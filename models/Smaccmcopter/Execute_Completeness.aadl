@@ -1,0 +1,106 @@
+package Execute_Completeness
+public
+
+annex resolute 
+{**
+		
+-- Each good message received by the vehicle SHALL 
+-- be executed by the vehicle within 100 ms 
+
+-- Context: 'received' means message is in the radio output buffer
+-- Context: 'good' means message is recent, authorized, and well-formed.
+-- Context: 'executed' means reaching the UAV controller input buffer.
+execute_completeness(d : device) <= 
+ **  "The system executes in less than 100ms,\n"
+     "and all messages that are received by device " d "\n"
+     "eventually reach the controller" ** 
+  total_time_delay <= 100ms  and
+  good_messages_reach_controller(d)
+
+-- Under the assumption that the system is schedulable, the total time
+-- delay will be the sum of the worst case execution times of all the threads
+total_time_delay : int = 
+  if analysis("schedule") then
+    wc_message_wait_time + 
+    wc_message_processing_time + 
+    wc_controller_delay
+  else  
+    fail "unable to schedule model"
+
+-- A component is schedulable if all threads complete before their
+-- respective deadlines 
+schedulable() <= 
+    ** "Every thread is either periodic or aperiodic" **
+	forall (t : thread) . 
+		property_lookup(t, Thread_Properties::Dispatch_Protocol) = "Periodic" or
+		property_lookup(t, Thread_Properties::Dispatch_Protocol) = "Aperiodic"
+
+-- calculates the sum of all thread processing times
+wc_message_processing_time : int = 
+	sum({thread_message_processing_time(t) for (t: thread)}) 
+
+--returns the processing time of an individual thread
+thread_message_processing_time(t : thread) : int =
+	if exists(c : connection) . contained(c, t) and message_channel(c) then 
+		if property_exists(t, SMACCM::WC_Execution_Time) then
+	 	   property_lookup(t, SMACCM::WC_Execution_Time)
+		else
+	  	   fail "Some thread contains a message channel but does not
+	  	   		 have a specified message processing time."
+	else
+	   0
+ 
+-- TODO: Figure out how to compute these 
+wc_message_wait_time : int = 0
+wc_controller_delay : int = 0  
+
+--------------------- BEGIN MESSAGING STUFF --------------------
+
+-- Each good message received by component x SHALL reach the UAV
+-- controller input buffer
+good_messages_reach_controller(x : component) <=
+  ** "All good messages sent from " x "\n"
+     "eventually reach the controller" ** 
+  class_of(x, SOFTWARE::Stability_Navigation) or
+  exists (y : component )(c : connection).  
+  	  connected(x, c, y) and
+  	  message_channel(c) and  
+      all_good_messages_sent(x, c) and
+        good_messages_reach_controller(y)
+    
+-- messages must only be transferred through threads that
+-- share a process with only memory safe threads. We also 
+-- verify that all the messages are sent through one connection
+all_good_messages_sent(x : component, c : connection) <=
+    ** "connection " c " is the only output message \n"
+       "channel in component " x ". Only good messages\n"
+       "are sent on this connection. All other threads\n"
+       "in the same process of this thread are memory safe" ** 
+	(forall(t : thread). 
+		x = t =>
+			exists(p : process).
+				contained(t, p) and memory_safe_process(p))
+	and
+	((property_exists(x, SMACCM::Always_Sends_Message) and  
+	  property_lookup(x, SMACCM::Always_Sends_Message)) 
+	  or class_of(x, SOFTWARE::Decrypt))
+		  
+-- all the messages are sent through one connection
+only_one_out_mc(x : component) <=
+ 	** "component " x " contains only a single\n"
+ 	    "output message channel." **
+	not 
+	exists(c1 : connection).
+	    message_channel(c1) and 
+	    exists(c2 : connection).
+			not (c1 = c2) and  
+	    	message_channel(c2) and  
+	    	exists (comp1: component). 
+	    		connected(x, c1, comp1) and
+	    		exists(comp2: component). 
+	 				connected(x, c2, comp2) and
+					not (comp1 = comp2)
+**};
+    
+    
+end Execute_Completeness;

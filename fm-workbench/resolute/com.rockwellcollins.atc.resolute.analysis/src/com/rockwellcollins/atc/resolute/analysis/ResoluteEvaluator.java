@@ -1,0 +1,1025 @@
+package com.rockwellcollins.atc.resolute.analysis;
+
+import java.util.ArrayList;
+import java.util.Deque;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.xtext.nodemodel.ICompositeNode;
+import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
+import org.osate.aadl2.AbstractNamedValue;
+import org.osate.aadl2.BooleanLiteral;
+import org.osate.aadl2.Classifier;
+import org.osate.aadl2.ComponentClassifier;
+import org.osate.aadl2.ComponentType;
+import org.osate.aadl2.Element;
+import org.osate.aadl2.EnumerationLiteral;
+import org.osate.aadl2.IntegerLiteral;
+import org.osate.aadl2.NamedElement;
+import org.osate.aadl2.NamedValue;
+import org.osate.aadl2.Property;
+import org.osate.aadl2.PropertyExpression;
+import org.osate.aadl2.RealLiteral;
+import org.osate.aadl2.StringLiteral;
+import org.osate.aadl2.instance.ComponentInstance;
+import org.osate.aadl2.instance.ConnectionInstance;
+import org.osate.aadl2.instance.ConnectionInstanceEnd;
+import org.osate.aadl2.instance.ConnectionReference;
+import org.osate.aadl2.instance.FeatureInstance;
+import org.osate.aadl2.properties.PropertyDoesNotApplyToHolderException;
+import org.osate.aadl2.properties.PropertyNotPresentException;
+import org.osate.xtext.aadl2.properties.util.GetProperties;
+import org.osate.xtext.aadl2.properties.util.PropertyUtils;
+
+import com.rockwellcollins.atc.resolute.analysis.values.BoolValue;
+import com.rockwellcollins.atc.resolute.analysis.values.IntValue;
+import com.rockwellcollins.atc.resolute.analysis.values.NamedElementValue;
+import com.rockwellcollins.atc.resolute.analysis.values.RealValue;
+import com.rockwellcollins.atc.resolute.analysis.values.ResoluteValue;
+import com.rockwellcollins.atc.resolute.analysis.values.SetValue;
+import com.rockwellcollins.atc.resolute.analysis.values.StringValue;
+import com.rockwellcollins.atc.resolute.resolute.Arg;
+import com.rockwellcollins.atc.resolute.resolute.BinaryExpr;
+import com.rockwellcollins.atc.resolute.resolute.BoolExpr;
+import com.rockwellcollins.atc.resolute.resolute.BuiltInFuncCallExpr;
+import com.rockwellcollins.atc.resolute.resolute.ClaimArg;
+import com.rockwellcollins.atc.resolute.resolute.ClaimBody;
+import com.rockwellcollins.atc.resolute.resolute.ClaimString;
+import com.rockwellcollins.atc.resolute.resolute.ConstantDefinition;
+import com.rockwellcollins.atc.resolute.resolute.DefinitionBody;
+import com.rockwellcollins.atc.resolute.resolute.Expr;
+import com.rockwellcollins.atc.resolute.resolute.FailExpr;
+import com.rockwellcollins.atc.resolute.resolute.FilterMapExpr;
+import com.rockwellcollins.atc.resolute.resolute.FnCallExpr;
+import com.rockwellcollins.atc.resolute.resolute.FunctionDefinition;
+import com.rockwellcollins.atc.resolute.resolute.IdExpr;
+import com.rockwellcollins.atc.resolute.resolute.IfThenElseExpr;
+import com.rockwellcollins.atc.resolute.resolute.IntExpr;
+import com.rockwellcollins.atc.resolute.resolute.ProveStatement;
+import com.rockwellcollins.atc.resolute.resolute.QuantifiedExpr;
+import com.rockwellcollins.atc.resolute.resolute.RealExpr;
+import com.rockwellcollins.atc.resolute.resolute.StringExpr;
+import com.rockwellcollins.atc.resolute.resolute.ThisExpr;
+import com.rockwellcollins.atc.resolute.resolute.Type;
+import com.rockwellcollins.atc.resolute.resolute.UnaryExpr;
+import com.rockwellcollins.atc.resolute.resolute.util.ResoluteSwitch;
+
+public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
+	// keeps track of the current value of arguments on the stack
+	private Deque<Map<Arg, ResoluteValue>> argMapStack;
+
+	// keeps track of which component the current prove statement was called on
+	final private ComponentInstance thisInst;
+
+	// used to draw assurance cases
+	final private ResoluteProofTree proofTree;
+
+	// keeps track of which claims have been called with what arguments
+	private Set<ClaimCallContext> claimCallContexts;
+
+	public ResoluteEvaluator(ComponentInstance thisInst, ResoluteProofTree proofTree) {
+		this.thisInst = thisInst;
+		this.proofTree = proofTree;
+
+		argMapStack = new LinkedList<>();
+		claimCallContexts = new HashSet<>();
+	}
+
+	@Override
+	public ResoluteValue caseFailExpr(FailExpr object) {
+		proofTree.addNewCurrent(object, "FAIL");
+		if (object.getVal() != null) {
+			String failStr = object.getVal().getValue();
+			throw new ResoluteFailException(failStr);
+		}
+		throw new ResoluteFailException("Fail Statement Reached");
+	}
+
+	@Override
+	public ResoluteValue caseConstantDefinition(ConstantDefinition object) {
+		String nodeStr = object.getName();
+
+		proofTree.addNewCurrent(object, nodeStr);
+		ResoluteValue result = doSwitch(object.getExpr());
+
+		proofTree.setCurReturnVal(object, nodeStr, result);
+
+		return result;
+	}
+
+	@Override
+	public ResoluteValue caseArg(Arg object) {
+		return argMapStack.getFirst().get(object);
+	}
+
+	@Override
+	public ResoluteValue caseBinaryExpr(BinaryExpr object) {
+		EvaluateConfidenceAnalysis.evaluate(object);
+		
+		String nodeStr = object.getOp();
+		proofTree.addNewCurrent(object, object.getOp());
+
+		// hack to draw implications in a readable way on the graph
+		if (object.getOp().equals("=>")) {
+			proofTree.addNewCurrent(object, "PREMISE");
+		}
+
+		ResoluteValue leftResult = doSwitch(object.getLeft());
+
+		ResoluteValue result = null;
+
+		switch (object.getOp()) {
+		case "and":
+			if (leftResult.getBool()) {
+				ResoluteValue rightResult = doSwitch(object.getRight());
+				result = rightResult;
+			} else {
+				result = new BoolValue(false);
+			}
+			break;
+		case "or":
+			if (leftResult.getBool()) {
+				result = new BoolValue(true);
+			} else {
+				ResoluteValue rightResult = doSwitch(object.getRight());
+				result = rightResult;
+			}
+			break;
+		case "=>":
+			if (!leftResult.getBool()) {
+
+				proofTree.setCurReturnVal(object, "PREMISE", leftResult);
+				result = new BoolValue(true);
+
+			} else {
+				proofTree.setCurReturnVal(object, "PREMISE", leftResult); // sets
+																			// the
+																			// 'PREMISE'
+																			// value
+				proofTree.addNewCurrent(object, "CONCLUSION");
+				ResoluteValue rightResult = doSwitch(object.getRight());
+				proofTree.setCurReturnVal(object, "CONCLUSION", rightResult);
+				result = rightResult;
+			}
+			break;
+		case "=":
+			ResoluteValue rightResult = doSwitch(object.getRight());
+			Expr rightExpr = object.getRight();
+			Expr leftExpr = object.getLeft();
+
+			if (rightExpr instanceof IdExpr) {
+				String retString = rightResult.toString();
+				proofTree.addNewCurrent(object, retString);
+				proofTree.setCurReturnVal(object, retString, rightResult);
+			}
+
+			if (leftExpr instanceof IdExpr) {
+				String retString = leftResult.toString();
+				proofTree.addNewCurrent(object, retString);
+				proofTree.setCurReturnVal(object, retString, leftResult);
+			}
+
+			result = new BoolValue(leftResult.equals(rightResult));
+			break;
+		case "+":
+			rightResult = doSwitch(object.getRight());
+			if (leftResult.isInt()) {
+				assert (rightResult.isInt());
+				result = new IntValue(leftResult.getInt() + rightResult.getInt());
+			} else {
+				assert (leftResult.isReal() && rightResult.isReal());
+				result = new RealValue(leftResult.getReal() + rightResult.getReal());
+			}
+			break;
+		case "-":
+			rightResult = doSwitch(object.getRight());
+			if (leftResult.isInt()) {
+				assert (rightResult.isInt());
+				result = new IntValue(leftResult.getInt() - rightResult.getInt());
+			} else {
+				assert (leftResult.isReal() && rightResult.isReal());
+				result = new RealValue(leftResult.getReal() - rightResult.getReal());
+			}
+			break;
+		case "*":
+			rightResult = doSwitch(object.getRight());
+			if (leftResult.isInt()) {
+				assert (rightResult.isInt());
+				result = new IntValue(leftResult.getInt() * rightResult.getInt());
+			} else {
+				assert (leftResult.isReal() && rightResult.isReal());
+				result = new RealValue(leftResult.getReal() * rightResult.getReal());
+			}
+			break;
+		case "/":
+			rightResult = doSwitch(object.getRight());
+			if (leftResult.isInt()) {
+				assert (rightResult.isInt());
+				result = new IntValue(leftResult.getInt() / rightResult.getInt());
+			} else {
+				assert (leftResult.isReal() && rightResult.isReal());
+				result = new RealValue(leftResult.getReal() / rightResult.getReal());
+			}
+			break;
+		case "in":
+			rightResult = doSwitch(object.getRight());
+			nodeStr = leftResult + " in " + rightResult;
+
+			assert (rightResult.isSet());
+			result = new BoolValue(rightResult.getSet().contains(leftResult));
+			break;
+		case "union":
+			rightResult = doSwitch(object.getRight());
+			assert (rightResult.isSet());
+			assert (leftResult.isSet());
+			Set<ResoluteValue> union = new HashSet<ResoluteValue>();
+			union.addAll(leftResult.getSet());
+			union.addAll(rightResult.getSet());
+			result = new SetValue(union);
+			break;
+		case "intersect":
+			rightResult = doSwitch(object.getRight());
+			assert (rightResult.isSet());
+			assert (leftResult.isSet());
+			Set<ResoluteValue> intersect = new HashSet<ResoluteValue>();
+			intersect.addAll(leftResult.getSet());
+			intersect.retainAll(rightResult.getSet());
+			result = new SetValue(intersect);
+			result = rightResult;
+			break;
+		case "<":
+			rightResult = doSwitch(object.getRight());
+			if (rightResult.isReal() && leftResult.isReal()) {
+				result = new BoolValue(leftResult.getReal() < rightResult.getReal());
+			} else {
+				assert (rightResult.isInt() && leftResult.isInt());
+				result = new BoolValue(leftResult.getInt() < rightResult.getInt());
+			}
+			break;
+		case ">":
+			rightResult = doSwitch(object.getRight());
+			if (rightResult.isReal() && leftResult.isReal()) {
+				result = new BoolValue(leftResult.getReal() > rightResult.getReal());
+			} else {
+				assert (rightResult.isInt() && leftResult.isInt());
+				result = new BoolValue(leftResult.getInt() > rightResult.getInt());
+			}
+			break;
+		case "<=":
+			rightResult = doSwitch(object.getRight());
+			if (rightResult.isReal() && leftResult.isReal()) {
+				result = new BoolValue(leftResult.getReal() <= rightResult.getReal());
+			} else {
+				assert (rightResult.isInt() && leftResult.isInt());
+				result = new BoolValue(leftResult.getInt() <= rightResult.getInt());
+			}
+			break;
+		case ">=":
+			rightResult = doSwitch(object.getRight());
+			if (rightResult.isReal() && leftResult.isReal()) {
+				result = new BoolValue(leftResult.getReal() >= rightResult.getReal());
+			} else {
+				assert (rightResult.isInt() && leftResult.isInt());
+				result = new BoolValue(leftResult.getInt() >= rightResult.getInt());
+			}
+			break;
+		default:
+			assert (false);
+			break;
+		}
+
+		proofTree.setCurReturnVal(object, nodeStr, result);
+
+		return result;
+	}
+
+	@Override
+	public ResoluteValue caseUnaryExpr(UnaryExpr object) {
+
+		ResoluteValue result = null;
+		proofTree.addNewCurrent(object, object.getOp());
+
+		switch (object.getOp()) {
+		case "not":
+			ResoluteValue tempResult = doSwitch(object.getExpr());
+			assert (tempResult.isBool());
+			result = new BoolValue(!tempResult.getBool());
+			break;
+		case "-":
+			tempResult = doSwitch(object.getExpr());
+			assert (tempResult.isInt() || tempResult.isReal());
+			if (tempResult.isInt()) {
+				result = new IntValue(-tempResult.getInt());
+			} else {
+				result = new RealValue(-tempResult.getReal());
+			}
+			break;
+		default:
+			assert (false);
+			break;
+		}
+		proofTree.setCurReturnVal(object, object.getOp(), result);
+		return result;
+	}
+
+	@Override
+	public ResoluteValue caseIdExpr(IdExpr object) {
+		NamedElement ref = object.getId();
+		if (ref instanceof Classifier || ref instanceof Property) {
+			return new NamedElementValue(ref);
+		} else {
+			return doSwitch(ref);
+		}
+	}
+
+	@Override
+	public ResoluteValue caseThisExpr(ThisExpr object) {
+		return new NamedElementValue(thisInst);
+	}
+
+	@Override
+	public ResoluteValue caseIntExpr(IntExpr object) {
+		long intVal = (long) object.getVal().getScaledValue();
+		String retString = Long.toString(intVal);
+		proofTree.addNewCurrent(object, retString);
+		ResoluteValue result = new IntValue(intVal);
+
+		proofTree.setCurReturnVal(object, retString, result);
+		return result;
+	}
+
+	@Override
+	public ResoluteValue caseRealExpr(RealExpr object) {
+		double realVal = object.getVal().getValue();
+		String retString = Double.toString(realVal);
+		proofTree.addNewCurrent(object, retString);
+		ResoluteValue result = new RealValue(realVal);
+
+		proofTree.setCurReturnVal(object, retString, result);
+		return result;
+	}
+
+	@Override
+	public ResoluteValue caseBoolExpr(BoolExpr object) {
+		boolean boolVal = object.getVal().getValue();
+		String retString = Boolean.toString(boolVal);
+		proofTree.addNewCurrent(object, retString);
+		ResoluteValue result = new BoolValue(boolVal);
+
+		proofTree.setCurReturnVal(object, retString, result);
+		return result;
+	}
+
+	@Override
+	public ResoluteValue caseStringExpr(StringExpr object) {
+		// there are an extra set of quotes ("") around a StringExpr
+		// that need to be removed
+		String str = object.getVal().getValue();
+		str = str.replace("\"", "");
+		proofTree.addNewCurrent(object, str);
+		ResoluteValue result = new StringValue(str);
+
+		proofTree.setCurReturnVal(object, str, result);
+		return result;
+	}
+
+	@Override
+	public ResoluteValue caseIfThenElseExpr(IfThenElseExpr object) {
+
+		Expr cond = object.getCond();
+
+		String nodeStr = "if " + exprToString(cond);
+		proofTree.addNewCurrent(object, nodeStr);
+
+		ResoluteValue condResult = doSwitch(cond);
+		assert (condResult.isBool());
+
+		ResoluteValue result;
+		if (condResult.getBool()) {
+			Expr thenExpr = object.getThen();
+			result = doSwitch(thenExpr);
+		} else {
+			Expr elseExpr = object.getElse();
+			result = doSwitch(elseExpr);
+		}
+
+		proofTree.setCurReturnVal(object, nodeStr, result);
+		return result;
+	}
+
+	@Override
+	public ResoluteValue caseQuantifiedExpr(QuantifiedExpr object) {
+
+		ResoluteValue result = null;
+		EList<Arg> argsEList = object.getArgs();
+		LinkedList<Arg> argsLinkedList = new LinkedList<Arg>();
+
+		String nodeStr = object.getQuant();
+		// make the arglist a linked list
+		for (Arg arg : argsEList) {
+			Type argType = arg.getType();
+			nodeStr += "(" + arg.getName() + " : " + argType.getName() + ")";
+			argsLinkedList.add(arg);
+		}
+
+		proofTree.addNewCurrent(object, nodeStr);
+
+		boolean boolResult = false;
+		switch (object.getQuant()) {
+		case "exists":
+			boolResult = quantHelper(object.getExpr(), argsLinkedList, false);
+			result = new BoolValue(boolResult);
+
+			break;
+		case "forall":
+			boolResult = quantHelper(object.getExpr(), argsLinkedList, true);
+			// assert(proofTree.getCurNode().getExprStr().equals(nodeStr));
+			result = new BoolValue(!boolResult);
+			break;
+		default:
+			assert (false);
+		}
+
+		proofTree.setCurReturnVal(object, nodeStr, result);
+
+		return result;
+	}
+
+	@Override
+	public ResoluteValue caseFnCallExpr(FnCallExpr object) {
+		FunctionDefinition funcDef = object.getFn();
+		List<ResoluteValue> argVals = doSwitchList(object.getArgs());
+
+		String text = createFunctionText(funcDef.getName(), funcDef.getArgs(), argVals);
+		proofTree.addNewCurrent(funcDef, text);
+
+		DefinitionBody body = funcDef.getBody();
+		ClaimCallContext context = null;
+		if (body instanceof ClaimBody) {
+			context = new ClaimCallContext(funcDef, argVals);
+			if (claimCallContexts.contains(context)) {
+				ResoluteValue result = new BoolValue(false);
+				proofTree.setCurReturnVal(funcDef, text, result);
+				return result;
+			}
+			claimCallContexts.add(context);
+		}
+
+		argMapStack.push(pairArguments(funcDef.getArgs(), argVals));
+		if (body instanceof ClaimBody) {
+			ClaimBody claimBody = (ClaimBody) body;
+			if (!claimBody.getClaim().isEmpty()) {
+				text = createClaimText(claimBody);
+			}
+		}
+
+		ResoluteValue result = doSwitch(body.getExpr());
+
+		argMapStack.pop();
+
+		if (context != null) {
+			claimCallContexts.remove(context);
+		}
+
+		proofTree.setCurReturnVal(funcDef, text, result);
+		return result;
+	}
+
+	private String createFunctionText(String name, EList<Arg> args, List<ResoluteValue> argVals) {
+		StringBuilder text = new StringBuilder();
+		text.append(name);
+		text.append("(");
+
+		if (args != null) {
+			for (int i = 0; i < args.size(); i++) {
+				text.append(argVals.get(i).toString());
+				if (i < args.size() - 1) {
+					text.append(", ");
+				}
+			}
+		}
+
+		text.append(")");
+		return text.toString();
+	}
+
+	private Map<Arg, ResoluteValue> pairArguments(List<Arg> args, List<ResoluteValue> argVals) {
+		Map<Arg, ResoluteValue> result = new HashMap<>();
+		if (args == null) {
+			return result;
+		}
+
+		for (int i = 0; i < args.size(); i++) {
+			result.put(args.get(i), argVals.get(i));
+		}
+		return result;
+	}
+
+	private String createClaimText(ClaimBody claimBody) {
+		StringBuilder text = new StringBuilder();
+
+		for (Element claim : claimBody.getClaim()) {
+			if (claim instanceof ClaimArg) {
+				Arg claimArg = ((ClaimArg) claim).getArg();
+				ResoluteValue argVal = doSwitch(claimArg);
+				if (argVal.isNamedElement()) {
+					addClaimReference(proofTree.getCurNode(), argVal.getNamedElement(),
+							argVal.toString());
+				}
+				text.append("'");
+				text.append(argVal.toString());
+				text.append("'");
+			} else if (claim instanceof ClaimString) {
+				text.append(((ClaimString) claim).getStr());
+			} else {
+				assert false;
+			}
+		}
+
+		return text.toString();
+	}
+
+	private static void addClaimReference(ResoluteProofNode node, NamedElement ne, String argText) {
+		if (ne instanceof ComponentInstance) {
+			ComponentInstance ci = (ComponentInstance) ne;
+			node.addClaimReference(argText, ci.getComponentClassifier());
+		} else if (ne instanceof ConnectionInstance) {
+			ConnectionInstance ci = (ConnectionInstance) ne;
+			node.addClaimReference(argText, ci.getConnectionReferences().get(0).getConnection());
+		}
+	}
+
+	@Override
+	public ResoluteValue caseFilterMapExpr(FilterMapExpr object) {
+		LinkedList<Set<NamedElement>> listOfCompLists = new LinkedList<Set<NamedElement>>();
+		LinkedList<Arg> args = new LinkedList<Arg>();
+		for (Arg arg : object.getArgs()) {
+			args.push(arg);
+			listOfCompLists.add(ResoluteQuantifiableAadlObjects.getAllComponentsOfType(arg.getType().getName()));
+		}
+		proofTree.addNewCurrent(object, "{LIST CALC}");
+		LinkedList<ResoluteValue> valSet = new LinkedList<ResoluteValue>();
+		mapIterateSets(object.getMap(), object.getFilter(), args, listOfCompLists, valSet);
+
+		ResoluteValue result = new SetValue(valSet);
+		proofTree.setCurReturnVal(object, result.toString(), result);
+		return result;
+	}
+
+	@Override
+	public ResoluteValue caseBuiltInFuncCallExpr(BuiltInFuncCallExpr object) {
+		String funName = object.getFn();
+		String nodeStr = funName;
+		ResoluteValue result = null;
+		List<ResoluteValue> argVals = doSwitchList(object.getArgs());
+
+		proofTree.addNewCurrent(object, exprToString(object));
+
+		// proofTree.addNewCurrent(funName);
+
+		switch (funName) {
+		case "connected":
+			// TODO: should this return true for connections in either
+			// direction?
+
+			ResoluteValue comp0Val = argVals.get(0);
+			ResoluteValue connVal = argVals.get(1);
+			ResoluteValue comp1Val = argVals.get(2);
+
+			assert (comp0Val.getNamedElement() instanceof ComponentInstance);
+			assert (connVal.getNamedElement() instanceof ConnectionInstance);
+			assert (comp1Val.getNamedElement() instanceof ComponentInstance);
+
+			ComponentInstance compInst0 = (ComponentInstance) comp0Val.getNamedElement();
+			ConnectionInstance conn = (ConnectionInstance) connVal.getNamedElement();
+			ComponentInstance compInst1 = (ComponentInstance) comp1Val.getNamedElement();
+
+			nodeStr += "(" + compInst0.getName() + ", " + conn.getName() + ", "
+					+ compInst1.getName() + ")";
+
+			ConnectionInstanceEnd allDest = conn.getDestination();
+			ConnectionInstanceEnd allSource = conn.getSource();
+
+			if (allSource.getComponentInstance().equals(compInst0)
+					&& allDest.getComponentInstance().equals(compInst1)) {
+				result = new BoolValue(true);
+			} else {
+				result = new BoolValue(false);
+			}
+
+			break;
+
+		case "property_lookup":
+			// the first element is the component
+			ResoluteValue compVal = argVals.get(0);
+			// the second element is the property
+			ResoluteValue propVal = argVals.get(1);
+
+			assert (propVal.getNamedElement() instanceof Property);
+			Property prop = (Property) propVal.getNamedElement();
+
+			PropertyExpression expr;
+			if (compVal.getNamedElement() instanceof ComponentInstance) {
+				ComponentInstance comp = (ComponentInstance) compVal.getNamedElement();
+				nodeStr += "(" + comp.getName() + ", " + prop.getName() + ")";
+				expr = getPropExpression(comp, prop);
+			} else {
+				assert (compVal.getNamedElement() instanceof ComponentType);
+				ComponentType comp = (ComponentType) compVal.getNamedElement();
+				nodeStr += "(" + comp.getName() + ", " + prop.getName() + ")";
+				expr = getPropExpression(comp, prop);
+			}
+
+			if (expr != null) {
+				if (expr instanceof StringLiteral) {
+					StringLiteral value = (StringLiteral) expr;
+					// nodeStr += value.getValue() + ")";
+					result = new StringValue(value.getValue());
+				} else if (expr instanceof NamedValue) {
+					NamedValue namedVal = (NamedValue) expr;
+					AbstractNamedValue absVal = namedVal.getNamedValue();
+					assert (absVal instanceof EnumerationLiteral);
+					EnumerationLiteral enVal = (EnumerationLiteral) absVal;
+
+					// nodeStr += enVal.getName() + ")";
+					result = new StringValue(enVal.getName());
+				} else if (expr instanceof BooleanLiteral) {
+					BooleanLiteral value = (BooleanLiteral) expr;
+					result = new BoolValue(value.getValue());
+				} else if (expr instanceof IntegerLiteral) {
+					IntegerLiteral value = (IntegerLiteral) expr;
+					result = new IntValue((long) value.getScaledValue());
+				} else {
+					assert (expr instanceof RealLiteral);
+					RealLiteral value = (RealLiteral) expr;
+					result = new RealValue(value.getValue());
+				}
+				break;
+			}
+
+		case "property_exists":
+			// the first element is the component
+			compVal = argVals.get(0);
+			// the second element is the property
+			propVal = argVals.get(1);
+
+			assert (propVal.getNamedElement() instanceof Property);
+			prop = (Property) propVal.getNamedElement();
+
+			if (compVal.getNamedElement() instanceof ComponentInstance) {
+				ComponentInstance comp = (ComponentInstance) compVal.getNamedElement();
+				nodeStr += "(" + comp.getName() + ", " + prop.getName() + ")";
+				result = getPropExists(comp, prop);
+			} else if (compVal.getNamedElement() instanceof ComponentType) {
+				assert (compVal.getNamedElement() instanceof ComponentType);
+				ComponentType comp = (ComponentType) compVal.getNamedElement();
+				nodeStr += "(" + comp.getName() + ", " + prop.getName() + ")";
+				result = getPropExists(comp, prop);
+			} else {
+				assert (compVal.getNamedElement() instanceof ConnectionInstance);
+				conn = (ConnectionInstance) compVal.getNamedElement();
+
+				// result = getPropExists(conn, prop);
+				for (ConnectionReference ref : conn.getConnectionReferences()) {
+					result = getPropExists(ref, prop);
+					assert (result.isBool());
+					if (result.getBool()) {
+						break;
+					}
+				}
+				nodeStr += "(" + conn.getName() + ", " + prop.getName() + ")";
+
+			}
+
+			break;
+		case "class_of":
+			comp0Val = argVals.get(0);
+			comp1Val = argVals.get(1);
+
+			assert (comp0Val.getNamedElement() instanceof ComponentInstance);
+			assert (comp1Val.getNamedElement() instanceof ComponentClassifier);
+
+			ComponentInstance compInst = (ComponentInstance) comp0Val.getNamedElement();
+			ComponentClassifier compClass = (ComponentClassifier) comp1Val.getNamedElement();
+
+			nodeStr += "(" + compInst.getName() + ", " + compClass.getName() + ")";
+
+			result = new BoolValue(compInst.getComponentClassifier().equals(compClass));
+			break;
+		
+		case "type":
+			NamedElement el = argVals.get(0).getNamedElement();
+			nodeStr += "(" + el.getName() + ")";
+			result = new NamedElementValue(builtinType(el));
+			break;
+		
+		case "has_type":
+			NamedElement el2 = argVals.get(0).getNamedElement();
+			nodeStr += "(" + el2.getName() + ")";
+			result = new BoolValue(builtinType(el2) != null);
+			break;
+
+		case "bound":
+			ComponentInstance ci0 = (ComponentInstance) argVals.get(0).getNamedElement();
+			ComponentInstance ci1 = (ComponentInstance) argVals.get(1).getNamedElement();
+			boolean bound = GetProperties.getActualMemoryBinding(ci0).contains(ci1)
+					|| GetProperties.getActualConnectionBinding(ci0).contains(ci1)
+					|| GetProperties.getActualProcessorBinding(ci0).contains(ci1);
+			result = new BoolValue(bound);
+			break;
+
+		case "contained":
+			ResoluteValue val0 = argVals.get(0);
+			ResoluteValue val1 = argVals.get(1);
+
+			NamedElement innerEl = val0.getNamedElement();
+			assert (val1.getNamedElement() instanceof ComponentInstance);
+			ComponentInstance outerComp = (ComponentInstance) val1.getNamedElement();
+
+			nodeStr += "(" + innerEl.getName() + ", " + outerComp.getName() + ")";
+
+			if (innerEl instanceof ConnectionInstance) {
+				conn = (ConnectionInstance) innerEl;
+
+				allDest = conn.getDestination();
+				allSource = conn.getSource();
+
+				if (allDest.getComponentInstance().equals(outerComp)
+						|| allSource.getComponentInstance().equals(outerComp)) {
+					result = new BoolValue(true);
+				} else {
+					result = new BoolValue(false);
+				}
+				break;
+			}
+			assert (innerEl instanceof ComponentInstance);
+			ComponentInstance innerComp = (ComponentInstance) innerEl;
+			ComponentInstance innerCompContainer = innerComp.getContainingComponentInstance();
+
+			result = new BoolValue(innerCompContainer.equals(outerComp));
+			break;
+
+		case "conn_source":
+			connVal = argVals.get(0);
+			assert (connVal.getNamedElement() instanceof ConnectionInstance);
+
+			conn = (ConnectionInstance) connVal.getNamedElement();
+			nodeStr += "(" + conn.getName() + ")";
+			result = new NamedElementValue(conn.getSource().getComponentInstance());
+
+			break;
+		case "conn_dest":
+			connVal = argVals.get(0);
+			assert (connVal.getNamedElement() instanceof ConnectionInstance);
+
+			conn = (ConnectionInstance) connVal.getNamedElement();
+			nodeStr += "(" + conn.getName() + ")";
+			result = new NamedElementValue(conn.getDestination().getComponentInstance());
+			break;
+		case "sum":
+			ResoluteValue setVal = argVals.get(0);
+			assert (setVal.isSet());
+
+			// determine if the elements are ints or reals
+
+			if (!setVal.getSet().iterator().hasNext()) {
+				result = new IntValue(0);
+				break;
+			}
+			ResoluteValue firstItem = setVal.getSet().iterator().next();
+
+			if (firstItem.isInt()) {
+				long sum = 0;
+				for (ResoluteValue setItem : setVal.getSet()) {
+					sum += setItem.getInt();
+				}
+				result = new IntValue(sum);
+			} else {
+				assert (firstItem.isReal());
+				double sum = 0;
+				for (ResoluteValue setItem : setVal.getSet()) {
+					sum += setItem.getReal();
+				}
+				result = new RealValue(sum);
+			}
+			break;
+		case "analysis":
+
+			ResoluteValue stringVal = argVals.get(0);
+			assert (stringVal.isString());
+
+			String analysisName = stringVal.getString();
+			nodeStr = "analysis(\"" + analysisName + "\", ";
+
+			List<ResoluteValue> analysisArgVals = new ArrayList<ResoluteValue>();
+
+			for (int i = 1; i < argVals.size(); i++) {
+				analysisArgVals.add(argVals.get(i));
+				nodeStr += argVals.get(i).toString() + ", ";
+			}
+
+			nodeStr = nodeStr.substring(0, nodeStr.length() - 2) + ")";
+			proofTree.getCurNode().setExprStr(nodeStr);
+
+			result = EvaluateExternalAnalysis.evaluate(this, analysisName, argVals);
+
+			if (result == null) {
+				String errorString = "External analysis '" + analysisName + "' failed with args:\n";
+				for (ResoluteValue argVal : argVals) {
+					errorString += argVal.toString() + "\n";
+				}
+				throw new ResoluteFailException(errorString);
+			}
+
+			break;
+		default:
+			assert (false);
+			break;
+		}
+
+		proofTree.setCurReturnVal(object, nodeStr, result);
+		return result;
+	}
+	
+	private NamedElement builtinType(NamedElement ne) {
+		if (ne instanceof ConnectionInstance) {
+			ConnectionInstance ci = (ConnectionInstance) ne;
+			FeatureInstance src = (FeatureInstance) ci.getSource();
+			return (NamedElement) src.getFeature().getFeatureClassifier();
+		} else {
+			return null;
+		}
+	}
+
+	/************** begin utility functions ***************/
+
+	private PropertyExpression getPropExpression(NamedElement comp, Property prop) {
+		try {
+			comp.getPropertyValue(prop); // this just checks to see if the
+											// property is associated
+			PropertyExpression expr = PropertyUtils.getSimplePropertyValue(comp, prop);
+			return expr;
+		} catch (PropertyDoesNotApplyToHolderException propException) {
+			return null;
+		} catch (PropertyNotPresentException propNotPresentException) {
+			return null;
+		}
+	}
+
+	private ResoluteValue getPropExists(NamedElement comp, Property prop) {
+		try {
+			comp.getPropertyValue(prop); // this just checks to see if the
+											// property is associated
+			PropertyUtils.getSimplePropertyValue(comp, prop);
+		} catch (PropertyDoesNotApplyToHolderException propException) {
+			return new BoolValue(false);
+		} catch (PropertyNotPresentException propNotPresentException) {
+			return new BoolValue(false);
+		}
+		return new BoolValue(true);
+	}
+
+	public void mapIterateSets(Expr expr, Expr filterExpr, LinkedList<Arg> freeArgs,
+			LinkedList<Set<NamedElement>> listOfCompLists, LinkedList<ResoluteValue> valList) {
+
+		assert (freeArgs.size() == listOfCompLists.size());
+
+		if (freeArgs.size() == 0) {
+			if (filterExpr == null) {
+				ResoluteValue mapResult = doSwitch(expr);
+				valList.add(mapResult);
+				return;
+			}
+			ResoluteValue result = doSwitch(filterExpr);
+			assert (result.isBool());
+			if (result.getBool()) {
+				ResoluteValue mapResult = doSwitch(expr);
+				valList.add(mapResult);
+			} else {
+				// remove failed checks from the proof
+				// tree to improve readability
+				// ResoluteProofNode proofNode = proofTree.getCurNode();
+				// proofNode.removeChildIndex(proofNode.getChildren().size()-1);
+			}
+			return;
+		}
+
+		Set<NamedElement> components = listOfCompLists.pop();
+		Arg arg = freeArgs.pop();
+		Map<Arg, ResoluteValue> argVals = argMapStack.getFirst();
+		assert (components.size() > 0);
+		for (NamedElement el : components) {
+			argVals.put(arg, new NamedElementValue(el));
+			mapIterateSets(expr, filterExpr, freeArgs, listOfCompLists, valList);
+			argVals.remove(arg);
+		}
+		freeArgs.push(arg);
+		listOfCompLists.push(components);
+	}
+
+	// this is a very stupid hacky way of implementing this
+	// it could be vastly improved. the "compl" value is true
+	// if the expression should be complemented (i.e., if "compl" should be
+	// false
+	// for existential quantification and true for universal
+	public boolean quantHelper(Expr expr, LinkedList<Arg> freeArgs, boolean compl) {
+
+		LinkedList<Set<NamedElement>> listOfCompLists = new LinkedList<Set<NamedElement>>();
+
+		for (Arg arg : freeArgs) {
+			listOfCompLists.add(ResoluteQuantifiableAadlObjects.getAllComponentsOfType(arg.getType().getName()));
+		}
+
+		return quantIterateSets(expr, freeArgs, listOfCompLists, compl);
+	}
+
+	// this function evaluates the given expression for every combination of
+	// values to the given "free args". It returns true if it finds a satisfying
+	// assignment to all the free arguments
+	public boolean quantIterateSets(Expr expr, LinkedList<Arg> freeArgs,
+			LinkedList<Set<NamedElement>> listOfCompLists, boolean compl) {
+
+		assert (freeArgs.size() == listOfCompLists.size());
+
+		if (freeArgs.size() == 0) {
+			ResoluteValue result = doSwitch(expr);
+			assert (result.isBool());
+			if (result.getBool() ^ compl) {
+				return true;
+			}
+			return false;
+		}
+
+		Set<NamedElement> components = listOfCompLists.pop();
+
+		if (components.size() == 0) {
+			throw new ResoluteQuantifierException("quantifier references components "
+					+ "of a type which are not present in this instance");
+		}
+
+		Arg arg = freeArgs.pop();
+		Map<Arg, ResoluteValue> argVals = argMapStack.getFirst();
+
+		assert (components.size() > 0);
+		for (NamedElement el : components) {
+			argVals.put(arg, new NamedElementValue(el));
+			if (quantIterateSets(expr, freeArgs, listOfCompLists, compl)) {
+				return true;
+			}
+			argVals.remove(arg);
+		}
+		freeArgs.push(arg);
+		listOfCompLists.push(components);
+
+		return false;
+	}
+
+	public ResoluteProofTree getProofTree() {
+		return proofTree;
+	}
+
+	public String proveStatementToString(ProveStatement ps) {
+		FnCallExpr fnCall = (FnCallExpr) ps.getExpr();
+
+		StringBuilder text = new StringBuilder();
+		text.append(fnCall.getFn().getName());
+		text.append("(");
+		Iterator<Expr> iterator = fnCall.getArgs().iterator();
+		while (iterator.hasNext()) {
+			Expr arg = iterator.next();
+			if (arg instanceof ThisExpr) {
+				text.append(new NamedElementValue(thisInst));
+			} else {
+				text.append(exprToString(arg));
+			}
+			if (iterator.hasNext()) {
+				text.append(", ");
+			}
+		}
+		text.append(")");
+		return text.toString();
+	}
+
+	public String exprToString(Expr expr) {
+		ICompositeNode compNode = NodeModelUtils.getNode(expr);
+		if (compNode != null) {
+			return NodeModelUtils.getTokenText(compNode);
+		}
+		return null;
+	}
+
+	public List<ResoluteValue> doSwitchList(List<? extends EObject> list) {
+		List<ResoluteValue> result = new ArrayList<>();
+		for (EObject e : list) {
+			result.add(doSwitch(e));
+		}
+		return result;
+	}
+}

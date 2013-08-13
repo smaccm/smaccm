@@ -1,0 +1,17 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: AADL to ADL Translator
+Bundle-SymbolicName: edu.umn.cs.crisys.smaccm.aadl2camkes;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: aadl2camkes.Activator
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.osate.aadl2;bundle-version="1.0.0",
+ org.osate.aadl2.modelsupport;bundle-version="1.0.0",
+ org.osate.xtext.aadl2.properties;bundle-version="1.0.0",
+ org.osate.aadl2.instantiation;bundle-version="1.0.0",
+ org.eclipse.ui.console;bundle-version="3.5.100",
+ org.osate.analysis.lute;bundle-version="1.0.0"
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-Vendor: University of Minnesota

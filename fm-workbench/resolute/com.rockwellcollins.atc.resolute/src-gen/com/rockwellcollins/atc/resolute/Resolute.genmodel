@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/com.rockwellcollins.atc.resolute/src-gen" editDirectory="/com.rockwellcollins.atc.resolute.edit/src"
+    editorDirectory="/com.rockwellcollins.atc.resolute.editor/src" modelPluginID="com.rockwellcollins.atc.resolute"
+    forceOverwrite="true" modelName="Resolute" updateClasspath="false" rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container"
+    complianceLevel="5.0" copyrightFields="false" editPluginID="com.rockwellcollins.atc.resolute.edit"
+    editorPluginID="com.rockwellcollins.atc.resolute.editor" runtimeVersion="2.8"
+    usedGenPackages="../../../../../../org.osate.aadl2/model/aadl2-nouml.genmodel#//aadl2">
+  <genPackages prefix="Resolute" basePackage="com.rockwellcollins.atc.resolute" resource="XML"
+      disposableProviderFactory="true" ecorePackage="Resolute.ecore#/">
+    <genClasses ecoreClass="Resolute.ecore#//ResoluteLibrary">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Resolute.ecore#//ResoluteLibrary/definitions"/>
+    </genClasses>
+    <genClasses ecoreClass="Resolute.ecore#//Definition"/>
+    <genClasses ecoreClass="Resolute.ecore#//Type"/>
+    <genClasses ecoreClass="Resolute.ecore#//BuiltinType"/>
+    <genClasses ecoreClass="Resolute.ecore#//Arg">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Resolute.ecore#//Arg/type"/>
+    </genClasses>
+    <genClasses ecoreClass="Resolute.ecore#//ConstantDefinition">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Resolute.ecore#//ConstantDefinition/type"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Resolute.ecore#//ConstantDefinition/expr"/>
+    </genClasses>
+    <genClasses ecoreClass="Resolute.ecore#//FunctionDefinition">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Resolute.ecore#//FunctionDefinition/args"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Resolute.ecore#//FunctionDefinition/body"/>
+    </genClasses>
+    <genClasses ecoreClass="Resolute.ecore#//ClaimString">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Resolute.ecore#//ClaimString/str"/>
+    </genClasses>
+    <genClasses ecoreClass="Resolute.ecore#//DefinitionBody">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Resolute.ecore#//DefinitionBody/expr"/>
+    </genClasses>
+    <genClasses ecoreClass="Resolute.ecore#//Expr"/>
+    <genClasses ecoreClass="Resolute.ecore#//ResoluteSubclause">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Resolute.ecore#//ResoluteSubclause/proves"/>
+    </genClasses>
+    <genClasses ecoreClass="Resolute.ecore#//ProveStatement">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Resolute.ecore#//ProveStatement/expr"/>
+    </genClasses>
+    <genClasses ecoreClass="Resolute.ecore#//SetType">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Resolute.ecore#//SetType/type"/>
+    </genClasses>
+    <genClasses ecoreClass="Resolute.ecore#//ClaimArg">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Resolute.ecore#//ClaimArg/arg"/>
+    </genClasses>
+    <genClasses ecoreClass="Resolute.ecore#//FuncBody">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Resolute.ecore#//FuncBody/type"/>
+    </genClasses>
+    <genClasses ecoreClass="Resolute.ecore#//ClaimBody">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Resolute.ecore#//ClaimBody/claim"/>
+    </genClasses>
+    <genClasses ecoreClass="Resolute.ecore#//BinaryExpr">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Resolute.ecore#//BinaryExpr/left"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Resolute.ecore#//BinaryExpr/op"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Resolute.ecore#//BinaryExpr/right"/>
+    </genClasses>
+    <genClasses ecoreClass="Resolute.ecore#//UnaryExpr">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Resolute.ecore#//UnaryExpr/op"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Resolute.ecore#//UnaryExpr/expr"/>
+    </genClasses>
+    <genClasses ecoreClass="Resolute.ecore#//IdExpr">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Resolute.ecore#//IdExpr/id"/>
+    </genClasses>
+    <genClasses ecoreClass="Resolute.ecore#//ThisExpr"/>
+    <genClasses ecoreClass="Resolute.ecore#//FailExpr">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Resolute.ecore#//FailExpr/val"/>
+    </genClasses>
+    <genClasses ecoreClass="Resolute.ecore#//IntExpr">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Resolute.ecore#//IntExpr/val"/>
+    </genClasses>
+    <genClasses ecoreClass="Resolute.ecore#//RealExpr">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Resolute.ecore#//RealExpr/val"/>
+    </genClasses>
+    <genClasses ecoreClass="Resolute.ecore#//BoolExpr">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Resolute.ecore#//BoolExpr/val"/>
+    </genClasses>
+    <genClasses ecoreClass="Resolute.ecore#//StringExpr">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Resolute.ecore#//StringExpr/val"/>
+    </genClasses>
+    <genClasses ecoreClass="Resolute.ecore#//IfThenElseExpr">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Resolute.ecore#//IfThenElseExpr/cond"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Resolute.ecore#//IfThenElseExpr/then"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Resolute.ecore#//IfThenElseExpr/else"/>
+    </genClasses>
+    <genClasses ecoreClass="Resolute.ecore#//QuantifiedExpr">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Resolute.ecore#//QuantifiedExpr/quant"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Resolute.ecore#//QuantifiedExpr/args"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Resolute.ecore#//QuantifiedExpr/expr"/>
+    </genClasses>
+    <genClasses ecoreClass="Resolute.ecore#//BuiltInFuncCallExpr">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Resolute.ecore#//BuiltInFuncCallExpr/fn"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Resolute.ecore#//BuiltInFuncCallExpr/args"/>
+    </genClasses>
+    <genClasses ecoreClass="Resolute.ecore#//FnCallExpr">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Resolute.ecore#//FnCallExpr/fn"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Resolute.ecore#//FnCallExpr/args"/>
+    </genClasses>
+    <genClasses ecoreClass="Resolute.ecore#//FilterMapExpr">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Resolute.ecore#//FilterMapExpr/map"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Resolute.ecore#//FilterMapExpr/args"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Resolute.ecore#//FilterMapExpr/filter"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>

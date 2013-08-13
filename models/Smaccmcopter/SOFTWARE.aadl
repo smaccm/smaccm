@@ -1,0 +1,212 @@
+package SOFTWARE
+public
+  with UAV;
+  with DATATYPES;
+  with IVORY;
+  with IVORY_TYPES;
+  with Static_Analysis;
+  with SMACCM;
+
+  system Software
+    features
+      motors_and_radios: feature group UAV::motors_and_radios;
+      sensors: feature group UAV::sensors;
+  end Software;
+  
+  system implementation Software.Impl
+    subcomponents
+      ML: process Main_Loop.Impl;
+	  Ivory: system IVORY::Software.Impl;
+             
+    connections
+      feature group motors_and_radios <-> ML.motors_and_radios;
+      feature group sensors <-> ML.sensors;
+  end Software.Impl;
+  
+  process Main_Loop
+    features
+      motors_and_radios: feature group UAV::motors_and_radios;
+      sensors: feature group UAV::sensors;
+  end Main_Loop;
+  
+  process implementation Main_Loop.Impl
+    subcomponents
+      SS: thread Sensors;
+      CCT: thread Command_Control_Telemetry;
+      RC: thread Radio_Control;
+      SN: thread Stability_Navigation;
+      MC: thread Motor_Control;
+      DC: thread Decrypt;
+      
+    connections
+      feature group sensors <-> SS.sensors_in;
+      port motors_and_radios.flight_control_commands -> RC.commands_in;
+      port motors_and_radios.mavlink -> DC.encrypt_in;
+      port DC.decrypt_out -> CCT.mavlink_in;
+      
+      port SS.sensors_out -> SN.sensors;
+      port RC.commands_out -> SN.rc_commands;
+      port CCT.mavlink_out -> SN.mavlink;
+      
+      port SN.motor_commands -> MC.motor_commands;
+      port MC.servo1_commands -> motors_and_radios.motor1;      
+      port MC.servo2_commands -> motors_and_radios.motor2;      
+      port MC.servo3_commands -> motors_and_radios.motor3;      
+      port MC.servo4_commands -> motors_and_radios.motor4;
+      
+    properties
+      SMACCM::OS => "Breakaway-RTOS";
+  end Main_Loop.Impl;
+  
+  thread Decrypt
+  	features 
+  		encrypt_in  : in data port DATATYPES::EncryptMAVlink;
+  		decrypt_out : out data port DATATYPES::MAVlink;
+  	properties
+  	  Period => 200ms;
+      Deadline => 200ms;
+      SMACCM::WC_Execution_Time => 10ms;
+  	  Dispatch_Protocol => Aperiodic;
+  	  SMACCM::Encryption_Algorthim => "AES-128-GCM";
+  	  SMACCM::Always_Sends_Message => true;
+  	  SMACCM::Language => "Ivory";
+  end Decrypt;
+  
+  thread User_Interface 
+    features
+      flight_mode_out: out data port Ivory_Types::flightmode;
+      
+    properties
+      Period => 200ms;
+      Deadline => 200ms;
+      SMACCM::WC_Execution_Time => 10ms;
+      
+      Dispatch_Protocol => Periodic;
+      
+      Source_Text => ("app/stabilize_hil/main.cpp");
+      Initialize_Entrypoint_Source_Text => "main";
+      Compute_Entrypoint_Source_Text => "main_task";
+      
+      Static_Analysis::Writes_to_buffers => ("motorsoutput_shared_state");
+      Static_Analysis::Reads_from_buffers => ("userinput_shared_state",
+        "sensors_shared_state", "gcs_shared_state");
+        
+      SMACCM::Language => "Ivory";
+  end User_Interface;
+
+  thread Stability_Navigation
+    features
+      rc_commands: in data port DATATYPES::Flight_Control_Commands;
+      mavlink: in data port DATATYPES::MAVLink;
+      sensors: in data port DATATYPES::Sensor_Data;
+      motor_commands: out data port DATATYPES::Motor_Commands;
+      
+    properties
+      Period => 200ms;
+      Deadline => 200ms;
+      SMACCM::WC_Execution_Time => 10ms;
+      
+      Dispatch_Protocol => Periodic;
+      
+      Source_Text => ("app/stabilize_hil/main.cpp");
+      Initialize_Entrypoint_Source_Text => "main";
+      Compute_Entrypoint_Source_Text => "main_task";
+      
+      Static_Analysis::Writes_to_buffers => ("motorsoutput_shared_state");
+      Static_Analysis::Reads_from_buffers => ("userinput_shared_state",
+        "sensors_shared_state", "gcs_shared_state");
+
+      SMACCM::Language => "Ivory";
+  end Stability_Navigation;
+
+  thread Command_Control_Telemetry
+    features
+      mavlink_in: in event data port DATATYPES::MAVLink;
+      mavlink_out: out data port DATATYPES::MAVLink;
+      
+    properties
+    
+      Period => 200ms;
+      Deadline => 200ms;
+      SMACCM::WC_Execution_Time => 10ms;
+    
+      Dispatch_Protocol => Aperiodic;
+      Dispatch_Trigger => (reference (mavlink_in));
+      
+      Source_Text => ("src/gcs_receive.c");
+      Initialize_Entrypoint_Source_Text => "gcs_receive_init";
+      Compute_Entrypoint_Source_Text => "gcs_receive_task";
+      
+      Static_Analysis::Writes_to_buffers => ("gcs_shared_state");
+      SMACCM::Always_Sends_Message => true;
+      SMACCM::Language => "Ivory";
+  end Command_Control_Telemetry;
+  
+  thread Radio_Control
+    features
+      commands_in: in data port DATATYPES::Flight_Control_Commands.Impl;
+      commands_out: out data port DATATYPES::Flight_Control_Commands.Impl;
+    
+    properties
+      Period => 200ms;
+      Deadline => 200ms;
+      SMACCM::WC_Execution_Time => 10ms;
+      Dispatch_Protocol => Periodic;
+      Compute_Execution_Time => 1 ms .. 3 ms;
+      
+      Source_Text => ("src/userinput.cpp");
+      Initialize_Entrypoint_Source_Text => "userinput_init";
+      Compute_Entrypoint_Source_Text => "userinput_task";
+      
+      Static_Analysis::Writes_to_buffers => ("userinput_shared_state");
+      SMACCM::Language => "Ivory";
+  end Radio_Control;
+
+  thread Sensors
+    features
+      sensors_in: feature group UAV::sensors;
+      sensors_out: out data port DATATYPES::Sensor_Data;
+      
+    properties
+      Period => 200ms;
+      Deadline => 200ms;
+      SMACCM::WC_Execution_Time => 10ms;
+      
+      Dispatch_Protocol => Periodic;
+	
+      Source_Text => ("src/sensors.cpp");
+      Initialize_Entrypoint_Source_Text => "sensors_init";
+      Compute_Entrypoint_Source_Text => "sensors_task";
+      
+      Static_Analysis::Writes_to_buffers => ("sensors_shared_state");
+      SMACCM::Language => "Ivory";
+  end Sensors;
+
+  thread Motor_Control
+    features
+      motor_commands: in data port DATATYPES::Motor_Commands;
+      servo1_commands: out data port DATATYPES::Servo_Commands;
+      servo2_commands: out data port DATATYPES::Servo_Commands;
+      servo3_commands: out data port DATATYPES::Servo_Commands;
+      servo4_commands: out data port DATATYPES::Servo_Commands;
+      
+    properties
+      Period => 200ms;
+      Deadline => 200ms;
+      SMACCM::WC_Execution_Time => 20ms;
+      
+      Dispatch_Protocol => Periodic;
+      Compute_Execution_Time => 1 ms .. 3 ms;
+      
+      Source_Text => ("src/motorsoutput.cpp");
+      Initialize_Entrypoint_Source_Text => "motorsoutput_init";
+      Compute_Entrypoint_Source_Text => "motorsoutput_task";
+      
+      Static_Analysis::Reads_from_buffers => ("motorsoutput_shared_state");
+      SMACCM::Language => "Ivory";
+      
+    annex resolute {**   
+    	prove only_receive_gs(this)
+    **};
+  end Motor_Control;
+end SOFTWARE;

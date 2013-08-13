@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="agree" nsURI="http://www.rockwellcollins.com/atc/agree/Agree"
+    nsPrefix="agree">
+  <eClassifiers xsi:type="ecore:EClass" name="AgreeLibrary" eSuperTypes="../../../../../../org.osate.aadl2/model/aadl2.ecore#//AnnexLibrary"/>
+  <eClassifiers xsi:type="ecore:EClass" name="AgreeSubclause" eSuperTypes="../../../../../../org.osate.aadl2/model/aadl2.ecore#//AnnexSubclause"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Contract" eSuperTypes="../../../../../../org.osate.aadl2/model/aadl2.ecore#//Element"/>
+  <eClassifiers xsi:type="ecore:EClass" name="SpecStatement" eSuperTypes="../../../../../../org.osate.aadl2/model/aadl2.ecore#//Element"/>
+  <eClassifiers xsi:type="ecore:EClass" name="CallDef"/>
+  <eClassifiers xsi:type="ecore:EClass" name="PropertyStatement" eSuperTypes="../../../../../../org.osate.aadl2/model/aadl2.ecore#//NamedElement #//SpecStatement">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="expr" eType="#//Expr" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ConstStatement" eSuperTypes="../../../../../../org.osate.aadl2/model/aadl2.ecore#//NamedElement #//SpecStatement">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="type" eType="#//Type" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="expr" eType="#//Expr" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="EqStatement" eSuperTypes="../../../../../../org.osate.aadl2/model/aadl2.ecore#//NamedElement #//SpecStatement">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="args" upperBound="-1" eType="#//Arg"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="expr" eType="#//Expr" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="FnDefExpr" eSuperTypes="../../../../../../org.osate.aadl2/model/aadl2.ecore#//NamedElement #//SpecStatement #//CallDef">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="args" upperBound="-1" eType="#//Arg"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="type" eType="#//Type" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="expr" eType="#//Expr" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="NodeDefExpr" eSuperTypes="../../../../../../org.osate.aadl2/model/aadl2.ecore#//NamedElement #//SpecStatement #//CallDef">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="args" upperBound="-1" eType="#//Arg"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="rets" upperBound="-1" eType="#//Arg"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="nodeBody" eType="#//NodeBodyExpr"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="NodeBodyExpr">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="locs" upperBound="-1" eType="#//Arg"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="eqs" upperBound="-1" eType="#//NodeEq"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="NodeEq">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="names" unique="false" upperBound="-1"
+        eType="#//Arg"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="expr" eType="#//Expr" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Arg" eSuperTypes="../../../../../../org.osate.aadl2/model/aadl2.ecore#//NamedElement">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="type" eType="#//Type" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Type" eSuperTypes="../../../../../../org.osate.aadl2/model/aadl2.ecore#//NamedElement"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Expr" eSuperTypes="../../../../../../org.osate.aadl2/model/aadl2.ecore#//Element"/>
+  <eClassifiers xsi:type="ecore:EClass" name="NestedDotID">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="name" eType="ecore:EClass ../../../../../../org.osate.aadl2/model/aadl2.ecore#//NamedElement"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="subName" eType="#//NestedDotID"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="AgreeContractLibrary" eSuperTypes="#//AgreeLibrary">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="contract" eType="#//Contract"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="AgreeContractSubclause" eSuperTypes="#//AgreeSubclause">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="contract" eType="#//Contract"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="AgreeContract" eSuperTypes="#//Contract">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="specs" upperBound="-1"
+        eType="#//SpecStatement" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="AssumeStatement" eSuperTypes="#//SpecStatement">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="expr" eType="#//Expr" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="GuaranteeStatement" eSuperTypes="#//SpecStatement">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="expr" eType="#//Expr" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="AssertStatement" eSuperTypes="#//SpecStatement">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="expr" eType="#//Expr" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ParamStatement" eSuperTypes="#//SpecStatement">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="expr" eType="#//Expr" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="type" eType="#//Type" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="BinaryExpr" eSuperTypes="#//Expr">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="left" eType="#//Expr" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="op" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="right" eType="#//Expr"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="UnaryExpr" eSuperTypes="#//Expr">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="op" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="expr" eType="#//Expr" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="IfThenElseExpr" eSuperTypes="#//Expr">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="a" eType="#//Expr" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="b" eType="#//Expr" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="c" eType="#//Expr" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="PrevExpr" eSuperTypes="#//Expr">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="delay" eType="#//Expr"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="init" eType="#//Expr" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="NextExpr" eSuperTypes="#//Expr">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="expr" eType="#//Expr" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="GetPropertyExpr" eSuperTypes="#//Expr">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="component" eType="#//Expr"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="name" eType="#//Expr" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="IdExpr" eSuperTypes="#//Expr">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="id" eType="ecore:EClass ../../../../../../org.osate.aadl2/model/aadl2.ecore#//NamedElement"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="NestIdExpr" eSuperTypes="#//Expr">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="id" eType="#//NestedDotID"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="IntLitExpr" eSuperTypes="#//Expr">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="val" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="PreExpr" eSuperTypes="#//Expr">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="expr" eType="#//Expr" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="FnCallExpr" eSuperTypes="#//Expr">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="fn" eType="#//CallDef"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="args" upperBound="-1" eType="#//Expr"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="RealLitExpr" eSuperTypes="#//Expr">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="val" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="BoolLitExpr" eSuperTypes="#//Expr">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="val" eType="ecore:EClass ../../../../../../org.osate.aadl2/model/aadl2.ecore#//BooleanLiteral"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ThisExpr" eSuperTypes="#//Expr"/>
+</ecore:EPackage>

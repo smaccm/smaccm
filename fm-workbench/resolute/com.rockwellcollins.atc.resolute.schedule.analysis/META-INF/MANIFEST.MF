@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Analysis
+Bundle-SymbolicName: com.rockwellcollins.atc.resolute.schedule.analysis;singleton:=true
+Bundle-Version: 1.0.0
+Bundle-Activator: com.rockwellcollins.atc.resolute.schedule.analysis.Activator
+Bundle-Vendor: ROCKWELLCOLLINS
+Require-Bundle: org.eclipse.core.runtime,
+ com.rockwellcollins.atc.resolute;bundle-version="1.0.0",
+ org.osate.aadl2;bundle-version="1.0.0",
+ com.rockwellcollins.atc.resolute.analysis;bundle-version="1.0.0"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7

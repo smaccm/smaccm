@@ -1,0 +1,187 @@
+grammar com.rockwellcollins.atc.resolute.Resolute with org.osate.xtext.aadl2.properties.Properties
+
+generate resolute "http://www.rockwellcollins.com/atc/resolute/Resolute"
+
+import "platform:/resource/org.osate.aadl2/model/aadl2.ecore" as aadl2
+
+AnnexLibrary returns aadl2::AnnexLibrary:
+	ResoluteLibrary
+;
+
+AnnexSubclause returns aadl2::AnnexSubclause:
+	ResoluteSubclause
+;
+
+NamedElement returns aadl2::NamedElement:
+	Definition
+|	Arg
+|	Type
+;
+
+Element returns aadl2::Element:
+	Expr
+|	ProveStatement
+|   ClaimString
+|   DefinitionBody
+|   Type
+;
+
+ResoluteLibrary:
+	{ResoluteLibrary}
+	definitions+=Definition*
+;
+
+Definition:
+	ConstantDefinition | FunctionDefinition
+;
+
+Type:
+	{SetType} '{' type=Type '}'
+|	BuiltinType
+;
+
+BuiltinType:
+	//aadl components
+ name=('data'
+|   'thread'
+|   'thread_group'
+|   'process'
+|   'subprogram'
+|   'subprogram_group'
+|   'processor'
+|   'virtual_processor'
+|   'memory'
+|   'bus'
+|   'virtual_bus'
+|   'device'
+|   'system'
+|   'abstract'
+    //non-aadl components
+|   'connection'
+|   'component'
+|   'string'
+|   'int'
+|   'real'
+|   'bool')
+
+;
+
+//Arg types are used for functions, claims, and quantifiers
+Arg returns Arg: 
+	name=ID ':' type=Type
+;
+
+ConstantDefinition:
+	name=ID ':' type=Type '=' expr=Expr
+;
+
+FunctionDefinition:
+	name=ID '(' (args+=Arg (',' args+=Arg)*)? ')' body=DefinitionBody
+;
+
+ClaimString:
+	 {ClaimString} str=STRING 
+| 	 {ClaimArg} arg=[Arg]
+;
+
+DefinitionBody:
+	 {FuncBody} ':' type=Type '=' expr=Expr
+|	 {ClaimBody} '<=' ('**'(claim+=ClaimString)*'**')? expr=Expr
+;
+
+Expr:
+	ImpliesExpr
+;
+
+ImpliesExpr returns Expr:
+	OrExpr (=>({BinaryExpr.left=current} op='=>') right=ImpliesExpr)?
+;
+
+OrExpr returns Expr:
+	AndExpr (=>({BinaryExpr.left=current} op='or') right=AndExpr)*
+;
+
+AndExpr returns Expr:
+	RelationalExpr (=>({BinaryExpr.left=current} op='and') right=RelationalExpr)*
+;
+
+RelationalOp:
+	'<' | '<=' | '>' | '>=' | '=' | '<>' | 'in'
+;
+ 
+RelationalExpr returns Expr:
+	PlusExpr (=>({BinaryExpr.left=current} op=RelationalOp) right=PlusExpr)?
+;
+
+PlusExpr returns Expr:
+	TimesExpr (=>({BinaryExpr.left=current} op=('+' | '-')) right=TimesExpr)*
+;
+
+TimesExpr returns Expr:
+	SetOpExpr (=>({BinaryExpr.left=current} op=('*' | '/')) right=SetOpExpr)*	
+;
+
+SetOpExpr returns Expr:
+	PrefixExpr (=>({BinaryExpr.left=current} op=('union' | 'intersect')) right=PrefixExpr)*	
+;
+
+PrefixExpr returns Expr:
+	{UnaryExpr} op=('-' | 'not') expr=PrefixExpr
+|	AtomicExpr
+;
+
+AtomicExpr returns Expr:
+	{IdExpr} id=[aadl2::NamedElement | QCREF]
+|	{ThisExpr} 'this'
+|   {FailExpr} 'fail' (val=StringTerm)?
+|	{IntExpr} val=IntegerTerm
+|   {RealExpr} val=RealTerm
+|	{BoolExpr} val=BooleanLiteral
+|   {StringExpr} val=StringTerm
+|	{IfThenElseExpr} 'if' cond=Expr 'then' then=Expr 'else' else=Expr
+|   {QuantifiedExpr} quant=('forall' | 'exists') ('(' args+=Arg ')')+ '.' expr=Expr
+|   {BuiltInFuncCallExpr} fn=BuiltInFunc '(' (args+=(Expr) (',' args+=(Expr))*)? ')'
+|	{FnCallExpr} fn=[FunctionDefinition] '(' (args+=(Expr) (',' args+=(Expr))*)? ')'
+|   {FilterMapExpr} '{' map=Expr 'for' ('(' args+=Arg ')')+ ('|' filter=Expr)? '}'
+|	'(' Expr ')'
+;
+
+BuiltInFunc:
+	'connected'
+|	'property_lookup'
+|	'class_of'
+|	'type'
+|   'has_type'
+|	'bound'
+|	'contained'
+|   'conn_source'
+|   'conn_dest'
+|   'property_exists'
+|   'sum'
+|   'analysis'
+;
+
+RealTerm returns aadl2::RealLiteral:
+	value=UnsignedReal (unit=[aadl2::UnitLiteral|ID])?
+;
+
+UnsignedReal returns aadl2::Real:
+	REAL_LIT
+;
+
+IntegerTerm returns aadl2::IntegerLiteral:
+	value=UnsignedInt (unit=[aadl2::UnitLiteral|ID])?
+;
+
+UnsignedInt returns aadl2::Integer:
+	INTEGER_LIT
+;
+
+ResoluteSubclause:
+	{ResoluteSubclause}
+	proves+=ProveStatement*
+;
+
+ProveStatement:
+	'prove' expr=Expr
+;

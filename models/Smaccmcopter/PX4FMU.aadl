@@ -1,0 +1,111 @@
+package PX4FMU
+public
+  with UAV;
+  with DATATYPES;
+  with CORTEX;
+  
+  system PX4FMU
+    features
+      sensors: feature group inverse of UAV::sensors;
+      expansion_slot: feature group expansion_slot;
+  end PX4FMU;
+  
+  system implementation PX4FMU.Impl
+    subcomponents
+      MC: system CORTEX::STM32F415.Impl;
+      
+      RESET: device Reset;
+      USB: device USB;
+      MON: device Battery_Monitor;
+      GPS: device GPS;
+      GYRO: device MPU_6000;
+ 
+      I2C2: bus I2C;
+      BARO: device MS5611;
+      MAG: device HMC5883L;
+      EEPROM: memory EEPROM;
+      
+    connections
+      -- I2C bus
+      bus access I2C2.bus_access <-> MC.i2c2;
+      bus access EEPROM.bus_access <-> I2C2;
+      bus access MAG.bus_access <-> I2C2;
+      port MAG.magnetometer_data -> sensors.magnetometer_data;
+      bus access BARO.bus_access <-> I2C2;
+      port BARO.barometric_data -> sensors.barometric_data;
+
+      -- Direct devices
+      port RESET.reset -> sensors.reset;
+      bus access USB.bus_access <-> MC.otg_fs;
+      bus access MON.bus_access <-> MC.adc123;
+      port MON.battery_data -> sensors.battery_data;
+      bus access GPS.bus_access <-> MC.usart6;
+      port GPS.GPS_Data -> sensors.gps_data;
+      bus access GYRO.bus_access <-> MC.spi1;
+      port GYRO.motion_data -> sensors.motion_data;
+      
+      -- Expansion slot
+      bus access expansion_slot.usart1 <-> MC.usart1;
+      bus access expansion_slot.usart2 <-> MC.usart2;
+      bus access expansion_slot.ppm <-> MC.ppm;
+      bus access expansion_slot.alarm <-> MC.alarm;
+  end PX4FMU.Impl;
+
+  device Reset
+    features
+      reset: out event port;
+  end Reset;
+  
+  device USB
+    features
+      bus_access: requires bus access CORTEX::AHB_Bus_Matrix;
+  end USB;
+
+  device Battery_Monitor
+    features
+      bus_access: requires bus access CORTEX::AHB_Bus_Matrix;
+      battery_data: out data port DATATYPES::Battery_Data;
+  end Battery_Monitor;
+
+  device GPS
+    features
+      bus_access: requires bus access CORTEX::AHB_Bus_Matrix;
+      gps_data: out data port DATATYPES::GPS_Data;
+  end GPS;
+
+  device MPU_6000
+    features
+      bus_access: requires bus access CORTEX::AHB_Bus_Matrix;
+      motion_data: out data port DATATYPES::Motion_Data;
+  end MPU_6000;
+
+  device MS5611
+    features
+      bus_access: requires bus access I2C;
+      barometric_data: out data port DATATYPES::Barometric_Data;
+  end MS5611;
+
+  device HMC5883L
+    features
+      bus_access: requires bus access I2C;
+      magnetometer_data: out data port DATATYPES::Magnetometer_Data;
+  end HMC5883L;
+
+  memory EEPROM
+    features
+      bus_access: requires bus access I2C;
+  end EEPROM;
+
+  bus I2C
+    features
+      bus_access: requires bus access CORTEX::AHB_Bus_Matrix;
+  end I2C;
+
+  feature group expansion_slot
+    features
+      usart1: provides bus access CORTEX::AHB_Bus_Matrix;
+      usart2: provides bus access CORTEX::AHB_Bus_Matrix;
+      ppm: provides bus access CORTEX::AHB_Bus_Matrix;
+      alarm: provides bus access CORTEX::AHB_Bus_Matrix;
+  end expansion_slot;
+end PX4FMU;

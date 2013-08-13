@@ -1,0 +1,31 @@
+Intersect(s1, s2) := {e in s1 | Member(e, s2)};
+Nonempty(s) := Cardinal(s) > 0;
+Overlap(s1, s2) := Nonempty(Intersect(s1, s2));
+
+Property_With_Default(t, p) := if Property_Exists(t, p) then Property(t, p) else Empty_Set;
+Writes_To(t) := Property_With_Default(t, "Static_Analysis::Writes_to_buffers");
+Reads_From(t) := Property_With_Default(t, "Static_Analysis::Reads_from_buffers");
+
+Exists_Shared_Buffer(t1, t2) := Overlap(Writes_To(t1), Reads_From(t2));
+
+Is_Thread(t) := Member(t, Thread_Set);
+Software_Connections := {c in Connection_Set |
+  Is_Thread(Owner(Source(c))) and Is_Thread(Owner(Destination(c)))};
+
+Connections_Between(t1, t2) := {c in Connection_Set | Owner(Source(c)) = t1 and Owner(Destination(c)) = t2};
+Exists_Connection(t1, t2) := Nonempty(Connections_Between(t1, t2));
+
+theorem Software_Connections_Realizable
+  foreach c in Software_Connections do
+    check Exists_Shared_Buffer(Owner(Source(c)), Owner(Destination(c))),
+      "Connection", c, "is not realizable via a shared buffer";
+end;
+
+theorem Shared_Buffers_Documented_As_Connections
+  foreach t1 in Thread_Set do
+    foreach t2 in Thread_Set do
+      when Exists_Shared_Buffer(t1, t2) do
+        check Exists_Connection(t1, t2),
+          "Thread", t1, "can communicate to thread", t2,
+          "via a shared buffered, but this connection is not documented in the model";
+end;
