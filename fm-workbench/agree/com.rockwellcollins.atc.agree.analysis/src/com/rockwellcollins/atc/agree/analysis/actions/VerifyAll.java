@@ -22,7 +22,7 @@ public class VerifyAll extends AgreeAction {
 
 	private void verifyAllSubsystems(SystemImplementation sysImpl, Subcomponent subContext) {
 
-		evaluator = new AgreeEvaluator(sysImpl);
+		AgreeEvaluator evaluator = new AgreeEvaluator(sysImpl);
 		evaluator.curComp = subContext;
 		final String lustre = evaluator.evaluate();
 

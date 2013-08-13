@@ -5,8 +5,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.console.MessageConsole;
 import org.eclipse.ui.console.MessageConsoleStream;
+import org.osate.aadl2.ComponentImplementation;
 import org.osate.aadl2.Element;
-import org.osate.aadl2.SystemImplementation;
 import org.osate.ui.dialogs.Dialog;
 
 import com.rockwellcollins.atc.agree.analysis.AgreeEvaluator;
@@ -14,27 +14,26 @@ import com.rockwellcollins.atc.agree.analysis.AgreeEvaluator;
 public class VerifySingle extends AgreeAction {
 	@Override
 	protected IStatus runJob(Element root, IProgressMonitor monitor) {
-
-		if (!(root instanceof SystemImplementation)) {
-			Dialog.showError("AGREE Error", "Please choose an AADL System Implementation");
+		if (!(root instanceof ComponentImplementation)) {
+			Dialog.showError("AGREE Error", "Please choose an AADL Component Implementation");
 			return Status.CANCEL_STATUS;
 		}
 
-		SystemImplementation sysImpl = (SystemImplementation) root;
-		evaluator = new AgreeEvaluator(sysImpl);
+		ComponentImplementation compImpl = (ComponentImplementation) root;
+		AgreeEvaluator evaluator = new AgreeEvaluator(compImpl);
 		final String lustre = evaluator.evaluate();
 
-		MessageConsole logConsole = findConsole("Log For '" + sysImpl.getName() + "'");
+		MessageConsole logConsole = findConsole("Log For '" + compImpl.getName() + "'");
 		logConsole.clearConsole();
 		MessageConsoleStream logOut = logConsole.newMessageStream();
 		logOut.println(evaluator.log.getLog());
 		
-		MessageConsole lustreConsole = findConsole("Lustre For '" + sysImpl.getName() + "'");
+		MessageConsole lustreConsole = findConsole("Lustre For '" + compImpl.getName() + "'");
 		lustreConsole.clearConsole();
 		MessageConsoleStream lustreOut = lustreConsole.newMessageStream();
 		lustreOut.println(lustre);
 
-		MessageConsole kindConsole = findConsole("Kind Output For '" + sysImpl.getName() + "'");
+		MessageConsole kindConsole = findConsole("Kind Output For '" + compImpl.getName() + "'");
 		kindConsole.clearConsole();
 		kindConsole.addPatternMatchListener(new AgreePatternListener(evaluator.refMap));
 		MessageConsoleStream kindOut = kindConsole.newMessageStream();

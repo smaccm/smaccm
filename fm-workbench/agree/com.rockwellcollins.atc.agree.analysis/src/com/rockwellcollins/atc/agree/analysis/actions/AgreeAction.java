@@ -45,9 +45,9 @@ import org.eclipse.xtext.ui.editor.GlobalURIEditorOpener;
 import org.eclipse.xtext.ui.editor.XtextEditor;
 import org.eclipse.xtext.ui.editor.outline.impl.EObjectNode;
 import org.eclipse.xtext.util.concurrent.IUnitOfWork;
+import org.osate.aadl2.ComponentImplementation;
 import org.osate.aadl2.Element;
 import org.osate.aadl2.Subcomponent;
-import org.osate.aadl2.SystemImplementation;
 
 import com.google.inject.Injector;
 import com.rockwellcollins.atc.agree.analysis.AgreeEvaluator;
@@ -65,7 +65,6 @@ import com.rockwellcollins.atc.agree.ui.internal.AgreeActivator;
 public abstract class AgreeAction implements IWorkbenchWindowActionDelegate {
 	private IWorkbenchWindow window;
 	private Object currentSelection;
-	protected AgreeEvaluator evaluator = null;
 
 	@Override
 	public void selectionChanged(IAction action, ISelection selection) {
@@ -204,9 +203,9 @@ public abstract class AgreeAction implements IWorkbenchWindowActionDelegate {
 					kVars = eval.getCompToKVarMap().get(subContext);
 					name = subContext.getName();
 				} else {
-					SystemImplementation sysImpl = eval.getSysImpl();
-					kVars = eval.getCompToKVarMap().get(sysImpl);
-					name = sysImpl.getName();
+					ComponentImplementation compImpl = eval.getComponentImplementation();
+					kVars = eval.getCompToKVarMap().get(compImpl);
+					name = compImpl.getName();
 				}
 
 				// get vars in alphebetical order
