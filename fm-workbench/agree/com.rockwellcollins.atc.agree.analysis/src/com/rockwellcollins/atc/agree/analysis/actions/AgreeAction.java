@@ -1,14 +1,12 @@
 package com.rockwellcollins.atc.agree.analysis.actions;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 
-import jkind.JKindException;
 import jkind.api.JKindApi;
 import jkind.api.results.JKindResult;
 import jkind.api.results.MapRenaming;
@@ -33,10 +31,10 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
+import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.console.ConsolePlugin;
 import org.eclipse.ui.console.IConsole;
 import org.eclipse.ui.console.IConsoleManager;
@@ -50,10 +48,10 @@ import org.eclipse.xtext.util.concurrent.IUnitOfWork;
 import org.osate.aadl2.Element;
 import org.osate.aadl2.Subcomponent;
 import org.osate.aadl2.SystemImplementation;
-import org.osate.aadl2.instance.SystemInstance;
-import org.osate.aadl2.modelsupport.errorreporting.AnalysisErrorReporterManager;
+
 import com.google.inject.Injector;
 import com.rockwellcollins.atc.agree.analysis.AgreeEvaluator;
+import com.rockwellcollins.atc.agree.analysis.AgreeSingleResultsView;
 import com.rockwellcollins.atc.agree.ui.internal.AgreeActivator;
 
 /**
@@ -69,6 +67,7 @@ public abstract class AgreeAction implements IWorkbenchWindowActionDelegate {
 	private Object currentSelection;
 	protected AgreeEvaluator evaluator = null;
 
+	@Override
 	public void selectionChanged(IAction action, ISelection selection) {
 		if (selection instanceof IStructuredSelection) {
 			IStructuredSelection iss = (IStructuredSelection) selection;
@@ -80,168 +79,148 @@ public abstract class AgreeAction implements IWorkbenchWindowActionDelegate {
 
 	abstract protected IStatus runJob(Element sel, IProgressMonitor monitor);
 
+	@Override
 	public void run(IAction action) {
-
-		//do injection stuff for the hyperlinker in the console
+		// do injection stuff for the hyperlinker in the console
 		AgreeActivator inst = AgreeActivator.getInstance();
 		Injector inj = inst.getInjector(AgreeActivator.COM_ROCKWELLCOLLINS_ATC_AGREE_AGREE);
 		GlobalURIEditorOpener uriEd = inj.getInstance(GlobalURIEditorOpener.class);
 		AgreeConsoleHyperLink.setGlobalURIEditorOpener(uriEd);
-		
+
 		WorkspaceJob job = new WorkspaceJob("AGREE Job") {
 			@Override
 			public IStatus runInWorkspace(final IProgressMonitor monitor) throws CoreException {
-				IEditorPart activeEditor;
-				EObjectNode node;
-				XtextEditor xtextEditor;
-
-				activeEditor = window.getActivePage().getActiveEditor();
-
+				IEditorPart activeEditor = window.getActivePage().getActiveEditor();
 				if (activeEditor == null) {
 					return Status.CANCEL_STATUS;
 				}
 
-				if ((!(currentSelection instanceof EObjectNode))
-						&& (!(currentSelection instanceof SystemInstance))) {
+				if (!(currentSelection instanceof EObjectNode)) {
 					return Status.CANCEL_STATUS;
 				}
 
-				xtextEditor = (XtextEditor) activeEditor.getAdapter(XtextEditor.class);
-
-				if (xtextEditor != null) {
-					node = (EObjectNode) currentSelection;
-
-					final URI uri = node.getEObjectURI();
-
-					xtextEditor.getDocument().readOnly(new IUnitOfWork<IStatus, XtextResource>() {
-						public IStatus exec(XtextResource resource) throws Exception {
-							EObject eobj = resource.getResourceSet().getEObject(uri, true);
-							if (eobj instanceof Element) {
-								return runJob((Element) eobj, monitor);
-							}
-
-							return Status.CANCEL_STATUS;
-						}
-					});
-				} else {
-					return runJob((Element) currentSelection, monitor);
+				XtextEditor xtextEditor = (XtextEditor) activeEditor.getAdapter(XtextEditor.class);
+				if (xtextEditor == null) {
+					return Status.CANCEL_STATUS;
 				}
 
+				EObjectNode node = (EObjectNode) currentSelection;
+				final URI uri = node.getEObjectURI();
+				xtextEditor.getDocument().readOnly(new IUnitOfWork<IStatus, XtextResource>() {
+					@Override
+					public IStatus exec(XtextResource resource) throws Exception {
+						EObject eobj = resource.getResourceSet().getEObject(uri, true);
+						if (eobj instanceof Element) {
+							return runJob((Element) eobj, monitor);
+						} else {
+							return Status.CANCEL_STATUS;
+						}
+					}
+				});
 				return Status.OK_STATUS;
 			}
 		};
 
 		job.setRule(ResourcesPlugin.getWorkspace().getRoot());
-		job.setUser(true);
 		job.schedule();
 	}
 
+	@Override
 	public void dispose() {
 	}
 
+	@Override
 	public void init(IWorkbenchWindow window) {
 		this.window = window;
 	}
 
-	protected IWorkbenchWindow getWindow() {
-		return window;
-	}
+	public void runKindQueryAPI(Subcomponent subContext, AgreeEvaluator eval, String query,
+			MessageConsoleStream out, IProgressMonitor monitor) {
 
-	protected Shell getShell() {
-		return window.getShell();
-	}
-
-	protected AnalysisErrorReporterManager getErrorManager() {
-		return AnalysisErrorReporterManager.NULL_ERROR_MANANGER;
-	}
-
-	public void runKindQueryAPI(Subcomponent subContext, 
-			AgreeEvaluator eval, 
-			String query, 
-			MessageConsoleStream out,
-			IProgressMonitor monitor){
-		
 		final Renaming varRenaming = new MapRenaming(eval.varRenaming, MapRenaming.Mode.NULL);
-		
+
 		JKindApi japi = new JKindApi();
-		JKindResult result = null;
-		
-		try{
+		final JKindResult result;
+
+		try {
 			String name;
-			if(subContext != null){
+			if (subContext != null) {
 				name = subContext.getName();
-			}else{
+			} else {
 				name = "TOP";
 			}
-			
+
 			result = new JKindResult(name);
+			showView(result);
 			japi.execute(query, result, monitor);
-			
-			File tempFile = File.createTempFile("agree_"+name+"_", ".xls");
+
+			File tempFile = File.createTempFile("agree_" + name + "_", ".xls");
 			result.toExcel(tempFile);
-		}catch (JKindException e){
+		} catch (Exception e) {
 			out.print(e.getMessage());
 			return;
-		} catch (IOException e) {
-			out.print(e.getMessage());
-			return;
-		}	
+		}
 
 		List<PropertyResult> props = result.getPropertyResults();
-		
-		for(PropertyResult propRes : props){
+
+		for (PropertyResult propRes : props) {
 			Property prop = propRes.getProperty();
-			out.print("Result for property '"+prop.getName()+"': ");
-			if(prop instanceof InvalidProperty){
+			out.print("Result for property '" + prop.getName() + "': ");
+			if (prop instanceof InvalidProperty) {
 				out.println("INVALID");
 				out.println();
 
-				InvalidProperty invProp = (InvalidProperty)prop;
+				InvalidProperty invProp = (InvalidProperty) prop;
 				final Counterexample cex = invProp.getCounterexample();
 				Comparator<String> compareFunc = new Comparator<String>() {
-					public int compare(String s1, String s2){
+					@Override
+					public int compare(String s1, String s2) {
 						String r1 = varRenaming.rename(s1);
 						String r2 = varRenaming.rename(s2);
-						
+
 						Signal<Value> sig1 = cex.getSignal(s1);
 						Signal<Value> sig2 = cex.getSignal(s2);
 
-						if(sig1 == null && sig2 == null)
+						if (sig1 == null && sig2 == null) {
 							return 0;
-						if(sig1 == null)
+						}
+						if (sig1 == null) {
 							return 1;
-						if(sig2 == null)
+						}
+						if (sig2 == null) {
 							return -1;
-						
+						}
+
 						return r1.compareTo(r2);
 					}
 				};
-				
-				//print out values for the top level component
-				
+
+				// print out values for the top level component
+
 				Set<String> kVars = null;
 				String name;
-				if(subContext != null){ //this is a result from a recursive call
+				if (subContext != null) { // this is a result from a recursive
+											// call
 					kVars = eval.getCompToKVarMap().get(subContext);
 					name = subContext.getName();
-				}else{
+				} else {
 					SystemImplementation sysImpl = eval.getSysImpl();
 					kVars = eval.getCompToKVarMap().get(sysImpl);
 					name = sysImpl.getName();
 				}
-				
-				//get vars in alphebetical order
+
+				// get vars in alphebetical order
 				ArrayList<String> kVarList = new ArrayList<String>();
 				kVarList.addAll(kVars);
 				Collections.sort(kVarList, compareFunc);
-				
+
 				printOutputVars(name, kVarList, varRenaming, cex, out);
-				
-				//print out values for variables in each component
-				for(Subcomponent subComp : eval.getSubComponents()){					
+
+				// print out values for variables in each component
+				for (Subcomponent subComp : eval.getSubComponents()) {
 					kVars = eval.getCompToKVarMap().get(subComp);
-					
-					//get vars in alphebetical order
+
+					// get vars in alphebetical order
 					kVarList.clear();
 					kVarList.addAll(kVars);
 					Collections.sort(kVarList, compareFunc);
@@ -249,42 +228,55 @@ public abstract class AgreeAction implements IWorkbenchWindowActionDelegate {
 					printOutputVars(subComp.getName(), kVarList, varRenaming, cex, out);
 
 				}
-				
-			}else if(prop instanceof UnknownProperty){
+
+			} else if (prop instanceof UnknownProperty) {
 				out.println("UNKNOWN");
-			}else{
-				assert(prop instanceof ValidProperty);
+			} else {
+				assert (prop instanceof ValidProperty);
 				out.println("VALID");
 			}
 		}
-		
+
 	}
-	
-	public void printOutputVars(String compName,
-			List<String> kVarList, 
-			Renaming varRenaming, 
-			Counterexample cex,
-			MessageConsoleStream out){
-		
+
+	private void showView(final JKindResult result) {
+		window.getShell().getDisplay().syncExec(new Runnable() {
+			@Override
+			public void run() {
+				AgreeSingleResultsView page;
+				try {
+					page = (AgreeSingleResultsView) window.getActivePage().showView(
+							AgreeSingleResultsView.ID);
+					page.setInput(result);
+				} catch (PartInitException e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	public void printOutputVars(String compName, List<String> kVarList, Renaming varRenaming,
+			Counterexample cex, MessageConsoleStream out) {
+
 		printHLine(out, cex.getLength());
-		out.print("Variables for component: '"+compName+"'\n");
+		out.print("Variables for component: '" + compName + "'\n");
 		printHLine(out, cex.getLength());
 
-		//print the top key
+		// print the top key
 		out.print(String.format("%-50s", "Variable Name"));
-		for(int k = 0; k < cex.getLength(); k++){
+		for (int k = 0; k < cex.getLength(); k++) {
 			out.print(String.format("%-8s", k));
 		}
-		out.println(); 
+		out.println();
 		printHLine(out, cex.getLength());
 
-		//print all the variables
-		for(String kVar : kVarList){
+		// print all the variables
+		for (String kVar : kVarList) {
 			String aadlName = varRenaming.rename(kVar);
 			Signal<Value> sig = cex.getSignal(kVar);
-			if(sig != null){
-				out.print(String.format("%-50s", "["+aadlName+"]"));
-				for(int k = 0; k < cex.getLength(); k++){
+			if (sig != null) {
+				out.print(String.format("%-50s", "[" + aadlName + "]"));
+				for (int k = 0; k < cex.getLength(); k++) {
 					Value val = sig.getValue(k);
 					out.print(String.format("%-8s", val));
 				}
@@ -293,22 +285,24 @@ public abstract class AgreeAction implements IWorkbenchWindowActionDelegate {
 		}
 		out.println();
 	}
-	
-	public void printHLine(MessageConsoleStream out, int nVars){
+
+	public void printHLine(MessageConsoleStream out, int nVars) {
 		out.print("--------------------------------------------------");
-		for(int k = 0; k < nVars; k++){
+		for (int k = 0; k < nVars; k++) {
 			out.print("-------");
 		}
 		out.println();
 	}
-	
+
 	protected static MessageConsole findConsole(String name) {
 		ConsolePlugin plugin = ConsolePlugin.getDefault();
 		IConsoleManager conMan = plugin.getConsoleManager();
 		IConsole[] existing = conMan.getConsoles();
-		for (int i = 0; i < existing.length; i++)
-			if (name.equals(existing[i].getName()))
+		for (int i = 0; i < existing.length; i++) {
+			if (name.equals(existing[i].getName())) {
 				return (MessageConsole) existing[i];
+			}
+		}
 		// no console found, so create a new one
 		MessageConsole myConsole = new MessageConsole(name, null);
 		conMan.addConsoles(new IConsole[] { myConsole });

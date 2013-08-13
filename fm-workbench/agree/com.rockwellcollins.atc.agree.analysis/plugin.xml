@@ -43,5 +43,16 @@
          </action>
       </actionSet>
    </extension>
-
+   <extension point="org.eclipse.ui.views">
+        <view id="com.rockwellcollins.atc.agree.analysis.agreeSingleResultsView"
+             name="AGREE Single Layer"
+          class="com.rockwellcollins.atc.agree.analysis.AgreeSingleResultsView"
+          icon="icons/layer.png"/>
+   </extension>
+   <extension point="org.eclipse.ui.views">
+        <view id="com.rockwellcollins.atc.agree.analysis.agreeMultipleResultsView"
+             name="AGREE All Layers"
+          class="com.rockwellcollins.atc.agree.analysis.AgreeMultipleResultsView"
+          icon="icons/layers.png"/>
+   </extension>
 </plugin>
