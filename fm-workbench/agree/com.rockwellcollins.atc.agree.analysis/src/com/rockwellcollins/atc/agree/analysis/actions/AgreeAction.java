@@ -10,13 +10,14 @@ import java.util.Set;
 
 import jkind.JKindException;
 import jkind.api.JKindApi;
+import jkind.api.results.JKindResult;
+import jkind.api.results.MapRenaming;
+import jkind.api.results.PropertyResult;
+import jkind.api.results.Renaming;
 import jkind.lustre.values.Value;
 import jkind.results.Counterexample;
 import jkind.results.InvalidProperty;
-import jkind.results.JKindResult;
-import jkind.results.MapRenaming;
 import jkind.results.Property;
-import jkind.results.Renaming;
 import jkind.results.Signal;
 import jkind.results.UnknownProperty;
 import jkind.results.ValidProperty;
@@ -154,9 +155,13 @@ public abstract class AgreeAction implements IWorkbenchWindowActionDelegate {
 		return AnalysisErrorReporterManager.NULL_ERROR_MANANGER;
 	}
 
-	public void runKindQueryAPI(Subcomponent subContext, AgreeEvaluator eval, String query, MessageConsoleStream out){
+	public void runKindQueryAPI(Subcomponent subContext, 
+			AgreeEvaluator eval, 
+			String query, 
+			MessageConsoleStream out,
+			IProgressMonitor monitor){
 		
-		final Renaming varRenaming = new MapRenaming(eval.varRenaming);
+		final Renaming varRenaming = new MapRenaming(eval.varRenaming, MapRenaming.Mode.NULL);
 		
 		JKindApi japi = new JKindApi();
 		JKindResult result = null;
@@ -169,7 +174,8 @@ public abstract class AgreeAction implements IWorkbenchWindowActionDelegate {
 				name = "TOP";
 			}
 			
-			result = japi.execute(query);
+			result = new JKindResult(name);
+			japi.execute(query, result, monitor);
 			
 			File tempFile = File.createTempFile("agree_"+name+"_", ".xls");
 			result.toExcel(tempFile);
@@ -181,9 +187,10 @@ public abstract class AgreeAction implements IWorkbenchWindowActionDelegate {
 			return;
 		}	
 
-		List<Property> props = result.getProperties();
+		List<PropertyResult> props = result.getPropertyResults();
 		
-		for(Property prop : props){
+		for(PropertyResult propRes : props){
+			Property prop = propRes.getProperty();
 			out.print("Result for property '"+prop.getName()+"': ");
 			if(prop instanceof InvalidProperty){
 				out.println("INVALID");

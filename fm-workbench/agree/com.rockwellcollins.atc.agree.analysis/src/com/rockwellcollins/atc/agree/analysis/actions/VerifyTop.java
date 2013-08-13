@@ -2,9 +2,6 @@ package com.rockwellcollins.atc.agree.analysis.actions;
 
 import java.io.IOException;
 
-import jkind.results.MapRenaming;
-import jkind.results.Renaming;
-
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -60,7 +57,7 @@ public class VerifyTop extends AgreeAction {
 		MessageConsoleStream kindOut = kindConsole.newMessageStream();
 		// out.println(result);
 		
-		runKindQueryAPI(null, evaluator, lustre, kindOut);
+		runKindQueryAPI(null, evaluator, lustre, kindOut, monitor);
 		
 
 		/*

@@ -19,6 +19,8 @@ import com.rockwellcollins.atc.agree.analysis.AgreeEvaluator;
 
 public class VerifyRec extends AgreeAction {
 
+	private IProgressMonitor monitor;
+
 	private void verifyAllSubsystems(SystemImplementation sysImpl, Subcomponent subContext) {
 
 		evaluator = new AgreeEvaluator(sysImpl);
@@ -49,7 +51,7 @@ public class VerifyRec extends AgreeAction {
 		kindConsole.addPatternMatchListener(new AgreePatternListener(evaluator.refMap));
 		MessageConsoleStream kindOut = kindConsole.newMessageStream();
 
-		runKindQueryAPI(subContext, evaluator, lustre, kindOut);
+		runKindQueryAPI(subContext, evaluator, lustre, kindOut, monitor);
 
 
 		for (Subcomponent subComp : sysImpl.getAllSubcomponents()) {
@@ -64,6 +66,7 @@ public class VerifyRec extends AgreeAction {
 	@Override
 	protected IStatus runJob(Element root, IProgressMonitor monitor) {
 
+		this.monitor = monitor;
 		if (!(root instanceof SystemImplementation)) {
 			Dialog.showError("AGREE Error", "Please choose an AADL System Implementation");
 			return Status.CANCEL_STATUS;
