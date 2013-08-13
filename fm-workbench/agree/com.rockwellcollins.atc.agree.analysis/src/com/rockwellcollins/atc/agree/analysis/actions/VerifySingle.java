@@ -16,7 +16,7 @@ import com.rockwellcollins.atc.agree.analysis.AgreeEvaluator;
 
 //import com.rockwellcollins.atc.jkind.plugin.views.JKindView;
 
-public class VerifyTop extends AgreeAction {
+public class VerifySingle extends AgreeAction {
 
 	// private void displayKindView(final IWorkbenchPage page, String query) {
 	// try {

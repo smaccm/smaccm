@@ -17,7 +17,7 @@ import com.rockwellcollins.atc.agree.analysis.AgreeEvaluator;
 
 //import com.rockwellcollins.atc.jkind.plugin.views.JKindView;
 
-public class VerifyRec extends AgreeAction {
+public class VerifyAll extends AgreeAction {
 
 	private IProgressMonitor monitor;
 
