@@ -9,33 +9,33 @@
             visible="true"
             id="com.rockwellcollins.atc.agree.analysis.actionSet">
          <menu
-               label="AGREE &amp;Menu"
+               label="A&amp;GREE Menu"
                id="agreeMenu">
             <separator
                   name="agreeMenu">
             </separator>
          </menu>
+          <action
+               label="Verify &amp;All System Layers"
+               icon="icons/layers.png"
+               class="com.rockwellcollins.atc.agree.analysis.actions.VerifyAll"
+               tooltip="Verify the contracts of all layers from the currently selected component and below"
+               menubarPath="agreeMenu/agreeGroup"
+               toolbarPath="agreeGroup"
+               id="com.rockwellcollins.atc.agree.analysis.actions.VerifyAll"
+               enablesFor="1">
+               <enablement>
+					<objectClass name="org.eclipse.xtext.ui.editor.outline.impl.EObjectNode"/>
+				</enablement>
+         </action>
          <action
-               label="&amp;Verify Single Layer"
+               label="Verify &amp;Single Layer"
                icon="icons/layer.png"
                class="com.rockwellcollins.atc.agree.analysis.actions.VerifySingle"
                tooltip="Verify only the contract of the currently selected component"
                menubarPath="agreeMenu/agreeGroup"
                toolbarPath="agreeGroup"
                id="com.rockwellcollins.atc.agree.analysis.actions.VerifySingle"
-               enablesFor="1">
-               <enablement>
-					<objectClass name="org.eclipse.xtext.ui.editor.outline.impl.EObjectNode"/>
-				</enablement>
-         </action>
-          <action
-               label="&amp;Verify All System Layers"
-               icon="icons/layers.png"
-               class="com.rockwellcollins.atc.agree.analysis.actions.VerifyAll"
-               tooltip="Verify the contracts at all layers from the currently selected component and below"
-               menubarPath="agreeMenu/agreeGroup"
-               toolbarPath="agreeGroup"
-               id="com.rockwellcollins.atc.agree.analysis.actions.VerifyAll"
                enablesFor="1">
                <enablement>
 					<objectClass name="org.eclipse.xtext.ui.editor.outline.impl.EObjectNode"/>
