@@ -2,15 +2,10 @@ package com.rockwellcollins.atc.agree.analysis.actions;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.jface.action.Action;
 import org.eclipse.ui.console.IHyperlink;
 import org.eclipse.xtext.ui.editor.GlobalURIEditorOpener;
 
-import com.google.inject.Injector;
-import com.rockwellcollins.atc.agree.ui.internal.AgreeActivator;
-
 public class AgreeConsoleHyperLink implements IHyperlink{
-
 	private static GlobalURIEditorOpener uriEd;
 	private EObject ref;
 	
@@ -20,14 +15,10 @@ public class AgreeConsoleHyperLink implements IHyperlink{
 	
 	@Override
 	public void linkEntered() {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void linkExited() {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
@@ -39,5 +30,4 @@ public class AgreeConsoleHyperLink implements IHyperlink{
 	public static void setGlobalURIEditorOpener(GlobalURIEditorOpener g){
 		uriEd = g;
 	}
-	
 }
