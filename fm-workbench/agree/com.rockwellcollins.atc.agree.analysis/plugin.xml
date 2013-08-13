@@ -17,7 +17,7 @@
          </menu>
          <action
                label="&amp;Verify Top Level Only"
-               icon="icons/sample.gif"
+               icon="icons/layer.png"
                class="com.rockwellcollins.atc.agree.analysis.actions.VerifyTop"
                tooltip="Verify only the contract of the top level system implementation"
                menubarPath="sampleMenu/sampleGroup"
@@ -30,7 +30,7 @@
          </action>
           <action
                label="&amp;Verify Recursively"
-               icon="icons/sample.gif"
+               icon="icons/layers.png"
                class="com.rockwellcollins.atc.agree.analysis.actions.VerifyRec"
                tooltip="Verifies the contracts of all system implementations under the top level system"
                menubarPath="sampleMenu/sampleGroup"
