@@ -10,18 +10,32 @@
    <extension
          point="org.eclipse.ui.actionSets">
       <actionSet
-            label="Sample Action Set"
+            label="Resolute Action Set"
             visible="true"
             id="com.rockwellcollins.atc.resolute.actionSet">
          <menu
-               label="Resolute"
+               label="Re&amp;solute"
                id="resoluteMenu">
             <separator
                   name="resoluteGroup">
             </separator>
          </menu>
          <action
-               label="&amp;Resolute Verbose"
+               label="Resolute &amp;Confidence"
+               icon="icons/confidence.png"
+               class="com.rockwellcollins.atc.resolute.analysis.actions.ResoluteConfidence"
+               tooltip="Generates assurance case with only claim text while calling external confidence plugins"
+               menubarPath="resoluteMenu/resoluteGroup"
+               toolbarPath="resoluteGroup"
+               id="com.rockwellcollins.atc.resolute.actions.ResoluteConfidence"
+               enablesFor="1">
+               <enablement>
+					<objectClass name="org.eclipse.xtext.ui.editor.outline.impl.EObjectNode"/>
+				</enablement>
+         </action>
+         <action
+               label="Resolute &amp;Verbose"
+               icon="icons/verbose.png"
                class="com.rockwellcollins.atc.resolute.analysis.actions.ResoluteVerbose"
                tooltip="Generates verbose assurance case"
                menubarPath="resoluteMenu/resoluteGroup"
@@ -34,23 +48,12 @@
          </action>
          <action
                label="&amp;Resolute Claims"
+               icon="icons/claims.png"
                class="com.rockwellcollins.atc.resolute.analysis.actions.ResoluteClaims"
                tooltip="Generates assurance case with only claim text"
                menubarPath="resoluteMenu/resoluteGroup"
                toolbarPath="resoluteGroup"
                id="com.rockwellcollins.atc.resolute.actions.ResoluteClaims"
-               enablesFor="1">
-               <enablement>
-					<objectClass name="org.eclipse.xtext.ui.editor.outline.impl.EObjectNode"/>
-				</enablement>
-         </action>
-         <action
-               label="&amp;Resolute Confidence"
-               class="com.rockwellcollins.atc.resolute.analysis.actions.ResoluteConfidence"
-               tooltip="Generates assurance case with only claim text while calling external confidence plugins"
-               menubarPath="resoluteMenu/resoluteGroup"
-               toolbarPath="resoluteGroup"
-               id="com.rockwellcollins.atc.resolute.actions.ResoluteConfidence"
                enablesFor="1">
                <enablement>
 					<objectClass name="org.eclipse.xtext.ui.editor.outline.impl.EObjectNode"/>
