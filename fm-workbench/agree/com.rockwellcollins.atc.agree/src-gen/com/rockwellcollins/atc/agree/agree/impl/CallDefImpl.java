@@ -7,7 +7,7 @@ import com.rockwellcollins.atc.agree.agree.CallDef;
 
 import org.eclipse.emf.ecore.EClass;
 
-import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
+import org.osate.aadl2.impl.ElementImpl;
 
 /**
  * <!-- begin-user-doc -->
@@ -18,7 +18,7 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
  *
  * @generated
  */
-public class CallDefImpl extends MinimalEObjectImpl.Container implements CallDef
+public class CallDefImpl extends ElementImpl implements CallDef
 {
   /**
    * <!-- begin-user-doc -->

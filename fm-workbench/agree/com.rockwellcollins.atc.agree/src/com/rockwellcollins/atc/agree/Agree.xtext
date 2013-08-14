@@ -19,6 +19,9 @@ Element returns aadl2::Element:
 	Expr
 |   AgreeContract
 |   SpecStatement
+|   CallDef
+|   NodeEq
+|   NodeBodyExpr
 ;
 
 AnnexLibrary returns aadl2::AnnexLibrary:

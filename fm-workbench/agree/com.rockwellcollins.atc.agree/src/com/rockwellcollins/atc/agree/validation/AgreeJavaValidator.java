@@ -319,16 +319,6 @@ public class AgreeJavaValidator extends com.rockwellcollins.atc.agree.validation
 		
 	}
 
-	private Boolean hasCallDefParent(Element e) {
-	  while (e != null) {
-	    if (e instanceof CallDef) {
-	      return true;
-	    }
-	    e = e.getOwner();
-	  }
-    return false;
-	}
-	
 	private AgreeType getAgreeType(ConstStatement constStat){
 		if(constStat.getType() == null)
 			return parseFailType;
@@ -711,11 +701,18 @@ public class AgreeJavaValidator extends com.rockwellcollins.atc.agree.validation
 		return null;
 	}
 	
+  private Boolean hasCallDefParent(Element e) {
+    while (e != null) {
+      if (e instanceof CallDef) {
+        return true;
+      }
+      e = e.getOwner();
+    }
+    return false;
+  }
+  
+
 	// TODO: Don't we need more validation here?  What if the Id of the IdExpr
-	// points to a type or other thing?  Don't we need to know whether 
-	// the Id is an r-value?
-	// Also, for ids used within nodes, id must be in the scope of the node.
-	// if (!(hasCallDefParent(id) && 
 	
 	private void checkScope(Expr expr, NamedElement id) {
     if (hasCallDefParent(expr)) {
@@ -733,8 +730,8 @@ public class AgreeJavaValidator extends com.rockwellcollins.atc.agree.validation
 	    return;
 	  
     // Scope check for nodes / functions
-    // NamedElement id = idExpr.getId();
-    // checkScope(idExpr, id);
+    NamedElement id = idExpr.getId();
+    checkScope(idExpr, id);
 	}
 	
 	@Check
@@ -742,8 +739,8 @@ public class AgreeJavaValidator extends com.rockwellcollins.atc.agree.validation
 	  if (idExpr == null) 
 	    return;
 	  
-    // NamedElement id = idExpr.getId().getName();
-    // checkScope(idExpr, id);
+    NamedElement id = idExpr.getId().getName();
+    checkScope(idExpr, id);
 	}
 	
 	private AgreeType getAgreeType(IdExpr idExpr){

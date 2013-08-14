@@ -1412,6 +1412,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     agreeSubclauseEClass.getESuperTypes().add(theAadl2Package.getAnnexSubclause());
     contractEClass.getESuperTypes().add(theAadl2Package.getElement());
     specStatementEClass.getESuperTypes().add(theAadl2Package.getElement());
+    callDefEClass.getESuperTypes().add(theAadl2Package.getElement());
     propertyStatementEClass.getESuperTypes().add(theAadl2Package.getNamedElement());
     propertyStatementEClass.getESuperTypes().add(this.getSpecStatement());
     constStatementEClass.getESuperTypes().add(theAadl2Package.getNamedElement());
@@ -1424,6 +1425,8 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     nodeDefExprEClass.getESuperTypes().add(theAadl2Package.getNamedElement());
     nodeDefExprEClass.getESuperTypes().add(this.getSpecStatement());
     nodeDefExprEClass.getESuperTypes().add(this.getCallDef());
+    nodeBodyExprEClass.getESuperTypes().add(theAadl2Package.getElement());
+    nodeEqEClass.getESuperTypes().add(theAadl2Package.getElement());
     argEClass.getESuperTypes().add(theAadl2Package.getNamedElement());
     typeEClass.getESuperTypes().add(theAadl2Package.getNamedElement());
     exprEClass.getESuperTypes().add(theAadl2Package.getElement());

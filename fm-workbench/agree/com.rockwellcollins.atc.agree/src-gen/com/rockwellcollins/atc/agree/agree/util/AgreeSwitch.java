@@ -119,6 +119,7 @@ public class AgreeSwitch<T> extends Switch<T>
       {
         CallDef callDef = (CallDef)theEObject;
         T result = caseCallDef(callDef);
+        if (result == null) result = caseElement(callDef);
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
@@ -178,6 +179,7 @@ public class AgreeSwitch<T> extends Switch<T>
       {
         NodeBodyExpr nodeBodyExpr = (NodeBodyExpr)theEObject;
         T result = caseNodeBodyExpr(nodeBodyExpr);
+        if (result == null) result = caseElement(nodeBodyExpr);
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
@@ -185,6 +187,7 @@ public class AgreeSwitch<T> extends Switch<T>
       {
         NodeEq nodeEq = (NodeEq)theEObject;
         T result = caseNodeEq(nodeEq);
+        if (result == null) result = caseElement(nodeEq);
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
