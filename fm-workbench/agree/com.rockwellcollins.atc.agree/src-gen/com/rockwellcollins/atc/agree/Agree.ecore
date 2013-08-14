@@ -6,7 +6,7 @@
   <eClassifiers xsi:type="ecore:EClass" name="AgreeSubclause" eSuperTypes="../../../../../../org.osate.aadl2/model/aadl2.ecore#//AnnexSubclause"/>
   <eClassifiers xsi:type="ecore:EClass" name="Contract" eSuperTypes="../../../../../../org.osate.aadl2/model/aadl2.ecore#//Element"/>
   <eClassifiers xsi:type="ecore:EClass" name="SpecStatement" eSuperTypes="../../../../../../org.osate.aadl2/model/aadl2.ecore#//Element"/>
-  <eClassifiers xsi:type="ecore:EClass" name="CallDef"/>
+  <eClassifiers xsi:type="ecore:EClass" name="CallDef" eSuperTypes="../../../../../../org.osate.aadl2/model/aadl2.ecore#//Element"/>
   <eClassifiers xsi:type="ecore:EClass" name="PropertyStatement" eSuperTypes="../../../../../../org.osate.aadl2/model/aadl2.ecore#//NamedElement #//SpecStatement">
     <eStructuralFeatures xsi:type="ecore:EReference" name="expr" eType="#//Expr" containment="true"/>
   </eClassifiers>
@@ -33,13 +33,13 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="nodeBody" eType="#//NodeBodyExpr"
         containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="NodeBodyExpr">
+  <eClassifiers xsi:type="ecore:EClass" name="NodeBodyExpr" eSuperTypes="../../../../../../org.osate.aadl2/model/aadl2.ecore#//Element">
     <eStructuralFeatures xsi:type="ecore:EReference" name="locs" upperBound="-1" eType="#//Arg"
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="eqs" upperBound="-1" eType="#//NodeEq"
         containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="NodeEq">
+  <eClassifiers xsi:type="ecore:EClass" name="NodeEq" eSuperTypes="../../../../../../org.osate.aadl2/model/aadl2.ecore#//Element">
     <eStructuralFeatures xsi:type="ecore:EReference" name="names" unique="false" upperBound="-1"
         eType="#//Arg"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="expr" eType="#//Expr" containment="true"/>

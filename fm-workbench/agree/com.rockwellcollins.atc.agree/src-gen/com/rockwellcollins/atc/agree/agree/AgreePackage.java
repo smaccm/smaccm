@@ -280,13 +280,31 @@ public interface AgreePackage extends EPackage
   int CALL_DEF = 4;
 
   /**
+   * The feature id for the '<em><b>Owned Element</b></em>' reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int CALL_DEF__OWNED_ELEMENT = Aadl2Package.ELEMENT__OWNED_ELEMENT;
+
+  /**
+   * The feature id for the '<em><b>Owned Comment</b></em>' containment reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int CALL_DEF__OWNED_COMMENT = Aadl2Package.ELEMENT__OWNED_COMMENT;
+
+  /**
    * The number of structural features of the '<em>Call Def</em>' class.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int CALL_DEF_FEATURE_COUNT = 0;
+  int CALL_DEF_FEATURE_COUNT = Aadl2Package.ELEMENT_FEATURE_COUNT + 0;
 
   /**
    * The meta object id for the '{@link com.rockwellcollins.atc.agree.agree.impl.PropertyStatementImpl <em>Property Statement</em>}' class.
@@ -718,13 +736,31 @@ public interface AgreePackage extends EPackage
   int NODE_BODY_EXPR = 10;
 
   /**
+   * The feature id for the '<em><b>Owned Element</b></em>' reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int NODE_BODY_EXPR__OWNED_ELEMENT = Aadl2Package.ELEMENT__OWNED_ELEMENT;
+
+  /**
+   * The feature id for the '<em><b>Owned Comment</b></em>' containment reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int NODE_BODY_EXPR__OWNED_COMMENT = Aadl2Package.ELEMENT__OWNED_COMMENT;
+
+  /**
    * The feature id for the '<em><b>Locs</b></em>' containment reference list.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int NODE_BODY_EXPR__LOCS = 0;
+  int NODE_BODY_EXPR__LOCS = Aadl2Package.ELEMENT_FEATURE_COUNT + 0;
 
   /**
    * The feature id for the '<em><b>Eqs</b></em>' containment reference list.
@@ -733,7 +769,7 @@ public interface AgreePackage extends EPackage
    * @generated
    * @ordered
    */
-  int NODE_BODY_EXPR__EQS = 1;
+  int NODE_BODY_EXPR__EQS = Aadl2Package.ELEMENT_FEATURE_COUNT + 1;
 
   /**
    * The number of structural features of the '<em>Node Body Expr</em>' class.
@@ -742,7 +778,7 @@ public interface AgreePackage extends EPackage
    * @generated
    * @ordered
    */
-  int NODE_BODY_EXPR_FEATURE_COUNT = 2;
+  int NODE_BODY_EXPR_FEATURE_COUNT = Aadl2Package.ELEMENT_FEATURE_COUNT + 2;
 
   /**
    * The meta object id for the '{@link com.rockwellcollins.atc.agree.agree.impl.NodeEqImpl <em>Node Eq</em>}' class.
@@ -755,13 +791,31 @@ public interface AgreePackage extends EPackage
   int NODE_EQ = 11;
 
   /**
+   * The feature id for the '<em><b>Owned Element</b></em>' reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int NODE_EQ__OWNED_ELEMENT = Aadl2Package.ELEMENT__OWNED_ELEMENT;
+
+  /**
+   * The feature id for the '<em><b>Owned Comment</b></em>' containment reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int NODE_EQ__OWNED_COMMENT = Aadl2Package.ELEMENT__OWNED_COMMENT;
+
+  /**
    * The feature id for the '<em><b>Names</b></em>' reference list.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int NODE_EQ__NAMES = 0;
+  int NODE_EQ__NAMES = Aadl2Package.ELEMENT_FEATURE_COUNT + 0;
 
   /**
    * The feature id for the '<em><b>Expr</b></em>' containment reference.
@@ -770,7 +824,7 @@ public interface AgreePackage extends EPackage
    * @generated
    * @ordered
    */
-  int NODE_EQ__EXPR = 1;
+  int NODE_EQ__EXPR = Aadl2Package.ELEMENT_FEATURE_COUNT + 1;
 
   /**
    * The number of structural features of the '<em>Node Eq</em>' class.
@@ -779,7 +833,7 @@ public interface AgreePackage extends EPackage
    * @generated
    * @ordered
    */
-  int NODE_EQ_FEATURE_COUNT = 2;
+  int NODE_EQ_FEATURE_COUNT = Aadl2Package.ELEMENT_FEATURE_COUNT + 2;
 
   /**
    * The meta object id for the '{@link com.rockwellcollins.atc.agree.agree.impl.ArgImpl <em>Arg</em>}' class.

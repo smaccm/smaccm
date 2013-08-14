@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: com.rockwellcollins.atc.resolute
+Bundle-Name: Resolute back-end
 Bundle-Vendor: Rockwell Collins, Inc.
 Bundle-Version: 1.0.0
 Bundle-SymbolicName: com.rockwellcollins.atc.resolute; singleton:=true

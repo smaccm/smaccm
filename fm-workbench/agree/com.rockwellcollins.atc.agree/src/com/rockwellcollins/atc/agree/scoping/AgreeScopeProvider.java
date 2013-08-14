@@ -25,7 +25,9 @@ import com.rockwellcollins.atc.agree.agree.AgreeContract;
 import com.rockwellcollins.atc.agree.agree.AgreeContractLibrary;
 import com.rockwellcollins.atc.agree.agree.AgreeContractSubclause;
 import com.rockwellcollins.atc.agree.agree.AgreeLibrary;
+import com.rockwellcollins.atc.agree.agree.Arg;
 import com.rockwellcollins.atc.agree.agree.NestedDotID;
+import com.rockwellcollins.atc.agree.agree.NodeDefExpr;
 import com.rockwellcollins.atc.agree.agree.PropertyStatement;
 import com.rockwellcollins.atc.agree.agree.SpecStatement;
 
@@ -39,7 +41,22 @@ import com.rockwellcollins.atc.agree.agree.SpecStatement;
  */
 public class AgreeScopeProvider extends org.osate.xtext.aadl2.properties.scoping.PropertiesScopeProvider {
 
-	
+  /*
+	IScope scope_NodeDef(NodeDefExpr ctx, EReference ref) {
+    Set<Element> components = new HashSet<Element>(); 
+    for (Arg arg: ctx.getArgs()) {
+      components.add(arg);
+    }
+    for (Arg arg: ctx.getRets()) {
+      components.add(arg);
+    }
+    for (Arg arg: ctx.getNodeBody().getLocs()) {
+      components.add(arg);
+    }
+    return Scopes.scopeFor(components, getScope(ctx.eContainer(), ref));
+	}
+  */
+  
 	IScope scope_NamedElement(AgreeContract ctx, EReference ref){
 		
 		EObject container = ctx.eContainer().eContainer();

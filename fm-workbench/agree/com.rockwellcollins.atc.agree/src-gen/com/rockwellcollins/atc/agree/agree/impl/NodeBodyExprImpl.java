@@ -16,10 +16,10 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 
-import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
-
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
+
+import org.osate.aadl2.impl.ElementImpl;
 
 /**
  * <!-- begin-user-doc -->
@@ -35,7 +35,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  *
  * @generated
  */
-public class NodeBodyExprImpl extends MinimalEObjectImpl.Container implements NodeBodyExpr
+public class NodeBodyExprImpl extends ElementImpl implements NodeBodyExpr
 {
   /**
    * The cached value of the '{@link #getLocs() <em>Locs</em>}' containment reference list.

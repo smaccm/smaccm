@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Resolute
+Bundle-Name: Resolute Analysis
 Bundle-SymbolicName: com.rockwellcollins.atc.resolute.analysis;singleton:=true
 Bundle-Version: 1.0.0
 Bundle-Activator: com.rockwellcollins.atc.resolute.analysis.Activator
@@ -31,4 +31,5 @@ Import-Package: com.rockwellcollins.atc.resolute.resolute,
 Export-Package: com.rockwellcollins.atc.resolute.analysis,
  com.rockwellcollins.atc.resolute.analysis.values
 Eclipse-RegisterBuddy: com.rockwellcollins.atc.resolute.ui
+Bundle-Vendor: Rockwell Collins, Inc.
 

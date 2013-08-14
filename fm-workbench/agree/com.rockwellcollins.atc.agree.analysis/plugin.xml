@@ -5,37 +5,37 @@
    <extension
          point="org.eclipse.ui.actionSets">
       <actionSet
-            label="Sample Action Set"
+            label="AGREE Action Set"
             visible="true"
             id="com.rockwellcollins.atc.agree.analysis.actionSet">
          <menu
-               label="AGREE &amp;Menu"
-               id="sampleMenu">
+               label="A&amp;GREE Menu"
+               id="agreeMenu">
             <separator
-                  name="sampleGroup">
+                  name="agreeMenu">
             </separator>
          </menu>
-         <action
-               label="&amp;Verify Top Level Only"
-               icon="icons/sample.gif"
-               class="com.rockwellcollins.atc.agree.analysis.actions.VerifyTop"
-               tooltip="Verify only the contract of the top level system implementation"
-               menubarPath="sampleMenu/sampleGroup"
-               toolbarPath="sampleGroup"
-               id="com.rockwellcollins.atc.agree.analysis.actions.VerifyTop"
+          <action
+               label="Verify &amp;All System Layers"
+               icon="icons/layers.png"
+               class="com.rockwellcollins.atc.agree.analysis.actions.VerifyAll"
+               tooltip="Verify the contracts of all layers from the currently selected component and below"
+               menubarPath="agreeMenu/agreeGroup"
+               toolbarPath="agreeGroup"
+               id="com.rockwellcollins.atc.agree.analysis.actions.VerifyAll"
                enablesFor="1">
                <enablement>
 					<objectClass name="org.eclipse.xtext.ui.editor.outline.impl.EObjectNode"/>
 				</enablement>
          </action>
-          <action
-               label="&amp;Verify Recursively"
-               icon="icons/sample.gif"
-               class="com.rockwellcollins.atc.agree.analysis.actions.VerifyRec"
-               tooltip="Verifies the contracts of all system implementations under the top level system"
-               menubarPath="sampleMenu/sampleGroup"
-               toolbarPath="sampleGroup"
-               id="com.rockwellcollins.atc.agree.analysis.actions.VerifyRec"
+         <action
+               label="Verify &amp;Single Layer"
+               icon="icons/layer.png"
+               class="com.rockwellcollins.atc.agree.analysis.actions.VerifySingle"
+               tooltip="Verify only the contract of the currently selected component"
+               menubarPath="agreeMenu/agreeGroup"
+               toolbarPath="agreeGroup"
+               id="com.rockwellcollins.atc.agree.analysis.actions.VerifySingle"
                enablesFor="1">
                <enablement>
 					<objectClass name="org.eclipse.xtext.ui.editor.outline.impl.EObjectNode"/>
@@ -43,5 +43,16 @@
          </action>
       </actionSet>
    </extension>
-
+   <extension point="org.eclipse.ui.views">
+        <view id="com.rockwellcollins.atc.agree.analysis.agreeSingleResultsView"
+             name="AGREE Single Layer"
+          class="com.rockwellcollins.atc.agree.analysis.AgreeSingleResultsView"
+          icon="icons/layer.png"/>
+   </extension>
+   <extension point="org.eclipse.ui.views">
+        <view id="com.rockwellcollins.atc.agree.analysis.agreeMultipleResultsView"
+             name="AGREE All Layers"
+          class="com.rockwellcollins.atc.agree.analysis.AgreeMultipleResultsView"
+          icon="icons/layers.png"/>
+   </extension>
 </plugin>

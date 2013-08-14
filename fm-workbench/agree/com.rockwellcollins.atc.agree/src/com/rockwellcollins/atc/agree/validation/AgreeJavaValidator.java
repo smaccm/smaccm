@@ -4,8 +4,12 @@
 package com.rockwellcollins.atc.agree.validation;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
@@ -23,6 +27,7 @@ import org.osate.aadl2.DataSubcomponent;
 import org.osate.aadl2.DataType;
 import org.osate.aadl2.EnumerationType;
 import org.osate.aadl2.NamedElement;
+import org.osate.aadl2.Element;
 import org.osate.aadl2.Property;
 import org.osate.aadl2.PropertyType;
 import org.osate.aadl2.Subcomponent;
@@ -313,7 +318,7 @@ public class AgreeJavaValidator extends com.rockwellcollins.atc.agree.validation
 		}
 		
 	}
-	
+
 	private AgreeType getAgreeType(ConstStatement constStat){
 		if(constStat.getType() == null)
 			return parseFailType;
@@ -362,21 +367,6 @@ public class AgreeJavaValidator extends com.rockwellcollins.atc.agree.validation
 		checkMultiAssignEq(eqStat, eqStat.getArgs(), eqStat.getExpr());
 	}
 	
-	private List<Arg> getNameArgs(List<NamedElement> elems) {
-	  ArrayList<Arg> result = new ArrayList<Arg>();
-	  for (NamedElement elem: elems) {
-	    if (elem instanceof Arg) {
-	      Arg arg = (Arg)elem;
-	      result.add(arg);
-	    }
-	    else {
-	      error("Equation attempting to assign: '" + elem.getName() + 
-	            "', which is not an l-value (assignable value).");
-	      return null;
-	    }
-	  }
-	  return result;
-	}
 	
 	@Check
 	public void checkNodeEq(NodeEq nodeEq) {
@@ -385,21 +375,44 @@ public class AgreeJavaValidator extends com.rockwellcollins.atc.agree.validation
 	  List<Arg> lhsArgs = nodeEq.getNames(); 
 	  if (lhsArgs == null)
 	    return ;
-	  
 	  checkMultiAssignEq(nodeEq, lhsArgs, nodeEq.getExpr()); 
-	  // TODO: check equations for appropriate ids: 
-	  //   -- only locals and outputs are assigned
-	  //   -- only locals, inputs, outputs, and constants are referenced.
 	}
 	
 	@Check
 	public void checkNodeDef(NodeDefExpr nodeDefExpr) {
-	  /* TODO for nodes: 
-	   * 
-	   * Type obligations: 
-	   *   - Names are unique for inputs/outputs/locals
-	   *   - Each output and local has exactly one assignment
-	   */
+	  Map<Arg, Integer> assignMap = new HashMap<Arg, Integer>();
+	  for (Arg arg: nodeDefExpr.getRets()) {
+	    assignMap.put(arg, 0);
+	  }
+	  for (Arg arg: nodeDefExpr.getNodeBody().getLocs()) {
+	    assignMap.put(arg,  0);
+	  }
+	  
+	  for (NodeEq eq: nodeDefExpr.getNodeBody().getEqs()) {
+	    for (Arg arg: eq.getNames()) {
+	      Integer value = assignMap.get(arg);
+	      if (value == null) {
+	        error("Equation attempting to assign: '" + arg.getName() + 
+              "', which is not an l-value (assignable value) within the node.");
+	        return;
+	      }
+	      else {
+	        assignMap.put(arg, value + 1);
+	      }
+	    }
+	  }
+    for (Map.Entry<Arg, Integer> elem : assignMap.entrySet()) {
+      if (elem.getValue() == 0) {
+        error("Variable '" + elem.getKey().getName()
+            + "' is never assigned by an equation in node '"
+            + nodeDefExpr.getName() + "'.");
+        return;
+      } else if (elem.getValue() > 1) {
+        error("Variable '" + elem.getKey().getName()
+            + "' is assigned multiple times in node '" + nodeDefExpr.getName()
+            + "'.");
+      }
+    }
 	}
 	
 	@Check
@@ -688,14 +701,52 @@ public class AgreeJavaValidator extends com.rockwellcollins.atc.agree.validation
 		return null;
 	}
 	
+  private Boolean hasCallDefParent(Element e) {
+    while (e != null) {
+      if (e instanceof CallDef) {
+        return true;
+      }
+      e = e.getOwner();
+    }
+    return false;
+  }
+  
+
 	// TODO: Don't we need more validation here?  What if the Id of the IdExpr
-	// points to a type or other thing?  Don't we need to know whether 
-	// the Id is an r-value?
+	
+	private void checkScope(Expr expr, NamedElement id) {
+    if (hasCallDefParent(expr)) {
+      if (!hasCallDefParent(id) && 
+          !(id instanceof ConstStatement)) {
+        error("Unknown identifier Id: '"+id 
+            +"' (Note that nodes can only refer to inputs, outputs, and local variables and global constants).");
+      }
+    }
+	}
+	
+	@Check
+	public void checkIdExpr(IdExpr idExpr) {
+	  if (idExpr == null)
+	    return;
+	  
+    // Scope check for nodes / functions
+    NamedElement id = idExpr.getId();
+    checkScope(idExpr, id);
+	}
+	
+	@Check
+	public void checkNestIdExpr(NestIdExpr idExpr) {
+	  if (idExpr == null) 
+	    return;
+	  
+    NamedElement id = idExpr.getId().getName();
+    checkScope(idExpr, id);
+	}
+	
 	private AgreeType getAgreeType(IdExpr idExpr){
 		
-		NamedElement id = idExpr.getId();
-		
-		return getAgreeType(id);
+    NamedElement id = idExpr.getId();
+    return getAgreeType(id);
 	}
 	
 	

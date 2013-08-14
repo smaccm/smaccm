@@ -37,16 +37,13 @@ import org.osate.aadl2.PropertyExpression;
 import org.osate.aadl2.RealLiteral;
 import org.osate.aadl2.StringLiteral;
 import org.osate.aadl2.Subcomponent;
-import org.osate.aadl2.SystemImplementation;
 import org.osate.aadl2.SystemSubcomponent;
-import org.osate.aadl2.SystemType;
 import org.osate.aadl2.modelsupport.resources.OsateResourceUtil;
 import org.osate.aadl2.properties.PropertyDoesNotApplyToHolderException;
 import org.osate.aadl2.properties.PropertyNotPresentException;
 import org.osate.xtext.aadl2.properties.util.EMFIndexRetrieval;
 import org.osate.xtext.aadl2.properties.util.PropertyUtils;
 
-import com.rockwellcollins.atc.agree.agree.util.AgreeSwitch;
 import com.rockwellcollins.atc.agree.agree.AgreeContract;
 import com.rockwellcollins.atc.agree.agree.AgreeContractSubclause;
 import com.rockwellcollins.atc.agree.agree.Arg;
@@ -77,6 +74,7 @@ import com.rockwellcollins.atc.agree.agree.RealLitExpr;
 import com.rockwellcollins.atc.agree.agree.SpecStatement;
 import com.rockwellcollins.atc.agree.agree.ThisExpr;
 import com.rockwellcollins.atc.agree.agree.UnaryExpr;
+import com.rockwellcollins.atc.agree.agree.util.AgreeSwitch;
 
 public class AgreeEvaluator extends AgreeSwitch<KindExpr> {
 
@@ -137,8 +135,8 @@ public class AgreeEvaluator extends AgreeSwitch<KindExpr> {
 
   public AgreeLogger                           log             = new AgreeLogger();
 
-  // the top level system implementation
-  private SystemImplementation                 topSysImpl;
+  // the top level component implementation
+  private ComponentImplementation                 topCompImpl;
 
   // the contract for the top level system implementation
   private ComponentContract                    sysContr;
@@ -236,25 +234,24 @@ public class AgreeEvaluator extends AgreeSwitch<KindExpr> {
                                                                                                                  // checking
                                                                                                                  // recursively)
 
-  public AgreeEvaluator(SystemImplementation sysImpl) {
-    topSysImpl = sysImpl;
+  public AgreeEvaluator(ComponentImplementation compImpl) {
+    topCompImpl = compImpl;
   }
 
   public String evaluate() {
 
-    compToKindVars.put(topSysImpl, new HashSet<String>());
+    compToKindVars.put(topCompImpl, new HashSet<String>());
 
     if (curComp != null)
       compToKindVars.put(curComp, new HashSet<String>());
 
-    for (Subcomponent subComp : topSysImpl.getAllSubcomponents()) {
+    for (Subcomponent subComp : topCompImpl.getAllSubcomponents()) {
       compToKindVars.put(subComp, new HashSet<String>());
     }
 
-    SystemType sys = topSysImpl.getType();
-    setLustreVars(sys);
-    setVarEquivs(topSysImpl);
-    makeContracts(topSysImpl);
+    setLustreVars(topCompImpl.getType());
+    setVarEquivs(topCompImpl);
+    makeContracts(topCompImpl);
     String result = getLustre();
 
     return result;
@@ -317,7 +314,7 @@ public class AgreeEvaluator extends AgreeSwitch<KindExpr> {
     if (curComp != null)
       compToKindVars.get(curComp).add(varDecl.jKindStr);
     else
-      compToKindVars.get(topSysImpl).add(varDecl.jKindStr);
+      compToKindVars.get(topCompImpl).add(varDecl.jKindStr);
 
     varRenaming.put(varDecl.jKindStr, varDecl.aadlStr);
     refMap.put(varDecl.aadlStr, state);
@@ -348,7 +345,7 @@ public class AgreeEvaluator extends AgreeSwitch<KindExpr> {
       if (curComp != null)
         compToKindVars.get(curComp).add(varDecl.jKindStr);
       else
-        compToKindVars.get(topSysImpl).add(varDecl.jKindStr);
+        compToKindVars.get(topCompImpl).add(varDecl.jKindStr);
 
       varRenaming.put(varDecl.jKindStr, varDecl.aadlStr);
       refMap.put(varDecl.aadlStr, state);
@@ -370,7 +367,7 @@ public class AgreeEvaluator extends AgreeSwitch<KindExpr> {
     if (curComp != null)
       compToKindVars.get(curComp).add(varType.jKindStr);
     else
-      compToKindVars.get(topSysImpl).add(varType.jKindStr);
+      compToKindVars.get(topCompImpl).add(varType.jKindStr);
 
     varRenaming.put(varType.jKindStr, varType.aadlStr);
     refMap.put(varType.aadlStr, state);
@@ -787,13 +784,13 @@ public class AgreeEvaluator extends AgreeSwitch<KindExpr> {
 
   }
 
-  private void makeContracts(SystemImplementation sysImpl) {
-    SystemType sys = sysImpl.getType();
+  private void makeContracts(ComponentImplementation compImpl) {
+    ComponentType ct = compImpl.getType();
 
-    for (Subcomponent sub : sysImpl.getAllSubcomponents()) {
+    for (Subcomponent sub : compImpl.getAllSubcomponents()) {
       Set<Subcomponent> outputClosure = new HashSet<Subcomponent>();
       outputClosure.add(sub);
-      getOutputClosure(sysImpl.getAllConnections(), outputClosure);
+      getOutputClosure(compImpl.getAllConnections(), outputClosure);
       closureMap.put(sub, outputClosure);
     }
 
@@ -813,23 +810,23 @@ public class AgreeEvaluator extends AgreeSwitch<KindExpr> {
     jKindNameTag = "";
     aadlNameTag = "";
 
-    for (AnnexSubclause annex : sysImpl.getAllAnnexSubclauses()) {
+    for (AnnexSubclause annex : compImpl.getAllAnnexSubclauses()) {
       if (annex instanceof AgreeContractSubclause) {
         doSwitch(annex);
       }
     }
 
-    for (AnnexSubclause annex : sys.getAllAnnexSubclauses()) {
+    for (AnnexSubclause annex : ct.getAllAnnexSubclauses()) {
       if (annex instanceof AgreeContractSubclause) {
         doSwitch(annex);
       }
     }
 
-    sysContr = new ComponentContract(sys.getName(), assumpExpressions,
+    sysContr = new ComponentContract(ct.getName(), assumpExpressions,
         guarExpressions, assertExpressions, propExpressions, eqExpressions,
         constExpressions, funDefExpressions, nodeDefExpressions);
 
-    for (Subcomponent subComp : sysImpl.getAllSubcomponents()) {
+    for (Subcomponent subComp : compImpl.getAllSubcomponents()) {
 
       if (!(subComp instanceof SystemSubcomponent))
         continue;
@@ -887,14 +884,14 @@ public class AgreeEvaluator extends AgreeSwitch<KindExpr> {
 
   // fills the connExpressions lists with expressions
   // that equate variables that are connected to one another
-  private void setVarEquivs(SystemImplementation sysImpl) {
+  private void setVarEquivs(ComponentImplementation compImpl) {
 
     // use for checking delay
     Property commTimingProp = EMFIndexRetrieval
         .getPropertyDefinitionInWorkspace(OsateResourceUtil.getResourceSet(),
             "Communication_Properties::Timing");
 
-    for (Connection conn : sysImpl.getAllConnections()) {
+    for (Connection conn : compImpl.getAllConnections()) {
 
       AbstractConnectionEnd absConnDest = conn.getDestination();
       AbstractConnectionEnd absConnSour = conn.getSource();
@@ -1013,12 +1010,12 @@ public class AgreeEvaluator extends AgreeSwitch<KindExpr> {
     }
   }
 
-  private void setLustreVars(SystemType sys) {
+  private void setLustreVars(ComponentType ct) {
 
-    Set<String> varList = compToKindVars.get(topSysImpl);
+    Set<String> varList = compToKindVars.get(topCompImpl);
     assert (varList != null);
 
-    for (Feature feat : sys.getAllFeatures()) {
+    for (Feature feat : ct.getAllFeatures()) {
       if (feat instanceof DataPort) {
         DataPort port = (DataPort) feat;
         DataSubcomponentType dataSub = port.getDataFeatureClassifier();
@@ -1328,8 +1325,8 @@ public class AgreeEvaluator extends AgreeSwitch<KindExpr> {
     return output;
   }
 
-  public SystemImplementation getSysImpl() {
-    return topSysImpl;
+  public ComponentImplementation getComponentImplementation() {
+    return topCompImpl;
   }
 
   public Set<Subcomponent> getSubComponents() {

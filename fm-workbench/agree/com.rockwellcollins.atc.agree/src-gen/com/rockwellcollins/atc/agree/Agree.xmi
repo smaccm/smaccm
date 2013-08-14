@@ -29,6 +29,9 @@
         <elements xsi:type="xtext:RuleCall" rule="/0/@rules.18"/>
         <elements xsi:type="xtext:RuleCall" rule="/0/@rules.6"/>
         <elements xsi:type="xtext:RuleCall" rule="/0/@rules.7"/>
+        <elements xsi:type="xtext:RuleCall" rule="/0/@rules.8"/>
+        <elements xsi:type="xtext:RuleCall" rule="/0/@rules.15"/>
+        <elements xsi:type="xtext:RuleCall" rule="/0/@rules.14"/>
       </alternatives>
     </rules>
     <rules xsi:type="xtext:ParserRule" name="AnnexLibrary">

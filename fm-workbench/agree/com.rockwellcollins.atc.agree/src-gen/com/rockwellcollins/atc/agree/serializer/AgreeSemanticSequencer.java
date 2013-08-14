@@ -552,7 +552,8 @@ public class AgreeSemanticSequencer extends PropertiesSemanticSequencer {
 				}
 				else break;
 			case AgreePackage.NODE_BODY_EXPR:
-				if(context == grammarAccess.getNodeBodyExprRule()) {
+				if(context == grammarAccess.getElementRule() ||
+				   context == grammarAccess.getNodeBodyExprRule()) {
 					sequence_NodeBodyExpr(context, (NodeBodyExpr) semanticObject); 
 					return; 
 				}
@@ -568,7 +569,8 @@ public class AgreeSemanticSequencer extends PropertiesSemanticSequencer {
 				}
 				else break;
 			case AgreePackage.NODE_EQ:
-				if(context == grammarAccess.getNodeEqRule()) {
+				if(context == grammarAccess.getElementRule() ||
+				   context == grammarAccess.getNodeEqRule()) {
 					sequence_NodeEq(context, (NodeEq) semanticObject); 
 					return; 
 				}

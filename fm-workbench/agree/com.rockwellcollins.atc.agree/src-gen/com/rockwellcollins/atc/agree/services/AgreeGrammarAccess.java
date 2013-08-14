@@ -66,13 +66,16 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cExprParserRuleCall_0 = (RuleCall)cAlternatives.eContents().get(0);
 		private final RuleCall cAgreeContractParserRuleCall_1 = (RuleCall)cAlternatives.eContents().get(1);
 		private final RuleCall cSpecStatementParserRuleCall_2 = (RuleCall)cAlternatives.eContents().get(2);
+		private final RuleCall cCallDefParserRuleCall_3 = (RuleCall)cAlternatives.eContents().get(3);
+		private final RuleCall cNodeEqParserRuleCall_4 = (RuleCall)cAlternatives.eContents().get(4);
+		private final RuleCall cNodeBodyExprParserRuleCall_5 = (RuleCall)cAlternatives.eContents().get(5);
 		
 		//Element returns aadl2::Element:
 		//
-		//	Expr | AgreeContract | SpecStatement;
+		//	Expr | AgreeContract | SpecStatement | CallDef | NodeEq | NodeBodyExpr;
 		public ParserRule getRule() { return rule; }
 
-		//Expr | AgreeContract | SpecStatement
+		//Expr | AgreeContract | SpecStatement | CallDef | NodeEq | NodeBodyExpr
 		public Alternatives getAlternatives() { return cAlternatives; }
 
 		//Expr
@@ -83,6 +86,15 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 
 		//SpecStatement
 		public RuleCall getSpecStatementParserRuleCall_2() { return cSpecStatementParserRuleCall_2; }
+
+		//CallDef
+		public RuleCall getCallDefParserRuleCall_3() { return cCallDefParserRuleCall_3; }
+
+		//NodeEq
+		public RuleCall getNodeEqParserRuleCall_4() { return cNodeEqParserRuleCall_4; }
+
+		//NodeBodyExpr
+		public RuleCall getNodeBodyExprParserRuleCall_5() { return cNodeBodyExprParserRuleCall_5; }
 	}
 
 	public class AnnexLibraryElements extends AbstractParserRuleElementFinder {
@@ -1984,7 +1996,7 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 
 	//Element returns aadl2::Element:
 	//
-	//	Expr | AgreeContract | SpecStatement;
+	//	Expr | AgreeContract | SpecStatement | CallDef | NodeEq | NodeBodyExpr;
 	public ElementElements getElementAccess() {
 		return (pElement != null) ? pElement : (pElement = new ElementElements());
 	}
