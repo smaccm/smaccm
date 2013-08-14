@@ -14,6 +14,7 @@ import jkind.api.results.JKindResult;
 import jkind.api.results.MapRenaming;
 import jkind.api.results.PropertyResult;
 import jkind.api.results.Renaming;
+import jkind.lustre.Program;
 import jkind.lustre.values.Value;
 import jkind.results.Counterexample;
 import jkind.results.InvalidProperty;
@@ -53,6 +54,7 @@ import org.osate.aadl2.SystemImplementation;
 import org.osate.aadl2.instance.SystemInstance;
 import org.osate.aadl2.modelsupport.errorreporting.AnalysisErrorReporterManager;
 import com.google.inject.Injector;
+import com.rockwellcollins.atc.agree.analysis.AgreeEmitter;
 import com.rockwellcollins.atc.agree.analysis.AgreeEvaluator;
 import com.rockwellcollins.atc.agree.ui.internal.AgreeActivator;
 
@@ -67,7 +69,7 @@ import com.rockwellcollins.atc.agree.ui.internal.AgreeActivator;
 public abstract class AgreeAction implements IWorkbenchWindowActionDelegate {
 	private IWorkbenchWindow window;
 	private Object currentSelection;
-	protected AgreeEvaluator evaluator = null;
+	protected AgreeEmitter emitter = null;
 
 	public void selectionChanged(IAction action, ISelection selection) {
 		if (selection instanceof IStructuredSelection) {
@@ -156,12 +158,12 @@ public abstract class AgreeAction implements IWorkbenchWindowActionDelegate {
 	}
 
 	public void runKindQueryAPI(Subcomponent subContext, 
-			AgreeEvaluator eval, 
-			String query, 
+			AgreeEmitter emit, 
+			Program query, 
 			MessageConsoleStream out,
 			IProgressMonitor monitor){
 		
-		final Renaming varRenaming = new MapRenaming(eval.varRenaming, MapRenaming.Mode.NULL);
+		final Renaming varRenaming = new MapRenaming(emit.varRenaming, MapRenaming.Mode.NULL);
 		
 		JKindApi japi = new JKindApi();
 		JKindResult result = null;
@@ -222,11 +224,11 @@ public abstract class AgreeAction implements IWorkbenchWindowActionDelegate {
 				Set<String> kVars = null;
 				String name;
 				if(subContext != null){ //this is a result from a recursive call
-					kVars = eval.getCompToKVarMap().get(subContext);
+					kVars = emit.getCompToKVarMap().get(subContext);
 					name = subContext.getName();
 				}else{
-					SystemImplementation sysImpl = eval.getSysImpl();
-					kVars = eval.getCompToKVarMap().get(sysImpl);
+					SystemImplementation sysImpl = emit.getSysImpl();
+					kVars = emit.getCompToKVarMap().get(sysImpl);
 					name = sysImpl.getName();
 				}
 				
@@ -238,8 +240,8 @@ public abstract class AgreeAction implements IWorkbenchWindowActionDelegate {
 				printOutputVars(name, kVarList, varRenaming, cex, out);
 				
 				//print out values for variables in each component
-				for(Subcomponent subComp : eval.getSubComponents()){					
-					kVars = eval.getCompToKVarMap().get(subComp);
+				for(Subcomponent subComp : emit.getSubComponents()){					
+					kVars = emit.getCompToKVarMap().get(subComp);
 					
 					//get vars in alphebetical order
 					kVarList.clear();

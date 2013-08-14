@@ -2,6 +2,8 @@ package com.rockwellcollins.atc.agree.analysis.actions;
 
 import java.io.IOException;
 
+import jkind.lustre.Program;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -13,6 +15,8 @@ import org.osate.aadl2.Element;
 import org.osate.aadl2.Subcomponent;
 import org.osate.aadl2.SystemImplementation;
 import org.osate.ui.dialogs.Dialog;
+
+import com.rockwellcollins.atc.agree.analysis.AgreeEmitter;
 import com.rockwellcollins.atc.agree.analysis.AgreeEvaluator;
 
 //import com.rockwellcollins.atc.jkind.plugin.views.JKindView;
@@ -23,9 +27,9 @@ public class VerifyRec extends AgreeAction {
 
 	private void verifyAllSubsystems(SystemImplementation sysImpl, Subcomponent subContext) {
 
-		evaluator = new AgreeEvaluator(sysImpl);
-		evaluator.curComp = subContext;
-		final String lustre = evaluator.evaluate();
+		emitter = new AgreeEmitter(sysImpl);
+		emitter.curComp = subContext;
+		final Program lustre = emitter.evaluate();
 
 		String consoleName = null;
 		if (subContext == null) {
@@ -39,20 +43,19 @@ public class VerifyRec extends AgreeAction {
 		MessageConsole logConsole = findConsole("Log For '" + consoleName + "'");
 		logConsole.clearConsole();
 		MessageConsoleStream logOut = logConsole.newMessageStream();
-		logOut.println(evaluator.log.getLog());
+		logOut.println(emitter.log.getLog());
 		
 		MessageConsole lustreConsole = findConsole("Lustre For '" + consoleName + "'");
 		lustreConsole.clearConsole();
 		MessageConsoleStream lustreOut = lustreConsole.newMessageStream();
-		lustreOut.println(lustre);
+		lustreOut.println(lustre.toString());
 
 		MessageConsole kindConsole = findConsole("Kind Output For '" + consoleName + "'");
 		kindConsole.clearConsole();
-		kindConsole.addPatternMatchListener(new AgreePatternListener(evaluator.refMap));
+		kindConsole.addPatternMatchListener(new AgreePatternListener(emitter.refMap));
 		MessageConsoleStream kindOut = kindConsole.newMessageStream();
 
-		runKindQueryAPI(subContext, evaluator, lustre, kindOut, monitor);
-
+		runKindQueryAPI(subContext, emitter, lustre, kindOut, monitor);
 
 		for (Subcomponent subComp : sysImpl.getAllSubcomponents()) {
 			ComponentImplementation compImpl = subComp.getComponentImplementation();
