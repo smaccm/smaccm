@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Set;
 
 import jkind.api.JKindApi;
+import jkind.api.results.AnalysisResult;
 import jkind.api.results.JKindResult;
 import jkind.api.results.MapRenaming;
 import jkind.api.results.PropertyResult;
@@ -66,7 +67,6 @@ import com.rockwellcollins.atc.agree.ui.internal.AgreeActivator;
 public abstract class AgreeAction implements IWorkbenchWindowActionDelegate {
     private IWorkbenchWindow window;
     private Object currentSelection;
-    protected AgreeEmitter emitter = null;
 
     @Override
     public void selectionChanged(IAction action, ISelection selection) {
@@ -240,7 +240,7 @@ public abstract class AgreeAction implements IWorkbenchWindowActionDelegate {
         }
     }
 
-    private void showView(final JKindResult result, final IProgressMonitor monitor) {
+    protected void showView(final AnalysisResult result, final IProgressMonitor monitor) {
         window.getShell().getDisplay().syncExec(new Runnable() {
             @Override
             public void run() {

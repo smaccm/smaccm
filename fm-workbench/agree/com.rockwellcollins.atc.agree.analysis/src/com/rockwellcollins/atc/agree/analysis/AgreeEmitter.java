@@ -33,6 +33,7 @@ import jkind.lustre.VarDecl;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.ui.internal.editorsupport.ComponentSupport;
 import org.osate.aadl2.AbstractConnectionEnd;
 import org.osate.aadl2.AnnexSubclause;
 import org.osate.aadl2.BooleanLiteral;
@@ -58,7 +59,6 @@ import org.osate.aadl2.PropertyExpression;
 import org.osate.aadl2.RealLiteral;
 import org.osate.aadl2.StringLiteral;
 import org.osate.aadl2.Subcomponent;
-import org.osate.aadl2.SystemSubcomponent;
 import org.osate.aadl2.modelsupport.resources.OsateResourceUtil;
 import org.osate.aadl2.properties.PropertyDoesNotApplyToHolderException;
 import org.osate.aadl2.properties.PropertyNotPresentException;
@@ -146,16 +146,16 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
 
     public AgreeLogger log = new AgreeLogger();
 
-    // the top level system implementation
-    private ComponentImplementation topCompImpl;
+    // the top level component implementation
+    private final ComponentImplementation topCompImpl;
 
-    // the contract for the top level system implementation
+    // the contract for the top level component implementation
     private ComponentContract sysContr;
 
     private Map<Subcomponent, ComponentContract> subContrs = new HashMap<Subcomponent, ComponentContract>();
     private Map<NamedElement, Set<String>> compToKindVars = new HashMap<NamedElement, Set<String>>();
     // keeps track of variable equivalences inferred from connections in the
-    // top level system implementation.
+    // top level component implementation.
     private List<Equation> connExpressions = new ArrayList<Equation>();
 
     // lists of expressions that are gathered for each individual component
@@ -177,12 +177,13 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
     private String aadlNameTag;
     public Map<String, String> varRenaming = new HashMap<String, String>();
     public Map<String, EObject> refMap = new HashMap<String, EObject>();
-    public Subcomponent curComp = null;
+    private Subcomponent curComp = null;
 
     // *********************** BEGIN METHODS ********************************
 
-    public AgreeEmitter(ComponentImplementation compImpl) {
+    public AgreeEmitter(ComponentImplementation compImpl, Subcomponent curComp) {
         topCompImpl = compImpl;
+        this.curComp = curComp;
     }
 
     public Program evaluate() {
@@ -596,7 +597,7 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
 
         // TODO: this code is for the case when there is some sort of
         // "floating" port on a component. I.e., a port that is not
-        // transatively connected to a feature on the top level system
+        // transatively connected to a feature on the top level component
         // and is not connected on one side to another internal component
         // perhaps we should throw an error here rather than creating
         // a new random input?
@@ -785,11 +786,6 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
                 nodeDefExpressions);
 
         for (Subcomponent subComp : topCompImpl.getAllSubcomponents()) {
-
-            if (!(subComp instanceof SystemSubcomponent)) {
-                continue;
-            }
-
             subComps.add(subComp);
             curComp = subComp;
 
@@ -927,7 +923,7 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
                 internalVars.add(varType);
 
                 // if the source context is not null, then this is a variable
-                // that was not in the top level system features. Therefore
+                // that was not in the top level component features. Therefore
                 // a new input variable must be created
                 if (sourContext != null) {
                     AgreeVarDecl inputVar = new AgreeVarDecl();

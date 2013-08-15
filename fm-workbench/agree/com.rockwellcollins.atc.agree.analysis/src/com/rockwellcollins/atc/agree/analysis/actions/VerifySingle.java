@@ -23,7 +23,7 @@ public class VerifySingle extends AgreeAction {
         }
 
         SystemImplementation compImpl = (SystemImplementation) root;
-        emitter = new AgreeEmitter(compImpl);
+        AgreeEmitter emitter = new AgreeEmitter(compImpl, null);
         final Program lustre = emitter.evaluate();
 
         MessageConsole logConsole = findConsole("Log For '" + compImpl.getName() + "'");
