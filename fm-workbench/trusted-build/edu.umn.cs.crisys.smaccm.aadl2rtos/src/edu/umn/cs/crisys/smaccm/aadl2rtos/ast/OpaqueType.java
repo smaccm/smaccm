@@ -17,7 +17,7 @@ LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE A
 IN NO EVENT SHALL THE AUTHORS, SPONSORS, DEVELOPERS, CONTRIBUTORS, OR COPYRIGHT HOLDERS BE LIABLE 
 FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, 
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE DATA OR THE USE OR OTHER DEALINGS IN THE DATA.
-*/
+ */
 
 package edu.umn.cs.crisys.smaccm.aadl2rtos.ast;
 
@@ -27,29 +27,33 @@ import edu.umn.cs.crisys.smaccm.aadl2rtos.Pair;
 
 public class OpaqueType extends Type {
 
-	public String toString() {
-		return "opaque";
-	}
+    @Override
+    public String toString() {
+        return "opaque";
+    }
 
-	public boolean isBaseType() {
-		return false;
-	}
-	
-	@Override
-	public Pair<String, String> splitCType() {
-		return new Pair<String, String>(toString(), "");
-	}
+    @Override
+    public boolean isBaseType() {
+        return false;
+    }
 
-	@Override
-	public List<Type> dependencies() {return null; }
+    @Override
+    public Pair<String, String> splitCType() {
+        return new Pair<String, String>(toString(), "");
+    }
 
-	@Override
-	public int hashCode() {
-		return 0;
-	}
+    @Override
+    public List<Type> dependencies() {
+        return null;
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		return (obj instanceof OpaqueType); 
-	}
+    @Override
+    public int hashCode() {
+        return 0;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return (obj instanceof OpaqueType);
+    }
 }

@@ -17,13 +17,13 @@ LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE A
 IN NO EVENT SHALL THE AUTHORS, SPONSORS, DEVELOPERS, CONTRIBUTORS, OR COPYRIGHT HOLDERS BE LIABLE 
 FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, 
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE DATA OR THE USE OR OTHER DEALINGS IN THE DATA.
-*/
+ */
 
 package edu.umn.cs.crisys.smaccm.aadl2rtos;
 
 @SuppressWarnings("serial")
 public class Aadl2RtosException extends RuntimeException {
-	public Aadl2RtosException(String message) {
-		super(message);
-	}
+    public Aadl2RtosException(String message) {
+        super(message);
+    }
 }

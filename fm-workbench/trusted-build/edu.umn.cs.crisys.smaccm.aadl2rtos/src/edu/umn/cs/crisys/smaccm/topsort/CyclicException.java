@@ -17,13 +17,13 @@ LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE A
 IN NO EVENT SHALL THE AUTHORS, SPONSORS, DEVELOPERS, CONTRIBUTORS, OR COPYRIGHT HOLDERS BE LIABLE 
 FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, 
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE DATA OR THE USE OR OTHER DEALINGS IN THE DATA.
-*/
+ */
 
 package edu.umn.cs.crisys.smaccm.topsort;
 
 @SuppressWarnings("serial")
 public class CyclicException extends Exception {
-	public CyclicException(String message) {
-		super(message);
-	}
+    public CyclicException(String message) {
+        super(message);
+    }
 }

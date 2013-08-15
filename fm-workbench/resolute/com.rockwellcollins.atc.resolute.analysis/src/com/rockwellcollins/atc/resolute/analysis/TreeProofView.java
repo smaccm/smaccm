@@ -22,63 +22,64 @@ import org.eclipse.xtext.ui.editor.GlobalURIEditorOpener;
 import com.google.inject.Inject;
 
 public class TreeProofView extends ViewPart {
-	private TreeViewer treeViewer;
+    private TreeViewer treeViewer;
 
-	@Inject
-	GlobalURIEditorOpener globalURIEditorOpener;
-	
-	@Override
-	public void createPartControl(Composite parent) {
-		treeViewer = new TreeViewer(parent, SWT.SINGLE);
-		treeViewer.setContentProvider(new ResoluteProofNodeContentProvider());
-		treeViewer.setLabelProvider(new ResoluteProofNodeLabelProvider());
-		ResoluteTooltipListener.createAndRegister(treeViewer);
+    @Inject
+    GlobalURIEditorOpener globalURIEditorOpener;
 
-		MenuManager manager = new MenuManager();
-		manager.setRemoveAllWhenShown(true);
+    @Override
+    public void createPartControl(Composite parent) {
+        treeViewer = new TreeViewer(parent, SWT.SINGLE);
+        treeViewer.setContentProvider(new ResoluteProofNodeContentProvider());
+        treeViewer.setLabelProvider(new ResoluteProofNodeLabelProvider());
+        ResoluteTooltipListener.createAndRegister(treeViewer);
 
-		manager.addMenuListener(new IMenuListener() {
-			@Override
-			public void menuAboutToShow(IMenuManager manager) {
-				IStructuredSelection selection = (IStructuredSelection) treeViewer.getSelection();
-				if (!selection.isEmpty()) {
-					ResoluteProofNode proofNode = (ResoluteProofNode) selection.getFirstElement();
-					String text;
-					if (proofNode.getParent() == null) {
-						text = "Open Prove Declaration";
-					} else {
-						text = "Open Claim Declaration";
-					}
-					manager.add(createHyperlinkAction(text, proofNode.getEObject()));
-					Map<String, EObject> references = proofNode.getClaimReferences();
-					for (String name : new TreeSet<String>(references.keySet())) {
-						manager.add(createHyperlinkAction("Go to '" + name + "'", references.get(name)));
-					}
-				}
-			}
-		});
-		treeViewer.getControl().setMenu(manager.createContextMenu(treeViewer.getTree()));
-	}
+        MenuManager manager = new MenuManager();
+        manager.setRemoveAllWhenShown(true);
 
-	private IAction createHyperlinkAction(String text, final EObject eObject) {
-		return new Action(text) {
-			@Override
-			public void run() {
-				globalURIEditorOpener.open(EcoreUtil.getURI(eObject), true);
-			}
-		};
-	}
-	
-	public void addProofs(List<ResoluteProofTree> proofTrees) {
-		List<ResoluteProofNode> roots = new ArrayList<>();
-		for (ResoluteProofTree tree : proofTrees) {
-			roots.add(tree.getRoot());
-		}
-		treeViewer.setInput(roots);
-	}
+        manager.addMenuListener(new IMenuListener() {
+            @Override
+            public void menuAboutToShow(IMenuManager manager) {
+                IStructuredSelection selection = (IStructuredSelection) treeViewer.getSelection();
+                if (!selection.isEmpty()) {
+                    ResoluteProofNode proofNode = (ResoluteProofNode) selection.getFirstElement();
+                    String text;
+                    if (proofNode.getParent() == null) {
+                        text = "Open Prove Declaration";
+                    } else {
+                        text = "Open Claim Declaration";
+                    }
+                    manager.add(createHyperlinkAction(text, proofNode.getEObject()));
+                    Map<String, EObject> references = proofNode.getClaimReferences();
+                    for (String name : new TreeSet<String>(references.keySet())) {
+                        manager.add(createHyperlinkAction("Go to '" + name + "'",
+                                references.get(name)));
+                    }
+                }
+            }
+        });
+        treeViewer.getControl().setMenu(manager.createContextMenu(treeViewer.getTree()));
+    }
 
-	@Override
-	public void setFocus() {
-		treeViewer.getControl().setFocus();
-	}
+    private IAction createHyperlinkAction(String text, final EObject eObject) {
+        return new Action(text) {
+            @Override
+            public void run() {
+                globalURIEditorOpener.open(EcoreUtil.getURI(eObject), true);
+            }
+        };
+    }
+
+    public void addProofs(List<ResoluteProofTree> proofTrees) {
+        List<ResoluteProofNode> roots = new ArrayList<>();
+        for (ResoluteProofTree tree : proofTrees) {
+            roots.add(tree.getRoot());
+        }
+        treeViewer.setInput(roots);
+    }
+
+    @Override
+    public void setFocus() {
+        treeViewer.getControl().setFocus();
+    }
 }

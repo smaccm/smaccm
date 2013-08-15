@@ -8,33 +8,33 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 
 public class ResoluteTooltipListener implements Listener {
-	private String tooltip = "";
-	private TreeViewer treeViewer;
+    private String tooltip = "";
+    private TreeViewer treeViewer;
 
-	public static void createAndRegister(TreeViewer treeViewer) {
-		ResoluteTooltipListener instance = new ResoluteTooltipListener(treeViewer);
-		treeViewer.getControl().addListener(SWT.MouseHover, instance);
-		treeViewer.getControl().addListener(SWT.MouseMove, instance);
-	}
-	
-	private ResoluteTooltipListener(TreeViewer treeViewer) {
-		this.treeViewer = treeViewer;
-	}
-	
-	@Override
-	public void handleEvent(Event event) {
-		switch (event.type) {
-			case SWT.MouseMove:
-				ViewerCell cell = treeViewer.getCell(new Point(event.x, event.y));
-				if (cell != null && cell.getElement() instanceof ResoluteProofNode) {
-					ResoluteProofNode node = (ResoluteProofNode) cell.getElement();
-					tooltip = node.getExprStr();
-				}
-				break;
-				
-			case SWT.MouseHover:
-				treeViewer.getControl().setToolTipText(tooltip);
-				break;
-		}
-	}
+    public static void createAndRegister(TreeViewer treeViewer) {
+        ResoluteTooltipListener instance = new ResoluteTooltipListener(treeViewer);
+        treeViewer.getControl().addListener(SWT.MouseHover, instance);
+        treeViewer.getControl().addListener(SWT.MouseMove, instance);
+    }
+
+    private ResoluteTooltipListener(TreeViewer treeViewer) {
+        this.treeViewer = treeViewer;
+    }
+
+    @Override
+    public void handleEvent(Event event) {
+        switch (event.type) {
+        case SWT.MouseMove:
+            ViewerCell cell = treeViewer.getCell(new Point(event.x, event.y));
+            if (cell != null && cell.getElement() instanceof ResoluteProofNode) {
+                ResoluteProofNode node = (ResoluteProofNode) cell.getElement();
+                tooltip = node.getExprStr();
+            }
+            break;
+
+        case SWT.MouseHover:
+            treeViewer.getControl().setToolTipText(tooltip);
+            break;
+        }
+    }
 }

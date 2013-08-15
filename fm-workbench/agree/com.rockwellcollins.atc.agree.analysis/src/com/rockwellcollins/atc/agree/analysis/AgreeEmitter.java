@@ -109,8 +109,9 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
 
         @Override
         public boolean equals(Object o) {
-            if (!(o instanceof AgreeVarDecl))
+            if (!(o instanceof AgreeVarDecl)) {
                 return false;
+            }
             return ((AgreeVarDecl) o).jKindStr.equals(jKindStr);
         }
 
@@ -190,8 +191,9 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
 
         compToKindVars.put(topSysImpl, new HashSet<String>());
 
-        if (curComp != null)
+        if (curComp != null) {
             compToKindVars.put(curComp, new HashSet<String>());
+        }
 
         for (Subcomponent subComp : topSysImpl.getAllSubcomponents()) {
             compToKindVars.put(subComp, new HashSet<String>());
@@ -262,10 +264,11 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
         varDecl.aadlStr = aadlNameTag + state.getName();
         varDecl.type = "bool";
 
-        if (curComp != null)
+        if (curComp != null) {
             compToKindVars.get(curComp).add(varDecl.jKindStr);
-        else
+        } else {
             compToKindVars.get(topSysImpl).add(varDecl.jKindStr);
+        }
 
         varRenaming.put(varDecl.jKindStr, varDecl.aadlStr);
         refMap.put(varDecl.aadlStr, state);
@@ -301,10 +304,11 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
             varDecl.aadlStr = aadlNameTag + baseName;
             varDecl.type = arg.getType().getName();
 
-            if (curComp != null)
+            if (curComp != null) {
                 compToKindVars.get(curComp).add(varDecl.jKindStr);
-            else
+            } else {
                 compToKindVars.get(topSysImpl).add(varDecl.jKindStr);
+            }
 
             varRenaming.put(varDecl.jKindStr, varDecl.aadlStr);
             refMap.put(varDecl.aadlStr, state);
@@ -326,10 +330,11 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
         varType.aadlStr = aadlNameTag + state.getName();
         varType.type = state.getType().getName();
 
-        if (curComp != null)
+        if (curComp != null) {
             compToKindVars.get(curComp).add(varType.jKindStr);
-        else
+        } else {
             compToKindVars.get(topSysImpl).add(varType.jKindStr);
+        }
 
         varRenaming.put(varType.jKindStr, varType.aadlStr);
         refMap.put(varType.aadlStr, state);
@@ -783,8 +788,9 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
 
         for (Subcomponent subComp : sysImpl.getAllSubcomponents()) {
 
-            if (!(subComp instanceof SystemSubcomponent))
+            if (!(subComp instanceof SystemSubcomponent)) {
                 continue;
+            }
 
             subComps.add(subComp);
             curComp = subComp;
@@ -855,8 +861,9 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
             boolean delayed = true;
             EnumerationLiteral lit = PropertyUtils.getEnumLiteral(conn, commTimingProp);
 
-            if (lit.getName().equals("immediate"))
+            if (lit.getName().equals("immediate")) {
                 delayed = false;
+            }
 
             ConnectionEnd destConn = ((ConnectedElement) absConnDest).getConnectionEnd();
             ConnectionEnd sourConn = ((ConnectedElement) absConnSour).getConnectionEnd();
@@ -873,8 +880,9 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
 
             DataSubcomponentType dataSub = port.getDataFeatureClassifier();
 
-            if (!(dataSub instanceof DataImplementation))
+            if (!(dataSub instanceof DataImplementation)) {
                 continue;
+            }
 
             Set<AgreeVarDecl> tempSet = new HashSet<AgreeVarDecl>();
             getAllDataNames((DataImplementation) dataSub, tempSet);
@@ -1014,8 +1022,9 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
                 } else {
                     assert (subImpl instanceof DataType);
                     AgreeVarDecl newStrType = dataTypeToVarType((DataSubcomponent) sub);
-                    if (newStrType.type != null)
+                    if (newStrType.type != null) {
                         subStrTypes.add(newStrType);
+                    }
                 }
             }
         }
@@ -1220,10 +1229,11 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
             return ((FnDefExpr) callDef).getName();
         } else if (callDef instanceof NodeDefExpr) {
             return ((NodeDefExpr) callDef).getName();
-        } else
+        } else {
             throw new AgreeException(
                     "In getFnCallExprName: Match failure; FnCallExpr does not resolve "
                             + "to either FnDefExpr or NodeDefExpr");
+        }
     }
 
     private List<VarDecl> argsToVarDeclList(EList<Arg> args) {

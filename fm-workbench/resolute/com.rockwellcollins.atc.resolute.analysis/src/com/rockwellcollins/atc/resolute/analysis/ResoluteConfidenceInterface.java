@@ -4,5 +4,5 @@ import com.rockwellcollins.atc.resolute.resolute.Expr;
 
 public interface ResoluteConfidenceInterface {
 
-	public void resoluteExprCall(Expr expr);
+    public void resoluteExprCall(Expr expr);
 }

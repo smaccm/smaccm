@@ -1,14 +1,12 @@
-
 package com.rockwellcollins.atc.resolute;
 
 /**
- * Initialization support for running Xtext languages 
- * without equinox extension registry
+ * Initialization support for running Xtext languages without equinox extension
+ * registry
  */
-public class ResoluteStandaloneSetup extends ResoluteStandaloneSetupGenerated{
+public class ResoluteStandaloneSetup extends ResoluteStandaloneSetupGenerated {
 
-	public static void doSetup() {
-		new ResoluteStandaloneSetup().createInjectorAndDoEMFRegistration();
-	}
+    public static void doSetup() {
+        new ResoluteStandaloneSetup().createInjectorAndDoEMFRegistration();
+    }
 }
-

@@ -27,93 +27,96 @@ import com.rockwellcollins.atc.resolute.services.ResoluteGrammarAccess;
 
 // Based on EMV2AnnexParser from Error Model annex
 public class ResoluteAnnexParser implements AnnexParser {
-	@Inject
-	public ResoluteParser parser;
+    @Inject
+    public ResoluteParser parser;
 
-	protected ResoluteGrammarAccess getGrammarAccess() {
-		return parser.getGrammarAccess();
-	}
+    protected ResoluteGrammarAccess getGrammarAccess() {
+        return parser.getGrammarAccess();
+    }
 
-	public AnnexLibrary parseAnnexLibrary(String annexName, String source, String filename,
-			int line, int column, ParseErrorReporter errReporter) {
-		return (AnnexLibrary) parse(source, getGrammarAccess().getResoluteLibraryRule(), filename,
-				line, column, errReporter);
+    @Override
+    public AnnexLibrary parseAnnexLibrary(String annexName, String source, String filename,
+            int line, int column, ParseErrorReporter errReporter) {
+        return (AnnexLibrary) parse(source, getGrammarAccess().getResoluteLibraryRule(), filename,
+                line, column, errReporter);
 
-	}
+    }
 
-	public AnnexSubclause parseAnnexSubclause(String annexName, String source, String filename,
-			int line, int column, ParseErrorReporter errReporter) {
-		return (AnnexSubclause) parse(source, getGrammarAccess().getResoluteSubclauseRule(),
-				filename, line, column, errReporter);
-	}
+    @Override
+    public AnnexSubclause parseAnnexSubclause(String annexName, String source, String filename,
+            int line, int column, ParseErrorReporter errReporter) {
+        return (AnnexSubclause) parse(source, getGrammarAccess().getResoluteSubclauseRule(),
+                filename, line, column, errReporter);
+    }
 
-	public EObject parse(String editString, ParserRule parserRule, String filename, int line,
-			int offset, ParseErrorReporter err) {
-		try {
-			editString = genWhitespace(offset) + editString + "\r\n";
-			IParseResult parseResult = parser.parse(parserRule, new StringReader(editString));
+    public EObject parse(String editString, ParserRule parserRule, String filename, int line,
+            int offset, ParseErrorReporter err) {
+        try {
+            editString = genWhitespace(offset) + editString + "\r\n";
+            IParseResult parseResult = parser.parse(parserRule, new StringReader(editString));
 
-			EObject result = null;
-			if (isValidParseResult(parseResult)) {
-				result = parseResult.getRootASTElement();
-				result.eAdapters().add(new AnnexParseResultImpl(parseResult, offset));
-				return result;
-			} else {
-				createDiagnostics(parseResult, filename, err);
-				result = parseResult.getRootASTElement();
-				if (result != null) {
-					result.eAdapters().add(new AnnexParseResultImpl(parseResult, offset));
-					return result;
-				} else {
-					return null;
-				}
-			}
-		} catch (Exception exc) {
-			return null;
-		}
-	}
+            EObject result = null;
+            if (isValidParseResult(parseResult)) {
+                result = parseResult.getRootASTElement();
+                result.eAdapters().add(new AnnexParseResultImpl(parseResult, offset));
+                return result;
+            } else {
+                createDiagnostics(parseResult, filename, err);
+                result = parseResult.getRootASTElement();
+                if (result != null) {
+                    result.eAdapters().add(new AnnexParseResultImpl(parseResult, offset));
+                    return result;
+                } else {
+                    return null;
+                }
+            }
+        } catch (Exception exc) {
+            return null;
+        }
+    }
 
-	protected String genWhitespace(int length) {
-		char[] array = new char[length];
-		Arrays.fill(array, ' ');
-		return new String(array);
-	}
+    protected String genWhitespace(int length) {
+        char[] array = new char[length];
+        Arrays.fill(array, ' ');
+        return new String(array);
+    }
 
-	private boolean isValidParseResult(IParseResult parseResult) {
-		EObject rootASTElement = parseResult.getRootASTElement();
-		return (rootASTElement != null && !parseResult.hasSyntaxErrors());
-	}
+    private boolean isValidParseResult(IParseResult parseResult) {
+        EObject rootASTElement = parseResult.getRootASTElement();
+        return (rootASTElement != null && !parseResult.hasSyntaxErrors());
+    }
 
-	/**
-	 * Creates {@link Diagnostic diagnostics} from {@link SyntaxError syntax
-	 * errors} in {@link ParseResult}. No diagnostics will be created if
-	 * {@link #isValidationDisabled() validation is disabled} for this resource.
-	 * 
-	 * @param parseResult
-	 *            the parse result that provides the syntax errors.
-	 * @return list of {@link Diagnostic}. Never <code>null</code>.
-	 */
-	private void createDiagnostics(IParseResult parseResult, String filename, ParseErrorReporter err) {
-		if (err instanceof MarkerParseErrorReporter) {
-			List<Diagnostic> diagnostics = new ArrayList<Diagnostic>();
-			Resource res = ((MarkerParseErrorReporter) err).getContextResource();
-			for (INode error : parseResult.getSyntaxErrors()) {
-				if (res == null) {
-					SyntaxErrorMessage errormsg = error.getSyntaxErrorMessage();
-					String msg = errormsg.getMessage();
-					err.error(filename, error.getStartLine(), msg);
-				} else {
-					diagnostics.add(new XtextSyntaxDiagnostic(error));
-				}
-			}
-			if (res != null)
-				res.getErrors().addAll(diagnostics);
-		} else {
-			for (INode error : parseResult.getSyntaxErrors()) {
-				SyntaxErrorMessage errormsg = error.getSyntaxErrorMessage();
-				String msg = errormsg.getMessage();
-				err.error(filename, error.getStartLine(), msg);
-			}
-		}
-	}
+    /**
+     * Creates {@link Diagnostic diagnostics} from {@link SyntaxError syntax
+     * errors} in {@link ParseResult}. No diagnostics will be created if
+     * {@link #isValidationDisabled() validation is disabled} for this resource.
+     * 
+     * @param parseResult
+     *            the parse result that provides the syntax errors.
+     * @return list of {@link Diagnostic}. Never <code>null</code>.
+     */
+    private void createDiagnostics(IParseResult parseResult, String filename, ParseErrorReporter err) {
+        if (err instanceof MarkerParseErrorReporter) {
+            List<Diagnostic> diagnostics = new ArrayList<Diagnostic>();
+            Resource res = ((MarkerParseErrorReporter) err).getContextResource();
+            for (INode error : parseResult.getSyntaxErrors()) {
+                if (res == null) {
+                    SyntaxErrorMessage errormsg = error.getSyntaxErrorMessage();
+                    String msg = errormsg.getMessage();
+                    err.error(filename, error.getStartLine(), msg);
+                } else {
+                    diagnostics.add(new XtextSyntaxDiagnostic(error));
+                }
+            }
+            if (res != null) {
+                res.getErrors().addAll(diagnostics);
+            }
+        } else {
+            for (INode error : parseResult.getSyntaxErrors()) {
+                SyntaxErrorMessage errormsg = error.getSyntaxErrorMessage();
+                String msg = errormsg.getMessage();
+                err.error(filename, error.getStartLine(), msg);
+            }
+        }
+    }
 }

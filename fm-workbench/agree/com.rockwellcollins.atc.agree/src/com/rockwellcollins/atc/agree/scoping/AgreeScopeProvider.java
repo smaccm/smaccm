@@ -25,116 +25,115 @@ import com.rockwellcollins.atc.agree.agree.AgreeContract;
 import com.rockwellcollins.atc.agree.agree.AgreeContractLibrary;
 import com.rockwellcollins.atc.agree.agree.AgreeContractSubclause;
 import com.rockwellcollins.atc.agree.agree.AgreeLibrary;
-import com.rockwellcollins.atc.agree.agree.Arg;
 import com.rockwellcollins.atc.agree.agree.NestedDotID;
-import com.rockwellcollins.atc.agree.agree.NodeDefExpr;
 import com.rockwellcollins.atc.agree.agree.PropertyStatement;
 import com.rockwellcollins.atc.agree.agree.SpecStatement;
-
 
 /**
  * This class contains custom scoping description.
  * 
- * see : http://www.eclipse.org/Xtext/documentation.html#scoping
- * on how and when to use it 
- *
+ * see : http://www.eclipse.org/Xtext/documentation.html#scoping on how and when
+ * to use it
+ * 
  */
-public class AgreeScopeProvider extends org.osate.xtext.aadl2.properties.scoping.PropertiesScopeProvider {
+public class AgreeScopeProvider extends
+        org.osate.xtext.aadl2.properties.scoping.PropertiesScopeProvider {
 
-  /*
-	IScope scope_NodeDef(NodeDefExpr ctx, EReference ref) {
-    Set<Element> components = new HashSet<Element>(); 
-    for (Arg arg: ctx.getArgs()) {
-      components.add(arg);
-    }
-    for (Arg arg: ctx.getRets()) {
-      components.add(arg);
-    }
-    for (Arg arg: ctx.getNodeBody().getLocs()) {
-      components.add(arg);
-    }
-    return Scopes.scopeFor(components, getScope(ctx.eContainer(), ref));
-	}
-  */
-  
-	IScope scope_NamedElement(AgreeContract ctx, EReference ref){
-		
-		EObject container = ctx.eContainer().eContainer();
-		if(container instanceof SystemType){
-			return null;
-		}
-		if(!(container instanceof SystemImplementation))
-			return IScope.NULLSCOPE;
-		
-		SystemType sysType = ((SystemImplementation)container).getType();
-		for(AnnexSubclause subclause : sysType.getAllAnnexSubclauses()){
-			if(subclause instanceof AgreeContractSubclause)
-				return getScope(((AgreeContractSubclause)subclause).getContract(), ref);
-		}
-		return IScope.NULLSCOPE;
-	}
-	
-	IScope scope_NamedElement(NestedDotID ctx, EReference ref) {
- 		Set<Element> components = getCorrespondingAadlElement(ctx);
- 		
-		return Scopes.scopeFor(components, getScope(ctx.eContainer(), ref));
-	}
-	
-	private Set<Element> getCorrespondingAadlElement(NestedDotID id){
-		
-		EObject container = id.eContainer();
-		
-		if(container instanceof NestedDotID){
-			NestedDotID parent = (NestedDotID)container;
-			EList<EObject> refs = parent.eCrossReferences();
-			
-			if(refs.size() != 1)
-				return new HashSet<Element>(); //this will throw a parsing error
-			container = refs.get(0);
-			
-			
-			if(container instanceof Subcomponent){
-				container = ((Subcomponent)container).getComponentImplementation();
-			}else if(container instanceof DataPortImpl){
-				container = ((DataPortImpl)container).getDataFeatureClassifier();
-			}else if(container instanceof AadlPackage){
-				for(AnnexLibrary annex : ((AadlPackage)container).getPublicSection().getOwnedAnnexLibraries()){
-					if(annex instanceof AgreeLibrary){
-						container = ((AgreeContractLibrary)annex).getContract();
-					}
-				}
-			}else{
-				return new HashSet<Element>(); //this will throw a parsing error
-			}
-		}else{
-			//travel out of the annex and get the component
-			//classifier that the annex is contained in
-			while(!(container instanceof ComponentClassifier))
-				container = container.eContainer();
-		}
-		
-	    if(container == null)
-	    	return new HashSet<Element>(); //this will throw a parsing error
-	    
-		Set<Element> result = new HashSet<Element>();
+    /*
+     * IScope scope_NodeDef(NodeDefExpr ctx, EReference ref) { Set<Element>
+     * components = new HashSet<Element>(); for (Arg arg: ctx.getArgs()) {
+     * components.add(arg); } for (Arg arg: ctx.getRets()) {
+     * components.add(arg); } for (Arg arg: ctx.getNodeBody().getLocs()) {
+     * components.add(arg); } return Scopes.scopeFor(components,
+     * getScope(ctx.eContainer(), ref)); }
+     */
 
-		if(container instanceof ComponentClassifier){
-			ComponentClassifier component = (ComponentClassifier)container;
-			for(Element el : component.getOwnedElements())
-				result.add(el);
-			for(Element el : component.getAllFeatures())
-				result.add(el);
-		}else{
-			assert(container instanceof AgreeContract);
-			for(SpecStatement spec : ((AgreeContract)container).getSpecs()){
-				if(spec instanceof PropertyStatement){
-					result.add(spec);
-				}
-			}
-		}
-		
-		return result;
-	}
+    IScope scope_NamedElement(AgreeContract ctx, EReference ref) {
 
-	
+        EObject container = ctx.eContainer().eContainer();
+        if (container instanceof SystemType) {
+            return null;
+        }
+        if (!(container instanceof SystemImplementation)) {
+            return IScope.NULLSCOPE;
+        }
+
+        SystemType sysType = ((SystemImplementation) container).getType();
+        for (AnnexSubclause subclause : sysType.getAllAnnexSubclauses()) {
+            if (subclause instanceof AgreeContractSubclause) {
+                return getScope(((AgreeContractSubclause) subclause).getContract(), ref);
+            }
+        }
+        return IScope.NULLSCOPE;
+    }
+
+    IScope scope_NamedElement(NestedDotID ctx, EReference ref) {
+        Set<Element> components = getCorrespondingAadlElement(ctx);
+
+        return Scopes.scopeFor(components, getScope(ctx.eContainer(), ref));
+    }
+
+    private Set<Element> getCorrespondingAadlElement(NestedDotID id) {
+
+        EObject container = id.eContainer();
+
+        if (container instanceof NestedDotID) {
+            NestedDotID parent = (NestedDotID) container;
+            EList<EObject> refs = parent.eCrossReferences();
+
+            if (refs.size() != 1) {
+                return new HashSet<Element>(); // this will throw a parsing
+                                               // error
+            }
+            container = refs.get(0);
+
+            if (container instanceof Subcomponent) {
+                container = ((Subcomponent) container).getComponentImplementation();
+            } else if (container instanceof DataPortImpl) {
+                container = ((DataPortImpl) container).getDataFeatureClassifier();
+            } else if (container instanceof AadlPackage) {
+                for (AnnexLibrary annex : ((AadlPackage) container).getPublicSection()
+                        .getOwnedAnnexLibraries()) {
+                    if (annex instanceof AgreeLibrary) {
+                        container = ((AgreeContractLibrary) annex).getContract();
+                    }
+                }
+            } else {
+                return new HashSet<Element>(); // this will throw a parsing
+                                               // error
+            }
+        } else {
+            // travel out of the annex and get the component
+            // classifier that the annex is contained in
+            while (!(container instanceof ComponentClassifier)) {
+                container = container.eContainer();
+            }
+        }
+
+        if (container == null) {
+            return new HashSet<Element>(); // this will throw a parsing error
+        }
+
+        Set<Element> result = new HashSet<Element>();
+
+        if (container instanceof ComponentClassifier) {
+            ComponentClassifier component = (ComponentClassifier) container;
+            for (Element el : component.getOwnedElements()) {
+                result.add(el);
+            }
+            for (Element el : component.getAllFeatures()) {
+                result.add(el);
+            }
+        } else {
+            assert (container instanceof AgreeContract);
+            for (SpecStatement spec : ((AgreeContract) container).getSpecs()) {
+                if (spec instanceof PropertyStatement) {
+                    result.add(spec);
+                }
+            }
+        }
+
+        return result;
+    }
+
 }

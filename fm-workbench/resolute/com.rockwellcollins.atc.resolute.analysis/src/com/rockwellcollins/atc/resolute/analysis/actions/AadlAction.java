@@ -58,90 +58,90 @@ import org.osate.aadl2.instance.SystemInstance;
 import org.osate.aadl2.modelsupport.errorreporting.AnalysisErrorReporterManager;
 
 abstract public class AadlAction implements IWorkbenchWindowActionDelegate {
-	private IWorkbenchWindow window;
-	private Object currentSelection;
+    private IWorkbenchWindow window;
+    private Object currentSelection;
 
-	@Override
-	public void selectionChanged(IAction action, ISelection selection) {
-		if (selection instanceof IStructuredSelection) {
-			IStructuredSelection iss = (IStructuredSelection) selection;
-			if (iss.size() == 1) {
-				currentSelection = iss.getFirstElement();
-			}
-		}
-	}
+    @Override
+    public void selectionChanged(IAction action, ISelection selection) {
+        if (selection instanceof IStructuredSelection) {
+            IStructuredSelection iss = (IStructuredSelection) selection;
+            if (iss.size() == 1) {
+                currentSelection = iss.getFirstElement();
+            }
+        }
+    }
 
-	abstract protected IStatus runJob(Element sel, IProgressMonitor monitor);
+    abstract protected IStatus runJob(Element sel, IProgressMonitor monitor);
 
-	@Override
-	public void run(IAction action) {
-		WorkspaceJob job = new WorkspaceJob("AADL Job") {
-			@Override
-			public IStatus runInWorkspace(final IProgressMonitor monitor) throws CoreException {
-				IEditorPart activeEditor;
-				EObjectNode node;
-				XtextEditor xtextEditor;
+    @Override
+    public void run(IAction action) {
+        WorkspaceJob job = new WorkspaceJob("AADL Job") {
+            @Override
+            public IStatus runInWorkspace(final IProgressMonitor monitor) throws CoreException {
+                IEditorPart activeEditor;
+                EObjectNode node;
+                XtextEditor xtextEditor;
 
-				activeEditor = window.getActivePage().getActiveEditor();
+                activeEditor = window.getActivePage().getActiveEditor();
 
-				if (activeEditor == null) {
-					return Status.CANCEL_STATUS;
-				}
+                if (activeEditor == null) {
+                    return Status.CANCEL_STATUS;
+                }
 
-				if ((!(currentSelection instanceof EObjectNode))
-						&& (!(currentSelection instanceof SystemInstance))) {
-					return Status.CANCEL_STATUS;
-				}
+                if ((!(currentSelection instanceof EObjectNode))
+                        && (!(currentSelection instanceof SystemInstance))) {
+                    return Status.CANCEL_STATUS;
+                }
 
-				xtextEditor = (XtextEditor) activeEditor.getAdapter(XtextEditor.class);
+                xtextEditor = (XtextEditor) activeEditor.getAdapter(XtextEditor.class);
 
-				if (xtextEditor != null) {
-					node = (EObjectNode) currentSelection;
+                if (xtextEditor != null) {
+                    node = (EObjectNode) currentSelection;
 
-					final URI uri = node.getEObjectURI();
+                    final URI uri = node.getEObjectURI();
 
-					xtextEditor.getDocument().readOnly(new IUnitOfWork<IStatus, XtextResource>() {
-						@Override
-						public IStatus exec(XtextResource resource) throws Exception {
-							EObject eobj = resource.getResourceSet().getEObject(uri, true);
-							if (eobj instanceof Element) {
-								return runJob((Element) eobj, monitor);
-							}
+                    xtextEditor.getDocument().readOnly(new IUnitOfWork<IStatus, XtextResource>() {
+                        @Override
+                        public IStatus exec(XtextResource resource) throws Exception {
+                            EObject eobj = resource.getResourceSet().getEObject(uri, true);
+                            if (eobj instanceof Element) {
+                                return runJob((Element) eobj, monitor);
+                            }
 
-							return Status.CANCEL_STATUS;
-						}
-					});
-				} else {
-					return runJob((Element) currentSelection, monitor);
-				}
+                            return Status.CANCEL_STATUS;
+                        }
+                    });
+                } else {
+                    return runJob((Element) currentSelection, monitor);
+                }
 
-				return Status.OK_STATUS;
-			}
-		};
+                return Status.OK_STATUS;
+            }
+        };
 
-		job.setRule(ResourcesPlugin.getWorkspace().getRoot());
-		job.setUser(true);
-		job.schedule();
-	}
+        job.setRule(ResourcesPlugin.getWorkspace().getRoot());
+        job.setUser(true);
+        job.schedule();
+    }
 
-	@Override
-	public void dispose() {
-	}
+    @Override
+    public void dispose() {
+    }
 
-	@Override
-	public void init(IWorkbenchWindow window) {
-		this.window = window;
-	}
+    @Override
+    public void init(IWorkbenchWindow window) {
+        this.window = window;
+    }
 
-	protected IWorkbenchWindow getWindow() {
-		return window;
-	}
+    protected IWorkbenchWindow getWindow() {
+        return window;
+    }
 
-	protected Shell getShell() {
-		return window.getShell();
-	}
+    protected Shell getShell() {
+        return window.getShell();
+    }
 
-	protected AnalysisErrorReporterManager getErrorManager() {
-		return AnalysisErrorReporterManager.NULL_ERROR_MANANGER;
-	}
+    protected AnalysisErrorReporterManager getErrorManager() {
+        return AnalysisErrorReporterManager.NULL_ERROR_MANANGER;
+    }
 }
