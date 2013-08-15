@@ -1216,6 +1216,7 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
 			Equation contrHist = new Equation(compId, contrHistExpr);
 			eqs.add(contrHist);
 			properties.add(compId.id);
+			varRenaming.put(compId.id, contract.compName+"_Assumptions");
 			
 		}
 
@@ -1225,6 +1226,7 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
 		Equation finalGuar = new Equation(sysGuaranteesId, totalSysGuarExpr);
 		eqs.add(finalGuar);
 		properties.add(sysGuaranteesId.id);
+		varRenaming.put(sysGuaranteesId.id, "System_Guarantees");
 		
 		Node topNode = new Node("_MAIN", inputs, outputs, internals, eqs, properties);
 		nodeSet.add(topNode);

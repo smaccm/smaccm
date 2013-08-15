@@ -159,7 +159,7 @@ public abstract class AgreeAction implements IWorkbenchWindowActionDelegate {
 				name = "TOP";
 			}
 
-			result = new JKindResult(name);
+			result = new JKindResult(name, query.getMainNode().properties, varRenaming);
 			showView(result);
 			japi.execute(query, result, monitor);
 
@@ -184,8 +184,8 @@ public abstract class AgreeAction implements IWorkbenchWindowActionDelegate {
 				Comparator<String> compareFunc = new Comparator<String>() {
 					@Override
 					public int compare(String s1, String s2) {
-						String r1 = varRenaming.rename(s1);
-						String r2 = varRenaming.rename(s2);
+						String r1 = s1; //varRenaming.rename(s1);
+						String r2 = s2; //varRenaming.rename(s2);
 
 						Signal<Value> sig1 = cex.getSignal(s1);
 						Signal<Value> sig2 = cex.getSignal(s2);
@@ -279,7 +279,7 @@ public abstract class AgreeAction implements IWorkbenchWindowActionDelegate {
 		// print all the variables
 		for (String kVar : kVarList) {
 			String aadlName = varRenaming.rename(kVar);
-			Signal<Value> sig = cex.getSignal(kVar);
+			Signal<Value> sig = cex.getSignal(aadlName);
 			if (sig != null) {
 				out.print(String.format("%-50s", "[" + aadlName + "]"));
 				for (int k = 0; k < cex.getLength(); k++) {
