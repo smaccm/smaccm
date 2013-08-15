@@ -8,6 +8,7 @@ import org.eclipse.ui.console.MessageConsole;
 import org.eclipse.ui.console.MessageConsoleStream;
 import org.osate.aadl2.ComponentImplementation;
 import org.osate.aadl2.Element;
+import org.osate.aadl2.SystemImplementation;
 import org.osate.ui.dialogs.Dialog;
 
 import com.rockwellcollins.atc.agree.analysis.AgreeEmitter;
@@ -21,8 +22,8 @@ public class VerifySingle extends AgreeAction {
 			return Status.CANCEL_STATUS;
 		}
 
-		SystemImplementation sysImpl = (SystemImplementation) root;
-		emitter = new AgreeEmitter(sysImpl);
+		SystemImplementation compImpl = (SystemImplementation) root;
+		emitter = new AgreeEmitter(compImpl);
 		final Program lustre = emitter.evaluate();
 
 		MessageConsole logConsole = findConsole("Log For '" + compImpl.getName() + "'");

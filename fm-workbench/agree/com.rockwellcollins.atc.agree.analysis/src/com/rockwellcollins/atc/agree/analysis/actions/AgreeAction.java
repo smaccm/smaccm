@@ -49,6 +49,8 @@ import org.eclipse.xtext.util.concurrent.IUnitOfWork;
 import org.osate.aadl2.ComponentImplementation;
 import org.osate.aadl2.Element;
 import org.osate.aadl2.Subcomponent;
+import org.osate.aadl2.SystemImplementation;
+import org.osate.aadl2.modelsupport.errorreporting.AnalysisErrorReporterManager;
 
 import com.google.inject.Injector;
 import com.rockwellcollins.atc.agree.analysis.AgreeEmitter;
