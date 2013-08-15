@@ -6,16 +6,32 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import jkind.lustre.BinaryExpr;
+import jkind.lustre.BinaryOp;
+import jkind.lustre.BoolExpr;
+import jkind.lustre.Equation;
+import jkind.lustre.Expr;
+import jkind.lustre.IdExpr;
+import jkind.lustre.IfThenElseExpr;
+import jkind.lustre.IntExpr;
+import jkind.lustre.NamedType;
+import jkind.lustre.Node;
+import jkind.lustre.NodeCallExpr;
+import jkind.lustre.Program;
+import jkind.lustre.RealExpr;
+import jkind.lustre.Type;
+import jkind.lustre.UnaryExpr;
+import jkind.lustre.UnaryOp;
+import jkind.lustre.VarDecl;
+
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.osate.aadl2.AbstractConnectionEnd;
-import org.osate.aadl2.AbstractNamedValue;
 import org.osate.aadl2.AnnexSubclause;
 import org.osate.aadl2.BooleanLiteral;
 import org.osate.aadl2.ComponentClassifier;
@@ -49,7 +65,6 @@ import org.osate.aadl2.properties.PropertyNotPresentException;
 import org.osate.xtext.aadl2.properties.util.EMFIndexRetrieval;
 import org.osate.xtext.aadl2.properties.util.PropertyUtils;
 
-import com.rockwellcollins.atc.agree.agree.util.AgreeSwitch;
 import com.rockwellcollins.atc.agree.agree.AgreeContract;
 import com.rockwellcollins.atc.agree.agree.AgreeContractSubclause;
 import com.rockwellcollins.atc.agree.agree.Arg;
@@ -76,23 +91,7 @@ import com.rockwellcollins.atc.agree.agree.PropertyStatement;
 import com.rockwellcollins.atc.agree.agree.RealLitExpr;
 import com.rockwellcollins.atc.agree.agree.SpecStatement;
 import com.rockwellcollins.atc.agree.agree.ThisExpr;
-import jkind.lustre.BinaryExpr;
-import jkind.lustre.BinaryOp;
-import jkind.lustre.BoolExpr;
-import jkind.lustre.Equation;
-import jkind.lustre.Expr;
-import jkind.lustre.IdExpr;
-import jkind.lustre.IfThenElseExpr;
-import jkind.lustre.IntExpr;
-import jkind.lustre.NamedType;
-import jkind.lustre.Node;
-import jkind.lustre.NodeCallExpr;
-import jkind.lustre.Program;
-import jkind.lustre.RealExpr;
-import jkind.lustre.Type;
-import jkind.lustre.UnaryExpr;
-import jkind.lustre.UnaryOp;
-import jkind.lustre.VarDecl;
+import com.rockwellcollins.atc.agree.agree.util.AgreeSwitch;
 
 public class AgreeEmitter extends AgreeSwitch<Expr> {
 

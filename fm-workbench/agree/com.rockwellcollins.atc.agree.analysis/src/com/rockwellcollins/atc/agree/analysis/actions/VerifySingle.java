@@ -1,6 +1,7 @@
 package com.rockwellcollins.atc.agree.analysis.actions;
 
 import jkind.lustre.Program;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -12,7 +13,6 @@ import org.osate.aadl2.SystemImplementation;
 import org.osate.ui.dialogs.Dialog;
 
 import com.rockwellcollins.atc.agree.analysis.AgreeEmitter;
-import com.rockwellcollins.atc.agree.analysis.AgreeEvaluator;
 
 public class VerifySingle extends AgreeAction {
 	@Override

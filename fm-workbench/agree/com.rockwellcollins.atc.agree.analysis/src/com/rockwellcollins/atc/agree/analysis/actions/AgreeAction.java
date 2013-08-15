@@ -46,7 +46,6 @@ import org.eclipse.xtext.ui.editor.GlobalURIEditorOpener;
 import org.eclipse.xtext.ui.editor.XtextEditor;
 import org.eclipse.xtext.ui.editor.outline.impl.EObjectNode;
 import org.eclipse.xtext.util.concurrent.IUnitOfWork;
-import org.osate.aadl2.ComponentImplementation;
 import org.osate.aadl2.Element;
 import org.osate.aadl2.Subcomponent;
 import org.osate.aadl2.SystemImplementation;
@@ -54,7 +53,6 @@ import org.osate.aadl2.modelsupport.errorreporting.AnalysisErrorReporterManager;
 
 import com.google.inject.Injector;
 import com.rockwellcollins.atc.agree.analysis.AgreeEmitter;
-import com.rockwellcollins.atc.agree.analysis.AgreeEvaluator;
 import com.rockwellcollins.atc.agree.analysis.AgreeSingleResultsView;
 import com.rockwellcollins.atc.agree.ui.internal.AgreeActivator;
 

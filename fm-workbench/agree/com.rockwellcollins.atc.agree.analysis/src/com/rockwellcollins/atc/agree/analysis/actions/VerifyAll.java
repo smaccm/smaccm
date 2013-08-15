@@ -1,7 +1,7 @@
 package com.rockwellcollins.atc.agree.analysis.actions;
 
-import java.io.IOException;
 import jkind.lustre.Program;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -13,8 +13,8 @@ import org.osate.aadl2.Element;
 import org.osate.aadl2.Subcomponent;
 import org.osate.aadl2.SystemImplementation;
 import org.osate.ui.dialogs.Dialog;
+
 import com.rockwellcollins.atc.agree.analysis.AgreeEmitter;
-import com.rockwellcollins.atc.agree.analysis.AgreeEvaluator;
 
 //import com.rockwellcollins.atc.jkind.plugin.views.JKindView;
 
