@@ -64,7 +64,7 @@ public class VerifyAll extends AgreeAction {
             Subcomponent context) {
         CompositeAnalysisResult result = new CompositeAnalysisResult("Verification for " + name);
 
-        result.addChild(createContractVerification(name, ci, context));
+        result.addChild(createContractVerification(ci, context));
         for (Subcomponent sub : ci.getAllSubcomponents()) {
             ComponentImplementation subCi = sub.getComponentImplementation();
             if (subCi != null) {
@@ -75,13 +75,13 @@ public class VerifyAll extends AgreeAction {
         return result;
     }
 
-    private AnalysisResult createContractVerification(String name, ComponentImplementation ci,
+    private AnalysisResult createContractVerification(ComponentImplementation ci,
             Subcomponent context) {
         final AgreeEmitter emitter = new AgreeEmitter(ci, context);
         Program program = emitter.evaluate();
         List<String> properties = program.getMainNode().properties;
         Renaming renaming = new MapRenaming(emitter.varRenaming, MapRenaming.Mode.NULL);
-        JKindResult result = new JKindResult("Contract for " + name, properties, renaming);
+        JKindResult result = new JKindResult("Contract", properties, renaming);
         queue.add(new WorkItem(program, result));
         return result;
     }

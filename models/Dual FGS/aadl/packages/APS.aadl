@@ -53,22 +53,18 @@ annex agree {**
 --  active: Bool ; 
 --  Pitch_Delta: real;  
 -----------------------------------------------------------------
-		
-fun abs(x: real) : real = if (x > 0.0) then x else -x ;  
-				  
-const CSA_MAX_PITCH_DELTA: real = 5.0 ; 
-const CSA_MAX_PITCH_DELTA_STEP: real = 5.0 ; 
 
 eq leader_pitch_delta : real =  
    if (GC_L.mds.active) then GC_L.cmds.Pitch_Delta
    else if (GC_R.mds.active) then GC_R.cmds.Pitch_Delta
    else (prev(leader_pitch_delta, 0.0)) ;
-		
--- assertion just defines CSA pitch delta in terms of the leader pitch delta.
-guarantee 
+   
+-- defines CSA pitch delta in terms of the leader pitch delta.
+property leader_pitch_delta_correct =
   (leader_pitch_delta > 0.0 => (CSA.CSA_Pitch_Delta > 0.0 and CSA.CSA_Pitch_Delta <= leader_pitch_delta)) and
   (leader_pitch_delta <= 0.0 => (CSA.CSA_Pitch_Delta <= 0.0 and CSA.CSA_Pitch_Delta >= leader_pitch_delta)); 
   
+guarantee leader_pitch_delta_correct;
 **};
 
   end Autopilot_System;
@@ -110,6 +106,10 @@ guarantee
       APP2CSA: port APP.CSA -> CSA;
       GCL2APP: port GC_L -> APP.GC_L;
       GCR2APP: port GC_R -> APP.GC_R;
+      
+      annex agree {**
+        assert leader_pitch_delta_correct;
+      **};
   end Autopilot_System.Autopilot_System_Impl;
   
   thread implementation Autopilot_Thread.Autopilot_Thread_Impl
