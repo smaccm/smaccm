@@ -49,11 +49,10 @@ import org.eclipse.xtext.util.concurrent.IUnitOfWork;
 import org.osate.aadl2.Element;
 import org.osate.aadl2.Subcomponent;
 import org.osate.aadl2.SystemImplementation;
-import org.osate.aadl2.modelsupport.errorreporting.AnalysisErrorReporterManager;
 
 import com.google.inject.Injector;
 import com.rockwellcollins.atc.agree.analysis.AgreeEmitter;
-import com.rockwellcollins.atc.agree.analysis.AgreeSingleResultsView;
+import com.rockwellcollins.atc.agree.analysis.AgreeResultsView;
 import com.rockwellcollins.atc.agree.ui.internal.AgreeActivator;
 
 /**
@@ -136,11 +135,6 @@ public abstract class AgreeAction implements IWorkbenchWindowActionDelegate {
 		this.window = window;
 	}
 
-
-	protected AnalysisErrorReporterManager getErrorManager() {
-		return AnalysisErrorReporterManager.NULL_ERROR_MANANGER;
-	}
-
 	public void runKindQueryAPI(Subcomponent subContext, 
 			AgreeEmitter emit, 
 			Program query, 
@@ -152,7 +146,7 @@ public abstract class AgreeAction implements IWorkbenchWindowActionDelegate {
 		final JKindResult result;
 
 		try {
-			String name;
+			final String name;
 			if (subContext != null) {
 				name = subContext.getName();
 			} else {
@@ -160,11 +154,11 @@ public abstract class AgreeAction implements IWorkbenchWindowActionDelegate {
 			}
 
 			result = new JKindResult(name, query.getMainNode().properties, varRenaming);
-			showView(result);
+			showView(result, monitor);
 			japi.execute(query, result, monitor);
 
-			File tempFile = File.createTempFile("agree_" + name + "_", ".xls");
-			result.toExcel(tempFile);
+            File tempFile = File.createTempFile("agree_" + name + "_", ".xls");
+            result.toExcel(tempFile);
 		} catch (Exception e) {
 			out.print(e.getMessage());
 			return;
@@ -245,15 +239,14 @@ public abstract class AgreeAction implements IWorkbenchWindowActionDelegate {
 
 	}
 
-	private void showView(final JKindResult result) {
+	private void showView(final JKindResult result, final IProgressMonitor monitor) {
 		window.getShell().getDisplay().syncExec(new Runnable() {
 			@Override
 			public void run() {
-				AgreeSingleResultsView page;
 				try {
-					page = (AgreeSingleResultsView) window.getActivePage().showView(
-							AgreeSingleResultsView.ID);
-					page.setInput(result);
+					AgreeResultsView page = (AgreeResultsView) window.getActivePage().showView(
+							AgreeResultsView.ID);
+					page.setInput(result, monitor);
 				} catch (PartInitException e) {
 					e.printStackTrace();
 				}

@@ -43,16 +43,36 @@
          </action>
       </actionSet>
    </extension>
+   
    <extension point="org.eclipse.ui.views">
-        <view id="com.rockwellcollins.atc.agree.analysis.agreeSingleResultsView"
-             name="AGREE Single Layer"
-          class="com.rockwellcollins.atc.agree.analysis.AgreeSingleResultsView"
-          icon="icons/layer.png"/>
-   </extension>
-   <extension point="org.eclipse.ui.views">
-        <view id="com.rockwellcollins.atc.agree.analysis.agreeMultipleResultsView"
-             name="AGREE All Layers"
-          class="com.rockwellcollins.atc.agree.analysis.AgreeMultipleResultsView"
+        <view id="com.rockwellcollins.atc.agree.analysis.agreeResultsView"
+             name="AGREE Results"
+          class="com.rockwellcollins.atc.agree.analysis.AgreeResultsView"
           icon="icons/layers.png"/>
+   </extension>
+  
+   <extension point="org.eclipse.ui.commands">
+     <category id="com.rockwellcollins.atc.agree.analysis.commands"
+       name="AGREE commands">
+     </category>
+     <command categoryId="com.rockwellcollins.atc.agree.analysis.commands"
+            description="Terminate the current AGREE analysis"
+            id="com.rockwellcollins.atc.agree.analysis.commands.terminate"
+            name="Terminate AGREE Analysis">
+     </command>
+   </extension>
+   
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            allPopups="false"
+            locationURI="toolbar:com.rockwellcollins.atc.agree.analysis.agreeResultsView">
+         <command
+               commandId="com.rockwellcollins.atc.agree.analysis.commands.terminate"
+               icon="icons/terminate.png"
+               label="Terminate"
+               style="push">
+         </command>
+      </menuContribution>
    </extension>
 </plugin>

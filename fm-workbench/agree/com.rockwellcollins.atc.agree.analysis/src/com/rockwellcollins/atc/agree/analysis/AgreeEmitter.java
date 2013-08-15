@@ -3,9 +3,11 @@ package com.rockwellcollins.atc.agree.analysis;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -95,7 +97,7 @@ import com.rockwellcollins.atc.agree.agree.util.AgreeSwitch;
 
 public class AgreeEmitter extends AgreeSwitch<Expr> {
 
-	public class AgreeVarDecl implements Comparable<Object> {
+	public class AgreeVarDecl implements Comparable<AgreeVarDecl> {
 		public String jKindStr = null;
 		public String aadlStr  = null;
 		public String type     = null;
@@ -113,12 +115,8 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
 		}
 
 		@Override
-		public int compareTo(Object o) {
-			// TODO Auto-generated method stub
-			if (!(o instanceof AgreeVarDecl))
-				return -1;
-
-			return jKindStr.compareTo(((AgreeVarDecl) o).jKindStr);
+		public int compareTo(AgreeVarDecl o) {
+			return jKindStr.compareTo(o.jKindStr);
 		}
 
 	}
@@ -1076,55 +1074,38 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
 
 	}
 
-	private Expr getLustreAssumptions(ComponentContract contract) {
-
-		Expr andExpr = new BoolExpr(true);
-		for (Expr expr : contract.assumps) {
-			andExpr = new BinaryExpr(andExpr, BinaryOp.AND, expr);
-		}
-		return andExpr;
+	private Expr conjoin(List<Expr> exprs) {
+	    if (exprs.isEmpty()) {
+	        return new BoolExpr(true);
+	    }
+	    
+	    Iterator<Expr> iterator = exprs.iterator();
+	    Expr result = iterator.next();
+	    while (iterator.hasNext()) {
+	        result = new BinaryExpr(result, BinaryOp.AND, iterator.next());
+	    }
+	    return result;
 	}
+    
+    private Expr conjoin(Expr... exprs) {
+        return conjoin(Arrays.asList(exprs));
+    }
+    
+    private Expr getLustreAssumptions(ComponentContract contract) {
+        return conjoin(contract.assumps);
+    }
 
-	private Expr getLustreAssumptionsAndAssertions(ComponentContract contract) {
+    private Expr getLustreAssumptionsAndAssertions(ComponentContract contract) {
+        return conjoin(conjoin(contract.assumps), conjoin(contract.asserts));
+    }
 
-		Expr andExpr = new BoolExpr(true);
-		for (Expr expr : contract.assumps) {
-			andExpr = new BinaryExpr(andExpr, BinaryOp.AND, expr);
-		}
-
-		for (Expr expr : contract.asserts) {
-			andExpr = new BinaryExpr(andExpr, BinaryOp.AND, expr);
-		}
-
-		return andExpr;
-	}
-
-	private Expr getLustreContract(ComponentContract contract) {
-
-		Expr andExpr = new BoolExpr(true);
-		for (Expr expr : contract.assumps) {
-			andExpr = new BinaryExpr(andExpr, BinaryOp.AND, expr);
-		}
-		
-		for (Expr expr : contract.guars) {
-			andExpr = new BinaryExpr(andExpr, BinaryOp.AND, expr);
-		}
-
-		for (Expr expr : contract.asserts) {
-			andExpr = new BinaryExpr(andExpr, BinaryOp.AND, expr);
-		}
-
-		return andExpr;
-	}
+    private Expr getLustreContract(ComponentContract contract) {
+        return conjoin(conjoin(contract.assumps), conjoin(contract.asserts),
+                conjoin(contract.guars));
+    }
 
 	private Expr getLustreGuarantee(ComponentContract contract) {
-
-		Expr andExpr = new BoolExpr(true);
-		for (Expr expr : contract.guars) {
-			andExpr = new BinaryExpr(andExpr, BinaryOp.AND, expr);
-		}
-		
-		return andExpr;
+	    return conjoin(contract.guars);
 	}
 
 	private List<Node> getLustre() {
