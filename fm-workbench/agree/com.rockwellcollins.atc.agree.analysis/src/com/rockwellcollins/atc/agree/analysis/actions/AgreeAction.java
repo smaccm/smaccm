@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Set;
 
 import jkind.api.JKindApi;
+import jkind.api.results.AnalysisResult;
 import jkind.api.results.JKindResult;
 import jkind.api.results.MapRenaming;
 import jkind.api.results.PropertyResult;
@@ -46,9 +47,9 @@ import org.eclipse.xtext.ui.editor.GlobalURIEditorOpener;
 import org.eclipse.xtext.ui.editor.XtextEditor;
 import org.eclipse.xtext.ui.editor.outline.impl.EObjectNode;
 import org.eclipse.xtext.util.concurrent.IUnitOfWork;
+import org.osate.aadl2.ComponentImplementation;
 import org.osate.aadl2.Element;
 import org.osate.aadl2.Subcomponent;
-import org.osate.aadl2.SystemImplementation;
 
 import com.google.inject.Injector;
 import com.rockwellcollins.atc.agree.analysis.AgreeEmitter;
@@ -66,7 +67,6 @@ import com.rockwellcollins.atc.agree.ui.internal.AgreeActivator;
 public abstract class AgreeAction implements IWorkbenchWindowActionDelegate {
     private IWorkbenchWindow window;
     private Object currentSelection;
-    protected AgreeEmitter emitter = null;
 
     @Override
     public void selectionChanged(IAction action, ISelection selection) {
@@ -161,6 +161,12 @@ public abstract class AgreeAction implements IWorkbenchWindowActionDelegate {
             return;
         }
 
+        printCounterexamples(subContext, emit, out, varRenaming, result);
+
+    }
+
+    private void printCounterexamples(Subcomponent subContext, AgreeEmitter emit,
+            MessageConsoleStream out, final Renaming varRenaming, final JKindResult result) {
         List<PropertyResult> props = result.getPropertyResults();
 
         for (PropertyResult propRes : props) {
@@ -196,17 +202,15 @@ public abstract class AgreeAction implements IWorkbenchWindowActionDelegate {
                 };
 
                 // print out values for the top level component
-
                 Set<String> kVars = null;
                 String name;
-                if (subContext != null) { // this is a result from a recursive
-                                          // call
+                if (subContext != null) { // this is a result from a recursive call
                     kVars = emit.getCompToKVarMap().get(subContext);
                     name = subContext.getName();
                 } else {
-                    SystemImplementation sysImpl = emit.getSysImpl();
-                    kVars = emit.getCompToKVarMap().get(sysImpl);
-                    name = sysImpl.getName();
+                    ComponentImplementation compImpl = emit.getCompImpl();
+                    kVars = emit.getCompToKVarMap().get(compImpl);
+                    name = compImpl.getName();
                 }
 
                 // get vars in alphebetical order
@@ -234,10 +238,9 @@ public abstract class AgreeAction implements IWorkbenchWindowActionDelegate {
                 out.println("VALID");
             }
         }
-
     }
 
-    private void showView(final JKindResult result, final IProgressMonitor monitor) {
+    protected void showView(final AnalysisResult result, final IProgressMonitor monitor) {
         window.getShell().getDisplay().syncExec(new Runnable() {
             @Override
             public void run() {
