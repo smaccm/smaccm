@@ -1,65 +1,65 @@
 package com.rockwellcollins.atc.resolute.validation;
 
 public class SetType extends ResoluteType {
-	final public ResoluteType elementType;
+    final public ResoluteType elementType;
 
-	public SetType(ResoluteType elementType) {
-		if (elementType == null) {
-			throw new IllegalArgumentException();
-		}
+    public SetType(ResoluteType elementType) {
+        if (elementType == null) {
+            throw new IllegalArgumentException();
+        }
 
-		this.elementType = elementType;
-	}
+        this.elementType = elementType;
+    }
 
-	@Override
-	public String toString() {
-		return "{" + elementType + "}";
-	}
+    @Override
+    public String toString() {
+        return "{" + elementType + "}";
+    }
 
-	@Override
-	public boolean subtypeOf(ResoluteType otherType) {
-		if (this.equals(BaseType.FAIL) || otherType.equals(BaseType.FAIL)) {
-			return true;
-		}
-		
-		if (otherType instanceof SetType) {
-			SetType st = (SetType) otherType;
-			return elementType.subtypeOf(st.elementType);
-		}
+    @Override
+    public boolean subtypeOf(ResoluteType otherType) {
+        if (this.equals(BaseType.FAIL) || otherType.equals(BaseType.FAIL)) {
+            return true;
+        }
 
-		return false;
-	}
+        if (otherType instanceof SetType) {
+            SetType st = (SetType) otherType;
+            return elementType.subtypeOf(st.elementType);
+        }
 
-	@Override
-	public ResoluteType join(ResoluteType otherType) {
-		if (this.equals(BaseType.FAIL) || otherType.equals(BaseType.FAIL)) {
-			return BaseType.FAIL;
-		}
-		
-		if (this.equals(otherType)) {
-			return this;
-		}
+        return false;
+    }
 
-		if (otherType instanceof SetType) {
-			SetType st = (SetType) otherType;
-			return elementType.join(st.elementType);
-		}
+    @Override
+    public ResoluteType join(ResoluteType otherType) {
+        if (this.equals(BaseType.FAIL) || otherType.equals(BaseType.FAIL)) {
+            return BaseType.FAIL;
+        }
 
-		return null;
-	}
+        if (this.equals(otherType)) {
+            return this;
+        }
 
-	@Override
-	public int hashCode() {
-		return elementType.hashCode();
-	}
+        if (otherType instanceof SetType) {
+            SetType st = (SetType) otherType;
+            return elementType.join(st.elementType);
+        }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (obj instanceof SetType) {
-			SetType st = (SetType) obj;
-			return st.elementType.equals(elementType);
-		}
+        return null;
+    }
 
-		return false;
-	}
+    @Override
+    public int hashCode() {
+        return elementType.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof SetType) {
+            SetType st = (SetType) obj;
+            return st.elementType.equals(elementType);
+        }
+
+        return false;
+    }
 }

@@ -20,15 +20,15 @@ import com.rockwellcollins.atc.resolute.resolute.QuantifiedExpr;
  * 
  */
 public class ResoluteScopeProvider extends PropertiesScopeProvider {
-	IScope scope_NamedElement(QuantifiedExpr ctx, EReference ref) {
-		return Scopes.scopeFor(ctx.getArgs(), getScope(ctx.eContainer(), ref));
-	}
+    IScope scope_NamedElement(QuantifiedExpr ctx, EReference ref) {
+        return Scopes.scopeFor(ctx.getArgs(), getScope(ctx.eContainer(), ref));
+    }
 
-	IScope scope_NamedElement(FunctionDefinition ctx, EReference ref) {
-		return Scopes.scopeFor(ctx.getArgs(), getScope(ctx.eContainer(), ref));
-	}
+    IScope scope_NamedElement(FunctionDefinition ctx, EReference ref) {
+        return Scopes.scopeFor(ctx.getArgs(), getScope(ctx.eContainer(), ref));
+    }
 
-	IScope scope_NamedElement(FilterMapExpr ctx, EReference ref) {
-		return Scopes.scopeFor(ctx.getArgs(), getScope(ctx.eContainer(), ref));
-	}
+    IScope scope_NamedElement(FilterMapExpr ctx, EReference ref) {
+        return Scopes.scopeFor(ctx.getArgs(), getScope(ctx.eContainer(), ref));
+    }
 }

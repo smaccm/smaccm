@@ -17,7 +17,7 @@ LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE A
 IN NO EVENT SHALL THE AUTHORS, SPONSORS, DEVELOPERS, CONTRIBUTORS, OR COPYRIGHT HOLDERS BE LIABLE 
 FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, 
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE DATA OR THE USE OR OTHER DEALINGS IN THE DATA.
-*/
+ */
 
 package edu.umn.cs.crisys.smaccm.aadl2rtos.ast;
 
@@ -32,82 +32,84 @@ import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosFailure;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Pair;
 
 public class IdType extends Type {
-	private final String typeId; 
-	private Type typeRef = null; 
-	
-	
-	public IdType(String tid) { 
-		typeId = tid; 
-	}
-	
-	public IdType(String typeId, Type typeRef) {
-		this.typeId = typeId; 
-		this.typeRef = typeRef;
-	}
-	
-	public String getTypeId() {
-		return typeId;
-	}
-	
-	@Override
-	public Pair<String, String> splitCType() {
-		return new Pair<String, String>(toString(), "");
-	}
+    private final String typeId;
+    private Type typeRef = null;
 
-	// TODO: this may be problematic for type aliases.  
-	// 	Type aliases are not supported in CORBA IDL.
-	public boolean isBaseType() { return false ; }
-	
-	public Type getTypeRef() { return typeRef; }
-	
-	private Type getRootTypeInt(Set<Type> visited) {
-		if (visited.contains(this)) {
-			throw new Aadl2RtosException("Circular reference in ids for type " + typeId);
-		}
-		else if (typeRef instanceof IdType) {
-			visited.add(this);
-			return ((IdType)typeRef).getRootTypeInt(visited);
-		}
-		else {
-			return typeRef;
-		}
-	}
-	
-	@Override
-	public Type getRootType() throws Aadl2RtosFailure {
-		Set<Type> visited = new HashSet<Type>();
-		try {
-			return getRootTypeInt(visited);
-		} catch (Aadl2RtosException e) {
-			Aadl2RtosFailure f = new Aadl2RtosFailure(); 
-			f.addMessage(e.toString());
-			f.addMessage("Circular reference in ids for type " + typeId); 
-			throw f;
-		}
-	}
-	
-	@Override
-	public void init(Map<String, Type> types) {
-		assert(types != null);
-		
-		Type ty = types.get(typeId);
-		if (ty == null)  {
-			throw new Aadl2RtosException("Unable to find type " + typeId + " (last lookup: " + typeId + ")");
-		}
-		else {
-			typeRef = ty;
-		}
-	}
-	
-	@Override
-	public List<Type> dependencies() {
-		List<Type> tyl = new ArrayList<Type>(1);
-		tyl.add(typeRef); 
-		return tyl;
-	}
-	
-	@Override
-	public String toString() {
-		return typeId; 
-	}
+    public IdType(String tid) {
+        typeId = tid;
+    }
+
+    public IdType(String typeId, Type typeRef) {
+        this.typeId = typeId;
+        this.typeRef = typeRef;
+    }
+
+    public String getTypeId() {
+        return typeId;
+    }
+
+    @Override
+    public Pair<String, String> splitCType() {
+        return new Pair<String, String>(toString(), "");
+    }
+
+    // TODO: this may be problematic for type aliases.
+    // Type aliases are not supported in CORBA IDL.
+    @Override
+    public boolean isBaseType() {
+        return false;
+    }
+
+    public Type getTypeRef() {
+        return typeRef;
+    }
+
+    private Type getRootTypeInt(Set<Type> visited) {
+        if (visited.contains(this)) {
+            throw new Aadl2RtosException("Circular reference in ids for type " + typeId);
+        } else if (typeRef instanceof IdType) {
+            visited.add(this);
+            return ((IdType) typeRef).getRootTypeInt(visited);
+        } else {
+            return typeRef;
+        }
+    }
+
+    @Override
+    public Type getRootType() throws Aadl2RtosFailure {
+        Set<Type> visited = new HashSet<Type>();
+        try {
+            return getRootTypeInt(visited);
+        } catch (Aadl2RtosException e) {
+            Aadl2RtosFailure f = new Aadl2RtosFailure();
+            f.addMessage(e.toString());
+            f.addMessage("Circular reference in ids for type " + typeId);
+            throw f;
+        }
+    }
+
+    @Override
+    public void init(Map<String, Type> types) {
+        assert (types != null);
+
+        Type ty = types.get(typeId);
+        if (ty == null) {
+            throw new Aadl2RtosException("Unable to find type " + typeId + " (last lookup: "
+                    + typeId + ")");
+        } else {
+            typeRef = ty;
+        }
+    }
+
+    @Override
+    public List<Type> dependencies() {
+        List<Type> tyl = new ArrayList<Type>(1);
+        tyl.add(typeRef);
+        return tyl;
+    }
+
+    @Override
+    public String toString() {
+        return typeId;
+    }
 }

@@ -9,30 +9,30 @@ import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.part.ViewPart;
 
 public class AgreeResultsView extends ViewPart {
-	public static final String ID = "com.rockwellcollins.atc.agree.analysis.agreeResultsView";
-	public final String TERMINATE_ID = "com.rockwellcollins.atc.agree.analysis.commands.terminate";
-	
-	private AnalysisResultTree tree;
-	private AnalysisTerminateHandler terminateHandler;
+    public static final String ID = "com.rockwellcollins.atc.agree.analysis.agreeResultsView";
+    public final String TERMINATE_ID = "com.rockwellcollins.atc.agree.analysis.commands.terminate";
 
-	@Override
-	public void createPartControl(Composite parent) {
-		tree = new AnalysisResultTree(parent);
+    private AnalysisResultTree tree;
+    private AnalysisTerminateHandler terminateHandler;
 
-		terminateHandler = new AnalysisTerminateHandler();
-		IHandlerService handlerService = (IHandlerService) getViewSite().getService(
-				IHandlerService.class);
-		handlerService.activateHandler(TERMINATE_ID, terminateHandler);
-	}
+    @Override
+    public void createPartControl(Composite parent) {
+        tree = new AnalysisResultTree(parent);
 
-	@Override
-	public void setFocus() {
-		tree.getControl().setFocus();
-	}
+        terminateHandler = new AnalysisTerminateHandler();
+        IHandlerService handlerService = (IHandlerService) getViewSite().getService(
+                IHandlerService.class);
+        handlerService.activateHandler(TERMINATE_ID, terminateHandler);
+    }
 
-	public void setInput(AnalysisResult result, IProgressMonitor monitor) {
-		tree.setInput(result);
-		terminateHandler.setResult(result);
-		terminateHandler.setMonitor(monitor);
-	}
+    @Override
+    public void setFocus() {
+        tree.getControl().setFocus();
+    }
+
+    public void setInput(AnalysisResult result, IProgressMonitor monitor) {
+        tree.setInput(result);
+        terminateHandler.setResult(result);
+        terminateHandler.setMonitor(monitor);
+    }
 }

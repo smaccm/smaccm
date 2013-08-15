@@ -17,7 +17,7 @@ LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE A
 IN NO EVENT SHALL THE AUTHORS, SPONSORS, DEVELOPERS, CONTRIBUTORS, OR COPYRIGHT HOLDERS BE LIABLE 
 FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, 
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE DATA OR THE USE OR OTHER DEALINGS IN THE DATA.
-*/
+ */
 
 package edu.umn.cs.crisys.smaccm.aadl2rtos.ast;
 
@@ -25,51 +25,54 @@ import java.util.List;
 
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Pair;
 
-
 public class CharType extends Type {
-	
-	CharEnum charSet; 
-	
-	public CharType(CharEnum set) {
-		charSet = set; 
-	}
-	
-	public boolean isBaseType() { return true; }
 
-	@Override
-	public Pair<String, String> splitCType() {
-		return new Pair<String, String>(toString(), "");
-	}
+    CharEnum charSet;
 
-	@Override
-	public List<Type> dependencies() {return null; }
+    public CharType(CharEnum set) {
+        charSet = set;
+    }
 
-	@Override
-	public String toString() {
-		if (charSet == CharEnum.ASCII) {
-			return "char";
-		} else {
-			return "wchar_t"; 
-		}
-	}
-	
-	public CharEnum getCharSet() {
-		return charSet; 
-	}
+    @Override
+    public boolean isBaseType() {
+        return true;
+    }
 
-//	@Override
-//	public Expr getDefaultValue() {
-//		return new BoolExpr(true);
-//	}
+    @Override
+    public Pair<String, String> splitCType() {
+        return new Pair<String, String>(toString(), "");
+    }
 
-	@Override
-	public int hashCode() {
-		return charSet.ordinal();
-	}
+    @Override
+    public List<Type> dependencies() {
+        return null;
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		return (obj instanceof CharType && 
-				((CharType)obj).getCharSet() == getCharSet()); 
-	}
+    @Override
+    public String toString() {
+        if (charSet == CharEnum.ASCII) {
+            return "char";
+        } else {
+            return "wchar_t";
+        }
+    }
+
+    public CharEnum getCharSet() {
+        return charSet;
+    }
+
+    // @Override
+    // public Expr getDefaultValue() {
+    // return new BoolExpr(true);
+    // }
+
+    @Override
+    public int hashCode() {
+        return charSet.ordinal();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return (obj instanceof CharType && ((CharType) obj).getCharSet() == getCharSet());
+    }
 }

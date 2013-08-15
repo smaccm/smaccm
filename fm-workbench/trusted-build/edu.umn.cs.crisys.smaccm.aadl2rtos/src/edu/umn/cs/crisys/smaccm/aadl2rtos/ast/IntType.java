@@ -17,7 +17,7 @@ LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE A
 IN NO EVENT SHALL THE AUTHORS, SPONSORS, DEVELOPERS, CONTRIBUTORS, OR COPYRIGHT HOLDERS BE LIABLE 
 FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, 
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE DATA OR THE USE OR OTHER DEALINGS IN THE DATA.
-*/
+ */
 
 package edu.umn.cs.crisys.smaccm.aadl2rtos.ast;
 
@@ -25,54 +25,57 @@ import java.util.List;
 
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Pair;
 
-
 public class IntType extends Type {
-	
-	private int bitSize; 
-	private boolean signed;
-	
-	public IntType(int _bitSize, boolean _signed) {
-		super();
-		bitSize = _bitSize ; 
-		signed = _signed;
-	}
-	
-	public boolean isBaseType() { return true; }
-	
-	int getBitSize() {
-		return bitSize;
-	}
-	
-	boolean isSigned() {
-		return signed;
-	}
-	
-	@Override
-	public String toString() {
-		return (signed ? "" : "u") + "int_" + bitSize;
-	}
 
-	@Override
-	public Pair<String, String> splitCType() {
-		return new Pair<String, String>(toString(), "");
-	}
+    private int bitSize;
+    private boolean signed;
 
-	@Override
-	public List<Type> dependencies() {return null; }
-	
-	//	@Override
-//	public Expr getDefaultValue() {
-//		return new IntExpr(0);
-//	}
-	
-	@Override
-	public int hashCode() {
-		return bitSize * (signed ? 1 : 2);
-	}
+    public IntType(int _bitSize, boolean _signed) {
+        super();
+        bitSize = _bitSize;
+        signed = _signed;
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		return (obj instanceof IntType) && 
-			   (((IntType)obj).getBitSize() == bitSize); 
-	}
+    @Override
+    public boolean isBaseType() {
+        return true;
+    }
+
+    int getBitSize() {
+        return bitSize;
+    }
+
+    boolean isSigned() {
+        return signed;
+    }
+
+    @Override
+    public String toString() {
+        return (signed ? "" : "u") + "int_" + bitSize;
+    }
+
+    @Override
+    public Pair<String, String> splitCType() {
+        return new Pair<String, String>(toString(), "");
+    }
+
+    @Override
+    public List<Type> dependencies() {
+        return null;
+    }
+
+    // @Override
+    // public Expr getDefaultValue() {
+    // return new IntExpr(0);
+    // }
+
+    @Override
+    public int hashCode() {
+        return bitSize * (signed ? 1 : 2);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return (obj instanceof IntType) && (((IntType) obj).getBitSize() == bitSize);
+    }
 }

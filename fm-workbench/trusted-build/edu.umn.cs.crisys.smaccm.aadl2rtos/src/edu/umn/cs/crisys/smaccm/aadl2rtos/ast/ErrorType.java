@@ -17,7 +17,7 @@ LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE A
 IN NO EVENT SHALL THE AUTHORS, SPONSORS, DEVELOPERS, CONTRIBUTORS, OR COPYRIGHT HOLDERS BE LIABLE 
 FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, 
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE DATA OR THE USE OR OTHER DEALINGS IN THE DATA.
-*/
+ */
 
 package edu.umn.cs.crisys.smaccm.aadl2rtos.ast;
 
@@ -25,36 +25,39 @@ import java.util.List;
 
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Pair;
 
-
 public class ErrorType extends Type {
-	@Override
-	public String toString() {
-		return "error";
-	}
+    @Override
+    public String toString() {
+        return "error";
+    }
 
-	@Override
-	public Pair<String, String> splitCType() {
-		return new Pair<String, String>(toString(), "");
-	}
+    @Override
+    public Pair<String, String> splitCType() {
+        return new Pair<String, String>(toString(), "");
+    }
 
-	@Override
-	public List<Type> dependencies() {return null; }
-	
-	public boolean isBaseType() {
-		return false;
-	}
-//	@Override
-//	public Expr getDefaultValue() {
-//		return null;
-//	}
+    @Override
+    public List<Type> dependencies() {
+        return null;
+    }
 
-	@Override
-	public int hashCode() {
-		return 0;
-	}
+    @Override
+    public boolean isBaseType() {
+        return false;
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		return (obj instanceof ErrorType); 
-	}
+    // @Override
+    // public Expr getDefaultValue() {
+    // return null;
+    // }
+
+    @Override
+    public int hashCode() {
+        return 0;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return (obj instanceof ErrorType);
+    }
 }

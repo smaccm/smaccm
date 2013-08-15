@@ -17,7 +17,7 @@ LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE A
 IN NO EVENT SHALL THE AUTHORS, SPONSORS, DEVELOPERS, CONTRIBUTORS, OR COPYRIGHT HOLDERS BE LIABLE 
 FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, 
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE DATA OR THE USE OR OTHER DEALINGS IN THE DATA.
-*/
+ */
 
 package edu.umn.cs.crisys.smaccm.aadl2rtos.ast;
 
@@ -25,47 +25,50 @@ import java.util.List;
 
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Pair;
 
-
 public class RealType extends Type {
-	
-	FloatEnum realKind; 
-	public RealType(FloatEnum kind) {
-		realKind = kind;
-	}
-	
-	public boolean isBaseType() {
-		return true;
-	}
-	
-	@Override
-	public Pair<String, String> splitCType() {
-		return new Pair<String, String>(toString(), "");
-	}
 
-	@Override
-	public List<Type> dependencies() {return null; }
-	
-	@Override
-	public String toString() {
-		if (FloatEnum.DOUBLE == realKind) {
-			return "double";
-		} else {
-			return "real";
-		}
-	}
+    FloatEnum realKind;
 
-//	@Override
-//	public Expr getDefaultValue() {
-//		return new RealExpr(0.0);
-//	}
-	
-	@Override
-	public int hashCode() {
-		return 0;
-	}
+    public RealType(FloatEnum kind) {
+        realKind = kind;
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		return (obj instanceof RealType); 
-	}
+    @Override
+    public boolean isBaseType() {
+        return true;
+    }
+
+    @Override
+    public Pair<String, String> splitCType() {
+        return new Pair<String, String>(toString(), "");
+    }
+
+    @Override
+    public List<Type> dependencies() {
+        return null;
+    }
+
+    @Override
+    public String toString() {
+        if (FloatEnum.DOUBLE == realKind) {
+            return "double";
+        } else {
+            return "real";
+        }
+    }
+
+    // @Override
+    // public Expr getDefaultValue() {
+    // return new RealExpr(0.0);
+    // }
+
+    @Override
+    public int hashCode() {
+        return 0;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return (obj instanceof RealType);
+    }
 }

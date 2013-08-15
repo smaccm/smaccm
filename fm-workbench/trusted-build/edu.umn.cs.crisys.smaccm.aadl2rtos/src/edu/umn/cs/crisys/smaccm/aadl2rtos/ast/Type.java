@@ -17,7 +17,7 @@ LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE A
 IN NO EVENT SHALL THE AUTHORS, SPONSORS, DEVELOPERS, CONTRIBUTORS, OR COPYRIGHT HOLDERS BE LIABLE 
 FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, 
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE DATA OR THE USE OR OTHER DEALINGS IN THE DATA.
-*/
+ */
 
 package edu.umn.cs.crisys.smaccm.aadl2rtos.ast;
 
@@ -28,26 +28,24 @@ import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosFailure;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Pair;
 import edu.umn.cs.crisys.smaccm.topsort.DependsOn;
 
-
 public abstract class Type implements DependsOn<Type> {
-	// public abstract Expr getDefaultValue();
-	
-	abstract public boolean isBaseType(); 
-	
-	@Override
-	public abstract List<Type> dependencies(); 
-	
-	public void init(Map<String, Type> env) {
-	}
+    // public abstract Expr getDefaultValue();
 
+    abstract public boolean isBaseType();
 
-	// C array types need to be split around identifiers
-	// x : array [20] of (array [10] of int) ==> 
-	// int x[20][10]; 
-	abstract public Pair<String, String> splitCType(); 
-	
-	public Type getRootType() throws Aadl2RtosFailure {
-		return this;
-	}
+    @Override
+    public abstract List<Type> dependencies();
+
+    public void init(Map<String, Type> env) {
+    }
+
+    // C array types need to be split around identifiers
+    // x : array [20] of (array [10] of int) ==>
+    // int x[20][10];
+    abstract public Pair<String, String> splitCType();
+
+    public Type getRootType() throws Aadl2RtosFailure {
+        return this;
+    }
 
 }

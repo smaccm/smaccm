@@ -14,18 +14,20 @@ import com.rockwellcollins.atc.resolute.linking.ResoluteLinkingService;
 
 // Based on EMV2AnnexLinkingService from Error Model annex
 public class ResoluteAnnexLinkingService implements AnnexLinkingService {
-	@Inject
-	public ResoluteLinkingService linkingService;
+    @Inject
+    public ResoluteLinkingService linkingService;
 
-	@Inject
-	public IQualifiedNameProvider nameProvider;
+    @Inject
+    public IQualifiedNameProvider nameProvider;
 
-	public List<EObject> resolveAnnexReference(String annexName, EObject context,
-			EReference reference, INode node) {
-		return linkingService.getLinkedObjects(context, reference, node);
-	}
-	
-	public QualifiedName getFullyQualifiedName(final EObject obj) {
-		return nameProvider.getFullyQualifiedName(obj);
-	}
+    @Override
+    public List<EObject> resolveAnnexReference(String annexName, EObject context,
+            EReference reference, INode node) {
+        return linkingService.getLinkedObjects(context, reference, node);
+    }
+
+    @Override
+    public QualifiedName getFullyQualifiedName(final EObject obj) {
+        return nameProvider.getFullyQualifiedName(obj);
+    }
 }

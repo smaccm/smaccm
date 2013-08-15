@@ -22,66 +22,65 @@ import com.rockwellcollins.atc.agree.agree.IdExpr;
 import com.rockwellcollins.atc.agree.agree.NestedDotID;
 
 public class AgreeLinkingService extends PropertiesLinkingService {
-	public AgreeLinkingService() {
-		super();
-	}
+    public AgreeLinkingService() {
+        super();
+    }
 
-	@Override
-	public List<EObject> getLinkedObjects(EObject context, EReference reference, INode node)
-			throws IllegalNodeException {
-		String name = getCrossRefNodeAsString(node);
-		
-		if (context instanceof PropertyValue) {
-			return findUnitLiteralAsList((Element) context, name);
-		}
-		
-		if (context instanceof IdExpr || context instanceof NestedDotID) {
+    @Override
+    public List<EObject> getLinkedObjects(EObject context, EReference reference, INode node)
+            throws IllegalNodeException {
+        String name = getCrossRefNodeAsString(node);
 
-			//int dotIndex = name.indexOf('.');
-			//name = name.substring(0, dotIndex);
-			
-			//EObject e = findComponentClassifier((Element) context, name);
-			
-			EObject e = findClassifier(context, reference, name);
-			if (e != null) {
-				return Collections.singletonList(e);
-			}
+        if (context instanceof PropertyValue) {
+            return findUnitLiteralAsList((Element) context, name);
+        }
 
-			// TODO: This is a blind lookup which is unaware of project dependencies and such
-			e = EMFIndexRetrieval.getEObjectOfType(context, reference.getEReferenceType(), name);
-			if (e != null) {
-				return Collections.singletonList(e);
-			}
-		}
-		
-		return super.getLinkedObjects(context, reference, node);
-	}
+        if (context instanceof IdExpr || context instanceof NestedDotID) {
 
-	public static List<EObject> findUnitLiteralAsList(Element context, String name) {
-		EObject e = findUnitLiteral(context, name);
-		if (e == null) {
-			return Collections.<EObject> emptyList();
-		}
-		return Collections.singletonList((EObject) e);
-	}
+            // int dotIndex = name.indexOf('.');
+            // name = name.substring(0, dotIndex);
 
-	final private static EClass UNITS_TYPE = Aadl2Package.eINSTANCE.getUnitsType();
+            // EObject e = findComponentClassifier((Element) context, name);
 
-	private static UnitLiteral findUnitLiteral(Element context, String name) {
-		// TODO: Scope literals by type, but how to do we know the type of an
-		// expression?
-		for (IEObjectDescription desc : EMFIndexRetrieval
-				.getAllEObjectsOfTypeInWorkspace(UNITS_TYPE)) {
-			UnitsType unitsType = (UnitsType) EcoreUtil.resolve(desc.getEObjectOrProxy(), context);
-			UnitLiteral literal = unitsType.findLiteral(name);
-			if (literal != null) {
-				return literal;
-			}
-		}
+            EObject e = findClassifier(context, reference, name);
+            if (e != null) {
+                return Collections.singletonList(e);
+            }
 
-		return null;
-	}
-	
+            // TODO: This is a blind lookup which is unaware of project
+            // dependencies and such
+            e = EMFIndexRetrieval.getEObjectOfType(context, reference.getEReferenceType(), name);
+            if (e != null) {
+                return Collections.singletonList(e);
+            }
+        }
 
-	
+        return super.getLinkedObjects(context, reference, node);
+    }
+
+    public static List<EObject> findUnitLiteralAsList(Element context, String name) {
+        EObject e = findUnitLiteral(context, name);
+        if (e == null) {
+            return Collections.<EObject> emptyList();
+        }
+        return Collections.singletonList(e);
+    }
+
+    final private static EClass UNITS_TYPE = Aadl2Package.eINSTANCE.getUnitsType();
+
+    private static UnitLiteral findUnitLiteral(Element context, String name) {
+        // TODO: Scope literals by type, but how to do we know the type of an
+        // expression?
+        for (IEObjectDescription desc : EMFIndexRetrieval
+                .getAllEObjectsOfTypeInWorkspace(UNITS_TYPE)) {
+            UnitsType unitsType = (UnitsType) EcoreUtil.resolve(desc.getEObjectOrProxy(), context);
+            UnitLiteral literal = unitsType.findLiteral(name);
+            if (literal != null) {
+                return literal;
+            }
+        }
+
+        return null;
+    }
+
 }

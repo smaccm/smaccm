@@ -7,64 +7,64 @@ import java.util.List;
 import java.util.Set;
 
 public class SetValue extends ResoluteValue {
-	final private Set<ResoluteValue> values;
+    final private Set<ResoluteValue> values;
 
-	public SetValue(Set<ResoluteValue> values) {
-		if (values == null) {
-			throw new IllegalArgumentException("Cannot create null SetValue");
-		}
+    public SetValue(Set<ResoluteValue> values) {
+        if (values == null) {
+            throw new IllegalArgumentException("Cannot create null SetValue");
+        }
 
-		this.values = Collections.unmodifiableSet(values);
-	}
-	
-	public SetValue(List<ResoluteValue> list) {
-		if (list == null) {
-			throw new IllegalArgumentException("Cannot create null SetValue");
-		}
+        this.values = Collections.unmodifiableSet(values);
+    }
 
-		this.values = Collections.unmodifiableSet(new HashSet<ResoluteValue>(list));
-	}
+    public SetValue(List<ResoluteValue> list) {
+        if (list == null) {
+            throw new IllegalArgumentException("Cannot create null SetValue");
+        }
 
-	@Override
-	public boolean isSet() {
-		return true;
-	}
+        this.values = Collections.unmodifiableSet(new HashSet<ResoluteValue>(list));
+    }
 
-	@Override
-	public Set<ResoluteValue> getSet() {
-		return values;
-	}
+    @Override
+    public boolean isSet() {
+        return true;
+    }
 
-	@Override
-	public String toString() {
-		StringBuilder text = new StringBuilder();
-		text.append("{");
+    @Override
+    public Set<ResoluteValue> getSet() {
+        return values;
+    }
 
-		Iterator<ResoluteValue> iterator = values.iterator();
-		while (iterator.hasNext()) {
-			ResoluteValue element = iterator.next();
-			text.append(element);
-			if (iterator.hasNext()) {
-				text.append(", ");
-			}
-		}
+    @Override
+    public String toString() {
+        StringBuilder text = new StringBuilder();
+        text.append("{");
 
-		text.append("}");
-		return text.toString();
-	}
+        Iterator<ResoluteValue> iterator = values.iterator();
+        while (iterator.hasNext()) {
+            ResoluteValue element = iterator.next();
+            text.append(element);
+            if (iterator.hasNext()) {
+                text.append(", ");
+            }
+        }
 
-	@Override
-	public int hashCode() {
-		return values.hashCode();
-	}
+        text.append("}");
+        return text.toString();
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (obj instanceof SetValue) {
-			SetValue sv = (SetValue) obj;
-			return sv.values.equals(values);
-		}
+    @Override
+    public int hashCode() {
+        return values.hashCode();
+    }
 
-		return false;
-	}
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof SetValue) {
+            SetValue sv = (SetValue) obj;
+            return sv.values.equals(values);
+        }
+
+        return false;
+    }
 }

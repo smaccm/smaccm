@@ -3,16 +3,15 @@ package com.rockwellcollins.atc.resolute.analysis.actions;
 import com.rockwellcollins.atc.resolute.analysis.ProofType;
 import com.rockwellcollins.atc.resolute.analysis.ResoluteProofTree;
 
-
 public class ResoluteConfidence extends ResoluteAction {
-	@Override
-	protected void pruneProof(ResoluteProofTree proof) {
-		proof.pruneFalseClaims();
-	}
+    @Override
+    protected void pruneProof(ResoluteProofTree proof) {
+        proof.pruneFalseClaims();
+    }
 
-	@Override
-	protected ProofType getProofType() {
-		return ProofType.CONFIDENCE;
-	}
-	
+    @Override
+    protected ProofType getProofType() {
+        return ProofType.CONFIDENCE;
+    }
+
 }
