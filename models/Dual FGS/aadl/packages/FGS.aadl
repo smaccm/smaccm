@@ -234,7 +234,7 @@ annex agree {**
   		assert leader_implies_active ;
   		assert LSO.Valid <=> AD.Pitch.Valid ;
 
-  		assert
+  		assert 
     		this_side_in_control => gc_ok ;
 
   		assert this_side_in_control => (AD.Pitch.Val = GC.cmds.Pitch_Delta) ;

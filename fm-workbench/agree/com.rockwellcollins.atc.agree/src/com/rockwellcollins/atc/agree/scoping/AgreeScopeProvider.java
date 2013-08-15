@@ -25,7 +25,9 @@ import com.rockwellcollins.atc.agree.agree.AgreeContract;
 import com.rockwellcollins.atc.agree.agree.AgreeContractLibrary;
 import com.rockwellcollins.atc.agree.agree.AgreeContractSubclause;
 import com.rockwellcollins.atc.agree.agree.AgreeLibrary;
+import com.rockwellcollins.atc.agree.agree.FnDefExpr;
 import com.rockwellcollins.atc.agree.agree.NestedDotID;
+import com.rockwellcollins.atc.agree.agree.NodeDefExpr;
 import com.rockwellcollins.atc.agree.agree.PropertyStatement;
 import com.rockwellcollins.atc.agree.agree.SpecStatement;
 
@@ -47,6 +49,13 @@ public class AgreeScopeProvider extends
      * components.add(arg); } return Scopes.scopeFor(components,
      * getScope(ctx.eContainer(), ref)); }
      */
+    
+    IScope scope_NamedElement(FnDefExpr ctx, EReference ref) {
+        return Scopes.scopeFor(ctx.getArgs(), getScope(ctx.eContainer(), ref));
+    }
+    IScope scope_NamedElement(NodeDefExpr ctx, EReference ref) {
+        return Scopes.scopeFor(ctx.getArgs(), getScope(ctx.eContainer(), ref));
+    }
 
     IScope scope_NamedElement(AgreeContract ctx, EReference ref) {
 
@@ -128,6 +137,9 @@ public class AgreeScopeProvider extends
             assert (container instanceof AgreeContract);
             for (SpecStatement spec : ((AgreeContract) container).getSpecs()) {
                 if (spec instanceof PropertyStatement) {
+                    result.add(spec);
+                }
+                if (spec instanceof NodeDefExpr) {
                     result.add(spec);
                 }
             }

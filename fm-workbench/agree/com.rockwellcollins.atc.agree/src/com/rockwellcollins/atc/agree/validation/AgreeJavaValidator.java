@@ -46,7 +46,6 @@ import com.rockwellcollins.atc.agree.agree.GuaranteeStatement;
 import com.rockwellcollins.atc.agree.agree.IdExpr;
 import com.rockwellcollins.atc.agree.agree.IfThenElseExpr;
 import com.rockwellcollins.atc.agree.agree.IntLitExpr;
-import com.rockwellcollins.atc.agree.agree.NestIdExpr;
 import com.rockwellcollins.atc.agree.agree.NestedDotID;
 import com.rockwellcollins.atc.agree.agree.NextExpr;
 import com.rockwellcollins.atc.agree.agree.NodeDefExpr;
@@ -329,10 +328,18 @@ public class AgreeJavaValidator extends
         for (Arg lhsArg : lhsArgs) {
             agreeLhsTypes.add(getAgreeType(lhsArg));
         }
-        if (rhsExpr instanceof FnCallExpr && ((FnCallExpr) rhsExpr).getFn() instanceof NodeDefExpr) {
-            NodeDefExpr nodeDef = (NodeDefExpr) ((FnCallExpr) rhsExpr).getFn();
-            for (Arg var : nodeDef.getRets()) {
-                agreeRhsTypes.add(new AgreeType(var.getType().getName()));
+        
+        if (rhsExpr instanceof FnCallExpr){
+            NamedElement namedEl = getFinalNestId(((FnCallExpr)rhsExpr).getFn());
+            if( namedEl instanceof NodeDefExpr){
+                NodeDefExpr nodeDef = (NodeDefExpr) namedEl;
+                for (Arg var : nodeDef.getRets()) {
+                    agreeRhsTypes.add(new AgreeType(var.getType().getName()));
+                }
+            }else{
+                assert (namedEl instanceof FnDefExpr);
+                FnDefExpr fnDef = (FnDefExpr)namedEl;
+                agreeRhsTypes.add(new AgreeType(fnDef.getType().getName()));
             }
         } else {
             agreeRhsTypes.add(getAgreeType(rhsExpr));
@@ -469,14 +476,20 @@ public class AgreeJavaValidator extends
         }
         return list;
     }
-
+    
     public void checkInputsVsActuals(FnCallExpr fnCall) {
-        CallDef callDef = fnCall.getFn();
-
-        if (callDef == null) {
+        
+        NestedDotID dotId = fnCall.getFn();
+        NamedElement namedEl = getFinalNestId(dotId);
+        
+        if (!(namedEl instanceof CallDef)) {
+           // error(fnCall, "Named Element '"+namedEl.getName()+"' is not a Node or Function definition");
+            //this error will be caught elsewhere
             return;
         }
 
+        CallDef callDef = (CallDef)namedEl;
+        
         List<AgreeType> inDefTypes;
         String callName;
 
@@ -529,7 +542,16 @@ public class AgreeJavaValidator extends
 
         // TODO: Examine type system in more detail
         // TODO: Fix to make support type lists.
-        CallDef callDef = fnCall.getFn();
+        
+        NestedDotID dotId = fnCall.getFn();
+        NamedElement namedEl = getFinalNestId(dotId);
+        
+        if (!(namedEl instanceof CallDef)) {
+            error(fnCall, "Named Element '"+namedEl.getName()+"' is not a Node or Function definition");
+            return parseFailType;
+        }
+        
+        CallDef callDef = (CallDef)namedEl;
         // extract in/out arguments
         if (callDef == null) {
             return parseFailType;
@@ -733,15 +755,15 @@ public class AgreeJavaValidator extends
         checkScope(idExpr, id);
     }
 
-    @Check
-    public void checkNestIdExpr(NestIdExpr idExpr) {
-        if (idExpr == null) {
-            return;
-        }
+    //@Check
+    //public void checkNestIdExpr(NestIdExpr idExpr) {
+    //    if (idExpr == null) {
+    //        return;
+    //    }
 
-        NamedElement id = idExpr.getId().getName();
-        checkScope(idExpr, id);
-    }
+    //  NamedElement id = idExpr.getId().getName();
+    //  checkScope(idExpr, id);
+    //}
 
     private AgreeType getAgreeType(IdExpr idExpr) {
 
@@ -803,9 +825,9 @@ public class AgreeJavaValidator extends
             return new AgreeType("bool");
         }
 
-        if (expr instanceof NestIdExpr) {
-            return getAgreeType(((NestIdExpr) expr).getId());
-        }
+        //if (expr instanceof NestIdExpr) {
+        //    return getAgreeType(((NestIdExpr) expr).getId());
+        //}
 
         if (expr instanceof ThisExpr) {
             return new AgreeType("component");
@@ -814,9 +836,17 @@ public class AgreeJavaValidator extends
         if (expr instanceof PreExpr) {
             return getAgreeType(((PreExpr) expr).getExpr());
         }
-
+        
         assert (false);
         return null;
     }
 
+    public NamedElement getFinalNestId(NestedDotID dotId){
+        
+        while(dotId.getSubName() != null){
+            dotId = dotId.getSubName();
+        }
+        return dotId.getName();
+    }
+    
 }

@@ -103,21 +103,10 @@ const FCS_MAX_PITCH_SIDE_DELTA: real = 2.0 ;
 const CSA_MAX_PITCH_DELTA: real = 5.0 ; 
 const CSA_MAX_PITCH_DELTA_STEP: real = 5.0 ; 
 
-node Foobar(x: real) returns (y: real); 
-let
-	y = if (x > 0.0) then x else -x;
-tel;
-
-node Foobar2(w: real, x: real) returns (y: real, z: real);
-let
-	y = if (x > 0.0) then x else -x;
-	z = if (x < 0.0) then x else -x;
-tel;
-
-eq dummy1: real, dummy2: real = Foobar2(0.0, 1.0);
+eq dummy1: real, dummy2: real = Agree_Nodes.Foobar2(0.0, 1.0); 
 		  
 -- We assume that the transient for altitude is bounded both 
--- in terms of the next state and from left to right side.
+-- in terms of the next state and from left to right side. 
     		  
 property AD_L_Pitch_Step_Delta_Valid = 
   true -> abs(AD_L.Pitch.Val - prev(AD_L.Pitch.Val, 0.0)) < ADS_MAX_PITCH_DELTA ;
@@ -134,9 +123,9 @@ property some_side_valid =
 assume some_side_valid ;
 
 -- We assume when a side recovers it does not fail immediately
---assume prev(prev(not left_side_valid, false), false) and
---       prev(left_side_valid, false) => 
---           left_side_valid ;
+assume prev(prev(not left_side_valid, false), false) and
+       prev(left_side_valid, false) => 
+           left_side_valid ;
 assume prev(prev(not right_side_valid, false), false) and
        prev(right_side_valid, false) =>
          right_side_valid ;
@@ -148,11 +137,10 @@ assume prev(prev(not right_side_valid, false), false) and
 		  
 -- Assertion: our computed pitch deltas are less than some 
 -- maximum amount.
-  
- 
-  guarantee true -> Foobar(CSA.CSA_Pitch_Delta) < CSA_MAX_PITCH_DELTA ;
 
-  guarantee true -> Foobar(CSA.CSA_Pitch_Delta - prev(CSA.CSA_Pitch_Delta, 0.0)) < CSA_MAX_PITCH_DELTA_STEP ;
+  guarantee true -> Agree_Nodes.Foobar(CSA.CSA_Pitch_Delta) < CSA_MAX_PITCH_DELTA ;
+
+  guarantee true -> Agree_Nodes.Foobar(CSA.CSA_Pitch_Delta - prev(CSA.CSA_Pitch_Delta, 0.0)) < CSA_MAX_PITCH_DELTA_STEP ;
 
 -- End of Flight_Control_System Contact
 ----------------------------------------------------------------

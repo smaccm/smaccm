@@ -73,7 +73,6 @@ import com.rockwellcollins.atc.agree.agree.Arg;
 import com.rockwellcollins.atc.agree.agree.AssertStatement;
 import com.rockwellcollins.atc.agree.agree.AssumeStatement;
 import com.rockwellcollins.atc.agree.agree.BoolLitExpr;
-import com.rockwellcollins.atc.agree.agree.CallDef;
 import com.rockwellcollins.atc.agree.agree.ConstStatement;
 import com.rockwellcollins.atc.agree.agree.EqStatement;
 import com.rockwellcollins.atc.agree.agree.FnCallExpr;
@@ -81,7 +80,6 @@ import com.rockwellcollins.atc.agree.agree.FnDefExpr;
 import com.rockwellcollins.atc.agree.agree.GetPropertyExpr;
 import com.rockwellcollins.atc.agree.agree.GuaranteeStatement;
 import com.rockwellcollins.atc.agree.agree.IntLitExpr;
-import com.rockwellcollins.atc.agree.agree.NestIdExpr;
 import com.rockwellcollins.atc.agree.agree.NestedDotID;
 import com.rockwellcollins.atc.agree.agree.NodeBodyExpr;
 import com.rockwellcollins.atc.agree.agree.NodeDefExpr;
@@ -174,7 +172,7 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
     private Set<AgreeVarDecl> internalVars = new HashSet<AgreeVarDecl>();
     private Set<Subcomponent> subComps = new HashSet<Subcomponent>();
     public Map<Subcomponent, Set<Subcomponent>> closureMap = new HashMap<Subcomponent, Set<Subcomponent>>();
-    private String dotChar = "_";
+    private String dotChar = "__";
     private String jKindNameTag;
     private String aadlNameTag;
     public Map<String, String> varRenaming = new HashMap<String, String>();
@@ -650,10 +648,10 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
         return result;
     }
 
-    @Override
-    public Expr caseNestIdExpr(NestIdExpr expr) {
-        return doSwitch(expr.getId());
-    }
+    //@Override
+    //public Expr caseNestIdExpr(NestIdExpr expr) {
+    //    return doSwitch(expr.getId());
+    //}
 
     @Override
     public Expr casePreExpr(PreExpr expr) {
@@ -1224,16 +1222,21 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
     }
 
     public String getFnCallExprName(FnCallExpr expr) {
-        CallDef callDef = expr.getFn();
-        if (callDef instanceof FnDefExpr) {
-            return ((FnDefExpr) callDef).getName();
-        } else if (callDef instanceof NodeDefExpr) {
-            return ((NodeDefExpr) callDef).getName();
-        } else {
-            throw new AgreeException(
-                    "In getFnCallExprName: Match failure; FnCallExpr does not resolve "
-                            + "to either FnDefExpr or NodeDefExpr");
-        }
+        NestedDotID dotId = expr.getFn();
+        NamedElement namedEl = getFinalNestId(dotId);
+        
+        return namedEl.getName();
+        
+        //CallDef callDef = expr.getFn();
+        //if (callDef instanceof FnDefExpr) {
+        //    return ((FnDefExpr) callDef).getName();
+        //} else if (callDef instanceof NodeDefExpr) {
+        //    return ((NodeDefExpr) callDef).getName();
+        //} else {
+        //    throw new AgreeException(
+        //            "In getFnCallExprName: Match failure; FnCallExpr does not resolve "
+        //                    + "to either FnDefExpr or NodeDefExpr");
+        //}
     }
 
     private List<VarDecl> argsToVarDeclList(EList<Arg> args) {
@@ -1269,12 +1272,23 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
             return Id.getName();
         } else if (obj instanceof com.rockwellcollins.atc.agree.agree.IdExpr) {
             return ((com.rockwellcollins.atc.agree.agree.IdExpr) obj).getId();
-        } else if (obj instanceof NestIdExpr) {
-            return namedElFromId(((NestIdExpr) obj).getId());
-        } else {
+        } 
+        //   else if (obj instanceof NestIdExpr) {
+        //    return namedElFromId(((NestIdExpr) obj).getId());
+        //} 
+        else {
             assert (obj instanceof ThisExpr);
             return curComp;
         }
     }
+    
+    public NamedElement getFinalNestId(NestedDotID dotId){
+        
+        while(dotId.getSubName() != null){
+            dotId = dotId.getSubName();
+        }
+        return dotId.getName();
+    }
+    
 
 }

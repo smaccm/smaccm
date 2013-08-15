@@ -3,16 +3,19 @@
 package com.rockwellcollins.atc.agree.agree;
 
 import org.eclipse.emf.ecore.EObject;
+
 import org.osate.aadl2.NamedElement;
 
 /**
- * <!-- begin-user-doc --> A representation of the model object '
- * <em><b>Type</b></em>'. <!-- end-user-doc -->
- * 
- * 
+ * <!-- begin-user-doc -->
+ * A representation of the model object '<em><b>Type</b></em>'.
+ * <!-- end-user-doc -->
+ *
+ *
  * @see com.rockwellcollins.atc.agree.agree.AgreePackage#getType()
  * @model
  * @generated
  */
-public interface Type extends EObject, NamedElement {
+public interface Type extends EObject, NamedElement
+{
 } // Type
