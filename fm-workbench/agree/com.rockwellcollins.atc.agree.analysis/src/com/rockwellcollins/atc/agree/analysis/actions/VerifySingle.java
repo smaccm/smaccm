@@ -15,34 +15,34 @@ import org.osate.ui.dialogs.Dialog;
 import com.rockwellcollins.atc.agree.analysis.AgreeEmitter;
 
 public class VerifySingle extends AgreeAction {
-	@Override
-	protected IStatus runJob(Element root, IProgressMonitor monitor) {
-		if (!(root instanceof ComponentImplementation)) {
-			Dialog.showError("AGREE Error", "Please choose an AADL Component Implementation");
-			return Status.CANCEL_STATUS;
-		}
+    @Override
+    protected IStatus runJob(Element root, IProgressMonitor monitor) {
+        if (!(root instanceof ComponentImplementation)) {
+            Dialog.showError("AGREE Error", "Please choose an AADL Component Implementation");
+            return Status.CANCEL_STATUS;
+        }
 
-		SystemImplementation compImpl = (SystemImplementation) root;
-		emitter = new AgreeEmitter(compImpl);
-		final Program lustre = emitter.evaluate();
+        SystemImplementation compImpl = (SystemImplementation) root;
+        emitter = new AgreeEmitter(compImpl);
+        final Program lustre = emitter.evaluate();
 
-		MessageConsole logConsole = findConsole("Log For '" + compImpl.getName() + "'");
-		logConsole.clearConsole();
-		MessageConsoleStream logOut = logConsole.newMessageStream();
-		logOut.println(emitter.log.getLog());
-		
-		MessageConsole lustreConsole = findConsole("Lustre For '" + compImpl.getName() + "'");
-		lustreConsole.clearConsole();
-		MessageConsoleStream lustreOut = lustreConsole.newMessageStream();
-		lustreOut.println(lustre.toString());
+        MessageConsole logConsole = findConsole("Log For '" + compImpl.getName() + "'");
+        logConsole.clearConsole();
+        MessageConsoleStream logOut = logConsole.newMessageStream();
+        logOut.println(emitter.log.getLog());
 
-		MessageConsole kindConsole = findConsole("Kind Output For '" + compImpl.getName() + "'");
-		kindConsole.clearConsole();
-		kindConsole.addPatternMatchListener(new AgreePatternListener(emitter.refMap));
-		MessageConsoleStream kindOut = kindConsole.newMessageStream();
-		
-		runKindQueryAPI(null, emitter, lustre, kindOut, monitor);
-		return Status.OK_STATUS;
-	}
+        MessageConsole lustreConsole = findConsole("Lustre For '" + compImpl.getName() + "'");
+        lustreConsole.clearConsole();
+        MessageConsoleStream lustreOut = lustreConsole.newMessageStream();
+        lustreOut.println(lustre.toString());
+
+        MessageConsole kindConsole = findConsole("Kind Output For '" + compImpl.getName() + "'");
+        kindConsole.clearConsole();
+        kindConsole.addPatternMatchListener(new AgreePatternListener(emitter.refMap));
+        MessageConsoleStream kindOut = kindConsole.newMessageStream();
+
+        runKindQueryAPI(null, emitter, lustre, kindOut, monitor);
+        return Status.OK_STATUS;
+    }
 
 }
