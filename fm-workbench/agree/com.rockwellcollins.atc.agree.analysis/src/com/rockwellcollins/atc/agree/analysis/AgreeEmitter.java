@@ -58,9 +58,7 @@ import org.osate.aadl2.PropertyExpression;
 import org.osate.aadl2.RealLiteral;
 import org.osate.aadl2.StringLiteral;
 import org.osate.aadl2.Subcomponent;
-import org.osate.aadl2.SystemImplementation;
 import org.osate.aadl2.SystemSubcomponent;
-import org.osate.aadl2.SystemType;
 import org.osate.aadl2.modelsupport.resources.OsateResourceUtil;
 import org.osate.aadl2.properties.PropertyDoesNotApplyToHolderException;
 import org.osate.aadl2.properties.PropertyNotPresentException;
@@ -149,7 +147,7 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
     public AgreeLogger log = new AgreeLogger();
 
     // the top level system implementation
-    private SystemImplementation topSysImpl;
+    private ComponentImplementation topCompImpl;
 
     // the contract for the top level system implementation
     private ComponentContract sysContr;
@@ -183,26 +181,26 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
 
     // *********************** BEGIN METHODS ********************************
 
-    public AgreeEmitter(SystemImplementation sysImpl) {
-        topSysImpl = sysImpl;
+    public AgreeEmitter(ComponentImplementation compImpl) {
+        topCompImpl = compImpl;
     }
 
     public Program evaluate() {
 
-        compToKindVars.put(topSysImpl, new HashSet<String>());
+        compToKindVars.put(topCompImpl, new HashSet<String>());
 
         if (curComp != null) {
             compToKindVars.put(curComp, new HashSet<String>());
         }
 
-        for (Subcomponent subComp : topSysImpl.getAllSubcomponents()) {
+        for (Subcomponent subComp : topCompImpl.getAllSubcomponents()) {
             compToKindVars.put(subComp, new HashSet<String>());
         }
 
-        SystemType sys = topSysImpl.getType();
-        setLustreVars(sys);
-        setVarEquivs(topSysImpl);
-        makeContracts(topSysImpl);
+        ComponentType ct = topCompImpl.getType();
+        setLustreVars(ct);
+        setVarEquivs();
+        makeContracts();
         List<Node> nodes = getLustre();
 
         Program prog = new Program(nodes);
@@ -267,7 +265,7 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
         if (curComp != null) {
             compToKindVars.get(curComp).add(varDecl.jKindStr);
         } else {
-            compToKindVars.get(topSysImpl).add(varDecl.jKindStr);
+            compToKindVars.get(topCompImpl).add(varDecl.jKindStr);
         }
 
         varRenaming.put(varDecl.jKindStr, varDecl.aadlStr);
@@ -307,7 +305,7 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
             if (curComp != null) {
                 compToKindVars.get(curComp).add(varDecl.jKindStr);
             } else {
-                compToKindVars.get(topSysImpl).add(varDecl.jKindStr);
+                compToKindVars.get(topCompImpl).add(varDecl.jKindStr);
             }
 
             varRenaming.put(varDecl.jKindStr, varDecl.aadlStr);
@@ -333,7 +331,7 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
         if (curComp != null) {
             compToKindVars.get(curComp).add(varType.jKindStr);
         } else {
-            compToKindVars.get(topSysImpl).add(varType.jKindStr);
+            compToKindVars.get(topCompImpl).add(varType.jKindStr);
         }
 
         varRenaming.put(varType.jKindStr, varType.aadlStr);
@@ -744,13 +742,13 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
 
     }
 
-    private void makeContracts(SystemImplementation sysImpl) {
-        SystemType sys = sysImpl.getType();
+    private void makeContracts() {
+        ComponentType ct = topCompImpl.getType();
 
-        for (Subcomponent sub : sysImpl.getAllSubcomponents()) {
+        for (Subcomponent sub : topCompImpl.getAllSubcomponents()) {
             Set<Subcomponent> outputClosure = new HashSet<Subcomponent>();
             outputClosure.add(sub);
-            getOutputClosure(sysImpl.getAllConnections(), outputClosure);
+            getOutputClosure(topCompImpl.getAllConnections(), outputClosure);
             closureMap.put(sub, outputClosure);
         }
 
@@ -770,23 +768,23 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
         jKindNameTag = "";
         aadlNameTag = "";
 
-        for (AnnexSubclause annex : sysImpl.getAllAnnexSubclauses()) {
+        for (AnnexSubclause annex : topCompImpl.getAllAnnexSubclauses()) {
             if (annex instanceof AgreeContractSubclause) {
                 doSwitch(annex);
             }
         }
 
-        for (AnnexSubclause annex : sys.getAllAnnexSubclauses()) {
+        for (AnnexSubclause annex : ct.getAllAnnexSubclauses()) {
             if (annex instanceof AgreeContractSubclause) {
                 doSwitch(annex);
             }
         }
 
-        sysContr = new ComponentContract(sys.getName(), assumpExpressions, guarExpressions,
+        sysContr = new ComponentContract(ct.getName(), assumpExpressions, guarExpressions,
                 assertExpressions, propExpressions, eqExpressions, constExpressions,
                 nodeDefExpressions);
 
-        for (Subcomponent subComp : sysImpl.getAllSubcomponents()) {
+        for (Subcomponent subComp : topCompImpl.getAllSubcomponents()) {
 
             if (!(subComp instanceof SystemSubcomponent)) {
                 continue;
@@ -845,13 +843,13 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
 
     // fills the connExpressions lists with expressions
     // that equate variables that are connected to one another
-    private void setVarEquivs(SystemImplementation sysImpl) {
+    private void setVarEquivs() {
 
         // use for checking delay
         Property commTimingProp = EMFIndexRetrieval.getPropertyDefinitionInWorkspace(
                 OsateResourceUtil.getResourceSet(), "Communication_Properties::Timing");
 
-        for (Connection conn : sysImpl.getAllConnections()) {
+        for (Connection conn : topCompImpl.getAllConnections()) {
 
             AbstractConnectionEnd absConnDest = conn.getDestination();
             AbstractConnectionEnd absConnSour = conn.getSource();
@@ -974,12 +972,12 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
         }
     }
 
-    private void setLustreVars(SystemType sys) {
+    private void setLustreVars(ComponentType ct) {
 
-        Set<String> varList = compToKindVars.get(topSysImpl);
+        Set<String> varList = compToKindVars.get(topCompImpl);
         assert (varList != null);
 
-        for (Feature feat : sys.getAllFeatures()) {
+        for (Feature feat : ct.getAllFeatures()) {
             if (feat instanceof DataPort) {
                 DataPort port = (DataPort) feat;
                 DataSubcomponentType dataSub = port.getDataFeatureClassifier();
@@ -1211,8 +1209,8 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
         return nodeSet;
     }
 
-    public SystemImplementation getSysImpl() {
-        return topSysImpl;
+    public ComponentImplementation getCompImpl() {
+        return topCompImpl;
     }
 
     public Set<Subcomponent> getSubComponents() {

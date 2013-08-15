@@ -19,17 +19,14 @@ import com.rockwellcollins.atc.agree.analysis.AgreeEmitter;
 //import com.rockwellcollins.atc.jkind.plugin.views.JKindView;
 
 public class VerifyAll extends AgreeAction {
-
-    private IProgressMonitor monitor;
-
-    private void verifyAllSubsystems(SystemImplementation sysImpl, Subcomponent subContext) {
-
-        emitter = new AgreeEmitter(sysImpl);
+    private void verifyAllSubsystems(ComponentImplementation compImpl, Subcomponent subContext,
+            IProgressMonitor monitor) {
+        emitter = new AgreeEmitter(compImpl);
         emitter.curComp = subContext;
         final Program lustre = emitter.evaluate();
         String consoleName = null;
         if (subContext == null) {
-            consoleName = sysImpl.getName();
+            consoleName = compImpl.getName();
         } else {
             Classifier prevComp = subContext.getContainingClassifier();
             assert (prevComp instanceof SystemImplementation);
@@ -53,28 +50,21 @@ public class VerifyAll extends AgreeAction {
 
         runKindQueryAPI(subContext, emitter, lustre, kindOut, monitor);
 
-        for (Subcomponent subComp : sysImpl.getAllSubcomponents()) {
-            ComponentImplementation compImpl = subComp.getComponentImplementation();
-            if (compImpl instanceof SystemImplementation) {
-                verifyAllSubsystems((SystemImplementation) compImpl, subComp);
-            }
+        for (Subcomponent subComp : compImpl.getAllSubcomponents()) {
+            ComponentImplementation subCompImpl = subComp.getComponentImplementation();
+            verifyAllSubsystems(subCompImpl, subComp, monitor);
         }
 
     }
 
     @Override
     protected IStatus runJob(Element root, IProgressMonitor monitor) {
-
-        this.monitor = monitor;
-        if (!(root instanceof SystemImplementation)) {
-            Dialog.showError("AGREE Error", "Please choose an AADL System Implementation");
+        if (!(root instanceof ComponentImplementation)) {
+            Dialog.showError("AGREE Error", "Please choose an AADL Component Implementation");
             return Status.CANCEL_STATUS;
         }
 
-        SystemImplementation sysImpl = (SystemImplementation) root;
-
-        verifyAllSubsystems(sysImpl, null);
-
+        verifyAllSubsystems((ComponentImplementation) root, null, monitor);
         return Status.OK_STATUS;
     }
 
