@@ -1,16 +1,18 @@
-package com.rockwellcollins.atc.agree.analysis.actions;
+package com.rockwellcollins.atc.agree.analysis.views;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.ui.console.IHyperlink;
 import org.eclipse.xtext.ui.editor.GlobalURIEditorOpener;
 
+import com.rockwellcollins.atc.agree.analysis.Util;
+
 public class AgreeConsoleHyperLink implements IHyperlink {
-    private static GlobalURIEditorOpener uriEd;
+    private static GlobalURIEditorOpener globalURIEditorOpener = Util.getGlobalURIEditorOpener();
     private EObject ref;
 
-    public AgreeConsoleHyperLink(EObject o) {
-        ref = o;
+    public AgreeConsoleHyperLink(EObject ref) {
+        this.ref = ref;
     }
 
     @Override
@@ -23,11 +25,6 @@ public class AgreeConsoleHyperLink implements IHyperlink {
 
     @Override
     public void linkActivated() {
-        uriEd.open(EcoreUtil.getURI(ref), true);
-
-    }
-
-    public static void setGlobalURIEditorOpener(GlobalURIEditorOpener g) {
-        uriEd = g;
+        globalURIEditorOpener.open(EcoreUtil.getURI(ref), true);
     }
 }

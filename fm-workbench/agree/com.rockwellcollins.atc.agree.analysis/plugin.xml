@@ -16,7 +16,7 @@
             </separator>
          </menu>
           <action
-               label="Verify &amp;All System Layers"
+               label="Verify &amp;All Layers"
                icon="icons/layers.png"
                class="com.rockwellcollins.atc.agree.analysis.actions.VerifyAll"
                tooltip="Verify the contracts of all layers from the currently selected component and below"
@@ -45,9 +45,9 @@
    </extension>
    
    <extension point="org.eclipse.ui.views">
-        <view id="com.rockwellcollins.atc.agree.analysis.agreeResultsView"
+        <view id="com.rockwellcollins.atc.agree.analysis.views.agreeResultsView"
              name="AGREE Results"
-          class="com.rockwellcollins.atc.agree.analysis.AgreeResultsView"
+          class="com.rockwellcollins.atc.agree.analysis.views.AgreeResultsView"
           icon="icons/layers.png"/>
    </extension>
   
@@ -66,7 +66,7 @@
          point="org.eclipse.ui.menus">
       <menuContribution
             allPopups="false"
-            locationURI="toolbar:com.rockwellcollins.atc.agree.analysis.agreeResultsView">
+            locationURI="toolbar:com.rockwellcollins.atc.agree.analysis.views.agreeResultsView">
          <command
                commandId="com.rockwellcollins.atc.agree.analysis.commands.terminate"
                icon="icons/terminate.png"

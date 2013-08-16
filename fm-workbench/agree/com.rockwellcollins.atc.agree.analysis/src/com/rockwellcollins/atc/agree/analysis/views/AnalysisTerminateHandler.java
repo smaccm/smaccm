@@ -1,4 +1,4 @@
-package com.rockwellcollins.atc.agree.analysis;
+package com.rockwellcollins.atc.agree.analysis.views;
 
 import jkind.api.results.AnalysisResult;
 import jkind.api.results.MultiStatus;
