@@ -72,12 +72,18 @@ public class AgreeMenuListener implements IMenuListener {
             manager.add(createHyperlinkAction("Open Contract", contract));
         }
 
-        final String log = linker.getLog(result);
+        String log = linker.getLog(result);
+        if (log == null && result instanceof PropertyResult) {
+            log = linker.getLog(result.getParent());
+        }
         if (log != null && !log.isEmpty()) {
             manager.add(createWriteConsoleAction("View Log", "Log", log));
         }
 
-        final Program program = linker.getProgram(result);
+        Program program = linker.getProgram(result);
+        if (program == null && result instanceof PropertyResult) {
+            program = linker.getProgram(result.getParent());
+        }
         if (program != null) {
             manager.add(createWriteConsoleAction("View Lustre", "Lustre", program));
         }
