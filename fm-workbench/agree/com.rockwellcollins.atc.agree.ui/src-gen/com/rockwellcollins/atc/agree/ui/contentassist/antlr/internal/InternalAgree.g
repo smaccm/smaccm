@@ -8316,9 +8316,11 @@ rule__TermExpr__Group_1_1__0__Impl
     }
 :
 (
-{ before(grammarAccess.getTermExprAccess().getGroup_1_1_0()); }
-(rule__TermExpr__Group_1_1_0__0)
-{ after(grammarAccess.getTermExprAccess().getGroup_1_1_0()); }
+{ before(grammarAccess.getTermExprAccess().getFnCallExprFnAction_1_1_0()); }
+(
+
+)
+{ after(grammarAccess.getTermExprAccess().getFnCallExprFnAction_1_1_0()); }
 )
 
 ;
@@ -8452,38 +8454,6 @@ finally {
 
 
 
-
-
-
-
-rule__TermExpr__Group_1_1_0__0
-    @init {
-		int stackSize = keepStackSize();
-    }
-:
-	rule__TermExpr__Group_1_1_0__0__Impl
-;
-finally {
-	restoreStackSize(stackSize);
-}
-
-rule__TermExpr__Group_1_1_0__0__Impl
-    @init {
-		int stackSize = keepStackSize();
-    }
-:
-(
-{ before(grammarAccess.getTermExprAccess().getFnCallExprFnAction_1_1_0_0()); }
-(
-
-)
-{ after(grammarAccess.getTermExprAccess().getFnCallExprFnAction_1_1_0_0()); }
-)
-
-;
-finally {
-	restoreStackSize(stackSize);
-}
 
 
 

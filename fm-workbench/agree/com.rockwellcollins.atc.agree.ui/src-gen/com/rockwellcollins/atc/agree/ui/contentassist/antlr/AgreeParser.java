@@ -122,7 +122,6 @@ public class AgreeParser extends AbstractContentAssistParser {
 					put(grammarAccess.getTermExprAccess().getGroup_0(), "rule__TermExpr__Group_0__0");
 					put(grammarAccess.getTermExprAccess().getGroup_1(), "rule__TermExpr__Group_1__0");
 					put(grammarAccess.getTermExprAccess().getGroup_1_1(), "rule__TermExpr__Group_1_1__0");
-					put(grammarAccess.getTermExprAccess().getGroup_1_1_0(), "rule__TermExpr__Group_1_1_0__0");
 					put(grammarAccess.getTermExprAccess().getGroup_1_1_3(), "rule__TermExpr__Group_1_1_3__0");
 					put(grammarAccess.getTermExprAccess().getGroup_2(), "rule__TermExpr__Group_2__0");
 					put(grammarAccess.getTermExprAccess().getGroup_3(), "rule__TermExpr__Group_3__0");

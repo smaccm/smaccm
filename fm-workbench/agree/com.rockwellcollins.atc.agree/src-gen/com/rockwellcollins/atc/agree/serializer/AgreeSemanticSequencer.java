@@ -513,7 +513,7 @@ public class AgreeSemanticSequencer extends PropertiesSemanticSequencer {
 				   context == grammarAccess.getRelateExprRule() ||
 				   context == grammarAccess.getRelateExprAccess().getBinaryExprLeftAction_1_0_0_0() ||
 				   context == grammarAccess.getTermExprRule() ||
-				   context == grammarAccess.getTermExprAccess().getFnCallExprFnAction_1_1_0_0() ||
+				   context == grammarAccess.getTermExprAccess().getFnCallExprFnAction_1_1_0() ||
 				   context == grammarAccess.getUnaryExprRule()) {
 					sequence_NestedDotID(context, (NestedDotID) semanticObject); 
 					return; 
@@ -948,7 +948,7 @@ public class AgreeSemanticSequencer extends PropertiesSemanticSequencer {
 	
 	/**
 	 * Constraint:
-	 *     (fn=TermExpr_FnCallExpr_1_1_0_0 args+=Expr args+=Expr*)
+	 *     (fn=TermExpr_FnCallExpr_1_1_0 args+=Expr args+=Expr*)
 	 */
 	protected void sequence_TermExpr(EObject context, FnCallExpr semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);

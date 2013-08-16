@@ -2553,14 +2553,13 @@ ruleTermExpr returns [EObject current=null]
         $current = $this_NestedDotID_2.current; 
         afterParserOrEnumRuleCall();
     }
-((((
-))=>(
+((
     {
         $current = forceCreateModelElementAndSet(
-            grammarAccess.getTermExprAccess().getFnCallExprFnAction_1_1_0_0(),
+            grammarAccess.getTermExprAccess().getFnCallExprFnAction_1_1_0(),
             $current);
     }
-))	otherlv_4='(' 
+)	otherlv_4='(' 
     {
     	newLeafNode(otherlv_4, grammarAccess.getTermExprAccess().getLeftParenthesisKeyword_1_1_1());
     }

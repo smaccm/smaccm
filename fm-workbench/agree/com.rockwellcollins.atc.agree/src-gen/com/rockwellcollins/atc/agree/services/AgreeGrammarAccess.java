@@ -1596,8 +1596,7 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		private final Group cGroup_1 = (Group)cAlternatives.eContents().get(1);
 		private final RuleCall cNestedDotIDParserRuleCall_1_0 = (RuleCall)cGroup_1.eContents().get(0);
 		private final Group cGroup_1_1 = (Group)cGroup_1.eContents().get(1);
-		private final Group cGroup_1_1_0 = (Group)cGroup_1_1.eContents().get(0);
-		private final Action cFnCallExprFnAction_1_1_0_0 = (Action)cGroup_1_1_0.eContents().get(0);
+		private final Action cFnCallExprFnAction_1_1_0 = (Action)cGroup_1_1.eContents().get(0);
 		private final Keyword cLeftParenthesisKeyword_1_1_1 = (Keyword)cGroup_1_1.eContents().get(1);
 		private final Assignment cArgsAssignment_1_1_2 = (Assignment)cGroup_1_1.eContents().get(2);
 		private final RuleCall cArgsExprParserRuleCall_1_1_2_0 = (RuleCall)cArgsAssignment_1_1_2.eContents().get(0);
@@ -1634,13 +1633,13 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		private final Keyword cRightParenthesisKeyword_7_2 = (Keyword)cGroup_7.eContents().get(2);
 		
 		//TermExpr returns Expr:
-		//	{IdExpr} id=[aadl2::NamedElement|QID] | NestedDotID (=> ({FnCallExpr.fn=current}) "(" args+=Expr ("," args+=Expr)*
-		//	")")? | {IntLitExpr} val=INTEGER_LIT | {PreExpr} "pre" "(" expr=Expr ")" | {RealLitExpr} val=REAL_LIT | {BoolLitExpr}
+		//	{IdExpr} id=[aadl2::NamedElement|QID] | NestedDotID ({FnCallExpr.fn=current} "(" args+=Expr ("," args+=Expr)* ")")? |
+		//	{IntLitExpr} val=INTEGER_LIT | {PreExpr} "pre" "(" expr=Expr ")" | {RealLitExpr} val=REAL_LIT | {BoolLitExpr}
 		//	val=BooleanLiteral | {ThisExpr} "this" | "(" Expr ")";
 		public ParserRule getRule() { return rule; }
 
-		//{IdExpr} id=[aadl2::NamedElement|QID] | NestedDotID (=> ({FnCallExpr.fn=current}) "(" args+=Expr ("," args+=Expr)* ")")?
-		//| {IntLitExpr} val=INTEGER_LIT | {PreExpr} "pre" "(" expr=Expr ")" | {RealLitExpr} val=REAL_LIT | {BoolLitExpr}
+		//{IdExpr} id=[aadl2::NamedElement|QID] | NestedDotID ({FnCallExpr.fn=current} "(" args+=Expr ("," args+=Expr)* ")")? |
+		//{IntLitExpr} val=INTEGER_LIT | {PreExpr} "pre" "(" expr=Expr ")" | {RealLitExpr} val=REAL_LIT | {BoolLitExpr}
 		//val=BooleanLiteral | {ThisExpr} "this" | "(" Expr ")"
 		public Alternatives getAlternatives() { return cAlternatives; }
 
@@ -1659,20 +1658,17 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		//QID
 		public RuleCall getIdNamedElementQIDParserRuleCall_0_1_0_1() { return cIdNamedElementQIDParserRuleCall_0_1_0_1; }
 
-		//NestedDotID (=> ({FnCallExpr.fn=current}) "(" args+=Expr ("," args+=Expr)* ")")?
+		//NestedDotID ({FnCallExpr.fn=current} "(" args+=Expr ("," args+=Expr)* ")")?
 		public Group getGroup_1() { return cGroup_1; }
 
 		//NestedDotID
 		public RuleCall getNestedDotIDParserRuleCall_1_0() { return cNestedDotIDParserRuleCall_1_0; }
 
-		//(=> ({FnCallExpr.fn=current}) "(" args+=Expr ("," args+=Expr)* ")")?
+		//({FnCallExpr.fn=current} "(" args+=Expr ("," args+=Expr)* ")")?
 		public Group getGroup_1_1() { return cGroup_1_1; }
 
-		//=> ({FnCallExpr.fn=current})
-		public Group getGroup_1_1_0() { return cGroup_1_1_0; }
-
 		//{FnCallExpr.fn=current}
-		public Action getFnCallExprFnAction_1_1_0_0() { return cFnCallExprFnAction_1_1_0_0; }
+		public Action getFnCallExprFnAction_1_1_0() { return cFnCallExprFnAction_1_1_0; }
 
 		//"("
 		public Keyword getLeftParenthesisKeyword_1_1_1() { return cLeftParenthesisKeyword_1_1_1; }
@@ -2241,8 +2237,8 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 	}
 
 	//TermExpr returns Expr:
-	//	{IdExpr} id=[aadl2::NamedElement|QID] | NestedDotID (=> ({FnCallExpr.fn=current}) "(" args+=Expr ("," args+=Expr)*
-	//	")")? | {IntLitExpr} val=INTEGER_LIT | {PreExpr} "pre" "(" expr=Expr ")" | {RealLitExpr} val=REAL_LIT | {BoolLitExpr}
+	//	{IdExpr} id=[aadl2::NamedElement|QID] | NestedDotID ({FnCallExpr.fn=current} "(" args+=Expr ("," args+=Expr)* ")")? |
+	//	{IntLitExpr} val=INTEGER_LIT | {PreExpr} "pre" "(" expr=Expr ")" | {RealLitExpr} val=REAL_LIT | {BoolLitExpr}
 	//	val=BooleanLiteral | {ThisExpr} "this" | "(" Expr ")";
 	public TermExprElements getTermExprAccess() {
 		return (pTermExpr != null) ? pTermExpr : (pTermExpr = new TermExprElements());

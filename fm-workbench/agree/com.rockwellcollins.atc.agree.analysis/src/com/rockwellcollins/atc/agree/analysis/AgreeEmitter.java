@@ -89,6 +89,7 @@ import com.rockwellcollins.atc.agree.agree.PropertyStatement;
 import com.rockwellcollins.atc.agree.agree.RealLitExpr;
 import com.rockwellcollins.atc.agree.agree.SpecStatement;
 import com.rockwellcollins.atc.agree.agree.ThisExpr;
+import com.rockwellcollins.atc.agree.agree.CallDef;
 import com.rockwellcollins.atc.agree.agree.util.AgreeSwitch;
 
 public class AgreeEmitter extends AgreeSwitch<Expr> {
@@ -176,6 +177,8 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
 	public Map<String, String> varRenaming = new HashMap<String, String>();
 	public Map<String, EObject> refMap = new HashMap<String, EObject>();
 	private Subcomponent curComp = null;
+    private Map<String, CallDef> nodeDefs = new HashMap<String, CallDef>();
+
 
 	// *********************** BEGIN METHODS ********************************
 
@@ -428,7 +431,13 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
 	public Expr caseFnCallExpr(FnCallExpr expr) {
 		// TODO: handle this correctly
 		String fnName = jKindNameTag + getFnCallExprName(expr);
-
+		
+		if(!nodeDefs.containsKey(fnName)){
+		    doSwitch(getFinalNestId(expr.getFn()));
+		    assert(nodeDefs.containsKey(fnName));
+		}
+		
+		
 		List<Expr> argResults = new ArrayList<Expr>();
 
 		for (com.rockwellcollins.atc.agree.agree.Expr argExpr : expr.getArgs()) {
@@ -446,9 +455,13 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
 	public Expr caseNodeDefExpr(NodeDefExpr expr) {
 
 		// System.out.println("Visiting caseNodeDefExpr");
-
+	    
 		String nodeName = jKindNameTag + expr.getName();
 
+		if(nodeDefs.containsKey(nodeName))
+		    return null; //don't create the node more than once
+		
+		nodeDefs.put(nodeName, expr);
 		List<VarDecl> inputs = argsToVarDeclList(expr.getArgs());
 		List<VarDecl> outputs = argsToVarDeclList(expr.getRets());
 		NodeBodyExpr body = expr.getNodeBody();
@@ -461,6 +474,7 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
 
 		Node node = new Node(nodeName, inputs, outputs, internals, eqs);
 
+		
 		nodeDefExpressions.add(node);
 
 		return null;
@@ -471,6 +485,9 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
 
 		String nodeName = jKindNameTag + expr.getName();
 
+		if(nodeDefs.containsKey(nodeName))
+		    return null;
+		
 		List<VarDecl> inputs = argsToVarDeclList(expr.getArgs());
 		Expr bodyExpr = doSwitch(expr.getExpr());
 
@@ -482,6 +499,7 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
 
 		Node node = new Node(nodeName, inputs, outputs, Collections.<VarDecl> emptyList(), eqs);
 
+		nodeDefs.put(nodeName,  expr);
 		nodeDefExpressions.add(node);
 
 		return null;
