@@ -20,6 +20,11 @@ import org.eclipse.xtext.ui.editor.outline.impl.EObjectNode;
 import org.eclipse.xtext.util.concurrent.IUnitOfWork;
 import org.osate.aadl2.Element;
 
+/**
+ * We should eventually replace this file with AaxlReadOnlyActionAsJob, but that
+ * class doesn't seem to be working correctly at the moment. In particular, it
+ * does not seem to find the currently selected AADL object.
+ */
 public abstract class AadlAction implements IWorkbenchWindowActionDelegate {
     private IWorkbenchWindow window;
     private Object currentSelection;
