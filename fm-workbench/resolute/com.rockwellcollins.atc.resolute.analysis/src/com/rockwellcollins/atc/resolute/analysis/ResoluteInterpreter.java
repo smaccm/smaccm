@@ -23,9 +23,7 @@ public class ResoluteInterpreter {
 
         // initialize the interfaces for all external analysis
         EvaluateExternalAnalysis.init(Platform.getExtensionRegistry());
-        if (proofType == ProofType.CONFIDENCE) {
-            EvaluateConfidenceAnalysis.init(Platform.getExtensionRegistry());
-        }
+        EvaluateConfidenceAnalysis.init(Platform.getExtensionRegistry());
     }
 
     public List<ResoluteProofTree> evaluateSubclause(ResoluteSubclause resSubclause) {
