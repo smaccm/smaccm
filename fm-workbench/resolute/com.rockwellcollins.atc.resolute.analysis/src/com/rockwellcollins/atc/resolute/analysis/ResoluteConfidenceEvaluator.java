@@ -19,10 +19,8 @@ import com.rockwellcollins.atc.resolute.resolute.ThisExpr;
 import com.rockwellcollins.atc.resolute.resolute.UnaryExpr;
 
 public class ResoluteConfidenceEvaluator extends ResoluteEvaluator {
-
     public ResoluteConfidenceEvaluator(ComponentInstance thisInst, ResoluteProofTree proofTree) {
         super(thisInst, proofTree);
-        // TODO Auto-generated constructor stub
     }
 
     @Override
@@ -108,5 +106,4 @@ public class ResoluteConfidenceEvaluator extends ResoluteEvaluator {
         EvaluateConfidenceAnalysis.evaluate(object);
         return super.caseBuiltInFuncCallExpr(object);
     }
-
 }
