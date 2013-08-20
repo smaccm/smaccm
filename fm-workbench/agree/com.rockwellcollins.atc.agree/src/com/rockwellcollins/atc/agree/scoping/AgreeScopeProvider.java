@@ -53,6 +53,7 @@ public class AgreeScopeProvider extends
     IScope scope_NamedElement(FnDefExpr ctx, EReference ref) {
         return Scopes.scopeFor(ctx.getArgs(), getScope(ctx.eContainer(), ref));
     }
+    
     IScope scope_NamedElement(NodeDefExpr ctx, EReference ref) {
         Set<Element> components = new HashSet<Element>();
         components.addAll(ctx.getArgs());
@@ -117,8 +118,11 @@ public class AgreeScopeProvider extends
             }
         } else {
             // travel out of the annex and get the component
-            // classifier that the annex is contained in
-            while (!(container instanceof ComponentClassifier)) {
+            // classifier that the annex is contained in.
+            // If the annex is in a library (not a component),
+            // then stop once you hit the contract library
+            while (!(container instanceof ComponentClassifier)
+                    && !(container instanceof AgreeContractLibrary)) {
                 container = container.eContainer();
             }
         }
@@ -138,6 +142,11 @@ public class AgreeScopeProvider extends
                 result.add(el);
             }
         } else {
+            
+            if(container instanceof AgreeContractLibrary){
+                container = ((AgreeContractLibrary)container).getContract();
+            }
+            
             assert (container instanceof AgreeContract);
             for (SpecStatement spec : ((AgreeContract) container).getSpecs()) {
                 if (spec instanceof PropertyStatement) {
