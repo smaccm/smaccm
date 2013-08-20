@@ -54,7 +54,11 @@ public class AgreeScopeProvider extends
         return Scopes.scopeFor(ctx.getArgs(), getScope(ctx.eContainer(), ref));
     }
     IScope scope_NamedElement(NodeDefExpr ctx, EReference ref) {
-        return Scopes.scopeFor(ctx.getArgs(), getScope(ctx.eContainer(), ref));
+        Set<Element> components = new HashSet<Element>();
+        components.addAll(ctx.getArgs());
+        components.addAll(ctx.getRets());
+        components.addAll(ctx.getNodeBody().getLocs());
+        return Scopes.scopeFor(components, getScope(ctx.eContainer(), ref));
     }
 
     IScope scope_NamedElement(AgreeContract ctx, EReference ref) {
