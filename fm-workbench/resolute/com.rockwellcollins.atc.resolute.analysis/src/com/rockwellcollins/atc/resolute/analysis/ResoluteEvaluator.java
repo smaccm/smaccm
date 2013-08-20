@@ -121,8 +121,6 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
 
     @Override
     public ResoluteValue caseBinaryExpr(BinaryExpr object) {
-        EvaluateConfidenceAnalysis.evaluate(object);
-
         String nodeStr = object.getOp();
         proofTree.addNewCurrent(object, object.getOp());
 
