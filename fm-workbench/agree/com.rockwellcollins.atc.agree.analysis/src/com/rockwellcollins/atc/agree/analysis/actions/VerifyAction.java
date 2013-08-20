@@ -8,7 +8,6 @@ import jkind.api.JKindApi;
 import jkind.api.results.AnalysisResult;
 import jkind.api.results.CompositeAnalysisResult;
 import jkind.api.results.JKindResult;
-import jkind.api.results.MapRenaming;
 import jkind.api.results.Renaming;
 import jkind.lustre.Program;
 
@@ -78,7 +77,7 @@ public abstract class VerifyAction extends AadlAction {
         AgreeEmitter emitter = new AgreeEmitter(ci, context);
         Program program = emitter.evaluate();
         List<String> properties = program.getMainNode().properties;
-        Renaming renaming = new MapRenaming(emitter.varRenaming, MapRenaming.Mode.NULL);
+        Renaming renaming = emitter.getRenaming();
         JKindResult result = new JKindResult("Contract", properties, renaming);
         queue.add(result);
 
@@ -86,8 +85,8 @@ public abstract class VerifyAction extends AadlAction {
         linker.setComponent(result, ci);
         linker.setContract(result, getContract(ci));
         linker.setLayout(result, emitter.getLayout());
-        linker.setReferenceMap(result, emitter.refMap);
-        linker.setLog(result, emitter.log.getLog());
+        linker.setReferenceMap(result, emitter.getReferenceMap());
+        linker.setLog(result, emitter.getLog());
 
         return result;
     }
