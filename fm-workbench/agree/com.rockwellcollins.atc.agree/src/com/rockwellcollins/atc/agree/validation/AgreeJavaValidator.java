@@ -553,9 +553,6 @@ public class AgreeJavaValidator extends
         
         CallDef callDef = (CallDef)namedEl;
         // extract in/out arguments
-        if (callDef == null) {
-            return parseFailType;
-        }
 
         if (callDef instanceof FnDefExpr) {
             FnDefExpr fnDef = (FnDefExpr) callDef;

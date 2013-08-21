@@ -47,7 +47,7 @@ public class AgreeAnnexParser implements AnnexParser {
     public AnnexLibrary parseAnnexLibrary(String annexName, String source, String filename,
             int line, int column, ParseErrorReporter errReporter) {
         return (AnnexLibrary) parse(source, getGrammarAccess().getAgreeLibraryRule(), filename,
-                line, column, errReporter);
+                column, errReporter);
 
     }
 
@@ -55,10 +55,10 @@ public class AgreeAnnexParser implements AnnexParser {
     public AnnexSubclause parseAnnexSubclause(String annexName, String source, String filename,
             int line, int column, ParseErrorReporter errReporter) {
         return (AnnexSubclause) parse(source, getGrammarAccess().getAgreeSubclauseRule(), filename,
-                line, column, errReporter);
+                column, errReporter);
     }
 
-    public EObject parse(String editString, ParserRule parserRule, String filename, int line,
+    public EObject parse(String editString, ParserRule parserRule, String filename,
             int offset, ParseErrorReporter err) {
         try {
             editString = genWhitespace(offset) + editString + "\r\n";
