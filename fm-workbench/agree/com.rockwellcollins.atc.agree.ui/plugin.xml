@@ -68,7 +68,7 @@
         </definition>
         <definition id="com.rockwellcollins.atc.agree.Agree.XtextEditor.opened">
             <and>
-                <reference definitionId="isXtextEditorActive"/>
+                <reference definitionId="isActiveEditorAnInstanceOfXtextEditor"/>
                 <with variable="activeEditor">
                     <test property="org.eclipse.xtext.ui.editor.XtextEditor.languageName" 
                         value="com.rockwellcollins.atc.agree.Agree" 

@@ -2,63 +2,40 @@
 <?eclipse version="3.4"?>
 <plugin>
 
-   <extension
-         point="org.eclipse.ui.actionSets">
-      <actionSet
-            label="AGREE Action Set"
-            visible="true"
-            id="com.rockwellcollins.atc.agree.analysis.actionSet">
-         <menu
-               label="A&amp;GREE Menu"
-               id="agreeMenu">
-            <separator
-                  name="agreeMenu">
-            </separator>
-         </menu>
-          <action
-               label="Verify &amp;All Layers"
-               icon="icons/layers.png"
-               class="com.rockwellcollins.atc.agree.analysis.actions.VerifyAll"
-               tooltip="Verify the contracts of all layers from the currently selected component and below"
-               menubarPath="agreeMenu/agreeGroup"
-               toolbarPath="agreeGroup"
-               id="com.rockwellcollins.atc.agree.analysis.actions.VerifyAll"
-               enablesFor="1">
-               <enablement>
-					<objectClass name="org.eclipse.xtext.ui.editor.outline.impl.EObjectNode"/>
-				</enablement>
-         </action>
-         <action
-               label="Verify &amp;Single Layer"
-               icon="icons/layer.png"
-               class="com.rockwellcollins.atc.agree.analysis.actions.VerifySingle"
-               tooltip="Verify only the contract of the currently selected component"
-               menubarPath="agreeMenu/agreeGroup"
-               toolbarPath="agreeGroup"
-               id="com.rockwellcollins.atc.agree.analysis.actions.VerifySingle"
-               enablesFor="1">
-               <enablement>
-					<objectClass name="org.eclipse.xtext.ui.editor.outline.impl.EObjectNode"/>
-				</enablement>
-         </action>
-      </actionSet>
-   </extension>
    
    <extension point="org.eclipse.ui.views">
-        <view id="com.rockwellcollins.atc.agree.analysis.views.agreeResultsView"
-             name="AGREE Results"
-          class="com.rockwellcollins.atc.agree.analysis.views.AgreeResultsView"
-          icon="icons/layers.png"/>
+      <category
+            id="com.rockwellcollins.atc.agree.analysis"
+            name="AGREE">
+      </category>
+        <view
+              category="com.rockwellcollins.atc.agree.analysis"
+              class="com.rockwellcollins.atc.agree.analysis.views.AgreeResultsView"
+              icon="icons/layers.png"
+              id="com.rockwellcollins.atc.agree.analysis.views.agreeResultsView"
+              name="AGREE Results"/>
    </extension>
   
    <extension point="org.eclipse.ui.commands">
-     <category id="com.rockwellcollins.atc.agree.analysis.commands"
-       name="AGREE commands">
-     </category>
+      <category
+            id="com.rockwellcollins.atc.agree.analysis.commands"
+            name="Commands related to AGREE">
+      </category>
      <command categoryId="com.rockwellcollins.atc.agree.analysis.commands"
             description="Terminate the current AGREE analysis"
             id="com.rockwellcollins.atc.agree.analysis.commands.terminate"
             name="Terminate AGREE Analysis">
+     </command>
+     <command
+           description="Verify the contract of the selected component"
+           id="com.rockwellcollins.atc.agree.analysis.commands.verifySingle"
+           name="Verify Single Layer">
+     </command>
+     <command
+           categoryId="com.rockwellcollins.atc.agree.analysis.commands"
+           description="Verify the contracts selected component and everything below"
+           id="com.rockwellcollins.atc.agree.analysis.commands.verifyAll"
+           name="Verify All Layers">
      </command>
    </extension>
    
@@ -74,5 +51,89 @@
                style="push">
          </command>
       </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="menu:org.eclipse.ui.main.menu?after=additions">
+         <menu
+               id="com.rockwellcollins.atc.agree.analysis.menus.agreeMenu"
+               label="AGREE"
+               mnemonic="g">
+            <command
+                  commandId="com.rockwellcollins.atc.agree.analysis.commands.verifySingle"
+                  icon="icons/layer.png"
+                  id="com.rockwellcollins.atc.agree.analysis.menus.verifySingle"
+                  mnemonic="s"
+                  style="push">
+            </command>
+            <command
+                  commandId="com.rockwellcollins.atc.agree.analysis.commands.verifyAll"
+                  icon="icons/layers.png"
+                  id="com.rockwellcollins.atc.agree.analysis.menus.verifyAll"
+                  mnemonic="a"
+                  style="push">
+            </command>
+         </menu>
+      </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="toolbar:org.eclipse.ui.main.toolbar?after=additions">
+         <toolbar
+               id="com.rockwellcollins.atc.agree.analysis.toolbars.main">
+            <command
+                  commandId="com.rockwellcollins.atc.agree.analysis.commands.verifySingle"
+                  icon="icons/layer.png"
+                  id="com.rockwellcollins.atc.agree.analysis.menus.verifySingle"
+                  style="push">
+            </command>
+            <command
+                  commandId="com.rockwellcollins.atc.agree.analysis.commands.verifyAll"
+                  icon="icons/layers.png"
+                  id="com.rockwellcollins.atc.agree.analysis.menus.verifyAll"
+                  style="push">
+            </command>
+         </toolbar>
+      </menuContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.handlers">
+      <handler
+            class="com.rockwellcollins.atc.agree.analysis.handlers.VerifySingleHandler"
+            commandId="com.rockwellcollins.atc.agree.analysis.commands.verifySingle">
+         <enabledWhen>
+            <reference
+                  definitionId="com.rockwellcollins.atc.agree.analysis.expressions.isSingleOutlineSelection">
+            </reference>
+         </enabledWhen>
+      </handler>
+      <handler
+            class="com.rockwellcollins.atc.agree.analysis.handlers.VerifyAllHandler"
+            commandId="com.rockwellcollins.atc.agree.analysis.commands.verifyAll">
+         <enabledWhen>
+            <reference
+                  definitionId="com.rockwellcollins.atc.agree.analysis.expressions.isSingleOutlineSelection">
+            </reference>
+         </enabledWhen>
+      </handler>
+   </extension>
+   <extension
+         point="org.eclipse.core.expressions.definitions">
+      <definition
+            id="com.rockwellcollins.atc.agree.analysis.expressions.isSingleOutlineSelection">
+         <with
+               variable="selection">
+            <and>
+               <count
+                     value="1">
+               </count>
+               <iterate
+                     ifEmpty="false"
+                     operator="or">
+                  <instanceof
+                        value="org.eclipse.xtext.ui.editor.outline.impl.EObjectNode">
+                  </instanceof>
+               </iterate>
+            </and>
+         </with>
+      </definition>
    </extension>
 </plugin>
