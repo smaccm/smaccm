@@ -1135,11 +1135,9 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
 
         IdExpr totalCompHistId = new IdExpr("_TOTAL_COMP_HIST");
         IdExpr sysAssumpHistId = new IdExpr("_SYSTEM_ASSUMP_HIST");
-        IdExpr sysGuaranteesId = new IdExpr("_SYSTEM_GUARANTEES");
 
         internals.add(new VarDecl(totalCompHistId.id, new NamedType("bool")));
         internals.add(new VarDecl(sysAssumpHistId.id, new NamedType("bool")));
-        internals.add(new VarDecl(sysGuaranteesId.id, new NamedType("bool")));
 
         // total component history
         Expr totalCompHist = new BoolExpr(true);
@@ -1185,8 +1183,26 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
             varRenaming.put(compId.id, propertyName);
             layout.addElement("Top", propertyName);
         }
-
-        Expr totalSysGuarExpr = new BinaryExpr(sysAssumpHistId, BinaryOp.AND, totalCompHistId);
+        
+        //create idividual properties for guarantees
+        int i = 0;
+        for(Expr guar : sysContr.guars){
+            IdExpr sysGuaranteesId = new IdExpr("_SYSTEM_GUAR_"+i);
+            internals.add(new VarDecl(sysGuaranteesId.id, new NamedType("bool")));
+            
+            Expr totalSysGuarExpr = new BinaryExpr(sysAssumpHistId, BinaryOp.AND, totalCompHistId);
+            totalSysGuarExpr = new BinaryExpr(totalSysGuarExpr, BinaryOp.IMPLIES,
+                   guar);
+            
+            Equation finalGuar = new Equation(sysGuaranteesId, totalSysGuarExpr);
+            eqs.add(finalGuar);
+            properties.add(sysGuaranteesId.id);
+            varRenaming.put(sysGuaranteesId.id, "Component Guarantee "+i);
+            layout.addElement("Top", "Component Guarantee "+i++);
+            
+        }
+        
+        /*
         totalSysGuarExpr = new BinaryExpr(totalSysGuarExpr, BinaryOp.IMPLIES,
                 getLustreGuarantee(sysContr));
 
@@ -1195,6 +1211,7 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
         properties.add(sysGuaranteesId.id);
         varRenaming.put(sysGuaranteesId.id, "Component Guarantees");
         layout.addElement("Top", "Component Guarantees");
+        */
 
         Node topNode = new Node("_MAIN", inputs, outputs, internals, eqs, properties);
         nodeSet.add(topNode);
