@@ -55,7 +55,7 @@
             allPopups="false"
             locationURI="menu:org.eclipse.ui.main.menu?after=additions">
          <menu
-               id="com.rockwellcollins.atc.agree.analysis.menus.agreeMenu"
+               id="com.rockwellcollins.atc.agree.analysis.menus.main"
                label="AGREE"
                mnemonic="g">
             <command
@@ -92,6 +92,29 @@
                   style="push">
             </command>
          </toolbar>
+      </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="popup:org.osate.xtext.aadl2.ui.outline?after=additions">
+         <menu
+               id="com.rockwellcollins.atc.agree.analysis.popups.main"
+               label="AGREE"
+               mnemonic="g">
+            <command
+                  commandId="com.rockwellcollins.atc.agree.analysis.commands.verifySingle"
+                  icon="icons/layer.png"
+                  id="com.rockwellcollins.atc.agree.analysis.menus.verifySingle"
+                  mnemonic="s"
+                  style="push">
+            </command>
+            <command
+                  commandId="com.rockwellcollins.atc.agree.analysis.commands.verifyAll"
+                  icon="icons/layers.png"
+                  id="com.rockwellcollins.atc.agree.analysis.menus.verifyAll"
+                  mnemonic="a"
+                  style="push">
+            </command>
+         </menu>
       </menuContribution>
    </extension>
    <extension
