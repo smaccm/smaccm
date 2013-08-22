@@ -28,10 +28,9 @@ import com.rockwellcollins.atc.agree.analysis.views.AgreeResultsLinker;
 import com.rockwellcollins.atc.agree.analysis.views.AgreeResultsView;
 
 public abstract class VerifyHandler extends AadlHandler {
-    private IProgressMonitor monitor;
     private AgreeResultsLinker linker = new AgreeResultsLinker();
     private Queue<JKindResult> queue = new ArrayDeque<>();
-    
+
     protected abstract boolean isRecursive();
 
     @Override
@@ -40,7 +39,6 @@ public abstract class VerifyHandler extends AadlHandler {
             Dialog.showError("AGREE Error", "Please choose an AADL Component Implementation");
             return Status.CANCEL_STATUS;
         }
-        this.monitor = monitor;
 
         ComponentImplementation ci = (ComponentImplementation) root;
         AnalysisResult result;
@@ -52,8 +50,8 @@ public abstract class VerifyHandler extends AadlHandler {
         } else {
             result = createContractVerification(ci, null);
         }
-        showView(result, monitor, linker);
-        return doAnalysis();
+        showView(result, linker);
+        return doAnalysis(monitor);
     }
 
     private AnalysisResult buildAnalysisResult(String name, ComponentImplementation ci,
@@ -101,15 +99,14 @@ public abstract class VerifyHandler extends AadlHandler {
         return null;
     }
 
-    protected void showView(final AnalysisResult result, final IProgressMonitor monitor,
-            final AgreeResultsLinker linker) {
+    protected void showView(final AnalysisResult result, final AgreeResultsLinker linker) {
         getWindow().getShell().getDisplay().syncExec(new Runnable() {
             @Override
             public void run() {
                 try {
                     AgreeResultsView page = (AgreeResultsView) getWindow().getActivePage()
                             .showView(AgreeResultsView.ID);
-                    page.setInput(result, monitor, linker);
+                    page.setInput(result, linker);
                 } catch (PartInitException e) {
                     e.printStackTrace();
                 }
@@ -117,7 +114,7 @@ public abstract class VerifyHandler extends AadlHandler {
         });
     }
 
-    private IStatus doAnalysis() {
+    private IStatus doAnalysis(IProgressMonitor monitor) {
         while (!queue.isEmpty() && !monitor.isCanceled()) {
             JKindResult result = queue.remove();
             Program program = linker.getProgram(result);
