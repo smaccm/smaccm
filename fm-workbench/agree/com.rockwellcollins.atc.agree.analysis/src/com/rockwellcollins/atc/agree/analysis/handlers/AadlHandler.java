@@ -52,7 +52,7 @@ public abstract class AadlHandler extends AbstractHandler {
         WorkspaceJob job = new WorkspaceJob(getJobName()) {
             @Override
             public IStatus runInWorkspace(final IProgressMonitor monitor) throws CoreException {
-                xtextEditor.getDocument().readOnly(new IUnitOfWork<IStatus, XtextResource>() {
+                return xtextEditor.getDocument().readOnly(new IUnitOfWork<IStatus, XtextResource>() {
                     @Override
                     public IStatus exec(XtextResource resource) throws Exception {
                         EObject eobj = resource.getResourceSet().getEObject(uri, true);
@@ -63,7 +63,6 @@ public abstract class AadlHandler extends AbstractHandler {
                         }
                     }
                 });
-                return Status.OK_STATUS;
             }
         };
 

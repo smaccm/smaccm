@@ -137,6 +137,10 @@
             </reference>
          </enabledWhen>
       </handler>
+      <handler
+            class="com.rockwellcollins.atc.agree.analysis.handlers.TerminateHandler"
+            commandId="com.rockwellcollins.atc.agree.analysis.commands.terminate">
+      </handler>
    </extension>
    <extension
          point="org.eclipse.core.expressions.definitions">
