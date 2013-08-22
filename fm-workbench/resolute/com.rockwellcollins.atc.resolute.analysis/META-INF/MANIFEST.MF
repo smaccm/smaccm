@@ -9,25 +9,13 @@ Require-Bundle: org.eclipse.ui,
  com.rockwellcollins.atc.resolute,
  org.osate.aadl2.modelsupport;bundle-version="1.0.0",
  org.eclipse.ui.console;bundle-version="3.5.100",
- com.rockwellcollins.atc.resolute.ui;bundle-version="1.0.0"
+ com.rockwellcollins.atc.resolute.ui;bundle-version="1.0.0",
+ org.osate.aadl2;bundle-version="1.0.0",
+ org.osate.ui;bundle-version="1.0.0",
+ org.osate.aadl2.instantiation;bundle-version="1.0.0",
+ org.osate.xtext.aadl2.properties;bundle-version="1.0.0"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
-Import-Package: com.rockwellcollins.atc.resolute.resolute,
- com.rockwellcollins.atc.resolute.resolute.util,
- org.eclipse.draw2d,
- org.eclipse.draw2d.geometry,
- org.eclipse.emf.common.util,
- org.eclipse.emf.ecore,
- org.eclipse.ui.console,
- org.osate.aadl2,
- org.osate.aadl2.impl,
- org.osate.aadl2.instance,
- org.osate.aadl2.instantiation,
- org.osate.aadl2.parsesupport,
- org.osate.aadl2.properties,
- org.osate.ui.actions,
- org.osate.ui.dialogs,
- org.osate.xtext.aadl2.properties.util
 Export-Package: com.rockwellcollins.atc.resolute.analysis,
  com.rockwellcollins.atc.resolute.analysis.values
 Eclipse-RegisterBuddy: com.rockwellcollins.atc.resolute.ui

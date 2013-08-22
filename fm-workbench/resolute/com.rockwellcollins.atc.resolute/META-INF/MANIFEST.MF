@@ -20,9 +20,7 @@ Require-Bundle: org.eclipse.xtext;visibility:=reexport,
  org.osate.xtext.aadl2.properties;bundle-version="1.0.0",
  org.osate.xtext.aadl2;bundle-version="1.0.0",
  org.osate.aadl2;bundle-version="1.0.0"
-Import-Package: com.rockwellcollins.atc.resolute.resolute,
- org.apache.log4j,
- org.eclipse.e4.core.di.annotations,
+Import-Package: org.apache.log4j,
  org.eclipse.xtext.xbase.lib
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Export-Package: com.rockwellcollins.atc.resolute,

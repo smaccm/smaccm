@@ -20,4 +20,3 @@ Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: .,
  dependencies/jkind-api.jar,
  dependencies/jxl.jar
-Import-Package: com.rockwellcollins.atc.agree.ui.internal
