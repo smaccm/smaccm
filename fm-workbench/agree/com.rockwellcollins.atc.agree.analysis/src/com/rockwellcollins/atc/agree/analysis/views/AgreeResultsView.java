@@ -10,7 +10,6 @@ import org.eclipse.ui.part.ViewPart;
 
 public class AgreeResultsView extends ViewPart {
     public static final String ID = "com.rockwellcollins.atc.agree.analysis.views.agreeResultsView";
-    public final String TERMINATE_ID = "com.rockwellcollins.atc.agree.analysis.commands.terminate";
 
     private AnalysisResultTree tree;
     private IProgressMonitor monitor;

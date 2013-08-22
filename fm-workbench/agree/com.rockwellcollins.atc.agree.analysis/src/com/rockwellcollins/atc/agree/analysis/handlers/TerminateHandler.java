@@ -18,4 +18,9 @@ public class TerminateHandler extends AbstractHandler {
         }
         return null;
     }
+    
+    @Override
+    public boolean isEnabled() {
+        return AadlHandler.isJobRunning();
+    }
 }
