@@ -19,47 +19,6 @@ import com.rockwellcollins.atc.resolute.analysis.values.ResoluteValue;
 public class ResoluteScheduleAnalysis implements ResoluteExternalAnalysis {
     @Override
     public ResoluteValue run(ResoluteEvaluator resEval, List<ResoluteValue> args) {
-
-        /*
-         * Set<NamedElement> procList =
-         * ResoluteQuantifiableAadlObjects.getAllComponentsOfType("processor");
-         * double clockPeriod = 0; if (procList.size() != 1) { throw new
-         * ResoluteFailException
-         * ("The external 'schedule' analysis assumes that the" +
-         * "instance model contains one and only one processor"); }
-         * 
-         * 
-         * for (NamedElement el : procList) { assert (el instanceof
-         * ComponentInstance); ComponentInstance comp = (ComponentInstance) el;
-         * EList<PropertyExpression> prop =
-         * comp.getPropertyValues("Timing_Properties", "Clock_Period");
-         * 
-         * if (prop.size() != 1) { throw new ResoluteFailException(
-         * "Processor '" + comp.getName() +
-         * "' must have a 'Clock_Period' property specified to run 'schedule' analysis"
-         * ); } PropertyExpression propExpr = prop.get(0);
-         * 
-         * // if the property isn't specified it returns a "namedvalue" if
-         * (!(propExpr instanceof IntegerLiteral)) { throw new
-         * ResoluteFailException( "Processor '" + comp.getName() +
-         * "' must have a 'Clock_Period' property specified to run 'schedule' analysis"
-         * ); }
-         * 
-         * IntegerLiteral intLit = (IntegerLiteral) propExpr; double value =
-         * intLit.getScaledValue(); // this is in pico seconds
-         * 
-         * if (value == 0) { throw new ResoluteFailException("Processor '" +
-         * comp.getName() +
-         * "' must have a non-zero 'Clock_Period' to run 'schedule' analysis");
-         * }
-         * 
-         * clockPeriod = value;
-         * 
-         * }
-         */
-
-        // --- Add threads ---
-
         double sched_ratio = 0;
         Set<NamedElement> threadList = ResoluteQuantifiableAadlObjects
                 .getAllComponentsOfType("thread");
@@ -100,8 +59,6 @@ public class ResoluteScheduleAnalysis implements ResoluteExternalAnalysis {
 
             assert (propExpr instanceof IntegerLiteral);
             intLit = (IntegerLiteral) propExpr;
-            double deadline_ps = intLit.getScaledValue(); // this is in pico
-                                                          // seconds
 
             prop = comp.getPropertyValues("SMACCM", "WC_Execution_Time");
 
