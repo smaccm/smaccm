@@ -106,7 +106,7 @@ public class AgreeAnnexParser implements AnnexParser {
      */
     private void createDiagnostics(IParseResult parseResult, String filename, ParseErrorReporter err) {
         if (err instanceof MarkerParseErrorReporter) {
-            List<Diagnostic> diagnostics = new ArrayList<Diagnostic>();
+            List<Diagnostic> diagnostics = new ArrayList<>();
             Resource res = ((MarkerParseErrorReporter) err).getContextResource();
             for (INode error : parseResult.getSyntaxErrors()) {
                 if (res == null) {

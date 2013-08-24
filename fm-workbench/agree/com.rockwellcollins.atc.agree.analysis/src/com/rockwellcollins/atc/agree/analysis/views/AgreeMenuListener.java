@@ -13,7 +13,9 @@ import jkind.lustre.Program;
 import jkind.lustre.values.Value;
 import jkind.results.Counterexample;
 import jkind.results.InvalidProperty;
+import jkind.results.Property;
 import jkind.results.Signal;
+import jkind.results.UnknownProperty;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -88,29 +90,50 @@ public class AgreeMenuListener implements IMenuListener {
             manager.add(createWriteConsoleAction("View Lustre", "Lustre", program));
         }
 
+        final Counterexample cex = getCounterexample(result);
+        if (cex != null) {
+            final String cexType = getCounterexampleType(result);
+            final Layout layout = linker.getLayout(result.getParent());
+            final Map<String, EObject> refMap = linker.getReferenceMap(result.getParent());
+
+            manager.add(new Action("View " + cexType + "Counterexample in Console") {
+                @Override
+                public void run() {
+                    viewCexConsole(cex, layout, refMap);
+                }
+            });
+
+            manager.add(new Action("View " + cexType + "Counterexample in Spreadsheet") {
+                @Override
+                public void run() {
+                    viewCexSpreadsheet(cex, layout);
+                }
+            });
+        }
+    }
+
+    private static Counterexample getCounterexample(AnalysisResult result) {
         if (result instanceof PropertyResult) {
-            PropertyResult pr = (PropertyResult) result;
-            if (pr.getProperty() instanceof InvalidProperty) {
-                InvalidProperty ip = (InvalidProperty) pr.getProperty();
-                final Counterexample cex = ip.getCounterexample();
-                final Layout layout = linker.getLayout(pr.getParent());
-                final Map<String, EObject> refMap = linker.getReferenceMap(pr.getParent());
-
-                manager.add(new Action("View Counterexample in Console") {
-                    @Override
-                    public void run() {
-                        viewCexConsole(cex, layout, refMap);
-                    }
-                });
-
-                manager.add(new Action("View Counterexample in Spreadsheet") {
-                    @Override
-                    public void run() {
-                        viewCexSpreadsheet(cex, layout);
-                    }
-                });
+            Property prop = ((PropertyResult) result).getProperty();
+            if (prop instanceof InvalidProperty) {
+                return ((InvalidProperty) prop).getCounterexample();
+            } else if (prop instanceof UnknownProperty) {
+                return ((UnknownProperty) prop).getInductiveCounterexample();
             }
         }
+
+        return null;
+    }
+
+    private static String getCounterexampleType(AnalysisResult result) {
+        if (result instanceof PropertyResult) {
+            Property prop = ((PropertyResult) result).getProperty();
+            if (prop instanceof UnknownProperty) {
+                return "Inductive ";
+            }
+        }
+
+        return " ";
     }
 
     private IAction createHyperlinkAction(String text, final EObject eObject) {
@@ -140,34 +163,36 @@ public class AgreeMenuListener implements IMenuListener {
         showConsole(console);
         console.clearConsole();
         console.addPatternMatchListener(new AgreePatternListener(refMap));
-        MessageConsoleStream out = console.newMessageStream();
-
-        for (String category : layout.getCategories()) {
-            if (isEmpty(category, cex, layout)) {
-                continue;
-            }
-            
-            printHLine(out, cex.getLength());
-            out.println("Variables for " + category);
-            printHLine(out, cex.getLength());
-
-            out.print(String.format("%-50s", "Variable Name"));
-            for (int k = 0; k < cex.getLength(); k++) {
-                out.print(String.format("%-8s", k));
-            }
-            out.println();
-            printHLine(out, cex.getLength());
-
-            for (Signal<Value> signal : cex.getSignals()) {
-                if (category.equals(layout.getCategory(signal.getName()))) {
-                    out.print(String.format("%-50s", "[" + signal.getName() + "]"));
-                    for (int k = 0; k < cex.getLength(); k++) {
-                        out.print(String.format("%-8s", signal.getValue(k)));
-                    }
-                    out.println();
+        try (MessageConsoleStream out = console.newMessageStream()) {
+            for (String category : layout.getCategories()) {
+                if (isEmpty(category, cex, layout)) {
+                    continue;
                 }
+
+                printHLine(out, cex.getLength());
+                out.println("Variables for " + category);
+                printHLine(out, cex.getLength());
+
+                out.print(String.format("%-50s", "Variable Name"));
+                for (int k = 0; k < cex.getLength(); k++) {
+                    out.print(String.format("%-8s", k));
+                }
+                out.println();
+                printHLine(out, cex.getLength());
+
+                for (Signal<Value> signal : cex.getSignals()) {
+                    if (category.equals(layout.getCategory(signal.getName()))) {
+                        out.print(String.format("%-50s", "[" + signal.getName() + "]"));
+                        for (int k = 0; k < cex.getLength(); k++) {
+                            out.print(String.format("%-8s", signal.getValue(k)));
+                        }
+                        out.println();
+                    }
+                }
+                out.println();
             }
-            out.println();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 

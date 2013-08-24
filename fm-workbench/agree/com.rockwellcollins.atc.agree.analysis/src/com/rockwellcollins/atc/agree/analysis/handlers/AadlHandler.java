@@ -2,10 +2,8 @@ package com.rockwellcollins.atc.agree.analysis.handlers;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.resources.WorkspaceJob;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -35,7 +33,7 @@ public abstract class AadlHandler extends AbstractHandler {
     abstract protected String getJobName();
 
     @Override
-    public Object execute(ExecutionEvent event) throws ExecutionException {
+    public Object execute(ExecutionEvent event) {
         EObjectNode node = getEObjectNode(HandlerUtil.getCurrentSelection(event));
         if (node == null) {
             return null;
@@ -55,7 +53,7 @@ public abstract class AadlHandler extends AbstractHandler {
         final IHandlerService handlerService = (IHandlerService) window.getService(IHandlerService.class);
         WorkspaceJob job = new WorkspaceJob(getJobName()) {
             @Override
-            public IStatus runInWorkspace(final IProgressMonitor monitor) throws CoreException {
+            public IStatus runInWorkspace(final IProgressMonitor monitor) {
                 final IHandlerActivation activation = handlerService.activateHandler(TERMINATE_ID, new TerminateHandler(monitor));
                 addJobChangeListener(new JobChangeAdapter() {
                     @Override

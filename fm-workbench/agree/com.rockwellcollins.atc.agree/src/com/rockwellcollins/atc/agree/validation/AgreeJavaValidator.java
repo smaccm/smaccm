@@ -323,8 +323,8 @@ public class AgreeJavaValidator extends
     }
 
     private void checkMultiAssignEq(EObject src, List<Arg> lhsArgs, Expr rhsExpr) {
-        List<AgreeType> agreeLhsTypes = new ArrayList<AgreeType>();
-        List<AgreeType> agreeRhsTypes = new ArrayList<AgreeType>();
+        List<AgreeType> agreeLhsTypes = new ArrayList<>();
+        List<AgreeType> agreeRhsTypes = new ArrayList<>();
         for (Arg lhsArg : lhsArgs) {
             agreeLhsTypes.add(getAgreeType(lhsArg));
         }
@@ -384,7 +384,7 @@ public class AgreeJavaValidator extends
 
     @Check
     public void checkNodeDef(NodeDefExpr nodeDefExpr) {
-        Map<Arg, Integer> assignMap = new HashMap<Arg, Integer>();
+        Map<Arg, Integer> assignMap = new HashMap<>();
         for (Arg arg : nodeDefExpr.getRets()) {
             assignMap.put(arg, 0);
         }
@@ -470,7 +470,7 @@ public class AgreeJavaValidator extends
     }
 
     public List<AgreeType> typesFromArgs(EList<Arg> args) {
-        ArrayList<AgreeType> list = new ArrayList<AgreeType>();
+        ArrayList<AgreeType> list = new ArrayList<>();
         for (Arg arg : args) {
             list.add(getAgreeType(arg));
         }
@@ -508,7 +508,7 @@ public class AgreeJavaValidator extends
         }
 
         // extract args.
-        List<AgreeType> argCallTypes = new ArrayList<AgreeType>();
+        List<AgreeType> argCallTypes = new ArrayList<>();
         for (Expr argExpr : fnCall.getArgs()) {
             argCallTypes.add(getAgreeType(argExpr));
         }

@@ -14,6 +14,7 @@ import jkind.lustre.Program;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.PartInitException;
 import org.osate.aadl2.AnnexSubclause;
 import org.osate.aadl2.ComponentImplementation;
@@ -23,7 +24,9 @@ import org.osate.aadl2.Subcomponent;
 import org.osate.ui.dialogs.Dialog;
 
 import com.rockwellcollins.atc.agree.agree.AgreeSubclause;
+import com.rockwellcollins.atc.agree.analysis.Activator;
 import com.rockwellcollins.atc.agree.analysis.AgreeEmitter;
+import com.rockwellcollins.atc.agree.analysis.preferences.PreferenceConstants;
 import com.rockwellcollins.atc.agree.analysis.views.AgreeResultsLinker;
 import com.rockwellcollins.atc.agree.analysis.views.AgreeResultsView;
 
@@ -115,10 +118,11 @@ public abstract class VerifyHandler extends AadlHandler {
     }
 
     private IStatus doAnalysis(IProgressMonitor monitor) {
+        JKindApi api = getJKindApi();
         while (!queue.isEmpty() && !monitor.isCanceled()) {
             JKindResult result = queue.remove();
             Program program = linker.getProgram(result);
-            new JKindApi().execute(program, result, monitor);
+            api.execute(program, result, monitor);
         }
 
         while (!queue.isEmpty()) {
@@ -126,5 +130,16 @@ public abstract class VerifyHandler extends AadlHandler {
         }
 
         return monitor.isCanceled() ? Status.CANCEL_STATUS : Status.OK_STATUS;
+    }
+
+    private JKindApi getJKindApi() {
+        JKindApi api = new JKindApi();
+        IPreferenceStore prefs = Activator.getDefault().getPreferenceStore();
+        if (prefs.getBoolean(PreferenceConstants.PREF_INDUCT_CEX)) {
+            api.setInductiveCounterexamples();
+        }
+        api.setN(prefs.getInt(PreferenceConstants.PREF_DEPTH));
+        api.setTimeout(prefs.getInt(PreferenceConstants.PREF_TIMEOUT));
+        return api;
     }
 }

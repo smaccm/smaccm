@@ -55,7 +55,7 @@ public class AgreeScopeProvider extends
     }
     
     IScope scope_NamedElement(NodeDefExpr ctx, EReference ref) {
-        Set<Element> components = new HashSet<Element>();
+        Set<Element> components = new HashSet<>();
         components.addAll(ctx.getArgs());
         components.addAll(ctx.getRets());
         components.addAll(ctx.getNodeBody().getLocs());
@@ -96,8 +96,7 @@ public class AgreeScopeProvider extends
             EList<EObject> refs = parent.eCrossReferences();
 
             if (refs.size() != 1) {
-                return new HashSet<Element>(); // this will throw a parsing
-                                               // error
+                return new HashSet<>(); // this will throw a parsing error
             }
             container = refs.get(0);
 
@@ -113,8 +112,7 @@ public class AgreeScopeProvider extends
                     }
                 }
             } else {
-                return new HashSet<Element>(); // this will throw a parsing
-                                               // error
+                return new HashSet<>(); // this will throw a parsing error
             }
         } else {
             // travel out of the annex and get the component
@@ -128,10 +126,10 @@ public class AgreeScopeProvider extends
         }
 
         if (container == null) {
-            return new HashSet<Element>(); // this will throw a parsing error
+            return new HashSet<>(); // this will throw a parsing error
         }
 
-        Set<Element> result = new HashSet<Element>();
+        Set<Element> result = new HashSet<>();
 
         if (container instanceof ComponentClassifier) {
             ComponentClassifier component = (ComponentClassifier) container;

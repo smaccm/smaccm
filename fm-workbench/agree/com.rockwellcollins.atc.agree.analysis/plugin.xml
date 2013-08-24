@@ -159,4 +159,19 @@
          </with>
       </definition>
    </extension>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            category="com.rockwellcollins.atc.agree.Agree"
+            class="com.rockwellcollins.atc.agree.analysis.preferences.AgreePreferencePage"
+            id="com.rockwellcollins.atc.agree.analysis.preferences.AgreePreferencePage"
+            name="Analysis">
+      </page>
+   </extension>
+   <extension
+         point="org.eclipse.core.runtime.preferences">
+      <initializer
+            class="com.rockwellcollins.atc.agree.analysis.preferences.PreferenceInitializer">
+      </initializer>
+   </extension>
 </plugin>

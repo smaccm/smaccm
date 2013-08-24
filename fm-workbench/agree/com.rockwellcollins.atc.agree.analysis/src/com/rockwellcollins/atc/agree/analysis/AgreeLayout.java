@@ -30,7 +30,7 @@ public class AgreeLayout implements Layout {
 		
 		List<String> sigList = compSignals.get(category);
 		if(sigList == null){
-		    sigList = new ArrayList<String>();
+		    sigList = new ArrayList<>();
 		    compSignals.put(category, sigList);
 		}
 		
