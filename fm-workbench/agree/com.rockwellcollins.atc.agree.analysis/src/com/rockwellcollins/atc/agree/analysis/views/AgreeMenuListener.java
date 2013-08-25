@@ -1,6 +1,5 @@
 package com.rockwellcollins.atc.agree.analysis.views;
 
-import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
 import java.util.Map;
@@ -242,22 +241,10 @@ public class AgreeMenuListener implements IMenuListener {
         try {
             File file = File.createTempFile("cex", ".xls");
             cex.toExcel(file, layout);
-            openSpreadsheet(file);
+            org.eclipse.swt.program.Program.launch(file.toString());
         } catch (IOException e) {
             Dialog.showError("Unable to open spreadsheet", e.getMessage());
             e.printStackTrace();
-        }
-    }
-
-    private void openSpreadsheet(File file) throws IOException {
-        if (System.getProperty("os.name").startsWith("Windows")) {
-            /*
-             * Desktop.open is slow initially on Windows, so we call explorer
-             * directly instead
-             */
-            new ProcessBuilder("explorer", file.toString()).start();
-        } else {
-            Desktop.getDesktop().open(file);
         }
     }
 }
