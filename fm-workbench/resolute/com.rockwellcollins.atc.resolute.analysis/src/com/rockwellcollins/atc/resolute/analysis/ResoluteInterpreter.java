@@ -3,7 +3,6 @@ package com.rockwellcollins.atc.resolute.analysis;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.core.runtime.Platform;
 import org.osate.aadl2.Element;
 import org.osate.aadl2.instance.ComponentInstance;
 
@@ -20,10 +19,6 @@ public class ResoluteInterpreter {
     public ResoluteInterpreter(ComponentInstance compInst, ProofType proofType) {
         this.compInst = compInst;
         this.proofType = proofType;
-
-        // initialize the interfaces for all external analysis
-        EvaluateExternalAnalysis.init(Platform.getExtensionRegistry());
-        EvaluateConfidenceAnalysis.init(Platform.getExtensionRegistry());
     }
 
     public List<ResoluteProofTree> evaluateSubclause(ResoluteSubclause resSubclause) {
