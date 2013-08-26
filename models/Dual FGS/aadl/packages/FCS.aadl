@@ -104,7 +104,7 @@ const CSA_MAX_PITCH_DELTA: real = 5.0 ;
 const CSA_MAX_PITCH_DELTA_STEP: real = 5.0 ; 
 		  
 -- We assume that the transient for altitude is bounded both 
--- in terms of the next state and from left to right side. 
+-- in terms of the next state and from left to right side. 	  
     		  
 property AD_L_Pitch_Step_Delta_Valid = 
   true -> abs(AD_L.Pitch.Val - prev(AD_L.Pitch.Val, 0.0)) < ADS_MAX_PITCH_DELTA ;

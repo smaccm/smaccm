@@ -450,7 +450,6 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
     }
 
     // TODO: ordering nodes/functions in dependency order
-    // TODO: why is this returning KindExpr? What does this mean?
     @Override
     public Expr caseNodeDefExpr(NodeDefExpr expr) {
 
@@ -1259,7 +1258,7 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
         Expr expr = doSwitch(nodeEq.getExpr());
         List<IdExpr> ids = new ArrayList<IdExpr>();
         for (Arg arg : nodeEq.getNames()) {
-            ids.add(new IdExpr(arg.getName()));
+            ids.add(new IdExpr(jKindNameTag + arg.getName()));
         }
         Equation eq = new Equation(ids, expr);
         return eq;

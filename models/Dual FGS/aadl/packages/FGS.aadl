@@ -106,7 +106,6 @@ annex agree {**
 --
 ------------------------------------------------------------------------
 
-
   fun abs(x: real) : real = if (x > 0.0) then x else -x ;
 
   --parameter META_Properties::Leader_Select_ID : int ;
