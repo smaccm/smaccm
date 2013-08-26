@@ -13,6 +13,7 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
     public void initializeDefaultPreferences() {
 		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
 		store.setDefault(PreferenceConstants.PREF_INDUCT_CEX, true);
+		store.setDefault(PreferenceConstants.PREF_SMOOTH_CEX, true);
 		store.setDefault(PreferenceConstants.PREF_DEPTH, 200);
 		store.setDefault(PreferenceConstants.PREF_TIMEOUT,	100);
 	}

@@ -138,6 +138,9 @@ public abstract class VerifyHandler extends AadlHandler {
         if (prefs.getBoolean(PreferenceConstants.PREF_INDUCT_CEX)) {
             api.setInductiveCounterexamples();
         }
+        if (prefs.getBoolean(PreferenceConstants.PREF_SMOOTH_CEX)) {
+            api.setSmoothCounterexamples();
+        }
         api.setN(prefs.getInt(PreferenceConstants.PREF_DEPTH));
         api.setTimeout(prefs.getInt(PreferenceConstants.PREF_TIMEOUT));
         return api;
