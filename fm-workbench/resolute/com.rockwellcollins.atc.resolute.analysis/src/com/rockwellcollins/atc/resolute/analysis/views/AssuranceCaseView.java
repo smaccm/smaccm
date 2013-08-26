@@ -1,4 +1,4 @@
-package com.rockwellcollins.atc.resolute.analysis;
+package com.rockwellcollins.atc.resolute.analysis.views;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,8 +20,14 @@ import org.eclipse.ui.part.ViewPart;
 import org.eclipse.xtext.ui.editor.GlobalURIEditorOpener;
 
 import com.google.inject.Inject;
+import com.rockwellcollins.atc.resolute.analysis.ResoluteProofNode;
+import com.rockwellcollins.atc.resolute.analysis.ResoluteProofNodeContentProvider;
+import com.rockwellcollins.atc.resolute.analysis.ResoluteProofNodeLabelProvider;
+import com.rockwellcollins.atc.resolute.analysis.ResoluteProofTree;
+import com.rockwellcollins.atc.resolute.analysis.ResoluteTooltipListener;
 
-public class TreeProofView extends ViewPart {
+public class AssuranceCaseView extends ViewPart {
+    public static final String ID = "com.rockwellcollins.atc.resolute.views.assuranceCaseView";
     private TreeViewer treeViewer;
 
     @Inject

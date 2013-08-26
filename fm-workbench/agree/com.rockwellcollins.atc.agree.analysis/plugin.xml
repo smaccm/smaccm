@@ -26,7 +26,7 @@
             id="com.rockwellcollins.atc.agree.analysis.commands.terminate"
             name="Terminate AGREE Analysis">
      </command>
-     <command
+     <command categoryId="com.rockwellcollins.atc.agree.analysis.commands"
            description="Verify the contract of the selected component"
            id="com.rockwellcollins.atc.agree.analysis.commands.verifySingle"
            name="Verify Single Layer">
