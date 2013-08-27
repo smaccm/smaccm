@@ -196,6 +196,16 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
         return createParamStatementAdapter();
       }
       @Override
+      public Adapter caseLemmaStatement(LemmaStatement object)
+      {
+        return createLemmaStatementAdapter();
+      }
+      @Override
+      public Adapter caseNodeLemma(NodeLemma object)
+      {
+        return createNodeLemmaAdapter();
+      }
+      @Override
       public Adapter caseBinaryExpr(BinaryExpr object)
       {
         return createBinaryExprAdapter();
@@ -648,6 +658,36 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
    * @generated
    */
   public Adapter createParamStatementAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.LemmaStatement <em>Lemma Statement</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see com.rockwellcollins.atc.agree.agree.LemmaStatement
+   * @generated
+   */
+  public Adapter createLemmaStatementAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.NodeLemma <em>Node Lemma</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see com.rockwellcollins.atc.agree.agree.NodeLemma
+   * @generated
+   */
+  public Adapter createNodeLemmaAdapter()
   {
     return null;
   }

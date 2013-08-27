@@ -64,7 +64,8 @@ property leader_pitch_delta_correct =
   (leader_pitch_delta > 0.0 => (CSA.CSA_Pitch_Delta > 0.0 and CSA.CSA_Pitch_Delta <= leader_pitch_delta)) and
   (leader_pitch_delta <= 0.0 => (CSA.CSA_Pitch_Delta <= 0.0 and CSA.CSA_Pitch_Delta >= leader_pitch_delta)); 
   
-guarantee leader_pitch_delta_correct;
+guarantee "leader pitch delta" :
+	leader_pitch_delta_correct;
 **};
 
   end Autopilot_System;

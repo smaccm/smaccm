@@ -87,6 +87,8 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
       case AgreePackage.GUARANTEE_STATEMENT: return createGuaranteeStatement();
       case AgreePackage.ASSERT_STATEMENT: return createAssertStatement();
       case AgreePackage.PARAM_STATEMENT: return createParamStatement();
+      case AgreePackage.LEMMA_STATEMENT: return createLemmaStatement();
+      case AgreePackage.NODE_LEMMA: return createNodeLemma();
       case AgreePackage.BINARY_EXPR: return createBinaryExpr();
       case AgreePackage.UNARY_EXPR: return createUnaryExpr();
       case AgreePackage.IF_THEN_ELSE_EXPR: return createIfThenElseExpr();
@@ -356,6 +358,28 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
   {
     ParamStatementImpl paramStatement = new ParamStatementImpl();
     return paramStatement;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public LemmaStatement createLemmaStatement()
+  {
+    LemmaStatementImpl lemmaStatement = new LemmaStatementImpl();
+    return lemmaStatement;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public NodeLemma createNodeLemma()
+  {
+    NodeLemmaImpl nodeLemma = new NodeLemmaImpl();
+    return nodeLemma;
   }
 
   /**

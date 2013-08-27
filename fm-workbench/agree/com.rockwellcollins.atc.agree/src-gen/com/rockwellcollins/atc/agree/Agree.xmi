@@ -102,6 +102,10 @@
             </type>
           </elements>
           <elements xsi:type="xtext:Keyword" value="assume"/>
+          <elements xsi:type="xtext:Assignment" feature="str" operator="=">
+            <terminal xsi:type="xtext:RuleCall" rule="/1/@rules.47"/>
+          </elements>
+          <elements xsi:type="xtext:Keyword" value=":"/>
           <elements xsi:type="xtext:Assignment" feature="expr" operator="=">
             <terminal xsi:type="xtext:RuleCall" rule="/0/@rules.18"/>
           </elements>
@@ -114,6 +118,10 @@
             </type>
           </elements>
           <elements xsi:type="xtext:Keyword" value="guarantee"/>
+          <elements xsi:type="xtext:Assignment" feature="str" operator="=">
+            <terminal xsi:type="xtext:RuleCall" rule="/1/@rules.47"/>
+          </elements>
+          <elements xsi:type="xtext:Keyword" value=":"/>
           <elements xsi:type="xtext:Assignment" feature="expr" operator="=">
             <terminal xsi:type="xtext:RuleCall" rule="/0/@rules.18"/>
           </elements>
@@ -144,6 +152,22 @@
           <elements xsi:type="xtext:Keyword" value=":"/>
           <elements xsi:type="xtext:Assignment" feature="type" operator="=">
             <terminal xsi:type="xtext:RuleCall" rule="/0/@rules.17"/>
+          </elements>
+          <elements xsi:type="xtext:Keyword" value=";"/>
+        </elements>
+        <elements xsi:type="xtext:Group">
+          <elements xsi:type="xtext:Action">
+            <type metamodel="/0/@metamodelDeclarations.0">
+              <classifier xsi:type="ecore:EClass" href="http://www.rockwellcollins.com/atc/agree/Agree#//LemmaStatement"/>
+            </type>
+          </elements>
+          <elements xsi:type="xtext:Keyword" value="lemma"/>
+          <elements xsi:type="xtext:Assignment" feature="str" operator="=">
+            <terminal xsi:type="xtext:RuleCall" rule="/1/@rules.47"/>
+          </elements>
+          <elements xsi:type="xtext:Keyword" value=":"/>
+          <elements xsi:type="xtext:Assignment" feature="expr" operator="=">
+            <terminal xsi:type="xtext:RuleCall" rule="/0/@rules.18"/>
           </elements>
           <elements xsi:type="xtext:Keyword" value=";"/>
         </elements>
@@ -318,31 +342,56 @@
       <type metamodel="/0/@metamodelDeclarations.0">
         <classifier xsi:type="ecore:EClass" href="http://www.rockwellcollins.com/atc/agree/Agree#//NodeEq"/>
       </type>
-      <alternatives xsi:type="xtext:Group">
-        <elements xsi:type="xtext:Assignment" feature="names" operator="+=">
-          <terminal xsi:type="xtext:CrossReference">
+      <alternatives xsi:type="xtext:Alternatives">
+        <elements xsi:type="xtext:Group">
+          <elements xsi:type="xtext:Action">
             <type metamodel="/0/@metamodelDeclarations.0">
-              <classifier xsi:type="ecore:EClass" href="http://www.rockwellcollins.com/atc/agree/Agree#//Arg"/>
+              <classifier xsi:type="ecore:EClass" href="http://www.rockwellcollins.com/atc/agree/Agree#//NodeEq"/>
             </type>
-            <terminal xsi:type="xtext:RuleCall" rule="/1/@rules.48"/>
-          </terminal>
-        </elements>
-        <elements xsi:type="xtext:Group" cardinality="*">
-          <elements xsi:type="xtext:Keyword" value=","/>
-          <elements xsi:type="xtext:Assignment" feature="names" operator="+=">
-            <terminal xsi:type="xtext:CrossReference">
-              <type metamodel="/0/@metamodelDeclarations.0">
-                <classifier xsi:type="ecore:EClass" href="http://www.rockwellcollins.com/atc/agree/Agree#//Arg"/>
-              </type>
-              <terminal xsi:type="xtext:RuleCall" rule="/1/@rules.48"/>
-            </terminal>
+          </elements>
+          <elements xsi:type="xtext:Group">
+            <elements xsi:type="xtext:Assignment" feature="names" operator="+=">
+              <terminal xsi:type="xtext:CrossReference">
+                <type metamodel="/0/@metamodelDeclarations.0">
+                  <classifier xsi:type="ecore:EClass" href="http://www.rockwellcollins.com/atc/agree/Agree#//Arg"/>
+                </type>
+                <terminal xsi:type="xtext:RuleCall" rule="/1/@rules.48"/>
+              </terminal>
+            </elements>
+            <elements xsi:type="xtext:Group" cardinality="*">
+              <elements xsi:type="xtext:Keyword" value=","/>
+              <elements xsi:type="xtext:Assignment" feature="names" operator="+=">
+                <terminal xsi:type="xtext:CrossReference">
+                  <type metamodel="/0/@metamodelDeclarations.0">
+                    <classifier xsi:type="ecore:EClass" href="http://www.rockwellcollins.com/atc/agree/Agree#//Arg"/>
+                  </type>
+                  <terminal xsi:type="xtext:RuleCall" rule="/1/@rules.48"/>
+                </terminal>
+              </elements>
+            </elements>
+            <elements xsi:type="xtext:Keyword" value="="/>
+            <elements xsi:type="xtext:Assignment" feature="expr" operator="=">
+              <terminal xsi:type="xtext:RuleCall" rule="/0/@rules.18"/>
+            </elements>
+            <elements xsi:type="xtext:Keyword" value=";"/>
           </elements>
         </elements>
-        <elements xsi:type="xtext:Keyword" value="="/>
-        <elements xsi:type="xtext:Assignment" feature="expr" operator="=">
-          <terminal xsi:type="xtext:RuleCall" rule="/0/@rules.18"/>
+        <elements xsi:type="xtext:Group">
+          <elements xsi:type="xtext:Action">
+            <type metamodel="/0/@metamodelDeclarations.0">
+              <classifier xsi:type="ecore:EClass" href="http://www.rockwellcollins.com/atc/agree/Agree#//NodeLemma"/>
+            </type>
+          </elements>
+          <elements xsi:type="xtext:Keyword" value="lemma"/>
+          <elements xsi:type="xtext:Assignment" feature="str" operator="=">
+            <terminal xsi:type="xtext:RuleCall" rule="/1/@rules.47"/>
+          </elements>
+          <elements xsi:type="xtext:Keyword" value=":"/>
+          <elements xsi:type="xtext:Assignment" feature="expr" operator="=">
+            <terminal xsi:type="xtext:RuleCall" rule="/0/@rules.18"/>
+          </elements>
+          <elements xsi:type="xtext:Keyword" value=";"/>
         </elements>
-        <elements xsi:type="xtext:Keyword" value=";"/>
       </alternatives>
     </rules>
     <rules xsi:type="xtext:ParserRule" name="Arg">

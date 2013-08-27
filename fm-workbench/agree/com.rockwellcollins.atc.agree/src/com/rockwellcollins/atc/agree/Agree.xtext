@@ -46,10 +46,11 @@ AgreeContract returns Contract:
 ;
 
 SpecStatement:
-	{AssumeStatement}     'assume' expr=Expr ';'
-|   {GuaranteeStatement}  'guarantee' expr=Expr ';'
+	{AssumeStatement}     'assume' str=STRING ':' expr=Expr ';'
+|   {GuaranteeStatement}  'guarantee' str=STRING ':' expr=Expr ';'
 |   {AssertStatement}     'assert' expr=Expr ';'
 |   {ParamStatement}      'parameter' expr=Expr ':' type=Type ';'
+|   {LemmaStatement}      'lemma' str=STRING ':' expr=Expr ';'
 |   PropertyStatement
 |   ConstStatement
 |   EqStatement
@@ -92,7 +93,8 @@ NodeBodyExpr:
 ;
 
 NodeEq: 
-	(names+=[Arg] (',' names+=[Arg])* '=' expr=Expr ';')
+	{NodeEq}	(names+=[Arg] (',' names+=[Arg])* '=' expr=Expr ';')
+|   {NodeLemma} 'lemma' str=STRING ':' expr=Expr ';'
 ;
 
 Arg returns Arg:

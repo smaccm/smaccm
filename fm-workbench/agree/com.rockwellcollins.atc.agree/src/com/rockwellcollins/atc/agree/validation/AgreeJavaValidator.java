@@ -46,10 +46,12 @@ import com.rockwellcollins.atc.agree.agree.GuaranteeStatement;
 import com.rockwellcollins.atc.agree.agree.IdExpr;
 import com.rockwellcollins.atc.agree.agree.IfThenElseExpr;
 import com.rockwellcollins.atc.agree.agree.IntLitExpr;
+import com.rockwellcollins.atc.agree.agree.LemmaStatement;
 import com.rockwellcollins.atc.agree.agree.NestedDotID;
 import com.rockwellcollins.atc.agree.agree.NextExpr;
 import com.rockwellcollins.atc.agree.agree.NodeDefExpr;
 import com.rockwellcollins.atc.agree.agree.NodeEq;
+import com.rockwellcollins.atc.agree.agree.NodeLemma;
 import com.rockwellcollins.atc.agree.agree.PreExpr;
 import com.rockwellcollins.atc.agree.agree.PrevExpr;
 import com.rockwellcollins.atc.agree.agree.PropertyStatement;
@@ -142,6 +144,28 @@ public class AgreeJavaValidator extends
 
         if (!exprType.matches(boolType)) {
             error(guar, "Expression for guarantee statement is of type '" + exprType.toString()
+                    + "' but must be of type 'bool'");
+        }
+
+    }
+    
+    @Check
+    public void checkLemma(LemmaStatement lemma) {
+
+        if (lemma.getExpr() == null) {
+            return;
+        }
+
+        Classifier comp = lemma.getContainingClassifier();
+
+        if (!(comp instanceof ComponentImplementation)) {
+            error(lemma, "Lemma statements are only allowed in component implementations and nodes");
+        }
+
+        AgreeType exprType = getAgreeType(lemma.getExpr());
+
+        if (!exprType.matches(boolType)) {
+            error(lemma, "Expression for lemma statement is of type '" + exprType.toString()
                     + "' but must be of type 'bool'");
         }
 
@@ -379,7 +403,22 @@ public class AgreeJavaValidator extends
         if (lhsArgs == null) {
             return;
         }
-        checkMultiAssignEq(nodeEq, lhsArgs, nodeEq.getExpr());
+        if(!(nodeEq instanceof NodeLemma))
+            checkMultiAssignEq(nodeEq, lhsArgs, nodeEq.getExpr());
+    }
+    
+    @Check
+    public void checkNodeLemma(NodeLemma nodeLemma) {
+        if (nodeLemma.getExpr() == null) {
+            return;
+        }
+        
+        AgreeType exprType = getAgreeType(nodeLemma.getExpr());
+
+        if (!exprType.matches(boolType)) {
+            error(nodeLemma, "Expression for lemma statement is of type '" + exprType.toString()
+                    + "' but must be of type 'bool'");
+        }
     }
 
     @Check

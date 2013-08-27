@@ -80,10 +80,12 @@ import com.rockwellcollins.atc.agree.agree.FnDefExpr;
 import com.rockwellcollins.atc.agree.agree.GetPropertyExpr;
 import com.rockwellcollins.atc.agree.agree.GuaranteeStatement;
 import com.rockwellcollins.atc.agree.agree.IntLitExpr;
+import com.rockwellcollins.atc.agree.agree.LemmaStatement;
 import com.rockwellcollins.atc.agree.agree.NestedDotID;
 import com.rockwellcollins.atc.agree.agree.NodeBodyExpr;
 import com.rockwellcollins.atc.agree.agree.NodeDefExpr;
 import com.rockwellcollins.atc.agree.agree.NodeEq;
+import com.rockwellcollins.atc.agree.agree.NodeLemma;
 import com.rockwellcollins.atc.agree.agree.ParamStatement;
 import com.rockwellcollins.atc.agree.agree.PreExpr;
 import com.rockwellcollins.atc.agree.agree.PrevExpr;
@@ -124,14 +126,14 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
     private class ComponentContract {
         public String compName;
         public List<Expr> assumps;
-        public List<Expr> guars;
+        public List<Equation> guars;
         public List<Expr> asserts;
         public List<Equation> props;
         public List<Equation> eqs;
         public List<Equation> consts;
         public List<Node> nodes;
 
-        public ComponentContract(String s, List<Expr> assu, List<Expr> g, List<Expr> asse,
+        public ComponentContract(String s, List<Expr> assu, List<Equation> g, List<Expr> asse,
                 List<Equation> p, List<Equation> e, List<Equation> c, List<Node> n) {
             compName = s;
             assumps = assu;
@@ -161,7 +163,7 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
 
     // lists of expressions that are gathered for each individual component
     private List<Expr> assumpExpressions;
-    private List<Expr> guarExpressions;
+    private List<Equation> guarExpressions;
     private List<Expr> assertExpressions;
     private List<Equation> propExpressions;
     private List<Equation> eqExpressions;
@@ -238,10 +240,25 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
     }
 
     @Override
+    public Expr caseLemmaStatement(LemmaStatement state){
+        Expr expr = doSwitch(state.getExpr());
+        String guarStr = state.getStr();
+        guarStr = guarStr.replace("\"", "");
+        IdExpr strId = new IdExpr(guarStr);
+        Equation eq = new Equation(strId, expr);
+        guarExpressions.add(eq);
+        return expr;
+    }
+    
+    @Override
     public Expr caseGuaranteeStatement(GuaranteeStatement state) {
 
         Expr expr = doSwitch(state.getExpr());
-        guarExpressions.add(expr);
+        String guarStr = state.getStr();
+        guarStr = guarStr.replace("\"", "");
+        IdExpr strId = new IdExpr(guarStr);
+        Equation eq = new Equation(strId, expr);
+        guarExpressions.add(eq);
         return expr;
     }
 
@@ -466,12 +483,27 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
         NodeBodyExpr body = expr.getNodeBody();
         List<VarDecl> internals = argsToVarDeclList(body.getLocs());
         List<Equation> eqs = new ArrayList<Equation>();
+        List<String> props = new ArrayList<String>();
 
         for (NodeEq nodeEq : body.getEqs()) {
-            eqs.add(nodeEqToEq(nodeEq));
+            
+            if(nodeEq instanceof NodeLemma){
+                NodeLemma nodeLemma = (NodeLemma)nodeEq;
+                String propName = nodeLemma.getStr();
+                props.add(propName);
+                IdExpr eqId = new IdExpr(propName);
+                Expr eqExpr = doSwitch(nodeLemma.getExpr());
+                Equation eq = new Equation(eqId, eqExpr);
+                eqs.add(eq);
+                VarDecl lemmaVar = new VarDecl(propName, NamedType.BOOL);
+                internals.add(lemmaVar);
+            }else{
+                eqs.add(nodeEqToEq(nodeEq));
+            }
+            
         }
 
-        Node node = new Node(nodeName, inputs, outputs, internals, eqs);
+        Node node = new Node(nodeName, inputs, outputs, internals, eqs, props);
 
         nodeDefExpressions.add(node);
 
@@ -760,7 +792,7 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
 
         // add all of the facts
         assumpExpressions = new ArrayList<Expr>();
-        guarExpressions = new ArrayList<Expr>();
+        guarExpressions = new ArrayList<Equation>();
         assertExpressions = new ArrayList<Expr>();
         propExpressions = new ArrayList<Equation>();
         eqExpressions = new ArrayList<Equation>();
@@ -793,7 +825,7 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
             curComp = subComp;
 
             assumpExpressions = new ArrayList<Expr>();
-            guarExpressions = new ArrayList<Expr>();
+            guarExpressions = new ArrayList<Equation>();
             assertExpressions = new ArrayList<Expr>();
             propExpressions = new ArrayList<Equation>();
             eqExpressions = new ArrayList<Equation>();
@@ -1072,6 +1104,19 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
         }
         return result;
     }
+    
+    private Expr conjoinEqs(List<Equation> eqs) {
+        if (eqs.isEmpty()) {
+            return new BoolExpr(true);
+        }
+
+        Iterator<Equation> iterator = eqs.iterator();
+        Expr result = iterator.next().expr;
+        while (iterator.hasNext()) {
+            result = new BinaryExpr(result, BinaryOp.AND, iterator.next().expr);
+        }
+        return result;
+    }
 
     private Expr conjoin(Expr... exprs) {
         return conjoin(Arrays.asList(exprs));
@@ -1087,11 +1132,11 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
 
     private Expr getLustreContract(ComponentContract contract) {
         return conjoin(conjoin(contract.assumps), conjoin(contract.asserts),
-                conjoin(contract.guars));
+                conjoinEqs(contract.guars));
     }
 
     private Expr getLustreGuarantee(ComponentContract contract) {
-        return conjoin(contract.guars);
+        return conjoinEqs(contract.guars);
     }
 
     private List<Node> getLustre() {
@@ -1191,34 +1236,22 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
         
         //create individual properties for guarantees
         int i = 0;
-        for(Expr guar : sysContr.guars){
-            IdExpr sysGuaranteesId = new IdExpr("_SYSTEM_GUAR_"+i);
+        for(Equation guar : sysContr.guars){
+            String guarName = guar.lhs.get(0).id;
+            IdExpr sysGuaranteesId = new IdExpr("_SYS_GUARANTEE_"+i);
             internals.add(new VarDecl(sysGuaranteesId.id, new NamedType("bool")));
             
             Expr totalSysGuarExpr = new BinaryExpr(sysAssumpHistId, BinaryOp.AND, totalCompHistId);
             totalSysGuarExpr = new BinaryExpr(totalSysGuarExpr, BinaryOp.IMPLIES,
-                   guar);
+                   guar.expr);
             
             Equation finalGuar = new Equation(sysGuaranteesId, totalSysGuarExpr);
             eqs.add(finalGuar);
             properties.add(sysGuaranteesId.id);
-            varRenaming.put(sysGuaranteesId.id, "Component Guarantee "+i);
+            varRenaming.put(sysGuaranteesId.id, guarName);
             layout.addElement("Top", "Component Guarantee "+i++, AgreeLayout.SigType.OUTPUT);
             
         }
-        
-        
-        
-        /*
-        totalSysGuarExpr = new BinaryExpr(totalSysGuarExpr, BinaryOp.IMPLIES,
-                getLustreGuarantee(sysContr));
-
-        Equation finalGuar = new Equation(sysGuaranteesId, totalSysGuarExpr);
-        eqs.add(finalGuar);
-        properties.add(sysGuaranteesId.id);
-        varRenaming.put(sysGuaranteesId.id, "Component Guarantees");
-        layout.addElement("Top", "Component Guarantees");
-        */
 
         Node topNode = new Node("_MAIN", inputs, outputs, internals, eqs, properties);
         nodeSet.add(topNode);

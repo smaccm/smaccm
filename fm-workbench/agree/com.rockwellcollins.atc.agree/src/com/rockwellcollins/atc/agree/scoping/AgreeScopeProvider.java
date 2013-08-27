@@ -75,10 +75,11 @@ public class AgreeScopeProvider extends
         SystemType sysType = ((SystemImplementation) container).getType();
         for (AnnexSubclause subclause : sysType.getAllAnnexSubclauses()) {
             if (subclause instanceof AgreeContractSubclause) {
-                return getScope(((AgreeContractSubclause) subclause).getContract(), ref);
+                IScope scopeOfType = getScope(((AgreeContractSubclause) subclause).getContract(), ref);
+                return Scopes.scopeFor(ctx.getSpecs(), scopeOfType);
             }
         }
-        return IScope.NULLSCOPE;
+        return IScope.NULLSCOPE; 
     }
 
     IScope scope_NamedElement(NestedDotID ctx, EReference ref) {

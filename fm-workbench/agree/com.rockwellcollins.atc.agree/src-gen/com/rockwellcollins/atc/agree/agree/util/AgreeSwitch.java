@@ -293,6 +293,24 @@ public class AgreeSwitch<T> extends Switch<T>
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
+      case AgreePackage.LEMMA_STATEMENT:
+      {
+        LemmaStatement lemmaStatement = (LemmaStatement)theEObject;
+        T result = caseLemmaStatement(lemmaStatement);
+        if (result == null) result = caseSpecStatement(lemmaStatement);
+        if (result == null) result = caseElement(lemmaStatement);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case AgreePackage.NODE_LEMMA:
+      {
+        NodeLemma nodeLemma = (NodeLemma)theEObject;
+        T result = caseNodeLemma(nodeLemma);
+        if (result == null) result = caseNodeEq(nodeLemma);
+        if (result == null) result = caseElement(nodeLemma);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
       case AgreePackage.BINARY_EXPR:
       {
         BinaryExpr binaryExpr = (BinaryExpr)theEObject;
@@ -778,6 +796,38 @@ public class AgreeSwitch<T> extends Switch<T>
    * @generated
    */
   public T caseParamStatement(ParamStatement object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Lemma Statement</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Lemma Statement</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseLemmaStatement(LemmaStatement object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Node Lemma</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Node Lemma</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseNodeLemma(NodeLemma object)
   {
     return null;
   }

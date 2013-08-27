@@ -4,7 +4,7 @@ package com.rockwellcollins.atc.agree.agree.impl;
 
 import com.rockwellcollins.atc.agree.agree.AgreePackage;
 import com.rockwellcollins.atc.agree.agree.Expr;
-import com.rockwellcollins.atc.agree.agree.GuaranteeStatement;
+import com.rockwellcollins.atc.agree.agree.LemmaStatement;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
@@ -16,19 +16,19 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Guarantee Statement</b></em>'.
+ * An implementation of the model object '<em><b>Lemma Statement</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link com.rockwellcollins.atc.agree.agree.impl.GuaranteeStatementImpl#getStr <em>Str</em>}</li>
- *   <li>{@link com.rockwellcollins.atc.agree.agree.impl.GuaranteeStatementImpl#getExpr <em>Expr</em>}</li>
+ *   <li>{@link com.rockwellcollins.atc.agree.agree.impl.LemmaStatementImpl#getStr <em>Str</em>}</li>
+ *   <li>{@link com.rockwellcollins.atc.agree.agree.impl.LemmaStatementImpl#getExpr <em>Expr</em>}</li>
  * </ul>
  * </p>
  *
  * @generated
  */
-public class GuaranteeStatementImpl extends SpecStatementImpl implements GuaranteeStatement
+public class LemmaStatementImpl extends SpecStatementImpl implements LemmaStatement
 {
   /**
    * The default value of the '{@link #getStr() <em>Str</em>}' attribute.
@@ -65,7 +65,7 @@ public class GuaranteeStatementImpl extends SpecStatementImpl implements Guarant
    * <!-- end-user-doc -->
    * @generated
    */
-  protected GuaranteeStatementImpl()
+  protected LemmaStatementImpl()
   {
     super();
   }
@@ -78,7 +78,7 @@ public class GuaranteeStatementImpl extends SpecStatementImpl implements Guarant
   @Override
   protected EClass eStaticClass()
   {
-    return AgreePackage.Literals.GUARANTEE_STATEMENT;
+    return AgreePackage.Literals.LEMMA_STATEMENT;
   }
 
   /**
@@ -101,7 +101,7 @@ public class GuaranteeStatementImpl extends SpecStatementImpl implements Guarant
     String oldStr = str;
     str = newStr;
     if (eNotificationRequired())
-      eNotify(new ENotificationImpl(this, Notification.SET, AgreePackage.GUARANTEE_STATEMENT__STR, oldStr, str));
+      eNotify(new ENotificationImpl(this, Notification.SET, AgreePackage.LEMMA_STATEMENT__STR, oldStr, str));
   }
 
   /**
@@ -125,7 +125,7 @@ public class GuaranteeStatementImpl extends SpecStatementImpl implements Guarant
     expr = newExpr;
     if (eNotificationRequired())
     {
-      ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, AgreePackage.GUARANTEE_STATEMENT__EXPR, oldExpr, newExpr);
+      ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, AgreePackage.LEMMA_STATEMENT__EXPR, oldExpr, newExpr);
       if (msgs == null) msgs = notification; else msgs.add(notification);
     }
     return msgs;
@@ -142,14 +142,14 @@ public class GuaranteeStatementImpl extends SpecStatementImpl implements Guarant
     {
       NotificationChain msgs = null;
       if (expr != null)
-        msgs = ((InternalEObject)expr).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - AgreePackage.GUARANTEE_STATEMENT__EXPR, null, msgs);
+        msgs = ((InternalEObject)expr).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - AgreePackage.LEMMA_STATEMENT__EXPR, null, msgs);
       if (newExpr != null)
-        msgs = ((InternalEObject)newExpr).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - AgreePackage.GUARANTEE_STATEMENT__EXPR, null, msgs);
+        msgs = ((InternalEObject)newExpr).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - AgreePackage.LEMMA_STATEMENT__EXPR, null, msgs);
       msgs = basicSetExpr(newExpr, msgs);
       if (msgs != null) msgs.dispatch();
     }
     else if (eNotificationRequired())
-      eNotify(new ENotificationImpl(this, Notification.SET, AgreePackage.GUARANTEE_STATEMENT__EXPR, newExpr, newExpr));
+      eNotify(new ENotificationImpl(this, Notification.SET, AgreePackage.LEMMA_STATEMENT__EXPR, newExpr, newExpr));
   }
 
   /**
@@ -162,7 +162,7 @@ public class GuaranteeStatementImpl extends SpecStatementImpl implements Guarant
   {
     switch (featureID)
     {
-      case AgreePackage.GUARANTEE_STATEMENT__EXPR:
+      case AgreePackage.LEMMA_STATEMENT__EXPR:
         return basicSetExpr(null, msgs);
     }
     return super.eInverseRemove(otherEnd, featureID, msgs);
@@ -178,9 +178,9 @@ public class GuaranteeStatementImpl extends SpecStatementImpl implements Guarant
   {
     switch (featureID)
     {
-      case AgreePackage.GUARANTEE_STATEMENT__STR:
+      case AgreePackage.LEMMA_STATEMENT__STR:
         return getStr();
-      case AgreePackage.GUARANTEE_STATEMENT__EXPR:
+      case AgreePackage.LEMMA_STATEMENT__EXPR:
         return getExpr();
     }
     return super.eGet(featureID, resolve, coreType);
@@ -196,10 +196,10 @@ public class GuaranteeStatementImpl extends SpecStatementImpl implements Guarant
   {
     switch (featureID)
     {
-      case AgreePackage.GUARANTEE_STATEMENT__STR:
+      case AgreePackage.LEMMA_STATEMENT__STR:
         setStr((String)newValue);
         return;
-      case AgreePackage.GUARANTEE_STATEMENT__EXPR:
+      case AgreePackage.LEMMA_STATEMENT__EXPR:
         setExpr((Expr)newValue);
         return;
     }
@@ -216,10 +216,10 @@ public class GuaranteeStatementImpl extends SpecStatementImpl implements Guarant
   {
     switch (featureID)
     {
-      case AgreePackage.GUARANTEE_STATEMENT__STR:
+      case AgreePackage.LEMMA_STATEMENT__STR:
         setStr(STR_EDEFAULT);
         return;
-      case AgreePackage.GUARANTEE_STATEMENT__EXPR:
+      case AgreePackage.LEMMA_STATEMENT__EXPR:
         setExpr((Expr)null);
         return;
     }
@@ -236,9 +236,9 @@ public class GuaranteeStatementImpl extends SpecStatementImpl implements Guarant
   {
     switch (featureID)
     {
-      case AgreePackage.GUARANTEE_STATEMENT__STR:
+      case AgreePackage.LEMMA_STATEMENT__STR:
         return STR_EDEFAULT == null ? str != null : !STR_EDEFAULT.equals(str);
-      case AgreePackage.GUARANTEE_STATEMENT__EXPR:
+      case AgreePackage.LEMMA_STATEMENT__EXPR:
         return expr != null;
     }
     return super.eIsSet(featureID);
@@ -261,4 +261,4 @@ public class GuaranteeStatementImpl extends SpecStatementImpl implements Guarant
     return result.toString();
   }
 
-} //GuaranteeStatementImpl
+} //LemmaStatementImpl

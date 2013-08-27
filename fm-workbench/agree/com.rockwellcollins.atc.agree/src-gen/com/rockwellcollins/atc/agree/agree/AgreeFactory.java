@@ -230,6 +230,24 @@ public interface AgreeFactory extends EFactory
   ParamStatement createParamStatement();
 
   /**
+   * Returns a new object of class '<em>Lemma Statement</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Lemma Statement</em>'.
+   * @generated
+   */
+  LemmaStatement createLemmaStatement();
+
+  /**
+   * Returns a new object of class '<em>Node Lemma</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Node Lemma</em>'.
+   * @generated
+   */
+  NodeLemma createNodeLemma();
+
+  /**
    * Returns a new object of class '<em>Binary Expr</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->

@@ -129,14 +129,15 @@ annex agree {**
      (true -> (abs(GC.cmds.Pitch_Delta - prev(GC.cmds.Pitch_Delta, 0.0)) < GC_MAX_PITCH_DELTA_STEP)) and
      (abs(GC.cmds.Pitch_Delta) < GC_MAX_PITCH_DELTA);
 
-  guarantee active_implies_valid ;
-  guarantee leader_implies_active ;
-  guarantee LSO.Valid <=> AD.Pitch.Valid ;
+  guarantee "active implies valid" : active_implies_valid ;
+  guarantee "leader implies active" : leader_implies_active ;
+  guarantee "LSO and Pitch the same" : LSO.Valid <=> AD.Pitch.Valid ;
 
-  guarantee
+  guarantee "this side in control pitch ok" :
     this_side_in_control => gc_ok ;
 
-  guarantee this_side_in_control => (AD.Pitch.Val = GC.cmds.Pitch_Delta) ;
+  guarantee "some name":
+  	this_side_in_control => (AD.Pitch.Val = GC.cmds.Pitch_Delta) ;
 
 -- End of Flight_Guidance_System Contract
 ---------------------------------------------------------------

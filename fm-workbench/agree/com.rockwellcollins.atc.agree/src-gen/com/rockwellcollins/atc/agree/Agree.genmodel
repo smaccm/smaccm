@@ -60,9 +60,11 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//AgreeContract/specs"/>
     </genClasses>
     <genClasses ecoreClass="Agree.ecore#//AssumeStatement">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Agree.ecore#//AssumeStatement/str"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//AssumeStatement/expr"/>
     </genClasses>
     <genClasses ecoreClass="Agree.ecore#//GuaranteeStatement">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Agree.ecore#//GuaranteeStatement/str"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//GuaranteeStatement/expr"/>
     </genClasses>
     <genClasses ecoreClass="Agree.ecore#//AssertStatement">
@@ -71,6 +73,13 @@
     <genClasses ecoreClass="Agree.ecore#//ParamStatement">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//ParamStatement/expr"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//ParamStatement/type"/>
+    </genClasses>
+    <genClasses ecoreClass="Agree.ecore#//LemmaStatement">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Agree.ecore#//LemmaStatement/str"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//LemmaStatement/expr"/>
+    </genClasses>
+    <genClasses ecoreClass="Agree.ecore#//NodeLemma">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Agree.ecore#//NodeLemma/str"/>
     </genClasses>
     <genClasses ecoreClass="Agree.ecore#//BinaryExpr">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//BinaryExpr/left"/>

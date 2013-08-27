@@ -20,11 +20,13 @@ import com.rockwellcollins.atc.agree.agree.GuaranteeStatement;
 import com.rockwellcollins.atc.agree.agree.IdExpr;
 import com.rockwellcollins.atc.agree.agree.IfThenElseExpr;
 import com.rockwellcollins.atc.agree.agree.IntLitExpr;
+import com.rockwellcollins.atc.agree.agree.LemmaStatement;
 import com.rockwellcollins.atc.agree.agree.NestedDotID;
 import com.rockwellcollins.atc.agree.agree.NextExpr;
 import com.rockwellcollins.atc.agree.agree.NodeBodyExpr;
 import com.rockwellcollins.atc.agree.agree.NodeDefExpr;
 import com.rockwellcollins.atc.agree.agree.NodeEq;
+import com.rockwellcollins.atc.agree.agree.NodeLemma;
 import com.rockwellcollins.atc.agree.agree.ParamStatement;
 import com.rockwellcollins.atc.agree.agree.PreExpr;
 import com.rockwellcollins.atc.agree.agree.PrevExpr;
@@ -490,6 +492,13 @@ public class AgreeSemanticSequencer extends PropertiesSemanticSequencer {
 					return; 
 				}
 				else break;
+			case AgreePackage.LEMMA_STATEMENT:
+				if(context == grammarAccess.getElementRule() ||
+				   context == grammarAccess.getSpecStatementRule()) {
+					sequence_SpecStatement(context, (LemmaStatement) semanticObject); 
+					return; 
+				}
+				else break;
 			case AgreePackage.NESTED_DOT_ID:
 				if(context == grammarAccess.getAddSubExprRule() ||
 				   context == grammarAccess.getAddSubExprAccess().getBinaryExprLeftAction_1_0_0_0() ||
@@ -567,6 +576,13 @@ public class AgreeSemanticSequencer extends PropertiesSemanticSequencer {
 				if(context == grammarAccess.getElementRule() ||
 				   context == grammarAccess.getNodeEqRule()) {
 					sequence_NodeEq(context, (NodeEq) semanticObject); 
+					return; 
+				}
+				else break;
+			case AgreePackage.NODE_LEMMA:
+				if(context == grammarAccess.getElementRule() ||
+				   context == grammarAccess.getNodeEqRule()) {
+					sequence_NodeEq(context, (NodeLemma) semanticObject); 
 					return; 
 				}
 				else break;
@@ -867,6 +883,15 @@ public class AgreeSemanticSequencer extends PropertiesSemanticSequencer {
 	
 	/**
 	 * Constraint:
+	 *     (str=STRING expr=Expr)
+	 */
+	protected void sequence_NodeEq(EObject context, NodeLemma semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Constraint:
 	 *     (component=Expr name=Expr)
 	 */
 	protected void sequence_PreDefFnExpr(EObject context, GetPropertyExpr semanticObject) {
@@ -912,7 +937,7 @@ public class AgreeSemanticSequencer extends PropertiesSemanticSequencer {
 	
 	/**
 	 * Constraint:
-	 *     expr=Expr
+	 *     (str=STRING expr=Expr)
 	 */
 	protected void sequence_SpecStatement(EObject context, AssumeStatement semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -921,9 +946,18 @@ public class AgreeSemanticSequencer extends PropertiesSemanticSequencer {
 	
 	/**
 	 * Constraint:
-	 *     expr=Expr
+	 *     (str=STRING expr=Expr)
 	 */
 	protected void sequence_SpecStatement(EObject context, GuaranteeStatement semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Constraint:
+	 *     (str=STRING expr=Expr)
+	 */
+	protected void sequence_SpecStatement(EObject context, LemmaStatement semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
