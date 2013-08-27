@@ -11,12 +11,12 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.ui.editor.XtextEditor;
 import org.eclipse.xtext.ui.editor.outline.impl.EObjectNode;
+import org.eclipse.xtext.ui.editor.utils.EditorUtils;
 import org.eclipse.xtext.util.concurrent.IUnitOfWork;
 import org.osate.aadl2.Element;
 
@@ -35,7 +35,7 @@ public abstract class AadlHandler extends AbstractHandler {
         }
         final URI uri = node.getEObjectURI();
 
-        final XtextEditor xtextEditor = getXtextEditor(event);
+        final XtextEditor xtextEditor = EditorUtils.getActiveXtextEditor(event);
         if (xtextEditor == null) {
             return null;
         }
@@ -66,14 +66,6 @@ public abstract class AadlHandler extends AbstractHandler {
         job.setRule(ResourcesPlugin.getWorkspace().getRoot());
         job.schedule();
         return null;
-    }
-
-    private XtextEditor getXtextEditor(ExecutionEvent event) {
-        IEditorPart activeEditor = HandlerUtil.getActiveEditor(event);
-        if (activeEditor == null) {
-            return null;
-        }
-        return (XtextEditor) activeEditor.getAdapter(XtextEditor.class);
     }
 
     private EObjectNode getEObjectNode(ISelection currentSelection) {
