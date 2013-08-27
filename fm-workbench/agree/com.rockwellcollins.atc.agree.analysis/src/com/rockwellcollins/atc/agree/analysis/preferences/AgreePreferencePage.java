@@ -37,6 +37,9 @@ public class AgreePreferencePage extends FieldEditorPreferencePage implements
     public void createFieldEditors() {
         addField(new BooleanFieldEditor(PreferenceConstants.PREF_INDUCT_CEX,
                 "Generate inductive counterexamples", getFieldEditorParent()));
+        addField(new BooleanFieldEditor(PreferenceConstants.PREF_SMOOTH_CEX,
+                "Generate smooth counterexamples (minimal number of input value changes)",
+                getFieldEditorParent()));
         addField(new NonNegativeIntegerFieldEditor(PreferenceConstants.PREF_DEPTH,
                 "Maximum depth for k-induction", getFieldEditorParent()));
         addField(new NonNegativeIntegerFieldEditor(PreferenceConstants.PREF_TIMEOUT,

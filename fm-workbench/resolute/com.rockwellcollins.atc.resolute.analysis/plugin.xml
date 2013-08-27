@@ -5,66 +5,185 @@
    		id="com.rockwellcollins.atc.resolute.analysis.external.resoluteExternalAnalysis"
   		name="Resolute External Analysis"
   		schema="schema/ResoluteExternalAnalysis.exsd"/>
-   <extension-point id="com.rockwellcollins.atc.resolute.analysis.resoluteConfidenceAnalysis" name="ResoluteConfidenceAnalysis" schema="schema/ResoluteConfidenceAnalysis.exsd"/>
-
+   <extension-point
+        id="com.rockwellcollins.atc.resolute.analysis.resoluteConfidenceAnalysis"
+        name="Resolute Confidence Analysis"
+        schema="schema/ResoluteConfidenceAnalysis.exsd"/>
+        
+    <extension point="org.eclipse.ui.views">
+      <category
+            id="com.rockwellcollins.atc.resolute.analysis"
+            name="Resolute">
+      </category>
+      <view
+          category="com.rockwellcollins.atc.resolute.analysis"
+          id="com.rockwellcollins.atc.resolute.views.assuranceCaseView"
+          icon="icons/claims.png"
+          name="Assurance Case"
+          class="com.rockwellcollins.atc.resolute.ui.ResoluteExecutableExtensionFactory:com.rockwellcollins.atc.resolute.analysis.views.AssuranceCaseView"/>
+   </extension>
+    
+   <extension point="org.eclipse.ui.commands">
+     <category
+            id="com.rockwellcollins.atc.resolute.analysis.commands"
+            name="Commands related to Resolute">
+     </category>
+     <command categoryId="com.rockwellcollins.atc.resolute.analysis.commands"
+            id="com.rockwellcollins.atc.resolute.analysis.commands.resoluteClaims"
+            name="Resolute Claims">
+     </command>
+     <command categoryId="com.rockwellcollins.atc.resolute.analysis.commands"
+           id="com.rockwellcollins.atc.resolute.analysis.commands.resoluteVerbose"
+           name="Resolute Verbose">
+     </command>
+     <command categoryId="com.rockwellcollins.atc.resolute.analysis.commands"
+           id="com.rockwellcollins.atc.resolute.analysis.commands.resoluteConfidence"
+           name="Resolute Confidence">
+     </command>
+   </extension>
+   
+     
    <extension
-         point="org.eclipse.ui.actionSets">
-      <actionSet
-            label="Resolute Action Set"
-            visible="true"
-            id="com.rockwellcollins.atc.resolute.actionSet">
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            allPopups="false"
+            locationURI="menu:org.eclipse.ui.main.menu?after=additions">
          <menu
-               label="Re&amp;solute"
-               id="resoluteMenu">
-            <separator
-                  name="resoluteGroup">
-            </separator>
+               id="com.rockwellcollins.atc.resolute.analysis.menus.main"
+               label="Resolute"
+               mnemonic="s">
+            <command
+                  commandId="com.rockwellcollins.atc.resolute.analysis.commands.resoluteClaims"
+                  icon="icons/claims.png"
+                  id="com.rockwellcollins.atc.resolute.analysis.menus.resoluteClaims"
+                  mnemonic="c"
+                  style="push">
+            </command>
+            <command
+                  commandId="com.rockwellcollins.atc.resolute.analysis.commands.resoluteVerbose"
+                  icon="icons/verbose.png"
+                  id="com.rockwellcollins.atc.resolute.analysis.menus.resoluteVerbose"
+                  mnemonic="v"
+                  style="push">
+            </command>
+            <command
+                  commandId="com.rockwellcollins.atc.resolute.analysis.commands.resoluteConfidence"
+                  icon="icons/confidence.png"
+                  id="com.rockwellcollins.atc.resolute.analysis.menus.resoluteConfidence"
+                  mnemonic="o"
+                  style="push">
+            </command>
          </menu>
-         <action
-               label="Resolute &amp;Confidence"
-               icon="icons/confidence.png"
-               class="com.rockwellcollins.atc.resolute.analysis.actions.ResoluteConfidence"
-               tooltip="Generates assurance case with only claim text while calling external confidence plugins"
-               menubarPath="resoluteMenu/resoluteGroup"
-               toolbarPath="resoluteGroup"
-               id="com.rockwellcollins.atc.resolute.actions.ResoluteConfidence"
-               enablesFor="1">
-               <enablement>
-					<objectClass name="org.eclipse.xtext.ui.editor.outline.impl.EObjectNode"/>
-				</enablement>
-         </action>
-         <action
-               label="Resolute &amp;Verbose"
-               icon="icons/verbose.png"
-               class="com.rockwellcollins.atc.resolute.analysis.actions.ResoluteVerbose"
-               tooltip="Generates verbose assurance case"
-               menubarPath="resoluteMenu/resoluteGroup"
-               toolbarPath="resoluteGroup"
-               id="com.rockwellcollins.atc.resolute.actions.ResoluteVerbose"
-               enablesFor="1">
-               <enablement>
-					<objectClass name="org.eclipse.xtext.ui.editor.outline.impl.EObjectNode"/>
-				</enablement>
-         </action>
-         <action
-               label="&amp;Resolute Claims"
-               icon="icons/claims.png"
-               class="com.rockwellcollins.atc.resolute.analysis.actions.ResoluteClaims"
-               tooltip="Generates assurance case with only claim text"
-               menubarPath="resoluteMenu/resoluteGroup"
-               toolbarPath="resoluteGroup"
-               id="com.rockwellcollins.atc.resolute.actions.ResoluteClaims"
-               enablesFor="1">
-               <enablement>
-					<objectClass name="org.eclipse.xtext.ui.editor.outline.impl.EObjectNode"/>
-				</enablement>
-         </action>
-      </actionSet>
+      </menuContribution>
+      
+      <menuContribution
+            allPopups="false"
+            locationURI="toolbar:org.eclipse.ui.main.toolbar?after=additions">
+         <toolbar
+               id="com.rockwellcollins.atc.resolute.analysis.toolbars.main">
+            <command
+                  commandId="com.rockwellcollins.atc.resolute.analysis.commands.resoluteClaims"
+                  icon="icons/claims.png"
+                  id="com.rockwellcollins.atc.resolute.analysis.menus.resoluteClaims"
+                  style="push">
+            </command>
+            <command
+                  commandId="com.rockwellcollins.atc.resolute.analysis.commands.resoluteVerbose"
+                  icon="icons/verbose.png"
+                  id="com.rockwellcollins.atc.resolute.analysis.menus.resoluteVerbose"
+                  style="push">
+            </command>
+            <command
+                  commandId="com.rockwellcollins.atc.resolute.analysis.commands.resoluteConfidence"
+                  icon="icons/confidence.png"
+                  id="com.rockwellcollins.atc.resolute.analysis.menus.resoluteConfidence"
+                  style="push">
+            </command>
+         </toolbar>
+      </menuContribution>
+      
+      <menuContribution
+            allPopups="false"
+            locationURI="popup:org.osate.xtext.aadl2.ui.outline?after=additions">
+         <menu
+               id="com.rockwellcollins.atc.resolute.analysis.popups.main"
+               label="Resolute"
+               mnemonic="s">
+            <command
+                  commandId="com.rockwellcollins.atc.resolute.analysis.commands.resoluteClaims"
+                  icon="icons/claims.png"
+                  id="com.rockwellcollins.atc.resolute.analysis.menus.resoluteClaims"
+                  mnemonic="c"
+                  style="push">
+            </command>
+            <command
+                  commandId="com.rockwellcollins.atc.resolute.analysis.commands.resoluteVerbose"
+                  icon="icons/verbose.png"
+                  id="com.rockwellcollins.atc.resolute.analysis.menus.resoluteVerbose"
+                  mnemonic="v"
+                  style="push">
+            </command>
+            <command
+                  commandId="com.rockwellcollins.atc.resolute.analysis.commands.resoluteConfidence"
+                  icon="icons/confidence.png"
+                  id="com.rockwellcollins.atc.resolute.analysis.menus.resoluteConfidence"
+                  mnemonic="o"
+                  style="push">
+            </command>
+         </menu>
+      </menuContribution>
    </extension>
-   <extension point="org.eclipse.ui.views">
-  		<view id="com.rockwellcollins.atc.resolute.treeproofview"
-          name="Tree Proof View"
-          class="com.rockwellcollins.atc.resolute.ui.ResoluteExecutableExtensionFactory:com.rockwellcollins.atc.resolute.analysis.TreeProofView"/>
+   
+   <extension
+         point="org.eclipse.ui.handlers">
+      <handler
+            class="com.rockwellcollins.atc.resolute.analysis.handlers.ResoluteClaimsHandler"
+            commandId="com.rockwellcollins.atc.resolute.analysis.commands.resoluteClaims">
+         <enabledWhen>
+            <reference
+                  definitionId="com.rockwellcollins.atc.resolute.analysis.expressions.isSingleOutlineSelection">
+            </reference>
+         </enabledWhen>
+      </handler>
+      <handler
+            class="com.rockwellcollins.atc.resolute.analysis.handlers.ResoluteVerboseHandler"
+            commandId="com.rockwellcollins.atc.resolute.analysis.commands.resoluteVerbose">
+         <enabledWhen>
+            <reference
+                  definitionId="com.rockwellcollins.atc.resolute.analysis.expressions.isSingleOutlineSelection">
+            </reference>
+         </enabledWhen>
+      </handler>
+            <handler
+            class="com.rockwellcollins.atc.resolute.analysis.handlers.ResoluteConfidenceHandler"
+            commandId="com.rockwellcollins.atc.resolute.analysis.commands.resoluteConfidence">
+         <enabledWhen>
+            <reference
+                  definitionId="com.rockwellcollins.atc.resolute.analysis.expressions.isSingleOutlineSelection">
+            </reference>
+         </enabledWhen>
+      </handler>
    </extension>
-
+   
+   <extension
+         point="org.eclipse.core.expressions.definitions">
+      <definition
+            id="com.rockwellcollins.atc.resolute.analysis.expressions.isSingleOutlineSelection">
+         <with
+               variable="selection">
+            <and>
+               <count
+                     value="1">
+               </count>
+               <iterate
+                     ifEmpty="false"
+                     operator="or">
+                  <instanceof
+                        value="org.eclipse.xtext.ui.editor.outline.impl.EObjectNode">
+                  </instanceof>
+               </iterate>
+            </and>
+         </with>
+      </definition>
+   </extension>
 </plugin>

@@ -1,9 +1,14 @@
-package com.rockwellcollins.atc.resolute.analysis.actions;
+package com.rockwellcollins.atc.resolute.analysis.handlers;
 
 import com.rockwellcollins.atc.resolute.analysis.ProofType;
 import com.rockwellcollins.atc.resolute.analysis.ResoluteProofTree;
 
-public class ResoluteConfidence extends ResoluteAction {
+public class ResoluteConfidenceHandler extends ResoluteHandler {
+    @Override
+    protected String getJobName() {
+        return "Resolute Confidence";
+    }
+
     @Override
     protected void pruneProof(ResoluteProofTree proof) {
         proof.pruneFalseClaims();
@@ -13,5 +18,4 @@ public class ResoluteConfidence extends ResoluteAction {
     protected ProofType getProofType() {
         return ProofType.CONFIDENCE;
     }
-
 }

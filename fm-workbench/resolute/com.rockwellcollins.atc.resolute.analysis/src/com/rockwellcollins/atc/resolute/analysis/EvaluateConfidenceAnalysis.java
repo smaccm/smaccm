@@ -11,7 +11,7 @@ import com.rockwellcollins.atc.resolute.resolute.Expr;
 
 public class EvaluateConfidenceAnalysis {
     final private static String EXTENTION_ID = "com.rockwellcollins.atc.resolute.analysis.resoluteConfidenceAnalysis";
-    static Set<ResoluteConfidenceInterface> interfaces;
+    private static Set<ResoluteConfidenceInterface> interfaces;
 
     static public void init(IExtensionRegistry registry) {
         interfaces = new HashSet<ResoluteConfidenceInterface>();

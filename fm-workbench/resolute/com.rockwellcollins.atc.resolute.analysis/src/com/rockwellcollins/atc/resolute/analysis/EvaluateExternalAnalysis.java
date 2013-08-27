@@ -11,11 +11,11 @@ import org.eclipse.core.runtime.IExtensionRegistry;
 import com.rockwellcollins.atc.resolute.analysis.values.ResoluteValue;
 
 public class EvaluateExternalAnalysis {
-    final private static Map<String, ResoluteExternalAnalysis> analysisMap = new HashMap<>();
     final private static String EXTENTION_ID = "com.rockwellcollins.atc.resolute.analysis.external.resoluteExternalAnalysis";
-
+    private static Map<String, ResoluteExternalAnalysis> analysisMap;
+    
     static public void init(IExtensionRegistry registry) {
-        analysisMap.clear();
+        analysisMap = new HashMap<>();
         evaluate(registry);
     }
 

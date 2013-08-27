@@ -1,4 +1,4 @@
-package com.rockwellcollins.atc.resolute.analysis.actions;
+package com.rockwellcollins.atc.resolute.analysis.handlers;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -8,7 +8,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.osate.aadl2.ComponentClassifier;
@@ -25,10 +24,10 @@ import com.rockwellcollins.atc.resolute.analysis.ProofType;
 import com.rockwellcollins.atc.resolute.analysis.ResoluteInterpreter;
 import com.rockwellcollins.atc.resolute.analysis.ResoluteProofTree;
 import com.rockwellcollins.atc.resolute.analysis.ResoluteQuantifiableAadlObjects;
-import com.rockwellcollins.atc.resolute.analysis.TreeProofView;
+import com.rockwellcollins.atc.resolute.analysis.views.AssuranceCaseView;
 import com.rockwellcollins.atc.resolute.resolute.ResoluteSubclause;
 
-public abstract class ResoluteAction extends AadlAction {
+public abstract class ResoluteHandler extends AadlHandler {
     @Override
     protected IStatus runJob(Element root, IProgressMonitor monitor) {
         SystemInstance si = null;
@@ -142,18 +141,16 @@ public abstract class ResoluteAction extends AadlAction {
         Display.getDefault().asyncExec(new Runnable() {
             @Override
             public void run() {
-                displayTreeProofView(proofTrees, page);
+                displayView(proofTrees, page);
             }
         });
     }
 
-    private void displayTreeProofView(final List<ResoluteProofTree> proofTrees,
-            final IWorkbenchPage page) {
+    private void displayView(final List<ResoluteProofTree> proofTrees, final IWorkbenchPage page) {
         try {
-            IViewPart view = page.showView("com.rockwellcollins.atc.resolute.treeproofview");
-            TreeProofView treeView = (TreeProofView) view;
-            treeView.addProofs(proofTrees);
-            treeView.setFocus();
+            AssuranceCaseView view = (AssuranceCaseView) page.showView(AssuranceCaseView.ID);
+            view.addProofs(proofTrees);
+            view.setFocus();
         } catch (PartInitException e) {
             e.printStackTrace();
         }
