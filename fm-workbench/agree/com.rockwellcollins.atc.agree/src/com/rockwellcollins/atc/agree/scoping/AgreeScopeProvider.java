@@ -77,12 +77,27 @@ public class AgreeScopeProvider extends
         for (AnnexSubclause subclause : sysType.getAllAnnexSubclauses()) {
             if (subclause instanceof AgreeContractSubclause) {
                 IScope scopeOfType = getScope(((AgreeContractSubclause) subclause).getContract(), ref);
-                return Scopes.scopeFor(ctx.getSpecs(), scopeOfType);
+                return Scopes.scopeFor(getAllElementsFromSpecs(ctx.getSpecs()), scopeOfType);
             }
         }
         return IScope.NULLSCOPE; 
     }
 
+    private Set<Element> getAllElementsFromSpecs(EList<SpecStatement> specs){
+        
+        Set<Element> result = new HashSet<>();
+        for(SpecStatement spec : specs){
+            if (spec instanceof EqStatement){
+                for(Element el : ((EqStatement)spec).getArgs()){
+                    result.add(el);
+                }
+            }else{
+                result.add(spec);
+            }
+        }
+        return result;
+    }
+    
     IScope scope_NamedElement(NestedDotID ctx, EReference ref) {
         Set<Element> components = getCorrespondingAadlElement(ctx);
 
@@ -148,17 +163,8 @@ public class AgreeScopeProvider extends
             }
             
             assert (container instanceof AgreeContract);
-            for (SpecStatement spec : ((AgreeContract) container).getSpecs()) {
-                if (spec instanceof PropertyStatement) {
-                    result.add(spec);
-                }
-                if (spec instanceof NodeDefExpr) {
-                    result.add(spec);
-                }
-                if (spec instanceof EqStatement){
-                    result.add(spec);
-                }
-            }
+            result = getAllElementsFromSpecs(((AgreeContract) container).getSpecs());
+               
         }
 
         return result;

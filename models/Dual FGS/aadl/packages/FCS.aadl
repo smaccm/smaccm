@@ -193,7 +193,7 @@ assume  "dont fail assumption" :
 
 annex agree {**
 	----------------------------------------------------------------
--- Flight_Control_System_Impl Facts
+-- Flight_Control_System_Impl Facts 
    
 assert (FGS_L.LSO.Valid and FGS_R.LSO.Valid) => FGS_L.LSO.Leader = FGS_R.LSO.Leader;
 			
