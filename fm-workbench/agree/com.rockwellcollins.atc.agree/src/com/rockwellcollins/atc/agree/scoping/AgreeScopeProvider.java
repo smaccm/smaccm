@@ -25,6 +25,7 @@ import com.rockwellcollins.atc.agree.agree.AgreeContract;
 import com.rockwellcollins.atc.agree.agree.AgreeContractLibrary;
 import com.rockwellcollins.atc.agree.agree.AgreeContractSubclause;
 import com.rockwellcollins.atc.agree.agree.AgreeLibrary;
+import com.rockwellcollins.atc.agree.agree.EqStatement;
 import com.rockwellcollins.atc.agree.agree.FnDefExpr;
 import com.rockwellcollins.atc.agree.agree.NestedDotID;
 import com.rockwellcollins.atc.agree.agree.NodeDefExpr;
@@ -152,6 +153,9 @@ public class AgreeScopeProvider extends
                     result.add(spec);
                 }
                 if (spec instanceof NodeDefExpr) {
+                    result.add(spec);
+                }
+                if (spec instanceof EqStatement){
                     result.add(spec);
                 }
             }
