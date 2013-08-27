@@ -80,8 +80,8 @@ FnDefExpr:
 ;
 
 NodeDefExpr:
-	'node' name=ID '(' args+=Arg (',' args+=Arg)* ')' 'returns'
-				   '(' rets+=Arg (',' rets+=Arg)* ')' ';'
+	'node' name=ID '(' (args+=Arg (',' args+=Arg)*)? ')' 'returns'
+				   '(' (rets+=Arg (',' rets+=Arg)*)? ')' ';'
 	nodeBody=NodeBodyExpr
 ;
 
@@ -173,7 +173,7 @@ PreDefFnNames:
 
 TermExpr returns Expr:
 	{IdExpr} id=[aadl2::NamedElement | QID ]
-|   NestedDotID ({FnCallExpr.fn=current} '(' args+=Expr (',' args+=Expr)* ')')?
+|   NestedDotID ({FnCallExpr.fn=current} '(' (args+=Expr (',' args+=Expr)*)? ')')?
 |	{IntLitExpr} val=INTEGER_LIT
 |	{PreExpr} 'pre' '(' expr=Expr ')'
 |   {RealLitExpr} val=REAL_LIT

@@ -858,14 +858,7 @@ public class AgreeSemanticSequencer extends PropertiesSemanticSequencer {
 	
 	/**
 	 * Constraint:
-	 *     (
-	 *         name=ID 
-	 *         args+=Arg 
-	 *         args+=Arg* 
-	 *         rets+=Arg 
-	 *         rets+=Arg* 
-	 *         nodeBody=NodeBodyExpr
-	 *     )
+	 *     (name=ID (args+=Arg args+=Arg*)? (rets+=Arg rets+=Arg*)? nodeBody=NodeBodyExpr)
 	 */
 	protected void sequence_NodeDefExpr(EObject context, NodeDefExpr semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -982,7 +975,7 @@ public class AgreeSemanticSequencer extends PropertiesSemanticSequencer {
 	
 	/**
 	 * Constraint:
-	 *     (fn=TermExpr_FnCallExpr_1_1_0 args+=Expr args+=Expr*)
+	 *     ((fn=TermExpr_FnCallExpr_1_1_0 (args+=Expr args+=Expr*)?) | fn=TermExpr_FnCallExpr_1_1_0)
 	 */
 	protected void sequence_TermExpr(EObject context, FnCallExpr semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
