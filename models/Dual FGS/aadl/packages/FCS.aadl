@@ -144,8 +144,6 @@ assume  "dont fail assumption" :
   guarantee "pitch step is valid" : 
   	true -> abs(CSA.CSA_Pitch_Delta - prev(CSA.CSA_Pitch_Delta, 0.0)) < CSA_MAX_PITCH_DELTA_STEP ;
 
-  property prop1 = true;
-
 -- End of Flight_Control_System Contact
 ----------------------------------------------------------------
 **};
@@ -193,7 +191,7 @@ assume  "dont fail assumption" :
 
 annex agree {**
 	----------------------------------------------------------------
--- Flight_Control_System_Impl Facts 
+-- Flight_Control_System_Impl Facts  
    
 assert (FGS_L.LSO.Valid and FGS_R.LSO.Valid) => FGS_L.LSO.Leader = FGS_R.LSO.Leader;
 			
