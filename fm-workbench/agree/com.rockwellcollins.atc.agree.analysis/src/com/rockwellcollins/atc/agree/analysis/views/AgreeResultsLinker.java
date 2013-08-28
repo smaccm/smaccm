@@ -11,7 +11,6 @@ import org.eclipse.emf.ecore.EObject;
 import org.osate.aadl2.ComponentImplementation;
 
 import com.rockwellcollins.atc.agree.agree.AgreeSubclause;
-import com.rockwellcollins.atc.agree.agree.GuaranteeStatement;
 
 public class AgreeResultsLinker {
     private Map<AnalysisResult, Program> programs = new HashMap<>();
@@ -20,7 +19,6 @@ public class AgreeResultsLinker {
     private Map<AnalysisResult, Layout> layouts = new HashMap<>();
     private Map<AnalysisResult, Map<String, EObject>> referenceMaps = new HashMap<>();
     private Map<AnalysisResult, String> logs = new HashMap<>();
-    private Map<AnalysisResult, GuaranteeStatement> guarantees = new HashMap<>();
 
     public void setProgram(AnalysisResult result, Program program) {
         programs.put(result, program);
@@ -68,13 +66,5 @@ public class AgreeResultsLinker {
     
     public String getLog(AnalysisResult result) {
         return logs.get(result);
-    }
-    
-    public void setGuarantee(AnalysisResult result, GuaranteeStatement gs) {
-        guarantees.put(result, gs);
-    }
-    
-    public GuaranteeStatement getGuarantee(AnalysisResult result) {
-        return guarantees.get(result);
     }
 }

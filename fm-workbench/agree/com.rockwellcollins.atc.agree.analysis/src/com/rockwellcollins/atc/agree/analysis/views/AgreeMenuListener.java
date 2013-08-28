@@ -130,9 +130,13 @@ public class AgreeMenuListener implements IMenuListener {
     }
 
     private void addOpenGuaranteeMenu(IMenuManager manager, AnalysisResult result) {
-        GuaranteeStatement gs = linker.getGuarantee(result);
-        if (gs != null) {
-            manager.add(createHyperlinkAction("Open Guarantee", gs));
+        if (result instanceof PropertyResult) {
+            PropertyResult pr = (PropertyResult) result;
+            Map<String, EObject> refMap = linker.getReferenceMap(pr.getParent());
+            EObject guarantee = refMap.get(pr.getName());
+            if (guarantee instanceof GuaranteeStatement) {
+                manager.add(createHyperlinkAction("Open Guarantee", guarantee));
+            }
         }
     }
 
