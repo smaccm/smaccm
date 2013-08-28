@@ -243,7 +243,8 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
     public Expr caseLemmaStatement(LemmaStatement state){
         Expr expr = doSwitch(state.getExpr());
         String guarStr = state.getStr();
-        guarStr = guarStr.replace("\"", "");
+        guarStr = aadlNameTag+guarStr.replace("\"", "");
+        refMap.put(guarStr, state);
         IdExpr strId = new IdExpr(guarStr);
         Equation eq = new Equation(strId, expr);
         guarExpressions.add(eq);
@@ -255,7 +256,8 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
 
         Expr expr = doSwitch(state.getExpr());
         String guarStr = state.getStr();
-        guarStr = guarStr.replace("\"", "");
+        guarStr = aadlNameTag+guarStr.replace("\"", "");
+        refMap.put(guarStr, state);
         IdExpr strId = new IdExpr(guarStr);
         Equation eq = new Equation(strId, expr);
         guarExpressions.add(eq);
