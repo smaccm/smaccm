@@ -38,6 +38,7 @@ import org.osate.aadl2.ComponentImplementation;
 import org.osate.ui.dialogs.Dialog;
 
 import com.rockwellcollins.atc.agree.agree.AgreeSubclause;
+import com.rockwellcollins.atc.agree.agree.GuaranteeStatement;
 import com.rockwellcollins.atc.agree.analysis.Util;
 
 public class AgreeMenuListener implements IMenuListener {
@@ -63,16 +64,29 @@ public class AgreeMenuListener implements IMenuListener {
     }
 
     private void addLinkedMenus(IMenuManager manager, AnalysisResult result) {
+        addOpenComponentMenu(manager, result);
+        addOpenContractMenu(manager, result);
+        addViewLogMenu(manager, result);
+        addViewCounterexampleMenu(manager, result);
+        addViewLustreMenu(manager, result);
+        addOpenGuaranteeMenu(manager, result);
+    }
+
+    private void addOpenComponentMenu(IMenuManager manager, AnalysisResult result) {
         ComponentImplementation ci = linker.getComponent(result);
         if (ci != null) {
             manager.add(createHyperlinkAction("Open " + ci.getName(), ci));
         }
+    }
 
+    private void addOpenContractMenu(IMenuManager manager, AnalysisResult result) {
         AgreeSubclause contract = linker.getContract(result);
         if (contract != null) {
             manager.add(createHyperlinkAction("Open Contract", contract));
         }
+    }
 
+    private void addViewLogMenu(IMenuManager manager, AnalysisResult result) {
         String log = linker.getLog(result);
         if (log == null && result instanceof PropertyResult) {
             log = linker.getLog(result.getParent());
@@ -80,7 +94,32 @@ public class AgreeMenuListener implements IMenuListener {
         if (log != null && !log.isEmpty()) {
             manager.add(createWriteConsoleAction("View Log", "Log", log));
         }
+    }
 
+    private void addViewCounterexampleMenu(IMenuManager manager, AnalysisResult result) {
+        final Counterexample cex = getCounterexample(result);
+        if (cex != null) {
+            final String cexType = getCounterexampleType(result);
+            final Layout layout = linker.getLayout(result.getParent());
+            final Map<String, EObject> refMap = linker.getReferenceMap(result.getParent());
+    
+            manager.add(new Action("View " + cexType + "Counterexample in Console") {
+                @Override
+                public void run() {
+                    viewCexConsole(cex, layout, refMap);
+                }
+            });
+    
+            manager.add(new Action("View " + cexType + "Counterexample in Spreadsheet") {
+                @Override
+                public void run() {
+                    viewCexSpreadsheet(cex, layout);
+                }
+            });
+        }
+    }
+
+    private void addViewLustreMenu(IMenuManager manager, AnalysisResult result) {
         Program program = linker.getProgram(result);
         if (program == null && result instanceof PropertyResult) {
             program = linker.getProgram(result.getParent());
@@ -88,26 +127,12 @@ public class AgreeMenuListener implements IMenuListener {
         if (program != null) {
             manager.add(createWriteConsoleAction("View Lustre", "Lustre", program));
         }
+    }
 
-        final Counterexample cex = getCounterexample(result);
-        if (cex != null) {
-            final String cexType = getCounterexampleType(result);
-            final Layout layout = linker.getLayout(result.getParent());
-            final Map<String, EObject> refMap = linker.getReferenceMap(result.getParent());
-
-            manager.add(new Action("View " + cexType + "Counterexample in Console") {
-                @Override
-                public void run() {
-                    viewCexConsole(cex, layout, refMap);
-                }
-            });
-
-            manager.add(new Action("View " + cexType + "Counterexample in Spreadsheet") {
-                @Override
-                public void run() {
-                    viewCexSpreadsheet(cex, layout);
-                }
-            });
+    private void addOpenGuaranteeMenu(IMenuManager manager, AnalysisResult result) {
+        GuaranteeStatement gs = linker.getGuarantee(result);
+        if (gs != null) {
+            manager.add(createHyperlinkAction("Open Guarantee", gs));
         }
     }
 
