@@ -1,5 +1,7 @@
 package com.rockwellcollins.atc.agree.analysis.handlers;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.ArrayDeque;
 import java.util.List;
 import java.util.Queue;
@@ -21,7 +23,6 @@ import org.osate.aadl2.ComponentImplementation;
 import org.osate.aadl2.ComponentType;
 import org.osate.aadl2.Element;
 import org.osate.aadl2.Subcomponent;
-import org.osate.ui.dialogs.Dialog;
 
 import com.rockwellcollins.atc.agree.agree.AgreeSubclause;
 import com.rockwellcollins.atc.agree.analysis.Activator;
@@ -39,22 +40,40 @@ public abstract class VerifyHandler extends AadlHandler {
     @Override
     protected IStatus runJob(Element root, IProgressMonitor monitor) {
         if (!(root instanceof ComponentImplementation)) {
-            Dialog.showError("AGREE Error", "Please choose an AADL Component Implementation");
-            return Status.CANCEL_STATUS;
+            return new Status(IStatus.ERROR, Activator.PLUGIN_ID,
+                    "Must select an AADL Component Implementation");
         }
 
-        ComponentImplementation ci = (ComponentImplementation) root;
-        AnalysisResult result;
-        if (isRecursive()) {
-            result = buildAnalysisResult(ci.getName(), ci, null);
-            CompositeAnalysisResult wrapper = new CompositeAnalysisResult("");
-            wrapper.addChild(result);
-            result = wrapper;
-        } else {
-            result = createContractVerification(ci, null);
+        try {
+            ComponentImplementation ci = (ComponentImplementation) root;
+            AnalysisResult result;
+            if (isRecursive()) {
+                result = buildAnalysisResult(ci.getName(), ci, null);
+                CompositeAnalysisResult wrapper = new CompositeAnalysisResult("");
+                wrapper.addChild(result);
+                result = wrapper;
+            } else {
+                result = createContractVerification(ci, null);
+            }
+            showView(result, linker);
+            return doAnalysis(monitor);
+        } catch (Throwable e) {
+            String messages = getNestedMessages(e);
+            return new Status(IStatus.ERROR, Activator.PLUGIN_ID, 0, messages, e);
         }
-        showView(result, linker);
-        return doAnalysis(monitor);
+    }
+
+    private String getNestedMessages(Throwable e) {
+        StringWriter sw = new StringWriter();
+        PrintWriter pw = new PrintWriter(sw);
+        while (e != null) {
+            if (!e.getMessage().isEmpty()) {
+                pw.println(e.getMessage());
+            }
+            e = e.getCause();
+        }
+        pw.close();
+        return sw.toString();
     }
 
     private AnalysisResult buildAnalysisResult(String name, ComponentImplementation ci,
