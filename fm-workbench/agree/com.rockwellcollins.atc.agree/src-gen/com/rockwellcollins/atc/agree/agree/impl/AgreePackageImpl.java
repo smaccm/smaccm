@@ -1496,7 +1496,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     fnDefExprEClass.getESuperTypes().add(theAadl2Package.getNamedElement());
     fnDefExprEClass.getESuperTypes().add(this.getSpecStatement());
     fnDefExprEClass.getESuperTypes().add(this.getCallDef());
-    nodeDefExprEClass.getESuperTypes().add(theAadl2Package.getNamedElement());
+    nodeDefExprEClass.getESuperTypes().add(theAadl2Package.getNamespace());
     nodeDefExprEClass.getESuperTypes().add(this.getSpecStatement());
     nodeDefExprEClass.getESuperTypes().add(this.getCallDef());
     nodeBodyExprEClass.getESuperTypes().add(theAadl2Package.getElement());

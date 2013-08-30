@@ -14,6 +14,7 @@ import org.osate.aadl2.AnnexSubclause;
 import org.osate.aadl2.Element;
 import org.osate.aadl2.ModalElement;
 import org.osate.aadl2.NamedElement;
+import org.osate.aadl2.Namespace;
 
 /**
  * <!-- begin-user-doc -->
@@ -167,9 +168,10 @@ public class AgreeSwitch<T> extends Switch<T>
       {
         NodeDefExpr nodeDefExpr = (NodeDefExpr)theEObject;
         T result = caseNodeDefExpr(nodeDefExpr);
-        if (result == null) result = caseNamedElement(nodeDefExpr);
+        if (result == null) result = caseNamespace(nodeDefExpr);
         if (result == null) result = caseSpecStatement(nodeDefExpr);
         if (result == null) result = caseCallDef(nodeDefExpr);
+        if (result == null) result = caseNamedElement(nodeDefExpr);
         if (result == null) result = caseElement(nodeDefExpr);
         if (result == null) result = defaultCase(theEObject);
         return result;
@@ -1115,6 +1117,22 @@ public class AgreeSwitch<T> extends Switch<T>
    * @generated
    */
   public T caseAnnexSubclause(AnnexSubclause object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Namespace</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Namespace</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseNamespace(Namespace object)
   {
     return null;
   }

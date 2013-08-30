@@ -99,45 +99,37 @@ ruleNamedElement returns [EObject current=null]
 
     |
     { 
-        newCompositeNode(grammarAccess.getNamedElementAccess().getNodeDefExprParserRuleCall_2()); 
+        newCompositeNode(grammarAccess.getNamedElementAccess().getPropertyStatementParserRuleCall_2()); 
     }
-    this_NodeDefExpr_2=ruleNodeDefExpr
+    this_PropertyStatement_2=rulePropertyStatement
     { 
-        $current = $this_NodeDefExpr_2.current; 
+        $current = $this_PropertyStatement_2.current; 
         afterParserOrEnumRuleCall();
     }
 
     |
     { 
-        newCompositeNode(grammarAccess.getNamedElementAccess().getPropertyStatementParserRuleCall_3()); 
+        newCompositeNode(grammarAccess.getNamedElementAccess().getConstStatementParserRuleCall_3()); 
     }
-    this_PropertyStatement_3=rulePropertyStatement
+    this_ConstStatement_3=ruleConstStatement
     { 
-        $current = $this_PropertyStatement_3.current; 
+        $current = $this_ConstStatement_3.current; 
         afterParserOrEnumRuleCall();
     }
 
     |
     { 
-        newCompositeNode(grammarAccess.getNamedElementAccess().getConstStatementParserRuleCall_4()); 
+        newCompositeNode(grammarAccess.getNamedElementAccess().getEqStatementParserRuleCall_4()); 
     }
-    this_ConstStatement_4=ruleConstStatement
+    this_EqStatement_4=ruleEqStatement
     { 
-        $current = $this_ConstStatement_4.current; 
-        afterParserOrEnumRuleCall();
-    }
-
-    |
-    { 
-        newCompositeNode(grammarAccess.getNamedElementAccess().getEqStatementParserRuleCall_5()); 
-    }
-    this_EqStatement_5=ruleEqStatement
-    { 
-        $current = $this_EqStatement_5.current; 
+        $current = $this_EqStatement_4.current; 
         afterParserOrEnumRuleCall();
     }
 )
 ;
+
+
 
 
 

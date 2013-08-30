@@ -4,7 +4,7 @@ package com.rockwellcollins.atc.agree.agree;
 
 import org.eclipse.emf.common.util.EList;
 
-import org.osate.aadl2.NamedElement;
+import org.osate.aadl2.Namespace;
 
 /**
  * <!-- begin-user-doc -->
@@ -24,7 +24,7 @@ import org.osate.aadl2.NamedElement;
  * @model
  * @generated
  */
-public interface NodeDefExpr extends NamedElement, SpecStatement, CallDef
+public interface NodeDefExpr extends Namespace, SpecStatement, CallDef
 {
   /**
    * Returns the value of the '<em><b>Args</b></em>' containment reference list.

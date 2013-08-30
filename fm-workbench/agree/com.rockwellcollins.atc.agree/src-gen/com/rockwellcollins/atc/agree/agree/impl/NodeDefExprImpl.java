@@ -22,7 +22,7 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
-import org.osate.aadl2.impl.NamedElementImpl;
+import org.osate.aadl2.impl.NamespaceImpl;
 
 /**
  * <!-- begin-user-doc -->
@@ -39,7 +39,7 @@ import org.osate.aadl2.impl.NamedElementImpl;
  *
  * @generated
  */
-public class NodeDefExprImpl extends NamedElementImpl implements NodeDefExpr
+public class NodeDefExprImpl extends NamespaceImpl implements NodeDefExpr
 {
   /**
    * The cached value of the '{@link #getArgs() <em>Args</em>}' containment reference list.

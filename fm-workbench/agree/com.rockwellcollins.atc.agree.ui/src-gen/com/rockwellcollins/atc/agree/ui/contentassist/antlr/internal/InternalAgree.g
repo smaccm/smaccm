@@ -91,6 +91,8 @@ finally {
 
 
 
+
+
 // Entry rule entryRuleAgreeLibrary
 entryRuleAgreeLibrary 
 :
@@ -1836,27 +1838,21 @@ rule__NamedElement__Alternatives
 )
 
     |(
-{ before(grammarAccess.getNamedElementAccess().getNodeDefExprParserRuleCall_2()); }
-	ruleNodeDefExpr
-{ after(grammarAccess.getNamedElementAccess().getNodeDefExprParserRuleCall_2()); }
-)
-
-    |(
-{ before(grammarAccess.getNamedElementAccess().getPropertyStatementParserRuleCall_3()); }
+{ before(grammarAccess.getNamedElementAccess().getPropertyStatementParserRuleCall_2()); }
 	rulePropertyStatement
-{ after(grammarAccess.getNamedElementAccess().getPropertyStatementParserRuleCall_3()); }
+{ after(grammarAccess.getNamedElementAccess().getPropertyStatementParserRuleCall_2()); }
 )
 
     |(
-{ before(grammarAccess.getNamedElementAccess().getConstStatementParserRuleCall_4()); }
+{ before(grammarAccess.getNamedElementAccess().getConstStatementParserRuleCall_3()); }
 	ruleConstStatement
-{ after(grammarAccess.getNamedElementAccess().getConstStatementParserRuleCall_4()); }
+{ after(grammarAccess.getNamedElementAccess().getConstStatementParserRuleCall_3()); }
 )
 
     |(
-{ before(grammarAccess.getNamedElementAccess().getEqStatementParserRuleCall_5()); }
+{ before(grammarAccess.getNamedElementAccess().getEqStatementParserRuleCall_4()); }
 	ruleEqStatement
-{ after(grammarAccess.getNamedElementAccess().getEqStatementParserRuleCall_5()); }
+{ after(grammarAccess.getNamedElementAccess().getEqStatementParserRuleCall_4()); }
 )
 
 ;
