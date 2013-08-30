@@ -12,8 +12,8 @@ import org.osate.aadl2.NamedElement;
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link com.rockwellcollins.atc.agree.agree.NestedDotID#getName <em>Name</em>}</li>
- *   <li>{@link com.rockwellcollins.atc.agree.agree.NestedDotID#getSubName <em>Sub Name</em>}</li>
+ *   <li>{@link com.rockwellcollins.atc.agree.agree.NestedDotID#getBase <em>Base</em>}</li>
+ *   <li>{@link com.rockwellcollins.atc.agree.agree.NestedDotID#getSub <em>Sub</em>}</li>
  * </ul>
  * </p>
  *
@@ -24,55 +24,55 @@ import org.osate.aadl2.NamedElement;
 public interface NestedDotID extends Expr
 {
   /**
-   * Returns the value of the '<em><b>Name</b></em>' reference.
+   * Returns the value of the '<em><b>Base</b></em>' reference.
    * <!-- begin-user-doc -->
    * <p>
-   * If the meaning of the '<em>Name</em>' reference isn't clear,
+   * If the meaning of the '<em>Base</em>' reference isn't clear,
    * there really should be more of a description here...
    * </p>
    * <!-- end-user-doc -->
-   * @return the value of the '<em>Name</em>' reference.
-   * @see #setName(NamedElement)
-   * @see com.rockwellcollins.atc.agree.agree.AgreePackage#getNestedDotID_Name()
+   * @return the value of the '<em>Base</em>' reference.
+   * @see #setBase(NamedElement)
+   * @see com.rockwellcollins.atc.agree.agree.AgreePackage#getNestedDotID_Base()
    * @model
    * @generated
    */
-  NamedElement getName();
+  NamedElement getBase();
 
   /**
-   * Sets the value of the '{@link com.rockwellcollins.atc.agree.agree.NestedDotID#getName <em>Name</em>}' reference.
+   * Sets the value of the '{@link com.rockwellcollins.atc.agree.agree.NestedDotID#getBase <em>Base</em>}' reference.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @param value the new value of the '<em>Name</em>' reference.
-   * @see #getName()
+   * @param value the new value of the '<em>Base</em>' reference.
+   * @see #getBase()
    * @generated
    */
-  void setName(NamedElement value);
+  void setBase(NamedElement value);
 
   /**
-   * Returns the value of the '<em><b>Sub Name</b></em>' containment reference.
+   * Returns the value of the '<em><b>Sub</b></em>' containment reference.
    * <!-- begin-user-doc -->
    * <p>
-   * If the meaning of the '<em>Sub Name</em>' containment reference isn't clear,
+   * If the meaning of the '<em>Sub</em>' containment reference isn't clear,
    * there really should be more of a description here...
    * </p>
    * <!-- end-user-doc -->
-   * @return the value of the '<em>Sub Name</em>' containment reference.
-   * @see #setSubName(NestedDotID)
-   * @see com.rockwellcollins.atc.agree.agree.AgreePackage#getNestedDotID_SubName()
+   * @return the value of the '<em>Sub</em>' containment reference.
+   * @see #setSub(NestedDotID)
+   * @see com.rockwellcollins.atc.agree.agree.AgreePackage#getNestedDotID_Sub()
    * @model containment="true"
    * @generated
    */
-  NestedDotID getSubName();
+  NestedDotID getSub();
 
   /**
-   * Sets the value of the '{@link com.rockwellcollins.atc.agree.agree.NestedDotID#getSubName <em>Sub Name</em>}' containment reference.
+   * Sets the value of the '{@link com.rockwellcollins.atc.agree.agree.NestedDotID#getSub <em>Sub</em>}' containment reference.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @param value the new value of the '<em>Sub Name</em>' containment reference.
-   * @see #getSubName()
+   * @param value the new value of the '<em>Sub</em>' containment reference.
+   * @see #getSub()
    * @generated
    */
-  void setSubName(NestedDotID value);
+  void setSub(NestedDotID value);
 
 } // NestedDotID

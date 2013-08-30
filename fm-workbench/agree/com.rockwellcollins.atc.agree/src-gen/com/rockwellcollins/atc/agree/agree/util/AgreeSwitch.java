@@ -203,7 +203,6 @@ public class AgreeSwitch<T> extends Switch<T>
       {
         Type type = (Type)theEObject;
         T result = caseType(type);
-        if (result == null) result = caseNamedElement(type);
         if (result == null) result = caseElement(type);
         if (result == null) result = defaultCase(theEObject);
         return result;

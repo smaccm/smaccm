@@ -15,10 +15,10 @@ import org.osate.aadl2.AadlPackage;
 import org.osate.aadl2.AnnexLibrary;
 import org.osate.aadl2.AnnexSubclause;
 import org.osate.aadl2.ComponentClassifier;
+import org.osate.aadl2.ComponentImplementation;
+import org.osate.aadl2.ComponentType;
 import org.osate.aadl2.Element;
 import org.osate.aadl2.Subcomponent;
-import org.osate.aadl2.SystemImplementation;
-import org.osate.aadl2.SystemType;
 import org.osate.aadl2.impl.DataPortImpl;
 
 import com.rockwellcollins.atc.agree.agree.AgreeContract;
@@ -29,7 +29,6 @@ import com.rockwellcollins.atc.agree.agree.EqStatement;
 import com.rockwellcollins.atc.agree.agree.FnDefExpr;
 import com.rockwellcollins.atc.agree.agree.NestedDotID;
 import com.rockwellcollins.atc.agree.agree.NodeDefExpr;
-import com.rockwellcollins.atc.agree.agree.PropertyStatement;
 import com.rockwellcollins.atc.agree.agree.SpecStatement;
 
 /**
@@ -42,19 +41,10 @@ import com.rockwellcollins.atc.agree.agree.SpecStatement;
 public class AgreeScopeProvider extends
         org.osate.xtext.aadl2.properties.scoping.PropertiesScopeProvider {
 
-    /*
-     * IScope scope_NodeDef(NodeDefExpr ctx, EReference ref) { Set<Element>
-     * components = new HashSet<Element>(); for (Arg arg: ctx.getArgs()) {
-     * components.add(arg); } for (Arg arg: ctx.getRets()) {
-     * components.add(arg); } for (Arg arg: ctx.getNodeBody().getLocs()) {
-     * components.add(arg); } return Scopes.scopeFor(components,
-     * getScope(ctx.eContainer(), ref)); }
-     */
-    
     IScope scope_NamedElement(FnDefExpr ctx, EReference ref) {
         return Scopes.scopeFor(ctx.getArgs(), getScope(ctx.eContainer(), ref));
     }
-    
+
     IScope scope_NamedElement(NodeDefExpr ctx, EReference ref) {
         Set<Element> components = new HashSet<>();
         components.addAll(ctx.getArgs());
@@ -64,48 +54,45 @@ public class AgreeScopeProvider extends
     }
 
     IScope scope_NamedElement(AgreeContract ctx, EReference ref) {
-
         EObject container = ctx.eContainer().eContainer();
-        if (container instanceof SystemType) {
+        if (container instanceof ComponentType) {
             return null;
         }
-        if (!(container instanceof SystemImplementation)) {
+        if (!(container instanceof ComponentImplementation)) {
             return IScope.NULLSCOPE;
         }
 
-        SystemType sysType = ((SystemImplementation) container).getType();
-        for (AnnexSubclause subclause : sysType.getAllAnnexSubclauses()) {
+        ComponentType compType = ((ComponentImplementation) container).getType();
+        for (AnnexSubclause subclause : compType.getAllAnnexSubclauses()) {
             if (subclause instanceof AgreeContractSubclause) {
-                IScope scopeOfType = getScope(((AgreeContractSubclause) subclause).getContract(), ref);
+                IScope scopeOfType = getScope(((AgreeContractSubclause) subclause).getContract(),
+                        ref);
                 return Scopes.scopeFor(getAllElementsFromSpecs(ctx.getSpecs()), scopeOfType);
             }
         }
-        return IScope.NULLSCOPE; 
+        return IScope.NULLSCOPE;
     }
 
-    private Set<Element> getAllElementsFromSpecs(EList<SpecStatement> specs){
-        
+    private Set<Element> getAllElementsFromSpecs(EList<SpecStatement> specs) {
         Set<Element> result = new HashSet<>();
-        for(SpecStatement spec : specs){
-            if (spec instanceof EqStatement){
-                for(Element el : ((EqStatement)spec).getArgs()){
+        for (SpecStatement spec : specs) {
+            if (spec instanceof EqStatement) {
+                for (Element el : ((EqStatement) spec).getArgs()) {
                     result.add(el);
                 }
-            }else{
+            } else {
                 result.add(spec);
             }
         }
         return result;
     }
-    
+
     IScope scope_NamedElement(NestedDotID ctx, EReference ref) {
         Set<Element> components = getCorrespondingAadlElement(ctx);
-
         return Scopes.scopeFor(components, getScope(ctx.eContainer(), ref));
     }
 
     private Set<Element> getCorrespondingAadlElement(NestedDotID id) {
-
         EObject container = id.eContainer();
 
         if (container instanceof NestedDotID) {
@@ -157,14 +144,14 @@ public class AgreeScopeProvider extends
                 result.add(el);
             }
         } else {
-            
-            if(container instanceof AgreeContractLibrary){
-                container = ((AgreeContractLibrary)container).getContract();
+
+            if (container instanceof AgreeContractLibrary) {
+                container = ((AgreeContractLibrary) container).getContract();
             }
-            
+
             assert (container instanceof AgreeContract);
             result = getAllElementsFromSpecs(((AgreeContract) container).getSpecs());
-               
+
         }
 
         return result;

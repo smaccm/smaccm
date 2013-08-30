@@ -23,8 +23,8 @@ import org.osate.aadl2.NamedElement;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link com.rockwellcollins.atc.agree.agree.impl.NestedDotIDImpl#getName <em>Name</em>}</li>
- *   <li>{@link com.rockwellcollins.atc.agree.agree.impl.NestedDotIDImpl#getSubName <em>Sub Name</em>}</li>
+ *   <li>{@link com.rockwellcollins.atc.agree.agree.impl.NestedDotIDImpl#getBase <em>Base</em>}</li>
+ *   <li>{@link com.rockwellcollins.atc.agree.agree.impl.NestedDotIDImpl#getSub <em>Sub</em>}</li>
  * </ul>
  * </p>
  *
@@ -33,24 +33,24 @@ import org.osate.aadl2.NamedElement;
 public class NestedDotIDImpl extends ExprImpl implements NestedDotID
 {
   /**
-   * The cached value of the '{@link #getName() <em>Name</em>}' reference.
+   * The cached value of the '{@link #getBase() <em>Base</em>}' reference.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @see #getName()
+   * @see #getBase()
    * @generated
    * @ordered
    */
-  protected NamedElement name;
+  protected NamedElement base;
 
   /**
-   * The cached value of the '{@link #getSubName() <em>Sub Name</em>}' containment reference.
+   * The cached value of the '{@link #getSub() <em>Sub</em>}' containment reference.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @see #getSubName()
+   * @see #getSub()
    * @generated
    * @ordered
    */
-  protected NestedDotID subName;
+  protected NestedDotID sub;
 
   /**
    * <!-- begin-user-doc -->
@@ -78,19 +78,19 @@ public class NestedDotIDImpl extends ExprImpl implements NestedDotID
    * <!-- end-user-doc -->
    * @generated
    */
-  public NamedElement getName()
+  public NamedElement getBase()
   {
-    if (name != null && ((EObject)name).eIsProxy())
+    if (base != null && ((EObject)base).eIsProxy())
     {
-      InternalEObject oldName = (InternalEObject)name;
-      name = (NamedElement)eResolveProxy(oldName);
-      if (name != oldName)
+      InternalEObject oldBase = (InternalEObject)base;
+      base = (NamedElement)eResolveProxy(oldBase);
+      if (base != oldBase)
       {
         if (eNotificationRequired())
-          eNotify(new ENotificationImpl(this, Notification.RESOLVE, AgreePackage.NESTED_DOT_ID__NAME, oldName, name));
+          eNotify(new ENotificationImpl(this, Notification.RESOLVE, AgreePackage.NESTED_DOT_ID__BASE, oldBase, base));
       }
     }
-    return name;
+    return base;
   }
 
   /**
@@ -98,9 +98,9 @@ public class NestedDotIDImpl extends ExprImpl implements NestedDotID
    * <!-- end-user-doc -->
    * @generated
    */
-  public NamedElement basicGetName()
+  public NamedElement basicGetBase()
   {
-    return name;
+    return base;
   }
 
   /**
@@ -108,12 +108,12 @@ public class NestedDotIDImpl extends ExprImpl implements NestedDotID
    * <!-- end-user-doc -->
    * @generated
    */
-  public void setName(NamedElement newName)
+  public void setBase(NamedElement newBase)
   {
-    NamedElement oldName = name;
-    name = newName;
+    NamedElement oldBase = base;
+    base = newBase;
     if (eNotificationRequired())
-      eNotify(new ENotificationImpl(this, Notification.SET, AgreePackage.NESTED_DOT_ID__NAME, oldName, name));
+      eNotify(new ENotificationImpl(this, Notification.SET, AgreePackage.NESTED_DOT_ID__BASE, oldBase, base));
   }
 
   /**
@@ -121,9 +121,9 @@ public class NestedDotIDImpl extends ExprImpl implements NestedDotID
    * <!-- end-user-doc -->
    * @generated
    */
-  public NestedDotID getSubName()
+  public NestedDotID getSub()
   {
-    return subName;
+    return sub;
   }
 
   /**
@@ -131,13 +131,13 @@ public class NestedDotIDImpl extends ExprImpl implements NestedDotID
    * <!-- end-user-doc -->
    * @generated
    */
-  public NotificationChain basicSetSubName(NestedDotID newSubName, NotificationChain msgs)
+  public NotificationChain basicSetSub(NestedDotID newSub, NotificationChain msgs)
   {
-    NestedDotID oldSubName = subName;
-    subName = newSubName;
+    NestedDotID oldSub = sub;
+    sub = newSub;
     if (eNotificationRequired())
     {
-      ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, AgreePackage.NESTED_DOT_ID__SUB_NAME, oldSubName, newSubName);
+      ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, AgreePackage.NESTED_DOT_ID__SUB, oldSub, newSub);
       if (msgs == null) msgs = notification; else msgs.add(notification);
     }
     return msgs;
@@ -148,20 +148,20 @@ public class NestedDotIDImpl extends ExprImpl implements NestedDotID
    * <!-- end-user-doc -->
    * @generated
    */
-  public void setSubName(NestedDotID newSubName)
+  public void setSub(NestedDotID newSub)
   {
-    if (newSubName != subName)
+    if (newSub != sub)
     {
       NotificationChain msgs = null;
-      if (subName != null)
-        msgs = ((InternalEObject)subName).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - AgreePackage.NESTED_DOT_ID__SUB_NAME, null, msgs);
-      if (newSubName != null)
-        msgs = ((InternalEObject)newSubName).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - AgreePackage.NESTED_DOT_ID__SUB_NAME, null, msgs);
-      msgs = basicSetSubName(newSubName, msgs);
+      if (sub != null)
+        msgs = ((InternalEObject)sub).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - AgreePackage.NESTED_DOT_ID__SUB, null, msgs);
+      if (newSub != null)
+        msgs = ((InternalEObject)newSub).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - AgreePackage.NESTED_DOT_ID__SUB, null, msgs);
+      msgs = basicSetSub(newSub, msgs);
       if (msgs != null) msgs.dispatch();
     }
     else if (eNotificationRequired())
-      eNotify(new ENotificationImpl(this, Notification.SET, AgreePackage.NESTED_DOT_ID__SUB_NAME, newSubName, newSubName));
+      eNotify(new ENotificationImpl(this, Notification.SET, AgreePackage.NESTED_DOT_ID__SUB, newSub, newSub));
   }
 
   /**
@@ -174,8 +174,8 @@ public class NestedDotIDImpl extends ExprImpl implements NestedDotID
   {
     switch (featureID)
     {
-      case AgreePackage.NESTED_DOT_ID__SUB_NAME:
-        return basicSetSubName(null, msgs);
+      case AgreePackage.NESTED_DOT_ID__SUB:
+        return basicSetSub(null, msgs);
     }
     return super.eInverseRemove(otherEnd, featureID, msgs);
   }
@@ -190,11 +190,11 @@ public class NestedDotIDImpl extends ExprImpl implements NestedDotID
   {
     switch (featureID)
     {
-      case AgreePackage.NESTED_DOT_ID__NAME:
-        if (resolve) return getName();
-        return basicGetName();
-      case AgreePackage.NESTED_DOT_ID__SUB_NAME:
-        return getSubName();
+      case AgreePackage.NESTED_DOT_ID__BASE:
+        if (resolve) return getBase();
+        return basicGetBase();
+      case AgreePackage.NESTED_DOT_ID__SUB:
+        return getSub();
     }
     return super.eGet(featureID, resolve, coreType);
   }
@@ -209,11 +209,11 @@ public class NestedDotIDImpl extends ExprImpl implements NestedDotID
   {
     switch (featureID)
     {
-      case AgreePackage.NESTED_DOT_ID__NAME:
-        setName((NamedElement)newValue);
+      case AgreePackage.NESTED_DOT_ID__BASE:
+        setBase((NamedElement)newValue);
         return;
-      case AgreePackage.NESTED_DOT_ID__SUB_NAME:
-        setSubName((NestedDotID)newValue);
+      case AgreePackage.NESTED_DOT_ID__SUB:
+        setSub((NestedDotID)newValue);
         return;
     }
     super.eSet(featureID, newValue);
@@ -229,11 +229,11 @@ public class NestedDotIDImpl extends ExprImpl implements NestedDotID
   {
     switch (featureID)
     {
-      case AgreePackage.NESTED_DOT_ID__NAME:
-        setName((NamedElement)null);
+      case AgreePackage.NESTED_DOT_ID__BASE:
+        setBase((NamedElement)null);
         return;
-      case AgreePackage.NESTED_DOT_ID__SUB_NAME:
-        setSubName((NestedDotID)null);
+      case AgreePackage.NESTED_DOT_ID__SUB:
+        setSub((NestedDotID)null);
         return;
     }
     super.eUnset(featureID);
@@ -249,10 +249,10 @@ public class NestedDotIDImpl extends ExprImpl implements NestedDotID
   {
     switch (featureID)
     {
-      case AgreePackage.NESTED_DOT_ID__NAME:
-        return name != null;
-      case AgreePackage.NESTED_DOT_ID__SUB_NAME:
-        return subName != null;
+      case AgreePackage.NESTED_DOT_ID__BASE:
+        return base != null;
+      case AgreePackage.NESTED_DOT_ID__SUB:
+        return sub != null;
     }
     return super.eIsSet(featureID);
   }

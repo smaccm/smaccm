@@ -907,7 +907,7 @@ public interface AgreePackage extends EPackage
    * @generated
    * @ordered
    */
-  int TYPE__OWNED_ELEMENT = Aadl2Package.NAMED_ELEMENT__OWNED_ELEMENT;
+  int TYPE__OWNED_ELEMENT = Aadl2Package.ELEMENT__OWNED_ELEMENT;
 
   /**
    * The feature id for the '<em><b>Owned Comment</b></em>' containment reference list.
@@ -916,34 +916,16 @@ public interface AgreePackage extends EPackage
    * @generated
    * @ordered
    */
-  int TYPE__OWNED_COMMENT = Aadl2Package.NAMED_ELEMENT__OWNED_COMMENT;
+  int TYPE__OWNED_COMMENT = Aadl2Package.ELEMENT__OWNED_COMMENT;
 
   /**
-   * The feature id for the '<em><b>Name</b></em>' attribute.
+   * The feature id for the '<em><b>String</b></em>' attribute.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int TYPE__NAME = Aadl2Package.NAMED_ELEMENT__NAME;
-
-  /**
-   * The feature id for the '<em><b>Qualified Name</b></em>' attribute.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int TYPE__QUALIFIED_NAME = Aadl2Package.NAMED_ELEMENT__QUALIFIED_NAME;
-
-  /**
-   * The feature id for the '<em><b>Owned Property Association</b></em>' containment reference list.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int TYPE__OWNED_PROPERTY_ASSOCIATION = Aadl2Package.NAMED_ELEMENT__OWNED_PROPERTY_ASSOCIATION;
+  int TYPE__STRING = Aadl2Package.ELEMENT_FEATURE_COUNT + 0;
 
   /**
    * The number of structural features of the '<em>Type</em>' class.
@@ -952,7 +934,7 @@ public interface AgreePackage extends EPackage
    * @generated
    * @ordered
    */
-  int TYPE_FEATURE_COUNT = Aadl2Package.NAMED_ELEMENT_FEATURE_COUNT + 0;
+  int TYPE_FEATURE_COUNT = Aadl2Package.ELEMENT_FEATURE_COUNT + 1;
 
   /**
    * The meta object id for the '{@link com.rockwellcollins.atc.agree.agree.impl.ExprImpl <em>Expr</em>}' class.
@@ -1020,22 +1002,22 @@ public interface AgreePackage extends EPackage
   int NESTED_DOT_ID__OWNED_COMMENT = EXPR__OWNED_COMMENT;
 
   /**
-   * The feature id for the '<em><b>Name</b></em>' reference.
+   * The feature id for the '<em><b>Base</b></em>' reference.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int NESTED_DOT_ID__NAME = EXPR_FEATURE_COUNT + 0;
+  int NESTED_DOT_ID__BASE = EXPR_FEATURE_COUNT + 0;
 
   /**
-   * The feature id for the '<em><b>Sub Name</b></em>' containment reference.
+   * The feature id for the '<em><b>Sub</b></em>' containment reference.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int NESTED_DOT_ID__SUB_NAME = EXPR_FEATURE_COUNT + 1;
+  int NESTED_DOT_ID__SUB = EXPR_FEATURE_COUNT + 1;
 
   /**
    * The number of structural features of the '<em>Nested Dot ID</em>' class.
@@ -1899,13 +1881,13 @@ public interface AgreePackage extends EPackage
   int GET_PROPERTY_EXPR__COMPONENT = EXPR_FEATURE_COUNT + 0;
 
   /**
-   * The feature id for the '<em><b>Name</b></em>' containment reference.
+   * The feature id for the '<em><b>Prop</b></em>' containment reference.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int GET_PROPERTY_EXPR__NAME = EXPR_FEATURE_COUNT + 1;
+  int GET_PROPERTY_EXPR__PROP = EXPR_FEATURE_COUNT + 1;
 
   /**
    * The number of structural features of the '<em>Get Property Expr</em>' class.
@@ -2556,6 +2538,17 @@ public interface AgreePackage extends EPackage
   EClass getType();
 
   /**
+   * Returns the meta object for the attribute '{@link com.rockwellcollins.atc.agree.agree.Type#getString <em>String</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the attribute '<em>String</em>'.
+   * @see com.rockwellcollins.atc.agree.agree.Type#getString()
+   * @see #getType()
+   * @generated
+   */
+  EAttribute getType_String();
+
+  /**
    * Returns the meta object for class '{@link com.rockwellcollins.atc.agree.agree.Expr <em>Expr</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -2576,26 +2569,26 @@ public interface AgreePackage extends EPackage
   EClass getNestedDotID();
 
   /**
-   * Returns the meta object for the reference '{@link com.rockwellcollins.atc.agree.agree.NestedDotID#getName <em>Name</em>}'.
+   * Returns the meta object for the reference '{@link com.rockwellcollins.atc.agree.agree.NestedDotID#getBase <em>Base</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @return the meta object for the reference '<em>Name</em>'.
-   * @see com.rockwellcollins.atc.agree.agree.NestedDotID#getName()
+   * @return the meta object for the reference '<em>Base</em>'.
+   * @see com.rockwellcollins.atc.agree.agree.NestedDotID#getBase()
    * @see #getNestedDotID()
    * @generated
    */
-  EReference getNestedDotID_Name();
+  EReference getNestedDotID_Base();
 
   /**
-   * Returns the meta object for the containment reference '{@link com.rockwellcollins.atc.agree.agree.NestedDotID#getSubName <em>Sub Name</em>}'.
+   * Returns the meta object for the containment reference '{@link com.rockwellcollins.atc.agree.agree.NestedDotID#getSub <em>Sub</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @return the meta object for the containment reference '<em>Sub Name</em>'.
-   * @see com.rockwellcollins.atc.agree.agree.NestedDotID#getSubName()
+   * @return the meta object for the containment reference '<em>Sub</em>'.
+   * @see com.rockwellcollins.atc.agree.agree.NestedDotID#getSub()
    * @see #getNestedDotID()
    * @generated
    */
-  EReference getNestedDotID_SubName();
+  EReference getNestedDotID_Sub();
 
   /**
    * Returns the meta object for class '{@link com.rockwellcollins.atc.agree.agree.AgreeContractLibrary <em>Contract Library</em>}'.
@@ -3023,15 +3016,15 @@ public interface AgreePackage extends EPackage
   EReference getGetPropertyExpr_Component();
 
   /**
-   * Returns the meta object for the containment reference '{@link com.rockwellcollins.atc.agree.agree.GetPropertyExpr#getName <em>Name</em>}'.
+   * Returns the meta object for the containment reference '{@link com.rockwellcollins.atc.agree.agree.GetPropertyExpr#getProp <em>Prop</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @return the meta object for the containment reference '<em>Name</em>'.
-   * @see com.rockwellcollins.atc.agree.agree.GetPropertyExpr#getName()
+   * @return the meta object for the containment reference '<em>Prop</em>'.
+   * @see com.rockwellcollins.atc.agree.agree.GetPropertyExpr#getProp()
    * @see #getGetPropertyExpr()
    * @generated
    */
-  EReference getGetPropertyExpr_Name();
+  EReference getGetPropertyExpr_Prop();
 
   /**
    * Returns the meta object for class '{@link com.rockwellcollins.atc.agree.agree.IdExpr <em>Id Expr</em>}'.
@@ -3472,6 +3465,14 @@ public interface AgreePackage extends EPackage
     EClass TYPE = eINSTANCE.getType();
 
     /**
+     * The meta object literal for the '<em><b>String</b></em>' attribute feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EAttribute TYPE__STRING = eINSTANCE.getType_String();
+
+    /**
      * The meta object literal for the '{@link com.rockwellcollins.atc.agree.agree.impl.ExprImpl <em>Expr</em>}' class.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -3492,20 +3493,20 @@ public interface AgreePackage extends EPackage
     EClass NESTED_DOT_ID = eINSTANCE.getNestedDotID();
 
     /**
-     * The meta object literal for the '<em><b>Name</b></em>' reference feature.
+     * The meta object literal for the '<em><b>Base</b></em>' reference feature.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      */
-    EReference NESTED_DOT_ID__NAME = eINSTANCE.getNestedDotID_Name();
+    EReference NESTED_DOT_ID__BASE = eINSTANCE.getNestedDotID_Base();
 
     /**
-     * The meta object literal for the '<em><b>Sub Name</b></em>' containment reference feature.
+     * The meta object literal for the '<em><b>Sub</b></em>' containment reference feature.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      */
-    EReference NESTED_DOT_ID__SUB_NAME = eINSTANCE.getNestedDotID_SubName();
+    EReference NESTED_DOT_ID__SUB = eINSTANCE.getNestedDotID_Sub();
 
     /**
      * The meta object literal for the '{@link com.rockwellcollins.atc.agree.agree.impl.AgreeContractLibraryImpl <em>Contract Library</em>}' class.
@@ -3858,12 +3859,12 @@ public interface AgreePackage extends EPackage
     EReference GET_PROPERTY_EXPR__COMPONENT = eINSTANCE.getGetPropertyExpr_Component();
 
     /**
-     * The meta object literal for the '<em><b>Name</b></em>' containment reference feature.
+     * The meta object literal for the '<em><b>Prop</b></em>' containment reference feature.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      */
-    EReference GET_PROPERTY_EXPR__NAME = eINSTANCE.getGetPropertyExpr_Name();
+    EReference GET_PROPERTY_EXPR__PROP = eINSTANCE.getGetPropertyExpr_Prop();
 
     /**
      * The meta object literal for the '{@link com.rockwellcollins.atc.agree.agree.impl.IdExprImpl <em>Id Expr</em>}' class.

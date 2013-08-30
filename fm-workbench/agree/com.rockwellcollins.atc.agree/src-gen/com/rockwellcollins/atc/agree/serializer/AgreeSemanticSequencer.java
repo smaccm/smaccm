@@ -711,7 +711,7 @@ public class AgreeSemanticSequencer extends PropertiesSemanticSequencer {
 				}
 				else break;
 			case AgreePackage.TYPE:
-				if(context == grammarAccess.getNamedElementRule() ||
+				if(context == grammarAccess.getElementRule() ||
 				   context == grammarAccess.getTypeRule()) {
 					sequence_Type(context, (Type) semanticObject); 
 					return; 
@@ -840,7 +840,7 @@ public class AgreeSemanticSequencer extends PropertiesSemanticSequencer {
 	
 	/**
 	 * Constraint:
-	 *     (name=[NamedElement|ID] subName=NestedDotID?)
+	 *     (base=[NamedElement|ID] sub=NestedDotID?)
 	 */
 	protected void sequence_NestedDotID(EObject context, NestedDotID semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -885,7 +885,7 @@ public class AgreeSemanticSequencer extends PropertiesSemanticSequencer {
 	
 	/**
 	 * Constraint:
-	 *     (component=Expr name=Expr)
+	 *     (component=Expr prop=Expr)
 	 */
 	protected void sequence_PreDefFnExpr(EObject context, GetPropertyExpr semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -1029,7 +1029,7 @@ public class AgreeSemanticSequencer extends PropertiesSemanticSequencer {
 	
 	/**
 	 * Constraint:
-	 *     (name='real' | name='bool' | name='int')
+	 *     (string='real' | string='bool' | string='int')
 	 */
 	protected void sequence_Type(EObject context, Type semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);

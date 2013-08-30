@@ -12,7 +12,7 @@ package com.rockwellcollins.atc.agree.agree;
  * The following features are supported:
  * <ul>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.GetPropertyExpr#getComponent <em>Component</em>}</li>
- *   <li>{@link com.rockwellcollins.atc.agree.agree.GetPropertyExpr#getName <em>Name</em>}</li>
+ *   <li>{@link com.rockwellcollins.atc.agree.agree.GetPropertyExpr#getProp <em>Prop</em>}</li>
  * </ul>
  * </p>
  *
@@ -49,29 +49,29 @@ public interface GetPropertyExpr extends Expr
   void setComponent(Expr value);
 
   /**
-   * Returns the value of the '<em><b>Name</b></em>' containment reference.
+   * Returns the value of the '<em><b>Prop</b></em>' containment reference.
    * <!-- begin-user-doc -->
    * <p>
-   * If the meaning of the '<em>Name</em>' containment reference isn't clear,
+   * If the meaning of the '<em>Prop</em>' containment reference isn't clear,
    * there really should be more of a description here...
    * </p>
    * <!-- end-user-doc -->
-   * @return the value of the '<em>Name</em>' containment reference.
-   * @see #setName(Expr)
-   * @see com.rockwellcollins.atc.agree.agree.AgreePackage#getGetPropertyExpr_Name()
+   * @return the value of the '<em>Prop</em>' containment reference.
+   * @see #setProp(Expr)
+   * @see com.rockwellcollins.atc.agree.agree.AgreePackage#getGetPropertyExpr_Prop()
    * @model containment="true"
    * @generated
    */
-  Expr getName();
+  Expr getProp();
 
   /**
-   * Sets the value of the '{@link com.rockwellcollins.atc.agree.agree.GetPropertyExpr#getName <em>Name</em>}' containment reference.
+   * Sets the value of the '{@link com.rockwellcollins.atc.agree.agree.GetPropertyExpr#getProp <em>Prop</em>}' containment reference.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @param value the new value of the '<em>Name</em>' containment reference.
-   * @see #getName()
+   * @param value the new value of the '<em>Prop</em>' containment reference.
+   * @see #getProp()
    * @generated
    */
-  void setName(Expr value);
+  void setProp(Expr value);
 
 } // GetPropertyExpr

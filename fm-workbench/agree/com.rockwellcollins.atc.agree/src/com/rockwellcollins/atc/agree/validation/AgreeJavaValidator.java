@@ -86,7 +86,7 @@ public class AgreeJavaValidator extends
             return parseFailType;
         }
 
-        return new AgreeType(arg.getType().getName());
+        return new AgreeType(arg.getType().getString());
     }
 
     @Check
@@ -208,12 +208,7 @@ public class AgreeJavaValidator extends
     }
 
     private AgreeType getAgreeType(NestedDotID nestDotIdExpr) {
-
-        while (nestDotIdExpr.getSubName() != null) {
-            nestDotIdExpr = nestDotIdExpr.getSubName();
-        }
-
-        return getAgreeType(nestDotIdExpr.getName());
+        return getAgreeType(getFinalNestId(nestDotIdExpr));
     }
 
     private AgreeType getAgreeType(NamedElement namedEl) {
@@ -327,7 +322,7 @@ public class AgreeJavaValidator extends
             return;
         }
 
-        AgreeType assumedType = new AgreeType(constStat.getType().getName());
+        AgreeType assumedType = new AgreeType(constStat.getType().getString());
         AgreeType actualType = getAgreeType(constStat.getExpr());
 
         if (!assumedType.matches(actualType)) {
@@ -343,7 +338,7 @@ public class AgreeJavaValidator extends
             return parseFailType;
         }
 
-        return new AgreeType(constStat.getType().getName());
+        return new AgreeType(constStat.getType().getString());
     }
 
     private void checkMultiAssignEq(EObject src, List<Arg> lhsArgs, Expr rhsExpr) {
@@ -358,12 +353,12 @@ public class AgreeJavaValidator extends
             if( namedEl instanceof NodeDefExpr){
                 NodeDefExpr nodeDef = (NodeDefExpr) namedEl;
                 for (Arg var : nodeDef.getRets()) {
-                    agreeRhsTypes.add(new AgreeType(var.getType().getName()));
+                    agreeRhsTypes.add(new AgreeType(var.getType().getString()));
                 }
             }else{
                 assert (namedEl instanceof FnDefExpr);
                 FnDefExpr fnDef = (FnDefExpr)namedEl;
-                agreeRhsTypes.add(new AgreeType(fnDef.getType().getName()));
+                agreeRhsTypes.add(new AgreeType(fnDef.getType().getString()));
             }
         } else {
             agreeRhsTypes.add(getAgreeType(rhsExpr));
@@ -460,7 +455,7 @@ public class AgreeJavaValidator extends
     public void checkGetPropertyExpr(GetPropertyExpr getPropExpr) {
         AgreeType compType = getAgreeType(getPropExpr.getComponent());
         // AgreeType propType = getAgreeType(propExpr.getName());
-        Expr propExpr = getPropExpr.getName();
+        Expr propExpr = getPropExpr.getProp();
 
         if (!compType.equals("component")) {
             error(getPropExpr, "the first argument of the 'Get_Property' function"
@@ -484,11 +479,11 @@ public class AgreeJavaValidator extends
 
     private AgreeType getAgreeType(GetPropertyExpr getPropExpr) {
 
-        if (getPropExpr.getName() == null) {
+        if (getPropExpr.getProp() == null) {
             return parseFailType;
         }
 
-        return getAgreeType(getPropExpr.getName());
+        return getAgreeType(getPropExpr.getProp());
     }
 
     @Check
@@ -595,7 +590,7 @@ public class AgreeJavaValidator extends
 
         if (callDef instanceof FnDefExpr) {
             FnDefExpr fnDef = (FnDefExpr) callDef;
-            return new AgreeType(fnDef.getType().getName());
+            return new AgreeType(fnDef.getType().getString());
         } else if (callDef instanceof NodeDefExpr) {
             NodeDefExpr nodeDef = (NodeDefExpr) callDef;
             List<AgreeType> outDefTypes = typesFromArgs(nodeDef.getRets());
@@ -878,11 +873,9 @@ public class AgreeJavaValidator extends
     }
 
     public NamedElement getFinalNestId(NestedDotID dotId){
-        
-        while(dotId.getSubName() != null){
-            dotId = dotId.getSubName();
+        while(dotId.getSub() != null){
+            dotId = dotId.getSub();
         }
-        return dotId.getName();
+        return dotId.getBase();
     }
-    
 }

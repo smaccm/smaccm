@@ -73,6 +73,7 @@ import com.rockwellcollins.atc.agree.agree.Arg;
 import com.rockwellcollins.atc.agree.agree.AssertStatement;
 import com.rockwellcollins.atc.agree.agree.AssumeStatement;
 import com.rockwellcollins.atc.agree.agree.BoolLitExpr;
+import com.rockwellcollins.atc.agree.agree.CallDef;
 import com.rockwellcollins.atc.agree.agree.ConstStatement;
 import com.rockwellcollins.atc.agree.agree.EqStatement;
 import com.rockwellcollins.atc.agree.agree.FnCallExpr;
@@ -93,7 +94,6 @@ import com.rockwellcollins.atc.agree.agree.PropertyStatement;
 import com.rockwellcollins.atc.agree.agree.RealLitExpr;
 import com.rockwellcollins.atc.agree.agree.SpecStatement;
 import com.rockwellcollins.atc.agree.agree.ThisExpr;
-import com.rockwellcollins.atc.agree.agree.CallDef;
 import com.rockwellcollins.atc.agree.agree.util.AgreeSwitch;
 
 public class AgreeEmitter extends AgreeSwitch<Expr> {
@@ -321,7 +321,7 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
             varIds.add(idExpr);
 
             varDecl.aadlStr = aadlNameTag + baseName;
-            varDecl.type = arg.getType().getName();
+            varDecl.type = arg.getType().getString();
 
             if (curComp != null) {
                 layout.addElement(curComp.getName(), varDecl.aadlStr, AgreeLayout.SigType.OUTPUT);
@@ -347,7 +347,7 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
         AgreeVarDecl varType = new AgreeVarDecl();
         varType.jKindStr = jKindNameTag + state.getName();
         varType.aadlStr = aadlNameTag + state.getName();
-        varType.type = state.getType().getName();
+        varType.type = state.getType().getString();
 
         if (curComp != null) {
             layout.addElement(curComp.getName(), varType.aadlStr, AgreeLayout.SigType.OUTPUT);
@@ -523,7 +523,7 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
         List<VarDecl> inputs = argsToVarDeclList(expr.getArgs());
         Expr bodyExpr = doSwitch(expr.getExpr());
 
-        Type outType = new NamedType(expr.getType().getName());
+        Type outType = new NamedType(expr.getType().getString());
         VarDecl outVar = new VarDecl("_outvar", outType);
         List<VarDecl> outputs = Collections.singletonList(outVar);
         Equation eq = new Equation(new IdExpr("_outvar"), bodyExpr);
@@ -542,7 +542,7 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
     @Override
     public Expr caseGetPropertyExpr(GetPropertyExpr expr) {
 
-        NamedElement propName = namedElFromId(expr.getName());
+        NamedElement propName = namedElFromId(expr.getProp());
         NamedElement compName = namedElFromId(expr.getComponent());
 
         assert (propName instanceof Property);
@@ -625,13 +625,13 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
         NestedDotID orgId = Id;
         String jKindVar = "";
         String aadlVar = "";
-        while (Id.getSubName() != null) {
-            jKindVar += Id.getName().getName() + dotChar;
-            aadlVar += Id.getName().getName() + ".";
-            Id = Id.getSubName();
+        while (Id.getSub() != null) {
+            jKindVar += Id.getBase().getName() + dotChar;
+            aadlVar += Id.getBase().getName() + ".";
+            Id = Id.getSub();
         }
 
-        NamedElement namedEl = Id.getName();
+        NamedElement namedEl = Id.getBase();
 
         String baseName = namedEl.getName();
         IdExpr result = new IdExpr(jKindVar + baseName);
@@ -658,7 +658,7 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
             if (!inputVars.contains(tempStrType) && !internalVars.contains(tempStrType)) {
 
                 log.logWarning("In component '"
-                        + orgId.getName().getContainingClassifier().getFullName() + "', Port '"
+                        + orgId.getBase().getContainingClassifier().getFullName() + "', Port '"
                         + tempStr + "' is not connected to anything. Considering it to be"
                         + " an unconstrained primary input.");
 
@@ -675,8 +675,8 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
                 // }
                 // this code just creates a new PI
                 tempStrType = dataTypeToVarType((DataSubcomponent) namedEl);
-                jKindVar += jKindNameTag + Id.getName().getName();
-                aadlVar += aadlNameTag + Id.getName().getName();
+                jKindVar += jKindNameTag + Id.getBase().getName();
+                aadlVar += aadlNameTag + Id.getBase().getName();
 
                 tempStrType.jKindStr = tempStr;
                 tempStrType.aadlStr = aadlVar;
@@ -1281,7 +1281,7 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
     private List<VarDecl> argsToVarDeclList(EList<Arg> args) {
         List<VarDecl> varList = new ArrayList<VarDecl>();
         for (Arg arg : args) {
-            Type type = new NamedType(arg.getType().getName());
+            Type type = new NamedType(arg.getType().getString());
             VarDecl varDecl = new VarDecl(jKindNameTag + arg.getName(), type);
             varList.add(varDecl);
         }
@@ -1301,28 +1301,20 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
 
     private NamedElement namedElFromId(EObject obj) {
         if (obj instanceof NestedDotID) {
-            NestedDotID Id = (NestedDotID) obj;
-            while (Id.getSubName() != null) {
-                Id = Id.getSubName();
-            }
-            return Id.getName();
+            return getFinalNestId((NestedDotID) obj);
         } else if (obj instanceof com.rockwellcollins.atc.agree.agree.IdExpr) {
             return ((com.rockwellcollins.atc.agree.agree.IdExpr) obj).getId();
-        }
-        // else if (obj instanceof NestIdExpr) {
-        // return namedElFromId(((NestIdExpr) obj).getId());
-        // }
-        else {
+        } else {
             assert (obj instanceof ThisExpr);
             return curComp;
         }
     }
 
     private NamedElement getFinalNestId(NestedDotID dotId) {
-        while (dotId.getSubName() != null) {
-            dotId = dotId.getSubName();
+        while (dotId.getSub() != null) {
+            dotId = dotId.getSub();
         }
-        return dotId.getName();
+        return dotId.getBase();
     }
 
     public String getLog() {

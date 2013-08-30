@@ -6,18 +6,16 @@ import "platform:/resource/org.osate.aadl2/model/aadl2.ecore" as aadl2
 
 NamedElement returns aadl2::NamedElement:
 	Arg
-|	Type
 |	FnDefExpr
 |   NodeDefExpr
 |   PropertyStatement
 |   ConstStatement
 |   EqStatement
-
 ;
-
 
 Element returns aadl2::Element:
 	Expr
+|	Type
 |   AgreeContract
 |   SpecStatement
 |   NodeEq
@@ -40,7 +38,6 @@ AgreeSubclause:
 {AgreeContractSubclause} contract=AgreeContract
 ;
 
-
 AgreeContract returns Contract:
 	{AgreeContract} (specs+=SpecStatement)+
 ;
@@ -56,12 +53,12 @@ SpecStatement:
 |   EqStatement
 |   FnDefExpr
 |   NodeDefExpr
-	;
+;
 
 CallDef returns CallDef:
 	FnDefExpr
 |   NodeDefExpr
-    ;
+;
 
 PropertyStatement:
 	'property' name=ID '=' expr=Expr ';'
@@ -86,14 +83,14 @@ NodeDefExpr:
 ;
 
 NodeBodyExpr: 
-	('var' (locs+=Arg ';')+ )? 
+	('var' (locs+=Arg ';')+)? 
 	'let' 
 		(eqs+=NodeEq)+
 	'tel' ';'  	
 ;
 
 NodeEq: 
-	{NodeEq}	(names+=[Arg] (',' names+=[Arg])* '=' expr=Expr ';')
+	{NodeEq}	names+=[Arg] (',' names+=[Arg])* '=' expr=Expr ';'
 |   {NodeLemma} 'lemma' str=STRING ':' expr=Expr ';'
 ;
 
@@ -102,7 +99,7 @@ Arg returns Arg:
 ;
 
 Type:
-	name=('real' | 'bool' | 'int')
+	string=('real' | 'bool' | 'int')
 ;
 
 Expr returns Expr:
@@ -160,7 +157,7 @@ IfThenElseExpr returns Expr:
 PreDefFnExpr returns Expr:
 	{PrevExpr} 'prev' '(' delay=Expr ',' init=Expr ')'
 |	{NextExpr} 'next' '(' expr=Expr ')'
-|   {GetPropertyExpr} 'Get_Property' '(' component=Expr ',' name=Expr ')'
+|   {GetPropertyExpr} 'Get_Property' '(' component=Expr ',' prop=Expr ')'
 | TermExpr
 ;
 
@@ -184,7 +181,7 @@ TermExpr returns Expr:
 
 
 NestedDotID:
-	name =[aadl2::NamedElement | ID] ('.' subName=NestedDotID)?
+	base=[aadl2::NamedElement | ID] ('.' sub=NestedDotID)?
 ;
 
 QID:

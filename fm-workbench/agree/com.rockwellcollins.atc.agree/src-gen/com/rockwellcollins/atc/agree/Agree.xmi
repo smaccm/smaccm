@@ -13,7 +13,6 @@
       </type>
       <alternatives xsi:type="xtext:Alternatives">
         <elements xsi:type="xtext:RuleCall" rule="/0/@rules.16"/>
-        <elements xsi:type="xtext:RuleCall" rule="/0/@rules.17"/>
         <elements xsi:type="xtext:RuleCall" rule="/0/@rules.12"/>
         <elements xsi:type="xtext:RuleCall" rule="/0/@rules.13"/>
         <elements xsi:type="xtext:RuleCall" rule="/0/@rules.9"/>
@@ -27,6 +26,7 @@
       </type>
       <alternatives xsi:type="xtext:Alternatives">
         <elements xsi:type="xtext:RuleCall" rule="/0/@rules.18"/>
+        <elements xsi:type="xtext:RuleCall" rule="/0/@rules.17"/>
         <elements xsi:type="xtext:RuleCall" rule="/0/@rules.6"/>
         <elements xsi:type="xtext:RuleCall" rule="/0/@rules.7"/>
         <elements xsi:type="xtext:RuleCall" rule="/0/@rules.15"/>
@@ -353,7 +353,16 @@
               <classifier xsi:type="ecore:EClass" href="http://www.rockwellcollins.com/atc/agree/Agree#//NodeEq"/>
             </type>
           </elements>
-          <elements xsi:type="xtext:Group">
+          <elements xsi:type="xtext:Assignment" feature="names" operator="+=">
+            <terminal xsi:type="xtext:CrossReference">
+              <type metamodel="/0/@metamodelDeclarations.0">
+                <classifier xsi:type="ecore:EClass" href="http://www.rockwellcollins.com/atc/agree/Agree#//Arg"/>
+              </type>
+              <terminal xsi:type="xtext:RuleCall" rule="/1/@rules.48"/>
+            </terminal>
+          </elements>
+          <elements xsi:type="xtext:Group" cardinality="*">
+            <elements xsi:type="xtext:Keyword" value=","/>
             <elements xsi:type="xtext:Assignment" feature="names" operator="+=">
               <terminal xsi:type="xtext:CrossReference">
                 <type metamodel="/0/@metamodelDeclarations.0">
@@ -362,23 +371,12 @@
                 <terminal xsi:type="xtext:RuleCall" rule="/1/@rules.48"/>
               </terminal>
             </elements>
-            <elements xsi:type="xtext:Group" cardinality="*">
-              <elements xsi:type="xtext:Keyword" value=","/>
-              <elements xsi:type="xtext:Assignment" feature="names" operator="+=">
-                <terminal xsi:type="xtext:CrossReference">
-                  <type metamodel="/0/@metamodelDeclarations.0">
-                    <classifier xsi:type="ecore:EClass" href="http://www.rockwellcollins.com/atc/agree/Agree#//Arg"/>
-                  </type>
-                  <terminal xsi:type="xtext:RuleCall" rule="/1/@rules.48"/>
-                </terminal>
-              </elements>
-            </elements>
-            <elements xsi:type="xtext:Keyword" value="="/>
-            <elements xsi:type="xtext:Assignment" feature="expr" operator="=">
-              <terminal xsi:type="xtext:RuleCall" rule="/0/@rules.18"/>
-            </elements>
-            <elements xsi:type="xtext:Keyword" value=";"/>
           </elements>
+          <elements xsi:type="xtext:Keyword" value="="/>
+          <elements xsi:type="xtext:Assignment" feature="expr" operator="=">
+            <terminal xsi:type="xtext:RuleCall" rule="/0/@rules.18"/>
+          </elements>
+          <elements xsi:type="xtext:Keyword" value=";"/>
         </elements>
         <elements xsi:type="xtext:Group">
           <elements xsi:type="xtext:Action">
@@ -416,7 +414,7 @@
       <type metamodel="/0/@metamodelDeclarations.0">
         <classifier xsi:type="ecore:EClass" href="http://www.rockwellcollins.com/atc/agree/Agree#//Type"/>
       </type>
-      <alternatives xsi:type="xtext:Assignment" feature="name" operator="=">
+      <alternatives xsi:type="xtext:Assignment" feature="string" operator="=">
         <terminal xsi:type="xtext:Alternatives">
           <elements xsi:type="xtext:Keyword" value="real"/>
           <elements xsi:type="xtext:Keyword" value="bool"/>
@@ -750,7 +748,7 @@
             <terminal xsi:type="xtext:RuleCall" rule="/0/@rules.18"/>
           </elements>
           <elements xsi:type="xtext:Keyword" value=","/>
-          <elements xsi:type="xtext:Assignment" feature="name" operator="=">
+          <elements xsi:type="xtext:Assignment" feature="prop" operator="=">
             <terminal xsi:type="xtext:RuleCall" rule="/0/@rules.18"/>
           </elements>
           <elements xsi:type="xtext:Keyword" value=")"/>
@@ -874,7 +872,7 @@
         <classifier xsi:type="ecore:EClass" href="http://www.rockwellcollins.com/atc/agree/Agree#//NestedDotID"/>
       </type>
       <alternatives xsi:type="xtext:Group">
-        <elements xsi:type="xtext:Assignment" feature="name" operator="=">
+        <elements xsi:type="xtext:Assignment" feature="base" operator="=">
           <terminal xsi:type="xtext:CrossReference">
             <type metamodel="/0/@metamodelDeclarations.1">
               <classifier xsi:type="ecore:EClass" href="http://aadl.info/AADL/2.0#//NamedElement"/>
@@ -884,7 +882,7 @@
         </elements>
         <elements xsi:type="xtext:Group" cardinality="?">
           <elements xsi:type="xtext:Keyword" value="."/>
-          <elements xsi:type="xtext:Assignment" feature="subName" operator="=">
+          <elements xsi:type="xtext:Assignment" feature="sub" operator="=">
             <terminal xsi:type="xtext:RuleCall" rule="/0/@rules.33"/>
           </elements>
         </elements>

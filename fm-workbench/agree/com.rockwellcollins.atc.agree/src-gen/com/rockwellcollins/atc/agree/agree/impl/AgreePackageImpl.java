@@ -697,6 +697,16 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  public EAttribute getType_String()
+  {
+    return (EAttribute)typeEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   public EClass getExpr()
   {
     return exprEClass;
@@ -717,7 +727,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getNestedDotID_Name()
+  public EReference getNestedDotID_Base()
   {
     return (EReference)nestedDotIDEClass.getEStructuralFeatures().get(0);
   }
@@ -727,7 +737,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getNestedDotID_SubName()
+  public EReference getNestedDotID_Sub()
   {
     return (EReference)nestedDotIDEClass.getEStructuralFeatures().get(1);
   }
@@ -1137,7 +1147,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getGetPropertyExpr_Name()
+  public EReference getGetPropertyExpr_Prop()
   {
     return (EReference)getPropertyExprEClass.getEStructuralFeatures().get(1);
   }
@@ -1355,12 +1365,13 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     createEReference(argEClass, ARG__TYPE);
 
     typeEClass = createEClass(TYPE);
+    createEAttribute(typeEClass, TYPE__STRING);
 
     exprEClass = createEClass(EXPR);
 
     nestedDotIDEClass = createEClass(NESTED_DOT_ID);
-    createEReference(nestedDotIDEClass, NESTED_DOT_ID__NAME);
-    createEReference(nestedDotIDEClass, NESTED_DOT_ID__SUB_NAME);
+    createEReference(nestedDotIDEClass, NESTED_DOT_ID__BASE);
+    createEReference(nestedDotIDEClass, NESTED_DOT_ID__SUB);
 
     agreeContractLibraryEClass = createEClass(AGREE_CONTRACT_LIBRARY);
     createEReference(agreeContractLibraryEClass, AGREE_CONTRACT_LIBRARY__CONTRACT);
@@ -1416,7 +1427,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
 
     getPropertyExprEClass = createEClass(GET_PROPERTY_EXPR);
     createEReference(getPropertyExprEClass, GET_PROPERTY_EXPR__COMPONENT);
-    createEReference(getPropertyExprEClass, GET_PROPERTY_EXPR__NAME);
+    createEReference(getPropertyExprEClass, GET_PROPERTY_EXPR__PROP);
 
     idExprEClass = createEClass(ID_EXPR);
     createEReference(idExprEClass, ID_EXPR__ID);
@@ -1491,7 +1502,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     nodeBodyExprEClass.getESuperTypes().add(theAadl2Package.getElement());
     nodeEqEClass.getESuperTypes().add(theAadl2Package.getElement());
     argEClass.getESuperTypes().add(theAadl2Package.getNamedElement());
-    typeEClass.getESuperTypes().add(theAadl2Package.getNamedElement());
+    typeEClass.getESuperTypes().add(theAadl2Package.getElement());
     exprEClass.getESuperTypes().add(theAadl2Package.getElement());
     nestedDotIDEClass.getESuperTypes().add(this.getExpr());
     agreeContractLibraryEClass.getESuperTypes().add(this.getAgreeLibrary());
@@ -1561,12 +1572,13 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     initEReference(getArg_Type(), this.getType(), null, "type", null, 0, 1, Arg.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(typeEClass, Type.class, "Type", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEAttribute(getType_String(), ecorePackage.getEString(), "string", null, 0, 1, Type.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(exprEClass, Expr.class, "Expr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
     initEClass(nestedDotIDEClass, NestedDotID.class, "NestedDotID", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getNestedDotID_Name(), theAadl2Package.getNamedElement(), null, "name", null, 0, 1, NestedDotID.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getNestedDotID_SubName(), this.getNestedDotID(), null, "subName", null, 0, 1, NestedDotID.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getNestedDotID_Base(), theAadl2Package.getNamedElement(), null, "base", null, 0, 1, NestedDotID.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getNestedDotID_Sub(), this.getNestedDotID(), null, "sub", null, 0, 1, NestedDotID.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(agreeContractLibraryEClass, AgreeContractLibrary.class, "AgreeContractLibrary", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getAgreeContractLibrary_Contract(), this.getContract(), null, "contract", null, 0, 1, AgreeContractLibrary.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -1622,7 +1634,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
 
     initEClass(getPropertyExprEClass, GetPropertyExpr.class, "GetPropertyExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getGetPropertyExpr_Component(), this.getExpr(), null, "component", null, 0, 1, GetPropertyExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getGetPropertyExpr_Name(), this.getExpr(), null, "name", null, 0, 1, GetPropertyExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getGetPropertyExpr_Prop(), this.getExpr(), null, "prop", null, 0, 1, GetPropertyExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(idExprEClass, IdExpr.class, "IdExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getIdExpr_Id(), theAadl2Package.getNamedElement(), null, "id", null, 0, 1, IdExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
