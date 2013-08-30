@@ -16,7 +16,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="type" eType="#//Type" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="expr" eType="#//Expr" containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="FunctionDefinition" eSuperTypes="#//Definition">
+  <eClassifiers xsi:type="ecore:EClass" name="FunctionDefinition" eSuperTypes="../../../../../../org.osate.aadl2/model/aadl2.ecore#//Namespace #//Definition">
     <eStructuralFeatures xsi:type="ecore:EReference" name="args" upperBound="-1" eType="#//Arg"
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="body" eType="#//DefinitionBody"

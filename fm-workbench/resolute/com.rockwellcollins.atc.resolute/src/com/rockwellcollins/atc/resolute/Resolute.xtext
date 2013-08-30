@@ -12,6 +12,10 @@ AnnexSubclause returns aadl2::AnnexSubclause:
 	ResoluteSubclause
 ;
 
+Namespace returns aadl2::Namespace:
+	FunctionDefinition
+;
+
 NamedElement returns aadl2::NamedElement:
 	Definition
 |	Arg
