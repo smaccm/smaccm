@@ -8,10 +8,6 @@ public class AgreeType {
         typeStr = str;
     }
 
-    public boolean matches(AgreeType otherType) {
-        return this.equals(otherType);
-    }
-
     public boolean isPrimType() {
         return typeStr.equals("bool") || typeStr.equals("int") || typeStr.equals("real");
     }
