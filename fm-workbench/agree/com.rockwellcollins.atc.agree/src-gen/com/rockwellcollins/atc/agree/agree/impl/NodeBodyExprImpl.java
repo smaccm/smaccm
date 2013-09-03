@@ -5,7 +5,7 @@ package com.rockwellcollins.atc.agree.agree.impl;
 import com.rockwellcollins.atc.agree.agree.AgreePackage;
 import com.rockwellcollins.atc.agree.agree.Arg;
 import com.rockwellcollins.atc.agree.agree.NodeBodyExpr;
-import com.rockwellcollins.atc.agree.agree.NodeEq;
+import com.rockwellcollins.atc.agree.agree.NodeStmt;
 
 import java.util.Collection;
 
@@ -29,7 +29,7 @@ import org.osate.aadl2.impl.ElementImpl;
  * The following features are implemented:
  * <ul>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.impl.NodeBodyExprImpl#getLocs <em>Locs</em>}</li>
- *   <li>{@link com.rockwellcollins.atc.agree.agree.impl.NodeBodyExprImpl#getEqs <em>Eqs</em>}</li>
+ *   <li>{@link com.rockwellcollins.atc.agree.agree.impl.NodeBodyExprImpl#getStmts <em>Stmts</em>}</li>
  * </ul>
  * </p>
  *
@@ -48,14 +48,14 @@ public class NodeBodyExprImpl extends ElementImpl implements NodeBodyExpr
   protected EList<Arg> locs;
 
   /**
-   * The cached value of the '{@link #getEqs() <em>Eqs</em>}' containment reference list.
+   * The cached value of the '{@link #getStmts() <em>Stmts</em>}' containment reference list.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @see #getEqs()
+   * @see #getStmts()
    * @generated
    * @ordered
    */
-  protected EList<NodeEq> eqs;
+  protected EList<NodeStmt> stmts;
 
   /**
    * <!-- begin-user-doc -->
@@ -97,13 +97,13 @@ public class NodeBodyExprImpl extends ElementImpl implements NodeBodyExpr
    * <!-- end-user-doc -->
    * @generated
    */
-  public EList<NodeEq> getEqs()
+  public EList<NodeStmt> getStmts()
   {
-    if (eqs == null)
+    if (stmts == null)
     {
-      eqs = new EObjectContainmentEList<NodeEq>(NodeEq.class, this, AgreePackage.NODE_BODY_EXPR__EQS);
+      stmts = new EObjectContainmentEList<NodeStmt>(NodeStmt.class, this, AgreePackage.NODE_BODY_EXPR__STMTS);
     }
-    return eqs;
+    return stmts;
   }
 
   /**
@@ -118,8 +118,8 @@ public class NodeBodyExprImpl extends ElementImpl implements NodeBodyExpr
     {
       case AgreePackage.NODE_BODY_EXPR__LOCS:
         return ((InternalEList<?>)getLocs()).basicRemove(otherEnd, msgs);
-      case AgreePackage.NODE_BODY_EXPR__EQS:
-        return ((InternalEList<?>)getEqs()).basicRemove(otherEnd, msgs);
+      case AgreePackage.NODE_BODY_EXPR__STMTS:
+        return ((InternalEList<?>)getStmts()).basicRemove(otherEnd, msgs);
     }
     return super.eInverseRemove(otherEnd, featureID, msgs);
   }
@@ -136,8 +136,8 @@ public class NodeBodyExprImpl extends ElementImpl implements NodeBodyExpr
     {
       case AgreePackage.NODE_BODY_EXPR__LOCS:
         return getLocs();
-      case AgreePackage.NODE_BODY_EXPR__EQS:
-        return getEqs();
+      case AgreePackage.NODE_BODY_EXPR__STMTS:
+        return getStmts();
     }
     return super.eGet(featureID, resolve, coreType);
   }
@@ -157,9 +157,9 @@ public class NodeBodyExprImpl extends ElementImpl implements NodeBodyExpr
         getLocs().clear();
         getLocs().addAll((Collection<? extends Arg>)newValue);
         return;
-      case AgreePackage.NODE_BODY_EXPR__EQS:
-        getEqs().clear();
-        getEqs().addAll((Collection<? extends NodeEq>)newValue);
+      case AgreePackage.NODE_BODY_EXPR__STMTS:
+        getStmts().clear();
+        getStmts().addAll((Collection<? extends NodeStmt>)newValue);
         return;
     }
     super.eSet(featureID, newValue);
@@ -178,8 +178,8 @@ public class NodeBodyExprImpl extends ElementImpl implements NodeBodyExpr
       case AgreePackage.NODE_BODY_EXPR__LOCS:
         getLocs().clear();
         return;
-      case AgreePackage.NODE_BODY_EXPR__EQS:
-        getEqs().clear();
+      case AgreePackage.NODE_BODY_EXPR__STMTS:
+        getStmts().clear();
         return;
     }
     super.eUnset(featureID);
@@ -197,8 +197,8 @@ public class NodeBodyExprImpl extends ElementImpl implements NodeBodyExpr
     {
       case AgreePackage.NODE_BODY_EXPR__LOCS:
         return locs != null && !locs.isEmpty();
-      case AgreePackage.NODE_BODY_EXPR__EQS:
-        return eqs != null && !eqs.isEmpty();
+      case AgreePackage.NODE_BODY_EXPR__STMTS:
+        return stmts != null && !stmts.isEmpty();
     }
     return super.eIsSet(featureID);
   }

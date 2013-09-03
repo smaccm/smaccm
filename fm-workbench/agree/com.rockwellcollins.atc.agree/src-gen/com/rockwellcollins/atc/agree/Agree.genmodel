@@ -20,7 +20,7 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//ConstStatement/expr"/>
     </genClasses>
     <genClasses ecoreClass="Agree.ecore#//EqStatement">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//EqStatement/args"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//EqStatement/lhs"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//EqStatement/expr"/>
     </genClasses>
     <genClasses ecoreClass="Agree.ecore#//FnDefExpr">
@@ -35,11 +35,10 @@
     </genClasses>
     <genClasses ecoreClass="Agree.ecore#//NodeBodyExpr">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//NodeBodyExpr/locs"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//NodeBodyExpr/eqs"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//NodeBodyExpr/stmts"/>
     </genClasses>
-    <genClasses ecoreClass="Agree.ecore#//NodeEq">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Agree.ecore#//NodeEq/names"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//NodeEq/expr"/>
+    <genClasses ecoreClass="Agree.ecore#//NodeStmt">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//NodeStmt/expr"/>
     </genClasses>
     <genClasses ecoreClass="Agree.ecore#//Arg">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//Arg/type"/>
@@ -79,6 +78,9 @@
     <genClasses ecoreClass="Agree.ecore#//LemmaStatement">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Agree.ecore#//LemmaStatement/str"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//LemmaStatement/expr"/>
+    </genClasses>
+    <genClasses ecoreClass="Agree.ecore#//NodeEq">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Agree.ecore#//NodeEq/lhs"/>
     </genClasses>
     <genClasses ecoreClass="Agree.ecore#//NodeLemma">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Agree.ecore#//NodeLemma/str"/>

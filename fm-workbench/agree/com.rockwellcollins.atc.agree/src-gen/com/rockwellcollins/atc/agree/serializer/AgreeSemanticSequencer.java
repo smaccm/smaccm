@@ -574,15 +574,15 @@ public class AgreeSemanticSequencer extends PropertiesSemanticSequencer {
 				else break;
 			case AgreePackage.NODE_EQ:
 				if(context == grammarAccess.getElementRule() ||
-				   context == grammarAccess.getNodeEqRule()) {
-					sequence_NodeEq(context, (NodeEq) semanticObject); 
+				   context == grammarAccess.getNodeStmtRule()) {
+					sequence_NodeStmt(context, (NodeEq) semanticObject); 
 					return; 
 				}
 				else break;
 			case AgreePackage.NODE_LEMMA:
 				if(context == grammarAccess.getElementRule() ||
-				   context == grammarAccess.getNodeEqRule()) {
-					sequence_NodeEq(context, (NodeLemma) semanticObject); 
+				   context == grammarAccess.getNodeStmtRule()) {
+					sequence_NodeStmt(context, (NodeLemma) semanticObject); 
 					return; 
 				}
 				else break;
@@ -813,7 +813,7 @@ public class AgreeSemanticSequencer extends PropertiesSemanticSequencer {
 	
 	/**
 	 * Constraint:
-	 *     (args+=Arg args+=Arg* expr=Expr)
+	 *     (lhs+=Arg lhs+=Arg* expr=Expr)
 	 */
 	protected void sequence_EqStatement(EObject context, EqStatement semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -849,7 +849,7 @@ public class AgreeSemanticSequencer extends PropertiesSemanticSequencer {
 	
 	/**
 	 * Constraint:
-	 *     (locs+=Arg* eqs+=NodeEq+)
+	 *     (locs+=Arg* stmts+=NodeStmt+)
 	 */
 	protected void sequence_NodeBodyExpr(EObject context, NodeBodyExpr semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -867,9 +867,9 @@ public class AgreeSemanticSequencer extends PropertiesSemanticSequencer {
 	
 	/**
 	 * Constraint:
-	 *     (names+=[Arg|ID] names+=[Arg|ID]* expr=Expr)
+	 *     (lhs+=[Arg|ID] lhs+=[Arg|ID]* expr=Expr)
 	 */
-	protected void sequence_NodeEq(EObject context, NodeEq semanticObject) {
+	protected void sequence_NodeStmt(EObject context, NodeEq semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
@@ -878,7 +878,7 @@ public class AgreeSemanticSequencer extends PropertiesSemanticSequencer {
 	 * Constraint:
 	 *     (str=STRING expr=Expr)
 	 */
-	protected void sequence_NodeEq(EObject context, NodeLemma semanticObject) {
+	protected void sequence_NodeStmt(EObject context, NodeLemma semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	

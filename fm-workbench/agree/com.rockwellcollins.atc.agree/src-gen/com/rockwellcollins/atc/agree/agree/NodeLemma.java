@@ -19,7 +19,7 @@ package com.rockwellcollins.atc.agree.agree;
  * @model
  * @generated
  */
-public interface NodeLemma extends NodeEq
+public interface NodeLemma extends NodeStmt
 {
   /**
    * Returns the value of the '<em><b>Str</b></em>' attribute.

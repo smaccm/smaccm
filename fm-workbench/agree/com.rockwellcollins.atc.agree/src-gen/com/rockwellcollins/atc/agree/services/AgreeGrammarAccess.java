@@ -59,15 +59,15 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cTypeParserRuleCall_1 = (RuleCall)cAlternatives.eContents().get(1);
 		private final RuleCall cAgreeContractParserRuleCall_2 = (RuleCall)cAlternatives.eContents().get(2);
 		private final RuleCall cSpecStatementParserRuleCall_3 = (RuleCall)cAlternatives.eContents().get(3);
-		private final RuleCall cNodeEqParserRuleCall_4 = (RuleCall)cAlternatives.eContents().get(4);
+		private final RuleCall cNodeStmtParserRuleCall_4 = (RuleCall)cAlternatives.eContents().get(4);
 		private final RuleCall cNodeBodyExprParserRuleCall_5 = (RuleCall)cAlternatives.eContents().get(5);
 		
 		//Element returns aadl2::Element:
 		//
-		//	Expr | Type | AgreeContract | SpecStatement | NodeEq | NodeBodyExpr;
+		//	Expr | Type | AgreeContract | SpecStatement | NodeStmt | NodeBodyExpr;
 		public ParserRule getRule() { return rule; }
 
-		//Expr | Type | AgreeContract | SpecStatement | NodeEq | NodeBodyExpr
+		//Expr | Type | AgreeContract | SpecStatement | NodeStmt | NodeBodyExpr
 		public Alternatives getAlternatives() { return cAlternatives; }
 
 		//Expr
@@ -82,8 +82,8 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		//SpecStatement
 		public RuleCall getSpecStatementParserRuleCall_3() { return cSpecStatementParserRuleCall_3; }
 
-		//NodeEq
-		public RuleCall getNodeEqParserRuleCall_4() { return cNodeEqParserRuleCall_4; }
+		//NodeStmt
+		public RuleCall getNodeStmtParserRuleCall_4() { return cNodeStmtParserRuleCall_4; }
 
 		//NodeBodyExpr
 		public RuleCall getNodeBodyExprParserRuleCall_5() { return cNodeBodyExprParserRuleCall_5; }
@@ -536,12 +536,12 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		private final Group cGroup = (Group)rule.eContents().get(1);
 		private final Keyword cEqKeyword_0 = (Keyword)cGroup.eContents().get(0);
 		private final Group cGroup_1 = (Group)cGroup.eContents().get(1);
-		private final Assignment cArgsAssignment_1_0 = (Assignment)cGroup_1.eContents().get(0);
-		private final RuleCall cArgsArgParserRuleCall_1_0_0 = (RuleCall)cArgsAssignment_1_0.eContents().get(0);
+		private final Assignment cLhsAssignment_1_0 = (Assignment)cGroup_1.eContents().get(0);
+		private final RuleCall cLhsArgParserRuleCall_1_0_0 = (RuleCall)cLhsAssignment_1_0.eContents().get(0);
 		private final Group cGroup_1_1 = (Group)cGroup_1.eContents().get(1);
 		private final Keyword cCommaKeyword_1_1_0 = (Keyword)cGroup_1_1.eContents().get(0);
-		private final Assignment cArgsAssignment_1_1_1 = (Assignment)cGroup_1_1.eContents().get(1);
-		private final RuleCall cArgsArgParserRuleCall_1_1_1_0 = (RuleCall)cArgsAssignment_1_1_1.eContents().get(0);
+		private final Assignment cLhsAssignment_1_1_1 = (Assignment)cGroup_1_1.eContents().get(1);
+		private final RuleCall cLhsArgParserRuleCall_1_1_1_0 = (RuleCall)cLhsAssignment_1_1_1.eContents().get(0);
 		private final Keyword cEqualsSignKeyword_2 = (Keyword)cGroup.eContents().get(2);
 		private final Assignment cExprAssignment_3 = (Assignment)cGroup.eContents().get(3);
 		private final RuleCall cExprExprParserRuleCall_3_0 = (RuleCall)cExprAssignment_3.eContents().get(0);
@@ -549,35 +549,35 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		
 		//EqStatement:
 		//
-		//	"eq" (args+=Arg ("," args+=Arg)*) "=" expr=Expr ";";
+		//	"eq" (lhs+=Arg ("," lhs+=Arg)*) "=" expr=Expr ";";
 		public ParserRule getRule() { return rule; }
 
-		//"eq" (args+=Arg ("," args+=Arg)*) "=" expr=Expr ";"
+		//"eq" (lhs+=Arg ("," lhs+=Arg)*) "=" expr=Expr ";"
 		public Group getGroup() { return cGroup; }
 
 		//"eq"
 		public Keyword getEqKeyword_0() { return cEqKeyword_0; }
 
-		//args+=Arg ("," args+=Arg)*
+		//lhs+=Arg ("," lhs+=Arg)*
 		public Group getGroup_1() { return cGroup_1; }
 
-		//args+=Arg
-		public Assignment getArgsAssignment_1_0() { return cArgsAssignment_1_0; }
+		//lhs+=Arg
+		public Assignment getLhsAssignment_1_0() { return cLhsAssignment_1_0; }
 
 		//Arg
-		public RuleCall getArgsArgParserRuleCall_1_0_0() { return cArgsArgParserRuleCall_1_0_0; }
+		public RuleCall getLhsArgParserRuleCall_1_0_0() { return cLhsArgParserRuleCall_1_0_0; }
 
-		//("," args+=Arg)*
+		//("," lhs+=Arg)*
 		public Group getGroup_1_1() { return cGroup_1_1; }
 
 		//","
 		public Keyword getCommaKeyword_1_1_0() { return cCommaKeyword_1_1_0; }
 
-		//args+=Arg
-		public Assignment getArgsAssignment_1_1_1() { return cArgsAssignment_1_1_1; }
+		//lhs+=Arg
+		public Assignment getLhsAssignment_1_1_1() { return cLhsAssignment_1_1_1; }
 
 		//Arg
-		public RuleCall getArgsArgParserRuleCall_1_1_1_0() { return cArgsArgParserRuleCall_1_1_1_0; }
+		public RuleCall getLhsArgParserRuleCall_1_1_1_0() { return cLhsArgParserRuleCall_1_1_1_0; }
 
 		//"="
 		public Keyword getEqualsSignKeyword_2() { return cEqualsSignKeyword_2; }
@@ -804,17 +804,17 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cLocsArgParserRuleCall_0_1_0_0 = (RuleCall)cLocsAssignment_0_1_0.eContents().get(0);
 		private final Keyword cSemicolonKeyword_0_1_1 = (Keyword)cGroup_0_1.eContents().get(1);
 		private final Keyword cLetKeyword_1 = (Keyword)cGroup.eContents().get(1);
-		private final Assignment cEqsAssignment_2 = (Assignment)cGroup.eContents().get(2);
-		private final RuleCall cEqsNodeEqParserRuleCall_2_0 = (RuleCall)cEqsAssignment_2.eContents().get(0);
+		private final Assignment cStmtsAssignment_2 = (Assignment)cGroup.eContents().get(2);
+		private final RuleCall cStmtsNodeStmtParserRuleCall_2_0 = (RuleCall)cStmtsAssignment_2.eContents().get(0);
 		private final Keyword cTelKeyword_3 = (Keyword)cGroup.eContents().get(3);
 		private final Keyword cSemicolonKeyword_4 = (Keyword)cGroup.eContents().get(4);
 		
 		//NodeBodyExpr:
 		//
-		//	("var" (locs+=Arg ";")+)? "let" eqs+=NodeEq+ "tel" ";";
+		//	("var" (locs+=Arg ";")+)? "let" stmts+=NodeStmt+ "tel" ";";
 		public ParserRule getRule() { return rule; }
 
-		//("var" (locs+=Arg ";")+)? "let" eqs+=NodeEq+ "tel" ";"
+		//("var" (locs+=Arg ";")+)? "let" stmts+=NodeStmt+ "tel" ";"
 		public Group getGroup() { return cGroup; }
 
 		//("var" (locs+=Arg ";")+)?
@@ -838,11 +838,11 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		//"let"
 		public Keyword getLetKeyword_1() { return cLetKeyword_1; }
 
-		//eqs+=NodeEq+
-		public Assignment getEqsAssignment_2() { return cEqsAssignment_2; }
+		//stmts+=NodeStmt+
+		public Assignment getStmtsAssignment_2() { return cStmtsAssignment_2; }
 
-		//NodeEq
-		public RuleCall getEqsNodeEqParserRuleCall_2_0() { return cEqsNodeEqParserRuleCall_2_0; }
+		//NodeStmt
+		public RuleCall getStmtsNodeStmtParserRuleCall_2_0() { return cStmtsNodeStmtParserRuleCall_2_0; }
 
 		//"tel"
 		public Keyword getTelKeyword_3() { return cTelKeyword_3; }
@@ -851,19 +851,19 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		public Keyword getSemicolonKeyword_4() { return cSemicolonKeyword_4; }
 	}
 
-	public class NodeEqElements extends AbstractParserRuleElementFinder {
-		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "NodeEq");
+	public class NodeStmtElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "NodeStmt");
 		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
 		private final Group cGroup_0 = (Group)cAlternatives.eContents().get(0);
 		private final Action cNodeEqAction_0_0 = (Action)cGroup_0.eContents().get(0);
-		private final Assignment cNamesAssignment_0_1 = (Assignment)cGroup_0.eContents().get(1);
-		private final CrossReference cNamesArgCrossReference_0_1_0 = (CrossReference)cNamesAssignment_0_1.eContents().get(0);
-		private final RuleCall cNamesArgIDTerminalRuleCall_0_1_0_1 = (RuleCall)cNamesArgCrossReference_0_1_0.eContents().get(1);
+		private final Assignment cLhsAssignment_0_1 = (Assignment)cGroup_0.eContents().get(1);
+		private final CrossReference cLhsArgCrossReference_0_1_0 = (CrossReference)cLhsAssignment_0_1.eContents().get(0);
+		private final RuleCall cLhsArgIDTerminalRuleCall_0_1_0_1 = (RuleCall)cLhsArgCrossReference_0_1_0.eContents().get(1);
 		private final Group cGroup_0_2 = (Group)cGroup_0.eContents().get(2);
 		private final Keyword cCommaKeyword_0_2_0 = (Keyword)cGroup_0_2.eContents().get(0);
-		private final Assignment cNamesAssignment_0_2_1 = (Assignment)cGroup_0_2.eContents().get(1);
-		private final CrossReference cNamesArgCrossReference_0_2_1_0 = (CrossReference)cNamesAssignment_0_2_1.eContents().get(0);
-		private final RuleCall cNamesArgIDTerminalRuleCall_0_2_1_0_1 = (RuleCall)cNamesArgCrossReference_0_2_1_0.eContents().get(1);
+		private final Assignment cLhsAssignment_0_2_1 = (Assignment)cGroup_0_2.eContents().get(1);
+		private final CrossReference cLhsArgCrossReference_0_2_1_0 = (CrossReference)cLhsAssignment_0_2_1.eContents().get(0);
+		private final RuleCall cLhsArgIDTerminalRuleCall_0_2_1_0_1 = (RuleCall)cLhsArgCrossReference_0_2_1_0.eContents().get(1);
 		private final Keyword cEqualsSignKeyword_0_3 = (Keyword)cGroup_0.eContents().get(3);
 		private final Assignment cExprAssignment_0_4 = (Assignment)cGroup_0.eContents().get(4);
 		private final RuleCall cExprExprParserRuleCall_0_4_0 = (RuleCall)cExprAssignment_0_4.eContents().get(0);
@@ -878,43 +878,43 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cExprExprParserRuleCall_1_4_0 = (RuleCall)cExprAssignment_1_4.eContents().get(0);
 		private final Keyword cSemicolonKeyword_1_5 = (Keyword)cGroup_1.eContents().get(5);
 		
-		//NodeEq:
+		//NodeStmt:
 		//
-		//	{NodeEq} names+=[Arg] ("," names+=[Arg])* "=" expr=Expr ";" | {NodeLemma} "lemma" str=STRING ":" expr=Expr ";";
+		//	{NodeEq} lhs+=[Arg] ("," lhs+=[Arg])* "=" expr=Expr ";" | {NodeLemma} "lemma" str=STRING ":" expr=Expr ";";
 		public ParserRule getRule() { return rule; }
 
-		//{NodeEq} names+=[Arg] ("," names+=[Arg])* "=" expr=Expr ";" | {NodeLemma} "lemma" str=STRING ":" expr=Expr ";"
+		//{NodeEq} lhs+=[Arg] ("," lhs+=[Arg])* "=" expr=Expr ";" | {NodeLemma} "lemma" str=STRING ":" expr=Expr ";"
 		public Alternatives getAlternatives() { return cAlternatives; }
 
-		//{NodeEq} names+=[Arg] ("," names+=[Arg])* "=" expr=Expr ";"
+		//{NodeEq} lhs+=[Arg] ("," lhs+=[Arg])* "=" expr=Expr ";"
 		public Group getGroup_0() { return cGroup_0; }
 
 		//{NodeEq}
 		public Action getNodeEqAction_0_0() { return cNodeEqAction_0_0; }
 
-		//names+=[Arg]
-		public Assignment getNamesAssignment_0_1() { return cNamesAssignment_0_1; }
+		//lhs+=[Arg]
+		public Assignment getLhsAssignment_0_1() { return cLhsAssignment_0_1; }
 
 		//[Arg]
-		public CrossReference getNamesArgCrossReference_0_1_0() { return cNamesArgCrossReference_0_1_0; }
+		public CrossReference getLhsArgCrossReference_0_1_0() { return cLhsArgCrossReference_0_1_0; }
 
 		//ID
-		public RuleCall getNamesArgIDTerminalRuleCall_0_1_0_1() { return cNamesArgIDTerminalRuleCall_0_1_0_1; }
+		public RuleCall getLhsArgIDTerminalRuleCall_0_1_0_1() { return cLhsArgIDTerminalRuleCall_0_1_0_1; }
 
-		//("," names+=[Arg])*
+		//("," lhs+=[Arg])*
 		public Group getGroup_0_2() { return cGroup_0_2; }
 
 		//","
 		public Keyword getCommaKeyword_0_2_0() { return cCommaKeyword_0_2_0; }
 
-		//names+=[Arg]
-		public Assignment getNamesAssignment_0_2_1() { return cNamesAssignment_0_2_1; }
+		//lhs+=[Arg]
+		public Assignment getLhsAssignment_0_2_1() { return cLhsAssignment_0_2_1; }
 
 		//[Arg]
-		public CrossReference getNamesArgCrossReference_0_2_1_0() { return cNamesArgCrossReference_0_2_1_0; }
+		public CrossReference getLhsArgCrossReference_0_2_1_0() { return cLhsArgCrossReference_0_2_1_0; }
 
 		//ID
-		public RuleCall getNamesArgIDTerminalRuleCall_0_2_1_0_1() { return cNamesArgIDTerminalRuleCall_0_2_1_0_1; }
+		public RuleCall getLhsArgIDTerminalRuleCall_0_2_1_0_1() { return cLhsArgIDTerminalRuleCall_0_2_1_0_1; }
 
 		//"="
 		public Keyword getEqualsSignKeyword_0_3() { return cEqualsSignKeyword_0_3; }
@@ -2032,7 +2032,7 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 	private FnDefExprElements pFnDefExpr;
 	private NodeDefExprElements pNodeDefExpr;
 	private NodeBodyExprElements pNodeBodyExpr;
-	private NodeEqElements pNodeEq;
+	private NodeStmtElements pNodeStmt;
 	private ArgElements pArg;
 	private TypeElements pType;
 	private ExprElements pExpr;
@@ -2104,7 +2104,7 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 
 	//Element returns aadl2::Element:
 	//
-	//	Expr | Type | AgreeContract | SpecStatement | NodeEq | NodeBodyExpr;
+	//	Expr | Type | AgreeContract | SpecStatement | NodeStmt | NodeBodyExpr;
 	public ElementElements getElementAccess() {
 		return (pElement != null) ? pElement : (pElement = new ElementElements());
 	}
@@ -2231,7 +2231,7 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 
 	//EqStatement:
 	//
-	//	"eq" (args+=Arg ("," args+=Arg)*) "=" expr=Expr ";";
+	//	"eq" (lhs+=Arg ("," lhs+=Arg)*) "=" expr=Expr ";";
 	public EqStatementElements getEqStatementAccess() {
 		return (pEqStatement != null) ? pEqStatement : (pEqStatement = new EqStatementElements());
 	}
@@ -2266,7 +2266,7 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 
 	//NodeBodyExpr:
 	//
-	//	("var" (locs+=Arg ";")+)? "let" eqs+=NodeEq+ "tel" ";";
+	//	("var" (locs+=Arg ";")+)? "let" stmts+=NodeStmt+ "tel" ";";
 	public NodeBodyExprElements getNodeBodyExprAccess() {
 		return (pNodeBodyExpr != null) ? pNodeBodyExpr : (pNodeBodyExpr = new NodeBodyExprElements());
 	}
@@ -2275,15 +2275,15 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		return getNodeBodyExprAccess().getRule();
 	}
 
-	//NodeEq:
+	//NodeStmt:
 	//
-	//	{NodeEq} names+=[Arg] ("," names+=[Arg])* "=" expr=Expr ";" | {NodeLemma} "lemma" str=STRING ":" expr=Expr ";";
-	public NodeEqElements getNodeEqAccess() {
-		return (pNodeEq != null) ? pNodeEq : (pNodeEq = new NodeEqElements());
+	//	{NodeEq} lhs+=[Arg] ("," lhs+=[Arg])* "=" expr=Expr ";" | {NodeLemma} "lemma" str=STRING ":" expr=Expr ";";
+	public NodeStmtElements getNodeStmtAccess() {
+		return (pNodeStmt != null) ? pNodeStmt : (pNodeStmt = new NodeStmtElements());
 	}
 	
-	public ParserRule getNodeEqRule() {
-		return getNodeEqAccess().getRule();
+	public ParserRule getNodeStmtRule() {
+		return getNodeStmtAccess().getRule();
 	}
 
 	//Arg:

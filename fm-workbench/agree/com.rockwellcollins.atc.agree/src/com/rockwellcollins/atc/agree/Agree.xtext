@@ -17,7 +17,7 @@ Element returns aadl2::Element:
 |	Type
 |   AgreeContract
 |   SpecStatement
-|   NodeEq
+|   NodeStmt
 |   NodeBodyExpr
 ;
 
@@ -72,7 +72,7 @@ ConstStatement:
 ;
 
 EqStatement:
-	'eq' (args+=Arg (',' args+=Arg)*) '=' expr=Expr ';'
+	'eq' (lhs+=Arg (',' lhs+=Arg)*) '=' expr=Expr ';'
 ;
 
 FnDefExpr:
@@ -88,12 +88,12 @@ NodeDefExpr:
 NodeBodyExpr: 
 	('var' (locs+=Arg ';')+)? 
 	'let' 
-		(eqs+=NodeEq)+
+		(stmts+=NodeStmt)+
 	'tel' ';'  	
 ;
 
-NodeEq: 
-	{NodeEq}	names+=[Arg] (',' names+=[Arg])* '=' expr=Expr ';'
+NodeStmt: 
+	{NodeEq}	lhs+=[Arg] (',' lhs+=[Arg])* '=' expr=Expr ';'
 |   {NodeLemma} 'lemma' str=STRING ':' expr=Expr ';'
 ;
 

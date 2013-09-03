@@ -184,11 +184,11 @@ public class AgreeSwitch<T> extends Switch<T>
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
-      case AgreePackage.NODE_EQ:
+      case AgreePackage.NODE_STMT:
       {
-        NodeEq nodeEq = (NodeEq)theEObject;
-        T result = caseNodeEq(nodeEq);
-        if (result == null) result = caseElement(nodeEq);
+        NodeStmt nodeStmt = (NodeStmt)theEObject;
+        T result = caseNodeStmt(nodeStmt);
+        if (result == null) result = caseElement(nodeStmt);
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
@@ -303,11 +303,20 @@ public class AgreeSwitch<T> extends Switch<T>
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
+      case AgreePackage.NODE_EQ:
+      {
+        NodeEq nodeEq = (NodeEq)theEObject;
+        T result = caseNodeEq(nodeEq);
+        if (result == null) result = caseNodeStmt(nodeEq);
+        if (result == null) result = caseElement(nodeEq);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
       case AgreePackage.NODE_LEMMA:
       {
         NodeLemma nodeLemma = (NodeLemma)theEObject;
         T result = caseNodeLemma(nodeLemma);
-        if (result == null) result = caseNodeEq(nodeLemma);
+        if (result == null) result = caseNodeStmt(nodeLemma);
         if (result == null) result = caseElement(nodeLemma);
         if (result == null) result = defaultCase(theEObject);
         return result;
@@ -610,17 +619,17 @@ public class AgreeSwitch<T> extends Switch<T>
   }
 
   /**
-   * Returns the result of interpreting the object as an instance of '<em>Node Eq</em>'.
+   * Returns the result of interpreting the object as an instance of '<em>Node Stmt</em>'.
    * <!-- begin-user-doc -->
    * This implementation returns null;
    * returning a non-null result will terminate the switch.
    * <!-- end-user-doc -->
    * @param object the target of the switch.
-   * @return the result of interpreting the object as an instance of '<em>Node Eq</em>'.
+   * @return the result of interpreting the object as an instance of '<em>Node Stmt</em>'.
    * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
    * @generated
    */
-  public T caseNodeEq(NodeEq object)
+  public T caseNodeStmt(NodeStmt object)
   {
     return null;
   }
@@ -813,6 +822,22 @@ public class AgreeSwitch<T> extends Switch<T>
    * @generated
    */
   public T caseLemmaStatement(LemmaStatement object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Node Eq</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Node Eq</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseNodeEq(NodeEq object)
   {
     return null;
   }

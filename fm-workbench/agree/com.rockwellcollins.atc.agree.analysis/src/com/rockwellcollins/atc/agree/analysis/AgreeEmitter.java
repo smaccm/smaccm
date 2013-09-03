@@ -87,6 +87,7 @@ import com.rockwellcollins.atc.agree.agree.NodeBodyExpr;
 import com.rockwellcollins.atc.agree.agree.NodeDefExpr;
 import com.rockwellcollins.atc.agree.agree.NodeEq;
 import com.rockwellcollins.atc.agree.agree.NodeLemma;
+import com.rockwellcollins.atc.agree.agree.NodeStmt;
 import com.rockwellcollins.atc.agree.agree.ParamStatement;
 import com.rockwellcollins.atc.agree.agree.PreExpr;
 import com.rockwellcollins.atc.agree.agree.PrevExpr;
@@ -240,7 +241,7 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
     }
 
     @Override
-    public Expr caseLemmaStatement(LemmaStatement state){
+    public Expr caseLemmaStatement(LemmaStatement state) {
         Expr expr = doSwitch(state.getExpr());
         String guarStr = state.getStr();
         guarStr = guarStr.replace("\"", "");
@@ -250,7 +251,7 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
         guarExpressions.add(eq);
         return expr;
     }
-    
+
     @Override
     public Expr caseGuaranteeStatement(GuaranteeStatement state) {
 
@@ -312,7 +313,7 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
 
         List<IdExpr> varIds = new ArrayList<IdExpr>();
 
-        for (Arg arg : state.getArgs()) {
+        for (Arg arg : state.getLhs()) {
             String baseName = arg.getName();
             AgreeVarDecl varDecl = new AgreeVarDecl();
             varDecl.jKindStr = jKindNameTag + baseName;
@@ -471,7 +472,6 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
     // TODO: ordering nodes/functions in dependency order
     @Override
     public Expr caseNodeDefExpr(NodeDefExpr expr) {
-
         // System.out.println("Visiting caseNodeDefExpr");
 
         String nodeName = jKindNameTag + expr.getName();
@@ -487,10 +487,9 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
         List<Equation> eqs = new ArrayList<Equation>();
         List<String> props = new ArrayList<String>();
 
-        for (NodeEq nodeEq : body.getEqs()) {
-            
-            if(nodeEq instanceof NodeLemma){
-                NodeLemma nodeLemma = (NodeLemma)nodeEq;
+        for (NodeStmt stmt : body.getStmts()) {
+            if (stmt instanceof NodeLemma) {
+                NodeLemma nodeLemma = (NodeLemma) stmt;
                 String propName = nodeLemma.getStr();
                 props.add(propName);
                 IdExpr eqId = new IdExpr(propName);
@@ -499,16 +498,12 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
                 eqs.add(eq);
                 VarDecl lemmaVar = new VarDecl(propName, NamedType.BOOL);
                 internals.add(lemmaVar);
-            }else{
-                eqs.add(nodeEqToEq(nodeEq));
+            } else if (stmt instanceof NodeEq) {
+                eqs.add(nodeEqToEq((NodeEq) stmt));
             }
-            
         }
 
-        Node node = new Node(nodeName, inputs, outputs, internals, eqs, props);
-
-        nodeDefExpressions.add(node);
-
+        nodeDefExpressions.add(new Node(nodeName, inputs, outputs, internals, eqs, props));
         return null;
     }
 
@@ -947,7 +942,8 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
                 varType.aadlStr = newAADLDestStr;
 
                 if (destContext != null) {
-                    layout.addElement(destContext.getName(), varType.aadlStr, AgreeLayout.SigType.OUTPUT);
+                    layout.addElement(destContext.getName(), varType.aadlStr,
+                            AgreeLayout.SigType.OUTPUT);
                 }
 
                 refMap.put(varType.aadlStr, destConn);
@@ -963,7 +959,8 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
                     inputVar.jKindStr = newSourStr;
                     inputVar.aadlStr = newAADLSourStr;
 
-                    layout.addElement(sourContext.getName(), inputVar.aadlStr, AgreeLayout.SigType.INPUT);
+                    layout.addElement(sourContext.getName(), inputVar.aadlStr,
+                            AgreeLayout.SigType.INPUT);
                     varRenaming.put(inputVar.jKindStr, inputVar.aadlStr);
                     refMap.put(inputVar.aadlStr, sourConn);
                     inputVars.add(inputVar);
@@ -1106,7 +1103,7 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
         }
         return result;
     }
-    
+
     private Expr conjoinEqs(List<Equation> eqs) {
         if (eqs.isEmpty()) {
             return new BoolExpr(true);
@@ -1159,7 +1156,7 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
         eqs.addAll(sysContr.eqs);
         eqs.addAll(sysContr.props);
 
-        //debug printing
+        // debug printing
         printCompVars("Top");
         for (Entry<Subcomponent, ComponentContract> entry : subContrs.entrySet()) {
             ComponentContract contract = entry.getValue();
@@ -1168,8 +1165,8 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
             eqs.addAll(contract.consts);
             eqs.addAll(contract.eqs);
             eqs.addAll(contract.props);
-            
-            //some stupid debug stuff
+
+            // some stupid debug stuff
             Subcomponent comp = entry.getKey();
             printCompVars(comp.getName());
         }
@@ -1235,24 +1232,23 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
             varRenaming.put(compId.id, propertyName);
             layout.addElement("Top", propertyName, AgreeLayout.SigType.OUTPUT);
         }
-        
-        //create individual properties for guarantees
+
+        // create individual properties for guarantees
         int i = 0;
-        for(Equation guar : sysContr.guars){
+        for (Equation guar : sysContr.guars) {
             String guarName = guar.lhs.get(0).id;
-            IdExpr sysGuaranteesId = new IdExpr("_SYS_GUARANTEE_"+i);
+            IdExpr sysGuaranteesId = new IdExpr("_SYS_GUARANTEE_" + i);
             internals.add(new VarDecl(sysGuaranteesId.id, new NamedType("bool")));
-            
+
             Expr totalSysGuarExpr = new BinaryExpr(sysAssumpHistId, BinaryOp.AND, totalCompHistId);
-            totalSysGuarExpr = new BinaryExpr(totalSysGuarExpr, BinaryOp.IMPLIES,
-                   guar.expr);
-            
+            totalSysGuarExpr = new BinaryExpr(totalSysGuarExpr, BinaryOp.IMPLIES, guar.expr);
+
             Equation finalGuar = new Equation(sysGuaranteesId, totalSysGuarExpr);
             eqs.add(finalGuar);
             properties.add(sysGuaranteesId.id);
             varRenaming.put(sysGuaranteesId.id, guarName);
-            layout.addElement("Top", "Component Guarantee "+i++, AgreeLayout.SigType.OUTPUT);
-            
+            layout.addElement("Top", "Component Guarantee " + i++, AgreeLayout.SigType.OUTPUT);
+
         }
 
         Node topNode = new Node("_MAIN", inputs, outputs, internals, eqs, properties);
@@ -1292,7 +1288,7 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
     private Equation nodeEqToEq(NodeEq nodeEq) {
         Expr expr = doSwitch(nodeEq.getExpr());
         List<IdExpr> ids = new ArrayList<IdExpr>();
-        for (Arg arg : nodeEq.getNames()) {
+        for (Arg arg : nodeEq.getLhs()) {
             ids.add(new IdExpr(jKindNameTag + arg.getName()));
         }
         Equation eq = new Equation(ids, expr);
@@ -1328,27 +1324,27 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
     public Renaming getRenaming() {
         return new MapRenaming(varRenaming, MapRenaming.Mode.NULL);
     }
-    
-    public void printCompVars(String compName){
+
+    public void printCompVars(String compName) {
         List<String> vars = layout.getAllInputsFromCategory(compName);
-        if(vars != null){
-            System.out.println("Input Vars from '"+compName+"'");
-            for(String var : vars){
+        if (vars != null) {
+            System.out.println("Input Vars from '" + compName + "'");
+            for (String var : vars) {
                 var = var.replaceAll("\\.", dotChar);
                 System.out.println(var);
             }
             System.out.println();
         }
-        
+
         vars = layout.getAllOutputsFromCategory(compName);
-        if(vars != null){
-            System.out.println("Output Vars from '"+compName+"'");
-            for(String var : vars){
+        if (vars != null) {
+            System.out.println("Output Vars from '" + compName + "'");
+            for (String var : vars) {
                 var = var.replaceAll("\\.", dotChar);
                 System.out.println(var);
             }
             System.out.println();
         }
     }
-    
+
 }

@@ -33,6 +33,7 @@ import com.rockwellcollins.atc.agree.agree.NodeBodyExpr;
 import com.rockwellcollins.atc.agree.agree.NodeDefExpr;
 import com.rockwellcollins.atc.agree.agree.NodeEq;
 import com.rockwellcollins.atc.agree.agree.NodeLemma;
+import com.rockwellcollins.atc.agree.agree.NodeStmt;
 import com.rockwellcollins.atc.agree.agree.ParamStatement;
 import com.rockwellcollins.atc.agree.agree.PreExpr;
 import com.rockwellcollins.atc.agree.agree.PrevExpr;
@@ -142,7 +143,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass nodeEqEClass = null;
+  private EClass nodeStmtEClass = null;
 
   /**
    * <!-- begin-user-doc -->
@@ -227,6 +228,13 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * @generated
    */
   private EClass lemmaStatementEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass nodeEqEClass = null;
 
   /**
    * <!-- begin-user-doc -->
@@ -507,7 +515,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getEqStatement_Args()
+  public EReference getEqStatement_Lhs()
   {
     return (EReference)eqStatementEClass.getEStructuralFeatures().get(0);
   }
@@ -627,7 +635,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getNodeBodyExpr_Eqs()
+  public EReference getNodeBodyExpr_Stmts()
   {
     return (EReference)nodeBodyExprEClass.getEStructuralFeatures().get(1);
   }
@@ -637,9 +645,9 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getNodeEq()
+  public EClass getNodeStmt()
   {
-    return nodeEqEClass;
+    return nodeStmtEClass;
   }
 
   /**
@@ -647,19 +655,9 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getNodeEq_Names()
+  public EReference getNodeStmt_Expr()
   {
-    return (EReference)nodeEqEClass.getEStructuralFeatures().get(0);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EReference getNodeEq_Expr()
-  {
-    return (EReference)nodeEqEClass.getEStructuralFeatures().get(1);
+    return (EReference)nodeStmtEClass.getEStructuralFeatures().get(0);
   }
 
   /**
@@ -940,6 +938,26 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
   public EReference getLemmaStatement_Expr()
   {
     return (EReference)lemmaStatementEClass.getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getNodeEq()
+  {
+    return nodeEqEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getNodeEq_Lhs()
+  {
+    return (EReference)nodeEqEClass.getEStructuralFeatures().get(0);
   }
 
   /**
@@ -1340,7 +1358,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     createEReference(constStatementEClass, CONST_STATEMENT__EXPR);
 
     eqStatementEClass = createEClass(EQ_STATEMENT);
-    createEReference(eqStatementEClass, EQ_STATEMENT__ARGS);
+    createEReference(eqStatementEClass, EQ_STATEMENT__LHS);
     createEReference(eqStatementEClass, EQ_STATEMENT__EXPR);
 
     fnDefExprEClass = createEClass(FN_DEF_EXPR);
@@ -1355,11 +1373,10 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
 
     nodeBodyExprEClass = createEClass(NODE_BODY_EXPR);
     createEReference(nodeBodyExprEClass, NODE_BODY_EXPR__LOCS);
-    createEReference(nodeBodyExprEClass, NODE_BODY_EXPR__EQS);
+    createEReference(nodeBodyExprEClass, NODE_BODY_EXPR__STMTS);
 
-    nodeEqEClass = createEClass(NODE_EQ);
-    createEReference(nodeEqEClass, NODE_EQ__NAMES);
-    createEReference(nodeEqEClass, NODE_EQ__EXPR);
+    nodeStmtEClass = createEClass(NODE_STMT);
+    createEReference(nodeStmtEClass, NODE_STMT__EXPR);
 
     argEClass = createEClass(ARG);
     createEReference(argEClass, ARG__TYPE);
@@ -1400,6 +1417,9 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     lemmaStatementEClass = createEClass(LEMMA_STATEMENT);
     createEAttribute(lemmaStatementEClass, LEMMA_STATEMENT__STR);
     createEReference(lemmaStatementEClass, LEMMA_STATEMENT__EXPR);
+
+    nodeEqEClass = createEClass(NODE_EQ);
+    createEReference(nodeEqEClass, NODE_EQ__LHS);
 
     nodeLemmaEClass = createEClass(NODE_LEMMA);
     createEAttribute(nodeLemmaEClass, NODE_LEMMA__STR);
@@ -1500,7 +1520,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     nodeDefExprEClass.getESuperTypes().add(this.getSpecStatement());
     nodeDefExprEClass.getESuperTypes().add(this.getCallDef());
     nodeBodyExprEClass.getESuperTypes().add(theAadl2Package.getElement());
-    nodeEqEClass.getESuperTypes().add(theAadl2Package.getElement());
+    nodeStmtEClass.getESuperTypes().add(theAadl2Package.getElement());
     argEClass.getESuperTypes().add(theAadl2Package.getNamedElement());
     typeEClass.getESuperTypes().add(theAadl2Package.getElement());
     exprEClass.getESuperTypes().add(theAadl2Package.getElement());
@@ -1513,7 +1533,8 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     assertStatementEClass.getESuperTypes().add(this.getSpecStatement());
     paramStatementEClass.getESuperTypes().add(this.getSpecStatement());
     lemmaStatementEClass.getESuperTypes().add(this.getSpecStatement());
-    nodeLemmaEClass.getESuperTypes().add(this.getNodeEq());
+    nodeEqEClass.getESuperTypes().add(this.getNodeStmt());
+    nodeLemmaEClass.getESuperTypes().add(this.getNodeStmt());
     binaryExprEClass.getESuperTypes().add(this.getExpr());
     unaryExprEClass.getESuperTypes().add(this.getExpr());
     ifThenElseExprEClass.getESuperTypes().add(this.getExpr());
@@ -1547,7 +1568,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     initEReference(getConstStatement_Expr(), this.getExpr(), null, "expr", null, 0, 1, ConstStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(eqStatementEClass, EqStatement.class, "EqStatement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getEqStatement_Args(), this.getArg(), null, "args", null, 0, -1, EqStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getEqStatement_Lhs(), this.getArg(), null, "lhs", null, 0, -1, EqStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getEqStatement_Expr(), this.getExpr(), null, "expr", null, 0, 1, EqStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(fnDefExprEClass, FnDefExpr.class, "FnDefExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -1562,11 +1583,10 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
 
     initEClass(nodeBodyExprEClass, NodeBodyExpr.class, "NodeBodyExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getNodeBodyExpr_Locs(), this.getArg(), null, "locs", null, 0, -1, NodeBodyExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getNodeBodyExpr_Eqs(), this.getNodeEq(), null, "eqs", null, 0, -1, NodeBodyExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getNodeBodyExpr_Stmts(), this.getNodeStmt(), null, "stmts", null, 0, -1, NodeBodyExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-    initEClass(nodeEqEClass, NodeEq.class, "NodeEq", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getNodeEq_Names(), this.getArg(), null, "names", null, 0, -1, NodeEq.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getNodeEq_Expr(), this.getExpr(), null, "expr", null, 0, 1, NodeEq.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEClass(nodeStmtEClass, NodeStmt.class, "NodeStmt", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getNodeStmt_Expr(), this.getExpr(), null, "expr", null, 0, 1, NodeStmt.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(argEClass, Arg.class, "Arg", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getArg_Type(), this.getType(), null, "type", null, 0, 1, Arg.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -1607,6 +1627,9 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     initEClass(lemmaStatementEClass, LemmaStatement.class, "LemmaStatement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEAttribute(getLemmaStatement_Str(), ecorePackage.getEString(), "str", null, 0, 1, LemmaStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getLemmaStatement_Expr(), this.getExpr(), null, "expr", null, 0, 1, LemmaStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+    initEClass(nodeEqEClass, NodeEq.class, "NodeEq", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getNodeEq_Lhs(), this.getArg(), null, "lhs", null, 0, -1, NodeEq.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(nodeLemmaEClass, NodeLemma.class, "NodeLemma", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEAttribute(getNodeLemma_Str(), ecorePackage.getEString(), "str", null, 0, 1, NodeLemma.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

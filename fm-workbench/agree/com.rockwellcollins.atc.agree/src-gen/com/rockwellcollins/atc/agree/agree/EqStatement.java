@@ -14,7 +14,7 @@ import org.osate.aadl2.NamedElement;
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link com.rockwellcollins.atc.agree.agree.EqStatement#getArgs <em>Args</em>}</li>
+ *   <li>{@link com.rockwellcollins.atc.agree.agree.EqStatement#getLhs <em>Lhs</em>}</li>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.EqStatement#getExpr <em>Expr</em>}</li>
  * </ul>
  * </p>
@@ -26,20 +26,20 @@ import org.osate.aadl2.NamedElement;
 public interface EqStatement extends NamedElement, SpecStatement
 {
   /**
-   * Returns the value of the '<em><b>Args</b></em>' containment reference list.
+   * Returns the value of the '<em><b>Lhs</b></em>' containment reference list.
    * The list contents are of type {@link com.rockwellcollins.atc.agree.agree.Arg}.
    * <!-- begin-user-doc -->
    * <p>
-   * If the meaning of the '<em>Args</em>' containment reference list isn't clear,
+   * If the meaning of the '<em>Lhs</em>' containment reference list isn't clear,
    * there really should be more of a description here...
    * </p>
    * <!-- end-user-doc -->
-   * @return the value of the '<em>Args</em>' containment reference list.
-   * @see com.rockwellcollins.atc.agree.agree.AgreePackage#getEqStatement_Args()
+   * @return the value of the '<em>Lhs</em>' containment reference list.
+   * @see com.rockwellcollins.atc.agree.agree.AgreePackage#getEqStatement_Lhs()
    * @model containment="true"
    * @generated
    */
-  EList<Arg> getArgs();
+  EList<Arg> getLhs();
 
   /**
    * Returns the value of the '<em><b>Expr</b></em>' containment reference.

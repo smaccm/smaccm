@@ -75,7 +75,7 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
       case AgreePackage.FN_DEF_EXPR: return createFnDefExpr();
       case AgreePackage.NODE_DEF_EXPR: return createNodeDefExpr();
       case AgreePackage.NODE_BODY_EXPR: return createNodeBodyExpr();
-      case AgreePackage.NODE_EQ: return createNodeEq();
+      case AgreePackage.NODE_STMT: return createNodeStmt();
       case AgreePackage.ARG: return createArg();
       case AgreePackage.TYPE: return createType();
       case AgreePackage.EXPR: return createExpr();
@@ -88,6 +88,7 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
       case AgreePackage.ASSERT_STATEMENT: return createAssertStatement();
       case AgreePackage.PARAM_STATEMENT: return createParamStatement();
       case AgreePackage.LEMMA_STATEMENT: return createLemmaStatement();
+      case AgreePackage.NODE_EQ: return createNodeEq();
       case AgreePackage.NODE_LEMMA: return createNodeLemma();
       case AgreePackage.BINARY_EXPR: return createBinaryExpr();
       case AgreePackage.UNARY_EXPR: return createUnaryExpr();
@@ -233,10 +234,10 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public NodeEq createNodeEq()
+  public NodeStmt createNodeStmt()
   {
-    NodeEqImpl nodeEq = new NodeEqImpl();
-    return nodeEq;
+    NodeStmtImpl nodeStmt = new NodeStmtImpl();
+    return nodeStmt;
   }
 
   /**
@@ -369,6 +370,17 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
   {
     LemmaStatementImpl lemmaStatement = new LemmaStatementImpl();
     return lemmaStatement;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public NodeEq createNodeEq()
+  {
+    NodeEqImpl nodeEq = new NodeEqImpl();
+    return nodeEq;
   }
 
   /**

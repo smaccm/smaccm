@@ -499,13 +499,13 @@ public interface AgreePackage extends EPackage
   int EQ_STATEMENT__OWNED_PROPERTY_ASSOCIATION = Aadl2Package.NAMED_ELEMENT__OWNED_PROPERTY_ASSOCIATION;
 
   /**
-   * The feature id for the '<em><b>Args</b></em>' containment reference list.
+   * The feature id for the '<em><b>Lhs</b></em>' containment reference list.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int EQ_STATEMENT__ARGS = Aadl2Package.NAMED_ELEMENT_FEATURE_COUNT + 0;
+  int EQ_STATEMENT__LHS = Aadl2Package.NAMED_ELEMENT_FEATURE_COUNT + 0;
 
   /**
    * The feature id for the '<em><b>Expr</b></em>' containment reference.
@@ -763,13 +763,13 @@ public interface AgreePackage extends EPackage
   int NODE_BODY_EXPR__LOCS = Aadl2Package.ELEMENT_FEATURE_COUNT + 0;
 
   /**
-   * The feature id for the '<em><b>Eqs</b></em>' containment reference list.
+   * The feature id for the '<em><b>Stmts</b></em>' containment reference list.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int NODE_BODY_EXPR__EQS = Aadl2Package.ELEMENT_FEATURE_COUNT + 1;
+  int NODE_BODY_EXPR__STMTS = Aadl2Package.ELEMENT_FEATURE_COUNT + 1;
 
   /**
    * The number of structural features of the '<em>Node Body Expr</em>' class.
@@ -781,14 +781,14 @@ public interface AgreePackage extends EPackage
   int NODE_BODY_EXPR_FEATURE_COUNT = Aadl2Package.ELEMENT_FEATURE_COUNT + 2;
 
   /**
-   * The meta object id for the '{@link com.rockwellcollins.atc.agree.agree.impl.NodeEqImpl <em>Node Eq</em>}' class.
+   * The meta object id for the '{@link com.rockwellcollins.atc.agree.agree.impl.NodeStmtImpl <em>Node Stmt</em>}' class.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @see com.rockwellcollins.atc.agree.agree.impl.NodeEqImpl
-   * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getNodeEq()
+   * @see com.rockwellcollins.atc.agree.agree.impl.NodeStmtImpl
+   * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getNodeStmt()
    * @generated
    */
-  int NODE_EQ = 11;
+  int NODE_STMT = 11;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -797,7 +797,7 @@ public interface AgreePackage extends EPackage
    * @generated
    * @ordered
    */
-  int NODE_EQ__OWNED_ELEMENT = Aadl2Package.ELEMENT__OWNED_ELEMENT;
+  int NODE_STMT__OWNED_ELEMENT = Aadl2Package.ELEMENT__OWNED_ELEMENT;
 
   /**
    * The feature id for the '<em><b>Owned Comment</b></em>' containment reference list.
@@ -806,16 +806,7 @@ public interface AgreePackage extends EPackage
    * @generated
    * @ordered
    */
-  int NODE_EQ__OWNED_COMMENT = Aadl2Package.ELEMENT__OWNED_COMMENT;
-
-  /**
-   * The feature id for the '<em><b>Names</b></em>' reference list.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int NODE_EQ__NAMES = Aadl2Package.ELEMENT_FEATURE_COUNT + 0;
+  int NODE_STMT__OWNED_COMMENT = Aadl2Package.ELEMENT__OWNED_COMMENT;
 
   /**
    * The feature id for the '<em><b>Expr</b></em>' containment reference.
@@ -824,16 +815,16 @@ public interface AgreePackage extends EPackage
    * @generated
    * @ordered
    */
-  int NODE_EQ__EXPR = Aadl2Package.ELEMENT_FEATURE_COUNT + 1;
+  int NODE_STMT__EXPR = Aadl2Package.ELEMENT_FEATURE_COUNT + 0;
 
   /**
-   * The number of structural features of the '<em>Node Eq</em>' class.
+   * The number of structural features of the '<em>Node Stmt</em>' class.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int NODE_EQ_FEATURE_COUNT = Aadl2Package.ELEMENT_FEATURE_COUNT + 2;
+  int NODE_STMT_FEATURE_COUNT = Aadl2Package.ELEMENT_FEATURE_COUNT + 1;
 
   /**
    * The meta object id for the '{@link com.rockwellcollins.atc.agree.agree.impl.ArgImpl <em>Arg</em>}' class.
@@ -1514,14 +1505,14 @@ public interface AgreePackage extends EPackage
   int LEMMA_STATEMENT_FEATURE_COUNT = SPEC_STATEMENT_FEATURE_COUNT + 2;
 
   /**
-   * The meta object id for the '{@link com.rockwellcollins.atc.agree.agree.impl.NodeLemmaImpl <em>Node Lemma</em>}' class.
+   * The meta object id for the '{@link com.rockwellcollins.atc.agree.agree.impl.NodeEqImpl <em>Node Eq</em>}' class.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @see com.rockwellcollins.atc.agree.agree.impl.NodeLemmaImpl
-   * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getNodeLemma()
+   * @see com.rockwellcollins.atc.agree.agree.impl.NodeEqImpl
+   * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getNodeEq()
    * @generated
    */
-  int NODE_LEMMA = 24;
+  int NODE_EQ = 24;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -1530,7 +1521,7 @@ public interface AgreePackage extends EPackage
    * @generated
    * @ordered
    */
-  int NODE_LEMMA__OWNED_ELEMENT = NODE_EQ__OWNED_ELEMENT;
+  int NODE_EQ__OWNED_ELEMENT = NODE_STMT__OWNED_ELEMENT;
 
   /**
    * The feature id for the '<em><b>Owned Comment</b></em>' containment reference list.
@@ -1539,16 +1530,7 @@ public interface AgreePackage extends EPackage
    * @generated
    * @ordered
    */
-  int NODE_LEMMA__OWNED_COMMENT = NODE_EQ__OWNED_COMMENT;
-
-  /**
-   * The feature id for the '<em><b>Names</b></em>' reference list.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int NODE_LEMMA__NAMES = NODE_EQ__NAMES;
+  int NODE_EQ__OWNED_COMMENT = NODE_STMT__OWNED_COMMENT;
 
   /**
    * The feature id for the '<em><b>Expr</b></em>' containment reference.
@@ -1557,7 +1539,62 @@ public interface AgreePackage extends EPackage
    * @generated
    * @ordered
    */
-  int NODE_LEMMA__EXPR = NODE_EQ__EXPR;
+  int NODE_EQ__EXPR = NODE_STMT__EXPR;
+
+  /**
+   * The feature id for the '<em><b>Lhs</b></em>' reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int NODE_EQ__LHS = NODE_STMT_FEATURE_COUNT + 0;
+
+  /**
+   * The number of structural features of the '<em>Node Eq</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int NODE_EQ_FEATURE_COUNT = NODE_STMT_FEATURE_COUNT + 1;
+
+  /**
+   * The meta object id for the '{@link com.rockwellcollins.atc.agree.agree.impl.NodeLemmaImpl <em>Node Lemma</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see com.rockwellcollins.atc.agree.agree.impl.NodeLemmaImpl
+   * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getNodeLemma()
+   * @generated
+   */
+  int NODE_LEMMA = 25;
+
+  /**
+   * The feature id for the '<em><b>Owned Element</b></em>' reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int NODE_LEMMA__OWNED_ELEMENT = NODE_STMT__OWNED_ELEMENT;
+
+  /**
+   * The feature id for the '<em><b>Owned Comment</b></em>' containment reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int NODE_LEMMA__OWNED_COMMENT = NODE_STMT__OWNED_COMMENT;
+
+  /**
+   * The feature id for the '<em><b>Expr</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int NODE_LEMMA__EXPR = NODE_STMT__EXPR;
 
   /**
    * The feature id for the '<em><b>Str</b></em>' attribute.
@@ -1566,7 +1603,7 @@ public interface AgreePackage extends EPackage
    * @generated
    * @ordered
    */
-  int NODE_LEMMA__STR = NODE_EQ_FEATURE_COUNT + 0;
+  int NODE_LEMMA__STR = NODE_STMT_FEATURE_COUNT + 0;
 
   /**
    * The number of structural features of the '<em>Node Lemma</em>' class.
@@ -1575,7 +1612,7 @@ public interface AgreePackage extends EPackage
    * @generated
    * @ordered
    */
-  int NODE_LEMMA_FEATURE_COUNT = NODE_EQ_FEATURE_COUNT + 1;
+  int NODE_LEMMA_FEATURE_COUNT = NODE_STMT_FEATURE_COUNT + 1;
 
   /**
    * The meta object id for the '{@link com.rockwellcollins.atc.agree.agree.impl.BinaryExprImpl <em>Binary Expr</em>}' class.
@@ -1585,7 +1622,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getBinaryExpr()
    * @generated
    */
-  int BINARY_EXPR = 25;
+  int BINARY_EXPR = 26;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -1649,7 +1686,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getUnaryExpr()
    * @generated
    */
-  int UNARY_EXPR = 26;
+  int UNARY_EXPR = 27;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -1704,7 +1741,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getIfThenElseExpr()
    * @generated
    */
-  int IF_THEN_ELSE_EXPR = 27;
+  int IF_THEN_ELSE_EXPR = 28;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -1768,7 +1805,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getPrevExpr()
    * @generated
    */
-  int PREV_EXPR = 28;
+  int PREV_EXPR = 29;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -1823,7 +1860,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getNextExpr()
    * @generated
    */
-  int NEXT_EXPR = 29;
+  int NEXT_EXPR = 30;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -1869,7 +1906,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getGetPropertyExpr()
    * @generated
    */
-  int GET_PROPERTY_EXPR = 30;
+  int GET_PROPERTY_EXPR = 31;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -1924,7 +1961,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getIdExpr()
    * @generated
    */
-  int ID_EXPR = 31;
+  int ID_EXPR = 32;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -1970,7 +2007,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getFnCallExpr()
    * @generated
    */
-  int FN_CALL_EXPR = 32;
+  int FN_CALL_EXPR = 33;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -2025,7 +2062,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getIntLitExpr()
    * @generated
    */
-  int INT_LIT_EXPR = 33;
+  int INT_LIT_EXPR = 34;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -2071,7 +2108,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getPreExpr()
    * @generated
    */
-  int PRE_EXPR = 34;
+  int PRE_EXPR = 35;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -2117,7 +2154,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getRealLitExpr()
    * @generated
    */
-  int REAL_LIT_EXPR = 35;
+  int REAL_LIT_EXPR = 36;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -2163,7 +2200,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getBoolLitExpr()
    * @generated
    */
-  int BOOL_LIT_EXPR = 36;
+  int BOOL_LIT_EXPR = 37;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -2209,7 +2246,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getThisExpr()
    * @generated
    */
-  int THIS_EXPR = 37;
+  int THIS_EXPR = 38;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -2353,15 +2390,15 @@ public interface AgreePackage extends EPackage
   EClass getEqStatement();
 
   /**
-   * Returns the meta object for the containment reference list '{@link com.rockwellcollins.atc.agree.agree.EqStatement#getArgs <em>Args</em>}'.
+   * Returns the meta object for the containment reference list '{@link com.rockwellcollins.atc.agree.agree.EqStatement#getLhs <em>Lhs</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @return the meta object for the containment reference list '<em>Args</em>'.
-   * @see com.rockwellcollins.atc.agree.agree.EqStatement#getArgs()
+   * @return the meta object for the containment reference list '<em>Lhs</em>'.
+   * @see com.rockwellcollins.atc.agree.agree.EqStatement#getLhs()
    * @see #getEqStatement()
    * @generated
    */
-  EReference getEqStatement_Args();
+  EReference getEqStatement_Lhs();
 
   /**
    * Returns the meta object for the containment reference '{@link com.rockwellcollins.atc.agree.agree.EqStatement#getExpr <em>Expr</em>}'.
@@ -2482,47 +2519,36 @@ public interface AgreePackage extends EPackage
   EReference getNodeBodyExpr_Locs();
 
   /**
-   * Returns the meta object for the containment reference list '{@link com.rockwellcollins.atc.agree.agree.NodeBodyExpr#getEqs <em>Eqs</em>}'.
+   * Returns the meta object for the containment reference list '{@link com.rockwellcollins.atc.agree.agree.NodeBodyExpr#getStmts <em>Stmts</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @return the meta object for the containment reference list '<em>Eqs</em>'.
-   * @see com.rockwellcollins.atc.agree.agree.NodeBodyExpr#getEqs()
+   * @return the meta object for the containment reference list '<em>Stmts</em>'.
+   * @see com.rockwellcollins.atc.agree.agree.NodeBodyExpr#getStmts()
    * @see #getNodeBodyExpr()
    * @generated
    */
-  EReference getNodeBodyExpr_Eqs();
+  EReference getNodeBodyExpr_Stmts();
 
   /**
-   * Returns the meta object for class '{@link com.rockwellcollins.atc.agree.agree.NodeEq <em>Node Eq</em>}'.
+   * Returns the meta object for class '{@link com.rockwellcollins.atc.agree.agree.NodeStmt <em>Node Stmt</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @return the meta object for class '<em>Node Eq</em>'.
-   * @see com.rockwellcollins.atc.agree.agree.NodeEq
+   * @return the meta object for class '<em>Node Stmt</em>'.
+   * @see com.rockwellcollins.atc.agree.agree.NodeStmt
    * @generated
    */
-  EClass getNodeEq();
+  EClass getNodeStmt();
 
   /**
-   * Returns the meta object for the reference list '{@link com.rockwellcollins.atc.agree.agree.NodeEq#getNames <em>Names</em>}'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return the meta object for the reference list '<em>Names</em>'.
-   * @see com.rockwellcollins.atc.agree.agree.NodeEq#getNames()
-   * @see #getNodeEq()
-   * @generated
-   */
-  EReference getNodeEq_Names();
-
-  /**
-   * Returns the meta object for the containment reference '{@link com.rockwellcollins.atc.agree.agree.NodeEq#getExpr <em>Expr</em>}'.
+   * Returns the meta object for the containment reference '{@link com.rockwellcollins.atc.agree.agree.NodeStmt#getExpr <em>Expr</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @return the meta object for the containment reference '<em>Expr</em>'.
-   * @see com.rockwellcollins.atc.agree.agree.NodeEq#getExpr()
-   * @see #getNodeEq()
+   * @see com.rockwellcollins.atc.agree.agree.NodeStmt#getExpr()
+   * @see #getNodeStmt()
    * @generated
    */
-  EReference getNodeEq_Expr();
+  EReference getNodeStmt_Expr();
 
   /**
    * Returns the meta object for class '{@link com.rockwellcollins.atc.agree.agree.Arg <em>Arg</em>}'.
@@ -2819,6 +2845,27 @@ public interface AgreePackage extends EPackage
    * @generated
    */
   EReference getLemmaStatement_Expr();
+
+  /**
+   * Returns the meta object for class '{@link com.rockwellcollins.atc.agree.agree.NodeEq <em>Node Eq</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>Node Eq</em>'.
+   * @see com.rockwellcollins.atc.agree.agree.NodeEq
+   * @generated
+   */
+  EClass getNodeEq();
+
+  /**
+   * Returns the meta object for the reference list '{@link com.rockwellcollins.atc.agree.agree.NodeEq#getLhs <em>Lhs</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the reference list '<em>Lhs</em>'.
+   * @see com.rockwellcollins.atc.agree.agree.NodeEq#getLhs()
+   * @see #getNodeEq()
+   * @generated
+   */
+  EReference getNodeEq_Lhs();
 
   /**
    * Returns the meta object for class '{@link com.rockwellcollins.atc.agree.agree.NodeLemma <em>Node Lemma</em>}'.
@@ -3319,12 +3366,12 @@ public interface AgreePackage extends EPackage
     EClass EQ_STATEMENT = eINSTANCE.getEqStatement();
 
     /**
-     * The meta object literal for the '<em><b>Args</b></em>' containment reference list feature.
+     * The meta object literal for the '<em><b>Lhs</b></em>' containment reference list feature.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      */
-    EReference EQ_STATEMENT__ARGS = eINSTANCE.getEqStatement_Args();
+    EReference EQ_STATEMENT__LHS = eINSTANCE.getEqStatement_Lhs();
 
     /**
      * The meta object literal for the '<em><b>Expr</b></em>' containment reference feature.
@@ -3421,30 +3468,22 @@ public interface AgreePackage extends EPackage
     EReference NODE_BODY_EXPR__LOCS = eINSTANCE.getNodeBodyExpr_Locs();
 
     /**
-     * The meta object literal for the '<em><b>Eqs</b></em>' containment reference list feature.
+     * The meta object literal for the '<em><b>Stmts</b></em>' containment reference list feature.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      */
-    EReference NODE_BODY_EXPR__EQS = eINSTANCE.getNodeBodyExpr_Eqs();
+    EReference NODE_BODY_EXPR__STMTS = eINSTANCE.getNodeBodyExpr_Stmts();
 
     /**
-     * The meta object literal for the '{@link com.rockwellcollins.atc.agree.agree.impl.NodeEqImpl <em>Node Eq</em>}' class.
+     * The meta object literal for the '{@link com.rockwellcollins.atc.agree.agree.impl.NodeStmtImpl <em>Node Stmt</em>}' class.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @see com.rockwellcollins.atc.agree.agree.impl.NodeEqImpl
-     * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getNodeEq()
+     * @see com.rockwellcollins.atc.agree.agree.impl.NodeStmtImpl
+     * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getNodeStmt()
      * @generated
      */
-    EClass NODE_EQ = eINSTANCE.getNodeEq();
-
-    /**
-     * The meta object literal for the '<em><b>Names</b></em>' reference list feature.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    EReference NODE_EQ__NAMES = eINSTANCE.getNodeEq_Names();
+    EClass NODE_STMT = eINSTANCE.getNodeStmt();
 
     /**
      * The meta object literal for the '<em><b>Expr</b></em>' containment reference feature.
@@ -3452,7 +3491,7 @@ public interface AgreePackage extends EPackage
      * <!-- end-user-doc -->
      * @generated
      */
-    EReference NODE_EQ__EXPR = eINSTANCE.getNodeEq_Expr();
+    EReference NODE_STMT__EXPR = eINSTANCE.getNodeStmt_Expr();
 
     /**
      * The meta object literal for the '{@link com.rockwellcollins.atc.agree.agree.impl.ArgImpl <em>Arg</em>}' class.
@@ -3701,6 +3740,24 @@ public interface AgreePackage extends EPackage
      * @generated
      */
     EReference LEMMA_STATEMENT__EXPR = eINSTANCE.getLemmaStatement_Expr();
+
+    /**
+     * The meta object literal for the '{@link com.rockwellcollins.atc.agree.agree.impl.NodeEqImpl <em>Node Eq</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see com.rockwellcollins.atc.agree.agree.impl.NodeEqImpl
+     * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getNodeEq()
+     * @generated
+     */
+    EClass NODE_EQ = eINSTANCE.getNodeEq();
+
+    /**
+     * The meta object literal for the '<em><b>Lhs</b></em>' reference list feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference NODE_EQ__LHS = eINSTANCE.getNodeEq_Lhs();
 
     /**
      * The meta object literal for the '{@link com.rockwellcollins.atc.agree.agree.impl.NodeLemmaImpl <em>Node Lemma</em>}' class.

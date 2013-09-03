@@ -77,9 +77,8 @@ public class AgreeScopeProvider extends
         Set<Element> result = new HashSet<>();
         for (SpecStatement spec : specs) {
             if (spec instanceof EqStatement) {
-                for (Element el : ((EqStatement) spec).getArgs()) {
-                    result.add(el);
-                }
+                EqStatement eq = (EqStatement) spec;
+                result.addAll(eq.getLhs());
             } else {
                 result.add(spec);
             }

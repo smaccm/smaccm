@@ -4,24 +4,15 @@ package com.rockwellcollins.atc.agree.agree.impl;
 
 import com.rockwellcollins.atc.agree.agree.AgreePackage;
 import com.rockwellcollins.atc.agree.agree.Arg;
-import com.rockwellcollins.atc.agree.agree.Expr;
 import com.rockwellcollins.atc.agree.agree.NodeEq;
 
 import java.util.Collection;
 
-import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.common.notify.NotificationChain;
-
 import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.InternalEObject;
-
-import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 import org.eclipse.emf.ecore.util.EObjectResolvingEList;
-
-import org.osate.aadl2.impl.ElementImpl;
 
 /**
  * <!-- begin-user-doc -->
@@ -30,34 +21,23 @@ import org.osate.aadl2.impl.ElementImpl;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link com.rockwellcollins.atc.agree.agree.impl.NodeEqImpl#getNames <em>Names</em>}</li>
- *   <li>{@link com.rockwellcollins.atc.agree.agree.impl.NodeEqImpl#getExpr <em>Expr</em>}</li>
+ *   <li>{@link com.rockwellcollins.atc.agree.agree.impl.NodeEqImpl#getLhs <em>Lhs</em>}</li>
  * </ul>
  * </p>
  *
  * @generated
  */
-public class NodeEqImpl extends ElementImpl implements NodeEq
+public class NodeEqImpl extends NodeStmtImpl implements NodeEq
 {
   /**
-   * The cached value of the '{@link #getNames() <em>Names</em>}' reference list.
+   * The cached value of the '{@link #getLhs() <em>Lhs</em>}' reference list.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @see #getNames()
+   * @see #getLhs()
    * @generated
    * @ordered
    */
-  protected EList<Arg> names;
-
-  /**
-   * The cached value of the '{@link #getExpr() <em>Expr</em>}' containment reference.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see #getExpr()
-   * @generated
-   * @ordered
-   */
-  protected Expr expr;
+  protected EList<Arg> lhs;
 
   /**
    * <!-- begin-user-doc -->
@@ -85,77 +65,13 @@ public class NodeEqImpl extends ElementImpl implements NodeEq
    * <!-- end-user-doc -->
    * @generated
    */
-  public EList<Arg> getNames()
+  public EList<Arg> getLhs()
   {
-    if (names == null)
+    if (lhs == null)
     {
-      names = new EObjectResolvingEList<Arg>(Arg.class, this, AgreePackage.NODE_EQ__NAMES);
+      lhs = new EObjectResolvingEList<Arg>(Arg.class, this, AgreePackage.NODE_EQ__LHS);
     }
-    return names;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public Expr getExpr()
-  {
-    return expr;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public NotificationChain basicSetExpr(Expr newExpr, NotificationChain msgs)
-  {
-    Expr oldExpr = expr;
-    expr = newExpr;
-    if (eNotificationRequired())
-    {
-      ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, AgreePackage.NODE_EQ__EXPR, oldExpr, newExpr);
-      if (msgs == null) msgs = notification; else msgs.add(notification);
-    }
-    return msgs;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public void setExpr(Expr newExpr)
-  {
-    if (newExpr != expr)
-    {
-      NotificationChain msgs = null;
-      if (expr != null)
-        msgs = ((InternalEObject)expr).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - AgreePackage.NODE_EQ__EXPR, null, msgs);
-      if (newExpr != null)
-        msgs = ((InternalEObject)newExpr).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - AgreePackage.NODE_EQ__EXPR, null, msgs);
-      msgs = basicSetExpr(newExpr, msgs);
-      if (msgs != null) msgs.dispatch();
-    }
-    else if (eNotificationRequired())
-      eNotify(new ENotificationImpl(this, Notification.SET, AgreePackage.NODE_EQ__EXPR, newExpr, newExpr));
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  @Override
-  public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs)
-  {
-    switch (featureID)
-    {
-      case AgreePackage.NODE_EQ__EXPR:
-        return basicSetExpr(null, msgs);
-    }
-    return super.eInverseRemove(otherEnd, featureID, msgs);
+    return lhs;
   }
 
   /**
@@ -168,10 +84,8 @@ public class NodeEqImpl extends ElementImpl implements NodeEq
   {
     switch (featureID)
     {
-      case AgreePackage.NODE_EQ__NAMES:
-        return getNames();
-      case AgreePackage.NODE_EQ__EXPR:
-        return getExpr();
+      case AgreePackage.NODE_EQ__LHS:
+        return getLhs();
     }
     return super.eGet(featureID, resolve, coreType);
   }
@@ -187,12 +101,9 @@ public class NodeEqImpl extends ElementImpl implements NodeEq
   {
     switch (featureID)
     {
-      case AgreePackage.NODE_EQ__NAMES:
-        getNames().clear();
-        getNames().addAll((Collection<? extends Arg>)newValue);
-        return;
-      case AgreePackage.NODE_EQ__EXPR:
-        setExpr((Expr)newValue);
+      case AgreePackage.NODE_EQ__LHS:
+        getLhs().clear();
+        getLhs().addAll((Collection<? extends Arg>)newValue);
         return;
     }
     super.eSet(featureID, newValue);
@@ -208,11 +119,8 @@ public class NodeEqImpl extends ElementImpl implements NodeEq
   {
     switch (featureID)
     {
-      case AgreePackage.NODE_EQ__NAMES:
-        getNames().clear();
-        return;
-      case AgreePackage.NODE_EQ__EXPR:
-        setExpr((Expr)null);
+      case AgreePackage.NODE_EQ__LHS:
+        getLhs().clear();
         return;
     }
     super.eUnset(featureID);
@@ -228,10 +136,8 @@ public class NodeEqImpl extends ElementImpl implements NodeEq
   {
     switch (featureID)
     {
-      case AgreePackage.NODE_EQ__NAMES:
-        return names != null && !names.isEmpty();
-      case AgreePackage.NODE_EQ__EXPR:
-        return expr != null;
+      case AgreePackage.NODE_EQ__LHS:
+        return lhs != null && !lhs.isEmpty();
     }
     return super.eIsSet(featureID);
   }

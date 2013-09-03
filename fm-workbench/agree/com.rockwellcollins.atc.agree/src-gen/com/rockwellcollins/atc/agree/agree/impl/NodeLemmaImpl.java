@@ -24,7 +24,7 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  *
  * @generated
  */
-public class NodeLemmaImpl extends NodeEqImpl implements NodeLemma
+public class NodeLemmaImpl extends NodeStmtImpl implements NodeLemma
 {
   /**
    * The default value of the '{@link #getStr() <em>Str</em>}' attribute.

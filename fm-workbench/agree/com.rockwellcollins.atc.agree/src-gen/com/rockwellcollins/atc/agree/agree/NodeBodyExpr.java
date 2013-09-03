@@ -17,7 +17,7 @@ import org.osate.aadl2.Element;
  * The following features are supported:
  * <ul>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.NodeBodyExpr#getLocs <em>Locs</em>}</li>
- *   <li>{@link com.rockwellcollins.atc.agree.agree.NodeBodyExpr#getEqs <em>Eqs</em>}</li>
+ *   <li>{@link com.rockwellcollins.atc.agree.agree.NodeBodyExpr#getStmts <em>Stmts</em>}</li>
  * </ul>
  * </p>
  *
@@ -44,19 +44,19 @@ public interface NodeBodyExpr extends EObject, Element
   EList<Arg> getLocs();
 
   /**
-   * Returns the value of the '<em><b>Eqs</b></em>' containment reference list.
-   * The list contents are of type {@link com.rockwellcollins.atc.agree.agree.NodeEq}.
+   * Returns the value of the '<em><b>Stmts</b></em>' containment reference list.
+   * The list contents are of type {@link com.rockwellcollins.atc.agree.agree.NodeStmt}.
    * <!-- begin-user-doc -->
    * <p>
-   * If the meaning of the '<em>Eqs</em>' containment reference list isn't clear,
+   * If the meaning of the '<em>Stmts</em>' containment reference list isn't clear,
    * there really should be more of a description here...
    * </p>
    * <!-- end-user-doc -->
-   * @return the value of the '<em>Eqs</em>' containment reference list.
-   * @see com.rockwellcollins.atc.agree.agree.AgreePackage#getNodeBodyExpr_Eqs()
+   * @return the value of the '<em>Stmts</em>' containment reference list.
+   * @see com.rockwellcollins.atc.agree.agree.AgreePackage#getNodeBodyExpr_Stmts()
    * @model containment="true"
    * @generated
    */
-  EList<NodeEq> getEqs();
+  EList<NodeStmt> getStmts();
 
 } // NodeBodyExpr

@@ -122,13 +122,13 @@ public interface AgreeFactory extends EFactory
   NodeBodyExpr createNodeBodyExpr();
 
   /**
-   * Returns a new object of class '<em>Node Eq</em>'.
+   * Returns a new object of class '<em>Node Stmt</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @return a new object of class '<em>Node Eq</em>'.
+   * @return a new object of class '<em>Node Stmt</em>'.
    * @generated
    */
-  NodeEq createNodeEq();
+  NodeStmt createNodeStmt();
 
   /**
    * Returns a new object of class '<em>Arg</em>'.
@@ -237,6 +237,15 @@ public interface AgreeFactory extends EFactory
    * @generated
    */
   LemmaStatement createLemmaStatement();
+
+  /**
+   * Returns a new object of class '<em>Node Eq</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Node Eq</em>'.
+   * @generated
+   */
+  NodeEq createNodeEq();
 
   /**
    * Returns a new object of class '<em>Node Lemma</em>'.

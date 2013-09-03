@@ -51,6 +51,7 @@ import com.rockwellcollins.atc.agree.agree.NextExpr;
 import com.rockwellcollins.atc.agree.agree.NodeDefExpr;
 import com.rockwellcollins.atc.agree.agree.NodeEq;
 import com.rockwellcollins.atc.agree.agree.NodeLemma;
+import com.rockwellcollins.atc.agree.agree.NodeStmt;
 import com.rockwellcollins.atc.agree.agree.PreExpr;
 import com.rockwellcollins.atc.agree.agree.PrevExpr;
 import com.rockwellcollins.atc.agree.agree.PropertyStatement;
@@ -291,14 +292,12 @@ public class AgreeJavaValidator extends
 
     @Check
     public void checkEqStatement(EqStatement eqStat) {
-        checkMultiAssignEq(eqStat, eqStat.getArgs(), eqStat.getExpr());
+        checkMultiAssignEq(eqStat, eqStat.getLhs(), eqStat.getExpr());
     }
 
     @Check
     public void checkNodeEq(NodeEq nodeEq) {
-        List<Arg> lhsArgs = nodeEq.getNames();
-        if (!(nodeEq instanceof NodeLemma))
-            checkMultiAssignEq(nodeEq, lhsArgs, nodeEq.getExpr());
+        checkMultiAssignEq(nodeEq, nodeEq.getLhs(), nodeEq.getExpr());
     }
 
     @Check
@@ -320,15 +319,18 @@ public class AgreeJavaValidator extends
             assignMap.put(arg, 0);
         }
 
-        for (NodeEq eq : nodeDefExpr.getNodeBody().getEqs()) {
-            for (Arg arg : eq.getNames()) {
-                Integer value = assignMap.get(arg);
-                if (value == null) {
-                    error("Equation attempting to assign '" + arg.getName()
-                            + "', which is not an assignable value within the node");
-                    return;
-                } else {
-                    assignMap.put(arg, value + 1);
+        for (NodeStmt stmt : nodeDefExpr.getNodeBody().getStmts()) {
+            if (stmt instanceof NodeEq) {
+                NodeEq eq = (NodeEq) stmt;
+                for (Arg arg : eq.getLhs()) {
+                    Integer value = assignMap.get(arg);
+                    if (value == null) {
+                        error("Equation attempting to assign '" + arg.getName()
+                                + "', which is not an assignable value within the node");
+                        return;
+                    } else {
+                        assignMap.put(arg, value + 1);
+                    }
                 }
             }
         }

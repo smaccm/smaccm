@@ -137,9 +137,9 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
         return createNodeBodyExprAdapter();
       }
       @Override
-      public Adapter caseNodeEq(NodeEq object)
+      public Adapter caseNodeStmt(NodeStmt object)
       {
-        return createNodeEqAdapter();
+        return createNodeStmtAdapter();
       }
       @Override
       public Adapter caseArg(Arg object)
@@ -200,6 +200,11 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
       public Adapter caseLemmaStatement(LemmaStatement object)
       {
         return createLemmaStatementAdapter();
+      }
+      @Override
+      public Adapter caseNodeEq(NodeEq object)
+      {
+        return createNodeEqAdapter();
       }
       @Override
       public Adapter caseNodeLemma(NodeLemma object)
@@ -489,16 +494,16 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
   }
 
   /**
-   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.NodeEq <em>Node Eq</em>}'.
+   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.NodeStmt <em>Node Stmt</em>}'.
    * <!-- begin-user-doc -->
    * This default implementation returns null so that we can easily ignore cases;
    * it's useful to ignore a case when inheritance will catch all the cases anyway.
    * <!-- end-user-doc -->
    * @return the new adapter.
-   * @see com.rockwellcollins.atc.agree.agree.NodeEq
+   * @see com.rockwellcollins.atc.agree.agree.NodeStmt
    * @generated
    */
-  public Adapter createNodeEqAdapter()
+  public Adapter createNodeStmtAdapter()
   {
     return null;
   }
@@ -679,6 +684,21 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
    * @generated
    */
   public Adapter createLemmaStatementAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.NodeEq <em>Node Eq</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see com.rockwellcollins.atc.agree.agree.NodeEq
+   * @generated
+   */
+  public Adapter createNodeEqAdapter()
   {
     return null;
   }
