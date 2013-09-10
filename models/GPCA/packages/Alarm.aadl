@@ -1,0 +1,88 @@
+---------------------------------------------------------------------------
+-- Copyright (c) 2013 University of Minnesota
+-- Author: Mike Whalen
+---------------------------------------------------------------------------
+
+----------------------------------------------------------------------------
+-- Edited by : Anitha Murugesan 
+-- Date 7/18/2013
+-- The features matches the Alarm behavioral model.
+--------------------------------------------------------------------------
+
+package Alarm
+public
+
+  with DATATYPES;
+  
+  system Alarm
+    features
+	  IM_IN: in data port DATATYPES::Infusion_Manager_Outputs.Impl;
+      TLM_MODE_IN: in data port DATATYPES::Top_Level_Mode_Outputs.Impl;
+      SYS_MON_IN: in data port DATATYPES::System_Monitor_Output.Impl;
+      LOGGING_IN: in data port DATATYPES::Log_Output.Impl;
+      OP_CMD_IN: in data port DATATYPES::Operator_Commands.Impl;
+      DB_IN: in data port DATATYPES::Drug_Database_Inputs.Impl;
+      SENSOR_IN: in data port DATATYPES::Device_Sensor_Inputs.Impl;
+      CONST_IN: in data port DATATYPES::Device_Configuration_Inputs.Impl;
+      SYS_STAT_IN: in data port DATATYPES::System_Status_Outputs.Impl;
+      CONFIG_IN: in data port DATATYPES::Config_Outputs.Impl;
+            
+	  ALARM_OUT: out data port DATATYPES::Alarm_Outputs.Impl;
+	            
+annex agree {**
+
+	-- Output of ALARM highest_level_alarm = 4 if the system is ON, outputs of system status In_Therapy and Reservoir_Empty are true.
+	-- REQ 59	
+	property empty_reservoir_implies_alarm_L4 = 
+		--true -> 
+		 (((TLM_MODE_IN.System_On) and (SYS_STAT_IN.In_Therapy) and (SYS_STAT_IN.Reservoir_Empty) ) => (ALARM_OUT.Highest_Level_Alarm = 4)); 
+	guarantee  "empty_reservoir_implies_alarm_L4": empty_reservoir_implies_alarm_L4;  
+
+	-- Output of ALARM highest_level_alarm >= 3 if the system is ON, In_Therapy and volume infused > vtbi hi from DB.
+	property volume_infused_grt_VTBI_Hi_causes_grt_L3_alarm = 
+		--true -> 
+		 (((TLM_MODE_IN.System_On) and (SYS_STAT_IN.In_Therapy) and (SYS_STAT_IN.Volume_Infused > DB_IN.VTBI_High ) ) => (ALARM_OUT.Highest_Level_Alarm >= 3)); 
+	guarantee  "volume_infused_grt_VTBI_Hi_causes_grt_L3_alarm": volume_infused_grt_VTBI_Hi_causes_grt_L3_alarm; 
+
+	-- Output of ALARM highest_level_alarm >= 3 if the system is ON and airineline
+	property air_in_line_implies_grt_L3_alarm = 
+		--true -> 
+		 (((TLM_MODE_IN.System_On) and (SENSOR_IN.Air_In_Line)) => (ALARM_OUT.Highest_Level_Alarm >= 3)); 
+    guarantee  "air_in_line_implies_grt_L3_alarm": air_in_line_implies_grt_L3_alarm;
+
+	-- Output of ALARM highest_level_alarm >= 3 if the system is ON and Occlusion
+	property occlusion_implies_grt_L3_alarm = 
+		--true -> 
+		 (((TLM_MODE_IN.System_On) and (SENSOR_IN.Occlusion)) => (ALARM_OUT.Highest_Level_Alarm >= 3)); 
+	guarantee  "occlusion_implies_grt_L3_alarm": occlusion_implies_grt_L3_alarm;
+
+	-- Output of ALARM highest_level_alarm >= 3 if the system is ON and door_open
+	property door_open_implies_grt_L3_alarm = 
+		--true -> 
+		 (((TLM_MODE_IN.System_On) and (SENSOR_IN.Door_Open)) => (ALARM_OUT.Highest_Level_Alarm >= 3)); 
+	guarantee  "door_open_implies_grt_L3_alarm": door_open_implies_grt_L3_alarm;
+
+-- Output of ALARM audio = set audio level if if the system is ON, the Highest_Level_Alarm is >= 3 and if audio is not disabled.
+	property alarm_gte_L3_causes_audio_output_EQ_audio_level = 
+		--true -> 
+			(((TLM_MODE_IN.System_On) and (ALARM_OUT.Highest_Level_Alarm >= 3) and (OP_CMD_IN.Disable_Audio = 0)) 
+				=> (ALARM_OUT.Audio_Notification_Command = CONST_IN.Audio_Level) and (ALARM_OUT.Is_Audio_Disabled = 0) );		
+	guarantee  "alarm_gte_L3_causes_audio_output_EQ_audio_level": alarm_gte_L3_causes_audio_output_EQ_audio_level; 
+
+	-- Output of ALARM audio = 0 if if the system is ON and audio is disabled.
+	property no_audio_if_audio_disabled = 
+	--	true -> 
+	     (((TLM_MODE_IN.System_On) and (OP_CMD_IN.Disable_Audio > 0)) 
+				=> (ALARM_OUT.Audio_Notification_Command = 0) and (ALARM_OUT.Is_Audio_Disabled = OP_CMD_IN.Disable_Audio) );
+	guarantee  "no_audio_if_audio_disabled": no_audio_if_audio_disabled; 
+				
+				
+**};
+	
+	
+  end Alarm;
+  
+  system implementation Alarm.Impl 
+  end Alarm.Impl;
+    
+end Alarm;

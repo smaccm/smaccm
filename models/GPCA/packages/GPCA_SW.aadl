@@ -1,0 +1,191 @@
+---------------------------------------------------------------------------
+-- Copyright (c) 2013 University of Minnesota
+-- Author: Mike Whalen
+---------------------------------------------------------------------------
+
+----------------------------------------------------------------------------
+-- Edited by : Anitha Murugesan 
+-- Date 7/18/2013
+-- The features matches the GPCA_SW behavioral model.
+--------------------------------------------------------------------------
+
+package GPCA_SW
+public
+  with DATATYPES,  System_Status, Config , Alarm, Infusion_Manager, Top_Level_Mode, Logging, System_Monitor, OutputBus, Communication_Properties;
+  
+  system GPCA_SW
+    features    
+		SENSOR_IN: in data port DATATYPES::Device_Sensor_Inputs.Impl;
+		CONST_IN: in data port DATATYPES::Device_Configuration_Inputs.Impl;
+		OP_CMD_IN: in data port DATATYPES::Operator_Commands.Impl;
+		DB_IN: in data port DATATYPES::Drug_Database_Inputs.Impl;
+		PRES_IN: in data port DATATYPES::Prescription_Inputs.Impl;
+		PATIENT_IN: in data port DATATYPES::Patient_Inputs.Impl;
+		  
+		GPCA_SW_OUT: out data port DATATYPES::GPCA_SW_Outputs.Impl;   				 
+		
+	  annex agree {**  		
+	   -----> If system is on and empty reservoir => Flow_Rate = 0  <-------
+	-- REQ 1 :  MODES RANGE
+		property mode_range = 
+			(GPCA_SW_OUT.Current_System_Mode = 0) or  
+					(GPCA_SW_OUT.Current_System_Mode = 1) or 
+					(GPCA_SW_OUT.Current_System_Mode = 2) or 
+					(GPCA_SW_OUT.Current_System_Mode = 3) or 
+					(GPCA_SW_OUT.Current_System_Mode = 4) or 
+					(GPCA_SW_OUT.Current_System_Mode = 6) or 
+					(GPCA_SW_OUT.Current_System_Mode = 7) or 
+					(GPCA_SW_OUT.Current_System_Mode = 8);
+		guarantee "output ":  mode_range;
+
+	 -- REQ 4 : System_Start transitions OFF to ON.
+		-- The requirement allocation is : 
+		-- TLM : System_Start to TLM -> System_On.
+		-- IM  : System_On -> Current_System_Mode = 1 if it was previously Current_System_Mode = 0
+ 
+		property system_on_implies_mode_1 = 
+			true -> 
+				((((pre(GPCA_SW_OUT.Current_System_Mode)) = 0) and (OP_CMD_IN.System_Start and not(OP_CMD_IN.System_Stop))) => (GPCA_SW_OUT.Current_System_Mode = 1));
+		guarantee "system_on_implies_mode_1 ":  system_on_implies_mode_1; 
+
+
+	 -- REQ 5 : System_Stop transitions to OFF.
+		-- The requirement allocation is : 
+		-- TLM : System_Stop to TLM -> !System_On.
+		-- IM  : !System_On -> Current_System_Mode = 0
+ 
+		property not_system_on_implies_mode_0 = 
+			true -> 
+				((not((pre(GPCA_SW_OUT.Current_System_Mode)) = 0) and (not (OP_CMD_IN.System_Start and not(OP_CMD_IN.System_Stop)))) => (GPCA_SW_OUT.Current_System_Mode = 0));
+		guarantee "not_system_on_implies_mode_0 ":  not_system_on_implies_mode_0; 
+
+
+
+	-- REQ 59	 : If empty reservoir => Flow_Rate =0 and audio if not disabled.
+	property empty_reservoir_and_In_therapy_implies_no_flow = 
+		true -> 
+		 ((((OP_CMD_IN.System_Start and not(OP_CMD_IN.System_Stop))) and (pre(GPCA_SW_OUT.Current_System_Mode) > 1) and (GPCA_SW_OUT.Reservoir_Volume < CONST_IN.Empty_Reservoir)  and (OP_CMD_IN.Disable_Audio = 0)) => 
+					(GPCA_SW_OUT.Commanded_Flow_Rate = 0) and (GPCA_SW_OUT.Audio_Notification_Command = CONST_IN.Audio_Level) and (GPCA_SW_OUT.Is_Audio_Disabled = 0) ); 	
+	guarantee "empty_reservoir_and_In_therapy_implies_no_flow ":  empty_reservoir_and_In_therapy_implies_no_flow;
+
+
+	-- Requirement : If Volume Infused > Drug DB VTBI_Hi => Overinfusion => Flow_Rate atmost KVO and audio if not disabled.
+	property volume_infused_gt_VTBI_Hi_and_In_therapy_implies_flow_kvo = 
+		true -> 
+		 ((((OP_CMD_IN.System_Start and not(OP_CMD_IN.System_Stop))) and (pre(GPCA_SW_OUT.Current_System_Mode) > 1) and (GPCA_SW_OUT.Volume_Infused < DB_IN.VTBI_High) and (OP_CMD_IN.Disable_Audio = 0)) => 
+					(GPCA_SW_OUT.Commanded_Flow_Rate <= GPCA_SW_OUT.Flow_Rate_KVO) and (GPCA_SW_OUT.Audio_Notification_Command = CONST_IN.Audio_Level) and (GPCA_SW_OUT.Is_Audio_Disabled = 0) ); 
+	
+	guarantee "volume_infused_gt_VTBI_Hi_and_In_therapy_implies_flow_kvo ":  volume_infused_gt_VTBI_Hi_and_In_therapy_implies_flow_kvo;
+
+
+	-- Requirement : AirInline => Flow_Rate atmost KVO and audio if not disabled.
+	property airInLine_implies_flow_at_most_KVO = 
+		true -> 
+		 -- (((OP_CMD_IN.System_Start and not(OP_CMD_IN.System_Stop)))) =>  -- and (SENSOR_IN.Air_In_Line)) =>  -- and (OP_CMD_IN.Disable_Audio = 0) ) => 
+					((GPCA_SW_OUT.Commanded_Flow_Rate <= GPCA_SW_OUT.Flow_Rate_KVO) and (GPCA_SW_OUT.Audio_Notification_Command = CONST_IN.Audio_Level) and (GPCA_SW_OUT.Is_Audio_Disabled = 0) ); 
+
+	guarantee "airInLine_implies_flow_at_most_KVO ":  airInLine_implies_flow_at_most_KVO;
+
+	-- Requirement : Occlusion => Flow_Rate atmost KVO and audio if not disabled.
+	property occlusion_implies_flow_at_most_KVO = 
+		true -> 
+		 (((OP_CMD_IN.System_Start and not(OP_CMD_IN.System_Stop))) and (SENSOR_IN.Occlusion) and (OP_CMD_IN.Disable_Audio = 0) ) => 
+					((GPCA_SW_OUT.Commanded_Flow_Rate <= GPCA_SW_OUT.Flow_Rate_KVO) and (GPCA_SW_OUT.Audio_Notification_Command = CONST_IN.Audio_Level) and (GPCA_SW_OUT.Is_Audio_Disabled = 0) ); 
+	guarantee "occlusion_implies_flow_at_most_KVO ":  occlusion_implies_flow_at_most_KVO;
+
+
+	-- Requirement : Door Open => Flow_Rate atmost KVO and audio if not disabled.
+	property door_open_implies_flow_at_most_KVO = 
+		true -> 
+		 (((OP_CMD_IN.System_Start and not(OP_CMD_IN.System_Stop))) and (SENSOR_IN.Door_Open) and (OP_CMD_IN.Disable_Audio = 0) ) => 
+					((GPCA_SW_OUT.Commanded_Flow_Rate <= GPCA_SW_OUT.Flow_Rate_KVO) and (GPCA_SW_OUT.Audio_Notification_Command = CONST_IN.Audio_Level) and (GPCA_SW_OUT.Is_Audio_Disabled = 0) ); 
+	guarantee "door_open_implies_flow_at_most_KVO ":  door_open_implies_flow_at_most_KVO;
+**};
+
+end GPCA_SW;
+  
+  system implementation GPCA_SW.Impl
+    subcomponents      
+      TLM: system Top_Level_Mode::Top_Level_Mode.Impl;
+      SYS_STAT: system System_Status::System_Status.Impl;
+      ALARM: system Alarm::Alarm.Impl;
+      CONFIG: system Config::Config.Impl;
+      IM: system Infusion_Manager::Infusion_Manager.Impl;
+      SYS_MON: system System_Monitor::System_Monitor.Impl;
+      LOG: system Logging::Logging.Impl;
+      OUTPUT: system OutputBus::OutputBus.Impl;
+           
+	  connections
+	  	  
+	  -- TLM
+	  OP_CMDtoTLM: 	port OP_CMD_IN -> TLM.OP_CMD_IN{Communication_Properties::Timing => immediate;};
+	  CONSTtoTLM: 	port CONST_IN -> TLM.CONST_IN{Communication_Properties::Timing => immediate;}; 
+	  
+	  TLM_OUT_toOUTPUT:  port TLM.TLM_MODE_OUT -> OUTPUT.TLM_MODE_IN{Communication_Properties::Timing => immediate;};
+          
+     -- data access TLM_MODE_OUT.Request_Confirm_Stop ->  GPCA_SW_OUT.Request_Confirm_Stop;
+	  
+      -- SYSTEM STATUS
+      IM_to_SYS_STAT: 	port IM.IM_OUT -> SYS_STAT.IM_IN;
+      TLM_to_SYS_STAT: 	port TLM.TLM_MODE_OUT -> SYS_STAT.TLM_MODE_IN {Communication_Properties::Timing => immediate;};
+      SENSOR_to_SYS_STAT: port SENSOR_IN -> SYS_STAT.SENSOR_IN {Communication_Properties::Timing => immediate;};
+      CONST_to_SYS_STAT: 	port CONST_IN -> SYS_STAT.CONST_IN{Communication_Properties::Timing => immediate;}; 
+      CONFIG_to_SYS_STAT: port CONFIG.CONFIG_OUT -> SYS_STAT.CONFIG_IN ;
+     
+       SYS_STAT_OUT_toOUTPUT:  port SYS_STAT.SYS_STAT_OUT -> OUTPUT.SYS_STAT_IN{Communication_Properties::Timing => immediate;};
+      
+      -- ALARM
+      IM_to_ALARM: 		port IM.IM_OUT -> ALARM.IM_IN;
+      TLM_to_ALARM: 		port TLM.TLM_MODE_OUT -> ALARM.TLM_MODE_IN  {Communication_Properties::Timing => immediate;};
+      SYS_MON_to_ALARM: 	port SYS_MON.SYS_MON_OUT -> ALARM.SYS_MON_IN  {Communication_Properties::Timing => immediate;};
+      OP_CMD_to_ALARM: 	port OP_CMD_IN -> ALARM.OP_CMD_IN{Communication_Properties::Timing => immediate;};
+      DB_to_ALARM: 		port DB_IN -> ALARM.DB_IN{Communication_Properties::Timing => immediate;};
+      SENSOR_to_ALARM: 	port SENSOR_IN -> ALARM.SENSOR_IN{Communication_Properties::Timing => immediate;}; 
+      CONST_to_ALARM: 	port CONST_IN -> ALARM.CONST_IN{Communication_Properties::Timing => immediate;}; 
+      SYS_STAT_to_ALARM: 	port SYS_STAT.SYS_STAT_OUT -> ALARM.SYS_STAT_IN  {Communication_Properties::Timing => immediate;};
+      CONFIG_to_ALARM: 	port CONFIG.CONFIG_OUT -> ALARM.CONFIG_IN; 
+      
+      ALARM_OUT_toOUTPUT:  port ALARM.ALARM_OUT -> OUTPUT.ALARM_IN{Communication_Properties::Timing => immediate;};
+      
+     
+     -- CONFIG
+     TLM_to_CONFIG: 		port TLM.TLM_MODE_OUT -> CONFIG.TLM_MODE_IN  {Communication_Properties::Timing => immediate;};
+     PRES_to_CONFIG: 		port PRES_IN -> CONFIG.PRES_IN  {Communication_Properties::Timing => immediate;};
+     OP_CMD_to_CONFIG: 	port OP_CMD_IN -> CONFIG.OP_CMD_IN{Communication_Properties::Timing => immediate;};
+     DB_to_CONFIG: 		port DB_IN -> CONFIG.DB_IN{Communication_Properties::Timing => immediate;};
+  	 CONS_to_CONFIG: 		port CONST_IN -> CONFIG.CONST_IN{Communication_Properties::Timing => immediate;}; 
+  	 SYS_STAT_to_CONFIG: 	port SYS_STAT.SYS_STAT_OUT -> CONFIG.SYS_STAT_IN  {Communication_Properties::Timing => immediate;}; 
+  	
+  	 CONFIG_toOUTPUT:  port CONFIG.CONFIG_OUT -> OUTPUT.CONFIG_IN{Communication_Properties::Timing => immediate;};
+  	    
+  	  -- IM
+  	  TLM_to_IM : 		port TLM.TLM_MODE_OUT -> IM.TLM_MODE_IN {Communication_Properties::Timing => immediate; } ;   
+  	  OP_CMD_to_IM: 		port OP_CMD_IN-> IM.OP_CMD_IN{Communication_Properties::Timing => immediate; }; 
+  	  PATIENT_to_IM: 		port PATIENT_IN -> IM.PATIENT_IN{Communication_Properties::Timing => immediate; };  
+  	  CONFIG_to_IM: 		port CONFIG.CONFIG_OUT -> IM.CONFIG_IN{Communication_Properties::Timing => immediate; };  
+      ALARM_to_IM: 		port ALARM.ALARM_OUT -> IM.ALARM_IN  {Communication_Properties::Timing => immediate; }; 
+      SYS_STAT_to_IM: 	port SYS_STAT.SYS_STAT_OUT -> IM.SYS_STAT_IN  {Communication_Properties::Timing => immediate;}; 
+      
+      IM_toOUTPUT:  port IM.IM_OUT -> OUTPUT.IM_IN{Communication_Properties::Timing => immediate;};
+  
+      -- SYSTEM MONI_to_R
+      TLM_to_SYS_MON: 	port TLM.TLM_MODE_OUT -> SYS_MON.TLM_MODE_IN  {Communication_Properties::Timing => immediate;};
+            
+       SYS_MON_toOUTPUT:  port SYS_MON.SYS_MON_OUT -> OUTPUT.SYS_MON_IN{Communication_Properties::Timing => immediate;};
+    
+       -- LOG
+       TLM_to_LOG : 		port TLM.TLM_MODE_OUT -> LOG.TLM_MODE_IN {Communication_Properties::Timing => immediate; } ;   
+  	   CONFIG_to_LOG: 	port CONFIG.CONFIG_OUT -> LOG.CONFIG_IN{Communication_Properties::Timing => immediate; };  
+       ALARM_to_LOG: 		port ALARM.ALARM_OUT -> LOG.ALARM_IN  {Communication_Properties::Timing => immediate; }; 
+       SYS_STAT_to_LOG: 	port SYS_STAT.SYS_STAT_OUT -> LOG.SYS_STAT_IN  {Communication_Properties::Timing => immediate;}; 
+       IM_to_LOG: 		port IM.IM_OUT -> LOG.IM_IN {Communication_Properties::Timing => immediate;};
+       
+       LOG_toOUTPUT:  port LOG.LOG_OUT -> OUTPUT.LOG_IN{Communication_Properties::Timing => immediate;}; 
+       
+     
+       -- OUTPUT_to_GPCA_OUT
+      OUTPUT_to_GPCA_OUT:  port OUTPUT.GPCA_SW_OUT -> GPCA_SW_OUT{Communication_Properties::Timing => immediate;}; 
+   	  
+  end GPCA_SW.Impl;
+  
+end GPCA_SW;

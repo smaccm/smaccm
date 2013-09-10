@@ -1,0 +1,88 @@
+---------------------------------------------------------------------------
+-- Copyright (c) 2013 University of Minnesota
+-- Author: Mike Whalen
+---------------------------------------------------------------------------
+
+-- Edited by : Anitha Murugesan 
+-- Date 7/18/2013
+-- The features matches the Infusion Manager behavioral model.
+--------------------------------------------------------------------------
+
+package Infusion_Manager
+public
+  with DATATYPES;
+  
+  system Infusion_Manager
+    features    
+      TLM_MODE_IN: in data port DATATYPES::Top_Level_Mode_Outputs.Impl;
+      OP_CMD_IN: in data port DATATYPES::Operator_Commands.Impl;
+      --DB_IN: in data port DATATYPES::Drug_Database_Inputs.Impl;
+      PATIENT_IN: in data port DATATYPES::Patient_Inputs.Impl;
+      CONFIG_IN: in data port DATATYPES::Config_Outputs.Impl;
+      ALARM_IN: in data port DATATYPES::Alarm_Outputs.Impl;
+      SYS_STAT_IN: in data port DATATYPES::System_Status_Outputs.Impl;
+      
+      IM_OUT: out data port DATATYPES::Infusion_Manager_Outputs.Impl;          
+   
+   
+      annex agree {**
+    -- REQ 1 :  MODES RANGE
+		property mode_range = 
+			(IM_OUT.Current_System_Mode = 0) or  
+					(IM_OUT.Current_System_Mode = 1) or 
+					(IM_OUT.Current_System_Mode = 2) or 
+					(IM_OUT.Current_System_Mode = 3) or 
+					(IM_OUT.Current_System_Mode = 4) or 
+					(IM_OUT.Current_System_Mode = 6) or 
+					(IM_OUT.Current_System_Mode = 7) or 
+					(IM_OUT.Current_System_Mode = 8);
+		guarantee "mode_range":   mode_range;
+
+	
+	 -- REQ 4 : System_Start transitions OFF to ON.
+		-- The requirement allocation is : 
+		-- TLM : System_Start to TLM -> System_On.
+		-- IM  : System_On -> Current_System_Mode = 1 if it was previously Current_System_Mode = 0
+ 
+		property is_system_on_implies_idle = 
+			true -> 
+				(((pre(IM_OUT.Current_System_Mode)) = 0) and (TLM_MODE_IN.System_On)) => (IM_OUT.Current_System_Mode = 1);
+		guarantee "is_system_on_implies_idle":   is_system_on_implies_idle; 
+
+
+	 -- REQ 5 : System_Stop transitions to OFF.
+		-- The requirement allocation is : 
+		-- TLM : System_Stop to TLM -> !System_On.
+		-- IM  : !System_On -> Current_System_Mode = 0
+
+		property not_system_on_implies_mode_0 = 
+			true -> 
+				( not((pre(IM_OUT.Current_System_Mode)) = 0) and (not TLM_MODE_IN.System_On)) => (IM_OUT.Current_System_Mode = 0);
+		guarantee "not_system_on_implies_mode_0":   not_system_on_implies_mode_0; 
+
+	------->  highest_level_alarm_4_implies_flow_rate_zero <------- 
+	
+		property alarm_L4_implies_flow_rate_zero = 
+		--true -> 
+			(((TLM_MODE_IN.System_On) and (ALARM_IN.Highest_Level_Alarm = 4)) => (IM_OUT.Commanded_Flow_Rate = 0));
+
+		guarantee "alarm_L4_implies_flow_rate_zero":  alarm_L4_implies_flow_rate_zero;
+
+	------->  highest_level_alarm_3_implies_flow_rate_kvo <------- 
+
+		property alarm_L3_implies_flow_rate_kvo = 
+		--true -> 
+			(((TLM_MODE_IN.System_On) and (ALARM_IN.Highest_Level_Alarm = 3)) => (IM_OUT.Commanded_Flow_Rate = CONFIG_IN.Flow_Rate_KVO));
+
+		guarantee "alarm_L3_implies_flow_rate_kvo":   alarm_L3_implies_flow_rate_kvo;
+
+	**};
+	
+	
+      
+  end Infusion_Manager;
+  
+  system implementation Infusion_Manager.Impl
+  end Infusion_Manager.Impl;
+    
+end Infusion_Manager;

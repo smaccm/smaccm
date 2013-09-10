@@ -1,0 +1,31 @@
+---------------------------------------------------------------------------
+-- Copyright (c) 2013 University of Minnesota
+-- Author: Mike Whalen
+---------------------------------------------------------------------------
+
+----------------------------------------------------------------------------
+-- Edited by : Anitha Murugesan 
+-- Date 7/18/2013
+-- The features matches the System Status behavioral model.
+--------------------------------------------------------------------------
+
+package System_Monitor
+public
+
+  with DATATYPES;
+  
+  system System_Monitor
+    features	
+	 
+	  TLM_MODE_IN: in data port DATATYPES::Top_Level_Mode_Outputs.Impl;    
+      
+	  SYS_MON_OUT: out data port DATATYPES::System_Monitor_Output.Impl;
+	            
+       --annex agree {****};
+
+  end System_Monitor;
+  
+  system implementation System_Monitor.Impl 
+  end System_Monitor.Impl;
+    
+end System_Monitor;
