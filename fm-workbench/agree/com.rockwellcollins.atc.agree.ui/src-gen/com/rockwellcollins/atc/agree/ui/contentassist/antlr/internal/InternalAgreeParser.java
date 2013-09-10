@@ -43066,8 +43066,8 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
     static final String DFA12_specialS =
         "\12\uffff}>";
     static final String[] DFA12_transitionS = {
-            "\1\2\1\1\1\4\32\uffff\1\5\14\uffff\1\7\14\uffff\1\3\1\6\24"+
-            "\uffff\1\5",
+            "\1\2\1\1\1\4\32\uffff\1\5\14\uffff\1\7\14\uffff\1\3\1\6\24\uffff"+
+            "\1\5",
             "\1\11\3\uffff\14\11\1\uffff\1\11\2\uffff\2\11\7\uffff\1\11"+
             "\1\uffff\2\11\6\uffff\2\11\5\uffff\1\11\1\10\14\uffff\4\11",
             "",
@@ -43121,16 +43121,16 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
         "\1\4\5\uffff\2\5\2\6\1\45\3\uffff\1\45\1\uffff\1\45\1\uffff\1\6"+
         "\1\uffff\1\45";
     static final String DFA14_maxS =
-        "\1\122\5\uffff\2\7\3\112\3\uffff\1\112\1\uffff\1\112\1\uffff\1"+
-        "\6\1\uffff\1\112";
+        "\1\122\5\uffff\2\7\3\112\3\uffff\1\112\1\uffff\1\112\1\uffff\1\6"+
+        "\1\uffff\1\112";
     static final String DFA14_acceptS =
-        "\1\uffff\1\1\1\2\1\3\1\4\1\5\5\uffff\1\11\1\12\1\6\1\uffff\1\7"+
-        "\1\uffff\1\10\1\uffff\1\13\1\uffff";
+        "\1\uffff\1\1\1\2\1\3\1\4\1\5\5\uffff\1\11\1\12\1\6\1\uffff\1\7\1"+
+        "\uffff\1\10\1\uffff\1\13\1\uffff";
     static final String DFA14_specialS =
         "\25\uffff}>";
     static final String[] DFA14_transitionS = {
-            "\1\5\1\11\1\12\1\10\23\uffff\1\6\1\7\5\uffff\1\14\14\uffff"+
-            "\1\13\25\uffff\1\2\1\1\1\uffff\1\4\1\3\10\uffff\1\14",
+            "\1\5\1\11\1\12\1\10\23\uffff\1\6\1\7\5\uffff\1\14\14\uffff\1"+
+            "\13\25\uffff\1\2\1\1\1\uffff\1\4\1\3\10\uffff\1\14",
             "",
             "",
             "",
