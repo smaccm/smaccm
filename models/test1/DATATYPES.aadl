@@ -1,0 +1,24 @@
+---------------------------------------------------------------------------
+-- Copyright (c) 2013 University of Minnesota
+-- Author: Mike Whalen
+---------------------------------------------------------------------------
+
+----------------------------------------------------------------------------
+-- Edited by : Anitha Murugesan 
+-- Date 7/18/2013
+-- The data definitions in this file matches the data inputs in buses-uint8.mat for the behavioral models
+--------------------------------------------------------------------------
+
+package DATATYPES
+public
+with Base_Types;
+
+ data IO
+  end IO;
+  
+  data implementation IO.Impl
+  	subcomponents
+  		field : data Base_Types::Integer ; 
+  end IO.Impl;
+    
+end DATATYPES;

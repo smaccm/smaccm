@@ -1,0 +1,35 @@
+---------------------------------------------------------------------------
+-- Copyright (c) 2013 University of Minnesota
+-- Author: Mike Whalen
+---------------------------------------------------------------------------
+
+----------------------------------------------------------------------------
+-- Edited by : Anitha Murugesan 
+-- Date 7/18/2013
+-- The features matches the System Status behavioral model.
+--------------------------------------------------------------------------
+
+package Package_C1
+public
+
+  with DATATYPES;
+  
+  system C1
+    features	
+		Input: in data port DATATYPES::IO.Impl;
+		Outp : out data port DATATYPES::IO.Impl;
+	            
+       annex agree {**
+
+		-------> if the system is ON and the computed Reservoir_Volume is less than the threshold then Reservoir_Empty = true  <-------
+
+		property gt_0 = (Outp.field > 0);
+		guarantee "gt_0" : gt_0;
+**};
+
+  end C1;
+  
+  system implementation C1.Impl 
+  end C1.Impl;
+    
+end Package_C1;

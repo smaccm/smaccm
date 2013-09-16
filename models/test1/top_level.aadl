@@ -1,0 +1,41 @@
+---------------------------------------------------------------------------
+-- Copyright (c) 2013 University of Minnesota
+-- Author: Mike Whalen
+---------------------------------------------------------------------------
+
+----------------------------------------------------------------------------
+-- Edited by : Anitha Murugesan 
+-- Date 7/18/2013
+-- The features matches the System Status behavioral model.
+--------------------------------------------------------------------------
+
+package top_level
+public
+with DATATYPES, Package_C1, Package_C2;
+
+  system System_Status
+    features	
+	  Inp : in data port DATATYPES::IO.Impl;
+	  Output : out data port DATATYPES::IO.Impl;
+	            
+       annex agree {**
+
+		guarantee "false" : false;
+
+**};
+
+  end System_Status;
+  
+  system implementation System_Status.Impl
+  	subcomponents 
+  		C1: system Package_C1::C1.Impl;
+  		C2: system Package_C2::C2.Impl;
+  		
+  	connections
+  		InpToC1 : port Inp -> C1.Input {Communication_Properties::Timing => immediate;};
+  		C1ToC2 : port C1.Outp -> C2.Input {Communication_Properties::Timing => immediate;};
+  		C2ToOutput : port C2.Outp -> Output ; 
+   
+  end System_Status.Impl;
+    
+end top_level;
