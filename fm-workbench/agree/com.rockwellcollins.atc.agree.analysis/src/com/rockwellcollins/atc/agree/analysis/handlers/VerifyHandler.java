@@ -138,7 +138,6 @@ public abstract class VerifyHandler extends AadlHandler {
 
     private IStatus doAnalysis(IProgressMonitor monitor) {
         JKindApi api = getJKindApi();
-        api.setBlameCounterexamples();
         while (!queue.isEmpty() && !monitor.isCanceled()) {
             JKindResult result = queue.remove();
             Program program = linker.getProgram(result);
@@ -161,6 +160,9 @@ public abstract class VerifyHandler extends AadlHandler {
         }
         if (prefs.getBoolean(PreferenceConstants.PREF_SMOOTH_CEX)) {
             api.setSmoothCounterexamples();
+        }
+        if (prefs.getBoolean(PreferenceConstants.PREF_BLAME_CEX)) {
+            api.setBlameCounterexamples();
         }
         api.setN(prefs.getInt(PreferenceConstants.PREF_DEPTH));
         api.setTimeout(prefs.getInt(PreferenceConstants.PREF_TIMEOUT));
