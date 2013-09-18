@@ -1228,10 +1228,10 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
             varRenaming.put(compId.id, propertyName);
             layout.addElement("Top", propertyName, AgreeLayout.SigType.OUTPUT);
             
+            /*
             //add a property that is true if the contract is a contradiction
             IdExpr contrId = new IdExpr("_CONTR_HIST_" + contract.compName);
             IdExpr notContrId = new IdExpr("_NULL_CONTR_HIST_" + contract.compName);
-
             Expr contExpr = getLustreContract(contract);
             Equation contHist = getLustreHistory(contExpr, contrId);
             Equation notContHist = new Equation(notContrId, new UnaryExpr(UnaryOp.NOT, contrId));
@@ -1243,6 +1243,7 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
             String contractName = contract.compName + " Contradiction";
             varRenaming.put(notContrId.id, contractName);
             layout.addElement("Top", contractName, AgreeLayout.SigType.OUTPUT);
+            */
             
         }
 
@@ -1264,6 +1265,7 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
 
         }
         
+        /*
         //check for contradiction in total component history
         IdExpr notTotalCompHistId = new IdExpr("_NOT_TOTAL_COMP_HIST");
         Equation contrEq = new Equation(notTotalCompHistId, new UnaryExpr(UnaryOp.NOT, totalCompHistId));
@@ -1272,7 +1274,7 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
         properties.add(notTotalCompHistId.id);
         varRenaming.put(notTotalCompHistId.id, "total component history contradiction");
         layout.addElement("Top", "total component history contradiction", AgreeLayout.SigType.OUTPUT);
-
+        */
 
         Node topNode = new Node("_MAIN", inputs, outputs, internals, eqs, properties);
         nodeSet.add(topNode);
