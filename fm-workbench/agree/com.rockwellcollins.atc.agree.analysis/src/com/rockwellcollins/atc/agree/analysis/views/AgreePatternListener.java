@@ -41,7 +41,7 @@ public class AgreePatternListener implements IPatternMatchListener {
 
     @Override
     public String getPattern() {
-        return "\\[.*\\]";
+        return "\\{.*\\}";
     }
 
     @Override

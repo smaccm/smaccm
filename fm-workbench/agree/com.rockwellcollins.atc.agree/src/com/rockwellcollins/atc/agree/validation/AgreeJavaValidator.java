@@ -311,6 +311,11 @@ public class AgreeJavaValidator extends
 
     @Check
     public void checkNodeDef(NodeDefExpr nodeDefExpr) {
+        
+        if(nodeDefExpr.getNodeBody() == null){
+            return; //this will throw a parse error anyway
+        }
+        
         Map<Arg, Integer> assignMap = new HashMap<>();
         for (Arg arg : nodeDefExpr.getRets()) {
             assignMap.put(arg, 0);

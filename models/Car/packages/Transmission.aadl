@@ -1,0 +1,50 @@
+package Transmission
+public
+	with Types;
+
+	system Speed_Control
+		features
+			Target: in data port Types::speed.speed_impl;
+			Actuator_Input: out data port Types::actuator.actuator_impl;
+			Actual: in data port Types::speed.speed_impl;
+			
+	annex agree {** 
+		eq e : real = Target.val - Actual.val;
+		eq e_int : real = prev(e, 0.0) + e; 
+		eq e_dot : real = prev(e, 0.0) - e;
+		
+		eq u : real = 0.2*e + 0.1*e_dot + 0.1*e_int;
+		guarantee "Acuator_Behavior" : Actuator_Input.val = u;
+	**}; 
+	
+	end Speed_Control;
+
+	system implementation Speed_Control.Speed_Control_Impl
+		
+	annex agree {**
+		assert Actuator_Input.val = u;
+	**};
+	end Speed_Control.Speed_Control_Impl;
+
+
+	system Throttle
+		features
+			Actuator_Input: in data port Types::actuator.actuator_impl;
+			Actual: out data port Types::speed.speed_impl;
+			
+		annex agree {**
+			guarantee "Throttle_Behavior" : Actual.val = prev(Actual.val, 0.0) + 0.1*Actuator_Input.val; 
+		**};
+		
+	end Throttle;
+
+	
+	system implementation Throttle.Throttle_Impl
+	
+	annex agree {**
+		assert Actual.val = prev(Actual.val, 0.0) + 0.1*Actuator_Input.val;  
+	**};
+	
+	end Throttle.Throttle_Impl;
+	
+end Transmission;

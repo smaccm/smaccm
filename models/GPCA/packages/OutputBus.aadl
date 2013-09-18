@@ -38,7 +38,7 @@ annex agree {**
 	guarantee "output ": (ALARM_IN.Notification_Message = GPCA_SW_OUT.Notification_Message);
 	   
 	guarantee "output ": (CONFIG_IN.Patient_ID = GPCA_SW_OUT.Patient_ID);
-	guarantee "output ": (CONFIG_IN.Drug_Name =  GPCA_SW_OUT.Drug_Name);
+	guarantee "output ": (CONFIG_IN.Drug_Name = GPCA_SW_OUT.Drug_Name);
 	guarantee "output ": (CONFIG_IN.Drug_Concentration = GPCA_SW_OUT.Drug_Concentration);
 	guarantee "output ": (CONFIG_IN.Infusion_Total_Duration = GPCA_SW_OUT.Infusion_Total_Duration);
 	guarantee "output ": (CONFIG_IN.VTBI_Total = GPCA_SW_OUT.VTBI_Total);

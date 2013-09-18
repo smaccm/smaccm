@@ -657,26 +657,22 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
                         + tempStr + "' is not connected to anything. Considering it to be"
                         + " an unconstrained primary input.");
 
-                // throw new AgreeException("In component '"+
-                // orgId.getName().getContainingClassifier().getFullName()+"', Port '"+
-                // tempStr+"' is not connected to anything.");
-
-                // NamedElement origEl = orgId.getName();
-                // if(origEl instanceof DataPort){
-                // DataPort port = (DataPort)origEl;
-                // if(port.getDirection().incoming())
-                // throw new
-                // AgreeException("Port '"+tempStr+"' is not connected to anything.");
-                // }
+             
                 // this code just creates a new PI
                 tempStrType = dataTypeToVarType((DataSubcomponent) namedEl);
-                jKindVar += jKindNameTag + Id.getBase().getName();
-                aadlVar += aadlNameTag + Id.getBase().getName();
+                jKindVar = jKindNameTag + jKindVar + Id.getBase().getName();
+                aadlVar = aadlNameTag + aadlVar + Id.getBase().getName();
 
+                //get rid of this. this is just a sanity check
+                assert(jKindVar.equals(tempStr));
                 tempStrType.jKindStr = tempStr;
                 tempStrType.aadlStr = aadlVar;
-
-                layout.addElement(curComp.getName(), aadlVar, AgreeLayout.SigType.INPUT);
+                
+                if(curComp != null){
+                    layout.addElement(curComp.getName(), aadlVar, AgreeLayout.SigType.INPUT);
+                }else{
+                    layout.addElement("Top", aadlVar, AgreeLayout.SigType.INPUT);
+                }
                 varRenaming.put(jKindVar, aadlVar);
                 refMap.put(aadlVar, Id);
                 inputVars.add(tempStrType);
@@ -1231,6 +1227,23 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
             String propertyName = contract.compName + " Assumptions";
             varRenaming.put(compId.id, propertyName);
             layout.addElement("Top", propertyName, AgreeLayout.SigType.OUTPUT);
+            
+            //add a property that is true if the contract is a contradiction
+            IdExpr contrId = new IdExpr("_CONTR_HIST_" + contract.compName);
+            IdExpr notContrId = new IdExpr("_NULL_CONTR_HIST_" + contract.compName);
+
+            Expr contExpr = getLustreContract(contract);
+            Equation contHist = getLustreHistory(contExpr, contrId);
+            Equation notContHist = new Equation(notContrId, new UnaryExpr(UnaryOp.NOT, contrId));
+            eqs.add(notContHist);
+            eqs.add(contHist);
+            internals.add(new VarDecl(contrId.id, new NamedType("bool")));
+            internals.add(new VarDecl(notContrId.id, new NamedType("bool")));
+            properties.add(notContrId.id);
+            String contractName = contract.compName + " Contradiction";
+            varRenaming.put(notContrId.id, contractName);
+            layout.addElement("Top", contractName, AgreeLayout.SigType.OUTPUT);
+            
         }
 
         // create individual properties for guarantees
@@ -1250,6 +1263,16 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
             layout.addElement("Top", "Component Guarantee " + i++, AgreeLayout.SigType.OUTPUT);
 
         }
+        
+        //check for contradiction in total component history
+        IdExpr notTotalCompHistId = new IdExpr("_NOT_TOTAL_COMP_HIST");
+        Equation contrEq = new Equation(notTotalCompHistId, new UnaryExpr(UnaryOp.NOT, totalCompHistId));
+        internals.add(new VarDecl(notTotalCompHistId.id, new NamedType("bool")));
+        eqs.add(contrEq);
+        properties.add(notTotalCompHistId.id);
+        varRenaming.put(notTotalCompHistId.id, "total component history contradiction");
+        layout.addElement("Top", "total component history contradiction", AgreeLayout.SigType.OUTPUT);
+
 
         Node topNode = new Node("_MAIN", inputs, outputs, internals, eqs, properties);
         nodeSet.add(topNode);

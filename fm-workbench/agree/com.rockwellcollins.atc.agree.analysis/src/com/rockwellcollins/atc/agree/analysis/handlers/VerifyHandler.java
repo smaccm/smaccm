@@ -138,10 +138,12 @@ public abstract class VerifyHandler extends AadlHandler {
 
     private IStatus doAnalysis(IProgressMonitor monitor) {
         JKindApi api = getJKindApi();
+        api.setBlameCounterexamples();
         while (!queue.isEmpty() && !monitor.isCanceled()) {
             JKindResult result = queue.remove();
             Program program = linker.getProgram(result);
             api.execute(program, result, monitor);
+            //System.out.println("whatever");
         }
 
         while (!queue.isEmpty()) {

@@ -8,6 +8,7 @@ import jkind.api.results.AnalysisResult;
 import jkind.api.results.PropertyResult;
 import jkind.api.ui.AnalysisResultTree;
 import jkind.excel.Layout;
+import jkind.intervalsim.Interval;
 import jkind.lustre.Program;
 import jkind.lustre.values.Value;
 import jkind.results.Counterexample;
@@ -201,18 +202,25 @@ public class AgreeMenuListener implements IMenuListener {
                 out.println("Variables for " + category);
                 printHLine(out, cex.getLength());
 
-                out.print(String.format("%-50s", "Variable Name"));
+                out.print(String.format("%-60s", "Variable Name"));
                 for (int k = 0; k < cex.getLength(); k++) {
-                    out.print(String.format("%-8s", k));
+                    out.print(String.format("%-15s", k));
                 }
                 out.println();
                 printHLine(out, cex.getLength());
 
                 for (Signal<Value> signal : cex.getSignals()) {
                     if (category.equals(layout.getCategory(signal.getName()))) {
-                        out.print(String.format("%-50s", "[" + signal.getName() + "]"));
+                        out.print(String.format("%-60s", "{" + signal.getName() + "}"));
                         for (int k = 0; k < cex.getLength(); k++) {
-                            out.print(String.format("%-8s", signal.getValue(k)));
+                            Value val = signal.getValue(k);
+                            if(val == null){
+                                out.print(String.format("%-15s", "-"));
+                            }else if(val instanceof Interval){
+                                out.print(String.format("%-15s", ((Interval) val).toPrettyString()));
+                            }else{
+                                out.print(String.format("%-15s", val));
+                            }
                         }
                         out.println();
                     }
@@ -236,7 +244,7 @@ public class AgreeMenuListener implements IMenuListener {
     private void printHLine(MessageConsoleStream out, int nVars) {
         out.print("--------------------------------------------------");
         for (int k = 0; k < nVars; k++) {
-            out.print("-------");
+            out.print("---------------------");
         }
         out.println();
     }
