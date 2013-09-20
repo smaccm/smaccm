@@ -185,6 +185,11 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
     private final Map<String, CallDef> nodeDefs = new HashMap<>();
 
     private List<Boolean> reversePropStatus = new ArrayList<Boolean>();
+    public List<String> assumProps = new ArrayList<String>();
+    public List<String> consistProps = new ArrayList<String>();
+    public List<String> guarProps = new ArrayList<String>();
+
+
 
     // *********************** BEGIN METHODS ********************************
 
@@ -1226,6 +1231,7 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
             Equation contrHist = new Equation(compId, contrHistExpr);
             eqs.add(contrHist);
             properties.add(compId.id);
+            assumProps.add(compId.id);
             reversePropStatus.add(false);
             String propertyName = contract.compName + " Assumptions";
             varRenaming.put(compId.id, propertyName);
@@ -1243,6 +1249,7 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
             internals.add(new VarDecl(contrId.id, new NamedType("bool")));
             internals.add(new VarDecl(notContrId.id, new NamedType("bool")));
             properties.add(notContrId.id);
+            consistProps.add(notContrId.id);
             reversePropStatus.add(true);
             String contractName = contract.compName + " Contradiction";
             varRenaming.put(notContrId.id, contractName);
@@ -1264,12 +1271,12 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
             Equation finalGuar = new Equation(sysGuaranteesId, totalSysGuarExpr);
             eqs.add(finalGuar);
             properties.add(sysGuaranteesId.id);
+            guarProps.add(sysGuaranteesId.id);
             reversePropStatus.add(false);
             varRenaming.put(sysGuaranteesId.id, guarName);
             layout.addElement("Top", "Component Guarantee " + i++, AgreeLayout.SigType.OUTPUT);
 
         }
-        
         
         //check for contradiction in total component history
         IdExpr notTotalCompHistId = new IdExpr("_NOT_TOTAL_COMP_HIST");
@@ -1277,10 +1284,10 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
         internals.add(new VarDecl(notTotalCompHistId.id, new NamedType("bool")));
         eqs.add(contrEq);
         properties.add(notTotalCompHistId.id);
+        consistProps.add(notTotalCompHistId.id);
         reversePropStatus.add(true);
         varRenaming.put(notTotalCompHistId.id, "total component history contradiction");
         layout.addElement("Top", "total component history contradiction", AgreeLayout.SigType.OUTPUT);
-        
 
         Node topNode = new Node("_MAIN", inputs, outputs, internals, eqs, properties);
         nodeSet.add(topNode);
