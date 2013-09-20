@@ -184,6 +184,8 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
     private Subcomponent curComp = null;
     private final Map<String, CallDef> nodeDefs = new HashMap<>();
 
+    private List<Boolean> reversePropStatus = new ArrayList<Boolean>();
+
     // *********************** BEGIN METHODS ********************************
 
     public AgreeEmitter(ComponentImplementation compImpl, Subcomponent curComp) {
@@ -1153,7 +1155,7 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
         eqs.addAll(sysContr.props);
 
         // debug printing
-        printCompVars("Top");
+        //printCompVars("Top");
         for (Entry<Subcomponent, ComponentContract> entry : subContrs.entrySet()) {
             ComponentContract contract = entry.getValue();
             nodeSet.addAll(contract.nodes);
@@ -1164,7 +1166,7 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
 
             // some stupid debug stuff
             Subcomponent comp = entry.getKey();
-            printCompVars(comp.getName());
+            //printCompVars(comp.getName());
         }
 
         eqs.addAll(connExpressions);
@@ -1224,11 +1226,12 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
             Equation contrHist = new Equation(compId, contrHistExpr);
             eqs.add(contrHist);
             properties.add(compId.id);
+            reversePropStatus.add(false);
             String propertyName = contract.compName + " Assumptions";
             varRenaming.put(compId.id, propertyName);
             layout.addElement("Top", propertyName, AgreeLayout.SigType.OUTPUT);
             
-            /*
+            
             //add a property that is true if the contract is a contradiction
             IdExpr contrId = new IdExpr("_CONTR_HIST_" + contract.compName);
             IdExpr notContrId = new IdExpr("_NULL_CONTR_HIST_" + contract.compName);
@@ -1240,10 +1243,11 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
             internals.add(new VarDecl(contrId.id, new NamedType("bool")));
             internals.add(new VarDecl(notContrId.id, new NamedType("bool")));
             properties.add(notContrId.id);
+            reversePropStatus.add(true);
             String contractName = contract.compName + " Contradiction";
             varRenaming.put(notContrId.id, contractName);
             layout.addElement("Top", contractName, AgreeLayout.SigType.OUTPUT);
-            */
+            
             
         }
 
@@ -1260,21 +1264,23 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
             Equation finalGuar = new Equation(sysGuaranteesId, totalSysGuarExpr);
             eqs.add(finalGuar);
             properties.add(sysGuaranteesId.id);
+            reversePropStatus.add(false);
             varRenaming.put(sysGuaranteesId.id, guarName);
             layout.addElement("Top", "Component Guarantee " + i++, AgreeLayout.SigType.OUTPUT);
 
         }
         
-        /*
+        
         //check for contradiction in total component history
         IdExpr notTotalCompHistId = new IdExpr("_NOT_TOTAL_COMP_HIST");
         Equation contrEq = new Equation(notTotalCompHistId, new UnaryExpr(UnaryOp.NOT, totalCompHistId));
         internals.add(new VarDecl(notTotalCompHistId.id, new NamedType("bool")));
         eqs.add(contrEq);
         properties.add(notTotalCompHistId.id);
+        reversePropStatus.add(true);
         varRenaming.put(notTotalCompHistId.id, "total component history contradiction");
         layout.addElement("Top", "total component history contradiction", AgreeLayout.SigType.OUTPUT);
-        */
+        
 
         Node topNode = new Node("_MAIN", inputs, outputs, internals, eqs, properties);
         nodeSet.add(topNode);
@@ -1370,6 +1376,10 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
             }
             System.out.println();
         }
+    }
+
+    public List<Boolean> getReverseStatus() {
+        return this.reversePropStatus;
     }
 
 }

@@ -98,7 +98,8 @@ public abstract class VerifyHandler extends AadlHandler {
         Program program = emitter.evaluate();
         List<String> properties = program.getMainNode().properties;
         Renaming renaming = emitter.getRenaming();
-        JKindResult result = new JKindResult("Contract", properties, renaming);
+        List<Boolean> propStatus = emitter.getReverseStatus();
+        JKindResult result = new JKindResult("Contract", properties, propStatus, renaming);
         queue.add(result);
 
         linker.setProgram(result, program);
