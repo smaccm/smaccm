@@ -137,7 +137,7 @@ assume  "dont fail assumption" :
 -- Assertion: our computed pitch deltas are less than some 
 -- maximum amount.
 
-  guarantee "test guard" : Agree_Nodes.Z(true);
+  guarantee "test guard" : Agree_Nodes.Z(true); 
   guarantee "pitch is valid" : 
   	true -> abs(CSA.CSA_Pitch_Delta) < CSA_MAX_PITCH_DELTA ;
 
@@ -154,7 +154,7 @@ assume  "dont fail assumption" :
       AP: system APS::Autopilot_System.Autopilot_System_Impl;
       FCI: system FCI::Flight_Crew_Interface.Flight_Crew_Interface_Impl;
       FGS_L: system FGS::Flight_Guidance_System.Flight_Guidance_System_Impl {
-        META_Properties::Leader_Select_ID => 1;
+        META_Properties::Leader_Select_ID => 1; 
         };
       FGS_R: system FGS::Flight_Guidance_System.Flight_Guidance_System_Impl {
         META_Properties::Leader_Select_ID => 2;

@@ -1,0 +1,7 @@
+property set QS_Properties is
+  Clock_Name: inherit aadlstring applies to (system, process, thread);
+  Execution_Order: aadlinteger applies to (system, process, thread);
+  Primary_Side: inherit aadlboolean applies to (system, process, thread);
+  Init_Bool: aadlboolean applies to (all);
+  Init_Int: aadlinteger applies to (all);
+end QS_Properties;

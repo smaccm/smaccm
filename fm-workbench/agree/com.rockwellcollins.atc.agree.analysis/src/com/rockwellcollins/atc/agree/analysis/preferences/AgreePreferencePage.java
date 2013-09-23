@@ -40,6 +40,9 @@ public class AgreePreferencePage extends FieldEditorPreferencePage implements
         addField(new BooleanFieldEditor(PreferenceConstants.PREF_SMOOTH_CEX,
                 "Generate smooth counterexamples (minimal number of input value changes)",
                 getFieldEditorParent()));
+        addField(new BooleanFieldEditor(PreferenceConstants.PREF_BLAME_CEX,
+                "Generate blamed counterexamples (generalized counter examples)",
+                getFieldEditorParent()));
         addField(new NonNegativeIntegerFieldEditor(PreferenceConstants.PREF_DEPTH,
                 "Maximum depth for k-induction", getFieldEditorParent()));
         addField(new NonNegativeIntegerFieldEditor(PreferenceConstants.PREF_TIMEOUT,

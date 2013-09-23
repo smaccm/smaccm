@@ -1,0 +1,21 @@
+-- 
+package Types
+public
+with Data_Model, Base_Types;
+  data Boolean
+    properties
+      Data_Model::Data_Representation => Boolean;
+  end Boolean;
+  
+  data Integer
+    properties
+      Data_Model::Data_Representation => Integer;
+      Data_Model::Data_Representation => Integer;
+  end Integer;
+  
+  data implementation Boolean.Boolean_Impl
+  subcomponents
+  		Val : data Base_Types::Boolean; 
+  end Boolean.Boolean_Impl;
+  
+end Types;

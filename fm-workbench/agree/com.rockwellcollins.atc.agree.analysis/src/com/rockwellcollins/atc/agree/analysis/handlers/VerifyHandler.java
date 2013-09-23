@@ -3,6 +3,7 @@ package com.rockwellcollins.atc.agree.analysis.handlers;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
 
@@ -11,6 +12,7 @@ import jkind.api.results.AnalysisResult;
 import jkind.api.results.CompositeAnalysisResult;
 import jkind.api.results.JKindResult;
 import jkind.api.results.Renaming;
+import jkind.lustre.Node;
 import jkind.lustre.Program;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -47,13 +49,17 @@ public abstract class VerifyHandler extends AadlHandler {
         try {
             ComponentImplementation ci = (ComponentImplementation) root;
             AnalysisResult result;
+            CompositeAnalysisResult wrapper = new CompositeAnalysisResult("");
+
             if (isRecursive()) {
                 result = buildAnalysisResult(ci.getName(), ci, null);
-                CompositeAnalysisResult wrapper = new CompositeAnalysisResult("");
                 wrapper.addChild(result);
                 result = wrapper;
             } else {
-                result = createContractVerification(ci, null);
+                wrapper.addChild(createConsistVerification(ci, null));
+                wrapper.addChild(createAssumptionVerification(ci,null));
+                wrapper.addChild(createGuaranteeVerification(ci, null));
+                result = wrapper;
             }
             showView(result, linker);
             return doAnalysis(monitor);
@@ -67,7 +73,7 @@ public abstract class VerifyHandler extends AadlHandler {
         StringWriter sw = new StringWriter();
         PrintWriter pw = new PrintWriter(sw);
         while (e != null) {
-            if (!e.getMessage().isEmpty()) {
+            if (e.getMessage() != null && !e.getMessage().isEmpty()) {
                 pw.println(e.getMessage());
             }
             e = e.getCause();
@@ -80,7 +86,10 @@ public abstract class VerifyHandler extends AadlHandler {
             Subcomponent context) {
         CompositeAnalysisResult result = new CompositeAnalysisResult("Verification for " + name);
 
-        result.addChild(createContractVerification(ci, context));
+        result.addChild(createGuaranteeVerification(ci, context));
+        result.addChild(createAssumptionVerification(ci, context));
+        result.addChild(createConsistVerification(ci, context));
+        
         for (Subcomponent sub : ci.getAllSubcomponents()) {
             ComponentImplementation subCi = sub.getComponentImplementation();
             if (subCi != null) {
@@ -92,13 +101,56 @@ public abstract class VerifyHandler extends AadlHandler {
         return result;
     }
 
-    private AnalysisResult createContractVerification(ComponentImplementation ci,
+    private AnalysisResult createGuaranteeVerification(ComponentImplementation ci,
             Subcomponent context) {
         AgreeEmitter emitter = new AgreeEmitter(ci, context);
         Program program = emitter.evaluate();
-        List<String> properties = program.getMainNode().properties;
+
+        List<String> properties = emitter.guarProps;
+        Node oldNode = program.getMainNode();
+        Node newNode = new Node(oldNode.location, 
+                oldNode.id,
+                oldNode.inputs, 
+                oldNode.outputs, 
+                oldNode.locals,
+                oldNode.equations,
+                properties,
+                oldNode.assertions);
+        
+        program = new Program(newNode);
         Renaming renaming = emitter.getRenaming();
-        JKindResult result = new JKindResult("Contract", properties, renaming);
+        JKindResult result = new JKindResult("Contract Guarantees", properties, renaming);
+        queue.add(result);
+
+        linker.setProgram(result, program);
+        linker.setComponent(result, ci);
+        linker.setContract(result, getContract(ci));
+        linker.setLayout(result, emitter.getLayout());
+        linker.setReferenceMap(result, emitter.getReferenceMap());
+        linker.setLog(result, emitter.getLog());
+
+        return result;
+    }
+    
+    private AnalysisResult createAssumptionVerification(ComponentImplementation ci,
+            Subcomponent context) {
+        AgreeEmitter emitter = new AgreeEmitter(ci, context);
+        Program program = emitter.evaluate();
+
+        List<String> properties = emitter.assumProps;
+        Node oldNode = program.getMainNode();
+        Node newNode = new Node(oldNode.location, 
+                oldNode.id,
+                oldNode.inputs, 
+                oldNode.outputs, 
+                oldNode.locals,
+                oldNode.equations,
+                properties,
+                oldNode.assertions);
+        
+        program = new Program(newNode);
+        Renaming renaming = emitter.getRenaming();
+        JKindResult result = new JKindResult("Contract Assumptions", properties, renaming);
         queue.add(result);
 
         linker.setProgram(result, program);
@@ -111,6 +163,42 @@ public abstract class VerifyHandler extends AadlHandler {
         return result;
     }
 
+    private AnalysisResult createConsistVerification(ComponentImplementation ci,
+            Subcomponent context) {
+        AgreeEmitter emitter = new AgreeEmitter(ci, context);
+        Program program = emitter.evaluate();
+
+        List<String> properties = emitter.consistProps;
+        Node oldNode = program.getMainNode();
+        Node newNode = new Node(oldNode.location, 
+                oldNode.id,
+                oldNode.inputs, 
+                oldNode.outputs, 
+                oldNode.locals,
+                oldNode.equations,
+                properties,
+                oldNode.assertions);
+        
+        program = new Program(newNode);
+        List<Boolean> reverseStatus = new ArrayList<>();
+        for(int i = 0; i < properties.size(); i ++){
+            reverseStatus.add(true);
+        }
+       
+        Renaming renaming = emitter.getRenaming();
+        JKindResult result = new JKindResult("Contract Consistancy", properties, reverseStatus, renaming);
+        queue.add(result);
+
+        linker.setProgram(result, program);
+        linker.setComponent(result, ci);
+        linker.setContract(result, getContract(ci));
+        linker.setLayout(result, emitter.getLayout());
+        linker.setReferenceMap(result, emitter.getReferenceMap());
+        linker.setLog(result, emitter.getLog());
+
+        return result;
+    }
+    
     private AgreeSubclause getContract(ComponentImplementation ci) {
         ComponentType ct = ci.getOwnedRealization().getImplemented();
         for (AnnexSubclause annex : ct.getOwnedAnnexSubclauses()) {
@@ -142,6 +230,7 @@ public abstract class VerifyHandler extends AadlHandler {
             JKindResult result = queue.remove();
             Program program = linker.getProgram(result);
             api.execute(program, result, monitor);
+            //System.out.println("whatever");
         }
 
         while (!queue.isEmpty()) {
@@ -159,6 +248,9 @@ public abstract class VerifyHandler extends AadlHandler {
         }
         if (prefs.getBoolean(PreferenceConstants.PREF_SMOOTH_CEX)) {
             api.setSmoothCounterexamples();
+        }
+        if (prefs.getBoolean(PreferenceConstants.PREF_BLAME_CEX)) {
+            api.setBlameCounterexamples();
         }
         api.setN(prefs.getInt(PreferenceConstants.PREF_DEPTH));
         api.setTimeout(prefs.getInt(PreferenceConstants.PREF_TIMEOUT));

@@ -1,0 +1,212 @@
+-- 
+package Pilot_Flying
+public
+with Types,Signals,QS_Properties,Data_Model;
+  system Cross_Channel_Bus
+    features
+      I: in data port Types::Boolean.Boolean_Impl;
+      O: out data port Types::Boolean.Boolean_Impl;
+     
+     annex agree {**
+     	property init_val = 
+     		Get_Property(this, QS_Properties::Init_Bool);
+     	
+     	guarantee "channel behavior" :       	
+     		 O.Val <=> prev(I.Val, init_val);
+     	
+     **};
+  end Cross_Channel_Bus;
+  
+  system Pilot_Flying_Side_Logic
+    features
+      riseTS: in data port Types::Boolean.Boolean_Impl;
+      riseOSPF: in data port Types::Boolean.Boolean_Impl;
+      PFS: out data port Types::Boolean.Boolean_Impl;
+    
+    annex agree {**
+    	property prim_side = 
+    		Get_Property(this, QS_Properties::Primary_Side);
+    **};
+    
+    annex behavior_specification {**
+      
+      variables
+        inhibit_count: Types::Integer;
+        wait_count: Types::Integer;
+      states
+        St_Inhibit :  state ;
+        St_Not_Pilot_Flying :  state ;
+        St_Pilot_Flying :  state ;
+        St_Wait :  state ;
+        St_Start :  initial state ;
+        St_Stop :  complete final state ;
+      transitions
+        Do_St_Inhibit [0] : St_Inhibit -[]-> St_Inhibit
+          { inhibit_count := inhibit_count + 1 }  ; 
+        T4 [1] : St_Inhibit -[ inhibit_count > 1 ]-> St_Not_Pilot_Flying ; 
+        T5 [1] : St_Not_Pilot_Flying -[ riseTS ]-> St_Wait
+          { PFS:= true; wait_count := 0 }  ; 
+        T6 [1] : St_Pilot_Flying -[ riseOSPF ]-> St_Inhibit
+          { PFS := false; inhibit_count := 0 }  ; 
+        Do_St_Wait [0] : St_Wait -[]-> St_Wait
+          { wait_count := wait_count + 1 }  ; 
+        T3 [1] : St_Wait -[ wait_count > 1 ]-> St_Pilot_Flying ; 
+        T2 [1] : St_Start -[ not QS_Properties::Primary_Side ]-> St_Inhibit
+          { PFS := false; inhibit_count := 0 }  ; 
+        T1 [1] : St_Start -[ QS_Properties::Primary_Side ]-> St_Wait
+          { PFS:= true; wait_count := 0 }  ; 
+**};
+  end Pilot_Flying_Side_Logic;
+  
+  system implementation Pilot_Flying_Side_Logic.Pilot_Flying_Side_Logic_Impl
+  
+  annex agree{**
+  	assert true;
+  	
+  	const STRT : int = 0;
+  	const CONF : int = 1;
+  	const INHB : int = 2;
+  	const LIST : int = 3;
+  	const WAIT : int = 4;
+  	
+  	eq inhibit_count : int = 0 -> 
+  		if (pre(state) != INHB) and (state = INHB) then
+  			0
+  		else if (pre(state) = INHB and (state = INHB)) then
+  			(pre(inhibit_count) + 1)
+  		else
+  			pre(inhibit_count);
+  			
+  	eq wait_count : int = 0 -> 
+  		if (pre(state) != WAIT) and (state = WAIT) then
+  			0
+  		else if (pre(state) = WAIT and (state = WAIT)) then
+  			(pre(wait_count) + 1)
+  		else
+  			pre(wait_count);
+  	
+  	eq state : int = (STRT ->(
+  		if ((pre(state) = STRT) and prim_side) then 
+  			WAIT 
+  		else if(pre(state) = STRT and (not prim_side)) then
+  			INHB
+  		else if (pre(state) = LIST and riseTS.Val) then
+  			WAIT
+  		else  if (pre(state) = INHB and inhibit_count > 1) then
+  			LIST
+  		else if (pre(state) = CONF and riseOSPF.Val) then
+  			INHB
+  		else if (pre(state) = WAIT and wait_count > 1) then
+  			CONF
+  		else
+  			pre(state)));
+  	
+  	assert PFS.Val <=> prim_side -> 
+  		(state = WAIT or state = CONF);
+  		
+  	
+  	
+  **};
+  end Pilot_Flying_Side_Logic.Pilot_Flying_Side_Logic_Impl;
+  
+  
+  system PilotFlying
+    features
+      TS: in data port Types::Boolean;
+      LPFS: out data port Types::Boolean;
+      RPFS: out data port Types::Boolean;
+  end PilotFlying;
+  
+  system Side
+    features
+      TS: in data port Types::Boolean;
+      OSPF: in data port Types::Boolean;
+      PFS: out data port Types::Boolean;
+    properties
+      QS_Properties::Primary_Side => false;
+  end Side;
+  
+  system implementation Cross_Channel_Bus.Cross_Channel_Bus_Impl
+    subcomponents
+      prev_I: data Types::Boolean;
+      
+      annex agree {**
+      	       
+      	assert O.Val <=> prev(I.Val, init_val);
+      	--assert (I.Val <=> init_val) -> true; 
+      
+	  **};
+      
+      
+    annex behavior_specification {**
+      
+      states
+        St_Step :  state ;
+        St_Start :  initial state ;
+        St_Stop :  complete final state ;
+      transitions
+        T2 [1] : St_Step -[  ]-> St_Step
+          { O := prev_I; prev_I := I }  ; 
+        T1 [1] : St_Start -[  ]-> St_Step
+          { O := prev_I; prev_I := I }  ; 
+**};
+  end Cross_Channel_Bus.Cross_Channel_Bus_Impl;
+  
+  system implementation PilotFlying.Pilot_Flying_Impl
+    subcomponents
+      LS: system Side.Side_Impl {
+        Data_Model::Initial_Value => ("true") applies to PFS;
+        QS_Properties::Clock_Name => "CLK1";
+        QS_Properties::Execution_Order => 3;
+        QS_Properties::Primary_Side => true;
+        };
+      RS: system Side.Side_Impl {
+        Data_Model::Initial_Value => ("false") applies to PFS;
+        QS_Properties::Clock_Name => "CLK3";
+        QS_Properties::Execution_Order => 4;
+        QS_Properties::Primary_Side => false;
+        };
+      LR: system Cross_Channel_Bus.Cross_Channel_Bus_Impl {
+        Data_Model::Initial_Value => ("true") applies to O;
+        Data_Model::Initial_Value => ("true") applies to prev_I;
+        QS_Properties::Init_Bool => true applies to O.Val;
+        QS_Properties::Init_Bool => true applies to I.Val;
+        QS_Properties::Clock_Name => "CLK2";
+        QS_Properties::Execution_Order => 1;
+        };
+      RL: system Cross_Channel_Bus.Cross_Channel_Bus_Impl {
+        Data_Model::Initial_Value => ("false") applies to O;
+        Data_Model::Initial_Value => ("false") applies to prev_I;
+        QS_Properties::Clock_Name => "CLK4";
+        QS_Properties::Execution_Order => 2;
+        };
+    connections
+      TS_to_LS: port TS -> LS.TS;
+      RL_to_LS: port RL.O -> LS.OSPF;
+      LS_to_LR: port LS.PFS -> LR.I;
+      LS_to_PF: port LS.PFS -> LPFS;
+      TS_to_RS: port TS -> RS.TS;
+      LR_to_RS: port LR.O -> RS.OSPF;
+      RS_to_RL: port RS.PFS -> RL.I;
+      RS_to_PF: port RS.PFS -> RPFS;
+  end PilotFlying.Pilot_Flying_Impl;
+  
+  system implementation Side.Side_Impl
+    subcomponents
+      PFSL: system Pilot_Flying_Side_Logic {
+        QS_Properties::Execution_Order => 3;
+        };
+      riseTS: system Signals::Rise {
+        QS_Properties::Execution_Order => 1;
+        };
+      riseOSPF: system Signals::Rise {
+        QS_Properties::Execution_Order => 2;
+        };
+    connections
+      RTS_to_PFSL: port riseTS.O -> PFSL.riseTS;
+      ROSPF_to_PFSL: port riseOSPF.O -> PFSL.riseOSPF;
+      PFSL_to_PFS: port PFSL.PFS -> PFS;
+      TS_to_RTS: port TS -> riseTS.I;
+      OSPF_to_ROSPF: port OSPF -> riseOSPF.I;
+  end Side.Side_Impl;
+end Pilot_Flying;
