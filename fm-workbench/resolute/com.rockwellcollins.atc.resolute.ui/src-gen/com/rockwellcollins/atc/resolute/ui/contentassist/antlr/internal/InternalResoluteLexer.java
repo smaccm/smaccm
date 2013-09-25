@@ -1499,10 +1499,11 @@ public class InternalResoluteLexer extends Lexer {
         try {
             int _type = T__82;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:77:7: ( ';' )
-            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:77:9: ';'
+            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:77:7: ( 'modes' )
+            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:77:9: 'modes'
             {
-            match(';'); 
+            match("modes"); 
+
 
             }
 
@@ -1519,11 +1520,10 @@ public class InternalResoluteLexer extends Lexer {
         try {
             int _type = T__83;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:78:7: ( 'applies' )
-            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:78:9: 'applies'
+            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:78:7: ( ';' )
+            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:78:9: ';'
             {
-            match("applies"); 
-
+            match(';'); 
 
             }
 
@@ -1540,10 +1540,10 @@ public class InternalResoluteLexer extends Lexer {
         try {
             int _type = T__84;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:79:7: ( 'to' )
-            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:79:9: 'to'
+            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:79:7: ( 'applies' )
+            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:79:9: 'applies'
             {
-            match("to"); 
+            match("applies"); 
 
 
             }
@@ -1561,10 +1561,10 @@ public class InternalResoluteLexer extends Lexer {
         try {
             int _type = T__85;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:80:7: ( 'binding' )
-            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:80:9: 'binding'
+            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:80:7: ( 'to' )
+            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:80:9: 'to'
             {
-            match("binding"); 
+            match("to"); 
 
 
             }
@@ -1582,10 +1582,10 @@ public class InternalResoluteLexer extends Lexer {
         try {
             int _type = T__86;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:81:7: ( 'modes' )
-            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:81:9: 'modes'
+            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:81:7: ( 'binding' )
+            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:81:9: 'binding'
             {
-            match("modes"); 
+            match("binding"); 
 
 
             }
@@ -1874,12 +1874,12 @@ public class InternalResoluteLexer extends Lexer {
         try {
             int _type = RULE_SL_COMMENT;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12495:17: ( '--' (~ ( ( '\\n' | '\\r' ) ) )* ( ( '\\r' )? '\\n' )? )
-            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12495:19: '--' (~ ( ( '\\n' | '\\r' ) ) )* ( ( '\\r' )? '\\n' )?
+            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12962:17: ( '--' (~ ( ( '\\n' | '\\r' ) ) )* ( ( '\\r' )? '\\n' )? )
+            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12962:19: '--' (~ ( ( '\\n' | '\\r' ) ) )* ( ( '\\r' )? '\\n' )?
             {
             match("--"); 
 
-            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12495:24: (~ ( ( '\\n' | '\\r' ) ) )*
+            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12962:24: (~ ( ( '\\n' | '\\r' ) ) )*
             loop1:
             do {
                 int alt1=2;
@@ -1892,7 +1892,7 @@ public class InternalResoluteLexer extends Lexer {
 
                 switch (alt1) {
             	case 1 :
-            	    // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12495:24: ~ ( ( '\\n' | '\\r' ) )
+            	    // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12962:24: ~ ( ( '\\n' | '\\r' ) )
             	    {
             	    if ( (input.LA(1)>='\u0000' && input.LA(1)<='\t')||(input.LA(1)>='\u000B' && input.LA(1)<='\f')||(input.LA(1)>='\u000E' && input.LA(1)<='\uFFFF') ) {
             	        input.consume();
@@ -1912,7 +1912,7 @@ public class InternalResoluteLexer extends Lexer {
                 }
             } while (true);
 
-            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12495:40: ( ( '\\r' )? '\\n' )?
+            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12962:40: ( ( '\\r' )? '\\n' )?
             int alt3=2;
             int LA3_0 = input.LA(1);
 
@@ -1921,9 +1921,9 @@ public class InternalResoluteLexer extends Lexer {
             }
             switch (alt3) {
                 case 1 :
-                    // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12495:41: ( '\\r' )? '\\n'
+                    // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12962:41: ( '\\r' )? '\\n'
                     {
-                    // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12495:41: ( '\\r' )?
+                    // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12962:41: ( '\\r' )?
                     int alt2=2;
                     int LA2_0 = input.LA(1);
 
@@ -1932,7 +1932,7 @@ public class InternalResoluteLexer extends Lexer {
                     }
                     switch (alt2) {
                         case 1 :
-                            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12495:41: '\\r'
+                            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12962:41: '\\r'
                             {
                             match('\r'); 
 
@@ -1962,8 +1962,8 @@ public class InternalResoluteLexer extends Lexer {
     // $ANTLR start "RULE_EXPONENT"
     public final void mRULE_EXPONENT() throws RecognitionException {
         try {
-            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12497:24: ( ( 'e' | 'E' ) ( '+' | '-' )? ( RULE_DIGIT )+ )
-            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12497:26: ( 'e' | 'E' ) ( '+' | '-' )? ( RULE_DIGIT )+
+            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12964:24: ( ( 'e' | 'E' ) ( '+' | '-' )? ( RULE_DIGIT )+ )
+            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12964:26: ( 'e' | 'E' ) ( '+' | '-' )? ( RULE_DIGIT )+
             {
             if ( input.LA(1)=='E'||input.LA(1)=='e' ) {
                 input.consume();
@@ -1974,7 +1974,7 @@ public class InternalResoluteLexer extends Lexer {
                 recover(mse);
                 throw mse;}
 
-            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12497:36: ( '+' | '-' )?
+            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12964:36: ( '+' | '-' )?
             int alt4=2;
             int LA4_0 = input.LA(1);
 
@@ -2000,7 +2000,7 @@ public class InternalResoluteLexer extends Lexer {
 
             }
 
-            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12497:47: ( RULE_DIGIT )+
+            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12964:47: ( RULE_DIGIT )+
             int cnt5=0;
             loop5:
             do {
@@ -2014,7 +2014,7 @@ public class InternalResoluteLexer extends Lexer {
 
                 switch (alt5) {
             	case 1 :
-            	    // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12497:47: RULE_DIGIT
+            	    // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12964:47: RULE_DIGIT
             	    {
             	    mRULE_DIGIT(); 
 
@@ -2042,8 +2042,8 @@ public class InternalResoluteLexer extends Lexer {
     // $ANTLR start "RULE_INT_EXPONENT"
     public final void mRULE_INT_EXPONENT() throws RecognitionException {
         try {
-            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12499:28: ( ( 'e' | 'E' ) ( '+' )? ( RULE_DIGIT )+ )
-            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12499:30: ( 'e' | 'E' ) ( '+' )? ( RULE_DIGIT )+
+            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12966:28: ( ( 'e' | 'E' ) ( '+' )? ( RULE_DIGIT )+ )
+            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12966:30: ( 'e' | 'E' ) ( '+' )? ( RULE_DIGIT )+
             {
             if ( input.LA(1)=='E'||input.LA(1)=='e' ) {
                 input.consume();
@@ -2054,7 +2054,7 @@ public class InternalResoluteLexer extends Lexer {
                 recover(mse);
                 throw mse;}
 
-            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12499:40: ( '+' )?
+            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12966:40: ( '+' )?
             int alt6=2;
             int LA6_0 = input.LA(1);
 
@@ -2063,7 +2063,7 @@ public class InternalResoluteLexer extends Lexer {
             }
             switch (alt6) {
                 case 1 :
-                    // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12499:40: '+'
+                    // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12966:40: '+'
                     {
                     match('+'); 
 
@@ -2072,7 +2072,7 @@ public class InternalResoluteLexer extends Lexer {
 
             }
 
-            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12499:45: ( RULE_DIGIT )+
+            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12966:45: ( RULE_DIGIT )+
             int cnt7=0;
             loop7:
             do {
@@ -2086,7 +2086,7 @@ public class InternalResoluteLexer extends Lexer {
 
                 switch (alt7) {
             	case 1 :
-            	    // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12499:45: RULE_DIGIT
+            	    // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12966:45: RULE_DIGIT
             	    {
             	    mRULE_DIGIT(); 
 
@@ -2116,10 +2116,10 @@ public class InternalResoluteLexer extends Lexer {
         try {
             int _type = RULE_REAL_LIT;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12501:15: ( ( RULE_DIGIT )+ ( '_' ( RULE_DIGIT )+ )* '.' ( RULE_DIGIT )+ ( '_' ( RULE_DIGIT )+ )* ( RULE_EXPONENT )? )
-            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12501:17: ( RULE_DIGIT )+ ( '_' ( RULE_DIGIT )+ )* '.' ( RULE_DIGIT )+ ( '_' ( RULE_DIGIT )+ )* ( RULE_EXPONENT )?
+            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12968:15: ( ( RULE_DIGIT )+ ( '_' ( RULE_DIGIT )+ )* '.' ( RULE_DIGIT )+ ( '_' ( RULE_DIGIT )+ )* ( RULE_EXPONENT )? )
+            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12968:17: ( RULE_DIGIT )+ ( '_' ( RULE_DIGIT )+ )* '.' ( RULE_DIGIT )+ ( '_' ( RULE_DIGIT )+ )* ( RULE_EXPONENT )?
             {
-            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12501:17: ( RULE_DIGIT )+
+            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12968:17: ( RULE_DIGIT )+
             int cnt8=0;
             loop8:
             do {
@@ -2133,7 +2133,7 @@ public class InternalResoluteLexer extends Lexer {
 
                 switch (alt8) {
             	case 1 :
-            	    // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12501:17: RULE_DIGIT
+            	    // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12968:17: RULE_DIGIT
             	    {
             	    mRULE_DIGIT(); 
 
@@ -2149,7 +2149,7 @@ public class InternalResoluteLexer extends Lexer {
                 cnt8++;
             } while (true);
 
-            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12501:29: ( '_' ( RULE_DIGIT )+ )*
+            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12968:29: ( '_' ( RULE_DIGIT )+ )*
             loop10:
             do {
                 int alt10=2;
@@ -2162,10 +2162,10 @@ public class InternalResoluteLexer extends Lexer {
 
                 switch (alt10) {
             	case 1 :
-            	    // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12501:30: '_' ( RULE_DIGIT )+
+            	    // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12968:30: '_' ( RULE_DIGIT )+
             	    {
             	    match('_'); 
-            	    // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12501:34: ( RULE_DIGIT )+
+            	    // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12968:34: ( RULE_DIGIT )+
             	    int cnt9=0;
             	    loop9:
             	    do {
@@ -2179,7 +2179,7 @@ public class InternalResoluteLexer extends Lexer {
 
             	        switch (alt9) {
             	    	case 1 :
-            	    	    // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12501:34: RULE_DIGIT
+            	    	    // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12968:34: RULE_DIGIT
             	    	    {
             	    	    mRULE_DIGIT(); 
 
@@ -2205,7 +2205,7 @@ public class InternalResoluteLexer extends Lexer {
             } while (true);
 
             match('.'); 
-            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12501:52: ( RULE_DIGIT )+
+            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12968:52: ( RULE_DIGIT )+
             int cnt11=0;
             loop11:
             do {
@@ -2219,7 +2219,7 @@ public class InternalResoluteLexer extends Lexer {
 
                 switch (alt11) {
             	case 1 :
-            	    // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12501:52: RULE_DIGIT
+            	    // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12968:52: RULE_DIGIT
             	    {
             	    mRULE_DIGIT(); 
 
@@ -2235,7 +2235,7 @@ public class InternalResoluteLexer extends Lexer {
                 cnt11++;
             } while (true);
 
-            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12501:64: ( '_' ( RULE_DIGIT )+ )*
+            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12968:64: ( '_' ( RULE_DIGIT )+ )*
             loop13:
             do {
                 int alt13=2;
@@ -2248,10 +2248,10 @@ public class InternalResoluteLexer extends Lexer {
 
                 switch (alt13) {
             	case 1 :
-            	    // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12501:65: '_' ( RULE_DIGIT )+
+            	    // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12968:65: '_' ( RULE_DIGIT )+
             	    {
             	    match('_'); 
-            	    // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12501:69: ( RULE_DIGIT )+
+            	    // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12968:69: ( RULE_DIGIT )+
             	    int cnt12=0;
             	    loop12:
             	    do {
@@ -2265,7 +2265,7 @@ public class InternalResoluteLexer extends Lexer {
 
             	        switch (alt12) {
             	    	case 1 :
-            	    	    // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12501:69: RULE_DIGIT
+            	    	    // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12968:69: RULE_DIGIT
             	    	    {
             	    	    mRULE_DIGIT(); 
 
@@ -2290,7 +2290,7 @@ public class InternalResoluteLexer extends Lexer {
                 }
             } while (true);
 
-            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12501:83: ( RULE_EXPONENT )?
+            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12968:83: ( RULE_EXPONENT )?
             int alt14=2;
             int LA14_0 = input.LA(1);
 
@@ -2299,7 +2299,7 @@ public class InternalResoluteLexer extends Lexer {
             }
             switch (alt14) {
                 case 1 :
-                    // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12501:83: RULE_EXPONENT
+                    // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12968:83: RULE_EXPONENT
                     {
                     mRULE_EXPONENT(); 
 
@@ -2324,10 +2324,10 @@ public class InternalResoluteLexer extends Lexer {
         try {
             int _type = RULE_INTEGER_LIT;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12503:18: ( ( RULE_DIGIT )+ ( '_' ( RULE_DIGIT )+ )* ( '#' RULE_BASED_INTEGER '#' ( RULE_INT_EXPONENT )? | ( RULE_INT_EXPONENT )? ) )
-            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12503:20: ( RULE_DIGIT )+ ( '_' ( RULE_DIGIT )+ )* ( '#' RULE_BASED_INTEGER '#' ( RULE_INT_EXPONENT )? | ( RULE_INT_EXPONENT )? )
+            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12970:18: ( ( RULE_DIGIT )+ ( '_' ( RULE_DIGIT )+ )* ( '#' RULE_BASED_INTEGER '#' ( RULE_INT_EXPONENT )? | ( RULE_INT_EXPONENT )? ) )
+            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12970:20: ( RULE_DIGIT )+ ( '_' ( RULE_DIGIT )+ )* ( '#' RULE_BASED_INTEGER '#' ( RULE_INT_EXPONENT )? | ( RULE_INT_EXPONENT )? )
             {
-            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12503:20: ( RULE_DIGIT )+
+            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12970:20: ( RULE_DIGIT )+
             int cnt15=0;
             loop15:
             do {
@@ -2341,7 +2341,7 @@ public class InternalResoluteLexer extends Lexer {
 
                 switch (alt15) {
             	case 1 :
-            	    // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12503:20: RULE_DIGIT
+            	    // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12970:20: RULE_DIGIT
             	    {
             	    mRULE_DIGIT(); 
 
@@ -2357,7 +2357,7 @@ public class InternalResoluteLexer extends Lexer {
                 cnt15++;
             } while (true);
 
-            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12503:32: ( '_' ( RULE_DIGIT )+ )*
+            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12970:32: ( '_' ( RULE_DIGIT )+ )*
             loop17:
             do {
                 int alt17=2;
@@ -2370,10 +2370,10 @@ public class InternalResoluteLexer extends Lexer {
 
                 switch (alt17) {
             	case 1 :
-            	    // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12503:33: '_' ( RULE_DIGIT )+
+            	    // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12970:33: '_' ( RULE_DIGIT )+
             	    {
             	    match('_'); 
-            	    // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12503:37: ( RULE_DIGIT )+
+            	    // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12970:37: ( RULE_DIGIT )+
             	    int cnt16=0;
             	    loop16:
             	    do {
@@ -2387,7 +2387,7 @@ public class InternalResoluteLexer extends Lexer {
 
             	        switch (alt16) {
             	    	case 1 :
-            	    	    // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12503:37: RULE_DIGIT
+            	    	    // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12970:37: RULE_DIGIT
             	    	    {
             	    	    mRULE_DIGIT(); 
 
@@ -2412,7 +2412,7 @@ public class InternalResoluteLexer extends Lexer {
                 }
             } while (true);
 
-            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12503:51: ( '#' RULE_BASED_INTEGER '#' ( RULE_INT_EXPONENT )? | ( RULE_INT_EXPONENT )? )
+            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12970:51: ( '#' RULE_BASED_INTEGER '#' ( RULE_INT_EXPONENT )? | ( RULE_INT_EXPONENT )? )
             int alt20=2;
             int LA20_0 = input.LA(1);
 
@@ -2423,12 +2423,12 @@ public class InternalResoluteLexer extends Lexer {
                 alt20=2;}
             switch (alt20) {
                 case 1 :
-                    // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12503:52: '#' RULE_BASED_INTEGER '#' ( RULE_INT_EXPONENT )?
+                    // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12970:52: '#' RULE_BASED_INTEGER '#' ( RULE_INT_EXPONENT )?
                     {
                     match('#'); 
                     mRULE_BASED_INTEGER(); 
                     match('#'); 
-                    // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12503:79: ( RULE_INT_EXPONENT )?
+                    // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12970:79: ( RULE_INT_EXPONENT )?
                     int alt18=2;
                     int LA18_0 = input.LA(1);
 
@@ -2437,7 +2437,7 @@ public class InternalResoluteLexer extends Lexer {
                     }
                     switch (alt18) {
                         case 1 :
-                            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12503:79: RULE_INT_EXPONENT
+                            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12970:79: RULE_INT_EXPONENT
                             {
                             mRULE_INT_EXPONENT(); 
 
@@ -2450,9 +2450,9 @@ public class InternalResoluteLexer extends Lexer {
                     }
                     break;
                 case 2 :
-                    // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12503:98: ( RULE_INT_EXPONENT )?
+                    // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12970:98: ( RULE_INT_EXPONENT )?
                     {
-                    // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12503:98: ( RULE_INT_EXPONENT )?
+                    // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12970:98: ( RULE_INT_EXPONENT )?
                     int alt19=2;
                     int LA19_0 = input.LA(1);
 
@@ -2461,7 +2461,7 @@ public class InternalResoluteLexer extends Lexer {
                     }
                     switch (alt19) {
                         case 1 :
-                            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12503:98: RULE_INT_EXPONENT
+                            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12970:98: RULE_INT_EXPONENT
                             {
                             mRULE_INT_EXPONENT(); 
 
@@ -2490,8 +2490,8 @@ public class InternalResoluteLexer extends Lexer {
     // $ANTLR start "RULE_DIGIT"
     public final void mRULE_DIGIT() throws RecognitionException {
         try {
-            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12505:21: ( '0' .. '9' )
-            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12505:23: '0' .. '9'
+            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12972:21: ( '0' .. '9' )
+            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12972:23: '0' .. '9'
             {
             matchRange('0','9'); 
 
@@ -2506,8 +2506,8 @@ public class InternalResoluteLexer extends Lexer {
     // $ANTLR start "RULE_EXTENDED_DIGIT"
     public final void mRULE_EXTENDED_DIGIT() throws RecognitionException {
         try {
-            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12507:30: ( ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) )
-            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12507:32: ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' )
+            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12974:30: ( ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) )
+            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12974:32: ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' )
             {
             if ( (input.LA(1)>='0' && input.LA(1)<='9')||(input.LA(1)>='A' && input.LA(1)<='F')||(input.LA(1)>='a' && input.LA(1)<='f') ) {
                 input.consume();
@@ -2530,11 +2530,11 @@ public class InternalResoluteLexer extends Lexer {
     // $ANTLR start "RULE_BASED_INTEGER"
     public final void mRULE_BASED_INTEGER() throws RecognitionException {
         try {
-            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12509:29: ( RULE_EXTENDED_DIGIT ( ( '_' )? RULE_EXTENDED_DIGIT )* )
-            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12509:31: RULE_EXTENDED_DIGIT ( ( '_' )? RULE_EXTENDED_DIGIT )*
+            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12976:29: ( RULE_EXTENDED_DIGIT ( ( '_' )? RULE_EXTENDED_DIGIT )* )
+            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12976:31: RULE_EXTENDED_DIGIT ( ( '_' )? RULE_EXTENDED_DIGIT )*
             {
             mRULE_EXTENDED_DIGIT(); 
-            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12509:51: ( ( '_' )? RULE_EXTENDED_DIGIT )*
+            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12976:51: ( ( '_' )? RULE_EXTENDED_DIGIT )*
             loop22:
             do {
                 int alt22=2;
@@ -2547,9 +2547,9 @@ public class InternalResoluteLexer extends Lexer {
 
                 switch (alt22) {
             	case 1 :
-            	    // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12509:52: ( '_' )? RULE_EXTENDED_DIGIT
+            	    // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12976:52: ( '_' )? RULE_EXTENDED_DIGIT
             	    {
-            	    // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12509:52: ( '_' )?
+            	    // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12976:52: ( '_' )?
             	    int alt21=2;
             	    int LA21_0 = input.LA(1);
 
@@ -2558,7 +2558,7 @@ public class InternalResoluteLexer extends Lexer {
             	    }
             	    switch (alt21) {
             	        case 1 :
-            	            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12509:52: '_'
+            	            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12976:52: '_'
             	            {
             	            match('_'); 
 
@@ -2591,12 +2591,12 @@ public class InternalResoluteLexer extends Lexer {
         try {
             int _type = RULE_ANNEXTEXT;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12511:16: ( '{**' ( options {greedy=false; } : . )* '**}' )
-            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12511:18: '{**' ( options {greedy=false; } : . )* '**}'
+            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12978:16: ( '{**' ( options {greedy=false; } : . )* '**}' )
+            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12978:18: '{**' ( options {greedy=false; } : . )* '**}'
             {
             match("{**"); 
 
-            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12511:24: ( options {greedy=false; } : . )*
+            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12978:24: ( options {greedy=false; } : . )*
             loop23:
             do {
                 int alt23=2;
@@ -2630,7 +2630,7 @@ public class InternalResoluteLexer extends Lexer {
 
                 switch (alt23) {
             	case 1 :
-            	    // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12511:52: .
+            	    // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12978:52: .
             	    {
             	    matchAny(); 
 
@@ -2660,10 +2660,10 @@ public class InternalResoluteLexer extends Lexer {
         try {
             int _type = RULE_STRING;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12513:13: ( ( '\"' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | 'u' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\"' ) ) )* '\"' | '\\'' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | 'u' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\\'' ) ) )* '\\'' ) )
-            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12513:15: ( '\"' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | 'u' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\"' ) ) )* '\"' | '\\'' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | 'u' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\\'' ) ) )* '\\'' )
+            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12980:13: ( ( '\"' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | 'u' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\"' ) ) )* '\"' | '\\'' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | 'u' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\\'' ) ) )* '\\'' ) )
+            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12980:15: ( '\"' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | 'u' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\"' ) ) )* '\"' | '\\'' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | 'u' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\\'' ) ) )* '\\'' )
             {
-            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12513:15: ( '\"' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | 'u' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\"' ) ) )* '\"' | '\\'' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | 'u' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\\'' ) ) )* '\\'' )
+            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12980:15: ( '\"' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | 'u' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\"' ) ) )* '\"' | '\\'' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | 'u' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\\'' ) ) )* '\\'' )
             int alt26=2;
             int LA26_0 = input.LA(1);
 
@@ -2681,10 +2681,10 @@ public class InternalResoluteLexer extends Lexer {
             }
             switch (alt26) {
                 case 1 :
-                    // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12513:16: '\"' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | 'u' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\"' ) ) )* '\"'
+                    // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12980:16: '\"' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | 'u' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\"' ) ) )* '\"'
                     {
                     match('\"'); 
-                    // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12513:20: ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | 'u' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\"' ) ) )*
+                    // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12980:20: ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | 'u' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\"' ) ) )*
                     loop24:
                     do {
                         int alt24=3;
@@ -2700,7 +2700,7 @@ public class InternalResoluteLexer extends Lexer {
 
                         switch (alt24) {
                     	case 1 :
-                    	    // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12513:21: '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | 'u' | '\"' | '\\'' | '\\\\' )
+                    	    // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12980:21: '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | 'u' | '\"' | '\\'' | '\\\\' )
                     	    {
                     	    match('\\'); 
                     	    if ( input.LA(1)=='\"'||input.LA(1)=='\''||input.LA(1)=='\\'||input.LA(1)=='b'||input.LA(1)=='f'||input.LA(1)=='n'||input.LA(1)=='r'||(input.LA(1)>='t' && input.LA(1)<='u') ) {
@@ -2716,7 +2716,7 @@ public class InternalResoluteLexer extends Lexer {
                     	    }
                     	    break;
                     	case 2 :
-                    	    // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12513:66: ~ ( ( '\\\\' | '\"' ) )
+                    	    // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12980:66: ~ ( ( '\\\\' | '\"' ) )
                     	    {
                     	    if ( (input.LA(1)>='\u0000' && input.LA(1)<='!')||(input.LA(1)>='#' && input.LA(1)<='[')||(input.LA(1)>=']' && input.LA(1)<='\uFFFF') ) {
                     	        input.consume();
@@ -2741,10 +2741,10 @@ public class InternalResoluteLexer extends Lexer {
                     }
                     break;
                 case 2 :
-                    // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12513:86: '\\'' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | 'u' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\\'' ) ) )* '\\''
+                    // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12980:86: '\\'' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | 'u' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\\'' ) ) )* '\\''
                     {
                     match('\''); 
-                    // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12513:91: ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | 'u' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\\'' ) ) )*
+                    // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12980:91: ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | 'u' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\\'' ) ) )*
                     loop25:
                     do {
                         int alt25=3;
@@ -2760,7 +2760,7 @@ public class InternalResoluteLexer extends Lexer {
 
                         switch (alt25) {
                     	case 1 :
-                    	    // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12513:92: '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | 'u' | '\"' | '\\'' | '\\\\' )
+                    	    // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12980:92: '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | 'u' | '\"' | '\\'' | '\\\\' )
                     	    {
                     	    match('\\'); 
                     	    if ( input.LA(1)=='\"'||input.LA(1)=='\''||input.LA(1)=='\\'||input.LA(1)=='b'||input.LA(1)=='f'||input.LA(1)=='n'||input.LA(1)=='r'||(input.LA(1)>='t' && input.LA(1)<='u') ) {
@@ -2776,7 +2776,7 @@ public class InternalResoluteLexer extends Lexer {
                     	    }
                     	    break;
                     	case 2 :
-                    	    // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12513:137: ~ ( ( '\\\\' | '\\'' ) )
+                    	    // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12980:137: ~ ( ( '\\\\' | '\\'' ) )
                     	    {
                     	    if ( (input.LA(1)>='\u0000' && input.LA(1)<='&')||(input.LA(1)>='(' && input.LA(1)<='[')||(input.LA(1)>=']' && input.LA(1)<='\uFFFF') ) {
                     	        input.consume();
@@ -2819,8 +2819,8 @@ public class InternalResoluteLexer extends Lexer {
         try {
             int _type = RULE_ID;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12515:9: ( ( 'a' .. 'z' | 'A' .. 'Z' ) ( ( '_' )? ( 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' ) )* )
-            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12515:11: ( 'a' .. 'z' | 'A' .. 'Z' ) ( ( '_' )? ( 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' ) )*
+            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12982:9: ( ( 'a' .. 'z' | 'A' .. 'Z' ) ( ( '_' )? ( 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' ) )* )
+            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12982:11: ( 'a' .. 'z' | 'A' .. 'Z' ) ( ( '_' )? ( 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' ) )*
             {
             if ( (input.LA(1)>='A' && input.LA(1)<='Z')||(input.LA(1)>='a' && input.LA(1)<='z') ) {
                 input.consume();
@@ -2831,7 +2831,7 @@ public class InternalResoluteLexer extends Lexer {
                 recover(mse);
                 throw mse;}
 
-            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12515:31: ( ( '_' )? ( 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' ) )*
+            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12982:31: ( ( '_' )? ( 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' ) )*
             loop28:
             do {
                 int alt28=2;
@@ -2844,9 +2844,9 @@ public class InternalResoluteLexer extends Lexer {
 
                 switch (alt28) {
             	case 1 :
-            	    // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12515:32: ( '_' )? ( 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' )
+            	    // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12982:32: ( '_' )? ( 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' )
             	    {
-            	    // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12515:32: ( '_' )?
+            	    // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12982:32: ( '_' )?
             	    int alt27=2;
             	    int LA27_0 = input.LA(1);
 
@@ -2855,7 +2855,7 @@ public class InternalResoluteLexer extends Lexer {
             	    }
             	    switch (alt27) {
             	        case 1 :
-            	            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12515:32: '_'
+            	            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12982:32: '_'
             	            {
             	            match('_'); 
 
@@ -2898,10 +2898,10 @@ public class InternalResoluteLexer extends Lexer {
         try {
             int _type = RULE_WS;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12517:9: ( ( ' ' | '\\t' | '\\r' | '\\n' )+ )
-            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12517:11: ( ' ' | '\\t' | '\\r' | '\\n' )+
+            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12984:9: ( ( ' ' | '\\t' | '\\r' | '\\n' )+ )
+            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12984:11: ( ' ' | '\\t' | '\\r' | '\\n' )+
             {
-            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12517:11: ( ' ' | '\\t' | '\\r' | '\\n' )+
+            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12984:11: ( ' ' | '\\t' | '\\r' | '\\n' )+
             int cnt29=0;
             loop29:
             do {
@@ -3600,21 +3600,21 @@ public class InternalResoluteLexer extends Lexer {
 
     protected DFA30 dfa30 = new DFA30(this);
     static final String DFA30_eotS =
-        "\1\uffff\1\51\13\46\1\104\1\106\1\110\1\112\1\114\1\uffff\5\46"+
-        "\1\125\1\uffff\1\127\3\uffff\1\131\4\uffff\1\46\1\133\5\uffff\4"+
-        "\46\1\145\20\46\1\173\1\174\1\46\13\uffff\7\46\6\uffff\1\u0087\3"+
-        "\uffff\7\46\1\uffff\3\46\1\u0095\5\46\1\u009b\5\46\1\u00a1\4\46"+
-        "\1\u00a9\2\uffff\3\46\1\u00ad\1\u00af\5\46\1\uffff\1\133\1\u00b5"+
-        "\3\46\1\u00b9\1\u00ba\1\u00bb\1\u00bc\4\46\1\uffff\5\46\1\uffff"+
-        "\1\u00c6\4\46\1\uffff\7\46\1\uffff\1\u00d4\2\46\1\uffff\1\46\1\uffff"+
-        "\1\46\1\u00d9\1\46\1\u00db\2\uffff\1\46\1\u00de\1\46\4\uffff\2\46"+
-        "\1\u00e2\5\46\1\u00e8\1\uffff\1\u00e9\5\46\1\uffff\6\46\1\uffff"+
-        "\1\46\1\u00f9\1\46\1\u00fb\1\uffff\1\46\1\uffff\1\46\1\u00fe\1\uffff"+
-        "\1\u0100\2\46\1\uffff\1\46\1\u0104\1\u0105\1\46\1\u0107\2\uffff"+
-        "\13\46\1\uffff\3\46\1\uffff\1\u0117\1\uffff\1\u0118\1\46\3\uffff"+
-        "\1\u011c\2\46\2\uffff\1\46\1\uffff\1\u0120\2\46\1\u0123\6\46\1\u012b"+
-        "\4\46\2\uffff\3\46\1\uffff\2\46\2\uffff\1\u0137\1\u0138\1\uffff"+
-        "\5\46\1\u013e\1\46\1\uffff\1\u0140\3\46\1\u0144\1\46\1\u0146\1\uffff"+
+        "\1\uffff\1\51\13\46\1\104\1\106\1\110\1\112\1\114\1\uffff\5\46\1"+
+        "\125\1\uffff\1\127\3\uffff\1\131\4\uffff\1\46\1\133\5\uffff\4\46"+
+        "\1\145\20\46\1\173\1\174\1\46\13\uffff\7\46\6\uffff\1\u0087\3\uffff"+
+        "\7\46\1\uffff\3\46\1\u0095\5\46\1\u009b\5\46\1\u00a1\4\46\1\u00a9"+
+        "\2\uffff\3\46\1\u00ad\1\u00af\5\46\1\uffff\1\133\1\u00b5\3\46\1"+
+        "\u00b9\1\u00ba\1\u00bb\1\u00bc\4\46\1\uffff\5\46\1\uffff\1\u00c6"+
+        "\4\46\1\uffff\7\46\1\uffff\1\u00d4\2\46\1\uffff\1\46\1\uffff\1\46"+
+        "\1\u00d9\1\46\1\u00db\2\uffff\1\46\1\u00de\1\46\4\uffff\2\46\1\u00e2"+
+        "\5\46\1\u00e8\1\uffff\1\u00e9\5\46\1\uffff\6\46\1\uffff\1\46\1\u00f9"+
+        "\1\46\1\u00fb\1\uffff\1\46\1\uffff\1\46\1\u00fe\1\uffff\1\u0100"+
+        "\2\46\1\uffff\1\46\1\u0104\1\u0105\1\46\1\u0107\2\uffff\13\46\1"+
+        "\uffff\3\46\1\uffff\1\u0117\1\uffff\1\u0118\1\46\3\uffff\1\u011c"+
+        "\2\46\2\uffff\1\46\1\uffff\1\u0120\2\46\1\u0123\6\46\1\u012b\4\46"+
+        "\2\uffff\3\46\1\uffff\2\46\2\uffff\1\u0137\1\u0138\1\uffff\5\46"+
+        "\1\u013e\1\46\1\uffff\1\u0140\3\46\1\u0144\1\46\1\u0146\1\uffff"+
         "\3\46\2\uffff\1\46\1\u014d\1\46\1\u014f\1\u0150\1\uffff\1\u0151"+
         "\1\uffff\1\46\1\u0153\1\u0154\1\uffff\1\46\1\uffff\2\46\1\u0159"+
         "\2\46\1\u015c\1\uffff\1\46\3\uffff\1\u015e\2\uffff\3\46\2\uffff"+
@@ -3688,16 +3688,16 @@ public class InternalResoluteLexer extends Lexer {
         "\172\1\160\1\157\2\uffff\1\172\1\162\1\uffff\1\172\1\uffff";
     static final String DFA30_acceptS =
         "\22\uffff\1\37\6\uffff\1\64\1\uffff\1\66\1\67\1\70\1\uffff\1\101"+
-        "\1\103\1\111\1\112\2\uffff\1\131\1\132\1\133\1\71\1\1\30\uffff\1"+
+        "\1\104\1\111\1\112\2\uffff\1\131\1\132\1\133\1\71\1\1\30\uffff\1"+
         "\27\1\33\1\26\1\31\1\30\1\61\1\32\1\122\1\35\1\125\1\36\7\uffff"+
         "\1\130\1\63\1\117\1\65\1\115\1\77\1\uffff\1\127\1\uffff\1\126\7"+
-        "\uffff\1\105\25\uffff\1\34\1\74\12\uffff\1\120\15\uffff\1\57\5\uffff"+
+        "\uffff\1\106\25\uffff\1\34\1\74\12\uffff\1\120\15\uffff\1\57\5\uffff"+
         "\1\13\5\uffff\1\121\7\uffff\1\23\3\uffff\1\42\1\uffff\1\100\5\uffff"+
         "\1\2\3\uffff\1\72\1\75\1\50\1\124\11\uffff\1\25\15\uffff\1\24\4"+
-        "\uffff\1\73\1\uffff\1\76\2\uffff\1\116\3\uffff\1\102\5\uffff\1\107"+
+        "\uffff\1\73\1\uffff\1\76\2\uffff\1\116\3\uffff\1\102\5\uffff\1\103"+
         "\1\52\17\uffff\1\40\1\uffff\1\62\2\uffff\1\15\1\uffff\1\3\3\uffff"+
         "\1\16\1\22\1\uffff\1\12\17\uffff\1\43\1\44\3\uffff\1\5\3\uffff\1"+
-        "\106\2\uffff\1\104\7\uffff\1\113\13\uffff\1\17\1\60\5\uffff\1\123"+
+        "\107\2\uffff\1\105\7\uffff\1\113\13\uffff\1\17\1\60\5\uffff\1\123"+
         "\1\uffff\1\47\3\uffff\1\51\1\uffff\1\10\6\uffff\1\45\1\uffff\1\55"+
         "\1\53\1\21\1\uffff\1\41\1\110\4\uffff\1\6\2\uffff\1\20\1\uffff\1"+
         "\114\5\uffff\1\14\1\54\1\4\14\uffff\1\46\1\56\2\uffff\1\7\1\uffff"+
@@ -3705,11 +3705,11 @@ public class InternalResoluteLexer extends Lexer {
     static final String DFA30_specialS =
         "\u017a\uffff}>";
     static final String[] DFA30_transitionS = {
-            "\2\47\2\uffff\1\47\22\uffff\1\47\1\uffff\1\45\4\uffff\1\45"+
-            "\1\33\1\34\1\1\1\20\1\35\1\21\1\36\1\22\12\44\1\32\1\40\1\15"+
-            "\1\17\1\16\2\uffff\32\46\1\41\1\uffff\1\42\3\uffff\1\11\1\10"+
-            "\1\12\1\2\1\26\1\25\1\46\1\27\1\13\3\46\1\7\1\24\1\43\1\4\1"+
-            "\46\1\14\1\5\1\3\1\23\1\6\4\46\1\30\1\37\1\31",
+            "\2\47\2\uffff\1\47\22\uffff\1\47\1\uffff\1\45\4\uffff\1\45\1"+
+            "\33\1\34\1\1\1\20\1\35\1\21\1\36\1\22\12\44\1\32\1\40\1\15\1"+
+            "\17\1\16\2\uffff\32\46\1\41\1\uffff\1\42\3\uffff\1\11\1\10\1"+
+            "\12\1\2\1\26\1\25\1\46\1\27\1\13\3\46\1\7\1\24\1\43\1\4\1\46"+
+            "\1\14\1\5\1\3\1\23\1\6\4\46\1\30\1\37\1\31",
             "\1\50",
             "\1\52\3\uffff\1\53",
             "\1\54\6\uffff\1\56\2\uffff\1\57\6\uffff\1\55",
@@ -3831,8 +3831,7 @@ public class InternalResoluteLexer extends Lexer {
             "\1\u00a3\4\uffff\1\u00a5\1\u00a4",
             "\1\u00a6",
             "\1\u00a7",
-            "\12\46\7\uffff\32\46\4\uffff\1\46\1\uffff\4\46\1\u00a8\25"+
-            "\46",
+            "\12\46\7\uffff\32\46\4\uffff\1\46\1\uffff\4\46\1\u00a8\25\46",
             "",
             "",
             "\1\u00aa",
@@ -3915,8 +3914,7 @@ public class InternalResoluteLexer extends Lexer {
             "\1\u00ec",
             "\1\u00ed",
             "\1\u00ee",
-            "\12\46\7\uffff\32\46\6\uffff\3\46\1\u00f0\16\46\1\u00ef\7"+
-            "\46",
+            "\12\46\7\uffff\32\46\6\uffff\3\46\1\u00f0\16\46\1\u00ef\7\46",
             "\1\u00f1",
             "\1\u00f2",
             "\1\u00f3",
@@ -4020,8 +4018,7 @@ public class InternalResoluteLexer extends Lexer {
             "\12\46\7\uffff\32\46\4\uffff\1\46\1\uffff\32\46",
             "\1\u0145",
             "\12\46\7\uffff\32\46\4\uffff\1\46\1\uffff\32\46",
-            "\12\46\7\uffff\32\46\6\uffff\4\46\1\u0148\6\46\1\u0147\16"+
-            "\46",
+            "\12\46\7\uffff\32\46\6\uffff\4\46\1\u0148\6\46\1\u0147\16\46",
             "\1\u0149",
             "\1\u014a",
             "\1\u014b",

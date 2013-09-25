@@ -122,6 +122,15 @@ public interface ResoluteFactory extends EFactory
   ResoluteSubclause createResoluteSubclause();
 
   /**
+   * Returns a new object of class '<em>Nested Dot ID</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Nested Dot ID</em>'.
+   * @generated
+   */
+  NestedDotID createNestedDotID();
+
+  /**
    * Returns a new object of class '<em>Prove Statement</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->

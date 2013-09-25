@@ -19,6 +19,7 @@ import com.rockwellcollins.atc.resolute.resolute.FunctionDefinition;
 import com.rockwellcollins.atc.resolute.resolute.IdExpr;
 import com.rockwellcollins.atc.resolute.resolute.IfThenElseExpr;
 import com.rockwellcollins.atc.resolute.resolute.IntExpr;
+import com.rockwellcollins.atc.resolute.resolute.NestedDotID;
 import com.rockwellcollins.atc.resolute.resolute.ProveStatement;
 import com.rockwellcollins.atc.resolute.resolute.QuantifiedExpr;
 import com.rockwellcollins.atc.resolute.resolute.RealExpr;
@@ -488,6 +489,12 @@ public class ResoluteSemanticSequencer extends PropertiesSemanticSequencer {
 					return; 
 				}
 				else break;
+			case ResolutePackage.NESTED_DOT_ID:
+				if(context == grammarAccess.getNestedDotIDRule()) {
+					sequence_NestedDotID(context, (NestedDotID) semanticObject); 
+					return; 
+				}
+				else break;
 			case ResolutePackage.PROVE_STATEMENT:
 				if(context == grammarAccess.getElementRule() ||
 				   context == grammarAccess.getProveStatementRule()) {
@@ -865,6 +872,15 @@ public class ResoluteSemanticSequencer extends PropertiesSemanticSequencer {
 	
 	/**
 	 * Constraint:
+	 *     (base=[NamedElement|ID] sub=NestedDotID?)
+	 */
+	protected void sequence_NestedDotID(EObject context, NestedDotID semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Constraint:
 	 *     ((op='-' | op='not') expr=PrefixExpr)
 	 */
 	protected void sequence_PrefixExpr(EObject context, UnaryExpr semanticObject) {
@@ -874,7 +890,7 @@ public class ResoluteSemanticSequencer extends PropertiesSemanticSequencer {
 	
 	/**
 	 * Constraint:
-	 *     expr=Expr
+	 *     (expr=Expr (modes+=NestedDotID modes+=NestedDotID*)?)
 	 */
 	protected void sequence_ProveStatement(EObject context, ProveStatement semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);

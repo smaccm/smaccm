@@ -21,6 +21,7 @@ import org.osate.xtext.aadl2.properties.util.EMFIndexRetrieval;
 import com.rockwellcollins.atc.resolute.resolute.ClaimArg;
 import com.rockwellcollins.atc.resolute.resolute.FnCallExpr;
 import com.rockwellcollins.atc.resolute.resolute.IdExpr;
+import com.rockwellcollins.atc.resolute.resolute.NestedDotID;
 import com.rockwellcollins.atc.resolute.resolute.ResolutePackage;
 
 public class ResoluteLinkingService extends PropertiesLinkingService {
@@ -48,7 +49,7 @@ public class ResoluteLinkingService extends PropertiesLinkingService {
             return findClassifier(context, reference, name);
         }
 
-        if (context instanceof IdExpr) {
+        if (context instanceof IdExpr || context instanceof NestedDotID) {
             EObject e = findClassifier(context, reference, name);
             if (e != null) {
                 return e;

@@ -33,6 +33,7 @@ import org.osate.aadl2.instance.ConnectionInstance;
 import org.osate.aadl2.instance.ConnectionInstanceEnd;
 import org.osate.aadl2.instance.ConnectionReference;
 import org.osate.aadl2.instance.FeatureInstance;
+import org.osate.aadl2.instance.SystemOperationMode;
 import org.osate.aadl2.properties.PropertyDoesNotApplyToHolderException;
 import org.osate.aadl2.properties.PropertyNotPresentException;
 import org.osate.xtext.aadl2.properties.util.GetProperties;
@@ -84,12 +85,18 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
     // keeps track of which claims have been called with what arguments
     private Set<ClaimCallContext> claimCallContexts;
 
+    private SystemOperationMode mode;
+
     public ResoluteEvaluator(ComponentInstance thisInst, ResoluteProofTree proofTree) {
         this.thisInst = thisInst;
         this.proofTree = proofTree;
 
         argMapStack = new LinkedList<>();
         claimCallContexts = new HashSet<>();
+    }
+    
+    public void setMode(SystemOperationMode mode){
+        this.mode = mode;
     }
 
     @Override

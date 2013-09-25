@@ -182,6 +182,13 @@ public class ResoluteSwitch<T> extends Switch<T>
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
+      case ResolutePackage.NESTED_DOT_ID:
+      {
+        NestedDotID nestedDotID = (NestedDotID)theEObject;
+        T result = caseNestedDotID(nestedDotID);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
       case ResolutePackage.PROVE_STATEMENT:
       {
         ProveStatement proveStatement = (ProveStatement)theEObject;
@@ -529,6 +536,22 @@ public class ResoluteSwitch<T> extends Switch<T>
    * @generated
    */
   public T caseResoluteSubclause(ResoluteSubclause object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Nested Dot ID</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Nested Dot ID</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseNestedDotID(NestedDotID object)
   {
     return null;
   }

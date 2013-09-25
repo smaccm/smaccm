@@ -35,8 +35,13 @@
     <genClasses ecoreClass="Resolute.ecore#//ResoluteSubclause">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Resolute.ecore#//ResoluteSubclause/proves"/>
     </genClasses>
+    <genClasses ecoreClass="Resolute.ecore#//NestedDotID">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Resolute.ecore#//NestedDotID/base"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Resolute.ecore#//NestedDotID/sub"/>
+    </genClasses>
     <genClasses ecoreClass="Resolute.ecore#//ProveStatement">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Resolute.ecore#//ProveStatement/expr"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Resolute.ecore#//ProveStatement/modes"/>
     </genClasses>
     <genClasses ecoreClass="Resolute.ecore#//SetType">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Resolute.ecore#//SetType/type"/>

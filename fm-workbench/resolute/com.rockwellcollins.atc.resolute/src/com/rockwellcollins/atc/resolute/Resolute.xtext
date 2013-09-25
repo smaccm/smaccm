@@ -186,6 +186,10 @@ ResoluteSubclause:
 	proves+=ProveStatement*
 ;
 
+NestedDotID:
+	base=[aadl2::NamedElement | ID] ('.' sub=NestedDotID)?
+;
+
 ProveStatement:
-	'prove' expr=Expr
+	'prove' expr=Expr (=> ('modes' ':' modes+=NestedDotID (',' modes+=NestedDotID)*))?
 ;

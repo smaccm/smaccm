@@ -2,6 +2,8 @@
  */
 package com.rockwellcollins.atc.resolute.resolute;
 
+import org.eclipse.emf.common.util.EList;
+
 import org.eclipse.emf.ecore.EObject;
 
 import org.osate.aadl2.Element;
@@ -15,6 +17,7 @@ import org.osate.aadl2.Element;
  * The following features are supported:
  * <ul>
  *   <li>{@link com.rockwellcollins.atc.resolute.resolute.ProveStatement#getExpr <em>Expr</em>}</li>
+ *   <li>{@link com.rockwellcollins.atc.resolute.resolute.ProveStatement#getModes <em>Modes</em>}</li>
  * </ul>
  * </p>
  *
@@ -49,5 +52,21 @@ public interface ProveStatement extends EObject, Element
    * @generated
    */
   void setExpr(Expr value);
+
+  /**
+   * Returns the value of the '<em><b>Modes</b></em>' containment reference list.
+   * The list contents are of type {@link com.rockwellcollins.atc.resolute.resolute.NestedDotID}.
+   * <!-- begin-user-doc -->
+   * <p>
+   * If the meaning of the '<em>Modes</em>' containment reference list isn't clear,
+   * there really should be more of a description here...
+   * </p>
+   * <!-- end-user-doc -->
+   * @return the value of the '<em>Modes</em>' containment reference list.
+   * @see com.rockwellcollins.atc.resolute.resolute.ResolutePackage#getProveStatement_Modes()
+   * @model containment="true"
+   * @generated
+   */
+  EList<NestedDotID> getModes();
 
 } // ProveStatement

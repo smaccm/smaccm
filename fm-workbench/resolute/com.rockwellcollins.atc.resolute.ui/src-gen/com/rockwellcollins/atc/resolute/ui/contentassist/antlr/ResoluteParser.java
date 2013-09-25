@@ -125,7 +125,12 @@ public class ResoluteParser extends AbstractContentAssistParser {
 					put(grammarAccess.getRealTermAccess().getGroup(), "rule__RealTerm__Group__0");
 					put(grammarAccess.getIntegerTermAccess().getGroup(), "rule__IntegerTerm__Group__0");
 					put(grammarAccess.getResoluteSubclauseAccess().getGroup(), "rule__ResoluteSubclause__Group__0");
+					put(grammarAccess.getNestedDotIDAccess().getGroup(), "rule__NestedDotID__Group__0");
+					put(grammarAccess.getNestedDotIDAccess().getGroup_1(), "rule__NestedDotID__Group_1__0");
 					put(grammarAccess.getProveStatementAccess().getGroup(), "rule__ProveStatement__Group__0");
+					put(grammarAccess.getProveStatementAccess().getGroup_2(), "rule__ProveStatement__Group_2__0");
+					put(grammarAccess.getProveStatementAccess().getGroup_2_0(), "rule__ProveStatement__Group_2_0__0");
+					put(grammarAccess.getProveStatementAccess().getGroup_2_0_3(), "rule__ProveStatement__Group_2_0_3__0");
 					put(grammarAccess.getContainedPropertyAssociationAccess().getGroup(), "rule__ContainedPropertyAssociation__Group__0");
 					put(grammarAccess.getContainedPropertyAssociationAccess().getGroup_3(), "rule__ContainedPropertyAssociation__Group_3__0");
 					put(grammarAccess.getContainedPropertyAssociationAccess().getGroup_3_1(), "rule__ContainedPropertyAssociation__Group_3_1__0");
@@ -231,7 +236,11 @@ public class ResoluteParser extends AbstractContentAssistParser {
 					put(grammarAccess.getIntegerTermAccess().getValueAssignment_0(), "rule__IntegerTerm__ValueAssignment_0");
 					put(grammarAccess.getIntegerTermAccess().getUnitAssignment_1(), "rule__IntegerTerm__UnitAssignment_1");
 					put(grammarAccess.getResoluteSubclauseAccess().getProvesAssignment_1(), "rule__ResoluteSubclause__ProvesAssignment_1");
+					put(grammarAccess.getNestedDotIDAccess().getBaseAssignment_0(), "rule__NestedDotID__BaseAssignment_0");
+					put(grammarAccess.getNestedDotIDAccess().getSubAssignment_1_1(), "rule__NestedDotID__SubAssignment_1_1");
 					put(grammarAccess.getProveStatementAccess().getExprAssignment_1(), "rule__ProveStatement__ExprAssignment_1");
+					put(grammarAccess.getProveStatementAccess().getModesAssignment_2_0_2(), "rule__ProveStatement__ModesAssignment_2_0_2");
+					put(grammarAccess.getProveStatementAccess().getModesAssignment_2_0_3_1(), "rule__ProveStatement__ModesAssignment_2_0_3_1");
 					put(grammarAccess.getContainedPropertyAssociationAccess().getPropertyAssignment_0(), "rule__ContainedPropertyAssociation__PropertyAssignment_0");
 					put(grammarAccess.getContainedPropertyAssociationAccess().getAppendAssignment_1_1(), "rule__ContainedPropertyAssociation__AppendAssignment_1_1");
 					put(grammarAccess.getContainedPropertyAssociationAccess().getConstantAssignment_2(), "rule__ContainedPropertyAssociation__ConstantAssignment_2");

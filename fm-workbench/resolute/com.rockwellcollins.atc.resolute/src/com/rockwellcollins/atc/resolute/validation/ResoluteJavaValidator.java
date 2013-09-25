@@ -24,6 +24,7 @@ import org.osate.aadl2.DataType;
 import org.osate.aadl2.DeviceType;
 import org.osate.aadl2.EnumerationType;
 import org.osate.aadl2.MemoryType;
+import org.osate.aadl2.Mode;
 import org.osate.aadl2.NamedElement;
 import org.osate.aadl2.ProcessType;
 import org.osate.aadl2.ProcessorType;
@@ -57,6 +58,7 @@ import com.rockwellcollins.atc.resolute.resolute.FunctionDefinition;
 import com.rockwellcollins.atc.resolute.resolute.IdExpr;
 import com.rockwellcollins.atc.resolute.resolute.IfThenElseExpr;
 import com.rockwellcollins.atc.resolute.resolute.IntExpr;
+import com.rockwellcollins.atc.resolute.resolute.NestedDotID;
 import com.rockwellcollins.atc.resolute.resolute.ProveStatement;
 import com.rockwellcollins.atc.resolute.resolute.QuantifiedExpr;
 import com.rockwellcollins.atc.resolute.resolute.RealExpr;
@@ -85,13 +87,27 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
     @Check
     public void checkProveStatement(ProveStatement prove) {
         Expr proveExpr = prove.getExpr();
+
+        
+        EList<NestedDotID> modes = prove.getModes();
+        if(modes != null){
+            for(NestedDotID modExpr : modes){
+                while(modExpr.getSub() != null){
+                    modExpr = modExpr.getSub();
+                }
+                if(!(modExpr.getBase() instanceof Mode)){
+                    error(prove, "ID '"+modExpr.getBase().getName()+"' is not a mode");
+                }
+            }
+        }
+        
         if (proveExpr instanceof FnCallExpr) {
             FnCallExpr fnCallExpr = (FnCallExpr) proveExpr;
             if (fnCallExpr.getFn().getBody() instanceof ClaimBody) {
                 return;
             }
         }
-
+        
         error(prove, "Prove statements must contain a claim");
     }
 

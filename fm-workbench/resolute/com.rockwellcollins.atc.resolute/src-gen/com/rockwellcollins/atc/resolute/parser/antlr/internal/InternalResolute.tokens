@@ -107,7 +107,7 @@ RULE_WS=15
 'conn_dest'=78
 'this'=60
 'has_type'=74
-';'=88
+';'=89
 'property_lookup'=71
 'forall'=65
 'compute'=95
@@ -116,11 +116,11 @@ RULE_WS=15
 'for'=68
 '+'=53
 'property_exists'=79
-'constant'=84
+'constant'=85
 '.'=67
 'data'=18
 '=>'=45
-'binding'=87
+'binding'=88
 'delta'=98
 'true'=90
 'bound'=75
@@ -147,7 +147,7 @@ RULE_WS=15
 '|'=69
 'connected'=70
 'class_of'=72
-'modes'=89
+'modes'=83
 'reference'=92
 '='=39
 '::'=99
@@ -163,10 +163,10 @@ RULE_WS=15
 'abstract'=31
 'bus'=27
 'contained'=76
-'to'=86
+'to'=87
 'thread'=19
 'subprogram'=22
-'+=>'=83
+'+=>'=84
 'system'=30
 '<='=43
 'false'=91
@@ -176,5 +176,5 @@ RULE_WS=15
 '['=93
 'or'=46
 '*'=55
-'applies'=85
+'applies'=86
 'component'=33

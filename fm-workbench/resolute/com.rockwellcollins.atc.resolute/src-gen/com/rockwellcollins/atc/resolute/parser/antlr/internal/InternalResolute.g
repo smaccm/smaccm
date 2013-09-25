@@ -2629,6 +2629,62 @@ ruleResoluteSubclause returns [EObject current=null]
 
 
 
+// Entry rule entryRuleNestedDotID
+entryRuleNestedDotID returns [EObject current=null] 
+	:
+	{ newCompositeNode(grammarAccess.getNestedDotIDRule()); }
+	 iv_ruleNestedDotID=ruleNestedDotID 
+	 { $current=$iv_ruleNestedDotID.current; } 
+	 EOF 
+;
+
+// Rule NestedDotID
+ruleNestedDotID returns [EObject current=null] 
+    @init { enterRule(); 
+    }
+    @after { leaveRule(); }:
+((
+(
+		{
+			if ($current==null) {
+	            $current = createModelElement(grammarAccess.getNestedDotIDRule());
+	        }
+        }
+	otherlv_0=RULE_ID
+	{
+		newLeafNode(otherlv_0, grammarAccess.getNestedDotIDAccess().getBaseNamedElementCrossReference_0_0()); 
+	}
+
+)
+)(	otherlv_1='.' 
+    {
+    	newLeafNode(otherlv_1, grammarAccess.getNestedDotIDAccess().getFullStopKeyword_1_0());
+    }
+(
+(
+		{ 
+	        newCompositeNode(grammarAccess.getNestedDotIDAccess().getSubNestedDotIDParserRuleCall_1_1_0()); 
+	    }
+		lv_sub_2_0=ruleNestedDotID		{
+	        if ($current==null) {
+	            $current = createModelElementForParent(grammarAccess.getNestedDotIDRule());
+	        }
+       		set(
+       			$current, 
+       			"sub",
+        		lv_sub_2_0, 
+        		"NestedDotID");
+	        afterParserOrEnumRuleCall();
+	    }
+
+)
+))?)
+;
+
+
+
+
+
 // Entry rule entryRuleProveStatement
 entryRuleProveStatement returns [EObject current=null] 
 	:
@@ -2665,7 +2721,66 @@ ruleProveStatement returns [EObject current=null]
 	    }
 
 )
-))
+)(((	'modes' 
+	':' 
+(
+(
+ruleNestedDotID
+)
+)(	',' 
+(
+(
+ruleNestedDotID
+)
+))*))=>(	otherlv_2='modes' 
+    {
+    	newLeafNode(otherlv_2, grammarAccess.getProveStatementAccess().getModesKeyword_2_0_0());
+    }
+	otherlv_3=':' 
+    {
+    	newLeafNode(otherlv_3, grammarAccess.getProveStatementAccess().getColonKeyword_2_0_1());
+    }
+(
+(
+		{ 
+	        newCompositeNode(grammarAccess.getProveStatementAccess().getModesNestedDotIDParserRuleCall_2_0_2_0()); 
+	    }
+		lv_modes_4_0=ruleNestedDotID		{
+	        if ($current==null) {
+	            $current = createModelElementForParent(grammarAccess.getProveStatementRule());
+	        }
+       		add(
+       			$current, 
+       			"modes",
+        		lv_modes_4_0, 
+        		"NestedDotID");
+	        afterParserOrEnumRuleCall();
+	    }
+
+)
+)(	otherlv_5=',' 
+    {
+    	newLeafNode(otherlv_5, grammarAccess.getProveStatementAccess().getCommaKeyword_2_0_3_0());
+    }
+(
+(
+		{ 
+	        newCompositeNode(grammarAccess.getProveStatementAccess().getModesNestedDotIDParserRuleCall_2_0_3_1_0()); 
+	    }
+		lv_modes_6_0=ruleNestedDotID		{
+	        if ($current==null) {
+	            $current = createModelElementForParent(grammarAccess.getProveStatementRule());
+	        }
+       		add(
+       			$current, 
+       			"modes",
+        		lv_modes_6_0, 
+        		"NestedDotID");
+	        afterParserOrEnumRuleCall();
+	    }
+
+)
+))*))?)
 ;
 
 

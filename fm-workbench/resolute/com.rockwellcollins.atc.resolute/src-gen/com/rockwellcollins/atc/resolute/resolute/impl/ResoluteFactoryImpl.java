@@ -75,6 +75,7 @@ public class ResoluteFactoryImpl extends EFactoryImpl implements ResoluteFactory
       case ResolutePackage.DEFINITION_BODY: return createDefinitionBody();
       case ResolutePackage.EXPR: return createExpr();
       case ResolutePackage.RESOLUTE_SUBCLAUSE: return createResoluteSubclause();
+      case ResolutePackage.NESTED_DOT_ID: return createNestedDotID();
       case ResolutePackage.PROVE_STATEMENT: return createProveStatement();
       case ResolutePackage.SET_TYPE: return createSetType();
       case ResolutePackage.CLAIM_ARG: return createClaimArg();
@@ -218,6 +219,17 @@ public class ResoluteFactoryImpl extends EFactoryImpl implements ResoluteFactory
   {
     ResoluteSubclauseImpl resoluteSubclause = new ResoluteSubclauseImpl();
     return resoluteSubclause;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public NestedDotID createNestedDotID()
+  {
+    NestedDotIDImpl nestedDotID = new NestedDotIDImpl();
+    return nestedDotID;
   }
 
   /**

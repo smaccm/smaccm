@@ -137,6 +137,11 @@ public class ResoluteAdapterFactory extends AdapterFactoryImpl
         return createResoluteSubclauseAdapter();
       }
       @Override
+      public Adapter caseNestedDotID(NestedDotID object)
+      {
+        return createNestedDotIDAdapter();
+      }
+      @Override
       public Adapter caseProveStatement(ProveStatement object)
       {
         return createProveStatementAdapter();
@@ -444,6 +449,21 @@ public class ResoluteAdapterFactory extends AdapterFactoryImpl
    * @generated
    */
   public Adapter createResoluteSubclauseAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.resolute.resolute.NestedDotID <em>Nested Dot ID</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see com.rockwellcollins.atc.resolute.resolute.NestedDotID
+   * @generated
+   */
+  public Adapter createNestedDotIDAdapter()
   {
     return null;
   }

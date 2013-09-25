@@ -22,6 +22,7 @@ import com.rockwellcollins.atc.resolute.resolute.FunctionDefinition;
 import com.rockwellcollins.atc.resolute.resolute.IdExpr;
 import com.rockwellcollins.atc.resolute.resolute.IfThenElseExpr;
 import com.rockwellcollins.atc.resolute.resolute.IntExpr;
+import com.rockwellcollins.atc.resolute.resolute.NestedDotID;
 import com.rockwellcollins.atc.resolute.resolute.ProveStatement;
 import com.rockwellcollins.atc.resolute.resolute.QuantifiedExpr;
 import com.rockwellcollins.atc.resolute.resolute.RealExpr;
@@ -128,6 +129,13 @@ public class ResolutePackageImpl extends EPackageImpl implements ResolutePackage
    * @generated
    */
   private EClass resoluteSubclauseEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass nestedDotIDEClass = null;
 
   /**
    * <!-- begin-user-doc -->
@@ -533,6 +541,36 @@ public class ResolutePackageImpl extends EPackageImpl implements ResolutePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  public EClass getNestedDotID()
+  {
+    return nestedDotIDEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getNestedDotID_Base()
+  {
+    return (EReference)nestedDotIDEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getNestedDotID_Sub()
+  {
+    return (EReference)nestedDotIDEClass.getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   public EClass getProveStatement()
   {
     return proveStatementEClass;
@@ -546,6 +584,16 @@ public class ResolutePackageImpl extends EPackageImpl implements ResolutePackage
   public EReference getProveStatement_Expr()
   {
     return (EReference)proveStatementEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getProveStatement_Modes()
+  {
+    return (EReference)proveStatementEClass.getEStructuralFeatures().get(1);
   }
 
   /**
@@ -1069,8 +1117,13 @@ public class ResolutePackageImpl extends EPackageImpl implements ResolutePackage
     resoluteSubclauseEClass = createEClass(RESOLUTE_SUBCLAUSE);
     createEReference(resoluteSubclauseEClass, RESOLUTE_SUBCLAUSE__PROVES);
 
+    nestedDotIDEClass = createEClass(NESTED_DOT_ID);
+    createEReference(nestedDotIDEClass, NESTED_DOT_ID__BASE);
+    createEReference(nestedDotIDEClass, NESTED_DOT_ID__SUB);
+
     proveStatementEClass = createEClass(PROVE_STATEMENT);
     createEReference(proveStatementEClass, PROVE_STATEMENT__EXPR);
+    createEReference(proveStatementEClass, PROVE_STATEMENT__MODES);
 
     setTypeEClass = createEClass(SET_TYPE);
     createEReference(setTypeEClass, SET_TYPE__TYPE);
@@ -1233,8 +1286,13 @@ public class ResolutePackageImpl extends EPackageImpl implements ResolutePackage
     initEClass(resoluteSubclauseEClass, ResoluteSubclause.class, "ResoluteSubclause", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getResoluteSubclause_Proves(), this.getProveStatement(), null, "proves", null, 0, -1, ResoluteSubclause.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
+    initEClass(nestedDotIDEClass, NestedDotID.class, "NestedDotID", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getNestedDotID_Base(), theAadl2Package.getNamedElement(), null, "base", null, 0, 1, NestedDotID.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getNestedDotID_Sub(), this.getNestedDotID(), null, "sub", null, 0, 1, NestedDotID.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
     initEClass(proveStatementEClass, ProveStatement.class, "ProveStatement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getProveStatement_Expr(), this.getExpr(), null, "expr", null, 0, 1, ProveStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getProveStatement_Modes(), this.getNestedDotID(), null, "modes", null, 0, -1, ProveStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(setTypeEClass, SetType.class, "SetType", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getSetType_Type(), this.getType(), null, "type", null, 0, 1, SetType.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
