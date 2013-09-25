@@ -1,0 +1,36 @@
+digraph {
+    graph [rankdir=LR];
+    node [shape=record];
+    sensors [label="sensors :: task|periodic @ 10ms|stack size 1024|<freertos_sharedState_1> sensors :: writer"];
+    userInput [label="userInput :: task|periodic @ 50ms|<freertos_sharedState_0> userInput :: writer|<freertos_sharedState_3> flightMode :: writer"];
+    blink [label="blink :: task|periodic @ 125ms|<freertos_sharedState_3> flightmode :: reader"];
+    control [label="control :: task|periodic @ 50ms|<freertos_sharedState_2> control :: writer|<freertos_sharedState_1> sensors :: reader|<freertos_sharedState_0> userinput :: reader|<freertos_sharedState_3> flightmode :: reader"];
+    motors [label="motors :: task|periodic @ 10ms|<freertos_sharedState_4> servos :: writer|<freertos_sharedState_3> flightMode :: reader|<freertos_sharedState_2> ctlOut :: reader"];
+    gcsReceiveTaskusart1 [label="gcsReceiveTaskusart1 :: task|<freertos_eventQueue_11> streamperiods :: emitter"];
+    gcsTransmitTaskusart1 [label="gcsTransmitTaskusart1 :: task|periodic @ 50ms|stack size 512|<freertos_sharedState_4> servos :: reader|<freertos_sharedState_2> control :: reader|<freertos_sharedState_5> position :: reader|<freertos_sharedState_1> sensors :: reader|<freertos_sharedState_3> flightmode :: reader|<freertos_eventQueue_11> streamperiods :: poll 0"];
+    freertos_sharedState_1 [label="DataPort :: Struct \"sensors_result\" |{<source>Source|<sink>Sink}"];
+    freertos_sharedState_0 [label="DataPort :: Struct \"userinput_result\" |{<source>Source|<sink>Sink}"];
+    freertos_sharedState_3 [label="DataPort :: Struct \"flightmode\" |{<source>Source|<sink>Sink}"];
+    freertos_sharedState_2 [label="DataPort :: Struct \"controloutput\" |{<source>Source|<sink>Sink}"];
+    freertos_sharedState_4 [label="DataPort :: Struct \"servos\" |{<source>Source|<sink>Sink}"];
+    freertos_sharedState_5 [label="DataPort :: Struct \"position_result\" |{<source>Source|<sink>Sink}"];
+    freertos_eventQueue_11 [label="Channel :: Struct \"gcsstream_timing\" |{<source>Source|<sink>Sink}"];
+    sensors:freertos_sharedState_1 -> freertos_sharedState_1:source ;
+    userInput:freertos_sharedState_0 -> freertos_sharedState_0:source ;
+    userInput:freertos_sharedState_3 -> freertos_sharedState_3:source ;
+    freertos_sharedState_3:sink -> blink:freertos_sharedState_3 ;
+    control:freertos_sharedState_2 -> freertos_sharedState_2:source ;
+    freertos_sharedState_1:sink -> control:freertos_sharedState_1 ;
+    freertos_sharedState_0:sink -> control:freertos_sharedState_0 ;
+    freertos_sharedState_3:sink -> control:freertos_sharedState_3 ;
+    motors:freertos_sharedState_4 -> freertos_sharedState_4:source ;
+    freertos_sharedState_3:sink -> motors:freertos_sharedState_3 ;
+    freertos_sharedState_2:sink -> motors:freertos_sharedState_2 ;
+    freertos_sharedState_4:sink -> gcsTransmitTaskusart1:freertos_sharedState_4 ;
+    freertos_sharedState_2:sink -> gcsTransmitTaskusart1:freertos_sharedState_2 ;
+    freertos_sharedState_5:sink -> gcsTransmitTaskusart1:freertos_sharedState_5 ;
+    freertos_sharedState_1:sink -> gcsTransmitTaskusart1:freertos_sharedState_1 ;
+    freertos_sharedState_3:sink -> gcsTransmitTaskusart1:freertos_sharedState_3 ;
+    gcsReceiveTaskusart1:freertos_eventQueue_11 -> freertos_eventQueue_11:source ;
+    freertos_eventQueue_11:sink -> gcsTransmitTaskusart1:freertos_eventQueue_11 ;
+}
