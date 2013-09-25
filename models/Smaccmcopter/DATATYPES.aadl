@@ -22,8 +22,11 @@ public
   
   data implementation Flight_Control_Commands.Impl
   subcomponents
-     f1 : data Base_Types::Float_64;
-     i2 : data Base_Types::Integer_32;
+     --f1 : data Base_Types::Float_64;
+     --i2 : data Base_Types::Integer_32;
+     --changed types for AGREE
+      f1 : data Base_Types::Float;
+      i2 : data Base_Types::Integer;
   end Flight_Control_Commands.impl;
   
   data Motor_Commands
@@ -33,8 +36,11 @@ public
   
   data implementation Motor_Commands.Impl
   subcomponents
-     val : data Base_Types::Float_64;
-     status : data Base_Types::Integer_8;
+    -- val : data Base_Types::Float_64;
+    -- status : data Base_Types::Integer_8;
+    --changed types for AGREE
+     val : data Base_Types::Float;
+     status : data Base_Types::Integer;
   end Motor_Commands.impl;
 
   data Servo_Commands
@@ -43,6 +49,15 @@ public
     Data_Model::Base_Type => (classifier (Base_Types::Integer_32));
     Data_Model::Dimension => (10);
   end Servo_Commands;
+  
+  
+  data Sensor_Data
+  end Sensor_Data;
+  
+  data implementation Sensor_Data.Impl
+  subcomponents
+      speed : data Base_Types::Float;
+  end Sensor_Data.Impl;
   
   data Magnetometer_Data
   end Magnetometer_Data;
@@ -53,12 +68,15 @@ public
   data Motion_Data
   end Motion_Data;
   
+  data implementation Motion_Data.Impl
+  subcomponents
+      vertical_speed : data Base_Types::Float;
+  end Motion_Data.Impl;
+  
   data Battery_Data
   end Battery_Data;
   
   data GPS_Data
   end GPS_Data;
   
-  data Sensor_Data
-  end Sensor_Data;
 end DATATYPES;

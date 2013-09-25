@@ -28,7 +28,7 @@ public
       motors_and_radios: feature group UAV::motors_and_radios;
       sensors: feature group UAV::sensors;
   end Main_Loop;
-  
+    
   process implementation Main_Loop.Impl
     subcomponents
       SS: thread Sensors;
@@ -96,10 +96,11 @@ public
 
   thread Stability_Navigation
     features
-      rc_commands: in data port DATATYPES::Flight_Control_Commands;
+      rc_commands: in data port DATATYPES::Flight_Control_Commands.Impl;
       mavlink: in data port DATATYPES::MAVLink;
-      sensors: in data port DATATYPES::Sensor_Data;
-      motor_commands: out data port DATATYPES::Motor_Commands;
+      sensors: in data port DATATYPES::Sensor_Data.Impl;
+      motor_commands: out data port DATATYPES::Motor_Commands.Impl;
+      
       
     properties
       Period => 200ms;
@@ -117,6 +118,17 @@ public
         "sensors_shared_state", "gcs_shared_state");
 
       SMACCM::Language => "Ivory";
+      
+      annex agree {** 
+		eq e : real = rc_commands.f1 - sensors.speed;
+		eq e_int : real = prev(e, 0.0) + e; 
+		eq e_dot : real = prev(e, 0.0) - e;
+		
+		eq u : real = 0.2*e + 0.1*e_dot + 0.1*e_int;
+		guarantee "Acuator_Behavior" : motor_commands.val = u;
+	  **}; 
+      
+      
   end Stability_Navigation;
 
   thread Command_Control_Telemetry
@@ -165,7 +177,7 @@ public
   thread Sensors
     features
       sensors_in: feature group UAV::sensors;
-      sensors_out: out data port DATATYPES::Sensor_Data;
+      sensors_out: out data port DATATYPES::Sensor_Data.Impl;
       
     properties
       Period => 200ms;
@@ -180,6 +192,7 @@ public
       
       Static_Analysis::Writes_to_buffers => ("sensors_shared_state");
       SMACCM::Language => "Ivory";
+      
   end Sensors;
 
   thread Motor_Control

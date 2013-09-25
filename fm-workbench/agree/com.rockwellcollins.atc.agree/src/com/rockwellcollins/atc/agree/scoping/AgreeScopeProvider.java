@@ -14,12 +14,14 @@ import org.eclipse.xtext.scoping.Scopes;
 import org.osate.aadl2.AadlPackage;
 import org.osate.aadl2.AnnexLibrary;
 import org.osate.aadl2.AnnexSubclause;
+import org.osate.aadl2.Classifier;
 import org.osate.aadl2.ComponentClassifier;
 import org.osate.aadl2.ComponentImplementation;
 import org.osate.aadl2.ComponentType;
 import org.osate.aadl2.Element;
 import org.osate.aadl2.Subcomponent;
 import org.osate.aadl2.impl.DataPortImpl;
+import org.osate.aadl2.impl.FeatureGroupImpl;
 
 import com.rockwellcollins.atc.agree.agree.AgreeContract;
 import com.rockwellcollins.atc.agree.agree.AgreeContractLibrary;
@@ -114,6 +116,8 @@ public class AgreeScopeProvider extends
                         container = ((AgreeContractLibrary) annex).getContract();
                     }
                 }
+            }else if (container instanceof FeatureGroupImpl){
+              container = ((FeatureGroupImpl)container).getAllFeatureGroupType();
             } else {
                 return new HashSet<>(); // this will throw a parsing error
             }
@@ -134,8 +138,8 @@ public class AgreeScopeProvider extends
 
         Set<Element> result = new HashSet<>();
 
-        if (container instanceof ComponentClassifier) {
-            ComponentClassifier component = (ComponentClassifier) container;
+        if (container instanceof Classifier) {
+            Classifier component = (Classifier) container;
             for (Element el : component.getOwnedElements()) {
                 result.add(el);
             }
