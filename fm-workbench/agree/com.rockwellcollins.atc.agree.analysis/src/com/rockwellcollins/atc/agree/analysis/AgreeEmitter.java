@@ -181,7 +181,7 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
     private String aadlNameTag;
     private final Map<String, String> varRenaming = new HashMap<>();
     private final Map<String, EObject> refMap = new HashMap<>();
-    private Subcomponent curComp = null;
+    private NamedElement curComp = null;
     private final Map<String, CallDef> nodeDefs = new HashMap<>();
 
     private List<Boolean> reversePropStatus = new ArrayList<Boolean>();
@@ -189,17 +189,20 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
     public List<String> consistProps = new ArrayList<String>();
     public List<String> guarProps = new ArrayList<String>();
 
-
+    private List<ComponentImplementation> modelParents;
 
     // *********************** BEGIN METHODS ********************************
 
-    public AgreeEmitter(ComponentImplementation compImpl, Subcomponent curComp) {
-        topCompImpl = compImpl;
+    public AgreeEmitter(ComponentImplementation compImpl, List<ComponentImplementation> modelParents, Subcomponent curComp) {
+        this.topCompImpl = compImpl;
         this.curComp = curComp;
+        this.modelParents = modelParents;
     }
 
     public Program evaluate() {
-        layout.addCategory("Top");
+        //layout.addCategory("Top");
+        layout.addCategory(topCompImpl.getName());
+
 
         if (curComp != null) {
             layout.addCategory(curComp.getName());
@@ -294,6 +297,7 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
         if (curComp != null) {
             layout.addElement(curComp.getName(), varDecl.aadlStr, AgreeLayout.SigType.OUTPUT);
         } else {
+            assert(false);
             layout.addElement("Top", varDecl.aadlStr, AgreeLayout.SigType.OUTPUT);
         }
 
@@ -334,6 +338,7 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
             if (curComp != null) {
                 layout.addElement(curComp.getName(), varDecl.aadlStr, AgreeLayout.SigType.OUTPUT);
             } else {
+                assert(false);
                 layout.addElement("Top", varDecl.aadlStr, AgreeLayout.SigType.OUTPUT);
             }
 
@@ -360,6 +365,7 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
         if (curComp != null) {
             layout.addElement(curComp.getName(), varType.aadlStr, AgreeLayout.SigType.OUTPUT);
         } else {
+            assert(false);
             layout.addElement("Top", varType.aadlStr, AgreeLayout.SigType.OUTPUT);
         }
 
@@ -548,19 +554,22 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
         NamedElement compName = namedElFromId(expr.getComponent());
 
         assert (propName instanceof Property);
-        assert (compName instanceof Subcomponent);
-
+        
         Property prop = (Property) propName;
-        Subcomponent subComp = (Subcomponent) compName;
 
-        PropertyExpression propVal = getPropExpression(subComp, prop);
+        PropertyExpression propVal = getPropExpression(compName, prop);
 
-        if (propVal == null) {
-            ComponentImplementation comp = subComp.getComponentImplementation();
-            propVal = getPropExpression(comp, prop);
+        //if (propVal == null) {
+        //    assert (compName instanceof Subcomponent);
+        //    Subcomponent subComp = (Subcomponent) compName;
+        //    ComponentImplementation comp = subComp.getComponentImplementation();
+        //    propVal = getPropExpression(comp, prop);
+        //}
+
+        if(propVal == null){
+            throw new AgreeException("Could not locate property value '"+
+                    prop.getFullName()+"' in component '"+compName.getName()+"'");
         }
-
-        assert (propVal != null);
         Expr res = null;
         if (propVal != null) {
             if (propVal instanceof StringLiteral) {
@@ -678,6 +687,7 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
                 if(curComp != null){
                     layout.addElement(curComp.getName(), aadlVar, AgreeLayout.SigType.INPUT);
                 }else{
+                    assert(false);
                     layout.addElement("Top", aadlVar, AgreeLayout.SigType.INPUT);
                 }
                 varRenaming.put(jKindVar, aadlVar);
@@ -735,14 +745,23 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
     // *********** Utility Methods *****************
 
     private PropertyExpression getPropExpression(NamedElement comp, Property prop) {
+        
+        PropertyExpression expr = null;
+        for(ComponentImplementation compImpl : modelParents){
+            expr = PropertyUtils.getContainedSimplePropertyValue(compImpl, comp, prop);
+            if(expr != null){
+                return expr;
+            }
+        }
+
         try {
             comp.getPropertyValue(prop); // this just checks to see if the
             // property is associated
-            PropertyExpression expr = PropertyUtils.getSimplePropertyValue(comp, prop);
+            expr = PropertyUtils.getSimplePropertyValue(comp, prop);
             return expr;
         } catch (PropertyDoesNotApplyToHolderException propException) {
             return null;
-        } catch (PropertyNotPresentException propNotPresentException) {
+        } catch (PropertyNotPresentException propNotPresentException) {            
             return null;
         }
     }
@@ -788,7 +807,8 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
             closureMap.put(sub, outputClosure);
         }
 
-        // curComp = sysImpl;
+        if(curComp == null)
+            curComp = this.topCompImpl;
 
         // add all of the facts
         assumpExpressions = new ArrayList<Expr>();
@@ -851,23 +871,26 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
 
             // compToKindVars.put(curComp, new ArrayList<String>());
             ComponentImplementation compImp = subComp.getComponentImplementation();
+            
+            if(compImp != null){
 
-            for (AnnexSubclause annex : compImp.getAllAnnexSubclauses()) {
-                if (annex instanceof AgreeContractSubclause) {
-                    doSwitch(annex);
+                for (AnnexSubclause annex : compImp.getAllAnnexSubclauses()) {
+                    if (annex instanceof AgreeContractSubclause) {
+                        doSwitch(annex);
+                    }
                 }
-            }
 
-            ComponentType compType = compImp.getType();
-            for (AnnexSubclause annex : compType.getAllAnnexSubclauses()) {
-                if (annex instanceof AgreeContractSubclause) {
-                    doSwitch(annex);
+                ComponentType compType = compImp.getType();
+                for (AnnexSubclause annex : compType.getAllAnnexSubclauses()) {
+                    if (annex instanceof AgreeContractSubclause) {
+                        doSwitch(annex);
+                    }
                 }
-            }
 
-            subContrs.put(subComp, new ComponentContract(subComp.getName(), assumpExpressions,
-                    guarExpressions, assertExpressions, propExpressions, eqExpressions,
-                    constExpressions, nodeDefExpressions));
+                subContrs.put(subComp, new ComponentContract(subComp.getName(), assumpExpressions,
+                        guarExpressions, assertExpressions, propExpressions, eqExpressions,
+                        constExpressions, nodeDefExpressions));
+            }
         }
 
     }
@@ -1017,7 +1040,8 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
                         for (AgreeVarDecl var : tempSet) {
                             varRenaming.put(var.jKindStr, var.aadlStr);
                             refMap.put(var.aadlStr, port);
-                            layout.addElement("Top", var.aadlStr, AgreeLayout.SigType.INPUT);
+                            //layout.addElement("Top", var.aadlStr, AgreeLayout.SigType.INPUT);
+                            layout.addElement(topCompImpl.getName(), var.aadlStr, AgreeLayout.SigType.INPUT);
                             inputVars.add(var);
                         }
                     }
@@ -1235,7 +1259,8 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
             reversePropStatus.add(false);
             String propertyName = contract.compName + " Assumptions";
             varRenaming.put(compId.id, propertyName);
-            layout.addElement("Top", propertyName, AgreeLayout.SigType.OUTPUT);
+            //layout.addElement("Top", propertyName, AgreeLayout.SigType.OUTPUT);
+            layout.addElement(topCompImpl.getName(), propertyName, AgreeLayout.SigType.OUTPUT);
             
             
             //add a property that is true if the contract is a contradiction
@@ -1251,9 +1276,11 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
             properties.add(notContrId.id);
             consistProps.add(notContrId.id);
             reversePropStatus.add(true);
-            String contractName = contract.compName + " Contradiction";
+            String contractName = contract.compName + " Consistant";
             varRenaming.put(notContrId.id, contractName);
-            layout.addElement("Top", contractName, AgreeLayout.SigType.OUTPUT);
+            //layout.addElement("Top", contractName, AgreeLayout.SigType.OUTPUT);
+            layout.addElement(topCompImpl.getName(), contractName, AgreeLayout.SigType.OUTPUT);
+
             
             
         }
@@ -1274,7 +1301,9 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
             guarProps.add(sysGuaranteesId.id);
             reversePropStatus.add(false);
             varRenaming.put(sysGuaranteesId.id, guarName);
-            layout.addElement("Top", "Component Guarantee " + i++, AgreeLayout.SigType.OUTPUT);
+            //layout.addElement("Top", "Component Guarantee " + i++, AgreeLayout.SigType.OUTPUT);
+            layout.addElement(topCompImpl.getName(), "Component Guarantee " + i++, AgreeLayout.SigType.OUTPUT);
+
 
         }
         
@@ -1286,8 +1315,10 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
         properties.add(notTotalCompHistId.id);
         consistProps.add(notTotalCompHistId.id);
         reversePropStatus.add(true);
-        varRenaming.put(notTotalCompHistId.id, "total component history contradiction");
-        layout.addElement("Top", "total component history contradiction", AgreeLayout.SigType.OUTPUT);
+        varRenaming.put(notTotalCompHistId.id, "Total Contract Consistant");
+        //layout.addElement("Top", "Total Contract Consistants", AgreeLayout.SigType.OUTPUT);
+        layout.addElement(topCompImpl.getName(), "Total Contract Consistants", AgreeLayout.SigType.OUTPUT);
+
 
         Node topNode = new Node("_MAIN", inputs, outputs, internals, eqs, properties);
         nodeSet.add(topNode);

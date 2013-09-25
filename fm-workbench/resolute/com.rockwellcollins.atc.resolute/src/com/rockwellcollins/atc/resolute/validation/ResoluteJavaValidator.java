@@ -18,6 +18,7 @@ import org.osate.aadl2.BusType;
 import org.osate.aadl2.Classifier;
 import org.osate.aadl2.ClassifierType;
 import org.osate.aadl2.ComponentClassifier;
+import org.osate.aadl2.ComponentImplementation;
 import org.osate.aadl2.ComponentType;
 import org.osate.aadl2.DataType;
 import org.osate.aadl2.DeviceType;
@@ -30,6 +31,7 @@ import org.osate.aadl2.Property;
 import org.osate.aadl2.PropertyType;
 import org.osate.aadl2.SubprogramGroupType;
 import org.osate.aadl2.SubprogramType;
+import org.osate.aadl2.SystemImplementation;
 import org.osate.aadl2.SystemType;
 import org.osate.aadl2.ThreadGroupType;
 import org.osate.aadl2.ThreadType;
@@ -96,9 +98,9 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
     @Check
     public void checkThisExpr(ThisExpr thisExpr) {
         Classifier parent = thisExpr.getContainingClassifier();
-        if (!(parent instanceof ComponentType)) {
+        if (!(parent instanceof ComponentType) && !(parent instanceof ComponentImplementation)) {
             error(thisExpr, "A 'this' expression can only be used in a "
-                    + "resolute subclause (inside of a component)");
+                    + "resolute subclause (inside of a component or component implementation)");
         }
     }
 
@@ -156,6 +158,9 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
     @Check
     public void checkFuncDef(FunctionDefinition funcDef) {
         DefinitionBody body = funcDef.getBody();
+        if(body == null)
+            return; //handled by parse error
+        
         ResoluteType exprType = getExprType(body.getExpr());
         ResoluteType defType;
 

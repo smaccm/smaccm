@@ -21,6 +21,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.PartInitException;
 import org.osate.aadl2.AnnexSubclause;
+import org.osate.aadl2.ComponentClassifier;
 import org.osate.aadl2.ComponentImplementation;
 import org.osate.aadl2.ComponentType;
 import org.osate.aadl2.Element;
@@ -50,15 +51,16 @@ public abstract class VerifyHandler extends AadlHandler {
             ComponentImplementation ci = (ComponentImplementation) root;
             AnalysisResult result;
             CompositeAnalysisResult wrapper = new CompositeAnalysisResult("");
-
+            List<ComponentImplementation> modelParents = new ArrayList<>();
+            
             if (isRecursive()) {
-                result = buildAnalysisResult(ci.getName(), ci, null);
+                result = buildAnalysisResult(ci.getName(), ci, modelParents, null);
                 wrapper.addChild(result);
                 result = wrapper;
             } else {
-                wrapper.addChild(createConsistVerification(ci, null));
-                wrapper.addChild(createAssumptionVerification(ci,null));
-                wrapper.addChild(createGuaranteeVerification(ci, null));
+                wrapper.addChild(createConsistVerification(ci, modelParents, null));
+                wrapper.addChild(createAssumptionVerification(ci, modelParents, null));
+                wrapper.addChild(createGuaranteeVerification(ci, modelParents, null));
                 result = wrapper;
             }
             showView(result, linker);
@@ -83,17 +85,18 @@ public abstract class VerifyHandler extends AadlHandler {
     }
 
     private AnalysisResult buildAnalysisResult(String name, ComponentImplementation ci,
-            Subcomponent context) {
+            List<ComponentImplementation> modelParents, Subcomponent context) {
         CompositeAnalysisResult result = new CompositeAnalysisResult("Verification for " + name);
-
-        result.addChild(createGuaranteeVerification(ci, context));
-        result.addChild(createAssumptionVerification(ci, context));
-        result.addChild(createConsistVerification(ci, context));
         
+        result.addChild(createGuaranteeVerification(ci, modelParents, context));
+        result.addChild(createAssumptionVerification(ci, modelParents, context));
+        result.addChild(createConsistVerification(ci, modelParents, context));
+        
+        modelParents.add(ci);
         for (Subcomponent sub : ci.getAllSubcomponents()) {
             ComponentImplementation subCi = sub.getComponentImplementation();
             if (subCi != null) {
-                result.addChild(buildAnalysisResult(sub.getName(), subCi, sub));
+                result.addChild(buildAnalysisResult(sub.getName(), subCi, modelParents, sub));
             }
         }
         linker.setComponent(result, ci);
@@ -102,8 +105,8 @@ public abstract class VerifyHandler extends AadlHandler {
     }
 
     private AnalysisResult createGuaranteeVerification(ComponentImplementation ci,
-            Subcomponent context) {
-        AgreeEmitter emitter = new AgreeEmitter(ci, context);
+            List<ComponentImplementation> modelParents, Subcomponent context) {
+        AgreeEmitter emitter = new AgreeEmitter(ci, modelParents, context); 
         Program program = emitter.evaluate();
 
         List<String> properties = emitter.guarProps;
@@ -117,7 +120,14 @@ public abstract class VerifyHandler extends AadlHandler {
                 properties,
                 oldNode.assertions);
         
-        program = new Program(newNode);
+        
+        List<Node> nodes = new ArrayList<>();
+        for(Node node : program.nodes){
+            if(node != oldNode)
+                nodes.add(node);
+        }
+        nodes.add(newNode);
+        program = new Program(nodes);
         Renaming renaming = emitter.getRenaming();
         JKindResult result = new JKindResult("Contract Guarantees", properties, renaming);
         queue.add(result);
@@ -133,8 +143,8 @@ public abstract class VerifyHandler extends AadlHandler {
     }
     
     private AnalysisResult createAssumptionVerification(ComponentImplementation ci,
-            Subcomponent context) {
-        AgreeEmitter emitter = new AgreeEmitter(ci, context);
+            List<ComponentImplementation> modelParents, Subcomponent context) {
+        AgreeEmitter emitter = new AgreeEmitter(ci, modelParents, context);
         Program program = emitter.evaluate();
 
         List<String> properties = emitter.assumProps;
@@ -148,7 +158,13 @@ public abstract class VerifyHandler extends AadlHandler {
                 properties,
                 oldNode.assertions);
         
-        program = new Program(newNode);
+        List<Node> nodes = new ArrayList<>();
+        for(Node node : program.nodes){
+            if(node != oldNode)
+                nodes.add(node);
+        }
+        nodes.add(newNode);
+        program = new Program(nodes);
         Renaming renaming = emitter.getRenaming();
         JKindResult result = new JKindResult("Contract Assumptions", properties, renaming);
         queue.add(result);
@@ -164,8 +180,8 @@ public abstract class VerifyHandler extends AadlHandler {
     }
 
     private AnalysisResult createConsistVerification(ComponentImplementation ci,
-            Subcomponent context) {
-        AgreeEmitter emitter = new AgreeEmitter(ci, context);
+            List<ComponentImplementation> modelParents, Subcomponent context) {
+        AgreeEmitter emitter = new AgreeEmitter(ci, modelParents, context);
         Program program = emitter.evaluate();
 
         List<String> properties = emitter.consistProps;
@@ -179,7 +195,13 @@ public abstract class VerifyHandler extends AadlHandler {
                 properties,
                 oldNode.assertions);
         
-        program = new Program(newNode);
+        List<Node> nodes = new ArrayList<>();
+        for(Node node : program.nodes){
+            if(node != oldNode)
+                nodes.add(node);
+        }
+        nodes.add(newNode);
+        program = new Program(nodes);
         List<Boolean> reverseStatus = new ArrayList<>();
         for(int i = 0; i < properties.size(); i ++){
             reverseStatus.add(true);

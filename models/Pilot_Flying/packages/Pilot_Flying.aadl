@@ -8,11 +8,10 @@ with Types,Signals,QS_Properties,Data_Model;
       O: out data port Types::Boolean.Boolean_Impl;
      
      annex agree {**
-     	property init_val = 
-     		Get_Property(this, QS_Properties::Init_Bool);
      	
-     	guarantee "channel behavior" :       	
-     		 O.Val <=> prev(I.Val, init_val);
+     	guarantee "whatever" : true;
+     	--guarantee "channel behavior" :       	
+     	--	 O.Val <=> prev(I.Val, init_val);
      	
      **};
   end Cross_Channel_Bus;
@@ -24,8 +23,13 @@ with Types,Signals,QS_Properties,Data_Model;
       PFS: out data port Types::Boolean.Boolean_Impl;
     
     annex agree {**
-    	property prim_side = 
-    		Get_Property(this, QS_Properties::Primary_Side);
+    	
+    		
+        --guarantee "cannot riseOSPF in inhibit" : riseOSPF.Val => not (PFS.Val);
+        --guarantee "cannot riseTS in wait" : riseTS.Val => not (PFS.Val);
+        guarantee "Cannot immediately switch" :
+        	PFS.Val and prev(not(PFS.Val), false) => not(prev(prev(PFS.Val,false),false));
+        
     **};
     
     annex behavior_specification {**
@@ -61,7 +65,8 @@ with Types,Signals,QS_Properties,Data_Model;
   system implementation Pilot_Flying_Side_Logic.Pilot_Flying_Side_Logic_Impl
   
   annex agree{**
-  	assert true;
+  	property prim_side = 
+    		Get_Property(this, QS_Properties::Primary_Side);
   	
   	const STRT : int = 0;
   	const CONF : int = 1;
@@ -90,7 +95,7 @@ with Types,Signals,QS_Properties,Data_Model;
   			WAIT 
   		else if(pre(state) = STRT and (not prim_side)) then
   			INHB
-  		else if (pre(state) = LIST and riseTS.Val) then
+  		else if (pre(state) = LIST and riseTS.Val) then 
   			WAIT
   		else  if (pre(state) = INHB and inhibit_count > 1) then
   			LIST
@@ -131,7 +136,8 @@ with Types,Signals,QS_Properties,Data_Model;
       prev_I: data Types::Boolean;
       
       annex agree {**
-      	       
+      	property init_val =  
+     		Get_Property(this, QS_Properties::Init_Bool);
       	assert O.Val <=> prev(I.Val, init_val);
       	--assert (I.Val <=> init_val) -> true; 
       
@@ -158,25 +164,25 @@ with Types,Signals,QS_Properties,Data_Model;
         Data_Model::Initial_Value => ("true") applies to PFS;
         QS_Properties::Clock_Name => "CLK1";
         QS_Properties::Execution_Order => 3;
-        QS_Properties::Primary_Side => true;
+        QS_Properties::Primary_Side => true applies to PFSL;
         };
       RS: system Side.Side_Impl {
         Data_Model::Initial_Value => ("false") applies to PFS;
         QS_Properties::Clock_Name => "CLK3";
         QS_Properties::Execution_Order => 4;
-        QS_Properties::Primary_Side => false;
+        QS_Properties::Primary_Side => false applies to PFSL;
         };
       LR: system Cross_Channel_Bus.Cross_Channel_Bus_Impl {
         Data_Model::Initial_Value => ("true") applies to O;
         Data_Model::Initial_Value => ("true") applies to prev_I;
-        QS_Properties::Init_Bool => true applies to O.Val;
-        QS_Properties::Init_Bool => true applies to I.Val;
+        QS_Properties::Init_Bool => true; 
         QS_Properties::Clock_Name => "CLK2";
         QS_Properties::Execution_Order => 1;
         };
       RL: system Cross_Channel_Bus.Cross_Channel_Bus_Impl {
         Data_Model::Initial_Value => ("false") applies to O;
         Data_Model::Initial_Value => ("false") applies to prev_I;
+        QS_Properties::Init_Bool => false;
         QS_Properties::Clock_Name => "CLK4";
         QS_Properties::Execution_Order => 2;
         };
@@ -193,7 +199,7 @@ with Types,Signals,QS_Properties,Data_Model;
   
   system implementation Side.Side_Impl
     subcomponents
-      PFSL: system Pilot_Flying_Side_Logic {
+      PFSL: system Pilot_Flying_Side_Logic.Pilot_Flying_Side_Logic_Impl {
         QS_Properties::Execution_Order => 3;
         };
       riseTS: system Signals::Rise {
