@@ -65,8 +65,6 @@ with Types,Signals,QS_Properties,Data_Model;
   system implementation Pilot_Flying_Side_Logic.Pilot_Flying_Side_Logic_Impl
   
   annex agree{**
-  	property prim_side = 
-    		Get_Property(this, QS_Properties::Primary_Side);
   	
   	const STRT : int = 0;
   	const CONF : int = 1;
@@ -74,43 +72,9 @@ with Types,Signals,QS_Properties,Data_Model;
   	const LIST : int = 3;
   	const WAIT : int = 4;
   	
-  	eq inhibit_count : int = 0 -> 
-  		if (pre(state) != INHB) and (state = INHB) then
-  			0
-  		else if (pre(state) = INHB and (state = INHB)) then
-  			(pre(inhibit_count) + 1)
-  		else
-  			pre(inhibit_count);
-  			
-  	eq wait_count : int = 0 -> 
-  		if (pre(state) != WAIT) and (state = WAIT) then
-  			0
-  		else if (pre(state) = WAIT and (state = WAIT)) then
-  			(pre(wait_count) + 1)
-  		else
-  			pre(wait_count);
-  	
-  	eq state : int = (STRT ->(
-  		if ((pre(state) = STRT) and prim_side) then 
-  			WAIT 
-  		else if(pre(state) = STRT and (not prim_side)) then
-  			INHB
-  		else if (pre(state) = LIST and riseTS.Val) then 
-  			WAIT
-  		else  if (pre(state) = INHB and inhibit_count > 1) then
-  			LIST
-  		else if (pre(state) = CONF and riseOSPF.Val) then
-  			INHB
-  		else if (pre(state) = WAIT and wait_count > 1) then
-  			CONF
-  		else
-  			pre(state)));
-  	
-  	assert PFS.Val <=> prim_side -> 
-  		(state = WAIT or state = CONF);
+  	eq state : int = STRT -> pre(state);
   		
-  	
-  	
+
   **};
   end Pilot_Flying_Side_Logic.Pilot_Flying_Side_Logic_Impl;
   
