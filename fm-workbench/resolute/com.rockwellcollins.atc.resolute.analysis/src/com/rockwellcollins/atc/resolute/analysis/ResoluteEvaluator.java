@@ -63,6 +63,7 @@ import com.rockwellcollins.atc.resolute.resolute.FunctionDefinition;
 import com.rockwellcollins.atc.resolute.resolute.IdExpr;
 import com.rockwellcollins.atc.resolute.resolute.IfThenElseExpr;
 import com.rockwellcollins.atc.resolute.resolute.IntExpr;
+import com.rockwellcollins.atc.resolute.resolute.NestedDotID;
 import com.rockwellcollins.atc.resolute.resolute.ProveStatement;
 import com.rockwellcollins.atc.resolute.resolute.QuantifiedExpr;
 import com.rockwellcollins.atc.resolute.resolute.RealExpr;
@@ -85,7 +86,9 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
     // keeps track of which claims have been called with what arguments
     private Set<ClaimCallContext> claimCallContexts;
 
-    private SystemOperationMode mode;
+    private List<SystemOperationMode> modes;
+    private SystemOperationMode sysMode = null;
+
 
     public ResoluteEvaluator(ComponentInstance thisInst, ResoluteProofTree proofTree) {
         this.thisInst = thisInst;
@@ -95,8 +98,15 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
         claimCallContexts = new HashSet<>();
     }
     
-    public void setMode(SystemOperationMode mode){
-        this.mode = mode;
+    public void setModes(List<SystemOperationMode> modes){
+        this.modes = modes;
+        
+        if(modes.size() > 0){
+            assert(modes.size() == 1);
+            sysMode = modes.get(0);
+            ResoluteQuantifiableAadlObjects.filterBySysMode(sysMode);
+        }
+        
     }
 
     @Override
@@ -346,6 +356,28 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
 
     @Override
     public ResoluteValue caseThisExpr(ThisExpr object) {
+        
+        NestedDotID id = object.getSub();
+        ComponentInstance compInst = thisInst;
+        boolean found = false;
+        while(id != null){
+            
+            found = false;
+            for(ComponentInstance subCompInst : compInst.getAllComponentInstances()){
+                if(subCompInst.getSubcomponent().equals(id.getBase())){
+                    compInst = subCompInst;
+                    id = id.getSub();
+                    found = true;
+                    break;
+                }
+            }
+            assert(found);
+           
+        }
+        if(found){
+            return new NamedElementValue(compInst);
+        }
+        
         return new NamedElementValue(thisInst);
     }
 
@@ -568,7 +600,7 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
         for (Arg arg : object.getArgs()) {
             args.push(arg);
             listOfCompLists.add(ResoluteQuantifiableAadlObjects.getAllComponentsOfType(arg
-                    .getType().getName()));
+                    .getType().getName(), modes.size() > 0));
         }
         proofTree.addNewCurrent(object, "{LIST CALC}");
         LinkedList<ResoluteValue> valSet = new LinkedList<ResoluteValue>();
@@ -941,7 +973,7 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
 
         for (Arg arg : freeArgs) {
             listOfCompLists.add(ResoluteQuantifiableAadlObjects.getAllComponentsOfType(arg
-                    .getType().getName()));
+                    .getType().getName(), modes.size() > 0));
         }
 
         return quantIterateSets(expr, freeArgs, listOfCompLists, compl);

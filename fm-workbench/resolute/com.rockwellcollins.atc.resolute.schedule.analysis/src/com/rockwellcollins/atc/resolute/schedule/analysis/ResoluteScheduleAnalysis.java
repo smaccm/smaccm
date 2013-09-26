@@ -21,7 +21,7 @@ public class ResoluteScheduleAnalysis implements ResoluteExternalAnalysis {
     public ResoluteValue run(ResoluteEvaluator resEval, List<ResoluteValue> args) {
         double sched_ratio = 0;
         Set<NamedElement> threadList = ResoluteQuantifiableAadlObjects
-                .getAllComponentsOfType("thread");
+                .getAllComponentsOfType("thread", false);
         for (NamedElement el : threadList) {
 
             assert (el instanceof ComponentInstance);

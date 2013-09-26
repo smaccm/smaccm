@@ -81,8 +81,13 @@ public class ResoluteInterpreter {
     public List<SystemOperationMode> getAllModeInstances(ProveStatement proveStatement){
         
         EList<NestedDotID> nestModesIds = proveStatement.getModes();
+        
+        if(nestModesIds == null || nestModesIds.size() == 0){
+            return new ArrayList<>();
+        }
+        
         List<ModeInstance> modeInsts = getCompInstSubModes(compInst, nestModesIds);
-
+        
         NamedElement root = compInst.getElementRoot();
         assert(root instanceof SystemInstance);
         SystemInstance sysInst = (SystemInstance)root;
@@ -106,14 +111,29 @@ public class ResoluteInterpreter {
         }
 
         List<SystemOperationMode> sysModes = getAllModeInstances(proveStatement);
+                
+        String proveText = evaluator.proveStatementToString(proveStatement);
         
-        String text = evaluator.proveStatementToString(proveStatement);
-        proofTree.addNewCurrent(proveStatement, text);
+        if(sysModes.size() > 1){
+
+            StringBuilder sb = new StringBuilder();
+            for(SystemOperationMode mode : sysModes){
+                sb.append(mode.toString());
+                sb.append("\n");
+            }
+
+            throw new ResoluteException("Prove statement:\n '"
+                    +proveText+"'\n Yields multiple system modes:\n"
+                    +sb.toString());
+        }
+        
+        evaluator.setModes(sysModes);
+        proofTree.addNewCurrent(proveStatement, proveText);
         proofTree.setRoot(proofTree.getCurNode());
 
         try {
             ResoluteValue resVal = evaluator.doSwitch(claim);
-            proofTree.setCurReturnVal(proveStatement, text, resVal);
+            proofTree.setCurReturnVal(proveStatement, proveText, resVal);
         } catch (ResoluteFailException e) {
             proofTree.getCurNode().setExprStr(e.getMessage());
 
@@ -123,7 +143,7 @@ public class ResoluteInterpreter {
                 proofTree.setCurReturnVal(curNode.getEObject(), curNode.getExprStr(), fail);
                 curNode = proofTree.getCurNode();
             }
-            proofTree.setCurReturnVal(proveStatement, text, fail);
+            proofTree.setCurReturnVal(proveStatement, proveText, fail);
         }
 
         return proofTree;

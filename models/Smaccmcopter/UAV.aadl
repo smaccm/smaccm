@@ -34,10 +34,6 @@ public
     properties
       Actual_Memory_Binding => (reference (PX4FMU.MC.FLASH)) applies to SW.ML;
       
-    annex resolute {**
-    	prove is_dos_safe(this)
-    **};
-      
   end UAV.Impl;
 
   feature group motors_and_radios

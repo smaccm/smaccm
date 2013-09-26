@@ -107,12 +107,11 @@ public class ResoluteScopeProvider extends PropertiesScopeProvider {
 
         if (container instanceof ComponentClassifier) {
             ComponentClassifier compImpl = (ComponentClassifier) container;
-            if(id.getSub() == null){
-                result.addAll(compImpl.getAllModes());
-            }else{
-                assert(compImpl instanceof ComponentImplementation);
+            result.addAll(compImpl.getAllModes());
+            if(compImpl instanceof ComponentImplementation){
                 result.addAll(((ComponentImplementation)compImpl).getAllSubcomponents());
             }
+          
         } else {
             assert(false);
         }

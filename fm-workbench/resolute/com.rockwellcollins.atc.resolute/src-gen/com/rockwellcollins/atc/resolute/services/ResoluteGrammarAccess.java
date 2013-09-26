@@ -1044,6 +1044,10 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		private final Group cGroup_1 = (Group)cAlternatives.eContents().get(1);
 		private final Action cThisExprAction_1_0 = (Action)cGroup_1.eContents().get(0);
 		private final Keyword cThisKeyword_1_1 = (Keyword)cGroup_1.eContents().get(1);
+		private final Group cGroup_1_2 = (Group)cGroup_1.eContents().get(2);
+		private final Keyword cFullStopKeyword_1_2_0 = (Keyword)cGroup_1_2.eContents().get(0);
+		private final Assignment cSubAssignment_1_2_1 = (Assignment)cGroup_1_2.eContents().get(1);
+		private final RuleCall cSubNestedDotIDParserRuleCall_1_2_1_0 = (RuleCall)cSubAssignment_1_2_1.eContents().get(0);
 		private final Group cGroup_2 = (Group)cAlternatives.eContents().get(2);
 		private final Action cFailExprAction_2_0 = (Action)cGroup_2.eContents().get(0);
 		private final Keyword cFailKeyword_2_1 = (Keyword)cGroup_2.eContents().get(1);
@@ -1139,16 +1143,16 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		private final Keyword cRightParenthesisKeyword_12_2 = (Keyword)cGroup_12.eContents().get(2);
 		
 		//AtomicExpr returns Expr:
-		//	{IdExpr} id=[aadl2::NamedElement|QCREF] | {ThisExpr} "this" | {FailExpr} "fail" val=StringTerm? | {IntExpr}
-		//	val=IntegerTerm | {RealExpr} val=RealTerm | {BoolExpr} val=BooleanLiteral | {StringExpr} val=StringTerm |
+		//	{IdExpr} id=[aadl2::NamedElement|QCREF] | {ThisExpr} "this" ("." sub=NestedDotID)? | {FailExpr} "fail" val=StringTerm?
+		//	| {IntExpr} val=IntegerTerm | {RealExpr} val=RealTerm | {BoolExpr} val=BooleanLiteral | {StringExpr} val=StringTerm |
 		//	{IfThenElseExpr} "if" cond=Expr "then" then=Expr "else" else=Expr | {QuantifiedExpr} quant=("forall" | "exists") ("("
 		//	args+=Arg ")")+ "." expr=Expr | {BuiltInFuncCallExpr} fn=BuiltInFunc "(" (args+=Expr ("," args+=Expr)*)? ")" |
 		//	{FnCallExpr} fn=[FunctionDefinition] "(" (args+=Expr ("," args+=Expr)*)? ")" | {FilterMapExpr} "{" map=Expr "for" ("("
 		//	args+=Arg ")")+ ("|" filter=Expr)? "}" | "(" Expr ")";
 		public ParserRule getRule() { return rule; }
 
-		//{IdExpr} id=[aadl2::NamedElement|QCREF] | {ThisExpr} "this" | {FailExpr} "fail" val=StringTerm? | {IntExpr}
-		//val=IntegerTerm | {RealExpr} val=RealTerm | {BoolExpr} val=BooleanLiteral | {StringExpr} val=StringTerm |
+		//{IdExpr} id=[aadl2::NamedElement|QCREF] | {ThisExpr} "this" ("." sub=NestedDotID)? | {FailExpr} "fail" val=StringTerm? |
+		//{IntExpr} val=IntegerTerm | {RealExpr} val=RealTerm | {BoolExpr} val=BooleanLiteral | {StringExpr} val=StringTerm |
 		//{IfThenElseExpr} "if" cond=Expr "then" then=Expr "else" else=Expr | {QuantifiedExpr} quant=("forall" | "exists") ("("
 		//args+=Arg ")")+ "." expr=Expr | {BuiltInFuncCallExpr} fn=BuiltInFunc "(" (args+=Expr ("," args+=Expr)*)? ")" |
 		//{FnCallExpr} fn=[FunctionDefinition] "(" (args+=Expr ("," args+=Expr)*)? ")" | {FilterMapExpr} "{" map=Expr "for" ("("
@@ -1170,7 +1174,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		//QCREF
 		public RuleCall getIdNamedElementQCREFParserRuleCall_0_1_0_1() { return cIdNamedElementQCREFParserRuleCall_0_1_0_1; }
 
-		//{ThisExpr} "this"
+		//{ThisExpr} "this" ("." sub=NestedDotID)?
 		public Group getGroup_1() { return cGroup_1; }
 
 		//{ThisExpr}
@@ -1178,6 +1182,18 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 
 		//"this"
 		public Keyword getThisKeyword_1_1() { return cThisKeyword_1_1; }
+
+		//("." sub=NestedDotID)?
+		public Group getGroup_1_2() { return cGroup_1_2; }
+
+		//"."
+		public Keyword getFullStopKeyword_1_2_0() { return cFullStopKeyword_1_2_0; }
+
+		//sub=NestedDotID
+		public Assignment getSubAssignment_1_2_1() { return cSubAssignment_1_2_1; }
+
+		//NestedDotID
+		public RuleCall getSubNestedDotIDParserRuleCall_1_2_1_0() { return cSubNestedDotIDParserRuleCall_1_2_1_0; }
 
 		//{FailExpr} "fail" val=StringTerm?
 		public Group getGroup_2() { return cGroup_2; }
@@ -2055,8 +2071,8 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	}
 
 	//AtomicExpr returns Expr:
-	//	{IdExpr} id=[aadl2::NamedElement|QCREF] | {ThisExpr} "this" | {FailExpr} "fail" val=StringTerm? | {IntExpr}
-	//	val=IntegerTerm | {RealExpr} val=RealTerm | {BoolExpr} val=BooleanLiteral | {StringExpr} val=StringTerm |
+	//	{IdExpr} id=[aadl2::NamedElement|QCREF] | {ThisExpr} "this" ("." sub=NestedDotID)? | {FailExpr} "fail" val=StringTerm?
+	//	| {IntExpr} val=IntegerTerm | {RealExpr} val=RealTerm | {BoolExpr} val=BooleanLiteral | {StringExpr} val=StringTerm |
 	//	{IfThenElseExpr} "if" cond=Expr "then" then=Expr "else" else=Expr | {QuantifiedExpr} quant=("forall" | "exists") ("("
 	//	args+=Arg ")")+ "." expr=Expr | {BuiltInFuncCallExpr} fn=BuiltInFunc "(" (args+=Expr ("," args+=Expr)*)? ")" |
 	//	{FnCallExpr} fn=[FunctionDefinition] "(" (args+=Expr ("," args+=Expr)*)? ")" | {FilterMapExpr} "{" map=Expr "for" ("("

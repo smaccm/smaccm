@@ -770,7 +770,7 @@ public class ResoluteSemanticSequencer extends PropertiesSemanticSequencer {
 	
 	/**
 	 * Constraint:
-	 *     {ThisExpr}
+	 *     (sub=NestedDotID?)
 	 */
 	protected void sequence_AtomicExpr(EObject context, ThisExpr semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);

@@ -69,7 +69,10 @@
   <eClassifiers xsi:type="ecore:EClass" name="IdExpr" eSuperTypes="#//Expr">
     <eStructuralFeatures xsi:type="ecore:EReference" name="id" eType="ecore:EClass ../../../../../../org.osate.aadl2/model/aadl2.ecore#//NamedElement"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="ThisExpr" eSuperTypes="#//Expr"/>
+  <eClassifiers xsi:type="ecore:EClass" name="ThisExpr" eSuperTypes="#//Expr">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="sub" eType="#//NestedDotID"
+        containment="true"/>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="FailExpr" eSuperTypes="#//Expr">
     <eStructuralFeatures xsi:type="ecore:EReference" name="val" eType="ecore:EClass ../../../../../../org.osate.aadl2/model/aadl2.ecore#//StringLiteral"
         containment="true"/>

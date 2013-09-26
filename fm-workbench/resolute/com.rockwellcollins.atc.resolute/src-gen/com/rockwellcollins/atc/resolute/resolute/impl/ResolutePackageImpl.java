@@ -781,6 +781,16 @@ public class ResolutePackageImpl extends EPackageImpl implements ResolutePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  public EReference getThisExpr_Sub()
+  {
+    return (EReference)thisExprEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   public EClass getFailExpr()
   {
     return failExprEClass;
@@ -1150,6 +1160,7 @@ public class ResolutePackageImpl extends EPackageImpl implements ResolutePackage
     createEReference(idExprEClass, ID_EXPR__ID);
 
     thisExprEClass = createEClass(THIS_EXPR);
+    createEReference(thisExprEClass, THIS_EXPR__SUB);
 
     failExprEClass = createEClass(FAIL_EXPR);
     createEReference(failExprEClass, FAIL_EXPR__VAL);
@@ -1319,6 +1330,7 @@ public class ResolutePackageImpl extends EPackageImpl implements ResolutePackage
     initEReference(getIdExpr_Id(), theAadl2Package.getNamedElement(), null, "id", null, 0, 1, IdExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(thisExprEClass, ThisExpr.class, "ThisExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getThisExpr_Sub(), this.getNestedDotID(), null, "sub", null, 0, 1, ThisExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(failExprEClass, FailExpr.class, "FailExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getFailExpr_Val(), theAadl2Package.getStringLiteral(), null, "val", null, 0, 1, FailExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

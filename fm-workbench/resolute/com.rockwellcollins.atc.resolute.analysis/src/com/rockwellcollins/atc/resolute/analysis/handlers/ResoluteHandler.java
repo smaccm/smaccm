@@ -116,7 +116,7 @@ public abstract class ResoluteHandler extends AadlHandler {
             ResoluteQuantifiableAadlObjects.virtualBusSet.add(compInst);
             break;
         case VIRTUAL_PROCESSOR:
-            ResoluteQuantifiableAadlObjects.virtualProcessorType.add(compInst);
+            ResoluteQuantifiableAadlObjects.virtualProcessorSet.add(compInst);
             break;
         default:
             assert false;

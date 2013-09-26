@@ -1,9 +1,13 @@
 package com.rockwellcollins.atc.resolute.analysis;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.osate.aadl2.NamedElement;
+import org.osate.aadl2.instance.ComponentInstance;
+import org.osate.aadl2.instance.ConnectionInstance;
+import org.osate.aadl2.instance.SystemOperationMode;
 
 public class ResoluteQuantifiableAadlObjects {
     static public final Set<NamedElement> connectionSet = new HashSet<>();
@@ -16,13 +20,30 @@ public class ResoluteQuantifiableAadlObjects {
     static public final Set<NamedElement> subprogramSet = new HashSet<>();
     static public final Set<NamedElement> subprogramGroupSet = new HashSet<>();
     static public final Set<NamedElement> processorSet = new HashSet<>();
-    static public final Set<NamedElement> virtualProcessorType = new HashSet<>();
+    static public final Set<NamedElement> virtualProcessorSet = new HashSet<>();
     static public final Set<NamedElement> memorySet = new HashSet<>();
     static public final Set<NamedElement> busSet = new HashSet<>();
     static public final Set<NamedElement> virtualBusSet = new HashSet<>();
     static public final Set<NamedElement> deviceSet = new HashSet<>();
     static public final Set<NamedElement> systemSet = new HashSet<>();
     static public final Set<NamedElement> abstractSet = new HashSet<>();
+    public static Set<NamedElement> abstractModalSet = new HashSet<>();
+    public static Set<NamedElement> virtualProcessorModalSet;
+    public static Set<NamedElement> virtualBusModalSet;
+    public static Set<NamedElement> threadModalSet;
+    public static Set<NamedElement> threadGroupModalSet;
+    public static Set<NamedElement> systemModalSet;
+    public static Set<NamedElement> subprogramModalSet;
+    public static Set<NamedElement> subprogramGroupModalSet;
+    public static Set<NamedElement> propertyModalSet;
+    public static Set<NamedElement> processModalSet;
+    public static Set<NamedElement> processorModalSet;
+    public static Set<NamedElement> memoryModalSet;
+    public static Set<NamedElement> deviceModalSet;
+    public static Set<NamedElement> connectionModalSet;
+    public static Set<NamedElement> dataModalSet;
+    public static Set<NamedElement> componentModalSet;
+    public static Set<NamedElement> busModalSet;
 
     static public void clearAllSets() {
         ResoluteQuantifiableAadlObjects.abstractSet.clear();
@@ -41,47 +62,100 @@ public class ResoluteQuantifiableAadlObjects {
         ResoluteQuantifiableAadlObjects.threadGroupSet.clear();
         ResoluteQuantifiableAadlObjects.threadSet.clear();
         ResoluteQuantifiableAadlObjects.virtualBusSet.clear();
-        ResoluteQuantifiableAadlObjects.virtualProcessorType.clear();
+        ResoluteQuantifiableAadlObjects.virtualProcessorSet.clear();
     }
 
-    public static Set<NamedElement> getAllComponentsOfType(String typeStr) {
+    public static Set<NamedElement> getAllComponentsOfType(String typeStr, boolean filterModal) {
         switch (typeStr) {
         case "connection":
-            return ResoluteQuantifiableAadlObjects.connectionSet;
+            
+            return filterModal ? connectionModalSet : connectionSet;
         case "property":
-            return ResoluteQuantifiableAadlObjects.propertySet;
+            return filterModal ? propertyModalSet : propertySet;
         case "component":
-            return ResoluteQuantifiableAadlObjects.componentSet;
+            return filterModal ? componentModalSet : componentSet;
         case "abstract":
-            return ResoluteQuantifiableAadlObjects.abstractSet;
+            return filterModal ? abstractModalSet : abstractSet;
         case "bus":
-            return ResoluteQuantifiableAadlObjects.busSet;
+            return filterModal ? busModalSet : busSet;
         case "data":
-            return ResoluteQuantifiableAadlObjects.dataSet;
+            return filterModal ? dataModalSet : dataSet;
         case "device":
-            return ResoluteQuantifiableAadlObjects.deviceSet;
+            return filterModal ? deviceModalSet : deviceSet;
         case "memory":
-            return ResoluteQuantifiableAadlObjects.memorySet;
+            return filterModal ? memoryModalSet : memorySet;
         case "process":
-            return ResoluteQuantifiableAadlObjects.processSet;
+            return filterModal ? processModalSet : processSet;
         case "processor":
-            return ResoluteQuantifiableAadlObjects.processorSet;
+            return filterModal ? processorModalSet : processorSet;
         case "subprogram_group":
-            return ResoluteQuantifiableAadlObjects.subprogramGroupSet;
+            return filterModal ? subprogramGroupModalSet : subprogramGroupSet;
         case "subprogram":
-            return ResoluteQuantifiableAadlObjects.subprogramSet;
+            return filterModal ? subprogramModalSet : subprogramSet;
         case "system":
-            return ResoluteQuantifiableAadlObjects.systemSet;
+            return filterModal ? systemModalSet : systemSet;
         case "thread_group":
-            return ResoluteQuantifiableAadlObjects.threadGroupSet;
+            return filterModal ? threadGroupModalSet : threadGroupSet;
         case "thread":
-            return ResoluteQuantifiableAadlObjects.threadSet;
+            return filterModal ? threadModalSet : threadSet;
         case "virtual_bus":
-            return ResoluteQuantifiableAadlObjects.virtualBusSet;
+            return filterModal ? virtualBusModalSet : virtualBusSet;
         case "virtual_processor":
-            return ResoluteQuantifiableAadlObjects.virtualProcessorType;
+            return filterModal ? virtualProcessorModalSet : virtualProcessorSet;
         default:
             throw new IllegalArgumentException("Unknown component type: " + typeStr);
         }
     }
+    
+    static private Set<NamedElement> filterBySysMode(Set<NamedElement> set, SystemOperationMode mode){
+        Set<NamedElement> filterSet = new HashSet<>();
+        ComponentInstance compInst;
+        for(NamedElement el : set){
+            
+            if(el instanceof ConnectionInstance){
+                ConnectionInstance connInst = (ConnectionInstance)el;
+                List<SystemOperationMode> modeList = connInst.getExistsInModes();
+
+                if(modeList == null || modeList.contains(mode))
+                    filterSet.add(connInst);
+
+            }else{
+
+                compInst = (ComponentInstance)el;
+                List<SystemOperationMode> modeList = compInst.getExistsInModes();
+
+                if(modeList == null || modeList.contains(mode)){
+                    filterSet.add(compInst);
+                }
+            }
+        }
+        
+        return filterSet;
+    }
+    
+    static public void filterBySysMode(SystemOperationMode mode){
+
+        abstractModalSet = filterBySysMode(abstractSet, mode);
+        busModalSet = filterBySysMode(busSet, mode);        
+        componentModalSet = filterBySysMode(componentSet, mode);       
+        dataModalSet = filterBySysMode(dataSet, mode);      
+        connectionModalSet = filterBySysMode(connectionSet, mode);        
+        deviceModalSet = filterBySysMode(deviceSet, mode);       
+        memoryModalSet = filterBySysMode(memorySet, mode);        
+        processorModalSet = filterBySysMode(processorSet, mode);        
+        processModalSet = filterBySysMode(processSet, mode);        
+        propertyModalSet = filterBySysMode(propertySet, mode);        
+        subprogramGroupModalSet = filterBySysMode(subprogramGroupSet, mode);        
+        subprogramModalSet = filterBySysMode(subprogramSet, mode);        
+        systemModalSet = filterBySysMode(systemSet, mode);       
+        threadGroupModalSet = filterBySysMode(threadGroupSet, mode);      
+        threadModalSet = filterBySysMode(threadSet, mode);   
+        virtualBusModalSet = filterBySysMode(virtualBusSet, mode);  
+        virtualProcessorModalSet = filterBySysMode(virtualProcessorSet, mode);
+                
+    }
+    
+    
+    
+    
 }

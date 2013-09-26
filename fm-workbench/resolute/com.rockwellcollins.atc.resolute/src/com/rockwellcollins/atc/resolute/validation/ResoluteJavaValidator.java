@@ -30,6 +30,7 @@ import org.osate.aadl2.ProcessType;
 import org.osate.aadl2.ProcessorType;
 import org.osate.aadl2.Property;
 import org.osate.aadl2.PropertyType;
+import org.osate.aadl2.Subcomponent;
 import org.osate.aadl2.SubprogramGroupType;
 import org.osate.aadl2.SubprogramType;
 import org.osate.aadl2.SystemImplementation;
@@ -117,6 +118,18 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
         if (!(parent instanceof ComponentType) && !(parent instanceof ComponentImplementation)) {
             error(thisExpr, "A 'this' expression can only be used in a "
                     + "resolute subclause (inside of a component or component implementation)");
+        }
+        
+        NestedDotID subThis = thisExpr.getSub();
+        
+        if(subThis != null){
+            while(subThis.getSub() != null){
+                subThis = subThis.getSub();
+            }
+            if(!(subThis.getBase() instanceof Subcomponent)){
+                error(thisExpr, "ID '"+subThis.getBase().getName()+"' is not a subcomponent");
+            }
+            
         }
     }
 

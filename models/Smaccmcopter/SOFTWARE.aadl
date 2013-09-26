@@ -33,20 +33,20 @@ public
     subcomponents
       SS: thread Sensors;
       CCT: thread Command_Control_Telemetry;
-      RC: thread Radio_Control;
+      RC: thread Radio_Control in modes (Normal_Operation, DOS_Operation);
       SN: thread Stability_Navigation;
       MC: thread Motor_Control;
-      DC: thread Decrypt;
+      DC: thread Decrypt in modes (Normal_Operation);
       
     connections
       feature group sensors <-> SS.sensors_in;
       port motors_and_radios.flight_control_commands -> RC.commands_in in modes (Normal_Operation);
-      port motors_and_radios.mavlink -> DC.encrypt_in in modes (Normal_Operation);
+      port motors_and_radios.mavlink -> DC.encrypt_in;
       port DC.decrypt_out -> CCT.mavlink_in;
       
       port SS.sensors_out -> SN.sensors;
       port RC.commands_out -> SN.rc_commands in modes (Normal_Operation);
-      port CCT.mavlink_out -> SN.mavlink in modes (Normal_Operation);
+      port CCT.mavlink_out -> SN.mavlink;
       
       port SN.motor_commands -> MC.motor_commands;
       port MC.servo1_commands -> motors_and_radios.motor1;      
@@ -62,7 +62,7 @@ public
       SMACCM::OS => "Breakaway-RTOS";
       
     annex resolute {** 
-    	prove is_dos_safe(this) modes : Normal_Operation, SN.two 
+    	prove is_dos_safe(this.SN) modes: DOS_Operation
     **};
 
   end Main_Loop.Impl;
@@ -109,11 +109,11 @@ public
       mavlink: in data port DATATYPES::MAVLink;
       sensors: in data port DATATYPES::Sensor_Data.Impl;
       motor_commands: out data port DATATYPES::Motor_Commands.Impl;
-      
-    modes
-      one : initial mode;
-      two : mode;
-      three : mode;
+    
+    --modes
+    --  one : initial mode;
+    --  two : mode;
+    --  three : mode;
       
     properties
       Period => 200ms;
@@ -232,7 +232,7 @@ public
       SMACCM::Language => "Ivory";
       
     annex resolute {**   
-    	prove only_receive_gs(this)
+    	prove only_receive_gs(this) 
     **};
   end Motor_Control;
 end SOFTWARE;

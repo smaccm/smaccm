@@ -67,7 +67,9 @@
     <genClasses ecoreClass="Resolute.ecore#//IdExpr">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Resolute.ecore#//IdExpr/id"/>
     </genClasses>
-    <genClasses ecoreClass="Resolute.ecore#//ThisExpr"/>
+    <genClasses ecoreClass="Resolute.ecore#//ThisExpr">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Resolute.ecore#//ThisExpr/sub"/>
+    </genClasses>
     <genClasses ecoreClass="Resolute.ecore#//FailExpr">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Resolute.ecore#//FailExpr/val"/>
     </genClasses>
