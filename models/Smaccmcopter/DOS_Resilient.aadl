@@ -7,8 +7,15 @@ annex resolute
 is_dos_safe(x : component) <=
  ** x " is safe from a denial of service attack\n"
       " because either the radio thread is not active\n"
-      " or nothing is connected to the radio thread\n" **
-      radio_thread_is_not_active() or not_connected_to_radio(x)
+      " or nothing is connected to the radio thread\n"
+      " and the system is schedulable" **
+      radio_thread_is_not_active() or 
+      (dos_schedulable() and not_connected_to_radio(x))
+
+dos_schedulable() <=
+ ** "External analysis determines the system\n"
+    "to be schedulable\n" **
+    analysis("schedule")
 
 radio_thread_is_not_active() <=
  ** "The radio thread is not active" **
