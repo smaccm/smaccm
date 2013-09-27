@@ -8,6 +8,7 @@ public
     features
       sensors: feature group inverse of UAV::sensors;
       expansion_slot: feature group expansion_slot;
+      i2c2_bus: provides bus access CORTEX::AHB_Bus_Matrix;
   end PX4FMU;
   
   system implementation PX4FMU.Impl
@@ -27,6 +28,7 @@ public
       
     connections
       -- I2C bus
+      bus access MC.i2c2 <-> i2c2_bus;
       bus access I2C2.bus_access <-> MC.i2c2;
       bus access EEPROM.bus_access <-> I2C2;
       bus access MAG.bus_access <-> I2C2;

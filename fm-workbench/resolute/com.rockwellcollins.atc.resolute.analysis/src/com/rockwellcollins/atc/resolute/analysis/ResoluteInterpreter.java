@@ -110,7 +110,7 @@ public class ResoluteInterpreter {
             evaluator = new ResoluteEvaluator(compInst, proofTree);
         }
 
-        List<SystemOperationMode> sysModes = getAllModeInstances(proveStatement);
+        List<SystemOperationMode> sysModes = getAllModeInstances(proveStatement); 
                 
         String proveText = evaluator.proveStatementToString(proveStatement);
         

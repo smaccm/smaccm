@@ -79,4 +79,7 @@ public
   data GPS_Data
   end GPS_Data;
   
+  data Private_Key_Data
+  end Private_Key_Data;
+  
 end DATATYPES;

@@ -11,6 +11,7 @@ public
     features
       motors_and_radios: feature group UAV::motors_and_radios;
       sensors: feature group UAV::sensors;
+      
   end Software;
   
   system implementation Software.Impl
@@ -33,7 +34,7 @@ public
     subcomponents
       SS: thread Sensors;
       CCT: thread Command_Control_Telemetry;
-      RC: thread Radio_Control in modes (Normal_Operation, DOS_Operation);
+      RC: thread Radio_Control in modes (Normal_Operation);
       SN: thread Stability_Navigation;
       MC: thread Motor_Control;
       DC: thread Decrypt in modes (Normal_Operation);
@@ -62,13 +63,14 @@ public
       SMACCM::OS => "Breakaway-RTOS";
       
     annex resolute {** 
-    	prove is_dos_safe(this.SN) modes: DOS_Operation
+    	prove is_dos_safe(this.SN) modes: DOS_Operation 
     **};
 
   end Main_Loop.Impl;
   
   thread Decrypt
   	features 
+  	    private_key : in data port DATATYPES::Private_Key_Data;
   		encrypt_in  : in data port DATATYPES::EncryptMAVlink;
   		decrypt_out : out data port DATATYPES::MAVlink;
   	properties
