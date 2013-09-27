@@ -29,7 +29,7 @@ public
       port flight_control_commands -> PX4IOAR.flight_control_commands;
       
       bus access PX4IOAR.rc_radio <-> radio_access_2_4Ghz;
-      bus access PX4IOAR.x3dr_radio <-> radio_access_915Mhz;
+      bus access PX4IOAR.x3dr_radio <-> radio_access_915Mhz;      	
       
     properties
       Actual_Memory_Binding => (reference (PX4FMU.MC.FLASH)) applies to SW.ML;

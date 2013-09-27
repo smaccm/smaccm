@@ -32,38 +32,47 @@ public
     
   process implementation Main_Loop.Impl
     subcomponents
-      SS: thread Sensors;
-      CCT: thread Command_Control_Telemetry;
+
+      SS: thread Sensors in modes (Boot, Normal_Operation, DOS_Operation);
+      CCT: thread Command_Control_Telemetry in modes (Normal_Operation);
+      BC: thread Backup_Commands in modes (DOS_Operation);
       RC: thread Radio_Control in modes (Normal_Operation);
-      SN: thread Stability_Navigation;
-      MC: thread Motor_Control;
+      SN: thread Stability_Navigation in modes (Normal_Operation, DOS_Operation);
+      MC: thread Motor_Control in modes (Normal_Operation, DOS_Operation);
       DC: thread Decrypt in modes (Normal_Operation);
       
     connections
-      feature group sensors <-> SS.sensors_in;
+      feature group sensors <-> SS.sensors_in in modes (Normal_Operation, Dos_Operation, Boot);
       port motors_and_radios.flight_control_commands -> RC.commands_in in modes (Normal_Operation);
-      port motors_and_radios.mavlink -> DC.encrypt_in;
-      port DC.decrypt_out -> CCT.mavlink_in;
+      port motors_and_radios.mavlink -> DC.encrypt_in in modes (Normal_Operation);
+      port DC.decrypt_out -> CCT.mavlink_in in modes (Normal_Operation);
       
-      port SS.sensors_out -> SN.sensors;
+      port SS.sensors_out -> SN.sensors in modes (Normal_Operation, Dos_Operation, Boot);
       port RC.commands_out -> SN.rc_commands in modes (Normal_Operation);
-      port CCT.mavlink_out -> SN.mavlink;
+      port CCT.mavlink_out -> SN.mavlink  in modes (Normal_Operation);
+      port BC.mavlink_out -> SN.mavlink  in modes (DOS_Operation);
       
-      port SN.motor_commands -> MC.motor_commands;
-      port MC.servo1_commands -> motors_and_radios.motor1;      
-      port MC.servo2_commands -> motors_and_radios.motor2;      
-      port MC.servo3_commands -> motors_and_radios.motor3;      
-      port MC.servo4_commands -> motors_and_radios.motor4;
+      port SN.motor_commands -> MC.motor_commands in modes (Normal_Operation, DOS_Operation);
+      port MC.servo1_commands -> motors_and_radios.motor1 in modes (Normal_Operation, DOS_Operation);      
+      port MC.servo2_commands -> motors_and_radios.motor2 in modes (Normal_Operation, DOS_Operation);      
+      port MC.servo3_commands -> motors_and_radios.motor3 in modes (Normal_Operation, DOS_Operation);      
+      port MC.servo4_commands -> motors_and_radios.motor4 in modes (Normal_Operation, DOS_Operation);
       
     modes
-      Normal_Operation: initial mode;
+      Boot: initial mode;
+      Maintenance: mode;
+      Normal_Operation: mode;
       DOS_Operation: mode;
       
-    properties
+    properties 
       SMACCM::OS => "Breakaway-RTOS";
       
     annex resolute {** 
     	prove is_dos_safe(this.SN) modes: DOS_Operation 
+    	
+    	prove mavlink_connected(this.SN) modes: DOS_Operation
+    	prove mavlink_connected(this.SN) modes: Normal_Operation
+    	
     **};
 
   end Main_Loop.Impl;
@@ -145,6 +154,27 @@ public
       
       
   end Stability_Navigation;
+ 
+  thread Backup_Commands
+    features
+      mavlink_out: out data port DATATYPES::MAVLink;
+      
+    properties
+    
+      Period => 200ms;
+      Deadline => 200ms;
+      SMACCM::WC_Execution_Time => 10ms;
+    
+      Dispatch_Protocol => Aperiodic;
+      
+      Source_Text => ("src/gcs_receive.c");
+      Initialize_Entrypoint_Source_Text => "gcs_receive_init";
+      Compute_Entrypoint_Source_Text => "gcs_receive_task";
+      
+      Static_Analysis::Writes_to_buffers => ("gcs_shared_state");
+      SMACCM::Always_Sends_Message => true;
+      SMACCM::Language => "Ivory";
+  end Backup_Commands;
 
   thread Command_Control_Telemetry
     features

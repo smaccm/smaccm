@@ -7,8 +7,30 @@ annex resolute
 is_dos_safe(x : component) <=
  ** x " is safe from a denial of service attack\n"
       " because either the radio thread is not active\n"
-      " or nothing is connected to the radio thread\n" **
-      radio_thread_is_not_active() or not_connected_to_radio(x)
+      " or nothing is connected to the radio thread\n"
+      " and the system is schedulable" **
+      radio_thread_is_not_active() or 
+      (dos_schedulable() and not_connected_to_radio(x))
+      
+mavlink_connected(t : component) <= 
+	** "thread '" t "' is connected to a mavlink connection" **   
+    exists(c : connection).
+    exists(y : component). is_mavlink_connection(y, t, c)
+    
+is_mavlink_connection(x : component, t : component, c : connection) <=
+  ** "component '" x "' is connected to component '" t "'\n"
+     "via a connection '" c " of type MAVLINK'\n" **
+    	connected(x, c, t) and is_stability_thread(t)
+    	and type(c) = DATATYPES::MAVLink
+    
+is_stability_thread(t: component) <=
+  ** "Thread '" t "' is the stability thread" **
+  class_of(t, SOFTWARE::Stability_Navigation)
+
+dos_schedulable() <=
+ ** "External analysis determines the system\n"
+    "to be schedulable\n" **
+    analysis("schedule")
 
 radio_thread_is_not_active() <=
  ** "The radio thread is not active" **
