@@ -52,7 +52,7 @@ only_receive_decrypt(x : component) <=
 -- The connection c carries commands
 -- Non command datatypes must be explicitly whitelisted here
 command_channel(c : connection) : bool =
-  has_type(c) and
+  (not has_type(c)) or
   (type(c) <> DATATYPES::Sensor_Data.Impl)
 
 -- The connection c delivers data without alteration.

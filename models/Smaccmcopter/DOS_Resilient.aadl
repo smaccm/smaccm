@@ -4,6 +4,13 @@ public
 annex resolute 
 {**
 
+no_external_commands(x : component, context : component) <=
+ ** x " does not receive commands from outside " context **
+ (forall (c : connection).
+  forall (y : component).
+   ((connected(y, c, x) and command_channel(c)) =>
+   	  contained(y, context) and no_external_commands(y, context)))
+
 is_dos_safe(x : component) <=
  ** x " is safe from a denial of service attack\n"
       " because either the radio thread is not active\n"
@@ -13,13 +20,13 @@ is_dos_safe(x : component) <=
       (dos_schedulable() and not_connected_to_radio(x))
       
 mavlink_connected(t : component) <= 
-	** "thread '" t "' is connected to a mavlink connection" **   
+	** "thread " t " is connected to a mavlink connection" **   
     exists(c : connection).
     exists(y : component). is_mavlink_connection(y, t, c)
     
 is_mavlink_connection(x : component, t : component, c : connection) <=
-  ** "component '" x "' is connected to component '" t "'\n"
-     "via a connection '" c " of type MAVLINK'\n" **
+  ** "component " x " is connected to component " t
+     "via a connection " c " of type MAVLINK" **
     	connected(x, c, t) and is_stability_thread(t)
     	and type(c) = DATATYPES::MAVLink
     

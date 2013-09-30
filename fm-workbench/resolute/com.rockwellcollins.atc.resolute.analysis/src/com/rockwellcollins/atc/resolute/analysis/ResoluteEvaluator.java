@@ -102,7 +102,9 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
         this.modes = modes;
         
         if(modes.size() > 0){
-            assert(modes.size() == 1);
+            if (modes.size() != 1) {
+                throw new UnsupportedOperationException("Multiple modes not supported: " + modes);
+            }
             sysMode = modes.get(0);
             ResoluteQuantifiableAadlObjects.filterBySysMode(sysMode);
         }
@@ -888,11 +890,15 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
     private NamedElement builtinType(NamedElement ne) {
         if (ne instanceof ConnectionInstance) {
             ConnectionInstance ci = (ConnectionInstance) ne;
-            FeatureInstance src = (FeatureInstance) ci.getSource();
-            return (NamedElement) src.getFeature().getFeatureClassifier();
-        } else {
-            return null;
+            if (ci.getSource() instanceof FeatureInstance) {
+                FeatureInstance src = (FeatureInstance) ci.getSource();
+                return (NamedElement) src.getFeature().getFeatureClassifier();
+            } else if (ci.getSource() instanceof ComponentInstance) {
+                return ci.getSource();
+            }
         }
+        
+        throw new IllegalArgumentException("Unable to get type of: " + ne);
     }
 
     /************** begin utility functions ***************/
