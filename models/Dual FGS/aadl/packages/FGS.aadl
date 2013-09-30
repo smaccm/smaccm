@@ -231,7 +231,7 @@ annex agree {**
       annex agree {**
       	
       	assert active_implies_valid ;
-  		assert leader_implies_active ;
+  		assert leader_implies_active ; 
   		assert LSO.Valid <=> AD.Pitch.Valid ;
 
   		assert 

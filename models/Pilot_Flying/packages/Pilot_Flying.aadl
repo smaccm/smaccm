@@ -101,15 +101,14 @@ with Types,Signals,QS_Properties,Data_Model;
   			LIST
   		else if (pre(state) = CONF and riseOSPF.Val) then
   			INHB
-  		else if (pre(state) = WAIT and wait_count > 1) then
+  		else if (pre(state) = WAIT and wait_count > 1) then 
   			CONF
-  		else
+  		else 
   			pre(state)));
   	
   	assert PFS.Val <=> prim_side -> 
   		(state = WAIT or state = CONF);
   		
-  	
   	
   **};
   end Pilot_Flying_Side_Logic.Pilot_Flying_Side_Logic_Impl;

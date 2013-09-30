@@ -109,7 +109,7 @@ guarantee "leader pitch delta" :
       GCR2APP: port GC_R -> APP.GC_R;
       
       annex agree {**
-        assert leader_pitch_delta_correct;
+        assert leader_pitch_delta_correct;  
       **};
   end Autopilot_System.Autopilot_System_Impl;
   

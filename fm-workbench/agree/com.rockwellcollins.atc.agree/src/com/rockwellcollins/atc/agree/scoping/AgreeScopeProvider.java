@@ -46,6 +46,10 @@ public class AgreeScopeProvider extends
     IScope scope_NamedElement(FnDefExpr ctx, EReference ref) {
         return Scopes.scopeFor(ctx.getArgs(), getScope(ctx.eContainer(), ref));
     }
+    
+    IScope scope_NamedElement(EqStatement ctx, EReference ref) {
+        return Scopes.scopeFor(ctx.getLhs(), getScope(ctx.eContainer(), ref));
+    }
 
     IScope scope_NamedElement(NodeDefExpr ctx, EReference ref) {
         Set<Element> components = new HashSet<>();
@@ -55,7 +59,23 @@ public class AgreeScopeProvider extends
         return Scopes.scopeFor(components, getScope(ctx.eContainer(), ref));
     }
 
+    
     IScope scope_NamedElement(AgreeContract ctx, EReference ref) {
+        EObject container = ctx.eContainer().eContainer();
+
+        if(container instanceof ComponentImplementation){
+            ComponentType compType = ((ComponentImplementation) container).getType();
+            for (AnnexSubclause subclause : compType.getAllAnnexSubclauses()) {
+                if (subclause instanceof AgreeContractSubclause) {
+                    IScope scopeOfType = getScope(((AgreeContractSubclause) subclause).getContract(),
+                            ref);
+                    return Scopes.scopeFor(getAllElementsFromSpecs(ctx.getSpecs()), scopeOfType);
+                }
+            }
+        }
+        return Scopes.scopeFor(getAllElementsFromSpecs(ctx.getSpecs()), IScope.NULLSCOPE);
+                
+        /*
         EObject container = ctx.eContainer().eContainer();
         if (container instanceof ComponentType) {
             return null;
@@ -73,7 +93,9 @@ public class AgreeScopeProvider extends
             }
         }
         return IScope.NULLSCOPE;
+        */
     }
+    
 
     private Set<Element> getAllElementsFromSpecs(EList<SpecStatement> specs) {
         Set<Element> result = new HashSet<>();
