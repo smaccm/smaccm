@@ -11,7 +11,6 @@ public
     features
       motors_and_radios: feature group UAV::motors_and_radios;
       sensors: feature group UAV::sensors;
-      
   end Software;
   
   system implementation Software.Impl
@@ -28,51 +27,73 @@ public
     features
       motors_and_radios: feature group UAV::motors_and_radios;
       sensors: feature group UAV::sensors;
+      
+      -- These are disconnected until we want to specify exactly 
+      -- the transition conditions. We would leave them out, but AADL
+      -- requires some condition on each mode transition.
+      e1: in event port;
+      e2: in event port;
+      e3: in event port;
+      e4: in event port;
   end Main_Loop;
     
   process implementation Main_Loop.Impl
     subcomponents
-
-      SS: thread Sensors in modes (Boot, Normal_Operation, DOS_Operation);
-      CCT: thread Command_Control_Telemetry in modes (Normal_Operation);
-      BC: thread Backup_Commands in modes (DOS_Operation);
-      RC: thread Radio_Control in modes (Normal_Operation);
-      SN: thread Stability_Navigation in modes (Normal_Operation, DOS_Operation);
-      MC: thread Motor_Control in modes (Normal_Operation, DOS_Operation);
-      DC: thread Decrypt in modes (Normal_Operation);
+      SS: thread Sensors in modes (Boot, Normal, Defensive);
+      CCT: thread Command_Control_Telemetry in modes (Normal);
+      BC: thread Backup_Commands in modes (Defensive);
+      -- RC: thread Radio_Control in modes (Normal);
+      SN: thread Stability_Navigation in modes (Normal, Defensive);
+      MC: thread Motor_Control in modes (Normal, Defensive);
+      DC: thread Decrypt in modes (Normal);
       
     connections
-      feature group sensors <-> SS.sensors_in in modes (Normal_Operation, Dos_Operation, Boot);
-      port motors_and_radios.flight_control_commands -> RC.commands_in in modes (Normal_Operation);
-      port motors_and_radios.mavlink -> DC.encrypt_in in modes (Normal_Operation);
-      port DC.decrypt_out -> CCT.mavlink_in in modes (Normal_Operation);
+      feature group sensors <-> SS.sensors_in in modes (Normal, Defensive, Boot);
+      -- port motors_and_radios.flight_control_commands -> RC.commands_in in modes (Normal);
+      port motors_and_radios.mavlink -> DC.encrypt_in in modes (Normal);
+      port DC.decrypt_out -> CCT.mavlink_in in modes (Normal);
       
-      port SS.sensors_out -> SN.sensors in modes (Normal_Operation, Dos_Operation, Boot);
-      port RC.commands_out -> SN.rc_commands in modes (Normal_Operation);
-      port CCT.mavlink_out -> SN.mavlink  in modes (Normal_Operation);
-      port BC.mavlink_out -> SN.mavlink  in modes (DOS_Operation);
+      port SS.sensors_out -> SN.sensors in modes (Normal, Defensive, Boot);
+      -- port RC.commands_out -> SN.rc_commands in modes (Normal);
+      port CCT.mavlink_out -> SN.mavlink  in modes (Normal);
+      port BC.mavlink_out -> SN.mavlink  in modes (Defensive);
       
-      port SN.motor_commands -> MC.motor_commands in modes (Normal_Operation, DOS_Operation);
-      port MC.servo1_commands -> motors_and_radios.motor1 in modes (Normal_Operation, DOS_Operation);      
-      port MC.servo2_commands -> motors_and_radios.motor2 in modes (Normal_Operation, DOS_Operation);      
-      port MC.servo3_commands -> motors_and_radios.motor3 in modes (Normal_Operation, DOS_Operation);      
-      port MC.servo4_commands -> motors_and_radios.motor4 in modes (Normal_Operation, DOS_Operation);
+      port SN.motor_commands -> MC.motor_commands in modes (Normal, Defensive);
+      port MC.servo1_commands -> motors_and_radios.motor1 in modes (Normal, Defensive);      
+      port MC.servo2_commands -> motors_and_radios.motor2 in modes (Normal, Defensive);      
+      port MC.servo3_commands -> motors_and_radios.motor3 in modes (Normal, Defensive);      
+      port MC.servo4_commands -> motors_and_radios.motor4 in modes (Normal, Defensive);
       
     modes
       Boot: initial mode;
       Maintenance: mode;
-      Normal_Operation: mode;
-      DOS_Operation: mode;
+      Normal: mode;
+      Defensive: mode;
+      
+      Boot -[e1]-> Normal;
+      Boot -[e2]-> Normal;
+      Normal -[e3]-> Defensive;
+      Defensive -[e4]-> Normal;
+      
+      --  +------+     +--------+     +-----------+
+      --  | Boot |---->| Normal |<--->| Defensive |
+      --  +------+     +--------+     +-----------+
+      --      |
+      --      v
+      --  +-------------+
+      --  | Maintenance |
+      --  +-------------+
       
     properties 
       SMACCM::OS => "Breakaway-RTOS";
       
     annex resolute {** 
-    	prove is_dos_safe(this.SN) modes: DOS_Operation 
+    	prove is_dos_safe(this.SN) modes: Defensive  
     	
-    	prove mavlink_connected(this.SN) modes: DOS_Operation
-    	prove mavlink_connected(this.SN) modes: Normal_Operation
-    	
+    	prove mavlink_connected(this.SN) modes: Defensive
+    	prove mavlink_connected(this.SN) modes: Normal
+    	      
+    	prove only_receive_gs(this.MC) modes: Normal
     **};
 
   end Main_Loop.Impl;
@@ -262,9 +283,5 @@ public
       
       Static_Analysis::Reads_from_buffers => ("motorsoutput_shared_state");
       SMACCM::Language => "Ivory";
-      
-    annex resolute {**   
-    	prove only_receive_gs(this) 
-    **};
   end Motor_Control;
 end SOFTWARE;

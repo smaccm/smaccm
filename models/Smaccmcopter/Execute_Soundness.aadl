@@ -46,17 +46,14 @@ uav_private_key() <=
 only_receive_decrypt(x : component) <=
   ** "The component " x " only receives messages that pass Decrypt" **
   forall (y : component) (c : connection).  
-    ((connected(y, c, x) and message_channel(c)) => 
+    ((connected(y, c, x) and command_channel(c)) => 
       unalterable_channel(c) and (class_of(y, SOFTWARE::Decrypt) or only_receive_decrypt(y)))       
        
--- The connection c carries messages
-message_channel(c : connection) : bool =
+-- The connection c carries commands
+-- Non command datatypes must be explicitly whitelisted here
+command_channel(c : connection) : bool =
   has_type(c) and
-  (type(c) = DATATYPES::RawMessage or
-   type(c) = DATATYPES::ParsedMessage or 
-   type(c) = DATATYPES::MAVLink or 
-   type(c) = DATATYPES::EncryptMAVLink or
-   type(c) = DATATYPES::Motor_Commands)
+  (type(c) <> DATATYPES::Sensor_Data.Impl)
 
 -- The connection c delivers data without alteration.
 -- "contained" means write permissions

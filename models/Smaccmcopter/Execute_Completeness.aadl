@@ -41,7 +41,7 @@ wc_message_processing_time : int =
 
 --returns the processing time of an individual thread
 thread_message_processing_time(t : thread) : int =
-	if exists(c : connection) . contained(c, t) and message_channel(c) then 
+	if exists(c : connection) . contained(c, t) and command_channel(c) then 
 		if property_exists(t, SMACCM::WC_Execution_Time) then
 	 	   property_lookup(t, SMACCM::WC_Execution_Time)
 		else
@@ -64,7 +64,7 @@ good_messages_reach_controller(x : component) <=
   class_of(x, SOFTWARE::Stability_Navigation) or
   exists (y : component )(c : connection).  
   	  connected(x, c, y) and
-  	  message_channel(c) and  
+  	  command_channel(c) and  
       all_good_messages_sent(x, c) and
         good_messages_reach_controller(y)
     
@@ -91,10 +91,10 @@ only_one_out_mc(x : component) <=
  	    "output message channel." **
 	not 
 	exists(c1 : connection).
-	    message_channel(c1) and 
+	    command_channel(c1) and 
 	    exists(c2 : connection).
 			not (c1 = c2) and  
-	    	message_channel(c2) and  
+	    	command_channel(c2) and  
 	    	exists (comp1: component). 
 	    		connected(x, c1, comp1) and
 	    		exists(comp2: component). 
