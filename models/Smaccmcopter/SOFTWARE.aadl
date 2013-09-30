@@ -6,6 +6,7 @@ public
   with IVORY_TYPES;
   with Static_Analysis;
   with SMACCM;
+  with Mode_Properties;
 
   system Software
     features
@@ -88,11 +89,14 @@ public
       SMACCM::OS => "Breakaway-RTOS";
       
     annex resolute {** 
-    	prove is_dos_safe(this.SN) modes: Defensive
     	prove no_external_commands(this.SN, this) modes: Defensive
-    	
     	-- This property should fail:
     	-- prove no_external_commands(this.SN, this) modes: Normal
+    	
+    	prove schedulable(this) modes: Normal
+    	prove schedulable(this) modes: Defensive
+    	
+    	prove no_radio_commands(this.SN) modes: Defensive
     	
     	prove receives_mavlink(this.SN) modes: Defensive
     	prove receives_mavlink(this.SN) modes: Normal

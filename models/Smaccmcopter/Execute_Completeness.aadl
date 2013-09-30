@@ -27,14 +27,6 @@ total_time_delay : int =
   else  
     fail "unable to schedule model"
 
--- A component is schedulable if all threads complete before their
--- respective deadlines 
-schedulable() <= 
-    ** "Every thread is either periodic or aperiodic" **
-	forall (t : thread) . 
-		property_lookup(t, Thread_Properties::Dispatch_Protocol) = "Periodic" or
-		property_lookup(t, Thread_Properties::Dispatch_Protocol) = "Aperiodic"
-
 -- calculates the sum of all thread processing times
 wc_message_processing_time : int = 
 	sum({thread_message_processing_time(t) for (t: thread)}) 
