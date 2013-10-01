@@ -6,13 +6,16 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.handlers.IHandlerActivation;
@@ -44,24 +47,30 @@ public abstract class AadlHandler extends AbstractHandler {
         if (xtextEditor == null) {
             return null;
         }
-        
+
         window = HandlerUtil.getActiveWorkbenchWindow(event);
         if (window == null) {
             return null;
         }
-        
-        final IHandlerService handlerService = (IHandlerService) window.getService(IHandlerService.class);
+
+        if (!saveChanges(window.getActivePage().getDirtyEditors())) {
+            return null;
+        }
+
+        final IHandlerService handlerService = (IHandlerService) window
+                .getService(IHandlerService.class);
         WorkspaceJob job = new WorkspaceJob(getJobName()) {
             @Override
             public IStatus runInWorkspace(final IProgressMonitor monitor) {
-                final IHandlerActivation activation = handlerService.activateHandler(TERMINATE_ID, new TerminateHandler(monitor));
+                final IHandlerActivation activation = handlerService.activateHandler(TERMINATE_ID,
+                        new TerminateHandler(monitor));
                 addJobChangeListener(new JobChangeAdapter() {
                     @Override
                     public void done(IJobChangeEvent event) {
                         handlerService.deactivateHandler(activation);
                     }
                 });
-                
+
                 return xtextEditor.getDocument().readOnly(
                         new IUnitOfWork<IStatus, XtextResource>() {
                             @Override
@@ -76,10 +85,27 @@ public abstract class AadlHandler extends AbstractHandler {
                         });
             }
         };
- 
+
         job.setRule(ResourcesPlugin.getWorkspace().getRoot());
         job.schedule();
         return null;
+    }
+
+    private boolean saveChanges(IEditorPart[] dirtyEditors) {
+        if (dirtyEditors.length == 0) {
+            return true;
+        }
+
+        if (MessageDialog.openConfirm(window.getShell(), "Save editors",
+                "Save editors and continue?")) {
+            NullProgressMonitor monitor = new NullProgressMonitor();
+            for (IEditorPart e : dirtyEditors) {
+                e.doSave(monitor);
+            }
+            return true;
+        } else {
+            return false;
+        }
     }
 
     private EObjectNode getEObjectNode(ISelection currentSelection) {
@@ -91,7 +117,7 @@ public abstract class AadlHandler extends AbstractHandler {
         }
         return null;
     }
-    
+
     protected IWorkbenchWindow getWindow() {
         return window;
     }

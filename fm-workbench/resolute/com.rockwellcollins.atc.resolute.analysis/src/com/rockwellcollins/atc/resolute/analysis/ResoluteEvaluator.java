@@ -102,7 +102,9 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
         this.modes = modes;
         
         if(modes.size() > 0){
-            assert(modes.size() == 1);
+            if (modes.size() != 1) {
+                throw new UnsupportedOperationException("Multiple modes not supported: " + modes);
+            }
             sysMode = modes.get(0);
             ResoluteQuantifiableAadlObjects.filterBySysMode(sysMode);
         }
@@ -185,6 +187,7 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
             }
             break;
         case "=":
+        case "<>":
             ResoluteValue rightResult = doSwitch(object.getRight());
             Expr rightExpr = object.getRight();
             Expr leftExpr = object.getLeft();
@@ -201,7 +204,8 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
                 proofTree.setCurReturnVal(object, retString, leftResult);
             }
 
-            result = new BoolValue(leftResult.equals(rightResult));
+            boolean value = leftResult.equals(rightResult);
+            result = new BoolValue(object.getOp().equals("=") ? value : !value);
             break;
         case "+":
             rightResult = doSwitch(object.getRight());
@@ -306,8 +310,7 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
             }
             break;
         default:
-            assert (false);
-            break;
+            throw new IllegalArgumentException("Unknown binary operator: " + object.getOp());
         }
 
         proofTree.setCurReturnVal(object, nodeStr, result);
@@ -337,8 +340,7 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
             }
             break;
         default:
-            assert (false);
-            break;
+            throw new IllegalArgumentException("Unknown unary operator: " + object.getOp());
         }
         proofTree.setCurReturnVal(object, object.getOp(), result);
         return result;
@@ -481,7 +483,7 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
             result = new BoolValue(!boolResult);
             break;
         default:
-            assert (false);
+            throw new IllegalArgumentException("Unknown quantifier: " + object.getQuant());
         }
 
         proofTree.setCurReturnVal(object, nodeStr, result);
@@ -576,7 +578,7 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
             } else if (claim instanceof ClaimString) {
                 text.append(((ClaimString) claim).getStr());
             } else {
-                assert false;
+                throw new IllegalArgumentException("Unknown claim type: " + claim.getClass());
             }
         }
 
@@ -878,8 +880,7 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
 
             break;
         default:
-            assert (false);
-            break;
+            throw new IllegalArgumentException("Unknown function: " + funName);
         }
 
         proofTree.setCurReturnVal(object, nodeStr, result);
@@ -889,11 +890,15 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
     private NamedElement builtinType(NamedElement ne) {
         if (ne instanceof ConnectionInstance) {
             ConnectionInstance ci = (ConnectionInstance) ne;
-            FeatureInstance src = (FeatureInstance) ci.getSource();
-            return (NamedElement) src.getFeature().getFeatureClassifier();
-        } else {
-            return null;
+            if (ci.getSource() instanceof FeatureInstance) {
+                FeatureInstance src = (FeatureInstance) ci.getSource();
+                return (NamedElement) src.getFeature().getFeatureClassifier();
+            } else if (ci.getSource() instanceof ComponentInstance) {
+                return ci.getSource();
+            }
         }
+        
+        throw new IllegalArgumentException("Unable to get type of: " + ne);
     }
 
     /************** begin utility functions ***************/
