@@ -39,6 +39,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.osate.aadl2.AbstractConnectionEnd;
 import org.osate.aadl2.AnnexSubclause;
 import org.osate.aadl2.BooleanLiteral;
+import org.osate.aadl2.Classifier;
 import org.osate.aadl2.ComponentClassifier;
 import org.osate.aadl2.ComponentImplementation;
 import org.osate.aadl2.ComponentType;
@@ -53,6 +54,8 @@ import org.osate.aadl2.DataSubcomponentType;
 import org.osate.aadl2.DataType;
 import org.osate.aadl2.EnumerationLiteral;
 import org.osate.aadl2.Feature;
+import org.osate.aadl2.FeatureGroup;
+import org.osate.aadl2.FeatureGroupType;
 import org.osate.aadl2.IntegerLiteral;
 import org.osate.aadl2.NamedElement;
 import org.osate.aadl2.NamedValue;
@@ -61,6 +64,7 @@ import org.osate.aadl2.PropertyExpression;
 import org.osate.aadl2.RealLiteral;
 import org.osate.aadl2.StringLiteral;
 import org.osate.aadl2.Subcomponent;
+import org.osate.aadl2.ThreadSubcomponent;
 import org.osate.aadl2.modelsupport.resources.OsateResourceUtil;
 import org.osate.aadl2.properties.PropertyDoesNotApplyToHolderException;
 import org.osate.aadl2.properties.PropertyNotPresentException;
@@ -919,109 +923,136 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
             Context sourContext = ((ConnectedElement) absConnSour).getContext();
 
             DataPort port = null;
-            if (destConn != null && (destConn instanceof DataPort)) {
-                port = (DataPort) destConn;
-            } else if (sourConn != null && (sourConn instanceof DataPort)) {
-                port = (DataPort) destConn;
-            }
-            assert (port != null);
-
-            DataSubcomponentType dataSub = port.getDataFeatureClassifier();
-
-            if (!(dataSub instanceof DataImplementation)) {
-                continue;
-            }
-
-            Set<AgreeVarDecl> tempSet = new HashSet<AgreeVarDecl>();
-            getAllDataNames((DataImplementation) dataSub, tempSet);
-
-            String sourStr;
-            String destStr;
-            String aadlSourStr;
-            String aadlDestStr;
-            if (sourContext != null) { // source is not an end point
-                assert (sourContext instanceof Subcomponent);
-                sourStr = sourContext.getName() + dotChar + sourConn.getName();
-                aadlSourStr = sourContext.getName() + "." + sourConn.getName();
-            } else {
-                sourStr = sourConn.getName();
-                aadlSourStr = sourConn.getName();
-            }
-
-            if (destContext != null) { // destination is not an end point
-                assert (destContext instanceof Subcomponent);
-                destStr = destContext.getName() + dotChar + destConn.getName();
-                aadlDestStr = destContext.getName() + "." + destConn.getName();
-            } else {
-                destStr = destConn.getName();
-                aadlDestStr = destConn.getName();
-            }
-
-            for (AgreeVarDecl varType : tempSet) {
-                String newDestStr = destStr + dotChar + varType.jKindStr;
-                String newSourStr = sourStr + dotChar + varType.jKindStr;
-                String newAADLDestStr = aadlDestStr + "." + varType.aadlStr;
-                String newAADLSourStr = aadlSourStr + "." + varType.aadlStr;
-
-                // make an internal var for this
-                varType.jKindStr = newDestStr;
-                varType.aadlStr = newAADLDestStr;
-
-                if (destContext != null) {
-                    layout.addElement(destContext.getName(), varType.aadlStr,
-                            AgreeLayout.SigType.OUTPUT);
-                }
-
-                refMap.put(varType.aadlStr, destConn);
-                varRenaming.put(varType.jKindStr, varType.aadlStr);
-                internalVars.add(varType);
-
-                // if the source context is not null, then this is a variable
-                // that was not in the top level component features. Therefore
-                // a new input variable must be created
-                if (sourContext != null) {
-                    AgreeVarDecl inputVar = new AgreeVarDecl();
-                    inputVar.type = varType.type;
-                    inputVar.jKindStr = newSourStr;
-                    inputVar.aadlStr = newAADLSourStr;
-
-                    layout.addElement(sourContext.getName(), inputVar.aadlStr,
-                            AgreeLayout.SigType.INPUT);
-                    varRenaming.put(inputVar.jKindStr, inputVar.aadlStr);
-                    refMap.put(inputVar.aadlStr, sourConn);
-                    inputVars.add(inputVar);
-                }
-
-                Expr connExpr = null;
-                IdExpr sourId = new IdExpr(newSourStr);
-
-                if (sourContext != null && destContext != null && delayed) {
-                    // this is not an input, and the output is not a terminal
-                    Expr initValExpr = null;
-                    switch (varType.type) {
-                    case "bool":
-                        initValExpr = new BoolExpr(true);
-                        break;
-                    case "int":
-                        initValExpr = new IntExpr(BigInteger.valueOf(0));
-                        break;
-                    case "real":
-                        initValExpr = new RealExpr(BigDecimal.valueOf(0.0));
-                        break;
+            if (destConn != null) {
+                if(destConn instanceof DataPort){
+                    port = (DataPort) destConn;
+                    setVarEquiv(port, sourContext, sourConn, destContext, destConn, delayed);
+                }else{
+                    assert(destConn instanceof FeatureGroup);
+                    FeatureGroupType featType = ((FeatureGroup)destConn).getAllFeatureGroupType();
+                    for(DataPort dPort: featType.getOwnedDataPorts()){
+                        setVarEquiv(dPort, sourContext, sourConn, destContext, destConn, delayed);
                     }
-                    connExpr = new UnaryExpr(UnaryOp.PRE, sourId);
-                    connExpr = new BinaryExpr(initValExpr, BinaryOp.ARROW, connExpr);
-                } else {
-                    connExpr = sourId;
                 }
-                IdExpr destId = new IdExpr(newDestStr);
-                Equation connEq = new Equation(destId, connExpr);
-
-                connExpressions.add(connEq);
+            } else if (sourConn != null) {
+                if(sourConn instanceof DataPort){
+                    port = (DataPort) destConn;
+                    setVarEquiv(port, sourContext, sourConn, destContext, destConn, delayed);
+                }else{
+                    assert(sourConn instanceof FeatureGroup);
+                    FeatureGroupType featType = ((FeatureGroup)sourConn).getAllFeatureGroupType();
+                    for(DataPort dPort: featType.getOwnedDataPorts()){
+                        setVarEquiv(dPort, sourContext, sourConn, destContext, destConn, delayed);
+                    }
+                }
             }
-
         }
     }
+    
+    
+    private void setVarEquiv(DataPort port,
+            Context sourContext,
+            ConnectionEnd sourConn,
+            Context destContext, 
+            ConnectionEnd destConn,
+            boolean delayed){
+        
+        DataSubcomponentType dataSub = port.getDataFeatureClassifier();
+
+        if (!(dataSub instanceof DataImplementation)) {
+            return;
+        }
+
+        Set<AgreeVarDecl> tempSet = new HashSet<AgreeVarDecl>();
+        getAllDataNames((DataImplementation) dataSub, tempSet);
+
+        String sourStr;
+        String destStr;
+        String aadlSourStr;
+        String aadlDestStr;
+        if (sourContext != null) { // source is not an end point
+            assert (sourContext instanceof Subcomponent || sourContext instanceof FeatureGroup);
+            sourStr = sourContext.getName() + dotChar + sourConn.getName();
+            aadlSourStr = sourContext.getName() + "." + sourConn.getName();
+        } else {
+            sourStr = sourConn.getName();
+            aadlSourStr = sourConn.getName();
+        }
+
+        if (destContext != null) { // destination is not an end point
+            assert (destContext instanceof Subcomponent || destContext instanceof ThreadSubcomponent);
+            destStr = destContext.getName() + dotChar + destConn.getName();
+            aadlDestStr = destContext.getName() + "." + destConn.getName();
+        } else {
+            destStr = destConn.getName();
+            aadlDestStr = destConn.getName();
+        }
+
+        for (AgreeVarDecl varType : tempSet) {
+            String newDestStr = destStr + dotChar + varType.jKindStr;
+            String newSourStr = sourStr + dotChar + varType.jKindStr;
+            String newAADLDestStr = aadlDestStr + "." + varType.aadlStr;
+            String newAADLSourStr = aadlSourStr + "." + varType.aadlStr;
+
+            // make an internal var for this
+            varType.jKindStr = newDestStr;
+            varType.aadlStr = newAADLDestStr;
+
+            if (destContext != null) {
+                layout.addElement(destContext.getName(), varType.aadlStr,
+                        AgreeLayout.SigType.OUTPUT);
+            }
+
+            refMap.put(varType.aadlStr, destConn);
+            varRenaming.put(varType.jKindStr, varType.aadlStr);
+            internalVars.add(varType);
+
+            // if the source context is not null, then this is a variable
+            // that was not in the top level component features. Therefore
+            // a new input variable must be created
+            if (sourContext != null) {
+                AgreeVarDecl inputVar = new AgreeVarDecl();
+                inputVar.type = varType.type;
+                inputVar.jKindStr = newSourStr;
+                inputVar.aadlStr = newAADLSourStr;
+
+                layout.addElement(sourContext.getName(), inputVar.aadlStr,
+                        AgreeLayout.SigType.INPUT);
+                varRenaming.put(inputVar.jKindStr, inputVar.aadlStr);
+                refMap.put(inputVar.aadlStr, sourConn);
+                inputVars.add(inputVar);
+            }
+
+            Expr connExpr = null;
+            IdExpr sourId = new IdExpr(newSourStr);
+
+            if (sourContext != null && destContext != null && delayed) {
+                // this is not an input, and the output is not a terminal
+                Expr initValExpr = null;
+                switch (varType.type) {
+                case "bool":
+                    initValExpr = new BoolExpr(true);
+                    break;
+                case "int":
+                    initValExpr = new IntExpr(BigInteger.valueOf(0));
+                    break;
+                case "real":
+                    initValExpr = new RealExpr(BigDecimal.valueOf(0.0));
+                    break;
+                }
+                connExpr = new UnaryExpr(UnaryOp.PRE, sourId);
+                connExpr = new BinaryExpr(initValExpr, BinaryOp.ARROW, connExpr);
+            } else {
+                connExpr = sourId;
+            }
+            IdExpr destId = new IdExpr(newDestStr);
+            Equation connEq = new Equation(destId, connExpr);
+
+            connExpressions.add(connEq);
+        }
+
+    }
+    
 
     private void setLustreVars(ComponentType ct) {
         for (Feature feat : ct.getAllFeatures()) {

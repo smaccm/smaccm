@@ -20,6 +20,7 @@ import org.osate.aadl2.ComponentImplementation;
 import org.osate.aadl2.ComponentType;
 import org.osate.aadl2.Element;
 import org.osate.aadl2.Subcomponent;
+import org.osate.aadl2.ThreadSubcomponent;
 import org.osate.aadl2.impl.DataPortImpl;
 import org.osate.aadl2.impl.FeatureGroupImpl;
 
@@ -127,7 +128,9 @@ public class AgreeScopeProvider extends
             }
             container = refs.get(0);
 
-            if (container instanceof Subcomponent) {
+            if(container instanceof ThreadSubcomponent){
+                container = ((ThreadSubcomponent)container).getComponentType();
+            }else if (container instanceof Subcomponent) {
                 container = ((Subcomponent) container).getComponentImplementation();
             } else if (container instanceof DataPortImpl) {
                 container = ((DataPortImpl) container).getDataFeatureClassifier();
