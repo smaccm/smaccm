@@ -76,22 +76,6 @@ all_good_messages_sent(x : component, c : connection) <=
 	((property_exists(x, SMACCM::Always_Sends_Message) and  
 	  property_lookup(x, SMACCM::Always_Sends_Message)) 
 	  or class_of(x, SOFTWARE::Decrypt))
-		  
--- all the messages are sent through one connection
-only_one_out_mc(x : component) <=
- 	** "component " x " contains only a single\n"
- 	    "output message channel." **
-	not 
-	exists(c1 : connection).
-	    command_channel(c1) and 
-	    exists(c2 : connection).
-			not (c1 = c2) and  
-	    	command_channel(c2) and  
-	    	exists (comp1: component). 
-	    		connected(x, c1, comp1) and
-	    		exists(comp2: component). 
-	 				connected(x, c2, comp2) and
-					not (comp1 = comp2)
 **};
     
     
