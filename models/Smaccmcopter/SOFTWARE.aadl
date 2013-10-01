@@ -17,7 +17,6 @@ public
   system implementation Software.Impl
     subcomponents
       ML: process Main_Loop.Impl;
-	  Ivory: system IVORY::Software.Impl;
              
     connections
       feature group motors_and_radios <-> ML.motors_and_radios;
@@ -194,11 +193,6 @@ public
       mavlink: in data port DATATYPES::MAVLink;
       sensors: in data port DATATYPES::Sensor_Data.Impl;
       motor_commands: out data port DATATYPES::Motor_Commands.Impl;
-    
-    --modes
-    --  one : initial mode;
-    --  two : mode;
-    --  three : mode;
       
     properties
       Period => 200ms;

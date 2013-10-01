@@ -33,7 +33,6 @@ import org.osate.aadl2.PropertyType;
 import org.osate.aadl2.Subcomponent;
 import org.osate.aadl2.SubprogramGroupType;
 import org.osate.aadl2.SubprogramType;
-import org.osate.aadl2.SystemImplementation;
 import org.osate.aadl2.SystemType;
 import org.osate.aadl2.ThreadGroupType;
 import org.osate.aadl2.ThreadType;
