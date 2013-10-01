@@ -132,6 +132,10 @@ public class AgreeScopeProvider extends
                 container = ((ThreadSubcomponent)container).getComponentType();
             }else if (container instanceof Subcomponent) {
                 container = ((Subcomponent) container).getComponentImplementation();
+                if(container == null){ //no implementation is provided
+                    container = refs.get(0);
+                    container = ((Subcomponent) container).getClassifier();
+                }
             } else if (container instanceof DataPortImpl) {
                 container = ((DataPortImpl) container).getDataFeatureClassifier();
             } else if (container instanceof AadlPackage) {

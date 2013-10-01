@@ -36,25 +36,60 @@ public
       e2: in event port;
       e3: in event port;
       e4: in event port;
+      
+      
+       annex agree {**
+
+			const max_accel : real = 10.0;
+			eq tv_speed : real = motors_and_radios.flight_control_commands.f1;
+			eq av_speed : real = sensors.motion_data.vertical_speed;
+
+			assume "target speed is positive" : tv_speed >= 0.0;
+			assume "reasonable target speed" : tv_speed < 150.0;
+			assume "zero initial speed" : (av_speed = 0.0) -> true;
+			
+			property const_tar_speed = 
+				Agree_Nodes.H(tv_speed = prev(tv_speed,tv_speed)); 
+			
+			guarantee "actual speed is less than constant target speed" : 
+				const_tar_speed => (av_speed <= tv_speed);
+			
+			guarantee "acceleration is limited" : 
+				Agree_Nodes.abs(av_speed - prev(av_speed, 0.0)) < max_accel;
+				
+	**};
+      
   end Main_Loop;
     
+  abstract environment
+  	features
+  		motor_input : in data port DATATYPES::Motor_Commands.Impl;
+  		sensor_output : out data port DATATYPES::Sensor_Data.Impl;
+  end environment;
+  
   process implementation Main_Loop.Impl
     subcomponents
       SS: thread Sensors in modes (Boot, Normal, Defensive);
       CCT: thread Command_Control_Telemetry in modes (Normal);
       BC: thread Backup_Commands in modes (Defensive);
-      -- RC: thread Radio_Control in modes (Normal);
+      --RC: thread Radio_Control in modes (Normal);
       SN: thread Stability_Navigation in modes (Normal, Defensive);
       MC: thread Motor_Control in modes (Normal, Defensive);
       DC: thread Decrypt in modes (Normal);
+      ENV: abstract environment;
       
     connections
-      feature group sensors <-> SS.sensors_in in modes (Normal, Defensive, Boot);
+      feature group sensors <-> SS.sensors_in 
+      {Communication_Properties::Timing => immediate;} 
+      in modes (Normal, Defensive, Boot) ;
       -- port motors_and_radios.flight_control_commands -> RC.commands_in in modes (Normal);
       port motors_and_radios.mavlink -> DC.encrypt_in in modes (Normal);
       port DC.decrypt_out -> CCT.mavlink_in in modes (Normal);
       
-      port SS.sensors_out -> SN.sensors in modes (Normal, Defensive, Boot);
+      port SS.sensors_out -> SN.sensors
+      {Communication_Properties::Timing => immediate;}
+      in modes (Normal, Defensive, Boot);
+      
       -- port RC.commands_out -> SN.rc_commands in modes (Normal);
       port CCT.mavlink_out -> SN.mavlink  in modes (Normal);
       port BC.mavlink_out -> SN.mavlink  in modes (Defensive);
@@ -64,6 +99,8 @@ public
       port MC.servo2_commands -> motors_and_radios.motor2 in modes (Normal, Defensive);      
       port MC.servo3_commands -> motors_and_radios.motor3 in modes (Normal, Defensive);      
       port MC.servo4_commands -> motors_and_radios.motor4 in modes (Normal, Defensive);
+      
+      --connect motors and sensors to the environment for agree
       
     modes
       Boot: initial mode;
@@ -94,14 +131,22 @@ public
     	-- prove no_external_commands(this.SN, this) modes: Normal
     	
     	prove schedulable(this) modes: Normal
-    	prove schedulable(this) modes: Defensive
-    	
+    	prove schedulable(this) modes: Defensive 
+    	 
     	prove no_radio_commands(this.SN) modes: Defensive
     	
     	prove receives_mavlink(this.SN) modes: Defensive
     	prove receives_mavlink(this.SN) modes: Normal
     	      
     	prove only_receive_gs(this.MC) modes: Normal
+    **};
+    
+    annex agree {**
+
+    	assert av_speed = prev(av_speed, 0.0) + 0.1 * SN.motor_commands.val;
+    	assert motors_and_radios.flight_control_commands.f1 = SN.rc_commands.f1;
+    	assert SN.sensors.speed = av_speed;
+    	
     **};
 
   end Main_Loop.Impl;
@@ -170,7 +215,7 @@ public
       Static_Analysis::Reads_from_buffers => ("userinput_shared_state",
         "sensors_shared_state", "gcs_shared_state");
 
-      SMACCM::Language => "Ivory";
+      SMACCM::Language => "Ivory"; 
       
       annex agree {** 
 		eq e : real = rc_commands.f1 - sensors.speed;

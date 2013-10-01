@@ -43,7 +43,7 @@ public
       motor3: out data port DATATYPES::Servo_Commands;
       motor4: out data port DATATYPES::Servo_Commands;
       
-      flight_control_commands: in data port DATATYPES::Flight_Control_Commands;
+      flight_control_commands: in data port DATATYPES::Flight_Control_Commands.Impl;
       mavlink: in out data port DATATYPES::EncryptMAVLink;
   end motors_and_radios;
   

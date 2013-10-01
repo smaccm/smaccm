@@ -137,8 +137,8 @@ assume  "dont fail assumption" :
 -- Assertion: our computed pitch deltas are less than some 
 -- maximum amount.
 
-  guarantee "test guard" : Agree_Nodes.Z(true); 
-  guarantee "pitch is valid" : 
+  guarantee "test guard" : Agree_Nodes.Z(true);  
+  guarantee "pitch is valid" :  
   	true -> abs(CSA.CSA_Pitch_Delta) < CSA_MAX_PITCH_DELTA ;
 
   guarantee "pitch step is valid" : 

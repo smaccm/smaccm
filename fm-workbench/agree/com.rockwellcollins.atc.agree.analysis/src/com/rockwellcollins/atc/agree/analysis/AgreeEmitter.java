@@ -53,12 +53,14 @@ import org.osate.aadl2.DataSubcomponent;
 import org.osate.aadl2.DataSubcomponentType;
 import org.osate.aadl2.DataType;
 import org.osate.aadl2.EnumerationLiteral;
+import org.osate.aadl2.EventDataPort;
 import org.osate.aadl2.Feature;
 import org.osate.aadl2.FeatureGroup;
 import org.osate.aadl2.FeatureGroupType;
 import org.osate.aadl2.IntegerLiteral;
 import org.osate.aadl2.NamedElement;
 import org.osate.aadl2.NamedValue;
+import org.osate.aadl2.Port;
 import org.osate.aadl2.Property;
 import org.osate.aadl2.PropertyExpression;
 import org.osate.aadl2.RealLiteral;
@@ -786,8 +788,8 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
                 assert (absConnSour instanceof ConnectedElement);
                 Context sourContext = ((ConnectedElement) absConnSour).getContext();
                 if (sourContext != null && subs.contains(sourContext)) {
-                    if (destContext != null) {
-                        assert (destContext instanceof Subcomponent);
+                    if (destContext != null && destContext instanceof Subcomponent) {
+                        //assert (destContext instanceof Subcomponent);
                         if (orig.equals(destContext)) {
                             // there is a loop
                             subs.clear();
@@ -873,28 +875,31 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
             jKindNameTag = subComp.getName() + dotChar;
             aadlNameTag = subComp.getName() + ".";
 
+            //this code would add the assertions of an implementation
+            //
             // compToKindVars.put(curComp, new ArrayList<String>());
-            ComponentImplementation compImp = subComp.getComponentImplementation();
-            
-            if(compImp != null){
-
-                for (AnnexSubclause annex : compImp.getAllAnnexSubclauses()) {
-                    if (annex instanceof AgreeContractSubclause) {
-                        doSwitch(annex);
-                    }
+            //ComponentImplementation compImp = subComp.getComponentImplementation();
+            //
+            //if(compImp != null){
+            //
+            //    for (AnnexSubclause annex : compImp.getAllAnnexSubclauses()) {
+            //        if (annex instanceof AgreeContractSubclause) {
+            //            doSwitch(annex);
+            //        }
+            //    }
+            //}
+                
+            ComponentType compType = subComp.getComponentType();
+            for (AnnexSubclause annex : compType.getAllAnnexSubclauses()) {
+                if (annex instanceof AgreeContractSubclause) {
+                    doSwitch(annex);
                 }
-
-                ComponentType compType = compImp.getType();
-                for (AnnexSubclause annex : compType.getAllAnnexSubclauses()) {
-                    if (annex instanceof AgreeContractSubclause) {
-                        doSwitch(annex);
-                    }
-                }
-
-                subContrs.put(subComp, new ComponentContract(subComp.getName(), assumpExpressions,
-                        guarExpressions, assertExpressions, propExpressions, eqExpressions,
-                        constExpressions, nodeDefExpressions));
             }
+
+            subContrs.put(subComp, new ComponentContract(subComp.getName(), assumpExpressions,
+                    guarExpressions, assertExpressions, propExpressions, eqExpressions,
+                    constExpressions, nodeDefExpressions));
+            
         }
 
     }
@@ -922,42 +927,49 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
             Context destContext = ((ConnectedElement) absConnDest).getContext();
             Context sourContext = ((ConnectedElement) absConnSour).getContext();
 
-            DataPort port = null;
+            Feature port = null;
             if (destConn != null) {
-                if(destConn instanceof DataPort){
-                    port = (DataPort) destConn;
-                    setVarEquiv(port, sourContext, sourConn, destContext, destConn, delayed);
-                }else{
-                    assert(destConn instanceof FeatureGroup);
-                    FeatureGroupType featType = ((FeatureGroup)destConn).getAllFeatureGroupType();
+                port = (Feature)destConn;
+                if(port instanceof FeatureGroup){
+                    FeatureGroupType featType = ((FeatureGroup)port).getAllFeatureGroupType();
                     for(DataPort dPort: featType.getOwnedDataPorts()){
-                        setVarEquiv(dPort, sourContext, sourConn, destContext, destConn, delayed);
+                        port = dPort;
+                        setVarEquiv(port.getName(),port, sourContext, sourConn, destContext, destConn, delayed);
                     }
+                }else{
+                    setVarEquiv("",port, sourContext, sourConn, destContext, destConn, delayed);
                 }
             } else if (sourConn != null) {
-                if(sourConn instanceof DataPort){
-                    port = (DataPort) destConn;
-                    setVarEquiv(port, sourContext, sourConn, destContext, destConn, delayed);
-                }else{
-                    assert(sourConn instanceof FeatureGroup);
-                    FeatureGroupType featType = ((FeatureGroup)sourConn).getAllFeatureGroupType();
+                port = (Feature)sourConn;
+                if(port instanceof FeatureGroup){
+                    FeatureGroupType featType = ((FeatureGroup)port).getAllFeatureGroupType();
                     for(DataPort dPort: featType.getOwnedDataPorts()){
-                        setVarEquiv(dPort, sourContext, sourConn, destContext, destConn, delayed);
+                        port = dPort;
+                        setVarEquiv(port.getName(),port, sourContext, sourConn, destContext, destConn, delayed);
                     }
+                }else{
+                    setVarEquiv("",port, sourContext, sourConn, destContext, destConn, delayed);
                 }
             }
         }
     }
     
     
-    private void setVarEquiv(DataPort port,
+    private void setVarEquiv(String prefix,
+            Feature port,
             Context sourContext,
             ConnectionEnd sourConn,
             Context destContext, 
             ConnectionEnd destConn,
             boolean delayed){
         
-        DataSubcomponentType dataSub = port.getDataFeatureClassifier();
+        
+        DataSubcomponentType dataSub;
+        if(port instanceof DataPort){
+            dataSub = ((DataPort)port).getDataFeatureClassifier();
+        }else{
+            dataSub = ((EventDataPort)port).getDataFeatureClassifier();
+        }
 
         if (!(dataSub instanceof DataImplementation)) {
             return;
@@ -989,6 +1001,11 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
         }
 
         for (AgreeVarDecl varType : tempSet) {
+            //stupid hack to handle feature groups correctly
+            if(!prefix.equals("")){
+                varType.jKindStr = prefix + dotChar + varType.jKindStr;
+                varType.aadlStr = prefix + "." + varType.aadlStr;
+            }
             String newDestStr = destStr + dotChar + varType.jKindStr;
             String newSourStr = sourStr + dotChar + varType.jKindStr;
             String newAADLDestStr = aadlDestStr + "." + varType.aadlStr;
