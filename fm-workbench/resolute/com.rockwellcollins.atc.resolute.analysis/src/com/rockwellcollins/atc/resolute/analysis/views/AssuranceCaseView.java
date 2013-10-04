@@ -79,7 +79,7 @@ public class AssuranceCaseView extends ViewPart {
     public void addProofs(List<ResoluteProofTree> proofTrees) {
         List<ResoluteProofNode> roots = new ArrayList<>();
         for (ResoluteProofTree tree : proofTrees) {
-            tree.sortDescendants();
+            // tree.sortDescendants();
             roots.add(tree.getRoot());
         }
         treeViewer.setInput(roots);

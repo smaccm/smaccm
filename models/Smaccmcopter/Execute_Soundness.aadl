@@ -49,7 +49,7 @@ only_receive_decrypt(x : component) <=
     ((connected(y, c, x) and command_channel(c)) => 
       unalterable_channel(c) and (class_of(y, SOFTWARE::Decrypt) or only_receive_decrypt(y)))       
        
--- The connection c carries commands
+-- The connection c potentially carries commands
 -- Non command datatypes must be explicitly whitelisted here
 command_channel(c : connection) : bool =
   (not has_type(c)) or
