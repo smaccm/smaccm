@@ -121,28 +121,29 @@ property some_side_valid =
 assume "valid assumption" : some_side_valid ;
 
 -- We assume when a side recovers it does not fail immediately
---assume prev(prev(not left_side_valid, false), false) and
+--assume "don't fail otherside assumption" : 
+--	   prev(prev(not left_side_valid, false), false) and
 --       prev(left_side_valid, false) => 
---           left_side_valid ;
-assume  "dont fail assumption" :
+--           left_side_valid ; 
+
+assume "dont fail assumption" : 
 	   prev(prev(not right_side_valid, false), false) and
        prev(right_side_valid, false) =>
          right_side_valid ;
 		  
 -- NB: should these be implications for assert instead of assumptions? 
 
-  assume "valid pitch" :AD_L_Pitch_Step_Delta_Valid and  
-         AD_R_Pitch_Step_Delta_Valid and pitch_lr_ok ;   
+assume "valid pitch" :AD_L_Pitch_Step_Delta_Valid and  
+       AD_R_Pitch_Step_Delta_Valid and pitch_lr_ok ;   
 		  
 -- Assertion: our computed pitch deltas are less than some 
 -- maximum amount.
 
-
-  guarantee "pitch is valid" : 
+guarantee "pitch is valid" : 
   	true -> abs(CSA.CSA_Pitch_Delta) < CSA_MAX_PITCH_DELTA ;
 
-  guarantee "pitch step is valid" : 
-  	true -> abs(CSA.CSA_Pitch_Delta - prev(CSA.CSA_Pitch_Delta, 0.0)) < CSA_MAX_PITCH_DELTA_STEP ;
+guarantee "pitch step is valid" : 
+	true -> abs(CSA.CSA_Pitch_Delta - prev(CSA.CSA_Pitch_Delta, 0.0)) < CSA_MAX_PITCH_DELTA_STEP ;
 
 -- End of Flight_Control_System Contact
 ----------------------------------------------------------------

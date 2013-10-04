@@ -3,6 +3,9 @@ package com.rockwellcollins.atc.resolute.linking;
 import java.util.Collections;
 import java.util.List;
 
+import org.eclipse.core.runtime.Path;
+import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
@@ -10,11 +13,14 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.xtext.linking.impl.IllegalNodeException;
 import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.resource.IEObjectDescription;
+import org.eclipse.xtext.resource.IResourceDescriptions;
 import org.osate.aadl2.Aadl2Package;
 import org.osate.aadl2.NamedElement;
 import org.osate.aadl2.PropertyValue;
 import org.osate.aadl2.UnitLiteral;
 import org.osate.aadl2.UnitsType;
+import org.osate.aadl2.impl.AadlPackageImpl;
+import org.osate.aadl2.util.Aadl2Util;
 import org.osate.xtext.aadl2.properties.linking.PropertiesLinkingService;
 import org.osate.xtext.aadl2.properties.util.EMFIndexRetrieval;
 
@@ -57,10 +63,29 @@ public class ResoluteLinkingService extends PropertiesLinkingService {
 
             // TODO: This is a blind lookup which is unaware of project
             // dependencies and such
-            e = EMFIndexRetrieval.getEObjectOfType(context, reference.getEReferenceType(), name);
-            if (e != null) {
-                return e;
+
+            Iterable<IEObjectDescription> allObjectTypes = 
+                    EMFIndexRetrieval.getAllEObjectsOfTypeInWorkspace(context, reference.getEReferenceType());
+            
+            URI contextUri = context.eResource().getURI();
+            String contextProject = contextUri.segment(1);
+            for (IEObjectDescription eod : allObjectTypes) {
+                if (eod.getName().toString().equalsIgnoreCase(name)) {
+                    EObject res = eod.getEObjectOrProxy();
+                    res = EcoreUtil.resolve(res, context.eResource().getResourceSet());
+                    if (!Aadl2Util.isNull(res)){
+                        URI linkUri = res.eResource().getURI();
+                        if(linkUri.segment(1).equals(contextProject)){
+                            return res;
+                        }
+                    }
+                }
             }
+            
+           // e = EMFIndexRetrieval.getEObjectOfType(context, reference.getEReferenceType(), name);
+           // if (e != null) {
+           //     return e;
+           // }
 
             e = getConstantDefinition(context, name);
             if (e != null) {
@@ -110,4 +135,5 @@ public class ResoluteLinkingService extends PropertiesLinkingService {
 
         return null;
     }
+    
 }

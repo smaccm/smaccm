@@ -4,6 +4,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
@@ -51,7 +52,7 @@ public abstract class VerifyHandler extends AadlHandler {
             ComponentImplementation ci = (ComponentImplementation) root;
             AnalysisResult result;
             CompositeAnalysisResult wrapper = new CompositeAnalysisResult("");
-            List<ComponentImplementation> modelParents = new ArrayList<>();
+            LinkedList<ComponentImplementation> modelParents = new LinkedList<>();
             
             if (isRecursive()) {
                 result = buildAnalysisResult(ci.getName(), ci, modelParents, null);
@@ -85,14 +86,14 @@ public abstract class VerifyHandler extends AadlHandler {
     }
 
     private AnalysisResult buildAnalysisResult(String name, ComponentImplementation ci,
-            List<ComponentImplementation> modelParents, Subcomponent context) {
+            LinkedList<ComponentImplementation> modelParents, Subcomponent context) {
         CompositeAnalysisResult result = new CompositeAnalysisResult("Verification for " + name);
         
         result.addChild(createGuaranteeVerification(ci, modelParents, context));
         result.addChild(createAssumptionVerification(ci, modelParents, context));
         result.addChild(createConsistVerification(ci, modelParents, context));
         
-        modelParents.add(ci);
+        modelParents.push(ci);
         for (Subcomponent sub : ci.getAllSubcomponents()) {
             ComponentImplementation subCi = sub.getComponentImplementation();
             if (subCi != null) {

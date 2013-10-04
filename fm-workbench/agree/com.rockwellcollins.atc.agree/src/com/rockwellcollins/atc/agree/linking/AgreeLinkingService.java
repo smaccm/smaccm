@@ -3,6 +3,7 @@ package com.rockwellcollins.atc.agree.linking;
 import java.util.Collections;
 import java.util.List;
 
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
@@ -15,6 +16,7 @@ import org.osate.aadl2.Element;
 import org.osate.aadl2.PropertyValue;
 import org.osate.aadl2.UnitLiteral;
 import org.osate.aadl2.UnitsType;
+import org.osate.aadl2.util.Aadl2Util;
 import org.osate.xtext.aadl2.properties.linking.PropertiesLinkingService;
 import org.osate.xtext.aadl2.properties.util.EMFIndexRetrieval;
 
@@ -44,12 +46,31 @@ public class AgreeLinkingService extends PropertiesLinkingService {
                 return Collections.singletonList(e);
             }
 
+            //this code will only link to objects in the same project
+            Iterable<IEObjectDescription> allObjectTypes = 
+                    EMFIndexRetrieval.getAllEObjectsOfTypeInWorkspace(context, reference.getEReferenceType());
+            
+            URI contextUri = context.eResource().getURI();
+            String contextProject = contextUri.segment(1);
+            for (IEObjectDescription eod : allObjectTypes) {
+                if (eod.getName().toString().equalsIgnoreCase(name)) {
+                    EObject res = eod.getEObjectOrProxy();
+                    res = EcoreUtil.resolve(res, context.eResource().getResourceSet());
+                    if (!Aadl2Util.isNull(res)){
+                        URI linkUri = res.eResource().getURI();
+                        if(linkUri.segment(1).equals(contextProject)){
+                            return Collections.singletonList(res);
+                        }
+                    }
+                }
+            }
+            
             // TODO: This is a blind lookup which is unaware of project
             // dependencies and such
-            e = EMFIndexRetrieval.getEObjectOfType(context, reference.getEReferenceType(), name);
-            if (e != null) {
-                return Collections.singletonList(e);
-            }
+            //e = EMFIndexRetrieval.getEObjectOfType(context, reference.getEReferenceType(), name);
+            //if (e != null) {
+            //    return Collections.singletonList(e);
+            //}
         }
 
         return super.getLinkedObjects(context, reference, node);

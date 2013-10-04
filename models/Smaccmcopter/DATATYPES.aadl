@@ -7,7 +7,7 @@ public
   end RawMessage;
   
   data ParsedMessage
-  end ParsedMessage; 
+  end ParsedMessage;  
   
   data MAVLink
   end MAVLink;

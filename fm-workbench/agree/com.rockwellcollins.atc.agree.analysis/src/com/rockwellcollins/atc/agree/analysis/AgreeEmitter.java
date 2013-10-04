@@ -469,7 +469,6 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
 
     @Override
     public Expr caseFnCallExpr(FnCallExpr expr) {
-        // TODO: handle this correctly
         String fnName = jKindNameTag + getFnCallExprName(expr);
 
         if (!nodeDefs.containsKey(fnName)) {
@@ -823,7 +822,6 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
         propExpressions = new ArrayList<Equation>();
         eqExpressions = new ArrayList<Equation>();
         constExpressions = new ArrayList<Equation>();
-        // funDefExpressions = new ArrayList<KindExpr>();
         nodeDefExpressions = new ArrayList<Node>();
 
         // set the tag

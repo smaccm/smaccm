@@ -93,7 +93,8 @@ public
 					((GPCA_SW_OUT.Commanded_Flow_Rate <= GPCA_SW_OUT.Flow_Rate_KVO) and (GPCA_SW_OUT.Audio_Notification_Command = CONST_IN.Audio_Level) and (GPCA_SW_OUT.Is_Audio_Disabled = 0) ); 
 	guarantee "occlusion_implies_flow_at_most_KVO ":  occlusion_implies_flow_at_most_KVO;
  
-
+ 
+ 	guarantee "bad" : false;
 	-- Requirement : Door Open => Flow_Rate atmost KVO and audio if not disabled.
 	property door_open_implies_flow_at_most_KVO = 
 		true -> 

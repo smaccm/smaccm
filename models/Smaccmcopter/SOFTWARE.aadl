@@ -39,7 +39,7 @@ public
       
        annex agree {**
 
-			const max_accel : real = 10.0;
+			const max_accel : real = 5.0; 
 			eq tv_speed : real = motors_and_radios.flight_control_commands.f1;
 			eq av_speed : real = sensors.motion_data.vertical_speed;
 
