@@ -22,7 +22,6 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.PartInitException;
 import org.osate.aadl2.AnnexSubclause;
-import org.osate.aadl2.ComponentClassifier;
 import org.osate.aadl2.ComponentImplementation;
 import org.osate.aadl2.ComponentType;
 import org.osate.aadl2.Element;
@@ -273,7 +272,7 @@ public abstract class VerifyHandler extends AadlHandler {
             api.setSmoothCounterexamples();
         }
         if (prefs.getBoolean(PreferenceConstants.PREF_BLAME_CEX)) {
-            api.setBlameCounterexamples();
+            api.setIntervalGeneralization();
         }
         api.setN(prefs.getInt(PreferenceConstants.PREF_DEPTH));
         api.setTimeout(prefs.getInt(PreferenceConstants.PREF_TIMEOUT));
