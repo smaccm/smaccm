@@ -30,7 +30,7 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
   {
     try
     {
-      AgreeFactory theAgreeFactory = (AgreeFactory)EPackage.Registry.INSTANCE.getEFactory("http://www.rockwellcollins.com/atc/agree/Agree"); 
+      AgreeFactory theAgreeFactory = (AgreeFactory)EPackage.Registry.INSTANCE.getEFactory(AgreePackage.eNS_URI);
       if (theAgreeFactory != null)
       {
         return theAgreeFactory;
@@ -88,6 +88,7 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
       case AgreePackage.ASSERT_STATEMENT: return createAssertStatement();
       case AgreePackage.PARAM_STATEMENT: return createParamStatement();
       case AgreePackage.LEMMA_STATEMENT: return createLemmaStatement();
+      case AgreePackage.LIFT_STATEMENT: return createLiftStatement();
       case AgreePackage.NODE_EQ: return createNodeEq();
       case AgreePackage.NODE_LEMMA: return createNodeLemma();
       case AgreePackage.BINARY_EXPR: return createBinaryExpr();
@@ -370,6 +371,17 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
   {
     LemmaStatementImpl lemmaStatement = new LemmaStatementImpl();
     return lemmaStatement;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public LiftStatement createLiftStatement()
+  {
+    LiftStatementImpl liftStatement = new LiftStatementImpl();
+    return liftStatement;
   }
 
   /**

@@ -21,6 +21,7 @@ import com.rockwellcollins.atc.agree.agree.IdExpr;
 import com.rockwellcollins.atc.agree.agree.IfThenElseExpr;
 import com.rockwellcollins.atc.agree.agree.IntLitExpr;
 import com.rockwellcollins.atc.agree.agree.LemmaStatement;
+import com.rockwellcollins.atc.agree.agree.LiftStatement;
 import com.rockwellcollins.atc.agree.agree.NestedDotID;
 import com.rockwellcollins.atc.agree.agree.NextExpr;
 import com.rockwellcollins.atc.agree.agree.NodeBodyExpr;
@@ -499,6 +500,13 @@ public class AgreeSemanticSequencer extends PropertiesSemanticSequencer {
 					return; 
 				}
 				else break;
+			case AgreePackage.LIFT_STATEMENT:
+				if(context == grammarAccess.getElementRule() ||
+				   context == grammarAccess.getSpecStatementRule()) {
+					sequence_SpecStatement(context, (LiftStatement) semanticObject); 
+					return; 
+				}
+				else break;
 			case AgreePackage.NESTED_DOT_ID:
 				if(context == grammarAccess.getAddSubExprRule() ||
 				   context == grammarAccess.getAddSubExprAccess().getBinaryExprLeftAction_1_0_0_0() ||
@@ -951,6 +959,15 @@ public class AgreeSemanticSequencer extends PropertiesSemanticSequencer {
 	 *     (str=STRING expr=Expr)
 	 */
 	protected void sequence_SpecStatement(EObject context, LemmaStatement semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Constraint:
+	 *     subcomp=NestedDotID
+	 */
+	protected void sequence_SpecStatement(EObject context, LiftStatement semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	

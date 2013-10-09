@@ -25,4 +25,13 @@ public
   			val: data Base_Types::Float;
   	end pitch.pitch_impl;
   	
+  	
+  	data state_sig
+  	end state_sig;
+  	
+  	data implementation state_sig.impl
+  		subcomponents
+  			val: data Base_Types::Integer;
+  	end state_sig.impl;
+  	
 end Types;

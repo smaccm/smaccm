@@ -1,11 +1,13 @@
 package Transmission
 public
 	with Types;
+	with Base_Types;
 
 	system Speed_Control
 		features
 			Target: in data port Types::speed.speed_impl;
-			Actuator_Input: out data port Types::actuator.actuator_impl;
+			--Actuator_Input: out data port Types::actuator.actuator_impl;
+			Actuator_Input: out data port Base_Types::Float;
 			Actual: in data port Types::speed.speed_impl;
 			
 	annex agree {** 
@@ -14,7 +16,7 @@ public
 		eq e_dot : real = prev(e, 0.0) - e;
 		
 		eq u : real = 0.2*e + 0.1*e_dot + 0.1*e_int;
-		guarantee "Acuator_Behavior" : Actuator_Input.val = u;
+		guarantee "Acuator_Behavior" : Actuator_Input = u;
 	**}; 
 	
 	end Speed_Control;
@@ -22,18 +24,19 @@ public
 	system implementation Speed_Control.Speed_Control_Impl
 		
 	annex agree {**
-		assert Actuator_Input.val = u;
+		assert Actuator_Input = u;
 	**};
 	end Speed_Control.Speed_Control_Impl;
 
 
 	system Throttle
 		features
-			Actuator_Input: in data port Types::actuator.actuator_impl;
+			--Actuator_Input: in data port Types::actuator.actuator_impl;
+			Actuator_Input: in data port Base_Types::Float;
 			Actual: out data port Types::speed.speed_impl;
 			
 		annex agree {**
-			guarantee "Throttle_Behavior" : Actual.val = prev(Actual.val, 0.0) + 0.1*Actuator_Input.val; 
+			guarantee "Throttle_Behavior" : Actual.val = prev(Actual.val, 0.0) + 0.1*Actuator_Input;  
 		**};
 		
 	end Throttle;
@@ -42,9 +45,44 @@ public
 	system implementation Throttle.Throttle_Impl
 	
 	annex agree {**
-		assert Actual.val = prev(Actual.val, 0.0) + 0.1*Actuator_Input.val;  
+		assert Actual.val = prev(Actual.val, 0.0) + 0.1*Actuator_Input;  
 	**};
 	
 	end Throttle.Throttle_Impl;
+	
+	system State_Machine
+		features
+			State_Out: out data port Types::state_sig.impl;
+	end State_Machine;
+	
+	system implementation State_Machine.Impl
+		subcomponents
+			SSM: system Sub_State_Machine.Impl; 
+			
+		connections
+			SMToSSM: port SSM.State_Out -> State_Out {Communication_Properties::Timing => immediate;};
+			
+		annex agree {**
+			lift SSM;
+			assert(SSM.State_Out.val = State_Out.val);
+		**};
+		
+	end State_Machine.impl;
+	
+	system Sub_State_Machine
+		features
+			State_Out: out data port Types::state_sig.impl;
+			
+		annex agree {**
+			guarantee "behavior" : State_Out.val = prev(State_Out.val,0);
+		**};
+	end Sub_State_Machine;
+	
+	system implementation Sub_State_Machine.Impl
+	
+		annex agree {**
+			assert State_Out.val = prev(State_Out.val,0);
+		**};
+	end Sub_State_Machine.impl;
 	
 end Transmission;

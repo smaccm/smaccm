@@ -239,6 +239,15 @@ public interface AgreeFactory extends EFactory
   LemmaStatement createLemmaStatement();
 
   /**
+   * Returns a new object of class '<em>Lift Statement</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Lift Statement</em>'.
+   * @generated
+   */
+  LiftStatement createLiftStatement();
+
+  /**
    * Returns a new object of class '<em>Node Eq</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->

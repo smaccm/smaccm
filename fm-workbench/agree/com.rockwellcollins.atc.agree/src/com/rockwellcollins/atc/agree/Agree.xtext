@@ -51,6 +51,7 @@ SpecStatement:
 |   {AssertStatement}     'assert' expr=Expr ';'
 |   {ParamStatement}      'parameter' expr=Expr ':' type=Type ';'
 |   {LemmaStatement}      'lemma' str=STRING ':' expr=Expr ';'
+|   {LiftStatement}       'lift' subcomp=NestedDotID ';'
 |   PropertyStatement
 |   ConstStatement
 |   EqStatement

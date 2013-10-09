@@ -85,6 +85,10 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="str" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="expr" eType="#//Expr" containment="true"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="LiftStatement" eSuperTypes="#//SpecStatement">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="subcomp" eType="#//NestedDotID"
+        containment="true"/>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="NodeEq" eSuperTypes="#//NodeStmt">
     <eStructuralFeatures xsi:type="ecore:EReference" name="lhs" unique="false" upperBound="-1"
         eType="#//Arg"/>

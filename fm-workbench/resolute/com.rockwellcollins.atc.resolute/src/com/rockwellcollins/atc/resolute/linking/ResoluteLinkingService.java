@@ -61,9 +61,6 @@ public class ResoluteLinkingService extends PropertiesLinkingService {
                 return e;
             }
 
-            // TODO: This is a blind lookup which is unaware of project
-            // dependencies and such
-
             Iterable<IEObjectDescription> allObjectTypes = 
                     EMFIndexRetrieval.getAllEObjectsOfTypeInWorkspace(context, reference.getEReferenceType());
             

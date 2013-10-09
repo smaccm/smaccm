@@ -239,23 +239,29 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		private final Assignment cExprAssignment_4_4 = (Assignment)cGroup_4.eContents().get(4);
 		private final RuleCall cExprExprParserRuleCall_4_4_0 = (RuleCall)cExprAssignment_4_4.eContents().get(0);
 		private final Keyword cSemicolonKeyword_4_5 = (Keyword)cGroup_4.eContents().get(5);
-		private final RuleCall cPropertyStatementParserRuleCall_5 = (RuleCall)cAlternatives.eContents().get(5);
-		private final RuleCall cConstStatementParserRuleCall_6 = (RuleCall)cAlternatives.eContents().get(6);
-		private final RuleCall cEqStatementParserRuleCall_7 = (RuleCall)cAlternatives.eContents().get(7);
-		private final RuleCall cFnDefExprParserRuleCall_8 = (RuleCall)cAlternatives.eContents().get(8);
-		private final RuleCall cNodeDefExprParserRuleCall_9 = (RuleCall)cAlternatives.eContents().get(9);
+		private final Group cGroup_5 = (Group)cAlternatives.eContents().get(5);
+		private final Action cLiftStatementAction_5_0 = (Action)cGroup_5.eContents().get(0);
+		private final Keyword cLiftKeyword_5_1 = (Keyword)cGroup_5.eContents().get(1);
+		private final Assignment cSubcompAssignment_5_2 = (Assignment)cGroup_5.eContents().get(2);
+		private final RuleCall cSubcompNestedDotIDParserRuleCall_5_2_0 = (RuleCall)cSubcompAssignment_5_2.eContents().get(0);
+		private final Keyword cSemicolonKeyword_5_3 = (Keyword)cGroup_5.eContents().get(3);
+		private final RuleCall cPropertyStatementParserRuleCall_6 = (RuleCall)cAlternatives.eContents().get(6);
+		private final RuleCall cConstStatementParserRuleCall_7 = (RuleCall)cAlternatives.eContents().get(7);
+		private final RuleCall cEqStatementParserRuleCall_8 = (RuleCall)cAlternatives.eContents().get(8);
+		private final RuleCall cFnDefExprParserRuleCall_9 = (RuleCall)cAlternatives.eContents().get(9);
+		private final RuleCall cNodeDefExprParserRuleCall_10 = (RuleCall)cAlternatives.eContents().get(10);
 		
 		//SpecStatement:
 		//	{AssumeStatement} "assume" str=STRING ":" expr=Expr ";" | {GuaranteeStatement} "guarantee" str=STRING ":" expr=Expr
 		//	";" | {AssertStatement} "assert" expr=Expr ";" | {ParamStatement} "parameter" expr=Expr ":" type=Type ";" |
-		//	{LemmaStatement} "lemma" str=STRING ":" expr=Expr ";" | PropertyStatement | ConstStatement | EqStatement | FnDefExpr |
-		//	NodeDefExpr;
+		//	{LemmaStatement} "lemma" str=STRING ":" expr=Expr ";" | {LiftStatement} "lift" subcomp=NestedDotID ";" |
+		//	PropertyStatement | ConstStatement | EqStatement | FnDefExpr | NodeDefExpr;
 		public ParserRule getRule() { return rule; }
 
 		//{AssumeStatement} "assume" str=STRING ":" expr=Expr ";" | {GuaranteeStatement} "guarantee" str=STRING ":" expr=Expr ";"
 		//| {AssertStatement} "assert" expr=Expr ";" | {ParamStatement} "parameter" expr=Expr ":" type=Type ";" |
-		//{LemmaStatement} "lemma" str=STRING ":" expr=Expr ";" | PropertyStatement | ConstStatement | EqStatement | FnDefExpr |
-		//NodeDefExpr
+		//{LemmaStatement} "lemma" str=STRING ":" expr=Expr ";" | {LiftStatement} "lift" subcomp=NestedDotID ";" |
+		//PropertyStatement | ConstStatement | EqStatement | FnDefExpr | NodeDefExpr
 		public Alternatives getAlternatives() { return cAlternatives; }
 
 		//{AssumeStatement} "assume" str=STRING ":" expr=Expr ";"
@@ -384,20 +390,38 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		//";"
 		public Keyword getSemicolonKeyword_4_5() { return cSemicolonKeyword_4_5; }
 
+		//{LiftStatement} "lift" subcomp=NestedDotID ";"
+		public Group getGroup_5() { return cGroup_5; }
+
+		//{LiftStatement}
+		public Action getLiftStatementAction_5_0() { return cLiftStatementAction_5_0; }
+
+		//"lift"
+		public Keyword getLiftKeyword_5_1() { return cLiftKeyword_5_1; }
+
+		//subcomp=NestedDotID
+		public Assignment getSubcompAssignment_5_2() { return cSubcompAssignment_5_2; }
+
+		//NestedDotID
+		public RuleCall getSubcompNestedDotIDParserRuleCall_5_2_0() { return cSubcompNestedDotIDParserRuleCall_5_2_0; }
+
+		//";"
+		public Keyword getSemicolonKeyword_5_3() { return cSemicolonKeyword_5_3; }
+
 		//PropertyStatement
-		public RuleCall getPropertyStatementParserRuleCall_5() { return cPropertyStatementParserRuleCall_5; }
+		public RuleCall getPropertyStatementParserRuleCall_6() { return cPropertyStatementParserRuleCall_6; }
 
 		//ConstStatement
-		public RuleCall getConstStatementParserRuleCall_6() { return cConstStatementParserRuleCall_6; }
+		public RuleCall getConstStatementParserRuleCall_7() { return cConstStatementParserRuleCall_7; }
 
 		//EqStatement
-		public RuleCall getEqStatementParserRuleCall_7() { return cEqStatementParserRuleCall_7; }
+		public RuleCall getEqStatementParserRuleCall_8() { return cEqStatementParserRuleCall_8; }
 
 		//FnDefExpr
-		public RuleCall getFnDefExprParserRuleCall_8() { return cFnDefExprParserRuleCall_8; }
+		public RuleCall getFnDefExprParserRuleCall_9() { return cFnDefExprParserRuleCall_9; }
 
 		//NodeDefExpr
-		public RuleCall getNodeDefExprParserRuleCall_9() { return cNodeDefExprParserRuleCall_9; }
+		public RuleCall getNodeDefExprParserRuleCall_10() { return cNodeDefExprParserRuleCall_10; }
 	}
 
 	public class CallDefElements extends AbstractParserRuleElementFinder {
@@ -2123,8 +2147,8 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 	//SpecStatement:
 	//	{AssumeStatement} "assume" str=STRING ":" expr=Expr ";" | {GuaranteeStatement} "guarantee" str=STRING ":" expr=Expr
 	//	";" | {AssertStatement} "assert" expr=Expr ";" | {ParamStatement} "parameter" expr=Expr ":" type=Type ";" |
-	//	{LemmaStatement} "lemma" str=STRING ":" expr=Expr ";" | PropertyStatement | ConstStatement | EqStatement | FnDefExpr |
-	//	NodeDefExpr;
+	//	{LemmaStatement} "lemma" str=STRING ":" expr=Expr ";" | {LiftStatement} "lift" subcomp=NestedDotID ";" |
+	//	PropertyStatement | ConstStatement | EqStatement | FnDefExpr | NodeDefExpr;
 	public SpecStatementElements getSpecStatementAccess() {
 		return (pSpecStatement != null) ? pSpecStatement : (pSpecStatement = new SpecStatementElements());
 	}

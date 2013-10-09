@@ -27,6 +27,7 @@ import com.rockwellcollins.atc.agree.agree.IdExpr;
 import com.rockwellcollins.atc.agree.agree.IfThenElseExpr;
 import com.rockwellcollins.atc.agree.agree.IntLitExpr;
 import com.rockwellcollins.atc.agree.agree.LemmaStatement;
+import com.rockwellcollins.atc.agree.agree.LiftStatement;
 import com.rockwellcollins.atc.agree.agree.NestedDotID;
 import com.rockwellcollins.atc.agree.agree.NextExpr;
 import com.rockwellcollins.atc.agree.agree.NodeBodyExpr;
@@ -228,6 +229,13 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * @generated
    */
   private EClass lemmaStatementEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass liftStatementEClass = null;
 
   /**
    * <!-- begin-user-doc -->
@@ -945,6 +953,26 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  public EClass getLiftStatement()
+  {
+    return liftStatementEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getLiftStatement_Subcomp()
+  {
+    return (EReference)liftStatementEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   public EClass getNodeEq()
   {
     return nodeEqEClass;
@@ -1418,6 +1446,9 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     createEAttribute(lemmaStatementEClass, LEMMA_STATEMENT__STR);
     createEReference(lemmaStatementEClass, LEMMA_STATEMENT__EXPR);
 
+    liftStatementEClass = createEClass(LIFT_STATEMENT);
+    createEReference(liftStatementEClass, LIFT_STATEMENT__SUBCOMP);
+
     nodeEqEClass = createEClass(NODE_EQ);
     createEReference(nodeEqEClass, NODE_EQ__LHS);
 
@@ -1533,6 +1564,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     assertStatementEClass.getESuperTypes().add(this.getSpecStatement());
     paramStatementEClass.getESuperTypes().add(this.getSpecStatement());
     lemmaStatementEClass.getESuperTypes().add(this.getSpecStatement());
+    liftStatementEClass.getESuperTypes().add(this.getSpecStatement());
     nodeEqEClass.getESuperTypes().add(this.getNodeStmt());
     nodeLemmaEClass.getESuperTypes().add(this.getNodeStmt());
     binaryExprEClass.getESuperTypes().add(this.getExpr());
@@ -1627,6 +1659,9 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     initEClass(lemmaStatementEClass, LemmaStatement.class, "LemmaStatement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEAttribute(getLemmaStatement_Str(), ecorePackage.getEString(), "str", null, 0, 1, LemmaStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getLemmaStatement_Expr(), this.getExpr(), null, "expr", null, 0, 1, LemmaStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+    initEClass(liftStatementEClass, LiftStatement.class, "LiftStatement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getLiftStatement_Subcomp(), this.getNestedDotID(), null, "subcomp", null, 0, 1, LiftStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(nodeEqEClass, NodeEq.class, "NodeEq", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getNodeEq_Lhs(), this.getArg(), null, "lhs", null, 0, -1, NodeEq.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

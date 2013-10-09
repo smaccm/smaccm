@@ -19,7 +19,9 @@ import org.osate.aadl2.ClassifierType;
 import org.osate.aadl2.ComponentClassifier;
 import org.osate.aadl2.ComponentImplementation;
 import org.osate.aadl2.ComponentType;
+import org.osate.aadl2.DataPort;
 import org.osate.aadl2.DataSubcomponent;
+import org.osate.aadl2.DataSubcomponentType;
 import org.osate.aadl2.DataType;
 import org.osate.aadl2.Element;
 import org.osate.aadl2.EnumerationType;
@@ -27,6 +29,8 @@ import org.osate.aadl2.NamedElement;
 import org.osate.aadl2.Property;
 import org.osate.aadl2.PropertyType;
 import org.osate.aadl2.Subcomponent;
+import org.osate.aadl2.ThreadSubcomponent;
+import org.osate.aadl2.impl.SubcomponentImpl;
 
 import com.rockwellcollins.atc.agree.agree.AgreePackage;
 import com.rockwellcollins.atc.agree.agree.Arg;
@@ -46,6 +50,7 @@ import com.rockwellcollins.atc.agree.agree.IdExpr;
 import com.rockwellcollins.atc.agree.agree.IfThenElseExpr;
 import com.rockwellcollins.atc.agree.agree.IntLitExpr;
 import com.rockwellcollins.atc.agree.agree.LemmaStatement;
+import com.rockwellcollins.atc.agree.agree.LiftStatement;
 import com.rockwellcollins.atc.agree.agree.NestedDotID;
 import com.rockwellcollins.atc.agree.agree.NextExpr;
 import com.rockwellcollins.atc.agree.agree.NodeDefExpr;
@@ -87,6 +92,32 @@ public class AgreeJavaValidator extends
         if (!matches(BOOL, exprType)) {
             error(assume, "Expression for assume statement is of type '" + exprType.toString()
                     + "' but must be of type 'bool'");
+        }
+    }
+    
+    @Check
+    public void checkLift(LiftStatement lift){
+        NestedDotID dotId = lift.getSubcomp();
+        
+        if(dotId.getSub() != null){
+            error(lift, "Lift statements can only be applied to direct subcomponents." +
+                        "Place a lift statement in the subcomponents contract for heavy lifting");
+        }
+        
+        NamedElement namedEl = dotId.getBase();
+        
+
+        if(namedEl != null){
+            if(!(namedEl instanceof SubcomponentImpl)){
+                error(lift, "Lift statements must apply to subcomponent implementations. '"
+                        +namedEl.getName()+"' is not a subcomponent.");
+            }else{
+                SubcomponentImpl subImpl = (SubcomponentImpl)namedEl;
+                if(subImpl.getComponentImplementation() == null){
+                    error(lift, "Lift statements must apply to subcomponent implementations. '"
+                            +namedEl.getName()+"' is a subcomponent type, not a subcomponent implementation.");
+                }
+            }
         }
     }
 
@@ -197,6 +228,8 @@ public class AgreeJavaValidator extends
             return getAgreeType((ConstStatement) namedEl);
         } else if (namedEl instanceof EqStatement) {
             return getAgreeType(namedEl);
+        } else if (namedEl instanceof DataPort){
+            return getAgreeType(((DataPort)namedEl).getDataFeatureClassifier());
         }
 
         return ERROR;
@@ -219,6 +252,19 @@ public class AgreeJavaValidator extends
             dataClass = dataType.getExtended();
         }
 
+        return new AgreeType("uninterpreted data");
+    }
+    
+    private AgreeType getAgreeType(DataSubcomponentType data) {
+        String qualName = data.getQualifiedName();
+        switch (qualName) {
+        case "Base_Types::Boolean":
+            return BOOL;
+        case "Base_Types::Integer":
+            return INT;
+        case "Base_Types::Float":
+            return REAL;
+        }
         return new AgreeType("uninterpreted data");
     }
 
