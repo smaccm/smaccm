@@ -64,7 +64,6 @@ public
 			
 		annex agree {**
 			lift SSM;
-			assert(SSM.State_Out.val = State_Out.val);
 		**};
 		
 	end State_Machine.impl;

@@ -29,7 +29,9 @@ import org.osate.aadl2.Subcomponent;
 
 import com.rockwellcollins.atc.agree.agree.AgreeSubclause;
 import com.rockwellcollins.atc.agree.analysis.Activator;
+import com.rockwellcollins.atc.agree.analysis.AgreeAnnexEmitter;
 import com.rockwellcollins.atc.agree.analysis.AgreeEmitter;
+import com.rockwellcollins.atc.agree.analysis.AgreeGenerator;
 import com.rockwellcollins.atc.agree.analysis.preferences.PreferenceConstants;
 import com.rockwellcollins.atc.agree.analysis.views.AgreeResultsLinker;
 import com.rockwellcollins.atc.agree.analysis.views.AgreeResultsView;
@@ -106,10 +108,14 @@ public abstract class VerifyHandler extends AadlHandler {
 
     private AnalysisResult createGuaranteeVerification(ComponentImplementation ci,
             List<ComponentImplementation> modelParents, Subcomponent context) {
-        AgreeEmitter emitter = new AgreeEmitter(ci, modelParents, context); 
-        Program program = emitter.evaluate();
+        //AgreeEmitter emitter = new AgreeEmitter(ci, modelParents, context); 
+        //Program program = emitter.evaluate();
+        
+        AgreeGenerator emitter = new AgreeGenerator(ci, modelParents);
+        Program program = emitter.evaluate(context);
 
-        List<String> properties = emitter.guarProps;
+
+        List<String> properties = emitter.getGuarProps();
         Node oldNode = program.getMainNode();
         Node newNode = new Node(oldNode.location, 
                 oldNode.id,
@@ -144,10 +150,13 @@ public abstract class VerifyHandler extends AadlHandler {
     
     private AnalysisResult createAssumptionVerification(ComponentImplementation ci,
             List<ComponentImplementation> modelParents, Subcomponent context) {
-        AgreeEmitter emitter = new AgreeEmitter(ci, modelParents, context);
-        Program program = emitter.evaluate();
+        //AgreeEmitter emitter = new AgreeEmitter(ci, modelParents, context);
+        //Program program = emitter.evaluate();
 
-        List<String> properties = emitter.assumProps;
+        AgreeGenerator emitter = new AgreeGenerator(ci, modelParents);
+        Program program = emitter.evaluate(context);
+
+        List<String> properties = emitter.getAssumeProps();
         Node oldNode = program.getMainNode();
         Node newNode = new Node(oldNode.location, 
                 oldNode.id,
@@ -181,10 +190,14 @@ public abstract class VerifyHandler extends AadlHandler {
 
     private AnalysisResult createConsistVerification(ComponentImplementation ci,
             List<ComponentImplementation> modelParents, Subcomponent context) {
-        AgreeEmitter emitter = new AgreeEmitter(ci, modelParents, context);
-        Program program = emitter.evaluate();
+        //AgreeEmitter emitter = new AgreeEmitter(ci, modelParents, context);
+        //Program program = emitter.evaluate();
+        
+        AgreeGenerator emitter = new AgreeGenerator(ci, modelParents);
+        Program program = emitter.evaluate(context);
 
-        List<String> properties = emitter.consistProps;
+
+        List<String> properties = emitter.getConsistProps();
         Node oldNode = program.getMainNode();
         Node newNode = new Node(oldNode.location, 
                 oldNode.id,

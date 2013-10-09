@@ -996,6 +996,13 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
             dataSub = ((EventDataPort)port).getDataFeatureClassifier();
         }
 
+        if(dataSub instanceof DataType){
+            //we only want to reason about known types
+            if(AgreeEmitterUtilities.dataTypeToVarType((DataType)dataSub) == null){
+                return;
+            }
+        }
+        
         if (!(dataSub instanceof DataImplementation || dataSub instanceof DataType)) {
             return;
         }
@@ -1534,6 +1541,18 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
 
     public List<Boolean> getReverseStatus() {
         return this.reversePropStatus;
+    }
+
+    public List<String> getConsistProps() {
+        return this.consistProps;
+    }
+
+    public List<String> getAssumeProps() {
+        return this.assumProps;
+    }
+
+    public List<String> getGuarProps() {
+        return this.guarProps;
     }
 
 }

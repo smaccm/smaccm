@@ -100,6 +100,21 @@ public class AgreeEmitterUtilities {
         return null;
 
     }
+
+    static public String dataTypeToVarType(DataType sub) {
+        String name = sub.getQualifiedName();
+
+        switch (name) {
+        case "Base_Types::Boolean":
+            return "bool";
+        case "Base_Types::Integer":
+            return "int";
+        case "Base_Types::Float":
+            return "real";
+        }
+
+        return null;
+    }
     
     
     public String getFnCallExprName(FnCallExpr expr) {

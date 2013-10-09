@@ -6,9 +6,9 @@ import java.util.Map;
 
 import jkind.api.results.MapRenaming;
 import jkind.api.results.Renaming;
-import jkind.excel.Layout;
 import jkind.lustre.Node;
 import jkind.lustre.Program;
+import jkind.results.layout.Layout;
 
 import org.eclipse.emf.ecore.EObject;
 import org.osate.aadl2.AnnexSubclause;
@@ -22,20 +22,25 @@ public class AgreeGenerator {
     
     private ComponentImplementation compImpl;
     private List<ComponentImplementation> modelParents;
+    private AgreeAnnexEmitter topEmitter;
+    private String dotChar = "__";
+
 
     public AgreeGenerator(ComponentImplementation compImpl, List<ComponentImplementation> modelParents){
         this.compImpl = compImpl;
         this.modelParents = modelParents;
     }
     
-    public Program evaluate(){
+    public Program evaluate(Subcomponent subCompContext){
         
         ComponentType ct = compImpl.getType();
         AgreeLayout layout = new AgreeLayout();
-        String category = compImpl.getName();
+        String category = "";
         
         AgreeAnnexEmitter topEmitter = new AgreeAnnexEmitter(
-                compImpl, modelParents, null, layout, category);
+                compImpl, modelParents, subCompContext, layout, category, "", "");
+        
+        this.topEmitter = topEmitter;
         
         for (AnnexSubclause annex : compImpl.getAllAnnexSubclauses()) {
             if (annex instanceof AgreeContractSubclause) {
@@ -53,9 +58,11 @@ public class AgreeGenerator {
         for (Subcomponent subComp : compImpl.getAllSubcomponents()) {
             ct = subComp.getComponentType();
             ComponentImplementation subCompImpl = subComp.getComponentImplementation();
-            category = compImpl.getName() + subComp.getName();
+            category = subComp.getName();
             AgreeAnnexEmitter subEmitter = new AgreeAnnexEmitter(
-                    subCompImpl, modelParents, subComp, layout, category);
+                    subCompImpl, modelParents, subComp, layout, category,
+                    subComp.getName() + dotChar,
+                    subComp.getName() + ".");
 
             for (AnnexSubclause annex : subCompImpl.getAllAnnexSubclauses()) {
                 if (annex instanceof AgreeContractSubclause) {
@@ -76,13 +83,34 @@ public class AgreeGenerator {
         return new Program(nodes);
         
     }
-    
-   // public Map<String, EObject> getReferenceMap() {
-   //     return refMap;
-   // }
 
-   // public Renaming getRenaming() {
-   //     return new MapRenaming(varRenaming, MapRenaming.Mode.NULL);
-   // }
+    public Map<String, EObject> getReferenceMap() {
+        return topEmitter.refMap;
+    }
+
+    public Renaming getRenaming() {
+        return new MapRenaming(topEmitter.varRenaming, MapRenaming.Mode.NULL);
+    }
+
+    public Layout getLayout() {
+        return topEmitter.layout;
+    }
+
+    public String getLog() {
+        return topEmitter.log.toString();
+    }
+
+    public List<String> getAssumeProps() {
+        return topEmitter.assumProps;
+    }
+
+    public List<String> getConsistProps() {
+        return topEmitter.consistProps;
+    }
+
+    public List<String> getGuarProps() {
+        return topEmitter.guarProps;
+    }
+
 
 }
