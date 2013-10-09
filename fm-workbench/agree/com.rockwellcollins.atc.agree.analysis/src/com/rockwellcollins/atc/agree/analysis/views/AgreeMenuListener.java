@@ -2,13 +2,13 @@ package com.rockwellcollins.atc.agree.analysis.views;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.Map;
 
 import jkind.api.results.AnalysisResult;
 import jkind.api.results.PropertyResult;
 import jkind.api.ui.AnalysisResultTree;
-import jkind.excel.Layout;
-import jkind.intervalsim.Interval;
+import jkind.interval.NumericInterval;
 import jkind.lustre.Program;
 import jkind.lustre.values.Value;
 import jkind.results.Counterexample;
@@ -16,6 +16,7 @@ import jkind.results.InvalidProperty;
 import jkind.results.Property;
 import jkind.results.Signal;
 import jkind.results.UnknownProperty;
+import jkind.results.layout.Layout;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -103,14 +104,14 @@ public class AgreeMenuListener implements IMenuListener {
             final String cexType = getCounterexampleType(result);
             final Layout layout = linker.getLayout(result.getParent());
             final Map<String, EObject> refMap = linker.getReferenceMap(result.getParent());
-    
+
             manager.add(new Action("View " + cexType + "Counterexample in Console") {
                 @Override
                 public void run() {
                     viewCexConsole(cex, layout, refMap);
                 }
             });
-    
+
             manager.add(new Action("View " + cexType + "Counterexample in Spreadsheet") {
                 @Override
                 public void run() {
@@ -214,12 +215,13 @@ public class AgreeMenuListener implements IMenuListener {
                         out.print(String.format("%-60s", "{" + signal.getName() + "}"));
                         for (int k = 0; k < cex.getLength(); k++) {
                             Value val = signal.getValue(k);
-                            if(val == null){
+                            if (jkind.util.Util.isArbitrary(val)) {
                                 out.print(String.format("%-15s", "-"));
-                            }else if(val instanceof Interval){
-                                out.print(String.format("%-15s", ((Interval) val).toPrettyString()));
-                            }else{
-                                out.print(String.format("%-15s", val));
+                            } else if (val instanceof NumericInterval) {
+                                out.print(String.format("%-15s",
+                                        formatInterval((NumericInterval) val)));
+                            } else {
+                                out.print(String.format("%-15s", val.toString()));
                             }
                         }
                         out.println();
@@ -230,6 +232,34 @@ public class AgreeMenuListener implements IMenuListener {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private String formatInterval(NumericInterval ni) {
+        if (ni.isExact()) {
+            return formatDouble(ni.getLow().toDouble());
+        }
+
+        String low;
+        if (ni.getLow().isFinite()) {
+            low = formatDouble(ni.getLow().toDouble());
+        } else {
+            low = "-inf";
+        }
+
+        String high;
+        if (ni.getHigh().isFinite()) {
+            high = formatDouble(ni.getHigh().toDouble());
+        } else {
+            high = "inf";
+        }
+
+        return "[" + low + ", " + high + "]";
+    }
+
+    private static final DecimalFormat format = new DecimalFormat("#.##");
+
+    private String formatDouble(double x) {
+        return format.format(x);
     }
 
     private boolean isEmpty(String category, Counterexample cex, Layout layout) {

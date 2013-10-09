@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import jkind.excel.Layout;
+import jkind.results.layout.Layout;
 
 public class AgreeLayout implements Layout {
 	private List<String> categories = new ArrayList<>();

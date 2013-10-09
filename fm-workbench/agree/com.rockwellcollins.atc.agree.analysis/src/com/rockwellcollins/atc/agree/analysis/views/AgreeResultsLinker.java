@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import jkind.api.results.AnalysisResult;
-import jkind.excel.Layout;
+import jkind.results.layout.Layout;
 import jkind.lustre.Program;
 
 import org.eclipse.emf.ecore.EObject;

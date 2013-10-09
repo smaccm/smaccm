@@ -4,10 +4,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.osate.aadl2.ComponentImplementation;
-import org.osate.aadl2.ContainedNamedElement;
-import org.osate.aadl2.Property;
-import org.osate.aadl2.PropertyAssociation;
 import org.osate.aadl2.Subcomponent;
 import org.osate.aadl2.SystemImplementation;
 

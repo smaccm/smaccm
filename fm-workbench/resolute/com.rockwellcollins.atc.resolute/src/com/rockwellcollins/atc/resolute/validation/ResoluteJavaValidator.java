@@ -505,7 +505,13 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
             // rather than a ResoluteSubclause. In this case an error
             // will be thrown by the type checking function for 'this'
             // statements above
-            if (parent instanceof ComponentType) {
+            if (parent instanceof ComponentImplementation) {
+                ComponentImplementation ci = (ComponentImplementation) parent;
+                ResoluteType type = getComponentType(ci.getType());
+                if (type != null) {
+                    return type;
+                }
+            } else if (parent instanceof ComponentType) {
                 ResoluteType type = getComponentType((ComponentType) parent);
                 if (type != null) {
                     return type;
