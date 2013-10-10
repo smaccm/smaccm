@@ -1,7 +1,7 @@
 -- 
 package Signals
 public
-with Types,Data_Model;
+with Types,Data_Model, Base_Types;
   system Fall
     features
       I: in data port Types::Boolean;
@@ -26,8 +26,8 @@ with Types,Data_Model;
   
   system Rise
     features
-      I: in data port Types::Boolean;
-      O: out data port Types::Boolean {
+      I: in data port Base_Types::Boolean;
+      O: out data port Base_Types::Boolean {
         Data_Model::Initial_Value => ("false");
         };
     annex behavior_specification {**

@@ -73,7 +73,7 @@ public
 			State_Out: out data port Types::state_sig.impl;
 			
 		annex agree {**
-			guarantee "behavior" : State_Out.val = prev(State_Out.val,0);
+			guarantee "behavior" : State_Out.val = prev(State_Out.val - 1,0);
 		**};
 	end Sub_State_Machine;
 	

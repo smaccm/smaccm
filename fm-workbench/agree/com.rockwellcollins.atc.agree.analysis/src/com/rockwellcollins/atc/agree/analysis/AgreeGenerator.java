@@ -64,9 +64,11 @@ public class AgreeGenerator {
                     subComp.getName() + dotChar,
                     subComp.getName() + ".");
 
-            for (AnnexSubclause annex : subCompImpl.getAllAnnexSubclauses()) {
-                if (annex instanceof AgreeContractSubclause) {
-                    subEmitter.doSwitch(annex);
+            if(subCompImpl != null){
+                for (AnnexSubclause annex : subCompImpl.getAllAnnexSubclauses()) {
+                    if (annex instanceof AgreeContractSubclause) {
+                        subEmitter.doSwitch(annex);
+                    }
                 }
             }
 

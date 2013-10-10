@@ -1,34 +1,34 @@
 -- 
 package Pilot_Flying
 public
-with Types,Signals,QS_Properties,Data_Model;
+with Types,Signals,QS_Properties,Data_Model, Base_Types;
   system Cross_Channel_Bus
     features
-      I: in data port Types::Boolean.Boolean_Impl;
-      O: out data port Types::Boolean.Boolean_Impl;
+      I: in data port Base_Types::Boolean;
+      O: out data port Base_Types::Boolean;
      
      annex agree {**
-     	
-     	guarantee "whatever" : true;
-     	--guarantee "channel behavior" :       	
-     	--	 O.Val <=> prev(I.Val, init_val);
+     	property init_val =  
+     		Get_Property(this, QS_Properties::Init_Bool);
+     		
+     	guarantee "channel behavior" :       	
+     		 O <=> prev(I, init_val);
      	
      **};
   end Cross_Channel_Bus;
   
   system Pilot_Flying_Side_Logic
     features
-      riseTS: in data port Types::Boolean.Boolean_Impl;
-      riseOSPF: in data port Types::Boolean.Boolean_Impl;
-      PFS: out data port Types::Boolean.Boolean_Impl;
+      riseTS: in data port Base_Types::Boolean;
+      riseOSPF: in data port Base_Types::Boolean;
+      PFS: out data port Base_Types::Boolean;
     
     annex agree {**
-    	
-    		
-        --guarantee "cannot riseOSPF in inhibit" : riseOSPF.Val => not (PFS.Val);
-        --guarantee "cannot riseTS in wait" : riseTS.Val => not (PFS.Val);
-        guarantee "Cannot immediately switch" :
-        	PFS.Val and prev(not(PFS.Val), false) => not(prev(prev(PFS.Val,false),false));
+
+        guarantee "Cannot immediately switch" : 
+        	(false -> (PFS != pre(PFS))) 
+        		=> 
+        	(prev(PFS, true) <=> prev(PFS , prev(PFS,true))) ;
         
     **};
     
@@ -75,17 +75,21 @@ with Types,Signals,QS_Properties,Data_Model;
   	const WAIT : int = 4;
   	
   	eq inhibit_count : int = 0 -> 
-  		if (pre(state) != INHB) and (state = INHB) then
+  		if (pre(state) = STRT) and not(prim_side) then
   			0
-  		else if (pre(state) = INHB and (state = INHB)) then
+		else if (pre(state) = CONF and riseOSPF) then  		
+			0
+		else if (pre(state) = INHB) then
   			(pre(inhibit_count) + 1)
   		else
   			pre(inhibit_count);
   			
   	eq wait_count : int = 0 -> 
-  		if (pre(state) != WAIT) and (state = WAIT) then
+  		if (pre(state) = STRT) and prim_side then
   			0
-  		else if (pre(state) = WAIT and (state = WAIT)) then
+  		else if (pre(state) = LIST and riseTS) then
+  			0	
+		else if (pre(state) = WAIT) then
   			(pre(wait_count) + 1)
   		else
   			pre(wait_count);
@@ -95,20 +99,21 @@ with Types,Signals,QS_Properties,Data_Model;
   			WAIT 
   		else if(pre(state) = STRT and (not prim_side)) then
   			INHB
-  		else if (pre(state) = LIST and riseTS.Val) then 
+  		else if (pre(state) = LIST and riseTS) then 
   			WAIT
-  		else  if (pre(state) = INHB and inhibit_count > 1) then
+  		else  if (pre(state) = INHB and pre(inhibit_count) > 1) then
   			LIST
-  		else if (pre(state) = CONF and riseOSPF.Val) then
+  		else if (pre(state) = CONF and riseOSPF) then
   			INHB
-  		else if (pre(state) = WAIT and wait_count > 1) then 
+  		else if (pre(state) = WAIT and pre(wait_count) > 1) then 
   			CONF
   		else 
   			pre(state)));
   	
-  	assert PFS.Val <=> prim_side -> 
-  		(state = WAIT or state = CONF);
-  		
+  	assert PFS <=> (prim_side ->( 
+  		((pre(state) = WAIT) 
+  			or (pre(state = CONF) and riseTS)
+  		)));		
   	
   **};
   end Pilot_Flying_Side_Logic.Pilot_Flying_Side_Logic_Impl;
@@ -116,16 +121,16 @@ with Types,Signals,QS_Properties,Data_Model;
   
   system PilotFlying
     features
-      TS: in data port Types::Boolean;
-      LPFS: out data port Types::Boolean;
-      RPFS: out data port Types::Boolean;
+      TS: in data port Base_Types::Boolean;
+      LPFS: out data port Base_Types::Boolean;
+      RPFS: out data port Base_Types::Boolean;
   end PilotFlying;
   
   system Side
     features
-      TS: in data port Types::Boolean;
-      OSPF: in data port Types::Boolean;
-      PFS: out data port Types::Boolean;
+      TS: in data port Base_Types::Boolean;
+      OSPF: in data port Base_Types::Boolean;
+      PFS: out data port Base_Types::Boolean;
     properties
       QS_Properties::Primary_Side => false;
   end Side;
@@ -135,11 +140,8 @@ with Types,Signals,QS_Properties,Data_Model;
       prev_I: data Types::Boolean;
       
       annex agree {**
-      	property init_val =  
-     		Get_Property(this, QS_Properties::Init_Bool);
-      	assert O.Val <=> prev(I.Val, init_val);
-      	--assert (I.Val <=> init_val) -> true; 
-      
+      	assert O <=> prev(I, init_val);
+      	--assert (I <=> init_val) -> true; 
 	  **};
       
       

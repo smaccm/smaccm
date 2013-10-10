@@ -135,6 +135,9 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
     //the current subcomponent
     private Subcomponent curComp; 
     
+    //the current implementation
+    private ComponentImplementation curImpl;
+    
     //print errors and warnings here
     public final AgreeLogger log = new AgreeLogger();
     
@@ -157,6 +160,7 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         }
                 
         this.curComp = subComp;
+        this.curImpl = compImpl;
         this.modelParents = modelParents;
         this.category = category;
         
@@ -580,7 +584,8 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
 
         if(propVal == null){
             throw new AgreeException("Could not locate property value '"+
-                    prop.getFullName()+"' in component '"+compName.getName()+"'");
+                    prop.getFullName()+"' in component '"+compName.getName()+"'.  Is it possible "
+                    + "that a 'this' statement is used in a context in which it wasn't supposed to?");
         }
         Expr res = null;
         if (propVal != null) {
@@ -621,6 +626,15 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
             return ((com.rockwellcollins.atc.agree.agree.IdExpr) obj).getId();
         } else {
             assert (obj instanceof ThisExpr);
+            if(curComp == null){
+                if(curImpl == null){
+                    throw new AgreeException("Null context and implemenation seen at 'this' statement");
+                }else{
+                    return curImpl;
+                }
+            }
+            
+            
             return curComp;
         }
     }
@@ -685,7 +699,7 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         // a new random input?
 
         // hack for making sure all inputs have been created
-        if (namedEl instanceof DataSubcomponent) {
+        if (namedEl instanceof DataSubcomponent || namedEl instanceof DataPort) {
             String tempStr = result.id;
             AgreeVarDecl tempStrType = new AgreeVarDecl();
             tempStrType.jKindStr = tempStr;
@@ -699,7 +713,15 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
 
              
                 // this code just creates a new PI
-                tempStrType = AgreeEmitterUtilities.dataTypeToVarType((DataSubcomponent) namedEl);
+                if(namedEl instanceof DataSubcomponent){
+                    tempStrType = AgreeEmitterUtilities.dataTypeToVarType((DataSubcomponent) namedEl);
+                }else{
+                    DataType dataType = (DataType) ((DataPort)namedEl).getDataFeatureClassifier();
+                            
+                    String typeStr = AgreeEmitterUtilities.dataTypeToVarType(dataType);
+                    tempStrType = new AgreeVarDecl();
+                    tempStrType.type = typeStr;
+                }
                 jKindVar = jKindNameTag + jKindVar + Id.getBase().getName();
                 aadlVar = aadlNameTag + aadlVar + Id.getBase().getName();
 
@@ -893,12 +915,21 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
             }
         }else{
             AgreeVarDecl varType = new AgreeVarDecl();
-            varType.jKindStr = destStr;
-            varType.aadlStr = aadlDestStr;
+            
+            String newDestStr = initJStr + destStr;
+            String newSourStr = initJStr + sourStr;
+            String newAADLDestStr = initAStr + aadlDestStr;
+            String newAADLSourStr = initAStr + aadlSourStr;
+            
+            varType.jKindStr = newDestStr;
+            varType.aadlStr = newAADLDestStr;
             varType.type = AgreeEmitterUtilities.dataTypeToVarType((DataType)dataSub);
             
             setVarEquiv_Helper(sourContext, sourConn, destContext, destConn, 
-                    varType, destStr, sourStr, aadlSourStr, delayed);
+                    varType, newDestStr, newSourStr, newAADLSourStr, delayed);
+            
+            //setVarEquiv_Helper(sourContext, sourConn, destContext, destConn, 
+            //        varType, destStr, sourStr, aadlSourStr, delayed);
             
         }
 
