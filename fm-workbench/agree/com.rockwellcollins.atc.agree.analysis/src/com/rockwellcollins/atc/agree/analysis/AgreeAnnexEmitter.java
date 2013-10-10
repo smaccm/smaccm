@@ -186,25 +186,26 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         NestedDotID nestId = lift.getSubcomp();
         
         Subcomponent subComp = (Subcomponent)nestId.getBase();
-        ComponentImplementation compImpl = curComp.getComponentImplementation();
-        ComponentType compType = curComp.getComponentType();
+        ComponentImplementation compImpl = curImpl;
+        ComponentImplementation subCompImpl = subComp.getComponentImplementation();
+        ComponentType subCompType = subCompImpl.getType();
         
         LinkedList<ComponentImplementation> subModelParents = new LinkedList<>();
         subModelParents.addAll(modelParents);
         subModelParents.push(compImpl);
         AgreeAnnexEmitter subEmitter = new AgreeAnnexEmitter(
-                compImpl, subModelParents, subComp, layout, category,
+                subComp.getComponentImplementation(), subModelParents, subComp, layout, category,
                 jKindNameTag + subComp.getName() + dotChar,
                 aadlNameTag + subComp.getFullName() + ".");
         
 
-        for (AnnexSubclause annex : compImpl.getAllAnnexSubclauses()) {
+        for (AnnexSubclause annex : subCompImpl.getAllAnnexSubclauses()) {
             if (annex instanceof AgreeContractSubclause) {
                 subEmitter.doSwitch(annex);
             }
         }
 
-        for (AnnexSubclause annex : compType.getAllAnnexSubclauses()) {
+        for (AnnexSubclause annex : subCompType.getAllAnnexSubclauses()) {
             if (annex instanceof AgreeContractSubclause) {
                 subEmitter.doSwitch(annex);
             }
