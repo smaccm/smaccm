@@ -691,6 +691,12 @@ public class AgreeJavaValidator extends
         // Scope check for nodes / functions
         NamedElement id = idExpr.getId();
         checkScope(idExpr, id);
+        
+        if(id instanceof Property){
+            if(!(idExpr.eContainer() instanceof GetPropertyExpr)){
+                error(idExpr, "References to AADL properties can only appear in 'Get_Property' expressions.");
+            }
+        }
     }
 
     private AgreeType getAgreeType(IdExpr idExpr) {

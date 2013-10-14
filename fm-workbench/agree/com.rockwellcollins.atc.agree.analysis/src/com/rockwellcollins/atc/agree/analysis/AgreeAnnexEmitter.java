@@ -105,7 +105,7 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
     private final List<Equation> eqExpressions = new ArrayList<>();
     private final List<Equation> constExpressions = new ArrayList<>();
     private final List<Node> nodeDefExpressions = new ArrayList<>();
-    private final List<Equation> connExpressions = new ArrayList<Equation>();
+    private final List<Equation> connExpressions = new ArrayList<>();
     private final String sysGuarTag = "__SYS_GUARANTEE_";
     
     //reference map used for hyperlinking from the console
@@ -168,7 +168,6 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         //    jPrefix += subComp.getName() + dotChar;
         //    aPrefix += subComp.getName() + ".";
         //}
-
         
         jKindNameTag = jPrefix;
         aadlNameTag = aPrefix;
@@ -1025,6 +1024,73 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
                 }
             }
         }
+    }
+    
+    public AgreeNode getComponentNode(){
+        
+        List<Equation> eqs = new ArrayList<Equation>();
+        List<VarDecl> inputs = new ArrayList<VarDecl>();
+        List<VarDecl> outputs = new ArrayList<VarDecl>();
+
+        List<Node> nodeSet = new ArrayList<Node>();
+
+        nodeSet.addAll(this.nodeDefExpressions);
+        eqs.addAll(this.constExpressions);
+        eqs.addAll(this.eqExpressions);
+        eqs.addAll(this.propExpressions);
+        eqs.addAll(this.connExpressions);
+        
+        Set<AgreeVarDecl> agreeInputVars = new HashSet<>();
+        Set<AgreeVarDecl> agreeInternalVars = new HashSet<>();
+        
+        agreeInputVars.addAll(this.inputVars);
+        agreeInternalVars.addAll(this.internalVars);
+        
+        //convert the variables
+        for(AgreeVarDecl aVar : agreeInputVars){
+            //sSystem.out.println(aVar.jKindStr);
+            inputs.add(new VarDecl(aVar.jKindStr, new NamedType(aVar.type)));
+        }
+        for(AgreeVarDecl aVar : agreeInternalVars){
+            outputs.add(new VarDecl(aVar.jKindStr, new NamedType(aVar.type)));
+        }
+        
+        //create equations for assumptions, assertions, and guarantees
+        List<VarDecl> guarVars = new ArrayList<>();
+        int i = 0;
+        for(Equation eq : this.guarExpressions){
+            IdExpr id = new IdExpr("__GUAR_"+i++);
+            VarDecl guarVar = new VarDecl(id.id, NamedType.BOOL);
+            outputs.add(guarVar);
+            guarVars.add(guarVar);
+            eqs.add(new Equation(id, eq.expr));
+        }
+        
+        List<VarDecl> asserVars = new ArrayList<>();
+        i = 0;
+        for(Expr expr : this.assertExpressions){
+            IdExpr id = new IdExpr("__ASSER_"+i++);
+            VarDecl asserVar = new VarDecl(id.id, NamedType.BOOL);
+            outputs.add(asserVar);
+            asserVars.add(asserVar);
+            eqs.add(new Equation(id, expr));
+        }
+        
+        List<VarDecl> assumVars = new ArrayList<>();
+        i = 0;
+        for(Equation eq : this.guarExpressions){
+            IdExpr id = new IdExpr("__ASSUM_"+i++);
+            VarDecl assumVar = new VarDecl(id.id, NamedType.BOOL);
+            outputs.add(assumVar);
+            assumVars.add(assumVar);
+            eqs.add(new Equation(id, eq.expr));
+        }
+
+        Node node = new Node("__NODE_"+this.category, inputs, outputs, Collections.EMPTY_LIST, eqs);
+        
+        List<Node> agreeNodes = new ArrayList<>(this.nodeDefExpressions);
+        agreeNodes.add(node);
+        return new AgreeNode(inputs, outputs, assumVars, asserVars, guarVars, agreeNodes);
     }
     
     public List<Node> getLustre(ComponentImplementation compImpl,
