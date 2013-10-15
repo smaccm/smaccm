@@ -27,6 +27,10 @@ import org.osate.aadl2.ComponentType;
 import org.osate.aadl2.Element;
 import org.osate.aadl2.NamedElement;
 import org.osate.aadl2.Subcomponent;
+import org.osate.aadl2.SystemImplementation;
+import org.osate.aadl2.instance.SystemInstance;
+import org.osate.aadl2.instantiation.InstantiateModel;
+import org.osate.ui.dialogs.Dialog;
 
 import com.rockwellcollins.atc.agree.agree.AgreeSubclause;
 import com.rockwellcollins.atc.agree.analysis.Activator;
@@ -45,25 +49,38 @@ public abstract class VerifyHandler extends AadlHandler {
 
     @Override
     protected IStatus runJob(Element root, IProgressMonitor monitor) {
-        if (!(root instanceof ComponentImplementation)) {
+        if (!(root instanceof SystemImplementation)) {
             return new Status(IStatus.ERROR, Activator.PLUGIN_ID,
-                    "Must select an AADL Component Implementation");
+                    "Must select an AADL System Implementation");
         }
 
         try {
             ComponentImplementation ci = (ComponentImplementation) root;
+            
+            SystemInstance si = null;
+            if (root instanceof SystemImplementation) {
+                final SystemImplementation sysimpl = (SystemImplementation) root;
+                try {
+                    si = InstantiateModel.buildInstanceModelFile(sysimpl);
+                } catch (Exception e) {
+                    Dialog.showError("Model Instantiate", "Error while re-instantiating the model: "
+                            + e.getMessage());
+                    return Status.CANCEL_STATUS;
+                }
+            }
+            
             AnalysisResult result;
             CompositeAnalysisResult wrapper = new CompositeAnalysisResult("");
             LinkedList<NamedElement> modelParents = new LinkedList<>();
             
             if (isRecursive()) {
-                result = buildAnalysisResult(ci.getName(), ci, modelParents, null);
+                result = buildAnalysisResult(ci.getName(), si, modelParents, null);
                 wrapper.addChild(result);
                 result = wrapper;
             } else {
-                wrapper.addChild(createConsistVerification(ci, modelParents, null));
-                wrapper.addChild(createAssumptionVerification(ci, modelParents, null));
-                wrapper.addChild(createGuaranteeVerification(ci, modelParents, null));
+                wrapper.addChild(createConsistVerification(si, modelParents, null));
+                wrapper.addChild(createAssumptionVerification(si, modelParents, null));
+                wrapper.addChild(createGuaranteeVerification(si, modelParents, null));
                 result = wrapper;
             }
             showView(result, linker);
@@ -87,32 +104,32 @@ public abstract class VerifyHandler extends AadlHandler {
         return sw.toString();
     }
 
-    private AnalysisResult buildAnalysisResult(String name, ComponentImplementation ci,
+    private AnalysisResult buildAnalysisResult(String name, SystemInstance si,
             LinkedList<NamedElement> modelParents, Subcomponent context) {
         CompositeAnalysisResult result = new CompositeAnalysisResult("Verification for " + name);
         
-        result.addChild(createGuaranteeVerification(ci, modelParents, context));
-        result.addChild(createAssumptionVerification(ci, modelParents, context));
-        result.addChild(createConsistVerification(ci, modelParents, context));
+        result.addChild(createGuaranteeVerification(si, modelParents, context));
+        result.addChild(createAssumptionVerification(si, modelParents, context));
+        result.addChild(createConsistVerification(si, modelParents, context));
         
-        modelParents.push(ci);
-        for (Subcomponent sub : ci.getAllSubcomponents()) {
+        modelParents.push(si);
+        for (Subcomponent sub : si.getAllSubcomponents()) {
             ComponentImplementation subCi = sub.getComponentImplementation();
             if (subCi != null) {
                 result.addChild(buildAnalysisResult(sub.getName(), subCi, modelParents, sub));
             }
         }
-        linker.setComponent(result, ci);
+        linker.setComponent(result, si);
 
         return result;
     }
 
-    private AnalysisResult createGuaranteeVerification(ComponentImplementation ci,
+    private AnalysisResult createGuaranteeVerification(SystemInstance si,
             List<NamedElement> modelParents, Subcomponent context) {
         //AgreeEmitter emitter = new AgreeEmitter(ci, modelParents, context); 
         //Program program = emitter.evaluate();
         
-        AgreeGenerator emitter = new AgreeGenerator(ci, modelParents);
+        AgreeGenerator emitter = new AgreeGenerator(si, modelParents);
         Program program = emitter.evaluate(context);
 
 
@@ -140,8 +157,8 @@ public abstract class VerifyHandler extends AadlHandler {
         queue.add(result);
 
         linker.setProgram(result, program);
-        linker.setComponent(result, ci);
-        linker.setContract(result, getContract(ci));
+        linker.setComponent(result, si.getSystemImplementation());
+        linker.setContract(result, getContract(si.getSystemImplementation()));
         linker.setLayout(result, emitter.getLayout());
         linker.setReferenceMap(result, emitter.getReferenceMap());
         linker.setLog(result, emitter.getLog());
@@ -149,12 +166,12 @@ public abstract class VerifyHandler extends AadlHandler {
         return result;
     }
     
-    private AnalysisResult createAssumptionVerification(ComponentImplementation ci,
+    private AnalysisResult createAssumptionVerification(SystemInstance si,
             List<NamedElement> modelParents, Subcomponent context) {
         //AgreeEmitter emitter = new AgreeEmitter(ci, modelParents, context);
         //Program program = emitter.evaluate();
 
-        AgreeGenerator emitter = new AgreeGenerator(ci, modelParents);
+        AgreeGenerator emitter = new AgreeGenerator(si, modelParents);
         Program program = emitter.evaluate(context);
 
         List<String> properties = emitter.getAssumeProps();
@@ -180,8 +197,8 @@ public abstract class VerifyHandler extends AadlHandler {
         queue.add(result);
 
         linker.setProgram(result, program);
-        linker.setComponent(result, ci);
-        linker.setContract(result, getContract(ci));
+        linker.setComponent(result, si);
+        linker.setContract(result, getContract(si));
         linker.setLayout(result, emitter.getLayout());
         linker.setReferenceMap(result, emitter.getReferenceMap());
         linker.setLog(result, emitter.getLog());
@@ -189,12 +206,12 @@ public abstract class VerifyHandler extends AadlHandler {
         return result;
     }
 
-    private AnalysisResult createConsistVerification(ComponentImplementation ci,
+    private AnalysisResult createConsistVerification(SystemInstance si,
             List<NamedElement> modelParents, Subcomponent context) {
         //AgreeEmitter emitter = new AgreeEmitter(ci, modelParents, context);
         //Program program = emitter.evaluate();
         
-        AgreeGenerator emitter = new AgreeGenerator(ci, modelParents);
+        AgreeGenerator emitter = new AgreeGenerator(si, modelParents);
         Program program = emitter.evaluate(context);
 
 
@@ -226,8 +243,8 @@ public abstract class VerifyHandler extends AadlHandler {
         queue.add(result);
 
         linker.setProgram(result, program);
-        linker.setComponent(result, ci);
-        linker.setContract(result, getContract(ci));
+        linker.setComponent(result, si);
+        linker.setContract(result, getContract(si));
         linker.setLayout(result, emitter.getLayout());
         linker.setReferenceMap(result, emitter.getReferenceMap());
         linker.setLog(result, emitter.getLog());

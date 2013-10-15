@@ -86,12 +86,13 @@ public class AgreeEmitterUtilities {
         }
     }
     
+    //TODO: i'm not sure that this function will work in more complicated cases of property inheritance
     public static PropertyExpression getSimplePropertyValue(final Subcomponent context,final NamedElement target, final Property pd){
         if (context == null) return target.getNonModalPropertyValue(pd);
         EList<PropertyAssociation> props = context.getOwnedPropertyAssociations();
         for (PropertyAssociation propertyAssociation : props) {
             if (propertyAssociation.getProperty().equals(pd)){
-                // we found a property with the corect type
+                // we found a property with the correct type
                 // now we need to check whether the applies to points to the holder
                 EList<ContainedNamedElement> appliestos = propertyAssociation.getAppliesTos();
                 for (ContainedNamedElement containedNamedElement : appliestos) {

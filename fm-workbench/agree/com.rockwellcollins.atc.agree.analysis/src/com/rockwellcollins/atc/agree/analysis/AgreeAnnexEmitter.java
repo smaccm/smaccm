@@ -1201,7 +1201,6 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
             refMap.putAll(subEmitter.refMap);
             agreeInputVars.addAll(subEmitter.inputVars);
             agreeInternalVars.addAll(subEmitter.internalVars);
-            
         }
 
         agreeInputVars.removeAll(agreeInternalVars);
@@ -1293,7 +1292,6 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
             varRenaming.put(notContrId.id, contractName);
             //layout.addElement("Top", contractName, AgreeLayout.SigType.OUTPUT);
             layout.addElement(category, contractName, AgreeLayout.SigType.OUTPUT);
-
         }
 
         // create individual properties for guarantees
@@ -1314,8 +1312,6 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
             varRenaming.put(sysGuaranteesId.id, guarName);
             //layout.addElement("Top", "Component Guarantee " + i++, AgreeLayout.SigType.OUTPUT);
             layout.addElement(category, "Component Guarantee " + i++, AgreeLayout.SigType.OUTPUT);
-
-
         }
         
         //check for contradiction in total component history

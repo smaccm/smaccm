@@ -16,6 +16,7 @@ import org.osate.aadl2.ComponentImplementation;
 import org.osate.aadl2.ComponentType;
 import org.osate.aadl2.NamedElement;
 import org.osate.aadl2.Subcomponent;
+import org.osate.aadl2.instance.SystemInstance;
 
 import com.rockwellcollins.atc.agree.agree.AgreeContractSubclause;
 
@@ -26,9 +27,8 @@ public class AgreeGenerator {
     private AgreeAnnexEmitter topEmitter;
     private String dotChar = "__";
 
-
-    public AgreeGenerator(ComponentImplementation compImpl, List<NamedElement> modelParents){
-        this.compImpl = compImpl;
+    public AgreeGenerator(SystemInstance sysInst, List<NamedElement> modelParents){
+        this.compImpl = sysInst.getSystemImplementation();
         this.modelParents = modelParents;
     }
     
