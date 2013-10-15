@@ -9699,6 +9699,7 @@ rule__TermExpr__Group_6__1
     }
 :
 	rule__TermExpr__Group_6__1__Impl
+	rule__TermExpr__Group_6__2
 ;
 finally {
 	restoreStackSize(stackSize);
@@ -9715,6 +9716,99 @@ rule__TermExpr__Group_6__1__Impl
 	'this' 
 
 { after(grammarAccess.getTermExprAccess().getThisKeyword_6_1()); }
+)
+
+;
+finally {
+	restoreStackSize(stackSize);
+}
+
+
+rule__TermExpr__Group_6__2
+    @init {
+		int stackSize = keepStackSize();
+    }
+:
+	rule__TermExpr__Group_6__2__Impl
+;
+finally {
+	restoreStackSize(stackSize);
+}
+
+rule__TermExpr__Group_6__2__Impl
+    @init {
+		int stackSize = keepStackSize();
+    }
+:
+(
+{ before(grammarAccess.getTermExprAccess().getGroup_6_2()); }
+(rule__TermExpr__Group_6_2__0)?
+{ after(grammarAccess.getTermExprAccess().getGroup_6_2()); }
+)
+
+;
+finally {
+	restoreStackSize(stackSize);
+}
+
+
+
+
+
+
+
+
+rule__TermExpr__Group_6_2__0
+    @init {
+		int stackSize = keepStackSize();
+    }
+:
+	rule__TermExpr__Group_6_2__0__Impl
+	rule__TermExpr__Group_6_2__1
+;
+finally {
+	restoreStackSize(stackSize);
+}
+
+rule__TermExpr__Group_6_2__0__Impl
+    @init {
+		int stackSize = keepStackSize();
+    }
+:
+(
+{ before(grammarAccess.getTermExprAccess().getFullStopKeyword_6_2_0()); }
+
+	'.' 
+
+{ after(grammarAccess.getTermExprAccess().getFullStopKeyword_6_2_0()); }
+)
+
+;
+finally {
+	restoreStackSize(stackSize);
+}
+
+
+rule__TermExpr__Group_6_2__1
+    @init {
+		int stackSize = keepStackSize();
+    }
+:
+	rule__TermExpr__Group_6_2__1__Impl
+;
+finally {
+	restoreStackSize(stackSize);
+}
+
+rule__TermExpr__Group_6_2__1__Impl
+    @init {
+		int stackSize = keepStackSize();
+    }
+:
+(
+{ before(grammarAccess.getTermExprAccess().getSubThisAssignment_6_2_1()); }
+(rule__TermExpr__SubThisAssignment_6_2_1)
+{ after(grammarAccess.getTermExprAccess().getSubThisAssignment_6_2_1()); }
 )
 
 ;
@@ -14727,6 +14821,21 @@ rule__TermExpr__ValAssignment_5_1
 (
 { before(grammarAccess.getTermExprAccess().getValBooleanLiteralParserRuleCall_5_1_0()); }
 	ruleBooleanLiteral{ after(grammarAccess.getTermExprAccess().getValBooleanLiteralParserRuleCall_5_1_0()); }
+)
+
+;
+finally {
+	restoreStackSize(stackSize);
+}
+
+rule__TermExpr__SubThisAssignment_6_2_1
+    @init {
+		int stackSize = keepStackSize();
+    }
+:
+(
+{ before(grammarAccess.getTermExprAccess().getSubThisNestedDotIDParserRuleCall_6_2_1_0()); }
+	ruleNestedDotID{ after(grammarAccess.getTermExprAccess().getSubThisNestedDotIDParserRuleCall_6_2_1_0()); }
 )
 
 ;

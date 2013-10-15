@@ -14,6 +14,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.osate.aadl2.AnnexSubclause;
 import org.osate.aadl2.ComponentImplementation;
 import org.osate.aadl2.ComponentType;
+import org.osate.aadl2.NamedElement;
 import org.osate.aadl2.Subcomponent;
 
 import com.rockwellcollins.atc.agree.agree.AgreeContractSubclause;
@@ -21,12 +22,12 @@ import com.rockwellcollins.atc.agree.agree.AgreeContractSubclause;
 public class AgreeGenerator {
     
     private ComponentImplementation compImpl;
-    private List<ComponentImplementation> modelParents;
+    private List<NamedElement> modelParents;
     private AgreeAnnexEmitter topEmitter;
     private String dotChar = "__";
 
 
-    public AgreeGenerator(ComponentImplementation compImpl, List<ComponentImplementation> modelParents){
+    public AgreeGenerator(ComponentImplementation compImpl, List<NamedElement> modelParents){
         this.compImpl = compImpl;
         this.modelParents = modelParents;
     }

@@ -1775,6 +1775,10 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		private final Group cGroup_6 = (Group)cAlternatives.eContents().get(6);
 		private final Action cThisExprAction_6_0 = (Action)cGroup_6.eContents().get(0);
 		private final Keyword cThisKeyword_6_1 = (Keyword)cGroup_6.eContents().get(1);
+		private final Group cGroup_6_2 = (Group)cGroup_6.eContents().get(2);
+		private final Keyword cFullStopKeyword_6_2_0 = (Keyword)cGroup_6_2.eContents().get(0);
+		private final Assignment cSubThisAssignment_6_2_1 = (Assignment)cGroup_6_2.eContents().get(1);
+		private final RuleCall cSubThisNestedDotIDParserRuleCall_6_2_1_0 = (RuleCall)cSubThisAssignment_6_2_1.eContents().get(0);
 		private final Group cGroup_7 = (Group)cAlternatives.eContents().get(7);
 		private final Keyword cLeftParenthesisKeyword_7_0 = (Keyword)cGroup_7.eContents().get(0);
 		private final RuleCall cExprParserRuleCall_7_1 = (RuleCall)cGroup_7.eContents().get(1);
@@ -1783,12 +1787,12 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		//TermExpr returns Expr:
 		//	{IdExpr} id=[aadl2::NamedElement|QID] | NestedDotID ({FnCallExpr.fn=current} "(" (args+=Expr ("," args+=Expr)*)? ")")?
 		//	| {IntLitExpr} val=INTEGER_LIT | {PreExpr} "pre" "(" expr=Expr ")" | {RealLitExpr} val=REAL_LIT | {BoolLitExpr}
-		//	val=BooleanLiteral | {ThisExpr} "this" | "(" Expr ")";
+		//	val=BooleanLiteral | {ThisExpr} "this" ("." subThis=NestedDotID)? | "(" Expr ")";
 		public ParserRule getRule() { return rule; }
 
 		//{IdExpr} id=[aadl2::NamedElement|QID] | NestedDotID ({FnCallExpr.fn=current} "(" (args+=Expr ("," args+=Expr)*)? ")")? |
 		//{IntLitExpr} val=INTEGER_LIT | {PreExpr} "pre" "(" expr=Expr ")" | {RealLitExpr} val=REAL_LIT | {BoolLitExpr}
-		//val=BooleanLiteral | {ThisExpr} "this" | "(" Expr ")"
+		//val=BooleanLiteral | {ThisExpr} "this" ("." subThis=NestedDotID)? | "(" Expr ")"
 		public Alternatives getAlternatives() { return cAlternatives; }
 
 		//{IdExpr} id=[aadl2::NamedElement|QID]
@@ -1902,7 +1906,7 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		//BooleanLiteral
 		public RuleCall getValBooleanLiteralParserRuleCall_5_1_0() { return cValBooleanLiteralParserRuleCall_5_1_0; }
 
-		//{ThisExpr} "this"
+		//{ThisExpr} "this" ("." subThis=NestedDotID)?
 		public Group getGroup_6() { return cGroup_6; }
 
 		//{ThisExpr}
@@ -1910,6 +1914,18 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 
 		//"this"
 		public Keyword getThisKeyword_6_1() { return cThisKeyword_6_1; }
+
+		//("." subThis=NestedDotID)?
+		public Group getGroup_6_2() { return cGroup_6_2; }
+
+		//"."
+		public Keyword getFullStopKeyword_6_2_0() { return cFullStopKeyword_6_2_0; }
+
+		//subThis=NestedDotID
+		public Assignment getSubThisAssignment_6_2_1() { return cSubThisAssignment_6_2_1; }
+
+		//NestedDotID
+		public RuleCall getSubThisNestedDotIDParserRuleCall_6_2_1_0() { return cSubThisNestedDotIDParserRuleCall_6_2_1_0; }
 
 		//"(" Expr ")"
 		public Group getGroup_7() { return cGroup_7; }
@@ -2402,7 +2418,7 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 	//TermExpr returns Expr:
 	//	{IdExpr} id=[aadl2::NamedElement|QID] | NestedDotID ({FnCallExpr.fn=current} "(" (args+=Expr ("," args+=Expr)*)? ")")?
 	//	| {IntLitExpr} val=INTEGER_LIT | {PreExpr} "pre" "(" expr=Expr ")" | {RealLitExpr} val=REAL_LIT | {BoolLitExpr}
-	//	val=BooleanLiteral | {ThisExpr} "this" | "(" Expr ")";
+	//	val=BooleanLiteral | {ThisExpr} "this" ("." subThis=NestedDotID)? | "(" Expr ")";
 	public TermExprElements getTermExprAccess() {
 		return (pTermExpr != null) ? pTermExpr : (pTermExpr = new TermExprElements());
 	}

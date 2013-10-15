@@ -135,6 +135,7 @@ public class AgreeParser extends AbstractContentAssistParser {
 					put(grammarAccess.getTermExprAccess().getGroup_4(), "rule__TermExpr__Group_4__0");
 					put(grammarAccess.getTermExprAccess().getGroup_5(), "rule__TermExpr__Group_5__0");
 					put(grammarAccess.getTermExprAccess().getGroup_6(), "rule__TermExpr__Group_6__0");
+					put(grammarAccess.getTermExprAccess().getGroup_6_2(), "rule__TermExpr__Group_6_2__0");
 					put(grammarAccess.getTermExprAccess().getGroup_7(), "rule__TermExpr__Group_7__0");
 					put(grammarAccess.getNestedDotIDAccess().getGroup(), "rule__NestedDotID__Group__0");
 					put(grammarAccess.getNestedDotIDAccess().getGroup_1(), "rule__NestedDotID__Group_1__0");
@@ -261,6 +262,7 @@ public class AgreeParser extends AbstractContentAssistParser {
 					put(grammarAccess.getTermExprAccess().getExprAssignment_3_3(), "rule__TermExpr__ExprAssignment_3_3");
 					put(grammarAccess.getTermExprAccess().getValAssignment_4_1(), "rule__TermExpr__ValAssignment_4_1");
 					put(grammarAccess.getTermExprAccess().getValAssignment_5_1(), "rule__TermExpr__ValAssignment_5_1");
+					put(grammarAccess.getTermExprAccess().getSubThisAssignment_6_2_1(), "rule__TermExpr__SubThisAssignment_6_2_1");
 					put(grammarAccess.getNestedDotIDAccess().getBaseAssignment_0(), "rule__NestedDotID__BaseAssignment_0");
 					put(grammarAccess.getNestedDotIDAccess().getSubAssignment_1_1(), "rule__NestedDotID__SubAssignment_1_1");
 					put(grammarAccess.getContainedPropertyAssociationAccess().getPropertyAssignment_0(), "rule__ContainedPropertyAssociation__PropertyAssignment_0");

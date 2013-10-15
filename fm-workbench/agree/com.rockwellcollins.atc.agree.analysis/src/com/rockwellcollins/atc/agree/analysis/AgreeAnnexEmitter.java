@@ -17,6 +17,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.osate.aadl2.AbstractConnectionEnd;
 import org.osate.aadl2.AnnexSubclause;
 import org.osate.aadl2.BooleanLiteral;
+import org.osate.aadl2.ClassifierFeature;
 import org.osate.aadl2.ComponentClassifier;
 import org.osate.aadl2.ComponentImplementation;
 import org.osate.aadl2.ComponentType;
@@ -116,7 +117,7 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
     private final String aadlNameTag;
     
     //a list of the parents of this component for handling "Get_Property" queries
-    private List<ComponentImplementation> modelParents;
+    private List<NamedElement> modelParents;
 
     //used for pretty printing jkind -> aadl variables
     public final Map<String, String> varRenaming = new HashMap<>();
@@ -147,7 +148,7 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
     public List<String> guarProps = null;
 
     public AgreeAnnexEmitter(ComponentImplementation compImpl,
-            List<ComponentImplementation> modelParents,
+            List<NamedElement> modelParents,
             Subcomponent subComp,
             AgreeLayout layout,
             String category,
@@ -189,7 +190,7 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         ComponentImplementation subCompImpl = subComp.getComponentImplementation();
         ComponentType subCompType = subCompImpl.getType();
         
-        LinkedList<ComponentImplementation> subModelParents = new LinkedList<>();
+        LinkedList<NamedElement> subModelParents = new LinkedList<>();
         subModelParents.addAll(modelParents);
         subModelParents.push(compImpl);
         AgreeAnnexEmitter subEmitter = new AgreeAnnexEmitter(
@@ -568,12 +569,80 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
 
         NamedElement propName = namedElFromId(expr.getProp());
         NamedElement compName = namedElFromId(expr.getComponent());
-
-        assert (propName instanceof Property);
         
         Property prop = (Property) propName;
+        
+        //special code for this expressions (this is the cleanest way i could think of doing this)
+        ComponentImplementation compImpl;
+        LinkedList<NamedElement> parentContexts = new LinkedList<>();
+        if(expr.getComponent() instanceof ThisExpr){
+            ThisExpr thisExpr = (ThisExpr)expr.getComponent();
+            NestedDotID nestId = thisExpr.getSubThis();
+            while(nestId != null){
+                parentContexts.push(compName);
+                NamedElement targetEl = thisExpr.getSubThis().getBase();
+                if(compName instanceof Subcomponent){
+                    Subcomponent subComp = (Subcomponent)compName;
+                    compImpl = subComp.getComponentImplementation();
+                    
+                    if(compImpl == null){
+                        ComponentType compType = subComp.getComponentType();
+                        for(ClassifierFeature feat : compType.getClassifierFeatures()){
+                            if(targetEl.equals(feat)){
+                                nestId = nestId.getSub();
+                                compName = targetEl;
+                                break;
+                            }
+                        }
+                        if(compName == targetEl){
+                            continue;
+                        }
+                        throw new AgreeException("Could not locate feature '"+targetEl+"' in '"+compType+"'");
+                    }
+                }else{
+                    compImpl = (ComponentImplementation)compName;
+                }
+                if(targetEl instanceof Subcomponent){
+                    for(Subcomponent subComp : compImpl.getAllSubcomponents()){
+                        if(targetEl.equals(subComp)){
+                            nestId = nestId.getSub();
+                            compName = targetEl;
+                            break;
+                        }
+                    }
+                    if(compName == targetEl){
+                        continue;
+                    }
+                }else{
+                    for(ClassifierFeature feat : compImpl.getClassifierFeatures()){
+                        if(targetEl.equals(feat)){
+                            nestId = nestId.getSub();
+                            compName = targetEl;
+                            break;
+                        }
+                    }
+                    if(compName == targetEl){
+                        continue;
+                    }
+                    ComponentType compType = compImpl.getType();
+                    for(ClassifierFeature feat : compType.getClassifierFeatures()){
+                        if(targetEl.equals(feat)){
+                            nestId = nestId.getSub();
+                            compName = targetEl;
+                            break;
+                        }
+                    }
+                    if(compName == targetEl){
+                        continue;
+                    }
+                    
+                    throw new AgreeException("Could not locate feature '"+targetEl+"' in '"+compImpl+"'");
+                }
+            }
+        }
 
-        PropertyExpression propVal = AgreeEmitterUtilities.getPropExpression(modelParents, compName, prop);
+        parentContexts.addAll(modelParents);
+        PropertyExpression propVal = AgreeEmitterUtilities.getPropExpression(parentContexts, compName, prop);
 
         //if (propVal == null) {
         //    assert (compName instanceof Subcomponent);
@@ -633,8 +702,6 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
                     return curImpl;
                 }
             }
-            
-            
             return curComp;
         }
     }

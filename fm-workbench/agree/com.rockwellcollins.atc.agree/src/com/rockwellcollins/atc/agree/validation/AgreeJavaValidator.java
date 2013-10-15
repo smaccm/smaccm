@@ -399,6 +399,16 @@ public class AgreeJavaValidator extends
     }
 
     @Check
+    public void checkThisExpr(ThisExpr thisExpr){
+        //these should only appear in Get_Property expressions
+        
+        if(!(thisExpr.eContainer() instanceof GetPropertyExpr)){
+            error(thisExpr, "'this' expressions can only be used in 'Get_Property' expressions.");
+        }
+        
+    }
+    
+    @Check
     public void checkGetPropertyExpr(GetPropertyExpr getPropExpr) {
         AgreeType compType = getAgreeType(getPropExpr.getComponent());
         // AgreeType propType = getAgreeType(propExpr.getName());

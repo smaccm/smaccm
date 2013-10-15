@@ -179,7 +179,7 @@ TermExpr returns Expr:
 |	{PreExpr} 'pre' '(' expr=Expr ')'
 |   {RealLitExpr} val=REAL_LIT
 |   {BoolLitExpr} val=BooleanLiteral
-|   {ThisExpr} 'this'
+|   {ThisExpr} 'this' ('.' subThis=NestedDotID)?
 | '(' Expr ')'
 ;
 

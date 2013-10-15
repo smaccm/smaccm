@@ -2313,13 +2313,22 @@ public interface AgreePackage extends EPackage
   int THIS_EXPR__OWNED_COMMENT = EXPR__OWNED_COMMENT;
 
   /**
+   * The feature id for the '<em><b>Sub This</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int THIS_EXPR__SUB_THIS = EXPR_FEATURE_COUNT + 0;
+
+  /**
    * The number of structural features of the '<em>This Expr</em>' class.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int THIS_EXPR_FEATURE_COUNT = EXPR_FEATURE_COUNT + 0;
+  int THIS_EXPR_FEATURE_COUNT = EXPR_FEATURE_COUNT + 1;
 
 
   /**
@@ -3306,6 +3315,17 @@ public interface AgreePackage extends EPackage
   EClass getThisExpr();
 
   /**
+   * Returns the meta object for the containment reference '{@link com.rockwellcollins.atc.agree.agree.ThisExpr#getSubThis <em>Sub This</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference '<em>Sub This</em>'.
+   * @see com.rockwellcollins.atc.agree.agree.ThisExpr#getSubThis()
+   * @see #getThisExpr()
+   * @generated
+   */
+  EReference getThisExpr_SubThis();
+
+  /**
    * Returns the factory that creates the instances of the model.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -4151,6 +4171,14 @@ public interface AgreePackage extends EPackage
      * @generated
      */
     EClass THIS_EXPR = eINSTANCE.getThisExpr();
+
+    /**
+     * The meta object literal for the '<em><b>Sub This</b></em>' containment reference feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference THIS_EXPR__SUB_THIS = eINSTANCE.getThisExpr_SubThis();
 
   }
 

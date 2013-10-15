@@ -132,6 +132,8 @@
     <genClasses ecoreClass="Agree.ecore#//BoolLitExpr">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//BoolLitExpr/val"/>
     </genClasses>
-    <genClasses ecoreClass="Agree.ecore#//ThisExpr"/>
+    <genClasses ecoreClass="Agree.ecore#//ThisExpr">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//ThisExpr/subThis"/>
+    </genClasses>
   </genPackages>
 </genmodel:GenModel>

@@ -1037,7 +1037,7 @@ public class AgreeSemanticSequencer extends PropertiesSemanticSequencer {
 	
 	/**
 	 * Constraint:
-	 *     {ThisExpr}
+	 *     (subThis=NestedDotID?)
 	 */
 	protected void sequence_TermExpr(EObject context, ThisExpr semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);

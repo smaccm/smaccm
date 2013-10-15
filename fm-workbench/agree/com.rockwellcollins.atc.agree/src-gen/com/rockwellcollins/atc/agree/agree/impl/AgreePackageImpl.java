@@ -1343,6 +1343,16 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  public EReference getThisExpr_SubThis()
+  {
+    return (EReference)thisExprEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   public AgreeFactory getAgreeFactory()
   {
     return (AgreeFactory)getEFactoryInstance();
@@ -1500,6 +1510,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     createEReference(boolLitExprEClass, BOOL_LIT_EXPR__VAL);
 
     thisExprEClass = createEClass(THIS_EXPR);
+    createEReference(thisExprEClass, THIS_EXPR__SUB_THIS);
   }
 
   /**
@@ -1714,6 +1725,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     initEReference(getBoolLitExpr_Val(), theAadl2Package.getBooleanLiteral(), null, "val", null, 0, 1, BoolLitExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(thisExprEClass, ThisExpr.class, "ThisExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getThisExpr_SubThis(), this.getNestedDotID(), null, "subThis", null, 0, 1, ThisExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     // Create resource
     createResource(eNS_URI);

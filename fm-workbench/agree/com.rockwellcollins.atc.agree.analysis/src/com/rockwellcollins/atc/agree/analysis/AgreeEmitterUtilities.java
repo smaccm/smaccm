@@ -26,16 +26,25 @@ import jkind.lustre.VarDecl;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.osate.aadl2.AbstractConnectionEnd;
+import org.osate.aadl2.AbstractNamedValue;
+import org.osate.aadl2.Classifier;
 import org.osate.aadl2.ComponentImplementation;
 import org.osate.aadl2.ConnectedElement;
 import org.osate.aadl2.Connection;
+import org.osate.aadl2.ContainedNamedElement;
+import org.osate.aadl2.ContainmentPathElement;
 import org.osate.aadl2.Context;
 import org.osate.aadl2.DataSubcomponent;
 import org.osate.aadl2.DataType;
+import org.osate.aadl2.ModalPropertyValue;
 import org.osate.aadl2.NamedElement;
+import org.osate.aadl2.NamedValue;
 import org.osate.aadl2.Property;
+import org.osate.aadl2.PropertyAssociation;
+import org.osate.aadl2.PropertyConstant;
 import org.osate.aadl2.PropertyExpression;
 import org.osate.aadl2.Subcomponent;
+import org.osate.aadl2.modelsupport.util.AadlUtil;
 import org.osate.aadl2.properties.PropertyDoesNotApplyToHolderException;
 import org.osate.aadl2.properties.PropertyNotPresentException;
 import org.osate.xtext.aadl2.properties.util.PropertyUtils;
@@ -49,13 +58,19 @@ import com.rockwellcollins.atc.agree.agree.ThisExpr;
 public class AgreeEmitterUtilities {
 
     
-    static public PropertyExpression getPropExpression(List<ComponentImplementation> modelParents, NamedElement comp, Property prop) {
+    static public PropertyExpression getPropExpression(List<NamedElement> modelParents, NamedElement comp, Property prop) {
         
         PropertyExpression expr = null;
-        for(ComponentImplementation compImpl : modelParents){
+        for(NamedElement compImpl : modelParents){
             expr = PropertyUtils.getContainedSimplePropertyValue(compImpl, comp, prop);
             if(expr != null){
                 return expr;
+            }
+            if(compImpl instanceof Subcomponent){
+                expr = getSimplePropertyValue((Subcomponent)compImpl, comp, prop);
+                if(expr != null){
+                    return expr;
+                }
             }
         }
 
@@ -70,6 +85,42 @@ public class AgreeEmitterUtilities {
             return null;
         }
     }
+    
+    public static PropertyExpression getSimplePropertyValue(final Subcomponent context,final NamedElement target, final Property pd){
+        if (context == null) return target.getNonModalPropertyValue(pd);
+        EList<PropertyAssociation> props = context.getOwnedPropertyAssociations();
+        for (PropertyAssociation propertyAssociation : props) {
+            if (propertyAssociation.getProperty().equals(pd)){
+                // we found a property with the corect type
+                // now we need to check whether the applies to points to the holder
+                EList<ContainedNamedElement> appliestos = propertyAssociation.getAppliesTos();
+                for (ContainedNamedElement containedNamedElement : appliestos) {
+                    EList<ContainmentPathElement> cpes = containedNamedElement.getContainmentPathElements();
+                    NamedElement pathcxt = cpes.get(cpes.size()-1).getNamedElement();
+                    if (target.equals(pathcxt)){
+                        EList<ModalPropertyValue> vallist = propertyAssociation.getOwnedValues();
+                        if (!vallist.isEmpty()){
+                            ModalPropertyValue elem = vallist.get(0);
+                            PropertyExpression res = elem.getOwnedValue();
+                            if (res instanceof NamedValue){
+                                AbstractNamedValue nv = ((NamedValue)res).getNamedValue();
+                                if (nv instanceof Property){
+                                    res = target.getNonModalPropertyValue((Property)nv);
+                                } else if (nv instanceof PropertyConstant){
+                                    res = ((PropertyConstant)nv).getConstantValue();
+                                } 
+                            }
+
+                            return res;
+                        }
+
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
 
     static public AgreeVarDecl dataTypeToVarType(DataSubcomponent sub) {
 

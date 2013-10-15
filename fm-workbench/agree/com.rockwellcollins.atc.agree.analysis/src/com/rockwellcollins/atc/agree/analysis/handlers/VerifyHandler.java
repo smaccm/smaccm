@@ -25,6 +25,7 @@ import org.osate.aadl2.AnnexSubclause;
 import org.osate.aadl2.ComponentImplementation;
 import org.osate.aadl2.ComponentType;
 import org.osate.aadl2.Element;
+import org.osate.aadl2.NamedElement;
 import org.osate.aadl2.Subcomponent;
 
 import com.rockwellcollins.atc.agree.agree.AgreeSubclause;
@@ -53,7 +54,7 @@ public abstract class VerifyHandler extends AadlHandler {
             ComponentImplementation ci = (ComponentImplementation) root;
             AnalysisResult result;
             CompositeAnalysisResult wrapper = new CompositeAnalysisResult("");
-            LinkedList<ComponentImplementation> modelParents = new LinkedList<>();
+            LinkedList<NamedElement> modelParents = new LinkedList<>();
             
             if (isRecursive()) {
                 result = buildAnalysisResult(ci.getName(), ci, modelParents, null);
@@ -87,7 +88,7 @@ public abstract class VerifyHandler extends AadlHandler {
     }
 
     private AnalysisResult buildAnalysisResult(String name, ComponentImplementation ci,
-            LinkedList<ComponentImplementation> modelParents, Subcomponent context) {
+            LinkedList<NamedElement> modelParents, Subcomponent context) {
         CompositeAnalysisResult result = new CompositeAnalysisResult("Verification for " + name);
         
         result.addChild(createGuaranteeVerification(ci, modelParents, context));
@@ -107,7 +108,7 @@ public abstract class VerifyHandler extends AadlHandler {
     }
 
     private AnalysisResult createGuaranteeVerification(ComponentImplementation ci,
-            List<ComponentImplementation> modelParents, Subcomponent context) {
+            List<NamedElement> modelParents, Subcomponent context) {
         //AgreeEmitter emitter = new AgreeEmitter(ci, modelParents, context); 
         //Program program = emitter.evaluate();
         
@@ -149,7 +150,7 @@ public abstract class VerifyHandler extends AadlHandler {
     }
     
     private AnalysisResult createAssumptionVerification(ComponentImplementation ci,
-            List<ComponentImplementation> modelParents, Subcomponent context) {
+            List<NamedElement> modelParents, Subcomponent context) {
         //AgreeEmitter emitter = new AgreeEmitter(ci, modelParents, context);
         //Program program = emitter.evaluate();
 
@@ -189,7 +190,7 @@ public abstract class VerifyHandler extends AadlHandler {
     }
 
     private AnalysisResult createConsistVerification(ComponentImplementation ci,
-            List<ComponentImplementation> modelParents, Subcomponent context) {
+            List<NamedElement> modelParents, Subcomponent context) {
         //AgreeEmitter emitter = new AgreeEmitter(ci, modelParents, context);
         //Program program = emitter.evaluate();
         

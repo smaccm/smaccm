@@ -172,7 +172,7 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
     public List<String> consistProps = new ArrayList<String>();
     public List<String> guarProps = new ArrayList<String>();
 
-    private List<ComponentImplementation> modelParents;
+    private List<NamedElement> modelParents;
 
     private String initJKindNameTag;
     private String initAadlNameTag;
@@ -180,7 +180,7 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
 
     // *********************** BEGIN METHODS ********************************
 
-    public AgreeEmitter(ComponentImplementation compImpl, List<ComponentImplementation> modelParents, Subcomponent curComp) {
+    public AgreeEmitter(ComponentImplementation compImpl, List<NamedElement> modelParents, Subcomponent curComp) {
         this.topCompImpl = compImpl;
         this.curComp = curComp;
         this.modelParents = modelParents;
@@ -230,7 +230,7 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
         Subcomponent subComp = (Subcomponent)nestId.getBase();
         compImpl = subComp.getComponentImplementation();
         
-        LinkedList<ComponentImplementation> subModelParents = new LinkedList<>();
+        LinkedList<NamedElement> subModelParents = new LinkedList<>();
         subModelParents.addAll(modelParents);
         subModelParents.push(compImpl);
         AgreeEmitter subEmitter = new AgreeEmitter(compImpl, subModelParents, subComp);
@@ -776,7 +776,7 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
     private PropertyExpression getPropExpression(NamedElement comp, Property prop) {
         
         PropertyExpression expr = null;
-        for(ComponentImplementation compImpl : modelParents){
+        for(NamedElement compImpl : modelParents){
             expr = PropertyUtils.getContainedSimplePropertyValue(compImpl, comp, prop);
             if(expr != null){
                 return expr;
