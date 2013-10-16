@@ -44,6 +44,8 @@ import org.osate.aadl2.RealLiteral;
 import org.osate.aadl2.StringLiteral;
 import org.osate.aadl2.Subcomponent;
 import org.osate.aadl2.ThreadSubcomponent;
+import org.osate.aadl2.impl.DataPortImpl;
+import org.osate.aadl2.instance.ComponentInstance;
 import org.osate.aadl2.modelsupport.resources.OsateResourceUtil;
 import org.osate.xtext.aadl2.properties.util.EMFIndexRetrieval;
 import org.osate.xtext.aadl2.properties.util.PropertyUtils;
@@ -137,7 +139,7 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
     private Subcomponent curComp; 
     
     //the current implementation
-    private ComponentImplementation curImpl;
+    private ComponentInstance curInst;
     
     //print errors and warnings here
     public final AgreeLogger log = new AgreeLogger();
@@ -147,9 +149,7 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
     public List<String> consistProps = null;
     public List<String> guarProps = null;
 
-    public AgreeAnnexEmitter(ComponentImplementation compImpl,
-            List<NamedElement> modelParents,
-            Subcomponent subComp,
+    public AgreeAnnexEmitter(ComponentInstance compInst,
             AgreeLayout layout,
             String category,
             String jPrefix,
@@ -160,33 +160,30 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
             layout.addCategory(category);
         }
                 
-        this.curComp = subComp;
-        this.curImpl = compImpl;
-        this.modelParents = modelParents;
+        this.curInst = compInst;
         this.category = category;
         
-        //if(subComp != null){
-        //    jPrefix += subComp.getName() + dotChar;
-        //    aPrefix += subComp.getName() + ".";
-        //}
+        curComp = curInst.getSubcomponent();
         
         jKindNameTag = jPrefix;
         aadlNameTag = aPrefix;
         //populates the connection equivalences
-        if(compImpl != null){
-            setVarEquivs(compImpl, jPrefix, aPrefix);
+        ComponentClassifier compClass = compInst.getComponentClassifier();
+        if(compClass instanceof ComponentImplementation){
+            setVarEquivs((ComponentImplementation)compClass, jPrefix, aPrefix);
         }
         
     }
     
    // ************** CASE STATEMENTS **********************
 
+    /*
     @Override
     public Expr caseLiftStatement(LiftStatement lift){
         NestedDotID nestId = lift.getSubcomp();
         
         Subcomponent subComp = (Subcomponent)nestId.getBase();
-        ComponentImplementation compImpl = curImpl;
+        ComponentImplementation compImpl = curInst;
         ComponentImplementation subCompImpl = subComp.getComponentImplementation();
         ComponentType subCompType = subCompImpl.getType();
         
@@ -229,6 +226,7 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
        
         return null;
     }
+    */
     
     @Override
     public Expr caseAgreeContractSubclause(AgreeContractSubclause contract) {
@@ -571,78 +569,8 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         NamedElement compName = namedElFromId(expr.getComponent());
         
         Property prop = (Property) propName;
-        
-        //special code for this expressions (this is the cleanest way i could think of doing this)
-        ComponentImplementation compImpl;
-        LinkedList<NamedElement> parentContexts = new LinkedList<>();
-        if(expr.getComponent() instanceof ThisExpr){
-            ThisExpr thisExpr = (ThisExpr)expr.getComponent();
-            NestedDotID nestId = thisExpr.getSubThis();
-            while(nestId != null){
-                parentContexts.push(compName);
-                NamedElement targetEl = thisExpr.getSubThis().getBase();
-                if(compName instanceof Subcomponent){
-                    Subcomponent subComp = (Subcomponent)compName;
-                    compImpl = subComp.getComponentImplementation();
-                    
-                    if(compImpl == null){
-                        ComponentType compType = subComp.getComponentType();
-                        for(ClassifierFeature feat : compType.getClassifierFeatures()){
-                            if(targetEl.equals(feat)){
-                                nestId = nestId.getSub();
-                                compName = targetEl;
-                                break;
-                            }
-                        }
-                        if(compName == targetEl){
-                            continue;
-                        }
-                        throw new AgreeException("Could not locate feature '"+targetEl+"' in '"+compType+"'");
-                    }
-                }else{
-                    compImpl = (ComponentImplementation)compName;
-                }
-                if(targetEl instanceof Subcomponent){
-                    for(Subcomponent subComp : compImpl.getAllSubcomponents()){
-                        if(targetEl.equals(subComp)){
-                            nestId = nestId.getSub();
-                            compName = targetEl;
-                            break;
-                        }
-                    }
-                    if(compName == targetEl){
-                        continue;
-                    }
-                }else{
-                    for(ClassifierFeature feat : compImpl.getClassifierFeatures()){
-                        if(targetEl.equals(feat)){
-                            nestId = nestId.getSub();
-                            compName = targetEl;
-                            break;
-                        }
-                    }
-                    if(compName == targetEl){
-                        continue;
-                    }
-                    ComponentType compType = compImpl.getType();
-                    for(ClassifierFeature feat : compType.getClassifierFeatures()){
-                        if(targetEl.equals(feat)){
-                            nestId = nestId.getSub();
-                            compName = targetEl;
-                            break;
-                        }
-                    }
-                    if(compName == targetEl){
-                        continue;
-                    }
-                    
-                    throw new AgreeException("Could not locate feature '"+targetEl+"' in '"+compImpl+"'");
-                }
-            }
-        }
 
-        parentContexts.addAll(modelParents);
-        PropertyExpression propVal = AgreeEmitterUtilities.getPropExpression(parentContexts, compName, prop);
+        PropertyExpression propVal = AgreeEmitterUtilities.getPropExpression(compName, prop);
 
         //if (propVal == null) {
         //    assert (compName instanceof Subcomponent);
@@ -695,14 +623,25 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
             return ((com.rockwellcollins.atc.agree.agree.IdExpr) obj).getId();
         } else {
             assert (obj instanceof ThisExpr);
-            if(curComp == null){
-                if(curImpl == null){
-                    throw new AgreeException("Null context and implemenation seen at 'this' statement");
+           
+            ThisExpr thisExpr = (ThisExpr)obj;
+            
+            ComponentInstance compInst = curInst;
+            NestedDotID nestId = thisExpr.getSubThis();
+            
+            while(nestId != null){
+                NamedElement base = nestId.getBase();
+                
+                if(base instanceof Subcomponent){
+                    compInst = compInst.findSubcomponentInstance((Subcomponent)base);
+                    nestId = nestId.getSub();
                 }else{
-                    return curImpl;
+                    assert(nestId.getSub() == null);
+                    return compInst.findFeatureInstance((Feature)base);
                 }
+                
             }
-            return curComp;
+            return compInst;
         }
     }
 
@@ -1160,8 +1099,7 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         return new AgreeNode(inputs, outputs, assumVars, asserVars, guarVars, agreeNodes);
     }
     
-    public List<Node> getLustre(ComponentImplementation compImpl,
-            List<AgreeAnnexEmitter> subEmitters) {
+    public List<Node> getLustre(List<AgreeAnnexEmitter> subEmitters) {
         // first print out the functions which will be
         // other nodes
 
@@ -1239,6 +1177,7 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         for(AgreeAnnexEmitter subEmitter : subEmitters){
             Set<Subcomponent> outputClosure = new HashSet<Subcomponent>();
             outputClosure.add(subEmitter.curComp);
+            ComponentImplementation compImpl = (ComponentImplementation) curInst.getComponentClassifier();
             getOutputClosure(compImpl.getAllConnections(), outputClosure);
             closureMap.put(subEmitter.curComp, outputClosure);
         }

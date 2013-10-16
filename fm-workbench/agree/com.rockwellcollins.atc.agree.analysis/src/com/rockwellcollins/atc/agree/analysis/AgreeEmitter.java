@@ -192,7 +192,8 @@ public class AgreeEmitter extends AgreeSwitch<Expr> {
             initAadlNameTag = curComp.getName() + ".";
         }
         
-        new AgreeGenerator(compImpl, modelParents);
+        assert(false); //this class is legacy and should no longer be used
+        //new AgreeGenerator(null, modelParents);
         
     }
 

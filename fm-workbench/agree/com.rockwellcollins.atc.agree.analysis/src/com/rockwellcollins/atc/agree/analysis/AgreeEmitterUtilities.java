@@ -29,6 +29,7 @@ import org.osate.aadl2.AbstractConnectionEnd;
 import org.osate.aadl2.AbstractNamedValue;
 import org.osate.aadl2.Classifier;
 import org.osate.aadl2.ComponentImplementation;
+import org.osate.aadl2.ComponentType;
 import org.osate.aadl2.ConnectedElement;
 import org.osate.aadl2.Connection;
 import org.osate.aadl2.ContainedNamedElement;
@@ -44,6 +45,8 @@ import org.osate.aadl2.PropertyAssociation;
 import org.osate.aadl2.PropertyConstant;
 import org.osate.aadl2.PropertyExpression;
 import org.osate.aadl2.Subcomponent;
+import org.osate.aadl2.instance.ComponentInstance;
+import org.osate.aadl2.instance.SystemInstance;
 import org.osate.aadl2.modelsupport.util.AadlUtil;
 import org.osate.aadl2.properties.PropertyDoesNotApplyToHolderException;
 import org.osate.aadl2.properties.PropertyNotPresentException;
@@ -58,22 +61,9 @@ import com.rockwellcollins.atc.agree.agree.ThisExpr;
 public class AgreeEmitterUtilities {
 
     
-    static public PropertyExpression getPropExpression(List<NamedElement> modelParents, NamedElement comp, Property prop) {
+    static public PropertyExpression getPropExpression(NamedElement comp, Property prop) {
         
-        PropertyExpression expr = null;
-        for(NamedElement compImpl : modelParents){
-            expr = PropertyUtils.getContainedSimplePropertyValue(compImpl, comp, prop);
-            if(expr != null){
-                return expr;
-            }
-            if(compImpl instanceof Subcomponent){
-                expr = getSimplePropertyValue((Subcomponent)compImpl, comp, prop);
-                if(expr != null){
-                    return expr;
-                }
-            }
-        }
-
+        PropertyExpression expr;
         try {
             comp.getPropertyValue(prop); // this just checks to see if the
             // property is associated
@@ -193,6 +183,27 @@ public class AgreeEmitterUtilities {
         return dotId.getBase();
     }
 
+    public static ComponentImplementation getInstanceImplementation(ComponentInstance compInst){
+        if(compInst instanceof SystemInstance){
+            return ((SystemInstance)compInst).getSystemImplementation();
+        }
+        try{
+            return (ComponentImplementation)compInst.getComponentClassifier();
+        }catch (ClassCastException e){
+            return null;
+        }
+    }
+    
+    public static ComponentType getInstanceType(ComponentInstance compInst){
+        if(compInst instanceof SystemInstance){
+            return ((SystemInstance)compInst).getSystemImplementation().getType();
+        }
+        try{
+            return ((ComponentImplementation)compInst.getComponentClassifier()).getType();
+        }catch (ClassCastException e){
+            return (ComponentType)compInst.getComponentClassifier();
+        }
+    }
     
     
 }

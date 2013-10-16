@@ -14,32 +14,29 @@ import org.eclipse.emf.ecore.EObject;
 import org.osate.aadl2.AnnexSubclause;
 import org.osate.aadl2.ComponentImplementation;
 import org.osate.aadl2.ComponentType;
-import org.osate.aadl2.NamedElement;
 import org.osate.aadl2.Subcomponent;
-import org.osate.aadl2.instance.SystemInstance;
-
+import org.osate.aadl2.instance.ComponentInstance;
 import com.rockwellcollins.atc.agree.agree.AgreeContractSubclause;
 
 public class AgreeGenerator {
     
-    private ComponentImplementation compImpl;
-    private List<NamedElement> modelParents;
+    private ComponentInstance compInst;
     private AgreeAnnexEmitter topEmitter;
     private String dotChar = "__";
 
-    public AgreeGenerator(SystemInstance sysInst, List<NamedElement> modelParents){
-        this.compImpl = sysInst.getSystemImplementation();
-        this.modelParents = modelParents;
+    public AgreeGenerator(ComponentInstance compInst){
+        this.compInst = compInst;
     }
     
-    public Program evaluate(Subcomponent subCompContext){
+    public Program evaluate(){
         
-        ComponentType ct = compImpl.getType();
+        ComponentImplementation compImpl = AgreeEmitterUtilities.getInstanceImplementation(compInst);
+        ComponentType ct = AgreeEmitterUtilities.getInstanceType(compInst);
         AgreeLayout layout = new AgreeLayout();
         String category = "";
         
         AgreeAnnexEmitter topEmitter = new AgreeAnnexEmitter(
-                compImpl, modelParents, subCompContext, layout, category, "", "");
+                compInst, layout, category, "", "");
         
         this.topEmitter = topEmitter;
         
@@ -56,14 +53,15 @@ public class AgreeGenerator {
         }
         
         List<AgreeAnnexEmitter> subEmitters = new ArrayList<>();
-        for (Subcomponent subComp : compImpl.getAllSubcomponents()) {
-            ct = subComp.getComponentType();
-            ComponentImplementation subCompImpl = subComp.getComponentImplementation();
-            category = subComp.getName();
+        for(Subcomponent subComp : compImpl.getAllSubcomponents()){
+            ComponentInstance subCompInst = compInst.findSubcomponentInstance(subComp);
+            ct = AgreeEmitterUtilities.getInstanceType(subCompInst);
+            ComponentImplementation subCompImpl = AgreeEmitterUtilities.getInstanceImplementation(subCompInst);
+            category = subCompInst.getQualifiedName();
             AgreeAnnexEmitter subEmitter = new AgreeAnnexEmitter(
-                    subCompImpl, modelParents, subComp, layout, category,
-                    subComp.getName() + dotChar,
-                    subComp.getName() + ".");
+                    subCompInst, layout, category,
+                    subCompInst.getName() + dotChar,
+                    subCompInst.getName() + ".");
 
             if(subCompImpl != null){
                 for (AnnexSubclause annex : subCompImpl.getAllAnnexSubclauses()) {
@@ -78,13 +76,13 @@ public class AgreeGenerator {
                     subEmitter.doSwitch(annex);
                 }
             }
-            
+
             subEmitters.add(subEmitter);
+
         }
-        
-        List<Node> nodes = topEmitter.getLustre(compImpl, subEmitters);
+        List<Node> nodes = topEmitter.getLustre(subEmitters);
         return new Program(nodes);
-        
+
     }
 
     public Map<String, EObject> getReferenceMap() {
