@@ -231,6 +231,9 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         
         inputVars.addAll(subEmitter.inputVars);
         internalVars.addAll(subEmitter.internalVars);
+        
+        varRenaming.putAll(subEmitter.varRenaming);
+        refMap.putAll(subEmitter.refMap);
        
         return null;
     }
@@ -1149,6 +1152,9 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
             agreeInternalVars.addAll(subEmitter.internalVars);
         }
 
+        //warn about combinational cycles
+        logCycleWarning(eqs);
+        
         agreeInputVars.removeAll(agreeInternalVars);
         
         //convert the variables
@@ -1273,10 +1279,75 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         //layout.addElement("Top", "Total Contract Consistants", AgreeLayout.SigType.OUTPUT);
         layout.addElement(category, "Total Contract Consistants", AgreeLayout.SigType.OUTPUT);
 
-
         Node topNode = new Node("_MAIN", inputs, outputs, internals, eqs, properties);
         nodeSet.add(topNode);
         return nodeSet;
+    }
+    
+    //warns the user if there is a cycle
+    private void logCycleWarning(List<Equation> eqs){
+        Map<String, Set<String>> idGraph = new HashMap<>();
+        List<String> ids = new ArrayList<>();
+        AgreeCycleVisitor visitor = new AgreeCycleVisitor();
+        
+        for(Equation eq : eqs){
+            for(IdExpr id : eq.lhs){
+                ids.add(id.id);
+                idGraph.put(id.id, eq.expr.accept(visitor));
+            }
+        }
+        
+        Set<String> discovered = new HashSet<>();
+        
+        for(String id : ids){
+            if(discovered.contains(id)){
+                continue;
+            }
+            List<String> cycle = cycleWarning_Helper(id, id, new HashSet<String>(), idGraph);
+            
+            if(cycle != null){
+                discovered.addAll(cycle);
+                String aadlString = this.varRenaming.get(id);
+                StringBuilder cycleStr = new StringBuilder("Possible cycle: "+aadlString);
+                
+                String sep = " -> ";
+                for(String cycleId : cycle){
+                    cycleStr.append(sep);
+                    aadlString = this.varRenaming.get(cycleId);
+                    cycleStr.append(aadlString);                
+                }
+                
+                log.logWarning(cycleStr.toString());
+                
+            }
+        }
+    }
+    
+    private LinkedList<String> cycleWarning_Helper(String visit, String target, 
+            Set<String> visited, Map<String, Set<String>> graph){
+        
+        if(visited.contains(visited)){
+            return null;
+        }
+        
+        visited.add(visit);
+        
+        Set<String> toVisit = graph.get(visit);
+        
+        if(toVisit != null){
+            for(String nextVisit : toVisit){
+                if(nextVisit.equals(target)){
+                    return new LinkedList<>(Collections.singletonList(target));
+                }
+                LinkedList<String> cycle = cycleWarning_Helper(nextVisit, target, visited, graph);
+                if(cycle != null){
+                    cycle.push(nextVisit);
+                    return cycle;
+                }
+            }
+        }
+        
+        return null;
     }
     
     private AgreeAnnexEmitter getSubcomponentEmitter(Subcomponent sub, 

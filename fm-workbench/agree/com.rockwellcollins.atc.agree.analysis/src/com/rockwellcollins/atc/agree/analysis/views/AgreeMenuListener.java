@@ -187,6 +187,20 @@ public class AgreeMenuListener implements IMenuListener {
             }
         };
     }
+    
+    private Action createWriteConsoleAction(String actionName, final String consoleName,
+            final Object content, final Map<String, EObject> refMap) {
+        return new Action(actionName) {
+            @Override
+            public void run() {
+                MessageConsole console = findConsole(consoleName);
+                showConsole(console);
+                console.clearConsole();
+                console.newMessageStream().println(content.toString());
+                console.addPatternMatchListener(new AgreePatternListener(refMap));
+            }
+        };
+    }
 
     private void viewCexConsole(Counterexample cex, Layout layout, Map<String, EObject> refMap) {
         MessageConsole console = findConsole("Counterexample");
