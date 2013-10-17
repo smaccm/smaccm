@@ -77,13 +77,13 @@ public abstract class VerifyHandler extends AadlHandler {
             LinkedList<NamedElement> modelParents = new LinkedList<>();
             
             if (isRecursive()) {
-                result = buildAnalysisResult(ci.getName(), si, modelParents, null);
+                result = buildAnalysisResult(ci.getName(), si);
                 wrapper.addChild(result);
                 result = wrapper;
             } else {
-                wrapper.addChild(createConsistVerification(si, modelParents, null));
-                wrapper.addChild(createAssumptionVerification(si, modelParents, null));
-                wrapper.addChild(createGuaranteeVerification(si, modelParents, null));
+                wrapper.addChild(createConsistVerification(si));
+                wrapper.addChild(createAssumptionVerification(si));
+                wrapper.addChild(createGuaranteeVerification(si));
                 result = wrapper;
             }
             showView(result, linker);
@@ -107,32 +107,28 @@ public abstract class VerifyHandler extends AadlHandler {
         return sw.toString();
     }
 
-    private AnalysisResult buildAnalysisResult(String name, ComponentInstance ci,
-            LinkedList<NamedElement> modelParents, Subcomponent context) {
+    private AnalysisResult buildAnalysisResult(String name, ComponentInstance ci) {
         CompositeAnalysisResult result = new CompositeAnalysisResult("Verification for " + name);
         
-        result.addChild(createGuaranteeVerification(ci, modelParents, context));
-        result.addChild(createAssumptionVerification(ci, modelParents, context));
-        result.addChild(createConsistVerification(ci, modelParents, context));
+        result.addChild(createGuaranteeVerification(ci));
+        result.addChild(createAssumptionVerification(ci));
+        result.addChild(createConsistVerification(ci));
         
-        modelParents.push(ci);
-        
-        for (ComponentInstance sub : ci.getAllComponentInstances()) {
-            if(sub != ci){
-                if(AgreeEmitterUtilities.getInstanceImplementation(sub) != null){
-                    result.addChild(buildAnalysisResult(sub.getName(), sub, modelParents, null));
+        ComponentImplementation compImpl = AgreeEmitterUtilities.getInstanceImplementation(ci);
+        for(Subcomponent subComp : compImpl.getAllSubcomponents()){
+            ComponentInstance subInst = ci.findSubcomponentInstance(subComp);
+            if(subInst != ci){
+                if(AgreeEmitterUtilities.getInstanceImplementation(subInst) != null){
+                    result.addChild(buildAnalysisResult(subInst.getName(), subInst));
                 }
             }
         }
-        linker.setComponent(result, ci.getContainingComponentImpl());
+        linker.setComponent(result, compImpl);
 
         return result;
     }
 
-    private AnalysisResult createGuaranteeVerification(ComponentInstance ci,
-            List<NamedElement> modelParents, Subcomponent context) {
-        //AgreeEmitter emitter = new AgreeEmitter(ci, modelParents, context); 
-        //Program program = emitter.evaluate();
+    private AnalysisResult createGuaranteeVerification(ComponentInstance ci) {
         
         AgreeGenerator emitter = new AgreeGenerator(ci);
         Program program = emitter.evaluate();
@@ -172,8 +168,7 @@ public abstract class VerifyHandler extends AadlHandler {
         return result;
     }
     
-    private AnalysisResult createAssumptionVerification(ComponentInstance ci,
-            List<NamedElement> modelParents, Subcomponent context) {
+    private AnalysisResult createAssumptionVerification(ComponentInstance ci) {
         //AgreeEmitter emitter = new AgreeEmitter(ci, modelParents, context);
         //Program program = emitter.evaluate();
 
@@ -213,8 +208,7 @@ public abstract class VerifyHandler extends AadlHandler {
         return result;
     }
 
-    private AnalysisResult createConsistVerification(ComponentInstance ci,
-            List<NamedElement> modelParents, Subcomponent context) {
+    private AnalysisResult createConsistVerification(ComponentInstance ci) {
         //AgreeEmitter emitter = new AgreeEmitter(ci, modelParents, context);
         //Program program = emitter.evaluate();
         

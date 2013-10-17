@@ -80,9 +80,9 @@ public
 	
 	system implementation Sub_State_Machine.Impl
 	
-		--annex agree {**
-		--	assert State_Out.val = prev(State_Out.val,0);
-		--**};
+		annex agree {**
+			assert State_Out.val = prev(State_Out.val,0);
+		**};
 	end Sub_State_Machine.impl;
 	
 end Transmission;

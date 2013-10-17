@@ -36,7 +36,7 @@ public class AgreeGenerator {
         String category = "";
         
         AgreeAnnexEmitter topEmitter = new AgreeAnnexEmitter(
-                compInst, layout, category, "", "");
+                compInst, layout, category, "", "", true);
         
         this.topEmitter = topEmitter;
         
@@ -61,7 +61,7 @@ public class AgreeGenerator {
             AgreeAnnexEmitter subEmitter = new AgreeAnnexEmitter(
                     subCompInst, layout, category,
                     subCompInst.getName() + dotChar,
-                    subCompInst.getName() + ".");
+                    subCompInst.getName() + ".", false);
 
             if(subCompImpl != null){
                 for (AnnexSubclause annex : subCompImpl.getAllAnnexSubclauses()) {

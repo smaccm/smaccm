@@ -148,20 +148,26 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
     public List<String> assumProps = null;
     public List<String> consistProps = null;
     public List<String> guarProps = null;
+    
+    //during recursive analysis we do not want to use lifts
+    //when proving top level components
+    private boolean ignoreLifts;
 
     public AgreeAnnexEmitter(ComponentInstance compInst,
             AgreeLayout layout,
             String category,
             String jPrefix,
-            String aPrefix){
+            String aPrefix,
+            boolean ignoreLifts){
         this.layout = layout;
+        this.curInst = compInst;
+        this.category = category;
+        this.ignoreLifts  = ignoreLifts;
         
         if(!layout.getCategories().contains(category)){
             layout.addCategory(category);
         }
                 
-        this.curInst = compInst;
-        this.category = category;
         
         curComp = curInst.getSubcomponent();
         
@@ -177,25 +183,26 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
     
    // ************** CASE STATEMENTS **********************
 
-    /*
+    
     @Override
     public Expr caseLiftStatement(LiftStatement lift){
+        
+        if(ignoreLifts){
+            return null;
+        }
+        
         NestedDotID nestId = lift.getSubcomp();
         
         Subcomponent subComp = (Subcomponent)nestId.getBase();
-        ComponentImplementation compImpl = curInst;
+        ComponentInstance subCompInst = curInst.findSubcomponentInstance(subComp);
         ComponentImplementation subCompImpl = subComp.getComponentImplementation();
         ComponentType subCompType = subCompImpl.getType();
-        
-        LinkedList<NamedElement> subModelParents = new LinkedList<>();
-        subModelParents.addAll(modelParents);
-        subModelParents.push(compImpl);
-        AgreeAnnexEmitter subEmitter = new AgreeAnnexEmitter(
-                subComp.getComponentImplementation(), subModelParents, subComp, layout, category,
-                jKindNameTag + subComp.getName() + dotChar,
-                aadlNameTag + subComp.getFullName() + ".");
-        
 
+        AgreeAnnexEmitter subEmitter = new AgreeAnnexEmitter(
+                subCompInst, layout, category,
+                jKindNameTag + subComp.getName() + dotChar,
+                aadlNameTag + subComp.getFullName() + ".", false);
+        
         for (AnnexSubclause annex : subCompImpl.getAllAnnexSubclauses()) {
             if (annex instanceof AgreeContractSubclause) {
                 subEmitter.doSwitch(annex);
@@ -216,6 +223,7 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         assertExpressions.addAll(subEmitter.assertExpressions);
         eqExpressions.addAll(subEmitter.eqExpressions);
         nodeDefExpressions.addAll(subEmitter.nodeDefExpressions);
+        propExpressions.addAll(subEmitter.propExpressions);
         
         subEmitter.inputVars.removeAll(internalVars);
         inputVars.removeAll(subEmitter.internalVars);
@@ -226,7 +234,7 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
        
         return null;
     }
-    */
+    
     
     @Override
     public Expr caseAgreeContractSubclause(AgreeContractSubclause contract) {
