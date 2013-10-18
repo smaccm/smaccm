@@ -12,7 +12,7 @@ public
       RF_2_4Ghz_Spectrum: bus RF_Spectrum.RF_2_4GHz;
       UAV: system UAV::UAV.Impl;
       GS: system Ground_Station.Impl;
-      RC: device RC_Controller;
+      RC: device RC_Controller; 
 
     connections
       bus access UAV.radio_access_915Mhz <-> RF_915Mhz_Spectrum;

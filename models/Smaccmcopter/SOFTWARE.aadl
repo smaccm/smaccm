@@ -14,7 +14,7 @@ public
       sensors: feature group UAV::sensors;
   end Software;
   
-  system implementation Software.Impl
+  system implementation Software.Impl 
     subcomponents
       ML: process Main_Loop.Impl;
              

@@ -215,7 +215,6 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
             }
         }
         
-        
         connExpressions.addAll(subEmitter.connExpressions);
         guarExpressions.addAll(subEmitter.guarExpressions);
         assumpExpressions.addAll(subEmitter.assumpExpressions);
