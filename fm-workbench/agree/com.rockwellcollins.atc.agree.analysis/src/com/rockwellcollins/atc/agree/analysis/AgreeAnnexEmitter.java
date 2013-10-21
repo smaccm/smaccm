@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.xtext.xbase.lib.IntegerExtensions;
 import org.osate.aadl2.AbstractConnectionEnd;
 import org.osate.aadl2.AnnexSubclause;
 import org.osate.aadl2.BooleanLiteral;
@@ -53,6 +54,7 @@ import org.osate.xtext.aadl2.properties.util.PropertyUtils;
 import jkind.lustre.BinaryExpr;
 import jkind.lustre.BinaryOp;
 import jkind.lustre.BoolExpr;
+import jkind.lustre.CondactExpr;
 import jkind.lustre.Equation;
 import jkind.lustre.Expr;
 import jkind.lustre.IdExpr;
@@ -152,6 +154,9 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
     //during recursive analysis we do not want to use lifts
     //when proving top level components
     private boolean ignoreLifts;
+    
+    //the depth of which to check consistency
+    private int consistUnrollDepth = 5;
 
     public AgreeAnnexEmitter(ComponentInstance compInst,
             AgreeLayout layout,
@@ -1103,13 +1108,16 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         }
 
         Node node = new Node("__NODE_"+this.category, inputs, outputs, Collections.EMPTY_LIST, eqs);
+        VarDecl clockVar = new VarDecl("__CLOCK_"+this.category, NamedType.BOOL);
         
         List<Node> agreeNodes = new ArrayList<>(this.nodeDefExpressions);
         agreeNodes.add(node);
-        return new AgreeNode(inputs, outputs, assumVars, asserVars, guarVars, agreeNodes);
+        
+        return new AgreeNode(inputs, outputs, assumVars,
+                asserVars, guarVars, agreeNodes, node, clockVar);
     }
     
-    public List<Node> getLustre(List<AgreeAnnexEmitter> subEmitters) {
+    public List<Node> getLustreWithCondacts(List<AgreeAnnexEmitter> subEmitters){
         // first print out the functions which will be
         // other nodes
 
@@ -1120,9 +1128,10 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         // start constructing the top level node
         List<Equation> eqs = new ArrayList<Equation>();
         List<VarDecl> inputs = new ArrayList<VarDecl>();
+        List<Expr> clocks = new ArrayList<>();
         List<VarDecl> outputs = new ArrayList<VarDecl>();
         List<VarDecl> internals = new ArrayList<VarDecl>();
-        List<String> properties = new ArrayList<String>();
+        List<String> properties = new ArrayList<String>();        
 
         List<Node> nodeSet = new ArrayList<Node>();
 
@@ -1139,16 +1148,52 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         agreeInternalVars.addAll(this.internalVars);
 
         for(AgreeAnnexEmitter subEmitter : subEmitters){
-            nodeSet.addAll(subEmitter.nodeDefExpressions);
-            eqs.addAll(subEmitter.constExpressions);
-            eqs.addAll(subEmitter.eqExpressions);
-            eqs.addAll(subEmitter.propExpressions);
-            eqs.addAll(subEmitter.connExpressions);
+            
+            AgreeNode agreeNode = subEmitter.getComponentNode();
+            nodeSet.addAll(agreeNode.nodes);
+            agreeInputVars.addAll(subEmitter.inputVars);
+            agreeInternalVars.addAll(subEmitter.internalVars); 
+            inputs.add(agreeNode.clockVar);
+            
+            List<Expr> initOutputs = new ArrayList<>();
+            List<Expr> nodeInputs = new ArrayList<>();
+            List<IdExpr> nodeOutputs = new ArrayList<>();
+            Expr clockExpr = new IdExpr(agreeNode.clockVar.id);
+            
+            clocks.add(clockExpr);
+            
+            //TODO: set different initial values for outputs
+            for(VarDecl var : agreeNode.aadlOutputs){
+                NamedType type = (NamedType)var.type;
+                
+                switch(type.name){
+                case "real":
+                    initOutputs.add(new RealExpr(BigDecimal.ZERO));
+                    break;
+                case "bool":
+                    initOutputs.add(new BoolExpr(false));
+                    break;
+                case "int":
+                    initOutputs.add(new IntExpr(BigInteger.ZERO));
+                    break;
+                default:
+                    throw new AgreeException("Unexpected type for aadl output");
+                }
+                nodeOutputs.add(new IdExpr(var.id));
+            }
+            
+            for(VarDecl var : agreeNode.aadlInputs){
+                nodeInputs.add(new IdExpr(var.id));
+            }
+
+            NodeCallExpr nodeCall = new NodeCallExpr(agreeNode.mainNode.id, nodeInputs);
+            
+            CondactExpr condact = new CondactExpr(clockExpr, nodeCall, initOutputs);
+            Equation condactEq = new Equation(nodeOutputs, condact);
             
             varRenaming.putAll(subEmitter.varRenaming);
             refMap.putAll(subEmitter.refMap);
-            agreeInputVars.addAll(subEmitter.inputVars);
-            agreeInternalVars.addAll(subEmitter.internalVars);
+
         }
 
         //warn about combinational cycles
@@ -1271,6 +1316,195 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         Equation contrEq = new Equation(notTotalCompHistId, new UnaryExpr(UnaryOp.NOT, totalCompHistId));
         internals.add(new VarDecl(notTotalCompHistId.id, new NamedType("bool")));
         eqs.add(contrEq);
+        properties.add(notTotalCompHistId.id);
+        consistProps.add(notTotalCompHistId.id);
+        //reversePropStatus.add(true);
+        varRenaming.put(notTotalCompHistId.id, "Total Contract Consistant");
+        //layout.addElement("Top", "Total Contract Consistants", AgreeLayout.SigType.OUTPUT);
+        layout.addElement(category, "Total Contract Consistants", AgreeLayout.SigType.OUTPUT);
+
+        Node topNode = new Node("_MAIN", inputs, outputs, internals, eqs, properties);
+        nodeSet.add(topNode);
+        return nodeSet;
+    }
+    
+    public List<Node> getLustre(List<AgreeAnnexEmitter> subEmitters) {
+        // first print out the functions which will be
+        // other nodes
+
+        assumProps = new ArrayList<String>();
+        consistProps = new ArrayList<String>();
+        guarProps = new ArrayList<String>();
+        
+        // start constructing the top level node
+        List<Equation> eqs = new ArrayList<Equation>();
+        List<VarDecl> inputs = new ArrayList<VarDecl>();
+        List<VarDecl> outputs = new ArrayList<VarDecl>();
+        List<VarDecl> internals = new ArrayList<VarDecl>();
+        List<String> properties = new ArrayList<String>();
+
+        List<Node> nodeSet = new ArrayList<Node>();
+
+        nodeSet.addAll(this.nodeDefExpressions);
+        eqs.addAll(this.constExpressions);
+        eqs.addAll(this.eqExpressions);
+        eqs.addAll(this.propExpressions);
+        eqs.addAll(this.connExpressions);
+        
+        Set<AgreeVarDecl> agreeInputVars = new HashSet<>();
+        Set<AgreeVarDecl> agreeInternalVars = new HashSet<>();
+        
+        agreeInputVars.addAll(this.inputVars);
+        agreeInternalVars.addAll(this.internalVars);
+
+        for(AgreeAnnexEmitter subEmitter : subEmitters){
+            nodeSet.addAll(subEmitter.nodeDefExpressions);
+            eqs.addAll(subEmitter.constExpressions);
+            eqs.addAll(subEmitter.eqExpressions);
+            eqs.addAll(subEmitter.propExpressions);
+            eqs.addAll(subEmitter.connExpressions);
+            
+            varRenaming.putAll(subEmitter.varRenaming);
+            refMap.putAll(subEmitter.refMap);
+            agreeInputVars.addAll(subEmitter.inputVars);
+            agreeInternalVars.addAll(subEmitter.internalVars);
+        }
+
+        //warn about combinational cycles
+        logCycleWarning(eqs);
+        
+        agreeInputVars.removeAll(agreeInternalVars);
+        
+        //convert the variables
+        for(AgreeVarDecl aVar : agreeInputVars){
+            //sSystem.out.println(aVar.jKindStr);
+            inputs.add(new VarDecl(aVar.jKindStr, new NamedType(aVar.type)));
+        }
+        for(AgreeVarDecl aVar : agreeInternalVars){
+            internals.add(new VarDecl(aVar.jKindStr, new NamedType(aVar.type)));
+        }
+
+        IdExpr totalCompHistId = new IdExpr("_TOTAL_COMP_HIST");
+        IdExpr sysAssumpHistId = new IdExpr("_SYSTEM_ASSUMP_HIST");
+
+        internals.add(new VarDecl(totalCompHistId.id, new NamedType("bool")));
+        internals.add(new VarDecl(sysAssumpHistId.id, new NamedType("bool")));
+
+        // total component history
+        Expr totalCompHist = new BoolExpr(true);
+
+        for(AgreeAnnexEmitter subEmitter : subEmitters){
+            totalCompHist = new BinaryExpr(totalCompHist, BinaryOp.AND, getLustreContract(subEmitter));
+        }
+
+        eqs.add(getLustreHistory(totalCompHist, totalCompHistId));
+
+        // system assumptions
+        Expr sysAssumpHist = getLustreAssumptionsAndAssertions(this);
+        eqs.add(getLustreHistory(sysAssumpHist, sysAssumpHistId));
+
+        
+        //make the closure map for proving assumptions
+        Map<Subcomponent, Set<Subcomponent>> closureMap = new HashMap<>();
+        for(AgreeAnnexEmitter subEmitter : subEmitters){
+            Set<Subcomponent> outputClosure = new HashSet<Subcomponent>();
+            outputClosure.add(subEmitter.curComp);
+            ComponentImplementation compImpl = (ComponentImplementation) curInst.getComponentClassifier();
+            getOutputClosure(compImpl.getAllConnections(), outputClosure);
+            closureMap.put(subEmitter.curComp, outputClosure);
+        }
+        
+        //make a counter for checking finite consistency
+        IdExpr countId = new IdExpr("__CONSIST_COUNTER");
+        internals.add(new VarDecl(countId.id, new NamedType("int")));
+        
+        Expr countPre = new BinaryExpr(new UnaryExpr(UnaryOp.PRE, countId), BinaryOp.PLUS, new IntExpr(BigInteger.ONE));
+        countPre = new BinaryExpr(new IntExpr(BigInteger.ZERO), BinaryOp.ARROW, countPre);
+        Equation contEq = new Equation(countId, countPre);
+        eqs.add(contEq);
+
+        
+        // get the individual history variables
+        for(AgreeAnnexEmitter subEmitter : subEmitters){
+
+            Expr higherContracts = new BoolExpr(true);
+
+            for (Subcomponent otherComp : closureMap.get(subEmitter.curComp)) {
+                higherContracts = new BinaryExpr(higherContracts, BinaryOp.AND,
+                        getLustreContract(getSubcomponentEmitter(otherComp, subEmitters)));
+            }
+
+            Expr contrAssumps = getLustreAssumptions(subEmitter);
+
+            IdExpr compId = new IdExpr("_Hist_" + subEmitter.category);
+            internals.add(new VarDecl(compId.id, new NamedType("bool")));
+
+            Expr leftSide = new UnaryExpr(UnaryOp.PRE, totalCompHist);
+            leftSide = new BinaryExpr(new BoolExpr(true), BinaryOp.ARROW, leftSide);
+            leftSide = new BinaryExpr(sysAssumpHist, BinaryOp.AND, leftSide);
+            leftSide = new BinaryExpr(higherContracts, BinaryOp.AND, leftSide);
+
+            Expr contrHistExpr = new BinaryExpr(leftSide, BinaryOp.IMPLIES, contrAssumps);
+            Equation contrHist = new Equation(compId, contrHistExpr);
+            eqs.add(contrHist);
+            properties.add(compId.id);
+            assumProps.add(compId.id);
+            String propertyName = subEmitter.category + " Assumptions";
+            varRenaming.put(compId.id, propertyName);
+            //layout.addElement("Top", propertyName, AgreeLayout.SigType.OUTPUT);
+            layout.addElement(category, propertyName, AgreeLayout.SigType.OUTPUT);
+            
+            
+            //add a property that is true if the contract is a contradiction
+            IdExpr contrHistId = new IdExpr("__CONTR_HIST_" + subEmitter.category);
+            IdExpr consistId = new IdExpr("__NULL_CONTR_HIST_" + subEmitter.category);
+
+            Expr contExpr = getLustreContract(subEmitter);
+            Equation contHist = getLustreHistory(contExpr, contrHistId);
+            Expr finiteConsist = getFinteConsistancy(contrHistId, countId, consistUnrollDepth);
+            Equation contrConsistEq = new Equation(consistId, finiteConsist);
+            eqs.add(contrConsistEq);
+            eqs.add(contHist);
+            internals.add(new VarDecl(contrHistId.id, new NamedType("bool")));
+            internals.add(new VarDecl(consistId.id, new NamedType("bool")));
+
+            properties.add(consistId.id);
+            consistProps.add(consistId.id);
+            //reversePropStatus.add(true);
+            String contractName = subEmitter.category + " Consistant";
+            varRenaming.put(consistId.id, contractName);
+            //layout.addElement("Top", contractName, AgreeLayout.SigType.OUTPUT);
+            layout.addElement(category, contractName, AgreeLayout.SigType.OUTPUT);
+        }
+
+        // create individual properties for guarantees
+        int i = 0;
+        for (Equation guar : guarExpressions) {
+            String guarName = guar.lhs.get(0).id;
+            IdExpr sysGuaranteesId = new IdExpr(sysGuarTag + i);
+            internals.add(new VarDecl(sysGuaranteesId.id, new NamedType("bool")));
+
+            Expr totalSysGuarExpr = new BinaryExpr(sysAssumpHistId, BinaryOp.AND, totalCompHistId);
+            totalSysGuarExpr = new BinaryExpr(totalSysGuarExpr, BinaryOp.IMPLIES, guar.expr);
+
+            Equation finalGuar = new Equation(sysGuaranteesId, totalSysGuarExpr);
+            eqs.add(finalGuar);
+            properties.add(sysGuaranteesId.id);
+            guarProps.add(sysGuaranteesId.id);
+            //reversePropStatus.add(false);
+            varRenaming.put(sysGuaranteesId.id, guarName);
+            //layout.addElement("Top", "Component Guarantee " + i++, AgreeLayout.SigType.OUTPUT);
+            layout.addElement(category, "Component Guarantee " + i++, AgreeLayout.SigType.OUTPUT);
+        }
+        
+        //check for contradiction in total component history
+        IdExpr notTotalCompHistId = new IdExpr("_TOTAL_COMP_FINITE_CONSIST");
+        Expr finiteConsist = getFinteConsistancy(totalCompHistId, countId, consistUnrollDepth);
+        Equation contrConsistEq = new Equation(notTotalCompHistId, finiteConsist);
+        
+        internals.add(new VarDecl(notTotalCompHistId.id, new NamedType("bool")));
+        eqs.add(contrConsistEq);
+        
         properties.add(notTotalCompHistId.id);
         consistProps.add(notTotalCompHistId.id);
         //reversePropStatus.add(true);
@@ -1416,6 +1650,16 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
 
         return histEq;
 
+    }
+    
+    //returns an expression for bounded history
+    private Expr getFinteConsistancy(IdExpr histId, IdExpr countId, int n) {
+        Expr countExpr = new BinaryExpr(countId, BinaryOp.EQUAL, new IntExpr(BigInteger.valueOf((long)n)));
+
+        Expr consistExpr = new BinaryExpr(histId, BinaryOp.AND, countExpr);
+        consistExpr = new UnaryExpr(UnaryOp.NOT, consistExpr);
+
+        return consistExpr;
     }
     
     static public void getOutputClosure(List<Connection> conns, Set<Subcomponent> subs) {

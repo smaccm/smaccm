@@ -125,7 +125,7 @@ public
       SMACCM::OS => "Breakaway-RTOS";
       
     annex resolute {** 
-    	prove no_external_commands(this.SN, this) modes: Defensive
+    	prove no_external_commands(this.SN, this) modes: Defensive 
     	-- This property should fail:
     	-- prove no_external_commands(this.SN, this) modes: Normal
     	

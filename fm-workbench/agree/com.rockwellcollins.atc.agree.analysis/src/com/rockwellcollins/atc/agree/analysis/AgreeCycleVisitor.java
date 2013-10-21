@@ -6,6 +6,7 @@ import java.util.Set;
 
 import jkind.lustre.BinaryExpr;
 import jkind.lustre.BoolExpr;
+import jkind.lustre.CondactExpr;
 import jkind.lustre.Expr;
 import jkind.lustre.ExprVisitor;
 import jkind.lustre.IdExpr;
@@ -80,7 +81,7 @@ public class AgreeCycleVisitor implements ExprVisitor<Set<String>>{
 
     @Override
     public Set<String> visit(RecordExpr e) {
-        throw new AgreeException("wtf mate? I didn't think we supported record type sin AGREE");
+        throw new AgreeException("wtf mate? I didn't think we supported record types in AGREE");
     }
 
     @Override
@@ -89,6 +90,18 @@ public class AgreeCycleVisitor implements ExprVisitor<Set<String>>{
             return new HashSet<>();
         }
         return e.expr.accept(this);
+    }
+
+    @Override
+    public Set<String> visit(CondactExpr e) {
+        Set<String> argSet = new HashSet<>();
+        
+        for(Expr argExpr : e.args){
+            argSet.addAll(argExpr.accept(this));
+        }
+        argSet.addAll(e.call.accept(this));
+        
+        return argSet;
     }
 
 }
