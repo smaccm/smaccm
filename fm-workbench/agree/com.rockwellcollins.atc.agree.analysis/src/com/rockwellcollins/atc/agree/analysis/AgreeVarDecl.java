@@ -1,5 +1,7 @@
 package com.rockwellcollins.atc.agree.analysis;
 
+import jkind.lustre.IdExpr;
+
 public class AgreeVarDecl implements Comparable<AgreeVarDecl> {
     public String jKindStr = null;
     public String aadlStr = null;
@@ -12,10 +14,16 @@ public class AgreeVarDecl implements Comparable<AgreeVarDecl> {
 
     @Override
     public boolean equals(Object o) {
-        if (!(o instanceof AgreeVarDecl)) {
-            return false;
+        
+        if(o instanceof IdExpr){
+            return ((IdExpr)o).id.equals(jKindStr);
         }
-        return ((AgreeVarDecl) o).jKindStr.equals(jKindStr);
+        
+        if (o instanceof AgreeVarDecl) {
+            return ((AgreeVarDecl) o).jKindStr.equals(jKindStr);
+        }
+        return false;
+        
     }
 
     @Override

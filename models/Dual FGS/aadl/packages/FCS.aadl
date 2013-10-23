@@ -121,10 +121,10 @@ property some_side_valid =
 assume "valid assumption" : some_side_valid ;
 
 -- We assume when a side recovers it does not fail immediately
---assume "don't fail otherside assumption" : 
---	   prev(prev(not left_side_valid, false), false) and
---       prev(left_side_valid, false) => 
---           left_side_valid ; 
+assume "don't fail otherside assumption" : 
+	   prev(prev(not left_side_valid, false), false) and
+       prev(left_side_valid, false) => 
+           left_side_valid ; 
 
 assume "dont fail assumption" : 
 	   prev(prev(not right_side_valid, false), false) and

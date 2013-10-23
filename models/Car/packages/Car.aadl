@@ -12,7 +12,7 @@ with Base_Types;
 	
 		annex agree {**
 
-			const max_accel : real = 5.0;
+			const max_accel : real = 10.0;
 
 			assume "target speed is positive" : Target_Speed.val >= 0.0;
 			assume "reasonable target speed" : Target_Speed.val < 150.0;
