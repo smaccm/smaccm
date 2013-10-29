@@ -137,7 +137,6 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
     private final Set<AgreeVarDecl> internalVars = new HashSet<>();
     private final Set<AgreeVarDecl> outputVars = new HashSet<>();
 
-
     //the special string used to replace the "." characters in aadl
     private final String dotChar = "__";
     
@@ -190,7 +189,6 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         if(!layout.getCategories().contains(category)){
             layout.addCategory(category);
         }
-                
         
         curComp = curInst.getSubcomponent();
         
