@@ -17,8 +17,8 @@ data implementation optical_flow_msg.impl
     flow_comp_m_x : data Base_Types::Float;
     flow_comp_m_y : data Base_Types::Float;
     ground_distance : data Base_Types::Float;
-    flow_x : data Base_Types::Signed_16;
-    flow_y : data Base_Types::Signed_16;
+    flow_x : data Base_Types::Integer_16;
+    flow_y : data Base_Types::Integer_16;
     sensor_id : data Base_Types::Unsigned_8;
     quality : data Base_Types::Unsigned_8;
 end optical_flow_msg.impl;

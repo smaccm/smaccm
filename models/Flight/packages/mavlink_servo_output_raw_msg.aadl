@@ -22,7 +22,7 @@ data implementation servo_output_raw_msg.impl
     servo6_raw : data Base_Types::Unsigned_16;
     servo7_raw : data Base_Types::Unsigned_16;
     servo8_raw : data Base_Types::Unsigned_16;
-    port : data Base_Types::Unsigned_8;
+    data_port : data Base_Types::Unsigned_8;
 end servo_output_raw_msg.impl;
 
 

@@ -18,14 +18,14 @@ data implementation sys_status_msg.impl
     onboard_control_sensors_health : data Base_Types::Unsigned_32;
     load : data Base_Types::Unsigned_16;
     voltage_battery : data Base_Types::Unsigned_16;
-    current_battery : data Base_Types::Signed_16;
+    current_battery : data Base_Types::Integer_16;
     drop_rate_comm : data Base_Types::Unsigned_16;
     errors_comm : data Base_Types::Unsigned_16;
     errors_count1 : data Base_Types::Unsigned_16;
     errors_count2 : data Base_Types::Unsigned_16;
     errors_count3 : data Base_Types::Unsigned_16;
     errors_count4 : data Base_Types::Unsigned_16;
-    battery_remaining : data Base_Types::Signed_8;
+    battery_remaining : data Base_Types::Integer_8;
 end sys_status_msg.impl;
 
 

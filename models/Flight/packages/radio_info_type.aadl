@@ -13,12 +13,12 @@ end radio_info;
 
 data implementation radio_info.impl
   subcomponents
-    lat : data Base_Types::Signed_32;
-    lon : data Base_Types::Signed_32;
-    gps_alt : data Base_Types::Signed_32;
-    vx : data Base_Types::Signed_16;
-    vy : data Base_Types::Signed_16;
-    vz : data Base_Types::Signed_16;
+    lat : data Base_Types::Integer_32;
+    lon : data Base_Types::Integer_32;
+    gps_alt : data Base_Types::Integer_32;
+    vx : data Base_Types::Integer_16;
+    vy : data Base_Types::Integer_16;
+    vz : data Base_Types::Integer_16;
     time : data Base_Types::Unsigned_32;
 end radio_info.impl;
 

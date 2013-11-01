@@ -777,7 +777,11 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
                 
                 //have to keep track of outputs for condacts
                 if(namedEl instanceof DataSubcomponent){
-                    if(((DirectedFeature)orgId.getBase()).getDirection() == DirectionType.OUT){
+                    NestedDotID tempId = orgId;
+                    while(!(tempId.getBase() instanceof DirectedFeature)){
+                        tempId = orgId.getSub();
+                    }
+                    if(((DirectedFeature)tempId.getBase()).getDirection() == DirectionType.OUT){
                         outputVars.add(tempStrType);
                     }
                 }else if(((DirectedFeature)namedEl).getDirection() == DirectionType.OUT){

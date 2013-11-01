@@ -13,8 +13,8 @@ end mission_request_partial_list_msg;
 
 data implementation mission_request_partial_list_msg.impl
   subcomponents
-    start_index : data Base_Types::Signed_16;
-    end_index : data Base_Types::Signed_16;
+    start_index : data Base_Types::Integer_16;
+    end_index : data Base_Types::Integer_16;
     target_system : data Base_Types::Unsigned_8;
     target_component : data Base_Types::Unsigned_8;
 end mission_request_partial_list_msg.impl;

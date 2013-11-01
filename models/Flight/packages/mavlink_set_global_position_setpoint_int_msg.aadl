@@ -13,10 +13,10 @@ end set_global_position_setpoint_int_msg;
 
 data implementation set_global_position_setpoint_int_msg.impl
   subcomponents
-    latitude : data Base_Types::Signed_32;
-    longitude : data Base_Types::Signed_32;
-    altitude : data Base_Types::Signed_32;
-    yaw : data Base_Types::Signed_16;
+    latitude : data Base_Types::Integer_32;
+    longitude : data Base_Types::Integer_32;
+    altitude : data Base_Types::Integer_32;
+    yaw : data Base_Types::Integer_16;
     coordinate_frame : data Base_Types::Unsigned_8;
 end set_global_position_setpoint_int_msg.impl;
 

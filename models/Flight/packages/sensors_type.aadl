@@ -13,7 +13,7 @@ end sensors_result;
 
 data implementation sensors_result.impl
   subcomponents
-    valid : data Base_Types::Bool;
+    valid : data Base_Types::Boolean;
     roll : data Base_Types::Float;
     pitch : data Base_Types::Float;
     yaw : data Base_Types::Float;

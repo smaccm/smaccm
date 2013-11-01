@@ -35,7 +35,7 @@ with userinput_type;
 			SMACCM_SYS::CommPrim_Source_Text => "receiveFromTask_gcsTransmitTask_uart5_529_chan419_565";
 			Compute_Entrypoint_Source_Text => "eventhandler_gcsTransmitTask_uart5_529_chan419_568";
 		};
-		paramReqs : in event data port Base_Types::Signed_16 {
+		paramReqs : in event data port Base_Types::Integer_16 {
 			Queue_Size => 512;
 			SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsTransmitTask_uart5_529.h";
 			SMACCM_SYS::CommPrim_Source_Text => "receiveFromTask_gcsTransmitTask_uart5_529_chan421_540";
@@ -196,7 +196,7 @@ with userinput_type;
 			SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart5_466.h";
 			SMACCM_SYS::CommPrim_Source_Text => "emitFromTask_gcsReceiveTask_uart5_466_chan11_511";
 		};
-		param_req : out event data port Base_Types::Signed_16 {
+		param_req : out event data port Base_Types::Integer_16 {
 			Queue_Size => 512;
 			SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart5_466.h";
 			SMACCM_SYS::CommPrim_Source_Text => "emitFromTask_gcsReceiveTask_uart5_466_chan421_510";
@@ -475,7 +475,7 @@ with userinput_type;
 			SMACCM_SYS::CommPrim_Source_Text => "receiveFromTask_gcsTransmitTask_uart1_368_chan258_404";
 			Compute_Entrypoint_Source_Text => ("eventhandler_gcsTransmitTask_uart1_368_chan258_407");
 		};
-		paramReqs : in event data port Base_Types::Signed_16 {
+		paramReqs : in event data port Base_Types::Integer_16 {
 			Queue_Size => 512;
 			SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsTransmitTask_uart1_368.h";
 			SMACCM_SYS::CommPrim_Source_Text => "receiveFromTask_gcsTransmitTask_uart1_368_chan260_379";
@@ -630,7 +630,7 @@ with userinput_type;
 			SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart1_305.h";
 			SMACCM_SYS::CommPrim_Source_Text => "emitFromTask_gcsReceiveTask_uart1_305_chan11_350";
 		};
-		param_req : out event data port Base_Types::Signed_16 {
+		param_req : out event data port Base_Types::Integer_16 {
 			Queue_Size => 512;
 			SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart1_305.h";
 			SMACCM_SYS::CommPrim_Source_Text => "emitFromTask_gcsReceiveTask_uart1_305_chan260_349";
@@ -1385,359 +1385,305 @@ with userinput_type;
 	process flight_gen_process
 	end flight_gen_process;
 	
-	process flight_gen_process.impl 
-		subcomponents 
-			gcsTransmitTask_uart5_529_inst : thread gcsTransmitTask_uart5_529 ;
-			encryptTask_uart5_523_inst : thread encryptTask_uart5_523 ; 
-			gcsReceiveTask_uart5_466_inst : thread gcsReceiveTask_uart5_466 ; 
-			decryptTask_uart5_460_inst : thread decryptTask_uart5_460 ; 
-			stateProxy_454_inst : thread stateProxy_454 ;
-			datalink_427_inst : thread datalink_427 ; 
-			gcsTransmitTask_uart1_368_inst : thread gcsTransmitTask_uart1_368 ; 
-			encryptTask_uart1_362_inst : thread encryptTask_uart1_362 ;
-			gcsReceiveTask_uart1_305_inst : thread gcsReceiveTask_uart1_305 ; 
-			decryptTask_uart1_299_inst : thread decryptTask_uart1_299 ; 
-			stateProxy_293_inst : thread stateProxy_293 ; 
-			datalink_266_inst : thread datalink_266 ; 
-			px4ioar_211_inst : thread px4ioar_211 ; 
-			sensorsCaptureTask_186_inst : thread sensorsCaptureTask_186 ; 
-			stateProxy_180_inst : thread stateProxy_180 ; 
-			ubloxGPS_163_inst : thread ubloxGPS_163 ; 
-			stateProxy_151_inst : thread stateProxy_151 ; 
-			stateProxy_144_inst : thread stateProxy_144 ; 
-			motmix_135_inst : thread motmix_135 ; 
-			control_102_inst : thread control_102 ;
-			blink_92_inst : thread blink_92 ; 
-			userInputMux_78_inst : thread userInputMux_78 ;
-			armedMux_64_inst : thread armedMux_64 ;
-			userMAVInput_51_inst : thread userMAVInput_51 ;
-			userPPMInput_40_inst : thread userPPMInput_40 ; 
-			stateProxy_2_inst : thread stateProxy_2 ;
-			uartISR_414_inst : thread uartISR_414 ; 
-			uartISR_253_inst : thread uartISR_253 ;
-			uartISR_208_inst : thread uartISR_208 ; 
-			uartISR_159_inst : thread uartISR_159 ;
-			
-			connections 
-				port gcsTransmitTask_uart5_529_inst . gcsTxToEncSrc -> encryptTask_uart5_523_inst . gcsTxToEnc ;
-				port encryptTask_uart5_523_inst . encToHxSrc
-																																-> datalink_427_inst . framed_ostream ; port gcsReceiveTask_uart5_466_inst .
-																																streamperiods -> gcsTransmitTask_uart5_529_inst . streamPeriod ; port
-																																gcsReceiveTask_uart5_466_inst . rc_override_tx -> userMAVInput_51_inst . rc_over_snk ;
-																																port gcsReceiveTask_uart5_466_inst . param_req -> gcsTransmitTask_uart5_529_inst .
-																																paramReqs ; port gcsReceiveTask_uart5_466_inst . armed -> armedMux_64_inst . mav_arming
-																																; port decryptTask_uart5_460_inst . decToGcsRxSrc -> gcsReceiveTask_uart5_466_inst .
-																																mavStream ; port datalink_427_inst . link_ostream -> uartISR_414_inst . ostream ; port
-																																datalink_427_inst . stat_ostream -> stateProxy_454_inst . proxyEvent ; port
-																																datalink_427_inst . framed_ostream -> decryptTask_uart5_460_inst . hxToDecRcv ; port
-																																gcsTransmitTask_uart1_368_inst . gcsTxToEncSrc -> encryptTask_uart1_362_inst .
-																																gcsTxToEnc ; port encryptTask_uart1_362_inst . encToHxSrc -> datalink_266_inst .
-																																framed_ostream ; port gcsReceiveTask_uart1_305_inst . streamperiods ->
-																																gcsTransmitTask_uart1_368_inst . streamPeriod ; port gcsReceiveTask_uart1_305_inst .
-																																rc_override_tx -> userMAVInput_51_inst . rc_over_snk ; port
-																																gcsReceiveTask_uart1_305_inst . param_req -> gcsTransmitTask_uart1_368_inst . paramReqs
-																																; port gcsReceiveTask_uart1_305_inst . armed -> armedMux_64_inst . mav_arming ; port
-																																decryptTask_uart1_299_inst . decToGcsRxSrc -> gcsReceiveTask_uart1_305_inst . mavStream
-																																; port datalink_266_inst . link_ostream -> uartISR_253_inst . ostream ; port
-																																datalink_266_inst . stat_ostream -> stateProxy_293_inst . proxyEvent ; port
-																																datalink_266_inst . framed_ostream -> decryptTask_uart1_299_inst . hxToDecRcv ; port
-																																px4ioar_211_inst . newstateEmitter -> px4ioar_211_inst . newstateEvent ; port
-																																px4ioar_211_inst . uart_ostream -> uartISR_208_inst . ostream ; port
-																																sensorsCaptureTask_186_inst . newstateEmitter -> sensorsCaptureTask_186_inst .
-																																newstateEvent ; port sensorsCaptureTask_186_inst . sensors -> control_102_inst .
-																																sensors ; port sensorsCaptureTask_186_inst . sensors -> stateProxy_2_inst . proxyEvent
-																																; port ubloxGPS_163_inst . position -> sensorsCaptureTask_186_inst . position ; port
-																																ubloxGPS_163_inst . position -> stateProxy_180_inst . proxyEvent ; port motmix_135_inst
-																																. motors -> px4ioar_211_inst . motor_istream ; port motmix_135_inst . motors ->
-																																stateProxy_144_inst . proxyEvent ; port control_102_inst . control ->
-																																stateProxy_151_inst . proxyEvent ; port control_102_inst . control -> motmix_135_inst .
-																																control ; port uartISR_414_inst . istream -> datalink_427_inst . link_istream ; port
-																																uartISR_253_inst . istream -> datalink_266_inst . link_istream ; port uartISR_159_inst
-																																. istream -> ubloxGPS_163_inst . istream ; port gcsReceiveTask_uart5_466_inst .
-																																paramWriter -> gcsTransmitTask_uart5_529_inst . paramReader ; port
-																																gcsReceiveTask_uart5_466_inst . paramWriter -> gcsReceiveTask_uart5_466_inst .
-																																paramReader ; port gcsReceiveTask_uart5_466_inst . paramWriter ->
-																																gcsTransmitTask_uart1_368_inst . paramReader ; port gcsReceiveTask_uart5_466_inst .
-																																paramWriter -> gcsReceiveTask_uart1_305_inst . paramReader ; port
-																																gcsReceiveTask_uart5_466_inst . paramWriter -> control_102_inst . paramReader ; port
-																																gcsReceiveTask_uart5_466_inst . paramWriter -> gcsTransmitTask_uart5_529_inst .
-																																paramReader ; port gcsReceiveTask_uart5_466_inst . paramWriter ->
-																																gcsReceiveTask_uart5_466_inst . paramReader ; port gcsReceiveTask_uart5_466_inst .
-																																paramWriter -> gcsTransmitTask_uart1_368_inst . paramReader ; port
-																																gcsReceiveTask_uart5_466_inst . paramWriter -> gcsReceiveTask_uart1_305_inst .
-																																paramReader ; port gcsReceiveTask_uart5_466_inst . paramWriter -> control_102_inst .
-																																paramReader ; port gcsReceiveTask_uart5_466_inst . paramWriter ->
-																																gcsTransmitTask_uart5_529_inst . paramReader ; port gcsReceiveTask_uart5_466_inst .
-																																paramWriter -> gcsReceiveTask_uart5_466_inst . paramReader ; port
-																																gcsReceiveTask_uart5_466_inst . paramWriter -> gcsTransmitTask_uart1_368_inst .
-																																paramReader ; port gcsReceiveTask_uart5_466_inst . paramWriter ->
-																																gcsReceiveTask_uart1_305_inst . paramReader ; port gcsReceiveTask_uart5_466_inst .
-																																paramWriter -> control_102_inst . paramReader ; port gcsReceiveTask_uart5_466_inst .
-																																paramWriter -> gcsTransmitTask_uart5_529_inst . paramReader ; port
-																																gcsReceiveTask_uart5_466_inst . paramWriter -> gcsReceiveTask_uart5_466_inst .
-																																paramReader ; port gcsReceiveTask_uart5_466_inst . paramWriter ->
-																																gcsTransmitTask_uart1_368_inst . paramReader ; port gcsReceiveTask_uart5_466_inst .
-																																paramWriter -> gcsReceiveTask_uart1_305_inst . paramReader ; port
-																																gcsReceiveTask_uart5_466_inst . paramWriter -> control_102_inst . paramReader ; port
-																																gcsReceiveTask_uart5_466_inst . paramWriter -> gcsTransmitTask_uart5_529_inst .
-																																paramReader ; port gcsReceiveTask_uart5_466_inst . paramWriter ->
-																																gcsReceiveTask_uart5_466_inst . paramReader ; port gcsReceiveTask_uart5_466_inst .
-																																paramWriter -> gcsTransmitTask_uart1_368_inst . paramReader ; port
-																																gcsReceiveTask_uart5_466_inst . paramWriter -> gcsReceiveTask_uart1_305_inst .
-																																paramReader ; port gcsReceiveTask_uart5_466_inst . paramWriter -> control_102_inst .
-																																paramReader ; port gcsReceiveTask_uart5_466_inst . paramWriter ->
-																																gcsTransmitTask_uart5_529_inst . paramReader ; port gcsReceiveTask_uart5_466_inst .
-																																paramWriter -> gcsReceiveTask_uart5_466_inst . paramReader ; port
-																																gcsReceiveTask_uart5_466_inst . paramWriter -> gcsTransmitTask_uart1_368_inst .
-																																paramReader ; port gcsReceiveTask_uart5_466_inst . paramWriter ->
-																																gcsReceiveTask_uart1_305_inst . paramReader ; port gcsReceiveTask_uart5_466_inst .
-																																paramWriter -> control_102_inst . paramReader ; port gcsReceiveTask_uart5_466_inst .
-																																paramWriter -> gcsTransmitTask_uart5_529_inst . paramReader ; port
-																																gcsReceiveTask_uart5_466_inst . paramWriter -> gcsReceiveTask_uart5_466_inst .
-																																paramReader ; port gcsReceiveTask_uart5_466_inst . paramWriter ->
-																																gcsTransmitTask_uart1_368_inst . paramReader ; port gcsReceiveTask_uart5_466_inst .
-																																paramWriter -> gcsReceiveTask_uart1_305_inst . paramReader ; port
-																																gcsReceiveTask_uart5_466_inst . paramWriter -> control_102_inst . paramReader ; port
-																																gcsReceiveTask_uart5_466_inst . paramWriter -> gcsTransmitTask_uart5_529_inst .
-																																paramReader ; port gcsReceiveTask_uart5_466_inst . paramWriter ->
-																																gcsReceiveTask_uart5_466_inst . paramReader ; port gcsReceiveTask_uart5_466_inst .
-																																paramWriter -> gcsTransmitTask_uart1_368_inst . paramReader ; port
-																																gcsReceiveTask_uart5_466_inst . paramWriter -> gcsReceiveTask_uart1_305_inst .
-																																paramReader ; port gcsReceiveTask_uart5_466_inst . paramWriter -> control_102_inst .
-																																paramReader ; port gcsReceiveTask_uart5_466_inst . paramWriter ->
-																																gcsTransmitTask_uart5_529_inst . paramReader ; port gcsReceiveTask_uart5_466_inst .
-																																paramWriter -> gcsReceiveTask_uart5_466_inst . paramReader ; port
-																																gcsReceiveTask_uart5_466_inst . paramWriter -> gcsTransmitTask_uart1_368_inst .
-																																paramReader ; port gcsReceiveTask_uart5_466_inst . paramWriter ->
-																																gcsReceiveTask_uart1_305_inst . paramReader ; port gcsReceiveTask_uart5_466_inst .
-																																paramWriter -> control_102_inst . paramReader ; port gcsReceiveTask_uart5_466_inst .
-																																paramWriter -> gcsTransmitTask_uart5_529_inst . paramReader ; port
-																																gcsReceiveTask_uart5_466_inst . paramWriter -> gcsReceiveTask_uart5_466_inst .
-																																paramReader ; port gcsReceiveTask_uart5_466_inst . paramWriter ->
-																																gcsTransmitTask_uart1_368_inst . paramReader ; port gcsReceiveTask_uart5_466_inst .
-																																paramWriter -> gcsReceiveTask_uart1_305_inst . paramReader ; port
-																																gcsReceiveTask_uart5_466_inst . paramWriter -> control_102_inst . paramReader ; port
-																																gcsReceiveTask_uart5_466_inst . paramWriter -> gcsTransmitTask_uart5_529_inst .
-																																paramReader ; port gcsReceiveTask_uart5_466_inst . paramWriter ->
-																																gcsReceiveTask_uart5_466_inst . paramReader ; port gcsReceiveTask_uart5_466_inst .
-																																paramWriter -> gcsTransmitTask_uart1_368_inst . paramReader ; port
-																																gcsReceiveTask_uart5_466_inst . paramWriter -> gcsReceiveTask_uart1_305_inst .
-																																paramReader ; port gcsReceiveTask_uart5_466_inst . paramWriter -> control_102_inst .
-																																paramReader ; port gcsReceiveTask_uart5_466_inst . paramWriter ->
-																																gcsTransmitTask_uart5_529_inst . paramReader ; port gcsReceiveTask_uart5_466_inst .
-																																paramWriter -> gcsReceiveTask_uart5_466_inst . paramReader ; port
-																																gcsReceiveTask_uart5_466_inst . paramWriter -> gcsTransmitTask_uart1_368_inst .
-																																paramReader ; port gcsReceiveTask_uart5_466_inst . paramWriter ->
-																																gcsReceiveTask_uart1_305_inst . paramReader ; port gcsReceiveTask_uart5_466_inst .
-																																paramWriter -> control_102_inst . paramReader ; port gcsReceiveTask_uart5_466_inst .
-																																paramWriter -> gcsTransmitTask_uart5_529_inst . paramReader ; port
-																																gcsReceiveTask_uart5_466_inst . paramWriter -> gcsReceiveTask_uart5_466_inst .
-																																paramReader ; port gcsReceiveTask_uart5_466_inst . paramWriter ->
-																																gcsTransmitTask_uart1_368_inst . paramReader ; port gcsReceiveTask_uart5_466_inst .
-																																paramWriter -> gcsReceiveTask_uart1_305_inst . paramReader ; port
-																																gcsReceiveTask_uart5_466_inst . paramWriter -> control_102_inst . paramReader ; port
-																																gcsReceiveTask_uart5_466_inst . paramWriter -> gcsTransmitTask_uart5_529_inst .
-																																paramReader ; port gcsReceiveTask_uart5_466_inst . paramWriter ->
-																																gcsReceiveTask_uart5_466_inst . paramReader ; port gcsReceiveTask_uart5_466_inst .
-																																paramWriter -> gcsTransmitTask_uart1_368_inst . paramReader ; port
-																																gcsReceiveTask_uart5_466_inst . paramWriter -> gcsReceiveTask_uart1_305_inst .
-																																paramReader ; port gcsReceiveTask_uart5_466_inst . paramWriter -> control_102_inst .
-																																paramReader ; port gcsReceiveTask_uart5_466_inst . paramWriter ->
-																																gcsTransmitTask_uart5_529_inst . paramReader ; port gcsReceiveTask_uart5_466_inst .
-																																paramWriter -> gcsReceiveTask_uart5_466_inst . paramReader ; port
-																																gcsReceiveTask_uart5_466_inst . paramWriter -> gcsTransmitTask_uart1_368_inst .
-																																paramReader ; port gcsReceiveTask_uart5_466_inst . paramWriter ->
-																																gcsReceiveTask_uart1_305_inst . paramReader ; port gcsReceiveTask_uart5_466_inst .
-																																paramWriter -> control_102_inst . paramReader ; port gcsReceiveTask_uart5_466_inst .
-																																paramWriter -> gcsTransmitTask_uart5_529_inst . paramReader ; port
-																																gcsReceiveTask_uart5_466_inst . paramWriter -> gcsReceiveTask_uart5_466_inst .
-																																paramReader ; port gcsReceiveTask_uart5_466_inst . paramWriter ->
-																																gcsTransmitTask_uart1_368_inst . paramReader ; port gcsReceiveTask_uart5_466_inst .
-																																paramWriter -> gcsReceiveTask_uart1_305_inst . paramReader ; port
-																																gcsReceiveTask_uart5_466_inst . paramWriter -> control_102_inst . paramReader ; port
-																																gcsReceiveTask_uart5_466_inst . paramWriter -> gcsTransmitTask_uart5_529_inst .
-																																paramReader ; port gcsReceiveTask_uart5_466_inst . paramWriter ->
-																																gcsReceiveTask_uart5_466_inst . paramReader ; port gcsReceiveTask_uart5_466_inst .
-																																paramWriter -> gcsTransmitTask_uart1_368_inst . paramReader ; port
-																																gcsReceiveTask_uart5_466_inst . paramWriter -> gcsReceiveTask_uart1_305_inst .
-																																paramReader ; port gcsReceiveTask_uart5_466_inst . paramWriter -> control_102_inst .
-																																paramReader ; port gcsReceiveTask_uart5_466_inst . paramWriter ->
-																																gcsTransmitTask_uart5_529_inst . paramReader ; port gcsReceiveTask_uart5_466_inst .
-																																paramWriter -> gcsReceiveTask_uart5_466_inst . paramReader ; port
-																																gcsReceiveTask_uart5_466_inst . paramWriter -> gcsTransmitTask_uart1_368_inst .
-																																paramReader ; port gcsReceiveTask_uart5_466_inst . paramWriter ->
-																																gcsReceiveTask_uart1_305_inst . paramReader ; port gcsReceiveTask_uart5_466_inst .
-																																paramWriter -> control_102_inst . paramReader ; port gcsReceiveTask_uart5_466_inst .
-																																paramWriter -> gcsTransmitTask_uart5_529_inst . paramReader ; port
-																																gcsReceiveTask_uart5_466_inst . paramWriter -> gcsReceiveTask_uart5_466_inst .
-																																paramReader ; port gcsReceiveTask_uart5_466_inst . paramWriter ->
-																																gcsTransmitTask_uart1_368_inst . paramReader ; port gcsReceiveTask_uart5_466_inst .
-																																paramWriter -> gcsReceiveTask_uart1_305_inst . paramReader ; port
-																																gcsReceiveTask_uart5_466_inst . paramWriter -> control_102_inst . paramReader ; port
-																																gcsReceiveTask_uart5_466_inst . paramWriter -> gcsTransmitTask_uart5_529_inst .
-																																paramReader ; port gcsReceiveTask_uart5_466_inst . paramWriter ->
-																																gcsReceiveTask_uart5_466_inst . paramReader ; port gcsReceiveTask_uart5_466_inst .
-																																paramWriter -> gcsTransmitTask_uart1_368_inst . paramReader ; port
-																																gcsReceiveTask_uart5_466_inst . paramWriter -> gcsReceiveTask_uart1_305_inst .
-																																paramReader ; port gcsReceiveTask_uart5_466_inst . paramWriter -> control_102_inst .
-																																paramReader ; port gcsReceiveTask_uart5_466_inst . flightMode ->
-																																gcsTransmitTask_uart5_529_inst . flightmode ; port gcsReceiveTask_uart5_466_inst .
-																																flightMode -> gcsTransmitTask_uart1_368_inst . flightmode ; port
-																																gcsReceiveTask_uart5_466_inst . flightMode -> motmix_135_inst . flightMode ; port
-																																gcsReceiveTask_uart5_466_inst . flightMode -> control_102_inst . flightmode ; port
-																																gcsReceiveTask_uart5_466_inst . flightMode -> blink_92_inst . flightmode ; port
-																																stateProxy_454_inst . proxyData -> gcsTransmitTask_uart5_529_inst . radio ; port
-																																gcsReceiveTask_uart1_305_inst . paramWriter -> gcsTransmitTask_uart5_529_inst .
-																																paramReader ; port gcsReceiveTask_uart1_305_inst . paramWriter ->
-																																gcsReceiveTask_uart5_466_inst . paramReader ; port gcsReceiveTask_uart1_305_inst .
-																																paramWriter -> gcsTransmitTask_uart1_368_inst . paramReader ; port
-																																gcsReceiveTask_uart1_305_inst . paramWriter -> gcsReceiveTask_uart1_305_inst .
-																																paramReader ; port gcsReceiveTask_uart1_305_inst . paramWriter -> control_102_inst .
-																																paramReader ; port gcsReceiveTask_uart1_305_inst . paramWriter ->
-																																gcsTransmitTask_uart5_529_inst . paramReader ; port gcsReceiveTask_uart1_305_inst .
-																																paramWriter -> gcsReceiveTask_uart5_466_inst . paramReader ; port
-																																gcsReceiveTask_uart1_305_inst . paramWriter -> gcsTransmitTask_uart1_368_inst .
-																																paramReader ; port gcsReceiveTask_uart1_305_inst . paramWriter ->
-																																gcsReceiveTask_uart1_305_inst . paramReader ; port gcsReceiveTask_uart1_305_inst .
-																																paramWriter -> control_102_inst . paramReader ; port gcsReceiveTask_uart1_305_inst .
-																																paramWriter -> gcsTransmitTask_uart5_529_inst . paramReader ; port
-																																gcsReceiveTask_uart1_305_inst . paramWriter -> gcsReceiveTask_uart5_466_inst .
-																																paramReader ; port gcsReceiveTask_uart1_305_inst . paramWriter ->
-																																gcsTransmitTask_uart1_368_inst . paramReader ; port gcsReceiveTask_uart1_305_inst .
-																																paramWriter -> gcsReceiveTask_uart1_305_inst . paramReader ; port
-																																gcsReceiveTask_uart1_305_inst . paramWriter -> control_102_inst . paramReader ; port
-																																gcsReceiveTask_uart1_305_inst . paramWriter -> gcsTransmitTask_uart5_529_inst .
-																																paramReader ; port gcsReceiveTask_uart1_305_inst . paramWriter ->
-																																gcsReceiveTask_uart5_466_inst . paramReader ; port gcsReceiveTask_uart1_305_inst .
-																																paramWriter -> gcsTransmitTask_uart1_368_inst . paramReader ; port
-																																gcsReceiveTask_uart1_305_inst . paramWriter -> gcsReceiveTask_uart1_305_inst .
-																																paramReader ; port gcsReceiveTask_uart1_305_inst . paramWriter -> control_102_inst .
-																																paramReader ; port gcsReceiveTask_uart1_305_inst . paramWriter ->
-																																gcsTransmitTask_uart5_529_inst . paramReader ; port gcsReceiveTask_uart1_305_inst .
-																																paramWriter -> gcsReceiveTask_uart5_466_inst . paramReader ; port
-																																gcsReceiveTask_uart1_305_inst . paramWriter -> gcsTransmitTask_uart1_368_inst .
-																																paramReader ; port gcsReceiveTask_uart1_305_inst . paramWriter ->
-																																gcsReceiveTask_uart1_305_inst . paramReader ; port gcsReceiveTask_uart1_305_inst .
-																																paramWriter -> control_102_inst . paramReader ; port gcsReceiveTask_uart1_305_inst .
-																																paramWriter -> gcsTransmitTask_uart5_529_inst . paramReader ; port
-																																gcsReceiveTask_uart1_305_inst . paramWriter -> gcsReceiveTask_uart5_466_inst .
-																																paramReader ; port gcsReceiveTask_uart1_305_inst . paramWriter ->
-																																gcsTransmitTask_uart1_368_inst . paramReader ; port gcsReceiveTask_uart1_305_inst .
-																																paramWriter -> gcsReceiveTask_uart1_305_inst . paramReader ; port
-																																gcsReceiveTask_uart1_305_inst . paramWriter -> control_102_inst . paramReader ; port
-																																gcsReceiveTask_uart1_305_inst . paramWriter -> gcsTransmitTask_uart5_529_inst .
-																																paramReader ; port gcsReceiveTask_uart1_305_inst . paramWriter ->
-																																gcsReceiveTask_uart5_466_inst . paramReader ; port gcsReceiveTask_uart1_305_inst .
-																																paramWriter -> gcsTransmitTask_uart1_368_inst . paramReader ; port
-																																gcsReceiveTask_uart1_305_inst . paramWriter -> gcsReceiveTask_uart1_305_inst .
-																																paramReader ; port gcsReceiveTask_uart1_305_inst . paramWriter -> control_102_inst .
-																																paramReader ; port gcsReceiveTask_uart1_305_inst . paramWriter ->
-																																gcsTransmitTask_uart5_529_inst . paramReader ; port gcsReceiveTask_uart1_305_inst .
-																																paramWriter -> gcsReceiveTask_uart5_466_inst . paramReader ; port
-																																gcsReceiveTask_uart1_305_inst . paramWriter -> gcsTransmitTask_uart1_368_inst .
-																																paramReader ; port gcsReceiveTask_uart1_305_inst . paramWriter ->
-																																gcsReceiveTask_uart1_305_inst . paramReader ; port gcsReceiveTask_uart1_305_inst .
-																																paramWriter -> control_102_inst . paramReader ; port gcsReceiveTask_uart1_305_inst .
-																																paramWriter -> gcsTransmitTask_uart5_529_inst . paramReader ; port
-																																gcsReceiveTask_uart1_305_inst . paramWriter -> gcsReceiveTask_uart5_466_inst .
-																																paramReader ; port gcsReceiveTask_uart1_305_inst . paramWriter ->
-																																gcsTransmitTask_uart1_368_inst . paramReader ; port gcsReceiveTask_uart1_305_inst .
-																																paramWriter -> gcsReceiveTask_uart1_305_inst . paramReader ; port
-																																gcsReceiveTask_uart1_305_inst . paramWriter -> control_102_inst . paramReader ; port
-																																gcsReceiveTask_uart1_305_inst . paramWriter -> gcsTransmitTask_uart5_529_inst .
-																																paramReader ; port gcsReceiveTask_uart1_305_inst . paramWriter ->
-																																gcsReceiveTask_uart5_466_inst . paramReader ; port gcsReceiveTask_uart1_305_inst .
-																																paramWriter -> gcsTransmitTask_uart1_368_inst . paramReader ; port
-																																gcsReceiveTask_uart1_305_inst . paramWriter -> gcsReceiveTask_uart1_305_inst .
-																																paramReader ; port gcsReceiveTask_uart1_305_inst . paramWriter -> control_102_inst .
-																																paramReader ; port gcsReceiveTask_uart1_305_inst . paramWriter ->
-																																gcsTransmitTask_uart5_529_inst . paramReader ; port gcsReceiveTask_uart1_305_inst .
-																																paramWriter -> gcsReceiveTask_uart5_466_inst . paramReader ; port
-																																gcsReceiveTask_uart1_305_inst . paramWriter -> gcsTransmitTask_uart1_368_inst .
-																																paramReader ; port gcsReceiveTask_uart1_305_inst . paramWriter ->
-																																gcsReceiveTask_uart1_305_inst . paramReader ; port gcsReceiveTask_uart1_305_inst .
-																																paramWriter -> control_102_inst . paramReader ; port gcsReceiveTask_uart1_305_inst .
-																																paramWriter -> gcsTransmitTask_uart5_529_inst . paramReader ; port
-																																gcsReceiveTask_uart1_305_inst . paramWriter -> gcsReceiveTask_uart5_466_inst .
-																																paramReader ; port gcsReceiveTask_uart1_305_inst . paramWriter ->
-																																gcsTransmitTask_uart1_368_inst . paramReader ; port gcsReceiveTask_uart1_305_inst .
-																																paramWriter -> gcsReceiveTask_uart1_305_inst . paramReader ; port
-																																gcsReceiveTask_uart1_305_inst . paramWriter -> control_102_inst . paramReader ; port
-																																gcsReceiveTask_uart1_305_inst . paramWriter -> gcsTransmitTask_uart5_529_inst .
-																																paramReader ; port gcsReceiveTask_uart1_305_inst . paramWriter ->
-																																gcsReceiveTask_uart5_466_inst . paramReader ; port gcsReceiveTask_uart1_305_inst .
-																																paramWriter -> gcsTransmitTask_uart1_368_inst . paramReader ; port
-																																gcsReceiveTask_uart1_305_inst . paramWriter -> gcsReceiveTask_uart1_305_inst .
-																																paramReader ; port gcsReceiveTask_uart1_305_inst . paramWriter -> control_102_inst .
-																																paramReader ; port gcsReceiveTask_uart1_305_inst . paramWriter ->
-																																gcsTransmitTask_uart5_529_inst . paramReader ; port gcsReceiveTask_uart1_305_inst .
-																																paramWriter -> gcsReceiveTask_uart5_466_inst . paramReader ; port
-																																gcsReceiveTask_uart1_305_inst . paramWriter -> gcsTransmitTask_uart1_368_inst .
-																																paramReader ; port gcsReceiveTask_uart1_305_inst . paramWriter ->
-																																gcsReceiveTask_uart1_305_inst . paramReader ; port gcsReceiveTask_uart1_305_inst .
-																																paramWriter -> control_102_inst . paramReader ; port gcsReceiveTask_uart1_305_inst .
-																																paramWriter -> gcsTransmitTask_uart5_529_inst . paramReader ; port
-																																gcsReceiveTask_uart1_305_inst . paramWriter -> gcsReceiveTask_uart5_466_inst .
-																																paramReader ; port gcsReceiveTask_uart1_305_inst . paramWriter ->
-																																gcsTransmitTask_uart1_368_inst . paramReader ; port gcsReceiveTask_uart1_305_inst .
-																																paramWriter -> gcsReceiveTask_uart1_305_inst . paramReader ; port
-																																gcsReceiveTask_uart1_305_inst . paramWriter -> control_102_inst . paramReader ; port
-																																gcsReceiveTask_uart1_305_inst . paramWriter -> gcsTransmitTask_uart5_529_inst .
-																																paramReader ; port gcsReceiveTask_uart1_305_inst . paramWriter ->
-																																gcsReceiveTask_uart5_466_inst . paramReader ; port gcsReceiveTask_uart1_305_inst .
-																																paramWriter -> gcsTransmitTask_uart1_368_inst . paramReader ; port
-																																gcsReceiveTask_uart1_305_inst . paramWriter -> gcsReceiveTask_uart1_305_inst .
-																																paramReader ; port gcsReceiveTask_uart1_305_inst . paramWriter -> control_102_inst .
-																																paramReader ; port gcsReceiveTask_uart1_305_inst . paramWriter ->
-																																gcsTransmitTask_uart5_529_inst . paramReader ; port gcsReceiveTask_uart1_305_inst .
-																																paramWriter -> gcsReceiveTask_uart5_466_inst . paramReader ; port
-																																gcsReceiveTask_uart1_305_inst . paramWriter -> gcsTransmitTask_uart1_368_inst .
-																																paramReader ; port gcsReceiveTask_uart1_305_inst . paramWriter ->
-																																gcsReceiveTask_uart1_305_inst . paramReader ; port gcsReceiveTask_uart1_305_inst .
-																																paramWriter -> control_102_inst . paramReader ; port gcsReceiveTask_uart1_305_inst .
-																																paramWriter -> gcsTransmitTask_uart5_529_inst . paramReader ; port
-																																gcsReceiveTask_uart1_305_inst . paramWriter -> gcsReceiveTask_uart5_466_inst .
-																																paramReader ; port gcsReceiveTask_uart1_305_inst . paramWriter ->
-																																gcsTransmitTask_uart1_368_inst . paramReader ; port gcsReceiveTask_uart1_305_inst .
-																																paramWriter -> gcsReceiveTask_uart1_305_inst . paramReader ; port
-																																gcsReceiveTask_uart1_305_inst . paramWriter -> control_102_inst . paramReader ; port
-																																gcsReceiveTask_uart1_305_inst . paramWriter -> gcsTransmitTask_uart5_529_inst .
-																																paramReader ; port gcsReceiveTask_uart1_305_inst . paramWriter ->
-																																gcsReceiveTask_uart5_466_inst . paramReader ; port gcsReceiveTask_uart1_305_inst .
-																																paramWriter -> gcsTransmitTask_uart1_368_inst . paramReader ; port
-																																gcsReceiveTask_uart1_305_inst . paramWriter -> gcsReceiveTask_uart1_305_inst .
-																																paramReader ; port gcsReceiveTask_uart1_305_inst . paramWriter -> control_102_inst .
-																																paramReader ; port gcsReceiveTask_uart1_305_inst . paramWriter ->
-																																gcsTransmitTask_uart5_529_inst . paramReader ; port gcsReceiveTask_uart1_305_inst .
-																																paramWriter -> gcsReceiveTask_uart5_466_inst . paramReader ; port
-																																gcsReceiveTask_uart1_305_inst . paramWriter -> gcsTransmitTask_uart1_368_inst .
-																																paramReader ; port gcsReceiveTask_uart1_305_inst . paramWriter ->
-																																gcsReceiveTask_uart1_305_inst . paramReader ; port gcsReceiveTask_uart1_305_inst .
-																																paramWriter -> control_102_inst . paramReader ; port gcsReceiveTask_uart1_305_inst .
-																																flightMode -> gcsTransmitTask_uart5_529_inst . flightmode ; port
-																																gcsReceiveTask_uart1_305_inst . flightMode -> gcsTransmitTask_uart1_368_inst .
-																																flightmode ; port gcsReceiveTask_uart1_305_inst . flightMode -> motmix_135_inst .
-																																flightMode ; port gcsReceiveTask_uart1_305_inst . flightMode -> control_102_inst .
-																																flightmode ; port gcsReceiveTask_uart1_305_inst . flightMode -> blink_92_inst .
-																																flightmode ; port stateProxy_293_inst . proxyData -> gcsTransmitTask_uart1_368_inst .
-																																radio ; port stateProxy_180_inst . proxyData -> gcsTransmitTask_uart5_529_inst .
-																																position ; port stateProxy_180_inst . proxyData -> gcsTransmitTask_uart1_368_inst .
-																																position ; port stateProxy_151_inst . proxyData -> gcsTransmitTask_uart5_529_inst .
-																																control ; port stateProxy_151_inst . proxyData -> gcsTransmitTask_uart1_368_inst .
-																																control ; port stateProxy_144_inst . proxyData -> gcsTransmitTask_uart5_529_inst .
-																																motors ; port stateProxy_144_inst . proxyData -> gcsTransmitTask_uart1_368_inst .
-																																motors ; port userInputMux_78_inst . src_res -> control_102_inst . userinput ; port
-																																armedMux_64_inst . armed_res_src -> gcsTransmitTask_uart5_529_inst . armed ; port
-																																armedMux_64_inst . armed_res_src -> gcsTransmitTask_uart1_368_inst . armed ; port
-																																armedMux_64_inst . armed_res_src -> motmix_135_inst . armReader ; port armedMux_64_inst
-																																. armed_res_src -> control_102_inst . armedReader ; port armedMux_64_inst .
-																																armed_res_src -> blink_92_inst . armed ; port armedMux_64_inst . armed_res_src ->
-																																userInputMux_78_inst . snk_armed ; port armedMux_64_inst . armed_res_src ->
-																																userMAVInput_51_inst . armedReader ; port userMAVInput_51_inst . src_js_fs ->
-																																userInputMux_78_inst . snk_mav_failsafe ; port userMAVInput_51_inst . rc_over_res_tx ->
-																																userInputMux_78_inst . snk_mav_ppm ; port userPPMInput_40_inst . ppmChansWriter ->
-																																armedMux_64_inst . ppm_input_snk ; port userPPMInput_40_inst . userInput ->
-																																userInputMux_78_inst . snk_rc_ppm ; port stateProxy_2_inst . proxyData ->
-																																gcsTransmitTask_uart5_529_inst . sensors ; port stateProxy_2_inst . proxyData ->
-																																gcsTransmitTask_uart1_368_inst . sensors ;
-																															end flight_gen_process . impl ; end flight_gen ;
+	process implementation flight_gen_process.impl
+  subcomponents
+    gcsTransmitTask_uart5_529_inst : thread gcsTransmitTask_uart5_529;
+    encryptTask_uart5_523_inst : thread encryptTask_uart5_523;
+    gcsReceiveTask_uart5_466_inst : thread gcsReceiveTask_uart5_466;
+    decryptTask_uart5_460_inst : thread decryptTask_uart5_460;
+    stateProxy_454_inst : thread stateProxy_454;
+    datalink_427_inst : thread datalink_427;
+    gcsTransmitTask_uart1_368_inst : thread gcsTransmitTask_uart1_368;
+    encryptTask_uart1_362_inst : thread encryptTask_uart1_362;
+    gcsReceiveTask_uart1_305_inst : thread gcsReceiveTask_uart1_305;
+    decryptTask_uart1_299_inst : thread decryptTask_uart1_299;
+    stateProxy_293_inst : thread stateProxy_293;
+    datalink_266_inst : thread datalink_266;
+    px4ioar_211_inst : thread px4ioar_211;
+    sensorsCaptureTask_186_inst : thread sensorsCaptureTask_186;
+    stateProxy_180_inst : thread stateProxy_180;
+    ubloxGPS_163_inst : thread ubloxGPS_163;
+    stateProxy_151_inst : thread stateProxy_151;
+    stateProxy_144_inst : thread stateProxy_144;
+    motmix_135_inst : thread motmix_135;
+    control_102_inst : thread control_102;
+    blink_92_inst : thread blink_92;
+    userInputMux_78_inst : thread userInputMux_78;
+    armedMux_64_inst : thread armedMux_64;
+    userMAVInput_51_inst : thread userMAVInput_51;
+    userPPMInput_40_inst : thread userPPMInput_40;
+    stateProxy_2_inst : thread stateProxy_2;
+    uartISR_414_inst : thread uartISR_414;
+    uartISR_253_inst : thread uartISR_253;
+    uartISR_208_inst : thread uartISR_208;
+    uartISR_159_inst : thread uartISR_159;
+  connections
+    port gcsTransmitTask_uart5_529_inst.gcsTxToEncSrc -> encryptTask_uart5_523_inst.gcsTxToEnc;
+    port encryptTask_uart5_523_inst.encToHxSrc -> datalink_427_inst.framed_ostream;
+    port gcsReceiveTask_uart5_466_inst.streamperiods -> gcsTransmitTask_uart5_529_inst.streamPeriod;
+    port gcsReceiveTask_uart5_466_inst.rc_override_tx -> userMAVInput_51_inst.rc_over_snk;
+    port gcsReceiveTask_uart5_466_inst.param_req -> gcsTransmitTask_uart5_529_inst.paramReqs;
+    port gcsReceiveTask_uart5_466_inst.armed -> armedMux_64_inst.mav_arming;
+    port decryptTask_uart5_460_inst.decToGcsRxSrc -> gcsReceiveTask_uart5_466_inst.mavStream;
+    port datalink_427_inst.link_ostream -> uartISR_414_inst.ostream;
+    port datalink_427_inst.stat_ostream -> stateProxy_454_inst.proxyEvent;
+    port datalink_427_inst.framed_ostream -> decryptTask_uart5_460_inst.hxToDecRcv;
+    port gcsTransmitTask_uart1_368_inst.gcsTxToEncSrc -> encryptTask_uart1_362_inst.gcsTxToEnc;
+    port encryptTask_uart1_362_inst.encToHxSrc -> datalink_266_inst.framed_ostream;
+    port gcsReceiveTask_uart1_305_inst.streamperiods -> gcsTransmitTask_uart1_368_inst.streamPeriod;
+    port gcsReceiveTask_uart1_305_inst.rc_override_tx -> userMAVInput_51_inst.rc_over_snk;
+    port gcsReceiveTask_uart1_305_inst.param_req -> gcsTransmitTask_uart1_368_inst.paramReqs;
+    port gcsReceiveTask_uart1_305_inst.armed -> armedMux_64_inst.mav_arming;
+    port decryptTask_uart1_299_inst.decToGcsRxSrc -> gcsReceiveTask_uart1_305_inst.mavStream;
+    port datalink_266_inst.link_ostream -> uartISR_253_inst.ostream;
+    port datalink_266_inst.stat_ostream -> stateProxy_293_inst.proxyEvent;
+    port datalink_266_inst.framed_ostream -> decryptTask_uart1_299_inst.hxToDecRcv;
+    port px4ioar_211_inst.newstateEmitter -> px4ioar_211_inst.newstateEvent;
+    port px4ioar_211_inst.uart_ostream -> uartISR_208_inst.ostream;
+    port sensorsCaptureTask_186_inst.newstateEmitter -> sensorsCaptureTask_186_inst.newstateEvent;
+    port sensorsCaptureTask_186_inst.sensors -> control_102_inst.sensors;
+    port sensorsCaptureTask_186_inst.sensors -> stateProxy_2_inst.proxyEvent;
+    port ubloxGPS_163_inst.position -> sensorsCaptureTask_186_inst.position;
+    port ubloxGPS_163_inst.position -> stateProxy_180_inst.proxyEvent;
+    port motmix_135_inst.motors -> px4ioar_211_inst.motor_istream;
+    port motmix_135_inst.motors -> stateProxy_144_inst.proxyEvent;
+    port control_102_inst.control -> stateProxy_151_inst.proxyEvent;
+    port control_102_inst.control -> motmix_135_inst.control;
+    port uartISR_414_inst.istream -> datalink_427_inst.link_istream;
+    port uartISR_253_inst.istream -> datalink_266_inst.link_istream;
+    port uartISR_159_inst.istream -> ubloxGPS_163_inst.istream;
+    port gcsReceiveTask_uart5_466_inst.paramWriter -> gcsTransmitTask_uart5_529_inst.paramReader;
+    port gcsReceiveTask_uart5_466_inst.paramWriter -> gcsReceiveTask_uart5_466_inst.paramReader;
+    port gcsReceiveTask_uart5_466_inst.paramWriter -> gcsTransmitTask_uart1_368_inst.paramReader;
+    port gcsReceiveTask_uart5_466_inst.paramWriter -> gcsReceiveTask_uart1_305_inst.paramReader;
+    port gcsReceiveTask_uart5_466_inst.paramWriter -> control_102_inst.paramReader;
+    port gcsReceiveTask_uart5_466_inst.paramWriter -> gcsTransmitTask_uart5_529_inst.paramReader;
+    port gcsReceiveTask_uart5_466_inst.paramWriter -> gcsReceiveTask_uart5_466_inst.paramReader;
+    port gcsReceiveTask_uart5_466_inst.paramWriter -> gcsTransmitTask_uart1_368_inst.paramReader;
+    port gcsReceiveTask_uart5_466_inst.paramWriter -> gcsReceiveTask_uart1_305_inst.paramReader;
+    port gcsReceiveTask_uart5_466_inst.paramWriter -> control_102_inst.paramReader;
+    port gcsReceiveTask_uart5_466_inst.paramWriter -> gcsTransmitTask_uart5_529_inst.paramReader;
+    port gcsReceiveTask_uart5_466_inst.paramWriter -> gcsReceiveTask_uart5_466_inst.paramReader;
+    port gcsReceiveTask_uart5_466_inst.paramWriter -> gcsTransmitTask_uart1_368_inst.paramReader;
+    port gcsReceiveTask_uart5_466_inst.paramWriter -> gcsReceiveTask_uart1_305_inst.paramReader;
+    port gcsReceiveTask_uart5_466_inst.paramWriter -> control_102_inst.paramReader;
+    port gcsReceiveTask_uart5_466_inst.paramWriter -> gcsTransmitTask_uart5_529_inst.paramReader;
+    port gcsReceiveTask_uart5_466_inst.paramWriter -> gcsReceiveTask_uart5_466_inst.paramReader;
+    port gcsReceiveTask_uart5_466_inst.paramWriter -> gcsTransmitTask_uart1_368_inst.paramReader;
+    port gcsReceiveTask_uart5_466_inst.paramWriter -> gcsReceiveTask_uart1_305_inst.paramReader;
+    port gcsReceiveTask_uart5_466_inst.paramWriter -> control_102_inst.paramReader;
+    port gcsReceiveTask_uart5_466_inst.paramWriter -> gcsTransmitTask_uart5_529_inst.paramReader;
+    port gcsReceiveTask_uart5_466_inst.paramWriter -> gcsReceiveTask_uart5_466_inst.paramReader;
+    port gcsReceiveTask_uart5_466_inst.paramWriter -> gcsTransmitTask_uart1_368_inst.paramReader;
+    port gcsReceiveTask_uart5_466_inst.paramWriter -> gcsReceiveTask_uart1_305_inst.paramReader;
+    port gcsReceiveTask_uart5_466_inst.paramWriter -> control_102_inst.paramReader;
+    port gcsReceiveTask_uart5_466_inst.paramWriter -> gcsTransmitTask_uart5_529_inst.paramReader;
+    port gcsReceiveTask_uart5_466_inst.paramWriter -> gcsReceiveTask_uart5_466_inst.paramReader;
+    port gcsReceiveTask_uart5_466_inst.paramWriter -> gcsTransmitTask_uart1_368_inst.paramReader;
+    port gcsReceiveTask_uart5_466_inst.paramWriter -> gcsReceiveTask_uart1_305_inst.paramReader;
+    port gcsReceiveTask_uart5_466_inst.paramWriter -> control_102_inst.paramReader;
+    port gcsReceiveTask_uart5_466_inst.paramWriter -> gcsTransmitTask_uart5_529_inst.paramReader;
+    port gcsReceiveTask_uart5_466_inst.paramWriter -> gcsReceiveTask_uart5_466_inst.paramReader;
+    port gcsReceiveTask_uart5_466_inst.paramWriter -> gcsTransmitTask_uart1_368_inst.paramReader;
+    port gcsReceiveTask_uart5_466_inst.paramWriter -> gcsReceiveTask_uart1_305_inst.paramReader;
+    port gcsReceiveTask_uart5_466_inst.paramWriter -> control_102_inst.paramReader;
+    port gcsReceiveTask_uart5_466_inst.paramWriter -> gcsTransmitTask_uart5_529_inst.paramReader;
+    port gcsReceiveTask_uart5_466_inst.paramWriter -> gcsReceiveTask_uart5_466_inst.paramReader;
+    port gcsReceiveTask_uart5_466_inst.paramWriter -> gcsTransmitTask_uart1_368_inst.paramReader;
+    port gcsReceiveTask_uart5_466_inst.paramWriter -> gcsReceiveTask_uart1_305_inst.paramReader;
+    port gcsReceiveTask_uart5_466_inst.paramWriter -> control_102_inst.paramReader;
+    port gcsReceiveTask_uart5_466_inst.paramWriter -> gcsTransmitTask_uart5_529_inst.paramReader;
+    port gcsReceiveTask_uart5_466_inst.paramWriter -> gcsReceiveTask_uart5_466_inst.paramReader;
+    port gcsReceiveTask_uart5_466_inst.paramWriter -> gcsTransmitTask_uart1_368_inst.paramReader;
+    port gcsReceiveTask_uart5_466_inst.paramWriter -> gcsReceiveTask_uart1_305_inst.paramReader;
+    port gcsReceiveTask_uart5_466_inst.paramWriter -> control_102_inst.paramReader;
+    port gcsReceiveTask_uart5_466_inst.paramWriter -> gcsTransmitTask_uart5_529_inst.paramReader;
+    port gcsReceiveTask_uart5_466_inst.paramWriter -> gcsReceiveTask_uart5_466_inst.paramReader;
+    port gcsReceiveTask_uart5_466_inst.paramWriter -> gcsTransmitTask_uart1_368_inst.paramReader;
+    port gcsReceiveTask_uart5_466_inst.paramWriter -> gcsReceiveTask_uart1_305_inst.paramReader;
+    port gcsReceiveTask_uart5_466_inst.paramWriter -> control_102_inst.paramReader;
+    port gcsReceiveTask_uart5_466_inst.paramWriter -> gcsTransmitTask_uart5_529_inst.paramReader;
+    port gcsReceiveTask_uart5_466_inst.paramWriter -> gcsReceiveTask_uart5_466_inst.paramReader;
+    port gcsReceiveTask_uart5_466_inst.paramWriter -> gcsTransmitTask_uart1_368_inst.paramReader;
+    port gcsReceiveTask_uart5_466_inst.paramWriter -> gcsReceiveTask_uart1_305_inst.paramReader;
+    port gcsReceiveTask_uart5_466_inst.paramWriter -> control_102_inst.paramReader;
+    port gcsReceiveTask_uart5_466_inst.paramWriter -> gcsTransmitTask_uart5_529_inst.paramReader;
+    port gcsReceiveTask_uart5_466_inst.paramWriter -> gcsReceiveTask_uart5_466_inst.paramReader;
+    port gcsReceiveTask_uart5_466_inst.paramWriter -> gcsTransmitTask_uart1_368_inst.paramReader;
+    port gcsReceiveTask_uart5_466_inst.paramWriter -> gcsReceiveTask_uart1_305_inst.paramReader;
+    port gcsReceiveTask_uart5_466_inst.paramWriter -> control_102_inst.paramReader;
+    port gcsReceiveTask_uart5_466_inst.paramWriter -> gcsTransmitTask_uart5_529_inst.paramReader;
+    port gcsReceiveTask_uart5_466_inst.paramWriter -> gcsReceiveTask_uart5_466_inst.paramReader;
+    port gcsReceiveTask_uart5_466_inst.paramWriter -> gcsTransmitTask_uart1_368_inst.paramReader;
+    port gcsReceiveTask_uart5_466_inst.paramWriter -> gcsReceiveTask_uart1_305_inst.paramReader;
+    port gcsReceiveTask_uart5_466_inst.paramWriter -> control_102_inst.paramReader;
+    port gcsReceiveTask_uart5_466_inst.paramWriter -> gcsTransmitTask_uart5_529_inst.paramReader;
+    port gcsReceiveTask_uart5_466_inst.paramWriter -> gcsReceiveTask_uart5_466_inst.paramReader;
+    port gcsReceiveTask_uart5_466_inst.paramWriter -> gcsTransmitTask_uart1_368_inst.paramReader;
+    port gcsReceiveTask_uart5_466_inst.paramWriter -> gcsReceiveTask_uart1_305_inst.paramReader;
+    port gcsReceiveTask_uart5_466_inst.paramWriter -> control_102_inst.paramReader;
+    port gcsReceiveTask_uart5_466_inst.paramWriter -> gcsTransmitTask_uart5_529_inst.paramReader;
+    port gcsReceiveTask_uart5_466_inst.paramWriter -> gcsReceiveTask_uart5_466_inst.paramReader;
+    port gcsReceiveTask_uart5_466_inst.paramWriter -> gcsTransmitTask_uart1_368_inst.paramReader;
+    port gcsReceiveTask_uart5_466_inst.paramWriter -> gcsReceiveTask_uart1_305_inst.paramReader;
+    port gcsReceiveTask_uart5_466_inst.paramWriter -> control_102_inst.paramReader;
+    port gcsReceiveTask_uart5_466_inst.paramWriter -> gcsTransmitTask_uart5_529_inst.paramReader;
+    port gcsReceiveTask_uart5_466_inst.paramWriter -> gcsReceiveTask_uart5_466_inst.paramReader;
+    port gcsReceiveTask_uart5_466_inst.paramWriter -> gcsTransmitTask_uart1_368_inst.paramReader;
+    port gcsReceiveTask_uart5_466_inst.paramWriter -> gcsReceiveTask_uart1_305_inst.paramReader;
+    port gcsReceiveTask_uart5_466_inst.paramWriter -> control_102_inst.paramReader;
+    port gcsReceiveTask_uart5_466_inst.paramWriter -> gcsTransmitTask_uart5_529_inst.paramReader;
+    port gcsReceiveTask_uart5_466_inst.paramWriter -> gcsReceiveTask_uart5_466_inst.paramReader;
+    port gcsReceiveTask_uart5_466_inst.paramWriter -> gcsTransmitTask_uart1_368_inst.paramReader;
+    port gcsReceiveTask_uart5_466_inst.paramWriter -> gcsReceiveTask_uart1_305_inst.paramReader;
+    port gcsReceiveTask_uart5_466_inst.paramWriter -> control_102_inst.paramReader;
+    port gcsReceiveTask_uart5_466_inst.paramWriter -> gcsTransmitTask_uart5_529_inst.paramReader;
+    port gcsReceiveTask_uart5_466_inst.paramWriter -> gcsReceiveTask_uart5_466_inst.paramReader;
+    port gcsReceiveTask_uart5_466_inst.paramWriter -> gcsTransmitTask_uart1_368_inst.paramReader;
+    port gcsReceiveTask_uart5_466_inst.paramWriter -> gcsReceiveTask_uart1_305_inst.paramReader;
+    port gcsReceiveTask_uart5_466_inst.paramWriter -> control_102_inst.paramReader;
+    port gcsReceiveTask_uart5_466_inst.paramWriter -> gcsTransmitTask_uart5_529_inst.paramReader;
+    port gcsReceiveTask_uart5_466_inst.paramWriter -> gcsReceiveTask_uart5_466_inst.paramReader;
+    port gcsReceiveTask_uart5_466_inst.paramWriter -> gcsTransmitTask_uart1_368_inst.paramReader;
+    port gcsReceiveTask_uart5_466_inst.paramWriter -> gcsReceiveTask_uart1_305_inst.paramReader;
+    port gcsReceiveTask_uart5_466_inst.paramWriter -> control_102_inst.paramReader;
+    port gcsReceiveTask_uart5_466_inst.paramWriter -> gcsTransmitTask_uart5_529_inst.paramReader;
+    port gcsReceiveTask_uart5_466_inst.paramWriter -> gcsReceiveTask_uart5_466_inst.paramReader;
+    port gcsReceiveTask_uart5_466_inst.paramWriter -> gcsTransmitTask_uart1_368_inst.paramReader;
+    port gcsReceiveTask_uart5_466_inst.paramWriter -> gcsReceiveTask_uart1_305_inst.paramReader;
+    port gcsReceiveTask_uart5_466_inst.paramWriter -> control_102_inst.paramReader;
+    port gcsReceiveTask_uart5_466_inst.flightMode -> gcsTransmitTask_uart5_529_inst.flightmode;
+    port gcsReceiveTask_uart5_466_inst.flightMode -> gcsTransmitTask_uart1_368_inst.flightmode;
+    port gcsReceiveTask_uart5_466_inst.flightMode -> motmix_135_inst.flightMode;
+    port gcsReceiveTask_uart5_466_inst.flightMode -> control_102_inst.flightmode;
+    port gcsReceiveTask_uart5_466_inst.flightMode -> blink_92_inst.flightmode;
+    port stateProxy_454_inst.proxyData -> gcsTransmitTask_uart5_529_inst.radio;
+    port gcsReceiveTask_uart1_305_inst.paramWriter -> gcsTransmitTask_uart5_529_inst.paramReader;
+    port gcsReceiveTask_uart1_305_inst.paramWriter -> gcsReceiveTask_uart5_466_inst.paramReader;
+    port gcsReceiveTask_uart1_305_inst.paramWriter -> gcsTransmitTask_uart1_368_inst.paramReader;
+    port gcsReceiveTask_uart1_305_inst.paramWriter -> gcsReceiveTask_uart1_305_inst.paramReader;
+    port gcsReceiveTask_uart1_305_inst.paramWriter -> control_102_inst.paramReader;
+    port gcsReceiveTask_uart1_305_inst.paramWriter -> gcsTransmitTask_uart5_529_inst.paramReader;
+    port gcsReceiveTask_uart1_305_inst.paramWriter -> gcsReceiveTask_uart5_466_inst.paramReader;
+    port gcsReceiveTask_uart1_305_inst.paramWriter -> gcsTransmitTask_uart1_368_inst.paramReader;
+    port gcsReceiveTask_uart1_305_inst.paramWriter -> gcsReceiveTask_uart1_305_inst.paramReader;
+    port gcsReceiveTask_uart1_305_inst.paramWriter -> control_102_inst.paramReader;
+    port gcsReceiveTask_uart1_305_inst.paramWriter -> gcsTransmitTask_uart5_529_inst.paramReader;
+    port gcsReceiveTask_uart1_305_inst.paramWriter -> gcsReceiveTask_uart5_466_inst.paramReader;
+    port gcsReceiveTask_uart1_305_inst.paramWriter -> gcsTransmitTask_uart1_368_inst.paramReader;
+    port gcsReceiveTask_uart1_305_inst.paramWriter -> gcsReceiveTask_uart1_305_inst.paramReader;
+    port gcsReceiveTask_uart1_305_inst.paramWriter -> control_102_inst.paramReader;
+    port gcsReceiveTask_uart1_305_inst.paramWriter -> gcsTransmitTask_uart5_529_inst.paramReader;
+    port gcsReceiveTask_uart1_305_inst.paramWriter -> gcsReceiveTask_uart5_466_inst.paramReader;
+    port gcsReceiveTask_uart1_305_inst.paramWriter -> gcsTransmitTask_uart1_368_inst.paramReader;
+    port gcsReceiveTask_uart1_305_inst.paramWriter -> gcsReceiveTask_uart1_305_inst.paramReader;
+    port gcsReceiveTask_uart1_305_inst.paramWriter -> control_102_inst.paramReader;
+    port gcsReceiveTask_uart1_305_inst.paramWriter -> gcsTransmitTask_uart5_529_inst.paramReader;
+    port gcsReceiveTask_uart1_305_inst.paramWriter -> gcsReceiveTask_uart5_466_inst.paramReader;
+    port gcsReceiveTask_uart1_305_inst.paramWriter -> gcsTransmitTask_uart1_368_inst.paramReader;
+    port gcsReceiveTask_uart1_305_inst.paramWriter -> gcsReceiveTask_uart1_305_inst.paramReader;
+    port gcsReceiveTask_uart1_305_inst.paramWriter -> control_102_inst.paramReader;
+    port gcsReceiveTask_uart1_305_inst.paramWriter -> gcsTransmitTask_uart5_529_inst.paramReader;
+    port gcsReceiveTask_uart1_305_inst.paramWriter -> gcsReceiveTask_uart5_466_inst.paramReader;
+    port gcsReceiveTask_uart1_305_inst.paramWriter -> gcsTransmitTask_uart1_368_inst.paramReader;
+    port gcsReceiveTask_uart1_305_inst.paramWriter -> gcsReceiveTask_uart1_305_inst.paramReader;
+    port gcsReceiveTask_uart1_305_inst.paramWriter -> control_102_inst.paramReader;
+    port gcsReceiveTask_uart1_305_inst.paramWriter -> gcsTransmitTask_uart5_529_inst.paramReader;
+    port gcsReceiveTask_uart1_305_inst.paramWriter -> gcsReceiveTask_uart5_466_inst.paramReader;
+    port gcsReceiveTask_uart1_305_inst.paramWriter -> gcsTransmitTask_uart1_368_inst.paramReader;
+    port gcsReceiveTask_uart1_305_inst.paramWriter -> gcsReceiveTask_uart1_305_inst.paramReader;
+    port gcsReceiveTask_uart1_305_inst.paramWriter -> control_102_inst.paramReader;
+    port gcsReceiveTask_uart1_305_inst.paramWriter -> gcsTransmitTask_uart5_529_inst.paramReader;
+    port gcsReceiveTask_uart1_305_inst.paramWriter -> gcsReceiveTask_uart5_466_inst.paramReader;
+    port gcsReceiveTask_uart1_305_inst.paramWriter -> gcsTransmitTask_uart1_368_inst.paramReader;
+    port gcsReceiveTask_uart1_305_inst.paramWriter -> gcsReceiveTask_uart1_305_inst.paramReader;
+    port gcsReceiveTask_uart1_305_inst.paramWriter -> control_102_inst.paramReader;
+    port gcsReceiveTask_uart1_305_inst.paramWriter -> gcsTransmitTask_uart5_529_inst.paramReader;
+    port gcsReceiveTask_uart1_305_inst.paramWriter -> gcsReceiveTask_uart5_466_inst.paramReader;
+    port gcsReceiveTask_uart1_305_inst.paramWriter -> gcsTransmitTask_uart1_368_inst.paramReader;
+    port gcsReceiveTask_uart1_305_inst.paramWriter -> gcsReceiveTask_uart1_305_inst.paramReader;
+    port gcsReceiveTask_uart1_305_inst.paramWriter -> control_102_inst.paramReader;
+    port gcsReceiveTask_uart1_305_inst.paramWriter -> gcsTransmitTask_uart5_529_inst.paramReader;
+    port gcsReceiveTask_uart1_305_inst.paramWriter -> gcsReceiveTask_uart5_466_inst.paramReader;
+    port gcsReceiveTask_uart1_305_inst.paramWriter -> gcsTransmitTask_uart1_368_inst.paramReader;
+    port gcsReceiveTask_uart1_305_inst.paramWriter -> gcsReceiveTask_uart1_305_inst.paramReader;
+    port gcsReceiveTask_uart1_305_inst.paramWriter -> control_102_inst.paramReader;
+    port gcsReceiveTask_uart1_305_inst.paramWriter -> gcsTransmitTask_uart5_529_inst.paramReader;
+    port gcsReceiveTask_uart1_305_inst.paramWriter -> gcsReceiveTask_uart5_466_inst.paramReader;
+    port gcsReceiveTask_uart1_305_inst.paramWriter -> gcsTransmitTask_uart1_368_inst.paramReader;
+    port gcsReceiveTask_uart1_305_inst.paramWriter -> gcsReceiveTask_uart1_305_inst.paramReader;
+    port gcsReceiveTask_uart1_305_inst.paramWriter -> control_102_inst.paramReader;
+    port gcsReceiveTask_uart1_305_inst.paramWriter -> gcsTransmitTask_uart5_529_inst.paramReader;
+    port gcsReceiveTask_uart1_305_inst.paramWriter -> gcsReceiveTask_uart5_466_inst.paramReader;
+    port gcsReceiveTask_uart1_305_inst.paramWriter -> gcsTransmitTask_uart1_368_inst.paramReader;
+    port gcsReceiveTask_uart1_305_inst.paramWriter -> gcsReceiveTask_uart1_305_inst.paramReader;
+    port gcsReceiveTask_uart1_305_inst.paramWriter -> control_102_inst.paramReader;
+    port gcsReceiveTask_uart1_305_inst.paramWriter -> gcsTransmitTask_uart5_529_inst.paramReader;
+    port gcsReceiveTask_uart1_305_inst.paramWriter -> gcsReceiveTask_uart5_466_inst.paramReader;
+    port gcsReceiveTask_uart1_305_inst.paramWriter -> gcsTransmitTask_uart1_368_inst.paramReader;
+    port gcsReceiveTask_uart1_305_inst.paramWriter -> gcsReceiveTask_uart1_305_inst.paramReader;
+    port gcsReceiveTask_uart1_305_inst.paramWriter -> control_102_inst.paramReader;
+    port gcsReceiveTask_uart1_305_inst.paramWriter -> gcsTransmitTask_uart5_529_inst.paramReader;
+    port gcsReceiveTask_uart1_305_inst.paramWriter -> gcsReceiveTask_uart5_466_inst.paramReader;
+    port gcsReceiveTask_uart1_305_inst.paramWriter -> gcsTransmitTask_uart1_368_inst.paramReader;
+    port gcsReceiveTask_uart1_305_inst.paramWriter -> gcsReceiveTask_uart1_305_inst.paramReader;
+    port gcsReceiveTask_uart1_305_inst.paramWriter -> control_102_inst.paramReader;
+    port gcsReceiveTask_uart1_305_inst.paramWriter -> gcsTransmitTask_uart5_529_inst.paramReader;
+    port gcsReceiveTask_uart1_305_inst.paramWriter -> gcsReceiveTask_uart5_466_inst.paramReader;
+    port gcsReceiveTask_uart1_305_inst.paramWriter -> gcsTransmitTask_uart1_368_inst.paramReader;
+    port gcsReceiveTask_uart1_305_inst.paramWriter -> gcsReceiveTask_uart1_305_inst.paramReader;
+    port gcsReceiveTask_uart1_305_inst.paramWriter -> control_102_inst.paramReader;
+    port gcsReceiveTask_uart1_305_inst.paramWriter -> gcsTransmitTask_uart5_529_inst.paramReader;
+    port gcsReceiveTask_uart1_305_inst.paramWriter -> gcsReceiveTask_uart5_466_inst.paramReader;
+    port gcsReceiveTask_uart1_305_inst.paramWriter -> gcsTransmitTask_uart1_368_inst.paramReader;
+    port gcsReceiveTask_uart1_305_inst.paramWriter -> gcsReceiveTask_uart1_305_inst.paramReader;
+    port gcsReceiveTask_uart1_305_inst.paramWriter -> control_102_inst.paramReader;
+    port gcsReceiveTask_uart1_305_inst.paramWriter -> gcsTransmitTask_uart5_529_inst.paramReader;
+    port gcsReceiveTask_uart1_305_inst.paramWriter -> gcsReceiveTask_uart5_466_inst.paramReader;
+    port gcsReceiveTask_uart1_305_inst.paramWriter -> gcsTransmitTask_uart1_368_inst.paramReader;
+    port gcsReceiveTask_uart1_305_inst.paramWriter -> gcsReceiveTask_uart1_305_inst.paramReader;
+    port gcsReceiveTask_uart1_305_inst.paramWriter -> control_102_inst.paramReader;
+    port gcsReceiveTask_uart1_305_inst.paramWriter -> gcsTransmitTask_uart5_529_inst.paramReader;
+    port gcsReceiveTask_uart1_305_inst.paramWriter -> gcsReceiveTask_uart5_466_inst.paramReader;
+    port gcsReceiveTask_uart1_305_inst.paramWriter -> gcsTransmitTask_uart1_368_inst.paramReader;
+    port gcsReceiveTask_uart1_305_inst.paramWriter -> gcsReceiveTask_uart1_305_inst.paramReader;
+    port gcsReceiveTask_uart1_305_inst.paramWriter -> control_102_inst.paramReader;
+    port gcsReceiveTask_uart1_305_inst.paramWriter -> gcsTransmitTask_uart5_529_inst.paramReader;
+    port gcsReceiveTask_uart1_305_inst.paramWriter -> gcsReceiveTask_uart5_466_inst.paramReader;
+    port gcsReceiveTask_uart1_305_inst.paramWriter -> gcsTransmitTask_uart1_368_inst.paramReader;
+    port gcsReceiveTask_uart1_305_inst.paramWriter -> gcsReceiveTask_uart1_305_inst.paramReader;
+    port gcsReceiveTask_uart1_305_inst.paramWriter -> control_102_inst.paramReader;
+    port gcsReceiveTask_uart1_305_inst.paramWriter -> gcsTransmitTask_uart5_529_inst.paramReader;
+    port gcsReceiveTask_uart1_305_inst.paramWriter -> gcsReceiveTask_uart5_466_inst.paramReader;
+    port gcsReceiveTask_uart1_305_inst.paramWriter -> gcsTransmitTask_uart1_368_inst.paramReader;
+    port gcsReceiveTask_uart1_305_inst.paramWriter -> gcsReceiveTask_uart1_305_inst.paramReader;
+    port gcsReceiveTask_uart1_305_inst.paramWriter -> control_102_inst.paramReader;
+    port gcsReceiveTask_uart1_305_inst.flightMode -> gcsTransmitTask_uart5_529_inst.flightmode;
+    port gcsReceiveTask_uart1_305_inst.flightMode -> gcsTransmitTask_uart1_368_inst.flightmode;
+    port gcsReceiveTask_uart1_305_inst.flightMode -> motmix_135_inst.flightMode;
+    port gcsReceiveTask_uart1_305_inst.flightMode -> control_102_inst.flightmode;
+    port gcsReceiveTask_uart1_305_inst.flightMode -> blink_92_inst.flightmode;
+    port stateProxy_293_inst.proxyData -> gcsTransmitTask_uart1_368_inst.radio;
+    port stateProxy_180_inst.proxyData -> gcsTransmitTask_uart5_529_inst.position;
+    port stateProxy_180_inst.proxyData -> gcsTransmitTask_uart1_368_inst.position;
+    port stateProxy_151_inst.proxyData -> gcsTransmitTask_uart5_529_inst.control;
+    port stateProxy_151_inst.proxyData -> gcsTransmitTask_uart1_368_inst.control;
+    port stateProxy_144_inst.proxyData -> gcsTransmitTask_uart5_529_inst.motors;
+    port stateProxy_144_inst.proxyData -> gcsTransmitTask_uart1_368_inst.motors;
+    port userInputMux_78_inst.src_res -> control_102_inst.userinput;
+    port armedMux_64_inst.armed_res_src -> gcsTransmitTask_uart5_529_inst.armed;
+    port armedMux_64_inst.armed_res_src -> gcsTransmitTask_uart1_368_inst.armed;
+    port armedMux_64_inst.armed_res_src -> motmix_135_inst.armReader;
+    port armedMux_64_inst.armed_res_src -> control_102_inst.armedReader;
+    port armedMux_64_inst.armed_res_src -> blink_92_inst.armed;
+    port armedMux_64_inst.armed_res_src -> userInputMux_78_inst.snk_armed;
+    port armedMux_64_inst.armed_res_src -> userMAVInput_51_inst.armedReader;
+    port userMAVInput_51_inst.src_js_fs -> userInputMux_78_inst.snk_mav_failsafe;
+    port userMAVInput_51_inst.rc_over_res_tx -> userInputMux_78_inst.snk_mav_ppm;
+    port userPPMInput_40_inst.ppmChansWriter -> armedMux_64_inst.ppm_input_snk;
+    port userPPMInput_40_inst.userInput -> userInputMux_78_inst.snk_rc_ppm;
+    port stateProxy_2_inst.proxyData -> gcsTransmitTask_uart5_529_inst.sensors;
+    port stateProxy_2_inst.proxyData -> gcsTransmitTask_uart1_368_inst.sensors;
+end flight_gen_process.impl;
+
+end flight_gen;

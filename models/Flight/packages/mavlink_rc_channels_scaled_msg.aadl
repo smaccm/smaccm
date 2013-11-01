@@ -14,15 +14,15 @@ end rc_channels_scaled_msg;
 data implementation rc_channels_scaled_msg.impl
   subcomponents
     time_boot_ms : data Base_Types::Unsigned_32;
-    chan1_scaled : data Base_Types::Signed_16;
-    chan2_scaled : data Base_Types::Signed_16;
-    chan3_scaled : data Base_Types::Signed_16;
-    chan4_scaled : data Base_Types::Signed_16;
-    chan5_scaled : data Base_Types::Signed_16;
-    chan6_scaled : data Base_Types::Signed_16;
-    chan7_scaled : data Base_Types::Signed_16;
-    chan8_scaled : data Base_Types::Signed_16;
-    port : data Base_Types::Unsigned_8;
+    chan1_scaled : data Base_Types::Integer_16;
+    chan2_scaled : data Base_Types::Integer_16;
+    chan3_scaled : data Base_Types::Integer_16;
+    chan4_scaled : data Base_Types::Integer_16;
+    chan5_scaled : data Base_Types::Integer_16;
+    chan6_scaled : data Base_Types::Integer_16;
+    chan7_scaled : data Base_Types::Integer_16;
+    chan8_scaled : data Base_Types::Integer_16;
+    data_port : data Base_Types::Unsigned_8;
     rssi : data Base_Types::Unsigned_8;
 end rc_channels_scaled_msg.impl;
 

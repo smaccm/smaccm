@@ -22,7 +22,7 @@ end param_string;
 data implementation param_string.impl
   subcomponents
     param_string_data : data ArrTy_16TyBase_Types_Unsigned_8;
-    param_string_len : data Base_Types::Signed_32;
+    param_string_len : data Base_Types::Integer_32;
 end param_string.impl;
 
 
@@ -35,7 +35,7 @@ end param_info;
 data implementation param_info.impl
   subcomponents
     param_name : data param_string;
-    param_index : data Base_Types::Signed_32;
+    param_index : data Base_Types::Integer_32;
     param_value : data Base_Types::Float;
 end param_info.impl;
 

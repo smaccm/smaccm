@@ -13,9 +13,9 @@ end set_gps_global_origin_msg;
 
 data implementation set_gps_global_origin_msg.impl
   subcomponents
-    latitude : data Base_Types::Signed_32;
-    longitude : data Base_Types::Signed_32;
-    altitude : data Base_Types::Signed_32;
+    latitude : data Base_Types::Integer_32;
+    longitude : data Base_Types::Integer_32;
+    altitude : data Base_Types::Integer_32;
     target_system : data Base_Types::Unsigned_8;
 end set_gps_global_origin_msg.impl;
 

@@ -14,15 +14,15 @@ end raw_imu_msg;
 data implementation raw_imu_msg.impl
   subcomponents
     time_usec : data Base_Types::Unsigned_64;
-    xacc : data Base_Types::Signed_16;
-    yacc : data Base_Types::Signed_16;
-    zacc : data Base_Types::Signed_16;
-    xgyro : data Base_Types::Signed_16;
-    ygyro : data Base_Types::Signed_16;
-    zgyro : data Base_Types::Signed_16;
-    xmag : data Base_Types::Signed_16;
-    ymag : data Base_Types::Signed_16;
-    zmag : data Base_Types::Signed_16;
+    xacc : data Base_Types::Integer_16;
+    yacc : data Base_Types::Integer_16;
+    zacc : data Base_Types::Integer_16;
+    xgyro : data Base_Types::Integer_16;
+    ygyro : data Base_Types::Integer_16;
+    zgyro : data Base_Types::Integer_16;
+    xmag : data Base_Types::Integer_16;
+    ymag : data Base_Types::Integer_16;
+    zmag : data Base_Types::Integer_16;
 end raw_imu_msg.impl;
 
 

@@ -8,7 +8,7 @@ public
 data ArrTy_10TyBase_Types_Signed_16
   properties
     Data_Model::Data_Representation => Array;
-    Data_Model::Base_Type => (classifier (Base_Types::Signed_16));
+    Data_Model::Base_Type => (classifier (Base_Types::Integer_16));
     Data_Model::Dimension => (10);
 end ArrTy_10TyBase_Types_Signed_16;
 

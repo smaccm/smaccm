@@ -81,6 +81,8 @@ public class AgreeGenerator {
 
         }
         List<Node> nodes = topEmitter.getLustreWithCondacts(subEmitters);
+        //List<Node> nodes = topEmitter.getLustre(subEmitters);
+
         return new Program(nodes);
 
     }

@@ -71,7 +71,7 @@ public
       SS: thread Sensors in modes (Boot, Normal, Defensive);
       CCT: thread Command_Control_Telemetry in modes (Normal);
       BC: thread Backup_Commands in modes (Defensive);
-      --RC: thread Radio_Control in modes (Normal);
+      RC: thread Radio_Control in modes (Normal);
       SN: thread Stability_Navigation in modes (Normal, Defensive);
       MC: thread Motor_Control in modes (Normal, Defensive);
       DC: thread Decrypt in modes (Normal);
@@ -81,7 +81,7 @@ public
       feature group sensors <-> SS.sensors_in 
       {Communication_Properties::Timing => immediate;}  
       in modes (Normal, Defensive, Boot) ;
-      -- port motors_and_radios.flight_control_commands -> RC.commands_in in modes (Normal);
+      port motors_and_radios.flight_control_commands -> RC.commands_in in modes (Normal);
       port motors_and_radios.mavlink -> DC.encrypt_in in modes (Normal);
       port DC.decrypt_out -> CCT.mavlink_in in modes (Normal);
       
@@ -89,7 +89,7 @@ public
       {Communication_Properties::Timing => immediate;}
       in modes (Normal, Defensive, Boot);
       
-      -- port RC.commands_out -> SN.rc_commands in modes (Normal);
+      port RC.commands_out -> SN.rc_commands in modes (Normal);
       port CCT.mavlink_out -> SN.mavlink  in modes (Normal);
       port BC.mavlink_out -> SN.mavlink  in modes (Defensive);
       

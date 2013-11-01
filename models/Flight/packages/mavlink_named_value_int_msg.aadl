@@ -22,7 +22,7 @@ end named_value_int_msg;
 data implementation named_value_int_msg.impl
   subcomponents
     time_boot_ms : data Base_Types::Unsigned_32;
-    value : data Base_Types::Signed_32;
+    value : data Base_Types::Integer_32;
     name : data ArrTy_10TyBase_Types_Unsigned_8;
 end named_value_int_msg.impl;
 

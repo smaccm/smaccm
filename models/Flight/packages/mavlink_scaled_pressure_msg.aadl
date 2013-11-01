@@ -16,7 +16,7 @@ data implementation scaled_pressure_msg.impl
     time_boot_ms : data Base_Types::Unsigned_32;
     press_abs : data Base_Types::Float;
     press_diff : data Base_Types::Float;
-    temperature : data Base_Types::Signed_16;
+    temperature : data Base_Types::Integer_16;
 end scaled_pressure_msg.impl;
 
 

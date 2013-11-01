@@ -17,7 +17,7 @@ data implementation vfr_hud_msg.impl
     groundspeed : data Base_Types::Float;
     alt : data Base_Types::Float;
     climb : data Base_Types::Float;
-    heading : data Base_Types::Signed_16;
+    heading : data Base_Types::Integer_16;
     throttle : data Base_Types::Unsigned_16;
 end vfr_hud_msg.impl;
 

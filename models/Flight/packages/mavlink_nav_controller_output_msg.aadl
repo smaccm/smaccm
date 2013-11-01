@@ -18,8 +18,8 @@ data implementation nav_controller_output_msg.impl
     alt_error : data Base_Types::Float;
     aspd_error : data Base_Types::Float;
     xtrack_error : data Base_Types::Float;
-    nav_bearing : data Base_Types::Signed_16;
-    target_bearing : data Base_Types::Signed_16;
+    nav_bearing : data Base_Types::Integer_16;
+    target_bearing : data Base_Types::Integer_16;
     wp_dist : data Base_Types::Unsigned_16;
 end nav_controller_output_msg.impl;
 

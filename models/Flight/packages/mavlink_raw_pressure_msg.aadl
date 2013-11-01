@@ -14,10 +14,10 @@ end raw_pressure_msg;
 data implementation raw_pressure_msg.impl
   subcomponents
     time_usec : data Base_Types::Unsigned_64;
-    press_abs : data Base_Types::Signed_16;
-    press_diff1 : data Base_Types::Signed_16;
-    press_diff2 : data Base_Types::Signed_16;
-    temperature : data Base_Types::Signed_16;
+    press_abs : data Base_Types::Integer_16;
+    press_diff1 : data Base_Types::Integer_16;
+    press_diff2 : data Base_Types::Integer_16;
+    temperature : data Base_Types::Integer_16;
 end raw_pressure_msg.impl;
 
 

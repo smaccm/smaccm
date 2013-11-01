@@ -22,7 +22,7 @@ data implementation hil_controls_msg.impl
     aux2 : data Base_Types::Float;
     aux3 : data Base_Types::Float;
     aux4 : data Base_Types::Float;
-    mode : data Base_Types::Unsigned_8;
+    cur_mode : data Base_Types::Unsigned_8;
     nav_mode : data Base_Types::Unsigned_8;
 end hil_controls_msg.impl;
 

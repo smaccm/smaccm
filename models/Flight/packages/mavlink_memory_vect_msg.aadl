@@ -8,7 +8,7 @@ public
 data ArrTy_32TyBase_Types_Signed_8
   properties
     Data_Model::Data_Representation => Array;
-    Data_Model::Base_Type => (classifier (Base_Types::Signed_8));
+    Data_Model::Base_Type => (classifier (Base_Types::Integer_8));
     Data_Model::Dimension => (32);
 end ArrTy_32TyBase_Types_Signed_8;
 

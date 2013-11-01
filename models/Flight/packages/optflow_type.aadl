@@ -13,7 +13,7 @@ end optflow_result;
  
 data implementation optflow_result.impl
   subcomponents
-    valid : data Base_Types::Bool;
+    valid : data Base_Types::Boolean;
     ground_dist : data Base_Types::Float;
     flow_x : data Base_Types::Float;
     flow_y : data Base_Types::Float;

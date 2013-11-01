@@ -9,5 +9,6 @@ property set SMACCM_SYS is
   
   CommPrim_Source_Header: aadlstring applies to (data port, event data port);
   CommPrim_Source_Text: aadlstring applies to (data port, event data port);
+  Signal_Name: aadlstring applies to (thread);
   
 end SMACCM_SYS;

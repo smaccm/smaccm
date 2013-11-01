@@ -13,7 +13,7 @@ end radio_stat;
 
 data implementation radio_stat.impl
   subcomponents
-    sik : data Base_Types::Bool;
+    sik : data Base_Types::Boolean;
     loc_rssi : data Base_Types::Unsigned_8;
     loc_noise : data Base_Types::Unsigned_8;
     loc_rxctr : data Base_Types::Unsigned_16;
