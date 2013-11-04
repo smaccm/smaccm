@@ -12,7 +12,7 @@ no_external_commands(x : component, context : component) <=
    	  contained(y, context) and no_external_commands(y, context)
 
 schedulable(p : component) <=
-  ** p " is schedulable" **
+  ** p " is schedulable" ** 
   analysis("schedule")
 
 receives_mavlink(t : component) <= 

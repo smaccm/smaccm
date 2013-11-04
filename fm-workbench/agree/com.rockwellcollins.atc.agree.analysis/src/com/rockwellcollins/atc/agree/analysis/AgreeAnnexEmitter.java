@@ -750,7 +750,6 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
                         + tempStr + "' is not connected to anything. Considering it to be"
                         + " an unconstrained primary input.");
 
-             
                 // this code just creates a new PI
                 if(namedEl instanceof DataSubcomponent){
                     tempStrType = AgreeEmitterUtilities.dataTypeToVarType((DataSubcomponent) namedEl);

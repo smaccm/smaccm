@@ -14,6 +14,7 @@ import org.osate.aadl2.AadlBoolean;
 import org.osate.aadl2.AadlInteger;
 import org.osate.aadl2.AadlReal;
 import org.osate.aadl2.AadlString;
+import org.osate.aadl2.AnnexSubclause;
 import org.osate.aadl2.Classifier;
 import org.osate.aadl2.ClassifierType;
 import org.osate.aadl2.ComponentClassifier;
@@ -32,7 +33,9 @@ import org.osate.aadl2.Subcomponent;
 import org.osate.aadl2.ThreadSubcomponent;
 import org.osate.aadl2.impl.SubcomponentImpl;
 
+import com.rockwellcollins.atc.agree.agree.AgreeContract;
 import com.rockwellcollins.atc.agree.agree.AgreePackage;
+import com.rockwellcollins.atc.agree.agree.AgreeSubclause;
 import com.rockwellcollins.atc.agree.agree.Arg;
 import com.rockwellcollins.atc.agree.agree.AssertStatement;
 import com.rockwellcollins.atc.agree.agree.AssumeStatement;
@@ -292,6 +295,42 @@ public class AgreeJavaValidator extends
                     + "' is '" + expected + "' but the actual type is '" + actual + "'");
         }
 
+    }
+    
+    @Check
+    public void checkNamedElement(NamedElement namedEl){
+        //if this is an implementation, verify that there is no idExpr of the same name
+        //in the type
+        
+        EObject container = namedEl.eContainer().eContainer().eContainer();
+        if(container instanceof ComponentImplementation){
+            ComponentType type = ((ComponentImplementation)container).getType();
+            NamedElement match = matchedInType(type, namedEl.getName());
+            if(match != null){
+                error(match, "Element of the same name ('"+namedEl.getName()
+                        +"') in component implementation '"
+                        +((ComponentImplementation)container).getName()+"'");
+                error(namedEl, "Element of the same name ('"+namedEl.getName()
+                        +"') in component type");
+            }
+        }
+    }
+    
+    private NamedElement matchedInType(ComponentType compType, String name){
+        
+        for(AnnexSubclause subClause : compType.getAllAnnexSubclauses()){
+            if(subClause instanceof AgreeSubclause){
+                AgreeContract contr = (AgreeContract) subClause.getChildren().get(0);
+                for(EObject obj : contr.getChildren()){
+                    if(obj instanceof NamedElement){
+                        if(((NamedElement)obj).getName().equals(name)){
+                            return (NamedElement) obj;
+                        }
+                    }
+                }
+            }
+        }
+        return null;
     }
 
     private AgreeType getAgreeType(ConstStatement constStat) {
