@@ -2,20 +2,20 @@
 Copyright (c) 2011, 2013, Rockwell Collins and the University of Minnesota.
 Developed with the sponsorship of the Defense Advanced Research Projects Agency (DARPA).
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of this data, 
-including any software or models in source or binary form, as well as any drawings, specifications, 
+Permission is hereby granted, free of charge, to any person obtaining a copy of this data,
+including any software or models in source or binary form, as well as any drawings, specifications,
 and documentation (collectively "the Data"), to deal in the Data without restriction, including
-without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, 
-and/or sell copies of the Data, and to permit persons to whom the Data is furnished to do so, 
+without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
+and/or sell copies of the Data, and to permit persons to whom the Data is furnished to do so,
 subject to the following conditions:
 
-The above copyright notice and this permission notice shall be included in all copies or 
+The above copyright notice and this permission notice shall be included in all copies or
 substantial portions of the Data.
 
-THE DATA IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT 
-LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
-IN NO EVENT SHALL THE AUTHORS, SPONSORS, DEVELOPERS, CONTRIBUTORS, OR COPYRIGHT HOLDERS BE LIABLE 
-FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, 
+THE DATA IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT
+LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+IN NO EVENT SHALL THE AUTHORS, SPONSORS, DEVELOPERS, CONTRIBUTORS, OR COPYRIGHT HOLDERS BE LIABLE
+FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE DATA OR THE USE OR OTHER DEALINGS IN THE DATA.
  */
 
@@ -25,27 +25,44 @@ import java.util.List;
 import java.util.Map;
 
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosFailure;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.Pair;
 import edu.umn.cs.crisys.smaccm.topsort.DependsOn;
 
 public abstract class Type implements DependsOn<Type> {
-    // public abstract Expr getDefaultValue();
+	// public abstract Expr getDefaultValue();
 
-    abstract public boolean isBaseType();
+	abstract public boolean isBaseType();
 
-    @Override
-    public abstract List<Type> dependencies();
+	public class CType {
+	  String prefix;
+	  String postfix; 
+	  
+	  CType(String prefix, String postfix) {
+	    this.prefix = prefix;
+	    this.postfix = postfix; 
+	  }
+	  
+	  public String getPrefix() { return prefix; }
+	  public String getPostfix() {return postfix; } 
+	  
+	  public String varString(String varId) {
+	    return this.prefix + " " + varId + " " + this.postfix;
+	  }
+	  
+	};
+	
+	@Override
+	public abstract List<Type> dependencies();
 
-    public void init(Map<String, Type> env) {
-    }
+	public void init(Map<String, Type> env) {
+	}
 
-    // C array types need to be split around identifiers
-    // x : array [20] of (array [10] of int) ==>
-    // int x[20][10];
-    abstract public Pair<String, String> splitCType();
+	// C array types need to be split around identifiers
+	// x : array [20] of (array [10] of int) ==>
+	// int x[20][10];
+	abstract public CType getCType();
 
-    public Type getRootType() throws Aadl2RtosFailure {
-        return this;
-    }
+	public Type getRootType() throws Aadl2RtosFailure {
+		return this;
+	}
 
 }

@@ -2,20 +2,20 @@
 Copyright (c) 2013, Rockwell Collins and the University of Minnesota.
 Developed with the sponsorship of the Defense Advanced Research Projects Agency (DARPA).
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of this data, 
-including any software or models in source or binary form, as well as any drawings, specifications, 
+Permission is hereby granted, free of charge, to any person obtaining a copy of this data,
+including any software or models in source or binary form, as well as any drawings, specifications,
 and documentation (collectively "the Data"), to deal in the Data without restriction, including
-without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, 
-and/or sell copies of the Data, and to permit persons to whom the Data is furnished to do so, 
+without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
+and/or sell copies of the Data, and to permit persons to whom the Data is furnished to do so,
 subject to the following conditions:
 
-The above copyright notice and this permission notice shall be included in all copies or 
+The above copyright notice and this permission notice shall be included in all copies or
 substantial portions of the Data.
 
-THE DATA IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT 
-LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
-IN NO EVENT SHALL THE AUTHORS, SPONSORS, DEVELOPERS, CONTRIBUTORS, OR COPYRIGHT HOLDERS BE LIABLE 
-FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, 
+THE DATA IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT
+LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+IN NO EVENT SHALL THE AUTHORS, SPONSORS, DEVELOPERS, CONTRIBUTORS, OR COPYRIGHT HOLDERS BE LIABLE
+FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE DATA OR THE USE OR OTHER DEALINGS IN THE DATA.
  */
 
@@ -39,17 +39,13 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.osate.aadl2.Element;
 import org.osate.aadl2.SystemImplementation;
@@ -60,226 +56,134 @@ import org.osate.analysis.lute.AadlAction;
 import org.osate.analysis.lute.utils.Logger;
 import org.w3c.dom.Document;
 
-import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.Model;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.printing.BrtosEntrypointSkeletonGenerator;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.printing.PrxGenerator;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.gluecode.BrtosEntrypointSkeletonGenerator;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.gluecode.MakefileWriter;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.prx.PrxGenerator;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.SharedData;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.util.Util;
 
 public class Aadl2RtosAction extends AadlAction {
-    protected Logger log;
+	private Logger log;
 
-    // Model object contains information from the AST nicely collated.
-    protected Model aadlModel;
+	// Model object contains information from the AST nicely collated.
+	// TODO: Figure out a principled way to deal with file locations.
+	// Allow overriding file names as properties?
 
-    // Path to file location that contained instance element.
-    protected String fp;
+	@Override
+	public IStatus runJob(Element sel, IProgressMonitor monitor, Logger logger) {
+		log = logger;
 
-    // Path
+		if (!(sel instanceof SystemImplementation)) {
+			log.error("Aadl2RtosAction.runJob: Must select a system implementation");
+			return Status.CANCEL_STATUS;
+		}
 
-    public Aadl2RtosAction() {
-        super();
-    }
+		final SystemImplementation sysimpl = (SystemImplementation) sel;
+		monitor.beginTask("Generating BRTOS Configuration for AADL Model", IProgressMonitor.UNKNOWN);
 
-    // TODO: Figure out a principled way to deal with file locations.
-    // Allow overriding file names as properties?
+		try {
+			// Create instance model
+			InstantiateModel im = new InstantiateModel(new NullProgressMonitor(), getErrorManager());
+			URI uri = OsateResourceUtil.getInstanceModelURI(sysimpl);
+			Resource resource = OsateResourceUtil.getEmptyAaxl2Resource(uri);
+			SystemInstance si = im.createSystemInstance(sysimpl, resource);
 
-    @Override
-    public IStatus runJob(Element sel, IProgressMonitor monitor, Logger logger) {
+			// Now harvest the stuff we need from the OSATE AST.
+			AadlModelParser parser = new AadlModelParser(sysimpl, si, logger);
+			Model model = new Model(sysimpl, si, 
+			                        parser.getThreadImplementationMap(), 
+			                        parser.getConnectionList(), 
+			                        parser.getISRList(), 
+			                        parser.getThreadCalendar(), 
+			                        parser.getFileNames(), 
+			                        new ArrayList<SharedData>(parser.getDataMap().values()));
+			
+			// This thing has to go!
+			AstHelper astHelper = parser.getAstHelper();
 
-        log = logger;
-        aadlModel = new Model(logger);
+			// Print out C skeletons
+			File dir = Util.getDirectory(sysimpl);
+			BrtosEntrypointSkeletonGenerator gen = new BrtosEntrypointSkeletonGenerator(log, model, dir, astHelper);
+			gen.write();
 
-        if (!(sel instanceof SystemImplementation)) {
-            log.error("Must select a system implementation");
-            return Status.CANCEL_STATUS;
-        }
-        final SystemImplementation sysimpl = (SystemImplementation) sel;
+			// Print out the .prx file
+			List<String> cFiles = new ArrayList<String>();
+			cFiles.add("gen/" + gen.getCFile().getName());
+			genPrxFile(cFiles, dir, model);
+			
+			// Print out the makefile
+			log.status("Creating Makefile in location: " + dir.getPath());
+			MakefileWriter mw = new MakefileWriter(new File(dir, "out").getPath(), new File(dir, "Makefile"), model);
+			mw.writeMakeFile();
+			
+		} catch (Aadl2RtosFailure f) {
+			log.error("Analysis Exception");
+			List<String> msgs = f.getMessages();
+			for (String msg : msgs) {
+				log.error(msg);
+			}
+			return Status.CANCEL_STATUS;
+		} catch (Exception e) {
+			log.error(e);
+			return Status.CANCEL_STATUS;
+		}
 
-        monitor.beginTask("Generating BRTOS Configuration for AADL Model", IProgressMonitor.UNKNOWN);
+		try {
+			ResourcesPlugin.getWorkspace().getRoot().refreshLocal(0, new NullProgressMonitor());
+		} catch (CoreException e) {
+			e.printStackTrace();
+		}
 
-        try {
-            // Create instance model
-            InstantiateModel im = new InstantiateModel(new NullProgressMonitor(), getErrorManager());
-            URI uri = OsateResourceUtil.getInstanceModelURI(sysimpl);
-            Resource resource = OsateResourceUtil.getEmptyAaxl2Resource(uri);
-            SystemInstance si = im.createSystemInstance(sysimpl, resource);
+		return Status.OK_STATUS;
+	}
 
-            // Now harvest the stuff we need from the OSATE AST.
-            aadlModel.init(sysimpl, si);
+	private void writeXmlFile(Document dom, File file) {
+		try {
+			Transformer tr = TransformerFactory.newInstance().newTransformer();
+			tr.setOutputProperty(OutputKeys.INDENT, "yes");
+			tr.setOutputProperty(OutputKeys.METHOD, "xml");
+			tr.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+			// tr.setOutputProperty(OutputKeys.DOCTYPE_SYSTEM, "roles.dtd");
+			tr.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
 
-            // Print out C skeletons
-            File dir = getDirectory(sysimpl);
-            BrtosEntrypointSkeletonGenerator gen = new BrtosEntrypointSkeletonGenerator(log,
-                    aadlModel, dir);
-            gen.write();
+			// send DOM to file
+			ByteArrayOutputStream bs = new ByteArrayOutputStream();
 
-            // Print out the .prx file
-            List<String> cFiles = new ArrayList<String>();
-            cFiles.add("gen/" + gen.getCFile().getName());
-            genPrxFile(cFiles, dir);
-        } catch (Aadl2RtosFailure f) {
-            log.error("Analysis Exception");
-            List<String> msgs = f.getMessages();
-            for (String msg : msgs) {
-                log.error(msg);
-            }
-            return Status.CANCEL_STATUS;
-        } catch (Exception e) {
-            log.error(Util.throwableToString(e));
-            return Status.CANCEL_STATUS;
-        }
+			tr.transform(new DOMSource(dom), new StreamResult(bs));
 
-        try {
-            ResourcesPlugin.getWorkspace().getRoot().refreshLocal(0, new NullProgressMonitor());
-        } catch (CoreException e) {
-            e.printStackTrace();
-        }
+			OutputStream outputStream = new FileOutputStream(file);
+			bs.writeTo(outputStream);
+			outputStream.close();
 
-        return Status.OK_STATUS;
-    }
+		} catch (TransformerException te) {
+			log.error("writeXmlFile::Error while transforming XML: " + te.getMessage());
+		} catch (IOException ie) {
+			log.error("writeXmlFile::Error while writing file: " + ie.getMessage());
+		}
+	}
 
-    public File getDirectory(EObject e) {
-        URI uri = e.eResource().getURI();
-        IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-        IFile file = root.getFile(new Path(uri.toPlatformString(true)));
-        return file.getParent().getLocation().toFile();
-    }
+	private void genPrxFile(List<String> cFiles, File dir, Model model) throws Aadl2RtosFailure {
+		Document dom;
+		PrxGenerator prxGen;
 
-    public void writeXmlFile(Document dom, File file) {
-        try {
-            Transformer tr = TransformerFactory.newInstance().newTransformer();
-            tr.setOutputProperty(OutputKeys.INDENT, "yes");
-            tr.setOutputProperty(OutputKeys.METHOD, "xml");
-            tr.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
-            // tr.setOutputProperty(OutputKeys.DOCTYPE_SYSTEM, "roles.dtd");
-            tr.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
+		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+		try {
+			// use factory to get an instance of document builder
+			DocumentBuilder db = dbf.newDocumentBuilder();
 
-            // send DOM to file
-            ByteArrayOutputStream bs = new ByteArrayOutputStream();
+			// create instance of DOM
+			dom = db.newDocument();
 
-            tr.transform(new DOMSource(dom), new StreamResult(bs));
-            // log.status(bs);
-            OutputStream outputStream = new FileOutputStream(file);
-            bs.writeTo(outputStream);
-            outputStream.close();
-        } catch (TransformerException te) {
-            log.error("writeXmlFile::Error while transforming XML: " + te.getMessage());
-        } catch (IOException ie) {
-            log.error("writeXmlFile::Error while writing file: " + ie.getMessage());
-        }
-    }
+			// create the PRX file
+			prxGen = new PrxGenerator(log, dom, model, cFiles);
+			prxGen.writeToDOM();
 
-    public void genPrxFile(List<String> cFiles, File dir) throws Aadl2RtosFailure {
-        Document dom;
-        PrxGenerator prxGen;
+			File file = new File(dir, Util.normalizeAadlName(model.getSystemImplementation()) + ".prx");
+			log.status("Creating .prx file in location: " + file);
+			writeXmlFile(dom, file);
 
-        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-        try {
-            // use factory to get an instance of document builder
-            DocumentBuilder db = dbf.newDocumentBuilder();
-            // create instance of DOM
-            dom = db.newDocument();
-
-            // create the PRX file
-            prxGen = new PrxGenerator(log, dom, aadlModel, cFiles);
-            prxGen.writeToDOM();
-
-            File file = new File(dir, Util.normalizeAadlName(aadlModel.sysimpl) + ".prx");
-            log.status("Creating .prx file in location: " + file);
-            writeXmlFile(dom, file);
-        } catch (ParserConfigurationException pce) {
-            log.error("UsersXML: Error trying to instantiate DocumentBuilder " + pce);
-        }
-    }
+		} catch (ParserConfigurationException pce) {
+			log.error("UsersXML: Error trying to instantiate DocumentBuilder " + pce);
+		}
+	}
 }
-
-/*
- * EList<PropertyAssociation> properties = dc.getOwnedPropertyAssociations();
- * for (PropertyAssociation i: properties) {
- * log.status("  Property Association: " + toSafeString(i));
- * log.status("  Property: " + toSafeString(i.getProperty()));
- * log.status("  In Bindings: " + toSafeStringCollection(i.getInBindings())); }
- * 
- * PropertyExpression pe = getProperty(dc, "Base_Types::Data_Representation");
- * if (pe != null) { log.status("  Data_Representation Property: " +
- * toSafeString(pe)); }
- */
-
-/*
- * private boolean isBaseType(DataClassifier dc) { if (dc instanceof
- * DataTypeImpl) { String qualifiedName = dc.getQualifiedName(); return
- * ("Base_Types::Boolean" == qualifiedName) || ("Base_Types::Integer_8" ==
- * qualifiedName) || ("Base_Types::Integer_16" == qualifiedName) ||
- * ("Base_Types::Integer_32" == qualifiedName) || ("Base_Types::Integer_64" ==
- * qualifiedName) || ("Base_Types::Unsigned_8" == qualifiedName) ||
- * ("Base_Types::Unsigned_16" == qualifiedName) || ("Base_Types::Unsigned_32" ==
- * qualifiedName) || ("Base_Types::Unsigned_64" == qualifiedName) ||
- * ("Base_Types::Float_32" == qualifiedName) || ("Base_Types::Float_64" ==
- * qualifiedName) || ("Base_Types::Character" == qualifiedName) ||
- * ("Base_Types::String" == qualifiedName) ; } else { return false; } }
- */
-
-/*
- * private void printElement(MessageConsoleStream ps, Element e, Logger log,
- * String indent) { log.status(indent + "Element: " + Util.toSafeString(e));
- * log.status(indent + "characteristics: "); indent = indent + "   "; if (e
- * instanceof ComponentInstanceImpl) { InstanceObject te = (InstanceObject) e;
- * PropertyExpression pe = getProperty(te, "Period"); if (null != pe) {
- * log.status(indent + "Period = " + Util.toSafeString(pe)); } else {
- * log.status(indent + "No period property"); } pe = getProperty(te,
- * "Dispatch_Protocol"); if (null != pe) { log.status(indent +
- * "Dispatch_Protocol = "+ Util.toSafeString(pe)); } else { log.status(indent +
- * "No Dispatch_Protocol property"); } } if (e instanceof FeatureInstanceImpl) {
- * FeatureInstanceImpl impl = (FeatureInstanceImpl) e; log.status(indent +
- * "- is a FeatureInstanceImpl"); Feature f = impl.getFeature(); if (f
- * instanceof DataPort) { DataPort dp = (DataPort) f; log.status(indent +
- * "- is a DataPort feature: "+ Util.toSafeString(dp)); log.status(indent +
- * Util.toSafeString(dp.getDataFeatureClassifier())); log.status(indent +
- * "- PortImplWrapper children: "); for (Element j: f.getChildren()) {
- * printElement(ps, j, log, indent + "   "); } } DirectionType dir =
- * impl.getDirection(); log.status(indent + "- has direction: " +
- * dir.toString()); EList<ConnectionInstance> cons =
- * impl.getSrcConnectionInstances(); log.status(indent +
- * "- with src connectionInstances: "); for (ConnectionInstance c: cons) {
- * log.status(indent + "   " + Util.toSafeString(c)); } cons =
- * impl.getDstConnectionInstances(); log.status(indent +
- * "- with dst connectionInstances: "); for (ConnectionInstance c: cons) {
- * log.status(indent + "   " + Util.toSafeString(c)); } }
- * 
- * log.status(indent + "- with children: "); indent = indent + "   "; for
- * (Element j: e.getChildren()) { printElement(ps, j, log, indent + "   "); } }
- */
-
-/*
- * for (Element i: threadInstances) { ComponentInstanceImpl ti =
- * (ComponentInstanceImpl)i ; log.status("For thread instance " + ti);
- * log.status("Containing classifier: " +
- * toSafeString(ti.getContainingClassifier()));
- * log.status("Containing component impl: " +
- * toSafeString(ti.getContainingComponentImpl()));
- * log.status("ThreadWrapper classifier: " +
- * toSafeString(ti.getComponentClassifier())); log.status("Owner " +
- * toSafeString(ti.getOwner())); log.status("Qualified name: " +
- * ti.getQualifiedName()); log.status("Path name: " + ti.getPathName());
- * log.status("Enclosing system implementation: " +
- * toSafeString(ti.getSystemInstance().getSystemImplementation()));
- * log.status("Impl: " + toSafeString(ti.getSystemImplementation())); }
- */
-
-/*
- * log.status("Elements: "); for (Element e: t.getChildren()) { log.status("   "
- * + e.toString()); }
- * 
- * } log.status("Features: "); for (Feature ci: sysimpl.getAllFeatures()) {
- * log.status("   " + ci.toString()); if (ci instanceof org.osate.aadl2.Data) {
- * dataTypes.add(ci); } else if (ci instanceof
- * org.osate.aadl2.DataImplementation) { dataTypes.add(ci); } }
- */
-/*
- * private MessageConsole findConsole(String name) { ConsolePlugin plugin =
- * ConsolePlugin.getDefault(); IConsoleManager conMan =
- * plugin.getConsoleManager(); IConsole[] existing = conMan.getConsoles(); for
- * (int i = 0; i < existing.length; i++) if (name.equals(existing[i].getName()))
- * return (MessageConsole) existing[i]; //no console found, so create a new one
- * MessageConsole myConsole = new MessageConsole(name, null);
- * conMan.addConsoles(new IConsole[]{myConsole}); return myConsole; }
- */

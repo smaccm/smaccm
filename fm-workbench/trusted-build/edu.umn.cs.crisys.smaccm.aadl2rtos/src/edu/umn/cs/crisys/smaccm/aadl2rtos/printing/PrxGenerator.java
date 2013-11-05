@@ -90,20 +90,50 @@ public class PrxGenerator {
     private void writeBoilerplateModules(org.w3c.dom.Element parent) {
         org.w3c.dom.Element e = null;
         org.w3c.dom.Element ec = null;
-
+        org.w3c.dom.Element ecc = null;
+        org.w3c.dom.Element eccc = null;
+/*
+ *     <module name="armv7m.exception-preempt">
+      <handler>rtos_preempt_handler</handler>
+      <trampolines>
+        <trampoline>
+          <name>systick</name>
+          <handler>tick_irq</handler>
+        </trampoline>
+      </trampolines>
+    </module>
+ * 
+ */
         e = doc.createElement("module");
-        e.setAttribute("name", "armv7m/build");
+        e.setAttribute("name", "armv7m.exception-preempt");
+        ec = doc.createElement("handler");
+        ec.appendChild(doc.createTextNode("rtos_preempt_handler"));
+        e.appendChild(ec);
+        ec = doc.createElement("trampolines");
+          ecc = doc.createElement("trampoline");
+            eccc = doc.createElement("name");
+            eccc.appendChild(doc.createTextNode("systick"));
+          ecc.appendChild(eccc);
+            eccc = doc.createElement("handler");
+            eccc.appendChild(doc.createTextNode("exec_sig_systick"));
+          ecc.appendChild(eccc);
+        ec.appendChild(ecc);
+        e.appendChild(ec);
+        parent.appendChild(e);
+        
+        e = doc.createElement("module");
+        e.setAttribute("name", "armv7m.build");
         parent.appendChild(e);
         e = doc.createElement("module");
-        e.setAttribute("name", "armv7m/ctxt-switch");
+        e.setAttribute("name", "armv7m.ctxt-switch");
         parent.appendChild(e);
 
         e = doc.createElement("module");
-        e.setAttribute("name", "armv7m/semihost-debug");
+        e.setAttribute("name", "armv7m.semihost-debug");
         parent.appendChild(e);
 
         e = doc.createElement("module");
-        e.setAttribute("name", "generic/debug");
+        e.setAttribute("name", "generic.debug");
         ec = doc.createElement("ll_debug");
         ec.appendChild(doc.createTextNode("armv7m_semihost_"));
         e.appendChild(ec);
@@ -118,7 +148,7 @@ public class PrxGenerator {
         org.w3c.dom.Element ec = null;
 
         e = doc.createElement("module");
-        e.setAttribute("name", "armv7m/vectable");
+        e.setAttribute("name", "armv7m.vectable");
         parent.appendChild(e);
 
         List<ThreadWrapper> ISRs = model.getISRThreads();
@@ -131,6 +161,7 @@ public class PrxGenerator {
         }
     }
 
+    public static int priority = 30; 
     private void printRigelComponent(ThreadWrapper c, Document doc, org.w3c.dom.Element parent) {
         org.w3c.dom.Element e;
         int index = model.getThreadTaskIndex(c);
@@ -154,7 +185,11 @@ public class PrxGenerator {
         e = doc.createElement("stack_size");
         e.appendChild(doc.createTextNode(Util.assertNonNull(c.getStackSizeInBytesOpt(),
                 "Task requires stack size").toString()));
+        parent.appendChild(e);
 
+        e = doc.createElement("priority");
+        e.appendChild(doc.createTextNode(Integer.toString(priority)));
+        priority--;
         parent.appendChild(e);
     }
 
@@ -179,7 +214,7 @@ public class PrxGenerator {
         org.w3c.dom.Element ec = null;
         // create data elements and place them under root
         e = doc.createElement("module");
-        e.setAttribute("name", "armv7m/rtos-rigel");
+        e.setAttribute("name", "armv7m.rtos-kochab");
         ec = doc.createElement("prefix");
         ec.appendChild(doc.createTextNode("rtos_"));
         e.appendChild(ec);

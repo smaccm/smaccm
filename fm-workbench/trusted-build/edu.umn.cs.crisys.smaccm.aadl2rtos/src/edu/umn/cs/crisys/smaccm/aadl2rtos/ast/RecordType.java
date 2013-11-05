@@ -2,20 +2,20 @@
 Copyright (c) 2011, 2013 Rockwell Collins and the University of Minnesota.
 Developed with the sponsorship of the Defense Advanced Research Projects Agency (DARPA).
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of this data, 
-including any software or models in source or binary form, as well as any drawings, specifications, 
+Permission is hereby granted, free of charge, to any person obtaining a copy of this data,
+including any software or models in source or binary form, as well as any drawings, specifications,
 and documentation (collectively "the Data"), to deal in the Data without restriction, including
-without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, 
-and/or sell copies of the Data, and to permit persons to whom the Data is furnished to do so, 
+without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
+and/or sell copies of the Data, and to permit persons to whom the Data is furnished to do so,
 subject to the following conditions:
 
-The above copyright notice and this permission notice shall be included in all copies or 
+The above copyright notice and this permission notice shall be included in all copies or
 substantial portions of the Data.
 
-THE DATA IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT 
-LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
-IN NO EVENT SHALL THE AUTHORS, SPONSORS, DEVELOPERS, CONTRIBUTORS, OR COPYRIGHT HOLDERS BE LIABLE 
-FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, 
+THE DATA IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT
+LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+IN NO EVENT SHALL THE AUTHORS, SPONSORS, DEVELOPERS, CONTRIBUTORS, OR COPYRIGHT HOLDERS BE LIABLE
+FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE DATA OR THE USE OR OTHER DEALINGS IN THE DATA.
  */
 
@@ -28,93 +28,89 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import edu.umn.cs.crisys.smaccm.aadl2rtos.Pair;
-
 public class RecordType extends Type {
-    final private Map<String, Type> fields = new Hashtable<String, Type>();
+	final private Map<String, Type> fields = new Hashtable<String, Type>();
 
-    @Override
-    public boolean isBaseType() {
-        return false;
-    }
+	@Override
+	public boolean isBaseType() {
+		return false;
+	}
 
-    public void addField(String name, Type type) {
-        fields.put(name.toLowerCase(), type);
-    }
+	public void addField(String name, Type type) {
+		fields.put(name.toLowerCase(), type);
+	}
 
-    public Type getField(String name) {
-        return fields.get(name.toLowerCase());
-    }
+	public Type getField(String name) {
+		return fields.get(name.toLowerCase());
+	}
 
-    public Set<String> getFieldNames() {
-        return fields.keySet();
-    }
+	public Set<String> getFieldNames() {
+		return fields.keySet();
+	}
 
-    @Override
-    public Pair<String, String> splitCType() {
-        return new Pair<String, String>(toString(), "");
-    }
+	@Override
+	public CType getCType() {
+		return new CType(toString(), "");
+	}
 
-    @Override
-    public List<Type> dependencies() {
-        ArrayList<Type> deps = new ArrayList<Type>();
-        for (Type t : fields.values()) {
-            List<Type> childDeps = t.dependencies();
-            if (childDeps != null) {
-                deps.addAll(childDeps);
-            }
-        }
-        return deps;
-    }
+	@Override
+	public List<Type> dependencies() {
+		ArrayList<Type> deps = new ArrayList<Type>();
+		for (Type t : fields.values()) {
+			List<Type> childDeps = t.dependencies();
+			if (childDeps != null) {
+				deps.addAll(childDeps);
+			}
+		}
+		return deps;
+	}
 
-    // TODO: properly indent the darn thing.
-    @Override
-    public String toString() {
-        StringBuilder buf = new StringBuilder();
-        buf.append("struct { \n");
+	// TODO: properly indent the darn thing.
+	@Override
+	public String toString() {
+		StringBuilder buf = new StringBuilder();
+		buf.append("struct { \n");
 
-        Iterator<String> iterator = getFieldNames().iterator();
-        while (iterator.hasNext()) {
-            String field = iterator.next();
-            buf.append("   ");
-            buf.append(getField(field));
-            buf.append(" ");
-            buf.append(field);
-            buf.append(" ; \n");
-        }
+		Iterator<String> iterator = getFieldNames().iterator();
+		while (iterator.hasNext()) {
+			String field = iterator.next();
+			buf.append("   ");
+			buf.append(getField(field).getCType().varString(field));
+			buf.append(" ; \n");
+		}
 
-        buf.append("}");
-        return buf.toString();
-    }
+		buf.append("}");
+		return buf.toString();
+	}
 
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((fields == null) ? 0 : fields.hashCode());
-        return result;
-    }
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((fields == null) ? 0 : fields.hashCode());
+		return result;
+	}
 
-    // Equality is structural (and auto-generated by Eclipse)
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (!(obj instanceof RecordType)) {
-            return false;
-        }
-        RecordType other = (RecordType) obj;
-        if (fields == null) {
-            if (other.fields != null) {
-                return false;
-            }
-        } else if (!fields.equals(other.fields)) {
-            return false;
-        }
-        return true;
-    }
+	// Equality is structural (and auto-generated by Eclipse)
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (!(obj instanceof RecordType)) {
+			return false;
+		}
+		RecordType other = (RecordType) obj;
+		if (fields == null) {
+			if (other.fields != null) {
+				return false;
+			}
+		} else if (!fields.equals(other.fields)) {
+			return false;
+		}
+		return true;
+	}
 }
