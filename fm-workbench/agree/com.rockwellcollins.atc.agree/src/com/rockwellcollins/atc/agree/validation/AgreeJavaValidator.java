@@ -300,7 +300,6 @@ public class AgreeJavaValidator extends
         }
 
     }
-    
 
     @Check
     public void checkNamedElement(NamedElement namedEl){
@@ -689,6 +688,7 @@ public class AgreeJavaValidator extends
             }
             return;
 
+        case "=":
         case "<>":
         case "!=":
             if (!matches(typeRight, typeLeft)) {
@@ -702,7 +702,6 @@ public class AgreeJavaValidator extends
         case "<=":
         case ">":
         case ">=":
-        case "=":
         case "+":
         case "-":
         case "*":
