@@ -821,7 +821,7 @@ public class AgreeSemanticSequencer extends PropertiesSemanticSequencer {
 	
 	/**
 	 * Constraint:
-	 *     (lhs+=Arg lhs+=Arg* expr=Expr)
+	 *     (lhs+=Arg lhs+=Arg* expr=Expr?)
 	 */
 	protected void sequence_EqStatement(EObject context, EqStatement semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);

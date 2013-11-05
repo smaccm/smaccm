@@ -73,7 +73,7 @@ ConstStatement:
 ;
 
 EqStatement:
-	'eq' (lhs+=Arg (',' lhs+=Arg)*) '=' expr=Expr ';'
+	'eq' (lhs+=Arg (',' lhs+=Arg)*) ('=' expr=Expr)? ';'
 ;
 
 FnDefExpr:
