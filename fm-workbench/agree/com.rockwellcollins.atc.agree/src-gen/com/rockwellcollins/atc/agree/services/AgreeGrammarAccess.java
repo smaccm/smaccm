@@ -547,16 +547,17 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		private final Keyword cCommaKeyword_1_1_0 = (Keyword)cGroup_1_1.eContents().get(0);
 		private final Assignment cLhsAssignment_1_1_1 = (Assignment)cGroup_1_1.eContents().get(1);
 		private final RuleCall cLhsArgParserRuleCall_1_1_1_0 = (RuleCall)cLhsAssignment_1_1_1.eContents().get(0);
-		private final Keyword cEqualsSignKeyword_2 = (Keyword)cGroup.eContents().get(2);
-		private final Assignment cExprAssignment_3 = (Assignment)cGroup.eContents().get(3);
-		private final RuleCall cExprExprParserRuleCall_3_0 = (RuleCall)cExprAssignment_3.eContents().get(0);
-		private final Keyword cSemicolonKeyword_4 = (Keyword)cGroup.eContents().get(4);
+		private final Group cGroup_2 = (Group)cGroup.eContents().get(2);
+		private final Keyword cEqualsSignKeyword_2_0 = (Keyword)cGroup_2.eContents().get(0);
+		private final Assignment cExprAssignment_2_1 = (Assignment)cGroup_2.eContents().get(1);
+		private final RuleCall cExprExprParserRuleCall_2_1_0 = (RuleCall)cExprAssignment_2_1.eContents().get(0);
+		private final Keyword cSemicolonKeyword_3 = (Keyword)cGroup.eContents().get(3);
 		
 		//EqStatement:
-		//	"eq" (lhs+=Arg ("," lhs+=Arg)*) "=" expr=Expr ";";
+		//	"eq" (lhs+=Arg ("," lhs+=Arg)*) ("=" expr=Expr)? ";";
 		public ParserRule getRule() { return rule; }
 
-		//"eq" (lhs+=Arg ("," lhs+=Arg)*) "=" expr=Expr ";"
+		//"eq" (lhs+=Arg ("," lhs+=Arg)*) ("=" expr=Expr)? ";"
 		public Group getGroup() { return cGroup; }
 
 		//"eq"
@@ -583,17 +584,20 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		//Arg
 		public RuleCall getLhsArgParserRuleCall_1_1_1_0() { return cLhsArgParserRuleCall_1_1_1_0; }
 
+		//("=" expr=Expr)?
+		public Group getGroup_2() { return cGroup_2; }
+
 		//"="
-		public Keyword getEqualsSignKeyword_2() { return cEqualsSignKeyword_2; }
+		public Keyword getEqualsSignKeyword_2_0() { return cEqualsSignKeyword_2_0; }
 
 		//expr=Expr
-		public Assignment getExprAssignment_3() { return cExprAssignment_3; }
+		public Assignment getExprAssignment_2_1() { return cExprAssignment_2_1; }
 
 		//Expr
-		public RuleCall getExprExprParserRuleCall_3_0() { return cExprExprParserRuleCall_3_0; }
+		public RuleCall getExprExprParserRuleCall_2_1_0() { return cExprExprParserRuleCall_2_1_0; }
 
 		//";"
-		public Keyword getSemicolonKeyword_4() { return cSemicolonKeyword_4; }
+		public Keyword getSemicolonKeyword_3() { return cSemicolonKeyword_3; }
 	}
 
 	public class FnDefExprElements extends AbstractParserRuleElementFinder {
@@ -2204,7 +2208,7 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 	}
 
 	//EqStatement:
-	//	"eq" (lhs+=Arg ("," lhs+=Arg)*) "=" expr=Expr ";";
+	//	"eq" (lhs+=Arg ("," lhs+=Arg)*) ("=" expr=Expr)? ";";
 	public EqStatementElements getEqStatementAccess() {
 		return (pEqStatement != null) ? pEqStatement : (pEqStatement = new EqStatementElements());
 	}

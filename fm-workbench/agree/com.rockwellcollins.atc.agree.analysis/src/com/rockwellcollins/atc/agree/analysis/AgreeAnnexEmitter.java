@@ -350,8 +350,11 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
     @Override
     public Expr caseEqStatement(EqStatement state) {
 
-        Expr expr = doSwitch(state.getExpr());
-
+        Expr expr = null;
+        if(state.getExpr() != null){
+            //this is an explicitly defined variable
+            expr = doSwitch(state.getExpr());
+        }
         List<IdExpr> varIds = new ArrayList<IdExpr>();
 
         for (Arg arg : state.getLhs()) {
@@ -366,16 +369,25 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
             varDecl.type = arg.getType().getString();
 
             layout.addElement(category, varDecl.aadlStr, AgreeLayout.SigType.OUTPUT);
-            
+
 
             varRenaming.put(varDecl.jKindStr, varDecl.aadlStr);
             refMap.put(varDecl.aadlStr, state);
-            internalVars.add(varDecl);
+            
+            if(expr != null){
+                internalVars.add(varDecl);
+            }else{
+                //the variable is implicitly defined
+                inputVars.add(varDecl);
+                outputVars.add(varDecl);
+            }
         }
 
-        Equation eq = new Equation(varIds, expr);
+        if(expr != null){
+            Equation eq = new Equation(varIds, expr);
+            eqExpressions.add(eq);
+        }
 
-        eqExpressions.add(eq);
         return null;
     }
 

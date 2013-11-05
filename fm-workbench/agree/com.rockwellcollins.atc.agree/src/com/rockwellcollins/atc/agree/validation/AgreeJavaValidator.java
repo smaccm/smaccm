@@ -386,6 +386,11 @@ public class AgreeJavaValidator extends
     }
 
     private void checkMultiAssignEq(EObject src, List<Arg> lhsArgs, Expr rhsExpr) {
+        
+        if(rhsExpr == null){
+            return;
+        }
+        
         List<AgreeType> agreeLhsTypes = typesFromArgs(lhsArgs);
         List<AgreeType> agreeRhsTypes = new ArrayList<>();
 

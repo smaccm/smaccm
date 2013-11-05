@@ -852,14 +852,14 @@ ruleEqStatement returns [EObject current=null]
 	    }
 
 )
-))*)	otherlv_4='=' 
+))*)(	otherlv_4='=' 
     {
-    	newLeafNode(otherlv_4, grammarAccess.getEqStatementAccess().getEqualsSignKeyword_2());
+    	newLeafNode(otherlv_4, grammarAccess.getEqStatementAccess().getEqualsSignKeyword_2_0());
     }
 (
 (
 		{ 
-	        newCompositeNode(grammarAccess.getEqStatementAccess().getExprExprParserRuleCall_3_0()); 
+	        newCompositeNode(grammarAccess.getEqStatementAccess().getExprExprParserRuleCall_2_1_0()); 
 	    }
 		lv_expr_5_0=ruleExpr		{
 	        if ($current==null) {
@@ -874,9 +874,9 @@ ruleEqStatement returns [EObject current=null]
 	    }
 
 )
-)	otherlv_6=';' 
+))?	otherlv_6=';' 
     {
-    	newLeafNode(otherlv_6, grammarAccess.getEqStatementAccess().getSemicolonKeyword_4());
+    	newLeafNode(otherlv_6, grammarAccess.getEqStatementAccess().getSemicolonKeyword_3());
     }
 )
 ;
