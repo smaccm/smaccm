@@ -12,10 +12,12 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xtext.validation.Check;
 import org.osate.aadl2.AadlBoolean;
 import org.osate.aadl2.AadlInteger;
+import org.osate.aadl2.AadlPackage;
 import org.osate.aadl2.AadlReal;
 import org.osate.aadl2.AadlString;
 import org.osate.aadl2.AnnexSubclause;
 import org.osate.aadl2.Classifier;
+import org.osate.aadl2.ClassifierFeature;
 import org.osate.aadl2.ClassifierType;
 import org.osate.aadl2.ComponentClassifier;
 import org.osate.aadl2.ComponentImplementation;
@@ -26,7 +28,9 @@ import org.osate.aadl2.DataSubcomponentType;
 import org.osate.aadl2.DataType;
 import org.osate.aadl2.Element;
 import org.osate.aadl2.EnumerationType;
+import org.osate.aadl2.Feature;
 import org.osate.aadl2.NamedElement;
+import org.osate.aadl2.Namespace;
 import org.osate.aadl2.Property;
 import org.osate.aadl2.PropertyType;
 import org.osate.aadl2.Subcomponent;
@@ -297,33 +301,78 @@ public class AgreeJavaValidator extends
 
     }
     
+
     @Check
     public void checkNamedElement(NamedElement namedEl){
-        //if this is an implementation, verify that there is no idExpr of the same name
-        //in the type
+      
+        //check for namespace collision in component types of component implementations
+        //and for collisions between subcomponent and feature names
         
-        EObject container = namedEl.eContainer().eContainer().eContainer();
+        EObject container = namedEl.eContainer();
+        while(!(container instanceof AadlPackage
+                || container instanceof ComponentImplementation
+                || container instanceof ComponentType)){
+            container = container.eContainer();
+        }
+        
+        ComponentImplementation compImpl = null;
+        ComponentType type = null;
         if(container instanceof ComponentImplementation){
-            ComponentType type = ((ComponentImplementation)container).getType();
-            NamedElement match = matchedInType(type, namedEl.getName());
-            if(match != null){
-                error(match, "Element of the same name ('"+namedEl.getName()
-                        +"') in component implementation '"
-                        +((ComponentImplementation)container).getName()+"'");
-                error(namedEl, "Element of the same name ('"+namedEl.getName()
-                        +"') in component type");
+            compImpl = (ComponentImplementation)container;
+            type = compImpl.getType();
+            checkDupNames(namedEl, type, compImpl);
+        }else{
+            if(container instanceof ComponentType){
+                type = (ComponentType) container;
+            }
+        }
+        
+        if(type != null){
+            for(Feature feat : type.getAllFeatures()){
+                if(namedEl.getName().equals(feat.getName())){
+                    error(feat, "Element of the same name ('"+namedEl.getName()
+                            +"') in AGREE Annex in '"
+                            +(compImpl == null ? type.getName() : compImpl.getName()) +"'");
+                    error(namedEl, "Feature of the same name ('"+namedEl.getName()
+                            +"') in component type");
+                }
+            }
+        }
+        
+    }
+
+    private void checkDupNames(NamedElement namedEl, ComponentType type,
+            ComponentImplementation compImpl) {
+        NamedElement match = matchedInAgreeAnnex(type, namedEl.getName());
+        
+        if(match != null){
+            error(match, "Element of the same name ('"+namedEl.getName()
+                    +"') in component implementation '"
+                    +compImpl.getName()+"'");
+            error(namedEl, "Element of the same name ('"+namedEl.getName()
+                    +"') in component type");
+        }
+        
+        for(Subcomponent sub : compImpl.getAllSubcomponents()){
+            if(namedEl.getName().equals(sub.getName())){
+                error(sub, "Element of the same name ('"+namedEl.getName()
+                        +"') in AGREE Annex in '"
+                        +compImpl.getName()+"'");
+                error(namedEl, "Subcomponent of the same name ('"+namedEl.getName()
+                        +"') in component implementation");
             }
         }
     }
     
-    private NamedElement matchedInType(ComponentType compType, String name){
+   
+    private NamedElement matchedInAgreeAnnex(ComponentClassifier compClass, String name){
         
-        for(AnnexSubclause subClause : compType.getAllAnnexSubclauses()){
+        for(AnnexSubclause subClause : compClass.getAllAnnexSubclauses()){
             if(subClause instanceof AgreeSubclause){
                 AgreeContract contr = (AgreeContract) subClause.getChildren().get(0);
                 for(EObject obj : contr.getChildren()){
                     if(obj instanceof NamedElement){
-                        if(((NamedElement)obj).getName().equals(name)){
+                        if(name.equals(((NamedElement)obj).getName())){
                             return (NamedElement) obj;
                         }
                     }

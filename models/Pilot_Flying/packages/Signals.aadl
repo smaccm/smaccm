@@ -1,17 +1,17 @@
 -- 
 package Signals
 public
-with Types,Data_Model, Base_Types;
+with Base_Types,Data_Model;
   system Fall
     features
-      I: in data port Types::Boolean;
-      O: out data port Types::Boolean {
+      I: in data port Base_Types::Boolean;
+      O: out data port Base_Types::Boolean {
         Data_Model::Initial_Value => ("false");
         };
     annex behavior_specification {**
       
       variables
-        prev_I: Types::Boolean;
+        prev_I: Base_Types::Boolean;
       states
         St_Step :  state ;
         St_Start :  initial state ;
@@ -33,7 +33,7 @@ with Types,Data_Model, Base_Types;
     annex behavior_specification {**
       
       variables
-        prev_I: Types::Boolean;
+        prev_I: Base_Types::Boolean;
       states
         St_Step :  state ;
         St_Start :  initial state ;
@@ -43,6 +43,17 @@ with Types,Data_Model, Base_Types;
           { O := not prev_I and I; prev_I := I }  ; 
         T1 [1] : St_Start -[  ]-> St_Step
           { O := false; prev_I := I }  ; 
-**};
+  **};
+
   end Rise;
+
+ system implementation Rise.Rise_Impl
+
+  annex agree{**
+  	    	
+  	assert O <=> (false -> not pre (I) and I);
+  
+  **};
+  end Rise.Rise_Impl;
+
 end Signals;
