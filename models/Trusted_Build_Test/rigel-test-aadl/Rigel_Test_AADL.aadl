@@ -1,0 +1,119 @@
+package Rigel_Test_AADL
+public
+  with Data_Model;
+  with Base_Types;
+  with SMACCM_SYS;
+
+
+-- Datatypes: these would likely go into a separate file.
+data dt
+end dt;
+
+data implementation dt.rec
+	subcomponents
+		field: data Base_Types::Unsigned_8;
+end dt.rec;
+
+thread Thread_A
+    features
+      signalCh: in event port 
+      	{
+      		Compute_Entrypoint_Source_Text => "exec_signalCh_threadA"; 
+      		Queue_Size => 2;
+      		-- can also state queue protocol and other properties.
+      		-- these would change the interface to the entrypoint.
+      		 
+      		-- 	Overflow_Handling_Protocol: enumeration (DropOldest, DropNewest, Error)
+      		-- Queue_Processing_Protocol: Supported_Queue_Processing_Protocols => FIFO
+			-- Fan_Out_Policy: enumeration (Broadcast, RoundRobin, Selective, OnDemand)
+			-- Urgency: aadlinteger 0 .. Max_Urgency
+			-- Dequeued_Items: aadlinteger
+			-- Dequeue_Protocol: enumeration ( OneItem, MultipleItems, AllItems ) => OneItem
+      	};
+      foo_data: out data port dt.rec;
+      
+    properties
+	  Dispatch_Protocol => Sporadic;
+      Period => 30 ms;
+      Priority => 10;
+      Source_Stack_Size => 64 bytes;
+      Priority => 10; 
+      Source_Text => ("src/rigel-test.c");
+      Initialize_Entrypoint_Source_Text => "init_A";
+      -- Compute_Entrypoint_Source_Text => "exec_periodic_fooSourceTask";
+  	  Compute_Execution_Time             => 2 ms .. 3 ms;
+end Thread_A;
+
+-- For 'timed' threads, the period is a timeout value if 
+-- an event does not arrive.  
+thread Thread_B
+    features
+      datap: in data port dt.rec;
+      signalCh: in event port 
+      	{
+      		Compute_Entrypoint_Source_Text => "exec_signalCh_threadB"; 
+      		Queue_Size => 2;
+      		-- can also state queue protocol and other properties.
+      		-- these would change the interface to the entrypoint.
+      		 
+      		-- 	Overflow_Handling_Protocol: enumeration (DropOldest, DropNewest, Error)
+      		-- Queue_Processing_Protocol: Supported_Queue_Processing_Protocols => FIFO
+			-- Fan_Out_Policy: enumeration (Broadcast, RoundRobin, Selective, OnDemand)
+			-- Urgency: aadlinteger 0 .. Max_Urgency
+			-- Dequeued_Items: aadlinteger
+			-- Dequeue_Protocol: enumeration ( OneItem, MultipleItems, AllItems ) => OneItem
+      	};
+      
+    properties
+	  Dispatch_Protocol => Aperiodic;
+      Period => 30 ms;
+      Priority => 8 ; 
+      Source_Stack_Size => 64 bytes;
+      Source_Text => ("src/rigel-test.c");
+      Initialize_Entrypoint_Source_Text => "init_B";
+      -- Compute_Entrypoint_Source_Text => "exec_periodic_barSourceTask";
+  	  Compute_Execution_Time             => 0 ms .. 5 ms;
+end Thread_B;
+
+thread systick_signal
+features
+  chEmitter : out event port ;
+
+properties
+      Dispatch_Protocol => Aperiodic;
+      Period => 30 ms;
+      Priority => 20; 
+      Source_Text => ("src/rigel-test.c");
+      Source_Stack_Size => 64 bytes;
+      Compute_Entrypoint_Source_Text => "exec_sig_systick";
+      SMACCM_SYS::Signal_Name => "systick";
+  	  Compute_Execution_Time             => 0 ms .. 1 ms;
+end systick_signal;
+
+
+process system_proc
+end system_proc;
+
+process implementation system_proc.Impl
+
+    subcomponents
+		A : thread Thread_A ;
+		B : thread Thread_B ; 
+		systick : thread systick_signal ;
+
+    connections
+      port systick.chEmitter -> A.signalCh;
+      port systick.chEmitter -> B.signalCh;
+      port A.foo_data -> B.datap;
+	  		 
+end system_proc.Impl;
+
+system Test
+end Test ; 
+
+system implementation Test.Impl
+	subcomponents 
+		P: process system_proc.Impl;
+end Test.Impl;
+  
+end Rigel_Test_AADL ; 

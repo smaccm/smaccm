@@ -19,9 +19,7 @@ with DATATYPES, Package_C1, Package_C2;
 	  Output : out data port DATATYPES::IO.Impl;
 	            
        annex agree {**
-
 		guarantee "false" : false;
-
 **};
 
   end System_Status;

@@ -1,0 +1,5 @@
+property set SMACCM_SYS is
+	Signal_Name: aadlstring applies to (thread);
+	Write_Function_Text: aadlstring applies to (port);
+	Output_Directory: aadlstring applies to (system implementation);
+end SMACCM_SYS;
