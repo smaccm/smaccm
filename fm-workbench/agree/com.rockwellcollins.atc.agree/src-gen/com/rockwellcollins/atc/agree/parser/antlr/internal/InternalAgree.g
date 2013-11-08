@@ -1726,11 +1726,11 @@ ruleEquivExpr returns [EObject current=null]
     @after { leaveRule(); }:
 (
     { 
-        newCompositeNode(grammarAccess.getEquivExprAccess().getAndExprParserRuleCall_0()); 
+        newCompositeNode(grammarAccess.getEquivExprAccess().getOrExprParserRuleCall_0()); 
     }
-    this_AndExpr_0=ruleAndExpr
+    this_OrExpr_0=ruleOrExpr
     { 
-        $current = $this_AndExpr_0.current; 
+        $current = $this_OrExpr_0.current; 
         afterParserOrEnumRuleCall();
     }
 (((((
@@ -1764,87 +1764,11 @@ ruleEquivExpr returns [EObject current=null]
 )))(
 (
 		{ 
-	        newCompositeNode(grammarAccess.getEquivExprAccess().getRightAndExprParserRuleCall_1_1_0()); 
-	    }
-		lv_right_3_0=ruleAndExpr		{
-	        if ($current==null) {
-	            $current = createModelElementForParent(grammarAccess.getEquivExprRule());
-	        }
-       		set(
-       			$current, 
-       			"right",
-        		lv_right_3_0, 
-        		"AndExpr");
-	        afterParserOrEnumRuleCall();
-	    }
-
-)
-))?)
-;
-
-
-
-
-
-// Entry rule entryRuleAndExpr
-entryRuleAndExpr returns [EObject current=null] 
-	:
-	{ newCompositeNode(grammarAccess.getAndExprRule()); }
-	 iv_ruleAndExpr=ruleAndExpr 
-	 { $current=$iv_ruleAndExpr.current; } 
-	 EOF 
-;
-
-// Rule AndExpr
-ruleAndExpr returns [EObject current=null] 
-    @init { enterRule(); 
-    }
-    @after { leaveRule(); }:
-(
-    { 
-        newCompositeNode(grammarAccess.getAndExprAccess().getOrExprParserRuleCall_0()); 
-    }
-    this_OrExpr_0=ruleOrExpr
-    { 
-        $current = $this_OrExpr_0.current; 
-        afterParserOrEnumRuleCall();
-    }
-(((((
-)(
-(
-	'and' 
- 
-
-)
-)))=>((
-    {
-        $current = forceCreateModelElementAndSet(
-            grammarAccess.getAndExprAccess().getBinaryExprLeftAction_1_0_0_0(),
-            $current);
-    }
-)(
-(
-		lv_op_2_0=	'and' 
-    {
-        newLeafNode(lv_op_2_0, grammarAccess.getAndExprAccess().getOpAndKeyword_1_0_0_1_0());
-    }
- 
-	    {
-	        if ($current==null) {
-	            $current = createModelElement(grammarAccess.getAndExprRule());
-	        }
-       		setWithLastConsumed($current, "op", lv_op_2_0, "and");
-	    }
-
-)
-)))(
-(
-		{ 
-	        newCompositeNode(grammarAccess.getAndExprAccess().getRightOrExprParserRuleCall_1_1_0()); 
+	        newCompositeNode(grammarAccess.getEquivExprAccess().getRightOrExprParserRuleCall_1_1_0()); 
 	    }
 		lv_right_3_0=ruleOrExpr		{
 	        if ($current==null) {
-	            $current = createModelElementForParent(grammarAccess.getAndExprRule());
+	            $current = createModelElementForParent(grammarAccess.getEquivExprRule());
 	        }
        		set(
        			$current, 
@@ -1855,7 +1779,7 @@ ruleAndExpr returns [EObject current=null]
 	    }
 
 )
-))*)
+))?)
 ;
 
 
@@ -1878,11 +1802,11 @@ ruleOrExpr returns [EObject current=null]
     @after { leaveRule(); }:
 (
     { 
-        newCompositeNode(grammarAccess.getOrExprAccess().getRelateExprParserRuleCall_0()); 
+        newCompositeNode(grammarAccess.getOrExprAccess().getAndExprParserRuleCall_0()); 
     }
-    this_RelateExpr_0=ruleRelateExpr
+    this_AndExpr_0=ruleAndExpr
     { 
-        $current = $this_RelateExpr_0.current; 
+        $current = $this_AndExpr_0.current; 
         afterParserOrEnumRuleCall();
     }
 (((((
@@ -1916,11 +1840,87 @@ ruleOrExpr returns [EObject current=null]
 )))(
 (
 		{ 
-	        newCompositeNode(grammarAccess.getOrExprAccess().getRightRelateExprParserRuleCall_1_1_0()); 
+	        newCompositeNode(grammarAccess.getOrExprAccess().getRightAndExprParserRuleCall_1_1_0()); 
+	    }
+		lv_right_3_0=ruleAndExpr		{
+	        if ($current==null) {
+	            $current = createModelElementForParent(grammarAccess.getOrExprRule());
+	        }
+       		set(
+       			$current, 
+       			"right",
+        		lv_right_3_0, 
+        		"AndExpr");
+	        afterParserOrEnumRuleCall();
+	    }
+
+)
+))*)
+;
+
+
+
+
+
+// Entry rule entryRuleAndExpr
+entryRuleAndExpr returns [EObject current=null] 
+	:
+	{ newCompositeNode(grammarAccess.getAndExprRule()); }
+	 iv_ruleAndExpr=ruleAndExpr 
+	 { $current=$iv_ruleAndExpr.current; } 
+	 EOF 
+;
+
+// Rule AndExpr
+ruleAndExpr returns [EObject current=null] 
+    @init { enterRule(); 
+    }
+    @after { leaveRule(); }:
+(
+    { 
+        newCompositeNode(grammarAccess.getAndExprAccess().getRelateExprParserRuleCall_0()); 
+    }
+    this_RelateExpr_0=ruleRelateExpr
+    { 
+        $current = $this_RelateExpr_0.current; 
+        afterParserOrEnumRuleCall();
+    }
+(((((
+)(
+(
+	'and' 
+ 
+
+)
+)))=>((
+    {
+        $current = forceCreateModelElementAndSet(
+            grammarAccess.getAndExprAccess().getBinaryExprLeftAction_1_0_0_0(),
+            $current);
+    }
+)(
+(
+		lv_op_2_0=	'and' 
+    {
+        newLeafNode(lv_op_2_0, grammarAccess.getAndExprAccess().getOpAndKeyword_1_0_0_1_0());
+    }
+ 
+	    {
+	        if ($current==null) {
+	            $current = createModelElement(grammarAccess.getAndExprRule());
+	        }
+       		setWithLastConsumed($current, "op", lv_op_2_0, "and");
+	    }
+
+)
+)))(
+(
+		{ 
+	        newCompositeNode(grammarAccess.getAndExprAccess().getRightRelateExprParserRuleCall_1_1_0()); 
 	    }
 		lv_right_3_0=ruleRelateExpr		{
 	        if ($current==null) {
-	            $current = createModelElementForParent(grammarAccess.getOrExprRule());
+	            $current = createModelElementForParent(grammarAccess.getAndExprRule());
 	        }
        		set(
        			$current, 
@@ -2214,9 +2214,6 @@ ruleMultDivExpr returns [EObject current=null]
     |			'/' 
  
 
-    |			'mod' 
- 
-
     |			'div' 
  
 
@@ -2256,9 +2253,9 @@ ruleMultDivExpr returns [EObject current=null]
        		setWithLastConsumed($current, "op", lv_op_2_2, null);
 	    }
 
-    |		lv_op_2_3=	'mod' 
+    |		lv_op_2_3=	'div' 
     {
-        newLeafNode(lv_op_2_3, grammarAccess.getMultDivExprAccess().getOpModKeyword_1_0_0_1_0_2());
+        newLeafNode(lv_op_2_3, grammarAccess.getMultDivExprAccess().getOpDivKeyword_1_0_0_1_0_2());
     }
  
 	    {
@@ -2266,18 +2263,6 @@ ruleMultDivExpr returns [EObject current=null]
 	            $current = createModelElement(grammarAccess.getMultDivExprRule());
 	        }
        		setWithLastConsumed($current, "op", lv_op_2_3, null);
-	    }
-
-    |		lv_op_2_4=	'div' 
-    {
-        newLeafNode(lv_op_2_4, grammarAccess.getMultDivExprAccess().getOpDivKeyword_1_0_0_1_0_3());
-    }
- 
-	    {
-	        if ($current==null) {
-	            $current = createModelElement(grammarAccess.getMultDivExprRule());
-	        }
-       		setWithLastConsumed($current, "op", lv_op_2_4, null);
 	    }
 
 )

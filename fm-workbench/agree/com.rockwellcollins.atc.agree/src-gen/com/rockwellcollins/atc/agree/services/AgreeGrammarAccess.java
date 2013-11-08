@@ -1129,7 +1129,7 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 	public class EquivExprElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "EquivExpr");
 		private final Group cGroup = (Group)rule.eContents().get(1);
-		private final RuleCall cAndExprParserRuleCall_0 = (RuleCall)cGroup.eContents().get(0);
+		private final RuleCall cOrExprParserRuleCall_0 = (RuleCall)cGroup.eContents().get(0);
 		private final Group cGroup_1 = (Group)cGroup.eContents().get(1);
 		private final Group cGroup_1_0 = (Group)cGroup_1.eContents().get(0);
 		private final Group cGroup_1_0_0 = (Group)cGroup_1_0.eContents().get(0);
@@ -1137,19 +1137,19 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		private final Assignment cOpAssignment_1_0_0_1 = (Assignment)cGroup_1_0_0.eContents().get(1);
 		private final Keyword cOpLessThanSignEqualsSignGreaterThanSignKeyword_1_0_0_1_0 = (Keyword)cOpAssignment_1_0_0_1.eContents().get(0);
 		private final Assignment cRightAssignment_1_1 = (Assignment)cGroup_1.eContents().get(1);
-		private final RuleCall cRightAndExprParserRuleCall_1_1_0 = (RuleCall)cRightAssignment_1_1.eContents().get(0);
+		private final RuleCall cRightOrExprParserRuleCall_1_1_0 = (RuleCall)cRightAssignment_1_1.eContents().get(0);
 		
 		//EquivExpr returns Expr:
-		//	AndExpr (=> ({BinaryExpr.left=current} op="<=>") right=AndExpr)?;
+		//	OrExpr (=> ({BinaryExpr.left=current} op="<=>") right=OrExpr)?;
 		public ParserRule getRule() { return rule; }
 
-		//AndExpr (=> ({BinaryExpr.left=current} op="<=>") right=AndExpr)?
+		//OrExpr (=> ({BinaryExpr.left=current} op="<=>") right=OrExpr)?
 		public Group getGroup() { return cGroup; }
 
-		//AndExpr
-		public RuleCall getAndExprParserRuleCall_0() { return cAndExprParserRuleCall_0; }
+		//OrExpr
+		public RuleCall getOrExprParserRuleCall_0() { return cOrExprParserRuleCall_0; }
 
-		//(=> ({BinaryExpr.left=current} op="<=>") right=AndExpr)?
+		//(=> ({BinaryExpr.left=current} op="<=>") right=OrExpr)?
 		public Group getGroup_1() { return cGroup_1; }
 
 		//=> ({BinaryExpr.left=current} op="<=>")
@@ -1167,54 +1167,6 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		//"<=>"
 		public Keyword getOpLessThanSignEqualsSignGreaterThanSignKeyword_1_0_0_1_0() { return cOpLessThanSignEqualsSignGreaterThanSignKeyword_1_0_0_1_0; }
 
-		//right=AndExpr
-		public Assignment getRightAssignment_1_1() { return cRightAssignment_1_1; }
-
-		//AndExpr
-		public RuleCall getRightAndExprParserRuleCall_1_1_0() { return cRightAndExprParserRuleCall_1_1_0; }
-	}
-
-	public class AndExprElements extends AbstractParserRuleElementFinder {
-		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "AndExpr");
-		private final Group cGroup = (Group)rule.eContents().get(1);
-		private final RuleCall cOrExprParserRuleCall_0 = (RuleCall)cGroup.eContents().get(0);
-		private final Group cGroup_1 = (Group)cGroup.eContents().get(1);
-		private final Group cGroup_1_0 = (Group)cGroup_1.eContents().get(0);
-		private final Group cGroup_1_0_0 = (Group)cGroup_1_0.eContents().get(0);
-		private final Action cBinaryExprLeftAction_1_0_0_0 = (Action)cGroup_1_0_0.eContents().get(0);
-		private final Assignment cOpAssignment_1_0_0_1 = (Assignment)cGroup_1_0_0.eContents().get(1);
-		private final Keyword cOpAndKeyword_1_0_0_1_0 = (Keyword)cOpAssignment_1_0_0_1.eContents().get(0);
-		private final Assignment cRightAssignment_1_1 = (Assignment)cGroup_1.eContents().get(1);
-		private final RuleCall cRightOrExprParserRuleCall_1_1_0 = (RuleCall)cRightAssignment_1_1.eContents().get(0);
-		
-		//AndExpr returns Expr:
-		//	OrExpr (=> ({BinaryExpr.left=current} op="and") right=OrExpr)*;
-		public ParserRule getRule() { return rule; }
-
-		//OrExpr (=> ({BinaryExpr.left=current} op="and") right=OrExpr)*
-		public Group getGroup() { return cGroup; }
-
-		//OrExpr
-		public RuleCall getOrExprParserRuleCall_0() { return cOrExprParserRuleCall_0; }
-
-		//(=> ({BinaryExpr.left=current} op="and") right=OrExpr)*
-		public Group getGroup_1() { return cGroup_1; }
-
-		//=> ({BinaryExpr.left=current} op="and")
-		public Group getGroup_1_0() { return cGroup_1_0; }
-
-		//{BinaryExpr.left=current} op="and"
-		public Group getGroup_1_0_0() { return cGroup_1_0_0; }
-
-		//{BinaryExpr.left=current}
-		public Action getBinaryExprLeftAction_1_0_0_0() { return cBinaryExprLeftAction_1_0_0_0; }
-
-		//op="and"
-		public Assignment getOpAssignment_1_0_0_1() { return cOpAssignment_1_0_0_1; }
-
-		//"and"
-		public Keyword getOpAndKeyword_1_0_0_1_0() { return cOpAndKeyword_1_0_0_1_0; }
-
 		//right=OrExpr
 		public Assignment getRightAssignment_1_1() { return cRightAssignment_1_1; }
 
@@ -1225,7 +1177,7 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 	public class OrExprElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "OrExpr");
 		private final Group cGroup = (Group)rule.eContents().get(1);
-		private final RuleCall cRelateExprParserRuleCall_0 = (RuleCall)cGroup.eContents().get(0);
+		private final RuleCall cAndExprParserRuleCall_0 = (RuleCall)cGroup.eContents().get(0);
 		private final Group cGroup_1 = (Group)cGroup.eContents().get(1);
 		private final Group cGroup_1_0 = (Group)cGroup_1.eContents().get(0);
 		private final Group cGroup_1_0_0 = (Group)cGroup_1_0.eContents().get(0);
@@ -1233,19 +1185,19 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		private final Assignment cOpAssignment_1_0_0_1 = (Assignment)cGroup_1_0_0.eContents().get(1);
 		private final Keyword cOpOrKeyword_1_0_0_1_0 = (Keyword)cOpAssignment_1_0_0_1.eContents().get(0);
 		private final Assignment cRightAssignment_1_1 = (Assignment)cGroup_1.eContents().get(1);
-		private final RuleCall cRightRelateExprParserRuleCall_1_1_0 = (RuleCall)cRightAssignment_1_1.eContents().get(0);
+		private final RuleCall cRightAndExprParserRuleCall_1_1_0 = (RuleCall)cRightAssignment_1_1.eContents().get(0);
 		
 		//OrExpr returns Expr:
-		//	RelateExpr (=> ({BinaryExpr.left=current} op="or") right=RelateExpr)*;
+		//	AndExpr (=> ({BinaryExpr.left=current} op="or") right=AndExpr)*;
 		public ParserRule getRule() { return rule; }
 
-		//RelateExpr (=> ({BinaryExpr.left=current} op="or") right=RelateExpr)*
+		//AndExpr (=> ({BinaryExpr.left=current} op="or") right=AndExpr)*
 		public Group getGroup() { return cGroup; }
 
-		//RelateExpr
-		public RuleCall getRelateExprParserRuleCall_0() { return cRelateExprParserRuleCall_0; }
+		//AndExpr
+		public RuleCall getAndExprParserRuleCall_0() { return cAndExprParserRuleCall_0; }
 
-		//(=> ({BinaryExpr.left=current} op="or") right=RelateExpr)*
+		//(=> ({BinaryExpr.left=current} op="or") right=AndExpr)*
 		public Group getGroup_1() { return cGroup_1; }
 
 		//=> ({BinaryExpr.left=current} op="or")
@@ -1262,6 +1214,54 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 
 		//"or"
 		public Keyword getOpOrKeyword_1_0_0_1_0() { return cOpOrKeyword_1_0_0_1_0; }
+
+		//right=AndExpr
+		public Assignment getRightAssignment_1_1() { return cRightAssignment_1_1; }
+
+		//AndExpr
+		public RuleCall getRightAndExprParserRuleCall_1_1_0() { return cRightAndExprParserRuleCall_1_1_0; }
+	}
+
+	public class AndExprElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "AndExpr");
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final RuleCall cRelateExprParserRuleCall_0 = (RuleCall)cGroup.eContents().get(0);
+		private final Group cGroup_1 = (Group)cGroup.eContents().get(1);
+		private final Group cGroup_1_0 = (Group)cGroup_1.eContents().get(0);
+		private final Group cGroup_1_0_0 = (Group)cGroup_1_0.eContents().get(0);
+		private final Action cBinaryExprLeftAction_1_0_0_0 = (Action)cGroup_1_0_0.eContents().get(0);
+		private final Assignment cOpAssignment_1_0_0_1 = (Assignment)cGroup_1_0_0.eContents().get(1);
+		private final Keyword cOpAndKeyword_1_0_0_1_0 = (Keyword)cOpAssignment_1_0_0_1.eContents().get(0);
+		private final Assignment cRightAssignment_1_1 = (Assignment)cGroup_1.eContents().get(1);
+		private final RuleCall cRightRelateExprParserRuleCall_1_1_0 = (RuleCall)cRightAssignment_1_1.eContents().get(0);
+		
+		//AndExpr returns Expr:
+		//	RelateExpr (=> ({BinaryExpr.left=current} op="and") right=RelateExpr)*;
+		public ParserRule getRule() { return rule; }
+
+		//RelateExpr (=> ({BinaryExpr.left=current} op="and") right=RelateExpr)*
+		public Group getGroup() { return cGroup; }
+
+		//RelateExpr
+		public RuleCall getRelateExprParserRuleCall_0() { return cRelateExprParserRuleCall_0; }
+
+		//(=> ({BinaryExpr.left=current} op="and") right=RelateExpr)*
+		public Group getGroup_1() { return cGroup_1; }
+
+		//=> ({BinaryExpr.left=current} op="and")
+		public Group getGroup_1_0() { return cGroup_1_0; }
+
+		//{BinaryExpr.left=current} op="and"
+		public Group getGroup_1_0_0() { return cGroup_1_0_0; }
+
+		//{BinaryExpr.left=current}
+		public Action getBinaryExprLeftAction_1_0_0_0() { return cBinaryExprLeftAction_1_0_0_0; }
+
+		//op="and"
+		public Assignment getOpAssignment_1_0_0_1() { return cOpAssignment_1_0_0_1; }
+
+		//"and"
+		public Keyword getOpAndKeyword_1_0_0_1_0() { return cOpAndKeyword_1_0_0_1_0; }
 
 		//right=RelateExpr
 		public Assignment getRightAssignment_1_1() { return cRightAssignment_1_1; }
@@ -1426,37 +1426,36 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		private final Alternatives cOpAlternatives_1_0_0_1_0 = (Alternatives)cOpAssignment_1_0_0_1.eContents().get(0);
 		private final Keyword cOpAsteriskKeyword_1_0_0_1_0_0 = (Keyword)cOpAlternatives_1_0_0_1_0.eContents().get(0);
 		private final Keyword cOpSolidusKeyword_1_0_0_1_0_1 = (Keyword)cOpAlternatives_1_0_0_1_0.eContents().get(1);
-		private final Keyword cOpModKeyword_1_0_0_1_0_2 = (Keyword)cOpAlternatives_1_0_0_1_0.eContents().get(2);
-		private final Keyword cOpDivKeyword_1_0_0_1_0_3 = (Keyword)cOpAlternatives_1_0_0_1_0.eContents().get(3);
+		private final Keyword cOpDivKeyword_1_0_0_1_0_2 = (Keyword)cOpAlternatives_1_0_0_1_0.eContents().get(2);
 		private final Assignment cRightAssignment_1_1 = (Assignment)cGroup_1.eContents().get(1);
 		private final RuleCall cRightUnaryExprParserRuleCall_1_1_0 = (RuleCall)cRightAssignment_1_1.eContents().get(0);
 		
 		//MultDivExpr returns Expr:
-		//	UnaryExpr (=> ({BinaryExpr.left=current} op=("*" | "/" | "mod" | "div")) right=UnaryExpr)*;
+		//	UnaryExpr (=> ({BinaryExpr.left=current} op=("*" | "/" | "div")) right=UnaryExpr)*;
 		public ParserRule getRule() { return rule; }
 
-		//UnaryExpr (=> ({BinaryExpr.left=current} op=("*" | "/" | "mod" | "div")) right=UnaryExpr)*
+		//UnaryExpr (=> ({BinaryExpr.left=current} op=("*" | "/" | "div")) right=UnaryExpr)*
 		public Group getGroup() { return cGroup; }
 
 		//UnaryExpr
 		public RuleCall getUnaryExprParserRuleCall_0() { return cUnaryExprParserRuleCall_0; }
 
-		//(=> ({BinaryExpr.left=current} op=("*" | "/" | "mod" | "div")) right=UnaryExpr)*
+		//(=> ({BinaryExpr.left=current} op=("*" | "/" | "div")) right=UnaryExpr)*
 		public Group getGroup_1() { return cGroup_1; }
 
-		//=> ({BinaryExpr.left=current} op=("*" | "/" | "mod" | "div"))
+		//=> ({BinaryExpr.left=current} op=("*" | "/" | "div"))
 		public Group getGroup_1_0() { return cGroup_1_0; }
 
-		//{BinaryExpr.left=current} op=("*" | "/" | "mod" | "div")
+		//{BinaryExpr.left=current} op=("*" | "/" | "div")
 		public Group getGroup_1_0_0() { return cGroup_1_0_0; }
 
 		//{BinaryExpr.left=current}
 		public Action getBinaryExprLeftAction_1_0_0_0() { return cBinaryExprLeftAction_1_0_0_0; }
 
-		//op=("*" | "/" | "mod" | "div")
+		//op=("*" | "/" | "div")
 		public Assignment getOpAssignment_1_0_0_1() { return cOpAssignment_1_0_0_1; }
 
-		//"*" | "/" | "mod" | "div"
+		//"*" | "/" | "div"
 		public Alternatives getOpAlternatives_1_0_0_1_0() { return cOpAlternatives_1_0_0_1_0; }
 
 		//"*"
@@ -1465,11 +1464,8 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		//"/"
 		public Keyword getOpSolidusKeyword_1_0_0_1_0_1() { return cOpSolidusKeyword_1_0_0_1_0_1; }
 
-		//"mod"
-		public Keyword getOpModKeyword_1_0_0_1_0_2() { return cOpModKeyword_1_0_0_1_0_2; }
-
 		//"div"
-		public Keyword getOpDivKeyword_1_0_0_1_0_3() { return cOpDivKeyword_1_0_0_1_0_3; }
+		public Keyword getOpDivKeyword_1_0_0_1_0_2() { return cOpDivKeyword_1_0_0_1_0_2; }
 
 		//right=UnaryExpr
 		public Assignment getRightAssignment_1_1() { return cRightAssignment_1_1; }
@@ -2032,8 +2028,8 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 	private ArrowExprElements pArrowExpr;
 	private ImpliesExprElements pImpliesExpr;
 	private EquivExprElements pEquivExpr;
-	private AndExprElements pAndExpr;
 	private OrExprElements pOrExpr;
+	private AndExprElements pAndExpr;
 	private RelateOpElements pRelateOp;
 	private RelateExprElements pRelateExpr;
 	private AddSubExprElements pAddSubExpr;
@@ -2309,7 +2305,7 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 	}
 
 	//EquivExpr returns Expr:
-	//	AndExpr (=> ({BinaryExpr.left=current} op="<=>") right=AndExpr)?;
+	//	OrExpr (=> ({BinaryExpr.left=current} op="<=>") right=OrExpr)?;
 	public EquivExprElements getEquivExprAccess() {
 		return (pEquivExpr != null) ? pEquivExpr : (pEquivExpr = new EquivExprElements());
 	}
@@ -2318,24 +2314,24 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		return getEquivExprAccess().getRule();
 	}
 
-	//AndExpr returns Expr:
-	//	OrExpr (=> ({BinaryExpr.left=current} op="and") right=OrExpr)*;
-	public AndExprElements getAndExprAccess() {
-		return (pAndExpr != null) ? pAndExpr : (pAndExpr = new AndExprElements());
-	}
-	
-	public ParserRule getAndExprRule() {
-		return getAndExprAccess().getRule();
-	}
-
 	//OrExpr returns Expr:
-	//	RelateExpr (=> ({BinaryExpr.left=current} op="or") right=RelateExpr)*;
+	//	AndExpr (=> ({BinaryExpr.left=current} op="or") right=AndExpr)*;
 	public OrExprElements getOrExprAccess() {
 		return (pOrExpr != null) ? pOrExpr : (pOrExpr = new OrExprElements());
 	}
 	
 	public ParserRule getOrExprRule() {
 		return getOrExprAccess().getRule();
+	}
+
+	//AndExpr returns Expr:
+	//	RelateExpr (=> ({BinaryExpr.left=current} op="and") right=RelateExpr)*;
+	public AndExprElements getAndExprAccess() {
+		return (pAndExpr != null) ? pAndExpr : (pAndExpr = new AndExprElements());
+	}
+	
+	public ParserRule getAndExprRule() {
+		return getAndExprAccess().getRule();
 	}
 
 	//RelateOp:
@@ -2369,7 +2365,7 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 	}
 
 	//MultDivExpr returns Expr:
-	//	UnaryExpr (=> ({BinaryExpr.left=current} op=("*" | "/" | "mod" | "div")) right=UnaryExpr)*;
+	//	UnaryExpr (=> ({BinaryExpr.left=current} op=("*" | "/" | "div")) right=UnaryExpr)*;
 	public MultDivExprElements getMultDivExprAccess() {
 		return (pMultDivExpr != null) ? pMultDivExpr : (pMultDivExpr = new MultDivExprElements());
 	}

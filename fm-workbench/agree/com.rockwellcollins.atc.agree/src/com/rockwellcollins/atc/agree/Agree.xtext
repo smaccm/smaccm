@@ -121,15 +121,15 @@ ImpliesExpr returns Expr:
 
 
 EquivExpr returns Expr:
-	AndExpr (=>({BinaryExpr.left=current} op='<=>') right=AndExpr)?
-;
-
-AndExpr returns Expr:
-	OrExpr (=>({BinaryExpr.left=current} op='and') right=OrExpr)*
+	OrExpr (=>({BinaryExpr.left=current} op='<=>') right=OrExpr)?
 ;
 
 OrExpr returns Expr:
-	RelateExpr (=>({BinaryExpr.left=current} op='or') right=RelateExpr)*
+	AndExpr (=>({BinaryExpr.left=current} op='or') right=AndExpr)*
+;
+
+AndExpr returns Expr:
+	RelateExpr (=>({BinaryExpr.left=current} op='and') right=RelateExpr)*
 ;
 
 RelateOp:
@@ -145,7 +145,7 @@ AddSubExpr returns Expr:
 ;
 
 MultDivExpr returns Expr:
-	UnaryExpr (=>({BinaryExpr.left=current} op=('*'|'/'|'mod'|'div')) right=UnaryExpr)*
+	UnaryExpr (=>({BinaryExpr.left=current} op=('*'|'/'|'div')) right=UnaryExpr)*
 ;
 
 UnaryExpr returns Expr:

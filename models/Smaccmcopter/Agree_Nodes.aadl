@@ -37,6 +37,103 @@ annex agree {**
     let
       outp = (S_Univ(q,p)) or H(p) ; 
     tel;
+    
+    node mod2(n : int) returns (r : int);
+    let
+    	r = n - (n/2)*2;
+    tel;
+    
+    node mod4(n : int) returns (r : int);
+    let
+    	r = n - (n/4)*4;
+    tel;
+    
+    node mod8(n : int) returns (r : int);
+    let
+    	r = n - (n/8)*8;
+    tel;
+    
+    node mod16(n : int) returns (r : int);
+    let
+    	r = n - (n/16)*16;
+    tel;
+    
+    node mod32(n : int) returns (r : int);
+    let
+    	r = n - (n/32)*32;
+    tel;
+    
+    node mod64(n : int) returns (r : int);
+    let
+    	r = n - (n/64)*64;
+    tel;
+    
+    node mod128(n : int) returns (r : int);
+    let
+    	r = n - (n/128)*128;
+    tel;
+    
+    node mod256(n : int) returns (r : int);
+    let
+    	r = n - (n/256)*256;
+    tel;
+    
+    node true_since(foo : bool, n : int) returns (r : bool);
+    var
+    	count : int;
+    let
+    	count = 0 -> 1 + pre(count);
+    	r = if(count <= n) then
+    			true
+    		else
+    			foo and prev(r, foo);
+    tel;
+      	
+    node false_since(foo : bool, n : int) returns (r : bool);
+    var
+    	count : int;
+    let
+    	count = 0 -> 1 + pre(count);
+    	r = if(count <= n) then
+    			not foo
+      		else
+     			(not(foo)) and prev(r, foo);
+    tel;
+      	
+    
+    
+    --sig_set : the signal to set
+    --sig_read : the signal to read, once read the signal is reset
+	--set : true if a signal is to be set
+	node Signal_Status(sig_set : int, sig_read : int, set : bool)
+					  returns 
+					  (sig0 : bool,
+					   sig1 : bool, 
+					   sig2 : bool,
+					   sig3 : bool,
+					   sig4 : bool,
+					   sig5 : bool,
+					   sig6 : bool,
+					   sig7 : bool
+					   );				
+		let
+			sig0 = if(sig_set = 0 and set) then true else 
+			       if(sig_read = 0) then false else prev(sig0, false);
+			sig1 = if(sig_set = 1 and set) then true else 
+			       if(sig_read = 1) then false else prev(sig1, false);
+			sig2 = if(sig_set = 2 and set) then true else 
+			       if(sig_read = 2) then false else prev(sig2, false);
+			sig3 = if(sig_set = 3 and set) then true else 
+			       if(sig_read = 3) then false else prev(sig3, false);
+			sig4 = if(sig_set = 4 and set) then true else 
+			       if(sig_read = 4) then false else prev(sig4, false);
+			sig5 = if(sig_set = 5 and set) then true else 
+			       if(sig_read = 5) then false else prev(sig5, false);
+			sig6 = if(sig_set = 6 and set) then true else 
+			       if(sig_read = 6) then false else prev(sig6, false);
+			sig7 = if(sig_set = 7 and set) then true else 
+			       if(sig_read = 7) then false else prev(sig7, false);
+		tel;
 	
 **};
 

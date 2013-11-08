@@ -401,10 +401,11 @@ public class AgreeJavaValidator extends
                 for (Arg var : nodeDef.getRets()) {
                     agreeRhsTypes.add(new AgreeType(var.getType().getString()));
                 }
-            } else {
-                assert (namedEl instanceof FnDefExpr);
+            } else if(namedEl instanceof FnDefExpr) {
                 FnDefExpr fnDef = (FnDefExpr) namedEl;
                 agreeRhsTypes.add(new AgreeType(fnDef.getType().getString()));
+            } else {
+                return; //parse error
             }
         } else {
             agreeRhsTypes.add(getAgreeType(rhsExpr));

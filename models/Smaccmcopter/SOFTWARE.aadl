@@ -7,6 +7,7 @@ public
   with Static_Analysis;
   with SMACCM;
   with Mode_Properties;
+  with Base_Types;
 
   system Software
     features
@@ -39,22 +40,8 @@ public
       
        annex agree {**
 
-			const max_accel : real = 5.0; 
-			eq tv_speed : real = motors_and_radios.flight_control_commands.f1;
-			eq av_speed : real = sensors.motion_data.vertical_speed;
-
-			assume "target speed is positive" : tv_speed >= 0.0;
-			assume "reasonable target speed" : tv_speed < 150.0;
-			assume "zero initial speed" : (av_speed = 0.0) -> true;
+			guarantee "test " : true;
 			
-			property const_tar_speed = 
-				Agree_Nodes.H(tv_speed = prev(tv_speed,tv_speed)); 
-			
-			guarantee "actual speed is less than constant target speed" : 
-				const_tar_speed => (av_speed <= tv_speed);
-			
-			guarantee "acceleration is limited" : 
-				Agree_Nodes.abs(av_speed - prev(av_speed, 0.0)) < max_accel;
 				
 	**};
       
@@ -141,11 +128,7 @@ public
     **};
     
     annex agree {**
- 
-    	assert av_speed = prev(av_speed, 0.0) + 0.1 * SN.motor_commands.val;
-    	assert motors_and_radios.flight_control_commands.f1 = SN.rc_commands.f1;
-    	assert SN.sensors.speed = av_speed; 
-    	
+    	assert true;
     **};
 
   end Main_Loop.Impl;
@@ -155,6 +138,9 @@ public
   	    private_key : in data port DATATYPES::Private_Key_Data;
   		encrypt_in  : in data port DATATYPES::EncryptMAVlink;
   		decrypt_out : out data port DATATYPES::MAVlink;
+  		signal_input : in data port Base_Types::Integer;
+        receive_signal : in data port Base_Types::Boolean;
+        
   	properties
   	  Period => 200ms;
       Deadline => 200ms;
@@ -193,6 +179,8 @@ public
       mavlink: in data port DATATYPES::MAVLink;
       sensors: in data port DATATYPES::Sensor_Data.Impl;
       motor_commands: out data port DATATYPES::Motor_Commands.Impl;
+      signal_input : in data port Base_Types::Integer;
+      receive_signal : in data port Base_Types::Boolean;
       
     properties
       Period => 200ms;
@@ -211,21 +199,14 @@ public
 
       SMACCM::Language => "Ivory"; 
       
-      annex agree {** 
-		eq e : real = rc_commands.f1 - sensors.speed;
-		eq e_int : real = prev(e, 0.0) + e; 
-		eq e_dot : real = prev(e, 0.0) - e;
-		
-		eq u : real = 0.2*e + 0.1*e_dot + 0.1*e_int;
-		guarantee "Acuator_Behavior" : motor_commands.val = u;
-	  **}; 
-      
       
   end Stability_Navigation;
  
   thread Backup_Commands
     features
       mavlink_out: out data port DATATYPES::MAVLink;
+      signal_input : in data port Base_Types::Integer;
+      receive_signal : in data port Base_Types::Boolean;
       
     properties
     
@@ -248,6 +229,9 @@ public
     features
       mavlink_in: in event data port DATATYPES::MAVLink;
       mavlink_out: out data port DATATYPES::MAVLink;
+      signal_input : in data port Base_Types::Integer;
+      receive_signal : in data port Base_Types::Boolean;
+      
       
     properties
     
@@ -271,6 +255,9 @@ public
     features
       commands_in: in data port DATATYPES::Flight_Control_Commands.Impl;
       commands_out: out data port DATATYPES::Flight_Control_Commands.Impl;
+      signal_input : in data port Base_Types::Integer;
+      receive_signal : in data port Base_Types::Boolean;
+      
     
     properties
       Period => 200ms;
@@ -291,6 +278,9 @@ public
     features
       sensors_in: feature group UAV::sensors;
       sensors_out: out data port DATATYPES::Sensor_Data.Impl;
+      signal_input : in data port Base_Types::Integer;
+      receive_signal : in data port Base_Types::Boolean;
+      
       
     properties
       Period => 200ms;
@@ -315,6 +305,7 @@ public
       servo2_commands: out data port DATATYPES::Servo_Commands;
       servo3_commands: out data port DATATYPES::Servo_Commands;
       servo4_commands: out data port DATATYPES::Servo_Commands;
+      signal_input : in data port Base_Types::Integer;
       
     properties
       Period => 200ms;
@@ -330,5 +321,63 @@ public
       
       Static_Analysis::Reads_from_buffers => ("motorsoutput_shared_state");
       SMACCM::Language => "Ivory";
+      
+      annex agree {**
+      	
+      	eq poll0 : bool;
+      	eq poll1 : bool;
+      	eq poll2 : bool;
+      	eq poll3 : bool;
+      	eq poll4 : bool;
+      	eq poll5 : bool;
+      	eq poll6 : bool;
+      	eq poll7 : bool;
+      	
+      	eq pend0 : bool = if(sent0) then true else if(poll0) then false else prev(pend0, false);
+        eq pend1 : bool = if(sent1) then true else if(poll1) then false else prev(pend1, false);
+        eq pend2 : bool = if(sent2) then true else if(poll2) then false else prev(pend2, false);
+        eq pend3 : bool = if(sent3) then true else if(poll3) then false else prev(pend3, false);
+        eq pend4 : bool = if(sent4) then true else if(poll4) then false else prev(pend4, false);
+        eq pend5 : bool = if(sent5) then true else if(poll5) then false else prev(pend5, false);
+        eq pend6 : bool = if(sent6) then true else if(poll6) then false else prev(pend6, false);
+        eq pend7 : bool = if(sent7) then true else if(poll7) then false else prev(pend7, false);
+      	
+      	eq sig : int = signal_input;
+      	eq sent0 : bool = Agree_Nodes.mod2(sig) != 0;
+      	eq sent1 : bool = Agree_Nodes.mod4(sig) != 0;
+      	eq sent2 : bool = Agree_Nodes.mod8(sig) != 0;
+      	eq sent3 : bool = Agree_Nodes.mod16(sig) != 0;
+      	eq sent4 : bool = Agree_Nodes.mod32(sig) != 0;
+      	eq sent5 : bool = Agree_Nodes.mod64(sig) != 0;
+      	eq sent6 : bool = Agree_Nodes.mod128(sig) != 0;
+      	eq sent7 : bool = Agree_Nodes.mod256(sig) != 0;
+      	
+      	-- contstraints to guarantee single polling
+      	guarantee "poll0" : poll0 => not(poll1 or poll2 or poll3 or poll4 or poll5 or poll6 or poll7);
+      	guarantee "poll1" : poll1 => not(poll0 or poll2 or poll3 or poll4 or poll5 or poll6 or poll7);
+      	guarantee "poll2" : poll2 => not(poll0 or poll1 or poll3 or poll4 or poll5 or poll6 or poll7);
+      	guarantee "poll3" : poll3 => not(poll0 or poll1 or poll2 or poll4 or poll5 or poll6 or poll7);
+      	guarantee "poll4" : poll4 => not(poll0 or poll1 or poll2 or poll3 or poll5 or poll6 or poll7);
+      	guarantee "poll5" : poll5 => not(poll0 or poll1 or poll2 or poll3 or poll4 or poll6 or poll7);
+      	guarantee "poll6" : poll6 => not(poll0 or poll1 or poll2 or poll3 or poll4 or poll5 or poll7);
+      	guarantee "poll7" : poll7 => not(poll0 or poll1 or poll2 or poll3 or poll4 or poll5 or poll6);
+      	
+      	--constraints to guarantee historical pending
+      	
+      	eq k : int;
+      	guarantee "k val" : k >= 0;
+      	guarantee "pend0" : Agree_Nodes.true_since(pend0, k) => Agree_Nodes.false_since(sent0, k);
+      	guarantee "pend1" : Agree_Nodes.true_since(pend1, k) => Agree_Nodes.false_since(sent1, k);
+      	guarantee "pend2" : Agree_Nodes.true_since(pend2, k) => Agree_Nodes.false_since(sent2, k);
+      	guarantee "pend3" : Agree_Nodes.true_since(pend3, k) => Agree_Nodes.false_since(sent3, k);
+      	guarantee "pend4" : Agree_Nodes.true_since(pend4, k) => Agree_Nodes.false_since(sent4, k);
+      	guarantee "pend5" : Agree_Nodes.true_since(pend5, k) => Agree_Nodes.false_since(sent5, k);
+      	guarantee "pend6" : Agree_Nodes.true_since(pend6, k) => Agree_Nodes.false_since(sent6, k);
+      	guarantee "pend7" : Agree_Nodes.true_since(pend7, k) => Agree_Nodes.false_since(sent7, k);
+      	
+      	
+      	
+      **};
+      
   end Motor_Control;
 end SOFTWARE;

@@ -13,12 +13,28 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import jkind.lustre.BinaryExpr;
+import jkind.lustre.BinaryOp;
+import jkind.lustre.BoolExpr;
+import jkind.lustre.CondactExpr;
+import jkind.lustre.Equation;
+import jkind.lustre.Expr;
+import jkind.lustre.IdExpr;
+import jkind.lustre.IfThenElseExpr;
+import jkind.lustre.IntExpr;
+import jkind.lustre.NamedType;
+import jkind.lustre.Node;
+import jkind.lustre.NodeCallExpr;
+import jkind.lustre.RealExpr;
+import jkind.lustre.Type;
+import jkind.lustre.UnaryExpr;
+import jkind.lustre.UnaryOp;
+import jkind.lustre.VarDecl;
+
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.xtext.xbase.lib.IntegerExtensions;
 import org.osate.aadl2.AbstractConnectionEnd;
 import org.osate.aadl2.AnnexSubclause;
 import org.osate.aadl2.BooleanLiteral;
-import org.osate.aadl2.ClassifierFeature;
 import org.osate.aadl2.ComponentClassifier;
 import org.osate.aadl2.ComponentImplementation;
 import org.osate.aadl2.ComponentType;
@@ -47,30 +63,10 @@ import org.osate.aadl2.RealLiteral;
 import org.osate.aadl2.StringLiteral;
 import org.osate.aadl2.Subcomponent;
 import org.osate.aadl2.ThreadSubcomponent;
-import org.osate.aadl2.impl.DataPortImpl;
 import org.osate.aadl2.instance.ComponentInstance;
 import org.osate.aadl2.modelsupport.resources.OsateResourceUtil;
 import org.osate.xtext.aadl2.properties.util.EMFIndexRetrieval;
 import org.osate.xtext.aadl2.properties.util.PropertyUtils;
-
-import jkind.lustre.BinaryExpr;
-import jkind.lustre.BinaryOp;
-import jkind.lustre.BoolExpr;
-import jkind.lustre.CondactExpr;
-import jkind.lustre.Equation;
-import jkind.lustre.Expr;
-import jkind.lustre.IdExpr;
-import jkind.lustre.IfThenElseExpr;
-import jkind.lustre.IntExpr;
-import jkind.lustre.NamedType;
-import jkind.lustre.Node;
-import jkind.lustre.NodeCallExpr;
-import jkind.lustre.Program;
-import jkind.lustre.RealExpr;
-import jkind.lustre.Type;
-import jkind.lustre.UnaryExpr;
-import jkind.lustre.UnaryOp;
-import jkind.lustre.VarDecl;
 
 import com.rockwellcollins.atc.agree.agree.AgreeContract;
 import com.rockwellcollins.atc.agree.agree.AgreeContractSubclause;
@@ -299,7 +295,6 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
 
     @Override
     public Expr caseGuaranteeStatement(GuaranteeStatement state) {
-
         Expr expr = doSwitch(state.getExpr());
         String guarStr = state.getStr();
         guarStr = guarStr.replace("\"", "");

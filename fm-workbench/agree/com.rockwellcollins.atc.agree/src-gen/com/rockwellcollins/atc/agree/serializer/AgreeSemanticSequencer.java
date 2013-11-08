@@ -760,11 +760,11 @@ public class AgreeSemanticSequencer extends PropertiesSemanticSequencer {
 	 * Constraint:
 	 *     (
 	 *         (left=AddSubExpr_BinaryExpr_1_0_0_0 (op='+' | op='-') right=MultDivExpr) | 
-	 *         (left=MultDivExpr_BinaryExpr_1_0_0_0 (op='*' | op='/' | op='mod' | op='div') right=UnaryExpr) | 
+	 *         (left=MultDivExpr_BinaryExpr_1_0_0_0 (op='*' | op='/' | op='div') right=UnaryExpr) | 
 	 *         (left=RelateExpr_BinaryExpr_1_0_0_0 op=RelateOp right=AddSubExpr) | 
-	 *         (left=OrExpr_BinaryExpr_1_0_0_0 op='or' right=RelateExpr) | 
-	 *         (left=AndExpr_BinaryExpr_1_0_0_0 op='and' right=OrExpr) | 
-	 *         (left=EquivExpr_BinaryExpr_1_0_0_0 op='<=>' right=AndExpr) | 
+	 *         (left=AndExpr_BinaryExpr_1_0_0_0 op='and' right=RelateExpr) | 
+	 *         (left=OrExpr_BinaryExpr_1_0_0_0 op='or' right=AndExpr) | 
+	 *         (left=EquivExpr_BinaryExpr_1_0_0_0 op='<=>' right=OrExpr) | 
 	 *         (left=ImpliesExpr_BinaryExpr_1_0_0_0 op='=>' right=EquivExpr) | 
 	 *         (left=ArrowExpr_BinaryExpr_1_0_0_0 op='->' right=ImpliesExpr)
 	 *     )
