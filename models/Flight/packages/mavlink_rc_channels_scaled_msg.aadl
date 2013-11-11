@@ -22,7 +22,7 @@ data implementation rc_channels_scaled_msg.impl
     chan6_scaled : data Base_Types::Integer_16;
     chan7_scaled : data Base_Types::Integer_16;
     chan8_scaled : data Base_Types::Integer_16;
-    data_port : data Base_Types::Unsigned_8;
+    xport : data Base_Types::Unsigned_8;
     rssi : data Base_Types::Unsigned_8;
 end rc_channels_scaled_msg.impl;
 

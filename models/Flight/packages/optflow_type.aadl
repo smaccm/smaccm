@@ -10,7 +10,7 @@ data optflow_result
     Data_Model::Data_Representation => Struct;
 end optflow_result;
 
- 
+
 data implementation optflow_result.impl
   subcomponents
     valid : data Base_Types::Boolean;

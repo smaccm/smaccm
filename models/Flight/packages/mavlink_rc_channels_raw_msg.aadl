@@ -22,7 +22,7 @@ data implementation rc_channels_raw_msg.impl
     chan6_raw : data Base_Types::Unsigned_16;
     chan7_raw : data Base_Types::Unsigned_16;
     chan8_raw : data Base_Types::Unsigned_16;
-    data_port : data Base_Types::Unsigned_8;
+    xport : data Base_Types::Unsigned_8;
     rssi : data Base_Types::Unsigned_8;
 end rc_channels_raw_msg.impl;
 

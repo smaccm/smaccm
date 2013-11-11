@@ -13,7 +13,7 @@ end flightmode;
 
 data implementation flightmode.impl
   subcomponents
-    cur_mode : data Base_Types::Unsigned_8;
+    xmode : data Base_Types::Unsigned_8;
     time : data Base_Types::Unsigned_32;
 end flightmode.impl;
 

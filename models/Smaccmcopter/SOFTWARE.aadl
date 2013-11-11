@@ -305,7 +305,8 @@ public
       servo2_commands: out data port DATATYPES::Servo_Commands;
       servo3_commands: out data port DATATYPES::Servo_Commands;
       servo4_commands: out data port DATATYPES::Servo_Commands;
-      signal_input : in data port Base_Types::Integer;
+      send_signal : in data port DATATYPES::Thread_Signal.Impl_8;
+      
       
     properties
       Period => 200ms;
@@ -324,6 +325,7 @@ public
       
       annex agree {**
       	
+      	-- true if signal n has been polled
       	eq poll0 : bool;
       	eq poll1 : bool;
       	eq poll2 : bool;
@@ -333,60 +335,70 @@ public
       	eq poll6 : bool;
       	eq poll7 : bool;
       	
-      	eq pend0 : bool = if(sent0) then true else if(poll0) then false else prev(pend0, false);
-        eq pend1 : bool = if(sent1) then true else if(poll1) then false else prev(pend1, false);
-        eq pend2 : bool = if(sent2) then true else if(poll2) then false else prev(pend2, false);
-        eq pend3 : bool = if(sent3) then true else if(poll3) then false else prev(pend3, false);
-        eq pend4 : bool = if(sent4) then true else if(poll4) then false else prev(pend4, false);
-        eq pend5 : bool = if(sent5) then true else if(poll5) then false else prev(pend5, false);
-        eq pend6 : bool = if(sent6) then true else if(poll6) then false else prev(pend6, false);
-        eq pend7 : bool = if(sent7) then true else if(poll7) then false else prev(pend7, false);
+      	-- true if signal n is pending
+      	eq pend0 : bool;
+      	eq pend1 : bool;
+      	eq pend2 : bool;
+      	eq pend3 : bool;
+      	eq pend4 : bool;
+      	eq pend5 : bool;
+      	eq pend6 : bool;
+      	eq pend7 : bool;
       	
-      	eq sig : int = signal_input;
-      	--eq sent0 : bool = Agree_Nodes.mod2(sig) != 0;
-      	--eq sent1 : bool = Agree_Nodes.mod4(sig) != 0;
-      	--eq sent2 : bool = Agree_Nodes.mod8(sig) != 0;
-      	--eq sent3 : bool = Agree_Nodes.mod16(sig) != 0;
-      	--eq sent4 : bool = Agree_Nodes.mod32(sig) != 0;
-      	--eq sent5 : bool = Agree_Nodes.mod64(sig) != 0;
-      	--eq sent6 : bool = Agree_Nodes.mod128(sig) != 0;
-      	--eq sent7 : bool = Agree_Nodes.mod256(sig) != 0;
+      	--true of signal n has been sent
+      	eq sent0 : bool = send_signal.sig0;
+      	eq sent1 : bool = send_signal.sig1;
+      	eq sent2 : bool = send_signal.sig2;
+      	eq sent3 : bool = send_signal.sig3;
+      	eq sent4 : bool = send_signal.sig4;
+      	eq sent5 : bool = send_signal.sig5;
+      	eq sent6 : bool = send_signal.sig6;
+      	eq sent7 : bool = send_signal.sig7;
       	
-      	eq sent0 : bool;
-      	eq sent1 : bool;
-      	eq sent2 : bool;
-      	eq sent3 : bool;
-      	eq sent4 : bool;
-      	eq sent5 : bool;
-      	eq sent6 : bool;
-      	eq sent7 : bool;
-      	
-      	-- other constraints
-      	guarantee "signal range pos" : sig <= 255 and sig >= 0;
-      	
-      	-- contstraints to guarantee single polling
-      	guarantee "poll0" : poll0 => not(poll1 or poll2 or poll3 or poll4 or poll5 or poll6 or poll7);
-      	guarantee "poll1" : poll1 => not(poll0 or poll2 or poll3 or poll4 or poll5 or poll6 or poll7);
-      	guarantee "poll2" : poll2 => not(poll0 or poll1 or poll3 or poll4 or poll5 or poll6 or poll7);
-      	guarantee "poll3" : poll3 => not(poll0 or poll1 or poll2 or poll4 or poll5 or poll6 or poll7);
-      	guarantee "poll4" : poll4 => not(poll0 or poll1 or poll2 or poll3 or poll5 or poll6 or poll7);
-      	guarantee "poll5" : poll5 => not(poll0 or poll1 or poll2 or poll3 or poll4 or poll6 or poll7);
-      	guarantee "poll6" : poll6 => not(poll0 or poll1 or poll2 or poll3 or poll4 or poll5 or poll7);
-      	guarantee "poll7" : poll7 => not(poll0 or poll1 or poll2 or poll3 or poll4 or poll5 or poll6);
-      	
-      	--constraints to guarantee historical pending
+      	--helper var for guarantess
       	eq k : int;
-      	guarantee "k val" : k >= 0;
-      	guarantee "pend0" : Agree_Nodes.true_since(pend0, k) and Agree_Nodes.false_since(sent0, k) => Agree_Nodes.false_since(poll0, k);
-      	guarantee "pend1" : Agree_Nodes.true_since(pend1, k) and Agree_Nodes.false_since(sent1, k) => Agree_Nodes.false_since(poll1, k);
-      	guarantee "pend2" : Agree_Nodes.true_since(pend2, k) and Agree_Nodes.false_since(sent2, k) => Agree_Nodes.false_since(poll2, k);
-      	guarantee "pend3" : Agree_Nodes.true_since(pend3, k) and Agree_Nodes.false_since(sent3, k) => Agree_Nodes.false_since(poll3, k);
-      	guarantee "pend4" : Agree_Nodes.true_since(pend4, k) and Agree_Nodes.false_since(sent4, k) => Agree_Nodes.false_since(poll4, k);
-      	guarantee "pend5" : Agree_Nodes.true_since(pend5, k) and Agree_Nodes.false_since(sent5, k) => Agree_Nodes.false_since(poll5, k);
-      	guarantee "pend6" : Agree_Nodes.true_since(pend6, k) and Agree_Nodes.false_since(sent6, k) => Agree_Nodes.false_since(poll6, k);
-      	guarantee "pend7" : Agree_Nodes.true_since(pend7, k) and Agree_Nodes.false_since(sent7, k) => Agree_Nodes.false_since(poll7, k);
       	
       	
+      	--eq pend0 : bool = if(sent0) then true else if(poll0) then false else prev(pend0, false);
+        --eq pend1 : bool = if(sent1) then true else if(poll1) then false else prev(pend1, false);
+        --eq pend2 : bool = if(sent2) then true else if(poll2) then false else prev(pend2, false);
+        --eq pend3 : bool = if(sent3) then true else if(poll3) then false else prev(pend3, false);
+        --eq pend4 : bool = if(sent4) then true else if(poll4) then false else prev(pend4, false);
+        --eq pend5 : bool = if(sent5) then true else if(poll5) then false else prev(pend5, false);
+        --eq pend6 : bool = if(sent6) then true else if(poll6) then false else prev(pend6, false);
+        --eq pend7 : bool = if(sent7) then true else if(poll7) then false else prev(pend7, false);
+      	
+      
+ 		eq sent_at_time0 : int;
+ 		eq sent_at_time1 : int;
+ 		eq sent_at_time2 : int;
+ 		eq sent_at_time3 : int;
+ 		eq sent_at_time4 : int;
+ 		eq sent_at_time5 : int;
+ 		eq sent_at_time6 : int;
+ 		eq sent_at_time7 : int;
+ 		
+ 		-- all time values are positive
+      	guarantee "k val is positive" : k >= 0;
+      	guarantee "sent times are positive" : sent_at_time0 >= 0 
+      		and sent_at_time1 >= 0 and sent_at_time2 >= 0 and sent_at_time3 >= 0
+      		and sent_at_time4 >= 0 and sent_at_time5 >= 0 and sent_at_time6 >= 0
+      		and sent_at_time7 >= 0;
+      	
+      	-- If a signal is pending, then there exists a time in the past when it was sent, and it has not been polled at all times in between.
+      	guarantee "rtos prop 5" : pend0 => sent_at_time0 <= k and Agree_Nodes.at_time(sent0, sent_at_time0);
+      	
+      	-- If a pending signal is not polled within k steps then it is still pending.
+      	guarantee "still_pend0" : Agree_Nodes.true_since(pend0, k) => Agree_Nodes.false_since(poll0, k);
+      	guarantee "still_pend1" : Agree_Nodes.true_since(pend1, k) => Agree_Nodes.false_since(poll1, k);
+      	guarantee "still_pend2" : Agree_Nodes.true_since(pend2, k) => Agree_Nodes.false_since(poll2, k);
+      	guarantee "still_pend3" : Agree_Nodes.true_since(pend3, k) => Agree_Nodes.false_since(poll3, k);
+      	guarantee "still_pend4" : Agree_Nodes.true_since(pend4, k) => Agree_Nodes.false_since(poll4, k);
+      	guarantee "still_pend5" : Agree_Nodes.true_since(pend5, k) => Agree_Nodes.false_since(poll5, k);
+      	guarantee "still_pend6" : Agree_Nodes.true_since(pend6, k) => Agree_Nodes.false_since(poll6, k);
+      	guarantee "still_pend7" : Agree_Nodes.true_since(pend7, k) => Agree_Nodes.false_since(poll7, k);
+      	
+      	-- n
       	
       **};
       

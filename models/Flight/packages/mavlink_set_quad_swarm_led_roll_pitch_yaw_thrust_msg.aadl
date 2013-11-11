@@ -5,12 +5,12 @@ public
   with Base_Types;
   with Data_Model;
 
-data ArrTy_4TyBase_Types_Signed_16
+data ArrTy_4TyBase_Types_Integer_16
   properties
     Data_Model::Data_Representation => Array;
     Data_Model::Base_Type => (classifier (Base_Types::Integer_16));
     Data_Model::Dimension => (4);
-end ArrTy_4TyBase_Types_Signed_16;
+end ArrTy_4TyBase_Types_Integer_16;
 
 
 data ArrTy_4TyBase_Types_Unsigned_16
@@ -37,11 +37,11 @@ end set_quad_swarm_led_roll_pitch_yaw_thrust_msg;
 
 data implementation set_quad_swarm_led_roll_pitch_yaw_thrust_msg.impl
   subcomponents
-    the_group : data Base_Types::Unsigned_8;
-    cur_mode : data Base_Types::Unsigned_8;
-    roll : data ArrTy_4TyBase_Types_Signed_16;
-    pitch : data ArrTy_4TyBase_Types_Signed_16;
-    yaw : data ArrTy_4TyBase_Types_Signed_16;
+    xgroup : data Base_Types::Unsigned_8;
+    xmode : data Base_Types::Unsigned_8;
+    roll : data ArrTy_4TyBase_Types_Integer_16;
+    pitch : data ArrTy_4TyBase_Types_Integer_16;
+    yaw : data ArrTy_4TyBase_Types_Integer_16;
     thrust : data ArrTy_4TyBase_Types_Unsigned_16;
     led_red : data ArrTy_4TyBase_Types_Unsigned_8;
     led_blue : data ArrTy_4TyBase_Types_Unsigned_8;

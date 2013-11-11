@@ -15,6 +15,21 @@ public
   data EncryptMAVLink
   end EncryptMAVLink;
   
+  data Thread_Signal
+  end Thread_Signal;
+  
+  data implementation Thread_Signal.Impl_8
+  subcomponents
+  	sig0 : data Base_Types::Boolean;
+  	sig1 : data Base_Types::Boolean;
+  	sig2 : data Base_Types::Boolean;
+  	sig3 : data Base_Types::Boolean;
+  	sig4 : data Base_Types::Boolean;
+  	sig5 : data Base_Types::Boolean;
+  	sig6 : data Base_Types::Boolean;
+  	sig7 : data Base_Types::Boolean;
+  end Thread_Signal.Impl_8;
+  
   data Flight_Control_Commands
   properties
   	Data_Model::Data_Representation => Struct;

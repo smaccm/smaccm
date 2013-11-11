@@ -38,46 +38,6 @@ annex agree {**
       outp = (S_Univ(q,p)) or H(p) ; 
     tel;
     
-    node mod2(n : int) returns (r : int);
-    let
-    	r = n - (n div 2)*2;
-    tel;
-    
-    node mod4(n : int) returns (r : int);
-    let
-    	r = n - (n div 4)*4;
-    tel;
-    
-    node mod8(n : int) returns (r : int);
-    let
-    	r = n - (n div 8)*8;
-    tel;
-    
-    node mod16(n : int) returns (r : int);
-    let
-    	r = n - (n div 16)*16;
-    tel;
-    
-    node mod32(n : int) returns (r : int);
-    let
-    	r = n - (n div 32)*32;
-    tel;
-    
-    node mod64(n : int) returns (r : int);
-    let
-    	r = n - (n div 64)*64;
-    tel;
-    
-    node mod128(n : int) returns (r : int);
-    let
-    	r = n - (n div 128)*128;
-    tel;
-    
-    node mod256(n : int) returns (r : int);
-    let
-    	r = n - (n div 256)*256;
-    tel;
-    
     node true_since(foo : bool, n : int) returns (r : bool);
     var
     	count : int;
@@ -86,7 +46,7 @@ annex agree {**
     	r = if(count <= n) then
     			foo
     		else
-    			foo and prev(r, foo);
+    			foo and prev(foo, foo);
     tel;
       	
     node false_since(foo : bool, n : int) returns (r : bool);
@@ -97,10 +57,34 @@ annex agree {**
     	r = if(count <= n) then
     			not foo
       		else
-     			(not(foo)) and prev(r, foo);
+     			(not(foo)) and prev(not foo, not foo);
     tel;
       	
+    node at_time(foo : bool, k : int) returns (r : bool);
+    var
+    	count : int;
+    let
+    	count = 0 -> 1 + pre(count);
+    	r = if(count = k) then
+    			foo
+    		else
+    			prev(r, false);
+    tel;
     
+    node false_between(foo : bool, start : int, end : int) returns (r : bool);
+    var
+    	count : int;
+    let
+    	count = 0 -> 1 + pre(count);
+    	r = if (count < start) then
+    			true
+    		else if (count > end) then
+    			prev(r, true)
+    		else if(count <= end and count >= start) then
+    			not foo
+      		else
+     			(not(foo)) and prev(r, foo);
+    tel;
     
     --sig_set : the signal to set
     --sig_read : the signal to read, once read the signal is reset
