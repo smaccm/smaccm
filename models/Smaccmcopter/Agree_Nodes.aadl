@@ -40,42 +40,42 @@ annex agree {**
     
     node mod2(n : int) returns (r : int);
     let
-    	r = n - (n/2)*2;
+    	r = n - (n div 2)*2;
     tel;
     
     node mod4(n : int) returns (r : int);
     let
-    	r = n - (n/4)*4;
+    	r = n - (n div 4)*4;
     tel;
     
     node mod8(n : int) returns (r : int);
     let
-    	r = n - (n/8)*8;
+    	r = n - (n div 8)*8;
     tel;
     
     node mod16(n : int) returns (r : int);
     let
-    	r = n - (n/16)*16;
+    	r = n - (n div 16)*16;
     tel;
     
     node mod32(n : int) returns (r : int);
     let
-    	r = n - (n/32)*32;
+    	r = n - (n div 32)*32;
     tel;
     
     node mod64(n : int) returns (r : int);
     let
-    	r = n - (n/64)*64;
+    	r = n - (n div 64)*64;
     tel;
     
     node mod128(n : int) returns (r : int);
     let
-    	r = n - (n/128)*128;
+    	r = n - (n div 128)*128;
     tel;
     
     node mod256(n : int) returns (r : int);
     let
-    	r = n - (n/256)*256;
+    	r = n - (n div 256)*256;
     tel;
     
     node true_since(foo : bool, n : int) returns (r : bool);
@@ -84,7 +84,7 @@ annex agree {**
     let
     	count = 0 -> 1 + pre(count);
     	r = if(count <= n) then
-    			true
+    			foo
     		else
     			foo and prev(r, foo);
     tel;

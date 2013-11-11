@@ -343,14 +343,26 @@ public
         eq pend7 : bool = if(sent7) then true else if(poll7) then false else prev(pend7, false);
       	
       	eq sig : int = signal_input;
-      	eq sent0 : bool = Agree_Nodes.mod2(sig) != 0;
-      	eq sent1 : bool = Agree_Nodes.mod4(sig) != 0;
-      	eq sent2 : bool = Agree_Nodes.mod8(sig) != 0;
-      	eq sent3 : bool = Agree_Nodes.mod16(sig) != 0;
-      	eq sent4 : bool = Agree_Nodes.mod32(sig) != 0;
-      	eq sent5 : bool = Agree_Nodes.mod64(sig) != 0;
-      	eq sent6 : bool = Agree_Nodes.mod128(sig) != 0;
-      	eq sent7 : bool = Agree_Nodes.mod256(sig) != 0;
+      	--eq sent0 : bool = Agree_Nodes.mod2(sig) != 0;
+      	--eq sent1 : bool = Agree_Nodes.mod4(sig) != 0;
+      	--eq sent2 : bool = Agree_Nodes.mod8(sig) != 0;
+      	--eq sent3 : bool = Agree_Nodes.mod16(sig) != 0;
+      	--eq sent4 : bool = Agree_Nodes.mod32(sig) != 0;
+      	--eq sent5 : bool = Agree_Nodes.mod64(sig) != 0;
+      	--eq sent6 : bool = Agree_Nodes.mod128(sig) != 0;
+      	--eq sent7 : bool = Agree_Nodes.mod256(sig) != 0;
+      	
+      	eq sent0 : bool;
+      	eq sent1 : bool;
+      	eq sent2 : bool;
+      	eq sent3 : bool;
+      	eq sent4 : bool;
+      	eq sent5 : bool;
+      	eq sent6 : bool;
+      	eq sent7 : bool;
+      	
+      	-- other constraints
+      	guarantee "signal range pos" : sig <= 255 and sig >= 0;
       	
       	-- contstraints to guarantee single polling
       	guarantee "poll0" : poll0 => not(poll1 or poll2 or poll3 or poll4 or poll5 or poll6 or poll7);
@@ -363,17 +375,16 @@ public
       	guarantee "poll7" : poll7 => not(poll0 or poll1 or poll2 or poll3 or poll4 or poll5 or poll6);
       	
       	--constraints to guarantee historical pending
-      	
       	eq k : int;
       	guarantee "k val" : k >= 0;
-      	guarantee "pend0" : Agree_Nodes.true_since(pend0, k) => Agree_Nodes.false_since(sent0, k);
-      	guarantee "pend1" : Agree_Nodes.true_since(pend1, k) => Agree_Nodes.false_since(sent1, k);
-      	guarantee "pend2" : Agree_Nodes.true_since(pend2, k) => Agree_Nodes.false_since(sent2, k);
-      	guarantee "pend3" : Agree_Nodes.true_since(pend3, k) => Agree_Nodes.false_since(sent3, k);
-      	guarantee "pend4" : Agree_Nodes.true_since(pend4, k) => Agree_Nodes.false_since(sent4, k);
-      	guarantee "pend5" : Agree_Nodes.true_since(pend5, k) => Agree_Nodes.false_since(sent5, k);
-      	guarantee "pend6" : Agree_Nodes.true_since(pend6, k) => Agree_Nodes.false_since(sent6, k);
-      	guarantee "pend7" : Agree_Nodes.true_since(pend7, k) => Agree_Nodes.false_since(sent7, k);
+      	guarantee "pend0" : Agree_Nodes.true_since(pend0, k) and Agree_Nodes.false_since(sent0, k) => Agree_Nodes.false_since(poll0, k);
+      	guarantee "pend1" : Agree_Nodes.true_since(pend1, k) and Agree_Nodes.false_since(sent1, k) => Agree_Nodes.false_since(poll1, k);
+      	guarantee "pend2" : Agree_Nodes.true_since(pend2, k) and Agree_Nodes.false_since(sent2, k) => Agree_Nodes.false_since(poll2, k);
+      	guarantee "pend3" : Agree_Nodes.true_since(pend3, k) and Agree_Nodes.false_since(sent3, k) => Agree_Nodes.false_since(poll3, k);
+      	guarantee "pend4" : Agree_Nodes.true_since(pend4, k) and Agree_Nodes.false_since(sent4, k) => Agree_Nodes.false_since(poll4, k);
+      	guarantee "pend5" : Agree_Nodes.true_since(pend5, k) and Agree_Nodes.false_since(sent5, k) => Agree_Nodes.false_since(poll5, k);
+      	guarantee "pend6" : Agree_Nodes.true_since(pend6, k) and Agree_Nodes.false_since(sent6, k) => Agree_Nodes.false_since(poll6, k);
+      	guarantee "pend7" : Agree_Nodes.true_since(pend7, k) and Agree_Nodes.false_since(sent7, k) => Agree_Nodes.false_since(poll7, k);
       	
       	
       	
