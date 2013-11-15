@@ -17,6 +17,8 @@ public
   with mavlink_hil_state_msg;
   with radio_info_type;
   with userinput_type;
+  with SMACCM;
+  with UAV;
 
 data ArrTy_80TyBase_Types_Unsigned_8
   properties
@@ -186,6 +188,12 @@ thread gcsTransmitTask_uart5_751
     Dispatch_Protocol => Hybrid;
     Period => 50 ms;
     SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_gcsTransmitTask_uart5_751_per50_824");
+    SMACCM::Language => "Ivory";
+    
+  annex agree {**
+  	guarantee "variable range" : paramReader_810 > 0.0;   
+  **};  
+    
 end gcsTransmitTask_uart5_751;
 
 
@@ -215,6 +223,8 @@ thread encryptTask_uart5_743
     Priority => 1;
     Source_Stack_Size => 256 bytes;
     Dispatch_Protocol => Sporadic;
+    SMACCM::Language => "Ivory";
+    
 end encryptTask_uart5_743;
 
 
@@ -466,6 +476,8 @@ thread gcsReceiveTask_uart5_638
     Priority => 2;
     Source_Stack_Size => 1024 bytes;
     Dispatch_Protocol => Sporadic;
+    SMACCM::Language => "Ivory";
+    
 end gcsReceiveTask_uart5_638;
 
 thread decryptTask_uart5_630
@@ -486,6 +498,9 @@ thread decryptTask_uart5_630
     Priority => 3;
     Source_Stack_Size => 256 bytes;
     Dispatch_Protocol => Sporadic;
+    SMACCM::Encryption_Algorthim => "AES-128-GCM";
+    SMACCM::Language => "Ivory";
+    
 end decryptTask_uart5_630;
 
 
@@ -507,6 +522,8 @@ thread stateProxy_622
     Priority => 4;
     Source_Stack_Size => 256 bytes;
     Dispatch_Protocol => Sporadic;
+    SMACCM::Language => "Ivory";
+    
 end stateProxy_622;
 
 
@@ -551,6 +568,8 @@ thread datalink_589
     Dispatch_Protocol => Hybrid;
     Period => 250 ms;
     SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_datalink_589_per250_620");
+    SMACCM::Language => "Ivory";
+    
 end datalink_589;
 
 
@@ -714,6 +733,8 @@ thread gcsTransmitTask_uart1_498
     Dispatch_Protocol => Hybrid;
     Period => 50 ms;
     SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_gcsTransmitTask_uart1_498_per50_571");
+    SMACCM::Language => "Ivory";
+    
 end gcsTransmitTask_uart1_498;
 
 
@@ -735,6 +756,8 @@ thread encryptTask_uart1_490
     Priority => 7;
     Source_Stack_Size => 256 bytes;
     Dispatch_Protocol => Sporadic;
+    SMACCM::Language => "Ivory";
+    
 end encryptTask_uart1_490;
 
 
@@ -986,6 +1009,8 @@ thread gcsReceiveTask_uart1_385
     Priority => 8;
     Source_Stack_Size => 1024 bytes;
     Dispatch_Protocol => Sporadic;
+    SMACCM::Language => "Ivory";
+    
 end gcsReceiveTask_uart1_385;
 
 
@@ -1007,6 +1032,10 @@ thread decryptTask_uart1_377
     Priority => 9;
     Source_Stack_Size => 256 bytes;
     Dispatch_Protocol => Sporadic;
+    SMACCM::Encryption_Algorthim => "AES-128-GCM";
+    SMACCM::Language => "Ivory";
+    
+    
 end decryptTask_uart1_377;
 
 
@@ -1028,6 +1057,8 @@ thread stateProxy_369
     Priority => 10;
     Source_Stack_Size => 256 bytes;
     Dispatch_Protocol => Sporadic;
+    SMACCM::Language => "Ivory";
+    
 end stateProxy_369;
 
 
@@ -1072,6 +1103,8 @@ thread datalink_336
     Dispatch_Protocol => Hybrid;
     Period => 250 ms;
     SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_datalink_336_per250_367");
+    SMACCM::Language => "Ivory";
+    
 end datalink_336;
 
 
@@ -1106,6 +1139,8 @@ thread px4ioar_275
     Dispatch_Protocol => Hybrid;
     Period => 1 ms;
     SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_px4ioar_275_per1_loop_316", "eventhandler_px4ioar_275_per1_bootCheckComplete_313", "eventhandler_px4ioar_275_per1_init4_309", "eventhandler_px4ioar_275_per1_init3_306", "eventhandler_px4ioar_275_per1_init2_303", "eventhandler_px4ioar_275_per1_init1_300", "eventhandler_px4ioar_275_per1_bootBegin_297");
+    SMACCM::Language => "Ivory";
+    
 end px4ioar_275;
 
 
@@ -1140,6 +1175,8 @@ thread sensorsCaptureTask_244
     Dispatch_Protocol => Hybrid;
     Period => 1 ms;
     SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_sensorsCaptureTask_244_per1_captureloop_266");
+    SMACCM::Language => "Ivory";
+    
 end sensorsCaptureTask_244;
 
 
@@ -1161,6 +1198,8 @@ thread stateProxy_236
     Priority => 14;
     Source_Stack_Size => 256 bytes;
     Dispatch_Protocol => Sporadic;
+    SMACCM::Language => "Ivory";
+    
 end stateProxy_236;
 
 
@@ -1182,6 +1221,8 @@ thread ubloxGPS_217
     Priority => 15;
     Source_Stack_Size => 256 bytes;
     Dispatch_Protocol => Sporadic;
+    SMACCM::Language => "Ivory";
+    
 end ubloxGPS_217;
 
 
@@ -1203,6 +1244,8 @@ thread stateProxy_201
     Priority => 16;
     Source_Stack_Size => 256 bytes;
     Dispatch_Protocol => Sporadic;
+    SMACCM::Language => "Ivory";
+    
 end stateProxy_201;
 
 
@@ -1224,6 +1267,8 @@ thread stateProxy_192
     Priority => 17;
     Source_Stack_Size => 256 bytes;
     Dispatch_Protocol => Sporadic;
+    SMACCM::Language => "Ivory";
+    
 end stateProxy_192;
 
 
@@ -1255,6 +1300,8 @@ thread motmix_179
     Priority => 18;
     Source_Stack_Size => 256 bytes;
     Dispatch_Protocol => Sporadic;
+    SMACCM::Language => "Ivory";
+    
 end motmix_179;
 
 
@@ -1391,6 +1438,12 @@ thread control_121
     Priority => 19;
     Source_Stack_Size => 256 bytes;
     Dispatch_Protocol => Sporadic;
+    SMACCM::Language => "Ivory";
+    
+    
+  annex agree {**
+  	guarantee "other constraint" : paramReader_172 < 0.0;
+  **};
 end control_121;
 
 
@@ -1413,6 +1466,8 @@ thread blink_109
     Dispatch_Protocol => Hybrid;
     Period => 125 ms;
     SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_blink_109_per125_120");
+    SMACCM::Language => "Ivory";
+    
 end blink_109;
 
 
@@ -1450,6 +1505,8 @@ thread userInputMux_90
     Dispatch_Protocol => Hybrid;
     Period => 50 ms;
     SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_userInputMux_90_per50_108");
+    SMACCM::Language => "Ivory";
+    
 end userInputMux_90;
 
 
@@ -1486,6 +1543,8 @@ thread armedMux_73
     Dispatch_Protocol => Hybrid;
     Period => 50 ms;
     SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_armedMux_73_per50_89");
+    SMACCM::Language => "Ivory";
+    
 end armedMux_73;
 
 
@@ -1517,6 +1576,8 @@ thread userMAVInput_56
     Priority => 23;
     Source_Stack_Size => 256 bytes;
     Dispatch_Protocol => Sporadic;
+    SMACCM::Language => "Ivory";
+    
 end userMAVInput_56;
 
 
@@ -1544,6 +1605,8 @@ thread userPPMInput_42
     Dispatch_Protocol => Hybrid;
     Period => 50 ms;
     SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_userPPMInput_42_per50_55");
+    SMACCM::Language => "Ivory";
+    
 end userPPMInput_42;
 
 
@@ -1565,6 +1628,8 @@ thread stateProxy_2
     Priority => 25;
     Source_Stack_Size => 256 bytes;
     Dispatch_Protocol => Sporadic;
+    SMACCM::Language => "Ivory";
+    
 end stateProxy_2;
 
 
@@ -1585,6 +1650,8 @@ thread uartISR_574
     Source_Text => ("tower_signal_usercode_uartISR_574.c");
     Priority => 26;
     SMACCM_SYS::Signal_Name => "UART5_IRQHandler";
+    SMACCM::Language => "Ivory";
+    
 end uartISR_574;
 
 
@@ -1605,6 +1672,8 @@ thread uartISR_321
     Source_Text => ("tower_signal_usercode_uartISR_321.c");
     Priority => 27;
     SMACCM_SYS::Signal_Name => "USART1_IRQHandler";
+    SMACCM::Language => "Ivory";
+    
 end uartISR_321;
 
 
@@ -1625,6 +1694,8 @@ thread uartISR_270
     Source_Text => ("tower_signal_usercode_uartISR_270.c");
     Priority => 28;
     SMACCM_SYS::Signal_Name => "USART2_IRQHandler";
+    SMACCM::Language => "Ivory";
+    
 end uartISR_270;
 
 
@@ -1645,11 +1716,28 @@ thread uartISR_211
     Source_Text => ("tower_signal_usercode_uartISR_211.c");
     Priority => 29;
     SMACCM_SYS::Signal_Name => "USART6_IRQHandler";
+    SMACCM::Language => "Ivory";
+    
 end uartISR_211;
 
 
+system Software
+  features
+  	sensors: feature group UAV::Sensors;
+  	motors_and_radios: feature group UAV::motors_and_radios;
+  	
+end Software;
+
+system implementation Software.impl
+  subcomponents
+  	main : process flight_gen_process.impl;
+end Software.impl;
+
 process flight_gen_process
   
+   annex agree {**
+    	guarantee "whatever" : true;
+    **};
 end flight_gen_process;
 
 
@@ -1936,6 +2024,16 @@ process implementation flight_gen_process.impl
     data access dataport36 -> userPPMInput_42_inst.userInput_45;
     data access dataport39 -> userPPMInput_42_inst.flightMode_43;
     data access dataport1 -> stateProxy_2_inst.proxyData_3;
+    
+  properties 
+    SMACCM::OS => "Breakaway-RTOS";
+    
+    
+  annex resolute {**
+    prove only_receive_gs(this.control_121_inst)
+  **};
+    
+    
 end flight_gen_process.impl;
 
 

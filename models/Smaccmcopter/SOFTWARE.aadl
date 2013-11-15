@@ -309,7 +309,7 @@ public
       
       
     properties
-      Period => 200ms;
+      Period => 200ms; 
       Deadline => 200ms;
       SMACCM::WC_Execution_Time => 20ms;
       
@@ -384,7 +384,7 @@ public
       		and sent_at_time1 >= 0 and sent_at_time2 >= 0 and sent_at_time3 >= 0
       		and sent_at_time4 >= 0 and sent_at_time5 >= 0 and sent_at_time6 >= 0
       		and sent_at_time7 >= 0;
-      	
+      	 
       	-- If a signal is pending, then there exists a time in the past when it was sent, and it has not been polled at all times in between.
       	guarantee "rtos prop 5" : pend0 => sent_at_time0 <= k and Agree_Nodes.at_time(sent0, sent_at_time0);
       	
@@ -397,7 +397,7 @@ public
       	guarantee "still_pend5" : Agree_Nodes.true_since(pend5, k) => Agree_Nodes.false_since(poll5, k);
       	guarantee "still_pend6" : Agree_Nodes.true_since(pend6, k) => Agree_Nodes.false_since(poll6, k);
       	guarantee "still_pend7" : Agree_Nodes.true_since(pend7, k) => Agree_Nodes.false_since(poll7, k);
-      	
+      	 
       	-- n
       	
       **};

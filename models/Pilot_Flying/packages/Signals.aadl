@@ -2,13 +2,26 @@
 package Signals
 public
 with Base_Types,Data_Model;
+
   system Fall
     features
       I: in data port Base_Types::Boolean;
       O: out data port Base_Types::Boolean {
         Data_Model::Initial_Value => ("false");
         };
-    annex behavior_specification {**
+        
+     annex agree{**
+  	    	
+	  	guarantee "falling_edge" : 
+	  	  O <=> if Agree_Nodes.tF(2) then false else (pre (I) and not I);
+  
+    **};
+
+  end Fall;
+  
+  system implementation Fall.Fall_Impl
+ 
+   annex behavior_specification {**
       
       variables
         prev_I: Base_Types::Boolean;
@@ -18,11 +31,42 @@ with Base_Types,Data_Model;
         St_Stop :  complete final state ;
       transitions
         T2 [1] : St_Step -[  ]-> St_Step
-          { O := prev_I and not I; prev_I := i }  ; 
+          { O :=  prev_I and not I; prev_I := I }  ; 
         T1 [1] : St_Start -[  ]-> St_Step
           { O := false; prev_I := I }  ; 
-**};
-  end Fall;
+    **};
+ 
+    annex agree{**
+  	
+		const St_Start         	: int = 0;
+		const St_Step        	: int = 1;
+		const St_Stop		    : int = 2;
+		
+		eq t1: bool = (false -> pre(state) = St_Start);
+		eq t2: bool = (false -> pre(state) = St_Step);
+		
+		eq state : int;
+			
+		assert t1 => (state = St_Step);
+		assert t2 => (state = St_Step);
+		assert not (t1 or t2) => (state = (St_Start -> pre(state)));
+	  	    
+	  	eq prevI : bool;
+			
+		assert t1 => (prevI = I);
+		assert t2 => (prevI = I);
+		assert not (t1 or t2) => (prevI = (false -> pre(prevI)));
+	    	
+	    assert t1 => (O = false);
+		assert t2 => (O = (pre(prevI) and not I));
+		assert not (t1 or t2) => (O = (false -> pre(O)));
+		  	
+		assert (state >= St_Start and state < St_Stop);  	    
+	  
+    **};
+    
+  end Fall.Fall_Impl;
+  
   
   system Rise
     features
@@ -30,7 +74,19 @@ with Base_Types,Data_Model;
       O: out data port Base_Types::Boolean {
         Data_Model::Initial_Value => ("false");
         };
-    annex behavior_specification {**
+        
+    annex agree{**
+  	    	
+	  	guarantee "rising_edge" : 
+	  	  O <=> if Agree_Nodes.tF(2) then false else (not pre (I) and I);
+  
+    **};
+  
+  end Rise;
+
+ system implementation Rise.Rise_Impl
+ 
+   annex behavior_specification {**
       
       variables
         prev_I: Base_Types::Boolean;
@@ -43,17 +99,36 @@ with Base_Types,Data_Model;
           { O := not prev_I and I; prev_I := I }  ; 
         T1 [1] : St_Start -[  ]-> St_Step
           { O := false; prev_I := I }  ; 
-  **};
-
-  end Rise;
-
- system implementation Rise.Rise_Impl
-
-  annex agree{**
-  	    	
-  	assert O <=> (false -> not pre (I) and I);
-  
-  **};
+    **};
+ 
+    annex agree{**
+  	
+		const St_Start         	: int = 0;
+		const St_Step        	: int = 1;
+		const St_Stop		    : int = 2;
+		
+		eq t1: bool = (false -> pre(state) = St_Start);
+		eq t2: bool = (false -> pre(state) = St_Step);
+		
+		eq state : int;
+			
+		assert t1 => (state = St_Step);
+		assert t2 => (state = St_Step);
+		assert not (t1 or t2) => (state = (St_Start -> pre(state)));
+	  	    
+	  	eq prevI : bool;
+			
+		assert t1 => (prevI = I);
+		assert t2 => (prevI = I);
+		assert not (t1 or t2) => (prevI = (false -> pre(prevI)));
+	    	
+	    assert t1 => (O = false);
+		assert t2 => (O = (not pre(prevI) and I));
+		assert not (t1 or t2) => (O = (false -> pre(O)));
+		  	
+		assert (state >= St_Start and state < St_Stop);  	    
+	  
+    **};
   end Rise.Rise_Impl;
 
 end Signals;

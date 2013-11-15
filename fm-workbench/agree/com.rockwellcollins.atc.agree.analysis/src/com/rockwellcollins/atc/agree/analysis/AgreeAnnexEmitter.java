@@ -42,6 +42,7 @@ import org.osate.aadl2.ConnectedElement;
 import org.osate.aadl2.Connection;
 import org.osate.aadl2.ConnectionEnd;
 import org.osate.aadl2.Context;
+import org.osate.aadl2.DataAccess;
 import org.osate.aadl2.DataImplementation;
 import org.osate.aadl2.DataPort;
 import org.osate.aadl2.DataSubcomponent;
@@ -65,6 +66,7 @@ import org.osate.aadl2.Subcomponent;
 import org.osate.aadl2.ThreadSubcomponent;
 import org.osate.aadl2.instance.ComponentInstance;
 import org.osate.aadl2.modelsupport.resources.OsateResourceUtil;
+import org.osate.aadl2.properties.PropertyDoesNotApplyToHolderException;
 import org.osate.xtext.aadl2.properties.util.EMFIndexRetrieval;
 import org.osate.xtext.aadl2.properties.util.PropertyUtils;
 
@@ -862,8 +864,13 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
             assert (absConnDest instanceof ConnectedElement);
             assert (absConnSour instanceof ConnectedElement);
 
-            EnumerationLiteral lit = PropertyUtils.getEnumLiteral(conn, commTimingProp);
-            boolean delayed = !lit.getName().equals("immediate");
+            boolean delayed = false;
+            try{
+                EnumerationLiteral lit = PropertyUtils.getEnumLiteral(conn, commTimingProp);
+                delayed = !lit.getName().equals("immediate");
+            }catch(PropertyDoesNotApplyToHolderException e){
+                delayed = false;
+            }
 
             ConnectionEnd destConn = ((ConnectedElement) absConnDest).getConnectionEnd();
             ConnectionEnd sourConn = ((ConnectedElement) absConnSour).getConnectionEnd();
@@ -912,8 +919,10 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         DataSubcomponentType dataSub;
         if(port instanceof DataPort){
             dataSub = ((DataPort)port).getDataFeatureClassifier();
-        }else{
+        }else if (port instanceof EventDataPort){
             dataSub = ((EventDataPort)port).getDataFeatureClassifier();
+        }else{
+            dataSub = ((DataAccess)port).getDataFeatureClassifier();
         }
         
         if(dataSub instanceof DataType){
@@ -1026,7 +1035,12 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         inputVars.add(inputVar);
 
         if(sourConn != null){
-            if(((DirectedFeature)sourConn).getDirection() == DirectionType.OUT){
+            if(sourConn instanceof DirectedFeature){
+                if(((DirectedFeature)sourConn).getDirection() == DirectionType.OUT){
+                    outputVars.add(inputVar);
+                }
+            }else{
+                assert(sourConn instanceof DataSubcomponent);
                 outputVars.add(inputVar);
             }
         }
@@ -1320,10 +1334,13 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         for(AgreeAnnexEmitter subEmitter : subEmitters){
 
             Expr higherContracts = new BoolExpr(true);
-
-            for (Subcomponent otherComp : closureMap.get(subEmitter.curComp)) {
+            Set<Subcomponent> closureSubs = closureMap.get(subEmitter.curComp);
+            for(AgreeAnnexEmitter closureEmitter : subEmitters){
+                if(closureSubs.contains(closureEmitter.curComp)){
+                    continue;
+                }
                 higherContracts = new BinaryExpr(higherContracts, BinaryOp.AND,
-                        getLustreContract(getSubcomponentEmitter(otherComp, subEmitters)));
+                        getLustreContract(closureEmitter));
             }
 
             Expr contrAssumps = getLustreAssumptions(subEmitter);
@@ -1518,12 +1535,15 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         for(AgreeAnnexEmitter subEmitter : subEmitters){
 
             Expr higherContracts = new BoolExpr(true);
-
-            for (Subcomponent otherComp : closureMap.get(subEmitter.curComp)) {
+            Set<Subcomponent> closureSubs = closureMap.get(subEmitter.curComp);
+            for(AgreeAnnexEmitter closureEmitter : subEmitters){
+                if(closureSubs.contains(closureEmitter.curComp)){
+                    continue;
+                }
                 higherContracts = new BinaryExpr(higherContracts, BinaryOp.AND,
-                        getLustreContract(getSubcomponentEmitter(otherComp, subEmitters)));
+                        getLustreContract(closureEmitter));
             }
-
+            
             Expr contrAssumps = getLustreAssumptions(subEmitter);
 
             IdExpr compId = new IdExpr("_Hist_" + subEmitter.category);

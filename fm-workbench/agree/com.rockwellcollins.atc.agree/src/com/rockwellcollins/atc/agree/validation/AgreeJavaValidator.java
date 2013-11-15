@@ -22,6 +22,7 @@ import org.osate.aadl2.ClassifierType;
 import org.osate.aadl2.ComponentClassifier;
 import org.osate.aadl2.ComponentImplementation;
 import org.osate.aadl2.ComponentType;
+import org.osate.aadl2.DataAccess;
 import org.osate.aadl2.DataPort;
 import org.osate.aadl2.DataSubcomponent;
 import org.osate.aadl2.DataSubcomponentType;
@@ -224,7 +225,7 @@ public class AgreeJavaValidator extends
             }
         } else if (namedEl instanceof DataSubcomponent) {
             // this is for checking "Base_Types::Boolean" etc...
-            return getAgreeType((DataSubcomponent) namedEl);
+            return getAgreeType(((DataSubcomponent) namedEl).getAllClassifier());
         } else if (namedEl instanceof Arg) {
             return getAgreeType((Arg) namedEl);
         } else if (namedEl instanceof ClassifierType || namedEl instanceof Subcomponent) {
@@ -237,13 +238,16 @@ public class AgreeJavaValidator extends
             return getAgreeType(namedEl);
         } else if (namedEl instanceof DataPort){
             return getAgreeType(((DataPort)namedEl).getDataFeatureClassifier());
+        } else if (namedEl instanceof DataAccess){
+            return getAgreeType((NamedElement)((DataAccess)namedEl).getFeatureClassifier());
+        } else if (namedEl instanceof DataType) {
+            return getAgreeType((ComponentClassifier)namedEl);
         }
 
         return ERROR;
     }
 
-    private AgreeType getAgreeType(DataSubcomponent data) {
-        ComponentClassifier dataClass = data.getAllClassifier();
+    private AgreeType getAgreeType(ComponentClassifier dataClass) {
 
         while (dataClass != null) {
             switch (dataClass.getQualifiedName()) {
