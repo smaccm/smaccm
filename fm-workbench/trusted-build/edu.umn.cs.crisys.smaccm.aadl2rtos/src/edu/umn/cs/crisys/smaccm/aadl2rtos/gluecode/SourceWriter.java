@@ -312,7 +312,8 @@ public class SourceWriter extends AbstractCodeWriter {
 	
 	private void writeThreadPeriodicDispatcher(Dispatcher d) throws IOException {
     for (ExternalHandler handler: d.getExternalHandlerList()) {
-      out.append(Util.ind(3) + handler.getHandlerName() + "(/*threadID*/);\n");
+      out.append(Util.ind(3) + "millis_from_sys_start += " + Integer.toString(d.getPeriod()) + ";\n");
+      out.append(Util.ind(3) + handler.getHandlerName() + "(/*threadID*/ millis_from_sys_start);\n");
     }	  
 	} 
 	
@@ -321,6 +322,8 @@ public class SourceWriter extends AbstractCodeWriter {
 		for (ThreadImplementation tw : allThreads) {
 			out.append("void " + tw.getGeneratedEntrypoint() + "(int threadID) \n");
 			out.append("{\n");
+
+			out.append(Util.ind(1) + "uint32_t millis_from_sys_start = 0;\n");
 
 			ExternalHandler initHandler = tw.getInitializeEntrypointOpt();
 			if (initHandler != null) {
