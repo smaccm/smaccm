@@ -1549,6 +1549,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     agreeSubclauseEClass.getESuperTypes().add(theAadl2Package.getAnnexSubclause());
     contractEClass.getESuperTypes().add(theAadl2Package.getElement());
     specStatementEClass.getESuperTypes().add(theAadl2Package.getElement());
+    callDefEClass.getESuperTypes().add(theAadl2Package.getNamedElement());
     propertyStatementEClass.getESuperTypes().add(theAadl2Package.getNamedElement());
     propertyStatementEClass.getESuperTypes().add(this.getSpecStatement());
     constStatementEClass.getESuperTypes().add(theAadl2Package.getNamedElement());

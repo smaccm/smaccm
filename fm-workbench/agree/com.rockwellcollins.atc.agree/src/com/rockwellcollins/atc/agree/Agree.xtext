@@ -59,6 +59,10 @@ SpecStatement:
 |   NodeDefExpr
 ;
 
+NamedCallDef returns aadl2::NamedElement:
+	CallDef
+;
+
 CallDef returns CallDef:
 	FnDefExpr
 |   NodeDefExpr

@@ -6,7 +6,7 @@
   <eClassifiers xsi:type="ecore:EClass" name="AgreeSubclause" eSuperTypes="../../../../../../org.osate.aadl2/model/aadl2.ecore#//AnnexSubclause"/>
   <eClassifiers xsi:type="ecore:EClass" name="Contract" eSuperTypes="../../../../../../org.osate.aadl2/model/aadl2.ecore#//Element"/>
   <eClassifiers xsi:type="ecore:EClass" name="SpecStatement" eSuperTypes="../../../../../../org.osate.aadl2/model/aadl2.ecore#//Element"/>
-  <eClassifiers xsi:type="ecore:EClass" name="CallDef"/>
+  <eClassifiers xsi:type="ecore:EClass" name="CallDef" eSuperTypes="../../../../../../org.osate.aadl2/model/aadl2.ecore#//NamedElement"/>
   <eClassifiers xsi:type="ecore:EClass" name="PropertyStatement" eSuperTypes="../../../../../../org.osate.aadl2/model/aadl2.ecore#//NamedElement #//SpecStatement">
     <eStructuralFeatures xsi:type="ecore:EReference" name="expr" eType="#//Expr" containment="true"/>
   </eClassifiers>
