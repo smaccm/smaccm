@@ -120,6 +120,8 @@ public class AgreeSwitch<T> extends Switch<T>
       {
         CallDef callDef = (CallDef)theEObject;
         T result = caseCallDef(callDef);
+        if (result == null) result = caseNamedElement(callDef);
+        if (result == null) result = caseElement(callDef);
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
@@ -157,9 +159,9 @@ public class AgreeSwitch<T> extends Switch<T>
       {
         FnDefExpr fnDefExpr = (FnDefExpr)theEObject;
         T result = caseFnDefExpr(fnDefExpr);
-        if (result == null) result = caseNamedElement(fnDefExpr);
         if (result == null) result = caseSpecStatement(fnDefExpr);
         if (result == null) result = caseCallDef(fnDefExpr);
+        if (result == null) result = caseNamedElement(fnDefExpr);
         if (result == null) result = caseElement(fnDefExpr);
         if (result == null) result = defaultCase(theEObject);
         return result;

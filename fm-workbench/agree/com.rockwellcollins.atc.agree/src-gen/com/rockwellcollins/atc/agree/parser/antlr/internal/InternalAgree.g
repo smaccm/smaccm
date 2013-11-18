@@ -634,6 +634,46 @@ ruleSpecStatement returns [EObject current=null]
 
 
 
+// Entry rule entryRuleCallDef
+entryRuleCallDef returns [EObject current=null] 
+	:
+	{ newCompositeNode(grammarAccess.getCallDefRule()); }
+	 iv_ruleCallDef=ruleCallDef 
+	 { $current=$iv_ruleCallDef.current; } 
+	 EOF 
+;
+
+// Rule CallDef
+ruleCallDef returns [EObject current=null] 
+    @init { enterRule(); 
+    }
+    @after { leaveRule(); }:
+(
+    { 
+        newCompositeNode(grammarAccess.getCallDefAccess().getFnDefExprParserRuleCall_0()); 
+    }
+    this_FnDefExpr_0=ruleFnDefExpr
+    { 
+        $current = $this_FnDefExpr_0.current; 
+        afterParserOrEnumRuleCall();
+    }
+
+    |
+    { 
+        newCompositeNode(grammarAccess.getCallDefAccess().getNodeDefExprParserRuleCall_1()); 
+    }
+    this_NodeDefExpr_1=ruleNodeDefExpr
+    { 
+        $current = $this_NodeDefExpr_1.current; 
+        afterParserOrEnumRuleCall();
+    }
+)
+;
+
+
+
+
+
 // Entry rule entryRulePropertyStatement
 entryRulePropertyStatement returns [EObject current=null] 
 	:

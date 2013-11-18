@@ -372,6 +372,7 @@ public class AgreeSemanticSequencer extends PropertiesSemanticSequencer {
 				if(context == grammarAccess.getCallDefRule() ||
 				   context == grammarAccess.getElementRule() ||
 				   context == grammarAccess.getFnDefExprRule() ||
+				   context == grammarAccess.getNamedCallDefRule() ||
 				   context == grammarAccess.getNamedElementRule() ||
 				   context == grammarAccess.getSpecStatementRule()) {
 					sequence_FnDefExpr(context, (FnDefExpr) semanticObject); 
@@ -573,6 +574,7 @@ public class AgreeSemanticSequencer extends PropertiesSemanticSequencer {
 			case AgreePackage.NODE_DEF_EXPR:
 				if(context == grammarAccess.getCallDefRule() ||
 				   context == grammarAccess.getElementRule() ||
+				   context == grammarAccess.getNamedCallDefRule() ||
 				   context == grammarAccess.getNamespaceRule() ||
 				   context == grammarAccess.getNodeDefExprRule() ||
 				   context == grammarAccess.getSpecStatementRule()) {

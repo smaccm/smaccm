@@ -5,8 +5,11 @@ package com.rockwellcollins.atc.agree.validation;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xtext.validation.Check;
@@ -70,6 +73,7 @@ import com.rockwellcollins.atc.agree.agree.PrevExpr;
 import com.rockwellcollins.atc.agree.agree.PropertyStatement;
 import com.rockwellcollins.atc.agree.agree.RealLitExpr;
 import com.rockwellcollins.atc.agree.agree.ThisExpr;
+import com.rockwellcollins.atc.agree.agree.Type;
 import com.rockwellcollins.atc.agree.agree.UnaryExpr;
 
 /**
@@ -84,6 +88,8 @@ public class AgreeJavaValidator extends
     private final static AgreeType INT = new AgreeType("int");
     private final static AgreeType REAL = new AgreeType("real");
     private final static AgreeType ERROR = new AgreeType("<error>");
+    
+    private Set<CallDef> checkedRecCalls = new HashSet<>();
 
     @Override
     protected boolean isResponsible(Map<Object, Object> context, EObject eObject) {
@@ -618,6 +624,52 @@ public class AgreeJavaValidator extends
     @Check
     public void checkFnCallExpr(FnCallExpr fnCall) {
         checkInputsVsActuals(fnCall);
+    }
+    
+    @Check
+    public void checkFnDefExpr(FnDefExpr fnDef){
+        
+        //verify typing
+        Type fnType = fnDef.getType();
+        if(fnType == null){
+            return; //this error will be caught in parsing
+        }
+        AgreeType exprType = getAgreeType(fnDef.getExpr());
+        if(!exprType.equals(fnType.getString())){
+            error(fnDef, "Function '"+fnDef.getName()+"' is of type '"
+                    +fnType.getString()+
+                    "' but its expression is of type '"+exprType+"'");
+        }
+        
+    }
+    
+    @Check
+    public void checkCallDef(CallDef callDef){
+        
+      //don't check recursive calls of functions that have
+        //already been walked over
+        if(checkedRecCalls.contains(callDef)){
+            return;
+        }
+        
+        FnCallRecursionHelper recHelp = new FnCallRecursionHelper();
+        recHelp.doSwitch(callDef);
+        
+        for(LinkedList<CallDef> loop : recHelp.loops){
+            StringBuilder loopStr = new StringBuilder();
+            String sep = "";
+            for (CallDef tempCallDef : loop){
+                checkedRecCalls.add(tempCallDef);
+                String callName = tempCallDef.getName();
+                loopStr.append(sep);
+                loopStr.append(callName);
+                sep = " -> ";
+            }
+            
+            error(callDef, "There exists a recursive dependency between the " +
+            		"following node or function calls : "+loopStr);
+            
+        }
     }
 
     private AgreeType getAgreeType(FnCallExpr fnCall) {

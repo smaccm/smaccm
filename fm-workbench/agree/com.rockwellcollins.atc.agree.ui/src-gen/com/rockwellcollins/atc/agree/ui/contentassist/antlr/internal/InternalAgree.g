@@ -207,6 +207,34 @@ finally {
 
 
 
+// Entry rule entryRuleCallDef
+entryRuleCallDef 
+:
+{ before(grammarAccess.getCallDefRule()); }
+	 ruleCallDef
+{ after(grammarAccess.getCallDefRule()); } 
+	 EOF 
+;
+
+// Rule CallDef
+ruleCallDef
+    @init {
+		int stackSize = keepStackSize();
+    }
+	:
+(
+{ before(grammarAccess.getCallDefAccess().getAlternatives()); }
+(rule__CallDef__Alternatives)
+{ after(grammarAccess.getCallDefAccess().getAlternatives()); }
+)
+
+;
+finally {
+	restoreStackSize(stackSize);
+}
+
+
+
 // Entry rule entryRulePropertyStatement
 entryRulePropertyStatement 
 :
@@ -1937,6 +1965,27 @@ finally {
 	restoreStackSize(stackSize);
 }
 
+rule__CallDef__Alternatives
+    @init {
+		int stackSize = keepStackSize();
+    }
+:
+(
+{ before(grammarAccess.getCallDefAccess().getFnDefExprParserRuleCall_0()); }
+	ruleFnDefExpr
+{ after(grammarAccess.getCallDefAccess().getFnDefExprParserRuleCall_0()); }
+)
+
+    |(
+{ before(grammarAccess.getCallDefAccess().getNodeDefExprParserRuleCall_1()); }
+	ruleNodeDefExpr
+{ after(grammarAccess.getCallDefAccess().getNodeDefExprParserRuleCall_1()); }
+)
+
+;
+finally {
+	restoreStackSize(stackSize);
+}
 
 rule__NodeStmt__Alternatives
     @init {
