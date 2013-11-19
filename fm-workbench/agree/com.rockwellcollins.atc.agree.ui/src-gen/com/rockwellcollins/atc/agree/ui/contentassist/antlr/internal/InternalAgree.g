@@ -2164,6 +2164,14 @@ rule__MultDivExpr__OpAlternatives_1_0_0_1_0
 { after(grammarAccess.getMultDivExprAccess().getOpDivKeyword_1_0_0_1_0_2()); }
 )
 
+    |(
+{ before(grammarAccess.getMultDivExprAccess().getOpModKeyword_1_0_0_1_0_3()); }
+
+	'mod' 
+
+{ after(grammarAccess.getMultDivExprAccess().getOpModKeyword_1_0_0_1_0_3()); }
+)
+
 ;
 finally {
 	restoreStackSize(stackSize);

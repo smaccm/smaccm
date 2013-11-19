@@ -664,6 +664,7 @@
                   <elements xsi:type="xtext:Keyword" value="*"/>
                   <elements xsi:type="xtext:Keyword" value="/"/>
                   <elements xsi:type="xtext:Keyword" value="div"/>
+                  <elements xsi:type="xtext:Keyword" value="mod"/>
                 </terminal>
               </elements>
             </elements>
