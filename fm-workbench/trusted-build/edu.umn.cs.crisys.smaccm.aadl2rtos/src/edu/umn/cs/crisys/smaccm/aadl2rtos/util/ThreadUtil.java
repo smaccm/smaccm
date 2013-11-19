@@ -4,11 +4,14 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.eclipse.emf.common.util.EList;
+import org.osate.aadl2.Element;
 import org.osate.aadl2.EnumerationLiteral;
 import org.osate.aadl2.IntegerLiteral;
 import org.osate.aadl2.NamedElement;
 import org.osate.aadl2.Property;
 import org.osate.aadl2.PropertyExpression;
+import org.osate.aadl2.impl.StringLiteralImpl;
 import org.osate.aadl2.impl.ThreadTypeImpl;
 import org.osate.xtext.aadl2.properties.util.PropertyUtils;
 
@@ -28,6 +31,9 @@ public abstract class ThreadUtil {
   final public static String SMACCM_SYS_COMPUTE_ENTRYPOINT_SOURCE_TEXT_NAME = "SMACCM_SYS::Compute_Entrypoint_Source_Text";
   final public static String PERIOD_NAME = "Period";
 	final public static String PRIORITY_NAME = "Priority";
+	final public static String LEGACY_NAME = "SMACCM_SYS::Is_Legacy";
+	final public static String LEGACY_SEMAPHORE_LIST_NAME = "SMACCM_SYS::Legacy_Semaphore_List";
+
 	final public static String DISPATCH_PROTOCOL_NAME = "Dispatch_Protocol";
 	final public static String QUEUE_SIZE_NAME = "QUEUE_SIZE";
 	final public static String ACCESS_RIGHT_NAME = "Access_Right";
@@ -50,6 +56,9 @@ public abstract class ThreadUtil {
 	    .getPropertyDefinitionInWorkspace(SMACCM_SYS_COMMPRIM_SOURCE_TEXT_NAME);
 	final public static Property PERIOD = Util.getPropertyDefinitionInWorkspace(PERIOD_NAME);
 	final public static Property PRIORITY = Util.getPropertyDefinitionInWorkspace(PRIORITY_NAME);
+	final public static Property LEGACY = Util.getPropertyDefinitionInWorkspace(LEGACY_NAME);
+	final public static Property LEGACY_SEMAPHORE_LIST = Util.getPropertyDefinitionInWorkspace(LEGACY_SEMAPHORE_LIST_NAME);
+
 	final public static Property DISPATCH_PROTOCOL = Util.getPropertyDefinitionInWorkspace(DISPATCH_PROTOCOL_NAME);
 	final public static Property QUEUE_SIZE = Util.getPropertyDefinitionInWorkspace(QUEUE_SIZE_NAME);
 	final public static Property ACCESS_RIGHT = Util.getPropertyDefinitionInWorkspace(ACCESS_RIGHT_NAME);
@@ -93,6 +102,29 @@ public abstract class ThreadUtil {
 		return priority;
 	}
 
+	public static boolean getLegacyValue(ThreadTypeImpl tti) {
+		boolean legacy = false;
+
+		try {
+			legacy = (boolean) PropertyUtils.getBooleanValue(tti, ThreadUtil.LEGACY);
+		} catch(Exception e) {}
+		return legacy;
+	}
+
+	public static List<String> getLegacySemaphoreList(ThreadTypeImpl tti) {
+		ArrayList<String> legacySemaphoreList = new ArrayList<String>();
+
+		try {
+			EList<Element> eList = PropertyUtils.getSimplePropertyListValue(tti, ThreadUtil.LEGACY_SEMAPHORE_LIST).getChildren();
+			
+			for (Element e : eList) {
+				StringLiteralImpl str = (StringLiteralImpl) e;
+				legacySemaphoreList.add(str.getValue());
+			}
+		} catch(Exception e) {}
+		return legacySemaphoreList;
+	}
+	
   public static int getStackSizeInBytes(NamedElement thread) {
     try {
       PropertyExpression value = PropertyUtils.getSimplePropertyValue(thread, ThreadUtil.SOURCE_STACK_SIZE);

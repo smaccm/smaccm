@@ -1,0 +1,107 @@
+package aadl_test
+public
+  with Data_Model;
+  with Base_Types;
+  with SMACCM_SYS;
+
+
+-- Datatypes: these would likely go into a separate file.
+data dt
+end dt;
+
+data implementation dt.rec
+	subcomponents
+		field: data Base_Types::Unsigned_8;
+end dt.rec;
+
+thread Legacy_Thread_A
+    properties
+      Priority => 10;
+      Source_Stack_Size => 64 bytes;
+      SMACCM_SYS::Is_Legacy => true;
+      SMACCM_SYS::Legacy_Semaphore_List => ("Legacy_Semaphore_A", "Legacy_Semaphore_B", "Legacy_Semaphore_C", "Legacy_Semaphore_D");
+end Legacy_Thread_A;
+
+thread Legacy_Thread_B
+    properties
+      Priority => 9;
+      Source_Stack_Size => 64 bytes;
+      SMACCM_SYS::Is_Legacy => true;
+end Legacy_Thread_B;
+
+thread Legacy_Thread_C
+    properties
+      Priority => 7;
+      Source_Stack_Size => 128 bytes;
+      SMACCM_SYS::Is_Legacy => true;
+end Legacy_Thread_C;
+
+thread Legacy_Thread_D
+    properties
+      Priority => 5;
+      Source_Stack_Size => 32 bytes;
+      SMACCM_SYS::Is_Legacy => true;
+end Legacy_Thread_D;
+
+thread Thread_A
+    features
+      foo_data: out data port dt.rec;
+      
+    properties
+	  Dispatch_Protocol => Periodic;
+      Period => 500 ms;
+      Priority => 10;
+      Source_Stack_Size => 64 bytes;
+      Priority => 10; 
+      Source_Text => ("src/test.c");
+      Initialize_Entrypoint_Source_Text => "init_A";
+      Compute_Entrypoint_Source_Text => "exec_periodic_thread_A";
+  	  Compute_Execution_Time             => 2 ms .. 3 ms;
+end Thread_A;
+
+-- For 'timed' threads, the period is a timeout value if 
+-- an event does not arrive.  
+thread Thread_B
+    features
+      datap: in data port dt.rec;
+      
+    properties
+	  Dispatch_Protocol => Periodic;
+      Period => 250 ms;
+      Priority => 8 ; 
+      Source_Stack_Size => 64 bytes;
+      Source_Text => ("src/test.c");
+      Initialize_Entrypoint_Source_Text => "init_B";
+      Compute_Entrypoint_Source_Text => "exec_periodic_thread_B";
+  	  Compute_Execution_Time             => 0 ms .. 5 ms;
+end Thread_B;
+
+
+
+process system_proc
+end system_proc;
+
+process implementation system_proc.Impl
+
+    subcomponents
+		A : thread Thread_A ;
+		B : thread Thread_B ; 
+		LA : thread Legacy_Thread_A ;
+		LB : thread Legacy_Thread_B ;
+		LC : thread Legacy_Thread_C ;
+		LD : thread Legacy_Thread_D ;
+
+    connections
+      port A.foo_data -> B.datap;
+	  		 
+end system_proc.Impl;
+
+system Test
+end Test ; 
+
+system implementation Test.Impl
+	subcomponents 
+		P: process system_proc.Impl;
+end Test.Impl;
+  
+end aadl_test ; 

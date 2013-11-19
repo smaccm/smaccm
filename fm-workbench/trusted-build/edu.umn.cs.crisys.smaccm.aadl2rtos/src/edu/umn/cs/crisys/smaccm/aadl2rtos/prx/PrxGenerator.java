@@ -209,9 +209,11 @@ public class PrxGenerator {
 		e.appendChild(doc.createTextNode(c.getName()));
 		parent.appendChild(e);
 
-		e = doc.createElement("entry");
-		e.appendChild(doc.createTextNode(c.getGeneratedEntrypoint()));
-		parent.appendChild(e);
+		if (! c.getThreadImplementation().isLegacyThread()) {
+			e = doc.createElement("entry");
+			e.appendChild(doc.createTextNode(c.getGeneratedEntrypoint()));
+			parent.appendChild(e);
+		}
 
 		e = doc.createElement("stack_size");
 		e.appendChild(doc.createTextNode(Integer.toString(c.getStackSize())));
@@ -303,13 +305,13 @@ public class PrxGenerator {
 	}
 	
 	private void createMutex(org.w3c.dom.Element e, String name) {
-    org.w3c.dom.Element ec = doc.createElement("mutex");
-    org.w3c.dom.Element ec2 = doc.createElement("name");
-    ec2.appendChild(doc.createTextNode(name));
-    ec.appendChild(ec2);
-    e.appendChild(ec);
+		org.w3c.dom.Element ec = doc.createElement("mutex");
+		org.w3c.dom.Element ec2 = doc.createElement("name");
+		ec2.appendChild(doc.createTextNode(name));
+		ec.appendChild(ec2);
+		e.appendChild(ec);
 	}
-	
+
 	private void writeKochabModuleMutexes(org.w3c.dom.Element parent) {
 		org.w3c.dom.Element e;
 		List<ThreadInstancePort> instances = model.getAllThreadInstanceInputPorts();
@@ -324,6 +326,9 @@ public class PrxGenerator {
 		}
 		for (SharedData d : model.getSharedDataList()) {
 		  createMutex(e, d.getMutexName());
+		}
+		for (String name : model.getLegacySemaphoreList()) {
+			  createMutex(e, name);
 		}
 	}
 	

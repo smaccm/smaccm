@@ -1,0 +1,7 @@
+property set SMACCM_SYS is
+	Signal_Name: aadlstring applies to (thread);
+	Write_Function_Text: aadlstring applies to (port);
+	Output_Directory: aadlstring applies to (system implementation);
+	Is_Legacy: aadlboolean => false applies to (thread);
+	Legacy_Semaphore_List: list of aadlstring applies to (thread);
+end SMACCM_SYS;

@@ -55,6 +55,7 @@ public class Model {
 	public List<ThreadImplementation> threadImplementationList;
 	public List<InterruptServiceRoutine> isrList;
 	public List<SharedData> sharedDataList;
+	public List<String> legacySemaphoreList;
 	public ThreadCalendar threadCalendar;
 	public Set<String> sourceFiles = new HashSet<String>(); 
 	
@@ -68,7 +69,8 @@ public class Model {
                List<InterruptServiceRoutine> isrList, 
                ThreadCalendar threadCalendar, 
                Set<String> sourceFiles, 
-               List<SharedData> sharedDataList) {
+               List<SharedData> sharedDataList,
+               List<String> legacySemaphoreList) {
 	  this.sharedDataList = sharedDataList; 
 	  this.sourceFiles = sourceFiles;
 		this.threadImplementationMap = threadImplementationMap;
@@ -79,6 +81,7 @@ public class Model {
 		this.systemInstance = sysInst;
 		this.connectionInstances = connectionInstances;
 		this.threadCalendar = threadCalendar;
+		this.legacySemaphoreList = legacySemaphoreList;
 		// this.threadSourcePorts = threadSourcePorts;
 
 		// createSemaphoreList();
@@ -171,5 +174,9 @@ public class Model {
 
 	public List<Connection> getConnections() {
 	  return this.connectionInstances;
+	}
+
+	public List<String> getLegacySemaphoreList() {
+		return this.legacySemaphoreList;
 	}
 }
