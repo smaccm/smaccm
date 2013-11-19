@@ -224,9 +224,13 @@ public class HeaderWriter extends AbstractCodeWriter {
 	    return "   void " + fnName
 	        + "(const " + Names.createRefParameter(d.getEventPort().getDataType(), "elem") + " ); \n\n";
 	  }
+	  else if (d.getDispatcherType() == DispatcherType.PERIODIC_DISPATCHER) {
+	    return "   void " + fnName
+				+ "(uint32_t millis_from_sys_start); \n\n";
+	  }
 	  else {
 	    return "   void " + fnName
-				+ "(  ); \n\n";
+				+ "(); \n\n";
 	  }
 	}
 	

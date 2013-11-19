@@ -241,8 +241,8 @@ public class Model {
                     Type subType = createAstType((DataClassifier) subClass);
                     rt.addField(c.getName(), subType);
                 } else {
-                    throw new Aadl2RtosException(
-                            "In createAstType: Subcomponent is not a data classifier");
+                   // throw new Aadl2RtosException(
+                   //         "In createAstType: Subcomponent is not a data classifier");
                 }
             }
             return rt;

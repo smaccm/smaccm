@@ -112,6 +112,7 @@ public class AadlModelParser {
 	private HashSet<String> fileNames =new HashSet<String>();
 	private ArrayList<Connection> connectionList;
 	private ArrayList<InterruptServiceRoutine> isrList = new ArrayList<InterruptServiceRoutine>();
+	private List<String> legacySemaphoreList = new ArrayList<String>();
 	private ThreadCalendar calendar = new ThreadCalendar();
 	
 	// Instance map
@@ -197,6 +198,10 @@ public class AadlModelParser {
 					threadImplementation.addThreadInstance(instance);
 					this.threadInstanceMap.put(co, instance);
 				}
+			}
+			
+			if (threadImplementation.isLegacyThread()) {
+				legacySemaphoreList.addAll(threadImplementation.getLegacySemaphores());
 			}
 			
 			// If ISR thread, create new ISR, port, and connections to receive from ISR.
@@ -530,5 +535,9 @@ public class AadlModelParser {
 	
 	public Set<String> getFileNames() {
 	  return this.fileNames;
+	}
+
+	public List<String> getLegacySemaphoreList() {
+		return this.legacySemaphoreList;
 	}
 }
