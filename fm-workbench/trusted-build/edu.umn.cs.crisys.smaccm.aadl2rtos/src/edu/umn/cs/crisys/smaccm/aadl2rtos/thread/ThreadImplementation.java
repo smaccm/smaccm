@@ -53,6 +53,7 @@ public class ThreadImplementation {
 	// Constructor
 	public ThreadImplementation(ThreadTypeImpl tti, AstHelper astHelper) {
 		name = tti.getName().toLowerCase();
+		generatedEntrypoint = tti.getFullName();
 		priority = ThreadUtil.getPriority(tti);
 		stackSize = ThreadUtil.getStackSizeInBytes(tti);
 
@@ -65,7 +66,6 @@ public class ThreadImplementation {
 			// determine whether this thread is 'normal' or ISR.
 			smaccmSysSignalOpt = Util.getStringValueOpt(tti, ThreadUtil.SMACCM_SYS_SIGNAL_NAME);
 			isrThread = (getSmaccmSysSignalOpt() != null);
-			generatedEntrypoint = tti.getFullName();
 
 			// create initializer handler, if it exists.
 			String entryPointSourceText = (String) Util.getStringValueOpt(tti,

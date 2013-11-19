@@ -209,11 +209,10 @@ public class PrxGenerator {
 		e.appendChild(doc.createTextNode(c.getName()));
 		parent.appendChild(e);
 
-		if (! c.getThreadImplementation().isLegacyThread()) {
-			e = doc.createElement("entry");
-			e.appendChild(doc.createTextNode(c.getGeneratedEntrypoint()));
-			parent.appendChild(e);
-		}
+		// periodic task scheduler, in makefile, additional c/o files (add another c file for testing tasks)
+		e = doc.createElement("entry");
+		e.appendChild(doc.createTextNode(c.getGeneratedEntrypoint()));
+		parent.appendChild(e);
 
 		e = doc.createElement("stack_size");
 		e.appendChild(doc.createTextNode(Integer.toString(c.getStackSize())));
