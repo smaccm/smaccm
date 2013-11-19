@@ -149,7 +149,7 @@ AddSubExpr returns Expr:
 ;
 
 MultDivExpr returns Expr:
-	UnaryExpr (=>({BinaryExpr.left=current} op=('*'|'/'|'div')) right=UnaryExpr)*
+	UnaryExpr (=>({BinaryExpr.left=current} op=('*'|'/'|'div'|'mod')) right=UnaryExpr)*
 ;
 
 UnaryExpr returns Expr:

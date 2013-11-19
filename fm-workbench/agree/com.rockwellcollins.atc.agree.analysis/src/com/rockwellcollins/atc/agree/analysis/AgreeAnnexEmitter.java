@@ -441,6 +441,9 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         case "/":
             binOp = BinaryOp.DIVIDE;
             break;
+        case "mod":
+            binOp = BinaryOp.MODULUS;
+            break;
         case "div":
             binOp = BinaryOp.INT_DIVIDE;
             break;

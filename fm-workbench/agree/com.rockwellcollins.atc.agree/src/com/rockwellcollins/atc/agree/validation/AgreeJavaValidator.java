@@ -767,7 +767,6 @@ public class AgreeJavaValidator extends
         case "+":
         case "-":
         case "*":
-        case "mod":
             if (!matches(typeRight, typeLeft)) {
                 error(binExpr, "left and right sides of binary expression '" + op
                         + "' are of type '" + typeLeft + "' and '" + typeRight
@@ -782,6 +781,7 @@ public class AgreeJavaValidator extends
                         + typeRight + "' but must be of type" + "'int' or 'real'");
             }
             return;
+        case "mod":
         case "div":
             if (!matches(INT, typeLeft)) {
                 error(binExpr, "left side of binary expression '" + op + "' is of type '"

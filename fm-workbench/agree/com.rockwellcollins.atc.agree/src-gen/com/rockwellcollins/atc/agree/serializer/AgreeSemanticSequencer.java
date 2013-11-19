@@ -762,7 +762,7 @@ public class AgreeSemanticSequencer extends PropertiesSemanticSequencer {
 	 * Constraint:
 	 *     (
 	 *         (left=AddSubExpr_BinaryExpr_1_0_0_0 (op='+' | op='-') right=MultDivExpr) | 
-	 *         (left=MultDivExpr_BinaryExpr_1_0_0_0 (op='*' | op='/' | op='div') right=UnaryExpr) | 
+	 *         (left=MultDivExpr_BinaryExpr_1_0_0_0 (op='*' | op='/' | op='div' | op='mod') right=UnaryExpr) | 
 	 *         (left=RelateExpr_BinaryExpr_1_0_0_0 op=RelateOp right=AddSubExpr) | 
 	 *         (left=AndExpr_BinaryExpr_1_0_0_0 op='and' right=RelateExpr) | 
 	 *         (left=OrExpr_BinaryExpr_1_0_0_0 op='or' right=AndExpr) | 
