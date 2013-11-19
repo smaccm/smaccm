@@ -53,11 +53,13 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE DATA OR THE USE OR OTHER DEALINGS
                 </task>
                 <task>
                     <name>legacy_thread_a_instance_2</name>
+                    <entry>Legacy_Thread_A_Instance_2</entry>
                     <stack_size>64</stack_size>
                     <priority>10</priority>
                 </task>
                 <task>
                     <name>legacy_thread_b_instance_3</name>
+                    <entry>Legacy_Thread_B_Instance_3</entry>
                     <stack_size>64</stack_size>
                     <priority>9</priority>
                 </task>
@@ -69,11 +71,13 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE DATA OR THE USE OR OTHER DEALINGS
                 </task>
                 <task>
                     <name>legacy_thread_c_instance_4</name>
+                    <entry>Legacy_Thread_C_Instance_4</entry>
                     <stack_size>128</stack_size>
                     <priority>7</priority>
                 </task>
                 <task>
                     <name>legacy_thread_d_instance_5</name>
+                    <entry>Legacy_Thread_D_Instance_5</entry>
                     <stack_size>32</stack_size>
                     <priority>5</priority>
                 </task>
@@ -97,13 +101,13 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE DATA OR THE USE OR OTHER DEALINGS
             </mutexes>
             <irq_events>
                 <irq_event>
-                    <name>smaccm_periodic_dispatch_thread_b</name>
-                    <task>3</task>
+                    <name>smaccm_periodic_dispatch_thread_a</name>
+                    <task>0</task>
                     <sig_set>1</sig_set>
                 </irq_event>
                 <irq_event>
-                    <name>smaccm_periodic_dispatch_thread_a</name>
-                    <task>0</task>
+                    <name>smaccm_periodic_dispatch_thread_b</name>
+                    <task>3</task>
                     <sig_set>1</sig_set>
                 </irq_event>
             </irq_events>
