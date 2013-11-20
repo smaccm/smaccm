@@ -4,6 +4,7 @@
 package com.rockwellcollins.atc.agree.validation;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -11,13 +12,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.validation.Check;
 import org.osate.aadl2.AadlBoolean;
 import org.osate.aadl2.AadlInteger;
 import org.osate.aadl2.AadlPackage;
 import org.osate.aadl2.AadlReal;
 import org.osate.aadl2.AadlString;
+import org.osate.aadl2.AnnexLibrary;
 import org.osate.aadl2.AnnexSubclause;
 import org.osate.aadl2.Classifier;
 import org.osate.aadl2.ClassifierFeature;
@@ -37,6 +41,7 @@ import org.osate.aadl2.NamedElement;
 import org.osate.aadl2.Namespace;
 import org.osate.aadl2.Property;
 import org.osate.aadl2.PropertyType;
+import org.osate.aadl2.PublicPackageSection;
 import org.osate.aadl2.Subcomponent;
 import org.osate.aadl2.ThreadSubcomponent;
 import org.osate.aadl2.impl.SubcomponentImpl;
@@ -75,6 +80,7 @@ import com.rockwellcollins.atc.agree.agree.RealLitExpr;
 import com.rockwellcollins.atc.agree.agree.ThisExpr;
 import com.rockwellcollins.atc.agree.agree.Type;
 import com.rockwellcollins.atc.agree.agree.UnaryExpr;
+import com.rockwellcollins.atc.agree.services.AgreeGrammarAccess.PreDefFnExprElements;
 
 /**
  * Custom validation rules.
@@ -309,6 +315,61 @@ public class AgreeJavaValidator extends
                     + "' is '" + expected + "' but the actual type is '" + actual + "'");
         }
 
+        Expr constExpr = constStat.getExpr();
+        TreeIterator<Object> iter = EcoreUtil2.getAllContents(Collections.singleton(constExpr));
+        
+        while(iter.hasNext()){
+            Object constExprElem = (Expr)iter.next();
+            
+            if(constExprElem instanceof PrevExpr){
+                error(constStat, "The expression for constant statment '"
+                        +constStat.getName()+"' is not constant");
+
+                return;
+            }
+            
+            if(constExprElem instanceof GetPropertyExpr){
+                error(constStat, "The expression for constant statment '"
+                        +constStat.getName()+"' is not constant");
+
+                return;
+            }
+            
+            if(constExprElem instanceof PreExpr){
+                error(constStat, "The expression for constant statment '"
+                        +constStat.getName()+"' is not constant");
+
+                return;
+            }
+            
+            if(constExprElem instanceof BinaryExpr){
+                if(((BinaryExpr)constExprElem).getOp().equals("->")){
+                    error(constStat, "The expression for constant statment '"
+                            +constStat.getName()+"' is not constant");
+
+                    return;
+                }
+            }
+
+            if(constExprElem instanceof NestedDotID){
+                NestedDotID nestHelp = (NestedDotID)constExprElem;
+                while(nestHelp.getSub() != null){
+                    nestHelp = nestHelp.getSub();
+                }
+                constExprElem = nestHelp.getBase();
+            }
+
+            if(!(constExprElem instanceof RealLitExpr
+                    || constExprElem instanceof IntLitExpr
+                    || constExprElem instanceof BoolLitExpr
+                    || constExprElem instanceof ConstStatement
+                    || constExprElem instanceof BinaryExpr)){
+                error(constStat, "The expression for constant statment '"
+                        +constStat.getName()+"' is not constant");
+                return;
+            }
+        }
+
     }
 
     @Check
@@ -441,6 +502,15 @@ public class AgreeJavaValidator extends
 
     @Check
     public void checkEqStatement(EqStatement eqStat) {
+        
+        EObject tempObj = eqStat;
+        while(!(tempObj instanceof AadlPackage)){
+            if(tempObj.eContainer() instanceof AnnexLibrary){
+                error(eqStat, "Equation statments are only allowed in component annexes");
+                break;
+            }
+            tempObj = tempObj.eContainer();
+        }
         checkMultiAssignEq(eqStat, eqStat.getLhs(), eqStat.getExpr());
     }
 

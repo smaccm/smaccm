@@ -14,8 +14,8 @@ public
 		
 		const P : real = 0.2;
 		const D : real = 0.1;
-		const I : real = 0.1;
-		
+		const I : real = 0.1;   
+				
 		eq e : real = Target.val - Actual.val;
 		eq e_int : real = prev(e, 0.0) + e; 
 		eq e_dot : real = prev(e, 0.0) - e;
