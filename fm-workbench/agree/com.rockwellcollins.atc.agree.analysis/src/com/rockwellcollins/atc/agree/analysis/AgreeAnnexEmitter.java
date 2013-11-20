@@ -389,24 +389,24 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
 
     @Override
     public Expr caseConstStatement(ConstStatement state) {
-        Expr expr = doSwitch(state.getExpr());
+       // Expr expr = doSwitch(state.getExpr());
 
-        AgreeVarDecl varType = new AgreeVarDecl();
-        varType.jKindStr = jKindNameTag + state.getName();
-        varType.aadlStr = aadlNameTag + state.getName();
-        varType.type = state.getType().getString();
+       // AgreeVarDecl varType = new AgreeVarDecl();
+       // varType.jKindStr = jKindNameTag + state.getName();
+       // varType.aadlStr = aadlNameTag + state.getName();
+       // varType.type = state.getType().getString();
 
-        layout.addElement(category, varType.aadlStr, AgreeLayout.SigType.OUTPUT);
+       // layout.addElement(category, varType.aadlStr, AgreeLayout.SigType.OUTPUT);
 
 
-        varRenaming.put(varType.jKindStr, varType.aadlStr);
-        refMap.put(varType.aadlStr, state);
-        internalVars.add(varType);
+       // varRenaming.put(varType.jKindStr, varType.aadlStr);
+       // refMap.put(varType.aadlStr, state);
+       // internalVars.add(varType);
 
-        IdExpr idExpr = new IdExpr(varType.jKindStr);
-        Equation eq = new Equation(idExpr, expr);
+       // IdExpr idExpr = new IdExpr(varType.jKindStr);
+       // Equation eq = new Equation(idExpr, expr);
 
-        constExpressions.add(eq);
+       // constExpressions.add(eq);
 
         return null;
     }
