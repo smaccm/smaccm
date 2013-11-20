@@ -240,7 +240,7 @@ public abstract class VerifyHandler extends AadlHandler {
         }
        
         Renaming renaming = emitter.getRenaming();
-        JKindResult result = new JKindResult("Contract Consistancy", properties, reverseStatus, renaming);
+        JKindResult result = new JKindResult("Contract Consistency", properties, reverseStatus, renaming);
         queue.add(result);
 
         ComponentImplementation compImpl = AgreeEmitterUtilities.getInstanceImplementation(ci);

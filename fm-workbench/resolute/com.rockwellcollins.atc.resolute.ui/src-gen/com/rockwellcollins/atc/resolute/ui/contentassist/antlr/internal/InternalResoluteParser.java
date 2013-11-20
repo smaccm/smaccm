@@ -37050,8 +37050,8 @@ public class InternalResoluteParser extends AbstractInternalContentAssistParser 
     static final String DFA12_maxS =
         "\1\143\1\140\15\uffff";
     static final String DFA12_acceptS =
-        "\2\uffff\1\2\1\3\1\4\1\5\1\6\1\7\1\10\1\11\1\12\1\14\1\15\1\13"+
-        "\1\1";
+        "\2\uffff\1\2\1\3\1\4\1\5\1\6\1\7\1\10\1\11\1\12\1\14\1\15\1\13\1"+
+        "\1";
     static final String DFA12_specialS =
         "\17\uffff}>";
     static final String[] DFA12_transitionS = {
@@ -37117,25 +37117,23 @@ public class InternalResoluteParser extends AbstractInternalContentAssistParser 
         "\1\4\5\uffff\2\7\1\uffff\1\53\2\uffff\1\53\1\uffff\1\53\1\uffff"+
         "\1\7\1\uffff\1\53";
     static final String DFA16_maxS =
-        "\1\143\5\uffff\2\134\1\uffff\1\136\2\uffff\1\134\1\uffff\1\134"+
-        "\1\uffff\1\7\1\uffff\1\134";
+        "\1\143\5\uffff\2\134\1\uffff\1\136\2\uffff\1\134\1\uffff\1\134\1"+
+        "\uffff\1\7\1\uffff\1\134";
     static final String DFA16_acceptS =
         "\1\uffff\1\1\1\2\1\3\1\4\1\5\2\uffff\1\6\1\uffff\1\11\1\12\1\uffff"+
         "\1\7\1\uffff\1\10\1\uffff\1\13\1\uffff";
     static final String DFA16_specialS =
         "\23\uffff}>";
     static final String[] DFA16_transitionS = {
-            "\1\6\1\7\1\5\1\11\44\uffff\2\10\23\uffff\1\13\3\uffff\1\12"+
-            "\21\uffff\1\2\1\1\1\uffff\1\4\1\3\7\uffff\1\13",
+            "\1\6\1\7\1\5\1\11\44\uffff\2\10\23\uffff\1\13\3\uffff\1\12\21"+
+            "\uffff\1\2\1\1\1\uffff\1\4\1\3\7\uffff\1\13",
             "",
             "",
             "",
             "",
             "",
-            "\1\14\43\uffff\1\15\32\uffff\2\15\13\uffff\2\15\7\uffff\1"+
-            "\10",
-            "\1\16\43\uffff\1\17\32\uffff\2\17\13\uffff\2\17\7\uffff\1"+
-            "\10",
+            "\1\14\43\uffff\1\15\32\uffff\2\15\13\uffff\2\15\7\uffff\1\10",
+            "\1\16\43\uffff\1\17\32\uffff\2\17\13\uffff\2\17\7\uffff\1\10",
             "",
             "\1\21\32\uffff\2\21\13\uffff\2\21\7\uffff\1\10\1\uffff\1\20",
             "",
@@ -37195,8 +37193,8 @@ public class InternalResoluteParser extends AbstractInternalContentAssistParser 
     static final String DFA28_specialS =
         "\1\uffff\1\6\1\2\1\5\1\3\1\0\1\1\1\4\2\uffff}>";
     static final String[] DFA28_transitionS = {
-            "\1\10\10\uffff\1\10\24\uffff\1\1\1\2\1\3\1\4\1\5\1\6\1\7\5"+
-            "\10\17\uffff\1\10\2\uffff\1\10\2\uffff\2\10\5\uffff\3\10\1\uffff"+
+            "\1\10\10\uffff\1\10\24\uffff\1\1\1\2\1\3\1\4\1\5\1\6\1\7\5\10"+
+            "\17\uffff\1\10\2\uffff\1\10\2\uffff\2\10\5\uffff\3\10\1\uffff"+
             "\2\10\14\uffff\2\10",
             "\1\uffff",
             "\1\uffff",

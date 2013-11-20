@@ -201,7 +201,6 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
     }
     
    // ************** CASE STATEMENTS **********************
-
     
     @Override
     public Expr caseLiftStatement(LiftStatement lift){
@@ -692,6 +691,8 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
 
     @Override
     public Expr caseIdExpr(com.rockwellcollins.atc.agree.agree.IdExpr expr) {
+        //I'm pretty sure this is dead code now
+        assert(false);
         // just make an expression of the NamedElement
         return new IdExpr(jKindNameTag + expr.getId().getName());
     }
@@ -733,6 +734,11 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
 
         NamedElement namedEl = Id.getBase();
 
+        //special case for constants
+        if(namedEl instanceof ConstStatement){
+            return doSwitch(((ConstStatement)namedEl).getExpr());
+        }
+        
         String baseName = namedEl.getName();
         IdExpr result = new IdExpr(jKindVar + baseName);
 

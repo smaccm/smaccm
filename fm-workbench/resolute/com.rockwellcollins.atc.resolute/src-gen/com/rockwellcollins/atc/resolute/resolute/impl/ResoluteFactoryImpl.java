@@ -30,7 +30,7 @@ public class ResoluteFactoryImpl extends EFactoryImpl implements ResoluteFactory
   {
     try
     {
-      ResoluteFactory theResoluteFactory = (ResoluteFactory)EPackage.Registry.INSTANCE.getEFactory("http://www.rockwellcollins.com/atc/resolute/Resolute"); 
+      ResoluteFactory theResoluteFactory = (ResoluteFactory)EPackage.Registry.INSTANCE.getEFactory(ResolutePackage.eNS_URI);
       if (theResoluteFactory != null)
       {
         return theResoluteFactory;

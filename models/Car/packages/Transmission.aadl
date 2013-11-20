@@ -11,11 +11,16 @@ public
 			Actual: in data port Types::speed.speed_impl;
 			
 	annex agree {** 
+		
+		const P : real = 0.2;
+		const D : real = 0.1;
+		const I : real = 0.1;
+		
 		eq e : real = Target.val - Actual.val;
 		eq e_int : real = prev(e, 0.0) + e; 
 		eq e_dot : real = prev(e, 0.0) - e;
 		
-		eq u : real = 0.2*e + 0.1*e_dot + 0.1*e_int;
+		eq u : real = P*e + D*e_dot + I*e_int;
 		guarantee "Acuator_Behavior" : Actuator_Input = u;
 	**}; 
 	

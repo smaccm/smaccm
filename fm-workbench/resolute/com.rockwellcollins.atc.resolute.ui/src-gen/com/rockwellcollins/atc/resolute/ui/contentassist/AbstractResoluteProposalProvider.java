@@ -5,7 +5,6 @@ package com.rockwellcollins.atc.resolute.ui.contentassist;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xtext.*;
-import org.osate.xtext.aadl2.properties.ui.contentassist.PropertiesProposalProvider;
 import org.eclipse.xtext.ui.editor.contentassist.ICompletionProposalAcceptor;
 import org.eclipse.xtext.ui.editor.contentassist.ContentAssistContext;
 
@@ -15,7 +14,7 @@ import org.eclipse.xtext.ui.editor.contentassist.ContentAssistContext;
  * with a more concrete subtype. 
  */
 @SuppressWarnings("all")
-public class AbstractResoluteProposalProvider extends PropertiesProposalProvider {
+public class AbstractResoluteProposalProvider extends org.osate.xtext.aadl2.properties.ui.contentassist.PropertiesProposalProvider {
 		
 	public void completeResoluteLibrary_Definitions(EObject model, Assignment assignment, ContentAssistContext context, ICompletionProposalAcceptor acceptor) {
 		completeRuleCall(((RuleCall)assignment.getTerminal()), context, acceptor);
