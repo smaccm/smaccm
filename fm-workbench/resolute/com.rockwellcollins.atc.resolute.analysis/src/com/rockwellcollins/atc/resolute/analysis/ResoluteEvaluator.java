@@ -36,6 +36,12 @@ import org.osate.aadl2.instance.FeatureInstance;
 import org.osate.aadl2.instance.SystemOperationMode;
 import org.osate.aadl2.properties.PropertyDoesNotApplyToHolderException;
 import org.osate.aadl2.properties.PropertyNotPresentException;
+import org.osate.aadl2.util.OsateDebug;
+import org.osate.xtext.aadl2.errormodel.errorModel.ErrorBehaviorTransition;
+import org.osate.xtext.aadl2.errormodel.errorModel.ErrorPropagation;
+import org.osate.xtext.aadl2.errormodel.errorModel.ErrorTypes;
+import org.osate.xtext.aadl2.errormodel.errorModel.TypeToken;
+import org.osate.xtext.aadl2.errormodel.util.EMV2Util;
 import org.osate.xtext.aadl2.properties.util.GetProperties;
 import org.osate.xtext.aadl2.properties.util.PropertyUtils;
 
@@ -152,7 +158,27 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
 
         ResoluteValue result = null;
 
-        switch (object.getOp()) {
+        switch (object.getOp())
+        {
+        case "lower_bound":
+            if (leftResult.getBool()) {
+                ResoluteValue rightResult = doSwitch(object.getRight());
+                result = rightResult;
+            } else {
+                result = new BoolValue(false);
+            }
+            break;
+            
+        case "upper_bound":
+            if (leftResult.getBool()) {
+                ResoluteValue rightResult = doSwitch(object.getRight());
+                result = rightResult;
+            } else {
+                result = new BoolValue(false);
+            }
+            break;
+            
+            
         case "and":
             if (leftResult.getBool()) {
                 ResoluteValue rightResult = doSwitch(object.getRight());
@@ -624,7 +650,62 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
 
         // proofTree.addNewCurrent(funName);
 
-        switch (funName) {
+        switch (funName)
+        {
+        case "error_state_reachable":
+        {
+        	result = new BoolValue(false);
+        	
+            ResoluteValue comp = argVals.get(0);
+            ResoluteValue stateVal = argVals.get(1);
+            
+            assert (comp.getNamedElement() instanceof ComponentInstance);
+            
+            ComponentInstance componentInstance = (ComponentInstance) comp.getNamedElement();
+            String stateName = stateVal.getString();
+
+            for (ErrorBehaviorTransition ebt : EMV2Util.getAllErrorBehaviorTransitions(componentInstance))
+            {
+            	String tmp = ebt.getTarget().getName();
+            	if (tmp.equalsIgnoreCase(stateName))
+            	{
+            		result = new BoolValue(true);
+            	}
+            	
+            }
+            break;
+        }
+        
+        
+        case "propagate_error":
+        {
+        	result = new BoolValue(false);
+        	
+            ResoluteValue comp = argVals.get(0);
+            ResoluteValue errorVal = argVals.get(1);
+            
+            assert (comp.getNamedElement() instanceof ComponentInstance);
+            
+            ComponentInstance componentInstance = (ComponentInstance) comp.getNamedElement();
+            String errorName = errorVal.getString();
+
+            for (ErrorPropagation ep : EMV2Util.getAllOutgoingErrorPropagations (componentInstance.getComponentClassifier()))
+            {
+            	for (TypeToken tt : ep.getTypeSet().getTypeTokens())
+            	{
+            		for (ErrorTypes et : tt.getType())
+            		{
+                        if (et.getName().equalsIgnoreCase(errorName))
+                        {
+                        	result = new BoolValue(true);
+                        }
+            			
+            		}
+            	}
+            }
+            
+            break;
+        }
         case "connected":
             // TODO: should this return true for connections in either
             // direction?
@@ -739,6 +820,8 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
             }
 
             break;
+            
+        
         case "class_of":
             comp0Val = argVals.get(0);
             comp1Val = argVals.get(1);
