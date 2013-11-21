@@ -931,7 +931,7 @@ ruleDefinitionBody returns [EObject current=null]
     {
     	newLeafNode(otherlv_9, grammarAccess.getDefinitionBodyAccess().getAsteriskAsteriskKeyword_1_2_2());
     }
-)?(
+)(
 (
 		{ 
 	        newCompositeNode(grammarAccess.getDefinitionBodyAccess().getExprExprParserRuleCall_1_3_0()); 

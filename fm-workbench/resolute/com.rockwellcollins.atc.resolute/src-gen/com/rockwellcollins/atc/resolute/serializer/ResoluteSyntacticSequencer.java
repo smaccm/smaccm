@@ -8,7 +8,6 @@ import org.eclipse.xtext.IGrammarAccess;
 import org.eclipse.xtext.RuleCall;
 import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.serializer.analysis.GrammarAlias.AbstractElementAlias;
-import org.eclipse.xtext.serializer.analysis.GrammarAlias.GroupAlias;
 import org.eclipse.xtext.serializer.analysis.GrammarAlias.TokenAlias;
 import org.eclipse.xtext.serializer.analysis.ISyntacticSequencerPDAProvider.ISynNavigable;
 import org.eclipse.xtext.serializer.analysis.ISyntacticSequencerPDAProvider.ISynTransition;
@@ -20,14 +19,12 @@ public class ResoluteSyntacticSequencer extends AbstractSyntacticSequencer {
 	protected ResoluteGrammarAccess grammarAccess;
 	protected AbstractElementAlias match_AtomicExpr_LeftParenthesisKeyword_12_0_a;
 	protected AbstractElementAlias match_AtomicExpr_LeftParenthesisKeyword_12_0_p;
-	protected AbstractElementAlias match_DefinitionBody___AsteriskAsteriskKeyword_1_2_0_AsteriskAsteriskKeyword_1_2_2__q;
 	
 	@Inject
 	protected void init(IGrammarAccess access) {
 		grammarAccess = (ResoluteGrammarAccess) access;
 		match_AtomicExpr_LeftParenthesisKeyword_12_0_a = new TokenAlias(true, true, grammarAccess.getAtomicExprAccess().getLeftParenthesisKeyword_12_0());
 		match_AtomicExpr_LeftParenthesisKeyword_12_0_p = new TokenAlias(true, false, grammarAccess.getAtomicExprAccess().getLeftParenthesisKeyword_12_0());
-		match_DefinitionBody___AsteriskAsteriskKeyword_1_2_0_AsteriskAsteriskKeyword_1_2_2__q = new GroupAlias(false, true, new TokenAlias(false, false, grammarAccess.getDefinitionBodyAccess().getAsteriskAsteriskKeyword_1_2_0()), new TokenAlias(false, false, grammarAccess.getDefinitionBodyAccess().getAsteriskAsteriskKeyword_1_2_2()));
 	}
 	
 	@Override
@@ -46,8 +43,6 @@ public class ResoluteSyntacticSequencer extends AbstractSyntacticSequencer {
 				emit_AtomicExpr_LeftParenthesisKeyword_12_0_a(semanticObject, getLastNavigableState(), syntaxNodes);
 			else if(match_AtomicExpr_LeftParenthesisKeyword_12_0_p.equals(syntax))
 				emit_AtomicExpr_LeftParenthesisKeyword_12_0_p(semanticObject, getLastNavigableState(), syntaxNodes);
-			else if(match_DefinitionBody___AsteriskAsteriskKeyword_1_2_0_AsteriskAsteriskKeyword_1_2_2__q.equals(syntax))
-				emit_DefinitionBody___AsteriskAsteriskKeyword_1_2_0_AsteriskAsteriskKeyword_1_2_2__q(semanticObject, getLastNavigableState(), syntaxNodes);
 			else acceptNodes(getLastNavigableState(), syntaxNodes);
 		}
 	}
@@ -65,14 +60,6 @@ public class ResoluteSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *     '('+
 	 */
 	protected void emit_AtomicExpr_LeftParenthesisKeyword_12_0_p(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
-		acceptNodes(transition, nodes);
-	}
-	
-	/**
-	 * Syntax:
-	 *     ('**' '**')?
-	 */
-	protected void emit_DefinitionBody___AsteriskAsteriskKeyword_1_2_0_AsteriskAsteriskKeyword_1_2_2__q(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
 		acceptNodes(transition, nodes);
 	}
 	

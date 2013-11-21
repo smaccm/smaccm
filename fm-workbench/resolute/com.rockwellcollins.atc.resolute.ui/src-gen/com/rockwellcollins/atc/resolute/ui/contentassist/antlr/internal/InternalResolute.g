@@ -3634,7 +3634,7 @@ rule__DefinitionBody__Group_1__2__Impl
 :
 (
 { before(grammarAccess.getDefinitionBodyAccess().getGroup_1_2()); }
-(rule__DefinitionBody__Group_1_2__0)?
+(rule__DefinitionBody__Group_1_2__0)
 { after(grammarAccess.getDefinitionBodyAccess().getGroup_1_2()); }
 )
 

@@ -90,7 +90,7 @@ ClaimString:
 
 DefinitionBody:
 	 {FuncBody} ':' type=Type '=' expr=Expr
-|	 {ClaimBody} '<=' ('**'(claim+=ClaimString)*'**')? expr=Expr
+|	 {ClaimBody} '<=' ('**'(claim+=ClaimString)*'**') expr=Expr
 ;
 
 Expr:
@@ -148,6 +148,30 @@ AtomicExpr returns Expr:
 |	{FnCallExpr} fn=[FunctionDefinition] '(' (args+=(Expr) (',' args+=(Expr))*)? ')'
 |   {FilterMapExpr} '{' map=Expr 'for' ('(' args+=Arg ')')+ ('|' filter=Expr)? '}'
 |	'(' Expr ')'
+;
+
+QuantArg:
+	name=ID ':' id=[aadl2::NamedElement | QCREF] '.' type=QuantType
+;
+
+QuantType:
+	name=('data'
+|   'threads'
+|   'thread_groups'
+|   'processes'
+|   'subprograms'
+|   'subprogram_groups'
+|   'processors'
+|   'virtual_processors'
+|   'memory'
+|   'buses'
+|   'virtual_buses'
+|   'devices'
+|   'systems'
+|   'abstracts'
+    //non-aadl components
+|   'connections'
+|   'components')
 ;
 
 BuiltInFunc:
