@@ -121,4 +121,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="filter" eType="#//Expr"
         containment="true"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="QuantArg" eSuperTypes="#//Arg">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="id" eType="ecore:EClass ../../../../../../org.osate.aadl2/model/aadl2.ecore#//NamedElement"/>
+  </eClassifiers>
 </ecore:EPackage>

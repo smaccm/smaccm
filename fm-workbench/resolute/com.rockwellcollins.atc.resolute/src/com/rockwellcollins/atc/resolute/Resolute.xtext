@@ -20,6 +20,7 @@ NamedElement returns aadl2::NamedElement:
 	Definition
 |	Arg
 |	Type
+|   QuantArg
 ;
 
 Element returns aadl2::Element:
@@ -143,18 +144,18 @@ AtomicExpr returns Expr:
 |	{BoolExpr} val=BooleanLiteral
 |   {StringExpr} val=StringTerm
 |	{IfThenElseExpr} 'if' cond=Expr 'then' then=Expr 'else' else=Expr
-|   {QuantifiedExpr} quant=('forall' | 'exists') ('(' args+=Arg ')')+ '.' expr=Expr
+|   {QuantifiedExpr} quant=('forall' | 'exists') ('(' args+=QuantArg ')')+ '.' expr=Expr
 |   {BuiltInFuncCallExpr} fn=BuiltInFunc '(' (args+=(Expr) (',' args+=(Expr))*)? ')'
 |	{FnCallExpr} fn=[FunctionDefinition] '(' (args+=(Expr) (',' args+=(Expr))*)? ')'
 |   {FilterMapExpr} '{' map=Expr 'for' ('(' args+=Arg ')')+ ('|' filter=Expr)? '}'
 |	'(' Expr ')'
 ;
 
-QuantArg:
-	name=ID ':' id=[aadl2::NamedElement | QCREF] '.' type=QuantType
+QuantArg returns Arg:
+	{QuantArg} name=ID ':' id=[aadl2::NamedElement | QCREF] '.' type=QuantType
 ;
 
-QuantType:
+QuantType returns Type:
 	name=('data'
 |   'threads'
 |   'thread_groups'

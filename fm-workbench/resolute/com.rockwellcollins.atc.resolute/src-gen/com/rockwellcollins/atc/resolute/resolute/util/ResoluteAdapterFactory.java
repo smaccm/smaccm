@@ -237,6 +237,11 @@ public class ResoluteAdapterFactory extends AdapterFactoryImpl
         return createFilterMapExprAdapter();
       }
       @Override
+      public Adapter caseQuantArg(QuantArg object)
+      {
+        return createQuantArgAdapter();
+      }
+      @Override
       public Adapter caseElement(Element object)
       {
         return createElementAdapter();
@@ -749,6 +754,21 @@ public class ResoluteAdapterFactory extends AdapterFactoryImpl
    * @generated
    */
   public Adapter createFilterMapExprAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.resolute.resolute.QuantArg <em>Quant Arg</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see com.rockwellcollins.atc.resolute.resolute.QuantArg
+   * @generated
+   */
+  public Adapter createQuantArgAdapter()
   {
     return null;
   }

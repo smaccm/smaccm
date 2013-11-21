@@ -21,6 +21,7 @@ import com.rockwellcollins.atc.resolute.resolute.IfThenElseExpr;
 import com.rockwellcollins.atc.resolute.resolute.IntExpr;
 import com.rockwellcollins.atc.resolute.resolute.NestedDotID;
 import com.rockwellcollins.atc.resolute.resolute.ProveStatement;
+import com.rockwellcollins.atc.resolute.resolute.QuantArg;
 import com.rockwellcollins.atc.resolute.resolute.QuantifiedExpr;
 import com.rockwellcollins.atc.resolute.resolute.RealExpr;
 import com.rockwellcollins.atc.resolute.resolute.ResoluteLibrary;
@@ -29,6 +30,7 @@ import com.rockwellcollins.atc.resolute.resolute.ResoluteSubclause;
 import com.rockwellcollins.atc.resolute.resolute.SetType;
 import com.rockwellcollins.atc.resolute.resolute.StringExpr;
 import com.rockwellcollins.atc.resolute.resolute.ThisExpr;
+import com.rockwellcollins.atc.resolute.resolute.Type;
 import com.rockwellcollins.atc.resolute.resolute.UnaryExpr;
 import com.rockwellcollins.atc.resolute.services.ResoluteGrammarAccess;
 import org.eclipse.emf.ecore.EObject;
@@ -502,6 +504,13 @@ public class ResoluteSemanticSequencer extends PropertiesSemanticSequencer {
 					return; 
 				}
 				else break;
+			case ResolutePackage.QUANT_ARG:
+				if(context == grammarAccess.getNamedElementRule() ||
+				   context == grammarAccess.getQuantArgRule()) {
+					sequence_QuantArg(context, (QuantArg) semanticObject); 
+					return; 
+				}
+				else break;
 			case ResolutePackage.QUANTIFIED_EXPR:
 				if(context == grammarAccess.getAndExprRule() ||
 				   context == grammarAccess.getAndExprAccess().getBinaryExprLeftAction_1_0_0_0() ||
@@ -613,6 +622,12 @@ public class ResoluteSemanticSequencer extends PropertiesSemanticSequencer {
 				   context == grammarAccess.getTimesExprRule() ||
 				   context == grammarAccess.getTimesExprAccess().getBinaryExprLeftAction_1_0_0_0()) {
 					sequence_AtomicExpr(context, (ThisExpr) semanticObject); 
+					return; 
+				}
+				else break;
+			case ResolutePackage.TYPE:
+				if(context == grammarAccess.getQuantTypeRule()) {
+					sequence_QuantType(context, (Type) semanticObject); 
 					return; 
 				}
 				else break;
@@ -743,7 +758,7 @@ public class ResoluteSemanticSequencer extends PropertiesSemanticSequencer {
 	
 	/**
 	 * Constraint:
-	 *     ((quant='forall' | quant='exists') args+=Arg+ expr=Expr)
+	 *     ((quant='forall' | quant='exists') args+=QuantArg+ expr=Expr)
 	 */
 	protected void sequence_AtomicExpr(EObject context, QuantifiedExpr semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -893,6 +908,41 @@ public class ResoluteSemanticSequencer extends PropertiesSemanticSequencer {
 	 *     (expr=Expr (modes+=NestedDotID modes+=NestedDotID*)?)
 	 */
 	protected void sequence_ProveStatement(EObject context, ProveStatement semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Constraint:
+	 *     (name=ID id=[NamedElement|QCREF] type=QuantType)
+	 */
+	protected void sequence_QuantArg(EObject context, QuantArg semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Constraint:
+	 *     (
+	 *         name='data' | 
+	 *         name='threads' | 
+	 *         name='thread_groups' | 
+	 *         name='processes' | 
+	 *         name='subprograms' | 
+	 *         name='subprogram_groups' | 
+	 *         name='processors' | 
+	 *         name='virtual_processors' | 
+	 *         name='memory' | 
+	 *         name='buses' | 
+	 *         name='virtual_buses' | 
+	 *         name='devices' | 
+	 *         name='systems' | 
+	 *         name='abstracts' | 
+	 *         name='connections' | 
+	 *         name='components'
+	 *     )
+	 */
+	protected void sequence_QuantType(EObject context, Type semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	

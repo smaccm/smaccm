@@ -1287,7 +1287,7 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         }
 
         //warn about combinational cycles
-        logCycleWarning(eqs);
+        logCycleWarning(eqs, false);
         
         agreeInputVars.removeAll(agreeInternalVars);
         
@@ -1487,7 +1487,7 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         }
 
         //warn about combinational cycles
-        logCycleWarning(eqs);
+        logCycleWarning(eqs, false);
         
         agreeInputVars.removeAll(agreeInternalVars);
         
@@ -1637,7 +1637,7 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
     }
     
     //warns the user if there is a cycle
-    private void logCycleWarning(List<Equation> eqs){
+    private void logCycleWarning(List<Equation> eqs, boolean throwException){
         Map<String, Set<String>> idGraph = new HashMap<>();
         List<String> ids = new ArrayList<>();
         AgreeCycleVisitor visitor = new AgreeCycleVisitor();
@@ -1651,6 +1651,7 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         
         Set<String> discovered = new HashSet<>();
         
+        StringBuilder exceptionStr = new StringBuilder();
         for(String id : ids){
             if(discovered.contains(id)){
                 continue;
@@ -1670,8 +1671,11 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
                 }
                 
                 log.logWarning(cycleStr.toString());
-                
+                exceptionStr.append(cycleStr);
             }
+        }
+        if(throwException && !discovered.isEmpty()){
+            throw new AgreeCombinationalCycleException(exceptionStr.toString());
         }
     }
     

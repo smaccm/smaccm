@@ -1862,6 +1862,88 @@ public interface ResolutePackage extends EPackage
    */
   int FILTER_MAP_EXPR_FEATURE_COUNT = EXPR_FEATURE_COUNT + 3;
 
+  /**
+   * The meta object id for the '{@link com.rockwellcollins.atc.resolute.resolute.impl.QuantArgImpl <em>Quant Arg</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see com.rockwellcollins.atc.resolute.resolute.impl.QuantArgImpl
+   * @see com.rockwellcollins.atc.resolute.resolute.impl.ResolutePackageImpl#getQuantArg()
+   * @generated
+   */
+  int QUANT_ARG = 31;
+
+  /**
+   * The feature id for the '<em><b>Owned Element</b></em>' reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int QUANT_ARG__OWNED_ELEMENT = ARG__OWNED_ELEMENT;
+
+  /**
+   * The feature id for the '<em><b>Owned Comment</b></em>' containment reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int QUANT_ARG__OWNED_COMMENT = ARG__OWNED_COMMENT;
+
+  /**
+   * The feature id for the '<em><b>Name</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int QUANT_ARG__NAME = ARG__NAME;
+
+  /**
+   * The feature id for the '<em><b>Qualified Name</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int QUANT_ARG__QUALIFIED_NAME = ARG__QUALIFIED_NAME;
+
+  /**
+   * The feature id for the '<em><b>Owned Property Association</b></em>' containment reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int QUANT_ARG__OWNED_PROPERTY_ASSOCIATION = ARG__OWNED_PROPERTY_ASSOCIATION;
+
+  /**
+   * The feature id for the '<em><b>Type</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int QUANT_ARG__TYPE = ARG__TYPE;
+
+  /**
+   * The feature id for the '<em><b>Id</b></em>' reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int QUANT_ARG__ID = ARG_FEATURE_COUNT + 0;
+
+  /**
+   * The number of structural features of the '<em>Quant Arg</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int QUANT_ARG_FEATURE_COUNT = ARG_FEATURE_COUNT + 1;
+
 
   /**
    * Returns the meta object for class '{@link com.rockwellcollins.atc.resolute.resolute.ResoluteLibrary <em>Library</em>}'.
@@ -2636,6 +2718,27 @@ public interface ResolutePackage extends EPackage
   EReference getFilterMapExpr_Filter();
 
   /**
+   * Returns the meta object for class '{@link com.rockwellcollins.atc.resolute.resolute.QuantArg <em>Quant Arg</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>Quant Arg</em>'.
+   * @see com.rockwellcollins.atc.resolute.resolute.QuantArg
+   * @generated
+   */
+  EClass getQuantArg();
+
+  /**
+   * Returns the meta object for the reference '{@link com.rockwellcollins.atc.resolute.resolute.QuantArg#getId <em>Id</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the reference '<em>Id</em>'.
+   * @see com.rockwellcollins.atc.resolute.resolute.QuantArg#getId()
+   * @see #getQuantArg()
+   * @generated
+   */
+  EReference getQuantArg_Id();
+
+  /**
    * Returns the factory that creates the instances of the model.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -3303,6 +3406,24 @@ public interface ResolutePackage extends EPackage
      * @generated
      */
     EReference FILTER_MAP_EXPR__FILTER = eINSTANCE.getFilterMapExpr_Filter();
+
+    /**
+     * The meta object literal for the '{@link com.rockwellcollins.atc.resolute.resolute.impl.QuantArgImpl <em>Quant Arg</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see com.rockwellcollins.atc.resolute.resolute.impl.QuantArgImpl
+     * @see com.rockwellcollins.atc.resolute.resolute.impl.ResolutePackageImpl#getQuantArg()
+     * @generated
+     */
+    EClass QUANT_ARG = eINSTANCE.getQuantArg();
+
+    /**
+     * The meta object literal for the '<em><b>Id</b></em>' reference feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference QUANT_ARG__ID = eINSTANCE.getQuantArg_Id();
 
   }
 

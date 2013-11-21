@@ -116,7 +116,7 @@ property left_side_valid = AD_L.Pitch.Valid ;
 property right_side_valid = AD_R.Pitch.Valid ;
 property some_side_valid = 
   left_side_valid or right_side_valid ;
-		  
+  		  
 -- We assume one side non-failed.  I leave this assumption unlabeled. 
 assume "valid assumption" : some_side_valid ;
 
@@ -126,10 +126,10 @@ assume "don't fail otherside assumption" :
        prev(left_side_valid, false) => 
            left_side_valid ; 
 
-assume "dont fail assumption" : 
-	   prev(prev(not right_side_valid, false), false) and
-       prev(right_side_valid, false) =>
-         right_side_valid ;
+--assume "dont fail assumption" : 
+--	   prev(prev(not right_side_valid, false), false) and
+--       prev(right_side_valid, false) =>
+--         right_side_valid ;
 		  
 -- NB: should these be implications for assert instead of assumptions? 
 

@@ -302,6 +302,15 @@ public interface ResoluteFactory extends EFactory
   FilterMapExpr createFilterMapExpr();
 
   /**
+   * Returns a new object of class '<em>Quant Arg</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Quant Arg</em>'.
+   * @generated
+   */
+  QuantArg createQuantArg();
+
+  /**
    * Returns the package supported by this factory.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->

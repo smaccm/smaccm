@@ -95,6 +95,7 @@ public class ResoluteFactoryImpl extends EFactoryImpl implements ResoluteFactory
       case ResolutePackage.BUILT_IN_FUNC_CALL_EXPR: return createBuiltInFuncCallExpr();
       case ResolutePackage.FN_CALL_EXPR: return createFnCallExpr();
       case ResolutePackage.FILTER_MAP_EXPR: return createFilterMapExpr();
+      case ResolutePackage.QUANT_ARG: return createQuantArg();
       default:
         throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
     }
@@ -439,6 +440,17 @@ public class ResoluteFactoryImpl extends EFactoryImpl implements ResoluteFactory
   {
     FilterMapExprImpl filterMapExpr = new FilterMapExprImpl();
     return filterMapExpr;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public QuantArg createQuantArg()
+  {
+    QuantArgImpl quantArg = new QuantArgImpl();
+    return quantArg;
   }
 
   /**

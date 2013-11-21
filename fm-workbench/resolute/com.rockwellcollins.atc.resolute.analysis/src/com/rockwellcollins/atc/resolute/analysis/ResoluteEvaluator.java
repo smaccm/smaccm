@@ -463,7 +463,7 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
         String nodeStr = object.getQuant();
         // make the arglist a linked list
         for (Arg arg : argsEList) {
-            Type argType = arg.getType();
+            Type argType = (Type)arg.getType();
             nodeStr += "(" + arg.getName() + " : " + argType.getName() + ")";
             argsLinkedList.add(arg);
         }

@@ -108,5 +108,8 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Resolute.ecore#//FilterMapExpr/args"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Resolute.ecore#//FilterMapExpr/filter"/>
     </genClasses>
+    <genClasses ecoreClass="Resolute.ecore#//QuantArg">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Resolute.ecore#//QuantArg/id"/>
+    </genClasses>
   </genPackages>
 </genmodel:GenModel>

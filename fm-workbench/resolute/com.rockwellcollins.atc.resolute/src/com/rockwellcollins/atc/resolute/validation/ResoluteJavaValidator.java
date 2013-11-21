@@ -60,6 +60,7 @@ import com.rockwellcollins.atc.resolute.resolute.IfThenElseExpr;
 import com.rockwellcollins.atc.resolute.resolute.IntExpr;
 import com.rockwellcollins.atc.resolute.resolute.NestedDotID;
 import com.rockwellcollins.atc.resolute.resolute.ProveStatement;
+import com.rockwellcollins.atc.resolute.resolute.QuantArg;
 import com.rockwellcollins.atc.resolute.resolute.QuantifiedExpr;
 import com.rockwellcollins.atc.resolute.resolute.RealExpr;
 import com.rockwellcollins.atc.resolute.resolute.ResolutePackage;
@@ -205,14 +206,12 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
     }
 
     @Check
+    public void checkQuantArg(QuantArg qArg){
+        
+    }
+    
+    @Check
     public void checkQuantifiedExpr(QuantifiedExpr quantExpr) {
-        for (Arg arg : quantExpr.getArgs()) {
-            ResoluteType argType = typeToResoluteType(arg.getType());
-            if (!argType.subtypeOf(BaseType.AADL)) {
-                error(arg, "Can only quantify over AADL types");
-            }
-        }
-
         ResoluteType exprType = getExprType(quantExpr.getExpr());
         if (!exprType.subtypeOf(BaseType.BOOL)) {
             error(quantExpr, "Expected type bool but found type " + exprType);
@@ -300,7 +299,7 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
         }
 
         for (int i = 0; i < actuals.size(); i++) {
-            ResoluteType formal = typeToResoluteType(formals.get(i).getType());
+            ResoluteType formal = typeToResoluteType((Type)formals.get(i).getType());
             ResoluteType actual = getExprType(actuals.get(i));
 
             if (!actual.subtypeOf(formal)) {
@@ -618,7 +617,7 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 
         if (idClass instanceof Arg) {
             Arg arg = (Arg) idClass;
-            return typeToResoluteType(arg.getType());
+            return typeToResoluteType((Type)arg.getType());
         }
 
         if (idClass instanceof Property) {

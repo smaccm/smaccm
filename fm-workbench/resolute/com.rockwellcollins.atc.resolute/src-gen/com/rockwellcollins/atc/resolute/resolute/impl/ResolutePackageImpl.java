@@ -24,6 +24,7 @@ import com.rockwellcollins.atc.resolute.resolute.IfThenElseExpr;
 import com.rockwellcollins.atc.resolute.resolute.IntExpr;
 import com.rockwellcollins.atc.resolute.resolute.NestedDotID;
 import com.rockwellcollins.atc.resolute.resolute.ProveStatement;
+import com.rockwellcollins.atc.resolute.resolute.QuantArg;
 import com.rockwellcollins.atc.resolute.resolute.QuantifiedExpr;
 import com.rockwellcollins.atc.resolute.resolute.RealExpr;
 import com.rockwellcollins.atc.resolute.resolute.ResoluteFactory;
@@ -269,6 +270,13 @@ public class ResolutePackageImpl extends EPackageImpl implements ResolutePackage
    * @generated
    */
   private EClass filterMapExprEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass quantArgEClass = null;
 
   /**
    * Creates an instance of the model <b>Package</b>, registered with
@@ -1071,6 +1079,26 @@ public class ResolutePackageImpl extends EPackageImpl implements ResolutePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  public EClass getQuantArg()
+  {
+    return quantArgEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getQuantArg_Id()
+  {
+    return (EReference)quantArgEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   public ResoluteFactory getResoluteFactory()
   {
     return (ResoluteFactory)getEFactoryInstance();
@@ -1199,6 +1227,9 @@ public class ResolutePackageImpl extends EPackageImpl implements ResolutePackage
     createEReference(filterMapExprEClass, FILTER_MAP_EXPR__MAP);
     createEReference(filterMapExprEClass, FILTER_MAP_EXPR__ARGS);
     createEReference(filterMapExprEClass, FILTER_MAP_EXPR__FILTER);
+
+    quantArgEClass = createEClass(QUANT_ARG);
+    createEReference(quantArgEClass, QUANT_ARG__ID);
   }
 
   /**
@@ -1264,6 +1295,7 @@ public class ResolutePackageImpl extends EPackageImpl implements ResolutePackage
     builtInFuncCallExprEClass.getESuperTypes().add(this.getExpr());
     fnCallExprEClass.getESuperTypes().add(this.getExpr());
     filterMapExprEClass.getESuperTypes().add(this.getExpr());
+    quantArgEClass.getESuperTypes().add(this.getArg());
 
     // Initialize classes and features; add operations and parameters
     initEClass(resoluteLibraryEClass, ResoluteLibrary.class, "ResoluteLibrary", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -1369,6 +1401,9 @@ public class ResolutePackageImpl extends EPackageImpl implements ResolutePackage
     initEReference(getFilterMapExpr_Map(), this.getExpr(), null, "map", null, 0, 1, FilterMapExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getFilterMapExpr_Args(), this.getArg(), null, "args", null, 0, -1, FilterMapExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getFilterMapExpr_Filter(), this.getExpr(), null, "filter", null, 0, 1, FilterMapExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+    initEClass(quantArgEClass, QuantArg.class, "QuantArg", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getQuantArg_Id(), theAadl2Package.getNamedElement(), null, "id", null, 0, 1, QuantArg.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     // Create resource
     createResource(eNS_URI);

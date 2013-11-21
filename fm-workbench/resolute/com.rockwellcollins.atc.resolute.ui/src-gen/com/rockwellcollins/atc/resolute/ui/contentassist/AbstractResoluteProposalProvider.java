@@ -177,6 +177,33 @@ public class AbstractResoluteProposalProvider extends org.osate.xtext.aadl2.prop
 	public void completeAtomicExpr_Filter(EObject model, Assignment assignment, ContentAssistContext context, ICompletionProposalAcceptor acceptor) {
 		completeRuleCall(((RuleCall)assignment.getTerminal()), context, acceptor);
 	}
+	public void completeQuantArg_Name(EObject model, Assignment assignment, ContentAssistContext context, ICompletionProposalAcceptor acceptor) {
+		completeRuleCall(((RuleCall)assignment.getTerminal()), context, acceptor);
+	}
+	public void completeQuantArg_Id(EObject model, Assignment assignment, ContentAssistContext context, ICompletionProposalAcceptor acceptor) {
+		lookupCrossReference(((CrossReference)assignment.getTerminal()), context, acceptor);
+	}
+	public void completeQuantArg_Type(EObject model, Assignment assignment, ContentAssistContext context, ICompletionProposalAcceptor acceptor) {
+		completeRuleCall(((RuleCall)assignment.getTerminal()), context, acceptor);
+	}
+	public void completeQuantType_Name(EObject model, Assignment assignment, ContentAssistContext context, ICompletionProposalAcceptor acceptor) {
+		// subclasses may override
+		// subclasses may override
+		// subclasses may override
+		// subclasses may override
+		// subclasses may override
+		// subclasses may override
+		// subclasses may override
+		// subclasses may override
+		// subclasses may override
+		// subclasses may override
+		// subclasses may override
+		// subclasses may override
+		// subclasses may override
+		// subclasses may override
+		// subclasses may override
+		// subclasses may override
+	}
 	public void completeRealTerm_Value(EObject model, Assignment assignment, ContentAssistContext context, ICompletionProposalAcceptor acceptor) {
 		completeRuleCall(((RuleCall)assignment.getTerminal()), context, acceptor);
 	}
@@ -278,6 +305,12 @@ public class AbstractResoluteProposalProvider extends org.osate.xtext.aadl2.prop
 		// subclasses may override
 	}
 	public void complete_AtomicExpr(EObject model, RuleCall ruleCall, ContentAssistContext context, ICompletionProposalAcceptor acceptor) {
+		// subclasses may override
+	}
+	public void complete_QuantArg(EObject model, RuleCall ruleCall, ContentAssistContext context, ICompletionProposalAcceptor acceptor) {
+		// subclasses may override
+	}
+	public void complete_QuantType(EObject model, RuleCall ruleCall, ContentAssistContext context, ICompletionProposalAcceptor acceptor) {
 		// subclasses may override
 	}
 	public void complete_BuiltInFunc(EObject model, RuleCall ruleCall, ContentAssistContext context, ICompletionProposalAcceptor acceptor) {

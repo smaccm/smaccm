@@ -2050,9 +2050,9 @@ ruleAtomicExpr returns [EObject current=null]
 (
 (
 		{ 
-	        newCompositeNode(grammarAccess.getAtomicExprAccess().getArgsArgParserRuleCall_8_2_1_0()); 
+	        newCompositeNode(grammarAccess.getAtomicExprAccess().getArgsQuantArgParserRuleCall_8_2_1_0()); 
 	    }
-		lv_args_27_0=ruleArg		{
+		lv_args_27_0=ruleQuantArg		{
 	        if ($current==null) {
 	            $current = createModelElementForParent(grammarAccess.getAtomicExprRule());
 	        }
@@ -2060,7 +2060,7 @@ ruleAtomicExpr returns [EObject current=null]
        			$current, 
        			"args",
         		lv_args_27_0, 
-        		"Arg");
+        		"QuantArg");
 	        afterParserOrEnumRuleCall();
 	    }
 
@@ -2336,6 +2336,311 @@ ruleAtomicExpr returns [EObject current=null]
     	newLeafNode(otherlv_57, grammarAccess.getAtomicExprAccess().getRightParenthesisKeyword_12_2());
     }
 ))
+;
+
+
+
+
+
+// Entry rule entryRuleQuantArg
+entryRuleQuantArg returns [EObject current=null] 
+	:
+	{ newCompositeNode(grammarAccess.getQuantArgRule()); }
+	 iv_ruleQuantArg=ruleQuantArg 
+	 { $current=$iv_ruleQuantArg.current; } 
+	 EOF 
+;
+
+// Rule QuantArg
+ruleQuantArg returns [EObject current=null] 
+    @init { enterRule(); 
+    }
+    @after { leaveRule(); }:
+((
+    {
+        $current = forceCreateModelElement(
+            grammarAccess.getQuantArgAccess().getQuantArgAction_0(),
+            $current);
+    }
+)(
+(
+		lv_name_1_0=RULE_ID
+		{
+			newLeafNode(lv_name_1_0, grammarAccess.getQuantArgAccess().getNameIDTerminalRuleCall_1_0()); 
+		}
+		{
+	        if ($current==null) {
+	            $current = createModelElement(grammarAccess.getQuantArgRule());
+	        }
+       		setWithLastConsumed(
+       			$current, 
+       			"name",
+        		lv_name_1_0, 
+        		"ID");
+	    }
+
+)
+)	otherlv_2=':' 
+    {
+    	newLeafNode(otherlv_2, grammarAccess.getQuantArgAccess().getColonKeyword_2());
+    }
+(
+(
+		{
+			if ($current==null) {
+	            $current = createModelElement(grammarAccess.getQuantArgRule());
+	        }
+        }
+		{ 
+	        newCompositeNode(grammarAccess.getQuantArgAccess().getIdNamedElementCrossReference_3_0()); 
+	    }
+		ruleQCREF		{ 
+	        afterParserOrEnumRuleCall();
+	    }
+
+)
+)	otherlv_4='.' 
+    {
+    	newLeafNode(otherlv_4, grammarAccess.getQuantArgAccess().getFullStopKeyword_4());
+    }
+(
+(
+		{ 
+	        newCompositeNode(grammarAccess.getQuantArgAccess().getTypeQuantTypeParserRuleCall_5_0()); 
+	    }
+		lv_type_5_0=ruleQuantType		{
+	        if ($current==null) {
+	            $current = createModelElementForParent(grammarAccess.getQuantArgRule());
+	        }
+       		set(
+       			$current, 
+       			"type",
+        		lv_type_5_0, 
+        		"QuantType");
+	        afterParserOrEnumRuleCall();
+	    }
+
+)
+))
+;
+
+
+
+
+
+// Entry rule entryRuleQuantType
+entryRuleQuantType returns [EObject current=null] 
+	:
+	{ newCompositeNode(grammarAccess.getQuantTypeRule()); }
+	 iv_ruleQuantType=ruleQuantType 
+	 { $current=$iv_ruleQuantType.current; } 
+	 EOF 
+;
+
+// Rule QuantType
+ruleQuantType returns [EObject current=null] 
+    @init { enterRule(); 
+    }
+    @after { leaveRule(); }:
+(
+(
+(
+		lv_name_0_1=	'data' 
+    {
+        newLeafNode(lv_name_0_1, grammarAccess.getQuantTypeAccess().getNameDataKeyword_0_0());
+    }
+ 
+	    {
+	        if ($current==null) {
+	            $current = createModelElement(grammarAccess.getQuantTypeRule());
+	        }
+       		setWithLastConsumed($current, "name", lv_name_0_1, null);
+	    }
+
+    |		lv_name_0_2=	'threads' 
+    {
+        newLeafNode(lv_name_0_2, grammarAccess.getQuantTypeAccess().getNameThreadsKeyword_0_1());
+    }
+ 
+	    {
+	        if ($current==null) {
+	            $current = createModelElement(grammarAccess.getQuantTypeRule());
+	        }
+       		setWithLastConsumed($current, "name", lv_name_0_2, null);
+	    }
+
+    |		lv_name_0_3=	'thread_groups' 
+    {
+        newLeafNode(lv_name_0_3, grammarAccess.getQuantTypeAccess().getNameThread_groupsKeyword_0_2());
+    }
+ 
+	    {
+	        if ($current==null) {
+	            $current = createModelElement(grammarAccess.getQuantTypeRule());
+	        }
+       		setWithLastConsumed($current, "name", lv_name_0_3, null);
+	    }
+
+    |		lv_name_0_4=	'processes' 
+    {
+        newLeafNode(lv_name_0_4, grammarAccess.getQuantTypeAccess().getNameProcessesKeyword_0_3());
+    }
+ 
+	    {
+	        if ($current==null) {
+	            $current = createModelElement(grammarAccess.getQuantTypeRule());
+	        }
+       		setWithLastConsumed($current, "name", lv_name_0_4, null);
+	    }
+
+    |		lv_name_0_5=	'subprograms' 
+    {
+        newLeafNode(lv_name_0_5, grammarAccess.getQuantTypeAccess().getNameSubprogramsKeyword_0_4());
+    }
+ 
+	    {
+	        if ($current==null) {
+	            $current = createModelElement(grammarAccess.getQuantTypeRule());
+	        }
+       		setWithLastConsumed($current, "name", lv_name_0_5, null);
+	    }
+
+    |		lv_name_0_6=	'subprogram_groups' 
+    {
+        newLeafNode(lv_name_0_6, grammarAccess.getQuantTypeAccess().getNameSubprogram_groupsKeyword_0_5());
+    }
+ 
+	    {
+	        if ($current==null) {
+	            $current = createModelElement(grammarAccess.getQuantTypeRule());
+	        }
+       		setWithLastConsumed($current, "name", lv_name_0_6, null);
+	    }
+
+    |		lv_name_0_7=	'processors' 
+    {
+        newLeafNode(lv_name_0_7, grammarAccess.getQuantTypeAccess().getNameProcessorsKeyword_0_6());
+    }
+ 
+	    {
+	        if ($current==null) {
+	            $current = createModelElement(grammarAccess.getQuantTypeRule());
+	        }
+       		setWithLastConsumed($current, "name", lv_name_0_7, null);
+	    }
+
+    |		lv_name_0_8=	'virtual_processors' 
+    {
+        newLeafNode(lv_name_0_8, grammarAccess.getQuantTypeAccess().getNameVirtual_processorsKeyword_0_7());
+    }
+ 
+	    {
+	        if ($current==null) {
+	            $current = createModelElement(grammarAccess.getQuantTypeRule());
+	        }
+       		setWithLastConsumed($current, "name", lv_name_0_8, null);
+	    }
+
+    |		lv_name_0_9=	'memory' 
+    {
+        newLeafNode(lv_name_0_9, grammarAccess.getQuantTypeAccess().getNameMemoryKeyword_0_8());
+    }
+ 
+	    {
+	        if ($current==null) {
+	            $current = createModelElement(grammarAccess.getQuantTypeRule());
+	        }
+       		setWithLastConsumed($current, "name", lv_name_0_9, null);
+	    }
+
+    |		lv_name_0_10=	'buses' 
+    {
+        newLeafNode(lv_name_0_10, grammarAccess.getQuantTypeAccess().getNameBusesKeyword_0_9());
+    }
+ 
+	    {
+	        if ($current==null) {
+	            $current = createModelElement(grammarAccess.getQuantTypeRule());
+	        }
+       		setWithLastConsumed($current, "name", lv_name_0_10, null);
+	    }
+
+    |		lv_name_0_11=	'virtual_buses' 
+    {
+        newLeafNode(lv_name_0_11, grammarAccess.getQuantTypeAccess().getNameVirtual_busesKeyword_0_10());
+    }
+ 
+	    {
+	        if ($current==null) {
+	            $current = createModelElement(grammarAccess.getQuantTypeRule());
+	        }
+       		setWithLastConsumed($current, "name", lv_name_0_11, null);
+	    }
+
+    |		lv_name_0_12=	'devices' 
+    {
+        newLeafNode(lv_name_0_12, grammarAccess.getQuantTypeAccess().getNameDevicesKeyword_0_11());
+    }
+ 
+	    {
+	        if ($current==null) {
+	            $current = createModelElement(grammarAccess.getQuantTypeRule());
+	        }
+       		setWithLastConsumed($current, "name", lv_name_0_12, null);
+	    }
+
+    |		lv_name_0_13=	'systems' 
+    {
+        newLeafNode(lv_name_0_13, grammarAccess.getQuantTypeAccess().getNameSystemsKeyword_0_12());
+    }
+ 
+	    {
+	        if ($current==null) {
+	            $current = createModelElement(grammarAccess.getQuantTypeRule());
+	        }
+       		setWithLastConsumed($current, "name", lv_name_0_13, null);
+	    }
+
+    |		lv_name_0_14=	'abstracts' 
+    {
+        newLeafNode(lv_name_0_14, grammarAccess.getQuantTypeAccess().getNameAbstractsKeyword_0_13());
+    }
+ 
+	    {
+	        if ($current==null) {
+	            $current = createModelElement(grammarAccess.getQuantTypeRule());
+	        }
+       		setWithLastConsumed($current, "name", lv_name_0_14, null);
+	    }
+
+    |		lv_name_0_15=	'connections' 
+    {
+        newLeafNode(lv_name_0_15, grammarAccess.getQuantTypeAccess().getNameConnectionsKeyword_0_14());
+    }
+ 
+	    {
+	        if ($current==null) {
+	            $current = createModelElement(grammarAccess.getQuantTypeRule());
+	        }
+       		setWithLastConsumed($current, "name", lv_name_0_15, null);
+	    }
+
+    |		lv_name_0_16=	'components' 
+    {
+        newLeafNode(lv_name_0_16, grammarAccess.getQuantTypeAccess().getNameComponentsKeyword_0_15());
+    }
+ 
+	    {
+	        if ($current==null) {
+	            $current = createModelElement(grammarAccess.getQuantTypeRule());
+	        }
+       		setWithLastConsumed($current, "name", lv_name_0_16, null);
+	    }
+
+)
+
+)
+)
 ;
 
 
