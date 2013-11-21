@@ -315,6 +315,33 @@ public class AgreeJavaValidator extends
                     + "' is '" + expected + "' but the actual type is '" + actual + "'");
         }
 
+        //check for constant cycles
+        Set<ConstStatement> constClosure = new HashSet<ConstStatement>();
+        Set<ConstStatement> prevClosure;
+        constClosure.add(constStat);
+        
+        //quick and dirty cycle check
+        do{
+            prevClosure = new HashSet<ConstStatement>(constClosure);
+            for(ConstStatement constFrontElem : constClosure){
+                List<NestedDotID> nestIds = EcoreUtil2.getAllContentsOfType(constFrontElem, NestedDotID.class);
+                for(NestedDotID nestId : nestIds){
+                    while(nestId.getSub() != null){
+                        nestId = nestId.getSub();
+                    }
+                    if(nestId.getBase() instanceof ConstStatement){
+                        ConstStatement closConst = (ConstStatement)nestId.getBase();
+                        if(closConst.equals(constStat)){
+                            error(constStat, "The expression for constant statment '"
+                                    +constStat.getName()+"' is in a cyclic definition");
+                            break;
+                        }
+                        constClosure.add(closConst);
+                    }
+                }
+            }
+        }while(!prevClosure.equals(constClosure));
+
         Expr constExpr = constStat.getExpr();
         TreeIterator<Object> iter = EcoreUtil2.getAllContents(Collections.singleton(constExpr));
         
@@ -358,19 +385,7 @@ public class AgreeJavaValidator extends
 
                 return;
             }
-
-           // if(!(constExprElem instanceof RealLitExpr
-           //         || constExprElem instanceof IntLitExpr
-           //         || constExprElem instanceof BoolLitExpr
-           //         || constExprElem instanceof ConstStatement
-           //         || constExprElem instanceof BinaryExpr
-           //         || constExprElem instanceof GetPropertyExpr
-           //         || constExprElem instanceof ThisExpr
-           //         || constExprElem instanceof DataPort)){
-           //     error(constStat, "The expression for constant statment '"
-           //             +constStat.getName()+"' is not constant");
-           //     return;
-           // }
+       
         }
 
     }
