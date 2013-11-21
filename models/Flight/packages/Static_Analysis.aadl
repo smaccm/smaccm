@@ -1,0 +1,4 @@
+property set Static_Analysis is
+  Writes_to_buffers: list of aadlstring applies to (thread, thread group, process, system);
+  Reads_from_buffers: list of aadlstring applies to (thread, thread group, process, system);
+end Static_Analysis;
