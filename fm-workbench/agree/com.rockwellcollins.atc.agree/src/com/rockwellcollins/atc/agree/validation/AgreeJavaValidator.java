@@ -328,13 +328,6 @@ public class AgreeJavaValidator extends
                 return;
             }
             
-            if(constExprElem instanceof GetPropertyExpr){
-                error(constStat, "The expression for constant statment '"
-                        +constStat.getName()+"' is not constant");
-
-                return;
-            }
-            
             if(constExprElem instanceof PreExpr){
                 error(constStat, "The expression for constant statment '"
                         +constStat.getName()+"' is not constant");
@@ -358,16 +351,26 @@ public class AgreeJavaValidator extends
                 }
                 constExprElem = nestHelp.getBase();
             }
-
-            if(!(constExprElem instanceof RealLitExpr
-                    || constExprElem instanceof IntLitExpr
-                    || constExprElem instanceof BoolLitExpr
-                    || constExprElem instanceof ConstStatement
-                    || constExprElem instanceof BinaryExpr)){
+            
+            if(constExprElem instanceof Arg){
                 error(constStat, "The expression for constant statment '"
                         +constStat.getName()+"' is not constant");
+
                 return;
             }
+
+           // if(!(constExprElem instanceof RealLitExpr
+           //         || constExprElem instanceof IntLitExpr
+           //         || constExprElem instanceof BoolLitExpr
+           //         || constExprElem instanceof ConstStatement
+           //         || constExprElem instanceof BinaryExpr
+           //         || constExprElem instanceof GetPropertyExpr
+           //         || constExprElem instanceof ThisExpr
+           //         || constExprElem instanceof DataPort)){
+           //     error(constStat, "The expression for constant statment '"
+           //             +constStat.getName()+"' is not constant");
+           //     return;
+           // }
         }
 
     }
