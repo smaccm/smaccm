@@ -3,6 +3,12 @@
  */
 package com.rockwellcollins.atc.agree.validation;
 
+
+import static com.rockwellcollins.atc.agree.validation.AgreeType.BOOL;
+import static com.rockwellcollins.atc.agree.validation.AgreeType.ERROR;
+import static com.rockwellcollins.atc.agree.validation.AgreeType.INT;
+import static com.rockwellcollins.atc.agree.validation.AgreeType.REAL;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -24,7 +30,6 @@ import org.osate.aadl2.AadlString;
 import org.osate.aadl2.AnnexLibrary;
 import org.osate.aadl2.AnnexSubclause;
 import org.osate.aadl2.Classifier;
-import org.osate.aadl2.ClassifierFeature;
 import org.osate.aadl2.ClassifierType;
 import org.osate.aadl2.ComponentClassifier;
 import org.osate.aadl2.ComponentImplementation;
@@ -38,12 +43,9 @@ import org.osate.aadl2.Element;
 import org.osate.aadl2.EnumerationType;
 import org.osate.aadl2.Feature;
 import org.osate.aadl2.NamedElement;
-import org.osate.aadl2.Namespace;
 import org.osate.aadl2.Property;
 import org.osate.aadl2.PropertyType;
-import org.osate.aadl2.PublicPackageSection;
 import org.osate.aadl2.Subcomponent;
-import org.osate.aadl2.ThreadSubcomponent;
 import org.osate.aadl2.impl.SubcomponentImpl;
 
 import com.rockwellcollins.atc.agree.agree.AgreeContract;
@@ -80,21 +82,13 @@ import com.rockwellcollins.atc.agree.agree.RealLitExpr;
 import com.rockwellcollins.atc.agree.agree.ThisExpr;
 import com.rockwellcollins.atc.agree.agree.Type;
 import com.rockwellcollins.atc.agree.agree.UnaryExpr;
-import com.rockwellcollins.atc.agree.services.AgreeGrammarAccess.PreDefFnExprElements;
 
 /**
  * Custom validation rules.
  * 
  * see http://www.eclipse.org/Xtext/documentation.html#validation
  */
-public class AgreeJavaValidator extends
-        com.rockwellcollins.atc.agree.validation.AbstractAgreeJavaValidator {
-
-    private final static AgreeType BOOL = new AgreeType("bool");
-    private final static AgreeType INT = new AgreeType("int");
-    private final static AgreeType REAL = new AgreeType("real");
-    private final static AgreeType ERROR = new AgreeType("<error>");
-    
+public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
     private Set<CallDef> checkedRecCalls = new HashSet<>();
 
     @Override
@@ -780,11 +774,11 @@ public class AgreeJavaValidator extends
                 error(fnCall, "Nodes embedded in expressions must have exactly one return value."
                         + "  Node " + nodeDef.getName() + " contains " + outDefTypes.size()
                         + " return values");
-                return null;
+                return ERROR;
             }
         } else {
             error(fnCall, "Node or Function definition name expected.");
-            return null;
+            return ERROR;
         }
     }
 
@@ -1011,7 +1005,7 @@ public class AgreeJavaValidator extends
     }
 
     public static boolean matches(AgreeType expected, AgreeType actual) {
-        if (expected == null || actual == null) {
+        if (expected.equals(ERROR) || actual.equals(ERROR)) {
             return true;
         }
 
