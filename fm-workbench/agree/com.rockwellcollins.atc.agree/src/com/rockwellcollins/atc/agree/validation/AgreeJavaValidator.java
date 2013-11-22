@@ -224,7 +224,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
         // quick and dirty cycle check
         do {
             prevClosure = new HashSet<ConstStatement>(constClosure);
-            for (ConstStatement constFrontElem : constClosure) {
+            for (ConstStatement constFrontElem : prevClosure) {
                 List<NestedDotID> nestIds = EcoreUtil2.getAllContentsOfType(constFrontElem,
                         NestedDotID.class);
                 for (NestedDotID nestId : nestIds) {
