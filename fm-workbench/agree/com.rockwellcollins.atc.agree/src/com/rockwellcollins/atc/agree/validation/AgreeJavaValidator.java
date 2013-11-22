@@ -228,11 +228,9 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
                 List<NestedDotID> nestIds = EcoreUtil2.getAllContentsOfType(constFrontElem,
                         NestedDotID.class);
                 for (NestedDotID nestId : nestIds) {
-                    while (nestId.getSub() != null) {
-                        nestId = nestId.getSub();
-                    }
-                    if (nestId.getBase() instanceof ConstStatement) {
-                        ConstStatement closConst = (ConstStatement) nestId.getBase();
+                    NamedElement base = getFinalNestId(nestId);
+                    if (base instanceof ConstStatement) {
+                        ConstStatement closConst = (ConstStatement) base;
                         if (closConst.equals(constStat)) {
                             error(constStat,
                                     "The expression for constant statment '" + constStat.getName()
@@ -245,52 +243,31 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
             }
         } while (!prevClosure.equals(constClosure));
 
-        Expr constExpr = constStat.getExpr();
-        TreeIterator<Object> iter = EcoreUtil2.getAllContents(Collections.singleton(constExpr));
-
-        while (iter.hasNext()) {
-            Object constExprElem = iter.next();
-
-            if (constExprElem instanceof PrevExpr) {
-                error(constStat, "The expression for constant statment '" + constStat.getName()
-                        + "' is not constant");
-
+        for (Expr e : EcoreUtil2.getAllContentsOfType(constStat.getExpr(), Expr.class)) {
+            if (!isPossibleConstant(e)) {
+                error(e, "Non-constant expression in constant declaration");
                 return;
             }
+        }
+    }
 
-            if (constExprElem instanceof PreExpr) {
-                error(constStat, "The expression for constant statment '" + constStat.getName()
-                        + "' is not constant");
-
-                return;
-            }
-
-            if (constExprElem instanceof BinaryExpr) {
-                if (((BinaryExpr) constExprElem).getOp().equals("->")) {
-                    error(constStat, "The expression for constant statment '" + constStat.getName()
-                            + "' is not constant");
-
-                    return;
-                }
-            }
-
-            if (constExprElem instanceof NestedDotID) {
-                NestedDotID nestHelp = (NestedDotID) constExprElem;
-                while (nestHelp.getSub() != null) {
-                    nestHelp = nestHelp.getSub();
-                }
-                constExprElem = nestHelp.getBase();
-            }
-
-            if (constExprElem instanceof Arg) {
-                error(constStat, "The expression for constant statment '" + constStat.getName()
-                        + "' is not constant");
-
-                return;
-            }
-
+    public boolean isPossibleConstant(Expr e) {
+        if (e instanceof PrevExpr || e instanceof PreExpr) {
+            return false;
         }
 
+        if (e instanceof BinaryExpr) {
+            if (((BinaryExpr) e).getOp().equals("->")) {
+                return false;
+            }
+        }
+
+        if (e instanceof NestedDotID) {
+            NamedElement base = getFinalNestId((NestedDotID) e);
+            return base instanceof ConstStatement;
+        }
+
+        return true;
     }
 
     @Check
