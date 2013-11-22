@@ -95,10 +95,6 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
         return (eObject.eClass().getEPackage() == AgreePackage.eINSTANCE);
     }
 
-    public AgreeType getAgreeType(Arg arg) {
-        return new AgreeType(arg.getType().getString());
-    }
-
     @Check
     public void checkAssume(AssumeStatement assume) {
         AgreeType exprType = getAgreeType(assume.getExpr());
@@ -200,90 +196,6 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
         }
     }
 
-    private AgreeType getAgreeType(UnaryExpr unaryExpr) {
-        return getAgreeType(unaryExpr.getExpr());
-    }
-
-    private AgreeType getAgreeType(NextExpr nextExpr) {
-        return getAgreeType(nextExpr.getExpr());
-    }
-
-    private AgreeType getAgreeType(NestedDotID nestDotIdExpr) {
-        return getAgreeType(getFinalNestId(nestDotIdExpr));
-    }
-
-    private AgreeType getAgreeType(NamedElement namedEl) {
-        if (namedEl instanceof Property) {
-            Property propVal = (Property) namedEl;
-            PropertyType propType = propVal.getPropertyType();
-
-            if (propType instanceof AadlBoolean) {
-                return BOOL;
-            } else if (propType instanceof AadlString || propType instanceof EnumerationType) {
-                return new AgreeType("string");
-            } else if (propType instanceof AadlInteger) {
-                return INT;
-            } else if (propType instanceof AadlReal) {
-                return REAL;
-            } else if (propType instanceof ClassifierType) {
-                return new AgreeType("component");
-            }
-        } else if (namedEl instanceof DataSubcomponent) {
-            // this is for checking "Base_Types::Boolean" etc...
-            return getAgreeType(((DataSubcomponent) namedEl).getAllClassifier());
-        } else if (namedEl instanceof Arg) {
-            return getAgreeType((Arg) namedEl);
-        } else if (namedEl instanceof ClassifierType || namedEl instanceof Subcomponent) {
-            return new AgreeType("component");
-        } else if (namedEl instanceof PropertyStatement) {
-            return getAgreeType((PropertyStatement) namedEl);
-        } else if (namedEl instanceof ConstStatement) {
-            return getAgreeType((ConstStatement) namedEl);
-        } else if (namedEl instanceof EqStatement) {
-            return getAgreeType(namedEl);
-        } else if (namedEl instanceof DataPort) {
-            return getAgreeType(((DataPort) namedEl).getDataFeatureClassifier());
-        } else if (namedEl instanceof DataAccess) {
-            return getAgreeType((NamedElement) ((DataAccess) namedEl).getFeatureClassifier());
-        } else if (namedEl instanceof DataType) {
-            return getAgreeType((ComponentClassifier) namedEl);
-        }
-
-        return ERROR;
-    }
-
-    private AgreeType getAgreeType(ComponentClassifier dataClass) {
-
-        while (dataClass != null) {
-            switch (dataClass.getQualifiedName()) {
-            case "Base_Types::Boolean":
-                return BOOL;
-            case "Base_Types::Integer":
-                return INT;
-            case "Base_Types::Float":
-                return REAL;
-            }
-
-            DataType dataType = (DataType) dataClass;
-            dataClass = dataType.getExtended();
-        }
-
-        return new AgreeType("uninterpreted data");
-    }
-
-    private AgreeType getAgreeType(DataSubcomponentType data) {
-        String qualName = data.getQualifiedName();
-        switch (qualName) {
-        case "Base_Types::Boolean":
-            return BOOL;
-        case "Base_Types::Integer":
-            return INT;
-        case "Base_Types::Float":
-            return REAL;
-        }
-        return new AgreeType("uninterpreted data");
-    }
-
     @Check
     public void checkPropertyStatement(PropertyStatement propStat) {
         AgreeType exprType = getAgreeType(propStat.getExpr());
@@ -292,10 +204,6 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
                     + exprType + "' but must be of type 'bool'");
         }
 
-    }
-
-    private AgreeType getAgreeType(PropertyStatement propStat) {
-        return getAgreeType(propStat.getExpr());
     }
 
     @Check
@@ -461,10 +369,6 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
         return null;
     }
 
-    private AgreeType getAgreeType(ConstStatement constStat) {
-        return new AgreeType(constStat.getType().getString());
-    }
-
     private void checkMultiAssignEq(EObject src, List<Arg> lhsArgs, Expr rhsExpr) {
 
         if (rhsExpr == null) {
@@ -615,10 +519,6 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
         }
     }
 
-    private AgreeType getAgreeType(GetPropertyExpr getPropExpr) {
-        return getAgreeType(getPropExpr.getProp());
-    }
-
     @Check
     public void checkPrevExpr(PrevExpr prevExpr) {
         AgreeType delayType = getAgreeType(prevExpr.getDelay());
@@ -629,26 +529,6 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
                     "The first and second arguments of the 'prev' function are of non-matching types '"
                             + delayType + "' and '" + initType + "'");
         }
-    }
-
-    private AgreeType getAgreeType(PrevExpr prevExpr) {
-        return getAgreeType(prevExpr.getDelay());
-    }
-
-    private List<AgreeType> getAgreeTypes(List<? extends Expr> exprs) {
-        ArrayList<AgreeType> list = new ArrayList<>();
-        for (Expr expr : exprs) {
-            list.add(getAgreeType(expr));
-        }
-        return list;
-    }
-
-    public List<AgreeType> typesFromArgs(List<Arg> args) {
-        ArrayList<AgreeType> list = new ArrayList<>();
-        for (Arg arg : args) {
-            list.add(getAgreeType(arg));
-        }
-        return list;
     }
 
     public void checkInputsVsActuals(FnCallExpr fnCall) {
@@ -747,34 +627,6 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
             error(callDef, "There exists a recursive dependency between the "
                     + "following node or function calls : " + loopStr);
 
-        }
-    }
-
-    private AgreeType getAgreeType(FnCallExpr fnCall) {
-        // TODO: Examine type system in more detail
-        // TODO: Fix to make support type lists.
-
-        NestedDotID dotId = fnCall.getFn();
-        NamedElement namedEl = getFinalNestId(dotId);
-
-        // extract in/out arguments
-        if (namedEl instanceof FnDefExpr) {
-            FnDefExpr fnDef = (FnDefExpr) namedEl;
-            return new AgreeType(fnDef.getType().getString());
-        } else if (namedEl instanceof NodeDefExpr) {
-            NodeDefExpr nodeDef = (NodeDefExpr) namedEl;
-            List<AgreeType> outDefTypes = typesFromArgs(nodeDef.getRets());
-            if (outDefTypes.size() == 1) {
-                return outDefTypes.get(0);
-            } else {
-                error(fnCall, "Nodes embedded in expressions must have exactly one return value."
-                        + "  Node " + nodeDef.getName() + " contains " + outDefTypes.size()
-                        + " return values");
-                return ERROR;
-            }
-        } else {
-            error(fnCall, "Node or Function definition name expected.");
-            return ERROR;
         }
     }
 
@@ -885,39 +737,6 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
         }
     }
 
-    private AgreeType getAgreeType(BinaryExpr binExpr) {
-        AgreeType typeLeft = getAgreeType(binExpr.getLeft());
-        String op = binExpr.getOp();
-
-        switch (op) {
-        case "->":
-            return typeLeft;
-        case "=>":
-        case "<=>":
-        case "and":
-        case "or":
-            return BOOL;
-        case "<>":
-        case "!=":
-            return BOOL;
-        case "<":
-        case "<=":
-        case ">":
-        case ">=":
-        case "=":
-            return BOOL;
-        case "+":
-        case "-":
-        case "*":
-        case "/":
-        case "mod":
-        case "div":
-            return typeLeft;
-        }
-
-        return ERROR;
-    }
-
     private Boolean hasCallDefParent(Element e) {
         while (e != null) {
             if (e instanceof CallDef) {
@@ -954,10 +773,196 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
         }
     }
 
-    private AgreeType getAgreeType(IdExpr idExpr) {
+    public NamedElement getFinalNestId(NestedDotID dotId) {
+        while (dotId.getSub() != null) {
+            dotId = dotId.getSub();
+        }
+        return dotId.getBase();
+    }
 
-        NamedElement id = idExpr.getId();
-        return getAgreeType(id);
+    public AgreeType getAgreeType(Arg arg) {
+        return new AgreeType(arg.getType().getString());
+    }
+
+    private AgreeType getAgreeType(UnaryExpr unaryExpr) {
+        return getAgreeType(unaryExpr.getExpr());
+    }
+
+    private AgreeType getAgreeType(NextExpr nextExpr) {
+        return getAgreeType(nextExpr.getExpr());
+    }
+
+    private AgreeType getAgreeType(NestedDotID nestDotIdExpr) {
+        return getAgreeType(getFinalNestId(nestDotIdExpr));
+    }
+
+    private AgreeType getAgreeType(NamedElement namedEl) {
+        if (namedEl instanceof Property) {
+            Property propVal = (Property) namedEl;
+            PropertyType propType = propVal.getPropertyType();
+
+            if (propType instanceof AadlBoolean) {
+                return BOOL;
+            } else if (propType instanceof AadlString || propType instanceof EnumerationType) {
+                return new AgreeType("string");
+            } else if (propType instanceof AadlInteger) {
+                return INT;
+            } else if (propType instanceof AadlReal) {
+                return REAL;
+            } else if (propType instanceof ClassifierType) {
+                return new AgreeType("component");
+            }
+        } else if (namedEl instanceof DataSubcomponent) {
+            // this is for checking "Base_Types::Boolean" etc...
+            return getAgreeType(((DataSubcomponent) namedEl).getAllClassifier());
+        } else if (namedEl instanceof Arg) {
+            return getAgreeType((Arg) namedEl);
+        } else if (namedEl instanceof ClassifierType || namedEl instanceof Subcomponent) {
+            return new AgreeType("component");
+        } else if (namedEl instanceof PropertyStatement) {
+            return getAgreeType((PropertyStatement) namedEl);
+        } else if (namedEl instanceof ConstStatement) {
+            return getAgreeType((ConstStatement) namedEl);
+        } else if (namedEl instanceof EqStatement) {
+            return getAgreeType(namedEl);
+        } else if (namedEl instanceof DataPort) {
+            return getAgreeType(((DataPort) namedEl).getDataFeatureClassifier());
+        } else if (namedEl instanceof DataAccess) {
+            return getAgreeType((NamedElement) ((DataAccess) namedEl).getFeatureClassifier());
+        } else if (namedEl instanceof DataType) {
+            return getAgreeType((ComponentClassifier) namedEl);
+        }
+
+        return ERROR;
+    }
+
+    private AgreeType getAgreeType(ComponentClassifier dataClass) {
+
+        while (dataClass != null) {
+            switch (dataClass.getQualifiedName()) {
+            case "Base_Types::Boolean":
+                return BOOL;
+            case "Base_Types::Integer":
+                return INT;
+            case "Base_Types::Float":
+                return REAL;
+            }
+
+            DataType dataType = (DataType) dataClass;
+            dataClass = dataType.getExtended();
+        }
+
+        return new AgreeType("uninterpreted data");
+    }
+
+    private AgreeType getAgreeType(DataSubcomponentType data) {
+        String qualName = data.getQualifiedName();
+        switch (qualName) {
+        case "Base_Types::Boolean":
+            return BOOL;
+        case "Base_Types::Integer":
+            return INT;
+        case "Base_Types::Float":
+            return REAL;
+        }
+        return new AgreeType("uninterpreted data");
+    }
+
+    private AgreeType getAgreeType(PropertyStatement propStat) {
+        return getAgreeType(propStat.getExpr());
+    }
+
+    private AgreeType getAgreeType(ConstStatement constStat) {
+        return new AgreeType(constStat.getType().getString());
+    }
+
+    private AgreeType getAgreeType(GetPropertyExpr getPropExpr) {
+        return getAgreeType(getPropExpr.getProp());
+    }
+
+    private AgreeType getAgreeType(PrevExpr prevExpr) {
+        return getAgreeType(prevExpr.getDelay());
+    }
+
+    private List<AgreeType> getAgreeTypes(List<? extends Expr> exprs) {
+        ArrayList<AgreeType> list = new ArrayList<>();
+        for (Expr expr : exprs) {
+            list.add(getAgreeType(expr));
+        }
+        return list;
+    }
+
+    public List<AgreeType> typesFromArgs(List<Arg> args) {
+        ArrayList<AgreeType> list = new ArrayList<>();
+        for (Arg arg : args) {
+            list.add(getAgreeType(arg));
+        }
+        return list;
+    }
+
+    private AgreeType getAgreeType(FnCallExpr fnCall) {
+        // TODO: Examine type system in more detail
+        // TODO: Fix to make support type lists.
+
+        NestedDotID dotId = fnCall.getFn();
+        NamedElement namedEl = getFinalNestId(dotId);
+
+        // extract in/out arguments
+        if (namedEl instanceof FnDefExpr) {
+            FnDefExpr fnDef = (FnDefExpr) namedEl;
+            return new AgreeType(fnDef.getType().getString());
+        } else if (namedEl instanceof NodeDefExpr) {
+            NodeDefExpr nodeDef = (NodeDefExpr) namedEl;
+            List<AgreeType> outDefTypes = typesFromArgs(nodeDef.getRets());
+            if (outDefTypes.size() == 1) {
+                return outDefTypes.get(0);
+            } else {
+                error(fnCall, "Nodes embedded in expressions must have exactly one return value."
+                        + "  Node " + nodeDef.getName() + " contains " + outDefTypes.size()
+                        + " return values");
+                return ERROR;
+            }
+        } else {
+            error(fnCall, "Node or Function definition name expected.");
+            return ERROR;
+        }
+    }
+
+    private AgreeType getAgreeType(BinaryExpr binExpr) {
+        AgreeType typeLeft = getAgreeType(binExpr.getLeft());
+        String op = binExpr.getOp();
+
+        switch (op) {
+        case "->":
+            return typeLeft;
+        case "=>":
+        case "<=>":
+        case "and":
+        case "or":
+            return BOOL;
+        case "<>":
+        case "!=":
+            return BOOL;
+        case "<":
+        case "<=":
+        case ">":
+        case ">=":
+        case "=":
+            return BOOL;
+        case "+":
+        case "-":
+        case "*":
+        case "/":
+        case "mod":
+        case "div":
+            return typeLeft;
+        }
+
+        return ERROR;
+    }
+
+    private AgreeType getAgreeType(IdExpr idExpr) {
+        return getAgreeType(idExpr.getId());
     }
 
     private AgreeType getAgreeType(Expr expr) {
@@ -992,13 +997,6 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
         }
 
         return ERROR;
-    }
-
-    public NamedElement getFinalNestId(NestedDotID dotId) {
-        while (dotId.getSub() != null) {
-            dotId = dotId.getSub();
-        }
-        return dotId.getBase();
     }
 
     public static boolean matches(AgreeType expected, AgreeType actual) {
