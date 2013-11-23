@@ -1801,8 +1801,8 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		private final Keyword cRightParenthesisKeyword_7_2 = (Keyword)cGroup_7.eContents().get(2);
 		
 		//TermExpr returns Expr:
-		//	{IdExpr} id=[aadl2::NamedElement|QID] | NestedDotID ({FnCallExpr.fn=current} "(" (args+=Expr ("," args+=Expr)*)? ")")?
-		//	| {IntLitExpr} val=INTEGER_LIT | {PreExpr} "pre" "(" expr=Expr ")" | {RealLitExpr} val=REAL_LIT | {BoolLitExpr}
+		//	{IdExpr} id=[aadl2::NamedElement|QID] | NestedDotID ({FnCallExpr.fn=current} "(" (args+=Expr ("," args+=Expr)*)?
+		//	")")? | {IntLitExpr} val=INTEGER_LIT | {PreExpr} "pre" "(" expr=Expr ")" | {RealLitExpr} val=REAL_LIT | {BoolLitExpr}
 		//	val=BooleanLiteral | {ThisExpr} "this" ("." subThis=NestedDotID)? | "(" Expr ")";
 		public ParserRule getRule() { return rule; }
 
@@ -2443,8 +2443,8 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 	}
 
 	//TermExpr returns Expr:
-	//	{IdExpr} id=[aadl2::NamedElement|QID] | NestedDotID ({FnCallExpr.fn=current} "(" (args+=Expr ("," args+=Expr)*)? ")")?
-	//	| {IntLitExpr} val=INTEGER_LIT | {PreExpr} "pre" "(" expr=Expr ")" | {RealLitExpr} val=REAL_LIT | {BoolLitExpr}
+	//	{IdExpr} id=[aadl2::NamedElement|QID] | NestedDotID ({FnCallExpr.fn=current} "(" (args+=Expr ("," args+=Expr)*)?
+	//	")")? | {IntLitExpr} val=INTEGER_LIT | {PreExpr} "pre" "(" expr=Expr ")" | {RealLitExpr} val=REAL_LIT | {BoolLitExpr}
 	//	val=BooleanLiteral | {ThisExpr} "this" ("." subThis=NestedDotID)? | "(" Expr ")";
 	public TermExprElements getTermExprAccess() {
 		return (pTermExpr != null) ? pTermExpr : (pTermExpr = new TermExprElements());

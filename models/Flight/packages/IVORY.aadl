@@ -1,0 +1,110 @@
+package IVORY
+public
+  with UAV;
+  with DATATYPES;
+  with IVORY_TYPES;
+  with Static_Analysis;
+  with SMACCM;
+
+  system Software
+    features
+      motors_and_radios: feature group UAV::motors_and_radios;
+      sensors: feature group UAV::sensors;
+  end Software;
+  
+  system foo
+  end foo; 
+  
+  system implementation Software.Impl
+    subcomponents
+      P: process Ivory_Proc.Impl;
+      foo_inst: system foo;           
+
+    connections
+      feature group motors_and_radios <-> P.motors_and_radios;
+      feature group sensors <-> P.sensors;
+  end Software.Impl;
+  
+  process Ivory_Proc
+    features
+      motors_and_radios: feature group UAV::motors_and_radios;
+      sensors: feature group UAV::sensors;
+  end Ivory_Proc;
+  
+  process implementation Ivory_Proc.Impl
+    subcomponents
+      UIT: thread userInputTask;
+      BT: thread blinkTask;
+      
+    connections
+      port UIT.flightmode_out -> BT.flightmode_in;
+  end Ivory_Proc.Impl;
+  
+  thread userInputTask
+    features
+      flightmode_out: out data port IVORY_TYPES::flightmode.Impl;
+      
+    properties
+      Period => 200ms;
+      Deadline => 200ms;
+      SMACCM::WC_Execution_Time => 10ms;
+      Dispatch_Protocol => Periodic;
+      
+      Source_Text => ("app/userInputTask/main.cpp");
+      Initialize_Entrypoint_Source_Text => "main";
+      Compute_Entrypoint_Source_Text => "main_task";
+	  Source_Stack_Size => 8196 bytes;
+	  Dispatch_Protocol => Periodic;
+	  Period => 50 ms; 
+      Compute_Execution_Time => 2 ms .. 5 ms;
+      Static_Analysis::Writes_to_buffers => ("userinput_shared_state");
+	  
+	  	 
+	  -- Other properties that may be useful (see AADL manual pg 78--80)
+	  -- Properties related to source text
+	  -- 	Source_Language: inherit list of Supported_Source_Languages
+	  -- Properties specifying memory requirements of threads
+	  -- 	Source_Code_Size: Size
+	  -- 	Source_Data_Size: Size
+	  -- 	Source_Stack_Size: Size
+	  -- 	Source_Heap_Size: Size
+	  -- Properties specifying thread dispatch properties
+	  -- 	Dispatch_Trigger: list of reference (port)
+	  -- 	Dispatch_Able: aadlboolean
+	  -- 	Dispatch_Offset: inherit Time
+	  -- 	First_Dispatch_Time : inherit Time
+	  -- the default value of the deadline is that of the period
+	  -- 	Deadline: inherit Time => Period
+	  -- Initialization and Computation time properties
+	  -- Properties specifying execution entrypoints and timing constraints
+	  -- 	Initialize_Execution_Time: Time_Range
+	  -- 	Initialize_Deadline: Time
+	  -- 	Compute_Execution_Time: Time_Range
+	  -- 	Compute_Deadline: Time
+  end userInputTask;
+
+
+  thread blinkTask
+    features
+      flightmode_in: in data port IVORY_TYPES::flightmode.Impl;
+      
+    properties
+      Period => 200ms;
+      Deadline => 200ms;
+      SMACCM::WC_Execution_Time => 10ms;
+      Dispatch_Protocol => Periodic;
+      
+      Source_Text => ("app/blinkTask/main.cpp");
+      Initialize_Entrypoint_Source_Text => "main";
+      Compute_Entrypoint_Source_Text => "main_task";
+	  Source_Stack_Size => 8196 bytes;
+	  Dispatch_Protocol => Periodic;
+	  Period => 50 ms; 
+      Compute_Execution_Time => 1 ms .. 3 ms;
+      
+      Static_Analysis::Reads_from_buffers => ("userinput_shared_state");
+      
+      -- See notes on properties from above.
+  end blinkTask;
+
+end IVORY;

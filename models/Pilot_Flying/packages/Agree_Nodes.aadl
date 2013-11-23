@@ -1,0 +1,32 @@
+package Agree_Nodes
+public
+annex agree{**
+  ---------------------------------------------------------------------------------------------------
+  -- Returns a stream true for the first n elements
+  ---------------------------------------------------------------------------------------------------
+  node tF(n: int) returns (r: bool);
+    var
+      c: int;
+    let
+      c = 1 -> (pre(c) + 1);
+      r = (c <= n);
+    tel;
+    
+  ---------------------------------------------------------------------------------------------------
+  -- Returns true if the input p has been true for n steps
+  ---------------------------------------------------------------------------------------------------
+  node isTrueFor(n: int, p: bool) returns (ok: bool);
+    var
+      c: int;
+    let
+      -- guarantee "n_is_constant" : true -> n = pre(n);
+
+      -- Counts the number of instants since p was last false
+      c = if p then (1 -> pre(c) + 1) else 0;
+
+      ok = (c >= n);
+    tel;
+      
+**};
+	
+end Agree_Nodes;
