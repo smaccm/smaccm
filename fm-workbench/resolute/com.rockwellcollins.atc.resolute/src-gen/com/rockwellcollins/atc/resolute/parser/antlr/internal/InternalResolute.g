@@ -2439,6 +2439,48 @@ ruleBuiltInFunc returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleTok
         $current.merge(kw);
         newLeafNode(kw, grammarAccess.getBuiltInFuncAccess().getAnalysisKeyword_11()); 
     }
+
+    |
+	kw='upper_bound' 
+    {
+        $current.merge(kw);
+        newLeafNode(kw, grammarAccess.getBuiltInFuncAccess().getUpper_boundKeyword_12()); 
+    }
+
+    |
+	kw='lower_bound' 
+    {
+        $current.merge(kw);
+        newLeafNode(kw, grammarAccess.getBuiltInFuncAccess().getLower_boundKeyword_13()); 
+    }
+
+    |
+	kw='receive_error' 
+    {
+        $current.merge(kw);
+        newLeafNode(kw, grammarAccess.getBuiltInFuncAccess().getReceive_errorKeyword_14()); 
+    }
+
+    |
+	kw='contain_error' 
+    {
+        $current.merge(kw);
+        newLeafNode(kw, grammarAccess.getBuiltInFuncAccess().getContain_errorKeyword_15()); 
+    }
+
+    |
+	kw='propagate_error' 
+    {
+        $current.merge(kw);
+        newLeafNode(kw, grammarAccess.getBuiltInFuncAccess().getPropagate_errorKeyword_16()); 
+    }
+
+    |
+	kw='error_state_reachable' 
+    {
+        $current.merge(kw);
+        newLeafNode(kw, grammarAccess.getBuiltInFuncAccess().getError_state_reachableKeyword_17()); 
+    }
 )
     ;
 

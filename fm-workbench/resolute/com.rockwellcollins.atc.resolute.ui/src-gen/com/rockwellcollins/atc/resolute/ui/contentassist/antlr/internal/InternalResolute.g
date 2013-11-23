@@ -2347,6 +2347,54 @@ rule__BuiltInFunc__Alternatives
 { after(grammarAccess.getBuiltInFuncAccess().getAnalysisKeyword_11()); }
 )
 
+    |(
+{ before(grammarAccess.getBuiltInFuncAccess().getUpper_boundKeyword_12()); }
+
+	'upper_bound' 
+
+{ after(grammarAccess.getBuiltInFuncAccess().getUpper_boundKeyword_12()); }
+)
+
+    |(
+{ before(grammarAccess.getBuiltInFuncAccess().getLower_boundKeyword_13()); }
+
+	'lower_bound' 
+
+{ after(grammarAccess.getBuiltInFuncAccess().getLower_boundKeyword_13()); }
+)
+
+    |(
+{ before(grammarAccess.getBuiltInFuncAccess().getReceive_errorKeyword_14()); }
+
+	'receive_error' 
+
+{ after(grammarAccess.getBuiltInFuncAccess().getReceive_errorKeyword_14()); }
+)
+
+    |(
+{ before(grammarAccess.getBuiltInFuncAccess().getContain_errorKeyword_15()); }
+
+	'contain_error' 
+
+{ after(grammarAccess.getBuiltInFuncAccess().getContain_errorKeyword_15()); }
+)
+
+    |(
+{ before(grammarAccess.getBuiltInFuncAccess().getPropagate_errorKeyword_16()); }
+
+	'propagate_error' 
+
+{ after(grammarAccess.getBuiltInFuncAccess().getPropagate_errorKeyword_16()); }
+)
+
+    |(
+{ before(grammarAccess.getBuiltInFuncAccess().getError_state_reachableKeyword_17()); }
+
+	'error_state_reachable' 
+
+{ after(grammarAccess.getBuiltInFuncAccess().getError_state_reachableKeyword_17()); }
+)
+
 ;
 finally {
 	restoreStackSize(stackSize);
