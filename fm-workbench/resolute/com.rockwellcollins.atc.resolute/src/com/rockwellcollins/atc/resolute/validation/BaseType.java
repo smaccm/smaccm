@@ -6,7 +6,8 @@ public class BaseType extends ResoluteType {
     public static final BaseType STRING = new BaseType("string");
     public static final BaseType BOOL = new BaseType("bool");
     public static final BaseType FAIL = new BaseType("fail");
-
+    public static final BaseType RANGE = new BaseType("range");
+    
     public static final BaseType COMPONENT = new BaseType("component");
     public static final BaseType CONNECTION = new BaseType("connection");
     public static final BaseType PROPERTY = new BaseType("property");

@@ -26,6 +26,7 @@ import org.osate.aadl2.NamedElement;
 import org.osate.aadl2.NamedValue;
 import org.osate.aadl2.Property;
 import org.osate.aadl2.PropertyExpression;
+import org.osate.aadl2.RangeType;
 import org.osate.aadl2.RealLiteral;
 import org.osate.aadl2.StringLiteral;
 import org.osate.aadl2.instance.ComponentInstance;
@@ -48,6 +49,7 @@ import org.osate.xtext.aadl2.properties.util.PropertyUtils;
 import com.rockwellcollins.atc.resolute.analysis.values.BoolValue;
 import com.rockwellcollins.atc.resolute.analysis.values.IntValue;
 import com.rockwellcollins.atc.resolute.analysis.values.NamedElementValue;
+import com.rockwellcollins.atc.resolute.analysis.values.RangeValue;
 import com.rockwellcollins.atc.resolute.analysis.values.RealValue;
 import com.rockwellcollins.atc.resolute.analysis.values.ResoluteValue;
 import com.rockwellcollins.atc.resolute.analysis.values.SetValue;
@@ -777,14 +779,88 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
                 } else if (expr instanceof IntegerLiteral) {
                     IntegerLiteral value = (IntegerLiteral) expr;
                     result = new IntValue((long) value.getScaledValue());
-                } else {
+                } else if (expr instanceof RealLiteral)
+                {
                     assert (expr instanceof RealLiteral);
                     RealLiteral value = (RealLiteral) expr;
                     result = new RealValue(value.getValue());
                 }
+                else if (expr instanceof org.osate.aadl2.RangeValue){
+                    assert (expr instanceof org.osate.aadl2.RangeValue);
+                    org.osate.aadl2.RangeValue value = (org.osate.aadl2.RangeValue) expr;
+                    PropertyExpression lb = value.getMinimumValue();
+                    PropertyExpression ub = value.getMaximumValue();
+                    if (value.getMinimumValue() instanceof IntegerLiteral)
+                    {
+                    	IntegerLiteral min = (IntegerLiteral) value.getMinimumValue();
+                    	IntegerLiteral max = (IntegerLiteral) value.getMaximumValue(); 
+                    	result = new RangeValue ((long)min.getScaledValue(), (long)max.getScaledValue());
+                    }
+                    else if (value.getMinimumValue() instanceof RealLiteral)
+                    {
+                    	IntegerLiteral min = (IntegerLiteral) value.getMinimumValue();
+                    	IntegerLiteral max = (IntegerLiteral) value.getMaximumValue(); 
+                    	result = new RangeValue ((double)min.getScaledValue(), (double)max.getScaledValue());
+                    }
+                    else
+                    {
+                    	OsateDebug.osateDebug("[ResoluteEvaluator] Unknown range type: " + expr);
+
+                    }
+                   
+                    
+                }
+                else
+                {
+                	OsateDebug.osateDebug("[ResoluteEvaluator] Unknown type: " + expr);
+                }
                 break;
             }
 
+        case "upper_bound":
+        {
+        	ResoluteValue arg0 = argVals.get(0);
+            
+        	assert (arg0 instanceof RangeValue);
+        	
+        	RangeValue rv = (RangeValue) arg0;
+        	
+        	if (rv.getType() == RangeValue.TYPE_INTEGER)
+        	{
+        		result = new IntValue (rv.getMaximumLong());
+        	}
+        	
+        	if (rv.getType() == RangeValue.TYPE_REAL)
+        	{
+        		result = new RealValue (rv.getMaximumDouble());
+        	}
+        	
+        	
+            break;
+        }
+        
+        case "lower_bound":
+        {
+        	ResoluteValue arg0 = argVals.get(0);
+            
+        	assert (arg0 instanceof RangeValue);
+        	
+        	RangeValue rv = (RangeValue) arg0;
+        	
+        	if (rv.getType() == RangeValue.TYPE_INTEGER)
+        	{
+        		result = new IntValue (rv.getMinimumLong());
+        	}
+        	
+        	if (rv.getType() == RangeValue.TYPE_REAL)
+        	{
+        		result = new RealValue (rv.getMinimumDouble());
+        	}
+        	
+        	
+            break;
+        }
+            
         case "property_exists":
             // the first element is the component
             compVal = argVals.get(0);

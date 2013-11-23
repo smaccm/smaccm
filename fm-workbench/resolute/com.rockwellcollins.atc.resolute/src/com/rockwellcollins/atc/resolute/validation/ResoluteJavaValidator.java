@@ -29,7 +29,9 @@ import org.osate.aadl2.NamedElement;
 import org.osate.aadl2.ProcessType;
 import org.osate.aadl2.ProcessorType;
 import org.osate.aadl2.Property;
+import org.osate.aadl2.PropertyExpression;
 import org.osate.aadl2.PropertyType;
+import org.osate.aadl2.RangeType;
 import org.osate.aadl2.Subcomponent;
 import org.osate.aadl2.SubprogramGroupType;
 import org.osate.aadl2.SubprogramType;
@@ -38,6 +40,7 @@ import org.osate.aadl2.ThreadGroupType;
 import org.osate.aadl2.ThreadType;
 import org.osate.aadl2.VirtualBusType;
 import org.osate.aadl2.VirtualProcessorType;
+import org.osate.aadl2.util.OsateDebug;
 
 import com.rockwellcollins.atc.resolute.analysis.external.EvaluateTypeExtention;
 import com.rockwellcollins.atc.resolute.analysis.external.ResoluteExternalAnalysisType;
@@ -346,7 +349,20 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
         List<ResoluteType> actualTypes = getExprTypes(actuals);
         List<ResoluteType> expectedTypes = new ArrayList<>();
 
-        switch (funCall.getFn()) {
+        switch (funCall.getFn())
+        {
+        case "upper_bound":
+        	expectedTypes.add(BaseType.RANGE);
+        	break;
+        
+        case "propagate_error":
+        case "contain_error":
+        case "receive_error":
+        case "error_state_reachable":
+        	expectedTypes.add(BaseType.COMPONENT);
+        	expectedTypes.add(BaseType.STRING);
+        	break;
+        
         case "connected":
             expectedTypes.add(BaseType.COMPONENT);
             expectedTypes.add(BaseType.CONNECTION);
@@ -641,12 +657,53 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
     public ResoluteType getBuiltInFnCallType(BuiltInFuncCallExpr funCall) {
         switch (funCall.getFn()) {
         case "connected":
+        case "propagate_error":
+        case "contain_error":
+        case "receive_error":
+        case "error_state_reachable":
         case "class_of":
-        case "bound":
+        case "bound": 
         case "contained":
         case "property_exists":
             return BaseType.BOOL;
 
+        case "upper_bound":
+        {
+            if (funCall.getArgs().size() != 1) {
+                return BaseType.FAIL;
+            }
+
+            Expr arg0 = funCall.getArgs().get(0);
+            BuiltInFuncCallExpr tmp = (BuiltInFuncCallExpr) arg0;
+            Expr propExpr = tmp.getArgs().get(1);
+            if (!(propExpr instanceof IdExpr)) {
+                error(funCall, "Cannot perform property lookup without literal property reference");
+                return BaseType.FAIL;
+            }
+
+            IdExpr idExpr = (IdExpr) propExpr;
+            if (!(idExpr.getId() instanceof Property)) {
+                error(funCall, "Cannot perform property lookup without literal property reference");
+                return BaseType.FAIL;
+            }
+
+            Property prop = (Property) idExpr.getId();
+            PropertyType propType = prop.getPropertyType();
+            if (propType instanceof RangeType)
+            {
+            	RangeType rt = (RangeType)propType;
+            	PropertyExpression pe = rt.getNumberType().getRange().getUpperBound();
+                if (pe instanceof AadlInteger) {
+                    return BaseType.INT;
+                }
+                if (pe instanceof AadlReal) {
+                    return BaseType.REAL;
+                }
+            }
+            return BaseType.FAIL;
+
+        }
+            
         case "property_lookup":
             if (funCall.getArgs().size() != 2) {
                 return BaseType.FAIL;
@@ -681,6 +738,10 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
             }
             if (propType instanceof ClassifierType) {
                 return BaseType.COMPONENT;
+            }
+            if (propType instanceof RangeType)
+            {
+            	return BaseType.RANGE;
             }
 
             break;
@@ -726,7 +787,7 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
             return analysisType.getType();
         }
 
-        error(funCall, "Unable to get type for function call expression");
+        error(funCall, "Unable to get type for function call expression ("+funCall.getFn()+")");
         return BaseType.FAIL;
     }
 
