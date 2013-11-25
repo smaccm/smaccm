@@ -67,6 +67,7 @@ public class ResoluteFactoryImpl extends EFactoryImpl implements ResoluteFactory
       case ResolutePackage.RESOLUTE_LIBRARY: return createResoluteLibrary();
       case ResolutePackage.DEFINITION: return createDefinition();
       case ResolutePackage.TYPE: return createType();
+      case ResolutePackage.ELEMENT_SETS: return createElementSets();
       case ResolutePackage.BUILTIN_TYPE: return createBuiltinType();
       case ResolutePackage.ARG: return createArg();
       case ResolutePackage.CONSTANT_DEFINITION: return createConstantDefinition();
@@ -132,6 +133,17 @@ public class ResoluteFactoryImpl extends EFactoryImpl implements ResoluteFactory
   {
     TypeImpl type = new TypeImpl();
     return type;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public ElementSets createElementSets()
+  {
+    ElementSetsImpl elementSets = new ElementSetsImpl();
+    return elementSets;
   }
 
   /**

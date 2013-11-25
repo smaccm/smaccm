@@ -13,6 +13,9 @@
     </genClasses>
     <genClasses ecoreClass="Resolute.ecore#//Definition"/>
     <genClasses ecoreClass="Resolute.ecore#//Type"/>
+    <genClasses ecoreClass="Resolute.ecore#//ElementSets">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Resolute.ecore#//ElementSets/name"/>
+    </genClasses>
     <genClasses ecoreClass="Resolute.ecore#//BuiltinType"/>
     <genClasses ecoreClass="Resolute.ecore#//Arg">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Resolute.ecore#//Arg/type"/>
@@ -66,6 +69,7 @@
     </genClasses>
     <genClasses ecoreClass="Resolute.ecore#//IdExpr">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Resolute.ecore#//IdExpr/id"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Resolute.ecore#//IdExpr/subelements"/>
     </genClasses>
     <genClasses ecoreClass="Resolute.ecore#//ThisExpr">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Resolute.ecore#//ThisExpr/sub"/>
@@ -109,7 +113,7 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Resolute.ecore#//FilterMapExpr/filter"/>
     </genClasses>
     <genClasses ecoreClass="Resolute.ecore#//QuantArg">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Resolute.ecore#//QuantArg/id"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Resolute.ecore#//QuantArg/expr"/>
     </genClasses>
   </genPackages>
 </genmodel:GenModel>

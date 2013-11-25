@@ -34,14 +34,61 @@ public class BaseType extends ResoluteType {
             throw new IllegalArgumentException();
         }
 
-        this.name = name;
+        //do some type conversion for quantifier arguments
+        switch(name){
+        case "threads" :
+            this.name = "thread";
+            break;
+        case "thread_groups":
+            this.name = "thead_groups";
+            break;
+        case "processes":
+            this.name = "process";
+            break;
+        case "subprograms":
+            this.name = "subprogram";
+            break;
+        case "subprogram_groups":
+            this.name = "subprogram_group";
+            break;
+        case "processors":
+            this.name = "processor";
+            break;
+        case "virtual_processors":
+            this.name = "virtual_processor";
+            break;
+        case "buses":
+            this.name = "bus";
+            break;
+        case "virtual_buses":
+            this.name = "virtual_bus";
+            break;
+        case "devices":
+            this.name = "device";
+            break;
+        case "systems":
+            this.name = "system";
+            break;
+        case "abstracts":
+            this.name = "abstract";
+            break;
+        case "connections":
+            this.name = "connection";
+            break;
+        case "components":
+            this.name = "component";
+            break;
+        default :
+            this.name = name;
+        }
+        
     }
 
     @Override
     public String toString() {
         return name;
     }
-
+    
     @Override
     public boolean subtypeOf(ResoluteType otherType) {
         if (this.equals(FAIL) || otherType.equals(FAIL)) {

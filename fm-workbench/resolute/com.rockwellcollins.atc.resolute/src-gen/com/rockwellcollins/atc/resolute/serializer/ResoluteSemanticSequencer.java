@@ -11,6 +11,7 @@ import com.rockwellcollins.atc.resolute.resolute.ClaimArg;
 import com.rockwellcollins.atc.resolute.resolute.ClaimBody;
 import com.rockwellcollins.atc.resolute.resolute.ClaimString;
 import com.rockwellcollins.atc.resolute.resolute.ConstantDefinition;
+import com.rockwellcollins.atc.resolute.resolute.ElementSets;
 import com.rockwellcollins.atc.resolute.resolute.FailExpr;
 import com.rockwellcollins.atc.resolute.resolute.FilterMapExpr;
 import com.rockwellcollins.atc.resolute.resolute.FnCallExpr;
@@ -30,7 +31,6 @@ import com.rockwellcollins.atc.resolute.resolute.ResoluteSubclause;
 import com.rockwellcollins.atc.resolute.resolute.SetType;
 import com.rockwellcollins.atc.resolute.resolute.StringExpr;
 import com.rockwellcollins.atc.resolute.resolute.ThisExpr;
-import com.rockwellcollins.atc.resolute.resolute.Type;
 import com.rockwellcollins.atc.resolute.resolute.UnaryExpr;
 import com.rockwellcollins.atc.resolute.services.ResoluteGrammarAccess;
 import org.eclipse.emf.ecore.EObject;
@@ -337,6 +337,12 @@ public class ResoluteSemanticSequencer extends PropertiesSemanticSequencer {
 					return; 
 				}
 				else break;
+			case ResolutePackage.ELEMENT_SETS:
+				if(context == grammarAccess.getElementSetsRule()) {
+					sequence_ElementSets(context, (ElementSets) semanticObject); 
+					return; 
+				}
+				else break;
 			case ResolutePackage.FAIL_EXPR:
 				if(context == grammarAccess.getAndExprRule() ||
 				   context == grammarAccess.getAndExprAccess().getBinaryExprLeftAction_1_0_0_0() ||
@@ -625,12 +631,6 @@ public class ResoluteSemanticSequencer extends PropertiesSemanticSequencer {
 					return; 
 				}
 				else break;
-			case ResolutePackage.TYPE:
-				if(context == grammarAccess.getQuantTypeRule()) {
-					sequence_QuantType(context, (Type) semanticObject); 
-					return; 
-				}
-				else break;
 			case ResolutePackage.UNARY_EXPR:
 				if(context == grammarAccess.getAndExprRule() ||
 				   context == grammarAccess.getAndExprAccess().getBinaryExprLeftAction_1_0_0_0() ||
@@ -731,7 +731,7 @@ public class ResoluteSemanticSequencer extends PropertiesSemanticSequencer {
 	
 	/**
 	 * Constraint:
-	 *     id=[NamedElement|QCREF]
+	 *     (id=[NamedElement|QCREF] subelements=ElementSets?)
 	 */
 	protected void sequence_AtomicExpr(EObject context, IdExpr semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -869,6 +869,33 @@ public class ResoluteSemanticSequencer extends PropertiesSemanticSequencer {
 	
 	/**
 	 * Constraint:
+	 *     (
+	 *         name='threads' | 
+	 *         name='data' | 
+	 *         name='memory' | 
+	 *         name='memories' | 
+	 *         name='thread_groups' | 
+	 *         name='processes' | 
+	 *         name='subprograms' | 
+	 *         name='subprogram_groups' | 
+	 *         name='processors' | 
+	 *         name='virtual_processors' | 
+	 *         name='buses' | 
+	 *         name='virtual_buses' | 
+	 *         name='devices' | 
+	 *         name='systems' | 
+	 *         name='abstracts' | 
+	 *         name='connections' | 
+	 *         name='components'
+	 *     )
+	 */
+	protected void sequence_ElementSets(EObject context, ElementSets semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Constraint:
 	 *     (name=ID (args+=Arg args+=Arg*)? body=DefinitionBody)
 	 */
 	protected void sequence_FunctionDefinition(EObject context, FunctionDefinition semanticObject) {
@@ -914,35 +941,9 @@ public class ResoluteSemanticSequencer extends PropertiesSemanticSequencer {
 	
 	/**
 	 * Constraint:
-	 *     (name=ID id=[NamedElement|QCREF] type=QuantType)
+	 *     (name=ID expr=Expr)
 	 */
 	protected void sequence_QuantArg(EObject context, QuantArg semanticObject) {
-		genericSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * Constraint:
-	 *     (
-	 *         name='data' | 
-	 *         name='threads' | 
-	 *         name='thread_groups' | 
-	 *         name='processes' | 
-	 *         name='subprograms' | 
-	 *         name='subprogram_groups' | 
-	 *         name='processors' | 
-	 *         name='virtual_processors' | 
-	 *         name='memory' | 
-	 *         name='buses' | 
-	 *         name='virtual_buses' | 
-	 *         name='devices' | 
-	 *         name='systems' | 
-	 *         name='abstracts' | 
-	 *         name='connections' | 
-	 *         name='components'
-	 *     )
-	 */
-	protected void sequence_QuantType(EObject context, Type semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	

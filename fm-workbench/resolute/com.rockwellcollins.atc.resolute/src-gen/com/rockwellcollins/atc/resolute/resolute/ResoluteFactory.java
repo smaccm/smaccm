@@ -50,6 +50,15 @@ public interface ResoluteFactory extends EFactory
   Type createType();
 
   /**
+   * Returns a new object of class '<em>Element Sets</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Element Sets</em>'.
+   * @generated
+   */
+  ElementSets createElementSets();
+
+  /**
    * Returns a new object of class '<em>Builtin Type</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->

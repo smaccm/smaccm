@@ -205,6 +205,7 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
         }
     }
 
+    //TODO: do type checking for quantifiers
     @Check
     public void checkQuantArg(QuantArg qArg){
         
@@ -563,6 +564,12 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 
         if (expr instanceof IdExpr) {
             IdExpr id = (IdExpr) expr;
+            BuiltinType subEls = id.getSubelements();
+            
+            if(subEls != null){
+                return typeToResoluteType(subEls);
+            }
+            
             return getIdExprType(id);
         }
 

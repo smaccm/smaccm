@@ -13,7 +13,7 @@ AnnexSubclause returns aadl2::AnnexSubclause:
 ;
 
 Namespace returns aadl2::Namespace:
-	FunctionDefinition
+	FunctionDefinition 
 ;
 
 NamedElement returns aadl2::NamedElement:
@@ -43,6 +43,30 @@ Definition:
 Type:
 	{SetType} '{' type=Type '}'
 |	BuiltinType
+;
+
+
+ElementSets:
+    //stuff for quantifiers only
+name=('threads'
+|	'data'
+|	'memory'
+|	'memories'
+|   'thread_groups'
+|   'processes'
+|   'subprograms'
+|   'subprogram_groups'
+|   'processors'
+|   'virtual_processors'
+|   'buses'
+|   'virtual_buses'
+|   'devices'
+|   'systems'
+|   'abstracts'
+    //non-aadl components
+|   'connections'
+|   'components')
+	
 ;
 
 BuiltinType:
@@ -136,7 +160,7 @@ PrefixExpr returns Expr:
 ;
 
 AtomicExpr returns Expr:
-	{IdExpr} id=[aadl2::NamedElement | QCREF]
+	{IdExpr} id=[aadl2::NamedElement | QCREF] ('.' subelements=ElementSets)? //for set expressions
 |	{ThisExpr} 'this' ('.' sub=NestedDotID)?
 |   {FailExpr} 'fail' (val=StringTerm)?
 |	{IntExpr} val=IntegerTerm
@@ -152,27 +176,7 @@ AtomicExpr returns Expr:
 ;
 
 QuantArg returns Arg:
-	{QuantArg} name=ID ':' id=[aadl2::NamedElement | QCREF] '.' type=QuantType
-;
-
-QuantType returns Type:
-	name=('data'
-|   'threads'
-|   'thread_groups'
-|   'processes'
-|   'subprograms'
-|   'subprogram_groups'
-|   'processors'
-|   'virtual_processors'
-|   'memory'
-|   'buses'
-|   'virtual_buses'
-|   'devices'
-|   'systems'
-|   'abstracts'
-    //non-aadl components
-|   'connections'
-|   'components')
+	{QuantArg} name=ID ':' expr=Expr
 ;
 
 BuiltInFunc:

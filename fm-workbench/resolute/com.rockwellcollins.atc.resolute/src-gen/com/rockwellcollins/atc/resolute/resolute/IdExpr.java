@@ -13,6 +13,7 @@ import org.osate.aadl2.NamedElement;
  * The following features are supported:
  * <ul>
  *   <li>{@link com.rockwellcollins.atc.resolute.resolute.IdExpr#getId <em>Id</em>}</li>
+ *   <li>{@link com.rockwellcollins.atc.resolute.resolute.IdExpr#getSubelements <em>Subelements</em>}</li>
  * </ul>
  * </p>
  *
@@ -47,5 +48,31 @@ public interface IdExpr extends Expr
    * @generated
    */
   void setId(NamedElement value);
+
+  /**
+   * Returns the value of the '<em><b>Subelements</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <p>
+   * If the meaning of the '<em>Subelements</em>' containment reference isn't clear,
+   * there really should be more of a description here...
+   * </p>
+   * <!-- end-user-doc -->
+   * @return the value of the '<em>Subelements</em>' containment reference.
+   * @see #setSubelements(ElementSets)
+   * @see com.rockwellcollins.atc.resolute.resolute.ResolutePackage#getIdExpr_Subelements()
+   * @model containment="true"
+   * @generated
+   */
+  ElementSets getSubelements();
+
+  /**
+   * Sets the value of the '{@link com.rockwellcollins.atc.resolute.resolute.IdExpr#getSubelements <em>Subelements</em>}' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @param value the new value of the '<em>Subelements</em>' containment reference.
+   * @see #getSubelements()
+   * @generated
+   */
+  void setSubelements(ElementSets value);
 
 } // IdExpr
