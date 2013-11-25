@@ -509,25 +509,25 @@ public class InternalResoluteParser extends AbstractInternalContentAssistParser 
     // $ANTLR end "ruleType"
 
 
-    // $ANTLR start "entryRuleElementSets"
-    // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:181:1: entryRuleElementSets : ruleElementSets EOF ;
-    public final void entryRuleElementSets() throws RecognitionException {
+    // $ANTLR start "entryRuleElementSet"
+    // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:181:1: entryRuleElementSet : ruleElementSet EOF ;
+    public final void entryRuleElementSet() throws RecognitionException {
         try {
-            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:182:1: ( ruleElementSets EOF )
-            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:183:1: ruleElementSets EOF
+            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:182:1: ( ruleElementSet EOF )
+            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:183:1: ruleElementSet EOF
             {
             if ( state.backtracking==0 ) {
-               before(grammarAccess.getElementSetsRule()); 
+               before(grammarAccess.getElementSetRule()); 
             }
-            pushFollow(FOLLOW_ruleElementSets_in_entryRuleElementSets314);
-            ruleElementSets();
+            pushFollow(FOLLOW_ruleElementSet_in_entryRuleElementSet314);
+            ruleElementSet();
 
             state._fsp--;
             if (state.failed) return ;
             if ( state.backtracking==0 ) {
-               after(grammarAccess.getElementSetsRule()); 
+               after(grammarAccess.getElementSetRule()); 
             }
-            match(input,EOF,FOLLOW_EOF_in_entryRuleElementSets321); if (state.failed) return ;
+            match(input,EOF,FOLLOW_EOF_in_entryRuleElementSet321); if (state.failed) return ;
 
             }
 
@@ -540,30 +540,30 @@ public class InternalResoluteParser extends AbstractInternalContentAssistParser 
         }
         return ;
     }
-    // $ANTLR end "entryRuleElementSets"
+    // $ANTLR end "entryRuleElementSet"
 
 
-    // $ANTLR start "ruleElementSets"
-    // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:190:1: ruleElementSets : ( ( rule__ElementSets__NameAssignment ) ) ;
-    public final void ruleElementSets() throws RecognitionException {
+    // $ANTLR start "ruleElementSet"
+    // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:190:1: ruleElementSet : ( ( rule__ElementSet__NameAssignment ) ) ;
+    public final void ruleElementSet() throws RecognitionException {
 
         		int stackSize = keepStackSize();
             
         try {
-            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:194:2: ( ( ( rule__ElementSets__NameAssignment ) ) )
-            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:195:1: ( ( rule__ElementSets__NameAssignment ) )
+            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:194:2: ( ( ( rule__ElementSet__NameAssignment ) ) )
+            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:195:1: ( ( rule__ElementSet__NameAssignment ) )
             {
-            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:195:1: ( ( rule__ElementSets__NameAssignment ) )
-            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:196:1: ( rule__ElementSets__NameAssignment )
+            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:195:1: ( ( rule__ElementSet__NameAssignment ) )
+            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:196:1: ( rule__ElementSet__NameAssignment )
             {
             if ( state.backtracking==0 ) {
-               before(grammarAccess.getElementSetsAccess().getNameAssignment()); 
+               before(grammarAccess.getElementSetAccess().getNameAssignment()); 
             }
-            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:197:1: ( rule__ElementSets__NameAssignment )
-            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:197:2: rule__ElementSets__NameAssignment
+            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:197:1: ( rule__ElementSet__NameAssignment )
+            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:197:2: rule__ElementSet__NameAssignment
             {
-            pushFollow(FOLLOW_rule__ElementSets__NameAssignment_in_ruleElementSets347);
-            rule__ElementSets__NameAssignment();
+            pushFollow(FOLLOW_rule__ElementSet__NameAssignment_in_ruleElementSet347);
+            rule__ElementSet__NameAssignment();
 
             state._fsp--;
             if (state.failed) return ;
@@ -571,7 +571,7 @@ public class InternalResoluteParser extends AbstractInternalContentAssistParser 
             }
 
             if ( state.backtracking==0 ) {
-               after(grammarAccess.getElementSetsAccess().getNameAssignment()); 
+               after(grammarAccess.getElementSetAccess().getNameAssignment()); 
             }
 
             }
@@ -591,7 +591,7 @@ public class InternalResoluteParser extends AbstractInternalContentAssistParser 
         }
         return ;
     }
-    // $ANTLR end "ruleElementSets"
+    // $ANTLR end "ruleElementSet"
 
 
     // $ANTLR start "entryRuleBuiltinType"
@@ -5321,9 +5321,9 @@ public class InternalResoluteParser extends AbstractInternalContentAssistParser 
     // $ANTLR end "rule__Type__Alternatives"
 
 
-    // $ANTLR start "rule__ElementSets__NameAlternatives_0"
-    // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:1785:1: rule__ElementSets__NameAlternatives_0 : ( ( 'threads' ) | ( 'data' ) | ( 'memory' ) | ( 'memories' ) | ( 'thread_groups' ) | ( 'processes' ) | ( 'subprograms' ) | ( 'subprogram_groups' ) | ( 'processors' ) | ( 'virtual_processors' ) | ( 'buses' ) | ( 'virtual_buses' ) | ( 'devices' ) | ( 'systems' ) | ( 'abstracts' ) | ( 'connections' ) | ( 'components' ) );
-    public final void rule__ElementSets__NameAlternatives_0() throws RecognitionException {
+    // $ANTLR start "rule__ElementSet__NameAlternatives_0"
+    // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:1785:1: rule__ElementSet__NameAlternatives_0 : ( ( 'threads' ) | ( 'data' ) | ( 'memory' ) | ( 'memories' ) | ( 'thread_groups' ) | ( 'processes' ) | ( 'subprograms' ) | ( 'subprogram_groups' ) | ( 'processors' ) | ( 'virtual_processors' ) | ( 'buses' ) | ( 'virtual_buses' ) | ( 'devices' ) | ( 'systems' ) | ( 'abstracts' ) | ( 'connections' ) | ( 'components' ) );
+    public final void rule__ElementSet__NameAlternatives_0() throws RecognitionException {
 
         		int stackSize = keepStackSize();
             
@@ -5432,11 +5432,11 @@ public class InternalResoluteParser extends AbstractInternalContentAssistParser 
                     // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:1791:1: 'threads'
                     {
                     if ( state.backtracking==0 ) {
-                       before(grammarAccess.getElementSetsAccess().getNameThreadsKeyword_0_0()); 
+                       before(grammarAccess.getElementSetAccess().getNameThreadsKeyword_0_0()); 
                     }
-                    match(input,17,FOLLOW_17_in_rule__ElementSets__NameAlternatives_03738); if (state.failed) return ;
+                    match(input,17,FOLLOW_17_in_rule__ElementSet__NameAlternatives_03738); if (state.failed) return ;
                     if ( state.backtracking==0 ) {
-                       after(grammarAccess.getElementSetsAccess().getNameThreadsKeyword_0_0()); 
+                       after(grammarAccess.getElementSetAccess().getNameThreadsKeyword_0_0()); 
                     }
 
                     }
@@ -5451,11 +5451,11 @@ public class InternalResoluteParser extends AbstractInternalContentAssistParser 
                     // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:1799:1: 'data'
                     {
                     if ( state.backtracking==0 ) {
-                       before(grammarAccess.getElementSetsAccess().getNameDataKeyword_0_1()); 
+                       before(grammarAccess.getElementSetAccess().getNameDataKeyword_0_1()); 
                     }
-                    match(input,18,FOLLOW_18_in_rule__ElementSets__NameAlternatives_03758); if (state.failed) return ;
+                    match(input,18,FOLLOW_18_in_rule__ElementSet__NameAlternatives_03758); if (state.failed) return ;
                     if ( state.backtracking==0 ) {
-                       after(grammarAccess.getElementSetsAccess().getNameDataKeyword_0_1()); 
+                       after(grammarAccess.getElementSetAccess().getNameDataKeyword_0_1()); 
                     }
 
                     }
@@ -5470,11 +5470,11 @@ public class InternalResoluteParser extends AbstractInternalContentAssistParser 
                     // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:1807:1: 'memory'
                     {
                     if ( state.backtracking==0 ) {
-                       before(grammarAccess.getElementSetsAccess().getNameMemoryKeyword_0_2()); 
+                       before(grammarAccess.getElementSetAccess().getNameMemoryKeyword_0_2()); 
                     }
-                    match(input,19,FOLLOW_19_in_rule__ElementSets__NameAlternatives_03778); if (state.failed) return ;
+                    match(input,19,FOLLOW_19_in_rule__ElementSet__NameAlternatives_03778); if (state.failed) return ;
                     if ( state.backtracking==0 ) {
-                       after(grammarAccess.getElementSetsAccess().getNameMemoryKeyword_0_2()); 
+                       after(grammarAccess.getElementSetAccess().getNameMemoryKeyword_0_2()); 
                     }
 
                     }
@@ -5489,11 +5489,11 @@ public class InternalResoluteParser extends AbstractInternalContentAssistParser 
                     // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:1815:1: 'memories'
                     {
                     if ( state.backtracking==0 ) {
-                       before(grammarAccess.getElementSetsAccess().getNameMemoriesKeyword_0_3()); 
+                       before(grammarAccess.getElementSetAccess().getNameMemoriesKeyword_0_3()); 
                     }
-                    match(input,20,FOLLOW_20_in_rule__ElementSets__NameAlternatives_03798); if (state.failed) return ;
+                    match(input,20,FOLLOW_20_in_rule__ElementSet__NameAlternatives_03798); if (state.failed) return ;
                     if ( state.backtracking==0 ) {
-                       after(grammarAccess.getElementSetsAccess().getNameMemoriesKeyword_0_3()); 
+                       after(grammarAccess.getElementSetAccess().getNameMemoriesKeyword_0_3()); 
                     }
 
                     }
@@ -5508,11 +5508,11 @@ public class InternalResoluteParser extends AbstractInternalContentAssistParser 
                     // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:1823:1: 'thread_groups'
                     {
                     if ( state.backtracking==0 ) {
-                       before(grammarAccess.getElementSetsAccess().getNameThread_groupsKeyword_0_4()); 
+                       before(grammarAccess.getElementSetAccess().getNameThread_groupsKeyword_0_4()); 
                     }
-                    match(input,21,FOLLOW_21_in_rule__ElementSets__NameAlternatives_03818); if (state.failed) return ;
+                    match(input,21,FOLLOW_21_in_rule__ElementSet__NameAlternatives_03818); if (state.failed) return ;
                     if ( state.backtracking==0 ) {
-                       after(grammarAccess.getElementSetsAccess().getNameThread_groupsKeyword_0_4()); 
+                       after(grammarAccess.getElementSetAccess().getNameThread_groupsKeyword_0_4()); 
                     }
 
                     }
@@ -5527,11 +5527,11 @@ public class InternalResoluteParser extends AbstractInternalContentAssistParser 
                     // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:1831:1: 'processes'
                     {
                     if ( state.backtracking==0 ) {
-                       before(grammarAccess.getElementSetsAccess().getNameProcessesKeyword_0_5()); 
+                       before(grammarAccess.getElementSetAccess().getNameProcessesKeyword_0_5()); 
                     }
-                    match(input,22,FOLLOW_22_in_rule__ElementSets__NameAlternatives_03838); if (state.failed) return ;
+                    match(input,22,FOLLOW_22_in_rule__ElementSet__NameAlternatives_03838); if (state.failed) return ;
                     if ( state.backtracking==0 ) {
-                       after(grammarAccess.getElementSetsAccess().getNameProcessesKeyword_0_5()); 
+                       after(grammarAccess.getElementSetAccess().getNameProcessesKeyword_0_5()); 
                     }
 
                     }
@@ -5546,11 +5546,11 @@ public class InternalResoluteParser extends AbstractInternalContentAssistParser 
                     // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:1839:1: 'subprograms'
                     {
                     if ( state.backtracking==0 ) {
-                       before(grammarAccess.getElementSetsAccess().getNameSubprogramsKeyword_0_6()); 
+                       before(grammarAccess.getElementSetAccess().getNameSubprogramsKeyword_0_6()); 
                     }
-                    match(input,23,FOLLOW_23_in_rule__ElementSets__NameAlternatives_03858); if (state.failed) return ;
+                    match(input,23,FOLLOW_23_in_rule__ElementSet__NameAlternatives_03858); if (state.failed) return ;
                     if ( state.backtracking==0 ) {
-                       after(grammarAccess.getElementSetsAccess().getNameSubprogramsKeyword_0_6()); 
+                       after(grammarAccess.getElementSetAccess().getNameSubprogramsKeyword_0_6()); 
                     }
 
                     }
@@ -5565,11 +5565,11 @@ public class InternalResoluteParser extends AbstractInternalContentAssistParser 
                     // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:1847:1: 'subprogram_groups'
                     {
                     if ( state.backtracking==0 ) {
-                       before(grammarAccess.getElementSetsAccess().getNameSubprogram_groupsKeyword_0_7()); 
+                       before(grammarAccess.getElementSetAccess().getNameSubprogram_groupsKeyword_0_7()); 
                     }
-                    match(input,24,FOLLOW_24_in_rule__ElementSets__NameAlternatives_03878); if (state.failed) return ;
+                    match(input,24,FOLLOW_24_in_rule__ElementSet__NameAlternatives_03878); if (state.failed) return ;
                     if ( state.backtracking==0 ) {
-                       after(grammarAccess.getElementSetsAccess().getNameSubprogram_groupsKeyword_0_7()); 
+                       after(grammarAccess.getElementSetAccess().getNameSubprogram_groupsKeyword_0_7()); 
                     }
 
                     }
@@ -5584,11 +5584,11 @@ public class InternalResoluteParser extends AbstractInternalContentAssistParser 
                     // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:1855:1: 'processors'
                     {
                     if ( state.backtracking==0 ) {
-                       before(grammarAccess.getElementSetsAccess().getNameProcessorsKeyword_0_8()); 
+                       before(grammarAccess.getElementSetAccess().getNameProcessorsKeyword_0_8()); 
                     }
-                    match(input,25,FOLLOW_25_in_rule__ElementSets__NameAlternatives_03898); if (state.failed) return ;
+                    match(input,25,FOLLOW_25_in_rule__ElementSet__NameAlternatives_03898); if (state.failed) return ;
                     if ( state.backtracking==0 ) {
-                       after(grammarAccess.getElementSetsAccess().getNameProcessorsKeyword_0_8()); 
+                       after(grammarAccess.getElementSetAccess().getNameProcessorsKeyword_0_8()); 
                     }
 
                     }
@@ -5603,11 +5603,11 @@ public class InternalResoluteParser extends AbstractInternalContentAssistParser 
                     // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:1863:1: 'virtual_processors'
                     {
                     if ( state.backtracking==0 ) {
-                       before(grammarAccess.getElementSetsAccess().getNameVirtual_processorsKeyword_0_9()); 
+                       before(grammarAccess.getElementSetAccess().getNameVirtual_processorsKeyword_0_9()); 
                     }
-                    match(input,26,FOLLOW_26_in_rule__ElementSets__NameAlternatives_03918); if (state.failed) return ;
+                    match(input,26,FOLLOW_26_in_rule__ElementSet__NameAlternatives_03918); if (state.failed) return ;
                     if ( state.backtracking==0 ) {
-                       after(grammarAccess.getElementSetsAccess().getNameVirtual_processorsKeyword_0_9()); 
+                       after(grammarAccess.getElementSetAccess().getNameVirtual_processorsKeyword_0_9()); 
                     }
 
                     }
@@ -5622,11 +5622,11 @@ public class InternalResoluteParser extends AbstractInternalContentAssistParser 
                     // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:1871:1: 'buses'
                     {
                     if ( state.backtracking==0 ) {
-                       before(grammarAccess.getElementSetsAccess().getNameBusesKeyword_0_10()); 
+                       before(grammarAccess.getElementSetAccess().getNameBusesKeyword_0_10()); 
                     }
-                    match(input,27,FOLLOW_27_in_rule__ElementSets__NameAlternatives_03938); if (state.failed) return ;
+                    match(input,27,FOLLOW_27_in_rule__ElementSet__NameAlternatives_03938); if (state.failed) return ;
                     if ( state.backtracking==0 ) {
-                       after(grammarAccess.getElementSetsAccess().getNameBusesKeyword_0_10()); 
+                       after(grammarAccess.getElementSetAccess().getNameBusesKeyword_0_10()); 
                     }
 
                     }
@@ -5641,11 +5641,11 @@ public class InternalResoluteParser extends AbstractInternalContentAssistParser 
                     // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:1879:1: 'virtual_buses'
                     {
                     if ( state.backtracking==0 ) {
-                       before(grammarAccess.getElementSetsAccess().getNameVirtual_busesKeyword_0_11()); 
+                       before(grammarAccess.getElementSetAccess().getNameVirtual_busesKeyword_0_11()); 
                     }
-                    match(input,28,FOLLOW_28_in_rule__ElementSets__NameAlternatives_03958); if (state.failed) return ;
+                    match(input,28,FOLLOW_28_in_rule__ElementSet__NameAlternatives_03958); if (state.failed) return ;
                     if ( state.backtracking==0 ) {
-                       after(grammarAccess.getElementSetsAccess().getNameVirtual_busesKeyword_0_11()); 
+                       after(grammarAccess.getElementSetAccess().getNameVirtual_busesKeyword_0_11()); 
                     }
 
                     }
@@ -5660,11 +5660,11 @@ public class InternalResoluteParser extends AbstractInternalContentAssistParser 
                     // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:1887:1: 'devices'
                     {
                     if ( state.backtracking==0 ) {
-                       before(grammarAccess.getElementSetsAccess().getNameDevicesKeyword_0_12()); 
+                       before(grammarAccess.getElementSetAccess().getNameDevicesKeyword_0_12()); 
                     }
-                    match(input,29,FOLLOW_29_in_rule__ElementSets__NameAlternatives_03978); if (state.failed) return ;
+                    match(input,29,FOLLOW_29_in_rule__ElementSet__NameAlternatives_03978); if (state.failed) return ;
                     if ( state.backtracking==0 ) {
-                       after(grammarAccess.getElementSetsAccess().getNameDevicesKeyword_0_12()); 
+                       after(grammarAccess.getElementSetAccess().getNameDevicesKeyword_0_12()); 
                     }
 
                     }
@@ -5679,11 +5679,11 @@ public class InternalResoluteParser extends AbstractInternalContentAssistParser 
                     // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:1895:1: 'systems'
                     {
                     if ( state.backtracking==0 ) {
-                       before(grammarAccess.getElementSetsAccess().getNameSystemsKeyword_0_13()); 
+                       before(grammarAccess.getElementSetAccess().getNameSystemsKeyword_0_13()); 
                     }
-                    match(input,30,FOLLOW_30_in_rule__ElementSets__NameAlternatives_03998); if (state.failed) return ;
+                    match(input,30,FOLLOW_30_in_rule__ElementSet__NameAlternatives_03998); if (state.failed) return ;
                     if ( state.backtracking==0 ) {
-                       after(grammarAccess.getElementSetsAccess().getNameSystemsKeyword_0_13()); 
+                       after(grammarAccess.getElementSetAccess().getNameSystemsKeyword_0_13()); 
                     }
 
                     }
@@ -5698,11 +5698,11 @@ public class InternalResoluteParser extends AbstractInternalContentAssistParser 
                     // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:1903:1: 'abstracts'
                     {
                     if ( state.backtracking==0 ) {
-                       before(grammarAccess.getElementSetsAccess().getNameAbstractsKeyword_0_14()); 
+                       before(grammarAccess.getElementSetAccess().getNameAbstractsKeyword_0_14()); 
                     }
-                    match(input,31,FOLLOW_31_in_rule__ElementSets__NameAlternatives_04018); if (state.failed) return ;
+                    match(input,31,FOLLOW_31_in_rule__ElementSet__NameAlternatives_04018); if (state.failed) return ;
                     if ( state.backtracking==0 ) {
-                       after(grammarAccess.getElementSetsAccess().getNameAbstractsKeyword_0_14()); 
+                       after(grammarAccess.getElementSetAccess().getNameAbstractsKeyword_0_14()); 
                     }
 
                     }
@@ -5717,11 +5717,11 @@ public class InternalResoluteParser extends AbstractInternalContentAssistParser 
                     // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:1911:1: 'connections'
                     {
                     if ( state.backtracking==0 ) {
-                       before(grammarAccess.getElementSetsAccess().getNameConnectionsKeyword_0_15()); 
+                       before(grammarAccess.getElementSetAccess().getNameConnectionsKeyword_0_15()); 
                     }
-                    match(input,32,FOLLOW_32_in_rule__ElementSets__NameAlternatives_04038); if (state.failed) return ;
+                    match(input,32,FOLLOW_32_in_rule__ElementSet__NameAlternatives_04038); if (state.failed) return ;
                     if ( state.backtracking==0 ) {
-                       after(grammarAccess.getElementSetsAccess().getNameConnectionsKeyword_0_15()); 
+                       after(grammarAccess.getElementSetAccess().getNameConnectionsKeyword_0_15()); 
                     }
 
                     }
@@ -5736,11 +5736,11 @@ public class InternalResoluteParser extends AbstractInternalContentAssistParser 
                     // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:1919:1: 'components'
                     {
                     if ( state.backtracking==0 ) {
-                       before(grammarAccess.getElementSetsAccess().getNameComponentsKeyword_0_16()); 
+                       before(grammarAccess.getElementSetAccess().getNameComponentsKeyword_0_16()); 
                     }
-                    match(input,33,FOLLOW_33_in_rule__ElementSets__NameAlternatives_04058); if (state.failed) return ;
+                    match(input,33,FOLLOW_33_in_rule__ElementSet__NameAlternatives_04058); if (state.failed) return ;
                     if ( state.backtracking==0 ) {
-                       after(grammarAccess.getElementSetsAccess().getNameComponentsKeyword_0_16()); 
+                       after(grammarAccess.getElementSetAccess().getNameComponentsKeyword_0_16()); 
                     }
 
                     }
@@ -5762,7 +5762,7 @@ public class InternalResoluteParser extends AbstractInternalContentAssistParser 
         }
         return ;
     }
-    // $ANTLR end "rule__ElementSets__NameAlternatives_0"
+    // $ANTLR end "rule__ElementSet__NameAlternatives_0"
 
 
     // $ANTLR start "rule__BuiltinType__NameAlternatives_0"
@@ -33238,27 +33238,27 @@ public class InternalResoluteParser extends AbstractInternalContentAssistParser 
     // $ANTLR end "rule__Type__TypeAssignment_0_2"
 
 
-    // $ANTLR start "rule__ElementSets__NameAssignment"
-    // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:11833:1: rule__ElementSets__NameAssignment : ( ( rule__ElementSets__NameAlternatives_0 ) ) ;
-    public final void rule__ElementSets__NameAssignment() throws RecognitionException {
+    // $ANTLR start "rule__ElementSet__NameAssignment"
+    // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:11833:1: rule__ElementSet__NameAssignment : ( ( rule__ElementSet__NameAlternatives_0 ) ) ;
+    public final void rule__ElementSet__NameAssignment() throws RecognitionException {
 
         		int stackSize = keepStackSize();
             
         try {
-            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:11837:1: ( ( ( rule__ElementSets__NameAlternatives_0 ) ) )
-            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:11838:1: ( ( rule__ElementSets__NameAlternatives_0 ) )
+            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:11837:1: ( ( ( rule__ElementSet__NameAlternatives_0 ) ) )
+            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:11838:1: ( ( rule__ElementSet__NameAlternatives_0 ) )
             {
-            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:11838:1: ( ( rule__ElementSets__NameAlternatives_0 ) )
-            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:11839:1: ( rule__ElementSets__NameAlternatives_0 )
+            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:11838:1: ( ( rule__ElementSet__NameAlternatives_0 ) )
+            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:11839:1: ( rule__ElementSet__NameAlternatives_0 )
             {
             if ( state.backtracking==0 ) {
-               before(grammarAccess.getElementSetsAccess().getNameAlternatives_0()); 
+               before(grammarAccess.getElementSetAccess().getNameAlternatives_0()); 
             }
-            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:11840:1: ( rule__ElementSets__NameAlternatives_0 )
-            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:11840:2: rule__ElementSets__NameAlternatives_0
+            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:11840:1: ( rule__ElementSet__NameAlternatives_0 )
+            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:11840:2: rule__ElementSet__NameAlternatives_0
             {
-            pushFollow(FOLLOW_rule__ElementSets__NameAlternatives_0_in_rule__ElementSets__NameAssignment23872);
-            rule__ElementSets__NameAlternatives_0();
+            pushFollow(FOLLOW_rule__ElementSet__NameAlternatives_0_in_rule__ElementSet__NameAssignment23872);
+            rule__ElementSet__NameAlternatives_0();
 
             state._fsp--;
             if (state.failed) return ;
@@ -33266,7 +33266,7 @@ public class InternalResoluteParser extends AbstractInternalContentAssistParser 
             }
 
             if ( state.backtracking==0 ) {
-               after(grammarAccess.getElementSetsAccess().getNameAlternatives_0()); 
+               after(grammarAccess.getElementSetAccess().getNameAlternatives_0()); 
             }
 
             }
@@ -33286,7 +33286,7 @@ public class InternalResoluteParser extends AbstractInternalContentAssistParser 
         }
         return ;
     }
-    // $ANTLR end "rule__ElementSets__NameAssignment"
+    // $ANTLR end "rule__ElementSet__NameAssignment"
 
 
     // $ANTLR start "rule__BuiltinType__NameAssignment"
@@ -34833,28 +34833,28 @@ public class InternalResoluteParser extends AbstractInternalContentAssistParser 
 
 
     // $ANTLR start "rule__AtomicExpr__SubelementsAssignment_0_2_1"
-    // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12381:1: rule__AtomicExpr__SubelementsAssignment_0_2_1 : ( ruleElementSets ) ;
+    // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12381:1: rule__AtomicExpr__SubelementsAssignment_0_2_1 : ( ruleElementSet ) ;
     public final void rule__AtomicExpr__SubelementsAssignment_0_2_1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
             
         try {
-            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12385:1: ( ( ruleElementSets ) )
-            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12386:1: ( ruleElementSets )
+            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12385:1: ( ( ruleElementSet ) )
+            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12386:1: ( ruleElementSet )
             {
-            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12386:1: ( ruleElementSets )
-            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12387:1: ruleElementSets
+            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12386:1: ( ruleElementSet )
+            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:12387:1: ruleElementSet
             {
             if ( state.backtracking==0 ) {
-               before(grammarAccess.getAtomicExprAccess().getSubelementsElementSetsParserRuleCall_0_2_1_0()); 
+               before(grammarAccess.getAtomicExprAccess().getSubelementsElementSetParserRuleCall_0_2_1_0()); 
             }
-            pushFollow(FOLLOW_ruleElementSets_in_rule__AtomicExpr__SubelementsAssignment_0_2_124993);
-            ruleElementSets();
+            pushFollow(FOLLOW_ruleElementSet_in_rule__AtomicExpr__SubelementsAssignment_0_2_124993);
+            ruleElementSet();
 
             state._fsp--;
             if (state.failed) return ;
             if ( state.backtracking==0 ) {
-               after(grammarAccess.getAtomicExprAccess().getSubelementsElementSetsParserRuleCall_0_2_1_0()); 
+               after(grammarAccess.getAtomicExprAccess().getSubelementsElementSetParserRuleCall_0_2_1_0()); 
             }
 
             }
@@ -38768,9 +38768,9 @@ public class InternalResoluteParser extends AbstractInternalContentAssistParser 
     public static final BitSet FOLLOW_ruleType_in_entryRuleType254 = new BitSet(new long[]{0x0000000000000000L});
     public static final BitSet FOLLOW_EOF_in_entryRuleType261 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_rule__Type__Alternatives_in_ruleType287 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleElementSets_in_entryRuleElementSets314 = new BitSet(new long[]{0x0000000000000000L});
-    public static final BitSet FOLLOW_EOF_in_entryRuleElementSets321 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_rule__ElementSets__NameAssignment_in_ruleElementSets347 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ruleElementSet_in_entryRuleElementSet314 = new BitSet(new long[]{0x0000000000000000L});
+    public static final BitSet FOLLOW_EOF_in_entryRuleElementSet321 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_rule__ElementSet__NameAssignment_in_ruleElementSet347 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_ruleBuiltinType_in_entryRuleBuiltinType374 = new BitSet(new long[]{0x0000000000000000L});
     public static final BitSet FOLLOW_EOF_in_entryRuleBuiltinType381 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_rule__BuiltinType__NameAssignment_in_ruleBuiltinType407 = new BitSet(new long[]{0x0000000000000002L});
@@ -38937,23 +38937,23 @@ public class InternalResoluteParser extends AbstractInternalContentAssistParser 
     public static final BitSet FOLLOW_ruleFunctionDefinition_in_rule__Definition__Alternatives3655 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_rule__Type__Group_0__0_in_rule__Type__Alternatives3687 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_ruleBuiltinType_in_rule__Type__Alternatives3705 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_17_in_rule__ElementSets__NameAlternatives_03738 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_18_in_rule__ElementSets__NameAlternatives_03758 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_19_in_rule__ElementSets__NameAlternatives_03778 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_20_in_rule__ElementSets__NameAlternatives_03798 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_21_in_rule__ElementSets__NameAlternatives_03818 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_22_in_rule__ElementSets__NameAlternatives_03838 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_23_in_rule__ElementSets__NameAlternatives_03858 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_24_in_rule__ElementSets__NameAlternatives_03878 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_25_in_rule__ElementSets__NameAlternatives_03898 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_26_in_rule__ElementSets__NameAlternatives_03918 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_27_in_rule__ElementSets__NameAlternatives_03938 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_28_in_rule__ElementSets__NameAlternatives_03958 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_29_in_rule__ElementSets__NameAlternatives_03978 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_30_in_rule__ElementSets__NameAlternatives_03998 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_31_in_rule__ElementSets__NameAlternatives_04018 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_32_in_rule__ElementSets__NameAlternatives_04038 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_33_in_rule__ElementSets__NameAlternatives_04058 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_17_in_rule__ElementSet__NameAlternatives_03738 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_18_in_rule__ElementSet__NameAlternatives_03758 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_19_in_rule__ElementSet__NameAlternatives_03778 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_20_in_rule__ElementSet__NameAlternatives_03798 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_21_in_rule__ElementSet__NameAlternatives_03818 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_22_in_rule__ElementSet__NameAlternatives_03838 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_23_in_rule__ElementSet__NameAlternatives_03858 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_24_in_rule__ElementSet__NameAlternatives_03878 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_25_in_rule__ElementSet__NameAlternatives_03898 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_26_in_rule__ElementSet__NameAlternatives_03918 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_27_in_rule__ElementSet__NameAlternatives_03938 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_28_in_rule__ElementSet__NameAlternatives_03958 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_29_in_rule__ElementSet__NameAlternatives_03978 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_30_in_rule__ElementSet__NameAlternatives_03998 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_31_in_rule__ElementSet__NameAlternatives_04018 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_32_in_rule__ElementSet__NameAlternatives_04038 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_33_in_rule__ElementSet__NameAlternatives_04058 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_18_in_rule__BuiltinType__NameAlternatives_04093 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_34_in_rule__BuiltinType__NameAlternatives_04113 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_35_in_rule__BuiltinType__NameAlternatives_04133 = new BitSet(new long[]{0x0000000000000002L});
@@ -39770,7 +39770,7 @@ public class InternalResoluteParser extends AbstractInternalContentAssistParser 
     public static final BitSet FOLLOW_RULE_ID_in_rule__QCREF__Group_2__1__Impl23772 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_ruleDefinition_in_rule__ResoluteLibrary__DefinitionsAssignment_123810 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_ruleType_in_rule__Type__TypeAssignment_0_223841 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_rule__ElementSets__NameAlternatives_0_in_rule__ElementSets__NameAssignment23872 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_rule__ElementSet__NameAlternatives_0_in_rule__ElementSet__NameAssignment23872 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_rule__BuiltinType__NameAlternatives_0_in_rule__BuiltinType__NameAssignment23905 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_RULE_ID_in_rule__Arg__NameAssignment_023938 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_ruleType_in_rule__Arg__TypeAssignment_223969 = new BitSet(new long[]{0x0000000000000002L});
@@ -39804,7 +39804,7 @@ public class InternalResoluteParser extends AbstractInternalContentAssistParser 
     public static final BitSet FOLLOW_rule__PrefixExpr__OpAlternatives_0_1_0_in_rule__PrefixExpr__OpAssignment_0_124890 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_rulePrefixExpr_in_rule__PrefixExpr__ExprAssignment_0_224923 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_ruleQCREF_in_rule__AtomicExpr__IdAssignment_0_124958 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleElementSets_in_rule__AtomicExpr__SubelementsAssignment_0_2_124993 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ruleElementSet_in_rule__AtomicExpr__SubelementsAssignment_0_2_124993 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_ruleNestedDotID_in_rule__AtomicExpr__SubAssignment_1_2_125024 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_ruleStringTerm_in_rule__AtomicExpr__ValAssignment_2_225055 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_ruleIntegerTerm_in_rule__AtomicExpr__ValAssignment_3_125086 = new BitSet(new long[]{0x0000000000000002L});

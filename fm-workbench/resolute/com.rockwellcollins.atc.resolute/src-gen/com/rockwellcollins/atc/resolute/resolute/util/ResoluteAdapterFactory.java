@@ -97,9 +97,9 @@ public class ResoluteAdapterFactory extends AdapterFactoryImpl
         return createTypeAdapter();
       }
       @Override
-      public Adapter caseElementSets(ElementSets object)
+      public Adapter caseElementSet(ElementSet object)
       {
-        return createElementSetsAdapter();
+        return createElementSetAdapter();
       }
       @Override
       public Adapter caseBuiltinType(BuiltinType object)
@@ -344,16 +344,16 @@ public class ResoluteAdapterFactory extends AdapterFactoryImpl
   }
 
   /**
-   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.resolute.resolute.ElementSets <em>Element Sets</em>}'.
+   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.resolute.resolute.ElementSet <em>Element Set</em>}'.
    * <!-- begin-user-doc -->
    * This default implementation returns null so that we can easily ignore cases;
    * it's useful to ignore a case when inheritance will catch all the cases anyway.
    * <!-- end-user-doc -->
    * @return the new adapter.
-   * @see com.rockwellcollins.atc.resolute.resolute.ElementSets
+   * @see com.rockwellcollins.atc.resolute.resolute.ElementSet
    * @generated
    */
-  public Adapter createElementSetsAdapter()
+  public Adapter createElementSetAdapter()
   {
     return null;
   }

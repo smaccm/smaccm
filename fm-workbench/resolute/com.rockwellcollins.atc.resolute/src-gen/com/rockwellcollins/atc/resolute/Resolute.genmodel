@@ -13,8 +13,8 @@
     </genClasses>
     <genClasses ecoreClass="Resolute.ecore#//Definition"/>
     <genClasses ecoreClass="Resolute.ecore#//Type"/>
-    <genClasses ecoreClass="Resolute.ecore#//ElementSets">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Resolute.ecore#//ElementSets/name"/>
+    <genClasses ecoreClass="Resolute.ecore#//ElementSet">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Resolute.ecore#//ElementSet/name"/>
     </genClasses>
     <genClasses ecoreClass="Resolute.ecore#//BuiltinType"/>
     <genClasses ecoreClass="Resolute.ecore#//Arg">

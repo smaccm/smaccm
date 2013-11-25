@@ -177,25 +177,25 @@ finally {
 
 
 
-// Entry rule entryRuleElementSets
-entryRuleElementSets 
+// Entry rule entryRuleElementSet
+entryRuleElementSet 
 :
-{ before(grammarAccess.getElementSetsRule()); }
-	 ruleElementSets
-{ after(grammarAccess.getElementSetsRule()); } 
+{ before(grammarAccess.getElementSetRule()); }
+	 ruleElementSet
+{ after(grammarAccess.getElementSetRule()); } 
 	 EOF 
 ;
 
-// Rule ElementSets
-ruleElementSets
+// Rule ElementSet
+ruleElementSet
     @init {
 		int stackSize = keepStackSize();
     }
 	:
 (
-{ before(grammarAccess.getElementSetsAccess().getNameAssignment()); }
-(rule__ElementSets__NameAssignment)
-{ after(grammarAccess.getElementSetsAccess().getNameAssignment()); }
+{ before(grammarAccess.getElementSetAccess().getNameAssignment()); }
+(rule__ElementSet__NameAssignment)
+{ after(grammarAccess.getElementSetAccess().getNameAssignment()); }
 )
 
 ;
@@ -1782,145 +1782,145 @@ finally {
 	restoreStackSize(stackSize);
 }
 
-rule__ElementSets__NameAlternatives_0
+rule__ElementSet__NameAlternatives_0
     @init {
 		int stackSize = keepStackSize();
     }
 :
 (
-{ before(grammarAccess.getElementSetsAccess().getNameThreadsKeyword_0_0()); }
+{ before(grammarAccess.getElementSetAccess().getNameThreadsKeyword_0_0()); }
 
 	'threads' 
 
-{ after(grammarAccess.getElementSetsAccess().getNameThreadsKeyword_0_0()); }
+{ after(grammarAccess.getElementSetAccess().getNameThreadsKeyword_0_0()); }
 )
 
     |(
-{ before(grammarAccess.getElementSetsAccess().getNameDataKeyword_0_1()); }
+{ before(grammarAccess.getElementSetAccess().getNameDataKeyword_0_1()); }
 
 	'data' 
 
-{ after(grammarAccess.getElementSetsAccess().getNameDataKeyword_0_1()); }
+{ after(grammarAccess.getElementSetAccess().getNameDataKeyword_0_1()); }
 )
 
     |(
-{ before(grammarAccess.getElementSetsAccess().getNameMemoryKeyword_0_2()); }
+{ before(grammarAccess.getElementSetAccess().getNameMemoryKeyword_0_2()); }
 
 	'memory' 
 
-{ after(grammarAccess.getElementSetsAccess().getNameMemoryKeyword_0_2()); }
+{ after(grammarAccess.getElementSetAccess().getNameMemoryKeyword_0_2()); }
 )
 
     |(
-{ before(grammarAccess.getElementSetsAccess().getNameMemoriesKeyword_0_3()); }
+{ before(grammarAccess.getElementSetAccess().getNameMemoriesKeyword_0_3()); }
 
 	'memories' 
 
-{ after(grammarAccess.getElementSetsAccess().getNameMemoriesKeyword_0_3()); }
+{ after(grammarAccess.getElementSetAccess().getNameMemoriesKeyword_0_3()); }
 )
 
     |(
-{ before(grammarAccess.getElementSetsAccess().getNameThread_groupsKeyword_0_4()); }
+{ before(grammarAccess.getElementSetAccess().getNameThread_groupsKeyword_0_4()); }
 
 	'thread_groups' 
 
-{ after(grammarAccess.getElementSetsAccess().getNameThread_groupsKeyword_0_4()); }
+{ after(grammarAccess.getElementSetAccess().getNameThread_groupsKeyword_0_4()); }
 )
 
     |(
-{ before(grammarAccess.getElementSetsAccess().getNameProcessesKeyword_0_5()); }
+{ before(grammarAccess.getElementSetAccess().getNameProcessesKeyword_0_5()); }
 
 	'processes' 
 
-{ after(grammarAccess.getElementSetsAccess().getNameProcessesKeyword_0_5()); }
+{ after(grammarAccess.getElementSetAccess().getNameProcessesKeyword_0_5()); }
 )
 
     |(
-{ before(grammarAccess.getElementSetsAccess().getNameSubprogramsKeyword_0_6()); }
+{ before(grammarAccess.getElementSetAccess().getNameSubprogramsKeyword_0_6()); }
 
 	'subprograms' 
 
-{ after(grammarAccess.getElementSetsAccess().getNameSubprogramsKeyword_0_6()); }
+{ after(grammarAccess.getElementSetAccess().getNameSubprogramsKeyword_0_6()); }
 )
 
     |(
-{ before(grammarAccess.getElementSetsAccess().getNameSubprogram_groupsKeyword_0_7()); }
+{ before(grammarAccess.getElementSetAccess().getNameSubprogram_groupsKeyword_0_7()); }
 
 	'subprogram_groups' 
 
-{ after(grammarAccess.getElementSetsAccess().getNameSubprogram_groupsKeyword_0_7()); }
+{ after(grammarAccess.getElementSetAccess().getNameSubprogram_groupsKeyword_0_7()); }
 )
 
     |(
-{ before(grammarAccess.getElementSetsAccess().getNameProcessorsKeyword_0_8()); }
+{ before(grammarAccess.getElementSetAccess().getNameProcessorsKeyword_0_8()); }
 
 	'processors' 
 
-{ after(grammarAccess.getElementSetsAccess().getNameProcessorsKeyword_0_8()); }
+{ after(grammarAccess.getElementSetAccess().getNameProcessorsKeyword_0_8()); }
 )
 
     |(
-{ before(grammarAccess.getElementSetsAccess().getNameVirtual_processorsKeyword_0_9()); }
+{ before(grammarAccess.getElementSetAccess().getNameVirtual_processorsKeyword_0_9()); }
 
 	'virtual_processors' 
 
-{ after(grammarAccess.getElementSetsAccess().getNameVirtual_processorsKeyword_0_9()); }
+{ after(grammarAccess.getElementSetAccess().getNameVirtual_processorsKeyword_0_9()); }
 )
 
     |(
-{ before(grammarAccess.getElementSetsAccess().getNameBusesKeyword_0_10()); }
+{ before(grammarAccess.getElementSetAccess().getNameBusesKeyword_0_10()); }
 
 	'buses' 
 
-{ after(grammarAccess.getElementSetsAccess().getNameBusesKeyword_0_10()); }
+{ after(grammarAccess.getElementSetAccess().getNameBusesKeyword_0_10()); }
 )
 
     |(
-{ before(grammarAccess.getElementSetsAccess().getNameVirtual_busesKeyword_0_11()); }
+{ before(grammarAccess.getElementSetAccess().getNameVirtual_busesKeyword_0_11()); }
 
 	'virtual_buses' 
 
-{ after(grammarAccess.getElementSetsAccess().getNameVirtual_busesKeyword_0_11()); }
+{ after(grammarAccess.getElementSetAccess().getNameVirtual_busesKeyword_0_11()); }
 )
 
     |(
-{ before(grammarAccess.getElementSetsAccess().getNameDevicesKeyword_0_12()); }
+{ before(grammarAccess.getElementSetAccess().getNameDevicesKeyword_0_12()); }
 
 	'devices' 
 
-{ after(grammarAccess.getElementSetsAccess().getNameDevicesKeyword_0_12()); }
+{ after(grammarAccess.getElementSetAccess().getNameDevicesKeyword_0_12()); }
 )
 
     |(
-{ before(grammarAccess.getElementSetsAccess().getNameSystemsKeyword_0_13()); }
+{ before(grammarAccess.getElementSetAccess().getNameSystemsKeyword_0_13()); }
 
 	'systems' 
 
-{ after(grammarAccess.getElementSetsAccess().getNameSystemsKeyword_0_13()); }
+{ after(grammarAccess.getElementSetAccess().getNameSystemsKeyword_0_13()); }
 )
 
     |(
-{ before(grammarAccess.getElementSetsAccess().getNameAbstractsKeyword_0_14()); }
+{ before(grammarAccess.getElementSetAccess().getNameAbstractsKeyword_0_14()); }
 
 	'abstracts' 
 
-{ after(grammarAccess.getElementSetsAccess().getNameAbstractsKeyword_0_14()); }
+{ after(grammarAccess.getElementSetAccess().getNameAbstractsKeyword_0_14()); }
 )
 
     |(
-{ before(grammarAccess.getElementSetsAccess().getNameConnectionsKeyword_0_15()); }
+{ before(grammarAccess.getElementSetAccess().getNameConnectionsKeyword_0_15()); }
 
 	'connections' 
 
-{ after(grammarAccess.getElementSetsAccess().getNameConnectionsKeyword_0_15()); }
+{ after(grammarAccess.getElementSetAccess().getNameConnectionsKeyword_0_15()); }
 )
 
     |(
-{ before(grammarAccess.getElementSetsAccess().getNameComponentsKeyword_0_16()); }
+{ before(grammarAccess.getElementSetAccess().getNameComponentsKeyword_0_16()); }
 
 	'components' 
 
-{ after(grammarAccess.getElementSetsAccess().getNameComponentsKeyword_0_16()); }
+{ after(grammarAccess.getElementSetAccess().getNameComponentsKeyword_0_16()); }
 )
 
 ;
@@ -11830,15 +11830,15 @@ finally {
 	restoreStackSize(stackSize);
 }
 
-rule__ElementSets__NameAssignment
+rule__ElementSet__NameAssignment
     @init {
 		int stackSize = keepStackSize();
     }
 :
 (
-{ before(grammarAccess.getElementSetsAccess().getNameAlternatives_0()); }
-(rule__ElementSets__NameAlternatives_0)
-{ after(grammarAccess.getElementSetsAccess().getNameAlternatives_0()); }
+{ before(grammarAccess.getElementSetAccess().getNameAlternatives_0()); }
+(rule__ElementSet__NameAlternatives_0)
+{ after(grammarAccess.getElementSetAccess().getNameAlternatives_0()); }
 )
 
 ;
@@ -12384,8 +12384,8 @@ rule__AtomicExpr__SubelementsAssignment_0_2_1
     }
 :
 (
-{ before(grammarAccess.getAtomicExprAccess().getSubelementsElementSetsParserRuleCall_0_2_1_0()); }
-	ruleElementSets{ after(grammarAccess.getAtomicExprAccess().getSubelementsElementSetsParserRuleCall_0_2_1_0()); }
+{ before(grammarAccess.getAtomicExprAccess().getSubelementsElementSetParserRuleCall_0_2_1_0()); }
+	ruleElementSet{ after(grammarAccess.getAtomicExprAccess().getSubelementsElementSetParserRuleCall_0_2_1_0()); }
 )
 
 ;

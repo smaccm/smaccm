@@ -2,7 +2,7 @@
  */
 package com.rockwellcollins.atc.resolute.resolute.impl;
 
-import com.rockwellcollins.atc.resolute.resolute.ElementSets;
+import com.rockwellcollins.atc.resolute.resolute.ElementSet;
 import com.rockwellcollins.atc.resolute.resolute.IdExpr;
 import com.rockwellcollins.atc.resolute.resolute.ResolutePackage;
 
@@ -51,7 +51,7 @@ public class IdExprImpl extends ExprImpl implements IdExpr
    * @generated
    * @ordered
    */
-  protected ElementSets subelements;
+  protected ElementSet subelements;
 
   /**
    * <!-- begin-user-doc -->
@@ -122,7 +122,7 @@ public class IdExprImpl extends ExprImpl implements IdExpr
    * <!-- end-user-doc -->
    * @generated
    */
-  public ElementSets getSubelements()
+  public ElementSet getSubelements()
   {
     return subelements;
   }
@@ -132,9 +132,9 @@ public class IdExprImpl extends ExprImpl implements IdExpr
    * <!-- end-user-doc -->
    * @generated
    */
-  public NotificationChain basicSetSubelements(ElementSets newSubelements, NotificationChain msgs)
+  public NotificationChain basicSetSubelements(ElementSet newSubelements, NotificationChain msgs)
   {
-    ElementSets oldSubelements = subelements;
+    ElementSet oldSubelements = subelements;
     subelements = newSubelements;
     if (eNotificationRequired())
     {
@@ -149,7 +149,7 @@ public class IdExprImpl extends ExprImpl implements IdExpr
    * <!-- end-user-doc -->
    * @generated
    */
-  public void setSubelements(ElementSets newSubelements)
+  public void setSubelements(ElementSet newSubelements)
   {
     if (newSubelements != subelements)
     {
@@ -214,7 +214,7 @@ public class IdExprImpl extends ExprImpl implements IdExpr
         setId((NamedElement)newValue);
         return;
       case ResolutePackage.ID_EXPR__SUBELEMENTS:
-        setSubelements((ElementSets)newValue);
+        setSubelements((ElementSet)newValue);
         return;
     }
     super.eSet(featureID, newValue);
@@ -234,7 +234,7 @@ public class IdExprImpl extends ExprImpl implements IdExpr
         setId((NamedElement)null);
         return;
       case ResolutePackage.ID_EXPR__SUBELEMENTS:
-        setSubelements((ElementSets)null);
+        setSubelements((ElementSet)null);
         return;
     }
     super.eUnset(featureID);

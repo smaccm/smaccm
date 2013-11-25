@@ -198,8 +198,8 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		public RuleCall getBuiltinTypeParserRuleCall_1() { return cBuiltinTypeParserRuleCall_1; }
 	}
 
-	public class ElementSetsElements extends AbstractParserRuleElementFinder {
-		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "ElementSets");
+	public class ElementSetElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "ElementSet");
 		private final Assignment cNameAssignment = (Assignment)rule.eContents().get(1);
 		private final Alternatives cNameAlternatives_0 = (Alternatives)cNameAssignment.eContents().get(0);
 		private final Keyword cNameThreadsKeyword_0_0 = (Keyword)cNameAlternatives_0.eContents().get(0);
@@ -220,7 +220,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		private final Keyword cNameConnectionsKeyword_0_15 = (Keyword)cNameAlternatives_0.eContents().get(15);
 		private final Keyword cNameComponentsKeyword_0_16 = (Keyword)cNameAlternatives_0.eContents().get(16);
 		
-		//ElementSets: //stuff for quantifiers only
+		//ElementSet: //stuff for quantifiers only
 		//	name=("threads" //non-aadl components
 		//	| "data" | "memory" | "memories" | "thread_groups" | "processes" | "subprograms" | "subprogram_groups" | "processors" |
 		//	"virtual_processors" | "buses" | "virtual_buses" | "devices" | "systems" | "abstracts" | "connections" |
@@ -1140,7 +1140,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		private final Group cGroup_0_2 = (Group)cGroup_0.eContents().get(2);
 		private final Keyword cFullStopKeyword_0_2_0 = (Keyword)cGroup_0_2.eContents().get(0);
 		private final Assignment cSubelementsAssignment_0_2_1 = (Assignment)cGroup_0_2.eContents().get(1);
-		private final RuleCall cSubelementsElementSetsParserRuleCall_0_2_1_0 = (RuleCall)cSubelementsAssignment_0_2_1.eContents().get(0);
+		private final RuleCall cSubelementsElementSetParserRuleCall_0_2_1_0 = (RuleCall)cSubelementsAssignment_0_2_1.eContents().get(0);
 		private final Group cGroup_1 = (Group)cAlternatives.eContents().get(1);
 		private final Action cThisExprAction_1_0 = (Action)cGroup_1.eContents().get(0);
 		private final Keyword cThisKeyword_1_1 = (Keyword)cGroup_1.eContents().get(1);
@@ -1243,7 +1243,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		private final Keyword cRightParenthesisKeyword_12_2 = (Keyword)cGroup_12.eContents().get(2);
 		
 		//AtomicExpr returns Expr:
-		//	{IdExpr} id=[aadl2::NamedElement|QCREF] ("." subelements=ElementSets)? //for set expressions
+		//	{IdExpr} id=[aadl2::NamedElement|QCREF] ("." subelements=ElementSet)? //for set expressions
 		//	| {ThisExpr} "this" ("." sub=NestedDotID)? | {FailExpr} "fail" val=StringTerm? | {IntExpr} val=IntegerTerm | {RealExpr}
 		//	val=RealTerm | {BoolExpr} val=BooleanLiteral | {StringExpr} val=StringTerm | {IfThenElseExpr} "if" cond=Expr "then"
 		//	then=Expr "else" else=Expr | {QuantifiedExpr} quant=("forall" | "exists") ("(" args+=QuantArg ")")+ "." expr=Expr |
@@ -1252,7 +1252,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		//	"}" | "(" Expr ")";
 		public ParserRule getRule() { return rule; }
 
-		//{IdExpr} id=[aadl2::NamedElement|QCREF] ("." subelements=ElementSets)? //for set expressions
+		//{IdExpr} id=[aadl2::NamedElement|QCREF] ("." subelements=ElementSet)? //for set expressions
 		//| {ThisExpr} "this" ("." sub=NestedDotID)? | {FailExpr} "fail" val=StringTerm? | {IntExpr} val=IntegerTerm | {RealExpr}
 		//val=RealTerm | {BoolExpr} val=BooleanLiteral | {StringExpr} val=StringTerm | {IfThenElseExpr} "if" cond=Expr "then"
 		//then=Expr "else" else=Expr | {QuantifiedExpr} quant=("forall" | "exists") ("(" args+=QuantArg ")")+ "." expr=Expr |
@@ -1261,7 +1261,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		//"(" Expr ")"
 		public Alternatives getAlternatives() { return cAlternatives; }
 
-		//{IdExpr} id=[aadl2::NamedElement|QCREF] ("." subelements=ElementSets)? //for set expressions
+		//{IdExpr} id=[aadl2::NamedElement|QCREF] ("." subelements=ElementSet)? //for set expressions
 		public Group getGroup_0() { return cGroup_0; }
 
 		//{IdExpr}
@@ -1276,17 +1276,17 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		//QCREF
 		public RuleCall getIdNamedElementQCREFParserRuleCall_0_1_0_1() { return cIdNamedElementQCREFParserRuleCall_0_1_0_1; }
 
-		//("." subelements=ElementSets)?
+		//("." subelements=ElementSet)?
 		public Group getGroup_0_2() { return cGroup_0_2; }
 
 		//"."
 		public Keyword getFullStopKeyword_0_2_0() { return cFullStopKeyword_0_2_0; }
 
-		//subelements=ElementSets
+		//subelements=ElementSet
 		public Assignment getSubelementsAssignment_0_2_1() { return cSubelementsAssignment_0_2_1; }
 
-		//ElementSets
-		public RuleCall getSubelementsElementSetsParserRuleCall_0_2_1_0() { return cSubelementsElementSetsParserRuleCall_0_2_1_0; }
+		//ElementSet
+		public RuleCall getSubelementsElementSetParserRuleCall_0_2_1_0() { return cSubelementsElementSetParserRuleCall_0_2_1_0; }
 
 		//{ThisExpr} "this" ("." sub=NestedDotID)?
 		public Group getGroup_1() { return cGroup_1; }
@@ -1912,7 +1912,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	private ResoluteLibraryElements pResoluteLibrary;
 	private DefinitionElements pDefinition;
 	private TypeElements pType;
-	private ElementSetsElements pElementSets;
+	private ElementSetElements pElementSet;
 	private BuiltinTypeElements pBuiltinType;
 	private ArgElements pArg;
 	private ConstantDefinitionElements pConstantDefinition;
@@ -2058,17 +2058,17 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		return getTypeAccess().getRule();
 	}
 
-	//ElementSets: //stuff for quantifiers only
+	//ElementSet: //stuff for quantifiers only
 	//	name=("threads" //non-aadl components
 	//	| "data" | "memory" | "memories" | "thread_groups" | "processes" | "subprograms" | "subprogram_groups" | "processors" |
 	//	"virtual_processors" | "buses" | "virtual_buses" | "devices" | "systems" | "abstracts" | "connections" |
 	//	"components");
-	public ElementSetsElements getElementSetsAccess() {
-		return (pElementSets != null) ? pElementSets : (pElementSets = new ElementSetsElements());
+	public ElementSetElements getElementSetAccess() {
+		return (pElementSet != null) ? pElementSet : (pElementSet = new ElementSetElements());
 	}
 	
-	public ParserRule getElementSetsRule() {
-		return getElementSetsAccess().getRule();
+	public ParserRule getElementSetRule() {
+		return getElementSetAccess().getRule();
 	}
 
 	//BuiltinType: //aadl components
@@ -2236,7 +2236,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	}
 
 	//AtomicExpr returns Expr:
-	//	{IdExpr} id=[aadl2::NamedElement|QCREF] ("." subelements=ElementSets)? //for set expressions
+	//	{IdExpr} id=[aadl2::NamedElement|QCREF] ("." subelements=ElementSet)? //for set expressions
 	//	| {ThisExpr} "this" ("." sub=NestedDotID)? | {FailExpr} "fail" val=StringTerm? | {IntExpr} val=IntegerTerm | {RealExpr}
 	//	val=RealTerm | {BoolExpr} val=BooleanLiteral | {StringExpr} val=StringTerm | {IfThenElseExpr} "if" cond=Expr "then"
 	//	then=Expr "else" else=Expr | {QuantifiedExpr} quant=("forall" | "exists") ("(" args+=QuantArg ")")+ "." expr=Expr |

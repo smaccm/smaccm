@@ -49,6 +49,7 @@ import com.rockwellcollins.atc.resolute.resolute.BuiltinType;
 import com.rockwellcollins.atc.resolute.resolute.ClaimBody;
 import com.rockwellcollins.atc.resolute.resolute.ConstantDefinition;
 import com.rockwellcollins.atc.resolute.resolute.DefinitionBody;
+import com.rockwellcollins.atc.resolute.resolute.ElementSet;
 import com.rockwellcollins.atc.resolute.resolute.Expr;
 import com.rockwellcollins.atc.resolute.resolute.FailExpr;
 import com.rockwellcollins.atc.resolute.resolute.FilterMapExpr;
@@ -214,9 +215,25 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
     @Check
     public void checkQuantifiedExpr(QuantifiedExpr quantExpr) {
         ResoluteType exprType = getExprType(quantExpr.getExpr());
+       
         if (!exprType.subtypeOf(BaseType.BOOL)) {
             error(quantExpr, "Expected type bool but found type " + exprType);
         }
+        
+        //check argument types
+        
+        for(Arg arg : quantExpr.getArgs()){
+            QuantArg qArg = (QuantArg)arg;
+            
+            ResoluteType argType = getExprType(qArg.getExpr());
+            
+            if(!(argType instanceof SetType)){
+                error(quantExpr, "Arguments to quantifier is of type '" + argType 
+                        +"' but must be of a set type");
+            }
+            
+        }
+        
     }
 
     @Check
@@ -564,7 +581,7 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 
         if (expr instanceof IdExpr) {
             IdExpr id = (IdExpr) expr;
-            BuiltinType subEls = id.getSubelements();
+            ElementSet subEls = id.getSubelements();
             
             if(subEls != null){
                 return typeToResoluteType(subEls);
@@ -624,6 +641,11 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 
         if (idClass instanceof Arg) {
             Arg arg = (Arg) idClass;
+            
+            if(arg instanceof QuantArg){
+                return BaseType.FAIL;
+            }
+            
             return typeToResoluteType((Type)arg.getType());
         }
 
@@ -778,6 +800,11 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
         return result;
     }
 
+    public ResoluteType typeToResoluteType(ElementSet elSet){
+        BaseType baseType = new BaseType(elSet.getName());
+        return new SetType(baseType);
+    }
+    
     public ResoluteType typeToResoluteType(Type type) {
         if (type instanceof BuiltinType) {
             BuiltinType bt = (BuiltinType) type;

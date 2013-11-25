@@ -41,7 +41,7 @@ public class ResoluteParser extends AbstractContentAssistParser {
 					put(grammarAccess.getElementAccess().getAlternatives(), "rule__Element__Alternatives");
 					put(grammarAccess.getDefinitionAccess().getAlternatives(), "rule__Definition__Alternatives");
 					put(grammarAccess.getTypeAccess().getAlternatives(), "rule__Type__Alternatives");
-					put(grammarAccess.getElementSetsAccess().getNameAlternatives_0(), "rule__ElementSets__NameAlternatives_0");
+					put(grammarAccess.getElementSetAccess().getNameAlternatives_0(), "rule__ElementSet__NameAlternatives_0");
 					put(grammarAccess.getBuiltinTypeAccess().getNameAlternatives_0(), "rule__BuiltinType__NameAlternatives_0");
 					put(grammarAccess.getClaimStringAccess().getAlternatives(), "rule__ClaimString__Alternatives");
 					put(grammarAccess.getDefinitionBodyAccess().getAlternatives(), "rule__DefinitionBody__Alternatives");
@@ -182,7 +182,7 @@ public class ResoluteParser extends AbstractContentAssistParser {
 					put(grammarAccess.getQCREFAccess().getGroup_2(), "rule__QCREF__Group_2__0");
 					put(grammarAccess.getResoluteLibraryAccess().getDefinitionsAssignment_1(), "rule__ResoluteLibrary__DefinitionsAssignment_1");
 					put(grammarAccess.getTypeAccess().getTypeAssignment_0_2(), "rule__Type__TypeAssignment_0_2");
-					put(grammarAccess.getElementSetsAccess().getNameAssignment(), "rule__ElementSets__NameAssignment");
+					put(grammarAccess.getElementSetAccess().getNameAssignment(), "rule__ElementSet__NameAssignment");
 					put(grammarAccess.getBuiltinTypeAccess().getNameAssignment(), "rule__BuiltinType__NameAssignment");
 					put(grammarAccess.getArgAccess().getNameAssignment_0(), "rule__Arg__NameAssignment_0");
 					put(grammarAccess.getArgAccess().getTypeAssignment_2(), "rule__Arg__TypeAssignment_2");

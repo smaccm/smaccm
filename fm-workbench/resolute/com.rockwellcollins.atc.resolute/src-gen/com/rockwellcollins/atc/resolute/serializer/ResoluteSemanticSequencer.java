@@ -11,7 +11,7 @@ import com.rockwellcollins.atc.resolute.resolute.ClaimArg;
 import com.rockwellcollins.atc.resolute.resolute.ClaimBody;
 import com.rockwellcollins.atc.resolute.resolute.ClaimString;
 import com.rockwellcollins.atc.resolute.resolute.ConstantDefinition;
-import com.rockwellcollins.atc.resolute.resolute.ElementSets;
+import com.rockwellcollins.atc.resolute.resolute.ElementSet;
 import com.rockwellcollins.atc.resolute.resolute.FailExpr;
 import com.rockwellcollins.atc.resolute.resolute.FilterMapExpr;
 import com.rockwellcollins.atc.resolute.resolute.FnCallExpr;
@@ -337,9 +337,9 @@ public class ResoluteSemanticSequencer extends PropertiesSemanticSequencer {
 					return; 
 				}
 				else break;
-			case ResolutePackage.ELEMENT_SETS:
-				if(context == grammarAccess.getElementSetsRule()) {
-					sequence_ElementSets(context, (ElementSets) semanticObject); 
+			case ResolutePackage.ELEMENT_SET:
+				if(context == grammarAccess.getElementSetRule()) {
+					sequence_ElementSet(context, (ElementSet) semanticObject); 
 					return; 
 				}
 				else break;
@@ -731,7 +731,7 @@ public class ResoluteSemanticSequencer extends PropertiesSemanticSequencer {
 	
 	/**
 	 * Constraint:
-	 *     (id=[NamedElement|QCREF] subelements=ElementSets?)
+	 *     (id=[NamedElement|QCREF] subelements=ElementSet?)
 	 */
 	protected void sequence_AtomicExpr(EObject context, IdExpr semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -889,7 +889,7 @@ public class ResoluteSemanticSequencer extends PropertiesSemanticSequencer {
 	 *         name='components'
 	 *     )
 	 */
-	protected void sequence_ElementSets(EObject context, ElementSets semanticObject) {
+	protected void sequence_ElementSet(EObject context, ElementSet semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	

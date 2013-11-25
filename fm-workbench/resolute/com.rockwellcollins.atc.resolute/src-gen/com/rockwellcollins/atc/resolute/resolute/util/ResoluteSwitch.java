@@ -107,10 +107,10 @@ public class ResoluteSwitch<T> extends Switch<T>
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
-      case ResolutePackage.ELEMENT_SETS:
+      case ResolutePackage.ELEMENT_SET:
       {
-        ElementSets elementSets = (ElementSets)theEObject;
-        T result = caseElementSets(elementSets);
+        ElementSet elementSet = (ElementSet)theEObject;
+        T result = caseElementSet(elementSet);
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
@@ -430,17 +430,17 @@ public class ResoluteSwitch<T> extends Switch<T>
   }
 
   /**
-   * Returns the result of interpreting the object as an instance of '<em>Element Sets</em>'.
+   * Returns the result of interpreting the object as an instance of '<em>Element Set</em>'.
    * <!-- begin-user-doc -->
    * This implementation returns null;
    * returning a non-null result will terminate the switch.
    * <!-- end-user-doc -->
    * @param object the target of the switch.
-   * @return the result of interpreting the object as an instance of '<em>Element Sets</em>'.
+   * @return the result of interpreting the object as an instance of '<em>Element Set</em>'.
    * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
    * @generated
    */
-  public T caseElementSets(ElementSets object)
+  public T caseElementSet(ElementSet object)
   {
     return null;
   }

@@ -58,12 +58,12 @@ public interface IdExpr extends Expr
    * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Subelements</em>' containment reference.
-   * @see #setSubelements(ElementSets)
+   * @see #setSubelements(ElementSet)
    * @see com.rockwellcollins.atc.resolute.resolute.ResolutePackage#getIdExpr_Subelements()
    * @model containment="true"
    * @generated
    */
-  ElementSets getSubelements();
+  ElementSet getSubelements();
 
   /**
    * Sets the value of the '{@link com.rockwellcollins.atc.resolute.resolute.IdExpr#getSubelements <em>Subelements</em>}' containment reference.
@@ -73,6 +73,6 @@ public interface IdExpr extends Expr
    * @see #getSubelements()
    * @generated
    */
-  void setSubelements(ElementSets value);
+  void setSubelements(ElementSet value);
 
 } // IdExpr

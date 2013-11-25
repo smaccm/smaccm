@@ -260,14 +260,14 @@ public interface ResolutePackage extends EPackage
   int TYPE_FEATURE_COUNT = Aadl2Package.NAMED_ELEMENT_FEATURE_COUNT + 0;
 
   /**
-   * The meta object id for the '{@link com.rockwellcollins.atc.resolute.resolute.impl.ElementSetsImpl <em>Element Sets</em>}' class.
+   * The meta object id for the '{@link com.rockwellcollins.atc.resolute.resolute.impl.ElementSetImpl <em>Element Set</em>}' class.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @see com.rockwellcollins.atc.resolute.resolute.impl.ElementSetsImpl
-   * @see com.rockwellcollins.atc.resolute.resolute.impl.ResolutePackageImpl#getElementSets()
+   * @see com.rockwellcollins.atc.resolute.resolute.impl.ElementSetImpl
+   * @see com.rockwellcollins.atc.resolute.resolute.impl.ResolutePackageImpl#getElementSet()
    * @generated
    */
-  int ELEMENT_SETS = 3;
+  int ELEMENT_SET = 3;
 
   /**
    * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -276,16 +276,16 @@ public interface ResolutePackage extends EPackage
    * @generated
    * @ordered
    */
-  int ELEMENT_SETS__NAME = 0;
+  int ELEMENT_SET__NAME = 0;
 
   /**
-   * The number of structural features of the '<em>Element Sets</em>' class.
+   * The number of structural features of the '<em>Element Set</em>' class.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int ELEMENT_SETS_FEATURE_COUNT = 1;
+  int ELEMENT_SET_FEATURE_COUNT = 1;
 
   /**
    * The meta object id for the '{@link com.rockwellcollins.atc.resolute.resolute.impl.BuiltinTypeImpl <em>Builtin Type</em>}' class.
@@ -2024,25 +2024,25 @@ public interface ResolutePackage extends EPackage
   EClass getType();
 
   /**
-   * Returns the meta object for class '{@link com.rockwellcollins.atc.resolute.resolute.ElementSets <em>Element Sets</em>}'.
+   * Returns the meta object for class '{@link com.rockwellcollins.atc.resolute.resolute.ElementSet <em>Element Set</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @return the meta object for class '<em>Element Sets</em>'.
-   * @see com.rockwellcollins.atc.resolute.resolute.ElementSets
+   * @return the meta object for class '<em>Element Set</em>'.
+   * @see com.rockwellcollins.atc.resolute.resolute.ElementSet
    * @generated
    */
-  EClass getElementSets();
+  EClass getElementSet();
 
   /**
-   * Returns the meta object for the attribute '{@link com.rockwellcollins.atc.resolute.resolute.ElementSets#getName <em>Name</em>}'.
+   * Returns the meta object for the attribute '{@link com.rockwellcollins.atc.resolute.resolute.ElementSet#getName <em>Name</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @return the meta object for the attribute '<em>Name</em>'.
-   * @see com.rockwellcollins.atc.resolute.resolute.ElementSets#getName()
-   * @see #getElementSets()
+   * @see com.rockwellcollins.atc.resolute.resolute.ElementSet#getName()
+   * @see #getElementSet()
    * @generated
    */
-  EAttribute getElementSets_Name();
+  EAttribute getElementSet_Name();
 
   /**
    * Returns the meta object for class '{@link com.rockwellcollins.atc.resolute.resolute.BuiltinType <em>Builtin Type</em>}'.
@@ -2869,14 +2869,14 @@ public interface ResolutePackage extends EPackage
     EClass TYPE = eINSTANCE.getType();
 
     /**
-     * The meta object literal for the '{@link com.rockwellcollins.atc.resolute.resolute.impl.ElementSetsImpl <em>Element Sets</em>}' class.
+     * The meta object literal for the '{@link com.rockwellcollins.atc.resolute.resolute.impl.ElementSetImpl <em>Element Set</em>}' class.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @see com.rockwellcollins.atc.resolute.resolute.impl.ElementSetsImpl
-     * @see com.rockwellcollins.atc.resolute.resolute.impl.ResolutePackageImpl#getElementSets()
+     * @see com.rockwellcollins.atc.resolute.resolute.impl.ElementSetImpl
+     * @see com.rockwellcollins.atc.resolute.resolute.impl.ResolutePackageImpl#getElementSet()
      * @generated
      */
-    EClass ELEMENT_SETS = eINSTANCE.getElementSets();
+    EClass ELEMENT_SET = eINSTANCE.getElementSet();
 
     /**
      * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
@@ -2884,7 +2884,7 @@ public interface ResolutePackage extends EPackage
      * <!-- end-user-doc -->
      * @generated
      */
-    EAttribute ELEMENT_SETS__NAME = eINSTANCE.getElementSets_Name();
+    EAttribute ELEMENT_SET__NAME = eINSTANCE.getElementSet_Name();
 
     /**
      * The meta object literal for the '{@link com.rockwellcollins.atc.resolute.resolute.impl.BuiltinTypeImpl <em>Builtin Type</em>}' class.
