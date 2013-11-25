@@ -1,0 +1,60 @@
+package UAV
+public
+  with UAS;
+  with PX4IOAR;
+  with PX4FMU;
+  with DATATYPES;
+  with flight_gen;
+  
+  system UAV
+    features
+      radio_access_915Mhz: requires bus access UAS::RF_Spectrum.RF_915MHz; 
+      radio_access_2_4Ghz: requires bus access UAS::RF_Spectrum.RF_2_4GHz;
+      mavlink: in out data port DATATYPES::EncryptMAVLink;
+      flight_control_commands: in data port DATATYPES::Flight_Control_Commands;
+  end UAV;
+  
+  system implementation UAV.Impl 
+    subcomponents
+      SW: system flight_gen::Software.impl;
+      PX4FMU: system PX4FMU::PX4FMU.Impl;
+      PX4IOAR: system PX4IOAR::PX4IOAR.Impl; 
+    
+    connections 
+      feature group PX4FMU.sensors <-> SW.sensors;
+      feature group PX4FMU.expansion_slot <-> PX4IOAR.expansion_connector;
+
+      feature group PX4IOAR.motors_and_radios <-> SW.motors_and_radios;
+      port PX4IOAR.mavlink <-> mavlink;
+      port flight_control_commands -> PX4IOAR.flight_control_commands;
+      
+      bus access PX4IOAR.rc_radio <-> radio_access_2_4Ghz;
+      bus access PX4IOAR.x3dr_radio <-> radio_access_915Mhz;      	
+      
+    properties
+      Actual_Memory_Binding => (reference (PX4FMU.MC.FLASH)) applies to SW.main;
+      
+  end UAV.Impl;
+
+  feature group motors_and_radios
+    features
+      motor1: out data port DATATYPES::Servo_Commands;
+      motor2: out data port DATATYPES::Servo_Commands;
+      motor3: out data port DATATYPES::Servo_Commands;
+      motor4: out data port DATATYPES::Servo_Commands;
+      
+      flight_control_commands: in data port DATATYPES::Flight_Control_Commands.Impl;
+      mavlink: in out data port DATATYPES::EncryptMAVLink;
+  end motors_and_radios;
+  
+  feature group sensors
+    features
+      magnetometer_data: in data port DATATYPES::Magnetometer_Data;
+      barometric_data: in data port DATATYPES::Barometric_Data;
+      motion_data: in data port DATATYPES::Motion_Data.Impl;
+      
+      reset: in event port;
+      battery_data: in data port DATATYPES::Battery_Data;
+      gps_data: in data port DATATYPES::GPS_Data;
+  end sensors;
+end UAV;

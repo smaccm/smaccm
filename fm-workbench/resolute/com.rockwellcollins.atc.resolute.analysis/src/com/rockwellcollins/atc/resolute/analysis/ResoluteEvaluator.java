@@ -26,6 +26,7 @@ import org.osate.aadl2.NamedElement;
 import org.osate.aadl2.NamedValue;
 import org.osate.aadl2.Property;
 import org.osate.aadl2.PropertyExpression;
+import org.osate.aadl2.RangeType;
 import org.osate.aadl2.RealLiteral;
 import org.osate.aadl2.StringLiteral;
 import org.osate.aadl2.instance.ComponentInstance;
@@ -36,12 +37,19 @@ import org.osate.aadl2.instance.FeatureInstance;
 import org.osate.aadl2.instance.SystemOperationMode;
 import org.osate.aadl2.properties.PropertyDoesNotApplyToHolderException;
 import org.osate.aadl2.properties.PropertyNotPresentException;
+import org.osate.aadl2.util.OsateDebug;
+import org.osate.xtext.aadl2.errormodel.errorModel.ErrorBehaviorTransition;
+import org.osate.xtext.aadl2.errormodel.errorModel.ErrorPropagation;
+import org.osate.xtext.aadl2.errormodel.errorModel.ErrorTypes;
+import org.osate.xtext.aadl2.errormodel.errorModel.TypeToken;
+import org.osate.xtext.aadl2.errormodel.util.EMV2Util;
 import org.osate.xtext.aadl2.properties.util.GetProperties;
 import org.osate.xtext.aadl2.properties.util.PropertyUtils;
 
 import com.rockwellcollins.atc.resolute.analysis.values.BoolValue;
 import com.rockwellcollins.atc.resolute.analysis.values.IntValue;
 import com.rockwellcollins.atc.resolute.analysis.values.NamedElementValue;
+import com.rockwellcollins.atc.resolute.analysis.values.RangeValue;
 import com.rockwellcollins.atc.resolute.analysis.values.RealValue;
 import com.rockwellcollins.atc.resolute.analysis.values.ResoluteValue;
 import com.rockwellcollins.atc.resolute.analysis.values.SetValue;
@@ -152,7 +160,27 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
 
         ResoluteValue result = null;
 
-        switch (object.getOp()) {
+        switch (object.getOp())
+        {
+        case "lower_bound":
+            if (leftResult.getBool()) {
+                ResoluteValue rightResult = doSwitch(object.getRight());
+                result = rightResult;
+            } else {
+                result = new BoolValue(false);
+            }
+            break;
+            
+        case "upper_bound":
+            if (leftResult.getBool()) {
+                ResoluteValue rightResult = doSwitch(object.getRight());
+                result = rightResult;
+            } else {
+                result = new BoolValue(false);
+            }
+            break;
+            
+            
         case "and":
             if (leftResult.getBool()) {
                 ResoluteValue rightResult = doSwitch(object.getRight());
@@ -624,7 +652,62 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
 
         // proofTree.addNewCurrent(funName);
 
-        switch (funName) {
+        switch (funName)
+        {
+        case "error_state_reachable":
+        {
+        	result = new BoolValue(false);
+        	
+            ResoluteValue comp = argVals.get(0);
+            ResoluteValue stateVal = argVals.get(1);
+            
+            assert (comp.getNamedElement() instanceof ComponentInstance);
+            
+            ComponentInstance componentInstance = (ComponentInstance) comp.getNamedElement();
+            String stateName = stateVal.getString();
+
+            for (ErrorBehaviorTransition ebt : EMV2Util.getAllErrorBehaviorTransitions(componentInstance))
+            {
+            	String tmp = ebt.getTarget().getName();
+            	if (tmp.equalsIgnoreCase(stateName))
+            	{
+            		result = new BoolValue(true);
+            	}
+            	
+            }
+            break;
+        }
+        
+        
+        case "propagate_error":
+        {
+        	result = new BoolValue(false);
+        	
+            ResoluteValue comp = argVals.get(0);
+            ResoluteValue errorVal = argVals.get(1);
+            
+            assert (comp.getNamedElement() instanceof ComponentInstance);
+            
+            ComponentInstance componentInstance = (ComponentInstance) comp.getNamedElement();
+            String errorName = errorVal.getString();
+
+            for (ErrorPropagation ep : EMV2Util.getAllOutgoingErrorPropagations (componentInstance.getComponentClassifier()))
+            {
+            	for (TypeToken tt : ep.getTypeSet().getTypeTokens())
+            	{
+            		for (ErrorTypes et : tt.getType())
+            		{
+                        if (et.getName().equalsIgnoreCase(errorName))
+                        {
+                        	result = new BoolValue(true);
+                        }
+            			
+            		}
+            	}
+            }
+            
+            break;
+        }
         case "connected":
             // TODO: should this return true for connections in either
             // direction?
@@ -696,14 +779,88 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
                 } else if (expr instanceof IntegerLiteral) {
                     IntegerLiteral value = (IntegerLiteral) expr;
                     result = new IntValue((long) value.getScaledValue());
-                } else {
+                } else if (expr instanceof RealLiteral)
+                {
                     assert (expr instanceof RealLiteral);
                     RealLiteral value = (RealLiteral) expr;
                     result = new RealValue(value.getValue());
                 }
+                else if (expr instanceof org.osate.aadl2.RangeValue){
+                    assert (expr instanceof org.osate.aadl2.RangeValue);
+                    org.osate.aadl2.RangeValue value = (org.osate.aadl2.RangeValue) expr;
+                    PropertyExpression lb = value.getMinimumValue();
+                    PropertyExpression ub = value.getMaximumValue();
+                    if (value.getMinimumValue() instanceof IntegerLiteral)
+                    {
+                    	IntegerLiteral min = (IntegerLiteral) value.getMinimumValue();
+                    	IntegerLiteral max = (IntegerLiteral) value.getMaximumValue(); 
+                    	result = new RangeValue ((long)min.getScaledValue(), (long)max.getScaledValue());
+                    }
+                    else if (value.getMinimumValue() instanceof RealLiteral)
+                    {
+                    	IntegerLiteral min = (IntegerLiteral) value.getMinimumValue();
+                    	IntegerLiteral max = (IntegerLiteral) value.getMaximumValue(); 
+                    	result = new RangeValue ((double)min.getScaledValue(), (double)max.getScaledValue());
+                    }
+                    else
+                    {
+                    	OsateDebug.osateDebug("[ResoluteEvaluator] Unknown range type: " + expr);
+
+                    }
+                   
+                    
+                }
+                else
+                {
+                	OsateDebug.osateDebug("[ResoluteEvaluator] Unknown type: " + expr);
+                }
                 break;
             }
 
+        case "upper_bound":
+        {
+        	ResoluteValue arg0 = argVals.get(0);
+            
+        	assert (arg0 instanceof RangeValue);
+        	
+        	RangeValue rv = (RangeValue) arg0;
+        	
+        	if (rv.getType() == RangeValue.TYPE_INTEGER)
+        	{
+        		result = new IntValue (rv.getMaximumLong());
+        	}
+        	
+        	if (rv.getType() == RangeValue.TYPE_REAL)
+        	{
+        		result = new RealValue (rv.getMaximumDouble());
+        	}
+        	
+        	
+            break;
+        }
+        
+        case "lower_bound":
+        {
+        	ResoluteValue arg0 = argVals.get(0);
+            
+        	assert (arg0 instanceof RangeValue);
+        	
+        	RangeValue rv = (RangeValue) arg0;
+        	
+        	if (rv.getType() == RangeValue.TYPE_INTEGER)
+        	{
+        		result = new IntValue (rv.getMinimumLong());
+        	}
+        	
+        	if (rv.getType() == RangeValue.TYPE_REAL)
+        	{
+        		result = new RealValue (rv.getMinimumDouble());
+        	}
+        	
+        	
+            break;
+        }
+            
         case "property_exists":
             // the first element is the component
             compVal = argVals.get(0);
@@ -739,6 +896,8 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
             }
 
             break;
+            
+        
         case "class_of":
             comp0Val = argVals.get(0);
             comp1Val = argVals.get(1);

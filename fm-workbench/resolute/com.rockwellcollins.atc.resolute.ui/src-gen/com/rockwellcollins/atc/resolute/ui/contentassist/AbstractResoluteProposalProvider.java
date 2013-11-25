@@ -5,17 +5,16 @@ package com.rockwellcollins.atc.resolute.ui.contentassist;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xtext.*;
-import org.osate.xtext.aadl2.properties.ui.contentassist.PropertiesProposalProvider;
 import org.eclipse.xtext.ui.editor.contentassist.ICompletionProposalAcceptor;
 import org.eclipse.xtext.ui.editor.contentassist.ContentAssistContext;
 
 /**
- * Represents a generated, default implementation of interface {@link IProposalProvider}.
+ * Represents a generated, default implementation of superclass {@link org.osate.xtext.aadl2.properties.ui.contentassist.PropertiesProposalProvider}.
  * Methods are dynamically dispatched on the first parameter, i.e., you can override them 
  * with a more concrete subtype. 
  */
 @SuppressWarnings("all")
-public class AbstractResoluteProposalProvider extends PropertiesProposalProvider {
+public class AbstractResoluteProposalProvider extends org.osate.xtext.aadl2.properties.ui.contentassist.PropertiesProposalProvider {
 		
 	public void completeResoluteLibrary_Definitions(EObject model, Assignment assignment, ContentAssistContext context, ICompletionProposalAcceptor acceptor) {
 		completeRuleCall(((RuleCall)assignment.getTerminal()), context, acceptor);

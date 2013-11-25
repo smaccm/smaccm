@@ -163,6 +163,12 @@ BuiltInFunc:
 |   'property_exists'
 |   'sum'
 |   'analysis'
+|	'upper_bound'             // upper_bound of a range
+|	'lower_bound'             // lower bound of a range
+|	'receive_error'           // the component can receive an incoming error
+|	'contain_error'           // the component contain the error
+|	'propagate_error'         // the component propagate an error
+|   'error_state_reachable'   // the error state is reachable
 ;
 
 RealTerm returns aadl2::RealLiteral:

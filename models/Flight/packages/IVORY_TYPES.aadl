@@ -1,0 +1,16 @@
+package IVORY_TYPES
+public
+  with Data_Model;
+  with Base_Types;
+  
+  data flightmode
+  end flightmode;
+  
+  data implementation flightmode.Impl
+  subcomponents
+  	armed      : data Base_Types::Boolean ; 
+    flightmode : data Base_Types::Unsigned_8;
+    time       : data Base_Types::Unsigned_32;
+  end flightmode.Impl;
+  
+end IVORY_TYPES;

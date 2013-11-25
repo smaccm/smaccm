@@ -1,42 +1,37 @@
 package com.rockwellcollins.atc.agree.validation;
 
 public class AgreeType {
+    public static final AgreeType BOOL = new AgreeType("bool");
+    public static final AgreeType INT = new AgreeType("int");
+    public static final AgreeType REAL = new AgreeType("real");
+    public static final AgreeType ERROR = new AgreeType("<error>");
 
-    private String typeStr;
+    private String name;
 
-    public AgreeType(String str) {
-        typeStr = str;
+    public AgreeType(String name) {
+        this.name = name;
     }
 
-    public boolean isPrimType() {
-        return typeStr.equals("bool") || typeStr.equals("int") || typeStr.equals("real");
+    public boolean isPrimitive() {
+        return equals(BOOL) || equals(INT) || equals(REAL);
     }
 
-    /********* begin overriden functions ********/
     @Override
     public boolean equals(Object o) {
-
-        if (o instanceof String) {
-            return this.equals(new AgreeType((String) o));
+        if (o instanceof AgreeType) {
+            AgreeType other = (AgreeType) o;
+            return name.equals(other.name);
         }
-
-        if (!(o instanceof AgreeType)) {
-            return false;
-        }
-
-        AgreeType otherType = (AgreeType) o;
-
-        return otherType.toString().equals(this.toString());
+        return false;
     }
 
     @Override
     public int hashCode() {
-        return typeStr.hashCode();
+        return name.hashCode();
     }
 
     @Override
     public String toString() {
-        return typeStr;
+        return name;
     }
-
 }
