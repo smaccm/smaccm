@@ -60,7 +60,7 @@ public class ResoluteLinkingService extends PropertiesLinkingService {
             if (e != null) {
                 return e;
             }
-
+            
             Iterable<IEObjectDescription> allObjectTypes = 
                     EMFIndexRetrieval.getAllEObjectsOfTypeInWorkspace(context, reference.getEReferenceType());
             

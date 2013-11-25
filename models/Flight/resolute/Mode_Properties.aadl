@@ -11,7 +11,7 @@ no_external_commands(x : component, context : component) <=
     connected(y, c, x) and command_channel(c) =>
    	  contained(y, context) and no_external_commands(y, context)
 
-schedulable(p : component) <=
+schedulable(p : component) <= 
   ** p " is schedulable" ** 
   analysis("schedule")
 
@@ -21,8 +21,12 @@ receives_mavlink(t : component) <=
 
 is_mavlink_connection(x : component, t : component, c : connection) <=
   ** x " supplies mavlink data to " t **
-  connected(x, c, t) and type(c) = DATATYPES::MAVLink
+  is_mavlink_type(c) and connected(x, c, t)
 
+is_mavlink_type(c : connection) <=
+  ** "connection " c " is of mavlink type" **  
+  has_type(c) and type(c) = DATATYPES::MAVLink
+  
 no_radio_commands(x : component) <=
   ** x " does not receive commands from the radio" **
   forall (c : connection).

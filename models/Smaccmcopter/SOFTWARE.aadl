@@ -125,6 +125,8 @@ public
     	prove receives_mavlink(this.SN) modes: Normal
     	      
     	prove only_receive_gs(this.MC) modes: Normal
+    	
+    	prove trivial() modes: Normal
     **};
     
     annex agree {**

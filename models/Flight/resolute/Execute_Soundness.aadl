@@ -10,7 +10,7 @@ only_receive_gs(x : component) <=
 only_gs_encrypt() <=
   ** "Only the Ground Station can send messages that pass Decrypt" ** 
   authenticated_encryption(encrypt_algorithm1) and 
-  authenticated_encryption(encrypt_algorithm2) and 
+  authenticated_encryption(encrypt_algorithm2) and  
   private_key()
 
 -- The encryption algorithm used by the Ground Station and Decrypt is e.

@@ -32,7 +32,7 @@ wc_message_processing_time : int =
 	sum({thread_message_processing_time(t) for (t: thread)}) 
 
 --returns the processing time of an individual thread
-thread_message_processing_time(t : thread) : int =
+thread_message_processing_time(t : thread) : int = 
 	if exists(c : connection) . contained(c, t) and command_channel(c) then 
 		if property_exists(t, SMACCM::WC_Execution_Time) then
 	 	   property_lookup(t, SMACCM::WC_Execution_Time)
