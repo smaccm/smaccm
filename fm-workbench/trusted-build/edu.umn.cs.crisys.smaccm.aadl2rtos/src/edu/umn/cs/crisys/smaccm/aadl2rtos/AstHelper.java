@@ -133,6 +133,8 @@ public class AstHelper {
 			return new IntType(32, false);
 		} else if ("Base_Types::Unsigned_64".equals(qualifiedName)) {
 			return new IntType(64, false);
+		} else if ("Base_Types::Float".equals(qualifiedName)) {
+			return new RealType(FloatEnum.SINGLE);			
 		} else if ("Base_Types::Float_32".equals(qualifiedName)) {
 			return new RealType(FloatEnum.SINGLE);
 		} else if ("Base_Types::Float_64".equals(qualifiedName)) {
