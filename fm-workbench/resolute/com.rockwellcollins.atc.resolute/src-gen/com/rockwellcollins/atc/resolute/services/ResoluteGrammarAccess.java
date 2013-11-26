@@ -1485,21 +1485,22 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		private final Keyword cHas_typeKeyword_4 = (Keyword)cAlternatives.eContents().get(4);
 		private final Keyword cBoundKeyword_5 = (Keyword)cAlternatives.eContents().get(5);
 		private final Keyword cContainedKeyword_6 = (Keyword)cAlternatives.eContents().get(6);
-		private final Keyword cConn_sourceKeyword_7 = (Keyword)cAlternatives.eContents().get(7);
-		private final Keyword cConn_destKeyword_8 = (Keyword)cAlternatives.eContents().get(8);
-		private final Keyword cProperty_existsKeyword_9 = (Keyword)cAlternatives.eContents().get(9);
-		private final Keyword cSumKeyword_10 = (Keyword)cAlternatives.eContents().get(10);
-		private final Keyword cAnalysisKeyword_11 = (Keyword)cAlternatives.eContents().get(11);
-		private final Keyword cUpper_boundKeyword_12 = (Keyword)cAlternatives.eContents().get(12);
-		private final Keyword cLower_boundKeyword_13 = (Keyword)cAlternatives.eContents().get(13);
-		private final Keyword cReceive_errorKeyword_14 = (Keyword)cAlternatives.eContents().get(14);
-		private final Keyword cContain_errorKeyword_15 = (Keyword)cAlternatives.eContents().get(15);
-		private final Keyword cPropagate_errorKeyword_16 = (Keyword)cAlternatives.eContents().get(16);
-		private final Keyword cError_state_reachableKeyword_17 = (Keyword)cAlternatives.eContents().get(17);
+		private final Keyword cGet_featureKeyword_7 = (Keyword)cAlternatives.eContents().get(7);
+		private final Keyword cConn_sourceKeyword_8 = (Keyword)cAlternatives.eContents().get(8);
+		private final Keyword cConn_destKeyword_9 = (Keyword)cAlternatives.eContents().get(9);
+		private final Keyword cProperty_existsKeyword_10 = (Keyword)cAlternatives.eContents().get(10);
+		private final Keyword cSumKeyword_11 = (Keyword)cAlternatives.eContents().get(11);
+		private final Keyword cAnalysisKeyword_12 = (Keyword)cAlternatives.eContents().get(12);
+		private final Keyword cUpper_boundKeyword_13 = (Keyword)cAlternatives.eContents().get(13);
+		private final Keyword cLower_boundKeyword_14 = (Keyword)cAlternatives.eContents().get(14);
+		private final Keyword cReceive_errorKeyword_15 = (Keyword)cAlternatives.eContents().get(15);
+		private final Keyword cContain_errorKeyword_16 = (Keyword)cAlternatives.eContents().get(16);
+		private final Keyword cPropagate_errorKeyword_17 = (Keyword)cAlternatives.eContents().get(17);
+		private final Keyword cError_state_reachableKeyword_18 = (Keyword)cAlternatives.eContents().get(18);
 		
 		//BuiltInFunc:
-		//	"connected" | "property_lookup" | "class_of" | "type" | "has_type" | "bound" | "contained" | "conn_source" |
-		//	"conn_dest" | "property_exists" | "sum" | "analysis" | // upper_bound of a range
+		//	"connected" | "property_lookup" | "class_of" | "type" | "has_type" | "bound" | "contained" | "get_feature" |
+		//	"conn_source" | "conn_dest" | "property_exists" | "sum" | "analysis" | // upper_bound of a range
 		// "upper_bound" |
 		//	// lower bound of a range
 		// "lower_bound" | // the component can receive an incoming error
@@ -1511,17 +1512,17 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		// "error_state_reachable";
 		public ParserRule getRule() { return rule; }
 
-		//"connected" | "property_lookup" | "class_of" | "type" | "has_type" | "bound" | "contained" | "conn_source" | "conn_dest"
-		//| "property_exists" | "sum" | "analysis" | // upper_bound of a range
-		// "upper_bound" | // lower bound of a range
-		//
-		//"lower_bound" | // the component can receive an incoming error
-		// "receive_error" | // the component contain the error
-		//
-		//"contain_error" | // the component propagate an error
-		// "propagate_error" | // the error state is reachable
-		//
-		//"error_state_reachable"
+		//"connected" | "property_lookup" | "class_of" | "type" | "has_type" | "bound" | "contained" | "get_feature" |
+		//"conn_source" | "conn_dest" | "property_exists" | "sum" | "analysis" | // upper_bound of a range
+		// "upper_bound" |
+		//// lower bound of a range
+		// "lower_bound" | // the component can receive an incoming error
+		// "receive_error" |
+		//// the component contain the error
+		// "contain_error" | // the component propagate an error
+		// "propagate_error" |
+		//// the error state is reachable
+		// "error_state_reachable"
 		public Alternatives getAlternatives() { return cAlternatives; }
 
 		//"connected"
@@ -1545,44 +1546,47 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		//"contained"
 		public Keyword getContainedKeyword_6() { return cContainedKeyword_6; }
 
+		//"get_feature"
+		public Keyword getGet_featureKeyword_7() { return cGet_featureKeyword_7; }
+
 		//"conn_source"
-		public Keyword getConn_sourceKeyword_7() { return cConn_sourceKeyword_7; }
+		public Keyword getConn_sourceKeyword_8() { return cConn_sourceKeyword_8; }
 
 		//"conn_dest"
-		public Keyword getConn_destKeyword_8() { return cConn_destKeyword_8; }
+		public Keyword getConn_destKeyword_9() { return cConn_destKeyword_9; }
 
 		//"property_exists"
-		public Keyword getProperty_existsKeyword_9() { return cProperty_existsKeyword_9; }
+		public Keyword getProperty_existsKeyword_10() { return cProperty_existsKeyword_10; }
 
 		//"sum"
-		public Keyword getSumKeyword_10() { return cSumKeyword_10; }
+		public Keyword getSumKeyword_11() { return cSumKeyword_11; }
 
 		//"analysis"
-		public Keyword getAnalysisKeyword_11() { return cAnalysisKeyword_11; }
+		public Keyword getAnalysisKeyword_12() { return cAnalysisKeyword_12; }
 
 		//// upper_bound of a range
 		// "upper_bound"
-		public Keyword getUpper_boundKeyword_12() { return cUpper_boundKeyword_12; }
+		public Keyword getUpper_boundKeyword_13() { return cUpper_boundKeyword_13; }
 
 		//// lower bound of a range
 		// "lower_bound"
-		public Keyword getLower_boundKeyword_13() { return cLower_boundKeyword_13; }
+		public Keyword getLower_boundKeyword_14() { return cLower_boundKeyword_14; }
 
 		//// the component can receive an incoming error
 		// "receive_error"
-		public Keyword getReceive_errorKeyword_14() { return cReceive_errorKeyword_14; }
+		public Keyword getReceive_errorKeyword_15() { return cReceive_errorKeyword_15; }
 
 		//// the component contain the error
 		// "contain_error"
-		public Keyword getContain_errorKeyword_15() { return cContain_errorKeyword_15; }
+		public Keyword getContain_errorKeyword_16() { return cContain_errorKeyword_16; }
 
 		//// the component propagate an error
 		// "propagate_error"
-		public Keyword getPropagate_errorKeyword_16() { return cPropagate_errorKeyword_16; }
+		public Keyword getPropagate_errorKeyword_17() { return cPropagate_errorKeyword_17; }
 
 		//// the error state is reachable
 		// "error_state_reachable"
-		public Keyword getError_state_reachableKeyword_17() { return cError_state_reachableKeyword_17; }
+		public Keyword getError_state_reachableKeyword_18() { return cError_state_reachableKeyword_18; }
 	}
 
 	public class RealTermElements extends AbstractParserRuleElementFinder {
@@ -2134,8 +2138,8 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	}
 
 	//BuiltInFunc:
-	//	"connected" | "property_lookup" | "class_of" | "type" | "has_type" | "bound" | "contained" | "conn_source" |
-	//	"conn_dest" | "property_exists" | "sum" | "analysis" | // upper_bound of a range
+	//	"connected" | "property_lookup" | "class_of" | "type" | "has_type" | "bound" | "contained" | "get_feature" |
+	//	"conn_source" | "conn_dest" | "property_exists" | "sum" | "analysis" | // upper_bound of a range
 	// "upper_bound" |
 	//	// lower bound of a range
 	// "lower_bound" | // the component can receive an incoming error

@@ -158,6 +158,7 @@ BuiltInFunc:
 |   'has_type'
 |	'bound'
 |	'contained'
+|   'get_feature'
 |   'conn_source'
 |   'conn_dest'
 |   'property_exists'

@@ -399,6 +399,11 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
         case "conn_dest":
             expectedTypes.add(BaseType.CONNECTION);
             break;
+        
+        case "get_feature":
+        	expectedTypes.add(BaseType.COMPONENT);
+            expectedTypes.add(BaseType.CONNECTION);
+            break;
 
         case "sum":
             if (actuals.size() != 1) {
@@ -756,6 +761,9 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
         case "conn_dest":
             return BaseType.COMPONENT;
 
+        case "get_feature":
+            return BaseType.COMPONENT;           
+            
         case "sum":
             if (funCall.getArgs().size() != 1) {
                 return BaseType.FAIL;
