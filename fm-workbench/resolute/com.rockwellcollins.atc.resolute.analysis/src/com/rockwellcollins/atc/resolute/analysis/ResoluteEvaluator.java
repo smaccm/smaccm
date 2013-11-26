@@ -26,15 +26,16 @@ import org.osate.aadl2.NamedElement;
 import org.osate.aadl2.NamedValue;
 import org.osate.aadl2.Property;
 import org.osate.aadl2.PropertyExpression;
-import org.osate.aadl2.RangeType;
 import org.osate.aadl2.RealLiteral;
 import org.osate.aadl2.StringLiteral;
 import org.osate.aadl2.instance.ComponentInstance;
 import org.osate.aadl2.instance.ConnectionInstance;
 import org.osate.aadl2.instance.ConnectionInstanceEnd;
 import org.osate.aadl2.instance.ConnectionReference;
+import org.osate.aadl2.instance.FeatureCategory;
 import org.osate.aadl2.instance.FeatureInstance;
 import org.osate.aadl2.instance.SystemOperationMode;
+import org.osate.aadl2.modelsupport.resources.OsateResourceUtil;
 import org.osate.aadl2.properties.PropertyDoesNotApplyToHolderException;
 import org.osate.aadl2.properties.PropertyNotPresentException;
 import org.osate.aadl2.util.OsateDebug;
@@ -43,6 +44,7 @@ import org.osate.xtext.aadl2.errormodel.errorModel.ErrorPropagation;
 import org.osate.xtext.aadl2.errormodel.errorModel.ErrorTypes;
 import org.osate.xtext.aadl2.errormodel.errorModel.TypeToken;
 import org.osate.xtext.aadl2.errormodel.util.EMV2Util;
+import org.osate.xtext.aadl2.properties.util.EMFIndexRetrieval;
 import org.osate.xtext.aadl2.properties.util.GetProperties;
 import org.osate.xtext.aadl2.properties.util.PropertyUtils;
 
@@ -709,8 +711,8 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
             break;
         }
         case "connected":
-            // TODO: should this return true for connections in either
-            // direction?
+            // TODO: come up with better defined semantics about what it means
+            // to be "connected"
 
             ResoluteValue comp0Val = argVals.get(0);
             ResoluteValue connVal = argVals.get(1);
@@ -729,6 +731,52 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
 
             ConnectionInstanceEnd allDest = conn.getDestination();
             ConnectionInstanceEnd allSource = conn.getSource();
+            
+            Property accessRightProp = EMFIndexRetrieval.getPropertyDefinitionInWorkspace(
+                    OsateResourceUtil.getResourceSet(), "Memory_Properties::Access_Right");
+            
+            
+            //code for data accesses
+            if(allDest instanceof FeatureInstance && 
+                    ((FeatureInstance)allDest).getCategory() == FeatureCategory.DATA_ACCESS){
+                EnumerationLiteral lit = PropertyUtils.getEnumLiteral(allDest, accessRightProp);
+                if(compInst1.equals(allDest.eContainer()) && compInst0.equals(allSource.eContainer())){
+                    if(lit.getName().equals("read_only") || lit.getName().equals("read_write")){
+                        result = new BoolValue(true);
+                        break;
+                    }
+                }
+                if(compInst0.equals(allDest.eContainer()) && compInst1.equals(allSource.eContainer())){
+                    if(lit.getName().equals("write_only") || lit.getName().equals("read_write")){
+                        result = new BoolValue(true);
+                        break;
+                    }
+                }
+                result = new BoolValue(false);
+                break;
+            }
+            
+            //code for data accesses
+            if(allSource instanceof FeatureInstance && 
+                    ((FeatureInstance)allSource).getCategory() == FeatureCategory.DATA_ACCESS){
+                EnumerationLiteral lit = PropertyUtils.getEnumLiteral(allSource, accessRightProp);
+                if(compInst1.equals(allDest.eContainer()) && compInst0.equals(allSource.eContainer())){
+                    if(lit.getName().equals("write_only") || lit.getName().equals("read_write")){
+                        result = new BoolValue(true);
+                        break;
+                    }
+                }
+                if(compInst0.equals(allDest.eContainer()) && compInst1.equals(allSource.eContainer())){
+                    if(lit.getName().equals("read_only") || lit.getName().equals("read_write")){
+                        result = new BoolValue(true);
+                        break;
+                    }
+                }
+                result = new BoolValue(false);
+                break;
+            }
+            
+            
 
             if (allSource.getComponentInstance().equals(compInst0)
                     && allDest.getComponentInstance().equals(compInst1)) {

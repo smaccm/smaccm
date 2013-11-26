@@ -5,7 +5,7 @@ package Execute_Soundness
 
 only_receive_gs(x : component) <=
   ** x " only receives messages from the Ground Station" **
-  only_gs_encrypt() and only_receive_decrypt(x)
+  only_gs_encrypt() and only_receive_decrypt(x, {z for (z : component) | false})
 
 only_gs_encrypt() <=
   ** "Only the Ground Station can send messages that pass Decrypt" ** 
@@ -46,20 +46,31 @@ uav_private_key() <=
   true
 
 -- The component x only receives messages that pass Decrypt.
-only_receive_decrypt(x : component) <=
+
+only_receive_decrypt(x : component, visited : {component}) <=
   ** "The component " x " only receives messages that pass Decrypt" **
   forall (y : component) (c : connection).  
-    ((connected(y, c, x) and command_channel(c)) => 
+    (((not (y in visited)) and connected(y, c, x) and command_channel(c)) => 
       unalterable_channel(c) and 
           ((class_of(x, flight_gen::decryptTask_uart1_377) or class_of(x, flight_gen::decryptTask_uart5_630)) 
-          	or only_receive_decrypt(y)
+          	or only_receive_decrypt(y, {z for (z : component) | z = x} union visited)
           ))       
        
 -- The connection c potentially carries commands
 -- Non command datatypes must be explicitly whitelisted here
 command_channel(c : connection) : bool =
   (not has_type(c)) or
-  (type(c) <> sensors_type::sensors_result.impl)
+  (type(c) <> sensors_type::sensors_result.impl or
+   type(c) <> Base_Types::Float or
+   type(c) <> gps_type::position.impl or
+   type(c) <> Base_Types::Unsigned_32 or
+   type(c) <> gcsstream_timing::gcsstream_timing or
+   type(c) <> data_rate::data_rate_state.impl or 
+   type(c) <> Base_Types::Integer_16 or
+   type(c) <> Base_Types::Integer_8 or
+   type(c) <> flight_gen::ArrTy_80TyBase_Types_Unsigned_8 
+   --type(c) <> 
+  )
 
 -- The connection c delivers data without alteration.
 -- "contained" means write permissions
