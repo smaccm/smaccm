@@ -1,22 +1,28 @@
 package com.rockwellcollins.atc.resolute.analysis;
 
+import java.io.IOException;
+import java.io.InputStream;
+
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
-import org.eclipse.swt.graphics.PaletteData;
-import org.eclipse.swt.graphics.RGB;
 
 import com.rockwellcollins.atc.resolute.analysis.values.ResoluteValue;
 
 public class ResoluteProofNodeLabelProvider implements ILabelProvider {
-    private static final int IMAGE_SIZE = 16;
-    private static final Image TRUE_IMAGE = new Image(null, new ImageData(IMAGE_SIZE, IMAGE_SIZE,
-            1, new PaletteData(new RGB[] { new RGB(127, 255, 127) })));
-    private static final Image FALSE_IMAGE = new Image(null, new ImageData(IMAGE_SIZE, IMAGE_SIZE,
-            1, new PaletteData(new RGB[] { new RGB(255, 127, 127) })));
-    private static final Image FAIL_IMAGE = new Image(null, new ImageData(IMAGE_SIZE, IMAGE_SIZE,
-            1, new PaletteData(new RGB[] { new RGB(191, 191, 191) })));
+    private static final Image VALID_IMAGE = loadImage("/icons/valid.png");
+    private static final Image INVALID_IMAGE = loadImage("/icons/invalid.png");
+    private static final Image ERROR_IMAGE = loadImage("/icons/error.png");
+
+    private static Image loadImage(String filename) {
+        try (InputStream stream = ResoluteProofNodeLabelProvider.class
+                .getResourceAsStream(filename)) {
+            return new Image(null, new ImageData(stream));
+        } catch (IOException e) {
+            return null;
+        }
+    }
 
     @Override
     public Image getImage(Object element) {
@@ -26,14 +32,14 @@ public class ResoluteProofNodeLabelProvider implements ILabelProvider {
 
             if (value.isBool()) {
                 if (value.getBool()) {
-                    return TRUE_IMAGE;
+                    return VALID_IMAGE;
                 } else {
-                    return FALSE_IMAGE;
+                    return INVALID_IMAGE;
                 }
             }
 
             if (value.isFail()) {
-                return FAIL_IMAGE;
+                return ERROR_IMAGE;
             }
 
             return null;
