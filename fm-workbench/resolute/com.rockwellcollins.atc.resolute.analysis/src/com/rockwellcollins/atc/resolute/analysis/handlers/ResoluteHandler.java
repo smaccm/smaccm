@@ -74,7 +74,11 @@ public abstract class ResoluteHandler extends AadlHandler {
 
     protected abstract void pruneProof(ResoluteProofTree proof);
 
-    private void initializeComponentLists(ComponentInstance compInst) {
+    private void initializeComponentLists(ComponentInstance compInst)
+    {
+    	if (compInst == null)
+    		return;
+    	
         switch (compInst.getCategory()) {
         case ABSTRACT:
             ResoluteQuantifiableAadlObjects.abstractSet.add(compInst);

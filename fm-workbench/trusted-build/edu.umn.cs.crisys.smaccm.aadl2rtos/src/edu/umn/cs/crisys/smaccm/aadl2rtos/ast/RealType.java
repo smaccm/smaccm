@@ -51,7 +51,7 @@ public class RealType extends Type {
 		if (FloatEnum.DOUBLE == realKind) {
 			return "double";
 		} else {
-			return "real";
+			return "float";
 		}
 	}
 
