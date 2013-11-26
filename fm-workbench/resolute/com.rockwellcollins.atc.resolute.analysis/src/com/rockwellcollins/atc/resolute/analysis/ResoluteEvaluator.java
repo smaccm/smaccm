@@ -709,12 +709,19 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
             break;
         }
         case "connected":
+        {
             // TODO: should this return true for connections in either
             // direction?
 
-            ResoluteValue comp0Val = argVals.get(0);
-            ResoluteValue connVal = argVals.get(1);
-            ResoluteValue comp1Val = argVals.get(2);
+            ResoluteValue comp0Val;
+            ResoluteValue comp1Val;
+            ResoluteValue connVal;
+            ConnectionInstanceEnd allDest; 
+            ConnectionInstanceEnd allSource;
+            
+            comp0Val = argVals.get(0);
+            connVal = argVals.get(1);
+            comp1Val = argVals.get(2);
 
             assert (comp0Val.getNamedElement() instanceof ComponentInstance);
             assert (connVal.getNamedElement() instanceof ConnectionInstance);
@@ -727,8 +734,9 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
             nodeStr += "(" + compInst0.getName() + ", " + conn.getName() + ", "
                     + compInst1.getName() + ")";
 
-            ConnectionInstanceEnd allDest = conn.getDestination();
-            ConnectionInstanceEnd allSource = conn.getSource();
+            
+            allDest = conn.getDestination();
+            allSource = conn.getSource();
 
             if (allSource.getComponentInstance().equals(compInst0)
                     && allDest.getComponentInstance().equals(compInst1)) {
@@ -738,12 +746,15 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
             }
 
             break;
-
+        }
+        
         case "property_lookup":
-            // the first element is the component
-            ResoluteValue compVal = argVals.get(0);
-            // the second element is the property
-            ResoluteValue propVal = argVals.get(1);
+        {
+            ResoluteValue compVal;
+            ResoluteValue propVal;
+            
+            compVal = argVals.get(0);
+            propVal = argVals.get(1);
 
             assert (propVal.getNamedElement() instanceof Property);
             Property prop = (Property) propVal.getNamedElement();
@@ -753,7 +764,12 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
                 ComponentInstance comp = (ComponentInstance) compVal.getNamedElement();
                 nodeStr += "(" + comp.getName() + ", " + prop.getName() + ")";
                 expr = getPropExpression(comp, prop);
-            } else {
+            } else if (compVal.getNamedElement() instanceof FeatureInstance)
+            {
+            	 FeatureInstance feat = (FeatureInstance) compVal.getNamedElement();
+            	 expr = getPropExpression(feat, prop);
+            }
+            else {
                 assert (compVal.getNamedElement() instanceof ComponentType);
                 ComponentType comp = (ComponentType) compVal.getNamedElement();
                 nodeStr += "(" + comp.getName() + ", " + prop.getName() + ")";
@@ -816,7 +832,9 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
                 }
                 break;
             }
-
+            break;
+        }
+        
         case "upper_bound":
         {
         	ResoluteValue arg0 = argVals.get(0);
@@ -862,6 +880,17 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
         }
             
         case "property_exists":
+        {
+
+            ResoluteValue compVal;
+            ResoluteValue propVal;
+
+            ResoluteValue comp0Val;
+            ResoluteValue comp1Val;
+            ResoluteValue connVal;
+            ConnectionInstance conn;
+            
+            Property prop;
             // the first element is the component
             compVal = argVals.get(0);
             // the second element is the property
@@ -895,10 +924,14 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
 
             }
 
-            break;
-            
+            break;    
+        }
         
         case "class_of":
+        {
+
+            ResoluteValue comp0Val;
+            ResoluteValue comp1Val;
             comp0Val = argVals.get(0);
             comp1Val = argVals.get(1);
 
@@ -912,7 +945,8 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
 
             result = new BoolValue(compInst.getComponentClassifier().equals(compClass));
             break;
-
+        }
+        
         case "type":
             NamedElement el = argVals.get(0).getNamedElement();
             nodeStr += "(" + el.getName() + ")";
@@ -935,8 +969,14 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
             break;
 
         case "contained":
-            ResoluteValue val0 = argVals.get(0);
-            ResoluteValue val1 = argVals.get(1);
+        {
+        	ConnectionInstance conn;
+        	ConnectionInstanceEnd allDest; 
+            ConnectionInstanceEnd allSource;
+            ResoluteValue val0;
+            ResoluteValue val1; 
+            val0 = argVals.get(0);
+            val1 = argVals.get(1);
 
             NamedElement innerEl = val0.getNamedElement();
             assert (val1.getNamedElement() instanceof ComponentInstance);
@@ -964,8 +1004,13 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
 
             result = new BoolValue(innerCompContainer.equals(outerComp));
             break;
-
+        }
+        
         case "conn_source":
+        {
+
+            ResoluteValue connVal;
+            ConnectionInstance conn;
             connVal = argVals.get(0);
             assert (connVal.getNamedElement() instanceof ConnectionInstance);
 
@@ -974,7 +1019,13 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
             result = new NamedElementValue(conn.getSource().getComponentInstance());
 
             break;
+        }
+        
         case "conn_dest":
+        {
+            ResoluteValue connVal;
+            ConnectionInstance conn;
+        
             connVal = argVals.get(0);
             assert (connVal.getNamedElement() instanceof ConnectionInstance);
 
@@ -982,6 +1033,36 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
             nodeStr += "(" + conn.getName() + ")";
             result = new NamedElementValue(conn.getDestination().getComponentInstance());
             break;
+        }
+        
+        case "get_feature":
+        {
+
+            ResoluteValue connVal;
+            ComponentInstance compVal;
+            ConnectionInstance conn;
+            connVal = argVals.get(1);
+            compVal = (ComponentInstance) argVals.get(0).getNamedElement();
+            
+            assert (connVal.getNamedElement() instanceof ConnectionInstance);
+            assert (compVal instanceof ConnectionInstance);
+            
+            conn = (ConnectionInstance) connVal.getNamedElement();
+            for (FeatureInstance fi : compVal.getFeatureInstances())
+            {
+            	for (ConnectionInstance ci : fi.getAllEnclosingConnectionInstances())
+            	{
+            		if (ci == conn)
+            		{
+            		result = new NamedElementValue(fi);
+            		break;
+            		}
+            	}
+            }
+            OsateDebug.osateDebug("result=" + result);
+            break;  
+        }
+            
         case "sum":
             ResoluteValue setVal = argVals.get(0);
             assert (setVal.isSet());
