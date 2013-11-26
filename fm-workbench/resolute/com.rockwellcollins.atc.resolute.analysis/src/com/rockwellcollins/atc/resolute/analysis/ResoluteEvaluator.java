@@ -1052,7 +1052,7 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
             {
             	for (ConnectionInstance ci : fi.getAllEnclosingConnectionInstances())
             	{
-            		if (ci == conn)
+            		if ((ci == conn) && (ci.getDestination() == fi))
             		{
             		result = new NamedElementValue(fi);
             		break;
