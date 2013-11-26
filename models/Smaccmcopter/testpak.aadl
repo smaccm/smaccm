@@ -6,8 +6,8 @@ annex resolute
 		
 trivial(p : process) <=
 	** "there exists a mavlink connection" **  
-	exists (c : p.connections) . type(c) = DATATYPES::MAVLink  
- 
+	exists (c : {z for (z : component) | true}) . type(c) = DATATYPES::MAVLink   
+  
 **};
      
     

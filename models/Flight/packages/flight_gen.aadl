@@ -16,7 +16,7 @@ public
   with mavlink_rc_channels_override_msg;
   with mavlink_hil_state_msg;
   with radio_info_type;
-  with userinput_type;
+  with userinput_type; 
   with SMACCM;
   with UAV;
 

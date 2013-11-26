@@ -65,6 +65,7 @@ import com.rockwellcollins.atc.resolute.resolute.IfThenElseExpr;
 import com.rockwellcollins.atc.resolute.resolute.IntExpr;
 import com.rockwellcollins.atc.resolute.resolute.NestedDotID;
 import com.rockwellcollins.atc.resolute.resolute.ProveStatement;
+import com.rockwellcollins.atc.resolute.resolute.QuantArg;
 import com.rockwellcollins.atc.resolute.resolute.QuantifiedExpr;
 import com.rockwellcollins.atc.resolute.resolute.RealExpr;
 import com.rockwellcollins.atc.resolute.resolute.StringExpr;
@@ -463,8 +464,7 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
         String nodeStr = object.getQuant();
         // make the arglist a linked list
         for (Arg arg : argsEList) {
-            Type argType = (Type)arg.getType();
-            nodeStr += "(" + arg.getName() + " : " + argType.getName() + ")";
+            nodeStr += "(" + arg.getName() + ")";
             argsLinkedList.add(arg);
         }
 
@@ -977,8 +977,8 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
         LinkedList<Set<NamedElement>> listOfCompLists = new LinkedList<Set<NamedElement>>();
 
         for (Arg arg : freeArgs) {
-            listOfCompLists.add(ResoluteQuantifiableAadlObjects.getAllComponentsOfType(arg
-                    .getType().getName(), modes.size() > 0));
+            QuantArg quantArg = (QuantArg)arg;
+            ResoluteValue argSetVal = doSwitch(quantArg.getExpr());
         }
 
         return quantIterateSets(expr, freeArgs, listOfCompLists, compl);

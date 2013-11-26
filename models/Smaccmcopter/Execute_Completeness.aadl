@@ -58,7 +58,7 @@ good_messages_reach_controller(x : component) <=
   	  command_channel(c) and  
       all_good_messages_sent(x, c) and
         good_messages_reach_controller(y)
-    
+     
 -- messages must only be transferred through threads that
 -- share a process with only memory safe threads. We also 
 -- verify that all the messages are sent through one connection
