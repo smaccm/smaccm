@@ -36,15 +36,6 @@ public
       e2: in event port;
       e3: in event port;
       e4: in event port;
-      
-      
-       annex agree {**
-
-			guarantee "test " : true;
-			
-				
-	**};
-      
   end Main_Loop;
     
   abstract environment
@@ -65,8 +56,9 @@ public
       ENV: abstract environment;
       
     connections
-      feature group sensors <-> SS.sensors_in 
-      {Communication_Properties::Timing => immediate;}  
+      feature group sensors <-> SS.sensors_in
+      -- Not supported in current version of Osate: 
+      -- {Communication_Properties::Timing => immediate;}  
       in modes (Normal, Defensive, Boot) ;
       port motors_and_radios.flight_control_commands -> RC.commands_in in modes (Normal);
       port motors_and_radios.mavlink -> DC.encrypt_in in modes (Normal);
@@ -85,8 +77,6 @@ public
       port MC.servo2_commands -> motors_and_radios.motor2 in modes (Normal, Defensive);      
       port MC.servo3_commands -> motors_and_radios.motor3 in modes (Normal, Defensive);      
       port MC.servo4_commands -> motors_and_radios.motor4 in modes (Normal, Defensive);
-      
-      --connect motors and sensors to the environment for agree
       
     modes
       Boot: initial mode;
@@ -125,14 +115,7 @@ public
     	prove receives_mavlink(this.SN) modes: Normal
     	      
     	prove only_receive_gs(this.MC) modes: Normal
-    	
-    	prove trivial() modes: Normal
     **};
-    
-    annex agree {**
-    	assert true;
-    **};
-
   end Main_Loop.Impl;
   
   thread Decrypt
@@ -326,7 +309,6 @@ public
       SMACCM::Language => "Ivory";
       
       annex agree {**
-      	
       	-- true if signal n has been polled
       	eq poll0 : bool;
       	eq poll1 : bool;
@@ -360,7 +342,6 @@ public
       	--helper var for guarantess
       	eq k : int;
       	
-      	
       	--eq pend0 : bool = if(sent0) then true else if(poll0) then false else prev(pend0, false);
         --eq pend1 : bool = if(sent1) then true else if(poll1) then false else prev(pend1, false);
         --eq pend2 : bool = if(sent2) then true else if(poll2) then false else prev(pend2, false);
@@ -369,7 +350,6 @@ public
         --eq pend5 : bool = if(sent5) then true else if(poll5) then false else prev(pend5, false);
         --eq pend6 : bool = if(sent6) then true else if(poll6) then false else prev(pend6, false);
         --eq pend7 : bool = if(sent7) then true else if(poll7) then false else prev(pend7, false);
-      	
       
  		eq sent_at_time0 : int;
  		eq sent_at_time1 : int;
@@ -399,9 +379,6 @@ public
       	guarantee "still_pend5" : Agree_Nodes.true_since(pend5, k) => Agree_Nodes.false_since(poll5, k);
       	guarantee "still_pend6" : Agree_Nodes.true_since(pend6, k) => Agree_Nodes.false_since(poll6, k);
       	guarantee "still_pend7" : Agree_Nodes.true_since(pend7, k) => Agree_Nodes.false_since(poll7, k);
-      	 
-      	-- n
-      	
       **};
       
   end Motor_Control;
