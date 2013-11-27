@@ -17,6 +17,7 @@ import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 import org.osate.aadl2.AbstractNamedValue;
 import org.osate.aadl2.BooleanLiteral;
 import org.osate.aadl2.Classifier;
+import org.osate.aadl2.ComponentCategory;
 import org.osate.aadl2.ComponentClassifier;
 import org.osate.aadl2.ComponentType;
 import org.osate.aadl2.Element;
@@ -55,6 +56,7 @@ import com.rockwellcollins.atc.resolute.resolute.ClaimBody;
 import com.rockwellcollins.atc.resolute.resolute.ClaimString;
 import com.rockwellcollins.atc.resolute.resolute.ConstantDefinition;
 import com.rockwellcollins.atc.resolute.resolute.DefinitionBody;
+import com.rockwellcollins.atc.resolute.resolute.ElementSet;
 import com.rockwellcollins.atc.resolute.resolute.Expr;
 import com.rockwellcollins.atc.resolute.resolute.FailExpr;
 import com.rockwellcollins.atc.resolute.resolute.FilterMapExpr;
@@ -350,12 +352,141 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
     @Override
     public ResoluteValue caseIdExpr(IdExpr object) {
         NamedElement ref = object.getId();
-        if (ref instanceof Classifier || ref instanceof Property) {
+        ElementSet subEls = object.getSubelements();
+        if(subEls != null){
+            return subElsFromObject(ref, subEls.getName());
+        }else if (ref instanceof Classifier || ref instanceof Property) {
             return new NamedElementValue(ref);
         } else {
             return doSwitch(ref);
         }
     }
+
+    private ResoluteValue subElsFromObject(NamedElement id, String setName) {
+        //TODO: finish this
+        
+        ComponentInstance compInst = null;
+        ResoluteValue idVal = doSwitch(id);
+        compInst = (ComponentInstance)idVal.getNamedElement();
+        
+        if(setName.equals("connections")){
+            EList<ConnectionInstance> connections = compInst.getAllEnclosingConnectionInstances();
+            Set<ResoluteValue> returnSet = new HashSet<ResoluteValue>();
+            for(ConnectionInstance conn : connections){
+                returnSet.add(new NamedElementValue(conn));
+            }
+            
+            return new SetValue(returnSet);
+        }
+        
+        EList<ComponentInstance> childInsts = compInst.getAllComponentInstances();
+        Set<ComponentInstance> filteredInsts = new HashSet<ComponentInstance>();
+        for(ComponentInstance childInst : childInsts){
+            switch(setName){
+            case "threads":
+                if(childInst.getCategory() == ComponentCategory.THREAD){
+                    filteredInsts.add(childInst);
+                }
+                break;
+            case "data":
+                if(childInst.getCategory() == ComponentCategory.DATA){
+                    filteredInsts.add(childInst);
+                }
+                break;
+            case "memory":
+                if(childInst.getCategory() == ComponentCategory.MEMORY){
+                    filteredInsts.add(childInst);
+                }
+                break;
+            case "thread_groups":
+                if(childInst.getCategory() == ComponentCategory.THREAD_GROUP){
+                    filteredInsts.add(childInst);
+                }
+                break;
+            case "processes":
+                if(childInst.getCategory() == ComponentCategory.PROCESS){
+                    filteredInsts.add(childInst);
+                }
+                break;
+            case "subprograms":
+                if(childInst.getCategory() == ComponentCategory.SUBPROGRAM){
+                    filteredInsts.add(childInst);
+                }
+                break;
+            case "subprogram_groups":
+                if(childInst.getCategory() == ComponentCategory.SUBPROGRAM_GROUP){
+                    filteredInsts.add(childInst);
+                }
+                break;
+            case "processors":
+                if(childInst.getCategory() == ComponentCategory.PROCESSOR){
+                    filteredInsts.add(childInst);
+                }
+                break;
+            case "virtual_processors":
+                if(childInst.getCategory() == ComponentCategory.VIRTUAL_PROCESSOR){
+                    filteredInsts.add(childInst);
+                }
+                break;
+            case "buses":
+                if(childInst.getCategory() == ComponentCategory.BUS){
+                    filteredInsts.add(childInst);
+                }
+                break;
+            case "virtual_buses":
+                if(childInst.getCategory() == ComponentCategory.VIRTUAL_BUS){
+                    filteredInsts.add(childInst);
+                }
+                break;
+            case "devices":
+                if(childInst.getCategory() == ComponentCategory.DEVICE){
+                    filteredInsts.add(childInst);
+                }
+                break;
+            case "systems":
+                if(childInst.getCategory() == ComponentCategory.SYSTEM){
+                    filteredInsts.add(childInst);
+                }
+                break;
+            case "abstracts":
+                if(childInst.getCategory() == ComponentCategory.ABSTRACT){
+                    filteredInsts.add(childInst);
+                }
+                break;
+            case "components":
+                filteredInsts.add(childInst);
+                break;
+            default:
+                assert(false); //unimplemented
+            }
+            
+        }
+        
+        Set<ResoluteValue> returnSet = new HashSet<ResoluteValue>();
+        for(ComponentInstance childInst : filteredInsts){
+            returnSet.add(new NamedElementValue(childInst));
+        }
+        
+        return new SetValue(returnSet);
+    }
+    
+    
+    private <T> Set<Element> getAllSubElsOfType(Class<T> klass, Set<Element> elements){
+        
+        Set<Element> result = new HashSet<Element>();
+        for(Element el : elements){
+            
+            if(klass.isInstance(el)){
+                
+            }
+            
+        }
+        
+        
+        return null;
+    }
+    
+    
 
     @Override
     public ResoluteValue caseThisExpr(ThisExpr object) {
@@ -979,6 +1110,16 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
         for (Arg arg : freeArgs) {
             QuantArg quantArg = (QuantArg)arg;
             ResoluteValue argSetVal = doSwitch(quantArg.getExpr());
+            SetValue setValue = (SetValue)argSetVal;
+            
+            Set<ResoluteValue> resVals = setValue.getSet();
+            Set<NamedElement> namedVals = new HashSet<NamedElement>();
+            
+            for(ResoluteValue resVal : resVals){
+                namedVals.add(resVal.getNamedElement());
+            }
+            
+            listOfCompLists.add(namedVals);
         }
 
         return quantIterateSets(expr, freeArgs, listOfCompLists, compl);

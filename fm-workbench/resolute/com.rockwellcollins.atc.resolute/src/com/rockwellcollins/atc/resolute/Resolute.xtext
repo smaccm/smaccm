@@ -51,7 +51,6 @@ ElementSet:
 name=('threads'
 |	'data'
 |	'memory'
-|	'memories'
 |   'thread_groups'
 |   'processes'
 |   'subprograms'
