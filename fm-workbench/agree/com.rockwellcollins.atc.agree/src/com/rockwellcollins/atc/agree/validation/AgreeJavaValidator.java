@@ -9,7 +9,6 @@ import static com.rockwellcollins.atc.agree.validation.AgreeType.INT;
 import static com.rockwellcollins.atc.agree.validation.AgreeType.REAL;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -17,7 +16,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.validation.Check;
@@ -477,22 +475,17 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
         // AgreeType propType = getAgreeType(propExpr.getName());
         Expr propExpr = getPropExpr.getProp();
 
-        if (!compType.equals("component")) {
-            error(getPropExpr, "the first argument of the 'Get_Property' function"
-                    + " is of type '" + compType.toString() + "' but must be of some"
-                    + " aadl component type.");
+        if (!compType.equals(new AgreeType("component"))) {
+            error(getPropExpr.getComponent(), "Expected type component, but found type " + compType);
         }
 
-        if (!(propExpr instanceof IdExpr)) {
-            error(getPropExpr, "the second argument of the 'Get_Property' function"
-                    + "must be some aadl property");
-            return;
-        }
-
-        NamedElement idVal = ((IdExpr) propExpr).getId();
-        if (!(idVal instanceof Property)) {
-            error(getPropExpr, "the second argument of the 'Get_Property' function"
-                    + "must be some aadl property");
+        if (propExpr instanceof IdExpr) {
+            NamedElement idVal = ((IdExpr) propExpr).getId();
+            if (!(idVal instanceof Property)) {
+                error(getPropExpr.getProp(), "Expected AADL property");
+            }
+        } else {
+            error(getPropExpr.getProp(), "Expected AADL property");
         }
     }
 
@@ -571,7 +564,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
             return; // this error will be caught in parsing
         }
         AgreeType exprType = getAgreeType(fnDef.getExpr());
-        if (!exprType.equals(fnType.getString())) {
+        if (!exprType.equals(new AgreeType(fnType.getString()))) {
             error(fnDef, "Function '" + fnDef.getName() + "' is of type '" + fnType.getString()
                     + "' but its expression is of type '" + exprType + "'");
         }
