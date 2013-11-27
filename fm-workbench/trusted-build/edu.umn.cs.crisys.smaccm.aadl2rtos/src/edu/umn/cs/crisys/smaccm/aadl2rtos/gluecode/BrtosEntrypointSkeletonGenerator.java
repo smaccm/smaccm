@@ -9,8 +9,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.osate.analysis.lute.utils.Logger;
 
+import edu.umn.cs.crisys.smaccm.aadl2rtos.Logger;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.AstHelper;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Model;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.Pair;

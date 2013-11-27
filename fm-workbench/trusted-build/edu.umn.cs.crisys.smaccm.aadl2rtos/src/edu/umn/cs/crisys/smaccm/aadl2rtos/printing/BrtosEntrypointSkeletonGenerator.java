@@ -21,8 +21,7 @@ import org.osate.aadl2.PortCategory;
 import org.osate.aadl2.impl.PortImpl;
 import org.osate.aadl2.impl.ThreadTypeImpl;
 import org.osate.aadl2.instance.ConnectionInstance;
-import org.osate.analysis.lute.utils.Logger;
-
+import edu.umn.cs.crisys.smaccm.aadl2rtos.Logger;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosException;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Pair;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Util;

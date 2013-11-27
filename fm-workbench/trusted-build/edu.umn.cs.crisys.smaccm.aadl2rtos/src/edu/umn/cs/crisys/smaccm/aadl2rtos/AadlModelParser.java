@@ -52,9 +52,9 @@ import org.osate.aadl2.instance.ConnectionInstanceEnd;
 import org.osate.aadl2.instance.ConnectionKind;
 import org.osate.aadl2.instance.InstanceObject;
 import org.osate.aadl2.instance.SystemInstance;
-import org.osate.analysis.lute.utils.Logger;
 import org.osate.xtext.aadl2.properties.util.PropertyUtils;
 
+import edu.umn.cs.crisys.smaccm.aadl2rtos.Logger;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.IdType;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.Pair;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.Type;

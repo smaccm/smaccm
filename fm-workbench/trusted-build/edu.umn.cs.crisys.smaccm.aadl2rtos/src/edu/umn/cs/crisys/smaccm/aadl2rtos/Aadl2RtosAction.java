@@ -52,8 +52,6 @@ import org.osate.aadl2.SystemImplementation;
 import org.osate.aadl2.instance.SystemInstance;
 import org.osate.aadl2.instantiation.InstantiateModel;
 import org.osate.aadl2.modelsupport.resources.OsateResourceUtil;
-import org.osate.analysis.lute.AadlAction;
-import org.osate.analysis.lute.utils.Logger;
 import org.w3c.dom.Document;
 
 import edu.umn.cs.crisys.smaccm.aadl2rtos.gluecode.BrtosEntrypointSkeletonGenerator;

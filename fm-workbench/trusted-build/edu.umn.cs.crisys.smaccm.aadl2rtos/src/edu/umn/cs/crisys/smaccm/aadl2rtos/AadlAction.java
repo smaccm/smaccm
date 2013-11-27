@@ -56,7 +56,6 @@ import org.eclipse.xtext.util.concurrent.IUnitOfWork;
 import org.osate.aadl2.Element;
 import org.osate.aadl2.instance.SystemInstance;
 import org.osate.aadl2.modelsupport.errorreporting.AnalysisErrorReporterManager;
-import org.osate.analysis.lute.utils.Logger;
 
 abstract public class AadlAction implements IWorkbenchWindowActionDelegate {
 	private IWorkbenchWindow window;

@@ -7,11 +7,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.osate.analysis.lute.utils.Logger;
 import org.w3c.dom.Comment;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import edu.umn.cs.crisys.smaccm.aadl2rtos.Logger;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosException;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Model;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.gluecode.Names;
@@ -166,11 +166,11 @@ public class PrxGenerator {
 		e.appendChild(ec);
 		ec = doc.createElement("trampolines");
 		e.appendChild(ec);
-		eec = doc.createElement("trampoline");
-		ec.appendChild(eec);
 		List<InterruptServiceRoutine> ISRs = model.getISRList();
 		for (InterruptServiceRoutine i : ISRs) {
-      writeTrampoline(i.getSignalName(), i.getHandlerName(), eec);
+		   eec = doc.createElement("trampoline");
+		   ec.appendChild(eec);
+           writeTrampoline(i.getSignalName(), i.getHandlerName(), eec);
 		}
 		if (model.getThreadCalendar().hasDispatchers()) {
 		  writeTrampoline("systick", Names.getCalendarFnName(), eec);
