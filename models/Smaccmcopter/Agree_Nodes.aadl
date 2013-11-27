@@ -38,40 +38,34 @@ annex agree {**
       outp = (S_Univ(q,p)) or H(p) ; 
     tel;
     
-    node true_since(foo : bool, n : int) returns (r : bool);
+    node true_since(x : bool, n : int) returns (r : bool);
     var
     	count : int;
     let
     	count = 0 -> 1 + pre(count);
-    	r = if(count <= n) then
-    			foo
+    	r = if (count <= n) then
+    			x
     		else
-    			foo and prev(foo, foo);
+    			x and prev(r, x);
     tel;
       	
-    node false_since(foo : bool, n : int) returns (r : bool);
+    node false_since(x : bool, n : int) returns (r : bool);
+    let
+        r = true_since(not(x), n);
+    tel;
+      	
+    node at_time(x : bool, k : int) returns (r : bool);
     var
     	count : int;
     let
     	count = 0 -> 1 + pre(count);
-    	r = if(count <= n) then
-    			not foo
-      		else
-     			(not(foo)) and prev(not foo, not foo);
-    tel;
-      	
-    node at_time(foo : bool, k : int) returns (r : bool);
-    var
-    	count : int;
-    let
-    	count = 0 -> 1 + pre(count);
-    	r = if(count = k) then
-    			foo
+    	r = if (count = k) then
+    			x
     		else
     			prev(r, false);
     tel;
     
-    node false_between(foo : bool, start : int, end : int) returns (r : bool);
+    node false_between(x : bool, start : int, end : int) returns (r : bool);
     var
     	count : int;
     let
@@ -80,10 +74,10 @@ annex agree {**
     			true
     		else if (count > end) then
     			prev(r, true)
-    		else if(count <= end and count >= start) then
-    			not foo
+    		else if (start <= count and count <= end) then
+    			not x
       		else
-     			(not(foo)) and prev(r, foo);
+     			not(x) and prev(r, x);
     tel;
     
     --sig_set : the signal to set
