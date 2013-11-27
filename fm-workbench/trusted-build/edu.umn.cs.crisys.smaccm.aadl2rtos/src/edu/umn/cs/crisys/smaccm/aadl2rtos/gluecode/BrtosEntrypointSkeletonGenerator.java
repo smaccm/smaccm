@@ -9,13 +9,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Logger;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.AstHelper;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Model;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.Pair;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.MyPort;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.ThreadImplementation;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.util.Pair;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.util.Util;
 
 // TODO: need to discuss where to place .c / .h files for User-provided thread functions

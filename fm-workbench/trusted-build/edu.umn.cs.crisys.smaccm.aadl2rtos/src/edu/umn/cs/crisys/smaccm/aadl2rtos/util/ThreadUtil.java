@@ -125,6 +125,30 @@ public abstract class ThreadUtil {
 		return legacySemaphoreList;
 	}
 	
+	// returns null if there is no handler list.
+	public static List<String> getComputeEntrypointList(NamedElement container) {
+		ArrayList<String> handlerList = new ArrayList<String>(); 
+		try {
+			EList<Element> eList = 
+				PropertyUtils.getSimplePropertyListValue(container,  
+					ThreadUtil.SMACCM_SYS_COMPUTE_ENTRYPOINT_SOURCE_TEXT).getChildren();
+			
+			for (Element e : eList) {
+				StringLiteralImpl str = (StringLiteralImpl) e; 
+				handlerList.add(str.getValue());
+			}
+			return handlerList;
+			
+		} catch (Exception e) {}
+		try {
+			String str = Util.getStringValue(container, ThreadUtil.COMPUTE_ENTRYPOINT_SOURCE_TEXT);
+			handlerList.add(str);
+			return handlerList;			
+		} catch (Exception e) {
+			return null; 
+		}
+	}
+	
   public static int getStackSizeInBytes(NamedElement thread) {
     try {
       PropertyExpression value = PropertyUtils.getSimplePropertyValue(thread, ThreadUtil.SOURCE_STACK_SIZE);

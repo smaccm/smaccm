@@ -319,7 +319,7 @@ public class PrxGenerator {
 		//parent.appendChild(e);
 
 		e = doc.createElement("mutexes");
-    parent.appendChild(e);
+        parent.appendChild(e);
 		for (ThreadInstancePort i : instances) {
 		  createMutex(e, i.getMutexName());
 		}

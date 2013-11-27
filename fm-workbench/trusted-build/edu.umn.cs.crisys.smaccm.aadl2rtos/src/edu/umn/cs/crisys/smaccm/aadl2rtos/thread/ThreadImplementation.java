@@ -93,15 +93,17 @@ public class ThreadImplementation {
 				// compute entrypoint
 				try {
 					int period = (int) PropertyUtils.getIntegerValue(tti, ThreadUtil.PERIOD);
-					String entrypointName = PropertyUtils.getStringValue(tti,
-							ThreadUtil.COMPUTE_ENTRYPOINT_SOURCE_TEXT);
+					List<String> entrypointNameList = 
+							ThreadUtil.getComputeEntrypointList(tti); 
 
 					// TODO: fix this! We don't know how long the list of
 					// handlers is!
-					ExternalHandler periodicHandler = new ExternalHandler(
-							entrypointName, fileNames.get(0));
 					List<ExternalHandler> handlerList = new ArrayList<ExternalHandler>();
-					handlerList.add(periodicHandler);
+					for (String s: entrypointNameList) {
+						ExternalHandler periodicHandler = new ExternalHandler(
+							s, fileNames.get(0));
+						handlerList.add(periodicHandler);
+					}
 					Dispatcher dispatcher = new Dispatcher(this, period, handlerList);
 					dispatcherList.add(dispatcher);
 				} catch (Exception e) {

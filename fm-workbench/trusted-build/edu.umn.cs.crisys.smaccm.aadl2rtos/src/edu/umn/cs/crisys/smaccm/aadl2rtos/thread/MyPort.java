@@ -36,7 +36,7 @@ public class MyPort {
 	private PortType portType = null;
 	private PortCategory category = null;
 	private DirectionType direction = null;
-	private String entrypointSourceText = null;
+	private List<String> entrypointSourceText = null;
 	private String commprimFnNameOpt = null;
 	private String commprimHeaderNameOpt = null;
 	private String sourceText = null;
@@ -60,7 +60,7 @@ public class MyPort {
 	
 	// For "manually created" ports
 	public MyPort(String portName, 
-	              String entrypointSourceText,
+	              List<String> entrypointSourceText,
 	              String sourceText,
                 String commprimFnNameOpt,
                 String commprimHeaderNameOpt,
@@ -99,7 +99,7 @@ public class MyPort {
 	
 	public MyPort(Port port, Type dataType, ThreadImplementation owner) {
 		this.portName = port.getName();
-		this.entrypointSourceText = Util.getStringValueOpt(port,ThreadUtil.COMPUTE_ENTRYPOINT_SOURCE_TEXT);
+		this.entrypointSourceText = ThreadUtil.getComputeEntrypointList(port);
 		this.commprimFnNameOpt = Util.getStringValueOpt(port, ThreadUtil.SMACCM_SYS_COMMPRIM_SOURCE_TEXT);
 		this.commprimHeaderNameOpt = Util.getStringValueOpt(port, ThreadUtil.SMACCM_SYS_COMMPRIM_SOURCE_HEADER);
 		this.sourceText = Util.getStringValueOpt(port,ThreadUtil.SOURCE_TEXT);
@@ -193,7 +193,7 @@ public class MyPort {
 		return portName;
 	}
 
-	public String getComputeEntrypointOpt() {
+	public List<String> getComputeEntrypointOpt() {
 		return entrypointSourceText;
 	}
 	

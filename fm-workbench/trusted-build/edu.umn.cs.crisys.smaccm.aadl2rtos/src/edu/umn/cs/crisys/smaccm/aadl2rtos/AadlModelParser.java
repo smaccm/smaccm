@@ -56,7 +56,6 @@ import org.osate.xtext.aadl2.properties.util.PropertyUtils;
 
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Logger;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.IdType;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.Pair;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.Type;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.Connection;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.Dispatcher;
@@ -70,6 +69,7 @@ import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.SharedDataAccessor.AccessType;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.ThreadCalendar;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.ThreadImplementation;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.ThreadInstance;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.util.Pair;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.util.PortUtil;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.util.ThreadUtil;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.util.Util;
@@ -210,8 +210,10 @@ public class AadlModelParser {
 			  InterruptServiceRoutine isr = 
 			       new InterruptServiceRoutine(signal);
 			  this.isrList.add(isr);
+			  List<String> signalList = new ArrayList<String>();
+			  signalList.add(signal);
 			  MyPort destPort = new MyPort("smaccm_isr_input_port", 
-			      signal, threadImplementation.getFileNames().get(0), null, 
+			      signalList, threadImplementation.getFileNames().get(0), null, 
 			      null, null, threadImplementation, MyPort.PortType.INPUT_EVENT_PORT);
 			  threadImplementation.addPort(destPort);
 			  isr.setDestinationPort(destPort);
@@ -240,15 +242,17 @@ public class AadlModelParser {
 			// 
 			// Add dispatchers for all input event and input event data ports
 			for (MyPort p : threadImplementation.getInputEventPorts()) {
-			  String entrypoint = p.getComputeEntrypointOpt();
+			  List<String> entrypoints = p.getComputeEntrypointOpt();
 			  String file = p.getSourceFileOpt();
 			  // if (file == null) {
 			  //   file = threadImplementation.
 			  // }
-			  if (entrypoint != null) {
-			    ExternalHandler eh = new ExternalHandler(entrypoint, file);
-			    ArrayList<ExternalHandler> ehl = new ArrayList<ExternalHandler>();
-			    ehl.add(eh);
+			  if (entrypoints != null) {
+				ArrayList<ExternalHandler> ehl = new ArrayList<ExternalHandler>();
+				for (String s: entrypoints) {
+			      ExternalHandler eh = new ExternalHandler(s, file);
+			      ehl.add(eh);
+				}
 			    Dispatcher disp = new Dispatcher(threadImplementation, p, ehl);
 			    threadImplementation.addDispatcher(disp);
 			  } else {

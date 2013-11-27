@@ -333,6 +333,9 @@ public class SourceWriter extends AbstractCodeWriter {
 			out.append(Util.ind(1) + "for (;;) {\n");
 			out.append(Util.ind(2) + "int current_sig = " + rtosFnName("signal_wait_set("));
 
+			if (tw.getDispatcherList().size() == 0) {
+				throw new Aadl2RtosException("Error: Thread implementation: '" + tw.getName() + "' has no dispatchers!");
+			}
 			Iterator<Dispatcher> it = tw.getDispatcherList().iterator();
 			while (it.hasNext()) {
 			  Dispatcher current = it.next();

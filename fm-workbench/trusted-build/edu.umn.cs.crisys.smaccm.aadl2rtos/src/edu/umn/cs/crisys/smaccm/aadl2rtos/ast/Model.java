@@ -91,11 +91,6 @@ public class Model {
         createTopLevelInstanceSets(si);
     }
 
-    public int getThreadTaskIndex(ThreadWrapper tti) {
-        List<ThreadWrapper> taskThreads = getTaskThreads();
-        return taskThreads.indexOf(tti);
-    }
-
     // find the data ports associated with some "top level" element.
     public void findDataPorts(Element elem, List<DataPortImpl> dpList) {
         if (elem instanceof DataPortImpl) {
@@ -130,37 +125,6 @@ public class Model {
         for (Element child : e.getChildren()) {
             findThreads(child);
         }
-    }
-
-    public List<ThreadWrapper> getAllThreads() {
-        List<ThreadWrapper> allThreads = new ArrayList<ThreadWrapper>();
-        for (ThreadTypeImpl th : threads) {
-            ThreadWrapper tw = new ThreadWrapper(th, this);
-            allThreads.add(tw);
-        }
-        return allThreads;
-    }
-
-    public List<ThreadWrapper> getTaskThreads() {
-        List<ThreadWrapper> taskThreads = new ArrayList<ThreadWrapper>();
-        for (ThreadTypeImpl th : threads) {
-            ThreadWrapper tw = new ThreadWrapper(th, this);
-            if (!tw.isISRThread()) {
-                taskThreads.add(tw);
-            }
-        }
-        return taskThreads;
-    }
-
-    public List<ThreadWrapper> getISRThreads() {
-        List<ThreadWrapper> taskThreads = new ArrayList<ThreadWrapper>();
-        for (ThreadTypeImpl th : threads) {
-            ThreadWrapper tw = new ThreadWrapper(th, this);
-            if (tw.isISRThread()) {
-                taskThreads.add(tw);
-            }
-        }
-        return taskThreads;
     }
 
     // find the data types associated with some "top level" element.
