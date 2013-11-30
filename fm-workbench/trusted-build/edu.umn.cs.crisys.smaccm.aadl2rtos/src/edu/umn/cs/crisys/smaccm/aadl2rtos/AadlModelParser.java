@@ -36,40 +36,25 @@ import org.osate.aadl2.DataClassifier;
 import org.osate.aadl2.Element;
 import org.osate.aadl2.EnumerationLiteral;
 import org.osate.aadl2.Feature;
-import org.osate.aadl2.NamedElement;
 import org.osate.aadl2.SystemImplementation;
-import org.osate.aadl2.impl.BusSubcomponentImpl;
 import org.osate.aadl2.impl.DataAccessImpl;
 import org.osate.aadl2.impl.DataSubcomponentImpl;
 import org.osate.aadl2.impl.PortImpl;
 import org.osate.aadl2.impl.SubcomponentImpl;
-import org.osate.aadl2.impl.SystemImpl;
 import org.osate.aadl2.impl.ThreadSubcomponentImpl;
 import org.osate.aadl2.impl.ThreadTypeImpl;
 import org.osate.aadl2.instance.ComponentInstance;
 import org.osate.aadl2.instance.ConnectionInstance;
-import org.osate.aadl2.instance.ConnectionInstanceEnd;
 import org.osate.aadl2.instance.ConnectionKind;
 import org.osate.aadl2.instance.InstanceObject;
 import org.osate.aadl2.instance.SystemInstance;
 import org.osate.xtext.aadl2.properties.util.PropertyUtils;
 
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Logger;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.IdType;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.Type;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.Connection;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.Dispatcher;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.*;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.Dispatcher.DispatcherType;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.ExternalHandler;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.InterruptServiceRoutine;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.MyPort;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.SharedData;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.SharedDataAccessor;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.SharedDataAccessor.AccessType;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.ThreadCalendar;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.ThreadImplementation;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.ThreadInstance;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.util.Pair;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.util.PortUtil;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.util.ThreadUtil;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.util.Util;
@@ -81,7 +66,7 @@ public class AadlModelParser {
 
 	// containers for AADL AST objects
 	private ArrayList<ThreadTypeImpl> threadTypeImplList;
-	private Set<SystemImpl> systemImplList = new HashSet<SystemImpl>();
+	// private Set<SystemImpl> systemImplList = new HashSet<SystemImpl>();
 	
 	// Instance objects
   private ArrayList<ComponentInstance> threadInstanceList;
@@ -117,7 +102,8 @@ public class AadlModelParser {
 	
 	// Instance map
 	private Map<ComponentInstance, ThreadInstance> threadInstanceMap;
-
+	private List<LegacyThreadImplementation> legacyThreadList; 
+	
 	private Logger logger;
 	
 	// Model constructor
@@ -130,6 +116,8 @@ public class AadlModelParser {
 		Connection.init();
 		ThreadInstance.init();
 		MyPort.init();
+		
+		legacyThreadList = new ArrayList<LegacyThreadImplementation>();
 		
 		threadTypeImplList = new ArrayList<ThreadTypeImpl>();
 		threadInstanceList = new ArrayList<ComponentInstance>();
@@ -187,79 +175,61 @@ public class AadlModelParser {
 
 		for (ThreadTypeImpl tti : threadTypeImplList) {
 			String threadImplName = tti.getName();
-			ThreadImplementation threadImplementation = new ThreadImplementation(tti, astHelper);
-
-			for (ComponentInstance co : threadInstanceList) {
-				String threadType = co.getComponentClassifier().getName().toString();
-
-				// Fixed.
-				if (threadType.equalsIgnoreCase(threadImplName)) {
-					ThreadInstance instance = new ThreadInstance(co, threadImplementation, astHelper);
-					threadImplementation.addThreadInstance(instance);
-					this.threadInstanceMap.put(co, instance);
+			
+			if (ThreadUtil.getLegacyValue(tti)) {
+				LegacyThreadImplementation lti = new LegacyThreadImplementation(tti, astHelper); 
+				this.legacyThreadList.add(lti);
+				this.legacySemaphoreList.addAll(lti.getLegacySemaphores());
+			} else {
+				ThreadImplementation threadImplementation = new ThreadImplementation(tti, astHelper);
+	
+				for (ComponentInstance co : threadInstanceList) {
+					String threadType = co.getComponentClassifier().getName().toString();
+	
+					// Fixed.
+					if (threadType.equalsIgnoreCase(threadImplName)) {
+						ThreadInstance instance = new ThreadInstance(co, threadImplementation, astHelper);
+						threadImplementation.addThreadInstance(instance);
+						this.threadInstanceMap.put(co, instance);
+					}
 				}
-			}
 			
-			if (threadImplementation.isLegacyThread()) {
-				legacySemaphoreList.addAll(threadImplementation.getLegacySemaphores());
-			}
-			
-			// If ISR thread, create new ISR, port, and connections to receive from ISR.
-			if (threadImplementation.isISRThread()) {
-			  String signal = threadImplementation.getSmaccmSysSignalOpt();
-			  InterruptServiceRoutine isr = 
-			       new InterruptServiceRoutine(signal);
-			  this.isrList.add(isr);
-			  List<String> signalList = new ArrayList<String>();
-			  signalList.add(signal);
-			  MyPort destPort = new MyPort("smaccm_isr_input_port", 
-			      signalList, threadImplementation.getFileNames().get(0), null, 
-			      null, null, threadImplementation, MyPort.PortType.INPUT_EVENT_PORT);
-			  threadImplementation.addPort(destPort);
-			  isr.setDestinationPort(destPort);
-			  for (ThreadInstance ti: threadImplementation.getThreadInstanceList()) {
-			    Connection c_fake = new Connection(null, ti, isr.getOutputPort(), destPort);
-			    this.connectionList.add(c_fake);
-			    destPort.addConnection(c_fake);
-			    isr.addThreadInstance(ti);
-			  }
-			}
-			
-			// Find and add thread ports.
-			EList<Feature> features = tti.getAllFeatures(); 
-			for (Feature f: features) {
-			  if (f instanceof PortImpl) {
-			    PortImpl portImpl = (PortImpl)f;
-			    Type datatype = getDataType(portImpl);
-	        MyPort port = new MyPort(portImpl, datatype, threadImplementation);
-			    threadImplementation.addPort(port);
-			    portMap.put(portImpl, port);
-			  } else if (f instanceof DataAccessImpl) {
-			    // TODO: Something here.
-			  }
-			  
-			}
-			// 
-			// Add dispatchers for all input event and input event data ports
-			for (MyPort p : threadImplementation.getInputEventPorts()) {
-			  List<String> entrypoints = p.getComputeEntrypointOpt();
-			  String file = p.getSourceFileOpt();
-			  // if (file == null) {
-			  //   file = threadImplementation.
-			  // }
-			  if (entrypoints != null) {
-				ArrayList<ExternalHandler> ehl = new ArrayList<ExternalHandler>();
-				for (String s: entrypoints) {
-			      ExternalHandler eh = new ExternalHandler(s, file);
-			      ehl.add(eh);
+				// Find and add thread ports.
+				EList<Feature> features = tti.getAllFeatures(); 
+				for (Feature f: features) {
+				  if (f instanceof PortImpl) {
+				    PortImpl portImpl = (PortImpl)f;
+				    Type datatype = getDataType(portImpl);
+		        MyPort port = new MyPort(portImpl, datatype, threadImplementation);
+				    threadImplementation.addPort(port);
+				    portMap.put(portImpl, port);
+				  } else if (f instanceof DataAccessImpl) {
+				    // TODO: Something here.
+				  }
+				  
 				}
-			    Dispatcher disp = new Dispatcher(threadImplementation, p, ehl);
-			    threadImplementation.addDispatcher(disp);
-			  } else {
-			    logger.warn("Warning: event port: " + p.getName() + " does not have a compute entrypoint and will not be dispatched.");
-			  }
-			}			
-			threadImplementationMap.put(tti, threadImplementation);
+				// 
+				// Add dispatchers for all input event and input event data ports
+				for (MyPort p : threadImplementation.getInputEventPorts()) {
+				  List<String> entrypoints = p.getComputeEntrypointOpt();
+				  String file = p.getSourceFileOpt();
+				  // if (file == null) {
+				  //   file = threadImplementation.
+				  // }
+				  if (entrypoints != null) {
+					ArrayList<ExternalHandler> ehl = new ArrayList<ExternalHandler>();
+					for (String s: entrypoints) {
+				      ExternalHandler eh = new ExternalHandler(s, file);
+				      ehl.add(eh);
+					}
+				    Dispatcher disp = new Dispatcher(threadImplementation, p, ehl);
+				    threadImplementation.addDispatcher(disp);
+				  } else {
+				    logger.warn("Warning: event port: " + p.getName() + " does not have a compute entrypoint and will not be dispatched.");
+				  }
+				}			
+				threadImplementationMap.put(tti, threadImplementation);
+			}
 		}
 	}
 
@@ -541,6 +511,9 @@ public class AadlModelParser {
 	  return this.fileNames;
 	}
 
+	public List<LegacyThreadImplementation> getLegacyThreadList() {
+		return this.legacyThreadList;
+	}
 	public List<String> getLegacySemaphoreList() {
 		return this.legacySemaphoreList;
 	}

@@ -33,6 +33,7 @@ public abstract class ThreadUtil {
 	final public static String PRIORITY_NAME = "Priority";
 	final public static String LEGACY_NAME = "SMACCM_SYS::Is_Legacy";
 	final public static String LEGACY_SEMAPHORE_LIST_NAME = "SMACCM_SYS::Legacy_Semaphore_List";
+	final public static String LEGACY_ENTRYPOINT_NAME = "SMACCM_SYS::Legacy_Entrypoint";
 
 	final public static String DISPATCH_PROTOCOL_NAME = "Dispatch_Protocol";
 	final public static String QUEUE_SIZE_NAME = "QUEUE_SIZE";
@@ -58,7 +59,8 @@ public abstract class ThreadUtil {
 	final public static Property PRIORITY = Util.getPropertyDefinitionInWorkspace(PRIORITY_NAME);
 	final public static Property LEGACY = Util.getPropertyDefinitionInWorkspace(LEGACY_NAME);
 	final public static Property LEGACY_SEMAPHORE_LIST = Util.getPropertyDefinitionInWorkspace(LEGACY_SEMAPHORE_LIST_NAME);
-
+	final public static Property LEGACY_ENTRYPOINT = Util.getPropertyDefinitionInWorkspace(LEGACY_ENTRYPOINT_NAME);
+	
 	final public static Property DISPATCH_PROTOCOL = Util.getPropertyDefinitionInWorkspace(DISPATCH_PROTOCOL_NAME);
 	final public static Property QUEUE_SIZE = Util.getPropertyDefinitionInWorkspace(QUEUE_SIZE_NAME);
 	final public static Property ACCESS_RIGHT = Util.getPropertyDefinitionInWorkspace(ACCESS_RIGHT_NAME);

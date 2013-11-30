@@ -22,10 +22,8 @@ import edu.umn.cs.crisys.smaccm.aadl2rtos.AstHelper;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.util.ThreadUtil;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.util.Util;
 
-public class ThreadImplementation {
+public class ThreadImplementation extends ThreadImplementationBase {
 
-	private int priority = -1;
-	private int stackSize = 0; 
 	private ExternalHandler initEntrypointHandler = null;
 	
 	private List<ThreadInstance> threadInstanceList = new ArrayList<ThreadInstance>();
@@ -33,9 +31,6 @@ public class ThreadImplementation {
 	private EnumerationLiteral dispatchProtocol; 
 	
 	private String smaccmSysSignalOpt = null;
-	private String generatedEntrypoint = null;
-	private String name;
-    private List<String> fileNames = new ArrayList<String>();
 	
 	// Data port lists
 	private ArrayList<MyPort> inputDataPortList = new ArrayList<MyPort>();
@@ -48,79 +43,65 @@ public class ThreadImplementation {
 	private ArrayList<String> legacySemaphoreList = new ArrayList<String>();
 
 	private boolean isrThread = false;
-	private boolean legacyThread = false;
 
 	// Constructor
 	public ThreadImplementation(ThreadTypeImpl tti, AstHelper astHelper) {
-		name = tti.getName().toLowerCase();
+		super(tti, astHelper);
 		generatedEntrypoint = tti.getFullName();
-		priority = ThreadUtil.getPriority(tti);
-		stackSize = ThreadUtil.getStackSizeInBytes(tti);
 
-		// Determine whether this is a legacy ("blob") thread
-		legacyThread = ThreadUtil.getLegacyValue(tti);
-		if (legacyThread) {
-			legacySemaphoreList = (ArrayList<String>) ThreadUtil.getLegacySemaphoreList(tti);
+		// determine whether this thread is 'normal' or ISR.
+		smaccmSysSignalOpt = Util.getStringValueOpt(tti, ThreadUtil.SMACCM_SYS_SIGNAL_NAME);
+		isrThread = (getSmaccmSysSignalOpt() != null);
+
+		// create initializer handler, if it exists.
+		String entryPointSourceText = (String) Util.getStringValueOpt(tti,
+				ThreadUtil.INITIALIZE_ENTRYPOINT_SOURCE_TEXT);
+
+		String entryPointFile = fileNames.get(0);
+		if (entryPointSourceText != null && entryPointFile != null) {
+			initEntrypointHandler = new ExternalHandler(
+					entryPointSourceText, entryPointFile);
 		}
-		else {
-			// determine whether this thread is 'normal' or ISR.
-			smaccmSysSignalOpt = Util.getStringValueOpt(tti, ThreadUtil.SMACCM_SYS_SIGNAL_NAME);
-			isrThread = (getSmaccmSysSignalOpt() != null);
 
-			// create initializer handler, if it exists.
-			String entryPointSourceText = (String) Util.getStringValueOpt(tti,
-					ThreadUtil.INITIALIZE_ENTRYPOINT_SOURCE_TEXT);
-			fileNames = Util.getSourceTextListOpt(tti, ThreadUtil.SOURCE_TEXT);
+		// determine and store dispatch protocol
+		try {
+			dispatchProtocol = ThreadUtil.getDispatchProtocol(tti);
+		} catch (Exception e) {
+			throw new Aadl2RtosException(
+					"Dispatch protocol not found for thread: " + this.getName());
+		}
 
-			String entryPointFile = fileNames.get(0);
-			if (entryPointSourceText != null && entryPointFile != null) {
-				initEntrypointHandler = new ExternalHandler(
-						entryPointSourceText, entryPointFile);
-			}
-
-			// determine and store dispatch protocol
+		if ((dispatchProtocol != null)
+				&& (dispatchProtocol.getName().equalsIgnoreCase("Periodic") || dispatchProtocol
+						.getName().equalsIgnoreCase("Hybrid"))) {
+			// if periodic or hybrid, thread should have a period and a
+			// compute entrypoint
 			try {
-				dispatchProtocol = ThreadUtil.getDispatchProtocol(tti);
+				int period = (int) PropertyUtils.getIntegerValue(tti, ThreadUtil.PERIOD);
+				List<String> entrypointNameList = 
+						ThreadUtil.getComputeEntrypointList(tti); 
+
+				// TODO: fix this! We don't know how long the list of
+				// handlers is!
+				List<ExternalHandler> handlerList = new ArrayList<ExternalHandler>();
+				for (String s: entrypointNameList) {
+					ExternalHandler periodicHandler = new ExternalHandler(
+						s, fileNames.get(0));
+					handlerList.add(periodicHandler);
+				}
+				Dispatcher dispatcher = new Dispatcher(this, period, handlerList);
+				dispatcherList.add(dispatcher);
 			} catch (Exception e) {
 				throw new Aadl2RtosException(
-						"Dispatch protocol not found for thread: " + this.getName());
-			}
-
-			if ((dispatchProtocol != null)
-					&& (dispatchProtocol.getName().equalsIgnoreCase("Periodic") || dispatchProtocol
-							.getName().equalsIgnoreCase("Hybrid"))) {
-				// if periodic or hybrid, thread should have a period and a
-				// compute entrypoint
-				try {
-					int period = (int) PropertyUtils.getIntegerValue(tti, ThreadUtil.PERIOD);
-					List<String> entrypointNameList = 
-							ThreadUtil.getComputeEntrypointList(tti); 
-
-					// TODO: fix this! We don't know how long the list of
-					// handlers is!
-					List<ExternalHandler> handlerList = new ArrayList<ExternalHandler>();
-					for (String s: entrypointNameList) {
-						ExternalHandler periodicHandler = new ExternalHandler(
-							s, fileNames.get(0));
-						handlerList.add(periodicHandler);
-					}
-					Dispatcher dispatcher = new Dispatcher(this, period, handlerList);
-					dispatcherList.add(dispatcher);
-				} catch (Exception e) {
-					throw new Aadl2RtosException(
-							"For thread "
-									+ this.getName()
-									+ " with dispatch protocol "
-									+ (dispatchProtocol.toString())
-									+ " properties: 'Period', 'Compute_Entrypoint_Source_Text', and 'Source_Text' are required.");
-				}
+						"For thread "
+								+ this.getName()
+								+ " with dispatch protocol "
+								+ (dispatchProtocol.toString())
+								+ " properties: 'Period', 'Compute_Entrypoint_Source_Text', and 'Source_Text' are required.");
 			}
 		}
 	}
 
-  public List<String> getFileNames() {
-    return this.fileNames;
-  }
 	
   public List<SharedDataAccessor> getSharedDataAccessors() {
     return this.accessorList;
@@ -189,10 +170,6 @@ public class ThreadImplementation {
 		}
 	}
 
-	public String getName() {
-		return name;
-	}
-
 	public ArrayList<MyPort> getOutputEventPortList() {
 		ArrayList<MyPort> portList = new ArrayList<MyPort>();
 		portList.addAll(outputEventPortList);
@@ -227,10 +204,6 @@ public class ThreadImplementation {
 		return isrThread;
 	}
 	
-	public boolean isLegacyThread() {
-		return legacyThread;
-	}
-
 	public List<String> getLegacySemaphores() {
 	    return this.legacySemaphoreList;
 	}
@@ -241,10 +214,6 @@ public class ThreadImplementation {
 
 	public ExternalHandler getInitializeEntrypointOpt() {
 		return this.initEntrypointHandler;
-	}
-
-	public String getGeneratedEntrypoint() {
-		return generatedEntrypoint;
 	}
 
 	public ArrayList<MyPort> getPortList() {
@@ -267,14 +236,6 @@ public class ThreadImplementation {
 		return portList;
 	}
 
-	public int getPriority() {
-	  return this.priority;
-	}
-	
-	public int getStackSize() {
-	  return this.stackSize;
-	}
-	
 	public void addThreadInstance(ThreadInstance instance) {
 		threadInstanceList.add(instance);
 	}

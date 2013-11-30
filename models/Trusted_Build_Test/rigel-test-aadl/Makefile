@@ -9,7 +9,7 @@
 # "LICENSE" for more information.
 #
 
-OUT_DIR := C:\docs\svn_smaccm\architecture\Examples\rigel-test-aadl\out
+OUT_DIR := /home/whalen/Documents/git_smaccm/smaccm/models/Trusted_Build_Test/rigel-test-aadl/out
 CONFIG_TOOLCHAIN := cortex-m4
 CONFIG_CORTEX_M4_PREFIX := arm-none-eabi-
 CONFIG_BOARD := px4
@@ -21,7 +21,7 @@ include mk/export.mk
 CFLAGS += -DIVORY_DEPLOY
 
 all:
-	arm-none-eabi-gcc -ffreestanding -c C:\docs\svn_smaccm\architecture\Examples\rigel-test-aadl\gen\Test_Impl_Instance.c -o $(OUT_DIR)Test_Impl_Instance.o $(CFLAGS) -I. -IC:\docs\svn_smaccm\architecture\Examples\rigel-test-aadl\gen 
+	arm-none-eabi-gcc -ffreestanding -c /home/whalen/Documents/git_smaccm/smaccm/models/Trusted_Build_Test/rigel-test-aadl/gen/Test_Impl_Instance.c -o $(OUT_DIR)Test_Impl_Instance.o $(CFLAGS) -I. -I/home/whalen/Documents/git_smaccm/smaccm/models/Trusted_Build_Test/rigel-test-aadl/gen 
 	arm-none-eabi-gcc -ffreestanding -c src/rigel-test.c -o $(OUT_DIR)rigel-test.o $(CFLAGS) -I. -Isrc 
 	arm-none-eabi-gcc -ffreestanding -c generic.debug.c -o $(OUT_DIR)generic.debug.o $(CFLAGS) -I.  
 	arm-none-eabi-gcc -ffreestanding -c rtos-kochab.c -o $(OUT_DIR)rtos-kochab.o $(CFLAGS) -I.  

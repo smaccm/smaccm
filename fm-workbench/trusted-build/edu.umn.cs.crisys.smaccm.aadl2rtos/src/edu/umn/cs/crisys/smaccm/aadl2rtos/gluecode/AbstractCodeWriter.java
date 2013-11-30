@@ -43,7 +43,7 @@ public abstract class AbstractCodeWriter {
 		this.astHelper = astHelper;
 		this.sysInstanceName = model.getSystemInstance().getName();
 		this.astTypesEntrySet = astHelper.getAstTypes().entrySet();
-		this.allThreads = model.getAllThreads();
+		this.allThreads = model.getThreadImplementations();
 	}
 
 	protected void writeFileMetadata(File f) throws IOException {

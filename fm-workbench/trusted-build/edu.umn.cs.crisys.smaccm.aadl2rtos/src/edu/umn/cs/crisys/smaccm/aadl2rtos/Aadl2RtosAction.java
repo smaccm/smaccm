@@ -95,6 +95,7 @@ public class Aadl2RtosAction extends AadlAction {
 			                        parser.getThreadCalendar(), 
 			                        parser.getFileNames(), 
 			                        new ArrayList<SharedData>(parser.getDataMap().values()),
+			                        parser.getLegacyThreadList(),
 			                        parser.getLegacySemaphoreList());
 			
 			// This thing has to go!

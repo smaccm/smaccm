@@ -17,8 +17,10 @@ import edu.umn.cs.crisys.smaccm.aadl2rtos.Model;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.gluecode.Names;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.Dispatcher;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.InterruptServiceRoutine;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.LegacyThreadImplementation;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.SharedData;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.ThreadImplementation;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.ThreadImplementationBase;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.ThreadInstance;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.ThreadInstancePort;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.util.Util;
@@ -191,15 +193,9 @@ public class PrxGenerator {
     }
 	}
 
-	private void printKochabComponent(ThreadInstance c, Document doc, org.w3c.dom.Element parent) {
+	private void printKochabComponent(ThreadImplementationBase c, Document doc, org.w3c.dom.Element parent) {
 		org.w3c.dom.Element e;
 		
-		// TODO: This will only work if we have one thread instance per thread.
-		List<ThreadInstance> til = c.getThreadImplementation().getThreadInstanceList();
-		if (til.size() != 1) {
-		  throw new Aadl2RtosException("At printRigelComponent: Only models with one thread instance per implementation " + 
-		      "are currently supported.");
-		}
 		e = doc.createElement("task");
 		parent.appendChild(e);
 
@@ -219,7 +215,7 @@ public class PrxGenerator {
 		parent.appendChild(e);
 		
 		e = doc.createElement("priority");
-		e.appendChild(doc.createTextNode(Integer.toString(c.getThreadImplementation().getPriority())));
+		e.appendChild(doc.createTextNode(Integer.toString(c.getPriority())));
 		parent.appendChild(e);
 	}
 
@@ -241,7 +237,7 @@ public class PrxGenerator {
 	private void writeKochabModuleTasks(org.w3c.dom.Element parent) {
 
 		org.w3c.dom.Element e;
-    List<ThreadImplementation> tasks = model.getAllThreads();
+        List<ThreadImplementation> tasks = model.getThreadImplementations();
 		//e = doc.createElement("num_tasks");
 		//e.appendChild(doc.createTextNode(Integer.toString(tasks.size())));
 		//parent.appendChild(e);
@@ -253,11 +249,21 @@ public class PrxGenerator {
 		Collections.sort(tasks, new PriorityComparator());
 		
 		for (ThreadImplementation i : tasks) {
+		  printKochabComponent(i, doc, e);
+			// TODO: This will only work if we have one thread instance per thread.
+		  List<ThreadInstance> til = i.getThreadInstanceList();
+		  if (til.size() != 1) {
+		    throw new Aadl2RtosException("At writeKochabModuleTasks: Only models with one thread instance per implementation " + 
+			      "are currently supported.");
+		  }
 		  for (ThreadInstance j: i.getThreadInstanceList()) {
-		    printKochabComponent(j, doc, e);
 		    j.setKochabThreadLocation(kochabLocation);
 		    kochabLocation++;
 		  }
+		}
+		
+		for (LegacyThreadImplementation i : model.getLegacyThreadImplementations()) {
+			printKochabComponent(i, doc, e);
 		}
 	}
 

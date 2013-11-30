@@ -18,7 +18,7 @@ thread Thread_A
     features
       signalCh: in event port 
       	{
-      		Compute_Entrypoint_Source_Text => "exec_signalCh_threadA"; 
+      		SMACCM_SYS::Compute_Entrypoint_Source_Text => ("exec_signalCh_threadA", "exec_signalCh_threadB"); 
       		Queue_Size => 2;
       		-- can also state queue protocol and other properties.
       		-- these would change the interface to the entrypoint.

@@ -40,7 +40,7 @@ public class BrtosEntrypointSkeletonGenerator {
 		this.log = log;
 		this.astHelper = astHelper;
 		this.model = model;
-		this.allThreads = model.getAllThreads();
+		this.allThreads = model.getThreadImplementations();
 		// this.threadSourcePorts = model.getThreadSourcePorts();
 
 		// Create source directories

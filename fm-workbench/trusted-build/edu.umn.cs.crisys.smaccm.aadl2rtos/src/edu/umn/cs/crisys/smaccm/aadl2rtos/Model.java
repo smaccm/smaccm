@@ -33,6 +33,7 @@ import org.osate.aadl2.instance.SystemInstance;
 
 import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.Connection;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.InterruptServiceRoutine;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.LegacyThreadImplementation;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.MyPort;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.SharedData;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.ThreadCalendar;
@@ -55,10 +56,11 @@ public class Model {
 	public List<ThreadImplementation> threadImplementationList;
 	public List<InterruptServiceRoutine> isrList;
 	public List<SharedData> sharedDataList;
-	public List<String> legacySemaphoreList;
 	public ThreadCalendar threadCalendar;
 	public Set<String> sourceFiles = new HashSet<String>(); 
-	
+
+	public List<LegacyThreadImplementation> legacyThreadList;
+	public List<String> legacySemaphoreList;
 	// private Map<ThreadImplementation, Set<Pair<MyPort, MyPort>>> threadSourcePorts = new HashMap<ThreadImplementation, Set<Pair<MyPort, MyPort>>>();
 
 	// Model constructor
@@ -70,6 +72,7 @@ public class Model {
                ThreadCalendar threadCalendar, 
                Set<String> sourceFiles, 
                List<SharedData> sharedDataList,
+               List<LegacyThreadImplementation> legacyThreadList,
                List<String> legacySemaphoreList) {
 	  this.sharedDataList = sharedDataList; 
 	  this.sourceFiles = sourceFiles;
@@ -81,6 +84,7 @@ public class Model {
 		this.systemInstance = sysInst;
 		this.connectionInstances = connectionInstances;
 		this.threadCalendar = threadCalendar;
+		this.legacyThreadList = legacyThreadList;
 		this.legacySemaphoreList = legacySemaphoreList;
 		// this.threadSourcePorts = threadSourcePorts;
 
@@ -137,13 +141,17 @@ public class Model {
 	}
 */
 	
-	public List<ThreadImplementation> getAllThreads() {
+	public List<ThreadImplementation> getThreadImplementations() {
 		return this.threadImplementationList;
+	}
+	
+	public List<LegacyThreadImplementation> getLegacyThreadImplementations() {
+		return this.legacyThreadList;
 	}
 	
 	public List<ThreadInstance> getAllThreadInstances() {
 	  List<ThreadInstance> list = new ArrayList<ThreadInstance>(); 
-	  for (ThreadImplementation t: getAllThreads()) {
+	  for (ThreadImplementation t: getThreadImplementations()) {
 	    list.addAll(t.getThreadInstanceList()); 
 	  }
 	  return list;
