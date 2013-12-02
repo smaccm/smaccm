@@ -43,6 +43,7 @@ public class ResoluteParser extends AbstractContentAssistParser {
 					put(grammarAccess.getTypeAccess().getAlternatives(), "rule__Type__Alternatives");
 					put(grammarAccess.getElementSetAccess().getNameAlternatives_0(), "rule__ElementSet__NameAlternatives_0");
 					put(grammarAccess.getBuiltinTypeAccess().getNameAlternatives_0(), "rule__BuiltinType__NameAlternatives_0");
+					put(grammarAccess.getArgAccess().getAlternatives(), "rule__Arg__Alternatives");
 					put(grammarAccess.getClaimStringAccess().getAlternatives(), "rule__ClaimString__Alternatives");
 					put(grammarAccess.getDefinitionBodyAccess().getAlternatives(), "rule__DefinitionBody__Alternatives");
 					put(grammarAccess.getRelationalOpAccess().getAlternatives(), "rule__RelationalOp__Alternatives");
@@ -64,7 +65,9 @@ public class ResoluteParser extends AbstractContentAssistParser {
 					put(grammarAccess.getNumAltAccess().getAlternatives(), "rule__NumAlt__Alternatives");
 					put(grammarAccess.getResoluteLibraryAccess().getGroup(), "rule__ResoluteLibrary__Group__0");
 					put(grammarAccess.getTypeAccess().getGroup_0(), "rule__Type__Group_0__0");
-					put(grammarAccess.getArgAccess().getGroup(), "rule__Arg__Group__0");
+					put(grammarAccess.getArgAccess().getGroup_0(), "rule__Arg__Group_0__0");
+					put(grammarAccess.getArgAccess().getGroup_0_0(), "rule__Arg__Group_0_0__0");
+					put(grammarAccess.getArgAccess().getGroup_1(), "rule__Arg__Group_1__0");
 					put(grammarAccess.getConstantDefinitionAccess().getGroup(), "rule__ConstantDefinition__Group__0");
 					put(grammarAccess.getFunctionDefinitionAccess().getGroup(), "rule__FunctionDefinition__Group__0");
 					put(grammarAccess.getFunctionDefinitionAccess().getGroup_2(), "rule__FunctionDefinition__Group_2__0");
@@ -125,7 +128,6 @@ public class ResoluteParser extends AbstractContentAssistParser {
 					put(grammarAccess.getAtomicExprAccess().getGroup_11_4(), "rule__AtomicExpr__Group_11_4__0");
 					put(grammarAccess.getAtomicExprAccess().getGroup_11_5(), "rule__AtomicExpr__Group_11_5__0");
 					put(grammarAccess.getAtomicExprAccess().getGroup_12(), "rule__AtomicExpr__Group_12__0");
-					put(grammarAccess.getQuantArgAccess().getGroup(), "rule__QuantArg__Group__0");
 					put(grammarAccess.getRealTermAccess().getGroup(), "rule__RealTerm__Group__0");
 					put(grammarAccess.getIntegerTermAccess().getGroup(), "rule__IntegerTerm__Group__0");
 					put(grammarAccess.getResoluteSubclauseAccess().getGroup(), "rule__ResoluteSubclause__Group__0");
@@ -184,8 +186,10 @@ public class ResoluteParser extends AbstractContentAssistParser {
 					put(grammarAccess.getTypeAccess().getTypeAssignment_0_2(), "rule__Type__TypeAssignment_0_2");
 					put(grammarAccess.getElementSetAccess().getNameAssignment(), "rule__ElementSet__NameAssignment");
 					put(grammarAccess.getBuiltinTypeAccess().getNameAssignment(), "rule__BuiltinType__NameAssignment");
-					put(grammarAccess.getArgAccess().getNameAssignment_0(), "rule__Arg__NameAssignment_0");
-					put(grammarAccess.getArgAccess().getTypeAssignment_2(), "rule__Arg__TypeAssignment_2");
+					put(grammarAccess.getArgAccess().getNameAssignment_0_0_0(), "rule__Arg__NameAssignment_0_0_0");
+					put(grammarAccess.getArgAccess().getTypeAssignment_0_0_2(), "rule__Arg__TypeAssignment_0_0_2");
+					put(grammarAccess.getArgAccess().getNameAssignment_1_1(), "rule__Arg__NameAssignment_1_1");
+					put(grammarAccess.getArgAccess().getExprAssignment_1_3(), "rule__Arg__ExprAssignment_1_3");
 					put(grammarAccess.getConstantDefinitionAccess().getNameAssignment_0(), "rule__ConstantDefinition__NameAssignment_0");
 					put(grammarAccess.getConstantDefinitionAccess().getTypeAssignment_2(), "rule__ConstantDefinition__TypeAssignment_2");
 					put(grammarAccess.getConstantDefinitionAccess().getExprAssignment_4(), "rule__ConstantDefinition__ExprAssignment_4");
@@ -238,8 +242,6 @@ public class ResoluteParser extends AbstractContentAssistParser {
 					put(grammarAccess.getAtomicExprAccess().getMapAssignment_11_2(), "rule__AtomicExpr__MapAssignment_11_2");
 					put(grammarAccess.getAtomicExprAccess().getArgsAssignment_11_4_1(), "rule__AtomicExpr__ArgsAssignment_11_4_1");
 					put(grammarAccess.getAtomicExprAccess().getFilterAssignment_11_5_1(), "rule__AtomicExpr__FilterAssignment_11_5_1");
-					put(grammarAccess.getQuantArgAccess().getNameAssignment_1(), "rule__QuantArg__NameAssignment_1");
-					put(grammarAccess.getQuantArgAccess().getExprAssignment_3(), "rule__QuantArg__ExprAssignment_3");
 					put(grammarAccess.getRealTermAccess().getValueAssignment_0(), "rule__RealTerm__ValueAssignment_0");
 					put(grammarAccess.getRealTermAccess().getUnitAssignment_1(), "rule__RealTerm__UnitAssignment_1");
 					put(grammarAccess.getIntegerTermAccess().getValueAssignment_0(), "rule__IntegerTerm__ValueAssignment_0");

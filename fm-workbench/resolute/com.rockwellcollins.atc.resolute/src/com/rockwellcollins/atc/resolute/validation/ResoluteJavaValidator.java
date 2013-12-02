@@ -364,6 +364,22 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
         List<ResoluteType> expectedTypes = new ArrayList<>();
 
         switch (funCall.getFn()) {
+        case "is_data":
+        case "is_thread":
+        case "is_thread_group":
+        case "is_process":
+        case "is_subprogram":
+        case "is_subprogram_group":
+        case "is_processor":
+        case "is_virtual_processor":
+        case "is_memory":
+        case "is_bus":
+        case "is_virtual_bus":
+        case "is_device":
+        case "is_system":
+        case "is_abstract":
+            expectedTypes.add(BaseType.COMPONENT);
+            break;
         case "connected":
             expectedTypes.add(BaseType.COMPONENT);
             expectedTypes.add(BaseType.CONNECTION);
@@ -394,13 +410,28 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
         case "contained":
             expectedTypes.add(BaseType.AADL);
             expectedTypes.add(BaseType.COMPONENT);
-            break;
+            break; 
 
         case "conn_source":
         case "conn_dest":
             expectedTypes.add(BaseType.CONNECTION);
             break;
 
+        case "identity":
+            //TODO: support integers and reals as well
+            expectedTypes.add(BaseType.AADL); 
+            break;
+        case "is_empty":
+            if (actuals.size() != 1) {
+                error(funCall, "function 'is_empty' expects one argument");
+                return;
+            }
+
+            if (!(actualTypes.get(0) instanceof SetType)) {
+               error(funCall, "function 'is_empty' expects argument of set type");
+            }
+            return;
+            
         case "sum":
             if (actuals.size() != 1) {
                 error(funCall, "function 'sum' expects one argument");
@@ -669,6 +700,21 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
     public ResoluteType getBuiltInFnCallType(BuiltInFuncCallExpr funCall) {
         switch (funCall.getFn()) {
         case "connected":
+        case "is_empty":
+        case "is_data":
+        case "is_thread":
+        case "is_thread_group":
+        case "is_process":
+        case "is_subprogram":
+        case "is_subprogram_group":
+        case "is_processor":
+        case "is_virtual_processor":
+        case "is_memory":
+        case "is_bus":
+        case "is_virtual_bus":
+        case "is_device":
+        case "is_system":
+        case "is_abstract":
         case "class_of":
         case "bound":
         case "contained":
@@ -723,6 +769,14 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
         case "conn_dest":
             return BaseType.COMPONENT;
 
+        case "identity":
+        {
+            List<Expr> args = funCall.getArgs();
+            Expr expr = args.get(0);
+            ResoluteType argType = getExprType(expr);
+            
+            return new SetType(argType);
+        }
         case "sum":
             if (funCall.getArgs().size() != 1) {
                 return BaseType.FAIL;

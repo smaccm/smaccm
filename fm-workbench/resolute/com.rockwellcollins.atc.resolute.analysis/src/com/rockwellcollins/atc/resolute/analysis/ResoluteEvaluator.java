@@ -33,10 +33,13 @@ import org.osate.aadl2.instance.ComponentInstance;
 import org.osate.aadl2.instance.ConnectionInstance;
 import org.osate.aadl2.instance.ConnectionInstanceEnd;
 import org.osate.aadl2.instance.ConnectionReference;
+import org.osate.aadl2.instance.FeatureCategory;
 import org.osate.aadl2.instance.FeatureInstance;
 import org.osate.aadl2.instance.SystemOperationMode;
+import org.osate.aadl2.modelsupport.resources.OsateResourceUtil;
 import org.osate.aadl2.properties.PropertyDoesNotApplyToHolderException;
 import org.osate.aadl2.properties.PropertyNotPresentException;
+import org.osate.xtext.aadl2.properties.util.EMFIndexRetrieval;
 import org.osate.xtext.aadl2.properties.util.GetProperties;
 import org.osate.xtext.aadl2.properties.util.PropertyUtils;
 
@@ -382,10 +385,10 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
                 }
             }
             
-            //EList<ConnectionInstance> connections = compInst.getAllEnclosingConnectionInstances();
-            //for(ConnectionInstance conn : connections){
-            //    returnSet.add(new NamedElementValue(conn));
-            //}
+            EList<ConnectionInstance> connections = compInst.getAllEnclosingConnectionInstances();
+            for(ConnectionInstance conn : connections){
+                returnSet.add(new NamedElementValue(conn));
+            }
             return new SetValue(returnSet);
         }
         
@@ -742,8 +745,18 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
         LinkedList<Arg> args = new LinkedList<Arg>();
         for (Arg arg : object.getArgs()) {
             args.push(arg);
-            listOfCompLists.add(ResoluteQuantifiableAadlObjects.getAllComponentsOfType(arg
+            
+            if(arg instanceof QuantArg){
+                ResoluteValue resVal = doSwitch(((QuantArg)arg).getExpr());
+                Set<NamedElement> compSet = new HashSet<NamedElement>();
+                for(ResoluteValue resValIter : ((SetValue)resVal).getSet()){
+                    compSet.add(resValIter.getNamedElement());
+                }
+                listOfCompLists.add(compSet);
+            }else{
+                listOfCompLists.add(ResoluteQuantifiableAadlObjects.getAllComponentsOfType(arg
                     .getType().getName(), modes.size() > 0));
+            }
         }
         proofTree.addNewCurrent(object, "{LIST CALC}");
         LinkedList<ResoluteValue> valSet = new LinkedList<ResoluteValue>();
@@ -767,12 +780,16 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
 
         switch (funName) {
         case "connected":
-            // TODO: should this return true for connections in either
-            // direction?
 
-            ResoluteValue comp0Val = argVals.get(0);
-            ResoluteValue connVal = argVals.get(1);
-            ResoluteValue comp1Val = argVals.get(2);
+            ResoluteValue comp0Val;
+            ResoluteValue comp1Val;
+            ResoluteValue connVal;
+            ConnectionInstanceEnd allDest; 
+            ConnectionInstanceEnd allSource;
+            
+            comp0Val = argVals.get(0);
+            connVal = argVals.get(1);
+            comp1Val = argVals.get(2);
 
             assert (comp0Val.getNamedElement() instanceof ComponentInstance);
             assert (connVal.getNamedElement() instanceof ConnectionInstance);
@@ -785,8 +802,52 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
             nodeStr += "(" + compInst0.getName() + ", " + conn.getName() + ", "
                     + compInst1.getName() + ")";
 
-            ConnectionInstanceEnd allDest = conn.getDestination();
-            ConnectionInstanceEnd allSource = conn.getSource();
+            allDest = conn.getDestination();
+            allSource = conn.getSource();
+            
+            Property accessRightProp = EMFIndexRetrieval.getPropertyDefinitionInWorkspace(
+                    OsateResourceUtil.getResourceSet(), "Memory_Properties::Access_Right");
+            
+            
+            //code for data accesses
+            if(allDest instanceof FeatureInstance && 
+                    ((FeatureInstance)allDest).getCategory() == FeatureCategory.DATA_ACCESS){
+                EnumerationLiteral lit = PropertyUtils.getEnumLiteral(allDest, accessRightProp);
+                if(compInst1.equals(allDest.eContainer()) && compInst0.equals(allSource.eContainer())){
+                    if(lit.getName().equals("read_only") || lit.getName().equals("read_write")){
+                        result = new BoolValue(true);
+                        break;
+                    }
+                }
+                if(compInst0.equals(allDest.eContainer()) && compInst1.equals(allSource.eContainer())){
+                    if(lit.getName().equals("write_only") || lit.getName().equals("read_write")){
+                        result = new BoolValue(true);
+                        break;
+                    }
+                }
+                result = new BoolValue(false);
+                break;
+            }
+            
+            //code for data accesses
+            if(allSource instanceof FeatureInstance && 
+                    ((FeatureInstance)allSource).getCategory() == FeatureCategory.DATA_ACCESS){
+                EnumerationLiteral lit = PropertyUtils.getEnumLiteral(allSource, accessRightProp);
+                if(compInst1.equals(allDest.eContainer()) && compInst0.equals(allSource.eContainer())){
+                    if(lit.getName().equals("write_only") || lit.getName().equals("read_write")){
+                        result = new BoolValue(true);
+                        break;
+                    }
+                }
+                if(compInst0.equals(allDest.eContainer()) && compInst1.equals(allSource.eContainer())){
+                    if(lit.getName().equals("read_only") || lit.getName().equals("read_write")){
+                        result = new BoolValue(true);
+                        break;
+                    }
+                }
+                result = new BoolValue(false);
+                break;
+            }
 
             if (allSource.getComponentInstance().equals(compInst0)
                     && allDest.getComponentInstance().equals(compInst1)) {
@@ -796,6 +857,7 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
             }
 
             break;
+        
 
         case "property_lookup":
             // the first element is the component
@@ -953,6 +1015,39 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
 
             conn = (ConnectionInstance) connVal.getNamedElement();
             nodeStr += "(" + conn.getName() + ")";
+            
+            allDest = conn.getDestination();
+            allSource = conn.getSource();
+            
+            accessRightProp = EMFIndexRetrieval.getPropertyDefinitionInWorkspace(
+                    OsateResourceUtil.getResourceSet(), "Memory_Properties::Access_Right");
+            
+            
+            //code for data accesses
+            if(allDest instanceof FeatureInstance && 
+                    ((FeatureInstance)allDest).getCategory() == FeatureCategory.DATA_ACCESS){
+                EnumerationLiteral lit = PropertyUtils.getEnumLiteral(allDest, accessRightProp);
+                if(lit.getName().equals("read_write") || lit.getName().equals("write_only")){
+                    result = new NamedElementValue((NamedElement)allDest.eContainer());
+                }else{
+                    result = new NamedElementValue((NamedElement)allSource.eContainer());
+                }
+                break;
+            }
+
+            
+            //code for data accesses
+            if(allSource instanceof FeatureInstance && 
+                    ((FeatureInstance)allSource).getCategory() == FeatureCategory.DATA_ACCESS){
+                EnumerationLiteral lit = PropertyUtils.getEnumLiteral(allSource, accessRightProp);
+                if(lit.getName().equals("read_write") || lit.getName().equals("write_only")){
+                    result = new NamedElementValue((NamedElement)allSource.eContainer());
+                }else{
+                    result = new NamedElementValue((NamedElement)allDest.eContainer());
+                }
+                break;
+            }
+            
             result = new NamedElementValue(conn.getSource().getComponentInstance());
 
             break;
@@ -962,6 +1057,37 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
 
             conn = (ConnectionInstance) connVal.getNamedElement();
             nodeStr += "(" + conn.getName() + ")";
+            
+            allDest = conn.getDestination();
+            allSource = conn.getSource();
+            
+            accessRightProp = EMFIndexRetrieval.getPropertyDefinitionInWorkspace(
+                    OsateResourceUtil.getResourceSet(), "Memory_Properties::Access_Right");
+            
+            
+            //code for data accesses
+            if(allDest instanceof FeatureInstance && 
+                    ((FeatureInstance)allDest).getCategory() == FeatureCategory.DATA_ACCESS){
+                EnumerationLiteral lit = PropertyUtils.getEnumLiteral(allDest, accessRightProp);
+                if(lit.getName().equals("read_write") || lit.getName().equals("read_only")){
+                    result = new NamedElementValue((NamedElement)allDest.eContainer());
+                    break;
+                }
+            }
+
+            
+            //code for data accesses
+            if(allSource instanceof FeatureInstance && 
+                    ((FeatureInstance)allSource).getCategory() == FeatureCategory.DATA_ACCESS){
+                EnumerationLiteral lit = PropertyUtils.getEnumLiteral(allSource, accessRightProp);
+                if(lit.getName().equals("read_write") || lit.getName().equals("read_only")){
+                    result = new NamedElementValue((NamedElement)allSource.eContainer());
+                    break;
+                }
+                assert(false);
+            }
+            
+            
             result = new NamedElementValue(conn.getDestination().getComponentInstance());
             break;
         case "sum":
@@ -1090,6 +1216,18 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
             compInst = (ComponentInstance)compVal.getNamedElement();
             result = new BoolValue(compInst.getCategory() == ComponentCategory.ABSTRACT);
             break;
+        case "is_empty":
+            compVal = argVals.get(0);
+            result = new BoolValue(((SetValue)compVal).getSet().isEmpty());
+            break;
+             
+        case "identity":
+            compVal = argVals.get(0);
+            Set<ResoluteValue> compSet = new HashSet<ResoluteValue>();
+            compSet.add(compVal);
+            result = new SetValue(compSet);
+            break;
+            
         default:
             throw new IllegalArgumentException("Unknown function: " + funName);
         }

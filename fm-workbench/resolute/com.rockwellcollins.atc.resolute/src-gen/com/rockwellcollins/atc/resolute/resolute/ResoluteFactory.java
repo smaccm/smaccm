@@ -158,6 +158,15 @@ public interface ResoluteFactory extends EFactory
   SetType createSetType();
 
   /**
+   * Returns a new object of class '<em>Quant Arg</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Quant Arg</em>'.
+   * @generated
+   */
+  QuantArg createQuantArg();
+
+  /**
    * Returns a new object of class '<em>Claim Arg</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -309,15 +318,6 @@ public interface ResoluteFactory extends EFactory
    * @generated
    */
   FilterMapExpr createFilterMapExpr();
-
-  /**
-   * Returns a new object of class '<em>Quant Arg</em>'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return a new object of class '<em>Quant Arg</em>'.
-   * @generated
-   */
-  QuantArg createQuantArg();
 
   /**
    * Returns the package supported by this factory.

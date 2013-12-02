@@ -214,6 +214,16 @@ public class ResoluteSwitch<T> extends Switch<T>
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
+      case ResolutePackage.QUANT_ARG:
+      {
+        QuantArg quantArg = (QuantArg)theEObject;
+        T result = caseQuantArg(quantArg);
+        if (result == null) result = caseArg(quantArg);
+        if (result == null) result = caseNamedElement(quantArg);
+        if (result == null) result = caseElement(quantArg);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
       case ResolutePackage.CLAIM_ARG:
       {
         ClaimArg claimArg = (ClaimArg)theEObject;
@@ -364,16 +374,6 @@ public class ResoluteSwitch<T> extends Switch<T>
         T result = caseFilterMapExpr(filterMapExpr);
         if (result == null) result = caseExpr(filterMapExpr);
         if (result == null) result = caseElement(filterMapExpr);
-        if (result == null) result = defaultCase(theEObject);
-        return result;
-      }
-      case ResolutePackage.QUANT_ARG:
-      {
-        QuantArg quantArg = (QuantArg)theEObject;
-        T result = caseQuantArg(quantArg);
-        if (result == null) result = caseArg(quantArg);
-        if (result == null) result = caseNamedElement(quantArg);
-        if (result == null) result = caseElement(quantArg);
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
@@ -617,6 +617,22 @@ public class ResoluteSwitch<T> extends Switch<T>
    * @generated
    */
   public T caseSetType(SetType object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Quant Arg</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Quant Arg</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseQuantArg(QuantArg object)
   {
     return null;
   }
@@ -889,22 +905,6 @@ public class ResoluteSwitch<T> extends Switch<T>
    * @generated
    */
   public T caseFilterMapExpr(FilterMapExpr object)
-  {
-    return null;
-  }
-
-  /**
-   * Returns the result of interpreting the object as an instance of '<em>Quant Arg</em>'.
-   * <!-- begin-user-doc -->
-   * This implementation returns null;
-   * returning a non-null result will terminate the switch.
-   * <!-- end-user-doc -->
-   * @param object the target of the switch.
-   * @return the result of interpreting the object as an instance of '<em>Quant Arg</em>'.
-   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-   * @generated
-   */
-  public T caseQuantArg(QuantArg object)
   {
     return null;
   }

@@ -20,7 +20,7 @@ NamedElement returns aadl2::NamedElement:
 	Definition
 |	Arg
 |	Type
-|   QuantArg
+//|   QuantArg
 ;
 
 Element returns aadl2::Element:
@@ -96,7 +96,8 @@ BuiltinType:
 
 //Arg types are used for functions, claims, and quantifiers
 Arg returns Arg: 
-	name=ID ':' type=Type
+	=>(name=ID ':' type=Type)
+|	{QuantArg} name=ID ':' expr=Expr
 ;
 
 ConstantDefinition:
@@ -167,16 +168,16 @@ AtomicExpr returns Expr:
 |	{BoolExpr} val=BooleanLiteral
 |   {StringExpr} val=StringTerm
 |	{IfThenElseExpr} 'if' cond=Expr 'then' then=Expr 'else' else=Expr
-|   {QuantifiedExpr} quant=('forall' | 'exists') ('(' args+=QuantArg ')')+ '.' expr=Expr
+|   {QuantifiedExpr} quant=('forall' | 'exists') ('(' args+=Arg ')')+ '.' expr=Expr
 |   {BuiltInFuncCallExpr} fn=BuiltInFunc '(' (args+=(Expr) (',' args+=(Expr))*)? ')'
 |	{FnCallExpr} fn=[FunctionDefinition] '(' (args+=(Expr) (',' args+=(Expr))*)? ')'
 |   {FilterMapExpr} '{' map=Expr 'for' ('(' args+=Arg ')')+ ('|' filter=Expr)? '}'
 |	'(' Expr ')'
 ;
 
-QuantArg returns Arg:
-	{QuantArg} name=ID ':' expr=Expr
-;
+//QuantArg returns Arg:
+//	{QuantArg} name=ID ':' expr=Expr
+//;
 
 BuiltInFunc:
 	'connected'
@@ -206,6 +207,9 @@ BuiltInFunc:
 |   'is_device'
 |   'is_system'
 |   'is_abstract'
+// set predicates
+|   'is_empty'
+|   'identity'
 ;
 
 RealTerm returns aadl2::RealLiteral:

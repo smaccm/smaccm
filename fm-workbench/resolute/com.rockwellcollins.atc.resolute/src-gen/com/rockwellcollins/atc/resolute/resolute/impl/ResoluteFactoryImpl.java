@@ -79,6 +79,7 @@ public class ResoluteFactoryImpl extends EFactoryImpl implements ResoluteFactory
       case ResolutePackage.NESTED_DOT_ID: return createNestedDotID();
       case ResolutePackage.PROVE_STATEMENT: return createProveStatement();
       case ResolutePackage.SET_TYPE: return createSetType();
+      case ResolutePackage.QUANT_ARG: return createQuantArg();
       case ResolutePackage.CLAIM_ARG: return createClaimArg();
       case ResolutePackage.FUNC_BODY: return createFuncBody();
       case ResolutePackage.CLAIM_BODY: return createClaimBody();
@@ -96,7 +97,6 @@ public class ResoluteFactoryImpl extends EFactoryImpl implements ResoluteFactory
       case ResolutePackage.BUILT_IN_FUNC_CALL_EXPR: return createBuiltInFuncCallExpr();
       case ResolutePackage.FN_CALL_EXPR: return createFnCallExpr();
       case ResolutePackage.FILTER_MAP_EXPR: return createFilterMapExpr();
-      case ResolutePackage.QUANT_ARG: return createQuantArg();
       default:
         throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
     }
@@ -265,6 +265,17 @@ public class ResoluteFactoryImpl extends EFactoryImpl implements ResoluteFactory
   {
     SetTypeImpl setType = new SetTypeImpl();
     return setType;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public QuantArg createQuantArg()
+  {
+    QuantArgImpl quantArg = new QuantArgImpl();
+    return quantArg;
   }
 
   /**
@@ -452,17 +463,6 @@ public class ResoluteFactoryImpl extends EFactoryImpl implements ResoluteFactory
   {
     FilterMapExprImpl filterMapExpr = new FilterMapExprImpl();
     return filterMapExpr;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public QuantArg createQuantArg()
-  {
-    QuantArgImpl quantArg = new QuantArgImpl();
-    return quantArg;
   }
 
   /**

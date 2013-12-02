@@ -511,9 +511,9 @@ public class ResoluteSemanticSequencer extends PropertiesSemanticSequencer {
 				}
 				else break;
 			case ResolutePackage.QUANT_ARG:
-				if(context == grammarAccess.getNamedElementRule() ||
-				   context == grammarAccess.getQuantArgRule()) {
-					sequence_QuantArg(context, (QuantArg) semanticObject); 
+				if(context == grammarAccess.getArgRule() ||
+				   context == grammarAccess.getNamedElementRule()) {
+					sequence_Arg(context, (QuantArg) semanticObject); 
 					return; 
 				}
 				else break;
@@ -686,6 +686,15 @@ public class ResoluteSemanticSequencer extends PropertiesSemanticSequencer {
 	
 	/**
 	 * Constraint:
+	 *     (name=ID expr=Expr)
+	 */
+	protected void sequence_Arg(EObject context, QuantArg semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Constraint:
 	 *     val=BooleanLiteral
 	 */
 	protected void sequence_AtomicExpr(EObject context, BoolExpr semanticObject) {
@@ -758,7 +767,7 @@ public class ResoluteSemanticSequencer extends PropertiesSemanticSequencer {
 	
 	/**
 	 * Constraint:
-	 *     ((quant='forall' | quant='exists') args+=QuantArg+ expr=Expr)
+	 *     ((quant='forall' | quant='exists') args+=Arg+ expr=Expr)
 	 */
 	protected void sequence_AtomicExpr(EObject context, QuantifiedExpr semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -873,7 +882,6 @@ public class ResoluteSemanticSequencer extends PropertiesSemanticSequencer {
 	 *         name='threads' | 
 	 *         name='data' | 
 	 *         name='memory' | 
-	 *         name='memories' | 
 	 *         name='thread_groups' | 
 	 *         name='processes' | 
 	 *         name='subprograms' | 
@@ -935,15 +943,6 @@ public class ResoluteSemanticSequencer extends PropertiesSemanticSequencer {
 	 *     (expr=Expr (modes+=NestedDotID modes+=NestedDotID*)?)
 	 */
 	protected void sequence_ProveStatement(EObject context, ProveStatement semanticObject) {
-		genericSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * Constraint:
-	 *     (name=ID expr=Expr)
-	 */
-	protected void sequence_QuantArg(EObject context, QuantArg semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	

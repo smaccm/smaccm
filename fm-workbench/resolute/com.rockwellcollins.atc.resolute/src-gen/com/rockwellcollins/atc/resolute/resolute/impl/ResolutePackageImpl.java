@@ -165,6 +165,13 @@ public class ResolutePackageImpl extends EPackageImpl implements ResolutePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  private EClass quantArgEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   private EClass claimArgEClass = null;
 
   /**
@@ -278,13 +285,6 @@ public class ResolutePackageImpl extends EPackageImpl implements ResolutePackage
    * @generated
    */
   private EClass filterMapExprEClass = null;
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  private EClass quantArgEClass = null;
 
   /**
    * Creates an instance of the model <b>Package</b>, registered with
@@ -650,6 +650,26 @@ public class ResolutePackageImpl extends EPackageImpl implements ResolutePackage
   public EReference getSetType_Type()
   {
     return (EReference)setTypeEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getQuantArg()
+  {
+    return quantArgEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getQuantArg_Expr()
+  {
+    return (EReference)quantArgEClass.getEStructuralFeatures().get(0);
   }
 
   /**
@@ -1117,26 +1137,6 @@ public class ResolutePackageImpl extends EPackageImpl implements ResolutePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getQuantArg()
-  {
-    return quantArgEClass;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EReference getQuantArg_Expr()
-  {
-    return (EReference)quantArgEClass.getEStructuralFeatures().get(0);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
   public ResoluteFactory getResoluteFactory()
   {
     return (ResoluteFactory)getEFactoryInstance();
@@ -1207,6 +1207,9 @@ public class ResolutePackageImpl extends EPackageImpl implements ResolutePackage
     setTypeEClass = createEClass(SET_TYPE);
     createEReference(setTypeEClass, SET_TYPE__TYPE);
 
+    quantArgEClass = createEClass(QUANT_ARG);
+    createEReference(quantArgEClass, QUANT_ARG__EXPR);
+
     claimArgEClass = createEClass(CLAIM_ARG);
     createEReference(claimArgEClass, CLAIM_ARG__ARG);
 
@@ -1269,9 +1272,6 @@ public class ResolutePackageImpl extends EPackageImpl implements ResolutePackage
     createEReference(filterMapExprEClass, FILTER_MAP_EXPR__MAP);
     createEReference(filterMapExprEClass, FILTER_MAP_EXPR__ARGS);
     createEReference(filterMapExprEClass, FILTER_MAP_EXPR__FILTER);
-
-    quantArgEClass = createEClass(QUANT_ARG);
-    createEReference(quantArgEClass, QUANT_ARG__EXPR);
   }
 
   /**
@@ -1320,6 +1320,7 @@ public class ResolutePackageImpl extends EPackageImpl implements ResolutePackage
     resoluteSubclauseEClass.getESuperTypes().add(theAadl2Package.getAnnexSubclause());
     proveStatementEClass.getESuperTypes().add(theAadl2Package.getElement());
     setTypeEClass.getESuperTypes().add(this.getType());
+    quantArgEClass.getESuperTypes().add(this.getArg());
     claimArgEClass.getESuperTypes().add(this.getClaimString());
     funcBodyEClass.getESuperTypes().add(this.getDefinitionBody());
     claimBodyEClass.getESuperTypes().add(this.getDefinitionBody());
@@ -1337,7 +1338,6 @@ public class ResolutePackageImpl extends EPackageImpl implements ResolutePackage
     builtInFuncCallExprEClass.getESuperTypes().add(this.getExpr());
     fnCallExprEClass.getESuperTypes().add(this.getExpr());
     filterMapExprEClass.getESuperTypes().add(this.getExpr());
-    quantArgEClass.getESuperTypes().add(this.getArg());
 
     // Initialize classes and features; add operations and parameters
     initEClass(resoluteLibraryEClass, ResoluteLibrary.class, "ResoluteLibrary", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -1384,6 +1384,9 @@ public class ResolutePackageImpl extends EPackageImpl implements ResolutePackage
 
     initEClass(setTypeEClass, SetType.class, "SetType", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getSetType_Type(), this.getType(), null, "type", null, 0, 1, SetType.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+    initEClass(quantArgEClass, QuantArg.class, "QuantArg", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getQuantArg_Expr(), this.getExpr(), null, "expr", null, 0, 1, QuantArg.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(claimArgEClass, ClaimArg.class, "ClaimArg", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getClaimArg_Arg(), this.getArg(), null, "arg", null, 0, 1, ClaimArg.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -1447,9 +1450,6 @@ public class ResolutePackageImpl extends EPackageImpl implements ResolutePackage
     initEReference(getFilterMapExpr_Map(), this.getExpr(), null, "map", null, 0, 1, FilterMapExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getFilterMapExpr_Args(), this.getArg(), null, "args", null, 0, -1, FilterMapExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getFilterMapExpr_Filter(), this.getExpr(), null, "filter", null, 0, 1, FilterMapExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-    initEClass(quantArgEClass, QuantArg.class, "QuantArg", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getQuantArg_Expr(), this.getExpr(), null, "expr", null, 0, 1, QuantArg.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     // Create resource
     createResource(eNS_URI);
