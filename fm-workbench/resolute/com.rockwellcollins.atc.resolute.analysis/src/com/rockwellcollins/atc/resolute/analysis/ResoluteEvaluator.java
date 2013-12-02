@@ -370,16 +370,26 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
         compInst = (ComponentInstance)idVal.getNamedElement();
         
         if(setName.equals("connections")){
-            EList<ConnectionInstance> connections = compInst.getAllEnclosingConnectionInstances();
+            EList<FeatureInstance> features = compInst.getFeatureInstances();
+            
             Set<ResoluteValue> returnSet = new HashSet<ResoluteValue>();
-            for(ConnectionInstance conn : connections){
-                returnSet.add(new NamedElementValue(conn));
+            for(FeatureInstance feature : features){
+                for(ConnectionInstance conn : feature.getSrcConnectionInstances()){
+                    returnSet.add(new NamedElementValue(conn));
+                }
+                for(ConnectionInstance conn : feature.getDstConnectionInstances()){
+                    returnSet.add(new NamedElementValue(conn));
+                }
             }
             
+            //EList<ConnectionInstance> connections = compInst.getAllEnclosingConnectionInstances();
+            //for(ConnectionInstance conn : connections){
+            //    returnSet.add(new NamedElementValue(conn));
+            //}
             return new SetValue(returnSet);
         }
         
-        EList<ComponentInstance> childInsts = compInst.getAllComponentInstances();
+        EList<ComponentInstance> childInsts = compInst.getComponentInstances();
         Set<ComponentInstance> filteredInsts = new HashSet<ComponentInstance>();
         for(ComponentInstance childInst : childInsts){
             switch(setName){
@@ -1009,6 +1019,76 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
                 throw new ResoluteFailException(errorString);
             }
 
+            break;
+        case "is_data":
+            compVal = argVals.get(0);
+            compInst = (ComponentInstance)compVal.getNamedElement();
+            result = new BoolValue(compInst.getCategory() == ComponentCategory.DATA);
+            break;
+        case "is_thread":
+            compVal = argVals.get(0);
+            compInst = (ComponentInstance)compVal.getNamedElement();
+            result = new BoolValue(compInst.getCategory() == ComponentCategory.THREAD);
+            break;
+        case "is_thread_group":
+            compVal = argVals.get(0);
+            compInst = (ComponentInstance)compVal.getNamedElement();
+            result = new BoolValue(compInst.getCategory() == ComponentCategory.THREAD_GROUP);
+            break;
+        case "is_process":
+            compVal = argVals.get(0);
+            compInst = (ComponentInstance)compVal.getNamedElement();
+            result = new BoolValue(compInst.getCategory() == ComponentCategory.PROCESS);
+            break;
+        case "is_subprogram":
+            compVal = argVals.get(0);
+            compInst = (ComponentInstance)compVal.getNamedElement();
+            result = new BoolValue(compInst.getCategory() == ComponentCategory.SUBPROGRAM);
+            break;
+        case "is_subprogram_group":
+            compVal = argVals.get(0);
+            compInst = (ComponentInstance)compVal.getNamedElement();
+            result = new BoolValue(compInst.getCategory() == ComponentCategory.SUBPROGRAM_GROUP);
+            break;
+        case "is_processor":
+            compVal = argVals.get(0);
+            compInst = (ComponentInstance)compVal.getNamedElement();
+            result = new BoolValue(compInst.getCategory() == ComponentCategory.PROCESS);
+            break;
+        case "is_virtual_processor":
+            compVal = argVals.get(0);
+            compInst = (ComponentInstance)compVal.getNamedElement();
+            result = new BoolValue(compInst.getCategory() == ComponentCategory.VIRTUAL_PROCESSOR);
+            break;
+        case "is_memory":
+            compVal = argVals.get(0);
+            compInst = (ComponentInstance)compVal.getNamedElement();
+            result = new BoolValue(compInst.getCategory() == ComponentCategory.MEMORY);
+            break;
+        case "is_bus":
+            compVal = argVals.get(0);
+            compInst = (ComponentInstance)compVal.getNamedElement();
+            result = new BoolValue(compInst.getCategory() == ComponentCategory.BUS);
+            break;
+        case "is_virtual_bus":
+            compVal = argVals.get(0);
+            compInst = (ComponentInstance)compVal.getNamedElement();
+            result = new BoolValue(compInst.getCategory() == ComponentCategory.VIRTUAL_BUS);
+            break;
+        case "is_device":
+            compVal = argVals.get(0);
+            compInst = (ComponentInstance)compVal.getNamedElement();
+            result = new BoolValue(compInst.getCategory() == ComponentCategory.DEVICE);
+            break;
+        case "is_system":
+            compVal = argVals.get(0);
+            compInst = (ComponentInstance)compVal.getNamedElement();
+            result = new BoolValue(compInst.getCategory() == ComponentCategory.SYSTEM);
+            break;
+        case "is_abstract":
+            compVal = argVals.get(0);
+            compInst = (ComponentInstance)compVal.getNamedElement();
+            result = new BoolValue(compInst.getCategory() == ComponentCategory.ABSTRACT);
             break;
         default:
             throw new IllegalArgumentException("Unknown function: " + funName);

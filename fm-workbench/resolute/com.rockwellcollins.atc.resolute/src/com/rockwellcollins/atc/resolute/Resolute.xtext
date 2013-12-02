@@ -191,6 +191,21 @@ BuiltInFunc:
 |   'property_exists'
 |   'sum'
 |   'analysis'
+// type checking predicates
+|   'is_data'
+|   'is_thread'
+|   'is_thread_group'
+|   'is_process'
+|   'is_subprogram'
+|   'is_subprogram_group'
+|   'is_processor'
+|   'is_virtual_processor'
+|   'is_memory'
+|   'is_bus'
+|   'is_virtual_bus'
+|   'is_device'
+|   'is_system'
+|   'is_abstract'
 ;
 
 RealTerm returns aadl2::RealLiteral:
