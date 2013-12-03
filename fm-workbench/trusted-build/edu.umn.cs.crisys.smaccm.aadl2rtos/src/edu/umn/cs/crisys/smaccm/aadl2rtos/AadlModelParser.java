@@ -185,27 +185,6 @@ public class AadlModelParser {
 			} else {
 				ThreadImplementation threadImplementation = new ThreadImplementation(tti, astHelper);
 
-				// If ISR thread, create new ISR, port, and connections to receive from ISR.
-	      if (threadImplementation.isISRThread()) {
-	        String signal = threadImplementation.getSmaccmSysSignalOpt();
-	        InterruptServiceRoutine isr = 
-	             new InterruptServiceRoutine(signal);
-	        this.isrList.add(isr);
-	        List<String> signalList = new ArrayList<String>();
-	        signalList.add(signal);
-	        MyPort destPort = new MyPort("smaccm_isr_input_port", 
-	            signalList, threadImplementation.getFileNames().get(0), null, 
-	            null, null, threadImplementation, MyPort.PortType.INPUT_EVENT_PORT);
-	        threadImplementation.addPort(destPort);
-	        isr.setDestinationPort(destPort);
-	        for (ThreadInstance ti: threadImplementation.getThreadInstanceList()) {
-	          Connection c_fake = new Connection(null, ti, isr.getOutputPort(), destPort);
-	          this.connectionList.add(c_fake);
-	          destPort.addConnection(c_fake);
-	          isr.addThreadInstance(ti);
-	        }
-	      }
-	
 				for (ComponentInstance co : threadInstanceList) {
 					String threadType = co.getComponentClassifier().getName().toString();
 	
@@ -217,6 +196,27 @@ public class AadlModelParser {
 					}
 				}
 			
+        // If ISR thread, create new ISR, port, and connections to receive from ISR.
+        if (threadImplementation.isISRThread()) {
+          String signal = threadImplementation.getSmaccmSysSignalOpt();
+          InterruptServiceRoutine isr = 
+               new InterruptServiceRoutine(signal);
+          this.isrList.add(isr);
+          List<String> signalList = new ArrayList<String>();
+          signalList.add(signal);
+          MyPort destPort = new MyPort("smaccm_isr_input_port", 
+              signalList, threadImplementation.getFileNames().get(0), null, 
+              null, null, threadImplementation, MyPort.PortType.INPUT_EVENT_PORT);
+          threadImplementation.addPort(destPort);
+          isr.setDestinationPort(destPort);
+          for (ThreadInstance ti: threadImplementation.getThreadInstanceList()) {
+            Connection c_fake = new Connection(null, ti, isr.getOutputPort(), destPort);
+            this.connectionList.add(c_fake);
+            destPort.addConnection(c_fake);
+            isr.addThreadInstance(ti);
+          }
+        }
+  
 				// Find and add thread ports.
 				EList<Feature> features = tti.getAllFeatures(); 
 				for (Feature f: features) {
