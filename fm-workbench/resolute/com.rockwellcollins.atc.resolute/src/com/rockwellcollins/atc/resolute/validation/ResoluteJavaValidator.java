@@ -215,16 +215,14 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
     @Check
     public void checkQuantifiedExpr(QuantifiedExpr quantExpr) {
         ResoluteType exprType = getExprType(quantExpr.getExpr());
-       
+
         if (!exprType.subtypeOf(BaseType.BOOL)) {
             error(quantExpr, "Expected type bool but found type " + exprType);
         }
-        
-        //check argument types
 
         for(Arg arg : quantExpr.getArgs()){
 
-            if(arg instanceof QuantArg){
+            if(arg instanceof QuantArg){ 
                 QuantArg qArg = (QuantArg)arg;
 
                 ResoluteType argType = getExprType(qArg.getExpr());
@@ -232,6 +230,11 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
                 if(!(argType instanceof SetType)){
                     error(quantExpr, "Arguments to quantifier is of type '" + argType 
                             +"' but must be of a set type");
+                }
+            }else{
+                ResoluteType argType = typeToResoluteType(arg.getType());
+                if (!argType.subtypeOf(BaseType.AADL)) {
+                    error(arg, "Can only quantify over AADL types");
                 }
             }
         }
