@@ -11,7 +11,7 @@ allMemory : {memory} = {x for (x : memory) | true}
 allThreads : {thread} = {x for (x : thread) | true}
 
 
-only_receive_gs(x : component) <=
+only_receive_gs(x : component) <= 
   ** x " only receives messages from the Ground Station" **
   only_gs_encrypt() and only_receive_decrypt_bfs(x, {z for (z : component) | false})
 

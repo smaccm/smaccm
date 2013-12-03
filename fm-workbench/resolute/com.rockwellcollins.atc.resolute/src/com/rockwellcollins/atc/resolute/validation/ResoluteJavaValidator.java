@@ -221,17 +221,19 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
         }
         
         //check argument types
-        
+
         for(Arg arg : quantExpr.getArgs()){
-            QuantArg qArg = (QuantArg)arg;
-            
-            ResoluteType argType = getExprType(qArg.getExpr());
-            
-            if(!(argType instanceof SetType)){
-                error(quantExpr, "Arguments to quantifier is of type '" + argType 
-                        +"' but must be of a set type");
+
+            if(arg instanceof QuantArg){
+                QuantArg qArg = (QuantArg)arg;
+
+                ResoluteType argType = getExprType(qArg.getExpr());
+
+                if(!(argType instanceof SetType)){
+                    error(quantExpr, "Arguments to quantifier is of type '" + argType 
+                            +"' but must be of a set type");
+                }
             }
-            
         }
         
     }
