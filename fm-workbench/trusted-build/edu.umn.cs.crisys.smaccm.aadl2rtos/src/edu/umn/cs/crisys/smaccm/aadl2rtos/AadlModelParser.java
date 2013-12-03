@@ -166,6 +166,8 @@ public class AadlModelParser {
 		// grab all files referenced in the model.
 		initializeFiles();
 		
+		initializeLegacyIRQs();
+		
 		// Harvest model data
 		astHelper.harvestModelData();
 	}
@@ -182,6 +184,27 @@ public class AadlModelParser {
 				this.legacySemaphoreList.addAll(lti.getLegacySemaphores());
 			} else {
 				ThreadImplementation threadImplementation = new ThreadImplementation(tti, astHelper);
+
+				// If ISR thread, create new ISR, port, and connections to receive from ISR.
+	      if (threadImplementation.isISRThread()) {
+	        String signal = threadImplementation.getSmaccmSysSignalOpt();
+	        InterruptServiceRoutine isr = 
+	             new InterruptServiceRoutine(signal);
+	        this.isrList.add(isr);
+	        List<String> signalList = new ArrayList<String>();
+	        signalList.add(signal);
+	        MyPort destPort = new MyPort("smaccm_isr_input_port", 
+	            signalList, threadImplementation.getFileNames().get(0), null, 
+	            null, null, threadImplementation, MyPort.PortType.INPUT_EVENT_PORT);
+	        threadImplementation.addPort(destPort);
+	        isr.setDestinationPort(destPort);
+	        for (ThreadInstance ti: threadImplementation.getThreadInstanceList()) {
+	          Connection c_fake = new Connection(null, ti, isr.getOutputPort(), destPort);
+	          this.connectionList.add(c_fake);
+	          destPort.addConnection(c_fake);
+	          isr.addThreadInstance(ti);
+	        }
+	      }
 	
 				for (ComponentInstance co : threadInstanceList) {
 					String threadType = co.getComponentClassifier().getName().toString();
@@ -257,6 +280,16 @@ public class AadlModelParser {
     for (String s: this.fileNames) {
       logger.status("Referenced File: " + s);
     }
+	}
+	
+	private void initializeLegacyIRQs() {
+	  List<String> irqs = ThreadUtil.getLegacyIRQList(this.systemImplementation);
+	  
+	  if (irqs.size() % 2 != 0) {
+	    throw new Aadl2RtosException("Error: legacy IRQ property should be list of size 2*n, where each element of n is a signal_name, handler_name pair");
+	  }
+	  
+	  
 	}
 	
 	private void initializeConnections() {
