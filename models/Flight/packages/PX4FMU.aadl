@@ -3,10 +3,11 @@ public
   with UAV;
   with DATATYPES;
   with CORTEX;
+  with sensors_type;
   
   system PX4FMU
     features
-      sensors: feature group inverse of UAV::sensors;
+      sensors: requires data access sensors_type::sensors_result.impl;
       expansion_slot: feature group expansion_slot;
       i2c2_bus: provides bus access CORTEX::AHB_Bus_Matrix;
   end PX4FMU;

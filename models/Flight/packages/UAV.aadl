@@ -5,6 +5,7 @@ public
   with PX4FMU;
   with DATATYPES;
   with flight_gen;
+  with motors_type;
   
   system UAV
     features
@@ -38,10 +39,9 @@ public
 
   feature group motors_and_radios
     features
-      motor1: out data port DATATYPES::Servo_Commands;
-      motor2: out data port DATATYPES::Servo_Commands;
-      motor3: out data port DATATYPES::Servo_Commands;
-      motor4: out data port DATATYPES::Servo_Commands;
+      motors: provides data access motors_type::motors.impl{
+      		Access_Right => read_only;
+      };
       
       flight_control_commands: in data port DATATYPES::Flight_Control_Commands.Impl;
       mavlink: in out data port DATATYPES::EncryptMAVLink;

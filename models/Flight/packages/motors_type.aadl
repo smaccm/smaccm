@@ -4,6 +4,7 @@ package motors_type
 public
   with Base_Types;
   with Data_Model;
+  with DATATYPES;
 
 data motors
   properties
@@ -13,10 +14,10 @@ end motors;
 
 data implementation motors.impl
   subcomponents
-    frontleft : data Base_Types::Float;
-    frontright : data Base_Types::Float;
-    backleft : data Base_Types::Float;
-    backright : data Base_Types::Float;
+    frontleft : data DATATYPES::Servo_Commands;
+    frontright : data DATATYPES::Servo_Commands;
+    backleft : data DATATYPES::Servo_Commands;
+    backright : data DATATYPES::Servo_Commands;
 end motors.impl;
 
 

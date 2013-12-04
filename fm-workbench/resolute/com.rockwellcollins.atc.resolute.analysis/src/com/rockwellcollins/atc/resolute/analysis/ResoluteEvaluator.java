@@ -256,6 +256,7 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
         case "in":
             rightResult = doSwitch(object.getRight());
             nodeStr = leftResult + " in " + rightResult;
+            System.out.println("in: "+leftResult);
 
             assert (rightResult.isSet());
             result = new BoolValue(rightResult.getSet().contains(leftResult));
@@ -385,7 +386,7 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
                 }
             }
             
-            EList<ConnectionInstance> connections = compInst.getAllEnclosingConnectionInstances();
+            EList<ConnectionInstance> connections = compInst.getConnectionInstances();
             for(ConnectionInstance conn : connections){
                 returnSet.add(new NamedElementValue(conn));
             }
@@ -1326,18 +1327,25 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
         LinkedList<Set<NamedElement>> listOfCompLists = new LinkedList<Set<NamedElement>>();
 
         for (Arg arg : freeArgs) {
-            QuantArg quantArg = (QuantArg)arg;
-            ResoluteValue argSetVal = doSwitch(quantArg.getExpr());
-            SetValue setValue = (SetValue)argSetVal;
-            
-            Set<ResoluteValue> resVals = setValue.getSet();
-            Set<NamedElement> namedVals = new HashSet<NamedElement>();
-            
-            for(ResoluteValue resVal : resVals){
-                namedVals.add(resVal.getNamedElement());
+
+            if(arg instanceof QuantArg){
+                QuantArg quantArg = (QuantArg)arg;
+                ResoluteValue argSetVal = doSwitch(quantArg.getExpr());
+                SetValue setValue = (SetValue)argSetVal;
+
+                Set<ResoluteValue> resVals = setValue.getSet();
+                Set<NamedElement> namedVals = new HashSet<NamedElement>();
+
+                System.out.println(resVals);
+                for(ResoluteValue resVal : resVals){
+                    namedVals.add(resVal.getNamedElement());
+                }
+
+                listOfCompLists.add(namedVals);
+            }else{
+                listOfCompLists.add(ResoluteQuantifiableAadlObjects.getAllComponentsOfType(arg
+                        .getType().getName(), modes.size() > 0));
             }
-            
-            listOfCompLists.add(namedVals);
         }
 
         return quantIterateSets(expr, freeArgs, listOfCompLists, compl);
