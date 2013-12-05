@@ -29,7 +29,18 @@ public class ThreadImplementationBase {
 	protected String name;
 	protected String generatedEntrypoint = null;
     protected List<String> fileNames = new ArrayList<String>();
-	
+
+  protected int kochabThreadLocation;
+  
+  public int getKochabThreadLocation() {
+    return this.kochabThreadLocation;
+  }
+  
+  public void setKochabThreadLocation(int loc) {
+    this.kochabThreadLocation = loc;
+  }
+    
+    
 	// Constructor
 	public ThreadImplementationBase(ThreadTypeImpl tti, AstHelper astHelper) {
 		name = tti.getName().toLowerCase();

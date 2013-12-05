@@ -1,0 +1,63 @@
+package Real_Toy
+public 
+   with Base_Types;
+   
+   
+system A
+	features
+		Input: in data port Base_Types::Float;
+		Output: out data port Base_Types::Float;
+			
+	annex agree {** 
+		assume "A input range" : Input < 20.0;
+		guarantee "A output range" : Output < 2.0*Input;
+	**};	
+end A ; 
+
+system B
+	features
+		Input: in data port Base_Types::Float;
+		Output: out data port Base_Types::Float;
+			
+	annex agree {** 
+		assume "B input range" : Input < 20.0;
+		guarantee "B output range" : Output < Input + 15.0;
+	**};	
+end B ; 
+
+system C
+	features
+		Input1: in data port Base_Types::Float;
+		Input2: in data port Base_Types::Float;
+		Output: out data port Base_Types::Float;
+			
+	annex agree {** 
+		guarantee "C output range" : Output = Input1 + Input2;
+	**};	
+end C ; 
+   
+system top_level
+	features
+		Input: in data port Base_Types::Float;
+		Output: out data port Base_Types::Float;
+	annex agree {** 
+		assume "System input range " : Input <= 10.0;
+		guarantee "System output range" : Output < 50.0;
+	**};	
+end top_level;
+
+system implementation top_level.Impl
+	subcomponents
+		A_sub : system A ; 
+		B_sub : system B ; 
+		C_sub : system C ; 
+	connections
+		IN_TO_A : port Input -> A_sub.Input {Communication_Properties::Timing => immediate;};
+		A_TO_B : port A_sub.Output -> B_sub.Input {Communication_Properties::Timing => immediate;};
+		A_TO_C : port A_sub.Output -> C_sub.Input1 {Communication_Properties::Timing => immediate;};
+		B_TO_C : port B_sub.Output -> C_sub.Input2 {Communication_Properties::Timing => immediate;};
+		C_TO_Output : port C_sub.Output -> Output {Communication_Properties::Timing => immediate;}; 
+end top_level.Impl;
+
+
+end Real_Toy;

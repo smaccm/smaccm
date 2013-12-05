@@ -1,0 +1,43 @@
+package defs
+public 
+
+annex agree {**
+	
+	const OFF_MODE : int = 0;
+	const SETUP_MODE : int = 1; 
+	const SUSPENDED_MODE : int = 2;
+	const COOKING_MODE : int = 3;
+	
+	-- const MAX_COOKING_STEPS : int = 100;
+	
+	fun is_running(m: int) : bool = (m = 3 or m = 2) ; 
+	fun is_cooking(m: int) : bool = (m = 3); 
+	fun is_suspended(m: int) : bool = (m = 2);
+	fun is_setup(m: int) : bool = (m = 1); 
+	
+	node initially_true(b: bool) returns (result: bool); 
+	let 
+		result = prev(true, b);
+	tel; 
+	
+	node rising_edge(signal: bool) returns (re: bool);
+	let
+		re = (signal and not prev(signal, false));
+	tel;
+	
+	node timer(set: bool, reset: bool) returns (time_val: int);
+	let
+		time_val = 
+			if reset then 0 else 
+				prev(time_val, 0) + (if set then 1 else 0);
+	tel;
+	
+	node contiguous_interval(signal: bool) returns (time_val: int);
+	let
+		time_val = timer(signal, not signal);
+	tel;
+		
+	
+**};
+
+end defs;

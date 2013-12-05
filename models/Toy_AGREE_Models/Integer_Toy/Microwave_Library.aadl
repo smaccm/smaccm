@@ -1,0 +1,23 @@
+package Microwave_Library
+public 
+
+annex agree {**
+	
+	const OFF_MODE : int = 0;
+	const SETUP_MODE : int = 1; 
+	const SUSPENDED_MODE : int = 2;
+	const COOKING_MODE : int = 3;
+	
+	fun is_running(m: int) : bool = (m = COOKING_MODE or m = SUSPENDED_MODE) ; 
+	fun is_cooking(m: int) : bool = (m = COOKING_MODE); 
+	fun is_suspended(m: int) : bool = (m = SUSPENDED_MODE);
+	fun is_setup(m: int) : bool = (m = SETUP_MODE); 
+	
+	node rising_edge(signal: bool) returns (re: bool);
+	let
+		re = (signal and not prev(signal, false));
+	tel;
+	
+**};
+
+end Microwave_Library;

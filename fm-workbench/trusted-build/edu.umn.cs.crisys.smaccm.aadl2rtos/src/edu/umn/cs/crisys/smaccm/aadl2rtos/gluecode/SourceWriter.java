@@ -90,13 +90,13 @@ public class SourceWriter extends AbstractCodeWriter {
 		//memcpy signature.
 		writeStupidMemcpy();
 		
-		if (model.threadCalendar.hasDispatchers()) {
+		if (model.getThreadCalendar().hasDispatchers()) {
 		  writeInitializePX4SystickInterrupt() ;
 		}
 		defineMutexes();
     writeAllSharedVars();
     
-    if (model.threadCalendar.hasDispatchers()) {
+    if (model.getThreadCalendar().hasDispatchers()) {
       writeThreadCalendar();
     }
     
@@ -144,7 +144,8 @@ public class SourceWriter extends AbstractCodeWriter {
 	 * }
 	 */
 	void writeStupidMemcpy() throws IOException {
-	  out.append("void *memcpy(void *dst, const void *src, int count) { \n"); 
+	  out.append("void *memcpy(void *dst, const void *src, int count);\n\n");
+/*	  out.append("void *memcpy(void *dst, const void *src, int count) { \n"); 
 	  out.append(ind + "uint32_t i;\n");
 	  out.append(ind + "uint8_t *src_ptr = (uint8_t *)src;\n"); 
 	  out.append(ind + "uint8_t *dst_ptr = (uint8_t *)dst;\n");
@@ -154,19 +155,9 @@ public class SourceWriter extends AbstractCodeWriter {
 	  out.append(ind + "}\n");
 	  out.append(ind + "return dst;\n");
 	  out.append("}\n\n");
+	  */
 	}
 	
-	/* should look like this:
-	 * int smaccm_calendar_counter;
-	 * void smaccm_thread_calendar() {
-	 *   counter = (counter + 1) % CALENDAR_MAX; 
-	 *   
-	 *   if ((counter % thread_count) == 0) {
-	 *     rtos_irq_event_raise(IRQ_EVENT_ID_BLAH); 
-	 *   }
-	 *   ... // more threads here...
-	 * }
-	 */
 	
 	private void writeInitializePX4SystickInterrupt() throws IOException {
 	   
@@ -208,6 +199,7 @@ public class SourceWriter extends AbstractCodeWriter {
 	  out.append("};\n");
 	}
 	
+	// group threads by periods for better performance.
 	private void writeThreadCalendar() throws IOException {
 	  
 	  ThreadCalendar tc = this.model.getThreadCalendar();
@@ -218,17 +210,17 @@ public class SourceWriter extends AbstractCodeWriter {
 	  
 	  out.append("int smaccm_calendar_counter = 0;\n\n");
 	  out.append("bool smaccm_thread_calendar() {\n");
-	  out.append(ind + "smaccm_calendar_counter = (smaccm_calendar_counter + 1) % " + 
-	      hyperperiodSubdivisions + ";\n");
 	  
 	  for (Dispatcher d : tc.getPeriodicDispatchers()) {
 	    int ctr = d.getPeriod() / tickInterval;
 	    out.append(ind + "if ((smaccm_calendar_counter % " + Integer.toString(ctr) + ") == 0) { \n");
       out.append(ind + ind + "rtos_irq_event_raise(" + 
           d.getPeriodicIrqSignalDefine() + ");\n");
-      out.append(ind + "return true;\n");
       out.append(ind + "}\n");
 	  }
+    out.append(ind + "smaccm_calendar_counter = (smaccm_calendar_counter + 1) % " + 
+        hyperperiodSubdivisions + ";\n");
+    out.append(ind + "return true;\n");
 	  out.append("}\n\n");
     writeComment("End dispatch.\n");
 	}
@@ -236,7 +228,7 @@ public class SourceWriter extends AbstractCodeWriter {
 	private void writeISRs() throws IOException {
 	  for (InterruptServiceRoutine r: model.getISRList()) {
 	    out.append("bool " + r.getHandlerName() + "() { \n\n");
-	    if (r.getThreadInstances().size() != 1) {
+	    if (r.getThreadInstances().size() > 1) {
 	      throw new Aadl2RtosException("For SystemBuild translation, Interrupt Service Routines (ISRs)" + 
 	          " can have only one thread instance for the corresponding ISR thread implementation.\n");
 	    }
@@ -525,7 +517,6 @@ public class SourceWriter extends AbstractCodeWriter {
   private void writeSharedDataReader(ThreadImplementation impl, SharedDataAccessor outp) throws IOException {
     SharedData sharedData = outp.getSharedData();
     Type dt = sharedData.getDataType();
-    out.append("/* Are you fucking kidding me? */");
     out.append("bool " + Names.getThreadImplReaderFnName(outp) + 
       "(/* THREAD_ID tid,  */ " + 
         Names.createRefParameter(outp.getSharedData().getDataType(), "elem") + ") {\n\n");

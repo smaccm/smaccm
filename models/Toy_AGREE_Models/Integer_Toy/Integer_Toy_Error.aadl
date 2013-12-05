@@ -1,0 +1,70 @@
+package Integer_Toy_Extended_Error
+public 
+   with Base_Types;
+
+
+data mydata extends Base_Types::Integer
+ 
+end mydata ; 
+   
+   
+system A
+	features
+		Input: in data port mydata;
+		Output: out data port Base_Types::Integer;
+			
+	annex agree {** 
+		assume "A input range" : Input < 20;
+		guarantee "A output range" : Output < 2*Input;
+	**};	
+end A ; 
+
+system B
+	features
+		Input: in data port Base_Types::Integer;
+		Output: out data port Base_Types::Integer;
+			
+	annex agree {** 
+		assume "B input range" : Input < 20;
+		guarantee "B output range" : Output < Input + 15;
+	**};	
+end B ; 
+
+system C
+	features
+		Input1: in data port Base_Types::Integer;
+		Input2: in data port Base_Types::Integer;
+		Output: out data port Base_Types::Integer;
+			
+	annex agree {** 
+		guarantee "C output range" : Output = Input1 + Input2;
+	**};	
+end C ; 
+   
+system top_level
+	features
+		Input: in data port mydata;
+		Output: out data port Base_Types::Integer;
+	annex agree {** 
+		assume "System input range " : Input < 10;
+		guarantee "System output range" : Output < 50;
+	**};	
+end top_level;
+
+system implementation top_level.Impl
+	subcomponents
+		A_inst : system A ; 
+		B_inst : system B ; 
+		C_inst : system C ; 
+	connections
+		IN_TO_A : port Input -> A_inst.Input {Communication_Properties::Timing => immediate;};
+		A_TO_B : port A_inst.Output -> B_inst.Input {Communication_Properties::Timing => immediate;};
+		A_TO_C : port A_inst.Output -> C_inst.Input1 {Communication_Properties::Timing => immediate;};
+		B_TO_C : port B_inst.Output -> C_inst.Input2 {Communication_Properties::Timing => immediate;};
+		C_TO_Output : port C_inst.Output -> Output {Communication_Properties::Timing => immediate;}; 
+end top_level.Impl;
+
+
+
+	
+end Integer_Toy_Extended_Error;

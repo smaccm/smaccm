@@ -24,6 +24,7 @@ package edu.umn.cs.crisys.smaccm.aadl2rtos;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -97,12 +98,18 @@ public class AadlModelParser {
 	private HashSet<String> fileNames =new HashSet<String>();
 	private ArrayList<Connection> connectionList;
 	private ArrayList<InterruptServiceRoutine> isrList = new ArrayList<InterruptServiceRoutine>();
+	private List<String> legacyMutexList = new ArrayList<String>();
 	private List<String> legacySemaphoreList = new ArrayList<String>();
 	private ThreadCalendar calendar = new ThreadCalendar();
 	
 	// Instance map
 	private Map<ComponentInstance, ThreadInstance> threadInstanceMap;
+
+	// legacy / eChronos integration
 	private List<LegacyThreadImplementation> legacyThreadList; 
+	private List<LegacyExternalIRQ> legacyExternalIRQList = new ArrayList<LegacyExternalIRQ>();
+	private List<LegacyIRQEvent> legacyIRQEventList = new ArrayList<LegacyIRQEvent>();
+	private boolean generateSystickIRQ = true; 
 	
 	private Logger logger;
 	
@@ -151,6 +158,11 @@ public class AadlModelParser {
 		// Initialize AST helper
 		astHelper = new AstHelper(threadTypeImplList);
 
+		// create the SystickIRQ value, if it exists.
+		try {
+		  this.generateSystickIRQ = PropertyUtils.getBooleanValue(systemImplementation, ThreadUtil.GENERATE_SCHEDULER_SYSTICK_IRQ);
+		} catch (Exception e) {}
+		
 		// Initialize thread implementations
 		initializeThreadImplMap();
 
@@ -181,6 +193,7 @@ public class AadlModelParser {
 			if (ThreadUtil.getLegacyValue(tti)) {
 				LegacyThreadImplementation lti = new LegacyThreadImplementation(tti, astHelper); 
 				this.legacyThreadList.add(lti);
+				this.legacyMutexList.addAll(lti.getLegacyMutexes());
 				this.legacySemaphoreList.addAll(lti.getLegacySemaphores());
 			} else {
 				ThreadImplementation threadImplementation = new ThreadImplementation(tti, astHelper);
@@ -190,7 +203,7 @@ public class AadlModelParser {
 	
 					// Fixed.
 					if (threadType.equalsIgnoreCase(threadImplName)) {
-						ThreadInstance instance = new ThreadInstance(co, threadImplementation, astHelper);
+						ThreadInstance instance = new ThreadInstance(threadImplementation);
 						threadImplementation.addThreadInstance(instance);
 						this.threadInstanceMap.put(co, instance);
 					}
@@ -283,13 +296,37 @@ public class AadlModelParser {
 	}
 	
 	private void initializeLegacyIRQs() {
-	  List<String> irqs = ThreadUtil.getLegacyIRQList(this.systemImplementation);
+	  List<String> irqStrings = ThreadUtil.getLegacyIRQList(this.systemImplementation);
 	  
-	  if (irqs.size() % 2 != 0) {
+	  if (irqStrings.size() % 2 != 0) {
 	    throw new Aadl2RtosException("Error: legacy IRQ property should be list of size 2*n, where each element of n is a signal_name, handler_name pair");
 	  }
+	  Iterator<String> it1 = irqStrings.iterator();
+	  while (it1.hasNext()) {
+	    String name = it1.next();
+	    String handlerName = it1.next();
+	    LegacyExternalIRQ irq = new LegacyExternalIRQ(name, handlerName);
+	    this.legacyExternalIRQList.add(irq);
+	  }
 	  
-	  
+	  List<String> irqEventStrings = ThreadUtil.getLegacyIRQEventList(this.systemImplementation);
+	  if (irqEventStrings.size() % 3 != 0) {
+	    throw new Aadl2RtosException("Error: legacy IRQ Event property should be a list of size 3*n, where each element of n is a IRQ_event_name, task_name, sig_set triple");
+	  }
+	  it1 = irqEventStrings.iterator();
+	  while (it1.hasNext()) {
+      String eventName = it1.next();
+      String taskName = it1.next();
+      String signalSetString = it1.next(); 
+      int signal;
+      try {
+	      signal = Integer.parseInt(signalSetString);
+	    } catch (NumberFormatException e) {
+	      throw new Aadl2RtosException("Error: legacy IRQ event property: third argument of triple not a number.");
+	    }
+	    LegacyIRQEvent evt = new LegacyIRQEvent(eventName, taskName, signal);
+	    this.legacyIRQEventList.add(evt);
+	  }
 	}
 	
 	private void initializeConnections() {
@@ -547,7 +584,23 @@ public class AadlModelParser {
 	public List<LegacyThreadImplementation> getLegacyThreadList() {
 		return this.legacyThreadList;
 	}
+	public List<String> getLegacyMutexList() {
+		return this.legacyMutexList;
+	}
+	
 	public List<String> getLegacySemaphoreList() {
-		return this.legacySemaphoreList;
+	  return this.legacySemaphoreList;
+	}
+	
+	public List<LegacyExternalIRQ> getLegacyExternalIRQList() {
+	  return this.legacyExternalIRQList;
+	}
+	
+	public List<LegacyIRQEvent> getLegacyIRQEventList() {
+	  return this.legacyIRQEventList;
+	}
+	
+	public boolean getSystickGenerateIRQ() {
+	  return this.generateSystickIRQ;
 	}
 }

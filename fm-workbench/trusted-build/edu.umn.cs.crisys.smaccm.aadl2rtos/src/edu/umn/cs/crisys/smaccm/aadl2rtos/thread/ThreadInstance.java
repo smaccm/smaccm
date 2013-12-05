@@ -16,7 +16,6 @@ import edu.umn.cs.crisys.smaccm.aadl2rtos.util.Util;
 public class ThreadInstance {
   private static int threadIdCounter = 0;
   private int threadId = 0;
-  private int kochabThreadLocation = -1;
   
   private ThreadImplementation impl;
 	
@@ -29,9 +28,8 @@ public class ThreadInstance {
 	}
 	
 	//output ISR port/ ISR connection b/w outputisrport and inputeventport
-	public ThreadInstance(ComponentInstance co, ThreadImplementation impl, AstHelper astHelper) {
+	public ThreadInstance(ThreadImplementation impl) {
 	  this.impl = impl;
-	  this.aadlInstance = co;
 	  this.threadId = ThreadInstance.threadIdCounter++; 
 	}
 	
@@ -45,14 +43,6 @@ public class ThreadInstance {
 	
 	public String getKochabThreadId() {
 	  return "TASK_ID_" + (this.getName().toUpperCase());
-	}
-	
-	public int getKochabThreadLocation() {
-	  return this.kochabThreadLocation;
-	}
-	
-	public void setKochabThreadLocation(int loc) {
-	  this.kochabThreadLocation = loc;
 	}
 	
 	public List<ThreadInstancePort> getThreadInstanceInputPorts() {

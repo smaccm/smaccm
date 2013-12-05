@@ -1,0 +1,285 @@
+node MC__is_cooking(
+  MC__m : int
+) returns (
+  _outvar : bool
+);
+let
+  _outvar = (MC__m = MC__COOKING_MODE);
+
+tel;
+
+node MC__is_setup(
+  MC__m : int
+) returns (
+  _outvar : bool
+);
+let
+  _outvar = (MC__m = MC__SETUP_MODE);
+
+tel;
+
+node MC__is_suspended(
+  MC__m : int
+) returns (
+  _outvar : bool
+);
+let
+  _outvar = (MC__m = MC__SUSPENDED_MODE);
+
+tel;
+
+node MC__is_running(
+  MC__m : int
+) returns (
+  _outvar : bool
+);
+let
+  _outvar = ((MC__m = MC__COOKING_MODE) or (MC__m = MC__SUSPENDED_MODE));
+
+tel;
+
+node MC__rising_edge(
+  MC__signal : bool
+) returns (
+  MC__re : bool
+);
+let
+  MC__re = (MC__signal and not (false -> pre MC__signal));
+
+tel;
+
+node DC__rising_edge(
+  DC__signal : bool
+) returns (
+  DC__re : bool
+);
+let
+  DC__re = (DC__signal and not (false -> pre DC__signal));
+
+tel;
+
+node OP__is_cooking(
+  OP__m : int
+) returns (
+  _outvar : bool
+);
+let
+  _outvar = (OP__m = OP__COOKING_MODE);
+
+tel;
+
+node _MAIN(
+  kp_2 : bool;
+  clear : bool;
+  kp_3 : bool;
+  kp_4 : bool;
+  kp_5 : bool;
+  MC__cooking_mode : int;
+  kp_6 : bool;
+  kp_7 : bool;
+  kp_8 : bool;
+  kp_9 : bool;
+  kp_0 : bool;
+  kp_1 : bool;
+  MC__enable : bool;
+  OP__heating_element_on : bool;
+  door_closed : bool;
+  MC__steps_remaining : int;
+  OP__middle_digit : int;
+  OP__right_digit : int;
+  DC__steps_to_cook : int;
+  start : bool;
+  OP__left_digit : int
+) returns (
+
+);
+var
+  MC__steps_to_cook : int;
+  MC__is_suspended : bool;
+  DC__kp_9_pressed : bool;
+  MC__start : bool;
+  DC__clear : bool;
+  MC__clear : bool;
+  left_digit : int;
+  OP__steps_remaining : int;
+  MC__is_cooking : bool;
+  MC__is_setup : bool;
+  time_to_cook : int;
+  DC__right_digit : int;
+  DC__pressed_digit_value : int;
+  DC__kp_1_pressed : bool;
+  DC__kp_4_pressed : bool;
+  MC__door_closed : bool;
+  DC__kp_8_pressed : bool;
+  DC__kp_9 : bool;
+  DC__left_digit : int;
+  DC__kp_7 : bool;
+  DC__next_steps_to_cook : int;
+  DC__kp_8 : bool;
+  DC__kp_5 : bool;
+  heating_element_on : bool;
+  DC__any_digit_pressed : bool;
+  DC__kp_6 : bool;
+  DC__kp_3 : bool;
+  DC__kp_2_pressed : bool;
+  DC__kp_4 : bool;
+  DC__kp_1 : bool;
+  DC__middle_digit : int;
+  DC__kp_2 : bool;
+  MC__is_running : bool;
+  DC__enable : bool;
+  DC__kp_0 : bool;
+  DC__kp_3_pressed : bool;
+  right_digit : int;
+  DC__kp_7_pressed : bool;
+  DC__kp_0_pressed : bool;
+  DC__kp_5_pressed : bool;
+  DC__clear_pressed : bool;
+  OP__cooking_mode : int;
+  DC__kp_6_pressed : bool;
+  middle_digit : int;
+  _TOTAL_COMP_HIST : bool;
+  _SYSTEM_ASSUMP_HIST : bool;
+  __CONSIST_COUNTER : int;
+  _Hist_MC : bool;
+  __CONTR_HIST_MC : bool;
+  __NULL_CONTR_HIST_MC : bool;
+  _Hist_DC : bool;
+  __CONTR_HIST_DC : bool;
+  __NULL_CONTR_HIST_DC : bool;
+  _Hist_OP : bool;
+  __CONTR_HIST_OP : bool;
+  __NULL_CONTR_HIST_OP : bool;
+  __SYS_GUARANTEE_0 : bool;
+  __SYS_GUARANTEE_1 : bool;
+  __SYS_GUARANTEE_2 : bool;
+  _TOTAL_COMP_FINITE_CONSIST : bool;
+let
+  --%MAIN
+  time_to_cook = (((left_digit * 60) + (middle_digit * 10)) + right_digit);
+
+  MC__clear = clear;
+
+  DC__clear = clear;
+
+  MC__start = start;
+
+  DC__kp_0 = kp_0;
+
+  DC__kp_1 = kp_1;
+
+  DC__kp_2 = kp_2;
+
+  DC__kp_3 = kp_3;
+
+  DC__kp_4 = kp_4;
+
+  DC__kp_5 = kp_5;
+
+  DC__kp_6 = kp_6;
+
+  DC__kp_7 = kp_7;
+
+  DC__kp_8 = kp_8;
+
+  DC__kp_9 = kp_9;
+
+  MC__door_closed = door_closed;
+
+  MC__steps_to_cook = DC__steps_to_cook;
+
+  DC__enable = MC__enable;
+
+  OP__steps_remaining = MC__steps_remaining;
+
+  OP__cooking_mode = MC__cooking_mode;
+
+  heating_element_on = OP__heating_element_on;
+
+  left_digit = OP__left_digit;
+
+  middle_digit = OP__middle_digit;
+
+  right_digit = OP__right_digit;
+
+  MC__is_cooking = MC__is_cooking(MC__cooking_mode);
+
+  MC__is_setup = MC__is_setup(MC__cooking_mode);
+
+  MC__is_suspended = MC__is_suspended(MC__cooking_mode);
+
+  MC__is_running = MC__is_running(MC__cooking_mode);
+
+  DC__kp_0_pressed = DC__rising_edge(DC__kp_0);
+
+  DC__kp_1_pressed = DC__rising_edge(DC__kp_1);
+
+  DC__kp_2_pressed = DC__rising_edge(DC__kp_2);
+
+  DC__kp_3_pressed = DC__rising_edge(DC__kp_3);
+
+  DC__kp_4_pressed = DC__rising_edge(DC__kp_4);
+
+  DC__kp_5_pressed = DC__rising_edge(DC__kp_5);
+
+  DC__kp_6_pressed = DC__rising_edge(DC__kp_6);
+
+  DC__kp_7_pressed = DC__rising_edge(DC__kp_7);
+
+  DC__kp_8_pressed = DC__rising_edge(DC__kp_8);
+
+  DC__kp_9_pressed = DC__rising_edge(DC__kp_9);
+
+  DC__clear_pressed = DC__rising_edge(DC__clear);
+
+  DC__pressed_digit_value = (if DC__kp_0_pressed then 0 else (if DC__kp_1_pressed then 1 else (if DC__kp_2_pressed then 2 else (if DC__kp_3_pressed then 3 else (if DC__kp_4_pressed then 4 else (if DC__kp_5_pressed then 5 else (if DC__kp_6_pressed then 6 else (if DC__kp_7_pressed then 7 else (if DC__kp_8_pressed then 8 else (if DC__kp_9_pressed then 9 else 0))))))))));
+
+  DC__left_digit = (DC__steps_to_cook div 60);
+
+  DC__middle_digit = ((DC__steps_to_cook mod 60) div 10);
+
+  DC__right_digit = (DC__steps_to_cook mod 10);
+
+  DC__any_digit_pressed = (((((((((DC__kp_1_pressed or DC__kp_2_pressed) or DC__kp_3_pressed) or DC__kp_4_pressed) or DC__kp_5_pressed) or DC__kp_6_pressed) or DC__kp_7_pressed) or DC__kp_8_pressed) or DC__kp_9_pressed) or DC__kp_0_pressed);
+
+  DC__next_steps_to_cook = ((((0 -> pre DC__middle_digit) * 60) + ((0 -> pre DC__right_digit) * 10)) + DC__pressed_digit_value);
+
+  _TOTAL_COMP_HIST = ((((true and ((true and true) and ((((((((((((((MC__cooking_mode >= 1) and (MC__cooking_mode <= 3)) and (MC__is_cooking(MC__cooking_mode) => MC__door_closed)) and (MC__is_setup -> pre true)) and ((MC__rising_edge(MC__is_running) and MC__door_closed) => MC__is_cooking)) and ((MC__rising_edge(MC__is_running) and not MC__door_closed) => MC__is_suspended)) and (((false -> pre MC__is_cooking) and MC__rising_edge(MC__clear)) => not MC__is_cooking)) and (((false -> pre MC__is_suspended) and MC__rising_edge(MC__clear)) => MC__is_setup)) and ((((false -> pre MC__is_suspended) and MC__rising_edge(MC__start)) and MC__door_closed) => MC__is_cooking)) and (MC__rising_edge(MC__is_running) => (MC__steps_remaining = MC__steps_to_cook))) and (MC__enable = MC__is_running)) and (true -> ((pre MC__is_cooking and MC__is_cooking) => (MC__steps_to_cook = (pre MC__steps_to_cook - 1))))) and (true -> ((pre MC__is_suspended and MC__is_suspended) => (MC__steps_to_cook = pre MC__steps_to_cook)))) and ((MC__steps_to_cook = 0) => MC__is_setup)))) and ((true and true) and ((((((not DC__enable => (DC__steps_to_cook = 0)) and (DC__clear => (DC__steps_to_cook = 0))) and (true -> (((not DC__any_digit_pressed and not DC__clear_pressed) and DC__enable) => (DC__steps_to_cook = pre DC__steps_to_cook)))) and ((DC__steps_to_cook = 0) -> pre true)) and (true -> (((not DC__clear_pressed and DC__enable) and DC__any_digit_pressed) => (DC__steps_to_cook = DC__next_steps_to_cook)))) and ((DC__rising_edge(DC__enable) and not DC__any_digit_pressed) => (DC__steps_to_cook = 0))))) and ((true and true) and ((((OP__heating_element_on = OP__is_cooking(OP__cooking_mode)) and (OP__left_digit = (OP__steps_remaining div 60))) and (OP__middle_digit = ((OP__steps_remaining mod 60) div 10))) and (OP__right_digit = (OP__steps_remaining mod 10))))) -> ((((true and ((true and true) and ((((((((((((((MC__cooking_mode >= 1) and (MC__cooking_mode <= 3)) and (MC__is_cooking(MC__cooking_mode) => MC__door_closed)) and (MC__is_setup -> pre true)) and ((MC__rising_edge(MC__is_running) and MC__door_closed) => MC__is_cooking)) and ((MC__rising_edge(MC__is_running) and not MC__door_closed) => MC__is_suspended)) and (((false -> pre MC__is_cooking) and MC__rising_edge(MC__clear)) => not MC__is_cooking)) and (((false -> pre MC__is_suspended) and MC__rising_edge(MC__clear)) => MC__is_setup)) and ((((false -> pre MC__is_suspended) and MC__rising_edge(MC__start)) and MC__door_closed) => MC__is_cooking)) and (MC__rising_edge(MC__is_running) => (MC__steps_remaining = MC__steps_to_cook))) and (MC__enable = MC__is_running)) and (true -> ((pre MC__is_cooking and MC__is_cooking) => (MC__steps_to_cook = (pre MC__steps_to_cook - 1))))) and (true -> ((pre MC__is_suspended and MC__is_suspended) => (MC__steps_to_cook = pre MC__steps_to_cook)))) and ((MC__steps_to_cook = 0) => MC__is_setup)))) and ((true and true) and ((((((not DC__enable => (DC__steps_to_cook = 0)) and (DC__clear => (DC__steps_to_cook = 0))) and (true -> (((not DC__any_digit_pressed and not DC__clear_pressed) and DC__enable) => (DC__steps_to_cook = pre DC__steps_to_cook)))) and ((DC__steps_to_cook = 0) -> pre true)) and (true -> (((not DC__clear_pressed and DC__enable) and DC__any_digit_pressed) => (DC__steps_to_cook = DC__next_steps_to_cook)))) and ((DC__rising_edge(DC__enable) and not DC__any_digit_pressed) => (DC__steps_to_cook = 0))))) and ((true and true) and ((((OP__heating_element_on = OP__is_cooking(OP__cooking_mode)) and (OP__left_digit = (OP__steps_remaining div 60))) and (OP__middle_digit = ((OP__steps_remaining mod 60) div 10))) and (OP__right_digit = (OP__steps_remaining mod 10))))) and pre _TOTAL_COMP_HIST));
+
+  _SYSTEM_ASSUMP_HIST = ((true and true) -> ((true and true) and pre _SYSTEM_ASSUMP_HIST));
+
+  __CONSIST_COUNTER = (0 -> (pre __CONSIST_COUNTER + 1));
+
+  _Hist_MC = (((((true and ((true and true) and ((((((((((((((MC__cooking_mode >= 1) and (MC__cooking_mode <= 3)) and (MC__is_cooking(MC__cooking_mode) => MC__door_closed)) and (MC__is_setup -> pre true)) and ((MC__rising_edge(MC__is_running) and MC__door_closed) => MC__is_cooking)) and ((MC__rising_edge(MC__is_running) and not MC__door_closed) => MC__is_suspended)) and (((false -> pre MC__is_cooking) and MC__rising_edge(MC__clear)) => not MC__is_cooking)) and (((false -> pre MC__is_suspended) and MC__rising_edge(MC__clear)) => MC__is_setup)) and ((((false -> pre MC__is_suspended) and MC__rising_edge(MC__start)) and MC__door_closed) => MC__is_cooking)) and (MC__rising_edge(MC__is_running) => (MC__steps_remaining = MC__steps_to_cook))) and (MC__enable = MC__is_running)) and (true -> ((pre MC__is_cooking and MC__is_cooking) => (MC__steps_to_cook = (pre MC__steps_to_cook - 1))))) and (true -> ((pre MC__is_suspended and MC__is_suspended) => (MC__steps_to_cook = pre MC__steps_to_cook)))) and ((MC__steps_to_cook = 0) => MC__is_setup)))) and ((true and true) and ((((((not DC__enable => (DC__steps_to_cook = 0)) and (DC__clear => (DC__steps_to_cook = 0))) and (true -> (((not DC__any_digit_pressed and not DC__clear_pressed) and DC__enable) => (DC__steps_to_cook = pre DC__steps_to_cook)))) and ((DC__steps_to_cook = 0) -> pre true)) and (true -> (((not DC__clear_pressed and DC__enable) and DC__any_digit_pressed) => (DC__steps_to_cook = DC__next_steps_to_cook)))) and ((DC__rising_edge(DC__enable) and not DC__any_digit_pressed) => (DC__steps_to_cook = 0))))) and ((true and true) and ((((OP__heating_element_on = OP__is_cooking(OP__cooking_mode)) and (OP__left_digit = (OP__steps_remaining div 60))) and (OP__middle_digit = ((OP__steps_remaining mod 60) div 10))) and (OP__right_digit = (OP__steps_remaining mod 10))))) and ((true and true) and (true -> pre (((true and ((true and true) and ((((((((((((((MC__cooking_mode >= 1) and (MC__cooking_mode <= 3)) and (MC__is_cooking(MC__cooking_mode) => MC__door_closed)) and (MC__is_setup -> pre true)) and ((MC__rising_edge(MC__is_running) and MC__door_closed) => MC__is_cooking)) and ((MC__rising_edge(MC__is_running) and not MC__door_closed) => MC__is_suspended)) and (((false -> pre MC__is_cooking) and MC__rising_edge(MC__clear)) => not MC__is_cooking)) and (((false -> pre MC__is_suspended) and MC__rising_edge(MC__clear)) => MC__is_setup)) and ((((false -> pre MC__is_suspended) and MC__rising_edge(MC__start)) and MC__door_closed) => MC__is_cooking)) and (MC__rising_edge(MC__is_running) => (MC__steps_remaining = MC__steps_to_cook))) and (MC__enable = MC__is_running)) and (true -> ((pre MC__is_cooking and MC__is_cooking) => (MC__steps_to_cook = (pre MC__steps_to_cook - 1))))) and (true -> ((pre MC__is_suspended and MC__is_suspended) => (MC__steps_to_cook = pre MC__steps_to_cook)))) and ((MC__steps_to_cook = 0) => MC__is_setup)))) and ((true and true) and ((((((not DC__enable => (DC__steps_to_cook = 0)) and (DC__clear => (DC__steps_to_cook = 0))) and (true -> (((not DC__any_digit_pressed and not DC__clear_pressed) and DC__enable) => (DC__steps_to_cook = pre DC__steps_to_cook)))) and ((DC__steps_to_cook = 0) -> pre true)) and (true -> (((not DC__clear_pressed and DC__enable) and DC__any_digit_pressed) => (DC__steps_to_cook = DC__next_steps_to_cook)))) and ((DC__rising_edge(DC__enable) and not DC__any_digit_pressed) => (DC__steps_to_cook = 0))))) and ((true and true) and ((((OP__heating_element_on = OP__is_cooking(OP__cooking_mode)) and (OP__left_digit = (OP__steps_remaining div 60))) and (OP__middle_digit = ((OP__steps_remaining mod 60) div 10))) and (OP__right_digit = (OP__steps_remaining mod 10)))))))) => true);
+
+  __NULL_CONTR_HIST_MC = not (__CONTR_HIST_MC and (__CONSIST_COUNTER = 5));
+
+  __CONTR_HIST_MC = (((true and true) and ((((((((((((((MC__cooking_mode >= 1) and (MC__cooking_mode <= 3)) and (MC__is_cooking(MC__cooking_mode) => MC__door_closed)) and (MC__is_setup -> pre true)) and ((MC__rising_edge(MC__is_running) and MC__door_closed) => MC__is_cooking)) and ((MC__rising_edge(MC__is_running) and not MC__door_closed) => MC__is_suspended)) and (((false -> pre MC__is_cooking) and MC__rising_edge(MC__clear)) => not MC__is_cooking)) and (((false -> pre MC__is_suspended) and MC__rising_edge(MC__clear)) => MC__is_setup)) and ((((false -> pre MC__is_suspended) and MC__rising_edge(MC__start)) and MC__door_closed) => MC__is_cooking)) and (MC__rising_edge(MC__is_running) => (MC__steps_remaining = MC__steps_to_cook))) and (MC__enable = MC__is_running)) and (true -> ((pre MC__is_cooking and MC__is_cooking) => (MC__steps_to_cook = (pre MC__steps_to_cook - 1))))) and (true -> ((pre MC__is_suspended and MC__is_suspended) => (MC__steps_to_cook = pre MC__steps_to_cook)))) and ((MC__steps_to_cook = 0) => MC__is_setup))) -> (((true and true) and ((((((((((((((MC__cooking_mode >= 1) and (MC__cooking_mode <= 3)) and (MC__is_cooking(MC__cooking_mode) => MC__door_closed)) and (MC__is_setup -> pre true)) and ((MC__rising_edge(MC__is_running) and MC__door_closed) => MC__is_cooking)) and ((MC__rising_edge(MC__is_running) and not MC__door_closed) => MC__is_suspended)) and (((false -> pre MC__is_cooking) and MC__rising_edge(MC__clear)) => not MC__is_cooking)) and (((false -> pre MC__is_suspended) and MC__rising_edge(MC__clear)) => MC__is_setup)) and ((((false -> pre MC__is_suspended) and MC__rising_edge(MC__start)) and MC__door_closed) => MC__is_cooking)) and (MC__rising_edge(MC__is_running) => (MC__steps_remaining = MC__steps_to_cook))) and (MC__enable = MC__is_running)) and (true -> ((pre MC__is_cooking and MC__is_cooking) => (MC__steps_to_cook = (pre MC__steps_to_cook - 1))))) and (true -> ((pre MC__is_suspended and MC__is_suspended) => (MC__steps_to_cook = pre MC__steps_to_cook)))) and ((MC__steps_to_cook = 0) => MC__is_setup))) and pre __CONTR_HIST_MC));
+
+  _Hist_DC = (((((true and ((true and true) and ((((((((((((((MC__cooking_mode >= 1) and (MC__cooking_mode <= 3)) and (MC__is_cooking(MC__cooking_mode) => MC__door_closed)) and (MC__is_setup -> pre true)) and ((MC__rising_edge(MC__is_running) and MC__door_closed) => MC__is_cooking)) and ((MC__rising_edge(MC__is_running) and not MC__door_closed) => MC__is_suspended)) and (((false -> pre MC__is_cooking) and MC__rising_edge(MC__clear)) => not MC__is_cooking)) and (((false -> pre MC__is_suspended) and MC__rising_edge(MC__clear)) => MC__is_setup)) and ((((false -> pre MC__is_suspended) and MC__rising_edge(MC__start)) and MC__door_closed) => MC__is_cooking)) and (MC__rising_edge(MC__is_running) => (MC__steps_remaining = MC__steps_to_cook))) and (MC__enable = MC__is_running)) and (true -> ((pre MC__is_cooking and MC__is_cooking) => (MC__steps_to_cook = (pre MC__steps_to_cook - 1))))) and (true -> ((pre MC__is_suspended and MC__is_suspended) => (MC__steps_to_cook = pre MC__steps_to_cook)))) and ((MC__steps_to_cook = 0) => MC__is_setup)))) and ((true and true) and ((((((not DC__enable => (DC__steps_to_cook = 0)) and (DC__clear => (DC__steps_to_cook = 0))) and (true -> (((not DC__any_digit_pressed and not DC__clear_pressed) and DC__enable) => (DC__steps_to_cook = pre DC__steps_to_cook)))) and ((DC__steps_to_cook = 0) -> pre true)) and (true -> (((not DC__clear_pressed and DC__enable) and DC__any_digit_pressed) => (DC__steps_to_cook = DC__next_steps_to_cook)))) and ((DC__rising_edge(DC__enable) and not DC__any_digit_pressed) => (DC__steps_to_cook = 0))))) and ((true and true) and ((((OP__heating_element_on = OP__is_cooking(OP__cooking_mode)) and (OP__left_digit = (OP__steps_remaining div 60))) and (OP__middle_digit = ((OP__steps_remaining mod 60) div 10))) and (OP__right_digit = (OP__steps_remaining mod 10))))) and ((true and true) and (true -> pre (((true and ((true and true) and ((((((((((((((MC__cooking_mode >= 1) and (MC__cooking_mode <= 3)) and (MC__is_cooking(MC__cooking_mode) => MC__door_closed)) and (MC__is_setup -> pre true)) and ((MC__rising_edge(MC__is_running) and MC__door_closed) => MC__is_cooking)) and ((MC__rising_edge(MC__is_running) and not MC__door_closed) => MC__is_suspended)) and (((false -> pre MC__is_cooking) and MC__rising_edge(MC__clear)) => not MC__is_cooking)) and (((false -> pre MC__is_suspended) and MC__rising_edge(MC__clear)) => MC__is_setup)) and ((((false -> pre MC__is_suspended) and MC__rising_edge(MC__start)) and MC__door_closed) => MC__is_cooking)) and (MC__rising_edge(MC__is_running) => (MC__steps_remaining = MC__steps_to_cook))) and (MC__enable = MC__is_running)) and (true -> ((pre MC__is_cooking and MC__is_cooking) => (MC__steps_to_cook = (pre MC__steps_to_cook - 1))))) and (true -> ((pre MC__is_suspended and MC__is_suspended) => (MC__steps_to_cook = pre MC__steps_to_cook)))) and ((MC__steps_to_cook = 0) => MC__is_setup)))) and ((true and true) and ((((((not DC__enable => (DC__steps_to_cook = 0)) and (DC__clear => (DC__steps_to_cook = 0))) and (true -> (((not DC__any_digit_pressed and not DC__clear_pressed) and DC__enable) => (DC__steps_to_cook = pre DC__steps_to_cook)))) and ((DC__steps_to_cook = 0) -> pre true)) and (true -> (((not DC__clear_pressed and DC__enable) and DC__any_digit_pressed) => (DC__steps_to_cook = DC__next_steps_to_cook)))) and ((DC__rising_edge(DC__enable) and not DC__any_digit_pressed) => (DC__steps_to_cook = 0))))) and ((true and true) and ((((OP__heating_element_on = OP__is_cooking(OP__cooking_mode)) and (OP__left_digit = (OP__steps_remaining div 60))) and (OP__middle_digit = ((OP__steps_remaining mod 60) div 10))) and (OP__right_digit = (OP__steps_remaining mod 10)))))))) => true);
+
+  __NULL_CONTR_HIST_DC = not (__CONTR_HIST_DC and (__CONSIST_COUNTER = 5));
+
+  __CONTR_HIST_DC = (((true and true) and ((((((not DC__enable => (DC__steps_to_cook = 0)) and (DC__clear => (DC__steps_to_cook = 0))) and (true -> (((not DC__any_digit_pressed and not DC__clear_pressed) and DC__enable) => (DC__steps_to_cook = pre DC__steps_to_cook)))) and ((DC__steps_to_cook = 0) -> pre true)) and (true -> (((not DC__clear_pressed and DC__enable) and DC__any_digit_pressed) => (DC__steps_to_cook = DC__next_steps_to_cook)))) and ((DC__rising_edge(DC__enable) and not DC__any_digit_pressed) => (DC__steps_to_cook = 0)))) -> (((true and true) and ((((((not DC__enable => (DC__steps_to_cook = 0)) and (DC__clear => (DC__steps_to_cook = 0))) and (true -> (((not DC__any_digit_pressed and not DC__clear_pressed) and DC__enable) => (DC__steps_to_cook = pre DC__steps_to_cook)))) and ((DC__steps_to_cook = 0) -> pre true)) and (true -> (((not DC__clear_pressed and DC__enable) and DC__any_digit_pressed) => (DC__steps_to_cook = DC__next_steps_to_cook)))) and ((DC__rising_edge(DC__enable) and not DC__any_digit_pressed) => (DC__steps_to_cook = 0)))) and pre __CONTR_HIST_DC));
+
+  _Hist_OP = ((((true and ((true and true) and ((((((((((((((MC__cooking_mode >= 1) and (MC__cooking_mode <= 3)) and (MC__is_cooking(MC__cooking_mode) => MC__door_closed)) and (MC__is_setup -> pre true)) and ((MC__rising_edge(MC__is_running) and MC__door_closed) => MC__is_cooking)) and ((MC__rising_edge(MC__is_running) and not MC__door_closed) => MC__is_suspended)) and (((false -> pre MC__is_cooking) and MC__rising_edge(MC__clear)) => not MC__is_cooking)) and (((false -> pre MC__is_suspended) and MC__rising_edge(MC__clear)) => MC__is_setup)) and ((((false -> pre MC__is_suspended) and MC__rising_edge(MC__start)) and MC__door_closed) => MC__is_cooking)) and (MC__rising_edge(MC__is_running) => (MC__steps_remaining = MC__steps_to_cook))) and (MC__enable = MC__is_running)) and (true -> ((pre MC__is_cooking and MC__is_cooking) => (MC__steps_to_cook = (pre MC__steps_to_cook - 1))))) and (true -> ((pre MC__is_suspended and MC__is_suspended) => (MC__steps_to_cook = pre MC__steps_to_cook)))) and ((MC__steps_to_cook = 0) => MC__is_setup)))) and ((true and true) and ((((((not DC__enable => (DC__steps_to_cook = 0)) and (DC__clear => (DC__steps_to_cook = 0))) and (true -> (((not DC__any_digit_pressed and not DC__clear_pressed) and DC__enable) => (DC__steps_to_cook = pre DC__steps_to_cook)))) and ((DC__steps_to_cook = 0) -> pre true)) and (true -> (((not DC__clear_pressed and DC__enable) and DC__any_digit_pressed) => (DC__steps_to_cook = DC__next_steps_to_cook)))) and ((DC__rising_edge(DC__enable) and not DC__any_digit_pressed) => (DC__steps_to_cook = 0))))) and ((true and true) and (true -> pre (((true and ((true and true) and ((((((((((((((MC__cooking_mode >= 1) and (MC__cooking_mode <= 3)) and (MC__is_cooking(MC__cooking_mode) => MC__door_closed)) and (MC__is_setup -> pre true)) and ((MC__rising_edge(MC__is_running) and MC__door_closed) => MC__is_cooking)) and ((MC__rising_edge(MC__is_running) and not MC__door_closed) => MC__is_suspended)) and (((false -> pre MC__is_cooking) and MC__rising_edge(MC__clear)) => not MC__is_cooking)) and (((false -> pre MC__is_suspended) and MC__rising_edge(MC__clear)) => MC__is_setup)) and ((((false -> pre MC__is_suspended) and MC__rising_edge(MC__start)) and MC__door_closed) => MC__is_cooking)) and (MC__rising_edge(MC__is_running) => (MC__steps_remaining = MC__steps_to_cook))) and (MC__enable = MC__is_running)) and (true -> ((pre MC__is_cooking and MC__is_cooking) => (MC__steps_to_cook = (pre MC__steps_to_cook - 1))))) and (true -> ((pre MC__is_suspended and MC__is_suspended) => (MC__steps_to_cook = pre MC__steps_to_cook)))) and ((MC__steps_to_cook = 0) => MC__is_setup)))) and ((true and true) and ((((((not DC__enable => (DC__steps_to_cook = 0)) and (DC__clear => (DC__steps_to_cook = 0))) and (true -> (((not DC__any_digit_pressed and not DC__clear_pressed) and DC__enable) => (DC__steps_to_cook = pre DC__steps_to_cook)))) and ((DC__steps_to_cook = 0) -> pre true)) and (true -> (((not DC__clear_pressed and DC__enable) and DC__any_digit_pressed) => (DC__steps_to_cook = DC__next_steps_to_cook)))) and ((DC__rising_edge(DC__enable) and not DC__any_digit_pressed) => (DC__steps_to_cook = 0))))) and ((true and true) and ((((OP__heating_element_on = OP__is_cooking(OP__cooking_mode)) and (OP__left_digit = (OP__steps_remaining div 60))) and (OP__middle_digit = ((OP__steps_remaining mod 60) div 10))) and (OP__right_digit = (OP__steps_remaining mod 10)))))))) => true);
+
+  __NULL_CONTR_HIST_OP = not (__CONTR_HIST_OP and (__CONSIST_COUNTER = 5));
+
+  __CONTR_HIST_OP = (((true and true) and ((((OP__heating_element_on = OP__is_cooking(OP__cooking_mode)) and (OP__left_digit = (OP__steps_remaining div 60))) and (OP__middle_digit = ((OP__steps_remaining mod 60) div 10))) and (OP__right_digit = (OP__steps_remaining mod 10)))) -> (((true and true) and ((((OP__heating_element_on = OP__is_cooking(OP__cooking_mode)) and (OP__left_digit = (OP__steps_remaining div 60))) and (OP__middle_digit = ((OP__steps_remaining mod 60) div 10))) and (OP__right_digit = (OP__steps_remaining mod 10)))) and pre __CONTR_HIST_OP));
+
+  __SYS_GUARANTEE_0 = ((_SYSTEM_ASSUMP_HIST and _TOTAL_COMP_HIST) => (heating_element_on => door_closed));
+
+  __SYS_GUARANTEE_1 = ((_SYSTEM_ASSUMP_HIST and _TOTAL_COMP_HIST) => (true -> ((heating_element_on and pre heating_element_on) => (time_to_cook < pre time_to_cook))));
+
+  __SYS_GUARANTEE_2 = ((_SYSTEM_ASSUMP_HIST and _TOTAL_COMP_HIST) => ((time_to_cook = 0) => not heating_element_on));
+
+  _TOTAL_COMP_FINITE_CONSIST = not (_TOTAL_COMP_HIST and (__CONSIST_COUNTER = 5));
+
+  --%PROPERTY __NULL_CONTR_HIST_MC;
+  --%PROPERTY __NULL_CONTR_HIST_DC;
+  --%PROPERTY __NULL_CONTR_HIST_OP;
+  --%PROPERTY _TOTAL_COMP_FINITE_CONSIST;
+
+tel;
+

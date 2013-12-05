@@ -1,0 +1,257 @@
+package Microwave
+public 
+   with Base_Types;
+   
+   
+-- This system managed    
+system Mode_Control
+	features
+		start: in data port Base_Types::Boolean;
+		clear: in data port Base_Types::Boolean;
+		steps_to_cook: in data port Base_Types::Integer;
+		door_closed: in data port Base_Types::Boolean; 
+		cooking_mode: out data port Base_Types::Integer;
+							
+	annex agree {** 
+		eq is_cooking : bool = defs.is_cooking(cooking_mode); 
+		eq is_setup : bool = defs.is_setup(cooking_mode); 
+		eq is_suspended : bool = defs.is_suspended(cooking_mode);
+		eq is_running : bool = defs.is_running(cooking_mode);
+		
+		-- assume "steps_to_cook range" : steps_to_cook <= defs.MAX_COOKING_STEPS;
+		guarantee "cooking_mode output range" : 
+			cooking_mode >= 1 and cooking_mode <=3; 
+		guarantee "cooking implies door closed" : 
+			defs.is_cooking(cooking_mode) => door_closed;			
+		guarantee "microwave starts in setup mode " : 
+			prev(true, is_setup); 
+		guarantee "When the microwave starts running, it shall be in the cooking mode if the door is closed" : 
+			(defs.rising_edge(is_running) and door_closed) => 
+				is_cooking;
+		guarantee "When the microwave starts running, it shall enter the suspended mode if the door is open" : 
+			(defs.rising_edge(is_running) and not door_closed) => 
+				is_suspended;
+		guarantee "When the clear button is first pressed, if the microwave was cooking, then the microwave shall stop cooking" :
+			prev(is_cooking, false) and defs.rising_edge(clear) => 
+				not is_cooking;
+		guarantee "If the microwave is in suspended mode when the clear button is first pressed, it shall enter the setup mode" : 		
+			prev(is_suspended, false) and defs.rising_edge(clear) => 
+				is_setup;
+		guarantee "If suspended, the microwave shall enter cooking mode when the start key is first pressed if the door is closed" :
+			(prev(is_suspended, false) and defs.rising_edge(start) and door_closed) => 
+				is_cooking;
+--		guarantee "Microwave eventually stops cooking" : 
+-- 			defs.contiguous_interval(is_cooking) <= defs.MAX_COOKING_STEPS;
+--		guarantee "When running starts, steps_remaining equals steps_to_cook" : 
+--			defs.rising_edge(is_running) => steps_remaining = steps_to_cook ; 
+--		guarantee "Enable shall true iff microwave is running" : 
+--			enable = is_running;
+--		guarantee "When microwave is cooking, steps_remaining shall decrease by 1 each step" : 
+--			true -> 
+--				((pre(is_cooking) and is_cooking) => 
+--					steps_remaining = pre(steps_remaining) - 1) ;
+--		guarantee "When microwave is suspended, steps_remaining shall remain the same" : 
+--			true -> 
+--				((pre(is_suspended) and is_suspended) => 
+--					steps_remaining = pre(steps_remaining)) ;
+			 
+		guarantee "When steps_to_cook = 0, microwave will be in setup mode" : 
+			steps_to_cook = 0 => is_setup ; 
+
+		--guarantee "If microwave is cooking, the longest time the microwave will continue to cook is steps remaining" : 
+		-- is_cooking => 
+	**};
+
+end Mode_Control ; 
+
+-- This is a "loose" specification; we don't define how the display updates with button presses
+-- or how time decrements when the microwave is on.  
+
+
+system Display_Control
+	features
+		clear: in data port Base_Types::Boolean; 
+		kp_0: in data port Base_Types::Boolean; 
+		kp_1: in data port Base_Types::Boolean; 
+		kp_2: in data port Base_Types::Boolean; 
+		kp_3: in data port Base_Types::Boolean; 
+		kp_4: in data port Base_Types::Boolean; 
+		kp_5: in data port Base_Types::Boolean; 
+		kp_6: in data port Base_Types::Boolean; 
+		kp_7: in data port Base_Types::Boolean; 
+		kp_8: in data port Base_Types::Boolean; 
+		kp_9: in data port Base_Types::Boolean; 
+		cooking_mode: in data port Base_Types::Integer;
+		left_digit : out data port Base_Types::Integer; 
+		middle_digit : out data port Base_Types::Integer; 
+		right_digit : out data port Base_Types::Integer;  
+		steps_to_cook: out data port Base_Types::Integer;
+
+	annex agree {**
+		-- store the initial button presses as booleans
+		eq kp_0_pressed : bool = defs.rising_edge(kp_0);
+		eq kp_1_pressed : bool = defs.rising_edge(kp_1);
+		eq kp_2_pressed : bool = defs.rising_edge(kp_2);
+		eq kp_3_pressed : bool = defs.rising_edge(kp_3);
+		eq kp_4_pressed : bool = defs.rising_edge(kp_4);
+		eq kp_5_pressed : bool = defs.rising_edge(kp_5);
+		eq kp_6_pressed : bool = defs.rising_edge(kp_6);
+		eq kp_7_pressed : bool = defs.rising_edge(kp_7);
+		eq kp_8_pressed : bool = defs.rising_edge(kp_8);
+		eq kp_9_pressed : bool = defs.rising_edge(kp_9);
+		eq clear_pressed: bool = defs.rising_edge(clear);
+
+		eq keypad_enabled: bool = (defs.is_setup(cooking_mode)); 
+		
+		-- assign priorities to the buttons in case of user mashing multiple 
+		-- buttons.
+		eq pressed_digit_value : int = 
+			if kp_0_pressed then 0 
+			else if kp_1_pressed then 1
+			else if kp_2_pressed then 2
+			else if kp_3_pressed then 3
+			else if kp_4_pressed then 4
+			else if kp_5_pressed then 5
+			else if kp_6_pressed then 6
+			else if kp_7_pressed then 7
+			else if kp_8_pressed then 8
+			else if kp_9_pressed then 9
+			else 0;
+				
+		eq any_digit_pressed : bool = 
+			kp_1_pressed or kp_2_pressed or kp_3_pressed or kp_4_pressed or 
+			kp_5_pressed or kp_6_pressed or kp_7_pressed or kp_8_pressed or
+			kp_9_pressed or kp_0_pressed ; 
+
+		-- range guarantees:
+		guarantee "left_digit range" : 
+			left_digit >= 0 and left_digit <= 9; 
+		guarantee "middle_digit range" :
+			middle_digit >= 0 and middle_digit <= 9;
+		guarantee "right_digit_range" :
+			right_digit >= 0 and right_digit <= 9;
+
+		eq eq_steps_to_cook : int = 
+			left_digit * 60 + 
+			middle_digit * 10 + 
+			right_digit; 
+			
+		guarantee "Steps to cook matches the displayed digits" : 
+			(steps_to_cook = eq_steps_to_cook);
+					
+--		eq next_steps_to_cook : int = 
+--			prev(middle_digit,0) * 60 + 
+--			prev(right_digit, 0) * 10 + 
+--			pressed_digit_value;
+		
+--		guarantee "If the keypad is not enabled, the steps to cook shall be zero" : 
+--			not modifiable => steps_to_cook = 0;
+		guarantee "If the keypad is enabled and the clear button is pressed, the steps to cook shall be zero" : 
+			(keypad_enabled and clear) => steps_to_cook = 0;
+			
+		guarantee "If the display is quiescent (no buttons pressed and enabled), the steps to cook shall remain the same." : 
+			true -> ((keypad_enabled and not any_digit_pressed and not clear_pressed) => 
+				(steps_to_cook = pre(steps_to_cook)));
+		guarantee "Steps to cook shall be initially zero" : prev(true, steps_to_cook = 0); 
+
+		-- This could be tighted up significantly; we could mention it decreases by 1, but
+		-- this is not really necessary for the property. 
+		guarantee "Steps to cook decreases while in cooking mode" : 
+			true -> (steps_to_cook = 0 or 
+				    (defs.is_cooking(cooking_mode) => steps_to_cook < pre(steps_to_cook)));
+				    
+--		guarantee "When a digit is pressed, steps to cook shall update to match the left-to-right progression of digits on the display" : 
+--			true -> 
+--			((not clear_pressed and enable and any_digit_pressed) => 
+--				(steps_to_cook = next_steps_to_cook)) ; 
+		
+		guarantee "when the keypad is initially enabled, if no digits are pressed, the value shall be zero" :
+			(defs.rising_edge(keypad_enabled) and not any_digit_pressed) => steps_to_cook = 0 ;
+		
+	**};	
+end Display_Control ; 
+
+system Output_Processing
+	features
+		cooking_mode: in data port Base_Types::Integer;
+		heating_element_on : out data port Base_Types::Boolean;  
+	annex agree {**
+		guarantee "var mapping heating_element_on" : heating_element_on = (defs.is_cooking(cooking_mode));
+	**};
+end Output_Processing;
+
+system Microwave_Control
+	features
+		clear: in data port Base_Types::Boolean; 
+		start: in data port Base_Types::Boolean;
+		kp_0: in data port Base_Types::Boolean; 
+		kp_1: in data port Base_Types::Boolean; 
+		kp_2: in data port Base_Types::Boolean; 
+		kp_3: in data port Base_Types::Boolean; 
+		kp_4: in data port Base_Types::Boolean; 
+		kp_5: in data port Base_Types::Boolean; 
+		kp_6: in data port Base_Types::Boolean; 
+		kp_7: in data port Base_Types::Boolean; 
+		kp_8: in data port Base_Types::Boolean; 
+		kp_9: in data port Base_Types::Boolean; 
+		door_closed: in data port Base_Types::Boolean;
+		
+		heating_element_on: out data port Base_Types::Boolean;
+		left_digit : out data port Base_Types::Integer;
+		middle_digit : out data port Base_Types::Integer;
+		right_digit : out data port Base_Types::Integer; 
+					
+	annex agree {** 
+		
+		eq time_to_cook : int = left_digit * 60 + middle_digit * 10 + right_digit ; 
+		
+		guarantee "heating_element_on implies door_closed_sensor" : 
+			heating_element_on => door_closed ; 
+		
+		guarantee "heating element on implies time to cook decreases" : 
+			true -> 
+				((heating_element_on and pre(heating_element_on)) => 
+					time_to_cook < pre(time_to_cook)); 
+		
+		guarantee "time to cook = 0 implies heating_element_off" : 
+			time_to_cook = 0 => not heating_element_on ; 
+		
+			
+	**};	
+end Microwave_Control ; 
+   
+
+system implementation Microwave_Control.Impl
+	subcomponents
+		MC : system Mode_Control ; 
+		DC : system Display_Control; 
+		OP : system Output_Processing ; 
+	connections
+		clear_TO_MC_clear : port clear -> MC.clear {Communication_Properties::Timing => immediate;};
+		clear_TO_DC_clear : port clear -> DC.clear {Communication_Properties::Timing => immediate;};
+		start_TO_MC_start : port start -> MC.start {Communication_Properties::Timing => immediate;};
+		kp_0_TO_DC_kp_0 : port kp_0 -> DC.kp_0 {Communication_Properties::Timing => immediate;};
+		kp_1_TO_DC_kp_1 : port kp_1 -> DC.kp_1 {Communication_Properties::Timing => immediate;};
+		kp_2_TO_DC_kp_2 : port kp_2 -> DC.kp_2 {Communication_Properties::Timing => immediate;};
+		kp_3_TO_DC_kp_3 : port kp_3 -> DC.kp_3 {Communication_Properties::Timing => immediate;};
+		kp_4_TO_DC_kp_4 : port kp_4 -> DC.kp_4 {Communication_Properties::Timing => immediate;};
+		kp_5_TO_DC_kp_5 : port kp_5 -> DC.kp_5 {Communication_Properties::Timing => immediate;};
+		kp_6_TO_DC_kp_6 : port kp_6 -> DC.kp_6 {Communication_Properties::Timing => immediate;};
+		kp_7_TO_DC_kp_7 : port kp_7 -> DC.kp_7 {Communication_Properties::Timing => immediate;};
+		kp_8_TO_DC_kp_8 : port kp_8 -> DC.kp_8 {Communication_Properties::Timing => immediate;};
+		kp_9_TO_DC_kp_9 : port kp_9 -> DC.kp_9 {Communication_Properties::Timing => immediate;};
+		door_closed_TO_MC_door_closed : port door_closed -> MC.door_closed {Communication_Properties::Timing => immediate;};
+		
+		DC_steps_to_cook_TO_MC_steps_to_cook : port DC.steps_to_cook -> MC.steps_to_cook {Communication_Properties::Timing => immediate;};
+		MC_cooking_mode_TO_OP_cooking_mode : port MC.cooking_mode -> OP.cooking_mode {Communication_Properties::Timing => immediate;};
+		
+		-- Note: this communication path is *delayed*
+		MC_enable_TO_DC_enable : port MC.cooking_mode -> DC.cooking_mode {Communication_Properties::Timing => delayed; };
+
+		OP_heating_element_on_TO_heating_element_on : port OP.heating_element_on -> heating_element_on {Communication_Properties::Timing => immediate;};
+		DC_left_digit_TO_left_digit : port DC.left_digit -> left_digit; 
+		DC_middle_digit_TO_middle_digit : port DC.middle_digit -> middle_digit;
+		DC_right_digit_TO_right_digit : port DC.right_digit -> right_digit; 
+end Microwave_Control.Impl;
+	
+end Microwave;

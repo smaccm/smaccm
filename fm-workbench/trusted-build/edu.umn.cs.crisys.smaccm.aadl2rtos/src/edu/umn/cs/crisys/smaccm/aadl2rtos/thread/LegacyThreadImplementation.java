@@ -25,7 +25,8 @@ import edu.umn.cs.crisys.smaccm.aadl2rtos.util.Util;
 public class LegacyThreadImplementation extends ThreadImplementationBase {
 
 	// Data port lists
-	private ArrayList<String> legacySemaphoreList = new ArrayList<String>();
+	private ArrayList<String> legacyMutexList = new ArrayList<String>();
+  private ArrayList<String> legacySemaphoreList = new ArrayList<String>();
 	/*
 	 * 		// Determine whether this is a legacy ("blob") thread
 		legacyThread = ThreadUtil.getLegacyValue(tti);
@@ -39,7 +40,8 @@ public class LegacyThreadImplementation extends ThreadImplementationBase {
 	{
 		super(tti, astHelper);
 		try { 
-			legacySemaphoreList = (ArrayList<String>) ThreadUtil.getLegacySemaphoreList(tti);
+			legacyMutexList = (ArrayList<String>) ThreadUtil.getLegacyMutexList(tti);
+      legacySemaphoreList = (ArrayList<String>) ThreadUtil.getLegacySemaphoreList(tti);
 			generatedEntrypoint = Util.getStringValue(tti, ThreadUtil.LEGACY_ENTRYPOINT);
 		} catch (Exception e) {
 			throw new Aadl2RtosException("Error: Legacy threads must have a SMACCM_SYS::Legacy_Entrypoint property defined");
@@ -50,8 +52,12 @@ public class LegacyThreadImplementation extends ThreadImplementationBase {
 		return true;
 	}
 
+	public List<String> getLegacyMutexes() {
+	    return this.legacyMutexList;
+	}
+	
 	public List<String> getLegacySemaphores() {
-	    return this.legacySemaphoreList;
+	  return this.legacySemaphoreList;
 	}
 	  
 }

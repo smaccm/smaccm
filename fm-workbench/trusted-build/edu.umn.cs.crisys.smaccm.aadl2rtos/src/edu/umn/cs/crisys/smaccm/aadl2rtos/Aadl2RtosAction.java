@@ -96,7 +96,11 @@ public class Aadl2RtosAction extends AadlAction {
 			                        parser.getFileNames(), 
 			                        new ArrayList<SharedData>(parser.getDataMap().values()),
 			                        parser.getLegacyThreadList(),
-			                        parser.getLegacySemaphoreList());
+			                        parser.getLegacyMutexList(),
+			                        parser.getLegacySemaphoreList(),
+			                        parser.getLegacyExternalIRQList(), 
+			                        parser.getLegacyIRQEventList(),
+			                        parser.getSystickGenerateIRQ());
 			
 			// This thing has to go!
 			AstHelper astHelper = parser.getAstHelper();

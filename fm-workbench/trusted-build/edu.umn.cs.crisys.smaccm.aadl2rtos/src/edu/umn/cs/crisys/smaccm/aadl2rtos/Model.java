@@ -33,11 +33,14 @@ import org.osate.aadl2.instance.SystemInstance;
 
 import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.Connection;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.InterruptServiceRoutine;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.LegacyExternalIRQ;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.LegacyIRQEvent;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.LegacyThreadImplementation;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.MyPort;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.SharedData;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.ThreadCalendar;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.ThreadImplementation;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.ThreadImplementationBase;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.ThreadInstance;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.ThreadInstancePort;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.util.ThreadUtil;
@@ -52,15 +55,20 @@ public class Model {
 	// private ArrayList<String> semaphoreList = new ArrayList<String>();
 
 	// Implementation objects
-	public Map<ThreadTypeImpl, ThreadImplementation> threadImplementationMap;
-	public List<ThreadImplementation> threadImplementationList;
-	public List<InterruptServiceRoutine> isrList;
-	public List<SharedData> sharedDataList;
-	public ThreadCalendar threadCalendar;
-	public Set<String> sourceFiles = new HashSet<String>(); 
+	private Map<ThreadTypeImpl, ThreadImplementation> threadImplementationMap;
+	private List<ThreadImplementation> threadImplementationList;
+	private List<InterruptServiceRoutine> isrList;
+	private List<SharedData> sharedDataList;
+	private ThreadCalendar threadCalendar;
+	private Set<String> sourceFiles = new HashSet<String>(); 
 
-	public List<LegacyThreadImplementation> legacyThreadList;
-	public List<String> legacySemaphoreList;
+	private List<LegacyThreadImplementation> legacyThreadList;
+	private List<String> legacyMutexList;
+	private List<String> legacySemaphoreList;
+	private List<LegacyExternalIRQ> legacyExternalIRQList;
+	private List<LegacyIRQEvent> legacyIRQEventList;
+	private boolean generateSystickIRQ; 
+	
 	// private Map<ThreadImplementation, Set<Pair<MyPort, MyPort>>> threadSourcePorts = new HashMap<ThreadImplementation, Set<Pair<MyPort, MyPort>>>();
 
 	// Model constructor
@@ -73,7 +81,11 @@ public class Model {
                Set<String> sourceFiles, 
                List<SharedData> sharedDataList,
                List<LegacyThreadImplementation> legacyThreadList,
-               List<String> legacySemaphoreList) {
+               List<String> legacyMutexList,
+               List<String> legacySemaphoreList,
+               List<LegacyExternalIRQ> legacyExternalIRQList,
+               List<LegacyIRQEvent> legacyIRQEventList, 
+               boolean generateSystickIRQ) {
 	  this.sharedDataList = sharedDataList; 
 	  this.sourceFiles = sourceFiles;
 		this.threadImplementationMap = threadImplementationMap;
@@ -85,9 +97,12 @@ public class Model {
 		this.connectionInstances = connectionInstances;
 		this.threadCalendar = threadCalendar;
 		this.legacyThreadList = legacyThreadList;
+		this.legacyMutexList = legacyMutexList;
 		this.legacySemaphoreList = legacySemaphoreList;
-		// this.threadSourcePorts = threadSourcePorts;
-
+		this.legacyExternalIRQList = legacyExternalIRQList;
+		this.legacyIRQEventList = legacyIRQEventList;
+		this.generateSystickIRQ = generateSystickIRQ;
+		
 		// createSemaphoreList();
 	}
 
@@ -149,6 +164,25 @@ public class Model {
 		return this.legacyThreadList;
 	}
 	
+	public List<ThreadImplementationBase> getAllThreadImplementations() {
+    List<ThreadImplementationBase> allTasks = new ArrayList<ThreadImplementationBase>();
+    for (ThreadImplementation ti: getThreadImplementations()) {
+      allTasks.add(ti);
+    }
+    for (LegacyThreadImplementation lti: getLegacyThreadImplementations()) {
+      allTasks.add(lti);
+    }
+    return allTasks;
+	}
+	
+	public List<LegacyExternalIRQ> getLegacyExternalIRQs() {
+	  return this.legacyExternalIRQList;
+	}
+	
+	public List<LegacyIRQEvent> getLegacyIRQEvents() {
+	  return this.legacyIRQEventList;
+	}
+	
 	public List<ThreadInstance> getAllThreadInstances() {
 	  List<ThreadInstance> list = new ArrayList<ThreadInstance>(); 
 	  for (ThreadImplementation t: getThreadImplementations()) {
@@ -184,7 +218,15 @@ public class Model {
 	  return this.connectionInstances;
 	}
 
-	public List<String> getLegacySemaphoreList() {
-		return this.legacySemaphoreList;
+	public List<String> getLegacyMutexList() {
+		return this.legacyMutexList;
+	}
+	
+  public List<String> getLegacySemaphoreList() {
+    return this.legacySemaphoreList;
+  }
+
+  public boolean getGenerateSystickIRQ() {
+	  return this.generateSystickIRQ;
 	}
 }

@@ -1,0 +1,122 @@
+package Integer_Toy_Node
+public 
+   with Base_Types;
+   
+   
+system A
+	features
+		Input: in data port Base_Types::Integer;
+		Output: out data port Base_Types::Integer;
+			
+	annex agree {** 
+		node set_reset_ctr(set: bool, reset: bool)
+		      returns (ctr_value: int); 
+		var 
+		   incr: int; 
+		let
+		   incr = if set then 1 else 0;
+		   ctr_value = 
+		   	  if (reset) then 0 else
+		   	    prev(ctr_value, 0) + incr;
+		   lemma "min ctr value" : ctr_value >= 0;
+		tel; 
+		
+		node Counter(init:int, incr: int, reset: bool)
+			returns(count: int);
+		let
+			count = init -> if reset then init
+						 else pre(count)+incr;
+		tel;
+
+		eq x1 : int = 0 -> Counter(0, 1, pre(x1) = 9);
+	    eq x2 : int = Counter(1, 0 -> pre(x2), false);
+
+		node ADD1(a: bool, b: bool, carry_in: bool) returns (out: bool, carry_out: bool); 
+		let
+		   out = (a <> b) <> carry_in;
+		   carry_out = (a and b) or (a and carry_in) or (b and carry_in);
+		tel;
+		
+		node ADD4 (a0: bool, a1: bool, a2: bool, a3: bool, b0 : bool, b1: bool, b2: bool, b3: bool) 
+		    returns (s0 : bool, s1: bool, s2: bool, s3:bool, carry: bool); 
+		  var c0: bool; 
+		      c1: bool; 
+		      c2: bool;
+		      c3: bool; 
+		  let 
+		    s0,c0 = ADD1(a0,b0,false); 
+		    s1,c1 = ADD1(a1,b1,c0); 
+		    s2,c2 = ADD1(a2,b2,c1); 
+		    s3,c3 = ADD1(a3,b3,c2); 
+		    carry = c3; 
+		tel; 
+		
+				
+		assume "A input range" : Input < 20;
+		guarantee "A output range" : Output < 2*Input;
+	**};	
+end A ; 
+
+system B
+	features
+		Input: in data port Base_Types::Integer;
+		Output: out data port Base_Types::Integer;
+			
+	annex agree {** 
+		assume "B input range" : Input < 20;
+		guarantee "B output range" : Output < Input + 15;
+	**};	
+end B ; 
+
+system C
+	features
+		Input1: in data port Base_Types::Integer;
+		Input2: in data port Base_Types::Integer;
+		Output: out data port Base_Types::Integer;
+			
+	annex agree {** 
+		guarantee "C output range" : Output = Input1 + Input2;
+	**};	
+end C ; 
+   
+system top_level
+	features
+		Input: in data port Base_Types::Integer;
+		Output: out data port Base_Types::Integer;
+	annex agree {** 
+		assume "System input range " : Input < 10;
+		guarantee "System output range" : Output < 50;
+	**};	
+end top_level;
+
+system implementation top_level.Impl
+	subcomponents
+		A_sub : system A ; 
+		B_sub : system B ; 
+		C_sub : system C ; 
+	connections
+		IN_TO_A : port Input -> A_sub.Input {Communication_Properties::Timing => immediate;};
+		A_TO_B : port A_sub.Output -> B_sub.Input {Communication_Properties::Timing => immediate;};
+		A_TO_C : port A_sub.Output -> C_sub.Input1 {Communication_Properties::Timing => immediate;};
+		B_TO_C : port B_sub.Output -> C_sub.Input2 {Communication_Properties::Timing => immediate;};
+		C_TO_Output : port C_sub.Output -> Output {Communication_Properties::Timing => immediate;}; 
+	
+	annex agree {**
+		node set_reset_ctr(set: bool, reset: bool)
+		      returns (ctr_value: int); 
+		var 
+		   incr: int; 
+		let
+		   incr = if set then 1 else 0;
+		   ctr_value = 
+		   	  if (reset) then 0 else
+		   	    prev(ctr_value, 0) + incr;
+		   lemma "min ctr value" : ctr_value >= 0;
+		tel; 
+
+		lemma "my lemma": set_reset_ctr(true, false) >= 1;
+		assert set_reset_ctr(true, false) >= 1;
+	**};
+end top_level.Impl;
+	
+end Integer_Toy_Node;
