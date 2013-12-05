@@ -741,6 +741,7 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
             if (propType instanceof AadlReal) {
                 return BaseType.REAL;
             }
+            
             if (propType instanceof ClassifierType) {
                 return BaseType.COMPONENT;
             }
