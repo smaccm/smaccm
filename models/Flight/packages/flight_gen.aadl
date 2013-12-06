@@ -1745,7 +1745,9 @@ end Software.impl;
 
 process flight_gen_process
   features
-  	sensors: provides data access sensors_type::sensors_result.impl;
+  	sensors: provides data access sensors_type::sensors_result.impl{
+  		Access_Right => read_write;
+  	};
   	motors_and_radios: feature group UAV::motors_and_radios;
   	gcs_transmit: feature group gcs_msgs::gcs_msg {
   		Access_Right => read_only applies to param1;

@@ -256,7 +256,6 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
         case "in":
             rightResult = doSwitch(object.getRight());
             nodeStr = leftResult + " in " + rightResult;
-            System.out.println("in: "+leftResult);
 
             assert (rightResult.isSet());
             result = new BoolValue(rightResult.getSet().contains(leftResult));
@@ -366,6 +365,18 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
         }
     }
 
+    private void addAllFeatureGroupConns(FeatureInstance feature, Set<ResoluteValue> returnSet){
+        for(FeatureInstance featInst : feature.getFeatureInstances()){
+            addAllFeatureGroupConns(featInst, returnSet);
+        }
+        for(ConnectionInstance conn : feature.getSrcConnectionInstances()){
+            returnSet.add(new NamedElementValue(conn));
+        }
+        for(ConnectionInstance conn : feature.getDstConnectionInstances()){
+            returnSet.add(new NamedElementValue(conn));
+        }
+    }
+    
     private ResoluteValue subElsFromObject(NamedElement id, String setName) {
         //TODO: finish this
         
@@ -378,12 +389,7 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
             
             Set<ResoluteValue> returnSet = new HashSet<ResoluteValue>();
             for(FeatureInstance feature : features){
-                for(ConnectionInstance conn : feature.getSrcConnectionInstances()){
-                    returnSet.add(new NamedElementValue(conn));
-                }
-                for(ConnectionInstance conn : feature.getDstConnectionInstances()){
-                    returnSet.add(new NamedElementValue(conn));
-                }
+               addAllFeatureGroupConns(feature, returnSet);
             }
             
             EList<ConnectionInstance> connections = compInst.getConnectionInstances();
@@ -1336,7 +1342,6 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
                 Set<ResoluteValue> resVals = setValue.getSet();
                 Set<NamedElement> namedVals = new HashSet<NamedElement>();
 
-                System.out.println(resVals);
                 for(ResoluteValue resVal : resVals){
                     namedVals.add(resVal.getNamedElement());
                 }
