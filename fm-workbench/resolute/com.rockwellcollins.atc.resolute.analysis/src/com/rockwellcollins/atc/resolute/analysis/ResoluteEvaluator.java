@@ -385,15 +385,16 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
         compInst = (ComponentInstance)idVal.getNamedElement();
         
         if(setName.equals("connections")){
-            EList<FeatureInstance> features = compInst.getFeatureInstances();
-            
             Set<ResoluteValue> returnSet = new HashSet<ResoluteValue>();
-            for(FeatureInstance feature : features){
-               addAllFeatureGroupConns(feature, returnSet);
-            }
+            //EList<FeatureInstance> features = compInst.getFeatureInstances();
+            //
+            //for(FeatureInstance feature : features){
+            //   addAllFeatureGroupConns(feature, returnSet);
+            //}
             
             EList<ConnectionInstance> connections = compInst.getConnectionInstances();
             for(ConnectionInstance conn : connections){
+                System.out.println(conn);
                 returnSet.add(new NamedElementValue(conn));
             }
             return new SetValue(returnSet);

@@ -15,7 +15,7 @@ connected_comps_via_cc(x : component) : {component} =
 
 only_receive_gs(x : component) <= 
   ** x " only receives messages from the Ground Station" **
-  only_gs_encrypt() and memory_protected_system() and only_receive_decrypt(x, {z for (z : component) | false})
+  only_gs_encrypt() and memory_protected_system() and only_receive_decrypt(x, identity(x))
 
 only_gs_encrypt() <= 
   ** "Only the Ground Station can send messages that pass Decrypt" ** 
