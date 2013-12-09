@@ -6,13 +6,9 @@ annex resolute
 
 no_external_commands(x : component, context : component) <=
   ** x " does not receive commands from outside " context **
-<<<<<<< HEAD
-  forall (c : connection).
-  forall (y : component).
-=======
+
   forall (c : x.connections).
   forall (y : allComponents).
->>>>>>> resolute_quant
     connected(y, c, x) and command_channel(c) =>
    	  contained(y, context) and no_external_commands(y, context)
 
@@ -22,11 +18,8 @@ schedulable(p : component) <=
 
 receives_mavlink(t : component) <= 
   ** t " receives mavlink data" **   
-<<<<<<< HEAD
-  exists(c : connection). exists(y : component). is_mavlink_connection(y, t, c)
-=======
+
   exists(c : t.connections). exists(y : allComponents). is_mavlink_connection(y, t, c)
->>>>>>> resolute_quant
 
 is_mavlink_connection(x : component, t : component, c : connection) <=
   ** x " supplies mavlink data to " t **
@@ -38,13 +31,9 @@ is_mavlink_type(c : connection) <=
   
 no_radio_commands(x : component) <=
   ** x " does not receive commands from the radio" **
-<<<<<<< HEAD
-  forall (c : connection).
-  forall (y : component).
-=======
+
   forall (c : x.connections).
   forall (y : allComponents).
->>>>>>> resolute_quant
     connected(y, c, x) and command_channel(c) =>
       is_not_radio(y) and no_radio_commands(y)
 

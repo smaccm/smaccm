@@ -3,13 +3,6 @@ package Execute_Soundness
     with SMACCM;    
     annex resolute {**
 
-<<<<<<< HEAD
-only_receive_gs(x : component) <=
-  ** x " only receives messages from the Ground Station" **
-  only_gs_encrypt() and only_receive_decrypt(x, {z for (z : component) | false})
-
-only_gs_encrypt() <=
-=======
 --component lists
 
 allProcesses : {process} = {x for (x : process) | true}
@@ -25,7 +18,6 @@ only_receive_gs(x : component) <=
   only_gs_encrypt() and memory_protected_system() and only_receive_decrypt(x, identity(x))
 
 only_gs_encrypt() <= 
->>>>>>> resolute_quant
   ** "Only the Ground Station can send messages that pass Decrypt" ** 
   authenticated_encryption(encrypt_algorithm1) and 
   authenticated_encryption(encrypt_algorithm2) and  
@@ -60,21 +52,7 @@ transmit_private_key() <=
   true
  
 uav_private_key() <=
-<<<<<<< HEAD
-  ** "The UAV does not leak the encryption key" **
-  true
 
--- The component x only receives messages that pass Decrypt.
-
-only_receive_decrypt(x : component, visited : {component}) <=
-  ** "The component " x " only receives messages that pass Decrypt" **
-  forall (y : component) (c : connection).  
-    (((not (y in visited)) and connected(y, c, x) and command_channel(c)) => 
-      unalterable_channel(c) and 
-          ((class_of(x, flight_gen::decryptTask_uart1_377) or class_of(x, flight_gen::decryptTask_uart5_630)) 
-          	or only_receive_decrypt(y, {z for (z : component) | z = x} union visited)
-          ))       
-=======
   ** "The UAV does not leak the encryption key" ** 
   true
 	
@@ -91,52 +69,12 @@ proc_or_thread(x : component) <=
 	** "component " x "is a processes or a thread." **
 	is_process(x) or is_thread(x)
 	
->>>>>>> resolute_quant
        
 -- The connection c potentially carries commands
 -- Non command datatypes must be explicitly whitelisted here
 command_channel(c : connection) : bool =
   (not has_type(c)) or
-<<<<<<< HEAD
-  (type(c) <> sensors_type::sensors_result.impl or
-   type(c) <> Base_Types::Float or
-   type(c) <> gps_type::position.impl or
-   type(c) <> Base_Types::Unsigned_32 or
-   type(c) <> gcsstream_timing::gcsstream_timing or
-   type(c) <> data_rate::data_rate_state.impl or 
-   type(c) <> Base_Types::Integer_16 or
-   type(c) <> Base_Types::Integer_8 or
-   type(c) <> flight_gen::ArrTy_80TyBase_Types_Unsigned_8 
-   --type(c) <> 
-  )
 
--- The connection c delivers data without alteration.
--- "contained" means write permissions
-unalterable_channel(c : connection) <=
-  ** "The connection " c " delivers data without alteration" **
-  (exists (p1 : process) (p2 : process). 
-        conn_source(c) = p1 
-    and conn_dest(c) = p2
-    and p1 <> p2
-    and memory_protected(p1) 
-    and memory_protected(p2))
-  or
-  (exists (p : process).
-  	contained(conn_source(c), p) and
-  	contained(conn_dest(c), p) and
-  	memory_protected(p))
-
-memory_protected(p : process) <=
-  ** "The memory of process " p " is protected from alterations by other processes" **
-  property_lookup(p, SMACCM::OS) = "SeL4" or
-  (property_lookup(p, SMACCM::OS) = "Breakaway-RTOS" and
-   forall (mem : memory). bound(p, mem) =>
-     forall (q : process). bound(q, mem) => memory_safe_process(q))
-
-memory_safe_process(p : process) <=
-  ** "The process " p " only writes to its own memory space" **
-  forall (t : thread). contained(t, p) => memory_safe_thread(t)
-=======
   (type(c) <> sensors_type::sensors_result.impl
    --type(c) <> Base_Types::Float or
    --type(c) <> gps_type::position.impl or
@@ -188,7 +126,6 @@ memory_protected(p : component) <=
 memory_safe_process(p : process) <=
   ** "The process " p " only writes to its own memory space" **
   forall (t : allThreads). contained(t, p) => memory_safe_thread(t)
->>>>>>> resolute_quant
 
 memory_safe_thread(t : thread) <=
   ** "The thread " t " only writes to its own memory space" **

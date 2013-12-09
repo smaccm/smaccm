@@ -2130,14 +2130,14 @@ process implementation flight_gen_process.impl
     data access dataport17 -> gcs_receive.param17;
     data access dataport16 -> gcs_receive.param18;
     data access dataport15 -> gcs_receive.param19;
-    data access dataport14 -> gcs_receive.param20;
+    data access dataport14 -> gcs_receive.param20; 
     
   properties 
     SMACCM::OS => "Breakaway-RTOS";
     
     
   annex resolute {**
-    prove only_receive_gs(this.control_121_inst)
+    prove only_receive_gs(this.control_121_inst) 
   **};
     
     

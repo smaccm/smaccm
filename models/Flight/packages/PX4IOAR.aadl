@@ -6,10 +6,7 @@ public
   with PX4FMU;
   with CORTEX;
   with SMACCM;
-<<<<<<< HEAD
-=======
   with motors_type;
->>>>>>> resolute_quant
 
   system PX4IOAR
     features
@@ -23,15 +20,8 @@ public
   
   system implementation PX4IOAR.Impl
     subcomponents
-<<<<<<< HEAD
-      M1: device Motor;
-      M2: device Motor;
-      M3: device Motor;
-      M4: device Motor;
-=======
       M: device Motors;
       
->>>>>>> resolute_quant
       BUZZER: device Buzzer;
       RC: device RC_Radio;
       x3DR: device x3DR_Radio;
@@ -39,21 +29,9 @@ public
     
     connections
       -- Motors
-<<<<<<< HEAD
-      port motors_and_radios.motor1 -> M1.commands;
-      port motors_and_radios.motor2 -> M2.commands;
-      port motors_and_radios.motor3 -> M3.commands;
-      port motors_and_radios.motor4 -> M4.commands;
-      bus access M1.bus_access <-> USART2;
-      bus access M2.bus_access <-> USART2;
-      bus access M3.bus_access <-> USART2;
-      bus access M4.bus_access <-> USART2;
-      
-=======
       port motors_and_radios.motors -> M.commands;
       bus access M.bus_access <-> USART2;
      
->>>>>>> resolute_quant
       -- Buzzer
       bus access BUZZER.bus_access <-> expansion_connector.alarm;
       
@@ -70,20 +48,12 @@ public
       bus access x3DR.antenna <-> x3dr_radio;
   end PX4IOAR.Impl;
   
-<<<<<<< HEAD
-  device Motor
-    features
-      commands: in data port DATATYPES::Servo_Commands;
-      bus_access: requires bus access USART2;
-  end Motor;
-=======
   device Motors
     features
       commands : in data port motors_type::motors.impl;
       --commands: in data port DATATYPES::Servo_Commands;
       bus_access: requires bus access USART2; 
   end Motors;
->>>>>>> resolute_quant
   
   device Buzzer
     features
@@ -108,9 +78,9 @@ public
     properties
       SMACCM::Always_Sends_Message => true; 
       
-      annex resolute {**  
-      	prove execute_completeness(this)
-      **};
+     -- annex resolute {**  
+     -- 	prove execute_completeness(this)
+     -- **};
       
   end x3DR_Radio;
   

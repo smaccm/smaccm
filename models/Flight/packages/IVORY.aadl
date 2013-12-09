@@ -4,7 +4,7 @@ public
   with DATATYPES;
   with IVORY_TYPES;
   with Static_Analysis;
-  with SMACCM;
+  with SMACCM; 
 
   system Software
     features
