@@ -24,8 +24,6 @@ system Mode_Control
 		guarantee "The range of the cooking_mode variable shall be [1..3]" : 
 			cooking_mode >= 1 and cooking_mode <=3; 
 		
-		-- Note that this is a provable, but not a testable requirement!
-		-- Why?	
 		guarantee "The microwave shall be in cooking mode only when the door is closed." : 
 			is_cooking => door_closed;			
 		
