@@ -21,6 +21,7 @@ Export-Package: com.rockwellcollins.atc.resolute.analysis,
  com.rockwellcollins.atc.resolute.analysis.values
 Eclipse-RegisterBuddy: com.rockwellcollins.atc.resolute.ui
 Bundle-Vendor: Rockwell Collins, Inc.
-Import-Package: org.osate.xtext.aadl2.errormodel.errorModel,
+Import-Package: com.rockwellcollins.atc.resolute.analysis.values,
+ org.osate.xtext.aadl2.errormodel.errorModel,
  org.osate.xtext.aadl2.errormodel.util
 

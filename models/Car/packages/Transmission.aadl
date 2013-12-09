@@ -58,6 +58,11 @@ public
 	system State_Machine
 		features
 			State_Out: out data port Types::state_sig.impl;
+			
+		annex agree{**
+			guarantee "sub behavior" : true;
+		**};
+			
 	end State_Machine;
 	
 	system implementation State_Machine.Impl
@@ -68,7 +73,9 @@ public
 			SMToSSM: port SSM.State_Out -> State_Out {Communication_Properties::Timing => immediate;};
 			
 		annex agree {**
-			lift SSM; 
+			assert 	 false;
+
+			--lift SSM; 
 		**};
 		
 	end State_Machine.impl;

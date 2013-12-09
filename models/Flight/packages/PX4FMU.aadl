@@ -3,10 +3,19 @@ public
   with UAV;
   with DATATYPES;
   with CORTEX;
+<<<<<<< HEAD
   
   system PX4FMU
     features
       sensors: feature group inverse of UAV::sensors;
+=======
+  with sensors_type;
+  with gcs_msgs;
+  
+  system PX4FMU
+    features
+      sensors: requires data access sensors_type::sensors_result.impl;
+>>>>>>> resolute_quant
       expansion_slot: feature group expansion_slot;
       i2c2_bus: provides bus access CORTEX::AHB_Bus_Matrix;
   end PX4FMU;
@@ -32,6 +41,7 @@ public
       bus access I2C2.bus_access <-> MC.i2c2;
       bus access EEPROM.bus_access <-> I2C2;
       bus access MAG.bus_access <-> I2C2;
+<<<<<<< HEAD
       port MAG.magnetometer_data -> sensors.magnetometer_data;
       bus access BARO.bus_access <-> I2C2;
       port BARO.barometric_data -> sensors.barometric_data;
@@ -45,6 +55,21 @@ public
       port GPS.GPS_Data -> sensors.gps_data;
       bus access GYRO.bus_access <-> MC.spi1;
       port GYRO.motion_data -> sensors.motion_data;
+=======
+      --port MAG.magnetometer_data -> sensors.magnetometer_data;
+      bus access BARO.bus_access <-> I2C2;
+      --port BARO.barometric_data -> sensors.barometric_data;
+
+      -- Direct devices
+     -- port RESET.reset -> sensors.reset;
+      bus access USB.bus_access <-> MC.otg_fs;
+      bus access MON.bus_access <-> MC.adc123;
+      --port MON.battery_data -> sensors.battery_data;
+      bus access GPS.bus_access <-> MC.usart6;
+      --port GPS.GPS_Data -> sensors.gps_data;
+      bus access GYRO.bus_access <-> MC.spi1;
+      port GYRO.motion_data -> sensors;
+>>>>>>> resolute_quant
       
       -- Expansion slot
       bus access expansion_slot.usart1 <-> MC.usart1;
@@ -78,7 +103,11 @@ public
   device MPU_6000
     features
       bus_access: requires bus access CORTEX::AHB_Bus_Matrix;
+<<<<<<< HEAD
       motion_data: out data port DATATYPES::Motion_Data;
+=======
+      motion_data: out data port sensors_type::sensors_result.impl;
+>>>>>>> resolute_quant
   end MPU_6000;
 
   device MS5611

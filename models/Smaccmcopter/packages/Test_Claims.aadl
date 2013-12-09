@@ -1,0 +1,12 @@
+package Test_Claims
+public
+
+annex resolute {**
+	
+test_claim(p : process) <=
+	** "this is a test claim" **
+	forall (t : p.threads) . true 
+	
+**};
+
+end Test_Claims;

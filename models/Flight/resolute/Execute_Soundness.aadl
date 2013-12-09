@@ -3,11 +3,29 @@ package Execute_Soundness
     with SMACCM;    
     annex resolute {**
 
+<<<<<<< HEAD
 only_receive_gs(x : component) <=
   ** x " only receives messages from the Ground Station" **
   only_gs_encrypt() and only_receive_decrypt(x, {z for (z : component) | false})
 
 only_gs_encrypt() <=
+=======
+--component lists
+
+allProcesses : {process} = {x for (x : process) | true}
+allMemory : {memory} = {x for (x : memory) | true}
+allThreads : {thread} = {x for (x : thread) | true}
+
+
+connected_comps_via_cc(x : component) : {component} =
+	{conn_source(c) for (c : x.connections) | command_channel(c)}
+
+only_receive_gs(x : component) <= 
+  ** x " only receives messages from the Ground Station" **
+  only_gs_encrypt() and memory_protected_system() and only_receive_decrypt(x, identity(x))
+
+only_gs_encrypt() <= 
+>>>>>>> resolute_quant
   ** "Only the Ground Station can send messages that pass Decrypt" ** 
   authenticated_encryption(encrypt_algorithm1) and 
   authenticated_encryption(encrypt_algorithm2) and  
@@ -42,6 +60,7 @@ transmit_private_key() <=
   true
  
 uav_private_key() <=
+<<<<<<< HEAD
   ** "The UAV does not leak the encryption key" **
   true
 
@@ -55,11 +74,30 @@ only_receive_decrypt(x : component, visited : {component}) <=
           ((class_of(x, flight_gen::decryptTask_uart1_377) or class_of(x, flight_gen::decryptTask_uart5_630)) 
           	or only_receive_decrypt(y, {z for (z : component) | z = x} union visited)
           ))       
+=======
+  ** "The UAV does not leak the encryption key" ** 
+  true
+	
+only_receive_decrypt(x : component, v : {component}) <=
+	** "The component " x " only receives messages that pass Decrypt" **
+	forall(z : connected_comps_via_cc(x)).
+	(not (z in v)) =>
+		  proc_or_thread(z)
+		  and
+          ((class_of(x, flight_gen::decryptTask_uart1_377) or class_of(x, flight_gen::decryptTask_uart5_630)) 
+          	or only_receive_decrypt(z, v union identity(z)))
+
+proc_or_thread(x : component) <=
+	** "component " x "is a processes or a thread." **
+	is_process(x) or is_thread(x)
+	
+>>>>>>> resolute_quant
        
 -- The connection c potentially carries commands
 -- Non command datatypes must be explicitly whitelisted here
 command_channel(c : connection) : bool =
   (not has_type(c)) or
+<<<<<<< HEAD
   (type(c) <> sensors_type::sensors_result.impl or
    type(c) <> Base_Types::Float or
    type(c) <> gps_type::position.impl or
@@ -98,6 +136,59 @@ memory_protected(p : process) <=
 memory_safe_process(p : process) <=
   ** "The process " p " only writes to its own memory space" **
   forall (t : thread). contained(t, p) => memory_safe_thread(t)
+=======
+  (type(c) <> sensors_type::sensors_result.impl
+   --type(c) <> Base_Types::Float or
+   --type(c) <> gps_type::position.impl or
+   --type(c) <> Base_Types::Unsigned_32 or
+   --type(c) <> gcsstream_timing::gcsstream_timing or
+   --type(c) <> data_rate::data_rate_state.impl or 
+   --type(c) <> Base_Types::Integer_16 or
+   --type(c) <> Base_Types::Integer_8 or
+   --type(c) <> flight_gen::ArrTy_80TyBase_Types_Unsigned_8 
+   --type(c) <> 
+   or true
+  )
+
+
+unalterable_channel(c : connection) <=
+  ** "The connection " c " delivers data without alteration" **
+  (is_process(conn_source(c)) => memory_protected(conn_source(c)))
+  and
+  (is_process(conn_dest(c)) => memory_protected(conn_dest(c)))
+  
+ 
+-- The connection c delivers data without alteration.
+-- "contained" means write permissions
+--unalterable_channel(c : connection) <=
+--  ** "The connection " c " delivers data without alteration" **
+--  (exists (p1 : allProcesses) (p2 : allProcesses). 
+--        conn_source(c) = p1 
+--    and conn_dest(c) = p2
+--    and p1 <> p2
+--    and memory_protected(p1) 
+--    and memory_protected(p2))
+--  or
+--  (exists (p : allProcesses).
+--  	contained(conn_source(c), p) and
+--  	contained(conn_dest(c), p) and
+--  	memory_protected(p))
+ 
+memory_protected_system() <=
+  ** "Every processes is memory protected" **
+  forall(p : process) . memory_protected(p)
+
+memory_protected(p : component) <=
+  ** "The memory of process " p " is protected from alterations by other processes" **
+  property_lookup(p, SMACCM::OS) = "SeL4" or
+  (property_lookup(p, SMACCM::OS) = "Breakaway-RTOS" and
+   forall (mem : allMemory). bound(p, mem) =>
+     forall (q : allProcesses). bound(q, mem) => memory_safe_process(q))
+
+memory_safe_process(p : process) <=
+  ** "The process " p " only writes to its own memory space" **
+  forall (t : allThreads). contained(t, p) => memory_safe_thread(t)
+>>>>>>> resolute_quant
 
 memory_safe_thread(t : thread) <=
   ** "The thread " t " only writes to its own memory space" **

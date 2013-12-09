@@ -13,6 +13,7 @@ import com.rockwellcollins.atc.resolute.resolute.ClaimString;
 import com.rockwellcollins.atc.resolute.resolute.ConstantDefinition;
 import com.rockwellcollins.atc.resolute.resolute.Definition;
 import com.rockwellcollins.atc.resolute.resolute.DefinitionBody;
+import com.rockwellcollins.atc.resolute.resolute.ElementSet;
 import com.rockwellcollins.atc.resolute.resolute.Expr;
 import com.rockwellcollins.atc.resolute.resolute.FailExpr;
 import com.rockwellcollins.atc.resolute.resolute.FilterMapExpr;
@@ -24,6 +25,7 @@ import com.rockwellcollins.atc.resolute.resolute.IfThenElseExpr;
 import com.rockwellcollins.atc.resolute.resolute.IntExpr;
 import com.rockwellcollins.atc.resolute.resolute.NestedDotID;
 import com.rockwellcollins.atc.resolute.resolute.ProveStatement;
+import com.rockwellcollins.atc.resolute.resolute.QuantArg;
 import com.rockwellcollins.atc.resolute.resolute.QuantifiedExpr;
 import com.rockwellcollins.atc.resolute.resolute.RealExpr;
 import com.rockwellcollins.atc.resolute.resolute.ResoluteFactory;
@@ -73,6 +75,13 @@ public class ResolutePackageImpl extends EPackageImpl implements ResolutePackage
    * @generated
    */
   private EClass typeEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass elementSetEClass = null;
 
   /**
    * <!-- begin-user-doc -->
@@ -150,6 +159,13 @@ public class ResolutePackageImpl extends EPackageImpl implements ResolutePackage
    * @generated
    */
   private EClass setTypeEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass quantArgEClass = null;
 
   /**
    * <!-- begin-user-doc -->
@@ -374,6 +390,26 @@ public class ResolutePackageImpl extends EPackageImpl implements ResolutePackage
   public EClass getType()
   {
     return typeEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getElementSet()
+  {
+    return elementSetEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getElementSet_Name()
+  {
+    return (EAttribute)elementSetEClass.getEStructuralFeatures().get(0);
   }
 
   /**
@@ -621,6 +657,26 @@ public class ResolutePackageImpl extends EPackageImpl implements ResolutePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  public EClass getQuantArg()
+  {
+    return quantArgEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getQuantArg_Expr()
+  {
+    return (EReference)quantArgEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   public EClass getClaimArg()
   {
     return claimArgEClass;
@@ -764,6 +820,16 @@ public class ResolutePackageImpl extends EPackageImpl implements ResolutePackage
   public EReference getIdExpr_Id()
   {
     return (EReference)idExprEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getIdExpr_Subelements()
+  {
+    return (EReference)idExprEClass.getEStructuralFeatures().get(1);
   }
 
   /**
@@ -1103,6 +1169,9 @@ public class ResolutePackageImpl extends EPackageImpl implements ResolutePackage
 
     typeEClass = createEClass(TYPE);
 
+    elementSetEClass = createEClass(ELEMENT_SET);
+    createEAttribute(elementSetEClass, ELEMENT_SET__NAME);
+
     builtinTypeEClass = createEClass(BUILTIN_TYPE);
 
     argEClass = createEClass(ARG);
@@ -1138,6 +1207,9 @@ public class ResolutePackageImpl extends EPackageImpl implements ResolutePackage
     setTypeEClass = createEClass(SET_TYPE);
     createEReference(setTypeEClass, SET_TYPE__TYPE);
 
+    quantArgEClass = createEClass(QUANT_ARG);
+    createEReference(quantArgEClass, QUANT_ARG__EXPR);
+
     claimArgEClass = createEClass(CLAIM_ARG);
     createEReference(claimArgEClass, CLAIM_ARG__ARG);
 
@@ -1158,6 +1230,7 @@ public class ResolutePackageImpl extends EPackageImpl implements ResolutePackage
 
     idExprEClass = createEClass(ID_EXPR);
     createEReference(idExprEClass, ID_EXPR__ID);
+    createEReference(idExprEClass, ID_EXPR__SUBELEMENTS);
 
     thisExprEClass = createEClass(THIS_EXPR);
     createEReference(thisExprEClass, THIS_EXPR__SUB);
@@ -1247,6 +1320,7 @@ public class ResolutePackageImpl extends EPackageImpl implements ResolutePackage
     resoluteSubclauseEClass.getESuperTypes().add(theAadl2Package.getAnnexSubclause());
     proveStatementEClass.getESuperTypes().add(theAadl2Package.getElement());
     setTypeEClass.getESuperTypes().add(this.getType());
+    quantArgEClass.getESuperTypes().add(this.getArg());
     claimArgEClass.getESuperTypes().add(this.getClaimString());
     funcBodyEClass.getESuperTypes().add(this.getDefinitionBody());
     claimBodyEClass.getESuperTypes().add(this.getDefinitionBody());
@@ -1272,6 +1346,9 @@ public class ResolutePackageImpl extends EPackageImpl implements ResolutePackage
     initEClass(definitionEClass, Definition.class, "Definition", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
     initEClass(typeEClass, Type.class, "Type", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+    initEClass(elementSetEClass, ElementSet.class, "ElementSet", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEAttribute(getElementSet_Name(), ecorePackage.getEString(), "name", null, 0, 1, ElementSet.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(builtinTypeEClass, BuiltinType.class, "BuiltinType", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
@@ -1308,6 +1385,9 @@ public class ResolutePackageImpl extends EPackageImpl implements ResolutePackage
     initEClass(setTypeEClass, SetType.class, "SetType", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getSetType_Type(), this.getType(), null, "type", null, 0, 1, SetType.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
+    initEClass(quantArgEClass, QuantArg.class, "QuantArg", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getQuantArg_Expr(), this.getExpr(), null, "expr", null, 0, 1, QuantArg.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
     initEClass(claimArgEClass, ClaimArg.class, "ClaimArg", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getClaimArg_Arg(), this.getArg(), null, "arg", null, 0, 1, ClaimArg.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
@@ -1328,6 +1408,7 @@ public class ResolutePackageImpl extends EPackageImpl implements ResolutePackage
 
     initEClass(idExprEClass, IdExpr.class, "IdExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getIdExpr_Id(), theAadl2Package.getNamedElement(), null, "id", null, 0, 1, IdExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getIdExpr_Subelements(), this.getElementSet(), null, "subelements", null, 0, 1, IdExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(thisExprEClass, ThisExpr.class, "ThisExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getThisExpr_Sub(), this.getNestedDotID(), null, "sub", null, 0, 1, ThisExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

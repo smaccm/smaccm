@@ -17,6 +17,7 @@ import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 import org.osate.aadl2.AbstractNamedValue;
 import org.osate.aadl2.BooleanLiteral;
 import org.osate.aadl2.Classifier;
+import org.osate.aadl2.ComponentCategory;
 import org.osate.aadl2.ComponentClassifier;
 import org.osate.aadl2.ComponentType;
 import org.osate.aadl2.Element;
@@ -44,6 +45,7 @@ import org.osate.xtext.aadl2.errormodel.errorModel.ErrorPropagation;
 import org.osate.xtext.aadl2.errormodel.errorModel.ErrorTypes;
 import org.osate.xtext.aadl2.errormodel.errorModel.TypeToken;
 import org.osate.xtext.aadl2.errormodel.util.EMV2Util;
+
 import org.osate.xtext.aadl2.properties.util.EMFIndexRetrieval;
 import org.osate.xtext.aadl2.properties.util.GetProperties;
 import org.osate.xtext.aadl2.properties.util.PropertyUtils;
@@ -65,6 +67,7 @@ import com.rockwellcollins.atc.resolute.resolute.ClaimBody;
 import com.rockwellcollins.atc.resolute.resolute.ClaimString;
 import com.rockwellcollins.atc.resolute.resolute.ConstantDefinition;
 import com.rockwellcollins.atc.resolute.resolute.DefinitionBody;
+import com.rockwellcollins.atc.resolute.resolute.ElementSet;
 import com.rockwellcollins.atc.resolute.resolute.Expr;
 import com.rockwellcollins.atc.resolute.resolute.FailExpr;
 import com.rockwellcollins.atc.resolute.resolute.FilterMapExpr;
@@ -75,6 +78,7 @@ import com.rockwellcollins.atc.resolute.resolute.IfThenElseExpr;
 import com.rockwellcollins.atc.resolute.resolute.IntExpr;
 import com.rockwellcollins.atc.resolute.resolute.NestedDotID;
 import com.rockwellcollins.atc.resolute.resolute.ProveStatement;
+import com.rockwellcollins.atc.resolute.resolute.QuantArg;
 import com.rockwellcollins.atc.resolute.resolute.QuantifiedExpr;
 import com.rockwellcollins.atc.resolute.resolute.RealExpr;
 import com.rockwellcollins.atc.resolute.resolute.StringExpr;
@@ -379,12 +383,159 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
     @Override
     public ResoluteValue caseIdExpr(IdExpr object) {
         NamedElement ref = object.getId();
-        if (ref instanceof Classifier || ref instanceof Property) {
+        ElementSet subEls = object.getSubelements();
+        if(subEls != null){
+            return subElsFromObject(ref, subEls.getName());
+        }else if (ref instanceof Classifier || ref instanceof Property) {
             return new NamedElementValue(ref);
         } else {
             return doSwitch(ref);
         }
     }
+
+    private void addAllFeatureGroupConns(FeatureInstance feature, Set<ResoluteValue> returnSet){
+        for(FeatureInstance featInst : feature.getFeatureInstances()){
+            addAllFeatureGroupConns(featInst, returnSet);
+        }
+        for(ConnectionInstance conn : feature.getSrcConnectionInstances()){
+            returnSet.add(new NamedElementValue(conn));
+        }
+        for(ConnectionInstance conn : feature.getDstConnectionInstances()){
+            returnSet.add(new NamedElementValue(conn));
+        }
+    }
+    
+    private ResoluteValue subElsFromObject(NamedElement id, String setName) {
+        //TODO: finish this
+        
+        ComponentInstance compInst = null;
+        ResoluteValue idVal = doSwitch(id);
+        compInst = (ComponentInstance)idVal.getNamedElement();
+        
+        if(setName.equals("connections")){
+            Set<ResoluteValue> returnSet = new HashSet<ResoluteValue>();
+            //EList<FeatureInstance> features = compInst.getFeatureInstances();
+            //
+            //for(FeatureInstance feature : features){
+            //   addAllFeatureGroupConns(feature, returnSet);
+            //}
+            
+            EList<ConnectionInstance> connections = compInst.getConnectionInstances();
+            for(ConnectionInstance conn : connections){
+                System.out.println(conn);
+                returnSet.add(new NamedElementValue(conn));
+            }
+            return new SetValue(returnSet);
+        }
+        
+        EList<ComponentInstance> childInsts = compInst.getComponentInstances();
+        Set<ComponentInstance> filteredInsts = new HashSet<ComponentInstance>();
+        for(ComponentInstance childInst : childInsts){
+            switch(setName){
+            case "threads":
+                if(childInst.getCategory() == ComponentCategory.THREAD){
+                    filteredInsts.add(childInst);
+                }
+                break;
+            case "data":
+                if(childInst.getCategory() == ComponentCategory.DATA){
+                    filteredInsts.add(childInst);
+                }
+                break;
+            case "memory":
+                if(childInst.getCategory() == ComponentCategory.MEMORY){
+                    filteredInsts.add(childInst);
+                }
+                break;
+            case "thread_groups":
+                if(childInst.getCategory() == ComponentCategory.THREAD_GROUP){
+                    filteredInsts.add(childInst);
+                }
+                break;
+            case "processes":
+                if(childInst.getCategory() == ComponentCategory.PROCESS){
+                    filteredInsts.add(childInst);
+                }
+                break;
+            case "subprograms":
+                if(childInst.getCategory() == ComponentCategory.SUBPROGRAM){
+                    filteredInsts.add(childInst);
+                }
+                break;
+            case "subprogram_groups":
+                if(childInst.getCategory() == ComponentCategory.SUBPROGRAM_GROUP){
+                    filteredInsts.add(childInst);
+                }
+                break;
+            case "processors":
+                if(childInst.getCategory() == ComponentCategory.PROCESSOR){
+                    filteredInsts.add(childInst);
+                }
+                break;
+            case "virtual_processors":
+                if(childInst.getCategory() == ComponentCategory.VIRTUAL_PROCESSOR){
+                    filteredInsts.add(childInst);
+                }
+                break;
+            case "buses":
+                if(childInst.getCategory() == ComponentCategory.BUS){
+                    filteredInsts.add(childInst);
+                }
+                break;
+            case "virtual_buses":
+                if(childInst.getCategory() == ComponentCategory.VIRTUAL_BUS){
+                    filteredInsts.add(childInst);
+                }
+                break;
+            case "devices":
+                if(childInst.getCategory() == ComponentCategory.DEVICE){
+                    filteredInsts.add(childInst);
+                }
+                break;
+            case "systems":
+                if(childInst.getCategory() == ComponentCategory.SYSTEM){
+                    filteredInsts.add(childInst);
+                }
+                break;
+            case "abstracts":
+                if(childInst.getCategory() == ComponentCategory.ABSTRACT){
+                    filteredInsts.add(childInst);
+                }
+                break;
+            case "components":
+                filteredInsts.add(childInst);
+                break;
+            default:
+                assert(false); //unimplemented
+            }
+            
+        }
+        
+        Set<ResoluteValue> returnSet = new HashSet<ResoluteValue>();
+        for(ComponentInstance childInst : filteredInsts){
+            returnSet.add(new NamedElementValue(childInst));
+        }
+        
+        return new SetValue(returnSet);
+    }
+    
+    
+    private <T> Set<Element> getAllSubElsOfType(Class<T> klass, Set<Element> elements){
+        
+        Set<Element> result = new HashSet<Element>();
+        for(Element el : elements){
+            
+            if(klass.isInstance(el)){
+                
+            }
+            
+        }
+        
+        
+        return null;
+    }
+    
+    
 
     @Override
     public ResoluteValue caseThisExpr(ThisExpr object) {
@@ -493,8 +644,7 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
         String nodeStr = object.getQuant();
         // make the arglist a linked list
         for (Arg arg : argsEList) {
-            Type argType = arg.getType();
-            nodeStr += "(" + arg.getName() + " : " + argType.getName() + ")";
+            nodeStr += "(" + arg.getName() + ")";
             argsLinkedList.add(arg);
         }
 
@@ -631,8 +781,18 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
         LinkedList<Arg> args = new LinkedList<Arg>();
         for (Arg arg : object.getArgs()) {
             args.push(arg);
-            listOfCompLists.add(ResoluteQuantifiableAadlObjects.getAllComponentsOfType(arg
+            
+            if(arg instanceof QuantArg){
+                ResoluteValue resVal = doSwitch(((QuantArg)arg).getExpr());
+                Set<NamedElement> compSet = new HashSet<NamedElement>();
+                for(ResoluteValue resValIter : ((SetValue)resVal).getSet()){
+                    compSet.add(resValIter.getNamedElement());
+                }
+                listOfCompLists.add(compSet);
+            }else{
+                listOfCompLists.add(ResoluteQuantifiableAadlObjects.getAllComponentsOfType(arg
                     .getType().getName(), modes.size() > 0));
+            }
         }
         proofTree.addNewCurrent(object, "{LIST CALC}");
         LinkedList<ResoluteValue> valSet = new LinkedList<ResoluteValue>();
@@ -654,6 +814,8 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
 
         // proofTree.addNewCurrent(funName);
 
+        ResoluteValue compVal;
+        ComponentInstance compInst;
         switch (funName)
         {
         case "error_state_reachable":
@@ -714,7 +876,7 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
             // TODO: come up with better defined semantics about what it means
             // to be "connected"
         {
-            
+
             ResoluteValue comp0Val;
             ResoluteValue comp1Val;
             ResoluteValue connVal;
@@ -792,31 +954,31 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
 
             break;
         }
-        
+
         case "property_lookup":
         {
-            ResoluteValue compVal;
+            ResoluteValue comp0Val;
             ResoluteValue propVal;
             
-            compVal = argVals.get(0);
+            comp0Val = argVals.get(0);
             propVal = argVals.get(1);
 
             assert (propVal.getNamedElement() instanceof Property);
             Property prop = (Property) propVal.getNamedElement();
 
             PropertyExpression expr;
-            if (compVal.getNamedElement() instanceof ComponentInstance) {
-                ComponentInstance comp = (ComponentInstance) compVal.getNamedElement();
+            if (comp0Val.getNamedElement() instanceof ComponentInstance) {
+                ComponentInstance comp = (ComponentInstance) comp0Val.getNamedElement();
                 nodeStr += "(" + comp.getName() + ", " + prop.getName() + ")";
                 expr = getPropExpression(comp, prop);
-            } else if (compVal.getNamedElement() instanceof FeatureInstance)
+            } else if (comp0Val.getNamedElement() instanceof FeatureInstance)
             {
-            	 FeatureInstance feat = (FeatureInstance) compVal.getNamedElement();
+            	 FeatureInstance feat = (FeatureInstance) comp0Val.getNamedElement();
             	 expr = getPropExpression(feat, prop);
             }
             else {
-                assert (compVal.getNamedElement() instanceof ComponentType);
-                ComponentType comp = (ComponentType) compVal.getNamedElement();
+                assert (comp0Val.getNamedElement() instanceof ComponentType);
+                ComponentType comp = (ComponentType) comp0Val.getNamedElement();
                 nodeStr += "(" + comp.getName() + ", " + prop.getName() + ")";
                 expr = getPropExpression(comp, prop);
             }
@@ -927,35 +1089,34 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
         case "property_exists":
         {
 
-            ResoluteValue compVal;
+            ResoluteValue comp0Val;
             ResoluteValue propVal;
 
-            ResoluteValue comp0Val;
             ResoluteValue comp1Val;
             ResoluteValue connVal;
             ConnectionInstance conn;
             
             Property prop;
             // the first element is the component
-            compVal = argVals.get(0);
+            comp0Val = argVals.get(0);
             // the second element is the property
             propVal = argVals.get(1);
 
             assert (propVal.getNamedElement() instanceof Property);
             prop = (Property) propVal.getNamedElement();
 
-            if (compVal.getNamedElement() instanceof ComponentInstance) {
-                ComponentInstance comp = (ComponentInstance) compVal.getNamedElement();
+            if (comp0Val.getNamedElement() instanceof ComponentInstance) {
+                ComponentInstance comp = (ComponentInstance) comp0Val.getNamedElement();
                 nodeStr += "(" + comp.getName() + ", " + prop.getName() + ")";
                 result = getPropExists(comp, prop);
-            } else if (compVal.getNamedElement() instanceof ComponentType) {
-                assert (compVal.getNamedElement() instanceof ComponentType);
-                ComponentType comp = (ComponentType) compVal.getNamedElement();
+            } else if (comp0Val.getNamedElement() instanceof ComponentType) {
+                assert (comp0Val.getNamedElement() instanceof ComponentType);
+                ComponentType comp = (ComponentType) comp0Val.getNamedElement();
                 nodeStr += "(" + comp.getName() + ", " + prop.getName() + ")";
                 result = getPropExists(comp, prop);
             } else {
-                assert (compVal.getNamedElement() instanceof ConnectionInstance);
-                conn = (ConnectionInstance) compVal.getNamedElement();
+                assert (comp0Val.getNamedElement() instanceof ConnectionInstance);
+                conn = (ConnectionInstance) comp0Val.getNamedElement();
 
                 // result = getPropExists(conn, prop);
                 for (ConnectionReference ref : conn.getConnectionReferences()) {
@@ -983,7 +1144,7 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
             assert (comp0Val.getNamedElement() instanceof ComponentInstance);
             assert (comp1Val.getNamedElement() instanceof ComponentClassifier);
 
-            ComponentInstance compInst = (ComponentInstance) comp0Val.getNamedElement();
+            compInst = (ComponentInstance) comp0Val.getNamedElement();
             ComponentClassifier compClass = (ComponentClassifier) comp1Val.getNamedElement();
 
             nodeStr += "(" + compInst.getName() + ", " + compClass.getName() + ")";
@@ -1061,6 +1222,39 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
 
             conn = (ConnectionInstance) connVal.getNamedElement();
             nodeStr += "(" + conn.getName() + ")";
+            
+            ConnectionInstanceEnd allDest = conn.getDestination();
+            ConnectionInstanceEnd allSource = conn.getSource();
+            
+            Property accessRightProp = EMFIndexRetrieval.getPropertyDefinitionInWorkspace(
+                    OsateResourceUtil.getResourceSet(), "Memory_Properties::Access_Right");
+            
+            
+            //code for data accesses
+            if(allDest instanceof FeatureInstance && 
+                    ((FeatureInstance)allDest).getCategory() == FeatureCategory.DATA_ACCESS){
+                EnumerationLiteral lit = PropertyUtils.getEnumLiteral(allDest, accessRightProp);
+                if(lit.getName().equals("read_write") || lit.getName().equals("write_only")){
+                    result = new NamedElementValue((NamedElement)allDest.eContainer());
+                }else{
+                    result = new NamedElementValue((NamedElement)allSource.eContainer());
+                }
+                break;
+            }
+
+            
+            //code for data accesses
+            if(allSource instanceof FeatureInstance && 
+                    ((FeatureInstance)allSource).getCategory() == FeatureCategory.DATA_ACCESS){
+                EnumerationLiteral lit = PropertyUtils.getEnumLiteral(allSource, accessRightProp);
+                if(lit.getName().equals("read_write") || lit.getName().equals("write_only")){
+                    result = new NamedElementValue((NamedElement)allSource.eContainer());
+                }else{
+                    result = new NamedElementValue((NamedElement)allDest.eContainer());
+                }
+                break;
+            }
+            
             result = new NamedElementValue(conn.getSource().getComponentInstance());
 
             break;
@@ -1076,6 +1270,37 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
 
             conn = (ConnectionInstance) connVal.getNamedElement();
             nodeStr += "(" + conn.getName() + ")";
+            
+            ConnectionInstanceEnd allDest = conn.getDestination();
+            ConnectionInstanceEnd allSource = conn.getSource();
+            
+            Property accessRightProp = EMFIndexRetrieval.getPropertyDefinitionInWorkspace(
+                    OsateResourceUtil.getResourceSet(), "Memory_Properties::Access_Right");
+            
+            
+            //code for data accesses
+            if(allDest instanceof FeatureInstance && 
+                    ((FeatureInstance)allDest).getCategory() == FeatureCategory.DATA_ACCESS){
+                EnumerationLiteral lit = PropertyUtils.getEnumLiteral(allDest, accessRightProp);
+                if(lit.getName().equals("read_write") || lit.getName().equals("read_only")){
+                    result = new NamedElementValue((NamedElement)allDest.eContainer());
+                    break;
+                }
+            }
+
+            
+            //code for data accesses
+            if(allSource instanceof FeatureInstance && 
+                    ((FeatureInstance)allSource).getCategory() == FeatureCategory.DATA_ACCESS){
+                EnumerationLiteral lit = PropertyUtils.getEnumLiteral(allSource, accessRightProp);
+                if(lit.getName().equals("read_write") || lit.getName().equals("read_only")){
+                    result = new NamedElementValue((NamedElement)allSource.eContainer());
+                    break;
+                }
+                assert(false);
+            }
+            
+            
             result = new NamedElementValue(conn.getDestination().getComponentInstance());
             break;
         }
@@ -1084,16 +1309,16 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
         {
 
             ResoluteValue connVal;
-            ComponentInstance compVal;
+            ComponentInstance comp0Val;
             ConnectionInstance conn;
             connVal = argVals.get(1);
-            compVal = (ComponentInstance) argVals.get(0).getNamedElement();
+            comp0Val = (ComponentInstance) argVals.get(0).getNamedElement();
             
             assert (connVal.getNamedElement() instanceof ConnectionInstance);
-            assert (compVal instanceof ConnectionInstance);
+            assert (comp0Val instanceof ConnectionInstance);
             
             conn = (ConnectionInstance) connVal.getNamedElement();
-            for (FeatureInstance fi : compVal.getFeatureInstances())
+            for (FeatureInstance fi : comp0Val.getFeatureInstances())
             {
             	for (ConnectionInstance ci : fi.getAllEnclosingConnectionInstances())
             	{
@@ -1164,6 +1389,88 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
             }
 
             break;
+        case "is_data":
+            compVal = argVals.get(0);
+            compInst = (ComponentInstance)compVal.getNamedElement();
+            result = new BoolValue(compInst.getCategory() == ComponentCategory.DATA);
+            break;
+        case "is_thread":
+            compVal = argVals.get(0);
+            compInst = (ComponentInstance)compVal.getNamedElement();
+            result = new BoolValue(compInst.getCategory() == ComponentCategory.THREAD);
+            break;
+        case "is_thread_group":
+            compVal = argVals.get(0);
+            compInst = (ComponentInstance)compVal.getNamedElement();
+            result = new BoolValue(compInst.getCategory() == ComponentCategory.THREAD_GROUP);
+            break;
+        case "is_process":
+            compVal = argVals.get(0);
+            compInst = (ComponentInstance)compVal.getNamedElement();
+            result = new BoolValue(compInst.getCategory() == ComponentCategory.PROCESS);
+            break;
+        case "is_subprogram":
+            compVal = argVals.get(0);
+            compInst = (ComponentInstance)compVal.getNamedElement();
+            result = new BoolValue(compInst.getCategory() == ComponentCategory.SUBPROGRAM);
+            break;
+        case "is_subprogram_group":
+            compVal = argVals.get(0);
+            compInst = (ComponentInstance)compVal.getNamedElement();
+            result = new BoolValue(compInst.getCategory() == ComponentCategory.SUBPROGRAM_GROUP);
+            break;
+        case "is_processor":
+            compVal = argVals.get(0);
+            compInst = (ComponentInstance)compVal.getNamedElement();
+            result = new BoolValue(compInst.getCategory() == ComponentCategory.PROCESS);
+            break;
+        case "is_virtual_processor":
+            compVal = argVals.get(0);
+            compInst = (ComponentInstance)compVal.getNamedElement();
+            result = new BoolValue(compInst.getCategory() == ComponentCategory.VIRTUAL_PROCESSOR);
+            break;
+        case "is_memory":
+            compVal = argVals.get(0);
+            compInst = (ComponentInstance)compVal.getNamedElement();
+            result = new BoolValue(compInst.getCategory() == ComponentCategory.MEMORY);
+            break;
+        case "is_bus":
+            compVal = argVals.get(0);
+            compInst = (ComponentInstance)compVal.getNamedElement();
+            result = new BoolValue(compInst.getCategory() == ComponentCategory.BUS);
+            break;
+        case "is_virtual_bus":
+            compVal = argVals.get(0);
+            compInst = (ComponentInstance)compVal.getNamedElement();
+            result = new BoolValue(compInst.getCategory() == ComponentCategory.VIRTUAL_BUS);
+            break;
+        case "is_device":
+            compVal = argVals.get(0);
+            compInst = (ComponentInstance)compVal.getNamedElement();
+            result = new BoolValue(compInst.getCategory() == ComponentCategory.DEVICE);
+            break;
+        case "is_system":
+            compVal = argVals.get(0);
+            compInst = (ComponentInstance)compVal.getNamedElement();
+            result = new BoolValue(compInst.getCategory() == ComponentCategory.SYSTEM);
+            break;
+        case "is_abstract":
+            compVal = argVals.get(0);
+            compInst = (ComponentInstance)compVal.getNamedElement();
+            result = new BoolValue(compInst.getCategory() == ComponentCategory.ABSTRACT);
+            break;
+        case "is_empty":
+            compVal = argVals.get(0);
+            result = new BoolValue(((SetValue)compVal).getSet().isEmpty());
+            break;
+             
+        case "identity":
+            compVal = argVals.get(0);
+            Set<ResoluteValue> compSet = new HashSet<ResoluteValue>();
+            compSet.add(compVal);
+            result = new SetValue(compSet);
+            break;
+            
         default:
             throw new IllegalArgumentException("Unknown function: " + funName);
         }
@@ -1262,8 +1569,24 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
         LinkedList<Set<NamedElement>> listOfCompLists = new LinkedList<Set<NamedElement>>();
 
         for (Arg arg : freeArgs) {
-            listOfCompLists.add(ResoluteQuantifiableAadlObjects.getAllComponentsOfType(arg
-                    .getType().getName(), modes.size() > 0));
+
+            if(arg instanceof QuantArg){
+                QuantArg quantArg = (QuantArg)arg;
+                ResoluteValue argSetVal = doSwitch(quantArg.getExpr());
+                SetValue setValue = (SetValue)argSetVal;
+
+                Set<ResoluteValue> resVals = setValue.getSet();
+                Set<NamedElement> namedVals = new HashSet<NamedElement>();
+
+                for(ResoluteValue resVal : resVals){
+                    namedVals.add(resVal.getNamedElement());
+                }
+
+                listOfCompLists.add(namedVals);
+            }else{
+                listOfCompLists.add(ResoluteQuantifiableAadlObjects.getAllComponentsOfType(arg
+                        .getType().getName(), modes.size() > 0));
+            }
         }
 
         return quantIterateSets(expr, freeArgs, listOfCompLists, compl);

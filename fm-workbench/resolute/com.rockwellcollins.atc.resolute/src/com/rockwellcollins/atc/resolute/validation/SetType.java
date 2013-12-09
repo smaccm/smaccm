@@ -62,4 +62,5 @@ public class SetType extends ResoluteType {
 
         return false;
     }
+
 }

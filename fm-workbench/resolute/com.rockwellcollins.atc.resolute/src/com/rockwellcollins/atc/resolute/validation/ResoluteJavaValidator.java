@@ -52,6 +52,7 @@ import com.rockwellcollins.atc.resolute.resolute.BuiltinType;
 import com.rockwellcollins.atc.resolute.resolute.ClaimBody;
 import com.rockwellcollins.atc.resolute.resolute.ConstantDefinition;
 import com.rockwellcollins.atc.resolute.resolute.DefinitionBody;
+import com.rockwellcollins.atc.resolute.resolute.ElementSet;
 import com.rockwellcollins.atc.resolute.resolute.Expr;
 import com.rockwellcollins.atc.resolute.resolute.FailExpr;
 import com.rockwellcollins.atc.resolute.resolute.FilterMapExpr;
@@ -63,6 +64,7 @@ import com.rockwellcollins.atc.resolute.resolute.IfThenElseExpr;
 import com.rockwellcollins.atc.resolute.resolute.IntExpr;
 import com.rockwellcollins.atc.resolute.resolute.NestedDotID;
 import com.rockwellcollins.atc.resolute.resolute.ProveStatement;
+import com.rockwellcollins.atc.resolute.resolute.QuantArg;
 import com.rockwellcollins.atc.resolute.resolute.QuantifiedExpr;
 import com.rockwellcollins.atc.resolute.resolute.RealExpr;
 import com.rockwellcollins.atc.resolute.resolute.ResolutePackage;
@@ -207,19 +209,39 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
         }
     }
 
+    //TODO: do type checking for quantifiers
+    @Check
+    public void checkQuantArg(QuantArg qArg){
+        
+    }
+    
     @Check
     public void checkQuantifiedExpr(QuantifiedExpr quantExpr) {
-        for (Arg arg : quantExpr.getArgs()) {
-            ResoluteType argType = typeToResoluteType(arg.getType());
-            if (!argType.subtypeOf(BaseType.AADL)) {
-                error(arg, "Can only quantify over AADL types");
-            }
-        }
-
         ResoluteType exprType = getExprType(quantExpr.getExpr());
+
         if (!exprType.subtypeOf(BaseType.BOOL)) {
             error(quantExpr, "Expected type bool but found type " + exprType);
         }
+
+        for(Arg arg : quantExpr.getArgs()){
+
+            if(arg instanceof QuantArg){ 
+                QuantArg qArg = (QuantArg)arg;
+
+                ResoluteType argType = getExprType(qArg.getExpr());
+
+                if(!(argType instanceof SetType)){
+                    error(quantExpr, "Arguments to quantifier is of type '" + argType 
+                            +"' but must be of a set type");
+                }
+            }else{
+                ResoluteType argType = typeToResoluteType(arg.getType());
+                if (!argType.subtypeOf(BaseType.AADL)) {
+                    error(arg, "Can only quantify over AADL types");
+                }
+            }
+        }
+        
     }
 
     @Check
@@ -303,7 +325,7 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
         }
 
         for (int i = 0; i < actuals.size(); i++) {
-            ResoluteType formal = typeToResoluteType(formals.get(i).getType());
+            ResoluteType formal = typeToResoluteType((Type)formals.get(i).getType());
             ResoluteType actual = getExprType(actuals.get(i));
 
             if (!actual.subtypeOf(formal)) {
@@ -363,6 +385,22 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
         	expectedTypes.add(BaseType.STRING);
         	break;
         
+        case "is_data":
+        case "is_thread":
+        case "is_thread_group":
+        case "is_process":
+        case "is_subprogram":
+        case "is_subprogram_group":
+        case "is_processor":
+        case "is_virtual_processor":
+        case "is_memory":
+        case "is_bus":
+        case "is_virtual_bus":
+        case "is_device":
+        case "is_system":
+        case "is_abstract":
+            expectedTypes.add(BaseType.COMPONENT);
+            break;
         case "connected":
             expectedTypes.add(BaseType.COMPONENT);
             expectedTypes.add(BaseType.CONNECTION);
@@ -393,7 +431,7 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
         case "contained":
             expectedTypes.add(BaseType.AADL);
             expectedTypes.add(BaseType.COMPONENT);
-            break;
+            break; 
 
         case "conn_source":
         case "conn_dest":
@@ -405,6 +443,21 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
             expectedTypes.add(BaseType.CONNECTION);
             break;
 
+        case "identity":
+            //TODO: support integers and reals as well
+            expectedTypes.add(BaseType.AADL); 
+            break;
+        case "is_empty":
+            if (actuals.size() != 1) {
+                error(funCall, "function 'is_empty' expects one argument");
+                return;
+            }
+
+            if (!(actualTypes.get(0) instanceof SetType)) {
+               error(funCall, "function 'is_empty' expects argument of set type");
+            }
+            return;
+            
         case "sum":
             if (actuals.size() != 1) {
                 error(funCall, "function 'sum' expects one argument");
@@ -585,6 +638,12 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 
         if (expr instanceof IdExpr) {
             IdExpr id = (IdExpr) expr;
+            ElementSet subEls = id.getSubelements();
+            
+            if(subEls != null){
+                return typeToResoluteType(subEls);
+            }
+            
             return getIdExprType(id);
         }
 
@@ -639,7 +698,12 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 
         if (idClass instanceof Arg) {
             Arg arg = (Arg) idClass;
-            return typeToResoluteType(arg.getType());
+            
+            if(arg instanceof QuantArg){
+                return BaseType.FAIL;
+            }
+            
+            return typeToResoluteType((Type)arg.getType());
         }
 
         if (idClass instanceof Property) {
@@ -666,6 +730,21 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
         case "contain_error":
         case "receive_error":
         case "error_state_reachable":
+        case "is_empty":
+        case "is_data":
+        case "is_thread":
+        case "is_thread_group":
+        case "is_process":
+        case "is_subprogram":
+        case "is_subprogram_group":
+        case "is_processor":
+        case "is_virtual_processor":
+        case "is_memory":
+        case "is_bus":
+        case "is_virtual_bus":
+        case "is_device":
+        case "is_system":
+        case "is_abstract":
         case "class_of":
         case "bound": 
         case "contained":
@@ -765,6 +844,15 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
         case "get_feature":
             return BaseType.COMPONENT;           
             
+        case "identity":
+        {
+            List<Expr> args = funCall.getArgs();
+            Expr expr = args.get(0);
+            ResoluteType argType = getExprType(expr);
+            
+            return new SetType(argType);
+        }
+        
         case "sum":
             if (funCall.getArgs().size() != 1) {
                 return BaseType.FAIL;
@@ -842,6 +930,11 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
         return result;
     }
 
+    public ResoluteType typeToResoluteType(ElementSet elSet){
+        BaseType baseType = new BaseType(elSet.getName());
+        return new SetType(baseType);
+    }
+    
     public ResoluteType typeToResoluteType(Type type) {
         if (type instanceof BuiltinType) {
             BuiltinType bt = (BuiltinType) type;

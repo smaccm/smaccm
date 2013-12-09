@@ -5,6 +5,10 @@ public
   with PX4FMU;
   with DATATYPES;
   with flight_gen;
+<<<<<<< HEAD
+=======
+  with motors_type;
+>>>>>>> resolute_quant
   
   system UAV
     features
@@ -21,9 +25,15 @@ public
       PX4IOAR: system PX4IOAR::PX4IOAR.Impl; 
     
     connections 
+<<<<<<< HEAD
       feature group PX4FMU.sensors <-> SW.sensors;
       feature group PX4FMU.expansion_slot <-> PX4IOAR.expansion_connector;
 
+=======
+      data access PX4FMU.sensors -> SW.sensors; 
+      feature group PX4FMU.expansion_slot <-> PX4IOAR.expansion_connector;
+ 
+>>>>>>> resolute_quant
       feature group PX4IOAR.motors_and_radios <-> SW.motors_and_radios;
       port PX4IOAR.mavlink <-> mavlink;
       port flight_control_commands -> PX4IOAR.flight_control_commands;
@@ -38,10 +48,16 @@ public
 
   feature group motors_and_radios
     features
+<<<<<<< HEAD
       motor1: out data port DATATYPES::Servo_Commands;
       motor2: out data port DATATYPES::Servo_Commands;
       motor3: out data port DATATYPES::Servo_Commands;
       motor4: out data port DATATYPES::Servo_Commands;
+=======
+      motors: provides data access motors_type::motors.impl{
+      		Access_Right => read_only;
+      };
+>>>>>>> resolute_quant
       
       flight_control_commands: in data port DATATYPES::Flight_Control_Commands.Impl;
       mavlink: in out data port DATATYPES::EncryptMAVLink;

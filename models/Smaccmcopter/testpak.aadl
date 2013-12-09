@@ -1,0 +1,15 @@
+package testpak
+public
+
+annex resolute 
+{**
+		
+trivial(p : process) <=
+	** "there exists a mavlink connection" **  
+	exists (c : {z for (z : component) | true}) . type(c) = DATATYPES::MAVLink   
+  
+**};
+     
+    
+
+end testpak;

@@ -28,6 +28,7 @@ import com.rockwellcollins.atc.resolute.resolute.ClaimArg;
 import com.rockwellcollins.atc.resolute.resolute.FnCallExpr;
 import com.rockwellcollins.atc.resolute.resolute.IdExpr;
 import com.rockwellcollins.atc.resolute.resolute.NestedDotID;
+import com.rockwellcollins.atc.resolute.resolute.QuantArg;
 import com.rockwellcollins.atc.resolute.resolute.ResolutePackage;
 
 public class ResoluteLinkingService extends PropertiesLinkingService {
@@ -52,6 +53,10 @@ public class ResoluteLinkingService extends PropertiesLinkingService {
         }
 
         if (context instanceof ClaimArg) {
+            return findClassifier(context, reference, name);
+        }
+        
+        if(context instanceof QuantArg) {
             return findClassifier(context, reference, name);
         }
 

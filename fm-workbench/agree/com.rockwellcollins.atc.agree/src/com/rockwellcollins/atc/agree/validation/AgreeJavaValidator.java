@@ -263,6 +263,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
         if (e instanceof NestedDotID) {
             NamedElement base = getFinalNestId((NestedDotID) e);
             return base instanceof ConstStatement;
+
         }
 
         return true;

@@ -19,6 +19,7 @@ public
   with userinput_type;
   with SMACCM;
   with UAV;
+  with gcs_msgs;
 
 data ArrTy_80TyBase_Types_Unsigned_8
   properties
@@ -1723,17 +1724,75 @@ end uartISR_211;
 
 system Software
   features
-  	sensors: feature group UAV::Sensors;
+  	sensors: provides data access sensors_type::sensors_result.impl;
   	motors_and_radios: feature group UAV::motors_and_radios;
+  	gcs_transmit : feature group gcs_msgs::gcs_msg;
+  	gcs_receive : feature group gcs_msgs::gcs_msg;
   	
 end Software;
 
 system implementation Software.impl
   subcomponents
   	main : process flight_gen_process.impl;
+  	
+  connections
+    data access main.sensors -> sensors;
+    feature group main.motors_and_radios <-> motors_and_radios;
+    feature group gcs_transmit <-> main.gcs_transmit;
+    feature group gcs_receive <-> main.gcs_receive;
+  	
 end Software.impl;
 
 process flight_gen_process
+  features
+  	sensors: provides data access sensors_type::sensors_result.impl{
+  		Access_Right => read_write;
+  	};
+  	motors_and_radios: feature group UAV::motors_and_radios;
+  	gcs_transmit: feature group gcs_msgs::gcs_msg {
+  		Access_Right => read_only applies to param1;
+  		Access_Right => read_only applies to param2;
+  		Access_Right => read_only applies to param3;
+  		Access_Right => read_only applies to param4;
+  		Access_Right => read_only applies to param5;
+  		Access_Right => read_only applies to param6;
+  		Access_Right => read_only applies to param7;
+  		Access_Right => read_only applies to param8;
+  		Access_Right => read_only applies to param9;
+  		Access_Right => read_only applies to param10;
+  		Access_Right => read_only applies to param11;
+  		Access_Right => read_only applies to param12;
+  		Access_Right => read_only applies to param13;
+  		Access_Right => read_only applies to param14;
+  		Access_Right => read_only applies to param15;
+  		Access_Right => read_only applies to param16;
+  		Access_Right => read_only applies to param17;
+  		Access_Right => read_only applies to param18;
+  		Access_Right => read_only applies to param19;
+  		Access_Right => read_only applies to param20;
+  	};
+  	gcs_receive: feature group gcs_msgs::gcs_msg {
+  		Access_Right => write_only applies to param1;
+  		Access_Right => write_only applies to param2;
+  		Access_Right => write_only applies to param3;
+  		Access_Right => write_only applies to param4;
+  		Access_Right => write_only applies to param5;
+  		Access_Right => write_only applies to param6;
+  		Access_Right => write_only applies to param7;
+  		Access_Right => write_only applies to param8;
+  		Access_Right => write_only applies to param9;
+  		Access_Right => write_only applies to param10;
+  		Access_Right => write_only applies to param11;
+  		Access_Right => write_only applies to param12;
+  		Access_Right => write_only applies to param13;
+  		Access_Right => write_only applies to param14;
+  		Access_Right => write_only applies to param15;
+  		Access_Right => write_only applies to param16;
+  		Access_Right => write_only applies to param17;
+  		Access_Right => write_only applies to param18;
+  		Access_Right => write_only applies to param19;
+  		Access_Right => write_only applies to param20;
+  	};
   
    annex agree {**
     	guarantee "whatever" : true;
@@ -2024,6 +2083,54 @@ process implementation flight_gen_process.impl
     data access dataport36 -> userPPMInput_42_inst.userInput_45;
     data access dataport39 -> userPPMInput_42_inst.flightMode_43;
     data access dataport1 -> stateProxy_2_inst.proxyData_3;
+    
+    --connections added by rockwell collins to link in hardware
+    data access dataport191 -> motors_and_radios.motors;
+    data access dataport1 -> sensors;
+    
+    --mavlink transmission connections
+    data access dataport33 -> gcs_transmit.param1;
+    data access dataport32 -> gcs_transmit.param2;
+    data access dataport31 -> gcs_transmit.param3;
+    data access dataport30 -> gcs_transmit.param4;
+    data access dataport29 -> gcs_transmit.param5;
+    data access dataport28 -> gcs_transmit.param6;
+    data access dataport27 -> gcs_transmit.param7;
+    data access dataport26 -> gcs_transmit.param8;
+    data access dataport25 -> gcs_transmit.param9;
+    data access dataport24 -> gcs_transmit.param10;
+    data access dataport23 -> gcs_transmit.param11;
+    data access dataport22 -> gcs_transmit.param12;
+    data access dataport21 -> gcs_transmit.param13;
+    data access dataport20 -> gcs_transmit.param14;
+    data access dataport19 -> gcs_transmit.param15;
+    data access dataport18 -> gcs_transmit.param16;
+    data access dataport17 -> gcs_transmit.param17;
+    data access dataport16 -> gcs_transmit.param18;
+    data access dataport15 -> gcs_transmit.param19;
+    data access dataport14 -> gcs_transmit.param20;
+    
+    --mavlink receive connections
+    data access dataport33 -> gcs_receive.param1;
+    data access dataport32 -> gcs_receive.param2;
+    data access dataport31 -> gcs_receive.param3;
+    data access dataport30 -> gcs_receive.param4;
+    data access dataport29 -> gcs_receive.param5;
+    data access dataport28 -> gcs_receive.param6;
+    data access dataport27 -> gcs_receive.param7;
+    data access dataport26 -> gcs_receive.param8;
+    data access dataport25 -> gcs_receive.param9;
+    data access dataport24 -> gcs_receive.param10;
+    data access dataport23 -> gcs_receive.param11;
+    data access dataport22 -> gcs_receive.param12;
+    data access dataport21 -> gcs_receive.param13;
+    data access dataport20 -> gcs_receive.param14;
+    data access dataport19 -> gcs_receive.param15;
+    data access dataport18 -> gcs_receive.param16;
+    data access dataport17 -> gcs_receive.param17;
+    data access dataport16 -> gcs_receive.param18;
+    data access dataport15 -> gcs_receive.param19;
+    data access dataport14 -> gcs_receive.param20;
     
   properties 
     SMACCM::OS => "Breakaway-RTOS";

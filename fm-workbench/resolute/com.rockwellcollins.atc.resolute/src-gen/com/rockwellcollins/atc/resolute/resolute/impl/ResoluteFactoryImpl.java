@@ -67,6 +67,7 @@ public class ResoluteFactoryImpl extends EFactoryImpl implements ResoluteFactory
       case ResolutePackage.RESOLUTE_LIBRARY: return createResoluteLibrary();
       case ResolutePackage.DEFINITION: return createDefinition();
       case ResolutePackage.TYPE: return createType();
+      case ResolutePackage.ELEMENT_SET: return createElementSet();
       case ResolutePackage.BUILTIN_TYPE: return createBuiltinType();
       case ResolutePackage.ARG: return createArg();
       case ResolutePackage.CONSTANT_DEFINITION: return createConstantDefinition();
@@ -78,6 +79,7 @@ public class ResoluteFactoryImpl extends EFactoryImpl implements ResoluteFactory
       case ResolutePackage.NESTED_DOT_ID: return createNestedDotID();
       case ResolutePackage.PROVE_STATEMENT: return createProveStatement();
       case ResolutePackage.SET_TYPE: return createSetType();
+      case ResolutePackage.QUANT_ARG: return createQuantArg();
       case ResolutePackage.CLAIM_ARG: return createClaimArg();
       case ResolutePackage.FUNC_BODY: return createFuncBody();
       case ResolutePackage.CLAIM_BODY: return createClaimBody();
@@ -131,6 +133,17 @@ public class ResoluteFactoryImpl extends EFactoryImpl implements ResoluteFactory
   {
     TypeImpl type = new TypeImpl();
     return type;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public ElementSet createElementSet()
+  {
+    ElementSetImpl elementSet = new ElementSetImpl();
+    return elementSet;
   }
 
   /**
@@ -252,6 +265,17 @@ public class ResoluteFactoryImpl extends EFactoryImpl implements ResoluteFactory
   {
     SetTypeImpl setType = new SetTypeImpl();
     return setType;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public QuantArg createQuantArg()
+  {
+    QuantArgImpl quantArg = new QuantArgImpl();
+    return quantArg;
   }
 
   /**

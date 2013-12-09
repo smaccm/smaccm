@@ -9,7 +9,7 @@ no_external_commands(x : component, context : component) <=
   forall (c : connection).
   forall (y : component).
     connected(y, c, x) and command_channel(c) =>
-   	  contained(y, context) and no_external_commands(y, context)
+   	  contained(y, context) and no_external_commands(y, context) 
 
 schedulable(p : component) <=
   ** p " is schedulable" ** 

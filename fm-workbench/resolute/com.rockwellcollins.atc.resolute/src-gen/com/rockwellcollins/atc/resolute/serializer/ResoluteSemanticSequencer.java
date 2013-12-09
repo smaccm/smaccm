@@ -11,6 +11,7 @@ import com.rockwellcollins.atc.resolute.resolute.ClaimArg;
 import com.rockwellcollins.atc.resolute.resolute.ClaimBody;
 import com.rockwellcollins.atc.resolute.resolute.ClaimString;
 import com.rockwellcollins.atc.resolute.resolute.ConstantDefinition;
+import com.rockwellcollins.atc.resolute.resolute.ElementSet;
 import com.rockwellcollins.atc.resolute.resolute.FailExpr;
 import com.rockwellcollins.atc.resolute.resolute.FilterMapExpr;
 import com.rockwellcollins.atc.resolute.resolute.FnCallExpr;
@@ -21,6 +22,7 @@ import com.rockwellcollins.atc.resolute.resolute.IfThenElseExpr;
 import com.rockwellcollins.atc.resolute.resolute.IntExpr;
 import com.rockwellcollins.atc.resolute.resolute.NestedDotID;
 import com.rockwellcollins.atc.resolute.resolute.ProveStatement;
+import com.rockwellcollins.atc.resolute.resolute.QuantArg;
 import com.rockwellcollins.atc.resolute.resolute.QuantifiedExpr;
 import com.rockwellcollins.atc.resolute.resolute.RealExpr;
 import com.rockwellcollins.atc.resolute.resolute.ResoluteLibrary;
@@ -335,6 +337,12 @@ public class ResoluteSemanticSequencer extends PropertiesSemanticSequencer {
 					return; 
 				}
 				else break;
+			case ResolutePackage.ELEMENT_SET:
+				if(context == grammarAccess.getElementSetRule()) {
+					sequence_ElementSet(context, (ElementSet) semanticObject); 
+					return; 
+				}
+				else break;
 			case ResolutePackage.FAIL_EXPR:
 				if(context == grammarAccess.getAndExprRule() ||
 				   context == grammarAccess.getAndExprAccess().getBinaryExprLeftAction_1_0_0_0() ||
@@ -499,6 +507,13 @@ public class ResoluteSemanticSequencer extends PropertiesSemanticSequencer {
 				if(context == grammarAccess.getElementRule() ||
 				   context == grammarAccess.getProveStatementRule()) {
 					sequence_ProveStatement(context, (ProveStatement) semanticObject); 
+					return; 
+				}
+				else break;
+			case ResolutePackage.QUANT_ARG:
+				if(context == grammarAccess.getArgRule() ||
+				   context == grammarAccess.getNamedElementRule()) {
+					sequence_Arg(context, (QuantArg) semanticObject); 
 					return; 
 				}
 				else break;
@@ -671,6 +686,15 @@ public class ResoluteSemanticSequencer extends PropertiesSemanticSequencer {
 	
 	/**
 	 * Constraint:
+	 *     (name=ID expr=Expr)
+	 */
+	protected void sequence_Arg(EObject context, QuantArg semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Constraint:
 	 *     val=BooleanLiteral
 	 */
 	protected void sequence_AtomicExpr(EObject context, BoolExpr semanticObject) {
@@ -716,7 +740,7 @@ public class ResoluteSemanticSequencer extends PropertiesSemanticSequencer {
 	
 	/**
 	 * Constraint:
-	 *     id=[NamedElement|QCREF]
+	 *     (id=[NamedElement|QCREF] subelements=ElementSet?)
 	 */
 	protected void sequence_AtomicExpr(EObject context, IdExpr semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -848,6 +872,32 @@ public class ResoluteSemanticSequencer extends PropertiesSemanticSequencer {
 	 *     (type=Type expr=Expr)
 	 */
 	protected void sequence_DefinitionBody(EObject context, FuncBody semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Constraint:
+	 *     (
+	 *         name='threads' | 
+	 *         name='data' | 
+	 *         name='memory' | 
+	 *         name='thread_groups' | 
+	 *         name='processes' | 
+	 *         name='subprograms' | 
+	 *         name='subprogram_groups' | 
+	 *         name='processors' | 
+	 *         name='virtual_processors' | 
+	 *         name='buses' | 
+	 *         name='virtual_buses' | 
+	 *         name='devices' | 
+	 *         name='systems' | 
+	 *         name='abstracts' | 
+	 *         name='connections' | 
+	 *         name='components'
+	 *     )
+	 */
+	protected void sequence_ElementSet(EObject context, ElementSet semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	

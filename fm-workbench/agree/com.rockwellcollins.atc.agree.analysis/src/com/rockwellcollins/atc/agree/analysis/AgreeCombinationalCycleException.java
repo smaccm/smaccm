@@ -8,4 +8,5 @@ public class AgreeCombinationalCycleException extends AgreeException {
         super(message);
         // TODO Auto-generated constructor stub
     }
+
 }

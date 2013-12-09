@@ -50,6 +50,15 @@ public interface ResoluteFactory extends EFactory
   Type createType();
 
   /**
+   * Returns a new object of class '<em>Element Set</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Element Set</em>'.
+   * @generated
+   */
+  ElementSet createElementSet();
+
+  /**
    * Returns a new object of class '<em>Builtin Type</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -147,6 +156,15 @@ public interface ResoluteFactory extends EFactory
    * @generated
    */
   SetType createSetType();
+
+  /**
+   * Returns a new object of class '<em>Quant Arg</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Quant Arg</em>'.
+   * @generated
+   */
+  QuantArg createQuantArg();
 
   /**
    * Returns a new object of class '<em>Claim Arg</em>'.
