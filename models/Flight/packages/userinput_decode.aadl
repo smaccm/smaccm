@@ -13,9 +13,8 @@ end flightmode_state;
 
 data implementation flightmode_state.impl
   subcomponents
-    last_modepwm : data Base_Types::Unsigned_16;
-    last_modepwm_time : data Base_Types::Unsigned_32;
-    valid_modepwm : data Base_Types::Unsigned_16;
+    fm_last_mode : data Base_Types::Unsigned_8;
+    fm_last_mode_time : data Base_Types::Unsigned_32;
 end flightmode_state.impl;
 
 

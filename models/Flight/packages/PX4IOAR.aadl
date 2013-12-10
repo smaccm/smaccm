@@ -29,23 +29,23 @@ public
     
     connections
       -- Motors
-      port motors_and_radios.motors -> M.commands;
-      bus access M.bus_access <-> USART2;
+      conn0 : port motors_and_radios.motors -> M.commands;
+      conn1 : bus access M.bus_access <-> USART2;
      
       -- Buzzer
-      bus access BUZZER.bus_access <-> expansion_connector.alarm;
+      conn2 : bus access BUZZER.bus_access <-> expansion_connector.alarm;
       
       -- RC Radio
-      port RC.commands_internal -> motors_and_radios.flight_control_commands;
-      port flight_control_commands -> RC.commands_external;
-      bus access RC.ppm <-> expansion_connector.ppm;
-      bus access RC.antenna <-> rc_radio;
+      conn3 : port RC.commands_internal -> motors_and_radios.flight_control_commands;
+      conn4 : port flight_control_commands -> RC.commands_external;
+      conn5 : bus access RC.ppm <-> expansion_connector.ppm;
+      conn6 : bus access RC.antenna <-> rc_radio;
       
       -- 3DR Radio
-      port x3DR.mavlink_internal <-> motors_and_radios.mavlink;
-      port mavlink <-> x3DR.mavlink_external;
-      bus access x3DR.usart <-> expansion_connector.usart1;
-      bus access x3DR.antenna <-> x3dr_radio;
+      conn7 : port x3DR.mavlink_internal <-> motors_and_radios.mavlink;
+      conn8 : port mavlink <-> x3DR.mavlink_external;
+      conn9 : bus access x3DR.usart <-> expansion_connector.usart1;
+      conn10 : bus access x3DR.antenna <-> x3dr_radio;
   end PX4IOAR.Impl;
   
   device Motors

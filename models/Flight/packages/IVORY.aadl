@@ -21,8 +21,8 @@ public
       foo_inst: system foo;           
 
     connections
-      feature group motors_and_radios <-> P.motors_and_radios;
-      feature group sensors <-> P.sensors;
+      conn1 : feature group motors_and_radios <-> P.motors_and_radios;
+      conn2 : feature group sensors <-> P.sensors;
   end Software.Impl;
   
   process Ivory_Proc
@@ -37,7 +37,7 @@ public
       BT: thread blinkTask;
       
     connections
-      port UIT.flightmode_out -> BT.flightmode_in;
+      conn : port UIT.flightmode_out -> BT.flightmode_in;
   end Ivory_Proc.Impl;
   
   thread userInputTask

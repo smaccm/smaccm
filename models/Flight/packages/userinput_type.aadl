@@ -18,6 +18,7 @@ data implementation userinput_result.impl
     pitch : data Base_Types::Float;
     yaw : data Base_Types::Float;
     time : data Base_Types::Unsigned_32;
+    xsource : data Base_Types::Unsigned_8;
 end userinput_result.impl;
 
 

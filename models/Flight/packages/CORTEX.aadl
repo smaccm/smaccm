@@ -22,20 +22,20 @@ public
       MATRIX: bus AHB_Bus_Matrix;
       
     connections
-      bus access CPU.bus_access <-> MATRIX;
-      bus access SRAM.bus_access <-> MATRIX;
-      bus access Flash.bus_access <-> MATRIX;
+      conn0 : bus access CPU.bus_access <-> MATRIX;
+      conn1 : bus access SRAM.bus_access <-> MATRIX;
+      conn2 : bus access Flash.bus_access <-> MATRIX;
       
-      bus access MATRIX <-> otg_fs;
-      bus access MATRIX <-> adc123;
-      bus access MATRIX <-> usart6;
-      bus access MATRIX <-> i2c2;
-      bus access MATRIX <-> spi1;
+      conn3 : bus access MATRIX <-> otg_fs;
+      conn4 : bus access MATRIX <-> adc123;
+      conn5 : bus access MATRIX <-> usart6;
+      conn6 : bus access MATRIX <-> i2c2;
+      conn7 : bus access MATRIX <-> spi1;
       
-      bus access MATRIX <-> usart1;
-      bus access MATRIX <-> usart2;
-      bus access MATRIX <-> ppm;
-      bus access MATRIX <-> alarm;
+      conn8 : bus access MATRIX <-> usart1;
+      conn9 : bus access MATRIX <-> usart2;
+      conn10 : bus access MATRIX <-> ppm;
+      conn11 : bus access MATRIX <-> alarm;
   end STM32F415.Impl;
   
   processor ARM_Cortex_M4

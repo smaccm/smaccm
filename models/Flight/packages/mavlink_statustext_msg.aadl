@@ -3,15 +3,8 @@
 package mavlink_statustext_msg
 public
   with Base_Types;
+  with TowerArrays;
   with Data_Model;
-
-data ArrTy_50TyBase_Types_Unsigned_8
-  properties
-    Data_Model::Data_Representation => Array;
-    Data_Model::Base_Type => (classifier (Base_Types::Unsigned_8));
-    Data_Model::Dimension => (50);
-end ArrTy_50TyBase_Types_Unsigned_8;
-
 
 data statustext_msg
   properties
@@ -22,7 +15,7 @@ end statustext_msg;
 data implementation statustext_msg.impl
   subcomponents
     severity : data Base_Types::Unsigned_8;
-    text : data ArrTy_50TyBase_Types_Unsigned_8;
+    text : data TowerArrays::ArrTy_50TyBase_Types_Unsigned_8;
 end statustext_msg.impl;
 
 

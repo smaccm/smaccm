@@ -15,13 +15,14 @@ public
       RC: device RC_Controller; 
 
     connections
-      bus access UAV.radio_access_915Mhz <-> RF_915Mhz_Spectrum;
-      bus access UAV.radio_access_2_4Ghz <-> RF_2_4Ghz_Spectrum;
-      bus access RC.radio_access <-> RF_2_4Ghz_Spectrum;
-      bus access GS.radio_access <-> RF_915Mhz_Spectrum;
+      conn0 : bus access UAV.radio_access_915Mhz <-> RF_915Mhz_Spectrum;
+      conn1 : bus access UAV.radio_access_2_4Ghz <-> RF_2_4Ghz_Spectrum;
+      conn2 :bus access RC.radio_access <-> RF_2_4Ghz_Spectrum;
+      conn3 :bus access GS.radio_access <-> RF_915Mhz_Spectrum;
       
-      port GS.mavlink <-> UAV.mavlink;
-      port RC.flight_control_commands -> UAV.flight_control_commands;
+      conn4 :port GS.mavlink <-> UAV.mavlink;
+      conn5 :port RC.flight_control_commands -> UAV.flight_control_commands;
+      
   end UAS.Impl;
 
   system Ground_Station

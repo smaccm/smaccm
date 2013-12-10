@@ -22,21 +22,21 @@ public
       PX4IOAR: system PX4IOAR::PX4IOAR.Impl; 
     
     connections 
-      data access PX4FMU.sensors -> SW.sensors; 
-      feature group PX4FMU.expansion_slot <-> PX4IOAR.expansion_connector;
+      conn0 :data access PX4FMU.sensors -> SW.sensors; 
+      conn1 :feature group PX4FMU.expansion_slot <-> PX4IOAR.expansion_connector;
  
-      feature group PX4IOAR.motors_and_radios <-> SW.motors_and_radios;
-      port PX4IOAR.mavlink <-> mavlink;
-      port flight_control_commands -> PX4IOAR.flight_control_commands;
+      conn2 :feature group PX4IOAR.motors_and_radios <-> SW.motors_and_radios;
+      conn3 :port PX4IOAR.mavlink <-> mavlink;
+      conn4 :port flight_control_commands -> PX4IOAR.flight_control_commands;
       
-      bus access PX4IOAR.rc_radio <-> radio_access_2_4Ghz;
-      bus access PX4IOAR.x3dr_radio <-> radio_access_915Mhz;      	
+      conn5 :bus access PX4IOAR.rc_radio <-> radio_access_2_4Ghz;
+      conn6 :bus access PX4IOAR.x3dr_radio <-> radio_access_915Mhz;      	
       
     properties
       Actual_Memory_Binding => (reference (PX4FMU.MC.FLASH)) applies to SW.main;
       
   end UAV.Impl;
-
+ 
   feature group motors_and_radios
     features
       motors: provides data access motors_type::motors.impl{

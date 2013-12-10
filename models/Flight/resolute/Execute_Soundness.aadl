@@ -25,10 +25,10 @@ only_gs_encrypt() <=
 
 -- The encryption algorithm used by the Ground Station and Decrypt is e.
 encrypt_algorithm1 : string =
-  property_lookup(flight_gen::decryptTask_uart5_630, SMACCM::Encryption_Algorthim) 
+  property_lookup(flight_gen::decryptTask_uart5, SMACCM::Encryption_Algorthim) 
   
 encrypt_algorithm2 : string =
-  property_lookup(flight_gen::decryptTask_uart1_377, SMACCM::Encryption_Algorthim) 
+  property_lookup(flight_gen::decryptTask_uart1, SMACCM::Encryption_Algorthim) 
 
 authenticated_encryption(e : string) <=
   ** "The encryption algorithm " e " is strong and authenticated. "
@@ -62,7 +62,7 @@ only_receive_decrypt(x : component, v : {component}) <=
 	(not (z in v)) =>
 		  proc_or_thread(z)
 		  and
-          ((class_of(x, flight_gen::decryptTask_uart1_377) or class_of(x, flight_gen::decryptTask_uart5_630)) 
+          ((class_of(x, flight_gen::decryptTask_uart1) or class_of(x, flight_gen::decryptTask_uart5)) 
           	or only_receive_decrypt(z, v union identity(z)))
 
 proc_or_thread(x : component) <=

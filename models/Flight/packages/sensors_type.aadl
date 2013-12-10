@@ -24,7 +24,8 @@ data implementation sensors_result.impl
     xacc : data Base_Types::Float;
     yacc : data Base_Types::Float;
     zacc : data Base_Types::Float;
-    time : data Base_Types::Unsigned_32;
+    ahrs_time : data Base_Types::Unsigned_32;
+    baro_time : data Base_Types::Unsigned_32;
 end sensors_result.impl;
 
 

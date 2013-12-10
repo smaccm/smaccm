@@ -3,15 +3,8 @@
 package mavlink_omnidirectional_flow_msg
 public
   with Base_Types;
+  with TowerArrays;
   with Data_Model;
-
-data ArrTy_10TyBase_Types_Integer_16
-  properties
-    Data_Model::Data_Representation => Array;
-    Data_Model::Base_Type => (classifier (Base_Types::Integer_16));
-    Data_Model::Dimension => (10);
-end ArrTy_10TyBase_Types_Integer_16;
-
 
 data omnidirectional_flow_msg
   properties
@@ -25,8 +18,8 @@ data implementation omnidirectional_flow_msg.impl
     front_distance_m : data Base_Types::Float;
     sensor_id : data Base_Types::Unsigned_8;
     quality : data Base_Types::Unsigned_8;
-    left : data ArrTy_10TyBase_Types_Integer_16;
-    right : data ArrTy_10TyBase_Types_Integer_16;
+    left : data TowerArrays::ArrTy_10TyBase_Types_Integer_16;
+    right : data TowerArrays::ArrTy_10TyBase_Types_Integer_16;
 end omnidirectional_flow_msg.impl;
 
 
