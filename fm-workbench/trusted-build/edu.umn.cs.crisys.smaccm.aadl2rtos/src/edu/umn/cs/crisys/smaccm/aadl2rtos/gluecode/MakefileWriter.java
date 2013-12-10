@@ -58,6 +58,7 @@ public class MakefileWriter {
   String outputDirectoryName;
   
   
+  List<String> cppFiles = new ArrayList<String>();
   List<String> cFiles = new ArrayList<String>();
   List<String> sFiles = new ArrayList<String>();
   List<String> oFiles = new ArrayList<String>();
@@ -75,12 +76,15 @@ public class MakefileWriter {
     for (String s: model.getSourceFiles()) {
       if (s.endsWith(".c")) {
         cFiles.add(s);
+      } else if (s.endsWith(".cpp")) {
+    	  cppFiles.add(s);
       } else if (s.endsWith(".s")) {
         sFiles.add(s);
       } else if (s.endsWith(".o")) {
         oFiles.add(s);
       } else if (s.endsWith(".a")) {
-        aFiles.add(s);
+    	  System.out.println("Lib file: " + s + ".");
+    	  aFiles.add(s);
       } else {
         throw new Aadl2RtosException("Unknown file type: " + s + "when creating makefile.");
       }
@@ -130,6 +134,15 @@ public class MakefileWriter {
     return build;
   }
   
+  String buildCppFileString(String cFile) {
+	    String outputFile = this.getOutputFile(cFile);
+	    String parentDirectory = getParentDirectoryString(cFile); 
+	    String build = 
+	        "\tarm-none-eabi-g++ -ffreestanding -c " + cFile + " -o " + outputFile + 
+	        " $(CFLAGS) -I. " + parentDirectory + " \n";  
+	    return build;
+	  }
+
   String buildSFileString(String sFile) {
     // TODO: Really should use Apache Commons IO
     String outputFile = this.getOutputFile(sFile);
@@ -144,6 +157,9 @@ public class MakefileWriter {
     for (String str: cFiles) {
       sb.append(" " + getOutputFile(str));
     }
+    for (String str: cppFiles) {
+        sb.append(" " + getOutputFile(str));
+      }
     for (String str: sFiles) {
       sb.append(" " + getOutputFile(str));
     }
@@ -192,6 +208,9 @@ public class MakefileWriter {
     out.append(header);
     for (String str: cFiles) {
       out.append(buildCFileString(str));
+    }
+    for (String str: cppFiles) {
+    	out.append(buildCppFileString(str));
     }
     for (String str: sFiles) {
       out.append(buildSFileString(str));

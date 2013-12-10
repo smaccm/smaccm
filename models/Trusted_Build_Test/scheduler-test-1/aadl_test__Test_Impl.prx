@@ -36,6 +36,255 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE DATA OR THE USE OR OTHER DEALINGS
             </trampolines>
         </module>
         <module name="armv7m.vectable">
+            <flash_load_addr>0x8000000</flash_load_addr>
+            <external_irqs>
+                <external_irq>
+                    <handler>exception_preempt_trampoline_wwdg</handler>
+                </external_irq>
+                <external_irq>
+                    <handler>exception_preempt_trampoline_pvd</handler>
+                </external_irq>
+                <external_irq>
+                    <handler>exception_preempt_trampoline_tamp_stamp</handler>
+                </external_irq>
+                <external_irq>
+                    <handler>exception_preempt_trampoline_rtc_wakeup</handler>
+                </external_irq>
+                <external_irq>
+                    <handler>exception_preempt_trampoline_flash</handler>
+                </external_irq>
+                <external_irq>
+                    <handler>exception_preempt_trampoline_rcc</handler>
+                </external_irq>
+                <external_irq>
+                    <handler>exception_preempt_trampoline_exti0</handler>
+                </external_irq>
+                <external_irq>
+                    <handler>exception_preempt_trampoline_exti1</handler>
+                </external_irq>
+                <external_irq>
+                    <handler>exception_preempt_trampoline_exti2</handler>
+                </external_irq>
+                <external_irq>
+                    <handler>exception_preempt_trampoline_exti3</handler>
+                </external_irq>
+                <external_irq>
+                    <handler>exception_preempt_trampoline_exti4</handler>
+                </external_irq>
+                <external_irq>
+                    <handler>exception_preempt_trampoline_dma1_stream0</handler>
+                </external_irq>
+                <external_irq>
+                    <handler>exception_preempt_trampoline_dma1_stream1</handler>
+                </external_irq>
+                <external_irq>
+                    <handler>exception_preempt_trampoline_dma1_stream2</handler>
+                </external_irq>
+                <external_irq>
+                    <handler>exception_preempt_trampoline_dma1_stream3</handler>
+                </external_irq>
+                <external_irq>
+                    <handler>exception_preempt_trampoline_dma1_stream4</handler>
+                </external_irq>
+                <external_irq>
+                    <handler>exception_preempt_trampoline_dma1_stream5</handler>
+                </external_irq>
+                <external_irq>
+                    <handler>exception_preempt_trampoline_dma1_stream6</handler>
+                </external_irq>
+                <external_irq>
+                    <handler>exception_preempt_trampoline_adc</handler>
+                </external_irq>
+                <external_irq>
+                    <handler>exception_preempt_trampoline_can1_tx</handler>
+                </external_irq>
+                <external_irq>
+                    <handler>exception_preempt_trampoline_can1_rx0</handler>
+                </external_irq>
+                <external_irq>
+                    <handler>exception_preempt_trampoline_can1_rx1</handler>
+                </external_irq>
+                <external_irq>
+                    <handler>exception_preempt_trampoline_can1_sce</handler>
+                </external_irq>
+                <external_irq>
+                    <handler>exception_preempt_trampoline_exti9_5</handler>
+                </external_irq>
+                <external_irq>
+                    <handler>exception_preempt_trampoline_tim1_brk_tim9</handler>
+                </external_irq>
+                <external_irq>
+                    <handler>exception_preempt_trampoline_tim1_up_tim10</handler>
+                </external_irq>
+                <external_irq>
+                    <handler>exception_preempt_trampoline_tim1_trg_com_tim11</handler>
+                </external_irq>
+                <external_irq>
+                    <handler>exception_preempt_trampoline_tim1_cc</handler>
+                </external_irq>
+                <external_irq>
+                    <handler>exception_preempt_trampoline_tim2</handler>
+                </external_irq>
+                <external_irq>
+                    <handler>exception_preempt_trampoline_tim3</handler>
+                </external_irq>
+                <external_irq>
+                    <handler>exception_preempt_trampoline_tim4</handler>
+                </external_irq>
+                <external_irq>
+                    <handler>exception_preempt_trampoline_i2c1_ev</handler>
+                </external_irq>
+                <external_irq>
+                    <handler>exception_preempt_trampoline_i2c1_er</handler>
+                </external_irq>
+                <external_irq>
+                    <handler>exception_preempt_trampoline_i2c2_ev</handler>
+                </external_irq>
+                <external_irq>
+                    <handler>exception_preempt_trampoline_i2c2_er</handler>
+                </external_irq>
+                <external_irq>
+                    <handler>exception_preempt_trampoline_spi1</handler>
+                </external_irq>
+                <external_irq>
+                    <handler>exception_preempt_trampoline_spi2</handler>
+                </external_irq>
+                <external_irq>
+                    <handler>exception_preempt_trampoline_usart1</handler>
+                </external_irq>
+                <external_irq>
+                    <handler>exception_preempt_trampoline_usart2</handler>
+                </external_irq>
+                <external_irq>
+                    <handler>exception_preempt_trampoline_usart3</handler>
+                </external_irq>
+                <external_irq>
+                    <handler>exception_preempt_trampoline_exti5_10</handler>
+                </external_irq>
+                <external_irq>
+                    <handler>exception_preempt_trampoline_rtc_alarm</handler>
+                </external_irq>
+                <external_irq>
+                    <handler>exception_preempt_trampoline_otg_fs_wkup</handler>
+                </external_irq>
+                <external_irq>
+                    <handler>exception_preempt_trampoline_tim8_brk_tim12</handler>
+                </external_irq>
+                <external_irq>
+                    <handler>exception_preempt_trampoline_tim8_up_tim13</handler>
+                </external_irq>
+                <external_irq>
+                    <handler>exception_preempt_trampoline_tim8_trg_com_tim14</handler>
+                </external_irq>
+                <external_irq>
+                    <handler>exception_preempt_trampoline_tim8_cc</handler>
+                </external_irq>
+                <external_irq>
+                    <handler>exception_preempt_trampoline_dma1_stream7</handler>
+                </external_irq>
+                <external_irq>
+                    <handler>exception_preempt_trampoline_fsmc</handler>
+                </external_irq>
+                <external_irq>
+                    <handler>exception_preempt_trampoline_sdio</handler>
+                </external_irq>
+                <external_irq>
+                    <handler>exception_preempt_trampoline_tim5</handler>
+                </external_irq>
+                <external_irq>
+                    <handler>exception_preempt_trampoline_spi3</handler>
+                </external_irq>
+                <external_irq>
+                    <handler>exception_preempt_trampoline_uart4</handler>
+                </external_irq>
+                <external_irq>
+                    <handler>exception_preempt_trampoline_uart5</handler>
+                </external_irq>
+                <external_irq>
+                    <handler>exception_preempt_trampoline_tim6_dac</handler>
+                </external_irq>
+                <external_irq>
+                    <handler>exception_preempt_trampoline_tim7</handler>
+                </external_irq>
+                <external_irq>
+                    <handler>exception_preempt_trampoline_dma2_stream0</handler>
+                </external_irq>
+                <external_irq>
+                    <handler>exception_preempt_trampoline_dma2_stream1</handler>
+                </external_irq>
+                <external_irq>
+                    <handler>exception_preempt_trampoline_dma2_stream2</handler>
+                </external_irq>
+                <external_irq>
+                    <handler>exception_preempt_trampoline_dma2_stream3</handler>
+                </external_irq>
+                <external_irq>
+                    <handler>exception_preempt_trampoline_dma2_stream4</handler>
+                </external_irq>
+                <external_irq>
+                    <handler>exception_preempt_trampoline_eth</handler>
+                </external_irq>
+                <external_irq>
+                    <handler>exception_preempt_trampoline_eth_wkup</handler>
+                </external_irq>
+                <external_irq>
+                    <handler>exception_preempt_trampoline_can2_tx</handler>
+                </external_irq>
+                <external_irq>
+                    <handler>exception_preempt_trampoline_can2_rx0</handler>
+                </external_irq>
+                <external_irq>
+                    <handler>exception_preempt_trampoline_can2_rx1</handler>
+                </external_irq>
+                <external_irq>
+                    <handler>exception_preempt_trampoline_can2_sce</handler>
+                </external_irq>
+                <external_irq>
+                    <handler>exception_preempt_trampoline_otg_fs</handler>
+                </external_irq>
+                <external_irq>
+                    <handler>exception_preempt_trampoline_dma2_stream5</handler>
+                </external_irq>
+                <external_irq>
+                    <handler>exception_preempt_trampoline_dma2_stream6</handler>
+                </external_irq>
+                <external_irq>
+                    <handler>exception_preempt_trampoline_dma2_stream7</handler>
+                </external_irq>
+                <external_irq>
+                    <handler>exception_preempt_trampoline_usart6</handler>
+                </external_irq>
+                <external_irq>
+                    <handler>exception_preempt_trampoline_i2c3_ev</handler>
+                </external_irq>
+                <external_irq>
+                    <handler>exception_preempt_trampoline_i2c3_er</handler>
+                </external_irq>
+                <external_irq>
+                    <handler>exception_preempt_trampoline_otg_hs_ep1_out</handler>
+                </external_irq>
+                <external_irq>
+                    <handler>exception_preempt_trampoline_otg_hs_ep1_in</handler>
+                </external_irq>
+                <external_irq>
+                    <handler>exception_preempt_trampoline_otg_hs_wkup</handler>
+                </external_irq>
+                <external_irq>
+                    <handler>exception_preempt_trampoline_otg_hs</handler>
+                </external_irq>
+                <external_irq>
+                    <handler>exception_preempt_trampoline_dcmi</handler>
+                </external_irq>
+                <external_irq>
+                    <handler>exception_preempt_trampoline_cryp</handler>
+                </external_irq>
+                <external_irq>
+                    <handler>exception_preempt_trampoline_hash_rng</handler>
+                </external_irq>
+                <external_irq>
+                    <handler>exception_preempt_trampoline_fpu</handler>
+                </external_irq>
+            </external_irqs>
             <systick>smaccm_thread_calendar</systick>
         </module>
         <module name="armv7m.rtos-kochab">
@@ -45,14 +294,14 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE DATA OR THE USE OR OTHER DEALINGS
             <irqeventid_size>8</irqeventid_size>
             <tasks>
                 <task>
-                    <name>thread_a_instance_0</name>
-                    <entry>Thread_A_Instance_0</entry>
+                    <name>thread_a</name>
+                    <entry>Thread_A</entry>
                     <stack_size>64</stack_size>
                     <priority>10</priority>
                 </task>
                 <task>
-                    <name>thread_b_instance_1</name>
-                    <entry>Thread_B_Instance_1</entry>
+                    <name>thread_b</name>
+                    <entry>Thread_B</entry>
                     <stack_size>64</stack_size>
                     <priority>8</priority>
                 </task>
@@ -62,21 +311,22 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE DATA OR THE USE OR OTHER DEALINGS
                     <name>mutex_datap_instance_1</name>
                 </mutex>
             </mutexes>
+            <semaphores/>
             <irq_events>
                 <irq_event>
                     <name>smaccm_periodic_dispatch_thread_a</name>
                     <task>0</task>
+                    <!--Task: thread_a has the 0th highest priority in the system.-->
                     <sig_set>1</sig_set>
                 </irq_event>
                 <irq_event>
                     <name>smaccm_periodic_dispatch_thread_b</name>
                     <task>1</task>
+                    <!--Task: thread_b has the 1th highest priority in the system.-->
                     <sig_set>1</sig_set>
                 </irq_event>
             </irq_events>
         </module>
         <!--Modules for Thread Entrypoint Files-->
-        <!--Modules for AADL-Generated Task Main Functions-->
-        <module name="gen.Test_Impl_Instance"/>
     </modules>
 </system>

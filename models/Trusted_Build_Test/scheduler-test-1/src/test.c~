@@ -20,7 +20,7 @@ extern void debug_println(const char *msg);
 extern void debug_printhex32(uint32_t val);
 void smaccm_initialize_px4_systick_interrupt();
 
-aadl_test__dt_rec A_data;
+test__dt_rec A_data;
 
 void
 init_A(void) 
@@ -45,7 +45,7 @@ exec_periodic_thread_A(void)
 
 
 uint8_t B_count ; 
-aadl_test__dt_rec B_data;
+test__dt_rec B_data;
  
 void init_B(void) 
 { 

@@ -109,7 +109,7 @@ public class SourceWriter extends AbstractCodeWriter {
 		writeThreadImplMainFunctions();
 		
 		// Write thread instance functions
-		writeThreadInstanceMainFunctions();
+		//writeThreadInstanceMainFunctions();
 
 		// Define main function
 		defineMainFunction();
@@ -312,7 +312,7 @@ public class SourceWriter extends AbstractCodeWriter {
 	private void writeThreadImplMainFunctions() throws IOException {
 
 		for (ThreadImplementation tw : allThreads) {
-			out.append("void " + tw.getGeneratedEntrypoint() + "(int threadID) \n");
+			out.append("void " + tw.getGeneratedEntrypoint() + "(/*int threadID*/) \n");
 			out.append("{\n");
 
 			out.append(Util.ind(1) + "uint32_t millis_from_sys_start = 0;\n");
