@@ -42,7 +42,7 @@ public class ThreadInstance {
 	}
 	
 	public String getKochabThreadId() {
-	  return "TASK_ID_" + (this.getName().toUpperCase());
+	  return "TASK_ID_" + (this.impl.getName().toUpperCase());
 	}
 	
 	public List<ThreadInstancePort> getThreadInstanceInputPorts() {

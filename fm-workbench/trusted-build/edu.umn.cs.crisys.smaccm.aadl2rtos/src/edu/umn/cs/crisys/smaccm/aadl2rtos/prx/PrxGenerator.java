@@ -331,8 +331,8 @@ public class PrxGenerator {
     eec.appendChild(doc.createTextNode(signalName));
     eec = doc.createElement("task");
     ec.appendChild(eec);
+    ec.appendChild(doc.createComment("Task: " + taskId + " has the " + Integer.toString(eventTask) + "th highest priority in the system."));
     eec.appendChild(doc.createTextNode(Integer.toString(eventTask)));
-    eec.appendChild(doc.createComment("Task: " + taskId + " has the " + Integer.toString(eventTask) + "th highest priority in the system."));
     eec = doc.createElement("sig_set");
     ec.appendChild(eec);
     eec.appendChild(doc.createTextNode(Integer.toString(1 << signalNumber)));	  
@@ -411,6 +411,8 @@ public class PrxGenerator {
 		for (String name : model.getLegacyMutexList()) {
 			  createMutexOrSemaphore(e, name, "mutex");
 		}
+		e = doc.createElement("semaphores");
+        parent.appendChild(e);
 		for (String name: model.getLegacySemaphoreList()) {
 		    createMutexOrSemaphore(e, name, "semaphore");
 		}
