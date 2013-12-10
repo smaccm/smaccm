@@ -212,13 +212,14 @@ public class AadlModelParser {
         // If ISR thread, create new ISR, port, and connections to receive from ISR.
         if (threadImplementation.isISRThread()) {
           String signal = threadImplementation.getSmaccmSysSignalOpt();
+          String handler = threadImplementation.getISRHandlerName();
           InterruptServiceRoutine isr = 
-               new InterruptServiceRoutine(signal);
+               new InterruptServiceRoutine(signal, handler);
           this.isrList.add(isr);
-          List<String> signalList = new ArrayList<String>();
-          signalList.add(signal);
+          List<String> handlerList = new ArrayList<String>();
+          handlerList.add(handler);
           MyPort destPort = new MyPort("smaccm_isr_input_port", 
-              signalList, threadImplementation.getFileNames().get(0), null, 
+        		  handlerList, threadImplementation.getFileNames().get(0), null, 
               null, null, threadImplementation, MyPort.PortType.INPUT_EVENT_PORT);
           threadImplementation.addPort(destPort);
           isr.setDestinationPort(destPort);

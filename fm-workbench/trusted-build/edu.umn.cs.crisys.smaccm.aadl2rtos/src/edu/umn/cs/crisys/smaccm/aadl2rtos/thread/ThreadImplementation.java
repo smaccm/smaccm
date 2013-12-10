@@ -31,6 +31,7 @@ public class ThreadImplementation extends ThreadImplementationBase {
 	private EnumerationLiteral dispatchProtocol; 
 	
 	private String smaccmSysSignalOpt = null;
+	private String isrHandlerName = null;
 	
 	// Data port lists
 	private ArrayList<MyPort> inputDataPortList = new ArrayList<MyPort>();
@@ -51,6 +52,7 @@ public class ThreadImplementation extends ThreadImplementationBase {
 
 		// determine whether this thread is 'normal' or ISR.
 		smaccmSysSignalOpt = Util.getStringValueOpt(tti, ThreadUtil.SMACCM_SYS_SIGNAL_NAME);
+		isrHandlerName = Util.getStringValueOpt(tti, ThreadUtil.ISR_HANDLER);
 		isrThread = (getSmaccmSysSignalOpt() != null);
 
 		// create initializer handler, if it exists.
@@ -210,6 +212,10 @@ public class ThreadImplementation extends ThreadImplementationBase {
 	  
 	public String getSmaccmSysSignalOpt() {
 		return smaccmSysSignalOpt;
+	}
+
+	public String getISRHandlerName() {
+		return isrHandlerName;
 	}
 
 	public ExternalHandler getInitializeEntrypointOpt() {

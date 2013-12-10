@@ -13,6 +13,7 @@ import java.util.List;
 public class InterruptServiceRoutine {
 
   String signalName;
+  String handlerName;
   MyPort outputServiceRoutinePort;
   MyPort destPort;
   List<ThreadInstance> destThreads = new ArrayList<ThreadInstance>();
@@ -25,8 +26,12 @@ public class InterruptServiceRoutine {
    * 
    */
   
-  public InterruptServiceRoutine(String signalName) {
+  public InterruptServiceRoutine(String signalName, String handlerName) {
     this.signalName = signalName; 
+    this.handlerName = handlerName;
+    
+   // System.out.println("Signal Name: " + signalName);
+    //System.out.println("Handler Name: " + handlerName);
     this.outputServiceRoutinePort = new MyPort(this); 
   }
   
@@ -55,7 +60,7 @@ public class InterruptServiceRoutine {
   }
   
   public String getHandlerName() {
-    return "smaccm_" + getSignalName(); 
+	  return "smaccm_" + handlerName;
   }
   
   public String getIrqSignalName() {
