@@ -133,6 +133,7 @@ memory_safe_thread(t : thread) <=
   
 ivory_thread(t : thread) <=
   ** "The thread " t " is generated from Ivory" **
+  property_exists(t, SMACCM::Language) and
   property_lookup(t, SMACCM::Language) = "Ivory"
   
 **};

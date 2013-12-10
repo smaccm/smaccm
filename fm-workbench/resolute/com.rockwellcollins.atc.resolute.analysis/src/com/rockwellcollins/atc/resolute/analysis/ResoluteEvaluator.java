@@ -414,13 +414,22 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
         
         if(setName.equals("connections")){
             Set<ResoluteValue> returnSet = new HashSet<ResoluteValue>();
-            //EList<FeatureInstance> features = compInst.getFeatureInstances();
-            //
-            //for(FeatureInstance feature : features){
-            //   addAllFeatureGroupConns(feature, returnSet);
-            //}
-            
-            EList<ConnectionInstance> connections = compInst.getConnectionInstances();
+            if(compInst.getCategory() == ComponentCategory.THREAD){
+                EList<FeatureInstance> features = compInst.getFeatureInstances();
+
+                for(FeatureInstance feature : features){
+                    addAllFeatureGroupConns(feature, returnSet);
+                }
+            }
+
+            //EList<ConnectionInstance> connections = compInst.getConnectionInstances();
+            EList<ConnectionInstance> connections;
+            connections = compInst.getSrcConnectionInstances();
+            for(ConnectionInstance conn : connections){
+                System.out.println(conn);
+                returnSet.add(new NamedElementValue(conn));
+            }
+            connections = compInst.getDstConnectionInstances();
             for(ConnectionInstance conn : connections){
                 System.out.println(conn);
                 returnSet.add(new NamedElementValue(conn));
@@ -718,7 +727,14 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
 
         if (args != null) {
             for (int i = 0; i < args.size(); i++) {
-                text.append(argVals.get(i).toString());
+                ResoluteValue arg = argVals.get(i);
+                String argStr;
+                if(arg != null){
+                    argStr = arg.toString();
+                }else{
+                    argStr = "null";
+                }
+                text.append(argStr);
                 if (i < args.size() - 1) {
                     text.append(", ");
                 }
@@ -1549,7 +1565,6 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
         Set<NamedElement> components = listOfCompLists.pop();
         Arg arg = freeArgs.pop();
         Map<Arg, ResoluteValue> argVals = argMapStack.getFirst();
-        assert (components.size() > 0);
         for (NamedElement el : components) {
             argVals.put(arg, new NamedElementValue(el));
             mapIterateSets(expr, filterExpr, freeArgs, listOfCompLists, valList);
@@ -1612,8 +1627,9 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
         Set<NamedElement> components = listOfCompLists.pop();
 
         if (components.size() == 0) {
-            throw new ResoluteQuantifierException("quantifier references components "
-                    + "of a type which are not present in this instance");
+            //throw new ResoluteQuantifierException("quantifier references components "
+            //        + "of a type which are not present in this instance");
+            return !compl;
         }
 
         Arg arg = freeArgs.pop();

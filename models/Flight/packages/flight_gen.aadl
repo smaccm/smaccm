@@ -81,7 +81,7 @@ thread gcsTransmitTask_uart5
       SMACCM_SYS::CommPrim_Source_Text => "read_gcsTransmitTask_uart5_917_dataport26_988";
     };
     paramReader_985: requires data access Base_Types::Float {
-      Access_Right => read_only;
+      Access_Right => read_only; 
       SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsTransmitTask_uart5_917.h";
       SMACCM_SYS::CommPrim_Source_Text => "read_gcsTransmitTask_uart5_917_dataport25_986";
     };
@@ -236,6 +236,7 @@ thread gcsTransmitTask_uart5
       SMACCM_SYS::CommPrim_Source_Text => "read_gcsTransmitTask_uart5_917_dataport87_919";
     };
   properties
+    SMACCM::Language => "Ivory";
     Source_Text => ("tower_task_usercode_gcsTransmitTask_uart5_917.c");
     Priority => 0;
     Source_Stack_Size => 1024 bytes;
@@ -260,6 +261,7 @@ thread encryptTask_uart5
     };
   properties
     Source_Text => ("tower_task_usercode_encryptTask_uart5_909.c");
+    SMACCM::Language => "Ivory";
     Priority => 1;
     Source_Stack_Size => 256 bytes;
     Dispatch_Protocol => Sporadic;
@@ -611,6 +613,7 @@ thread gcsReceiveTask_uart5
     };
   properties
     Source_Text => ("tower_task_usercode_gcsReceiveTask_uart5_764.c");
+    SMACCM::Language => "Ivory";
     Priority => 2;
     Source_Stack_Size => 1024 bytes;
     Dispatch_Protocol => Sporadic;
@@ -631,7 +634,9 @@ thread decryptTask_uart5
       SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_decryptTask_uart5_756_chan712_763");
     };
   properties
+    SMACCM::Encryption_Algorthim => "AES-128-CTR-HMAC-SHA1";
     Source_Text => ("tower_task_usercode_decryptTask_uart5_756.c");
+    SMACCM::Language => "Ivory";
     Priority => 3;
     Source_Stack_Size => 256 bytes;
     Dispatch_Protocol => Sporadic;
@@ -653,6 +658,7 @@ thread stateProxy
     };
   properties
     Source_Text => ("tower_task_usercode_stateProxy_748.c");
+    SMACCM::Language => "Ivory";
     Priority => 4;
     Source_Stack_Size => 256 bytes;
     Dispatch_Protocol => Sporadic;
@@ -695,6 +701,7 @@ thread datalink
     };
   properties
     Source_Text => ("tower_task_usercode_datalink_715.c");
+    SMACCM::Language => "Ivory";
     Priority => 5;
     Source_Stack_Size => 256 bytes;
     Dispatch_Protocol => Hybrid;
@@ -918,6 +925,7 @@ thread gcsTransmitTask_uart1
     };
   properties
     Source_Text => ("tower_task_usercode_gcsTransmitTask_uart1_598.c");
+    SMACCM::Language => "Ivory";
     Priority => 6;
     Source_Stack_Size => 1024 bytes;
     Dispatch_Protocol => Hybrid;
@@ -941,6 +949,7 @@ thread encryptTask_uart1
     };
   properties
     Source_Text => ("tower_task_usercode_encryptTask_uart1_590.c");
+    SMACCM::Language => "Ivory";
     Priority => 7;
     Source_Stack_Size => 256 bytes;
     Dispatch_Protocol => Sporadic;
@@ -1292,6 +1301,7 @@ thread gcsReceiveTask_uart1
     };
   properties
     Source_Text => ("tower_task_usercode_gcsReceiveTask_uart1_445.c");
+    SMACCM::Language => "Ivory";
     Priority => 8;
     Source_Stack_Size => 1024 bytes;
     Dispatch_Protocol => Sporadic;
@@ -1312,7 +1322,9 @@ thread decryptTask_uart1
       SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_decryptTask_uart1_437_chan393_444");
     };
   properties
+    SMACCM::Encryption_Algorthim => "AES-128-CTR-HMAC-SHA1";    
     Source_Text => ("tower_task_usercode_decryptTask_uart1_437.c");
+    SMACCM::Language => "Ivory";
     Priority => 9;
     Source_Stack_Size => 256 bytes;
     Dispatch_Protocol => Sporadic;
@@ -1334,6 +1346,7 @@ thread stateProxy_429
     };
   properties
     Source_Text => ("tower_task_usercode_stateProxy_429.c");
+    SMACCM::Language => "Ivory";
     Priority => 10;
     Source_Stack_Size => 256 bytes;
     Dispatch_Protocol => Sporadic;
@@ -1376,6 +1389,7 @@ thread datalink_396
     };
   properties
     Source_Text => ("tower_task_usercode_datalink_396.c");
+    SMACCM::Language => "Ivory";
     Priority => 11;
     Source_Stack_Size => 256 bytes;
     Dispatch_Protocol => Hybrid;
@@ -1410,6 +1424,7 @@ thread px4ioar
     };
   properties
     Source_Text => ("tower_task_usercode_px4ioar_335.c");
+    SMACCM::Language => "Ivory";
     Priority => 12;
     Source_Stack_Size => 256 bytes;
     Dispatch_Protocol => Hybrid;
@@ -1444,6 +1459,7 @@ thread sensorsCaptureTask
     };
   properties
     Source_Text => ("tower_task_usercode_sensorsCaptureTask_304.c");
+    SMACCM::Language => "Ivory";
     Priority => 13;
     Source_Stack_Size => 1024 bytes;
     Dispatch_Protocol => Hybrid;
@@ -1467,6 +1483,7 @@ thread stateProxy_296
     };
   properties
     Source_Text => ("tower_task_usercode_stateProxy_296.c");
+    SMACCM::Language => "Ivory";
     Priority => 14;
     Source_Stack_Size => 256 bytes;
     Dispatch_Protocol => Sporadic;
@@ -1488,6 +1505,7 @@ thread ubloxGPS
     };
   properties
     Source_Text => ("tower_task_usercode_ubloxGPS_277.c");
+    SMACCM::Language => "Ivory";
     Priority => 15;
     Source_Stack_Size => 256 bytes;
     Dispatch_Protocol => Sporadic;
@@ -1509,6 +1527,7 @@ thread stateProxy_261
     };
   properties
     Source_Text => ("tower_task_usercode_stateProxy_261.c");
+    SMACCM::Language => "Ivory";
     Priority => 16;
     Source_Stack_Size => 256 bytes;
     Dispatch_Protocol => Sporadic;
@@ -1530,6 +1549,7 @@ thread stateProxy_252
     };
   properties
     Source_Text => ("tower_task_usercode_stateProxy_252.c");
+    SMACCM::Language => "Ivory";
     Priority => 17;
     Source_Stack_Size => 256 bytes;
     Dispatch_Protocol => Sporadic;
@@ -1561,6 +1581,7 @@ thread motmix
     };
   properties
     Source_Text => ("tower_task_usercode_motmix_239.c");
+    SMACCM::Language => "Ivory";
     Priority => 18;
     Source_Stack_Size => 256 bytes;
     Dispatch_Protocol => Sporadic;
@@ -1751,6 +1772,7 @@ thread control
     };
   properties
     Source_Text => ("tower_task_usercode_control_136.c");
+    SMACCM::Language => "Ivory";
     Priority => 19;
     Source_Stack_Size => 256 bytes;
     Dispatch_Protocol => Hybrid;
@@ -1773,6 +1795,7 @@ thread blink
     };
   properties
     Source_Text => ("tower_task_usercode_blink_124.c");
+    SMACCM::Language => "Ivory";
     Priority => 20;
     Source_Stack_Size => 256 bytes;
     Dispatch_Protocol => Hybrid;
@@ -1815,6 +1838,7 @@ thread userInputMux
     };
   properties
     Source_Text => ("tower_task_usercode_userInputMux_102.c");
+    SMACCM::Language => "Ivory";
     Priority => 21;
     Source_Stack_Size => 256 bytes;
     Dispatch_Protocol => Hybrid;
@@ -1842,6 +1866,7 @@ thread flightModeMuxTask
     };
   properties
     Source_Text => ("tower_task_usercode_flightModeMuxTask_88.c");
+    SMACCM::Language => "Ivory";
     Priority => 22;
     Source_Stack_Size => 256 bytes;
     Dispatch_Protocol => Hybrid;
@@ -1870,6 +1895,7 @@ thread armingTask
     };
   properties
     Source_Text => ("tower_task_usercode_armingTask_70.c");
+    SMACCM::Language => "Ivory";
     Priority => 23;
     Source_Stack_Size => 256 bytes;
     Dispatch_Protocol => Hybrid;
@@ -1903,6 +1929,7 @@ thread userMAVInput
     };
   properties
     Source_Text => ("tower_task_usercode_userMAVInput_53.c");
+    SMACCM::Language => "Ivory";
     Priority => 24;
     Source_Stack_Size => 256 bytes;
     Dispatch_Protocol => Sporadic;
@@ -1923,6 +1950,7 @@ thread userPPMInput
     };
   properties
     Source_Text => ("tower_task_usercode_userPPMInput_40.c");
+    SMACCM::Language => "Ivory";
     Priority => 25;
     Source_Stack_Size => 256 bytes;
     Dispatch_Protocol => Hybrid;
@@ -1946,6 +1974,7 @@ thread uartISR
   properties
     Dispatch_Protocol => Sporadic;
     Source_Text => ("tower_signal_usercode_uartISR_700.c");
+    SMACCM::Language => "Ivory";
     Priority => 26;
     SMACCM_SYS::Signal_Name => "UART5_IRQHandler";
 end uartISR;
@@ -1966,6 +1995,7 @@ thread uartISR_381
   properties
     Dispatch_Protocol => Sporadic;
     Source_Text => ("tower_signal_usercode_uartISR_381.c");
+    SMACCM::Language => "Ivory";
     Priority => 27;
     SMACCM_SYS::Signal_Name => "USART1_IRQHandler";
 end uartISR_381;
@@ -1986,6 +2016,7 @@ thread uartISR_330
   properties
     Dispatch_Protocol => Sporadic;
     Source_Text => ("tower_signal_usercode_uartISR_330.c");
+    SMACCM::Language => "Ivory";
     Priority => 28;
     SMACCM_SYS::Signal_Name => "USART2_IRQHandler";
 end uartISR_330;
@@ -2006,6 +2037,7 @@ thread uartISR_271
   properties
     Dispatch_Protocol => Sporadic;
     Source_Text => ("tower_signal_usercode_uartISR_271.c");
+    SMACCM::Language => "Ivory";
     Priority => 29;
     SMACCM_SYS::Signal_Name => "USART6_IRQHandler";
 end uartISR_271;
@@ -2026,7 +2058,7 @@ system implementation Software.impl
   	main : process flight_gen_process.impl;
   	
   connections
-    conn0 : data access main.sensors -> sensors;
+    conn0 : data access sensors -> main.sensors;
     conn1 : feature group main.motors_and_radios <-> motors_and_radios;
     conn2 : feature group gcs_transmit <-> main.gcs_transmit;
     conn3 : feature group gcs_receive <-> main.gcs_receive;
@@ -2463,7 +2495,7 @@ conn292:     data access dataport38 -> userPPMInput_inst.userInput;
 
      --connections added by rockwell collins to link in hardware
 conn294:     data access dataport260 -> motors_and_radios.motors;
-conn295:     data access dataport0 -> sensors;
+conn295:     data access sensors -> dataport0;
 
      --mavlink transmission connections
 conn298:     data access dataport33 -> gcs_transmit.param1;
