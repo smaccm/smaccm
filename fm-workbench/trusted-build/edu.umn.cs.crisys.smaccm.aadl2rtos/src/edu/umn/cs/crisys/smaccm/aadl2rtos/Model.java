@@ -60,7 +60,8 @@ public class Model {
 	private List<InterruptServiceRoutine> isrList;
 	private List<SharedData> sharedDataList;
 	private ThreadCalendar threadCalendar;
-	private Set<String> sourceFiles = new HashSet<String>(); 
+	private Set<String> sourceFiles = new HashSet<String>();
+	private List<String> libraryFiles = new ArrayList<String>(); 	
 
 	private List<LegacyThreadImplementation> legacyThreadList;
 	private List<String> legacyMutexList;
@@ -79,6 +80,7 @@ public class Model {
                List<InterruptServiceRoutine> isrList, 
                ThreadCalendar threadCalendar, 
                Set<String> sourceFiles, 
+               List<String> libraryFiles, 
                List<SharedData> sharedDataList,
                List<LegacyThreadImplementation> legacyThreadList,
                List<String> legacyMutexList,
@@ -88,6 +90,7 @@ public class Model {
                boolean generateSystickIRQ) {
 	  this.sharedDataList = sharedDataList; 
 	  this.sourceFiles = sourceFiles;
+	  this.libraryFiles = libraryFiles;
 		this.threadImplementationMap = threadImplementationMap;
 		this.threadImplementationList = 
 		      new ArrayList<ThreadImplementation>(threadImplementationMap.values());
@@ -128,9 +131,17 @@ public class Model {
 	  return this.sourceFiles; 
 	}
 	
+	public List<String> getLibraryFiles()  {
+		return this.libraryFiles; 
+	}
+	
 	public void addSourceFile(String fileName) {
 	  this.sourceFiles.add(fileName);
 	}
+	
+	public void addLibraryFile(String fileName) {
+		this.libraryFiles.add(fileName);
+	}	
 	
 	public List<InterruptServiceRoutine> getISRList() {
 	  return this.isrList;

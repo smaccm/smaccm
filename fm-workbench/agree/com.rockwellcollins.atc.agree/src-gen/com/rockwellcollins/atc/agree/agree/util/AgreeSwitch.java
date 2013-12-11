@@ -149,7 +149,6 @@ public class AgreeSwitch<T> extends Switch<T>
       {
         EqStatement eqStatement = (EqStatement)theEObject;
         T result = caseEqStatement(eqStatement);
-        if (result == null) result = caseNamedElement(eqStatement);
         if (result == null) result = caseSpecStatement(eqStatement);
         if (result == null) result = caseElement(eqStatement);
         if (result == null) result = defaultCase(theEObject);

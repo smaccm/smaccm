@@ -1,197 +1,155 @@
 grammar com.rockwellcollins.atc.agree.Agree with org.osate.xtext.aadl2.properties.Properties
 
 generate agree "http://www.rockwellcollins.com/atc/agree/Agree"
-
 import "platform:/resource/org.osate.aadl2/model/aadl2.ecore" as aadl2
 
 NamedElement returns aadl2::NamedElement:
 	Arg
-|	FnDefExpr
-|   PropertyStatement
-|   ConstStatement
-|   EqStatement
-;
+	| FnDefExpr
+	| PropertyStatement
+	| ConstStatement;
 
 Element returns aadl2::Element:
 	Expr
-|	Type
-|   AgreeContract
-|   SpecStatement
-|   NodeStmt
-|   NodeBodyExpr
-;
+	| Type
+	| AgreeContract
+	| SpecStatement
+	| NodeStmt
+	| NodeBodyExpr
+	| EqStatement;
 
 Namespace returns aadl2::Namespace:
-	NodeDefExpr
-;
+	NodeDefExpr;
 
 AnnexLibrary returns aadl2::AnnexLibrary:
-	AgreeLibrary
-;
+	AgreeLibrary;
 
 AnnexSubclause returns aadl2::AnnexSubclause:
-	AgreeSubclause
-;
+	AgreeSubclause;
 
 AgreeLibrary:
-{AgreeContractLibrary} contract=AgreeContract
-;
+	{AgreeContractLibrary} contract=AgreeContract;
 
 AgreeSubclause:
-{AgreeContractSubclause} contract=AgreeContract
-;
+	{AgreeContractSubclause} contract=AgreeContract;
 
 AgreeContract returns Contract:
-	{AgreeContract} (specs+=SpecStatement)+
-;
+	{AgreeContract} (specs+=SpecStatement)+;
 
 SpecStatement:
-	{AssumeStatement}     'assume' str=STRING ':' expr=Expr ';'
-|   {GuaranteeStatement}  'guarantee' str=STRING ':' expr=Expr ';'
-|   {AssertStatement}     'assert' expr=Expr ';'
-|   {ParamStatement}      'parameter' expr=Expr ':' type=Type ';'
-|   {LemmaStatement}      'lemma' str=STRING ':' expr=Expr ';'
-|   {LiftStatement}       'lift' subcomp=NestedDotID ';'
-|   PropertyStatement
-|   ConstStatement
-|   EqStatement
-|   FnDefExpr
-|   NodeDefExpr
-;
+	{AssumeStatement} 'assume' str=STRING ':' expr=Expr ';'
+	| {GuaranteeStatement} 'guarantee' str=STRING ':' expr=Expr ';'
+	| {AssertStatement} 'assert' expr=Expr ';'
+	| {ParamStatement} 'parameter' expr=Expr ':' type=Type ';'
+	| {LemmaStatement} 'lemma' str=STRING ':' expr=Expr ';'
+	| {LiftStatement} 'lift' subcomp=NestedDotID ';'
+	| PropertyStatement
+	| ConstStatement
+	| EqStatement
+	| FnDefExpr
+	| NodeDefExpr;
 
 NamedCallDef returns aadl2::NamedElement:
-	CallDef
-;
+	CallDef;
 
 CallDef returns CallDef:
 	FnDefExpr
-|   NodeDefExpr
-;
+	| NodeDefExpr;
 
 PropertyStatement:
-	'property' name=ID '=' expr=Expr ';'
-;
+	'property' name=ID '=' expr=Expr ';';
 
 ConstStatement:
-	'const' name=ID ':' type=Type '=' expr=Expr ';'
-;
+	'const' name=ID ':' type=Type '=' expr=Expr ';';
 
 EqStatement:
-	'eq' (lhs+=Arg (',' lhs+=Arg)*) ('=' expr=Expr)? ';'
-;
+	'eq' (lhs+=Arg (',' lhs+=Arg)*) ('=' expr=Expr)? ';';
 
 FnDefExpr:
-	 'fun' name=ID '(' args+=Arg (',' args+=Arg)* ')' ':' type=Type '=' expr=Expr ';'
-;
+	'fun' name=ID '(' args+=Arg (',' args+=Arg)* ')' ':' type=Type '=' expr=Expr ';';
 
 NodeDefExpr:
 	'node' name=ID '(' (args+=Arg (',' args+=Arg)*)? ')' 'returns'
-				   '(' (rets+=Arg (',' rets+=Arg)*)? ')' ';'
-	nodeBody=NodeBodyExpr
-;
+	'(' (rets+=Arg (',' rets+=Arg)*)? ')' ';'
+	nodeBody=NodeBodyExpr;
 
-NodeBodyExpr: 
-	('var' (locs+=Arg ';')+)? 
-	'let' 
-		(stmts+=NodeStmt)+
-	'tel' ';'  	
-;
+NodeBodyExpr:
+	('var' (locs+=Arg ';')+)?
+	'let'
+	(stmts+=NodeStmt)+
+	'tel' ';';
 
-NodeStmt: 
-	{NodeEq}	lhs+=[Arg] (',' lhs+=[Arg])* '=' expr=Expr ';'
-|   {NodeLemma} 'lemma' str=STRING ':' expr=Expr ';'
-;
+NodeStmt:
+	{NodeEq} lhs+=[Arg] (',' lhs+=[Arg])* '=' expr=Expr ';'
+	| {NodeLemma} 'lemma' str=STRING ':' expr=Expr ';';
 
 Arg returns Arg:
-	name=ID ':' type=Type
-;
+	name=ID ':' type=Type;
 
 Type:
-	string=('real' | 'bool' | 'int')
-;
+	string=('real' | 'bool' | 'int');
 
 Expr returns Expr:
-	ArrowExpr
-;
+	ArrowExpr;
 
 ArrowExpr returns Expr:
-	ImpliesExpr (=>({BinaryExpr.left=current} op='->') right=ImpliesExpr)?
-;
-
+	ImpliesExpr (=> ({BinaryExpr.left=current} op='->') right=ImpliesExpr)?;
 
 ImpliesExpr returns Expr:
-	EquivExpr (=>({BinaryExpr.left=current} op='=>') right=EquivExpr)?
-;
-
+	EquivExpr (=> ({BinaryExpr.left=current} op='=>') right=EquivExpr)?;
 
 EquivExpr returns Expr:
-	OrExpr (=>({BinaryExpr.left=current} op='<=>') right=OrExpr)?
-;
+	OrExpr (=> ({BinaryExpr.left=current} op='<=>') right=OrExpr)?;
 
 OrExpr returns Expr:
-	AndExpr (=>({BinaryExpr.left=current} op='or') right=AndExpr)*
-;
+	AndExpr (=> ({BinaryExpr.left=current} op='or') right=AndExpr)*;
 
 AndExpr returns Expr:
-	RelateExpr (=>({BinaryExpr.left=current} op='and') right=RelateExpr)*
-;
+	RelateExpr (=> ({BinaryExpr.left=current} op='and') right=RelateExpr)*;
 
 RelateOp:
-	'<' | '<=' | '>' | '>=' | '=' | '<>' | '!='
-;
+	'<' | '<=' | '>' | '>=' | '=' | '<>' | '!=';
 
 RelateExpr returns Expr:
-	AddSubExpr (=>({BinaryExpr.left=current} op=RelateOp) right=AddSubExpr)?
-;
+	AddSubExpr (=> ({BinaryExpr.left=current} op=RelateOp) right=AddSubExpr)?;
 
 AddSubExpr returns Expr:
-	MultDivExpr (=>({BinaryExpr.left=current} op=('+'|'-')) right=MultDivExpr)*
-;
+	MultDivExpr (=> ({BinaryExpr.left=current} op=('+' | '-')) right=MultDivExpr)*;
 
 MultDivExpr returns Expr:
-	UnaryExpr (=>({BinaryExpr.left=current} op=('*'|'/'|'div'|'mod')) right=UnaryExpr)*
-;
+	UnaryExpr (=> ({BinaryExpr.left=current} op=('*' | '/' | 'div' | 'mod')) right=UnaryExpr)*;
 
 UnaryExpr returns Expr:
-	{UnaryExpr} op=('-'|'not') expr=UnaryExpr
-|	IfThenElseExpr
-;
+	{UnaryExpr} op=('-' | 'not') expr=UnaryExpr
+	| IfThenElseExpr;
 
 IfThenElseExpr returns Expr:
-    {IfThenElseExpr}'if' a=Expr 'then' b=Expr 'else' c=Expr
-|   PreDefFnExpr
-;
+	{IfThenElseExpr} 'if' a=Expr 'then' b=Expr 'else' c=Expr
+	| PreDefFnExpr;
 
 PreDefFnExpr returns Expr:
 	{PrevExpr} 'prev' '(' delay=Expr ',' init=Expr ')'
-|	{NextExpr} 'next' '(' expr=Expr ')'
-|   {GetPropertyExpr} 'Get_Property' '(' component=Expr ',' prop=Expr ')'
-| TermExpr
-;
+	| {NextExpr} 'next' '(' expr=Expr ')'
+	| {GetPropertyExpr} 'Get_Property' '(' component=Expr ',' prop=Expr ')'
+	| TermExpr;
 
 PreDefFnNames:
 	'prev'
-|	'next'
-|	'Get_Property'
-;
-
+	| 'next'
+	| 'Get_Property';
 
 TermExpr returns Expr:
-	{IdExpr} id=[aadl2::NamedElement | QID ]
-|   NestedDotID ({FnCallExpr.fn=current} '(' (args+=Expr (',' args+=Expr)*)? ')')?
-|	{IntLitExpr} val=INTEGER_LIT
-|	{PreExpr} 'pre' '(' expr=Expr ')'
-|   {RealLitExpr} val=REAL_LIT
-|   {BoolLitExpr} val=BooleanLiteral
-|   {ThisExpr} 'this' ('.' subThis=NestedDotID)?
-| '(' Expr ')'
-;
-
+	{IdExpr} id=[aadl2::NamedElement|QID]
+	| NestedDotID ({FnCallExpr.fn=current} '(' (args+=Expr (',' args+=Expr)*)? ')')?
+	| {IntLitExpr} val=INTEGER_LIT
+	| {PreExpr} 'pre' '(' expr=Expr ')'
+	| {RealLitExpr} val=REAL_LIT
+	| {BoolLitExpr} val=BooleanLiteral
+	| {ThisExpr} 'this' ('.' subThis=NestedDotID)?
+	| '(' Expr ')';
 
 NestedDotID:
-	base=[aadl2::NamedElement | ID] ('.' sub=NestedDotID)?
-;
+	base=[aadl2::NamedElement|ID] ('.' sub=NestedDotID)?;
 
 QID:
-	ID '::' ID
-;
+	ID '::' ID;

@@ -4,7 +4,7 @@ package com.rockwellcollins.atc.agree.agree;
 
 import org.eclipse.emf.common.util.EList;
 
-import org.osate.aadl2.NamedElement;
+import org.osate.aadl2.Element;
 
 /**
  * <!-- begin-user-doc -->
@@ -23,7 +23,7 @@ import org.osate.aadl2.NamedElement;
  * @model
  * @generated
  */
-public interface EqStatement extends NamedElement, SpecStatement
+public interface EqStatement extends Element, SpecStatement
 {
   /**
    * Returns the value of the '<em><b>Lhs</b></em>' containment reference list.

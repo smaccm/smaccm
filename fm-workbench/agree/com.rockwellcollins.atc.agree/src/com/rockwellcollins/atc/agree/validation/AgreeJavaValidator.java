@@ -391,16 +391,42 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 
     @Check
     public void checkEqStatement(EqStatement eqStat) {
-
-        EObject tempObj = eqStat;
-        while (!(tempObj instanceof AadlPackage)) {
-            if (tempObj.eContainer() instanceof AnnexLibrary) {
-                error(eqStat, "Equation statments are only allowed in component annexes");
-                break;
-            }
-            tempObj = tempObj.eContainer();
+        AnnexLibrary library = EcoreUtil2.getContainerOfType(eqStat, AnnexLibrary.class);
+        if (library != null) {
+            error(eqStat, "Equation statments are only allowed in component annexes");
         }
         checkMultiAssignEq(eqStat, eqStat.getLhs(), eqStat.getExpr());
+    }
+
+    @Check
+    public void checkNameOverlap(AgreeContract contract) {
+        ComponentImplementation ci = EcoreUtil2.getContainerOfType(contract,
+                ComponentImplementation.class);
+        if (ci == null) {
+            return;
+        }
+
+        Set<String> parentNames = getParentNames(ci);
+        for (AgreeSubclause subclause : EcoreUtil2.getAllContentsOfType(ci, AgreeSubclause.class)) {
+            List<NamedElement> es = EcoreUtil2.getAllContentsOfType(subclause, NamedElement.class);
+            for (NamedElement e : es) {
+                if (parentNames.contains(e.getName())) {
+                    error(e, e.getName() + " already defined in component type contract");
+                }
+            }
+        }
+    }
+
+    private Set<String> getParentNames(ComponentImplementation ci) {
+        Set<String> result = new HashSet<>();
+        ComponentType ct = ci.getType();
+        for (AgreeSubclause subclause : EcoreUtil2.getAllContentsOfType(ct, AgreeSubclause.class)) {
+            List<NamedElement> es = EcoreUtil2.getAllContentsOfType(subclause, NamedElement.class);
+            for (NamedElement e : es) {
+                result.add(e.getName());
+            }
+        }
+        return result;
     }
 
     @Check
@@ -414,6 +440,18 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
         if (!matches(BOOL, exprType)) {
             error(nodeLemma, "Expression for lemma statement is of type '" + exprType
                     + "' but must be of type 'bool'");
+        }
+    }
+
+    @Check
+    public void checkNodeStmt(NodeStmt nodeStmt) {
+        List<NestedDotID> dotIds = EcoreUtil2.getAllContentsOfType(nodeStmt, NestedDotID.class);
+        for (NestedDotID dotId : dotIds) {
+            NamedElement id = getFinalNestId(dotId);
+            if (!(id instanceof Arg) && !(id instanceof ConstStatement)
+                    && !(id instanceof NodeDefExpr)) {
+                error(dotId, "Only arguments, constants, and node calls allowed within a node");
+            }
         }
     }
 

@@ -25,13 +25,12 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cFnDefExprParserRuleCall_1 = (RuleCall)cAlternatives.eContents().get(1);
 		private final RuleCall cPropertyStatementParserRuleCall_2 = (RuleCall)cAlternatives.eContents().get(2);
 		private final RuleCall cConstStatementParserRuleCall_3 = (RuleCall)cAlternatives.eContents().get(3);
-		private final RuleCall cEqStatementParserRuleCall_4 = (RuleCall)cAlternatives.eContents().get(4);
 		
 		//NamedElement returns aadl2::NamedElement:
-		//	Arg | FnDefExpr | PropertyStatement | ConstStatement | EqStatement;
+		//	Arg | FnDefExpr | PropertyStatement | ConstStatement;
 		public ParserRule getRule() { return rule; }
 
-		//Arg | FnDefExpr | PropertyStatement | ConstStatement | EqStatement
+		//Arg | FnDefExpr | PropertyStatement | ConstStatement
 		public Alternatives getAlternatives() { return cAlternatives; }
 
 		//Arg
@@ -45,9 +44,6 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 
 		//ConstStatement
 		public RuleCall getConstStatementParserRuleCall_3() { return cConstStatementParserRuleCall_3; }
-
-		//EqStatement
-		public RuleCall getEqStatementParserRuleCall_4() { return cEqStatementParserRuleCall_4; }
 	}
 
 	public class ElementElements extends AbstractParserRuleElementFinder {
@@ -59,12 +55,13 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cSpecStatementParserRuleCall_3 = (RuleCall)cAlternatives.eContents().get(3);
 		private final RuleCall cNodeStmtParserRuleCall_4 = (RuleCall)cAlternatives.eContents().get(4);
 		private final RuleCall cNodeBodyExprParserRuleCall_5 = (RuleCall)cAlternatives.eContents().get(5);
+		private final RuleCall cEqStatementParserRuleCall_6 = (RuleCall)cAlternatives.eContents().get(6);
 		
 		//Element returns aadl2::Element:
-		//	Expr | Type | AgreeContract | SpecStatement | NodeStmt | NodeBodyExpr;
+		//	Expr | Type | AgreeContract | SpecStatement | NodeStmt | NodeBodyExpr | EqStatement;
 		public ParserRule getRule() { return rule; }
 
-		//Expr | Type | AgreeContract | SpecStatement | NodeStmt | NodeBodyExpr
+		//Expr | Type | AgreeContract | SpecStatement | NodeStmt | NodeBodyExpr | EqStatement
 		public Alternatives getAlternatives() { return cAlternatives; }
 
 		//Expr
@@ -84,6 +81,9 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 
 		//NodeBodyExpr
 		public RuleCall getNodeBodyExprParserRuleCall_5() { return cNodeBodyExprParserRuleCall_5; }
+
+		//EqStatement
+		public RuleCall getEqStatementParserRuleCall_6() { return cEqStatementParserRuleCall_6; }
 	}
 
 	public class NamespaceElements extends AbstractParserRuleElementFinder {
@@ -2098,7 +2098,7 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 
 	
 	//NamedElement returns aadl2::NamedElement:
-	//	Arg | FnDefExpr | PropertyStatement | ConstStatement | EqStatement;
+	//	Arg | FnDefExpr | PropertyStatement | ConstStatement;
 	public NamedElementElements getNamedElementAccess() {
 		return (pNamedElement != null) ? pNamedElement : (pNamedElement = new NamedElementElements());
 	}
@@ -2108,7 +2108,7 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 	}
 
 	//Element returns aadl2::Element:
-	//	Expr | Type | AgreeContract | SpecStatement | NodeStmt | NodeBodyExpr;
+	//	Expr | Type | AgreeContract | SpecStatement | NodeStmt | NodeBodyExpr | EqStatement;
 	public ElementElements getElementAccess() {
 		return (pElement != null) ? pElement : (pElement = new ElementElements());
 	}
