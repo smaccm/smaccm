@@ -22,7 +22,7 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
-import org.osate.aadl2.impl.NamedElementImpl;
+import org.osate.aadl2.impl.ElementImpl;
 
 /**
  * <!-- begin-user-doc -->
@@ -38,7 +38,7 @@ import org.osate.aadl2.impl.NamedElementImpl;
  *
  * @generated
  */
-public class EqStatementImpl extends NamedElementImpl implements EqStatement
+public class EqStatementImpl extends ElementImpl implements EqStatement
 {
   /**
    * The cached value of the '{@link #getLhs() <em>Lhs</em>}' containment reference list.

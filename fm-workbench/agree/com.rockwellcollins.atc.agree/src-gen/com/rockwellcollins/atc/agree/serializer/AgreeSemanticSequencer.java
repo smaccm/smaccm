@@ -335,7 +335,6 @@ public class AgreeSemanticSequencer extends PropertiesSemanticSequencer {
 			case AgreePackage.EQ_STATEMENT:
 				if(context == grammarAccess.getElementRule() ||
 				   context == grammarAccess.getEqStatementRule() ||
-				   context == grammarAccess.getNamedElementRule() ||
 				   context == grammarAccess.getSpecStatementRule()) {
 					sequence_EqStatement(context, (EqStatement) semanticObject); 
 					return; 

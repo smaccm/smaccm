@@ -116,16 +116,6 @@ ruleNamedElement returns [EObject current=null]
         $current = $this_ConstStatement_3.current; 
         afterParserOrEnumRuleCall();
     }
-
-    |
-    { 
-        newCompositeNode(grammarAccess.getNamedElementAccess().getEqStatementParserRuleCall_4()); 
-    }
-    this_EqStatement_4=ruleEqStatement
-    { 
-        $current = $this_EqStatement_4.current; 
-        afterParserOrEnumRuleCall();
-    }
 )
 ;
 

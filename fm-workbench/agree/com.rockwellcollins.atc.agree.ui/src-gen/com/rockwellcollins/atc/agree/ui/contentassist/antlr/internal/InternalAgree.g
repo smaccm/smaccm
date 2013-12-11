@@ -1877,12 +1877,6 @@ rule__NamedElement__Alternatives
 { after(grammarAccess.getNamedElementAccess().getConstStatementParserRuleCall_3()); }
 )
 
-    |(
-{ before(grammarAccess.getNamedElementAccess().getEqStatementParserRuleCall_4()); }
-	ruleEqStatement
-{ after(grammarAccess.getNamedElementAccess().getEqStatementParserRuleCall_4()); }
-)
-
 ;
 finally {
 	restoreStackSize(stackSize);
