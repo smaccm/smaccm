@@ -448,8 +448,9 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
         List<NestedDotID> dotIds = EcoreUtil2.getAllContentsOfType(nodeStmt, NestedDotID.class);
         for (NestedDotID dotId : dotIds) {
             NamedElement id = getFinalNestId(dotId);
-            if (!(id instanceof Arg) && !(id instanceof ConstStatement)) {
-                error(dotId, "Only arguments and constants allowed within a node");
+            if (!(id instanceof Arg) && !(id instanceof ConstStatement)
+                    && !(id instanceof NodeDefExpr)) {
+                error(dotId, "Only arguments, constants, and node calls allowed within a node");
             }
         }
     }
