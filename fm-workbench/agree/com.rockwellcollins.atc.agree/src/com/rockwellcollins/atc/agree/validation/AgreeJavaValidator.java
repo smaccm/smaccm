@@ -416,7 +416,18 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
                     + "' but must be of type 'bool'");
         }
     }
-
+    
+    @Check
+    public void checkNodeStmt(NodeStmt nodeStmt) {
+        List<NestedDotID> dotIds = EcoreUtil2.getAllContentsOfType(nodeStmt, NestedDotID.class);
+        for (NestedDotID dotId : dotIds) {
+            NamedElement id = getFinalNestId(dotId);
+            if (!(id instanceof Arg) && !(id instanceof ConstStatement)) {
+                error(dotId, "Only arguments and constants allowed within a node");
+            }
+        }
+    }
+    
     @Check
     public void checkNodeDef(NodeDefExpr nodeDefExpr) {
 
