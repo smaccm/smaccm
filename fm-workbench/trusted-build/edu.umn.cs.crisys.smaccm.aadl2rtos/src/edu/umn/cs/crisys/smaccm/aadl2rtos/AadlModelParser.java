@@ -95,7 +95,8 @@ public class AadlModelParser {
 	    new HashMap<DataSubcomponentImpl, SharedData>();
 	
 	private HashMap<PortImpl, MyPort> portMap = new HashMap<PortImpl, MyPort>();
-	private HashSet<String> fileNames =new HashSet<String>();
+	private HashSet<String> sourceFileNames = new HashSet<String>();
+	private List<String> libraryFileNames = new ArrayList<String>();	
 	private ArrayList<Connection> connectionList;
 	private ArrayList<InterruptServiceRoutine> isrList = new ArrayList<InterruptServiceRoutine>();
 	private List<String> legacyMutexList = new ArrayList<String>();
@@ -277,23 +278,28 @@ public class AadlModelParser {
 	    for (Dispatcher d: i.getDispatcherList()) {
 	      for (ExternalHandler h: d.getExternalHandlerList()) {
 	        if (h.getHandlerFileName() != null) {
-	          this.fileNames.add(h.getHandlerFileName());
+	          this.sourceFileNames.add(h.getHandlerFileName());
 	        }
 	      }
 	    }
-	    this.fileNames.addAll(i.getFileNames());
+	    this.sourceFileNames.addAll(i.getFileNames());
 	  }
 	  
     // create initializer handler, if it exists.
     List<String> topLevelFileNames = 
         Util.getSourceTextListOpt(this.systemImplementation, ThreadUtil.SOURCE_TEXT);
-    if (topLevelFileNames != null) {
-      this.fileNames.addAll(topLevelFileNames);
-    }
-    
-    for (String s: this.fileNames) {
-      logger.status("Referenced File: " + s);
-    }
+ 
+		if (topLevelFileNames != null) {
+			for (String s : topLevelFileNames) {
+				logger.status("Referenced File: " + s);
+
+				if (s.endsWith(".a")) {
+					this.libraryFileNames.add(s);
+				} else {
+					this.sourceFileNames.add(s);
+				}
+			}
+		}
 	}
 	
 	private void initializeLegacyIRQs() {
@@ -578,9 +584,13 @@ public class AadlModelParser {
 	  return this.calendar;
 	}
 	
-	public Set<String> getFileNames() {
-	  return this.fileNames;
+	public Set<String> getSourceFileNames() {
+	  return this.sourceFileNames;
 	}
+	
+	public List<String> getLibraryFileNames() {
+		return this.libraryFileNames;
+	}	
 
 	public List<LegacyThreadImplementation> getLegacyThreadList() {
 		return this.legacyThreadList;

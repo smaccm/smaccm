@@ -12,6 +12,8 @@ import java.util.List;
 
 // import org.apache.commons.io.FilenameUtils;
 
+import java.util.Set;
+
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosException;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Model;
 
@@ -73,7 +75,10 @@ public class MakefileWriter {
     // add the directories if they do not exist.
     outputDirectory.mkdirs();
     
-    for (String s: model.getSourceFiles()) {
+    Set<String> sourceFiles = model.getSourceFiles();
+    List<String> libraryFiles = model.getLibraryFiles();
+    
+    for (String s: sourceFiles) {
       if (s.endsWith(".c")) {
         cFiles.add(s);
       } else if (s.endsWith(".cpp")) {
@@ -82,13 +87,19 @@ public class MakefileWriter {
         sFiles.add(s);
       } else if (s.endsWith(".o")) {
         oFiles.add(s);
-      } else if (s.endsWith(".a")) {
-    	  System.out.println("Lib file: " + s + ".");
-    	  aFiles.add(s);
       } else {
         throw new Aadl2RtosException("Unknown file type: " + s + "when creating makefile.");
       }
     }
+  
+    for (String s: libraryFiles) {
+        if (s.endsWith(".a")) {
+      	  aFiles.add(s);
+        } else {
+          throw new Aadl2RtosException("Unknown file type: " + s + "when creating makefile.");
+        }
+      }
+   
     /*
      * add OS files to files.
      */
