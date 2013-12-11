@@ -1245,28 +1245,43 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
             Property accessRightProp = EMFIndexRetrieval.getPropertyDefinitionInWorkspace(
                     OsateResourceUtil.getResourceSet(), "Memory_Properties::Access_Right");
             
-            
             //code for data accesses
             if(allDest instanceof FeatureInstance && 
                     ((FeatureInstance)allDest).getCategory() == FeatureCategory.DATA_ACCESS){
                 EnumerationLiteral lit = PropertyUtils.getEnumLiteral(allDest, accessRightProp);
                 if(lit.getName().equals("read_write") || lit.getName().equals("write_only")){
-                    result = new NamedElementValue((NamedElement)allDest.eContainer());
+                    NamedElement namedEl = allDest;
+                    while(!(namedEl instanceof ComponentInstance)){
+                        namedEl = (NamedElement) namedEl.eContainer();
+                    }
+                    result = new NamedElementValue(namedEl);
                 }else{
-                    result = new NamedElementValue((NamedElement)allSource.eContainer());
+                    NamedElement namedEl = allSource;
+                    while(!(namedEl instanceof ComponentInstance)){
+                        namedEl = (NamedElement) namedEl.eContainer();
+                    }
+                    result = new NamedElementValue(namedEl);
+
                 }
                 break;
             }
-
             
             //code for data accesses
             if(allSource instanceof FeatureInstance && 
                     ((FeatureInstance)allSource).getCategory() == FeatureCategory.DATA_ACCESS){
                 EnumerationLiteral lit = PropertyUtils.getEnumLiteral(allSource, accessRightProp);
                 if(lit.getName().equals("read_write") || lit.getName().equals("write_only")){
-                    result = new NamedElementValue((NamedElement)allSource.eContainer());
+                    NamedElement namedEl = allSource;
+                    while(!(namedEl instanceof ComponentInstance)){
+                        namedEl = (NamedElement) namedEl.eContainer();
+                    }
+                    result = new NamedElementValue(namedEl);
                 }else{
-                    result = new NamedElementValue((NamedElement)allDest.eContainer());
+                    NamedElement namedEl = allDest;
+                    while(!(namedEl instanceof ComponentInstance)){
+                        namedEl = (NamedElement) namedEl.eContainer();
+                    }
+                    result = new NamedElementValue(namedEl);
                 }
                 break;
             }
@@ -1287,34 +1302,34 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
             conn = (ConnectionInstance) connVal.getNamedElement();
             nodeStr += "(" + conn.getName() + ")";
             
-            ConnectionInstanceEnd allDest = conn.getDestination();
-            ConnectionInstanceEnd allSource = conn.getSource();
-            
-            Property accessRightProp = EMFIndexRetrieval.getPropertyDefinitionInWorkspace(
-                    OsateResourceUtil.getResourceSet(), "Memory_Properties::Access_Right");
+            //ConnectionInstanceEnd allDest = conn.getDestination();
+            //ConnectionInstanceEnd allSource = conn.getSource();
+            //
+            //Property accessRightProp = EMFIndexRetrieval.getPropertyDefinitionInWorkspace(
+            //        OsateResourceUtil.getResourceSet(), "Memory_Properties::Access_Right");
             
             
             //code for data accesses
-            if(allDest instanceof FeatureInstance && 
-                    ((FeatureInstance)allDest).getCategory() == FeatureCategory.DATA_ACCESS){
-                EnumerationLiteral lit = PropertyUtils.getEnumLiteral(allDest, accessRightProp);
-                if(lit.getName().equals("read_write") || lit.getName().equals("read_only")){
-                    result = new NamedElementValue((NamedElement)allDest.eContainer());
-                    break;
-                }
-            }
+            //if(allDest instanceof FeatureInstance && 
+            //        ((FeatureInstance)allDest).getCategory() == FeatureCategory.DATA_ACCESS){
+            //    EnumerationLiteral lit = PropertyUtils.getEnumLiteral(allDest, accessRightProp);
+            //    if(lit.getName().equals("read_write") || lit.getName().equals("read_only")){
+            //        result = new NamedElementValue((NamedElement)allDest.eContainer());
+            //        break;
+            //    }
+            //}
 
             
             //code for data accesses
-            if(allSource instanceof FeatureInstance && 
-                    ((FeatureInstance)allSource).getCategory() == FeatureCategory.DATA_ACCESS){
-                EnumerationLiteral lit = PropertyUtils.getEnumLiteral(allSource, accessRightProp);
-                if(lit.getName().equals("read_write") || lit.getName().equals("read_only")){
-                    result = new NamedElementValue((NamedElement)allSource.eContainer());
-                    break;
-                }
-                assert(false);
-            }
+            //if(allSource instanceof FeatureInstance && 
+            //        ((FeatureInstance)allSource).getCategory() == FeatureCategory.DATA_ACCESS){
+            //    EnumerationLiteral lit = PropertyUtils.getEnumLiteral(allSource, accessRightProp);
+            //    if(lit.getName().equals("read_write") || lit.getName().equals("read_only")){
+            //        result = new NamedElementValue((NamedElement)allSource.eContainer());
+            //        break;
+            //    }
+            //    assert(false);
+            //}
             
             
             result = new NamedElementValue(conn.getDestination().getComponentInstance());
@@ -1492,6 +1507,11 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
         }
 
         proofTree.setCurReturnVal(object, nodeStr, result);
+        if(result.isNamedElement()){
+            if(result.getNamedElement() instanceof FeatureInstance){
+                System.out.println(result.getNamedElement());
+            }
+        }
         return result;
     }
 
