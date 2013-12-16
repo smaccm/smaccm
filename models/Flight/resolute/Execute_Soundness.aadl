@@ -59,17 +59,16 @@ uav_private_key() <=
 only_receive_decrypt(x : component, v : {component}) <=
 	** "The component " x " only receives messages that pass Decrypt" **
 	forall(z : connected_comps_via_cc(x)).
-	(not (z in v)) =>
+	(not (z in v)) => 
 		  proc_or_thread_or_data(z)
-		  and
+		  and 
           ((class_of(x, flight_gen::decryptTask_uart1) or class_of(x, flight_gen::decryptTask_uart5)) 
-          	or only_receive_decrypt(z, v union identity(z)))
+           	or (only_receive_decrypt(z, (v union identity(z)) union connected_comps_via_cc(x))))
 
 proc_or_thread_or_data(x : component) <=
 	** "component " x "is a processes, thread or data component." **
-	is_process(x) or is_thread(x) or is_data(x)
+	is_process(x) or is_thread(x) or is_data(x) or is_system(x)
 	
-       
 -- The connection c potentially carries commands
 -- Non command datatypes must be explicitly whitelisted here
 command_channel(c : connection) : bool =
@@ -85,6 +84,7 @@ command_channel(c : connection) : bool =
    --type(c) <> Base_Types::Integer_8 or
    --type(c) <> flight_gen::ArrTy_80TyBase_Types_Unsigned_8 
    --type(c) <> 
+   or true
   )
 
 

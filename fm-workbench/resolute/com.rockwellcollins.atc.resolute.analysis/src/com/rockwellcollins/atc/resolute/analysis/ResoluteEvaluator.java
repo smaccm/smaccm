@@ -8,6 +8,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import org.eclipse.emf.common.util.EList;
@@ -426,12 +427,12 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
             EList<ConnectionInstance> connections;
             connections = compInst.getSrcConnectionInstances();
             for(ConnectionInstance conn : connections){
-                System.out.println(conn);
+                //System.out.println(conn);
                 returnSet.add(new NamedElementValue(conn));
             }
             connections = compInst.getDstConnectionInstances();
             for(ConnectionInstance conn : connections){
-                System.out.println(conn);
+                //System.out.println(conn);
                 returnSet.add(new NamedElementValue(conn));
             }
             return new SetValue(returnSet);
@@ -687,6 +688,7 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
 
         String text = createFunctionText(funcDef.getName(), funcDef.getArgs(), argVals);
         proofTree.addNewCurrent(funcDef, text);
+        //System.out.println(text);
 
         DefinitionBody body = funcDef.getBody();
         ClaimCallContext context = null;
@@ -1302,34 +1304,53 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
             conn = (ConnectionInstance) connVal.getNamedElement();
             nodeStr += "(" + conn.getName() + ")";
             
-            //ConnectionInstanceEnd allDest = conn.getDestination();
-            //ConnectionInstanceEnd allSource = conn.getSource();
-            //
-            //Property accessRightProp = EMFIndexRetrieval.getPropertyDefinitionInWorkspace(
-            //        OsateResourceUtil.getResourceSet(), "Memory_Properties::Access_Right");
+            ConnectionInstanceEnd allDest = conn.getDestination();
+            ConnectionInstanceEnd allSource = conn.getSource();
+            
+            Property accessRightProp = EMFIndexRetrieval.getPropertyDefinitionInWorkspace(
+                    OsateResourceUtil.getResourceSet(), "Memory_Properties::Access_Right");
             
             
             //code for data accesses
-            //if(allDest instanceof FeatureInstance && 
-            //        ((FeatureInstance)allDest).getCategory() == FeatureCategory.DATA_ACCESS){
-            //    EnumerationLiteral lit = PropertyUtils.getEnumLiteral(allDest, accessRightProp);
-            //    if(lit.getName().equals("read_write") || lit.getName().equals("read_only")){
-            //        result = new NamedElementValue((NamedElement)allDest.eContainer());
-            //        break;
-            //    }
-            //}
+            if(allDest instanceof FeatureInstance && 
+                    ((FeatureInstance)allDest).getCategory() == FeatureCategory.DATA_ACCESS){
+                EnumerationLiteral lit = PropertyUtils.getEnumLiteral(allDest, accessRightProp);
+                if(lit.getName().equals("read_write") || lit.getName().equals("read_only")){
+                    NamedElement namedEl = allDest;
+                    while(!(namedEl instanceof ComponentInstance)){
+                        namedEl = (NamedElement) namedEl.eContainer();
+                    }
+                    result = new NamedElementValue(namedEl);
+                }else{
+                    NamedElement namedEl = allSource;
+                    while(!(namedEl instanceof ComponentInstance)){
+                        namedEl = (NamedElement) namedEl.eContainer();
+                    }
+                    result = new NamedElementValue(namedEl);
+
+                }
+            }
 
             
             //code for data accesses
-            //if(allSource instanceof FeatureInstance && 
-            //        ((FeatureInstance)allSource).getCategory() == FeatureCategory.DATA_ACCESS){
-            //    EnumerationLiteral lit = PropertyUtils.getEnumLiteral(allSource, accessRightProp);
-            //    if(lit.getName().equals("read_write") || lit.getName().equals("read_only")){
-            //        result = new NamedElementValue((NamedElement)allSource.eContainer());
-            //        break;
-            //    }
-            //    assert(false);
-            //}
+            if(allSource instanceof FeatureInstance && 
+                    ((FeatureInstance)allSource).getCategory() == FeatureCategory.DATA_ACCESS){
+                EnumerationLiteral lit = PropertyUtils.getEnumLiteral(allSource, accessRightProp);
+                if(lit.getName().equals("read_write") || lit.getName().equals("read_only")){
+                    NamedElement namedEl = allSource;
+                    while(!(namedEl instanceof ComponentInstance)){
+                        namedEl = (NamedElement) namedEl.eContainer();
+                    }
+                    result = new NamedElementValue(namedEl);
+                }else{
+                    NamedElement namedEl = allDest;
+                    while(!(namedEl instanceof ComponentInstance)){
+                        namedEl = (NamedElement) namedEl.eContainer();
+                    }
+                    result = new NamedElementValue(namedEl);
+                }
+                assert(false);
+            }
             
             
             result = new NamedElementValue(conn.getDestination().getComponentInstance());
@@ -1710,4 +1731,20 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
         }
         return result;
     }
+    
+    public void printStack(){
+        
+        Iterator<Map<Arg, ResoluteValue>> stackIter = argMapStack.descendingIterator();
+        System.out.println("Stack Entry:");
+        while(stackIter.hasNext()){
+            Map<Arg, ResoluteValue> argMap = stackIter.next();
+            
+            for(Entry<Arg, ResoluteValue> entry : argMap.entrySet()){
+                System.out.println(entry.getKey() + " : " + entry.getValue());
+            }
+            System.out.println();
+        }
+        
+    }
+    
 }

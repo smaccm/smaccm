@@ -700,7 +700,8 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
             Arg arg = (Arg) idClass;
             
             if(arg instanceof QuantArg){
-                return BaseType.FAIL;
+                SetType argSetType = (SetType) getExprType(((QuantArg)arg).getExpr());
+                return argSetType.elementType;
             }
             
             return typeToResoluteType((Type)arg.getType());
