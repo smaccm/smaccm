@@ -62,8 +62,8 @@ only_receive_decrypt(x : component, v : {component}) <=
 	(not (z in v)) => 
 		  proc_or_thread_or_data(z)
 		  and 
-          ((class_of(x, flight_gen::decryptTask_uart1) or class_of(x, flight_gen::decryptTask_uart5)) 
-           	or (only_receive_decrypt(z, (v union identity(z)) union connected_comps_via_cc(x))))
+          ((class_of(z, flight_gen::decryptTask_uart1) or class_of(z, flight_gen::decryptTask_uart5)) 
+           	or (only_receive_decrypt(z, v union connected_comps_via_cc(x))))
 
 proc_or_thread_or_data(x : component) <=
 	** "component " x "is a processes, thread or data component." **
@@ -84,7 +84,6 @@ command_channel(c : connection) : bool =
    --type(c) <> Base_Types::Integer_8 or
    --type(c) <> flight_gen::ArrTy_80TyBase_Types_Unsigned_8 
    --type(c) <> 
-   or true
   )
 
 
