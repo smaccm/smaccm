@@ -1,0 +1,13 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Consistency Analysis
+Bundle-SymbolicName: com.rockwellcollins.atc.resolute.consistency;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: com.rockwellcollins.atc.resolute.consistency.Activator
+Bundle-Vendor: CMU/SEI
+Require-Bundle: org.eclipse.core.runtime,
+ com.rockwellcollins.atc.resolute;bundle-version="1.0.0",
+ org.osate.aadl2;bundle-version="1.0.0",
+ com.rockwellcollins.atc.resolute.analysis;bundle-version="1.0.0"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-ActivationPolicy: lazy
