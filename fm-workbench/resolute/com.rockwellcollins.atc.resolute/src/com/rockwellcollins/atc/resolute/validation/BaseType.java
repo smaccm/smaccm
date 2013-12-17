@@ -76,6 +76,7 @@ public class BaseType extends ResoluteType {
         case "connections":
             this.name = "connection";
             break;
+        case "features":
         case "components":
             this.name = "component";
             break;

@@ -384,7 +384,13 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
         	expectedTypes.add(BaseType.COMPONENT);
         	expectedTypes.add(BaseType.STRING);
         	break;
-        
+        case "is_bidirectional":
+        case "is_data_access":
+        case "is_bus_access":
+        case "is_event_port":
+        case "is_data_port":
+            expectedTypes.add(BaseType.CONNECTION);
+            break;
         case "is_data":
         case "is_thread":
         case "is_thread_group":
@@ -700,8 +706,14 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
             Arg arg = (Arg) idClass;
             
             if(arg instanceof QuantArg){
-                SetType argSetType = (SetType) getExprType(((QuantArg)arg).getExpr());
-                return argSetType.elementType;
+                
+                ResoluteType argType = getExprType(((QuantArg)arg).getExpr());
+                
+                if(argType instanceof SetType){
+                    return ((SetType)argType).elementType;
+                }else{
+                    return argType;
+                }
             }
             
             return typeToResoluteType((Type)arg.getType());
@@ -731,6 +743,11 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
         case "contain_error":
         case "receive_error":
         case "error_state_reachable":
+        case "is_bidirectional":
+        case "is_event_port":
+        case "is_data_access":
+        case "is_bus_access":
+        case "is_data_port":
         case "is_empty":
         case "is_data":
         case "is_thread":

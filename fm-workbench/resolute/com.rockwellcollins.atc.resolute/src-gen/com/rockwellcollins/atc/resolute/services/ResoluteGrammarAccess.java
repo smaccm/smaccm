@@ -215,23 +215,26 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		private final Keyword cNameAbstractsKeyword_0_13 = (Keyword)cNameAlternatives_0.eContents().get(13);
 		private final Keyword cNameConnectionsKeyword_0_14 = (Keyword)cNameAlternatives_0.eContents().get(14);
 		private final Keyword cNameComponentsKeyword_0_15 = (Keyword)cNameAlternatives_0.eContents().get(15);
+		private final Keyword cNameFeaturesKeyword_0_16 = (Keyword)cNameAlternatives_0.eContents().get(16);
 		
 		//ElementSet: //stuff for quantifiers only
 		//	name=("threads" //non-aadl components
 		//	| "data" | "memory" | "thread_groups" | "processes" | "subprograms" | "subprogram_groups" | "processors" |
-		//	"virtual_processors" | "buses" | "virtual_buses" | "devices" | "systems" | "abstracts" | "connections" |
-		//	"components");
+		//	"virtual_processors" | "buses" | "virtual_buses" | "devices" | "systems" | "abstracts" | "connections" | "components"
+		//	| "features");
 		public ParserRule getRule() { return rule; }
 
 		////stuff for quantifiers only
 		//name=("threads" //non-aadl components
 		//| "data" | "memory" | "thread_groups" | "processes" | "subprograms" | "subprogram_groups" | "processors" |
-		//"virtual_processors" | "buses" | "virtual_buses" | "devices" | "systems" | "abstracts" | "connections" | "components")
+		//"virtual_processors" | "buses" | "virtual_buses" | "devices" | "systems" | "abstracts" | "connections" | "components" |
+		//"features")
 		public Assignment getNameAssignment() { return cNameAssignment; }
 
 		//"threads" //non-aadl components
 		//| "data" | "memory" | "thread_groups" | "processes" | "subprograms" | "subprogram_groups" | "processors" |
-		//"virtual_processors" | "buses" | "virtual_buses" | "devices" | "systems" | "abstracts" | "connections" | "components"
+		//"virtual_processors" | "buses" | "virtual_buses" | "devices" | "systems" | "abstracts" | "connections" | "components" |
+		//"features"
 		public Alternatives getNameAlternatives_0() { return cNameAlternatives_0; }
 
 		//"threads"
@@ -281,6 +284,9 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 
 		//"components"
 		public Keyword getNameComponentsKeyword_0_15() { return cNameComponentsKeyword_0_15; }
+
+		//"features"
+		public Keyword getNameFeaturesKeyword_0_16() { return cNameFeaturesKeyword_0_16; }
 	}
 
 	public class BuiltinTypeElements extends AbstractParserRuleElementFinder {
@@ -1656,6 +1662,11 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		private final Keyword cIs_abstractKeyword_32 = (Keyword)cAlternatives.eContents().get(32);
 		private final Keyword cIs_emptyKeyword_33 = (Keyword)cAlternatives.eContents().get(33);
 		private final Keyword cIdentityKeyword_34 = (Keyword)cAlternatives.eContents().get(34);
+		private final Keyword cIs_bidirectionalKeyword_35 = (Keyword)cAlternatives.eContents().get(35);
+		private final Keyword cIs_data_accessKeyword_36 = (Keyword)cAlternatives.eContents().get(36);
+		private final Keyword cIs_bus_accessKeyword_37 = (Keyword)cAlternatives.eContents().get(37);
+		private final Keyword cIs_data_portKeyword_38 = (Keyword)cAlternatives.eContents().get(38);
+		private final Keyword cIs_event_portKeyword_39 = (Keyword)cAlternatives.eContents().get(39);
 		
 		////QuantArg returns Arg:
 		////	{QuantArg} name=ID ':' expr=Expr
@@ -1663,6 +1674,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		//BuiltInFunc:
 		//	"connected" // type checking predicates
 		//	// set predicates
+		//	// connection predicates
 		//	| "property_lookup" | "class_of" | "type" | "has_type" | "bound" | "contained" | "get_feature" | "conn_source" |
 		//	"conn_dest" | "property_exists" | "sum" | "analysis" | // upper_bound of a range
 		//	"upper_bound" | // lower bound of a range
@@ -1672,11 +1684,13 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		//	"propagate_error" | // the error state is reachable
 		//	"error_state_reachable" | "is_data" | "is_thread" | "is_thread_group" | "is_process" | "is_subprogram" |
 		//	"is_subprogram_group" | "is_processor" | "is_virtual_processor" | "is_memory" | "is_bus" | "is_virtual_bus" |
-		//	"is_device" | "is_system" | "is_abstract" | "is_empty" | "identity";
+		//	"is_device" | "is_system" | "is_abstract" | "is_empty" | "identity" | "is_bidirectional" | "is_data_access" |
+		//	"is_bus_access" | "is_data_port" | "is_event_port";
 		public ParserRule getRule() { return rule; }
 
 		//"connected" // type checking predicates
 		//// set predicates
+		//// connection predicates
 		//| "property_lookup" | "class_of" | "type" | "has_type" | "bound" | "contained" | "get_feature" | "conn_source" |
 		//"conn_dest" | "property_exists" | "sum" | "analysis" | // upper_bound of a range
 		//"upper_bound" | // lower bound of a range
@@ -1686,7 +1700,8 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		//"propagate_error" | // the error state is reachable
 		//"error_state_reachable" | "is_data" | "is_thread" | "is_thread_group" | "is_process" | "is_subprogram" |
 		//"is_subprogram_group" | "is_processor" | "is_virtual_processor" | "is_memory" | "is_bus" | "is_virtual_bus" |
-		//"is_device" | "is_system" | "is_abstract" | "is_empty" | "identity"
+		//"is_device" | "is_system" | "is_abstract" | "is_empty" | "identity" | "is_bidirectional" | "is_data_access" |
+		//"is_bus_access" | "is_data_port" | "is_event_port"
 		public Alternatives getAlternatives() { return cAlternatives; }
 
 		//"connected"
@@ -1799,6 +1814,21 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 
 		//"identity"
 		public Keyword getIdentityKeyword_34() { return cIdentityKeyword_34; }
+
+		//"is_bidirectional"
+		public Keyword getIs_bidirectionalKeyword_35() { return cIs_bidirectionalKeyword_35; }
+
+		//"is_data_access"
+		public Keyword getIs_data_accessKeyword_36() { return cIs_data_accessKeyword_36; }
+
+		//"is_bus_access"
+		public Keyword getIs_bus_accessKeyword_37() { return cIs_bus_accessKeyword_37; }
+
+		//"is_data_port"
+		public Keyword getIs_data_portKeyword_38() { return cIs_data_portKeyword_38; }
+
+		//"is_event_port"
+		public Keyword getIs_event_portKeyword_39() { return cIs_event_portKeyword_39; }
 	}
 
 	public class RealTermElements extends AbstractParserRuleElementFinder {
@@ -2175,8 +2205,8 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	//ElementSet: //stuff for quantifiers only
 	//	name=("threads" //non-aadl components
 	//	| "data" | "memory" | "thread_groups" | "processes" | "subprograms" | "subprogram_groups" | "processors" |
-	//	"virtual_processors" | "buses" | "virtual_buses" | "devices" | "systems" | "abstracts" | "connections" |
-	//	"components");
+	//	"virtual_processors" | "buses" | "virtual_buses" | "devices" | "systems" | "abstracts" | "connections" | "components"
+	//	| "features");
 	public ElementSetElements getElementSetAccess() {
 		return (pElementSet != null) ? pElementSet : (pElementSet = new ElementSetElements());
 	}
@@ -2371,6 +2401,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	//BuiltInFunc:
 	//	"connected" // type checking predicates
 	//	// set predicates
+	//	// connection predicates
 	//	| "property_lookup" | "class_of" | "type" | "has_type" | "bound" | "contained" | "get_feature" | "conn_source" |
 	//	"conn_dest" | "property_exists" | "sum" | "analysis" | // upper_bound of a range
 	//	"upper_bound" | // lower bound of a range
@@ -2380,7 +2411,8 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	//	"propagate_error" | // the error state is reachable
 	//	"error_state_reachable" | "is_data" | "is_thread" | "is_thread_group" | "is_process" | "is_subprogram" |
 	//	"is_subprogram_group" | "is_processor" | "is_virtual_processor" | "is_memory" | "is_bus" | "is_virtual_bus" |
-	//	"is_device" | "is_system" | "is_abstract" | "is_empty" | "identity";
+	//	"is_device" | "is_system" | "is_abstract" | "is_empty" | "identity" | "is_bidirectional" | "is_data_access" |
+	//	"is_bus_access" | "is_data_port" | "is_event_port";
 	public BuiltInFuncElements getBuiltInFuncAccess() {
 		return (pBuiltInFunc != null) ? pBuiltInFunc : (pBuiltInFunc = new BuiltInFuncElements());
 	}

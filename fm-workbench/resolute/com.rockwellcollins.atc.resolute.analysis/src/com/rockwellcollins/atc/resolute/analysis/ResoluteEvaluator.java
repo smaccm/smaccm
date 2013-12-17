@@ -17,12 +17,18 @@ import org.eclipse.xtext.nodemodel.ICompositeNode;
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 import org.osate.aadl2.AbstractNamedValue;
 import org.osate.aadl2.BooleanLiteral;
+import org.osate.aadl2.Bus;
+import org.osate.aadl2.BusAccess;
 import org.osate.aadl2.Classifier;
 import org.osate.aadl2.ComponentCategory;
 import org.osate.aadl2.ComponentClassifier;
 import org.osate.aadl2.ComponentType;
+import org.osate.aadl2.DataAccess;
+import org.osate.aadl2.DataPort;
 import org.osate.aadl2.Element;
 import org.osate.aadl2.EnumerationLiteral;
+import org.osate.aadl2.EventPort;
+import org.osate.aadl2.Feature;
 import org.osate.aadl2.IntegerLiteral;
 import org.osate.aadl2.NamedElement;
 import org.osate.aadl2.NamedValue;
@@ -33,6 +39,7 @@ import org.osate.aadl2.StringLiteral;
 import org.osate.aadl2.instance.ComponentInstance;
 import org.osate.aadl2.instance.ConnectionInstance;
 import org.osate.aadl2.instance.ConnectionInstanceEnd;
+import org.osate.aadl2.instance.ConnectionKind;
 import org.osate.aadl2.instance.ConnectionReference;
 import org.osate.aadl2.instance.FeatureCategory;
 import org.osate.aadl2.instance.FeatureInstance;
@@ -406,6 +413,14 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
         }
     }
     
+    private void addAllFeatureGroupFeatures(FeatureInstance feature, Set<ResoluteValue> returnSet){
+        for(FeatureInstance featInst : feature.getFeatureInstances()){
+            addAllFeatureGroupFeatures(featInst, returnSet);
+        }
+        returnSet.add(new NamedElementValue(feature.getFeature()));
+
+    }
+    
     private ResoluteValue subElsFromObject(NamedElement id, String setName) {
         //TODO: finish this
         
@@ -434,6 +449,16 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
             for(ConnectionInstance conn : connections){
                 //System.out.println(conn);
                 returnSet.add(new NamedElementValue(conn));
+            }
+            return new SetValue(returnSet);
+        }
+        
+        if(setName.equals("features")){
+            EList<FeatureInstance> features = compInst.getFeatureInstances();
+            Set<ResoluteValue> returnSet = new HashSet<ResoluteValue>();
+
+            for(FeatureInstance feature : features){
+                addAllFeatureGroupFeatures(feature, returnSet);
             }
             return new SetValue(returnSet);
         }
@@ -1367,7 +1392,7 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
             comp0Val = (ComponentInstance) argVals.get(0).getNamedElement();
             
             assert (connVal.getNamedElement() instanceof ConnectionInstance);
-            assert (comp0Val instanceof ConnectionInstance);
+            assert (comp0Val instanceof ComponentInstance);
             
             conn = (ConnectionInstance) connVal.getNamedElement();
             for (FeatureInstance fi : comp0Val.getFeatureInstances())
@@ -1440,6 +1465,52 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
                 throw new ResoluteFailException(errorString);
             }
 
+            break;
+            
+        case "is_bidirectional":
+            compVal = argVals.get(0);
+            ConnectionInstance connInst = (ConnectionInstance)compVal.getNamedElement();
+            result = new BoolValue(connInst.isBidirectional());
+            break;
+        case "is_bus_access":
+            compVal = argVals.get(0);
+            connInst = (ConnectionInstance)compVal.getNamedElement();
+            FeatureInstance featInst;
+            if(connInst.getSource() instanceof FeatureInstance){
+                featInst = (FeatureInstance)connInst.getSource();
+            }else{
+                featInst = (FeatureInstance)connInst.getDestination();
+            }
+            result = new BoolValue(featInst.getFeature() instanceof BusAccess);
+            break;
+        case "is_data_access":
+            compVal = argVals.get(0);
+            connInst = (ConnectionInstance)compVal.getNamedElement();
+            if(connInst.getSource() instanceof FeatureInstance){
+                featInst = (FeatureInstance)connInst.getSource();
+            }else{
+                featInst = (FeatureInstance)connInst.getDestination();
+            }
+            result = new BoolValue(featInst.getFeature() instanceof DataAccess);
+        case "is_data_port":
+            compVal = argVals.get(0);
+            connInst = (ConnectionInstance)compVal.getNamedElement();
+            if(connInst.getSource() instanceof FeatureInstance){
+                featInst = (FeatureInstance)connInst.getSource();
+            }else{
+                featInst = (FeatureInstance)connInst.getDestination();
+            }
+            result = new BoolValue(featInst.getFeature() instanceof DataPort);
+            break;
+        case "is_event_port":
+            compVal = argVals.get(0);
+            connInst = (ConnectionInstance)compVal.getNamedElement();
+            if(connInst.getSource() instanceof FeatureInstance){
+                featInst = (FeatureInstance)connInst.getSource();
+            }else{
+                featInst = (FeatureInstance)connInst.getDestination();
+            }
+            result = new BoolValue(featInst.getFeature() instanceof EventPort);
             break;
         case "is_data":
             compVal = argVals.get(0);
@@ -1515,7 +1586,6 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
             compVal = argVals.get(0);
             result = new BoolValue(((SetValue)compVal).getSet().isEmpty());
             break;
-             
         case "identity":
             compVal = argVals.get(0);
             Set<ResoluteValue> compSet = new HashSet<ResoluteValue>();

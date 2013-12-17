@@ -1,0 +1,43 @@
+package Port_Reasoning
+public
+
+annex resolute {**
+	
+	
+bi_ports_have_variance() <=
+	** "All bidirectional ports have variance justification" **
+	forall(c : connection) . connection_is_not_bidrectional(c)
+	
+connection_is_not_bidrectional(c : connection) <=
+	** "Connection " c " is not bidirectional if it is not a bus access" **
+	not is_bus_access(c) => not is_bidirectional(c)   
+	
+all_features_bound() <=
+	** "All component features are bound to connections " **
+	forall (comp : component) . 
+		not(is_data(comp) or is_bus(comp)) => conn_eq_feat(comp)
+	
+conn_eq_feat(comp : component) <=
+	** "All the features of component " comp " are connected" **
+	(forall(x : comp.features) . print_name(x)) and
+	(forall(z : comp.connections) . print_name_conn(z)) and
+	num_features(comp) = num_connections(comp)  
+	
+num_connections(comp : component) : int =
+	sum({1 for (x : comp.connections)})	
+	 
+num_features(comp : component) : int =
+	sum({ 1 for (x : comp.features)})
+	
+print_name(comp : component) <=
+	** "The component name is " comp **
+	true
+	
+print_name_conn(conn : connection) <=
+	** "The connection name is " conn **
+	true
+	
+**};
+
+
+end Port_Reasoning;

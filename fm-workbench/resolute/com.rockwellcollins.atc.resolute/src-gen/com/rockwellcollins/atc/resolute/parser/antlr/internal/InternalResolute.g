@@ -458,6 +458,18 @@ ruleElementSet returns [EObject current=null]
        		setWithLastConsumed($current, "name", lv_name_0_16, null);
 	    }
 
+    |		lv_name_0_17=	'features' 
+    {
+        newLeafNode(lv_name_0_17, grammarAccess.getElementSetAccess().getNameFeaturesKeyword_0_16());
+    }
+ 
+	    {
+	        if ($current==null) {
+	            $current = createModelElement(grammarAccess.getElementSetRule());
+	        }
+       		setWithLastConsumed($current, "name", lv_name_0_17, null);
+	    }
+
 )
 
 )
@@ -2897,6 +2909,41 @@ ruleBuiltInFunc returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleTok
     {
         $current.merge(kw);
         newLeafNode(kw, grammarAccess.getBuiltInFuncAccess().getIdentityKeyword_34()); 
+    }
+
+    |
+	kw='is_bidirectional' 
+    {
+        $current.merge(kw);
+        newLeafNode(kw, grammarAccess.getBuiltInFuncAccess().getIs_bidirectionalKeyword_35()); 
+    }
+
+    |
+	kw='is_data_access' 
+    {
+        $current.merge(kw);
+        newLeafNode(kw, grammarAccess.getBuiltInFuncAccess().getIs_data_accessKeyword_36()); 
+    }
+
+    |
+	kw='is_bus_access' 
+    {
+        $current.merge(kw);
+        newLeafNode(kw, grammarAccess.getBuiltInFuncAccess().getIs_bus_accessKeyword_37()); 
+    }
+
+    |
+	kw='is_data_port' 
+    {
+        $current.merge(kw);
+        newLeafNode(kw, grammarAccess.getBuiltInFuncAccess().getIs_data_portKeyword_38()); 
+    }
+
+    |
+	kw='is_event_port' 
+    {
+        $current.merge(kw);
+        newLeafNode(kw, grammarAccess.getBuiltInFuncAccess().getIs_event_portKeyword_39()); 
     }
 )
     ;

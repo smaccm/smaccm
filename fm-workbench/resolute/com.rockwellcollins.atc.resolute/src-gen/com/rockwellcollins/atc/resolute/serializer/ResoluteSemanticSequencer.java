@@ -894,7 +894,8 @@ public class ResoluteSemanticSequencer extends PropertiesSemanticSequencer {
 	 *         name='systems' | 
 	 *         name='abstracts' | 
 	 *         name='connections' | 
-	 *         name='components'
+	 *         name='components' | 
+	 *         name='features'
 	 *     )
 	 */
 	protected void sequence_ElementSet(EObject context, ElementSet semanticObject) {

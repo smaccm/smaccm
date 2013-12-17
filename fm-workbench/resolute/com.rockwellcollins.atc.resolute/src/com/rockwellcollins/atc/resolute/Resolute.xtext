@@ -64,7 +64,8 @@ name=('threads'
 |   'abstracts'
     //non-aadl components
 |   'connections'
-|   'components')
+|   'components'
+|   'features')
 	
 ;
 
@@ -217,6 +218,12 @@ BuiltInFunc:
 // set predicates
 |   'is_empty'
 |   'identity'
+// connection predicates
+|   'is_bidirectional'
+|   'is_data_access'
+|   'is_bus_access'
+|   'is_data_port'
+|   'is_event_port'
 ;
 
 RealTerm returns aadl2::RealLiteral:

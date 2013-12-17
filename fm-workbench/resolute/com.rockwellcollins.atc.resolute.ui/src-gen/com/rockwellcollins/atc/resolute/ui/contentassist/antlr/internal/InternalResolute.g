@@ -1887,6 +1887,14 @@ rule__ElementSet__NameAlternatives_0
 { after(grammarAccess.getElementSetAccess().getNameComponentsKeyword_0_15()); }
 )
 
+    |(
+{ before(grammarAccess.getElementSetAccess().getNameFeaturesKeyword_0_16()); }
+
+	'features' 
+
+{ after(grammarAccess.getElementSetAccess().getNameFeaturesKeyword_0_16()); }
+)
+
 ;
 finally {
 	restoreStackSize(stackSize);
@@ -2717,6 +2725,46 @@ rule__BuiltInFunc__Alternatives
 	'identity' 
 
 { after(grammarAccess.getBuiltInFuncAccess().getIdentityKeyword_34()); }
+)
+
+    |(
+{ before(grammarAccess.getBuiltInFuncAccess().getIs_bidirectionalKeyword_35()); }
+
+	'is_bidirectional' 
+
+{ after(grammarAccess.getBuiltInFuncAccess().getIs_bidirectionalKeyword_35()); }
+)
+
+    |(
+{ before(grammarAccess.getBuiltInFuncAccess().getIs_data_accessKeyword_36()); }
+
+	'is_data_access' 
+
+{ after(grammarAccess.getBuiltInFuncAccess().getIs_data_accessKeyword_36()); }
+)
+
+    |(
+{ before(grammarAccess.getBuiltInFuncAccess().getIs_bus_accessKeyword_37()); }
+
+	'is_bus_access' 
+
+{ after(grammarAccess.getBuiltInFuncAccess().getIs_bus_accessKeyword_37()); }
+)
+
+    |(
+{ before(grammarAccess.getBuiltInFuncAccess().getIs_data_portKeyword_38()); }
+
+	'is_data_port' 
+
+{ after(grammarAccess.getBuiltInFuncAccess().getIs_data_portKeyword_38()); }
+)
+
+    |(
+{ before(grammarAccess.getBuiltInFuncAccess().getIs_event_portKeyword_39()); }
+
+	'is_event_port' 
+
+{ after(grammarAccess.getBuiltInFuncAccess().getIs_event_portKeyword_39()); }
 )
 
 ;
