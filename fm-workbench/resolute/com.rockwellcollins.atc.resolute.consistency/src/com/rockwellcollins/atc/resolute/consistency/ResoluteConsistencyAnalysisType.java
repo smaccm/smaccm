@@ -20,6 +20,8 @@ public class ResoluteConsistencyAnalysisType implements ResoluteExternalAnalysis
     	list.add(BaseType.STRING);
     	list.add(BaseType.STRING);
     	list.add(BaseType.STRING);
+    	list.add(BaseType.STRING);
         return list;
     }
 }
+  
