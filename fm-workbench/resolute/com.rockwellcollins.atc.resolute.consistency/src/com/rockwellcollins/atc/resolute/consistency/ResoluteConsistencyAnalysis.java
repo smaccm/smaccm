@@ -15,8 +15,7 @@ public class ResoluteConsistencyAnalysis implements ResoluteExternalAnalysis {
     @Override
     public ResoluteValue run(ResoluteEvaluator resEval, List<ResoluteValue> args) 
     {
-    	int nmatches = 0;
-    	String current_line;
+
     	ResoluteValue arg0 = args.get(0);
     	ResoluteValue arg1 = args.get(1);
     	ResoluteValue arg2 = args.get(2);
@@ -27,31 +26,8 @@ public class ResoluteConsistencyAnalysis implements ResoluteExternalAnalysis {
     	assert (arg2.isString());
     	assert (arg3.isString());
     			
-		try 
-		{
-			BufferedReader br;
-			br = new BufferedReader(new FileReader(arg1.getString()));
-			
-			while ((current_line = br.readLine()) != null)
-			{
-				if (current_line.contains(arg2.getString()))
-				{
-					nmatches++;
-				}
-			}
-			br.close();
-		} 
-		catch (Exception e) 
-		{
-			e.printStackTrace();
-			return new BoolValue(false);
-		}
 
-		if (nmatches == arg3.getInt())
-		{
-			return new BoolValue(true);
-		}
-        return new BoolValue(false);
+        return new BoolValue(true);
     }
 
 }

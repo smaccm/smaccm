@@ -1197,6 +1197,44 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
             break;
         }
         
+        case "name":
+        {
+
+            ResoluteValue comp0Val;
+            ResoluteValue comp1Val;
+            comp0Val = argVals.get(0);
+            comp1Val = argVals.get(1);
+
+            assert (comp0Val.getNamedElement() instanceof ComponentInstance);
+            assert (comp1Val.getString() != null);
+            
+            compInst = (ComponentInstance) comp0Val.getNamedElement();
+            
+ 
+            result = new BoolValue(compInst.getName().equalsIgnoreCase(comp1Val.getString()));
+            break;
+        }
+        
+        case "subcomponent_of":
+        {
+            ResoluteValue comp0Val;
+            ResoluteValue comp1Val;
+            comp0Val = argVals.get(0);
+            comp1Val = argVals.get(1);
+            ComponentInstance compInstParent;
+            
+            assert (comp0Val.getNamedElement() instanceof ComponentInstance);
+            assert (comp1Val.getNamedElement() instanceof ComponentInstance);
+
+            compInst = (ComponentInstance) comp0Val.getNamedElement();
+            compInstParent = (ComponentInstance) comp1Val.getNamedElement();
+
+            nodeStr += "(" + compInst.getName() + ", " + compInstParent.getName() + ")";
+
+            result = new BoolValue(compInst.getContainingComponentInstance() == compInstParent);
+            break;
+        }
+        
         case "type":
             NamedElement el = argVals.get(0).getNamedElement();
             nodeStr += "(" + el.getName() + ")";
