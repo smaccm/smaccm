@@ -1221,17 +1221,25 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
             ResoluteValue comp1Val;
             comp0Val = argVals.get(0);
             comp1Val = argVals.get(1);
-            ComponentInstance compInstParent;
+            ComponentInstance compInst2;
             
             assert (comp0Val.getNamedElement() instanceof ComponentInstance);
             assert (comp1Val.getNamedElement() instanceof ComponentInstance);
 
             compInst = (ComponentInstance) comp0Val.getNamedElement();
-            compInstParent = (ComponentInstance) comp1Val.getNamedElement();
+            compInst2 = (ComponentInstance) comp1Val.getNamedElement();
 
-            nodeStr += "(" + compInst.getName() + ", " + compInstParent.getName() + ")";
+            nodeStr += "(" + compInst.getName() + ", " + compInst2.getName() + ")";
 
-            result = new BoolValue(compInst.getContainingComponentInstance() == compInstParent);
+            while ((compInst2.getContainingComponentInstance() != null) && (compInst2 != compInst))
+            {
+            	compInst2 = compInst2.getContainingComponentInstance();
+            }
+        	if (compInst2 == compInst)
+        	{
+        		return new BoolValue(true);
+        	}
+            result = new BoolValue(false);
             break;
         }
         
