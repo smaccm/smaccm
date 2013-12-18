@@ -184,6 +184,8 @@ BuiltInFunc:
 	'connected'
 |	'property_lookup'
 |	'class_of'
+|   'subcomponent_of'
+|   'name'
 |	'type'
 |   'has_type'
 |	'bound'

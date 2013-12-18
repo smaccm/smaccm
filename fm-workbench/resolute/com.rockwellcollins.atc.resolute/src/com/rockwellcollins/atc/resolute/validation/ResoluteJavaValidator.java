@@ -420,10 +420,16 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
             break;
 
         case "class_of":
+        case "subcomponent_of":
             expectedTypes.add(BaseType.COMPONENT);
             expectedTypes.add(BaseType.COMPONENT);
             break;
 
+        case "name":
+            expectedTypes.add(BaseType.COMPONENT);
+            expectedTypes.add(BaseType.STRING);
+            break;            
+            
         case "type":
         case "has_type":
             expectedTypes.add(BaseType.AADL);
@@ -764,6 +770,8 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
         case "is_system":
         case "is_abstract":
         case "class_of":
+        case "subcomponent_of":
+        case "name":
         case "bound": 
         case "contained":
         case "property_exists":
