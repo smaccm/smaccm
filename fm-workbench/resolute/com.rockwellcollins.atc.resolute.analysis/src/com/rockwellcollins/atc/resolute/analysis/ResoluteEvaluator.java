@@ -811,7 +811,8 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
     private static void addClaimReference(ResoluteProofNode node, NamedElement ne, String argText) {
         if (ne instanceof ComponentInstance) {
             ComponentInstance ci = (ComponentInstance) ne;
-            node.addClaimReference(argText, ci.getComponentClassifier());
+            //node.addClaimReference(argText, ci.getComponentClassifier());
+            node.addClaimReference(argText, ci.getSubcomponent());
         } else if (ne instanceof ConnectionInstance) {
             ConnectionInstance ci = (ConnectionInstance) ne;
             node.addClaimReference(argText, ci.getConnectionReferences().get(0).getConnection());
