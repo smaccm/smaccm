@@ -46,6 +46,12 @@ public
       conn8 : port mavlink <-> x3DR.mavlink_external;
       conn9 : bus access x3DR.usart <-> expansion_connector.usart1;
       conn10 : bus access x3DR.antenna <-> x3dr_radio;
+      
+      
+    annex resolute {**
+    	prove execute_completeness(this.x3DR) 
+    **};
+      
   end PX4IOAR.Impl;
   
   device Motors

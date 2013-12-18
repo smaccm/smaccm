@@ -107,14 +107,20 @@ public class ResoluteLinkingService extends PropertiesLinkingService {
     }
 
     private static EObject getNamedElementByType(EObject context, String name, EClass eclass) {
+
         for (IEObjectDescription desc : EMFIndexRetrieval.getAllEObjectsOfTypeInWorkspace(context,
                 eclass)) {
             EObject e = EcoreUtil.resolve(desc.getEObjectOrProxy(), context);
             if (e instanceof NamedElement) {
                 NamedElement ne = (NamedElement) e;
-                if (name.equals(ne.getName())) {
-                    return ne;
-                }
+                URI contextUri = ne.eResource().getURI();
+                String contextProject = contextUri.segment(1);
+                URI linkUri = context.eResource().getURI();
+                if(linkUri.segment(1).equals(contextProject)){
+                    if (name.equals(ne.getName())) {
+                        return ne;
+                    }
+                } 
             }
         }
 

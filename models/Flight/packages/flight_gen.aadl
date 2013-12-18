@@ -2070,6 +2070,7 @@ process flight_gen_process
   	sensors: provides data access sensors_type::sensors_result.impl{
   		Access_Right => read_write;
   	};
+  	
   	motors_and_radios: feature group UAV::motors_and_radios;
   	gcs_transmit: feature group gcs_msgs::gcs_msg {
   		Access_Right => read_only applies to param1;
@@ -2093,6 +2094,7 @@ process flight_gen_process
   		Access_Right => read_only applies to param19;
   		Access_Right => read_only applies to param20;
   	};
+  	
   	gcs_receive: feature group gcs_msgs::gcs_msg {
   		Access_Right => write_only applies to param1;
   		Access_Right => write_only applies to param2;
@@ -2116,9 +2118,7 @@ process flight_gen_process
   		Access_Right => write_only applies to param20;
   	};
   
-   annex agree {**
-    	guarantee "whatever" : true;
-    **};
+ 
 end flight_gen_process;
 
 process implementation flight_gen_process.impl
