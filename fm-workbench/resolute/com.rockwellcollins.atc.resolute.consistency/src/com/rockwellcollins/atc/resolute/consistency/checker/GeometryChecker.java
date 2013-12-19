@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 import org.osate.aadl2.NamedElement;
 import org.osate.aadl2.modelsupport.util.AadlUtil;
 import org.osate.aadl2.util.OsateDebug;
@@ -31,10 +32,10 @@ public class GeometryChecker extends AbstractChecker{
 			OsateDebug.osateDebug("[GeometryChecker] open file " + this.sourceFile);
 			OsateDebug.osateDebug("directory=" + AadlUtil.getResourcePath(component).toString());
 			
-			IPath path = AadlUtil.getResourcePath(component);
-			path = path.append("/" + this.sourceFile);
-			OsateDebug.osateDebug("file=" + path.toString());
-
+//			IPath path = AadlUtil.getResourcePath(component);
+//			path = path.append("/" + this.sourceFile);
+//			OsateDebug.osateDebug("file=" + path.toString());
+			IPath path = new Path (this.sourceFile);
 			IFile targetFile = ResourcesPlugin.getWorkspace().getRoot().getFile(path);
 			
 			br = new BufferedReader(new InputStreamReader (targetFile.getContents()));
