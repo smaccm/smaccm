@@ -24,7 +24,9 @@ import org.osate.aadl2.ComponentCategory;
 import org.osate.aadl2.ComponentClassifier;
 import org.osate.aadl2.ComponentType;
 import org.osate.aadl2.DataAccess;
+import org.osate.aadl2.DataImplementation;
 import org.osate.aadl2.DataPort;
+import org.osate.aadl2.DataSubcomponentType;
 import org.osate.aadl2.Element;
 import org.osate.aadl2.EnumerationLiteral;
 import org.osate.aadl2.EventPort;
@@ -53,7 +55,6 @@ import org.osate.xtext.aadl2.errormodel.errorModel.ErrorPropagation;
 import org.osate.xtext.aadl2.errormodel.errorModel.ErrorTypes;
 import org.osate.xtext.aadl2.errormodel.errorModel.TypeToken;
 import org.osate.xtext.aadl2.errormodel.util.EMV2Util;
-
 import org.osate.xtext.aadl2.properties.util.EMFIndexRetrieval;
 import org.osate.xtext.aadl2.properties.util.GetProperties;
 import org.osate.xtext.aadl2.properties.util.PropertyUtils;
@@ -1021,8 +1022,8 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
             	 expr = getPropExpression(feat, prop);
             }
             else {
-                assert (comp0Val.getNamedElement() instanceof ComponentType);
-                ComponentType comp = (ComponentType) comp0Val.getNamedElement();
+                assert (comp0Val.getNamedElement() instanceof ComponentClassifier);
+                ComponentClassifier comp = (ComponentClassifier) comp0Val.getNamedElement();
                 nodeStr += "(" + comp.getName() + ", " + prop.getName() + ")";
                 expr = getPropExpression(comp, prop);
             }
@@ -1202,17 +1203,21 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
 
             ResoluteValue comp0Val;
             ResoluteValue comp1Val;
+            NamedElement ne;
             comp0Val = argVals.get(0);
             comp1Val = argVals.get(1);
 
-            assert (comp0Val.getNamedElement() instanceof ComponentInstance);
+            
             assert (comp1Val.getString() != null);
+            ne = comp0Val.getNamedElement();
             
-            compInst = (ComponentInstance) comp0Val.getNamedElement();
+            if (ne instanceof ComponentInstance)
+            {
+            	compInst = (ComponentInstance) comp0Val.getNamedElement();
+            	result = new BoolValue(compInst.getName().equalsIgnoreCase(comp1Val.getString()));
+            }
+            return new BoolValue (ne.getName().equalsIgnoreCase(comp1Val.getString()));
             
- 
-            result = new BoolValue(compInst.getName().equalsIgnoreCase(comp1Val.getString()));
-            break;
         }
         
         case "subcomponent_of":
@@ -1662,6 +1667,13 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
             } else if (ci.getSource() instanceof ComponentInstance) {
                 return ci.getSource();
             }
+        }
+        if (ne instanceof DataPort)
+        {
+        	DataPort dp = (DataPort) ne;
+        	DataSubcomponentType dst = dp.getDataFeatureClassifier();
+
+        	return dst;
         }
         
         throw new IllegalArgumentException("Unable to get type of: " + ne);

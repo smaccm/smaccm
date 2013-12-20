@@ -374,6 +374,7 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
         switch (funCall.getFn())
         {
         case "upper_bound":
+        case "lower_bound":
         	expectedTypes.add(BaseType.RANGE);
         	break;
         
@@ -778,6 +779,7 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
             return BaseType.BOOL;
 
         case "upper_bound":
+        case "lower_bound":
         {
             if (funCall.getArgs().size() != 1) {
                 return BaseType.FAIL;
@@ -802,7 +804,9 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
             if (propType instanceof RangeType)
             {
             	RangeType rt = (RangeType)propType;
-            	PropertyExpression pe = rt.getNumberType().getRange().getUpperBound();
+            	PropertyExpression pe;
+            	
+            	pe = rt.getNumberType().getRange().getUpperBound();
                 if (pe instanceof AadlInteger) {
                     return BaseType.INT;
                 }
