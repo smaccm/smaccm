@@ -1306,8 +1306,14 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
             assert (innerEl instanceof ComponentInstance);
             ComponentInstance innerComp = (ComponentInstance) innerEl;
             ComponentInstance innerCompContainer = innerComp.getContainingComponentInstance();
-
-            result = new BoolValue(innerCompContainer.equals(outerComp));
+            if (innerCompContainer == null)
+            {
+            	result = new BoolValue (false);
+            }
+            else
+            {
+            	result = new BoolValue(innerCompContainer.equals(outerComp));
+            }
             break;
         }
         
