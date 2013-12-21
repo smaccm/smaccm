@@ -1159,7 +1159,11 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
                 ComponentType comp = (ComponentType) comp0Val.getNamedElement();
                 nodeStr += "(" + comp.getName() + ", " + prop.getName() + ")";
                 result = getPropExists(comp, prop);
-            } else {
+            } else if (comp0Val.getNamedElement() instanceof Classifier) {
+            	Classifier comp = (Classifier) comp0Val.getNamedElement();
+                nodeStr += "(" + comp.getName() + ", " + prop.getName() + ")";
+                result = getPropExists(comp, prop);
+            }else {
                 assert (comp0Val.getNamedElement() instanceof ConnectionInstance);
                 conn = (ConnectionInstance) comp0Val.getNamedElement();
 
