@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 import org.osate.aadl2.Mode;
 import org.osate.aadl2.NamedElement;
 import org.osate.aadl2.Subcomponent;
@@ -31,6 +32,10 @@ public class ResoluteInterpreter {
         String proveText = ResoluteProver.proveStatementToString(proveStatement, compInst);
         ResoluteResult subResult = evaluateProveStatementBody(proveStatement, getAllModeInstances(proveStatement));
         Map<String, EObject> references = Collections.emptyMap();
+        if (proveStatement.getModes().size() == 1) {
+            String mode = NodeModelUtils.getNode(proveStatement.getModes().get(0)).getText();
+            proveText += " (mode: " + mode + ")";
+        }
         return new ClaimResult(proveText, subResult, references, proveStatement);
     }
 
