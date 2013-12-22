@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.emf.ecore.EObject;
-import org.osate.aadl2.Element;
 import org.osate.aadl2.Mode;
 import org.osate.aadl2.NamedElement;
 import org.osate.aadl2.Subcomponent;
@@ -20,7 +19,6 @@ import com.rockwellcollins.atc.resolute.analysis.results.FailResult;
 import com.rockwellcollins.atc.resolute.analysis.results.ResoluteResult;
 import com.rockwellcollins.atc.resolute.resolute.NestedDotID;
 import com.rockwellcollins.atc.resolute.resolute.ProveStatement;
-import com.rockwellcollins.atc.resolute.resolute.ResoluteSubclause;
 
 public class ResoluteInterpreter {
     final private ComponentInstance compInst;
@@ -29,19 +27,14 @@ public class ResoluteInterpreter {
         this.compInst = compInst;
     }
 
-    public List<ResoluteResult> evaluateSubclause(ResoluteSubclause resSubclause) {
-        List<ResoluteResult> results = new ArrayList<>();
-
-        for (Element element : resSubclause.getChildren()) {
-            if (element instanceof ProveStatement) {
-                results.add(evaluateProveStatement((ProveStatement) element));
-            }
-        }
-
-        return results;
+    public ResoluteResult evaluateProveStatement(ProveStatement proveStatement) {
+        String proveText = ResoluteProver.proveStatementToString(proveStatement, compInst);
+        ResoluteResult subResult = evaluateProveStatementBody(proveStatement, getAllModeInstances(proveStatement));
+        Map<String, EObject> references = Collections.emptyMap();
+        return new ClaimResult(proveText, subResult, references, proveStatement);
     }
 
-    public ModeInstance getCompInstSubMode(ComponentInstance compInst, NestedDotID modeId) {
+    private ModeInstance getCompInstSubMode(ComponentInstance compInst, NestedDotID modeId) {
         if (modeId.getSub() != null) {
             NamedElement el = modeId.getBase();
             assert (el instanceof Subcomponent);
@@ -64,7 +57,7 @@ public class ResoluteInterpreter {
         throw new IllegalArgumentException();
     }
 
-    public List<ModeInstance> getCompInstSubModes(ComponentInstance subCompInst,
+    private List<ModeInstance> getCompInstSubModes(ComponentInstance subCompInst,
             List<NestedDotID> nestModesIds) {
         List<ModeInstance> result = new ArrayList<>();
         if (nestModesIds != null) {
@@ -75,7 +68,7 @@ public class ResoluteInterpreter {
         return result;
     }
 
-    public List<SystemOperationMode> getAllModeInstances(ProveStatement proveStatement) {
+    private List<SystemOperationMode> getAllModeInstances(ProveStatement proveStatement) {
         List<NestedDotID> nestModesIds = proveStatement.getModes();
 
         if (nestModesIds == null || nestModesIds.size() == 0) {
@@ -91,13 +84,6 @@ public class ResoluteInterpreter {
         List<SystemOperationMode> sysModes = sysInst.getSystemOperationModesFor(modeInsts);
 
         return sysModes;
-    }
-
-    public ResoluteResult evaluateProveStatement(ProveStatement proveStatement) {
-        String proveText = ResoluteProver.proveStatementToString(proveStatement, compInst);
-        ResoluteResult subResult = evaluateProveStatementBody(proveStatement, getAllModeInstances(proveStatement));
-        Map<String, EObject> references = Collections.emptyMap();
-        return new ClaimResult(proveText, subResult, references, proveStatement);
     }
 
     private ResoluteResult evaluateProveStatementBody(ProveStatement proveStatement,

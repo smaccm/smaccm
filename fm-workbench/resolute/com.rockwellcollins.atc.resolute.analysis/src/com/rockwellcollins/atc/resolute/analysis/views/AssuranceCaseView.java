@@ -12,6 +12,7 @@ import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
@@ -78,7 +79,11 @@ public class AssuranceCaseView extends ViewPart {
     }
 
     public void setProofs(List<ResoluteResult> proofTrees) {
+        Object[] expandedElements = treeViewer.getExpandedElements();
+        TreePath[] expandedTreePaths = treeViewer.getExpandedTreePaths();
         treeViewer.setInput(proofTrees);
+        treeViewer.setExpandedElements(expandedElements);
+        treeViewer.setExpandedTreePaths(expandedTreePaths);
     }
 
     @Override

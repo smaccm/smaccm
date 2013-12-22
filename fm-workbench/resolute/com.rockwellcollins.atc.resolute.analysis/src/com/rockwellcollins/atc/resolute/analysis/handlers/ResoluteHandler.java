@@ -23,6 +23,7 @@ import com.rockwellcollins.atc.resolute.analysis.execution.ResoluteInterpreter;
 import com.rockwellcollins.atc.resolute.analysis.execution.ResoluteQuantifiableAadlObjects;
 import com.rockwellcollins.atc.resolute.analysis.results.ResoluteResult;
 import com.rockwellcollins.atc.resolute.analysis.views.AssuranceCaseView;
+import com.rockwellcollins.atc.resolute.resolute.ProveStatement;
 import com.rockwellcollins.atc.resolute.resolute.ResoluteSubclause;
 
 public class ResoluteHandler extends AadlHandler {
@@ -62,16 +63,19 @@ public class ResoluteHandler extends AadlHandler {
             ComponentInstance compInst = (ComponentInstance) el;
             for (Element child : compInst.getComponentClassifier().getChildren()) {
                 if (child instanceof ResoluteSubclause) {
-                    ResoluteInterpreter resInterp = new ResoluteInterpreter(compInst);
-                    ResoluteSubclause subClause = (ResoluteSubclause) child;
-                    proofTrees.addAll(resInterp.evaluateSubclause(subClause));
+                    ResoluteInterpreter interpreter = new ResoluteInterpreter(compInst);
+                    for (Element element : child.getChildren()) {
+                        if (element instanceof ProveStatement) {
+                            proofTrees.add(interpreter.evaluateProveStatement((ProveStatement) element));
+                            drawProofs(proofTrees);
+                        }
+                    }
                 }
             }
         }
         stop = System.currentTimeMillis();
         System.out.println("Evaluation time: " + (stop - start) / 1000.0 + "s");
 
-        drawProofs(proofTrees);
         return Status.OK_STATUS;
     }
 
