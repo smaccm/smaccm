@@ -164,7 +164,7 @@ public class ResoluteProver extends ResoluteSwitch<ResoluteResult> {
 
         ClaimCallContext context = new ClaimCallContext(funcDef, argVals);
         if (claimCallContexts.contains(context)) {
-            return new FailResult("Recursive call to " + funcDef.getName(), object);
+            return new FailResult("Recursive call to " + funcDef.getName() + " with arguments " + argVals, object);
         }
 
         claimCallContexts.add(context);
