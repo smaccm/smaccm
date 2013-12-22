@@ -1,14 +1,12 @@
 package com.rockwellcollins.atc.resolute.consistency;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.util.List;
 
 import org.osate.aadl2.NamedElement;
 import org.osate.aadl2.util.OsateDebug;
 
-import com.rockwellcollins.atc.resolute.analysis.ResoluteEvaluator;
-import com.rockwellcollins.atc.resolute.analysis.ResoluteExternalAnalysis;
+import com.rockwellcollins.atc.resolute.analysis.execution.ResoluteEvaluator;
+import com.rockwellcollins.atc.resolute.analysis.execution.ResoluteExternalAnalysis;
 import com.rockwellcollins.atc.resolute.analysis.values.BoolValue;
 import com.rockwellcollins.atc.resolute.analysis.values.ResoluteValue;
 import com.rockwellcollins.atc.resolute.consistency.Utils.ModelType;

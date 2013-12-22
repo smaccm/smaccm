@@ -1,4 +1,4 @@
-package com.rockwellcollins.atc.resolute.analysis;
+package com.rockwellcollins.atc.resolute.analysis.views;
 
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.ViewerCell;
@@ -6,6 +6,8 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
+
+import com.rockwellcollins.atc.resolute.analysis.results.ClaimResult;
 
 public class ResoluteTooltipListener implements Listener {
     private String tooltip = "";
@@ -26,9 +28,9 @@ public class ResoluteTooltipListener implements Listener {
         switch (event.type) {
         case SWT.MouseMove:
             ViewerCell cell = treeViewer.getCell(new Point(event.x, event.y));
-            if (cell != null && cell.getElement() instanceof ResoluteProofNode) {
-                ResoluteProofNode node = (ResoluteProofNode) cell.getElement();
-                tooltip = node.getExprStr();
+            if (cell != null && cell.getElement() instanceof ClaimResult) {
+                ClaimResult claim = (ClaimResult) cell.getElement();
+                tooltip = claim.getText();
             }
             break;
 

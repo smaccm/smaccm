@@ -1,16 +1,15 @@
 package com.rockwellcollins.atc.resolute.analysis.handlers;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.emf.common.util.EList;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
-import org.osate.aadl2.ComponentClassifier;
 import org.osate.aadl2.Element;
 import org.osate.aadl2.NamedElement;
 import org.osate.aadl2.SystemImplementation;
@@ -20,20 +19,26 @@ import org.osate.aadl2.instance.SystemInstance;
 import org.osate.aadl2.instantiation.InstantiateModel;
 import org.osate.ui.dialogs.Dialog;
 
-import com.rockwellcollins.atc.resolute.analysis.ProofType;
-import com.rockwellcollins.atc.resolute.analysis.ResoluteInterpreter;
-import com.rockwellcollins.atc.resolute.analysis.ResoluteProofTree;
-import com.rockwellcollins.atc.resolute.analysis.ResoluteQuantifiableAadlObjects;
+import com.rockwellcollins.atc.resolute.analysis.execution.ResoluteInterpreter;
+import com.rockwellcollins.atc.resolute.analysis.execution.ResoluteQuantifiableAadlObjects;
+import com.rockwellcollins.atc.resolute.analysis.results.ResoluteResult;
 import com.rockwellcollins.atc.resolute.analysis.views.AssuranceCaseView;
 import com.rockwellcollins.atc.resolute.resolute.ResoluteSubclause;
 
-public abstract class ResoluteHandler extends AadlHandler {
+public class ResoluteHandler extends AadlHandler {
+    @Override
+    protected String getJobName() {
+        return "Resolute Analysis";
+    }
+
     @Override
     protected IStatus runJob(Element root, IProgressMonitor monitor) {
-        SystemInstance si = null;
+        clearProofs();
+        SystemInstance si;
 
+        long start = System.currentTimeMillis();
         if (root instanceof SystemImplementation) {
-            final SystemImplementation sysimpl = (SystemImplementation) root;
+            SystemImplementation sysimpl = (SystemImplementation) root;
             try {
                 si = InstantiateModel.buildInstanceModelFile(sysimpl);
             } catch (Exception e) {
@@ -41,44 +46,40 @@ public abstract class ResoluteHandler extends AadlHandler {
                         + e.getMessage());
                 return Status.CANCEL_STATUS;
             }
+        } else {
+            Dialog.showError("Model Instantiate",
+                    "You must select a System Implementation to instantiate");
+            return Status.CANCEL_STATUS;
         }
+        long stop = System.currentTimeMillis();
+        System.out.println("Instantiation time: " + (stop - start) / 1000.0 + "s");
 
-        assert (si != null);
+        start = System.currentTimeMillis();
         ResoluteQuantifiableAadlObjects.clearAllSets();
         initializeComponentLists(si);
-        List<ResoluteProofTree> proofTrees = new LinkedList<ResoluteProofTree>();
+        List<ResoluteResult> proofTrees = new ArrayList<>();
         for (NamedElement el : ResoluteQuantifiableAadlObjects.componentSet) {
             ComponentInstance compInst = (ComponentInstance) el;
-
-            ComponentClassifier compClass = compInst.getComponentClassifier();
-            EList<Element> componentChildren = compClass.getChildren();
-            for (Element child : componentChildren) {
+            for (Element child : compInst.getComponentClassifier().getChildren()) {
                 if (child instanceof ResoluteSubclause) {
-                    ResoluteInterpreter resInterp = new ResoluteInterpreter(compInst,
-                            getProofType());
+                    ResoluteInterpreter resInterp = new ResoluteInterpreter(compInst);
                     ResoluteSubclause subClause = (ResoluteSubclause) child;
-                    List<ResoluteProofTree> proofs = resInterp.evaluateSubclause(subClause);
-                    for (ResoluteProofTree proof : proofs) {
-                        pruneProof(proof);
-                    }
-                    proofTrees.addAll(proofs);
+                    proofTrees.addAll(resInterp.evaluateSubclause(subClause));
                 }
             }
         }
+        stop = System.currentTimeMillis();
+        System.out.println("Evaluation time: " + (stop - start) / 1000.0 + "s");
 
         drawProofs(proofTrees);
         return Status.OK_STATUS;
     }
 
-    protected abstract ProofType getProofType();
+    private void initializeComponentLists(ComponentInstance compInst) {
+        if (compInst == null) {
+            return;
+        }
 
-    protected abstract void pruneProof(ResoluteProofTree proof);
-
-    private void initializeComponentLists(ComponentInstance compInst)
-    {
-    	if (compInst == null)
-    		return;
-    	
         switch (compInst.getCategory()) {
         case ABSTRACT:
             ResoluteQuantifiableAadlObjects.abstractSet.add(compInst);
@@ -139,7 +140,7 @@ public abstract class ResoluteHandler extends AadlHandler {
         }
     }
 
-    private void drawProofs(final List<ResoluteProofTree> proofTrees) {
+    private void drawProofs(final List<ResoluteResult> proofTrees) {
         final IWorkbenchPage page = getWindow().getActivePage();
 
         Display.getDefault().asyncExec(new Runnable() {
@@ -150,13 +151,17 @@ public abstract class ResoluteHandler extends AadlHandler {
         });
     }
 
-    private void displayView(final List<ResoluteProofTree> proofTrees, final IWorkbenchPage page) {
+    private void displayView(final List<ResoluteResult> proofTrees, final IWorkbenchPage page) {
         try {
             AssuranceCaseView view = (AssuranceCaseView) page.showView(AssuranceCaseView.ID);
-            view.addProofs(proofTrees);
+            view.setProofs(proofTrees);
             view.setFocus();
         } catch (PartInitException e) {
             e.printStackTrace();
         }
+    }
+
+    private void clearProofs() {
+        drawProofs(Collections.<ResoluteResult> emptyList());
     }
 }

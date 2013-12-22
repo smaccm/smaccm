@@ -116,7 +116,7 @@ ClaimString:
 
 DefinitionBody:
 	 {FuncBody} ':' type=Type '=' expr=Expr
-|	 {ClaimBody} '<=' ('**'(claim+=ClaimString)*'**') expr=Expr
+|	 {ClaimBody} '<=' ('**'(claim+=ClaimString)+'**') expr=Expr
 ;
 
 Expr:
@@ -190,7 +190,6 @@ BuiltInFunc:
 |   'has_type'
 |	'bound'
 |	'contained'
-|   'get_feature'
 |   'conn_source'
 |   'conn_dest'
 |   'property_exists'
@@ -219,7 +218,7 @@ BuiltInFunc:
 |   'is_abstract'
 // set predicates
 |   'is_empty'
-|   'identity'
+|   'singleton'
 // connection predicates
 |   'is_bidirectional'
 |   'is_data_access'

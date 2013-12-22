@@ -40,7 +40,6 @@ import org.osate.aadl2.ThreadGroupType;
 import org.osate.aadl2.ThreadType;
 import org.osate.aadl2.VirtualBusType;
 import org.osate.aadl2.VirtualProcessorType;
-import org.osate.aadl2.util.OsateDebug;
 
 import com.rockwellcollins.atc.resolute.analysis.external.EvaluateTypeExtention;
 import com.rockwellcollins.atc.resolute.analysis.external.ResoluteExternalAnalysisType;
@@ -450,16 +449,12 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
         case "conn_dest":
             expectedTypes.add(BaseType.CONNECTION);
             break;
-        
-        case "get_feature":
-        	expectedTypes.add(BaseType.COMPONENT);
-            expectedTypes.add(BaseType.CONNECTION);
+            
+        case "singleton":
+            //TODO: support integers and reals as well
+            expectedTypes.add(BaseType.AADL);
             break;
 
-        case "identity":
-            //TODO: support integers and reals as well
-            expectedTypes.add(BaseType.AADL); 
-            break;
         case "is_empty":
             if (actuals.size() != 1) {
                 error(funCall, "function 'is_empty' expects one argument");
@@ -870,19 +865,12 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
         case "conn_source":
         case "conn_dest":
             return BaseType.COMPONENT;
-
-        case "get_feature":
-            return BaseType.COMPONENT;           
             
-        case "identity":
-        {
-            List<Expr> args = funCall.getArgs();
-            Expr expr = args.get(0);
-            ResoluteType argType = getExprType(expr);
-            
-            return new SetType(argType);
+        case "singleton": {
+            Expr expr = funCall.getArgs().get(0);
+            return new SetType(getExprType(expr));
         }
-        
+
         case "sum":
             if (funCall.getArgs().size() != 1) {
                 return BaseType.FAIL;

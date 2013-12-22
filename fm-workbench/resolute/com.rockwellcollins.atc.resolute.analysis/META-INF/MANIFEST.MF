@@ -18,6 +18,8 @@ Require-Bundle: org.eclipse.ui,
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Export-Package: com.rockwellcollins.atc.resolute.analysis,
+ com.rockwellcollins.atc.resolute.analysis.execution,
+ com.rockwellcollins.atc.resolute.analysis.results,
  com.rockwellcollins.atc.resolute.analysis.values
 Eclipse-RegisterBuddy: com.rockwellcollins.atc.resolute.ui
 Bundle-Vendor: Rockwell Collins, Inc.

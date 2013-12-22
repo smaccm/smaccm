@@ -1,7 +1,6 @@
 package com.rockwellcollins.atc.resolute.consistency.checker;
 
 import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.InputStreamReader;
 
 import org.eclipse.core.resources.IFile;
