@@ -1016,9 +1016,15 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
                 ComponentInstance comp = (ComponentInstance) comp0Val.getNamedElement();
                 nodeStr += "(" + comp.getName() + ", " + prop.getName() + ")";
                 expr = getPropExpression(comp, prop);
-            } else if (comp0Val.getNamedElement() instanceof FeatureInstance)
+            } 
+            else if (comp0Val.getNamedElement() instanceof FeatureInstance)
             {
             	 FeatureInstance feat = (FeatureInstance) comp0Val.getNamedElement();
+            	 expr = getPropExpression(feat, prop);
+            }
+            else if (comp0Val.getNamedElement() instanceof Feature)
+            {
+            	Feature feat = (Feature) comp0Val.getNamedElement();
             	 expr = getPropExpression(feat, prop);
             }
             else {
@@ -1161,6 +1167,10 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
                 result = getPropExists(comp, prop);
             } else if (comp0Val.getNamedElement() instanceof Classifier) {
             	Classifier comp = (Classifier) comp0Val.getNamedElement();
+                nodeStr += "(" + comp.getName() + ", " + prop.getName() + ")";
+                result = getPropExists(comp, prop);
+            }else if (comp0Val.getNamedElement() instanceof Feature) {
+            	Feature comp = (Feature) comp0Val.getNamedElement();
                 nodeStr += "(" + comp.getName() + ", " + prop.getName() + ")";
                 result = getPropExists(comp, prop);
             }else {
