@@ -1192,13 +1192,27 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
 
             assert (comp0Val.getNamedElement() instanceof ComponentInstance);
             assert (comp1Val.getNamedElement() instanceof ComponentClassifier);
-
-            compInst = (ComponentInstance) comp0Val.getNamedElement();
+            NamedElement ne = comp0Val.getNamedElement();
+            compInst = null;
+            
             ComponentClassifier compClass = (ComponentClassifier) comp1Val.getNamedElement();
+            result = new BoolValue (false);
+            if (ne instanceof ComponentInstance)
+            {
+            	compInst = (ComponentInstance) comp0Val.getNamedElement();
+            	result = new BoolValue(compInst.getComponentClassifier().equals(compClass));
+            }
+            if (ne instanceof BusAccess)
+            {
+            	ComponentClassifier comp0Class = (ComponentClassifier) ((BusAccess)ne).getBusFeatureClassifier();
+            	result = new BoolValue(comp0Class.equals(compClass));
+            }
+            
+            
 
-            nodeStr += "(" + compInst.getName() + ", " + compClass.getName() + ")";
+            nodeStr += "(" + ne.getName() + ", " + compClass.getName() + ")";
 
-            result = new BoolValue(compInst.getComponentClassifier().equals(compClass));
+            
             break;
         }
         
