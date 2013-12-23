@@ -30,7 +30,8 @@ public class ResoluteInterpreter {
 
     public ResoluteResult evaluateProveStatement(ProveStatement proveStatement) {
         String proveText = ResoluteProver.proveStatementToString(proveStatement, compInst);
-        ResoluteResult subResult = evaluateProveStatementBody(proveStatement, getAllModeInstances(proveStatement));
+        ResoluteResult subResult = evaluateProveStatementBody(proveStatement,
+                getAllModeInstances(proveStatement));
         Map<String, EObject> references = Collections.emptyMap();
         if (proveStatement.getModes().size() == 1) {
             String mode = NodeModelUtils.getNode(proveStatement.getModes().get(0)).getText();
@@ -39,18 +40,34 @@ public class ResoluteInterpreter {
         return new ClaimResult(proveText, subResult, references, proveStatement);
     }
 
+    private List<SystemOperationMode> getAllModeInstances(ProveStatement proveStatement) {
+        List<NestedDotID> nestModesIds = proveStatement.getModes();
+        if (nestModesIds == null || nestModesIds.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        SystemInstance sysInst = (SystemInstance) compInst.getElementRoot();
+        return sysInst.getSystemOperationModesFor(getCompInstSubModes(nestModesIds));
+    }
+
+    private List<ModeInstance> getCompInstSubModes(List<NestedDotID> ids) {
+        List<ModeInstance> result = new ArrayList<>();
+        for (NestedDotID id : ids) {
+            result.add(getCompInstSubMode(compInst, id));
+        }
+        return result;
+    }
+
     private ModeInstance getCompInstSubMode(ComponentInstance compInst, NestedDotID modeId) {
         if (modeId.getSub() != null) {
-            NamedElement el = modeId.getBase();
-            assert (el instanceof Subcomponent);
-            Subcomponent subComp = (Subcomponent) el;
+            Subcomponent subComp = (Subcomponent) modeId.getBase();
 
             for (ComponentInstance subCompInst : compInst.getAllComponentInstances()) {
                 if (subCompInst.getSubcomponent().equals(subComp)) {
                     return getCompInstSubMode(subCompInst, modeId.getSub());
                 }
             }
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("Failed to find subcomponent instance: " + subComp.getName());
         }
 
         Mode thisMode = (Mode) modeId.getBase();
@@ -59,36 +76,7 @@ public class ResoluteInterpreter {
                 return modeInst;
             }
         }
-        throw new IllegalArgumentException();
-    }
-
-    private List<ModeInstance> getCompInstSubModes(ComponentInstance subCompInst,
-            List<NestedDotID> nestModesIds) {
-        List<ModeInstance> result = new ArrayList<>();
-        if (nestModesIds != null) {
-            for (NestedDotID id : nestModesIds) {
-                result.add(getCompInstSubMode(subCompInst, id));
-            }
-        }
-        return result;
-    }
-
-    private List<SystemOperationMode> getAllModeInstances(ProveStatement proveStatement) {
-        List<NestedDotID> nestModesIds = proveStatement.getModes();
-
-        if (nestModesIds == null || nestModesIds.size() == 0) {
-            return new ArrayList<>();
-        }
-
-        List<ModeInstance> modeInsts = getCompInstSubModes(compInst, nestModesIds);
-
-        NamedElement root = compInst.getElementRoot();
-        assert (root instanceof SystemInstance);
-        SystemInstance sysInst = (SystemInstance) root;
-
-        List<SystemOperationMode> sysModes = sysInst.getSystemOperationModesFor(modeInsts);
-
-        return sysModes;
+        throw new IllegalArgumentException("Failed to find mode instance: " + thisMode.getName());
     }
 
     private ResoluteResult evaluateProveStatementBody(ProveStatement proveStatement,
@@ -102,7 +90,8 @@ public class ResoluteInterpreter {
                 sb.append(mode.toString());
                 sb.append("\n");
             }
-            return new FailResult("Prove statement yields multiple system modes: " + sb, proveStatement);
+            return new FailResult("Prove statement yields multiple system modes: " + sb,
+                    proveStatement);
         }
     }
 }
