@@ -620,64 +620,17 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
                         + element.getContainingClassifier().getName(), object);
             }
 
-            if (expr instanceof StringLiteral) {
-                StringLiteral value = (StringLiteral) expr;
-                return new StringValue(value.getValue());
-            } else if (expr instanceof NamedValue) {
-                NamedValue namedVal = (NamedValue) expr;
-                AbstractNamedValue absVal = namedVal.getNamedValue();
-                EnumerationLiteral enVal = (EnumerationLiteral) absVal;
-                return new StringValue(enVal.getName());
-            } else if (expr instanceof BooleanLiteral) {
-                BooleanLiteral value = (BooleanLiteral) expr;
-                return new BoolValue(value.getValue());
-            } else if (expr instanceof IntegerLiteral) {
-                IntegerLiteral value = (IntegerLiteral) expr;
-                return new IntValue((long) value.getScaledValue());
-            } else if (expr instanceof RealLiteral) {
-                RealLiteral value = (RealLiteral) expr;
-                return new RealValue(value.getValue());
-            } else if (expr instanceof org.osate.aadl2.RangeValue) {
-                org.osate.aadl2.RangeValue value = (org.osate.aadl2.RangeValue) expr;
-                if (value.getMinimumValue() instanceof IntegerLiteral) {
-                    IntegerLiteral min = (IntegerLiteral) value.getMinimumValue();
-                    IntegerLiteral max = (IntegerLiteral) value.getMaximumValue();
-                    return new RangeValue((long) min.getScaledValue(), (long) max.getScaledValue());
-                } else if (value.getMinimumValue() instanceof RealLiteral) {
-                    IntegerLiteral min = (IntegerLiteral) value.getMinimumValue();
-                    IntegerLiteral max = (IntegerLiteral) value.getMaximumValue();
-                    return new RangeValue((double) min.getScaledValue(),
-                            (double) max.getScaledValue());
-                } else {
-                    throw new IllegalArgumentException("Unknown range type: " + expr);
-                }
-            } else {
-                throw new IllegalArgumentException("Unknown type: " + expr.getClass().getName());
-            }
+            return exprToValue(expr);
         }
 
         case "upper_bound": {
             RangeValue rv = (RangeValue) argVals.get(0);
-
-            if (rv.getType() == RangeValue.TYPE_INTEGER) {
-                return new IntValue(rv.getMaximumLong());
-            } else if (rv.getType() == RangeValue.TYPE_REAL) {
-                return new RealValue(rv.getMaximumDouble());
-            } else {
-                throw new IllegalArgumentException("Unknown range type: " + rv);
-            }
+            return rv.getMax();
         }
 
         case "lower_bound": {
             RangeValue rv = (RangeValue) argVals.get(0);
-
-            if (rv.getType() == RangeValue.TYPE_INTEGER) {
-                return new IntValue(rv.getMinimumLong());
-            } else if (rv.getType() == RangeValue.TYPE_REAL) {
-                return new RealValue(rv.getMinimumDouble());
-            } else {
-                throw new IllegalArgumentException("Unknown range type: " + rv);
-            }
+            return rv.getMin();
         }
 
         case "property_exists": {
@@ -700,7 +653,7 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
         case "class_of": {
             NamedElement ne = argVals.get(0).getNamedElement();
             ComponentClassifier classifier = (ComponentClassifier) argVals.get(1).getNamedElement();
-            
+
             if (ne instanceof ComponentInstance) {
                 ComponentInstance comp = (ComponentInstance) ne;
                 return new BoolValue(comp.getComponentClassifier().equals(classifier));
@@ -708,7 +661,7 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
                 BusAccess busAccess = (BusAccess) ne;
                 return new BoolValue(busAccess.getBusFeatureClassifier().equals(classifier));
             }
-            
+
             throw new IllegalArgumentException("Unable to get class of " + ne.getName());
         }
 
@@ -1002,6 +955,32 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
 
         default:
             throw new IllegalArgumentException("Unknown function: " + funName);
+        }
+    }
+
+    private static ResoluteValue exprToValue(PropertyExpression expr) {
+        if (expr instanceof StringLiteral) {
+            StringLiteral value = (StringLiteral) expr;
+            return new StringValue(value.getValue());
+        } else if (expr instanceof NamedValue) {
+            NamedValue namedVal = (NamedValue) expr;
+            AbstractNamedValue absVal = namedVal.getNamedValue();
+            EnumerationLiteral enVal = (EnumerationLiteral) absVal;
+            return new StringValue(enVal.getName());
+        } else if (expr instanceof BooleanLiteral) {
+            BooleanLiteral value = (BooleanLiteral) expr;
+            return new BoolValue(value.getValue());
+        } else if (expr instanceof IntegerLiteral) {
+            IntegerLiteral value = (IntegerLiteral) expr;
+            return new IntValue((long) value.getScaledValue());
+        } else if (expr instanceof RealLiteral) {
+            RealLiteral value = (RealLiteral) expr;
+            return new RealValue(value.getValue());
+        } else if (expr instanceof org.osate.aadl2.RangeValue) {
+            org.osate.aadl2.RangeValue value = (org.osate.aadl2.RangeValue) expr;
+            return new RangeValue(exprToValue(value.getMinimum()), exprToValue(value.getMaximum()));
+        } else {
+            throw new IllegalArgumentException("Unknown property expression type: " + expr.getClass().getName());
         }
     }
 
