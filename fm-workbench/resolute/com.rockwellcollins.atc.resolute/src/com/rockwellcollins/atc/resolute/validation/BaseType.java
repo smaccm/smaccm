@@ -27,6 +27,8 @@ public class BaseType extends ResoluteType {
     public static final BaseType THREAD = new BaseType("thread");
     public static final BaseType VIRTUAL_BUS = new BaseType("virtual_bus");
     public static final BaseType VIRTUAL_PROCESSOR = new BaseType("virtual_processor");
+    public static final BaseType FEATURE = new BaseType("feature");
+
 
     final public String name;
 
@@ -77,6 +79,8 @@ public class BaseType extends ResoluteType {
             this.name = "connection";
             break;
         case "features":
+            this.name = "feature";
+            break;
         case "components":
             this.name = "component";
             break;
@@ -113,7 +117,7 @@ public class BaseType extends ResoluteType {
                         || subtypeOf(VIRTUAL_PROCESSOR);
 
             case "aadl":
-                return subtypeOf(COMPONENT) || subtypeOf(CONNECTION) || subtypeOf(PROPERTY);
+                return subtypeOf(COMPONENT) || subtypeOf(CONNECTION) || subtypeOf(PROPERTY) || subtypeOf(FEATURE);
 
             default:
                 return false;

@@ -86,6 +86,8 @@ BuiltinType:
 |   'system'
 |   'abstract'
     //non-aadl components
+|   'aadl'
+|   'feature'
 |   'connection'
 |   'component'
 |   'string'
@@ -188,6 +190,7 @@ BuiltInFunc:
 |   'name'
 |	'type'
 |   'has_type'
+|   'is_connected'
 |	'bound'
 |	'contained'
 |   'conn_source'

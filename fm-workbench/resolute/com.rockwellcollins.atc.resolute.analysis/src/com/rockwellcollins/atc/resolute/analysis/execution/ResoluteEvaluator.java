@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xtext.EcoreUtil2;
 import org.osate.aadl2.AbstractNamedValue;
@@ -21,6 +22,7 @@ import org.osate.aadl2.DataAccess;
 import org.osate.aadl2.DataPort;
 import org.osate.aadl2.EnumerationLiteral;
 import org.osate.aadl2.EventPort;
+import org.osate.aadl2.Feature;
 import org.osate.aadl2.IntegerLiteral;
 import org.osate.aadl2.NamedElement;
 import org.osate.aadl2.NamedValue;
@@ -356,7 +358,7 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
         for (FeatureInstance featInst : feature.getFeatureInstances()) {
             addAllFeatureGroupFeatures(featInst, returnSet);
         }
-        returnSet.add(new NamedElementValue(feature.getFeature()));
+        returnSet.add(new NamedElementValue(feature));
     }
 
     @Override
@@ -947,6 +949,14 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
 
         case "is_empty": {
             return new BoolValue(argVals.get(0).getSet().isEmpty());
+        }
+        
+        case "is_connected" : {
+            NamedElement namedEl = argVals.get(0).getNamedElement();
+            FeatureInstance feat = (FeatureInstance)namedEl;
+            EList<ConnectionInstance> sourceConns = feat.getSrcConnectionInstances();
+            EList<ConnectionInstance> destConns = feat.getDstConnectionInstances();
+            return new BoolValue(!(sourceConns.size() == 0 && destConns.size() == 0));
         }
 
         case "singleton": {

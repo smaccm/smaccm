@@ -17,6 +17,7 @@ import org.osate.aadl2.Element;
 import org.osate.aadl2.NamedElement;
 import org.osate.aadl2.instance.ComponentInstance;
 import org.osate.aadl2.instance.ConnectionInstance;
+import org.osate.aadl2.instance.FeatureInstance;
 import org.osate.aadl2.instance.SystemOperationMode;
 
 import com.rockwellcollins.atc.resolute.analysis.results.ClaimResult;
@@ -229,6 +230,9 @@ public class ResoluteProver extends ResoluteSwitch<ResoluteResult> {
         } else if (e instanceof ConnectionInstance) {
             ConnectionInstance ci = (ConnectionInstance) e;
             return ci.getConnectionReferences().get(0).getConnection();
+        } else if (e instanceof FeatureInstance){
+            FeatureInstance feat = (FeatureInstance) e;
+            return feat.getFeature();
         } else {
             return null;
         }

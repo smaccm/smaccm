@@ -1,8 +1,10 @@
 package com.rockwellcollins.atc.resolute.analysis.values;
 
+import org.eclipse.emf.ecore.EObject;
 import org.osate.aadl2.ComponentClassifier;
 import org.osate.aadl2.NamedElement;
 import org.osate.aadl2.instance.ComponentInstance;
+import org.osate.aadl2.instance.FeatureInstance;
 
 public class NamedElementValue extends ResoluteValue {
     final private NamedElement value;
@@ -31,6 +33,18 @@ public class NamedElementValue extends ResoluteValue {
             ComponentInstance ci = (ComponentInstance) value;
             ComponentClassifier cc = ci.getComponentClassifier();
             return value.getName() + " : " + cc.getQualifiedName();
+        }
+        
+        if(value instanceof FeatureInstance){
+            EObject container = value.eContainer();
+            StringBuilder sb = new StringBuilder();
+            while(container.eContainer() instanceof ComponentInstance){
+                sb.insert(0, ".");
+                sb.insert(0, ((NamedElement)container).getQualifiedName());
+                container = container.eContainer();
+            }
+            sb.append(value.getQualifiedName());
+            return sb.toString();
         }
 
         return value.getQualifiedName();

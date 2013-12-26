@@ -19,9 +19,7 @@ all_features_bound() <=
 	
 conn_eq_feat(comp : component) <=
 	** "All the features of component " comp " are connected" **
-	(forall(x : comp.features) . print_name(x)) and
-	(forall(z : comp.connections) . print_name_conn(z)) and
-	num_features(comp) = num_connections(comp)  
+	(forall(x : comp.features) . check_connected(x))
 	
 num_connections(comp : component) : int =
 	sum({1 for (x : comp.connections)})	
@@ -29,9 +27,9 @@ num_connections(comp : component) : int =
 num_features(comp : component) : int =
 	sum({ 1 for (x : comp.features)})
 	
-print_name(comp : component) <=
-	** "The component name is " comp **
-	true
+check_connected(feat : feature) <= 
+	** "The feature: " feat " is connected" **
+	is_connected(feat) 
 	
 print_name_conn(conn : connection) <=
 	** "The connection name is " conn **

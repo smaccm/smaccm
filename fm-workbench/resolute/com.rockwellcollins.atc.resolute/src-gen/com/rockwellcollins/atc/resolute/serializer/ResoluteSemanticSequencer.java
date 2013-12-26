@@ -818,6 +818,8 @@ public class ResoluteSemanticSequencer extends PropertiesSemanticSequencer {
 	 *         name='device' | 
 	 *         name='system' | 
 	 *         name='abstract' | 
+	 *         name='aadl' | 
+	 *         name='feature' | 
 	 *         name='connection' | 
 	 *         name='component' | 
 	 *         name='string' | 
