@@ -860,7 +860,7 @@ public class ResoluteSemanticSequencer extends PropertiesSemanticSequencer {
 	
 	/**
 	 * Constraint:
-	 *     (claim+=ClaimString* expr=Expr)
+	 *     (claim+=ClaimString+ expr=Expr)
 	 */
 	protected void sequence_DefinitionBody(EObject context, ClaimBody semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);

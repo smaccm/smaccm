@@ -9,7 +9,7 @@ public
   system implementation UAS.Impl
     subcomponents
       RF_915Mhz_Spectrum: bus RF_Spectrum.RF_915MHz;
-      RF_2_4Ghz_Spectrum: bus RF_Spectrum.RF_2_4GHz;
+      RF_2_4Ghz_Spectrum: bus RF_Spectrum.RF_2_4GHz; 
       UAV: system UAV::UAV.Impl;
       GS: system Ground_Station.Impl;
       RC: device RC_Controller; 

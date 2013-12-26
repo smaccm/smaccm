@@ -29,16 +29,8 @@
             name="Commands related to Resolute">
      </category>
      <command categoryId="com.rockwellcollins.atc.resolute.analysis.commands"
-            id="com.rockwellcollins.atc.resolute.analysis.commands.resoluteClaims"
-            name="Resolute Claims">
-     </command>
-     <command categoryId="com.rockwellcollins.atc.resolute.analysis.commands"
-           id="com.rockwellcollins.atc.resolute.analysis.commands.resoluteVerbose"
-           name="Resolute Verbose">
-     </command>
-     <command categoryId="com.rockwellcollins.atc.resolute.analysis.commands"
-           id="com.rockwellcollins.atc.resolute.analysis.commands.resoluteConfidence"
-           name="Resolute Confidence">
+            id="com.rockwellcollins.atc.resolute.analysis.commands.resolute"
+            name="Resolute">
      </command>
    </extension>
    
@@ -47,56 +39,13 @@
          point="org.eclipse.ui.menus">
       <menuContribution
             allPopups="false"
-            locationURI="menu:org.eclipse.ui.main.menu?after=additions">
-         <menu
-               id="com.rockwellcollins.atc.resolute.analysis.menus.main"
-               label="Resolute"
-               mnemonic="s">
-            <command
-                  commandId="com.rockwellcollins.atc.resolute.analysis.commands.resoluteClaims"
-                  icon="icons/claims.png"
-                  id="com.rockwellcollins.atc.resolute.analysis.menus.resoluteClaims"
-                  mnemonic="c"
-                  style="push">
-            </command>
-            <command
-                  commandId="com.rockwellcollins.atc.resolute.analysis.commands.resoluteVerbose"
-                  icon="icons/verbose.png"
-                  id="com.rockwellcollins.atc.resolute.analysis.menus.resoluteVerbose"
-                  mnemonic="v"
-                  style="push">
-            </command>
-            <command
-                  commandId="com.rockwellcollins.atc.resolute.analysis.commands.resoluteConfidence"
-                  icon="icons/confidence.png"
-                  id="com.rockwellcollins.atc.resolute.analysis.menus.resoluteConfidence"
-                  mnemonic="o"
-                  style="push">
-            </command>
-         </menu>
-      </menuContribution>
-      
-      <menuContribution
-            allPopups="false"
             locationURI="toolbar:org.eclipse.ui.main.toolbar?after=additions">
          <toolbar
                id="com.rockwellcollins.atc.resolute.analysis.toolbars.main">
             <command
-                  commandId="com.rockwellcollins.atc.resolute.analysis.commands.resoluteClaims"
+                  commandId="com.rockwellcollins.atc.resolute.analysis.commands.resolute"
                   icon="icons/claims.png"
-                  id="com.rockwellcollins.atc.resolute.analysis.menus.resoluteClaims"
-                  style="push">
-            </command>
-            <command
-                  commandId="com.rockwellcollins.atc.resolute.analysis.commands.resoluteVerbose"
-                  icon="icons/verbose.png"
-                  id="com.rockwellcollins.atc.resolute.analysis.menus.resoluteVerbose"
-                  style="push">
-            </command>
-            <command
-                  commandId="com.rockwellcollins.atc.resolute.analysis.commands.resoluteConfidence"
-                  icon="icons/confidence.png"
-                  id="com.rockwellcollins.atc.resolute.analysis.menus.resoluteConfidence"
+                  id="com.rockwellcollins.atc.resolute.analysis.menus.resolute"
                   style="push">
             </command>
          </toolbar>
@@ -105,58 +54,21 @@
       <menuContribution
             allPopups="false"
             locationURI="popup:org.osate.xtext.aadl2.ui.outline?after=additions">
-         <menu
-               id="com.rockwellcollins.atc.resolute.analysis.popups.main"
-               label="Resolute"
-               mnemonic="s">
-            <command
-                  commandId="com.rockwellcollins.atc.resolute.analysis.commands.resoluteClaims"
-                  icon="icons/claims.png"
-                  id="com.rockwellcollins.atc.resolute.analysis.menus.resoluteClaims"
-                  mnemonic="c"
-                  style="push">
-            </command>
-            <command
-                  commandId="com.rockwellcollins.atc.resolute.analysis.commands.resoluteVerbose"
-                  icon="icons/verbose.png"
-                  id="com.rockwellcollins.atc.resolute.analysis.menus.resoluteVerbose"
-                  mnemonic="v"
-                  style="push">
-            </command>
-            <command
-                  commandId="com.rockwellcollins.atc.resolute.analysis.commands.resoluteConfidence"
-                  icon="icons/confidence.png"
-                  id="com.rockwellcollins.atc.resolute.analysis.menus.resoluteConfidence"
-                  mnemonic="o"
-                  style="push">
-            </command>
-         </menu>
+         <command
+                commandId="com.rockwellcollins.atc.resolute.analysis.commands.resolute"
+                icon="icons/claims.png"
+                id="com.rockwellcollins.atc.resolute.analysis.menus.resolute"
+                mnemonic="r"
+                style="push">
+         </command>
       </menuContribution>
    </extension>
    
    <extension
          point="org.eclipse.ui.handlers">
       <handler
-            class="com.rockwellcollins.atc.resolute.analysis.handlers.ResoluteClaimsHandler"
-            commandId="com.rockwellcollins.atc.resolute.analysis.commands.resoluteClaims">
-         <enabledWhen>
-            <reference
-                  definitionId="com.rockwellcollins.atc.resolute.analysis.expressions.isSingleOutlineSelection">
-            </reference>
-         </enabledWhen>
-      </handler>
-      <handler
-            class="com.rockwellcollins.atc.resolute.analysis.handlers.ResoluteVerboseHandler"
-            commandId="com.rockwellcollins.atc.resolute.analysis.commands.resoluteVerbose">
-         <enabledWhen>
-            <reference
-                  definitionId="com.rockwellcollins.atc.resolute.analysis.expressions.isSingleOutlineSelection">
-            </reference>
-         </enabledWhen>
-      </handler>
-            <handler
-            class="com.rockwellcollins.atc.resolute.analysis.handlers.ResoluteConfidenceHandler"
-            commandId="com.rockwellcollins.atc.resolute.analysis.commands.resoluteConfidence">
+            class="com.rockwellcollins.atc.resolute.analysis.handlers.ResoluteHandler"
+            commandId="com.rockwellcollins.atc.resolute.analysis.commands.resolute">
          <enabledWhen>
             <reference
                   definitionId="com.rockwellcollins.atc.resolute.analysis.expressions.isSingleOutlineSelection">

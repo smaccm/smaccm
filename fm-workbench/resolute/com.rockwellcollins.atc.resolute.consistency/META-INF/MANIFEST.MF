@@ -11,3 +11,5 @@ Require-Bundle: org.eclipse.core.runtime,
  com.rockwellcollins.atc.resolute.analysis;bundle-version="1.0.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
+Import-Package: org.jdom.xpath;version="1.1.1",
+ org.osate.aadl2.modelsupport.util

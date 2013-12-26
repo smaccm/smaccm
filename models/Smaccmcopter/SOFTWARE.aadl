@@ -56,14 +56,9 @@ public
       ENV: abstract environment;
       
     connections
-<<<<<<< HEAD
       feature group sensors <-> SS.sensors_in
       -- Not supported in current version of Osate: 
-      -- {Communication_Properties::Timing => immediate;}  
-=======
-      feature group sensors <-> SS.sensors_in  
-      {Communication_Properties::Timing => immediate;}   
->>>>>>> resolute_quant
+      -- {Communication_Properties::Timing => immediate;}
       in modes (Normal, Defensive, Boot) ;
       port motors_and_radios.flight_control_commands -> RC.commands_in in modes (Normal);
       port motors_and_radios.mavlink -> DC.encrypt_in in modes (Normal);
@@ -107,19 +102,19 @@ public
       SMACCM::OS => "Breakaway-RTOS";
       
     annex resolute {** 
-    	--prove no_external_commands(this.SN, this) modes: Defensive 
+    	prove no_external_commands(this.SN, this) modes: Defensive 
     	-- This property should fail:
     	-- prove no_external_commands(this.SN, this) modes: Normal
     	
-    	--prove schedulable(this) modes: Normal
-    	--prove schedulable(this) modes: Defensive 
+    	prove schedulable(this) modes: Normal
+    	prove schedulable(this) modes: Defensive 
     	 
-    	--prove no_radio_commands(this.SN) modes: Defensive
+    	prove no_radio_commands(this.SN) modes: Defensive
     	
-    	--prove receives_mavlink(this.SN) modes: Defensive
-    	--prove receives_mavlink(this.SN) modes: Normal
+    	prove receives_mavlink(this.SN) modes: Defensive
+    	prove receives_mavlink(this.SN) modes: Normal
     	      
-    	--prove only_receive_gs(this.MC) modes: Normal
+    	prove only_receive_gs(this.MC) modes: Normal
     	
     	prove test_claim(this)
     	

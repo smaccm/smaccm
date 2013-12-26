@@ -1,6 +1,5 @@
 package com.rockwellcollins.atc.resolute.analysis.views;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
@@ -13,6 +12,7 @@ import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
@@ -20,11 +20,10 @@ import org.eclipse.ui.part.ViewPart;
 import org.eclipse.xtext.ui.editor.GlobalURIEditorOpener;
 
 import com.google.inject.Inject;
-import com.rockwellcollins.atc.resolute.analysis.ResoluteProofNode;
-import com.rockwellcollins.atc.resolute.analysis.ResoluteProofNodeContentProvider;
-import com.rockwellcollins.atc.resolute.analysis.ResoluteProofNodeLabelProvider;
-import com.rockwellcollins.atc.resolute.analysis.ResoluteProofTree;
-import com.rockwellcollins.atc.resolute.analysis.ResoluteTooltipListener;
+import com.rockwellcollins.atc.resolute.analysis.results.ClaimResult;
+import com.rockwellcollins.atc.resolute.analysis.results.FailResult;
+import com.rockwellcollins.atc.resolute.analysis.results.ResoluteResult;
+import com.rockwellcollins.atc.resolute.resolute.ProveStatement;
 
 public class AssuranceCaseView extends ViewPart {
     public static final String ID = "com.rockwellcollins.atc.resolute.views.assuranceCaseView";
@@ -36,8 +35,8 @@ public class AssuranceCaseView extends ViewPart {
     @Override
     public void createPartControl(Composite parent) {
         treeViewer = new TreeViewer(parent, SWT.SINGLE);
-        treeViewer.setContentProvider(new ResoluteProofNodeContentProvider());
-        treeViewer.setLabelProvider(new ResoluteProofNodeLabelProvider());
+        treeViewer.setContentProvider(new ResoluteResultContentProvider());
+        treeViewer.setLabelProvider(new ResoluteResultLabelProvider());
         ResoluteTooltipListener.createAndRegister(treeViewer);
 
         MenuManager manager = new MenuManager();
@@ -48,15 +47,18 @@ public class AssuranceCaseView extends ViewPart {
             public void menuAboutToShow(IMenuManager manager) {
                 IStructuredSelection selection = (IStructuredSelection) treeViewer.getSelection();
                 if (!selection.isEmpty()) {
-                    ResoluteProofNode proofNode = (ResoluteProofNode) selection.getFirstElement();
-                    String text;
-                    if (proofNode.getParent() == null) {
-                        text = "Open Prove Declaration";
+                    ClaimResult claim = (ClaimResult) selection.getFirstElement();
+                    
+                    EObject location = claim.getLocation();
+                    if (claim instanceof FailResult) {
+                        manager.add(createHyperlinkAction("Open Failure Location", location));
+                    } else if (location instanceof ProveStatement) {
+                        manager.add(createHyperlinkAction("Open Prove Statement", location));
                     } else {
-                        text = "Open Claim Declaration";
+                        manager.add(createHyperlinkAction("Open Claim Definition", location));
                     }
-                    manager.add(createHyperlinkAction(text, proofNode.getEObject()));
-                    Map<String, EObject> references = proofNode.getClaimReferences();
+                    
+                    Map<String, EObject> references = claim.getReferences();
                     for (String name : new TreeSet<String>(references.keySet())) {
                         manager.add(createHyperlinkAction("Go to '" + name + "'",
                                 references.get(name)));
@@ -76,13 +78,12 @@ public class AssuranceCaseView extends ViewPart {
         };
     }
 
-    public void addProofs(List<ResoluteProofTree> proofTrees) {
-        List<ResoluteProofNode> roots = new ArrayList<>();
-        for (ResoluteProofTree tree : proofTrees) {
-            //tree.sortDescendants();
-            roots.add(tree.getRoot());
-        }
-        treeViewer.setInput(roots);
+    public void setProofs(List<ResoluteResult> proofTrees) {
+        Object[] expandedElements = treeViewer.getExpandedElements();
+        TreePath[] expandedTreePaths = treeViewer.getExpandedTreePaths();
+        treeViewer.setInput(proofTrees);
+        treeViewer.setExpandedElements(expandedElements);
+        treeViewer.setExpandedTreePaths(expandedTreePaths);
     }
 
     @Override

@@ -40,7 +40,6 @@ import org.osate.aadl2.ThreadGroupType;
 import org.osate.aadl2.ThreadType;
 import org.osate.aadl2.VirtualBusType;
 import org.osate.aadl2.VirtualProcessorType;
-import org.osate.aadl2.util.OsateDebug;
 
 import com.rockwellcollins.atc.resolute.analysis.external.EvaluateTypeExtention;
 import com.rockwellcollins.atc.resolute.analysis.external.ResoluteExternalAnalysisType;
@@ -374,6 +373,7 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
         switch (funCall.getFn())
         {
         case "upper_bound":
+        case "lower_bound":
         	expectedTypes.add(BaseType.RANGE);
         	break;
         
@@ -420,10 +420,16 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
             break;
 
         case "class_of":
+        case "subcomponent_of":
             expectedTypes.add(BaseType.COMPONENT);
             expectedTypes.add(BaseType.COMPONENT);
             break;
 
+        case "name":
+            expectedTypes.add(BaseType.COMPONENT);
+            expectedTypes.add(BaseType.STRING);
+            break;            
+            
         case "type":
         case "has_type":
             expectedTypes.add(BaseType.AADL);
@@ -443,16 +449,12 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
         case "conn_dest":
             expectedTypes.add(BaseType.CONNECTION);
             break;
-        
-        case "get_feature":
-        	expectedTypes.add(BaseType.COMPONENT);
-            expectedTypes.add(BaseType.CONNECTION);
+            
+        case "singleton":
+            //TODO: support integers and reals as well
+            expectedTypes.add(BaseType.AADL);
             break;
 
-        case "identity":
-            //TODO: support integers and reals as well
-            expectedTypes.add(BaseType.AADL); 
-            break;
         case "is_empty":
             if (actuals.size() != 1) {
                 error(funCall, "function 'is_empty' expects one argument");
@@ -764,12 +766,15 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
         case "is_system":
         case "is_abstract":
         case "class_of":
+        case "subcomponent_of":
+        case "name":
         case "bound": 
         case "contained":
         case "property_exists":
             return BaseType.BOOL;
 
         case "upper_bound":
+        case "lower_bound":
         {
             if (funCall.getArgs().size() != 1) {
                 return BaseType.FAIL;
@@ -794,7 +799,9 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
             if (propType instanceof RangeType)
             {
             	RangeType rt = (RangeType)propType;
-            	PropertyExpression pe = rt.getNumberType().getRange().getUpperBound();
+            	PropertyExpression pe;
+            	
+            	pe = rt.getNumberType().getRange().getUpperBound();
                 if (pe instanceof AadlInteger) {
                     return BaseType.INT;
                 }
@@ -858,19 +865,12 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
         case "conn_source":
         case "conn_dest":
             return BaseType.COMPONENT;
-
-        case "get_feature":
-            return BaseType.COMPONENT;           
             
-        case "identity":
-        {
-            List<Expr> args = funCall.getArgs();
-            Expr expr = args.get(0);
-            ResoluteType argType = getExprType(expr);
-            
-            return new SetType(argType);
+        case "singleton": {
+            Expr expr = funCall.getArgs().get(0);
+            return new SetType(getExprType(expr));
         }
-        
+
         case "sum":
             if (funCall.getArgs().size() != 1) {
                 return BaseType.FAIL;

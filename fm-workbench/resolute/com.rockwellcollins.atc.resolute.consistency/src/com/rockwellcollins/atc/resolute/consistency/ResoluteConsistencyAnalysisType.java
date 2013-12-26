@@ -17,6 +17,7 @@ public class ResoluteConsistencyAnalysisType implements ResoluteExternalAnalysis
     public List<ResoluteType> getArgTypes() {
     	ArrayList<ResoluteType> list;
     	list = new ArrayList<ResoluteType>();
+    	list.add(BaseType.AADL);
     	list.add(BaseType.STRING);
     	list.add(BaseType.STRING);
     	list.add(BaseType.STRING);

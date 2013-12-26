@@ -6,6 +6,8 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
+import com.rockwellcollins.atc.resolute.analysis.execution.EvaluateExternalAnalysis;
+
 /**
  * The activator class controls the plug-in life cycle
  */
@@ -38,7 +40,6 @@ public class Activator extends AbstractUIPlugin {
         // Initialize the interfaces for all external analysis
         final IExtensionRegistry extensionRegistry = Platform.getExtensionRegistry();
         EvaluateExternalAnalysis.init(extensionRegistry);
-        EvaluateConfidenceAnalysis.init(extensionRegistry);
     }
 
     /*
