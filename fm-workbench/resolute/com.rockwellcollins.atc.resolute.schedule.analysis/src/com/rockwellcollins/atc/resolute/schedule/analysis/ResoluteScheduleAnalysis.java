@@ -46,33 +46,17 @@ public class ResoluteScheduleAnalysis implements ResoluteExternalAnalysis {
 
             //prop = comp.getPropertyValues("Timing_Properties", "Deadline");
 
-<<<<<<< HEAD
             //if (prop.size() != 1) {
             //    throw new ResoluteFailException("Thread '" + comp.getName()
             //            + "' must have a 'Deadline' property specified to run 'schedule' analysis");
             //}
-=======
-            if (prop.size() != 1) {
-                throw new ResoluteFailException("Thread '" + comp.getName()
-                        + "' must have a 'Deadline' property specified to run 'schedule' analysis",
-                        comp.getSubcomponent());
-            }
->>>>>>> f35ccf5b0afca91922b5047b42747fdb2141d03e
 
             //propExpr = prop.get(0);
 
-<<<<<<< HEAD
             //if (!(propExpr instanceof IntegerLiteral)) {
             //    throw new ResoluteFailException("Thread '" + comp.getName()
             //            + "' must have a 'Deadline' property specified to run 'schedule' analysis");
             //}
-=======
-            if (!(propExpr instanceof IntegerLiteral)) {
-                throw new ResoluteFailException("Thread '" + comp.getName()
-                        + "' must have a 'Deadline' property specified to run 'schedule' analysis",
-                        comp.getSubcomponent());
-            }
->>>>>>> f35ccf5b0afca91922b5047b42747fdb2141d03e
 
             //assert (propExpr instanceof IntegerLiteral);
             //intLit = (IntegerLiteral) propExpr;
