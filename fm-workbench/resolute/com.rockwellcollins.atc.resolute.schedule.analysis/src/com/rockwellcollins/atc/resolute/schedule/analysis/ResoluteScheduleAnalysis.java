@@ -43,22 +43,22 @@ public class ResoluteScheduleAnalysis implements ResoluteExternalAnalysis {
             double period_ps = intLit.getScaledValue(); // this is in pico
                                                         // seconds
 
-            prop = comp.getPropertyValues("Timing_Properties", "Deadline");
+            //prop = comp.getPropertyValues("Timing_Properties", "Deadline");
 
-            if (prop.size() != 1) {
-                throw new ResoluteFailException("Thread '" + comp.getName()
-                        + "' must have a 'Deadline' property specified to run 'schedule' analysis");
-            }
+            //if (prop.size() != 1) {
+            //    throw new ResoluteFailException("Thread '" + comp.getName()
+            //            + "' must have a 'Deadline' property specified to run 'schedule' analysis");
+            //}
 
-            propExpr = prop.get(0);
+            //propExpr = prop.get(0);
 
-            if (!(propExpr instanceof IntegerLiteral)) {
-                throw new ResoluteFailException("Thread '" + comp.getName()
-                        + "' must have a 'Deadline' property specified to run 'schedule' analysis");
-            }
+            //if (!(propExpr instanceof IntegerLiteral)) {
+            //    throw new ResoluteFailException("Thread '" + comp.getName()
+            //            + "' must have a 'Deadline' property specified to run 'schedule' analysis");
+            //}
 
-            assert (propExpr instanceof IntegerLiteral);
-            intLit = (IntegerLiteral) propExpr;
+            //assert (propExpr instanceof IntegerLiteral);
+            //intLit = (IntegerLiteral) propExpr;
 
             prop = comp.getPropertyValues("SMACCM", "WC_Execution_Time");
 
