@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -80,21 +81,20 @@ import com.rockwellcollins.atc.resolute.resolute.UnaryExpr;
 import com.rockwellcollins.atc.resolute.resolute.util.ResoluteSwitch;
 
 public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
-    // Stack for function, claim, and quantifier arguments, shared with ResoluteProver
-    private Deque<Map<Arg, ResoluteValue>> argMapStack;
+    // Stack for function, claim, and quantifier arguments
+    protected final Deque<Map<Arg, ResoluteValue>> argMapStack = new LinkedList<>();
 
     // Keeps track of context of the initial prove statement
-    final private EvaluationContext context;
+    protected final EvaluationContext context;
 
     final private static BoolValue TRUE = new BoolValue(true);
     final private static BoolValue FALSE = new BoolValue(false);
 
-    public ResoluteEvaluator(EvaluationContext context,
-            Deque<Map<Arg, ResoluteValue>> argMapStack) {
+    public ResoluteEvaluator(EvaluationContext context, Map<Arg, ResoluteValue> env) {
         this.context = context;
-        this.argMapStack = argMapStack;
+        this.argMapStack.push(new HashMap<>(env));
     }
-    
+
     public EvaluationContext getEvaluationContext() {
         return context;
     }
@@ -935,10 +935,10 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
         case "is_empty": {
             return new BoolValue(argVals.get(0).getSet().isEmpty());
         }
-        
-        case "is_connected" : {
+
+        case "is_connected": {
             NamedElement namedEl = argVals.get(0).getNamedElement();
-            FeatureInstance feat = (FeatureInstance)namedEl;
+            FeatureInstance feat = (FeatureInstance) namedEl;
             EList<ConnectionInstance> sourceConns = feat.getSrcConnectionInstances();
             EList<ConnectionInstance> destConns = feat.getDstConnectionInstances();
             return new BoolValue(!(sourceConns.size() == 0 && destConns.size() == 0));
@@ -975,7 +975,8 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
             org.osate.aadl2.RangeValue value = (org.osate.aadl2.RangeValue) expr;
             return new RangeValue(exprToValue(value.getMinimum()), exprToValue(value.getMaximum()));
         } else {
-            throw new IllegalArgumentException("Unknown property expression type: " + expr.getClass().getName());
+            throw new IllegalArgumentException("Unknown property expression type: "
+                    + expr.getClass().getName());
         }
     }
 
