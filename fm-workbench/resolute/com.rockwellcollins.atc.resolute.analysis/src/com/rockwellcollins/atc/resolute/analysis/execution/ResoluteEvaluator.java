@@ -92,7 +92,12 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
 
     public ResoluteEvaluator(EvaluationContext context, Map<Arg, ResoluteValue> env) {
         this.context = context;
-        this.argMapStack.push(new HashMap<>(env));
+        if (env == null) {
+            Map<Arg, ResoluteValue> emptyMap = Collections.emptyMap();
+            this.argMapStack.push(emptyMap);
+        } else {
+            this.argMapStack.push(new HashMap<>(env));
+        }
     }
 
     public EvaluationContext getEvaluationContext() {
