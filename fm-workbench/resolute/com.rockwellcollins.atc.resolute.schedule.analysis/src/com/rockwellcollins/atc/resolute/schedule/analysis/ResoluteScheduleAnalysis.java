@@ -9,10 +9,10 @@ import org.osate.aadl2.NamedElement;
 import org.osate.aadl2.PropertyExpression;
 import org.osate.aadl2.instance.ComponentInstance;
 
+import com.rockwellcollins.atc.resolute.analysis.execution.EvaluationContext;
 import com.rockwellcollins.atc.resolute.analysis.execution.ResoluteEvaluator;
 import com.rockwellcollins.atc.resolute.analysis.execution.ResoluteExternalAnalysis;
 import com.rockwellcollins.atc.resolute.analysis.execution.ResoluteFailException;
-import com.rockwellcollins.atc.resolute.analysis.execution.ResoluteQuantifiableAadlObjects;
 import com.rockwellcollins.atc.resolute.analysis.values.BoolValue;
 import com.rockwellcollins.atc.resolute.analysis.values.ResoluteValue;
 
@@ -20,10 +20,9 @@ public class ResoluteScheduleAnalysis implements ResoluteExternalAnalysis {
     @Override
     public ResoluteValue run(ResoluteEvaluator resEval, List<ResoluteValue> args) {
         double sched_ratio = 0;
-        Set<NamedElement> threadList = ResoluteQuantifiableAadlObjects.getAllComponentsOfType(
-                "thread", false);
+        EvaluationContext context = resEval.getEvaluationContext();
+        Set<NamedElement> threadList = context.getSet("thread");
         for (NamedElement el : threadList) {
-
             assert (el instanceof ComponentInstance);
             ComponentInstance comp = (ComponentInstance) el;
             EList<PropertyExpression> prop = comp.getPropertyValues("Timing_Properties", "Period");

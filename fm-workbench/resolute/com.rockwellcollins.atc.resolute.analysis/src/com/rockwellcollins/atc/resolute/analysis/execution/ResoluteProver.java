@@ -18,7 +18,6 @@ import org.osate.aadl2.NamedElement;
 import org.osate.aadl2.instance.ComponentInstance;
 import org.osate.aadl2.instance.ConnectionInstance;
 import org.osate.aadl2.instance.FeatureInstance;
-import org.osate.aadl2.instance.SystemOperationMode;
 
 import com.rockwellcollins.atc.resolute.analysis.results.ClaimResult;
 import com.rockwellcollins.atc.resolute.analysis.results.FailResult;
@@ -47,9 +46,9 @@ public class ResoluteProver extends ResoluteSwitch<ResoluteResult> {
 
     private final ResoluteEvaluator evaluator;
 
-    public ResoluteProver(ComponentInstance thisInst, List<SystemOperationMode> sysModes) {
+    public ResoluteProver(EvaluationContext context) {
         this.argMapStack = new LinkedList<>();
-        this.evaluator = new ResoluteEvaluator(thisInst, this.argMapStack, sysModes);
+        this.evaluator = new ResoluteEvaluator(context, this.argMapStack);
         this.claimCallContexts = new HashSet<>();
     }
 

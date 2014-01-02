@@ -22,7 +22,6 @@ import org.osate.aadl2.DataAccess;
 import org.osate.aadl2.DataPort;
 import org.osate.aadl2.EnumerationLiteral;
 import org.osate.aadl2.EventPort;
-import org.osate.aadl2.Feature;
 import org.osate.aadl2.IntegerLiteral;
 import org.osate.aadl2.NamedElement;
 import org.osate.aadl2.NamedValue;
@@ -36,7 +35,6 @@ import org.osate.aadl2.instance.ConnectionInstanceEnd;
 import org.osate.aadl2.instance.ConnectionReference;
 import org.osate.aadl2.instance.FeatureCategory;
 import org.osate.aadl2.instance.FeatureInstance;
-import org.osate.aadl2.instance.SystemOperationMode;
 import org.osate.aadl2.modelsupport.resources.OsateResourceUtil;
 import org.osate.aadl2.properties.PropertyDoesNotApplyToHolderException;
 import org.osate.aadl2.properties.PropertyNotPresentException;
@@ -85,32 +83,20 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
     // Stack for function, claim, and quantifier arguments, shared with ResoluteProver
     private Deque<Map<Arg, ResoluteValue>> argMapStack;
 
-    // keeps track of which component the current prove statement was called on
-    final private ComponentInstance thisInst;
-
-    private List<SystemOperationMode> modes;
-    private SystemOperationMode sysMode;
+    // Keeps track of context of the initial prove statement
+    final private EvaluationContext context;
 
     final private static BoolValue TRUE = new BoolValue(true);
     final private static BoolValue FALSE = new BoolValue(false);
 
-    public ResoluteEvaluator(ComponentInstance thisInst,
-            Deque<Map<Arg, ResoluteValue>> argMapStack, List<SystemOperationMode> sysModes) {
-        this.thisInst = thisInst;
+    public ResoluteEvaluator(EvaluationContext context,
+            Deque<Map<Arg, ResoluteValue>> argMapStack) {
+        this.context = context;
         this.argMapStack = argMapStack;
-        setModes(sysModes);
     }
-
-    public void setModes(List<SystemOperationMode> modes) {
-        this.modes = modes;
-
-        if (modes.size() > 0) {
-            if (modes.size() != 1) {
-                throw new UnsupportedOperationException("Multiple modes not supported: " + modes);
-            }
-            sysMode = modes.get(0);
-            ResoluteQuantifiableAadlObjects.filterBySysMode(sysMode);
-        }
+    
+    public EvaluationContext getEvaluationContext() {
+        return context;
     }
 
     @Override
@@ -363,7 +349,7 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
 
     @Override
     public ResoluteValue caseThisExpr(ThisExpr object) {
-        ComponentInstance curr = thisInst;
+        ComponentInstance curr = context.getThisInstance();
         for (NestedDotID id = object.getSub(); id != null; id = id.getSub()) {
             curr = getInstanceChild(curr, id.getBase());
         }
@@ -463,8 +449,7 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
             return doSwitch(quantArg.getExpr()).getSet();
         } else {
             Set<ResoluteValue> values = new HashSet<ResoluteValue>();
-            for (NamedElement ne : ResoluteQuantifiableAadlObjects.getAllComponentsOfType(arg
-                    .getType().getName(), modes.size() > 0)) {
+            for (NamedElement ne : context.getSet(arg.getType().getName())) {
                 values.add(new NamedElementValue(ne));
             }
             return values;
