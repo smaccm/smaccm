@@ -57,6 +57,7 @@ public class ResoluteHandler extends AadlHandler {
 
         start = System.currentTimeMillis();
         ResoluteQuantifiableAadlObjects.clearAllSets();
+        ResoluteQuantifiableAadlObjects.buildFeatConnMap(si);
         initializeComponentLists(si);
         List<ResoluteResult> proofTrees = new ArrayList<>();
         for (NamedElement el : ResoluteQuantifiableAadlObjects.componentSet) {

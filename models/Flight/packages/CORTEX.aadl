@@ -4,7 +4,7 @@ public
     features
       otg_fs: provides bus access AHB_Bus_Matrix;
       adc123: provides bus access AHB_Bus_Matrix;
-      usart6: provides bus access AHB_Bus_Matrix;
+      usart6: provides bus access AHB_Bus_Matrix; 
       i2c2: provides bus access AHB_Bus_Matrix;
       spi1: provides bus access AHB_Bus_Matrix;
       
@@ -13,7 +13,7 @@ public
       ppm: provides bus access AHB_Bus_Matrix;
       alarm: provides bus access AHB_Bus_Matrix;
   end STM32F415;
-  
+   
   system implementation STM32F415.Impl
     subcomponents
       CPU: processor ARM_Cortex_M4;
@@ -22,20 +22,20 @@ public
       MATRIX: bus AHB_Bus_Matrix;
       
     connections
-      conn0 : bus access CPU.bus_access <-> MATRIX;
-      conn1 : bus access SRAM.bus_access <-> MATRIX;
-      conn2 : bus access Flash.bus_access <-> MATRIX;
+      conn0: bus access CPU.bus_access <-> MATRIX;
+      conn1: bus access SRAM.bus_access <-> MATRIX;
+      conn2: bus access Flash.bus_access <-> MATRIX;
       
-      conn3 : bus access MATRIX <-> otg_fs;
-      conn4 : bus access MATRIX <-> adc123;
-      conn5 : bus access MATRIX <-> usart6;
-      conn6 : bus access MATRIX <-> i2c2;
-      conn7 : bus access MATRIX <-> spi1;
+      conn3: bus access MATRIX <-> otg_fs;
+      conn4: bus access MATRIX <-> adc123;
+      conn5: bus access MATRIX <-> usart6;
+      conn6: bus access MATRIX <-> i2c2;
+      conn7: bus access MATRIX <-> spi1;
       
-      conn8 : bus access MATRIX <-> usart1;
-      conn9 : bus access MATRIX <-> usart2;
-      conn10 : bus access MATRIX <-> ppm;
-      conn11 : bus access MATRIX <-> alarm;
+      conn8: bus access MATRIX <-> usart1;
+      conn9: bus access MATRIX <-> usart2;
+      conn10: bus access MATRIX <-> ppm;
+      conn11: bus access MATRIX <-> alarm;
   end STM32F415.Impl;
   
   processor ARM_Cortex_M4

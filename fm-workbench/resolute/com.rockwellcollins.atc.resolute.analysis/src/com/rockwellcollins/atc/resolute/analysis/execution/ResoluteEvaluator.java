@@ -358,7 +358,9 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
         for (FeatureInstance featInst : feature.getFeatureInstances()) {
             addAllFeatureGroupFeatures(featInst, returnSet);
         }
-        returnSet.add(new NamedElementValue(feature));
+        if(feature.getFeatureInstances().size() == 0){
+            returnSet.add(new NamedElementValue(feature));
+        }
     }
 
     @Override
@@ -954,9 +956,8 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
         case "is_connected" : {
             NamedElement namedEl = argVals.get(0).getNamedElement();
             FeatureInstance feat = (FeatureInstance)namedEl;
-            EList<ConnectionInstance> sourceConns = feat.getSrcConnectionInstances();
-            EList<ConnectionInstance> destConns = feat.getDstConnectionInstances();
-            return new BoolValue(!(sourceConns.size() == 0 && destConns.size() == 0));
+            ConnectionInstance conn = ResoluteQuantifiableAadlObjects.featToConnMap.get(feat);
+            return new BoolValue(conn != null);
         }
 
         case "singleton": {

@@ -1,5 +1,6 @@
 package com.rockwellcollins.atc.resolute.analysis.execution;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -7,6 +8,11 @@ import java.util.Set;
 import org.osate.aadl2.NamedElement;
 import org.osate.aadl2.instance.ComponentInstance;
 import org.osate.aadl2.instance.ConnectionInstance;
+import org.osate.aadl2.instance.ConnectionInstanceEnd;
+import org.osate.aadl2.instance.FeatureCategory;
+import org.osate.aadl2.instance.FeatureInstance;
+import org.osate.aadl2.instance.InstanceObject;
+import org.osate.aadl2.instance.SystemInstance;
 import org.osate.aadl2.instance.SystemOperationMode;
 
 public class ResoluteQuantifiableAadlObjects {
@@ -45,6 +51,8 @@ public class ResoluteQuantifiableAadlObjects {
     public static Set<NamedElement> componentModalSet;
     public static Set<NamedElement> busModalSet;
 
+    public static HashMap<FeatureInstance, ConnectionInstance> featToConnMap;
+    
     static public void clearAllSets() {
         ResoluteQuantifiableAadlObjects.abstractSet.clear();
         ResoluteQuantifiableAadlObjects.busSet.clear();
@@ -155,7 +163,47 @@ public class ResoluteQuantifiableAadlObjects {
                 
     }
     
+    static private void addAllSubFeatsToConnMap(FeatureInstance feat, ConnectionInstance connInst){
+        for(FeatureInstance subFeat : feat.getFeatureInstances()){
+            addAllSubFeatsToConnMap(subFeat, connInst);
+        }
+        if(feat.getFeatureInstances().size() == 0){
+            featToConnMap.put(feat, connInst);
+        }
+    }
     
+    static public void buildFeatConnMap(SystemInstance sysInst){
+        featToConnMap = new HashMap<FeatureInstance, ConnectionInstance>();
+
+        for(ConnectionInstance connInst : sysInst.getAllConnectionInstances()){
+            FeatureInstance prevFeat = null;
+            for(InstanceObject instObj : connInst.getThroughFeatureInstances()){
+                if(instObj instanceof FeatureInstance){
+                    FeatureInstance featInst = (FeatureInstance)instObj;
+                    //strange hack to handle feature groups... sorry...
+                    if(featInst.getCategory() == FeatureCategory.FEATURE_GROUP){
+                        if(prevFeat == null || prevFeat.getCategory() == FeatureCategory.FEATURE_GROUP){
+                            //mark all the features of this group as connected
+                            addAllSubFeatsToConnMap(featInst, connInst);
+                        }else{
+                            boolean found = false;
+                            for(FeatureInstance subFeat : featInst.getFeatureInstances()){
+                                if(subFeat.getName().equals(prevFeat.getName())){
+                                    featToConnMap.put(subFeat, connInst);
+                                    found = true;
+                                    break;
+                                }
+                            }
+                            assert(found);
+                        }
+                    }else{
+                        featToConnMap.put(featInst, connInst);
+                    }
+                    prevFeat = featInst;
+                }
+           }
+        }
+    }
     
     
 }

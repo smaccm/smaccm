@@ -9,26 +9,19 @@ public
   system implementation UAS.Impl
     subcomponents
       RF_915Mhz_Spectrum: bus RF_Spectrum.RF_915MHz;
-      RF_2_4Ghz_Spectrum: bus RF_Spectrum.RF_2_4GHz; 
+      RF_2_4Ghz_Spectrum: bus RF_Spectrum.RF_2_4GHz;
       UAV: system UAV::UAV.Impl;
       GS: system Ground_Station.Impl;
       RC: device RC_Controller; 
 
     connections
-      conn0 : bus access UAV.radio_access_915Mhz <-> RF_915Mhz_Spectrum;
-      conn1 : bus access UAV.radio_access_2_4Ghz <-> RF_2_4Ghz_Spectrum;
-      conn2 :bus access RC.radio_access <-> RF_2_4Ghz_Spectrum;
-      conn3 :bus access GS.radio_access <-> RF_915Mhz_Spectrum;
+      conn0: bus access UAV.radio_access_915Mhz <-> RF_915Mhz_Spectrum;
+      conn1: bus access UAV.radio_access_2_4Ghz <-> RF_2_4Ghz_Spectrum;
+      conn2: bus access RC.radio_access <-> RF_2_4Ghz_Spectrum;
+      conn3: bus access GS.radio_access <-> RF_915Mhz_Spectrum;
       
-      conn4 :port GS.mavlink <-> UAV.mavlink;
-      conn5 :port RC.flight_control_commands -> UAV.flight_control_commands;
-      
-    annex resolute {**
-    	prove bi_ports_have_variance()
-    	prove all_features_bound()
-    **};
-      
-      
+      conn4: port GS.mavlink <-> UAV.mavlink;
+      conn5: port RC.flight_control_commands -> UAV.flight_control_commands;
   end UAS.Impl;
 
   system Ground_Station
