@@ -120,7 +120,7 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
 
     @Override
     public ResoluteValue caseArg(Arg object) {
-        return argMapStack.getFirst().get(object);
+        return argMapStack.peek().get(object);
     }
 
     @Override
@@ -423,7 +423,7 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
             Arg arg = args.get(0);
             List<Arg> rest = args.subList(1, args.size());
             for (ResoluteValue value : getArgSet(arg)) {
-                argMapStack.getFirst().put(arg, value);
+                argMapStack.peek().put(arg, value);
                 if (exists(rest, body).getBool()) {
                     return TRUE;
                 }
@@ -439,7 +439,7 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
             Arg arg = args.get(0);
             List<Arg> rest = args.subList(1, args.size());
             for (ResoluteValue value : getArgSet(arg)) {
-                argMapStack.getFirst().put(arg, value);
+                argMapStack.peek().put(arg, value);
                 if (!forall(rest, body).getBool()) {
                     return FALSE;
                 }
@@ -499,7 +499,7 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
             List<Arg> rest = args.subList(1, args.size());
             Set<ResoluteValue> result = new HashSet<ResoluteValue>();
             for (ResoluteValue value : getArgSet(arg)) {
-                argMapStack.getFirst().put(arg, value);
+                argMapStack.peek().put(arg, value);
                 result.addAll(filterMap(rest, map, filter));
             }
             return result;

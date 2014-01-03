@@ -133,7 +133,7 @@ public class ResoluteProver extends ResoluteSwitch<ResoluteResult> {
             Arg arg = args.get(0);
             List<Arg> rest = args.subList(1, args.size());
             for (ResoluteValue value : getArgSet(arg)) {
-                argMapStack.getFirst().put(arg, value);
+                argMapStack.peek().put(arg, value);
                 ResoluteResult subResult = exists(rest, body);
                 if (subResult.isValid()) {
                     return subResult;
@@ -151,7 +151,7 @@ public class ResoluteProver extends ResoluteSwitch<ResoluteResult> {
             List<Arg> rest = args.subList(1, args.size());
             List<ResoluteResult> children = new ArrayList<>();
             for (ResoluteValue value : getArgSet(arg)) {
-                argMapStack.getFirst().put(arg, value);
+                argMapStack.peek().put(arg, value);
                 ResoluteResult subResult = forall(rest, body);
                 children.add(subResult);
                 if (!subResult.isValid()) {
@@ -208,7 +208,7 @@ public class ResoluteProver extends ResoluteSwitch<ResoluteResult> {
             if (claim instanceof ClaimArg) {
                 Arg claimArg = ((ClaimArg) claim).getArg();
                 text.append("'");
-                text.append(eval(claimArg));
+                text.append(argMapStack.peek().get(claimArg));
                 text.append("'");
             } else if (claim instanceof ClaimString) {
                 text.append(((ClaimString) claim).getStr());
@@ -225,7 +225,7 @@ public class ResoluteProver extends ResoluteSwitch<ResoluteResult> {
         for (ClaimString claim : body.getClaim()) {
             if (claim instanceof ClaimArg) {
                 Arg claimArg = ((ClaimArg) claim).getArg();
-                ResoluteValue argVal = eval(claimArg);
+                ResoluteValue argVal = argMapStack.peek().get(claimArg);
                 if (argVal.isNamedElement()) {
                     EObject modelElement = getModelElement(argVal.getNamedElement());
                     if (modelElement != null) {
