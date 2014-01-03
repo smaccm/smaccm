@@ -21,14 +21,15 @@ import com.rockwellcollins.atc.resolute.resolute.NestedDotID;
 import com.rockwellcollins.atc.resolute.resolute.ProveStatement;
 
 public class ResoluteInterpreter {
-    final private ComponentInstance compInst;
+    final private EvaluationContext globalContext;
 
-    public ResoluteInterpreter(ComponentInstance compInst) {
-        this.compInst = compInst;
+    public ResoluteInterpreter(EvaluationContext globalContext) {
+        this.globalContext = globalContext;
     }
 
     public ResoluteResult evaluateProveStatement(ProveStatement proveStatement) {
-        String proveText = ResoluteProver.proveStatementToString(proveStatement, compInst);
+        String proveText = ResoluteProver.proveStatementToString(proveStatement,
+                globalContext.getThisInstance());
         ResoluteResult subResult = evaluateProveStatementBody(proveStatement,
                 getAllModeInstances(proveStatement));
         Map<String, EObject> references = Collections.emptyMap();
@@ -45,14 +46,14 @@ public class ResoluteInterpreter {
             return Collections.emptyList();
         }
 
-        SystemInstance sysInst = (SystemInstance) compInst.getElementRoot();
-        return sysInst.getSystemOperationModesFor(getCompInstSubModes(nestModesIds));
+        SystemInstance si = globalContext.getThisInstance().getSystemInstance();
+        return si.getSystemOperationModesFor(getCompInstSubModes(nestModesIds));
     }
 
     private List<ModeInstance> getCompInstSubModes(List<NestedDotID> ids) {
         List<ModeInstance> result = new ArrayList<>();
         for (NestedDotID id : ids) {
-            result.add(getCompInstSubMode(compInst, id));
+            result.add(getCompInstSubMode(globalContext.getThisInstance(), id));
         }
         return result;
     }
@@ -66,7 +67,8 @@ public class ResoluteInterpreter {
                     return getCompInstSubMode(subCompInst, modeId.getSub());
                 }
             }
-            throw new IllegalArgumentException("Failed to find subcomponent instance: " + subComp.getName());
+            throw new IllegalArgumentException("Failed to find subcomponent instance: "
+                    + subComp.getName());
         }
 
         Mode thisMode = (Mode) modeId.getBase();
@@ -81,7 +83,8 @@ public class ResoluteInterpreter {
     private ResoluteResult evaluateProveStatementBody(ProveStatement proveStatement,
             List<SystemOperationMode> sysModes) {
         if (sysModes.size() <= 1) {
-            ResoluteProver prover = new ResoluteProver(compInst, sysModes);
+            EvaluationContext context = createEvaluationContext(sysModes);
+            ResoluteProver prover = new ResoluteProver(context);
             return prover.doSwitch(proveStatement.getExpr());
         } else {
             StringBuilder sb = new StringBuilder();
@@ -91,6 +94,14 @@ public class ResoluteInterpreter {
             }
             return new FailResult("Prove statement yields multiple system modes: " + sb,
                     proveStatement);
+        }
+    }
+
+    private EvaluationContext createEvaluationContext(List<SystemOperationMode> sysModes) {
+        if (sysModes.isEmpty()) {
+            return globalContext;
+        } else {
+            return globalContext.filterByMode(sysModes.get(0));
         }
     }
 }

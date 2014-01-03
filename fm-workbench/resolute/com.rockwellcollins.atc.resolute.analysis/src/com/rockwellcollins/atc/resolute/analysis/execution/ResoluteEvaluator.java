@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -22,7 +23,6 @@ import org.osate.aadl2.DataAccess;
 import org.osate.aadl2.DataPort;
 import org.osate.aadl2.EnumerationLiteral;
 import org.osate.aadl2.EventPort;
-import org.osate.aadl2.Feature;
 import org.osate.aadl2.IntegerLiteral;
 import org.osate.aadl2.NamedElement;
 import org.osate.aadl2.NamedValue;
@@ -36,7 +36,6 @@ import org.osate.aadl2.instance.ConnectionInstanceEnd;
 import org.osate.aadl2.instance.ConnectionReference;
 import org.osate.aadl2.instance.FeatureCategory;
 import org.osate.aadl2.instance.FeatureInstance;
-import org.osate.aadl2.instance.SystemOperationMode;
 import org.osate.aadl2.modelsupport.resources.OsateResourceUtil;
 import org.osate.aadl2.properties.PropertyDoesNotApplyToHolderException;
 import org.osate.aadl2.properties.PropertyNotPresentException;
@@ -82,35 +81,27 @@ import com.rockwellcollins.atc.resolute.resolute.UnaryExpr;
 import com.rockwellcollins.atc.resolute.resolute.util.ResoluteSwitch;
 
 public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
-    // Stack for function, claim, and quantifier arguments, shared with ResoluteProver
-    private Deque<Map<Arg, ResoluteValue>> argMapStack;
+    // Stack for function, claim, and quantifier arguments
+    protected final Deque<Map<Arg, ResoluteValue>> argMapStack = new LinkedList<>();
 
-    // keeps track of which component the current prove statement was called on
-    final private ComponentInstance thisInst;
-
-    private List<SystemOperationMode> modes;
-    private SystemOperationMode sysMode;
+    // Keeps track of context of the initial prove statement
+    protected final EvaluationContext context;
 
     final private static BoolValue TRUE = new BoolValue(true);
     final private static BoolValue FALSE = new BoolValue(false);
 
-    public ResoluteEvaluator(ComponentInstance thisInst,
-            Deque<Map<Arg, ResoluteValue>> argMapStack, List<SystemOperationMode> sysModes) {
-        this.thisInst = thisInst;
-        this.argMapStack = argMapStack;
-        setModes(sysModes);
+    public ResoluteEvaluator(EvaluationContext context, Map<Arg, ResoluteValue> env) {
+        this.context = context;
+        if (env == null) {
+            Map<Arg, ResoluteValue> emptyMap = Collections.emptyMap();
+            this.argMapStack.push(emptyMap);
+        } else {
+            this.argMapStack.push(new HashMap<>(env));
+        }
     }
 
-    public void setModes(List<SystemOperationMode> modes) {
-        this.modes = modes;
-
-        if (modes.size() > 0) {
-            if (modes.size() != 1) {
-                throw new UnsupportedOperationException("Multiple modes not supported: " + modes);
-            }
-            sysMode = modes.get(0);
-            ResoluteQuantifiableAadlObjects.filterBySysMode(sysMode);
-        }
+    public EvaluationContext getEvaluationContext() {
+        return context;
     }
 
     @Override
@@ -129,7 +120,7 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
 
     @Override
     public ResoluteValue caseArg(Arg object) {
-        return argMapStack.getFirst().get(object);
+        return argMapStack.peek().get(object);
     }
 
     @Override
@@ -365,7 +356,7 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
 
     @Override
     public ResoluteValue caseThisExpr(ThisExpr object) {
-        ComponentInstance curr = thisInst;
+        ComponentInstance curr = context.getThisInstance();
         for (NestedDotID id = object.getSub(); id != null; id = id.getSub()) {
             curr = getInstanceChild(curr, id.getBase());
         }
@@ -434,7 +425,7 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
             Arg arg = args.get(0);
             List<Arg> rest = args.subList(1, args.size());
             for (ResoluteValue value : getArgSet(arg)) {
-                argMapStack.getFirst().put(arg, value);
+                argMapStack.peek().put(arg, value);
                 if (exists(rest, body).getBool()) {
                     return TRUE;
                 }
@@ -450,7 +441,7 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
             Arg arg = args.get(0);
             List<Arg> rest = args.subList(1, args.size());
             for (ResoluteValue value : getArgSet(arg)) {
-                argMapStack.getFirst().put(arg, value);
+                argMapStack.peek().put(arg, value);
                 if (!forall(rest, body).getBool()) {
                     return FALSE;
                 }
@@ -465,8 +456,7 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
             return doSwitch(quantArg.getExpr()).getSet();
         } else {
             Set<ResoluteValue> values = new HashSet<ResoluteValue>();
-            for (NamedElement ne : ResoluteQuantifiableAadlObjects.getAllComponentsOfType(arg
-                    .getType().getName(), modes.size() > 0)) {
+            for (NamedElement ne : context.getSet(arg.getType().getName())) {
                 values.add(new NamedElementValue(ne));
             }
             return values;
@@ -511,7 +501,7 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
             List<Arg> rest = args.subList(1, args.size());
             Set<ResoluteValue> result = new HashSet<ResoluteValue>();
             for (ResoluteValue value : getArgSet(arg)) {
-                argMapStack.getFirst().put(arg, value);
+                argMapStack.peek().put(arg, value);
                 result.addAll(filterMap(rest, map, filter));
             }
             return result;
@@ -952,12 +942,13 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
         case "is_empty": {
             return new BoolValue(argVals.get(0).getSet().isEmpty());
         }
-        
-        case "is_connected" : {
+
+        case "is_connected": {
             NamedElement namedEl = argVals.get(0).getNamedElement();
             FeatureInstance feat = (FeatureInstance)namedEl;
             ConnectionInstance conn = ResoluteQuantifiableAadlObjects.featToConnMap.get(feat);
             return new BoolValue(conn != null);
+   
         }
 
         case "singleton": {
@@ -991,7 +982,8 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
             org.osate.aadl2.RangeValue value = (org.osate.aadl2.RangeValue) expr;
             return new RangeValue(exprToValue(value.getMinimum()), exprToValue(value.getMaximum()));
         } else {
-            throw new IllegalArgumentException("Unknown property expression type: " + expr.getClass().getName());
+            throw new IllegalArgumentException("Unknown property expression type: "
+                    + expr.getClass().getName());
         }
     }
 

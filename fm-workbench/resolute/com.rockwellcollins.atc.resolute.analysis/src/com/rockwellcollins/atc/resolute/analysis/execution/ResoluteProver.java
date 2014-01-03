@@ -18,7 +18,6 @@ import org.osate.aadl2.NamedElement;
 import org.osate.aadl2.instance.ComponentInstance;
 import org.osate.aadl2.instance.ConnectionInstance;
 import org.osate.aadl2.instance.FeatureInstance;
-import org.osate.aadl2.instance.SystemOperationMode;
 
 import com.rockwellcollins.atc.resolute.analysis.results.ClaimResult;
 import com.rockwellcollins.atc.resolute.analysis.results.FailResult;
@@ -39,18 +38,33 @@ import com.rockwellcollins.atc.resolute.resolute.ThisExpr;
 import com.rockwellcollins.atc.resolute.resolute.util.ResoluteSwitch;
 
 public class ResoluteProver extends ResoluteSwitch<ResoluteResult> {
-    // Stack for function, claim, and quantifier arguments, shared with ResoluteEvaluator
-    private Deque<Map<Arg, ResoluteValue>> argMapStack;
+    // Stack for function, claim, and quantifier arguments
+    protected final Deque<Map<Arg, ResoluteValue>> argMapStack = new LinkedList<>();
 
     // Claims have been called with what arguments, used to detect cycles
-    private Set<ClaimCallContext> claimCallContexts;
+    protected final Set<ClaimCallContext> claimCallContexts = new HashSet<>();
 
-    private final ResoluteEvaluator evaluator;
+    protected final EvaluationContext context;
 
-    public ResoluteProver(ComponentInstance thisInst, List<SystemOperationMode> sysModes) {
-        this.argMapStack = new LinkedList<>();
-        this.evaluator = new ResoluteEvaluator(thisInst, this.argMapStack, sysModes);
-        this.claimCallContexts = new HashSet<>();
+    public ResoluteProver(EvaluationContext context) {
+        this.context = context;
+    }
+
+    /* This will be overridden by children to instantiate modified evaluators */
+    protected ResoluteEvaluator createResoluteEvaluator() {
+        return new ResoluteEvaluator(context, argMapStack.peek());
+    }
+
+    protected ResoluteValue eval(EObject e) {
+        return createResoluteEvaluator().doSwitch(e);
+    }
+
+    protected Set<ResoluteValue> getArgSet(Arg arg) {
+        return createResoluteEvaluator().getArgSet(arg);
+    }
+
+    private List<ResoluteValue> evalList(List<? extends EObject> list) {
+        return createResoluteEvaluator().doSwitchList(list);
     }
 
     /**
@@ -59,7 +73,7 @@ public class ResoluteProver extends ResoluteSwitch<ResoluteResult> {
      */
     @Override
     public ResoluteResult defaultCase(EObject object) {
-        return new ResoluteResult(evaluator.doSwitch(object).getBool());
+        return new ResoluteResult(eval(object).getBool());
     }
 
     @Override
@@ -94,7 +108,7 @@ public class ResoluteProver extends ResoluteSwitch<ResoluteResult> {
                 throw new IllegalArgumentException();
             }
         } else {
-            return new ResoluteResult(evaluator.doSwitch(object).getBool());
+            return new ResoluteResult(eval(object).getBool());
         }
     }
 
@@ -118,8 +132,8 @@ public class ResoluteProver extends ResoluteSwitch<ResoluteResult> {
         } else {
             Arg arg = args.get(0);
             List<Arg> rest = args.subList(1, args.size());
-            for (ResoluteValue value : evaluator.getArgSet(arg)) {
-                argMapStack.getFirst().put(arg, value);
+            for (ResoluteValue value : getArgSet(arg)) {
+                argMapStack.peek().put(arg, value);
                 ResoluteResult subResult = exists(rest, body);
                 if (subResult.isValid()) {
                     return subResult;
@@ -136,8 +150,8 @@ public class ResoluteProver extends ResoluteSwitch<ResoluteResult> {
             Arg arg = args.get(0);
             List<Arg> rest = args.subList(1, args.size());
             List<ResoluteResult> children = new ArrayList<>();
-            for (ResoluteValue value : evaluator.getArgSet(arg)) {
-                argMapStack.getFirst().put(arg, value);
+            for (ResoluteValue value : getArgSet(arg)) {
+                argMapStack.peek().put(arg, value);
                 ResoluteResult subResult = forall(rest, body);
                 children.add(subResult);
                 if (!subResult.isValid()) {
@@ -161,11 +175,12 @@ public class ResoluteProver extends ResoluteSwitch<ResoluteResult> {
     private ResoluteResult claimCall(FnCallExpr object) {
         FunctionDefinition funcDef = object.getFn();
         ClaimBody body = (ClaimBody) funcDef.getBody();
-        List<ResoluteValue> argVals = evaluator.doSwitchList(object.getArgs());
+        List<ResoluteValue> argVals = evalList(object.getArgs());
 
         ClaimCallContext context = new ClaimCallContext(funcDef, argVals);
         if (claimCallContexts.contains(context)) {
-            return new FailResult("Recursive call to " + funcDef.getName() + " with arguments " + argVals, object);
+            return new FailResult("Recursive call to " + funcDef.getName() + " with arguments "
+                    + argVals, object);
         }
 
         claimCallContexts.add(context);
@@ -193,7 +208,7 @@ public class ResoluteProver extends ResoluteSwitch<ResoluteResult> {
             if (claim instanceof ClaimArg) {
                 Arg claimArg = ((ClaimArg) claim).getArg();
                 text.append("'");
-                text.append(evaluator.doSwitch(claimArg));
+                text.append(argMapStack.peek().get(claimArg));
                 text.append("'");
             } else if (claim instanceof ClaimString) {
                 text.append(((ClaimString) claim).getStr());
@@ -210,7 +225,7 @@ public class ResoluteProver extends ResoluteSwitch<ResoluteResult> {
         for (ClaimString claim : body.getClaim()) {
             if (claim instanceof ClaimArg) {
                 Arg claimArg = ((ClaimArg) claim).getArg();
-                ResoluteValue argVal = evaluator.doSwitch(claimArg);
+                ResoluteValue argVal = argMapStack.peek().get(claimArg);
                 if (argVal.isNamedElement()) {
                     EObject modelElement = getModelElement(argVal.getNamedElement());
                     if (modelElement != null) {
@@ -230,7 +245,7 @@ public class ResoluteProver extends ResoluteSwitch<ResoluteResult> {
         } else if (e instanceof ConnectionInstance) {
             ConnectionInstance ci = (ConnectionInstance) e;
             return ci.getConnectionReferences().get(0).getConnection();
-        } else if (e instanceof FeatureInstance){
+        } else if (e instanceof FeatureInstance) {
             FeatureInstance feat = (FeatureInstance) e;
             return feat.getFeature();
         } else {
