@@ -41,7 +41,7 @@ public
       conn7: port RESET.reset -> sensors.reset;
       conn8: bus access USB.bus_access <-> MC.otg_fs;
       conn9: bus access MON.bus_access <-> MC.adc123;
-      conn10: port MON.battery_data -> sensors.battery_data;
+      conn10: port MON.battery_data -> sensors.battery_data; 
       conn11: bus access GPS.bus_access <-> MC.usart6;
       conn12: port GPS.GPS_Data -> sensors.gps_data;
       conn13: bus access GYRO.bus_access <-> MC.spi1;
@@ -62,7 +62,7 @@ public
 
   device Reset
     features
-      reset: out event port;
+      reset: out event data port DATATYPES::Reset_Data;
   end Reset;
   
   device USB

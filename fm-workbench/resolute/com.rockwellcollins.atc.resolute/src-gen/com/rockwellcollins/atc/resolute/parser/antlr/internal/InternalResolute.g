@@ -2838,150 +2838,157 @@ ruleBuiltInFunc returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleTok
     }
 
     |
+	kw='get_connection' 
+    {
+        $current.merge(kw);
+        newLeafNode(kw, grammarAccess.getBuiltInFuncAccess().getGet_connectionKeyword_21()); 
+    }
+
+    |
 	kw='is_data' 
     {
         $current.merge(kw);
-        newLeafNode(kw, grammarAccess.getBuiltInFuncAccess().getIs_dataKeyword_21()); 
+        newLeafNode(kw, grammarAccess.getBuiltInFuncAccess().getIs_dataKeyword_22()); 
     }
 
     |
 	kw='is_thread' 
     {
         $current.merge(kw);
-        newLeafNode(kw, grammarAccess.getBuiltInFuncAccess().getIs_threadKeyword_22()); 
+        newLeafNode(kw, grammarAccess.getBuiltInFuncAccess().getIs_threadKeyword_23()); 
     }
 
     |
 	kw='is_thread_group' 
     {
         $current.merge(kw);
-        newLeafNode(kw, grammarAccess.getBuiltInFuncAccess().getIs_thread_groupKeyword_23()); 
+        newLeafNode(kw, grammarAccess.getBuiltInFuncAccess().getIs_thread_groupKeyword_24()); 
     }
 
     |
 	kw='is_process' 
     {
         $current.merge(kw);
-        newLeafNode(kw, grammarAccess.getBuiltInFuncAccess().getIs_processKeyword_24()); 
+        newLeafNode(kw, grammarAccess.getBuiltInFuncAccess().getIs_processKeyword_25()); 
     }
 
     |
 	kw='is_subprogram' 
     {
         $current.merge(kw);
-        newLeafNode(kw, grammarAccess.getBuiltInFuncAccess().getIs_subprogramKeyword_25()); 
+        newLeafNode(kw, grammarAccess.getBuiltInFuncAccess().getIs_subprogramKeyword_26()); 
     }
 
     |
 	kw='is_subprogram_group' 
     {
         $current.merge(kw);
-        newLeafNode(kw, grammarAccess.getBuiltInFuncAccess().getIs_subprogram_groupKeyword_26()); 
+        newLeafNode(kw, grammarAccess.getBuiltInFuncAccess().getIs_subprogram_groupKeyword_27()); 
     }
 
     |
 	kw='is_processor' 
     {
         $current.merge(kw);
-        newLeafNode(kw, grammarAccess.getBuiltInFuncAccess().getIs_processorKeyword_27()); 
+        newLeafNode(kw, grammarAccess.getBuiltInFuncAccess().getIs_processorKeyword_28()); 
     }
 
     |
 	kw='is_virtual_processor' 
     {
         $current.merge(kw);
-        newLeafNode(kw, grammarAccess.getBuiltInFuncAccess().getIs_virtual_processorKeyword_28()); 
+        newLeafNode(kw, grammarAccess.getBuiltInFuncAccess().getIs_virtual_processorKeyword_29()); 
     }
 
     |
 	kw='is_memory' 
     {
         $current.merge(kw);
-        newLeafNode(kw, grammarAccess.getBuiltInFuncAccess().getIs_memoryKeyword_29()); 
+        newLeafNode(kw, grammarAccess.getBuiltInFuncAccess().getIs_memoryKeyword_30()); 
     }
 
     |
 	kw='is_bus' 
     {
         $current.merge(kw);
-        newLeafNode(kw, grammarAccess.getBuiltInFuncAccess().getIs_busKeyword_30()); 
+        newLeafNode(kw, grammarAccess.getBuiltInFuncAccess().getIs_busKeyword_31()); 
     }
 
     |
 	kw='is_virtual_bus' 
     {
         $current.merge(kw);
-        newLeafNode(kw, grammarAccess.getBuiltInFuncAccess().getIs_virtual_busKeyword_31()); 
+        newLeafNode(kw, grammarAccess.getBuiltInFuncAccess().getIs_virtual_busKeyword_32()); 
     }
 
     |
 	kw='is_device' 
     {
         $current.merge(kw);
-        newLeafNode(kw, grammarAccess.getBuiltInFuncAccess().getIs_deviceKeyword_32()); 
+        newLeafNode(kw, grammarAccess.getBuiltInFuncAccess().getIs_deviceKeyword_33()); 
     }
 
     |
 	kw='is_system' 
     {
         $current.merge(kw);
-        newLeafNode(kw, grammarAccess.getBuiltInFuncAccess().getIs_systemKeyword_33()); 
+        newLeafNode(kw, grammarAccess.getBuiltInFuncAccess().getIs_systemKeyword_34()); 
     }
 
     |
 	kw='is_abstract' 
     {
         $current.merge(kw);
-        newLeafNode(kw, grammarAccess.getBuiltInFuncAccess().getIs_abstractKeyword_34()); 
+        newLeafNode(kw, grammarAccess.getBuiltInFuncAccess().getIs_abstractKeyword_35()); 
     }
 
     |
 	kw='is_empty' 
     {
         $current.merge(kw);
-        newLeafNode(kw, grammarAccess.getBuiltInFuncAccess().getIs_emptyKeyword_35()); 
+        newLeafNode(kw, grammarAccess.getBuiltInFuncAccess().getIs_emptyKeyword_36()); 
     }
 
     |
 	kw='singleton' 
     {
         $current.merge(kw);
-        newLeafNode(kw, grammarAccess.getBuiltInFuncAccess().getSingletonKeyword_36()); 
+        newLeafNode(kw, grammarAccess.getBuiltInFuncAccess().getSingletonKeyword_37()); 
     }
 
     |
 	kw='is_bidirectional' 
     {
         $current.merge(kw);
-        newLeafNode(kw, grammarAccess.getBuiltInFuncAccess().getIs_bidirectionalKeyword_37()); 
+        newLeafNode(kw, grammarAccess.getBuiltInFuncAccess().getIs_bidirectionalKeyword_38()); 
     }
 
     |
 	kw='is_data_access' 
     {
         $current.merge(kw);
-        newLeafNode(kw, grammarAccess.getBuiltInFuncAccess().getIs_data_accessKeyword_38()); 
+        newLeafNode(kw, grammarAccess.getBuiltInFuncAccess().getIs_data_accessKeyword_39()); 
     }
 
     |
 	kw='is_bus_access' 
     {
         $current.merge(kw);
-        newLeafNode(kw, grammarAccess.getBuiltInFuncAccess().getIs_bus_accessKeyword_39()); 
+        newLeafNode(kw, grammarAccess.getBuiltInFuncAccess().getIs_bus_accessKeyword_40()); 
     }
 
     |
 	kw='is_data_port' 
     {
         $current.merge(kw);
-        newLeafNode(kw, grammarAccess.getBuiltInFuncAccess().getIs_data_portKeyword_40()); 
+        newLeafNode(kw, grammarAccess.getBuiltInFuncAccess().getIs_data_portKeyword_41()); 
     }
 
     |
 	kw='is_event_port' 
     {
         $current.merge(kw);
-        newLeafNode(kw, grammarAccess.getBuiltInFuncAccess().getIs_event_portKeyword_41()); 
+        newLeafNode(kw, grammarAccess.getBuiltInFuncAccess().getIs_event_portKeyword_42()); 
     }
 )
     ;

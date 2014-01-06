@@ -1,0 +1,12 @@
+package Gound_Station_Encryption
+public
+
+annex resolute {**
+	
+all_outgoing_encrypted(gs : component, uav : component) <=
+	** "All connections from " gs " to " uav " are encrypted" **
+	forall(conn : gs.connections).
+**};
+
+
+end Gound_Station_Encryption;

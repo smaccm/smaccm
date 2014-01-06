@@ -376,6 +376,7 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
         case "lower_bound":
         	expectedTypes.add(BaseType.RANGE);
         	break;
+        case "get_connection":
         case "is_connected":
             expectedTypes.add(BaseType.FEATURE);
             break;
@@ -776,6 +777,8 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
         case "property_exists":
             return BaseType.BOOL;
 
+        case "get_connection":
+            return BaseType.CONNECTION;
         case "upper_bound":
         case "lower_bound":
         {

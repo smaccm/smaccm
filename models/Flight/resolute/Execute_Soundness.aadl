@@ -72,7 +72,13 @@ data_or_thread(x : component) <=
 -- Non command datatypes must be explicitly whitelisted here
 command_channel(c : connection) : bool =
   (not has_type(c)) or
-  (type(c) <> sensors_type::sensors_result.impl)
+  (type(c) <> DATATYPES::Magnetometer_Data and
+   type(c) <> DATATYPES::Barometric_Data and
+   type(c) <> DATATYPES::Motion_Data and
+   type(c) <> DATATYPES::Battery_Data and
+   type(c) <> DATATYPES::GPS_Data and
+   type(c) <> DATATYPES::Reset_Data
+  )
 
 
 unalterable_channel(c : connection) <=

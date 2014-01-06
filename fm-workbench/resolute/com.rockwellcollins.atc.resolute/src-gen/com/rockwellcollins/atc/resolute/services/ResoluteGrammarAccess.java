@@ -1656,27 +1656,28 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		private final Keyword cContain_errorKeyword_18 = (Keyword)cAlternatives.eContents().get(18);
 		private final Keyword cPropagate_errorKeyword_19 = (Keyword)cAlternatives.eContents().get(19);
 		private final Keyword cError_state_reachableKeyword_20 = (Keyword)cAlternatives.eContents().get(20);
-		private final Keyword cIs_dataKeyword_21 = (Keyword)cAlternatives.eContents().get(21);
-		private final Keyword cIs_threadKeyword_22 = (Keyword)cAlternatives.eContents().get(22);
-		private final Keyword cIs_thread_groupKeyword_23 = (Keyword)cAlternatives.eContents().get(23);
-		private final Keyword cIs_processKeyword_24 = (Keyword)cAlternatives.eContents().get(24);
-		private final Keyword cIs_subprogramKeyword_25 = (Keyword)cAlternatives.eContents().get(25);
-		private final Keyword cIs_subprogram_groupKeyword_26 = (Keyword)cAlternatives.eContents().get(26);
-		private final Keyword cIs_processorKeyword_27 = (Keyword)cAlternatives.eContents().get(27);
-		private final Keyword cIs_virtual_processorKeyword_28 = (Keyword)cAlternatives.eContents().get(28);
-		private final Keyword cIs_memoryKeyword_29 = (Keyword)cAlternatives.eContents().get(29);
-		private final Keyword cIs_busKeyword_30 = (Keyword)cAlternatives.eContents().get(30);
-		private final Keyword cIs_virtual_busKeyword_31 = (Keyword)cAlternatives.eContents().get(31);
-		private final Keyword cIs_deviceKeyword_32 = (Keyword)cAlternatives.eContents().get(32);
-		private final Keyword cIs_systemKeyword_33 = (Keyword)cAlternatives.eContents().get(33);
-		private final Keyword cIs_abstractKeyword_34 = (Keyword)cAlternatives.eContents().get(34);
-		private final Keyword cIs_emptyKeyword_35 = (Keyword)cAlternatives.eContents().get(35);
-		private final Keyword cSingletonKeyword_36 = (Keyword)cAlternatives.eContents().get(36);
-		private final Keyword cIs_bidirectionalKeyword_37 = (Keyword)cAlternatives.eContents().get(37);
-		private final Keyword cIs_data_accessKeyword_38 = (Keyword)cAlternatives.eContents().get(38);
-		private final Keyword cIs_bus_accessKeyword_39 = (Keyword)cAlternatives.eContents().get(39);
-		private final Keyword cIs_data_portKeyword_40 = (Keyword)cAlternatives.eContents().get(40);
-		private final Keyword cIs_event_portKeyword_41 = (Keyword)cAlternatives.eContents().get(41);
+		private final Keyword cGet_connectionKeyword_21 = (Keyword)cAlternatives.eContents().get(21);
+		private final Keyword cIs_dataKeyword_22 = (Keyword)cAlternatives.eContents().get(22);
+		private final Keyword cIs_threadKeyword_23 = (Keyword)cAlternatives.eContents().get(23);
+		private final Keyword cIs_thread_groupKeyword_24 = (Keyword)cAlternatives.eContents().get(24);
+		private final Keyword cIs_processKeyword_25 = (Keyword)cAlternatives.eContents().get(25);
+		private final Keyword cIs_subprogramKeyword_26 = (Keyword)cAlternatives.eContents().get(26);
+		private final Keyword cIs_subprogram_groupKeyword_27 = (Keyword)cAlternatives.eContents().get(27);
+		private final Keyword cIs_processorKeyword_28 = (Keyword)cAlternatives.eContents().get(28);
+		private final Keyword cIs_virtual_processorKeyword_29 = (Keyword)cAlternatives.eContents().get(29);
+		private final Keyword cIs_memoryKeyword_30 = (Keyword)cAlternatives.eContents().get(30);
+		private final Keyword cIs_busKeyword_31 = (Keyword)cAlternatives.eContents().get(31);
+		private final Keyword cIs_virtual_busKeyword_32 = (Keyword)cAlternatives.eContents().get(32);
+		private final Keyword cIs_deviceKeyword_33 = (Keyword)cAlternatives.eContents().get(33);
+		private final Keyword cIs_systemKeyword_34 = (Keyword)cAlternatives.eContents().get(34);
+		private final Keyword cIs_abstractKeyword_35 = (Keyword)cAlternatives.eContents().get(35);
+		private final Keyword cIs_emptyKeyword_36 = (Keyword)cAlternatives.eContents().get(36);
+		private final Keyword cSingletonKeyword_37 = (Keyword)cAlternatives.eContents().get(37);
+		private final Keyword cIs_bidirectionalKeyword_38 = (Keyword)cAlternatives.eContents().get(38);
+		private final Keyword cIs_data_accessKeyword_39 = (Keyword)cAlternatives.eContents().get(39);
+		private final Keyword cIs_bus_accessKeyword_40 = (Keyword)cAlternatives.eContents().get(40);
+		private final Keyword cIs_data_portKeyword_41 = (Keyword)cAlternatives.eContents().get(41);
+		private final Keyword cIs_event_portKeyword_42 = (Keyword)cAlternatives.eContents().get(42);
 		
 		////QuantArg returns Arg:
 		////	{QuantArg} name=ID ':' expr=Expr
@@ -1692,10 +1693,10 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		//	"receive_error" | // the component contain the error
 		//	"contain_error" | // the component propagate an error
 		//	"propagate_error" | // the error state is reachable
-		//	"error_state_reachable" | "is_data" | "is_thread" | "is_thread_group" | "is_process" | "is_subprogram" |
-		//	"is_subprogram_group" | "is_processor" | "is_virtual_processor" | "is_memory" | "is_bus" | "is_virtual_bus" |
-		//	"is_device" | "is_system" | "is_abstract" | "is_empty" | "singleton" | "is_bidirectional" | "is_data_access" |
-		//	"is_bus_access" | "is_data_port" | "is_event_port";
+		//	"error_state_reachable" | "get_connection" | "is_data" | "is_thread" | "is_thread_group" | "is_process" |
+		//	"is_subprogram" | "is_subprogram_group" | "is_processor" | "is_virtual_processor" | "is_memory" | "is_bus" |
+		//	"is_virtual_bus" | "is_device" | "is_system" | "is_abstract" | "is_empty" | "singleton" | "is_bidirectional" |
+		//	"is_data_access" | "is_bus_access" | "is_data_port" | "is_event_port";
 		public ParserRule getRule() { return rule; }
 
 		//"connected" // type checking predicates
@@ -1708,10 +1709,10 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		//"receive_error" | // the component contain the error
 		//"contain_error" | // the component propagate an error
 		//"propagate_error" | // the error state is reachable
-		//"error_state_reachable" | "is_data" | "is_thread" | "is_thread_group" | "is_process" | "is_subprogram" |
-		//"is_subprogram_group" | "is_processor" | "is_virtual_processor" | "is_memory" | "is_bus" | "is_virtual_bus" |
-		//"is_device" | "is_system" | "is_abstract" | "is_empty" | "singleton" | "is_bidirectional" | "is_data_access" |
-		//"is_bus_access" | "is_data_port" | "is_event_port"
+		//"error_state_reachable" | "get_connection" | "is_data" | "is_thread" | "is_thread_group" | "is_process" |
+		//"is_subprogram" | "is_subprogram_group" | "is_processor" | "is_virtual_processor" | "is_memory" | "is_bus" |
+		//"is_virtual_bus" | "is_device" | "is_system" | "is_abstract" | "is_empty" | "singleton" | "is_bidirectional" |
+		//"is_data_access" | "is_bus_access" | "is_data_port" | "is_event_port"
 		public Alternatives getAlternatives() { return cAlternatives; }
 
 		//"connected"
@@ -1783,68 +1784,71 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		//"error_state_reachable"
 		public Keyword getError_state_reachableKeyword_20() { return cError_state_reachableKeyword_20; }
 
+		//"get_connection"
+		public Keyword getGet_connectionKeyword_21() { return cGet_connectionKeyword_21; }
+
 		//"is_data"
-		public Keyword getIs_dataKeyword_21() { return cIs_dataKeyword_21; }
+		public Keyword getIs_dataKeyword_22() { return cIs_dataKeyword_22; }
 
 		//"is_thread"
-		public Keyword getIs_threadKeyword_22() { return cIs_threadKeyword_22; }
+		public Keyword getIs_threadKeyword_23() { return cIs_threadKeyword_23; }
 
 		//"is_thread_group"
-		public Keyword getIs_thread_groupKeyword_23() { return cIs_thread_groupKeyword_23; }
+		public Keyword getIs_thread_groupKeyword_24() { return cIs_thread_groupKeyword_24; }
 
 		//"is_process"
-		public Keyword getIs_processKeyword_24() { return cIs_processKeyword_24; }
+		public Keyword getIs_processKeyword_25() { return cIs_processKeyword_25; }
 
 		//"is_subprogram"
-		public Keyword getIs_subprogramKeyword_25() { return cIs_subprogramKeyword_25; }
+		public Keyword getIs_subprogramKeyword_26() { return cIs_subprogramKeyword_26; }
 
 		//"is_subprogram_group"
-		public Keyword getIs_subprogram_groupKeyword_26() { return cIs_subprogram_groupKeyword_26; }
+		public Keyword getIs_subprogram_groupKeyword_27() { return cIs_subprogram_groupKeyword_27; }
 
 		//"is_processor"
-		public Keyword getIs_processorKeyword_27() { return cIs_processorKeyword_27; }
+		public Keyword getIs_processorKeyword_28() { return cIs_processorKeyword_28; }
 
 		//"is_virtual_processor"
-		public Keyword getIs_virtual_processorKeyword_28() { return cIs_virtual_processorKeyword_28; }
+		public Keyword getIs_virtual_processorKeyword_29() { return cIs_virtual_processorKeyword_29; }
 
 		//"is_memory"
-		public Keyword getIs_memoryKeyword_29() { return cIs_memoryKeyword_29; }
+		public Keyword getIs_memoryKeyword_30() { return cIs_memoryKeyword_30; }
 
 		//"is_bus"
-		public Keyword getIs_busKeyword_30() { return cIs_busKeyword_30; }
+		public Keyword getIs_busKeyword_31() { return cIs_busKeyword_31; }
 
 		//"is_virtual_bus"
-		public Keyword getIs_virtual_busKeyword_31() { return cIs_virtual_busKeyword_31; }
+		public Keyword getIs_virtual_busKeyword_32() { return cIs_virtual_busKeyword_32; }
 
 		//"is_device"
-		public Keyword getIs_deviceKeyword_32() { return cIs_deviceKeyword_32; }
+		public Keyword getIs_deviceKeyword_33() { return cIs_deviceKeyword_33; }
 
 		//"is_system"
-		public Keyword getIs_systemKeyword_33() { return cIs_systemKeyword_33; }
+		public Keyword getIs_systemKeyword_34() { return cIs_systemKeyword_34; }
 
 		//"is_abstract"
-		public Keyword getIs_abstractKeyword_34() { return cIs_abstractKeyword_34; }
+		public Keyword getIs_abstractKeyword_35() { return cIs_abstractKeyword_35; }
 
 		//"is_empty"
-		public Keyword getIs_emptyKeyword_35() { return cIs_emptyKeyword_35; }
+		public Keyword getIs_emptyKeyword_36() { return cIs_emptyKeyword_36; }
 
 		//"singleton"
-		public Keyword getSingletonKeyword_36() { return cSingletonKeyword_36; }
+		public Keyword getSingletonKeyword_37() { return cSingletonKeyword_37; }
 
 		//"is_bidirectional"
-		public Keyword getIs_bidirectionalKeyword_37() { return cIs_bidirectionalKeyword_37; }
+		public Keyword getIs_bidirectionalKeyword_38() { return cIs_bidirectionalKeyword_38; }
 
 		//"is_data_access"
-		public Keyword getIs_data_accessKeyword_38() { return cIs_data_accessKeyword_38; }
+		public Keyword getIs_data_accessKeyword_39() { return cIs_data_accessKeyword_39; }
 
 		//"is_bus_access"
-		public Keyword getIs_bus_accessKeyword_39() { return cIs_bus_accessKeyword_39; }
+		public Keyword getIs_bus_accessKeyword_40() { return cIs_bus_accessKeyword_40; }
 
 		//"is_data_port"
-		public Keyword getIs_data_portKeyword_40() { return cIs_data_portKeyword_40; }
+		public Keyword getIs_data_portKeyword_41() { return cIs_data_portKeyword_41; }
 
 		//"is_event_port"
-		public Keyword getIs_event_portKeyword_41() { return cIs_event_portKeyword_41; }
+		public Keyword getIs_event_portKeyword_42() { return cIs_event_portKeyword_42; }
 	}
 
 	public class RealTermElements extends AbstractParserRuleElementFinder {
@@ -2425,10 +2429,10 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	//	"receive_error" | // the component contain the error
 	//	"contain_error" | // the component propagate an error
 	//	"propagate_error" | // the error state is reachable
-	//	"error_state_reachable" | "is_data" | "is_thread" | "is_thread_group" | "is_process" | "is_subprogram" |
-	//	"is_subprogram_group" | "is_processor" | "is_virtual_processor" | "is_memory" | "is_bus" | "is_virtual_bus" |
-	//	"is_device" | "is_system" | "is_abstract" | "is_empty" | "singleton" | "is_bidirectional" | "is_data_access" |
-	//	"is_bus_access" | "is_data_port" | "is_event_port";
+	//	"error_state_reachable" | "get_connection" | "is_data" | "is_thread" | "is_thread_group" | "is_process" |
+	//	"is_subprogram" | "is_subprogram_group" | "is_processor" | "is_virtual_processor" | "is_memory" | "is_bus" |
+	//	"is_virtual_bus" | "is_device" | "is_system" | "is_abstract" | "is_empty" | "singleton" | "is_bidirectional" |
+	//	"is_data_access" | "is_bus_access" | "is_data_port" | "is_event_port";
 	public BuiltInFuncElements getBuiltInFuncAccess() {
 		return (pBuiltInFunc != null) ? pBuiltInFunc : (pBuiltInFunc = new BuiltInFuncElements());
 	}

@@ -52,8 +52,7 @@ public
       magnetometer_data: in data port DATATYPES::Magnetometer_Data;
       barometric_data: in data port DATATYPES::Barometric_Data;
       motion_data: in data port DATATYPES::Motion_Data.Impl;
-      
-      reset: in event port;
+      reset: in event data port DATATYPES::Reset_Data;
       battery_data: in data port DATATYPES::Battery_Data;
       gps_data: in data port DATATYPES::GPS_Data;
   end sensors;

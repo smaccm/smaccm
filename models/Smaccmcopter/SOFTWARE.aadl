@@ -20,8 +20,8 @@ public
       ML: process Main_Loop.Impl;
              
     connections
-      feature group motors_and_radios <-> ML.motors_and_radios;
-      feature group sensors <-> ML.sensors;
+      conn0: feature group motors_and_radios <-> ML.motors_and_radios;
+      conn1: feature group sensors <-> ML.sensors;
   end Software.Impl;
   
   process Main_Loop
@@ -56,27 +56,27 @@ public
       ENV: abstract environment;
       
     connections
-      feature group sensors <-> SS.sensors_in
+      conn: feature group sensors <-> SS.sensors_in
       -- Not supported in current version of Osate: 
       -- {Communication_Properties::Timing => immediate;}
       in modes (Normal, Defensive, Boot) ;
-      port motors_and_radios.flight_control_commands -> RC.commands_in in modes (Normal);
-      port motors_and_radios.mavlink -> DC.encrypt_in in modes (Normal);
-      port DC.decrypt_out -> CCT.mavlink_in in modes (Normal);
+      conn0: port motors_and_radios.flight_control_commands -> RC.commands_in in modes (Normal);
+      conn1: port motors_and_radios.mavlink -> DC.encrypt_in in modes (Normal);
+      conn2: port DC.decrypt_out -> CCT.mavlink_in in modes (Normal);
       
-      port SS.sensors_out -> SN.sensors
+      conn3: port SS.sensors_out -> SN.sensors
       {Communication_Properties::Timing => immediate;}
       in modes (Normal, Defensive, Boot);
       
-      port RC.commands_out -> SN.rc_commands in modes (Normal);
-      port CCT.mavlink_out -> SN.mavlink  in modes (Normal);
-      port BC.mavlink_out -> SN.mavlink  in modes (Defensive);
+      conn4: port RC.commands_out -> SN.rc_commands in modes (Normal);
+      conn5: port CCT.mavlink_out -> SN.mavlink  in modes (Normal);
+      conn6: port BC.mavlink_out -> SN.mavlink  in modes (Defensive);
       
-      port SN.motor_commands -> MC.motor_commands in modes (Normal, Defensive);
-      port MC.servo1_commands -> motors_and_radios.motor1 in modes (Normal, Defensive);      
-      port MC.servo2_commands -> motors_and_radios.motor2 in modes (Normal, Defensive);      
-      port MC.servo3_commands -> motors_and_radios.motor3 in modes (Normal, Defensive);      
-      port MC.servo4_commands -> motors_and_radios.motor4 in modes (Normal, Defensive);
+      conn7: port SN.motor_commands -> MC.motor_commands in modes (Normal, Defensive);
+      conn8: port MC.servo1_commands -> motors_and_radios.motor1 in modes (Normal, Defensive);      
+      conn9: port MC.servo2_commands -> motors_and_radios.motor2 in modes (Normal, Defensive);      
+      conn10: port MC.servo3_commands -> motors_and_radios.motor3 in modes (Normal, Defensive);      
+      conn11: port MC.servo4_commands -> motors_and_radios.motor4 in modes (Normal, Defensive);
       
     modes
       Boot: initial mode;

@@ -954,6 +954,17 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
             return new BoolValue(conn != null);
    
         }
+        case "get_connection": {
+            NamedElement namedEl = argVals.get(0).getNamedElement();
+            FeatureInstance feat = (FeatureInstance)namedEl;
+            ConnectionInstance conn = ResoluteQuantifiableAadlObjects.featToConnMap.get(feat);
+            if(conn == null){
+                throw new ResoluteFailException("Call to 'get_connection' on feature '"
+                        +feat.getName()+"', but the feature is not connected",
+                        feat);
+            }
+            return new NamedElementValue(conn);
+        }
 
         case "singleton": {
             return new SetValue(Collections.singleton(argVals.get(0)));

@@ -705,7 +705,6 @@ thread datalink
       SMACCM_SYS::CommPrim_Source_Text => "receiveFromTask_datalink_715_chan699_717";
       SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_datalink_715_chan699_735");
     };
-    flight_control_commands: in data port DATATYPES::Flight_Control_Commands.Impl;
     mavlink: in out data port DATATYPES::EncryptMAVLink;
     
   properties
@@ -1021,7 +1020,7 @@ thread gcsReceiveTask_uart1
       SMACCM_SYS::CommPrim_Source_Text => "write_gcsReceiveTask_uart1_445_dataport31_507";
     };
     paramWriter_504: requires data access Base_Types::Float {
-      Access_Right => write_only;
+      Access_Right => write_only; 
       SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart1_445.h";
       SMACCM_SYS::CommPrim_Source_Text => "write_gcsReceiveTask_uart1_445_dataport30_505";
     };
@@ -1399,6 +1398,10 @@ thread datalink_396
       SMACCM_SYS::CommPrim_Source_Text => "receiveFromTask_datalink_396_chan380_398";
       SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_datalink_396_chan380_416");
     };
+    
+    --added by Backes
+    flight_control_commands: in data port DATATYPES::Flight_Control_Commands.Impl;
+    
   properties
     Source_Text => ("tower_task_usercode_datalink_396.c");
     SMACCM::Language => "Ivory";
@@ -1475,6 +1478,10 @@ thread sensorsCaptureTask
       SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_sensorsCaptureTask_304.h";
       SMACCM_SYS::CommPrim_Source_Text => "write_sensorsCaptureTask_304_dataport0_306";
     };
+    
+    --added by backes
+    sensors_in: feature group UAV::sensors;
+    
   properties
     Source_Text => ("tower_task_usercode_sensorsCaptureTask_304.c");
     SMACCM::Language => "Ivory";
@@ -2461,12 +2468,13 @@ conn290:     data access dataport37 -> userMAVInput_inst.armedReader;
 conn291:     data access dataport39 -> userPPMInput_inst.ppmChansWriter;
 conn292:     data access dataport38 -> userPPMInput_inst.userInput;
 --outgoing connections
-ccs:         port motors_and_radios.flight_control_commands -> datalink_inst.flight_control_commands;
+ccs:         port motors_and_radios.flight_control_commands -> datalink_396_inst.flight_control_commands;
 mavconn:     port motors_and_radios.mavlink -> datalink_inst.mavlink;
 motor1:      port px4ioar_inst.motor1 -> motors_and_radios.motor1;
 motor2:      port px4ioar_inst.motor2 -> motors_and_radios.motor2;
 motor3:      port px4ioar_inst.motor3 -> motors_and_radios.motor3;
 motor4:      port px4ioar_inst.motor4 -> motors_and_radios.motor4;
+sensor_conn: feature group sensors <-> sensorsCaptureTask_inst.sensors_in;
 
   properties 
     SMACCM::OS => "Breakaway-RTOS";
@@ -2474,6 +2482,7 @@ motor4:      port px4ioar_inst.motor4 -> motors_and_radios.motor4;
     
   annex resolute {**
     prove only_receive_gs(this.control_inst) 
+    prove all_through_connections(this)
   **};
 
 end flight_gen_process.impl;
