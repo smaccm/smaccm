@@ -647,7 +647,11 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
         case "class_of": {
             NamedElement ne = argVals.get(0).getNamedElement();
             ComponentClassifier classifier = (ComponentClassifier) argVals.get(1).getNamedElement();
-
+            if (ne instanceof FeatureInstance)
+            {
+            	ne = ((FeatureInstance)ne).getFeature();
+            }
+            
             if (ne instanceof ComponentInstance) {
                 ComponentInstance comp = (ComponentInstance) ne;
                 return new BoolValue(comp.getComponentClassifier().equals(classifier));
@@ -999,6 +1003,10 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
         } else if (ne instanceof DataPort) {
             DataPort dp = (DataPort) ne;
             return dp.getDataFeatureClassifier();
+        } else if (ne instanceof FeatureInstance)
+        {
+        	FeatureInstance fi = (FeatureInstance) ne;
+        	return (NamedElement) fi.getFeature().getFeatureClassifier();
         }
 
         return null;

@@ -107,7 +107,8 @@ public class BaseType extends ResoluteType {
 
         if (otherType instanceof BaseType) {
             BaseType bt = (BaseType) otherType;
-            switch (bt.name) {
+            switch (bt.name) 
+            {
             case "component":
                 return subtypeOf(ABSTRACT) || subtypeOf(BUS) || subtypeOf(DATA)
                         || subtypeOf(DEVICE) || subtypeOf(MEMORY) || subtypeOf(PROCESSOR)
@@ -115,7 +116,10 @@ public class BaseType extends ResoluteType {
                         || subtypeOf(SUBPROGRAM) || subtypeOf(SYSTEM) || subtypeOf(THREAD_GROUP)
                         || subtypeOf(THREAD) || subtypeOf(VIRTUAL_BUS)
                         || subtypeOf(VIRTUAL_PROCESSOR);
-
+            
+            case "feature":
+            	return subtypeOf (COMPONENT);
+            	
             case "aadl":
                 return subtypeOf(COMPONENT) || subtypeOf(CONNECTION) || subtypeOf(PROPERTY) || subtypeOf(FEATURE);
 
@@ -157,8 +161,14 @@ public class BaseType extends ResoluteType {
     public boolean equals(Object obj) {
         if (obj instanceof BaseType) {
             BaseType bt = (BaseType) obj;
+            if (this.name.equals("feature"))
+            {
+            	return ((bt.name.equals("feature")) || (bt.name.equals("component")));
+            }
             return bt.name.equals(name);
         }
+        
+        
 
         return false;
     }
