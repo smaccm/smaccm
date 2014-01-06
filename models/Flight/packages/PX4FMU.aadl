@@ -3,6 +3,7 @@ public
   with UAV;
   with DATATYPES;
   with CORTEX;
+  with SMACCM;
   
   system PX4FMU
     features
@@ -51,6 +52,12 @@ public
       conn16: bus access expansion_slot.usart2 <-> MC.usart2;
       conn17: bus access expansion_slot.ppm <-> MC.ppm;
       conn18: bus access expansion_slot.alarm <-> MC.alarm;
+      
+    properties
+      SMACCM::Unimplemented => true applies to MC.usart2;
+      SMACCM::Unimplemented => true applies to expansion_slot.usart2;
+      
+      
   end PX4FMU.Impl;
 
   device Reset

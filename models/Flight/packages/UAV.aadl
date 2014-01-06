@@ -19,7 +19,7 @@ public
       SW: system flight_gen::Software.Impl;
       PX4FMU: system PX4FMU::PX4FMU.Impl;
       PX4IOAR: system PX4IOAR::PX4IOAR.Impl; 
-    
+     
     connections 
       conn0: feature group PX4FMU.sensors <-> SW.sensors;
       conn1: feature group PX4FMU.expansion_slot <-> PX4IOAR.expansion_connector;

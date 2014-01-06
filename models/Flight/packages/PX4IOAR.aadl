@@ -15,6 +15,7 @@ public
       flight_control_commands: in data port DATATYPES::Flight_Control_Commands;
       rc_radio: requires bus access UAS::RF_Spectrum.RF_2_4GHz;
       x3dr_radio: requires bus access UAS::RF_Spectrum.RF_915MHz;
+      
   end PX4IOAR;
   
   system implementation PX4IOAR.Impl
@@ -53,6 +54,10 @@ public
       conn14: port mavlink <-> x3DR.mavlink_external;
       conn15: bus access x3DR.usart <-> expansion_connector.usart1;
       conn16: bus access x3DR.antenna <-> x3dr_radio;
+      
+    properties
+    	SMACCM::Unimplemented => true applies to expansion_connector.usart2;
+      
   end PX4IOAR.Impl;
   
   device Motor

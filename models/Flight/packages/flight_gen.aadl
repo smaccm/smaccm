@@ -275,6 +275,7 @@ thread gcsReceiveTask_uart5
       Queue_Size => 16;
       SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart5_764.h";
       SMACCM_SYS::CommPrim_Source_Text => "emitFromTask_gcsReceiveTask_uart5_764_chan708_900";
+      SMACCM::Unimplemented => true;
     };
     streamperiods: out event data port gcsstream_timing::gcsstream_timing.impl {
       Queue_Size => 16;
@@ -300,6 +301,7 @@ thread gcsReceiveTask_uart5
       Queue_Size => 4;
       SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart5_764.h";
       SMACCM_SYS::CommPrim_Source_Text => "emitFromTask_gcsReceiveTask_uart5_764_chan710_766";
+      SMACCM::Unimplemented => true;
     };
     mavStream: in event data port TowerArrays::ArrTy_80TyBase_Types_Unsigned_8.impl {
       Queue_Size => 16;
@@ -612,10 +614,7 @@ thread gcsReceiveTask_uart5
       SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart5_764.h";
       SMACCM_SYS::CommPrim_Source_Text => "read_gcsReceiveTask_uart5_764_dataport4_832";
     };
-    
-    mavlink: in out data port DATATYPES::EncryptMAVLink;
-    
-    
+
   properties
     Source_Text => ("tower_task_usercode_gcsReceiveTask_uart5_764.c");
     SMACCM::Language => "Ivory";
@@ -677,10 +676,12 @@ thread datalink
       SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_datalink_715.h";
       SMACCM_SYS::CommPrim_Source_Text => "emitFromTask_datalink_715_chan698_737";
     };
+    
     info_ostream: out event data port radio_info_type::radio_info.impl {
       Queue_Size => 2;
       SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_datalink_715.h";
       SMACCM_SYS::CommPrim_Source_Text => "emitFromTask_datalink_715_chan714_725";
+      SMACCM::Unimplemented => true;
     };
     stat_ostream: out event data port radio_stat_type::radio_stat.impl {
       Queue_Size => 2;
@@ -940,7 +941,7 @@ thread gcsTransmitTask_uart1
     Period => 50 ms;
     SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_gcsTransmitTask_uart1_598_per50_697");
 end gcsTransmitTask_uart1;
-
+ 
 
 thread encryptTask_uart1
   features
@@ -970,6 +971,7 @@ thread gcsReceiveTask_uart1
       Queue_Size => 16;
       SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart1_445.h";
       SMACCM_SYS::CommPrim_Source_Text => "emitFromTask_gcsReceiveTask_uart1_445_chan389_581";
+      SMACCM::Unimplemented => true;
     };
     streamperiods: out event data port gcsstream_timing::gcsstream_timing.impl {
       Queue_Size => 16;
@@ -995,6 +997,7 @@ thread gcsReceiveTask_uart1
       Queue_Size => 4;
       SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart1_445.h";
       SMACCM_SYS::CommPrim_Source_Text => "emitFromTask_gcsReceiveTask_uart1_445_chan391_447";
+      SMACCM::Unimplemented => true;
     };
     mavStream: in event data port TowerArrays::ArrTy_80TyBase_Types_Unsigned_8.impl {
       Queue_Size => 16;
@@ -1372,6 +1375,7 @@ thread datalink_396
       Queue_Size => 2;
       SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_datalink_396.h";
       SMACCM_SYS::CommPrim_Source_Text => "emitFromTask_datalink_396_chan395_406";
+      SMACCM::Unimplemented => true;
     };
     stat_ostream: out event data port radio_stat_type::radio_stat.impl {
       Queue_Size => 2;
@@ -1430,6 +1434,12 @@ thread px4ioar
       SMACCM_SYS::CommPrim_Source_Text => "receiveFromTask_px4ioar_335_chan34_339";
       SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_px4ioar_335_chan34_loop_377");
     };
+    motor1 : out data port DATATYPES::Servo_Commands;
+    motor2 : out data port DATATYPES::Servo_Commands;
+    motor3 : out data port DATATYPES::Servo_Commands;
+    motor4 : out data port DATATYPES::Servo_Commands;
+    
+    
   properties
     Source_Text => ("tower_task_usercode_px4ioar_335.c");
     SMACCM::Language => "Ivory";
@@ -2015,6 +2025,8 @@ thread uartISR_330
       Queue_Size => 1;
       SMACCM_SYS::CommPrim_Source_Header => "tower_signal_comm_uartISR_330.h";
       SMACCM_SYS::CommPrim_Source_Text => "emitFromSig_uartISR_330_chan329_334";
+      SMACCM::Unimplemented => true;
+      
     };
     ostream: in event data port Base_Types::Unsigned_8 {
       Queue_Size => 12;
@@ -2041,6 +2053,7 @@ thread uartISR_271
       Queue_Size => 2;
       SMACCM_SYS::CommPrim_Source_Header => "tower_signal_comm_uartISR_271.h";
       SMACCM_SYS::CommPrim_Source_Text => "receiveFromSig_uartISR_271_chan269_273";
+      SMACCM::Unimplemented => true;
     };
   properties
     Dispatch_Protocol => Sporadic;
@@ -2221,7 +2234,8 @@ conn64:     data access dataport37 -> gcsTransmitTask_uart5_inst.armed;
 conn65:     data access dataport747 -> gcsTransmitTask_uart5_inst.radio;
 conn66:     data access dataport260 -> gcsTransmitTask_uart5_inst.motors;
 conn67:     data access dataport251 -> gcsTransmitTask_uart5_inst.control;
-conn68:     data access dataport295 -> gcsTransmitTask_uart5_inst.position;
+conn68:     data access dataport295 -> gcsTransmitTask_uart5_inst.position; 
+
 conn69:     data access dataport0 -> gcsTransmitTask_uart5_inst.sensors;
 conn70:     data access dataport87 -> gcsTransmitTask_uart5_inst.flightmode;
 conn71:     data access dataport33 -> gcsReceiveTask_uart5_inst.paramWriter;
@@ -2449,6 +2463,11 @@ conn292:     data access dataport38 -> userPPMInput_inst.userInput;
 --outgoing connections
 ccs:         port motors_and_radios.flight_control_commands -> datalink_inst.flight_control_commands;
 mavconn:     port motors_and_radios.mavlink -> datalink_inst.mavlink;
+motor1:      port px4ioar_inst.motor1 -> motors_and_radios.motor1;
+motor2:      port px4ioar_inst.motor2 -> motors_and_radios.motor2;
+motor3:      port px4ioar_inst.motor3 -> motors_and_radios.motor3;
+motor4:      port px4ioar_inst.motor4 -> motors_and_radios.motor4;
+
   properties 
     SMACCM::OS => "Breakaway-RTOS";
     

@@ -22,6 +22,12 @@ public
       
       conn4: port GS.mavlink <-> UAV.mavlink;
       conn5: port RC.flight_control_commands -> UAV.flight_control_commands;
+      
+    annex resolute {**
+    	prove all_features_bound()
+    	prove bi_ports_have_variance()
+    **};
+      
   end UAS.Impl;
 
   system Ground_Station

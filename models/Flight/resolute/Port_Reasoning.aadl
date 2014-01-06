@@ -2,8 +2,7 @@ package Port_Reasoning
 public
 
 annex resolute {**
-	
-	
+		
 bi_ports_have_variance() <=
 	** "All bidirectional ports have variance justification" **
 	forall(c : connection) . connection_is_not_bidrectional(c)
@@ -19,7 +18,7 @@ all_features_bound() <=
 	
 conn_eq_feat(comp : component) <=
 	** "All the features of component " comp " are connected" **
-	(forall(x : comp.features) . check_connected(x))
+	(forall(x : comp.features) . (feat_is_connected(x) or feat_is_unimplemented(x)))
 	
 num_connections(comp : component) : int =
 	sum({1 for (x : comp.connections)})	
@@ -27,13 +26,15 @@ num_connections(comp : component) : int =
 num_features(comp : component) : int =
 	sum({ 1 for (x : comp.features)})
 	
-check_connected(feat : feature) <= 
+feat_is_connected(feat : feature) <= 
 	** "The feature: " feat " is connected" **
 	is_connected(feat) 
-	
-print_name_conn(conn : connection) <=
-	** "The connection name is " conn **
-	true
+
+feat_is_unimplemented(feat : feature) <=
+	** "The feature: " feat " is unimplemented" **
+	property_exists(feat, SMACCM::Unimplemented) and
+	property_lookup(feat, SMACCM::Unimplemented)
+
 	
 **};
 
