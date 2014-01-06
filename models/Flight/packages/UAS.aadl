@@ -26,6 +26,7 @@ public
     annex resolute {**
     	prove all_features_bound()
     	prove bi_ports_have_variance()
+    	prove print_all_unimplemented()
     **};
       
   end UAS.Impl;

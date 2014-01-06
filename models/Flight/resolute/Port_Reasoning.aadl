@@ -35,6 +35,17 @@ feat_is_unimplemented(feat : feature) <=
 	property_exists(feat, SMACCM::Unimplemented) and
 	property_lookup(feat, SMACCM::Unimplemented)
 
+print_all_unimplemented() <=
+	** "The following features are marked as unimplemented" **
+	forall(comp : component) . forall(feat : comp.features) . (
+		(property_exists(feat, SMACCM::Unimplemented) and  
+		property_lookup(feat, SMACCM::Unimplemented)) =>
+		print_feature(feat))
+
+print_feature(feat : feature) <=
+	** feat **
+	true
+	
 	
 **};
 
