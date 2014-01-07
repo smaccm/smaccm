@@ -1,8 +1,14 @@
 package com.rockwellcollins.atc.agree.linking;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IProjectDescription;
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
@@ -46,37 +52,50 @@ public class AgreeLinkingService extends PropertiesLinkingService {
                 return Collections.singletonList(e);
             }
 
-            //this code will only link to objects in the same project
-            Iterable<IEObjectDescription> allObjectTypes = 
-                    EMFIndexRetrieval.getAllEObjectsOfTypeInWorkspace(context, reference.getEReferenceType());
-            
-            URI contextUri = context.eResource().getURI();
-            String contextProject = contextUri.segment(1);
+            // This code will only link to objects in the projects visible from the current project
+            Iterable<IEObjectDescription> allObjectTypes = EMFIndexRetrieval
+                    .getAllEObjectsOfTypeInWorkspace(context, reference.getEReferenceType());
+
+            String contextProject = context.eResource().getURI().segment(1);
+            List<String> visibleProjects = getVisibleProjects(contextProject);
+
             for (IEObjectDescription eod : allObjectTypes) {
                 if (eod.getName().toString().equalsIgnoreCase(name)) {
                     EObject res = eod.getEObjectOrProxy();
                     res = EcoreUtil.resolve(res, context.eResource().getResourceSet());
-                    if (!Aadl2Util.isNull(res)){
+                    if (!Aadl2Util.isNull(res)) {
                         URI linkUri = res.eResource().getURI();
-                        if(linkUri.segment(1).equals(contextProject)){
+                        String linkProject = linkUri.segment(1);
+                        if (visibleProjects.contains(linkProject)) {
                             return Collections.singletonList(res);
                         }
                     }
                 }
             }
-            
-            // TODO: This is a blind lookup which is unaware of project
-            // dependencies and such
-            //e = EMFIndexRetrieval.getEObjectOfType(context, reference.getEReferenceType(), name);
-            //if (e != null) {
-            //    return Collections.singletonList(e);
-            //}
         }
 
         return super.getLinkedObjects(context, reference, node);
     }
 
-    public static List<EObject> findUnitLiteralAsList(Element context, String name) {
+    private static List<String> getVisibleProjects(String contextProjectName) {
+        List<String> result = new ArrayList<>();
+        result.add(contextProjectName);
+
+        IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+        IProject contextProject = root.getProject(contextProjectName);
+        try {
+            IProjectDescription description = contextProject.getDescription();
+            for (IProject referencedProject : description.getReferencedProjects()) {
+                result.add(referencedProject.getName());
+            }
+        } catch (CoreException ex) {
+            ex.printStackTrace();
+        }
+
+        return result;
+    }
+
+    private static List<EObject> findUnitLiteralAsList(Element context, String name) {
         EObject e = findUnitLiteral(context, name);
         if (e == null) {
             return Collections.<EObject> emptyList();
@@ -100,5 +119,4 @@ public class AgreeLinkingService extends PropertiesLinkingService {
 
         return null;
     }
-
 }
