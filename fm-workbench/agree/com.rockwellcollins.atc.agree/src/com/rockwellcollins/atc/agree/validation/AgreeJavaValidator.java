@@ -261,9 +261,12 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
         }
 
         if (e instanceof NestedDotID) {
+            if (EcoreUtil2.getContainerOfType(e, GetPropertyExpr.class) != null) {
+                return true;
+            }
+            
             NamedElement base = getFinalNestId((NestedDotID) e);
             return base instanceof ConstStatement;
-
         }
 
         return true;
