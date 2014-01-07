@@ -82,11 +82,11 @@ public class AgreeLinkingService extends PropertiesLinkingService {
         result.add(contextProjectName);
 
         IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-        IProject contextProject = root.getProject(contextProjectName);
+        IProject contextProject = root.getProject(URI.decode(contextProjectName));
         try {
             IProjectDescription description = contextProject.getDescription();
             for (IProject referencedProject : description.getReferencedProjects()) {
-                result.add(referencedProject.getName());
+                result.add(URI.encodeSegment(referencedProject.getName(), false));
             }
         } catch (CoreException ex) {
             ex.printStackTrace();

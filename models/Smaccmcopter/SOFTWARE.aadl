@@ -102,22 +102,19 @@ public
       SMACCM::OS => "Breakaway-RTOS";
       
     annex resolute {** 
-    	prove no_external_commands(this.SN, this) modes: Defensive 
+    	prove only_receive_gs(this.MC) modes: Normal
+    	
+    	-- prove no_external_commands(this.SN, this) modes: Defensive 
     	-- This property should fail:
     	-- prove no_external_commands(this.SN, this) modes: Normal
     	
-    	prove schedulable(this) modes: Normal
-    	prove schedulable(this) modes: Defensive 
+    	-- prove schedulable(this) modes: Normal
+    	-- prove schedulable(this) modes: Defensive 
     	 
-    	prove no_radio_commands(this.SN) modes: Defensive
+    	-- prove no_radio_commands(this.SN) modes: Defensive
     	
-    	prove receives_mavlink(this.SN) modes: Defensive
-    	prove receives_mavlink(this.SN) modes: Normal
-    	      
-    	prove only_receive_gs(this.MC) modes: Normal
-    	
-    	prove test_claim(this)
-    	
+    	-- prove receives_mavlink(this.SN) modes: Defensive
+    	-- prove receives_mavlink(this.SN) modes: Normal
     **};
   end Main_Loop.Impl;
   
