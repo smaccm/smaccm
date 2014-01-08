@@ -33,6 +33,7 @@ data implementation gcsstream_timing.impl
     vfr_hud : data gcsstream_data;
     global_position_int : data gcsstream_data;
     params : data gcsstream_data;
+    veh_commsec : data gcsstream_data;
     radio : data gcsstream_data;
 end gcsstream_timing.impl;
 
@@ -52,6 +53,7 @@ data implementation gcsstream_schedule.impl
     vfr_hud_sched : data Base_Types::Unsigned_32;
     global_position_int_sched : data Base_Types::Unsigned_32;
     params_sched : data Base_Types::Unsigned_32;
+    veh_commsec_sched : data Base_Types::Unsigned_32;
     radio_sched : data Base_Types::Unsigned_32;
 end gcsstream_schedule.impl;
 

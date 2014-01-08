@@ -21,7 +21,7 @@ data implementation mavlink_receive_state.impl
     sysid : data Base_Types::Unsigned_8;
     compid : data Base_Types::Unsigned_8;
     msgid : data Base_Types::Unsigned_8;
-    payload : data TowerArrays::ArrTy_256TyBase_Types_Unsigned_8;
+    payload : data TowerArrays::ArrTy_255TyBase_Types_Unsigned_8;
     crc : data Base_Types::Unsigned_16;
 end mavlink_receive_state.impl;
 

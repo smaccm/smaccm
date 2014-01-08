@@ -52,7 +52,7 @@ public
 	  Source_Stack_Size => 8196 bytes;
 	  Dispatch_Protocol => Periodic;
 	  Period => 50 ms; 
-      Compute_Execution_Time => 2 ms .. 5 ms;
+      Timing_Properties::Compute_Execution_Time => 2 ms .. 5 ms;
       Static_Analysis::Writes_to_buffers => ("userinput_shared_state");
 	  
 	  	 

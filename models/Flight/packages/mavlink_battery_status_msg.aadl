@@ -6,7 +6,7 @@ public
   with Data_Model;
 
 data battery_status_msg
-  properties 
+  properties
     Data_Model::Data_Representation => Struct;
 end battery_status_msg;
 

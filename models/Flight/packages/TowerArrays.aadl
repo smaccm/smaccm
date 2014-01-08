@@ -5,19 +5,6 @@ public
   with Data_Model;
   with Base_Types;
 
-data ArrTy_8TyBase_Types_Unsigned_16
-   
-end ArrTy_8TyBase_Types_Unsigned_16;
-
-
-data implementation ArrTy_8TyBase_Types_Unsigned_16.impl
-  properties
-    Data_Model::Data_Representation => Array;
-    Data_Model::Base_Type => (classifier (Base_Types::Unsigned_16));
-    Data_Model::Dimension => (8);
-end ArrTy_8TyBase_Types_Unsigned_16.impl;
-
-
 data ArrTy_96TyBase_Types_Unsigned_8
   
 end ArrTy_96TyBase_Types_Unsigned_8;
@@ -187,17 +174,17 @@ data implementation ArrTy_80TyBase_Types_Unsigned_8.impl
 end ArrTy_80TyBase_Types_Unsigned_8.impl;
 
 
-data ArrTy_256TyBase_Types_Unsigned_8
+data ArrTy_255TyBase_Types_Unsigned_8
   
-end ArrTy_256TyBase_Types_Unsigned_8;
+end ArrTy_255TyBase_Types_Unsigned_8;
 
 
-data implementation ArrTy_256TyBase_Types_Unsigned_8.impl
+data implementation ArrTy_255TyBase_Types_Unsigned_8.impl
   properties
     Data_Model::Data_Representation => Array;
     Data_Model::Base_Type => (classifier (Base_Types::Unsigned_8));
-    Data_Model::Dimension => (256);
-end ArrTy_256TyBase_Types_Unsigned_8.impl;
+    Data_Model::Dimension => (255);
+end ArrTy_255TyBase_Types_Unsigned_8.impl;
 
 
 
