@@ -3,9 +3,30 @@ public
 
 annex resolute {**
 	
-all_outgoing_encrypted(gs : component, uav : component) <=
-	** "All connections from " gs " to " uav " are encrypted" **
-	forall(conn : gs.connections).
+all_outgoing_through_trusted(gs : component) <=
+	** "All connections from " gs " to any process or thread are encrypted or travel through a hardware bus" **
+	forall(z : connected_comps_via_untrusted_channel(gs)) .
+		(not (is_process(z) or is_thread(z))) and all_outgoing_trusted_helper(z, connected_comps_via_untrusted_channel(gs))
+
+all_outgoing_trusted_helper(gs : component, v : {component}) <=
+	** "All connections from " gs " to any process or thread are encrypted or travel through a hardware bus" **
+	forall(z : connected_comps_via_untrusted_channel(gs)) .
+		(not (z in v)) =>
+		(not (is_process(z) or is_thread(z))) and all_outgoing_trusted_helper(z, connected_comps_via_untrusted_channel(gs) union v)	
+
+connected_comps_via_untrusted_channel(x : component) : {component} =
+	{conn_dest(c) for (c : x.connections) |
+		conn_is_not_trusted(c) and not_hardware_bus(conn_dest(c))
+	}
+ 
+
+not_hardware_bus(comp: component) : bool =
+	not class_of(comp, CORTEX::AHB_Bus_Matrix)
+
+conn_is_not_trusted(conn : connection) : bool =
+	(not has_type(conn)) or 
+	(type(conn) <> DATATYPES::EncryptMAVLink)
+
 **};
 
 

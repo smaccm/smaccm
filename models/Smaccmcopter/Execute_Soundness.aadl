@@ -17,7 +17,7 @@ only_gs_encrypt() <=
 encrypt_algorithm : string =
   property_lookup(SOFTWARE::Decrypt, SMACCM::Encryption_Algorthim) 
 
-authenticated_encryption(e : string) <=
+authenticated_encryption(e : string) <= 
   ** "The encryption algorithm " e " is strong and authenticated. "
      "Messages cannot be forged or manipulated" **
   e = "AES-128-GCM" or e = "AES-128-CTR-HMAC-SHA1"

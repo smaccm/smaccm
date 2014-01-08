@@ -36,6 +36,7 @@ import org.osate.aadl2.instance.ConnectionInstanceEnd;
 import org.osate.aadl2.instance.ConnectionReference;
 import org.osate.aadl2.instance.FeatureCategory;
 import org.osate.aadl2.instance.FeatureInstance;
+import org.osate.aadl2.instance.SystemInstance;
 import org.osate.aadl2.modelsupport.resources.OsateResourceUtil;
 import org.osate.aadl2.properties.PropertyDoesNotApplyToHolderException;
 import org.osate.aadl2.properties.PropertyNotPresentException;
@@ -49,6 +50,7 @@ import org.osate.xtext.aadl2.properties.util.GetProperties;
 import org.osate.xtext.aadl2.properties.util.PropertyUtils;
 
 import com.rockwellcollins.atc.resolute.analysis.values.BoolValue;
+import com.rockwellcollins.atc.resolute.analysis.values.ConnectionValue;
 import com.rockwellcollins.atc.resolute.analysis.values.IntValue;
 import com.rockwellcollins.atc.resolute.analysis.values.NamedElementValue;
 import com.rockwellcollins.atc.resolute.analysis.values.RangeValue;
@@ -259,20 +261,28 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
         ComponentInstance compInst = (ComponentInstance) doSwitch(id).getNamedElement();
 
         if (setName.equals("connections")) {
-            Set<ResoluteValue> returnSet = new HashSet<ResoluteValue>();
-            if (compInst.getCategory() == ComponentCategory.THREAD) {
+            Set<ConnectionInstance> connSet = new HashSet<ConnectionInstance>();
+           // if (compInst.getCategory() == ComponentCategory.THREAD) {
                 for (FeatureInstance feature : compInst.getFeatureInstances()) {
-                    addAllFeatureGroupConns(feature, returnSet);
+                    addAllFeatureGroupConns(feature, connSet);
                 }
-            }
-
+          //  }
+            
             for (ConnectionInstance conn : compInst.getSrcConnectionInstances()) {
-                returnSet.add(new NamedElementValue(conn));
+                connSet.add(conn);
             }
             for (ConnectionInstance conn : compInst.getDstConnectionInstances()) {
-                returnSet.add(new NamedElementValue(conn));
+                connSet.add(conn);
             }
-
+            
+            //go through the connection set and make doubles of bidrectional connections
+            Set<ResoluteValue> returnSet = new HashSet<ResoluteValue>();
+            for(ConnectionInstance conn : connSet){
+                if(conn.isBidirectional()){
+                    returnSet.add(new ConnectionValue(conn, true));
+                }
+                returnSet.add(new ConnectionValue(conn, false));
+            }
             return new SetValue(returnSet);
         }
 
@@ -333,15 +343,15 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
         }
     }
 
-    private void addAllFeatureGroupConns(FeatureInstance feature, Set<ResoluteValue> returnSet) {
+    private void addAllFeatureGroupConns(FeatureInstance feature, Set<ConnectionInstance> returnSet) {
         for (FeatureInstance featInst : feature.getFeatureInstances()) {
             addAllFeatureGroupConns(featInst, returnSet);
         }
         for (ConnectionInstance conn : feature.getSrcConnectionInstances()) {
-            returnSet.add(new NamedElementValue(conn));
+            returnSet.add(conn);
         }
         for (ConnectionInstance conn : feature.getDstConnectionInstances()) {
-            returnSet.add(new NamedElementValue(conn));
+            returnSet.add(conn);
         }
     }
 
@@ -722,9 +732,18 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
         }
 
         case "conn_source": {
-            ConnectionInstance conn = (ConnectionInstance) argVals.get(0).getNamedElement();
-            ConnectionInstanceEnd dst = conn.getDestination();
-            ConnectionInstanceEnd src = conn.getSource();
+            ConnectionValue resoluteConnVal = (ConnectionValue) argVals.get(0);
+            ConnectionInstance conn = (ConnectionInstance) resoluteConnVal.getNamedElement();
+
+            ConnectionInstanceEnd dst;
+            ConnectionInstanceEnd src;
+            if(resoluteConnVal.fReverseDirection){
+                dst = conn.getSource();
+                src = conn.getDestination();
+            }else{
+                dst = conn.getDestination();
+                src = conn.getSource(); 
+            }
 
             Property accessRightProp = EMFIndexRetrieval.getPropertyDefinitionInWorkspace(
                     OsateResourceUtil.getResourceSet(), "Memory_Properties::Access_Right");
@@ -755,9 +774,18 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
         }
 
         case "conn_dest": {
-            ConnectionInstance conn = (ConnectionInstance) argVals.get(0).getNamedElement();
-            ConnectionInstanceEnd dst = conn.getDestination();
-            ConnectionInstanceEnd src = conn.getSource();
+            ConnectionValue resoluteConnVal = (ConnectionValue) argVals.get(0);
+            ConnectionInstance conn = (ConnectionInstance) resoluteConnVal.getNamedElement();
+
+            ConnectionInstanceEnd dst;
+            ConnectionInstanceEnd src;
+            if(resoluteConnVal.fReverseDirection){
+                dst = conn.getSource();
+                src = conn.getDestination();
+            }else{
+                dst = conn.getDestination();
+                src = conn.getSource(); 
+            }
 
             Property accessRightProp = EMFIndexRetrieval.getPropertyDefinitionInWorkspace(
                     OsateResourceUtil.getResourceSet(), "Memory_Properties::Access_Right");
@@ -963,7 +991,7 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
                         +feat.getName()+"', but the feature is not connected",
                         feat);
             }
-            return new NamedElementValue(conn);
+            return new ConnectionValue(conn, false);
         }
 
         case "singleton": {

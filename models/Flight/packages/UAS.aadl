@@ -27,6 +27,7 @@ public
     	prove all_features_bound()
     	prove bi_ports_have_variance()
     	prove print_all_unimplemented()
+    	prove all_outgoing_through_trusted(this.GS)
     **};
       
   end UAS.Impl;

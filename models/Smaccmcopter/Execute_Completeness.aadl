@@ -20,7 +20,7 @@ execute_completeness(d : device) <=
 -- Under the assumption that the system is schedulable, the total time
 -- delay will be the sum of the worst case execution times of all the threads
 total_time_delay : int = 
-  if analysis("schedule") then
+  if analysis("schedule") then 
     wc_message_wait_time + 
     wc_message_processing_time + 
     wc_controller_delay
