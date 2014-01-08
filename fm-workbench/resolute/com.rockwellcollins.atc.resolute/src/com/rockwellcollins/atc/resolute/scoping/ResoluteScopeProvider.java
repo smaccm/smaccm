@@ -4,6 +4,7 @@
 package com.rockwellcollins.atc.resolute.scoping;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.eclipse.emf.common.util.EList;
@@ -23,6 +24,7 @@ import org.osate.aadl2.impl.DataPortImpl;
 import org.osate.aadl2.impl.FeatureGroupImpl;
 import org.osate.xtext.aadl2.properties.scoping.PropertiesScopeProvider;
 
+import com.rockwellcollins.atc.resolute.resolute.Arg;
 import com.rockwellcollins.atc.resolute.resolute.FilterMapExpr;
 import com.rockwellcollins.atc.resolute.resolute.FunctionDefinition;
 import com.rockwellcollins.atc.resolute.resolute.NestedDotID;
@@ -44,6 +46,16 @@ public class ResoluteScopeProvider extends PropertiesScopeProvider {
 
     IScope scope_NamedElement(FunctionDefinition ctx, EReference ref) {
         return Scopes.scopeFor(ctx.getArgs(), getScope(ctx.eContainer(), ref));
+    }
+    
+    IScope scope_NamedElement(Arg ctx, EReference ref) {
+        if (ctx.eContainer() instanceof FilterMapExpr) {
+            FilterMapExpr parent = (FilterMapExpr) ctx.eContainer();
+            List<Arg> visibleArgs = parent.getArgs().subList(0, parent.getArgs().indexOf(ctx));
+            return Scopes.scopeFor(visibleArgs, getScope(parent.eContainer(), ref));
+        }
+        
+        return getScope(ctx.eContainer(), ref);
     }
 
     IScope scope_NamedElement(FilterMapExpr ctx, EReference ref) {
