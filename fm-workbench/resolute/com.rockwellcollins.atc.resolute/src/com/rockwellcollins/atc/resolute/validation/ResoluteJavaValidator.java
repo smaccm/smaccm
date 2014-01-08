@@ -960,12 +960,19 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
     }
     
     public ResoluteType typeToResoluteType(Type type) {
-        if (type instanceof BuiltinType) {
+        if (type == null) {
+            return BaseType.FAIL;
+        } else if (type instanceof BuiltinType) {
             BuiltinType bt = (BuiltinType) type;
             return new BaseType(bt.getName());
         } else if (type instanceof com.rockwellcollins.atc.resolute.resolute.SetType) {
             com.rockwellcollins.atc.resolute.resolute.SetType st = (com.rockwellcollins.atc.resolute.resolute.SetType) type;
-            return new SetType(typeToResoluteType(st.getType()));
+            ResoluteType innerType = typeToResoluteType(st.getType());
+            if (innerType == BaseType.FAIL) {
+                return BaseType.FAIL;
+            } else {
+                return new SetType(innerType);
+            }
         } else {
             error(type, "Unable to convert type");
             throw new IllegalArgumentException();

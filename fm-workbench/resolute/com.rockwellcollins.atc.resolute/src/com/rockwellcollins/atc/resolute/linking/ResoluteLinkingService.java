@@ -9,6 +9,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.xtext.linking.impl.IllegalNodeException;
 import org.eclipse.xtext.nodemodel.INode;
@@ -107,20 +108,22 @@ public class ResoluteLinkingService extends PropertiesLinkingService {
     }
 
     private static EObject getNamedElementByType(EObject context, String name, EClass eclass) {
-
         for (IEObjectDescription desc : EMFIndexRetrieval.getAllEObjectsOfTypeInWorkspace(context,
                 eclass)) {
             EObject e = EcoreUtil.resolve(desc.getEObjectOrProxy(), context);
             if (e instanceof NamedElement) {
                 NamedElement ne = (NamedElement) e;
-                URI contextUri = ne.eResource().getURI();
-                String contextProject = contextUri.segment(1);
-                URI linkUri = context.eResource().getURI();
-                if(linkUri.segment(1).equals(contextProject)){
-                    if (name.equals(ne.getName())) {
-                        return ne;
+                Resource resource = ne.eResource();
+                if (resource != null) {
+                    URI contextUri = resource.getURI();
+                    String contextProject = contextUri.segment(1);
+                    URI linkUri = context.eResource().getURI();
+                    if(linkUri.segment(1).equals(contextProject)){
+                        if (name.equals(ne.getName())) {
+                            return ne;
+                        }
                     }
-                } 
+                }
             }
         }
 

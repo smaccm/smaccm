@@ -1,5 +1,9 @@
 package com.rockwellcollins.atc.resolute.analysis.views;
 
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
+import java.awt.datatransfer.Transferable;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
@@ -47,8 +51,8 @@ public class AssuranceCaseView extends ViewPart {
             public void menuAboutToShow(IMenuManager manager) {
                 IStructuredSelection selection = (IStructuredSelection) treeViewer.getSelection();
                 if (!selection.isEmpty()) {
-                    ClaimResult claim = (ClaimResult) selection.getFirstElement();
-                    
+                    final ClaimResult claim = (ClaimResult) selection.getFirstElement();
+
                     EObject location = claim.getLocation();
                     if (claim instanceof FailResult) {
                         manager.add(createHyperlinkAction("Open Failure Location", location));
@@ -57,12 +61,21 @@ public class AssuranceCaseView extends ViewPart {
                     } else {
                         manager.add(createHyperlinkAction("Open Claim Definition", location));
                     }
-                    
+
                     Map<String, EObject> references = claim.getReferences();
                     for (String name : new TreeSet<String>(references.keySet())) {
                         manager.add(createHyperlinkAction("Go to '" + name + "'",
                                 references.get(name)));
                     }
+
+                    manager.add(new Action("Copy Claim Text") {
+                        @Override
+                        public void run() {
+                            Transferable text = new StringSelection(claim.getText());
+                            Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+                            clipboard.setContents(text, null);
+                        }
+                    });
                 }
             }
         });
