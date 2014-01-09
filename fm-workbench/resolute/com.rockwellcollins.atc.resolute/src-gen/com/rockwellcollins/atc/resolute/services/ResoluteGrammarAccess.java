@@ -60,13 +60,13 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cDefinitionParserRuleCall_0 = (RuleCall)cAlternatives.eContents().get(0);
 		private final RuleCall cArgParserRuleCall_1 = (RuleCall)cAlternatives.eContents().get(1);
 		private final RuleCall cTypeParserRuleCall_2 = (RuleCall)cAlternatives.eContents().get(2);
+		private final RuleCall cLetBindingParserRuleCall_3 = (RuleCall)cAlternatives.eContents().get(3);
 		
-		////|   QuantArg
 		//NamedElement returns aadl2::NamedElement:
-		//	Definition | Arg | Type;
+		//	Definition | Arg | Type | LetBinding;
 		public ParserRule getRule() { return rule; }
 
-		//Definition | Arg | Type
+		//Definition | Arg | Type | LetBinding
 		public Alternatives getAlternatives() { return cAlternatives; }
 
 		//Definition
@@ -77,6 +77,9 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 
 		//Type
 		public RuleCall getTypeParserRuleCall_2() { return cTypeParserRuleCall_2; }
+
+		//LetBinding
+		public RuleCall getLetBindingParserRuleCall_3() { return cLetBindingParserRuleCall_3; }
 	}
 
 	public class ElementElements extends AbstractParserRuleElementFinder {
@@ -227,14 +230,14 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		////stuff for quantifiers only
 		//name=("threads" //non-aadl components
 		//| "data" | "memory" | "thread_groups" | "processes" | "subprograms" | "subprogram_groups" | "processors" |
-		//"virtual_processors" | "buses" | "virtual_buses" | "devices" | "systems" | "abstracts" | "connections" | "components" |
-		//"features")
+		//"virtual_processors" | "buses" | "virtual_buses" | "devices" | "systems" | "abstracts" | "connections" | "components"
+		//| "features")
 		public Assignment getNameAssignment() { return cNameAssignment; }
 
 		//"threads" //non-aadl components
 		//| "data" | "memory" | "thread_groups" | "processes" | "subprograms" | "subprogram_groups" | "processors" |
-		//"virtual_processors" | "buses" | "virtual_buses" | "devices" | "systems" | "abstracts" | "connections" | "components" |
-		//"features"
+		//"virtual_processors" | "buses" | "virtual_buses" | "devices" | "systems" | "abstracts" | "connections" | "components"
+		//| "features"
 		public Alternatives getNameAlternatives_0() { return cNameAlternatives_0; }
 
 		//"threads"
@@ -326,14 +329,14 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		////aadl components
 		//name=("data" //non-aadl components
 		//| "thread" | "thread_group" | "process" | "subprogram" | "subprogram_group" | "processor" | "virtual_processor" |
-		//"memory" | "bus" | "virtual_bus" | "device" | "system" | "abstract" | "aadl" | "feature" | "connection" | "component" |
-		//"string" | "int" | "real" | "bool")
+		//"memory" | "bus" | "virtual_bus" | "device" | "system" | "abstract" | "aadl" | "feature" | "connection" | "component"
+		//| "string" | "int" | "real" | "bool")
 		public Assignment getNameAssignment() { return cNameAssignment; }
 
 		//"data" //non-aadl components
 		//| "thread" | "thread_group" | "process" | "subprogram" | "subprogram_group" | "processor" | "virtual_processor" |
-		//"memory" | "bus" | "virtual_bus" | "device" | "system" | "abstract" | "aadl" | "feature" | "connection" | "component" |
-		//"string" | "int" | "real" | "bool"
+		//"memory" | "bus" | "virtual_bus" | "device" | "system" | "abstract" | "aadl" | "feature" | "connection" | "component"
+		//| "string" | "int" | "real" | "bool"
 		public Alternatives getNameAlternatives_0() { return cNameAlternatives_0; }
 
 		//"data"
@@ -1281,9 +1284,17 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cFilterExprParserRuleCall_11_5_1_0 = (RuleCall)cFilterAssignment_11_5_1.eContents().get(0);
 		private final Keyword cRightCurlyBracketKeyword_11_6 = (Keyword)cGroup_11.eContents().get(6);
 		private final Group cGroup_12 = (Group)cAlternatives.eContents().get(12);
-		private final Keyword cLeftParenthesisKeyword_12_0 = (Keyword)cGroup_12.eContents().get(0);
-		private final RuleCall cExprParserRuleCall_12_1 = (RuleCall)cGroup_12.eContents().get(1);
-		private final Keyword cRightParenthesisKeyword_12_2 = (Keyword)cGroup_12.eContents().get(2);
+		private final Action cLetExprAction_12_0 = (Action)cGroup_12.eContents().get(0);
+		private final Keyword cLetKeyword_12_1 = (Keyword)cGroup_12.eContents().get(1);
+		private final Assignment cBindingAssignment_12_2 = (Assignment)cGroup_12.eContents().get(2);
+		private final RuleCall cBindingLetBindingParserRuleCall_12_2_0 = (RuleCall)cBindingAssignment_12_2.eContents().get(0);
+		private final Keyword cSemicolonKeyword_12_3 = (Keyword)cGroup_12.eContents().get(3);
+		private final Assignment cExprAssignment_12_4 = (Assignment)cGroup_12.eContents().get(4);
+		private final RuleCall cExprExprParserRuleCall_12_4_0 = (RuleCall)cExprAssignment_12_4.eContents().get(0);
+		private final Group cGroup_13 = (Group)cAlternatives.eContents().get(13);
+		private final Keyword cLeftParenthesisKeyword_13_0 = (Keyword)cGroup_13.eContents().get(0);
+		private final RuleCall cExprParserRuleCall_13_1 = (RuleCall)cGroup_13.eContents().get(1);
+		private final Keyword cRightParenthesisKeyword_13_2 = (Keyword)cGroup_13.eContents().get(2);
 		
 		//AtomicExpr returns Expr:
 		//	{IdExpr} id=[aadl2::NamedElement|QCREF] ("." subelements=ElementSet)? //for set expressions
@@ -1292,16 +1303,16 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		//	then=Expr "else" else=Expr | {QuantifiedExpr} quant=("forall" | "exists") ("(" args+=Arg ")")+ "." expr=Expr |
 		//	{BuiltInFuncCallExpr} fn=BuiltInFunc "(" (args+=Expr ("," args+=Expr)*)? ")" | {FnCallExpr} fn=[FunctionDefinition]
 		//	"(" (args+=Expr ("," args+=Expr)*)? ")" | {FilterMapExpr} "{" map=Expr "for" ("(" args+=Arg ")")+ ("|" filter=Expr)?
-		//	"}" | "(" Expr ")";
+		//	"}" | {LetExpr} "let" binding=LetBinding ";" expr=Expr | "(" Expr ")";
 		public ParserRule getRule() { return rule; }
 
 		//{IdExpr} id=[aadl2::NamedElement|QCREF] ("." subelements=ElementSet)? //for set expressions
 		//| {ThisExpr} "this" ("." sub=NestedDotID)? | {FailExpr} "fail" val=StringTerm? | {IntExpr} val=IntegerTerm | {RealExpr}
 		//val=RealTerm | {BoolExpr} val=BooleanLiteral | {StringExpr} val=StringTerm | {IfThenElseExpr} "if" cond=Expr "then"
 		//then=Expr "else" else=Expr | {QuantifiedExpr} quant=("forall" | "exists") ("(" args+=Arg ")")+ "." expr=Expr |
-		//{BuiltInFuncCallExpr} fn=BuiltInFunc "(" (args+=Expr ("," args+=Expr)*)? ")" | {FnCallExpr} fn=[FunctionDefinition] "("
-		//(args+=Expr ("," args+=Expr)*)? ")" | {FilterMapExpr} "{" map=Expr "for" ("(" args+=Arg ")")+ ("|" filter=Expr)? "}" |
-		//"(" Expr ")"
+		//{BuiltInFuncCallExpr} fn=BuiltInFunc "(" (args+=Expr ("," args+=Expr)*)? ")" | {FnCallExpr} fn=[FunctionDefinition]
+		//"(" (args+=Expr ("," args+=Expr)*)? ")" | {FilterMapExpr} "{" map=Expr "for" ("(" args+=Arg ")")+ ("|" filter=Expr)?
+		//"}" | {LetExpr} "let" binding=LetBinding ";" expr=Expr | "(" Expr ")"
 		public Alternatives getAlternatives() { return cAlternatives; }
 
 		//{IdExpr} id=[aadl2::NamedElement|QCREF] ("." subelements=ElementSet)? //for set expressions
@@ -1619,17 +1630,85 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		//"}"
 		public Keyword getRightCurlyBracketKeyword_11_6() { return cRightCurlyBracketKeyword_11_6; }
 
-		//"(" Expr ")"
+		//{LetExpr} "let" binding=LetBinding ";" expr=Expr
 		public Group getGroup_12() { return cGroup_12; }
 
-		//"("
-		public Keyword getLeftParenthesisKeyword_12_0() { return cLeftParenthesisKeyword_12_0; }
+		//{LetExpr}
+		public Action getLetExprAction_12_0() { return cLetExprAction_12_0; }
+
+		//"let"
+		public Keyword getLetKeyword_12_1() { return cLetKeyword_12_1; }
+
+		//binding=LetBinding
+		public Assignment getBindingAssignment_12_2() { return cBindingAssignment_12_2; }
+
+		//LetBinding
+		public RuleCall getBindingLetBindingParserRuleCall_12_2_0() { return cBindingLetBindingParserRuleCall_12_2_0; }
+
+		//";"
+		public Keyword getSemicolonKeyword_12_3() { return cSemicolonKeyword_12_3; }
+
+		//expr=Expr
+		public Assignment getExprAssignment_12_4() { return cExprAssignment_12_4; }
 
 		//Expr
-		public RuleCall getExprParserRuleCall_12_1() { return cExprParserRuleCall_12_1; }
+		public RuleCall getExprExprParserRuleCall_12_4_0() { return cExprExprParserRuleCall_12_4_0; }
+
+		//"(" Expr ")"
+		public Group getGroup_13() { return cGroup_13; }
+
+		//"("
+		public Keyword getLeftParenthesisKeyword_13_0() { return cLeftParenthesisKeyword_13_0; }
+
+		//Expr
+		public RuleCall getExprParserRuleCall_13_1() { return cExprParserRuleCall_13_1; }
 
 		//")"
-		public Keyword getRightParenthesisKeyword_12_2() { return cRightParenthesisKeyword_12_2; }
+		public Keyword getRightParenthesisKeyword_13_2() { return cRightParenthesisKeyword_13_2; }
+	}
+
+	public class LetBindingElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "LetBinding");
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final Assignment cNameAssignment_0 = (Assignment)cGroup.eContents().get(0);
+		private final RuleCall cNameIDTerminalRuleCall_0_0 = (RuleCall)cNameAssignment_0.eContents().get(0);
+		private final Keyword cColonKeyword_1 = (Keyword)cGroup.eContents().get(1);
+		private final Assignment cTypeAssignment_2 = (Assignment)cGroup.eContents().get(2);
+		private final RuleCall cTypeTypeParserRuleCall_2_0 = (RuleCall)cTypeAssignment_2.eContents().get(0);
+		private final Keyword cEqualsSignKeyword_3 = (Keyword)cGroup.eContents().get(3);
+		private final Assignment cExprAssignment_4 = (Assignment)cGroup.eContents().get(4);
+		private final RuleCall cExprExprParserRuleCall_4_0 = (RuleCall)cExprAssignment_4.eContents().get(0);
+		
+		//LetBinding:
+		//	name=ID ":" type=Type "=" expr=Expr;
+		public ParserRule getRule() { return rule; }
+
+		//name=ID ":" type=Type "=" expr=Expr
+		public Group getGroup() { return cGroup; }
+
+		//name=ID
+		public Assignment getNameAssignment_0() { return cNameAssignment_0; }
+
+		//ID
+		public RuleCall getNameIDTerminalRuleCall_0_0() { return cNameIDTerminalRuleCall_0_0; }
+
+		//":"
+		public Keyword getColonKeyword_1() { return cColonKeyword_1; }
+
+		//type=Type
+		public Assignment getTypeAssignment_2() { return cTypeAssignment_2; }
+
+		//Type
+		public RuleCall getTypeTypeParserRuleCall_2_0() { return cTypeTypeParserRuleCall_2_0; }
+
+		//"="
+		public Keyword getEqualsSignKeyword_3() { return cEqualsSignKeyword_3; }
+
+		//expr=Expr
+		public Assignment getExprAssignment_4() { return cExprAssignment_4; }
+
+		//Expr
+		public RuleCall getExprExprParserRuleCall_4_0() { return cExprExprParserRuleCall_4_0; }
 	}
 
 	public class BuiltInFuncElements extends AbstractParserRuleElementFinder {
@@ -2094,6 +2173,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	private SetOpExprElements pSetOpExpr;
 	private PrefixExprElements pPrefixExpr;
 	private AtomicExprElements pAtomicExpr;
+	private LetBindingElements pLetBinding;
 	private BuiltInFuncElements pBuiltInFunc;
 	private RealTermElements pRealTerm;
 	private UnsignedRealElements pUnsignedReal;
@@ -2171,9 +2251,8 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		return getNamespaceAccess().getRule();
 	}
 
-	////|   QuantArg
 	//NamedElement returns aadl2::NamedElement:
-	//	Definition | Arg | Type;
+	//	Definition | Arg | Type | LetBinding;
 	public NamedElementElements getNamedElementAccess() {
 		return (pNamedElement != null) ? pNamedElement : (pNamedElement = new NamedElementElements());
 	}
@@ -2406,13 +2485,23 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	//	then=Expr "else" else=Expr | {QuantifiedExpr} quant=("forall" | "exists") ("(" args+=Arg ")")+ "." expr=Expr |
 	//	{BuiltInFuncCallExpr} fn=BuiltInFunc "(" (args+=Expr ("," args+=Expr)*)? ")" | {FnCallExpr} fn=[FunctionDefinition]
 	//	"(" (args+=Expr ("," args+=Expr)*)? ")" | {FilterMapExpr} "{" map=Expr "for" ("(" args+=Arg ")")+ ("|" filter=Expr)?
-	//	"}" | "(" Expr ")";
+	//	"}" | {LetExpr} "let" binding=LetBinding ";" expr=Expr | "(" Expr ")";
 	public AtomicExprElements getAtomicExprAccess() {
 		return (pAtomicExpr != null) ? pAtomicExpr : (pAtomicExpr = new AtomicExprElements());
 	}
 	
 	public ParserRule getAtomicExprRule() {
 		return getAtomicExprAccess().getRule();
+	}
+
+	//LetBinding:
+	//	name=ID ":" type=Type "=" expr=Expr;
+	public LetBindingElements getLetBindingAccess() {
+		return (pLetBinding != null) ? pLetBinding : (pLetBinding = new LetBindingElements());
+	}
+	
+	public ParserRule getLetBindingRule() {
+		return getLetBindingAccess().getRule();
 	}
 
 	////QuantArg returns Arg:

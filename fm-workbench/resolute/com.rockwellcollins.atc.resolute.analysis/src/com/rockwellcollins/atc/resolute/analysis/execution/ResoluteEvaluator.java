@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xtext.EcoreUtil2;
 import org.osate.aadl2.AbstractNamedValue;
@@ -36,7 +35,6 @@ import org.osate.aadl2.instance.ConnectionInstanceEnd;
 import org.osate.aadl2.instance.ConnectionReference;
 import org.osate.aadl2.instance.FeatureCategory;
 import org.osate.aadl2.instance.FeatureInstance;
-import org.osate.aadl2.instance.SystemInstance;
 import org.osate.aadl2.modelsupport.resources.OsateResourceUtil;
 import org.osate.aadl2.properties.PropertyDoesNotApplyToHolderException;
 import org.osate.aadl2.properties.PropertyNotPresentException;
@@ -73,6 +71,8 @@ import com.rockwellcollins.atc.resolute.resolute.FunctionDefinition;
 import com.rockwellcollins.atc.resolute.resolute.IdExpr;
 import com.rockwellcollins.atc.resolute.resolute.IfThenElseExpr;
 import com.rockwellcollins.atc.resolute.resolute.IntExpr;
+import com.rockwellcollins.atc.resolute.resolute.LetBinding;
+import com.rockwellcollins.atc.resolute.resolute.LetExpr;
 import com.rockwellcollins.atc.resolute.resolute.NestedDotID;
 import com.rockwellcollins.atc.resolute.resolute.QuantArg;
 import com.rockwellcollins.atc.resolute.resolute.QuantifiedExpr;
@@ -84,7 +84,7 @@ import com.rockwellcollins.atc.resolute.resolute.util.ResoluteSwitch;
 
 public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
     // Stack for function, claim, and quantifier arguments
-    protected final Deque<Map<Arg, ResoluteValue>> argMapStack = new LinkedList<>();
+    protected final Deque<Map<NamedElement, ResoluteValue>> varStack = new LinkedList<>();
 
     // Keeps track of context of the initial prove statement
     protected final EvaluationContext context;
@@ -92,13 +92,13 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
     final private static BoolValue TRUE = new BoolValue(true);
     final private static BoolValue FALSE = new BoolValue(false);
 
-    public ResoluteEvaluator(EvaluationContext context, Map<Arg, ResoluteValue> env) {
+    public ResoluteEvaluator(EvaluationContext context, Map<NamedElement, ResoluteValue> env) {
         this.context = context;
         if (env == null) {
-            Map<Arg, ResoluteValue> emptyMap = Collections.emptyMap();
-            this.argMapStack.push(emptyMap);
+            Map<NamedElement, ResoluteValue> emptyMap = Collections.emptyMap();
+            this.varStack.push(emptyMap);
         } else {
-            this.argMapStack.push(new HashMap<>(env));
+            this.varStack.push(new HashMap<>(env));
         }
     }
 
@@ -122,7 +122,7 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
 
     @Override
     public ResoluteValue caseArg(Arg object) {
-        return argMapStack.peek().get(object);
+        return varStack.peek().get(object);
     }
 
     @Override
@@ -262,23 +262,23 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
 
         if (setName.equals("connections")) {
             Set<ConnectionInstance> connSet = new HashSet<ConnectionInstance>();
-           // if (compInst.getCategory() == ComponentCategory.THREAD) {
-                for (FeatureInstance feature : compInst.getFeatureInstances()) {
-                    addAllFeatureGroupConns(feature, connSet);
-                }
-          //  }
-            
+            // if (compInst.getCategory() == ComponentCategory.THREAD) {
+            for (FeatureInstance feature : compInst.getFeatureInstances()) {
+                addAllFeatureGroupConns(feature, connSet);
+            }
+            // }
+
             for (ConnectionInstance conn : compInst.getSrcConnectionInstances()) {
                 connSet.add(conn);
             }
             for (ConnectionInstance conn : compInst.getDstConnectionInstances()) {
                 connSet.add(conn);
             }
-            
-            //go through the connection set and make doubles of bidrectional connections
+
+            // go through the connection set and make doubles of bidrectional connections
             Set<ResoluteValue> returnSet = new HashSet<ResoluteValue>();
-            for(ConnectionInstance conn : connSet){
-                if(conn.isBidirectional()){
+            for (ConnectionInstance conn : connSet) {
+                if (conn.isBidirectional()) {
                     returnSet.add(new ConnectionValue(conn, true));
                 }
                 returnSet.add(new ConnectionValue(conn, false));
@@ -359,7 +359,7 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
         for (FeatureInstance featInst : feature.getFeatureInstances()) {
             addAllFeatureGroupFeatures(featInst, returnSet);
         }
-        if(feature.getFeatureInstances().size() == 0){
+        if (feature.getFeatureInstances().size() == 0) {
             returnSet.add(new NamedElementValue(feature));
         }
     }
@@ -435,7 +435,7 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
             Arg arg = args.get(0);
             List<Arg> rest = args.subList(1, args.size());
             for (ResoluteValue value : getArgSet(arg)) {
-                argMapStack.peek().put(arg, value);
+                varStack.peek().put(arg, value);
                 if (exists(rest, body).getBool()) {
                     return TRUE;
                 }
@@ -451,7 +451,7 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
             Arg arg = args.get(0);
             List<Arg> rest = args.subList(1, args.size());
             for (ResoluteValue value : getArgSet(arg)) {
-                argMapStack.peek().put(arg, value);
+                varStack.peek().put(arg, value);
                 if (!forall(rest, body).getBool()) {
                     return FALSE;
                 }
@@ -483,15 +483,16 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
         DefinitionBody body = funcDef.getBody();
         List<ResoluteValue> argVals = doSwitchList(object.getArgs());
 
-        argMapStack.push(pairArguments(funcDef.getArgs(), argVals));
+        varStack.push(pairArguments(funcDef.getArgs(), argVals));
         ResoluteValue value = doSwitch(body.getExpr());
-        argMapStack.pop();
+        varStack.pop();
 
         return value;
     }
 
-    public static Map<Arg, ResoluteValue> pairArguments(List<Arg> args, List<ResoluteValue> argVals) {
-        Map<Arg, ResoluteValue> result = new HashMap<>();
+    public static Map<NamedElement, ResoluteValue> pairArguments(List<Arg> args,
+            List<ResoluteValue> argVals) {
+        Map<NamedElement, ResoluteValue> result = new HashMap<>();
         for (int i = 0; i < args.size(); i++) {
             result.put(args.get(i), argVals.get(i));
         }
@@ -511,7 +512,7 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
             List<Arg> rest = args.subList(1, args.size());
             Set<ResoluteValue> result = new HashSet<ResoluteValue>();
             for (ResoluteValue value : getArgSet(arg)) {
-                argMapStack.peek().put(arg, value);
+                varStack.peek().put(arg, value);
                 result.addAll(filterMap(rest, map, filter));
             }
             return result;
@@ -524,6 +525,19 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
         } else {
             return Collections.emptySet();
         }
+    }
+
+    @Override
+    public ResoluteValue caseLetExpr(LetExpr object) {
+        LetBinding binding = object.getBinding();
+        ResoluteValue boundValue = doSwitch(binding.getExpr());
+        varStack.peek().put(binding, boundValue);
+        return doSwitch(object.getExpr());
+    }
+    
+    @Override
+    public ResoluteValue caseLetBinding(LetBinding object) {
+        return varStack.peek().get(object);
     }
 
     @Override
@@ -657,11 +671,10 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
         case "class_of": {
             NamedElement ne = argVals.get(0).getNamedElement();
             ComponentClassifier classifier = (ComponentClassifier) argVals.get(1).getNamedElement();
-            if (ne instanceof FeatureInstance)
-            {
-            	ne = ((FeatureInstance)ne).getFeature();
+            if (ne instanceof FeatureInstance) {
+                ne = ((FeatureInstance) ne).getFeature();
             }
-            
+
             if (ne instanceof ComponentInstance) {
                 ComponentInstance comp = (ComponentInstance) ne;
                 return new BoolValue(comp.getComponentClassifier().equals(classifier));
@@ -737,12 +750,12 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
 
             ConnectionInstanceEnd dst;
             ConnectionInstanceEnd src;
-            if(resoluteConnVal.fReverseDirection){
+            if (resoluteConnVal.fReverseDirection) {
                 dst = conn.getSource();
                 src = conn.getDestination();
-            }else{
+            } else {
                 dst = conn.getDestination();
-                src = conn.getSource(); 
+                src = conn.getSource();
             }
 
             Property accessRightProp = EMFIndexRetrieval.getPropertyDefinitionInWorkspace(
@@ -779,12 +792,12 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
 
             ConnectionInstanceEnd dst;
             ConnectionInstanceEnd src;
-            if(resoluteConnVal.fReverseDirection){
+            if (resoluteConnVal.fReverseDirection) {
                 dst = conn.getSource();
                 src = conn.getDestination();
-            }else{
+            } else {
                 dst = conn.getDestination();
-                src = conn.getSource(); 
+                src = conn.getSource();
             }
 
             Property accessRightProp = EMFIndexRetrieval.getPropertyDefinitionInWorkspace(
@@ -977,19 +990,18 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
 
         case "is_connected": {
             NamedElement namedEl = argVals.get(0).getNamedElement();
-            FeatureInstance feat = (FeatureInstance)namedEl;
+            FeatureInstance feat = (FeatureInstance) namedEl;
             ConnectionInstance conn = ResoluteQuantifiableAadlObjects.featToConnMap.get(feat);
             return new BoolValue(conn != null);
-   
+
         }
         case "get_connection": {
             NamedElement namedEl = argVals.get(0).getNamedElement();
-            FeatureInstance feat = (FeatureInstance)namedEl;
+            FeatureInstance feat = (FeatureInstance) namedEl;
             ConnectionInstance conn = ResoluteQuantifiableAadlObjects.featToConnMap.get(feat);
-            if(conn == null){
+            if (conn == null) {
                 throw new ResoluteFailException("Call to 'get_connection' on feature '"
-                        +feat.getName()+"', but the feature is not connected",
-                        feat);
+                        + feat.getName() + "', but the feature is not connected", feat);
             }
             return new ConnectionValue(conn, false);
         }
@@ -1042,10 +1054,9 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
         } else if (ne instanceof DataPort) {
             DataPort dp = (DataPort) ne;
             return dp.getDataFeatureClassifier();
-        } else if (ne instanceof FeatureInstance)
-        {
-        	FeatureInstance fi = (FeatureInstance) ne;
-        	return (NamedElement) fi.getFeature().getFeatureClassifier();
+        } else if (ne instanceof FeatureInstance) {
+            FeatureInstance fi = (FeatureInstance) ne;
+            return (NamedElement) fi.getFeature().getFeatureClassifier();
         }
 
         return null;

@@ -178,6 +178,15 @@ public class ResoluteSwitch<T> extends Switch<T>
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
+      case ResolutePackage.LET_BINDING:
+      {
+        LetBinding letBinding = (LetBinding)theEObject;
+        T result = caseLetBinding(letBinding);
+        if (result == null) result = caseNamedElement(letBinding);
+        if (result == null) result = caseElement(letBinding);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
       case ResolutePackage.RESOLUTE_SUBCLAUSE:
       {
         ResoluteSubclause resoluteSubclause = (ResoluteSubclause)theEObject;
@@ -377,6 +386,15 @@ public class ResoluteSwitch<T> extends Switch<T>
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
+      case ResolutePackage.LET_EXPR:
+      {
+        LetExpr letExpr = (LetExpr)theEObject;
+        T result = caseLetExpr(letExpr);
+        if (result == null) result = caseExpr(letExpr);
+        if (result == null) result = caseElement(letExpr);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
       default: return defaultCase(theEObject);
     }
   }
@@ -553,6 +571,22 @@ public class ResoluteSwitch<T> extends Switch<T>
    * @generated
    */
   public T caseExpr(Expr object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Let Binding</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Let Binding</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseLetBinding(LetBinding object)
   {
     return null;
   }
@@ -905,6 +939,22 @@ public class ResoluteSwitch<T> extends Switch<T>
    * @generated
    */
   public T caseFilterMapExpr(FilterMapExpr object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Let Expr</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Let Expr</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseLetExpr(LetExpr object)
   {
     return null;
   }

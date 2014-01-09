@@ -20,7 +20,7 @@ NamedElement returns aadl2::NamedElement:
 	Definition
 |	Arg
 |	Type
-//|   QuantArg
+|   LetBinding
 ;
 
 Element returns aadl2::Element:
@@ -175,7 +175,12 @@ AtomicExpr returns Expr:
 |   {BuiltInFuncCallExpr} fn=BuiltInFunc '(' (args+=(Expr) (',' args+=(Expr))*)? ')'
 |	{FnCallExpr} fn=[FunctionDefinition] '(' (args+=(Expr) (',' args+=(Expr))*)? ')'
 |   {FilterMapExpr} '{' map=Expr 'for' ('(' args+=Arg ')')+ ('|' filter=Expr)? '}'
+|   {LetExpr} 'let' binding=LetBinding ';' expr=Expr
 |	'(' Expr ')'
+;
+
+LetBinding:
+	name=ID ':' type=Type '=' expr=Expr
 ;
 
 //QuantArg returns Arg:

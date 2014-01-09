@@ -61,6 +61,8 @@ import com.rockwellcollins.atc.resolute.resolute.FunctionDefinition;
 import com.rockwellcollins.atc.resolute.resolute.IdExpr;
 import com.rockwellcollins.atc.resolute.resolute.IfThenElseExpr;
 import com.rockwellcollins.atc.resolute.resolute.IntExpr;
+import com.rockwellcollins.atc.resolute.resolute.LetBinding;
+import com.rockwellcollins.atc.resolute.resolute.LetExpr;
 import com.rockwellcollins.atc.resolute.resolute.NestedDotID;
 import com.rockwellcollins.atc.resolute.resolute.ProveStatement;
 import com.rockwellcollins.atc.resolute.resolute.QuantArg;
@@ -581,6 +583,11 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
             UnaryExpr unaryExpr = (UnaryExpr) expr;
             return getExprType(unaryExpr.getExpr());
         }
+        
+        if (expr instanceof LetExpr) {
+            LetExpr letExpr = (LetExpr) expr;
+            return getExprType(letExpr.getExpr());
+        }
 
         if (expr instanceof ThisExpr) {
             Classifier parent = expr.getContainingClassifier();
@@ -735,6 +742,11 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 
         if (idClass instanceof FunctionDefinition) {
             return new BaseType("function");
+        }
+        
+        if (idClass instanceof LetBinding) {
+            LetBinding binding = (LetBinding) idClass;
+            return typeToResoluteType(binding.getType());
         }
 
         error(id, "Unable to get type for id expression");

@@ -122,6 +122,15 @@ public interface ResoluteFactory extends EFactory
   Expr createExpr();
 
   /**
+   * Returns a new object of class '<em>Let Binding</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Let Binding</em>'.
+   * @generated
+   */
+  LetBinding createLetBinding();
+
+  /**
    * Returns a new object of class '<em>Subclause</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -318,6 +327,15 @@ public interface ResoluteFactory extends EFactory
    * @generated
    */
   FilterMapExpr createFilterMapExpr();
+
+  /**
+   * Returns a new object of class '<em>Let Expr</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Let Expr</em>'.
+   * @generated
+   */
+  LetExpr createLetExpr();
 
   /**
    * Returns the package supported by this factory.

@@ -128,6 +128,8 @@ public class ResoluteParser extends AbstractContentAssistParser {
 					put(grammarAccess.getAtomicExprAccess().getGroup_11_4(), "rule__AtomicExpr__Group_11_4__0");
 					put(grammarAccess.getAtomicExprAccess().getGroup_11_5(), "rule__AtomicExpr__Group_11_5__0");
 					put(grammarAccess.getAtomicExprAccess().getGroup_12(), "rule__AtomicExpr__Group_12__0");
+					put(grammarAccess.getAtomicExprAccess().getGroup_13(), "rule__AtomicExpr__Group_13__0");
+					put(grammarAccess.getLetBindingAccess().getGroup(), "rule__LetBinding__Group__0");
 					put(grammarAccess.getRealTermAccess().getGroup(), "rule__RealTerm__Group__0");
 					put(grammarAccess.getIntegerTermAccess().getGroup(), "rule__IntegerTerm__Group__0");
 					put(grammarAccess.getResoluteSubclauseAccess().getGroup(), "rule__ResoluteSubclause__Group__0");
@@ -242,6 +244,11 @@ public class ResoluteParser extends AbstractContentAssistParser {
 					put(grammarAccess.getAtomicExprAccess().getMapAssignment_11_2(), "rule__AtomicExpr__MapAssignment_11_2");
 					put(grammarAccess.getAtomicExprAccess().getArgsAssignment_11_4_1(), "rule__AtomicExpr__ArgsAssignment_11_4_1");
 					put(grammarAccess.getAtomicExprAccess().getFilterAssignment_11_5_1(), "rule__AtomicExpr__FilterAssignment_11_5_1");
+					put(grammarAccess.getAtomicExprAccess().getBindingAssignment_12_2(), "rule__AtomicExpr__BindingAssignment_12_2");
+					put(grammarAccess.getAtomicExprAccess().getExprAssignment_12_4(), "rule__AtomicExpr__ExprAssignment_12_4");
+					put(grammarAccess.getLetBindingAccess().getNameAssignment_0(), "rule__LetBinding__NameAssignment_0");
+					put(grammarAccess.getLetBindingAccess().getTypeAssignment_2(), "rule__LetBinding__TypeAssignment_2");
+					put(grammarAccess.getLetBindingAccess().getExprAssignment_4(), "rule__LetBinding__ExprAssignment_4");
 					put(grammarAccess.getRealTermAccess().getValueAssignment_0(), "rule__RealTerm__ValueAssignment_0");
 					put(grammarAccess.getRealTermAccess().getUnitAssignment_1(), "rule__RealTerm__UnitAssignment_1");
 					put(grammarAccess.getIntegerTermAccess().getValueAssignment_0(), "rule__IntegerTerm__ValueAssignment_0");

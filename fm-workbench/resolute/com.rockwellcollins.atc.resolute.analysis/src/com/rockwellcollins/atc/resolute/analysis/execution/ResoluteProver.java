@@ -39,7 +39,7 @@ import com.rockwellcollins.atc.resolute.resolute.util.ResoluteSwitch;
 
 public class ResoluteProver extends ResoluteSwitch<ResoluteResult> {
     // Stack for function, claim, and quantifier arguments
-    protected final Deque<Map<Arg, ResoluteValue>> argMapStack = new LinkedList<>();
+    protected final Deque<Map<NamedElement, ResoluteValue>> varStack = new LinkedList<>();
 
     // Claims have been called with what arguments, used to detect cycles
     protected final Set<ClaimCallContext> claimCallContexts = new HashSet<>();
@@ -52,7 +52,7 @@ public class ResoluteProver extends ResoluteSwitch<ResoluteResult> {
 
     /* This will be overridden by children to instantiate modified evaluators */
     protected ResoluteEvaluator createResoluteEvaluator() {
-        return new ResoluteEvaluator(context, argMapStack.peek());
+        return new ResoluteEvaluator(context, varStack.peek());
     }
 
     protected ResoluteValue eval(EObject e) {
@@ -133,7 +133,7 @@ public class ResoluteProver extends ResoluteSwitch<ResoluteResult> {
             Arg arg = args.get(0);
             List<Arg> rest = args.subList(1, args.size());
             for (ResoluteValue value : getArgSet(arg)) {
-                argMapStack.peek().put(arg, value);
+                varStack.peek().put(arg, value);
                 ResoluteResult subResult = exists(rest, body);
                 if (subResult.isValid()) {
                     return subResult;
@@ -151,7 +151,7 @@ public class ResoluteProver extends ResoluteSwitch<ResoluteResult> {
             List<Arg> rest = args.subList(1, args.size());
             List<ResoluteResult> children = new ArrayList<>();
             for (ResoluteValue value : getArgSet(arg)) {
-                argMapStack.peek().put(arg, value);
+                varStack.peek().put(arg, value);
                 ResoluteResult subResult = forall(rest, body);
                 children.add(subResult);
                 if (!subResult.isValid()) {
@@ -184,7 +184,7 @@ public class ResoluteProver extends ResoluteSwitch<ResoluteResult> {
         }
 
         claimCallContexts.add(context);
-        argMapStack.push(ResoluteEvaluator.pairArguments(funcDef.getArgs(), argVals));
+        varStack.push(ResoluteEvaluator.pairArguments(funcDef.getArgs(), argVals));
 
         String text = createClaimText(body);
         Map<String, EObject> references = createClaimReferences(body);
@@ -195,7 +195,7 @@ public class ResoluteProver extends ResoluteSwitch<ResoluteResult> {
             subResult = new FailResult(e.getMessage(), e.getLocation());
         }
 
-        argMapStack.pop();
+        varStack.pop();
         claimCallContexts.remove(context);
 
         return new ClaimResult(text, subResult, references, funcDef);
@@ -208,7 +208,7 @@ public class ResoluteProver extends ResoluteSwitch<ResoluteResult> {
             if (claim instanceof ClaimArg) {
                 Arg claimArg = ((ClaimArg) claim).getArg();
                 text.append("'");
-                text.append(argMapStack.peek().get(claimArg));
+                text.append(varStack.peek().get(claimArg));
                 text.append("'");
             } else if (claim instanceof ClaimString) {
                 text.append(((ClaimString) claim).getStr());
@@ -225,7 +225,7 @@ public class ResoluteProver extends ResoluteSwitch<ResoluteResult> {
         for (ClaimString claim : body.getClaim()) {
             if (claim instanceof ClaimArg) {
                 Arg claimArg = ((ClaimArg) claim).getArg();
-                ResoluteValue argVal = argMapStack.peek().get(claimArg);
+                ResoluteValue argVal = varStack.peek().get(claimArg);
                 if (argVal.isNamedElement()) {
                     EObject modelElement = getModelElement(argVal.getNamedElement());
                     if (modelElement != null) {

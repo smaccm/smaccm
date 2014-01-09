@@ -20,6 +20,8 @@ import com.rockwellcollins.atc.resolute.resolute.FunctionDefinition;
 import com.rockwellcollins.atc.resolute.resolute.IdExpr;
 import com.rockwellcollins.atc.resolute.resolute.IfThenElseExpr;
 import com.rockwellcollins.atc.resolute.resolute.IntExpr;
+import com.rockwellcollins.atc.resolute.resolute.LetBinding;
+import com.rockwellcollins.atc.resolute.resolute.LetExpr;
 import com.rockwellcollins.atc.resolute.resolute.NestedDotID;
 import com.rockwellcollins.atc.resolute.resolute.ProveStatement;
 import com.rockwellcollins.atc.resolute.resolute.QuantArg;
@@ -497,6 +499,36 @@ public class ResoluteSemanticSequencer extends PropertiesSemanticSequencer {
 					return; 
 				}
 				else break;
+			case ResolutePackage.LET_BINDING:
+				if(context == grammarAccess.getLetBindingRule() ||
+				   context == grammarAccess.getNamedElementRule()) {
+					sequence_LetBinding(context, (LetBinding) semanticObject); 
+					return; 
+				}
+				else break;
+			case ResolutePackage.LET_EXPR:
+				if(context == grammarAccess.getAndExprRule() ||
+				   context == grammarAccess.getAndExprAccess().getBinaryExprLeftAction_1_0_0_0() ||
+				   context == grammarAccess.getAtomicExprRule() ||
+				   context == grammarAccess.getElementRule() ||
+				   context == grammarAccess.getExprRule() ||
+				   context == grammarAccess.getImpliesExprRule() ||
+				   context == grammarAccess.getImpliesExprAccess().getBinaryExprLeftAction_1_0_0_0() ||
+				   context == grammarAccess.getOrExprRule() ||
+				   context == grammarAccess.getOrExprAccess().getBinaryExprLeftAction_1_0_0_0() ||
+				   context == grammarAccess.getPlusExprRule() ||
+				   context == grammarAccess.getPlusExprAccess().getBinaryExprLeftAction_1_0_0_0() ||
+				   context == grammarAccess.getPrefixExprRule() ||
+				   context == grammarAccess.getRelationalExprRule() ||
+				   context == grammarAccess.getRelationalExprAccess().getBinaryExprLeftAction_1_0_0_0() ||
+				   context == grammarAccess.getSetOpExprRule() ||
+				   context == grammarAccess.getSetOpExprAccess().getBinaryExprLeftAction_1_0_0_0() ||
+				   context == grammarAccess.getTimesExprRule() ||
+				   context == grammarAccess.getTimesExprAccess().getBinaryExprLeftAction_1_0_0_0()) {
+					sequence_AtomicExpr(context, (LetExpr) semanticObject); 
+					return; 
+				}
+				else break;
 			case ResolutePackage.NESTED_DOT_ID:
 				if(context == grammarAccess.getNestedDotIDRule()) {
 					sequence_NestedDotID(context, (NestedDotID) semanticObject); 
@@ -767,6 +799,15 @@ public class ResoluteSemanticSequencer extends PropertiesSemanticSequencer {
 	
 	/**
 	 * Constraint:
+	 *     (binding=LetBinding expr=Expr)
+	 */
+	protected void sequence_AtomicExpr(EObject context, LetExpr semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Constraint:
 	 *     ((quant='forall' | quant='exists') args+=Arg+ expr=Expr)
 	 */
 	protected void sequence_AtomicExpr(EObject context, QuantifiedExpr semanticObject) {
@@ -920,6 +961,15 @@ public class ResoluteSemanticSequencer extends PropertiesSemanticSequencer {
 	 */
 	protected void sequence_IntegerTerm(EObject context, IntegerLiteral semanticObject) {
 		genericSequencer.createSequence(context, (EObject)semanticObject);
+	}
+	
+	
+	/**
+	 * Constraint:
+	 *     (name=ID type=Type expr=Expr)
+	 */
+	protected void sequence_LetBinding(EObject context, LetBinding semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
 	}
 	
 	

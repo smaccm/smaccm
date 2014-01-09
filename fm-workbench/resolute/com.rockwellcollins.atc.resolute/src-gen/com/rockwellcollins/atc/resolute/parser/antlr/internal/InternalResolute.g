@@ -2652,23 +2652,157 @@ ruleAtomicExpr returns [EObject current=null]
     	newLeafNode(otherlv_56, grammarAccess.getAtomicExprAccess().getRightCurlyBracketKeyword_11_6());
     }
 )
-    |(	otherlv_57='(' 
+    |((
     {
-    	newLeafNode(otherlv_57, grammarAccess.getAtomicExprAccess().getLeftParenthesisKeyword_12_0());
+        $current = forceCreateModelElement(
+            grammarAccess.getAtomicExprAccess().getLetExprAction_12_0(),
+            $current);
+    }
+)	otherlv_58='let' 
+    {
+    	newLeafNode(otherlv_58, grammarAccess.getAtomicExprAccess().getLetKeyword_12_1());
+    }
+(
+(
+		{ 
+	        newCompositeNode(grammarAccess.getAtomicExprAccess().getBindingLetBindingParserRuleCall_12_2_0()); 
+	    }
+		lv_binding_59_0=ruleLetBinding		{
+	        if ($current==null) {
+	            $current = createModelElementForParent(grammarAccess.getAtomicExprRule());
+	        }
+       		set(
+       			$current, 
+       			"binding",
+        		lv_binding_59_0, 
+        		"LetBinding");
+	        afterParserOrEnumRuleCall();
+	    }
+
+)
+)	otherlv_60=';' 
+    {
+    	newLeafNode(otherlv_60, grammarAccess.getAtomicExprAccess().getSemicolonKeyword_12_3());
+    }
+(
+(
+		{ 
+	        newCompositeNode(grammarAccess.getAtomicExprAccess().getExprExprParserRuleCall_12_4_0()); 
+	    }
+		lv_expr_61_0=ruleExpr		{
+	        if ($current==null) {
+	            $current = createModelElementForParent(grammarAccess.getAtomicExprRule());
+	        }
+       		set(
+       			$current, 
+       			"expr",
+        		lv_expr_61_0, 
+        		"Expr");
+	        afterParserOrEnumRuleCall();
+	    }
+
+)
+))
+    |(	otherlv_62='(' 
+    {
+    	newLeafNode(otherlv_62, grammarAccess.getAtomicExprAccess().getLeftParenthesisKeyword_13_0());
     }
 
     { 
-        newCompositeNode(grammarAccess.getAtomicExprAccess().getExprParserRuleCall_12_1()); 
+        newCompositeNode(grammarAccess.getAtomicExprAccess().getExprParserRuleCall_13_1()); 
     }
-    this_Expr_58=ruleExpr
+    this_Expr_63=ruleExpr
     { 
-        $current = $this_Expr_58.current; 
+        $current = $this_Expr_63.current; 
         afterParserOrEnumRuleCall();
     }
-	otherlv_59=')' 
+	otherlv_64=')' 
     {
-    	newLeafNode(otherlv_59, grammarAccess.getAtomicExprAccess().getRightParenthesisKeyword_12_2());
+    	newLeafNode(otherlv_64, grammarAccess.getAtomicExprAccess().getRightParenthesisKeyword_13_2());
     }
+))
+;
+
+
+
+
+
+// Entry rule entryRuleLetBinding
+entryRuleLetBinding returns [EObject current=null] 
+	:
+	{ newCompositeNode(grammarAccess.getLetBindingRule()); }
+	 iv_ruleLetBinding=ruleLetBinding 
+	 { $current=$iv_ruleLetBinding.current; } 
+	 EOF 
+;
+
+// Rule LetBinding
+ruleLetBinding returns [EObject current=null] 
+    @init { enterRule(); 
+    }
+    @after { leaveRule(); }:
+((
+(
+		lv_name_0_0=RULE_ID
+		{
+			newLeafNode(lv_name_0_0, grammarAccess.getLetBindingAccess().getNameIDTerminalRuleCall_0_0()); 
+		}
+		{
+	        if ($current==null) {
+	            $current = createModelElement(grammarAccess.getLetBindingRule());
+	        }
+       		setWithLastConsumed(
+       			$current, 
+       			"name",
+        		lv_name_0_0, 
+        		"ID");
+	    }
+
+)
+)	otherlv_1=':' 
+    {
+    	newLeafNode(otherlv_1, grammarAccess.getLetBindingAccess().getColonKeyword_1());
+    }
+(
+(
+		{ 
+	        newCompositeNode(grammarAccess.getLetBindingAccess().getTypeTypeParserRuleCall_2_0()); 
+	    }
+		lv_type_2_0=ruleType		{
+	        if ($current==null) {
+	            $current = createModelElementForParent(grammarAccess.getLetBindingRule());
+	        }
+       		set(
+       			$current, 
+       			"type",
+        		lv_type_2_0, 
+        		"Type");
+	        afterParserOrEnumRuleCall();
+	    }
+
+)
+)	otherlv_3='=' 
+    {
+    	newLeafNode(otherlv_3, grammarAccess.getLetBindingAccess().getEqualsSignKeyword_3());
+    }
+(
+(
+		{ 
+	        newCompositeNode(grammarAccess.getLetBindingAccess().getExprExprParserRuleCall_4_0()); 
+	    }
+		lv_expr_4_0=ruleExpr		{
+	        if ($current==null) {
+	            $current = createModelElementForParent(grammarAccess.getLetBindingRule());
+	        }
+       		set(
+       			$current, 
+       			"expr",
+        		lv_expr_4_0, 
+        		"Expr");
+	        afterParserOrEnumRuleCall();
+	    }
+
+)
 ))
 ;
 

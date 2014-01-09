@@ -23,6 +23,8 @@ import com.rockwellcollins.atc.resolute.resolute.FunctionDefinition;
 import com.rockwellcollins.atc.resolute.resolute.IdExpr;
 import com.rockwellcollins.atc.resolute.resolute.IfThenElseExpr;
 import com.rockwellcollins.atc.resolute.resolute.IntExpr;
+import com.rockwellcollins.atc.resolute.resolute.LetBinding;
+import com.rockwellcollins.atc.resolute.resolute.LetExpr;
 import com.rockwellcollins.atc.resolute.resolute.NestedDotID;
 import com.rockwellcollins.atc.resolute.resolute.ProveStatement;
 import com.rockwellcollins.atc.resolute.resolute.QuantArg;
@@ -131,6 +133,13 @@ public class ResolutePackageImpl extends EPackageImpl implements ResolutePackage
    * @generated
    */
   private EClass exprEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass letBindingEClass = null;
 
   /**
    * <!-- begin-user-doc -->
@@ -285,6 +294,13 @@ public class ResolutePackageImpl extends EPackageImpl implements ResolutePackage
    * @generated
    */
   private EClass filterMapExprEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass letExprEClass = null;
 
   /**
    * Creates an instance of the model <b>Package</b>, registered with
@@ -550,6 +566,36 @@ public class ResolutePackageImpl extends EPackageImpl implements ResolutePackage
   public EClass getExpr()
   {
     return exprEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getLetBinding()
+  {
+    return letBindingEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getLetBinding_Type()
+  {
+    return (EReference)letBindingEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getLetBinding_Expr()
+  {
+    return (EReference)letBindingEClass.getEStructuralFeatures().get(1);
   }
 
   /**
@@ -1137,6 +1183,36 @@ public class ResolutePackageImpl extends EPackageImpl implements ResolutePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  public EClass getLetExpr()
+  {
+    return letExprEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getLetExpr_Binding()
+  {
+    return (EReference)letExprEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getLetExpr_Expr()
+  {
+    return (EReference)letExprEClass.getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   public ResoluteFactory getResoluteFactory()
   {
     return (ResoluteFactory)getEFactoryInstance();
@@ -1192,6 +1268,10 @@ public class ResolutePackageImpl extends EPackageImpl implements ResolutePackage
     createEReference(definitionBodyEClass, DEFINITION_BODY__EXPR);
 
     exprEClass = createEClass(EXPR);
+
+    letBindingEClass = createEClass(LET_BINDING);
+    createEReference(letBindingEClass, LET_BINDING__TYPE);
+    createEReference(letBindingEClass, LET_BINDING__EXPR);
 
     resoluteSubclauseEClass = createEClass(RESOLUTE_SUBCLAUSE);
     createEReference(resoluteSubclauseEClass, RESOLUTE_SUBCLAUSE__PROVES);
@@ -1272,6 +1352,10 @@ public class ResolutePackageImpl extends EPackageImpl implements ResolutePackage
     createEReference(filterMapExprEClass, FILTER_MAP_EXPR__MAP);
     createEReference(filterMapExprEClass, FILTER_MAP_EXPR__ARGS);
     createEReference(filterMapExprEClass, FILTER_MAP_EXPR__FILTER);
+
+    letExprEClass = createEClass(LET_EXPR);
+    createEReference(letExprEClass, LET_EXPR__BINDING);
+    createEReference(letExprEClass, LET_EXPR__EXPR);
   }
 
   /**
@@ -1317,6 +1401,7 @@ public class ResolutePackageImpl extends EPackageImpl implements ResolutePackage
     claimStringEClass.getESuperTypes().add(theAadl2Package.getElement());
     definitionBodyEClass.getESuperTypes().add(theAadl2Package.getElement());
     exprEClass.getESuperTypes().add(theAadl2Package.getElement());
+    letBindingEClass.getESuperTypes().add(theAadl2Package.getNamedElement());
     resoluteSubclauseEClass.getESuperTypes().add(theAadl2Package.getAnnexSubclause());
     proveStatementEClass.getESuperTypes().add(theAadl2Package.getElement());
     setTypeEClass.getESuperTypes().add(this.getType());
@@ -1338,6 +1423,7 @@ public class ResolutePackageImpl extends EPackageImpl implements ResolutePackage
     builtInFuncCallExprEClass.getESuperTypes().add(this.getExpr());
     fnCallExprEClass.getESuperTypes().add(this.getExpr());
     filterMapExprEClass.getESuperTypes().add(this.getExpr());
+    letExprEClass.getESuperTypes().add(this.getExpr());
 
     // Initialize classes and features; add operations and parameters
     initEClass(resoluteLibraryEClass, ResoluteLibrary.class, "ResoluteLibrary", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -1370,6 +1456,10 @@ public class ResolutePackageImpl extends EPackageImpl implements ResolutePackage
     initEReference(getDefinitionBody_Expr(), this.getExpr(), null, "expr", null, 0, 1, DefinitionBody.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(exprEClass, Expr.class, "Expr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+    initEClass(letBindingEClass, LetBinding.class, "LetBinding", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getLetBinding_Type(), this.getType(), null, "type", null, 0, 1, LetBinding.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getLetBinding_Expr(), this.getExpr(), null, "expr", null, 0, 1, LetBinding.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(resoluteSubclauseEClass, ResoluteSubclause.class, "ResoluteSubclause", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getResoluteSubclause_Proves(), this.getProveStatement(), null, "proves", null, 0, -1, ResoluteSubclause.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -1450,6 +1540,10 @@ public class ResolutePackageImpl extends EPackageImpl implements ResolutePackage
     initEReference(getFilterMapExpr_Map(), this.getExpr(), null, "map", null, 0, 1, FilterMapExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getFilterMapExpr_Args(), this.getArg(), null, "args", null, 0, -1, FilterMapExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getFilterMapExpr_Filter(), this.getExpr(), null, "filter", null, 0, 1, FilterMapExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+    initEClass(letExprEClass, LetExpr.class, "LetExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getLetExpr_Binding(), this.getLetBinding(), null, "binding", null, 0, 1, LetExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getLetExpr_Expr(), this.getExpr(), null, "expr", null, 0, 1, LetExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     // Create resource
     createResource(eNS_URI);

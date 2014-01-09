@@ -75,6 +75,7 @@ public class ResoluteFactoryImpl extends EFactoryImpl implements ResoluteFactory
       case ResolutePackage.CLAIM_STRING: return createClaimString();
       case ResolutePackage.DEFINITION_BODY: return createDefinitionBody();
       case ResolutePackage.EXPR: return createExpr();
+      case ResolutePackage.LET_BINDING: return createLetBinding();
       case ResolutePackage.RESOLUTE_SUBCLAUSE: return createResoluteSubclause();
       case ResolutePackage.NESTED_DOT_ID: return createNestedDotID();
       case ResolutePackage.PROVE_STATEMENT: return createProveStatement();
@@ -97,6 +98,7 @@ public class ResoluteFactoryImpl extends EFactoryImpl implements ResoluteFactory
       case ResolutePackage.BUILT_IN_FUNC_CALL_EXPR: return createBuiltInFuncCallExpr();
       case ResolutePackage.FN_CALL_EXPR: return createFnCallExpr();
       case ResolutePackage.FILTER_MAP_EXPR: return createFilterMapExpr();
+      case ResolutePackage.LET_EXPR: return createLetExpr();
       default:
         throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
     }
@@ -221,6 +223,17 @@ public class ResoluteFactoryImpl extends EFactoryImpl implements ResoluteFactory
   {
     ExprImpl expr = new ExprImpl();
     return expr;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public LetBinding createLetBinding()
+  {
+    LetBindingImpl letBinding = new LetBindingImpl();
+    return letBinding;
   }
 
   /**
@@ -463,6 +476,17 @@ public class ResoluteFactoryImpl extends EFactoryImpl implements ResoluteFactory
   {
     FilterMapExprImpl filterMapExpr = new FilterMapExprImpl();
     return filterMapExpr;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public LetExpr createLetExpr()
+  {
+    LetExprImpl letExpr = new LetExprImpl();
+    return letExpr;
   }
 
   /**
