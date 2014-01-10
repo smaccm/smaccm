@@ -20,15 +20,13 @@ public class ResoluteConsistencyAnalysis implements ResoluteExternalAnalysis {
     @Override
     public ResoluteValue run(ResoluteEvaluator resEval, List<ResoluteValue> args) 
     {
-
-    	ResoluteValue arg0 = args.get(0);
-    	ResoluteValue arg1 = args.get(1);
-    	ResoluteValue arg2 = args.get(2);
-    	ResoluteValue arg3 = args.get(3);
-    	ResoluteValue arg4 = args.get(4);
-    	ResoluteValue arg5 = args.get(5);
+    	ResoluteValue arg1 = args.get(0);
+    	ResoluteValue arg2 = args.get(1);
+    	ResoluteValue arg3 = args.get(2);
+    	ResoluteValue arg4 = args.get(3);
+    	ResoluteValue arg5 = args.get(4);
     	
-    	assert (arg0.isString());
+    	
     	assert (arg1.isNamedElement());
     	assert (arg2.isString());
     	assert (arg3.isString());
