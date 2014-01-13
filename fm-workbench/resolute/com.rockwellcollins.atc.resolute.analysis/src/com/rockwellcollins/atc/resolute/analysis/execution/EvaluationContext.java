@@ -11,15 +11,19 @@ import java.util.Set;
 import org.osate.aadl2.NamedElement;
 import org.osate.aadl2.instance.ComponentInstance;
 import org.osate.aadl2.instance.ConnectionInstance;
+import org.osate.aadl2.instance.FeatureInstance;
 import org.osate.aadl2.instance.SystemOperationMode;
 
 public class EvaluationContext {
     private final ComponentInstance thisInst;
     private final Map<String, Set<NamedElement>> sets;
+    private final FeatureToConnectionMap featToConnMap;
 
-    public EvaluationContext(ComponentInstance thisInst, Map<String, Set<NamedElement>> sets) {
+    public EvaluationContext(ComponentInstance thisInst, Map<String, Set<NamedElement>> sets,
+            FeatureToConnectionMap featToConnMap) {
         this.thisInst = thisInst;
         this.sets = sets;
+        this.featToConnMap = featToConnMap;
     }
     
     public EvaluationContext filterByMode(SystemOperationMode mode) {
@@ -29,7 +33,8 @@ public class EvaluationContext {
             Set<NamedElement> set = entry.getValue();
             filteredSet.put(name, filterBySysMode(set, mode));
         }
-        return new EvaluationContext(thisInst, filteredSet);
+        // TODO: The featToConnMap should be filtered by submode as well
+        return new EvaluationContext(thisInst, filteredSet, featToConnMap);
     }
 
     private Set<NamedElement> filterBySysMode(Set<NamedElement> set, SystemOperationMode mode) {
@@ -65,5 +70,9 @@ public class EvaluationContext {
         } else {
             return set;
         }
+    }
+
+    public ConnectionInstance getConnectionForFeature(FeatureInstance feat) {
+        return featToConnMap.get(feat);
     }
 }

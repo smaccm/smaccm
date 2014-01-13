@@ -25,8 +25,8 @@ import org.osate.aadl2.instantiation.InstantiateModel;
 import org.osate.ui.dialogs.Dialog;
 
 import com.rockwellcollins.atc.resolute.analysis.execution.EvaluationContext;
+import com.rockwellcollins.atc.resolute.analysis.execution.FeatureToConnectionMap;
 import com.rockwellcollins.atc.resolute.analysis.execution.ResoluteInterpreter;
-import com.rockwellcollins.atc.resolute.analysis.execution.ResoluteQuantifiableAadlObjects;
 import com.rockwellcollins.atc.resolute.analysis.results.ResoluteResult;
 import com.rockwellcollins.atc.resolute.analysis.views.AssuranceCaseView;
 import com.rockwellcollins.atc.resolute.resolute.ProveStatement;
@@ -41,7 +41,6 @@ public class ResoluteHandler extends AadlHandler {
     @Override
     protected IStatus runJob(Element root, IProgressMonitor monitor) {
         clearProofs();
-        Map<String, Set<NamedElement>> sets = new HashMap<>();
 
         long start = System.currentTimeMillis();
         SystemInstance si;
@@ -49,7 +48,6 @@ public class ResoluteHandler extends AadlHandler {
             SystemImplementation sysimpl = (SystemImplementation) root;
             try {
                 si = InstantiateModel.buildInstanceModelFile(sysimpl);
-                initializeSets(si, sets);
             } catch (Exception e) {
                 Dialog.showError("Model Instantiate", "Error while re-instantiating the model: "
                         + e.getMessage());
@@ -63,16 +61,19 @@ public class ResoluteHandler extends AadlHandler {
         long stop = System.currentTimeMillis();
         System.out.println("Instantiation time: " + (stop - start) / 1000.0 + "s");
 
+        
         start = System.currentTimeMillis();
 
-        ResoluteQuantifiableAadlObjects.buildFeatConnMap(si);
+        Map<String, Set<NamedElement>> sets = new HashMap<>();
+        initializeSets(si, sets);
+        FeatureToConnectionMap featToConnMap = new FeatureToConnectionMap(si);
 
         List<ResoluteResult> proofTrees = new ArrayList<>();
         for (NamedElement el : sets.get("component")) {
             ComponentInstance compInst = (ComponentInstance) el;
             for (Element child : compInst.getComponentClassifier().getChildren()) {
                 if (child instanceof ResoluteSubclause) {
-                    EvaluationContext context = new EvaluationContext(compInst, sets);
+                    EvaluationContext context = new EvaluationContext(compInst, sets, featToConnMap);
                     ResoluteInterpreter interpreter = new ResoluteInterpreter(context);
                     for (Element element : child.getChildren()) {
                         if (element instanceof ProveStatement) {
