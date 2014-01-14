@@ -101,6 +101,7 @@ public class Aadl2RtosAction extends AadlAction {
 			                        parser.getLegacySemaphoreList(),
 			                        parser.getLegacyExternalIRQList(), 
 			                        parser.getLegacyIRQEventList(),
+			                        parser.getExternalIRQList(),
 			                        parser.getSystickGenerateIRQ());
 			
 			// This thing has to go!

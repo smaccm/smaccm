@@ -110,6 +110,7 @@ public class AadlModelParser {
 	private List<LegacyThreadImplementation> legacyThreadList; 
 	private List<LegacyExternalIRQ> legacyExternalIRQList = new ArrayList<LegacyExternalIRQ>();
 	private List<LegacyIRQEvent> legacyIRQEventList = new ArrayList<LegacyIRQEvent>();
+	private List<ExternalIRQ> externalIRQList = new ArrayList<ExternalIRQ>();
 	private boolean generateSystickIRQ = true; 
 	
 	private Logger logger;
@@ -322,17 +323,35 @@ public class AadlModelParser {
 	  }
 	  it1 = irqEventStrings.iterator();
 	  while (it1.hasNext()) {
-      String eventName = it1.next();
-      String taskName = it1.next();
-      String signalSetString = it1.next(); 
-      int signal;
-      try {
-	      signal = Integer.parseInt(signalSetString);
-	    } catch (NumberFormatException e) {
-	      throw new Aadl2RtosException("Error: legacy IRQ event property: third argument of triple not a number.");
-	    }
-	    LegacyIRQEvent evt = new LegacyIRQEvent(eventName, taskName, signal);
-	    this.legacyIRQEventList.add(evt);
+	      String eventName = it1.next();
+	      String taskName = it1.next();
+	      String signalSetString = it1.next(); 
+	      int signal;
+	      try {
+		      signal = Integer.parseInt(signalSetString);
+		  } catch (NumberFormatException e) {
+		      throw new Aadl2RtosException("Error: legacy IRQ event property: third argument of triple not a number.");
+		  }
+		  LegacyIRQEvent evt = new LegacyIRQEvent(eventName, taskName, signal);
+		  this.legacyIRQEventList.add(evt);
+	  }
+	  
+	  List<String> externalIrqStrings = ThreadUtil.getExternalIRQList(this.systemImplementation);
+	  if (externalIrqStrings.size() %2 != 0) {
+		  throw new Aadl2RtosException("Error: External IRQ property should be a list of size 2*n, where each element of n is a external_irq, irq_number pair");
+	  }
+	  it1 = externalIrqStrings.iterator();
+	  while (it1.hasNext()) {
+		  String externIrqName = it1.next();
+		  String externIrqNumberString = it1.next();
+		  int externIrqNumber;
+		  try {
+			  externIrqNumber = Integer.parseInt(externIrqNumberString);
+		  } catch (NumberFormatException e) {
+			  throw new Aadl2RtosException("Error: External IRQ property: second argument of pair is not a number");
+		  }
+		  ExternalIRQ irq = new ExternalIRQ(externIrqName, externIrqNumber);
+		  this.externalIRQList.add(irq);
 	  }
 	}
 	
@@ -609,6 +628,10 @@ public class AadlModelParser {
 	
 	public List<LegacyIRQEvent> getLegacyIRQEventList() {
 	  return this.legacyIRQEventList;
+	}
+	
+	public List<ExternalIRQ> getExternalIRQList() {
+		return this.externalIRQList;
 	}
 	
 	public boolean getSystickGenerateIRQ() {

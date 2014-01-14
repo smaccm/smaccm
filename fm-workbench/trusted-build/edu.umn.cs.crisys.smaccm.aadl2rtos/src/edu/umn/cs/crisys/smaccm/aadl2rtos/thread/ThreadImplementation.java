@@ -52,8 +52,13 @@ public class ThreadImplementation extends ThreadImplementationBase {
 
 		// determine whether this thread is 'normal' or ISR.
 		smaccmSysSignalOpt = Util.getStringValueOpt(tti, ThreadUtil.SMACCM_SYS_SIGNAL_NAME);
-		isrHandlerName = Util.getStringValueOpt(tti, ThreadUtil.ISR_HANDLER);
 		isrThread = (getSmaccmSysSignalOpt() != null);
+		if (isrThread) {
+			isrHandlerName = Util.getStringValueOpt(tti, ThreadUtil.ISR_HANDLER);
+			if (isrHandlerName == null) {
+				throw new Aadl2RtosException("Error: ISR Thread: "+ tti.getFullName() + " requires ISR_handler property");
+			}
+		}
 
 		// create initializer handler, if it exists.
 		String entryPointSourceText = (String) Util.getStringValueOpt(tti,

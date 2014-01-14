@@ -32,6 +32,7 @@ import org.osate.aadl2.impl.ThreadTypeImpl;
 import org.osate.aadl2.instance.SystemInstance;
 
 import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.Connection;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.ExternalIRQ;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.InterruptServiceRoutine;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.LegacyExternalIRQ;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.LegacyIRQEvent;
@@ -68,6 +69,7 @@ public class Model {
 	private List<String> legacySemaphoreList;
 	private List<LegacyExternalIRQ> legacyExternalIRQList;
 	private List<LegacyIRQEvent> legacyIRQEventList;
+	private List<ExternalIRQ> externalIRQList;
 	private boolean generateSystickIRQ; 
 	
 	// private Map<ThreadImplementation, Set<Pair<MyPort, MyPort>>> threadSourcePorts = new HashMap<ThreadImplementation, Set<Pair<MyPort, MyPort>>>();
@@ -86,7 +88,8 @@ public class Model {
                List<String> legacyMutexList,
                List<String> legacySemaphoreList,
                List<LegacyExternalIRQ> legacyExternalIRQList,
-               List<LegacyIRQEvent> legacyIRQEventList, 
+               List<LegacyIRQEvent> legacyIRQEventList,
+               List<ExternalIRQ> externalIRQList,
                boolean generateSystickIRQ) {
 	  this.sharedDataList = sharedDataList; 
 	  this.sourceFiles = sourceFiles;
@@ -104,6 +107,7 @@ public class Model {
 		this.legacySemaphoreList = legacySemaphoreList;
 		this.legacyExternalIRQList = legacyExternalIRQList;
 		this.legacyIRQEventList = legacyIRQEventList;
+		this.externalIRQList = externalIRQList;
 		this.generateSystickIRQ = generateSystickIRQ;
 		
 		// createSemaphoreList();
@@ -192,6 +196,10 @@ public class Model {
 	
 	public List<LegacyIRQEvent> getLegacyIRQEvents() {
 	  return this.legacyIRQEventList;
+	}
+	
+	public List<ExternalIRQ> getExternalIRQs() {
+		return this.externalIRQList;
 	}
 	
 	public List<ThreadInstance> getAllThreadInstances() {

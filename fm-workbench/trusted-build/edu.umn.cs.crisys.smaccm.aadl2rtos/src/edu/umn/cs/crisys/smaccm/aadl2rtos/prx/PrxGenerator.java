@@ -17,6 +17,7 @@ import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosException;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Model;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.gluecode.Names;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.Dispatcher;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.ExternalIRQ;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.InterruptServiceRoutine;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.LegacyExternalIRQ;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.LegacyIRQEvent;
@@ -160,23 +161,26 @@ public class PrxGenerator {
       parent.appendChild(e);
     } catch (Exception excep) {
       throw new Aadl2RtosException("Error: creating handler name for ISR; handler list in incorrect format for thread: " 
-          + handlerName + ".  Exception: " + excep);
+          + handlerName + ".  Exception: " + excep.toString());
     }
 	}
 
-  private void writeLegacyVectableEntry(String lirqName, org.w3c.dom.Element parent) {
+  private void writeLegacyVectableEntry(ExternalIRQ eirq, org.w3c.dom.Element parent) {
     org.w3c.dom.Element e;
     org.w3c.dom.Element ec;
     e = doc.createElement("external_irq");
-    String externalHandlerName = "exception_preempt_trampoline_" + lirqName;
+    String externalHandlerName = eirq.getName();
     try {
+      ec = doc.createElement("number");
+      ec.appendChild(doc.createTextNode(Integer.toString(eirq.getIrqId())));
+      e.appendChild(ec);
       ec = doc.createElement("handler");
       ec.appendChild(doc.createTextNode(externalHandlerName));
       e.appendChild(ec);
       parent.appendChild(e);
     } catch (Exception excep) {
       throw new Aadl2RtosException("Error: creating handler name for external ISR; handler list in incorrect format for external IRQ: " 
-          + lirqName + ".  Exception: " + excep);
+          + externalHandlerName + ".  Exception: " + excep);
     }
   }
 
@@ -248,13 +252,13 @@ public class PrxGenerator {
 		//if (!model.getLegacyExternalIRQs().isEmpty()) {
 		  ec = doc.createElement("external_irqs");
 		  e.appendChild(ec);
-		  for (String lirqName: externIrqArray) {
-  		  writeLegacyVectableEntry(lirqName, ec);
+		  for (ExternalIRQ eirq: model.getExternalIRQs()) {
+  		  writeLegacyVectableEntry(eirq, ec);
   		}
 		// }
-    if (model.getThreadCalendar().hasDispatchers() && model.getGenerateSystickIRQ()) {
-      writeVectableEntry("systick", Names.getCalendarFnName(), e);
-    }
+        if (model.getThreadCalendar().hasDispatchers() && model.getGenerateSystickIRQ()) {
+           writeVectableEntry("systick", Names.getCalendarFnName(), e);
+        }
 	}
 
 	private void printKochabComponent(ThreadImplementationBase c, Document doc, org.w3c.dom.Element parent) {
