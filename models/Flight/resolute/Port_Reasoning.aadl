@@ -28,10 +28,10 @@ num_features(comp : component) : int =
 	
 feat_is_connected(feat : feature) <= 
 	** "The feature: " feat " is connected" **
-	is_connected(feat) and print_connection(get_connection(feat))
+	is_connected(feat) and print_connections(connections(feat))
 	
-print_connection(conn : connection) <=
-	** "The connection name is " conn **
+print_connections(conns : {connection}) <=
+	** "The connections are " conns **
 	true
 
 feat_is_unimplemented(feat : feature) <=
@@ -55,13 +55,10 @@ all_through_connections(comp : component) <=
 	   "its respective connection " **
 	   forall(feat : comp.features) . 
 	   		is_connected(feat) 
-	   		and print_connection(get_connection(feat))
-	   		and not (conn_dest(get_connection(feat)) = comp)
-	   		and not (conn_source(get_connection(feat)) = comp)
-	   		
-	   
+	   		and print_connections(connections(feat))
+	   		and is_empty({c for (c : connections(feat)) |
+	   			                 conn_source(c) = comp or conn_dest(c) = comp})
 
-	
 **};
 
 

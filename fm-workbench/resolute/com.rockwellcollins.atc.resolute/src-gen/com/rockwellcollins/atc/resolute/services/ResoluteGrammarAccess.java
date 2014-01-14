@@ -1735,7 +1735,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		private final Keyword cContain_errorKeyword_18 = (Keyword)cAlternatives.eContents().get(18);
 		private final Keyword cPropagate_errorKeyword_19 = (Keyword)cAlternatives.eContents().get(19);
 		private final Keyword cError_state_reachableKeyword_20 = (Keyword)cAlternatives.eContents().get(20);
-		private final Keyword cGet_connectionKeyword_21 = (Keyword)cAlternatives.eContents().get(21);
+		private final Keyword cConnectionsKeyword_21 = (Keyword)cAlternatives.eContents().get(21);
 		private final Keyword cIs_dataKeyword_22 = (Keyword)cAlternatives.eContents().get(22);
 		private final Keyword cIs_threadKeyword_23 = (Keyword)cAlternatives.eContents().get(23);
 		private final Keyword cIs_thread_groupKeyword_24 = (Keyword)cAlternatives.eContents().get(24);
@@ -1772,10 +1772,10 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		//	"receive_error" | // the component contain the error
 		//	"contain_error" | // the component propagate an error
 		//	"propagate_error" | // the error state is reachable
-		//	"error_state_reachable" | "get_connection" | "is_data" | "is_thread" | "is_thread_group" | "is_process" |
-		//	"is_subprogram" | "is_subprogram_group" | "is_processor" | "is_virtual_processor" | "is_memory" | "is_bus" |
-		//	"is_virtual_bus" | "is_device" | "is_system" | "is_abstract" | "is_empty" | "singleton" | "is_bidirectional" |
-		//	"is_data_access" | "is_bus_access" | "is_data_port" | "is_event_port";
+		//	"error_state_reachable" | "connections" | "is_data" | "is_thread" | "is_thread_group" | "is_process" | "is_subprogram"
+		//	| "is_subprogram_group" | "is_processor" | "is_virtual_processor" | "is_memory" | "is_bus" | "is_virtual_bus" |
+		//	"is_device" | "is_system" | "is_abstract" | "is_empty" | "singleton" | "is_bidirectional" | "is_data_access" |
+		//	"is_bus_access" | "is_data_port" | "is_event_port";
 		public ParserRule getRule() { return rule; }
 
 		//"connected" // type checking predicates
@@ -1788,10 +1788,10 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		//"receive_error" | // the component contain the error
 		//"contain_error" | // the component propagate an error
 		//"propagate_error" | // the error state is reachable
-		//"error_state_reachable" | "get_connection" | "is_data" | "is_thread" | "is_thread_group" | "is_process" |
-		//"is_subprogram" | "is_subprogram_group" | "is_processor" | "is_virtual_processor" | "is_memory" | "is_bus" |
-		//"is_virtual_bus" | "is_device" | "is_system" | "is_abstract" | "is_empty" | "singleton" | "is_bidirectional" |
-		//"is_data_access" | "is_bus_access" | "is_data_port" | "is_event_port"
+		//"error_state_reachable" | "connections" | "is_data" | "is_thread" | "is_thread_group" | "is_process" | "is_subprogram" |
+		//"is_subprogram_group" | "is_processor" | "is_virtual_processor" | "is_memory" | "is_bus" | "is_virtual_bus" |
+		//"is_device" | "is_system" | "is_abstract" | "is_empty" | "singleton" | "is_bidirectional" | "is_data_access" |
+		//"is_bus_access" | "is_data_port" | "is_event_port"
 		public Alternatives getAlternatives() { return cAlternatives; }
 
 		//"connected"
@@ -1863,8 +1863,8 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		//"error_state_reachable"
 		public Keyword getError_state_reachableKeyword_20() { return cError_state_reachableKeyword_20; }
 
-		//"get_connection"
-		public Keyword getGet_connectionKeyword_21() { return cGet_connectionKeyword_21; }
+		//"connections"
+		public Keyword getConnectionsKeyword_21() { return cConnectionsKeyword_21; }
 
 		//"is_data"
 		public Keyword getIs_dataKeyword_22() { return cIs_dataKeyword_22; }
@@ -2518,10 +2518,10 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	//	"receive_error" | // the component contain the error
 	//	"contain_error" | // the component propagate an error
 	//	"propagate_error" | // the error state is reachable
-	//	"error_state_reachable" | "get_connection" | "is_data" | "is_thread" | "is_thread_group" | "is_process" |
-	//	"is_subprogram" | "is_subprogram_group" | "is_processor" | "is_virtual_processor" | "is_memory" | "is_bus" |
-	//	"is_virtual_bus" | "is_device" | "is_system" | "is_abstract" | "is_empty" | "singleton" | "is_bidirectional" |
-	//	"is_data_access" | "is_bus_access" | "is_data_port" | "is_event_port";
+	//	"error_state_reachable" | "connections" | "is_data" | "is_thread" | "is_thread_group" | "is_process" | "is_subprogram"
+	//	| "is_subprogram_group" | "is_processor" | "is_virtual_processor" | "is_memory" | "is_bus" | "is_virtual_bus" |
+	//	"is_device" | "is_system" | "is_abstract" | "is_empty" | "singleton" | "is_bidirectional" | "is_data_access" |
+	//	"is_bus_access" | "is_data_port" | "is_event_port";
 	public BuiltInFuncElements getBuiltInFuncAccess() {
 		return (pBuiltInFunc != null) ? pBuiltInFunc : (pBuiltInFunc = new BuiltInFuncElements());
 	}

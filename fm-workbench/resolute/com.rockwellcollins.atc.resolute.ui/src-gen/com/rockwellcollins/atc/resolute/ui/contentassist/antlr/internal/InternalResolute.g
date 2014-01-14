@@ -2666,11 +2666,11 @@ rule__BuiltInFunc__Alternatives
 )
 
     |(
-{ before(grammarAccess.getBuiltInFuncAccess().getGet_connectionKeyword_21()); }
+{ before(grammarAccess.getBuiltInFuncAccess().getConnectionsKeyword_21()); }
 
-	'get_connection' 
+	'connections' 
 
-{ after(grammarAccess.getBuiltInFuncAccess().getGet_connectionKeyword_21()); }
+{ after(grammarAccess.getBuiltInFuncAccess().getConnectionsKeyword_21()); }
 )
 
     |(

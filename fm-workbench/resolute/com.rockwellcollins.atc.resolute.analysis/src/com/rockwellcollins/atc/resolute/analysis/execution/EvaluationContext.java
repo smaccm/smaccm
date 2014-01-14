@@ -14,16 +14,18 @@ import org.osate.aadl2.instance.ConnectionInstance;
 import org.osate.aadl2.instance.FeatureInstance;
 import org.osate.aadl2.instance.SystemOperationMode;
 
+import com.rockwellcollins.atc.resolute.analysis.values.ConnectionValue;
+
 public class EvaluationContext {
     private final ComponentInstance thisInst;
     private final Map<String, Set<NamedElement>> sets;
-    private final FeatureToConnectionMap featToConnMap;
+    private final FeatureToConnectionsMap featToConnsMap;
 
     public EvaluationContext(ComponentInstance thisInst, Map<String, Set<NamedElement>> sets,
-            FeatureToConnectionMap featToConnMap) {
+            FeatureToConnectionsMap featToConnsMap) {
         this.thisInst = thisInst;
         this.sets = sets;
-        this.featToConnMap = featToConnMap;
+        this.featToConnsMap = featToConnsMap;
     }
     
     public EvaluationContext filterByMode(SystemOperationMode mode) {
@@ -34,7 +36,7 @@ public class EvaluationContext {
             filteredSet.put(name, filterBySysMode(set, mode));
         }
         // TODO: The featToConnMap should be filtered by submode as well
-        return new EvaluationContext(thisInst, filteredSet, featToConnMap);
+        return new EvaluationContext(thisInst, filteredSet, featToConnsMap);
     }
 
     private Set<NamedElement> filterBySysMode(Set<NamedElement> set, SystemOperationMode mode) {
@@ -72,7 +74,7 @@ public class EvaluationContext {
         }
     }
 
-    public ConnectionInstance getConnectionForFeature(FeatureInstance feat) {
-        return featToConnMap.get(feat);
+    public List<ConnectionValue> getConnectionsForFeature(FeatureInstance feat) {
+        return featToConnsMap.get(feat);
     }
 }

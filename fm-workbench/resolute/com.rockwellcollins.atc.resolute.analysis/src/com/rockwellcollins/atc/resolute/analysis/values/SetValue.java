@@ -9,7 +9,7 @@ import java.util.Set;
 public class SetValue extends ResoluteValue {
     final private Set<ResoluteValue> values;
 
-    public SetValue(Set<ResoluteValue> values) {
+    public SetValue(Set<? extends ResoluteValue> values) {
         if (values == null) {
             throw new IllegalArgumentException("Cannot create null SetValue");
         }
@@ -17,7 +17,7 @@ public class SetValue extends ResoluteValue {
         this.values = Collections.unmodifiableSet(values);
     }
 
-    public SetValue(List<ResoluteValue> list) {
+    public SetValue(List<? extends ResoluteValue> list) {
         if (list == null) {
             throw new IllegalArgumentException("Cannot create null SetValue");
         }

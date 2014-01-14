@@ -311,6 +311,11 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
     @Check
     public void checkFnCallExpr(FnCallExpr funCall) {
         FunctionDefinition funDef = funCall.getFn();
+        if (funDef.getName() == null) {
+            // Prevent cascading errors when function is not found
+            return;
+        }
+        
         EList<Expr> actuals = funCall.getArgs();
         EList<Arg> formals = funDef.getArgs();
 
@@ -326,7 +331,7 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
         }
 
         for (int i = 0; i < actuals.size(); i++) {
-            ResoluteType formal = typeToResoluteType((Type)formals.get(i).getType());
+            ResoluteType formal = typeToResoluteType(formals.get(i).getType());
             ResoluteType actual = getExprType(actuals.get(i));
 
             if (!actual.subtypeOf(formal)) {
@@ -378,7 +383,7 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
         case "lower_bound":
         	expectedTypes.add(BaseType.RANGE);
         	break;
-        case "get_connection":
+        case "connections":
         case "is_connected":
             expectedTypes.add(BaseType.FEATURE);
             break;
@@ -637,8 +642,11 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
             if (body instanceof FuncBody) {
                 FuncBody funcBody = (FuncBody) body;
                 return typeToResoluteType(funcBody.getType());
-            } else {
+            } else if (body instanceof ClaimBody) {
                 return BaseType.BOOL;
+            } else {
+                // Prevent cascading errors when function is not found
+                return BaseType.FAIL;
             }
         }
 
@@ -728,7 +736,7 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
                 }
             }
             
-            return typeToResoluteType((Type)arg.getType());
+            return typeToResoluteType(arg.getType());
         }
 
         if (idClass instanceof Property) {
@@ -789,8 +797,8 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
         case "property_exists":
             return BaseType.BOOL;
 
-        case "get_connection":
-            return BaseType.CONNECTION;
+        case "connections":
+            return new SetType(BaseType.CONNECTION);
         case "upper_bound":
         case "lower_bound":
         {
