@@ -67,6 +67,7 @@ import com.rockwellcollins.atc.resolute.resolute.Expr;
 import com.rockwellcollins.atc.resolute.resolute.FailExpr;
 import com.rockwellcollins.atc.resolute.resolute.FilterMapExpr;
 import com.rockwellcollins.atc.resolute.resolute.FnCallExpr;
+import com.rockwellcollins.atc.resolute.resolute.FuncBody;
 import com.rockwellcollins.atc.resolute.resolute.FunctionDefinition;
 import com.rockwellcollins.atc.resolute.resolute.IdExpr;
 import com.rockwellcollins.atc.resolute.resolute.IfThenElseExpr;
@@ -475,7 +476,11 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
 
     @Override
     public ResoluteValue caseFnCallExpr(FnCallExpr object) {
-        return functionCall(object);
+        if (object.getFn().getBody() instanceof FuncBody) {
+            return functionCall(object);
+        } else {
+            throw new ResoluteFailException("Encountered claim call in evaluator", object);
+        }
     }
 
     private ResoluteValue functionCall(FnCallExpr object) {
@@ -534,7 +539,7 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
         varStack.peek().put(binding, boundValue);
         return doSwitch(object.getExpr());
     }
-    
+
     @Override
     public ResoluteValue caseLetBinding(LetBinding object) {
         return varStack.peek().get(object);
@@ -995,7 +1000,7 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
             return new BoolValue(!conns.isEmpty());
 
         }
-        
+
         case "connections": {
             NamedElement namedEl = argVals.get(0).getNamedElement();
             FeatureInstance feat = (FeatureInstance) namedEl;

@@ -32,6 +32,8 @@ import com.rockwellcollins.atc.resolute.resolute.ClaimString;
 import com.rockwellcollins.atc.resolute.resolute.Expr;
 import com.rockwellcollins.atc.resolute.resolute.FnCallExpr;
 import com.rockwellcollins.atc.resolute.resolute.FunctionDefinition;
+import com.rockwellcollins.atc.resolute.resolute.LetBinding;
+import com.rockwellcollins.atc.resolute.resolute.LetExpr;
 import com.rockwellcollins.atc.resolute.resolute.ProveStatement;
 import com.rockwellcollins.atc.resolute.resolute.QuantifiedExpr;
 import com.rockwellcollins.atc.resolute.resolute.ThisExpr;
@@ -110,6 +112,14 @@ public class ResoluteProver extends ResoluteSwitch<ResoluteResult> {
         } else {
             return new ResoluteResult(eval(object).getBool());
         }
+    }
+
+    @Override
+    public ResoluteResult caseLetExpr(LetExpr object) {
+        LetBinding binding = object.getBinding();
+        ResoluteValue boundValue = eval(binding.getExpr());
+        varStack.peek().put(binding, boundValue);
+        return doSwitch(object.getExpr());
     }
 
     @Override

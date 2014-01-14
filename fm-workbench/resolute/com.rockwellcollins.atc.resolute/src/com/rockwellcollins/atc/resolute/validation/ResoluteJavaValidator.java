@@ -367,6 +367,13 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
                 return inClaimContext(qe);
             }
         }
+        
+        if (context instanceof LetExpr) {
+            LetExpr le = (LetExpr) context;
+            if (le.getExpr().equals(obj)) {
+                return inClaimContext(le);
+            }
+        }
 
         return false;
     }
