@@ -1,6 +1,9 @@
 package com.rockwellcollins.atc.resolute.analysis.execution;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.osate.aadl2.instance.ConnectionInstance;
@@ -9,10 +12,12 @@ import org.osate.aadl2.instance.FeatureInstance;
 import org.osate.aadl2.instance.InstanceObject;
 import org.osate.aadl2.instance.SystemInstance;
 
-public class FeatureToConnectionMap {
-    private final Map<FeatureInstance, ConnectionInstance> map = new HashMap<>();
+import com.rockwellcollins.atc.resolute.analysis.values.ConnectionValue;
+
+public class FeatureToConnectionsMap {
+    private final Map<FeatureInstance, List<ConnectionValue>> map = new HashMap<>();
     
-    public FeatureToConnectionMap(SystemInstance sysInst) {
+    public FeatureToConnectionsMap(SystemInstance sysInst) {
         for (ConnectionInstance connInst : sysInst.getAllConnectionInstances()) {
             FeatureInstance prevFeat = null;
             for (InstanceObject instObj : connInst.getThroughFeatureInstances()) {
@@ -28,7 +33,7 @@ public class FeatureToConnectionMap {
                             boolean found = false;
                             for (FeatureInstance subFeat : featInst.getFeatureInstances()) {
                                 if (subFeat.getName().equals(prevFeat.getName())) {
-                                    map.put(subFeat, connInst);
+                                    add(subFeat, connInst);
                                     found = true;
                                     break;
                                 }
@@ -36,7 +41,7 @@ public class FeatureToConnectionMap {
                             assert (found);
                         }
                     } else {
-                        map.put(featInst, connInst);
+                        add(featInst, connInst);
                     }
                     prevFeat = featInst;
                 }
@@ -49,11 +54,25 @@ public class FeatureToConnectionMap {
             addAllSubFeatsToConnMap(subFeat, connInst);
         }
         if (feat.getFeatureInstances().isEmpty()) {
-            map.put(feat, connInst);
+            add(feat, connInst);
         }
     }
 
-    public ConnectionInstance get(FeatureInstance feat) {
-        return map.get(feat);
+    private void add(FeatureInstance feat, ConnectionInstance connInst) {
+        if (map.containsKey(feat)) {
+            map.get(feat).add(new ConnectionValue(connInst, false));
+        } else {
+            List<ConnectionValue> list = new ArrayList<>();
+            list.add(new ConnectionValue(connInst, false));
+            map.put(feat, list);
+        }
+    }
+
+    public List<ConnectionValue> get(FeatureInstance feat) {
+        if (map.containsKey(feat)) {
+            return map.get(feat);
+        } else {
+            return Collections.emptyList();
+        }
     }
 }

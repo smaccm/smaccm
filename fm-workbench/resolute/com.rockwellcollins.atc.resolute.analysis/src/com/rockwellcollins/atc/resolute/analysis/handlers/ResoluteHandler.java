@@ -25,7 +25,7 @@ import org.osate.aadl2.instantiation.InstantiateModel;
 import org.osate.ui.dialogs.Dialog;
 
 import com.rockwellcollins.atc.resolute.analysis.execution.EvaluationContext;
-import com.rockwellcollins.atc.resolute.analysis.execution.FeatureToConnectionMap;
+import com.rockwellcollins.atc.resolute.analysis.execution.FeatureToConnectionsMap;
 import com.rockwellcollins.atc.resolute.analysis.execution.ResoluteInterpreter;
 import com.rockwellcollins.atc.resolute.analysis.results.ResoluteResult;
 import com.rockwellcollins.atc.resolute.analysis.views.AssuranceCaseView;
@@ -66,14 +66,14 @@ public class ResoluteHandler extends AadlHandler {
 
         Map<String, Set<NamedElement>> sets = new HashMap<>();
         initializeSets(si, sets);
-        FeatureToConnectionMap featToConnMap = new FeatureToConnectionMap(si);
+        FeatureToConnectionsMap featToConnsMap = new FeatureToConnectionsMap(si);
 
         List<ResoluteResult> proofTrees = new ArrayList<>();
         for (NamedElement el : sets.get("component")) {
             ComponentInstance compInst = (ComponentInstance) el;
             for (Element child : compInst.getComponentClassifier().getChildren()) {
                 if (child instanceof ResoluteSubclause) {
-                    EvaluationContext context = new EvaluationContext(compInst, sets, featToConnMap);
+                    EvaluationContext context = new EvaluationContext(compInst, sets, featToConnsMap);
                     ResoluteInterpreter interpreter = new ResoluteInterpreter(context);
                     for (Element element : child.getChildren()) {
                         if (element instanceof ProveStatement) {

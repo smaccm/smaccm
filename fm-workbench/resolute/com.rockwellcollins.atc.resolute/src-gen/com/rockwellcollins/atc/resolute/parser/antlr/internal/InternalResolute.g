@@ -2972,10 +2972,10 @@ ruleBuiltInFunc returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleTok
     }
 
     |
-	kw='get_connection' 
+	kw='connections' 
     {
         $current.merge(kw);
-        newLeafNode(kw, grammarAccess.getBuiltInFuncAccess().getGet_connectionKeyword_21()); 
+        newLeafNode(kw, grammarAccess.getBuiltInFuncAccess().getConnectionsKeyword_21()); 
     }
 
     |

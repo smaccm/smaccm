@@ -209,7 +209,7 @@ BuiltInFunc:
 |	'contain_error'           // the component contain the error
 |	'propagate_error'         // the component propagate an error
 |   'error_state_reachable'   // the error state is reachable
-|   'get_connection'
+|   'connections'
 // type checking predicates
 |   'is_data'
 |   'is_thread'
