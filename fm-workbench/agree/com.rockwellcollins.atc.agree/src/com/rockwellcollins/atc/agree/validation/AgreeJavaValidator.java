@@ -452,7 +452,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
         for (NestedDotID dotId : dotIds) {
             NamedElement id = getFinalNestId(dotId);
             if (!(id instanceof Arg) && !(id instanceof ConstStatement)
-                    && !(id instanceof NodeDefExpr)) {
+                    && !(id instanceof NodeDefExpr) && !(id instanceof FnDefExpr)) {
                 error(dotId, "Only arguments, constants, and node calls allowed within a node");
             }
         }

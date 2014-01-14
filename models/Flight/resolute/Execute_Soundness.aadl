@@ -77,8 +77,8 @@ command_channel(c : connection) : bool =
    type(c) <> DATATYPES::Motion_Data and
    type(c) <> DATATYPES::Battery_Data and
    type(c) <> DATATYPES::GPS_Data and
-   type(c) <> DATATYPES::Reset_Data and
-   type(c) <> DATATYPES::Flight_Control_Commands -- this is the ppm type
+   type(c) <> DATATYPES::Reset_Data -- and
+   --type(c) <> DATATYPES::Flight_Control_Commands -- this is the ppm type
   )
 
 

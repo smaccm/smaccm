@@ -51,7 +51,7 @@ print_feature(feat : feature) <=
 	true
 	
 all_through_connections(comp : component) <=
-	** "Every feature of " comp " is not the final desitination of "
+	** "Every feature of " comp " is not the final destination of "
 	   "its respective connection " **
 	   forall(feat : comp.features) . 
 	   		is_connected(feat) 
