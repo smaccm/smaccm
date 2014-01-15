@@ -40,7 +40,7 @@ public abstract class Util {
   final public static Property DATA_MODEL_DIMENSION = Util
       .getPropertyDefinitionInWorkspace(DATA_MODEL_DIMENSION_NAME);
 
-  public static EnumerationLiteral getDataRepresentationName(DataTypeImpl tti) {
+  public static EnumerationLiteral getDataRepresentationName(NamedElement tti) {
     try {
       return PropertyUtils.getEnumLiteral(tti, Util.DATA_MODEL_DATA_REPRESENTATION);
     } catch (Exception e) {
@@ -48,7 +48,7 @@ public abstract class Util {
     }
   }
 
-  public static DataClassifier getBaseType(DataTypeImpl tti) {
+  public static DataClassifier getBaseType(NamedElement tti) {
     PropertyExpression value ;
     try {
       value = PropertyUtils
@@ -75,7 +75,7 @@ public abstract class Util {
     }
   }
   
-  public static int getDimension(DataTypeImpl tti) {
+  public static int getDimension(NamedElement tti) {
     try {
       PropertyExpression value = PropertyUtils.getSimplePropertyValue(tti, Util.DATA_MODEL_DIMENSION);
       if (value instanceof ListValueImpl) {
@@ -108,6 +108,17 @@ public abstract class Util {
 		return normalizeAadlName(n.getQualifiedName());
 	}
 
+    public static String getCUintTypeForMaxValue(int maxValue) {
+    	if (maxValue <= 256) 
+    		return "c_uint8";
+    	else if (maxValue <= 65536) {
+    		return "c_uint16";
+    	} else {
+    		return "c_uint32"; 
+    	}
+    		
+    }
+	
 	/*
 	 * getStringValue Fixes a bug in the PropertyUtils version...returns "" if
 	 * the string is not defined, so it is not possible to distinguish between

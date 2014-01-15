@@ -466,9 +466,9 @@ public class AadlModelParser {
     DataClassifier classifier = (DataClassifier) portImpl.getClassifier();
     String dcName = Util.normalizeAadlName(classifier);
 
-    if (!this.model.astTypes.containsKey(dcName)) {
-      System.out.println("Type not found: " + dcName + "\n");
-    } 
+//    if (!this.model.astTypes.containsKey(dcName)) {
+//      System.out.println("Type not found: " + dcName + "\n");
+//    } 
     dataType = lookupType(classifier);
 
     return dataType;
@@ -622,7 +622,7 @@ public class AadlModelParser {
 		String dcName = Util.normalizeAadlName(dc);
 		Type ty = createAstType(dc);
 		if (this.model.astTypes.containsKey(dcName)) {
-			return new IdType(dcName);
+			return new IdType(dcName, this.model.astTypes.get(dcName));
 		} else {
 			return ty;
 		}
@@ -684,21 +684,39 @@ public class AadlModelParser {
 			      " found unexpected representation type: '"+ el.getName() + "'; expecting 'Array'.");
 			}
 		} else if (dc instanceof DataImplementationImpl) {
-			RecordType rt = new RecordType();
 			DataImplementationImpl dii = (DataImplementationImpl) dc;
-
-			for (DataSubcomponent c : dii.getOwnedDataSubcomponents()) {
-				Classifier subClass = c.getClassifier();
-				if (subClass instanceof DataClassifier) {
-					Type subType = createAstType((DataClassifier) subClass);
-					rt.addField(c.getName(), subType);
+			EList<DataSubcomponent> subcomponents = dii.getOwnedDataSubcomponents();
+			if (subcomponents.isEmpty()) {
+				
+				// check if array type.
+				EnumerationLiteral el = Util.getDataRepresentationName(dii);
+				DataClassifier childDc = Util.getBaseType(dii);
+				int size = Util.getDimension(dii);
+				Type childElem = createAstType(childDc); 
+				if ((el.getName()).equalsIgnoreCase("Array")) {
+				    ArrayType at = new ArrayType(childElem, size); 
+				    this.model.astTypes.put(normalizedName, at);
+				    return at;
 				} else {
-					throw new Aadl2RtosException(
-							"In createAstType: Subcomponent is not a data classifier");
+				   throw new Aadl2RtosException("Examining type: " + dc.getFullName() + 
+				      " found unexpected representation type: '"+ dc.getName() + "'; expecting 'Array'.");
 				}
 			}
-			this.model.astTypes.put(normalizedName, rt);
-			return rt;
+			else {
+				RecordType rt = new RecordType();
+				for (DataSubcomponent c : subcomponents) {
+					Classifier subClass = c.getClassifier();
+					if (subClass instanceof DataClassifier) {
+						Type subType = createAstType((DataClassifier) subClass);
+						rt.addField(c.getName(), subType);
+					} else {
+						throw new Aadl2RtosException(
+								"In createAstType: Subcomponent is not a data classifier");
+					}
+				}
+				this.model.astTypes.put(normalizedName, rt);
+				return rt;
+			}
 		} else {
 			throw new Aadl2RtosException(
 					"In createAstType: data classifier is not data type or data implementation");

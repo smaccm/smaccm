@@ -554,30 +554,30 @@ public class SourceWriter extends AbstractCodeWriter {
   }
   
   private void writeEventDataPortSharedVars(ThreadInstancePort c, MyPort dstPort, Type portTy) throws IOException {
-    String queueSize = Integer.toString(c.getPort().getQueueSize());
-    String arraySize = Integer.toString(c.getPort().getQueueSize() + 1);
+    String arraySize = Integer.toString(c.getArraySize());
+    // TODO: fix this.
     String queueName = c.getVarName();
+    String isFullName = c.getIsFullName();
     String head = c.getCircBufferFrontVarName();
     String tail = c.getCircBufferBackVarName();
 
-    out.append("#define " + c.getQueueSizeName() + " " + queueSize + "\n");
     out.append(c.getQueueType().getCType().varString(queueName) + "; \n");
+    out.append("bool " + isFullName + " = false; \n");
     out.append(c.getCircRefType().getCType().varString(head) + "; \n");
-    out.append(c.getCircRefType().getCType().varString(tail) + "; \n\n");     
-
+    out.append(c.getCircRefType().getCType().varString(tail) + "; \n\n");
+    
+    // right now we can only support queues 
+    // if (queueSize >= )
+    
     // Write is_full function
     out.append("bool " + queueName + "_is_full() {\n");
-    out.append(ind + "int mod_value = (" + tail + " + 1) % " + arraySize + ";\n");
-    out.append(ind + "if (mod_value == " + head + ") {\n");
-    out.append(ind + ind + "return true;\n");
-    out.append(ind + "} else {\n");
-    out.append(ind + ind + "return false;\n");
+    out.append(ind + "return (" + tail + " == " + head + ") && (" + isFullName + ");\n");
     out.append(ind + "}\n");
     out.append("}\n\n");
 
     // Write is_empty function
     out.append("bool " + queueName + "_is_empty() {\n");
-    out.append(ind + "return (" + tail + " == " + head + ");\n");
+    out.append(ind + "return (" + tail + " == " + head + ") && (!" + isFullName + ");\n");
     out.append("}\n\n");
 
     // Write enqueue function
@@ -596,6 +596,7 @@ public class SourceWriter extends AbstractCodeWriter {
     }
 
     out.append(ind + ind + tail + " = (" + tail + " + 1) % " + arraySize + ";\n");
+    out.append(ind + ind + "if (" + tail + " == " + head + ") { " + isFullName + " = true; } \n\n");
     out.append(ind + ind + "return true;\n");
     out.append(ind + "}\n");
     out.append("}\n\n");
@@ -613,6 +614,7 @@ public class SourceWriter extends AbstractCodeWriter {
           readFromAadlMemcpy(portTy, "elem", queueName + "[" + head + "]") + ";\n");
     }
     out.append(ind + ind + head + " = (" + head + " + 1) % " + arraySize + ";\n");
+    out.append(ind + ind + isFullName + " = false; \n");
     out.append(ind + ind + "return true;\n");
     out.append(ind + "}\n");
     out.append("}\n\n");
