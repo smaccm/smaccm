@@ -2637,8 +2637,8 @@ process implementation flight_gen_process.impl
     SMACCM::OS => "Breakaway-RTOS";
     
   annex resolute {**
-    prove only_receive_gs(this.control_inst) 
-    prove all_through_connections(this)
+    prove execute_soundness()
+    --prove all_through_connections(this)
   **};
     
     
