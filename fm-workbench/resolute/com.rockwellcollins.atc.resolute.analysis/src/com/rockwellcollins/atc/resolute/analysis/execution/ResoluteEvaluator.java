@@ -1097,6 +1097,9 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
         } else if (ne instanceof FeatureInstance) {
             FeatureInstance fi = (FeatureInstance) ne;
             return (NamedElement) fi.getFeature().getFeatureClassifier();
+        } else if (ne instanceof ComponentInstance) {
+            ComponentInstance ci = (ComponentInstance) ne;
+            return ci.getComponentClassifier();
         }
 
         return null;
