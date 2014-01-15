@@ -12,11 +12,8 @@ import org.osate.aadl2.DirectionType;
 import org.osate.aadl2.PortCategory;
 
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosException;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.AstHelper;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Model;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.ArrayType;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.IdType;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.PointerType;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.Type;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.Dispatcher;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.Dispatcher.DispatcherType;
@@ -32,8 +29,8 @@ import edu.umn.cs.crisys.smaccm.topsort.TopologicalSort;
 
 public class HeaderWriter extends AbstractCodeWriter {
 	public HeaderWriter(BufferedWriter out, File CFile, File HFile,
-			Model model, AstHelper astHelper) {
-		super(out, CFile, HFile, model, astHelper);
+			Model model) {
+		super(out, CFile, HFile, model);
 	}
 
 	public String getHeaderDefStr() {

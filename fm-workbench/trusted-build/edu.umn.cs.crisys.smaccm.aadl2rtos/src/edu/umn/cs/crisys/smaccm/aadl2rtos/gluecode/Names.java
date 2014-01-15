@@ -29,7 +29,6 @@ import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.PointerType;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.Type;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.InterruptServiceRoutine;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.MyPort;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.SharedData;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.SharedDataAccessor;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.ThreadImplementation;
 

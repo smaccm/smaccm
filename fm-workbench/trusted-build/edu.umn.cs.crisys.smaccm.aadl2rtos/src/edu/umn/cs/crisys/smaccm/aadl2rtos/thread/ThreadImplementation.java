@@ -10,7 +10,6 @@ package edu.umn.cs.crisys.smaccm.aadl2rtos.thread;
  */
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import org.osate.aadl2.EnumerationLiteral;
@@ -18,7 +17,6 @@ import org.osate.aadl2.impl.ThreadTypeImpl;
 import org.osate.xtext.aadl2.properties.util.PropertyUtils;
 
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosException;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.AstHelper;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.util.ThreadUtil;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.util.Util;
 
@@ -46,8 +44,8 @@ public class ThreadImplementation extends ThreadImplementationBase {
 	private boolean isrThread = false;
 
 	// Constructor
-	public ThreadImplementation(ThreadTypeImpl tti, AstHelper astHelper) {
-		super(tti, astHelper);
+	public ThreadImplementation(ThreadTypeImpl tti) {
+		super(tti);
 		generatedEntrypoint = tti.getFullName();
 
 		// determine whether this thread is 'normal' or ISR.

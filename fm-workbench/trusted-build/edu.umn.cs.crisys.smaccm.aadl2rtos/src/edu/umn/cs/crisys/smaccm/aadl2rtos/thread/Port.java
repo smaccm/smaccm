@@ -1,7 +1,5 @@
 package edu.umn.cs.crisys.smaccm.aadl2rtos.thread;
 
-import org.osate.aadl2.DataClassifier;
-import org.osate.xtext.aadl2.properties.util.PropertyUtils;
 
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosException;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.Type;

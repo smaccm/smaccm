@@ -1,6 +1,5 @@
 package edu.umn.cs.crisys.smaccm.aadl2rtos.prx;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -10,7 +9,6 @@ import java.util.Set;
 
 import org.w3c.dom.Comment;
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Logger;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosException;
@@ -21,9 +19,7 @@ import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.ExternalIRQ;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.InterruptServiceRoutine;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.LegacyExternalIRQ;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.LegacyIRQEvent;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.LegacyThreadImplementation;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.SharedData;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.ThreadImplementation;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.ThreadImplementationBase;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.ThreadInstance;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.ThreadInstancePort;

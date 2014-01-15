@@ -10,15 +10,11 @@ package edu.umn.cs.crisys.smaccm.aadl2rtos.thread;
  */
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
-import org.osate.aadl2.EnumerationLiteral;
 import org.osate.aadl2.impl.ThreadTypeImpl;
-import org.osate.xtext.aadl2.properties.util.PropertyUtils;
 
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosException;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.AstHelper;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.util.ThreadUtil;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.util.Util;
 
@@ -36,9 +32,9 @@ public class LegacyThreadImplementation extends ThreadImplementationBase {
 
 	 */
 	// Constructor
-	public LegacyThreadImplementation(ThreadTypeImpl tti, AstHelper astHelper)  
+	public LegacyThreadImplementation(ThreadTypeImpl tti)  
 	{
-		super(tti, astHelper);
+		super(tti);
 		try { 
 			legacyMutexList = (ArrayList<String>) ThreadUtil.getLegacyMutexList(tti);
       legacySemaphoreList = (ArrayList<String>) ThreadUtil.getLegacySemaphoreList(tti);

@@ -22,15 +22,17 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE DATA OR THE USE OR OTHER DEALINGS
 package edu.umn.cs.crisys.smaccm.aadl2rtos;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.osate.aadl2.DataClassifier;
 import org.osate.aadl2.SystemImplementation;
-import org.osate.aadl2.impl.ThreadTypeImpl;
 import org.osate.aadl2.instance.SystemInstance;
 
+import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.Type;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.Connection;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.ExternalIRQ;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.InterruptServiceRoutine;
@@ -44,7 +46,6 @@ import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.ThreadImplementation;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.ThreadImplementationBase;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.ThreadInstance;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.ThreadInstancePort;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.util.ThreadUtil;
 
 public class Model {
 	private SystemImplementation systemImplementation;
@@ -52,67 +53,44 @@ public class Model {
 
 	// Connection instances - drives number of semaphores
 	// (one function per thread implementation, pass in thread instance id)
-	private List<Connection> connectionInstances = new ArrayList<Connection>();
+	List<Connection> connectionInstances = new ArrayList<Connection>();
 	// private ArrayList<String> semaphoreList = new ArrayList<String>();
 
-	// Implementation objects
-	private Map<ThreadTypeImpl, ThreadImplementation> threadImplementationMap;
-	private List<ThreadImplementation> threadImplementationList;
-	private List<InterruptServiceRoutine> isrList;
-	private List<SharedData> sharedDataList;
-	private ThreadCalendar threadCalendar;
-	private Set<String> sourceFiles = new HashSet<String>();
-	private List<String> libraryFiles = new ArrayList<String>(); 	
 
-	private List<LegacyThreadImplementation> legacyThreadList;
-	private List<String> legacyMutexList;
-	private List<String> legacySemaphoreList;
-	private List<LegacyExternalIRQ> legacyExternalIRQList;
-	private List<LegacyIRQEvent> legacyIRQEventList;
-	private List<ExternalIRQ> externalIRQList;
-	private boolean generateSystickIRQ; 
+	// Implementation objects: external.
+	List<ThreadImplementation> threadImplementationList = new ArrayList<ThreadImplementation>();
+	List<InterruptServiceRoutine> isrList = new ArrayList<InterruptServiceRoutine>();
+	List<SharedData> sharedDataList = new ArrayList<SharedData>();
+	ThreadCalendar threadCalendar = new ThreadCalendar();
+	Set<String> sourceFiles = new HashSet<String>();
+	List<String> libraryFiles = new ArrayList<String>(); 	
+
+	List<LegacyThreadImplementation> legacyThreadList = new ArrayList<LegacyThreadImplementation>();
+	List<String> legacyMutexList = new ArrayList<String>();
+	List<String> legacySemaphoreList = new ArrayList<String>();
+	List<LegacyExternalIRQ> legacyExternalIRQList = new ArrayList<LegacyExternalIRQ>();
+	List<LegacyIRQEvent> legacyIRQEventList = new ArrayList<LegacyIRQEvent>();
+	List<ExternalIRQ> externalIRQList = new ArrayList<ExternalIRQ>();
+	boolean generateSystickIRQ;
+	List<Connection> connectionList = new ArrayList<Connection>(); 
+	
+	// type stuff
+	Set<DataClassifier> dataTypes = new HashSet<DataClassifier>();
+	Map<String, Type> astTypes = new HashMap<String, Type>();
 	
 	// private Map<ThreadImplementation, Set<Pair<MyPort, MyPort>>> threadSourcePorts = new HashMap<ThreadImplementation, Set<Pair<MyPort, MyPort>>>();
 
 	// Model constructor
 	public Model(SystemImplementation sysImpl, 
-	             SystemInstance sysInst, 
-	             Map<ThreadTypeImpl, ThreadImplementation> threadImplementationMap, 
-               List<Connection> connectionInstances, 
-               List<InterruptServiceRoutine> isrList, 
-               ThreadCalendar threadCalendar, 
-               Set<String> sourceFiles, 
-               List<String> libraryFiles, 
-               List<SharedData> sharedDataList,
-               List<LegacyThreadImplementation> legacyThreadList,
-               List<String> legacyMutexList,
-               List<String> legacySemaphoreList,
-               List<LegacyExternalIRQ> legacyExternalIRQList,
-               List<LegacyIRQEvent> legacyIRQEventList,
-               List<ExternalIRQ> externalIRQList,
-               boolean generateSystickIRQ) {
-	  this.sharedDataList = sharedDataList; 
-	  this.sourceFiles = sourceFiles;
-	  this.libraryFiles = libraryFiles;
-		this.threadImplementationMap = threadImplementationMap;
-		this.threadImplementationList = 
-		      new ArrayList<ThreadImplementation>(threadImplementationMap.values());
-		this.isrList = isrList;
+	             SystemInstance sysInst) {
 		this.systemImplementation = sysImpl;
 		this.systemInstance = sysInst;
-		this.connectionInstances = connectionInstances;
-		this.threadCalendar = threadCalendar;
-		this.legacyThreadList = legacyThreadList;
-		this.legacyMutexList = legacyMutexList;
-		this.legacySemaphoreList = legacySemaphoreList;
-		this.legacyExternalIRQList = legacyExternalIRQList;
-		this.legacyIRQEventList = legacyIRQEventList;
-		this.externalIRQList = externalIRQList;
-		this.generateSystickIRQ = generateSystickIRQ;
-		
-		// createSemaphoreList();
 	}
 
+//	public Map<ThreadTypeImpl, ThreadImplementation> getThreadImplementationMap() {
+//		return this.threadImplementationMap;
+//	}
+	
 	public List<ThreadInstance> getDestinationThreadsForPort(MyPort pi) {
 		List<ThreadInstance> destThreads = new ArrayList<ThreadInstance>();
 
@@ -162,14 +140,6 @@ public class Model {
 	public List<SharedData> getSharedDataList() {
 	  return this.sharedDataList;
 	}
-/*	public List<ThreadImplementation> getTaskThreads() {
-		return ThreadUtil.getTaskThreads(threadImplementationMap.values());
-	}
-
-	public List<ThreadImplementation> getISRThreads() {
-		return ThreadUtil.getISRThreads(threadImplementationMap.values());
-	}
-*/
 	
 	public List<ThreadImplementation> getThreadImplementations() {
 		return this.threadImplementationList;
@@ -218,6 +188,7 @@ public class Model {
 	  }
 	  return instances;
 	}
+
 	
 /*
 	public Map<ThreadImplementation, Set<Pair<MyPort, MyPort>>> getThreadSourcePorts() {
@@ -225,14 +196,15 @@ public class Model {
 	}
 */	
 
-	public List<ThreadImplementation> getThreads(List<String> threadNameList) {
-		List<ThreadImplementation> threadList = new ArrayList<ThreadImplementation>();
-		for (String threadName : threadNameList) { 
-			threadList.add(threadImplementationMap.get(threadName));
-		}
-		return threadList;
-	}
+//	public List<ThreadImplementation> getThreads(List<String> threadNameList) {
+//		List<ThreadImplementation> threadList = new ArrayList<ThreadImplementation>();
+//		for (String threadName : threadNameList) { 
+//			threadList.add(threadImplementationMap.get(threadName));
+//		}
+//		return threadList;
+//	}
 
+	
 	public List<Connection> getConnections() {
 	  return this.connectionInstances;
 	}
@@ -248,4 +220,10 @@ public class Model {
   public boolean getGenerateSystickIRQ() {
 	  return this.generateSystickIRQ;
 	}
+
+  public Map<String, Type> getAstTypes() {
+		return this.astTypes;
+}
+
+
 }
