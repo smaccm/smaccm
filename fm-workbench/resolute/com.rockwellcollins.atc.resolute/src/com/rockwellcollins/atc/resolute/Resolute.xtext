@@ -203,6 +203,7 @@ BuiltInFunc:
 |   'property_exists'
 |   'sum'
 |   'analysis'
+|   'instance'
 |	'upper_bound'             // upper_bound of a range
 |	'lower_bound'             // lower bound of a range
 |	'receive_error'           // the component can receive an incoming error
