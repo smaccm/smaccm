@@ -402,14 +402,16 @@ public class PrxGenerator {
 
 		e = doc.createElement("mutexes");
         parent.appendChild(e);
+        // for building 'flight' the legacy list has to be first in file order so 
+        // that these semaphores are assigned starting at ID 0. 
+		for (String name : model.getLegacyMutexList()) {
+			  createMutexOrSemaphore(e, name, "mutex");
+		}
 		for (ThreadInstancePort i : instances) {
 		  createMutexOrSemaphore(e, i.getMutexName(), "mutex");
 		}
 		for (SharedData d : model.getSharedDataList()) {
 		  createMutexOrSemaphore(e, d.getMutexName(), "mutex");
-		}
-		for (String name : model.getLegacyMutexList()) {
-			  createMutexOrSemaphore(e, name, "mutex");
 		}
 		e = doc.createElement("semaphores");
         parent.appendChild(e);
