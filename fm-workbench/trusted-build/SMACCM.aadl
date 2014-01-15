@@ -26,4 +26,5 @@ property set SMACCM_SYS is
 	Legacy_IRQ_Handler_List: list of aadlstring applies to (system implementation);
 	External_IRQ_List: list of aadlstring applies to (system implementation);
 	Generate_Scheduler_Systick_IRQ: aadlboolean => true applies to (system implementation);
+	Language: aadlstring applies to (thread, system implementation);
 end SMACCM_SYS;

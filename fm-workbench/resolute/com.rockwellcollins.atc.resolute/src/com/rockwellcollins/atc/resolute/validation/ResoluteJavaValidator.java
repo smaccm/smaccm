@@ -471,6 +471,10 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
             //TODO: support integers and reals as well
             expectedTypes.add(BaseType.AADL);
             break;
+            
+        case "instance":
+            expectedTypes.add(BaseType.COMPONENT);
+            break;
 
         case "is_empty":
             if (actuals.size() != 1) {
@@ -903,6 +907,9 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
             Expr expr = funCall.getArgs().get(0);
             return new SetType(getExprType(expr));
         }
+        
+        case "instance":
+            return BaseType.COMPONENT;
 
         case "sum":
             if (funCall.getArgs().size() != 1) {

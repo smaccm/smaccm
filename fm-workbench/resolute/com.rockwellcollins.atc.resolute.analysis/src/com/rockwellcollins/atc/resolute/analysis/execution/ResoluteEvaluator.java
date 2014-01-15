@@ -18,6 +18,7 @@ import org.osate.aadl2.BusAccess;
 import org.osate.aadl2.Classifier;
 import org.osate.aadl2.ComponentCategory;
 import org.osate.aadl2.ComponentClassifier;
+import org.osate.aadl2.ComponentImplementation;
 import org.osate.aadl2.DataAccess;
 import org.osate.aadl2.DataPort;
 import org.osate.aadl2.EnumerationLiteral;
@@ -35,6 +36,7 @@ import org.osate.aadl2.instance.ConnectionInstanceEnd;
 import org.osate.aadl2.instance.ConnectionReference;
 import org.osate.aadl2.instance.FeatureCategory;
 import org.osate.aadl2.instance.FeatureInstance;
+import org.osate.aadl2.instance.SystemInstance;
 import org.osate.aadl2.modelsupport.resources.OsateResourceUtil;
 import org.osate.aadl2.properties.PropertyDoesNotApplyToHolderException;
 import org.osate.aadl2.properties.PropertyNotPresentException;
@@ -870,6 +872,28 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
             }
         }
 
+        case "instance": {
+            NamedElement decl = argVals.get(0).getNamedElement();
+            SystemInstance top = context.getThisInstance().getSystemInstance();
+            ComponentInstance result = null;
+            for (ComponentInstance ci : top.getAllComponentInstances()) {
+                if (isInstanceOf(ci, decl)) {
+                    if (result == null) {
+                        result = ci;
+                    } else {
+                        throw new ResoluteFailException(
+                                "Found multiple instances of declarative element", object);
+                    }
+                }
+            }
+            if (result != null) {
+                return new NamedElementValue(result);
+            } else {
+                throw new ResoluteFailException("Failed to find instance of declarative element",
+                        object);
+            }
+        }
+
         case "is_bidirectional": {
             ConnectionInstance conn = (ConnectionInstance) argVals.get(0).getNamedElement();
             return new BoolValue(conn.isBidirectional());
@@ -1015,6 +1039,20 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
         default:
             throw new IllegalArgumentException("Unknown function: " + funName);
         }
+    }
+
+    private boolean isInstanceOf(ComponentInstance instance, NamedElement declarative) {
+        ComponentClassifier cc = instance.getComponentClassifier();
+        if (cc.equals(declarative)) {
+            return true;
+        }
+
+        if (cc instanceof ComponentImplementation) {
+            ComponentImplementation ci = (ComponentImplementation) cc;
+            return (ci.getType().equals(declarative));
+        }
+
+        return false;
     }
 
     private static ResoluteValue exprToValue(PropertyExpression expr) {
