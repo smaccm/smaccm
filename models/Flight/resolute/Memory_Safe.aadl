@@ -1,0 +1,35 @@
+package Memory_Safe
+  public
+    annex resolute {**
+	
+memory_safe() <=
+	** "The system is memory safe" **
+	forall (p : process). memory_protected(p)
+
+memory_protected(p : process) <=
+  ** "The memory of process " p " is protected from alterations by other processes" **
+  runs_on_os(p, "SeL4") or
+  (runs_on_os(p, "eChronos") and
+   forall (mem : memory). bound(p, mem) =>
+     forall (q : process). bound(q, mem) => memory_safe_process(q))
+     
+runs_on_os(p : process, os : string) <=
+  ** p " runs on " os **
+  property_lookup(p, SMACCM::OS) = os
+
+memory_safe_process(p : process) <=
+  ** "The process " p " only writes to its own memory space" **
+  forall (t : thread). contained(t, p) => memory_safe_thread(t)
+
+memory_safe_thread(t : thread) <=
+  ** "The thread " t " only writes to its own memory space" **
+  ivory_thread(t)
+  
+ivory_thread(t : thread) <=
+  ** "The thread " t " is generated from Ivory" **
+  property_exists(t, SMACCM::Language) and
+  property_lookup(t, SMACCM::Language) = "Ivory"
+
+**};
+	
+end Memory_Safe;

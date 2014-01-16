@@ -697,7 +697,7 @@ thread decryptTask_uart5
     Source_Stack_Size => 256 bytes;
     SMACCM::Language => "Ivory";
     Dispatch_Protocol => Sporadic;
-    SMACCM::Encryption_Algorthim => "AES-128-CTR-HMAC-SHA1";
+    SMACCM::Encryption_Algorthim => "AES-128-GCM";
     
 end decryptTask_uart5;
 
@@ -1444,7 +1444,7 @@ thread decryptTask_uart1
     Source_Stack_Size => 256 bytes;
     SMACCM::Language => "Ivory";
     Dispatch_Protocol => Sporadic;
-    SMACCM::Encryption_Algorthim => "AES-128-CTR-HMAC-SHA1";
+    SMACCM::Encryption_Algorthim => "AES-128-GCM";
     
 end decryptTask_uart1;
 
@@ -2634,11 +2634,12 @@ process implementation flight_gen_process.impl
 	sensor_conn: feature group sensors <-> sensorsCaptureTask_inst.sensors_in;
     
   properties 
-    SMACCM::OS => "Breakaway-RTOS";
+    SMACCM::OS => "eChronos";
     
   annex resolute {**
     prove execute_soundness()
-    --prove all_through_connections(this)
+    prove memory_safe()
+    prove all_through_connections(this)
   **};
     
     

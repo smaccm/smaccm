@@ -8,7 +8,7 @@ execute_soundness() <=
   only_gs_encrypt() and motors_only_receive_decrypt()
 
 only_gs_encrypt() <= 
-  ** "Only the Ground Station can send commands that pass Decrypt" **
+  ** "Only the Ground Station can send commands that pass decrypt" **
   let algo1 : string =
     property_lookup(flight_gen::decryptTask_uart5, SMACCM::Encryption_Algorthim);
   let algo2 : string =
@@ -54,7 +54,7 @@ MOTORS : {component} = instances(PX4IOAR::Motor)
 MAIN_LOOP : component = instance(flight_gen::flight_gen_process)
 
 motors_only_receive_decrypt() <=
-	** "The UAV motors only execute commands that pass Decrypt" **
+	** "The UAV motors only execute commands that pass decrypt" **
 	motors_only_receive_from_mainloop(MAIN_LOOP) and
 	all_commands_to_mainloop_pass_decrypt_before_motors(MAIN_LOOP)
 	
@@ -70,11 +70,11 @@ comes_from_mainloop(c : connection, mainloop : component) <=
 	 subcomponent_of(conn_source(c), mainloop)
 
 all_commands_to_mainloop_pass_decrypt_before_motors(mainloop : component) <=
-  ** "All commands to " mainloop " pass Decrypt before reaching UAV motors" **
+  ** "All commands to " mainloop " pass decrypt before reaching UAV motors" **
   all_inputs_decrypt_or_sensors(mainloop)
 	
 all_inputs_decrypt_or_sensors(mainloop : component) <=
-    ** "All inputs to " mainloop " are sensor data or pass Decrypt before reaching UAV motors" **
+    ** "All inputs to " mainloop " are sensor data or pass decrypt before reaching UAV motors" **
 	forall (f : mainloop.features).
 	    is_incomming(f, mainloop) =>
 	      is_sensor_data(f) or feature_confined_to_decrypt(f, mainloop)
@@ -95,13 +95,13 @@ is_sensor_data(f : feature) <=
 
   
 feature_confined_to_decrypt(f : feature, mainloop : component) <=
-  ** "Commands to " f " pass through Decrypt before reaching the UAV motors" **
+  ** "Commands to " f " pass through decrypt before reaching the UAV motors" **
   forall (c : connections(f)).
     subcomponent_of(conn_dest(c), mainloop) =>
       component_confined_to_decrypt(conn_dest(c), mainloop)
       
 component_confined_to_decrypt(c : component, mainloop : component) <=
-  ** "Commands to " c " pass through Decrypt before reaching the UAV motors" **
+  ** "Commands to " c " pass through decrypt before reaching the UAV motors" **
   let reach : {component} = predecrypt_reach(c, mainloop);
     component_confined_to_decrypt_by_set(c, reach)
     
@@ -132,59 +132,6 @@ cannot_reach_UAV_motors(x : component) <=
   ** x " cannot communicate directly to UAV motors" **
   forall (conn : x.connections).
     conn_source(conn) = x => not (conn_dest(conn) in MOTORS)
-
-unalterable_channel(c : connection) <=
-  ** "The connection " c " delivers data without alteration" **
-  (is_process(conn_source(c)) => memory_protected(conn_source(c)))
-  and
-  (is_process(conn_dest(c)) => memory_protected(conn_dest(c)))
-  
- 
--- The connection c delivers data without alteration.
--- "contained" means write permissions
---unalterable_channel(c : connection) <=
---  ** "The connection " c " delivers data without alteration" **
---  (exists (p1 : allProcesses) (p2 : allProcesses). 
---        conn_source(c) = p1 
---    and conn_dest(c) = p2
---    and p1 <> p2
---    and memory_protected(p1) 
---    and memory_protected(p2))
---  or
---  (exists (p : allProcesses).
---  	contained(conn_source(c), p) and
---  	contained(conn_dest(c), p) and
---  	memory_protected(p))
- 
-memory_protected_system() <=
-  ** "Every processes is memory protected" **
-  forall(p : process) . memory_protected(p)
-
-memory_protected(p : component) <=
-  ** "The memory of process " p " is protected from alterations by other processes" **
-  property_lookup(p, SMACCM::OS) = "SeL4" or
-  (property_lookup(p, SMACCM::OS) = "Breakaway-RTOS" and
-   forall (mem : allMemory). bound(p, mem) =>
-     forall (q : allProcesses). bound(q, mem) => memory_safe_process(q))
-
-memory_safe_process(p : process) <=
-  ** "The process " p " only writes to its own memory space" **
-  forall (t : allThreads). contained(t, p) => memory_safe_thread(t)
-
-memory_safe_thread(t : thread) <=
-  ** "The thread " t " only writes to its own memory space" **
-  ivory_thread(t)
-  
-ivory_thread(t : thread) <=
-  ** "The thread " t " is generated from Ivory" **
-  property_exists(t, SMACCM::Language) and
-  property_lookup(t, SMACCM::Language) = "Ivory"
-  
---component lists
-
-allProcesses : {process} = {x for (x : process) }
-allMemory : {memory} = {x for (x : memory) }
-allThreads : {thread} = {x for (x : thread) }
 
 --debugging
   
