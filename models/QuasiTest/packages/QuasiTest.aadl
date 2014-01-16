@@ -1,0 +1,125 @@
+package QuasiTest
+public
+with Base_Types;
+with QuasiTestProps;
+
+system Formation
+	features
+		left_shift: in data port Base_Types::Boolean;
+		right_shift: in data port Base_Types::Boolean;
+		leader: out data port Base_Types::Integer;
+		right: out data port Base_Types::Integer;
+		left: out data port Base_types::Integer;
+		
+	annex agree {**
+		
+		guarantee "leader in range" : leader >=0 and leader <= 2;
+		guarantee "right in range" : right >=0 and right <= 2;
+		guarantee "left in range" : left >=0 and left <= 2;
+		
+		guarantee "one of each" :
+			leader != right and right != left and left != leader;
+		
+		guarantee "left shift correctness":
+			left_shift =>
+				(true -> pre(left) = right and pre(leader) = left and pre(right) = leader);
+		
+		guarantee "right shift correctness":
+			right_shift =>
+				(true -> pre(right) = left and pre(left) = leader and pre(leader) = right);
+		
+		assume "not shifting both same" : not (left_shift and right_shift);
+		
+	**};
+		
+end Formation;
+
+system implementation Formation.impl
+	subcomponents
+		VA: system Vehicle {QuasiTestProps::Init_State => 0;};
+		VB: system Vehicle {QuasiTestProps::Init_State => 1;};
+		VC: system Vehicle {QuasiTestProps::Init_State => 2;};
+
+	connections
+		va_left : port left_shift -> VA.left_shift;
+		va_right : port right_shift -> VA.right_shift;
+		vb_left : port left_shift -> VB.left_shift;
+		vb_right : port right_shift -> VB.right_shift;
+		vc_left : port left_shift -> VC.left_shift;
+		vc_right : port right_shift -> VC.right_shift;
+		
+	annex agree {**
+		const leader_state : int = 0;
+		const left_state : int = 1;
+		const right_state : int = 2;
+		
+		assert leader = 
+			if VA.state = leader_state then
+				0
+			else if VB.state = leader_state then
+				1
+			else
+				2;
+				
+		assert right = 
+			if VA.state = right_state then
+				0
+			else if VB.state = right_state then
+				1
+			else
+				2;
+				
+		assert left = 
+			if VA.state = left_state then
+				0
+			else if VB.state = left_state then
+				1
+			else
+				2;
+		
+	**};
+
+
+end Formation.impl;
+
+
+system Vehicle
+	features
+		left_shift: in data port Base_Types::Boolean;
+		right_shift: in data port Base_Types::Boolean;
+		state: out data port Base_Types::Integer;
+
+	annex agree {**
+		
+		const leader : int = 0;
+		const left : int = 1;
+		const right : int = 2;
+		
+		const init_state : int = Get_Property(this, QuasiTestProps::Init_State);
+		
+		guarantee "leader position behavior":
+			((left_shift and pre(state) = leader) => state = left)
+			and
+			((right_shift and pre(state) = leader) => state = right);
+			
+		guarantee "left position behavior":
+			((left_shift and pre(state) = left) => state = right)
+			and
+			((right_shift and pre(state) = left) => state = leader);
+			
+		guarantee "right position behavior":
+			((left_shift and pre(state) = right) => state = leader)
+			and
+			((right_shift and pre(state) = right) => state = left);
+			
+		guarantee "initial state" : state = init_state -> true;
+		
+		guarantee "stationary behavior" : true ->
+			not (left_shift or right_shift) =>
+				state = pre(state);
+			
+	**};
+		
+end Vehicle;
+
+end QuasiTest;

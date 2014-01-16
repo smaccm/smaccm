@@ -1190,7 +1190,7 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         List<Expr> clocks = new ArrayList<>();
         List<VarDecl> outputs = new ArrayList<VarDecl>();
         List<VarDecl> internals = new ArrayList<VarDecl>();
-        List<String> properties = new ArrayList<String>();        
+        List<String> properties = new ArrayList<String>();
 
         List<Node> nodeSet = new ArrayList<Node>();
 
