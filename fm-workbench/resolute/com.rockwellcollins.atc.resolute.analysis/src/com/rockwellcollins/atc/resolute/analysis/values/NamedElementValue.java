@@ -7,7 +7,7 @@ import org.osate.aadl2.instance.ComponentInstance;
 import org.osate.aadl2.instance.FeatureInstance;
 
 public class NamedElementValue extends ResoluteValue {
-    final private NamedElement value;
+    final protected NamedElement value;
 
     public NamedElementValue(NamedElement value) {
         if (value == null) {

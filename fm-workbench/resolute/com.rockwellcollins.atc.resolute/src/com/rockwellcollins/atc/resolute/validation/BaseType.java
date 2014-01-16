@@ -7,7 +7,7 @@ public class BaseType extends ResoluteType {
     public static final BaseType BOOL = new BaseType("bool");
     public static final BaseType FAIL = new BaseType("fail");
     public static final BaseType RANGE = new BaseType("range");
-    
+
     public static final BaseType COMPONENT = new BaseType("component");
     public static final BaseType CONNECTION = new BaseType("connection");
     public static final BaseType PROPERTY = new BaseType("property");
@@ -29,7 +29,6 @@ public class BaseType extends ResoluteType {
     public static final BaseType VIRTUAL_PROCESSOR = new BaseType("virtual_processor");
     public static final BaseType FEATURE = new BaseType("feature");
 
-
     final public String name;
 
     public BaseType(String name) {
@@ -37,64 +36,14 @@ public class BaseType extends ResoluteType {
             throw new IllegalArgumentException();
         }
 
-        //do some type conversion for quantifier arguments
-        switch(name){
-        case "threads" :
-            this.name = "thread";
-            break;
-        case "thread_groups":
-            this.name = "thead_groups";
-            break;
-        case "processes":
-            this.name = "process";
-            break;
-        case "subprograms":
-            this.name = "subprogram";
-            break;
-        case "subprogram_groups":
-            this.name = "subprogram_group";
-            break;
-        case "processors":
-            this.name = "processor";
-            break;
-        case "virtual_processors":
-            this.name = "virtual_processor";
-            break;
-        case "buses":
-            this.name = "bus";
-            break;
-        case "virtual_buses":
-            this.name = "virtual_bus";
-            break;
-        case "devices":
-            this.name = "device";
-            break;
-        case "systems":
-            this.name = "system";
-            break;
-        case "abstracts":
-            this.name = "abstract";
-            break;
-        case "connections":
-            this.name = "connection";
-            break;
-        case "features":
-            this.name = "feature";
-            break;
-        case "components":
-            this.name = "component";
-            break;
-        default :
-            this.name = name;
-        }
-        
+        this.name = name;
     }
 
     @Override
     public String toString() {
         return name;
     }
-    
+
     @Override
     public boolean subtypeOf(ResoluteType otherType) {
         if (this.equals(FAIL) || otherType.equals(FAIL)) {
@@ -107,8 +56,7 @@ public class BaseType extends ResoluteType {
 
         if (otherType instanceof BaseType) {
             BaseType bt = (BaseType) otherType;
-            switch (bt.name) 
-            {
+            switch (bt.name) {
             case "component":
                 return subtypeOf(ABSTRACT) || subtypeOf(BUS) || subtypeOf(DATA)
                         || subtypeOf(DEVICE) || subtypeOf(MEMORY) || subtypeOf(PROCESSOR)
@@ -116,12 +64,13 @@ public class BaseType extends ResoluteType {
                         || subtypeOf(SUBPROGRAM) || subtypeOf(SYSTEM) || subtypeOf(THREAD_GROUP)
                         || subtypeOf(THREAD) || subtypeOf(VIRTUAL_BUS)
                         || subtypeOf(VIRTUAL_PROCESSOR);
-            
+
             case "feature":
-            	return subtypeOf (COMPONENT);
-            	
+                return subtypeOf(COMPONENT);
+
             case "aadl":
-                return subtypeOf(COMPONENT) || subtypeOf(CONNECTION) || subtypeOf(PROPERTY) || subtypeOf(FEATURE);
+                return subtypeOf(COMPONENT) || subtypeOf(CONNECTION) || subtypeOf(PROPERTY)
+                        || subtypeOf(FEATURE);
 
             default:
                 return false;
@@ -161,14 +110,11 @@ public class BaseType extends ResoluteType {
     public boolean equals(Object obj) {
         if (obj instanceof BaseType) {
             BaseType bt = (BaseType) obj;
-            if (this.name.equals("feature"))
-            {
-            	return ((bt.name.equals("feature")) || (bt.name.equals("component")));
+            if (this.name.equals("feature")) {
+                return ((bt.name.equals("feature")) || (bt.name.equals("component")));
             }
             return bt.name.equals(name);
         }
-        
-        
 
         return false;
     }
