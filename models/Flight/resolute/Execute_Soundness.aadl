@@ -3,31 +3,19 @@ package Execute_Soundness
     with SMACCM;    
     annex resolute {**
 
---component lists
-
-allProcesses : {process} = {x for (x : process) }
-allMemory : {memory} = {x for (x : memory) }
-allThreads : {thread} = {x for (x : thread) }
-
-connected_comps_via_cc(x : component) : {component} =
-	{conn_source(c) for (c : x.connections) | command_channel(c)}
-
-only_receive_gs(x : component) <= 
-  ** x " only receives messages from the Ground Station" **
-  only_gs_encrypt() and memory_protected_system() and only_receive_decrypt(x, singleton(x))
+execute_soundness() <= 
+  ** "The UAV motors only execute commands from the Ground Station" **
+  only_gs_encrypt() and motors_only_receive_decrypt()
 
 only_gs_encrypt() <= 
-  ** "Only the Ground Station can send messages that pass Decrypt" ** 
-  authenticated_encryption(encrypt_algorithm1) and 
-  authenticated_encryption(encrypt_algorithm2) and  
+  ** "Only the Ground Station can send commands that pass decrypt" **
+  let algo1 : string =
+    property_lookup(flight_gen::decryptTask_uart5, SMACCM::Encryption_Algorthim);
+  let algo2 : string =
+    property_lookup(flight_gen::decryptTask_uart1, SMACCM::Encryption_Algorthim);
+  algo1 = algo2 and
+  authenticated_encryption(algo1) and  
   private_key()
-
--- The encryption algorithm used by the Ground Station and Decrypt is e.
-encrypt_algorithm1 : string =
-  property_lookup(flight_gen::decryptTask_uart5, SMACCM::Encryption_Algorthim) 
-  
-encrypt_algorithm2 : string =
-  property_lookup(flight_gen::decryptTask_uart1, SMACCM::Encryption_Algorthim) 
 
 authenticated_encryption(e : string) <=
   ** "The encryption algorithm " e " is strong and authenticated. "
@@ -36,7 +24,11 @@ authenticated_encryption(e : string) <=
 
 private_key() <=
   ** "The encryption key is private to the UAV and Ground Station" **
-  key_randomly_generated() and gs_private_key() and transmit_private_key() and uav_private_key()
+  key_randomly_generated() and
+  gs_private_key() and
+  transmit_private_key() and
+  uav_private_key() and
+  uav_private_key_unchanged()
 
 key_randomly_generated() <=
   ** "The encryption key is randomly generated and cannot be guessed" **
@@ -51,83 +43,107 @@ transmit_private_key() <=
   true
  
 uav_private_key() <=
-
   ** "The UAV does not leak the encryption key" ** 
   true
-	
-only_receive_decrypt(x : component, v : {component}) <=
-	** "The component " x " only receives messages that pass Decrypt" **
-	forall(z : connected_comps_via_cc(x)).
-	(not (z in v)) => 
-		  data_or_thread(z)
-		  and 
-          ((class_of(z, flight_gen::decryptTask_uart1) or class_of(z, flight_gen::decryptTask_uart5)) 
-           	or (only_receive_decrypt(z, v union connected_comps_via_cc(x))))
-
-data_or_thread(x : component) <=
-	** "component " x "is a processes, thread or data component." **
-	is_thread(x) or is_data(x) 
-	
--- The connection c potentially carries commands
--- Non command datatypes must be explicitly whitelisted here
-command_channel(c : connection) : bool =
-  (not has_type(c)) or
-  (type(c) <> DATATYPES::Magnetometer_Data and
-   type(c) <> DATATYPES::Barometric_Data and
-   type(c) <> DATATYPES::Motion_Data and
-   type(c) <> DATATYPES::Battery_Data and
-   type(c) <> DATATYPES::GPS_Data and
-   type(c) <> DATATYPES::Reset_Data -- and
-   --type(c) <> DATATYPES::Flight_Control_Commands -- this is the ppm type
-  )
-
-
-unalterable_channel(c : connection) <=
-  ** "The connection " c " delivers data without alteration" **
-  (is_process(conn_source(c)) => memory_protected(conn_source(c)))
-  and
-  (is_process(conn_dest(c)) => memory_protected(conn_dest(c)))
   
- 
--- The connection c delivers data without alteration.
--- "contained" means write permissions
---unalterable_channel(c : connection) <=
---  ** "The connection " c " delivers data without alteration" **
---  (exists (p1 : allProcesses) (p2 : allProcesses). 
---        conn_source(c) = p1 
---    and conn_dest(c) = p2
---    and p1 <> p2
---    and memory_protected(p1) 
---    and memory_protected(p2))
---  or
---  (exists (p : allProcesses).
---  	contained(conn_source(c), p) and
---  	contained(conn_dest(c), p) and
---  	memory_protected(p))
- 
-memory_protected_system() <=
-  ** "Every processes is memory protected" **
-  forall(p : process) . memory_protected(p)
+uav_private_key_unchanged() <=
+  ** "The encryption key is unmodified while on the UAV" **
+  true
 
-memory_protected(p : component) <=
-  ** "The memory of process " p " is protected from alterations by other processes" **
-  property_lookup(p, SMACCM::OS) = "SeL4" or
-  (property_lookup(p, SMACCM::OS) = "Breakaway-RTOS" and
-   forall (mem : allMemory). bound(p, mem) =>
-     forall (q : allProcesses). bound(q, mem) => memory_safe_process(q))
+MOTORS : {component} = instances(PX4IOAR::Motor)
+MAIN_LOOP : component = instance(flight_gen::flight_gen_process)
 
-memory_safe_process(p : process) <=
-  ** "The process " p " only writes to its own memory space" **
-  forall (t : allThreads). contained(t, p) => memory_safe_thread(t)
+motors_only_receive_decrypt() <=
+	** "The UAV motors only execute commands that pass decrypt" **
+	motors_only_receive_from_mainloop(MAIN_LOOP) and
+	all_commands_to_mainloop_pass_decrypt_before_motors(MAIN_LOOP)
+	
+-- TODO: What should we say about non-data port connections?
+motors_only_receive_from_mainloop(mainloop : component) <=
+	** "The UAV motors only receive commands from " mainloop **
+	forall (m : MOTORS).
+	  forall (c : m.connections).
+	    is_data_port(c) => comes_from_mainloop(c, mainloop)
 
-memory_safe_thread(t : thread) <=
-  ** "The thread " t " only writes to its own memory space" **
-  ivory_thread(t)
+comes_from_mainloop(c : connection, mainloop : component) <=
+	** c " comes from " mainloop **
+	 subcomponent_of(conn_source(c), mainloop)
+
+all_commands_to_mainloop_pass_decrypt_before_motors(mainloop : component) <=
+  ** "All commands to " mainloop " pass decrypt before reaching UAV motors" **
+  all_inputs_decrypt_or_sensors(mainloop)
+	
+all_inputs_decrypt_or_sensors(mainloop : component) <=
+    ** "All inputs to " mainloop " are sensor data or pass decrypt before reaching UAV motors" **
+	forall (f : mainloop.features).
+	    is_incomming(f, mainloop) =>
+	      is_sensor_data(f) or feature_confined_to_decrypt(f, mainloop)
+
+is_incomming(f : feature, x : component) : bool =
+  exists (c : connections(f)). subcomponent_of(conn_dest(c), x)
+
+is_sensor_data(f : feature) <=
+  ** f " only receives sensor data" **
+  has_type(f) and
+  (type(f) = DATATYPES::Magnetometer_Data or
+   type(f) = DATATYPES::Barometric_Data or
+   type(f) = DATATYPES::Motion_Data or
+   type(f) = DATATYPES::Motion_Data.Impl or
+   type(f) = DATATYPES::Battery_Data or
+   type(f) = DATATYPES::GPS_Data or
+   type(f) = DATATYPES::Reset_Data)
+
   
-ivory_thread(t : thread) <=
-  ** "The thread " t " is generated from Ivory" **
-  property_exists(t, SMACCM::Language) and
-  property_lookup(t, SMACCM::Language) = "Ivory"
+feature_confined_to_decrypt(f : feature, mainloop : component) <=
+  ** "Commands to " f " pass through decrypt before reaching the UAV motors" **
+  forall (c : connections(f)).
+    subcomponent_of(conn_dest(c), mainloop) =>
+      component_confined_to_decrypt(conn_dest(c), mainloop)
+      
+component_confined_to_decrypt(c : component, mainloop : component) <=
+  ** "Commands to " c " pass through decrypt before reaching the UAV motors" **
+  let reach : {component} = predecrypt_reach(c, mainloop);
+    component_confined_to_decrypt_by_set(c, reach)
+    
+predecrypt_reach(c : component, mainloop : component) : {component} =
+  recursive_predecrypt_reach(singleton(c))
+  
+recursive_predecrypt_reach(curr : {component}) : {component} =
+  let next : {component} = curr union next_predecrypt_reach(curr);
+  if next = curr then
+    curr
+  else
+    recursive_predecrypt_reach(next)
+   
+next_predecrypt_reach(curr : {component}) : {component} =
+  {conn_dest(conn) for (x : curr) (conn : x.connections) |
+	conn_source(conn) = x and not is_decrypt(x)}
+
+is_decrypt(comp : component) : bool =
+  class_of(comp, flight_gen::decryptTask_uart1) or
+  class_of(comp, flight_gen::decryptTask_uart5)
+
+component_confined_to_decrypt_by_set(x : component, reach : {component}) <=
+  ** "Commands to " x " not passing through decrypt are confined and "
+     "cannot reach UAV motors. Confinement set: " reach **
+  forall (y : reach). cannot_reach_UAV_motors(y)
+
+cannot_reach_UAV_motors(x : component) <=
+  ** x " cannot communicate directly to UAV motors" **
+  forall (conn : x.connections).
+    conn_source(conn) = x => not (conn_dest(conn) in MOTORS)
+
+--debugging
+  
+print_empty() <= ** "" ** true
+
+print_aadl(a : aadl) <=
+  ** a **
+  true
+  
+print_set(s : {aadl}) <=
+  ** s **
+  true
   
 **};
     

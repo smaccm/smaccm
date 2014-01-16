@@ -19,13 +19,7 @@ all_features_bound() <=
 conn_eq_feat(comp : component) <=
 	** "All the features of component " comp " are connected" **
 	(forall(x : comp.features) . (feat_is_connected(x) or feat_is_unimplemented(x)))
-	
-num_connections(comp : component) : int =
-	sum({1 for (x : comp.connections)})	
-	 
-num_features(comp : component) : int =
-	sum({ 1 for (x : comp.features)})
-	
+
 feat_is_connected(feat : feature) <= 
 	** "The feature: " feat " is connected" **
 	is_connected(feat) and print_connections(connections(feat))

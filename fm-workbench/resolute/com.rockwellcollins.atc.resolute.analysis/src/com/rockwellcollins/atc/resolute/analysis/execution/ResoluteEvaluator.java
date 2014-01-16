@@ -33,6 +33,7 @@ import org.osate.aadl2.StringLiteral;
 import org.osate.aadl2.instance.ComponentInstance;
 import org.osate.aadl2.instance.ConnectionInstance;
 import org.osate.aadl2.instance.ConnectionInstanceEnd;
+import org.osate.aadl2.instance.ConnectionKind;
 import org.osate.aadl2.instance.ConnectionReference;
 import org.osate.aadl2.instance.FeatureCategory;
 import org.osate.aadl2.instance.FeatureInstance;
@@ -265,11 +266,9 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
 
         if (setName.equals("connections")) {
             Set<ConnectionInstance> connSet = new HashSet<ConnectionInstance>();
-            // if (compInst.getCategory() == ComponentCategory.THREAD) {
             for (FeatureInstance feature : compInst.getFeatureInstances()) {
                 addAllFeatureGroupConns(feature, connSet);
             }
-            // }
 
             for (ConnectionInstance conn : compInst.getSrcConnectionInstances()) {
                 connSet.add(conn);
@@ -892,6 +891,18 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
                 throw new ResoluteFailException("Failed to find instance of declarative element",
                         object);
             }
+        }
+        
+        case "instances": {
+            NamedElement decl = argVals.get(0).getNamedElement();
+            SystemInstance top = context.getThisInstance().getSystemInstance();
+            Set<NamedElementValue> result = new HashSet<>();
+            for (ComponentInstance ci : top.getAllComponentInstances()) {
+                if (isInstanceOf(ci, decl)) {
+                    result.add(new NamedElementValue(ci));
+                }
+            }
+            return new SetValue(result);
         }
 
         case "is_bidirectional": {
