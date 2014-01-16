@@ -24,6 +24,7 @@ package edu.umn.cs.crisys.smaccm.aadl2rtos.gluecode;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -235,9 +236,15 @@ public class SourceWriter extends AbstractCodeWriter {
 	    }
 	    ThreadInstance ti = r.getThreadInstances().get(0);
 	    ThreadInstancePort tip = new ThreadInstancePort(ti, r.getDestinationPort());
-      out.append(ind + tip.getVarName() + " += 1; \n"); 
-	    out.append(ind + "rtos_irq_event_raise(" + 
-	        r.getIrqSignalDefine() + ");\n");
+        if (model.getISRType() == Model.ISRType.SignalingISR) {
+		    out.append(ind + tip.getVarName() + " += 1; \n"); 
+		    out.append(ind + "rtos_irq_event_raise(" + 
+		        r.getIrqSignalDefine() + ");\n");
+        } else if (model.getISRType() == Model.ISRType.InThreadContextISR) {
+        	out.append(ind + r.getTowerHandlerName() + "();\n");
+        } else {
+        	throw new Aadl2RtosException("Unknown ISR Type for ISR: " + r.getIrqSignalName());
+        }
 	    out.append(ind + "return true;\n");
 	    out.append("}\n\n");
 	  }
@@ -305,7 +312,22 @@ public class SourceWriter extends AbstractCodeWriter {
 	
 	private void writeThreadImplMainFunctions() throws IOException {
 
-		for (ThreadImplementation tw : allThreads) {
+		
+		List<ThreadImplementation> threads;
+//		if (model.getISRType() == Model.ISRType.SignalingISR) {
+			threads = allThreads;
+//		} else if (model.getISRType() == Model.ISRType.InThreadContextISR) {
+//			threads = new ArrayList<ThreadImplementation>();
+//			for (ThreadImplementation ti : allThreads) {
+//				if (!ti.isISRThread()) {
+//					threads.add(ti);
+//				}
+//			}
+//		} else {
+//			throw new Aadl2RtosException("Error: unknonwn ISR type: " + model.getISRType().toString());
+//		}
+				
+		for (ThreadImplementation tw : threads) {
 			out.append("void " + tw.getGeneratedEntrypoint() + "(/*int threadID*/) \n");
 			out.append("{\n");
 
@@ -660,7 +682,7 @@ public class SourceWriter extends AbstractCodeWriter {
   }
   
   private void writeAllSharedVars() throws IOException {
-    writeComment("Shared variables for port-to-port communication.");
+    writeComment("Shared variables for port-to-port communication.\n");
     for (ThreadInstancePort c: this.model.getAllThreadInstanceInputPorts()) {
       writeThreadInstancePortSharedVars(c);
     }

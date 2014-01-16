@@ -21,8 +21,7 @@ public class InterruptServiceRoutine {
   /*
    * TODO: We need to refactor the port hierarchy so that we can create an 
    * OutputInterruptServiceRoutine port.  It is quite different from other 
-   * ports.  However, in the mean time, we will "fake" an output event port with 
-   * a null thread owner and a null datatype.  The 
+   * ports.   
    * 
    */
   
@@ -61,6 +60,10 @@ public class InterruptServiceRoutine {
   
   public String getHandlerName() {
 	  return "smaccm_" + handlerName;
+  }
+  
+  public String getTowerHandlerName() {
+	  return handlerName;
   }
   
   public String getIrqSignalName() {

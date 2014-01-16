@@ -179,8 +179,21 @@ public class AadlModelParser {
 		this.model.sharedDataList = new ArrayList<SharedData>(this.sharedDataMap.values());
 	}
 
+	// here is where the performance bottleneck is.
 	private void initializeThreadImplMap() {
 		threadImplementationMap = new HashMap<ThreadTypeImpl, ThreadImplementation>(threadTypeImplList.size());
+
+		// map component instances to implementations.
+		HashMap<ThreadTypeImpl, List<ComponentInstance>> 
+			threadImplToInstanceMap = new HashMap<ThreadTypeImpl, List<ComponentInstance>>(); 
+		for (ComponentInstance co : threadInstanceList) {
+			// String threadType = co.getComponentClassifier().getName().toString();
+			ThreadTypeImpl threadType = (ThreadTypeImpl)co.getComponentClassifier(); 
+			if (!threadImplToInstanceMap.containsKey(threadType)) {
+				threadImplToInstanceMap.put(threadType, new ArrayList<ComponentInstance>());
+			} 
+			threadImplToInstanceMap.get(threadType).add(co);
+		}
 
 		for (ThreadTypeImpl tti : threadTypeImplList) {
 			String threadImplName = tti.getName();
@@ -192,12 +205,11 @@ public class AadlModelParser {
 				this.model.legacySemaphoreList.addAll(lti.getLegacySemaphores());
 			} else {
 				ThreadImplementation threadImplementation = new ThreadImplementation(tti);
-
-				for (ComponentInstance co : threadInstanceList) {
-					String threadType = co.getComponentClassifier().getName().toString();
-	
-					// Fixed.
-					if (threadType.equalsIgnoreCase(threadImplName)) {
+				if (!threadImplToInstanceMap.containsKey(tti)) {
+					throw new Aadl2RtosException("Unable to find any thread instances for implementation: " + tti.getName()) ; 
+				}
+				else {
+					for (ComponentInstance co: threadImplToInstanceMap.get(tti)) {
 						ThreadInstance instance = new ThreadInstance(threadImplementation);
 						threadImplementation.addThreadInstance(instance);
 						this.threadInstanceMap.put(co, instance);
@@ -540,35 +552,36 @@ public class AadlModelParser {
 		for (ComponentInstance ci : components) {
 			ComponentCategory category = ci.getCategory();
 
-			if (category == ComponentCategory.ABSTRACT) {
-				abstractInstances.add(ci);
-			} else if (category == ComponentCategory.BUS) {
-				busInstances.add(ci);
-			} else if (category == ComponentCategory.DATA) {
-				dataInstances.add(ci);
-			} else if (category == ComponentCategory.DEVICE) {
-				deviceInstances.add(ci);
-			} else if (category == ComponentCategory.MEMORY) {
-				memoryInstances.add(ci);
-			} else if (category == ComponentCategory.PROCESS) {
-				processInstances.add(ci);
-			} else if (category == ComponentCategory.PROCESSOR) {
-				processorInstances.add(ci);
-			} else if (category == ComponentCategory.SUBPROGRAM) {
-				subprogramInstances.add(ci);
-			} else if (category == ComponentCategory.SUBPROGRAM_GROUP) {
-				subprogramGroupInstances.add(ci);
-			} else if (category == ComponentCategory.SYSTEM) {
-				systemInstances.add(ci);
-			} else if (category == ComponentCategory.THREAD) {
+			if (category == ComponentCategory.THREAD) {
 				threadInstanceList.add(ci);
-			} else if (category == ComponentCategory.THREAD_GROUP) {
-				threadGroupInstances.add(ci);
-			} else if (category == ComponentCategory.VIRTUAL_BUS) {
-				virtualBusInstances.add(ci);
-			} else if (category == ComponentCategory.VIRTUAL_PROCESSOR) {
-				virtualProcessorInstances.add(ci);
 			}
+//			if (category == ComponentCategory.ABSTRACT) {
+//				abstractInstances.add(ci);
+//			} else if (category == ComponentCategory.BUS) {
+//				busInstances.add(ci);
+//			} else if (category == ComponentCategory.DATA) {
+//				dataInstances.add(ci);
+//			} else if (category == ComponentCategory.DEVICE) {
+//				deviceInstances.add(ci);
+//			} else if (category == ComponentCategory.MEMORY) {
+//				memoryInstances.add(ci);
+//			} else if (category == ComponentCategory.PROCESS) {
+//				processInstances.add(ci);
+//			} else if (category == ComponentCategory.PROCESSOR) {
+//				processorInstances.add(ci);
+//			} else if (category == ComponentCategory.SUBPROGRAM) {
+//				subprogramInstances.add(ci);
+//			} else if (category == ComponentCategory.SUBPROGRAM_GROUP) {
+//				subprogramGroupInstances.add(ci);
+//			} else if (category == ComponentCategory.SYSTEM) {
+//				systemInstances.add(ci);
+//			} else if (category == ComponentCategory.THREAD_GROUP) {
+//				threadGroupInstances.add(ci);
+//			} else if (category == ComponentCategory.VIRTUAL_BUS) {
+//				virtualBusInstances.add(ci);
+//			} else if (category == ComponentCategory.VIRTUAL_PROCESSOR) {
+//				virtualProcessorInstances.add(ci);
+//			}
 		}
 	}
 

@@ -63,6 +63,11 @@ public class ThreadImplementationBase {
 		return generatedEntrypoint;
 	}
 
+	public boolean isISRThread() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 	
 	
 }

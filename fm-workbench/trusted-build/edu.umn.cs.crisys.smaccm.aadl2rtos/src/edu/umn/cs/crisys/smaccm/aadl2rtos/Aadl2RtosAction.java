@@ -83,6 +83,8 @@ public class Aadl2RtosAction extends AadlAction {
 			InstantiateModel im = new InstantiateModel(new NullProgressMonitor(), getErrorManager());
 			URI uri = OsateResourceUtil.getInstanceModelURI(sysimpl);
 			Resource resource = OsateResourceUtil.getEmptyAaxl2Resource(uri);
+			
+			// Aha!  The big time sink is here!
 			SystemInstance si = im.createSystemInstance(sysimpl, resource);
 
 			// Now harvest the stuff we need from the OSATE AST.

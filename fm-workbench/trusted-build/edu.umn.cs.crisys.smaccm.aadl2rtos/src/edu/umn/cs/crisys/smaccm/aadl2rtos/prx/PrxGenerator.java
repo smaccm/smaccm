@@ -1,5 +1,6 @@
 package edu.umn.cs.crisys.smaccm.aadl2rtos.prx;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -20,6 +21,7 @@ import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.InterruptServiceRoutine;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.LegacyExternalIRQ;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.LegacyIRQEvent;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.SharedData;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.ThreadImplementation;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.ThreadImplementationBase;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.ThreadInstance;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.ThreadInstancePort;
@@ -322,7 +324,21 @@ public class PrxGenerator {
 		e = doc.createElement("tasks");
 		parent.appendChild(e);
 		
-    List<ThreadImplementationBase> allTasks = model.getAllThreadImplementations();
+    List<ThreadImplementationBase> allTasks; 
+    
+//	if (model.getISRType() == Model.ISRType.SignalingISR) {
+	    allTasks = model.getAllThreadImplementations();
+//	} else if (model.getISRType() == Model.ISRType.InThreadContextISR) {
+//		allTasks = new ArrayList<ThreadImplementationBase>();
+//		for (ThreadImplementationBase ti : model.getAllThreadImplementations()) {
+//			if (!ti.isISRThread()) {
+//				allTasks.add(ti);
+//			}
+//		}
+//	} else {
+//		throw new Aadl2RtosException("Error: unknonwn ISR type: " + model.getISRType().toString());
+//	}
+
     int kochabLocation = 0;
     Collections.sort(allTasks, new PriorityComparator());
     for (ThreadImplementationBase i : allTasks) {

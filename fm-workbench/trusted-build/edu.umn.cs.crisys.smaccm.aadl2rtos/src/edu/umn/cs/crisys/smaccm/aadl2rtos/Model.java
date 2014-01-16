@@ -82,6 +82,9 @@ public class Model {
 	public enum CommMutualExclusionPrimitive {Semaphore, SuspendInterrupt} ; 
 	CommMutualExclusionPrimitive commMutexPrimitive = CommMutualExclusionPrimitive.SuspendInterrupt; 
 	
+	public enum ISRType {InThreadContextISR, SignalingISR} ; 
+	ISRType isrType = ISRType.InThreadContextISR; 
+	
 	// private Map<ThreadImplementation, Set<Pair<MyPort, MyPort>>> threadSourcePorts = new HashMap<ThreadImplementation, Set<Pair<MyPort, MyPort>>>();
 
 	// Model constructor
@@ -125,6 +128,9 @@ public class Model {
 		return this.commMutexPrimitive; 
 	}
 	
+	public ISRType getISRType() {
+		return this.isrType; 
+	}
 	
 	public void addSourceFile(String fileName) {
 	  this.sourceFiles.add(fileName);
@@ -168,6 +174,8 @@ public class Model {
     }
     return allTasks;
 	}
+	
+	
 	
 	public List<LegacyExternalIRQ> getLegacyExternalIRQs() {
 	  return this.legacyExternalIRQList;
