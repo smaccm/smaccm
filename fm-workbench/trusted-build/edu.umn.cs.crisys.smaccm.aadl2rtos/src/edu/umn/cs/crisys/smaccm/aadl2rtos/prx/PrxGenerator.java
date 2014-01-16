@@ -422,11 +422,13 @@ public class PrxGenerator {
 		for (String name : model.getLegacyMutexList()) {
 			  createMutexOrSemaphore(e, name, "mutex");
 		}
-		for (ThreadInstancePort i : instances) {
-		  createMutexOrSemaphore(e, i.getMutexName(), "mutex");
-		}
-		for (SharedData d : model.getSharedDataList()) {
-		  createMutexOrSemaphore(e, d.getMutexName(), "mutex");
+		if (model.getCommMutexPrimitive() == Model.CommMutualExclusionPrimitive.Semaphore) {
+			for (ThreadInstancePort i : instances) {
+			  createMutexOrSemaphore(e, i.getMutexName(), "mutex");
+			}
+			for (SharedData d : model.getSharedDataList()) {
+			  createMutexOrSemaphore(e, d.getMutexName(), "mutex");
+			}
 		}
 		e = doc.createElement("semaphores");
         parent.appendChild(e);

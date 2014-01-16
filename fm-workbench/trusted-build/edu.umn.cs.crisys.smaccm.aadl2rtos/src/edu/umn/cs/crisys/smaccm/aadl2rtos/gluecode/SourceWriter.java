@@ -88,10 +88,13 @@ public class SourceWriter extends AbstractCodeWriter {
 		//memcpy signature.
 		writeStupidMemcpy();
 		
+		out.append("void ivory_echronos_begin_atomic();\n");
+		out.append("void ivory_echronos_end_atomic();\n\n");
+		
 		if (model.getThreadCalendar().hasDispatchers()) {
 		  writeInitializePX4SystickInterrupt() ;
 		}
-		defineMutexes();
+		// defineMutexes();
     writeAllSharedVars();
     
     if (model.getThreadCalendar().hasDispatchers()) {
@@ -240,13 +243,6 @@ public class SourceWriter extends AbstractCodeWriter {
 	  }
 	}
 	
-	private void defineMutexes() throws IOException {
-//		for (String semaphore : semaphoreList) {
-//			out.append("sem_t " + semaphore + ";\n");
-//		}		
-		out.append("\n");
-	}
-
 	private void defineMainFunction() throws IOException {
 //		out.append("int main() {\n");
 //		out.append("    int result;\n");
@@ -395,7 +391,25 @@ public class SourceWriter extends AbstractCodeWriter {
 	 *   Can I find this code somewhere?
 	 */
 
-	
+   private void writeEnterCriticalSection(String ind, String mutexDefine) throws IOException {
+      // start critical section
+      if (model.getCommMutexPrimitive() == Model.CommMutualExclusionPrimitive.Semaphore) {
+    	  out.append(ind + rtosFnName("mutex_lock(") + mutexDefine + ");\n");
+      } else {
+    	  out.append(ind + "ivory_echronos_begin_atomic(); \n");
+      }
+   }
+
+   private void writeExitCriticalSection(String ind, String mutexDefine) throws IOException {
+      // finish critical section
+      if (model.getCommMutexPrimitive() == Model.CommMutualExclusionPrimitive.Semaphore) {
+    	  out.append(ind + rtosFnName("mutex_unlock(") + mutexDefine + ");\n");
+      } else {
+    	  out.append(ind + "ivory_echronos_end_atomic(); \n");
+      }
+   }
+      
+   
   private void writeIsEmpty(ThreadImplementation impl, MyPort inp) throws IOException {
     
     String fnName = Names.getInputQueueIsEmptyFnName(impl, inp);
@@ -420,9 +434,8 @@ public class SourceWriter extends AbstractCodeWriter {
       //int dstThreadId = c.getDestThreadInstance().getThreadId();
       MyPort destPort = tip.getPort();
       
-      // lock the semaphore
-      out.append(ind + rtosFnName("mutex_lock(") + tip.getMutexDefine() + ");\n");
-  
+      writeEnterCriticalSection(ind, tip.getMutexDefine());
+      
       if (destPort.isInputDataPort()) {
         out.append(ind + "result = false; \n");
       }
@@ -432,8 +445,9 @@ public class SourceWriter extends AbstractCodeWriter {
       else if (destPort.isInputEventDataPort()) {
          out.append(ind + "result = " + tip.getVarName() + "_is_empty();\n");
       }
+
       // unlock the semaphore
-      out.append(ind + rtosFnName("mutex_unlock(") + tip.getMutexDefine() + ");\n");
+      writeExitCriticalSection(ind, tip.getMutexDefine());
     }
     out.append(ind + "return result;\n");
     out.append("}\n\n");
@@ -484,8 +498,8 @@ public class SourceWriter extends AbstractCodeWriter {
       Type destPortType = destPort.getDataType();
       
       // lock the semaphore
-      out.append(ind + rtosFnName("mutex_lock(") + tip.getMutexDefine() + ");\n");
-  
+      writeEnterCriticalSection(ind, tip.getMutexDefine());
+      
       if (destPort.isInputDataPort()) {
         if (destPortType.isBaseType()) {
           out.append(ind + "*elem = " + tip.getVarName() + "; \n");
@@ -506,7 +520,7 @@ public class SourceWriter extends AbstractCodeWriter {
         out.append(ind + "result = " + tip.getVarName() + "_dequeue(elem);\n");
       }
       // unlock the semaphore
-      out.append(ind + rtosFnName("mutex_unlock(") + tip.getMutexDefine() + ");\n");
+      writeExitCriticalSection(ind, tip.getMutexDefine());
     }
     out.append(ind + "return result;\n");
     out.append("}\n\n");
@@ -520,13 +534,13 @@ public class SourceWriter extends AbstractCodeWriter {
         Names.createRefParameter(outp.getSharedData().getDataType(), "elem") + ") {\n\n");
     // unlock the semaphore
     out.append(ind + "bool result = true;\n\n");
-    out.append(ind + rtosFnName("mutex_lock(") + outp.getSharedData().getMutexDefine() + ");\n");
+    writeEnterCriticalSection(ind, outp.getSharedData().getMutexDefine()); 
     if (dt.isBaseType()) {
       out.append(ind + "*elem = " + sharedData.getVarName() + "; \n");
     } else {
       out.append(ind + this.readFromAadlMemcpy(dt, "elem", sharedData.getVarName()) + ";\n");
     }
-    out.append(ind + rtosFnName("mutex_unlock(") + outp.getSharedData().getMutexDefine() + ");\n");
+    writeExitCriticalSection(ind, outp.getSharedData().getMutexDefine()); 
     out.append(ind + "return result;\n");
     out.append("}\n\n");
   }
@@ -707,7 +721,7 @@ public class SourceWriter extends AbstractCodeWriter {
         */
         
         // lock the semaphore
-        out.append(ind + rtosFnName("mutex_lock(") + tip.getMutexDefine() + ");\n");
+        writeEnterCriticalSection(ind, tip.getMutexDefine());
     
         if (destPort.isInputDataPort()) {
           if (destPortType.isBaseType()) {
@@ -736,8 +750,7 @@ public class SourceWriter extends AbstractCodeWriter {
         }
         
         // unlock the semaphore
-        out.append(ind + rtosFnName("mutex_unlock(") + tip.getMutexDefine() + ");\n");
-        
+        writeExitCriticalSection(ind, tip.getMutexDefine());
       }
     }
     out.append(ind + "return result;\n");
@@ -752,13 +765,14 @@ public class SourceWriter extends AbstractCodeWriter {
     out.append("const " + Names.createRefParameter(outp.getSharedData().getDataType(), "elem") + ") {\n\n");
     // unlock the semaphore
     out.append(ind + "bool result = true;\n\n");
-    out.append(ind + rtosFnName("mutex_lock(") + outp.getSharedData().getMutexDefine() + ");\n");
+    writeEnterCriticalSection(ind, outp.getSharedData().getMutexDefine());
     if (dt.isBaseType()) {
       out.append(ind + sharedData.getVarName() + " = *elem; \n");
     } else {
       out.append(ind + 
           this.writeToAadlMemcpy(dt, sharedData.getVarName(), "elem") + ";\n");
     }    
+    writeExitCriticalSection(ind, outp.getSharedData().getMutexDefine());
     out.append(ind + "return result;\n");
     out.append("}\n\n");
   }

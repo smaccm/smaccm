@@ -71,12 +71,16 @@ public class Model {
 	List<LegacyExternalIRQ> legacyExternalIRQList = new ArrayList<LegacyExternalIRQ>();
 	List<LegacyIRQEvent> legacyIRQEventList = new ArrayList<LegacyIRQEvent>();
 	List<ExternalIRQ> externalIRQList = new ArrayList<ExternalIRQ>();
-	boolean generateSystickIRQ;
 	List<Connection> connectionList = new ArrayList<Connection>(); 
 	
 	// type stuff
 	Set<DataClassifier> dataTypes = new HashSet<DataClassifier>();
 	Map<String, Type> astTypes = new HashMap<String, Type>();
+	
+	boolean generateSystickIRQ;
+	
+	public enum CommMutualExclusionPrimitive {Semaphore, SuspendInterrupt} ; 
+	CommMutualExclusionPrimitive commMutexPrimitive = CommMutualExclusionPrimitive.SuspendInterrupt; 
 	
 	// private Map<ThreadImplementation, Set<Pair<MyPort, MyPort>>> threadSourcePorts = new HashMap<ThreadImplementation, Set<Pair<MyPort, MyPort>>>();
 
@@ -116,6 +120,11 @@ public class Model {
 	public List<String> getLibraryFiles()  {
 		return this.libraryFiles; 
 	}
+	
+	public CommMutualExclusionPrimitive getCommMutexPrimitive() {
+		return this.commMutexPrimitive; 
+	}
+	
 	
 	public void addSourceFile(String fileName) {
 	  this.sourceFiles.add(fileName);
