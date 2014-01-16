@@ -466,7 +466,7 @@ public class SourceWriter extends AbstractCodeWriter {
     if (inp.isInputEventPort()) {
       out.append(") {\n\n");  
     } else {
-      out.append((new PointerType(argType)).getCType().varString("elem") + ") {\n\n");
+      out.append(Names.createRefParameter(argType, "elem") + ") {\n\n");
     }
     // create function result variable.
     out.append(ind + "bool result = true;\n\n");
@@ -572,7 +572,6 @@ public class SourceWriter extends AbstractCodeWriter {
     // Write is_full function
     out.append("bool " + queueName + "_is_full() {\n");
     out.append(ind + "return (" + tail + " == " + head + ") && (" + isFullName + ");\n");
-    out.append(ind + "}\n");
     out.append("}\n\n");
 
     // Write is_empty function
