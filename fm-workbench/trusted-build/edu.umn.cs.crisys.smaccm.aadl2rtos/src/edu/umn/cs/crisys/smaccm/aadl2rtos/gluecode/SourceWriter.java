@@ -91,6 +91,8 @@ public class SourceWriter extends AbstractCodeWriter {
 		
 		out.append("void ivory_echronos_begin_atomic();\n");
 		out.append("void ivory_echronos_end_atomic();\n\n");
+		out.append("uint64_t timer_get_ticks();\n\n");
+		out.append("uint32_t smaccm_get_time_in_ms() {return (uint32_t)(timer_get_ticks() / 1000ULL); }\n\n");
 		
 		if (model.getThreadCalendar().hasDispatchers()) {
 		  writeInitializePX4SystickInterrupt() ;
@@ -305,8 +307,8 @@ public class SourceWriter extends AbstractCodeWriter {
 	
 	private void writeThreadPeriodicDispatcher(Dispatcher d) throws IOException {
     for (ExternalHandler handler: d.getExternalHandlerList()) {
-      out.append(Util.ind(3) + "millis_from_sys_start += " + Integer.toString(d.getPeriod()) + ";\n");
-      out.append(Util.ind(3) + handler.getHandlerName() + "(/*threadID*/ millis_from_sys_start);\n");
+      //out.append(Util.ind(3) + "millis_from_sys_start += " + Integer.toString(d.getPeriod()) + ";\n");
+      out.append(Util.ind(3) + handler.getHandlerName() + "(/*threadID, */ smaccm_get_time_in_ms());\n");
     }	  
 	} 
 	
@@ -331,7 +333,7 @@ public class SourceWriter extends AbstractCodeWriter {
 			out.append("void " + tw.getGeneratedEntrypoint() + "(/*int threadID*/) \n");
 			out.append("{\n");
 
-			out.append(Util.ind(1) + "uint32_t millis_from_sys_start = 0;\n");
+			// out.append(Util.ind(1) + "uint32_t millis_from_sys_start = 0;\n");
 
 			ExternalHandler initHandler = tw.getInitializeEntrypointOpt();
 			if (initHandler != null) {
