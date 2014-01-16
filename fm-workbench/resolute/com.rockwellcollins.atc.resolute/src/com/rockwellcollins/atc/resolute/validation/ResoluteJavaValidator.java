@@ -449,7 +449,7 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
             
         case "type":
         case "has_type":
-            expectedTypes.add(BaseType.CONNECTION);
+            expectedTypes.add(BaseType.AADL);
             break;
 
         case "bound":

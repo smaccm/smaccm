@@ -7,9 +7,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.osate.aadl2.instance.ConnectionInstance;
-import org.osate.aadl2.instance.FeatureCategory;
+import org.osate.aadl2.instance.ConnectionReference;
 import org.osate.aadl2.instance.FeatureInstance;
-import org.osate.aadl2.instance.InstanceObject;
 import org.osate.aadl2.instance.SystemInstance;
 
 import com.rockwellcollins.atc.resolute.analysis.values.ConnectionValue;
@@ -19,42 +18,16 @@ public class FeatureToConnectionsMap {
     
     public FeatureToConnectionsMap(SystemInstance sysInst) {
         for (ConnectionInstance connInst : sysInst.getAllConnectionInstances()) {
-            FeatureInstance prevFeat = null;
-            for (InstanceObject instObj : connInst.getThroughFeatureInstances()) {
-                if (instObj instanceof FeatureInstance) {
-                    FeatureInstance featInst = (FeatureInstance) instObj;
-                    // strange hack to handle feature groups... sorry...
-                    if (featInst.getCategory() == FeatureCategory.FEATURE_GROUP) {
-                        if (prevFeat == null
-                                || prevFeat.getCategory() == FeatureCategory.FEATURE_GROUP) {
-                            // mark all the features of this group as connected
-                            addAllSubFeatsToConnMap(featInst, connInst);
-                        } else {
-                            boolean found = false;
-                            for (FeatureInstance subFeat : featInst.getFeatureInstances()) {
-                                if (subFeat.getName().equals(prevFeat.getName())) {
-                                    add(subFeat, connInst);
-                                    found = true;
-                                    break;
-                                }
-                            }
-                            assert (found);
-                        }
-                    } else {
-                        add(featInst, connInst);
-                    }
-                    prevFeat = featInst;
+            for (ConnectionReference conRef : connInst.getConnectionReferences()) {
+                if (conRef.getSource() instanceof FeatureInstance) {
+                    FeatureInstance fi = (FeatureInstance) conRef.getSource();
+                    add(fi, connInst);
+                }
+                if (conRef.getDestination() instanceof FeatureInstance) {
+                    FeatureInstance fi = (FeatureInstance) conRef.getDestination();
+                    add(fi, connInst);
                 }
             }
-        }
-    }
-
-    private void addAllSubFeatsToConnMap(FeatureInstance feat, ConnectionInstance connInst) {
-        for (FeatureInstance subFeat : feat.getFeatureInstances()) {
-            addAllSubFeatsToConnMap(subFeat, connInst);
-        }
-        if (feat.getFeatureInstances().isEmpty()) {
-            add(feat, connInst);
         }
     }
 

@@ -4,14 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.osate.aadl2.instance.ComponentInstance;
-import org.osate.aadl2.instance.ConnectionInstance;
-import org.osate.aadl2.instance.ConnectionKind;
-
-import edu.umn.cs.crisys.smaccm.aadl2rtos.AstHelper;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.ArrayType;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.IntType;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.Type;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.util.Util;
 
 public class ThreadInstance {
   private static int threadIdCounter = 0;

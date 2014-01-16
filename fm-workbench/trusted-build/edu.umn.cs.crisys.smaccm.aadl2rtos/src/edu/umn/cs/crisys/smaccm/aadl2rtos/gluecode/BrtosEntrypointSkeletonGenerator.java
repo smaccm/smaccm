@@ -6,15 +6,11 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Logger;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.AstHelper;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Model;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.MyPort;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.ThreadImplementation;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.util.Pair;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.util.Util;
 
 // TODO: need to discuss where to place .c / .h files for User-provided thread functions
@@ -23,7 +19,7 @@ public class BrtosEntrypointSkeletonGenerator {
 	private Model model;
 	private SourceWriter sourceWriter;
 	private HeaderWriter headerWriter;
-	private AstHelper astHelper;
+	// private AstHelper astHelper;
 
 	private Logger log;
 	private List<MyPort> events;
@@ -36,9 +32,8 @@ public class BrtosEntrypointSkeletonGenerator {
 
 	// so write threadName_write_portName for each port.
 
-	public BrtosEntrypointSkeletonGenerator(Logger log, Model model, File dir, AstHelper astHelper) {
+	public BrtosEntrypointSkeletonGenerator(Logger log, Model model, File dir) {
 		this.log = log;
-		this.astHelper = astHelper;
 		this.model = model;
 		this.allThreads = model.getThreadImplementations();
 		// this.threadSourcePorts = model.getThreadSourcePorts();
@@ -88,12 +83,12 @@ public class BrtosEntrypointSkeletonGenerator {
 		try {
 			log.status("Writing AADL middleware header files...");
 			BufferedWriter hwriter = new BufferedWriter(new FileWriter(getHFile()));
-			this.headerWriter = new HeaderWriter(hwriter, CFile, HFile, model, astHelper);
+			this.headerWriter = new HeaderWriter(hwriter, CFile, HFile, model);
 			headerWriter.writeHeader();
 
 			log.status("Writing AADL middleware source files...");
 			BufferedWriter cwriter = new BufferedWriter(new FileWriter(getCFile()));
-			this.sourceWriter = new SourceWriter(cwriter, CFile, HFile, model, astHelper, events);
+			this.sourceWriter = new SourceWriter(cwriter, CFile, HFile, model, events);
 			sourceWriter.writeSource();
 
 			hwriter.close();

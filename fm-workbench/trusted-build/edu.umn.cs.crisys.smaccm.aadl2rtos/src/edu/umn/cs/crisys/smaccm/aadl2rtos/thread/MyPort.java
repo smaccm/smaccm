@@ -31,7 +31,7 @@ public class MyPort {
 
 	// TODO: refactor this into a proper hierarchy!
 	private ThreadImplementation owner = null;
-	private InterruptServiceRoutine isrOwner = null;
+	//private InterruptServiceRoutine isrOwner = null;
 	private Type dataType = null;
 	private PortType portType = null;
 	private PortCategory category = null;
@@ -53,7 +53,7 @@ public class MyPort {
 	public MyPort(InterruptServiceRoutine isr) {
 	  this.direction = DirectionType.OUT;
 	  this.portType = PortType.OUTPUT_ISR;
-	  this.isrOwner = isr;
+	  //this.isrOwner = isr;
 	  this.portName = "ISR_PORT";
 	  this.category = PortCategory.EVENT;
 	}

@@ -28,7 +28,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosException;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.AstHelper;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Model;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.ArrayType;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.IntType;
@@ -58,9 +57,8 @@ public class SourceWriter extends AbstractCodeWriter {
 			File CFile,
 			File HFile,
 			Model model,
-			AstHelper astHelper,
 			List<MyPort> events) {
-		super(out, CFile, HFile, model, astHelper);
+		super(out, CFile, HFile, model);
 		// this.semaphoreList = model.getSemaphores();
 	}
 

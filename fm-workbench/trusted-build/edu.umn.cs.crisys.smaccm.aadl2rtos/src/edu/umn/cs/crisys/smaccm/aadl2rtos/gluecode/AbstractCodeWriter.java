@@ -12,10 +12,6 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.osate.aadl2.DataClassifier;
-import org.osate.aadl2.impl.PortImpl;
-
-import edu.umn.cs.crisys.smaccm.aadl2rtos.AstHelper;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Model;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.Type;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.ThreadImplementation;
@@ -26,7 +22,6 @@ public abstract class AbstractCodeWriter {
 	protected File HFile;
 	protected BufferedWriter out;
 
-	protected AstHelper astHelper;
 	protected Model model;
 	protected String sysInstanceName;
 
@@ -35,14 +30,13 @@ public abstract class AbstractCodeWriter {
 	protected List<ThreadImplementation> allThreads = new ArrayList<ThreadImplementation>();
 
 	public AbstractCodeWriter(BufferedWriter out, File CFile, File HFile,
-			Model model, AstHelper astHelper) {
+			Model model) {
 		this.out = out;
 		this.CFile = CFile;
 		this.HFile = HFile;
 		this.model = model;
-		this.astHelper = astHelper;
 		this.sysInstanceName = model.getSystemInstance().getName();
-		this.astTypesEntrySet = astHelper.getAstTypes().entrySet();
+		this.astTypesEntrySet = model.getAstTypes().entrySet();
 		this.allThreads = model.getThreadImplementations();
 	}
 
@@ -74,10 +68,12 @@ public abstract class AbstractCodeWriter {
 		return getRtosPrefix() + postfix;
 	}
 
+	/*
 	protected Type getType(PortImpl impl) {
 		if (impl == null) {
 			return null;
 		}
 		return astHelper.lookupType((DataClassifier) impl.getClassifier());
-	}
+	} */
+	
 }

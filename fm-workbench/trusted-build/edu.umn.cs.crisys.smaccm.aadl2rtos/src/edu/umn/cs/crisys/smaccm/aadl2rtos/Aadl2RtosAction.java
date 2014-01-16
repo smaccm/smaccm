@@ -57,7 +57,6 @@ import org.w3c.dom.Document;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.gluecode.BrtosEntrypointSkeletonGenerator;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.gluecode.MakefileWriter;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.prx.PrxGenerator;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.SharedData;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.util.Util;
 
 public class Aadl2RtosAction extends AadlAction {
@@ -87,29 +86,15 @@ public class Aadl2RtosAction extends AadlAction {
 			SystemInstance si = im.createSystemInstance(sysimpl, resource);
 
 			// Now harvest the stuff we need from the OSATE AST.
-			AadlModelParser parser = new AadlModelParser(sysimpl, si, logger);
-			Model model = new Model(sysimpl, si, 
-			                        parser.getThreadImplementationMap(), 
-			                        parser.getConnectionList(), 
-			                        parser.getISRList(), 
-			                        parser.getThreadCalendar(), 
-			                        parser.getSourceFileNames(), 
-			                        parser.getLibraryFileNames(),
-			                        new ArrayList<SharedData>(parser.getDataMap().values()),
-			                        parser.getLegacyThreadList(),
-			                        parser.getLegacyMutexList(),
-			                        parser.getLegacySemaphoreList(),
-			                        parser.getLegacyExternalIRQList(), 
-			                        parser.getLegacyIRQEventList(),
-			                        parser.getExternalIRQList(),
-			                        parser.getSystickGenerateIRQ());
+			Model model = new Model(sysimpl, si);
 			
-			// This thing has to go!
-			AstHelper astHelper = parser.getAstHelper();
-
+			// AadlModelParser initializes the Model class from the OSATE hierarchy
+			// (it is a factory).
+			new AadlModelParser(sysimpl, si, model, logger);
+			
 			// Print out C skeletons
 			File dir = Util.getDirectory(sysimpl);
-			BrtosEntrypointSkeletonGenerator gen = new BrtosEntrypointSkeletonGenerator(log, model, dir, astHelper);
+			BrtosEntrypointSkeletonGenerator gen = new BrtosEntrypointSkeletonGenerator(log, model, dir);
 			gen.write();
 
 			// Print out the .prx file

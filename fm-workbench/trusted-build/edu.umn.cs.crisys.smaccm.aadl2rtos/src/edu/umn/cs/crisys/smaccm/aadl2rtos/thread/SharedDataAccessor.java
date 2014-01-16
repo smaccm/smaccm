@@ -3,7 +3,6 @@
  */
 package edu.umn.cs.crisys.smaccm.aadl2rtos.thread;
 
-import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.Type;
 
 /**
  * @author Whalen

@@ -204,7 +204,7 @@ public class MakefileWriter {
         "# \"LICENSE\" for more information.\n" + 
         "#\n" + 
         "\n" + 
-        "OUT_DIR := " + outputDirectory + "\n" + 
+        "OUT_DIR := " + outputDirectory + "/\n" + 
         "CONFIG_TOOLCHAIN := cortex-m4\n" + 
         "CONFIG_CORTEX_M4_PREFIX := arm-none-eabi-\n" + 
         "CONFIG_BOARD := px4\n" + 

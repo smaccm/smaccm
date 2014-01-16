@@ -23,23 +23,25 @@ package edu.umn.cs.crisys.smaccm.aadl2rtos;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.eclipse.emf.common.util.EList;
 import org.osate.aadl2.Classifier;
 import org.osate.aadl2.ComponentCategory;
 import org.osate.aadl2.ComponentImplementation;
 import org.osate.aadl2.DataClassifier;
+import org.osate.aadl2.DataSubcomponent;
 import org.osate.aadl2.Element;
 import org.osate.aadl2.EnumerationLiteral;
 import org.osate.aadl2.Feature;
 import org.osate.aadl2.SystemImplementation;
 import org.osate.aadl2.impl.DataAccessImpl;
+import org.osate.aadl2.impl.DataImplementationImpl;
+import org.osate.aadl2.impl.DataPortImpl;
 import org.osate.aadl2.impl.DataSubcomponentImpl;
+import org.osate.aadl2.impl.DataTypeImpl;
 import org.osate.aadl2.impl.PortImpl;
 import org.osate.aadl2.impl.SubcomponentImpl;
 import org.osate.aadl2.impl.ThreadSubcomponentImpl;
@@ -52,6 +54,13 @@ import org.osate.aadl2.instance.SystemInstance;
 import org.osate.xtext.aadl2.properties.util.PropertyUtils;
 
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Logger;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.ArrayType;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.BoolType;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.FloatEnum;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.IdType;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.IntType;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.RealType;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.RecordType;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.Type;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.*;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.Dispatcher.DispatcherType;
@@ -63,7 +72,6 @@ import edu.umn.cs.crisys.smaccm.aadl2rtos.util.Util;
 public class AadlModelParser {
 	private SystemImplementation systemImplementation;
 	private SystemInstance systemInstance;
-	private AstHelper astHelper;
 
 	// containers for AADL AST objects
 	private ArrayList<ThreadTypeImpl> threadTypeImplList;
@@ -92,46 +100,31 @@ public class AadlModelParser {
 	// TODO: Thread names do not have to be globally unique: 
 	private Map<ThreadTypeImpl, ThreadImplementation> threadImplementationMap;
 	private Map<DataSubcomponentImpl, SharedData> sharedDataMap = 
-	    new HashMap<DataSubcomponentImpl, SharedData>();
-	
+	    new HashMap<DataSubcomponentImpl, SharedData>();	
 	private HashMap<PortImpl, MyPort> portMap = new HashMap<PortImpl, MyPort>();
-	private HashSet<String> sourceFileNames = new HashSet<String>();
-	private List<String> libraryFileNames = new ArrayList<String>();	
-	private ArrayList<Connection> connectionList;
-	private ArrayList<InterruptServiceRoutine> isrList = new ArrayList<InterruptServiceRoutine>();
-	private List<String> legacyMutexList = new ArrayList<String>();
-	private List<String> legacySemaphoreList = new ArrayList<String>();
-	private ThreadCalendar calendar = new ThreadCalendar();
 	
 	// Instance map
 	private Map<ComponentInstance, ThreadInstance> threadInstanceMap;
-
-	// legacy / eChronos integration
-	private List<LegacyThreadImplementation> legacyThreadList; 
-	private List<LegacyExternalIRQ> legacyExternalIRQList = new ArrayList<LegacyExternalIRQ>();
-	private List<LegacyIRQEvent> legacyIRQEventList = new ArrayList<LegacyIRQEvent>();
-	private List<ExternalIRQ> externalIRQList = new ArrayList<ExternalIRQ>();
-	private boolean generateSystickIRQ = true; 
+	
+	//
+	private Model model;
 	
 	private Logger logger;
 	
 	// Model constructor
-	public AadlModelParser(SystemImplementation sysimpl, SystemInstance si, Logger logger) {
+	public AadlModelParser(SystemImplementation sysimpl, SystemInstance si, Model model, Logger logger) {
 		this.systemImplementation = sysimpl;
 		this.systemInstance = si;
 		this.logger = logger;
+		this.model = model;
 		
 		// re-init the counters.
 		Connection.init();
 		ThreadInstance.init();
 		MyPort.init();
 		
-		legacyThreadList = new ArrayList<LegacyThreadImplementation>();
-		
 		threadTypeImplList = new ArrayList<ThreadTypeImpl>();
 		threadInstanceList = new ArrayList<ComponentInstance>();
-		connectionList = new ArrayList<Connection>();
-		// threadSourcePorts = new HashMap<ThreadImplementation, Set<Pair<MyPort, MyPort>>>();
 		threadInstanceMap = new HashMap<ComponentInstance, ThreadInstance>();
 		
 		// Connection instances
@@ -157,12 +150,9 @@ public class AadlModelParser {
 		findTopLevelComponentInstances(systemInstance);
 		findAllSourceTexts(systemImplementation); 
 		
-		// Initialize AST helper
-		astHelper = new AstHelper(threadTypeImplList);
-
 		// create the SystickIRQ value, if it exists.
 		try {
-		  this.generateSystickIRQ = PropertyUtils.getBooleanValue(systemImplementation, ThreadUtil.GENERATE_SCHEDULER_SYSTICK_IRQ);
+		  this.model.generateSystickIRQ = PropertyUtils.getBooleanValue(systemImplementation, ThreadUtil.GENERATE_SCHEDULER_SYSTICK_IRQ);
 		} catch (Exception e) {}
 		
 		// Initialize thread implementations
@@ -179,11 +169,14 @@ public class AadlModelParser {
 		
 		// grab all files referenced in the model.
 		initializeFiles();
-		
 		initializeLegacyIRQs();
 		
-		// Harvest model data
-		astHelper.harvestModelData();
+		// Harvest model type data
+		harvestModelTypeData();
+		
+		// initialize the model thread and shared data lists.
+		this.model.threadImplementationList = new ArrayList<ThreadImplementation>(this.threadImplementationMap.values());
+		this.model.sharedDataList = new ArrayList<SharedData>(this.sharedDataMap.values());
 	}
 
 	private void initializeThreadImplMap() {
@@ -193,12 +186,12 @@ public class AadlModelParser {
 			String threadImplName = tti.getName();
 			
 			if (ThreadUtil.getLegacyValue(tti)) {
-				LegacyThreadImplementation lti = new LegacyThreadImplementation(tti, astHelper); 
-				this.legacyThreadList.add(lti);
-				this.legacyMutexList.addAll(lti.getLegacyMutexes());
-				this.legacySemaphoreList.addAll(lti.getLegacySemaphores());
+				LegacyThreadImplementation lti = new LegacyThreadImplementation(tti); 
+				this.model.legacyThreadList.add(lti);
+				this.model.legacyMutexList.addAll(lti.getLegacyMutexes());
+				this.model.legacySemaphoreList.addAll(lti.getLegacySemaphores());
 			} else {
-				ThreadImplementation threadImplementation = new ThreadImplementation(tti, astHelper);
+				ThreadImplementation threadImplementation = new ThreadImplementation(tti);
 
 				for (ComponentInstance co : threadInstanceList) {
 					String threadType = co.getComponentClassifier().getName().toString();
@@ -217,7 +210,7 @@ public class AadlModelParser {
           String handler = threadImplementation.getISRHandlerName();
           InterruptServiceRoutine isr = 
                new InterruptServiceRoutine(signal, handler);
-          this.isrList.add(isr);
+          this.model.isrList.add(isr);
           List<String> handlerList = new ArrayList<String>();
           handlerList.add(handler);
           MyPort destPort = new MyPort("smaccm_isr_input_port", 
@@ -227,7 +220,7 @@ public class AadlModelParser {
           isr.setDestinationPort(destPort);
           for (ThreadInstance ti: threadImplementation.getThreadInstanceList()) {
             Connection c_fake = new Connection(null, ti, isr.getOutputPort(), destPort);
-            this.connectionList.add(c_fake);
+            this.model.connectionList.add(c_fake);
             destPort.addConnection(c_fake);
             isr.addThreadInstance(ti);
           }
@@ -279,11 +272,11 @@ public class AadlModelParser {
 	    for (Dispatcher d: i.getDispatcherList()) {
 	      for (ExternalHandler h: d.getExternalHandlerList()) {
 	        if (h.getHandlerFileName() != null) {
-	          this.sourceFileNames.add(h.getHandlerFileName());
+	          this.model.sourceFiles.add(h.getHandlerFileName());
 	        }
 	      }
 	    }
-	    this.sourceFileNames.addAll(i.getFileNames());
+	    this.model.sourceFiles.addAll(i.getFileNames());
 	  }
 	  
     // create initializer handler, if it exists.
@@ -295,9 +288,9 @@ public class AadlModelParser {
 				logger.status("Referenced File: " + s);
 
 				if (s.endsWith(".a")) {
-					this.libraryFileNames.add(s);
+					this.model.libraryFiles.add(s);
 				} else {
-					this.sourceFileNames.add(s);
+					this.model.sourceFiles.add(s);
 				}
 			}
 		}
@@ -314,7 +307,7 @@ public class AadlModelParser {
 	    String name = it1.next();
 	    String handlerName = it1.next();
 	    LegacyExternalIRQ irq = new LegacyExternalIRQ(name, handlerName);
-	    this.legacyExternalIRQList.add(irq);
+	    this.model.legacyExternalIRQList.add(irq);
 	  }
 	  
 	  List<String> irqEventStrings = ThreadUtil.getLegacyIRQEventList(this.systemImplementation);
@@ -333,7 +326,7 @@ public class AadlModelParser {
 		      throw new Aadl2RtosException("Error: legacy IRQ event property: third argument of triple not a number.");
 		  }
 		  LegacyIRQEvent evt = new LegacyIRQEvent(eventName, taskName, signal);
-		  this.legacyIRQEventList.add(evt);
+		  this.model.legacyIRQEventList.add(evt);
 	  }
 	  
 	  List<String> externalIrqStrings = ThreadUtil.getExternalIRQList(this.systemImplementation);
@@ -351,7 +344,7 @@ public class AadlModelParser {
 			  throw new Aadl2RtosException("Error: External IRQ property: second argument of pair is not a number");
 		  }
 		  ExternalIRQ irq = new ExternalIRQ(externIrqName, externIrqNumber);
-		  this.externalIRQList.add(irq);
+		  this.model.externalIRQList.add(irq);
 	  }
 	}
 	
@@ -390,7 +383,7 @@ public class AadlModelParser {
   				dstThreadInstance.addIsDstOfConnection(conn);
   				sourcePort.addConnection(conn);
   				destPort.addConnection(conn);
-  				this.connectionList.add(conn);
+  				this.model.connectionList.add(conn);
 	      } else if (ci.getKind() == ConnectionKind.ACCESS_CONNECTION) {
           DataAccessImpl destAccessImpl = 
               PortUtil.getDataAccessImplFromConnectionInstanceEnd(ci.getDestination());
@@ -454,7 +447,7 @@ public class AadlModelParser {
 	  for (ThreadImplementation ti: this.threadImplementationMap.values()) {
 	    for (Dispatcher d: ti.getDispatcherList()) {
 	      if (d.getDispatcherType() == DispatcherType.PERIODIC_DISPATCHER) {
-	        calendar.addPeriodicDispatcher(d);
+	        this.model.threadCalendar.addPeriodicDispatcher(d);
 	      }
 	    }
 	  }
@@ -473,17 +466,17 @@ public class AadlModelParser {
     DataClassifier classifier = (DataClassifier) portImpl.getClassifier();
     String dcName = Util.normalizeAadlName(classifier);
 
-    if (!astHelper.astTypes.containsKey(dcName)) {
+    if (!this.model.astTypes.containsKey(dcName)) {
       System.out.println("Type not found: " + dcName + "\n");
     } 
-    dataType = astHelper.lookupType(classifier);
+    dataType = lookupType(classifier);
 
     return dataType;
 	}
 
 	private Type getDataType(DataSubcomponentImpl dataImpl) {
 	  DataClassifier classifier = (DataClassifier) dataImpl.getClassifier();
-	  return astHelper.lookupType(classifier);
+	  return lookupType(classifier);
 	}
 	
 	/*	
@@ -579,10 +572,6 @@ public class AadlModelParser {
 		}
 	}
 
-	public AstHelper getAstHelper() {
-		return astHelper;
-	}
-
   public Map<DataSubcomponentImpl, SharedData> getDataMap() {
     return this.sharedDataMap;
   }
@@ -591,50 +580,130 @@ public class AadlModelParser {
 		return threadImplementationMap;
 	}
 	
-	public List<InterruptServiceRoutine> getISRList() {
-	  return this.isrList;
+  
+	public Map<String, Type> getAstTypes() {
+		return this.model.astTypes;
 	}
-	
-	public List<Connection> getConnectionList() {
-	  return this.connectionList;
-	}
-	
-	public ThreadCalendar getThreadCalendar() {
-	  return this.calendar;
-	}
-	
-	public Set<String> getSourceFileNames() {
-	  return this.sourceFileNames;
-	}
-	
-	public List<String> getLibraryFileNames() {
-		return this.libraryFileNames;
-	}	
 
-	public List<LegacyThreadImplementation> getLegacyThreadList() {
-		return this.legacyThreadList;
+	public void harvestModelTypeData() {
+		// Collect thread data types
+		for (ThreadTypeImpl t : this.threadTypeImplList) {
+			collectDataTypes(t);
+		}
+
+		// create internal ast types from the AADL types
+		for (DataClassifier dc : this.model.dataTypes) {
+			Type t = createAstType(dc);
+			if (!t.isBaseType()) {
+				this.model.astTypes.put(Util.normalizeAadlName(dc), t);
+			}
+		}
+		for (Type t : this.model.astTypes.values()) {
+			t.init(this.model.astTypes);
+		}
 	}
-	public List<String> getLegacyMutexList() {
-		return this.legacyMutexList;
+
+	// find the data types associated with some "top level" element.
+	public void collectDataTypes(Element elem) {
+		if (elem instanceof DataPortImpl) {
+			DataPortImpl dpi = (DataPortImpl) elem;
+			Classifier dpiClass = dpi.getClassifier();
+
+			if (dpiClass instanceof DataTypeImpl || dpiClass instanceof DataImplementationImpl) {
+				this.model.dataTypes.add((DataClassifier) dpiClass);
+			}
+		}
+		for (Element child : elem.getChildren()) {
+			collectDataTypes(child);
+		}
 	}
-	
-	public List<String> getLegacySemaphoreList() {
-	  return this.legacySemaphoreList;
+
+	public Type lookupType(DataClassifier dc) {
+		String dcName = Util.normalizeAadlName(dc);
+		Type ty = createAstType(dc);
+		if (this.model.astTypes.containsKey(dcName)) {
+			return new IdType(dcName);
+		} else {
+			return ty;
+		}
 	}
-	
-	public List<LegacyExternalIRQ> getLegacyExternalIRQList() {
-	  return this.legacyExternalIRQList;
+
+	// what about the recursive aspect of this?
+	// So what we want is: for each subcomponent, record the field id and the
+	// type name.
+	public Type createAstType(DataClassifier dc) {
+		if (dc == null) {
+			return null;
+		}
+		String qualifiedName = dc.getQualifiedName();
+		String normalizedName = Util.normalizeAadlName(qualifiedName);
+
+		if (this.model.astTypes.containsKey(normalizedName)) {
+			return this.model.astTypes.get(normalizedName);
+		}
+
+		// base types defined by the data modeling annex
+		if ("Base_Types::Boolean".equals(qualifiedName)) {
+			return new BoolType();
+		} else if ("Base_Types::Integer_8".equals(qualifiedName)) {
+			return new IntType(8, true);
+		} else if ("Base_Types::Integer_16".equals(qualifiedName)) {
+			return new IntType(16, true);
+		} else if ("Base_Types::Integer_32".equals(qualifiedName)) {
+			return new IntType(32, true);
+		} else if ("Base_Types::Integer_64".equals(qualifiedName)) {
+			return new IntType(64, true);
+		} else if ("Base_Types::Unsigned_8".equals(qualifiedName)) {
+			return new IntType(8, false);
+		} else if ("Base_Types::Unsigned_16".equals(qualifiedName)) {
+			return new IntType(16, false);
+		} else if ("Base_Types::Unsigned_32".equals(qualifiedName)) {
+			return new IntType(32, false);
+		} else if ("Base_Types::Unsigned_64".equals(qualifiedName)) {
+			return new IntType(64, false);
+		} else if ("Base_Types::Float".equals(qualifiedName)) {
+			return new RealType(FloatEnum.SINGLE);			
+		} else if ("Base_Types::Float_32".equals(qualifiedName)) {
+			return new RealType(FloatEnum.SINGLE);
+		} else if ("Base_Types::Float_64".equals(qualifiedName)) {
+			return new RealType(FloatEnum.DOUBLE);
+		} else if ("Base_Types::Character".equals(qualifiedName)) {
+			throw new Aadl2RtosException("Character types are currently unsupported");
+		} else if ("Base_Types::String" == qualifiedName) {
+			throw new Aadl2RtosException("String types are currently unsupported");
+		} else if (dc instanceof DataTypeImpl) {
+		  DataTypeImpl dti = (DataTypeImpl)dc;
+			EnumerationLiteral el = Util.getDataRepresentationName(dti);
+			DataClassifier childDc = Util.getBaseType(dti);
+		  int size = Util.getDimension(dti);
+			Type childElem = createAstType(childDc); 
+			if ((el.getName()).equalsIgnoreCase("Array")) {
+			  return new ArrayType(childElem, size);
+			} else {
+			  throw new Aadl2RtosException("Examining type: " + dc.getFullName() + 
+			      " found unexpected representation type: '"+ el.getName() + "'; expecting 'Array'.");
+			}
+		} else if (dc instanceof DataImplementationImpl) {
+			RecordType rt = new RecordType();
+			DataImplementationImpl dii = (DataImplementationImpl) dc;
+
+			for (DataSubcomponent c : dii.getOwnedDataSubcomponents()) {
+				Classifier subClass = c.getClassifier();
+				if (subClass instanceof DataClassifier) {
+					Type subType = createAstType((DataClassifier) subClass);
+					rt.addField(c.getName(), subType);
+				} else {
+					throw new Aadl2RtosException(
+							"In createAstType: Subcomponent is not a data classifier");
+				}
+			}
+			this.model.astTypes.put(normalizedName, rt);
+			return rt;
+		} else {
+			throw new Aadl2RtosException(
+					"In createAstType: data classifier is not data type or data implementation");
+		}
 	}
-	
-	public List<LegacyIRQEvent> getLegacyIRQEventList() {
-	  return this.legacyIRQEventList;
-	}
-	
-	public List<ExternalIRQ> getExternalIRQList() {
-		return this.externalIRQList;
-	}
-	
-	public boolean getSystickGenerateIRQ() {
-	  return this.generateSystickIRQ;
-	}
+
+  
 }
