@@ -7,6 +7,7 @@ import java.util.List;
 
 import jkind.lustre.BinaryExpr;
 import jkind.lustre.BinaryOp;
+import jkind.lustre.BoolExpr;
 import jkind.lustre.Equation;
 import jkind.lustre.Expr;
 import jkind.lustre.IdExpr;
@@ -22,12 +23,13 @@ import jkind.lustre.VarDecl;
 
 public class AgreeCalendarUtils {
 
-    static private String dfaName;
+    static private String dfaName = null;
     
     static public Node getDFANode(String name, int synchrony){
         if(synchrony <= 0){
             throw new AgreeException("Attempt to use quasi-synchrony of value: "+synchrony);
         }
+        
         
         dfaName = name;
         
@@ -114,17 +116,33 @@ public class AgreeCalendarUtils {
         return new Node(dfaName, inputs, outputs, locals, equations, properties);
     }
     
-    static public Node getCalendarNode(String name, List<IdExpr> clks){
+    static public Node getCalendarNode(String name, int numClks){
+        
+        if(dfaName == null){
+            throw new AgreeException("Each call to getCalendarNode must be preeceded by a call to getDFANode");
+        }
         
         Node calendarNode;
         Expr nodeExpr = null;
+        String clkVarPrefix = "_clk_";
         IdExpr outVar = new IdExpr("_out");
+        
+        //make the inputs and outputs
+        List<VarDecl> inputs = new ArrayList<>();
+        List<IdExpr> clks = new ArrayList<>();
+        for(int i = 0; i < numClks; i++){
+            inputs.add(new VarDecl(clkVarPrefix+i, NamedType.BOOL));
+            clks.add(new IdExpr(clkVarPrefix+i));
+        }
+  
+        List<VarDecl> outputs = new ArrayList<>();
+        outputs.add(new VarDecl(outVar.id, NamedType.BOOL));
         
         for(int i = 0; i < clks.size()-1; i++){
             Expr clk0 = clks.get(i);
             for(int j = i+1; j < clks.size(); j++){
                 Expr clk1 = clks.get(j);
-                Expr dfaExpr = DFAExpr(clk0, clk1);
+                Expr dfaExpr = getDFAExpr(clk0, clk1);
                 if(nodeExpr == null){
                     nodeExpr = dfaExpr;
                 }else{
@@ -132,24 +150,41 @@ public class AgreeCalendarUtils {
                 }
             }
         }
-        
-        //make the inputs and outputs
-        List<VarDecl> inputs = new ArrayList<>();
-        
-        for(IdExpr clkId : clks){
-            inputs.add(new VarDecl(clkId.id, NamedType.BOOL));
-        }
-        
-        List<VarDecl> outputs = new ArrayList<>();
-        outputs.add(new VarDecl(outVar.id, NamedType.BOOL));
-        
+
         Equation nodeEq = new Equation(outVar, nodeExpr);
         calendarNode = new Node(name, inputs, outputs, new ArrayList<VarDecl>(), Collections.singletonList(nodeEq));
+        
+        dfaName = null;
         
         return calendarNode;
     }
     
-    static private Expr DFAExpr(Expr clk0, Expr clk1){
+    static public List<Equation> getAllClksHaveTicked(String name, String clkPref, List<Expr> clks){
+        
+        Expr result = new BoolExpr(true);
+        List<Equation> eqs = new ArrayList<>();
+        
+        int i = 0;
+        for(Expr clk : clks){
+            Equation clkHasTicked = getClkHasTicked(new IdExpr(clkPref+i), clk);
+            result = new BinaryExpr(result, BinaryOp.AND, clkHasTicked.lhs.get(0));
+            eqs.add(clkHasTicked);
+            i++;
+        }
+        eqs.add(new Equation(new IdExpr(name), result));
+        return eqs;
+        
+    }
+    
+    static public Equation getClkHasTicked(IdExpr clkTickedId, Expr clkExpr){
+        
+        // clkTickedID = clkExpr -> clkExpr or pre clkTickedId
+        Expr tickExpr = new BinaryExpr(clkExpr, BinaryOp.OR, new UnaryExpr(UnaryOp.PRE, clkTickedId));
+        
+        return new Equation(clkTickedId, new BinaryExpr(clkExpr, BinaryOp.ARROW, tickExpr));
+    }
+    
+    static private Expr getDFAExpr(Expr clk0, Expr clk1){
         return new NodeCallExpr(dfaName, clk0, clk1);
     }
     

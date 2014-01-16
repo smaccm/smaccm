@@ -99,6 +99,7 @@ import com.rockwellcollins.atc.agree.agree.RealLitExpr;
 import com.rockwellcollins.atc.agree.agree.SpecStatement;
 import com.rockwellcollins.atc.agree.agree.ThisExpr;
 import com.rockwellcollins.atc.agree.agree.util.AgreeSwitch;
+import com.rockwellcollins.atc.agree.analysis.AgreeLayout.SigType;
 
 public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
 
@@ -1215,9 +1216,14 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
             List<Expr> initOutputs = new ArrayList<>();
             List<Expr> nodeInputs = new ArrayList<>();
             List<IdExpr> nodeOutputs = new ArrayList<>();
-            Expr clockExpr = new IdExpr(agreeNode.clockVar.id);
+            IdExpr clockExpr = new IdExpr(agreeNode.clockVar.id);
             
             clocks.add(clockExpr);
+           
+            //make it so the clock is visible in the counter example
+            varRenaming.put(clockExpr.id, clockExpr.id);
+            refMap.put(clockExpr.id, subEmitter.curComp);
+            layout.addElement(subEmitter.category, clockExpr.id, SigType.INPUT);
             
             agreeInputVars.addAll(subEmitter.inputVars);
             agreeInternalVars.addAll(subEmitter.internalVars); 
@@ -1395,6 +1401,17 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
             layout.addElement(category, contractName, AgreeLayout.SigType.OUTPUT);
         }
 
+        //get the equations that guarantee that every clock has ticked atleast once
+        List<Equation> tickEqs = AgreeCalendarUtils.getAllClksHaveTicked("__ALL_TICKED", "__CLK_TICKED", clocks);
+        
+        //add all the new clock tick variables to the internal variables list
+        for(Equation eq : tickEqs){
+            internals.add(new VarDecl(eq.lhs.get(0).id, NamedType.BOOL));
+        }
+        
+        eqs.addAll(tickEqs);
+        IdExpr allClksTickedExpr = tickEqs.get(tickEqs.size()-1).lhs.get(0);
+        
         // create individual properties for guarantees
         int i = 0;
         for (Equation guar : guarExpressions) {
@@ -1403,6 +1420,7 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
             internals.add(new VarDecl(sysGuaranteesId.id, new NamedType("bool")));
 
             Expr totalSysGuarExpr = new BinaryExpr(sysAssumpHistId, BinaryOp.AND, totalCompHistId);
+            totalSysGuarExpr = new BinaryExpr(totalSysGuarExpr, BinaryOp.AND, allClksTickedExpr);
             totalSysGuarExpr = new BinaryExpr(totalSysGuarExpr, BinaryOp.IMPLIES, guar.expr);
 
             Equation finalGuar = new Equation(sysGuaranteesId, totalSysGuarExpr);
@@ -1431,13 +1449,28 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         layout.addElement(category, "Total Contract Consistants", AgreeLayout.SigType.OUTPUT);
 
         //create the assertions for the clocks
+        
+        Node dfaNode = AgreeCalendarUtils.getDFANode("__dfa_node", 2);
+        Node calNode = AgreeCalendarUtils.getCalendarNode("__calendar_node", clocks.size());
+        nodeSet.add(dfaNode);
+        nodeSet.add(calNode);
+
+       // Expr clockAssertion = new NodeCallExpr(calNode.id, clocks);
+        
+        //also assert that some clock ticks
+        Expr clockTickAssertion = new BoolExpr(false);
+        for(Expr expr : clocks){
+            clockTickAssertion = new BinaryExpr(expr, BinaryOp.OR, clockTickAssertion);
+        }
+
         Expr clockAssertion = new BoolExpr(true);
         for(Expr expr : clocks){
             clockAssertion = new BinaryExpr(expr, BinaryOp.AND, clockAssertion);
         }
-        
+
         List<Expr> assertions = new ArrayList<>();
         assertions.add(clockAssertion);
+        assertions.add(clockTickAssertion);
         
         Node topNode = new Node("_MAIN", inputs, outputs, internals, eqs, properties, assertions);
         nodeSet.add(topNode);

@@ -32,7 +32,7 @@ system Formation
 		
 	**};
 		
-end Formation;
+end Formation; 
 
 system implementation Formation.impl
 	subcomponents
@@ -41,12 +41,12 @@ system implementation Formation.impl
 		VC: system Vehicle {QuasiTestProps::Init_State => 2;};
 
 	connections
-		va_left : port left_shift -> VA.left_shift;
-		va_right : port right_shift -> VA.right_shift;
-		vb_left : port left_shift -> VB.left_shift;
-		vb_right : port right_shift -> VB.right_shift;
-		vc_left : port left_shift -> VC.left_shift;
-		vc_right : port right_shift -> VC.right_shift;
+		va_left : port left_shift -> VA.left_shift {Communication_Properties::Timing => immediate; };
+		va_right : port right_shift -> VA.right_shift {Communication_Properties::Timing => immediate; };
+		vb_left : port left_shift -> VB.left_shift {Communication_Properties::Timing => immediate; };
+		vb_right : port right_shift -> VB.right_shift {Communication_Properties::Timing => immediate; };
+		vc_left : port left_shift -> VC.left_shift {Communication_Properties::Timing => immediate; };
+		vc_right : port right_shift -> VC.right_shift {Communication_Properties::Timing => immediate; };
 		
 	annex agree {**
 		const leader_state : int = 0;
@@ -118,6 +118,8 @@ system Vehicle
 			not (left_shift or right_shift) =>
 				state = pre(state);
 			
+		guarantee "bounded state" :
+			state >= 0 and state <= 2;
 	**};
 		
 end Vehicle;
