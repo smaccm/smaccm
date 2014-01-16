@@ -1,7 +1,7 @@
 package QuasiTest
 public
 with Base_Types;
-with QuasiTestProps;
+with QuasiTestProps; 
 
 system Formation
 	features
