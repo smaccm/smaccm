@@ -44,6 +44,7 @@ import org.osate.aadl2.Property;
 import org.osate.aadl2.PropertyType;
 import org.osate.aadl2.Subcomponent;
 import org.osate.aadl2.impl.SubcomponentImpl;
+import org.osate.aadl2.instance.ComponentInstance;
 
 import com.rockwellcollins.atc.agree.agree.AgreeContract;
 import com.rockwellcollins.atc.agree.agree.AgreePackage;
@@ -54,6 +55,7 @@ import com.rockwellcollins.atc.agree.agree.AssumeStatement;
 import com.rockwellcollins.atc.agree.agree.BinaryExpr;
 import com.rockwellcollins.atc.agree.agree.BoolLitExpr;
 import com.rockwellcollins.atc.agree.agree.CallDef;
+import com.rockwellcollins.atc.agree.agree.ClockID;
 import com.rockwellcollins.atc.agree.agree.ConstStatement;
 import com.rockwellcollins.atc.agree.agree.EqStatement;
 import com.rockwellcollins.atc.agree.agree.Expr;
@@ -76,6 +78,8 @@ import com.rockwellcollins.atc.agree.agree.PreExpr;
 import com.rockwellcollins.atc.agree.agree.PrevExpr;
 import com.rockwellcollins.atc.agree.agree.PropertyStatement;
 import com.rockwellcollins.atc.agree.agree.RealLitExpr;
+import com.rockwellcollins.atc.agree.agree.SpecStatement;
+import com.rockwellcollins.atc.agree.agree.SynchStatement;
 import com.rockwellcollins.atc.agree.agree.ThisExpr;
 import com.rockwellcollins.atc.agree.agree.Type;
 import com.rockwellcollins.atc.agree.agree.UnaryExpr;
@@ -87,12 +91,21 @@ import com.rockwellcollins.atc.agree.agree.UnaryExpr;
  */
 public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
     private Set<CallDef> checkedRecCalls = new HashSet<>();
-
+    
     @Override
     protected boolean isResponsible(Map<Object, Object> context, EObject eObject) {
         return (eObject.eClass().getEPackage() == AgreePackage.eINSTANCE);
     }
 
+    @Check
+    public void checkSynchStatement(SynchStatement sync){
+        //TODO: I'm pretty sure INT_LITs are always positive anyway.
+        //So this may be redundant
+        if(Integer.valueOf(sync.getVal()) < 0){
+            error(sync, "The value of synchrony statments must be positive");
+        }
+    }
+    
     @Check
     public void checkAssume(AssumeStatement assume) {
         AgreeType exprType = getAgreeType(assume.getExpr());
@@ -101,7 +114,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
                     + "' but must be of type 'bool'");
         }
     }
-
+    
     @Check
     public void checkLift(LiftStatement lift) {
         NestedDotID dotId = lift.getSubcomp();
@@ -409,6 +422,20 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
             return;
         }
 
+        Set<SynchStatement> syncs = new HashSet<>();
+        //check that there are zero or more synchrony statments
+        for(SpecStatement spec : contract.getSpecs()){
+            if(spec instanceof SynchStatement){
+                syncs.add((SynchStatement)spec);
+            }
+        }
+        
+        if(syncs.size() > 1){
+            for(SynchStatement sync : syncs){
+                error(sync, "Multiple synchrony statements in a single contract");
+            }
+        }
+        
         Set<String> parentNames = getParentNames(ci);
         for (AgreeSubclause subclause : EcoreUtil2.getAllContentsOfType(ci, AgreeSubclause.class)) {
             List<NamedElement> es = EcoreUtil2.getAllContentsOfType(subclause, NamedElement.class);
@@ -1001,6 +1028,8 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
         } else if (expr instanceof RealLitExpr) {
             return REAL;
         } else if (expr instanceof BoolLitExpr) {
+            return BOOL;
+        } else if (expr instanceof ClockID){
             return BOOL;
         } else if (expr instanceof ThisExpr) {
             return new AgreeType("component");

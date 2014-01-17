@@ -59,6 +59,15 @@ public interface AgreeFactory extends EFactory
   SpecStatement createSpecStatement();
 
   /**
+   * Returns a new object of class '<em>Synch Statement</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Synch Statement</em>'.
+   * @generated
+   */
+  SynchStatement createSynchStatement();
+
+  /**
    * Returns a new object of class '<em>Call Def</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -165,6 +174,15 @@ public interface AgreeFactory extends EFactory
    * @generated
    */
   NestedDotID createNestedDotID();
+
+  /**
+   * Returns a new object of class '<em>Clock ID</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Clock ID</em>'.
+   * @generated
+   */
+  ClockID createClockID();
 
   /**
    * Returns a new object of class '<em>Contract Library</em>'.

@@ -68,6 +68,7 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
       case AgreePackage.AGREE_SUBCLAUSE: return createAgreeSubclause();
       case AgreePackage.CONTRACT: return createContract();
       case AgreePackage.SPEC_STATEMENT: return createSpecStatement();
+      case AgreePackage.SYNCH_STATEMENT: return createSynchStatement();
       case AgreePackage.CALL_DEF: return createCallDef();
       case AgreePackage.PROPERTY_STATEMENT: return createPropertyStatement();
       case AgreePackage.CONST_STATEMENT: return createConstStatement();
@@ -80,6 +81,7 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
       case AgreePackage.TYPE: return createType();
       case AgreePackage.EXPR: return createExpr();
       case AgreePackage.NESTED_DOT_ID: return createNestedDotID();
+      case AgreePackage.CLOCK_ID: return createClockID();
       case AgreePackage.AGREE_CONTRACT_LIBRARY: return createAgreeContractLibrary();
       case AgreePackage.AGREE_CONTRACT_SUBCLAUSE: return createAgreeContractSubclause();
       case AgreePackage.AGREE_CONTRACT: return createAgreeContract();
@@ -151,6 +153,17 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
   {
     SpecStatementImpl specStatement = new SpecStatementImpl();
     return specStatement;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public SynchStatement createSynchStatement()
+  {
+    SynchStatementImpl synchStatement = new SynchStatementImpl();
+    return synchStatement;
   }
 
   /**
@@ -283,6 +296,17 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
   {
     NestedDotIDImpl nestedDotID = new NestedDotIDImpl();
     return nestedDotID;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public ClockID createClockID()
+  {
+    ClockIDImpl clockID = new ClockIDImpl();
+    return clockID;
   }
 
   /**

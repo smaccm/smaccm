@@ -43,11 +43,15 @@ SpecStatement:
 	| {ParamStatement} 'parameter' expr=Expr ':' type=Type ';'
 	| {LemmaStatement} 'lemma' str=STRING ':' expr=Expr ';'
 	| {LiftStatement} 'lift' subcomp=NestedDotID ';'
+	| SynchStatement
 	| PropertyStatement
 	| ConstStatement
 	| EqStatement
 	| FnDefExpr
 	| NodeDefExpr;
+
+SynchStatement:
+	'synchrony' ':' val = INTEGER_LIT ';';
 
 NamedCallDef returns aadl2::NamedElement:
 	CallDef;
@@ -140,6 +144,7 @@ PreDefFnNames:
 
 TermExpr returns Expr:
 	{IdExpr} id=[aadl2::NamedElement|QID]
+	| ClockID
 	| NestedDotID ({FnCallExpr.fn=current} '(' (args+=Expr (',' args+=Expr)*)? ')')?
 	| {IntLitExpr} val=INTEGER_LIT
 	| {PreExpr} 'pre' '(' expr=Expr ')'
@@ -150,6 +155,9 @@ TermExpr returns Expr:
 
 NestedDotID:
 	base=[aadl2::NamedElement|ID] ('.' sub=NestedDotID)?;
+	
+ClockID:
+	comp=[aadl2::NamedElement|ID] '.' 'CLK';
 
 QID:
 	ID '::' ID;

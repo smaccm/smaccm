@@ -11,6 +11,7 @@ import com.rockwellcollins.atc.agree.agree.AssertStatement;
 import com.rockwellcollins.atc.agree.agree.AssumeStatement;
 import com.rockwellcollins.atc.agree.agree.BinaryExpr;
 import com.rockwellcollins.atc.agree.agree.BoolLitExpr;
+import com.rockwellcollins.atc.agree.agree.ClockID;
 import com.rockwellcollins.atc.agree.agree.ConstStatement;
 import com.rockwellcollins.atc.agree.agree.EqStatement;
 import com.rockwellcollins.atc.agree.agree.FnCallExpr;
@@ -33,6 +34,7 @@ import com.rockwellcollins.atc.agree.agree.PreExpr;
 import com.rockwellcollins.atc.agree.agree.PrevExpr;
 import com.rockwellcollins.atc.agree.agree.PropertyStatement;
 import com.rockwellcollins.atc.agree.agree.RealLitExpr;
+import com.rockwellcollins.atc.agree.agree.SynchStatement;
 import com.rockwellcollins.atc.agree.agree.ThisExpr;
 import com.rockwellcollins.atc.agree.agree.Type;
 import com.rockwellcollins.atc.agree.agree.UnaryExpr;
@@ -323,6 +325,34 @@ public class AgreeSemanticSequencer extends PropertiesSemanticSequencer {
 					return; 
 				}
 				else break;
+			case AgreePackage.CLOCK_ID:
+				if(context == grammarAccess.getAddSubExprRule() ||
+				   context == grammarAccess.getAddSubExprAccess().getBinaryExprLeftAction_1_0_0_0() ||
+				   context == grammarAccess.getAndExprRule() ||
+				   context == grammarAccess.getAndExprAccess().getBinaryExprLeftAction_1_0_0_0() ||
+				   context == grammarAccess.getArrowExprRule() ||
+				   context == grammarAccess.getArrowExprAccess().getBinaryExprLeftAction_1_0_0_0() ||
+				   context == grammarAccess.getClockIDRule() ||
+				   context == grammarAccess.getElementRule() ||
+				   context == grammarAccess.getEquivExprRule() ||
+				   context == grammarAccess.getEquivExprAccess().getBinaryExprLeftAction_1_0_0_0() ||
+				   context == grammarAccess.getExprRule() ||
+				   context == grammarAccess.getIfThenElseExprRule() ||
+				   context == grammarAccess.getImpliesExprRule() ||
+				   context == grammarAccess.getImpliesExprAccess().getBinaryExprLeftAction_1_0_0_0() ||
+				   context == grammarAccess.getMultDivExprRule() ||
+				   context == grammarAccess.getMultDivExprAccess().getBinaryExprLeftAction_1_0_0_0() ||
+				   context == grammarAccess.getOrExprRule() ||
+				   context == grammarAccess.getOrExprAccess().getBinaryExprLeftAction_1_0_0_0() ||
+				   context == grammarAccess.getPreDefFnExprRule() ||
+				   context == grammarAccess.getRelateExprRule() ||
+				   context == grammarAccess.getRelateExprAccess().getBinaryExprLeftAction_1_0_0_0() ||
+				   context == grammarAccess.getTermExprRule() ||
+				   context == grammarAccess.getUnaryExprRule()) {
+					sequence_ClockID(context, (ClockID) semanticObject); 
+					return; 
+				}
+				else break;
 			case AgreePackage.CONST_STATEMENT:
 				if(context == grammarAccess.getConstStatementRule() ||
 				   context == grammarAccess.getElementRule() ||
@@ -530,7 +560,7 @@ public class AgreeSemanticSequencer extends PropertiesSemanticSequencer {
 				   context == grammarAccess.getRelateExprRule() ||
 				   context == grammarAccess.getRelateExprAccess().getBinaryExprLeftAction_1_0_0_0() ||
 				   context == grammarAccess.getTermExprRule() ||
-				   context == grammarAccess.getTermExprAccess().getFnCallExprFnAction_1_1_0() ||
+				   context == grammarAccess.getTermExprAccess().getFnCallExprFnAction_2_1_0() ||
 				   context == grammarAccess.getUnaryExprRule()) {
 					sequence_NestedDotID(context, (NestedDotID) semanticObject); 
 					return; 
@@ -692,6 +722,14 @@ public class AgreeSemanticSequencer extends PropertiesSemanticSequencer {
 					return; 
 				}
 				else break;
+			case AgreePackage.SYNCH_STATEMENT:
+				if(context == grammarAccess.getElementRule() ||
+				   context == grammarAccess.getSpecStatementRule() ||
+				   context == grammarAccess.getSynchStatementRule()) {
+					sequence_SynchStatement(context, (SynchStatement) semanticObject); 
+					return; 
+				}
+				else break;
 			case AgreePackage.THIS_EXPR:
 				if(context == grammarAccess.getAddSubExprRule() ||
 				   context == grammarAccess.getAddSubExprAccess().getBinaryExprLeftAction_1_0_0_0() ||
@@ -807,6 +845,15 @@ public class AgreeSemanticSequencer extends PropertiesSemanticSequencer {
 	 *     (name=ID type=Type)
 	 */
 	protected void sequence_Arg(EObject context, Arg semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Constraint:
+	 *     comp=[NamedElement|ID]
+	 */
+	protected void sequence_ClockID(EObject context, ClockID semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
@@ -984,6 +1031,15 @@ public class AgreeSemanticSequencer extends PropertiesSemanticSequencer {
 	
 	/**
 	 * Constraint:
+	 *     val=INTEGER_LIT
+	 */
+	protected void sequence_SynchStatement(EObject context, SynchStatement semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Constraint:
 	 *     val=BooleanLiteral
 	 */
 	protected void sequence_TermExpr(EObject context, BoolLitExpr semanticObject) {
@@ -993,7 +1049,7 @@ public class AgreeSemanticSequencer extends PropertiesSemanticSequencer {
 	
 	/**
 	 * Constraint:
-	 *     ((fn=TermExpr_FnCallExpr_1_1_0 (args+=Expr args+=Expr*)?) | fn=TermExpr_FnCallExpr_1_1_0)
+	 *     ((fn=TermExpr_FnCallExpr_2_1_0 (args+=Expr args+=Expr*)?) | fn=TermExpr_FnCallExpr_2_1_0)
 	 */
 	protected void sequence_TermExpr(EObject context, FnCallExpr semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);

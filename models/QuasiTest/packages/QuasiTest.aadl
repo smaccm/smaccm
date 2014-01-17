@@ -49,9 +49,15 @@ system implementation Formation.impl
 		vc_right : port right_shift -> VC.right_shift {Communication_Properties::Timing => immediate; };
 		
 	annex agree {**
+		synchrony : 2; 
+		
 		const leader_state : int = 0;
 		const left_state : int = 1;
 		const right_state : int = 2;
+		
+		eq a_clk : bool = VA.CLK;
+		eq b_clk : bool = VB.CLK;
+		eq c_clk : bool = VC.CLK; 
 		
 		assert leader = 
 			if VA.state = leader_state then
