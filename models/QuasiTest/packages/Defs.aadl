@@ -1,0 +1,18 @@
+package Defs
+public
+
+annex agree{**
+	
+	node rising(signal : bool) returns (result : bool);
+	let
+		result = false -> pre(not signal) and signal;
+	tel;
+	
+	node falling(signal : bool) returns (result : bool);
+	let
+		result = false -> pre(signal) and (not signal);
+	tel;
+	
+**};
+
+end Defs;
