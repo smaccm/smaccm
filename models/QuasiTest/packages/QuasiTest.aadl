@@ -43,7 +43,25 @@ system Formation
 		guarantee "atomic pending shift leader":
 			(true -> pre(pend_leader) != 3 => (pre(pend_leader) != pend_leader => leader = pre(pend_leader)));
 		
-		assume "not shifting both same" : not (defs.rising(left_shift) and defs.rising(right_shift));
+		assume "not shifting both same" : not (left_shift and right_shift);
+				
+		assume "all components see left shift" :
+			true -> pre(defs.rising(left_shift)) => left_shift or 
+				((pend_leader != 3) and (pend_right != 3) and (pend_left != 3));
+				
+		assume "all components see right shift" :
+			true -> pre(defs.rising(right_shift)) => right_shift or 
+				((pend_leader != 3) and (pend_right != 3) and (pend_left != 3));
+				
+		assume "only shift if none pending" :
+			defs.rising(left_shift) or defs.rising(right_shift) => 
+				((pend_leader != 3) and (pend_right != 3) and (pend_left != 3));
+				
+				
+		eq count : int = 0 -> pre(count) + 1;
+		
+		assume "assume we do a shift right away" :
+			count = 1 => defs.rising(left_shift) or defs.rising(right_shift);
 		
 	**};
 		
@@ -72,7 +90,7 @@ system implementation Formation.impl
 	annex agree {**
 		-- This states that every subcomponent's clock ticks at most two 
 		-- times since any other subcomponent's clock ticks
-		synchrony : 0; 
+		synchrony : 1; 
 		
 		const leader_state : int = 0;
 		const left_state : int = 1;
@@ -209,7 +227,7 @@ system Vehicle
 				(pre(state) = pend_left and pre(neighbor_state0) != left and pre(neighbor_state1) != left)
 					 => state = left;
 					 
-		assume "not shifting both same" : not (defs.rising(left_shift) and defs.rising(right_shift));
+		assume "not shifting both same" : not (left_shift and right_shift);
 					 
 	**};
 		
