@@ -10,25 +10,40 @@ system Formation
 		leader: out data port Base_Types::Integer;
 		right: out data port Base_Types::Integer;
 		left: out data port Base_types::Integer;
+		pend_leader: out data port Base_Types::Integer;
+		pend_right: out data port Base_Types::Integer;
+		pend_left: out data port Base_types::Integer;
+		
 		
 	annex agree {**
+	
+		guarantee "leader in range" : leader >=0 and leader <= 3;
+		guarantee "right in range" : right >=0 and right <= 3;
+		guarantee "left in range" : left >=0 and left <= 3;
+		guarantee "pend_leader in range" : pend_leader >=0 and pend_leader <= 3;
+		guarantee "pend_right in range" : pend_right >=0 and pend_right <= 3;
+		guarantee "pend_left in range" : pend_left >=0 and pend_left <= 3;
 		
-		guarantee "leader in range" : leader >=0 and leader <= 2;
-		guarantee "right in range" : right >=0 and right <= 2;
-		guarantee "left in range" : left >=0 and left <= 2;
+		guarantee "no two pending in the same position" :
+			(pend_leader != 3 => pend_leader != pend_right and pend_leader != pend_left) and 
+			(pend_right != 3 => pend_leader != pend_right and pend_right != pend_left) and
+			(pend_left != 3 => pend_leader != pend_left and pend_right != pend_left);
+
+		guarantee "no two in the same final position" :
+			(leader != 3 => leader != right and leader != left) and
+			(right != 3 => right != leader and right != left) and
+			(left != 3 => left != leader and left != right);
+
+		guarantee "atomic pending shift right":
+			(true -> pre(pend_right) != 3 => (pre(pend_right) != pend_right => right = pre(pend_right)));
+			
+		guarantee "atomic pending shift left":
+			(true -> pre(pend_left) != 3 => (pre(pend_left) != pend_left => left = pre(pend_left)));
+			
+		guarantee "atomic pending shift leader":
+			(true -> pre(pend_leader) != 3 => (pre(pend_leader) != pend_leader => leader = pre(pend_leader)));
 		
-		guarantee "one of each" :
-			leader != right and right != left and left != leader;
-		
-		guarantee "left shift correctness":
-			left_shift =>
-				(true -> pre(left) = right and pre(leader) = left and pre(right) = leader);
-		
-		guarantee "right shift correctness":
-			right_shift =>
-				(true -> pre(right) = left and pre(left) = leader and pre(leader) = right);
-		
-		assume "not shifting both same" : not (left_shift and right_shift);
+		assume "not shifting both same" : not (defs.rising(left_shift) and defs.rising(right_shift));
 		
 	**};
 		
@@ -36,52 +51,102 @@ end Formation;
 
 system implementation Formation.impl
 	subcomponents
-		VA: system Vehicle {QuasiTestProps::Init_State => 0;};
-		VB: system Vehicle {QuasiTestProps::Init_State => 1;};
-		VC: system Vehicle {QuasiTestProps::Init_State => 2;};
+		VA: system Vehicle.impl {QuasiTestProps::Init_State => 0;};
+		VB: system Vehicle.impl {QuasiTestProps::Init_State => 1;};
+		VC: system Vehicle.impl {QuasiTestProps::Init_State => 2;};
 
 	connections
 		va_left : port left_shift -> VA.left_shift {Communication_Properties::Timing => immediate; };
 		va_right : port right_shift -> VA.right_shift {Communication_Properties::Timing => immediate; };
+		va_n0 : port VB.state -> VA.neighbor_state0 {Communication_Properties::Timing => immediate; };
+		va_n1 : port VC.state -> VA.neighbor_state1 {Communication_Properties::Timing => immediate; };
 		vb_left : port left_shift -> VB.left_shift {Communication_Properties::Timing => immediate; };
 		vb_right : port right_shift -> VB.right_shift {Communication_Properties::Timing => immediate; };
+		vb_n0 : port VA.state -> VB.neighbor_state0 {Communication_Properties::Timing => immediate; };
+		vb_n1 : port VC.state -> VB.neighbor_state1 {Communication_Properties::Timing => immediate; };
 		vc_left : port left_shift -> VC.left_shift {Communication_Properties::Timing => immediate; };
 		vc_right : port right_shift -> VC.right_shift {Communication_Properties::Timing => immediate; };
+		vc_n0 : port VA.state -> VC.neighbor_state0 {Communication_Properties::Timing => immediate; };
+		vc_n1 : port VB.state -> VC.neighbor_state1 {Communication_Properties::Timing => immediate; };
 		
 	annex agree {**
-		synchrony : 2; 
+		-- This states that every subcomponent's clock ticks at most two 
+		-- times since any other subcomponent's clock ticks
+		synchrony : 0; 
 		
 		const leader_state : int = 0;
 		const left_state : int = 1;
 		const right_state : int = 2;
+		const pend_leader_state : int = 3;
+		const pend_left_state : int = 4;
+		const pend_right_state : int = 5;
 		
+		-- This allows you to reference the clocks if you would like to
 		eq a_clk : bool = VA.CLK;
 		eq b_clk : bool = VB.CLK;
 		eq c_clk : bool = VC.CLK; 
+		
+		assert a_clk and b_clk and c_clk -> true;
 		
 		assert leader = 
 			if VA.state = leader_state then
 				0
 			else if VB.state = leader_state then
 				1
+			else if VC.state = leader_state then
+				2
 			else
-				2;
+				3;
+				
+		assert pend_leader = 
+			if VA.state = pend_leader_state then
+				0
+			else if VB.state = pend_leader_state then
+				1
+			else if VC.state = pend_leader_state then
+				2
+			else
+				3;
 				
 		assert right = 
 			if VA.state = right_state then
 				0
 			else if VB.state = right_state then
 				1
+			else if VC.state = right_state then
+				2
 			else
-				2;
+				3;
+		
+		assert pend_right = 
+			if VA.state = pend_right_state then
+				0
+			else if VB.state = pend_right_state then
+				1
+			else if VC.state = pend_right_state then
+				2
+			else
+				3;
 				
 		assert left = 
 			if VA.state = left_state then
 				0
 			else if VB.state = left_state then
 				1
+			else if VC.state = left_state then
+				2
 			else
-				2;
+				3;
+				
+		assert pend_left = 
+			if VA.state = pend_left_state then
+				0
+			else if VB.state = pend_left_state then
+				1
+			else if VC.state = pend_left_state then
+				2
+			else
+				3;
 		
 	**};
 
@@ -93,6 +158,8 @@ system Vehicle
 	features
 		left_shift: in data port Base_Types::Boolean;
 		right_shift: in data port Base_Types::Boolean;
+		neighbor_state0: in data port Base_Types::Integer;
+		neighbor_state1: in data port Base_Types::Integer;
 		state: out data port Base_Types::Integer;
 
 	annex agree {**
@@ -100,34 +167,90 @@ system Vehicle
 		const leader : int = 0;
 		const left : int = 1;
 		const right : int = 2;
+		const pend_leader : int = 3;
+		const pend_left : int = 4;
+		const pend_right : int = 5;
 		
 		const init_state : int = Get_Property(this, QuasiTestProps::Init_State);
 		
 		guarantee "leader position behavior":
-			((left_shift and pre(state) = leader) => state = left)
+			((defs.rising(left_shift) and pre(state) = leader) => state = pend_left)
 			and
-			((right_shift and pre(state) = leader) => state = right);
+			((defs.rising(right_shift) and pre(state) = leader) => state = pend_right);
 			
 		guarantee "left position behavior":
-			((left_shift and pre(state) = left) => state = right)
+			((defs.rising(left_shift) and pre(state) = left) => state = pend_right)
 			and
-			((right_shift and pre(state) = left) => state = leader);
+			((defs.rising(right_shift) and pre(state) = left) => state = pend_leader);
 			
 		guarantee "right position behavior":
-			((left_shift and pre(state) = right) => state = leader)
+			((defs.rising(left_shift) and pre(state) = right) => state = pend_leader)
 			and
-			((right_shift and pre(state) = right) => state = left);
+			((defs.rising(right_shift) and pre(state) = right) => state = pend_left);
 			
 		guarantee "initial state" : state = init_state -> true;
 		
 		guarantee "stationary behavior" : true ->
-			not (left_shift or right_shift) =>
+			not (defs.rising(left_shift) or defs.rising(right_shift)) and pre(state) <= 2 =>
 				state = pre(state);
 			
-		guarantee "bounded state" :
-			state >= 0 and state <= 2;
+		guarantee "state leader transition behavior" :
+			true -> 
+				(pre(state) = pend_leader and pre(neighbor_state0) != leader and pre(neighbor_state1) != leader)
+					 => state = leader;
+					 
+		guarantee "state right transition behavior" :
+			true -> 
+				(pre(state) = pend_right and pre(neighbor_state0) != right and pre(neighbor_state1) != right)
+					 => state = right;
+					 
+		guarantee "state left transition behavior" :
+			true -> 
+				(pre(state) = pend_left and pre(neighbor_state0) != left and pre(neighbor_state1) != left)
+					 => state = left;
+					 
+		assume "not shifting both same" : not (defs.rising(left_shift) and defs.rising(right_shift));
+					 
 	**};
 		
 end Vehicle;
+
+system implementation Vehicle.impl
+
+	annex agree {**
+		
+		assert state = (init_state -> 
+				if(pre(state) = pend_leader and pre(neighbor_state0) != leader and pre(neighbor_state1) != leader) then
+					leader
+				else if(pre(state) = pend_right and pre(neighbor_state0) != right and pre(neighbor_state1) != right) then
+					right
+				else if(pre(state) = pend_left and pre(neighbor_state0) != left and pre(neighbor_state1) != left) then
+					left
+				else if(defs.rising(left_shift)) then
+					if(pre(state) = leader) then
+						pend_left
+					else if (pre(state) = left) then
+						pend_right
+					else if (pre(state) = right) then
+						pend_leader
+					else
+						pre(state)
+				else if(defs.rising(right_shift)) then
+					if(pre(state) = leader) then
+						pend_right
+					else if (pre(state) = left) then
+						pend_leader
+					else if (pre(state) = right) then
+						pend_left
+					else
+						pre(state)
+				else
+					pre(state)
+		);
+		
+	**};
+
+end Vehicle.impl;
+
 
 end QuasiTest;
