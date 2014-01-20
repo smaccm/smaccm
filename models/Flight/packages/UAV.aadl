@@ -5,6 +5,7 @@ public
   with PX4FMU;
   with DATATYPES;
   with flight_gen;
+  with SMACCM;
   
   system UAV
     features
@@ -43,7 +44,9 @@ public
       motor3: out data port DATATYPES::Servo_Commands;
       motor4: out data port DATATYPES::Servo_Commands;
       
-      flight_control_commands: in data port DATATYPES::Flight_Control_Commands.Impl;
+      flight_control_commands: in data port DATATYPES::Flight_Control_Commands.Impl {
+        SMACCM::Unimplemented => true;
+      };
       mavlink: in out data port DATATYPES::EncryptMAVLink;
   end motors_and_radios;
   

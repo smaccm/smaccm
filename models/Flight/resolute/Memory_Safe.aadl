@@ -8,11 +8,19 @@ memory_safe() <=
 
 memory_protected(p : process) <=
   ** "The memory of process " p " is protected from alterations by other processes" **
-  runs_on_os(p, "SeL4") or
-  (runs_on_os(p, "eChronos") and
+  os_guarantees_memory_safety(p) or
+  (os_guarantees_memory_separation(p) and
    forall (mem : memory). bound(p, mem) =>
      forall (q : process). bound(q, mem) => memory_safe_process(q))
-     
+
+os_guarantees_memory_safety(p : process) <=
+  ** "The operating system of " p " guarantees memory safety" **
+  runs_on_os(p, "SeL4")
+
+os_guarantees_memory_separation(p : process) <=
+  ** "The operating system of " p " guarantees thread local memory is separated" **
+  runs_on_os(p, "eChronos")
+
 runs_on_os(p : process, os : string) <=
   ** p " runs on " os **
   property_lookup(p, SMACCM::OS) = os
