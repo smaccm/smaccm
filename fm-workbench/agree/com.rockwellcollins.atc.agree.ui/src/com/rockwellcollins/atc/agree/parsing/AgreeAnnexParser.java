@@ -43,7 +43,6 @@ public class AgreeAnnexParser implements AnnexParser {
         return getParser().getGrammarAccess();
     }
 
-    @Override
     public AnnexLibrary parseAnnexLibrary(String annexName, String source, String filename,
             int line, int column, ParseErrorReporter errReporter) {
         return (AnnexLibrary) parse(source, getGrammarAccess().getAgreeLibraryRule(), filename,
@@ -51,7 +50,6 @@ public class AgreeAnnexParser implements AnnexParser {
 
     }
 
-    @Override
     public AnnexSubclause parseAnnexSubclause(String annexName, String source, String filename,
             int line, int column, ParseErrorReporter errReporter) {
         return (AnnexSubclause) parse(source, getGrammarAccess().getAgreeSubclauseRule(), filename,

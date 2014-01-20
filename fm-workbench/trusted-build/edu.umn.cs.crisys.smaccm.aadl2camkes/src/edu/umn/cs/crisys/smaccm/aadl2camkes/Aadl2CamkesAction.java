@@ -70,10 +70,10 @@ import edu.umn.cs.crisys.smaccm.aadl2camkes.ast.Type;
 
 import org.osate.aadl2.instance.InstanceObject;
 import org.osate.analysis.lute.AadlAction;
-import org.osate.analysis.lute.utils.Logger;
+import org.osate.analysis.lute.utils.LuteLogger;
 
 public class Aadl2CamkesAction extends AadlAction {
-	protected Logger log;
+	protected LuteLogger log;
 	
 	
 	// AADL given sets from "top-level" system implementation
@@ -92,7 +92,7 @@ public class Aadl2CamkesAction extends AadlAction {
 	}
 	
 	@Override
-	public IStatus runJob(Element sel, IProgressMonitor monitor, Logger logger) {
+	public IStatus runJob(Element sel, IProgressMonitor monitor, LuteLogger logger) {
 		
 		log = logger;
 		//console = findConsole("aadl2camkes");
@@ -431,6 +431,8 @@ public class Aadl2CamkesAction extends AadlAction {
 		}
 		return result;
 	}
+
+
 
 }
 

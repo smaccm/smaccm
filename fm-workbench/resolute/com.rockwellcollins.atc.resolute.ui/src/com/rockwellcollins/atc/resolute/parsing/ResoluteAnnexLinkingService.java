@@ -20,13 +20,11 @@ public class ResoluteAnnexLinkingService implements AnnexLinkingService {
     @Inject
     public IQualifiedNameProvider nameProvider;
 
-    @Override
     public List<EObject> resolveAnnexReference(String annexName, EObject context,
             EReference reference, INode node) {
         return linkingService.getLinkedObjects(context, reference, node);
     }
 
-    @Override
     public QualifiedName getFullyQualifiedName(final EObject obj) {
         return nameProvider.getFullyQualifiedName(obj);
     }
