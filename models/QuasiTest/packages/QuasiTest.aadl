@@ -17,6 +17,8 @@ system Formation
 		
 	annex agree {**
 	
+		const none : int = 3;
+	
 		guarantee "leader in range" : leader >=0 and leader <= 3;
 		guarantee "right in range" : right >=0 and right <= 3;
 		guarantee "left in range" : left >=0 and left <= 3;
@@ -35,27 +37,27 @@ system Formation
 			(left != 3 => left != leader and left != right);
 
 		guarantee "atomic pending shift right":
-			(true -> pre(pend_right) != 3 => (pre(pend_right) != pend_right => right = pre(pend_right)));
+			(true -> pre(pend_right) != none => (pre(pend_right) != pend_right => right = pre(pend_right)));
 			
 		guarantee "atomic pending shift left":
-			(true -> pre(pend_left) != 3 => (pre(pend_left) != pend_left => left = pre(pend_left)));
+			(true -> pre(pend_left) != none => (pre(pend_left) != pend_left => left = pre(pend_left)));
 			
 		guarantee "atomic pending shift leader":
-			(true -> pre(pend_leader) != 3 => (pre(pend_leader) != pend_leader => leader = pre(pend_leader)));
+			(true -> pre(pend_leader) != none => (pre(pend_leader) != pend_leader => leader = pre(pend_leader)));
 		
 		assume "not shifting both same" : not (left_shift and right_shift);
 				
 		assume "all components see left shift" :
 			true -> pre(defs.rising(left_shift)) => left_shift or 
-				((pend_leader != 3) and (pend_right != 3) and (pend_left != 3));
+				((pend_leader != none) and (pend_right != none) and (pend_left != none));
 				
-		assume "all components see right shift" :
+		assume "all components see right shift" : 
 			true -> pre(defs.rising(right_shift)) => right_shift or 
-				((pend_leader != 3) and (pend_right != 3) and (pend_left != 3));
+				((pend_leader != none) and (pend_right != none) and (pend_left != none));
 				
 		assume "only shift if none pending" :
 			defs.rising(left_shift) or defs.rising(right_shift) => 
-				((pend_leader != 3) and (pend_right != 3) and (pend_left != 3));
+				((pend_leader != none) and (pend_right != none) and (pend_left != none));
 				
 				
 		eq count : int = 0 -> pre(count) + 1;
