@@ -73,7 +73,9 @@ public
   
   device RC_Radio
     features
-      commands_internal: out data port DATATYPES::Flight_Control_Commands;
+      commands_internal: out data port DATATYPES::Flight_Control_Commands {
+      	SMACCM::Unimplemented => true;
+      };
       commands_external: in data port DATATYPES::Flight_Control_Commands;
       ppm: requires bus access CORTEX::AHB_Bus_Matrix;
       antenna: requires bus access UAS::RF_Spectrum.RF_2_4GHz;

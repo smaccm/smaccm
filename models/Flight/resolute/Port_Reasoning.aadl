@@ -18,7 +18,7 @@ all_features_bound() <=
 	
 conn_eq_feat(comp : component) <=
 	** "All the features of component " comp " are connected" **
-	(forall(x : comp.features) . (feat_is_connected(x) or feat_is_unimplemented(x)))
+	(forall(x : comp.features). (feat_is_connected(x) or feat_is_unimplemented(x)))
 
 feat_is_connected(feat : feature) <= 
 	** "The feature: " feat " is connected" **
@@ -45,14 +45,18 @@ print_feature(feat : feature) <=
 	true
 	
 all_through_connections(comp : component) <=
-	** "Every feature of " comp " is not the final destination of "
-	   "its respective connection " **
-	   forall(feat : comp.features) . 
-	   		is_connected(feat) 
-	   		and print_connections(connections(feat))
-	   		and is_empty({c for (c : connections(feat)) |
-	   			                 conn_source(c) = comp or conn_dest(c) = comp})
-
+  ** "Every feature of " comp " is not the final source or destination of "
+     "its connections" **
+  forall(feat : comp.features).
+    not_final(feat, comp) or
+    name(feat, "flight_control_commands") -- ignore RC controller
+	        
+not_final(feat : feature, comp : component) <=
+  ** feat " is not the final source or destination for any of its connections" **
+	is_connected(feat) 
+	and print_connections(connections(feat))
+	and is_empty({c for (c : connections(feat)) |
+		conn_source(c) = comp or conn_dest(c) = comp})
 **};
 
 
