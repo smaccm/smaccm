@@ -3138,6 +3138,13 @@ ruleBuiltInFunc returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleTok
         $current.merge(kw);
         newLeafNode(kw, grammarAccess.getBuiltInFuncAccess().getIs_event_portKeyword_44()); 
     }
+
+    |
+	kw='is_event_data_port' 
+    {
+        $current.merge(kw);
+        newLeafNode(kw, grammarAccess.getBuiltInFuncAccess().getIs_event_data_portKeyword_45()); 
+    }
 )
     ;
 

@@ -1759,6 +1759,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		private final Keyword cIs_bus_accessKeyword_42 = (Keyword)cAlternatives.eContents().get(42);
 		private final Keyword cIs_data_portKeyword_43 = (Keyword)cAlternatives.eContents().get(43);
 		private final Keyword cIs_event_portKeyword_44 = (Keyword)cAlternatives.eContents().get(44);
+		private final Keyword cIs_event_data_portKeyword_45 = (Keyword)cAlternatives.eContents().get(45);
 		
 		////QuantArg returns Arg:
 		////	{QuantArg} name=ID ':' expr=Expr
@@ -1777,7 +1778,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		//	"error_state_reachable" | "connections" | "is_data" | "is_thread" | "is_thread_group" | "is_process" | "is_subprogram"
 		//	| "is_subprogram_group" | "is_processor" | "is_virtual_processor" | "is_memory" | "is_bus" | "is_virtual_bus" |
 		//	"is_device" | "is_system" | "is_abstract" | "is_empty" | "singleton" | "is_bidirectional" | "is_data_access" |
-		//	"is_bus_access" | "is_data_port" | "is_event_port";
+		//	"is_bus_access" | "is_data_port" | "is_event_port" | "is_event_data_port";
 		public ParserRule getRule() { return rule; }
 
 		//"connected" // type checking predicates
@@ -1793,7 +1794,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		//"error_state_reachable" | "connections" | "is_data" | "is_thread" | "is_thread_group" | "is_process" | "is_subprogram" |
 		//"is_subprogram_group" | "is_processor" | "is_virtual_processor" | "is_memory" | "is_bus" | "is_virtual_bus" |
 		//"is_device" | "is_system" | "is_abstract" | "is_empty" | "singleton" | "is_bidirectional" | "is_data_access" |
-		//"is_bus_access" | "is_data_port" | "is_event_port"
+		//"is_bus_access" | "is_data_port" | "is_event_port" | "is_event_data_port"
 		public Alternatives getAlternatives() { return cAlternatives; }
 
 		//"connected"
@@ -1936,6 +1937,9 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 
 		//"is_event_port"
 		public Keyword getIs_event_portKeyword_44() { return cIs_event_portKeyword_44; }
+
+		//"is_event_data_port"
+		public Keyword getIs_event_data_portKeyword_45() { return cIs_event_data_portKeyword_45; }
 	}
 
 	public class RealTermElements extends AbstractParserRuleElementFinder {
@@ -2529,7 +2533,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	//	"error_state_reachable" | "connections" | "is_data" | "is_thread" | "is_thread_group" | "is_process" | "is_subprogram"
 	//	| "is_subprogram_group" | "is_processor" | "is_virtual_processor" | "is_memory" | "is_bus" | "is_virtual_bus" |
 	//	"is_device" | "is_system" | "is_abstract" | "is_empty" | "singleton" | "is_bidirectional" | "is_data_access" |
-	//	"is_bus_access" | "is_data_port" | "is_event_port";
+	//	"is_bus_access" | "is_data_port" | "is_event_port" | "is_event_data_port";
 	public BuiltInFuncElements getBuiltInFuncAccess() {
 		return (pBuiltInFunc != null) ? pBuiltInFunc : (pBuiltInFunc = new BuiltInFuncElements());
 	}

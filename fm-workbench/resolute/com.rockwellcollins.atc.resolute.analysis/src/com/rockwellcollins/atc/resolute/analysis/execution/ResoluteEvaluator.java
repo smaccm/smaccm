@@ -22,6 +22,7 @@ import org.osate.aadl2.ComponentImplementation;
 import org.osate.aadl2.DataAccess;
 import org.osate.aadl2.DataPort;
 import org.osate.aadl2.EnumerationLiteral;
+import org.osate.aadl2.EventDataPort;
 import org.osate.aadl2.EventPort;
 import org.osate.aadl2.IntegerLiteral;
 import org.osate.aadl2.NamedElement;
@@ -952,6 +953,18 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
                 featInst = (FeatureInstance) conn.getDestination();
             }
             return new BoolValue(featInst.getFeature() instanceof EventPort);
+        }
+        
+
+        case "is_event_data_port": {
+            ConnectionInstance conn = (ConnectionInstance) argVals.get(0).getNamedElement();
+            FeatureInstance featInst;
+            if (conn.getSource() instanceof FeatureInstance) {
+                featInst = (FeatureInstance) conn.getSource();
+            } else {
+                featInst = (FeatureInstance) conn.getDestination();
+            }
+            return new BoolValue(featInst.getFeature() instanceof EventDataPort);
         }
 
         case "is_data": {

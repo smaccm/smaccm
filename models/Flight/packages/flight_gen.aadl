@@ -2638,9 +2638,10 @@ process implementation flight_gen_process.impl
     SMACCM::OS => "eChronos";
     
   annex resolute {**
-    prove execute_soundness()
     prove memory_safe()
     prove all_through_connections(this)
+    prove execute_soundness()
+    prove execute_completeness(this.uart5ISR_inst)
   **};
     
     

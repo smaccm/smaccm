@@ -236,6 +236,7 @@ BuiltInFunc:
 |   'is_bus_access'
 |   'is_data_port'
 |   'is_event_port'
+|	'is_event_data_port'
 ;
 
 RealTerm returns aadl2::RealLiteral:

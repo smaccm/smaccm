@@ -2857,6 +2857,14 @@ rule__BuiltInFunc__Alternatives
 { after(grammarAccess.getBuiltInFuncAccess().getIs_event_portKeyword_44()); }
 )
 
+    |(
+{ before(grammarAccess.getBuiltInFuncAccess().getIs_event_data_portKeyword_45()); }
+
+	'is_event_data_port' 
+
+{ after(grammarAccess.getBuiltInFuncAccess().getIs_event_data_portKeyword_45()); }
+)
+
 ;
 finally {
 	restoreStackSize(stackSize);

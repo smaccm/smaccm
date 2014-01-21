@@ -404,6 +404,7 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
         case "is_bus_access":
         case "is_event_port":
         case "is_data_port":
+        case "is_event_data_port":
             expectedTypes.add(BaseType.CONNECTION);
             break;
         case "is_data":
@@ -780,6 +781,7 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
         case "error_state_reachable":
         case "is_bidirectional":
         case "is_event_port":
+        case "is_event_data_port":
         case "is_data_access":
         case "is_bus_access":
         case "is_data_port":

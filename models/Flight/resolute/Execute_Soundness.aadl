@@ -63,7 +63,8 @@ motors_only_receive_from_mainloop(mainloop : component) <=
 	** "The UAV motors only receive commands from " mainloop **
 	forall (m : MOTORS).
 	  forall (c : m.connections).
-	    is_data_port(c) => comes_from_mainloop(c, mainloop)
+	    (is_data_port(c) or is_event_data_port(c)) =>
+	      comes_from_mainloop(c, mainloop)
 
 comes_from_mainloop(c : connection, mainloop : component) <=
 	** c " comes from " mainloop **
@@ -93,7 +94,6 @@ is_sensor_data(f : feature) <=
    type(f) = DATATYPES::GPS_Data or
    type(f) = DATATYPES::Reset_Data)
 
-  
 feature_confined_to_decrypt(f : feature, mainloop : component) <=
   ** "Commands to " f " pass through decrypt before reaching the UAV motors" **
   forall (c : connections(f)).
