@@ -15,7 +15,7 @@ import com.rockwellcollins.atc.resolute.analysis.values.ConnectionValue;
 
 public class FeatureToConnectionsMap {
     private final Map<FeatureInstance, List<ConnectionValue>> map = new HashMap<>();
-    
+
     public FeatureToConnectionsMap(SystemInstance sysInst) {
         for (ConnectionInstance connInst : sysInst.getAllConnectionInstances()) {
             for (ConnectionReference conRef : connInst.getConnectionReferences()) {

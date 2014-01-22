@@ -18,6 +18,16 @@ public class RangeValue extends ResoluteValue {
     }
 
     @Override
+    public boolean isRange() {
+        return true;
+    }
+
+    @Override
+    public RangeValue getRange() {
+        return this;
+    }
+
+    @Override
     public int hashCode() {
         return min.hashCode() + max.hashCode();
     }

@@ -3,10 +3,10 @@ package com.rockwellcollins.atc.resolute.analysis.handlers;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -26,6 +26,7 @@ import org.osate.ui.dialogs.Dialog;
 
 import com.rockwellcollins.atc.resolute.analysis.execution.EvaluationContext;
 import com.rockwellcollins.atc.resolute.analysis.execution.FeatureToConnectionsMap;
+import com.rockwellcollins.atc.resolute.analysis.execution.NamedElementComparator;
 import com.rockwellcollins.atc.resolute.analysis.execution.ResoluteInterpreter;
 import com.rockwellcollins.atc.resolute.analysis.results.ResoluteResult;
 import com.rockwellcollins.atc.resolute.analysis.views.AssuranceCaseView;
@@ -61,10 +62,9 @@ public class ResoluteHandler extends AadlHandler {
         long stop = System.currentTimeMillis();
         System.out.println("Instantiation time: " + (stop - start) / 1000.0 + "s");
 
-        
         start = System.currentTimeMillis();
 
-        Map<String, Set<NamedElement>> sets = new HashMap<>();
+        Map<String, SortedSet<NamedElement>> sets = new HashMap<>();
         initializeSets(si, sets);
         FeatureToConnectionsMap featToConnsMap = new FeatureToConnectionsMap(si);
 
@@ -73,7 +73,8 @@ public class ResoluteHandler extends AadlHandler {
             ComponentInstance compInst = (ComponentInstance) el;
             for (Element child : compInst.getComponentClassifier().getChildren()) {
                 if (child instanceof ResoluteSubclause) {
-                    EvaluationContext context = new EvaluationContext(compInst, sets, featToConnsMap);
+                    EvaluationContext context = new EvaluationContext(compInst, sets,
+                            featToConnsMap);
                     ResoluteInterpreter interpreter = new ResoluteInterpreter(context);
                     for (Element element : child.getChildren()) {
                         if (element instanceof ProveStatement) {
@@ -91,7 +92,7 @@ public class ResoluteHandler extends AadlHandler {
         return Status.OK_STATUS;
     }
 
-    private void initializeSets(ComponentInstance ci, Map<String, Set<NamedElement>> sets) {
+    private void initializeSets(ComponentInstance ci, Map<String, SortedSet<NamedElement>> sets) {
         if (ci == null) {
             return;
         }
@@ -112,10 +113,10 @@ public class ResoluteHandler extends AadlHandler {
         return category.getName().replace(" ", "_");
     }
 
-    private void addToSet(Map<String, Set<NamedElement>> sets, String name, NamedElement ne) {
-        Set<NamedElement> set = sets.get(name);
+    private void addToSet(Map<String, SortedSet<NamedElement>> sets, String name, NamedElement ne) {
+        SortedSet<NamedElement> set = sets.get(name);
         if (set == null) {
-            set = new HashSet<>();
+            set = new TreeSet<>(new NamedElementComparator());
             sets.put(name, set);
         }
         set.add(ne);
