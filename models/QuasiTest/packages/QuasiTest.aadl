@@ -35,7 +35,15 @@ system Formation
 			(leader != 3 => leader != right and leader != left) and
 			(right != 3 => right != leader and right != left) and
 			(left != 3 => left != leader and left != right);
-
+			
+		--note that this guarantee needs to be present to prove the later guarantees
+		guarantee "all components in some position" :
+			(leader = 0 or right = 0 or left = 0 or pend_leader = 0 or pend_right = 0 or pend_left = 0)
+			and
+			(leader = 1 or right = 1 or left = 1 or pend_leader = 1 or pend_right = 1 or pend_left = 1)
+			and
+			(leader = 2 or right = 2 or left = 2 or pend_leader = 2 or pend_right = 2 or pend_left = 2);
+			
 		guarantee "atomic pending shift right":
 			(true -> pre(pend_right) != none => (pre(pend_right) != pend_right => right = pre(pend_right)));
 			
@@ -58,8 +66,7 @@ system Formation
 		assume "only shift if none pending" :
 			defs.rising(left_shift) or defs.rising(right_shift) => 
 				((pend_leader != none) and (pend_right != none) and (pend_left != none));
-				
-				
+								
 		eq count : int = 0 -> pre(count) + 1;
 		
 		assume "assume we do a shift right away" :

@@ -45,10 +45,10 @@ public class AgreeCalendarUtils {
         IdExpr out = new IdExpr(outVar.id);
         
         VarDecl clkVar0 = new VarDecl("_clk0", NamedType.BOOL);
-        IdExpr clk0 = new IdExpr(clkVar0.id);
+        IdExpr p = new IdExpr(clkVar0.id);
         
         VarDecl clkVar1 = new VarDecl("_clk1", NamedType.BOOL);
-        IdExpr clk1 = new IdExpr(clkVar1.id);
+        IdExpr q = new IdExpr(clkVar1.id);
         
         List<VarDecl> inputs = new ArrayList<>();
         inputs.add(clkVar0);
@@ -82,28 +82,28 @@ public class AgreeCalendarUtils {
         //if (0 -> pre r) > 0 then -1 else ((0 -> pre r) - 1)
         Expr ifExpr1 = new IfThenElseExpr(rPreGTExpr, intNegOneExpr, rPreMinus);
         //if q then (if (0 -> pre r) > 0 then -1 else ((0 -> pre r) - 1)) else (0 -> pre r)
-        Expr ifExprClk1 = new IfThenElseExpr(clk1, ifExpr1, rPreExpr);
+        Expr ifExprClk1 = new IfThenElseExpr(q, ifExpr1, rPreExpr);
         //if p then (if (0 -> pre r) < 0 then 1 else ((0 -> pre r) + 1))
         //else if q then (if (0 -> pre r) > 0 then -1 else ((0 -> pre r) - 1))
         //else (0 -> pre r);
-        Expr ifExprClk0 = new IfThenElseExpr(clk0, ifExpr0, ifExprClk1);
+        Expr ifExprClk0 = new IfThenElseExpr(p, ifExpr0, ifExprClk1);
         //if p and q then 0 
         //else if p then (if (0 -> pre r) < 0 then 1 else ((0 -> pre r) + 1))
         //else if q then (if (0 -> pre r) > 0 then -1 else ((0 -> pre r) - 1))
         //else (0 -> pre r);
-        Expr rExpr = new IfThenElseExpr(new BinaryExpr(clk0, BinaryOp.AND, clk1), intZeroExpr, ifExprClk0);
+        Expr rExpr = new IfThenElseExpr(new BinaryExpr(p, BinaryOp.AND, q), intZeroExpr, ifExprClk0);
         
-        //((0 -> pre r) = 2 and p)
-        Expr condExpr0 = new BinaryExpr(new BinaryExpr(rPreExpr, BinaryOp.EQUAL, intSyncValExpr), BinaryOp.AND, clk0);
-        //((0 -> pre r) = -2 and q)
-        Expr condExpr1 = new BinaryExpr(new BinaryExpr(rPreExpr, BinaryOp.EQUAL, intNegSyncValxpr), BinaryOp.AND, clk1);
-        //not (((0 -> pre r) = 2 and p) or ((0 -> pre r) = -2 and q))
+        //((0 -> pre r) >= 2 and p)
+        Expr condExpr0 = new BinaryExpr(new BinaryExpr(rPreExpr, BinaryOp.GREATEREQUAL, intSyncValExpr), BinaryOp.AND, p);
+        //((0 -> pre r) <= -2 and q)
+        Expr condExpr1 = new BinaryExpr(new BinaryExpr(rPreExpr, BinaryOp.LESSEQUAL, intNegSyncValxpr), BinaryOp.AND, q);
+        //not (((0 -> pre r) >= 2 and p) or ((0 -> pre r) <= -2 and q))
         Expr outExpr = new UnaryExpr(UnaryOp.NOT, new BinaryExpr(condExpr0, BinaryOp.OR, condExpr1));
         
         //r <= 2 and r >= -2
-        Expr rIsBoundedExpr = new BinaryExpr(new BinaryExpr(rExpr, BinaryOp.LESSEQUAL, intSyncValExpr),
-                BinaryOp.OR,
-                new BinaryExpr(rExpr, BinaryOp.GREATEREQUAL, intNegSyncValxpr));
+        Expr rIsBoundedExpr = new BinaryExpr(new BinaryExpr(r, BinaryOp.LESSEQUAL, intSyncValExpr),
+                BinaryOp.AND,
+                new BinaryExpr(r, BinaryOp.GREATEREQUAL, intNegSyncValxpr));
         
         List<Equation> equations = new ArrayList<>();
         equations.add(new Equation(r, rExpr));
