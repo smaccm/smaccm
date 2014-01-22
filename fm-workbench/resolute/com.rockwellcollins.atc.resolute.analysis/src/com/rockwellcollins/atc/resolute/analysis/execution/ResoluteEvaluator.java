@@ -9,6 +9,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xtext.EcoreUtil2;
@@ -34,7 +36,6 @@ import org.osate.aadl2.StringLiteral;
 import org.osate.aadl2.instance.ComponentInstance;
 import org.osate.aadl2.instance.ConnectionInstance;
 import org.osate.aadl2.instance.ConnectionInstanceEnd;
-import org.osate.aadl2.instance.ConnectionKind;
 import org.osate.aadl2.instance.ConnectionReference;
 import org.osate.aadl2.instance.FeatureCategory;
 import org.osate.aadl2.instance.FeatureInstance;
@@ -463,12 +464,12 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
         }
     }
 
-    public Set<ResoluteValue> getArgSet(Arg arg) {
+    public SortedSet<ResoluteValue> getArgSet(Arg arg) {
         if (arg instanceof QuantArg) {
             QuantArg quantArg = (QuantArg) arg;
             return doSwitch(quantArg.getExpr()).getSet();
         } else {
-            Set<ResoluteValue> values = new HashSet<ResoluteValue>();
+            SortedSet<ResoluteValue> values = new TreeSet<ResoluteValue>();
             for (NamedElement ne : context.getSet(arg.getType().getName())) {
                 values.add(new NamedElementValue(ne));
             }
@@ -511,13 +512,13 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
         return new SetValue(filterMap(object.getArgs(), object.getMap(), object.getFilter()));
     }
 
-    private Set<ResoluteValue> filterMap(List<Arg> args, Expr map, Expr filter) {
+    private SortedSet<ResoluteValue> filterMap(List<Arg> args, Expr map, Expr filter) {
         if (args.isEmpty()) {
             return filter(map, filter);
         } else {
             Arg arg = args.get(0);
             List<Arg> rest = args.subList(1, args.size());
-            Set<ResoluteValue> result = new HashSet<ResoluteValue>();
+            SortedSet<ResoluteValue> result = new TreeSet<ResoluteValue>();
             for (ResoluteValue value : getArgSet(arg)) {
                 varStack.peek().put(arg, value);
                 result.addAll(filterMap(rest, map, filter));
@@ -526,12 +527,12 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
         }
     }
 
-    private Set<ResoluteValue> filter(Expr map, Expr filter) {
+    private SortedSet<ResoluteValue> filter(Expr map, Expr filter) {
+        TreeSet<ResoluteValue> result = new TreeSet<ResoluteValue>();
         if (filter == null || doSwitch(filter).getBool()) {
-            return Collections.singleton(doSwitch(map));
-        } else {
-            return Collections.emptySet();
+            result.add(doSwitch(map));
         }
+        return result;
     }
 
     @Override
@@ -893,7 +894,7 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
                         object);
             }
         }
-        
+
         case "instances": {
             NamedElement decl = argVals.get(0).getNamedElement();
             SystemInstance top = context.getThisInstance().getSystemInstance();
@@ -954,7 +955,6 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
             }
             return new BoolValue(featInst.getFeature() instanceof EventPort);
         }
-        
 
         case "is_event_data_port": {
             ConnectionInstance conn = (ConnectionInstance) argVals.get(0).getNamedElement();

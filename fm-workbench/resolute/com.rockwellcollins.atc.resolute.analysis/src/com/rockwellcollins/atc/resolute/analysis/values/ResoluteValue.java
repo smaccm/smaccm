@@ -1,6 +1,6 @@
 package com.rockwellcollins.atc.resolute.analysis.values;
 
-import java.util.Set;
+import java.util.SortedSet;
 
 import org.osate.aadl2.NamedElement;
 
@@ -28,8 +28,8 @@ public abstract class ResoluteValue implements Comparable<ResoluteValue> {
     public boolean isNamedElement() {
         return false;
     }
-
-    public boolean isFail() {
+    
+    public boolean isRange() {
         return false;
     }
 
@@ -49,12 +49,16 @@ public abstract class ResoluteValue implements Comparable<ResoluteValue> {
         throw new IllegalArgumentException();
     }
 
-    public Set<ResoluteValue> getSet() {
+    public SortedSet<ResoluteValue> getSet() {
         throw new IllegalArgumentException();
     }
 
     public NamedElement getNamedElement() {
         throw new IllegalArgumentException();
+    }
+    
+    public RangeValue getRange() {
+       throw new IllegalArgumentException();
     }
 
     @Override
@@ -65,6 +69,22 @@ public abstract class ResoluteValue implements Comparable<ResoluteValue> {
             return Long.compare(getInt(), other.getInt());
         } else if (isReal() && other.isReal()) {
             return Double.compare(getReal(), other.getReal());
+        } else if (isString() && other.isString()) {
+            return String.CASE_INSENSITIVE_ORDER.compare(getString(), other.getString());
+        } else if (isNamedElement() && other.isNamedElement()) {
+            return String.CASE_INSENSITIVE_ORDER.compare(getNamedElement().getName(), other
+                    .getNamedElement().getName());
+        } else if (isSet() && other.isSet()) {
+            return Integer.compare(getSet().hashCode(), other.getSet().hashCode());
+        } else if (isRange() && other.isRange()) {
+            RangeValue a = getRange();
+            RangeValue b = other.getRange();
+            int cmp = a.getMin().compareTo(b.getMin());
+            if (cmp != 0) {
+                return cmp;
+            } else {
+                return a.getMax().compareTo(b.getMax());
+            }
         } else {
             throw new IllegalArgumentException("Unable to compare " + getClass().getName()
                     + " and " + other.getClass().getName());
