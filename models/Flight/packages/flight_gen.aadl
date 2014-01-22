@@ -2087,7 +2087,7 @@ thread mavlinkInputTask
     SMACCM::Language => "Ivory";
     Dispatch_Protocol => Hybrid;
     Period => 5 ms;
-    SMACCM::Always_Sends_Message => true
+    SMACCM::Always_Sends_Message => true ;
     SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_mavlinkInputTask_65_per5_85");
 end mavlinkInputTask;
 
