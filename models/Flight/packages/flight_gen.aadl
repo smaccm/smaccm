@@ -670,6 +670,7 @@ thread gcsReceiveTask_uart5
     Source_Stack_Size => 1024 bytes;
     SMACCM::Language => "Ivory";
     Dispatch_Protocol => Sporadic;
+    SMACCM::Always_Sends_Message => true;
 end gcsReceiveTask_uart5;
 
 
@@ -698,6 +699,7 @@ thread decryptTask_uart5
     SMACCM::Language => "Ivory";
     Dispatch_Protocol => Sporadic;
     SMACCM::Encryption_Algorthim => "AES-128-GCM";
+    SMACCM::Always_Sends_Message => true;
     
 end decryptTask_uart5;
 
@@ -767,6 +769,7 @@ thread datalink_uart5
     SMACCM::Language => "Ivory";
     Dispatch_Protocol => Hybrid;
     Period => 1000 ms;
+    SMACCM::Always_Sends_Message => true;
     SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_datalink_uart5_785_per1000_816");
 end datalink_uart5;
 
@@ -1985,6 +1988,7 @@ thread proxy_userinput
     Source_Stack_Size => 256 bytes;
     SMACCM::Language => "Ivory";
     Dispatch_Protocol => Sporadic;
+    SMACCM::Always_Sends_Message => true;
 end proxy_userinput;
 
 
@@ -2019,6 +2023,8 @@ thread uiMuxTask
     Source_Stack_Size => 256 bytes;
     SMACCM::Language => "Ivory";
     Dispatch_Protocol => Sporadic;
+    SMACCM::Always_Sends_Message => true;
+    
 end uiMuxTask;
 
 
@@ -2081,6 +2087,7 @@ thread mavlinkInputTask
     SMACCM::Language => "Ivory";
     Dispatch_Protocol => Hybrid;
     Period => 5 ms;
+    SMACCM::Always_Sends_Message => true
     SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_mavlinkInputTask_65_per5_85");
 end mavlinkInputTask;
 
@@ -2134,6 +2141,7 @@ thread uart5ISR
     Dispatch_Protocol => Sporadic;
     Source_Text => ("tower_signal_usercode_uart5ISR_770.c");
     Priority => 27;
+    SMACCM::Always_Sends_Message => true;
     SMACCM::Language => "Ivory";
     SMACCM_SYS::Signal_Name => "UART5_IRQn";
     SMACCM_SYS::ISR_Handler => "UART5_IRQHandler";

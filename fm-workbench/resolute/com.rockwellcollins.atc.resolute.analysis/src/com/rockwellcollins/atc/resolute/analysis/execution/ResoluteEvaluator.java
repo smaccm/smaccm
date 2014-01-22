@@ -1112,8 +1112,9 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
             if (ci.getSource() instanceof FeatureInstance) {
                 FeatureInstance src = (FeatureInstance) ci.getSource();
                 return (NamedElement) src.getFeature().getFeatureClassifier();
-            } else if (ci.getSource() instanceof ComponentInstance) {
-                return ci.getSource();
+            } else if (ci.getDestination() instanceof FeatureInstance) {
+                FeatureInstance src = (FeatureInstance) ci.getDestination();
+                return (NamedElement) src.getFeature().getFeatureClassifier();
             }
         } else if (ne instanceof DataPort) {
             DataPort dp = (DataPort) ne;
