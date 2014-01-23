@@ -130,10 +130,10 @@ public class PrxGenerator {
     org.w3c.dom.Element ec;
 
 	  
-	  e = doc.createElement("trampoline");
+	e = doc.createElement("trampoline");
     parent.appendChild(e);
 	  
-	  if (signalName == null || handlerName == null) {
+	if (signalName == null || handlerName == null) {
       throw new Aadl2RtosException("Error in PrxGenerator: " + 
           "ISR threads must define both a signalName and a handlerName. (At least) one is not defined.");
     }
@@ -232,10 +232,23 @@ public class PrxGenerator {
 		e = doc.createElement("module");
 		e.setAttribute("name", "armv7m.vectable");
 		parent.appendChild(e);
-		/*  <flash_load_addr>0x8000000</flash_load_addr> */
+
 		ec = doc.createElement("flash_load_addr");
 		e.appendChild(ec);
 		ec.appendChild(doc.createTextNode("0x8000000"));
+		ec = doc.createElement("code_addr");
+		e.appendChild(ec);
+		ec.appendChild(doc.createTextNode("0x8000000"));
+		ec = doc.createElement("systick");
+		e.appendChild(ec);
+		ec.appendChild(doc.createTextNode("exception_preempt_trampoline_systick"));
+		ec = doc.createElement("syscall");
+		e.appendChild(ec);
+		ec.appendChild(doc.createTextNode("SVCHandler"));
+		ec = doc.createElement("pendsv");
+		e.appendChild(ec);
+		ec.appendChild(doc.createTextNode("PendSVHandler"));
+	      
 		for (InterruptServiceRoutine i : ISRs) {
 		  if (isInternalIrq(i.getSignalName())) {
 		    writeVectableEntry(i.getSignalName(), i.getHandlerName(), e);
@@ -321,7 +334,7 @@ public class PrxGenerator {
 		}
 	}
 
-	private void writeIrqEvent(org.w3c.dom.Element e, String signalName, String taskId, int eventTask, int signalNumber) {
+	private void writeIrqEvent(org.w3c.dom.Element e, String signalName, String taskId, int eventTask, String taskName, int signalNumber) {
     org.w3c.dom.Element ec;
     org.w3c.dom.Element eec;
     ec = doc.createElement("irq_event");
@@ -329,10 +342,10 @@ public class PrxGenerator {
     eec = doc.createElement("name");
     ec.appendChild(eec);
     eec.appendChild(doc.createTextNode(signalName));
-    eec = doc.createElement("task");
+    eec = doc.createElement("task_name");
     ec.appendChild(eec);
     ec.appendChild(doc.createComment("Task: " + taskId + " has the " + Integer.toString(eventTask) + "th highest priority in the system."));
-    eec.appendChild(doc.createTextNode(Integer.toString(eventTask)));
+    eec.appendChild(doc.createTextNode((taskName)));
     eec = doc.createElement("sig_set");
     ec.appendChild(eec);
     eec.appendChild(doc.createTextNode(Integer.toString(1 << signalNumber)));	  
@@ -359,9 +372,10 @@ public class PrxGenerator {
 	    String signalName = isr.getIrqSignalName();
 	    ThreadImplementationBase tib = isr.getThreadInstances().get(0).getThreadImplementation(); 
 	    String taskId = tib.getName();
+	    String taskName = tib.getName();
 	    int eventTask = tib.getKochabThreadLocation(); 
 	    int signalNumber = isr.getDestinationPort().getPortID();
-	    writeIrqEvent(e, signalName, taskId, eventTask, signalNumber);
+	    writeIrqEvent(e, signalName, taskId, eventTask, taskName, signalNumber);
 	  }
 
 	  // write signal numbers for all periodically dispatched threads.
@@ -369,9 +383,10 @@ public class PrxGenerator {
 	    String signalName = d.getPeriodicIrqSignalName();
 	    for (ThreadInstance ti: d.getOwner().getThreadInstanceList()) {
 	      String taskId = ti.getThreadImplementation().getName();
+	      String taskName = d.getOwner().getName();
 	      int eventTask = ti.getThreadImplementation().getKochabThreadLocation();
 	      int signalNumber = d.getOwner().getSignalNumberForDispatcher(d);
-	      writeIrqEvent(e, signalName, taskId, eventTask, signalNumber);
+	      writeIrqEvent(e, signalName, taskId, eventTask, taskName, signalNumber);
 	    }
 	  }
 	  
@@ -381,7 +396,7 @@ public class PrxGenerator {
 	    if (tib == null) {
 	      throw new Aadl2RtosException("Unable to find thread with name: '" + lie.getTaskName() + "'.");
 	    }
-	    writeIrqEvent(e, lie.getName(), tib.getName(), tib.getKochabThreadLocation(), lie.getSigSet());
+	    writeIrqEvent(e, lie.getName(), tib.getName(), tib.getKochabThreadLocation(), lie.getTaskName(), lie.getSigSet());
 	  }
 	}
 	
