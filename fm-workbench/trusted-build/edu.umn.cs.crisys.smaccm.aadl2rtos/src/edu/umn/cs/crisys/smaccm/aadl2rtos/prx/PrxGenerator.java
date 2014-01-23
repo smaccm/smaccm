@@ -242,7 +242,7 @@ public class PrxGenerator {
 		ec = doc.createElement("systick");
 		e.appendChild(ec);
 		ec.appendChild(doc.createTextNode("exception_preempt_trampoline_systick"));
-		ec = doc.createElement("syscall");
+		ec = doc.createElement("svcall");
 		e.appendChild(ec);
 		ec.appendChild(doc.createTextNode("SVCHandler"));
 		ec = doc.createElement("pendsv");
