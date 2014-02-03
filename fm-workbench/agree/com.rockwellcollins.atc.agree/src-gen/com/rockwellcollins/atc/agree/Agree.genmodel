@@ -11,6 +11,9 @@
     <genClasses ecoreClass="Agree.ecore#//AgreeSubclause"/>
     <genClasses ecoreClass="Agree.ecore#//Contract"/>
     <genClasses ecoreClass="Agree.ecore#//SpecStatement"/>
+    <genClasses ecoreClass="Agree.ecore#//SynchStatement">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Agree.ecore#//SynchStatement/val"/>
+    </genClasses>
     <genClasses ecoreClass="Agree.ecore#//CallDef"/>
     <genClasses ecoreClass="Agree.ecore#//PropertyStatement">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//PropertyStatement/expr"/>
@@ -50,6 +53,9 @@
     <genClasses ecoreClass="Agree.ecore#//NestedDotID">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Agree.ecore#//NestedDotID/base"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//NestedDotID/sub"/>
+    </genClasses>
+    <genClasses ecoreClass="Agree.ecore#//ClockID">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Agree.ecore#//ClockID/comp"/>
     </genClasses>
     <genClasses ecoreClass="Agree.ecore#//AgreeContractLibrary">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//AgreeContractLibrary/contract"/>

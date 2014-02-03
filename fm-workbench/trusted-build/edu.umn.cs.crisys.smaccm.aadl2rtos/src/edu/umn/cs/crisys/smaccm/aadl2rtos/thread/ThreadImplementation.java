@@ -10,7 +10,6 @@ package edu.umn.cs.crisys.smaccm.aadl2rtos.thread;
  */
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import org.osate.aadl2.EnumerationLiteral;
@@ -18,7 +17,6 @@ import org.osate.aadl2.impl.ThreadTypeImpl;
 import org.osate.xtext.aadl2.properties.util.PropertyUtils;
 
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosException;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.AstHelper;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.util.ThreadUtil;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.util.Util;
 
@@ -31,6 +29,7 @@ public class ThreadImplementation extends ThreadImplementationBase {
 	private EnumerationLiteral dispatchProtocol; 
 	
 	private String smaccmSysSignalOpt = null;
+	private String isrHandlerName = null;
 	
 	// Data port lists
 	private ArrayList<MyPort> inputDataPortList = new ArrayList<MyPort>();
@@ -45,13 +44,19 @@ public class ThreadImplementation extends ThreadImplementationBase {
 	private boolean isrThread = false;
 
 	// Constructor
-	public ThreadImplementation(ThreadTypeImpl tti, AstHelper astHelper) {
-		super(tti, astHelper);
+	public ThreadImplementation(ThreadTypeImpl tti) {
+		super(tti);
 		generatedEntrypoint = tti.getFullName();
 
 		// determine whether this thread is 'normal' or ISR.
 		smaccmSysSignalOpt = Util.getStringValueOpt(tti, ThreadUtil.SMACCM_SYS_SIGNAL_NAME);
 		isrThread = (getSmaccmSysSignalOpt() != null);
+		if (isrThread) {
+			isrHandlerName = Util.getStringValueOpt(tti, ThreadUtil.ISR_HANDLER);
+			if (isrHandlerName == null) {
+				throw new Aadl2RtosException("Error: ISR Thread: "+ tti.getFullName() + " requires ISR_handler property");
+			}
+		}
 
 		// create initializer handler, if it exists.
 		String entryPointSourceText = (String) Util.getStringValueOpt(tti,
@@ -210,6 +215,10 @@ public class ThreadImplementation extends ThreadImplementationBase {
 	  
 	public String getSmaccmSysSignalOpt() {
 		return smaccmSysSignalOpt;
+	}
+
+	public String getISRHandlerName() {
+		return isrHandlerName;
 	}
 
 	public ExternalHandler getInitializeEntrypointOpt() {

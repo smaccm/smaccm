@@ -3,15 +3,8 @@
 package mavlink_change_operator_control_msg
 public
   with Base_Types;
+  with TowerArrays;
   with Data_Model;
-
-data ArrTy_25TyBase_Types_Unsigned_8
-  properties
-    Data_Model::Data_Representation => Array;
-    Data_Model::Base_Type => (classifier (Base_Types::Unsigned_8));
-    Data_Model::Dimension => (25);
-end ArrTy_25TyBase_Types_Unsigned_8;
-
 
 data change_operator_control_msg
   properties
@@ -24,7 +17,7 @@ data implementation change_operator_control_msg.impl
     target_system : data Base_Types::Unsigned_8;
     control_request : data Base_Types::Unsigned_8;
     version : data Base_Types::Unsigned_8;
-    passkey : data ArrTy_25TyBase_Types_Unsigned_8;
+    passkey : data TowerArrays::ArrTy_25TyBase_Types_Unsigned_8;
 end change_operator_control_msg.impl;
 
 

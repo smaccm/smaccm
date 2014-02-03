@@ -50,6 +50,15 @@ public interface ResoluteFactory extends EFactory
   Type createType();
 
   /**
+   * Returns a new object of class '<em>Element Set</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Element Set</em>'.
+   * @generated
+   */
+  ElementSet createElementSet();
+
+  /**
    * Returns a new object of class '<em>Builtin Type</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -113,6 +122,15 @@ public interface ResoluteFactory extends EFactory
   Expr createExpr();
 
   /**
+   * Returns a new object of class '<em>Let Binding</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Let Binding</em>'.
+   * @generated
+   */
+  LetBinding createLetBinding();
+
+  /**
    * Returns a new object of class '<em>Subclause</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -147,6 +165,15 @@ public interface ResoluteFactory extends EFactory
    * @generated
    */
   SetType createSetType();
+
+  /**
+   * Returns a new object of class '<em>Quant Arg</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Quant Arg</em>'.
+   * @generated
+   */
+  QuantArg createQuantArg();
 
   /**
    * Returns a new object of class '<em>Claim Arg</em>'.
@@ -300,6 +327,15 @@ public interface ResoluteFactory extends EFactory
    * @generated
    */
   FilterMapExpr createFilterMapExpr();
+
+  /**
+   * Returns a new object of class '<em>Let Expr</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Let Expr</em>'.
+   * @generated
+   */
+  LetExpr createLetExpr();
 
   /**
    * Returns the package supported by this factory.

@@ -37,7 +37,6 @@ import org.osate.ui.dialogs.Dialog;
 import com.rockwellcollins.atc.agree.agree.AgreeSubclause;
 import com.rockwellcollins.atc.agree.analysis.Activator;
 import com.rockwellcollins.atc.agree.analysis.AgreeAnnexEmitter;
-import com.rockwellcollins.atc.agree.analysis.AgreeEmitter;
 import com.rockwellcollins.atc.agree.analysis.AgreeEmitterUtilities;
 import com.rockwellcollins.atc.agree.analysis.AgreeGenerator;
 import com.rockwellcollins.atc.agree.analysis.preferences.PreferenceConstants;

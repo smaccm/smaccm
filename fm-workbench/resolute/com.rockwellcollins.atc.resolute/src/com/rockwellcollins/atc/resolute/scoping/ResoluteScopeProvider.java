@@ -3,7 +3,9 @@
  */
 package com.rockwellcollins.atc.resolute.scoping;
 
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.eclipse.emf.common.util.EList;
@@ -11,20 +13,18 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.xtext.scoping.IScope;
 import org.eclipse.xtext.scoping.Scopes;
-import org.osate.aadl2.AadlPackage;
-import org.osate.aadl2.AnnexLibrary;
-import org.osate.aadl2.Classifier;
 import org.osate.aadl2.ComponentClassifier;
 import org.osate.aadl2.ComponentImplementation;
 import org.osate.aadl2.Element;
 import org.osate.aadl2.Subcomponent;
 import org.osate.aadl2.ThreadSubcomponent;
-import org.osate.aadl2.impl.DataPortImpl;
-import org.osate.aadl2.impl.FeatureGroupImpl;
 import org.osate.xtext.aadl2.properties.scoping.PropertiesScopeProvider;
 
+import com.rockwellcollins.atc.resolute.resolute.Arg;
 import com.rockwellcollins.atc.resolute.resolute.FilterMapExpr;
 import com.rockwellcollins.atc.resolute.resolute.FunctionDefinition;
+import com.rockwellcollins.atc.resolute.resolute.LetBinding;
+import com.rockwellcollins.atc.resolute.resolute.LetExpr;
 import com.rockwellcollins.atc.resolute.resolute.NestedDotID;
 import com.rockwellcollins.atc.resolute.resolute.ProveStatement;
 import com.rockwellcollins.atc.resolute.resolute.QuantifiedExpr;
@@ -33,8 +33,8 @@ import com.rockwellcollins.atc.resolute.resolute.ResoluteSubclause;
 /**
  * This class contains custom scoping description.
  * 
- * see : http://www.eclipse.org/Xtext/documentation/latest/xtext.html#scoping on
- * how and when to use it
+ * see : http://www.eclipse.org/Xtext/documentation/latest/xtext.html#scoping on how and when to use
+ * it
  * 
  */
 public class ResoluteScopeProvider extends PropertiesScopeProvider {
@@ -46,29 +46,47 @@ public class ResoluteScopeProvider extends PropertiesScopeProvider {
         return Scopes.scopeFor(ctx.getArgs(), getScope(ctx.eContainer(), ref));
     }
 
+    IScope scope_NamedElement(Arg ctx, EReference ref) {
+        if (ctx.eContainer() instanceof FilterMapExpr) {
+            FilterMapExpr parent = (FilterMapExpr) ctx.eContainer();
+            List<Arg> args = parent.getArgs();
+            List<Arg> visibleArgs = args.subList(0, args.indexOf(ctx));
+            return Scopes.scopeFor(visibleArgs, getScope(parent.eContainer(), ref));
+        }
+
+        return getScope(ctx.eContainer(), ref);
+    }
+
     IScope scope_NamedElement(FilterMapExpr ctx, EReference ref) {
         return Scopes.scopeFor(ctx.getArgs(), getScope(ctx.eContainer(), ref));
     }
-    
-    
+
+    IScope scope_NamedElement(LetBinding ctx, EReference ref) {
+        LetExpr parent = (LetExpr) ctx.eContainer();
+        return getScope(parent.eContainer(), ref);
+    }
+
+    IScope scope_NamedElement(LetExpr ctx, EReference ref) {
+        return Scopes.scopeFor(Collections.singleton(ctx.getBinding()),
+                getScope(ctx.eContainer(), ref));
+    }
+
     IScope scope_NamedElement(ProveStatement ctx, EReference ref) {
         EObject container = ctx.eContainer();
-        assert(container instanceof ResoluteSubclause);
+        assert (container instanceof ResoluteSubclause);
         container = container.eContainer();
-        if(container instanceof ComponentImplementation){
-            ComponentImplementation compImpl = (ComponentImplementation)container;
-            return Scopes.scopeFor(compImpl.getAllModes(),  getScope(ctx.eContainer(), ref));
+        if (container instanceof ComponentImplementation) {
+            ComponentImplementation compImpl = (ComponentImplementation) container;
+            return Scopes.scopeFor(compImpl.getAllModes(), getScope(ctx.eContainer(), ref));
         }
         return getScope(ctx.eContainer(), ref);
     }
-    
-    
+
     IScope scope_NamedElement(NestedDotID ctx, EReference ref) {
         Set<Element> components = getCorrespondingAadlElement(ctx);
         return Scopes.scopeFor(components, getScope(ctx.eContainer(), ref));
     }
 
-    
     private Set<Element> getCorrespondingAadlElement(NestedDotID id) {
         EObject container = id.eContainer();
 
@@ -82,15 +100,15 @@ public class ResoluteScopeProvider extends PropertiesScopeProvider {
             container = refs.get(0);
 
             if (container instanceof Subcomponent) {
-                if(container instanceof ThreadSubcomponent){
-                    container = ((ThreadSubcomponent)container).getThreadSubcomponentType();
-                }else{
+                if (container instanceof ThreadSubcomponent) {
+                    container = ((ThreadSubcomponent) container).getThreadSubcomponentType();
+                } else {
                     container = ((Subcomponent) container).getComponentImplementation();
                 }
             } else {
                 return new HashSet<>(); // this will throw a parsing error
             }
-            
+
         } else {
             // travel out of the annex and get the component
             // classifier that the annex is contained in.
@@ -108,17 +126,15 @@ public class ResoluteScopeProvider extends PropertiesScopeProvider {
         if (container instanceof ComponentClassifier) {
             ComponentClassifier compImpl = (ComponentClassifier) container;
             result.addAll(compImpl.getAllModes());
-            if(compImpl instanceof ComponentImplementation){
-                result.addAll(((ComponentImplementation)compImpl).getAllSubcomponents());
+            if (compImpl instanceof ComponentImplementation) {
+                result.addAll(((ComponentImplementation) compImpl).getAllSubcomponents());
             }
-          
-        } else {
-            assert(false);
-        }
 
+        } else {
+            assert (false);
+        }
 
         return result;
     }
-    
-    
+
 }

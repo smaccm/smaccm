@@ -24,11 +24,11 @@ package edu.umn.cs.crisys.smaccm.aadl2rtos.gluecode;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosException;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.AstHelper;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Model;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.ArrayType;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.IntType;
@@ -58,9 +58,8 @@ public class SourceWriter extends AbstractCodeWriter {
 			File CFile,
 			File HFile,
 			Model model,
-			AstHelper astHelper,
 			List<MyPort> events) {
-		super(out, CFile, HFile, model, astHelper);
+		super(out, CFile, HFile, model);
 		// this.semaphoreList = model.getSemaphores();
 	}
 
@@ -90,10 +89,15 @@ public class SourceWriter extends AbstractCodeWriter {
 		//memcpy signature.
 		writeStupidMemcpy();
 		
+		out.append("void ivory_echronos_begin_atomic();\n");
+		out.append("void ivory_echronos_end_atomic();\n\n");
+		out.append("uint64_t timer_get_ticks();\n\n");
+		out.append("uint32_t smaccm_get_time_in_ms() {return (uint32_t)(timer_get_ticks() / 1000ULL); }\n\n");
+		
 		if (model.getThreadCalendar().hasDispatchers()) {
 		  writeInitializePX4SystickInterrupt() ;
 		}
-		defineMutexes();
+		// defineMutexes();
     writeAllSharedVars();
     
     if (model.getThreadCalendar().hasDispatchers()) {
@@ -109,7 +113,7 @@ public class SourceWriter extends AbstractCodeWriter {
 		writeThreadImplMainFunctions();
 		
 		// Write thread instance functions
-		writeThreadInstanceMainFunctions();
+		//writeThreadInstanceMainFunctions();
 
 		// Define main function
 		defineMainFunction();
@@ -234,21 +238,20 @@ public class SourceWriter extends AbstractCodeWriter {
 	    }
 	    ThreadInstance ti = r.getThreadInstances().get(0);
 	    ThreadInstancePort tip = new ThreadInstancePort(ti, r.getDestinationPort());
-      out.append(ind + tip.getVarName() + " += 1; \n"); 
-	    out.append(ind + "rtos_irq_event_raise(" + 
-	        r.getIrqSignalDefine() + ");\n");
+        if (model.getISRType() == Model.ISRType.SignalingISR) {
+		    out.append(ind + tip.getVarName() + " += 1; \n"); 
+		    out.append(ind + "rtos_irq_event_raise(" + 
+		        r.getIrqSignalDefine() + ");\n");
+        } else if (model.getISRType() == Model.ISRType.InThreadContextISR) {
+        	out.append(ind + r.getTowerHandlerName() + "();\n");
+        } else {
+        	throw new Aadl2RtosException("Unknown ISR Type for ISR: " + r.getIrqSignalName());
+        }
 	    out.append(ind + "return true;\n");
 	    out.append("}\n\n");
 	  }
 	}
 	
-	private void defineMutexes() throws IOException {
-//		for (String semaphore : semaphoreList) {
-//			out.append("sem_t " + semaphore + ";\n");
-//		}		
-		out.append("\n");
-	}
-
 	private void defineMainFunction() throws IOException {
 //		out.append("int main() {\n");
 //		out.append("    int result;\n");
@@ -304,18 +307,33 @@ public class SourceWriter extends AbstractCodeWriter {
 	
 	private void writeThreadPeriodicDispatcher(Dispatcher d) throws IOException {
     for (ExternalHandler handler: d.getExternalHandlerList()) {
-      out.append(Util.ind(3) + "millis_from_sys_start += " + Integer.toString(d.getPeriod()) + ";\n");
-      out.append(Util.ind(3) + handler.getHandlerName() + "(/*threadID*/ millis_from_sys_start);\n");
+      //out.append(Util.ind(3) + "millis_from_sys_start += " + Integer.toString(d.getPeriod()) + ";\n");
+      out.append(Util.ind(3) + handler.getHandlerName() + "(/*threadID, */ smaccm_get_time_in_ms());\n");
     }	  
 	} 
 	
 	private void writeThreadImplMainFunctions() throws IOException {
 
-		for (ThreadImplementation tw : allThreads) {
-			out.append("void " + tw.getGeneratedEntrypoint() + "(int threadID) \n");
+		
+		List<ThreadImplementation> threads;
+//		if (model.getISRType() == Model.ISRType.SignalingISR) {
+			threads = allThreads;
+//		} else if (model.getISRType() == Model.ISRType.InThreadContextISR) {
+//			threads = new ArrayList<ThreadImplementation>();
+//			for (ThreadImplementation ti : allThreads) {
+//				if (!ti.isISRThread()) {
+//					threads.add(ti);
+//				}
+//			}
+//		} else {
+//			throw new Aadl2RtosException("Error: unknonwn ISR type: " + model.getISRType().toString());
+//		}
+				
+		for (ThreadImplementation tw : threads) {
+			out.append("void " + tw.getGeneratedEntrypoint() + "(/*int threadID*/) \n");
 			out.append("{\n");
 
-			out.append(Util.ind(1) + "uint32_t millis_from_sys_start = 0;\n");
+			// out.append(Util.ind(1) + "uint32_t millis_from_sys_start = 0;\n");
 
 			ExternalHandler initHandler = tw.getInitializeEntrypointOpt();
 			if (initHandler != null) {
@@ -397,7 +415,25 @@ public class SourceWriter extends AbstractCodeWriter {
 	 *   Can I find this code somewhere?
 	 */
 
-	
+   private void writeEnterCriticalSection(String ind, String mutexDefine) throws IOException {
+      // start critical section
+      if (model.getCommMutexPrimitive() == Model.CommMutualExclusionPrimitive.Semaphore) {
+    	  out.append(ind + rtosFnName("mutex_lock(") + mutexDefine + ");\n");
+      } else {
+    	  out.append(ind + "ivory_echronos_begin_atomic(); \n");
+      }
+   }
+
+   private void writeExitCriticalSection(String ind, String mutexDefine) throws IOException {
+      // finish critical section
+      if (model.getCommMutexPrimitive() == Model.CommMutualExclusionPrimitive.Semaphore) {
+    	  out.append(ind + rtosFnName("mutex_unlock(") + mutexDefine + ");\n");
+      } else {
+    	  out.append(ind + "ivory_echronos_end_atomic(); \n");
+      }
+   }
+      
+   
   private void writeIsEmpty(ThreadImplementation impl, MyPort inp) throws IOException {
     
     String fnName = Names.getInputQueueIsEmptyFnName(impl, inp);
@@ -422,9 +458,8 @@ public class SourceWriter extends AbstractCodeWriter {
       //int dstThreadId = c.getDestThreadInstance().getThreadId();
       MyPort destPort = tip.getPort();
       
-      // lock the semaphore
-      out.append(ind + rtosFnName("mutex_lock(") + tip.getMutexDefine() + ");\n");
-  
+      writeEnterCriticalSection(ind, tip.getMutexDefine());
+      
       if (destPort.isInputDataPort()) {
         out.append(ind + "result = false; \n");
       }
@@ -434,8 +469,9 @@ public class SourceWriter extends AbstractCodeWriter {
       else if (destPort.isInputEventDataPort()) {
          out.append(ind + "result = " + tip.getVarName() + "_is_empty();\n");
       }
+
       // unlock the semaphore
-      out.append(ind + rtosFnName("mutex_unlock(") + tip.getMutexDefine() + ");\n");
+      writeExitCriticalSection(ind, tip.getMutexDefine());
     }
     out.append(ind + "return result;\n");
     out.append("}\n\n");
@@ -468,7 +504,7 @@ public class SourceWriter extends AbstractCodeWriter {
     if (inp.isInputEventPort()) {
       out.append(") {\n\n");  
     } else {
-      out.append((new PointerType(argType)).getCType().varString("elem") + ") {\n\n");
+      out.append(Names.createRefParameter(argType, "elem") + ") {\n\n");
     }
     // create function result variable.
     out.append(ind + "bool result = true;\n\n");
@@ -486,8 +522,8 @@ public class SourceWriter extends AbstractCodeWriter {
       Type destPortType = destPort.getDataType();
       
       // lock the semaphore
-      out.append(ind + rtosFnName("mutex_lock(") + tip.getMutexDefine() + ");\n");
-  
+      writeEnterCriticalSection(ind, tip.getMutexDefine());
+      
       if (destPort.isInputDataPort()) {
         if (destPortType.isBaseType()) {
           out.append(ind + "*elem = " + tip.getVarName() + "; \n");
@@ -508,7 +544,7 @@ public class SourceWriter extends AbstractCodeWriter {
         out.append(ind + "result = " + tip.getVarName() + "_dequeue(elem);\n");
       }
       // unlock the semaphore
-      out.append(ind + rtosFnName("mutex_unlock(") + tip.getMutexDefine() + ");\n");
+      writeExitCriticalSection(ind, tip.getMutexDefine());
     }
     out.append(ind + "return result;\n");
     out.append("}\n\n");
@@ -522,13 +558,13 @@ public class SourceWriter extends AbstractCodeWriter {
         Names.createRefParameter(outp.getSharedData().getDataType(), "elem") + ") {\n\n");
     // unlock the semaphore
     out.append(ind + "bool result = true;\n\n");
-    out.append(ind + rtosFnName("mutex_lock(") + outp.getSharedData().getMutexDefine() + ");\n");
+    writeEnterCriticalSection(ind, outp.getSharedData().getMutexDefine()); 
     if (dt.isBaseType()) {
       out.append(ind + "*elem = " + sharedData.getVarName() + "; \n");
     } else {
       out.append(ind + this.readFromAadlMemcpy(dt, "elem", sharedData.getVarName()) + ";\n");
     }
-    out.append(ind + rtosFnName("mutex_unlock(") + outp.getSharedData().getMutexDefine() + ");\n");
+    writeExitCriticalSection(ind, outp.getSharedData().getMutexDefine()); 
     out.append(ind + "return result;\n");
     out.append("}\n\n");
   }
@@ -556,30 +592,29 @@ public class SourceWriter extends AbstractCodeWriter {
   }
   
   private void writeEventDataPortSharedVars(ThreadInstancePort c, MyPort dstPort, Type portTy) throws IOException {
-    String queueSize = Integer.toString(c.getPort().getQueueSize());
-    String arraySize = Integer.toString(c.getPort().getQueueSize() + 1);
+    String arraySize = Integer.toString(c.getArraySize());
+    // TODO: fix this.
     String queueName = c.getVarName();
+    String isFullName = c.getIsFullName();
     String head = c.getCircBufferFrontVarName();
     String tail = c.getCircBufferBackVarName();
 
-    out.append("#define " + c.getQueueSizeName() + " " + queueSize + "\n");
     out.append(c.getQueueType().getCType().varString(queueName) + "; \n");
+    out.append("bool " + isFullName + " = false; \n");
     out.append(c.getCircRefType().getCType().varString(head) + "; \n");
-    out.append(c.getCircRefType().getCType().varString(tail) + "; \n\n");     
-
+    out.append(c.getCircRefType().getCType().varString(tail) + "; \n\n");
+    
+    // right now we can only support queues 
+    // if (queueSize >= )
+    
     // Write is_full function
     out.append("bool " + queueName + "_is_full() {\n");
-    out.append(ind + "int mod_value = (" + tail + " + 1) % " + arraySize + ";\n");
-    out.append(ind + "if (mod_value == " + head + ") {\n");
-    out.append(ind + ind + "return true;\n");
-    out.append(ind + "} else {\n");
-    out.append(ind + ind + "return false;\n");
-    out.append(ind + "}\n");
+    out.append(ind + "return (" + tail + " == " + head + ") && (" + isFullName + ");\n");
     out.append("}\n\n");
 
     // Write is_empty function
     out.append("bool " + queueName + "_is_empty() {\n");
-    out.append(ind + "return (" + tail + " == " + head + ");\n");
+    out.append(ind + "return (" + tail + " == " + head + ") && (!" + isFullName + ");\n");
     out.append("}\n\n");
 
     // Write enqueue function
@@ -598,6 +633,7 @@ public class SourceWriter extends AbstractCodeWriter {
     }
 
     out.append(ind + ind + tail + " = (" + tail + " + 1) % " + arraySize + ";\n");
+    out.append(ind + ind + "if (" + tail + " == " + head + ") { " + isFullName + " = true; } \n\n");
     out.append(ind + ind + "return true;\n");
     out.append(ind + "}\n");
     out.append("}\n\n");
@@ -615,6 +651,7 @@ public class SourceWriter extends AbstractCodeWriter {
           readFromAadlMemcpy(portTy, "elem", queueName + "[" + head + "]") + ";\n");
     }
     out.append(ind + ind + head + " = (" + head + " + 1) % " + arraySize + ";\n");
+    out.append(ind + ind + isFullName + " = false; \n");
     out.append(ind + ind + "return true;\n");
     out.append(ind + "}\n");
     out.append("}\n\n");
@@ -647,7 +684,7 @@ public class SourceWriter extends AbstractCodeWriter {
   }
   
   private void writeAllSharedVars() throws IOException {
-    writeComment("Shared variables for port-to-port communication.");
+    writeComment("Shared variables for port-to-port communication.\n");
     for (ThreadInstancePort c: this.model.getAllThreadInstanceInputPorts()) {
       writeThreadInstancePortSharedVars(c);
     }
@@ -708,7 +745,7 @@ public class SourceWriter extends AbstractCodeWriter {
         */
         
         // lock the semaphore
-        out.append(ind + rtosFnName("mutex_lock(") + tip.getMutexDefine() + ");\n");
+        writeEnterCriticalSection(ind, tip.getMutexDefine());
     
         if (destPort.isInputDataPort()) {
           if (destPortType.isBaseType()) {
@@ -737,8 +774,7 @@ public class SourceWriter extends AbstractCodeWriter {
         }
         
         // unlock the semaphore
-        out.append(ind + rtosFnName("mutex_unlock(") + tip.getMutexDefine() + ");\n");
-        
+        writeExitCriticalSection(ind, tip.getMutexDefine());
       }
     }
     out.append(ind + "return result;\n");
@@ -753,13 +789,14 @@ public class SourceWriter extends AbstractCodeWriter {
     out.append("const " + Names.createRefParameter(outp.getSharedData().getDataType(), "elem") + ") {\n\n");
     // unlock the semaphore
     out.append(ind + "bool result = true;\n\n");
-    out.append(ind + rtosFnName("mutex_lock(") + outp.getSharedData().getMutexDefine() + ");\n");
+    writeEnterCriticalSection(ind, outp.getSharedData().getMutexDefine());
     if (dt.isBaseType()) {
       out.append(ind + sharedData.getVarName() + " = *elem; \n");
     } else {
       out.append(ind + 
           this.writeToAadlMemcpy(dt, sharedData.getVarName(), "elem") + ";\n");
     }    
+    writeExitCriticalSection(ind, outp.getSharedData().getMutexDefine());
     out.append(ind + "return result;\n");
     out.append("}\n\n");
   }

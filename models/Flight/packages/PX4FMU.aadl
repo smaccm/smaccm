@@ -3,6 +3,7 @@ public
   with UAV;
   with DATATYPES;
   with CORTEX;
+  with SMACCM;
   
   system PX4FMU
     features
@@ -28,34 +29,40 @@ public
       
     connections
       -- I2C bus
-      bus access MC.i2c2 <-> i2c2_bus;
-      bus access I2C2.bus_access <-> MC.i2c2;
-      bus access EEPROM.bus_access <-> I2C2;
-      bus access MAG.bus_access <-> I2C2;
-      port MAG.magnetometer_data -> sensors.magnetometer_data;
-      bus access BARO.bus_access <-> I2C2;
-      port BARO.barometric_data -> sensors.barometric_data;
+      conn0: bus access MC.i2c2 <-> i2c2_bus;
+      conn1: bus access I2C2.bus_access <-> MC.i2c2;
+      conn2: bus access EEPROM.bus_access <-> I2C2;
+      conn3: bus access MAG.bus_access <-> I2C2;
+      conn4: port MAG.magnetometer_data -> sensors.magnetometer_data;
+      conn5: bus access BARO.bus_access <-> I2C2;
+      conn6: port BARO.barometric_data -> sensors.barometric_data;
 
       -- Direct devices
-      port RESET.reset -> sensors.reset;
-      bus access USB.bus_access <-> MC.otg_fs;
-      bus access MON.bus_access <-> MC.adc123;
-      port MON.battery_data -> sensors.battery_data;
-      bus access GPS.bus_access <-> MC.usart6;
-      port GPS.GPS_Data -> sensors.gps_data;
-      bus access GYRO.bus_access <-> MC.spi1;
-      port GYRO.motion_data -> sensors.motion_data;
+      conn7: port RESET.reset -> sensors.reset;
+      conn8: bus access USB.bus_access <-> MC.otg_fs;
+      conn9: bus access MON.bus_access <-> MC.adc123;
+      conn10: port MON.battery_data -> sensors.battery_data; 
+      conn11: bus access GPS.bus_access <-> MC.usart6;
+      conn12: port GPS.GPS_Data -> sensors.gps_data;
+      conn13: bus access GYRO.bus_access <-> MC.spi1;
+      conn14: port GYRO.motion_data -> sensors.motion_data;
       
       -- Expansion slot
-      bus access expansion_slot.usart1 <-> MC.usart1;
-      bus access expansion_slot.usart2 <-> MC.usart2;
-      bus access expansion_slot.ppm <-> MC.ppm;
-      bus access expansion_slot.alarm <-> MC.alarm;
+      conn15: bus access expansion_slot.usart1 <-> MC.usart1;
+      conn16: bus access expansion_slot.usart2 <-> MC.usart2;
+      conn17: bus access expansion_slot.ppm <-> MC.ppm;
+      conn18: bus access expansion_slot.alarm <-> MC.alarm;
+      
+    properties
+      SMACCM::Unimplemented => true applies to MC.usart2;
+      SMACCM::Unimplemented => true applies to expansion_slot.usart2;
+      
+      
   end PX4FMU.Impl;
 
   device Reset
     features
-      reset: out event port;
+      reset: out event data port DATATYPES::Reset_Data;
   end Reset;
   
   device USB

@@ -12,6 +12,8 @@ import java.util.List;
 
 // import org.apache.commons.io.FilenameUtils;
 
+import java.util.Set;
+
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosException;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Model;
 
@@ -58,6 +60,7 @@ public class MakefileWriter {
   String outputDirectoryName;
   
   
+  List<String> cppFiles = new ArrayList<String>();
   List<String> cFiles = new ArrayList<String>();
   List<String> sFiles = new ArrayList<String>();
   List<String> oFiles = new ArrayList<String>();
@@ -72,19 +75,31 @@ public class MakefileWriter {
     // add the directories if they do not exist.
     outputDirectory.mkdirs();
     
-    for (String s: model.getSourceFiles()) {
+    Set<String> sourceFiles = model.getSourceFiles();
+    List<String> libraryFiles = model.getLibraryFiles();
+    
+    for (String s: sourceFiles) {
       if (s.endsWith(".c")) {
         cFiles.add(s);
+      } else if (s.endsWith(".cpp")) {
+    	  cppFiles.add(s);
       } else if (s.endsWith(".s")) {
         sFiles.add(s);
       } else if (s.endsWith(".o")) {
         oFiles.add(s);
-      } else if (s.endsWith(".a")) {
-        aFiles.add(s);
       } else {
         throw new Aadl2RtosException("Unknown file type: " + s + "when creating makefile.");
       }
     }
+  
+    for (String s: libraryFiles) {
+        if (s.endsWith(".a")) {
+      	  aFiles.add(s);
+        } else {
+          throw new Aadl2RtosException("Unknown file type: " + s + "when creating makefile.");
+        }
+      }
+   
     /*
      * add OS files to files.
      */
@@ -130,6 +145,15 @@ public class MakefileWriter {
     return build;
   }
   
+  String buildCppFileString(String cFile) {
+	    String outputFile = this.getOutputFile(cFile);
+	    String parentDirectory = getParentDirectoryString(cFile); 
+	    String build = 
+	        "\tarm-none-eabi-g++ -ffreestanding -c " + cFile + " -o " + outputFile + 
+	        " $(CFLAGS) -I. " + parentDirectory + " \n";  
+	    return build;
+	  }
+
   String buildSFileString(String sFile) {
     // TODO: Really should use Apache Commons IO
     String outputFile = this.getOutputFile(sFile);
@@ -144,6 +168,9 @@ public class MakefileWriter {
     for (String str: cFiles) {
       sb.append(" " + getOutputFile(str));
     }
+    for (String str: cppFiles) {
+        sb.append(" " + getOutputFile(str));
+      }
     for (String str: sFiles) {
       sb.append(" " + getOutputFile(str));
     }
@@ -177,7 +204,7 @@ public class MakefileWriter {
         "# \"LICENSE\" for more information.\n" + 
         "#\n" + 
         "\n" + 
-        "OUT_DIR := " + outputDirectory + "\n" + 
+        "OUT_DIR := " + outputDirectory + "/\n" + 
         "CONFIG_TOOLCHAIN := cortex-m4\n" + 
         "CONFIG_CORTEX_M4_PREFIX := arm-none-eabi-\n" + 
         "CONFIG_BOARD := px4\n" + 
@@ -192,6 +219,9 @@ public class MakefileWriter {
     out.append(header);
     for (String str: cFiles) {
       out.append(buildCFileString(str));
+    }
+    for (String str: cppFiles) {
+    	out.append(buildCppFileString(str));
     }
     for (String str: sFiles) {
       out.append(buildSFileString(str));

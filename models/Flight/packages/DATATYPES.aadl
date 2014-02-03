@@ -83,6 +83,9 @@ public
   data Motion_Data
   end Motion_Data;
   
+  data Reset_Data
+  end Reset_Data;
+  
   data implementation Motion_Data.Impl
   subcomponents
       vertical_speed : data Base_Types::Float;

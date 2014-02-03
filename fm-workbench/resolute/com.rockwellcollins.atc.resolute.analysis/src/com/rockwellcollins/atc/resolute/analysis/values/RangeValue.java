@@ -1,63 +1,42 @@
 package com.rockwellcollins.atc.resolute.analysis.values;
 
 public class RangeValue extends ResoluteValue {
-    
-	final public static int TYPE_INTEGER = 1;
-	final public static int TYPE_REAL    = 2;
-	
-	private int    type;
-	private double minDouble = 0;
-    private double maxDouble = 0;
-	private long  minLong = 0;
-    private long  maxLong = 0;
-    
-    public RangeValue(double min, double max) 
-    {
-        this.minDouble = min;
-        this.maxDouble = max;
-        this.type = TYPE_REAL;
-    }
-    
-    public RangeValue(long min, long max) 
-    {
-        this.minLong = min;
-        this.maxLong = max;
-        this.type = TYPE_INTEGER;
+    private final ResoluteValue min;
+    private final ResoluteValue max;
+
+    public RangeValue(ResoluteValue min, ResoluteValue max) {
+        this.min = min;
+        this.max = max;
     }
 
-    public int getType ()
-    {
-    	return this.type;
-    }
-    
-    public double getMinimumDouble() {
-        return minDouble;
-    }
-    
-    public long getMinimumLong() {
-        return minLong;
-    }
-    
-    public double getMaximumDouble() {
-        return maxDouble;
-    }
-    
-    public long getMaximumLong() {
-        return maxLong;
+    public ResoluteValue getMin() {
+        return min;
     }
 
+    public ResoluteValue getMax() {
+        return max;
+    }
 
+    @Override
+    public boolean isRange() {
+        return true;
+    }
+
+    @Override
+    public RangeValue getRange() {
+        return this;
+    }
+
+    @Override
+    public int hashCode() {
+        return min.hashCode() + max.hashCode();
+    }
 
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof RangeValue) {
-            RangeValue dv = (RangeValue) obj;
-            return (
-            		(dv.getMaximumDouble() == maxDouble) &&
-            		(dv.getMaximumLong() == maxLong) &&
-            		(dv.getMinimumDouble() == minDouble) &&
-            		(dv.getMinimumLong() == minLong)
-            	   );
+            RangeValue rv = (RangeValue) obj;
+            return min.equals(rv.min) && max.equals(rv.max);
         }
 
         return false;

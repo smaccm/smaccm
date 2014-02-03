@@ -13,6 +13,7 @@ import java.util.List;
 public class InterruptServiceRoutine {
 
   String signalName;
+  String handlerName;
   MyPort outputServiceRoutinePort;
   MyPort destPort;
   List<ThreadInstance> destThreads = new ArrayList<ThreadInstance>();
@@ -20,13 +21,16 @@ public class InterruptServiceRoutine {
   /*
    * TODO: We need to refactor the port hierarchy so that we can create an 
    * OutputInterruptServiceRoutine port.  It is quite different from other 
-   * ports.  However, in the mean time, we will "fake" an output event port with 
-   * a null thread owner and a null datatype.  The 
+   * ports.   
    * 
    */
   
-  public InterruptServiceRoutine(String signalName) {
+  public InterruptServiceRoutine(String signalName, String handlerName) {
     this.signalName = signalName; 
+    this.handlerName = handlerName;
+    
+   // System.out.println("Signal Name: " + signalName);
+    //System.out.println("Handler Name: " + handlerName);
     this.outputServiceRoutinePort = new MyPort(this); 
   }
   
@@ -55,7 +59,11 @@ public class InterruptServiceRoutine {
   }
   
   public String getHandlerName() {
-    return "smaccm_" + getSignalName(); 
+	  return "smaccm_" + handlerName;
+  }
+  
+  public String getTowerHandlerName() {
+	  return handlerName;
   }
   
   public String getIrqSignalName() {

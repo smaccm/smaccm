@@ -116,7 +116,7 @@ property left_side_valid = AD_L.Pitch.Valid ;
 property right_side_valid = AD_R.Pitch.Valid ;
 property some_side_valid = 
   left_side_valid or right_side_valid ;
-		  
+  		  
 -- We assume one side non-failed.  I leave this assumption unlabeled. 
 assume "valid assumption" : some_side_valid ;
 

@@ -30,29 +30,29 @@ public
     
     connections
       -- Motors
-      port motors_and_radios.motor1 -> M1.commands;
-      port motors_and_radios.motor2 -> M2.commands;
-      port motors_and_radios.motor3 -> M3.commands;
-      port motors_and_radios.motor4 -> M4.commands;
-      bus access M1.bus_access <-> USART2;
-      bus access M2.bus_access <-> USART2;
-      bus access M3.bus_access <-> USART2;
-      bus access M4.bus_access <-> USART2;
+      conn0: port motors_and_radios.motor1 -> M1.commands;
+      conn1: port motors_and_radios.motor2 -> M2.commands;
+      conn2: port motors_and_radios.motor3 -> M3.commands;
+      conn3: port motors_and_radios.motor4 -> M4.commands;
+      conn4: bus access M1.bus_access <-> USART2;
+      conn5: bus access M2.bus_access <-> USART2;
+      conn6: bus access M3.bus_access <-> USART2;
+      conn7: bus access M4.bus_access <-> USART2;
       
       -- Buzzer
-      bus access BUZZER.bus_access <-> expansion_connector.alarm;
+      conn8: bus access BUZZER.bus_access <-> expansion_connector.alarm;
       
       -- RC Radio
-      port RC.commands_internal -> motors_and_radios.flight_control_commands;
-      port flight_control_commands -> RC.commands_external;
-      bus access RC.ppm <-> expansion_connector.ppm;
-      bus access RC.antenna <-> rc_radio;
+      conn9: port RC.commands_internal -> motors_and_radios.flight_control_commands;
+      conn10: port flight_control_commands -> RC.commands_external;
+      conn11: bus access RC.ppm <-> expansion_connector.ppm;
+      conn12: bus access RC.antenna <-> rc_radio;
       
       -- 3DR Radio
-      port x3DR.mavlink_internal <-> motors_and_radios.mavlink;
-      port mavlink <-> x3DR.mavlink_external;
-      bus access x3DR.usart <-> expansion_connector.usart1;
-      bus access x3DR.antenna <-> x3dr_radio;
+      conn13: port x3DR.mavlink_internal <-> motors_and_radios.mavlink;
+      conn14: port mavlink <-> x3DR.mavlink_external;
+      conn15: bus access x3DR.usart <-> expansion_connector.usart1;
+      conn16: bus access x3DR.antenna <-> x3dr_radio;
   end PX4IOAR.Impl;
   
   device Motor
@@ -84,9 +84,9 @@ public
     properties
       SMACCM::Always_Sends_Message => true; 
       
-      annex resolute {**  
-      	prove execute_completeness(this)
-      **};
+      --annex resolute {**  
+      	--prove execute_completeness(this)
+      --**};
       
   end x3DR_Radio;
   

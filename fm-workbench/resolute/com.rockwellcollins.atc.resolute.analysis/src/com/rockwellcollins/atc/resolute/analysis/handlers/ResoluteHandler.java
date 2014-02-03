@@ -1,16 +1,20 @@
 package com.rockwellcollins.atc.resolute.analysis.handlers;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.emf.common.util.EList;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
-import org.osate.aadl2.ComponentClassifier;
+import org.osate.aadl2.ComponentCategory;
 import org.osate.aadl2.Element;
 import org.osate.aadl2.NamedElement;
 import org.osate.aadl2.SystemImplementation;
@@ -20,20 +24,29 @@ import org.osate.aadl2.instance.SystemInstance;
 import org.osate.aadl2.instantiation.InstantiateModel;
 import org.osate.ui.dialogs.Dialog;
 
-import com.rockwellcollins.atc.resolute.analysis.ProofType;
-import com.rockwellcollins.atc.resolute.analysis.ResoluteInterpreter;
-import com.rockwellcollins.atc.resolute.analysis.ResoluteProofTree;
-import com.rockwellcollins.atc.resolute.analysis.ResoluteQuantifiableAadlObjects;
+import com.rockwellcollins.atc.resolute.analysis.execution.EvaluationContext;
+import com.rockwellcollins.atc.resolute.analysis.execution.FeatureToConnectionsMap;
+import com.rockwellcollins.atc.resolute.analysis.execution.NamedElementComparator;
+import com.rockwellcollins.atc.resolute.analysis.execution.ResoluteInterpreter;
+import com.rockwellcollins.atc.resolute.analysis.results.ResoluteResult;
 import com.rockwellcollins.atc.resolute.analysis.views.AssuranceCaseView;
+import com.rockwellcollins.atc.resolute.resolute.ProveStatement;
 import com.rockwellcollins.atc.resolute.resolute.ResoluteSubclause;
 
-public abstract class ResoluteHandler extends AadlHandler {
+public class ResoluteHandler extends AadlHandler {
+    @Override
+    protected String getJobName() {
+        return "Resolute Analysis";
+    }
+
     @Override
     protected IStatus runJob(Element root, IProgressMonitor monitor) {
-        SystemInstance si = null;
+        clearProofs();
 
+        long start = System.currentTimeMillis();
+        SystemInstance si;
         if (root instanceof SystemImplementation) {
-            final SystemImplementation sysimpl = (SystemImplementation) root;
+            SystemImplementation sysimpl = (SystemImplementation) root;
             try {
                 si = InstantiateModel.buildInstanceModelFile(sysimpl);
             } catch (Exception e) {
@@ -41,105 +54,75 @@ public abstract class ResoluteHandler extends AadlHandler {
                         + e.getMessage());
                 return Status.CANCEL_STATUS;
             }
+        } else {
+            Dialog.showError("Model Instantiate",
+                    "You must select a System Implementation to instantiate");
+            return Status.CANCEL_STATUS;
         }
+        long stop = System.currentTimeMillis();
+        System.out.println("Instantiation time: " + (stop - start) / 1000.0 + "s");
 
-        assert (si != null);
-        ResoluteQuantifiableAadlObjects.clearAllSets();
-        initializeComponentLists(si);
-        List<ResoluteProofTree> proofTrees = new LinkedList<ResoluteProofTree>();
-        for (NamedElement el : ResoluteQuantifiableAadlObjects.componentSet) {
+        start = System.currentTimeMillis();
+
+        Map<String, SortedSet<NamedElement>> sets = new HashMap<>();
+        initializeSets(si, sets);
+        FeatureToConnectionsMap featToConnsMap = new FeatureToConnectionsMap(si);
+
+        List<ResoluteResult> proofTrees = new ArrayList<>();
+        for (NamedElement el : sets.get("component")) {
             ComponentInstance compInst = (ComponentInstance) el;
-
-            ComponentClassifier compClass = compInst.getComponentClassifier();
-            EList<Element> componentChildren = compClass.getChildren();
-            for (Element child : componentChildren) {
+            for (Element child : compInst.getComponentClassifier().getChildren()) {
                 if (child instanceof ResoluteSubclause) {
-                    ResoluteInterpreter resInterp = new ResoluteInterpreter(compInst,
-                            getProofType());
-                    ResoluteSubclause subClause = (ResoluteSubclause) child;
-                    List<ResoluteProofTree> proofs = resInterp.evaluateSubclause(subClause);
-                    for (ResoluteProofTree proof : proofs) {
-                        pruneProof(proof);
+                    EvaluationContext context = new EvaluationContext(compInst, sets,
+                            featToConnsMap);
+                    ResoluteInterpreter interpreter = new ResoluteInterpreter(context);
+                    for (Element element : child.getChildren()) {
+                        if (element instanceof ProveStatement) {
+                            proofTrees.add(interpreter
+                                    .evaluateProveStatement((ProveStatement) element));
+                            drawProofs(proofTrees);
+                        }
                     }
-                    proofTrees.addAll(proofs);
                 }
             }
         }
+        stop = System.currentTimeMillis();
+        System.out.println("Evaluation time: " + (stop - start) / 1000.0 + "s");
 
-        drawProofs(proofTrees);
         return Status.OK_STATUS;
     }
 
-    protected abstract ProofType getProofType();
-
-    protected abstract void pruneProof(ResoluteProofTree proof);
-
-    private void initializeComponentLists(ComponentInstance compInst)
-    {
-    	if (compInst == null)
-    		return;
-    	
-        switch (compInst.getCategory()) {
-        case ABSTRACT:
-            ResoluteQuantifiableAadlObjects.abstractSet.add(compInst);
-            break;
-        case BUS:
-            ResoluteQuantifiableAadlObjects.busSet.add(compInst);
-            break;
-        case DATA:
-            ResoluteQuantifiableAadlObjects.dataSet.add(compInst);
-            break;
-        case DEVICE:
-            ResoluteQuantifiableAadlObjects.deviceSet.add(compInst);
-            break;
-        case MEMORY:
-            ResoluteQuantifiableAadlObjects.memorySet.add(compInst);
-            break;
-        case PROCESSOR:
-            ResoluteQuantifiableAadlObjects.processorSet.add(compInst);
-            break;
-        case PROCESS:
-            ResoluteQuantifiableAadlObjects.processSet.add(compInst);
-            break;
-        case SUBPROGRAM_GROUP:
-            ResoluteQuantifiableAadlObjects.subprogramGroupSet.add(compInst);
-            break;
-        case SUBPROGRAM:
-            ResoluteQuantifiableAadlObjects.subprogramSet.add(compInst);
-            break;
-        case SYSTEM:
-            ResoluteQuantifiableAadlObjects.systemSet.add(compInst);
-            break;
-        case THREAD_GROUP:
-            ResoluteQuantifiableAadlObjects.threadGroupSet.add(compInst);
-            break;
-        case THREAD:
-            ResoluteQuantifiableAadlObjects.threadSet.add(compInst);
-            break;
-        case VIRTUAL_BUS:
-            ResoluteQuantifiableAadlObjects.virtualBusSet.add(compInst);
-            break;
-        case VIRTUAL_PROCESSOR:
-            ResoluteQuantifiableAadlObjects.virtualProcessorSet.add(compInst);
-            break;
-        default:
-            assert false;
+    private void initializeSets(ComponentInstance ci, Map<String, SortedSet<NamedElement>> sets) {
+        if (ci == null) {
+            return;
         }
 
-        ResoluteQuantifiableAadlObjects.componentSet.add(compInst);
+        addToSet(sets, getCategoryName(ci.getCategory()), ci);
+        addToSet(sets, "component", ci);
 
-        for (ComponentInstance comp : compInst.getAllComponentInstances()) {
-            if (!comp.equals(compInst)) {
-                initializeComponentLists(comp);
-            }
+        for (ComponentInstance sub : ci.getComponentInstances()) {
+            initializeSets(sub, sets);
         }
 
-        for (ConnectionInstance conn : compInst.getConnectionInstances()) {
-            ResoluteQuantifiableAadlObjects.connectionSet.add(conn);
+        for (ConnectionInstance conn : ci.getConnectionInstances()) {
+            addToSet(sets, "connection", conn);
         }
     }
 
-    private void drawProofs(final List<ResoluteProofTree> proofTrees) {
+    private String getCategoryName(ComponentCategory category) {
+        return category.getName().replace(" ", "_");
+    }
+
+    private void addToSet(Map<String, SortedSet<NamedElement>> sets, String name, NamedElement ne) {
+        SortedSet<NamedElement> set = sets.get(name);
+        if (set == null) {
+            set = new TreeSet<>(new NamedElementComparator());
+            sets.put(name, set);
+        }
+        set.add(ne);
+    }
+
+    private void drawProofs(final List<ResoluteResult> proofTrees) {
         final IWorkbenchPage page = getWindow().getActivePage();
 
         Display.getDefault().asyncExec(new Runnable() {
@@ -150,13 +133,17 @@ public abstract class ResoluteHandler extends AadlHandler {
         });
     }
 
-    private void displayView(final List<ResoluteProofTree> proofTrees, final IWorkbenchPage page) {
+    private void displayView(final List<ResoluteResult> proofTrees, final IWorkbenchPage page) {
         try {
             AssuranceCaseView view = (AssuranceCaseView) page.showView(AssuranceCaseView.ID);
-            view.addProofs(proofTrees);
+            view.setProofs(proofTrees);
             view.setFocus();
         } catch (PartInitException e) {
             e.printStackTrace();
         }
+    }
+
+    private void clearProofs() {
+        drawProofs(Collections.<ResoluteResult> emptyList());
     }
 }

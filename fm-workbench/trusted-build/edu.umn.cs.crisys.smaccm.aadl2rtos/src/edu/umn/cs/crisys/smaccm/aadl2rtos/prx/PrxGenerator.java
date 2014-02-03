@@ -10,17 +10,16 @@ import java.util.Set;
 
 import org.w3c.dom.Comment;
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Logger;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosException;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Model;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.gluecode.Names;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.Dispatcher;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.ExternalIRQ;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.InterruptServiceRoutine;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.LegacyExternalIRQ;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.LegacyIRQEvent;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.LegacyThreadImplementation;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.SharedData;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.ThreadImplementation;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.ThreadImplementationBase;
@@ -133,10 +132,10 @@ public class PrxGenerator {
     org.w3c.dom.Element ec;
 
 	  
-	  e = doc.createElement("trampoline");
+	e = doc.createElement("trampoline");
     parent.appendChild(e);
 	  
-	  if (signalName == null || handlerName == null) {
+	if (signalName == null || handlerName == null) {
       throw new Aadl2RtosException("Error in PrxGenerator: " + 
           "ISR threads must define both a signalName and a handlerName. (At least) one is not defined.");
     }
@@ -160,23 +159,26 @@ public class PrxGenerator {
       parent.appendChild(e);
     } catch (Exception excep) {
       throw new Aadl2RtosException("Error: creating handler name for ISR; handler list in incorrect format for thread: " 
-          + handlerName + ".  Exception: " + excep);
+          + handlerName + ".  Exception: " + excep.toString());
     }
 	}
 
-  private void writeLegacyVectableEntry(String lirqName, org.w3c.dom.Element parent) {
+  private void writeLegacyVectableEntry(ExternalIRQ eirq, org.w3c.dom.Element parent) {
     org.w3c.dom.Element e;
     org.w3c.dom.Element ec;
     e = doc.createElement("external_irq");
-    String externalHandlerName = "exception_preempt_trampoline_" + lirqName;
+    String externalHandlerName = eirq.getName();
     try {
+      ec = doc.createElement("number");
+      ec.appendChild(doc.createTextNode(Integer.toString(eirq.getIrqId())));
+      e.appendChild(ec);
       ec = doc.createElement("handler");
       ec.appendChild(doc.createTextNode(externalHandlerName));
       e.appendChild(ec);
       parent.appendChild(e);
     } catch (Exception excep) {
       throw new Aadl2RtosException("Error: creating handler name for external ISR; handler list in incorrect format for external IRQ: " 
-          + lirqName + ".  Exception: " + excep);
+          + externalHandlerName + ".  Exception: " + excep);
     }
   }
 
@@ -232,10 +234,23 @@ public class PrxGenerator {
 		e = doc.createElement("module");
 		e.setAttribute("name", "armv7m.vectable");
 		parent.appendChild(e);
-		/*  <flash_load_addr>0x8000000</flash_load_addr> */
+
 		ec = doc.createElement("flash_load_addr");
 		e.appendChild(ec);
 		ec.appendChild(doc.createTextNode("0x8000000"));
+		ec = doc.createElement("code_addr");
+		e.appendChild(ec);
+		ec.appendChild(doc.createTextNode("0x8000000"));
+		ec = doc.createElement("systick");
+		e.appendChild(ec);
+		ec.appendChild(doc.createTextNode("exception_preempt_trampoline_systick"));
+		ec = doc.createElement("svcall");
+		e.appendChild(ec);
+		ec.appendChild(doc.createTextNode("SVCHandler"));
+		ec = doc.createElement("pendsv");
+		e.appendChild(ec);
+		ec.appendChild(doc.createTextNode("PendSVHandler"));
+	      
 		for (InterruptServiceRoutine i : ISRs) {
 		  if (isInternalIrq(i.getSignalName())) {
 		    writeVectableEntry(i.getSignalName(), i.getHandlerName(), e);
@@ -248,13 +263,13 @@ public class PrxGenerator {
 		//if (!model.getLegacyExternalIRQs().isEmpty()) {
 		  ec = doc.createElement("external_irqs");
 		  e.appendChild(ec);
-		  for (String lirqName: externIrqArray) {
-  		  writeLegacyVectableEntry(lirqName, ec);
+		  for (ExternalIRQ eirq: model.getExternalIRQs()) {
+  		  writeLegacyVectableEntry(eirq, ec);
   		}
 		// }
-    if (model.getThreadCalendar().hasDispatchers() && model.getGenerateSystickIRQ()) {
-      writeVectableEntry("systick", Names.getCalendarFnName(), e);
-    }
+        if (model.getThreadCalendar().hasDispatchers() && model.getGenerateSystickIRQ()) {
+           writeVectableEntry("systick", Names.getCalendarFnName(), e);
+        }
 	}
 
 	private void printKochabComponent(ThreadImplementationBase c, Document doc, org.w3c.dom.Element parent) {
@@ -309,7 +324,21 @@ public class PrxGenerator {
 		e = doc.createElement("tasks");
 		parent.appendChild(e);
 		
-    List<ThreadImplementationBase> allTasks = model.getAllThreadImplementations();
+    List<ThreadImplementationBase> allTasks; 
+    
+//	if (model.getISRType() == Model.ISRType.SignalingISR) {
+	    allTasks = model.getAllThreadImplementations();
+//	} else if (model.getISRType() == Model.ISRType.InThreadContextISR) {
+//		allTasks = new ArrayList<ThreadImplementationBase>();
+//		for (ThreadImplementationBase ti : model.getAllThreadImplementations()) {
+//			if (!ti.isISRThread()) {
+//				allTasks.add(ti);
+//			}
+//		}
+//	} else {
+//		throw new Aadl2RtosException("Error: unknonwn ISR type: " + model.getISRType().toString());
+//	}
+
     int kochabLocation = 0;
     Collections.sort(allTasks, new PriorityComparator());
     for (ThreadImplementationBase i : allTasks) {
@@ -321,7 +350,7 @@ public class PrxGenerator {
 		}
 	}
 
-	private void writeIrqEvent(org.w3c.dom.Element e, String signalName, String taskId, int eventTask, int signalNumber) {
+	private void writeIrqEvent(org.w3c.dom.Element e, String signalName, String taskId, int eventTask, String taskName, int signalNumber) {
     org.w3c.dom.Element ec;
     org.w3c.dom.Element eec;
     ec = doc.createElement("irq_event");
@@ -329,10 +358,10 @@ public class PrxGenerator {
     eec = doc.createElement("name");
     ec.appendChild(eec);
     eec.appendChild(doc.createTextNode(signalName));
-    eec = doc.createElement("task");
+    eec = doc.createElement("task_name");
     ec.appendChild(eec);
-    eec.appendChild(doc.createTextNode(Integer.toString(eventTask)));
-    eec.appendChild(doc.createComment("Task: " + taskId + " has the " + Integer.toString(eventTask) + "th highest priority in the system."));
+    ec.appendChild(doc.createComment("Task: " + taskId + " has the " + Integer.toString(eventTask) + "th highest priority in the system."));
+    eec.appendChild(doc.createTextNode((taskName)));
     eec = doc.createElement("sig_set");
     ec.appendChild(eec);
     eec.appendChild(doc.createTextNode(Integer.toString(1 << signalNumber)));	  
@@ -359,9 +388,10 @@ public class PrxGenerator {
 	    String signalName = isr.getIrqSignalName();
 	    ThreadImplementationBase tib = isr.getThreadInstances().get(0).getThreadImplementation(); 
 	    String taskId = tib.getName();
+	    String taskName = tib.getName();
 	    int eventTask = tib.getKochabThreadLocation(); 
 	    int signalNumber = isr.getDestinationPort().getPortID();
-	    writeIrqEvent(e, signalName, taskId, eventTask, signalNumber);
+	    writeIrqEvent(e, signalName, taskId, eventTask, taskName, signalNumber);
 	  }
 
 	  // write signal numbers for all periodically dispatched threads.
@@ -369,9 +399,10 @@ public class PrxGenerator {
 	    String signalName = d.getPeriodicIrqSignalName();
 	    for (ThreadInstance ti: d.getOwner().getThreadInstanceList()) {
 	      String taskId = ti.getThreadImplementation().getName();
+	      String taskName = d.getOwner().getName();
 	      int eventTask = ti.getThreadImplementation().getKochabThreadLocation();
 	      int signalNumber = d.getOwner().getSignalNumberForDispatcher(d);
-	      writeIrqEvent(e, signalName, taskId, eventTask, signalNumber);
+	      writeIrqEvent(e, signalName, taskId, eventTask, taskName, signalNumber);
 	    }
 	  }
 	  
@@ -381,7 +412,7 @@ public class PrxGenerator {
 	    if (tib == null) {
 	      throw new Aadl2RtosException("Unable to find thread with name: '" + lie.getTaskName() + "'.");
 	    }
-	    writeIrqEvent(e, lie.getName(), tib.getName(), tib.getKochabThreadLocation(), lie.getSigSet());
+	    writeIrqEvent(e, lie.getName(), tib.getName(), tib.getKochabThreadLocation(), lie.getTaskName(), lie.getSigSet());
 	  }
 	}
 	
@@ -402,15 +433,21 @@ public class PrxGenerator {
 
 		e = doc.createElement("mutexes");
         parent.appendChild(e);
-		for (ThreadInstancePort i : instances) {
-		  createMutexOrSemaphore(e, i.getMutexName(), "mutex");
-		}
-		for (SharedData d : model.getSharedDataList()) {
-		  createMutexOrSemaphore(e, d.getMutexName(), "mutex");
-		}
+        // for building 'flight' the legacy list has to be first in file order so 
+        // that these semaphores are assigned starting at ID 0. 
 		for (String name : model.getLegacyMutexList()) {
 			  createMutexOrSemaphore(e, name, "mutex");
 		}
+		if (model.getCommMutexPrimitive() == Model.CommMutualExclusionPrimitive.Semaphore) {
+			for (ThreadInstancePort i : instances) {
+			  createMutexOrSemaphore(e, i.getMutexName(), "mutex");
+			}
+			for (SharedData d : model.getSharedDataList()) {
+			  createMutexOrSemaphore(e, d.getMutexName(), "mutex");
+			}
+		}
+		e = doc.createElement("semaphores");
+        parent.appendChild(e);
 		for (String name: model.getLegacySemaphoreList()) {
 		    createMutexOrSemaphore(e, name, "semaphore");
 		}

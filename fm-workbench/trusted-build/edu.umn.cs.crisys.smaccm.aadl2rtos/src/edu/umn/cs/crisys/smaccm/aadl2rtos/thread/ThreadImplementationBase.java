@@ -10,15 +10,9 @@ package edu.umn.cs.crisys.smaccm.aadl2rtos.thread;
  */
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
-import org.osate.aadl2.EnumerationLiteral;
 import org.osate.aadl2.impl.ThreadTypeImpl;
-import org.osate.xtext.aadl2.properties.util.PropertyUtils;
-
-import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosException;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.AstHelper;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.util.ThreadUtil;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.util.Util;
 
@@ -42,7 +36,7 @@ public class ThreadImplementationBase {
     
     
 	// Constructor
-	public ThreadImplementationBase(ThreadTypeImpl tti, AstHelper astHelper) {
+	public ThreadImplementationBase(ThreadTypeImpl tti) {
 		name = tti.getName().toLowerCase();
 		priority = ThreadUtil.getPriority(tti);
 		stackSize = ThreadUtil.getStackSizeInBytes(tti);
@@ -67,6 +61,11 @@ public class ThreadImplementationBase {
 
 	public String getGeneratedEntrypoint() {
 		return generatedEntrypoint;
+	}
+
+	public boolean isISRThread() {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 	

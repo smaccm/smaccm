@@ -34,7 +34,6 @@ public class ResoluteAnnexParser implements AnnexParser {
         return parser.getGrammarAccess();
     }
 
-    @Override
     public AnnexLibrary parseAnnexLibrary(String annexName, String source, String filename,
             int line, int column, ParseErrorReporter errReporter) {
         return (AnnexLibrary) parse(source, getGrammarAccess().getResoluteLibraryRule(), filename,
@@ -42,7 +41,6 @@ public class ResoluteAnnexParser implements AnnexParser {
 
     }
 
-    @Override
     public AnnexSubclause parseAnnexSubclause(String annexName, String source, String filename,
             int line, int column, ParseErrorReporter errReporter) {
         return (AnnexSubclause) parse(source, getGrammarAccess().getResoluteSubclauseRule(),

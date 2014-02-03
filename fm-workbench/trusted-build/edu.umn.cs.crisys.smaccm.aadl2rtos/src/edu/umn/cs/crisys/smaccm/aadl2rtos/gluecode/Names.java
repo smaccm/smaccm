@@ -24,12 +24,13 @@ package edu.umn.cs.crisys.smaccm.aadl2rtos.gluecode;
 import org.osate.aadl2.DirectionType;
 
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosException;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosFailure;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.ArrayType;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.IdType;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.PointerType;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.Type;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.InterruptServiceRoutine;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.MyPort;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.SharedData;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.SharedDataAccessor;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.ThreadImplementation;
 
@@ -108,14 +109,26 @@ public class Names {
     return impl.getName() + "_is_empty_" + inp.getName();
   }
   
+  static public Type getStructuralType(Type ty) {
+	  try {
+		  if (ty instanceof IdType) {
+			  Type returnType = ((IdType) ty).getRootType();
+			  return returnType;
+		  } else return ty;
+	  } catch (Aadl2RtosFailure r) {
+		  throw new Aadl2RtosException(r.toString());
+	  }
+  }
+  
   static public String createRefParameter(Type ty, String id) {
-    Type elemTy = (ty instanceof ArrayType) ?
+	  
+    Type elemTy = (getStructuralType(ty) instanceof ArrayType) ?
         ty : new PointerType(ty);
     return elemTy.getCType().varString(id);
   }
   
   static public String getVarRef(Type ty, String id) {
-    return (ty instanceof ArrayType) ? id : ("&" + id);
+    return (getStructuralType(ty) instanceof ArrayType) ? id : ("&" + id);
   }
   
 }

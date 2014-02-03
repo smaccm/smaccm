@@ -116,6 +116,15 @@ public class AgreeSwitch<T> extends Switch<T>
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
+      case AgreePackage.SYNCH_STATEMENT:
+      {
+        SynchStatement synchStatement = (SynchStatement)theEObject;
+        T result = caseSynchStatement(synchStatement);
+        if (result == null) result = caseSpecStatement(synchStatement);
+        if (result == null) result = caseElement(synchStatement);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
       case AgreePackage.CALL_DEF:
       {
         CallDef callDef = (CallDef)theEObject;
@@ -149,7 +158,6 @@ public class AgreeSwitch<T> extends Switch<T>
       {
         EqStatement eqStatement = (EqStatement)theEObject;
         T result = caseEqStatement(eqStatement);
-        if (result == null) result = caseNamedElement(eqStatement);
         if (result == null) result = caseSpecStatement(eqStatement);
         if (result == null) result = caseElement(eqStatement);
         if (result == null) result = defaultCase(theEObject);
@@ -225,6 +233,15 @@ public class AgreeSwitch<T> extends Switch<T>
         T result = caseNestedDotID(nestedDotID);
         if (result == null) result = caseExpr(nestedDotID);
         if (result == null) result = caseElement(nestedDotID);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case AgreePackage.CLOCK_ID:
+      {
+        ClockID clockID = (ClockID)theEObject;
+        T result = caseClockID(clockID);
+        if (result == null) result = caseExpr(clockID);
+        if (result == null) result = caseElement(clockID);
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
@@ -518,6 +535,22 @@ public class AgreeSwitch<T> extends Switch<T>
   }
 
   /**
+   * Returns the result of interpreting the object as an instance of '<em>Synch Statement</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Synch Statement</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseSynchStatement(SynchStatement object)
+  {
+    return null;
+  }
+
+  /**
    * Returns the result of interpreting the object as an instance of '<em>Call Def</em>'.
    * <!-- begin-user-doc -->
    * This implementation returns null;
@@ -705,6 +738,22 @@ public class AgreeSwitch<T> extends Switch<T>
    * @generated
    */
   public T caseNestedDotID(NestedDotID object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Clock ID</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Clock ID</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseClockID(ClockID object)
   {
     return null;
   }

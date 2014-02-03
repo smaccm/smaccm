@@ -7,7 +7,7 @@ public class BaseType extends ResoluteType {
     public static final BaseType BOOL = new BaseType("bool");
     public static final BaseType FAIL = new BaseType("fail");
     public static final BaseType RANGE = new BaseType("range");
-    
+
     public static final BaseType COMPONENT = new BaseType("component");
     public static final BaseType CONNECTION = new BaseType("connection");
     public static final BaseType PROPERTY = new BaseType("property");
@@ -27,6 +27,7 @@ public class BaseType extends ResoluteType {
     public static final BaseType THREAD = new BaseType("thread");
     public static final BaseType VIRTUAL_BUS = new BaseType("virtual_bus");
     public static final BaseType VIRTUAL_PROCESSOR = new BaseType("virtual_processor");
+    public static final BaseType FEATURE = new BaseType("feature");
 
     final public String name;
 
@@ -64,8 +65,12 @@ public class BaseType extends ResoluteType {
                         || subtypeOf(THREAD) || subtypeOf(VIRTUAL_BUS)
                         || subtypeOf(VIRTUAL_PROCESSOR);
 
+            case "feature":
+                return subtypeOf(COMPONENT);
+
             case "aadl":
-                return subtypeOf(COMPONENT) || subtypeOf(CONNECTION) || subtypeOf(PROPERTY);
+                return subtypeOf(COMPONENT) || subtypeOf(CONNECTION) || subtypeOf(PROPERTY)
+                        || subtypeOf(FEATURE);
 
             default:
                 return false;
@@ -105,6 +110,9 @@ public class BaseType extends ResoluteType {
     public boolean equals(Object obj) {
         if (obj instanceof BaseType) {
             BaseType bt = (BaseType) obj;
+            if (this.name.equals("feature")) {
+                return ((bt.name.equals("feature")) || (bt.name.equals("component")));
+            }
             return bt.name.equals(name);
         }
 

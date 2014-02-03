@@ -28,6 +28,7 @@ import com.rockwellcollins.atc.agree.agree.AgreeContract;
 import com.rockwellcollins.atc.agree.agree.AgreeContractLibrary;
 import com.rockwellcollins.atc.agree.agree.AgreeContractSubclause;
 import com.rockwellcollins.atc.agree.agree.AgreeLibrary;
+import com.rockwellcollins.atc.agree.agree.ClockID;
 import com.rockwellcollins.atc.agree.agree.EqStatement;
 import com.rockwellcollins.atc.agree.agree.FnDefExpr;
 import com.rockwellcollins.atc.agree.agree.NestedDotID;
@@ -59,7 +60,6 @@ public class AgreeScopeProvider extends
         components.addAll(ctx.getNodeBody().getLocs());
         return Scopes.scopeFor(components, getScope(ctx.eContainer(), ref));
     }
-
     
     IScope scope_NamedElement(AgreeContract ctx, EReference ref) {
         EObject container = ctx.eContainer().eContainer();
@@ -115,7 +115,20 @@ public class AgreeScopeProvider extends
         Set<Element> components = getCorrespondingAadlElement(ctx);
         return Scopes.scopeFor(components, getScope(ctx.eContainer(), ref));
     }
-
+    
+    IScope scope_NamedElement(ClockID ctx, EReference ref){
+        EObject container = ctx.eContainer();
+        while(!(container instanceof ComponentClassifier)){
+            container = container.eContainer();
+        }
+        
+        if(container instanceof ComponentImplementation){
+            return Scopes.scopeFor(((ComponentImplementation)container).getAllSubcomponents(), getScope(ctx.eContainer(), ref));
+        }
+        
+        return IScope.NULLSCOPE;
+    }
+    
     private Set<Element> getCorrespondingAadlElement(NestedDotID id) {
         EObject container = id.eContainer();
 

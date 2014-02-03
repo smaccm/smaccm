@@ -3,23 +3,20 @@ package com.rockwellcollins.atc.resolute.linking;
 import java.util.Collections;
 import java.util.List;
 
-import org.eclipse.core.runtime.Path;
-import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.xtext.linking.impl.IllegalNodeException;
 import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.resource.IEObjectDescription;
-import org.eclipse.xtext.resource.IResourceDescriptions;
 import org.osate.aadl2.Aadl2Package;
 import org.osate.aadl2.NamedElement;
 import org.osate.aadl2.PropertyValue;
 import org.osate.aadl2.UnitLiteral;
 import org.osate.aadl2.UnitsType;
-import org.osate.aadl2.impl.AadlPackageImpl;
 import org.osate.aadl2.util.Aadl2Util;
 import org.osate.xtext.aadl2.properties.linking.PropertiesLinkingService;
 import org.osate.xtext.aadl2.properties.util.EMFIndexRetrieval;
@@ -28,6 +25,7 @@ import com.rockwellcollins.atc.resolute.resolute.ClaimArg;
 import com.rockwellcollins.atc.resolute.resolute.FnCallExpr;
 import com.rockwellcollins.atc.resolute.resolute.IdExpr;
 import com.rockwellcollins.atc.resolute.resolute.NestedDotID;
+import com.rockwellcollins.atc.resolute.resolute.QuantArg;
 import com.rockwellcollins.atc.resolute.resolute.ResolutePackage;
 
 public class ResoluteLinkingService extends PropertiesLinkingService {
@@ -52,6 +50,10 @@ public class ResoluteLinkingService extends PropertiesLinkingService {
         }
 
         if (context instanceof ClaimArg) {
+            return findClassifier(context, reference, name);
+        }
+        
+        if(context instanceof QuantArg) {
             return findClassifier(context, reference, name);
         }
 
@@ -107,8 +109,16 @@ public class ResoluteLinkingService extends PropertiesLinkingService {
             EObject e = EcoreUtil.resolve(desc.getEObjectOrProxy(), context);
             if (e instanceof NamedElement) {
                 NamedElement ne = (NamedElement) e;
-                if (name.equals(ne.getName())) {
-                    return ne;
+                Resource resource = ne.eResource();
+                if (resource != null) {
+                    URI contextUri = resource.getURI();
+                    String contextProject = contextUri.segment(1);
+                    URI linkUri = context.eResource().getURI();
+                    if(linkUri.segment(1).equals(contextProject)){
+                        if (name.equals(ne.getName())) {
+                            return ne;
+                        }
+                    }
                 }
             }
         }

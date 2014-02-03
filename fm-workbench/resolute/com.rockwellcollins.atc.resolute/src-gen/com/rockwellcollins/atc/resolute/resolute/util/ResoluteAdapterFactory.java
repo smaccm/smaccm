@@ -97,6 +97,11 @@ public class ResoluteAdapterFactory extends AdapterFactoryImpl
         return createTypeAdapter();
       }
       @Override
+      public Adapter caseElementSet(ElementSet object)
+      {
+        return createElementSetAdapter();
+      }
+      @Override
       public Adapter caseBuiltinType(BuiltinType object)
       {
         return createBuiltinTypeAdapter();
@@ -132,6 +137,11 @@ public class ResoluteAdapterFactory extends AdapterFactoryImpl
         return createExprAdapter();
       }
       @Override
+      public Adapter caseLetBinding(LetBinding object)
+      {
+        return createLetBindingAdapter();
+      }
+      @Override
       public Adapter caseResoluteSubclause(ResoluteSubclause object)
       {
         return createResoluteSubclauseAdapter();
@@ -150,6 +160,11 @@ public class ResoluteAdapterFactory extends AdapterFactoryImpl
       public Adapter caseSetType(SetType object)
       {
         return createSetTypeAdapter();
+      }
+      @Override
+      public Adapter caseQuantArg(QuantArg object)
+      {
+        return createQuantArgAdapter();
       }
       @Override
       public Adapter caseClaimArg(ClaimArg object)
@@ -235,6 +250,11 @@ public class ResoluteAdapterFactory extends AdapterFactoryImpl
       public Adapter caseFilterMapExpr(FilterMapExpr object)
       {
         return createFilterMapExprAdapter();
+      }
+      @Override
+      public Adapter caseLetExpr(LetExpr object)
+      {
+        return createLetExprAdapter();
       }
       @Override
       public Adapter caseElement(Element object)
@@ -329,6 +349,21 @@ public class ResoluteAdapterFactory extends AdapterFactoryImpl
    * @generated
    */
   public Adapter createTypeAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.resolute.resolute.ElementSet <em>Element Set</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see com.rockwellcollins.atc.resolute.resolute.ElementSet
+   * @generated
+   */
+  public Adapter createElementSetAdapter()
   {
     return null;
   }
@@ -439,6 +474,21 @@ public class ResoluteAdapterFactory extends AdapterFactoryImpl
   }
 
   /**
+   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.resolute.resolute.LetBinding <em>Let Binding</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see com.rockwellcollins.atc.resolute.resolute.LetBinding
+   * @generated
+   */
+  public Adapter createLetBindingAdapter()
+  {
+    return null;
+  }
+
+  /**
    * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.resolute.resolute.ResoluteSubclause <em>Subclause</em>}'.
    * <!-- begin-user-doc -->
    * This default implementation returns null so that we can easily ignore cases;
@@ -494,6 +544,21 @@ public class ResoluteAdapterFactory extends AdapterFactoryImpl
    * @generated
    */
   public Adapter createSetTypeAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.resolute.resolute.QuantArg <em>Quant Arg</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see com.rockwellcollins.atc.resolute.resolute.QuantArg
+   * @generated
+   */
+  public Adapter createQuantArgAdapter()
   {
     return null;
   }
@@ -749,6 +814,21 @@ public class ResoluteAdapterFactory extends AdapterFactoryImpl
    * @generated
    */
   public Adapter createFilterMapExprAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.resolute.resolute.LetExpr <em>Let Expr</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see com.rockwellcollins.atc.resolute.resolute.LetExpr
+   * @generated
+   */
+  public Adapter createLetExprAdapter()
   {
     return null;
   }

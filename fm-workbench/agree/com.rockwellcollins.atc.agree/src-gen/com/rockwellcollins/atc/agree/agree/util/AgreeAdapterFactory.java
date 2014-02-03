@@ -102,6 +102,11 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
         return createSpecStatementAdapter();
       }
       @Override
+      public Adapter caseSynchStatement(SynchStatement object)
+      {
+        return createSynchStatementAdapter();
+      }
+      @Override
       public Adapter caseCallDef(CallDef object)
       {
         return createCallDefAdapter();
@@ -160,6 +165,11 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
       public Adapter caseNestedDotID(NestedDotID object)
       {
         return createNestedDotIDAdapter();
+      }
+      @Override
+      public Adapter caseClockID(ClockID object)
+      {
+        return createClockIDAdapter();
       }
       @Override
       public Adapter caseAgreeContractLibrary(AgreeContractLibrary object)
@@ -394,6 +404,21 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
   }
 
   /**
+   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.SynchStatement <em>Synch Statement</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see com.rockwellcollins.atc.agree.agree.SynchStatement
+   * @generated
+   */
+  public Adapter createSynchStatementAdapter()
+  {
+    return null;
+  }
+
+  /**
    * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.CallDef <em>Call Def</em>}'.
    * <!-- begin-user-doc -->
    * This default implementation returns null so that we can easily ignore cases;
@@ -569,6 +594,21 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
    * @generated
    */
   public Adapter createNestedDotIDAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.ClockID <em>Clock ID</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see com.rockwellcollins.atc.agree.agree.ClockID
+   * @generated
+   */
+  public Adapter createClockIDAdapter()
   {
     return null;
   }

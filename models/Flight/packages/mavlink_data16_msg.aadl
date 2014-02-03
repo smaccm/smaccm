@@ -3,15 +3,8 @@
 package mavlink_data16_msg
 public
   with Base_Types;
+  with TowerArrays;
   with Data_Model;
-
-data ArrTy_16TyBase_Types_Unsigned_8
-  properties
-    Data_Model::Data_Representation => Array;
-    Data_Model::Base_Type => (classifier (Base_Types::Unsigned_8));
-    Data_Model::Dimension => (16);
-end ArrTy_16TyBase_Types_Unsigned_8;
-
 
 data data16_msg
   properties
@@ -23,7 +16,7 @@ data implementation data16_msg.impl
   subcomponents
     data16_type : data Base_Types::Unsigned_8;
     len : data Base_Types::Unsigned_8;
-    data16 : data ArrTy_16TyBase_Types_Unsigned_8;
+    data16 : data TowerArrays::ArrTy_16TyBase_Types_Unsigned_8;
 end data16_msg.impl;
 
 

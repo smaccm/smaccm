@@ -37,7 +37,10 @@ public abstract class ThreadUtil {
 	final public static String LEGACY_ENTRYPOINT_NAME = "SMACCM_SYS::Legacy_Entrypoint";
   final public static String LEGACY_EXTERNAL_IRQ_LIST_NAME = "SMACCM_SYS::Legacy_IRQ_Handler_List";
   final public static String LEGACY_EXTERNAL_IRQ_EVENT_LIST_NAME = "SMACCM_SYS::Legacy_IRQ_Event_List";
+  final public static String EXTERNAL_IRQ_LIST_NAME = "SMACCM_SYS::External_IRQ_List";
   final public static String GENERATE_SCHEDULER_SYSTICK_IRQ_NAME = "SMACCM_SYS::Generate_Scheduler_Systick_IRQ";
+  final public static String ISR_HANDLER_NAME = "SMACCM_SYS::ISR_Handler";
+
 
 	final public static String DISPATCH_PROTOCOL_NAME = "Dispatch_Protocol";
 	final public static String QUEUE_SIZE_NAME = "QUEUE_SIZE";
@@ -68,8 +71,10 @@ public abstract class ThreadUtil {
 	final public static Property LEGACY_ENTRYPOINT = Util.getPropertyDefinitionInWorkspace(LEGACY_ENTRYPOINT_NAME);
   final public static Property LEGACY_EXTERNAL_IRQ_LIST = Util.getPropertyDefinitionInWorkspace(LEGACY_EXTERNAL_IRQ_LIST_NAME);
   final public static Property LEGACY_EXTERNAL_IRQ_EVENT_LIST = Util.getPropertyDefinitionInWorkspace(LEGACY_EXTERNAL_IRQ_EVENT_LIST_NAME);
+  final public static Property EXTERNAL_IRQ_LIST = Util.getPropertyDefinitionInWorkspace(EXTERNAL_IRQ_LIST_NAME);
   final public static Property GENERATE_SCHEDULER_SYSTICK_IRQ = Util.getPropertyDefinitionInWorkspace(GENERATE_SCHEDULER_SYSTICK_IRQ_NAME);
-	
+  final public static Property ISR_HANDLER = Util.getPropertyDefinitionInWorkspace(ISR_HANDLER_NAME);
+
 	final public static Property DISPATCH_PROTOCOL = Util.getPropertyDefinitionInWorkspace(DISPATCH_PROTOCOL_NAME);
 	final public static Property QUEUE_SIZE = Util.getPropertyDefinitionInWorkspace(QUEUE_SIZE_NAME);
 	final public static Property ACCESS_RIGHT = Util.getPropertyDefinitionInWorkspace(ACCESS_RIGHT_NAME);
@@ -123,16 +128,16 @@ public abstract class ThreadUtil {
 	}
 
 	public static List<String> getStringList(NamedElement tti, Property p) {
-		ArrayList<String> legacySemaphoreList = new ArrayList<String>();
+		ArrayList<String> list = new ArrayList<String>();
 
 		try {
 			EList<Element> eList = PropertyUtils.getSimplePropertyListValue(tti, p).getChildren();
 			
 			for (Element e : eList) {
 				StringLiteralImpl str = (StringLiteralImpl) e;
-				legacySemaphoreList.add(str.getValue());			}
+				list.add(str.getValue());			}
 		} catch(Exception e) {}
-		return legacySemaphoreList;
+		return list;
 	}
 
   public static List<String> getLegacyMutexList(NamedElement tti) {
@@ -144,33 +149,17 @@ public abstract class ThreadUtil {
   }
 
   public static List<String> getLegacyIRQEventList(NamedElement tti) {
-    ArrayList<String> legacySemaphoreList = new ArrayList<String>();
-
-    try {
-      EList<Element> eList = PropertyUtils.getSimplePropertyListValue(tti, ThreadUtil.LEGACY_EXTERNAL_IRQ_EVENT_LIST).getChildren();
-      
-      for (Element e : eList) {
-        StringLiteralImpl str = (StringLiteralImpl) e;
-        legacySemaphoreList.add(str.getValue());
-      }
-    } catch(Exception e) {}
-    return legacySemaphoreList;
+    return getStringList(tti, ThreadUtil.LEGACY_EXTERNAL_IRQ_EVENT_LIST);
   }
 	
   public static List<String> getLegacyIRQList(NamedElement tti) {
-    ArrayList<String> legacySemaphoreList = new ArrayList<String>();
-
-    try {
-      EList<Element> eList = PropertyUtils.getSimplePropertyListValue(tti, ThreadUtil.LEGACY_EXTERNAL_IRQ_LIST).getChildren();
-      
-      for (Element e : eList) {
-        StringLiteralImpl str = (StringLiteralImpl) e;
-        legacySemaphoreList.add(str.getValue());
-      }
-    } catch(Exception e) {}
-    return legacySemaphoreList;
+	return getStringList(tti, ThreadUtil.LEGACY_EXTERNAL_IRQ_LIST);
   }
-	
+
+  public static List<String> getExternalIRQList(NamedElement tti) {
+	return getStringList(tti, ThreadUtil.EXTERNAL_IRQ_LIST);
+  }
+  
 	// returns null if there is no handler list.
 	public static List<String> getComputeEntrypointList(NamedElement container) {
 		ArrayList<String> handlerList = new ArrayList<String>(); 

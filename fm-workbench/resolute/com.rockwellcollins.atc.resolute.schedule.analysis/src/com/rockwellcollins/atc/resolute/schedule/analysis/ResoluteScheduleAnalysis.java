@@ -9,10 +9,10 @@ import org.osate.aadl2.NamedElement;
 import org.osate.aadl2.PropertyExpression;
 import org.osate.aadl2.instance.ComponentInstance;
 
-import com.rockwellcollins.atc.resolute.analysis.ResoluteEvaluator;
-import com.rockwellcollins.atc.resolute.analysis.ResoluteExternalAnalysis;
-import com.rockwellcollins.atc.resolute.analysis.ResoluteFailException;
-import com.rockwellcollins.atc.resolute.analysis.ResoluteQuantifiableAadlObjects;
+import com.rockwellcollins.atc.resolute.analysis.execution.EvaluationContext;
+import com.rockwellcollins.atc.resolute.analysis.execution.ResoluteEvaluator;
+import com.rockwellcollins.atc.resolute.analysis.execution.ResoluteExternalAnalysis;
+import com.rockwellcollins.atc.resolute.analysis.execution.ResoluteFailException;
 import com.rockwellcollins.atc.resolute.analysis.values.BoolValue;
 import com.rockwellcollins.atc.resolute.analysis.values.ResoluteValue;
 
@@ -20,45 +20,45 @@ public class ResoluteScheduleAnalysis implements ResoluteExternalAnalysis {
     @Override
     public ResoluteValue run(ResoluteEvaluator resEval, List<ResoluteValue> args) {
         double sched_ratio = 0;
-        Set<NamedElement> threadList = ResoluteQuantifiableAadlObjects
-                .getAllComponentsOfType("thread", false);
+        EvaluationContext context = resEval.getEvaluationContext();
+        Set<NamedElement> threadList = context.getSet("thread");
         for (NamedElement el : threadList) {
-
             assert (el instanceof ComponentInstance);
             ComponentInstance comp = (ComponentInstance) el;
             EList<PropertyExpression> prop = comp.getPropertyValues("Timing_Properties", "Period");
 
             if (prop.size() != 1) {
                 throw new ResoluteFailException("Thread '" + comp.getName()
-                        + "' must have a 'Period' property specified to run 'schedule' analysis");
+                        + "' must have a 'Period' property specified to run 'schedule' analysis",
+                        comp.getSubcomponent());
             }
             PropertyExpression propExpr = prop.get(0);
 
             if (!(propExpr instanceof IntegerLiteral)) {
                 throw new ResoluteFailException("Thread '" + comp.getName()
-                        + "' must have a 'Period' property specified to run 'schedule' analysis");
+                        + "' must have a 'Period' property specified to run 'schedule' analysis",
+                        comp.getSubcomponent());
             }
             assert (propExpr instanceof IntegerLiteral);
             IntegerLiteral intLit = (IntegerLiteral) propExpr;
-            double period_ps = intLit.getScaledValue(); // this is in pico
-                                                        // seconds
+            double period_ps = intLit.getScaledValue(); // this is in pico seconds
 
-            prop = comp.getPropertyValues("Timing_Properties", "Deadline");
+            //prop = comp.getPropertyValues("Timing_Properties", "Deadline");
 
-            if (prop.size() != 1) {
-                throw new ResoluteFailException("Thread '" + comp.getName()
-                        + "' must have a 'Deadline' property specified to run 'schedule' analysis");
-            }
+            //if (prop.size() != 1) {
+            //    throw new ResoluteFailException("Thread '" + comp.getName()
+            //            + "' must have a 'Deadline' property specified to run 'schedule' analysis");
+            //}
 
-            propExpr = prop.get(0);
+            //propExpr = prop.get(0);
 
-            if (!(propExpr instanceof IntegerLiteral)) {
-                throw new ResoluteFailException("Thread '" + comp.getName()
-                        + "' must have a 'Deadline' property specified to run 'schedule' analysis");
-            }
+            //if (!(propExpr instanceof IntegerLiteral)) {
+            //    throw new ResoluteFailException("Thread '" + comp.getName()
+            //            + "' must have a 'Deadline' property specified to run 'schedule' analysis");
+            //}
 
-            assert (propExpr instanceof IntegerLiteral);
-            intLit = (IntegerLiteral) propExpr;
+            //assert (propExpr instanceof IntegerLiteral);
+            //intLit = (IntegerLiteral) propExpr;
 
             prop = comp.getPropertyValues("SMACCM", "WC_Execution_Time");
 
@@ -66,7 +66,8 @@ public class ResoluteScheduleAnalysis implements ResoluteExternalAnalysis {
                 throw new ResoluteFailException(
                         "Thread '"
                                 + comp.getName()
-                                + "' must have a 'WC_Execution_Time' property specified to run 'schedule' analysis");
+                                + "' must have a 'WC_Execution_Time' property specified to run 'schedule' analysis",
+                        comp.getSubcomponent());
             }
 
             propExpr = prop.get(0);
@@ -75,7 +76,8 @@ public class ResoluteScheduleAnalysis implements ResoluteExternalAnalysis {
                 throw new ResoluteFailException(
                         "Thread '"
                                 + comp.getName()
-                                + "' must have a 'WC_Execution_Time' property specified to run 'schedule' analysis");
+                                + "' must have a 'WC_Execution_Time' property specified to run 'schedule' analysis",
+                        comp.getSubcomponent());
             }
 
             assert (propExpr instanceof IntegerLiteral);

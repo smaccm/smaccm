@@ -49,6 +49,10 @@ public class ThreadInstancePort {
     return ("QS_" + getNameRoot()).toUpperCase();
   }
   
+  public String getIsFullName() {
+	  return "is_full_" + getNameRoot(); 
+  }
+  
    // Functions for input event ports ONLY.  This is why we need to split this
   // class up.
   public String getCircBufferFrontVarName() {
@@ -64,13 +68,23 @@ public class ThreadInstancePort {
     return ty;
   }
   
+  public int getArraySize() {
+	  return this.getPort().getQueueSize();
+  }
+  
   public Type getQueueType() {
     Type ty = this.getPort().getDataType();
-    return new ArrayType(ty, this.getPort().getQueueSize() + 1);
+    return new ArrayType(ty, this.getArraySize());
   }
   
   public Type getCircRefType() {
-    return new IntType(32, false);
+	  if (this.getArraySize() <= 256) {
+		  return new IntType(8, false);
+	  } else if (this.getArraySize() <= 65536) {
+		  return new IntType(16, false);
+	  } else {
+         return new IntType(32, false);
+	  }
   }
 
   

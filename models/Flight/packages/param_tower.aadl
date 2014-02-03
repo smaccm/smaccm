@@ -3,15 +3,8 @@
 package param_tower
 public
   with Base_Types;
+  with TowerArrays;
   with Data_Model;
-
-data ArrTy_16TyBase_Types_Unsigned_8
-  properties
-    Data_Model::Data_Representation => Array;
-    Data_Model::Base_Type => (classifier (Base_Types::Unsigned_8));
-    Data_Model::Dimension => (16);
-end ArrTy_16TyBase_Types_Unsigned_8;
-
 
 data ivory_string_ParamString
   properties
@@ -21,7 +14,7 @@ end ivory_string_ParamString;
 
 data implementation ivory_string_ParamString.impl
   subcomponents
-    ivory_string_ParamString_data : data ArrTy_16TyBase_Types_Unsigned_8;
+    ivory_string_ParamString_data : data TowerArrays::ArrTy_16TyBase_Types_Unsigned_8;
     ivory_string_ParamString_len : data Base_Types::Integer_32;
 end ivory_string_ParamString.impl;
 

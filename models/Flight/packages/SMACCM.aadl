@@ -6,4 +6,5 @@ property set SMACCM is
   Always_Sends_Message: aadlboolean applies to (system, process, thread, device);
   WC_Execution_Time: Time applies to (thread);
   WC_Wait_Time: Time applies to (thread);
+  Unimplemented: aadlboolean applies to (feature);
 end SMACCM;

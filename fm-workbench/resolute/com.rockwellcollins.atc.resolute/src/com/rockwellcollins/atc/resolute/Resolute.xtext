@@ -13,13 +13,14 @@ AnnexSubclause returns aadl2::AnnexSubclause:
 ;
 
 Namespace returns aadl2::Namespace:
-	FunctionDefinition
+	FunctionDefinition 
 ;
 
 NamedElement returns aadl2::NamedElement:
 	Definition
 |	Arg
 |	Type
+|   LetBinding
 ;
 
 Element returns aadl2::Element:
@@ -44,6 +45,30 @@ Type:
 |	BuiltinType
 ;
 
+
+ElementSet:
+    //stuff for quantifiers only
+name=('threads'
+|	'data'
+|	'memory'
+|   'thread_groups'
+|   'processes'
+|   'subprograms'
+|   'subprogram_groups'
+|   'processors'
+|   'virtual_processors'
+|   'buses'
+|   'virtual_buses'
+|   'devices'
+|   'systems'
+|   'abstracts'
+    //non-aadl components
+|   'connections'
+|   'components'
+|   'features')
+	
+;
+
 BuiltinType:
 	//aadl components
  name=('data'
@@ -61,6 +86,8 @@ BuiltinType:
 |   'system'
 |   'abstract'
     //non-aadl components
+|   'aadl'
+|   'feature'
 |   'connection'
 |   'component'
 |   'string'
@@ -72,7 +99,8 @@ BuiltinType:
 
 //Arg types are used for functions, claims, and quantifiers
 Arg returns Arg: 
-	name=ID ':' type=Type
+	=>(name=ID ':' type=Type)
+|	{QuantArg} name=ID ':' expr=Expr
 ;
 
 ConstantDefinition:
@@ -90,7 +118,7 @@ ClaimString:
 
 DefinitionBody:
 	 {FuncBody} ':' type=Type '=' expr=Expr
-|	 {ClaimBody} '<=' ('**'(claim+=ClaimString)*'**')? expr=Expr
+|	 {ClaimBody} '<=' ('**'(claim+=ClaimString)+'**') expr=Expr
 ;
 
 Expr:
@@ -135,7 +163,7 @@ PrefixExpr returns Expr:
 ;
 
 AtomicExpr returns Expr:
-	{IdExpr} id=[aadl2::NamedElement | QCREF]
+	{IdExpr} id=[aadl2::NamedElement | QCREF] ('.' subelements=ElementSet)? //for set expressions
 |	{ThisExpr} 'this' ('.' sub=NestedDotID)?
 |   {FailExpr} 'fail' (val=StringTerm)?
 |	{IntExpr} val=IntegerTerm
@@ -147,29 +175,68 @@ AtomicExpr returns Expr:
 |   {BuiltInFuncCallExpr} fn=BuiltInFunc '(' (args+=(Expr) (',' args+=(Expr))*)? ')'
 |	{FnCallExpr} fn=[FunctionDefinition] '(' (args+=(Expr) (',' args+=(Expr))*)? ')'
 |   {FilterMapExpr} '{' map=Expr 'for' ('(' args+=Arg ')')+ ('|' filter=Expr)? '}'
+|   {LetExpr} 'let' binding=LetBinding ';' expr=Expr
 |	'(' Expr ')'
 ;
+
+LetBinding:
+	name=ID ':' type=Type '=' expr=Expr
+;
+
+//QuantArg returns Arg:
+//	{QuantArg} name=ID ':' expr=Expr
+//;
 
 BuiltInFunc:
 	'connected'
 |	'property_lookup'
 |	'class_of'
+|   'subcomponent_of'
+|   'name'
 |	'type'
 |   'has_type'
+|   'is_connected'
 |	'bound'
 |	'contained'
-|   'get_feature'
 |   'conn_source'
 |   'conn_dest'
 |   'property_exists'
 |   'sum'
 |   'analysis'
+|   'instance'
+|   'instances'
 |	'upper_bound'             // upper_bound of a range
 |	'lower_bound'             // lower bound of a range
 |	'receive_error'           // the component can receive an incoming error
 |	'contain_error'           // the component contain the error
 |	'propagate_error'         // the component propagate an error
 |   'error_state_reachable'   // the error state is reachable
+|   'connections'
+// type checking predicates
+|   'is_data'
+|   'is_thread'
+|   'is_thread_group'
+|   'is_process'
+|   'is_subprogram'
+|   'is_subprogram_group'
+|   'is_processor'
+|   'is_virtual_processor'
+|   'is_memory'
+|   'is_bus'
+|   'is_virtual_bus'
+|   'is_device'
+|   'is_system'
+|   'is_abstract'
+// set predicates
+|   'is_empty'
+|   'singleton'
+// connection predicates
+|   'is_bidirectional'
+|   'is_data_access'
+|   'is_bus_access'
+|   'is_data_port'
+|   'is_event_port'
+|	'is_event_data_port'
 ;
 
 RealTerm returns aadl2::RealLiteral:

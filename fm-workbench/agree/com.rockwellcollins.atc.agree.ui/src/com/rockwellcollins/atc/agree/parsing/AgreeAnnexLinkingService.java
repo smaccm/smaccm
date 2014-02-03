@@ -37,13 +37,11 @@ public class AgreeAnnexLinkingService implements AnnexLinkingService {
         return nameProvider;
     }
 
-    @Override
     public List<EObject> resolveAnnexReference(String annexName, EObject context,
             EReference reference, INode node) {
         return getLinkingService().getLinkedObjects(context, reference, node);
     }
 
-    @Override
     public QualifiedName getFullyQualifiedName(final EObject obj) {
         return getNameProvider().getFullyQualifiedName(obj);
     }

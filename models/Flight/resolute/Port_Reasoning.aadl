@@ -1,0 +1,63 @@
+package Port_Reasoning
+public
+
+annex resolute {**
+		
+bi_ports_have_variance() <=
+	** "All bidirectional ports have variance justification" **
+	forall(c : connection) . connection_is_not_bidrectional(c)
+	
+connection_is_not_bidrectional(c : connection) <=
+	** "Connection " c " is not bidirectional if it is not a bus access" **
+	not is_bus_access(c) => not is_bidirectional(c)   
+	
+all_features_bound() <=
+	** "All component features are bound to connections " **
+	forall (comp : component) . 
+		not(is_data(comp) or is_bus(comp)) => conn_eq_feat(comp)
+	
+conn_eq_feat(comp : component) <=
+	** "All the features of component " comp " are connected" **
+	(forall(x : comp.features). (feat_is_connected(x) or feat_is_unimplemented(x)))
+
+feat_is_connected(feat : feature) <= 
+	** "The feature: " feat " is connected" **
+	is_connected(feat) and print_connections(connections(feat))
+	
+print_connections(conns : {connection}) <=
+	** "The connections are " conns **
+	true
+
+feat_is_unimplemented(feat : feature) <=
+	** "The feature: " feat " is unimplemented" **
+	property_exists(feat, SMACCM::Unimplemented) and
+	property_lookup(feat, SMACCM::Unimplemented)
+
+print_all_unimplemented() <=
+	** "The following features are marked as unimplemented" **
+	forall(comp : component) . forall(feat : comp.features) . (
+		(property_exists(feat, SMACCM::Unimplemented) and  
+		property_lookup(feat, SMACCM::Unimplemented)) =>
+		print_feature(feat))
+
+print_feature(feat : feature) <=
+	** feat **
+	true
+	
+all_through_connections(comp : component) <=
+  ** "Every feature of " comp " is not the final source or destination of "
+     "its connections" **
+  forall(feat : comp.features).
+    not_final(feat, comp) or
+    name(feat, "flight_control_commands") -- ignore RC controller
+	        
+not_final(feat : feature, comp : component) <=
+  ** feat " is not the final source or destination for any of its connections" **
+	is_connected(feat) 
+	and print_connections(connections(feat))
+	and is_empty({c for (c : connections(feat)) |
+		conn_source(c) = comp or conn_dest(c) = comp})
+**};
+
+
+end Port_Reasoning;

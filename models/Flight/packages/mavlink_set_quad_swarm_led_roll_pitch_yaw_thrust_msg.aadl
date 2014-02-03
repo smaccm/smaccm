@@ -3,31 +3,8 @@
 package mavlink_set_quad_swarm_led_roll_pitch_yaw_thrust_msg
 public
   with Base_Types;
+  with TowerArrays;
   with Data_Model;
-
-data ArrTy_4TyBase_Types_Integer_16
-  properties
-    Data_Model::Data_Representation => Array;
-    Data_Model::Base_Type => (classifier (Base_Types::Integer_16));
-    Data_Model::Dimension => (4);
-end ArrTy_4TyBase_Types_Integer_16;
-
-
-data ArrTy_4TyBase_Types_Unsigned_16
-  properties
-    Data_Model::Data_Representation => Array;
-    Data_Model::Base_Type => (classifier (Base_Types::Unsigned_16));
-    Data_Model::Dimension => (4);
-end ArrTy_4TyBase_Types_Unsigned_16;
-
-
-data ArrTy_4TyBase_Types_Unsigned_8
-  properties
-    Data_Model::Data_Representation => Array;
-    Data_Model::Base_Type => (classifier (Base_Types::Unsigned_8));
-    Data_Model::Dimension => (4);
-end ArrTy_4TyBase_Types_Unsigned_8;
-
 
 data set_quad_swarm_led_roll_pitch_yaw_thrust_msg
   properties
@@ -39,13 +16,13 @@ data implementation set_quad_swarm_led_roll_pitch_yaw_thrust_msg.impl
   subcomponents
     xgroup : data Base_Types::Unsigned_8;
     xmode : data Base_Types::Unsigned_8;
-    roll : data ArrTy_4TyBase_Types_Integer_16;
-    pitch : data ArrTy_4TyBase_Types_Integer_16;
-    yaw : data ArrTy_4TyBase_Types_Integer_16;
-    thrust : data ArrTy_4TyBase_Types_Unsigned_16;
-    led_red : data ArrTy_4TyBase_Types_Unsigned_8;
-    led_blue : data ArrTy_4TyBase_Types_Unsigned_8;
-    led_green : data ArrTy_4TyBase_Types_Unsigned_8;
+    roll : data TowerArrays::ArrTy_4TyBase_Types_Integer_16;
+    pitch : data TowerArrays::ArrTy_4TyBase_Types_Integer_16;
+    yaw : data TowerArrays::ArrTy_4TyBase_Types_Integer_16;
+    thrust : data TowerArrays::ArrTy_4TyBase_Types_Unsigned_16;
+    led_red : data TowerArrays::ArrTy_4TyBase_Types_Unsigned_8;
+    led_blue : data TowerArrays::ArrTy_4TyBase_Types_Unsigned_8;
+    led_green : data TowerArrays::ArrTy_4TyBase_Types_Unsigned_8;
 end set_quad_swarm_led_roll_pitch_yaw_thrust_msg.impl;
 
 

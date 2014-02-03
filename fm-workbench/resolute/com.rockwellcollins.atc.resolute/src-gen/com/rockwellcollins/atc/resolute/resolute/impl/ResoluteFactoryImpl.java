@@ -67,6 +67,7 @@ public class ResoluteFactoryImpl extends EFactoryImpl implements ResoluteFactory
       case ResolutePackage.RESOLUTE_LIBRARY: return createResoluteLibrary();
       case ResolutePackage.DEFINITION: return createDefinition();
       case ResolutePackage.TYPE: return createType();
+      case ResolutePackage.ELEMENT_SET: return createElementSet();
       case ResolutePackage.BUILTIN_TYPE: return createBuiltinType();
       case ResolutePackage.ARG: return createArg();
       case ResolutePackage.CONSTANT_DEFINITION: return createConstantDefinition();
@@ -74,10 +75,12 @@ public class ResoluteFactoryImpl extends EFactoryImpl implements ResoluteFactory
       case ResolutePackage.CLAIM_STRING: return createClaimString();
       case ResolutePackage.DEFINITION_BODY: return createDefinitionBody();
       case ResolutePackage.EXPR: return createExpr();
+      case ResolutePackage.LET_BINDING: return createLetBinding();
       case ResolutePackage.RESOLUTE_SUBCLAUSE: return createResoluteSubclause();
       case ResolutePackage.NESTED_DOT_ID: return createNestedDotID();
       case ResolutePackage.PROVE_STATEMENT: return createProveStatement();
       case ResolutePackage.SET_TYPE: return createSetType();
+      case ResolutePackage.QUANT_ARG: return createQuantArg();
       case ResolutePackage.CLAIM_ARG: return createClaimArg();
       case ResolutePackage.FUNC_BODY: return createFuncBody();
       case ResolutePackage.CLAIM_BODY: return createClaimBody();
@@ -95,6 +98,7 @@ public class ResoluteFactoryImpl extends EFactoryImpl implements ResoluteFactory
       case ResolutePackage.BUILT_IN_FUNC_CALL_EXPR: return createBuiltInFuncCallExpr();
       case ResolutePackage.FN_CALL_EXPR: return createFnCallExpr();
       case ResolutePackage.FILTER_MAP_EXPR: return createFilterMapExpr();
+      case ResolutePackage.LET_EXPR: return createLetExpr();
       default:
         throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
     }
@@ -131,6 +135,17 @@ public class ResoluteFactoryImpl extends EFactoryImpl implements ResoluteFactory
   {
     TypeImpl type = new TypeImpl();
     return type;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public ElementSet createElementSet()
+  {
+    ElementSetImpl elementSet = new ElementSetImpl();
+    return elementSet;
   }
 
   /**
@@ -215,6 +230,17 @@ public class ResoluteFactoryImpl extends EFactoryImpl implements ResoluteFactory
    * <!-- end-user-doc -->
    * @generated
    */
+  public LetBinding createLetBinding()
+  {
+    LetBindingImpl letBinding = new LetBindingImpl();
+    return letBinding;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   public ResoluteSubclause createResoluteSubclause()
   {
     ResoluteSubclauseImpl resoluteSubclause = new ResoluteSubclauseImpl();
@@ -252,6 +278,17 @@ public class ResoluteFactoryImpl extends EFactoryImpl implements ResoluteFactory
   {
     SetTypeImpl setType = new SetTypeImpl();
     return setType;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public QuantArg createQuantArg()
+  {
+    QuantArgImpl quantArg = new QuantArgImpl();
+    return quantArg;
   }
 
   /**
@@ -439,6 +476,17 @@ public class ResoluteFactoryImpl extends EFactoryImpl implements ResoluteFactory
   {
     FilterMapExprImpl filterMapExpr = new FilterMapExprImpl();
     return filterMapExpr;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public LetExpr createLetExpr()
+  {
+    LetExprImpl letExpr = new LetExprImpl();
+    return letExpr;
   }
 
   /**

@@ -1,0 +1,31 @@
+package gcs_msgs
+public
+  with Base_Types;
+  with Data_Model;
+
+feature group gcs_msg
+  features
+    param1 : provides data access Base_Types::Float;
+    param2 : provides data access Base_Types::Float;
+    param3 : provides data access Base_Types::Float;
+    param4 : provides data access Base_Types::Float;
+    param5 : provides data access Base_Types::Float;
+    param6 : provides data access Base_Types::Float;
+    param7 : provides data access Base_Types::Float;
+    param8 : provides data access Base_Types::Float;
+    param9 : provides data access Base_Types::Float;
+    param10 : provides data access Base_Types::Float;
+    param11 : provides data access Base_Types::Float;
+    param12 : provides data access Base_Types::Float;
+    param13 : provides data access Base_Types::Float;
+    param14 : provides data access Base_Types::Float;
+    param15 : provides data access Base_Types::Float;
+    param16 : provides data access Base_Types::Float;
+    param17 : provides data access Base_Types::Float;
+    param18 : provides data access Base_Types::Float;
+    param19 : provides data access Base_Types::Float;
+    param20 : provides data access Base_Types::Float;
+end gcs_msg;
+
+
+end gcs_msgs;

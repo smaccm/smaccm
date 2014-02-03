@@ -260,6 +260,34 @@ public interface ResolutePackage extends EPackage
   int TYPE_FEATURE_COUNT = Aadl2Package.NAMED_ELEMENT_FEATURE_COUNT + 0;
 
   /**
+   * The meta object id for the '{@link com.rockwellcollins.atc.resolute.resolute.impl.ElementSetImpl <em>Element Set</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see com.rockwellcollins.atc.resolute.resolute.impl.ElementSetImpl
+   * @see com.rockwellcollins.atc.resolute.resolute.impl.ResolutePackageImpl#getElementSet()
+   * @generated
+   */
+  int ELEMENT_SET = 3;
+
+  /**
+   * The feature id for the '<em><b>Name</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int ELEMENT_SET__NAME = 0;
+
+  /**
+   * The number of structural features of the '<em>Element Set</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int ELEMENT_SET_FEATURE_COUNT = 1;
+
+  /**
    * The meta object id for the '{@link com.rockwellcollins.atc.resolute.resolute.impl.BuiltinTypeImpl <em>Builtin Type</em>}' class.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -267,7 +295,7 @@ public interface ResolutePackage extends EPackage
    * @see com.rockwellcollins.atc.resolute.resolute.impl.ResolutePackageImpl#getBuiltinType()
    * @generated
    */
-  int BUILTIN_TYPE = 3;
+  int BUILTIN_TYPE = 4;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -331,7 +359,7 @@ public interface ResolutePackage extends EPackage
    * @see com.rockwellcollins.atc.resolute.resolute.impl.ResolutePackageImpl#getArg()
    * @generated
    */
-  int ARG = 4;
+  int ARG = 5;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -404,7 +432,7 @@ public interface ResolutePackage extends EPackage
    * @see com.rockwellcollins.atc.resolute.resolute.impl.ResolutePackageImpl#getConstantDefinition()
    * @generated
    */
-  int CONSTANT_DEFINITION = 5;
+  int CONSTANT_DEFINITION = 6;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -486,7 +514,7 @@ public interface ResolutePackage extends EPackage
    * @see com.rockwellcollins.atc.resolute.resolute.impl.ResolutePackageImpl#getFunctionDefinition()
    * @generated
    */
-  int FUNCTION_DEFINITION = 6;
+  int FUNCTION_DEFINITION = 7;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -586,7 +614,7 @@ public interface ResolutePackage extends EPackage
    * @see com.rockwellcollins.atc.resolute.resolute.impl.ResolutePackageImpl#getClaimString()
    * @generated
    */
-  int CLAIM_STRING = 7;
+  int CLAIM_STRING = 8;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -632,7 +660,7 @@ public interface ResolutePackage extends EPackage
    * @see com.rockwellcollins.atc.resolute.resolute.impl.ResolutePackageImpl#getDefinitionBody()
    * @generated
    */
-  int DEFINITION_BODY = 8;
+  int DEFINITION_BODY = 9;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -678,7 +706,7 @@ public interface ResolutePackage extends EPackage
    * @see com.rockwellcollins.atc.resolute.resolute.impl.ResolutePackageImpl#getExpr()
    * @generated
    */
-  int EXPR = 9;
+  int EXPR = 10;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -708,6 +736,88 @@ public interface ResolutePackage extends EPackage
   int EXPR_FEATURE_COUNT = Aadl2Package.ELEMENT_FEATURE_COUNT + 0;
 
   /**
+   * The meta object id for the '{@link com.rockwellcollins.atc.resolute.resolute.impl.LetBindingImpl <em>Let Binding</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see com.rockwellcollins.atc.resolute.resolute.impl.LetBindingImpl
+   * @see com.rockwellcollins.atc.resolute.resolute.impl.ResolutePackageImpl#getLetBinding()
+   * @generated
+   */
+  int LET_BINDING = 11;
+
+  /**
+   * The feature id for the '<em><b>Owned Element</b></em>' reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int LET_BINDING__OWNED_ELEMENT = Aadl2Package.NAMED_ELEMENT__OWNED_ELEMENT;
+
+  /**
+   * The feature id for the '<em><b>Owned Comment</b></em>' containment reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int LET_BINDING__OWNED_COMMENT = Aadl2Package.NAMED_ELEMENT__OWNED_COMMENT;
+
+  /**
+   * The feature id for the '<em><b>Name</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int LET_BINDING__NAME = Aadl2Package.NAMED_ELEMENT__NAME;
+
+  /**
+   * The feature id for the '<em><b>Qualified Name</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int LET_BINDING__QUALIFIED_NAME = Aadl2Package.NAMED_ELEMENT__QUALIFIED_NAME;
+
+  /**
+   * The feature id for the '<em><b>Owned Property Association</b></em>' containment reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int LET_BINDING__OWNED_PROPERTY_ASSOCIATION = Aadl2Package.NAMED_ELEMENT__OWNED_PROPERTY_ASSOCIATION;
+
+  /**
+   * The feature id for the '<em><b>Type</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int LET_BINDING__TYPE = Aadl2Package.NAMED_ELEMENT_FEATURE_COUNT + 0;
+
+  /**
+   * The feature id for the '<em><b>Expr</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int LET_BINDING__EXPR = Aadl2Package.NAMED_ELEMENT_FEATURE_COUNT + 1;
+
+  /**
+   * The number of structural features of the '<em>Let Binding</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int LET_BINDING_FEATURE_COUNT = Aadl2Package.NAMED_ELEMENT_FEATURE_COUNT + 2;
+
+  /**
    * The meta object id for the '{@link com.rockwellcollins.atc.resolute.resolute.impl.ResoluteSubclauseImpl <em>Subclause</em>}' class.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -715,7 +825,7 @@ public interface ResolutePackage extends EPackage
    * @see com.rockwellcollins.atc.resolute.resolute.impl.ResolutePackageImpl#getResoluteSubclause()
    * @generated
    */
-  int RESOLUTE_SUBCLAUSE = 10;
+  int RESOLUTE_SUBCLAUSE = 12;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -797,7 +907,7 @@ public interface ResolutePackage extends EPackage
    * @see com.rockwellcollins.atc.resolute.resolute.impl.ResolutePackageImpl#getNestedDotID()
    * @generated
    */
-  int NESTED_DOT_ID = 11;
+  int NESTED_DOT_ID = 13;
 
   /**
    * The feature id for the '<em><b>Base</b></em>' reference.
@@ -834,7 +944,7 @@ public interface ResolutePackage extends EPackage
    * @see com.rockwellcollins.atc.resolute.resolute.impl.ResolutePackageImpl#getProveStatement()
    * @generated
    */
-  int PROVE_STATEMENT = 12;
+  int PROVE_STATEMENT = 14;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -889,7 +999,7 @@ public interface ResolutePackage extends EPackage
    * @see com.rockwellcollins.atc.resolute.resolute.impl.ResolutePackageImpl#getSetType()
    * @generated
    */
-  int SET_TYPE = 13;
+  int SET_TYPE = 15;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -955,6 +1065,88 @@ public interface ResolutePackage extends EPackage
   int SET_TYPE_FEATURE_COUNT = TYPE_FEATURE_COUNT + 1;
 
   /**
+   * The meta object id for the '{@link com.rockwellcollins.atc.resolute.resolute.impl.QuantArgImpl <em>Quant Arg</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see com.rockwellcollins.atc.resolute.resolute.impl.QuantArgImpl
+   * @see com.rockwellcollins.atc.resolute.resolute.impl.ResolutePackageImpl#getQuantArg()
+   * @generated
+   */
+  int QUANT_ARG = 16;
+
+  /**
+   * The feature id for the '<em><b>Owned Element</b></em>' reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int QUANT_ARG__OWNED_ELEMENT = ARG__OWNED_ELEMENT;
+
+  /**
+   * The feature id for the '<em><b>Owned Comment</b></em>' containment reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int QUANT_ARG__OWNED_COMMENT = ARG__OWNED_COMMENT;
+
+  /**
+   * The feature id for the '<em><b>Name</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int QUANT_ARG__NAME = ARG__NAME;
+
+  /**
+   * The feature id for the '<em><b>Qualified Name</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int QUANT_ARG__QUALIFIED_NAME = ARG__QUALIFIED_NAME;
+
+  /**
+   * The feature id for the '<em><b>Owned Property Association</b></em>' containment reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int QUANT_ARG__OWNED_PROPERTY_ASSOCIATION = ARG__OWNED_PROPERTY_ASSOCIATION;
+
+  /**
+   * The feature id for the '<em><b>Type</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int QUANT_ARG__TYPE = ARG__TYPE;
+
+  /**
+   * The feature id for the '<em><b>Expr</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int QUANT_ARG__EXPR = ARG_FEATURE_COUNT + 0;
+
+  /**
+   * The number of structural features of the '<em>Quant Arg</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int QUANT_ARG_FEATURE_COUNT = ARG_FEATURE_COUNT + 1;
+
+  /**
    * The meta object id for the '{@link com.rockwellcollins.atc.resolute.resolute.impl.ClaimArgImpl <em>Claim Arg</em>}' class.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -962,7 +1154,7 @@ public interface ResolutePackage extends EPackage
    * @see com.rockwellcollins.atc.resolute.resolute.impl.ResolutePackageImpl#getClaimArg()
    * @generated
    */
-  int CLAIM_ARG = 14;
+  int CLAIM_ARG = 17;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -1017,7 +1209,7 @@ public interface ResolutePackage extends EPackage
    * @see com.rockwellcollins.atc.resolute.resolute.impl.ResolutePackageImpl#getFuncBody()
    * @generated
    */
-  int FUNC_BODY = 15;
+  int FUNC_BODY = 18;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -1072,7 +1264,7 @@ public interface ResolutePackage extends EPackage
    * @see com.rockwellcollins.atc.resolute.resolute.impl.ResolutePackageImpl#getClaimBody()
    * @generated
    */
-  int CLAIM_BODY = 16;
+  int CLAIM_BODY = 19;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -1127,7 +1319,7 @@ public interface ResolutePackage extends EPackage
    * @see com.rockwellcollins.atc.resolute.resolute.impl.ResolutePackageImpl#getBinaryExpr()
    * @generated
    */
-  int BINARY_EXPR = 17;
+  int BINARY_EXPR = 20;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -1191,7 +1383,7 @@ public interface ResolutePackage extends EPackage
    * @see com.rockwellcollins.atc.resolute.resolute.impl.ResolutePackageImpl#getUnaryExpr()
    * @generated
    */
-  int UNARY_EXPR = 18;
+  int UNARY_EXPR = 21;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -1246,7 +1438,7 @@ public interface ResolutePackage extends EPackage
    * @see com.rockwellcollins.atc.resolute.resolute.impl.ResolutePackageImpl#getIdExpr()
    * @generated
    */
-  int ID_EXPR = 19;
+  int ID_EXPR = 22;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -1276,13 +1468,22 @@ public interface ResolutePackage extends EPackage
   int ID_EXPR__ID = EXPR_FEATURE_COUNT + 0;
 
   /**
+   * The feature id for the '<em><b>Subelements</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int ID_EXPR__SUBELEMENTS = EXPR_FEATURE_COUNT + 1;
+
+  /**
    * The number of structural features of the '<em>Id Expr</em>' class.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int ID_EXPR_FEATURE_COUNT = EXPR_FEATURE_COUNT + 1;
+  int ID_EXPR_FEATURE_COUNT = EXPR_FEATURE_COUNT + 2;
 
   /**
    * The meta object id for the '{@link com.rockwellcollins.atc.resolute.resolute.impl.ThisExprImpl <em>This Expr</em>}' class.
@@ -1292,7 +1493,7 @@ public interface ResolutePackage extends EPackage
    * @see com.rockwellcollins.atc.resolute.resolute.impl.ResolutePackageImpl#getThisExpr()
    * @generated
    */
-  int THIS_EXPR = 20;
+  int THIS_EXPR = 23;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -1338,7 +1539,7 @@ public interface ResolutePackage extends EPackage
    * @see com.rockwellcollins.atc.resolute.resolute.impl.ResolutePackageImpl#getFailExpr()
    * @generated
    */
-  int FAIL_EXPR = 21;
+  int FAIL_EXPR = 24;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -1384,7 +1585,7 @@ public interface ResolutePackage extends EPackage
    * @see com.rockwellcollins.atc.resolute.resolute.impl.ResolutePackageImpl#getIntExpr()
    * @generated
    */
-  int INT_EXPR = 22;
+  int INT_EXPR = 25;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -1430,7 +1631,7 @@ public interface ResolutePackage extends EPackage
    * @see com.rockwellcollins.atc.resolute.resolute.impl.ResolutePackageImpl#getRealExpr()
    * @generated
    */
-  int REAL_EXPR = 23;
+  int REAL_EXPR = 26;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -1476,7 +1677,7 @@ public interface ResolutePackage extends EPackage
    * @see com.rockwellcollins.atc.resolute.resolute.impl.ResolutePackageImpl#getBoolExpr()
    * @generated
    */
-  int BOOL_EXPR = 24;
+  int BOOL_EXPR = 27;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -1522,7 +1723,7 @@ public interface ResolutePackage extends EPackage
    * @see com.rockwellcollins.atc.resolute.resolute.impl.ResolutePackageImpl#getStringExpr()
    * @generated
    */
-  int STRING_EXPR = 25;
+  int STRING_EXPR = 28;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -1568,7 +1769,7 @@ public interface ResolutePackage extends EPackage
    * @see com.rockwellcollins.atc.resolute.resolute.impl.ResolutePackageImpl#getIfThenElseExpr()
    * @generated
    */
-  int IF_THEN_ELSE_EXPR = 26;
+  int IF_THEN_ELSE_EXPR = 29;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -1632,7 +1833,7 @@ public interface ResolutePackage extends EPackage
    * @see com.rockwellcollins.atc.resolute.resolute.impl.ResolutePackageImpl#getQuantifiedExpr()
    * @generated
    */
-  int QUANTIFIED_EXPR = 27;
+  int QUANTIFIED_EXPR = 30;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -1696,7 +1897,7 @@ public interface ResolutePackage extends EPackage
    * @see com.rockwellcollins.atc.resolute.resolute.impl.ResolutePackageImpl#getBuiltInFuncCallExpr()
    * @generated
    */
-  int BUILT_IN_FUNC_CALL_EXPR = 28;
+  int BUILT_IN_FUNC_CALL_EXPR = 31;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -1751,7 +1952,7 @@ public interface ResolutePackage extends EPackage
    * @see com.rockwellcollins.atc.resolute.resolute.impl.ResolutePackageImpl#getFnCallExpr()
    * @generated
    */
-  int FN_CALL_EXPR = 29;
+  int FN_CALL_EXPR = 32;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -1806,7 +2007,7 @@ public interface ResolutePackage extends EPackage
    * @see com.rockwellcollins.atc.resolute.resolute.impl.ResolutePackageImpl#getFilterMapExpr()
    * @generated
    */
-  int FILTER_MAP_EXPR = 30;
+  int FILTER_MAP_EXPR = 33;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -1862,6 +2063,61 @@ public interface ResolutePackage extends EPackage
    */
   int FILTER_MAP_EXPR_FEATURE_COUNT = EXPR_FEATURE_COUNT + 3;
 
+  /**
+   * The meta object id for the '{@link com.rockwellcollins.atc.resolute.resolute.impl.LetExprImpl <em>Let Expr</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see com.rockwellcollins.atc.resolute.resolute.impl.LetExprImpl
+   * @see com.rockwellcollins.atc.resolute.resolute.impl.ResolutePackageImpl#getLetExpr()
+   * @generated
+   */
+  int LET_EXPR = 34;
+
+  /**
+   * The feature id for the '<em><b>Owned Element</b></em>' reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int LET_EXPR__OWNED_ELEMENT = EXPR__OWNED_ELEMENT;
+
+  /**
+   * The feature id for the '<em><b>Owned Comment</b></em>' containment reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int LET_EXPR__OWNED_COMMENT = EXPR__OWNED_COMMENT;
+
+  /**
+   * The feature id for the '<em><b>Binding</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int LET_EXPR__BINDING = EXPR_FEATURE_COUNT + 0;
+
+  /**
+   * The feature id for the '<em><b>Expr</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int LET_EXPR__EXPR = EXPR_FEATURE_COUNT + 1;
+
+  /**
+   * The number of structural features of the '<em>Let Expr</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int LET_EXPR_FEATURE_COUNT = EXPR_FEATURE_COUNT + 2;
+
 
   /**
    * Returns the meta object for class '{@link com.rockwellcollins.atc.resolute.resolute.ResoluteLibrary <em>Library</em>}'.
@@ -1903,6 +2159,27 @@ public interface ResolutePackage extends EPackage
    * @generated
    */
   EClass getType();
+
+  /**
+   * Returns the meta object for class '{@link com.rockwellcollins.atc.resolute.resolute.ElementSet <em>Element Set</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>Element Set</em>'.
+   * @see com.rockwellcollins.atc.resolute.resolute.ElementSet
+   * @generated
+   */
+  EClass getElementSet();
+
+  /**
+   * Returns the meta object for the attribute '{@link com.rockwellcollins.atc.resolute.resolute.ElementSet#getName <em>Name</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the attribute '<em>Name</em>'.
+   * @see com.rockwellcollins.atc.resolute.resolute.ElementSet#getName()
+   * @see #getElementSet()
+   * @generated
+   */
+  EAttribute getElementSet_Name();
 
   /**
    * Returns the meta object for class '{@link com.rockwellcollins.atc.resolute.resolute.BuiltinType <em>Builtin Type</em>}'.
@@ -2052,6 +2329,38 @@ public interface ResolutePackage extends EPackage
   EClass getExpr();
 
   /**
+   * Returns the meta object for class '{@link com.rockwellcollins.atc.resolute.resolute.LetBinding <em>Let Binding</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>Let Binding</em>'.
+   * @see com.rockwellcollins.atc.resolute.resolute.LetBinding
+   * @generated
+   */
+  EClass getLetBinding();
+
+  /**
+   * Returns the meta object for the containment reference '{@link com.rockwellcollins.atc.resolute.resolute.LetBinding#getType <em>Type</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference '<em>Type</em>'.
+   * @see com.rockwellcollins.atc.resolute.resolute.LetBinding#getType()
+   * @see #getLetBinding()
+   * @generated
+   */
+  EReference getLetBinding_Type();
+
+  /**
+   * Returns the meta object for the containment reference '{@link com.rockwellcollins.atc.resolute.resolute.LetBinding#getExpr <em>Expr</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference '<em>Expr</em>'.
+   * @see com.rockwellcollins.atc.resolute.resolute.LetBinding#getExpr()
+   * @see #getLetBinding()
+   * @generated
+   */
+  EReference getLetBinding_Expr();
+
+  /**
    * Returns the meta object for class '{@link com.rockwellcollins.atc.resolute.resolute.ResoluteSubclause <em>Subclause</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -2156,6 +2465,27 @@ public interface ResolutePackage extends EPackage
    * @generated
    */
   EReference getSetType_Type();
+
+  /**
+   * Returns the meta object for class '{@link com.rockwellcollins.atc.resolute.resolute.QuantArg <em>Quant Arg</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>Quant Arg</em>'.
+   * @see com.rockwellcollins.atc.resolute.resolute.QuantArg
+   * @generated
+   */
+  EClass getQuantArg();
+
+  /**
+   * Returns the meta object for the containment reference '{@link com.rockwellcollins.atc.resolute.resolute.QuantArg#getExpr <em>Expr</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference '<em>Expr</em>'.
+   * @see com.rockwellcollins.atc.resolute.resolute.QuantArg#getExpr()
+   * @see #getQuantArg()
+   * @generated
+   */
+  EReference getQuantArg_Expr();
 
   /**
    * Returns the meta object for class '{@link com.rockwellcollins.atc.resolute.resolute.ClaimArg <em>Claim Arg</em>}'.
@@ -2315,6 +2645,17 @@ public interface ResolutePackage extends EPackage
    * @generated
    */
   EReference getIdExpr_Id();
+
+  /**
+   * Returns the meta object for the containment reference '{@link com.rockwellcollins.atc.resolute.resolute.IdExpr#getSubelements <em>Subelements</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference '<em>Subelements</em>'.
+   * @see com.rockwellcollins.atc.resolute.resolute.IdExpr#getSubelements()
+   * @see #getIdExpr()
+   * @generated
+   */
+  EReference getIdExpr_Subelements();
 
   /**
    * Returns the meta object for class '{@link com.rockwellcollins.atc.resolute.resolute.ThisExpr <em>This Expr</em>}'.
@@ -2636,6 +2977,38 @@ public interface ResolutePackage extends EPackage
   EReference getFilterMapExpr_Filter();
 
   /**
+   * Returns the meta object for class '{@link com.rockwellcollins.atc.resolute.resolute.LetExpr <em>Let Expr</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>Let Expr</em>'.
+   * @see com.rockwellcollins.atc.resolute.resolute.LetExpr
+   * @generated
+   */
+  EClass getLetExpr();
+
+  /**
+   * Returns the meta object for the containment reference '{@link com.rockwellcollins.atc.resolute.resolute.LetExpr#getBinding <em>Binding</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference '<em>Binding</em>'.
+   * @see com.rockwellcollins.atc.resolute.resolute.LetExpr#getBinding()
+   * @see #getLetExpr()
+   * @generated
+   */
+  EReference getLetExpr_Binding();
+
+  /**
+   * Returns the meta object for the containment reference '{@link com.rockwellcollins.atc.resolute.resolute.LetExpr#getExpr <em>Expr</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference '<em>Expr</em>'.
+   * @see com.rockwellcollins.atc.resolute.resolute.LetExpr#getExpr()
+   * @see #getLetExpr()
+   * @generated
+   */
+  EReference getLetExpr_Expr();
+
+  /**
    * Returns the factory that creates the instances of the model.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -2695,6 +3068,24 @@ public interface ResolutePackage extends EPackage
      * @generated
      */
     EClass TYPE = eINSTANCE.getType();
+
+    /**
+     * The meta object literal for the '{@link com.rockwellcollins.atc.resolute.resolute.impl.ElementSetImpl <em>Element Set</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see com.rockwellcollins.atc.resolute.resolute.impl.ElementSetImpl
+     * @see com.rockwellcollins.atc.resolute.resolute.impl.ResolutePackageImpl#getElementSet()
+     * @generated
+     */
+    EClass ELEMENT_SET = eINSTANCE.getElementSet();
+
+    /**
+     * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EAttribute ELEMENT_SET__NAME = eINSTANCE.getElementSet_Name();
 
     /**
      * The meta object literal for the '{@link com.rockwellcollins.atc.resolute.resolute.impl.BuiltinTypeImpl <em>Builtin Type</em>}' class.
@@ -2823,6 +3214,32 @@ public interface ResolutePackage extends EPackage
     EClass EXPR = eINSTANCE.getExpr();
 
     /**
+     * The meta object literal for the '{@link com.rockwellcollins.atc.resolute.resolute.impl.LetBindingImpl <em>Let Binding</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see com.rockwellcollins.atc.resolute.resolute.impl.LetBindingImpl
+     * @see com.rockwellcollins.atc.resolute.resolute.impl.ResolutePackageImpl#getLetBinding()
+     * @generated
+     */
+    EClass LET_BINDING = eINSTANCE.getLetBinding();
+
+    /**
+     * The meta object literal for the '<em><b>Type</b></em>' containment reference feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference LET_BINDING__TYPE = eINSTANCE.getLetBinding_Type();
+
+    /**
+     * The meta object literal for the '<em><b>Expr</b></em>' containment reference feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference LET_BINDING__EXPR = eINSTANCE.getLetBinding_Expr();
+
+    /**
      * The meta object literal for the '{@link com.rockwellcollins.atc.resolute.resolute.impl.ResoluteSubclauseImpl <em>Subclause</em>}' class.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -2909,6 +3326,24 @@ public interface ResolutePackage extends EPackage
      * @generated
      */
     EReference SET_TYPE__TYPE = eINSTANCE.getSetType_Type();
+
+    /**
+     * The meta object literal for the '{@link com.rockwellcollins.atc.resolute.resolute.impl.QuantArgImpl <em>Quant Arg</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see com.rockwellcollins.atc.resolute.resolute.impl.QuantArgImpl
+     * @see com.rockwellcollins.atc.resolute.resolute.impl.ResolutePackageImpl#getQuantArg()
+     * @generated
+     */
+    EClass QUANT_ARG = eINSTANCE.getQuantArg();
+
+    /**
+     * The meta object literal for the '<em><b>Expr</b></em>' containment reference feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference QUANT_ARG__EXPR = eINSTANCE.getQuantArg_Expr();
 
     /**
      * The meta object literal for the '{@link com.rockwellcollins.atc.resolute.resolute.impl.ClaimArgImpl <em>Claim Arg</em>}' class.
@@ -3041,6 +3476,14 @@ public interface ResolutePackage extends EPackage
      * @generated
      */
     EReference ID_EXPR__ID = eINSTANCE.getIdExpr_Id();
+
+    /**
+     * The meta object literal for the '<em><b>Subelements</b></em>' containment reference feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference ID_EXPR__SUBELEMENTS = eINSTANCE.getIdExpr_Subelements();
 
     /**
      * The meta object literal for the '{@link com.rockwellcollins.atc.resolute.resolute.impl.ThisExprImpl <em>This Expr</em>}' class.
@@ -3303,6 +3746,32 @@ public interface ResolutePackage extends EPackage
      * @generated
      */
     EReference FILTER_MAP_EXPR__FILTER = eINSTANCE.getFilterMapExpr_Filter();
+
+    /**
+     * The meta object literal for the '{@link com.rockwellcollins.atc.resolute.resolute.impl.LetExprImpl <em>Let Expr</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see com.rockwellcollins.atc.resolute.resolute.impl.LetExprImpl
+     * @see com.rockwellcollins.atc.resolute.resolute.impl.ResolutePackageImpl#getLetExpr()
+     * @generated
+     */
+    EClass LET_EXPR = eINSTANCE.getLetExpr();
+
+    /**
+     * The meta object literal for the '<em><b>Binding</b></em>' containment reference feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference LET_EXPR__BINDING = eINSTANCE.getLetExpr_Binding();
+
+    /**
+     * The meta object literal for the '<em><b>Expr</b></em>' containment reference feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference LET_EXPR__EXPR = eINSTANCE.getLetExpr_Expr();
 
   }
 

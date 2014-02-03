@@ -15,7 +15,9 @@ data implementation PIDState.impl
   subcomponents
     pid_iState : data Base_Types::Float;
     pid_dState : data Base_Types::Float;
-    pid_reset : data Base_Types::Unsigned_8;
+    pid_dReset : data Base_Types::Unsigned_8;
+    pid_pLast : data Base_Types::Float;
+    pid_dLast : data Base_Types::Float;
 end PIDState.impl;
 
 
