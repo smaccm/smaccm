@@ -2053,6 +2053,15 @@ thread controlLawTask
     Source_Stack_Size => 256 bytes;
     SMACCM::Language => "Ivory";
     Dispatch_Protocol => Sporadic;
+    
+  annex agree {**
+  	
+  	eq safe_req : bool = ppm_req_snk.set_safe;
+  	eq arm_req : bool = ppm_req_snk.set_armed;
+  	eq disarm_req : bool = ppm_req_snk.set_disarmed;
+  	
+  **};
+    
 end controlLawTask;
 
 
@@ -2118,6 +2127,66 @@ thread ppmInputTower
     Dispatch_Protocol => Hybrid;
     Period => 50 ms;
     SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_ppmInputTower_43_per50_62");
+
+  annex agree {**
+  	const deadSafe : int = 0;
+  	const deadArmable : int = 1;
+  	const armingIdle : int = 0;
+  	const armingActive : int = 1;
+  	const armingComplete : int = 2;
+  	const hystresis : int = 750;
+  	
+	eq arming_state : int;
+	eq arming_state_time : int;
+	eq dead_last_pos : int = deadSafe -> pre (dead_pos);
+	
+  	
+  	eq throttle_chan : int = flight_control_commands.ppm2;
+  	eq rudder_chan : int = flight_control_commands.ppm3;
+  	eq dead_chan : int = flight_control_commands.ppm5;
+  	eq time : int; --TODO: plug this variable into the model;
+  	
+  	eq dead_pos : int = 
+  		if dead_chan > 1600 then
+  			deadArmable
+  		else
+  			deadSafe;
+  	  	
+  	guarantee "dead switch position is safe behavior" : 
+  		(dead_pos = deadSafe) =>
+  			arming_state = armingIdle
+  			and
+  			arming_state_time = time;
+  		
+  	eq prev_arming_state : int = armingIdle -> pre (arming_state);
+  	eq prev_arming_state_time : int = arming_state_time -> pre(arming_state_time);
+  	eq sticks_corner : bool = throttle_chan < 1050 and rudder_chan > 1900;
+    eq donewaiting : bool = (time - prev_arming_state_time) > hystresis;
+  		
+  	guarantee "dead switch is unsafe behavior" : 
+  		(dead_pos != deadSafe) =>
+  			if(prev_arming_state = armingIdle and sticks_corner) then
+  				arming_state = armingActive
+  				and
+  				arming_state_time = time
+  			else if(prev_arming_state = armingActive and sticks_corner) then
+  				if(donewaiting) then
+  					arming_state = armingComplete
+  				else
+  					arming_state = armingActive
+  			else
+  				arming_state = armingIdle;
+  	
+  	
+  	guarantee "set armed behavior" :
+  		arming_state = armingComplete => cr_emitter.set_armed;
+  	
+  	guarantee "set safe behavior" :
+  		dead_pos = deadSafe => cr_emitter.set_safe;
+  	
+  	
+  **};
+
 end ppmInputTower;
 
 
