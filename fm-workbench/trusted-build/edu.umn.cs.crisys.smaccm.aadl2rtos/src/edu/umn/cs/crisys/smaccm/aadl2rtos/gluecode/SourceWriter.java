@@ -333,7 +333,17 @@ public class SourceWriter extends AbstractCodeWriter {
 			out.append("void " + tw.getGeneratedEntrypoint() + "(/*int threadID*/) \n");
 			out.append("{\n");
 
-			out.append(Util.ind(1) + "uint32_t millis_from_sys_start = 0;\n");
+			if (tw.getDispatchProtocol().equalsIgnoreCase("periodic") ||
+				tw.getDispatchProtocol().equalsIgnoreCase("hybrid")) {
+				out.append(Util.ind(1) + "uint32_t millis_from_sys_start = 0;\n");
+			} else if (tw.getDispatchProtocol().equalsIgnoreCase("sporadic") ||
+					   tw.getDispatchProtocol().equalsIgnoreCase("aperiodic")) {
+				// no op.
+			} else {
+				// error! dispatch protocol not understood
+				throw new Aadl2RtosException("Unexpected dispatch protocol: " + tw.getDispatchProtocol() + " in thread " + tw.getName() + 
+						"; one of {Periodic, Hybrid, Aperiodic, Sporadic} expected");
+			}
 
 			ExternalHandler initHandler = tw.getInitializeEntrypointOpt();
 			if (initHandler != null) {
