@@ -6,6 +6,8 @@ package edu.umn.cs.crisys.smaccm.aadl2rtos.ast;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.umn.cs.crisys.smaccm.aadl2rtos.parse.Model.ISRType;
+
 /**
  * @author Whalen
  *
@@ -16,6 +18,9 @@ public class InterruptServiceRoutine {
   String handlerName;
   MyPort outputServiceRoutinePort;
   MyPort destPort;
+  public enum ISRType {InThreadContextISR, SignalingISR} ; 
+  ISRType isrType = ISRType.SignalingISR; 
+  
   List<ThreadInstance> destThreads = new ArrayList<ThreadInstance>();
   
   /*
@@ -56,6 +61,10 @@ public class InterruptServiceRoutine {
   
   public String getSignalName() {
     return signalName;
+  }
+  
+  public ISRType getISRType() {
+	  return isrType;
   }
   
   public String getHandlerName() {

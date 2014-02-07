@@ -223,7 +223,7 @@ public class HeaderWriter extends AbstractCodeWriter {
 	  }
 	  else if (d.getDispatcherType() == DispatcherType.PERIODIC_DISPATCHER) {
 	    return "   void " + fnName
-				+ "(uint32_t millis_from_sys_start); \n\n";
+				+ "(uint32_t *millis_from_sys_start); \n\n";
 	  }
 	  else {
 	    return "   void " + fnName
