@@ -14,7 +14,13 @@ Require-Bundle: org.eclipse.ui,
  org.osate.ui;bundle-version="1.0.0",
  org.osate.aadl2.instantiation;bundle-version="1.0.0",
  org.osate.xtext.aadl2.properties;bundle-version="1.0.0",
- org.osate.xtext.aadl2.errormodel
+ org.osate.xtext.aadl2.errormodel,
+ org.eclipse.ui.ide;bundle-version="3.8.2",
+ org.eclipse.emf.transaction;bundle-version="1.4.0",
+ net.certware.argument.arm;bundle-version="1.2.1";resolution:=optional,
+ net.certware.argument.caz;bundle-version="1.2.1";resolution:=optional,
+ net.certware.argument.caz.diagram;bundle-version="1.2.1";resolution:=optional,
+ org.eclipse.gmf.runtime.notation;bundle-version="1.5.0";resolution:=optional
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Export-Package: com.rockwellcollins.atc.resolute.analysis,
@@ -23,8 +29,6 @@ Export-Package: com.rockwellcollins.atc.resolute.analysis,
  com.rockwellcollins.atc.resolute.analysis.values
 Eclipse-RegisterBuddy: com.rockwellcollins.atc.resolute.ui
 Bundle-Vendor: Rockwell Collins, Inc.
-Import-Package: com.rockwellcollins.atc.resolute.analysis.execution,
- com.rockwellcollins.atc.resolute.analysis.values,
- org.osate.xtext.aadl2.errormodel.errorModel,
+Import-Package: org.osate.xtext.aadl2.errormodel.errorModel,
  org.osate.xtext.aadl2.errormodel.util
 

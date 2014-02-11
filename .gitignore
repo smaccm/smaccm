@@ -1,2 +1,5 @@
 bin
 instances
+*.caz
+*.caz_diagram
+.settings
