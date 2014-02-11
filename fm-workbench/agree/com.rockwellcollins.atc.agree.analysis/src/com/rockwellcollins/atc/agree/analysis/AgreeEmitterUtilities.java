@@ -25,7 +25,6 @@ import jkind.lustre.VarDecl;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
-import org.osate.aadl2.AbstractConnectionEnd;
 import org.osate.aadl2.AbstractNamedValue;
 import org.osate.aadl2.Classifier;
 import org.osate.aadl2.ComponentImplementation;
