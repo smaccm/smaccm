@@ -1,6 +1,7 @@
 package Microwave_SEng5861
 public 
    with Base_Types;
+   with defs;
    
    
 -- This system managed    
@@ -49,7 +50,7 @@ system Mode_Control
 		guarantee "At the instant when the clear button is pressed, if the microwave is in suspended mode, it shall enter the setup mode" : 		
 			true; 
 			
-		guarantee "If suspended, at the instant the start key is pressed the microwave shall enter cooking mode if the door is closed" :
+		guarantee "If suspended, at the instant the start key is pressed the microwave shall enter cooking mode if the door is closed and the seconds_to_cook is greater than 0" :
 			true; 
 			
 		guarantee "If seconds_to_cook = 0, microwave will be in setup mode" : 
