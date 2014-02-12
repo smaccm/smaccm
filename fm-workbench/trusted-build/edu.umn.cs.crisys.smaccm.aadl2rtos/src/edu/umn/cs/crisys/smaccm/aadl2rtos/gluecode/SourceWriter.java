@@ -29,24 +29,24 @@ import java.util.Iterator;
 import java.util.List;
 
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosException;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.Model;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.ArrayType;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.IntType;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.PointerType;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.Type;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.Connection;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.Dispatcher;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.Dispatcher.DispatcherType;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.ExternalHandler;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.InterruptServiceRoutine;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.MyPort;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.SharedData;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.SharedDataAccessor;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.SharedDataAccessor.AccessType;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.ThreadCalendar;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.ThreadImplementation;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.ThreadInstance;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.ThreadInstancePort;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.Connection;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.Dispatcher;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.ExternalHandler;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.InterruptServiceRoutine;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.MyPort;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.SharedData;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.SharedDataAccessor;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.ThreadCalendar;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.ThreadImplementation;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.ThreadInstance;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.ThreadInstancePort;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.Dispatcher.DispatcherType;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.SharedDataAccessor.AccessType;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.type.ArrayType;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.type.IntType;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.type.PointerType;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.type.Type;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.parse.Model;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.util.Util;
 
 public class SourceWriter extends AbstractCodeWriter {
@@ -307,8 +307,8 @@ public class SourceWriter extends AbstractCodeWriter {
 	
 	private void writeThreadPeriodicDispatcher(Dispatcher d) throws IOException {
     for (ExternalHandler handler: d.getExternalHandlerList()) {
-      //out.append(Util.ind(3) + "millis_from_sys_start += " + Integer.toString(d.getPeriod()) + ";\n");
-      out.append(Util.ind(3) + handler.getHandlerName() + "(/*threadID, */ smaccm_get_time_in_ms());\n");
+      out.append(Util.ind(3) + "smaccm_millis_from_sys_start = smaccm_get_time_in_ms(); \n");
+      out.append(Util.ind(3) + handler.getHandlerName() + "(&smaccm_millis_from_sys_start);\n");
     }	  
 	} 
 	
@@ -333,7 +333,7 @@ public class SourceWriter extends AbstractCodeWriter {
 			out.append("void " + tw.getGeneratedEntrypoint() + "(/*int threadID*/) \n");
 			out.append("{\n");
 
-			// out.append(Util.ind(1) + "uint32_t millis_from_sys_start = 0;\n");
+			out.append(Util.ind(1) + "uint32_t millis_from_sys_start = 0;\n");
 
 			ExternalHandler initHandler = tw.getInitializeEntrypointOpt();
 			if (initHandler != null) {

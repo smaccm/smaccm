@@ -56,6 +56,8 @@ import org.w3c.dom.Document;
 
 import edu.umn.cs.crisys.smaccm.aadl2rtos.gluecode.BrtosEntrypointSkeletonGenerator;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.gluecode.MakefileWriter;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.parse.AadlModelParser;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.parse.Model;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.prx.PrxGenerator;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.util.Util;
 
