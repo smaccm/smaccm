@@ -26,8 +26,6 @@ system Mode_Control
 		guarantee "The range of the cooking_mode variable shall be [1..3]" : 
 			true ; 
 		
-		-- Note that this is a provable, but not a testable requirement!
-		-- Why?	
 		guarantee "The microwave shall be in cooking mode only when the door is closed." : 
 			true;			
 		
@@ -59,6 +57,41 @@ system Mode_Control
 	**};
 
 end Mode_Control ; 
+
+-------------------------------------------------------------------------------
+-- Here is an implementation that should satisfy the properties defined above.
+-------------------------------------------------------------------------------
+
+system implementation Mode_Control.Impl
+	annex agree {**
+		const OFF_MODE : int = 0;
+		const SETUP_MODE : int = 1; 
+		const SUSPENDED_MODE : int = 2;
+		const COOKING_MODE : int = 3;
+		eq st_pr: bool = defs.rising_edge(start);
+		eq cl_pr: bool = defs.rising_edge(clear);
+
+		-- encoding the state machine used for mode control as a sequence of if/then/elses.
+		eq sm : int = SETUP_MODE -> 
+			if pre(defs.is_setup(sm)) and st_pr and seconds_to_cook > 0 then 
+				if (door_closed) then 
+					COOKING_MODE
+				else 
+					SUSPENDED_MODE
+			else if pre(defs.is_running(sm)) and seconds_to_cook <= 0 then 
+				SETUP_MODE
+			else if pre(defs.is_cooking(sm)) and (cl_pr or not door_closed) then
+				SUSPENDED_MODE
+			else if pre(defs.is_suspended(sm)) and cl_pr then 
+				SETUP_MODE
+			else if pre(defs.is_suspended(sm)) and door_closed then 
+				COOKING_MODE
+			else pre(sm); 
+
+		assert(cooking_mode = sm); 
+					
+	**};
+end Mode_Control.Impl;
 
 
 -- This is a "loose" specification; we don't define how the display updates with button presses
@@ -144,6 +177,70 @@ system Display_Control
 		
 	**};	
 end Display_Control ; 
+
+system implementation Display_Control.Impl
+
+	annex agree {**
+		eq foo: bool = false;
+		
+		eq kp_digit : int = 
+			if (kp_0_pressed) then 0
+			else if (kp_1_pressed) then 1
+			else if (kp_2_pressed) then 2
+			else if (kp_3_pressed) then 3
+			else if (kp_4_pressed) then 4
+			else if (kp_5_pressed) then 5
+			else if (kp_6_pressed) then 6
+			else if (kp_7_pressed) then 7
+			else if (kp_8_pressed) then 8
+			else if (kp_9_pressed) then 9
+			else 0;
+		
+		node update_digit(carry_value: int, mode: int, prev_right: int, carry_in: bool, digit_pressed: bool, clear_pressed: bool, prev_at_zero: bool) returns
+			 (digit: int, carry_out: bool); 
+		let
+			digit = 0 -> 
+				if defs.is_cooking(mode) then
+					if (prev_at_zero) then 0
+					else if carry_in then 
+						if pre(digit) = 0 then carry_value else pre(digit) - 1
+					else
+						pre(digit)
+				else if (defs.is_setup(mode)) then 
+					if (clear_pressed) then 
+						0
+					else if digit_pressed then 
+						prev_right
+					else 
+						pre(digit)
+				else
+					pre(digit);
+			carry_out = false -> digit = carry_value and pre(digit = 0); 
+		tel;
+						 
+		eq eq_secs : int = 
+			left_digit * 60 + 
+			middle_digit * 10 + 
+			right_digit; 
+			 
+		eq digit_registered : bool = any_digit_pressed and not clear_pressed;
+		eq prev_at_zero : bool = prev(seconds_to_cook = 0, true);
+		eq right_eq : int, right_carry: bool = 
+			update_digit(9, cooking_mode, kp_digit, true, any_digit_pressed, clear_pressed, prev_at_zero);
+		eq middle_eq : int, middle_carry: bool = 
+			update_digit(5, cooking_mode, prev(right_eq, 0), right_carry, any_digit_pressed, clear_pressed, prev_at_zero);
+		eq left_eq : int, left_carry: bool = 
+			update_digit(9, cooking_mode, prev(middle_eq, 0), middle_carry, any_digit_pressed, clear_pressed, prev_at_zero);
+		 
+		assert(left_digit = left_eq);
+		assert(middle_digit = middle_eq);
+		assert(right_digit = right_eq);
+		assert(seconds_to_cook = eq_secs);
+		  
+	**};
+	
+end Display_Control.Impl;
+
 
 system Output_Processing
 	features
