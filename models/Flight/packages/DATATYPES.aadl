@@ -42,6 +42,17 @@ public
      --changed types for AGREE
       f1 : data Base_Types::Float;
       i2 : data Base_Types::Integer;
+      
+      --ppm inputs
+      ppm0 : data Base_Types::Integer;
+      ppm1 : data Base_Types::Integer;
+      ppm2 : data Base_Types::Integer;
+      ppm3 : data Base_Types::Integer;
+      ppm4 : data Base_Types::Integer;
+      ppm5 : data Base_Types::Integer;
+      ppm6 : data Base_Types::Integer;
+      ppm7 : data Base_Types::Integer;
+      
   end Flight_Control_Commands.impl;
   
   data Motor_Commands

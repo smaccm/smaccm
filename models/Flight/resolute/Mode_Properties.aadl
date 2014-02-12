@@ -4,12 +4,17 @@ public
 annex resolute 
 {**
 
+--adding this stub so that this file no longer shows
+--as an error
+command_channel(c : connection) : bool =
+	true
+	
 no_external_commands(x : component, context : component) <=
   ** x " does not receive commands from outside " context **
 
   forall (c : x.connections).
   forall (y : component).
-    connected(y, c, x) and command_channel(c) =>
+    connected(y, c, x) and command_channel(c) => 
    	  contained(y, context) and no_external_commands(y, context)
 
 schedulable(p : component) <= 
@@ -40,6 +45,7 @@ no_radio_commands(x : component) <=
 is_not_radio(x : component) : bool =
 	true
   --not class_of(x, SOFTWARE::Command_Control_Telemetry)
+
 
 **};
     
