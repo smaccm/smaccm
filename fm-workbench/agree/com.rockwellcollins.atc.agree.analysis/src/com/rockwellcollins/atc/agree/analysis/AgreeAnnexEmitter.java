@@ -32,6 +32,7 @@ import jkind.lustre.UnaryOp;
 import jkind.lustre.VarDecl;
 
 import org.eclipse.emf.ecore.EObject;
+import org.osate.aadl2.AbstractConnectionEnd;
 import org.osate.aadl2.AnnexSubclause;
 import org.osate.aadl2.BooleanLiteral;
 import org.osate.aadl2.ComponentClassifier;
@@ -883,8 +884,8 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
 
         for (Connection conn : compImpl.getAllConnections()) {
 
-        	ConnectedElement absConnDest = conn.getDestination();
-        	ConnectedElement absConnSour = conn.getSource();
+            AbstractConnectionEnd absConnDest = conn.getDestination();
+            AbstractConnectionEnd absConnSour = conn.getSource();
             assert (absConnDest instanceof ConnectedElement);
             assert (absConnSour instanceof ConnectedElement);
 
@@ -1861,8 +1862,8 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         do {
             prevSize = subs.size();
             for (Connection conn : conns) {
-            	ConnectedElement absConnDest = conn.getDestination();
-            	ConnectedElement absConnSour = conn.getSource();
+                AbstractConnectionEnd absConnDest = conn.getDestination();
+                AbstractConnectionEnd absConnSour = conn.getSource();
 
                 assert (absConnDest instanceof ConnectedElement);
                 Context destContext = ((ConnectedElement) absConnDest).getContext();
