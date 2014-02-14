@@ -239,7 +239,7 @@ public class SourceWriter extends AbstractCodeWriter {
 	    ThreadInstance ti = r.getThreadInstances().get(0);
 	    ThreadInstancePort tip = new ThreadInstancePort(ti, r.getDestinationPort());
         if (r.getISRType() == InterruptServiceRoutine.ISRType.SignalingISR) {
-		    out.append(ind + tip.getVarName() + " += 1; \n"); 
+		    out.append(ind + tip.getVarName() + " = 1; \n"); 
 		    out.append(ind + "rtos_irq_event_raise(" + 
 		        r.getIrqSignalDefine() + ");\n");
         } else if (r.getISRType() == InterruptServiceRoutine.ISRType.InThreadContextISR) {
