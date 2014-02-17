@@ -14,8 +14,10 @@ import org.eclipse.emf.ecore.EObject;
 import org.osate.aadl2.AnnexSubclause;
 import org.osate.aadl2.ComponentImplementation;
 import org.osate.aadl2.ComponentType;
+import org.osate.aadl2.DataSubcomponent;
 import org.osate.aadl2.Subcomponent;
 import org.osate.aadl2.instance.ComponentInstance;
+
 import com.rockwellcollins.atc.agree.agree.AgreeContractSubclause;
 
 public class AgreeGenerator {
@@ -36,24 +38,35 @@ public class AgreeGenerator {
         String category = "";
         
         AgreeAnnexEmitter topEmitter = new AgreeAnnexEmitter(
-                compInst, layout, category, "", "", true);
+                compInst, layout, category, "", "", true, true);
         
         this.topEmitter = topEmitter;
         
+        boolean foundAnnex = false;
         for (AnnexSubclause annex : compImpl.getAllAnnexSubclauses()) {
             if (annex instanceof AgreeContractSubclause) {
                 topEmitter.doSwitch(annex);
+                foundAnnex = true;
             }
         }
 
+        
+        
         for (AnnexSubclause annex : ct.getAllAnnexSubclauses()) {
             if (annex instanceof AgreeContractSubclause) {
                 topEmitter.doSwitch(annex);
+                foundAnnex = true;
             }
         }
         
         List<AgreeAnnexEmitter> subEmitters = new ArrayList<>();
         for(Subcomponent subComp : compImpl.getAllSubcomponents()){
+        	//don't check data subcomponents
+        	if(subComp instanceof DataSubcomponent){
+        		continue;
+        	}
+        	
+        	boolean foundSubAnnex = false;
             ComponentInstance subCompInst = compInst.findSubcomponentInstance(subComp);
             ct = AgreeEmitterUtilities.getInstanceType(subCompInst);
             ComponentImplementation subCompImpl = AgreeEmitterUtilities.getInstanceImplementation(subCompInst);
@@ -61,12 +74,13 @@ public class AgreeGenerator {
             AgreeAnnexEmitter subEmitter = new AgreeAnnexEmitter(
                     subCompInst, layout, category,
                     subCompInst.getName() + dotChar,
-                    subCompInst.getName() + ".", false);
+                    subCompInst.getName() + ".", false, false);
 
             if(subCompImpl != null){
                 for (AnnexSubclause annex : subCompImpl.getAllAnnexSubclauses()) {
                     if (annex instanceof AgreeContractSubclause) {
                         subEmitter.doSwitch(annex);
+                        foundSubAnnex = foundAnnex = true;
                     }
                 }
             }
@@ -74,12 +88,19 @@ public class AgreeGenerator {
             for (AnnexSubclause annex : ct.getAllAnnexSubclauses()) {
                 if (annex instanceof AgreeContractSubclause) {
                     subEmitter.doSwitch(annex);
+                    foundSubAnnex = foundAnnex = true;
                 }
             }
 
-            subEmitters.add(subEmitter);
+            if(foundSubAnnex){
+            	subEmitters.add(subEmitter);
+            }
 
         }
+        if(!foundAnnex){
+        	return null;
+        }
+        
         List<Node> nodes = topEmitter.getLustreWithCondacts(subEmitters);
         //List<Node> nodes = topEmitter.getLustre(subEmitters);
 

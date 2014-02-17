@@ -2056,9 +2056,29 @@ thread controlLawTask
     
   annex agree {**
   	
+  	const safe : int = 0;
+  	const disarmed : int = 1;
+  	const armed : int = 2;
+  	
+  	
   	eq safe_req : bool = ppm_req_snk.set_safe;
   	eq arm_req : bool = ppm_req_snk.set_armed;
   	eq disarm_req : bool = ppm_req_snk.set_disarmed;
+  	eq armed_mode : int = law_emitter.armed_mode;
+  	eq prev_armed_mode : int = safe -> pre(armed_mode);
+  	
+  	guarantee "armed mode behavior" :
+  		if (prev_armed_mode = safe and (not safe_req)) then
+  			armed_mode = disarmed
+  		else if (safe_req) then
+  			armed_mode = safe
+  		else if (disarm_req) then
+  			armed_mode = disarmed
+  		else if (arm_req) then
+  			armed_mode = armed
+  		else
+  			armed_mode = prev_armed_mode;
+  	
   	
   **};
     
@@ -2184,6 +2204,8 @@ thread ppmInputTower
   	guarantee "set safe behavior" :
   		dead_pos = deadSafe => cr_emitter.set_safe;
   	
+  	guarantee  "set disarm behavior" :
+  		cr_emitter.set_disarmed = false;
   	
   **};
 
@@ -2305,6 +2327,7 @@ process flight_gen_process
 	features
       motors_and_radios: feature group UAV::motors_and_radios;
       sensors: feature group UAV::sensors;
+      
 end flight_gen_process;
 
 
@@ -2719,6 +2742,17 @@ process implementation flight_gen_process.impl
     prove all_through_connections(this)
     prove execute_soundness()
     prove execute_completeness(this.uart5ISR_inst)
+  **};
+  
+  annex agree {**
+  	synchrony: 1;
+  	
+  	lemma "ppm arming" : 
+  		    ppmInputTower_inst.cr_emitter.set_armed => controlLawTask_inst.law_emitter.armed_mode = 3;
+  		
+  	--make sure the two clocks do not click at the same time	
+  	assert not (controlLawTask_inst.CLK and ppmInputTower_inst.CLK);	
+  	
   **};
     
     

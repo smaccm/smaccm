@@ -27,6 +27,7 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.osate.aadl2.AbstractConnectionEnd;
 import org.osate.aadl2.AbstractNamedValue;
+import org.osate.aadl2.AnnexSubclause;
 import org.osate.aadl2.Classifier;
 import org.osate.aadl2.ComponentImplementation;
 import org.osate.aadl2.ComponentType;
@@ -52,6 +53,7 @@ import org.osate.aadl2.properties.PropertyDoesNotApplyToHolderException;
 import org.osate.aadl2.properties.PropertyNotPresentException;
 import org.osate.xtext.aadl2.properties.util.PropertyUtils;
 
+import com.rockwellcollins.atc.agree.agree.AgreeSubclause;
 import com.rockwellcollins.atc.agree.agree.Arg;
 import com.rockwellcollins.atc.agree.agree.FnCallExpr;
 import com.rockwellcollins.atc.agree.agree.NestedDotID;
@@ -127,6 +129,13 @@ public class AgreeEmitterUtilities {
                 newStrType.type = "bool";
                 return newStrType;
             case "Base_Types::Integer":
+            case "Base_Types::Unsigned":
+            case "Base_Types::Unsigned_32":
+            case "Base_Types::Unsigned_16":
+            case "Base_Types::Unsigned_8":
+            case "Base_Types::Integer_32":
+            case "Base_Types::Integer_16":
+            case "Base_Types::Integer_8":
                 newStrType.type = "int";
                 return newStrType;
             case "Base_Types::Float":
@@ -203,6 +212,28 @@ public class AgreeEmitterUtilities {
         }catch (ClassCastException e){
             return (ComponentType)compInst.getComponentClassifier();
         }
+    }
+    
+    public static boolean containsAgreeAnnex(Subcomponent subComp){
+    	
+    	ComponentImplementation compImpl = subComp.getComponentImplementation();
+    	if(compImpl != null){
+    		for(AnnexSubclause subClause : compImpl.getOwnedAnnexSubclauses()){
+    			if(subClause instanceof AgreeSubclause){
+    				return true;
+    			}
+    		}
+    	}
+    	
+    	ComponentType compType = subComp.getComponentType();
+    	if(compType != null){
+    		for(AnnexSubclause subClause : compType.getOwnedAnnexSubclauses()){
+    			if(subClause instanceof AgreeSubclause){
+    				return true;
+    			}
+    		}
+    	}
+    	return false;
     }
     
     

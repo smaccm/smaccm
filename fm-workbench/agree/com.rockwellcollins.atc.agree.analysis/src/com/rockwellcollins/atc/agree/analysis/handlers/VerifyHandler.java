@@ -8,6 +8,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
+import jkind.JKindException;
 import jkind.api.JKindApi;
 import jkind.api.results.AnalysisResult;
 import jkind.api.results.CompositeAnalysisResult;
@@ -109,10 +110,19 @@ public abstract class VerifyHandler extends AadlHandler {
     private AnalysisResult buildAnalysisResult(String name, ComponentInstance ci) {
         CompositeAnalysisResult result = new CompositeAnalysisResult("Verification for " + name);
         
-        result.addChild(createGuaranteeVerification(ci));
-        result.addChild(createAssumptionVerification(ci));
-        result.addChild(createConsistVerification(ci));
-        
+        AnalysisResult tempResult = createGuaranteeVerification(ci);
+        if(tempResult != null){
+        	result.addChild(tempResult);
+        }
+        tempResult = createAssumptionVerification(ci);
+        if(tempResult != null){
+        	result.addChild(tempResult);
+        }
+        tempResult = createConsistVerification(ci);
+        if(tempResult != null){
+        	result.addChild(tempResult);
+        }
+
         ComponentImplementation compImpl = AgreeEmitterUtilities.getInstanceImplementation(ci);
         for(Subcomponent subComp : compImpl.getAllSubcomponents()){
             ComponentInstance subInst = ci.findSubcomponentInstance(subComp);
@@ -131,6 +141,9 @@ public abstract class VerifyHandler extends AadlHandler {
         
         AgreeGenerator emitter = new AgreeGenerator(ci);
         Program program = emitter.evaluate();
+        if(program == null){
+        	return null;
+        }
 
 
         List<String> properties = emitter.getGuarProps();
@@ -173,7 +186,10 @@ public abstract class VerifyHandler extends AadlHandler {
 
         AgreeGenerator emitter = new AgreeGenerator(ci);
         Program program = emitter.evaluate();
-
+        if(program == null){
+        	return null;
+        }
+        
         List<String> properties = emitter.getAssumeProps();
         Node oldNode = program.getMainNode();
         Node newNode = new Node(oldNode.location, 
@@ -213,7 +229,9 @@ public abstract class VerifyHandler extends AadlHandler {
         
         AgreeGenerator emitter = new AgreeGenerator(ci);
         Program program = emitter.evaluate();
-
+        if(program == null){
+        	return null;
+        }
 
         List<String> properties = emitter.getConsistProps();
         Node oldNode = program.getMainNode();
@@ -283,7 +301,14 @@ public abstract class VerifyHandler extends AadlHandler {
         while (!queue.isEmpty() && !monitor.isCanceled()) {
             JKindResult result = queue.remove();
             Program program = linker.getProgram(result);
-            api.execute(program, result, monitor);
+            try{
+            	api.execute(program, result, monitor);
+            } catch (JKindException e){
+            	System.out.println(result.getText());
+            	System.out.println("******** HERE IS THE LUSTRE ********");
+            	System.out.println(program);
+            	break;
+            }
             //System.out.println("whatever");
         }
 
