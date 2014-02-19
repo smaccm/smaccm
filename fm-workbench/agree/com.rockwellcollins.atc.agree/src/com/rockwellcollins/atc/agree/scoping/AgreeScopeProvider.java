@@ -35,6 +35,9 @@ import com.rockwellcollins.atc.agree.agree.EqStatement;
 import com.rockwellcollins.atc.agree.agree.FnDefExpr;
 import com.rockwellcollins.atc.agree.agree.NestedDotID;
 import com.rockwellcollins.atc.agree.agree.NodeDefExpr;
+import com.rockwellcollins.atc.agree.agree.QueueCountID;
+import com.rockwellcollins.atc.agree.agree.QueueInsertID;
+import com.rockwellcollins.atc.agree.agree.QueueRemoveID;
 import com.rockwellcollins.atc.agree.agree.SpecStatement;
 
 /**
@@ -129,6 +132,39 @@ public class AgreeScopeProvider extends
         }
         
         return IScope.NULLSCOPE;
+    }
+    
+    IScope scope_NamedElement(QueueRemoveID ctx, EReference ref){
+        EObject container = ctx.eContainer();
+        while(!(container instanceof ComponentClassifier)){
+            container = container.eContainer();
+        }
+        
+        return Scopes.scopeFor(((ComponentClassifier)container).getAllFeatures(), getScope(ctx.eContainer(), ref));
+        
+        
+    }
+    
+    IScope scope_NamedElement(QueueInsertID ctx, EReference ref){
+        EObject container = ctx.eContainer();
+        while(!(container instanceof ComponentClassifier)){
+            container = container.eContainer();
+        }
+        
+        return Scopes.scopeFor(((ComponentClassifier)container).getAllFeatures(), getScope(ctx.eContainer(), ref));
+        
+        
+    }
+    
+    IScope scope_NamedElement(QueueCountID ctx, EReference ref){
+        EObject container = ctx.eContainer();
+        while(!(container instanceof ComponentClassifier)){
+            container = container.eContainer();
+        }
+        
+        return Scopes.scopeFor(((ComponentClassifier)container).getAllFeatures(), getScope(ctx.eContainer(), ref));
+        
+        
     }
     
     private Set<Element> getCorrespondingAadlElement(NestedDotID id) {

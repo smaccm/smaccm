@@ -228,7 +228,9 @@ public class AgreeCalendarUtils {
 		Expr insertIf0 = new IfThenElseExpr(elemIn, preInsertMore, preInsert);
 		Expr insertIfCond = new BinaryExpr(preInsert, BinaryOp.EQUAL, new IntExpr(BigInteger.valueOf(queueSize-1)));
 		insertIfCond = new BinaryExpr(elemIn, BinaryOp.AND, insertIfCond);
-		Expr insertExpr = new IfThenElseExpr(insertIfCond, new IntExpr(BigInteger.ZERO), insertIf0);
+		Expr insertIf1 = new IfThenElseExpr(insertIfCond, new IntExpr(BigInteger.ZERO), insertIf0);
+		Expr insertIf2 = new IfThenElseExpr(elemIn, new IntExpr(BigInteger.ONE), new IntExpr(BigInteger.ZERO));
+		Expr insertExpr = new BinaryExpr(insertIf2, BinaryOp.ARROW, insertIf1);
 		
 		Equation insertEq = new Equation(insert, insertExpr);
 		eqs.add(insertEq);
@@ -240,6 +242,7 @@ public class AgreeCalendarUtils {
 		Expr removeIfCond = new BinaryExpr(preRemove, BinaryOp.EQUAL, new IntExpr(BigInteger.valueOf(queueSize-1)));
 		removeIfCond = new BinaryExpr(elemOut, BinaryOp.AND, removeIfCond);
 		Expr removeExpr = new IfThenElseExpr(removeIfCond, new IntExpr(BigInteger.ZERO), removeIf0);
+		removeExpr = new BinaryExpr(new IntExpr(BigInteger.ZERO), BinaryOp.ARROW, removeExpr);
 		
 		Equation removeEq = new Equation(remove, removeExpr);
 		eqs.add(removeEq);
@@ -279,7 +282,21 @@ public class AgreeCalendarUtils {
 			eqs.add(elEq);
 		}
 		
-		return new Node(nodeName, inputs, outputs, locals, eqs);
+		//queue properties:
+		List<String> props = new ArrayList<>();
+		//don't remove more than are present:
+		Expr propExpr0 = new BinaryExpr(preRemove, BinaryOp.EQUAL, preInsert);
+		Expr propExpr1 = new BinaryExpr(remove, BinaryOp.EQUAL, preRemove);
+		Expr propImpl = new BinaryExpr(propExpr0, BinaryOp.IMPLIES, propExpr1);
+		Expr propArrow = new BinaryExpr(remove, BinaryOp.LESSEQUAL, insert);
+		propArrow = new BinaryExpr(propArrow, BinaryOp.ARROW, propImpl);
+		IdExpr propId0 = new IdExpr("__REMOVE_LTE_INSERT_"+nodeName);
+		locals.add(new VarDecl(propId0.id, NamedType.BOOL));
+		Equation propEq0 = new Equation(propId0, propArrow);
+		eqs.add(propEq0);
+		props.add(propId0.id);
+		
+		return new Node(nodeName, inputs, outputs, locals, eqs, props);
     	
     }
     
@@ -317,5 +334,22 @@ public class AgreeCalendarUtils {
 		return new Node(nodeName, inputs, outputs, locals, eqs);
 
     }
+
+	public static Expr getSingleTick(List<Expr> clocks) {
+		
+		Expr returnExpr = new BoolExpr(false);
+		for(Expr clock0 : clocks){
+			Expr tickExpr = clock0;
+			for(Expr clock1: clocks){
+				if(clock0 != clock1){
+					Expr notClock1 = new UnaryExpr(UnaryOp.NOT, clock1);
+					tickExpr = new BinaryExpr(tickExpr, BinaryOp.AND, notClock1);
+				}
+			}
+			returnExpr = new BinaryExpr(tickExpr, BinaryOp.OR, returnExpr);
+		}
+		
+		return returnExpr;
+	}
     
 }

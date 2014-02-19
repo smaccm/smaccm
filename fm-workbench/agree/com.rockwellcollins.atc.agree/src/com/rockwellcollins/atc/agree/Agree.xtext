@@ -51,7 +51,7 @@ SpecStatement:
 	| NodeDefExpr;
 
 SynchStatement:
-	'synchrony' ':' val = INTEGER_LIT ';';
+	'synchrony' ':' val = INTEGER_LIT  (sim=('simult'|'no_simult'))? ';';
 
 NamedCallDef returns aadl2::NamedElement:
 	CallDef;
@@ -145,6 +145,9 @@ PreDefFnNames:
 TermExpr returns Expr:
 	{IdExpr} id=[aadl2::NamedElement|QID]
 	| ClockID
+	| QueueRemoveID
+	| QueueInsertID
+	| QueueCountID
 	| NestedDotID ({FnCallExpr.fn=current} '(' (args+=Expr (',' args+=Expr)*)? ')')?
 	| {IntLitExpr} val=INTEGER_LIT
 	| {PreExpr} 'pre' '(' expr=Expr ')'
@@ -158,6 +161,17 @@ NestedDotID:
 	
 ClockID:
 	comp=[aadl2::NamedElement|ID] '.' 'CLK';
+	
+QueueRemoveID:
+	comp=[aadl2::NamedElement|ID] '.' 'REMOVE';	
+
+QueueInsertID:
+	comp=[aadl2::NamedElement|ID] '.' 'INSERT';	
+	
+QueueCountID:
+	comp=[aadl2::NamedElement|ID] '.' 'COUNT';	
+
+	
 
 QID:
 	ID '::' ID;

@@ -1,5 +1,8 @@
 package com.rockwellcollins.atc.agree.analysis;
 
+import org.osate.aadl2.ConnectionEnd;
+import org.osate.aadl2.EventDataPort;
+
 import jkind.lustre.Type;
 
 public class AgreeQueueElement {
@@ -11,19 +14,31 @@ public class AgreeQueueElement {
 	public Type type;
 	public String destCategory;
 	public String sourCategory;
-	public long queueSize;	
+	public long queueSize;
+	public EventDataPort sourConn;
+	public EventDataPort destConn;	
 	
-	public AgreeQueueElement(String jSour, String aSour, 
-			String jDest, String aDest, Type type, String sourCategory, String destCategory, long queueSize){
+	public AgreeQueueElement(String jSour, 
+			String aSour, 
+			String jDest, 
+			String aDest, 
+			Type type, 
+			EventDataPort sourConn, 
+			EventDataPort destConn, 
+			String sourCategory, 
+			String destCategory, 
+			long queueSize){
 		
 		this.jSour = jSour;
 		this.aSour = aSour;
 		this.jDest = jDest;
 		this.aDest = aDest;
 		this.type = type;
+		this.sourConn = sourConn;
+		this.destConn = destConn;
 		this.destCategory = destCategory;
 		this.sourCategory = sourCategory;
-		this.queueSize = 2;
+		this.queueSize = queueSize;
 		
 		if(destCategory == null || sourCategory == null){
 			throw new AgreeException("Created queue with null source or destination category");

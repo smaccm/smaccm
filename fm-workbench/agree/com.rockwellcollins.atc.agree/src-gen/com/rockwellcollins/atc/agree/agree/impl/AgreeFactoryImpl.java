@@ -82,6 +82,9 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
       case AgreePackage.EXPR: return createExpr();
       case AgreePackage.NESTED_DOT_ID: return createNestedDotID();
       case AgreePackage.CLOCK_ID: return createClockID();
+      case AgreePackage.QUEUE_REMOVE_ID: return createQueueRemoveID();
+      case AgreePackage.QUEUE_INSERT_ID: return createQueueInsertID();
+      case AgreePackage.QUEUE_COUNT_ID: return createQueueCountID();
       case AgreePackage.AGREE_CONTRACT_LIBRARY: return createAgreeContractLibrary();
       case AgreePackage.AGREE_CONTRACT_SUBCLAUSE: return createAgreeContractSubclause();
       case AgreePackage.AGREE_CONTRACT: return createAgreeContract();
@@ -307,6 +310,39 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
   {
     ClockIDImpl clockID = new ClockIDImpl();
     return clockID;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public QueueRemoveID createQueueRemoveID()
+  {
+    QueueRemoveIDImpl queueRemoveID = new QueueRemoveIDImpl();
+    return queueRemoveID;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public QueueInsertID createQueueInsertID()
+  {
+    QueueInsertIDImpl queueInsertID = new QueueInsertIDImpl();
+    return queueInsertID;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public QueueCountID createQueueCountID()
+  {
+    QueueCountIDImpl queueCountID = new QueueCountIDImpl();
+    return queueCountID;
   }
 
   /**

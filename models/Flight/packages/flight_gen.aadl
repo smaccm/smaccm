@@ -2042,7 +2042,7 @@ thread controlLawTask
       SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_controlLawTask_87_chan64_104");
     };
     ppm_req_snk: in event data port control_law_request_type::control_law_request.impl {
-      Queue_Size => 16;
+      Queue_Size => 1;
       SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_controlLawTask_87.h";
       SMACCM_SYS::CommPrim_Source_Text => "receiveFromTask_controlLawTask_87_chan42_96";
       SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_controlLawTask_87_chan42_99");
@@ -2061,14 +2061,16 @@ thread controlLawTask
   	const armed : int = 2;
   	
   	
-  	eq safe_req : bool = ppm_req_snk.set_safe;
+  	eq safe_req : bool = ppm_req_snk.set_safe; 
   	eq arm_req : bool = ppm_req_snk.set_armed;
   	eq disarm_req : bool = ppm_req_snk.set_disarmed;
   	eq armed_mode : int = law_emitter.armed_mode;
   	eq prev_armed_mode : int = safe -> pre(armed_mode);
   	
   	guarantee "armed mode behavior" :
-  		if (prev_armed_mode = safe and (not safe_req)) then
+  		if(ppm_req_snk.COUNT = 0) then
+  			armed_mode = prev_armed_mode
+  		else if (prev_armed_mode = safe and (not safe_req)) then
   			armed_mode = disarmed
   		else if (safe_req) then
   			armed_mode = safe
@@ -2078,7 +2080,16 @@ thread controlLawTask
   			armed_mode = armed
   		else
   			armed_mode = prev_armed_mode;
-  	
+  			
+  			
+  	guarantee "always remove from queue when possible" :
+  		ppm_req_snk.COUNT > 0 => ppm_req_snk.REMOVE;
+  		
+  	guarantee "don't remove if you cannot" :
+  		ppm_req_snk.COUNT = 0 => not ppm_req_snk.REMOVE;
+  		
+  	guarantee "check count":
+  		ppm_req_snk.COUNT > 0;
   	
   **};
     
@@ -2124,12 +2135,12 @@ end mavlinkInputTask;
 thread ppmInputTower
   features
     cr_emitter: out event data port control_law_request_type::control_law_request.impl {
-      Queue_Size => 16;
+      Queue_Size => 1;
       SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_ppmInputTower_43.h";
       SMACCM_SYS::CommPrim_Source_Text => "emitFromTask_ppmInputTower_43_chan42_47";
     };
     ui_emitter: out event data port userinput_type::userinput_result.impl {
-      Queue_Size => 16;
+      Queue_Size => 1;
       SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_ppmInputTower_43.h";
       SMACCM_SYS::CommPrim_Source_Text => "emitFromTask_ppmInputTower_43_chan41_45";
     };
@@ -2145,7 +2156,7 @@ thread ppmInputTower
     Source_Stack_Size => 256 bytes;
     SMACCM::Language => "Ivory";
     Dispatch_Protocol => Hybrid;
-    Period => 50 ms;
+    Period => 50 ms; 
     SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_ppmInputTower_43_per50_62");
 
   annex agree {**
@@ -2155,12 +2166,12 @@ thread ppmInputTower
   	const armingActive : int = 1;
   	const armingComplete : int = 2;
   	const hystresis : int = 750;
-  	
+ 
 	eq arming_state : int;
 	eq arming_state_time : int;
 	eq dead_last_pos : int = deadSafe -> pre (dead_pos);
 	
-  	
+  	  	
   	eq throttle_chan : int = flight_control_commands.ppm2;
   	eq rudder_chan : int = flight_control_commands.ppm3;
   	eq dead_chan : int = flight_control_commands.ppm5;
@@ -2206,6 +2217,10 @@ thread ppmInputTower
   	
   	guarantee  "set disarm behavior" :
   		cr_emitter.set_disarmed = false;
+  		
+  	guarantee "always insert" :
+  		cr_emitter.INSERT;	
+  		  		
   	
   **};
 
@@ -2745,13 +2760,27 @@ process implementation flight_gen_process.impl
   **};
   
   annex agree {**
-  	synchrony: 1;
+  	synchrony: 1 no_simult;
   	
-  	lemma "ppm arming" : 
-  		    ppmInputTower_inst.cr_emitter.set_armed => controlLawTask_inst.law_emitter.armed_mode = 3;
-  		
-  	--make sure the two clocks do not click at the same time	
-  	assert not (controlLawTask_inst.CLK and ppmInputTower_inst.CLK);	
+  	
+  	node time_since(trigger : bool) returns (count : int);
+  	let
+  		count = 0 -> (if(trigger) then 0 else (pre(count) + 1));
+  	tel;
+
+  	eq ppmSetArmed : bool = ppmInputTower_inst.cr_emitter.set_armed;
+  	eq ctrlArmedMode: int = controlLawTask_inst.law_emitter.armed_mode;
+  	
+  	eq sinceArmed : int = time_since(ppmSetArmed);
+  	eq sinceModeArmed : int = time_since(ctrlArmedMode = 3);
+  	eq armedCount : int = (if ppmSetArmed then 1 else 0) ->
+  		if ppmSetArmed then (pre(armedCount) + 1) else pre(armedCount);
+  	
+  	lemma "ppm arming" :  
+		ctrlArmedMode = 2 => armedCount > 0;  		
+		
+	lemma "positive armed count" :
+		armedCount >= 0;
   	
   **};
     

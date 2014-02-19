@@ -30,6 +30,9 @@ import com.rockwellcollins.atc.agree.agree.ClockID;
 import com.rockwellcollins.atc.agree.agree.IdExpr;
 import com.rockwellcollins.atc.agree.agree.NestedDotID;
 import com.rockwellcollins.atc.agree.agree.NodeEq;
+import com.rockwellcollins.atc.agree.agree.QueueCountID;
+import com.rockwellcollins.atc.agree.agree.QueueInsertID;
+import com.rockwellcollins.atc.agree.agree.QueueRemoveID;
 
 public class AgreeLinkingService extends PropertiesLinkingService {
     public AgreeLinkingService() {
@@ -45,8 +48,13 @@ public class AgreeLinkingService extends PropertiesLinkingService {
             return findUnitLiteralAsList((Element) context, name);
         }
 
-        if (context instanceof IdExpr || context instanceof NestedDotID
-                || context instanceof NodeEq || context instanceof ClockID) {
+        if (context instanceof IdExpr 
+        		|| context instanceof NestedDotID
+                || context instanceof NodeEq 
+                || context instanceof ClockID
+                || context instanceof QueueInsertID
+                || context instanceof QueueRemoveID
+                || context instanceof QueueCountID) {
 
             EObject e = findClassifier(context, reference, name);
             if (e != null) {

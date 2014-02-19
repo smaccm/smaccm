@@ -33,6 +33,9 @@ import com.rockwellcollins.atc.agree.agree.ParamStatement;
 import com.rockwellcollins.atc.agree.agree.PreExpr;
 import com.rockwellcollins.atc.agree.agree.PrevExpr;
 import com.rockwellcollins.atc.agree.agree.PropertyStatement;
+import com.rockwellcollins.atc.agree.agree.QueueCountID;
+import com.rockwellcollins.atc.agree.agree.QueueInsertID;
+import com.rockwellcollins.atc.agree.agree.QueueRemoveID;
 import com.rockwellcollins.atc.agree.agree.RealLitExpr;
 import com.rockwellcollins.atc.agree.agree.SynchStatement;
 import com.rockwellcollins.atc.agree.agree.ThisExpr;
@@ -560,7 +563,7 @@ public class AgreeSemanticSequencer extends PropertiesSemanticSequencer {
 				   context == grammarAccess.getRelateExprRule() ||
 				   context == grammarAccess.getRelateExprAccess().getBinaryExprLeftAction_1_0_0_0() ||
 				   context == grammarAccess.getTermExprRule() ||
-				   context == grammarAccess.getTermExprAccess().getFnCallExprFnAction_2_1_0() ||
+				   context == grammarAccess.getTermExprAccess().getFnCallExprFnAction_5_1_0() ||
 				   context == grammarAccess.getUnaryExprRule()) {
 					sequence_NestedDotID(context, (NestedDotID) semanticObject); 
 					return; 
@@ -692,6 +695,90 @@ public class AgreeSemanticSequencer extends PropertiesSemanticSequencer {
 				   context == grammarAccess.getPropertyStatementRule() ||
 				   context == grammarAccess.getSpecStatementRule()) {
 					sequence_PropertyStatement(context, (PropertyStatement) semanticObject); 
+					return; 
+				}
+				else break;
+			case AgreePackage.QUEUE_COUNT_ID:
+				if(context == grammarAccess.getAddSubExprRule() ||
+				   context == grammarAccess.getAddSubExprAccess().getBinaryExprLeftAction_1_0_0_0() ||
+				   context == grammarAccess.getAndExprRule() ||
+				   context == grammarAccess.getAndExprAccess().getBinaryExprLeftAction_1_0_0_0() ||
+				   context == grammarAccess.getArrowExprRule() ||
+				   context == grammarAccess.getArrowExprAccess().getBinaryExprLeftAction_1_0_0_0() ||
+				   context == grammarAccess.getElementRule() ||
+				   context == grammarAccess.getEquivExprRule() ||
+				   context == grammarAccess.getEquivExprAccess().getBinaryExprLeftAction_1_0_0_0() ||
+				   context == grammarAccess.getExprRule() ||
+				   context == grammarAccess.getIfThenElseExprRule() ||
+				   context == grammarAccess.getImpliesExprRule() ||
+				   context == grammarAccess.getImpliesExprAccess().getBinaryExprLeftAction_1_0_0_0() ||
+				   context == grammarAccess.getMultDivExprRule() ||
+				   context == grammarAccess.getMultDivExprAccess().getBinaryExprLeftAction_1_0_0_0() ||
+				   context == grammarAccess.getOrExprRule() ||
+				   context == grammarAccess.getOrExprAccess().getBinaryExprLeftAction_1_0_0_0() ||
+				   context == grammarAccess.getPreDefFnExprRule() ||
+				   context == grammarAccess.getQueueCountIDRule() ||
+				   context == grammarAccess.getRelateExprRule() ||
+				   context == grammarAccess.getRelateExprAccess().getBinaryExprLeftAction_1_0_0_0() ||
+				   context == grammarAccess.getTermExprRule() ||
+				   context == grammarAccess.getUnaryExprRule()) {
+					sequence_QueueCountID(context, (QueueCountID) semanticObject); 
+					return; 
+				}
+				else break;
+			case AgreePackage.QUEUE_INSERT_ID:
+				if(context == grammarAccess.getAddSubExprRule() ||
+				   context == grammarAccess.getAddSubExprAccess().getBinaryExprLeftAction_1_0_0_0() ||
+				   context == grammarAccess.getAndExprRule() ||
+				   context == grammarAccess.getAndExprAccess().getBinaryExprLeftAction_1_0_0_0() ||
+				   context == grammarAccess.getArrowExprRule() ||
+				   context == grammarAccess.getArrowExprAccess().getBinaryExprLeftAction_1_0_0_0() ||
+				   context == grammarAccess.getElementRule() ||
+				   context == grammarAccess.getEquivExprRule() ||
+				   context == grammarAccess.getEquivExprAccess().getBinaryExprLeftAction_1_0_0_0() ||
+				   context == grammarAccess.getExprRule() ||
+				   context == grammarAccess.getIfThenElseExprRule() ||
+				   context == grammarAccess.getImpliesExprRule() ||
+				   context == grammarAccess.getImpliesExprAccess().getBinaryExprLeftAction_1_0_0_0() ||
+				   context == grammarAccess.getMultDivExprRule() ||
+				   context == grammarAccess.getMultDivExprAccess().getBinaryExprLeftAction_1_0_0_0() ||
+				   context == grammarAccess.getOrExprRule() ||
+				   context == grammarAccess.getOrExprAccess().getBinaryExprLeftAction_1_0_0_0() ||
+				   context == grammarAccess.getPreDefFnExprRule() ||
+				   context == grammarAccess.getQueueInsertIDRule() ||
+				   context == grammarAccess.getRelateExprRule() ||
+				   context == grammarAccess.getRelateExprAccess().getBinaryExprLeftAction_1_0_0_0() ||
+				   context == grammarAccess.getTermExprRule() ||
+				   context == grammarAccess.getUnaryExprRule()) {
+					sequence_QueueInsertID(context, (QueueInsertID) semanticObject); 
+					return; 
+				}
+				else break;
+			case AgreePackage.QUEUE_REMOVE_ID:
+				if(context == grammarAccess.getAddSubExprRule() ||
+				   context == grammarAccess.getAddSubExprAccess().getBinaryExprLeftAction_1_0_0_0() ||
+				   context == grammarAccess.getAndExprRule() ||
+				   context == grammarAccess.getAndExprAccess().getBinaryExprLeftAction_1_0_0_0() ||
+				   context == grammarAccess.getArrowExprRule() ||
+				   context == grammarAccess.getArrowExprAccess().getBinaryExprLeftAction_1_0_0_0() ||
+				   context == grammarAccess.getElementRule() ||
+				   context == grammarAccess.getEquivExprRule() ||
+				   context == grammarAccess.getEquivExprAccess().getBinaryExprLeftAction_1_0_0_0() ||
+				   context == grammarAccess.getExprRule() ||
+				   context == grammarAccess.getIfThenElseExprRule() ||
+				   context == grammarAccess.getImpliesExprRule() ||
+				   context == grammarAccess.getImpliesExprAccess().getBinaryExprLeftAction_1_0_0_0() ||
+				   context == grammarAccess.getMultDivExprRule() ||
+				   context == grammarAccess.getMultDivExprAccess().getBinaryExprLeftAction_1_0_0_0() ||
+				   context == grammarAccess.getOrExprRule() ||
+				   context == grammarAccess.getOrExprAccess().getBinaryExprLeftAction_1_0_0_0() ||
+				   context == grammarAccess.getPreDefFnExprRule() ||
+				   context == grammarAccess.getQueueRemoveIDRule() ||
+				   context == grammarAccess.getRelateExprRule() ||
+				   context == grammarAccess.getRelateExprAccess().getBinaryExprLeftAction_1_0_0_0() ||
+				   context == grammarAccess.getTermExprRule() ||
+				   context == grammarAccess.getUnaryExprRule()) {
+					sequence_QueueRemoveID(context, (QueueRemoveID) semanticObject); 
 					return; 
 				}
 				else break;
@@ -977,6 +1064,33 @@ public class AgreeSemanticSequencer extends PropertiesSemanticSequencer {
 	
 	/**
 	 * Constraint:
+	 *     comp=[NamedElement|ID]
+	 */
+	protected void sequence_QueueCountID(EObject context, QueueCountID semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Constraint:
+	 *     comp=[NamedElement|ID]
+	 */
+	protected void sequence_QueueInsertID(EObject context, QueueInsertID semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Constraint:
+	 *     comp=[NamedElement|ID]
+	 */
+	protected void sequence_QueueRemoveID(EObject context, QueueRemoveID semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Constraint:
 	 *     expr=Expr
 	 */
 	protected void sequence_SpecStatement(EObject context, AssertStatement semanticObject) {
@@ -1031,7 +1145,7 @@ public class AgreeSemanticSequencer extends PropertiesSemanticSequencer {
 	
 	/**
 	 * Constraint:
-	 *     val=INTEGER_LIT
+	 *     (val=INTEGER_LIT (sim='simult' | sim='no_simult')?)
 	 */
 	protected void sequence_SynchStatement(EObject context, SynchStatement semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -1049,7 +1163,7 @@ public class AgreeSemanticSequencer extends PropertiesSemanticSequencer {
 	
 	/**
 	 * Constraint:
-	 *     ((fn=TermExpr_FnCallExpr_2_1_0 (args+=Expr args+=Expr*)?) | fn=TermExpr_FnCallExpr_2_1_0)
+	 *     ((fn=TermExpr_FnCallExpr_5_1_0 (args+=Expr args+=Expr*)?) | fn=TermExpr_FnCallExpr_5_1_0)
 	 */
 	protected void sequence_TermExpr(EObject context, FnCallExpr semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);

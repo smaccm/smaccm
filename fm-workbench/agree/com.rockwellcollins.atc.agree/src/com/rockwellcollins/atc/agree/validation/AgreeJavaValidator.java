@@ -77,6 +77,9 @@ import com.rockwellcollins.atc.agree.agree.NodeStmt;
 import com.rockwellcollins.atc.agree.agree.PreExpr;
 import com.rockwellcollins.atc.agree.agree.PrevExpr;
 import com.rockwellcollins.atc.agree.agree.PropertyStatement;
+import com.rockwellcollins.atc.agree.agree.QueueCountID;
+import com.rockwellcollins.atc.agree.agree.QueueInsertID;
+import com.rockwellcollins.atc.agree.agree.QueueRemoveID;
 import com.rockwellcollins.atc.agree.agree.RealLitExpr;
 import com.rockwellcollins.atc.agree.agree.SpecStatement;
 import com.rockwellcollins.atc.agree.agree.SynchStatement;
@@ -1035,6 +1038,12 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
             return new AgreeType("component");
         } else if (expr instanceof PreExpr) {
             return getAgreeType(((PreExpr) expr).getExpr());
+        } else if( expr instanceof QueueCountID){
+        	return INT;
+        } else if( expr instanceof QueueInsertID){
+        	return BOOL;
+        } else if( expr instanceof QueueRemoveID){
+        	return BOOL;
         }
 
         return ERROR;

@@ -12,6 +12,7 @@ import jkind.results.layout.Layout;
 
 import org.eclipse.emf.ecore.EObject;
 import org.osate.aadl2.AnnexSubclause;
+import org.osate.aadl2.BusSubcomponent;
 import org.osate.aadl2.ComponentImplementation;
 import org.osate.aadl2.ComponentType;
 import org.osate.aadl2.DataSubcomponent;
@@ -62,7 +63,8 @@ public class AgreeGenerator {
         List<AgreeAnnexEmitter> subEmitters = new ArrayList<>();
         for(Subcomponent subComp : compImpl.getAllSubcomponents()){
         	//don't check data subcomponents
-        	if(subComp instanceof DataSubcomponent){
+        	if(subComp instanceof DataSubcomponent
+        			|| subComp instanceof BusSubcomponent){
         		continue;
         	}
         	

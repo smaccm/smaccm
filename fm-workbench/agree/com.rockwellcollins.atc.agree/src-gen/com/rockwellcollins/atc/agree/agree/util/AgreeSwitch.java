@@ -245,6 +245,33 @@ public class AgreeSwitch<T> extends Switch<T>
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
+      case AgreePackage.QUEUE_REMOVE_ID:
+      {
+        QueueRemoveID queueRemoveID = (QueueRemoveID)theEObject;
+        T result = caseQueueRemoveID(queueRemoveID);
+        if (result == null) result = caseExpr(queueRemoveID);
+        if (result == null) result = caseElement(queueRemoveID);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case AgreePackage.QUEUE_INSERT_ID:
+      {
+        QueueInsertID queueInsertID = (QueueInsertID)theEObject;
+        T result = caseQueueInsertID(queueInsertID);
+        if (result == null) result = caseExpr(queueInsertID);
+        if (result == null) result = caseElement(queueInsertID);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case AgreePackage.QUEUE_COUNT_ID:
+      {
+        QueueCountID queueCountID = (QueueCountID)theEObject;
+        T result = caseQueueCountID(queueCountID);
+        if (result == null) result = caseExpr(queueCountID);
+        if (result == null) result = caseElement(queueCountID);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
       case AgreePackage.AGREE_CONTRACT_LIBRARY:
       {
         AgreeContractLibrary agreeContractLibrary = (AgreeContractLibrary)theEObject;
@@ -754,6 +781,54 @@ public class AgreeSwitch<T> extends Switch<T>
    * @generated
    */
   public T caseClockID(ClockID object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Queue Remove ID</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Queue Remove ID</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseQueueRemoveID(QueueRemoveID object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Queue Insert ID</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Queue Insert ID</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseQueueInsertID(QueueInsertID object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Queue Count ID</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Queue Count ID</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseQueueCountID(QueueCountID object)
   {
     return null;
   }

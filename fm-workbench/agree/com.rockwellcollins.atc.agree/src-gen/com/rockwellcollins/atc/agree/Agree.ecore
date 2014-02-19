@@ -8,6 +8,7 @@
   <eClassifiers xsi:type="ecore:EClass" name="SpecStatement" eSuperTypes="../../../../../../org.osate.aadl2/model/aadl2.ecore#//Element"/>
   <eClassifiers xsi:type="ecore:EClass" name="SynchStatement" eSuperTypes="#//SpecStatement">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="val" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="sim" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="CallDef" eSuperTypes="../../../../../../org.osate.aadl2/model/aadl2.ecore#//NamedElement"/>
   <eClassifiers xsi:type="ecore:EClass" name="PropertyStatement" eSuperTypes="../../../../../../org.osate.aadl2/model/aadl2.ecore#//NamedElement #//SpecStatement">
@@ -58,6 +59,15 @@
         containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ClockID" eSuperTypes="#//Expr">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="comp" eType="ecore:EClass ../../../../../../org.osate.aadl2/model/aadl2.ecore#//NamedElement"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="QueueRemoveID" eSuperTypes="#//Expr">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="comp" eType="ecore:EClass ../../../../../../org.osate.aadl2/model/aadl2.ecore#//NamedElement"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="QueueInsertID" eSuperTypes="#//Expr">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="comp" eType="ecore:EClass ../../../../../../org.osate.aadl2/model/aadl2.ecore#//NamedElement"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="QueueCountID" eSuperTypes="#//Expr">
     <eStructuralFeatures xsi:type="ecore:EReference" name="comp" eType="ecore:EClass ../../../../../../org.osate.aadl2/model/aadl2.ecore#//NamedElement"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="AgreeContractLibrary" eSuperTypes="#//AgreeLibrary">
