@@ -16,6 +16,7 @@ import org.osate.aadl2.BusSubcomponent;
 import org.osate.aadl2.ComponentImplementation;
 import org.osate.aadl2.ComponentType;
 import org.osate.aadl2.DataSubcomponent;
+import org.osate.aadl2.DataSubcomponentType;
 import org.osate.aadl2.Subcomponent;
 import org.osate.aadl2.instance.ComponentInstance;
 
@@ -64,6 +65,7 @@ public class AgreeGenerator {
         for(Subcomponent subComp : compImpl.getAllSubcomponents()){
         	//don't check data subcomponents
         	if(subComp instanceof DataSubcomponent
+        			|| subComp instanceof DataSubcomponentType
         			|| subComp instanceof BusSubcomponent){
         		continue;
         	}

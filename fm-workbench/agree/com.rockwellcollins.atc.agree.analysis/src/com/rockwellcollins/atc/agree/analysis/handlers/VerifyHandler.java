@@ -128,13 +128,20 @@ public abstract class VerifyHandler extends AadlHandler {
             ComponentInstance subInst = ci.findSubcomponentInstance(subComp);
             if(subInst != ci){
                 if(AgreeEmitterUtilities.getInstanceImplementation(subInst) != null){
-                    result.addChild(buildAnalysisResult(subInst.getName(), subInst));
+                	AnalysisResult buildAnalysisResult = buildAnalysisResult(subInst.getName(), subInst);
+                	if(buildAnalysisResult != null){
+                		result.addChild(buildAnalysisResult);
+                	}
                 }
             }
         }
-        linker.setComponent(result, compImpl);
+        
+        if(result.getChildren().size() != 0){
+        	linker.setComponent(result, compImpl);
+        	return result;
+        }
 
-        return result;
+        return null;
     }
 
     private AnalysisResult createGuaranteeVerification(ComponentInstance ci) {
