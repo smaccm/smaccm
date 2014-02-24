@@ -261,8 +261,8 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 
 		//{AssumeStatement} "assume" str=STRING ":" expr=Expr ";" | {GuaranteeStatement} "guarantee" str=STRING ":" expr=Expr ";"
 		//| {AssertStatement} "assert" expr=Expr ";" | {ParamStatement} "parameter" expr=Expr ":" type=Type ";" |
-		//{LemmaStatement} "lemma" str=STRING ":" expr=Expr ";" | {LiftStatement} "lift" subcomp=NestedDotID ";" | SynchStatement
-		//| PropertyStatement | ConstStatement | EqStatement | FnDefExpr | NodeDefExpr
+		//{LemmaStatement} "lemma" str=STRING ":" expr=Expr ";" | {LiftStatement} "lift" subcomp=NestedDotID ";" |
+		//SynchStatement | PropertyStatement | ConstStatement | EqStatement | FnDefExpr | NodeDefExpr
 		public Alternatives getAlternatives() { return cAlternatives; }
 
 		//{AssumeStatement} "assume" str=STRING ":" expr=Expr ";"
@@ -1648,31 +1648,24 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cInitExprParserRuleCall_0_5_0 = (RuleCall)cInitAssignment_0_5.eContents().get(0);
 		private final Keyword cRightParenthesisKeyword_0_6 = (Keyword)cGroup_0.eContents().get(6);
 		private final Group cGroup_1 = (Group)cAlternatives.eContents().get(1);
-		private final Action cNextExprAction_1_0 = (Action)cGroup_1.eContents().get(0);
-		private final Keyword cNextKeyword_1_1 = (Keyword)cGroup_1.eContents().get(1);
+		private final Action cGetPropertyExprAction_1_0 = (Action)cGroup_1.eContents().get(0);
+		private final Keyword cGet_PropertyKeyword_1_1 = (Keyword)cGroup_1.eContents().get(1);
 		private final Keyword cLeftParenthesisKeyword_1_2 = (Keyword)cGroup_1.eContents().get(2);
-		private final Assignment cExprAssignment_1_3 = (Assignment)cGroup_1.eContents().get(3);
-		private final RuleCall cExprExprParserRuleCall_1_3_0 = (RuleCall)cExprAssignment_1_3.eContents().get(0);
-		private final Keyword cRightParenthesisKeyword_1_4 = (Keyword)cGroup_1.eContents().get(4);
-		private final Group cGroup_2 = (Group)cAlternatives.eContents().get(2);
-		private final Action cGetPropertyExprAction_2_0 = (Action)cGroup_2.eContents().get(0);
-		private final Keyword cGet_PropertyKeyword_2_1 = (Keyword)cGroup_2.eContents().get(1);
-		private final Keyword cLeftParenthesisKeyword_2_2 = (Keyword)cGroup_2.eContents().get(2);
-		private final Assignment cComponentAssignment_2_3 = (Assignment)cGroup_2.eContents().get(3);
-		private final RuleCall cComponentExprParserRuleCall_2_3_0 = (RuleCall)cComponentAssignment_2_3.eContents().get(0);
-		private final Keyword cCommaKeyword_2_4 = (Keyword)cGroup_2.eContents().get(4);
-		private final Assignment cPropAssignment_2_5 = (Assignment)cGroup_2.eContents().get(5);
-		private final RuleCall cPropExprParserRuleCall_2_5_0 = (RuleCall)cPropAssignment_2_5.eContents().get(0);
-		private final Keyword cRightParenthesisKeyword_2_6 = (Keyword)cGroup_2.eContents().get(6);
-		private final RuleCall cTermExprParserRuleCall_3 = (RuleCall)cAlternatives.eContents().get(3);
+		private final Assignment cComponentAssignment_1_3 = (Assignment)cGroup_1.eContents().get(3);
+		private final RuleCall cComponentExprParserRuleCall_1_3_0 = (RuleCall)cComponentAssignment_1_3.eContents().get(0);
+		private final Keyword cCommaKeyword_1_4 = (Keyword)cGroup_1.eContents().get(4);
+		private final Assignment cPropAssignment_1_5 = (Assignment)cGroup_1.eContents().get(5);
+		private final RuleCall cPropExprParserRuleCall_1_5_0 = (RuleCall)cPropAssignment_1_5.eContents().get(0);
+		private final Keyword cRightParenthesisKeyword_1_6 = (Keyword)cGroup_1.eContents().get(6);
+		private final RuleCall cTermExprParserRuleCall_2 = (RuleCall)cAlternatives.eContents().get(2);
 		
 		//PreDefFnExpr returns Expr:
-		//	{PrevExpr} "prev" "(" delay=Expr "," init=Expr ")" | {NextExpr} "next" "(" expr=Expr ")" | {GetPropertyExpr}
-		//	"Get_Property" "(" component=Expr "," prop=Expr ")" | TermExpr;
+		//	{PrevExpr} "prev" "(" delay=Expr "," init=Expr ")" | {GetPropertyExpr} "Get_Property" "(" component=Expr ","
+		//	prop=Expr ")" | TermExpr;
 		public ParserRule getRule() { return rule; }
 
-		//{PrevExpr} "prev" "(" delay=Expr "," init=Expr ")" | {NextExpr} "next" "(" expr=Expr ")" | {GetPropertyExpr}
-		//"Get_Property" "(" component=Expr "," prop=Expr ")" | TermExpr
+		//{PrevExpr} "prev" "(" delay=Expr "," init=Expr ")" | {GetPropertyExpr} "Get_Property" "(" component=Expr "," prop=Expr
+		//")" | TermExpr
 		public Alternatives getAlternatives() { return cAlternatives; }
 
 		//{PrevExpr} "prev" "(" delay=Expr "," init=Expr ")"
@@ -1705,83 +1698,58 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		//")"
 		public Keyword getRightParenthesisKeyword_0_6() { return cRightParenthesisKeyword_0_6; }
 
-		//{NextExpr} "next" "(" expr=Expr ")"
+		//{GetPropertyExpr} "Get_Property" "(" component=Expr "," prop=Expr ")"
 		public Group getGroup_1() { return cGroup_1; }
 
-		//{NextExpr}
-		public Action getNextExprAction_1_0() { return cNextExprAction_1_0; }
+		//{GetPropertyExpr}
+		public Action getGetPropertyExprAction_1_0() { return cGetPropertyExprAction_1_0; }
 
-		//"next"
-		public Keyword getNextKeyword_1_1() { return cNextKeyword_1_1; }
+		//"Get_Property"
+		public Keyword getGet_PropertyKeyword_1_1() { return cGet_PropertyKeyword_1_1; }
 
 		//"("
 		public Keyword getLeftParenthesisKeyword_1_2() { return cLeftParenthesisKeyword_1_2; }
 
-		//expr=Expr
-		public Assignment getExprAssignment_1_3() { return cExprAssignment_1_3; }
-
-		//Expr
-		public RuleCall getExprExprParserRuleCall_1_3_0() { return cExprExprParserRuleCall_1_3_0; }
-
-		//")"
-		public Keyword getRightParenthesisKeyword_1_4() { return cRightParenthesisKeyword_1_4; }
-
-		//{GetPropertyExpr} "Get_Property" "(" component=Expr "," prop=Expr ")"
-		public Group getGroup_2() { return cGroup_2; }
-
-		//{GetPropertyExpr}
-		public Action getGetPropertyExprAction_2_0() { return cGetPropertyExprAction_2_0; }
-
-		//"Get_Property"
-		public Keyword getGet_PropertyKeyword_2_1() { return cGet_PropertyKeyword_2_1; }
-
-		//"("
-		public Keyword getLeftParenthesisKeyword_2_2() { return cLeftParenthesisKeyword_2_2; }
-
 		//component=Expr
-		public Assignment getComponentAssignment_2_3() { return cComponentAssignment_2_3; }
+		public Assignment getComponentAssignment_1_3() { return cComponentAssignment_1_3; }
 
 		//Expr
-		public RuleCall getComponentExprParserRuleCall_2_3_0() { return cComponentExprParserRuleCall_2_3_0; }
+		public RuleCall getComponentExprParserRuleCall_1_3_0() { return cComponentExprParserRuleCall_1_3_0; }
 
 		//","
-		public Keyword getCommaKeyword_2_4() { return cCommaKeyword_2_4; }
+		public Keyword getCommaKeyword_1_4() { return cCommaKeyword_1_4; }
 
 		//prop=Expr
-		public Assignment getPropAssignment_2_5() { return cPropAssignment_2_5; }
+		public Assignment getPropAssignment_1_5() { return cPropAssignment_1_5; }
 
 		//Expr
-		public RuleCall getPropExprParserRuleCall_2_5_0() { return cPropExprParserRuleCall_2_5_0; }
+		public RuleCall getPropExprParserRuleCall_1_5_0() { return cPropExprParserRuleCall_1_5_0; }
 
 		//")"
-		public Keyword getRightParenthesisKeyword_2_6() { return cRightParenthesisKeyword_2_6; }
+		public Keyword getRightParenthesisKeyword_1_6() { return cRightParenthesisKeyword_1_6; }
 
 		//TermExpr
-		public RuleCall getTermExprParserRuleCall_3() { return cTermExprParserRuleCall_3; }
+		public RuleCall getTermExprParserRuleCall_2() { return cTermExprParserRuleCall_2; }
 	}
 
 	public class PreDefFnNamesElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "PreDefFnNames");
 		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
 		private final Keyword cPrevKeyword_0 = (Keyword)cAlternatives.eContents().get(0);
-		private final Keyword cNextKeyword_1 = (Keyword)cAlternatives.eContents().get(1);
-		private final Keyword cGet_PropertyKeyword_2 = (Keyword)cAlternatives.eContents().get(2);
+		private final Keyword cGet_PropertyKeyword_1 = (Keyword)cAlternatives.eContents().get(1);
 		
 		//PreDefFnNames:
-		//	"prev" | "next" | "Get_Property";
+		//	"prev" | "Get_Property";
 		public ParserRule getRule() { return rule; }
 
-		//"prev" | "next" | "Get_Property"
+		//"prev" | "Get_Property"
 		public Alternatives getAlternatives() { return cAlternatives; }
 
 		//"prev"
 		public Keyword getPrevKeyword_0() { return cPrevKeyword_0; }
 
-		//"next"
-		public Keyword getNextKeyword_1() { return cNextKeyword_1; }
-
 		//"Get_Property"
-		public Keyword getGet_PropertyKeyword_2() { return cGet_PropertyKeyword_2; }
+		public Keyword getGet_PropertyKeyword_1() { return cGet_PropertyKeyword_1; }
 	}
 
 	public class TermExprElements extends AbstractParserRuleElementFinder {
@@ -1839,8 +1807,8 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		
 		//TermExpr returns Expr:
 		//	{IdExpr} id=[aadl2::NamedElement|QID] | ClockID | NestedDotID ({FnCallExpr.fn=current} "(" (args+=Expr (","
-		//	args+=Expr)*)? ")")? | {IntLitExpr} val=INTEGER_LIT | {PreExpr} "pre" "(" expr=Expr ")" | {RealLitExpr} val=REAL_LIT |
-		//	{BoolLitExpr} val=BooleanLiteral | {ThisExpr} "this" ("." subThis=NestedDotID)? | "(" Expr ")";
+		//	args+=Expr)*)? ")")? | {IntLitExpr} val=INTEGER_LIT | {PreExpr} "pre" "(" expr=Expr ")" | {RealLitExpr} val=REAL_LIT
+		//	| {BoolLitExpr} val=BooleanLiteral | {ThisExpr} "this" ("." subThis=NestedDotID)? | "(" Expr ")";
 		public ParserRule getRule() { return rule; }
 
 		//{IdExpr} id=[aadl2::NamedElement|QID] | ClockID | NestedDotID ({FnCallExpr.fn=current} "(" (args+=Expr (","
@@ -2506,8 +2474,8 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 	}
 
 	//PreDefFnExpr returns Expr:
-	//	{PrevExpr} "prev" "(" delay=Expr "," init=Expr ")" | {NextExpr} "next" "(" expr=Expr ")" | {GetPropertyExpr}
-	//	"Get_Property" "(" component=Expr "," prop=Expr ")" | TermExpr;
+	//	{PrevExpr} "prev" "(" delay=Expr "," init=Expr ")" | {GetPropertyExpr} "Get_Property" "(" component=Expr ","
+	//	prop=Expr ")" | TermExpr;
 	public PreDefFnExprElements getPreDefFnExprAccess() {
 		return (pPreDefFnExpr != null) ? pPreDefFnExpr : (pPreDefFnExpr = new PreDefFnExprElements());
 	}
@@ -2517,7 +2485,7 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 	}
 
 	//PreDefFnNames:
-	//	"prev" | "next" | "Get_Property";
+	//	"prev" | "Get_Property";
 	public PreDefFnNamesElements getPreDefFnNamesAccess() {
 		return (pPreDefFnNames != null) ? pPreDefFnNames : (pPreDefFnNames = new PreDefFnNamesElements());
 	}
@@ -2528,8 +2496,8 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 
 	//TermExpr returns Expr:
 	//	{IdExpr} id=[aadl2::NamedElement|QID] | ClockID | NestedDotID ({FnCallExpr.fn=current} "(" (args+=Expr (","
-	//	args+=Expr)*)? ")")? | {IntLitExpr} val=INTEGER_LIT | {PreExpr} "pre" "(" expr=Expr ")" | {RealLitExpr} val=REAL_LIT |
-	//	{BoolLitExpr} val=BooleanLiteral | {ThisExpr} "this" ("." subThis=NestedDotID)? | "(" Expr ")";
+	//	args+=Expr)*)? ")")? | {IntLitExpr} val=INTEGER_LIT | {PreExpr} "pre" "(" expr=Expr ")" | {RealLitExpr} val=REAL_LIT
+	//	| {BoolLitExpr} val=BooleanLiteral | {ThisExpr} "this" ("." subThis=NestedDotID)? | "(" Expr ")";
 	public TermExprElements getTermExprAccess() {
 		return (pTermExpr != null) ? pTermExpr : (pTermExpr = new TermExprElements());
 	}

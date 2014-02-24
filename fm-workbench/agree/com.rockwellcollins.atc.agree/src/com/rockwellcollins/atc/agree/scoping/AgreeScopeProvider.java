@@ -23,7 +23,6 @@ import org.osate.aadl2.Element;
 import org.osate.aadl2.EventDataPort;
 import org.osate.aadl2.Subcomponent;
 import org.osate.aadl2.ThreadSubcomponent;
-import org.osate.aadl2.impl.DataPortImpl;
 import org.osate.aadl2.impl.FeatureGroupImpl;
 
 import com.rockwellcollins.atc.agree.agree.AgreeContract;

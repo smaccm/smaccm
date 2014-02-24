@@ -320,15 +320,6 @@ public interface AgreeFactory extends EFactory
   PrevExpr createPrevExpr();
 
   /**
-   * Returns a new object of class '<em>Next Expr</em>'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return a new object of class '<em>Next Expr</em>'.
-   * @generated
-   */
-  NextExpr createNextExpr();
-
-  /**
    * Returns a new object of class '<em>Get Property Expr</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->

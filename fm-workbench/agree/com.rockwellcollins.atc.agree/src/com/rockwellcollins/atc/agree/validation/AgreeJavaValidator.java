@@ -44,7 +44,6 @@ import org.osate.aadl2.Property;
 import org.osate.aadl2.PropertyType;
 import org.osate.aadl2.Subcomponent;
 import org.osate.aadl2.impl.SubcomponentImpl;
-import org.osate.aadl2.instance.ComponentInstance;
 
 import com.rockwellcollins.atc.agree.agree.AgreeContract;
 import com.rockwellcollins.atc.agree.agree.AgreePackage;
@@ -69,7 +68,6 @@ import com.rockwellcollins.atc.agree.agree.IntLitExpr;
 import com.rockwellcollins.atc.agree.agree.LemmaStatement;
 import com.rockwellcollins.atc.agree.agree.LiftStatement;
 import com.rockwellcollins.atc.agree.agree.NestedDotID;
-import com.rockwellcollins.atc.agree.agree.NextExpr;
 import com.rockwellcollins.atc.agree.agree.NodeDefExpr;
 import com.rockwellcollins.atc.agree.agree.NodeEq;
 import com.rockwellcollins.atc.agree.agree.NodeLemma;
@@ -827,10 +825,6 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
         return getAgreeType(unaryExpr.getExpr());
     }
 
-    private AgreeType getAgreeType(NextExpr nextExpr) {
-        return getAgreeType(nextExpr.getExpr());
-    }
-
     private AgreeType getAgreeType(NestedDotID nestDotIdExpr) {
         return getAgreeType(getFinalNestId(nestDotIdExpr));
     }
@@ -1013,8 +1007,6 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
             return getAgreeType((IfThenElseExpr) expr);
         } else if (expr instanceof PrevExpr) {
             return getAgreeType((PrevExpr) expr);
-        } else if (expr instanceof NextExpr) {
-            return getAgreeType((NextExpr) expr);
         } else if (expr instanceof GetPropertyExpr) {
             return getAgreeType((GetPropertyExpr) expr);
         } else if (expr instanceof NestedDotID) {

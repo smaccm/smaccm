@@ -126,7 +126,6 @@ public class AgreeParser extends AbstractContentAssistParser {
 					put(grammarAccess.getIfThenElseExprAccess().getGroup_0(), "rule__IfThenElseExpr__Group_0__0");
 					put(grammarAccess.getPreDefFnExprAccess().getGroup_0(), "rule__PreDefFnExpr__Group_0__0");
 					put(grammarAccess.getPreDefFnExprAccess().getGroup_1(), "rule__PreDefFnExpr__Group_1__0");
-					put(grammarAccess.getPreDefFnExprAccess().getGroup_2(), "rule__PreDefFnExpr__Group_2__0");
 					put(grammarAccess.getTermExprAccess().getGroup_0(), "rule__TermExpr__Group_0__0");
 					put(grammarAccess.getTermExprAccess().getGroup_2(), "rule__TermExpr__Group_2__0");
 					put(grammarAccess.getTermExprAccess().getGroup_2_1(), "rule__TermExpr__Group_2_1__0");
@@ -256,9 +255,8 @@ public class AgreeParser extends AbstractContentAssistParser {
 					put(grammarAccess.getIfThenElseExprAccess().getCAssignment_0_6(), "rule__IfThenElseExpr__CAssignment_0_6");
 					put(grammarAccess.getPreDefFnExprAccess().getDelayAssignment_0_3(), "rule__PreDefFnExpr__DelayAssignment_0_3");
 					put(grammarAccess.getPreDefFnExprAccess().getInitAssignment_0_5(), "rule__PreDefFnExpr__InitAssignment_0_5");
-					put(grammarAccess.getPreDefFnExprAccess().getExprAssignment_1_3(), "rule__PreDefFnExpr__ExprAssignment_1_3");
-					put(grammarAccess.getPreDefFnExprAccess().getComponentAssignment_2_3(), "rule__PreDefFnExpr__ComponentAssignment_2_3");
-					put(grammarAccess.getPreDefFnExprAccess().getPropAssignment_2_5(), "rule__PreDefFnExpr__PropAssignment_2_5");
+					put(grammarAccess.getPreDefFnExprAccess().getComponentAssignment_1_3(), "rule__PreDefFnExpr__ComponentAssignment_1_3");
+					put(grammarAccess.getPreDefFnExprAccess().getPropAssignment_1_5(), "rule__PreDefFnExpr__PropAssignment_1_5");
 					put(grammarAccess.getTermExprAccess().getIdAssignment_0_1(), "rule__TermExpr__IdAssignment_0_1");
 					put(grammarAccess.getTermExprAccess().getArgsAssignment_2_1_2_0(), "rule__TermExpr__ArgsAssignment_2_1_2_0");
 					put(grammarAccess.getTermExprAccess().getArgsAssignment_2_1_2_1_1(), "rule__TermExpr__ArgsAssignment_2_1_2_1_1");

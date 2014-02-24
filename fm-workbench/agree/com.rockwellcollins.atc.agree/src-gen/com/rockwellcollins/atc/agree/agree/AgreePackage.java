@@ -2009,52 +2009,6 @@ public interface AgreePackage extends EPackage
   int PREV_EXPR_FEATURE_COUNT = EXPR_FEATURE_COUNT + 2;
 
   /**
-   * The meta object id for the '{@link com.rockwellcollins.atc.agree.agree.impl.NextExprImpl <em>Next Expr</em>}' class.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see com.rockwellcollins.atc.agree.agree.impl.NextExprImpl
-   * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getNextExpr()
-   * @generated
-   */
-  int NEXT_EXPR = 33;
-
-  /**
-   * The feature id for the '<em><b>Owned Element</b></em>' reference list.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int NEXT_EXPR__OWNED_ELEMENT = EXPR__OWNED_ELEMENT;
-
-  /**
-   * The feature id for the '<em><b>Owned Comment</b></em>' containment reference list.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int NEXT_EXPR__OWNED_COMMENT = EXPR__OWNED_COMMENT;
-
-  /**
-   * The feature id for the '<em><b>Expr</b></em>' containment reference.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int NEXT_EXPR__EXPR = EXPR_FEATURE_COUNT + 0;
-
-  /**
-   * The number of structural features of the '<em>Next Expr</em>' class.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int NEXT_EXPR_FEATURE_COUNT = EXPR_FEATURE_COUNT + 1;
-
-  /**
    * The meta object id for the '{@link com.rockwellcollins.atc.agree.agree.impl.GetPropertyExprImpl <em>Get Property Expr</em>}' class.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -2062,7 +2016,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getGetPropertyExpr()
    * @generated
    */
-  int GET_PROPERTY_EXPR = 34;
+  int GET_PROPERTY_EXPR = 33;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -2117,7 +2071,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getIdExpr()
    * @generated
    */
-  int ID_EXPR = 35;
+  int ID_EXPR = 34;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -2163,7 +2117,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getFnCallExpr()
    * @generated
    */
-  int FN_CALL_EXPR = 36;
+  int FN_CALL_EXPR = 35;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -2218,7 +2172,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getIntLitExpr()
    * @generated
    */
-  int INT_LIT_EXPR = 37;
+  int INT_LIT_EXPR = 36;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -2264,7 +2218,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getPreExpr()
    * @generated
    */
-  int PRE_EXPR = 38;
+  int PRE_EXPR = 37;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -2310,7 +2264,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getRealLitExpr()
    * @generated
    */
-  int REAL_LIT_EXPR = 39;
+  int REAL_LIT_EXPR = 38;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -2356,7 +2310,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getBoolLitExpr()
    * @generated
    */
-  int BOOL_LIT_EXPR = 40;
+  int BOOL_LIT_EXPR = 39;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -2402,7 +2356,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getThisExpr()
    * @generated
    */
-  int THIS_EXPR = 41;
+  int THIS_EXPR = 40;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -3265,27 +3219,6 @@ public interface AgreePackage extends EPackage
    * @generated
    */
   EReference getPrevExpr_Init();
-
-  /**
-   * Returns the meta object for class '{@link com.rockwellcollins.atc.agree.agree.NextExpr <em>Next Expr</em>}'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return the meta object for class '<em>Next Expr</em>'.
-   * @see com.rockwellcollins.atc.agree.agree.NextExpr
-   * @generated
-   */
-  EClass getNextExpr();
-
-  /**
-   * Returns the meta object for the containment reference '{@link com.rockwellcollins.atc.agree.agree.NextExpr#getExpr <em>Expr</em>}'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return the meta object for the containment reference '<em>Expr</em>'.
-   * @see com.rockwellcollins.atc.agree.agree.NextExpr#getExpr()
-   * @see #getNextExpr()
-   * @generated
-   */
-  EReference getNextExpr_Expr();
 
   /**
    * Returns the meta object for class '{@link com.rockwellcollins.atc.agree.agree.GetPropertyExpr <em>Get Property Expr</em>}'.
@@ -4189,24 +4122,6 @@ public interface AgreePackage extends EPackage
      * @generated
      */
     EReference PREV_EXPR__INIT = eINSTANCE.getPrevExpr_Init();
-
-    /**
-     * The meta object literal for the '{@link com.rockwellcollins.atc.agree.agree.impl.NextExprImpl <em>Next Expr</em>}' class.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @see com.rockwellcollins.atc.agree.agree.impl.NextExprImpl
-     * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getNextExpr()
-     * @generated
-     */
-    EClass NEXT_EXPR = eINSTANCE.getNextExpr();
-
-    /**
-     * The meta object literal for the '<em><b>Expr</b></em>' containment reference feature.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    EReference NEXT_EXPR__EXPR = eINSTANCE.getNextExpr_Expr();
 
     /**
      * The meta object literal for the '{@link com.rockwellcollins.atc.agree.agree.impl.GetPropertyExprImpl <em>Get Property Expr</em>}' class.

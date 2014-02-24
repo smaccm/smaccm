@@ -247,11 +247,6 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
         return createPrevExprAdapter();
       }
       @Override
-      public Adapter caseNextExpr(NextExpr object)
-      {
-        return createNextExprAdapter();
-      }
-      @Override
       public Adapter caseGetPropertyExpr(GetPropertyExpr object)
       {
         return createGetPropertyExprAdapter();
@@ -834,21 +829,6 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
    * @generated
    */
   public Adapter createPrevExprAdapter()
-  {
-    return null;
-  }
-
-  /**
-   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.NextExpr <em>Next Expr</em>}'.
-   * <!-- begin-user-doc -->
-   * This default implementation returns null so that we can easily ignore cases;
-   * it's useful to ignore a case when inheritance will catch all the cases anyway.
-   * <!-- end-user-doc -->
-   * @return the new adapter.
-   * @see com.rockwellcollins.atc.agree.agree.NextExpr
-   * @generated
-   */
-  public Adapter createNextExprAdapter()
   {
     return null;
   }
