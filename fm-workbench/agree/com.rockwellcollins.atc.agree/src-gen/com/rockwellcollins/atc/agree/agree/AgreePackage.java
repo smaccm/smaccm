@@ -1093,13 +1093,22 @@ public interface AgreePackage extends EPackage
   int NESTED_DOT_ID__BASE = EXPR_FEATURE_COUNT + 0;
 
   /**
+   * The feature id for the '<em><b>Tag</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int NESTED_DOT_ID__TAG = EXPR_FEATURE_COUNT + 1;
+
+  /**
    * The feature id for the '<em><b>Sub</b></em>' containment reference.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int NESTED_DOT_ID__SUB = EXPR_FEATURE_COUNT + 1;
+  int NESTED_DOT_ID__SUB = EXPR_FEATURE_COUNT + 2;
 
   /**
    * The number of structural features of the '<em>Nested Dot ID</em>' class.
@@ -1108,191 +1117,7 @@ public interface AgreePackage extends EPackage
    * @generated
    * @ordered
    */
-  int NESTED_DOT_ID_FEATURE_COUNT = EXPR_FEATURE_COUNT + 2;
-
-  /**
-   * The meta object id for the '{@link com.rockwellcollins.atc.agree.agree.impl.ClockIDImpl <em>Clock ID</em>}' class.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see com.rockwellcollins.atc.agree.agree.impl.ClockIDImpl
-   * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getClockID()
-   * @generated
-   */
-  int CLOCK_ID = 17;
-
-  /**
-   * The feature id for the '<em><b>Owned Element</b></em>' reference list.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int CLOCK_ID__OWNED_ELEMENT = EXPR__OWNED_ELEMENT;
-
-  /**
-   * The feature id for the '<em><b>Owned Comment</b></em>' containment reference list.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int CLOCK_ID__OWNED_COMMENT = EXPR__OWNED_COMMENT;
-
-  /**
-   * The feature id for the '<em><b>Comp</b></em>' reference.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int CLOCK_ID__COMP = EXPR_FEATURE_COUNT + 0;
-
-  /**
-   * The number of structural features of the '<em>Clock ID</em>' class.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int CLOCK_ID_FEATURE_COUNT = EXPR_FEATURE_COUNT + 1;
-
-  /**
-   * The meta object id for the '{@link com.rockwellcollins.atc.agree.agree.impl.QueueRemoveIDImpl <em>Queue Remove ID</em>}' class.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see com.rockwellcollins.atc.agree.agree.impl.QueueRemoveIDImpl
-   * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getQueueRemoveID()
-   * @generated
-   */
-  int QUEUE_REMOVE_ID = 18;
-
-  /**
-   * The feature id for the '<em><b>Owned Element</b></em>' reference list.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int QUEUE_REMOVE_ID__OWNED_ELEMENT = EXPR__OWNED_ELEMENT;
-
-  /**
-   * The feature id for the '<em><b>Owned Comment</b></em>' containment reference list.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int QUEUE_REMOVE_ID__OWNED_COMMENT = EXPR__OWNED_COMMENT;
-
-  /**
-   * The feature id for the '<em><b>Comp</b></em>' reference.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int QUEUE_REMOVE_ID__COMP = EXPR_FEATURE_COUNT + 0;
-
-  /**
-   * The number of structural features of the '<em>Queue Remove ID</em>' class.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int QUEUE_REMOVE_ID_FEATURE_COUNT = EXPR_FEATURE_COUNT + 1;
-
-  /**
-   * The meta object id for the '{@link com.rockwellcollins.atc.agree.agree.impl.QueueInsertIDImpl <em>Queue Insert ID</em>}' class.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see com.rockwellcollins.atc.agree.agree.impl.QueueInsertIDImpl
-   * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getQueueInsertID()
-   * @generated
-   */
-  int QUEUE_INSERT_ID = 19;
-
-  /**
-   * The feature id for the '<em><b>Owned Element</b></em>' reference list.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int QUEUE_INSERT_ID__OWNED_ELEMENT = EXPR__OWNED_ELEMENT;
-
-  /**
-   * The feature id for the '<em><b>Owned Comment</b></em>' containment reference list.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int QUEUE_INSERT_ID__OWNED_COMMENT = EXPR__OWNED_COMMENT;
-
-  /**
-   * The feature id for the '<em><b>Comp</b></em>' reference.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int QUEUE_INSERT_ID__COMP = EXPR_FEATURE_COUNT + 0;
-
-  /**
-   * The number of structural features of the '<em>Queue Insert ID</em>' class.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int QUEUE_INSERT_ID_FEATURE_COUNT = EXPR_FEATURE_COUNT + 1;
-
-  /**
-   * The meta object id for the '{@link com.rockwellcollins.atc.agree.agree.impl.QueueCountIDImpl <em>Queue Count ID</em>}' class.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see com.rockwellcollins.atc.agree.agree.impl.QueueCountIDImpl
-   * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getQueueCountID()
-   * @generated
-   */
-  int QUEUE_COUNT_ID = 20;
-
-  /**
-   * The feature id for the '<em><b>Owned Element</b></em>' reference list.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int QUEUE_COUNT_ID__OWNED_ELEMENT = EXPR__OWNED_ELEMENT;
-
-  /**
-   * The feature id for the '<em><b>Owned Comment</b></em>' containment reference list.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int QUEUE_COUNT_ID__OWNED_COMMENT = EXPR__OWNED_COMMENT;
-
-  /**
-   * The feature id for the '<em><b>Comp</b></em>' reference.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int QUEUE_COUNT_ID__COMP = EXPR_FEATURE_COUNT + 0;
-
-  /**
-   * The number of structural features of the '<em>Queue Count ID</em>' class.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int QUEUE_COUNT_ID_FEATURE_COUNT = EXPR_FEATURE_COUNT + 1;
+  int NESTED_DOT_ID_FEATURE_COUNT = EXPR_FEATURE_COUNT + 3;
 
   /**
    * The meta object id for the '{@link com.rockwellcollins.atc.agree.agree.impl.AgreeContractLibraryImpl <em>Contract Library</em>}' class.
@@ -1302,7 +1127,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getAgreeContractLibrary()
    * @generated
    */
-  int AGREE_CONTRACT_LIBRARY = 21;
+  int AGREE_CONTRACT_LIBRARY = 17;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -1375,7 +1200,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getAgreeContractSubclause()
    * @generated
    */
-  int AGREE_CONTRACT_SUBCLAUSE = 22;
+  int AGREE_CONTRACT_SUBCLAUSE = 18;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -1457,7 +1282,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getAgreeContract()
    * @generated
    */
-  int AGREE_CONTRACT = 23;
+  int AGREE_CONTRACT = 19;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -1503,7 +1328,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getAssumeStatement()
    * @generated
    */
-  int ASSUME_STATEMENT = 24;
+  int ASSUME_STATEMENT = 20;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -1558,7 +1383,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getGuaranteeStatement()
    * @generated
    */
-  int GUARANTEE_STATEMENT = 25;
+  int GUARANTEE_STATEMENT = 21;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -1613,7 +1438,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getAssertStatement()
    * @generated
    */
-  int ASSERT_STATEMENT = 26;
+  int ASSERT_STATEMENT = 22;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -1659,7 +1484,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getParamStatement()
    * @generated
    */
-  int PARAM_STATEMENT = 27;
+  int PARAM_STATEMENT = 23;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -1714,7 +1539,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getLemmaStatement()
    * @generated
    */
-  int LEMMA_STATEMENT = 28;
+  int LEMMA_STATEMENT = 24;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -1769,7 +1594,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getLiftStatement()
    * @generated
    */
-  int LIFT_STATEMENT = 29;
+  int LIFT_STATEMENT = 25;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -1815,7 +1640,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getNodeEq()
    * @generated
    */
-  int NODE_EQ = 30;
+  int NODE_EQ = 26;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -1870,7 +1695,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getNodeLemma()
    * @generated
    */
-  int NODE_LEMMA = 31;
+  int NODE_LEMMA = 27;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -1925,7 +1750,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getBinaryExpr()
    * @generated
    */
-  int BINARY_EXPR = 32;
+  int BINARY_EXPR = 28;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -1989,7 +1814,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getUnaryExpr()
    * @generated
    */
-  int UNARY_EXPR = 33;
+  int UNARY_EXPR = 29;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -2044,7 +1869,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getIfThenElseExpr()
    * @generated
    */
-  int IF_THEN_ELSE_EXPR = 34;
+  int IF_THEN_ELSE_EXPR = 30;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -2108,7 +1933,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getPrevExpr()
    * @generated
    */
-  int PREV_EXPR = 35;
+  int PREV_EXPR = 31;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -2163,7 +1988,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getNextExpr()
    * @generated
    */
-  int NEXT_EXPR = 36;
+  int NEXT_EXPR = 32;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -2209,7 +2034,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getGetPropertyExpr()
    * @generated
    */
-  int GET_PROPERTY_EXPR = 37;
+  int GET_PROPERTY_EXPR = 33;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -2264,7 +2089,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getIdExpr()
    * @generated
    */
-  int ID_EXPR = 38;
+  int ID_EXPR = 34;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -2310,7 +2135,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getFnCallExpr()
    * @generated
    */
-  int FN_CALL_EXPR = 39;
+  int FN_CALL_EXPR = 35;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -2365,7 +2190,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getIntLitExpr()
    * @generated
    */
-  int INT_LIT_EXPR = 40;
+  int INT_LIT_EXPR = 36;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -2411,7 +2236,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getPreExpr()
    * @generated
    */
-  int PRE_EXPR = 41;
+  int PRE_EXPR = 37;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -2457,7 +2282,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getRealLitExpr()
    * @generated
    */
-  int REAL_LIT_EXPR = 42;
+  int REAL_LIT_EXPR = 38;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -2503,7 +2328,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getBoolLitExpr()
    * @generated
    */
-  int BOOL_LIT_EXPR = 43;
+  int BOOL_LIT_EXPR = 39;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -2549,7 +2374,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getThisExpr()
    * @generated
    */
-  int THIS_EXPR = 44;
+  int THIS_EXPR = 40;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -2968,6 +2793,17 @@ public interface AgreePackage extends EPackage
   EReference getNestedDotID_Base();
 
   /**
+   * Returns the meta object for the attribute '{@link com.rockwellcollins.atc.agree.agree.NestedDotID#getTag <em>Tag</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the attribute '<em>Tag</em>'.
+   * @see com.rockwellcollins.atc.agree.agree.NestedDotID#getTag()
+   * @see #getNestedDotID()
+   * @generated
+   */
+  EAttribute getNestedDotID_Tag();
+
+  /**
    * Returns the meta object for the containment reference '{@link com.rockwellcollins.atc.agree.agree.NestedDotID#getSub <em>Sub</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -2977,90 +2813,6 @@ public interface AgreePackage extends EPackage
    * @generated
    */
   EReference getNestedDotID_Sub();
-
-  /**
-   * Returns the meta object for class '{@link com.rockwellcollins.atc.agree.agree.ClockID <em>Clock ID</em>}'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return the meta object for class '<em>Clock ID</em>'.
-   * @see com.rockwellcollins.atc.agree.agree.ClockID
-   * @generated
-   */
-  EClass getClockID();
-
-  /**
-   * Returns the meta object for the reference '{@link com.rockwellcollins.atc.agree.agree.ClockID#getComp <em>Comp</em>}'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return the meta object for the reference '<em>Comp</em>'.
-   * @see com.rockwellcollins.atc.agree.agree.ClockID#getComp()
-   * @see #getClockID()
-   * @generated
-   */
-  EReference getClockID_Comp();
-
-  /**
-   * Returns the meta object for class '{@link com.rockwellcollins.atc.agree.agree.QueueRemoveID <em>Queue Remove ID</em>}'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return the meta object for class '<em>Queue Remove ID</em>'.
-   * @see com.rockwellcollins.atc.agree.agree.QueueRemoveID
-   * @generated
-   */
-  EClass getQueueRemoveID();
-
-  /**
-   * Returns the meta object for the reference '{@link com.rockwellcollins.atc.agree.agree.QueueRemoveID#getComp <em>Comp</em>}'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return the meta object for the reference '<em>Comp</em>'.
-   * @see com.rockwellcollins.atc.agree.agree.QueueRemoveID#getComp()
-   * @see #getQueueRemoveID()
-   * @generated
-   */
-  EReference getQueueRemoveID_Comp();
-
-  /**
-   * Returns the meta object for class '{@link com.rockwellcollins.atc.agree.agree.QueueInsertID <em>Queue Insert ID</em>}'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return the meta object for class '<em>Queue Insert ID</em>'.
-   * @see com.rockwellcollins.atc.agree.agree.QueueInsertID
-   * @generated
-   */
-  EClass getQueueInsertID();
-
-  /**
-   * Returns the meta object for the reference '{@link com.rockwellcollins.atc.agree.agree.QueueInsertID#getComp <em>Comp</em>}'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return the meta object for the reference '<em>Comp</em>'.
-   * @see com.rockwellcollins.atc.agree.agree.QueueInsertID#getComp()
-   * @see #getQueueInsertID()
-   * @generated
-   */
-  EReference getQueueInsertID_Comp();
-
-  /**
-   * Returns the meta object for class '{@link com.rockwellcollins.atc.agree.agree.QueueCountID <em>Queue Count ID</em>}'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return the meta object for class '<em>Queue Count ID</em>'.
-   * @see com.rockwellcollins.atc.agree.agree.QueueCountID
-   * @generated
-   */
-  EClass getQueueCountID();
-
-  /**
-   * Returns the meta object for the reference '{@link com.rockwellcollins.atc.agree.agree.QueueCountID#getComp <em>Comp</em>}'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return the meta object for the reference '<em>Comp</em>'.
-   * @see com.rockwellcollins.atc.agree.agree.QueueCountID#getComp()
-   * @see #getQueueCountID()
-   * @generated
-   */
-  EReference getQueueCountID_Comp();
 
   /**
    * Returns the meta object for class '{@link com.rockwellcollins.atc.agree.agree.AgreeContractLibrary <em>Contract Library</em>}'.
@@ -4044,84 +3796,20 @@ public interface AgreePackage extends EPackage
     EReference NESTED_DOT_ID__BASE = eINSTANCE.getNestedDotID_Base();
 
     /**
+     * The meta object literal for the '<em><b>Tag</b></em>' attribute feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EAttribute NESTED_DOT_ID__TAG = eINSTANCE.getNestedDotID_Tag();
+
+    /**
      * The meta object literal for the '<em><b>Sub</b></em>' containment reference feature.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      */
     EReference NESTED_DOT_ID__SUB = eINSTANCE.getNestedDotID_Sub();
-
-    /**
-     * The meta object literal for the '{@link com.rockwellcollins.atc.agree.agree.impl.ClockIDImpl <em>Clock ID</em>}' class.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @see com.rockwellcollins.atc.agree.agree.impl.ClockIDImpl
-     * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getClockID()
-     * @generated
-     */
-    EClass CLOCK_ID = eINSTANCE.getClockID();
-
-    /**
-     * The meta object literal for the '<em><b>Comp</b></em>' reference feature.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    EReference CLOCK_ID__COMP = eINSTANCE.getClockID_Comp();
-
-    /**
-     * The meta object literal for the '{@link com.rockwellcollins.atc.agree.agree.impl.QueueRemoveIDImpl <em>Queue Remove ID</em>}' class.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @see com.rockwellcollins.atc.agree.agree.impl.QueueRemoveIDImpl
-     * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getQueueRemoveID()
-     * @generated
-     */
-    EClass QUEUE_REMOVE_ID = eINSTANCE.getQueueRemoveID();
-
-    /**
-     * The meta object literal for the '<em><b>Comp</b></em>' reference feature.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    EReference QUEUE_REMOVE_ID__COMP = eINSTANCE.getQueueRemoveID_Comp();
-
-    /**
-     * The meta object literal for the '{@link com.rockwellcollins.atc.agree.agree.impl.QueueInsertIDImpl <em>Queue Insert ID</em>}' class.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @see com.rockwellcollins.atc.agree.agree.impl.QueueInsertIDImpl
-     * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getQueueInsertID()
-     * @generated
-     */
-    EClass QUEUE_INSERT_ID = eINSTANCE.getQueueInsertID();
-
-    /**
-     * The meta object literal for the '<em><b>Comp</b></em>' reference feature.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    EReference QUEUE_INSERT_ID__COMP = eINSTANCE.getQueueInsertID_Comp();
-
-    /**
-     * The meta object literal for the '{@link com.rockwellcollins.atc.agree.agree.impl.QueueCountIDImpl <em>Queue Count ID</em>}' class.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @see com.rockwellcollins.atc.agree.agree.impl.QueueCountIDImpl
-     * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getQueueCountID()
-     * @generated
-     */
-    EClass QUEUE_COUNT_ID = eINSTANCE.getQueueCountID();
-
-    /**
-     * The meta object literal for the '<em><b>Comp</b></em>' reference feature.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    EReference QUEUE_COUNT_ID__COMP = eINSTANCE.getQueueCountID_Comp();
 
     /**
      * The meta object literal for the '{@link com.rockwellcollins.atc.agree.agree.impl.AgreeContractLibraryImpl <em>Contract Library</em>}' class.

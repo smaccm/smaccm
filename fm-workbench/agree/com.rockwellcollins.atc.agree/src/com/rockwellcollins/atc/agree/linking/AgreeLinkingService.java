@@ -26,13 +26,9 @@ import org.osate.aadl2.util.Aadl2Util;
 import org.osate.xtext.aadl2.properties.linking.PropertiesLinkingService;
 import org.osate.xtext.aadl2.properties.util.EMFIndexRetrieval;
 
-import com.rockwellcollins.atc.agree.agree.ClockID;
 import com.rockwellcollins.atc.agree.agree.IdExpr;
 import com.rockwellcollins.atc.agree.agree.NestedDotID;
 import com.rockwellcollins.atc.agree.agree.NodeEq;
-import com.rockwellcollins.atc.agree.agree.QueueCountID;
-import com.rockwellcollins.atc.agree.agree.QueueInsertID;
-import com.rockwellcollins.atc.agree.agree.QueueRemoveID;
 
 public class AgreeLinkingService extends PropertiesLinkingService {
     public AgreeLinkingService() {
@@ -50,11 +46,7 @@ public class AgreeLinkingService extends PropertiesLinkingService {
 
         if (context instanceof IdExpr 
         		|| context instanceof NestedDotID
-                || context instanceof NodeEq 
-                || context instanceof ClockID
-                || context instanceof QueueInsertID
-                || context instanceof QueueRemoveID
-                || context instanceof QueueCountID) {
+                || context instanceof NodeEq) {
 
             EObject e = findClassifier(context, reference, name);
             if (e != null) {

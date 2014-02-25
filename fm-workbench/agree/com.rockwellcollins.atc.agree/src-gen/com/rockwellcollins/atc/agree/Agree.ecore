@@ -55,20 +55,9 @@
   <eClassifiers xsi:type="ecore:EClass" name="Expr" eSuperTypes="../../../../../../org.osate.aadl2/model/aadl2.ecore#//Element"/>
   <eClassifiers xsi:type="ecore:EClass" name="NestedDotID" eSuperTypes="#//Expr">
     <eStructuralFeatures xsi:type="ecore:EReference" name="base" eType="ecore:EClass ../../../../../../org.osate.aadl2/model/aadl2.ecore#//NamedElement"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="tag" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="sub" eType="#//NestedDotID"
         containment="true"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="ClockID" eSuperTypes="#//Expr">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="comp" eType="ecore:EClass ../../../../../../org.osate.aadl2/model/aadl2.ecore#//NamedElement"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="QueueRemoveID" eSuperTypes="#//Expr">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="comp" eType="ecore:EClass ../../../../../../org.osate.aadl2/model/aadl2.ecore#//NamedElement"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="QueueInsertID" eSuperTypes="#//Expr">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="comp" eType="ecore:EClass ../../../../../../org.osate.aadl2/model/aadl2.ecore#//NamedElement"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="QueueCountID" eSuperTypes="#//Expr">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="comp" eType="ecore:EClass ../../../../../../org.osate.aadl2/model/aadl2.ecore#//NamedElement"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="AgreeContractLibrary" eSuperTypes="#//AgreeLibrary">
     <eStructuralFeatures xsi:type="ecore:EReference" name="contract" eType="#//Contract"

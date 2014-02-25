@@ -167,26 +167,6 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
         return createNestedDotIDAdapter();
       }
       @Override
-      public Adapter caseClockID(ClockID object)
-      {
-        return createClockIDAdapter();
-      }
-      @Override
-      public Adapter caseQueueRemoveID(QueueRemoveID object)
-      {
-        return createQueueRemoveIDAdapter();
-      }
-      @Override
-      public Adapter caseQueueInsertID(QueueInsertID object)
-      {
-        return createQueueInsertIDAdapter();
-      }
-      @Override
-      public Adapter caseQueueCountID(QueueCountID object)
-      {
-        return createQueueCountIDAdapter();
-      }
-      @Override
       public Adapter caseAgreeContractLibrary(AgreeContractLibrary object)
       {
         return createAgreeContractLibraryAdapter();
@@ -609,66 +589,6 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
    * @generated
    */
   public Adapter createNestedDotIDAdapter()
-  {
-    return null;
-  }
-
-  /**
-   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.ClockID <em>Clock ID</em>}'.
-   * <!-- begin-user-doc -->
-   * This default implementation returns null so that we can easily ignore cases;
-   * it's useful to ignore a case when inheritance will catch all the cases anyway.
-   * <!-- end-user-doc -->
-   * @return the new adapter.
-   * @see com.rockwellcollins.atc.agree.agree.ClockID
-   * @generated
-   */
-  public Adapter createClockIDAdapter()
-  {
-    return null;
-  }
-
-  /**
-   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.QueueRemoveID <em>Queue Remove ID</em>}'.
-   * <!-- begin-user-doc -->
-   * This default implementation returns null so that we can easily ignore cases;
-   * it's useful to ignore a case when inheritance will catch all the cases anyway.
-   * <!-- end-user-doc -->
-   * @return the new adapter.
-   * @see com.rockwellcollins.atc.agree.agree.QueueRemoveID
-   * @generated
-   */
-  public Adapter createQueueRemoveIDAdapter()
-  {
-    return null;
-  }
-
-  /**
-   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.QueueInsertID <em>Queue Insert ID</em>}'.
-   * <!-- begin-user-doc -->
-   * This default implementation returns null so that we can easily ignore cases;
-   * it's useful to ignore a case when inheritance will catch all the cases anyway.
-   * <!-- end-user-doc -->
-   * @return the new adapter.
-   * @see com.rockwellcollins.atc.agree.agree.QueueInsertID
-   * @generated
-   */
-  public Adapter createQueueInsertIDAdapter()
-  {
-    return null;
-  }
-
-  /**
-   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.QueueCountID <em>Queue Count ID</em>}'.
-   * <!-- begin-user-doc -->
-   * This default implementation returns null so that we can easily ignore cases;
-   * it's useful to ignore a case when inheritance will catch all the cases anyway.
-   * <!-- end-user-doc -->
-   * @return the new adapter.
-   * @see com.rockwellcollins.atc.agree.agree.QueueCountID
-   * @generated
-   */
-  public Adapter createQueueCountIDAdapter()
   {
     return null;
   }

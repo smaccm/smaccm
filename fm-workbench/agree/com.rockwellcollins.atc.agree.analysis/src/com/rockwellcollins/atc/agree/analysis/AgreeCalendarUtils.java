@@ -190,7 +190,7 @@ public class AgreeCalendarUtils {
     }
     
     
-    public static Node queueNode(String nodeName, Type type, int queueSize){
+    public static Node queueCircleNode(String nodeName, Type type, int queueSize){
     	
     	List<VarDecl> inputs = new ArrayList<>();
     	List<VarDecl> outputs = new ArrayList<>();
@@ -247,12 +247,14 @@ public class AgreeCalendarUtils {
 		Equation removeEq = new Equation(remove, removeExpr);
 		eqs.add(removeEq);
 		
-		//equation for num_els
-		Expr removeGtInsert = new BinaryExpr(remove, BinaryOp.GREATER, insert);
-		Expr gtResult = new BinaryExpr(new IntExpr(BigInteger.valueOf(queueSize)), BinaryOp.MINUS, remove);
-		gtResult = new BinaryExpr(gtResult, BinaryOp.PLUS, insert);
-		Expr ltEqReslt = new BinaryExpr(insert, BinaryOp.MINUS, remove);
-		Expr numElsExpr = new IfThenElseExpr(removeGtInsert, gtResult, ltEqReslt);
+		Expr preElemIn = new UnaryExpr(UnaryOp.PRE, elemIn);
+		Expr preElemOut = new UnaryExpr(UnaryOp.PRE, elemOut);
+		Expr preNumEls = new UnaryExpr(UnaryOp.PRE, numEls);
+		Expr preNumElsMore = new BinaryExpr(preNumEls, BinaryOp.PLUS, new IntExpr(BigInteger.ONE));
+		Expr preNumElsLessExpr = new BinaryExpr(preNumEls, BinaryOp.MINUS, new IntExpr(BigInteger.ONE));
+		Expr numElsIf0 = new IfThenElseExpr(preElemIn, preNumElsMore, preNumEls);
+		Expr numElsExpr = new IfThenElseExpr(preElemOut, preNumElsLessExpr, numElsIf0);
+		numElsExpr = new BinaryExpr(new IntExpr(BigInteger.ZERO), BinaryOp.ARROW, numElsExpr);
 		
 		Equation numElsEq = new Equation(numEls, numElsExpr);
 		eqs.add(numElsEq);
@@ -285,14 +287,113 @@ public class AgreeCalendarUtils {
 		//queue properties:
 		List<String> props = new ArrayList<>();
 		//don't remove more than are present:
-		Expr propExpr0 = new BinaryExpr(preRemove, BinaryOp.EQUAL, preInsert);
-		Expr propExpr1 = new BinaryExpr(remove, BinaryOp.EQUAL, preRemove);
-		Expr propImpl = new BinaryExpr(propExpr0, BinaryOp.IMPLIES, propExpr1);
-		Expr propArrow = new BinaryExpr(remove, BinaryOp.LESSEQUAL, insert);
-		propArrow = new BinaryExpr(propArrow, BinaryOp.ARROW, propImpl);
+		//Expr propExpr0 = new BinaryExpr(preRemove, BinaryOp.EQUAL, preInsert);
+		//Expr propExpr1 = new BinaryExpr(remove, BinaryOp.EQUAL, preRemove);
+		//Expr propImpl = new BinaryExpr(propExpr0, BinaryOp.IMPLIES, propExpr1);
+		//Expr propArrow = new BinaryExpr(remove, BinaryOp.LESSEQUAL, insert);
+		//propArrow = new BinaryExpr(propArrow, BinaryOp.ARROW, propImpl);
+		Expr propExpr = new BinaryExpr(numEls, BinaryOp.GREATEREQUAL, new IntExpr(BigInteger.ZERO));
 		IdExpr propId0 = new IdExpr("__REMOVE_LTE_INSERT_"+nodeName);
 		locals.add(new VarDecl(propId0.id, NamedType.BOOL));
-		Equation propEq0 = new Equation(propId0, propArrow);
+		Equation propEq0 = new Equation(propId0, propExpr);
+		eqs.add(propEq0);
+		props.add(propId0.id);
+		
+		return new Node(nodeName, inputs, outputs, locals, eqs, props);
+    	
+    }
+    
+    
+public static Node queueNode(String nodeName, Type type, int queueSize){
+    	
+    	List<VarDecl> inputs = new ArrayList<>();
+    	List<VarDecl> outputs = new ArrayList<>();
+    	List<VarDecl> locals = new ArrayList<>();
+    	List<IdExpr> els = new ArrayList<>();
+		List<Equation> eqs = new ArrayList<>();
+    	
+		String elBase = "el";
+		
+		IdExpr elemIn = new IdExpr("el_in");
+		IdExpr elemOut = new IdExpr("el_out");
+		IdExpr insert = new IdExpr("insert");
+		IdExpr output = new IdExpr("output");
+		IdExpr input = new IdExpr("input");
+		IdExpr numEls = new IdExpr("num_els");
+
+		inputs.add(new VarDecl(input.id, type));
+		inputs.add(new VarDecl(elemIn.id, NamedType.BOOL));
+		inputs.add(new VarDecl(elemOut.id, NamedType.BOOL));
+		outputs.add(new VarDecl(numEls.id, NamedType.INT));
+		outputs.add(new VarDecl(output.id, type));
+		locals.add(new VarDecl(insert.id, NamedType.INT));
+
+		//add an extra "dummy element" for handling too many inserts
+		for(int i = 0 ; i < queueSize + 1; i++){
+			IdExpr el = new IdExpr(elBase+i);
+			els.add(el);
+			locals.add(new VarDecl(el.id, type));
+		}
+		
+		//equation for insert
+		Expr preElemIn = new UnaryExpr(UnaryOp.PRE, elemIn);
+		Expr preElemOut = new UnaryExpr(UnaryOp.PRE, elemOut);
+		Expr preInsert = new UnaryExpr(UnaryOp.PRE, insert);
+		Expr preInsertMore = new BinaryExpr(preInsert, BinaryOp.PLUS, new IntExpr(BigInteger.ONE));
+		Expr preInsertLess = new BinaryExpr(preInsert, BinaryOp.MINUS, new IntExpr(BigInteger.ONE));
+		Expr insertIf0 = new IfThenElseExpr(preElemIn, preInsertMore, preInsert);
+		Expr insertIf1 = new IfThenElseExpr(preElemOut, preInsertLess, insertIf0);
+		Expr insertExpr = new BinaryExpr(new IntExpr(BigInteger.ZERO), BinaryOp.ARROW, insertIf1);
+		
+		Equation insertEq = new Equation(insert, insertExpr);
+		eqs.add(insertEq);
+		
+		//equation for numEls
+		Expr preNumEls = new UnaryExpr(UnaryOp.PRE, numEls);
+		Expr preNumElsMore = new BinaryExpr(preNumEls, BinaryOp.PLUS, new IntExpr(BigInteger.ONE));
+		Expr preNumElsLessExpr = new BinaryExpr(preNumEls, BinaryOp.MINUS, new IntExpr(BigInteger.ONE));
+		Expr numElsIf0 = new IfThenElseExpr(preElemIn, preNumElsMore, preNumEls);
+		Expr numElsExpr = new IfThenElseExpr(preElemOut, preNumElsLessExpr, numElsIf0);
+		numElsExpr = new BinaryExpr(new IntExpr(BigInteger.ZERO), BinaryOp.ARROW, numElsExpr);
+		
+		Equation numElsEq = new Equation(numEls, numElsExpr);
+		eqs.add(numElsEq);
+		
+		//equation for the output
+		Equation outputEq = new Equation(output, new IdExpr(elBase+0));
+		eqs.add(outputEq);
+		
+		//equations for each queue element
+		Expr preInput = new UnaryExpr(UnaryOp.PRE, input);
+		for(int i = 0; i < queueSize; i++){
+			Expr preEl = new UnaryExpr(UnaryOp.PRE, els.get(i));
+			Expr cond = new UnaryExpr(UnaryOp.PRE, insert);
+			cond = new BinaryExpr(cond, BinaryOp.EQUAL, new IntExpr(BigInteger.valueOf(i)));
+			cond = new BinaryExpr(preElemIn, BinaryOp.AND, cond);
+			Expr elemIf0 = new IfThenElseExpr(cond, preInput, preEl);
+			Expr elemIf1 = new IfThenElseExpr(preElemOut, els.get(i+1), elemIf0);
+			Expr elExpr = new BinaryExpr(input, BinaryOp.ARROW, elemIf1);
+			
+			Equation elEq = new Equation(els.get(i), elExpr);
+			eqs.add(elEq);
+		}
+		//special case for the dummy element
+		Equation elEq = new Equation(els.get(queueSize), input);
+		eqs.add(elEq);
+		
+		
+		//queue properties:
+		List<String> props = new ArrayList<>();
+		//don't remove more than are present:
+		//Expr propExpr0 = new BinaryExpr(preRemove, BinaryOp.EQUAL, preInsert);
+		//Expr propExpr1 = new BinaryExpr(remove, BinaryOp.EQUAL, preRemove);
+		//Expr propImpl = new BinaryExpr(propExpr0, BinaryOp.IMPLIES, propExpr1);
+		//Expr propArrow = new BinaryExpr(remove, BinaryOp.LESSEQUAL, insert);
+		//propArrow = new BinaryExpr(propArrow, BinaryOp.ARROW, propImpl);
+		Expr propExpr = new BinaryExpr(numEls, BinaryOp.GREATEREQUAL, new IntExpr(BigInteger.ZERO));
+		IdExpr propId0 = new IdExpr("__REMOVE_LTE_INSERT_"+nodeName);
+		locals.add(new VarDecl(propId0.id, NamedType.BOOL));
+		Equation propEq0 = new Equation(propId0, propExpr);
 		eqs.add(propEq0);
 		props.add(propId0.id);
 		

@@ -53,19 +53,8 @@
     <genClasses ecoreClass="Agree.ecore#//Expr"/>
     <genClasses ecoreClass="Agree.ecore#//NestedDotID">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Agree.ecore#//NestedDotID/base"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Agree.ecore#//NestedDotID/tag"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//NestedDotID/sub"/>
-    </genClasses>
-    <genClasses ecoreClass="Agree.ecore#//ClockID">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Agree.ecore#//ClockID/comp"/>
-    </genClasses>
-    <genClasses ecoreClass="Agree.ecore#//QueueRemoveID">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Agree.ecore#//QueueRemoveID/comp"/>
-    </genClasses>
-    <genClasses ecoreClass="Agree.ecore#//QueueInsertID">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Agree.ecore#//QueueInsertID/comp"/>
-    </genClasses>
-    <genClasses ecoreClass="Agree.ecore#//QueueCountID">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Agree.ecore#//QueueCountID/comp"/>
     </genClasses>
     <genClasses ecoreClass="Agree.ecore#//AgreeContractLibrary">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//AgreeContractLibrary/contract"/>

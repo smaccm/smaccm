@@ -15,7 +15,6 @@ import com.rockwellcollins.atc.agree.agree.AssumeStatement;
 import com.rockwellcollins.atc.agree.agree.BinaryExpr;
 import com.rockwellcollins.atc.agree.agree.BoolLitExpr;
 import com.rockwellcollins.atc.agree.agree.CallDef;
-import com.rockwellcollins.atc.agree.agree.ClockID;
 import com.rockwellcollins.atc.agree.agree.ConstStatement;
 import com.rockwellcollins.atc.agree.agree.Contract;
 import com.rockwellcollins.atc.agree.agree.EqStatement;
@@ -40,9 +39,6 @@ import com.rockwellcollins.atc.agree.agree.ParamStatement;
 import com.rockwellcollins.atc.agree.agree.PreExpr;
 import com.rockwellcollins.atc.agree.agree.PrevExpr;
 import com.rockwellcollins.atc.agree.agree.PropertyStatement;
-import com.rockwellcollins.atc.agree.agree.QueueCountID;
-import com.rockwellcollins.atc.agree.agree.QueueInsertID;
-import com.rockwellcollins.atc.agree.agree.QueueRemoveID;
 import com.rockwellcollins.atc.agree.agree.RealLitExpr;
 import com.rockwellcollins.atc.agree.agree.SpecStatement;
 import com.rockwellcollins.atc.agree.agree.SynchStatement;
@@ -185,34 +181,6 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * @generated
    */
   private EClass nestedDotIDEClass = null;
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  private EClass clockIDEClass = null;
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  private EClass queueRemoveIDEClass = null;
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  private EClass queueInsertIDEClass = null;
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  private EClass queueCountIDEClass = null;
 
   /**
    * <!-- begin-user-doc -->
@@ -813,89 +781,19 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  public EAttribute getNestedDotID_Tag()
+  {
+    return (EAttribute)nestedDotIDEClass.getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   public EReference getNestedDotID_Sub()
   {
-    return (EReference)nestedDotIDEClass.getEStructuralFeatures().get(1);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EClass getClockID()
-  {
-    return clockIDEClass;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EReference getClockID_Comp()
-  {
-    return (EReference)clockIDEClass.getEStructuralFeatures().get(0);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EClass getQueueRemoveID()
-  {
-    return queueRemoveIDEClass;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EReference getQueueRemoveID_Comp()
-  {
-    return (EReference)queueRemoveIDEClass.getEStructuralFeatures().get(0);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EClass getQueueInsertID()
-  {
-    return queueInsertIDEClass;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EReference getQueueInsertID_Comp()
-  {
-    return (EReference)queueInsertIDEClass.getEStructuralFeatures().get(0);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EClass getQueueCountID()
-  {
-    return queueCountIDEClass;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EReference getQueueCountID_Comp()
-  {
-    return (EReference)queueCountIDEClass.getEStructuralFeatures().get(0);
+    return (EReference)nestedDotIDEClass.getEStructuralFeatures().get(2);
   }
 
   /**
@@ -1580,19 +1478,8 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
 
     nestedDotIDEClass = createEClass(NESTED_DOT_ID);
     createEReference(nestedDotIDEClass, NESTED_DOT_ID__BASE);
+    createEAttribute(nestedDotIDEClass, NESTED_DOT_ID__TAG);
     createEReference(nestedDotIDEClass, NESTED_DOT_ID__SUB);
-
-    clockIDEClass = createEClass(CLOCK_ID);
-    createEReference(clockIDEClass, CLOCK_ID__COMP);
-
-    queueRemoveIDEClass = createEClass(QUEUE_REMOVE_ID);
-    createEReference(queueRemoveIDEClass, QUEUE_REMOVE_ID__COMP);
-
-    queueInsertIDEClass = createEClass(QUEUE_INSERT_ID);
-    createEReference(queueInsertIDEClass, QUEUE_INSERT_ID__COMP);
-
-    queueCountIDEClass = createEClass(QUEUE_COUNT_ID);
-    createEReference(queueCountIDEClass, QUEUE_COUNT_ID__COMP);
 
     agreeContractLibraryEClass = createEClass(AGREE_CONTRACT_LIBRARY);
     createEReference(agreeContractLibraryEClass, AGREE_CONTRACT_LIBRARY__CONTRACT);
@@ -1735,10 +1622,6 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     typeEClass.getESuperTypes().add(theAadl2Package.getElement());
     exprEClass.getESuperTypes().add(theAadl2Package.getElement());
     nestedDotIDEClass.getESuperTypes().add(this.getExpr());
-    clockIDEClass.getESuperTypes().add(this.getExpr());
-    queueRemoveIDEClass.getESuperTypes().add(this.getExpr());
-    queueInsertIDEClass.getESuperTypes().add(this.getExpr());
-    queueCountIDEClass.getESuperTypes().add(this.getExpr());
     agreeContractLibraryEClass.getESuperTypes().add(this.getAgreeLibrary());
     agreeContractSubclauseEClass.getESuperTypes().add(this.getAgreeSubclause());
     agreeContractEClass.getESuperTypes().add(this.getContract());
@@ -1817,19 +1700,8 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
 
     initEClass(nestedDotIDEClass, NestedDotID.class, "NestedDotID", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getNestedDotID_Base(), theAadl2Package.getNamedElement(), null, "base", null, 0, 1, NestedDotID.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEAttribute(getNestedDotID_Tag(), ecorePackage.getEString(), "tag", null, 0, 1, NestedDotID.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getNestedDotID_Sub(), this.getNestedDotID(), null, "sub", null, 0, 1, NestedDotID.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-    initEClass(clockIDEClass, ClockID.class, "ClockID", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getClockID_Comp(), theAadl2Package.getNamedElement(), null, "comp", null, 0, 1, ClockID.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-    initEClass(queueRemoveIDEClass, QueueRemoveID.class, "QueueRemoveID", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getQueueRemoveID_Comp(), theAadl2Package.getNamedElement(), null, "comp", null, 0, 1, QueueRemoveID.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-    initEClass(queueInsertIDEClass, QueueInsertID.class, "QueueInsertID", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getQueueInsertID_Comp(), theAadl2Package.getNamedElement(), null, "comp", null, 0, 1, QueueInsertID.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-    initEClass(queueCountIDEClass, QueueCountID.class, "QueueCountID", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getQueueCountID_Comp(), theAadl2Package.getNamedElement(), null, "comp", null, 0, 1, QueueCountID.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(agreeContractLibraryEClass, AgreeContractLibrary.class, "AgreeContractLibrary", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getAgreeContractLibrary_Contract(), this.getContract(), null, "contract", null, 0, 1, AgreeContractLibrary.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

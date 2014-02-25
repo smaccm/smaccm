@@ -144,10 +144,6 @@ PreDefFnNames:
 
 TermExpr returns Expr:
 	{IdExpr} id=[aadl2::NamedElement|QID]
-	| ClockID
-	| QueueRemoveID
-	| QueueInsertID
-	| QueueCountID
 	| NestedDotID ({FnCallExpr.fn=current} '(' (args+=Expr (',' args+=Expr)*)? ')')?
 	| {IntLitExpr} val=INTEGER_LIT
 	| {PreExpr} 'pre' '(' expr=Expr ')'
@@ -157,19 +153,13 @@ TermExpr returns Expr:
 	| '(' Expr ')';
 
 NestedDotID:
-	base=[aadl2::NamedElement|ID] ('.' sub=NestedDotID)?;
-	
-ClockID:
-	comp=[aadl2::NamedElement|ID] '.' 'CLK';
-	
-QueueRemoveID:
-	comp=[aadl2::NamedElement|ID] '.' 'REMOVE';	
+	base=[aadl2::NamedElement|ID] ('.' ((=> tag=ReservedVarTag) | sub=NestedDotID))?;
 
-QueueInsertID:
-	comp=[aadl2::NamedElement|ID] '.' 'INSERT';	
-	
-QueueCountID:
-	comp=[aadl2::NamedElement|ID] '.' 'COUNT';	
+ReservedVarTag:
+	'REMOVE'
+|	'INSERT'
+|	'COUNT'
+|   'CLK';
 
 	
 

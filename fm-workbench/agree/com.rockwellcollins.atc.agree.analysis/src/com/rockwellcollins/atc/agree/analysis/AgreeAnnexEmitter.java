@@ -79,7 +79,6 @@ import com.rockwellcollins.atc.agree.agree.Arg;
 import com.rockwellcollins.atc.agree.agree.AssertStatement;
 import com.rockwellcollins.atc.agree.agree.AssumeStatement;
 import com.rockwellcollins.atc.agree.agree.BoolLitExpr;
-import com.rockwellcollins.atc.agree.agree.ClockID;
 import com.rockwellcollins.atc.agree.agree.ConstStatement;
 import com.rockwellcollins.atc.agree.agree.EqStatement;
 import com.rockwellcollins.atc.agree.agree.FnCallExpr;
@@ -99,9 +98,6 @@ import com.rockwellcollins.atc.agree.agree.ParamStatement;
 import com.rockwellcollins.atc.agree.agree.PreExpr;
 import com.rockwellcollins.atc.agree.agree.PrevExpr;
 import com.rockwellcollins.atc.agree.agree.PropertyStatement;
-import com.rockwellcollins.atc.agree.agree.QueueCountID;
-import com.rockwellcollins.atc.agree.agree.QueueInsertID;
-import com.rockwellcollins.atc.agree.agree.QueueRemoveID;
 import com.rockwellcollins.atc.agree.agree.RealLitExpr;
 import com.rockwellcollins.atc.agree.agree.SpecStatement;
 import com.rockwellcollins.atc.agree.agree.SynchStatement;
@@ -368,16 +364,15 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
 
 // ************** CASE STATEMENTS **********************
     
-    public Expr caseQueueCountID(QueueCountID countId){
+    public Expr getQueueCountID(String jVarName, String aVarName, NamedElement comp){
     	
     	
-    	NamedElement comp = countId.getComp();
     	EventDataPort port = (EventDataPort)comp;
 
     	//a variable of the same name as this should be created by setEventPortQueues()
     	//in the AgreeAnnexEmitter which created "this" AgreeAnnexEmitter
-    	AgreeVarDecl countVar = new AgreeVarDecl(queueCountPrefix+this.jKindNameTag+port.getName(),
-    			queueCountPrefix+this.aadlNameTag+port.getName(),
+    	AgreeVarDecl countVar = new AgreeVarDecl(queueCountPrefix+jVarName,
+    			queueCountPrefix+aVarName,
         		NamedType.INT.toString());
     	
     	IdExpr countIdExpr = new IdExpr(countVar.jKindStr);
@@ -396,16 +391,14 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
     }
     
     
-    @Override
-    public Expr caseQueueRemoveID(QueueRemoveID remId){
-    	
-      	NamedElement comp = remId.getComp();
+    public Expr getQueueRemoveID(String jVarName, String aVarName, NamedElement comp){
+
     	EventDataPort port = (EventDataPort)comp;
 
     	//a variable of the same name as this should be created by setEventPortQueues()
     	//in the AgreeAnnexEmitter which created "this" AgreeAnnexEmitter
-    	AgreeVarDecl removeVar = new AgreeVarDecl(queueOutClockPrefix+this.jKindNameTag+port.getName(),
-    			queueOutClockPrefix+this.aadlNameTag+port.getName(),
+    	AgreeVarDecl removeVar = new AgreeVarDecl(queueOutClockPrefix+jVarName,
+    			queueOutClockPrefix+aVarName,
         		NamedType.BOOL.toString());
     	
     	IdExpr removeIdExpr = new IdExpr(removeVar.jKindStr);
@@ -422,16 +415,15 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
     	return removeIdExpr;
     }
     
-    @Override
-    public Expr caseQueueInsertID(QueueInsertID insertId){
+
+    public Expr getQueueInsertID(String jVarName, String aVarName, NamedElement comp){
     	
-    	NamedElement comp = insertId.getComp();
     	EventDataPort port = (EventDataPort)comp;
     	
     	//a variable of the same name as this should be created by setEventPortQueues()
     	//in the AgreeAnnexEmitter which created "this" AgreeAnnexEmitter
-    	AgreeVarDecl insertVar = new AgreeVarDecl(queueInClockPrefix+this.jKindNameTag+port.getName(),
-    			queueInClockPrefix+this.aadlNameTag+port.getName(),
+    	AgreeVarDecl insertVar = new AgreeVarDecl(queueInClockPrefix+jVarName,
+    			queueInClockPrefix+aVarName,
         		NamedType.BOOL.toString());
     	
     	IdExpr insertIdExpr = new IdExpr(insertVar.jKindStr);
@@ -449,6 +441,33 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
     	return insertIdExpr;
     }
     
+    public Expr getClockID(String jVarName, String aVarName, NamedElement comp){
+    	//IdExpr clockId = new IdExpr(clockIDPrefix+comp.getName());
+    	
+    	
+    	//a variable of the same name as this should be created by setEventPortQueues()
+    	//in the AgreeAnnexEmitter which created "this" AgreeAnnexEmitter
+    	AgreeVarDecl clockVar = new AgreeVarDecl(clockIDPrefix+jVarName,
+    			clockIDPrefix+aVarName,
+        		NamedType.BOOL.toString());
+    	
+    	IdExpr clockId = new IdExpr(clockVar.jKindStr);
+
+    	//if we have already made the expression then don't make it again
+        if(inputVars.contains(clockVar)){
+        	return clockId;
+        }
+        
+        inputVars.add(clockVar);
+        varRenaming.put(clockVar.jKindStr,clockVar.aadlStr);
+        refMap.put(clockVar.aadlStr, comp);
+        layout.addElement(category, clockVar.aadlStr, AgreeLayout.SigType.INPUT);
+    	
+    	return clockId;
+    	
+    }
+    
+    
     @Override
     public Expr caseSynchStatement(SynchStatement sync){
         this.synchrony  = Integer.valueOf(sync.getVal());
@@ -459,12 +478,6 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         }
         
         return null;
-    }
-    
-    @Override
-    public Expr caseClockID(ClockID clkID){
-    	IdExpr clockId = new IdExpr(clockIDPrefix+clkID.getComp().getName());
-        return clockId;
     }
     
     @Override
@@ -979,6 +992,27 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         }
 
         NamedElement namedEl = Id.getBase();
+        
+        String tag = Id.getTag();
+        if(tag != null){
+        	
+        	String jVarPrefix = this.jKindNameTag + jKindVar + namedEl.getName();
+        	String aVarPrefix = this.aadlNameTag + aadlVar + namedEl.getName();
+        	
+        	switch(tag){
+        	case "CLK":
+        		return getClockID(jVarPrefix, aVarPrefix, namedEl);
+        	case "COUNT":
+        		return getQueueCountID(jVarPrefix, aVarPrefix, namedEl);
+        	case "INSERT":
+        		return getQueueInsertID(jVarPrefix, aVarPrefix, namedEl);
+        	case "REMOVE":
+        		return getQueueRemoveID(jVarPrefix, aVarPrefix, namedEl);
+        	default:
+        		throw new AgreeException("use of uknown tag: '"+tag+"' in expression: '"+aadlVar+tag+"'");
+        	}
+        }
+        
 
         //special case for constants
         if(namedEl instanceof ConstStatement){
@@ -1751,11 +1785,18 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
             
             //TODO: set different initial values for outputs
             for(VarDecl var : agreeNode.outputs){
-                NamedType type = (NamedType)var.type;
-                initOutputs.add(initTypeMap.get(type.name));
-                nodeOutputs.add(new IdExpr(var.id));
+            	NamedType type = (NamedType)var.type;
+            	//queue in and out variables need to be false initially
+            	//if(var.id.startsWith(queueInClockPrefix)
+            	//		|| var.id.startsWith(queueOutClockPrefix)){
+            	//	initOutputs.add(new BoolExpr(false));
+            	//}else{
+
+            		initOutputs.add(initTypeMap.get(type.name));
+            		nodeOutputs.add(new IdExpr(var.id));
+            	//}
             }
-            
+
             for(VarDecl var : agreeNode.inputs){
                 nodeInputs.add(new IdExpr(var.id));
             }

@@ -30,14 +30,10 @@ import com.rockwellcollins.atc.agree.agree.AgreeContract;
 import com.rockwellcollins.atc.agree.agree.AgreeContractLibrary;
 import com.rockwellcollins.atc.agree.agree.AgreeContractSubclause;
 import com.rockwellcollins.atc.agree.agree.AgreeLibrary;
-import com.rockwellcollins.atc.agree.agree.ClockID;
 import com.rockwellcollins.atc.agree.agree.EqStatement;
 import com.rockwellcollins.atc.agree.agree.FnDefExpr;
 import com.rockwellcollins.atc.agree.agree.NestedDotID;
 import com.rockwellcollins.atc.agree.agree.NodeDefExpr;
-import com.rockwellcollins.atc.agree.agree.QueueCountID;
-import com.rockwellcollins.atc.agree.agree.QueueInsertID;
-import com.rockwellcollins.atc.agree.agree.QueueRemoveID;
 import com.rockwellcollins.atc.agree.agree.SpecStatement;
 
 /**
@@ -121,6 +117,7 @@ public class AgreeScopeProvider extends
         return Scopes.scopeFor(components, getScope(ctx.eContainer(), ref));
     }
     
+    /*
     IScope scope_NamedElement(ClockID ctx, EReference ref){
         EObject container = ctx.eContainer();
         while(!(container instanceof ComponentClassifier)){
@@ -166,6 +163,7 @@ public class AgreeScopeProvider extends
         
         
     }
+    */
     
     private Set<Element> getCorrespondingAadlElement(NestedDotID id) {
         EObject container = id.eContainer();
