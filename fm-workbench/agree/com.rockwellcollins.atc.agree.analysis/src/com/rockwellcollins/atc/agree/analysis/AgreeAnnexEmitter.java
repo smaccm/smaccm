@@ -247,10 +247,13 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
 		   			throw new AgreeException("Something went wrong with book keeping during queue creation");
 		   		}
 		   		
-		   		IdExpr clockInId = new IdExpr(queueInClockPrefix+agreeQueEl.sourCategory+dotChar+agreeQueEl.sourConn.getName());
+		   		String jCat = agreeQueEl.sourCategory == null ? "" : agreeQueEl.sourCategory+dotChar;
+		   		String aCat = agreeQueEl.sourCategory == null ? "" : agreeQueEl.sourCategory+".";
+		   		
+		   		IdExpr clockInId = new IdExpr(queueInClockPrefix+jCat+agreeQueEl.sourConn.getName());
 		   		AgreeVarDecl clockInVar = 
 		   				new AgreeVarDecl(clockInId.id,
-		   						queueInClockPrefix+agreeQueEl.sourCategory+"."+agreeQueEl.sourConn.getName()
+		   						queueInClockPrefix+aCat+agreeQueEl.sourConn.getName()
 		   						, NamedType.BOOL.toString());
 				
 		   		//if the clock input hasn't been created yet,
@@ -290,10 +293,13 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
 		   	connExpressions.add(multEq);	   	
 		   	
 		   	//add all the stuff for the queuenode call
-		   	IdExpr clockOutId = new IdExpr(queueOutClockPrefix+firstQueue.destCategory+dotChar+firstQueue.destConn.getName());
+		   	String jCat =  firstQueue.destCategory == null ? "" : firstQueue.destCategory+dotChar;
+	   		String aCat = firstQueue.destCategory == null ? "" : firstQueue.destCategory+".";
+		   	
+		   	IdExpr clockOutId = new IdExpr(queueOutClockPrefix+jCat+firstQueue.destConn.getName());
 		   	AgreeVarDecl clockOutVar = 
 		   			new AgreeVarDecl(clockOutId.id,
-		   					queueOutClockPrefix+firstQueue.destCategory+"."+firstQueue.destConn.getName(),
+		   					queueOutClockPrefix+aCat+firstQueue.destConn.getName(),
 		   					NamedType.BOOL.toString());
 
 	   		//if the clock output hasn't been created yet,
@@ -336,10 +342,10 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
 		   	
 		   	countIds.add(queueElsId);
 		   	
-	   		IdExpr singleQueueCountId = new IdExpr(queueCountPrefix+firstQueue.destCategory+dotChar+firstQueue.destConn.getName());
+	   		IdExpr singleQueueCountId = new IdExpr(queueCountPrefix+jCat+firstQueue.destConn.getName());
 	   		AgreeVarDecl singleQueueCountVar = 
 	   				new AgreeVarDecl(singleQueueCountId.id,
-	   						queueCountPrefix+firstQueue.destCategory+"."+firstQueue.destConn.getName(),
+	   						queueCountPrefix+aCat+firstQueue.destConn.getName(),
 	   						NamedType.INT.toString());
 
 	   		if(!inputVars.contains(singleQueueCountVar)){

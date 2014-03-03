@@ -97,7 +97,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
         return (eObject.eClass().getEPackage() == AgreePackage.eINSTANCE);
     }
 
-    @Check(CheckType.NORMAL)
+    @Check(CheckType.FAST)
     public void checkSynchStatement(SynchStatement sync){
         //TODO: I'm pretty sure INT_LITs are always positive anyway.
         //So this may be redundant
@@ -106,7 +106,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
         }
     }
     
-    @Check(CheckType.NORMAL)
+    @Check(CheckType.FAST)
     public void checkAssume(AssumeStatement assume) {
         AgreeType exprType = getAgreeType(assume.getExpr());
         if (!matches(BOOL, exprType)) {
@@ -115,7 +115,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
         }
     }
     
-    @Check(CheckType.NORMAL)
+    @Check(CheckType.FAST)
     public void checkLift(LiftStatement lift) {
         NestedDotID dotId = lift.getSubcomp();
 
@@ -141,7 +141,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
         }
     }
 
-    @Check(CheckType.NORMAL)
+    @Check(CheckType.FAST)
     public void checkAssert(AssertStatement asser) {
         Classifier comp = asser.getContainingClassifier();
         if (!(comp instanceof ComponentImplementation)) {
@@ -156,7 +156,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 
     }
 
-    @Check(CheckType.NORMAL)
+    @Check(CheckType.FAST)
     public void checkGuarantee(GuaranteeStatement guar) {
         Classifier comp = guar.getContainingClassifier();
         if (!(comp instanceof ComponentType)) {
@@ -170,7 +170,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
         }
     }
 
-    @Check(CheckType.NORMAL)
+    @Check(CheckType.FAST)
     public void checkLemma(LemmaStatement lemma) {
         Classifier comp = lemma.getContainingClassifier();
         if (!(comp instanceof ComponentImplementation)) {
@@ -184,7 +184,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
         }
     }
 
-    @Check(CheckType.NORMAL)
+    @Check(CheckType.FAST)
     public void checkUnaryExpr(UnaryExpr unaryExpr) {
         AgreeType typeRight = getAgreeType(unaryExpr.getExpr());
         String op = unaryExpr.getOp();
@@ -207,7 +207,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
         }
     }
 
-    @Check(CheckType.NORMAL)
+    @Check(CheckType.FAST)
     public void checkPropertyStatement(PropertyStatement propStat) {
         AgreeType exprType = getAgreeType(propStat.getExpr());
         if (!matches(BOOL, exprType)) {
@@ -217,7 +217,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 
     }
 
-    @Check(CheckType.NORMAL)
+    @Check(CheckType.FAST)
     public void checkConstStatement(ConstStatement constStat) {
         AgreeType expected = new AgreeType(constStat.getType().getString());
         AgreeType actual = getAgreeType(constStat.getExpr());
@@ -285,7 +285,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
         return true;
     }
 
-    @Check(CheckType.NORMAL)
+    @Check(CheckType.FAST)
     public void checkNamedElement(NamedElement namedEl) {
 
         // check for namespace collision in component types of component
@@ -405,7 +405,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
         }
     }
 
-    @Check(CheckType.NORMAL)
+    @Check(CheckType.FAST)
     public void checkEqStatement(EqStatement eqStat) {
         AnnexLibrary library = EcoreUtil2.getContainerOfType(eqStat, AnnexLibrary.class);
         if (library != null) {
@@ -414,7 +414,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
         checkMultiAssignEq(eqStat, eqStat.getLhs(), eqStat.getExpr());
     }
 
-    @Check(CheckType.NORMAL)
+    @Check(CheckType.FAST)
     public void checkNameOverlap(AgreeContract contract) {
         ComponentImplementation ci = EcoreUtil2.getContainerOfType(contract,
                 ComponentImplementation.class);
@@ -459,12 +459,12 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
         return result;
     }
 
-    @Check(CheckType.NORMAL)
+    @Check(CheckType.FAST)
     public void checkNodeEq(NodeEq nodeEq) {
         checkMultiAssignEq(nodeEq, nodeEq.getLhs(), nodeEq.getExpr());
     }
 
-    @Check(CheckType.NORMAL)
+    @Check(CheckType.FAST)
     public void checkNodeLemma(NodeLemma nodeLemma) {
         AgreeType exprType = getAgreeType(nodeLemma.getExpr());
         if (!matches(BOOL, exprType)) {
@@ -473,7 +473,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
         }
     }
 
-    @Check(CheckType.NORMAL)
+    @Check(CheckType.FAST)
     public void checkNodeStmt(NodeStmt nodeStmt) {
         List<NestedDotID> dotIds = EcoreUtil2.getAllContentsOfType(nodeStmt, NestedDotID.class);
         for (NestedDotID dotId : dotIds) {
@@ -485,7 +485,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
         }
     }
 
-    @Check(CheckType.NORMAL)
+    @Check(CheckType.FAST)
     public void checkNodeDef(NodeDefExpr nodeDefExpr) {
 
         if (nodeDefExpr.getNodeBody() == null) {
@@ -528,7 +528,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
         }
     }
 
-    @Check(CheckType.NORMAL)
+    @Check(CheckType.FAST)
     public void checkThisExpr(ThisExpr thisExpr) {
         // these should only appear in Get_Property expressions
 
@@ -538,7 +538,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 
     }
 
-    @Check(CheckType.NORMAL)
+    @Check(CheckType.FAST)
     public void checkGetPropertyExpr(GetPropertyExpr getPropExpr) {
         AgreeType compType = getAgreeType(getPropExpr.getComponent());
         // AgreeType propType = getAgreeType(propExpr.getName());
@@ -558,7 +558,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
         }
     }
 
-    @Check(CheckType.NORMAL)
+    @Check(CheckType.FAST)
     public void checkPrevExpr(PrevExpr prevExpr) {
         AgreeType delayType = getAgreeType(prevExpr.getDelay());
         AgreeType initType = getAgreeType(prevExpr.getInit());
@@ -628,12 +628,12 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
         }
     }
 
-    @Check(CheckType.NORMAL)
+    @Check(CheckType.FAST)
     public void checkFnCallExpr(FnCallExpr fnCall) {
         checkInputsVsActuals(fnCall);
     }
 
-    @Check(CheckType.NORMAL)
+    @Check(CheckType.FAST)
     public void checkFnDefExpr(FnDefExpr fnDef) {
 
         // verify typing
@@ -649,7 +649,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 
     }
 
-    @Check(CheckType.NORMAL)
+    @Check(CheckType.FAST)
     public void checkCallDef(CallDef callDef) {
 
         // don't check recursive calls of functions that have
@@ -678,7 +678,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
         }
     }
 
-    @Check(CheckType.NORMAL)
+    @Check(CheckType.FAST)
     public void checkIfThenElseExpr(IfThenElseExpr expr) {
         AgreeType condType = getAgreeType(expr.getA());
         AgreeType thenType = getAgreeType(expr.getB());
@@ -699,7 +699,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
         return getAgreeType(expr.getB());
     }
 
-    @Check(CheckType.NORMAL)
+    @Check(CheckType.FAST)
     public void checkBinaryExpr(BinaryExpr binExpr) {
         AgreeType typeLeft = getAgreeType(binExpr.getLeft());
         AgreeType typeRight = getAgreeType(binExpr.getRight());
@@ -807,7 +807,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
         }
     }
 
-    @Check(CheckType.NORMAL)
+    @Check(CheckType.FAST)
     public void checkIdExpr(IdExpr idExpr) {
         // Scope check for nodes / functions
         NamedElement id = idExpr.getId();

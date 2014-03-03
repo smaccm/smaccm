@@ -36,13 +36,13 @@ public class AgreeQueueElement {
 		this.type = type;
 		this.sourConn = sourConn;
 		this.destConn = destConn;
-		this.destCategory = destCategory;
-		this.sourCategory = sourCategory;
+		this.destCategory = destCategory;// == null ? "" : destCategory;
+		this.sourCategory = sourCategory;// == null ? "" : sourCategory;
 		this.queueSize = queueSize;
 		
-		if(destCategory == null || sourCategory == null){
-			throw new AgreeException("Created queue with null source or destination category");
-		}
+		//if(destCategory == null || sourCategory == null){
+		//	throw new AgreeException("Created queue with null source or destination category");
+		//}
 		
 		
 	}

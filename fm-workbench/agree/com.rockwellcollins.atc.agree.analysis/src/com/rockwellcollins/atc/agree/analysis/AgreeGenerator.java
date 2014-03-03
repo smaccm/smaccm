@@ -81,7 +81,7 @@ public class AgreeGenerator {
                     subCompInst.getName() + ".", false, false);
 
             
-            //we should only have to look at the annexes in the type not the implementation
+            //TODO: figure out if we actually want to grab this stuff
             //if(subCompImpl != null){
             //    for (AnnexSubclause annex : subCompImpl.getAllAnnexSubclauses()) {
             //        if (annex instanceof AgreeContractSubclause) {
