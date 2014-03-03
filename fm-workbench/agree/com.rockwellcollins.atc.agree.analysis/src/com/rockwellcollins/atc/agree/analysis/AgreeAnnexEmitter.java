@@ -365,8 +365,7 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
 // ************** CASE STATEMENTS **********************
     
     public Expr getQueueCountID(String jVarName, String aVarName, NamedElement comp){
-    	
-    	
+
     	EventDataPort port = (EventDataPort)comp;
 
     	//a variable of the same name as this should be created by setEventPortQueues()
@@ -1669,8 +1668,8 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
 	private List<Expr> getClockAssertions(List<Expr> clocks, List<Node> nodeSet) {
 		Expr clockAssertion;
         if(this.synchrony > 0){
-            Node dfaNode = AgreeCalendarUtils.getDFANode("__dfa_node", this.synchrony);
-            Node calNode = AgreeCalendarUtils.getCalendarNode("__calendar_node", clocks.size());
+            Node dfaNode = AgreeCalendarUtils.getDFANode("__dfa_node_"+this.category, this.synchrony);
+            Node calNode = AgreeCalendarUtils.getCalendarNode("__calendar_node_"+this.category, clocks.size());
             nodeSet.add(dfaNode);
             nodeSet.add(calNode);
 
@@ -1715,9 +1714,9 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         properties.add(notTotalCompHistId.id);
         consistProps.add(notTotalCompHistId.id);
         //reversePropStatus.add(true);
-        varRenaming.put(notTotalCompHistId.id, "Total Contract Consistant");
+        varRenaming.put(notTotalCompHistId.id, "Total Contract Consistent");
         //layout.addElement("Top", "Total Contract Consistants", AgreeLayout.SigType.OUTPUT);
-        layout.addElement(category, "Total Contract Consistants", AgreeLayout.SigType.OUTPUT);
+        layout.addElement(category, "Total Contract Consistents", AgreeLayout.SigType.OUTPUT);
 	}
 
 
@@ -1742,19 +1741,27 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
             
             AgreeNode agreeNode = subEmitter.getComponentNode();
             nodeSet.addAll(agreeNode.nodes);
-            inputs.add(agreeNode.clockVar);
             
             List<Expr> initOutputs = new ArrayList<>();
             List<Expr> nodeInputs = new ArrayList<>();
             List<IdExpr> nodeOutputs = new ArrayList<>();
+            
+            //if the clock was explicitly referenced it may
+            //have already been created. Don't add it to the
+            //input list if it was already created
             IdExpr clockExpr = new IdExpr(agreeNode.clockVar.id);
+            AgreeVarDecl agreeInputVar = new AgreeVarDecl(agreeNode.clockVar.id, null, null);
+            
+            if(!this.inputVars.contains(agreeInputVar)){
+            	inputs.add(agreeNode.clockVar);
+            	//make it so the clock is visible in the counter example
+            	varRenaming.put(clockExpr.id, clockExpr.id);
+            	refMap.put(clockExpr.id, subEmitter.curComp);
+            	layout.addElement(subEmitter.category, clockExpr.id, SigType.INPUT);
+            }
             
             clocks.add(clockExpr);
-           
-            //make it so the clock is visible in the counter example
-            varRenaming.put(clockExpr.id, clockExpr.id);
-            refMap.put(clockExpr.id, subEmitter.curComp);
-            layout.addElement(subEmitter.category, clockExpr.id, SigType.INPUT);
+
             
             agreeInputVars.addAll(subEmitter.inputVars);
             agreeInternalVars.addAll(subEmitter.internalVars); 
@@ -1885,7 +1892,7 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
             properties.add(consistId.id);
             consistProps.add(consistId.id);
             //reversePropStatus.add(true);
-            String contractName = subEmitter.category + " Consistant";
+            String contractName = subEmitter.category + " Consistent";
             varRenaming.put(consistId.id, contractName);
             //layout.addElement("Top", contractName, AgreeLayout.SigType.OUTPUT);
             layout.addElement(category, contractName, AgreeLayout.SigType.OUTPUT);

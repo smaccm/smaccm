@@ -2060,7 +2060,6 @@ thread controlLawTask
   	const disarmed : int = 1;
   	const armed : int = 2;
   	
-  	
   	eq safe_req : bool = ppm_req_snk.set_safe; 
   	eq arm_req : bool = ppm_req_snk.set_armed;
   	eq disarm_req : bool = ppm_req_snk.set_disarmed;
@@ -2159,7 +2158,7 @@ thread ppmInputTower
     Period => 50 ms; 
     SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_ppmInputTower_43_per50_62");
 
-  annex agree {**
+  annex agree {** 
   	-- begin constants --
   	const deadSafe : int = 0;
   	const deadArmable : int = 1;
@@ -2199,8 +2198,6 @@ thread ppmInputTower
 	eq ppm6 : int = flight_control_commands.ppm6;
 	eq ppm7 : int = flight_control_commands.ppm7;
 	
-	
-	
 	-- begin intermediate vars --
   	eq throttle_chan : int = flight_control_commands.ppm2;
   	eq rudder_chan : int = flight_control_commands.ppm3;
@@ -2208,7 +2205,7 @@ thread ppmInputTower
   	eq dead_pos : int = if dead_chan > 1600 then deadArmable else deadSafe;
   	eq prev_ppm_last_time : int = 0 -> pre (ppm_last_time);
   	eq sticks_corner : bool = (throttle_chan < 1050 and rudder_chan > 1900);
-  	eq done_waiting : bool = (time - arming_state_time) > hystresis;
+  	eq done_waiting : bool = (time - prev_arming_state_time) > hystresis;
   	eq prev_arming_state_time : int = prev(arming_state_time, 0);
   	eq prev_arming_state : int = prev(arming_state, armingIdle);
   	

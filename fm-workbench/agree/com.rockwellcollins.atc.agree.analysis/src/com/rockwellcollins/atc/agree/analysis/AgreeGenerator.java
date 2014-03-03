@@ -80,14 +80,16 @@ public class AgreeGenerator {
                     subCompInst.getName() + dotChar,
                     subCompInst.getName() + ".", false, false);
 
-            if(subCompImpl != null){
-                for (AnnexSubclause annex : subCompImpl.getAllAnnexSubclauses()) {
-                    if (annex instanceof AgreeContractSubclause) {
-                        subEmitter.doSwitch(annex);
-                        foundSubAnnex = foundAnnex = true;
-                    }
-                }
-            }
+            
+            //we should only have to look at the annexes in the type not the implementation
+            //if(subCompImpl != null){
+            //    for (AnnexSubclause annex : subCompImpl.getAllAnnexSubclauses()) {
+            //        if (annex instanceof AgreeContractSubclause) {
+            //            subEmitter.doSwitch(annex);
+            //            foundSubAnnex = foundAnnex = true;
+            //        }
+            //    }
+            //}
 
             for (AnnexSubclause annex : ct.getAllAnnexSubclauses()) {
                 if (annex instanceof AgreeContractSubclause) {

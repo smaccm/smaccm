@@ -179,7 +179,7 @@ guarantee "pitch step is valid" :
         };
       FGSLtoFDL: port FGS_L.GC -> FD_L;
       FGSLtoFGSR: port FGS_L.LSO -> FGS_R.LSI;
-      AHRtoFGSR: port AH_R -> FGS_R.AH;
+      AHRtoFGSR: port AH_R -> FGS_R.AH; 
       FMRtoFGSR: port FM_R -> FGS_R.VNAV;
       NAVRtoFGSR: port NAV_R -> FGS_R.NAV;
       FGSRtoFDR: port FGS_R.GC -> FD_R;
