@@ -47,14 +47,14 @@ public class CAZExport {
     private static final CazFactory f = CazFactory.eINSTANCE;
 
     private ArgumentDiagram argumentDiagram = f.createArgumentDiagram();
-    private int id = 1;
+    private int id = 0;
 
     public void export(Claim parent, ResoluteResult result) {
         if (result instanceof ClaimResult) {
             ClaimResult cr = (ClaimResult) result;
             Claim claim = f.createClaim();
 
-            claim.setIdentifier(Integer.toString(id++));
+            claim.setIdentifier("id" + id++);
             claim.setContent(cr.getText());
 
             argumentDiagram.getClaims().add(claim);
