@@ -18,6 +18,23 @@ thread group UserInputThreads
 	uart5_control_law_request: in event data port control_law_request_type::control_law_request.impl;
 	uart1_control_law_request: in event data port control_law_request_type::control_law_request.impl;
 	  
+	  
+  annex agree {**
+  	
+  		guarantee "Control law is initially set to safe" :
+  			law_emitter.armed_mode = 0 -> true;
+  			
+  		guarantee "User input ranges are bounded" :
+  			ui_emitter.COUNT > 0 =>
+  			(-1.0 <= ui_emitter.roll and ui_emitter.roll <= 1.0) and
+  			(-1.0 <= ui_emitter.pitch and ui_emitter.pitch <= 1.0) and
+  			(-1.0 <= ui_emitter.throttle and ui_emitter.throttle <= 1.0) and
+  			(-1.0 <= ui_emitter.yaw and ui_emitter.yaw <= 1.0); 
+  			
+  		guarantee "User input time always increasing" :
+  			true -> ui_emitter.COUNT > 0 => (ui_emitter.time > pre (ui_emitter.time));
+  **};
+	  
 end UserInputThreads;
 
 thread group implementation UserInputThreads.Impl
@@ -102,12 +119,11 @@ thread group implementation UserInputThreads.Impl
 			and sincePPMSafe > sincePPMArmed
 		) => sinceCtrlArmed < 2;
 		
-	lemma "premise" :
-		not (ctrlArmedMode = 2);  
-		
 	--remove output elements as they become available
 	assert law_emitter.COUNT > 0 => law_emitter.REMOVE;
 	assert law_emitter.COUNT = 0 => not law_emitter.REMOVE;
+	assert ui_emitter.COUNT > 0 => ui_emitter.REMOVE;
+	assert ui_emitter.COUNT = 0 => not ui_emitter.REMOVE;
 		
   **};
 	
@@ -293,20 +309,20 @@ thread ppmInputTower
   	const armingComplete : int = 2;
   	const hystresis : int = 750;
   	const timeout_limit : int = 150;
-  	const minBound : int = 800;
-  	const maxBound : int = 2200;
+  	const minBound : real = 800.0;
+  	const maxBound : real = 2200.0;
  
  	-- begin state varaibles --
    	eq ppm_valid : bool;
  	--all ppm last signals
-  	eq ppm_last0 : int;
-  	eq ppm_last1 : int;
-  	eq ppm_last2 : int;
-  	eq ppm_last3 : int;
-  	eq ppm_last4 : int;
-  	eq ppm_last5 : int;
-  	eq ppm_last6 : int;
-  	eq ppm_last7 : int; 
+  	eq ppm_last0 : real;
+  	eq ppm_last1 : real;
+  	eq ppm_last2 : real;
+  	eq ppm_last3 : real;
+  	eq ppm_last4 : real;
+  	eq ppm_last5 : real;
+  	eq ppm_last6 : real;
+  	eq ppm_last7 : real; 
  	eq ppm_last_time : int;
 	eq arming_state : int;
 	eq arming_state_time : int;
@@ -315,22 +331,22 @@ thread ppmInputTower
 	-- begin inputs --
 	eq time : int; --TODO: plug this variable into the model
 	eq captured : bool; --TODO: plug this variable into the model
-	eq ppm0 : int = flight_control_commands.ppm0;
-	eq ppm1 : int = flight_control_commands.ppm1;
-	eq ppm2 : int = flight_control_commands.ppm2;
-	eq ppm3 : int = flight_control_commands.ppm3;
-	eq ppm4 : int = flight_control_commands.ppm4;
-	eq ppm5 : int = flight_control_commands.ppm5;
-	eq ppm6 : int = flight_control_commands.ppm6;
-	eq ppm7 : int = flight_control_commands.ppm7;
+	eq ppm0 : real = flight_control_commands.ppm0;
+	eq ppm1 : real = flight_control_commands.ppm1;
+	eq ppm2 : real = flight_control_commands.ppm2;
+	eq ppm3 : real = flight_control_commands.ppm3;
+	eq ppm4 : real = flight_control_commands.ppm4;
+	eq ppm5 : real = flight_control_commands.ppm5;
+	eq ppm6 : real = flight_control_commands.ppm6;
+	eq ppm7 : real = flight_control_commands.ppm7;
 	
 	-- begin intermediate vars --
-  	eq throttle_chan : int = flight_control_commands.ppm2;
-  	eq rudder_chan : int = flight_control_commands.ppm3;
-  	eq dead_chan : int = flight_control_commands.ppm5;
-  	eq dead_pos : int = if dead_chan > 1600 then deadArmable else deadSafe;
+  	eq throttle_chan : real = flight_control_commands.ppm2;
+  	eq rudder_chan : real = flight_control_commands.ppm3;
+  	eq dead_chan : real = flight_control_commands.ppm5;
+  	eq dead_pos : int = if dead_chan > 1600.0 then deadArmable else deadSafe;
   	eq prev_ppm_last_time : int = 0 -> pre (ppm_last_time);
-  	eq sticks_corner : bool = (throttle_chan < 1050 and rudder_chan > 1900);
+  	eq sticks_corner : bool = (throttle_chan < 1050.0 and rudder_chan > 1900.0);
   	eq done_waiting : bool = (time - prev_arming_state_time) > hystresis;
   	eq prev_arming_state_time : int = prev(arming_state_time, 0);
   	eq prev_arming_state : int = prev(arming_state, armingIdle);
@@ -344,7 +360,7 @@ thread ppmInputTower
   		(ppm6 > minBound and ppm6 < maxBound) and
   		(ppm7 > minBound and ppm7 < maxBound);
   	
-  	-- begin behavioral guarantees --
+  	-- begin arming logic requirements --
   	
   	guarantee "arming_state and time behavior" :
   		if (captured and all_good) then
@@ -371,9 +387,6 @@ thread ppmInputTower
   			dead_last_pos = deadSafe
   		else
   			dead_last_pos = prev(dead_last_pos, deadSafe);
-  	
-  	guarantee "only insert items in queue if a sample is received" :
-  		captured = cr_emitter.INSERT;
   		
   	guarantee "ppm_last_time behavior":
   		if (captured and all_good) then 
@@ -412,7 +425,6 @@ thread ppmInputTower
   			ppm_last6 = prev(ppm_last6, ppm6) and
   			ppm_last7 = prev(ppm_last7, ppm7);
   		
-  	
   	guarantee "disarmed signal is always false":
   		cr_emitter.set_disarmed = false;
   	
@@ -423,6 +435,51 @@ thread ppmInputTower
   			cr_emitter.set_armed = true
   		else
   			cr_emitter.set_armed = prev(cr_emitter.set_armed, false);
+  	
+  	-- begin ppm processing requirements
+  	
+  	eq ppmHigh : int = 1900;
+  	eq ppmLow : int = 1100;
+  	eq ppmCenter : int = 1500;
+  	
+  	node scale_proc(input : real) returns (result : real);
+  	var
+  		outmin : real;
+  		outmax : real;
+  		centered : real;
+  		ranged : real;
+  	let
+  		outmin = -1.0;
+  		outmax = 1.0;
+  		centered = input - 1500.0;
+  		ranged = centered / 500.0; 
+  		
+  		result = if (ranged < -1.0) then
+  					-1.0
+  				 else if (ranged > 1.0) then
+  				 	1.0
+  				 else
+  				 	ranged;
+  	tel;
+  	
+  	guarantee "invalid ppm signal behavior" :
+  		(not ppm_valid) =>
+  			ui_emitter.roll = 0.0 and
+  			ui_emitter.pitch = 0.0 and
+  			ui_emitter.throttle = -1.0 and
+  			ui_emitter.yaw = 0.0 and
+  			ui_emitter.time = (0 -> pre(ui_emitter.time));
+  			
+  	guarantee "valid ppm signal behavior" :
+  		ppm_valid => 
+  			ui_emitter.roll = scale_proc(ppm_last0) and
+  			ui_emitter.pitch = scale_proc(ppm_last1) and
+  			ui_emitter.throttle = scale_proc(ppm_last2) and
+  			ui_emitter.yaw = scale_proc(ppm_last3) and
+  			ui_emitter.time = time;
+  	
+  	guarantee "always insert into ui queue" :
+  		ui_emitter.INSERT;
   	
   **};
 

@@ -779,6 +779,12 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
                 error(binExpr, "right side of binary expression '" + op + "' is of type '"
                         + typeRight + "' but must be of type 'real'");
             }
+            
+            Expr rightSide = binExpr.getRight();
+            if(!(rightSide instanceof ConstStatement || rightSide instanceof RealLitExpr)){
+            	error(binExpr, "right side of binary expression '" + op + "' is not constant");
+            }
+            
             return;
         default:
             assert (false);
@@ -1075,7 +1081,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 
     public static boolean matches(AgreeType expected, AgreeType actual) {
         if (expected.equals(ERROR) || actual.equals(ERROR)) {
-            return true;
+            return false;
         }
 
         return expected.equals(actual);
