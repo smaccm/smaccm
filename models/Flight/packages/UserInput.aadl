@@ -24,6 +24,12 @@ thread group UserInputThreads
   		guarantee "Queues initially empty" :
   			(ui_emitter.COUNT = 0 -> true) and
   			(law_emitter.COUNT = 0 -> true);
+  			
+  		guarantee "Queue bounds" :
+  			ui_emitter.COUNT < 2 and
+  			ui_emitter.COUNT >= 0 and
+  			law_emitter.COUNT < 2 and
+  			law_emitter.COUNT >= 0;
   	
   		guarantee "Control law is initially set to safe" :
   			law_emitter.armed_mode = 0 -> true;
@@ -35,8 +41,18 @@ thread group UserInputThreads
   			(-1.0 <= ui_emitter.throttle and ui_emitter.throttle <= 1.0) and
   			(-1.0 <= ui_emitter.yaw and ui_emitter.yaw <= 1.0); 
   			
+  		node ris_edg(signal : bool) returns (result : bool);
+  		let
+  			result = false -> (signal and not pre(signal));
+  		tel;
+  			
+		eq ui_insertions : int = 0 -> if (ris_edg(ui_emitter.COUNT > 0)) then
+										pre(ui_insertions) + 1
+									  else
+									  	pre(ui_insertions);
+  			
   		guarantee "User input time always increasing" :
-  			true -> ui_emitter.COUNT > 0 => (ui_emitter.time >= pre (ui_emitter.time));
+  			true -> ui_insertions > 1 => (ui_emitter.time >= pre (ui_emitter.time));
   **};
 	  
 end UserInputThreads;
@@ -66,11 +82,6 @@ thread group implementation UserInputThreads.Impl
   annex agree {**
   	calendar: ppmInputTower_inst, controlLawTask_inst, uiMuxTask_inst;  
    
-  	node ris_edg(signal : bool) returns (result : bool);
-  	let
-  		result = false -> (signal and not pre(signal));
-  	tel;
-  	
   	node time_since(trigger : bool) returns (count : int);
   	let
   		count = 0 -> (if(trigger) then 0 else (pre(count) + 1));
@@ -79,10 +90,7 @@ thread group implementation UserInputThreads.Impl
   	eq ppmSetArmed : bool = ppmInputTower_inst.cr_emitter.set_armed;
   	eq ppmSetSafe : bool = ppmInputTower_inst.cr_emitter.set_safe;
   	eq ppmQueueInsert : bool = ppmInputTower_inst.cr_emitter.INSERT;
-  	eq ctrlArmedMode: int = if (law_emitter.COUNT > 0) then
-  								law_emitter.armed_mode
-  							else
-  								(0 -> pre (ctrlArmedMode));
+  	eq ctrlArmedMode: int = law_emitter.armed_mode;
   	
   	eq sincePPMArmed : int = time_since(ris_edg(ppmSetArmed));
   	eq sincePPMSafe : int = time_since(ris_edg(ppmSetSafe));
@@ -104,15 +112,18 @@ thread group implementation UserInputThreads.Impl
   	
   	-- needs to be present to prove the followign lemma
 	lemma "armed mode range" :
-		ctrlArmedMode <= 2 and ctrlArmedMode >= 0;
+		law_emitter.COUNT > 0 => ctrlArmedMode <= 2 and ctrlArmedMode >= 0;
 
   	lemma "positive counts" :
 		armedCount >= 0 and sincePPMArmed >=0 and sinceCtrlArmed >=0; 
 		
 	lemma "low queue bound" :
-		controlLawTask_inst.ppm_req_snk.COUNT = 0 -> true and
+		(controlLawTask_inst.ppm_req_snk.COUNT = 0 -> true) and
+		(uiMuxTask_inst.ppm_ui.COUNT = 0 -> true) and
 		controlLawTask_inst.ppm_req_snk.COUNT < 2 and
-		controlLawTask_inst.ppm_req_snk.COUNT >= 0; 
+		uiMuxTask_inst.ppm_ui.COUNT < 2 and
+		controlLawTask_inst.ppm_req_snk.COUNT >= 0 and
+		uiMuxTask_inst.ppm_ui.COUNT >= 0; 
 
 	lemma "controller not armed initially" :
 		(not (ctrlArmedMode = 2)) -> true;	
@@ -127,10 +138,10 @@ thread group implementation UserInputThreads.Impl
 		) => sinceCtrlArmed < 2;
 		
 	--remove output elements as they become available
-	--assert law_emitter.COUNT > 0 => law_emitter.REMOVE;
-	--assert law_emitter.COUNT = 0 => not law_emitter.REMOVE;
-	--assert ui_emitter.COUNT > 0 => ui_emitter.REMOVE;
-	--assert ui_emitter.COUNT = 0 => not ui_emitter.REMOVE;
+	assert law_emitter.COUNT > 0 => law_emitter.REMOVE;
+	assert law_emitter.COUNT = 0 => not law_emitter.REMOVE;
+	assert ui_emitter.COUNT > 0 => ui_emitter.REMOVE;
+	assert ui_emitter.COUNT = 0 => not ui_emitter.REMOVE;
 		
   **};
 	
@@ -172,22 +183,21 @@ thread uiMuxTask
   annex agree {**
   	
   		-- for now lets just do a pass through with the ppm ui input
-  		guarantee "true" : true;
   		
-  		--guarantee "always remove from ppm" :
-  		--	(ppm_ui.COUNT > 0 => ppm_ui.REMOVE) and
-  		--	(ppm_ui.COUNT = 0 => not ppm_ui.REMOVE);
+  		guarantee "always remove from ppm" :
+  			(ppm_ui.COUNT > 0 => ppm_ui.REMOVE) and
+  			(ppm_ui.COUNT = 0 => not ppm_ui.REMOVE);
   			
-  		--guarantee "always insert into output if ppm input is available" :
-  		--	(ppm_ui.COUNT > 0 => ui_emitter.INSERT) and
-  		--	(ppm_ui.COUNT = 0 => not  ui_emitter.INSERT);
+  		guarantee "always insert into output if ppm input is available" :
+  			(ppm_ui.COUNT > 0 => ui_emitter.INSERT) and
+  			(ppm_ui.COUNT = 0 => not  ui_emitter.INSERT);
   		
-  		--guarantee "queue passthrough" :
-  		--	ui_emitter.throttle = ppm_ui.throttle and
-  		--	ui_emitter.roll = ppm_ui.roll and
-  		--	ui_emitter.pitch = ppm_ui.pitch and
-  		--	ui_emitter.yaw = ppm_ui.yaw and
-  		--	ui_emitter.time = ppm_ui.time; 
+  		guarantee "queue passthrough" :
+  			ui_emitter.throttle = ppm_ui.throttle and
+  			ui_emitter.roll = ppm_ui.roll and
+  			ui_emitter.pitch = ppm_ui.pitch and
+  			ui_emitter.yaw = ppm_ui.yaw and
+  			ui_emitter.time = ppm_ui.time; 
   	
   **};
     
@@ -491,6 +501,12 @@ thread ppmInputTower
   				 else
   				 	ranged;
   	tel;
+  	
+  	guarantee "positive time" :
+  		time >= 0;
+  	
+  	guarantee "the time value is always increasing" :
+  		true -> time > pre(time);
   	
   	guarantee "invalid ppm signal behavior" :
   		(not ppm_valid) =>

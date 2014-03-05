@@ -486,6 +486,11 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
     
     @Override
     public Expr caseSynchStatement(SynchStatement sync){
+    	
+    	if(sync instanceof CalenStatement){
+    		return null;
+    	}
+    	
         this.synchrony  = Integer.valueOf(sync.getVal());
         String simVal = sync.getSim();
         
@@ -1388,6 +1393,9 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         if (destContext != null) {
             layout.addElement(destContext.getName(), destVar.aadlStr,
                     AgreeLayout.SigType.OUTPUT);
+        }else{
+        	layout.addElement(this.category, destVar.aadlStr,
+                    AgreeLayout.SigType.OUTPUT);
         }
 
         refMap.put(destVar.aadlStr, destConn);
@@ -1674,6 +1682,30 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         Expr queueInsertRemoveAtomicAssertion = getQueueInsertRemoveAtomicAssertion(subEmitters);
         assertions.add(queueInsertRemoveAtomicAssertion);
         
+        //make assertions implicit by adding them to the LHS of properties
+        List<String> assertProps = new ArrayList<>();
+        
+        Expr totalAssertExpr = new BoolExpr(true);
+        for(Expr assertExpr : assertions){
+        	totalAssertExpr = new BinaryExpr(totalAssertExpr, BinaryOp.AND, assertExpr);
+        }
+        IdExpr assertId = new IdExpr("__ASSERTIONS_");
+        internals.add(new VarDecl(assertId.id, NamedType.BOOL));
+        Equation assertEq = new Equation(assertId, totalAssertExpr);
+        eqs.add(assertEq);
+        
+        //for(String propStr : guarProps){
+        //	IdExpr propId = new IdExpr(propStr);
+        //	IdExpr assertProp = new IdExpr("__ASSERT_"+propStr);
+        //	internals.add(new VarDecl(assertProp.id, NamedType.BOOL));
+        //	
+        //	Equation propEq = new Equation(assertProp, new BinaryExpr(assertId, BinaryOp.IMPLIES, propId));
+        //	eqs.add(propEq);
+        //	assertProps.add(assertProp.id);
+        //	varRenaming.put(assertProp.id, assertProp.id);
+        //}
+        //
+        //guarProps = assertProps;
         
         Node topNode = new Node("_MAIN", inputs, outputs, internals, eqs, properties, assertions);
         nodeSet.add(topNode);

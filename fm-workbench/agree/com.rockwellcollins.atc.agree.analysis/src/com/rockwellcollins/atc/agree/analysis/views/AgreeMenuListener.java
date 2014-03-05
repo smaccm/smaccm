@@ -184,6 +184,7 @@ public class AgreeMenuListener implements IMenuListener {
                 showConsole(console);
                 console.clearConsole();
                 console.newMessageStream().println(content.toString());
+                System.out.println(content.toString());
             }
         };
     }
