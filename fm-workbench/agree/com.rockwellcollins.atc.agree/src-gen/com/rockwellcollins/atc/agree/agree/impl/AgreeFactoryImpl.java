@@ -90,6 +90,7 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
       case AgreePackage.PARAM_STATEMENT: return createParamStatement();
       case AgreePackage.LEMMA_STATEMENT: return createLemmaStatement();
       case AgreePackage.LIFT_STATEMENT: return createLiftStatement();
+      case AgreePackage.CALEN_STATEMENT: return createCalenStatement();
       case AgreePackage.NODE_EQ: return createNodeEq();
       case AgreePackage.NODE_LEMMA: return createNodeLemma();
       case AgreePackage.BINARY_EXPR: return createBinaryExpr();
@@ -394,6 +395,17 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
   {
     LiftStatementImpl liftStatement = new LiftStatementImpl();
     return liftStatement;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public CalenStatement createCalenStatement()
+  {
+    CalenStatementImpl calenStatement = new CalenStatementImpl();
+    return calenStatement;
   }
 
   /**

@@ -30,6 +30,7 @@ import com.rockwellcollins.atc.agree.agree.AgreeContract;
 import com.rockwellcollins.atc.agree.agree.AgreeContractLibrary;
 import com.rockwellcollins.atc.agree.agree.AgreeContractSubclause;
 import com.rockwellcollins.atc.agree.agree.AgreeLibrary;
+import com.rockwellcollins.atc.agree.agree.CalenStatement;
 import com.rockwellcollins.atc.agree.agree.EqStatement;
 import com.rockwellcollins.atc.agree.agree.FnDefExpr;
 import com.rockwellcollins.atc.agree.agree.NestedDotID;
@@ -112,6 +113,19 @@ public class AgreeScopeProvider extends
         return result;
     }
 
+    IScope scope_NamedElement(CalenStatement ctx, EReference ref) {
+        
+    	EObject container = ctx.getContainingClassifier();
+    	while(!(container instanceof ComponentClassifier)){
+    		container = container.eContainer();
+    	}
+    	
+    	if(container instanceof ComponentImplementation){
+    		return Scopes.scopeFor(((ComponentImplementation)container).getAllSubcomponents());
+    	}
+    	return IScope.NULLSCOPE;
+    }
+    
     IScope scope_NamedElement(NestedDotID ctx, EReference ref) {
         Set<Element> components = getCorrespondingAadlElement(ctx);
         return Scopes.scopeFor(components, getScope(ctx.eContainer(), ref));

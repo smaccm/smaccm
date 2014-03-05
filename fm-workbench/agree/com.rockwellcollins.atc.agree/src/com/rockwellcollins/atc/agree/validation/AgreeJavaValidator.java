@@ -55,6 +55,7 @@ import com.rockwellcollins.atc.agree.agree.AssertStatement;
 import com.rockwellcollins.atc.agree.agree.AssumeStatement;
 import com.rockwellcollins.atc.agree.agree.BinaryExpr;
 import com.rockwellcollins.atc.agree.agree.BoolLitExpr;
+import com.rockwellcollins.atc.agree.agree.CalenStatement;
 import com.rockwellcollins.atc.agree.agree.CallDef;
 import com.rockwellcollins.atc.agree.agree.ConstStatement;
 import com.rockwellcollins.atc.agree.agree.EqStatement;
@@ -96,11 +97,25 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
     protected boolean isResponsible(Map<Object, Object> context, EObject eObject) {
         return (eObject.eClass().getEPackage() == AgreePackage.eINSTANCE);
     }
+    
+    @Check(CheckType.FAST)
+    public void checkCalenStatement(CalenStatement calen){
+    	for(NamedElement el : calen.getEls()){
+    		if(!(el instanceof Subcomponent)){
+    			error(calen, "Element '"+el.getName()+"' is not a subcomponent");
+    		}
+    	}
+    }
+    
 
     @Check(CheckType.FAST)
     public void checkSynchStatement(SynchStatement sync){
         //TODO: I'm pretty sure INT_LITs are always positive anyway.
         //So this may be redundant
+    	if(sync instanceof CalenStatement){
+    		return;
+    	}
+    	
         if(Integer.valueOf(sync.getVal()) < 0){
             error(sync, "The value of synchrony statments must be positive");
         }
@@ -428,11 +443,14 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
             if(spec instanceof SynchStatement){
                 syncs.add((SynchStatement)spec);
             }
+            if(spec instanceof CalenStatement){
+            	syncs.add((CalenStatement)spec);
+            }
         }
         
         if(syncs.size() > 1){
             for(SynchStatement sync : syncs){
-                error(sync, "Multiple synchrony statements in a single contract");
+                error(sync, "Multiple synchrony or calender statements in a single contract");
             }
         }
         

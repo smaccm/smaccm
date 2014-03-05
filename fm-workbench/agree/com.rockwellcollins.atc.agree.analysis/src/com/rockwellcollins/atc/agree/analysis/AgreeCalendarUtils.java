@@ -3,7 +3,9 @@ package com.rockwellcollins.atc.agree.analysis;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import jkind.lustre.BinaryExpr;
 import jkind.lustre.BinaryOp;
@@ -116,6 +118,92 @@ public class AgreeCalendarUtils {
         
         return new Node(dfaName, inputs, outputs, locals, equations, properties);
     }
+    
+    public static Node getExplicitCalendarNode(String nodeName, List<IdExpr> calendar, List<Expr> clocks) {
+		//filter the calendar if some clocks are not present
+		List<IdExpr> filteredCalendar = new ArrayList<>();
+		Map<String, List<Integer>> clockTickMap = new HashMap<>();
+
+		for(IdExpr calId : calendar){
+			for(Expr clockExpr : clocks){
+				IdExpr clockId = (IdExpr)clockExpr;
+				if(calId.id.equals(clockId.id)){
+					filteredCalendar.add(clockId);
+					break;
+				}
+			}
+		}
+
+		int i = 0;
+		for(IdExpr clockId : filteredCalendar){
+			List<Integer> ticks = clockTickMap.get(clockId.id);
+			if(ticks == null){
+				ticks = new ArrayList<>();
+				clockTickMap.put(clockId.id, ticks);
+			}
+			ticks.add(i++);
+		}
+		
+		for(Expr clockExpr : clocks){
+			IdExpr clockId = (IdExpr)clockExpr;
+			if(clockTickMap.get(clockId.id) == null){
+				throw new AgreeException("Clock Id '"+clockId.id+"' is not present in calendar statement");
+			}
+		}
+		
+		//add all of the clocks to to the inputs of the node
+		List<VarDecl> inputs = new ArrayList<>();
+		for(Expr clockExpr : clocks){
+			VarDecl input = new VarDecl(((IdExpr)clockExpr).id, NamedType.BOOL);
+			inputs.add(input);
+		}
+		
+		//the output is the variable asserting the calendar
+		List<VarDecl> outputs = new ArrayList<>();
+		IdExpr outputAssert = new IdExpr("__CALENDAR_ASSERTION");
+		outputs.add(new VarDecl(outputAssert.id, NamedType.BOOL));
+
+		//create a variable that counts through the calendar elements
+
+		List<VarDecl> locals = new ArrayList<>();
+		VarDecl clockCounterVar = new VarDecl("__CALANDER_COUNTER", NamedType.INT);
+		locals.add(clockCounterVar);
+		
+		List<Equation> equations = new ArrayList<>();
+		
+		//create the expression for the counter variable
+		IdExpr clockCountId = new IdExpr(clockCounterVar.id);
+		IntExpr calendarSize = new IntExpr(BigInteger.valueOf(filteredCalendar.size()-1));
+		
+		Expr preClockCount = new UnaryExpr(UnaryOp.PRE, clockCountId);
+		Expr preLast = new BinaryExpr(preClockCount, BinaryOp.EQUAL, calendarSize);
+		Expr prePlus = new BinaryExpr(preClockCount, BinaryOp.PLUS, new IntExpr(BigInteger.ONE));
+		Expr ifClock = new IfThenElseExpr(preLast, new IntExpr(BigInteger.ZERO), prePlus);
+		Expr clockArrow = new BinaryExpr(new IntExpr(BigInteger.ZERO), BinaryOp.ARROW, ifClock);
+		
+		Equation clockCountEq = new Equation(clockCountId, clockArrow);
+		equations.add(clockCountEq);
+		
+		//create constraints for which calendar element is ticking
+		Expr calendarConstraint = new BoolExpr(true);
+		for(Expr clockExpr : clocks){
+			IdExpr clockId = (IdExpr)clockExpr;
+			List<Integer> ticks = clockTickMap.get(clockId.id);
+			Expr clockTicking = new BoolExpr(false);
+			for(Integer tick : ticks){
+				Expr clockIsTickValue = new BinaryExpr(clockCountId, 
+						BinaryOp.EQUAL, 
+						new IntExpr(BigInteger.valueOf(tick.longValue())));
+				clockTicking = new BinaryExpr(clockTicking, BinaryOp.OR, clockIsTickValue);
+			}
+			Expr ifExpr = new IfThenElseExpr(clockTicking, clockId, new UnaryExpr(UnaryOp.NOT, clockId));
+			calendarConstraint = new BinaryExpr(calendarConstraint, BinaryOp.AND, ifExpr);
+		}
+		Equation outEq = new Equation(outputAssert, calendarConstraint);
+		equations.add(outEq);
+		
+		return new Node(nodeName, inputs, outputs, locals, equations);
+	}
     
     static public Node getCalendarNode(String name, int numClks){
         

@@ -11,6 +11,7 @@ import com.rockwellcollins.atc.agree.agree.AssertStatement;
 import com.rockwellcollins.atc.agree.agree.AssumeStatement;
 import com.rockwellcollins.atc.agree.agree.BinaryExpr;
 import com.rockwellcollins.atc.agree.agree.BoolLitExpr;
+import com.rockwellcollins.atc.agree.agree.CalenStatement;
 import com.rockwellcollins.atc.agree.agree.ConstStatement;
 import com.rockwellcollins.atc.agree.agree.EqStatement;
 import com.rockwellcollins.atc.agree.agree.FnCallExpr;
@@ -321,6 +322,14 @@ public class AgreeSemanticSequencer extends PropertiesSemanticSequencer {
 				   context == grammarAccess.getTermExprRule() ||
 				   context == grammarAccess.getUnaryExprRule()) {
 					sequence_TermExpr(context, (BoolLitExpr) semanticObject); 
+					return; 
+				}
+				else break;
+			case AgreePackage.CALEN_STATEMENT:
+				if(context == grammarAccess.getElementRule() ||
+				   context == grammarAccess.getSpecStatementRule() ||
+				   context == grammarAccess.getSynchStatementRule()) {
+					sequence_SynchStatement(context, (CalenStatement) semanticObject); 
 					return; 
 				}
 				else break;
@@ -987,6 +996,15 @@ public class AgreeSemanticSequencer extends PropertiesSemanticSequencer {
 	 *     (expr=Expr type=Type)
 	 */
 	protected void sequence_SpecStatement(EObject context, ParamStatement semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Constraint:
+	 *     (els+=[NamedElement|ID] els+=[NamedElement|ID]*)
+	 */
+	protected void sequence_SynchStatement(EObject context, CalenStatement semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	

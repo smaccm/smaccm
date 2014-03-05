@@ -94,6 +94,10 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="subcomp" eType="#//NestedDotID"
         containment="true"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="CalenStatement" eSuperTypes="#//SynchStatement">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="els" unique="false" upperBound="-1"
+        eType="ecore:EClass ../../../../../../org.osate.aadl2/model/aadl2.ecore#//NamedElement"/>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="NodeEq" eSuperTypes="#//NodeStmt">
     <eStructuralFeatures xsi:type="ecore:EReference" name="lhs" unique="false" upperBound="-1"
         eType="#//Arg"/>

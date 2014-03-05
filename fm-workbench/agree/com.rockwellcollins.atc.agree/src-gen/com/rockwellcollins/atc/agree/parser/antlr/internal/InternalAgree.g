@@ -646,19 +646,25 @@ ruleSynchStatement returns [EObject current=null]
     @init { enterRule(); 
     }
     @after { leaveRule(); }:
-(	otherlv_0='synchrony' 
+(((
     {
-    	newLeafNode(otherlv_0, grammarAccess.getSynchStatementAccess().getSynchronyKeyword_0());
+        $current = forceCreateModelElement(
+            grammarAccess.getSynchStatementAccess().getSynchStatementAction_0_0(),
+            $current);
     }
-	otherlv_1=':' 
+)	otherlv_1='synchrony' 
     {
-    	newLeafNode(otherlv_1, grammarAccess.getSynchStatementAccess().getColonKeyword_1());
+    	newLeafNode(otherlv_1, grammarAccess.getSynchStatementAccess().getSynchronyKeyword_0_1());
+    }
+	otherlv_2=':' 
+    {
+    	newLeafNode(otherlv_2, grammarAccess.getSynchStatementAccess().getColonKeyword_0_2());
     }
 (
 (
-		lv_val_2_0=RULE_INTEGER_LIT
+		lv_val_3_0=RULE_INTEGER_LIT
 		{
-			newLeafNode(lv_val_2_0, grammarAccess.getSynchStatementAccess().getValINTEGER_LITTerminalRuleCall_2_0()); 
+			newLeafNode(lv_val_3_0, grammarAccess.getSynchStatementAccess().getValINTEGER_LITTerminalRuleCall_0_3_0()); 
 		}
 		{
 	        if ($current==null) {
@@ -667,7 +673,7 @@ ruleSynchStatement returns [EObject current=null]
        		setWithLastConsumed(
        			$current, 
        			"val",
-        		lv_val_2_0, 
+        		lv_val_3_0, 
         		"INTEGER_LIT");
 	    }
 
@@ -675,38 +681,87 @@ ruleSynchStatement returns [EObject current=null]
 )(
 (
 (
-		lv_sim_3_1=	'simult' 
+		lv_sim_4_1=	'simult' 
     {
-        newLeafNode(lv_sim_3_1, grammarAccess.getSynchStatementAccess().getSimSimultKeyword_3_0_0());
+        newLeafNode(lv_sim_4_1, grammarAccess.getSynchStatementAccess().getSimSimultKeyword_0_4_0_0());
     }
  
 	    {
 	        if ($current==null) {
 	            $current = createModelElement(grammarAccess.getSynchStatementRule());
 	        }
-       		setWithLastConsumed($current, "sim", lv_sim_3_1, null);
+       		setWithLastConsumed($current, "sim", lv_sim_4_1, null);
 	    }
 
-    |		lv_sim_3_2=	'no_simult' 
+    |		lv_sim_4_2=	'no_simult' 
     {
-        newLeafNode(lv_sim_3_2, grammarAccess.getSynchStatementAccess().getSimNo_simultKeyword_3_0_1());
+        newLeafNode(lv_sim_4_2, grammarAccess.getSynchStatementAccess().getSimNo_simultKeyword_0_4_0_1());
     }
  
 	    {
 	        if ($current==null) {
 	            $current = createModelElement(grammarAccess.getSynchStatementRule());
 	        }
-       		setWithLastConsumed($current, "sim", lv_sim_3_2, null);
+       		setWithLastConsumed($current, "sim", lv_sim_4_2, null);
 	    }
 
 )
 
 )
-)?	otherlv_4=';' 
+)?	otherlv_5=';' 
     {
-    	newLeafNode(otherlv_4, grammarAccess.getSynchStatementAccess().getSemicolonKeyword_4());
+    	newLeafNode(otherlv_5, grammarAccess.getSynchStatementAccess().getSemicolonKeyword_0_5());
     }
 )
+    |((
+    {
+        $current = forceCreateModelElement(
+            grammarAccess.getSynchStatementAccess().getCalenStatementAction_1_0(),
+            $current);
+    }
+)	otherlv_7='calendar' 
+    {
+    	newLeafNode(otherlv_7, grammarAccess.getSynchStatementAccess().getCalendarKeyword_1_1());
+    }
+	otherlv_8=':' 
+    {
+    	newLeafNode(otherlv_8, grammarAccess.getSynchStatementAccess().getColonKeyword_1_2());
+    }
+(
+(
+		{
+			if ($current==null) {
+	            $current = createModelElement(grammarAccess.getSynchStatementRule());
+	        }
+        }
+	otherlv_9=RULE_ID
+	{
+		newLeafNode(otherlv_9, grammarAccess.getSynchStatementAccess().getElsNamedElementCrossReference_1_3_0()); 
+	}
+
+)
+)(	otherlv_10=',' 
+    {
+    	newLeafNode(otherlv_10, grammarAccess.getSynchStatementAccess().getCommaKeyword_1_4_0());
+    }
+(
+(
+		{
+			if ($current==null) {
+	            $current = createModelElement(grammarAccess.getSynchStatementRule());
+	        }
+        }
+	otherlv_11=RULE_ID
+	{
+		newLeafNode(otherlv_11, grammarAccess.getSynchStatementAccess().getElsNamedElementCrossReference_1_4_1_0()); 
+	}
+
+)
+))*	otherlv_12=';' 
+    {
+    	newLeafNode(otherlv_12, grammarAccess.getSynchStatementAccess().getSemicolonKeyword_1_5());
+    }
+))
 ;
 
 

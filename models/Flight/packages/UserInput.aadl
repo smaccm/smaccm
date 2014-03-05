@@ -11,15 +11,19 @@ with mavlink_rc_channels_override_msg;
 thread group UserInputThreads
 
   features
-    ui_emitter: out event data port userinput_type::userinput_result.impl;
-    law_emitter: out event data port control_law_type::control_law.impl;
-	uart5_rcoverride_tx: in event data port mavlink_rc_channels_override_msg::rc_channels_override_msg.impl;
-	uart1_rcoverride_tx: in event data port mavlink_rc_channels_override_msg::rc_channels_override_msg.impl;
-	uart5_control_law_request: in event data port control_law_request_type::control_law_request.impl;
-	uart1_control_law_request: in event data port control_law_request_type::control_law_request.impl;
+    ui_emitter: out event data port userinput_type::userinput_result.impl{Queue_Size => 16;};
+    law_emitter: out event data port control_law_type::control_law.impl{Queue_Size => 16;};
+	uart5_rcoverride_tx: in event data port mavlink_rc_channels_override_msg::rc_channels_override_msg.impl{Queue_Size => 16;};
+	uart1_rcoverride_tx: in event data port mavlink_rc_channels_override_msg::rc_channels_override_msg.impl{Queue_Size => 16;};
+	uart5_control_law_request: in event data port control_law_request_type::control_law_request.impl{Queue_Size => 16;};
+	uart1_control_law_request: in event data port control_law_request_type::control_law_request.impl{Queue_Size => 16;};
 	  
 	  
   annex agree {**
+  	
+  		guarantee "Queues initially empty" :
+  			(ui_emitter.COUNT = 0 -> true) and
+  			(law_emitter.COUNT = 0 -> true);
   	
   		guarantee "Control law is initially set to safe" :
   			law_emitter.armed_mode = 0 -> true;
@@ -32,7 +36,7 @@ thread group UserInputThreads
   			(-1.0 <= ui_emitter.yaw and ui_emitter.yaw <= 1.0); 
   			
   		guarantee "User input time always increasing" :
-  			true -> ui_emitter.COUNT > 0 => (ui_emitter.time > pre (ui_emitter.time));
+  			true -> ui_emitter.COUNT > 0 => (ui_emitter.time >= pre (ui_emitter.time));
   **};
 	  
 end UserInputThreads;
@@ -60,8 +64,8 @@ thread group implementation UserInputThreads.Impl
 	
 	
   annex agree {**
-  	synchrony: 1 no_simult;
-  	
+  	calendar: ppmInputTower_inst, controlLawTask_inst, uiMuxTask_inst;  
+   
   	node ris_edg(signal : bool) returns (result : bool);
   	let
   		result = false -> (signal and not pre(signal));
@@ -75,7 +79,10 @@ thread group implementation UserInputThreads.Impl
   	eq ppmSetArmed : bool = ppmInputTower_inst.cr_emitter.set_armed;
   	eq ppmSetSafe : bool = ppmInputTower_inst.cr_emitter.set_safe;
   	eq ppmQueueInsert : bool = ppmInputTower_inst.cr_emitter.INSERT;
-  	eq ctrlArmedMode: int = controlLawTask_inst.law_emitter.armed_mode;
+  	eq ctrlArmedMode: int = if (law_emitter.COUNT > 0) then
+  								law_emitter.armed_mode
+  							else
+  								(0 -> pre (ctrlArmedMode));
   	
   	eq sincePPMArmed : int = time_since(ris_edg(ppmSetArmed));
   	eq sincePPMSafe : int = time_since(ris_edg(ppmSetSafe));
@@ -115,15 +122,15 @@ thread group implementation UserInputThreads.Impl
 		
 	lemma "if arming ever occurs after safe, then the controller will become armed":
 		(armedCount > 0 
-			and sincePPMArmed > 4
+			and sincePPMArmed > 6
 			and sincePPMSafe > sincePPMArmed
 		) => sinceCtrlArmed < 2;
 		
 	--remove output elements as they become available
-	assert law_emitter.COUNT > 0 => law_emitter.REMOVE;
-	assert law_emitter.COUNT = 0 => not law_emitter.REMOVE;
-	assert ui_emitter.COUNT > 0 => ui_emitter.REMOVE;
-	assert ui_emitter.COUNT = 0 => not ui_emitter.REMOVE;
+	--assert law_emitter.COUNT > 0 => law_emitter.REMOVE;
+	--assert law_emitter.COUNT = 0 => not law_emitter.REMOVE;
+	--assert ui_emitter.COUNT > 0 => ui_emitter.REMOVE;
+	--assert ui_emitter.COUNT = 0 => not ui_emitter.REMOVE;
 		
   **};
 	
@@ -161,6 +168,29 @@ thread uiMuxTask
     SMACCM::Language => "Ivory";
     Dispatch_Protocol => Sporadic;
     SMACCM::Always_Sends_Message => true;
+    
+  annex agree {**
+  	
+  		-- for now lets just do a pass through with the ppm ui input
+  		guarantee "true" : true;
+  		
+  		--guarantee "always remove from ppm" :
+  		--	(ppm_ui.COUNT > 0 => ppm_ui.REMOVE) and
+  		--	(ppm_ui.COUNT = 0 => not ppm_ui.REMOVE);
+  			
+  		--guarantee "always insert into output if ppm input is available" :
+  		--	(ppm_ui.COUNT > 0 => ui_emitter.INSERT) and
+  		--	(ppm_ui.COUNT = 0 => not  ui_emitter.INSERT);
+  		
+  		--guarantee "queue passthrough" :
+  		--	ui_emitter.throttle = ppm_ui.throttle and
+  		--	ui_emitter.roll = ppm_ui.roll and
+  		--	ui_emitter.pitch = ppm_ui.pitch and
+  		--	ui_emitter.yaw = ppm_ui.yaw and
+  		--	ui_emitter.time = ppm_ui.time; 
+  	
+  **};
+    
     
 end uiMuxTask;
 
