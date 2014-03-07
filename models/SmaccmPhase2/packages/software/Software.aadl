@@ -1,0 +1,24 @@
+package Software
+public
+	with UAV;
+	with Commsec;
+	
+	system Software
+		features
+			sensors: feature group UAV::sensors;
+      		motors_and_radios: feature group UAV::motors_and_radios;
+	end Software;
+	
+	system implementation Software.Impl
+		subcomponents
+			ML: process ML.Impl;
+	end Software.Impl;
+	
+	process ML
+	end ML;
+	
+	process implementation ML.Impl
+		subcomponents
+			Commsec: thread group Commsec::Commsec;
+	end ML.Impl;
+end Software;
