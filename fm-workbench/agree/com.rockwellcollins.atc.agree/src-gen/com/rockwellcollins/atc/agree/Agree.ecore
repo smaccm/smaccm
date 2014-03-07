@@ -125,9 +125,6 @@
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="init" eType="#//Expr" containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="NextExpr" eSuperTypes="#//Expr">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="expr" eType="#//Expr" containment="true"/>
-  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="GetPropertyExpr" eSuperTypes="#//Expr">
     <eStructuralFeatures xsi:type="ecore:EReference" name="component" eType="#//Expr"
         containment="true"/>

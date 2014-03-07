@@ -30,7 +30,6 @@ import com.rockwellcollins.atc.agree.agree.IntLitExpr;
 import com.rockwellcollins.atc.agree.agree.LemmaStatement;
 import com.rockwellcollins.atc.agree.agree.LiftStatement;
 import com.rockwellcollins.atc.agree.agree.NestedDotID;
-import com.rockwellcollins.atc.agree.agree.NextExpr;
 import com.rockwellcollins.atc.agree.agree.NodeBodyExpr;
 import com.rockwellcollins.atc.agree.agree.NodeDefExpr;
 import com.rockwellcollins.atc.agree.agree.NodeEq;
@@ -294,13 +293,6 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * @generated
    */
   private EClass prevExprEClass = null;
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  private EClass nextExprEClass = null;
 
   /**
    * <!-- begin-user-doc -->
@@ -1229,26 +1221,6 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getNextExpr()
-  {
-    return nextExprEClass;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EReference getNextExpr_Expr()
-  {
-    return (EReference)nextExprEClass.getEStructuralFeatures().get(0);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
   public EClass getGetPropertyExpr()
   {
     return getPropertyExprEClass;
@@ -1567,9 +1539,6 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     createEReference(prevExprEClass, PREV_EXPR__DELAY);
     createEReference(prevExprEClass, PREV_EXPR__INIT);
 
-    nextExprEClass = createEClass(NEXT_EXPR);
-    createEReference(nextExprEClass, NEXT_EXPR__EXPR);
-
     getPropertyExprEClass = createEClass(GET_PROPERTY_EXPR);
     createEReference(getPropertyExprEClass, GET_PROPERTY_EXPR__COMPONENT);
     createEReference(getPropertyExprEClass, GET_PROPERTY_EXPR__PROP);
@@ -1669,7 +1638,6 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     unaryExprEClass.getESuperTypes().add(this.getExpr());
     ifThenElseExprEClass.getESuperTypes().add(this.getExpr());
     prevExprEClass.getESuperTypes().add(this.getExpr());
-    nextExprEClass.getESuperTypes().add(this.getExpr());
     getPropertyExprEClass.getESuperTypes().add(this.getExpr());
     idExprEClass.getESuperTypes().add(this.getExpr());
     fnCallExprEClass.getESuperTypes().add(this.getExpr());
@@ -1792,9 +1760,6 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     initEClass(prevExprEClass, PrevExpr.class, "PrevExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getPrevExpr_Delay(), this.getExpr(), null, "delay", null, 0, 1, PrevExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getPrevExpr_Init(), this.getExpr(), null, "init", null, 0, 1, PrevExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-    initEClass(nextExprEClass, NextExpr.class, "NextExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getNextExpr_Expr(), this.getExpr(), null, "expr", null, 0, 1, NextExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(getPropertyExprEClass, GetPropertyExpr.class, "GetPropertyExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getGetPropertyExpr_Component(), this.getExpr(), null, "component", null, 0, 1, GetPropertyExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

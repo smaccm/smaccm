@@ -13,18 +13,18 @@ import org.w3c.dom.Document;
 
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Logger;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosException;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.Model;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.Dispatcher;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.ExternalIRQ;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.InterruptServiceRoutine;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.LegacyExternalIRQ;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.LegacyIRQEvent;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.SharedData;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.ThreadImplementation;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.ThreadImplementationBase;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.ThreadInstance;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.ThreadInstancePort;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.gluecode.Names;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.Dispatcher;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.ExternalIRQ;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.InterruptServiceRoutine;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.LegacyExternalIRQ;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.LegacyIRQEvent;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.SharedData;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.ThreadImplementation;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.ThreadImplementationBase;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.ThreadInstance;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.ThreadInstancePort;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.parse.Model;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.util.Util;
 
 public class PrxGenerator {

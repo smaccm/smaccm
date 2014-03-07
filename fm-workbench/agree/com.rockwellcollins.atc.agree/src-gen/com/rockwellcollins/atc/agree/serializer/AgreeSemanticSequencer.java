@@ -24,7 +24,6 @@ import com.rockwellcollins.atc.agree.agree.IntLitExpr;
 import com.rockwellcollins.atc.agree.agree.LemmaStatement;
 import com.rockwellcollins.atc.agree.agree.LiftStatement;
 import com.rockwellcollins.atc.agree.agree.NestedDotID;
-import com.rockwellcollins.atc.agree.agree.NextExpr;
 import com.rockwellcollins.atc.agree.agree.NodeBodyExpr;
 import com.rockwellcollins.atc.agree.agree.NodeDefExpr;
 import com.rockwellcollins.atc.agree.agree.NodeEq;
@@ -546,33 +545,6 @@ public class AgreeSemanticSequencer extends PropertiesSemanticSequencer {
 					return; 
 				}
 				else break;
-			case AgreePackage.NEXT_EXPR:
-				if(context == grammarAccess.getAddSubExprRule() ||
-				   context == grammarAccess.getAddSubExprAccess().getBinaryExprLeftAction_1_0_0_0() ||
-				   context == grammarAccess.getAndExprRule() ||
-				   context == grammarAccess.getAndExprAccess().getBinaryExprLeftAction_1_0_0_0() ||
-				   context == grammarAccess.getArrowExprRule() ||
-				   context == grammarAccess.getArrowExprAccess().getBinaryExprLeftAction_1_0_0_0() ||
-				   context == grammarAccess.getElementRule() ||
-				   context == grammarAccess.getEquivExprRule() ||
-				   context == grammarAccess.getEquivExprAccess().getBinaryExprLeftAction_1_0_0_0() ||
-				   context == grammarAccess.getExprRule() ||
-				   context == grammarAccess.getIfThenElseExprRule() ||
-				   context == grammarAccess.getImpliesExprRule() ||
-				   context == grammarAccess.getImpliesExprAccess().getBinaryExprLeftAction_1_0_0_0() ||
-				   context == grammarAccess.getMultDivExprRule() ||
-				   context == grammarAccess.getMultDivExprAccess().getBinaryExprLeftAction_1_0_0_0() ||
-				   context == grammarAccess.getOrExprRule() ||
-				   context == grammarAccess.getOrExprAccess().getBinaryExprLeftAction_1_0_0_0() ||
-				   context == grammarAccess.getPreDefFnExprRule() ||
-				   context == grammarAccess.getRelateExprRule() ||
-				   context == grammarAccess.getRelateExprAccess().getBinaryExprLeftAction_1_0_0_0() ||
-				   context == grammarAccess.getTermExprRule() ||
-				   context == grammarAccess.getUnaryExprRule()) {
-					sequence_PreDefFnExpr(context, (NextExpr) semanticObject); 
-					return; 
-				}
-				else break;
 			case AgreePackage.NODE_BODY_EXPR:
 				if(context == grammarAccess.getElementRule() ||
 				   context == grammarAccess.getNodeBodyExprRule()) {
@@ -915,15 +887,6 @@ public class AgreeSemanticSequencer extends PropertiesSemanticSequencer {
 	 *     (component=Expr prop=Expr)
 	 */
 	protected void sequence_PreDefFnExpr(EObject context, GetPropertyExpr semanticObject) {
-		genericSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * Constraint:
-	 *     expr=Expr
-	 */
-	protected void sequence_PreDefFnExpr(EObject context, NextExpr semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	

@@ -114,9 +114,6 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//PrevExpr/delay"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//PrevExpr/init"/>
     </genClasses>
-    <genClasses ecoreClass="Agree.ecore#//NextExpr">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//NextExpr/expr"/>
-    </genClasses>
     <genClasses ecoreClass="Agree.ecore#//GetPropertyExpr">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//GetPropertyExpr/component"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//GetPropertyExpr/prop"/>

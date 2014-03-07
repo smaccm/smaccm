@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Set;
 
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosException;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.Model;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.parse.Model;
 
 /**
  * @author Whalen

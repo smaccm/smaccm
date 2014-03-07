@@ -1,0 +1,102 @@
+package PX4IOAR
+public
+  with UAS;
+  with UAV;
+  with DATATYPES;
+  with PX4FMU;
+  with CORTEX;
+  with SMACCM;
+
+  system PX4IOAR
+    features
+      expansion_connector: feature group inverse of PX4FMU::expansion_slot;
+      motors_and_radios: feature group inverse of UAV::motors_and_radios;
+      mavlink: in out data port DATATYPES::EncryptMAVLink;
+      flight_control_commands: in data port DATATYPES::Flight_Control_Commands;
+      rc_radio: requires bus access UAS::RF_Spectrum.RF_2_4GHz;
+      x3dr_radio: requires bus access UAS::RF_Spectrum.RF_915MHz;
+      
+  end PX4IOAR;
+  
+  system implementation PX4IOAR.Impl
+    subcomponents
+      M1: device Motor;
+      M2: device Motor;
+      M3: device Motor;
+      M4: device Motor;
+      BUZZER: device Buzzer;
+      RC: device RC_Radio;
+      x3DR: device x3DR_Radio;
+      USART2: bus USART2;
+    
+    connections
+      -- Motors
+      conn0: port motors_and_radios.motor1 -> M1.commands;
+      conn1: port motors_and_radios.motor2 -> M2.commands;
+      conn2: port motors_and_radios.motor3 -> M3.commands;
+      conn3: port motors_and_radios.motor4 -> M4.commands;
+      conn4: bus access M1.bus_access <-> USART2;
+      conn5: bus access M2.bus_access <-> USART2;
+      conn6: bus access M3.bus_access <-> USART2;
+      conn7: bus access M4.bus_access <-> USART2;
+      
+      -- Buzzer
+      conn8: bus access BUZZER.bus_access <-> expansion_connector.alarm;
+      
+      -- RC Radio
+      conn9: port RC.commands_internal -> motors_and_radios.flight_control_commands;
+      conn10: port flight_control_commands -> RC.commands_external;
+      conn11: bus access RC.ppm <-> expansion_connector.ppm;
+      conn12: bus access RC.antenna <-> rc_radio;
+      
+      -- 3DR Radio
+      conn13: port x3DR.mavlink_internal <-> motors_and_radios.mavlink;
+      conn14: port mavlink <-> x3DR.mavlink_external;
+      conn15: bus access x3DR.usart <-> expansion_connector.usart1;
+      conn16: bus access x3DR.antenna <-> x3dr_radio;
+      
+    properties
+    	SMACCM::Unimplemented => true applies to expansion_connector.usart2;
+      
+  end PX4IOAR.Impl;
+  
+  device Motor
+    features
+      commands: in data port DATATYPES::Servo_Commands;
+      bus_access: requires bus access USART2;
+  end Motor;
+  
+  device Buzzer
+    features
+      bus_access: requires bus access CORTEX::AHB_Bus_Matrix;
+  end Buzzer;
+  
+  device RC_Radio
+    features
+      commands_internal: out data port DATATYPES::Flight_Control_Commands {
+      	SMACCM::Unimplemented => true;
+      };
+      commands_external: in data port DATATYPES::Flight_Control_Commands;
+      ppm: requires bus access CORTEX::AHB_Bus_Matrix;
+      antenna: requires bus access UAS::RF_Spectrum.RF_2_4GHz;
+  end RC_Radio;
+  
+  device x3DR_Radio
+    features
+      mavlink_internal: in out data port DATATYPES::EncryptMAVLink;
+      mavlink_external: in out data port DATATYPES::EncryptMAVLink;
+      usart: requires bus access CORTEX::AHB_Bus_Matrix;
+      antenna: requires bus access UAS::RF_Spectrum.RF_915Mhz;
+      
+    properties
+      SMACCM::Always_Sends_Message => true; 
+      
+      --annex resolute {**  
+      	--prove execute_completeness(this)
+      --**};
+      
+  end x3DR_Radio;
+  
+  bus USART2
+  end USART2;
+end PX4IOAR;

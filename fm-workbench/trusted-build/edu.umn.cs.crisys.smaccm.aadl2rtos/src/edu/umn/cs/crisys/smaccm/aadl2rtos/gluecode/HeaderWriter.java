@@ -12,17 +12,17 @@ import org.osate.aadl2.DirectionType;
 import org.osate.aadl2.PortCategory;
 
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosException;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.Model;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.IdType;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.Type;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.Dispatcher;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.Dispatcher.DispatcherType;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.ExternalHandler;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.MyPort;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.SharedDataAccessor;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.SharedDataAccessor.AccessType;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.ThreadImplementation;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.ThreadInstance;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.Dispatcher;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.ExternalHandler;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.MyPort;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.SharedDataAccessor;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.ThreadImplementation;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.ThreadInstance;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.Dispatcher.DispatcherType;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.SharedDataAccessor.AccessType;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.type.IdType;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.type.Type;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.parse.Model;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.util.Util;
 import edu.umn.cs.crisys.smaccm.topsort.CyclicException;
 import edu.umn.cs.crisys.smaccm.topsort.TopologicalSort;
@@ -223,7 +223,7 @@ public class HeaderWriter extends AbstractCodeWriter {
 	  }
 	  else if (d.getDispatcherType() == DispatcherType.PERIODIC_DISPATCHER) {
 	    return "   void " + fnName
-				+ "(uint32_t millis_from_sys_start); \n\n";
+				+ "(uint32_t *millis_from_sys_start); \n\n";
 	  }
 	  else {
 	    return "   void " + fnName

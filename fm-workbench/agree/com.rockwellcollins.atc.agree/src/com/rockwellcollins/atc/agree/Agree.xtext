@@ -135,13 +135,11 @@ IfThenElseExpr returns Expr:
 
 PreDefFnExpr returns Expr:
 	{PrevExpr} 'prev' '(' delay=Expr ',' init=Expr ')'
-	| {NextExpr} 'next' '(' expr=Expr ')'
 	| {GetPropertyExpr} 'Get_Property' '(' component=Expr ',' prop=Expr ')'
 	| TermExpr;
 
 PreDefFnNames:
 	'prev'
-	| 'next'
 	| 'Get_Property';
 
 TermExpr returns Expr:

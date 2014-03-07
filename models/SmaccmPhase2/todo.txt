@@ -1,0 +1,6 @@
+* Fill out details of ODROID_XU board
+* Figure out where CAN connection is on PX4s (Ask PAT)
+* Connect PX4s to ODROID_XU
+* Fill out details of software
+
+* Create visio diagrams of architecture including changes to PX4s

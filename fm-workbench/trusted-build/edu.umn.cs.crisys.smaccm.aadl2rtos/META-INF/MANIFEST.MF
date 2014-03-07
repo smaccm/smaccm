@@ -19,7 +19,7 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Export-Package: 
  edu.umn.cs.crisys.smaccm.aadl2rtos,
  edu.umn.cs.crisys.smaccm.aadl2rtos.ast,
+ edu.umn.cs.crisys.smaccm.aadl2rtos.ast.type,
  edu.umn.cs.crisys.smaccm.aadl2rtos.gluecode,
  edu.umn.cs.crisys.smaccm.aadl2rtos.prx,
- edu.umn.cs.crisys.smaccm.aadl2rtos.thread,
  edu.umn.cs.crisys.smaccm.aadl2rtos.util

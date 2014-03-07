@@ -16,7 +16,7 @@ import org.osate.aadl2.impl.ThreadTypeImpl;
 import org.osate.xtext.aadl2.properties.util.PropertyUtils;
 
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosException;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.ThreadImplementation;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.ThreadImplementation;
 
 public abstract class ThreadUtil {
 

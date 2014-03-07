@@ -180,73 +180,83 @@ public class AgreeMenuListener implements IMenuListener {
         return new Action(actionName) {
             @Override
             public void run() {
-                MessageConsole console = findConsole(consoleName);
+                final MessageConsole console = findConsole(consoleName);
                 showConsole(console);
                 console.clearConsole();
-                console.newMessageStream().println(content.toString());
-                System.out.println(content.toString());
-            }
-        };
-    }
-    
-    private Action createWriteConsoleAction(String actionName, final String consoleName,
-            final Object content, final Map<String, EObject> refMap) {
-        return new Action(actionName) {
-            @Override
-            public void run() {
-                MessageConsole console = findConsole(consoleName);
-                showConsole(console);
-                console.clearConsole();
-                console.newMessageStream().println(content.toString());
-                console.addPatternMatchListener(new AgreePatternListener(refMap));
+
+                /*
+                 * From the Eclipse API: "Clients should avoid writing large amounts of output to
+                 * this stream in the UI thread. The console needs to process the output in the UI
+                 * thread and if the client hogs the UI thread writing output to the console, the
+                 * console will not be able to process the output."
+                 */
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        console.newMessageStream().println(content.toString());
+                    }
+                }).start();
             }
         };
     }
 
-    private void viewCexConsole(Counterexample cex, Layout layout, Map<String, EObject> refMap) {
-        MessageConsole console = findConsole("Counterexample");
+    private void viewCexConsole(final Counterexample cex, final Layout layout,
+            Map<String, EObject> refMap) {
+        final MessageConsole console = findConsole("Counterexample");
         showConsole(console);
         console.clearConsole();
         console.addPatternMatchListener(new AgreePatternListener(refMap));
-        try (MessageConsoleStream out = console.newMessageStream()) {
-            for (String category : layout.getCategories()) {
-                if (isEmpty(category, cex, layout)) {
-                    continue;
-                }
 
-                printHLine(out, cex.getLength());
-                out.println("Variables for " + category);
-                printHLine(out, cex.getLength());
+        /*
+         * From the Eclipse API: "Clients should avoid writing large amounts of output to this
+         * stream in the UI thread. The console needs to process the output in the UI thread and if
+         * the client hogs the UI thread writing output to the console, the console will not be able
+         * to process the output."
+         */
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try (MessageConsoleStream out = console.newMessageStream()) {
+                    for (String category : layout.getCategories()) {
+                        if (isEmpty(category, cex, layout)) {
+                            continue;
+                        }
 
-                out.print(String.format("%-60s", "Variable Name"));
-                for (int k = 0; k < cex.getLength(); k++) {
-                    out.print(String.format("%-15s", k));
-                }
-                out.println();
-                printHLine(out, cex.getLength());
+                        printHLine(out, cex.getLength());
+                        out.println("Variables for " + category);
+                        printHLine(out, cex.getLength());
 
-                for (Signal<Value> signal : cex.getSignals()) {
-                    if (category.equals(layout.getCategory(signal.getName()))) {
-                        out.print(String.format("%-60s", "{" + signal.getName() + "}"));
+                        out.print(String.format("%-60s", "Variable Name"));
                         for (int k = 0; k < cex.getLength(); k++) {
-                            Value val = signal.getValue(k);
-                            if (jkind.util.Util.isArbitrary(val)) {
-                                out.print(String.format("%-15s", "-"));
-                            } else if (val instanceof NumericInterval) {
-                                out.print(String.format("%-15s",
-                                        formatInterval((NumericInterval) val)));
-                            } else {
-                                out.print(String.format("%-15s", val.toString()));
+                            out.print(String.format("%-15s", k));
+                        }
+                        out.println();
+                        printHLine(out, cex.getLength());
+
+                        for (Signal<Value> signal : cex.getSignals()) {
+                            if (category.equals(layout.getCategory(signal.getName()))) {
+                                out.print(String.format("%-60s", "{" + signal.getName() + "}"));
+                                for (int k = 0; k < cex.getLength(); k++) {
+                                    Value val = signal.getValue(k);
+                                    if (jkind.util.Util.isArbitrary(val)) {
+                                        out.print(String.format("%-15s", "-"));
+                                    } else if (val instanceof NumericInterval) {
+                                        out.print(String.format("%-15s",
+                                                formatInterval((NumericInterval) val)));
+                                    } else {
+                                        out.print(String.format("%-15s", val.toString()));
+                                    }
+                                }
+                                out.println();
                             }
                         }
                         out.println();
                     }
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-                out.println();
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        }).start();
     }
 
     private String formatInterval(NumericInterval ni) {

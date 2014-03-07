@@ -8,9 +8,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Logger;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.Model;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.MyPort;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.ThreadImplementation;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.MyPort;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.ThreadImplementation;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.parse.Model;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.util.Util;
 
 // TODO: need to discuss where to place .c / .h files for User-provided thread functions

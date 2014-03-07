@@ -386,15 +386,6 @@ public class AgreeSwitch<T> extends Switch<T>
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
-      case AgreePackage.NEXT_EXPR:
-      {
-        NextExpr nextExpr = (NextExpr)theEObject;
-        T result = caseNextExpr(nextExpr);
-        if (result == null) result = caseExpr(nextExpr);
-        if (result == null) result = caseElement(nextExpr);
-        if (result == null) result = defaultCase(theEObject);
-        return result;
-      }
       case AgreePackage.GET_PROPERTY_EXPR:
       {
         GetPropertyExpr getPropertyExpr = (GetPropertyExpr)theEObject;
@@ -995,22 +986,6 @@ public class AgreeSwitch<T> extends Switch<T>
    * @generated
    */
   public T casePrevExpr(PrevExpr object)
-  {
-    return null;
-  }
-
-  /**
-   * Returns the result of interpreting the object as an instance of '<em>Next Expr</em>'.
-   * <!-- begin-user-doc -->
-   * This implementation returns null;
-   * returning a non-null result will terminate the switch.
-   * <!-- end-user-doc -->
-   * @param object the target of the switch.
-   * @return the result of interpreting the object as an instance of '<em>Next Expr</em>'.
-   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-   * @generated
-   */
-  public T caseNextExpr(NextExpr object)
   {
     return null;
   }

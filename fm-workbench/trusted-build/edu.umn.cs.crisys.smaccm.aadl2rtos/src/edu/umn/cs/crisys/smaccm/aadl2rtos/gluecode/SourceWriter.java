@@ -29,24 +29,24 @@ import java.util.Iterator;
 import java.util.List;
 
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosException;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.Model;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.ArrayType;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.IntType;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.PointerType;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.Type;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.Connection;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.Dispatcher;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.Dispatcher.DispatcherType;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.ExternalHandler;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.InterruptServiceRoutine;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.MyPort;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.SharedData;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.SharedDataAccessor;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.SharedDataAccessor.AccessType;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.ThreadCalendar;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.ThreadImplementation;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.ThreadInstance;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.ThreadInstancePort;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.Connection;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.Dispatcher;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.ExternalHandler;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.InterruptServiceRoutine;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.MyPort;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.SharedData;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.SharedDataAccessor;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.ThreadCalendar;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.ThreadImplementation;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.ThreadInstance;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.ThreadInstancePort;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.Dispatcher.DispatcherType;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.SharedDataAccessor.AccessType;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.type.ArrayType;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.type.IntType;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.type.PointerType;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.type.Type;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.parse.Model;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.util.Util;
 
 public class SourceWriter extends AbstractCodeWriter {
@@ -238,11 +238,11 @@ public class SourceWriter extends AbstractCodeWriter {
 	    }
 	    ThreadInstance ti = r.getThreadInstances().get(0);
 	    ThreadInstancePort tip = new ThreadInstancePort(ti, r.getDestinationPort());
-        if (model.getISRType() == Model.ISRType.SignalingISR) {
-		    out.append(ind + tip.getVarName() + " += 1; \n"); 
+        if (r.getISRType() == InterruptServiceRoutine.ISRType.SignalingISR) {
+		    out.append(ind + tip.getVarName() + " = 1; \n"); 
 		    out.append(ind + "rtos_irq_event_raise(" + 
 		        r.getIrqSignalDefine() + ");\n");
-        } else if (model.getISRType() == Model.ISRType.InThreadContextISR) {
+        } else if (r.getISRType() == InterruptServiceRoutine.ISRType.InThreadContextISR) {
         	out.append(ind + r.getTowerHandlerName() + "();\n");
         } else {
         	throw new Aadl2RtosException("Unknown ISR Type for ISR: " + r.getIrqSignalName());
@@ -307,8 +307,8 @@ public class SourceWriter extends AbstractCodeWriter {
 	
 	private void writeThreadPeriodicDispatcher(Dispatcher d) throws IOException {
     for (ExternalHandler handler: d.getExternalHandlerList()) {
-      //out.append(Util.ind(3) + "millis_from_sys_start += " + Integer.toString(d.getPeriod()) + ";\n");
-      out.append(Util.ind(3) + handler.getHandlerName() + "(/*threadID, */ smaccm_get_time_in_ms());\n");
+      out.append(Util.ind(3) + "smaccm_millis_from_sys_start = smaccm_get_time_in_ms(); \n");
+      out.append(Util.ind(3) + handler.getHandlerName() + "(&smaccm_millis_from_sys_start);\n");
     }	  
 	} 
 	
@@ -316,24 +316,23 @@ public class SourceWriter extends AbstractCodeWriter {
 
 		
 		List<ThreadImplementation> threads;
-//		if (model.getISRType() == Model.ISRType.SignalingISR) {
-			threads = allThreads;
-//		} else if (model.getISRType() == Model.ISRType.InThreadContextISR) {
-//			threads = new ArrayList<ThreadImplementation>();
-//			for (ThreadImplementation ti : allThreads) {
-//				if (!ti.isISRThread()) {
-//					threads.add(ti);
-//				}
-//			}
-//		} else {
-//			throw new Aadl2RtosException("Error: unknonwn ISR type: " + model.getISRType().toString());
-//		}
+		threads = allThreads;
 				
 		for (ThreadImplementation tw : threads) {
 			out.append("void " + tw.getGeneratedEntrypoint() + "(/*int threadID*/) \n");
 			out.append("{\n");
 
-			// out.append(Util.ind(1) + "uint32_t millis_from_sys_start = 0;\n");
+			if (tw.getDispatchProtocol().equalsIgnoreCase("periodic") ||
+				tw.getDispatchProtocol().equalsIgnoreCase("hybrid")) {
+				out.append(Util.ind(1) + "uint32_t smaccm_millis_from_sys_start = 0;\n");
+			} else if (tw.getDispatchProtocol().equalsIgnoreCase("sporadic") ||
+					   tw.getDispatchProtocol().equalsIgnoreCase("aperiodic")) {
+				// no op.
+			} else {
+				// error! dispatch protocol not understood
+				throw new Aadl2RtosException("Unexpected dispatch protocol: " + tw.getDispatchProtocol() + " in thread " + tw.getName() + 
+						"; one of {Periodic, Hybrid, Aperiodic, Sporadic} expected");
+			}
 
 			ExternalHandler initHandler = tw.getInitializeEntrypointOpt();
 			if (initHandler != null) {

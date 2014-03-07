@@ -557,20 +557,20 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
         case "error_state_reachable": {
             ComponentInstance comp = (ComponentInstance) argVals.get(0).getNamedElement();
             String stateName = argVals.get(1).getString();
-
+            
             for (ErrorBehaviorTransition ebt : EMV2Util.getAllErrorBehaviorTransitions(comp)) {
                 if (ebt.getTarget().getName().equalsIgnoreCase(stateName)) {
                     return TRUE;
                 }
             }
-
+            
             return FALSE;
         }
 
         case "propagate_error": {
             ComponentInstance comp = (ComponentInstance) argVals.get(0).getNamedElement();
             String errorName = argVals.get(1).getString();
-
+            
             for (ErrorPropagation ep : EMV2Util.getAllOutgoingErrorPropagations(comp
                     .getComponentClassifier())) {
                 for (TypeToken tt : ep.getTypeSet().getTypeTokens()) {
@@ -581,7 +581,7 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
                     }
                 }
             }
-
+            
             return FALSE;
         }
 

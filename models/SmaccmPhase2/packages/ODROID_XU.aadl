@@ -1,0 +1,8 @@
+package ODROID_XU
+public
+	system ODROID_XU
+	end ODROID_XU;
+	
+	system implementation ODROID_XU.Impl
+	end ODROID_XU.Impl;
+end ODROID_XU;

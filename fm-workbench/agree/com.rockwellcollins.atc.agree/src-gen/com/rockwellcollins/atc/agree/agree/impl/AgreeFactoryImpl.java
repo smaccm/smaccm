@@ -97,7 +97,6 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
       case AgreePackage.UNARY_EXPR: return createUnaryExpr();
       case AgreePackage.IF_THEN_ELSE_EXPR: return createIfThenElseExpr();
       case AgreePackage.PREV_EXPR: return createPrevExpr();
-      case AgreePackage.NEXT_EXPR: return createNextExpr();
       case AgreePackage.GET_PROPERTY_EXPR: return createGetPropertyExpr();
       case AgreePackage.ID_EXPR: return createIdExpr();
       case AgreePackage.FN_CALL_EXPR: return createFnCallExpr();
@@ -472,17 +471,6 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
   {
     PrevExprImpl prevExpr = new PrevExprImpl();
     return prevExpr;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public NextExpr createNextExpr()
-  {
-    NextExprImpl nextExpr = new NextExprImpl();
-    return nextExpr;
   }
 
   /**
