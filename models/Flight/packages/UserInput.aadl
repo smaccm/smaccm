@@ -23,6 +23,30 @@ thread group UserInputThreads
 	
   annex agree {**
   	
+  	  	-- begin constants --
+  		const deadSafe : int = AGREE_Arming_Logic.deadSafe;
+  		const deadArmable : int = AGREE_Arming_Logic.deadArmable;
+  	
+  		--equations for reading the state of control sticks
+  		eq throttle_chan : real = flight_control_commands.ppm2;
+  		eq rudder_chan : real = flight_control_commands.ppm3;
+  		eq dead_chan : real = flight_control_commands.ppm5;
+  		eq dead_pos : int = if dead_chan > 1600.0 then deadArmable else deadSafe;
+  		eq sticks_corner : bool = (throttle_chan < 1050.0 and rudder_chan > 1900.0);
+  		
+  		eq dead_pos_armed_past : bool = 
+  			dead_pos = deadArmable -> pre (dead_pos_armed_past) or dead_pos = deadArmable;
+  		
+  		eq sticks_corner_past : bool = 
+  			sticks_corner -> pre(sticks_corner_past) or sticks_corner;
+  		
+  		eq armed_past : bool = 
+  			sticks_corner_past and dead_pos_armed_past;
+  		
+  		guarantee "The controller is not armed unless the ppm says so" :
+  			(law_emitter.COUNT > 0 and law_emitter.armed_mode = 2) 
+  				=> armed_past;
+  		
   		guarantee "Queues initially empty" :
   			(ui_emitter.COUNT = 0 -> true) and
   			(law_emitter.COUNT = 0 -> true);
@@ -349,15 +373,15 @@ thread ppmInputTower
 
   annex agree {** 
   	-- begin constants --
-  	const deadSafe : int = 0;
-  	const deadArmable : int = 1;
-  	const armingIdle : int = 0;
-  	const armingActive : int = 1;
-  	const armingComplete : int = 2;
-  	const hystresis : int = 750;
-  	const timeout_limit : int = 150;
-  	const minBound : real = 800.0;
-  	const maxBound : real = 2200.0;
+  	const deadSafe : int = AGREE_Arming_Logic.deadSafe;
+  	const deadArmable : int = AGREE_Arming_Logic.deadArmable;
+  	const armingIdle : int = AGREE_Arming_Logic.armingIdle;
+  	const armingActive : int = AGREE_Arming_Logic.armingActive;
+  	const armingComplete : int = AGREE_Arming_Logic.armingComplete;
+  	const hystresis : int = AGREE_Arming_Logic.hystresis;
+  	const timeout_limit : int = AGREE_Arming_Logic.timeout_limit;
+  	const minBound : real = AGREE_Arming_Logic.minBound;
+  	const maxBound : real = AGREE_Arming_Logic.maxBound;
  
  	-- begin state varaibles --
    	eq ppm_valid : bool;
@@ -539,7 +563,6 @@ thread ppmInputTower
   **};
 
 end ppmInputTower;
-
 
 
 end UserInput;

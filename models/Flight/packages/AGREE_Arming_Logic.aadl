@@ -3,99 +3,16 @@ public
 
 annex agree {**
 	
-	const deadSafe : int = 0;
-	const deadArmable : int = 1;
-	const minBound : int = 800;
-	const maxBound : int = 2200;
-	const ppmHigh : int = 1900;
-	const ppmLow : int = 1100;
-	const ppmCenter : int = 1500;
-	
-	node no_sample
-	(
-		time : int, 
-		ppm_last_time : int,
-		timeout_limit : int,
-		dead_last_pos : int,
-		ppm_valid : bool
-	) 
-	returns 
-	(result : bool);
-	var
-		invalidate : bool;
-		inv0 : bool;
-		inv1 : bool;
-		no_effect : bool;
-	let
-		inv0 = (dead_last_pos = deadSafe);
-		inv1 = (ppm_valid = false);
-		invalidate = (inv0 and inv1);
-		no_effect = ppm_valid = pre(ppm_valid);
-		result = 
-			if (time - ppm_last_time) > timeout_limit then 
-				invalidate
-			else
-				no_effect;
-	tel;
-	
-	
-	node new_sample
-	(
-		ppm0 : int,
-		ppm1 : int,
-		ppm2 : int,
-		ppm3 : int,
-		ppm4 : int,
-		ppm5 : int,
-		ppm6 : int,
-		ppm7 : int,
-		time : int,
-		ppm_last_time : int,
-		ppm_valid : bool,
-		dead_last_pos : int
-	)
-	returns
-	(result : bool);
-	var
-		invalidate : bool;
-		validate : bool;
-		inv0 : bool;
-		inv1 : bool;
-		val0 : bool;
-		val1 : bool;
-		val2 : bool;
-		all_good : bool;
-		throttle_chan : int;
-		rudder_chan : int;
-		dead_chan : int;
-		dead_pos : int;
-	let
-		inv0 = (dead_last_pos = deadSafe);
-		inv1 = (ppm_valid = false);
-		invalidate = (inv0 and inv1);
-		all_good  = (ppm0 >= minBound and ppm0 <= maxBound)
-					and (ppm1 >= minBound and ppm1 <= maxBound)
-					and (ppm2 >= minBound and ppm2 <= maxBound)
-					and (ppm3 >= minBound and ppm3 <= maxBound)
-					and (ppm4 >= minBound and ppm4 <= maxBound)
-					and (ppm5 >= minBound and ppm5 <= maxBound)
-					and (ppm6 >= minBound and ppm6 <= maxBound)
-					and (ppm7 >= minBound and ppm7 <= maxBound);
-		val0 = (ppm_valid = true);
-		val1 = (ppm_last_time = time);
-		val2 = (dead_last_pos = dead_pos);
-		validate = val0 and val1 and val2;
-		throttle_chan = ppm2;
-		rudder_chan = ppm3;
-		dead_chan = ppm5;
-		dead_pos = if dead_chan > 1600 then deadArmable else deadSafe;
-		result = if all_good then 
-					validate
-				 else
-				 	invalidate;
-	tel;
-	
-	
+  	const deadSafe : int = 0;
+  	const deadArmable : int = 1;
+  	const armingIdle : int = 0;
+  	const armingActive : int = 1;
+  	const armingComplete : int = 2;
+  	const hystresis : int = 750;
+  	const timeout_limit : int = 150;
+  	const minBound : real = 800.0;
+  	const maxBound : real = 2200.0;
+
 **};
 
 
