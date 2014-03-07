@@ -7,6 +7,7 @@ with control_law_request_type;
 with userinput_type;
 with DATATYPES;
 with mavlink_rc_channels_override_msg;
+with Base_Types;
 
 thread group UserInputThreads
 
@@ -17,8 +18,9 @@ thread group UserInputThreads
 	uart1_rcoverride_tx: in event data port mavlink_rc_channels_override_msg::rc_channels_override_msg.impl{Queue_Size => 16;};
 	uart5_control_law_request: in event data port control_law_request_type::control_law_request.impl{Queue_Size => 16;};
 	uart1_control_law_request: in event data port control_law_request_type::control_law_request.impl{Queue_Size => 16;};
-	  
-	  
+    flight_control_commands: in data port DATATYPES::Flight_Control_Commands.Impl;
+	system_time : in data port Base_Types::Integer;
+	
   annex agree {**
   	
   		guarantee "Queues initially empty" :
@@ -46,13 +48,23 @@ thread group UserInputThreads
   			result = false -> (signal and not pre(signal));
   		tel;
   			
-		eq ui_insertions : int = 0 -> if (ris_edg(ui_emitter.COUNT > 0)) then
+		eq ui_insertions : int = (if (ui_emitter.COUNT > 0) then 1 else 0) -> if (ris_edg(ui_emitter.COUNT > 0)) then
 										pre(ui_insertions) + 1
 									  else
 									  	pre(ui_insertions);
   			
   		guarantee "User input time always increasing" :
   			true -> ui_insertions > 1 => (ui_emitter.time >= pre (ui_emitter.time));
+  			
+  		guarantee "UI insertions is always positive" :
+  			ui_insertions >= 0;
+  			
+  		assume "positive time" :
+  			system_time >= 0;
+  	
+  		assume "the time value is always increasing" :
+  			true -> system_time > pre(system_time);
+  			
   **};
 	  
 end UserInputThreads;
@@ -77,8 +89,8 @@ thread group implementation UserInputThreads.Impl
     conn_14 : port uart1_rcoverride_tx -> mavlinkInputTask_inst.rcoverride;
     conn_6 : port uart5_control_law_request -> mavlinkInputTask_inst.mav_controllaw_req;
     conn_7 : port uart1_control_law_request -> mavlinkInputTask_inst.mav_controllaw_req;
-	
-	
+	conn_99 : port flight_control_commands -> ppmInputTower_inst.flight_control_commands;
+	conn_time : port system_time -> ppmInputTower_inst.time;
   annex agree {**
   	calendar: ppmInputTower_inst, controlLawTask_inst, uiMuxTask_inst;  
    
@@ -131,12 +143,8 @@ thread group implementation UserInputThreads.Impl
   	lemma "controller never arms unless ppm send arm signal" :  
 		ctrlArmedMode = 2 => armedCount > 0;  
 		
-	lemma "if arming ever occurs after safe, then the controller will become armed":
-		(armedCount > 0 
-			and sincePPMArmed > 6
-			and sincePPMSafe > sincePPMArmed
-		) => sinceCtrlArmed < 2;
-		
+	eq ever_safe : bool = ppmSetSafe -> pre (ever_safe) or ppmSetSafe;
+	
 	--remove output elements as they become available
 	assert law_emitter.COUNT > 0 => law_emitter.REMOVE;
 	assert law_emitter.COUNT = 0 => not law_emitter.REMOVE;
@@ -327,9 +335,8 @@ thread ppmInputTower
     };
     
     --added by Backes
-    flight_control_commands: in data port DATATYPES::Flight_Control_Commands.Impl {
-    	SMACCM::Unimplemented => true;
-    };
+    flight_control_commands: in data port DATATYPES::Flight_Control_Commands.Impl;
+    time : in data port Base_Types::Integer;
     
   properties
     Source_Text => ("tower_task_usercode_ppmInputTower_43.c");
@@ -369,7 +376,6 @@ thread ppmInputTower
 	eq dead_last_pos : int;
 	
 	-- begin inputs --
-	eq time : int; --TODO: plug this variable into the model
 	eq captured : bool; --TODO: plug this variable into the model
 	eq ppm0 : real = flight_control_commands.ppm0;
 	eq ppm1 : real = flight_control_commands.ppm1;
@@ -502,11 +508,14 @@ thread ppmInputTower
   				 	ranged;
   	tel;
   	
-  	guarantee "positive time" :
+  	assume "positive time" :
   		time >= 0;
   	
-  	guarantee "the time value is always increasing" :
-  		true -> time > pre(time);
+  	assume "the time value is always increasing" :
+  		true -> time >= pre(time);
+  	
+  	guarantee "helpful guarantee for monotonic time" :
+  		time >= ui_emitter.time;
   	
   	guarantee "invalid ppm signal behavior" :
   		(not ppm_valid) =>

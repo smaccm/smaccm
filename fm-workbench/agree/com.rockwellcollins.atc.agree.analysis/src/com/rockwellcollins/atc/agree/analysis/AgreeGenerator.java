@@ -81,7 +81,8 @@ public class AgreeGenerator {
                     subCompInst.getName() + ".", false, false);
 
             
-            //TODO: figure out if we actually want to grab this stuff
+            //TODO: figure out if we actually want to grab this stuff.
+            //      I am pretty sure this is only needed for lifting
             //if(subCompImpl != null){
             //    for (AnnexSubclause annex : subCompImpl.getAllAnnexSubclauses()) {
             //        if (annex instanceof AgreeContractSubclause) {

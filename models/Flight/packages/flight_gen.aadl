@@ -2103,12 +2103,26 @@ end Software;
       conn0: feature group motors_and_radios <-> ML.motors_and_radios;
       conn1: feature group sensors <-> ML.sensors;
       
+    annex agree {**
+      assert ML.system_time >= 0;
+  	  assert true -> ML.system_time > pre(ML.system_time);
+    **};
+      
   end Software.Impl;
 
 process flight_gen_process
 	features
       motors_and_radios: feature group UAV::motors_and_radios;
       sensors: feature group UAV::sensors;
+      system_time : in data port Base_Types::Integer;
+      
+    annex agree {**
+    	assume "positive time" :
+  			system_time >= 0;
+  	
+  		assume "the time value is always increasing" :
+  			true -> system_time > pre(system_time);
+    **};
       
 end flight_gen_process;
 
@@ -2507,6 +2521,7 @@ process implementation flight_gen_process.impl
 	motor3   : port px4ioar_inst.motor3 -> motors_and_radios.motor3;
 	motor4   : port px4ioar_inst.motor4 -> motors_and_radios.motor4;
 	sensor_conn: feature group sensors <-> sensorsCaptureTask_inst.sensors_in;
+    time_conn : port system_time -> UserInputThreads_inst.system_time;
     
   properties 
     SMACCM::OS => "eChronos";
@@ -2517,7 +2532,7 @@ process implementation flight_gen_process.impl
     prove execute_soundness()
     prove execute_completeness(this.uart5ISR_inst)
   **};
-  
+
 end flight_gen_process.impl;
 
 

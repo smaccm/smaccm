@@ -1631,9 +1631,6 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         //make a counter for checking finite consistency
         IdExpr countId = addConsistencyConstraints(eqs, internals);
         
-        // get the individual history variables
-        addSubcomponentAssumptions(subEmitters, eqs, internals, properties,
-				totalCompHist, sysAssumpHist, closureMap, countId);
 
         //get the equations that guarantee that every clock has ticked atleast once
         List<Equation> tickEqs = AgreeCalendarUtils.getAllClksHaveTicked("__ALL_TICKED", "__CLK_TICKED", clocks);
@@ -1645,6 +1642,11 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         
         eqs.addAll(tickEqs);
         IdExpr allClksTickedExpr = tickEqs.get(tickEqs.size()-1).lhs.get(0);
+        
+        // get the individual history variables and create assumption properties
+        addSubcomponentAssumptions(subEmitters, eqs, internals, properties,
+				totalCompHist, sysAssumpHistId, allClksTickedExpr, closureMap, countId);
+        
         
         // create individual properties for guarantees
         int i = 0;
@@ -1898,7 +1900,7 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
 	private void addSubcomponentAssumptions(List<AgreeAnnexEmitter> subEmitters,
 			List<Equation> eqs, List<VarDecl> internals,
 			List<String> properties, Expr totalCompHist, Expr sysAssumpHist,
-			Map<Subcomponent, Set<Subcomponent>> closureMap, IdExpr countId) {
+			IdExpr allClksTickedExpr, Map<Subcomponent, Set<Subcomponent>> closureMap, IdExpr countId) {
 		for(AgreeAnnexEmitter subEmitter : subEmitters){
 
             Expr higherContracts = new BoolExpr(true);
@@ -1920,6 +1922,8 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
             leftSide = new BinaryExpr(new BoolExpr(true), BinaryOp.ARROW, leftSide);
             leftSide = new BinaryExpr(sysAssumpHist, BinaryOp.AND, leftSide);
             leftSide = new BinaryExpr(higherContracts, BinaryOp.AND, leftSide);
+            IdExpr clockVarId = new IdExpr(subEmitter.agreeNode.clockVar.id);
+            leftSide = new BinaryExpr(clockVarId, BinaryOp.AND, leftSide);
 
             Expr contrHistExpr = new BinaryExpr(leftSide, BinaryOp.IMPLIES, contrAssumps);
             Equation contrHist = new Equation(compId, contrHistExpr);
