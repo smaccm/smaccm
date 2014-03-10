@@ -434,7 +434,7 @@ thread ppmInputTower
   annex agree {** 
   	-- begin constants --
   	const deadSafe : int = AGREE_Arming_Logic.deadSafe;
-  	const deadArmable : int = AGREE_Arming_Logic.deadArmable;
+  	const deadArmable : int = AGREE_Arming_Logic.deadArmable; 
   	const armingIdle : int = AGREE_Arming_Logic.armingIdle;
   	const armingActive : int = AGREE_Arming_Logic.armingActive;
   	const armingComplete : int = AGREE_Arming_Logic.armingComplete;
@@ -468,11 +468,11 @@ thread ppmInputTower
 	eq ppm4 : real = flight_control_commands.ppm4;
 	eq ppm5 : real = flight_control_commands.ppm5;
 	eq ppm6 : real = flight_control_commands.ppm6;
-	eq ppm7 : real = flight_control_commands.ppm7;
+	eq ppm7 : real = flight_control_commands.ppm7; 
 	
 	-- begin intermediate vars --
   	eq throttle_chan : real = flight_control_commands.ppm2;
-  	eq rudder_chan : real = flight_control_commands.ppm3;
+  	eq rudder_chan : real = flight_control_commands.ppm3; 
   	eq dead_chan : real = flight_control_commands.ppm5;
   	eq dead_pos : int = if dead_chan > 1600.0 then deadArmable else deadSafe;
   	eq prev_ppm_last_time : int = 0 -> pre (ppm_last_time);
