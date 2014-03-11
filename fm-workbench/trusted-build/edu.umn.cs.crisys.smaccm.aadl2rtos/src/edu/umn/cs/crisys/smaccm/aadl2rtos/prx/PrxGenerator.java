@@ -241,9 +241,11 @@ public class PrxGenerator {
 		ec = doc.createElement("code_addr");
 		e.appendChild(ec);
 		ec.appendChild(doc.createTextNode("0x8000000"));
-		ec = doc.createElement("systick");
-		e.appendChild(ec);
-		ec.appendChild(doc.createTextNode("exception_preempt_trampoline_systick"));
+		if (!model.getGenerateSystickIRQ()) {
+		  ec = doc.createElement("systick");
+		  e.appendChild(ec);
+		  ec.appendChild(doc.createTextNode("exception_preempt_trampoline_systick"));
+		}
 		ec = doc.createElement("svcall");
 		e.appendChild(ec);
 		ec.appendChild(doc.createTextNode("SVCHandler"));
