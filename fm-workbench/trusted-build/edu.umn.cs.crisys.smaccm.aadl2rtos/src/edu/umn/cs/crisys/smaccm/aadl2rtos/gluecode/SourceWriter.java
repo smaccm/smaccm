@@ -91,8 +91,6 @@ public class SourceWriter extends AbstractCodeWriter {
 		
 		out.append("void ivory_echronos_begin_atomic();\n");
 		out.append("void ivory_echronos_end_atomic();\n\n");
-		out.append("uint64_t timer_get_ticks();\n\n");
-		out.append("uint32_t smaccm_get_time_in_ms() {return (uint32_t)(timer_get_ticks() / 1000ULL); }\n\n");
 		
 		if (model.getThreadCalendar().hasDispatchers()) {
 		  writeInitializePX4SystickInterrupt() ;
@@ -211,8 +209,20 @@ public class SourceWriter extends AbstractCodeWriter {
 	  int tickInterval = tc.getGreatestCommonDivisorInMilliseconds();
 
 	  writeComment("ISR Function for managing periodic thread dispatch.\n");
+	  out.append("const uint32_t smaccm_tick_interval = " + tickInterval + "; \n");
+	  out.append("const uint32_t smaccm_hyperperiod_subdivisions = " + hyperperiodSubdivisions + "; \n");
+	  out.append("uint32_t smaccm_calendar_counter = 0;\n\n");
+	  out.append("uint32_t smaccm_calendar_ticks = 0; \n\n");	  
+
+    if (!model.getGenerateSystickIRQ()) {
+      writeComment("Generation using external tick handler.\n");
+      out.append("uint64_t timer_get_ticks();\n\n");
+      out.append("uint32_t smaccm_get_time_in_ms() {return (uint32_t)(timer_get_ticks() / 1000ULL); }\n\n");
+    } else {
+      out.append("uint32_t smaccm_get_time_in_ms() {return (uint32_t)(smaccm_calendar_ticks * smaccm_tick_interval); }\n\n");
+    }
 	  
-	  out.append("int smaccm_calendar_counter = 0;\n\n");
+	  
 	  out.append("bool smaccm_thread_calendar() {\n");
 	  
 	  for (Dispatcher d : tc.getPeriodicDispatchers()) {
@@ -224,6 +234,7 @@ public class SourceWriter extends AbstractCodeWriter {
 	  }
     out.append(ind + "smaccm_calendar_counter = (smaccm_calendar_counter + 1) % " + 
         hyperperiodSubdivisions + ";\n");
+    out.append(ind + "smaccm_calendar_ticks++; \n");
     out.append(ind + "return true;\n");
 	  out.append("}\n\n");
     writeComment("End dispatch.\n");
