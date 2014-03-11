@@ -254,9 +254,10 @@ public class PrxGenerator {
 		for (InterruptServiceRoutine i : ISRs) {
 		  if (isInternalIrq(i.getSignalName())) {
 		    writeVectableEntry(i.getSignalName(), i.getHandlerName(), e);
-		  } else if (! isExternalIrq(i.getSignalName())) {
-		    throw new Aadl2RtosException("IRQ: " + i.getSignalName() + " is not a known internal or external IRQ");
-		  }
+		  } 
+		  // else if (! isExternalIrq(i.getSignalName())) {
+		  //   throw new Aadl2RtosException("IRQ: " + i.getSignalName() + " is not a known internal or external IRQ");
+		  // }
 		}
 		
 		// write lirqs from static list: 
