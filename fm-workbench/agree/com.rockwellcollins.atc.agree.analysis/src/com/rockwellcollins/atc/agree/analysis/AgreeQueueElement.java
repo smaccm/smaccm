@@ -1,8 +1,6 @@
 package com.rockwellcollins.atc.agree.analysis;
 
-import org.osate.aadl2.ConnectionEnd;
 import org.osate.aadl2.EventDataPort;
-
 import jkind.lustre.Type;
 
 public class AgreeQueueElement {
@@ -39,12 +37,7 @@ public class AgreeQueueElement {
 		this.destCategory = destCategory;// == null ? "" : destCategory;
 		this.sourCategory = sourCategory;// == null ? "" : sourCategory;
 		this.queueSize = queueSize;
-		
-		//if(destCategory == null || sourCategory == null){
-		//	throw new AgreeException("Created queue with null source or destination category");
-		//}
-		
-		
+
 	}
 	
 	@Override
@@ -62,9 +55,6 @@ public class AgreeQueueElement {
 	public int hashCode(){
 		return this.jDest.hashCode();
 	}
-	
-	
-	
-	
+
 	
 }

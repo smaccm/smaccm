@@ -34,6 +34,7 @@ import jkind.lustre.VarDecl;
 
 import org.eclipse.emf.ecore.EObject;
 import org.osate.aadl2.AbstractConnectionEnd;
+import org.osate.aadl2.Access;
 import org.osate.aadl2.AnnexSubclause;
 import org.osate.aadl2.BooleanLiteral;
 import org.osate.aadl2.BusAccess;
@@ -69,6 +70,7 @@ import org.osate.aadl2.ThreadSubcomponent;
 import org.osate.aadl2.instance.ComponentInstance;
 import org.osate.aadl2.modelsupport.resources.OsateResourceUtil;
 import org.osate.aadl2.properties.PropertyDoesNotApplyToHolderException;
+import org.osate.aadl2.properties.PropertyNotPresentException;
 import org.osate.xtext.aadl2.properties.util.EMFIndexRetrieval;
 import org.osate.xtext.aadl2.properties.util.PropertyUtils;
 
@@ -145,6 +147,7 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
     private final Set<AgreeVarDecl> internalVars = new HashSet<>();
     private final Set<AgreeVarDecl> outputVars = new HashSet<>();
     private final Map<String, List<AgreeQueueElement>> queueMap = new HashMap<>();
+    private final Map<String, List<AgreeDataAccess>> dataAccessMap = new HashMap<>();
     
     //the special string used to replace the "." characters in aadl
     private final String dotChar = "__";
@@ -1180,6 +1183,8 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
                 delayed = lit.getName().equals("delayed");
             }catch(PropertyDoesNotApplyToHolderException e){
                 delayed = false;
+            }catch(PropertyNotPresentException e){
+                delayed = false;
             }
 
             ConnectionEnd destConn = ((ConnectedElement) absConnDest).getConnectionEnd();
@@ -1247,19 +1252,28 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         
         DataSubcomponentType dataSub;
         long queueSize = -1;
+        String dataAccessRight = null;
         if(port instanceof DataPort){
             dataSub = ((DataPort)port).getDataFeatureClassifier();
         }else if (port instanceof EventDataPort){
             dataSub = ((EventDataPort)port).getDataFeatureClassifier();
             Property queueSizeProp = EMFIndexRetrieval.getPropertyDefinitionInWorkspace(
                     OsateResourceUtil.getResourceSet(), "Communication_Properties::Queue_Size");
-            try{
+           // try{
             	queueSize = PropertyUtils.getIntegerValue(port, queueSizeProp);
-            }catch(PropertyDoesNotApplyToHolderException e){
-                delayed = false;
-            }
-        }else if (port instanceof BusAccess || port instanceof DataAccess){
-        	//TODO: we don't currently support data or bus accesses
+           // }catch(PropertyDoesNotApplyToHolderException e){
+           //     delayed = false;
+           // }
+          
+        }else if (port instanceof DataAccess){
+        	dataSub = ((DataAccess)port).getDataFeatureClassifier();
+            Property accessRight = EMFIndexRetrieval.getPropertyDefinitionInWorkspace(
+                    OsateResourceUtil.getResourceSet(), "Memory_Properties::Access_Right");
+            EnumerationLiteral dataAccessEnum = PropertyUtils.getEnumLiteral(port, accessRight);
+            dataAccessRight = dataAccessEnum.getName();
+            
+        }else if(port instanceof BusAccess){
+        	//TODO we currently do not support bus accesses
         	return;
         }else{
             dataSub = ((DataAccess)port).getDataFeatureClassifier();
@@ -1324,7 +1338,7 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
                 sourVarType.type = destVarType.type;
 
                 setConnExpr_Helper(sourContext, sourConn, destContext, destConn, 
-                        destVarType, sourVarType, delayed, queueSize);
+                        destVarType, sourVarType, delayed, queueSize, dataAccessRight);
             }
         }else{
             AgreeVarDecl destVarType = new AgreeVarDecl();
@@ -1344,7 +1358,7 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
             sourVarType.type = destVarType.type;
             
             setConnExpr_Helper(sourContext, sourConn, destContext, destConn, 
-                    destVarType, sourVarType, delayed, queueSize);
+                    destVarType, sourVarType, delayed, queueSize, dataAccessRight);
 
         }
 
@@ -1357,7 +1371,8 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
             AgreeVarDecl destVar,
             AgreeVarDecl sourVar,
             boolean delayed,
-            long queueSize){
+            long queueSize, 
+            String dataAccessRight){
         
     	if(delayed && queueSize != -1){
     		throw new AgreeException("Connection: "+sourVar.aadlStr+
@@ -1366,29 +1381,38 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
     	
     	//if this is an event port, save them to turn them into queues later
     	if(queueSize != -1){
-    		String destCategory = destContext == null ? null : destContext.getName();
-    		String sourCategory = sourContext == null ? null : sourContext.getName();
-
-    		AgreeQueueElement agreeQueueElem = new AgreeQueueElement(sourVar.jKindStr, 
-    				sourVar.aadlStr, 
-    				destVar.jKindStr, 
-    				destVar.aadlStr, 
-    				new NamedType(destVar.type),
-    				(EventDataPort)sourConn,
-    				(EventDataPort)destConn,
-    				sourCategory, 
-    				destCategory, 
-    				queueSize);
-    		
-    		if(queueMap.containsKey(destVar.jKindStr)){
-    			List<AgreeQueueElement> queues = queueMap.get(destVar.jKindStr);
-    			queues.add(agreeQueueElem);
-    		}else{
-    			List<AgreeQueueElement> queues = new ArrayList<AgreeQueueElement>();
-    			queues.add(agreeQueueElem);
-    			queueMap.put(destVar.jKindStr, queues);
-    		}
+    		recordQueueElement(sourContext, sourConn, destContext, destConn,
+					destVar, sourVar, queueSize);
        	}
+    	
+    	//code for data access
+    	if(dataAccessRight != null){
+    		switch(dataAccessRight){
+    		case "read_only":
+    			recordDataAcccess(sourContext, sourConn, destContext, destConn,
+					destVar, sourVar);
+    			break;
+    		case "write_only":
+    			//switch everything around
+    			Context tempContext = sourContext;
+    			ConnectionEnd tempConn = sourConn;
+    			AgreeVarDecl tempVar = sourVar;
+    			sourContext = destContext;
+    			sourConn = destConn;
+    			sourVar = destVar;
+    			destContext = tempContext;
+    			destConn = tempConn;
+    			destVar = tempVar;
+    			
+    			recordDataAcccess(sourContext, sourConn, destContext, destConn,
+    					destVar, sourVar);
+    			break;
+    		case "read_write":
+    			throw new AgreeException("AGREE doesn't know how to handle read_write data accesses");
+        	default:
+        		throw new AgreeException("Unknown data access type '"+dataAccessRight+"'");
+    		}
+    	}
     	
         if (destContext != null) {
             layout.addElement(destContext.getName(), destVar.aadlStr,
@@ -1415,7 +1439,7 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
                     outputVars.add(sourVar);
                 }
             }else{
-                assert(sourConn instanceof DataSubcomponent);
+                assert(sourConn instanceof DataSubcomponent || sourConn instanceof DataAccess);
                 outputVars.add(sourVar);
             }
         }
@@ -1448,6 +1472,62 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         connExpressions.add(connEq);
         
     }
+
+
+	private void recordQueueElement(Context sourContext,
+			ConnectionEnd sourConn, Context destContext,
+			ConnectionEnd destConn, AgreeVarDecl destVar, AgreeVarDecl sourVar,
+			long queueSize) {
+		String destCategory = destContext == null ? null : destContext.getName();
+		String sourCategory = sourContext == null ? null : sourContext.getName();
+
+		AgreeQueueElement agreeQueueElem = new AgreeQueueElement(sourVar.jKindStr, 
+				sourVar.aadlStr, 
+				destVar.jKindStr, 
+				destVar.aadlStr, 
+				new NamedType(destVar.type),
+				(EventDataPort)sourConn,
+				(EventDataPort)destConn,
+				sourCategory, 
+				destCategory, 
+				queueSize);
+		
+		if(queueMap.containsKey(destVar.jKindStr)){
+			List<AgreeQueueElement> queues = queueMap.get(destVar.jKindStr);
+			queues.add(agreeQueueElem);
+		}else{
+			List<AgreeQueueElement> queues = new ArrayList<AgreeQueueElement>();
+			queues.add(agreeQueueElem);
+			queueMap.put(destVar.jKindStr, queues);
+		}
+	}
+
+
+	private void recordDataAcccess(Context sourContext, ConnectionEnd sourConn,
+			Context destContext, ConnectionEnd destConn, AgreeVarDecl destVar,
+			AgreeVarDecl sourVar) {
+		String destCategory = destContext == null ? null : destContext.getName();
+		String sourCategory = sourContext == null ? null : sourContext.getName();
+
+		AgreeDataAccess agreeDataAccess = new AgreeDataAccess(sourVar.jKindStr, 
+				sourVar.aadlStr, 
+				destVar.jKindStr, 
+				destVar.aadlStr, 
+				new NamedType(destVar.type),
+				(DataAccess)sourConn,
+				(DataAccess)destConn,
+				sourCategory, 
+				destCategory);
+		
+		if(dataAccessMap.containsKey(destVar.jKindStr)){
+			List<AgreeDataAccess> accesses = dataAccessMap.get(destVar.jKindStr);
+			accesses.add(agreeDataAccess);
+		}else{
+			List<AgreeDataAccess> acesses = new ArrayList<AgreeDataAccess>();
+			acesses.add(agreeDataAccess);
+			dataAccessMap.put(destVar.jKindStr, acesses);
+		}
+	}
     
     //helper method to above
     private void getAllDataNames(DataImplementation dataImpl, Set<AgreeVarDecl> subStrTypes) {

@@ -2474,7 +2474,7 @@ process implementation flight_gen_process.impl
     time_conn : port system_time -> UserInputThreads_inst.system_time;
     
   properties 
-    SMACCM::OS => "eChronos";
+    SMACCM::OS => "eChronos"; 
     
   annex resolute {**
     prove memory_safe()
