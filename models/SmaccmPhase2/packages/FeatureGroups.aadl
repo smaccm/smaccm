@@ -1,0 +1,103 @@
+package FeatureGroups
+public
+  with mavlink_veh_commsec_msg;
+  with att_control_dbg_type;
+  with alt_control_dbg_type;
+  with radio_stat_type;
+  with motors_type;
+  with controloutput_type;
+  with gps_type;
+  with sensors_type;
+  with control_law_type;
+  with Base_Types;
+  
+feature group data_conns
+  features
+    commsecInfo: requires data access mavlink_veh_commsec_msg::veh_commsec_msg.impl;
+    att_control: requires data access att_control_dbg_type::att_control_dbg.impl;
+    alt_control: requires data access alt_control_dbg_type::alt_control_dbg.impl;
+    radio: requires data access radio_stat_type::radio_stat.impl;
+    motors: requires data access motors_type::motors.impl;
+    control: requires data access controloutput_type::controloutput.impl;
+    position: requires data access gps_type::position.impl;
+    sensors: requires data access sensors_type::sensors_result.impl;
+    controllaw: requires data access control_law_type::control_law.impl;
+end data_conns;
+
+feature group control_params_read
+	features
+      param_reader_ALT_UI_DEAD: requires data access Base_Types::Float ;
+      param_reader_ALT_UI_SENS: requires data access Base_Types::Float ;
+      param_reader_ALT_POS_IMAX: requires data access Base_Types::Float ;
+      param_reader_ALT_POS_D: requires data access Base_Types::Float ;
+      param_reader_ALT_POS_I: requires data access Base_Types::Float ;
+      param_reader_ALT_POS_P: requires data access Base_Types::Float ;
+      param_reader_ALT_RATE_IMAX: requires data access Base_Types::Float ;
+      param_reader_ALT_RATE_D: requires data access Base_Types::Float ;
+      param_reader_ALT_RATE_I: requires data access Base_Types::Float ;
+      param_reader_ALT_RATE_P: requires data access Base_Types::Float ;
+      param_reader_YAW_STAB_IMAX: requires data access Base_Types::Float ;
+      param_reader_YAW_STAB_D: requires data access Base_Types::Float ;
+      param_reader_YAW_STAB_I: requires data access Base_Types::Float ;
+      param_reader_YAW_STAB_P: requires data access Base_Types::Float ;
+      param_reader_YAW_RATE_IMAX: requires data access Base_Types::Float ;
+      param_reader_YAW_RATE_D: requires data access Base_Types::Float ;
+      param_reader_YAW_RATE_I: requires data access Base_Types::Float ;
+      param_reader_YAW_RATE_P: requires data access Base_Types::Float ;
+      param_reader_PIT_STAB_IMAX: requires data access Base_Types::Float ;
+      param_reader_PIT_STAB_D: requires data access Base_Types::Float ;
+      param_reader_PIT_STAB_I: requires data access Base_Types::Float ;
+      param_reader_PIT_STAB_P: requires data access Base_Types::Float ;
+      param_reader_PIT_RATE_IMAX: requires data access Base_Types::Float ;
+      param_reader_PIT_RATE_D: requires data access Base_Types::Float ;
+      param_reader_PIT_RATE_I: requires data access Base_Types::Float ;
+      param_reader_PIT_RATE_P: requires data access Base_Types::Float ;
+      param_reader_RLL_STAB_IMAX: requires data access Base_Types::Float ;
+      param_reader_RLL_STAB_D: requires data access Base_Types::Float ;
+      param_reader_RLL_STAB_I: requires data access Base_Types::Float ;
+      param_reader_RLL_STAB_P: requires data access Base_Types::Float ;
+      param_reader_RLL_RATE_IMAX: requires data access Base_Types::Float ;
+      param_reader_RLL_RATE_D: requires data access Base_Types::Float ;
+      param_reader_RLL_RATE_I: requires data access Base_Types::Float ;
+      param_reader_RLL_RATE_P: requires data access Base_Types::Float ;
+end control_params_read;
+
+feature group control_params_write
+	features
+      param_writer_ALT_UI_DEAD: requires data access Base_Types::Float ;
+      param_writer_ALT_UI_SENS: requires data access Base_Types::Float ;
+      param_writer_ALT_POS_IMAX: requires data access Base_Types::Float ;
+      param_writer_ALT_POS_D: requires data access Base_Types::Float ;
+      param_writer_ALT_POS_I: requires data access Base_Types::Float ;
+      param_writer_ALT_POS_P: requires data access Base_Types::Float ;
+      param_writer_ALT_RATE_IMAX: requires data access Base_Types::Float ;
+      param_writer_ALT_RATE_D: requires data access Base_Types::Float ;
+      param_writer_ALT_RATE_I: requires data access Base_Types::Float ;
+      param_writer_ALT_RATE_P: requires data access Base_Types::Float ;
+      param_writer_YAW_STAB_IMAX: requires data access Base_Types::Float ;
+      param_writer_YAW_STAB_D: requires data access Base_Types::Float ;
+      param_writer_YAW_STAB_I: requires data access Base_Types::Float ;
+      param_writer_YAW_STAB_P: requires data access Base_Types::Float ;
+      param_writer_YAW_RATE_IMAX: requires data access Base_Types::Float ;
+      param_writer_YAW_RATE_D: requires data access Base_Types::Float ;
+      param_writer_YAW_RATE_I: requires data access Base_Types::Float ;
+      param_writer_YAW_RATE_P: requires data access Base_Types::Float ;
+      param_writer_PIT_STAB_IMAX: requires data access Base_Types::Float ;
+      param_writer_PIT_STAB_D: requires data access Base_Types::Float ;
+      param_writer_PIT_STAB_I: requires data access Base_Types::Float ;
+      param_writer_PIT_STAB_P: requires data access Base_Types::Float ;
+      param_writer_PIT_RATE_IMAX: requires data access Base_Types::Float ;
+      param_writer_PIT_RATE_D: requires data access Base_Types::Float ;
+      param_writer_PIT_RATE_I: requires data access Base_Types::Float ;
+      param_writer_PIT_RATE_P: requires data access Base_Types::Float ;
+      param_writer_RLL_STAB_IMAX: requires data access Base_Types::Float ;
+      param_writer_RLL_STAB_D: requires data access Base_Types::Float ;
+      param_writer_RLL_STAB_I: requires data access Base_Types::Float ;
+      param_writer_RLL_STAB_P: requires data access Base_Types::Float ;
+      param_writer_RLL_RATE_IMAX: requires data access Base_Types::Float ;
+      param_writer_RLL_RATE_D: requires data access Base_Types::Float ;
+      param_writer_RLL_RATE_I: requires data access Base_Types::Float ;
+      param_writer_RLL_RATE_P: requires data access Base_Types::Float ;
+end control_params_write;
+
+end FeatureGroups;

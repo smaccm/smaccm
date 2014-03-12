@@ -25,6 +25,8 @@ public
   with GCS;
   with Commsec;
   with Datalink;
+  with FeatureGroups;
+  with Control;
 	
  
 thread px4ioar
@@ -43,7 +45,15 @@ thread px4ioar
       Queue_Size => 2;
       SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_px4ioar_381.h";
       SMACCM_SYS::CommPrim_Source_Text => "receiveFromTask_px4ioar_381_chan395_399";
-      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_px4ioar_381_chan395_newstate_loop_424", "eventhandler_px4ioar_381_chan395_newstate_bootCheckComplete_420", "eventhandler_px4ioar_381_chan395_newstate_initMulti_417", "eventhandler_px4ioar_381_chan395_newstate_init4_416", "eventhandler_px4ioar_381_chan395_newstate_init3_413", "eventhandler_px4ioar_381_chan395_newstate_init2_410", "eventhandler_px4ioar_381_chan395_newstate_init1_407", "eventhandler_px4ioar_381_chan395_newstate_bootBegin_404");
+      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_px4ioar_381_chan395_newstate_loop_424"
+      	, "eventhandler_px4ioar_381_chan395_newstate_bootCheckComplete_420",
+      	 "eventhandler_px4ioar_381_chan395_newstate_initMulti_417",
+      	  "eventhandler_px4ioar_381_chan395_newstate_init4_416",
+      	   "eventhandler_px4ioar_381_chan395_newstate_init3_413",
+      	    "eventhandler_px4ioar_381_chan395_newstate_init2_410",
+      	     "eventhandler_px4ioar_381_chan395_newstate_init1_407",
+      	      "eventhandler_px4ioar_381_chan395_newstate_bootBegin_404"
+      );
     };
     motor_istream: in event data port motors_type::motors.impl {
       Queue_Size => 16;
@@ -65,7 +75,13 @@ thread px4ioar
     SMACCM::Language => "Ivory";
     Dispatch_Protocol => Hybrid;
     Period => 1 ms;
-    SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_px4ioar_381_per1_loop_422", "eventhandler_px4ioar_381_per1_bootCheckComplete_419", "eventhandler_px4ioar_381_per1_init4_415", "eventhandler_px4ioar_381_per1_init3_412", "eventhandler_px4ioar_381_per1_init2_409", "eventhandler_px4ioar_381_per1_init1_406", "eventhandler_px4ioar_381_per1_bootBegin_403");
+    SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_px4ioar_381_per1_loop_422", 
+    "eventhandler_px4ioar_381_per1_bootCheckComplete_419", 
+    "eventhandler_px4ioar_381_per1_init4_415", 
+    "eventhandler_px4ioar_381_per1_init3_412", 
+    "eventhandler_px4ioar_381_per1_init2_409", 
+    "eventhandler_px4ioar_381_per1_init1_406", 
+    "eventhandler_px4ioar_381_per1_bootBegin_403");
 end px4ioar;
 
 
@@ -174,28 +190,6 @@ thread motors_state
 end motors_state;
 
 
-thread control_state
-  features
-    proxyEvent: in event data port controloutput_type::controloutput.impl {
-      Queue_Size => 16;
-      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_state_298.h";
-      SMACCM_SYS::CommPrim_Source_Text => "receiveFromTask_control_state_298_chan38_302";
-      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_control_state_298_chan38_305");
-    };
-    proxyData: requires data access controloutput_type::controloutput.impl {
-      Access_Right => write_only;
-      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_state_298.h";
-      SMACCM_SYS::CommPrim_Source_Text => "write_control_state_298_dataport297_300";
-    };
-  properties
-    Source_Text => ("tower_task_usercode_control_state_298.c");
-    Priority => 17;
-    Source_Stack_Size => 256 bytes;
-    SMACCM::Language => "Ivory";
-    Dispatch_Protocol => Sporadic;
-end control_state;
-
-
 thread motmix
   features
     motors: out event data port motors_type::motors.impl {
@@ -221,220 +215,6 @@ thread motmix
     SMACCM::Language => "Ivory";
     Dispatch_Protocol => Sporadic;
 end motmix;
-
-
-thread control
-  features
-    control: out event data port controloutput_type::controloutput.impl {
-      Queue_Size => 16;
-      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_157.h";
-      SMACCM_SYS::CommPrim_Source_Text => "emitFromTask_control_157_chan38_165";
-    };
-    att_control_dbg: requires data access att_control_dbg_type::att_control_dbg.impl {
-      Access_Right => write_only;
-      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_157.h";
-      SMACCM_SYS::CommPrim_Source_Text => "write_control_157_dataport40_261";
-    };
-    alt_control_dbg: requires data access alt_control_dbg_type::alt_control_dbg.impl {
-      Access_Right => write_only;
-      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_157.h";
-      SMACCM_SYS::CommPrim_Source_Text => "write_control_157_dataport39_257";
-    };
-    param_reader_ALT_UI_DEAD: requires data access Base_Types::Float {
-      Access_Right => read_only;
-      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_157.h";
-      SMACCM_SYS::CommPrim_Source_Text => "read_control_157_dataport36_233";
-    };
-    param_reader_ALT_UI_SENS: requires data access Base_Types::Float {
-      Access_Right => read_only;
-      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_157.h";
-      SMACCM_SYS::CommPrim_Source_Text => "read_control_157_dataport35_231";
-    };
-    param_reader_ALT_POS_IMAX: requires data access Base_Types::Float {
-      Access_Right => read_only;
-      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_157.h";
-      SMACCM_SYS::CommPrim_Source_Text => "read_control_157_dataport34_229";
-    };
-    param_reader_ALT_POS_D: requires data access Base_Types::Float {
-      Access_Right => read_only;
-      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_157.h";
-      SMACCM_SYS::CommPrim_Source_Text => "read_control_157_dataport33_227";
-    };
-    param_reader_ALT_POS_I: requires data access Base_Types::Float {
-      Access_Right => read_only;
-      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_157.h";
-      SMACCM_SYS::CommPrim_Source_Text => "read_control_157_dataport32_225";
-    };
-    param_reader_ALT_POS_P: requires data access Base_Types::Float {
-      Access_Right => read_only;
-      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_157.h";
-      SMACCM_SYS::CommPrim_Source_Text => "read_control_157_dataport31_223";
-    };
-    param_reader_ALT_RATE_IMAX: requires data access Base_Types::Float {
-      Access_Right => read_only;
-      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_157.h";
-      SMACCM_SYS::CommPrim_Source_Text => "read_control_157_dataport30_221";
-    };
-    param_reader_ALT_RATE_D: requires data access Base_Types::Float {
-      Access_Right => read_only;
-      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_157.h";
-      SMACCM_SYS::CommPrim_Source_Text => "read_control_157_dataport29_219";
-    };
-    param_reader_ALT_RATE_I: requires data access Base_Types::Float {
-      Access_Right => read_only;
-      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_157.h";
-      SMACCM_SYS::CommPrim_Source_Text => "read_control_157_dataport28_217";
-    };
-    param_reader_ALT_RATE_P: requires data access Base_Types::Float {
-      Access_Right => read_only;
-      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_157.h";
-      SMACCM_SYS::CommPrim_Source_Text => "read_control_157_dataport27_215";
-    };
-    param_reader_YAW_STAB_IMAX: requires data access Base_Types::Float {
-      Access_Right => read_only;
-      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_157.h";
-      SMACCM_SYS::CommPrim_Source_Text => "read_control_157_dataport26_213";
-    };
-    param_reader_YAW_STAB_D: requires data access Base_Types::Float {
-      Access_Right => read_only;
-      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_157.h";
-      SMACCM_SYS::CommPrim_Source_Text => "read_control_157_dataport25_211";
-    };
-    param_reader_YAW_STAB_I: requires data access Base_Types::Float {
-      Access_Right => read_only;
-      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_157.h";
-      SMACCM_SYS::CommPrim_Source_Text => "read_control_157_dataport24_209";
-    };
-    param_reader_YAW_STAB_P: requires data access Base_Types::Float {
-      Access_Right => read_only;
-      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_157.h";
-      SMACCM_SYS::CommPrim_Source_Text => "read_control_157_dataport23_207";
-    };
-    param_reader_YAW_RATE_IMAX: requires data access Base_Types::Float {
-      Access_Right => read_only;
-      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_157.h";
-      SMACCM_SYS::CommPrim_Source_Text => "read_control_157_dataport22_205";
-    };
-    param_reader_YAW_RATE_D: requires data access Base_Types::Float {
-      Access_Right => read_only;
-      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_157.h";
-      SMACCM_SYS::CommPrim_Source_Text => "read_control_157_dataport21_203";
-    };
-    param_reader_YAW_RATE_I: requires data access Base_Types::Float {
-      Access_Right => read_only;
-      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_157.h";
-      SMACCM_SYS::CommPrim_Source_Text => "read_control_157_dataport20_201";
-    };
-    param_reader_YAW_RATE_P: requires data access Base_Types::Float {
-      Access_Right => read_only;
-      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_157.h";
-      SMACCM_SYS::CommPrim_Source_Text => "read_control_157_dataport19_199";
-    };
-    param_reader_PIT_STAB_IMAX: requires data access Base_Types::Float {
-      Access_Right => read_only;
-      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_157.h";
-      SMACCM_SYS::CommPrim_Source_Text => "read_control_157_dataport18_197";
-    };
-    param_reader_PIT_STAB_D: requires data access Base_Types::Float {
-      Access_Right => read_only;
-      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_157.h";
-      SMACCM_SYS::CommPrim_Source_Text => "read_control_157_dataport17_195";
-    };
-    param_reader_PIT_STAB_I: requires data access Base_Types::Float {
-      Access_Right => read_only;
-      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_157.h";
-      SMACCM_SYS::CommPrim_Source_Text => "read_control_157_dataport16_193";
-    };
-    param_reader_PIT_STAB_P: requires data access Base_Types::Float {
-      Access_Right => read_only;
-      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_157.h";
-      SMACCM_SYS::CommPrim_Source_Text => "read_control_157_dataport15_191";
-    };
-    param_reader_PIT_RATE_IMAX: requires data access Base_Types::Float {
-      Access_Right => read_only;
-      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_157.h";
-      SMACCM_SYS::CommPrim_Source_Text => "read_control_157_dataport14_189";
-    };
-    param_reader_PIT_RATE_D: requires data access Base_Types::Float {
-      Access_Right => read_only;
-      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_157.h";
-      SMACCM_SYS::CommPrim_Source_Text => "read_control_157_dataport13_187";
-    };
-    param_reader_PIT_RATE_I: requires data access Base_Types::Float {
-      Access_Right => read_only;
-      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_157.h";
-      SMACCM_SYS::CommPrim_Source_Text => "read_control_157_dataport12_185";
-    };
-    param_reader_PIT_RATE_P: requires data access Base_Types::Float {
-      Access_Right => read_only;
-      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_157.h";
-      SMACCM_SYS::CommPrim_Source_Text => "read_control_157_dataport11_183";
-    };
-    param_reader_RLL_STAB_IMAX: requires data access Base_Types::Float {
-      Access_Right => read_only;
-      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_157.h";
-      SMACCM_SYS::CommPrim_Source_Text => "read_control_157_dataport10_181";
-    };
-    param_reader_RLL_STAB_D: requires data access Base_Types::Float {
-      Access_Right => read_only;
-      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_157.h";
-      SMACCM_SYS::CommPrim_Source_Text => "read_control_157_dataport9_179";
-    };
-    param_reader_RLL_STAB_I: requires data access Base_Types::Float {
-      Access_Right => read_only;
-      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_157.h";
-      SMACCM_SYS::CommPrim_Source_Text => "read_control_157_dataport8_177";
-    };
-    param_reader_RLL_STAB_P: requires data access Base_Types::Float {
-      Access_Right => read_only;
-      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_157.h";
-      SMACCM_SYS::CommPrim_Source_Text => "read_control_157_dataport7_175";
-    };
-    param_reader_RLL_RATE_IMAX: requires data access Base_Types::Float {
-      Access_Right => read_only;
-      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_157.h";
-      SMACCM_SYS::CommPrim_Source_Text => "read_control_157_dataport6_173";
-    };
-    param_reader_RLL_RATE_D: requires data access Base_Types::Float {
-      Access_Right => read_only;
-      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_157.h";
-      SMACCM_SYS::CommPrim_Source_Text => "read_control_157_dataport5_171";
-    };
-    param_reader_RLL_RATE_I: requires data access Base_Types::Float {
-      Access_Right => read_only;
-      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_157.h";
-      SMACCM_SYS::CommPrim_Source_Text => "read_control_157_dataport4_169";
-    };
-    param_reader_RLL_RATE_P: requires data access Base_Types::Float {
-      Access_Right => read_only;
-      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_157.h";
-      SMACCM_SYS::CommPrim_Source_Text => "read_control_157_dataport3_167";
-    };
-    sensors: requires data access sensors_type::sensors_result.impl {
-      Access_Right => read_only;
-      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_157.h";
-      SMACCM_SYS::CommPrim_Source_Text => "read_control_157_dataport0_163";
-    };
-    userinput: requires data access userinput_type::userinput_result.impl {
-      Access_Right => read_only;
-      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_157.h";
-      SMACCM_SYS::CommPrim_Source_Text => "read_control_157_dataport131_161";
-    };
-    control_law: requires data access control_law_type::control_law.impl {
-      Access_Right => read_only;
-      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_157.h";
-      SMACCM_SYS::CommPrim_Source_Text => "read_control_157_dataport140_159";
-    };
-  properties
-    Source_Text => ("tower_task_usercode_control_157.c");
-    Priority => 19;
-    Source_Stack_Size => 256 bytes;
-    SMACCM::Language => "Ivory";
-    Dispatch_Protocol => Hybrid;
-    Period => 5 ms;
-    SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_control_157_per5_286");
-end control;
-
 
 thread blink
   features
@@ -584,55 +364,331 @@ end uart6ISR;
       
   end flight_gen_process;
 
+data proc_data
+  features
+	transmitParams5 : feature group inverse of FeatureGroups::control_params_read;
+    transmitParams1 : feature group inverse of FeatureGroups::control_params_read;
+    receiveParamsRead5 : feature group inverse of FeatureGroups::control_params_read;
+    receiveParamsWrite5 : feature group inverse of FeatureGroups::control_params_write;
+    receiveParamsRead1 : feature group inverse of FeatureGroups::control_params_read;
+    receiveParamsWrite1 : feature group inverse of FeatureGroups::control_params_write;
+    transCons5 : feature group inverse of FeatureGroups::data_conns;
+    transCons1 : feature group inverse of FeatureGroups::data_conns;
+    
+    commsecInfo1: provides data access mavlink_veh_commsec_msg::veh_commsec_msg.impl;
+    commsecInfo5: provides data access mavlink_veh_commsec_msg::veh_commsec_msg.impl;
+    
+    att_control: provides data access att_control_dbg_type::att_control_dbg.impl;
+    alt_control: provides data access alt_control_dbg_type::alt_control_dbg.impl;
+    radio: provides data access radio_stat_type::radio_stat.impl;
+    motors: provides data access motors_type::motors.impl;
+    control: provides data access controloutput_type::controloutput.impl;
+    position: provides data access gps_type::position.impl;
+    sensors: provides data access sensors_type::sensors_result.impl;
+    controllaw: provides data access control_law_type::control_law.impl;
+end proc_data;
+
+data implementation proc_data.impl
+	subcomponents
+      dataport817 : data radio_stat_type::radio_stat.impl;
+      dataport777 : data mavlink_veh_commsec_msg::veh_commsec_msg.impl;
+      dataport474 : data radio_stat_type::radio_stat.impl;
+      dataport434 : data mavlink_veh_commsec_msg::veh_commsec_msg.impl;
+      dataport341 : data gps_type::position.impl;
+      dataport306 : data motors_type::motors.impl;
+      dataport297 : data controloutput_type::controloutput.impl;
+      dataport140 : data control_law_type::control_law.impl;
+      dataport131 : data userinput_type::userinput_result.impl;
+      dataport40 : data att_control_dbg_type::att_control_dbg.impl;
+      dataport39 : data alt_control_dbg_type::alt_control_dbg.impl;
+      dataport36 : data Base_Types::Float;
+      dataport35 : data Base_Types::Float;
+      dataport34 : data Base_Types::Float;
+      dataport33 : data Base_Types::Float;
+      dataport32 : data Base_Types::Float;
+      dataport31 : data Base_Types::Float;
+      dataport30 : data Base_Types::Float;
+      dataport29 : data Base_Types::Float;
+      dataport28 : data Base_Types::Float;
+      dataport27 : data Base_Types::Float;
+      dataport26 : data Base_Types::Float;
+      dataport25 : data Base_Types::Float;
+      dataport24 : data Base_Types::Float;
+      dataport23 : data Base_Types::Float;
+      dataport22 : data Base_Types::Float;
+      dataport21 : data Base_Types::Float;
+      dataport20 : data Base_Types::Float;
+      dataport19 : data Base_Types::Float;
+      dataport18 : data Base_Types::Float;
+      dataport17 : data Base_Types::Float;
+      dataport16 : data Base_Types::Float;
+      dataport15 : data Base_Types::Float;
+      dataport14 : data Base_Types::Float;
+      dataport13 : data Base_Types::Float;
+      dataport12 : data Base_Types::Float;
+      dataport11 : data Base_Types::Float;
+      dataport10 : data Base_Types::Float;
+      dataport9 : data Base_Types::Float;
+      dataport8 : data Base_Types::Float;
+      dataport7 : data Base_Types::Float;
+      dataport6 : data Base_Types::Float;
+      dataport5 : data Base_Types::Float;
+      dataport4 : data Base_Types::Float;
+      dataport3 : data Base_Types::Float;
+      dataport0 : data sensors_type::sensors_result.impl;
+      
+    connections  
+    
+    connComm1: data access dataport434 -> commsecInfo1;
+    connComm5: data access dataport777 -> commsecInfo5;
+        
+    connAtt: data access dataport40 -> att_control;
+    connAlt: data access dataport39 -> alt_control;
+    
+	connRadio: data access dataport817 -> radio;
+	connMotor: data access dataport306 -> motors;
+	connControl: data access dataport297 -> control;
+	connPosition: data access dataport341 -> position;
+	connSensors: data access dataport0 -> sensors;
+	connControlLaw: data access dataport140 -> controllaw;
+    
+    conn_40 : data access dataport36 -> transmitParams5.param_reader_ALT_UI_DEAD;
+    conn_41 : data access dataport35 -> transmitParams5.param_reader_ALT_UI_SENS;
+    conn_42 : data access dataport34 -> transmitParams5.param_reader_ALT_POS_IMAX;
+    conn_43 : data access dataport33 -> transmitParams5.param_reader_ALT_POS_D;
+    conn_44 : data access dataport32 -> transmitParams5.param_reader_ALT_POS_I;
+    conn_45 : data access dataport31 -> transmitParams5.param_reader_ALT_POS_P;
+    conn_46 : data access dataport30 -> transmitParams5.param_reader_ALT_RATE_IMAX;
+    conn_47 : data access dataport29 -> transmitParams5.param_reader_ALT_RATE_D;
+    conn_48 : data access dataport28 -> transmitParams5.param_reader_ALT_RATE_I;
+    conn_49 : data access dataport27 -> transmitParams5.param_reader_ALT_RATE_P;
+    conn_50 : data access dataport26 -> transmitParams5.param_reader_YAW_STAB_IMAX;
+    conn_51 : data access dataport25 -> transmitParams5.param_reader_YAW_STAB_D;
+    conn_52 : data access dataport24 -> transmitParams5.param_reader_YAW_STAB_I;
+    conn_53 : data access dataport23 -> transmitParams5.param_reader_YAW_STAB_P;
+    conn_54 : data access dataport22 -> transmitParams5.param_reader_YAW_RATE_IMAX;
+    conn_55 : data access dataport21 -> transmitParams5.param_reader_YAW_RATE_D;
+    conn_56 : data access dataport20 -> transmitParams5.param_reader_YAW_RATE_I;
+    conn_57 : data access dataport19 -> transmitParams5.param_reader_YAW_RATE_P;
+    conn_58 : data access dataport18 -> transmitParams5.param_reader_PIT_STAB_IMAX;
+    conn_59 : data access dataport17 -> transmitParams5.param_reader_PIT_STAB_D;
+    conn_60 : data access dataport16 -> transmitParams5.param_reader_PIT_STAB_I;
+    conn_61 : data access dataport15 -> transmitParams5.param_reader_PIT_STAB_P;
+    conn_62 : data access dataport14 -> transmitParams5.param_reader_PIT_RATE_IMAX;
+    conn_63 : data access dataport13 -> transmitParams5.param_reader_PIT_RATE_D;
+    conn_64 : data access dataport12 -> transmitParams5.param_reader_PIT_RATE_I;
+    conn_65 : data access dataport11 -> transmitParams5.param_reader_PIT_RATE_P;
+    conn_66 : data access dataport10 -> transmitParams5.param_reader_RLL_STAB_IMAX;
+    conn_67 : data access dataport9 -> transmitParams5.param_reader_RLL_STAB_D;
+    conn_68 : data access dataport8 -> transmitParams5.param_reader_RLL_STAB_I;
+    conn_69 : data access dataport7 -> transmitParams5.param_reader_RLL_STAB_P;
+    conn_70 : data access dataport6 -> transmitParams5.param_reader_RLL_RATE_IMAX;
+    conn_71 : data access dataport5 -> transmitParams5.param_reader_RLL_RATE_D;
+    conn_72 : data access dataport4 -> transmitParams5.param_reader_RLL_RATE_I;
+    conn_73 : data access dataport3 -> transmitParams5.param_reader_RLL_RATE_P;
+     
+     conn_83 : data access dataport36 -> receiveParamsWrite5.param_writer_ALT_UI_DEAD;
+    conn_84 : data access dataport35 -> receiveParamsWrite5.param_writer_ALT_UI_SENS;
+    conn_85 : data access dataport34 -> receiveParamsWrite5.param_writer_ALT_POS_IMAX;
+    conn_86 : data access dataport33 -> receiveParamsWrite5.param_writer_ALT_POS_D;
+    conn_87 : data access dataport32 -> receiveParamsWrite5.param_writer_ALT_POS_I;
+    conn_88 : data access dataport31 -> receiveParamsWrite5.param_writer_ALT_POS_P;
+    conn_89 : data access dataport30 -> receiveParamsWrite5.param_writer_ALT_RATE_IMAX;
+    conn_90 : data access dataport29 -> receiveParamsWrite5.param_writer_ALT_RATE_D;
+    conn_91 : data access dataport28 -> receiveParamsWrite5.param_writer_ALT_RATE_I;
+    conn_92 : data access dataport27 -> receiveParamsWrite5.param_writer_ALT_RATE_P;
+    conn_93 : data access dataport26 -> receiveParamsWrite5.param_writer_YAW_STAB_IMAX;
+    conn_94 : data access dataport25 -> receiveParamsWrite5.param_writer_YAW_STAB_D;
+    conn_95 : data access dataport24 -> receiveParamsWrite5.param_writer_YAW_STAB_I;
+    conn_96 : data access dataport23 -> receiveParamsWrite5.param_writer_YAW_STAB_P;
+    conn_97 : data access dataport22 -> receiveParamsWrite5.param_writer_YAW_RATE_IMAX;
+    conn_98 : data access dataport21 -> receiveParamsWrite5.param_writer_YAW_RATE_D;
+    conn_99 : data access dataport20 -> receiveParamsWrite5.param_writer_YAW_RATE_I;
+    conn_100 : data access dataport19 -> receiveParamsWrite5.param_writer_YAW_RATE_P;
+    conn_101 : data access dataport18 -> receiveParamsWrite5.param_writer_PIT_STAB_IMAX;
+    conn_102 : data access dataport17 -> receiveParamsWrite5.param_writer_PIT_STAB_D;
+    conn_103 : data access dataport16 -> receiveParamsWrite5.param_writer_PIT_STAB_I;
+    conn_104 : data access dataport15 -> receiveParamsWrite5.param_writer_PIT_STAB_P;
+    conn_105 : data access dataport14 -> receiveParamsWrite5.param_writer_PIT_RATE_IMAX;
+    conn_106 : data access dataport13 -> receiveParamsWrite5.param_writer_PIT_RATE_D;
+    conn_107 : data access dataport12 -> receiveParamsWrite5.param_writer_PIT_RATE_I;
+    conn_108 : data access dataport11 -> receiveParamsWrite5.param_writer_PIT_RATE_P;
+    conn_109 : data access dataport10 -> receiveParamsWrite5.param_writer_RLL_STAB_IMAX;
+    conn_110 : data access dataport9 -> receiveParamsWrite5.param_writer_RLL_STAB_D;
+    conn_111 : data access dataport8 -> receiveParamsWrite5.param_writer_RLL_STAB_I;
+    conn_112 : data access dataport7 -> receiveParamsWrite5.param_writer_RLL_STAB_P;
+    conn_113 : data access dataport6 -> receiveParamsWrite5.param_writer_RLL_RATE_IMAX;
+    conn_114 : data access dataport5 -> receiveParamsWrite5.param_writer_RLL_RATE_D;
+    conn_115 : data access dataport4 -> receiveParamsWrite5.param_writer_RLL_RATE_I;
+    conn_116 : data access dataport3 -> receiveParamsWrite5.param_writer_RLL_RATE_P;
+    conn_117 : data access dataport36 -> receiveParamsRead5.param_reader_ALT_UI_DEAD;
+    conn_118 : data access dataport35 -> receiveParamsRead5.param_reader_ALT_UI_SENS;
+    conn_119 : data access dataport34 -> receiveParamsRead5.param_reader_ALT_POS_IMAX;
+    conn_120 : data access dataport33 -> receiveParamsRead5.param_reader_ALT_POS_D;
+    conn_121 : data access dataport32 -> receiveParamsRead5.param_reader_ALT_POS_I;
+    conn_122 : data access dataport31 -> receiveParamsRead5.param_reader_ALT_POS_P;
+    conn_123 : data access dataport30 -> receiveParamsRead5.param_reader_ALT_RATE_IMAX;
+    conn_124 : data access dataport29 -> receiveParamsRead5.param_reader_ALT_RATE_D;
+    conn_125 : data access dataport28 -> receiveParamsRead5.param_reader_ALT_RATE_I;
+    conn_126 : data access dataport27 -> receiveParamsRead5.param_reader_ALT_RATE_P;
+    conn_127 : data access dataport26 -> receiveParamsRead5.param_reader_YAW_STAB_IMAX;
+    conn_128 : data access dataport25 -> receiveParamsRead5.param_reader_YAW_STAB_D;
+    conn_129 : data access dataport24 -> receiveParamsRead5.param_reader_YAW_STAB_I;
+    conn_130 : data access dataport23 -> receiveParamsRead5.param_reader_YAW_STAB_P;
+    conn_131 : data access dataport22 -> receiveParamsRead5.param_reader_YAW_RATE_IMAX;
+    conn_132 : data access dataport21 -> receiveParamsRead5.param_reader_YAW_RATE_D;
+    conn_133 : data access dataport20 -> receiveParamsRead5.param_reader_YAW_RATE_I;
+    conn_134 : data access dataport19 -> receiveParamsRead5.param_reader_YAW_RATE_P;
+    conn_135 : data access dataport18 -> receiveParamsRead5.param_reader_PIT_STAB_IMAX;
+    conn_136 : data access dataport17 -> receiveParamsRead5.param_reader_PIT_STAB_D;
+    conn_137 : data access dataport16 -> receiveParamsRead5.param_reader_PIT_STAB_I;
+    conn_138 : data access dataport15 -> receiveParamsRead5.param_reader_PIT_STAB_P;
+    conn_139 : data access dataport14 -> receiveParamsRead5.param_reader_PIT_RATE_IMAX;
+    conn_140 : data access dataport13 -> receiveParamsRead5.param_reader_PIT_RATE_D;
+    conn_141 : data access dataport12 -> receiveParamsRead5.param_reader_PIT_RATE_I;
+    conn_142 : data access dataport11 -> receiveParamsRead5.param_reader_PIT_RATE_P;
+    conn_143 : data access dataport10 -> receiveParamsRead5.param_reader_RLL_STAB_IMAX;
+    conn_144 : data access dataport9 -> receiveParamsRead5.param_reader_RLL_STAB_D;
+    conn_145 : data access dataport8 -> receiveParamsRead5.param_reader_RLL_STAB_I;
+    conn_146 : data access dataport7 -> receiveParamsRead5.param_reader_RLL_STAB_P;
+    conn_147 : data access dataport6 -> receiveParamsRead5.param_reader_RLL_RATE_IMAX;
+    conn_148 : data access dataport5 -> receiveParamsRead5.param_reader_RLL_RATE_D;
+    conn_149 : data access dataport4 -> receiveParamsRead5.param_reader_RLL_RATE_I;
+    conn_150 : data access dataport3 -> receiveParamsRead5.param_reader_RLL_RATE_P;
+    
+     conn_153 : data access dataport36 -> transmitParams1.param_reader_ALT_UI_DEAD;
+    conn_154 : data access dataport35 -> transmitParams1.param_reader_ALT_UI_SENS;
+    conn_155 : data access dataport34 -> transmitParams1.param_reader_ALT_POS_IMAX;
+    conn_156 : data access dataport33 -> transmitParams1.param_reader_ALT_POS_D;
+    conn_157 : data access dataport32 -> transmitParams1.param_reader_ALT_POS_I;
+    conn_158 : data access dataport31 -> transmitParams1.param_reader_ALT_POS_P;
+    conn_159 : data access dataport30 -> transmitParams1.param_reader_ALT_RATE_IMAX;
+    conn_160 : data access dataport29 -> transmitParams1.param_reader_ALT_RATE_D;
+    conn_161 : data access dataport28 -> transmitParams1.param_reader_ALT_RATE_I;
+    conn_162 : data access dataport27 -> transmitParams1.param_reader_ALT_RATE_P;
+    conn_163 : data access dataport26 -> transmitParams1.param_reader_YAW_STAB_IMAX;
+    conn_164 : data access dataport25 -> transmitParams1.param_reader_YAW_STAB_D;
+    conn_165 : data access dataport24 -> transmitParams1.param_reader_YAW_STAB_I;
+    conn_166 : data access dataport23 -> transmitParams1.param_reader_YAW_STAB_P;
+    conn_167 : data access dataport22 -> transmitParams1.param_reader_YAW_RATE_IMAX;
+    conn_168 : data access dataport21 -> transmitParams1.param_reader_YAW_RATE_D;
+    conn_169 : data access dataport20 -> transmitParams1.param_reader_YAW_RATE_I;
+    conn_170 : data access dataport19 -> transmitParams1.param_reader_YAW_RATE_P;
+    conn_171 : data access dataport18 -> transmitParams1.param_reader_PIT_STAB_IMAX;
+    conn_172 : data access dataport17 -> transmitParams1.param_reader_PIT_STAB_D;
+    conn_173 : data access dataport16 -> transmitParams1.param_reader_PIT_STAB_I;
+    conn_174 : data access dataport15 -> transmitParams1.param_reader_PIT_STAB_P;
+    conn_175 : data access dataport14 -> transmitParams1.param_reader_PIT_RATE_IMAX;
+    conn_176 : data access dataport13 -> transmitParams1.param_reader_PIT_RATE_D;
+    conn_177 : data access dataport12 -> transmitParams1.param_reader_PIT_RATE_I;
+    conn_178 : data access dataport11 -> transmitParams1.param_reader_PIT_RATE_P;
+    conn_179 : data access dataport10 -> transmitParams1.param_reader_RLL_STAB_IMAX;
+    conn_180 : data access dataport9 -> transmitParams1.param_reader_RLL_STAB_D;
+    conn_181 : data access dataport8 -> transmitParams1.param_reader_RLL_STAB_I;
+    conn_182 : data access dataport7 -> transmitParams1.param_reader_RLL_STAB_P;
+    conn_183 : data access dataport6 -> transmitParams1.param_reader_RLL_RATE_IMAX;
+    conn_184 : data access dataport5 -> transmitParams1.param_reader_RLL_RATE_D;
+    conn_185 : data access dataport4 -> transmitParams1.param_reader_RLL_RATE_I;
+    conn_186 : data access dataport3 -> transmitParams1.param_reader_RLL_RATE_P;
+
+    conn_196 : data access dataport36 -> receiveParamsWrite1.param_writer_ALT_UI_DEAD;
+    conn_197 : data access dataport35 -> receiveParamsWrite1.param_writer_ALT_UI_SENS;
+    conn_198 : data access dataport34 -> receiveParamsWrite1.param_writer_ALT_POS_IMAX;
+    conn_199 : data access dataport33 -> receiveParamsWrite1.param_writer_ALT_POS_D;
+    conn_200 : data access dataport32 -> receiveParamsWrite1.param_writer_ALT_POS_I;
+    conn_201 : data access dataport31 -> receiveParamsWrite1.param_writer_ALT_POS_P;
+    conn_202 : data access dataport30 -> receiveParamsWrite1.param_writer_ALT_RATE_IMAX;
+    conn_203 : data access dataport29 -> receiveParamsWrite1.param_writer_ALT_RATE_D;
+    conn_204 : data access dataport28 -> receiveParamsWrite1.param_writer_ALT_RATE_I;
+    conn_205 : data access dataport27 -> receiveParamsWrite1.param_writer_ALT_RATE_P;
+    conn_206 : data access dataport26 -> receiveParamsWrite1.param_writer_YAW_STAB_IMAX;
+    conn_207 : data access dataport25 -> receiveParamsWrite1.param_writer_YAW_STAB_D;
+    conn_208 : data access dataport24 -> receiveParamsWrite1.param_writer_YAW_STAB_I;
+    conn_209 : data access dataport23 -> receiveParamsWrite1.param_writer_YAW_STAB_P;
+    conn_210 : data access dataport22 -> receiveParamsWrite1.param_writer_YAW_RATE_IMAX;
+    conn_211 : data access dataport21 -> receiveParamsWrite1.param_writer_YAW_RATE_D;
+    conn_212 : data access dataport20 -> receiveParamsWrite1.param_writer_YAW_RATE_I;
+    conn_213 : data access dataport19 -> receiveParamsWrite1.param_writer_YAW_RATE_P;
+    conn_214 : data access dataport18 -> receiveParamsWrite1.param_writer_PIT_STAB_IMAX;
+    conn_215 : data access dataport17 -> receiveParamsWrite1.param_writer_PIT_STAB_D;
+    conn_216 : data access dataport16 -> receiveParamsWrite1.param_writer_PIT_STAB_I;
+    conn_217 : data access dataport15 -> receiveParamsWrite1.param_writer_PIT_STAB_P;
+    conn_218 : data access dataport14 -> receiveParamsWrite1.param_writer_PIT_RATE_IMAX;
+    conn_219 : data access dataport13 -> receiveParamsWrite1.param_writer_PIT_RATE_D;
+    conn_220 : data access dataport12 -> receiveParamsWrite1.param_writer_PIT_RATE_I;
+    conn_221 : data access dataport11 -> receiveParamsWrite1.param_writer_PIT_RATE_P;
+    conn_222 : data access dataport10 -> receiveParamsWrite1.param_writer_RLL_STAB_IMAX;
+    conn_223 : data access dataport9 -> receiveParamsWrite1.param_writer_RLL_STAB_D;
+    conn_224 : data access dataport8 -> receiveParamsWrite1.param_writer_RLL_STAB_I;
+    conn_225 : data access dataport7 -> receiveParamsWrite1.param_writer_RLL_STAB_P;
+    conn_226 : data access dataport6 -> receiveParamsWrite1.param_writer_RLL_RATE_IMAX;
+    conn_227 : data access dataport5 -> receiveParamsWrite1.param_writer_RLL_RATE_D;
+    conn_228 : data access dataport4 -> receiveParamsWrite1.param_writer_RLL_RATE_I;
+    conn_229 : data access dataport3 -> receiveParamsWrite1.param_writer_RLL_RATE_P;
+    conn_230 : data access dataport36 -> receiveParamsRead5.param_reader_ALT_UI_DEAD;
+    conn_231 : data access dataport35 -> receiveParamsRead5.param_reader_ALT_UI_SENS;
+    conn_232 : data access dataport34 -> receiveParamsRead5.param_reader_ALT_POS_IMAX;
+    conn_233 : data access dataport33 -> receiveParamsRead5.param_reader_ALT_POS_D;
+    conn_234 : data access dataport32 -> receiveParamsRead5.param_reader_ALT_POS_I;
+    conn_235 : data access dataport31 -> receiveParamsRead5.param_reader_ALT_POS_P;
+    conn_236 : data access dataport30 -> receiveParamsRead5.param_reader_ALT_RATE_IMAX;
+    conn_237 : data access dataport29 -> receiveParamsRead5.param_reader_ALT_RATE_D;
+    conn_238 : data access dataport28 -> receiveParamsRead5.param_reader_ALT_RATE_I;
+    conn_239 : data access dataport27 -> receiveParamsRead5.param_reader_ALT_RATE_P;
+    conn_240 : data access dataport26 -> receiveParamsRead5.param_reader_YAW_STAB_IMAX;
+    conn_241 : data access dataport25 -> receiveParamsRead5.param_reader_YAW_STAB_D;
+    conn_242 : data access dataport24 -> receiveParamsRead5.param_reader_YAW_STAB_I;
+    conn_243 : data access dataport23 -> receiveParamsRead5.param_reader_YAW_STAB_P;
+    conn_244 : data access dataport22 -> receiveParamsRead5.param_reader_YAW_RATE_IMAX;
+    conn_245 : data access dataport21 -> receiveParamsRead5.param_reader_YAW_RATE_D;
+    conn_246 : data access dataport20 -> receiveParamsRead5.param_reader_YAW_RATE_I;
+    conn_247 : data access dataport19 -> receiveParamsRead5.param_reader_YAW_RATE_P;
+    conn_248 : data access dataport18 -> receiveParamsRead5.param_reader_PIT_STAB_IMAX;
+    conn_249 : data access dataport17 -> receiveParamsRead5.param_reader_PIT_STAB_D;
+    conn_250 : data access dataport16 -> receiveParamsRead5.param_reader_PIT_STAB_I;
+    conn_251 : data access dataport15 -> receiveParamsRead5.param_reader_PIT_STAB_P;
+    conn_252 : data access dataport14 -> receiveParamsRead5.param_reader_PIT_RATE_IMAX;
+    conn_253 : data access dataport13 -> receiveParamsRead5.param_reader_PIT_RATE_D;
+    conn_254 : data access dataport12 -> receiveParamsRead5.param_reader_PIT_RATE_I;
+    conn_255 : data access dataport11 -> receiveParamsRead5.param_reader_PIT_RATE_P;
+    conn_256 : data access dataport10 -> receiveParamsRead5.param_reader_RLL_STAB_IMAX;
+    conn_257 : data access dataport9 -> receiveParamsRead5.param_reader_RLL_STAB_D;
+    conn_258 : data access dataport8 -> receiveParamsRead5.param_reader_RLL_STAB_I;
+    conn_259 : data access dataport7 -> receiveParamsRead5.param_reader_RLL_STAB_P;
+    conn_260 : data access dataport6 -> receiveParamsRead5.param_reader_RLL_RATE_IMAX;
+    conn_261 : data access dataport5 -> receiveParamsRead5.param_reader_RLL_RATE_D;
+    conn_262 : data access dataport4 -> receiveParamsRead5.param_reader_RLL_RATE_I;
+    conn_263 : data access dataport3 -> receiveParamsRead5.param_reader_RLL_RATE_P;   
+     
+ 	conn_187 : data access dataport434 -> transCons1.commsecInfo;
+    conn_188 : data access dataport40 -> transCons1.att_control;
+    conn_189 : data access dataport39 -> transCons1.alt_control;
+    conn_190 : data access dataport474 -> transCons1.radio;
+    conn_191 : data access dataport306 -> transCons1.motors;
+    conn_192 : data access dataport297 -> transCons1.control;
+    conn_193 : data access dataport341 -> transCons1.position;
+    conn_194 : data access dataport0 -> transCons1.sensors;
+    conn_195 : data access dataport140 -> transCons1.controllaw;
+    
+    conn_74 : data access dataport777 -> transCons5.commsecInfo;
+    conn_75 : data access dataport40 -> transCons5.att_control;
+    conn_76 : data access dataport39 -> transCons5.alt_control;
+    conn_77 : data access dataport817 -> transCons5.radio;
+    conn_78 : data access dataport306 -> transCons5.motors;
+    conn_79 : data access dataport297 -> transCons5.control;
+    conn_80 : data access dataport341 -> transCons5.position;
+    conn_81 : data access dataport0 -> transCons5.sensors;
+    conn_82 : data access dataport140 -> transCons5.controllaw;   
+ 
+ 
+end proc_data.impl;
+
+
+
 
 process implementation flight_gen_process.impl
   subcomponents
-    dataport817 : data radio_stat_type::radio_stat.impl;
-    dataport777 : data mavlink_veh_commsec_msg::veh_commsec_msg.impl;
-    dataport474 : data radio_stat_type::radio_stat.impl;
-    dataport434 : data mavlink_veh_commsec_msg::veh_commsec_msg.impl;
-    dataport341 : data gps_type::position.impl;
-    dataport306 : data motors_type::motors.impl;
-    dataport297 : data controloutput_type::controloutput.impl;
-    dataport140 : data control_law_type::control_law.impl;
-    dataport131 : data userinput_type::userinput_result.impl;
-    dataport40 : data att_control_dbg_type::att_control_dbg.impl;
-    dataport39 : data alt_control_dbg_type::alt_control_dbg.impl;
-    dataport36 : data Base_Types::Float;
-    dataport35 : data Base_Types::Float;
-    dataport34 : data Base_Types::Float;
-    dataport33 : data Base_Types::Float;
-    dataport32 : data Base_Types::Float;
-    dataport31 : data Base_Types::Float;
-    dataport30 : data Base_Types::Float;
-    dataport29 : data Base_Types::Float;
-    dataport28 : data Base_Types::Float;
-    dataport27 : data Base_Types::Float;
-    dataport26 : data Base_Types::Float;
-    dataport25 : data Base_Types::Float;
-    dataport24 : data Base_Types::Float;
-    dataport23 : data Base_Types::Float;
-    dataport22 : data Base_Types::Float;
-    dataport21 : data Base_Types::Float;
-    dataport20 : data Base_Types::Float;
-    dataport19 : data Base_Types::Float;
-    dataport18 : data Base_Types::Float;
-    dataport17 : data Base_Types::Float;
-    dataport16 : data Base_Types::Float;
-    dataport15 : data Base_Types::Float;
-    dataport14 : data Base_Types::Float;
-    dataport13 : data Base_Types::Float;
-    dataport12 : data Base_Types::Float;
-    dataport11 : data Base_Types::Float;
-    dataport10 : data Base_Types::Float;
-    dataport9 : data Base_Types::Float;
-    dataport8 : data Base_Types::Float;
-    dataport7 : data Base_Types::Float;
-    dataport6 : data Base_Types::Float;
-    dataport5 : data Base_Types::Float;
-    dataport4 : data Base_Types::Float;
-    dataport3 : data Base_Types::Float;
-    dataport0 : data sensors_type::sensors_result.impl;
+    threadData : data proc_data.impl;
     datalink_uart5_inst : thread Datalink::datalink_uart5;
     datalink_uart1_inst : thread Datalink::datalink_uart1;
     px4ioar_inst : thread px4ioar;
@@ -640,13 +696,12 @@ process implementation flight_gen_process.impl
     position_state_inst : thread position_state;
     ubloxGPS_inst : thread ubloxGPS;
     motors_state_inst : thread motors_state;
-    control_state_inst : thread control_state;
     motmix_inst : thread motmix;
-    control_inst : thread control;
     blink_inst : thread blink;
     UserInputThreads_inst : thread group UserInput::UserInputThreads.Impl;
     Commsec_inst : thread group Commsec::Commsec.Impl;
     GCS_inst : thread group GCS::GCS.Impl;
+    Control_inst : thread group Control::ControlThreads.impl; 
     uart5ISR_inst : thread uart5ISR;
     uart1ISR_inst : thread uart1ISR;
     uart2ISR_inst : thread uart2ISR;
@@ -675,281 +730,27 @@ process implementation flight_gen_process.impl
     conn_25 : port ubloxGPS_inst.position -> position_state_inst.proxyEvent;
     conn_26 : port motmix_inst.motors -> px4ioar_inst.motor_istream;
     conn_27 : port motmix_inst.motors -> motors_state_inst.proxyEvent;
-    conn_28 : port control_inst.control -> control_state_inst.proxyEvent;
     conn_29 : port control_inst.control -> motmix_inst.control;
     conn_37 : port uart5ISR_inst.istream -> datalink_uart5_inst.link_istream;
     conn_38 : port uart1ISR_inst.istream -> datalink_uart1_inst.link_istream;
     conn_39 : port uart6ISR_inst.istream -> ubloxGPS_inst.istream;
-    conn_40 : data access dataport36 -> gcsTransmitTask_uart5_inst.param_reader_ALT_UI_DEAD;
-    conn_41 : data access dataport35 -> gcsTransmitTask_uart5_inst.param_reader_ALT_UI_SENS;
-    conn_42 : data access dataport34 -> gcsTransmitTask_uart5_inst.param_reader_ALT_POS_IMAX;
-    conn_43 : data access dataport33 -> gcsTransmitTask_uart5_inst.param_reader_ALT_POS_D;
-    conn_44 : data access dataport32 -> gcsTransmitTask_uart5_inst.param_reader_ALT_POS_I;
-    conn_45 : data access dataport31 -> gcsTransmitTask_uart5_inst.param_reader_ALT_POS_P;
-    conn_46 : data access dataport30 -> gcsTransmitTask_uart5_inst.param_reader_ALT_RATE_IMAX;
-    conn_47 : data access dataport29 -> gcsTransmitTask_uart5_inst.param_reader_ALT_RATE_D;
-    conn_48 : data access dataport28 -> gcsTransmitTask_uart5_inst.param_reader_ALT_RATE_I;
-    conn_49 : data access dataport27 -> gcsTransmitTask_uart5_inst.param_reader_ALT_RATE_P;
-    conn_50 : data access dataport26 -> gcsTransmitTask_uart5_inst.param_reader_YAW_STAB_IMAX;
-    conn_51 : data access dataport25 -> gcsTransmitTask_uart5_inst.param_reader_YAW_STAB_D;
-    conn_52 : data access dataport24 -> gcsTransmitTask_uart5_inst.param_reader_YAW_STAB_I;
-    conn_53 : data access dataport23 -> gcsTransmitTask_uart5_inst.param_reader_YAW_STAB_P;
-    conn_54 : data access dataport22 -> gcsTransmitTask_uart5_inst.param_reader_YAW_RATE_IMAX;
-    conn_55 : data access dataport21 -> gcsTransmitTask_uart5_inst.param_reader_YAW_RATE_D;
-    conn_56 : data access dataport20 -> gcsTransmitTask_uart5_inst.param_reader_YAW_RATE_I;
-    conn_57 : data access dataport19 -> gcsTransmitTask_uart5_inst.param_reader_YAW_RATE_P;
-    conn_58 : data access dataport18 -> gcsTransmitTask_uart5_inst.param_reader_PIT_STAB_IMAX;
-    conn_59 : data access dataport17 -> gcsTransmitTask_uart5_inst.param_reader_PIT_STAB_D;
-    conn_60 : data access dataport16 -> gcsTransmitTask_uart5_inst.param_reader_PIT_STAB_I;
-    conn_61 : data access dataport15 -> gcsTransmitTask_uart5_inst.param_reader_PIT_STAB_P;
-    conn_62 : data access dataport14 -> gcsTransmitTask_uart5_inst.param_reader_PIT_RATE_IMAX;
-    conn_63 : data access dataport13 -> gcsTransmitTask_uart5_inst.param_reader_PIT_RATE_D;
-    conn_64 : data access dataport12 -> gcsTransmitTask_uart5_inst.param_reader_PIT_RATE_I;
-    conn_65 : data access dataport11 -> gcsTransmitTask_uart5_inst.param_reader_PIT_RATE_P;
-    conn_66 : data access dataport10 -> gcsTransmitTask_uart5_inst.param_reader_RLL_STAB_IMAX;
-    conn_67 : data access dataport9 -> gcsTransmitTask_uart5_inst.param_reader_RLL_STAB_D;
-    conn_68 : data access dataport8 -> gcsTransmitTask_uart5_inst.param_reader_RLL_STAB_I;
-    conn_69 : data access dataport7 -> gcsTransmitTask_uart5_inst.param_reader_RLL_STAB_P;
-    conn_70 : data access dataport6 -> gcsTransmitTask_uart5_inst.param_reader_RLL_RATE_IMAX;
-    conn_71 : data access dataport5 -> gcsTransmitTask_uart5_inst.param_reader_RLL_RATE_D;
-    conn_72 : data access dataport4 -> gcsTransmitTask_uart5_inst.param_reader_RLL_RATE_I;
-    conn_73 : data access dataport3 -> gcsTransmitTask_uart5_inst.param_reader_RLL_RATE_P;
-    conn_74 : data access dataport777 -> gcsTransmitTask_uart5_inst.commsecInfo;
-    conn_75 : data access dataport40 -> gcsTransmitTask_uart5_inst.att_control;
-    conn_76 : data access dataport39 -> gcsTransmitTask_uart5_inst.alt_control;
-    conn_77 : data access dataport817 -> gcsTransmitTask_uart5_inst.radio;
-    conn_78 : data access dataport306 -> gcsTransmitTask_uart5_inst.motors;
-    conn_79 : data access dataport297 -> gcsTransmitTask_uart5_inst.control;
-    conn_80 : data access dataport341 -> gcsTransmitTask_uart5_inst.position;
-    conn_81 : data access dataport0 -> gcsTransmitTask_uart5_inst.sensors;
-    conn_82 : data access dataport140 -> gcsTransmitTask_uart5_inst.controllaw;
-    conn_83 : data access dataport36 -> gcsReceiveTask_uart5_inst.param_writer_ALT_UI_DEAD;
-    conn_84 : data access dataport35 -> gcsReceiveTask_uart5_inst.param_writer_ALT_UI_SENS;
-    conn_85 : data access dataport34 -> gcsReceiveTask_uart5_inst.param_writer_ALT_POS_IMAX;
-    conn_86 : data access dataport33 -> gcsReceiveTask_uart5_inst.param_writer_ALT_POS_D;
-    conn_87 : data access dataport32 -> gcsReceiveTask_uart5_inst.param_writer_ALT_POS_I;
-    conn_88 : data access dataport31 -> gcsReceiveTask_uart5_inst.param_writer_ALT_POS_P;
-    conn_89 : data access dataport30 -> gcsReceiveTask_uart5_inst.param_writer_ALT_RATE_IMAX;
-    conn_90 : data access dataport29 -> gcsReceiveTask_uart5_inst.param_writer_ALT_RATE_D;
-    conn_91 : data access dataport28 -> gcsReceiveTask_uart5_inst.param_writer_ALT_RATE_I;
-    conn_92 : data access dataport27 -> gcsReceiveTask_uart5_inst.param_writer_ALT_RATE_P;
-    conn_93 : data access dataport26 -> gcsReceiveTask_uart5_inst.param_writer_YAW_STAB_IMAX;
-    conn_94 : data access dataport25 -> gcsReceiveTask_uart5_inst.param_writer_YAW_STAB_D;
-    conn_95 : data access dataport24 -> gcsReceiveTask_uart5_inst.param_writer_YAW_STAB_I;
-    conn_96 : data access dataport23 -> gcsReceiveTask_uart5_inst.param_writer_YAW_STAB_P;
-    conn_97 : data access dataport22 -> gcsReceiveTask_uart5_inst.param_writer_YAW_RATE_IMAX;
-    conn_98 : data access dataport21 -> gcsReceiveTask_uart5_inst.param_writer_YAW_RATE_D;
-    conn_99 : data access dataport20 -> gcsReceiveTask_uart5_inst.param_writer_YAW_RATE_I;
-    conn_100 : data access dataport19 -> gcsReceiveTask_uart5_inst.param_writer_YAW_RATE_P;
-    conn_101 : data access dataport18 -> gcsReceiveTask_uart5_inst.param_writer_PIT_STAB_IMAX;
-    conn_102 : data access dataport17 -> gcsReceiveTask_uart5_inst.param_writer_PIT_STAB_D;
-    conn_103 : data access dataport16 -> gcsReceiveTask_uart5_inst.param_writer_PIT_STAB_I;
-    conn_104 : data access dataport15 -> gcsReceiveTask_uart5_inst.param_writer_PIT_STAB_P;
-    conn_105 : data access dataport14 -> gcsReceiveTask_uart5_inst.param_writer_PIT_RATE_IMAX;
-    conn_106 : data access dataport13 -> gcsReceiveTask_uart5_inst.param_writer_PIT_RATE_D;
-    conn_107 : data access dataport12 -> gcsReceiveTask_uart5_inst.param_writer_PIT_RATE_I;
-    conn_108 : data access dataport11 -> gcsReceiveTask_uart5_inst.param_writer_PIT_RATE_P;
-    conn_109 : data access dataport10 -> gcsReceiveTask_uart5_inst.param_writer_RLL_STAB_IMAX;
-    conn_110 : data access dataport9 -> gcsReceiveTask_uart5_inst.param_writer_RLL_STAB_D;
-    conn_111 : data access dataport8 -> gcsReceiveTask_uart5_inst.param_writer_RLL_STAB_I;
-    conn_112 : data access dataport7 -> gcsReceiveTask_uart5_inst.param_writer_RLL_STAB_P;
-    conn_113 : data access dataport6 -> gcsReceiveTask_uart5_inst.param_writer_RLL_RATE_IMAX;
-    conn_114 : data access dataport5 -> gcsReceiveTask_uart5_inst.param_writer_RLL_RATE_D;
-    conn_115 : data access dataport4 -> gcsReceiveTask_uart5_inst.param_writer_RLL_RATE_I;
-    conn_116 : data access dataport3 -> gcsReceiveTask_uart5_inst.param_writer_RLL_RATE_P;
-    conn_117 : data access dataport36 -> gcsReceiveTask_uart5_inst.param_reader_ALT_UI_DEAD;
-    conn_118 : data access dataport35 -> gcsReceiveTask_uart5_inst.param_reader_ALT_UI_SENS;
-    conn_119 : data access dataport34 -> gcsReceiveTask_uart5_inst.param_reader_ALT_POS_IMAX;
-    conn_120 : data access dataport33 -> gcsReceiveTask_uart5_inst.param_reader_ALT_POS_D;
-    conn_121 : data access dataport32 -> gcsReceiveTask_uart5_inst.param_reader_ALT_POS_I;
-    conn_122 : data access dataport31 -> gcsReceiveTask_uart5_inst.param_reader_ALT_POS_P;
-    conn_123 : data access dataport30 -> gcsReceiveTask_uart5_inst.param_reader_ALT_RATE_IMAX;
-    conn_124 : data access dataport29 -> gcsReceiveTask_uart5_inst.param_reader_ALT_RATE_D;
-    conn_125 : data access dataport28 -> gcsReceiveTask_uart5_inst.param_reader_ALT_RATE_I;
-    conn_126 : data access dataport27 -> gcsReceiveTask_uart5_inst.param_reader_ALT_RATE_P;
-    conn_127 : data access dataport26 -> gcsReceiveTask_uart5_inst.param_reader_YAW_STAB_IMAX;
-    conn_128 : data access dataport25 -> gcsReceiveTask_uart5_inst.param_reader_YAW_STAB_D;
-    conn_129 : data access dataport24 -> gcsReceiveTask_uart5_inst.param_reader_YAW_STAB_I;
-    conn_130 : data access dataport23 -> gcsReceiveTask_uart5_inst.param_reader_YAW_STAB_P;
-    conn_131 : data access dataport22 -> gcsReceiveTask_uart5_inst.param_reader_YAW_RATE_IMAX;
-    conn_132 : data access dataport21 -> gcsReceiveTask_uart5_inst.param_reader_YAW_RATE_D;
-    conn_133 : data access dataport20 -> gcsReceiveTask_uart5_inst.param_reader_YAW_RATE_I;
-    conn_134 : data access dataport19 -> gcsReceiveTask_uart5_inst.param_reader_YAW_RATE_P;
-    conn_135 : data access dataport18 -> gcsReceiveTask_uart5_inst.param_reader_PIT_STAB_IMAX;
-    conn_136 : data access dataport17 -> gcsReceiveTask_uart5_inst.param_reader_PIT_STAB_D;
-    conn_137 : data access dataport16 -> gcsReceiveTask_uart5_inst.param_reader_PIT_STAB_I;
-    conn_138 : data access dataport15 -> gcsReceiveTask_uart5_inst.param_reader_PIT_STAB_P;
-    conn_139 : data access dataport14 -> gcsReceiveTask_uart5_inst.param_reader_PIT_RATE_IMAX;
-    conn_140 : data access dataport13 -> gcsReceiveTask_uart5_inst.param_reader_PIT_RATE_D;
-    conn_141 : data access dataport12 -> gcsReceiveTask_uart5_inst.param_reader_PIT_RATE_I;
-    conn_142 : data access dataport11 -> gcsReceiveTask_uart5_inst.param_reader_PIT_RATE_P;
-    conn_143 : data access dataport10 -> gcsReceiveTask_uart5_inst.param_reader_RLL_STAB_IMAX;
-    conn_144 : data access dataport9 -> gcsReceiveTask_uart5_inst.param_reader_RLL_STAB_D;
-    conn_145 : data access dataport8 -> gcsReceiveTask_uart5_inst.param_reader_RLL_STAB_I;
-    conn_146 : data access dataport7 -> gcsReceiveTask_uart5_inst.param_reader_RLL_STAB_P;
-    conn_147 : data access dataport6 -> gcsReceiveTask_uart5_inst.param_reader_RLL_RATE_IMAX;
-    conn_148 : data access dataport5 -> gcsReceiveTask_uart5_inst.param_reader_RLL_RATE_D;
-    conn_149 : data access dataport4 -> gcsReceiveTask_uart5_inst.param_reader_RLL_RATE_I;
-    conn_150 : data access dataport3 -> gcsReceiveTask_uart5_inst.param_reader_RLL_RATE_P;
-    conn_151 : data access dataport777 -> decryptTask_uart5_inst.commsec_info_src;
-    conn_152 : data access dataport817 -> radio_status_uart5_inst.proxyData;
-    conn_153 : data access dataport36 -> gcsTransmitTask_uart1_inst.param_reader_ALT_UI_DEAD;
-    conn_154 : data access dataport35 -> gcsTransmitTask_uart1_inst.param_reader_ALT_UI_SENS;
-    conn_155 : data access dataport34 -> gcsTransmitTask_uart1_inst.param_reader_ALT_POS_IMAX;
-    conn_156 : data access dataport33 -> gcsTransmitTask_uart1_inst.param_reader_ALT_POS_D;
-    conn_157 : data access dataport32 -> gcsTransmitTask_uart1_inst.param_reader_ALT_POS_I;
-    conn_158 : data access dataport31 -> gcsTransmitTask_uart1_inst.param_reader_ALT_POS_P;
-    conn_159 : data access dataport30 -> gcsTransmitTask_uart1_inst.param_reader_ALT_RATE_IMAX;
-    conn_160 : data access dataport29 -> gcsTransmitTask_uart1_inst.param_reader_ALT_RATE_D;
-    conn_161 : data access dataport28 -> gcsTransmitTask_uart1_inst.param_reader_ALT_RATE_I;
-    conn_162 : data access dataport27 -> gcsTransmitTask_uart1_inst.param_reader_ALT_RATE_P;
-    conn_163 : data access dataport26 -> gcsTransmitTask_uart1_inst.param_reader_YAW_STAB_IMAX;
-    conn_164 : data access dataport25 -> gcsTransmitTask_uart1_inst.param_reader_YAW_STAB_D;
-    conn_165 : data access dataport24 -> gcsTransmitTask_uart1_inst.param_reader_YAW_STAB_I;
-    conn_166 : data access dataport23 -> gcsTransmitTask_uart1_inst.param_reader_YAW_STAB_P;
-    conn_167 : data access dataport22 -> gcsTransmitTask_uart1_inst.param_reader_YAW_RATE_IMAX;
-    conn_168 : data access dataport21 -> gcsTransmitTask_uart1_inst.param_reader_YAW_RATE_D;
-    conn_169 : data access dataport20 -> gcsTransmitTask_uart1_inst.param_reader_YAW_RATE_I;
-    conn_170 : data access dataport19 -> gcsTransmitTask_uart1_inst.param_reader_YAW_RATE_P;
-    conn_171 : data access dataport18 -> gcsTransmitTask_uart1_inst.param_reader_PIT_STAB_IMAX;
-    conn_172 : data access dataport17 -> gcsTransmitTask_uart1_inst.param_reader_PIT_STAB_D;
-    conn_173 : data access dataport16 -> gcsTransmitTask_uart1_inst.param_reader_PIT_STAB_I;
-    conn_174 : data access dataport15 -> gcsTransmitTask_uart1_inst.param_reader_PIT_STAB_P;
-    conn_175 : data access dataport14 -> gcsTransmitTask_uart1_inst.param_reader_PIT_RATE_IMAX;
-    conn_176 : data access dataport13 -> gcsTransmitTask_uart1_inst.param_reader_PIT_RATE_D;
-    conn_177 : data access dataport12 -> gcsTransmitTask_uart1_inst.param_reader_PIT_RATE_I;
-    conn_178 : data access dataport11 -> gcsTransmitTask_uart1_inst.param_reader_PIT_RATE_P;
-    conn_179 : data access dataport10 -> gcsTransmitTask_uart1_inst.param_reader_RLL_STAB_IMAX;
-    conn_180 : data access dataport9 -> gcsTransmitTask_uart1_inst.param_reader_RLL_STAB_D;
-    conn_181 : data access dataport8 -> gcsTransmitTask_uart1_inst.param_reader_RLL_STAB_I;
-    conn_182 : data access dataport7 -> gcsTransmitTask_uart1_inst.param_reader_RLL_STAB_P;
-    conn_183 : data access dataport6 -> gcsTransmitTask_uart1_inst.param_reader_RLL_RATE_IMAX;
-    conn_184 : data access dataport5 -> gcsTransmitTask_uart1_inst.param_reader_RLL_RATE_D;
-    conn_185 : data access dataport4 -> gcsTransmitTask_uart1_inst.param_reader_RLL_RATE_I;
-    conn_186 : data access dataport3 -> gcsTransmitTask_uart1_inst.param_reader_RLL_RATE_P;
-    conn_187 : data access dataport434 -> gcsTransmitTask_uart1_inst.commsecInfo;
-    conn_188 : data access dataport40 -> gcsTransmitTask_uart1_inst.att_control;
-    conn_189 : data access dataport39 -> gcsTransmitTask_uart1_inst.alt_control;
-    conn_190 : data access dataport474 -> gcsTransmitTask_uart1_inst.radio;
-    conn_191 : data access dataport306 -> gcsTransmitTask_uart1_inst.motors;
-    conn_192 : data access dataport297 -> gcsTransmitTask_uart1_inst.control;
-    conn_193 : data access dataport341 -> gcsTransmitTask_uart1_inst.position;
-    conn_194 : data access dataport0 -> gcsTransmitTask_uart1_inst.sensors;
-    conn_195 : data access dataport140 -> gcsTransmitTask_uart1_inst.controllaw;
-    conn_196 : data access dataport36 -> gcsReceiveTask_uart1_inst.param_writer_ALT_UI_DEAD;
-    conn_197 : data access dataport35 -> gcsReceiveTask_uart1_inst.param_writer_ALT_UI_SENS;
-    conn_198 : data access dataport34 -> gcsReceiveTask_uart1_inst.param_writer_ALT_POS_IMAX;
-    conn_199 : data access dataport33 -> gcsReceiveTask_uart1_inst.param_writer_ALT_POS_D;
-    conn_200 : data access dataport32 -> gcsReceiveTask_uart1_inst.param_writer_ALT_POS_I;
-    conn_201 : data access dataport31 -> gcsReceiveTask_uart1_inst.param_writer_ALT_POS_P;
-    conn_202 : data access dataport30 -> gcsReceiveTask_uart1_inst.param_writer_ALT_RATE_IMAX;
-    conn_203 : data access dataport29 -> gcsReceiveTask_uart1_inst.param_writer_ALT_RATE_D;
-    conn_204 : data access dataport28 -> gcsReceiveTask_uart1_inst.param_writer_ALT_RATE_I;
-    conn_205 : data access dataport27 -> gcsReceiveTask_uart1_inst.param_writer_ALT_RATE_P;
-    conn_206 : data access dataport26 -> gcsReceiveTask_uart1_inst.param_writer_YAW_STAB_IMAX;
-    conn_207 : data access dataport25 -> gcsReceiveTask_uart1_inst.param_writer_YAW_STAB_D;
-    conn_208 : data access dataport24 -> gcsReceiveTask_uart1_inst.param_writer_YAW_STAB_I;
-    conn_209 : data access dataport23 -> gcsReceiveTask_uart1_inst.param_writer_YAW_STAB_P;
-    conn_210 : data access dataport22 -> gcsReceiveTask_uart1_inst.param_writer_YAW_RATE_IMAX;
-    conn_211 : data access dataport21 -> gcsReceiveTask_uart1_inst.param_writer_YAW_RATE_D;
-    conn_212 : data access dataport20 -> gcsReceiveTask_uart1_inst.param_writer_YAW_RATE_I;
-    conn_213 : data access dataport19 -> gcsReceiveTask_uart1_inst.param_writer_YAW_RATE_P;
-    conn_214 : data access dataport18 -> gcsReceiveTask_uart1_inst.param_writer_PIT_STAB_IMAX;
-    conn_215 : data access dataport17 -> gcsReceiveTask_uart1_inst.param_writer_PIT_STAB_D;
-    conn_216 : data access dataport16 -> gcsReceiveTask_uart1_inst.param_writer_PIT_STAB_I;
-    conn_217 : data access dataport15 -> gcsReceiveTask_uart1_inst.param_writer_PIT_STAB_P;
-    conn_218 : data access dataport14 -> gcsReceiveTask_uart1_inst.param_writer_PIT_RATE_IMAX;
-    conn_219 : data access dataport13 -> gcsReceiveTask_uart1_inst.param_writer_PIT_RATE_D;
-    conn_220 : data access dataport12 -> gcsReceiveTask_uart1_inst.param_writer_PIT_RATE_I;
-    conn_221 : data access dataport11 -> gcsReceiveTask_uart1_inst.param_writer_PIT_RATE_P;
-    conn_222 : data access dataport10 -> gcsReceiveTask_uart1_inst.param_writer_RLL_STAB_IMAX;
-    conn_223 : data access dataport9 -> gcsReceiveTask_uart1_inst.param_writer_RLL_STAB_D;
-    conn_224 : data access dataport8 -> gcsReceiveTask_uart1_inst.param_writer_RLL_STAB_I;
-    conn_225 : data access dataport7 -> gcsReceiveTask_uart1_inst.param_writer_RLL_STAB_P;
-    conn_226 : data access dataport6 -> gcsReceiveTask_uart1_inst.param_writer_RLL_RATE_IMAX;
-    conn_227 : data access dataport5 -> gcsReceiveTask_uart1_inst.param_writer_RLL_RATE_D;
-    conn_228 : data access dataport4 -> gcsReceiveTask_uart1_inst.param_writer_RLL_RATE_I;
-    conn_229 : data access dataport3 -> gcsReceiveTask_uart1_inst.param_writer_RLL_RATE_P;
-    conn_230 : data access dataport36 -> gcsReceiveTask_uart1_inst.param_reader_ALT_UI_DEAD;
-    conn_231 : data access dataport35 -> gcsReceiveTask_uart1_inst.param_reader_ALT_UI_SENS;
-    conn_232 : data access dataport34 -> gcsReceiveTask_uart1_inst.param_reader_ALT_POS_IMAX;
-    conn_233 : data access dataport33 -> gcsReceiveTask_uart1_inst.param_reader_ALT_POS_D;
-    conn_234 : data access dataport32 -> gcsReceiveTask_uart1_inst.param_reader_ALT_POS_I;
-    conn_235 : data access dataport31 -> gcsReceiveTask_uart1_inst.param_reader_ALT_POS_P;
-    conn_236 : data access dataport30 -> gcsReceiveTask_uart1_inst.param_reader_ALT_RATE_IMAX;
-    conn_237 : data access dataport29 -> gcsReceiveTask_uart1_inst.param_reader_ALT_RATE_D;
-    conn_238 : data access dataport28 -> gcsReceiveTask_uart1_inst.param_reader_ALT_RATE_I;
-    conn_239 : data access dataport27 -> gcsReceiveTask_uart1_inst.param_reader_ALT_RATE_P;
-    conn_240 : data access dataport26 -> gcsReceiveTask_uart1_inst.param_reader_YAW_STAB_IMAX;
-    conn_241 : data access dataport25 -> gcsReceiveTask_uart1_inst.param_reader_YAW_STAB_D;
-    conn_242 : data access dataport24 -> gcsReceiveTask_uart1_inst.param_reader_YAW_STAB_I;
-    conn_243 : data access dataport23 -> gcsReceiveTask_uart1_inst.param_reader_YAW_STAB_P;
-    conn_244 : data access dataport22 -> gcsReceiveTask_uart1_inst.param_reader_YAW_RATE_IMAX;
-    conn_245 : data access dataport21 -> gcsReceiveTask_uart1_inst.param_reader_YAW_RATE_D;
-    conn_246 : data access dataport20 -> gcsReceiveTask_uart1_inst.param_reader_YAW_RATE_I;
-    conn_247 : data access dataport19 -> gcsReceiveTask_uart1_inst.param_reader_YAW_RATE_P;
-    conn_248 : data access dataport18 -> gcsReceiveTask_uart1_inst.param_reader_PIT_STAB_IMAX;
-    conn_249 : data access dataport17 -> gcsReceiveTask_uart1_inst.param_reader_PIT_STAB_D;
-    conn_250 : data access dataport16 -> gcsReceiveTask_uart1_inst.param_reader_PIT_STAB_I;
-    conn_251 : data access dataport15 -> gcsReceiveTask_uart1_inst.param_reader_PIT_STAB_P;
-    conn_252 : data access dataport14 -> gcsReceiveTask_uart1_inst.param_reader_PIT_RATE_IMAX;
-    conn_253 : data access dataport13 -> gcsReceiveTask_uart1_inst.param_reader_PIT_RATE_D;
-    conn_254 : data access dataport12 -> gcsReceiveTask_uart1_inst.param_reader_PIT_RATE_I;
-    conn_255 : data access dataport11 -> gcsReceiveTask_uart1_inst.param_reader_PIT_RATE_P;
-    conn_256 : data access dataport10 -> gcsReceiveTask_uart1_inst.param_reader_RLL_STAB_IMAX;
-    conn_257 : data access dataport9 -> gcsReceiveTask_uart1_inst.param_reader_RLL_STAB_D;
-    conn_258 : data access dataport8 -> gcsReceiveTask_uart1_inst.param_reader_RLL_STAB_I;
-    conn_259 : data access dataport7 -> gcsReceiveTask_uart1_inst.param_reader_RLL_STAB_P;
-    conn_260 : data access dataport6 -> gcsReceiveTask_uart1_inst.param_reader_RLL_RATE_IMAX;
-    conn_261 : data access dataport5 -> gcsReceiveTask_uart1_inst.param_reader_RLL_RATE_D;
-    conn_262 : data access dataport4 -> gcsReceiveTask_uart1_inst.param_reader_RLL_RATE_I;
-    conn_263 : data access dataport3 -> gcsReceiveTask_uart1_inst.param_reader_RLL_RATE_P;
+        
+    conn_151 : data access threadData.commsecInfo5 -> Commsec_inst.commsec_info_src_uart5;
+    conn_152 : data access threadData.radio -> radio_status_uart5_inst.proxyData;
     conn_264 : data access dataport434 -> decryptTask_uart1_inst.commsec_info_src;
     conn_265 : data access dataport474 -> radio_status_uart1_inst.proxyData;
+    
     conn_266 : data access dataport0 -> sensorsCaptureTask_inst.sensors;
     conn_267 : data access dataport341 -> position_state_inst.proxyData;
     conn_268 : data access dataport306 -> motors_state_inst.proxyData;
-    conn_269 : data access dataport297 -> control_state_inst.proxyData;
+    conn_269 : data access dataport297 -> Control_inst.proxyData;
     conn_270 : data access dataport140 -> motmix_inst.controllaw;
-    conn_271 : data access dataport40 -> control_inst.att_control_dbg;
-    conn_272 : data access dataport39 -> control_inst.alt_control_dbg;
-    conn_273 : data access dataport36 -> control_inst.param_reader_ALT_UI_DEAD;
-    conn_274 : data access dataport35 -> control_inst.param_reader_ALT_UI_SENS;
-    conn_275 : data access dataport34 -> control_inst.param_reader_ALT_POS_IMAX;
-    conn_276 : data access dataport33 -> control_inst.param_reader_ALT_POS_D;
-    conn_277 : data access dataport32 -> control_inst.param_reader_ALT_POS_I;
-    conn_278 : data access dataport31 -> control_inst.param_reader_ALT_POS_P;
-    conn_279 : data access dataport30 -> control_inst.param_reader_ALT_RATE_IMAX;
-    conn_280 : data access dataport29 -> control_inst.param_reader_ALT_RATE_D;
-    conn_281 : data access dataport28 -> control_inst.param_reader_ALT_RATE_I;
-    conn_282 : data access dataport27 -> control_inst.param_reader_ALT_RATE_P;
-    conn_283 : data access dataport26 -> control_inst.param_reader_YAW_STAB_IMAX;
-    conn_284 : data access dataport25 -> control_inst.param_reader_YAW_STAB_D;
-    conn_285 : data access dataport24 -> control_inst.param_reader_YAW_STAB_I;
-    conn_286 : data access dataport23 -> control_inst.param_reader_YAW_STAB_P;
-    conn_287 : data access dataport22 -> control_inst.param_reader_YAW_RATE_IMAX;
-    conn_288 : data access dataport21 -> control_inst.param_reader_YAW_RATE_D;
-    conn_289 : data access dataport20 -> control_inst.param_reader_YAW_RATE_I;
-    conn_290 : data access dataport19 -> control_inst.param_reader_YAW_RATE_P;
-    conn_291 : data access dataport18 -> control_inst.param_reader_PIT_STAB_IMAX;
-    conn_292 : data access dataport17 -> control_inst.param_reader_PIT_STAB_D;
-    conn_293 : data access dataport16 -> control_inst.param_reader_PIT_STAB_I;
-    conn_294 : data access dataport15 -> control_inst.param_reader_PIT_STAB_P;
-    conn_295 : data access dataport14 -> control_inst.param_reader_PIT_RATE_IMAX;
-    conn_296 : data access dataport13 -> control_inst.param_reader_PIT_RATE_D;
-    conn_297 : data access dataport12 -> control_inst.param_reader_PIT_RATE_I;
-    conn_298 : data access dataport11 -> control_inst.param_reader_PIT_RATE_P;
-    conn_299 : data access dataport10 -> control_inst.param_reader_RLL_STAB_IMAX;
-    conn_300 : data access dataport9 -> control_inst.param_reader_RLL_STAB_D;
-    conn_301 : data access dataport8 -> control_inst.param_reader_RLL_STAB_I;
-    conn_302 : data access dataport7 -> control_inst.param_reader_RLL_STAB_P;
-    conn_303 : data access dataport6 -> control_inst.param_reader_RLL_RATE_IMAX;
-    conn_304 : data access dataport5 -> control_inst.param_reader_RLL_RATE_D;
-    conn_305 : data access dataport4 -> control_inst.param_reader_RLL_RATE_I;
-    conn_306 : data access dataport3 -> control_inst.param_reader_RLL_RATE_P;
-    conn_307 : data access dataport0 -> control_inst.sensors;
-    conn_308 : data access dataport131 -> control_inst.userinput;
-    conn_309 : data access dataport140 -> control_inst.control_law;
+    conn_271 : data access dataport40 -> Control_inst.att_control;
+    conn_272 : data access dataport39 -> Control_inst.alt_control;
+   
+    conn_307 : data access dataport0 -> Control_inst.sensors;
+    conn_308 : data access dataport131 -> Control_inst.userinput;
+    conn_309 : data access dataport140 -> Control_inst.control_law;
     conn_310 : data access dataport140 -> blink_inst.controllaw;
     conn_311 : data access dataport140 -> UserInputThreads_inst.proxyControlData;
     conn_312 : data access dataport131 -> UserInputThreads_inst.proxyUiData;

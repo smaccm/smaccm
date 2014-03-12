@@ -17,58 +17,8 @@ public
   with mavlink_hil_state_msg;
   with SMACCM;
   with SMACCM_SYS;
-
-feature group transmit_conns
-  features
-    commsecInfo: requires data access mavlink_veh_commsec_msg::veh_commsec_msg.impl;
-    att_control: requires data access att_control_dbg_type::att_control_dbg.impl;
-    alt_control: requires data access alt_control_dbg_type::alt_control_dbg.impl;
-    radio: requires data access radio_stat_type::radio_stat.impl;
-    motors: requires data access motors_type::motors.impl;
-    control: requires data access controloutput_type::controloutput.impl;
-    position: requires data access gps_type::position.impl;
-    sensors: requires data access sensors_type::sensors_result.impl;
-    controllaw: requires data access control_law_type::control_law.impl;
-end transmit_conns;
-
-feature group control_params
-	features
-      param_reader_ALT_UI_DEAD: requires data access Base_Types::Float;
-      param_reader_ALT_UI_SENS: requires data access Base_Types::Float;
-      param_reader_ALT_POS_IMAX: requires data access Base_Types::Float;
-      param_reader_ALT_POS_D: requires data access Base_Types::Float ;
-      param_reader_ALT_POS_I: requires data access Base_Types::Float ;
-      param_reader_ALT_POS_P: requires data access Base_Types::Float ;
-      param_reader_ALT_RATE_IMAX: requires data access Base_Types::Float ;
-      param_reader_ALT_RATE_D: requires data access Base_Types::Float ;
-      param_reader_ALT_RATE_I: requires data access Base_Types::Float ;
-      param_reader_ALT_RATE_P: requires data access Base_Types::Float ;
-      param_reader_YAW_STAB_IMAX: requires data access Base_Types::Float ;
-      param_reader_YAW_STAB_D: requires data access Base_Types::Float ;
-      param_reader_YAW_STAB_I: requires data access Base_Types::Float ;
-      param_reader_YAW_STAB_P: requires data access Base_Types::Float ;
-      param_reader_YAW_RATE_IMAX: requires data access Base_Types::Float ;
-      param_reader_YAW_RATE_D: requires data access Base_Types::Float ;
-      param_reader_YAW_RATE_I: requires data access Base_Types::Float ;
-      param_reader_YAW_RATE_P: requires data access Base_Types::Float ;
-      param_reader_PIT_STAB_IMAX: requires data access Base_Types::Float ;
-      param_reader_PIT_STAB_D: requires data access Base_Types::Float ;
-      param_reader_PIT_STAB_I: requires data access Base_Types::Float ;
-      param_reader_PIT_STAB_P: requires data access Base_Types::Float ;
-      param_reader_PIT_RATE_IMAX: requires data access Base_Types::Float ;
-      param_reader_PIT_RATE_D: requires data access Base_Types::Float ;
-      param_reader_PIT_RATE_I: requires data access Base_Types::Float ;
-      param_reader_PIT_RATE_P: requires data access Base_Types::Float ;
-      param_reader_RLL_STAB_IMAX: requires data access Base_Types::Float ;
-      param_reader_RLL_STAB_D: requires data access Base_Types::Float ;
-      param_reader_RLL_STAB_I: requires data access Base_Types::Float ;
-      param_reader_RLL_STAB_P: requires data access Base_Types::Float ;
-      param_reader_RLL_RATE_IMAX: requires data access Base_Types::Float ;
-      param_reader_RLL_RATE_D: requires data access Base_Types::Float ;
-      param_reader_RLL_RATE_I: requires data access Base_Types::Float ;
-      param_reader_RLL_RATE_P: requires data access Base_Types::Float ;
-end control_params;
-
+  with Software;
+  with FeatureGroups;
 
   thread group GCS
     features
@@ -110,12 +60,14 @@ end control_params;
       };
       
       --params
-    transmitParams5 : feature group control_params;
-    transmitParams1 : feature group control_params;
-    receiveParams5 : feature group control_params;
-    receiveParams1 : feature group control_params;
-    transCons5 : feature group transmit_conns;
-    transCons1 : feature group transmit_conns;
+    transmitParams5 : feature group FeatureGroups::control_params_read;
+    transmitParams1 : feature group FeatureGroups::control_params_read;
+    receiveParamsRead5 : feature group FeatureGroups::control_params_read;
+    receiveParamsWrite5 : feature group FeatureGroups::control_params_write;
+    receiveParamsRead1 : feature group FeatureGroups::control_params_read;
+    receiveParamsWrite1 : feature group FeatureGroups::control_params_write;
+    transCons5 : feature group FeatureGroups::data_conns;
+    transCons1 : feature group FeatureGroups::data_conns;
     
   end GCS;
   
@@ -131,8 +83,8 @@ end control_params;
     connections
       conn_322 : port gcsReceiveTask_uart5_inst.streamperiods -> gcsTransmitTask_uart5_inst.streamPeriod;
       conn_533 : port gcsReceiveTask_uart5_inst.param_req -> gcsTransmitTask_uart5_inst.paramReqs;
-      conn_143 : port gcsReceiveTask_uart1_inst.streamperiods -> gcsTransmitTask_uart1_inst.streamPeriod;
-      conn_125 : port gcsReceiveTask_uart1_inst.param_req -> gcsTransmitTask_uart1_inst.paramReqs;
+      conn_11243 : port gcsReceiveTask_uart1_inst.streamperiods -> gcsTransmitTask_uart1_inst.streamPeriod;
+      conn_12325 : port gcsReceiveTask_uart1_inst.param_req -> gcsTransmitTask_uart1_inst.paramReqs;
       txuart5 : port gcsTransmitTask_uart5_inst.gcsTxToEncSrc -> gcsTxToEncSrc_uart5;
       mavlink5 : port mavStream_uart5 -> gcsReceiveTask_uart5_inst.mavStream;
       rc_uart5 : port gcsReceiveTask_uart5_inst.rc_override_tx -> rc_override_tx_uart5;
@@ -235,6 +187,76 @@ end control_params;
       conn_1227 : data access gcsTransmitTask_uart1_inst.sensors -> transCons1.sensors;
       conn_1228: data access gcsTransmitTask_uart1_inst.controllaw -> transCons1.controllaw;
 
+    conn_83 : data access gcsReceiveTask_uart5_inst.param_writer_ALT_UI_DEAD -> receiveParamsWrite5.param_writer_ALT_UI_DEAD;
+    conn_84 : data access gcsReceiveTask_uart5_inst.param_writer_ALT_UI_SENS -> receiveParamsWrite5.param_writer_ALT_UI_SENS;
+    conn_85 : data access gcsReceiveTask_uart5_inst.param_writer_ALT_POS_IMAX -> receiveParamsWrite5.param_writer_ALT_POS_IMAX;
+    conn_86 : data access gcsReceiveTask_uart5_inst.param_writer_ALT_POS_D -> receiveParamsWrite5.param_writer_ALT_POS_D;
+    conn_87 : data access gcsReceiveTask_uart5_inst.param_writer_ALT_POS_I -> receiveParamsWrite5.param_writer_ALT_POS_I;
+    conn_88 : data access gcsReceiveTask_uart5_inst.param_writer_ALT_POS_P -> receiveParamsWrite5.param_writer_ALT_POS_P;
+    conn_89 : data access gcsReceiveTask_uart5_inst.param_writer_ALT_RATE_IMAX -> receiveParamsWrite5.param_writer_ALT_RATE_IMAX;
+    conn_90 : data access gcsReceiveTask_uart5_inst.param_writer_ALT_RATE_D -> receiveParamsWrite5.param_writer_ALT_RATE_D;
+    conn_91 : data access gcsReceiveTask_uart5_inst.param_writer_ALT_RATE_I -> receiveParamsWrite5.param_writer_ALT_RATE_I;
+    conn_92 : data access gcsReceiveTask_uart5_inst.param_writer_ALT_RATE_P -> receiveParamsWrite5.param_writer_ALT_RATE_P;
+    conn_93 : data access gcsReceiveTask_uart5_inst.param_writer_YAW_STAB_IMAX -> receiveParamsWrite5.param_writer_YAW_STAB_IMAX;
+    conn_94 : data access gcsReceiveTask_uart5_inst.param_writer_YAW_STAB_D -> receiveParamsWrite5.param_writer_YAW_STAB_D;
+    conn_95 : data access gcsReceiveTask_uart5_inst.param_writer_YAW_STAB_I -> receiveParamsWrite5.param_writer_YAW_STAB_I;
+    conn_96 : data access gcsReceiveTask_uart5_inst.param_writer_YAW_STAB_P -> receiveParamsWrite5.param_writer_YAW_STAB_P;
+    conn_97 : data access gcsReceiveTask_uart5_inst.param_writer_YAW_RATE_IMAX -> receiveParamsWrite5.param_writer_YAW_RATE_IMAX;
+    conn_98 : data access gcsReceiveTask_uart5_inst.param_writer_YAW_RATE_D -> receiveParamsWrite5.param_writer_YAW_RATE_D;
+    conn_99 : data access gcsReceiveTask_uart5_inst.param_writer_YAW_RATE_I -> receiveParamsWrite5.param_writer_YAW_RATE_I;
+    conn_100 : data access gcsReceiveTask_uart5_inst.param_writer_YAW_RATE_P -> receiveParamsWrite5.param_writer_YAW_RATE_P;
+    conn_101 : data access gcsReceiveTask_uart5_inst.param_writer_PIT_STAB_IMAX -> receiveParamsWrite5.param_writer_PIT_STAB_IMAX;
+    conn_102 : data access gcsReceiveTask_uart5_inst.param_writer_PIT_STAB_D -> receiveParamsWrite5.param_writer_PIT_STAB_D;
+    conn_103 : data access gcsReceiveTask_uart5_inst.param_writer_PIT_STAB_I -> receiveParamsWrite5.param_writer_PIT_STAB_I;
+    conn_104 : data access gcsReceiveTask_uart5_inst.param_writer_PIT_STAB_P -> receiveParamsWrite5.param_writer_PIT_STAB_P;
+    conn_105 : data access gcsReceiveTask_uart5_inst.param_writer_PIT_RATE_IMAX -> receiveParamsWrite5.param_writer_PIT_RATE_IMAX;
+    conn_106 : data access gcsReceiveTask_uart5_inst.param_writer_PIT_RATE_D -> receiveParamsWrite5.param_writer_PIT_RATE_D;
+    conn_107 : data access gcsReceiveTask_uart5_inst.param_writer_PIT_RATE_I -> receiveParamsWrite5.param_writer_PIT_RATE_I;
+    conn_108 : data access gcsReceiveTask_uart5_inst.param_writer_PIT_RATE_P -> receiveParamsWrite5.param_writer_PIT_RATE_P;
+    conn_109 : data access gcsReceiveTask_uart5_inst.param_writer_RLL_STAB_IMAX -> receiveParamsWrite5.param_writer_RLL_STAB_IMAX;
+    conn_110 : data access gcsReceiveTask_uart5_inst.param_writer_RLL_STAB_D -> receiveParamsWrite5.param_writer_RLL_STAB_D;
+    conn_111 : data access gcsReceiveTask_uart5_inst.param_writer_RLL_STAB_I -> receiveParamsWrite5.param_writer_RLL_STAB_I;
+    conn_112 : data access gcsReceiveTask_uart5_inst.param_writer_RLL_STAB_P -> receiveParamsWrite5.param_writer_RLL_STAB_P;
+    conn_113 : data access gcsReceiveTask_uart5_inst.param_writer_RLL_RATE_IMAX -> receiveParamsWrite5.param_writer_RLL_RATE_IMAX;
+    conn_114 : data access gcsReceiveTask_uart5_inst.param_writer_RLL_RATE_D -> receiveParamsWrite5.param_writer_RLL_RATE_D;
+    conn_115 : data access gcsReceiveTask_uart5_inst.param_writer_RLL_RATE_I -> receiveParamsWrite5.param_writer_RLL_RATE_I;
+    conn_116 : data access gcsReceiveTask_uart5_inst.param_writer_RLL_RATE_P -> receiveParamsWrite5.param_writer_RLL_RATE_P;
+    conn_117 : data access gcsReceiveTask_uart5_inst.param_reader_ALT_UI_DEAD -> receiveParamsRead5.param_reader_ALT_UI_DEAD;
+    conn_118 : data access gcsReceiveTask_uart5_inst.param_reader_ALT_UI_SENS -> receiveParamsRead5.param_reader_ALT_UI_SENS;
+    conn_119 : data access gcsReceiveTask_uart5_inst.param_reader_ALT_POS_IMAX -> receiveParamsRead5.param_reader_ALT_POS_IMAX;
+    conn_120 : data access gcsReceiveTask_uart5_inst.param_reader_ALT_POS_D -> receiveParamsRead5.param_reader_ALT_POS_D;
+    conn_121 : data access gcsReceiveTask_uart5_inst.param_reader_ALT_POS_I -> receiveParamsRead5.param_reader_ALT_POS_I;
+    conn_122 : data access gcsReceiveTask_uart5_inst.param_reader_ALT_POS_P -> receiveParamsRead5.param_reader_ALT_POS_P;
+    conn_123 : data access gcsReceiveTask_uart5_inst.param_reader_ALT_RATE_IMAX -> receiveParamsRead5.param_reader_ALT_RATE_IMAX;
+    conn_124 : data access gcsReceiveTask_uart5_inst.param_reader_ALT_RATE_D -> receiveParamsRead5.param_reader_ALT_RATE_D;
+    conn_125 : data access gcsReceiveTask_uart5_inst.param_reader_ALT_RATE_I -> receiveParamsRead5.param_reader_ALT_RATE_I;
+    conn_126 : data access gcsReceiveTask_uart5_inst.param_reader_ALT_RATE_P -> receiveParamsRead5.param_reader_ALT_RATE_P;
+    conn_127 : data access gcsReceiveTask_uart5_inst.param_reader_YAW_STAB_IMAX -> receiveParamsRead5.param_reader_YAW_STAB_IMAX;
+    conn_128 : data access gcsReceiveTask_uart5_inst.param_reader_YAW_STAB_D -> receiveParamsRead5.param_reader_YAW_STAB_D;
+    conn_129 : data access gcsReceiveTask_uart5_inst.param_reader_YAW_STAB_I -> receiveParamsRead5.param_reader_YAW_STAB_I;
+    conn_130 : data access gcsReceiveTask_uart5_inst.param_reader_YAW_STAB_P -> receiveParamsRead5.param_reader_YAW_STAB_P;
+    conn_131 : data access gcsReceiveTask_uart5_inst.param_reader_YAW_RATE_IMAX -> receiveParamsRead5.param_reader_YAW_RATE_IMAX;
+    conn_132 : data access gcsReceiveTask_uart5_inst.param_reader_YAW_RATE_D -> receiveParamsRead5.param_reader_YAW_RATE_D;
+    conn_133 : data access gcsReceiveTask_uart5_inst.param_reader_YAW_RATE_I -> receiveParamsRead5.param_reader_YAW_RATE_I;
+    conn_134 : data access gcsReceiveTask_uart5_inst.param_reader_YAW_RATE_P -> receiveParamsRead5.param_reader_YAW_RATE_P;
+    conn_135 : data access gcsReceiveTask_uart5_inst.param_reader_PIT_STAB_IMAX -> receiveParamsRead5.param_reader_PIT_STAB_IMAX;
+    conn_136 : data access gcsReceiveTask_uart5_inst.param_reader_PIT_STAB_D -> receiveParamsRead5.param_reader_PIT_STAB_D;
+    conn_137 : data access gcsReceiveTask_uart5_inst.param_reader_PIT_STAB_I -> receiveParamsRead5.param_reader_PIT_STAB_I;
+    conn_138 : data access gcsReceiveTask_uart5_inst.param_reader_PIT_STAB_P -> receiveParamsRead5.param_reader_PIT_STAB_P;
+    conn_139 : data access gcsReceiveTask_uart5_inst.param_reader_PIT_RATE_IMAX -> receiveParamsRead5.param_reader_PIT_RATE_IMAX;
+    conn_140 : data access gcsReceiveTask_uart5_inst.param_reader_PIT_RATE_D -> receiveParamsRead5.param_reader_PIT_RATE_D;
+    conn_141 : data access gcsReceiveTask_uart5_inst.param_reader_PIT_RATE_I -> receiveParamsRead5.param_reader_PIT_RATE_I;
+    conn_142 : data access gcsReceiveTask_uart5_inst.param_reader_PIT_RATE_P -> receiveParamsRead5.param_reader_PIT_RATE_P;
+    conn_143 : data access gcsReceiveTask_uart5_inst.param_reader_RLL_STAB_IMAX -> receiveParamsRead5.param_reader_RLL_STAB_IMAX;
+    conn_144 : data access gcsReceiveTask_uart5_inst.param_reader_RLL_STAB_D -> receiveParamsRead5.param_reader_RLL_STAB_D;
+    conn_145 : data access gcsReceiveTask_uart5_inst.param_reader_RLL_STAB_I -> receiveParamsRead5.param_reader_RLL_STAB_I;
+    conn_146 : data access gcsReceiveTask_uart5_inst.param_reader_RLL_STAB_P -> receiveParamsRead5.param_reader_RLL_STAB_P;
+    conn_147 : data access gcsReceiveTask_uart5_inst.param_reader_RLL_RATE_IMAX -> receiveParamsRead5.param_reader_RLL_RATE_IMAX;
+    conn_148 : data access gcsReceiveTask_uart5_inst.param_reader_RLL_RATE_D -> receiveParamsRead5.param_reader_RLL_RATE_D;
+    conn_149 : data access gcsReceiveTask_uart5_inst.param_reader_RLL_RATE_I -> receiveParamsRead5.param_reader_RLL_RATE_I;
+    conn_150 : data access gcsReceiveTask_uart5_inst.param_reader_RLL_RATE_P -> receiveParamsRead5.param_reader_RLL_RATE_P;
+   
+    
   end GCS.Impl;
   
   thread gcsTransmitTask_uart5
