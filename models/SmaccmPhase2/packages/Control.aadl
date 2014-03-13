@@ -1,0 +1,325 @@
+package Control
+public
+  with Base_Types;
+  with TowerArrays;
+  with gcsstream_timing;
+  with mavlink_veh_commsec_msg;
+  with att_control_dbg_type;
+  with alt_control_dbg_type;
+  with radio_stat_type;
+  with motors_type;
+  with controloutput_type;
+  with gps_type;
+  with sensors_type;
+  with control_law_type;
+  with mavlink_rc_channels_override_msg;
+  with control_law_request_type;
+  with mavlink_hil_state_msg;
+  with SMACCM;
+  with SMACCM_SYS;
+  with userinput_type;
+  with Software;
+  with FeatureGroups;
+
+
+thread group ControlThreads
+  features
+	contParams : feature group FeatureGroups::control_params_read;
+	sensors: requires data access sensors_type::sensors_result.impl ;
+    userinput: requires data access userinput_type::userinput_result.impl;
+    control_law: requires data access control_law_type::control_law.impl; 
+    control: out event data port controloutput_type::controloutput.impl;
+    att_control: requires data access att_control_dbg_type::att_control_dbg.impl;
+    alt_control: requires data access alt_control_dbg_type::alt_control_dbg.impl;
+	proxyData: requires data access controloutput_type::controloutput.impl;
+	
+end ControlThreads;
+
+thread group implementation ControlThreads.impl
+  subcomponents
+    control_inst : thread control;
+    control_state_inst : thread control_state;
+    
+  connections
+
+    conn_273 : data access control_inst.param_reader_ALT_UI_DEAD -> contParams.param_reader_ALT_UI_DEAD;
+    conn_274 : data access contParams.param_reader_ALT_UI_SENS -> control_inst.param_reader_ALT_UI_SENS;
+    conn_275 : data access contParams.param_reader_ALT_POS_IMAX -> control_inst.param_reader_ALT_POS_IMAX;
+    conn_276 : data access contParams.param_reader_ALT_POS_D -> control_inst.param_reader_ALT_POS_D;
+    conn_277 : data access contParams.param_reader_ALT_POS_I -> control_inst.param_reader_ALT_POS_I;
+    conn_278 : data access contParams.param_reader_ALT_POS_P -> control_inst.param_reader_ALT_POS_P;
+    conn_279 : data access contParams.param_reader_ALT_RATE_IMAX -> control_inst.param_reader_ALT_RATE_IMAX;
+    conn_280 : data access contParams.param_reader_ALT_RATE_D -> control_inst.param_reader_ALT_RATE_D;
+    conn_281 : data access contParams.param_reader_ALT_RATE_I -> control_inst.param_reader_ALT_RATE_I;
+    conn_282 : data access contParams.param_reader_ALT_RATE_P -> control_inst.param_reader_ALT_RATE_P;
+    conn_283 : data access contParams.param_reader_YAW_STAB_IMAX -> control_inst.param_reader_YAW_STAB_IMAX;
+    conn_284 : data access contParams.param_reader_YAW_STAB_D -> control_inst.param_reader_YAW_STAB_D;
+    conn_285 : data access contParams.param_reader_YAW_STAB_I -> control_inst.param_reader_YAW_STAB_I;
+    conn_286 : data access contParams.param_reader_YAW_STAB_P -> control_inst.param_reader_YAW_STAB_P;
+    conn_287 : data access contParams.param_reader_YAW_RATE_IMAX -> control_inst.param_reader_YAW_RATE_IMAX;
+    conn_288 : data access contParams.param_reader_YAW_RATE_D -> control_inst.param_reader_YAW_RATE_D;
+    conn_289 : data access contParams.param_reader_YAW_RATE_I -> control_inst.param_reader_YAW_RATE_I;
+    conn_290 : data access contParams.param_reader_YAW_RATE_P -> control_inst.param_reader_YAW_RATE_P;
+    conn_291 : data access contParams.param_reader_PIT_STAB_IMAX -> control_inst.param_reader_PIT_STAB_IMAX;
+    conn_292 : data access contParams.param_reader_PIT_STAB_D -> control_inst.param_reader_PIT_STAB_D;
+    conn_293 : data access contParams.param_reader_PIT_STAB_I -> control_inst.param_reader_PIT_STAB_I;
+    conn_294 : data access contParams.param_reader_PIT_STAB_P -> control_inst.param_reader_PIT_STAB_P;
+    conn_295 : data access contParams.param_reader_PIT_RATE_IMAX -> control_inst.param_reader_PIT_RATE_IMAX;
+    conn_296 : data access contParams.param_reader_PIT_RATE_D -> control_inst.param_reader_PIT_RATE_D;
+    conn_297 : data access contParams.param_reader_PIT_RATE_I -> control_inst.param_reader_PIT_RATE_I;
+    conn_298 : data access contParams.param_reader_PIT_RATE_P -> control_inst.param_reader_PIT_RATE_P;
+    conn_299 : data access contParams.param_reader_RLL_STAB_IMAX -> control_inst.param_reader_RLL_STAB_IMAX;
+    conn_300 : data access contParams.param_reader_RLL_STAB_D -> control_inst.param_reader_RLL_STAB_D;
+    conn_301 : data access contParams.param_reader_RLL_STAB_I -> control_inst.param_reader_RLL_STAB_I;
+    conn_302 : data access contParams.param_reader_RLL_STAB_P -> control_inst.param_reader_RLL_STAB_P;
+    conn_303 : data access contParams.param_reader_RLL_RATE_IMAX -> control_inst.param_reader_RLL_RATE_IMAX;
+    conn_304 : data access contParams.param_reader_RLL_RATE_D -> control_inst.param_reader_RLL_RATE_D;
+    conn_305 : data access contParams.param_reader_RLL_RATE_I -> control_inst.param_reader_RLL_RATE_I;
+    conn_306 : data access contParams.param_reader_RLL_RATE_P -> control_inst.param_reader_RLL_RATE_P;
+    
+    conn_307 : data access sensors -> control_inst.sensors;
+    conn_308 : data access userinput -> control_inst.userinput;
+    conn_309 : data access control_law -> control_inst.control_law;
+    conn_271 : data access att_control -> control_inst.att_control_dbg;
+    conn_272 : data access alt_control -> control_inst.alt_control_dbg;
+    
+    conn_28 : port control_inst.control -> control_state_inst.proxyEvent;
+    conn_proxy : data access proxyData -> controL_state_inst.proxyData;
+    
+end ControlThreads.impl;
+
+thread control_state
+  features
+    proxyEvent: in event data port controloutput_type::controloutput.impl {
+      Queue_Size => 16;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_state_298.h";
+      SMACCM_SYS::CommPrim_Source_Text => "receiveFromTask_control_state_298_chan38_302";
+      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_control_state_298_chan38_305");
+    };
+    proxyData: requires data access controloutput_type::controloutput.impl {
+      Access_Right => write_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_state_298.h";
+      SMACCM_SYS::CommPrim_Source_Text => "write_control_state_298_dataport297_300";
+    };
+  properties
+    Source_Text => ("tower_task_usercode_control_state_298.c");
+    Priority => 17;
+    Source_Stack_Size => 256 bytes;
+    SMACCM::Language => "Ivory";
+    Dispatch_Protocol => Sporadic;
+end control_state;
+
+
+thread control
+  features
+    control: out event data port controloutput_type::controloutput.impl {
+      Queue_Size => 16;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_157.h";
+      SMACCM_SYS::CommPrim_Source_Text => "emitFromTask_control_157_chan38_165";
+    };
+    att_control_dbg: requires data access att_control_dbg_type::att_control_dbg.impl {
+      Access_Right => write_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_157.h";
+      SMACCM_SYS::CommPrim_Source_Text => "write_control_157_dataport40_261";
+    };
+    alt_control_dbg: requires data access alt_control_dbg_type::alt_control_dbg.impl {
+      Access_Right => write_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_157.h";
+      SMACCM_SYS::CommPrim_Source_Text => "write_control_157_dataport39_257";
+    };
+    param_reader_ALT_UI_DEAD: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_157.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_control_157_dataport36_233";
+    };
+    param_reader_ALT_UI_SENS: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_157.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_control_157_dataport35_231";
+    };
+    param_reader_ALT_POS_IMAX: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_157.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_control_157_dataport34_229";
+    };
+    param_reader_ALT_POS_D: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_157.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_control_157_dataport33_227";
+    };
+    param_reader_ALT_POS_I: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_157.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_control_157_dataport32_225";
+    };
+    param_reader_ALT_POS_P: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_157.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_control_157_dataport31_223";
+    };
+    param_reader_ALT_RATE_IMAX: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_157.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_control_157_dataport30_221";
+    };
+    param_reader_ALT_RATE_D: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_157.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_control_157_dataport29_219";
+    };
+    param_reader_ALT_RATE_I: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_157.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_control_157_dataport28_217";
+    };
+    param_reader_ALT_RATE_P: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_157.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_control_157_dataport27_215";
+    };
+    param_reader_YAW_STAB_IMAX: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_157.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_control_157_dataport26_213";
+    };
+    param_reader_YAW_STAB_D: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_157.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_control_157_dataport25_211";
+    };
+    param_reader_YAW_STAB_I: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_157.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_control_157_dataport24_209";
+    };
+    param_reader_YAW_STAB_P: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_157.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_control_157_dataport23_207";
+    };
+    param_reader_YAW_RATE_IMAX: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_157.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_control_157_dataport22_205";
+    };
+    param_reader_YAW_RATE_D: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_157.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_control_157_dataport21_203";
+    };
+    param_reader_YAW_RATE_I: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_157.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_control_157_dataport20_201";
+    };
+    param_reader_YAW_RATE_P: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_157.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_control_157_dataport19_199";
+    };
+    param_reader_PIT_STAB_IMAX: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_157.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_control_157_dataport18_197";
+    };
+    param_reader_PIT_STAB_D: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_157.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_control_157_dataport17_195";
+    };
+    param_reader_PIT_STAB_I: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_157.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_control_157_dataport16_193";
+    };
+    param_reader_PIT_STAB_P: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_157.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_control_157_dataport15_191";
+    };
+    param_reader_PIT_RATE_IMAX: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_157.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_control_157_dataport14_189";
+    };
+    param_reader_PIT_RATE_D: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_157.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_control_157_dataport13_187";
+    };
+    param_reader_PIT_RATE_I: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_157.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_control_157_dataport12_185";
+    };
+    param_reader_PIT_RATE_P: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_157.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_control_157_dataport11_183";
+    };
+    param_reader_RLL_STAB_IMAX: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_157.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_control_157_dataport10_181";
+    };
+    param_reader_RLL_STAB_D: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_157.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_control_157_dataport9_179";
+    };
+    param_reader_RLL_STAB_I: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_157.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_control_157_dataport8_177";
+    };
+    param_reader_RLL_STAB_P: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_157.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_control_157_dataport7_175";
+    };
+    param_reader_RLL_RATE_IMAX: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_157.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_control_157_dataport6_173";
+    };
+    param_reader_RLL_RATE_D: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_157.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_control_157_dataport5_171";
+    };
+    param_reader_RLL_RATE_I: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_157.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_control_157_dataport4_169";
+    };
+    param_reader_RLL_RATE_P: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_157.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_control_157_dataport3_167";
+    };
+    sensors: requires data access sensors_type::sensors_result.impl {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_157.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_control_157_dataport0_163";
+    };
+    userinput: requires data access userinput_type::userinput_result.impl {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_157.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_control_157_dataport131_161";
+    };
+    control_law: requires data access control_law_type::control_law.impl {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_157.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_control_157_dataport140_159";
+    }; 
+  properties
+    Source_Text => ("tower_task_usercode_control_157.c");
+    Priority => 19;
+    Source_Stack_Size => 256 bytes;
+    SMACCM::Language => "Ivory";
+    Dispatch_Protocol => Hybrid;
+    Period => 5 ms;
+    SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_control_157_per5_286");
+end control;
+
+end Control;

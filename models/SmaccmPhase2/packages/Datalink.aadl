@@ -1,0 +1,112 @@
+package Datalink
+public
+  with Base_Types;
+  with TowerArrays;
+  with radio_stat_type;
+  with SMACCM;
+  with SMACCM_SYS;
+  with radio_info_type;
+  
+thread group Datalink
+end Datalink;
+
+thread group implementation Datalink.Impl
+  subcomponents
+    datalink_uart5_inst : thread datalink_uart5;
+    datalink_uart1_inst : thread datalink_uart1;
+    
+end Datalink.Impl;
+
+thread datalink_uart5
+  features
+    link_ostream: out event data port Base_Types::Unsigned_8 {
+      Queue_Size => 1024;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_datalink_uart5_785.h";
+      SMACCM_SYS::CommPrim_Source_Text => "emitFromTask_datalink_uart5_785_chan768_807";
+    };
+    info_ostream: out event data port radio_info_type::radio_info.impl {
+      Queue_Size => 2;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_datalink_uart5_785.h";
+      SMACCM_SYS::CommPrim_Source_Text => "emitFromTask_datalink_uart5_785_chan784_795";
+      SMACCM::Unimplemented => true;
+    };
+    stat_ostream: out event data port radio_stat_type::radio_stat.impl {
+      Queue_Size => 2;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_datalink_uart5_785.h";
+      SMACCM_SYS::CommPrim_Source_Text => "emitFromTask_datalink_uart5_785_chan783_793";
+    };
+    framed_ostream: out event data port TowerArrays::ArrTy_96TyBase_Types_Unsigned_8.impl {
+      Queue_Size => 8;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_datalink_uart5_785.h";
+      SMACCM_SYS::CommPrim_Source_Text => "emitFromTask_datalink_uart5_785_chan782_791";
+    };
+    framed_istream: in event data port TowerArrays::ArrTy_96TyBase_Types_Unsigned_8.impl {
+      Queue_Size => 8;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_datalink_uart5_785.h";
+      SMACCM_SYS::CommPrim_Source_Text => "receiveFromTask_datalink_uart5_785_chan781_809";
+      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_datalink_uart5_785_chan781_812");
+    };
+    link_istream: in event data port Base_Types::Unsigned_8 {
+      Queue_Size => 1024;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_datalink_uart5_785.h";
+      SMACCM_SYS::CommPrim_Source_Text => "receiveFromTask_datalink_uart5_785_chan769_787";
+      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_datalink_uart5_785_chan769_805");
+    };
+    
+  properties
+    Source_Text => ("tower_task_usercode_datalink_uart5_785.c");
+    Priority => 5;
+    Source_Stack_Size => 256 bytes;
+    SMACCM::Language => "Ivory";
+    Dispatch_Protocol => Hybrid;
+    Period => 1000 ms;
+    SMACCM::Always_Sends_Message => true;
+    SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_datalink_uart5_785_per1000_816");
+end datalink_uart5;
+
+thread datalink_uart1
+  features
+    link_ostream: out event data port Base_Types::Unsigned_8 {
+      Queue_Size => 1024;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_datalink_uart1_442.h";
+      SMACCM_SYS::CommPrim_Source_Text => "emitFromTask_datalink_uart1_442_chan425_464";
+    };
+    info_ostream: out event data port radio_info_type::radio_info.impl {
+      Queue_Size => 2;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_datalink_uart1_442.h";
+      SMACCM_SYS::CommPrim_Source_Text => "emitFromTask_datalink_uart1_442_chan441_452";
+      SMACCM::Unimplemented => true;
+    };
+    stat_ostream: out event data port radio_stat_type::radio_stat.impl {
+      Queue_Size => 2;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_datalink_uart1_442.h";
+      SMACCM_SYS::CommPrim_Source_Text => "emitFromTask_datalink_uart1_442_chan440_450";
+    };
+    framed_ostream: out event data port TowerArrays::ArrTy_96TyBase_Types_Unsigned_8.impl {
+      Queue_Size => 8;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_datalink_uart1_442.h";
+      SMACCM_SYS::CommPrim_Source_Text => "emitFromTask_datalink_uart1_442_chan439_448";
+    };
+    framed_istream: in event data port TowerArrays::ArrTy_96TyBase_Types_Unsigned_8.impl {
+      Queue_Size => 8;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_datalink_uart1_442.h";
+      SMACCM_SYS::CommPrim_Source_Text => "receiveFromTask_datalink_uart1_442_chan438_466";
+      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_datalink_uart1_442_chan438_469");
+    };
+    link_istream: in event data port Base_Types::Unsigned_8 {
+      Queue_Size => 1024;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_datalink_uart1_442.h";
+      SMACCM_SYS::CommPrim_Source_Text => "receiveFromTask_datalink_uart1_442_chan426_444";
+      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_datalink_uart1_442_chan426_462");
+    };
+  properties
+    Source_Text => ("tower_task_usercode_datalink_uart1_442.c");
+    Priority => 11;
+    Source_Stack_Size => 256 bytes;
+    SMACCM::Language => "Ivory";
+    Dispatch_Protocol => Hybrid;
+    Period => 1000 ms;
+    SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_datalink_uart1_442_per1000_473");
+end datalink_uart1;
+
+end Datalink;
