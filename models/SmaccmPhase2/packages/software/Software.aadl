@@ -386,6 +386,7 @@ data proc_data
     position: provides data access gps_type::position.impl;
     sensors: provides data access sensors_type::sensors_result.impl;
     controllaw: provides data access control_law_type::control_law.impl;
+    userinput: provides data access userinput_type::userinput_result.impl;
 end proc_data;
 
 data implementation proc_data.impl
@@ -679,7 +680,7 @@ data implementation proc_data.impl
     conn_80 : data access dataport341 -> transCons5.position;
     conn_81 : data access dataport0 -> transCons5.sensors;
     conn_82 : data access dataport140 -> transCons5.controllaw;   
- 
+    conn_user : data access dataport131 -> userinput;
  
 end proc_data.impl;
 
@@ -736,24 +737,24 @@ process implementation flight_gen_process.impl
     conn_39 : port uart6ISR_inst.istream -> ubloxGPS_inst.istream;
         
     conn_151 : data access threadData.commsecInfo5 -> Commsec_inst.commsec_info_src_uart5;
-    conn_152 : data access threadData.radio -> radio_status_uart5_inst.proxyData;
-    conn_264 : data access dataport434 -> decryptTask_uart1_inst.commsec_info_src;
-    conn_265 : data access dataport474 -> radio_status_uart1_inst.proxyData;
+    conn_152 : data access threadData.radio -> GCS_inst.radioData5;
+    conn_264 : data access threadData.commsecInfo1 -> Commsec_inst.commsec_info_src_uart1;
+    conn_12252 : data access threadData.radio -> GCS_inst.radioData1;
     
-    conn_266 : data access dataport0 -> sensorsCaptureTask_inst.sensors;
-    conn_267 : data access dataport341 -> position_state_inst.proxyData;
-    conn_268 : data access dataport306 -> motors_state_inst.proxyData;
-    conn_269 : data access dataport297 -> Control_inst.proxyData;
-    conn_270 : data access dataport140 -> motmix_inst.controllaw;
-    conn_271 : data access dataport40 -> Control_inst.att_control;
-    conn_272 : data access dataport39 -> Control_inst.alt_control;
+    conn_266 : data access threadData.sensors -> sensorsCaptureTask_inst.sensors;
+    conn_267 : data access threadData.position -> position_state_inst.proxyData;
+    conn_268 : data access threadData.motors -> motors_state_inst.proxyData;
+    conn_269 : data access threadData.control -> Control_inst.proxyData;
+    conn_270 : data access threadData.controllaw -> motmix_inst.controllaw;
+    conn_271 : data access threadData.att_control -> Control_inst.att_control;
+    conn_272 : data access threadData.alt_control -> Control_inst.alt_control;
    
-    conn_307 : data access dataport0 -> Control_inst.sensors;
-    conn_308 : data access dataport131 -> Control_inst.userinput;
-    conn_309 : data access dataport140 -> Control_inst.control_law;
-    conn_310 : data access dataport140 -> blink_inst.controllaw;
-    conn_311 : data access dataport140 -> UserInputThreads_inst.proxyControlData;
-    conn_312 : data access dataport131 -> UserInputThreads_inst.proxyUiData;
+    conn_307 : data access threadData.sensors -> Control_inst.sensors;
+    conn_308 : data access threadData.userinput -> Control_inst.userinput;
+    conn_309 : data access threadData.controllaw -> Control_inst.control_law;
+    conn_310 : data access threadData.controllaw -> blink_inst.controllaw;
+    conn_311 : data access threadData.controllaw -> UserInputThreads_inst.proxyControlData;
+    conn_312 : data access threadData.userinput -> UserInputThreads_inst.proxyUiData;
     
     --connections to hardware
     --outgoing connections
