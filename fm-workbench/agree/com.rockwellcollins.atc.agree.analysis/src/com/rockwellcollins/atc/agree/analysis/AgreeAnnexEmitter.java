@@ -1726,7 +1726,7 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
 			List<VarDecl> internals, List<String> properties,
 			IdExpr totalCompHistId, IdExpr countId) {
 		IdExpr notTotalCompHistId = new IdExpr("_TOTAL_COMP_FINITE_CONSIST");
-        Expr finiteConsist = getFinteConsistancy(totalCompHistId, countId, consistUnrollDepth);
+        Expr finiteConsist = AgreeEmitterUtilities.getFinteConsistancy(totalCompHistId, countId, consistUnrollDepth);
         Equation contrConsistEq = new Equation(notTotalCompHistId, finiteConsist);
         
         internals.add(new VarDecl(notTotalCompHistId.id, new NamedType("bool")));
@@ -1873,10 +1873,10 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
                     continue;
                 }
                 higherContracts = new BinaryExpr(higherContracts, BinaryOp.AND,
-                        getLustreContract(closureEmitter));
+                		AgreeEmitterUtilities.getLustreContract(closureEmitter));
             }
 
-            Expr contrAssumps = getLustreAssumptions(subEmitter);
+            Expr contrAssumps = AgreeEmitterUtilities.getLustreAssumptions(subEmitter);
 
             IdExpr compId = new IdExpr("_Hist_" + subEmitter.category);
             internals.add(new VarDecl(compId.id, new NamedType("bool")));
@@ -1903,9 +1903,9 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
             IdExpr contrHistId = new IdExpr("__CONTR_HIST_" + subEmitter.category);
             IdExpr consistId = new IdExpr("__NULL_CONTR_HIST_" + subEmitter.category);
 
-            Expr contExpr = getLustreContract(subEmitter);
-            Equation contHist = getLustreHistory(contExpr, contrHistId);
-            Expr finiteConsist = getFinteConsistancy(contrHistId, countId, consistUnrollDepth);
+            Expr contExpr = AgreeEmitterUtilities.getLustreContract(subEmitter);
+            Equation contHist = AgreeEmitterUtilities.getLustreHistory(contExpr, contrHistId);
+            Expr finiteConsist = AgreeEmitterUtilities.getFinteConsistancy(contrHistId, countId, consistUnrollDepth);
             Equation contrConsistEq = new Equation(consistId, finiteConsist);
             eqs.add(contrConsistEq);
             eqs.add(contHist);
@@ -1922,187 +1922,6 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         }
 	}
     
-    
-    
-    //warns the user if there is a cycle
-    private void logCycleWarning(List<Equation> eqs, boolean throwException){
-        Map<String, Set<String>> idGraph = new HashMap<>();
-        List<String> ids = new ArrayList<>();
-        AgreeCycleVisitor visitor = new AgreeCycleVisitor();
-        
-        for(Equation eq : eqs){
-            for(IdExpr id : eq.lhs){
-                ids.add(id.id);
-                idGraph.put(id.id, eq.expr.accept(visitor));
-            }
-        }
-        
-        Set<String> discovered = new HashSet<>();
-        
-        StringBuilder exceptionStr = new StringBuilder();
-        for(String id : ids){
-            if(discovered.contains(id)){
-                continue;
-            }
-            List<String> cycle = cycleWarning_Helper(id, id, new HashSet<String>(), idGraph);
-            
-            if(cycle != null){
-                discovered.addAll(cycle);
-                String aadlString = this.varRenaming.get(id);
-                StringBuilder cycleStr = new StringBuilder("Possible cycle: "+aadlString);
-                
-                String sep = " -> ";
-                for(String cycleId : cycle){
-                    cycleStr.append(sep);
-                    aadlString = this.varRenaming.get(cycleId);
-                    cycleStr.append(aadlString);                
-                }
-                
-                log.logWarning(cycleStr.toString());
-                exceptionStr.append(cycleStr);
-            }
-        }
-        if(throwException && !discovered.isEmpty()){
-            throw new AgreeCombinationalCycleException(exceptionStr.toString());
-        }
-    }
-    
-    private LinkedList<String> cycleWarning_Helper(String visit, String target, 
-            Set<String> visited, Map<String, Set<String>> graph){
-        
-        if(visited.contains(visited)){
-            return null;
-        }
-        
-        visited.add(visit);
-        
-        Set<String> toVisit = graph.get(visit);
-        
-        if(toVisit != null){
-            for(String nextVisit : toVisit){
-                if(nextVisit.equals(target)){
-                    return new LinkedList<>(Collections.singletonList(target));
-                }
-                LinkedList<String> cycle = cycleWarning_Helper(nextVisit, target, visited, graph);
-                if(cycle != null){
-                    cycle.push(nextVisit);
-                    return cycle;
-                }
-            }
-        }
-        
-        return null;
-    }
-    
-    private Expr conjoin(List<Expr> exprs) {
-        if (exprs.isEmpty()) {
-            return new BoolExpr(true);
-        }
-
-        Iterator<Expr> iterator = exprs.iterator();
-        Expr result = iterator.next();
-        while (iterator.hasNext()) {
-            result = new BinaryExpr(result, BinaryOp.AND, iterator.next());
-        }
-        return result;
-    }
-
-    private Expr conjoinEqs(List<Equation> eqs) {
-        if (eqs.isEmpty()) {
-            return new BoolExpr(true);
-        }
-
-        Iterator<Equation> iterator = eqs.iterator();
-        Expr result = iterator.next().expr;
-        while (iterator.hasNext()) {
-            result = new BinaryExpr(result, BinaryOp.AND, iterator.next().expr);
-        }
-        return result;
-    }
-
-    private Expr conjoin(Expr... exprs) {
-        return conjoin(Arrays.asList(exprs));
-    }
-
-    private Expr getLustreAssumptions(AgreeAnnexEmitter emitter) {
-        if(emitter.agreeNode == null){
-            return conjoin(emitter.assumpExpressions);
-        }else{
-            return conjoin(emitter.agreeNode.assumptions);
-        }
-    }
-
-    private Expr getLustreAssumptionsAndAssertions(AgreeAnnexEmitter emitter) {
-        if(emitter.agreeNode == null){
-            return conjoin(conjoin(emitter.assumpExpressions), conjoin(emitter.assertExpressions));
-        }else{
-            return conjoin(conjoin(emitter.agreeNode.assertions), conjoin(emitter.agreeNode.assumptions));
-        }
-    }
-
-    private Expr getLustreContract(AgreeAnnexEmitter emitter) {
-        if(emitter.agreeNode == null){
-            return conjoin(conjoin(emitter.assumpExpressions), conjoin(emitter.assertExpressions),
-                    conjoinEqs(emitter.guarExpressions));
-        }else{
-            return conjoin(conjoin(emitter.agreeNode.assertions),
-                    conjoin(emitter.agreeNode.assumptions),
-                    conjoin(emitter.agreeNode.guarantees));
-        }
-    }
-    
-    private Equation getLustreHistory(Expr expr, IdExpr histId) {
-
-        Expr preHist = new UnaryExpr(UnaryOp.PRE, histId);
-        Expr histExpr = new BinaryExpr(expr, BinaryOp.AND, preHist);
-        histExpr = new BinaryExpr(expr, BinaryOp.ARROW, histExpr);
-
-        Equation histEq = new Equation(histId, histExpr);
-
-        return histEq;
-
-    }
-    
-    //returns an expression for bounded history
-    private Expr getFinteConsistancy(IdExpr histId, IdExpr countId, int n) {
-        Expr countExpr = new BinaryExpr(countId, BinaryOp.EQUAL, new IntExpr(BigInteger.valueOf((long)n)));
-
-        Expr consistExpr = new BinaryExpr(histId, BinaryOp.AND, countExpr);
-        consistExpr = new UnaryExpr(UnaryOp.NOT, consistExpr);
-
-        return consistExpr;
-    }
-    
-    static public void getOutputClosure(List<Connection> conns, Set<Subcomponent> subs) {
-
-        assert (subs.size() == 1);
-        Subcomponent orig = (Subcomponent) (subs.toArray()[0]);
-        int prevSize = subs.size();
-        do {
-            prevSize = subs.size();
-            for (Connection conn : conns) {
-                AbstractConnectionEnd absConnDest = conn.getDestination();
-                AbstractConnectionEnd absConnSour = conn.getSource();
-
-                assert (absConnDest instanceof ConnectedElement);
-                Context destContext = ((ConnectedElement) absConnDest).getContext();
-                assert (absConnSour instanceof ConnectedElement);
-                Context sourContext = ((ConnectedElement) absConnSour).getContext();
-                if (sourContext != null && subs.contains(sourContext)) {
-                    if (destContext != null && destContext instanceof Subcomponent) {
-                        //assert (destContext instanceof Subcomponent);
-                        if (orig.equals(destContext)) {
-                            // there is a loop
-                            subs.clear();
-                            break;
-                        }
-                        subs.add((Subcomponent) destContext);
-                    }
-                }
-            }
-        } while (subs.size() != prevSize);
-
-    }
     
     private Expr getQueueInsertRemoveAtomicAssertion(List<AgreeAnnexEmitter> subEmitters){
     	
