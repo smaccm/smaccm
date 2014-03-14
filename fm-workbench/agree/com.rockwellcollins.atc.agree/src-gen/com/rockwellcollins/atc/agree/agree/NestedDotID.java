@@ -13,6 +13,7 @@ import org.osate.aadl2.NamedElement;
  * The following features are supported:
  * <ul>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.NestedDotID#getBase <em>Base</em>}</li>
+ *   <li>{@link com.rockwellcollins.atc.agree.agree.NestedDotID#getTag <em>Tag</em>}</li>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.NestedDotID#getSub <em>Sub</em>}</li>
  * </ul>
  * </p>
@@ -48,6 +49,32 @@ public interface NestedDotID extends Expr
    * @generated
    */
   void setBase(NamedElement value);
+
+  /**
+   * Returns the value of the '<em><b>Tag</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <p>
+   * If the meaning of the '<em>Tag</em>' attribute isn't clear,
+   * there really should be more of a description here...
+   * </p>
+   * <!-- end-user-doc -->
+   * @return the value of the '<em>Tag</em>' attribute.
+   * @see #setTag(String)
+   * @see com.rockwellcollins.atc.agree.agree.AgreePackage#getNestedDotID_Tag()
+   * @model
+   * @generated
+   */
+  String getTag();
+
+  /**
+   * Sets the value of the '{@link com.rockwellcollins.atc.agree.agree.NestedDotID#getTag <em>Tag</em>}' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @param value the new value of the '<em>Tag</em>' attribute.
+   * @see #getTag()
+   * @generated
+   */
+  void setTag(String value);
 
   /**
    * Returns the value of the '<em><b>Sub</b></em>' containment reference.

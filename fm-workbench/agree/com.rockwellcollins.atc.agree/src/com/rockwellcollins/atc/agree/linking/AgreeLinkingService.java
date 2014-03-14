@@ -26,7 +26,7 @@ import org.osate.aadl2.util.Aadl2Util;
 import org.osate.xtext.aadl2.properties.linking.PropertiesLinkingService;
 import org.osate.xtext.aadl2.properties.util.EMFIndexRetrieval;
 
-import com.rockwellcollins.atc.agree.agree.ClockID;
+import com.rockwellcollins.atc.agree.agree.CalenStatement;
 import com.rockwellcollins.atc.agree.agree.IdExpr;
 import com.rockwellcollins.atc.agree.agree.NestedDotID;
 import com.rockwellcollins.atc.agree.agree.NodeEq;
@@ -45,8 +45,10 @@ public class AgreeLinkingService extends PropertiesLinkingService {
             return findUnitLiteralAsList((Element) context, name);
         }
 
-        if (context instanceof IdExpr || context instanceof NestedDotID
-                || context instanceof NodeEq || context instanceof ClockID) {
+        if (context instanceof IdExpr 
+        		|| context instanceof NestedDotID
+                || context instanceof NodeEq
+                || context instanceof CalenStatement) {
 
             EObject e = findClassifier(context, reference, name);
             if (e != null) {

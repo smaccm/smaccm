@@ -176,15 +176,6 @@ public interface AgreeFactory extends EFactory
   NestedDotID createNestedDotID();
 
   /**
-   * Returns a new object of class '<em>Clock ID</em>'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return a new object of class '<em>Clock ID</em>'.
-   * @generated
-   */
-  ClockID createClockID();
-
-  /**
    * Returns a new object of class '<em>Contract Library</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -264,6 +255,15 @@ public interface AgreeFactory extends EFactory
    * @generated
    */
   LiftStatement createLiftStatement();
+
+  /**
+   * Returns a new object of class '<em>Calen Statement</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Calen Statement</em>'.
+   * @generated
+   */
+  CalenStatement createCalenStatement();
 
   /**
    * Returns a new object of class '<em>Node Eq</em>'.

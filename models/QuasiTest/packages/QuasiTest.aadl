@@ -3,6 +3,73 @@ public
 with Base_Types;
 with QuasiTestProps; 
 
+
+system Squadron
+	features
+		leader_l: out data port Base_Types::Integer;
+		right_l: out data port Base_Types::Integer;
+		left_l: out data port Base_types::Integer;
+		leader_r: out data port Base_Types::Integer;
+		right_r: out data port Base_Types::Integer;
+		left_r: out data port Base_types::Integer;
+		left_shift : in data port Base_types::Boolean;
+		right_shift : in data port Base_types::Boolean;
+
+	annex agree {**
+		guarantee "leader equivalence" : leader_r = leader_l;
+	**};
+		
+end Squadron;
+
+
+system implementation Squadron.impl
+	subcomponents
+		form_right : system Formation.impl;
+		form_left : system Formation.impl;
+		
+	connections
+		conn_leadr : port form_right.leader -> leader_r;
+		conn_leadl : port form_left.leader -> leader_l;
+		conn_leftr : port form_right.left -> left_r;
+		conn_leftl : port form_left.left -> left_l;
+		conn_rightr : port form_right.right -> right_l;
+		conn_rightl : port form_left.right -> right_r;
+
+	annex agree {**
+		
+		const none : int = 3;
+		
+		--make sure that everyone shifts the same
+		assert right_shift = form_right.right_shift;
+		assert left_shift = form_right.left_shift;
+		assert form_right.left_shift = form_left.left_shift;
+		assert form_right.right_shift = form_left.right_shift;
+		
+		eq form_left_pend : bool =
+			form_left.pend_leader != none or
+			form_left.pend_left != none or
+			form_left.pend_right != none;
+		
+		eq form_right_pend : bool =
+			form_right.pend_leader != none or
+			form_right.pend_left != none or
+			form_right.pend_right != none;
+			
+		--make sure shifts only happen if nothing is pending
+		assert (form_right_pend or form_left_pend) => not (left_shift or right_shift);
+		
+		assert not (left_shift and right_shift);
+				
+		assert true -> pre(defs.rising(left_shift)) => left_shift or 
+				not (form_right_pend or form_left_pend);
+				
+		assert true -> pre(defs.rising(right_shift)) => right_shift or 
+				not (form_right_pend or form_left_pend); 
+		
+	**};
+
+end Squadron.impl;
+
 system Formation
 	features
 		left_shift: in data port Base_Types::Boolean;
@@ -13,7 +80,6 @@ system Formation
 		pend_leader: out data port Base_Types::Integer;
 		pend_right: out data port Base_Types::Integer;
 		pend_left: out data port Base_types::Integer;
-		
 		
 	annex agree {**
 	
@@ -66,12 +132,7 @@ system Formation
 		assume "only shift if none pending" :
 			defs.rising(left_shift) or defs.rising(right_shift) => 
 				((pend_leader != none) and (pend_right != none) and (pend_left != none));
-								
-		eq count : int = 0 -> pre(count) + 1;
-		
-		assume "assume we do a shift right away" :
-			count = 1 => defs.rising(left_shift) or defs.rising(right_shift);
-		
+					
 	**};
 		
 end Formation; 
@@ -200,6 +261,11 @@ system Vehicle
 		
 		const init_state : int = Get_Property(this, QuasiTestProps::Init_State);
 		
+		eq is_pending : bool = state >= 3 or state <= 5;
+		
+		guarantee "state range":
+			state >= 0 and state <= 5;
+		
 		guarantee "leader position behavior":
 			((defs.rising(left_shift) and pre(state) = leader) => state = pend_left)
 			and
@@ -223,18 +289,27 @@ system Vehicle
 			
 		guarantee "state leader transition behavior" :
 			true -> 
-				(pre(state) = pend_leader and pre(neighbor_state0) != leader and pre(neighbor_state1) != leader)
-					 => state = leader;
+				(pre(state) = pend_leader) => 
+					if (pre(neighbor_state0) != leader and pre(neighbor_state1) != leader) then
+						state = leader
+					else
+						state = pend_leader;
 					 
 		guarantee "state right transition behavior" :
 			true -> 
-				(pre(state) = pend_right and pre(neighbor_state0) != right and pre(neighbor_state1) != right)
-					 => state = right;
+				(pre(state) = pend_right) =>
+					if (pre(neighbor_state0) != right and pre(neighbor_state1) != right) then
+						state = right
+					else
+						state = pend_right;
 					 
 		guarantee "state left transition behavior" :
 			true -> 
-				(pre(state) = pend_left and pre(neighbor_state0) != left and pre(neighbor_state1) != left)
-					 => state = left;
+				(pre(state) = pend_left) => 
+					if (pre(neighbor_state0) != left and pre(neighbor_state1) != left) then
+						state = left
+					else
+						state = pend_left;
 					 
 		assume "not shifting both same" : not (left_shift and right_shift);
 					 

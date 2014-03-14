@@ -307,13 +307,22 @@ public interface AgreePackage extends EPackage
   int SYNCH_STATEMENT__VAL = SPEC_STATEMENT_FEATURE_COUNT + 0;
 
   /**
+   * The feature id for the '<em><b>Sim</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int SYNCH_STATEMENT__SIM = SPEC_STATEMENT_FEATURE_COUNT + 1;
+
+  /**
    * The number of structural features of the '<em>Synch Statement</em>' class.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int SYNCH_STATEMENT_FEATURE_COUNT = SPEC_STATEMENT_FEATURE_COUNT + 1;
+  int SYNCH_STATEMENT_FEATURE_COUNT = SPEC_STATEMENT_FEATURE_COUNT + 2;
 
   /**
    * The meta object id for the '{@link com.rockwellcollins.atc.agree.agree.impl.CallDefImpl <em>Call Def</em>}' class.
@@ -1084,13 +1093,22 @@ public interface AgreePackage extends EPackage
   int NESTED_DOT_ID__BASE = EXPR_FEATURE_COUNT + 0;
 
   /**
+   * The feature id for the '<em><b>Tag</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int NESTED_DOT_ID__TAG = EXPR_FEATURE_COUNT + 1;
+
+  /**
    * The feature id for the '<em><b>Sub</b></em>' containment reference.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int NESTED_DOT_ID__SUB = EXPR_FEATURE_COUNT + 1;
+  int NESTED_DOT_ID__SUB = EXPR_FEATURE_COUNT + 2;
 
   /**
    * The number of structural features of the '<em>Nested Dot ID</em>' class.
@@ -1099,53 +1117,7 @@ public interface AgreePackage extends EPackage
    * @generated
    * @ordered
    */
-  int NESTED_DOT_ID_FEATURE_COUNT = EXPR_FEATURE_COUNT + 2;
-
-  /**
-   * The meta object id for the '{@link com.rockwellcollins.atc.agree.agree.impl.ClockIDImpl <em>Clock ID</em>}' class.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see com.rockwellcollins.atc.agree.agree.impl.ClockIDImpl
-   * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getClockID()
-   * @generated
-   */
-  int CLOCK_ID = 17;
-
-  /**
-   * The feature id for the '<em><b>Owned Element</b></em>' reference list.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int CLOCK_ID__OWNED_ELEMENT = EXPR__OWNED_ELEMENT;
-
-  /**
-   * The feature id for the '<em><b>Owned Comment</b></em>' containment reference list.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int CLOCK_ID__OWNED_COMMENT = EXPR__OWNED_COMMENT;
-
-  /**
-   * The feature id for the '<em><b>Comp</b></em>' reference.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int CLOCK_ID__COMP = EXPR_FEATURE_COUNT + 0;
-
-  /**
-   * The number of structural features of the '<em>Clock ID</em>' class.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int CLOCK_ID_FEATURE_COUNT = EXPR_FEATURE_COUNT + 1;
+  int NESTED_DOT_ID_FEATURE_COUNT = EXPR_FEATURE_COUNT + 3;
 
   /**
    * The meta object id for the '{@link com.rockwellcollins.atc.agree.agree.impl.AgreeContractLibraryImpl <em>Contract Library</em>}' class.
@@ -1155,7 +1127,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getAgreeContractLibrary()
    * @generated
    */
-  int AGREE_CONTRACT_LIBRARY = 18;
+  int AGREE_CONTRACT_LIBRARY = 17;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -1228,7 +1200,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getAgreeContractSubclause()
    * @generated
    */
-  int AGREE_CONTRACT_SUBCLAUSE = 19;
+  int AGREE_CONTRACT_SUBCLAUSE = 18;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -1310,7 +1282,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getAgreeContract()
    * @generated
    */
-  int AGREE_CONTRACT = 20;
+  int AGREE_CONTRACT = 19;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -1356,7 +1328,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getAssumeStatement()
    * @generated
    */
-  int ASSUME_STATEMENT = 21;
+  int ASSUME_STATEMENT = 20;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -1411,7 +1383,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getGuaranteeStatement()
    * @generated
    */
-  int GUARANTEE_STATEMENT = 22;
+  int GUARANTEE_STATEMENT = 21;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -1466,7 +1438,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getAssertStatement()
    * @generated
    */
-  int ASSERT_STATEMENT = 23;
+  int ASSERT_STATEMENT = 22;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -1512,7 +1484,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getParamStatement()
    * @generated
    */
-  int PARAM_STATEMENT = 24;
+  int PARAM_STATEMENT = 23;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -1567,7 +1539,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getLemmaStatement()
    * @generated
    */
-  int LEMMA_STATEMENT = 25;
+  int LEMMA_STATEMENT = 24;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -1622,7 +1594,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getLiftStatement()
    * @generated
    */
-  int LIFT_STATEMENT = 26;
+  int LIFT_STATEMENT = 25;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -1659,6 +1631,70 @@ public interface AgreePackage extends EPackage
    * @ordered
    */
   int LIFT_STATEMENT_FEATURE_COUNT = SPEC_STATEMENT_FEATURE_COUNT + 1;
+
+  /**
+   * The meta object id for the '{@link com.rockwellcollins.atc.agree.agree.impl.CalenStatementImpl <em>Calen Statement</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see com.rockwellcollins.atc.agree.agree.impl.CalenStatementImpl
+   * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getCalenStatement()
+   * @generated
+   */
+  int CALEN_STATEMENT = 26;
+
+  /**
+   * The feature id for the '<em><b>Owned Element</b></em>' reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int CALEN_STATEMENT__OWNED_ELEMENT = SYNCH_STATEMENT__OWNED_ELEMENT;
+
+  /**
+   * The feature id for the '<em><b>Owned Comment</b></em>' containment reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int CALEN_STATEMENT__OWNED_COMMENT = SYNCH_STATEMENT__OWNED_COMMENT;
+
+  /**
+   * The feature id for the '<em><b>Val</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int CALEN_STATEMENT__VAL = SYNCH_STATEMENT__VAL;
+
+  /**
+   * The feature id for the '<em><b>Sim</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int CALEN_STATEMENT__SIM = SYNCH_STATEMENT__SIM;
+
+  /**
+   * The feature id for the '<em><b>Els</b></em>' reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int CALEN_STATEMENT__ELS = SYNCH_STATEMENT_FEATURE_COUNT + 0;
+
+  /**
+   * The number of structural features of the '<em>Calen Statement</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int CALEN_STATEMENT_FEATURE_COUNT = SYNCH_STATEMENT_FEATURE_COUNT + 1;
 
   /**
    * The meta object id for the '{@link com.rockwellcollins.atc.agree.agree.impl.NodeEqImpl <em>Node Eq</em>}' class.
@@ -2457,6 +2493,17 @@ public interface AgreePackage extends EPackage
   EAttribute getSynchStatement_Val();
 
   /**
+   * Returns the meta object for the attribute '{@link com.rockwellcollins.atc.agree.agree.SynchStatement#getSim <em>Sim</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the attribute '<em>Sim</em>'.
+   * @see com.rockwellcollins.atc.agree.agree.SynchStatement#getSim()
+   * @see #getSynchStatement()
+   * @generated
+   */
+  EAttribute getSynchStatement_Sim();
+
+  /**
    * Returns the meta object for class '{@link com.rockwellcollins.atc.agree.agree.CallDef <em>Call Def</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -2764,6 +2811,17 @@ public interface AgreePackage extends EPackage
   EReference getNestedDotID_Base();
 
   /**
+   * Returns the meta object for the attribute '{@link com.rockwellcollins.atc.agree.agree.NestedDotID#getTag <em>Tag</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the attribute '<em>Tag</em>'.
+   * @see com.rockwellcollins.atc.agree.agree.NestedDotID#getTag()
+   * @see #getNestedDotID()
+   * @generated
+   */
+  EAttribute getNestedDotID_Tag();
+
+  /**
    * Returns the meta object for the containment reference '{@link com.rockwellcollins.atc.agree.agree.NestedDotID#getSub <em>Sub</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -2773,27 +2831,6 @@ public interface AgreePackage extends EPackage
    * @generated
    */
   EReference getNestedDotID_Sub();
-
-  /**
-   * Returns the meta object for class '{@link com.rockwellcollins.atc.agree.agree.ClockID <em>Clock ID</em>}'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return the meta object for class '<em>Clock ID</em>'.
-   * @see com.rockwellcollins.atc.agree.agree.ClockID
-   * @generated
-   */
-  EClass getClockID();
-
-  /**
-   * Returns the meta object for the reference '{@link com.rockwellcollins.atc.agree.agree.ClockID#getComp <em>Comp</em>}'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return the meta object for the reference '<em>Comp</em>'.
-   * @see com.rockwellcollins.atc.agree.agree.ClockID#getComp()
-   * @see #getClockID()
-   * @generated
-   */
-  EReference getClockID_Comp();
 
   /**
    * Returns the meta object for class '{@link com.rockwellcollins.atc.agree.agree.AgreeContractLibrary <em>Contract Library</em>}'.
@@ -3027,6 +3064,27 @@ public interface AgreePackage extends EPackage
    * @generated
    */
   EReference getLiftStatement_Subcomp();
+
+  /**
+   * Returns the meta object for class '{@link com.rockwellcollins.atc.agree.agree.CalenStatement <em>Calen Statement</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>Calen Statement</em>'.
+   * @see com.rockwellcollins.atc.agree.agree.CalenStatement
+   * @generated
+   */
+  EClass getCalenStatement();
+
+  /**
+   * Returns the meta object for the reference list '{@link com.rockwellcollins.atc.agree.agree.CalenStatement#getEls <em>Els</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the reference list '<em>Els</em>'.
+   * @see com.rockwellcollins.atc.agree.agree.CalenStatement#getEls()
+   * @see #getCalenStatement()
+   * @generated
+   */
+  EReference getCalenStatement_Els();
 
   /**
    * Returns the meta object for class '{@link com.rockwellcollins.atc.agree.agree.NodeEq <em>Node Eq</em>}'.
@@ -3492,6 +3550,14 @@ public interface AgreePackage extends EPackage
     EAttribute SYNCH_STATEMENT__VAL = eINSTANCE.getSynchStatement_Val();
 
     /**
+     * The meta object literal for the '<em><b>Sim</b></em>' attribute feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EAttribute SYNCH_STATEMENT__SIM = eINSTANCE.getSynchStatement_Sim();
+
+    /**
      * The meta object literal for the '{@link com.rockwellcollins.atc.agree.agree.impl.CallDefImpl <em>Call Def</em>}' class.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -3748,30 +3814,20 @@ public interface AgreePackage extends EPackage
     EReference NESTED_DOT_ID__BASE = eINSTANCE.getNestedDotID_Base();
 
     /**
+     * The meta object literal for the '<em><b>Tag</b></em>' attribute feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EAttribute NESTED_DOT_ID__TAG = eINSTANCE.getNestedDotID_Tag();
+
+    /**
      * The meta object literal for the '<em><b>Sub</b></em>' containment reference feature.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      */
     EReference NESTED_DOT_ID__SUB = eINSTANCE.getNestedDotID_Sub();
-
-    /**
-     * The meta object literal for the '{@link com.rockwellcollins.atc.agree.agree.impl.ClockIDImpl <em>Clock ID</em>}' class.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @see com.rockwellcollins.atc.agree.agree.impl.ClockIDImpl
-     * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getClockID()
-     * @generated
-     */
-    EClass CLOCK_ID = eINSTANCE.getClockID();
-
-    /**
-     * The meta object literal for the '<em><b>Comp</b></em>' reference feature.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    EReference CLOCK_ID__COMP = eINSTANCE.getClockID_Comp();
 
     /**
      * The meta object literal for the '{@link com.rockwellcollins.atc.agree.agree.impl.AgreeContractLibraryImpl <em>Contract Library</em>}' class.
@@ -3966,6 +4022,24 @@ public interface AgreePackage extends EPackage
      * @generated
      */
     EReference LIFT_STATEMENT__SUBCOMP = eINSTANCE.getLiftStatement_Subcomp();
+
+    /**
+     * The meta object literal for the '{@link com.rockwellcollins.atc.agree.agree.impl.CalenStatementImpl <em>Calen Statement</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see com.rockwellcollins.atc.agree.agree.impl.CalenStatementImpl
+     * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getCalenStatement()
+     * @generated
+     */
+    EClass CALEN_STATEMENT = eINSTANCE.getCalenStatement();
+
+    /**
+     * The meta object literal for the '<em><b>Els</b></em>' reference list feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference CALEN_STATEMENT__ELS = eINSTANCE.getCalenStatement_Els();
 
     /**
      * The meta object literal for the '{@link com.rockwellcollins.atc.agree.agree.impl.NodeEqImpl <em>Node Eq</em>}' class.

@@ -13,6 +13,7 @@
     <genClasses ecoreClass="Agree.ecore#//SpecStatement"/>
     <genClasses ecoreClass="Agree.ecore#//SynchStatement">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Agree.ecore#//SynchStatement/val"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Agree.ecore#//SynchStatement/sim"/>
     </genClasses>
     <genClasses ecoreClass="Agree.ecore#//CallDef"/>
     <genClasses ecoreClass="Agree.ecore#//PropertyStatement">
@@ -52,10 +53,8 @@
     <genClasses ecoreClass="Agree.ecore#//Expr"/>
     <genClasses ecoreClass="Agree.ecore#//NestedDotID">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Agree.ecore#//NestedDotID/base"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Agree.ecore#//NestedDotID/tag"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//NestedDotID/sub"/>
-    </genClasses>
-    <genClasses ecoreClass="Agree.ecore#//ClockID">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Agree.ecore#//ClockID/comp"/>
     </genClasses>
     <genClasses ecoreClass="Agree.ecore#//AgreeContractLibrary">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//AgreeContractLibrary/contract"/>
@@ -87,6 +86,9 @@
     </genClasses>
     <genClasses ecoreClass="Agree.ecore#//LiftStatement">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//LiftStatement/subcomp"/>
+    </genClasses>
+    <genClasses ecoreClass="Agree.ecore#//CalenStatement">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Agree.ecore#//CalenStatement/els"/>
     </genClasses>
     <genClasses ecoreClass="Agree.ecore#//NodeEq">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Agree.ecore#//NodeEq/lhs"/>
