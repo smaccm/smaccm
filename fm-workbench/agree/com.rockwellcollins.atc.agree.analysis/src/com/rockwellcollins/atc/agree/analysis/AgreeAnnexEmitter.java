@@ -1593,67 +1593,6 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         //make a counter for checking finite consistency
         IdExpr countId = addConsistencyConstraints(eqs, internals);
         
-        Expr countPre = new BinaryExpr(new UnaryExpr(UnaryOp.PRE, countId), BinaryOp.PLUS, new IntExpr(BigInteger.ONE));
-        countPre = new BinaryExpr(new IntExpr(BigInteger.ZERO), BinaryOp.ARROW, countPre);
-        Equation contEq = new Equation(countId, countPre);
-        eqs.add(contEq);
-
-        
-        // get the individual history variables
-        for(AgreeAnnexEmitter subEmitter : subEmitters){
-
-            Expr higherContracts = new BoolExpr(true);
-            Set<Subcomponent> closureSubs = closureMap.get(subEmitter.curComp);
-            for(AgreeAnnexEmitter closureEmitter : subEmitters){
-                if(closureSubs.contains(closureEmitter.curComp)){
-                    continue;
-                }
-                higherContracts = new BinaryExpr(higherContracts, BinaryOp.AND,
-                		AgreeEmitterUtilities.getLustreContract(closureEmitter));
-            }
-
-            Expr contrAssumps = AgreeEmitterUtilities.getLustreAssumptions(subEmitter);
-
-            IdExpr compId = new IdExpr("_Hist_" + subEmitter.category);
-            internals.add(new VarDecl(compId.id, new NamedType("bool")));
-
-            Expr leftSide = new UnaryExpr(UnaryOp.PRE, totalCompHist);
-            leftSide = new BinaryExpr(new BoolExpr(true), BinaryOp.ARROW, leftSide);
-            leftSide = new BinaryExpr(sysAssumpHist, BinaryOp.AND, leftSide);
-            leftSide = new BinaryExpr(higherContracts, BinaryOp.AND, leftSide);
-
-            Expr contrHistExpr = new BinaryExpr(leftSide, BinaryOp.IMPLIES, contrAssumps);
-            Equation contrHist = new Equation(compId, contrHistExpr);
-            eqs.add(contrHist);
-            properties.add(compId.id);
-            assumProps.add(compId.id);
-            String propertyName = subEmitter.category + " Assumptions";
-            varRenaming.put(compId.id, propertyName);
-            //layout.addElement("Top", propertyName, AgreeLayout.SigType.OUTPUT);
-            layout.addElement(category, propertyName, AgreeLayout.SigType.OUTPUT);
-            
-            
-            //add a property that is true if the contract is a contradiction
-            IdExpr contrHistId = new IdExpr("__CONTR_HIST_" + subEmitter.category);
-            IdExpr consistId = new IdExpr("__NULL_CONTR_HIST_" + subEmitter.category);
-
-            Expr contExpr = AgreeEmitterUtilities.getLustreContract(subEmitter);
-            Equation contHist = AgreeEmitterUtilities.getLustreHistory(contExpr, contrHistId);
-            Expr finiteConsist = AgreeEmitterUtilities.getFinteConsistancy(contrHistId, countId, consistUnrollDepth);
-            Equation contrConsistEq = new Equation(consistId, finiteConsist);
-            eqs.add(contrConsistEq);
-            eqs.add(contHist);
-            internals.add(new VarDecl(contrHistId.id, new NamedType("bool")));
-            internals.add(new VarDecl(consistId.id, new NamedType("bool")));
-
-            properties.add(consistId.id);
-            consistProps.add(consistId.id);
-            //reversePropStatus.add(true);
-            String contractName = subEmitter.category + " Consistant";
-            varRenaming.put(consistId.id, contractName);
-            //layout.addElement("Top", contractName, AgreeLayout.SigType.OUTPUT);
-            layout.addElement(category, contractName, AgreeLayout.SigType.OUTPUT);
-        }
 
         //get the equations that guarantee that every clock has ticked atleast once
         List<Equation> tickEqs = AgreeCalendarUtils.getAllClksHaveTicked("__ALL_TICKED", "__CLK_TICKED", clocks);
