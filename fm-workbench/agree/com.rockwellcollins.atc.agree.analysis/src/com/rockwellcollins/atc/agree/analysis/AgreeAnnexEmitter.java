@@ -1655,7 +1655,6 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
             layout.addElement(category, contractName, AgreeLayout.SigType.OUTPUT);
         }
 
-
         //get the equations that guarantee that every clock has ticked atleast once
         List<Equation> tickEqs = AgreeCalendarUtils.getAllClksHaveTicked("__ALL_TICKED", "__CLK_TICKED", clocks);
         
@@ -2240,6 +2239,5 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
 
     	return andEquivExpr;
     }
-    
-    
+        
 }

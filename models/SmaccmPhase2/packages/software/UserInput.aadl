@@ -54,7 +54,7 @@ thread group UserInputThreads
   		guarantee "The controller is not armed unless the ppm says so" :
   			(law_emitter.COUNT > 0 and law_emitter.armed_mode = 2) 
   				=> armed_past;
-  		
+  		 
   		guarantee "Queues initially empty" :
   			(ui_emitter.COUNT = 0 -> true) and
   			(law_emitter.COUNT = 0 -> true);
