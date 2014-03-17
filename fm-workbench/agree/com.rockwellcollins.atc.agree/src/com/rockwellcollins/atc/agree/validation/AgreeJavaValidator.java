@@ -19,6 +19,7 @@ import java.util.Set;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.validation.Check;
+import org.eclipse.xtext.validation.CheckType;
 import org.osate.aadl2.AadlBoolean;
 import org.osate.aadl2.AadlInteger;
 import org.osate.aadl2.AadlPackage;
@@ -53,8 +54,8 @@ import com.rockwellcollins.atc.agree.agree.AssertStatement;
 import com.rockwellcollins.atc.agree.agree.AssumeStatement;
 import com.rockwellcollins.atc.agree.agree.BinaryExpr;
 import com.rockwellcollins.atc.agree.agree.BoolLitExpr;
+import com.rockwellcollins.atc.agree.agree.CalenStatement;
 import com.rockwellcollins.atc.agree.agree.CallDef;
-import com.rockwellcollins.atc.agree.agree.ClockID;
 import com.rockwellcollins.atc.agree.agree.ConstStatement;
 import com.rockwellcollins.atc.agree.agree.EqStatement;
 import com.rockwellcollins.atc.agree.agree.Expr;
@@ -94,17 +95,31 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
     protected boolean isResponsible(Map<Object, Object> context, EObject eObject) {
         return (eObject.eClass().getEPackage() == AgreePackage.eINSTANCE);
     }
+    
+    @Check(CheckType.FAST)
+    public void checkCalenStatement(CalenStatement calen){
+    	for(NamedElement el : calen.getEls()){
+    		if(!(el instanceof Subcomponent)){
+    			error(calen, "Element '"+el.getName()+"' is not a subcomponent");
+    		}
+    	}
+    }
+    
 
-    @Check
+    @Check(CheckType.FAST)
     public void checkSynchStatement(SynchStatement sync){
         //TODO: I'm pretty sure INT_LITs are always positive anyway.
         //So this may be redundant
+    	if(sync instanceof CalenStatement){
+    		return;
+    	}
+    	
         if(Integer.valueOf(sync.getVal()) < 0){
             error(sync, "The value of synchrony statments must be positive");
         }
     }
     
-    @Check
+    @Check(CheckType.FAST)
     public void checkAssume(AssumeStatement assume) {
         AgreeType exprType = getAgreeType(assume.getExpr());
         if (!matches(BOOL, exprType)) {
@@ -113,7 +128,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
         }
     }
     
-    @Check
+    @Check(CheckType.FAST)
     public void checkLift(LiftStatement lift) {
         NestedDotID dotId = lift.getSubcomp();
 
@@ -139,7 +154,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
         }
     }
 
-    @Check
+    @Check(CheckType.FAST)
     public void checkAssert(AssertStatement asser) {
         Classifier comp = asser.getContainingClassifier();
         if (!(comp instanceof ComponentImplementation)) {
@@ -154,7 +169,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 
     }
 
-    @Check
+    @Check(CheckType.FAST)
     public void checkGuarantee(GuaranteeStatement guar) {
         Classifier comp = guar.getContainingClassifier();
         if (!(comp instanceof ComponentType)) {
@@ -168,7 +183,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
         }
     }
 
-    @Check
+    @Check(CheckType.FAST)
     public void checkLemma(LemmaStatement lemma) {
         Classifier comp = lemma.getContainingClassifier();
         if (!(comp instanceof ComponentImplementation)) {
@@ -182,7 +197,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
         }
     }
 
-    @Check
+    @Check(CheckType.FAST)
     public void checkUnaryExpr(UnaryExpr unaryExpr) {
         AgreeType typeRight = getAgreeType(unaryExpr.getExpr());
         String op = unaryExpr.getOp();
@@ -205,7 +220,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
         }
     }
 
-    @Check
+    @Check(CheckType.FAST)
     public void checkPropertyStatement(PropertyStatement propStat) {
         AgreeType exprType = getAgreeType(propStat.getExpr());
         if (!matches(BOOL, exprType)) {
@@ -215,7 +230,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 
     }
 
-    @Check
+    @Check(CheckType.FAST)
     public void checkConstStatement(ConstStatement constStat) {
         AgreeType expected = new AgreeType(constStat.getType().getString());
         AgreeType actual = getAgreeType(constStat.getExpr());
@@ -283,7 +298,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
         return true;
     }
 
-    @Check
+    @Check(CheckType.FAST)
     public void checkNamedElement(NamedElement namedEl) {
 
         // check for namespace collision in component types of component
@@ -403,7 +418,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
         }
     }
 
-    @Check
+    @Check(CheckType.FAST)
     public void checkEqStatement(EqStatement eqStat) {
         AnnexLibrary library = EcoreUtil2.getContainerOfType(eqStat, AnnexLibrary.class);
         if (library != null) {
@@ -412,7 +427,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
         checkMultiAssignEq(eqStat, eqStat.getLhs(), eqStat.getExpr());
     }
 
-    @Check
+    @Check(CheckType.FAST)
     public void checkNameOverlap(AgreeContract contract) {
         ComponentImplementation ci = EcoreUtil2.getContainerOfType(contract,
                 ComponentImplementation.class);
@@ -426,11 +441,14 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
             if(spec instanceof SynchStatement){
                 syncs.add((SynchStatement)spec);
             }
+            if(spec instanceof CalenStatement){
+            	syncs.add((CalenStatement)spec);
+            }
         }
         
         if(syncs.size() > 1){
             for(SynchStatement sync : syncs){
-                error(sync, "Multiple synchrony statements in a single contract");
+                error(sync, "Multiple synchrony or calender statements in a single contract");
             }
         }
         
@@ -457,12 +475,12 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
         return result;
     }
 
-    @Check
+    @Check(CheckType.FAST)
     public void checkNodeEq(NodeEq nodeEq) {
         checkMultiAssignEq(nodeEq, nodeEq.getLhs(), nodeEq.getExpr());
     }
 
-    @Check
+    @Check(CheckType.FAST)
     public void checkNodeLemma(NodeLemma nodeLemma) {
         AgreeType exprType = getAgreeType(nodeLemma.getExpr());
         if (!matches(BOOL, exprType)) {
@@ -471,7 +489,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
         }
     }
 
-    @Check
+    @Check(CheckType.FAST)
     public void checkNodeStmt(NodeStmt nodeStmt) {
         List<NestedDotID> dotIds = EcoreUtil2.getAllContentsOfType(nodeStmt, NestedDotID.class);
         for (NestedDotID dotId : dotIds) {
@@ -483,7 +501,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
         }
     }
 
-    @Check
+    @Check(CheckType.FAST)
     public void checkNodeDef(NodeDefExpr nodeDefExpr) {
 
         if (nodeDefExpr.getNodeBody() == null) {
@@ -526,7 +544,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
         }
     }
 
-    @Check
+    @Check(CheckType.FAST)
     public void checkThisExpr(ThisExpr thisExpr) {
         // these should only appear in Get_Property expressions
 
@@ -536,7 +554,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 
     }
 
-    @Check
+    @Check(CheckType.FAST)
     public void checkGetPropertyExpr(GetPropertyExpr getPropExpr) {
         AgreeType compType = getAgreeType(getPropExpr.getComponent());
         // AgreeType propType = getAgreeType(propExpr.getName());
@@ -556,7 +574,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
         }
     }
 
-    @Check
+    @Check(CheckType.FAST)
     public void checkPrevExpr(PrevExpr prevExpr) {
         AgreeType delayType = getAgreeType(prevExpr.getDelay());
         AgreeType initType = getAgreeType(prevExpr.getInit());
@@ -570,6 +588,15 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 
     public void checkInputsVsActuals(FnCallExpr fnCall) {
         NestedDotID dotId = fnCall.getFn();
+        
+        //if the id has a 'tag' then it is using a resrved variable
+        String tag = getNestedDotIDTag(dotId);
+        if(tag != null){
+        	error(fnCall, "Use of reserved variable tag: '"+tag+" does not make sense"+
+        			" in the context of a node call");
+        }
+        
+        
         NamedElement namedEl = getFinalNestId(dotId);
 
         if (!(namedEl instanceof CallDef)) {
@@ -617,12 +644,12 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
         }
     }
 
-    @Check
+    @Check(CheckType.FAST)
     public void checkFnCallExpr(FnCallExpr fnCall) {
         checkInputsVsActuals(fnCall);
     }
 
-    @Check
+    @Check(CheckType.FAST)
     public void checkFnDefExpr(FnDefExpr fnDef) {
 
         // verify typing
@@ -638,7 +665,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 
     }
 
-    @Check
+    @Check(CheckType.FAST)
     public void checkCallDef(CallDef callDef) {
 
         // don't check recursive calls of functions that have
@@ -667,7 +694,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
         }
     }
 
-    @Check
+    @Check(CheckType.FAST)
     public void checkIfThenElseExpr(IfThenElseExpr expr) {
         AgreeType condType = getAgreeType(expr.getA());
         AgreeType thenType = getAgreeType(expr.getB());
@@ -688,7 +715,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
         return getAgreeType(expr.getB());
     }
 
-    @Check
+    @Check(CheckType.FAST)
     public void checkBinaryExpr(BinaryExpr binExpr) {
         AgreeType typeLeft = getAgreeType(binExpr.getLeft());
         AgreeType typeRight = getAgreeType(binExpr.getRight());
@@ -768,6 +795,12 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
                 error(binExpr, "right side of binary expression '" + op + "' is of type '"
                         + typeRight + "' but must be of type 'real'");
             }
+            
+            Expr rightSide = binExpr.getRight();
+            if(!(rightSide instanceof ConstStatement || rightSide instanceof RealLitExpr)){
+            	error(binExpr, "right side of binary expression '" + op + "' is not constant");
+            }
+            
             return;
         default:
             assert (false);
@@ -796,7 +829,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
         }
     }
 
-    @Check
+    @Check(CheckType.FAST)
     public void checkIdExpr(IdExpr idExpr) {
         // Scope check for nodes / functions
         NamedElement id = idExpr.getId();
@@ -814,8 +847,18 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
         while (dotId.getSub() != null) {
             dotId = dotId.getSub();
         }
+
         return dotId.getBase();
     }
+    
+    public String getNestedDotIDTag(NestedDotID dotId) {
+        while (dotId.getSub() != null) {
+            dotId = dotId.getSub();
+        }
+
+        return dotId.getTag();
+    }
+
 
     public AgreeType getAgreeType(Arg arg) {
         return new AgreeType(arg.getType().getString());
@@ -826,6 +869,22 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
     }
 
     private AgreeType getAgreeType(NestedDotID nestDotIdExpr) {
+    	
+    	String tag = getNestedDotIDTag(nestDotIdExpr);
+    	
+    	if(tag != null){
+    		switch (tag){
+    		case "CLK":
+    		case "INSERT":
+    		case "REMOVE":
+    			return BOOL;
+    		case "COUNT":
+    			return INT;
+    		default: 
+    			return ERROR;
+    		}
+    	}
+    	
         return getAgreeType(getFinalNestId(nestDotIdExpr));
     }
 
@@ -1021,9 +1080,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
             return REAL;
         } else if (expr instanceof BoolLitExpr) {
             return BOOL;
-        } else if (expr instanceof ClockID){
-            return BOOL;
-        } else if (expr instanceof ThisExpr) {
+        }  else if (expr instanceof ThisExpr) {
             return new AgreeType("component");
         } else if (expr instanceof PreExpr) {
             return getAgreeType(((PreExpr) expr).getExpr());
@@ -1034,7 +1091,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 
     public static boolean matches(AgreeType expected, AgreeType actual) {
         if (expected.equals(ERROR) || actual.equals(ERROR)) {
-            return true;
+            return false;
         }
 
         return expected.equals(actual);

@@ -24,6 +24,7 @@ import org.osate.aadl2.NamedElement;
  * The following features are implemented:
  * <ul>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.impl.NestedDotIDImpl#getBase <em>Base</em>}</li>
+ *   <li>{@link com.rockwellcollins.atc.agree.agree.impl.NestedDotIDImpl#getTag <em>Tag</em>}</li>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.impl.NestedDotIDImpl#getSub <em>Sub</em>}</li>
  * </ul>
  * </p>
@@ -41,6 +42,26 @@ public class NestedDotIDImpl extends ExprImpl implements NestedDotID
    * @ordered
    */
   protected NamedElement base;
+
+  /**
+   * The default value of the '{@link #getTag() <em>Tag</em>}' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #getTag()
+   * @generated
+   * @ordered
+   */
+  protected static final String TAG_EDEFAULT = null;
+
+  /**
+   * The cached value of the '{@link #getTag() <em>Tag</em>}' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #getTag()
+   * @generated
+   * @ordered
+   */
+  protected String tag = TAG_EDEFAULT;
 
   /**
    * The cached value of the '{@link #getSub() <em>Sub</em>}' containment reference.
@@ -121,6 +142,29 @@ public class NestedDotIDImpl extends ExprImpl implements NestedDotID
    * <!-- end-user-doc -->
    * @generated
    */
+  public String getTag()
+  {
+    return tag;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public void setTag(String newTag)
+  {
+    String oldTag = tag;
+    tag = newTag;
+    if (eNotificationRequired())
+      eNotify(new ENotificationImpl(this, Notification.SET, AgreePackage.NESTED_DOT_ID__TAG, oldTag, tag));
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   public NestedDotID getSub()
   {
     return sub;
@@ -193,6 +237,8 @@ public class NestedDotIDImpl extends ExprImpl implements NestedDotID
       case AgreePackage.NESTED_DOT_ID__BASE:
         if (resolve) return getBase();
         return basicGetBase();
+      case AgreePackage.NESTED_DOT_ID__TAG:
+        return getTag();
       case AgreePackage.NESTED_DOT_ID__SUB:
         return getSub();
     }
@@ -211,6 +257,9 @@ public class NestedDotIDImpl extends ExprImpl implements NestedDotID
     {
       case AgreePackage.NESTED_DOT_ID__BASE:
         setBase((NamedElement)newValue);
+        return;
+      case AgreePackage.NESTED_DOT_ID__TAG:
+        setTag((String)newValue);
         return;
       case AgreePackage.NESTED_DOT_ID__SUB:
         setSub((NestedDotID)newValue);
@@ -232,6 +281,9 @@ public class NestedDotIDImpl extends ExprImpl implements NestedDotID
       case AgreePackage.NESTED_DOT_ID__BASE:
         setBase((NamedElement)null);
         return;
+      case AgreePackage.NESTED_DOT_ID__TAG:
+        setTag(TAG_EDEFAULT);
+        return;
       case AgreePackage.NESTED_DOT_ID__SUB:
         setSub((NestedDotID)null);
         return;
@@ -251,10 +303,29 @@ public class NestedDotIDImpl extends ExprImpl implements NestedDotID
     {
       case AgreePackage.NESTED_DOT_ID__BASE:
         return base != null;
+      case AgreePackage.NESTED_DOT_ID__TAG:
+        return TAG_EDEFAULT == null ? tag != null : !TAG_EDEFAULT.equals(tag);
       case AgreePackage.NESTED_DOT_ID__SUB:
         return sub != null;
     }
     return super.eIsSet(featureID);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public String toString()
+  {
+    if (eIsProxy()) return super.toString();
+
+    StringBuffer result = new StringBuffer(super.toString());
+    result.append(" (tag: ");
+    result.append(tag);
+    result.append(')');
+    return result.toString();
   }
 
 } //NestedDotIDImpl

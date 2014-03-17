@@ -1,24 +1,783 @@
 package Software
 public
-	with UAV;
-	with Commsec;
+	with SMACCM_SYS;
+  with Base_Types;
+  with TowerArrays;
+  with gcsstream_timing;
+  with mavlink_veh_commsec_msg;
+  with att_control_dbg_type;
+  with alt_control_dbg_type;
+  with radio_stat_type;
+  with motors_type;
+  with controloutput_type;
+  with gps_type;
+  with sensors_type;
+  with control_law_type;
+  with mavlink_rc_channels_override_msg;
+  with control_law_request_type;
+  with mavlink_hil_state_msg;
+  with radio_info_type;
+  with userinput_type;
+  with UserInput;
+  with UAV;
+  with SMACCM;
+  with DATATYPES;
+  with GCS;
+  with Commsec;
+  with Datalink;
+  with FeatureGroups;
+  with Control;
 	
-	system Software
-		features
-			sensors: feature group UAV::sensors;
-      		motors_and_radios: feature group UAV::motors_and_radios;
-	end Software;
+ 
+thread px4ioar
+  features
+    newstateEmitter: out event data port Base_Types::Unsigned_32 {
+      Queue_Size => 2;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_px4ioar_381.h";
+      SMACCM_SYS::CommPrim_Source_Text => "emitFromTask_px4ioar_381_chan395_397";
+    };
+    uart_ostream: out event data port Base_Types::Unsigned_8 {
+      Queue_Size => 12;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_px4ioar_381.h";
+      SMACCM_SYS::CommPrim_Source_Text => "emitFromTask_px4ioar_381_chan374_383";
+    };
+    newstateEvent: in event data port Base_Types::Unsigned_32 {
+      Queue_Size => 2;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_px4ioar_381.h";
+      SMACCM_SYS::CommPrim_Source_Text => "receiveFromTask_px4ioar_381_chan395_399";
+      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_px4ioar_381_chan395_newstate_loop_424"
+      	, "eventhandler_px4ioar_381_chan395_newstate_bootCheckComplete_420",
+      	 "eventhandler_px4ioar_381_chan395_newstate_initMulti_417",
+      	  "eventhandler_px4ioar_381_chan395_newstate_init4_416",
+      	   "eventhandler_px4ioar_381_chan395_newstate_init3_413",
+      	    "eventhandler_px4ioar_381_chan395_newstate_init2_410",
+      	     "eventhandler_px4ioar_381_chan395_newstate_init1_407",
+      	      "eventhandler_px4ioar_381_chan395_newstate_bootBegin_404"
+      );
+    };
+    motor_istream: in event data port motors_type::motors.impl {
+      Queue_Size => 16;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_px4ioar_381.h";
+      SMACCM_SYS::CommPrim_Source_Text => "receiveFromTask_px4ioar_381_chan37_385";
+      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_px4ioar_381_chan37_loop_423");
+    };
+    
+    --added by Backes
+    motor1 : out data port DATATYPES::Servo_Commands;
+    motor2 : out data port DATATYPES::Servo_Commands;
+    motor3 : out data port DATATYPES::Servo_Commands;
+    motor4 : out data port DATATYPES::Servo_Commands;
+    
+  properties
+    Source_Text => ("tower_task_usercode_px4ioar_381.c");
+    Priority => 12;
+    Source_Stack_Size => 256 bytes;
+    SMACCM::Language => "Ivory";
+    Dispatch_Protocol => Hybrid;
+    Period => 1 ms;
+    SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_px4ioar_381_per1_loop_422", 
+    "eventhandler_px4ioar_381_per1_bootCheckComplete_419", 
+    "eventhandler_px4ioar_381_per1_init4_415", 
+    "eventhandler_px4ioar_381_per1_init3_412", 
+    "eventhandler_px4ioar_381_per1_init2_409", 
+    "eventhandler_px4ioar_381_per1_init1_406", 
+    "eventhandler_px4ioar_381_per1_bootBegin_403");
+end px4ioar;
+
+
+thread sensorsCaptureTask
+  features
+    newstateEmitter: out event data port Base_Types::Unsigned_32 {
+      Queue_Size => 2;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_sensorsCaptureTask_350.h";
+      SMACCM_SYS::CommPrim_Source_Text => "emitFromTask_sensorsCaptureTask_350_chan363_365";
+    };
+    newstateEvent: in event data port Base_Types::Unsigned_32 {
+      Queue_Size => 2;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_sensorsCaptureTask_350.h";
+      SMACCM_SYS::CommPrim_Source_Text => "receiveFromTask_sensorsCaptureTask_350_chan363_367";
+      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_sensorsCaptureTask_350_chan363_newstate_captureloop_373", "eventhandler_sensorsCaptureTask_350_chan363_newstate_init_370");
+    };
+    position: in event data port gps_type::position.impl {
+      Queue_Size => 16;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_sensorsCaptureTask_350.h";
+      SMACCM_SYS::CommPrim_Source_Text => "receiveFromTask_sensorsCaptureTask_350_chan322_355";
+      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_sensorsCaptureTask_350_chan322_358");
+    };
+    sensors: requires data access sensors_type::sensors_result.impl {
+      Access_Right => write_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_sensorsCaptureTask_350.h";
+      SMACCM_SYS::CommPrim_Source_Text => "write_sensorsCaptureTask_350_dataport0_352";
+    };
+    
+    --added by backes
+    sensors_in: feature group UAV::sensors;
+    
+  properties
+    Source_Text => ("tower_task_usercode_sensorsCaptureTask_350.c");
+    Priority => 13;
+    Source_Stack_Size => 1024 bytes;
+    SMACCM::Language => "Ivory";
+    Dispatch_Protocol => Hybrid;
+    Period => 1 ms;
+    SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_sensorsCaptureTask_350_per1_captureloop_372");
+end sensorsCaptureTask;
+
+
+thread position_state
+  features
+    proxyEvent: in event data port gps_type::position.impl {
+      Queue_Size => 16;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_position_state_342.h";
+      SMACCM_SYS::CommPrim_Source_Text => "receiveFromTask_position_state_342_chan322_346";
+      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_position_state_342_chan322_349");
+    };
+    proxyData: requires data access gps_type::position.impl {
+      Access_Right => write_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_position_state_342.h";
+      SMACCM_SYS::CommPrim_Source_Text => "write_position_state_342_dataport341_344";
+    };
+  properties
+    Source_Text => ("tower_task_usercode_position_state_342.c");
+    Priority => 14;
+    Source_Stack_Size => 256 bytes;
+    SMACCM::Language => "Ivory";
+    Dispatch_Protocol => Sporadic;
+end position_state;
+
+
+thread ubloxGPS
+  features
+    position: out event data port gps_type::position.impl {
+      Queue_Size => 16;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_ubloxGPS_323.h";
+      SMACCM_SYS::CommPrim_Source_Text => "emitFromTask_ubloxGPS_323_chan322_329";
+    };
+    istream: in event data port Base_Types::Unsigned_8 {
+      Queue_Size => 256;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_ubloxGPS_323.h";
+      SMACCM_SYS::CommPrim_Source_Text => "receiveFromTask_ubloxGPS_323_chan316_325";
+      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_ubloxGPS_323_chan316_340");
+    };
+  properties
+    Source_Text => ("tower_task_usercode_ubloxGPS_323.c");
+    Priority => 15;
+    Source_Stack_Size => 256 bytes;
+    SMACCM::Language => "Ivory";
+    Dispatch_Protocol => Sporadic;
+end ubloxGPS;
+
+
+thread motors_state
+  features
+    proxyEvent: in event data port motors_type::motors.impl {
+      Queue_Size => 16;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_motors_state_307.h";
+      SMACCM_SYS::CommPrim_Source_Text => "receiveFromTask_motors_state_307_chan37_311";
+      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_motors_state_307_chan37_314");
+    };
+    proxyData: requires data access motors_type::motors.impl {
+      Access_Right => write_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_motors_state_307.h";
+      SMACCM_SYS::CommPrim_Source_Text => "write_motors_state_307_dataport306_309";
+    };
+  properties
+    Source_Text => ("tower_task_usercode_motors_state_307.c");
+    Priority => 16;
+    Source_Stack_Size => 256 bytes;
+    SMACCM::Language => "Ivory";
+    Dispatch_Protocol => Sporadic;
+end motors_state;
+
+
+thread motmix
+  features
+    motors: out event data port motors_type::motors.impl {
+      Queue_Size => 16;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_motmix_287.h";
+      SMACCM_SYS::CommPrim_Source_Text => "emitFromTask_motmix_287_chan37_291";
+    };
+    control: in event data port controloutput_type::controloutput.impl {
+      Queue_Size => 16;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_motmix_287.h";
+      SMACCM_SYS::CommPrim_Source_Text => "receiveFromTask_motmix_287_chan38_293";
+      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_motmix_287_chan38_296");
+    };
+    controllaw: requires data access control_law_type::control_law.impl {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_motmix_287.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_motmix_287_dataport140_289";
+    };
+  properties
+    Source_Text => ("tower_task_usercode_motmix_287.c");
+    Priority => 18;
+    Source_Stack_Size => 256 bytes;
+    SMACCM::Language => "Ivory";
+    Dispatch_Protocol => Sporadic;
+end motmix;
+
+thread blink
+  features
+    controllaw: requires data access control_law_type::control_law.impl {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_blink_149.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_blink_149_dataport140_151";
+    };
+  properties
+    Source_Text => ("tower_task_usercode_blink_149.c");
+    Priority => 20;
+    Source_Stack_Size => 256 bytes;
+    SMACCM::Language => "Ivory";
+    Dispatch_Protocol => Hybrid;
+    Period => 125 ms;
+    SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_blink_149_per125_156");
+end blink;
+
+thread uart5ISR
+  features
+    istream: out event data port Base_Types::Unsigned_8 {
+      Queue_Size => 1024;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_signal_comm_uart5ISR_770.h";
+      SMACCM_SYS::CommPrim_Source_Text => "emitFromSig_uart5ISR_770_chan769_774";
+    };
+    ostream: in event data port Base_Types::Unsigned_8 {
+      Queue_Size => 1024;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_signal_comm_uart5ISR_770.h";
+      SMACCM_SYS::CommPrim_Source_Text => "receiveFromSig_uart5ISR_770_chan768_772";
+    };
+    
+    --added by Backes
+    mavlink: in out data port DATATYPES::EncryptMAVLink;
+    
+  properties
+    Dispatch_Protocol => Sporadic;
+    Source_Text => ("tower_signal_usercode_uart5ISR_770.c");
+    Priority => 27;
+    SMACCM::Always_Sends_Message => true;
+    SMACCM::Language => "Ivory";
+    SMACCM_SYS::Signal_Name => "UART5_IRQn";
+    SMACCM_SYS::ISR_Handler => "UART5_IRQHandler";
+end uart5ISR;
+
+
+thread uart1ISR
+  features
+    istream: out event data port Base_Types::Unsigned_8 {
+      Queue_Size => 1024;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_signal_comm_uart1ISR_427.h";
+      SMACCM_SYS::CommPrim_Source_Text => "emitFromSig_uart1ISR_427_chan426_431";
+    };
+    ostream: in event data port Base_Types::Unsigned_8 {
+      Queue_Size => 1024;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_signal_comm_uart1ISR_427.h";
+      SMACCM_SYS::CommPrim_Source_Text => "receiveFromSig_uart1ISR_427_chan425_429";
+    };
+  properties
+    Dispatch_Protocol => Sporadic;
+    Source_Text => ("tower_signal_usercode_uart1ISR_427.c");
+    Priority => 28;
+    SMACCM::Language => "Ivory";
+    SMACCM_SYS::Signal_Name => "USART1_IRQn";
+    SMACCM_SYS::ISR_Handler => "USART1_IRQHandler";
+end uart1ISR;
+
+
+thread uart2ISR
+  features
+    istream: out event data port Base_Types::Unsigned_8 {
+      Queue_Size => 1;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_signal_comm_uart2ISR_376.h";
+      SMACCM_SYS::CommPrim_Source_Text => "emitFromSig_uart2ISR_376_chan375_380";
+      SMACCM::Unimplemented => true;
+    };
+    ostream: in event data port Base_Types::Unsigned_8 {
+      Queue_Size => 12;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_signal_comm_uart2ISR_376.h";
+      SMACCM_SYS::CommPrim_Source_Text => "receiveFromSig_uart2ISR_376_chan374_378";
+    };
+  properties
+    Dispatch_Protocol => Sporadic;
+    Source_Text => ("tower_signal_usercode_uart2ISR_376.c");
+    Priority => 29;
+    SMACCM::Language => "Ivory";
+    SMACCM_SYS::Signal_Name => "USART2_IRQn";
+    SMACCM_SYS::ISR_Handler => "USART2_IRQHandler";
+end uart2ISR;
+
+
+thread uart6ISR
+  features
+    istream: out event data port Base_Types::Unsigned_8 {
+      Queue_Size => 256;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_signal_comm_uart6ISR_317.h";
+      SMACCM_SYS::CommPrim_Source_Text => "emitFromSig_uart6ISR_317_chan316_321";
+    };
+    ostream: in event data port Base_Types::Unsigned_8 {
+      Queue_Size => 2;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_signal_comm_uart6ISR_317.h";
+      SMACCM_SYS::CommPrim_Source_Text => "receiveFromSig_uart6ISR_317_chan315_319";
+      SMACCM::Unimplemented => true;
+    };
+  properties
+    Dispatch_Protocol => Sporadic;
+    Source_Text => ("tower_signal_usercode_uart6ISR_317.c");
+    Priority => 30;
+    SMACCM::Language => "Ivory";
+    SMACCM_SYS::Signal_Name => "USART6_IRQn";
+    SMACCM_SYS::ISR_Handler => "USART6_IRQHandler";
+end uart6ISR;
 	
-	system implementation Software.Impl
-		subcomponents
-			ML: process ML.Impl;
-	end Software.Impl;
+  system Software
+    features
+      motors_and_radios: feature group UAV::motors_and_radios;
+      sensors: feature group UAV::sensors;
+  end Software;
+  
+  system implementation Software.Impl 
+    subcomponents
+      ML: process flight_gen_process.Impl;
+             
+    connections
+      conn0: feature group motors_and_radios <-> ML.motors_and_radios;
+      conn1: feature group sensors <-> ML.sensors;
+      
+    annex agree {**
+      assert ML.system_time >= 0;
+  	  assert true -> ML.system_time > pre(ML.system_time);
+    **};
+      
+  end Software.Impl;
+
+  process flight_gen_process
+	features
+      motors_and_radios: feature group UAV::motors_and_radios;
+      sensors: feature group UAV::sensors;
+      system_time : in data port Base_Types::Integer;
+      
+    annex agree {**
+    	assume "positive time" :
+  			system_time >= 0;
+  	
+  		assume "the time value is always increasing" :
+  			true -> system_time > pre(system_time);
+    **};
+      
+  end flight_gen_process;
+
+data proc_data
+  features
+	transmitParams5 : feature group inverse of FeatureGroups::control_params_read;
+    transmitParams1 : feature group inverse of FeatureGroups::control_params_read;
+    receiveParamsRead5 : feature group inverse of FeatureGroups::control_params_read;
+    receiveParamsWrite5 : feature group inverse of FeatureGroups::control_params_write;
+    receiveParamsRead1 : feature group inverse of FeatureGroups::control_params_read;
+    receiveParamsWrite1 : feature group inverse of FeatureGroups::control_params_write;
+    transCons5 : feature group inverse of FeatureGroups::data_conns;
+    transCons1 : feature group inverse of FeatureGroups::data_conns;
+    
+    commsecInfo1: provides data access mavlink_veh_commsec_msg::veh_commsec_msg.impl;
+    commsecInfo5: provides data access mavlink_veh_commsec_msg::veh_commsec_msg.impl;
+    
+    att_control: provides data access att_control_dbg_type::att_control_dbg.impl;
+    alt_control: provides data access alt_control_dbg_type::alt_control_dbg.impl;
+    radio: provides data access radio_stat_type::radio_stat.impl;
+    motors: provides data access motors_type::motors.impl;
+    control: provides data access controloutput_type::controloutput.impl;
+    position: provides data access gps_type::position.impl;
+    sensors: provides data access sensors_type::sensors_result.impl;
+    controllaw: provides data access control_law_type::control_law.impl;
+    userinput: provides data access userinput_type::userinput_result.impl;
+end proc_data;
+
+data implementation proc_data.impl
+	subcomponents
+      dataport817 : data radio_stat_type::radio_stat.impl;
+      dataport777 : data mavlink_veh_commsec_msg::veh_commsec_msg.impl;
+      dataport474 : data radio_stat_type::radio_stat.impl;
+      dataport434 : data mavlink_veh_commsec_msg::veh_commsec_msg.impl;
+      dataport341 : data gps_type::position.impl;
+      dataport306 : data motors_type::motors.impl;
+      dataport297 : data controloutput_type::controloutput.impl;
+      dataport140 : data control_law_type::control_law.impl;
+      dataport131 : data userinput_type::userinput_result.impl;
+      dataport40 : data att_control_dbg_type::att_control_dbg.impl;
+      dataport39 : data alt_control_dbg_type::alt_control_dbg.impl;
+      dataport36 : data Base_Types::Float;
+      dataport35 : data Base_Types::Float;
+      dataport34 : data Base_Types::Float;
+      dataport33 : data Base_Types::Float;
+      dataport32 : data Base_Types::Float;
+      dataport31 : data Base_Types::Float;
+      dataport30 : data Base_Types::Float;
+      dataport29 : data Base_Types::Float;
+      dataport28 : data Base_Types::Float;
+      dataport27 : data Base_Types::Float;
+      dataport26 : data Base_Types::Float;
+      dataport25 : data Base_Types::Float;
+      dataport24 : data Base_Types::Float;
+      dataport23 : data Base_Types::Float;
+      dataport22 : data Base_Types::Float;
+      dataport21 : data Base_Types::Float;
+      dataport20 : data Base_Types::Float;
+      dataport19 : data Base_Types::Float;
+      dataport18 : data Base_Types::Float;
+      dataport17 : data Base_Types::Float;
+      dataport16 : data Base_Types::Float;
+      dataport15 : data Base_Types::Float;
+      dataport14 : data Base_Types::Float;
+      dataport13 : data Base_Types::Float;
+      dataport12 : data Base_Types::Float;
+      dataport11 : data Base_Types::Float;
+      dataport10 : data Base_Types::Float;
+      dataport9 : data Base_Types::Float;
+      dataport8 : data Base_Types::Float;
+      dataport7 : data Base_Types::Float;
+      dataport6 : data Base_Types::Float;
+      dataport5 : data Base_Types::Float;
+      dataport4 : data Base_Types::Float;
+      dataport3 : data Base_Types::Float;
+      dataport0 : data sensors_type::sensors_result.impl;
+      
+    connections  
+    
+    connComm1: data access dataport434 -> commsecInfo1;
+    connComm5: data access dataport777 -> commsecInfo5;
+        
+    connAtt: data access dataport40 -> att_control;
+    connAlt: data access dataport39 -> alt_control;
+    
+	connRadio: data access dataport817 -> radio;
+	connMotor: data access dataport306 -> motors;
+	connControl: data access dataport297 -> control;
+	connPosition: data access dataport341 -> position;
+	connSensors: data access dataport0 -> sensors;
+	connControlLaw: data access dataport140 -> controllaw;
+    
+    conn_40 : data access dataport36 -> transmitParams5.param_reader_ALT_UI_DEAD;
+    conn_41 : data access dataport35 -> transmitParams5.param_reader_ALT_UI_SENS;
+    conn_42 : data access dataport34 -> transmitParams5.param_reader_ALT_POS_IMAX;
+    conn_43 : data access dataport33 -> transmitParams5.param_reader_ALT_POS_D;
+    conn_44 : data access dataport32 -> transmitParams5.param_reader_ALT_POS_I;
+    conn_45 : data access dataport31 -> transmitParams5.param_reader_ALT_POS_P;
+    conn_46 : data access dataport30 -> transmitParams5.param_reader_ALT_RATE_IMAX;
+    conn_47 : data access dataport29 -> transmitParams5.param_reader_ALT_RATE_D;
+    conn_48 : data access dataport28 -> transmitParams5.param_reader_ALT_RATE_I;
+    conn_49 : data access dataport27 -> transmitParams5.param_reader_ALT_RATE_P;
+    conn_50 : data access dataport26 -> transmitParams5.param_reader_YAW_STAB_IMAX;
+    conn_51 : data access dataport25 -> transmitParams5.param_reader_YAW_STAB_D;
+    conn_52 : data access dataport24 -> transmitParams5.param_reader_YAW_STAB_I;
+    conn_53 : data access dataport23 -> transmitParams5.param_reader_YAW_STAB_P;
+    conn_54 : data access dataport22 -> transmitParams5.param_reader_YAW_RATE_IMAX;
+    conn_55 : data access dataport21 -> transmitParams5.param_reader_YAW_RATE_D;
+    conn_56 : data access dataport20 -> transmitParams5.param_reader_YAW_RATE_I;
+    conn_57 : data access dataport19 -> transmitParams5.param_reader_YAW_RATE_P;
+    conn_58 : data access dataport18 -> transmitParams5.param_reader_PIT_STAB_IMAX;
+    conn_59 : data access dataport17 -> transmitParams5.param_reader_PIT_STAB_D;
+    conn_60 : data access dataport16 -> transmitParams5.param_reader_PIT_STAB_I;
+    conn_61 : data access dataport15 -> transmitParams5.param_reader_PIT_STAB_P;
+    conn_62 : data access dataport14 -> transmitParams5.param_reader_PIT_RATE_IMAX;
+    conn_63 : data access dataport13 -> transmitParams5.param_reader_PIT_RATE_D;
+    conn_64 : data access dataport12 -> transmitParams5.param_reader_PIT_RATE_I;
+    conn_65 : data access dataport11 -> transmitParams5.param_reader_PIT_RATE_P;
+    conn_66 : data access dataport10 -> transmitParams5.param_reader_RLL_STAB_IMAX;
+    conn_67 : data access dataport9 -> transmitParams5.param_reader_RLL_STAB_D;
+    conn_68 : data access dataport8 -> transmitParams5.param_reader_RLL_STAB_I;
+    conn_69 : data access dataport7 -> transmitParams5.param_reader_RLL_STAB_P;
+    conn_70 : data access dataport6 -> transmitParams5.param_reader_RLL_RATE_IMAX;
+    conn_71 : data access dataport5 -> transmitParams5.param_reader_RLL_RATE_D;
+    conn_72 : data access dataport4 -> transmitParams5.param_reader_RLL_RATE_I;
+    conn_73 : data access dataport3 -> transmitParams5.param_reader_RLL_RATE_P;
+     
+     conn_83 : data access dataport36 -> receiveParamsWrite5.param_writer_ALT_UI_DEAD;
+    conn_84 : data access dataport35 -> receiveParamsWrite5.param_writer_ALT_UI_SENS;
+    conn_85 : data access dataport34 -> receiveParamsWrite5.param_writer_ALT_POS_IMAX;
+    conn_86 : data access dataport33 -> receiveParamsWrite5.param_writer_ALT_POS_D;
+    conn_87 : data access dataport32 -> receiveParamsWrite5.param_writer_ALT_POS_I;
+    conn_88 : data access dataport31 -> receiveParamsWrite5.param_writer_ALT_POS_P;
+    conn_89 : data access dataport30 -> receiveParamsWrite5.param_writer_ALT_RATE_IMAX;
+    conn_90 : data access dataport29 -> receiveParamsWrite5.param_writer_ALT_RATE_D;
+    conn_91 : data access dataport28 -> receiveParamsWrite5.param_writer_ALT_RATE_I;
+    conn_92 : data access dataport27 -> receiveParamsWrite5.param_writer_ALT_RATE_P;
+    conn_93 : data access dataport26 -> receiveParamsWrite5.param_writer_YAW_STAB_IMAX;
+    conn_94 : data access dataport25 -> receiveParamsWrite5.param_writer_YAW_STAB_D;
+    conn_95 : data access dataport24 -> receiveParamsWrite5.param_writer_YAW_STAB_I;
+    conn_96 : data access dataport23 -> receiveParamsWrite5.param_writer_YAW_STAB_P;
+    conn_97 : data access dataport22 -> receiveParamsWrite5.param_writer_YAW_RATE_IMAX;
+    conn_98 : data access dataport21 -> receiveParamsWrite5.param_writer_YAW_RATE_D;
+    conn_99 : data access dataport20 -> receiveParamsWrite5.param_writer_YAW_RATE_I;
+    conn_100 : data access dataport19 -> receiveParamsWrite5.param_writer_YAW_RATE_P;
+    conn_101 : data access dataport18 -> receiveParamsWrite5.param_writer_PIT_STAB_IMAX;
+    conn_102 : data access dataport17 -> receiveParamsWrite5.param_writer_PIT_STAB_D;
+    conn_103 : data access dataport16 -> receiveParamsWrite5.param_writer_PIT_STAB_I;
+    conn_104 : data access dataport15 -> receiveParamsWrite5.param_writer_PIT_STAB_P;
+    conn_105 : data access dataport14 -> receiveParamsWrite5.param_writer_PIT_RATE_IMAX;
+    conn_106 : data access dataport13 -> receiveParamsWrite5.param_writer_PIT_RATE_D;
+    conn_107 : data access dataport12 -> receiveParamsWrite5.param_writer_PIT_RATE_I;
+    conn_108 : data access dataport11 -> receiveParamsWrite5.param_writer_PIT_RATE_P;
+    conn_109 : data access dataport10 -> receiveParamsWrite5.param_writer_RLL_STAB_IMAX;
+    conn_110 : data access dataport9 -> receiveParamsWrite5.param_writer_RLL_STAB_D;
+    conn_111 : data access dataport8 -> receiveParamsWrite5.param_writer_RLL_STAB_I;
+    conn_112 : data access dataport7 -> receiveParamsWrite5.param_writer_RLL_STAB_P;
+    conn_113 : data access dataport6 -> receiveParamsWrite5.param_writer_RLL_RATE_IMAX;
+    conn_114 : data access dataport5 -> receiveParamsWrite5.param_writer_RLL_RATE_D;
+    conn_115 : data access dataport4 -> receiveParamsWrite5.param_writer_RLL_RATE_I;
+    conn_116 : data access dataport3 -> receiveParamsWrite5.param_writer_RLL_RATE_P;
+    conn_117 : data access dataport36 -> receiveParamsRead5.param_reader_ALT_UI_DEAD;
+    conn_118 : data access dataport35 -> receiveParamsRead5.param_reader_ALT_UI_SENS;
+    conn_119 : data access dataport34 -> receiveParamsRead5.param_reader_ALT_POS_IMAX;
+    conn_120 : data access dataport33 -> receiveParamsRead5.param_reader_ALT_POS_D;
+    conn_121 : data access dataport32 -> receiveParamsRead5.param_reader_ALT_POS_I;
+    conn_122 : data access dataport31 -> receiveParamsRead5.param_reader_ALT_POS_P;
+    conn_123 : data access dataport30 -> receiveParamsRead5.param_reader_ALT_RATE_IMAX;
+    conn_124 : data access dataport29 -> receiveParamsRead5.param_reader_ALT_RATE_D;
+    conn_125 : data access dataport28 -> receiveParamsRead5.param_reader_ALT_RATE_I;
+    conn_126 : data access dataport27 -> receiveParamsRead5.param_reader_ALT_RATE_P;
+    conn_127 : data access dataport26 -> receiveParamsRead5.param_reader_YAW_STAB_IMAX;
+    conn_128 : data access dataport25 -> receiveParamsRead5.param_reader_YAW_STAB_D;
+    conn_129 : data access dataport24 -> receiveParamsRead5.param_reader_YAW_STAB_I;
+    conn_130 : data access dataport23 -> receiveParamsRead5.param_reader_YAW_STAB_P;
+    conn_131 : data access dataport22 -> receiveParamsRead5.param_reader_YAW_RATE_IMAX;
+    conn_132 : data access dataport21 -> receiveParamsRead5.param_reader_YAW_RATE_D;
+    conn_133 : data access dataport20 -> receiveParamsRead5.param_reader_YAW_RATE_I;
+    conn_134 : data access dataport19 -> receiveParamsRead5.param_reader_YAW_RATE_P;
+    conn_135 : data access dataport18 -> receiveParamsRead5.param_reader_PIT_STAB_IMAX;
+    conn_136 : data access dataport17 -> receiveParamsRead5.param_reader_PIT_STAB_D;
+    conn_137 : data access dataport16 -> receiveParamsRead5.param_reader_PIT_STAB_I;
+    conn_138 : data access dataport15 -> receiveParamsRead5.param_reader_PIT_STAB_P;
+    conn_139 : data access dataport14 -> receiveParamsRead5.param_reader_PIT_RATE_IMAX;
+    conn_140 : data access dataport13 -> receiveParamsRead5.param_reader_PIT_RATE_D;
+    conn_141 : data access dataport12 -> receiveParamsRead5.param_reader_PIT_RATE_I;
+    conn_142 : data access dataport11 -> receiveParamsRead5.param_reader_PIT_RATE_P;
+    conn_143 : data access dataport10 -> receiveParamsRead5.param_reader_RLL_STAB_IMAX;
+    conn_144 : data access dataport9 -> receiveParamsRead5.param_reader_RLL_STAB_D;
+    conn_145 : data access dataport8 -> receiveParamsRead5.param_reader_RLL_STAB_I;
+    conn_146 : data access dataport7 -> receiveParamsRead5.param_reader_RLL_STAB_P;
+    conn_147 : data access dataport6 -> receiveParamsRead5.param_reader_RLL_RATE_IMAX;
+    conn_148 : data access dataport5 -> receiveParamsRead5.param_reader_RLL_RATE_D;
+    conn_149 : data access dataport4 -> receiveParamsRead5.param_reader_RLL_RATE_I;
+    conn_150 : data access dataport3 -> receiveParamsRead5.param_reader_RLL_RATE_P;
+    
+     conn_153 : data access dataport36 -> transmitParams1.param_reader_ALT_UI_DEAD;
+    conn_154 : data access dataport35 -> transmitParams1.param_reader_ALT_UI_SENS;
+    conn_155 : data access dataport34 -> transmitParams1.param_reader_ALT_POS_IMAX;
+    conn_156 : data access dataport33 -> transmitParams1.param_reader_ALT_POS_D;
+    conn_157 : data access dataport32 -> transmitParams1.param_reader_ALT_POS_I;
+    conn_158 : data access dataport31 -> transmitParams1.param_reader_ALT_POS_P;
+    conn_159 : data access dataport30 -> transmitParams1.param_reader_ALT_RATE_IMAX;
+    conn_160 : data access dataport29 -> transmitParams1.param_reader_ALT_RATE_D;
+    conn_161 : data access dataport28 -> transmitParams1.param_reader_ALT_RATE_I;
+    conn_162 : data access dataport27 -> transmitParams1.param_reader_ALT_RATE_P;
+    conn_163 : data access dataport26 -> transmitParams1.param_reader_YAW_STAB_IMAX;
+    conn_164 : data access dataport25 -> transmitParams1.param_reader_YAW_STAB_D;
+    conn_165 : data access dataport24 -> transmitParams1.param_reader_YAW_STAB_I;
+    conn_166 : data access dataport23 -> transmitParams1.param_reader_YAW_STAB_P;
+    conn_167 : data access dataport22 -> transmitParams1.param_reader_YAW_RATE_IMAX;
+    conn_168 : data access dataport21 -> transmitParams1.param_reader_YAW_RATE_D;
+    conn_169 : data access dataport20 -> transmitParams1.param_reader_YAW_RATE_I;
+    conn_170 : data access dataport19 -> transmitParams1.param_reader_YAW_RATE_P;
+    conn_171 : data access dataport18 -> transmitParams1.param_reader_PIT_STAB_IMAX;
+    conn_172 : data access dataport17 -> transmitParams1.param_reader_PIT_STAB_D;
+    conn_173 : data access dataport16 -> transmitParams1.param_reader_PIT_STAB_I;
+    conn_174 : data access dataport15 -> transmitParams1.param_reader_PIT_STAB_P;
+    conn_175 : data access dataport14 -> transmitParams1.param_reader_PIT_RATE_IMAX;
+    conn_176 : data access dataport13 -> transmitParams1.param_reader_PIT_RATE_D;
+    conn_177 : data access dataport12 -> transmitParams1.param_reader_PIT_RATE_I;
+    conn_178 : data access dataport11 -> transmitParams1.param_reader_PIT_RATE_P;
+    conn_179 : data access dataport10 -> transmitParams1.param_reader_RLL_STAB_IMAX;
+    conn_180 : data access dataport9 -> transmitParams1.param_reader_RLL_STAB_D;
+    conn_181 : data access dataport8 -> transmitParams1.param_reader_RLL_STAB_I;
+    conn_182 : data access dataport7 -> transmitParams1.param_reader_RLL_STAB_P;
+    conn_183 : data access dataport6 -> transmitParams1.param_reader_RLL_RATE_IMAX;
+    conn_184 : data access dataport5 -> transmitParams1.param_reader_RLL_RATE_D;
+    conn_185 : data access dataport4 -> transmitParams1.param_reader_RLL_RATE_I;
+    conn_186 : data access dataport3 -> transmitParams1.param_reader_RLL_RATE_P;
+
+    conn_196 : data access dataport36 -> receiveParamsWrite1.param_writer_ALT_UI_DEAD;
+    conn_197 : data access dataport35 -> receiveParamsWrite1.param_writer_ALT_UI_SENS;
+    conn_198 : data access dataport34 -> receiveParamsWrite1.param_writer_ALT_POS_IMAX;
+    conn_199 : data access dataport33 -> receiveParamsWrite1.param_writer_ALT_POS_D;
+    conn_200 : data access dataport32 -> receiveParamsWrite1.param_writer_ALT_POS_I;
+    conn_201 : data access dataport31 -> receiveParamsWrite1.param_writer_ALT_POS_P;
+    conn_202 : data access dataport30 -> receiveParamsWrite1.param_writer_ALT_RATE_IMAX;
+    conn_203 : data access dataport29 -> receiveParamsWrite1.param_writer_ALT_RATE_D;
+    conn_204 : data access dataport28 -> receiveParamsWrite1.param_writer_ALT_RATE_I;
+    conn_205 : data access dataport27 -> receiveParamsWrite1.param_writer_ALT_RATE_P;
+    conn_206 : data access dataport26 -> receiveParamsWrite1.param_writer_YAW_STAB_IMAX;
+    conn_207 : data access dataport25 -> receiveParamsWrite1.param_writer_YAW_STAB_D;
+    conn_208 : data access dataport24 -> receiveParamsWrite1.param_writer_YAW_STAB_I;
+    conn_209 : data access dataport23 -> receiveParamsWrite1.param_writer_YAW_STAB_P;
+    conn_210 : data access dataport22 -> receiveParamsWrite1.param_writer_YAW_RATE_IMAX;
+    conn_211 : data access dataport21 -> receiveParamsWrite1.param_writer_YAW_RATE_D;
+    conn_212 : data access dataport20 -> receiveParamsWrite1.param_writer_YAW_RATE_I;
+    conn_213 : data access dataport19 -> receiveParamsWrite1.param_writer_YAW_RATE_P;
+    conn_214 : data access dataport18 -> receiveParamsWrite1.param_writer_PIT_STAB_IMAX;
+    conn_215 : data access dataport17 -> receiveParamsWrite1.param_writer_PIT_STAB_D;
+    conn_216 : data access dataport16 -> receiveParamsWrite1.param_writer_PIT_STAB_I;
+    conn_217 : data access dataport15 -> receiveParamsWrite1.param_writer_PIT_STAB_P;
+    conn_218 : data access dataport14 -> receiveParamsWrite1.param_writer_PIT_RATE_IMAX;
+    conn_219 : data access dataport13 -> receiveParamsWrite1.param_writer_PIT_RATE_D;
+    conn_220 : data access dataport12 -> receiveParamsWrite1.param_writer_PIT_RATE_I;
+    conn_221 : data access dataport11 -> receiveParamsWrite1.param_writer_PIT_RATE_P;
+    conn_222 : data access dataport10 -> receiveParamsWrite1.param_writer_RLL_STAB_IMAX;
+    conn_223 : data access dataport9 -> receiveParamsWrite1.param_writer_RLL_STAB_D;
+    conn_224 : data access dataport8 -> receiveParamsWrite1.param_writer_RLL_STAB_I;
+    conn_225 : data access dataport7 -> receiveParamsWrite1.param_writer_RLL_STAB_P;
+    conn_226 : data access dataport6 -> receiveParamsWrite1.param_writer_RLL_RATE_IMAX;
+    conn_227 : data access dataport5 -> receiveParamsWrite1.param_writer_RLL_RATE_D;
+    conn_228 : data access dataport4 -> receiveParamsWrite1.param_writer_RLL_RATE_I;
+    conn_229 : data access dataport3 -> receiveParamsWrite1.param_writer_RLL_RATE_P;
+    conn_230 : data access dataport36 -> receiveParamsRead5.param_reader_ALT_UI_DEAD;
+    conn_231 : data access dataport35 -> receiveParamsRead5.param_reader_ALT_UI_SENS;
+    conn_232 : data access dataport34 -> receiveParamsRead5.param_reader_ALT_POS_IMAX;
+    conn_233 : data access dataport33 -> receiveParamsRead5.param_reader_ALT_POS_D;
+    conn_234 : data access dataport32 -> receiveParamsRead5.param_reader_ALT_POS_I;
+    conn_235 : data access dataport31 -> receiveParamsRead5.param_reader_ALT_POS_P;
+    conn_236 : data access dataport30 -> receiveParamsRead5.param_reader_ALT_RATE_IMAX;
+    conn_237 : data access dataport29 -> receiveParamsRead5.param_reader_ALT_RATE_D;
+    conn_238 : data access dataport28 -> receiveParamsRead5.param_reader_ALT_RATE_I;
+    conn_239 : data access dataport27 -> receiveParamsRead5.param_reader_ALT_RATE_P;
+    conn_240 : data access dataport26 -> receiveParamsRead5.param_reader_YAW_STAB_IMAX;
+    conn_241 : data access dataport25 -> receiveParamsRead5.param_reader_YAW_STAB_D;
+    conn_242 : data access dataport24 -> receiveParamsRead5.param_reader_YAW_STAB_I;
+    conn_243 : data access dataport23 -> receiveParamsRead5.param_reader_YAW_STAB_P;
+    conn_244 : data access dataport22 -> receiveParamsRead5.param_reader_YAW_RATE_IMAX;
+    conn_245 : data access dataport21 -> receiveParamsRead5.param_reader_YAW_RATE_D;
+    conn_246 : data access dataport20 -> receiveParamsRead5.param_reader_YAW_RATE_I;
+    conn_247 : data access dataport19 -> receiveParamsRead5.param_reader_YAW_RATE_P;
+    conn_248 : data access dataport18 -> receiveParamsRead5.param_reader_PIT_STAB_IMAX;
+    conn_249 : data access dataport17 -> receiveParamsRead5.param_reader_PIT_STAB_D;
+    conn_250 : data access dataport16 -> receiveParamsRead5.param_reader_PIT_STAB_I;
+    conn_251 : data access dataport15 -> receiveParamsRead5.param_reader_PIT_STAB_P;
+    conn_252 : data access dataport14 -> receiveParamsRead5.param_reader_PIT_RATE_IMAX;
+    conn_253 : data access dataport13 -> receiveParamsRead5.param_reader_PIT_RATE_D;
+    conn_254 : data access dataport12 -> receiveParamsRead5.param_reader_PIT_RATE_I;
+    conn_255 : data access dataport11 -> receiveParamsRead5.param_reader_PIT_RATE_P;
+    conn_256 : data access dataport10 -> receiveParamsRead5.param_reader_RLL_STAB_IMAX;
+    conn_257 : data access dataport9 -> receiveParamsRead5.param_reader_RLL_STAB_D;
+    conn_258 : data access dataport8 -> receiveParamsRead5.param_reader_RLL_STAB_I;
+    conn_259 : data access dataport7 -> receiveParamsRead5.param_reader_RLL_STAB_P;
+    conn_260 : data access dataport6 -> receiveParamsRead5.param_reader_RLL_RATE_IMAX;
+    conn_261 : data access dataport5 -> receiveParamsRead5.param_reader_RLL_RATE_D;
+    conn_262 : data access dataport4 -> receiveParamsRead5.param_reader_RLL_RATE_I;
+    conn_263 : data access dataport3 -> receiveParamsRead5.param_reader_RLL_RATE_P;   
+     
+ 	conn_187 : data access dataport434 -> transCons1.commsecInfo;
+    conn_188 : data access dataport40 -> transCons1.att_control;
+    conn_189 : data access dataport39 -> transCons1.alt_control;
+    conn_190 : data access dataport474 -> transCons1.radio;
+    conn_191 : data access dataport306 -> transCons1.motors;
+    conn_192 : data access dataport297 -> transCons1.control;
+    conn_193 : data access dataport341 -> transCons1.position;
+    conn_194 : data access dataport0 -> transCons1.sensors;
+    conn_195 : data access dataport140 -> transCons1.controllaw;
+    
+    conn_74 : data access dataport777 -> transCons5.commsecInfo;
+    conn_75 : data access dataport40 -> transCons5.att_control;
+    conn_76 : data access dataport39 -> transCons5.alt_control;
+    conn_77 : data access dataport817 -> transCons5.radio;
+    conn_78 : data access dataport306 -> transCons5.motors;
+    conn_79 : data access dataport297 -> transCons5.control;
+    conn_80 : data access dataport341 -> transCons5.position;
+    conn_81 : data access dataport0 -> transCons5.sensors;
+    conn_82 : data access dataport140 -> transCons5.controllaw;   
+    conn_user : data access dataport131 -> userinput;
+ 
+end proc_data.impl;
+
+
+
+
+process implementation flight_gen_process.impl
+  subcomponents
+    threadData : data proc_data.impl;
+    datalink_uart5_inst : thread Datalink::datalink_uart5;
+    datalink_uart1_inst : thread Datalink::datalink_uart1;
+    px4ioar_inst : thread px4ioar;
+    sensorsCaptureTask_inst : thread sensorsCaptureTask;
+    position_state_inst : thread position_state;
+    ubloxGPS_inst : thread ubloxGPS;
+    motors_state_inst : thread motors_state;
+    motmix_inst : thread motmix;
+    blink_inst : thread blink;
+    UserInputThreads_inst : thread group UserInput::UserInputThreads.Impl;
+    Commsec_inst : thread group Commsec::Commsec.Impl;
+    GCS_inst : thread group GCS::GCS.Impl;
+    Control_inst : thread group Control::ControlThreads.impl; 
+    uart5ISR_inst : thread uart5ISR;
+    uart1ISR_inst : thread uart1ISR;
+    uart2ISR_inst : thread uart2ISR;
+    uart6ISR_inst : thread uart6ISR;
+  connections 
+    conn_1 : port GCS_inst.gcsTxToEncSrc_uart5 -> Commsec_inst.gcsTxToEnc_uart5;
+    conn_2 : port Commsec_inst.encToHxSrc_uart5 -> datalink_uart5_inst.framed_istream;
+    conn_3 : port GCS_inst.rc_override_tx_uart5 -> UserInputThreads_inst.uart5_rcoverride_tx;
+    conn_4 : port GCS_inst.control_law_request_uart5 -> UserInputThreads_inst.uart5_control_law_request;
+    conn_5 : port Commsec_inst.decToGcsRxSrc_uart5 -> GCS_inst.mavStream_uart5;
+    conn_6 : port datalink_uart5_inst.link_ostream -> uart5ISR_inst.ostream;
+    conn_7 : port datalink_uart5_inst.stat_ostream -> GCS_inst.radioEvent5;
+    conn_8 : port datalink_uart5_inst.framed_ostream -> Commsec_inst.hxToDecRcv_uart5;
+    conn_11 : port GCS_inst.gcsTxToEncSrc_uart1 -> Commsec_inst.gcsTxToEnc_uart1;
+    conn_12 : port Commsec_inst.encToHxSrc_uart1 -> datalink_uart1_inst.framed_istream;
+    conn_14 : port GCS_inst.rc_override_tx_uart1 -> UserInputThreads_inst.uart1_rcoverride_tx;
+    conn_16 : port GCS_inst.control_law_request_uart1 -> UserInputThreads_inst.uart1_control_law_request;
+    conn_17 : port Commsec_inst.decToGcsRxSrc_uart1 -> GCS_inst.mavStream_uart1;
+    conn_18 : port datalink_uart1_inst.link_ostream -> uart1ISR_inst.ostream;
+    conn_19 : port datalink_uart1_inst.stat_ostream -> GCS_inst.radioEvent1;
+    conn_20 : port datalink_uart1_inst.framed_ostream -> Commsec_inst.hxToDecRcv_uart1;
+    conn_21 : port px4ioar_inst.newstateEmitter -> px4ioar_inst.newstateEvent;
+    conn_22 : port px4ioar_inst.uart_ostream -> uart2ISR_inst.ostream;
+    conn_23 : port sensorsCaptureTask_inst.newstateEmitter -> sensorsCaptureTask_inst.newstateEvent;
+    conn_24 : port ubloxGPS_inst.position -> sensorsCaptureTask_inst.position;
+    conn_25 : port ubloxGPS_inst.position -> position_state_inst.proxyEvent;
+    conn_26 : port motmix_inst.motors -> px4ioar_inst.motor_istream;
+    conn_27 : port motmix_inst.motors -> motors_state_inst.proxyEvent;
+    conn_29 : port control_inst.control -> motmix_inst.control;
+    conn_37 : port uart5ISR_inst.istream -> datalink_uart5_inst.link_istream;
+    conn_38 : port uart1ISR_inst.istream -> datalink_uart1_inst.link_istream;
+    conn_39 : port uart6ISR_inst.istream -> ubloxGPS_inst.istream;
+        
+    conn_151 : data access threadData.commsecInfo5 -> Commsec_inst.commsec_info_src_uart5;
+    conn_152 : data access threadData.radio -> GCS_inst.radioData5;
+    conn_264 : data access threadData.commsecInfo1 -> Commsec_inst.commsec_info_src_uart1;
+    conn_12252 : data access threadData.radio -> GCS_inst.radioData1;
+    
+    conn_266 : data access threadData.sensors -> sensorsCaptureTask_inst.sensors;
+    conn_267 : data access threadData.position -> position_state_inst.proxyData;
+    conn_268 : data access threadData.motors -> motors_state_inst.proxyData;
+    conn_269 : data access threadData.control -> Control_inst.proxyData;
+    conn_270 : data access threadData.controllaw -> motmix_inst.controllaw;
+    conn_271 : data access threadData.att_control -> Control_inst.att_control;
+    conn_272 : data access threadData.alt_control -> Control_inst.alt_control;
+   
+    conn_307 : data access threadData.sensors -> Control_inst.sensors;
+    conn_308 : data access threadData.userinput -> Control_inst.userinput;
+    conn_309 : data access threadData.controllaw -> Control_inst.control_law;
+    conn_310 : data access threadData.controllaw -> blink_inst.controllaw;
+    conn_311 : data access threadData.controllaw -> UserInputThreads_inst.proxyControlData;
+    conn_312 : data access threadData.userinput -> UserInputThreads_inst.proxyUiData;
+    
+    --connections to hardware
+    --outgoing connections
+	--ccs      : port motors_and_radios.flight_control_commands -> ppmInputTower_inst.flight_control_commands;
+	mavconn  : port motors_and_radios.mavlink -> uart5ISR_inst.mavlink;
+	motor1   : port px4ioar_inst.motor1 -> motors_and_radios.motor1;
+	motor2   : port px4ioar_inst.motor2 -> motors_and_radios.motor2;
+	motor3   : port px4ioar_inst.motor3 -> motors_and_radios.motor3;
+	motor4   : port px4ioar_inst.motor4 -> motors_and_radios.motor4;
+	sensor_conn: feature group sensors <-> sensorsCaptureTask_inst.sensors_in;
+    time_conn : port system_time -> UserInputThreads_inst.system_time;
+    
+  properties 
+    SMACCM::OS => "eChronos";
+    
+  annex resolute {**
+    prove memory_safe()
+    prove all_through_connections(this)
+    prove execute_soundness()
+    prove execute_completeness(this.uart5ISR_inst)
+  **};
+
+end flight_gen_process.impl;
 	
-	process ML
-	end ML;
 	
-	process implementation ML.Impl
-		subcomponents
-			Commsec: thread group Commsec::Commsec;
-	end ML.Impl;
 end Software;

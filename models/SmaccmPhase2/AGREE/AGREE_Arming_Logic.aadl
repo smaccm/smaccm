@@ -1,0 +1,19 @@
+package AGREE_Arming_Logic
+public
+
+annex agree {**
+	
+  	const deadSafe : int = 0;
+  	const deadArmable : int = 1;
+  	const armingIdle : int = 0;
+  	const armingActive : int = 1;
+  	const armingComplete : int = 2;
+  	const hystresis : int = 750;
+  	const timeout_limit : int = 150;
+  	const minBound : real = 800.0;
+  	const maxBound : real = 2200.0;
+
+**};
+
+
+end AGREE_Arming_Logic;

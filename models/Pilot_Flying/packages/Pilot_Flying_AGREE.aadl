@@ -13,6 +13,7 @@ with Base_Types,Signals,QS_Properties,Data_Model;
      
    annex agree{**
     	
+    	
       const initO: bool = Get_Property(this.O, QS_Properties::Init_Bool);
   	 
       eq ttF: bool = Agree_Nodes.tF(2);

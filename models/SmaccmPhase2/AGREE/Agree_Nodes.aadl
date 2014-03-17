@@ -1,0 +1,124 @@
+package Agree_Nodes
+public
+
+annex agree {** 
+	
+	node abs(inp: real) returns (outp: real);
+	let
+		outp = if(inp < 0.0) then -inp else inp;
+	tel;
+	
+    node Y(inp: bool) returns (outpr: bool); 
+    let
+      outpr = false -> pre(inp);
+    tel;  
+ 
+    node Z(inp: bool) returns (outp: bool); 
+    let 
+      outp = true -> pre(inp); 
+    tel; 
+     
+    node H(inp: bool) returns (outp: bool);  
+    let
+      outp = inp -> (inp and pre(outp));
+    tel;
+    
+    node O(inp: bool) returns (outp: bool); 
+    let
+      outp = inp -> (inp or (pre(outp))); 
+    tel ;  
+
+    node S_Univ(p: bool, q: bool) returns (outp: bool); 
+    let
+      outp = (Y(O(q))) => p; 
+    tel; 
+
+	node T_Univ(p: bool, q: bool) returns (outp: bool);
+    let
+      outp = (S_Univ(q,p)) or H(p) ; 
+    tel;
+    
+    node true_since(foo : bool, n : int) returns (r : bool);
+    var
+    	count : int;
+    let
+    	count = 0 -> 1 + pre(count);
+    	r = if(count <= n) then
+    			foo
+    		else
+    			foo and prev(foo, foo);
+    tel;
+      	
+    node false_since(foo : bool, n : int) returns (r : bool);
+    var
+    	count : int;
+    let
+    	count = 0 -> 1 + pre(count);
+    	r = if(count <= n) then
+    			not foo
+      		else
+     			(not(foo)) and prev(not foo, not foo);
+    tel;
+      	
+    node at_time(foo : bool, k : int) returns (r : bool);
+    var
+    	count : int;
+    let
+    	count = 0 -> 1 + pre(count);
+    	r = if(count = k) then
+    			foo
+    		else
+    			prev(r, false);
+    tel;
+    
+    node false_between(foo : bool, start : int, end : int) returns (r : bool);
+    var
+    	count : int;
+    let
+    	count = 0 -> 1 + pre(count);
+    	r = if (count < start) then
+    			true
+    		else if (count > end) then
+    			prev(r, true)
+    		else if(count <= end and count >= start) then
+    			not foo
+      		else
+     			(not(foo)) and prev(r, foo);
+    tel;
+    
+    --sig_set : the signal to set
+    --sig_read : the signal to read, once read the signal is reset
+	--set : true if a signal is to be set
+	node Signal_Status(sig_set : int, sig_read : int, set : bool)
+					  returns 
+					  (sig0 : bool,
+					   sig1 : bool, 
+					   sig2 : bool,
+					   sig3 : bool,
+					   sig4 : bool,
+					   sig5 : bool,
+					   sig6 : bool,
+					   sig7 : bool
+					   );				
+		let
+			sig0 = if(sig_set = 0 and set) then true else 
+			       if(sig_read = 0) then false else prev(sig0, false);
+			sig1 = if(sig_set = 1 and set) then true else 
+			       if(sig_read = 1) then false else prev(sig1, false);
+			sig2 = if(sig_set = 2 and set) then true else 
+			       if(sig_read = 2) then false else prev(sig2, false);
+			sig3 = if(sig_set = 3 and set) then true else 
+			       if(sig_read = 3) then false else prev(sig3, false);
+			sig4 = if(sig_set = 4 and set) then true else 
+			       if(sig_read = 4) then false else prev(sig4, false);
+			sig5 = if(sig_set = 5 and set) then true else 
+			       if(sig_read = 5) then false else prev(sig5, false);
+			sig6 = if(sig_set = 6 and set) then true else 
+			       if(sig_read = 6) then false else prev(sig6, false);
+			sig7 = if(sig_set = 7 and set) then true else 
+			       if(sig_read = 7) then false else prev(sig7, false);
+		tel;
+	
+**};
+
+end Agree_Nodes;

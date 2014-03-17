@@ -236,15 +236,6 @@ public class AgreeSwitch<T> extends Switch<T>
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
-      case AgreePackage.CLOCK_ID:
-      {
-        ClockID clockID = (ClockID)theEObject;
-        T result = caseClockID(clockID);
-        if (result == null) result = caseExpr(clockID);
-        if (result == null) result = caseElement(clockID);
-        if (result == null) result = defaultCase(theEObject);
-        return result;
-      }
       case AgreePackage.AGREE_CONTRACT_LIBRARY:
       {
         AgreeContractLibrary agreeContractLibrary = (AgreeContractLibrary)theEObject;
@@ -328,6 +319,16 @@ public class AgreeSwitch<T> extends Switch<T>
         T result = caseLiftStatement(liftStatement);
         if (result == null) result = caseSpecStatement(liftStatement);
         if (result == null) result = caseElement(liftStatement);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case AgreePackage.CALEN_STATEMENT:
+      {
+        CalenStatement calenStatement = (CalenStatement)theEObject;
+        T result = caseCalenStatement(calenStatement);
+        if (result == null) result = caseSynchStatement(calenStatement);
+        if (result == null) result = caseSpecStatement(calenStatement);
+        if (result == null) result = caseElement(calenStatement);
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
@@ -734,22 +735,6 @@ public class AgreeSwitch<T> extends Switch<T>
   }
 
   /**
-   * Returns the result of interpreting the object as an instance of '<em>Clock ID</em>'.
-   * <!-- begin-user-doc -->
-   * This implementation returns null;
-   * returning a non-null result will terminate the switch.
-   * <!-- end-user-doc -->
-   * @param object the target of the switch.
-   * @return the result of interpreting the object as an instance of '<em>Clock ID</em>'.
-   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-   * @generated
-   */
-  public T caseClockID(ClockID object)
-  {
-    return null;
-  }
-
-  /**
    * Returns the result of interpreting the object as an instance of '<em>Contract Library</em>'.
    * <!-- begin-user-doc -->
    * This implementation returns null;
@@ -889,6 +874,22 @@ public class AgreeSwitch<T> extends Switch<T>
    * @generated
    */
   public T caseLiftStatement(LiftStatement object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Calen Statement</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Calen Statement</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseCalenStatement(CalenStatement object)
   {
     return null;
   }

@@ -29,7 +29,7 @@ import com.rockwellcollins.atc.agree.agree.AgreeContract;
 import com.rockwellcollins.atc.agree.agree.AgreeContractLibrary;
 import com.rockwellcollins.atc.agree.agree.AgreeContractSubclause;
 import com.rockwellcollins.atc.agree.agree.AgreeLibrary;
-import com.rockwellcollins.atc.agree.agree.ClockID;
+import com.rockwellcollins.atc.agree.agree.CalenStatement;
 import com.rockwellcollins.atc.agree.agree.EqStatement;
 import com.rockwellcollins.atc.agree.agree.FnDefExpr;
 import com.rockwellcollins.atc.agree.agree.NestedDotID;
@@ -112,11 +112,25 @@ public class AgreeScopeProvider extends
         return result;
     }
 
+    IScope scope_NamedElement(CalenStatement ctx, EReference ref) {
+        
+    	EObject container = ctx.getContainingClassifier();
+    	while(!(container instanceof ComponentClassifier)){
+    		container = container.eContainer();
+    	}
+    	
+    	if(container instanceof ComponentImplementation){
+    		return Scopes.scopeFor(((ComponentImplementation)container).getAllSubcomponents());
+    	}
+    	return IScope.NULLSCOPE;
+    }
+    
     IScope scope_NamedElement(NestedDotID ctx, EReference ref) {
         Set<Element> components = getCorrespondingAadlElement(ctx);
         return Scopes.scopeFor(components, getScope(ctx.eContainer(), ref));
     }
     
+    /*
     IScope scope_NamedElement(ClockID ctx, EReference ref){
         EObject container = ctx.eContainer();
         while(!(container instanceof ComponentClassifier)){
@@ -129,6 +143,40 @@ public class AgreeScopeProvider extends
         
         return IScope.NULLSCOPE;
     }
+    
+    IScope scope_NamedElement(QueueRemoveID ctx, EReference ref){
+        EObject container = ctx.eContainer();
+        while(!(container instanceof ComponentClassifier)){
+            container = container.eContainer();
+        }
+        
+        return Scopes.scopeFor(((ComponentClassifier)container).getAllFeatures(), getScope(ctx.eContainer(), ref));
+        
+        
+    }
+    
+    IScope scope_NamedElement(QueueInsertID ctx, EReference ref){
+        EObject container = ctx.eContainer();
+        while(!(container instanceof ComponentClassifier)){
+            container = container.eContainer();
+        }
+        
+        return Scopes.scopeFor(((ComponentClassifier)container).getAllFeatures(), getScope(ctx.eContainer(), ref));
+        
+        
+    }
+    
+    IScope scope_NamedElement(QueueCountID ctx, EReference ref){
+        EObject container = ctx.eContainer();
+        while(!(container instanceof ComponentClassifier)){
+            container = container.eContainer();
+        }
+        
+        return Scopes.scopeFor(((ComponentClassifier)container).getAllFeatures(), getScope(ctx.eContainer(), ref));
+        
+        
+    }
+    */
     
     private Set<Element> getCorrespondingAadlElement(NestedDotID id) {
         EObject container = id.eContainer();

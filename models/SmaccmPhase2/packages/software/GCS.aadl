@@ -1,0 +1,1555 @@
+package GCS
+public
+  with Base_Types;
+  with TowerArrays;
+  with gcsstream_timing;
+  with mavlink_veh_commsec_msg;
+  with att_control_dbg_type;
+  with alt_control_dbg_type;
+  with radio_stat_type;
+  with motors_type;
+  with controloutput_type;
+  with gps_type;
+  with sensors_type;
+  with control_law_type;
+  with mavlink_rc_channels_override_msg;
+  with control_law_request_type;
+  with mavlink_hil_state_msg;
+  with SMACCM;
+  with SMACCM_SYS;
+  with Software;
+  with FeatureGroups;
+
+  thread group GCS
+    features
+      gcsTxToEncSrc_uart5: out event data port TowerArrays::ArrTy_80TyBase_Types_Unsigned_8.impl{
+        Queue_Size => 16;
+      };
+      mavStream_uart5: in event data port TowerArrays::ArrTy_80TyBase_Types_Unsigned_8.impl {
+        Queue_Size => 16;
+      };
+      rc_override_tx_uart5: out event data port mavlink_rc_channels_override_msg::rc_channels_override_msg.impl {
+        Queue_Size => 16;
+      };
+      control_law_request_uart5: out event data port control_law_request_type::control_law_request.impl {
+        Queue_Size => 16;
+      };
+      gcsTxToEncSrc_uart1: out event data port TowerArrays::ArrTy_80TyBase_Types_Unsigned_8.impl{
+        Queue_Size => 16;
+      };
+      mavStream_uart1: in event data port TowerArrays::ArrTy_80TyBase_Types_Unsigned_8.impl {
+        Queue_Size => 16;
+      };
+      rc_override_tx_uart1: out event data port mavlink_rc_channels_override_msg::rc_channels_override_msg.impl {
+        Queue_Size => 16;
+      };
+      control_law_request_uart1: out event data port control_law_request_type::control_law_request.impl {
+        Queue_Size => 16;
+      };
+      radioEvent5: in event data port radio_stat_type::radio_stat.impl {
+        Queue_Size => 2;
+      };
+      radioEvent1: in event data port radio_stat_type::radio_stat.impl {
+        Queue_Size => 2;
+      };
+      radioData5: requires data access radio_stat_type::radio_stat.impl {
+        Access_Right => write_only;
+      };
+      radioData1: requires data access radio_stat_type::radio_stat.impl {
+        Access_Right => write_only;
+      };
+      
+      --params
+    transmitParams5 : feature group FeatureGroups::control_params_read;
+    transmitParams1 : feature group FeatureGroups::control_params_read;
+    receiveParamsRead5 : feature group FeatureGroups::control_params_read;
+    receiveParamsWrite5 : feature group FeatureGroups::control_params_write;
+    receiveParamsRead1 : feature group FeatureGroups::control_params_read;
+    receiveParamsWrite1 : feature group FeatureGroups::control_params_write;
+    transCons5 : feature group FeatureGroups::data_conns;
+    transCons1 : feature group FeatureGroups::data_conns;
+    
+  end GCS;
+  
+  thread group implementation GCS.Impl
+  	subcomponents
+	  gcsTransmitTask_uart5_inst : thread gcsTransmitTask_uart5;
+      gcsReceiveTask_uart5_inst : thread gcsReceiveTask_uart5;
+      gcsTransmitTask_uart1_inst : thread gcsTransmitTask_uart1;
+      gcsReceiveTask_uart1_inst : thread gcsReceiveTask_uart1;
+      radio_status_uart5_inst : thread radio_status_uart5;
+      radio_status_uart1_inst : thread radio_status_uart1;
+      
+    connections
+      conn_322 : port gcsReceiveTask_uart5_inst.streamperiods -> gcsTransmitTask_uart5_inst.streamPeriod;
+      conn_533 : port gcsReceiveTask_uart5_inst.param_req -> gcsTransmitTask_uart5_inst.paramReqs;
+      conn_11243 : port gcsReceiveTask_uart1_inst.streamperiods -> gcsTransmitTask_uart1_inst.streamPeriod;
+      conn_12325 : port gcsReceiveTask_uart1_inst.param_req -> gcsTransmitTask_uart1_inst.paramReqs;
+      txuart5 : port gcsTransmitTask_uart5_inst.gcsTxToEncSrc -> gcsTxToEncSrc_uart5;
+      mavlink5 : port mavStream_uart5 -> gcsReceiveTask_uart5_inst.mavStream;
+      rc_uart5 : port gcsReceiveTask_uart5_inst.rc_override_tx -> rc_override_tx_uart5;
+      ctrlrq_uart5: port gcsReceiveTask_uart5_inst.control_law_request -> control_law_request_uart5;
+      txuart1 : port gcsTransmitTask_uart1_inst.gcsTxToEncSrc -> gcsTxToEncSrc_uart1;
+      mavlink1 : port mavStream_uart1 -> gcsReceiveTask_uart1_inst.mavStream;
+      rc_uart1 : port gcsReceiveTask_uart1_inst.rc_override_tx -> rc_override_tx_uart1;
+      ctrlrq_uart1: port gcsReceiveTask_uart1_inst.control_law_request -> control_law_request_uart1;
+      radEvent5: port radioEvent5 -> radio_status_uart5_inst.proxyEvent;
+      radEvent1: port radioEvent1 -> radio_status_uart1_inst.proxyEvent;
+      radData5: data access radio_status_uart5_inst.proxyData -> radioData5;
+      radData1: data access radio_status_uart1_inst.proxyData -> radioData1;
+     
+      --paramater connections
+     conn_342 : data access gcsTransmitTask_uart5_inst.param_reader_ALT_UI_DEAD -> transmitParams5.param_reader_ALT_UI_DEAD;
+     conn_0 : data access gcsTransmitTask_uart5_inst.param_reader_ALT_UI_SENS -> transmitParams5.param_reader_ALT_UI_SENS;
+     conn_1 : data access gcsTransmitTask_uart5_inst.param_reader_ALT_POS_IMAX -> transmitParams5.param_reader_ALT_POS_IMAX;
+     conn_2 : data access gcsTransmitTask_uart5_inst.param_reader_ALT_POS_D -> transmitParams5.param_reader_ALT_POS_D;
+     conn_3 : data access gcsTransmitTask_uart5_inst.param_reader_ALT_POS_I -> transmitParams5.param_reader_ALT_POS_I;
+     conn_4 : data access gcsTransmitTask_uart5_inst.param_reader_ALT_POS_P -> transmitParams5.param_reader_ALT_POS_P;
+     conn_5 : data access gcsTransmitTask_uart5_inst.param_reader_ALT_RATE_IMAX -> transmitParams5.param_reader_ALT_RATE_IMAX;
+     conn_6 : data access gcsTransmitTask_uart5_inst.param_reader_ALT_RATE_D -> transmitParams5.param_reader_ALT_RATE_D;
+     conn_7 : data access gcsTransmitTask_uart5_inst.param_reader_ALT_RATE_I -> transmitParams5.param_reader_ALT_RATE_I;
+     conn_8 : data access gcsTransmitTask_uart5_inst.param_reader_ALT_RATE_P -> transmitParams5.param_reader_ALT_RATE_P;
+     conn_9 : data access gcsTransmitTask_uart5_inst.param_reader_YAW_STAB_IMAX -> transmitParams5.param_reader_YAW_STAB_IMAX;
+     conn_10 : data access gcsTransmitTask_uart5_inst.param_reader_YAW_STAB_D -> transmitParams5.param_reader_YAW_STAB_D;
+     conn_11 : data access gcsTransmitTask_uart5_inst.param_reader_YAW_STAB_I -> transmitParams5.param_reader_YAW_STAB_I;
+     conn_12 : data access gcsTransmitTask_uart5_inst.param_reader_YAW_STAB_P -> transmitParams5.param_reader_YAW_STAB_P;
+     conn_13 : data access gcsTransmitTask_uart5_inst.param_reader_YAW_RATE_IMAX -> transmitParams5.param_reader_YAW_RATE_IMAX;
+     conn_14 : data access gcsTransmitTask_uart5_inst.param_reader_YAW_RATE_D -> transmitParams5.param_reader_YAW_RATE_D;
+     conn_15 : data access gcsTransmitTask_uart5_inst.param_reader_YAW_RATE_I -> transmitParams5.param_reader_YAW_RATE_I;
+     conn_16 : data access gcsTransmitTask_uart5_inst.param_reader_YAW_RATE_P -> transmitParams5.param_reader_YAW_RATE_P;
+     conn_17 : data access gcsTransmitTask_uart5_inst.param_reader_PIT_STAB_IMAX -> transmitParams5.param_reader_PIT_STAB_IMAX;
+     conn_18 : data access gcsTransmitTask_uart5_inst.param_reader_PIT_STAB_D -> transmitParams5.param_reader_PIT_STAB_D;
+     conn_19 : data access gcsTransmitTask_uart5_inst.param_reader_PIT_STAB_I -> transmitParams5.param_reader_PIT_STAB_I;
+     conn_20 : data access gcsTransmitTask_uart5_inst.param_reader_PIT_STAB_P -> transmitParams5.param_reader_PIT_STAB_P;
+     conn_21 : data access gcsTransmitTask_uart5_inst.param_reader_PIT_RATE_IMAX -> transmitParams5.param_reader_PIT_RATE_IMAX;
+     conn_22 : data access gcsTransmitTask_uart5_inst.param_reader_PIT_RATE_D -> transmitParams5.param_reader_PIT_RATE_D;
+     conn_23 : data access gcsTransmitTask_uart5_inst.param_reader_PIT_RATE_I -> transmitParams5.param_reader_PIT_RATE_I;
+     conn_24 : data access gcsTransmitTask_uart5_inst.param_reader_PIT_RATE_P -> transmitParams5.param_reader_PIT_RATE_P;
+     conn_25 : data access gcsTransmitTask_uart5_inst.param_reader_RLL_STAB_IMAX -> transmitParams5.param_reader_RLL_STAB_IMAX;
+     conn_26 : data access gcsTransmitTask_uart5_inst.param_reader_RLL_STAB_D -> transmitParams5.param_reader_RLL_STAB_D;
+     conn_27 : data access gcsTransmitTask_uart5_inst.param_reader_RLL_STAB_I -> transmitParams5.param_reader_RLL_STAB_I;
+     conn_28 : data access gcsTransmitTask_uart5_inst.param_reader_RLL_STAB_P -> transmitParams5.param_reader_RLL_STAB_P;
+     conn_29 : data access gcsTransmitTask_uart5_inst.param_reader_RLL_RATE_IMAX -> transmitParams5.param_reader_RLL_RATE_IMAX;
+     conn_30 : data access gcsTransmitTask_uart5_inst.param_reader_RLL_RATE_D -> transmitParams5.param_reader_RLL_RATE_D;
+     conn_31 : data access gcsTransmitTask_uart5_inst.param_reader_RLL_RATE_I -> transmitParams5.param_reader_RLL_RATE_I;
+     conn_32 : data access gcsTransmitTask_uart5_inst.param_reader_RLL_RATE_P -> transmitParams5.param_reader_RLL_RATE_P;
+     conn_6342 : data access gcsTransmitTask_uart1_inst.param_reader_ALT_UI_DEAD -> transmitParams1.param_reader_ALT_UI_DEAD;
+     conn_60 : data access gcsTransmitTask_uart1_inst.param_reader_ALT_UI_SENS -> transmitParams1.param_reader_ALT_UI_SENS;
+     conn_61 : data access gcsTransmitTask_uart1_inst.param_reader_ALT_POS_IMAX -> transmitParams1.param_reader_ALT_POS_IMAX;
+     conn_62 : data access gcsTransmitTask_uart1_inst.param_reader_ALT_POS_D -> transmitParams1.param_reader_ALT_POS_D;
+     conn_63 : data access gcsTransmitTask_uart1_inst.param_reader_ALT_POS_I -> transmitParams1.param_reader_ALT_POS_I;
+     conn_64 : data access gcsTransmitTask_uart1_inst.param_reader_ALT_POS_P -> transmitParams1.param_reader_ALT_POS_P;
+     conn_65 : data access gcsTransmitTask_uart1_inst.param_reader_ALT_RATE_IMAX -> transmitParams1.param_reader_ALT_RATE_IMAX;
+     conn_66 : data access gcsTransmitTask_uart1_inst.param_reader_ALT_RATE_D -> transmitParams1.param_reader_ALT_RATE_D;
+     conn_67 : data access gcsTransmitTask_uart1_inst.param_reader_ALT_RATE_I -> transmitParams1.param_reader_ALT_RATE_I;
+     conn_68 : data access gcsTransmitTask_uart1_inst.param_reader_ALT_RATE_P -> transmitParams1.param_reader_ALT_RATE_P;
+     conn_69 : data access gcsTransmitTask_uart1_inst.param_reader_YAW_STAB_IMAX -> transmitParams1.param_reader_YAW_STAB_IMAX;
+     conn_610 : data access gcsTransmitTask_uart1_inst.param_reader_YAW_STAB_D -> transmitParams1.param_reader_YAW_STAB_D;
+     conn_611 : data access gcsTransmitTask_uart1_inst.param_reader_YAW_STAB_I -> transmitParams1.param_reader_YAW_STAB_I;
+     conn_612 : data access gcsTransmitTask_uart1_inst.param_reader_YAW_STAB_P -> transmitParams1.param_reader_YAW_STAB_P;
+     conn_613 : data access gcsTransmitTask_uart1_inst.param_reader_YAW_RATE_IMAX -> transmitParams1.param_reader_YAW_RATE_IMAX;
+     conn_614 : data access gcsTransmitTask_uart1_inst.param_reader_YAW_RATE_D -> transmitParams1.param_reader_YAW_RATE_D;
+     conn_615 : data access gcsTransmitTask_uart1_inst.param_reader_YAW_RATE_I -> transmitParams1.param_reader_YAW_RATE_I;
+     conn_616 : data access gcsTransmitTask_uart1_inst.param_reader_YAW_RATE_P -> transmitParams1.param_reader_YAW_RATE_P;
+     conn_617 : data access gcsTransmitTask_uart1_inst.param_reader_PIT_STAB_IMAX -> transmitParams1.param_reader_PIT_STAB_IMAX;
+     conn_618 : data access gcsTransmitTask_uart1_inst.param_reader_PIT_STAB_D -> transmitParams1.param_reader_PIT_STAB_D;
+     conn_619 : data access gcsTransmitTask_uart1_inst.param_reader_PIT_STAB_I -> transmitParams1.param_reader_PIT_STAB_I;
+     conn_620 : data access gcsTransmitTask_uart1_inst.param_reader_PIT_STAB_P -> transmitParams1.param_reader_PIT_STAB_P;
+     conn_621 : data access gcsTransmitTask_uart1_inst.param_reader_PIT_RATE_IMAX -> transmitParams1.param_reader_PIT_RATE_IMAX;
+     conn_622 : data access gcsTransmitTask_uart1_inst.param_reader_PIT_RATE_D -> transmitParams1.param_reader_PIT_RATE_D;
+     conn_623 : data access gcsTransmitTask_uart1_inst.param_reader_PIT_RATE_I -> transmitParams1.param_reader_PIT_RATE_I;
+     conn_624 : data access gcsTransmitTask_uart1_inst.param_reader_PIT_RATE_P -> transmitParams1.param_reader_PIT_RATE_P;
+     conn_625 : data access gcsTransmitTask_uart1_inst.param_reader_RLL_STAB_IMAX -> transmitParams1.param_reader_RLL_STAB_IMAX;
+     conn_626 : data access gcsTransmitTask_uart1_inst.param_reader_RLL_STAB_D -> transmitParams1.param_reader_RLL_STAB_D;
+     conn_627 : data access gcsTransmitTask_uart1_inst.param_reader_RLL_STAB_I -> transmitParams1.param_reader_RLL_STAB_I;
+     conn_628 : data access gcsTransmitTask_uart1_inst.param_reader_RLL_STAB_P -> transmitParams1.param_reader_RLL_STAB_P;
+     conn_629 : data access gcsTransmitTask_uart1_inst.param_reader_RLL_RATE_IMAX -> transmitParams1.param_reader_RLL_RATE_IMAX;
+     conn_630 : data access gcsTransmitTask_uart1_inst.param_reader_RLL_RATE_D -> transmitParams1.param_reader_RLL_RATE_D;
+     conn_631 : data access gcsTransmitTask_uart1_inst.param_reader_RLL_RATE_I -> transmitParams1.param_reader_RLL_RATE_I;
+     conn_632 : data access gcsTransmitTask_uart1_inst.param_reader_RLL_RATE_P -> transmitParams1.param_reader_RLL_RATE_P;
+
+      conn_220 : data access gcsTransmitTask_uart5_inst.commsecInfo -> transCons5.commsecInfo;
+      conn_221 : data access gcsTransmitTask_uart5_inst.att_control -> transCons5.att_control;
+      conn_222 : data access gcsTransmitTask_uart5_inst.alt_control -> transCons5.alt_control;
+      conn_223 : data access gcsTransmitTask_uart5_inst.radio -> transCons5.radio;
+      conn_224 : data access gcsTransmitTask_uart5_inst.motors -> transCons5.motors;
+      conn_225 : data access gcsTransmitTask_uart5_inst.control -> transCons5.control;
+      conn_226 : data access gcsTransmitTask_uart5_inst.position -> transCons5.position;
+      conn_227 : data access gcsTransmitTask_uart5_inst.sensors -> transCons5.sensors;
+      conn_228: data access gcsTransmitTask_uart5_inst.controllaw -> transCons5.controllaw;
+      conn_1220 : data access gcsTransmitTask_uart1_inst.commsecInfo -> transCons1.commsecInfo;
+      conn_1221 : data access gcsTransmitTask_uart1_inst.att_control -> transCons1.att_control;
+      conn_1222 : data access gcsTransmitTask_uart1_inst.alt_control -> transCons1.alt_control;
+      conn_1223 : data access gcsTransmitTask_uart1_inst.radio -> transCons1.radio;
+      conn_1224 : data access gcsTransmitTask_uart1_inst.motors -> transCons1.motors;
+      conn_1225 : data access gcsTransmitTask_uart1_inst.control -> transCons1.control;
+      conn_1226 : data access gcsTransmitTask_uart1_inst.position -> transCons1.position;
+      conn_1227 : data access gcsTransmitTask_uart1_inst.sensors -> transCons1.sensors;
+      conn_1228: data access gcsTransmitTask_uart1_inst.controllaw -> transCons1.controllaw;
+
+    conn_83 : data access gcsReceiveTask_uart5_inst.param_writer_ALT_UI_DEAD -> receiveParamsWrite5.param_writer_ALT_UI_DEAD;
+    conn_84 : data access gcsReceiveTask_uart5_inst.param_writer_ALT_UI_SENS -> receiveParamsWrite5.param_writer_ALT_UI_SENS;
+    conn_85 : data access gcsReceiveTask_uart5_inst.param_writer_ALT_POS_IMAX -> receiveParamsWrite5.param_writer_ALT_POS_IMAX;
+    conn_86 : data access gcsReceiveTask_uart5_inst.param_writer_ALT_POS_D -> receiveParamsWrite5.param_writer_ALT_POS_D;
+    conn_87 : data access gcsReceiveTask_uart5_inst.param_writer_ALT_POS_I -> receiveParamsWrite5.param_writer_ALT_POS_I;
+    conn_88 : data access gcsReceiveTask_uart5_inst.param_writer_ALT_POS_P -> receiveParamsWrite5.param_writer_ALT_POS_P;
+    conn_89 : data access gcsReceiveTask_uart5_inst.param_writer_ALT_RATE_IMAX -> receiveParamsWrite5.param_writer_ALT_RATE_IMAX;
+    conn_90 : data access gcsReceiveTask_uart5_inst.param_writer_ALT_RATE_D -> receiveParamsWrite5.param_writer_ALT_RATE_D;
+    conn_91 : data access gcsReceiveTask_uart5_inst.param_writer_ALT_RATE_I -> receiveParamsWrite5.param_writer_ALT_RATE_I;
+    conn_92 : data access gcsReceiveTask_uart5_inst.param_writer_ALT_RATE_P -> receiveParamsWrite5.param_writer_ALT_RATE_P;
+    conn_93 : data access gcsReceiveTask_uart5_inst.param_writer_YAW_STAB_IMAX -> receiveParamsWrite5.param_writer_YAW_STAB_IMAX;
+    conn_94 : data access gcsReceiveTask_uart5_inst.param_writer_YAW_STAB_D -> receiveParamsWrite5.param_writer_YAW_STAB_D;
+    conn_95 : data access gcsReceiveTask_uart5_inst.param_writer_YAW_STAB_I -> receiveParamsWrite5.param_writer_YAW_STAB_I;
+    conn_96 : data access gcsReceiveTask_uart5_inst.param_writer_YAW_STAB_P -> receiveParamsWrite5.param_writer_YAW_STAB_P;
+    conn_97 : data access gcsReceiveTask_uart5_inst.param_writer_YAW_RATE_IMAX -> receiveParamsWrite5.param_writer_YAW_RATE_IMAX;
+    conn_98 : data access gcsReceiveTask_uart5_inst.param_writer_YAW_RATE_D -> receiveParamsWrite5.param_writer_YAW_RATE_D;
+    conn_99 : data access gcsReceiveTask_uart5_inst.param_writer_YAW_RATE_I -> receiveParamsWrite5.param_writer_YAW_RATE_I;
+    conn_100 : data access gcsReceiveTask_uart5_inst.param_writer_YAW_RATE_P -> receiveParamsWrite5.param_writer_YAW_RATE_P;
+    conn_101 : data access gcsReceiveTask_uart5_inst.param_writer_PIT_STAB_IMAX -> receiveParamsWrite5.param_writer_PIT_STAB_IMAX;
+    conn_102 : data access gcsReceiveTask_uart5_inst.param_writer_PIT_STAB_D -> receiveParamsWrite5.param_writer_PIT_STAB_D;
+    conn_103 : data access gcsReceiveTask_uart5_inst.param_writer_PIT_STAB_I -> receiveParamsWrite5.param_writer_PIT_STAB_I;
+    conn_104 : data access gcsReceiveTask_uart5_inst.param_writer_PIT_STAB_P -> receiveParamsWrite5.param_writer_PIT_STAB_P;
+    conn_105 : data access gcsReceiveTask_uart5_inst.param_writer_PIT_RATE_IMAX -> receiveParamsWrite5.param_writer_PIT_RATE_IMAX;
+    conn_106 : data access gcsReceiveTask_uart5_inst.param_writer_PIT_RATE_D -> receiveParamsWrite5.param_writer_PIT_RATE_D;
+    conn_107 : data access gcsReceiveTask_uart5_inst.param_writer_PIT_RATE_I -> receiveParamsWrite5.param_writer_PIT_RATE_I;
+    conn_108 : data access gcsReceiveTask_uart5_inst.param_writer_PIT_RATE_P -> receiveParamsWrite5.param_writer_PIT_RATE_P;
+    conn_109 : data access gcsReceiveTask_uart5_inst.param_writer_RLL_STAB_IMAX -> receiveParamsWrite5.param_writer_RLL_STAB_IMAX;
+    conn_110 : data access gcsReceiveTask_uart5_inst.param_writer_RLL_STAB_D -> receiveParamsWrite5.param_writer_RLL_STAB_D;
+    conn_111 : data access gcsReceiveTask_uart5_inst.param_writer_RLL_STAB_I -> receiveParamsWrite5.param_writer_RLL_STAB_I;
+    conn_112 : data access gcsReceiveTask_uart5_inst.param_writer_RLL_STAB_P -> receiveParamsWrite5.param_writer_RLL_STAB_P;
+    conn_113 : data access gcsReceiveTask_uart5_inst.param_writer_RLL_RATE_IMAX -> receiveParamsWrite5.param_writer_RLL_RATE_IMAX;
+    conn_114 : data access gcsReceiveTask_uart5_inst.param_writer_RLL_RATE_D -> receiveParamsWrite5.param_writer_RLL_RATE_D;
+    conn_115 : data access gcsReceiveTask_uart5_inst.param_writer_RLL_RATE_I -> receiveParamsWrite5.param_writer_RLL_RATE_I;
+    conn_116 : data access gcsReceiveTask_uart5_inst.param_writer_RLL_RATE_P -> receiveParamsWrite5.param_writer_RLL_RATE_P;
+    conn_117 : data access gcsReceiveTask_uart5_inst.param_reader_ALT_UI_DEAD -> receiveParamsRead5.param_reader_ALT_UI_DEAD;
+    conn_118 : data access gcsReceiveTask_uart5_inst.param_reader_ALT_UI_SENS -> receiveParamsRead5.param_reader_ALT_UI_SENS;
+    conn_119 : data access gcsReceiveTask_uart5_inst.param_reader_ALT_POS_IMAX -> receiveParamsRead5.param_reader_ALT_POS_IMAX;
+    conn_120 : data access gcsReceiveTask_uart5_inst.param_reader_ALT_POS_D -> receiveParamsRead5.param_reader_ALT_POS_D;
+    conn_121 : data access gcsReceiveTask_uart5_inst.param_reader_ALT_POS_I -> receiveParamsRead5.param_reader_ALT_POS_I;
+    conn_122 : data access gcsReceiveTask_uart5_inst.param_reader_ALT_POS_P -> receiveParamsRead5.param_reader_ALT_POS_P;
+    conn_123 : data access gcsReceiveTask_uart5_inst.param_reader_ALT_RATE_IMAX -> receiveParamsRead5.param_reader_ALT_RATE_IMAX;
+    conn_124 : data access gcsReceiveTask_uart5_inst.param_reader_ALT_RATE_D -> receiveParamsRead5.param_reader_ALT_RATE_D;
+    conn_125 : data access gcsReceiveTask_uart5_inst.param_reader_ALT_RATE_I -> receiveParamsRead5.param_reader_ALT_RATE_I;
+    conn_126 : data access gcsReceiveTask_uart5_inst.param_reader_ALT_RATE_P -> receiveParamsRead5.param_reader_ALT_RATE_P;
+    conn_127 : data access gcsReceiveTask_uart5_inst.param_reader_YAW_STAB_IMAX -> receiveParamsRead5.param_reader_YAW_STAB_IMAX;
+    conn_128 : data access gcsReceiveTask_uart5_inst.param_reader_YAW_STAB_D -> receiveParamsRead5.param_reader_YAW_STAB_D;
+    conn_129 : data access gcsReceiveTask_uart5_inst.param_reader_YAW_STAB_I -> receiveParamsRead5.param_reader_YAW_STAB_I;
+    conn_130 : data access gcsReceiveTask_uart5_inst.param_reader_YAW_STAB_P -> receiveParamsRead5.param_reader_YAW_STAB_P;
+    conn_131 : data access gcsReceiveTask_uart5_inst.param_reader_YAW_RATE_IMAX -> receiveParamsRead5.param_reader_YAW_RATE_IMAX;
+    conn_132 : data access gcsReceiveTask_uart5_inst.param_reader_YAW_RATE_D -> receiveParamsRead5.param_reader_YAW_RATE_D;
+    conn_133 : data access gcsReceiveTask_uart5_inst.param_reader_YAW_RATE_I -> receiveParamsRead5.param_reader_YAW_RATE_I;
+    conn_134 : data access gcsReceiveTask_uart5_inst.param_reader_YAW_RATE_P -> receiveParamsRead5.param_reader_YAW_RATE_P;
+    conn_135 : data access gcsReceiveTask_uart5_inst.param_reader_PIT_STAB_IMAX -> receiveParamsRead5.param_reader_PIT_STAB_IMAX;
+    conn_136 : data access gcsReceiveTask_uart5_inst.param_reader_PIT_STAB_D -> receiveParamsRead5.param_reader_PIT_STAB_D;
+    conn_137 : data access gcsReceiveTask_uart5_inst.param_reader_PIT_STAB_I -> receiveParamsRead5.param_reader_PIT_STAB_I;
+    conn_138 : data access gcsReceiveTask_uart5_inst.param_reader_PIT_STAB_P -> receiveParamsRead5.param_reader_PIT_STAB_P;
+    conn_139 : data access gcsReceiveTask_uart5_inst.param_reader_PIT_RATE_IMAX -> receiveParamsRead5.param_reader_PIT_RATE_IMAX;
+    conn_140 : data access gcsReceiveTask_uart5_inst.param_reader_PIT_RATE_D -> receiveParamsRead5.param_reader_PIT_RATE_D;
+    conn_141 : data access gcsReceiveTask_uart5_inst.param_reader_PIT_RATE_I -> receiveParamsRead5.param_reader_PIT_RATE_I;
+    conn_142 : data access gcsReceiveTask_uart5_inst.param_reader_PIT_RATE_P -> receiveParamsRead5.param_reader_PIT_RATE_P;
+    conn_143 : data access gcsReceiveTask_uart5_inst.param_reader_RLL_STAB_IMAX -> receiveParamsRead5.param_reader_RLL_STAB_IMAX;
+    conn_144 : data access gcsReceiveTask_uart5_inst.param_reader_RLL_STAB_D -> receiveParamsRead5.param_reader_RLL_STAB_D;
+    conn_145 : data access gcsReceiveTask_uart5_inst.param_reader_RLL_STAB_I -> receiveParamsRead5.param_reader_RLL_STAB_I;
+    conn_146 : data access gcsReceiveTask_uart5_inst.param_reader_RLL_STAB_P -> receiveParamsRead5.param_reader_RLL_STAB_P;
+    conn_147 : data access gcsReceiveTask_uart5_inst.param_reader_RLL_RATE_IMAX -> receiveParamsRead5.param_reader_RLL_RATE_IMAX;
+    conn_148 : data access gcsReceiveTask_uart5_inst.param_reader_RLL_RATE_D -> receiveParamsRead5.param_reader_RLL_RATE_D;
+    conn_149 : data access gcsReceiveTask_uart5_inst.param_reader_RLL_RATE_I -> receiveParamsRead5.param_reader_RLL_RATE_I;
+    conn_150 : data access gcsReceiveTask_uart5_inst.param_reader_RLL_RATE_P -> receiveParamsRead5.param_reader_RLL_RATE_P;
+   
+    
+  end GCS.Impl;
+  
+  thread gcsTransmitTask_uart5
+  features
+    gcsTxToEncSrc: out event data port TowerArrays::ArrTy_80TyBase_Types_Unsigned_8.impl {
+      Queue_Size => 16;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsTransmitTask_uart5_1003.h";
+      SMACCM_SYS::CommPrim_Source_Text => "emitFromTask_gcsTransmitTask_uart5_1003_chan775_1021";
+    };
+    streamPeriod: in event data port gcsstream_timing::gcsstream_timing.impl {
+      Queue_Size => 16;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsTransmitTask_uart5_1003.h";
+      SMACCM_SYS::CommPrim_Source_Text => "receiveFromTask_gcsTransmitTask_uart5_1003_chan778_1103";
+      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_gcsTransmitTask_uart5_1003_chan778_1106");
+    };
+    paramReqs: in event data port Base_Types::Integer_16 {
+      Queue_Size => 512;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsTransmitTask_uart5_1003.h";
+      SMACCM_SYS::CommPrim_Source_Text => "receiveFromTask_gcsTransmitTask_uart5_1003_chan779_1028";
+    };
+    param_reader_ALT_UI_DEAD: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsTransmitTask_uart5_1003.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsTransmitTask_uart5_1003_dataport36_1096";
+    };
+    param_reader_ALT_UI_SENS: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsTransmitTask_uart5_1003.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsTransmitTask_uart5_1003_dataport35_1094";
+    };
+    param_reader_ALT_POS_IMAX: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsTransmitTask_uart5_1003.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsTransmitTask_uart5_1003_dataport34_1092";
+    };
+    param_reader_ALT_POS_D: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsTransmitTask_uart5_1003.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsTransmitTask_uart5_1003_dataport33_1090";
+    };
+    param_reader_ALT_POS_I: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsTransmitTask_uart5_1003.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsTransmitTask_uart5_1003_dataport32_1088";
+    };
+    param_reader_ALT_POS_P: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsTransmitTask_uart5_1003.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsTransmitTask_uart5_1003_dataport31_1086";
+    };
+    param_reader_ALT_RATE_IMAX: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsTransmitTask_uart5_1003.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsTransmitTask_uart5_1003_dataport30_1084";
+    };
+    param_reader_ALT_RATE_D: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsTransmitTask_uart5_1003.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsTransmitTask_uart5_1003_dataport29_1082";
+    };
+    param_reader_ALT_RATE_I: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsTransmitTask_uart5_1003.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsTransmitTask_uart5_1003_dataport28_1080";
+    };
+    param_reader_ALT_RATE_P: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsTransmitTask_uart5_1003.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsTransmitTask_uart5_1003_dataport27_1078";
+    };
+    param_reader_YAW_STAB_IMAX: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsTransmitTask_uart5_1003.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsTransmitTask_uart5_1003_dataport26_1076";
+    };
+    param_reader_YAW_STAB_D: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsTransmitTask_uart5_1003.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsTransmitTask_uart5_1003_dataport25_1074";
+    };
+    param_reader_YAW_STAB_I: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsTransmitTask_uart5_1003.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsTransmitTask_uart5_1003_dataport24_1072";
+    };
+    param_reader_YAW_STAB_P: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsTransmitTask_uart5_1003.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsTransmitTask_uart5_1003_dataport23_1070";
+    };
+    param_reader_YAW_RATE_IMAX: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsTransmitTask_uart5_1003.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsTransmitTask_uart5_1003_dataport22_1068";
+    };
+    param_reader_YAW_RATE_D: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsTransmitTask_uart5_1003.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsTransmitTask_uart5_1003_dataport21_1066";
+    };
+    param_reader_YAW_RATE_I: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsTransmitTask_uart5_1003.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsTransmitTask_uart5_1003_dataport20_1064";
+    };
+    param_reader_YAW_RATE_P: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsTransmitTask_uart5_1003.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsTransmitTask_uart5_1003_dataport19_1062";
+    };
+    param_reader_PIT_STAB_IMAX: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsTransmitTask_uart5_1003.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsTransmitTask_uart5_1003_dataport18_1060";
+    };
+    param_reader_PIT_STAB_D: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsTransmitTask_uart5_1003.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsTransmitTask_uart5_1003_dataport17_1058";
+    };
+    param_reader_PIT_STAB_I: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsTransmitTask_uart5_1003.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsTransmitTask_uart5_1003_dataport16_1056";
+    };
+    param_reader_PIT_STAB_P: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsTransmitTask_uart5_1003.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsTransmitTask_uart5_1003_dataport15_1054";
+    };
+    param_reader_PIT_RATE_IMAX: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsTransmitTask_uart5_1003.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsTransmitTask_uart5_1003_dataport14_1052";
+    };
+    param_reader_PIT_RATE_D: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsTransmitTask_uart5_1003.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsTransmitTask_uart5_1003_dataport13_1050";
+    };
+    param_reader_PIT_RATE_I: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsTransmitTask_uart5_1003.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsTransmitTask_uart5_1003_dataport12_1048";
+    };
+    param_reader_PIT_RATE_P: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsTransmitTask_uart5_1003.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsTransmitTask_uart5_1003_dataport11_1046";
+    };
+    param_reader_RLL_STAB_IMAX: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsTransmitTask_uart5_1003.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsTransmitTask_uart5_1003_dataport10_1044";
+    };
+    param_reader_RLL_STAB_D: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsTransmitTask_uart5_1003.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsTransmitTask_uart5_1003_dataport9_1042";
+    };
+    param_reader_RLL_STAB_I: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsTransmitTask_uart5_1003.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsTransmitTask_uart5_1003_dataport8_1040";
+    };
+    param_reader_RLL_STAB_P: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsTransmitTask_uart5_1003.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsTransmitTask_uart5_1003_dataport7_1038";
+    };
+    param_reader_RLL_RATE_IMAX: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsTransmitTask_uart5_1003.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsTransmitTask_uart5_1003_dataport6_1036";
+    };
+    param_reader_RLL_RATE_D: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsTransmitTask_uart5_1003.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsTransmitTask_uart5_1003_dataport5_1034";
+    };
+    param_reader_RLL_RATE_I: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsTransmitTask_uart5_1003.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsTransmitTask_uart5_1003_dataport4_1032";
+    };
+    param_reader_RLL_RATE_P: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsTransmitTask_uart5_1003.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsTransmitTask_uart5_1003_dataport3_1030";
+    };
+    commsecInfo: requires data access mavlink_veh_commsec_msg::veh_commsec_msg.impl {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsTransmitTask_uart5_1003.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsTransmitTask_uart5_1003_dataport777_1023";
+    };
+    att_control: requires data access att_control_dbg_type::att_control_dbg.impl {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsTransmitTask_uart5_1003.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsTransmitTask_uart5_1003_dataport40_1019";
+    };
+    alt_control: requires data access alt_control_dbg_type::alt_control_dbg.impl {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsTransmitTask_uart5_1003.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsTransmitTask_uart5_1003_dataport39_1017";
+    };
+    radio: requires data access radio_stat_type::radio_stat.impl {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsTransmitTask_uart5_1003.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsTransmitTask_uart5_1003_dataport817_1015";
+    };
+    motors: requires data access motors_type::motors.impl {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsTransmitTask_uart5_1003.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsTransmitTask_uart5_1003_dataport306_1013";
+    };
+    control: requires data access controloutput_type::controloutput.impl {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsTransmitTask_uart5_1003.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsTransmitTask_uart5_1003_dataport297_1011";
+    };
+    position: requires data access gps_type::position.impl {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsTransmitTask_uart5_1003.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsTransmitTask_uart5_1003_dataport341_1009";
+    };
+    sensors: requires data access sensors_type::sensors_result.impl {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsTransmitTask_uart5_1003.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsTransmitTask_uart5_1003_dataport0_1007";
+    };
+    controllaw: requires data access control_law_type::control_law.impl {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsTransmitTask_uart5_1003.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsTransmitTask_uart5_1003_dataport140_1005";
+    };
+  properties
+    Source_Text => ("tower_task_usercode_gcsTransmitTask_uart5_1003.c");
+    Priority => 0;
+    Source_Stack_Size => 1024 bytes;
+    SMACCM::Language => "Ivory";
+    Dispatch_Protocol => Hybrid;
+    Period => 50 ms;
+    SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_gcsTransmitTask_uart5_1003_per50_1110");
+  end gcsTransmitTask_uart5;
+  
+  thread gcsReceiveTask_uart5
+  features
+    streamperiods: out event data port gcsstream_timing::gcsstream_timing.impl {
+      Queue_Size => 16;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart5_839.h";
+      SMACCM_SYS::CommPrim_Source_Text => "emitFromTask_gcsReceiveTask_uart5_839_chan778_987";
+    };
+    rc_override_tx: out event data port mavlink_rc_channels_override_msg::rc_channels_override_msg.impl {
+      Queue_Size => 16;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart5_839.h";
+      SMACCM_SYS::CommPrim_Source_Text => "emitFromTask_gcsReceiveTask_uart5_839_chan2_983";
+    };
+    param_req: out event data port Base_Types::Integer_16 {
+      Queue_Size => 512;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart5_839.h";
+      SMACCM_SYS::CommPrim_Source_Text => "emitFromTask_gcsReceiveTask_uart5_839_chan779_981";
+    };
+    control_law_request: out event data port control_law_request_type::control_law_request.impl {
+      Queue_Size => 16;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart5_839.h";
+      SMACCM_SYS::CommPrim_Source_Text => "emitFromTask_gcsReceiveTask_uart5_839_chan1_843";
+    };
+    hil_src: out event data port mavlink_hil_state_msg::hil_state_msg.impl {
+      Queue_Size => 4;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart5_839.h";
+      SMACCM_SYS::CommPrim_Source_Text => "emitFromTask_gcsReceiveTask_uart5_839_chan780_841";
+      SMACCM::Unimplemented => true;
+    };
+    mavStream: in event data port TowerArrays::ArrTy_80TyBase_Types_Unsigned_8.impl {
+      Queue_Size => 16;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart5_839.h";
+      SMACCM_SYS::CommPrim_Source_Text => "receiveFromTask_gcsReceiveTask_uart5_839_chan776_991";
+      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_gcsReceiveTask_uart5_839_chan776_994");
+    };
+    param_writer_ALT_UI_DEAD: requires data access Base_Types::Float {
+      Access_Right => write_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart5_839.h";
+      SMACCM_SYS::CommPrim_Source_Text => "write_gcsReceiveTask_uart5_839_dataport36_911";
+    };
+    param_writer_ALT_UI_SENS: requires data access Base_Types::Float {
+      Access_Right => write_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart5_839.h";
+      SMACCM_SYS::CommPrim_Source_Text => "write_gcsReceiveTask_uart5_839_dataport35_909";
+    };
+    param_writer_ALT_POS_IMAX: requires data access Base_Types::Float {
+      Access_Right => write_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart5_839.h";
+      SMACCM_SYS::CommPrim_Source_Text => "write_gcsReceiveTask_uart5_839_dataport34_907";
+    };
+    param_writer_ALT_POS_D: requires data access Base_Types::Float {
+      Access_Right => write_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart5_839.h";
+      SMACCM_SYS::CommPrim_Source_Text => "write_gcsReceiveTask_uart5_839_dataport33_905";
+    };
+    param_writer_ALT_POS_I: requires data access Base_Types::Float {
+      Access_Right => write_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart5_839.h";
+      SMACCM_SYS::CommPrim_Source_Text => "write_gcsReceiveTask_uart5_839_dataport32_903";
+    };
+    param_writer_ALT_POS_P: requires data access Base_Types::Float {
+      Access_Right => write_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart5_839.h";
+      SMACCM_SYS::CommPrim_Source_Text => "write_gcsReceiveTask_uart5_839_dataport31_901";
+    };
+    param_writer_ALT_RATE_IMAX: requires data access Base_Types::Float {
+      Access_Right => write_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart5_839.h";
+      SMACCM_SYS::CommPrim_Source_Text => "write_gcsReceiveTask_uart5_839_dataport30_899";
+    };
+    param_writer_ALT_RATE_D: requires data access Base_Types::Float {
+      Access_Right => write_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart5_839.h";
+      SMACCM_SYS::CommPrim_Source_Text => "write_gcsReceiveTask_uart5_839_dataport29_897";
+    };
+    param_writer_ALT_RATE_I: requires data access Base_Types::Float {
+      Access_Right => write_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart5_839.h";
+      SMACCM_SYS::CommPrim_Source_Text => "write_gcsReceiveTask_uart5_839_dataport28_895";
+    };
+    param_writer_ALT_RATE_P: requires data access Base_Types::Float {
+      Access_Right => write_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart5_839.h";
+      SMACCM_SYS::CommPrim_Source_Text => "write_gcsReceiveTask_uart5_839_dataport27_893";
+    };
+    param_writer_YAW_STAB_IMAX: requires data access Base_Types::Float {
+      Access_Right => write_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart5_839.h";
+      SMACCM_SYS::CommPrim_Source_Text => "write_gcsReceiveTask_uart5_839_dataport26_891";
+    };
+    param_writer_YAW_STAB_D: requires data access Base_Types::Float {
+      Access_Right => write_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart5_839.h";
+      SMACCM_SYS::CommPrim_Source_Text => "write_gcsReceiveTask_uart5_839_dataport25_889";
+    };
+    param_writer_YAW_STAB_I: requires data access Base_Types::Float {
+      Access_Right => write_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart5_839.h";
+      SMACCM_SYS::CommPrim_Source_Text => "write_gcsReceiveTask_uart5_839_dataport24_887";
+    };
+    param_writer_YAW_STAB_P: requires data access Base_Types::Float {
+      Access_Right => write_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart5_839.h";
+      SMACCM_SYS::CommPrim_Source_Text => "write_gcsReceiveTask_uart5_839_dataport23_885";
+    };
+    param_writer_YAW_RATE_IMAX: requires data access Base_Types::Float {
+      Access_Right => write_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart5_839.h";
+      SMACCM_SYS::CommPrim_Source_Text => "write_gcsReceiveTask_uart5_839_dataport22_883";
+    };
+    param_writer_YAW_RATE_D: requires data access Base_Types::Float {
+      Access_Right => write_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart5_839.h";
+      SMACCM_SYS::CommPrim_Source_Text => "write_gcsReceiveTask_uart5_839_dataport21_881";
+    };
+    param_writer_YAW_RATE_I: requires data access Base_Types::Float {
+      Access_Right => write_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart5_839.h";
+      SMACCM_SYS::CommPrim_Source_Text => "write_gcsReceiveTask_uart5_839_dataport20_879";
+    };
+    param_writer_YAW_RATE_P: requires data access Base_Types::Float {
+      Access_Right => write_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart5_839.h";
+      SMACCM_SYS::CommPrim_Source_Text => "write_gcsReceiveTask_uart5_839_dataport19_877";
+    };
+    param_writer_PIT_STAB_IMAX: requires data access Base_Types::Float {
+      Access_Right => write_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart5_839.h";
+      SMACCM_SYS::CommPrim_Source_Text => "write_gcsReceiveTask_uart5_839_dataport18_875";
+    };
+    param_writer_PIT_STAB_D: requires data access Base_Types::Float {
+      Access_Right => write_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart5_839.h";
+      SMACCM_SYS::CommPrim_Source_Text => "write_gcsReceiveTask_uart5_839_dataport17_873";
+    };
+    param_writer_PIT_STAB_I: requires data access Base_Types::Float {
+      Access_Right => write_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart5_839.h";
+      SMACCM_SYS::CommPrim_Source_Text => "write_gcsReceiveTask_uart5_839_dataport16_871";
+    };
+    param_writer_PIT_STAB_P: requires data access Base_Types::Float {
+      Access_Right => write_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart5_839.h";
+      SMACCM_SYS::CommPrim_Source_Text => "write_gcsReceiveTask_uart5_839_dataport15_869";
+    };
+    param_writer_PIT_RATE_IMAX: requires data access Base_Types::Float {
+      Access_Right => write_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart5_839.h";
+      SMACCM_SYS::CommPrim_Source_Text => "write_gcsReceiveTask_uart5_839_dataport14_867";
+    };
+    param_writer_PIT_RATE_D: requires data access Base_Types::Float {
+      Access_Right => write_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart5_839.h";
+      SMACCM_SYS::CommPrim_Source_Text => "write_gcsReceiveTask_uart5_839_dataport13_865";
+    };
+    param_writer_PIT_RATE_I: requires data access Base_Types::Float {
+      Access_Right => write_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart5_839.h";
+      SMACCM_SYS::CommPrim_Source_Text => "write_gcsReceiveTask_uart5_839_dataport12_863";
+    };
+    param_writer_PIT_RATE_P: requires data access Base_Types::Float {
+      Access_Right => write_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart5_839.h";
+      SMACCM_SYS::CommPrim_Source_Text => "write_gcsReceiveTask_uart5_839_dataport11_861";
+    };
+    param_writer_RLL_STAB_IMAX: requires data access Base_Types::Float {
+      Access_Right => write_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart5_839.h";
+      SMACCM_SYS::CommPrim_Source_Text => "write_gcsReceiveTask_uart5_839_dataport10_859";
+    };
+    param_writer_RLL_STAB_D: requires data access Base_Types::Float {
+      Access_Right => write_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart5_839.h";
+      SMACCM_SYS::CommPrim_Source_Text => "write_gcsReceiveTask_uart5_839_dataport9_857";
+    };
+    param_writer_RLL_STAB_I: requires data access Base_Types::Float {
+      Access_Right => write_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart5_839.h";
+      SMACCM_SYS::CommPrim_Source_Text => "write_gcsReceiveTask_uart5_839_dataport8_855";
+    };
+    param_writer_RLL_STAB_P: requires data access Base_Types::Float {
+      Access_Right => write_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart5_839.h";
+      SMACCM_SYS::CommPrim_Source_Text => "write_gcsReceiveTask_uart5_839_dataport7_853";
+    };
+    param_writer_RLL_RATE_IMAX: requires data access Base_Types::Float {
+      Access_Right => write_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart5_839.h";
+      SMACCM_SYS::CommPrim_Source_Text => "write_gcsReceiveTask_uart5_839_dataport6_851";
+    };
+    param_writer_RLL_RATE_D: requires data access Base_Types::Float {
+      Access_Right => write_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart5_839.h";
+      SMACCM_SYS::CommPrim_Source_Text => "write_gcsReceiveTask_uart5_839_dataport5_849";
+    };
+    param_writer_RLL_RATE_I: requires data access Base_Types::Float {
+      Access_Right => write_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart5_839.h";
+      SMACCM_SYS::CommPrim_Source_Text => "write_gcsReceiveTask_uart5_839_dataport4_847";
+    };
+    param_writer_RLL_RATE_P: requires data access Base_Types::Float {
+      Access_Right => write_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart5_839.h";
+      SMACCM_SYS::CommPrim_Source_Text => "write_gcsReceiveTask_uart5_839_dataport3_845";
+    };
+    param_reader_ALT_UI_DEAD: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart5_839.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsReceiveTask_uart5_839_dataport36_979";
+    };
+    param_reader_ALT_UI_SENS: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart5_839.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsReceiveTask_uart5_839_dataport35_977";
+    };
+    param_reader_ALT_POS_IMAX: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart5_839.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsReceiveTask_uart5_839_dataport34_975";
+    };
+    param_reader_ALT_POS_D: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart5_839.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsReceiveTask_uart5_839_dataport33_973";
+    };
+    param_reader_ALT_POS_I: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart5_839.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsReceiveTask_uart5_839_dataport32_971";
+    };
+    param_reader_ALT_POS_P: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart5_839.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsReceiveTask_uart5_839_dataport31_969";
+    };
+    param_reader_ALT_RATE_IMAX: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart5_839.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsReceiveTask_uart5_839_dataport30_967";
+    };
+    param_reader_ALT_RATE_D: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart5_839.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsReceiveTask_uart5_839_dataport29_965";
+    };
+    param_reader_ALT_RATE_I: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart5_839.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsReceiveTask_uart5_839_dataport28_963";
+    };
+    param_reader_ALT_RATE_P: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart5_839.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsReceiveTask_uart5_839_dataport27_961";
+    };
+    param_reader_YAW_STAB_IMAX: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart5_839.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsReceiveTask_uart5_839_dataport26_959";
+    };
+    param_reader_YAW_STAB_D: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart5_839.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsReceiveTask_uart5_839_dataport25_957";
+    };
+    param_reader_YAW_STAB_I: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart5_839.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsReceiveTask_uart5_839_dataport24_955";
+    };
+    param_reader_YAW_STAB_P: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart5_839.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsReceiveTask_uart5_839_dataport23_953";
+    };
+    param_reader_YAW_RATE_IMAX: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart5_839.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsReceiveTask_uart5_839_dataport22_951";
+    };
+    param_reader_YAW_RATE_D: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart5_839.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsReceiveTask_uart5_839_dataport21_949";
+    };
+    param_reader_YAW_RATE_I: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart5_839.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsReceiveTask_uart5_839_dataport20_947";
+    };
+    param_reader_YAW_RATE_P: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart5_839.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsReceiveTask_uart5_839_dataport19_945";
+    };
+    param_reader_PIT_STAB_IMAX: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart5_839.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsReceiveTask_uart5_839_dataport18_943";
+    };
+    param_reader_PIT_STAB_D: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart5_839.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsReceiveTask_uart5_839_dataport17_941";
+    };
+    param_reader_PIT_STAB_I: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart5_839.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsReceiveTask_uart5_839_dataport16_939";
+    };
+    param_reader_PIT_STAB_P: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart5_839.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsReceiveTask_uart5_839_dataport15_937";
+    };
+    param_reader_PIT_RATE_IMAX: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart5_839.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsReceiveTask_uart5_839_dataport14_935";
+    };
+    param_reader_PIT_RATE_D: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart5_839.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsReceiveTask_uart5_839_dataport13_933";
+    };
+    param_reader_PIT_RATE_I: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart5_839.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsReceiveTask_uart5_839_dataport12_931";
+    };
+    param_reader_PIT_RATE_P: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart5_839.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsReceiveTask_uart5_839_dataport11_929";
+    };
+    param_reader_RLL_STAB_IMAX: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart5_839.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsReceiveTask_uart5_839_dataport10_927";
+    };
+    param_reader_RLL_STAB_D: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart5_839.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsReceiveTask_uart5_839_dataport9_925";
+    };
+    param_reader_RLL_STAB_I: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart5_839.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsReceiveTask_uart5_839_dataport8_923";
+    };
+    param_reader_RLL_STAB_P: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart5_839.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsReceiveTask_uart5_839_dataport7_921";
+    };
+    param_reader_RLL_RATE_IMAX: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart5_839.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsReceiveTask_uart5_839_dataport6_919";
+    };
+    param_reader_RLL_RATE_D: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart5_839.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsReceiveTask_uart5_839_dataport5_917";
+    };
+    param_reader_RLL_RATE_I: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart5_839.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsReceiveTask_uart5_839_dataport4_915";
+    };
+    param_reader_RLL_RATE_P: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart5_839.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsReceiveTask_uart5_839_dataport3_913";
+    };
+  properties
+    Source_Text => ("tower_task_usercode_gcsReceiveTask_uart5_839.c");
+    Priority => 2;
+    Source_Stack_Size => 1024 bytes;
+    SMACCM::Language => "Ivory";
+    Dispatch_Protocol => Sporadic;
+    SMACCM::Always_Sends_Message => true;
+end gcsReceiveTask_uart5;
+
+thread gcsTransmitTask_uart1
+  features
+    gcsTxToEncSrc: out event data port TowerArrays::ArrTy_80TyBase_Types_Unsigned_8.impl {
+      Queue_Size => 16;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsTransmitTask_uart1_660.h";
+      SMACCM_SYS::CommPrim_Source_Text => "emitFromTask_gcsTransmitTask_uart1_660_chan432_678";
+    };
+    streamPeriod: in event data port gcsstream_timing::gcsstream_timing.impl {
+      Queue_Size => 16;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsTransmitTask_uart1_660.h";
+      SMACCM_SYS::CommPrim_Source_Text => "receiveFromTask_gcsTransmitTask_uart1_660_chan435_760";
+      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_gcsTransmitTask_uart1_660_chan435_763");
+    };
+    paramReqs: in event data port Base_Types::Integer_16 {
+      Queue_Size => 512;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsTransmitTask_uart1_660.h";
+      SMACCM_SYS::CommPrim_Source_Text => "receiveFromTask_gcsTransmitTask_uart1_660_chan436_685";
+    };
+    param_reader_ALT_UI_DEAD: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsTransmitTask_uart1_660.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsTransmitTask_uart1_660_dataport36_753";
+    };
+    param_reader_ALT_UI_SENS: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsTransmitTask_uart1_660.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsTransmitTask_uart1_660_dataport35_751";
+    };
+    param_reader_ALT_POS_IMAX: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsTransmitTask_uart1_660.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsTransmitTask_uart1_660_dataport34_749";
+    };
+    param_reader_ALT_POS_D: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsTransmitTask_uart1_660.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsTransmitTask_uart1_660_dataport33_747";
+    };
+    param_reader_ALT_POS_I: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsTransmitTask_uart1_660.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsTransmitTask_uart1_660_dataport32_745";
+    };
+    param_reader_ALT_POS_P: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsTransmitTask_uart1_660.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsTransmitTask_uart1_660_dataport31_743";
+    };
+    param_reader_ALT_RATE_IMAX: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsTransmitTask_uart1_660.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsTransmitTask_uart1_660_dataport30_741";
+    };
+    param_reader_ALT_RATE_D: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsTransmitTask_uart1_660.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsTransmitTask_uart1_660_dataport29_739";
+    };
+    param_reader_ALT_RATE_I: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsTransmitTask_uart1_660.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsTransmitTask_uart1_660_dataport28_737";
+    };
+    param_reader_ALT_RATE_P: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsTransmitTask_uart1_660.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsTransmitTask_uart1_660_dataport27_735";
+    };
+    param_reader_YAW_STAB_IMAX: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsTransmitTask_uart1_660.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsTransmitTask_uart1_660_dataport26_733";
+    };
+    param_reader_YAW_STAB_D: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsTransmitTask_uart1_660.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsTransmitTask_uart1_660_dataport25_731";
+    };
+    param_reader_YAW_STAB_I: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsTransmitTask_uart1_660.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsTransmitTask_uart1_660_dataport24_729";
+    };
+    param_reader_YAW_STAB_P: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsTransmitTask_uart1_660.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsTransmitTask_uart1_660_dataport23_727";
+    };
+    param_reader_YAW_RATE_IMAX: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsTransmitTask_uart1_660.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsTransmitTask_uart1_660_dataport22_725";
+    };
+    param_reader_YAW_RATE_D: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsTransmitTask_uart1_660.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsTransmitTask_uart1_660_dataport21_723";
+    };
+    param_reader_YAW_RATE_I: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsTransmitTask_uart1_660.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsTransmitTask_uart1_660_dataport20_721";
+    };
+    param_reader_YAW_RATE_P: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsTransmitTask_uart1_660.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsTransmitTask_uart1_660_dataport19_719";
+    };
+    param_reader_PIT_STAB_IMAX: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsTransmitTask_uart1_660.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsTransmitTask_uart1_660_dataport18_717";
+    };
+    param_reader_PIT_STAB_D: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsTransmitTask_uart1_660.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsTransmitTask_uart1_660_dataport17_715";
+    };
+    param_reader_PIT_STAB_I: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsTransmitTask_uart1_660.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsTransmitTask_uart1_660_dataport16_713";
+    };
+    param_reader_PIT_STAB_P: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsTransmitTask_uart1_660.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsTransmitTask_uart1_660_dataport15_711";
+    };
+    param_reader_PIT_RATE_IMAX: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsTransmitTask_uart1_660.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsTransmitTask_uart1_660_dataport14_709";
+    };
+    param_reader_PIT_RATE_D: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsTransmitTask_uart1_660.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsTransmitTask_uart1_660_dataport13_707";
+    };
+    param_reader_PIT_RATE_I: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsTransmitTask_uart1_660.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsTransmitTask_uart1_660_dataport12_705";
+    };
+    param_reader_PIT_RATE_P: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsTransmitTask_uart1_660.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsTransmitTask_uart1_660_dataport11_703";
+    };
+    param_reader_RLL_STAB_IMAX: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsTransmitTask_uart1_660.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsTransmitTask_uart1_660_dataport10_701";
+    };
+    param_reader_RLL_STAB_D: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsTransmitTask_uart1_660.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsTransmitTask_uart1_660_dataport9_699";
+    };
+    param_reader_RLL_STAB_I: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsTransmitTask_uart1_660.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsTransmitTask_uart1_660_dataport8_697";
+    };
+    param_reader_RLL_STAB_P: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsTransmitTask_uart1_660.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsTransmitTask_uart1_660_dataport7_695";
+    };
+    param_reader_RLL_RATE_IMAX: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsTransmitTask_uart1_660.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsTransmitTask_uart1_660_dataport6_693";
+    };
+    param_reader_RLL_RATE_D: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsTransmitTask_uart1_660.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsTransmitTask_uart1_660_dataport5_691";
+    };
+    param_reader_RLL_RATE_I: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsTransmitTask_uart1_660.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsTransmitTask_uart1_660_dataport4_689";
+    };
+    param_reader_RLL_RATE_P: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsTransmitTask_uart1_660.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsTransmitTask_uart1_660_dataport3_687";
+    };
+    commsecInfo: requires data access mavlink_veh_commsec_msg::veh_commsec_msg.impl {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsTransmitTask_uart1_660.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsTransmitTask_uart1_660_dataport434_680";
+    };
+    att_control: requires data access att_control_dbg_type::att_control_dbg.impl {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsTransmitTask_uart1_660.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsTransmitTask_uart1_660_dataport40_676";
+    };
+    alt_control: requires data access alt_control_dbg_type::alt_control_dbg.impl {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsTransmitTask_uart1_660.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsTransmitTask_uart1_660_dataport39_674";
+    };
+    radio: requires data access radio_stat_type::radio_stat.impl {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsTransmitTask_uart1_660.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsTransmitTask_uart1_660_dataport474_672";
+    };
+    motors: requires data access motors_type::motors.impl {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsTransmitTask_uart1_660.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsTransmitTask_uart1_660_dataport306_670";
+    };
+    control: requires data access controloutput_type::controloutput.impl {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsTransmitTask_uart1_660.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsTransmitTask_uart1_660_dataport297_668";
+    };
+    position: requires data access gps_type::position.impl {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsTransmitTask_uart1_660.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsTransmitTask_uart1_660_dataport341_666";
+    };
+    sensors: requires data access sensors_type::sensors_result.impl {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsTransmitTask_uart1_660.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsTransmitTask_uart1_660_dataport0_664";
+    };
+    controllaw: requires data access control_law_type::control_law.impl {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsTransmitTask_uart1_660.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsTransmitTask_uart1_660_dataport140_662";
+    };
+  properties
+    Source_Text => ("tower_task_usercode_gcsTransmitTask_uart1_660.c");
+    Priority => 6;
+    Source_Stack_Size => 1024 bytes;
+    SMACCM::Language => "Ivory";
+    Dispatch_Protocol => Hybrid;
+    Period => 50 ms;
+    SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_gcsTransmitTask_uart1_660_per50_767");
+end gcsTransmitTask_uart1;
+
+thread gcsReceiveTask_uart1
+  features
+    streamperiods: out event data port gcsstream_timing::gcsstream_timing.impl {
+      Queue_Size => 16;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart1_496.h";
+      SMACCM_SYS::CommPrim_Source_Text => "emitFromTask_gcsReceiveTask_uart1_496_chan435_644";
+    };
+    rc_override_tx: out event data port mavlink_rc_channels_override_msg::rc_channels_override_msg.impl {
+      Queue_Size => 16;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart1_496.h";
+      SMACCM_SYS::CommPrim_Source_Text => "emitFromTask_gcsReceiveTask_uart1_496_chan2_640";
+    };
+    param_req: out event data port Base_Types::Integer_16 {
+      Queue_Size => 512;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart1_496.h";
+      SMACCM_SYS::CommPrim_Source_Text => "emitFromTask_gcsReceiveTask_uart1_496_chan436_638";
+    };
+    control_law_request: out event data port control_law_request_type::control_law_request.impl {
+      Queue_Size => 16;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart1_496.h";
+      SMACCM_SYS::CommPrim_Source_Text => "emitFromTask_gcsReceiveTask_uart1_496_chan1_500";
+    };
+    hil_src: out event data port mavlink_hil_state_msg::hil_state_msg.impl {
+      Queue_Size => 4;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart1_496.h";
+      SMACCM_SYS::CommPrim_Source_Text => "emitFromTask_gcsReceiveTask_uart1_496_chan437_498";
+      SMACCM::Unimplemented => true; 
+    };
+    mavStream: in event data port TowerArrays::ArrTy_80TyBase_Types_Unsigned_8.impl {
+      Queue_Size => 16;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart1_496.h";
+      SMACCM_SYS::CommPrim_Source_Text => "receiveFromTask_gcsReceiveTask_uart1_496_chan433_648";
+      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_gcsReceiveTask_uart1_496_chan433_651");
+    };
+    param_writer_ALT_UI_DEAD: requires data access Base_Types::Float {
+      Access_Right => write_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart1_496.h";
+      SMACCM_SYS::CommPrim_Source_Text => "write_gcsReceiveTask_uart1_496_dataport36_568";
+    };
+    param_writer_ALT_UI_SENS: requires data access Base_Types::Float {
+      Access_Right => write_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart1_496.h";
+      SMACCM_SYS::CommPrim_Source_Text => "write_gcsReceiveTask_uart1_496_dataport35_566";
+    };
+    param_writer_ALT_POS_IMAX: requires data access Base_Types::Float {
+      Access_Right => write_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart1_496.h";
+      SMACCM_SYS::CommPrim_Source_Text => "write_gcsReceiveTask_uart1_496_dataport34_564";
+    };
+    param_writer_ALT_POS_D: requires data access Base_Types::Float {
+      Access_Right => write_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart1_496.h";
+      SMACCM_SYS::CommPrim_Source_Text => "write_gcsReceiveTask_uart1_496_dataport33_562";
+    };
+    param_writer_ALT_POS_I: requires data access Base_Types::Float {
+      Access_Right => write_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart1_496.h";
+      SMACCM_SYS::CommPrim_Source_Text => "write_gcsReceiveTask_uart1_496_dataport32_560";
+    };
+    param_writer_ALT_POS_P: requires data access Base_Types::Float {
+      Access_Right => write_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart1_496.h";
+      SMACCM_SYS::CommPrim_Source_Text => "write_gcsReceiveTask_uart1_496_dataport31_558";
+    };
+    param_writer_ALT_RATE_IMAX: requires data access Base_Types::Float {
+      Access_Right => write_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart1_496.h";
+      SMACCM_SYS::CommPrim_Source_Text => "write_gcsReceiveTask_uart1_496_dataport30_556";
+    };
+    param_writer_ALT_RATE_D: requires data access Base_Types::Float {
+      Access_Right => write_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart1_496.h";
+      SMACCM_SYS::CommPrim_Source_Text => "write_gcsReceiveTask_uart1_496_dataport29_554";
+    };
+    param_writer_ALT_RATE_I: requires data access Base_Types::Float {
+      Access_Right => write_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart1_496.h";
+      SMACCM_SYS::CommPrim_Source_Text => "write_gcsReceiveTask_uart1_496_dataport28_552";
+    };
+    param_writer_ALT_RATE_P: requires data access Base_Types::Float {
+      Access_Right => write_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart1_496.h";
+      SMACCM_SYS::CommPrim_Source_Text => "write_gcsReceiveTask_uart1_496_dataport27_550";
+    };
+    param_writer_YAW_STAB_IMAX: requires data access Base_Types::Float {
+      Access_Right => write_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart1_496.h";
+      SMACCM_SYS::CommPrim_Source_Text => "write_gcsReceiveTask_uart1_496_dataport26_548";
+    };
+    param_writer_YAW_STAB_D: requires data access Base_Types::Float {
+      Access_Right => write_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart1_496.h";
+      SMACCM_SYS::CommPrim_Source_Text => "write_gcsReceiveTask_uart1_496_dataport25_546";
+    };
+    param_writer_YAW_STAB_I: requires data access Base_Types::Float {
+      Access_Right => write_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart1_496.h";
+      SMACCM_SYS::CommPrim_Source_Text => "write_gcsReceiveTask_uart1_496_dataport24_544";
+    };
+    param_writer_YAW_STAB_P: requires data access Base_Types::Float {
+      Access_Right => write_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart1_496.h";
+      SMACCM_SYS::CommPrim_Source_Text => "write_gcsReceiveTask_uart1_496_dataport23_542";
+    };
+    param_writer_YAW_RATE_IMAX: requires data access Base_Types::Float {
+      Access_Right => write_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart1_496.h";
+      SMACCM_SYS::CommPrim_Source_Text => "write_gcsReceiveTask_uart1_496_dataport22_540";
+    };
+    param_writer_YAW_RATE_D: requires data access Base_Types::Float {
+      Access_Right => write_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart1_496.h";
+      SMACCM_SYS::CommPrim_Source_Text => "write_gcsReceiveTask_uart1_496_dataport21_538";
+    };
+    param_writer_YAW_RATE_I: requires data access Base_Types::Float {
+      Access_Right => write_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart1_496.h";
+      SMACCM_SYS::CommPrim_Source_Text => "write_gcsReceiveTask_uart1_496_dataport20_536";
+    };
+    param_writer_YAW_RATE_P: requires data access Base_Types::Float {
+      Access_Right => write_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart1_496.h";
+      SMACCM_SYS::CommPrim_Source_Text => "write_gcsReceiveTask_uart1_496_dataport19_534";
+    };
+    param_writer_PIT_STAB_IMAX: requires data access Base_Types::Float {
+      Access_Right => write_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart1_496.h";
+      SMACCM_SYS::CommPrim_Source_Text => "write_gcsReceiveTask_uart1_496_dataport18_532";
+    };
+    param_writer_PIT_STAB_D: requires data access Base_Types::Float {
+      Access_Right => write_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart1_496.h";
+      SMACCM_SYS::CommPrim_Source_Text => "write_gcsReceiveTask_uart1_496_dataport17_530";
+    };
+    param_writer_PIT_STAB_I: requires data access Base_Types::Float {
+      Access_Right => write_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart1_496.h";
+      SMACCM_SYS::CommPrim_Source_Text => "write_gcsReceiveTask_uart1_496_dataport16_528";
+    };
+    param_writer_PIT_STAB_P: requires data access Base_Types::Float {
+      Access_Right => write_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart1_496.h";
+      SMACCM_SYS::CommPrim_Source_Text => "write_gcsReceiveTask_uart1_496_dataport15_526";
+    };
+    param_writer_PIT_RATE_IMAX: requires data access Base_Types::Float {
+      Access_Right => write_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart1_496.h";
+      SMACCM_SYS::CommPrim_Source_Text => "write_gcsReceiveTask_uart1_496_dataport14_524";
+    };
+    param_writer_PIT_RATE_D: requires data access Base_Types::Float {
+      Access_Right => write_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart1_496.h";
+      SMACCM_SYS::CommPrim_Source_Text => "write_gcsReceiveTask_uart1_496_dataport13_522";
+    };
+    param_writer_PIT_RATE_I: requires data access Base_Types::Float {
+      Access_Right => write_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart1_496.h";
+      SMACCM_SYS::CommPrim_Source_Text => "write_gcsReceiveTask_uart1_496_dataport12_520";
+    };
+    param_writer_PIT_RATE_P: requires data access Base_Types::Float {
+      Access_Right => write_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart1_496.h";
+      SMACCM_SYS::CommPrim_Source_Text => "write_gcsReceiveTask_uart1_496_dataport11_518";
+    };
+    param_writer_RLL_STAB_IMAX: requires data access Base_Types::Float {
+      Access_Right => write_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart1_496.h";
+      SMACCM_SYS::CommPrim_Source_Text => "write_gcsReceiveTask_uart1_496_dataport10_516";
+    };
+    param_writer_RLL_STAB_D: requires data access Base_Types::Float {
+      Access_Right => write_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart1_496.h";
+      SMACCM_SYS::CommPrim_Source_Text => "write_gcsReceiveTask_uart1_496_dataport9_514";
+    };
+    param_writer_RLL_STAB_I: requires data access Base_Types::Float {
+      Access_Right => write_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart1_496.h";
+      SMACCM_SYS::CommPrim_Source_Text => "write_gcsReceiveTask_uart1_496_dataport8_512";
+    };
+    param_writer_RLL_STAB_P: requires data access Base_Types::Float {
+      Access_Right => write_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart1_496.h";
+      SMACCM_SYS::CommPrim_Source_Text => "write_gcsReceiveTask_uart1_496_dataport7_510";
+    };
+    param_writer_RLL_RATE_IMAX: requires data access Base_Types::Float {
+      Access_Right => write_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart1_496.h";
+      SMACCM_SYS::CommPrim_Source_Text => "write_gcsReceiveTask_uart1_496_dataport6_508";
+    };
+    param_writer_RLL_RATE_D: requires data access Base_Types::Float {
+      Access_Right => write_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart1_496.h";
+      SMACCM_SYS::CommPrim_Source_Text => "write_gcsReceiveTask_uart1_496_dataport5_506";
+    };
+    param_writer_RLL_RATE_I: requires data access Base_Types::Float {
+      Access_Right => write_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart1_496.h";
+      SMACCM_SYS::CommPrim_Source_Text => "write_gcsReceiveTask_uart1_496_dataport4_504";
+    };
+    param_writer_RLL_RATE_P: requires data access Base_Types::Float {
+      Access_Right => write_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart1_496.h";
+      SMACCM_SYS::CommPrim_Source_Text => "write_gcsReceiveTask_uart1_496_dataport3_502";
+    };
+    param_reader_ALT_UI_DEAD: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart1_496.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsReceiveTask_uart1_496_dataport36_636";
+    };
+    param_reader_ALT_UI_SENS: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart1_496.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsReceiveTask_uart1_496_dataport35_634";
+    };
+    param_reader_ALT_POS_IMAX: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart1_496.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsReceiveTask_uart1_496_dataport34_632";
+    };
+    param_reader_ALT_POS_D: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart1_496.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsReceiveTask_uart1_496_dataport33_630";
+    };
+    param_reader_ALT_POS_I: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart1_496.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsReceiveTask_uart1_496_dataport32_628";
+    };
+    param_reader_ALT_POS_P: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart1_496.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsReceiveTask_uart1_496_dataport31_626";
+    };
+    param_reader_ALT_RATE_IMAX: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart1_496.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsReceiveTask_uart1_496_dataport30_624";
+    };
+    param_reader_ALT_RATE_D: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart1_496.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsReceiveTask_uart1_496_dataport29_622";
+    };
+    param_reader_ALT_RATE_I: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart1_496.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsReceiveTask_uart1_496_dataport28_620";
+    };
+    param_reader_ALT_RATE_P: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart1_496.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsReceiveTask_uart1_496_dataport27_618";
+    };
+    param_reader_YAW_STAB_IMAX: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart1_496.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsReceiveTask_uart1_496_dataport26_616";
+    };
+    param_reader_YAW_STAB_D: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart1_496.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsReceiveTask_uart1_496_dataport25_614";
+    };
+    param_reader_YAW_STAB_I: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart1_496.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsReceiveTask_uart1_496_dataport24_612";
+    };
+    param_reader_YAW_STAB_P: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart1_496.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsReceiveTask_uart1_496_dataport23_610";
+    };
+    param_reader_YAW_RATE_IMAX: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart1_496.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsReceiveTask_uart1_496_dataport22_608";
+    };
+    param_reader_YAW_RATE_D: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart1_496.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsReceiveTask_uart1_496_dataport21_606";
+    };
+    param_reader_YAW_RATE_I: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart1_496.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsReceiveTask_uart1_496_dataport20_604";
+    };
+    param_reader_YAW_RATE_P: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart1_496.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsReceiveTask_uart1_496_dataport19_602";
+    };
+    param_reader_PIT_STAB_IMAX: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart1_496.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsReceiveTask_uart1_496_dataport18_600";
+    };
+    param_reader_PIT_STAB_D: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart1_496.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsReceiveTask_uart1_496_dataport17_598";
+    };
+    param_reader_PIT_STAB_I: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart1_496.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsReceiveTask_uart1_496_dataport16_596";
+    };
+    param_reader_PIT_STAB_P: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart1_496.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsReceiveTask_uart1_496_dataport15_594";
+    };
+    param_reader_PIT_RATE_IMAX: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart1_496.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsReceiveTask_uart1_496_dataport14_592";
+    };
+    param_reader_PIT_RATE_D: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart1_496.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsReceiveTask_uart1_496_dataport13_590";
+    };
+    param_reader_PIT_RATE_I: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart1_496.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsReceiveTask_uart1_496_dataport12_588";
+    };
+    param_reader_PIT_RATE_P: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart1_496.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsReceiveTask_uart1_496_dataport11_586";
+    };
+    param_reader_RLL_STAB_IMAX: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart1_496.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsReceiveTask_uart1_496_dataport10_584";
+    };
+    param_reader_RLL_STAB_D: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart1_496.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsReceiveTask_uart1_496_dataport9_582";
+    };
+    param_reader_RLL_STAB_I: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart1_496.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsReceiveTask_uart1_496_dataport8_580";
+    };
+    param_reader_RLL_STAB_P: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart1_496.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsReceiveTask_uart1_496_dataport7_578";
+    };
+    param_reader_RLL_RATE_IMAX: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart1_496.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsReceiveTask_uart1_496_dataport6_576";
+    };
+    param_reader_RLL_RATE_D: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart1_496.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsReceiveTask_uart1_496_dataport5_574";
+    };
+    param_reader_RLL_RATE_I: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart1_496.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsReceiveTask_uart1_496_dataport4_572";
+    };
+    param_reader_RLL_RATE_P: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart1_496.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsReceiveTask_uart1_496_dataport3_570";
+    };
+  properties
+    Source_Text => ("tower_task_usercode_gcsReceiveTask_uart1_496.c");
+    Priority => 8;
+    Source_Stack_Size => 1024 bytes;
+    SMACCM::Language => "Ivory";
+    Dispatch_Protocol => Sporadic;
+end gcsReceiveTask_uart1;
+
+thread radio_status_uart5
+  features
+    proxyEvent: in event data port radio_stat_type::radio_stat.impl {
+      Queue_Size => 2;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_radio_status_uart5_818.h";
+      SMACCM_SYS::CommPrim_Source_Text => "receiveFromTask_radio_status_uart5_818_chan783_822";
+      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_radio_status_uart5_818_chan783_825");
+    };
+    proxyData: requires data access radio_stat_type::radio_stat.impl {
+      Access_Right => write_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_radio_status_uart5_818.h";
+      SMACCM_SYS::CommPrim_Source_Text => "write_radio_status_uart5_818_dataport817_820";
+    };
+  properties
+    Source_Text => ("tower_task_usercode_radio_status_uart5_818.c");
+    Priority => 4;
+    Source_Stack_Size => 256 bytes;
+    SMACCM::Language => "Ivory";
+    Dispatch_Protocol => Sporadic;
+end radio_status_uart5;
+
+thread radio_status_uart1
+  features
+    proxyEvent: in event data port radio_stat_type::radio_stat.impl {
+      Queue_Size => 2;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_radio_status_uart1_475.h";
+      SMACCM_SYS::CommPrim_Source_Text => "receiveFromTask_radio_status_uart1_475_chan440_479";
+      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_radio_status_uart1_475_chan440_482");
+    };
+    proxyData: requires data access radio_stat_type::radio_stat.impl {
+      Access_Right => write_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_radio_status_uart1_475.h";
+      SMACCM_SYS::CommPrim_Source_Text => "write_radio_status_uart1_475_dataport474_477";
+    };
+  properties
+    Source_Text => ("tower_task_usercode_radio_status_uart1_475.c");
+    Priority => 10;
+    Source_Stack_Size => 256 bytes;
+    SMACCM::Language => "Ivory";
+    Dispatch_Protocol => Sporadic;
+end radio_status_uart1;
+
+end GCS;

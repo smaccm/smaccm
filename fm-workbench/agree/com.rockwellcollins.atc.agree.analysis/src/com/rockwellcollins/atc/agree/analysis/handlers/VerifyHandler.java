@@ -8,6 +8,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
+import jkind.JKindException;
+import jkind.SolverOption;
 import jkind.api.JKindApi;
 import jkind.api.results.AnalysisResult;
 import jkind.api.results.CompositeAnalysisResult;
@@ -109,28 +111,47 @@ public abstract class VerifyHandler extends AadlHandler {
     private AnalysisResult buildAnalysisResult(String name, ComponentInstance ci) {
         CompositeAnalysisResult result = new CompositeAnalysisResult("Verification for " + name);
         
-        result.addChild(createGuaranteeVerification(ci));
-        result.addChild(createAssumptionVerification(ci));
-        result.addChild(createConsistVerification(ci));
-        
+        AnalysisResult tempResult = createGuaranteeVerification(ci);
+        if(tempResult != null){
+        	result.addChild(tempResult);
+        }
+        tempResult = createAssumptionVerification(ci);
+        if(tempResult != null){
+        	result.addChild(tempResult);
+        }
+        tempResult = createConsistVerification(ci);
+        if(tempResult != null){
+        	result.addChild(tempResult);
+        }
+
         ComponentImplementation compImpl = AgreeEmitterUtilities.getInstanceImplementation(ci);
         for(Subcomponent subComp : compImpl.getAllSubcomponents()){
             ComponentInstance subInst = ci.findSubcomponentInstance(subComp);
             if(subInst != ci){
                 if(AgreeEmitterUtilities.getInstanceImplementation(subInst) != null){
-                    result.addChild(buildAnalysisResult(subInst.getName(), subInst));
+                	AnalysisResult buildAnalysisResult = buildAnalysisResult(subInst.getName(), subInst);
+                	if(buildAnalysisResult != null){
+                		result.addChild(buildAnalysisResult);
+                	}
                 }
             }
         }
-        linker.setComponent(result, compImpl);
+        
+        if(result.getChildren().size() != 0){
+        	linker.setComponent(result, compImpl);
+        	return result;
+        }
 
-        return result;
+        return null;
     }
 
     private AnalysisResult createGuaranteeVerification(ComponentInstance ci) {
         
         AgreeGenerator emitter = new AgreeGenerator(ci);
         Program program = emitter.evaluate();
+        if(program == null){
+        	return null;
+        }
 
 
         List<String> properties = emitter.getGuarProps();
@@ -173,7 +194,10 @@ public abstract class VerifyHandler extends AadlHandler {
 
         AgreeGenerator emitter = new AgreeGenerator(ci);
         Program program = emitter.evaluate();
-
+        if(program == null){
+        	return null;
+        }
+        
         List<String> properties = emitter.getAssumeProps();
         Node oldNode = program.getMainNode();
         Node newNode = new Node(oldNode.location, 
@@ -213,7 +237,9 @@ public abstract class VerifyHandler extends AadlHandler {
         
         AgreeGenerator emitter = new AgreeGenerator(ci);
         Program program = emitter.evaluate();
-
+        if(program == null){
+        	return null;
+        }
 
         List<String> properties = emitter.getConsistProps();
         Node oldNode = program.getMainNode();
@@ -283,7 +309,14 @@ public abstract class VerifyHandler extends AadlHandler {
         while (!queue.isEmpty() && !monitor.isCanceled()) {
             JKindResult result = queue.remove();
             Program program = linker.getProgram(result);
-            api.execute(program, result, monitor);
+            try{
+            	api.execute(program, result, monitor);
+            } catch (JKindException e){
+            	System.out.println(result.getText());
+            	System.out.println("******** HERE IS THE LUSTRE ********");
+            	System.out.println(program);
+            	break;
+            }
             //System.out.println("whatever");
         }
 
@@ -306,6 +339,8 @@ public abstract class VerifyHandler extends AadlHandler {
         if (prefs.getBoolean(PreferenceConstants.PREF_BLAME_CEX)) {
             api.setIntervalGeneralization();
         }
+        api.setSolver(SolverOption.Z3);
+        
         api.setN(prefs.getInt(PreferenceConstants.PREF_DEPTH));
         api.setTimeout(prefs.getInt(PreferenceConstants.PREF_TIMEOUT));
         return api;

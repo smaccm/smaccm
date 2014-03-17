@@ -7,6 +7,15 @@ public class AgreeVarDecl implements Comparable<AgreeVarDecl> {
     public String aadlStr = null;
     public String type = null;
 
+    
+    public AgreeVarDecl(){}
+    
+    public AgreeVarDecl(String jKindStr, String aadlStr, String type){
+    	this.jKindStr = jKindStr;
+    	this.aadlStr = aadlStr;
+    	this.type = type;
+    }
+    
     @Override
     public int hashCode() {
         return jKindStr.hashCode();

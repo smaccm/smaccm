@@ -12,6 +12,7 @@ package com.rockwellcollins.atc.agree.agree;
  * The following features are supported:
  * <ul>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.SynchStatement#getVal <em>Val</em>}</li>
+ *   <li>{@link com.rockwellcollins.atc.agree.agree.SynchStatement#getSim <em>Sim</em>}</li>
  * </ul>
  * </p>
  *
@@ -46,5 +47,31 @@ public interface SynchStatement extends SpecStatement
    * @generated
    */
   void setVal(String value);
+
+  /**
+   * Returns the value of the '<em><b>Sim</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <p>
+   * If the meaning of the '<em>Sim</em>' attribute isn't clear,
+   * there really should be more of a description here...
+   * </p>
+   * <!-- end-user-doc -->
+   * @return the value of the '<em>Sim</em>' attribute.
+   * @see #setSim(String)
+   * @see com.rockwellcollins.atc.agree.agree.AgreePackage#getSynchStatement_Sim()
+   * @model
+   * @generated
+   */
+  String getSim();
+
+  /**
+   * Sets the value of the '{@link com.rockwellcollins.atc.agree.agree.SynchStatement#getSim <em>Sim</em>}' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @param value the new value of the '<em>Sim</em>' attribute.
+   * @see #getSim()
+   * @generated
+   */
+  void setSim(String value);
 
 } // SynchStatement

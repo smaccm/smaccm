@@ -19,6 +19,7 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  * The following features are implemented:
  * <ul>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.impl.SynchStatementImpl#getVal <em>Val</em>}</li>
+ *   <li>{@link com.rockwellcollins.atc.agree.agree.impl.SynchStatementImpl#getSim <em>Sim</em>}</li>
  * </ul>
  * </p>
  *
@@ -45,6 +46,26 @@ public class SynchStatementImpl extends SpecStatementImpl implements SynchStatem
    * @ordered
    */
   protected String val = VAL_EDEFAULT;
+
+  /**
+   * The default value of the '{@link #getSim() <em>Sim</em>}' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #getSim()
+   * @generated
+   * @ordered
+   */
+  protected static final String SIM_EDEFAULT = null;
+
+  /**
+   * The cached value of the '{@link #getSim() <em>Sim</em>}' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #getSim()
+   * @generated
+   * @ordered
+   */
+  protected String sim = SIM_EDEFAULT;
 
   /**
    * <!-- begin-user-doc -->
@@ -95,6 +116,29 @@ public class SynchStatementImpl extends SpecStatementImpl implements SynchStatem
    * <!-- end-user-doc -->
    * @generated
    */
+  public String getSim()
+  {
+    return sim;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public void setSim(String newSim)
+  {
+    String oldSim = sim;
+    sim = newSim;
+    if (eNotificationRequired())
+      eNotify(new ENotificationImpl(this, Notification.SET, AgreePackage.SYNCH_STATEMENT__SIM, oldSim, sim));
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   @Override
   public Object eGet(int featureID, boolean resolve, boolean coreType)
   {
@@ -102,6 +146,8 @@ public class SynchStatementImpl extends SpecStatementImpl implements SynchStatem
     {
       case AgreePackage.SYNCH_STATEMENT__VAL:
         return getVal();
+      case AgreePackage.SYNCH_STATEMENT__SIM:
+        return getSim();
     }
     return super.eGet(featureID, resolve, coreType);
   }
@@ -118,6 +164,9 @@ public class SynchStatementImpl extends SpecStatementImpl implements SynchStatem
     {
       case AgreePackage.SYNCH_STATEMENT__VAL:
         setVal((String)newValue);
+        return;
+      case AgreePackage.SYNCH_STATEMENT__SIM:
+        setSim((String)newValue);
         return;
     }
     super.eSet(featureID, newValue);
@@ -136,6 +185,9 @@ public class SynchStatementImpl extends SpecStatementImpl implements SynchStatem
       case AgreePackage.SYNCH_STATEMENT__VAL:
         setVal(VAL_EDEFAULT);
         return;
+      case AgreePackage.SYNCH_STATEMENT__SIM:
+        setSim(SIM_EDEFAULT);
+        return;
     }
     super.eUnset(featureID);
   }
@@ -152,6 +204,8 @@ public class SynchStatementImpl extends SpecStatementImpl implements SynchStatem
     {
       case AgreePackage.SYNCH_STATEMENT__VAL:
         return VAL_EDEFAULT == null ? val != null : !VAL_EDEFAULT.equals(val);
+      case AgreePackage.SYNCH_STATEMENT__SIM:
+        return SIM_EDEFAULT == null ? sim != null : !SIM_EDEFAULT.equals(sim);
     }
     return super.eIsSet(featureID);
   }
@@ -169,6 +223,8 @@ public class SynchStatementImpl extends SpecStatementImpl implements SynchStatem
     StringBuffer result = new StringBuffer(super.toString());
     result.append(" (val: ");
     result.append(val);
+    result.append(", sim: ");
+    result.append(sim);
     result.append(')');
     return result.toString();
   }

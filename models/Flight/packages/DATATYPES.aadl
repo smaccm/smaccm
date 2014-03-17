@@ -37,21 +37,14 @@ public
   
   data implementation Flight_Control_Commands.Impl
   subcomponents
-     --f1 : data Base_Types::Float_64;
-     --i2 : data Base_Types::Integer_32;
-     --changed types for AGREE
-      f1 : data Base_Types::Float;
-      i2 : data Base_Types::Integer;
-      
-      --ppm inputs
-      ppm0 : data Base_Types::Integer;
-      ppm1 : data Base_Types::Integer;
-      ppm2 : data Base_Types::Integer;
-      ppm3 : data Base_Types::Integer;
-      ppm4 : data Base_Types::Integer;
-      ppm5 : data Base_Types::Integer;
-      ppm6 : data Base_Types::Integer;
-      ppm7 : data Base_Types::Integer;
+      ppm0 : data Base_Types::Float;
+      ppm1 : data Base_Types::Float;
+      ppm2 : data Base_Types::Float;
+      ppm3 : data Base_Types::Float;
+      ppm4 : data Base_Types::Float;
+      ppm5 : data Base_Types::Float;
+      ppm6 : data Base_Types::Float;
+      ppm7 : data Base_Types::Float;
       
   end Flight_Control_Commands.impl;
   
