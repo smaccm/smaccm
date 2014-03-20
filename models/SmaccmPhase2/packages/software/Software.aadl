@@ -684,9 +684,6 @@ data implementation proc_data.impl
  
 end proc_data.impl;
 
-
-
-
 process implementation flight_gen_process.impl
   subcomponents
     threadData : data proc_data.impl;
