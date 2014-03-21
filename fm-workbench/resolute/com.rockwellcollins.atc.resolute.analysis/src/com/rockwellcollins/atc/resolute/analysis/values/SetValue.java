@@ -9,7 +9,6 @@ import java.util.TreeSet;
 
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
-import com.rockwellcollins.atc.resolute.validation.BaseType;
 import com.rockwellcollins.atc.resolute.validation.ResoluteType;
 import com.rockwellcollins.atc.resolute.validation.SetType;
 

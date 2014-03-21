@@ -1,23 +1,11 @@
 package com.rockwellcollins.atc.resolute.analysis.values;
 
 import org.eclipse.emf.ecore.EObject;
-import org.osate.aadl2.Abstract;
-import org.osate.aadl2.Bus;
 import org.osate.aadl2.ComponentClassifier;
-import org.osate.aadl2.Data;
-import org.osate.aadl2.Device;
-import org.osate.aadl2.Memory;
 import org.osate.aadl2.NamedElement;
-import org.osate.aadl2.Processor;
-import org.osate.aadl2.Subprogram;
-import org.osate.aadl2.SubprogramGroup;
-import org.osate.aadl2.VirtualBus;
-import org.osate.aadl2.VirtualProcessor;
 import org.osate.aadl2.instance.ComponentInstance;
 import org.osate.aadl2.instance.ConnectionInstance;
-import org.osate.aadl2.instance.FeatureCategory;
 import org.osate.aadl2.instance.FeatureInstance;
-import org.osate.aadl2.instance.SystemInstance;
 
 import com.rockwellcollins.atc.resolute.validation.BaseType;
 import com.rockwellcollins.atc.resolute.validation.ResoluteType;
