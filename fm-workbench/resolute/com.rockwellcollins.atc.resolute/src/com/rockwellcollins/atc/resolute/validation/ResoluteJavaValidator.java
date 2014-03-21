@@ -1,6 +1,7 @@
 package com.rockwellcollins.atc.resolute.validation;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -23,15 +24,15 @@ import org.osate.aadl2.ComponentType;
 import org.osate.aadl2.DataType;
 import org.osate.aadl2.DeviceType;
 import org.osate.aadl2.EnumerationType;
+import org.osate.aadl2.ListType;
 import org.osate.aadl2.MemoryType;
-import org.osate.aadl2.Mode;
 import org.osate.aadl2.NamedElement;
 import org.osate.aadl2.ProcessType;
 import org.osate.aadl2.ProcessorType;
 import org.osate.aadl2.Property;
-import org.osate.aadl2.PropertyExpression;
 import org.osate.aadl2.PropertyType;
 import org.osate.aadl2.RangeType;
+import org.osate.aadl2.ReferenceType;
 import org.osate.aadl2.Subcomponent;
 import org.osate.aadl2.SubprogramGroupType;
 import org.osate.aadl2.SubprogramType;
@@ -46,20 +47,20 @@ import com.rockwellcollins.atc.resolute.analysis.external.ResoluteExternalAnalys
 import com.rockwellcollins.atc.resolute.resolute.Arg;
 import com.rockwellcollins.atc.resolute.resolute.BinaryExpr;
 import com.rockwellcollins.atc.resolute.resolute.BoolExpr;
-import com.rockwellcollins.atc.resolute.resolute.BuiltInFuncCallExpr;
-import com.rockwellcollins.atc.resolute.resolute.BuiltinType;
+import com.rockwellcollins.atc.resolute.resolute.BuiltInFnCallExpr;
+import com.rockwellcollins.atc.resolute.resolute.CastExpr;
 import com.rockwellcollins.atc.resolute.resolute.ClaimBody;
 import com.rockwellcollins.atc.resolute.resolute.ConstantDefinition;
 import com.rockwellcollins.atc.resolute.resolute.DefinitionBody;
-import com.rockwellcollins.atc.resolute.resolute.ElementSet;
 import com.rockwellcollins.atc.resolute.resolute.Expr;
 import com.rockwellcollins.atc.resolute.resolute.FailExpr;
 import com.rockwellcollins.atc.resolute.resolute.FilterMapExpr;
 import com.rockwellcollins.atc.resolute.resolute.FnCallExpr;
-import com.rockwellcollins.atc.resolute.resolute.FuncBody;
+import com.rockwellcollins.atc.resolute.resolute.FunctionBody;
 import com.rockwellcollins.atc.resolute.resolute.FunctionDefinition;
 import com.rockwellcollins.atc.resolute.resolute.IdExpr;
 import com.rockwellcollins.atc.resolute.resolute.IfThenElseExpr;
+import com.rockwellcollins.atc.resolute.resolute.InstanceOfExpr;
 import com.rockwellcollins.atc.resolute.resolute.IntExpr;
 import com.rockwellcollins.atc.resolute.resolute.LetBinding;
 import com.rockwellcollins.atc.resolute.resolute.LetExpr;
@@ -69,6 +70,7 @@ import com.rockwellcollins.atc.resolute.resolute.QuantArg;
 import com.rockwellcollins.atc.resolute.resolute.QuantifiedExpr;
 import com.rockwellcollins.atc.resolute.resolute.RealExpr;
 import com.rockwellcollins.atc.resolute.resolute.ResolutePackage;
+import com.rockwellcollins.atc.resolute.resolute.SetExpr;
 import com.rockwellcollins.atc.resolute.resolute.StringExpr;
 import com.rockwellcollins.atc.resolute.resolute.ThisExpr;
 import com.rockwellcollins.atc.resolute.resolute.Type;
@@ -93,18 +95,6 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
     @Check
     public void checkProveStatement(ProveStatement prove) {
         Expr proveExpr = prove.getExpr();
-
-        EList<NestedDotID> modes = prove.getModes();
-        if (modes != null) {
-            for (NestedDotID modExpr : modes) {
-                while (modExpr.getSub() != null) {
-                    modExpr = modExpr.getSub();
-                }
-                if (!(modExpr.getBase() instanceof Mode)) {
-                    error(prove, "ID '" + modExpr.getBase().getName() + "' is not a mode");
-                }
-            }
-        }
 
         if (proveExpr instanceof FnCallExpr) {
             FnCallExpr fnCallExpr = (FnCallExpr) proveExpr;
@@ -184,51 +174,49 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
         ResoluteType defType = typeToResoluteType(consDef.getType());
 
         if (!exprType.subtypeOf(defType)) {
-            error(consDef, "Definition expects type " + defType + " but has type " + exprType);
+            error(consDef.getType(), "Definition expects type " + defType + " but has type "
+                    + exprType);
         }
     }
 
     @Check
     public void checkFuncDef(FunctionDefinition funcDef) {
         DefinitionBody body = funcDef.getBody();
-        if (body == null)
+        if (body == null) {
             return; // handled by parse error
+        }
 
         ResoluteType exprType = getExprType(body.getExpr());
-        ResoluteType defType;
 
-        if (body instanceof FuncBody) {
-            FuncBody funcBody = (FuncBody) body;
-            defType = typeToResoluteType(funcBody.getType());
+        if (body instanceof FunctionBody) {
+            FunctionBody funcBody = (FunctionBody) body;
+            ResoluteType defType = typeToResoluteType(funcBody.getType());
+            if (!exprType.subtypeOf(defType)) {
+                error(funcBody.getType(), "Function expects type " + defType + " but has type "
+                        + exprType);
+            }
         } else {
-            defType = BaseType.BOOL;
+            if (!exprType.subtypeOf(BaseType.BOOL)) {
+                error(funcDef, "Claim must have type bool, but has type " + exprType);
+            }
         }
-
-        if (!exprType.subtypeOf(defType)) {
-            error(funcDef, "Definition expects type " + defType + " but has type " + exprType);
-        }
-    }
-
-    // TODO: do type checking for quantifiers
-    @Check
-    public void checkQuantArg(QuantArg qArg) {
 
     }
 
     @Check
     public void checkQuantifiedExpr(QuantifiedExpr quantExpr) {
         ResoluteType exprType = getExprType(quantExpr.getExpr());
-
         if (!exprType.subtypeOf(BaseType.BOOL)) {
             error(quantExpr, "Expected type bool but found type " + exprType);
         }
 
         for (Arg arg : quantExpr.getArgs()) {
-
             if (arg instanceof QuantArg) {
                 QuantArg qArg = (QuantArg) arg;
-
                 ResoluteType argType = getExprType(qArg.getExpr());
+                if (argType.equals(BaseType.FAIL)) {
+                    return;
+                }
 
                 if (!(argType instanceof SetType)) {
                     error(quantExpr, "Arguments to quantifier is of type '" + argType
@@ -241,7 +229,6 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
                 }
             }
         }
-
     }
 
     @Check
@@ -282,25 +269,8 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
             }
             break;
 
-        case "in":
-            if (typeRight instanceof SetType) {
-                SetType setType = (SetType) typeRight;
-                if (typeLeft.join(setType.elementType) != null) {
-                    return;
-                }
-            }
-            break;
-
-        case "union":
-        case "intersect":
-            if (typeLeft instanceof SetType && typeRight instanceof SetType
-                    && typeLeft.join(typeRight) != null) {
-                return;
-            }
-            break;
-
         default:
-            error(binExpr, "Unknown binary operator '" + op + "' in type checking");
+            error(binExpr, "Unknown binary operator '" + op + "'");
             return;
         }
 
@@ -378,179 +348,32 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
     }
 
     @Check
-    public void checkBuiltInFuncCallExpr(BuiltInFuncCallExpr funCall) {
+    public void checkBuiltInFnCallExpr(BuiltInFnCallExpr funCall) {
         EList<Expr> actuals = funCall.getArgs();
         List<ResoluteType> actualTypes = getExprTypes(actuals);
-        List<ResoluteType> expectedTypes = new ArrayList<>();
+        if (containsFail(actualTypes)) {
+            return;
+        }
 
+        // Special cases that require a little polymorphism
         switch (funCall.getFn()) {
-        case "upper_bound":
-        case "lower_bound":
-            expectedTypes.add(BaseType.RANGE);
-            break;
-        case "connections":
-        case "is_connected":
-            expectedTypes.add(BaseType.FEATURE);
-            break;
-        case "propagate_error":
-        case "contain_error":
-        case "receive_error":
-        case "error_state_reachable":
-            expectedTypes.add(BaseType.COMPONENT);
-            expectedTypes.add(BaseType.STRING);
-            break;
-        case "is_bidirectional":
-        case "is_data_access":
-        case "is_bus_access":
-        case "is_event_port":
-        case "is_data_port":
-        case "is_event_data_port":
-            expectedTypes.add(BaseType.CONNECTION);
-            break;
-        case "is_data":
-        case "is_thread":
-        case "is_thread_group":
-        case "is_process":
-        case "is_subprogram":
-        case "is_subprogram_group":
-        case "is_processor":
-        case "is_virtual_processor":
-        case "is_memory":
-        case "is_bus":
-        case "is_virtual_bus":
-        case "is_device":
-        case "is_system":
-        case "is_abstract":
-            expectedTypes.add(BaseType.COMPONENT);
-            break;
-        case "connected":
-            expectedTypes.add(BaseType.COMPONENT);
-            expectedTypes.add(BaseType.CONNECTION);
-            expectedTypes.add(BaseType.COMPONENT);
-            break;
-
-        case "property_lookup":
-        case "property_exists":
-            expectedTypes.add(BaseType.AADL);
-            expectedTypes.add(BaseType.PROPERTY);
-            break;
-
-        case "class_of":
-        case "subcomponent_of":
-            expectedTypes.add(BaseType.COMPONENT);
-            expectedTypes.add(BaseType.COMPONENT);
-            break;
-
-        case "name":
-            expectedTypes.add(BaseType.COMPONENT);
-            expectedTypes.add(BaseType.STRING);
-            break;
-
-        case "type":
-        case "has_type":
-            expectedTypes.add(BaseType.AADL);
-            break;
-
-        case "bound":
-            expectedTypes.add(BaseType.COMPONENT);
-            expectedTypes.add(BaseType.COMPONENT);
-            break;
-
-        case "contained":
-            expectedTypes.add(BaseType.AADL);
-            expectedTypes.add(BaseType.COMPONENT);
-            break;
-
-        case "conn_source":
-        case "conn_dest":
-            expectedTypes.add(BaseType.CONNECTION);
-            break;
-
-        case "singleton":
-            // TODO: support integers and reals as well
-            expectedTypes.add(BaseType.AADL);
-            break;
-
-        case "instance":
-        case "instances":
-            expectedTypes.add(BaseType.COMPONENT);
-            break;
-
-        case "is_empty":
-            if (actuals.size() != 1) {
-                error(funCall, "function 'is_empty' expects one argument");
-                return;
-            }
-
-            if (!(actualTypes.get(0) instanceof SetType)) {
-                error(funCall, "function 'is_empty' expects argument of set type");
-            }
-            return;
-
-        case "sum":
-            if (actuals.size() != 1) {
-                error(funCall, "function 'sum' expects one argument");
-                return;
-            }
-
-            if (actualTypes.get(0) instanceof SetType) {
-                SetType setType = (SetType) actualTypes.get(0);
-                if (setType.elementType.subtypeOf(BaseType.INT)
-                        || setType.elementType.subtypeOf(BaseType.REAL)) {
-                    return;
-                }
-            }
-
-            error(funCall.getArgs().get(0),
-                    "function 'sum' not defined on type " + actualTypes.get(0));
-            return;
-
         case "analysis":
-            if (actuals.size() < 1) {
-                error(funCall, "Function 'analysis' expects at least one argument");
-                return;
-            }
-
-            Expr expr = actuals.get(0);
-            if (!(expr instanceof StringExpr)) {
-                error(funCall, "The first argument of 'analysis' must be a literal string");
-                return;
-            }
-
-            StringExpr analysisStrExpr = (StringExpr) expr;
-            String analysisStr = analysisStrExpr.getVal().getValue();
-            analysisStr = analysisStr.replace("\"", "");
-            ResoluteExternalAnalysisType analysisType = EvaluateTypeExtention.getType(analysisStr);
-
-            if (analysisType == null) {
-                error(funCall, "Could not find external analysis '" + analysisStr + "'");
-                return;
-            }
-
-            List<ResoluteType> argTypes = analysisType.getArgTypes();
-            int expectArgSize = argTypes.size();
-
-            if (actuals.size() != expectArgSize + 1) {
-                error(funCall, "External analysis '" + analysisStr + "' expects " + expectArgSize
-                        + " additional arguments but found " + (actuals.size() - 1)
-                        + " additional arguments");
-                return;
-            }
-
-            for (int i = 0; i < argTypes.size(); i++) {
-                ResoluteType actualType = getExprType(actuals.get(i + 1));
-                ResoluteType expectedType = argTypes.get(i);
-
-                if (!actualType.subtypeOf(expectedType)) {
-                    error(funCall.getArgs().get(i + 1), "Expected type " + expectedType
-                            + " but found type " + actualType);
-                }
-            }
-
+            checkAnalysisCall(funCall, actuals);
             return;
+        case "member":
+            checkMemberCall(funCall, actualTypes);
+            return;
+        case "sum":
+            checkSumCall(funCall, actualTypes);
+            return;
+        case "union":
+        case "intersect":
+            checkBinarySetOpCall(funCall, actualTypes);
+            return;
+        }
 
-        default:
-            error(funCall, "Unknown builtin function '" + funCall.getFn() + "'");
+        List<ResoluteType> expectedTypes = getExpectedTypes(funCall);
+        if (expectedTypes == null) {
             return;
         }
 
@@ -571,6 +394,187 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
         }
     }
 
+    private boolean containsFail(List<ResoluteType> types) {
+        for (ResoluteType type : types) {
+            if (type.equals(BaseType.FAIL)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void checkAnalysisCall(BuiltInFnCallExpr funCall, EList<Expr> actuals) {
+        if (actuals.size() < 1) {
+            error(funCall, "Function 'analysis' expects at least one argument");
+            return;
+        }
+
+        Expr expr = actuals.get(0);
+        if (!(expr instanceof StringExpr)) {
+            error(funCall, "The first argument of 'analysis' must be a literal string");
+            return;
+        }
+
+        StringExpr analysisStrExpr = (StringExpr) expr;
+        String analysisStr = analysisStrExpr.getVal().getValue().replace("\"", "");
+        ResoluteExternalAnalysisType analysisType = EvaluateTypeExtention.getType(analysisStr);
+
+        if (analysisType == null) {
+            error(funCall, "Could not find external analysis '" + analysisStr + "'");
+            return;
+        }
+
+        List<ResoluteType> argTypes = analysisType.getArgTypes();
+        if (actuals.size() != argTypes.size() + 1) {
+            error(funCall, "External analysis '" + analysisStr + "' expects " + argTypes.size()
+                    + " additional arguments but found " + (actuals.size() - 1)
+                    + " additional arguments");
+            return;
+        }
+
+        for (int i = 0; i < argTypes.size(); i++) {
+            ResoluteType actualType = getExprType(actuals.get(i + 1));
+            ResoluteType expectedType = argTypes.get(i);
+
+            if (!actualType.subtypeOf(expectedType)) {
+                error(funCall.getArgs().get(i + 1), "Expected type " + expectedType
+                        + " but found type " + actualType);
+            }
+        }
+    }
+
+    private void checkMemberCall(BuiltInFnCallExpr funCall, List<ResoluteType> actualTypes) {
+        if (actualTypes.size() != 2) {
+            error(funCall, "function 'member' expects two arguments");
+            return;
+        }
+
+        if (!(actualTypes.get(1) instanceof SetType)) {
+            error(funCall.getArgs().get(1),
+                    "Expected set type but found type " + actualTypes.get(1));
+            return;
+        }
+
+        ResoluteType elementType = actualTypes.get(0);
+        SetType setType = (SetType) actualTypes.get(1);
+        if (elementType.join(setType.elementType) == null) {
+            error(funCall, "function 'member' not defined on arguments of type " + elementType
+                    + ", " + setType);
+            return;
+        }
+
+        return;
+    }
+
+    private void checkSumCall(BuiltInFnCallExpr funCall, List<ResoluteType> actualTypes) {
+        if (actualTypes.size() != 1) {
+            error(funCall, "function 'sum' expects one argument");
+            return;
+        }
+
+        if (actualTypes.get(0) instanceof SetType) {
+            SetType setType = (SetType) actualTypes.get(0);
+            if (setType.elementType.subtypeOf(BaseType.INT)
+                    || setType.elementType.subtypeOf(BaseType.REAL)) {
+                return;
+            }
+        }
+
+        error(funCall.getArgs().get(0), "function 'sum' not defined on type " + actualTypes.get(0));
+        return;
+    }
+
+    private void checkBinarySetOpCall(BuiltInFnCallExpr funCall, List<ResoluteType> actualTypes) {
+        if (actualTypes.size() != 2) {
+            error(funCall, "function '" + funCall.getFn() + "' expects two arguments");
+            return;
+        }
+
+        for (int i = 0; i < 2; i++) {
+            if (!(actualTypes.get(i) instanceof SetType)) {
+                error(funCall.getArgs().get(i),
+                        "Expected set type but found type " + actualTypes.get(i));
+                return;
+            }
+        }
+
+        SetType set1 = (SetType) actualTypes.get(0);
+        SetType set2 = (SetType) actualTypes.get(1);
+
+        if (set1.join(set2) == null) {
+            error(funCall, "function '" + funCall.getFn() + "' not defined on arguments of type "
+                    + set1 + ", " + set2);
+            return;
+        }
+
+        return;
+    }
+
+    private List<ResoluteType> getExpectedTypes(BuiltInFnCallExpr funCall) {
+        List<ResoluteType> expectedTypes = new ArrayList<>();
+
+        switch (funCall.getFn()) {
+        // Primary type: aadl
+        case "has_parent":
+        case "parent":
+        case "name":
+        case "type":
+        case "has_type":
+        case "features":
+        case "connections":
+            expectedTypes.add(BaseType.AADL);
+            break;
+        case "has_property":
+        case "property":
+            expectedTypes.add(BaseType.AADL);
+            expectedTypes.add(BaseType.PROPERTY);
+            break;
+
+        // Primary type: component
+        case "subcomponents":
+            expectedTypes.add(BaseType.COMPONENT);
+            break;
+
+        // Primary type: connection
+        case "source":
+        case "destination":
+            expectedTypes.add(BaseType.CONNECTION);
+            break;
+
+        // Primary type: feature
+        case "direction":
+            expectedTypes.add(BaseType.FEATURE);
+            break;
+
+        // Primary type: range
+        case "lower_bound":
+        case "upper_bound":
+            expectedTypes.add(BaseType.RANGE);
+            break;
+
+        // Other
+        case "instance":
+        case "instances":
+            expectedTypes.add(BaseType.AADL);
+            break;
+
+        // Error Annex
+        case "propagate_error":
+        case "contain_error":
+        case "receive_error":
+        case "error_state_reachable":
+            expectedTypes.add(BaseType.COMPONENT);
+            expectedTypes.add(BaseType.STRING);
+            break;
+
+        default:
+            error(funCall, "Unknown built-in function '" + funCall.getFn() + "'");
+            return null;
+        }
+
+        return expectedTypes;
+    }
+
     @Check
     public void checkFilterMapExpr(FilterMapExpr mapExpr) {
         Expr filterExpr = mapExpr.getFilter();
@@ -579,6 +583,48 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
             if (!validType.subtypeOf(BaseType.BOOL)) {
                 error(mapExpr.getFilter(), "Expected type bool but found type " + validType);
             }
+        }
+    }
+
+    @Check
+    public void checkSetExpr(SetExpr setExpr) {
+        if (setExpr.getExprs().isEmpty()) {
+            return;
+        }
+
+        Iterator<Expr> iterator = setExpr.getExprs().iterator();
+        ResoluteType common = getExprType(iterator.next());
+        int i = 1;
+        while (iterator.hasNext()) {
+            Expr expr = iterator.next();
+            ResoluteType type = getExprType(expr);
+            ResoluteType join = common.join(type);
+            if (join == null) {
+                error(setExpr.getExprs().get(i), "Unable to add type " + type + " to set of type "
+                        + new SetType(common));
+                return;
+            } else {
+                common = join;
+                i++;
+            }
+        }
+    }
+
+    @Check
+    public void checkInstanceOfExpr(InstanceOfExpr e) {
+        ResoluteType exprType = getExprType(e.getExpr());
+        ResoluteType type = typeToResoluteType(e.getType());
+        if (!type.subtypeOf(exprType)) {
+            error(e, "Cannot compare from " + exprType + " to " + type);
+        }
+    }
+
+    @Check
+    public void checkCastExpr(CastExpr e) {
+        ResoluteType exprType = getExprType(e.getExpr());
+        ResoluteType type = typeToResoluteType(e.getType());
+        if (!type.subtypeOf(exprType)) {
+            error(e, "Cannot cast from " + exprType + " to " + type);
         }
     }
 
@@ -650,8 +696,8 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
         if (expr instanceof FnCallExpr) {
             FnCallExpr funCall = (FnCallExpr) expr;
             DefinitionBody body = funCall.getFn().getBody();
-            if (body instanceof FuncBody) {
-                FuncBody funcBody = (FuncBody) body;
+            if (body instanceof FunctionBody) {
+                FunctionBody funcBody = (FunctionBody) body;
                 return typeToResoluteType(funcBody.getType());
             } else if (body instanceof ClaimBody) {
                 return BaseType.BOOL;
@@ -675,18 +721,39 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 
         if (expr instanceof IdExpr) {
             IdExpr id = (IdExpr) expr;
-            ElementSet subEls = id.getSubelements();
-
-            if (subEls != null) {
-                return typeToResoluteType(subEls);
-            }
-
             return getIdExprType(id);
         }
 
-        if (expr instanceof BuiltInFuncCallExpr) {
-            BuiltInFuncCallExpr funCall = (BuiltInFuncCallExpr) expr;
-            return getBuiltInFnCallType(funCall);
+        if (expr instanceof BuiltInFnCallExpr) {
+            return getBuiltInFnCallType((BuiltInFnCallExpr) expr);
+        }
+
+        if (expr instanceof SetExpr) {
+            SetExpr setExpr = (SetExpr) expr;
+            if (setExpr.getExprs().isEmpty()) {
+                return BaseType.FAIL;
+            }
+
+            Iterator<Expr> iterator = setExpr.getExprs().iterator();
+            ResoluteType common = getExprType(iterator.next());
+            while (iterator.hasNext()) {
+                Expr e = iterator.next();
+                ResoluteType type = getExprType(e);
+                common = common.join(type);
+                if (common == null) {
+                    return BaseType.FAIL;
+                }
+            }
+            return new SetType(common);
+        }
+
+        if (expr instanceof CastExpr) {
+            CastExpr castExpr = (CastExpr) expr;
+            return typeToResoluteType(castExpr.getType());
+        }
+
+        if (expr instanceof InstanceOfExpr) {
+            return BaseType.BOOL;
         }
 
         error(expr, "Unable to get type for expression");
@@ -695,7 +762,6 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 
     public ResoluteType getBinaryExprType(BinaryExpr binExpr) {
         ResoluteType leftType = getExprType(binExpr.getLeft());
-        ResoluteType rightType = getExprType(binExpr.getRight());
 
         switch (binExpr.getOp()) {
         case "=>":
@@ -707,7 +773,6 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
         case ">=":
         case "=":
         case "<>":
-        case "in":
             return BaseType.BOOL;
 
         case "+":
@@ -715,10 +780,6 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
         case "*":
         case "/":
             return leftType;
-
-        case "union":
-        case "intersect":
-            return leftType.join(rightType);
         }
 
         error(binExpr, "Unable to get type for binary expression");
@@ -730,7 +791,7 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 
         if (idClass instanceof ComponentClassifier) {
             ComponentClassifier component = (ComponentClassifier) idClass;
-            return new BaseType(component.getCategory().toString());
+            return new BaseType(component.getCategory());
         }
 
         if (idClass instanceof Arg) {
@@ -772,179 +833,172 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
         return BaseType.FAIL;
     }
 
-    public ResoluteType getBuiltInFnCallType(BuiltInFuncCallExpr funCall) {
+    public ResoluteType getBuiltInFnCallType(BuiltInFnCallExpr funCall) {
+        // Simple predicates
+        if (funCall.getFn().startsWith("has_")) {
+            return BaseType.BOOL;
+        }
+
         switch (funCall.getFn()) {
-        case "connected":
-        case "propagate_error":
-        case "contain_error":
-        case "receive_error":
-        case "error_state_reachable":
-        case "is_bidirectional":
-        case "is_event_port":
-        case "is_event_data_port":
-        case "is_data_access":
-        case "is_bus_access":
-        case "is_data_port":
-        case "is_empty":
-        case "is_data":
-        case "is_thread":
-        case "is_thread_group":
-        case "is_process":
-        case "is_subprogram":
-        case "is_subprogram_group":
-        case "is_processor":
-        case "is_virtual_processor":
-        case "is_memory":
-        case "is_bus":
-        case "is_virtual_bus":
-        case "is_device":
-        case "is_system":
-        case "is_abstract":
-        case "is_connected":
-        case "class_of":
-        case "subcomponent_of":
+        // Primary type: aadl
+        case "property":
+            return getPropertyType(funCall);
+        case "parent":
+            return BaseType.AADL;
         case "name":
-        case "bound":
-        case "contained":
-        case "property_exists":
-            return BaseType.BOOL;
-
-        case "connections":
-            return new SetType(BaseType.CONNECTION);
-        case "upper_bound":
-        case "lower_bound": {
-            if (funCall.getArgs().size() != 1) {
-                return BaseType.FAIL;
-            }
-
-            Expr arg0 = funCall.getArgs().get(0);
-            BuiltInFuncCallExpr tmp = (BuiltInFuncCallExpr) arg0;
-            Expr propExpr = tmp.getArgs().get(1);
-            if (!(propExpr instanceof IdExpr)) {
-                error(funCall, "Cannot perform property lookup without literal property reference");
-                return BaseType.FAIL;
-            }
-
-            IdExpr idExpr = (IdExpr) propExpr;
-            if (!(idExpr.getId() instanceof Property)) {
-                error(funCall, "Cannot perform property lookup without literal property reference");
-                return BaseType.FAIL;
-            }
-
-            Property prop = (Property) idExpr.getId();
-            PropertyType propType = prop.getPropertyType();
-            if (propType instanceof RangeType) {
-                RangeType rt = (RangeType) propType;
-                PropertyExpression pe;
-
-                pe = rt.getNumberType().getRange().getUpperBound();
-                if (pe instanceof AadlInteger) {
-                    return BaseType.INT;
-                }
-                if (pe instanceof AadlReal) {
-                    return BaseType.REAL;
-                }
-            }
-            return BaseType.FAIL;
-
-        }
-
-        case "property_lookup":
-            if (funCall.getArgs().size() != 2) {
-                return BaseType.FAIL;
-            }
-
-            Expr propExpr = funCall.getArgs().get(1);
-            if (!(propExpr instanceof IdExpr)) {
-                error(funCall, "Cannot perform property lookup without literal property reference");
-                return BaseType.FAIL;
-            }
-
-            IdExpr idExpr = (IdExpr) propExpr;
-            if (!(idExpr.getId() instanceof Property)) {
-                error(funCall, "Cannot perform property lookup without literal property reference");
-                return BaseType.FAIL;
-            }
-
-            Property prop = (Property) idExpr.getId();
-            PropertyType propType = prop.getPropertyType();
-
-            if (propType instanceof AadlBoolean) {
-                return BaseType.BOOL;
-            }
-            if (propType instanceof AadlString || propType instanceof EnumerationType) {
-                return BaseType.STRING;
-            }
-            if (propType instanceof AadlInteger) {
-                return BaseType.INT;
-            }
-            if (propType instanceof AadlReal) {
-                return BaseType.REAL;
-            }
-
-            if (propType instanceof ClassifierType) {
-                return BaseType.COMPONENT;
-            }
-            if (propType instanceof RangeType) {
-                return BaseType.RANGE;
-            }
-
-            break;
-
+            return BaseType.STRING;
         case "type":
-            return BaseType.DATA;
+            return BaseType.AADL;
+        case "features":
+            return new SetType(BaseType.FEATURE);
 
-        case "has_type":
-            return BaseType.BOOL;
-
-        case "conn_source":
-        case "conn_dest":
-            return BaseType.COMPONENT;
-
-        case "singleton": {
-            Expr expr = funCall.getArgs().get(0);
-            return new SetType(getExprType(expr));
-        }
-
-        case "instance":
-            return BaseType.COMPONENT;
-
-        case "instances":
+            // Primary type: component
+        case "subcomponents":
             return new SetType(BaseType.COMPONENT);
 
+            // Primary type: connection
+        case "source":
+        case "destination":
+            return BaseType.AADL;
+
+            // Primary type: feature
+        case "connections":
+            return new SetType(BaseType.CONNECTION);
+        case "direction":
+            return BaseType.STRING;
+
+            // Primary type: range
+        case "upper_bound":
+        case "lower_bound":
+            return BaseType.INT;
+
+            // Primary type: set
+        case "member":
+            return BaseType.BOOL;
         case "sum":
-            if (funCall.getArgs().size() != 1) {
-                return BaseType.FAIL;
-            }
+            return getSumType(funCall);
+        case "union":
+        case "intersect":
+            return getBinarySetOpType(funCall);
 
-            Expr setExpr = funCall.getArgs().get(0);
-            SetType setType = (SetType) getExprType(setExpr);
-            return setType.elementType;
-
+            // Other
+        case "instance":
+            return BaseType.COMPONENT;
+        case "instances":
+            return new SetType(BaseType.COMPONENT);
         case "analysis":
-            List<Expr> args = funCall.getArgs();
+            return getAnalysisType(funCall);
 
-            if (args.isEmpty()) {
-                return BaseType.FAIL;
-            }
+            // Error Annex
+        case "receive_error":
+        case "contain_error":
+        case "propagate_error":
+        case "error_state_reachable":
+            return BaseType.BOOL;
 
-            Expr expr = args.get(0);
-            if (!(expr instanceof StringExpr)) {
-                return BaseType.FAIL;
-            }
+        default:
+            return BaseType.FAIL;
+        }
+    }
 
-            StringExpr analysisStrExpr = (StringExpr) expr;
-            String analysisStr = analysisStrExpr.getVal().getValue().replace("\"", "");
-            ResoluteExternalAnalysisType analysisType = EvaluateTypeExtention.getType(analysisStr);
-
-            if (analysisType == null) {
-                return BaseType.FAIL;
-            }
-            return analysisType.getType();
+    private ResoluteType getPropertyType(BuiltInFnCallExpr funCall) {
+        if (funCall.getArgs().size() != 2) {
+            return BaseType.FAIL;
         }
 
-        error(funCall, "Unable to get type for function call expression (" + funCall.getFn() + ")");
-        return BaseType.FAIL;
+        Expr propExpr = funCall.getArgs().get(1);
+        if (!(propExpr instanceof IdExpr)) {
+            error(funCall, "Cannot perform property lookup without literal property reference");
+            return BaseType.FAIL;
+        }
+
+        IdExpr idExpr = (IdExpr) propExpr;
+        if (!(idExpr.getId() instanceof Property)) {
+            error(funCall, "Cannot perform property lookup without literal property reference");
+            return BaseType.FAIL;
+        }
+
+        Property prop = (Property) idExpr.getId();
+        ResoluteType type = convertPropertyType(prop.getPropertyType());
+        if (type == null) {
+            error(funCall.getArgs().get(1), "Unknown property type");
+            return BaseType.FAIL;
+        } else {
+            return type;
+        }
+    }
+
+    private ResoluteType convertPropertyType(PropertyType propType) {
+        if (propType instanceof AadlBoolean) {
+            return BaseType.BOOL;
+        } else if (propType instanceof AadlString || propType instanceof EnumerationType) {
+            return BaseType.STRING;
+        } else if (propType instanceof AadlInteger) {
+            return BaseType.INT;
+        } else if (propType instanceof AadlReal) {
+            return BaseType.REAL;
+        } else if (propType instanceof ClassifierType) {
+            return BaseType.COMPONENT;
+        } else if (propType instanceof RangeType) {
+            return BaseType.RANGE;
+        } else if (propType instanceof ReferenceType) {
+            return BaseType.AADL;
+        } else if (propType instanceof ListType) {
+            ListType listType = (ListType) propType;
+            ResoluteType elementType = convertPropertyType(listType.getElementType());
+            if (elementType == null) {
+                return null;
+            } else {
+                return new SetType(elementType);
+            }
+        } else {
+            return null;
+        }
+    }
+
+    private ResoluteType getSumType(BuiltInFnCallExpr funCall) {
+        if (funCall.getArgs().size() != 1) {
+            return BaseType.FAIL;
+        }
+
+        SetType set = (SetType) getExprType(funCall.getArgs().get(0));
+        return set.elementType;
+    }
+
+    private ResoluteType getBinarySetOpType(BuiltInFnCallExpr funCall) {
+        if (funCall.getArgs().size() != 2) {
+            return BaseType.FAIL;
+        }
+
+        SetType set1 = (SetType) getExprType(funCall.getArgs().get(0));
+        SetType set2 = (SetType) getExprType(funCall.getArgs().get(1));
+
+        ResoluteType join = set1.join(set2);
+        if (join == null) {
+            return BaseType.FAIL;
+        } else {
+            return join;
+        }
+    }
+
+    private ResoluteType getAnalysisType(BuiltInFnCallExpr funCall) {
+        if (funCall.getArgs().isEmpty()) {
+            return BaseType.FAIL;
+        }
+
+        Expr expr = funCall.getArgs().get(0);
+        if (!(expr instanceof StringExpr)) {
+            return BaseType.FAIL;
+        }
+
+        StringExpr analysisStrExpr = (StringExpr) expr;
+        String analysisStr = analysisStrExpr.getVal().getValue().replace("\"", "");
+        ResoluteExternalAnalysisType analysisType = EvaluateTypeExtention.getType(analysisStr);
+
+        if (analysisType == null) {
+            return BaseType.FAIL;
+        }
+        return analysisType.getType();
     }
 
     static private ResoluteType getComponentType(ComponentType comp) {
@@ -989,55 +1043,12 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
         return result;
     }
 
-    private static ResoluteType typeToResoluteType(ElementSet elSet) {
-        return new SetType(new BaseType(getElementSetTypeName(elSet)));
-    }
-
-    private static String getElementSetTypeName(ElementSet elSet) {
-        switch (elSet.getName()) {
-        case "threads":
-            return "thread";
-        case "thread_groups":
-            return "thead_groups";
-        case "processes":
-            return "process";
-        case "subprograms":
-            return "subprogram";
-        case "subprogram_groups":
-            return "subprogram_group";
-        case "processors":
-            return "processor";
-        case "virtual_processors":
-            return "virtual_processor";
-        case "buses":
-            return "bus";
-        case "virtual_buses":
-            return "virtual_bus";
-        case "devices":
-            return "device";
-        case "systems":
-            return "system";
-        case "abstracts":
-            return "abstract";
-        case "connections":
-            return "connection";
-        case "port_connections":
-            return "connection";
-        case "features":
-            return "feature";
-        case "components":
-            return "component";
-        default:
-            throw new IllegalArgumentException("Unknown element set type: " + elSet.getName());
-        }
-    }
-
     private ResoluteType typeToResoluteType(Type type) {
         if (type == null) {
             return BaseType.FAIL;
-        } else if (type instanceof BuiltinType) {
-            BuiltinType bt = (BuiltinType) type;
-            return new BaseType(bt.getName());
+        } else if (type instanceof com.rockwellcollins.atc.resolute.resolute.BaseType) {
+            com.rockwellcollins.atc.resolute.resolute.BaseType bt = (com.rockwellcollins.atc.resolute.resolute.BaseType) type;
+            return new BaseType(bt.getType());
         } else if (type instanceof com.rockwellcollins.atc.resolute.resolute.SetType) {
             com.rockwellcollins.atc.resolute.resolute.SetType st = (com.rockwellcollins.atc.resolute.resolute.SetType) type;
             ResoluteType innerType = typeToResoluteType(st.getType());

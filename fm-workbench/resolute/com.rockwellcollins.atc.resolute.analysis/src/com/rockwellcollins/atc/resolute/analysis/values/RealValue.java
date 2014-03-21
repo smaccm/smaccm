@@ -1,5 +1,8 @@
 package com.rockwellcollins.atc.resolute.analysis.values;
 
+import com.rockwellcollins.atc.resolute.validation.BaseType;
+import com.rockwellcollins.atc.resolute.validation.ResoluteType;
+
 public class RealValue extends ResoluteValue {
     final private double value;
 
@@ -17,6 +20,11 @@ public class RealValue extends ResoluteValue {
         return value;
     }
 
+    @Override
+    public ResoluteType getType() {
+        return BaseType.REAL;
+    }
+    
     @Override
     public String toString() {
         return Double.toString(value);

@@ -18,9 +18,8 @@ import com.rockwellcollins.atc.resolute.analysis.values.ResoluteValue;
 
 public class ResoluteScheduleAnalysis implements ResoluteExternalAnalysis {
     @Override
-    public ResoluteValue run(ResoluteEvaluator resEval, List<ResoluteValue> args) {
+    public ResoluteValue run(EvaluationContext context, List<ResoluteValue> args) {
         double sched_ratio = 0;
-        EvaluationContext context = resEval.getEvaluationContext();
         Set<NamedElement> threadList = context.getSet("thread");
         for (NamedElement el : threadList) {
             assert (el instanceof ComponentInstance);

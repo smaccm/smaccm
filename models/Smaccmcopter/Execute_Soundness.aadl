@@ -15,7 +15,7 @@ only_gs_encrypt() <=
 
 -- The encryption algorithm used by the Ground Station and Decrypt is e.
 encrypt_algorithm : string =
-  property_lookup(SOFTWARE::Decrypt, SMACCM::Encryption_Algorthim) 
+  property(SOFTWARE::Decrypt, SMACCM::Encryption_Algorthim) 
 
 authenticated_encryption(e : string) <= 
   ** "The encryption algorithm " e " is strong and authenticated. "
@@ -45,36 +45,36 @@ uav_private_key() <=
 -- The component x only receives messages that pass Decrypt.
 only_receive_decrypt(x : component) <=
   ** "The component " x " only receives messages that pass Decrypt" **
-  forall (y : component) (c : connection).  
-    ((connected(y, c, x) and command_channel(c)) => 
-      unalterable_channel(c) and (class_of(y, SOFTWARE::Decrypt) or only_receive_decrypt(y)))       
-       
--- The connection c potentially carries commands
--- Non command datatypes must be explicitly whitelisted here
-command_channel(c : connection) : bool =
-  (not has_type(c)) or
-  (type(c) <> DATATYPES::Sensor_Data.Impl)
+  forall (c : connection).  
+    (parent(destination(c)) = x) =>
+      non_command_channel(c) or only_receive_decrypt_channel(c)
+    
+only_receive_decrypt_channel(c : connection) <=
+  ** "The connection " c " only carries messages that pass Decrypt" **
+  let src : component = parent(source(c));
+  unalterable_channel(c) and (is_decrypter(src) or only_receive_decrypt(src))      
+
+is_decrypter(comp : component) <=
+  ** comp " is the decrypter" **
+  type(comp) = SOFTWARE::Decrypt
+
+non_command_channel(c : connection) <=
+  ** "The connection " c " only carries sensor data" **
+  has_type(c) and type(c) = DATATYPES::Sensor_Data.Impl
 
 -- The connection c delivers data without alteration.
 -- "contained" means write permissions
 unalterable_channel(c : connection) <=
   ** "The connection " c " delivers data without alteration" **
-  (exists (p1 : process) (p2 : process). 
-        conn_source(c) = p1 
-    and conn_dest(c) = p2
-    and p1 <> p2
-    and memory_protected(p1) 
-    and memory_protected(p2))
-  or
-  (exists (p : process).
-  	contained(conn_source(c), p) and
-  	contained(conn_dest(c), p) and
-  	memory_protected(p))
+  exists (p : process).
+  	contained(source(c), p) and
+  	contained(destination(c), p) and
+  	memory_protected(p)
 
 memory_protected(p : process) <=
   ** "The memory of process " p " is protected from alterations by other processes" **
-  property_lookup(p, SMACCM::OS) = "SeL4" or
-  (property_lookup(p, SMACCM::OS) = "Breakaway-RTOS" and
+  property(p, SMACCM::OS) = "SeL4" or
+  (property(p, SMACCM::OS) = "Breakaway-RTOS" and
    forall (mem : memory). bound(p, mem) =>
      forall (q : process). bound(q, mem) => memory_safe_process(q))
 
@@ -88,7 +88,7 @@ memory_safe_thread(t : thread) <=
   
 ivory_thread(t : thread) <=
   ** "The thread " t " is generated from Ivory" **
-  property_lookup(t, SMACCM::Language) = "Ivory"
+  property(t, SMACCM::Language) = "Ivory"
   
 **};
     

@@ -1,5 +1,8 @@
 package com.rockwellcollins.atc.resolute.analysis.values;
 
+import com.rockwellcollins.atc.resolute.validation.BaseType;
+import com.rockwellcollins.atc.resolute.validation.ResoluteType;
+
 public class RangeValue extends ResoluteValue {
     private final ResoluteValue min;
     private final ResoluteValue max;
@@ -27,6 +30,11 @@ public class RangeValue extends ResoluteValue {
         return this;
     }
 
+    @Override
+    public ResoluteType getType() {
+        return BaseType.RANGE;
+    }
+    
     @Override
     public int hashCode() {
         return min.hashCode() + max.hashCode();

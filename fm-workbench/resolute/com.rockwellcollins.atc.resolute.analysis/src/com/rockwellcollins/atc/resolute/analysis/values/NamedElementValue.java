@@ -1,10 +1,26 @@
 package com.rockwellcollins.atc.resolute.analysis.values;
 
 import org.eclipse.emf.ecore.EObject;
+import org.osate.aadl2.Abstract;
+import org.osate.aadl2.Bus;
 import org.osate.aadl2.ComponentClassifier;
+import org.osate.aadl2.Data;
+import org.osate.aadl2.Device;
+import org.osate.aadl2.Memory;
 import org.osate.aadl2.NamedElement;
+import org.osate.aadl2.Processor;
+import org.osate.aadl2.Subprogram;
+import org.osate.aadl2.SubprogramGroup;
+import org.osate.aadl2.VirtualBus;
+import org.osate.aadl2.VirtualProcessor;
 import org.osate.aadl2.instance.ComponentInstance;
+import org.osate.aadl2.instance.ConnectionInstance;
+import org.osate.aadl2.instance.FeatureCategory;
 import org.osate.aadl2.instance.FeatureInstance;
+import org.osate.aadl2.instance.SystemInstance;
+
+import com.rockwellcollins.atc.resolute.validation.BaseType;
+import com.rockwellcollins.atc.resolute.validation.ResoluteType;
 
 public class NamedElementValue extends ResoluteValue {
     final protected NamedElement value;
@@ -28,19 +44,35 @@ public class NamedElementValue extends ResoluteValue {
     }
 
     @Override
+    public ResoluteType getType() {
+        if (value instanceof FeatureInstance) {
+            FeatureInstance fi = (FeatureInstance) value;
+            return new BaseType(fi);
+        } else if (value instanceof ConnectionInstance) {
+            return BaseType.CONNECTION;
+        } else if (value instanceof ComponentInstance) {
+            ComponentInstance ci = (ComponentInstance) value;
+            return new BaseType(ci.getCategory());
+        } else {
+            throw new IllegalArgumentException("Unknown NamedElement type: "
+                    + value.getClass().getName());
+        }
+    }
+
+    @Override
     public String toString() {
         if (value instanceof ComponentInstance) {
             ComponentInstance ci = (ComponentInstance) value;
             ComponentClassifier cc = ci.getComponentClassifier();
             return value.getName() + " : " + cc.getQualifiedName();
         }
-        
-        if(value instanceof FeatureInstance){
+
+        if (value instanceof FeatureInstance) {
             EObject container = value.eContainer();
             StringBuilder sb = new StringBuilder();
-            while(container.eContainer() instanceof ComponentInstance){
+            while (container.eContainer() instanceof ComponentInstance) {
                 sb.insert(0, ".");
-                sb.insert(0, ((NamedElement)container).getQualifiedName());
+                sb.insert(0, ((NamedElement) container).getQualifiedName());
                 container = container.eContainer();
             }
             sb.append(value.getQualifiedName());

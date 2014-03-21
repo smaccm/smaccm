@@ -97,14 +97,9 @@ public class ResoluteAdapterFactory extends AdapterFactoryImpl
         return createTypeAdapter();
       }
       @Override
-      public Adapter caseElementSet(ElementSet object)
+      public Adapter caseBaseType(BaseType object)
       {
-        return createElementSetAdapter();
-      }
-      @Override
-      public Adapter caseBuiltinType(BuiltinType object)
-      {
-        return createBuiltinTypeAdapter();
+        return createBaseTypeAdapter();
       }
       @Override
       public Adapter caseArg(Arg object)
@@ -122,14 +117,14 @@ public class ResoluteAdapterFactory extends AdapterFactoryImpl
         return createFunctionDefinitionAdapter();
       }
       @Override
-      public Adapter caseClaimString(ClaimString object)
-      {
-        return createClaimStringAdapter();
-      }
-      @Override
       public Adapter caseDefinitionBody(DefinitionBody object)
       {
         return createDefinitionBodyAdapter();
+      }
+      @Override
+      public Adapter caseClaimText(ClaimText object)
+      {
+        return createClaimTextAdapter();
       }
       @Override
       public Adapter caseExpr(Expr object)
@@ -167,14 +162,9 @@ public class ResoluteAdapterFactory extends AdapterFactoryImpl
         return createQuantArgAdapter();
       }
       @Override
-      public Adapter caseClaimArg(ClaimArg object)
+      public Adapter caseFunctionBody(FunctionBody object)
       {
-        return createClaimArgAdapter();
-      }
-      @Override
-      public Adapter caseFuncBody(FuncBody object)
-      {
-        return createFuncBodyAdapter();
+        return createFunctionBodyAdapter();
       }
       @Override
       public Adapter caseClaimBody(ClaimBody object)
@@ -182,14 +172,34 @@ public class ResoluteAdapterFactory extends AdapterFactoryImpl
         return createClaimBodyAdapter();
       }
       @Override
+      public Adapter caseClaimString(ClaimString object)
+      {
+        return createClaimStringAdapter();
+      }
+      @Override
+      public Adapter caseClaimArg(ClaimArg object)
+      {
+        return createClaimArgAdapter();
+      }
+      @Override
       public Adapter caseBinaryExpr(BinaryExpr object)
       {
         return createBinaryExprAdapter();
       }
       @Override
+      public Adapter caseInstanceOfExpr(InstanceOfExpr object)
+      {
+        return createInstanceOfExprAdapter();
+      }
+      @Override
       public Adapter caseUnaryExpr(UnaryExpr object)
       {
         return createUnaryExprAdapter();
+      }
+      @Override
+      public Adapter caseCastExpr(CastExpr object)
+      {
+        return createCastExprAdapter();
       }
       @Override
       public Adapter caseIdExpr(IdExpr object)
@@ -237,9 +247,9 @@ public class ResoluteAdapterFactory extends AdapterFactoryImpl
         return createQuantifiedExprAdapter();
       }
       @Override
-      public Adapter caseBuiltInFuncCallExpr(BuiltInFuncCallExpr object)
+      public Adapter caseBuiltInFnCallExpr(BuiltInFnCallExpr object)
       {
-        return createBuiltInFuncCallExprAdapter();
+        return createBuiltInFnCallExprAdapter();
       }
       @Override
       public Adapter caseFnCallExpr(FnCallExpr object)
@@ -250,6 +260,11 @@ public class ResoluteAdapterFactory extends AdapterFactoryImpl
       public Adapter caseFilterMapExpr(FilterMapExpr object)
       {
         return createFilterMapExprAdapter();
+      }
+      @Override
+      public Adapter caseSetExpr(SetExpr object)
+      {
+        return createSetExprAdapter();
       }
       @Override
       public Adapter caseLetExpr(LetExpr object)
@@ -354,31 +369,16 @@ public class ResoluteAdapterFactory extends AdapterFactoryImpl
   }
 
   /**
-   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.resolute.resolute.ElementSet <em>Element Set</em>}'.
+   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.resolute.resolute.BaseType <em>Base Type</em>}'.
    * <!-- begin-user-doc -->
    * This default implementation returns null so that we can easily ignore cases;
    * it's useful to ignore a case when inheritance will catch all the cases anyway.
    * <!-- end-user-doc -->
    * @return the new adapter.
-   * @see com.rockwellcollins.atc.resolute.resolute.ElementSet
+   * @see com.rockwellcollins.atc.resolute.resolute.BaseType
    * @generated
    */
-  public Adapter createElementSetAdapter()
-  {
-    return null;
-  }
-
-  /**
-   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.resolute.resolute.BuiltinType <em>Builtin Type</em>}'.
-   * <!-- begin-user-doc -->
-   * This default implementation returns null so that we can easily ignore cases;
-   * it's useful to ignore a case when inheritance will catch all the cases anyway.
-   * <!-- end-user-doc -->
-   * @return the new adapter.
-   * @see com.rockwellcollins.atc.resolute.resolute.BuiltinType
-   * @generated
-   */
-  public Adapter createBuiltinTypeAdapter()
+  public Adapter createBaseTypeAdapter()
   {
     return null;
   }
@@ -429,21 +429,6 @@ public class ResoluteAdapterFactory extends AdapterFactoryImpl
   }
 
   /**
-   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.resolute.resolute.ClaimString <em>Claim String</em>}'.
-   * <!-- begin-user-doc -->
-   * This default implementation returns null so that we can easily ignore cases;
-   * it's useful to ignore a case when inheritance will catch all the cases anyway.
-   * <!-- end-user-doc -->
-   * @return the new adapter.
-   * @see com.rockwellcollins.atc.resolute.resolute.ClaimString
-   * @generated
-   */
-  public Adapter createClaimStringAdapter()
-  {
-    return null;
-  }
-
-  /**
    * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.resolute.resolute.DefinitionBody <em>Definition Body</em>}'.
    * <!-- begin-user-doc -->
    * This default implementation returns null so that we can easily ignore cases;
@@ -454,6 +439,21 @@ public class ResoluteAdapterFactory extends AdapterFactoryImpl
    * @generated
    */
   public Adapter createDefinitionBodyAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.resolute.resolute.ClaimText <em>Claim Text</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see com.rockwellcollins.atc.resolute.resolute.ClaimText
+   * @generated
+   */
+  public Adapter createClaimTextAdapter()
   {
     return null;
   }
@@ -564,31 +564,16 @@ public class ResoluteAdapterFactory extends AdapterFactoryImpl
   }
 
   /**
-   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.resolute.resolute.ClaimArg <em>Claim Arg</em>}'.
+   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.resolute.resolute.FunctionBody <em>Function Body</em>}'.
    * <!-- begin-user-doc -->
    * This default implementation returns null so that we can easily ignore cases;
    * it's useful to ignore a case when inheritance will catch all the cases anyway.
    * <!-- end-user-doc -->
    * @return the new adapter.
-   * @see com.rockwellcollins.atc.resolute.resolute.ClaimArg
+   * @see com.rockwellcollins.atc.resolute.resolute.FunctionBody
    * @generated
    */
-  public Adapter createClaimArgAdapter()
-  {
-    return null;
-  }
-
-  /**
-   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.resolute.resolute.FuncBody <em>Func Body</em>}'.
-   * <!-- begin-user-doc -->
-   * This default implementation returns null so that we can easily ignore cases;
-   * it's useful to ignore a case when inheritance will catch all the cases anyway.
-   * <!-- end-user-doc -->
-   * @return the new adapter.
-   * @see com.rockwellcollins.atc.resolute.resolute.FuncBody
-   * @generated
-   */
-  public Adapter createFuncBodyAdapter()
+  public Adapter createFunctionBodyAdapter()
   {
     return null;
   }
@@ -609,6 +594,36 @@ public class ResoluteAdapterFactory extends AdapterFactoryImpl
   }
 
   /**
+   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.resolute.resolute.ClaimString <em>Claim String</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see com.rockwellcollins.atc.resolute.resolute.ClaimString
+   * @generated
+   */
+  public Adapter createClaimStringAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.resolute.resolute.ClaimArg <em>Claim Arg</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see com.rockwellcollins.atc.resolute.resolute.ClaimArg
+   * @generated
+   */
+  public Adapter createClaimArgAdapter()
+  {
+    return null;
+  }
+
+  /**
    * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.resolute.resolute.BinaryExpr <em>Binary Expr</em>}'.
    * <!-- begin-user-doc -->
    * This default implementation returns null so that we can easily ignore cases;
@@ -624,6 +639,21 @@ public class ResoluteAdapterFactory extends AdapterFactoryImpl
   }
 
   /**
+   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.resolute.resolute.InstanceOfExpr <em>Instance Of Expr</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see com.rockwellcollins.atc.resolute.resolute.InstanceOfExpr
+   * @generated
+   */
+  public Adapter createInstanceOfExprAdapter()
+  {
+    return null;
+  }
+
+  /**
    * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.resolute.resolute.UnaryExpr <em>Unary Expr</em>}'.
    * <!-- begin-user-doc -->
    * This default implementation returns null so that we can easily ignore cases;
@@ -634,6 +664,21 @@ public class ResoluteAdapterFactory extends AdapterFactoryImpl
    * @generated
    */
   public Adapter createUnaryExprAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.resolute.resolute.CastExpr <em>Cast Expr</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see com.rockwellcollins.atc.resolute.resolute.CastExpr
+   * @generated
+   */
+  public Adapter createCastExprAdapter()
   {
     return null;
   }
@@ -774,16 +819,16 @@ public class ResoluteAdapterFactory extends AdapterFactoryImpl
   }
 
   /**
-   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.resolute.resolute.BuiltInFuncCallExpr <em>Built In Func Call Expr</em>}'.
+   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.resolute.resolute.BuiltInFnCallExpr <em>Built In Fn Call Expr</em>}'.
    * <!-- begin-user-doc -->
    * This default implementation returns null so that we can easily ignore cases;
    * it's useful to ignore a case when inheritance will catch all the cases anyway.
    * <!-- end-user-doc -->
    * @return the new adapter.
-   * @see com.rockwellcollins.atc.resolute.resolute.BuiltInFuncCallExpr
+   * @see com.rockwellcollins.atc.resolute.resolute.BuiltInFnCallExpr
    * @generated
    */
-  public Adapter createBuiltInFuncCallExprAdapter()
+  public Adapter createBuiltInFnCallExprAdapter()
   {
     return null;
   }
@@ -814,6 +859,21 @@ public class ResoluteAdapterFactory extends AdapterFactoryImpl
    * @generated
    */
   public Adapter createFilterMapExprAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.resolute.resolute.SetExpr <em>Set Expr</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see com.rockwellcollins.atc.resolute.resolute.SetExpr
+   * @generated
+   */
+  public Adapter createSetExprAdapter()
   {
     return null;
   }

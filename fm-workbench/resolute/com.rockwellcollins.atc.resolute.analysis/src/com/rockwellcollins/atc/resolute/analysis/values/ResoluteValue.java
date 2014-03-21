@@ -4,6 +4,8 @@ import java.util.SortedSet;
 
 import org.osate.aadl2.NamedElement;
 
+import com.rockwellcollins.atc.resolute.validation.ResoluteType;
+
 public abstract class ResoluteValue implements Comparable<ResoluteValue> {
     public boolean isBool() {
         return false;
@@ -60,6 +62,8 @@ public abstract class ResoluteValue implements Comparable<ResoluteValue> {
     public RangeValue getRange() {
        throw new IllegalArgumentException();
     }
+    
+    public abstract ResoluteType getType();
 
     @Override
     public int compareTo(ResoluteValue other) {

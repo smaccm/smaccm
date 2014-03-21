@@ -1,5 +1,8 @@
 package com.rockwellcollins.atc.resolute.analysis.values;
 
+import com.rockwellcollins.atc.resolute.validation.BaseType;
+import com.rockwellcollins.atc.resolute.validation.ResoluteType;
+
 public class StringValue extends ResoluteValue {
     final private String value;
 
@@ -22,6 +25,11 @@ public class StringValue extends ResoluteValue {
     }
 
     @Override
+    public ResoluteType getType() {
+        return BaseType.STRING;
+    }
+    
+    @Override
     public String toString() {
         return value;
     }
@@ -35,7 +43,7 @@ public class StringValue extends ResoluteValue {
     public boolean equals(Object obj) {
         if (obj instanceof StringValue) {
             StringValue sv = (StringValue) obj;
-            return sv.value.equals(value);
+            return sv.value.equalsIgnoreCase(value);
         }
 
         return false;

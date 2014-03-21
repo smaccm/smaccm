@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.List;
 
+import com.rockwellcollins.atc.resolute.analysis.execution.EvaluationContext;
 import com.rockwellcollins.atc.resolute.analysis.execution.ResoluteEvaluator;
 import com.rockwellcollins.atc.resolute.analysis.execution.ResoluteExternalAnalysis;
 import com.rockwellcollins.atc.resolute.analysis.values.BoolValue;
@@ -13,7 +14,7 @@ import com.rockwellcollins.atc.resolute.analysis.values.ResoluteValue;
 
 public class ResoluteNgrepAnalysis implements ResoluteExternalAnalysis {
     @Override
-    public ResoluteValue run(ResoluteEvaluator resEval, List<ResoluteValue> args) 
+    public ResoluteValue run(EvaluationContext context, List<ResoluteValue> args) 
     {
     	int nmatches = 0;
     	String current_line;

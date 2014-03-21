@@ -1,19 +1,23 @@
 package com.rockwellcollins.atc.resolute.linking;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IProjectDescription;
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
-import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.xtext.linking.impl.IllegalNodeException;
 import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.resource.IEObjectDescription;
 import org.osate.aadl2.Aadl2Package;
-import org.osate.aadl2.NamedElement;
 import org.osate.aadl2.PropertyValue;
 import org.osate.aadl2.UnitLiteral;
 import org.osate.aadl2.UnitsType;
@@ -104,26 +108,46 @@ public class ResoluteLinkingService extends PropertiesLinkingService {
     }
 
     private static EObject getNamedElementByType(EObject context, String name, EClass eclass) {
-        for (IEObjectDescription desc : EMFIndexRetrieval.getAllEObjectsOfTypeInWorkspace(context,
-                eclass)) {
-            EObject e = EcoreUtil.resolve(desc.getEObjectOrProxy(), context);
-            if (e instanceof NamedElement) {
-                NamedElement ne = (NamedElement) e;
-                Resource resource = ne.eResource();
-                if (resource != null) {
-                    URI contextUri = resource.getURI();
-                    String contextProject = contextUri.segment(1);
-                    URI linkUri = context.eResource().getURI();
-                    if(linkUri.segment(1).equals(contextProject)){
-                        if (name.equals(ne.getName())) {
-                            return ne;
-                        }
+        // This code will only link to objects in the projects visible from the current project
+        Iterable<IEObjectDescription> allObjectTypes = EMFIndexRetrieval
+                .getAllEObjectsOfTypeInWorkspace(context, eclass);
+
+        String contextProject = context.eResource().getURI().segment(1);
+        List<String> visibleProjects = getVisibleProjects(contextProject);
+
+        for (IEObjectDescription eod : allObjectTypes) {
+            if (eod.getName().getLastSegment().equalsIgnoreCase(name)) {
+                EObject res = eod.getEObjectOrProxy();
+                res = EcoreUtil.resolve(res, context.eResource().getResourceSet());
+                if (!Aadl2Util.isNull(res)) {
+                    URI linkUri = res.eResource().getURI();
+                    String linkProject = linkUri.segment(1);
+                    if (visibleProjects.contains(linkProject)) {
+                        return res;
                     }
                 }
             }
         }
 
         return null;
+    }
+
+    private static List<String> getVisibleProjects(String contextProjectName) {
+        List<String> result = new ArrayList<>();
+        result.add(contextProjectName);
+
+        IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+        IProject contextProject = root.getProject(URI.decode(contextProjectName));
+        try {
+            IProjectDescription description = contextProject.getDescription();
+            for (IProject referencedProject : description.getReferencedProjects()) {
+                result.add(URI.encodeSegment(referencedProject.getName(), false));
+            }
+        } catch (CoreException ex) {
+            ex.printStackTrace();
+        }
+
+        return result;
     }
 
     final private static EClass UNITS_TYPE = Aadl2Package.eINSTANCE.getUnitsType();

@@ -102,25 +102,14 @@ public class ResoluteSwitch<T> extends Switch<T>
       {
         Type type = (Type)theEObject;
         T result = caseType(type);
-        if (result == null) result = caseNamedElement(type);
-        if (result == null) result = caseElement(type);
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
-      case ResolutePackage.ELEMENT_SET:
+      case ResolutePackage.BASE_TYPE:
       {
-        ElementSet elementSet = (ElementSet)theEObject;
-        T result = caseElementSet(elementSet);
-        if (result == null) result = defaultCase(theEObject);
-        return result;
-      }
-      case ResolutePackage.BUILTIN_TYPE:
-      {
-        BuiltinType builtinType = (BuiltinType)theEObject;
-        T result = caseBuiltinType(builtinType);
-        if (result == null) result = caseType(builtinType);
-        if (result == null) result = caseNamedElement(builtinType);
-        if (result == null) result = caseElement(builtinType);
+        BaseType baseType = (BaseType)theEObject;
+        T result = caseBaseType(baseType);
+        if (result == null) result = caseType(baseType);
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
@@ -154,19 +143,19 @@ public class ResoluteSwitch<T> extends Switch<T>
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
-      case ResolutePackage.CLAIM_STRING:
-      {
-        ClaimString claimString = (ClaimString)theEObject;
-        T result = caseClaimString(claimString);
-        if (result == null) result = caseElement(claimString);
-        if (result == null) result = defaultCase(theEObject);
-        return result;
-      }
       case ResolutePackage.DEFINITION_BODY:
       {
         DefinitionBody definitionBody = (DefinitionBody)theEObject;
         T result = caseDefinitionBody(definitionBody);
         if (result == null) result = caseElement(definitionBody);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case ResolutePackage.CLAIM_TEXT:
+      {
+        ClaimText claimText = (ClaimText)theEObject;
+        T result = caseClaimText(claimText);
+        if (result == null) result = caseElement(claimText);
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
@@ -218,8 +207,6 @@ public class ResoluteSwitch<T> extends Switch<T>
         SetType setType = (SetType)theEObject;
         T result = caseSetType(setType);
         if (result == null) result = caseType(setType);
-        if (result == null) result = caseNamedElement(setType);
-        if (result == null) result = caseElement(setType);
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
@@ -233,21 +220,12 @@ public class ResoluteSwitch<T> extends Switch<T>
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
-      case ResolutePackage.CLAIM_ARG:
+      case ResolutePackage.FUNCTION_BODY:
       {
-        ClaimArg claimArg = (ClaimArg)theEObject;
-        T result = caseClaimArg(claimArg);
-        if (result == null) result = caseClaimString(claimArg);
-        if (result == null) result = caseElement(claimArg);
-        if (result == null) result = defaultCase(theEObject);
-        return result;
-      }
-      case ResolutePackage.FUNC_BODY:
-      {
-        FuncBody funcBody = (FuncBody)theEObject;
-        T result = caseFuncBody(funcBody);
-        if (result == null) result = caseDefinitionBody(funcBody);
-        if (result == null) result = caseElement(funcBody);
+        FunctionBody functionBody = (FunctionBody)theEObject;
+        T result = caseFunctionBody(functionBody);
+        if (result == null) result = caseDefinitionBody(functionBody);
+        if (result == null) result = caseElement(functionBody);
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
@@ -260,6 +238,24 @@ public class ResoluteSwitch<T> extends Switch<T>
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
+      case ResolutePackage.CLAIM_STRING:
+      {
+        ClaimString claimString = (ClaimString)theEObject;
+        T result = caseClaimString(claimString);
+        if (result == null) result = caseClaimText(claimString);
+        if (result == null) result = caseElement(claimString);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case ResolutePackage.CLAIM_ARG:
+      {
+        ClaimArg claimArg = (ClaimArg)theEObject;
+        T result = caseClaimArg(claimArg);
+        if (result == null) result = caseClaimText(claimArg);
+        if (result == null) result = caseElement(claimArg);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
       case ResolutePackage.BINARY_EXPR:
       {
         BinaryExpr binaryExpr = (BinaryExpr)theEObject;
@@ -269,12 +265,30 @@ public class ResoluteSwitch<T> extends Switch<T>
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
+      case ResolutePackage.INSTANCE_OF_EXPR:
+      {
+        InstanceOfExpr instanceOfExpr = (InstanceOfExpr)theEObject;
+        T result = caseInstanceOfExpr(instanceOfExpr);
+        if (result == null) result = caseExpr(instanceOfExpr);
+        if (result == null) result = caseElement(instanceOfExpr);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
       case ResolutePackage.UNARY_EXPR:
       {
         UnaryExpr unaryExpr = (UnaryExpr)theEObject;
         T result = caseUnaryExpr(unaryExpr);
         if (result == null) result = caseExpr(unaryExpr);
         if (result == null) result = caseElement(unaryExpr);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case ResolutePackage.CAST_EXPR:
+      {
+        CastExpr castExpr = (CastExpr)theEObject;
+        T result = caseCastExpr(castExpr);
+        if (result == null) result = caseExpr(castExpr);
+        if (result == null) result = caseElement(castExpr);
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
@@ -359,12 +373,12 @@ public class ResoluteSwitch<T> extends Switch<T>
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
-      case ResolutePackage.BUILT_IN_FUNC_CALL_EXPR:
+      case ResolutePackage.BUILT_IN_FN_CALL_EXPR:
       {
-        BuiltInFuncCallExpr builtInFuncCallExpr = (BuiltInFuncCallExpr)theEObject;
-        T result = caseBuiltInFuncCallExpr(builtInFuncCallExpr);
-        if (result == null) result = caseExpr(builtInFuncCallExpr);
-        if (result == null) result = caseElement(builtInFuncCallExpr);
+        BuiltInFnCallExpr builtInFnCallExpr = (BuiltInFnCallExpr)theEObject;
+        T result = caseBuiltInFnCallExpr(builtInFnCallExpr);
+        if (result == null) result = caseExpr(builtInFnCallExpr);
+        if (result == null) result = caseElement(builtInFnCallExpr);
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
@@ -383,6 +397,15 @@ public class ResoluteSwitch<T> extends Switch<T>
         T result = caseFilterMapExpr(filterMapExpr);
         if (result == null) result = caseExpr(filterMapExpr);
         if (result == null) result = caseElement(filterMapExpr);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case ResolutePackage.SET_EXPR:
+      {
+        SetExpr setExpr = (SetExpr)theEObject;
+        T result = caseSetExpr(setExpr);
+        if (result == null) result = caseExpr(setExpr);
+        if (result == null) result = caseElement(setExpr);
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
@@ -448,33 +471,17 @@ public class ResoluteSwitch<T> extends Switch<T>
   }
 
   /**
-   * Returns the result of interpreting the object as an instance of '<em>Element Set</em>'.
+   * Returns the result of interpreting the object as an instance of '<em>Base Type</em>'.
    * <!-- begin-user-doc -->
    * This implementation returns null;
    * returning a non-null result will terminate the switch.
    * <!-- end-user-doc -->
    * @param object the target of the switch.
-   * @return the result of interpreting the object as an instance of '<em>Element Set</em>'.
+   * @return the result of interpreting the object as an instance of '<em>Base Type</em>'.
    * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
    * @generated
    */
-  public T caseElementSet(ElementSet object)
-  {
-    return null;
-  }
-
-  /**
-   * Returns the result of interpreting the object as an instance of '<em>Builtin Type</em>'.
-   * <!-- begin-user-doc -->
-   * This implementation returns null;
-   * returning a non-null result will terminate the switch.
-   * <!-- end-user-doc -->
-   * @param object the target of the switch.
-   * @return the result of interpreting the object as an instance of '<em>Builtin Type</em>'.
-   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-   * @generated
-   */
-  public T caseBuiltinType(BuiltinType object)
+  public T caseBaseType(BaseType object)
   {
     return null;
   }
@@ -528,22 +535,6 @@ public class ResoluteSwitch<T> extends Switch<T>
   }
 
   /**
-   * Returns the result of interpreting the object as an instance of '<em>Claim String</em>'.
-   * <!-- begin-user-doc -->
-   * This implementation returns null;
-   * returning a non-null result will terminate the switch.
-   * <!-- end-user-doc -->
-   * @param object the target of the switch.
-   * @return the result of interpreting the object as an instance of '<em>Claim String</em>'.
-   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-   * @generated
-   */
-  public T caseClaimString(ClaimString object)
-  {
-    return null;
-  }
-
-  /**
    * Returns the result of interpreting the object as an instance of '<em>Definition Body</em>'.
    * <!-- begin-user-doc -->
    * This implementation returns null;
@@ -555,6 +546,22 @@ public class ResoluteSwitch<T> extends Switch<T>
    * @generated
    */
   public T caseDefinitionBody(DefinitionBody object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Claim Text</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Claim Text</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseClaimText(ClaimText object)
   {
     return null;
   }
@@ -672,33 +679,17 @@ public class ResoluteSwitch<T> extends Switch<T>
   }
 
   /**
-   * Returns the result of interpreting the object as an instance of '<em>Claim Arg</em>'.
+   * Returns the result of interpreting the object as an instance of '<em>Function Body</em>'.
    * <!-- begin-user-doc -->
    * This implementation returns null;
    * returning a non-null result will terminate the switch.
    * <!-- end-user-doc -->
    * @param object the target of the switch.
-   * @return the result of interpreting the object as an instance of '<em>Claim Arg</em>'.
+   * @return the result of interpreting the object as an instance of '<em>Function Body</em>'.
    * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
    * @generated
    */
-  public T caseClaimArg(ClaimArg object)
-  {
-    return null;
-  }
-
-  /**
-   * Returns the result of interpreting the object as an instance of '<em>Func Body</em>'.
-   * <!-- begin-user-doc -->
-   * This implementation returns null;
-   * returning a non-null result will terminate the switch.
-   * <!-- end-user-doc -->
-   * @param object the target of the switch.
-   * @return the result of interpreting the object as an instance of '<em>Func Body</em>'.
-   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-   * @generated
-   */
-  public T caseFuncBody(FuncBody object)
+  public T caseFunctionBody(FunctionBody object)
   {
     return null;
   }
@@ -720,6 +711,38 @@ public class ResoluteSwitch<T> extends Switch<T>
   }
 
   /**
+   * Returns the result of interpreting the object as an instance of '<em>Claim String</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Claim String</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseClaimString(ClaimString object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Claim Arg</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Claim Arg</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseClaimArg(ClaimArg object)
+  {
+    return null;
+  }
+
+  /**
    * Returns the result of interpreting the object as an instance of '<em>Binary Expr</em>'.
    * <!-- begin-user-doc -->
    * This implementation returns null;
@@ -736,6 +759,22 @@ public class ResoluteSwitch<T> extends Switch<T>
   }
 
   /**
+   * Returns the result of interpreting the object as an instance of '<em>Instance Of Expr</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Instance Of Expr</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseInstanceOfExpr(InstanceOfExpr object)
+  {
+    return null;
+  }
+
+  /**
    * Returns the result of interpreting the object as an instance of '<em>Unary Expr</em>'.
    * <!-- begin-user-doc -->
    * This implementation returns null;
@@ -747,6 +786,22 @@ public class ResoluteSwitch<T> extends Switch<T>
    * @generated
    */
   public T caseUnaryExpr(UnaryExpr object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Cast Expr</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Cast Expr</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseCastExpr(CastExpr object)
   {
     return null;
   }
@@ -896,17 +951,17 @@ public class ResoluteSwitch<T> extends Switch<T>
   }
 
   /**
-   * Returns the result of interpreting the object as an instance of '<em>Built In Func Call Expr</em>'.
+   * Returns the result of interpreting the object as an instance of '<em>Built In Fn Call Expr</em>'.
    * <!-- begin-user-doc -->
    * This implementation returns null;
    * returning a non-null result will terminate the switch.
    * <!-- end-user-doc -->
    * @param object the target of the switch.
-   * @return the result of interpreting the object as an instance of '<em>Built In Func Call Expr</em>'.
+   * @return the result of interpreting the object as an instance of '<em>Built In Fn Call Expr</em>'.
    * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
    * @generated
    */
-  public T caseBuiltInFuncCallExpr(BuiltInFuncCallExpr object)
+  public T caseBuiltInFnCallExpr(BuiltInFnCallExpr object)
   {
     return null;
   }
@@ -939,6 +994,22 @@ public class ResoluteSwitch<T> extends Switch<T>
    * @generated
    */
   public T caseFilterMapExpr(FilterMapExpr object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Set Expr</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Set Expr</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseSetExpr(SetExpr object)
   {
     return null;
   }

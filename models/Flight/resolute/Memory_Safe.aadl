@@ -23,7 +23,7 @@ os_guarantees_memory_separation(p : process) <=
 
 runs_on_os(p : process, os : string) <=
   ** p " runs on " os **
-  property_lookup(p, SMACCM::OS) = os
+  property(p, SMACCM::OS) = os
 
 memory_safe_process(p : process) <=
   ** "The process " p " only writes to its own memory space" **
@@ -35,8 +35,8 @@ memory_safe_thread(t : thread) <=
   
 ivory_thread(t : thread) <=
   ** "The thread " t " is generated from Ivory" **
-  property_exists(t, SMACCM::Language) and
-  property_lookup(t, SMACCM::Language) = "Ivory"
+  has_property(t, SMACCM::Language) and
+  property(t, SMACCM::Language) = "Ivory"
 
 **};
 	

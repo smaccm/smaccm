@@ -29,6 +29,7 @@ import com.rockwellcollins.atc.resolute.resolute.BinaryExpr;
 import com.rockwellcollins.atc.resolute.resolute.ClaimArg;
 import com.rockwellcollins.atc.resolute.resolute.ClaimBody;
 import com.rockwellcollins.atc.resolute.resolute.ClaimString;
+import com.rockwellcollins.atc.resolute.resolute.ClaimText;
 import com.rockwellcollins.atc.resolute.resolute.Expr;
 import com.rockwellcollins.atc.resolute.resolute.FnCallExpr;
 import com.rockwellcollins.atc.resolute.resolute.FunctionDefinition;
@@ -232,7 +233,7 @@ public class ResoluteProver extends ResoluteSwitch<ResoluteResult> {
 
     private Map<String, EObject> createClaimReferences(ClaimBody body) {
         Map<String, EObject> result = new HashMap<>();
-        for (ClaimString claim : body.getClaim()) {
+        for (ClaimText claim : body.getClaim()) {
             if (claim instanceof ClaimArg) {
                 Arg claimArg = ((ClaimArg) claim).getArg();
                 ResoluteValue argVal = varStack.peek().get(claimArg);

@@ -7,6 +7,12 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+
+import com.rockwellcollins.atc.resolute.validation.BaseType;
+import com.rockwellcollins.atc.resolute.validation.ResoluteType;
+import com.rockwellcollins.atc.resolute.validation.SetType;
+
 public class SetValue extends ResoluteValue {
     // Use a SortedSet to ensure deterministic ordering
     final private SortedSet<ResoluteValue> values;
@@ -37,6 +43,15 @@ public class SetValue extends ResoluteValue {
         return values;
     }
 
+    @Override
+    public ResoluteType getType() {
+        if (values.isEmpty()) {
+            throw new NotImplementedException();
+        } else {
+            return new SetType(values.iterator().next().getType());
+        }
+    }
+    
     @Override
     public String toString() {
         StringBuilder text = new StringBuilder();

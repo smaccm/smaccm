@@ -32,6 +32,7 @@ import com.rockwellcollins.atc.resolute.analysis.results.ResoluteResult;
 import com.rockwellcollins.atc.resolute.analysis.views.AssuranceCaseView;
 import com.rockwellcollins.atc.resolute.resolute.ProveStatement;
 import com.rockwellcollins.atc.resolute.resolute.ResoluteSubclause;
+import com.rockwellcollins.atc.resolute.validation.BaseType;
 
 public class ResoluteHandler extends AadlHandler {
     @Override
@@ -110,7 +111,7 @@ public class ResoluteHandler extends AadlHandler {
     }
 
     private String getCategoryName(ComponentCategory category) {
-        return category.getName().replace(" ", "_");
+        return new BaseType(category).toString();
     }
 
     private void addToSet(Map<String, SortedSet<NamedElement>> sets, String name, NamedElement ne) {

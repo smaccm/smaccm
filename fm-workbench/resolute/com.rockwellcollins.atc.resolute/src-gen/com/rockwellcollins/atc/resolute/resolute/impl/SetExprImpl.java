@@ -2,9 +2,9 @@
  */
 package com.rockwellcollins.atc.resolute.resolute.impl;
 
-import com.rockwellcollins.atc.resolute.resolute.ClaimBody;
-import com.rockwellcollins.atc.resolute.resolute.ClaimText;
+import com.rockwellcollins.atc.resolute.resolute.Expr;
 import com.rockwellcollins.atc.resolute.resolute.ResolutePackage;
+import com.rockwellcollins.atc.resolute.resolute.SetExpr;
 
 import java.util.Collection;
 
@@ -20,35 +20,35 @@ import org.eclipse.emf.ecore.util.InternalEList;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Claim Body</b></em>'.
+ * An implementation of the model object '<em><b>Set Expr</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link com.rockwellcollins.atc.resolute.resolute.impl.ClaimBodyImpl#getClaim <em>Claim</em>}</li>
+ *   <li>{@link com.rockwellcollins.atc.resolute.resolute.impl.SetExprImpl#getExprs <em>Exprs</em>}</li>
  * </ul>
  * </p>
  *
  * @generated
  */
-public class ClaimBodyImpl extends DefinitionBodyImpl implements ClaimBody
+public class SetExprImpl extends ExprImpl implements SetExpr
 {
   /**
-   * The cached value of the '{@link #getClaim() <em>Claim</em>}' containment reference list.
+   * The cached value of the '{@link #getExprs() <em>Exprs</em>}' containment reference list.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @see #getClaim()
+   * @see #getExprs()
    * @generated
    * @ordered
    */
-  protected EList<ClaimText> claim;
+  protected EList<Expr> exprs;
 
   /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  protected ClaimBodyImpl()
+  protected SetExprImpl()
   {
     super();
   }
@@ -61,7 +61,7 @@ public class ClaimBodyImpl extends DefinitionBodyImpl implements ClaimBody
   @Override
   protected EClass eStaticClass()
   {
-    return ResolutePackage.Literals.CLAIM_BODY;
+    return ResolutePackage.Literals.SET_EXPR;
   }
 
   /**
@@ -69,13 +69,13 @@ public class ClaimBodyImpl extends DefinitionBodyImpl implements ClaimBody
    * <!-- end-user-doc -->
    * @generated
    */
-  public EList<ClaimText> getClaim()
+  public EList<Expr> getExprs()
   {
-    if (claim == null)
+    if (exprs == null)
     {
-      claim = new EObjectContainmentEList<ClaimText>(ClaimText.class, this, ResolutePackage.CLAIM_BODY__CLAIM);
+      exprs = new EObjectContainmentEList<Expr>(Expr.class, this, ResolutePackage.SET_EXPR__EXPRS);
     }
-    return claim;
+    return exprs;
   }
 
   /**
@@ -88,8 +88,8 @@ public class ClaimBodyImpl extends DefinitionBodyImpl implements ClaimBody
   {
     switch (featureID)
     {
-      case ResolutePackage.CLAIM_BODY__CLAIM:
-        return ((InternalEList<?>)getClaim()).basicRemove(otherEnd, msgs);
+      case ResolutePackage.SET_EXPR__EXPRS:
+        return ((InternalEList<?>)getExprs()).basicRemove(otherEnd, msgs);
     }
     return super.eInverseRemove(otherEnd, featureID, msgs);
   }
@@ -104,8 +104,8 @@ public class ClaimBodyImpl extends DefinitionBodyImpl implements ClaimBody
   {
     switch (featureID)
     {
-      case ResolutePackage.CLAIM_BODY__CLAIM:
-        return getClaim();
+      case ResolutePackage.SET_EXPR__EXPRS:
+        return getExprs();
     }
     return super.eGet(featureID, resolve, coreType);
   }
@@ -121,9 +121,9 @@ public class ClaimBodyImpl extends DefinitionBodyImpl implements ClaimBody
   {
     switch (featureID)
     {
-      case ResolutePackage.CLAIM_BODY__CLAIM:
-        getClaim().clear();
-        getClaim().addAll((Collection<? extends ClaimText>)newValue);
+      case ResolutePackage.SET_EXPR__EXPRS:
+        getExprs().clear();
+        getExprs().addAll((Collection<? extends Expr>)newValue);
         return;
     }
     super.eSet(featureID, newValue);
@@ -139,8 +139,8 @@ public class ClaimBodyImpl extends DefinitionBodyImpl implements ClaimBody
   {
     switch (featureID)
     {
-      case ResolutePackage.CLAIM_BODY__CLAIM:
-        getClaim().clear();
+      case ResolutePackage.SET_EXPR__EXPRS:
+        getExprs().clear();
         return;
     }
     super.eUnset(featureID);
@@ -156,10 +156,10 @@ public class ClaimBodyImpl extends DefinitionBodyImpl implements ClaimBody
   {
     switch (featureID)
     {
-      case ResolutePackage.CLAIM_BODY__CLAIM:
-        return claim != null && !claim.isEmpty();
+      case ResolutePackage.SET_EXPR__EXPRS:
+        return exprs != null && !exprs.isEmpty();
     }
     return super.eIsSet(featureID);
   }
 
-} //ClaimBodyImpl
+} //SetExprImpl

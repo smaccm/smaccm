@@ -24,7 +24,7 @@ public interface ClaimBody extends DefinitionBody
 {
   /**
    * Returns the value of the '<em><b>Claim</b></em>' containment reference list.
-   * The list contents are of type {@link com.rockwellcollins.atc.resolute.resolute.ClaimString}.
+   * The list contents are of type {@link com.rockwellcollins.atc.resolute.resolute.ClaimText}.
    * <!-- begin-user-doc -->
    * <p>
    * If the meaning of the '<em>Claim</em>' containment reference list isn't clear,
@@ -36,6 +36,6 @@ public interface ClaimBody extends DefinitionBody
    * @model containment="true"
    * @generated
    */
-  EList<ClaimString> getClaim();
+  EList<ClaimText> getClaim();
 
 } // ClaimBody

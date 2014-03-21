@@ -3,25 +3,27 @@
 package com.rockwellcollins.atc.resolute.resolute.impl;
 
 import com.rockwellcollins.atc.resolute.resolute.Arg;
+import com.rockwellcollins.atc.resolute.resolute.BaseType;
 import com.rockwellcollins.atc.resolute.resolute.BinaryExpr;
 import com.rockwellcollins.atc.resolute.resolute.BoolExpr;
-import com.rockwellcollins.atc.resolute.resolute.BuiltInFuncCallExpr;
-import com.rockwellcollins.atc.resolute.resolute.BuiltinType;
+import com.rockwellcollins.atc.resolute.resolute.BuiltInFnCallExpr;
+import com.rockwellcollins.atc.resolute.resolute.CastExpr;
 import com.rockwellcollins.atc.resolute.resolute.ClaimArg;
 import com.rockwellcollins.atc.resolute.resolute.ClaimBody;
 import com.rockwellcollins.atc.resolute.resolute.ClaimString;
+import com.rockwellcollins.atc.resolute.resolute.ClaimText;
 import com.rockwellcollins.atc.resolute.resolute.ConstantDefinition;
 import com.rockwellcollins.atc.resolute.resolute.Definition;
 import com.rockwellcollins.atc.resolute.resolute.DefinitionBody;
-import com.rockwellcollins.atc.resolute.resolute.ElementSet;
 import com.rockwellcollins.atc.resolute.resolute.Expr;
 import com.rockwellcollins.atc.resolute.resolute.FailExpr;
 import com.rockwellcollins.atc.resolute.resolute.FilterMapExpr;
 import com.rockwellcollins.atc.resolute.resolute.FnCallExpr;
-import com.rockwellcollins.atc.resolute.resolute.FuncBody;
+import com.rockwellcollins.atc.resolute.resolute.FunctionBody;
 import com.rockwellcollins.atc.resolute.resolute.FunctionDefinition;
 import com.rockwellcollins.atc.resolute.resolute.IdExpr;
 import com.rockwellcollins.atc.resolute.resolute.IfThenElseExpr;
+import com.rockwellcollins.atc.resolute.resolute.InstanceOfExpr;
 import com.rockwellcollins.atc.resolute.resolute.IntExpr;
 import com.rockwellcollins.atc.resolute.resolute.LetBinding;
 import com.rockwellcollins.atc.resolute.resolute.LetExpr;
@@ -34,6 +36,7 @@ import com.rockwellcollins.atc.resolute.resolute.ResoluteFactory;
 import com.rockwellcollins.atc.resolute.resolute.ResoluteLibrary;
 import com.rockwellcollins.atc.resolute.resolute.ResolutePackage;
 import com.rockwellcollins.atc.resolute.resolute.ResoluteSubclause;
+import com.rockwellcollins.atc.resolute.resolute.SetExpr;
 import com.rockwellcollins.atc.resolute.resolute.SetType;
 import com.rockwellcollins.atc.resolute.resolute.StringExpr;
 import com.rockwellcollins.atc.resolute.resolute.ThisExpr;
@@ -83,14 +86,7 @@ public class ResolutePackageImpl extends EPackageImpl implements ResolutePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass elementSetEClass = null;
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  private EClass builtinTypeEClass = null;
+  private EClass baseTypeEClass = null;
 
   /**
    * <!-- begin-user-doc -->
@@ -118,14 +114,14 @@ public class ResolutePackageImpl extends EPackageImpl implements ResolutePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass claimStringEClass = null;
+  private EClass definitionBodyEClass = null;
 
   /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass definitionBodyEClass = null;
+  private EClass claimTextEClass = null;
 
   /**
    * <!-- begin-user-doc -->
@@ -181,14 +177,7 @@ public class ResolutePackageImpl extends EPackageImpl implements ResolutePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass claimArgEClass = null;
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  private EClass funcBodyEClass = null;
+  private EClass functionBodyEClass = null;
 
   /**
    * <!-- begin-user-doc -->
@@ -202,6 +191,20 @@ public class ResolutePackageImpl extends EPackageImpl implements ResolutePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  private EClass claimStringEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass claimArgEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   private EClass binaryExprEClass = null;
 
   /**
@@ -209,7 +212,21 @@ public class ResolutePackageImpl extends EPackageImpl implements ResolutePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  private EClass instanceOfExprEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   private EClass unaryExprEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass castExprEClass = null;
 
   /**
    * <!-- begin-user-doc -->
@@ -279,7 +296,7 @@ public class ResolutePackageImpl extends EPackageImpl implements ResolutePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass builtInFuncCallExprEClass = null;
+  private EClass builtInFnCallExprEClass = null;
 
   /**
    * <!-- begin-user-doc -->
@@ -294,6 +311,13 @@ public class ResolutePackageImpl extends EPackageImpl implements ResolutePackage
    * @generated
    */
   private EClass filterMapExprEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass setExprEClass = null;
 
   /**
    * <!-- begin-user-doc -->
@@ -413,9 +437,9 @@ public class ResolutePackageImpl extends EPackageImpl implements ResolutePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getElementSet()
+  public EClass getBaseType()
   {
-    return elementSetEClass;
+    return baseTypeEClass;
   }
 
   /**
@@ -423,19 +447,9 @@ public class ResolutePackageImpl extends EPackageImpl implements ResolutePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EAttribute getElementSet_Name()
+  public EAttribute getBaseType_Type()
   {
-    return (EAttribute)elementSetEClass.getEStructuralFeatures().get(0);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EClass getBuiltinType()
-  {
-    return builtinTypeEClass;
+    return (EAttribute)baseTypeEClass.getEStructuralFeatures().get(0);
   }
 
   /**
@@ -523,26 +537,6 @@ public class ResolutePackageImpl extends EPackageImpl implements ResolutePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getClaimString()
-  {
-    return claimStringEClass;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EAttribute getClaimString_Str()
-  {
-    return (EAttribute)claimStringEClass.getEStructuralFeatures().get(0);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
   public EClass getDefinitionBody()
   {
     return definitionBodyEClass;
@@ -556,6 +550,16 @@ public class ResolutePackageImpl extends EPackageImpl implements ResolutePackage
   public EReference getDefinitionBody_Expr()
   {
     return (EReference)definitionBodyEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getClaimText()
+  {
+    return claimTextEClass;
   }
 
   /**
@@ -673,16 +677,6 @@ public class ResolutePackageImpl extends EPackageImpl implements ResolutePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getProveStatement_Modes()
-  {
-    return (EReference)proveStatementEClass.getEStructuralFeatures().get(1);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
   public EClass getSetType()
   {
     return setTypeEClass;
@@ -723,9 +717,9 @@ public class ResolutePackageImpl extends EPackageImpl implements ResolutePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getClaimArg()
+  public EClass getFunctionBody()
   {
-    return claimArgEClass;
+    return functionBodyEClass;
   }
 
   /**
@@ -733,29 +727,9 @@ public class ResolutePackageImpl extends EPackageImpl implements ResolutePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getClaimArg_Arg()
+  public EReference getFunctionBody_Type()
   {
-    return (EReference)claimArgEClass.getEStructuralFeatures().get(0);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EClass getFuncBody()
-  {
-    return funcBodyEClass;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EReference getFuncBody_Type()
-  {
-    return (EReference)funcBodyEClass.getEStructuralFeatures().get(0);
+    return (EReference)functionBodyEClass.getEStructuralFeatures().get(0);
   }
 
   /**
@@ -776,6 +750,46 @@ public class ResolutePackageImpl extends EPackageImpl implements ResolutePackage
   public EReference getClaimBody_Claim()
   {
     return (EReference)claimBodyEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getClaimString()
+  {
+    return claimStringEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getClaimString_Str()
+  {
+    return (EAttribute)claimStringEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getClaimArg()
+  {
+    return claimArgEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getClaimArg_Arg()
+  {
+    return (EReference)claimArgEClass.getEStructuralFeatures().get(0);
   }
 
   /**
@@ -823,6 +837,36 @@ public class ResolutePackageImpl extends EPackageImpl implements ResolutePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  public EClass getInstanceOfExpr()
+  {
+    return instanceOfExprEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getInstanceOfExpr_Expr()
+  {
+    return (EReference)instanceOfExprEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getInstanceOfExpr_Type()
+  {
+    return (EReference)instanceOfExprEClass.getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   public EClass getUnaryExpr()
   {
     return unaryExprEClass;
@@ -853,6 +897,36 @@ public class ResolutePackageImpl extends EPackageImpl implements ResolutePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  public EClass getCastExpr()
+  {
+    return castExprEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getCastExpr_Type()
+  {
+    return (EReference)castExprEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getCastExpr_Expr()
+  {
+    return (EReference)castExprEClass.getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   public EClass getIdExpr()
   {
     return idExprEClass;
@@ -866,16 +940,6 @@ public class ResolutePackageImpl extends EPackageImpl implements ResolutePackage
   public EReference getIdExpr_Id()
   {
     return (EReference)idExprEClass.getEStructuralFeatures().get(0);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EReference getIdExpr_Subelements()
-  {
-    return (EReference)idExprEClass.getEStructuralFeatures().get(1);
   }
 
   /**
@@ -1083,9 +1147,9 @@ public class ResolutePackageImpl extends EPackageImpl implements ResolutePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getBuiltInFuncCallExpr()
+  public EClass getBuiltInFnCallExpr()
   {
-    return builtInFuncCallExprEClass;
+    return builtInFnCallExprEClass;
   }
 
   /**
@@ -1093,9 +1157,9 @@ public class ResolutePackageImpl extends EPackageImpl implements ResolutePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EAttribute getBuiltInFuncCallExpr_Fn()
+  public EAttribute getBuiltInFnCallExpr_Fn()
   {
-    return (EAttribute)builtInFuncCallExprEClass.getEStructuralFeatures().get(0);
+    return (EAttribute)builtInFnCallExprEClass.getEStructuralFeatures().get(0);
   }
 
   /**
@@ -1103,9 +1167,9 @@ public class ResolutePackageImpl extends EPackageImpl implements ResolutePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getBuiltInFuncCallExpr_Args()
+  public EReference getBuiltInFnCallExpr_Args()
   {
-    return (EReference)builtInFuncCallExprEClass.getEStructuralFeatures().get(1);
+    return (EReference)builtInFnCallExprEClass.getEStructuralFeatures().get(1);
   }
 
   /**
@@ -1183,6 +1247,26 @@ public class ResolutePackageImpl extends EPackageImpl implements ResolutePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  public EClass getSetExpr()
+  {
+    return setExprEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getSetExpr_Exprs()
+  {
+    return (EReference)setExprEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   public EClass getLetExpr()
   {
     return letExprEClass;
@@ -1245,10 +1329,8 @@ public class ResolutePackageImpl extends EPackageImpl implements ResolutePackage
 
     typeEClass = createEClass(TYPE);
 
-    elementSetEClass = createEClass(ELEMENT_SET);
-    createEAttribute(elementSetEClass, ELEMENT_SET__NAME);
-
-    builtinTypeEClass = createEClass(BUILTIN_TYPE);
+    baseTypeEClass = createEClass(BASE_TYPE);
+    createEAttribute(baseTypeEClass, BASE_TYPE__TYPE);
 
     argEClass = createEClass(ARG);
     createEReference(argEClass, ARG__TYPE);
@@ -1261,11 +1343,10 @@ public class ResolutePackageImpl extends EPackageImpl implements ResolutePackage
     createEReference(functionDefinitionEClass, FUNCTION_DEFINITION__ARGS);
     createEReference(functionDefinitionEClass, FUNCTION_DEFINITION__BODY);
 
-    claimStringEClass = createEClass(CLAIM_STRING);
-    createEAttribute(claimStringEClass, CLAIM_STRING__STR);
-
     definitionBodyEClass = createEClass(DEFINITION_BODY);
     createEReference(definitionBodyEClass, DEFINITION_BODY__EXPR);
+
+    claimTextEClass = createEClass(CLAIM_TEXT);
 
     exprEClass = createEClass(EXPR);
 
@@ -1282,7 +1363,6 @@ public class ResolutePackageImpl extends EPackageImpl implements ResolutePackage
 
     proveStatementEClass = createEClass(PROVE_STATEMENT);
     createEReference(proveStatementEClass, PROVE_STATEMENT__EXPR);
-    createEReference(proveStatementEClass, PROVE_STATEMENT__MODES);
 
     setTypeEClass = createEClass(SET_TYPE);
     createEReference(setTypeEClass, SET_TYPE__TYPE);
@@ -1290,27 +1370,37 @@ public class ResolutePackageImpl extends EPackageImpl implements ResolutePackage
     quantArgEClass = createEClass(QUANT_ARG);
     createEReference(quantArgEClass, QUANT_ARG__EXPR);
 
-    claimArgEClass = createEClass(CLAIM_ARG);
-    createEReference(claimArgEClass, CLAIM_ARG__ARG);
-
-    funcBodyEClass = createEClass(FUNC_BODY);
-    createEReference(funcBodyEClass, FUNC_BODY__TYPE);
+    functionBodyEClass = createEClass(FUNCTION_BODY);
+    createEReference(functionBodyEClass, FUNCTION_BODY__TYPE);
 
     claimBodyEClass = createEClass(CLAIM_BODY);
     createEReference(claimBodyEClass, CLAIM_BODY__CLAIM);
+
+    claimStringEClass = createEClass(CLAIM_STRING);
+    createEAttribute(claimStringEClass, CLAIM_STRING__STR);
+
+    claimArgEClass = createEClass(CLAIM_ARG);
+    createEReference(claimArgEClass, CLAIM_ARG__ARG);
 
     binaryExprEClass = createEClass(BINARY_EXPR);
     createEReference(binaryExprEClass, BINARY_EXPR__LEFT);
     createEAttribute(binaryExprEClass, BINARY_EXPR__OP);
     createEReference(binaryExprEClass, BINARY_EXPR__RIGHT);
 
+    instanceOfExprEClass = createEClass(INSTANCE_OF_EXPR);
+    createEReference(instanceOfExprEClass, INSTANCE_OF_EXPR__EXPR);
+    createEReference(instanceOfExprEClass, INSTANCE_OF_EXPR__TYPE);
+
     unaryExprEClass = createEClass(UNARY_EXPR);
     createEAttribute(unaryExprEClass, UNARY_EXPR__OP);
     createEReference(unaryExprEClass, UNARY_EXPR__EXPR);
 
+    castExprEClass = createEClass(CAST_EXPR);
+    createEReference(castExprEClass, CAST_EXPR__TYPE);
+    createEReference(castExprEClass, CAST_EXPR__EXPR);
+
     idExprEClass = createEClass(ID_EXPR);
     createEReference(idExprEClass, ID_EXPR__ID);
-    createEReference(idExprEClass, ID_EXPR__SUBELEMENTS);
 
     thisExprEClass = createEClass(THIS_EXPR);
     createEReference(thisExprEClass, THIS_EXPR__SUB);
@@ -1340,9 +1430,9 @@ public class ResolutePackageImpl extends EPackageImpl implements ResolutePackage
     createEReference(quantifiedExprEClass, QUANTIFIED_EXPR__ARGS);
     createEReference(quantifiedExprEClass, QUANTIFIED_EXPR__EXPR);
 
-    builtInFuncCallExprEClass = createEClass(BUILT_IN_FUNC_CALL_EXPR);
-    createEAttribute(builtInFuncCallExprEClass, BUILT_IN_FUNC_CALL_EXPR__FN);
-    createEReference(builtInFuncCallExprEClass, BUILT_IN_FUNC_CALL_EXPR__ARGS);
+    builtInFnCallExprEClass = createEClass(BUILT_IN_FN_CALL_EXPR);
+    createEAttribute(builtInFnCallExprEClass, BUILT_IN_FN_CALL_EXPR__FN);
+    createEReference(builtInFnCallExprEClass, BUILT_IN_FN_CALL_EXPR__ARGS);
 
     fnCallExprEClass = createEClass(FN_CALL_EXPR);
     createEReference(fnCallExprEClass, FN_CALL_EXPR__FN);
@@ -1352,6 +1442,9 @@ public class ResolutePackageImpl extends EPackageImpl implements ResolutePackage
     createEReference(filterMapExprEClass, FILTER_MAP_EXPR__MAP);
     createEReference(filterMapExprEClass, FILTER_MAP_EXPR__ARGS);
     createEReference(filterMapExprEClass, FILTER_MAP_EXPR__FILTER);
+
+    setExprEClass = createEClass(SET_EXPR);
+    createEReference(setExprEClass, SET_EXPR__EXPRS);
 
     letExprEClass = createEClass(LET_EXPR);
     createEReference(letExprEClass, LET_EXPR__BINDING);
@@ -1392,25 +1485,27 @@ public class ResolutePackageImpl extends EPackageImpl implements ResolutePackage
     // Add supertypes to classes
     resoluteLibraryEClass.getESuperTypes().add(theAadl2Package.getAnnexLibrary());
     definitionEClass.getESuperTypes().add(theAadl2Package.getNamedElement());
-    typeEClass.getESuperTypes().add(theAadl2Package.getNamedElement());
-    builtinTypeEClass.getESuperTypes().add(this.getType());
+    baseTypeEClass.getESuperTypes().add(this.getType());
     argEClass.getESuperTypes().add(theAadl2Package.getNamedElement());
     constantDefinitionEClass.getESuperTypes().add(this.getDefinition());
     functionDefinitionEClass.getESuperTypes().add(theAadl2Package.getNamespace());
     functionDefinitionEClass.getESuperTypes().add(this.getDefinition());
-    claimStringEClass.getESuperTypes().add(theAadl2Package.getElement());
     definitionBodyEClass.getESuperTypes().add(theAadl2Package.getElement());
+    claimTextEClass.getESuperTypes().add(theAadl2Package.getElement());
     exprEClass.getESuperTypes().add(theAadl2Package.getElement());
     letBindingEClass.getESuperTypes().add(theAadl2Package.getNamedElement());
     resoluteSubclauseEClass.getESuperTypes().add(theAadl2Package.getAnnexSubclause());
     proveStatementEClass.getESuperTypes().add(theAadl2Package.getElement());
     setTypeEClass.getESuperTypes().add(this.getType());
     quantArgEClass.getESuperTypes().add(this.getArg());
-    claimArgEClass.getESuperTypes().add(this.getClaimString());
-    funcBodyEClass.getESuperTypes().add(this.getDefinitionBody());
+    functionBodyEClass.getESuperTypes().add(this.getDefinitionBody());
     claimBodyEClass.getESuperTypes().add(this.getDefinitionBody());
+    claimStringEClass.getESuperTypes().add(this.getClaimText());
+    claimArgEClass.getESuperTypes().add(this.getClaimText());
     binaryExprEClass.getESuperTypes().add(this.getExpr());
+    instanceOfExprEClass.getESuperTypes().add(this.getExpr());
     unaryExprEClass.getESuperTypes().add(this.getExpr());
+    castExprEClass.getESuperTypes().add(this.getExpr());
     idExprEClass.getESuperTypes().add(this.getExpr());
     thisExprEClass.getESuperTypes().add(this.getExpr());
     failExprEClass.getESuperTypes().add(this.getExpr());
@@ -1420,9 +1515,10 @@ public class ResolutePackageImpl extends EPackageImpl implements ResolutePackage
     stringExprEClass.getESuperTypes().add(this.getExpr());
     ifThenElseExprEClass.getESuperTypes().add(this.getExpr());
     quantifiedExprEClass.getESuperTypes().add(this.getExpr());
-    builtInFuncCallExprEClass.getESuperTypes().add(this.getExpr());
+    builtInFnCallExprEClass.getESuperTypes().add(this.getExpr());
     fnCallExprEClass.getESuperTypes().add(this.getExpr());
     filterMapExprEClass.getESuperTypes().add(this.getExpr());
+    setExprEClass.getESuperTypes().add(this.getExpr());
     letExprEClass.getESuperTypes().add(this.getExpr());
 
     // Initialize classes and features; add operations and parameters
@@ -1433,10 +1529,8 @@ public class ResolutePackageImpl extends EPackageImpl implements ResolutePackage
 
     initEClass(typeEClass, Type.class, "Type", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
-    initEClass(elementSetEClass, ElementSet.class, "ElementSet", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEAttribute(getElementSet_Name(), ecorePackage.getEString(), "name", null, 0, 1, ElementSet.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-    initEClass(builtinTypeEClass, BuiltinType.class, "BuiltinType", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEClass(baseTypeEClass, BaseType.class, "BaseType", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEAttribute(getBaseType_Type(), ecorePackage.getEString(), "type", null, 0, 1, BaseType.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(argEClass, Arg.class, "Arg", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getArg_Type(), this.getType(), null, "type", null, 0, 1, Arg.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -1449,11 +1543,10 @@ public class ResolutePackageImpl extends EPackageImpl implements ResolutePackage
     initEReference(getFunctionDefinition_Args(), this.getArg(), null, "args", null, 0, -1, FunctionDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getFunctionDefinition_Body(), this.getDefinitionBody(), null, "body", null, 0, 1, FunctionDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-    initEClass(claimStringEClass, ClaimString.class, "ClaimString", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEAttribute(getClaimString_Str(), ecorePackage.getEString(), "str", null, 0, 1, ClaimString.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
     initEClass(definitionBodyEClass, DefinitionBody.class, "DefinitionBody", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getDefinitionBody_Expr(), this.getExpr(), null, "expr", null, 0, 1, DefinitionBody.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+    initEClass(claimTextEClass, ClaimText.class, "ClaimText", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
     initEClass(exprEClass, Expr.class, "Expr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
@@ -1470,7 +1563,6 @@ public class ResolutePackageImpl extends EPackageImpl implements ResolutePackage
 
     initEClass(proveStatementEClass, ProveStatement.class, "ProveStatement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getProveStatement_Expr(), this.getExpr(), null, "expr", null, 0, 1, ProveStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getProveStatement_Modes(), this.getNestedDotID(), null, "modes", null, 0, -1, ProveStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(setTypeEClass, SetType.class, "SetType", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getSetType_Type(), this.getType(), null, "type", null, 0, 1, SetType.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -1478,27 +1570,37 @@ public class ResolutePackageImpl extends EPackageImpl implements ResolutePackage
     initEClass(quantArgEClass, QuantArg.class, "QuantArg", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getQuantArg_Expr(), this.getExpr(), null, "expr", null, 0, 1, QuantArg.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-    initEClass(claimArgEClass, ClaimArg.class, "ClaimArg", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getClaimArg_Arg(), this.getArg(), null, "arg", null, 0, 1, ClaimArg.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-    initEClass(funcBodyEClass, FuncBody.class, "FuncBody", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getFuncBody_Type(), this.getType(), null, "type", null, 0, 1, FuncBody.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEClass(functionBodyEClass, FunctionBody.class, "FunctionBody", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getFunctionBody_Type(), this.getType(), null, "type", null, 0, 1, FunctionBody.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(claimBodyEClass, ClaimBody.class, "ClaimBody", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getClaimBody_Claim(), this.getClaimString(), null, "claim", null, 0, -1, ClaimBody.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getClaimBody_Claim(), this.getClaimText(), null, "claim", null, 0, -1, ClaimBody.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+    initEClass(claimStringEClass, ClaimString.class, "ClaimString", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEAttribute(getClaimString_Str(), ecorePackage.getEString(), "str", null, 0, 1, ClaimString.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+    initEClass(claimArgEClass, ClaimArg.class, "ClaimArg", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getClaimArg_Arg(), this.getArg(), null, "arg", null, 0, 1, ClaimArg.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(binaryExprEClass, BinaryExpr.class, "BinaryExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getBinaryExpr_Left(), this.getExpr(), null, "left", null, 0, 1, BinaryExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEAttribute(getBinaryExpr_Op(), ecorePackage.getEString(), "op", null, 0, 1, BinaryExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getBinaryExpr_Right(), this.getExpr(), null, "right", null, 0, 1, BinaryExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
+    initEClass(instanceOfExprEClass, InstanceOfExpr.class, "InstanceOfExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getInstanceOfExpr_Expr(), this.getExpr(), null, "expr", null, 0, 1, InstanceOfExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getInstanceOfExpr_Type(), this.getBaseType(), null, "type", null, 0, 1, InstanceOfExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
     initEClass(unaryExprEClass, UnaryExpr.class, "UnaryExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEAttribute(getUnaryExpr_Op(), ecorePackage.getEString(), "op", null, 0, 1, UnaryExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getUnaryExpr_Expr(), this.getExpr(), null, "expr", null, 0, 1, UnaryExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
+    initEClass(castExprEClass, CastExpr.class, "CastExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getCastExpr_Type(), this.getBaseType(), null, "type", null, 0, 1, CastExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getCastExpr_Expr(), this.getExpr(), null, "expr", null, 0, 1, CastExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
     initEClass(idExprEClass, IdExpr.class, "IdExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getIdExpr_Id(), theAadl2Package.getNamedElement(), null, "id", null, 0, 1, IdExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getIdExpr_Subelements(), this.getElementSet(), null, "subelements", null, 0, 1, IdExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(thisExprEClass, ThisExpr.class, "ThisExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getThisExpr_Sub(), this.getNestedDotID(), null, "sub", null, 0, 1, ThisExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -1528,9 +1630,9 @@ public class ResolutePackageImpl extends EPackageImpl implements ResolutePackage
     initEReference(getQuantifiedExpr_Args(), this.getArg(), null, "args", null, 0, -1, QuantifiedExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getQuantifiedExpr_Expr(), this.getExpr(), null, "expr", null, 0, 1, QuantifiedExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-    initEClass(builtInFuncCallExprEClass, BuiltInFuncCallExpr.class, "BuiltInFuncCallExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEAttribute(getBuiltInFuncCallExpr_Fn(), ecorePackage.getEString(), "fn", null, 0, 1, BuiltInFuncCallExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getBuiltInFuncCallExpr_Args(), this.getExpr(), null, "args", null, 0, -1, BuiltInFuncCallExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEClass(builtInFnCallExprEClass, BuiltInFnCallExpr.class, "BuiltInFnCallExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEAttribute(getBuiltInFnCallExpr_Fn(), ecorePackage.getEString(), "fn", null, 0, 1, BuiltInFnCallExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getBuiltInFnCallExpr_Args(), this.getExpr(), null, "args", null, 0, -1, BuiltInFnCallExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(fnCallExprEClass, FnCallExpr.class, "FnCallExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getFnCallExpr_Fn(), this.getFunctionDefinition(), null, "fn", null, 0, 1, FnCallExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -1540,6 +1642,9 @@ public class ResolutePackageImpl extends EPackageImpl implements ResolutePackage
     initEReference(getFilterMapExpr_Map(), this.getExpr(), null, "map", null, 0, 1, FilterMapExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getFilterMapExpr_Args(), this.getArg(), null, "args", null, 0, -1, FilterMapExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getFilterMapExpr_Filter(), this.getExpr(), null, "filter", null, 0, 1, FilterMapExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+    initEClass(setExprEClass, SetExpr.class, "SetExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getSetExpr_Exprs(), this.getExpr(), null, "exprs", null, 0, -1, SetExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(letExprEClass, LetExpr.class, "LetExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getLetExpr_Binding(), this.getLetBinding(), null, "binding", null, 0, 1, LetExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

@@ -2,7 +2,7 @@
  */
 package com.rockwellcollins.atc.resolute.resolute.impl;
 
-import com.rockwellcollins.atc.resolute.resolute.ElementSet;
+import com.rockwellcollins.atc.resolute.resolute.BaseType;
 import com.rockwellcollins.atc.resolute.resolute.ResolutePackage;
 
 import org.eclipse.emf.common.notify.Notification;
@@ -10,49 +10,48 @@ import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EClass;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Element Set</b></em>'.
+ * An implementation of the model object '<em><b>Base Type</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link com.rockwellcollins.atc.resolute.resolute.impl.ElementSetImpl#getName <em>Name</em>}</li>
+ *   <li>{@link com.rockwellcollins.atc.resolute.resolute.impl.BaseTypeImpl#getType <em>Type</em>}</li>
  * </ul>
  * </p>
  *
  * @generated
  */
-public class ElementSetImpl extends MinimalEObjectImpl.Container implements ElementSet
+public class BaseTypeImpl extends TypeImpl implements BaseType
 {
   /**
-   * The default value of the '{@link #getName() <em>Name</em>}' attribute.
+   * The default value of the '{@link #getType() <em>Type</em>}' attribute.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @see #getName()
+   * @see #getType()
    * @generated
    * @ordered
    */
-  protected static final String NAME_EDEFAULT = null;
+  protected static final String TYPE_EDEFAULT = null;
 
   /**
-   * The cached value of the '{@link #getName() <em>Name</em>}' attribute.
+   * The cached value of the '{@link #getType() <em>Type</em>}' attribute.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @see #getName()
+   * @see #getType()
    * @generated
    * @ordered
    */
-  protected String name = NAME_EDEFAULT;
+  protected String type = TYPE_EDEFAULT;
 
   /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  protected ElementSetImpl()
+  protected BaseTypeImpl()
   {
     super();
   }
@@ -65,7 +64,7 @@ public class ElementSetImpl extends MinimalEObjectImpl.Container implements Elem
   @Override
   protected EClass eStaticClass()
   {
-    return ResolutePackage.Literals.ELEMENT_SET;
+    return ResolutePackage.Literals.BASE_TYPE;
   }
 
   /**
@@ -73,9 +72,9 @@ public class ElementSetImpl extends MinimalEObjectImpl.Container implements Elem
    * <!-- end-user-doc -->
    * @generated
    */
-  public String getName()
+  public String getType()
   {
-    return name;
+    return type;
   }
 
   /**
@@ -83,12 +82,12 @@ public class ElementSetImpl extends MinimalEObjectImpl.Container implements Elem
    * <!-- end-user-doc -->
    * @generated
    */
-  public void setName(String newName)
+  public void setType(String newType)
   {
-    String oldName = name;
-    name = newName;
+    String oldType = type;
+    type = newType;
     if (eNotificationRequired())
-      eNotify(new ENotificationImpl(this, Notification.SET, ResolutePackage.ELEMENT_SET__NAME, oldName, name));
+      eNotify(new ENotificationImpl(this, Notification.SET, ResolutePackage.BASE_TYPE__TYPE, oldType, type));
   }
 
   /**
@@ -101,8 +100,8 @@ public class ElementSetImpl extends MinimalEObjectImpl.Container implements Elem
   {
     switch (featureID)
     {
-      case ResolutePackage.ELEMENT_SET__NAME:
-        return getName();
+      case ResolutePackage.BASE_TYPE__TYPE:
+        return getType();
     }
     return super.eGet(featureID, resolve, coreType);
   }
@@ -117,8 +116,8 @@ public class ElementSetImpl extends MinimalEObjectImpl.Container implements Elem
   {
     switch (featureID)
     {
-      case ResolutePackage.ELEMENT_SET__NAME:
-        setName((String)newValue);
+      case ResolutePackage.BASE_TYPE__TYPE:
+        setType((String)newValue);
         return;
     }
     super.eSet(featureID, newValue);
@@ -134,8 +133,8 @@ public class ElementSetImpl extends MinimalEObjectImpl.Container implements Elem
   {
     switch (featureID)
     {
-      case ResolutePackage.ELEMENT_SET__NAME:
-        setName(NAME_EDEFAULT);
+      case ResolutePackage.BASE_TYPE__TYPE:
+        setType(TYPE_EDEFAULT);
         return;
     }
     super.eUnset(featureID);
@@ -151,8 +150,8 @@ public class ElementSetImpl extends MinimalEObjectImpl.Container implements Elem
   {
     switch (featureID)
     {
-      case ResolutePackage.ELEMENT_SET__NAME:
-        return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
+      case ResolutePackage.BASE_TYPE__TYPE:
+        return TYPE_EDEFAULT == null ? type != null : !TYPE_EDEFAULT.equals(type);
     }
     return super.eIsSet(featureID);
   }
@@ -168,10 +167,10 @@ public class ElementSetImpl extends MinimalEObjectImpl.Container implements Elem
     if (eIsProxy()) return super.toString();
 
     StringBuffer result = new StringBuffer(super.toString());
-    result.append(" (name: ");
-    result.append(name);
+    result.append(" (type: ");
+    result.append(type);
     result.append(')');
     return result.toString();
   }
 
-} //ElementSetImpl
+} //BaseTypeImpl
