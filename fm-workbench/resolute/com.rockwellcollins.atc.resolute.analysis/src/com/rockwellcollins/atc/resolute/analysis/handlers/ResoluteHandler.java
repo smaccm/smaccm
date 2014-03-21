@@ -14,6 +14,9 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.handlers.IHandlerActivation;
+import org.eclipse.ui.handlers.IHandlerService;
+import org.eclipse.xtext.EcoreUtil2;
 import org.osate.aadl2.ComponentCategory;
 import org.osate.aadl2.Element;
 import org.osate.aadl2.NamedElement;
@@ -35,6 +38,9 @@ import com.rockwellcollins.atc.resolute.resolute.ResoluteSubclause;
 import com.rockwellcollins.atc.resolute.validation.BaseType;
 
 public class ResoluteHandler extends AadlHandler {
+    private static final String RERUN_ID = "com.rockwellcollins.atc.resolute.analysis.commands.rerunResolute";
+    private IHandlerActivation rerunActivation;
+
     @Override
     protected String getJobName() {
         return "Resolute Analysis";
@@ -43,6 +49,7 @@ public class ResoluteHandler extends AadlHandler {
     @Override
     protected IStatus runJob(Element root, IProgressMonitor monitor) {
         clearProofs();
+        disableRerunHandler();
 
         long start = System.currentTimeMillis();
         SystemInstance si;
@@ -90,7 +97,27 @@ public class ResoluteHandler extends AadlHandler {
         stop = System.currentTimeMillis();
         System.out.println("Evaluation time: " + (stop - start) / 1000.0 + "s");
 
+        enableRerunHandler(root);
+        System.out.println(EcoreUtil2.getURI(root));
+
         return Status.OK_STATUS;
+    }
+
+    private void enableRerunHandler(Element root) {
+        IHandlerService handlerService = getHandlerService();
+        rerunActivation = handlerService.activateHandler(RERUN_ID, new RerunHandler(root, this));
+    }
+
+    private void disableRerunHandler() {
+        if (rerunActivation != null) {
+            IHandlerService handlerService = getHandlerService();
+            handlerService.deactivateHandler(rerunActivation);
+            rerunActivation = null;
+        }
+    }
+
+    private IHandlerService getHandlerService() {
+        return (IHandlerService) getWindow().getService(IHandlerService.class);
     }
 
     private void initializeSets(ComponentInstance ci, Map<String, SortedSet<NamedElement>> sets) {
@@ -144,7 +171,7 @@ public class ResoluteHandler extends AadlHandler {
         }
     }
 
-    private void clearProofs() {
+    protected void clearProofs() {
         drawProofs(Collections.<ResoluteResult> emptyList());
     }
 }
