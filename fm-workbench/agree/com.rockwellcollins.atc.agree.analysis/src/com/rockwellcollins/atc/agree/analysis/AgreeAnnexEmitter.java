@@ -33,7 +33,6 @@ import jkind.lustre.UnaryOp;
 import jkind.lustre.VarDecl;
 
 import org.eclipse.emf.ecore.EObject;
-import org.osate.aadl2.AbstractConnectionEnd;
 import org.osate.aadl2.AnnexSubclause;
 import org.osate.aadl2.BooleanLiteral;
 import org.osate.aadl2.BusAccess;
@@ -1149,10 +1148,8 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
 
         for (Connection conn : compImpl.getAllConnections()) {
 
-            AbstractConnectionEnd absConnDest = conn.getDestination();
-            AbstractConnectionEnd absConnSour = conn.getSource();
-            assert (absConnDest instanceof ConnectedElement);
-            assert (absConnSour instanceof ConnectedElement);
+            ConnectedElement absConnDest = conn.getDestination();
+            ConnectedElement absConnSour = conn.getSource();
 
             boolean delayed = false;
             try{
@@ -1162,10 +1159,10 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
                 delayed = false;
             }
 
-            ConnectionEnd destConn = ((ConnectedElement) absConnDest).getConnectionEnd();
-            ConnectionEnd sourConn = ((ConnectedElement) absConnSour).getConnectionEnd();
-            Context destContext = ((ConnectedElement) absConnDest).getContext();
-            Context sourContext = ((ConnectedElement) absConnSour).getContext();
+            ConnectionEnd destConn = absConnDest.getConnectionEnd();
+            ConnectionEnd sourConn = absConnSour.getConnectionEnd();
+            Context destContext = absConnDest.getContext();
+            Context sourContext = absConnSour.getContext();
 
             //only make connections to things that have annexs
             if(destContext != null && destContext instanceof Subcomponent){

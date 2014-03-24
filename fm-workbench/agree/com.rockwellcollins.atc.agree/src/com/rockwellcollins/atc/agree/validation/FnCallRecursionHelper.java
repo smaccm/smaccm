@@ -70,7 +70,9 @@ public class FnCallRecursionHelper extends AgreeSwitch<Expr>{
     public Expr caseNodeBodyExpr(NodeBodyExpr object){
         
         for(NodeStmt stmt : object.getStmts()){
+        	LinkedList<CallDef> copyOfVisited = new LinkedList<>(visited);
             doSwitch(stmt);
+            visited = copyOfVisited;
         }
         return null;
     }

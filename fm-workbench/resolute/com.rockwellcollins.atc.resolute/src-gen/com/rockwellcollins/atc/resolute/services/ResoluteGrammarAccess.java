@@ -230,14 +230,14 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		////stuff for quantifiers only
 		//name=("threads" //non-aadl components
 		//| "data" | "memory" | "thread_groups" | "processes" | "subprograms" | "subprogram_groups" | "processors" |
-		//"virtual_processors" | "buses" | "virtual_buses" | "devices" | "systems" | "abstracts" | "connections" | "components"
-		//| "features")
+		//"virtual_processors" | "buses" | "virtual_buses" | "devices" | "systems" | "abstracts" | "connections" | "components" |
+		//"features")
 		public Assignment getNameAssignment() { return cNameAssignment; }
 
 		//"threads" //non-aadl components
 		//| "data" | "memory" | "thread_groups" | "processes" | "subprograms" | "subprogram_groups" | "processors" |
-		//"virtual_processors" | "buses" | "virtual_buses" | "devices" | "systems" | "abstracts" | "connections" | "components"
-		//| "features"
+		//"virtual_processors" | "buses" | "virtual_buses" | "devices" | "systems" | "abstracts" | "connections" | "components" |
+		//"features"
 		public Alternatives getNameAlternatives_0() { return cNameAlternatives_0; }
 
 		//"threads"
@@ -329,14 +329,14 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		////aadl components
 		//name=("data" //non-aadl components
 		//| "thread" | "thread_group" | "process" | "subprogram" | "subprogram_group" | "processor" | "virtual_processor" |
-		//"memory" | "bus" | "virtual_bus" | "device" | "system" | "abstract" | "aadl" | "feature" | "connection" | "component"
-		//| "string" | "int" | "real" | "bool")
+		//"memory" | "bus" | "virtual_bus" | "device" | "system" | "abstract" | "aadl" | "feature" | "connection" | "component" |
+		//"string" | "int" | "real" | "bool")
 		public Assignment getNameAssignment() { return cNameAssignment; }
 
 		//"data" //non-aadl components
 		//| "thread" | "thread_group" | "process" | "subprogram" | "subprogram_group" | "processor" | "virtual_processor" |
-		//"memory" | "bus" | "virtual_bus" | "device" | "system" | "abstract" | "aadl" | "feature" | "connection" | "component"
-		//| "string" | "int" | "real" | "bool"
+		//"memory" | "bus" | "virtual_bus" | "device" | "system" | "abstract" | "aadl" | "feature" | "connection" | "component" |
+		//"string" | "int" | "real" | "bool"
 		public Alternatives getNameAlternatives_0() { return cNameAlternatives_0; }
 
 		//"data"
@@ -1310,9 +1310,9 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		//| {ThisExpr} "this" ("." sub=NestedDotID)? | {FailExpr} "fail" val=StringTerm? | {IntExpr} val=IntegerTerm | {RealExpr}
 		//val=RealTerm | {BoolExpr} val=BooleanLiteral | {StringExpr} val=StringTerm | {IfThenElseExpr} "if" cond=Expr "then"
 		//then=Expr "else" else=Expr | {QuantifiedExpr} quant=("forall" | "exists") ("(" args+=Arg ")")+ "." expr=Expr |
-		//{BuiltInFuncCallExpr} fn=BuiltInFunc "(" (args+=Expr ("," args+=Expr)*)? ")" | {FnCallExpr} fn=[FunctionDefinition]
-		//"(" (args+=Expr ("," args+=Expr)*)? ")" | {FilterMapExpr} "{" map=Expr "for" ("(" args+=Arg ")")+ ("|" filter=Expr)?
-		//"}" | {LetExpr} "let" binding=LetBinding ";" expr=Expr | "(" Expr ")"
+		//{BuiltInFuncCallExpr} fn=BuiltInFunc "(" (args+=Expr ("," args+=Expr)*)? ")" | {FnCallExpr} fn=[FunctionDefinition] "("
+		//(args+=Expr ("," args+=Expr)*)? ")" | {FilterMapExpr} "{" map=Expr "for" ("(" args+=Arg ")")+ ("|" filter=Expr)? "}" |
+		//{LetExpr} "let" binding=LetBinding ";" expr=Expr | "(" Expr ")"
 		public Alternatives getAlternatives() { return cAlternatives; }
 
 		//{IdExpr} id=[aadl2::NamedElement|QCREF] ("." subelements=ElementSet)? //for set expressions
@@ -3045,13 +3045,6 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	public ParserRule getSTARRule() {
 		return getSTARAccess().getRule();
 	}
-
-	////terminal IDANNEXTEXT: ID ANNEXTEXT;
-	//terminal ANNEXTEXT:
-	//	"{**"->"**}";
-	public TerminalRule getANNEXTEXTRule() {
-		return gaProperties.getANNEXTEXTRule();
-	} 
 
 	//terminal STRING:
 	//	"\"" ("\\" ("b" | "t" | "n" | "f" | "r" | "u" | "\"" | "\'" | "\\") | !("\\" | "\""))* "\"" | "\'" ("\\" ("b" | "t" |

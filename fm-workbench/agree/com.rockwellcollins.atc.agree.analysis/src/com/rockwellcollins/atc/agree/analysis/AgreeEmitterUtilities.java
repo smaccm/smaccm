@@ -29,7 +29,6 @@ import jkind.lustre.VarDecl;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
-import org.osate.aadl2.AbstractConnectionEnd;
 import org.osate.aadl2.AbstractNamedValue;
 import org.osate.aadl2.AnnexSubclause;
 import org.osate.aadl2.Classifier;
@@ -393,13 +392,11 @@ public class AgreeEmitterUtilities {
         do {
             prevSize = subs.size();
             for (Connection conn : conns) {
-                AbstractConnectionEnd absConnDest = conn.getDestination();
-                AbstractConnectionEnd absConnSour = conn.getSource();
+            	ConnectedElement absConnDest = conn.getDestination();
+            	ConnectedElement absConnSour = conn.getSource();
 
-                assert (absConnDest instanceof ConnectedElement);
-                Context destContext = ((ConnectedElement) absConnDest).getContext();
-                assert (absConnSour instanceof ConnectedElement);
-                Context sourContext = ((ConnectedElement) absConnSour).getContext();
+                Context destContext = absConnDest.getContext();
+                Context sourContext = absConnSour.getContext();
                 if (sourContext != null && subs.contains(sourContext)) {
                     if (destContext != null && destContext instanceof Subcomponent) {
                         //assert (destContext instanceof Subcomponent);
