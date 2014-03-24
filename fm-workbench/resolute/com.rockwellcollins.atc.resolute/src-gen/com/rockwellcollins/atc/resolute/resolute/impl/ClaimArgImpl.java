@@ -26,7 +26,7 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  *
  * @generated
  */
-public class ClaimArgImpl extends ClaimStringImpl implements ClaimArg
+public class ClaimArgImpl extends ClaimTextImpl implements ClaimArg
 {
   /**
    * The cached value of the '{@link #getArg() <em>Arg</em>}' reference.

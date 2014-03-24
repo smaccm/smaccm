@@ -2,7 +2,7 @@
  */
 package com.rockwellcollins.atc.resolute.resolute.impl;
 
-import com.rockwellcollins.atc.resolute.resolute.FuncBody;
+import com.rockwellcollins.atc.resolute.resolute.FunctionBody;
 import com.rockwellcollins.atc.resolute.resolute.ResolutePackage;
 import com.rockwellcollins.atc.resolute.resolute.Type;
 
@@ -16,18 +16,18 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Func Body</b></em>'.
+ * An implementation of the model object '<em><b>Function Body</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link com.rockwellcollins.atc.resolute.resolute.impl.FuncBodyImpl#getType <em>Type</em>}</li>
+ *   <li>{@link com.rockwellcollins.atc.resolute.resolute.impl.FunctionBodyImpl#getType <em>Type</em>}</li>
  * </ul>
  * </p>
  *
  * @generated
  */
-public class FuncBodyImpl extends DefinitionBodyImpl implements FuncBody
+public class FunctionBodyImpl extends DefinitionBodyImpl implements FunctionBody
 {
   /**
    * The cached value of the '{@link #getType() <em>Type</em>}' containment reference.
@@ -44,7 +44,7 @@ public class FuncBodyImpl extends DefinitionBodyImpl implements FuncBody
    * <!-- end-user-doc -->
    * @generated
    */
-  protected FuncBodyImpl()
+  protected FunctionBodyImpl()
   {
     super();
   }
@@ -57,7 +57,7 @@ public class FuncBodyImpl extends DefinitionBodyImpl implements FuncBody
   @Override
   protected EClass eStaticClass()
   {
-    return ResolutePackage.Literals.FUNC_BODY;
+    return ResolutePackage.Literals.FUNCTION_BODY;
   }
 
   /**
@@ -81,7 +81,7 @@ public class FuncBodyImpl extends DefinitionBodyImpl implements FuncBody
     type = newType;
     if (eNotificationRequired())
     {
-      ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, ResolutePackage.FUNC_BODY__TYPE, oldType, newType);
+      ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, ResolutePackage.FUNCTION_BODY__TYPE, oldType, newType);
       if (msgs == null) msgs = notification; else msgs.add(notification);
     }
     return msgs;
@@ -98,14 +98,14 @@ public class FuncBodyImpl extends DefinitionBodyImpl implements FuncBody
     {
       NotificationChain msgs = null;
       if (type != null)
-        msgs = ((InternalEObject)type).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - ResolutePackage.FUNC_BODY__TYPE, null, msgs);
+        msgs = ((InternalEObject)type).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - ResolutePackage.FUNCTION_BODY__TYPE, null, msgs);
       if (newType != null)
-        msgs = ((InternalEObject)newType).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - ResolutePackage.FUNC_BODY__TYPE, null, msgs);
+        msgs = ((InternalEObject)newType).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - ResolutePackage.FUNCTION_BODY__TYPE, null, msgs);
       msgs = basicSetType(newType, msgs);
       if (msgs != null) msgs.dispatch();
     }
     else if (eNotificationRequired())
-      eNotify(new ENotificationImpl(this, Notification.SET, ResolutePackage.FUNC_BODY__TYPE, newType, newType));
+      eNotify(new ENotificationImpl(this, Notification.SET, ResolutePackage.FUNCTION_BODY__TYPE, newType, newType));
   }
 
   /**
@@ -118,7 +118,7 @@ public class FuncBodyImpl extends DefinitionBodyImpl implements FuncBody
   {
     switch (featureID)
     {
-      case ResolutePackage.FUNC_BODY__TYPE:
+      case ResolutePackage.FUNCTION_BODY__TYPE:
         return basicSetType(null, msgs);
     }
     return super.eInverseRemove(otherEnd, featureID, msgs);
@@ -134,7 +134,7 @@ public class FuncBodyImpl extends DefinitionBodyImpl implements FuncBody
   {
     switch (featureID)
     {
-      case ResolutePackage.FUNC_BODY__TYPE:
+      case ResolutePackage.FUNCTION_BODY__TYPE:
         return getType();
     }
     return super.eGet(featureID, resolve, coreType);
@@ -150,7 +150,7 @@ public class FuncBodyImpl extends DefinitionBodyImpl implements FuncBody
   {
     switch (featureID)
     {
-      case ResolutePackage.FUNC_BODY__TYPE:
+      case ResolutePackage.FUNCTION_BODY__TYPE:
         setType((Type)newValue);
         return;
     }
@@ -167,7 +167,7 @@ public class FuncBodyImpl extends DefinitionBodyImpl implements FuncBody
   {
     switch (featureID)
     {
-      case ResolutePackage.FUNC_BODY__TYPE:
+      case ResolutePackage.FUNCTION_BODY__TYPE:
         setType((Type)null);
         return;
     }
@@ -184,10 +184,10 @@ public class FuncBodyImpl extends DefinitionBodyImpl implements FuncBody
   {
     switch (featureID)
     {
-      case ResolutePackage.FUNC_BODY__TYPE:
+      case ResolutePackage.FUNCTION_BODY__TYPE:
         return type != null;
     }
     return super.eIsSet(featureID);
   }
 
-} //FuncBodyImpl
+} //FunctionBodyImpl

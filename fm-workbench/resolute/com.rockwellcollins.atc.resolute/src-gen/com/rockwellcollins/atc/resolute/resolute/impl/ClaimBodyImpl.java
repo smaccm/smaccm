@@ -3,7 +3,7 @@
 package com.rockwellcollins.atc.resolute.resolute.impl;
 
 import com.rockwellcollins.atc.resolute.resolute.ClaimBody;
-import com.rockwellcollins.atc.resolute.resolute.ClaimString;
+import com.rockwellcollins.atc.resolute.resolute.ClaimText;
 import com.rockwellcollins.atc.resolute.resolute.ResolutePackage;
 
 import java.util.Collection;
@@ -41,7 +41,7 @@ public class ClaimBodyImpl extends DefinitionBodyImpl implements ClaimBody
    * @generated
    * @ordered
    */
-  protected EList<ClaimString> claim;
+  protected EList<ClaimText> claim;
 
   /**
    * <!-- begin-user-doc -->
@@ -69,11 +69,11 @@ public class ClaimBodyImpl extends DefinitionBodyImpl implements ClaimBody
    * <!-- end-user-doc -->
    * @generated
    */
-  public EList<ClaimString> getClaim()
+  public EList<ClaimText> getClaim()
   {
     if (claim == null)
     {
-      claim = new EObjectContainmentEList<ClaimString>(ClaimString.class, this, ResolutePackage.CLAIM_BODY__CLAIM);
+      claim = new EObjectContainmentEList<ClaimText>(ClaimText.class, this, ResolutePackage.CLAIM_BODY__CLAIM);
     }
     return claim;
   }
@@ -123,7 +123,7 @@ public class ClaimBodyImpl extends DefinitionBodyImpl implements ClaimBody
     {
       case ResolutePackage.CLAIM_BODY__CLAIM:
         getClaim().clear();
-        getClaim().addAll((Collection<? extends ClaimString>)newValue);
+        getClaim().addAll((Collection<? extends ClaimText>)newValue);
         return;
     }
     super.eSet(featureID, newValue);

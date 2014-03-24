@@ -2,28 +2,30 @@
  */
 package com.rockwellcollins.atc.resolute.resolute.impl;
 
-import com.rockwellcollins.atc.resolute.resolute.BuiltinType;
+import com.rockwellcollins.atc.resolute.resolute.ClaimText;
 import com.rockwellcollins.atc.resolute.resolute.ResolutePackage;
 
 import org.eclipse.emf.ecore.EClass;
 
+import org.osate.aadl2.impl.ElementImpl;
+
 /**
  * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Builtin Type</b></em>'.
+ * An implementation of the model object '<em><b>Claim Text</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * </p>
  *
  * @generated
  */
-public class BuiltinTypeImpl extends TypeImpl implements BuiltinType
+public class ClaimTextImpl extends ElementImpl implements ClaimText
 {
   /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  protected BuiltinTypeImpl()
+  protected ClaimTextImpl()
   {
     super();
   }
@@ -36,7 +38,7 @@ public class BuiltinTypeImpl extends TypeImpl implements BuiltinType
   @Override
   protected EClass eStaticClass()
   {
-    return ResolutePackage.Literals.BUILTIN_TYPE;
+    return ResolutePackage.Literals.CLAIM_TEXT;
   }
 
-} //BuiltinTypeImpl
+} //ClaimTextImpl

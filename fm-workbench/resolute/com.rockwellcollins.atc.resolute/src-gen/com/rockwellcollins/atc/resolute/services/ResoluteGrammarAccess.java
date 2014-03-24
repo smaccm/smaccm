@@ -59,14 +59,13 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
 		private final RuleCall cDefinitionParserRuleCall_0 = (RuleCall)cAlternatives.eContents().get(0);
 		private final RuleCall cArgParserRuleCall_1 = (RuleCall)cAlternatives.eContents().get(1);
-		private final RuleCall cTypeParserRuleCall_2 = (RuleCall)cAlternatives.eContents().get(2);
-		private final RuleCall cLetBindingParserRuleCall_3 = (RuleCall)cAlternatives.eContents().get(3);
+		private final RuleCall cLetBindingParserRuleCall_2 = (RuleCall)cAlternatives.eContents().get(2);
 		
 		//NamedElement returns aadl2::NamedElement:
-		//	Definition | Arg | Type | LetBinding;
+		//	Definition | Arg | LetBinding;
 		public ParserRule getRule() { return rule; }
 
-		//Definition | Arg | Type | LetBinding
+		//Definition | Arg | LetBinding
 		public Alternatives getAlternatives() { return cAlternatives; }
 
 		//Definition
@@ -75,11 +74,8 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		//Arg
 		public RuleCall getArgParserRuleCall_1() { return cArgParserRuleCall_1; }
 
-		//Type
-		public RuleCall getTypeParserRuleCall_2() { return cTypeParserRuleCall_2; }
-
 		//LetBinding
-		public RuleCall getLetBindingParserRuleCall_3() { return cLetBindingParserRuleCall_3; }
+		public RuleCall getLetBindingParserRuleCall_2() { return cLetBindingParserRuleCall_2; }
 	}
 
 	public class ElementElements extends AbstractParserRuleElementFinder {
@@ -87,15 +83,14 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
 		private final RuleCall cExprParserRuleCall_0 = (RuleCall)cAlternatives.eContents().get(0);
 		private final RuleCall cProveStatementParserRuleCall_1 = (RuleCall)cAlternatives.eContents().get(1);
-		private final RuleCall cClaimStringParserRuleCall_2 = (RuleCall)cAlternatives.eContents().get(2);
+		private final RuleCall cClaimTextParserRuleCall_2 = (RuleCall)cAlternatives.eContents().get(2);
 		private final RuleCall cDefinitionBodyParserRuleCall_3 = (RuleCall)cAlternatives.eContents().get(3);
-		private final RuleCall cTypeParserRuleCall_4 = (RuleCall)cAlternatives.eContents().get(4);
 		
 		//Element returns aadl2::Element:
-		//	Expr | ProveStatement | ClaimString | DefinitionBody | Type;
+		//	Expr | ProveStatement | ClaimText | DefinitionBody;
 		public ParserRule getRule() { return rule; }
 
-		//Expr | ProveStatement | ClaimString | DefinitionBody | Type
+		//Expr | ProveStatement | ClaimText | DefinitionBody
 		public Alternatives getAlternatives() { return cAlternatives; }
 
 		//Expr
@@ -104,14 +99,11 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		//ProveStatement
 		public RuleCall getProveStatementParserRuleCall_1() { return cProveStatementParserRuleCall_1; }
 
-		//ClaimString
-		public RuleCall getClaimStringParserRuleCall_2() { return cClaimStringParserRuleCall_2; }
+		//ClaimText
+		public RuleCall getClaimTextParserRuleCall_2() { return cClaimTextParserRuleCall_2; }
 
 		//DefinitionBody
 		public RuleCall getDefinitionBodyParserRuleCall_3() { return cDefinitionBodyParserRuleCall_3; }
-
-		//Type
-		public RuleCall getTypeParserRuleCall_4() { return cTypeParserRuleCall_4; }
 	}
 
 	public class ResoluteLibraryElements extends AbstractParserRuleElementFinder {
@@ -167,13 +159,13 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		private final Assignment cTypeAssignment_0_2 = (Assignment)cGroup_0.eContents().get(2);
 		private final RuleCall cTypeTypeParserRuleCall_0_2_0 = (RuleCall)cTypeAssignment_0_2.eContents().get(0);
 		private final Keyword cRightCurlyBracketKeyword_0_3 = (Keyword)cGroup_0.eContents().get(3);
-		private final RuleCall cBuiltinTypeParserRuleCall_1 = (RuleCall)cAlternatives.eContents().get(1);
+		private final RuleCall cBaseTypeParserRuleCall_1 = (RuleCall)cAlternatives.eContents().get(1);
 		
 		//Type:
-		//	{SetType} "{" type=Type "}" | BuiltinType;
+		//	{SetType} "{" type=Type "}" | BaseType;
 		public ParserRule getRule() { return rule; }
 
-		//{SetType} "{" type=Type "}" | BuiltinType
+		//{SetType} "{" type=Type "}" | BaseType
 		public Alternatives getAlternatives() { return cAlternatives; }
 
 		//{SetType} "{" type=Type "}"
@@ -194,216 +186,210 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		//"}"
 		public Keyword getRightCurlyBracketKeyword_0_3() { return cRightCurlyBracketKeyword_0_3; }
 
-		//BuiltinType
-		public RuleCall getBuiltinTypeParserRuleCall_1() { return cBuiltinTypeParserRuleCall_1; }
+		//BaseType
+		public RuleCall getBaseTypeParserRuleCall_1() { return cBaseTypeParserRuleCall_1; }
 	}
 
-	public class ElementSetElements extends AbstractParserRuleElementFinder {
-		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "ElementSet");
-		private final Assignment cNameAssignment = (Assignment)rule.eContents().get(1);
-		private final Alternatives cNameAlternatives_0 = (Alternatives)cNameAssignment.eContents().get(0);
-		private final Keyword cNameThreadsKeyword_0_0 = (Keyword)cNameAlternatives_0.eContents().get(0);
-		private final Keyword cNameDataKeyword_0_1 = (Keyword)cNameAlternatives_0.eContents().get(1);
-		private final Keyword cNameMemoryKeyword_0_2 = (Keyword)cNameAlternatives_0.eContents().get(2);
-		private final Keyword cNameThread_groupsKeyword_0_3 = (Keyword)cNameAlternatives_0.eContents().get(3);
-		private final Keyword cNameProcessesKeyword_0_4 = (Keyword)cNameAlternatives_0.eContents().get(4);
-		private final Keyword cNameSubprogramsKeyword_0_5 = (Keyword)cNameAlternatives_0.eContents().get(5);
-		private final Keyword cNameSubprogram_groupsKeyword_0_6 = (Keyword)cNameAlternatives_0.eContents().get(6);
-		private final Keyword cNameProcessorsKeyword_0_7 = (Keyword)cNameAlternatives_0.eContents().get(7);
-		private final Keyword cNameVirtual_processorsKeyword_0_8 = (Keyword)cNameAlternatives_0.eContents().get(8);
-		private final Keyword cNameBusesKeyword_0_9 = (Keyword)cNameAlternatives_0.eContents().get(9);
-		private final Keyword cNameVirtual_busesKeyword_0_10 = (Keyword)cNameAlternatives_0.eContents().get(10);
-		private final Keyword cNameDevicesKeyword_0_11 = (Keyword)cNameAlternatives_0.eContents().get(11);
-		private final Keyword cNameSystemsKeyword_0_12 = (Keyword)cNameAlternatives_0.eContents().get(12);
-		private final Keyword cNameAbstractsKeyword_0_13 = (Keyword)cNameAlternatives_0.eContents().get(13);
-		private final Keyword cNameConnectionsKeyword_0_14 = (Keyword)cNameAlternatives_0.eContents().get(14);
-		private final Keyword cNameComponentsKeyword_0_15 = (Keyword)cNameAlternatives_0.eContents().get(15);
-		private final Keyword cNameFeaturesKeyword_0_16 = (Keyword)cNameAlternatives_0.eContents().get(16);
+	public class BaseTypeElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "BaseType");
+		private final Assignment cTypeAssignment = (Assignment)rule.eContents().get(1);
+		private final Alternatives cTypeAlternatives_0 = (Alternatives)cTypeAssignment.eContents().get(0);
+		private final Keyword cTypeIntKeyword_0_0 = (Keyword)cTypeAlternatives_0.eContents().get(0);
+		private final Keyword cTypeRealKeyword_0_1 = (Keyword)cTypeAlternatives_0.eContents().get(1);
+		private final Keyword cTypeStringKeyword_0_2 = (Keyword)cTypeAlternatives_0.eContents().get(2);
+		private final Keyword cTypeBoolKeyword_0_3 = (Keyword)cTypeAlternatives_0.eContents().get(3);
+		private final Keyword cTypeRangeKeyword_0_4 = (Keyword)cTypeAlternatives_0.eContents().get(4);
+		private final Keyword cTypeAadlKeyword_0_5 = (Keyword)cTypeAlternatives_0.eContents().get(5);
+		private final Keyword cTypeComponentKeyword_0_6 = (Keyword)cTypeAlternatives_0.eContents().get(6);
+		private final Keyword cTypeAbstractKeyword_0_7 = (Keyword)cTypeAlternatives_0.eContents().get(7);
+		private final Keyword cTypeBusKeyword_0_8 = (Keyword)cTypeAlternatives_0.eContents().get(8);
+		private final Keyword cTypeDataKeyword_0_9 = (Keyword)cTypeAlternatives_0.eContents().get(9);
+		private final Keyword cTypeDeviceKeyword_0_10 = (Keyword)cTypeAlternatives_0.eContents().get(10);
+		private final Keyword cTypeMemoryKeyword_0_11 = (Keyword)cTypeAlternatives_0.eContents().get(11);
+		private final Keyword cTypeProcessorKeyword_0_12 = (Keyword)cTypeAlternatives_0.eContents().get(12);
+		private final Keyword cTypeProcessKeyword_0_13 = (Keyword)cTypeAlternatives_0.eContents().get(13);
+		private final Keyword cTypeSubprogram_groupKeyword_0_14 = (Keyword)cTypeAlternatives_0.eContents().get(14);
+		private final Keyword cTypeSubprogramKeyword_0_15 = (Keyword)cTypeAlternatives_0.eContents().get(15);
+		private final Keyword cTypeSystemKeyword_0_16 = (Keyword)cTypeAlternatives_0.eContents().get(16);
+		private final Keyword cTypeThread_groupKeyword_0_17 = (Keyword)cTypeAlternatives_0.eContents().get(17);
+		private final Keyword cTypeThreadKeyword_0_18 = (Keyword)cTypeAlternatives_0.eContents().get(18);
+		private final Keyword cTypeVirtual_busKeyword_0_19 = (Keyword)cTypeAlternatives_0.eContents().get(19);
+		private final Keyword cTypeVirtual_processorKeyword_0_20 = (Keyword)cTypeAlternatives_0.eContents().get(20);
+		private final Keyword cTypeConnectionKeyword_0_21 = (Keyword)cTypeAlternatives_0.eContents().get(21);
+		private final Keyword cTypePropertyKeyword_0_22 = (Keyword)cTypeAlternatives_0.eContents().get(22);
+		private final Keyword cTypeFeatureKeyword_0_23 = (Keyword)cTypeAlternatives_0.eContents().get(23);
+		private final Keyword cTypePortKeyword_0_24 = (Keyword)cTypeAlternatives_0.eContents().get(24);
+		private final Keyword cTypeData_portKeyword_0_25 = (Keyword)cTypeAlternatives_0.eContents().get(25);
+		private final Keyword cTypeEvent_portKeyword_0_26 = (Keyword)cTypeAlternatives_0.eContents().get(26);
+		private final Keyword cTypeEvent_data_portKeyword_0_27 = (Keyword)cTypeAlternatives_0.eContents().get(27);
+		private final Keyword cTypeFeature_groupKeyword_0_28 = (Keyword)cTypeAlternatives_0.eContents().get(28);
+		private final Keyword cTypeAccessKeyword_0_29 = (Keyword)cTypeAlternatives_0.eContents().get(29);
+		private final Keyword cTypeBus_accessKeyword_0_30 = (Keyword)cTypeAlternatives_0.eContents().get(30);
+		private final Keyword cTypeProvides_bus_accessKeyword_0_31 = (Keyword)cTypeAlternatives_0.eContents().get(31);
+		private final Keyword cTypeRequires_bus_accessKeyword_0_32 = (Keyword)cTypeAlternatives_0.eContents().get(32);
+		private final Keyword cTypeData_accessKeyword_0_33 = (Keyword)cTypeAlternatives_0.eContents().get(33);
+		private final Keyword cTypeProvides_data_accessKeyword_0_34 = (Keyword)cTypeAlternatives_0.eContents().get(34);
+		private final Keyword cTypeRequires_data_accessKeyword_0_35 = (Keyword)cTypeAlternatives_0.eContents().get(35);
+		private final Keyword cTypeSubprogram_accessKeyword_0_36 = (Keyword)cTypeAlternatives_0.eContents().get(36);
+		private final Keyword cTypeProvides_subprogram_accessKeyword_0_37 = (Keyword)cTypeAlternatives_0.eContents().get(37);
+		private final Keyword cTypeRequires_subprogram_accessKeyword_0_38 = (Keyword)cTypeAlternatives_0.eContents().get(38);
+		private final Keyword cTypeSubprogram_group_accessKeyword_0_39 = (Keyword)cTypeAlternatives_0.eContents().get(39);
+		private final Keyword cTypeProvides_subprogram_group_accessKeyword_0_40 = (Keyword)cTypeAlternatives_0.eContents().get(40);
+		private final Keyword cTypeRequires_subprogram_group_accessKeyword_0_41 = (Keyword)cTypeAlternatives_0.eContents().get(41);
 		
-		//ElementSet: //stuff for quantifiers only
-		//	name=("threads" //non-aadl components
-		//	| "data" | "memory" | "thread_groups" | "processes" | "subprograms" | "subprogram_groups" | "processors" |
-		//	"virtual_processors" | "buses" | "virtual_buses" | "devices" | "systems" | "abstracts" | "connections" | "components"
-		//	| "features");
+		//BaseType:
+		//	type=("int" | "real" | "string" | "bool" | "range" | "aadl" | "component" | "abstract" | "bus" | "data" | "device" |
+		//	"memory" | "processor" | "process" | "subprogram_group" | "subprogram" | "system" | "thread_group" | "thread" |
+		//	"virtual_bus" | "virtual_processor" | "connection" | "property" | "feature" | "port" | "data_port" | "event_port" |
+		//	"event_data_port" | "feature_group" | "access" | "bus_access" | "provides_bus_access" | "requires_bus_access" |
+		//	"data_access" | "provides_data_access" | "requires_data_access" | "subprogram_access" | "provides_subprogram_access" |
+		//	"requires_subprogram_access" | "subprogram_group_access" | "provides_subprogram_group_access" |
+		//	"requires_subprogram_group_access");
 		public ParserRule getRule() { return rule; }
 
-		////stuff for quantifiers only
-		//name=("threads" //non-aadl components
-		//| "data" | "memory" | "thread_groups" | "processes" | "subprograms" | "subprogram_groups" | "processors" |
-		//"virtual_processors" | "buses" | "virtual_buses" | "devices" | "systems" | "abstracts" | "connections" | "components" |
-		//"features")
-		public Assignment getNameAssignment() { return cNameAssignment; }
+		//type=("int" | "real" | "string" | "bool" | "range" | "aadl" | "component" | "abstract" | "bus" | "data" | "device" |
+		//"memory" | "processor" | "process" | "subprogram_group" | "subprogram" | "system" | "thread_group" | "thread" |
+		//"virtual_bus" | "virtual_processor" | "connection" | "property" | "feature" | "port" | "data_port" | "event_port" |
+		//"event_data_port" | "feature_group" | "access" | "bus_access" | "provides_bus_access" | "requires_bus_access" |
+		//"data_access" | "provides_data_access" | "requires_data_access" | "subprogram_access" | "provides_subprogram_access" |
+		//"requires_subprogram_access" | "subprogram_group_access" | "provides_subprogram_group_access" |
+		//"requires_subprogram_group_access")
+		public Assignment getTypeAssignment() { return cTypeAssignment; }
 
-		//"threads" //non-aadl components
-		//| "data" | "memory" | "thread_groups" | "processes" | "subprograms" | "subprogram_groups" | "processors" |
-		//"virtual_processors" | "buses" | "virtual_buses" | "devices" | "systems" | "abstracts" | "connections" | "components" |
-		//"features"
-		public Alternatives getNameAlternatives_0() { return cNameAlternatives_0; }
-
-		//"threads"
-		public Keyword getNameThreadsKeyword_0_0() { return cNameThreadsKeyword_0_0; }
-
-		//"data"
-		public Keyword getNameDataKeyword_0_1() { return cNameDataKeyword_0_1; }
-
-		//"memory"
-		public Keyword getNameMemoryKeyword_0_2() { return cNameMemoryKeyword_0_2; }
-
-		//"thread_groups"
-		public Keyword getNameThread_groupsKeyword_0_3() { return cNameThread_groupsKeyword_0_3; }
-
-		//"processes"
-		public Keyword getNameProcessesKeyword_0_4() { return cNameProcessesKeyword_0_4; }
-
-		//"subprograms"
-		public Keyword getNameSubprogramsKeyword_0_5() { return cNameSubprogramsKeyword_0_5; }
-
-		//"subprogram_groups"
-		public Keyword getNameSubprogram_groupsKeyword_0_6() { return cNameSubprogram_groupsKeyword_0_6; }
-
-		//"processors"
-		public Keyword getNameProcessorsKeyword_0_7() { return cNameProcessorsKeyword_0_7; }
-
-		//"virtual_processors"
-		public Keyword getNameVirtual_processorsKeyword_0_8() { return cNameVirtual_processorsKeyword_0_8; }
-
-		//"buses"
-		public Keyword getNameBusesKeyword_0_9() { return cNameBusesKeyword_0_9; }
-
-		//"virtual_buses"
-		public Keyword getNameVirtual_busesKeyword_0_10() { return cNameVirtual_busesKeyword_0_10; }
-
-		//"devices"
-		public Keyword getNameDevicesKeyword_0_11() { return cNameDevicesKeyword_0_11; }
-
-		//"systems"
-		public Keyword getNameSystemsKeyword_0_12() { return cNameSystemsKeyword_0_12; }
-
-		//"abstracts"
-		public Keyword getNameAbstractsKeyword_0_13() { return cNameAbstractsKeyword_0_13; }
-
-		//"connections"
-		public Keyword getNameConnectionsKeyword_0_14() { return cNameConnectionsKeyword_0_14; }
-
-		//"components"
-		public Keyword getNameComponentsKeyword_0_15() { return cNameComponentsKeyword_0_15; }
-
-		//"features"
-		public Keyword getNameFeaturesKeyword_0_16() { return cNameFeaturesKeyword_0_16; }
-	}
-
-	public class BuiltinTypeElements extends AbstractParserRuleElementFinder {
-		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "BuiltinType");
-		private final Assignment cNameAssignment = (Assignment)rule.eContents().get(1);
-		private final Alternatives cNameAlternatives_0 = (Alternatives)cNameAssignment.eContents().get(0);
-		private final Keyword cNameDataKeyword_0_0 = (Keyword)cNameAlternatives_0.eContents().get(0);
-		private final Keyword cNameThreadKeyword_0_1 = (Keyword)cNameAlternatives_0.eContents().get(1);
-		private final Keyword cNameThread_groupKeyword_0_2 = (Keyword)cNameAlternatives_0.eContents().get(2);
-		private final Keyword cNameProcessKeyword_0_3 = (Keyword)cNameAlternatives_0.eContents().get(3);
-		private final Keyword cNameSubprogramKeyword_0_4 = (Keyword)cNameAlternatives_0.eContents().get(4);
-		private final Keyword cNameSubprogram_groupKeyword_0_5 = (Keyword)cNameAlternatives_0.eContents().get(5);
-		private final Keyword cNameProcessorKeyword_0_6 = (Keyword)cNameAlternatives_0.eContents().get(6);
-		private final Keyword cNameVirtual_processorKeyword_0_7 = (Keyword)cNameAlternatives_0.eContents().get(7);
-		private final Keyword cNameMemoryKeyword_0_8 = (Keyword)cNameAlternatives_0.eContents().get(8);
-		private final Keyword cNameBusKeyword_0_9 = (Keyword)cNameAlternatives_0.eContents().get(9);
-		private final Keyword cNameVirtual_busKeyword_0_10 = (Keyword)cNameAlternatives_0.eContents().get(10);
-		private final Keyword cNameDeviceKeyword_0_11 = (Keyword)cNameAlternatives_0.eContents().get(11);
-		private final Keyword cNameSystemKeyword_0_12 = (Keyword)cNameAlternatives_0.eContents().get(12);
-		private final Keyword cNameAbstractKeyword_0_13 = (Keyword)cNameAlternatives_0.eContents().get(13);
-		private final Keyword cNameAadlKeyword_0_14 = (Keyword)cNameAlternatives_0.eContents().get(14);
-		private final Keyword cNameFeatureKeyword_0_15 = (Keyword)cNameAlternatives_0.eContents().get(15);
-		private final Keyword cNameConnectionKeyword_0_16 = (Keyword)cNameAlternatives_0.eContents().get(16);
-		private final Keyword cNameComponentKeyword_0_17 = (Keyword)cNameAlternatives_0.eContents().get(17);
-		private final Keyword cNameStringKeyword_0_18 = (Keyword)cNameAlternatives_0.eContents().get(18);
-		private final Keyword cNameIntKeyword_0_19 = (Keyword)cNameAlternatives_0.eContents().get(19);
-		private final Keyword cNameRealKeyword_0_20 = (Keyword)cNameAlternatives_0.eContents().get(20);
-		private final Keyword cNameBoolKeyword_0_21 = (Keyword)cNameAlternatives_0.eContents().get(21);
-		
-		//BuiltinType: //aadl components
-		//	name=("data" //non-aadl components
-		//	| "thread" | "thread_group" | "process" | "subprogram" | "subprogram_group" | "processor" | "virtual_processor" |
-		//	"memory" | "bus" | "virtual_bus" | "device" | "system" | "abstract" | "aadl" | "feature" | "connection" | "component"
-		//	| "string" | "int" | "real" | "bool");
-		public ParserRule getRule() { return rule; }
-
-		////aadl components
-		//name=("data" //non-aadl components
-		//| "thread" | "thread_group" | "process" | "subprogram" | "subprogram_group" | "processor" | "virtual_processor" |
-		//"memory" | "bus" | "virtual_bus" | "device" | "system" | "abstract" | "aadl" | "feature" | "connection" | "component" |
-		//"string" | "int" | "real" | "bool")
-		public Assignment getNameAssignment() { return cNameAssignment; }
-
-		//"data" //non-aadl components
-		//| "thread" | "thread_group" | "process" | "subprogram" | "subprogram_group" | "processor" | "virtual_processor" |
-		//"memory" | "bus" | "virtual_bus" | "device" | "system" | "abstract" | "aadl" | "feature" | "connection" | "component" |
-		//"string" | "int" | "real" | "bool"
-		public Alternatives getNameAlternatives_0() { return cNameAlternatives_0; }
-
-		//"data"
-		public Keyword getNameDataKeyword_0_0() { return cNameDataKeyword_0_0; }
-
-		//"thread"
-		public Keyword getNameThreadKeyword_0_1() { return cNameThreadKeyword_0_1; }
-
-		//"thread_group"
-		public Keyword getNameThread_groupKeyword_0_2() { return cNameThread_groupKeyword_0_2; }
-
-		//"process"
-		public Keyword getNameProcessKeyword_0_3() { return cNameProcessKeyword_0_3; }
-
-		//"subprogram"
-		public Keyword getNameSubprogramKeyword_0_4() { return cNameSubprogramKeyword_0_4; }
-
-		//"subprogram_group"
-		public Keyword getNameSubprogram_groupKeyword_0_5() { return cNameSubprogram_groupKeyword_0_5; }
-
-		//"processor"
-		public Keyword getNameProcessorKeyword_0_6() { return cNameProcessorKeyword_0_6; }
-
-		//"virtual_processor"
-		public Keyword getNameVirtual_processorKeyword_0_7() { return cNameVirtual_processorKeyword_0_7; }
-
-		//"memory"
-		public Keyword getNameMemoryKeyword_0_8() { return cNameMemoryKeyword_0_8; }
-
-		//"bus"
-		public Keyword getNameBusKeyword_0_9() { return cNameBusKeyword_0_9; }
-
-		//"virtual_bus"
-		public Keyword getNameVirtual_busKeyword_0_10() { return cNameVirtual_busKeyword_0_10; }
-
-		//"device"
-		public Keyword getNameDeviceKeyword_0_11() { return cNameDeviceKeyword_0_11; }
-
-		//"system"
-		public Keyword getNameSystemKeyword_0_12() { return cNameSystemKeyword_0_12; }
-
-		//"abstract"
-		public Keyword getNameAbstractKeyword_0_13() { return cNameAbstractKeyword_0_13; }
-
-		//"aadl"
-		public Keyword getNameAadlKeyword_0_14() { return cNameAadlKeyword_0_14; }
-
-		//"feature"
-		public Keyword getNameFeatureKeyword_0_15() { return cNameFeatureKeyword_0_15; }
-
-		//"connection"
-		public Keyword getNameConnectionKeyword_0_16() { return cNameConnectionKeyword_0_16; }
-
-		//"component"
-		public Keyword getNameComponentKeyword_0_17() { return cNameComponentKeyword_0_17; }
-
-		//"string"
-		public Keyword getNameStringKeyword_0_18() { return cNameStringKeyword_0_18; }
+		//"int" | "real" | "string" | "bool" | "range" | "aadl" | "component" | "abstract" | "bus" | "data" | "device" | "memory"
+		//| "processor" | "process" | "subprogram_group" | "subprogram" | "system" | "thread_group" | "thread" | "virtual_bus" |
+		//"virtual_processor" | "connection" | "property" | "feature" | "port" | "data_port" | "event_port" | "event_data_port" |
+		//"feature_group" | "access" | "bus_access" | "provides_bus_access" | "requires_bus_access" | "data_access" |
+		//"provides_data_access" | "requires_data_access" | "subprogram_access" | "provides_subprogram_access" |
+		//"requires_subprogram_access" | "subprogram_group_access" | "provides_subprogram_group_access" |
+		//"requires_subprogram_group_access"
+		public Alternatives getTypeAlternatives_0() { return cTypeAlternatives_0; }
 
 		//"int"
-		public Keyword getNameIntKeyword_0_19() { return cNameIntKeyword_0_19; }
+		public Keyword getTypeIntKeyword_0_0() { return cTypeIntKeyword_0_0; }
 
 		//"real"
-		public Keyword getNameRealKeyword_0_20() { return cNameRealKeyword_0_20; }
+		public Keyword getTypeRealKeyword_0_1() { return cTypeRealKeyword_0_1; }
+
+		//"string"
+		public Keyword getTypeStringKeyword_0_2() { return cTypeStringKeyword_0_2; }
 
 		//"bool"
-		public Keyword getNameBoolKeyword_0_21() { return cNameBoolKeyword_0_21; }
+		public Keyword getTypeBoolKeyword_0_3() { return cTypeBoolKeyword_0_3; }
+
+		//"range"
+		public Keyword getTypeRangeKeyword_0_4() { return cTypeRangeKeyword_0_4; }
+
+		//"aadl"
+		public Keyword getTypeAadlKeyword_0_5() { return cTypeAadlKeyword_0_5; }
+
+		//"component"
+		public Keyword getTypeComponentKeyword_0_6() { return cTypeComponentKeyword_0_6; }
+
+		//"abstract"
+		public Keyword getTypeAbstractKeyword_0_7() { return cTypeAbstractKeyword_0_7; }
+
+		//"bus"
+		public Keyword getTypeBusKeyword_0_8() { return cTypeBusKeyword_0_8; }
+
+		//"data"
+		public Keyword getTypeDataKeyword_0_9() { return cTypeDataKeyword_0_9; }
+
+		//"device"
+		public Keyword getTypeDeviceKeyword_0_10() { return cTypeDeviceKeyword_0_10; }
+
+		//"memory"
+		public Keyword getTypeMemoryKeyword_0_11() { return cTypeMemoryKeyword_0_11; }
+
+		//"processor"
+		public Keyword getTypeProcessorKeyword_0_12() { return cTypeProcessorKeyword_0_12; }
+
+		//"process"
+		public Keyword getTypeProcessKeyword_0_13() { return cTypeProcessKeyword_0_13; }
+
+		//"subprogram_group"
+		public Keyword getTypeSubprogram_groupKeyword_0_14() { return cTypeSubprogram_groupKeyword_0_14; }
+
+		//"subprogram"
+		public Keyword getTypeSubprogramKeyword_0_15() { return cTypeSubprogramKeyword_0_15; }
+
+		//"system"
+		public Keyword getTypeSystemKeyword_0_16() { return cTypeSystemKeyword_0_16; }
+
+		//"thread_group"
+		public Keyword getTypeThread_groupKeyword_0_17() { return cTypeThread_groupKeyword_0_17; }
+
+		//"thread"
+		public Keyword getTypeThreadKeyword_0_18() { return cTypeThreadKeyword_0_18; }
+
+		//"virtual_bus"
+		public Keyword getTypeVirtual_busKeyword_0_19() { return cTypeVirtual_busKeyword_0_19; }
+
+		//"virtual_processor"
+		public Keyword getTypeVirtual_processorKeyword_0_20() { return cTypeVirtual_processorKeyword_0_20; }
+
+		//"connection"
+		public Keyword getTypeConnectionKeyword_0_21() { return cTypeConnectionKeyword_0_21; }
+
+		//"property"
+		public Keyword getTypePropertyKeyword_0_22() { return cTypePropertyKeyword_0_22; }
+
+		//"feature"
+		public Keyword getTypeFeatureKeyword_0_23() { return cTypeFeatureKeyword_0_23; }
+
+		//"port"
+		public Keyword getTypePortKeyword_0_24() { return cTypePortKeyword_0_24; }
+
+		//"data_port"
+		public Keyword getTypeData_portKeyword_0_25() { return cTypeData_portKeyword_0_25; }
+
+		//"event_port"
+		public Keyword getTypeEvent_portKeyword_0_26() { return cTypeEvent_portKeyword_0_26; }
+
+		//"event_data_port"
+		public Keyword getTypeEvent_data_portKeyword_0_27() { return cTypeEvent_data_portKeyword_0_27; }
+
+		//"feature_group"
+		public Keyword getTypeFeature_groupKeyword_0_28() { return cTypeFeature_groupKeyword_0_28; }
+
+		//"access"
+		public Keyword getTypeAccessKeyword_0_29() { return cTypeAccessKeyword_0_29; }
+
+		//"bus_access"
+		public Keyword getTypeBus_accessKeyword_0_30() { return cTypeBus_accessKeyword_0_30; }
+
+		//"provides_bus_access"
+		public Keyword getTypeProvides_bus_accessKeyword_0_31() { return cTypeProvides_bus_accessKeyword_0_31; }
+
+		//"requires_bus_access"
+		public Keyword getTypeRequires_bus_accessKeyword_0_32() { return cTypeRequires_bus_accessKeyword_0_32; }
+
+		//"data_access"
+		public Keyword getTypeData_accessKeyword_0_33() { return cTypeData_accessKeyword_0_33; }
+
+		//"provides_data_access"
+		public Keyword getTypeProvides_data_accessKeyword_0_34() { return cTypeProvides_data_accessKeyword_0_34; }
+
+		//"requires_data_access"
+		public Keyword getTypeRequires_data_accessKeyword_0_35() { return cTypeRequires_data_accessKeyword_0_35; }
+
+		//"subprogram_access"
+		public Keyword getTypeSubprogram_accessKeyword_0_36() { return cTypeSubprogram_accessKeyword_0_36; }
+
+		//"provides_subprogram_access"
+		public Keyword getTypeProvides_subprogram_accessKeyword_0_37() { return cTypeProvides_subprogram_accessKeyword_0_37; }
+
+		//"requires_subprogram_access"
+		public Keyword getTypeRequires_subprogram_accessKeyword_0_38() { return cTypeRequires_subprogram_accessKeyword_0_38; }
+
+		//"subprogram_group_access"
+		public Keyword getTypeSubprogram_group_accessKeyword_0_39() { return cTypeSubprogram_group_accessKeyword_0_39; }
+
+		//"provides_subprogram_group_access"
+		public Keyword getTypeProvides_subprogram_group_accessKeyword_0_40() { return cTypeProvides_subprogram_group_accessKeyword_0_40; }
+
+		//"requires_subprogram_group_access"
+		public Keyword getTypeRequires_subprogram_group_accessKeyword_0_41() { return cTypeRequires_subprogram_group_accessKeyword_0_41; }
 	}
 
 	public class ArgElements extends AbstractParserRuleElementFinder {
@@ -583,8 +569,92 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		public RuleCall getBodyDefinitionBodyParserRuleCall_4_0() { return cBodyDefinitionBodyParserRuleCall_4_0; }
 	}
 
-	public class ClaimStringElements extends AbstractParserRuleElementFinder {
-		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "ClaimString");
+	public class DefinitionBodyElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "DefinitionBody");
+		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
+		private final Group cGroup_0 = (Group)cAlternatives.eContents().get(0);
+		private final Action cFunctionBodyAction_0_0 = (Action)cGroup_0.eContents().get(0);
+		private final Keyword cColonKeyword_0_1 = (Keyword)cGroup_0.eContents().get(1);
+		private final Assignment cTypeAssignment_0_2 = (Assignment)cGroup_0.eContents().get(2);
+		private final RuleCall cTypeTypeParserRuleCall_0_2_0 = (RuleCall)cTypeAssignment_0_2.eContents().get(0);
+		private final Keyword cEqualsSignKeyword_0_3 = (Keyword)cGroup_0.eContents().get(3);
+		private final Assignment cExprAssignment_0_4 = (Assignment)cGroup_0.eContents().get(4);
+		private final RuleCall cExprExprParserRuleCall_0_4_0 = (RuleCall)cExprAssignment_0_4.eContents().get(0);
+		private final Group cGroup_1 = (Group)cAlternatives.eContents().get(1);
+		private final Action cClaimBodyAction_1_0 = (Action)cGroup_1.eContents().get(0);
+		private final Keyword cLessThanSignEqualsSignKeyword_1_1 = (Keyword)cGroup_1.eContents().get(1);
+		private final Group cGroup_1_2 = (Group)cGroup_1.eContents().get(2);
+		private final Keyword cAsteriskAsteriskKeyword_1_2_0 = (Keyword)cGroup_1_2.eContents().get(0);
+		private final Assignment cClaimAssignment_1_2_1 = (Assignment)cGroup_1_2.eContents().get(1);
+		private final RuleCall cClaimClaimTextParserRuleCall_1_2_1_0 = (RuleCall)cClaimAssignment_1_2_1.eContents().get(0);
+		private final Keyword cAsteriskAsteriskKeyword_1_2_2 = (Keyword)cGroup_1_2.eContents().get(2);
+		private final Assignment cExprAssignment_1_3 = (Assignment)cGroup_1.eContents().get(3);
+		private final RuleCall cExprExprParserRuleCall_1_3_0 = (RuleCall)cExprAssignment_1_3.eContents().get(0);
+		
+		//DefinitionBody:
+		//	{FunctionBody} ":" type=Type "=" expr=Expr | {ClaimBody} "<=" ("**" claim+=ClaimText+ "**") expr=Expr;
+		public ParserRule getRule() { return rule; }
+
+		//{FunctionBody} ":" type=Type "=" expr=Expr | {ClaimBody} "<=" ("**" claim+=ClaimText+ "**") expr=Expr
+		public Alternatives getAlternatives() { return cAlternatives; }
+
+		//{FunctionBody} ":" type=Type "=" expr=Expr
+		public Group getGroup_0() { return cGroup_0; }
+
+		//{FunctionBody}
+		public Action getFunctionBodyAction_0_0() { return cFunctionBodyAction_0_0; }
+
+		//":"
+		public Keyword getColonKeyword_0_1() { return cColonKeyword_0_1; }
+
+		//type=Type
+		public Assignment getTypeAssignment_0_2() { return cTypeAssignment_0_2; }
+
+		//Type
+		public RuleCall getTypeTypeParserRuleCall_0_2_0() { return cTypeTypeParserRuleCall_0_2_0; }
+
+		//"="
+		public Keyword getEqualsSignKeyword_0_3() { return cEqualsSignKeyword_0_3; }
+
+		//expr=Expr
+		public Assignment getExprAssignment_0_4() { return cExprAssignment_0_4; }
+
+		//Expr
+		public RuleCall getExprExprParserRuleCall_0_4_0() { return cExprExprParserRuleCall_0_4_0; }
+
+		//{ClaimBody} "<=" ("**" claim+=ClaimText+ "**") expr=Expr
+		public Group getGroup_1() { return cGroup_1; }
+
+		//{ClaimBody}
+		public Action getClaimBodyAction_1_0() { return cClaimBodyAction_1_0; }
+
+		//"<="
+		public Keyword getLessThanSignEqualsSignKeyword_1_1() { return cLessThanSignEqualsSignKeyword_1_1; }
+
+		//"**" claim+=ClaimText+ "**"
+		public Group getGroup_1_2() { return cGroup_1_2; }
+
+		//"**"
+		public Keyword getAsteriskAsteriskKeyword_1_2_0() { return cAsteriskAsteriskKeyword_1_2_0; }
+
+		//claim+=ClaimText+
+		public Assignment getClaimAssignment_1_2_1() { return cClaimAssignment_1_2_1; }
+
+		//ClaimText
+		public RuleCall getClaimClaimTextParserRuleCall_1_2_1_0() { return cClaimClaimTextParserRuleCall_1_2_1_0; }
+
+		//"**"
+		public Keyword getAsteriskAsteriskKeyword_1_2_2() { return cAsteriskAsteriskKeyword_1_2_2; }
+
+		//expr=Expr
+		public Assignment getExprAssignment_1_3() { return cExprAssignment_1_3; }
+
+		//Expr
+		public RuleCall getExprExprParserRuleCall_1_3_0() { return cExprExprParserRuleCall_1_3_0; }
+	}
+
+	public class ClaimTextElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "ClaimText");
 		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
 		private final Group cGroup_0 = (Group)cAlternatives.eContents().get(0);
 		private final Action cClaimStringAction_0_0 = (Action)cGroup_0.eContents().get(0);
@@ -596,7 +666,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		private final CrossReference cArgArgCrossReference_1_1_0 = (CrossReference)cArgAssignment_1_1.eContents().get(0);
 		private final RuleCall cArgArgIDTerminalRuleCall_1_1_0_1 = (RuleCall)cArgArgCrossReference_1_1_0.eContents().get(1);
 		
-		//ClaimString:
+		//ClaimText:
 		//	{ClaimString} str=STRING | {ClaimArg} arg=[Arg];
 		public ParserRule getRule() { return rule; }
 
@@ -629,90 +699,6 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 
 		//ID
 		public RuleCall getArgArgIDTerminalRuleCall_1_1_0_1() { return cArgArgIDTerminalRuleCall_1_1_0_1; }
-	}
-
-	public class DefinitionBodyElements extends AbstractParserRuleElementFinder {
-		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "DefinitionBody");
-		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
-		private final Group cGroup_0 = (Group)cAlternatives.eContents().get(0);
-		private final Action cFuncBodyAction_0_0 = (Action)cGroup_0.eContents().get(0);
-		private final Keyword cColonKeyword_0_1 = (Keyword)cGroup_0.eContents().get(1);
-		private final Assignment cTypeAssignment_0_2 = (Assignment)cGroup_0.eContents().get(2);
-		private final RuleCall cTypeTypeParserRuleCall_0_2_0 = (RuleCall)cTypeAssignment_0_2.eContents().get(0);
-		private final Keyword cEqualsSignKeyword_0_3 = (Keyword)cGroup_0.eContents().get(3);
-		private final Assignment cExprAssignment_0_4 = (Assignment)cGroup_0.eContents().get(4);
-		private final RuleCall cExprExprParserRuleCall_0_4_0 = (RuleCall)cExprAssignment_0_4.eContents().get(0);
-		private final Group cGroup_1 = (Group)cAlternatives.eContents().get(1);
-		private final Action cClaimBodyAction_1_0 = (Action)cGroup_1.eContents().get(0);
-		private final Keyword cLessThanSignEqualsSignKeyword_1_1 = (Keyword)cGroup_1.eContents().get(1);
-		private final Group cGroup_1_2 = (Group)cGroup_1.eContents().get(2);
-		private final Keyword cAsteriskAsteriskKeyword_1_2_0 = (Keyword)cGroup_1_2.eContents().get(0);
-		private final Assignment cClaimAssignment_1_2_1 = (Assignment)cGroup_1_2.eContents().get(1);
-		private final RuleCall cClaimClaimStringParserRuleCall_1_2_1_0 = (RuleCall)cClaimAssignment_1_2_1.eContents().get(0);
-		private final Keyword cAsteriskAsteriskKeyword_1_2_2 = (Keyword)cGroup_1_2.eContents().get(2);
-		private final Assignment cExprAssignment_1_3 = (Assignment)cGroup_1.eContents().get(3);
-		private final RuleCall cExprExprParserRuleCall_1_3_0 = (RuleCall)cExprAssignment_1_3.eContents().get(0);
-		
-		//DefinitionBody:
-		//	{FuncBody} ":" type=Type "=" expr=Expr | {ClaimBody} "<=" ("**" claim+=ClaimString+ "**") expr=Expr;
-		public ParserRule getRule() { return rule; }
-
-		//{FuncBody} ":" type=Type "=" expr=Expr | {ClaimBody} "<=" ("**" claim+=ClaimString+ "**") expr=Expr
-		public Alternatives getAlternatives() { return cAlternatives; }
-
-		//{FuncBody} ":" type=Type "=" expr=Expr
-		public Group getGroup_0() { return cGroup_0; }
-
-		//{FuncBody}
-		public Action getFuncBodyAction_0_0() { return cFuncBodyAction_0_0; }
-
-		//":"
-		public Keyword getColonKeyword_0_1() { return cColonKeyword_0_1; }
-
-		//type=Type
-		public Assignment getTypeAssignment_0_2() { return cTypeAssignment_0_2; }
-
-		//Type
-		public RuleCall getTypeTypeParserRuleCall_0_2_0() { return cTypeTypeParserRuleCall_0_2_0; }
-
-		//"="
-		public Keyword getEqualsSignKeyword_0_3() { return cEqualsSignKeyword_0_3; }
-
-		//expr=Expr
-		public Assignment getExprAssignment_0_4() { return cExprAssignment_0_4; }
-
-		//Expr
-		public RuleCall getExprExprParserRuleCall_0_4_0() { return cExprExprParserRuleCall_0_4_0; }
-
-		//{ClaimBody} "<=" ("**" claim+=ClaimString+ "**") expr=Expr
-		public Group getGroup_1() { return cGroup_1; }
-
-		//{ClaimBody}
-		public Action getClaimBodyAction_1_0() { return cClaimBodyAction_1_0; }
-
-		//"<="
-		public Keyword getLessThanSignEqualsSignKeyword_1_1() { return cLessThanSignEqualsSignKeyword_1_1; }
-
-		//"**" claim+=ClaimString+ "**"
-		public Group getGroup_1_2() { return cGroup_1_2; }
-
-		//"**"
-		public Keyword getAsteriskAsteriskKeyword_1_2_0() { return cAsteriskAsteriskKeyword_1_2_0; }
-
-		//claim+=ClaimString+
-		public Assignment getClaimAssignment_1_2_1() { return cClaimAssignment_1_2_1; }
-
-		//ClaimString
-		public RuleCall getClaimClaimStringParserRuleCall_1_2_1_0() { return cClaimClaimStringParserRuleCall_1_2_1_0; }
-
-		//"**"
-		public Keyword getAsteriskAsteriskKeyword_1_2_2() { return cAsteriskAsteriskKeyword_1_2_2; }
-
-		//expr=Expr
-		public Assignment getExprAssignment_1_3() { return cExprAssignment_1_3; }
-
-		//Expr
-		public RuleCall getExprExprParserRuleCall_1_3_0() { return cExprExprParserRuleCall_1_3_0; }
 	}
 
 	public class ExprElements extends AbstractParserRuleElementFinder {
@@ -826,7 +812,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	public class AndExprElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "AndExpr");
 		private final Group cGroup = (Group)rule.eContents().get(1);
-		private final RuleCall cRelationalExprParserRuleCall_0 = (RuleCall)cGroup.eContents().get(0);
+		private final RuleCall cInstanceOfExprParserRuleCall_0 = (RuleCall)cGroup.eContents().get(0);
 		private final Group cGroup_1 = (Group)cGroup.eContents().get(1);
 		private final Group cGroup_1_0 = (Group)cGroup_1.eContents().get(0);
 		private final Group cGroup_1_0_0 = (Group)cGroup_1_0.eContents().get(0);
@@ -834,19 +820,19 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		private final Assignment cOpAssignment_1_0_0_1 = (Assignment)cGroup_1_0_0.eContents().get(1);
 		private final Keyword cOpAndKeyword_1_0_0_1_0 = (Keyword)cOpAssignment_1_0_0_1.eContents().get(0);
 		private final Assignment cRightAssignment_1_1 = (Assignment)cGroup_1.eContents().get(1);
-		private final RuleCall cRightRelationalExprParserRuleCall_1_1_0 = (RuleCall)cRightAssignment_1_1.eContents().get(0);
+		private final RuleCall cRightInstanceOfExprParserRuleCall_1_1_0 = (RuleCall)cRightAssignment_1_1.eContents().get(0);
 		
 		//AndExpr returns Expr:
-		//	RelationalExpr (=> ({BinaryExpr.left=current} op="and") right=RelationalExpr)*;
+		//	InstanceOfExpr (=> ({BinaryExpr.left=current} op="and") right=InstanceOfExpr)*;
 		public ParserRule getRule() { return rule; }
 
-		//RelationalExpr (=> ({BinaryExpr.left=current} op="and") right=RelationalExpr)*
+		//InstanceOfExpr (=> ({BinaryExpr.left=current} op="and") right=InstanceOfExpr)*
 		public Group getGroup() { return cGroup; }
 
-		//RelationalExpr
-		public RuleCall getRelationalExprParserRuleCall_0() { return cRelationalExprParserRuleCall_0; }
+		//InstanceOfExpr
+		public RuleCall getInstanceOfExprParserRuleCall_0() { return cInstanceOfExprParserRuleCall_0; }
 
-		//(=> ({BinaryExpr.left=current} op="and") right=RelationalExpr)*
+		//(=> ({BinaryExpr.left=current} op="and") right=InstanceOfExpr)*
 		public Group getGroup_1() { return cGroup_1; }
 
 		//=> ({BinaryExpr.left=current} op="and")
@@ -864,11 +850,55 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		//"and"
 		public Keyword getOpAndKeyword_1_0_0_1_0() { return cOpAndKeyword_1_0_0_1_0; }
 
-		//right=RelationalExpr
+		//right=InstanceOfExpr
 		public Assignment getRightAssignment_1_1() { return cRightAssignment_1_1; }
 
+		//InstanceOfExpr
+		public RuleCall getRightInstanceOfExprParserRuleCall_1_1_0() { return cRightInstanceOfExprParserRuleCall_1_1_0; }
+	}
+
+	public class InstanceOfExprElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "InstanceOfExpr");
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final RuleCall cRelationalExprParserRuleCall_0 = (RuleCall)cGroup.eContents().get(0);
+		private final Group cGroup_1 = (Group)cGroup.eContents().get(1);
+		private final Group cGroup_1_0 = (Group)cGroup_1.eContents().get(0);
+		private final Group cGroup_1_0_0 = (Group)cGroup_1_0.eContents().get(0);
+		private final Action cInstanceOfExprExprAction_1_0_0_0 = (Action)cGroup_1_0_0.eContents().get(0);
+		private final Keyword cInstanceofKeyword_1_0_0_1 = (Keyword)cGroup_1_0_0.eContents().get(1);
+		private final Assignment cTypeAssignment_1_1 = (Assignment)cGroup_1.eContents().get(1);
+		private final RuleCall cTypeBaseTypeParserRuleCall_1_1_0 = (RuleCall)cTypeAssignment_1_1.eContents().get(0);
+		
+		//InstanceOfExpr returns Expr:
+		//	RelationalExpr (=> ({InstanceOfExpr.expr=current} "instanceof") type=BaseType)?;
+		public ParserRule getRule() { return rule; }
+
+		//RelationalExpr (=> ({InstanceOfExpr.expr=current} "instanceof") type=BaseType)?
+		public Group getGroup() { return cGroup; }
+
 		//RelationalExpr
-		public RuleCall getRightRelationalExprParserRuleCall_1_1_0() { return cRightRelationalExprParserRuleCall_1_1_0; }
+		public RuleCall getRelationalExprParserRuleCall_0() { return cRelationalExprParserRuleCall_0; }
+
+		//(=> ({InstanceOfExpr.expr=current} "instanceof") type=BaseType)?
+		public Group getGroup_1() { return cGroup_1; }
+
+		//=> ({InstanceOfExpr.expr=current} "instanceof")
+		public Group getGroup_1_0() { return cGroup_1_0; }
+
+		//{InstanceOfExpr.expr=current} "instanceof"
+		public Group getGroup_1_0_0() { return cGroup_1_0_0; }
+
+		//{InstanceOfExpr.expr=current}
+		public Action getInstanceOfExprExprAction_1_0_0_0() { return cInstanceOfExprExprAction_1_0_0_0; }
+
+		//"instanceof"
+		public Keyword getInstanceofKeyword_1_0_0_1() { return cInstanceofKeyword_1_0_0_1; }
+
+		//type=BaseType
+		public Assignment getTypeAssignment_1_1() { return cTypeAssignment_1_1; }
+
+		//BaseType
+		public RuleCall getTypeBaseTypeParserRuleCall_1_1_0() { return cTypeBaseTypeParserRuleCall_1_1_0; }
 	}
 
 	public class RelationalOpElements extends AbstractParserRuleElementFinder {
@@ -880,13 +910,12 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		private final Keyword cGreaterThanSignEqualsSignKeyword_3 = (Keyword)cAlternatives.eContents().get(3);
 		private final Keyword cEqualsSignKeyword_4 = (Keyword)cAlternatives.eContents().get(4);
 		private final Keyword cLessThanSignGreaterThanSignKeyword_5 = (Keyword)cAlternatives.eContents().get(5);
-		private final Keyword cInKeyword_6 = (Keyword)cAlternatives.eContents().get(6);
 		
 		//RelationalOp:
-		//	"<" | "<=" | ">" | ">=" | "=" | "<>" | "in";
+		//	"<" | "<=" | ">" | ">=" | "=" | "<>";
 		public ParserRule getRule() { return rule; }
 
-		//"<" | "<=" | ">" | ">=" | "=" | "<>" | "in"
+		//"<" | "<=" | ">" | ">=" | "=" | "<>"
 		public Alternatives getAlternatives() { return cAlternatives; }
 
 		//"<"
@@ -906,9 +935,6 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 
 		//"<>"
 		public Keyword getLessThanSignGreaterThanSignKeyword_5() { return cLessThanSignGreaterThanSignKeyword_5; }
-
-		//"in"
-		public Keyword getInKeyword_6() { return cInKeyword_6; }
 	}
 
 	public class RelationalExprElements extends AbstractParserRuleElementFinder {
@@ -1018,7 +1044,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	public class TimesExprElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "TimesExpr");
 		private final Group cGroup = (Group)rule.eContents().get(1);
-		private final RuleCall cSetOpExprParserRuleCall_0 = (RuleCall)cGroup.eContents().get(0);
+		private final RuleCall cPrefixExprParserRuleCall_0 = (RuleCall)cGroup.eContents().get(0);
 		private final Group cGroup_1 = (Group)cGroup.eContents().get(1);
 		private final Group cGroup_1_0 = (Group)cGroup_1.eContents().get(0);
 		private final Group cGroup_1_0_0 = (Group)cGroup_1_0.eContents().get(0);
@@ -1028,19 +1054,19 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		private final Keyword cOpAsteriskKeyword_1_0_0_1_0_0 = (Keyword)cOpAlternatives_1_0_0_1_0.eContents().get(0);
 		private final Keyword cOpSolidusKeyword_1_0_0_1_0_1 = (Keyword)cOpAlternatives_1_0_0_1_0.eContents().get(1);
 		private final Assignment cRightAssignment_1_1 = (Assignment)cGroup_1.eContents().get(1);
-		private final RuleCall cRightSetOpExprParserRuleCall_1_1_0 = (RuleCall)cRightAssignment_1_1.eContents().get(0);
+		private final RuleCall cRightPrefixExprParserRuleCall_1_1_0 = (RuleCall)cRightAssignment_1_1.eContents().get(0);
 		
 		//TimesExpr returns Expr:
-		//	SetOpExpr (=> ({BinaryExpr.left=current} op=("*" | "/")) right=SetOpExpr)*;
+		//	PrefixExpr (=> ({BinaryExpr.left=current} op=("*" | "/")) right=PrefixExpr)*;
 		public ParserRule getRule() { return rule; }
 
-		//SetOpExpr (=> ({BinaryExpr.left=current} op=("*" | "/")) right=SetOpExpr)*
+		//PrefixExpr (=> ({BinaryExpr.left=current} op=("*" | "/")) right=PrefixExpr)*
 		public Group getGroup() { return cGroup; }
 
-		//SetOpExpr
-		public RuleCall getSetOpExprParserRuleCall_0() { return cSetOpExprParserRuleCall_0; }
+		//PrefixExpr
+		public RuleCall getPrefixExprParserRuleCall_0() { return cPrefixExprParserRuleCall_0; }
 
-		//(=> ({BinaryExpr.left=current} op=("*" | "/")) right=SetOpExpr)*
+		//(=> ({BinaryExpr.left=current} op=("*" | "/")) right=PrefixExpr)*
 		public Group getGroup_1() { return cGroup_1; }
 
 		//=> ({BinaryExpr.left=current} op=("*" | "/"))
@@ -1064,62 +1090,6 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		//"/"
 		public Keyword getOpSolidusKeyword_1_0_0_1_0_1() { return cOpSolidusKeyword_1_0_0_1_0_1; }
 
-		//right=SetOpExpr
-		public Assignment getRightAssignment_1_1() { return cRightAssignment_1_1; }
-
-		//SetOpExpr
-		public RuleCall getRightSetOpExprParserRuleCall_1_1_0() { return cRightSetOpExprParserRuleCall_1_1_0; }
-	}
-
-	public class SetOpExprElements extends AbstractParserRuleElementFinder {
-		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "SetOpExpr");
-		private final Group cGroup = (Group)rule.eContents().get(1);
-		private final RuleCall cPrefixExprParserRuleCall_0 = (RuleCall)cGroup.eContents().get(0);
-		private final Group cGroup_1 = (Group)cGroup.eContents().get(1);
-		private final Group cGroup_1_0 = (Group)cGroup_1.eContents().get(0);
-		private final Group cGroup_1_0_0 = (Group)cGroup_1_0.eContents().get(0);
-		private final Action cBinaryExprLeftAction_1_0_0_0 = (Action)cGroup_1_0_0.eContents().get(0);
-		private final Assignment cOpAssignment_1_0_0_1 = (Assignment)cGroup_1_0_0.eContents().get(1);
-		private final Alternatives cOpAlternatives_1_0_0_1_0 = (Alternatives)cOpAssignment_1_0_0_1.eContents().get(0);
-		private final Keyword cOpUnionKeyword_1_0_0_1_0_0 = (Keyword)cOpAlternatives_1_0_0_1_0.eContents().get(0);
-		private final Keyword cOpIntersectKeyword_1_0_0_1_0_1 = (Keyword)cOpAlternatives_1_0_0_1_0.eContents().get(1);
-		private final Assignment cRightAssignment_1_1 = (Assignment)cGroup_1.eContents().get(1);
-		private final RuleCall cRightPrefixExprParserRuleCall_1_1_0 = (RuleCall)cRightAssignment_1_1.eContents().get(0);
-		
-		//SetOpExpr returns Expr:
-		//	PrefixExpr (=> ({BinaryExpr.left=current} op=("union" | "intersect")) right=PrefixExpr)*;
-		public ParserRule getRule() { return rule; }
-
-		//PrefixExpr (=> ({BinaryExpr.left=current} op=("union" | "intersect")) right=PrefixExpr)*
-		public Group getGroup() { return cGroup; }
-
-		//PrefixExpr
-		public RuleCall getPrefixExprParserRuleCall_0() { return cPrefixExprParserRuleCall_0; }
-
-		//(=> ({BinaryExpr.left=current} op=("union" | "intersect")) right=PrefixExpr)*
-		public Group getGroup_1() { return cGroup_1; }
-
-		//=> ({BinaryExpr.left=current} op=("union" | "intersect"))
-		public Group getGroup_1_0() { return cGroup_1_0; }
-
-		//{BinaryExpr.left=current} op=("union" | "intersect")
-		public Group getGroup_1_0_0() { return cGroup_1_0_0; }
-
-		//{BinaryExpr.left=current}
-		public Action getBinaryExprLeftAction_1_0_0_0() { return cBinaryExprLeftAction_1_0_0_0; }
-
-		//op=("union" | "intersect")
-		public Assignment getOpAssignment_1_0_0_1() { return cOpAssignment_1_0_0_1; }
-
-		//"union" | "intersect"
-		public Alternatives getOpAlternatives_1_0_0_1_0() { return cOpAlternatives_1_0_0_1_0; }
-
-		//"union"
-		public Keyword getOpUnionKeyword_1_0_0_1_0_0() { return cOpUnionKeyword_1_0_0_1_0_0; }
-
-		//"intersect"
-		public Keyword getOpIntersectKeyword_1_0_0_1_0_1() { return cOpIntersectKeyword_1_0_0_1_0_1; }
-
 		//right=PrefixExpr
 		public Assignment getRightAssignment_1_1() { return cRightAssignment_1_1; }
 
@@ -1138,13 +1108,21 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		private final Keyword cOpNotKeyword_0_1_0_1 = (Keyword)cOpAlternatives_0_1_0.eContents().get(1);
 		private final Assignment cExprAssignment_0_2 = (Assignment)cGroup_0.eContents().get(2);
 		private final RuleCall cExprPrefixExprParserRuleCall_0_2_0 = (RuleCall)cExprAssignment_0_2.eContents().get(0);
-		private final RuleCall cAtomicExprParserRuleCall_1 = (RuleCall)cAlternatives.eContents().get(1);
+		private final Group cGroup_1 = (Group)cAlternatives.eContents().get(1);
+		private final Action cCastExprAction_1_0 = (Action)cGroup_1.eContents().get(0);
+		private final Keyword cLeftParenthesisKeyword_1_1 = (Keyword)cGroup_1.eContents().get(1);
+		private final Assignment cTypeAssignment_1_2 = (Assignment)cGroup_1.eContents().get(2);
+		private final RuleCall cTypeBaseTypeParserRuleCall_1_2_0 = (RuleCall)cTypeAssignment_1_2.eContents().get(0);
+		private final Keyword cRightParenthesisKeyword_1_3 = (Keyword)cGroup_1.eContents().get(3);
+		private final Assignment cExprAssignment_1_4 = (Assignment)cGroup_1.eContents().get(4);
+		private final RuleCall cExprPrefixExprParserRuleCall_1_4_0 = (RuleCall)cExprAssignment_1_4.eContents().get(0);
+		private final RuleCall cAtomicExprParserRuleCall_2 = (RuleCall)cAlternatives.eContents().get(2);
 		
 		//PrefixExpr returns Expr:
-		//	{UnaryExpr} op=("-" | "not") expr=PrefixExpr | AtomicExpr;
+		//	{UnaryExpr} op=("-" | "not") expr=PrefixExpr | {CastExpr} "(" type=BaseType ")" expr=PrefixExpr | AtomicExpr;
 		public ParserRule getRule() { return rule; }
 
-		//{UnaryExpr} op=("-" | "not") expr=PrefixExpr | AtomicExpr
+		//{UnaryExpr} op=("-" | "not") expr=PrefixExpr | {CastExpr} "(" type=BaseType ")" expr=PrefixExpr | AtomicExpr
 		public Alternatives getAlternatives() { return cAlternatives; }
 
 		//{UnaryExpr} op=("-" | "not") expr=PrefixExpr
@@ -1171,8 +1149,32 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		//PrefixExpr
 		public RuleCall getExprPrefixExprParserRuleCall_0_2_0() { return cExprPrefixExprParserRuleCall_0_2_0; }
 
+		//{CastExpr} "(" type=BaseType ")" expr=PrefixExpr
+		public Group getGroup_1() { return cGroup_1; }
+
+		//{CastExpr}
+		public Action getCastExprAction_1_0() { return cCastExprAction_1_0; }
+
+		//"("
+		public Keyword getLeftParenthesisKeyword_1_1() { return cLeftParenthesisKeyword_1_1; }
+
+		//type=BaseType
+		public Assignment getTypeAssignment_1_2() { return cTypeAssignment_1_2; }
+
+		//BaseType
+		public RuleCall getTypeBaseTypeParserRuleCall_1_2_0() { return cTypeBaseTypeParserRuleCall_1_2_0; }
+
+		//")"
+		public Keyword getRightParenthesisKeyword_1_3() { return cRightParenthesisKeyword_1_3; }
+
+		//expr=PrefixExpr
+		public Assignment getExprAssignment_1_4() { return cExprAssignment_1_4; }
+
+		//PrefixExpr
+		public RuleCall getExprPrefixExprParserRuleCall_1_4_0() { return cExprPrefixExprParserRuleCall_1_4_0; }
+
 		//AtomicExpr
-		public RuleCall getAtomicExprParserRuleCall_1() { return cAtomicExprParserRuleCall_1; }
+		public RuleCall getAtomicExprParserRuleCall_2() { return cAtomicExprParserRuleCall_2; }
 	}
 
 	public class AtomicExprElements extends AbstractParserRuleElementFinder {
@@ -1183,10 +1185,6 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		private final Assignment cIdAssignment_0_1 = (Assignment)cGroup_0.eContents().get(1);
 		private final CrossReference cIdNamedElementCrossReference_0_1_0 = (CrossReference)cIdAssignment_0_1.eContents().get(0);
 		private final RuleCall cIdNamedElementQCREFParserRuleCall_0_1_0_1 = (RuleCall)cIdNamedElementCrossReference_0_1_0.eContents().get(1);
-		private final Group cGroup_0_2 = (Group)cGroup_0.eContents().get(2);
-		private final Keyword cFullStopKeyword_0_2_0 = (Keyword)cGroup_0_2.eContents().get(0);
-		private final Assignment cSubelementsAssignment_0_2_1 = (Assignment)cGroup_0_2.eContents().get(1);
-		private final RuleCall cSubelementsElementSetParserRuleCall_0_2_1_0 = (RuleCall)cSubelementsAssignment_0_2_1.eContents().get(0);
 		private final Group cGroup_1 = (Group)cAlternatives.eContents().get(1);
 		private final Action cThisExprAction_1_0 = (Action)cGroup_1.eContents().get(0);
 		private final Keyword cThisKeyword_1_1 = (Keyword)cGroup_1.eContents().get(1);
@@ -1241,9 +1239,9 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		private final Assignment cExprAssignment_8_4 = (Assignment)cGroup_8.eContents().get(4);
 		private final RuleCall cExprExprParserRuleCall_8_4_0 = (RuleCall)cExprAssignment_8_4.eContents().get(0);
 		private final Group cGroup_9 = (Group)cAlternatives.eContents().get(9);
-		private final Action cBuiltInFuncCallExprAction_9_0 = (Action)cGroup_9.eContents().get(0);
+		private final Action cBuiltInFnCallExprAction_9_0 = (Action)cGroup_9.eContents().get(0);
 		private final Assignment cFnAssignment_9_1 = (Assignment)cGroup_9.eContents().get(1);
-		private final RuleCall cFnBuiltInFuncParserRuleCall_9_1_0 = (RuleCall)cFnAssignment_9_1.eContents().get(0);
+		private final RuleCall cFnBuiltInFnParserRuleCall_9_1_0 = (RuleCall)cFnAssignment_9_1.eContents().get(0);
 		private final Keyword cLeftParenthesisKeyword_9_2 = (Keyword)cGroup_9.eContents().get(2);
 		private final Group cGroup_9_3 = (Group)cGroup_9.eContents().get(3);
 		private final Assignment cArgsAssignment_9_3_0 = (Assignment)cGroup_9_3.eContents().get(0);
@@ -1268,54 +1266,65 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cArgsExprParserRuleCall_10_3_1_1_0 = (RuleCall)cArgsAssignment_10_3_1_1.eContents().get(0);
 		private final Keyword cRightParenthesisKeyword_10_4 = (Keyword)cGroup_10.eContents().get(4);
 		private final Group cGroup_11 = (Group)cAlternatives.eContents().get(11);
-		private final Action cFilterMapExprAction_11_0 = (Action)cGroup_11.eContents().get(0);
-		private final Keyword cLeftCurlyBracketKeyword_11_1 = (Keyword)cGroup_11.eContents().get(1);
-		private final Assignment cMapAssignment_11_2 = (Assignment)cGroup_11.eContents().get(2);
-		private final RuleCall cMapExprParserRuleCall_11_2_0 = (RuleCall)cMapAssignment_11_2.eContents().get(0);
-		private final Keyword cForKeyword_11_3 = (Keyword)cGroup_11.eContents().get(3);
-		private final Group cGroup_11_4 = (Group)cGroup_11.eContents().get(4);
-		private final Keyword cLeftParenthesisKeyword_11_4_0 = (Keyword)cGroup_11_4.eContents().get(0);
-		private final Assignment cArgsAssignment_11_4_1 = (Assignment)cGroup_11_4.eContents().get(1);
-		private final RuleCall cArgsArgParserRuleCall_11_4_1_0 = (RuleCall)cArgsAssignment_11_4_1.eContents().get(0);
-		private final Keyword cRightParenthesisKeyword_11_4_2 = (Keyword)cGroup_11_4.eContents().get(2);
-		private final Group cGroup_11_5 = (Group)cGroup_11.eContents().get(5);
-		private final Keyword cVerticalLineKeyword_11_5_0 = (Keyword)cGroup_11_5.eContents().get(0);
-		private final Assignment cFilterAssignment_11_5_1 = (Assignment)cGroup_11_5.eContents().get(1);
-		private final RuleCall cFilterExprParserRuleCall_11_5_1_0 = (RuleCall)cFilterAssignment_11_5_1.eContents().get(0);
-		private final Keyword cRightCurlyBracketKeyword_11_6 = (Keyword)cGroup_11.eContents().get(6);
+		private final Keyword cLeftCurlyBracketKeyword_11_0 = (Keyword)cGroup_11.eContents().get(0);
+		private final RuleCall cExprParserRuleCall_11_1 = (RuleCall)cGroup_11.eContents().get(1);
+		private final Alternatives cAlternatives_11_2 = (Alternatives)cGroup_11.eContents().get(2);
+		private final Group cGroup_11_2_0 = (Group)cAlternatives_11_2.eContents().get(0);
+		private final Action cFilterMapExprMapAction_11_2_0_0 = (Action)cGroup_11_2_0.eContents().get(0);
+		private final Keyword cForKeyword_11_2_0_1 = (Keyword)cGroup_11_2_0.eContents().get(1);
+		private final Group cGroup_11_2_0_2 = (Group)cGroup_11_2_0.eContents().get(2);
+		private final Keyword cLeftParenthesisKeyword_11_2_0_2_0 = (Keyword)cGroup_11_2_0_2.eContents().get(0);
+		private final Assignment cArgsAssignment_11_2_0_2_1 = (Assignment)cGroup_11_2_0_2.eContents().get(1);
+		private final RuleCall cArgsArgParserRuleCall_11_2_0_2_1_0 = (RuleCall)cArgsAssignment_11_2_0_2_1.eContents().get(0);
+		private final Keyword cRightParenthesisKeyword_11_2_0_2_2 = (Keyword)cGroup_11_2_0_2.eContents().get(2);
+		private final Group cGroup_11_2_0_3 = (Group)cGroup_11_2_0.eContents().get(3);
+		private final Keyword cVerticalLineKeyword_11_2_0_3_0 = (Keyword)cGroup_11_2_0_3.eContents().get(0);
+		private final Assignment cFilterAssignment_11_2_0_3_1 = (Assignment)cGroup_11_2_0_3.eContents().get(1);
+		private final RuleCall cFilterExprParserRuleCall_11_2_0_3_1_0 = (RuleCall)cFilterAssignment_11_2_0_3_1.eContents().get(0);
+		private final Group cGroup_11_2_1 = (Group)cAlternatives_11_2.eContents().get(1);
+		private final Action cSetExprExprsAction_11_2_1_0 = (Action)cGroup_11_2_1.eContents().get(0);
+		private final Group cGroup_11_2_1_1 = (Group)cGroup_11_2_1.eContents().get(1);
+		private final Keyword cCommaKeyword_11_2_1_1_0 = (Keyword)cGroup_11_2_1_1.eContents().get(0);
+		private final Assignment cExprsAssignment_11_2_1_1_1 = (Assignment)cGroup_11_2_1_1.eContents().get(1);
+		private final RuleCall cExprsExprParserRuleCall_11_2_1_1_1_0 = (RuleCall)cExprsAssignment_11_2_1_1_1.eContents().get(0);
+		private final Keyword cRightCurlyBracketKeyword_11_3 = (Keyword)cGroup_11.eContents().get(3);
 		private final Group cGroup_12 = (Group)cAlternatives.eContents().get(12);
-		private final Action cLetExprAction_12_0 = (Action)cGroup_12.eContents().get(0);
-		private final Keyword cLetKeyword_12_1 = (Keyword)cGroup_12.eContents().get(1);
-		private final Assignment cBindingAssignment_12_2 = (Assignment)cGroup_12.eContents().get(2);
-		private final RuleCall cBindingLetBindingParserRuleCall_12_2_0 = (RuleCall)cBindingAssignment_12_2.eContents().get(0);
-		private final Keyword cSemicolonKeyword_12_3 = (Keyword)cGroup_12.eContents().get(3);
-		private final Assignment cExprAssignment_12_4 = (Assignment)cGroup_12.eContents().get(4);
-		private final RuleCall cExprExprParserRuleCall_12_4_0 = (RuleCall)cExprAssignment_12_4.eContents().get(0);
+		private final Action cSetExprAction_12_0 = (Action)cGroup_12.eContents().get(0);
+		private final Keyword cLeftCurlyBracketKeyword_12_1 = (Keyword)cGroup_12.eContents().get(1);
+		private final Keyword cRightCurlyBracketKeyword_12_2 = (Keyword)cGroup_12.eContents().get(2);
 		private final Group cGroup_13 = (Group)cAlternatives.eContents().get(13);
-		private final Keyword cLeftParenthesisKeyword_13_0 = (Keyword)cGroup_13.eContents().get(0);
-		private final RuleCall cExprParserRuleCall_13_1 = (RuleCall)cGroup_13.eContents().get(1);
-		private final Keyword cRightParenthesisKeyword_13_2 = (Keyword)cGroup_13.eContents().get(2);
+		private final Action cLetExprAction_13_0 = (Action)cGroup_13.eContents().get(0);
+		private final Keyword cLetKeyword_13_1 = (Keyword)cGroup_13.eContents().get(1);
+		private final Assignment cBindingAssignment_13_2 = (Assignment)cGroup_13.eContents().get(2);
+		private final RuleCall cBindingLetBindingParserRuleCall_13_2_0 = (RuleCall)cBindingAssignment_13_2.eContents().get(0);
+		private final Keyword cSemicolonKeyword_13_3 = (Keyword)cGroup_13.eContents().get(3);
+		private final Assignment cExprAssignment_13_4 = (Assignment)cGroup_13.eContents().get(4);
+		private final RuleCall cExprExprParserRuleCall_13_4_0 = (RuleCall)cExprAssignment_13_4.eContents().get(0);
+		private final Group cGroup_14 = (Group)cAlternatives.eContents().get(14);
+		private final Keyword cLeftParenthesisKeyword_14_0 = (Keyword)cGroup_14.eContents().get(0);
+		private final RuleCall cExprParserRuleCall_14_1 = (RuleCall)cGroup_14.eContents().get(1);
+		private final Keyword cRightParenthesisKeyword_14_2 = (Keyword)cGroup_14.eContents().get(2);
 		
 		//AtomicExpr returns Expr:
-		//	{IdExpr} id=[aadl2::NamedElement|QCREF] ("." subelements=ElementSet)? //for set expressions
-		//	| {ThisExpr} "this" ("." sub=NestedDotID)? | {FailExpr} "fail" val=StringTerm? | {IntExpr} val=IntegerTerm | {RealExpr}
-		//	val=RealTerm | {BoolExpr} val=BooleanLiteral | {StringExpr} val=StringTerm | {IfThenElseExpr} "if" cond=Expr "then"
-		//	then=Expr "else" else=Expr | {QuantifiedExpr} quant=("forall" | "exists") ("(" args+=Arg ")")+ "." expr=Expr |
-		//	{BuiltInFuncCallExpr} fn=BuiltInFunc "(" (args+=Expr ("," args+=Expr)*)? ")" | {FnCallExpr} fn=[FunctionDefinition]
-		//	"(" (args+=Expr ("," args+=Expr)*)? ")" | {FilterMapExpr} "{" map=Expr "for" ("(" args+=Arg ")")+ ("|" filter=Expr)?
-		//	"}" | {LetExpr} "let" binding=LetBinding ";" expr=Expr | "(" Expr ")";
+		//	{IdExpr} id=[aadl2::NamedElement|QCREF] | {ThisExpr} "this" ("." sub=NestedDotID)? | {FailExpr} "fail" val=StringTerm?
+		//	| {IntExpr} val=IntegerTerm | {RealExpr} val=RealTerm | {BoolExpr} val=BooleanLiteral | {StringExpr} val=StringTerm |
+		//	{IfThenElseExpr} "if" cond=Expr "then" then=Expr "else" else=Expr | {QuantifiedExpr} quant=("forall" | "exists") ("("
+		//	args+=Arg ")")+ "." expr=Expr | {BuiltInFnCallExpr} fn=BuiltInFn "(" (args+=Expr ("," args+=Expr)*)? ")" |
+		//	{FnCallExpr} fn=[FunctionDefinition] "(" (args+=Expr ("," args+=Expr)*)? ")" | "{" Expr ({FilterMapExpr.map=current}
+		//	"for" ("(" args+=Arg ")")+ ("|" filter=Expr)? | {SetExpr.exprs+=current} ("," exprs+=Expr)*) "}" | {SetExpr} "{" "}" |
+		//	{LetExpr} "let" binding=LetBinding ";" expr=Expr | "(" Expr ")";
 		public ParserRule getRule() { return rule; }
 
-		//{IdExpr} id=[aadl2::NamedElement|QCREF] ("." subelements=ElementSet)? //for set expressions
-		//| {ThisExpr} "this" ("." sub=NestedDotID)? | {FailExpr} "fail" val=StringTerm? | {IntExpr} val=IntegerTerm | {RealExpr}
-		//val=RealTerm | {BoolExpr} val=BooleanLiteral | {StringExpr} val=StringTerm | {IfThenElseExpr} "if" cond=Expr "then"
-		//then=Expr "else" else=Expr | {QuantifiedExpr} quant=("forall" | "exists") ("(" args+=Arg ")")+ "." expr=Expr |
-		//{BuiltInFuncCallExpr} fn=BuiltInFunc "(" (args+=Expr ("," args+=Expr)*)? ")" | {FnCallExpr} fn=[FunctionDefinition] "("
-		//(args+=Expr ("," args+=Expr)*)? ")" | {FilterMapExpr} "{" map=Expr "for" ("(" args+=Arg ")")+ ("|" filter=Expr)? "}" |
-		//{LetExpr} "let" binding=LetBinding ";" expr=Expr | "(" Expr ")"
+		//{IdExpr} id=[aadl2::NamedElement|QCREF] | {ThisExpr} "this" ("." sub=NestedDotID)? | {FailExpr} "fail" val=StringTerm? |
+		//{IntExpr} val=IntegerTerm | {RealExpr} val=RealTerm | {BoolExpr} val=BooleanLiteral | {StringExpr} val=StringTerm |
+		//{IfThenElseExpr} "if" cond=Expr "then" then=Expr "else" else=Expr | {QuantifiedExpr} quant=("forall" | "exists") ("("
+		//args+=Arg ")")+ "." expr=Expr | {BuiltInFnCallExpr} fn=BuiltInFn "(" (args+=Expr ("," args+=Expr)*)? ")" | {FnCallExpr}
+		//fn=[FunctionDefinition] "(" (args+=Expr ("," args+=Expr)*)? ")" | "{" Expr ({FilterMapExpr.map=current} "for" ("("
+		//args+=Arg ")")+ ("|" filter=Expr)? | {SetExpr.exprs+=current} ("," exprs+=Expr)*) "}" | {SetExpr} "{" "}" | {LetExpr}
+		//"let" binding=LetBinding ";" expr=Expr | "(" Expr ")"
 		public Alternatives getAlternatives() { return cAlternatives; }
 
-		//{IdExpr} id=[aadl2::NamedElement|QCREF] ("." subelements=ElementSet)? //for set expressions
+		//{IdExpr} id=[aadl2::NamedElement|QCREF]
 		public Group getGroup_0() { return cGroup_0; }
 
 		//{IdExpr}
@@ -1329,18 +1338,6 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 
 		//QCREF
 		public RuleCall getIdNamedElementQCREFParserRuleCall_0_1_0_1() { return cIdNamedElementQCREFParserRuleCall_0_1_0_1; }
-
-		//("." subelements=ElementSet)?
-		public Group getGroup_0_2() { return cGroup_0_2; }
-
-		//"."
-		public Keyword getFullStopKeyword_0_2_0() { return cFullStopKeyword_0_2_0; }
-
-		//subelements=ElementSet
-		public Assignment getSubelementsAssignment_0_2_1() { return cSubelementsAssignment_0_2_1; }
-
-		//ElementSet
-		public RuleCall getSubelementsElementSetParserRuleCall_0_2_1_0() { return cSubelementsElementSetParserRuleCall_0_2_1_0; }
 
 		//{ThisExpr} "this" ("." sub=NestedDotID)?
 		public Group getGroup_1() { return cGroup_1; }
@@ -1501,17 +1498,17 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		//Expr
 		public RuleCall getExprExprParserRuleCall_8_4_0() { return cExprExprParserRuleCall_8_4_0; }
 
-		//{BuiltInFuncCallExpr} fn=BuiltInFunc "(" (args+=Expr ("," args+=Expr)*)? ")"
+		//{BuiltInFnCallExpr} fn=BuiltInFn "(" (args+=Expr ("," args+=Expr)*)? ")"
 		public Group getGroup_9() { return cGroup_9; }
 
-		//{BuiltInFuncCallExpr}
-		public Action getBuiltInFuncCallExprAction_9_0() { return cBuiltInFuncCallExprAction_9_0; }
+		//{BuiltInFnCallExpr}
+		public Action getBuiltInFnCallExprAction_9_0() { return cBuiltInFnCallExprAction_9_0; }
 
-		//fn=BuiltInFunc
+		//fn=BuiltInFn
 		public Assignment getFnAssignment_9_1() { return cFnAssignment_9_1; }
 
-		//BuiltInFunc
-		public RuleCall getFnBuiltInFuncParserRuleCall_9_1_0() { return cFnBuiltInFuncParserRuleCall_9_1_0; }
+		//BuiltInFn
+		public RuleCall getFnBuiltInFnParserRuleCall_9_1_0() { return cFnBuiltInFnParserRuleCall_9_1_0; }
 
 		//"("
 		public Keyword getLeftParenthesisKeyword_9_2() { return cLeftParenthesisKeyword_9_2; }
@@ -1582,89 +1579,123 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		//")"
 		public Keyword getRightParenthesisKeyword_10_4() { return cRightParenthesisKeyword_10_4; }
 
-		//{FilterMapExpr} "{" map=Expr "for" ("(" args+=Arg ")")+ ("|" filter=Expr)? "}"
+		//"{" Expr ({FilterMapExpr.map=current} "for" ("(" args+=Arg ")")+ ("|" filter=Expr)? | {SetExpr.exprs+=current} (","
+		//exprs+=Expr)*) "}"
 		public Group getGroup_11() { return cGroup_11; }
 
-		//{FilterMapExpr}
-		public Action getFilterMapExprAction_11_0() { return cFilterMapExprAction_11_0; }
-
 		//"{"
-		public Keyword getLeftCurlyBracketKeyword_11_1() { return cLeftCurlyBracketKeyword_11_1; }
-
-		//map=Expr
-		public Assignment getMapAssignment_11_2() { return cMapAssignment_11_2; }
+		public Keyword getLeftCurlyBracketKeyword_11_0() { return cLeftCurlyBracketKeyword_11_0; }
 
 		//Expr
-		public RuleCall getMapExprParserRuleCall_11_2_0() { return cMapExprParserRuleCall_11_2_0; }
+		public RuleCall getExprParserRuleCall_11_1() { return cExprParserRuleCall_11_1; }
+
+		//{FilterMapExpr.map=current} "for" ("(" args+=Arg ")")+ ("|" filter=Expr)? | {SetExpr.exprs+=current} ("," exprs+=Expr)*
+		public Alternatives getAlternatives_11_2() { return cAlternatives_11_2; }
+
+		//{FilterMapExpr.map=current} "for" ("(" args+=Arg ")")+ ("|" filter=Expr)?
+		public Group getGroup_11_2_0() { return cGroup_11_2_0; }
+
+		//{FilterMapExpr.map=current}
+		public Action getFilterMapExprMapAction_11_2_0_0() { return cFilterMapExprMapAction_11_2_0_0; }
 
 		//"for"
-		public Keyword getForKeyword_11_3() { return cForKeyword_11_3; }
+		public Keyword getForKeyword_11_2_0_1() { return cForKeyword_11_2_0_1; }
 
 		//("(" args+=Arg ")")+
-		public Group getGroup_11_4() { return cGroup_11_4; }
+		public Group getGroup_11_2_0_2() { return cGroup_11_2_0_2; }
 
 		//"("
-		public Keyword getLeftParenthesisKeyword_11_4_0() { return cLeftParenthesisKeyword_11_4_0; }
+		public Keyword getLeftParenthesisKeyword_11_2_0_2_0() { return cLeftParenthesisKeyword_11_2_0_2_0; }
 
 		//args+=Arg
-		public Assignment getArgsAssignment_11_4_1() { return cArgsAssignment_11_4_1; }
+		public Assignment getArgsAssignment_11_2_0_2_1() { return cArgsAssignment_11_2_0_2_1; }
 
 		//Arg
-		public RuleCall getArgsArgParserRuleCall_11_4_1_0() { return cArgsArgParserRuleCall_11_4_1_0; }
+		public RuleCall getArgsArgParserRuleCall_11_2_0_2_1_0() { return cArgsArgParserRuleCall_11_2_0_2_1_0; }
 
 		//")"
-		public Keyword getRightParenthesisKeyword_11_4_2() { return cRightParenthesisKeyword_11_4_2; }
+		public Keyword getRightParenthesisKeyword_11_2_0_2_2() { return cRightParenthesisKeyword_11_2_0_2_2; }
 
 		//("|" filter=Expr)?
-		public Group getGroup_11_5() { return cGroup_11_5; }
+		public Group getGroup_11_2_0_3() { return cGroup_11_2_0_3; }
 
 		//"|"
-		public Keyword getVerticalLineKeyword_11_5_0() { return cVerticalLineKeyword_11_5_0; }
+		public Keyword getVerticalLineKeyword_11_2_0_3_0() { return cVerticalLineKeyword_11_2_0_3_0; }
 
 		//filter=Expr
-		public Assignment getFilterAssignment_11_5_1() { return cFilterAssignment_11_5_1; }
+		public Assignment getFilterAssignment_11_2_0_3_1() { return cFilterAssignment_11_2_0_3_1; }
 
 		//Expr
-		public RuleCall getFilterExprParserRuleCall_11_5_1_0() { return cFilterExprParserRuleCall_11_5_1_0; }
+		public RuleCall getFilterExprParserRuleCall_11_2_0_3_1_0() { return cFilterExprParserRuleCall_11_2_0_3_1_0; }
+
+		//{SetExpr.exprs+=current} ("," exprs+=Expr)*
+		public Group getGroup_11_2_1() { return cGroup_11_2_1; }
+
+		//{SetExpr.exprs+=current}
+		public Action getSetExprExprsAction_11_2_1_0() { return cSetExprExprsAction_11_2_1_0; }
+
+		//("," exprs+=Expr)*
+		public Group getGroup_11_2_1_1() { return cGroup_11_2_1_1; }
+
+		//","
+		public Keyword getCommaKeyword_11_2_1_1_0() { return cCommaKeyword_11_2_1_1_0; }
+
+		//exprs+=Expr
+		public Assignment getExprsAssignment_11_2_1_1_1() { return cExprsAssignment_11_2_1_1_1; }
+
+		//Expr
+		public RuleCall getExprsExprParserRuleCall_11_2_1_1_1_0() { return cExprsExprParserRuleCall_11_2_1_1_1_0; }
 
 		//"}"
-		public Keyword getRightCurlyBracketKeyword_11_6() { return cRightCurlyBracketKeyword_11_6; }
+		public Keyword getRightCurlyBracketKeyword_11_3() { return cRightCurlyBracketKeyword_11_3; }
 
-		//{LetExpr} "let" binding=LetBinding ";" expr=Expr
+		//{SetExpr} "{" "}"
 		public Group getGroup_12() { return cGroup_12; }
 
-		//{LetExpr}
-		public Action getLetExprAction_12_0() { return cLetExprAction_12_0; }
+		//{SetExpr}
+		public Action getSetExprAction_12_0() { return cSetExprAction_12_0; }
 
-		//"let"
-		public Keyword getLetKeyword_12_1() { return cLetKeyword_12_1; }
+		//"{"
+		public Keyword getLeftCurlyBracketKeyword_12_1() { return cLeftCurlyBracketKeyword_12_1; }
 
-		//binding=LetBinding
-		public Assignment getBindingAssignment_12_2() { return cBindingAssignment_12_2; }
+		//"}"
+		public Keyword getRightCurlyBracketKeyword_12_2() { return cRightCurlyBracketKeyword_12_2; }
 
-		//LetBinding
-		public RuleCall getBindingLetBindingParserRuleCall_12_2_0() { return cBindingLetBindingParserRuleCall_12_2_0; }
-
-		//";"
-		public Keyword getSemicolonKeyword_12_3() { return cSemicolonKeyword_12_3; }
-
-		//expr=Expr
-		public Assignment getExprAssignment_12_4() { return cExprAssignment_12_4; }
-
-		//Expr
-		public RuleCall getExprExprParserRuleCall_12_4_0() { return cExprExprParserRuleCall_12_4_0; }
-
-		//"(" Expr ")"
+		//{LetExpr} "let" binding=LetBinding ";" expr=Expr
 		public Group getGroup_13() { return cGroup_13; }
 
-		//"("
-		public Keyword getLeftParenthesisKeyword_13_0() { return cLeftParenthesisKeyword_13_0; }
+		//{LetExpr}
+		public Action getLetExprAction_13_0() { return cLetExprAction_13_0; }
+
+		//"let"
+		public Keyword getLetKeyword_13_1() { return cLetKeyword_13_1; }
+
+		//binding=LetBinding
+		public Assignment getBindingAssignment_13_2() { return cBindingAssignment_13_2; }
+
+		//LetBinding
+		public RuleCall getBindingLetBindingParserRuleCall_13_2_0() { return cBindingLetBindingParserRuleCall_13_2_0; }
+
+		//";"
+		public Keyword getSemicolonKeyword_13_3() { return cSemicolonKeyword_13_3; }
+
+		//expr=Expr
+		public Assignment getExprAssignment_13_4() { return cExprAssignment_13_4; }
 
 		//Expr
-		public RuleCall getExprParserRuleCall_13_1() { return cExprParserRuleCall_13_1; }
+		public RuleCall getExprExprParserRuleCall_13_4_0() { return cExprExprParserRuleCall_13_4_0; }
+
+		//"(" Expr ")"
+		public Group getGroup_14() { return cGroup_14; }
+
+		//"("
+		public Keyword getLeftParenthesisKeyword_14_0() { return cLeftParenthesisKeyword_14_0; }
+
+		//Expr
+		public RuleCall getExprParserRuleCall_14_1() { return cExprParserRuleCall_14_1; }
 
 		//")"
-		public Keyword getRightParenthesisKeyword_13_2() { return cRightParenthesisKeyword_13_2; }
+		public Keyword getRightParenthesisKeyword_14_2() { return cRightParenthesisKeyword_14_2; }
 	}
 
 	public class LetBindingElements extends AbstractParserRuleElementFinder {
@@ -1711,103 +1742,82 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		public RuleCall getExprExprParserRuleCall_4_0() { return cExprExprParserRuleCall_4_0; }
 	}
 
-	public class BuiltInFuncElements extends AbstractParserRuleElementFinder {
-		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "BuiltInFunc");
+	public class BuiltInFnElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "BuiltInFn");
 		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
-		private final Keyword cConnectedKeyword_0 = (Keyword)cAlternatives.eContents().get(0);
-		private final Keyword cProperty_lookupKeyword_1 = (Keyword)cAlternatives.eContents().get(1);
-		private final Keyword cClass_ofKeyword_2 = (Keyword)cAlternatives.eContents().get(2);
-		private final Keyword cSubcomponent_ofKeyword_3 = (Keyword)cAlternatives.eContents().get(3);
+		private final Keyword cHas_propertyKeyword_0 = (Keyword)cAlternatives.eContents().get(0);
+		private final Keyword cPropertyKeyword_1 = (Keyword)cAlternatives.eContents().get(1);
+		private final Keyword cHas_parentKeyword_2 = (Keyword)cAlternatives.eContents().get(2);
+		private final Keyword cParentKeyword_3 = (Keyword)cAlternatives.eContents().get(3);
 		private final Keyword cNameKeyword_4 = (Keyword)cAlternatives.eContents().get(4);
 		private final Keyword cTypeKeyword_5 = (Keyword)cAlternatives.eContents().get(5);
 		private final Keyword cHas_typeKeyword_6 = (Keyword)cAlternatives.eContents().get(6);
-		private final Keyword cIs_connectedKeyword_7 = (Keyword)cAlternatives.eContents().get(7);
-		private final Keyword cBoundKeyword_8 = (Keyword)cAlternatives.eContents().get(8);
-		private final Keyword cContainedKeyword_9 = (Keyword)cAlternatives.eContents().get(9);
-		private final Keyword cConn_sourceKeyword_10 = (Keyword)cAlternatives.eContents().get(10);
-		private final Keyword cConn_destKeyword_11 = (Keyword)cAlternatives.eContents().get(11);
-		private final Keyword cProperty_existsKeyword_12 = (Keyword)cAlternatives.eContents().get(12);
-		private final Keyword cSumKeyword_13 = (Keyword)cAlternatives.eContents().get(13);
-		private final Keyword cAnalysisKeyword_14 = (Keyword)cAlternatives.eContents().get(14);
-		private final Keyword cInstanceKeyword_15 = (Keyword)cAlternatives.eContents().get(15);
-		private final Keyword cInstancesKeyword_16 = (Keyword)cAlternatives.eContents().get(16);
-		private final Keyword cUpper_boundKeyword_17 = (Keyword)cAlternatives.eContents().get(17);
-		private final Keyword cLower_boundKeyword_18 = (Keyword)cAlternatives.eContents().get(18);
-		private final Keyword cReceive_errorKeyword_19 = (Keyword)cAlternatives.eContents().get(19);
-		private final Keyword cContain_errorKeyword_20 = (Keyword)cAlternatives.eContents().get(20);
-		private final Keyword cPropagate_errorKeyword_21 = (Keyword)cAlternatives.eContents().get(21);
-		private final Keyword cError_state_reachableKeyword_22 = (Keyword)cAlternatives.eContents().get(22);
-		private final Keyword cConnectionsKeyword_23 = (Keyword)cAlternatives.eContents().get(23);
-		private final Keyword cIs_dataKeyword_24 = (Keyword)cAlternatives.eContents().get(24);
-		private final Keyword cIs_threadKeyword_25 = (Keyword)cAlternatives.eContents().get(25);
-		private final Keyword cIs_thread_groupKeyword_26 = (Keyword)cAlternatives.eContents().get(26);
-		private final Keyword cIs_processKeyword_27 = (Keyword)cAlternatives.eContents().get(27);
-		private final Keyword cIs_subprogramKeyword_28 = (Keyword)cAlternatives.eContents().get(28);
-		private final Keyword cIs_subprogram_groupKeyword_29 = (Keyword)cAlternatives.eContents().get(29);
-		private final Keyword cIs_processorKeyword_30 = (Keyword)cAlternatives.eContents().get(30);
-		private final Keyword cIs_virtual_processorKeyword_31 = (Keyword)cAlternatives.eContents().get(31);
-		private final Keyword cIs_memoryKeyword_32 = (Keyword)cAlternatives.eContents().get(32);
-		private final Keyword cIs_busKeyword_33 = (Keyword)cAlternatives.eContents().get(33);
-		private final Keyword cIs_virtual_busKeyword_34 = (Keyword)cAlternatives.eContents().get(34);
-		private final Keyword cIs_deviceKeyword_35 = (Keyword)cAlternatives.eContents().get(35);
-		private final Keyword cIs_systemKeyword_36 = (Keyword)cAlternatives.eContents().get(36);
-		private final Keyword cIs_abstractKeyword_37 = (Keyword)cAlternatives.eContents().get(37);
-		private final Keyword cIs_emptyKeyword_38 = (Keyword)cAlternatives.eContents().get(38);
-		private final Keyword cSingletonKeyword_39 = (Keyword)cAlternatives.eContents().get(39);
-		private final Keyword cIs_bidirectionalKeyword_40 = (Keyword)cAlternatives.eContents().get(40);
-		private final Keyword cIs_data_accessKeyword_41 = (Keyword)cAlternatives.eContents().get(41);
-		private final Keyword cIs_bus_accessKeyword_42 = (Keyword)cAlternatives.eContents().get(42);
-		private final Keyword cIs_data_portKeyword_43 = (Keyword)cAlternatives.eContents().get(43);
-		private final Keyword cIs_event_portKeyword_44 = (Keyword)cAlternatives.eContents().get(44);
-		private final Keyword cIs_event_data_portKeyword_45 = (Keyword)cAlternatives.eContents().get(45);
+		private final Keyword cFeaturesKeyword_7 = (Keyword)cAlternatives.eContents().get(7);
+		private final Keyword cConnectionsKeyword_8 = (Keyword)cAlternatives.eContents().get(8);
+		private final Keyword cSubcomponentsKeyword_9 = (Keyword)cAlternatives.eContents().get(9);
+		private final Keyword cSourceKeyword_10 = (Keyword)cAlternatives.eContents().get(10);
+		private final Keyword cDestinationKeyword_11 = (Keyword)cAlternatives.eContents().get(11);
+		private final Keyword cDirectionKeyword_12 = (Keyword)cAlternatives.eContents().get(12);
+		private final Keyword cLower_boundKeyword_13 = (Keyword)cAlternatives.eContents().get(13);
+		private final Keyword cUpper_boundKeyword_14 = (Keyword)cAlternatives.eContents().get(14);
+		private final Keyword cMemberKeyword_15 = (Keyword)cAlternatives.eContents().get(15);
+		private final Keyword cSumKeyword_16 = (Keyword)cAlternatives.eContents().get(16);
+		private final Keyword cUnionKeyword_17 = (Keyword)cAlternatives.eContents().get(17);
+		private final Keyword cIntersectKeyword_18 = (Keyword)cAlternatives.eContents().get(18);
+		private final Keyword cInstanceKeyword_19 = (Keyword)cAlternatives.eContents().get(19);
+		private final Keyword cInstancesKeyword_20 = (Keyword)cAlternatives.eContents().get(20);
+		private final Keyword cAnalysisKeyword_21 = (Keyword)cAlternatives.eContents().get(21);
+		private final Keyword cReceive_errorKeyword_22 = (Keyword)cAlternatives.eContents().get(22);
+		private final Keyword cContain_errorKeyword_23 = (Keyword)cAlternatives.eContents().get(23);
+		private final Keyword cPropagate_errorKeyword_24 = (Keyword)cAlternatives.eContents().get(24);
+		private final Keyword cError_state_reachableKeyword_25 = (Keyword)cAlternatives.eContents().get(25);
 		
-		////QuantArg returns Arg:
-		////	{QuantArg} name=ID ':' expr=Expr
-		////;
-		//BuiltInFunc:
-		//	"connected" // type checking predicates
-		//	// set predicates
-		//	// connection predicates
-		//	| "property_lookup" | "class_of" | "subcomponent_of" | "name" | "type" | "has_type" | "is_connected" | "bound" |
-		//	"contained" | "conn_source" | "conn_dest" | "property_exists" | "sum" | "analysis" | "instance" | "instances" | // upper_bound of a range
-		//	"upper_bound" | // lower bound of a range
-		//	"lower_bound" | // the component can receive an incoming error
+		//BuiltInFn: // Primary type: aadl
+		//	"has_property" // Primary type: component
+		//	// Primary type: connection
+		//	// Primary type: feature
+		//	// Primary type: range
+		//	// Primary type: set
+		//	// Other
+		//	// Error Annex
+		//	| "property" | "has_parent" | "parent" | "name" | "type" | "has_type" | "features" | "connections" | "subcomponents" |
+		//	"source" | "destination" | "direction" | "lower_bound" | "upper_bound" | "member" | "sum" | "union" | "intersect" |
+		//	"instance" | "instances" | "analysis" | // the component can receive an incoming error
 		//	"receive_error" | // the component contain the error
 		//	"contain_error" | // the component propagate an error
 		//	"propagate_error" | // the error state is reachable
-		//	"error_state_reachable" | "connections" | "is_data" | "is_thread" | "is_thread_group" | "is_process" | "is_subprogram"
-		//	| "is_subprogram_group" | "is_processor" | "is_virtual_processor" | "is_memory" | "is_bus" | "is_virtual_bus" |
-		//	"is_device" | "is_system" | "is_abstract" | "is_empty" | "singleton" | "is_bidirectional" | "is_data_access" |
-		//	"is_bus_access" | "is_data_port" | "is_event_port" | "is_event_data_port";
+		//	"error_state_reachable";
 		public ParserRule getRule() { return rule; }
 
-		//"connected" // type checking predicates
-		//// set predicates
-		//// connection predicates
-		//| "property_lookup" | "class_of" | "subcomponent_of" | "name" | "type" | "has_type" | "is_connected" | "bound" |
-		//"contained" | "conn_source" | "conn_dest" | "property_exists" | "sum" | "analysis" | "instance" | "instances" | // upper_bound of a range
-		//"upper_bound" | // lower bound of a range
-		//"lower_bound" | // the component can receive an incoming error
+		//// Primary type: aadl
+		//"has_property" // Primary type: component
+		//// Primary type: connection
+		//// Primary type: feature
+		//// Primary type: range
+		//// Primary type: set
+		//// Other
+		//// Error Annex
+		//| "property" | "has_parent" | "parent" | "name" | "type" | "has_type" | "features" | "connections" | "subcomponents" |
+		//"source" | "destination" | "direction" | "lower_bound" | "upper_bound" | "member" | "sum" | "union" | "intersect" |
+		//"instance" | "instances" | "analysis" | // the component can receive an incoming error
 		//"receive_error" | // the component contain the error
 		//"contain_error" | // the component propagate an error
 		//"propagate_error" | // the error state is reachable
-		//"error_state_reachable" | "connections" | "is_data" | "is_thread" | "is_thread_group" | "is_process" | "is_subprogram" |
-		//"is_subprogram_group" | "is_processor" | "is_virtual_processor" | "is_memory" | "is_bus" | "is_virtual_bus" |
-		//"is_device" | "is_system" | "is_abstract" | "is_empty" | "singleton" | "is_bidirectional" | "is_data_access" |
-		//"is_bus_access" | "is_data_port" | "is_event_port" | "is_event_data_port"
+		//"error_state_reachable"
 		public Alternatives getAlternatives() { return cAlternatives; }
 
-		//"connected"
-		public Keyword getConnectedKeyword_0() { return cConnectedKeyword_0; }
+		//// Primary type: aadl
+		//"has_property"
+		public Keyword getHas_propertyKeyword_0() { return cHas_propertyKeyword_0; }
 
-		//"property_lookup"
-		public Keyword getProperty_lookupKeyword_1() { return cProperty_lookupKeyword_1; }
+		//"property"
+		public Keyword getPropertyKeyword_1() { return cPropertyKeyword_1; }
 
-		//"class_of"
-		public Keyword getClass_ofKeyword_2() { return cClass_ofKeyword_2; }
+		//"has_parent"
+		public Keyword getHas_parentKeyword_2() { return cHas_parentKeyword_2; }
 
-		//"subcomponent_of"
-		public Keyword getSubcomponent_ofKeyword_3() { return cSubcomponent_ofKeyword_3; }
+		//"parent"
+		public Keyword getParentKeyword_3() { return cParentKeyword_3; }
 
 		//"name"
 		public Keyword getNameKeyword_4() { return cNameKeyword_4; }
@@ -1818,128 +1828,66 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		//"has_type"
 		public Keyword getHas_typeKeyword_6() { return cHas_typeKeyword_6; }
 
-		//"is_connected"
-		public Keyword getIs_connectedKeyword_7() { return cIs_connectedKeyword_7; }
+		//"features"
+		public Keyword getFeaturesKeyword_7() { return cFeaturesKeyword_7; }
 
-		//"bound"
-		public Keyword getBoundKeyword_8() { return cBoundKeyword_8; }
+		//"connections"
+		public Keyword getConnectionsKeyword_8() { return cConnectionsKeyword_8; }
 
-		//"contained"
-		public Keyword getContainedKeyword_9() { return cContainedKeyword_9; }
+		//"subcomponents"
+		public Keyword getSubcomponentsKeyword_9() { return cSubcomponentsKeyword_9; }
 
-		//"conn_source"
-		public Keyword getConn_sourceKeyword_10() { return cConn_sourceKeyword_10; }
+		//"source"
+		public Keyword getSourceKeyword_10() { return cSourceKeyword_10; }
 
-		//"conn_dest"
-		public Keyword getConn_destKeyword_11() { return cConn_destKeyword_11; }
+		//"destination"
+		public Keyword getDestinationKeyword_11() { return cDestinationKeyword_11; }
 
-		//"property_exists"
-		public Keyword getProperty_existsKeyword_12() { return cProperty_existsKeyword_12; }
+		//"direction"
+		public Keyword getDirectionKeyword_12() { return cDirectionKeyword_12; }
+
+		//"lower_bound"
+		public Keyword getLower_boundKeyword_13() { return cLower_boundKeyword_13; }
+
+		//"upper_bound"
+		public Keyword getUpper_boundKeyword_14() { return cUpper_boundKeyword_14; }
+
+		//"member"
+		public Keyword getMemberKeyword_15() { return cMemberKeyword_15; }
 
 		//"sum"
-		public Keyword getSumKeyword_13() { return cSumKeyword_13; }
+		public Keyword getSumKeyword_16() { return cSumKeyword_16; }
 
-		//"analysis"
-		public Keyword getAnalysisKeyword_14() { return cAnalysisKeyword_14; }
+		//"union"
+		public Keyword getUnionKeyword_17() { return cUnionKeyword_17; }
+
+		//"intersect"
+		public Keyword getIntersectKeyword_18() { return cIntersectKeyword_18; }
 
 		//"instance"
-		public Keyword getInstanceKeyword_15() { return cInstanceKeyword_15; }
+		public Keyword getInstanceKeyword_19() { return cInstanceKeyword_19; }
 
 		//"instances"
-		public Keyword getInstancesKeyword_16() { return cInstancesKeyword_16; }
+		public Keyword getInstancesKeyword_20() { return cInstancesKeyword_20; }
 
-		//// upper_bound of a range
-		//"upper_bound"
-		public Keyword getUpper_boundKeyword_17() { return cUpper_boundKeyword_17; }
-
-		//// lower bound of a range
-		//"lower_bound"
-		public Keyword getLower_boundKeyword_18() { return cLower_boundKeyword_18; }
+		//"analysis"
+		public Keyword getAnalysisKeyword_21() { return cAnalysisKeyword_21; }
 
 		//// the component can receive an incoming error
 		//"receive_error"
-		public Keyword getReceive_errorKeyword_19() { return cReceive_errorKeyword_19; }
+		public Keyword getReceive_errorKeyword_22() { return cReceive_errorKeyword_22; }
 
 		//// the component contain the error
 		//"contain_error"
-		public Keyword getContain_errorKeyword_20() { return cContain_errorKeyword_20; }
+		public Keyword getContain_errorKeyword_23() { return cContain_errorKeyword_23; }
 
 		//// the component propagate an error
 		//"propagate_error"
-		public Keyword getPropagate_errorKeyword_21() { return cPropagate_errorKeyword_21; }
+		public Keyword getPropagate_errorKeyword_24() { return cPropagate_errorKeyword_24; }
 
 		//// the error state is reachable
 		//"error_state_reachable"
-		public Keyword getError_state_reachableKeyword_22() { return cError_state_reachableKeyword_22; }
-
-		//"connections"
-		public Keyword getConnectionsKeyword_23() { return cConnectionsKeyword_23; }
-
-		//"is_data"
-		public Keyword getIs_dataKeyword_24() { return cIs_dataKeyword_24; }
-
-		//"is_thread"
-		public Keyword getIs_threadKeyword_25() { return cIs_threadKeyword_25; }
-
-		//"is_thread_group"
-		public Keyword getIs_thread_groupKeyword_26() { return cIs_thread_groupKeyword_26; }
-
-		//"is_process"
-		public Keyword getIs_processKeyword_27() { return cIs_processKeyword_27; }
-
-		//"is_subprogram"
-		public Keyword getIs_subprogramKeyword_28() { return cIs_subprogramKeyword_28; }
-
-		//"is_subprogram_group"
-		public Keyword getIs_subprogram_groupKeyword_29() { return cIs_subprogram_groupKeyword_29; }
-
-		//"is_processor"
-		public Keyword getIs_processorKeyword_30() { return cIs_processorKeyword_30; }
-
-		//"is_virtual_processor"
-		public Keyword getIs_virtual_processorKeyword_31() { return cIs_virtual_processorKeyword_31; }
-
-		//"is_memory"
-		public Keyword getIs_memoryKeyword_32() { return cIs_memoryKeyword_32; }
-
-		//"is_bus"
-		public Keyword getIs_busKeyword_33() { return cIs_busKeyword_33; }
-
-		//"is_virtual_bus"
-		public Keyword getIs_virtual_busKeyword_34() { return cIs_virtual_busKeyword_34; }
-
-		//"is_device"
-		public Keyword getIs_deviceKeyword_35() { return cIs_deviceKeyword_35; }
-
-		//"is_system"
-		public Keyword getIs_systemKeyword_36() { return cIs_systemKeyword_36; }
-
-		//"is_abstract"
-		public Keyword getIs_abstractKeyword_37() { return cIs_abstractKeyword_37; }
-
-		//"is_empty"
-		public Keyword getIs_emptyKeyword_38() { return cIs_emptyKeyword_38; }
-
-		//"singleton"
-		public Keyword getSingletonKeyword_39() { return cSingletonKeyword_39; }
-
-		//"is_bidirectional"
-		public Keyword getIs_bidirectionalKeyword_40() { return cIs_bidirectionalKeyword_40; }
-
-		//"is_data_access"
-		public Keyword getIs_data_accessKeyword_41() { return cIs_data_accessKeyword_41; }
-
-		//"is_bus_access"
-		public Keyword getIs_bus_accessKeyword_42() { return cIs_bus_accessKeyword_42; }
-
-		//"is_data_port"
-		public Keyword getIs_data_portKeyword_43() { return cIs_data_portKeyword_43; }
-
-		//"is_event_port"
-		public Keyword getIs_event_portKeyword_44() { return cIs_event_portKeyword_44; }
-
-		//"is_event_data_port"
-		public Keyword getIs_event_data_portKeyword_45() { return cIs_event_data_portKeyword_45; }
+		public Keyword getError_state_reachableKeyword_25() { return cError_state_reachableKeyword_25; }
 	}
 
 	public class RealTermElements extends AbstractParserRuleElementFinder {
@@ -2100,22 +2048,12 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		private final Keyword cProveKeyword_0 = (Keyword)cGroup.eContents().get(0);
 		private final Assignment cExprAssignment_1 = (Assignment)cGroup.eContents().get(1);
 		private final RuleCall cExprExprParserRuleCall_1_0 = (RuleCall)cExprAssignment_1.eContents().get(0);
-		private final Group cGroup_2 = (Group)cGroup.eContents().get(2);
-		private final Group cGroup_2_0 = (Group)cGroup_2.eContents().get(0);
-		private final Keyword cModesKeyword_2_0_0 = (Keyword)cGroup_2_0.eContents().get(0);
-		private final Keyword cColonKeyword_2_0_1 = (Keyword)cGroup_2_0.eContents().get(1);
-		private final Assignment cModesAssignment_2_0_2 = (Assignment)cGroup_2_0.eContents().get(2);
-		private final RuleCall cModesNestedDotIDParserRuleCall_2_0_2_0 = (RuleCall)cModesAssignment_2_0_2.eContents().get(0);
-		private final Group cGroup_2_0_3 = (Group)cGroup_2_0.eContents().get(3);
-		private final Keyword cCommaKeyword_2_0_3_0 = (Keyword)cGroup_2_0_3.eContents().get(0);
-		private final Assignment cModesAssignment_2_0_3_1 = (Assignment)cGroup_2_0_3.eContents().get(1);
-		private final RuleCall cModesNestedDotIDParserRuleCall_2_0_3_1_0 = (RuleCall)cModesAssignment_2_0_3_1.eContents().get(0);
 		
 		//ProveStatement:
-		//	"prove" expr=Expr => ("modes" ":" modes+=NestedDotID ("," modes+=NestedDotID)*)?;
+		//	"prove" expr=Expr;
 		public ParserRule getRule() { return rule; }
 
-		//"prove" expr=Expr => ("modes" ":" modes+=NestedDotID ("," modes+=NestedDotID)*)?
+		//"prove" expr=Expr
 		public Group getGroup() { return cGroup; }
 
 		//"prove"
@@ -2126,36 +2064,6 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 
 		//Expr
 		public RuleCall getExprExprParserRuleCall_1_0() { return cExprExprParserRuleCall_1_0; }
-
-		//=> ("modes" ":" modes+=NestedDotID ("," modes+=NestedDotID)*)?
-		public Group getGroup_2() { return cGroup_2; }
-
-		//"modes" ":" modes+=NestedDotID ("," modes+=NestedDotID)*
-		public Group getGroup_2_0() { return cGroup_2_0; }
-
-		//"modes"
-		public Keyword getModesKeyword_2_0_0() { return cModesKeyword_2_0_0; }
-
-		//":"
-		public Keyword getColonKeyword_2_0_1() { return cColonKeyword_2_0_1; }
-
-		//modes+=NestedDotID
-		public Assignment getModesAssignment_2_0_2() { return cModesAssignment_2_0_2; }
-
-		//NestedDotID
-		public RuleCall getModesNestedDotIDParserRuleCall_2_0_2_0() { return cModesNestedDotIDParserRuleCall_2_0_2_0; }
-
-		//("," modes+=NestedDotID)*
-		public Group getGroup_2_0_3() { return cGroup_2_0_3; }
-
-		//","
-		public Keyword getCommaKeyword_2_0_3_0() { return cCommaKeyword_2_0_3_0; }
-
-		//modes+=NestedDotID
-		public Assignment getModesAssignment_2_0_3_1() { return cModesAssignment_2_0_3_1; }
-
-		//NestedDotID
-		public RuleCall getModesNestedDotIDParserRuleCall_2_0_3_1_0() { return cModesNestedDotIDParserRuleCall_2_0_3_1_0; }
 	}
 	
 	
@@ -2167,26 +2075,25 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	private ResoluteLibraryElements pResoluteLibrary;
 	private DefinitionElements pDefinition;
 	private TypeElements pType;
-	private ElementSetElements pElementSet;
-	private BuiltinTypeElements pBuiltinType;
+	private BaseTypeElements pBaseType;
 	private ArgElements pArg;
 	private ConstantDefinitionElements pConstantDefinition;
 	private FunctionDefinitionElements pFunctionDefinition;
-	private ClaimStringElements pClaimString;
 	private DefinitionBodyElements pDefinitionBody;
+	private ClaimTextElements pClaimText;
 	private ExprElements pExpr;
 	private ImpliesExprElements pImpliesExpr;
 	private OrExprElements pOrExpr;
 	private AndExprElements pAndExpr;
+	private InstanceOfExprElements pInstanceOfExpr;
 	private RelationalOpElements pRelationalOp;
 	private RelationalExprElements pRelationalExpr;
 	private PlusExprElements pPlusExpr;
 	private TimesExprElements pTimesExpr;
-	private SetOpExprElements pSetOpExpr;
 	private PrefixExprElements pPrefixExpr;
 	private AtomicExprElements pAtomicExpr;
 	private LetBindingElements pLetBinding;
-	private BuiltInFuncElements pBuiltInFunc;
+	private BuiltInFnElements pBuiltInFn;
 	private RealTermElements pRealTerm;
 	private UnsignedRealElements pUnsignedReal;
 	private IntegerTermElements pIntegerTerm;
@@ -2264,7 +2171,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	}
 
 	//NamedElement returns aadl2::NamedElement:
-	//	Definition | Arg | Type | LetBinding;
+	//	Definition | Arg | LetBinding;
 	public NamedElementElements getNamedElementAccess() {
 		return (pNamedElement != null) ? pNamedElement : (pNamedElement = new NamedElementElements());
 	}
@@ -2274,7 +2181,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	}
 
 	//Element returns aadl2::Element:
-	//	Expr | ProveStatement | ClaimString | DefinitionBody | Type;
+	//	Expr | ProveStatement | ClaimText | DefinitionBody;
 	public ElementElements getElementAccess() {
 		return (pElement != null) ? pElement : (pElement = new ElementElements());
 	}
@@ -2304,7 +2211,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	}
 
 	//Type:
-	//	{SetType} "{" type=Type "}" | BuiltinType;
+	//	{SetType} "{" type=Type "}" | BaseType;
 	public TypeElements getTypeAccess() {
 		return (pType != null) ? pType : (pType = new TypeElements());
 	}
@@ -2313,30 +2220,20 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		return getTypeAccess().getRule();
 	}
 
-	//ElementSet: //stuff for quantifiers only
-	//	name=("threads" //non-aadl components
-	//	| "data" | "memory" | "thread_groups" | "processes" | "subprograms" | "subprogram_groups" | "processors" |
-	//	"virtual_processors" | "buses" | "virtual_buses" | "devices" | "systems" | "abstracts" | "connections" | "components"
-	//	| "features");
-	public ElementSetElements getElementSetAccess() {
-		return (pElementSet != null) ? pElementSet : (pElementSet = new ElementSetElements());
+	//BaseType:
+	//	type=("int" | "real" | "string" | "bool" | "range" | "aadl" | "component" | "abstract" | "bus" | "data" | "device" |
+	//	"memory" | "processor" | "process" | "subprogram_group" | "subprogram" | "system" | "thread_group" | "thread" |
+	//	"virtual_bus" | "virtual_processor" | "connection" | "property" | "feature" | "port" | "data_port" | "event_port" |
+	//	"event_data_port" | "feature_group" | "access" | "bus_access" | "provides_bus_access" | "requires_bus_access" |
+	//	"data_access" | "provides_data_access" | "requires_data_access" | "subprogram_access" | "provides_subprogram_access" |
+	//	"requires_subprogram_access" | "subprogram_group_access" | "provides_subprogram_group_access" |
+	//	"requires_subprogram_group_access");
+	public BaseTypeElements getBaseTypeAccess() {
+		return (pBaseType != null) ? pBaseType : (pBaseType = new BaseTypeElements());
 	}
 	
-	public ParserRule getElementSetRule() {
-		return getElementSetAccess().getRule();
-	}
-
-	//BuiltinType: //aadl components
-	//	name=("data" //non-aadl components
-	//	| "thread" | "thread_group" | "process" | "subprogram" | "subprogram_group" | "processor" | "virtual_processor" |
-	//	"memory" | "bus" | "virtual_bus" | "device" | "system" | "abstract" | "aadl" | "feature" | "connection" | "component"
-	//	| "string" | "int" | "real" | "bool");
-	public BuiltinTypeElements getBuiltinTypeAccess() {
-		return (pBuiltinType != null) ? pBuiltinType : (pBuiltinType = new BuiltinTypeElements());
-	}
-	
-	public ParserRule getBuiltinTypeRule() {
-		return getBuiltinTypeAccess().getRule();
+	public ParserRule getBaseTypeRule() {
+		return getBaseTypeAccess().getRule();
 	}
 
 	////Arg types are used for functions, claims, and quantifiers
@@ -2370,24 +2267,24 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		return getFunctionDefinitionAccess().getRule();
 	}
 
-	//ClaimString:
-	//	{ClaimString} str=STRING | {ClaimArg} arg=[Arg];
-	public ClaimStringElements getClaimStringAccess() {
-		return (pClaimString != null) ? pClaimString : (pClaimString = new ClaimStringElements());
-	}
-	
-	public ParserRule getClaimStringRule() {
-		return getClaimStringAccess().getRule();
-	}
-
 	//DefinitionBody:
-	//	{FuncBody} ":" type=Type "=" expr=Expr | {ClaimBody} "<=" ("**" claim+=ClaimString+ "**") expr=Expr;
+	//	{FunctionBody} ":" type=Type "=" expr=Expr | {ClaimBody} "<=" ("**" claim+=ClaimText+ "**") expr=Expr;
 	public DefinitionBodyElements getDefinitionBodyAccess() {
 		return (pDefinitionBody != null) ? pDefinitionBody : (pDefinitionBody = new DefinitionBodyElements());
 	}
 	
 	public ParserRule getDefinitionBodyRule() {
 		return getDefinitionBodyAccess().getRule();
+	}
+
+	//ClaimText:
+	//	{ClaimString} str=STRING | {ClaimArg} arg=[Arg];
+	public ClaimTextElements getClaimTextAccess() {
+		return (pClaimText != null) ? pClaimText : (pClaimText = new ClaimTextElements());
+	}
+	
+	public ParserRule getClaimTextRule() {
+		return getClaimTextAccess().getRule();
 	}
 
 	//Expr:
@@ -2421,7 +2318,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	}
 
 	//AndExpr returns Expr:
-	//	RelationalExpr (=> ({BinaryExpr.left=current} op="and") right=RelationalExpr)*;
+	//	InstanceOfExpr (=> ({BinaryExpr.left=current} op="and") right=InstanceOfExpr)*;
 	public AndExprElements getAndExprAccess() {
 		return (pAndExpr != null) ? pAndExpr : (pAndExpr = new AndExprElements());
 	}
@@ -2430,8 +2327,18 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		return getAndExprAccess().getRule();
 	}
 
+	//InstanceOfExpr returns Expr:
+	//	RelationalExpr (=> ({InstanceOfExpr.expr=current} "instanceof") type=BaseType)?;
+	public InstanceOfExprElements getInstanceOfExprAccess() {
+		return (pInstanceOfExpr != null) ? pInstanceOfExpr : (pInstanceOfExpr = new InstanceOfExprElements());
+	}
+	
+	public ParserRule getInstanceOfExprRule() {
+		return getInstanceOfExprAccess().getRule();
+	}
+
 	//RelationalOp:
-	//	"<" | "<=" | ">" | ">=" | "=" | "<>" | "in";
+	//	"<" | "<=" | ">" | ">=" | "=" | "<>";
 	public RelationalOpElements getRelationalOpAccess() {
 		return (pRelationalOp != null) ? pRelationalOp : (pRelationalOp = new RelationalOpElements());
 	}
@@ -2461,7 +2368,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	}
 
 	//TimesExpr returns Expr:
-	//	SetOpExpr (=> ({BinaryExpr.left=current} op=("*" | "/")) right=SetOpExpr)*;
+	//	PrefixExpr (=> ({BinaryExpr.left=current} op=("*" | "/")) right=PrefixExpr)*;
 	public TimesExprElements getTimesExprAccess() {
 		return (pTimesExpr != null) ? pTimesExpr : (pTimesExpr = new TimesExprElements());
 	}
@@ -2470,18 +2377,8 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		return getTimesExprAccess().getRule();
 	}
 
-	//SetOpExpr returns Expr:
-	//	PrefixExpr (=> ({BinaryExpr.left=current} op=("union" | "intersect")) right=PrefixExpr)*;
-	public SetOpExprElements getSetOpExprAccess() {
-		return (pSetOpExpr != null) ? pSetOpExpr : (pSetOpExpr = new SetOpExprElements());
-	}
-	
-	public ParserRule getSetOpExprRule() {
-		return getSetOpExprAccess().getRule();
-	}
-
 	//PrefixExpr returns Expr:
-	//	{UnaryExpr} op=("-" | "not") expr=PrefixExpr | AtomicExpr;
+	//	{UnaryExpr} op=("-" | "not") expr=PrefixExpr | {CastExpr} "(" type=BaseType ")" expr=PrefixExpr | AtomicExpr;
 	public PrefixExprElements getPrefixExprAccess() {
 		return (pPrefixExpr != null) ? pPrefixExpr : (pPrefixExpr = new PrefixExprElements());
 	}
@@ -2491,13 +2388,13 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	}
 
 	//AtomicExpr returns Expr:
-	//	{IdExpr} id=[aadl2::NamedElement|QCREF] ("." subelements=ElementSet)? //for set expressions
-	//	| {ThisExpr} "this" ("." sub=NestedDotID)? | {FailExpr} "fail" val=StringTerm? | {IntExpr} val=IntegerTerm | {RealExpr}
-	//	val=RealTerm | {BoolExpr} val=BooleanLiteral | {StringExpr} val=StringTerm | {IfThenElseExpr} "if" cond=Expr "then"
-	//	then=Expr "else" else=Expr | {QuantifiedExpr} quant=("forall" | "exists") ("(" args+=Arg ")")+ "." expr=Expr |
-	//	{BuiltInFuncCallExpr} fn=BuiltInFunc "(" (args+=Expr ("," args+=Expr)*)? ")" | {FnCallExpr} fn=[FunctionDefinition]
-	//	"(" (args+=Expr ("," args+=Expr)*)? ")" | {FilterMapExpr} "{" map=Expr "for" ("(" args+=Arg ")")+ ("|" filter=Expr)?
-	//	"}" | {LetExpr} "let" binding=LetBinding ";" expr=Expr | "(" Expr ")";
+	//	{IdExpr} id=[aadl2::NamedElement|QCREF] | {ThisExpr} "this" ("." sub=NestedDotID)? | {FailExpr} "fail" val=StringTerm?
+	//	| {IntExpr} val=IntegerTerm | {RealExpr} val=RealTerm | {BoolExpr} val=BooleanLiteral | {StringExpr} val=StringTerm |
+	//	{IfThenElseExpr} "if" cond=Expr "then" then=Expr "else" else=Expr | {QuantifiedExpr} quant=("forall" | "exists") ("("
+	//	args+=Arg ")")+ "." expr=Expr | {BuiltInFnCallExpr} fn=BuiltInFn "(" (args+=Expr ("," args+=Expr)*)? ")" |
+	//	{FnCallExpr} fn=[FunctionDefinition] "(" (args+=Expr ("," args+=Expr)*)? ")" | "{" Expr ({FilterMapExpr.map=current}
+	//	"for" ("(" args+=Arg ")")+ ("|" filter=Expr)? | {SetExpr.exprs+=current} ("," exprs+=Expr)*) "}" | {SetExpr} "{" "}" |
+	//	{LetExpr} "let" binding=LetBinding ";" expr=Expr | "(" Expr ")";
 	public AtomicExprElements getAtomicExprAccess() {
 		return (pAtomicExpr != null) ? pAtomicExpr : (pAtomicExpr = new AtomicExprElements());
 	}
@@ -2516,30 +2413,27 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		return getLetBindingAccess().getRule();
 	}
 
-	////QuantArg returns Arg:
-	////	{QuantArg} name=ID ':' expr=Expr
-	////;
-	//BuiltInFunc:
-	//	"connected" // type checking predicates
-	//	// set predicates
-	//	// connection predicates
-	//	| "property_lookup" | "class_of" | "subcomponent_of" | "name" | "type" | "has_type" | "is_connected" | "bound" |
-	//	"contained" | "conn_source" | "conn_dest" | "property_exists" | "sum" | "analysis" | "instance" | "instances" | // upper_bound of a range
-	//	"upper_bound" | // lower bound of a range
-	//	"lower_bound" | // the component can receive an incoming error
+	//BuiltInFn: // Primary type: aadl
+	//	"has_property" // Primary type: component
+	//	// Primary type: connection
+	//	// Primary type: feature
+	//	// Primary type: range
+	//	// Primary type: set
+	//	// Other
+	//	// Error Annex
+	//	| "property" | "has_parent" | "parent" | "name" | "type" | "has_type" | "features" | "connections" | "subcomponents" |
+	//	"source" | "destination" | "direction" | "lower_bound" | "upper_bound" | "member" | "sum" | "union" | "intersect" |
+	//	"instance" | "instances" | "analysis" | // the component can receive an incoming error
 	//	"receive_error" | // the component contain the error
 	//	"contain_error" | // the component propagate an error
 	//	"propagate_error" | // the error state is reachable
-	//	"error_state_reachable" | "connections" | "is_data" | "is_thread" | "is_thread_group" | "is_process" | "is_subprogram"
-	//	| "is_subprogram_group" | "is_processor" | "is_virtual_processor" | "is_memory" | "is_bus" | "is_virtual_bus" |
-	//	"is_device" | "is_system" | "is_abstract" | "is_empty" | "singleton" | "is_bidirectional" | "is_data_access" |
-	//	"is_bus_access" | "is_data_port" | "is_event_port" | "is_event_data_port";
-	public BuiltInFuncElements getBuiltInFuncAccess() {
-		return (pBuiltInFunc != null) ? pBuiltInFunc : (pBuiltInFunc = new BuiltInFuncElements());
+	//	"error_state_reachable";
+	public BuiltInFnElements getBuiltInFnAccess() {
+		return (pBuiltInFn != null) ? pBuiltInFn : (pBuiltInFn = new BuiltInFnElements());
 	}
 	
-	public ParserRule getBuiltInFuncRule() {
-		return getBuiltInFuncAccess().getRule();
+	public ParserRule getBuiltInFnRule() {
+		return getBuiltInFnAccess().getRule();
 	}
 
 	//RealTerm returns aadl2::RealLiteral:
@@ -2603,7 +2497,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	}
 
 	//ProveStatement:
-	//	"prove" expr=Expr => ("modes" ":" modes+=NestedDotID ("," modes+=NestedDotID)*)?;
+	//	"prove" expr=Expr;
 	public ProveStatementElements getProveStatementAccess() {
 		return (pProveStatement != null) ? pProveStatement : (pProveStatement = new ProveStatementElements());
 	}

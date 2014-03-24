@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Queue;
 
 import jkind.JKindException;
-import jkind.SolverOption;
 import jkind.api.JKindApi;
 import jkind.api.results.AnalysisResult;
 import jkind.api.results.CompositeAnalysisResult;
@@ -23,8 +22,9 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.handlers.IHandlerActivation;
+import org.eclipse.ui.handlers.IHandlerService;
 import org.osate.aadl2.AnnexSubclause;
-import org.osate.aadl2.Classifier;
 import org.osate.aadl2.ComponentImplementation;
 import org.osate.aadl2.ComponentType;
 import org.osate.aadl2.Element;
@@ -38,7 +38,6 @@ import org.osate.ui.dialogs.Dialog;
 
 import com.rockwellcollins.atc.agree.agree.AgreeSubclause;
 import com.rockwellcollins.atc.agree.analysis.Activator;
-import com.rockwellcollins.atc.agree.analysis.AgreeAnnexEmitter;
 import com.rockwellcollins.atc.agree.analysis.AgreeEmitterUtilities;
 import com.rockwellcollins.atc.agree.analysis.AgreeGenerator;
 import com.rockwellcollins.atc.agree.analysis.preferences.PreferenceConstants;
@@ -48,11 +47,16 @@ import com.rockwellcollins.atc.agree.analysis.views.AgreeResultsView;
 public abstract class VerifyHandler extends AadlHandler {
     private AgreeResultsLinker linker = new AgreeResultsLinker();
     private Queue<JKindResult> queue = new ArrayDeque<>();
+    
+    private static final String RERUN_ID = "com.rockwellcollins.atc.agree.analysis.commands.rerunAgree";
+    private IHandlerActivation rerunActivation;
 
     protected abstract boolean isRecursive();
 
     @Override
     protected IStatus runJob(Element root, IProgressMonitor monitor) {
+        disableRerunHandler();
+        
         if (!(root instanceof SystemImplementation)) {
             return new Status(IStatus.ERROR, Activator.PLUGIN_ID,
                     "Must select an AADL System Implementation");
@@ -88,7 +92,7 @@ public abstract class VerifyHandler extends AadlHandler {
                 result = wrapper;
             }
             showView(result, linker);
-            return doAnalysis(monitor);
+            return doAnalysis(root, monitor);
         } catch (Throwable e) {
             String messages = getNestedMessages(e);
             return new Status(IStatus.ERROR, Activator.PLUGIN_ID, 0, messages, e);
@@ -303,8 +307,23 @@ public abstract class VerifyHandler extends AadlHandler {
             }
         });
     }
+    
+    protected void clearView() {
+        getWindow().getShell().getDisplay().syncExec(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    AgreeResultsView page = (AgreeResultsView) getWindow().getActivePage()
+                            .showView(AgreeResultsView.ID);
+                    page.setInput(new CompositeAnalysisResult("empty"), null);
+                } catch (PartInitException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
 
-    private IStatus doAnalysis(IProgressMonitor monitor) {
+    private IStatus doAnalysis(Element root, IProgressMonitor monitor) {
         JKindApi api = getJKindApi();
         while (!queue.isEmpty() && !monitor.isCanceled()) {
             JKindResult result = queue.remove();
@@ -324,7 +343,25 @@ public abstract class VerifyHandler extends AadlHandler {
             queue.remove().cancel();
         }
 
+        enableRerunHandler(root);
         return monitor.isCanceled() ? Status.CANCEL_STATUS : Status.OK_STATUS;
+    }
+
+    private void enableRerunHandler(Element root) {
+        IHandlerService handlerService = getHandlerService();
+        rerunActivation = handlerService.activateHandler(RERUN_ID, new RerunHandler(root, this));
+    }
+
+    private void disableRerunHandler() {
+        if (rerunActivation != null) {
+            IHandlerService handlerService = getHandlerService();
+            handlerService.deactivateHandler(rerunActivation);
+            rerunActivation = null;
+        }
+    }
+
+    private IHandlerService getHandlerService() {
+        return (IHandlerService) getWindow().getService(IHandlerService.class);
     }
 
     private JKindApi getJKindApi() {

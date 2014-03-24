@@ -6,7 +6,6 @@ public
   with IVORY_TYPES;
   with Static_Analysis;
   with SMACCM;
-  with Mode_Properties;
   with Base_Types;
 
   system Software
@@ -46,75 +45,40 @@ public
   
   process implementation Main_Loop.Impl
     subcomponents
-      SS: thread Sensors in modes (Boot, Normal, Defensive);
-      CCT: thread Command_Control_Telemetry in modes (Normal);
-      BC: thread Backup_Commands in modes (Defensive);
-      RC: thread Radio_Control in modes (Normal);
-      SN: thread Stability_Navigation in modes (Normal, Defensive);
-      MC: thread Motor_Control in modes (Normal, Defensive);
-      DC: thread Decrypt in modes (Normal);
+      SS: thread Sensors;
+      CCT: thread Command_Control_Telemetry;
+      RC: thread Radio_Control;
+      SN: thread Stability_Navigation;
+      MC: thread Motor_Control;
+      DC: thread Decrypt;
       ENV: abstract environment;
       
     connections
-      conn: feature group sensors <-> SS.sensors_in
+      conn: feature group sensors <-> SS.sensors_in;
       -- Not supported in current version of Osate: 
       -- {Communication_Properties::Timing => immediate;}
-      in modes (Normal, Defensive, Boot) ;
-      conn0: port motors_and_radios.flight_control_commands -> RC.commands_in in modes (Normal);
-      conn1: port motors_and_radios.mavlink -> DC.encrypt_in in modes (Normal);
-      conn2: port DC.decrypt_out -> CCT.mavlink_in in modes (Normal);
+      conn0: port motors_and_radios.flight_control_commands -> RC.commands_in;
+      conn1: port motors_and_radios.mavlink -> DC.encrypt_in;
+      conn2: port DC.decrypt_out -> CCT.mavlink_in;
       
       conn3: port SS.sensors_out -> SN.sensors
-      {Communication_Properties::Timing => immediate;}
-      in modes (Normal, Defensive, Boot);
+      {Communication_Properties::Timing => immediate;};
       
-      conn4: port RC.commands_out -> SN.rc_commands in modes (Normal);
-      conn5: port CCT.mavlink_out -> SN.mavlink  in modes (Normal);
-      conn6: port BC.mavlink_out -> SN.mavlink  in modes (Defensive);
+      --conn4: port RC.commands_out -> SN.rc_commands;
+      conn5: port CCT.mavlink_out -> SN.mavlink;
       
-      conn7: port SN.motor_commands -> MC.motor_commands in modes (Normal, Defensive);
-      conn8: port MC.servo1_commands -> motors_and_radios.motor1 in modes (Normal, Defensive);      
-      conn9: port MC.servo2_commands -> motors_and_radios.motor2 in modes (Normal, Defensive);      
-      conn10: port MC.servo3_commands -> motors_and_radios.motor3 in modes (Normal, Defensive);      
-      conn11: port MC.servo4_commands -> motors_and_radios.motor4 in modes (Normal, Defensive);
-      
-    modes
-      Boot: initial mode;
-      Maintenance: mode;
-      Normal: mode;
-      Defensive: mode;
-      
-      Boot -[e1]-> Normal;
-      Boot -[e2]-> Normal;
-      Normal -[e3]-> Defensive;
-      Defensive -[e4]-> Normal;
-      
-      --  +------+     +--------+     +-----------+
-      --  | Boot |---->| Normal |<--->| Defensive |
-      --  +------+     +--------+     +-----------+
-      --      |
-      --      v
-      --  +-------------+
-      --  | Maintenance |
-      --  +-------------+
-      
+      conn7: port SN.motor_commands -> MC.motor_commands;
+      conn8: port MC.servo1_commands -> motors_and_radios.motor1;      
+      conn9: port MC.servo2_commands -> motors_and_radios.motor2;      
+      conn10: port MC.servo3_commands -> motors_and_radios.motor3;   
+      conn11: port MC.servo4_commands -> motors_and_radios.motor4;
+
     properties 
       SMACCM::OS => "Breakaway-RTOS";
       
     annex resolute {** 
-    	prove only_receive_gs(this.MC) modes: Normal
-    	
-    	-- prove no_external_commands(this.SN, this) modes: Defensive 
-    	-- This property should fail:
-    	-- prove no_external_commands(this.SN, this) modes: Normal
-    	
-    	-- prove schedulable(this) modes: Normal
-    	-- prove schedulable(this) modes: Defensive 
-    	 
-    	-- prove no_radio_commands(this.SN) modes: Defensive
-    	
-    	-- prove receives_mavlink(this.SN) modes: Defensive
-    	-- prove receives_mavlink(this.SN) modes: Normal
+    	prove only_receive_gs(this.MC)
+    	prove schedulable(this)
     **};
   end Main_Loop.Impl;
   

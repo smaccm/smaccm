@@ -7,7 +7,7 @@ import com.rockwellcollins.atc.resolute.resolute.Type;
 
 import org.eclipse.emf.ecore.EClass;
 
-import org.osate.aadl2.impl.NamedElementImpl;
+import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 
 /**
  * <!-- begin-user-doc -->
@@ -18,7 +18,7 @@ import org.osate.aadl2.impl.NamedElementImpl;
  *
  * @generated
  */
-public class TypeImpl extends NamedElementImpl implements Type
+public class TypeImpl extends MinimalEObjectImpl.Container implements Type
 {
   /**
    * <!-- begin-user-doc -->

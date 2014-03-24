@@ -38,13 +38,17 @@ public abstract class AadlHandler extends AbstractHandler {
         }
         final URI uri = node.getEObjectURI();
 
-        final XtextEditor xtextEditor = EditorUtils.getActiveXtextEditor(event);
-        if (xtextEditor == null) {
+        window = HandlerUtil.getActiveWorkbenchWindow(event);
+        if (window == null) {
             return null;
         }
 
-        window = HandlerUtil.getActiveWorkbenchWindow(event);
-        if (window == null) {
+        return executeURI(uri);
+    }
+
+    public Object executeURI(final URI uri) {
+        final XtextEditor xtextEditor = EditorUtils.getActiveXtextEditor();
+        if (xtextEditor == null) {
             return null;
         }
 

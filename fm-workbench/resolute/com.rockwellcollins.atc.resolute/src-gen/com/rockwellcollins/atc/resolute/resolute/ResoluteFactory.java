@@ -50,22 +50,13 @@ public interface ResoluteFactory extends EFactory
   Type createType();
 
   /**
-   * Returns a new object of class '<em>Element Set</em>'.
+   * Returns a new object of class '<em>Base Type</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @return a new object of class '<em>Element Set</em>'.
+   * @return a new object of class '<em>Base Type</em>'.
    * @generated
    */
-  ElementSet createElementSet();
-
-  /**
-   * Returns a new object of class '<em>Builtin Type</em>'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return a new object of class '<em>Builtin Type</em>'.
-   * @generated
-   */
-  BuiltinType createBuiltinType();
+  BaseType createBaseType();
 
   /**
    * Returns a new object of class '<em>Arg</em>'.
@@ -95,15 +86,6 @@ public interface ResoluteFactory extends EFactory
   FunctionDefinition createFunctionDefinition();
 
   /**
-   * Returns a new object of class '<em>Claim String</em>'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return a new object of class '<em>Claim String</em>'.
-   * @generated
-   */
-  ClaimString createClaimString();
-
-  /**
    * Returns a new object of class '<em>Definition Body</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -111,6 +93,15 @@ public interface ResoluteFactory extends EFactory
    * @generated
    */
   DefinitionBody createDefinitionBody();
+
+  /**
+   * Returns a new object of class '<em>Claim Text</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Claim Text</em>'.
+   * @generated
+   */
+  ClaimText createClaimText();
 
   /**
    * Returns a new object of class '<em>Expr</em>'.
@@ -176,22 +167,13 @@ public interface ResoluteFactory extends EFactory
   QuantArg createQuantArg();
 
   /**
-   * Returns a new object of class '<em>Claim Arg</em>'.
+   * Returns a new object of class '<em>Function Body</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @return a new object of class '<em>Claim Arg</em>'.
+   * @return a new object of class '<em>Function Body</em>'.
    * @generated
    */
-  ClaimArg createClaimArg();
-
-  /**
-   * Returns a new object of class '<em>Func Body</em>'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return a new object of class '<em>Func Body</em>'.
-   * @generated
-   */
-  FuncBody createFuncBody();
+  FunctionBody createFunctionBody();
 
   /**
    * Returns a new object of class '<em>Claim Body</em>'.
@@ -203,6 +185,24 @@ public interface ResoluteFactory extends EFactory
   ClaimBody createClaimBody();
 
   /**
+   * Returns a new object of class '<em>Claim String</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Claim String</em>'.
+   * @generated
+   */
+  ClaimString createClaimString();
+
+  /**
+   * Returns a new object of class '<em>Claim Arg</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Claim Arg</em>'.
+   * @generated
+   */
+  ClaimArg createClaimArg();
+
+  /**
    * Returns a new object of class '<em>Binary Expr</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -212,6 +212,15 @@ public interface ResoluteFactory extends EFactory
   BinaryExpr createBinaryExpr();
 
   /**
+   * Returns a new object of class '<em>Instance Of Expr</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Instance Of Expr</em>'.
+   * @generated
+   */
+  InstanceOfExpr createInstanceOfExpr();
+
+  /**
    * Returns a new object of class '<em>Unary Expr</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -219,6 +228,15 @@ public interface ResoluteFactory extends EFactory
    * @generated
    */
   UnaryExpr createUnaryExpr();
+
+  /**
+   * Returns a new object of class '<em>Cast Expr</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Cast Expr</em>'.
+   * @generated
+   */
+  CastExpr createCastExpr();
 
   /**
    * Returns a new object of class '<em>Id Expr</em>'.
@@ -302,13 +320,13 @@ public interface ResoluteFactory extends EFactory
   QuantifiedExpr createQuantifiedExpr();
 
   /**
-   * Returns a new object of class '<em>Built In Func Call Expr</em>'.
+   * Returns a new object of class '<em>Built In Fn Call Expr</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @return a new object of class '<em>Built In Func Call Expr</em>'.
+   * @return a new object of class '<em>Built In Fn Call Expr</em>'.
    * @generated
    */
-  BuiltInFuncCallExpr createBuiltInFuncCallExpr();
+  BuiltInFnCallExpr createBuiltInFnCallExpr();
 
   /**
    * Returns a new object of class '<em>Fn Call Expr</em>'.
@@ -327,6 +345,15 @@ public interface ResoluteFactory extends EFactory
    * @generated
    */
   FilterMapExpr createFilterMapExpr();
+
+  /**
+   * Returns a new object of class '<em>Set Expr</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Set Expr</em>'.
+   * @generated
+   */
+  SetExpr createSetExpr();
 
   /**
    * Returns a new object of class '<em>Let Expr</em>'.

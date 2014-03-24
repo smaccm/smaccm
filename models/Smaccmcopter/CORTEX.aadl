@@ -53,7 +53,7 @@ public
     properties
       Memory_Protocol => read_write;
       Base_Address => 16#2000_0000#;
-      Byte_Count => 16#2_0000#; -- 128K
+      Memory_Size => 128 KByte;
   end SRAM;
   
   memory Flash
@@ -63,7 +63,7 @@ public
     properties
       Memory_Protocol => execute_only;
       Base_Address => 16#0800_0000#;
-      Byte_Count => 16#10_0000#; -- 1024K
+      Memory_Size => 1 MByte;
   end Flash;
 
   bus AHB_Bus_Matrix

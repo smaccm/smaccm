@@ -19,7 +19,7 @@ package com.rockwellcollins.atc.resolute.resolute;
  * @model
  * @generated
  */
-public interface ClaimArg extends ClaimString
+public interface ClaimArg extends ClaimText
 {
   /**
    * Returns the value of the '<em><b>Arg</b></em>' reference.

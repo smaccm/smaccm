@@ -32,8 +32,7 @@ public class EvaluateExternalAnalysis {
         }
     }
 
-    public static ResoluteValue evaluate(ResoluteEvaluator eval, String name,
-            List<ResoluteValue> args) {
-        return analysisMap.get(name).run(eval, args);
+    public static ResoluteValue evaluate(String name, EvaluationContext context, List<ResoluteValue> args) {
+        return analysisMap.get(name).run(context, args);
     }
 }

@@ -1,5 +1,8 @@
 package com.rockwellcollins.atc.resolute.analysis.values;
 
+import com.rockwellcollins.atc.resolute.validation.BaseType;
+import com.rockwellcollins.atc.resolute.validation.ResoluteType;
+
 public class BoolValue extends ResoluteValue {
     final private boolean value;
 
@@ -17,6 +20,11 @@ public class BoolValue extends ResoluteValue {
         return value;
     }
 
+    @Override
+    public ResoluteType getType() {
+        return BaseType.BOOL;
+    }
+    
     @Override
     public String toString() {
         return Boolean.toString(value);

@@ -1,7 +1,7 @@
 package Execute_Soundness
-  public 
-    with SMACCM;    
-    annex resolute {**
+public
+with SMACCM;
+annex resolute {**
 
 execute_soundness() <= 
   ** "The UAV motors only execute commands from the Ground Station" **
@@ -10,9 +10,9 @@ execute_soundness() <=
 only_gs_encrypt() <= 
   ** "Only the Ground Station can send commands that pass decrypt" **
   let algo1 : string =
-    property_lookup(flight_gen::decryptTask_uart5, SMACCM::Encryption_Algorthim);
+    property(flight_gen::decryptTask_uart5, SMACCM::Encryption_Algorthim);
   let algo2 : string =
-    property_lookup(flight_gen::decryptTask_uart1, SMACCM::Encryption_Algorthim);
+    property(flight_gen::decryptTask_uart1, SMACCM::Encryption_Algorthim);
   algo1 = algo2 and
   authenticated_encryption(algo1) and  
   private_key()
@@ -62,26 +62,26 @@ motors_only_receive_decrypt() <=
 motors_only_receive_from_mainloop(mainloop : component) <=
 	** "The UAV motors only receive commands from " mainloop **
 	forall (m : MOTORS).
-	  forall (c : m.connections).
-	    (is_data_port(c) or is_event_data_port(c)) =>
+	  forall (c : connections(m)).
+	    (is_data_port_connection(c) or is_event_data_port_connection(c)) =>
 	      comes_from_mainloop(c, mainloop)
 
 comes_from_mainloop(c : connection, mainloop : component) <=
 	** c " comes from " mainloop **
-	 subcomponent_of(conn_source(c), mainloop)
+	 contained(source(c), mainloop)
 
 all_commands_to_mainloop_pass_decrypt_before_motors(mainloop : component) <=
   ** "All commands to " mainloop " pass decrypt before reaching UAV motors" **
   all_inputs_decrypt_or_sensors(mainloop)
-	
+
 all_inputs_decrypt_or_sensors(mainloop : component) <=
     ** "All inputs to " mainloop " are sensor data or pass decrypt before reaching UAV motors" **
-	forall (f : mainloop.features).
+	forall (f : flatten_features(features(mainloop))).
 	    is_incomming(f, mainloop) =>
 	      is_sensor_data(f) or feature_confined_to_decrypt(f, mainloop)
 
 is_incomming(f : feature, x : component) : bool =
-  exists (c : connections(f)). subcomponent_of(conn_dest(c), x)
+  exists (c : connections(f)). contained(destination(c), x)
 
 is_sensor_data(f : feature) <=
   ** f " only receives sensor data" **
@@ -97,8 +97,8 @@ is_sensor_data(f : feature) <=
 feature_confined_to_decrypt(f : feature, mainloop : component) <=
   ** "Commands to " f " pass through decrypt before reaching the UAV motors" **
   forall (c : connections(f)).
-    subcomponent_of(conn_dest(c), mainloop) =>
-      component_confined_to_decrypt(conn_dest(c), mainloop)
+    contained(destination(c), mainloop) =>
+      component_confined_to_decrypt(destination_component(c), mainloop)
       
 component_confined_to_decrypt(c : component, mainloop : component) <=
   ** "Commands to " c " pass through decrypt before reaching the UAV motors" **
@@ -106,22 +106,60 @@ component_confined_to_decrypt(c : component, mainloop : component) <=
     component_confined_to_decrypt_by_set(c, reach)
     
 predecrypt_reach(c : component, mainloop : component) : {component} =
-  recursive_predecrypt_reach(singleton(c))
+  recursive_predecrypt_reach({c})
   
 recursive_predecrypt_reach(curr : {component}) : {component} =
-  let next : {component} = curr union next_predecrypt_reach(curr);
+  let next : {component} = union(curr, next_predecrypt_reach(curr));
   if next = curr then
     curr
   else
     recursive_predecrypt_reach(next)
    
 next_predecrypt_reach(curr : {component}) : {component} =
-  {conn_dest(conn) for (x : curr) (conn : x.connections) |
-	conn_source(conn) = x and not is_decrypt(x)}
+  {y for (x : curr) (y : reachable_components(x)) | not is_decrypt(x)}
+
+reachable_components(comp : component) : {component} =
+  {c for (conn : connections(comp))
+  	     (c : reachable_components_via_connection(comp, conn))}
+
+-- What components (either a single one or none) can 'comp' reach directly via 'conn'
+--
+-- This is complicated due to data access connections which seem to ignore
+-- normal aadl directionality, and instead use an access rights property
+reachable_components_via_connection(comp : component, conn : connection) : {component} =
+  -- a direct port connection
+  if is_port_connection(conn) then
+    if source_component(conn) = comp then {destination_component(conn)} else {}
+  -- a component reading from 'comp' as a data component via read access on 'conn'
+  else if comp instanceof data then
+    if comp = source(conn) and has_read_access(destination(conn)) then
+      {destination_component(conn)}
+    else if comp = destination(conn) and has_read_access(source(conn)) then
+      {source_component(conn)}
+    else
+      {}
+  -- 'comp' writing to a data component via write access on 'conn'  
+  else if destination(conn) instanceof data and has_write_access(source(conn)) then
+    {destination_component(conn)}
+  else if source(conn) instanceof data and has_write_access(destination(conn)) then
+    {source_component(conn)}
+  -- Other connections unsupported at this time
+  else
+    {}
+
+has_write_access(a : aadl) : bool =
+  has_property(a, Memory_Properties::Access_Right) and
+  (property(a, Memory_Properties::Access_Right) = "write_only" or
+   property(a, Memory_Properties::Access_Right) = "read_write")
+
+has_read_access(a : aadl) : bool =
+  has_property(a, Memory_Properties::Access_Right) and
+  (property(a, Memory_Properties::Access_Right) = "read_only" or
+   property(a, Memory_Properties::Access_Right) = "read_write")
 
 is_decrypt(comp : component) : bool =
-  class_of(comp, flight_gen::decryptTask_uart1) or
-  class_of(comp, flight_gen::decryptTask_uart5)
+  type(comp) = flight_gen::decryptTask_uart1 or
+  type(comp) = flight_gen::decryptTask_uart5
 
 component_confined_to_decrypt_by_set(x : component, reach : {component}) <=
   ** "Commands to " x " not passing through decrypt are confined and "
@@ -130,8 +168,9 @@ component_confined_to_decrypt_by_set(x : component, reach : {component}) <=
 
 cannot_reach_UAV_motors(x : component) <=
   ** x " cannot communicate directly to UAV motors" **
-  forall (conn : x.connections).
-    conn_source(conn) = x => not (conn_dest(conn) in MOTORS)
+  not member(x, MOTORS) and
+  forall (conn : connections(x)).
+    source_component(conn) = x => not member(destination_component(conn), MOTORS)
 
 --debugging
   
@@ -146,5 +185,4 @@ print_set(s : {aadl}) <=
   true
   
 **};
-    
 end Execute_Soundness;

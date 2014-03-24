@@ -2,7 +2,7 @@
  */
 package com.rockwellcollins.atc.resolute.resolute.impl;
 
-import com.rockwellcollins.atc.resolute.resolute.BuiltInFuncCallExpr;
+import com.rockwellcollins.atc.resolute.resolute.BuiltInFnCallExpr;
 import com.rockwellcollins.atc.resolute.resolute.Expr;
 import com.rockwellcollins.atc.resolute.resolute.ResolutePackage;
 
@@ -23,19 +23,19 @@ import org.eclipse.emf.ecore.util.InternalEList;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Built In Func Call Expr</b></em>'.
+ * An implementation of the model object '<em><b>Built In Fn Call Expr</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link com.rockwellcollins.atc.resolute.resolute.impl.BuiltInFuncCallExprImpl#getFn <em>Fn</em>}</li>
- *   <li>{@link com.rockwellcollins.atc.resolute.resolute.impl.BuiltInFuncCallExprImpl#getArgs <em>Args</em>}</li>
+ *   <li>{@link com.rockwellcollins.atc.resolute.resolute.impl.BuiltInFnCallExprImpl#getFn <em>Fn</em>}</li>
+ *   <li>{@link com.rockwellcollins.atc.resolute.resolute.impl.BuiltInFnCallExprImpl#getArgs <em>Args</em>}</li>
  * </ul>
  * </p>
  *
  * @generated
  */
-public class BuiltInFuncCallExprImpl extends ExprImpl implements BuiltInFuncCallExpr
+public class BuiltInFnCallExprImpl extends ExprImpl implements BuiltInFnCallExpr
 {
   /**
    * The default value of the '{@link #getFn() <em>Fn</em>}' attribute.
@@ -72,7 +72,7 @@ public class BuiltInFuncCallExprImpl extends ExprImpl implements BuiltInFuncCall
    * <!-- end-user-doc -->
    * @generated
    */
-  protected BuiltInFuncCallExprImpl()
+  protected BuiltInFnCallExprImpl()
   {
     super();
   }
@@ -85,7 +85,7 @@ public class BuiltInFuncCallExprImpl extends ExprImpl implements BuiltInFuncCall
   @Override
   protected EClass eStaticClass()
   {
-    return ResolutePackage.Literals.BUILT_IN_FUNC_CALL_EXPR;
+    return ResolutePackage.Literals.BUILT_IN_FN_CALL_EXPR;
   }
 
   /**
@@ -108,7 +108,7 @@ public class BuiltInFuncCallExprImpl extends ExprImpl implements BuiltInFuncCall
     String oldFn = fn;
     fn = newFn;
     if (eNotificationRequired())
-      eNotify(new ENotificationImpl(this, Notification.SET, ResolutePackage.BUILT_IN_FUNC_CALL_EXPR__FN, oldFn, fn));
+      eNotify(new ENotificationImpl(this, Notification.SET, ResolutePackage.BUILT_IN_FN_CALL_EXPR__FN, oldFn, fn));
   }
 
   /**
@@ -120,7 +120,7 @@ public class BuiltInFuncCallExprImpl extends ExprImpl implements BuiltInFuncCall
   {
     if (args == null)
     {
-      args = new EObjectContainmentEList<Expr>(Expr.class, this, ResolutePackage.BUILT_IN_FUNC_CALL_EXPR__ARGS);
+      args = new EObjectContainmentEList<Expr>(Expr.class, this, ResolutePackage.BUILT_IN_FN_CALL_EXPR__ARGS);
     }
     return args;
   }
@@ -135,7 +135,7 @@ public class BuiltInFuncCallExprImpl extends ExprImpl implements BuiltInFuncCall
   {
     switch (featureID)
     {
-      case ResolutePackage.BUILT_IN_FUNC_CALL_EXPR__ARGS:
+      case ResolutePackage.BUILT_IN_FN_CALL_EXPR__ARGS:
         return ((InternalEList<?>)getArgs()).basicRemove(otherEnd, msgs);
     }
     return super.eInverseRemove(otherEnd, featureID, msgs);
@@ -151,9 +151,9 @@ public class BuiltInFuncCallExprImpl extends ExprImpl implements BuiltInFuncCall
   {
     switch (featureID)
     {
-      case ResolutePackage.BUILT_IN_FUNC_CALL_EXPR__FN:
+      case ResolutePackage.BUILT_IN_FN_CALL_EXPR__FN:
         return getFn();
-      case ResolutePackage.BUILT_IN_FUNC_CALL_EXPR__ARGS:
+      case ResolutePackage.BUILT_IN_FN_CALL_EXPR__ARGS:
         return getArgs();
     }
     return super.eGet(featureID, resolve, coreType);
@@ -170,10 +170,10 @@ public class BuiltInFuncCallExprImpl extends ExprImpl implements BuiltInFuncCall
   {
     switch (featureID)
     {
-      case ResolutePackage.BUILT_IN_FUNC_CALL_EXPR__FN:
+      case ResolutePackage.BUILT_IN_FN_CALL_EXPR__FN:
         setFn((String)newValue);
         return;
-      case ResolutePackage.BUILT_IN_FUNC_CALL_EXPR__ARGS:
+      case ResolutePackage.BUILT_IN_FN_CALL_EXPR__ARGS:
         getArgs().clear();
         getArgs().addAll((Collection<? extends Expr>)newValue);
         return;
@@ -191,10 +191,10 @@ public class BuiltInFuncCallExprImpl extends ExprImpl implements BuiltInFuncCall
   {
     switch (featureID)
     {
-      case ResolutePackage.BUILT_IN_FUNC_CALL_EXPR__FN:
+      case ResolutePackage.BUILT_IN_FN_CALL_EXPR__FN:
         setFn(FN_EDEFAULT);
         return;
-      case ResolutePackage.BUILT_IN_FUNC_CALL_EXPR__ARGS:
+      case ResolutePackage.BUILT_IN_FN_CALL_EXPR__ARGS:
         getArgs().clear();
         return;
     }
@@ -211,9 +211,9 @@ public class BuiltInFuncCallExprImpl extends ExprImpl implements BuiltInFuncCall
   {
     switch (featureID)
     {
-      case ResolutePackage.BUILT_IN_FUNC_CALL_EXPR__FN:
+      case ResolutePackage.BUILT_IN_FN_CALL_EXPR__FN:
         return FN_EDEFAULT == null ? fn != null : !FN_EDEFAULT.equals(fn);
-      case ResolutePackage.BUILT_IN_FUNC_CALL_EXPR__ARGS:
+      case ResolutePackage.BUILT_IN_FN_CALL_EXPR__ARGS:
         return args != null && !args.isEmpty();
     }
     return super.eIsSet(featureID);
@@ -236,4 +236,4 @@ public class BuiltInFuncCallExprImpl extends ExprImpl implements BuiltInFuncCall
     return result.toString();
   }
 
-} //BuiltInFuncCallExprImpl
+} //BuiltInFnCallExprImpl

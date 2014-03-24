@@ -29,11 +29,14 @@
             name="Commands related to Resolute">
      </category>
      <command categoryId="com.rockwellcollins.atc.resolute.analysis.commands"
+            id="com.rockwellcollins.atc.resolute.analysis.commands.rerunResolute"
+            name="Re-run Resolute">
+     </command>
+     <command categoryId="com.rockwellcollins.atc.resolute.analysis.commands"
             id="com.rockwellcollins.atc.resolute.analysis.commands.resolute"
             name="Resolute">
      </command>
    </extension>
-   
      
    <extension
          point="org.eclipse.ui.menus">
@@ -60,6 +63,17 @@
                 id="com.rockwellcollins.atc.resolute.analysis.menus.resolute"
                 mnemonic="r"
                 style="push">
+         </command>
+      </menuContribution>
+      
+      <menuContribution
+            allPopups="false"
+            locationURI="toolbar:com.rockwellcollins.atc.resolute.views.assuranceCaseView">
+         <command
+               commandId="com.rockwellcollins.atc.resolute.analysis.commands.rerunResolute"
+               icon="icons/refresh.gif"
+               label="Re-run Resolute"
+               style="push">
          </command>
       </menuContribution>
    </extension>

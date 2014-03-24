@@ -67,13 +67,12 @@ public class ResoluteFactoryImpl extends EFactoryImpl implements ResoluteFactory
       case ResolutePackage.RESOLUTE_LIBRARY: return createResoluteLibrary();
       case ResolutePackage.DEFINITION: return createDefinition();
       case ResolutePackage.TYPE: return createType();
-      case ResolutePackage.ELEMENT_SET: return createElementSet();
-      case ResolutePackage.BUILTIN_TYPE: return createBuiltinType();
+      case ResolutePackage.BASE_TYPE: return createBaseType();
       case ResolutePackage.ARG: return createArg();
       case ResolutePackage.CONSTANT_DEFINITION: return createConstantDefinition();
       case ResolutePackage.FUNCTION_DEFINITION: return createFunctionDefinition();
-      case ResolutePackage.CLAIM_STRING: return createClaimString();
       case ResolutePackage.DEFINITION_BODY: return createDefinitionBody();
+      case ResolutePackage.CLAIM_TEXT: return createClaimText();
       case ResolutePackage.EXPR: return createExpr();
       case ResolutePackage.LET_BINDING: return createLetBinding();
       case ResolutePackage.RESOLUTE_SUBCLAUSE: return createResoluteSubclause();
@@ -81,11 +80,14 @@ public class ResoluteFactoryImpl extends EFactoryImpl implements ResoluteFactory
       case ResolutePackage.PROVE_STATEMENT: return createProveStatement();
       case ResolutePackage.SET_TYPE: return createSetType();
       case ResolutePackage.QUANT_ARG: return createQuantArg();
-      case ResolutePackage.CLAIM_ARG: return createClaimArg();
-      case ResolutePackage.FUNC_BODY: return createFuncBody();
+      case ResolutePackage.FUNCTION_BODY: return createFunctionBody();
       case ResolutePackage.CLAIM_BODY: return createClaimBody();
+      case ResolutePackage.CLAIM_STRING: return createClaimString();
+      case ResolutePackage.CLAIM_ARG: return createClaimArg();
       case ResolutePackage.BINARY_EXPR: return createBinaryExpr();
+      case ResolutePackage.INSTANCE_OF_EXPR: return createInstanceOfExpr();
       case ResolutePackage.UNARY_EXPR: return createUnaryExpr();
+      case ResolutePackage.CAST_EXPR: return createCastExpr();
       case ResolutePackage.ID_EXPR: return createIdExpr();
       case ResolutePackage.THIS_EXPR: return createThisExpr();
       case ResolutePackage.FAIL_EXPR: return createFailExpr();
@@ -95,9 +97,10 @@ public class ResoluteFactoryImpl extends EFactoryImpl implements ResoluteFactory
       case ResolutePackage.STRING_EXPR: return createStringExpr();
       case ResolutePackage.IF_THEN_ELSE_EXPR: return createIfThenElseExpr();
       case ResolutePackage.QUANTIFIED_EXPR: return createQuantifiedExpr();
-      case ResolutePackage.BUILT_IN_FUNC_CALL_EXPR: return createBuiltInFuncCallExpr();
+      case ResolutePackage.BUILT_IN_FN_CALL_EXPR: return createBuiltInFnCallExpr();
       case ResolutePackage.FN_CALL_EXPR: return createFnCallExpr();
       case ResolutePackage.FILTER_MAP_EXPR: return createFilterMapExpr();
+      case ResolutePackage.SET_EXPR: return createSetExpr();
       case ResolutePackage.LET_EXPR: return createLetExpr();
       default:
         throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
@@ -142,21 +145,10 @@ public class ResoluteFactoryImpl extends EFactoryImpl implements ResoluteFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public ElementSet createElementSet()
+  public BaseType createBaseType()
   {
-    ElementSetImpl elementSet = new ElementSetImpl();
-    return elementSet;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public BuiltinType createBuiltinType()
-  {
-    BuiltinTypeImpl builtinType = new BuiltinTypeImpl();
-    return builtinType;
+    BaseTypeImpl baseType = new BaseTypeImpl();
+    return baseType;
   }
 
   /**
@@ -197,10 +189,10 @@ public class ResoluteFactoryImpl extends EFactoryImpl implements ResoluteFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public ClaimString createClaimString()
+  public DefinitionBody createDefinitionBody()
   {
-    ClaimStringImpl claimString = new ClaimStringImpl();
-    return claimString;
+    DefinitionBodyImpl definitionBody = new DefinitionBodyImpl();
+    return definitionBody;
   }
 
   /**
@@ -208,10 +200,10 @@ public class ResoluteFactoryImpl extends EFactoryImpl implements ResoluteFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public DefinitionBody createDefinitionBody()
+  public ClaimText createClaimText()
   {
-    DefinitionBodyImpl definitionBody = new DefinitionBodyImpl();
-    return definitionBody;
+    ClaimTextImpl claimText = new ClaimTextImpl();
+    return claimText;
   }
 
   /**
@@ -296,21 +288,10 @@ public class ResoluteFactoryImpl extends EFactoryImpl implements ResoluteFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public ClaimArg createClaimArg()
+  public FunctionBody createFunctionBody()
   {
-    ClaimArgImpl claimArg = new ClaimArgImpl();
-    return claimArg;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public FuncBody createFuncBody()
-  {
-    FuncBodyImpl funcBody = new FuncBodyImpl();
-    return funcBody;
+    FunctionBodyImpl functionBody = new FunctionBodyImpl();
+    return functionBody;
   }
 
   /**
@@ -329,6 +310,28 @@ public class ResoluteFactoryImpl extends EFactoryImpl implements ResoluteFactory
    * <!-- end-user-doc -->
    * @generated
    */
+  public ClaimString createClaimString()
+  {
+    ClaimStringImpl claimString = new ClaimStringImpl();
+    return claimString;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public ClaimArg createClaimArg()
+  {
+    ClaimArgImpl claimArg = new ClaimArgImpl();
+    return claimArg;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   public BinaryExpr createBinaryExpr()
   {
     BinaryExprImpl binaryExpr = new BinaryExprImpl();
@@ -340,10 +343,32 @@ public class ResoluteFactoryImpl extends EFactoryImpl implements ResoluteFactory
    * <!-- end-user-doc -->
    * @generated
    */
+  public InstanceOfExpr createInstanceOfExpr()
+  {
+    InstanceOfExprImpl instanceOfExpr = new InstanceOfExprImpl();
+    return instanceOfExpr;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   public UnaryExpr createUnaryExpr()
   {
     UnaryExprImpl unaryExpr = new UnaryExprImpl();
     return unaryExpr;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public CastExpr createCastExpr()
+  {
+    CastExprImpl castExpr = new CastExprImpl();
+    return castExpr;
   }
 
   /**
@@ -450,10 +475,10 @@ public class ResoluteFactoryImpl extends EFactoryImpl implements ResoluteFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public BuiltInFuncCallExpr createBuiltInFuncCallExpr()
+  public BuiltInFnCallExpr createBuiltInFnCallExpr()
   {
-    BuiltInFuncCallExprImpl builtInFuncCallExpr = new BuiltInFuncCallExprImpl();
-    return builtInFuncCallExpr;
+    BuiltInFnCallExprImpl builtInFnCallExpr = new BuiltInFnCallExprImpl();
+    return builtInFnCallExpr;
   }
 
   /**
@@ -476,6 +501,17 @@ public class ResoluteFactoryImpl extends EFactoryImpl implements ResoluteFactory
   {
     FilterMapExprImpl filterMapExpr = new FilterMapExprImpl();
     return filterMapExpr;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public SetExpr createSetExpr()
+  {
+    SetExprImpl setExpr = new SetExprImpl();
+    return setExpr;
   }
 
   /**

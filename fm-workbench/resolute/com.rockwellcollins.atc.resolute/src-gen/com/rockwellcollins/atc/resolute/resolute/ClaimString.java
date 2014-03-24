@@ -2,9 +2,6 @@
  */
 package com.rockwellcollins.atc.resolute.resolute;
 
-import org.eclipse.emf.ecore.EObject;
-
-import org.osate.aadl2.Element;
 
 /**
  * <!-- begin-user-doc -->
@@ -22,7 +19,7 @@ import org.osate.aadl2.Element;
  * @model
  * @generated
  */
-public interface ClaimString extends EObject, Element
+public interface ClaimString extends ClaimText
 {
   /**
    * Returns the value of the '<em><b>Str</b></em>' attribute.

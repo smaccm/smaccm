@@ -11,8 +11,6 @@ import org.eclipse.emf.ecore.EClass;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
-import org.osate.aadl2.impl.ElementImpl;
-
 /**
  * <!-- begin-user-doc -->
  * An implementation of the model object '<em><b>Claim String</b></em>'.
@@ -26,7 +24,7 @@ import org.osate.aadl2.impl.ElementImpl;
  *
  * @generated
  */
-public class ClaimStringImpl extends ElementImpl implements ClaimString
+public class ClaimStringImpl extends ClaimTextImpl implements ClaimString
 {
   /**
    * The default value of the '{@link #getStr() <em>Str</em>}' attribute.

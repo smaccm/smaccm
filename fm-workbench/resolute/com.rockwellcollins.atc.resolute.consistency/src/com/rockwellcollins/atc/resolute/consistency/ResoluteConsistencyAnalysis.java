@@ -5,7 +5,7 @@ import java.util.List;
 import org.osate.aadl2.NamedElement;
 import org.osate.aadl2.util.OsateDebug;
 
-import com.rockwellcollins.atc.resolute.analysis.execution.ResoluteEvaluator;
+import com.rockwellcollins.atc.resolute.analysis.execution.EvaluationContext;
 import com.rockwellcollins.atc.resolute.analysis.execution.ResoluteExternalAnalysis;
 import com.rockwellcollins.atc.resolute.analysis.values.BoolValue;
 import com.rockwellcollins.atc.resolute.analysis.values.ResoluteValue;
@@ -18,7 +18,7 @@ import com.rockwellcollins.atc.resolute.consistency.checker.SimulinkChecker;
 
 public class ResoluteConsistencyAnalysis implements ResoluteExternalAnalysis {
     @Override
-    public ResoluteValue run(ResoluteEvaluator resEval, List<ResoluteValue> args) 
+    public ResoluteValue run(EvaluationContext context, List<ResoluteValue> args) 
     {
     	ResoluteValue arg1 = args.get(0);
     	ResoluteValue arg2 = args.get(1);
