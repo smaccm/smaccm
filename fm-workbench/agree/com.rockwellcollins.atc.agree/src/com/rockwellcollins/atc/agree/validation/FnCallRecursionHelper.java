@@ -27,6 +27,12 @@ public class FnCallRecursionHelper extends AgreeSwitch<Expr>{
     public LinkedList<CallDef> visited;
     public List<LinkedList<CallDef>> loops;
     
+    public void doSwitchPreserveVisited(Expr expr){
+    	LinkedList<CallDef> copyOfVisited = new LinkedList<>(visited);
+    	doSwitch(expr);
+        visited = copyOfVisited;
+    }
+    
     public FnCallRecursionHelper(){
         visited = new LinkedList<>();
         loops = new ArrayList<>();
@@ -34,35 +40,35 @@ public class FnCallRecursionHelper extends AgreeSwitch<Expr>{
 
     @Override
     public Expr caseBinaryExpr(BinaryExpr object) {
-        doSwitch(object.getLeft());
-        doSwitch(object.getRight());
+        doSwitchPreserveVisited(object.getLeft());
+        doSwitchPreserveVisited(object.getRight());
         return null;
     }
 
     @Override
     public Expr caseUnaryExpr(UnaryExpr object) {
-        doSwitch(object.getExpr());
+        doSwitchPreserveVisited(object.getExpr());
         return null;
     }
 
     @Override
     public Expr caseIfThenElseExpr(IfThenElseExpr object) {
-        doSwitch(object.getC());
-        doSwitch(object.getB());
-        doSwitch(object.getA());
+        doSwitchPreserveVisited(object.getC());
+        doSwitchPreserveVisited(object.getB());
+        doSwitchPreserveVisited(object.getA());
         return null;
     }
 
     @Override
     public Expr casePrevExpr(PrevExpr object) {
-        doSwitch(object.getDelay());
-        doSwitch(object.getInit());
+        doSwitchPreserveVisited(object.getDelay());
+        doSwitchPreserveVisited(object.getInit());
         return null;
     }
 
     @Override
     public Expr casePreExpr(PreExpr object) {
-        doSwitch(object.getExpr());
+        doSwitchPreserveVisited(object.getExpr());
         return null;
     }
 
@@ -70,22 +76,20 @@ public class FnCallRecursionHelper extends AgreeSwitch<Expr>{
     public Expr caseNodeBodyExpr(NodeBodyExpr object){
         
         for(NodeStmt stmt : object.getStmts()){
-        	LinkedList<CallDef> copyOfVisited = new LinkedList<>(visited);
             doSwitch(stmt);
-            visited = copyOfVisited;
         }
         return null;
     }
     
     @Override
     public Expr caseNodeEq(NodeEq object){
-        doSwitch(object.getExpr());
+        doSwitchPreserveVisited(object.getExpr());
         return null;
     }
     
     @Override
     public Expr caseNodeLemma(NodeLemma object){
-        doSwitch(object.getExpr());
+        doSwitchPreserveVisited(object.getExpr());
         return null;
     }
     
@@ -113,7 +117,7 @@ public class FnCallRecursionHelper extends AgreeSwitch<Expr>{
             loops.add(loop);
         }else{
             visited.push(object);
-            doSwitch(object.getExpr());
+            doSwitchPreserveVisited(object.getExpr());
         }
         return null;
     }
