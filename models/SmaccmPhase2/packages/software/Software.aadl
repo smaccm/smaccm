@@ -355,6 +355,9 @@ end uart6ISR;
       system_time : in data port Base_Types::Integer;
       
     annex agree {**
+      
+      eq foobar : int;
+      
     	assume "positive time" :
   			system_time >= 0;
   	
@@ -366,7 +369,7 @@ end uart6ISR;
 
 data proc_data
   features
-	transmitParams5 : feature group inverse of FeatureGroups::control_params_read;
+	  transmitParams5 : feature group inverse of FeatureGroups::control_params_read;
     transmitParams1 : feature group inverse of FeatureGroups::control_params_read;
     receiveParamsRead5 : feature group inverse of FeatureGroups::control_params_read;
     receiveParamsWrite5 : feature group inverse of FeatureGroups::control_params_write;
@@ -391,68 +394,68 @@ end proc_data;
 
 data implementation proc_data.impl
 	subcomponents
-      dataport817 : data radio_stat_type::radio_stat.impl;
-      dataport777 : data mavlink_veh_commsec_msg::veh_commsec_msg.impl;
-      dataport474 : data radio_stat_type::radio_stat.impl;
-      dataport434 : data mavlink_veh_commsec_msg::veh_commsec_msg.impl;
-      dataport341 : data gps_type::position.impl;
-      dataport306 : data motors_type::motors.impl;
-      dataport297 : data controloutput_type::controloutput.impl;
-      dataport140 : data control_law_type::control_law.impl;
-      dataport131 : data userinput_type::userinput_result.impl;
-      dataport40 : data att_control_dbg_type::att_control_dbg.impl;
-      dataport39 : data alt_control_dbg_type::alt_control_dbg.impl;
-      dataport36 : data Base_Types::Float;
-      dataport35 : data Base_Types::Float;
-      dataport34 : data Base_Types::Float;
-      dataport33 : data Base_Types::Float;
-      dataport32 : data Base_Types::Float;
-      dataport31 : data Base_Types::Float;
-      dataport30 : data Base_Types::Float;
-      dataport29 : data Base_Types::Float;
-      dataport28 : data Base_Types::Float;
-      dataport27 : data Base_Types::Float;
-      dataport26 : data Base_Types::Float;
-      dataport25 : data Base_Types::Float;
-      dataport24 : data Base_Types::Float;
-      dataport23 : data Base_Types::Float;
-      dataport22 : data Base_Types::Float;
-      dataport21 : data Base_Types::Float;
-      dataport20 : data Base_Types::Float;
-      dataport19 : data Base_Types::Float;
-      dataport18 : data Base_Types::Float;
-      dataport17 : data Base_Types::Float;
-      dataport16 : data Base_Types::Float;
-      dataport15 : data Base_Types::Float;
-      dataport14 : data Base_Types::Float;
-      dataport13 : data Base_Types::Float;
-      dataport12 : data Base_Types::Float;
-      dataport11 : data Base_Types::Float;
-      dataport10 : data Base_Types::Float;
-      dataport9 : data Base_Types::Float;
-      dataport8 : data Base_Types::Float;
-      dataport7 : data Base_Types::Float;
-      dataport6 : data Base_Types::Float;
-      dataport5 : data Base_Types::Float;
-      dataport4 : data Base_Types::Float;
-      dataport3 : data Base_Types::Float;
-      dataport0 : data sensors_type::sensors_result.impl;
+    dataport817 : data radio_stat_type::radio_stat.impl;
+    dataport777 : data mavlink_veh_commsec_msg::veh_commsec_msg.impl;
+    dataport474 : data radio_stat_type::radio_stat.impl;
+    dataport434 : data mavlink_veh_commsec_msg::veh_commsec_msg.impl;
+    dataport341 : data gps_type::position.impl;
+    dataport306 : data motors_type::motors.impl;
+    dataport297 : data controloutput_type::controloutput.impl;
+    dataport140 : data control_law_type::control_law.impl;
+    dataport131 : data userinput_type::userinput_result.impl;
+    dataport40 : data att_control_dbg_type::att_control_dbg.impl;
+    dataport39 : data alt_control_dbg_type::alt_control_dbg.impl;
+    dataport36 : data Base_Types::Float;
+    dataport35 : data Base_Types::Float;
+    dataport34 : data Base_Types::Float;
+    dataport33 : data Base_Types::Float;
+    dataport32 : data Base_Types::Float;
+    dataport31 : data Base_Types::Float;
+    dataport30 : data Base_Types::Float;
+    dataport29 : data Base_Types::Float;
+    dataport28 : data Base_Types::Float;
+    dataport27 : data Base_Types::Float;
+    dataport26 : data Base_Types::Float;
+    dataport25 : data Base_Types::Float;
+    dataport24 : data Base_Types::Float;
+    dataport23 : data Base_Types::Float;
+    dataport22 : data Base_Types::Float;
+    dataport21 : data Base_Types::Float;
+    dataport20 : data Base_Types::Float;
+    dataport19 : data Base_Types::Float;
+    dataport18 : data Base_Types::Float;
+    dataport17 : data Base_Types::Float;
+    dataport16 : data Base_Types::Float;
+    dataport15 : data Base_Types::Float;
+    dataport14 : data Base_Types::Float;
+    dataport13 : data Base_Types::Float;
+    dataport12 : data Base_Types::Float;
+    dataport11 : data Base_Types::Float;
+    dataport10 : data Base_Types::Float;
+    dataport9 : data Base_Types::Float;
+    dataport8 : data Base_Types::Float;
+    dataport7 : data Base_Types::Float;
+    dataport6 : data Base_Types::Float;
+    dataport5 : data Base_Types::Float;
+    dataport4 : data Base_Types::Float;
+    dataport3 : data Base_Types::Float;
+    dataport0 : data sensors_type::sensors_result.impl;
       
-    connections  
+  connections  
     
     connComm1: data access dataport434 -> commsecInfo1;
     connComm5: data access dataport777 -> commsecInfo5;
         
     connAtt: data access dataport40 -> att_control;
     connAlt: data access dataport39 -> alt_control;
-    
-	connRadio: data access dataport817 -> radio;
-	connMotor: data access dataport306 -> motors;
-	connControl: data access dataport297 -> control;
-	connPosition: data access dataport341 -> position;
-	connSensors: data access dataport0 -> sensors;
-	connControlLaw: data access dataport140 -> controllaw;
-    
+  
+  	connRadio: data access dataport817 -> radio;
+  	connMotor: data access dataport306 -> motors;
+  	connControl: data access dataport297 -> control;
+  	connPosition: data access dataport341 -> position;
+  	connSensors: data access dataport0 -> sensors;
+  	connControlLaw: data access dataport140 -> controllaw;
+  
     conn_40 : data access dataport36 -> transmitParams5.param_reader_ALT_UI_DEAD;
     conn_41 : data access dataport35 -> transmitParams5.param_reader_ALT_UI_SENS;
     conn_42 : data access dataport34 -> transmitParams5.param_reader_ALT_POS_IMAX;
@@ -488,7 +491,7 @@ data implementation proc_data.impl
     conn_72 : data access dataport4 -> transmitParams5.param_reader_RLL_RATE_I;
     conn_73 : data access dataport3 -> transmitParams5.param_reader_RLL_RATE_P;
      
-     conn_83 : data access dataport36 -> receiveParamsWrite5.param_writer_ALT_UI_DEAD;
+    conn_83 : data access dataport36 -> receiveParamsWrite5.param_writer_ALT_UI_DEAD;
     conn_84 : data access dataport35 -> receiveParamsWrite5.param_writer_ALT_UI_SENS;
     conn_85 : data access dataport34 -> receiveParamsWrite5.param_writer_ALT_POS_IMAX;
     conn_86 : data access dataport33 -> receiveParamsWrite5.param_writer_ALT_POS_D;
@@ -557,7 +560,7 @@ data implementation proc_data.impl
     conn_149 : data access dataport4 -> receiveParamsRead5.param_reader_RLL_RATE_I;
     conn_150 : data access dataport3 -> receiveParamsRead5.param_reader_RLL_RATE_P;
     
-     conn_153 : data access dataport36 -> transmitParams1.param_reader_ALT_UI_DEAD;
+    conn_153 : data access dataport36 -> transmitParams1.param_reader_ALT_UI_DEAD;
     conn_154 : data access dataport35 -> transmitParams1.param_reader_ALT_UI_SENS;
     conn_155 : data access dataport34 -> transmitParams1.param_reader_ALT_POS_IMAX;
     conn_156 : data access dataport33 -> transmitParams1.param_reader_ALT_POS_D;
@@ -661,7 +664,7 @@ data implementation proc_data.impl
     conn_262 : data access dataport4 -> receiveParamsRead5.param_reader_RLL_RATE_I;
     conn_263 : data access dataport3 -> receiveParamsRead5.param_reader_RLL_RATE_P;   
      
- 	conn_187 : data access dataport434 -> transCons1.commsecInfo;
+ 	  conn_187 : data access dataport434 -> transCons1.commsecInfo;
     conn_188 : data access dataport40 -> transCons1.att_control;
     conn_189 : data access dataport39 -> transCons1.alt_control;
     conn_190 : data access dataport474 -> transCons1.radio;
@@ -755,17 +758,21 @@ process implementation flight_gen_process.impl
     
     --connections to hardware
     --outgoing connections
-	--ccs      : port motors_and_radios.flight_control_commands -> ppmInputTower_inst.flight_control_commands;
-	mavconn  : port motors_and_radios.mavlink -> uart5ISR_inst.mavlink;
-	motor1   : port px4ioar_inst.motor1 -> motors_and_radios.motor1;
-	motor2   : port px4ioar_inst.motor2 -> motors_and_radios.motor2;
-	motor3   : port px4ioar_inst.motor3 -> motors_and_radios.motor3;
-	motor4   : port px4ioar_inst.motor4 -> motors_and_radios.motor4;
-	sensor_conn: feature group sensors <-> sensorsCaptureTask_inst.sensors_in;
+	  --ccs      : port motors_and_radios.flight_control_commands -> ppmInputTower_inst.flight_control_commands;
+  	mavconn  : port motors_and_radios.mavlink -> uart5ISR_inst.mavlink;
+  	motor1   : port px4ioar_inst.motor1 -> motors_and_radios.motor1;
+  	motor2   : port px4ioar_inst.motor2 -> motors_and_radios.motor2;
+  	motor3   : port px4ioar_inst.motor3 -> motors_and_radios.motor3;
+  	motor4   : port px4ioar_inst.motor4 -> motors_and_radios.motor4;
+  	sensor_conn: feature group sensors <-> sensorsCaptureTask_inst.sensors_in;
     time_conn : port system_time -> UserInputThreads_inst.system_time;
     
   properties 
     SMACCM::OS => "eChronos";
+
+  annex agree {**
+    lemma "asfdsadf" : foobar > 0;  
+  **};
 
 end flight_gen_process.impl;
 	

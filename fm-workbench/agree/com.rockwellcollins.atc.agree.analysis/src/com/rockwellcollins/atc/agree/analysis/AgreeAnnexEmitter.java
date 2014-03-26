@@ -540,13 +540,13 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
                 jKindNameTag + subComp.getName() + dotChar,
                 aadlNameTag + subComp.getFullName() + ".", false, true);
         
-        for (AnnexSubclause annex : AnnexUtil.getAllAnnexSubclauses(subCompImpl, AgreePackage.eINSTANCE.getAgreeSubclause())) {
+        for (AnnexSubclause annex : AnnexUtil.getAllAnnexSubclauses(subCompImpl, AgreePackage.eINSTANCE.getAgreeContractSubclause())) {
             if (annex instanceof AgreeContractSubclause) { 
                 subEmitter.doSwitch(annex);
             }
         }
 
-        for (AnnexSubclause annex : AnnexUtil.getAllAnnexSubclauses(subCompType, AgreePackage.eINSTANCE.getAgreeSubclause())) {
+        for (AnnexSubclause annex : AnnexUtil.getAllAnnexSubclauses(subCompType, AgreePackage.eINSTANCE.getAgreeContractSubclause())) {
             if (annex instanceof AgreeContractSubclause) {
                 subEmitter.doSwitch(annex);
             }

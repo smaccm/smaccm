@@ -35,6 +35,7 @@ import com.rockwellcollins.atc.agree.agree.AgreePackage;
 import com.rockwellcollins.atc.agree.agree.CalenStatement;
 import com.rockwellcollins.atc.agree.agree.EqStatement;
 import com.rockwellcollins.atc.agree.agree.FnDefExpr;
+import com.rockwellcollins.atc.agree.agree.IdExpr;
 import com.rockwellcollins.atc.agree.agree.NestedDotID;
 import com.rockwellcollins.atc.agree.agree.NodeDefExpr;
 import com.rockwellcollins.atc.agree.agree.SpecStatement;
@@ -67,10 +68,13 @@ public class AgreeScopeProvider extends
     
     IScope scope_NamedElement(AgreeContract ctx, EReference ref) {
         EObject container = ctx.eContainer().eContainer();
-
+        while(!(container instanceof ComponentClassifier)){
+        	container = container.eContainer();
+        }
+        
         if(container instanceof ComponentImplementation){
             ComponentType compType = ((ComponentImplementation) container).getType();
-            for (AnnexSubclause subclause : AnnexUtil.getAllAnnexSubclauses(compType, AgreePackage.eINSTANCE.getAgreeSubclause())) {
+            for (AnnexSubclause subclause : AnnexUtil.getAllAnnexSubclauses(compType, AgreePackage.eINSTANCE.getAgreeContractSubclause())) {
                 if (subclause instanceof AgreeContractSubclause) {
                     IScope scopeOfType = getScope(((AgreeContractSubclause) subclause).getContract(),
                             ref);
@@ -80,25 +84,6 @@ public class AgreeScopeProvider extends
         }
         return Scopes.scopeFor(getAllElementsFromSpecs(ctx.getSpecs()), IScope.NULLSCOPE);
                 
-        /*
-        EObject container = ctx.eContainer().eContainer();
-        if (container instanceof ComponentType) {
-            return null;
-        }
-        if (!(container instanceof ComponentImplementation)) {
-            return IScope.NULLSCOPE;
-        }
-
-        ComponentType compType = ((ComponentImplementation) container).getType();
-        for (AnnexSubclause subclause : compType.getAllAnnexSubclauses()) {
-            if (subclause instanceof AgreeContractSubclause) {
-                IScope scopeOfType = getScope(((AgreeContractSubclause) subclause).getContract(),
-                        ref);
-                return Scopes.scopeFor(getAllElementsFromSpecs(ctx.getSpecs()), scopeOfType);
-            }
-        }
-        return IScope.NULLSCOPE;
-        */
     }
     
 
@@ -133,53 +118,13 @@ public class AgreeScopeProvider extends
         return Scopes.scopeFor(components, getScope(ctx.eContainer(), ref));
     }
     
-    /*
-    IScope scope_NamedElement(ClockID ctx, EReference ref){
-        EObject container = ctx.eContainer();
-        while(!(container instanceof ComponentClassifier)){
-            container = container.eContainer();
-        }
-        
-        if(container instanceof ComponentImplementation){
-            return Scopes.scopeFor(((ComponentImplementation)container).getAllSubcomponents(), getScope(ctx.eContainer(), ref));
-        }
-        
-        return IScope.NULLSCOPE;
-    }
-    
-    IScope scope_NamedElement(QueueRemoveID ctx, EReference ref){
-        EObject container = ctx.eContainer();
-        while(!(container instanceof ComponentClassifier)){
-            container = container.eContainer();
-        }
-        
-        return Scopes.scopeFor(((ComponentClassifier)container).getAllFeatures(), getScope(ctx.eContainer(), ref));
-        
-        
-    }
-    
-    IScope scope_NamedElement(QueueInsertID ctx, EReference ref){
-        EObject container = ctx.eContainer();
-        while(!(container instanceof ComponentClassifier)){
-            container = container.eContainer();
-        }
-        
-        return Scopes.scopeFor(((ComponentClassifier)container).getAllFeatures(), getScope(ctx.eContainer(), ref));
-        
-        
-    }
-    
-    IScope scope_NamedElement(QueueCountID ctx, EReference ref){
-        EObject container = ctx.eContainer();
-        while(!(container instanceof ComponentClassifier)){
-            container = container.eContainer();
-        }
-        
-        return Scopes.scopeFor(((ComponentClassifier)container).getAllFeatures(), getScope(ctx.eContainer(), ref));
-        
-        
-    }
-    */
+    //IScope scope_NamedElement(IdExpr ctx, EReference ref){
+    //	
+    //	EObject container = ctx.eContainer();
+    //	while(!(container instanceof ComponentClassi)
+    //	
+     //   return Scopes.scopeFor(getAllElementsFromSpecs(ctx.getSpecs()), IScope.NULLSCOPE);
+    //}
     
     private Set<Element> getCorrespondingAadlElement(NestedDotID id) {
         EObject container = id.eContainer();

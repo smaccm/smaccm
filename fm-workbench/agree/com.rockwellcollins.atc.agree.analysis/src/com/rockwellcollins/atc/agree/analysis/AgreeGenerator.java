@@ -47,7 +47,7 @@ public class AgreeGenerator {
         this.topEmitter = topEmitter;
         
         boolean foundAnnex = false;
-        for (AnnexSubclause annex : AnnexUtil.getAllAnnexSubclauses(compImpl, AgreePackage.eINSTANCE.getAgreeSubclause())) {
+        for (AnnexSubclause annex : AnnexUtil.getAllAnnexSubclauses(compImpl, AgreePackage.eINSTANCE.getAgreeContractSubclause())) {
             if (annex instanceof AgreeContractSubclause) {
                 topEmitter.doSwitch(annex);
                 foundAnnex = true;
@@ -56,7 +56,7 @@ public class AgreeGenerator {
 
         
         
-        for (AnnexSubclause annex : AnnexUtil.getAllAnnexSubclauses(ct, AgreePackage.eINSTANCE.getAgreeSubclause())) {
+        for (AnnexSubclause annex : AnnexUtil.getAllAnnexSubclauses(ct, AgreePackage.eINSTANCE.getAgreeContractSubclause())) {
             if (annex instanceof AgreeContractSubclause) {
                 topEmitter.doSwitch(annex);
                 foundAnnex = true;
@@ -94,7 +94,7 @@ public class AgreeGenerator {
             //    }
             //}
 
-            for (AnnexSubclause annex : AnnexUtil.getAllAnnexSubclauses(ct, AgreePackage.eINSTANCE.getAgreeSubclause())) {
+            for (AnnexSubclause annex : AnnexUtil.getAllAnnexSubclauses(ct, AgreePackage.eINSTANCE.getAgreeContractSubclause())) {
                 if (annex instanceof AgreeContractSubclause) {
                     subEmitter.doSwitch(annex);
                     foundSubAnnex = foundAnnex = true;
