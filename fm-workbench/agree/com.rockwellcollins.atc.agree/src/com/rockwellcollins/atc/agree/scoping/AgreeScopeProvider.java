@@ -21,6 +21,7 @@ import org.osate.aadl2.ComponentType;
 import org.osate.aadl2.DataPort;
 import org.osate.aadl2.Element;
 import org.osate.aadl2.EventDataPort;
+import org.osate.aadl2.PublicPackageSection;
 import org.osate.aadl2.Subcomponent;
 import org.osate.aadl2.ThreadSubcomponent;
 import org.osate.aadl2.impl.FeatureGroupImpl;
@@ -205,9 +206,10 @@ public class AgreeScopeProvider extends
             }else if (container instanceof EventDataPort){
             	container = ((EventDataPort) container).getDataFeatureClassifier();
             } else if (container instanceof AadlPackage) {
-                for (AnnexLibrary annex : ((AadlPackage) container).getPublicSection()
-                        .getOwnedAnnexLibraries()) {
-                    if (annex instanceof AgreeLibrary) {
+            	
+            	AadlPackage aadlPackage = (AadlPackage) container;
+                for (AnnexLibrary annex :  AnnexUtil.getAllActualAnnexLibraries(aadlPackage, AgreePackage.eINSTANCE.getAgreeContractLibrary())) {
+                    if (annex instanceof AgreeLibrary) { 
                         container = ((AgreeContractLibrary) annex).getContract();
                     }
                 }
