@@ -1,0 +1,95 @@
+package Sensors
+public
+  with SMACCM_SYS;
+  with Base_Types;
+  with gps_type;
+  with sensors_type;
+  with UAV;
+  with SMACCM;
+
+
+thread group Sensors
+  features
+    position: out event data port gps_type::position.impl;
+    sensors: requires data access sensors_type::sensors_result.impl;
+    sensors_in: feature group UAV::sensors;
+    istream: in event data port Base_Types::Unsigned_8;
+    
+end Sensors;
+
+thread group implementation Sensors.Impl
+  subcomponents
+    sensorsCaptureTask_inst : thread sensorsCaptureTask;
+    ubloxGPS_inst : thread ubloxGPS;
+
+  connections
+    conn0 : port sensorsCaptureTask_inst.newstateEmitter -> SensorsCaptureTask_inst.newstateEvent;
+    conn2 : port ubloxGPS_inst.position -> position;
+    conn5 : port ubloxGPS_inst.position -> sensorsCaptureTask_inst.position;
+    conn3 : data access sensors -> sensorsCaptureTask_inst.sensors;
+    conn4 : feature group sensors_in -> sensorsCaptureTask_inst.sensors_in;
+    conn6 : port istream -> ubloxGPS_inst.istream;
+
+end Sensors.Impl;
+
+thread sensorsCaptureTask
+  features
+    newstateEmitter: out event data port Base_Types::Unsigned_32 {
+      Queue_Size => 2;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_sensorsCaptureTask_350.h";
+      SMACCM_SYS::CommPrim_Source_Text => "emitFromTask_sensorsCaptureTask_350_chan363_365";
+    };
+    newstateEvent: in event data port Base_Types::Unsigned_32 {
+      Queue_Size => 2;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_sensorsCaptureTask_350.h";
+      SMACCM_SYS::CommPrim_Source_Text => "receiveFromTask_sensorsCaptureTask_350_chan363_367";
+      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_sensorsCaptureTask_350_chan363_newstate_captureloop_373", "eventhandler_sensorsCaptureTask_350_chan363_newstate_init_370");
+    };
+    position: in event data port gps_type::position.impl {
+      Queue_Size => 16;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_sensorsCaptureTask_350.h";
+      SMACCM_SYS::CommPrim_Source_Text => "receiveFromTask_sensorsCaptureTask_350_chan322_355";
+      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_sensorsCaptureTask_350_chan322_358");
+    };
+    sensors: requires data access sensors_type::sensors_result.impl {
+      Access_Right => write_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_sensorsCaptureTask_350.h";
+      SMACCM_SYS::CommPrim_Source_Text => "write_sensorsCaptureTask_350_dataport0_352";
+    };
+    
+    --added by backes
+    sensors_in: feature group UAV::sensors;
+    
+  properties
+    Source_Text => ("tower_task_usercode_sensorsCaptureTask_350.c");
+    Priority => 13;
+    Source_Stack_Size => 1024 bytes;
+    SMACCM::Language => "Ivory";
+    Dispatch_Protocol => Hybrid;
+    Period => 1 ms;
+    SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_sensorsCaptureTask_350_per1_captureloop_372");
+end sensorsCaptureTask;
+
+thread ubloxGPS
+  features
+    position: out event data port gps_type::position.impl {
+      Queue_Size => 16;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_ubloxGPS_323.h";
+      SMACCM_SYS::CommPrim_Source_Text => "emitFromTask_ubloxGPS_323_chan322_329";
+    };
+    istream: in event data port Base_Types::Unsigned_8 {
+      Queue_Size => 256;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_ubloxGPS_323.h";
+      SMACCM_SYS::CommPrim_Source_Text => "receiveFromTask_ubloxGPS_323_chan316_325";
+      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_ubloxGPS_323_chan316_340");
+    };
+  properties
+    Source_Text => ("tower_task_usercode_ubloxGPS_323.c");
+    Priority => 15;
+    Source_Stack_Size => 256 bytes;
+    SMACCM::Language => "Ivory";
+    Dispatch_Protocol => Sporadic;
+end ubloxGPS;
+
+
+end Sensors;
