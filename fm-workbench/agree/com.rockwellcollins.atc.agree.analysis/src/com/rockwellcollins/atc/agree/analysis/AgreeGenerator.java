@@ -19,8 +19,10 @@ import org.osate.aadl2.DataSubcomponent;
 import org.osate.aadl2.DataSubcomponentType;
 import org.osate.aadl2.Subcomponent;
 import org.osate.aadl2.instance.ComponentInstance;
+import org.osate.annexsupport.AnnexUtil;
 
 import com.rockwellcollins.atc.agree.agree.AgreeContractSubclause;
+import com.rockwellcollins.atc.agree.agree.AgreePackage;
 
 public class AgreeGenerator {
     
@@ -45,7 +47,7 @@ public class AgreeGenerator {
         this.topEmitter = topEmitter;
         
         boolean foundAnnex = false;
-        for (AnnexSubclause annex : compImpl.getAllAnnexSubclauses()) {
+        for (AnnexSubclause annex : AnnexUtil.getAllAnnexSubclauses(compImpl, AgreePackage.eINSTANCE.getAgreeSubclause())) {
             if (annex instanceof AgreeContractSubclause) {
                 topEmitter.doSwitch(annex);
                 foundAnnex = true;
@@ -54,7 +56,7 @@ public class AgreeGenerator {
 
         
         
-        for (AnnexSubclause annex : ct.getAllAnnexSubclauses()) {
+        for (AnnexSubclause annex : AnnexUtil.getAllAnnexSubclauses(ct, AgreePackage.eINSTANCE.getAgreeSubclause())) {
             if (annex instanceof AgreeContractSubclause) {
                 topEmitter.doSwitch(annex);
                 foundAnnex = true;
@@ -92,7 +94,7 @@ public class AgreeGenerator {
             //    }
             //}
 
-            for (AnnexSubclause annex : ct.getAllAnnexSubclauses()) {
+            for (AnnexSubclause annex : AnnexUtil.getAllAnnexSubclauses(ct, AgreePackage.eINSTANCE.getAgreeSubclause())) {
                 if (annex instanceof AgreeContractSubclause) {
                     subEmitter.doSwitch(annex);
                     foundSubAnnex = foundAnnex = true;

@@ -45,6 +45,7 @@ import org.osate.aadl2.Property;
 import org.osate.aadl2.PropertyType;
 import org.osate.aadl2.Subcomponent;
 import org.osate.aadl2.impl.SubcomponentImpl;
+import org.osate.annexsupport.AnnexUtil;
 
 import com.rockwellcollins.atc.agree.agree.AgreeContract;
 import com.rockwellcollins.atc.agree.agree.AgreePackage;
@@ -359,7 +360,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 
     private NamedElement matchedInAgreeAnnex(ComponentClassifier compClass, String name) {
 
-        for (AnnexSubclause subClause : compClass.getAllAnnexSubclauses()) {
+        for (AnnexSubclause subClause : AnnexUtil.getAllAnnexSubclauses(compClass, AgreePackage.eINSTANCE.getAgreeSubclause())) {
             if (subClause instanceof AgreeSubclause) {
                 AgreeContract contr = (AgreeContract) subClause.getChildren().get(0);
                 for (EObject obj : contr.getChildren()) {

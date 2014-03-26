@@ -21,7 +21,8 @@ Require-Bundle: org.eclipse.xtext;visibility:=reexport,
  org.antlr.runtime,
  org.eclipse.xtext.common.types
 Import-Package: org.apache.log4j,
- org.eclipse.xtext.xbase.lib
+ org.eclipse.xtext.xbase.lib,
+ org.osate.annexsupport
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Export-Package: com.rockwellcollins.atc.agree,
  com.rockwellcollins.atc.agree.services,

@@ -68,12 +68,14 @@ import org.osate.aadl2.ThreadSubcomponent;
 import org.osate.aadl2.instance.ComponentInstance;
 import org.osate.aadl2.modelsupport.resources.OsateResourceUtil;
 import org.osate.aadl2.properties.PropertyDoesNotApplyToHolderException;
+import org.osate.annexsupport.AnnexUtil;
 import org.osate.xtext.aadl2.properties.util.EMFIndexRetrieval;
 import org.osate.xtext.aadl2.properties.util.PropertyUtils;
 
 import com.google.inject.name.Named;
 import com.rockwellcollins.atc.agree.agree.AgreeContract;
 import com.rockwellcollins.atc.agree.agree.AgreeContractSubclause;
+import com.rockwellcollins.atc.agree.agree.AgreePackage;
 import com.rockwellcollins.atc.agree.agree.Arg;
 import com.rockwellcollins.atc.agree.agree.AssertStatement;
 import com.rockwellcollins.atc.agree.agree.AssumeStatement;
@@ -538,13 +540,13 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
                 jKindNameTag + subComp.getName() + dotChar,
                 aadlNameTag + subComp.getFullName() + ".", false, true);
         
-        for (AnnexSubclause annex : subCompImpl.getAllAnnexSubclauses()) {
-            if (annex instanceof AgreeContractSubclause) {
+        for (AnnexSubclause annex : AnnexUtil.getAllAnnexSubclauses(subCompImpl, AgreePackage.eINSTANCE.getAgreeSubclause())) {
+            if (annex instanceof AgreeContractSubclause) { 
                 subEmitter.doSwitch(annex);
             }
         }
 
-        for (AnnexSubclause annex : subCompType.getAllAnnexSubclauses()) {
+        for (AnnexSubclause annex : AnnexUtil.getAllAnnexSubclauses(subCompType, AgreePackage.eINSTANCE.getAgreeSubclause())) {
             if (annex instanceof AgreeContractSubclause) {
                 subEmitter.doSwitch(annex);
             }

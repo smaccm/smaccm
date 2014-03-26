@@ -24,11 +24,13 @@ import org.osate.aadl2.EventDataPort;
 import org.osate.aadl2.Subcomponent;
 import org.osate.aadl2.ThreadSubcomponent;
 import org.osate.aadl2.impl.FeatureGroupImpl;
+import org.osate.annexsupport.AnnexUtil;
 
 import com.rockwellcollins.atc.agree.agree.AgreeContract;
 import com.rockwellcollins.atc.agree.agree.AgreeContractLibrary;
 import com.rockwellcollins.atc.agree.agree.AgreeContractSubclause;
 import com.rockwellcollins.atc.agree.agree.AgreeLibrary;
+import com.rockwellcollins.atc.agree.agree.AgreePackage;
 import com.rockwellcollins.atc.agree.agree.CalenStatement;
 import com.rockwellcollins.atc.agree.agree.EqStatement;
 import com.rockwellcollins.atc.agree.agree.FnDefExpr;
@@ -67,7 +69,7 @@ public class AgreeScopeProvider extends
 
         if(container instanceof ComponentImplementation){
             ComponentType compType = ((ComponentImplementation) container).getType();
-            for (AnnexSubclause subclause : compType.getAllAnnexSubclauses()) {
+            for (AnnexSubclause subclause : AnnexUtil.getAllAnnexSubclauses(compType, AgreePackage.eINSTANCE.getAgreeSubclause())) {
                 if (subclause instanceof AgreeContractSubclause) {
                     IScope scopeOfType = getScope(((AgreeContractSubclause) subclause).getContract(),
                             ref);
