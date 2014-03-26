@@ -1,0 +1,136 @@
+package UARTS
+public
+  with SMACCM;
+  with SMACCM_SYS;
+  with Base_Types;
+  with DATATYPES;
+
+thread group UARTS
+  features
+    istream_uart1: out event data port Base_Types::Unsigned_8;
+    istream_uart2: out event data port Base_Types::Unsigned_8;
+    istream_uart5: out event data port Base_Types::Unsigned_8;
+    istream_uart6: out event data port Base_Types::Unsigned_8;
+    ostream_uart1: in event data port Base_Types::Unsigned_8;
+    ostream_uart2: in event data port Base_Types::Unsigned_8;
+    ostream_uart5: in event data port Base_Types::Unsigned_8;
+    ostream_uart6: in event data port Base_Types::Unsigned_8;
+    mavlink: in out data port DATATYPES::EncryptMAVLink;
+    
+end UARTS;
+
+thread group implementation UARTS.Impl
+  subcomponents
+    uart5ISR_inst : thread uart5ISR;
+    uart1ISR_inst : thread uart1ISR;
+    uart2ISR_inst : thread uart2ISR;
+    uart6ISR_inst : thread uart6ISR;
+    
+  connections
+    conni1 : port uart1ISR_inst.istream -> istream_uart1;
+    conno1 : port ostream_uart1 -> uart1ISR_inst.ostream;
+    conni2 : port uart2ISR_inst.istream -> istream_uart2;
+    conno2 : port ostream_uart2 -> uart2ISR_inst.ostream;
+    conni5 : port uart5ISR_inst.istream -> istream_uart5;
+    conno5 : port ostream_uart5 -> uart5ISR_inst.ostream;
+    conni6 : port uart6ISR_inst.istream -> istream_uart6;
+    conno6 : port ostream_uart6 -> uart6ISR_inst.ostream;
+    connmav : port mavlink -> uart5ISR_inst.mavlink;
+    
+end UARTS.Impl;
+
+thread uart5ISR
+  features
+    istream: out event data port Base_Types::Unsigned_8 {
+      Queue_Size => 1024;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_signal_comm_uart5ISR_770.h";
+      SMACCM_SYS::CommPrim_Source_Text => "emitFromSig_uart5ISR_770_chan769_774";
+    };
+    ostream: in event data port Base_Types::Unsigned_8 {
+      Queue_Size => 1024;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_signal_comm_uart5ISR_770.h";
+      SMACCM_SYS::CommPrim_Source_Text => "receiveFromSig_uart5ISR_770_chan768_772";
+    };
+    
+    --added by Backes
+    mavlink: in out data port DATATYPES::EncryptMAVLink;
+    
+  properties
+    Dispatch_Protocol => Sporadic;
+    Source_Text => ("tower_signal_usercode_uart5ISR_770.c");
+    Priority => 27;
+    SMACCM::Always_Sends_Message => true;
+    SMACCM::Language => "Ivory";
+    SMACCM_SYS::Signal_Name => "UART5_IRQn";
+    SMACCM_SYS::ISR_Handler => "UART5_IRQHandler";
+end uart5ISR;
+
+
+thread uart1ISR
+  features
+    istream: out event data port Base_Types::Unsigned_8 {
+      Queue_Size => 1024;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_signal_comm_uart1ISR_427.h";
+      SMACCM_SYS::CommPrim_Source_Text => "emitFromSig_uart1ISR_427_chan426_431";
+    };
+    ostream: in event data port Base_Types::Unsigned_8 {
+      Queue_Size => 1024;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_signal_comm_uart1ISR_427.h";
+      SMACCM_SYS::CommPrim_Source_Text => "receiveFromSig_uart1ISR_427_chan425_429";
+    };
+  properties
+    Dispatch_Protocol => Sporadic;
+    Source_Text => ("tower_signal_usercode_uart1ISR_427.c");
+    Priority => 28;
+    SMACCM::Language => "Ivory";
+    SMACCM_SYS::Signal_Name => "USART1_IRQn";
+    SMACCM_SYS::ISR_Handler => "USART1_IRQHandler";
+end uart1ISR;
+
+
+thread uart2ISR
+  features
+    istream: out event data port Base_Types::Unsigned_8 {
+      Queue_Size => 1;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_signal_comm_uart2ISR_376.h";
+      SMACCM_SYS::CommPrim_Source_Text => "emitFromSig_uart2ISR_376_chan375_380";
+      SMACCM::Unimplemented => true;
+    };
+    ostream: in event data port Base_Types::Unsigned_8 {
+      Queue_Size => 12;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_signal_comm_uart2ISR_376.h";
+      SMACCM_SYS::CommPrim_Source_Text => "receiveFromSig_uart2ISR_376_chan374_378";
+    };
+  properties
+    Dispatch_Protocol => Sporadic;
+    Source_Text => ("tower_signal_usercode_uart2ISR_376.c");
+    Priority => 29;
+    SMACCM::Language => "Ivory";
+    SMACCM_SYS::Signal_Name => "USART2_IRQn";
+    SMACCM_SYS::ISR_Handler => "USART2_IRQHandler";
+end uart2ISR;
+
+
+thread uart6ISR
+  features
+    istream: out event data port Base_Types::Unsigned_8 {
+      Queue_Size => 256;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_signal_comm_uart6ISR_317.h";
+      SMACCM_SYS::CommPrim_Source_Text => "emitFromSig_uart6ISR_317_chan316_321";
+    };
+    ostream: in event data port Base_Types::Unsigned_8 {
+      Queue_Size => 2;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_signal_comm_uart6ISR_317.h";
+      SMACCM_SYS::CommPrim_Source_Text => "receiveFromSig_uart6ISR_317_chan315_319";
+      SMACCM::Unimplemented => true;
+    };
+  properties
+    Dispatch_Protocol => Sporadic;
+    Source_Text => ("tower_signal_usercode_uart6ISR_317.c");
+    Priority => 30;
+    SMACCM::Language => "Ivory";
+    SMACCM_SYS::Signal_Name => "USART6_IRQn";
+    SMACCM_SYS::ISR_Handler => "USART6_IRQHandler";
+end uart6ISR;
+
+end UARTS;
