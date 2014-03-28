@@ -54,8 +54,10 @@ import org.osate.aadl2.instance.SystemInstance;
 import org.osate.aadl2.modelsupport.util.AadlUtil;
 import org.osate.aadl2.properties.PropertyDoesNotApplyToHolderException;
 import org.osate.aadl2.properties.PropertyNotPresentException;
+import org.osate.annexsupport.AnnexUtil;
 import org.osate.xtext.aadl2.properties.util.PropertyUtils;
 
+import com.rockwellcollins.atc.agree.agree.AgreePackage;
 import com.rockwellcollins.atc.agree.agree.AgreeSubclause;
 import com.rockwellcollins.atc.agree.agree.Arg;
 import com.rockwellcollins.atc.agree.agree.FnCallExpr;
@@ -417,19 +419,15 @@ public class AgreeEmitterUtilities {
     	
     	ComponentImplementation compImpl = subComp.getComponentImplementation();
     	if(compImpl != null){
-    		for(AnnexSubclause subClause : compImpl.getOwnedAnnexSubclauses()){
-    			if(subClause instanceof AgreeSubclause){
-    				return true;
-    			}
+    		if(AnnexUtil.getAllAnnexSubclauses(compImpl, AgreePackage.eINSTANCE.getAgreeContractSubclause()).size() > 0){
+    			return true;
     		}
     	}
     	
     	ComponentType compType = subComp.getComponentType();
     	if(compType != null){
-    		for(AnnexSubclause subClause : compType.getOwnedAnnexSubclauses()){
-    			if(subClause instanceof AgreeSubclause){
-    				return true;
-    			}
+    		if(AnnexUtil.getAllAnnexSubclauses(compType, AgreePackage.eINSTANCE.getAgreeContractSubclause()).size() > 0){
+    			return true;
     		}
     	}
     	return false;
