@@ -36,9 +36,10 @@ public class AgreeCalendarUtils {
         
         dfaName = name;
         
-        VarDecl rVar = new VarDecl("_r", 
-                new SubrangeIntType(BigInteger.valueOf(-synchrony), 
-                        BigInteger.valueOf(synchrony)));
+        //VarDecl rVar = new VarDecl("_r", 
+        //        new SubrangeIntType(BigInteger.valueOf(-synchrony), 
+        //                BigInteger.valueOf(synchrony)));
+        VarDecl rVar = new VarDecl("_r", NamedType.INT);
         IdExpr r = new IdExpr(rVar.id);
         
         VarDecl rIsBoundedVar = new VarDecl("_r_is_bounded", NamedType.BOOL);
