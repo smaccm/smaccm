@@ -265,11 +265,7 @@ system Vehicle
 		
 		guarantee "state range":
 			state >= 0 and state <= 5;
-			
-	  guarantee "state the same if no shift":
-	    not (defs.rising(left_shift) or defs.rising(right_shift)) => 
-	      (true -> state = pre(state));
-		
+
 		guarantee "leader position behavior":
 			((defs.rising(left_shift) and pre(state) = leader) => state = pend_left)
 			and

@@ -115,7 +115,12 @@ public class AgreeScopeProvider extends
     
     IScope scope_NamedElement(NestedDotID ctx, EReference ref) {
         Set<Element> components = getCorrespondingAadlElement(ctx);
-        return Scopes.scopeFor(components, getScope(ctx.eContainer(), ref));
+        if(ctx.eContainer() instanceof NestedDotID){
+        	return Scopes.scopeFor(components, IScope.NULLSCOPE);
+        }else{
+        	return Scopes.scopeFor(components, getScope(ctx.eContainer(), ref));
+        }
+
     }
     
     //IScope scope_NamedElement(IdExpr ctx, EReference ref){
