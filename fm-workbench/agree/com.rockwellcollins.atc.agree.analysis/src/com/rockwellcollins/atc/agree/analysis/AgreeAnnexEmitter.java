@@ -1075,17 +1075,28 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
                 inputVars.add(tempStrType);
                 
                 //have to keep track of outputs for condacts
-                if(namedEl instanceof DataSubcomponent){
-                    NestedDotID tempId = orgId;
-                    while(!(tempId.getBase() instanceof DirectedFeature)){
-                        tempId = orgId.getSub();
-                    }
-                    if(((DirectedFeature)tempId.getBase()).getDirection() == DirectionType.OUT){
-                        outputVars.add(tempStrType);
-                    }
-                }else if(((DirectedFeature)namedEl).getDirection() == DirectionType.OUT){
-                    outputVars.add(tempStrType);
-                }
+                boolean reverseDirection = false;
+            	if(orgId.getBase() instanceof FeatureGroup){
+            		FeatureGroup featGroup = (FeatureGroup)orgId.getBase();
+            		reverseDirection = featGroup.isInverse();
+            	}
+            	if(namedEl instanceof DataSubcomponent){
+            		NestedDotID tempId = orgId;
+            		while(!(tempId.getBase() instanceof DirectedFeature)){
+            			tempId = orgId.getSub();
+            		}
+            		DirectionType direction = ((DirectedFeature)tempId.getBase()).getDirection();
+            		if((direction == DirectionType.OUT && !reverseDirection)
+            				|| (direction == DirectionType.IN && reverseDirection)){
+            			outputVars.add(tempStrType);
+            		}
+            	}else{
+            		DirectionType direction = ((DirectedFeature)namedEl).getDirection();
+            		if((direction == DirectionType.OUT && !reverseDirection)
+            				|| (direction == DirectionType.IN && reverseDirection)){
+            			outputVars.add(tempStrType);
+            		}
+            	}
                 
             }
         }
