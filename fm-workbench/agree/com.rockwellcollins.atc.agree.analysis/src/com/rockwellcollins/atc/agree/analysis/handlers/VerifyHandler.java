@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Queue;
 
 import jkind.JKindException;
+import jkind.SolverOption;
 import jkind.api.JKindApi;
 import jkind.api.results.AnalysisResult;
 import jkind.api.results.CompositeAnalysisResult;
@@ -20,6 +21,7 @@ import jkind.lustre.Program;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.handlers.IHandlerActivation;
@@ -31,14 +33,18 @@ import org.osate.aadl2.Element;
 import org.osate.aadl2.NamedElement;
 import org.osate.aadl2.Subcomponent;
 import org.osate.aadl2.SystemImplementation;
+import org.osate.aadl2.SystemType;
 import org.osate.aadl2.instance.ComponentInstance;
 import org.osate.aadl2.instance.SystemInstance;
 import org.osate.aadl2.instantiation.InstantiateModel;
+import org.osate.annexsupport.AnnexUtil;
 import org.osate.ui.dialogs.Dialog;
 
+import com.rockwellcollins.atc.agree.agree.AgreePackage;
 import com.rockwellcollins.atc.agree.agree.AgreeSubclause;
 import com.rockwellcollins.atc.agree.analysis.Activator;
 import com.rockwellcollins.atc.agree.analysis.AgreeEmitterUtilities;
+import com.rockwellcollins.atc.agree.analysis.AgreeException;
 import com.rockwellcollins.atc.agree.analysis.AgreeGenerator;
 import com.rockwellcollins.atc.agree.analysis.preferences.PreferenceConstants;
 import com.rockwellcollins.atc.agree.analysis.views.AgreeResultsLinker;
@@ -80,6 +86,13 @@ public abstract class VerifyHandler extends AadlHandler {
             AnalysisResult result;
             CompositeAnalysisResult wrapper = new CompositeAnalysisResult("");
             LinkedList<NamedElement> modelParents = new LinkedList<>();
+            
+            SystemType sysType = si.getSystemImplementation().getType();
+            EList<AnnexSubclause> annexSubClauses = AnnexUtil.getAllAnnexSubclauses(sysType, AgreePackage.eINSTANCE.getAgreeContractSubclause());
+            
+            if(annexSubClauses.size() == 0){
+            	throw new AgreeException("There is not an AGREE annex in the '"+sysType.getName()+"' system type.");
+            }
             
             if (isRecursive()) {
                 result = buildAnalysisResult(ci.getName(), si);
@@ -376,7 +389,7 @@ public abstract class VerifyHandler extends AadlHandler {
         if (prefs.getBoolean(PreferenceConstants.PREF_BLAME_CEX)) {
             api.setIntervalGeneralization();
         }
-        //api.setSolver(SolverOption.Z3);
+        api.setSolver(SolverOption.Z3);
         
         api.setN(prefs.getInt(PreferenceConstants.PREF_DEPTH));
         api.setTimeout(prefs.getInt(PreferenceConstants.PREF_TIMEOUT));
