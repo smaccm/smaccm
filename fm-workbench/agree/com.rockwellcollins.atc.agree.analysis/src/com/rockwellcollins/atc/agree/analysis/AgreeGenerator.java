@@ -51,6 +51,7 @@ public class AgreeGenerator {
             if (annex instanceof AgreeContractSubclause) {
                 topEmitter.doSwitch(annex);
                 foundAnnex = true;
+                break;
             }
         }
 
@@ -60,6 +61,7 @@ public class AgreeGenerator {
             if (annex instanceof AgreeContractSubclause) {
                 topEmitter.doSwitch(annex);
                 foundAnnex = true;
+                break;
             }
         }
         
