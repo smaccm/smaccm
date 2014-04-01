@@ -1,32 +1,47 @@
 package com.rockwellcollins.atc.aadl2sexp.handlers;
 
-import org.eclipse.core.commands.AbstractHandler;
-import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.handlers.HandlerUtil;
-import org.eclipse.xtext.resource.XtextResource;
-import org.eclipse.xtext.ui.editor.XtextEditor;
-import org.eclipse.xtext.util.concurrent.IUnitOfWork;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.osate.aadl2.Element;
+import org.osate.aadl2.SystemImplementation;
+import org.osate.aadl2.instance.SystemInstance;
+import org.osate.aadl2.instantiation.InstantiateModel;
+import org.osate.ui.dialogs.Dialog;
 
-public class Aadl2SexpHandler extends AbstractHandler {
+import com.rockwellcollins.atc.aadl2sexp.Activator;
+
+public class Aadl2SexpHandler extends AadlHandler {
     @Override
-    public Object execute(ExecutionEvent event) throws ExecutionException {
-        IEditorPart editor = HandlerUtil.getActiveEditorChecked(event);
-        if (!(editor instanceof XtextEditor)) {
-            return null;
+    protected IStatus runJob(Element root, IProgressMonitor monitor) {
+        if (!(root instanceof SystemImplementation)) {
+            return new Status(IStatus.ERROR, Activator.PLUGIN_ID,
+                    "Must select an AADL System Implementation");
         }
 
-        XtextEditor xtextEditor = (XtextEditor) editor;
-        Sexp sexp = xtextEditor.getDocument().readOnly(
-                new IUnitOfWork<Sexp, XtextResource>() {
-                    @Override
-                    public Sexp exec(XtextResource state) throws Exception {
-                        return Ast2SexpSwitch.convert(state.getContents().get(0));
-                    }
-                });
+        try {
+            SystemInstance si = null;
+            if (root instanceof SystemImplementation) {
+                final SystemImplementation sysimpl = (SystemImplementation) root;
+                try {
+                    si = InstantiateModel.buildInstanceModelFile(sysimpl);
+                } catch (Exception e) {
+                    Dialog.showError("Model Instantiate", "Error while re-instantiating the model: "
+                            + e.getMessage());
+                    return Status.CANCEL_STATUS;
+                }
+            }
+            
+            System.out.println(InstanceToSexp.convert(si));
+        } catch (Throwable e) {
+            return new Status(IStatus.ERROR, Activator.PLUGIN_ID, 0, e.getMessage(), e);
+        }
+        
+        return Status.OK_STATUS;
+    }
 
-        System.out.println(sexp);
-        return null;
+    @Override
+    protected String getJobName() {
+        return "AADL to Sexp";
     }
 }
