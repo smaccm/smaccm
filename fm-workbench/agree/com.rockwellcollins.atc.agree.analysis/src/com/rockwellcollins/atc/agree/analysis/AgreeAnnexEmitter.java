@@ -829,10 +829,13 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         List<Equation> eqs = new ArrayList<Equation>();
         List<String> props = new ArrayList<String>();
 
+        String lemmaName = "nodeLemma";
+        int lemmaIndex = 0;
         for (NodeStmt stmt : body.getStmts()) {
             if (stmt instanceof NodeLemma) {
                 NodeLemma nodeLemma = (NodeLemma) stmt;
-                String propName = nodeLemma.getStr();
+                //String propName = ((NodeLemma) stmt).getStr();
+                String propName = lemmaName + lemmaIndex++;
                 props.add(propName);
                 IdExpr eqId = new IdExpr(propName);
                 Expr eqExpr = doSwitch(nodeLemma.getExpr());

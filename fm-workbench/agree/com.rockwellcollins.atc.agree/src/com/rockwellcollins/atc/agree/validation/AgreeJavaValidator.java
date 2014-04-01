@@ -945,7 +945,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
             dataClass = dataType.getExtended();
         }
 
-        return new AgreeType("uninterpreted data");
+        return AgreeType.ERROR;
     }
 
     private AgreeType getAgreeType(DataSubcomponentType data) {
@@ -958,7 +958,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
         case "Base_Types::Float":
             return REAL;
         }
-        return new AgreeType("uninterpreted data");
+        return AgreeType.ERROR;
     }
 
     private AgreeType getAgreeType(PropertyStatement propStat) {
