@@ -13,4 +13,7 @@ public class PreferenceConstants {
     public static final String PREF_DEPTH = "inductionDepth";
 
     public static final String PREF_TIMEOUT = "timeout";
+    
+    public static final String PREF_SOLVER = "solver";
+    
 }

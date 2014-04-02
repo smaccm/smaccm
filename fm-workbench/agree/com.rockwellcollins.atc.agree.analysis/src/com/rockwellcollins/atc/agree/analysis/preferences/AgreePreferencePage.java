@@ -1,8 +1,11 @@
 package com.rockwellcollins.atc.agree.analysis.preferences;
 
+import jkind.SolverOption;
+
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.IntegerFieldEditor;
+import org.eclipse.jface.preference.RadioGroupFieldEditor;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
@@ -47,6 +50,18 @@ public class AgreePreferencePage extends FieldEditorPreferencePage implements
                 "Maximum depth for k-induction", getFieldEditorParent()));
         addField(new NonNegativeIntegerFieldEditor(PreferenceConstants.PREF_TIMEOUT,
                 "Timeout per layer in seconds", getFieldEditorParent()));
+        
+        String[][] solverValues = new String[3][2];
+        solverValues[0][0] = SolverOption.YICES.name();
+        solverValues[0][1] = SolverOption.YICES.name();
+        solverValues[1][0] = SolverOption.Z3.name();
+        solverValues[1][1] = SolverOption.Z3.name();
+        solverValues[2][0] = SolverOption.CVC4.name();
+        solverValues[2][1] = SolverOption.CVC4.name();
+        
+        addField(new RadioGroupFieldEditor(PreferenceConstants.PREF_SOLVER, 
+        		"Which solver to use", 3, solverValues, getFieldEditorParent()));
+        
     }
 
     private class NonNegativeIntegerFieldEditor extends IntegerFieldEditor {
