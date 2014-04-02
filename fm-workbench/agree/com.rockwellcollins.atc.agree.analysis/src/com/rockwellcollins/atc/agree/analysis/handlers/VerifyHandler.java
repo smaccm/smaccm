@@ -389,6 +389,7 @@ public abstract class VerifyHandler extends AadlHandler {
         if (prefs.getBoolean(PreferenceConstants.PREF_BLAME_CEX)) {
             api.setIntervalGeneralization();
         }
+        
         switch(prefs.getString(PreferenceConstants.PREF_SOLVER)){
         case "YICES":
             api.setSolver(SolverOption.YICES);

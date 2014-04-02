@@ -66,6 +66,7 @@ import org.osate.aadl2.StringLiteral;
 import org.osate.aadl2.Subcomponent;
 import org.osate.aadl2.ThreadSubcomponent;
 import org.osate.aadl2.instance.ComponentInstance;
+import org.osate.aadl2.instance.FeatureInstance;
 import org.osate.aadl2.modelsupport.resources.OsateResourceUtil;
 import org.osate.aadl2.properties.PropertyDoesNotApplyToHolderException;
 import org.osate.annexsupport.AnnexUtil;
@@ -959,8 +960,24 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
                     compInst = compInst.findSubcomponentInstance((Subcomponent)base);
                     nestId = nestId.getSub();
                 }else{
-                    assert(nestId.getSub() == null);
-                    return compInst.findFeatureInstance((Feature)base);
+                    assert(base instanceof FeatureGroup);
+                    FeatureInstance featInst = compInst.findFeatureInstance((Feature)base);
+                    
+                    while(nestId.getSub() != null){
+                    	nestId = nestId.getSub();
+                    	assert(nestId.getBase() instanceof Feature);
+                    	Feature subFeat = (Feature)nestId.getBase();
+                    	FeatureInstance eqFeatInst = null;
+                    	for(FeatureInstance subFeatInst : featInst.getFeatureInstances()){
+                    		if(subFeatInst.getFeature().equals(subFeat)){
+                    			eqFeatInst = subFeatInst;
+                    			break;
+                    		}
+                    	}
+                    	featInst = eqFeatInst;
+                    }
+                    
+                    return featInst;
                 }
                 
             }
@@ -1448,6 +1465,7 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         IdExpr destId = new IdExpr(destVar.jKindStr);
         Equation connEq = new Equation(destId, connExpr);
 
+        System.out.println(connEq);
         connExpressions.add(connEq);
         
     }
