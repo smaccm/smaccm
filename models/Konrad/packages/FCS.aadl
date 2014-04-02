@@ -1,0 +1,45 @@
+package FCS
+public
+  with Base_Types;
+  with Konrad_Properties;
+  
+  system Side
+    features
+      other_side_pilot_flying: in data port Base_Types::Boolean;
+      transfer_switch: in data port Base_Types::Boolean;
+      pilot_flying_side: out data port Base_Types::Boolean;
+  end Side;
+	
+  system Channel
+    features
+      input: in data port Base_Types::Boolean;
+      output: out data port Base_Types::Boolean;
+  end Channel;
+  
+  system Top
+    features
+      transfer_switch: in data port Base_Types::Boolean;
+  end Top;
+  
+  system implementation Top.impl
+    subcomponents
+      left_side: system Side {
+      	Konrad_Properties::Initial_Pilot_Flying_Side => true;
+      };
+      right_side: system Side {
+      	Konrad_Properties::Initial_Pilot_Flying_Side => false;
+      };
+      left_right: system Channel;
+      right_left: system Channel;
+      
+    connections
+      c1 : port left_side.pilot_flying_side -> left_right.input;
+      c2 : port left_right.output -> right_side.other_side_pilot_flying;
+      
+      c3 : port right_side.pilot_flying_side -> right_left.input;
+      c4 : port right_left.output -> left_side.other_side_pilot_flying;
+      
+      c5 : port transfer_switch -> left_side.transfer_switch;
+      c6 : port transfer_switch -> right_side.transfer_switch;
+  end Top.impl;
+end FCS;

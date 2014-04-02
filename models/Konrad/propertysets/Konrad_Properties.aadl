@@ -1,0 +1,3 @@
+property set Konrad_Properties is
+  Initial_Pilot_Flying_Side: aadlboolean applies to (system, process, thread);
+end Konrad_Properties;

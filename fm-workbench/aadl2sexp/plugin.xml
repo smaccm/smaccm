@@ -35,6 +35,17 @@
             </command>
          </toolbar>
       </menuContribution>
+
+      <menuContribution
+            allPopups="false"
+            locationURI="popup:org.osate.xtext.aadl2.ui.outline?after=additions">
+        <command
+              commandId="com.rockwellcollins.atc.aadl2sexp.commands.aadl2sexpCommand"
+              icon="icons/sample.gif"
+              id="com.rockwellcollins.atc.aadl2sexp.menus.aadl2sexp"
+              style="push">
+        </command>
+      </menuContribution>
    </extension>
 
 </plugin>
