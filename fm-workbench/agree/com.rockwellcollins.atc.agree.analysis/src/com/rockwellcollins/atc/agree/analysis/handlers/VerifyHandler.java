@@ -389,7 +389,7 @@ public abstract class VerifyHandler extends AadlHandler {
         if (prefs.getBoolean(PreferenceConstants.PREF_BLAME_CEX)) {
             api.setIntervalGeneralization();
         }
-        api.setSolver(SolverOption.Z3);
+        //api.setSolver(SolverOption.Z3);
         
         api.setN(prefs.getInt(PreferenceConstants.PREF_DEPTH));
         api.setTimeout(prefs.getInt(PreferenceConstants.PREF_TIMEOUT));
