@@ -134,13 +134,13 @@ system Formation
 				((pend_leader != none) and (pend_right != none) and (pend_left != none));
 					
 	**};
-		
+		 
 end Formation; 
 
 system implementation Formation.impl
 	subcomponents
 		VA: system Vehicle.impl {QuasiTestProps::Init_State => 0;};
-		VB: system Vehicle.impl {QuasiTestProps::Init_State => 1;};
+		VB: system Vehicle.impl {QuasiTestProps::Init_State => 1;}; 
 		VC: system Vehicle.impl {QuasiTestProps::Init_State => 2;};
 
 	connections

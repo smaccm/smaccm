@@ -56,6 +56,7 @@ import org.osate.aadl2.EventDataPort;
 import org.osate.aadl2.Feature;
 import org.osate.aadl2.FeatureGroup;
 import org.osate.aadl2.FeatureGroupType;
+import org.osate.aadl2.FeatureType;
 import org.osate.aadl2.IntegerLiteral;
 import org.osate.aadl2.NamedElement;
 import org.osate.aadl2.NamedValue;
@@ -66,6 +67,7 @@ import org.osate.aadl2.StringLiteral;
 import org.osate.aadl2.Subcomponent;
 import org.osate.aadl2.ThreadSubcomponent;
 import org.osate.aadl2.instance.ComponentInstance;
+import org.osate.aadl2.instance.ConnectionInstance;
 import org.osate.aadl2.instance.FeatureInstance;
 import org.osate.aadl2.modelsupport.resources.OsateResourceUtil;
 import org.osate.aadl2.properties.PropertyDoesNotApplyToHolderException;
@@ -106,6 +108,8 @@ import com.rockwellcollins.atc.agree.agree.SpecStatement;
 import com.rockwellcollins.atc.agree.agree.SynchStatement;
 import com.rockwellcollins.atc.agree.agree.ThisExpr;
 import com.rockwellcollins.atc.agree.agree.util.AgreeSwitch;
+import com.rockwellcollins.atc.agree.analysis.AgreeConnectionEnd.ConnType;
+import com.rockwellcollins.atc.agree.analysis.AgreeConnectionEnd.Direction;
 import com.rockwellcollins.atc.agree.analysis.AgreeLayout.SigType;
 
 public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
@@ -119,6 +123,9 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
     public final List<Equation> constExpressions = new ArrayList<>();
     public final List<Node> nodeDefExpressions = new ArrayList<>();
     public final List<Equation> connExpressions = new ArrayList<>();
+    //this set keeps track of all the left hand sides of connection
+    //expressions
+    public final Set<String> connLHS = new HashSet<>();
     public final String sysGuarTag = "__SYS_GUARANTEE_";
     
     //reference map used for hyperlinking from the console
@@ -184,10 +191,12 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
     private int synchrony = 0;
     private List<IdExpr> calendar = new ArrayList<IdExpr>();
     private boolean simultaneity = true;
+	private FeatureToConnectionsMap featToConnMap;
 
     public AgreeAnnexEmitter(ComponentInstance compInst,
             AgreeLayout layout,
             String category,
+            FeatureToConnectionsMap featToConnMap, 
             String jPrefix,
             String aPrefix,
             boolean ignoreLifts,
@@ -197,6 +206,7 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         this.curInst = compInst;
         this.category = category;
         this.ignoreLifts  = ignoreLifts;
+        this.featToConnMap = featToConnMap;
         
         initTypeMap.put("bool", initBool);
         initTypeMap.put("real", initReal);
@@ -210,8 +220,9 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         
         jKindNameTag = jPrefix;
         aadlNameTag = aPrefix;
-        
+                
         ComponentClassifier compClass = compInst.getComponentClassifier();
+                
         //populates the connection equivalences if we are at the top level
         //this is only here to make sure that "LIFT" statements work correctly
         if(topLevel){
@@ -313,7 +324,7 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
 
 		   	internalVars.add(queueInputVar);
 		   	Equation multEq = new Equation(queueInputId, queueMultCall);
-		   	connExpressions.add(multEq);	   	
+		   	addConnection(multEq);	   	
 		   	
 		   	//add all the stuff for the queuenode call
 		   	String jCat =  firstQueue.destCategory == null ? "" : firstQueue.destCategory+dotChar;
@@ -385,7 +396,7 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
 		   	queueLhs.add(queueElsId);
 		   	queueLhs.add(new IdExpr(destStr));
 		   	Equation queueEq = new Equation(queueLhs, queueCall);
-		   	connExpressions.add(queueEq);
+		   	addConnection(queueEq);
 
 	   	}
 	   
@@ -537,7 +548,7 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         ComponentType subCompType = subCompImpl.getType();
 
         AgreeAnnexEmitter subEmitter = new AgreeAnnexEmitter(
-                subCompInst, layout, category,
+                subCompInst, layout, category, featToConnMap,
                 jKindNameTag + subComp.getName() + dotChar,
                 aadlNameTag + subComp.getFullName() + ".", false, true);
         
@@ -1171,9 +1182,7 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
     
     //********* begin lustre generation *******//
     
-    // fills the connExpressions lists with expressions
-    // that equate variables that are connected to one another
-    private void setConnExprs(ComponentImplementation compImpl, String initJStr, String initAStr) {
+    private void setConnExprs2(ComponentImplementation compImpl, String initJStr, String initAStr) {
 
         // use for checking delay
         Property commTimingProp = EMFIndexRetrieval.getPropertyDefinitionInWorkspace(
@@ -1243,8 +1252,170 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         }
     }
     
+    // fills the connExpressions lists with expressions
+    // that equate variables that are connected to one another
+    private void setConnExprs(ComponentImplementation compImpl, String initJStr, String initAStr) {
+
+        // use for checking delay
+        Property commTimingProp = EMFIndexRetrieval.getPropertyDefinitionInWorkspace(
+                OsateResourceUtil.getResourceSet(), "Communication_Properties::Timing");
+
+        for (Connection conn : compImpl.getAllConnections()) {
+
+            ConnectedElement absConnDest = conn.getDestination();
+            ConnectedElement absConnSour = conn.getSource();
+
+            boolean delayed = false;
+            try{
+                EnumerationLiteral lit = PropertyUtils.getEnumLiteral(conn, commTimingProp);
+                delayed = lit.getName().equals("delayed");
+            }catch(PropertyDoesNotApplyToHolderException e){
+                delayed = false;
+            }
+
+            ConnectionEnd destConn = absConnDest.getConnectionEnd();
+            ConnectionEnd sourConn = absConnSour.getConnectionEnd();
+            Context destContext = absConnDest.getContext();
+            Context sourContext = absConnSour.getContext();
+
+            //only make connections to things that have annexs
+            if(destContext != null && destContext instanceof Subcomponent){
+            	if(!AgreeEmitterUtilities.containsAgreeAnnex((Subcomponent)destContext)){
+            		continue;
+            	}
+            }
+            if(sourContext != null && sourContext instanceof Subcomponent){
+            	if(!AgreeEmitterUtilities.containsAgreeAnnex((Subcomponent)sourContext)){
+            		continue;
+            	}
+            }
+            
+            //List<AgreeConnectionEnd> conns = getAgreeConnections(absConnSour, absConnDest);
+            
+            Feature port = null;
+            if (destConn != null) {
+            	if(!(destConn instanceof Feature)){ //we don't handle data accesses
+            		continue;
+            	}
+            	
+                port = (Feature)destConn;
+                if(port instanceof FeatureGroup){
+                    FeatureGroupType featType = ((FeatureGroup)port).getAllFeatureGroupType();
+                    for(DataPort dPort: featType.getOwnedDataPorts()){
+                        port = dPort;
+                        setConnExpr(port.getName(), initJStr, initAStr, port, sourContext, sourConn, destContext, destConn, delayed);
+                    }
+                }else{
+                    setConnExpr("", initJStr, initAStr, port, sourContext, sourConn, destContext, destConn, delayed);
+                }
+            } else if (sourConn != null) {
+            	if(!(sourConn instanceof Feature)){ //we don't handle data accesses
+            		continue;
+            	}
+                port = (Feature)sourConn;
+                if(port instanceof FeatureGroup){
+                    FeatureGroupType featType = ((FeatureGroup)port).getAllFeatureGroupType();
+                    for(DataPort dPort: featType.getOwnedDataPorts()){
+                        port = dPort;
+                        setConnExpr(port.getName(), initJStr, initAStr, port, sourContext, sourConn, destContext, destConn, delayed);
+                    }
+                }else{
+                    setConnExpr("", initJStr, initAStr, port, sourContext, sourConn, destContext, destConn, delayed);
+                }
+            }
+        }
+    }
     
-    private void setConnExpr(String prefix,
+    
+    private List<AgreeConnectionEnd> getAgreeConnections(
+			ConnectedElement absConnSour, ConnectedElement absConnDest) {
+		
+    	ConnectionEnd destConn = absConnDest.getConnectionEnd();
+        ConnectionEnd sourConn = absConnSour.getConnectionEnd();
+        Context destContext = absConnDest.getContext();
+        Context sourContext = absConnSour.getContext();
+        
+        Feature port = (Feature)(destConn == null ? sourConn : destConn);
+    	List<AgreeConnectionEnd> conns = getAgreeConnections_helper("", port);
+    	
+		return conns;
+	}
+    
+    private List<AgreeConnectionEnd> getAgreeConnections_helper(String prefix, Feature port){
+    	
+    	List<AgreeConnectionEnd> agreeConns = new ArrayList<>();
+    	if(port instanceof FeatureGroup){
+    		FeatureGroup featGroup = (FeatureGroup)port;
+    		FeatureGroupType featType = featGroup.getAllFeatureGroupType();
+    		
+    		for(Feature feat : featType.getAllFeatures()){
+    			agreeConns.addAll(getAgreeConnections_helper(feat.getName(), feat));
+    		}
+    		
+    	}else if(port instanceof DataPort){
+    		
+    		DataPort dataPort = (DataPort)port;
+    		DataSubcomponentType dataClass = dataPort.getDataFeatureClassifier();
+    		Set<AgreeVarDecl> tempSet = new HashSet<>();
+    		
+    		if(dataClass instanceof DataType){
+    			AgreeVarDecl agreeVar =
+    				new AgreeVarDecl("",
+    								 "",
+    								 AgreeEmitterUtilities.dataTypeToVarType((DataType)dataClass));
+    			tempSet.add(agreeVar);
+    		}else{
+    			getAllDataNames((DataImplementation)dataClass, tempSet);
+    		}	
+			ConnType connType;
+			
+			if(port instanceof EventDataPort){
+				connType = AgreeConnectionEnd.ConnType.QUEUE;
+			}else{
+				connType = AgreeConnectionEnd.ConnType.IMMEDIATE;
+			}
+			
+			Direction direction = AgreeConnectionEnd.Direction.IN;
+			if(dataPort.getDirection() == DirectionType.IN){
+				direction = AgreeConnectionEnd.Direction.IN;
+			}else if (dataPort.getDirection() == DirectionType.OUT){
+				direction = AgreeConnectionEnd.Direction.OUT;
+			}else{
+				throw new AgreeException("unable to handle in-out direction type on port '"+port.getName()+"'");
+			}
+			
+			for(AgreeVarDecl var : tempSet){
+				AgreeConnectionEnd agreeConn = new AgreeConnectionEnd();
+				agreeConn.varType = var.type;
+				agreeConn.lustreString = var.jKindStr;
+				agreeConn.aadlString = var.aadlStr;
+				agreeConn.connType = connType;
+				agreeConn.direction = direction; 
+				agreeConns.add(agreeConn);
+			}
+    		
+    	}else{
+    		throw new AgreeException("unsure how to handled port '"+port.getName()+"'");
+    	}
+    	
+    	for(AgreeConnectionEnd agreeConn : agreeConns){
+    		if(agreeConn.lustreString == ""){
+    			agreeConn.lustreString = prefix;
+    		}else{
+    			agreeConn.lustreString = prefix + dotChar + agreeConn.lustreString;
+    		}
+    		if(agreeConn.aadlString == ""){
+    			agreeConn.aadlString = prefix;
+    		}else{
+        		agreeConn.aadlString = prefix + "." + agreeConn.aadlString;
+    		}
+    	}
+    	
+    	
+    	return agreeConns;
+    }
+
+	private void setConnExpr(String prefix,
             String initJStr,
             String initAStr,
             Feature port,
@@ -1466,11 +1637,10 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         Equation connEq = new Equation(destId, connExpr);
 
         System.out.println(connEq);
-        connExpressions.add(connEq);
+        addConnection(connEq);
         
     }
     
-    //helper method to above
     private void getAllDataNames(DataImplementation dataImpl, Set<AgreeVarDecl> subStrTypes) {
 
         for (Subcomponent sub : dataImpl.getAllSubcomponents()) {
@@ -1487,7 +1657,6 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
                         subStrTypes.add(newStrType);
                     }
                 } else {
-                    assert (subImpl instanceof DataType);
                     AgreeVarDecl newStrType = AgreeEmitterUtilities.dataTypeToVarType((DataSubcomponent) sub);
                     if (newStrType != null && newStrType.type != null) {
                         subStrTypes.add(newStrType);
@@ -2059,6 +2228,24 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
     	}
 
     	return andEquivExpr;
+    }
+    
+    private void addConnection(Equation connEq){
+    	
+    	if(connEq.lhs.size() != 1){
+    		throw new AgreeException("attemp to add connection expression with a"
+    				+ "left hand side not equal to one");
+    	}
+    	
+    	String connStr = connEq.lhs.get(0).id;
+    	
+    	if(connLHS.contains(connStr)){
+    		throw new AgreeException("multiple assignments of connection variable '"+connStr+"'");
+    	}
+
+    	connLHS.add(connStr);
+    	connExpressions.add(connEq);
+    	
     }
         
 }

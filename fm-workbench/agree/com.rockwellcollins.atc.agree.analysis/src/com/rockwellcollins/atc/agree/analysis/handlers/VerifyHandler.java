@@ -46,6 +46,7 @@ import com.rockwellcollins.atc.agree.analysis.Activator;
 import com.rockwellcollins.atc.agree.analysis.AgreeEmitterUtilities;
 import com.rockwellcollins.atc.agree.analysis.AgreeException;
 import com.rockwellcollins.atc.agree.analysis.AgreeGenerator;
+import com.rockwellcollins.atc.agree.analysis.FeatureToConnectionsMap;
 import com.rockwellcollins.atc.agree.analysis.preferences.PreferenceConstants;
 import com.rockwellcollins.atc.agree.analysis.views.AgreeResultsLinker;
 import com.rockwellcollins.atc.agree.analysis.views.AgreeResultsView;
@@ -53,6 +54,7 @@ import com.rockwellcollins.atc.agree.analysis.views.AgreeResultsView;
 public abstract class VerifyHandler extends AadlHandler {
     private AgreeResultsLinker linker = new AgreeResultsLinker();
     private Queue<JKindResult> queue = new ArrayDeque<>();
+    private FeatureToConnectionsMap featToConnMap;
     
     private static final String RERUN_ID = "com.rockwellcollins.atc.agree.analysis.commands.rerunAgree";
     private IHandlerActivation rerunActivation;
@@ -83,6 +85,7 @@ public abstract class VerifyHandler extends AadlHandler {
                 }
             }
             
+            featToConnMap = new FeatureToConnectionsMap(si);
             AnalysisResult result;
             CompositeAnalysisResult wrapper = new CompositeAnalysisResult("");
             LinkedList<NamedElement> modelParents = new LinkedList<>();
@@ -164,7 +167,7 @@ public abstract class VerifyHandler extends AadlHandler {
 
     private AnalysisResult createGuaranteeVerification(ComponentInstance ci) {
         
-        AgreeGenerator emitter = new AgreeGenerator(ci);
+        AgreeGenerator emitter = new AgreeGenerator(ci, featToConnMap);
         Program program = emitter.evaluate();
         if(program == null){
         	return null;
@@ -209,7 +212,7 @@ public abstract class VerifyHandler extends AadlHandler {
         //AgreeEmitter emitter = new AgreeEmitter(ci, modelParents, context);
         //Program program = emitter.evaluate();
 
-        AgreeGenerator emitter = new AgreeGenerator(ci);
+        AgreeGenerator emitter = new AgreeGenerator(ci, featToConnMap);
         Program program = emitter.evaluate();
         if(program == null){
         	return null;
@@ -252,7 +255,7 @@ public abstract class VerifyHandler extends AadlHandler {
         //AgreeEmitter emitter = new AgreeEmitter(ci, modelParents, context);
         //Program program = emitter.evaluate();
         
-        AgreeGenerator emitter = new AgreeGenerator(ci);
+        AgreeGenerator emitter = new AgreeGenerator(ci, featToConnMap);
         Program program = emitter.evaluate();
         if(program == null){
         	return null;

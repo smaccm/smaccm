@@ -4,6 +4,10 @@ public
   with DATATYPES;
  
   system UAS
+  
+    annex agree {**
+      guarantee "asfd": true;
+    **};
   end UAS;
   
   system implementation UAS.Impl
