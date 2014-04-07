@@ -222,20 +222,9 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
                 
         ComponentClassifier compClass = compInst.getComponentClassifier();
                 
-        //get information about all the features of this components
-        for(FeatureInstance featInst : compInst.getFeatureInstances()){
-        	List<AgreeFeature> featList = getAgreeFeatures("",featInst);
-        	featInstToAgreeFeatMap.put(featInst, featList);
-        }
-        
-        //get information about all the features of this components subcomponents
-        for(ComponentInstance subCompInst : compInst.getComponentInstances()){
-        	for(FeatureInstance featInst : subCompInst.getFeatureInstances()){
-            	List<AgreeFeature> featList = getAgreeFeatures("",featInst);
-            	featInstToAgreeFeatMap.put(featInst, featList);
-            }
-        }
-        
+        //get information about all the features of this component and its subcomponents
+        recordFeatures(compInst, layout, category);
+
         //populates the connection equivalences if we are at the top level
         //this is only here to make sure that "LIFT" statements work correctly
         if(topLevel){
@@ -245,6 +234,48 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         }
         
     }
+
+	private void recordFeatures(ComponentInstance compInst, AgreeLayout layout,
+			String category) {
+		for(FeatureInstance featInst : compInst.getFeatureInstances()){
+        	List<AgreeFeature> featList = getAgreeFeatures(category, featInst);
+        	//add features to the correct input var or output var location
+        	for(AgreeFeature agreeFeat : featList){
+        		AgreeVarDecl varDecl = new AgreeVarDecl(agreeFeat.lustreString,
+        				agreeFeat.aadlString, agreeFeat.varType);
+        		switch(agreeFeat.direction){
+        		case IN:
+        			inputVars.add(varDecl);
+        			layout.addElement(category, agreeFeat.aadlString, AgreeLayout.SigType.INPUT);
+        			break;
+        		case OUT:
+        			outputVars.add(varDecl);
+        			layout.addElement(category, agreeFeat.aadlString, AgreeLayout.SigType.OUTPUT);
+        		}
+        		
+        		addToRenaming(agreeFeat.lustreString, agreeFeat.aadlString);
+	   			refMap.put(agreeFeat.aadlString, agreeFeat.feature);
+        	}
+        	
+        	featInstToAgreeFeatMap.put(featInst, featList);
+        }
+        
+        //get information about all the features of this components subcomponents
+        for(ComponentInstance subCompInst : compInst.getComponentInstances()){
+        	for(FeatureInstance featInst : subCompInst.getFeatureInstances()){
+            	List<AgreeFeature> featList = getAgreeFeatures(subCompInst.getName() ,featInst);
+            	for(AgreeFeature agreeFeat : featList){
+            		AgreeVarDecl varDecl = new AgreeVarDecl(agreeFeat.lustreString,
+            				agreeFeat.aadlString, agreeFeat.varType);
+            		internalVars.add(varDecl);
+            		layout.addElement(category, agreeFeat.aadlString, AgreeLayout.SigType.OUTPUT);
+            		addToRenaming(agreeFeat.lustreString, agreeFeat.aadlString);
+            		refMap.put(agreeFeat.aadlString, agreeFeat.feature);
+            	}
+            	featInstToAgreeFeatMap.put(featInst, featList);
+        	}
+        }
+	}
     
     private void addToRenamingAll(Map<String, String> renamings) {
 		for(Entry<String,String> entry :renamings.entrySet()){
@@ -1093,6 +1124,7 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
 
             if (!inputVars.contains(tempStrType) && !internalVars.contains(tempStrType)) {
 
+            	assert(false); //this code should now be unreachable
                 log.logWarning("In component '"
                         + orgId.getBase().getContainingClassifier().getFullName() + "', Port '"
                         + jKindVar + "' is not connected to anything. Considering it to be"
@@ -1303,7 +1335,8 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
             	}
             }
             
-            //List<AgreeFeature> conns = getAgreeConnections(absConnSour, absConnDest);
+            //makeConnectionExpressions(absConnSour, absConnDest);
+            
             
             Feature port = null;
             if (destConn != null) {
@@ -1342,7 +1375,7 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
     }
     
     
-    private List<AgreeFeature> getAgreeConnections(
+    private void makeConnectionExpressions(
 			ConnectedElement absConnSour, ConnectedElement absConnDest) {
 		
     	ConnectionEnd destConn = absConnDest.getConnectionEnd();
@@ -1350,65 +1383,106 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         Context destContext = absConnDest.getContext();
         Context sourContext = absConnSour.getContext();
         
-        String sourName = (sourContext == null) ? this.curComp.getName() : sourContext.getName();
-        String destName = (destContext == null) ? this.curComp.getName() : destContext.getName();
+        String sourName = (sourContext == null) ? category : sourContext.getName();
+        String destName = (destContext == null) ? category : destContext.getName();
 
+        ComponentInstance sourInst = (sourContext == null) ? curInst : curInst.findSubcomponentInstance((Subcomponent)sourContext);
+        ComponentInstance destInst = (sourContext == null) ? curInst : curInst.findSubcomponentInstance((Subcomponent)destContext);
+
+        //get the corresponding feature instances
+        FeatureInstance sourFeatInst = null;
+        FeatureInstance destFeatInst = null;
+        for(FeatureInstance featInst : sourInst.getFeatureInstances()){
+        	if(featInst.getFeature() == sourConn
+        		|| featInst.getFeature() == destConn){
+        		sourFeatInst = featInst;
+        		break;
+        	}
+        }
+        for(FeatureInstance featInst : destInst.getFeatureInstances()){
+        	if(featInst.getFeature() == destConn
+        		|| featInst.getFeature() == sourConn){
+        		destFeatInst = featInst;
+        		break;
+        	}
+        }
+        
         //grabs the subnames for all the connections
-        List<AgreeFeature> conns = getAgreeFeatures("", (FeatureInstance)destConn);
+        List<AgreeFeature> destConns = featInstToAgreeFeatMap.get(destFeatInst);
+        List<AgreeFeature> sourConns = featInstToAgreeFeatMap.get(sourFeatInst);
+
     	
         boolean fReverseConn = (sourContext == null);
-        String lhsLustreName;
-        String rhsLustreName;
-        String lhsAadlName;
-        String rhsAadlName;
-        for(AgreeFeature agreeConn : conns){
+        String lhsLustreName = null;
+        String rhsLustreName = null;
+        String lhsAadlName = null;
+        String rhsAadlName = null;
+        int i;
+        assert(destConns.size() == sourConns.size());
+        for(i = 0; i < destConns.size(); i++){
+        	AgreeFeature agreeDestConn = destConns.get(i);
+        	AgreeFeature agreeSourConn = sourConns.get(i);
+        	
+        	assert(agreeDestConn.lustreString == agreeSourConn.lustreString);
+        	assert(agreeDestConn.aadlString == agreeSourConn.aadlString);
+        	assert(agreeDestConn.varType == agreeSourConn.varType);
         	
         	if(fReverseConn){
-        		switch(agreeConn.direction){
+        		switch(agreeDestConn.direction){
         		case IN:
-        			lhsLustreName = destName + agreeConn.lustreString;
-        			lhsAadlName = destName + agreeConn.aadlString;
-        			rhsLustreName = sourName + agreeConn.lustreString;
-        			rhsAadlName = sourName + agreeConn.aadlString;
+        			lhsLustreName = destName + agreeDestConn.lustreString;
+        			lhsAadlName = destName + agreeDestConn.aadlString;
+        			rhsLustreName = sourName + agreeSourConn.lustreString;
+        			rhsAadlName = sourName + agreeSourConn.aadlString;
+        			break;
         		case OUT:
-        			lhsLustreName = sourName + agreeConn.lustreString;
-        			lhsAadlName = sourName + agreeConn.aadlString;
-        			rhsLustreName = destName + agreeConn.lustreString;
-        			rhsAadlName = destName + agreeConn.aadlString;
+        			lhsLustreName = sourName + agreeSourConn.lustreString;
+        			lhsAadlName = sourName + agreeSourConn.aadlString;
+        			rhsLustreName = destName + agreeDestConn.lustreString;
+        			rhsAadlName = destName + agreeDestConn.aadlString;
         		}
         	}else{
-        		switch(agreeConn.direction){
+        		assert(sourContext != null);
+        		switch(agreeDestConn.direction){
         		case IN:
-        			lhsLustreName = sourName + agreeConn.lustreString;
-        			lhsAadlName = sourName + agreeConn.aadlString;
-        			rhsLustreName = destName + agreeConn.lustreString;
-        			rhsAadlName = destName + agreeConn.aadlString;
+        			lhsLustreName = sourName + agreeSourConn.lustreString;
+        			lhsAadlName = sourName + agreeSourConn.aadlString;
+        			rhsLustreName = destName + agreeDestConn.lustreString;
+        			rhsAadlName = destName + agreeDestConn.aadlString;
+        			break;
         		case OUT:
-        			lhsLustreName = destName + agreeConn.lustreString;
-        			lhsAadlName = destName + agreeConn.aadlString;
-        			rhsLustreName = sourName + agreeConn.lustreString;
-        			rhsLustreName = sourName + agreeConn.aadlString;
+        			lhsLustreName = destName + agreeDestConn.lustreString;
+        			lhsAadlName = destName + agreeDestConn.aadlString;
+        			rhsLustreName = sourName + agreeSourConn.lustreString;
+        			rhsAadlName = sourName + agreeSourConn.aadlString;
         		}
         	}
         	
-        	//if(agreeConn.connType == AgreeConnectionEnd.ConnType.QUEUE){
-        	//	AgreeQueueElement agreeQueueElem = new AgreeQueueElement(sourVar.jKindStr, 
-        	//			sourVar.aadlStr, 
-        	//			destVar.jKindStr, 
-        	//			destVar.aadlStr, 
-        	//			new NamedType(destVar.type),
-        	//			(EventDataPort)sourConn,
-        	//			(EventDataPort)destConn,
-        	//			sourCategory, 
-        	//			destCategory, 
-        	//			queueSize);
-        	//}
-        	
-        	
+        	if(agreeDestConn.connType == AgreeFeature.ConnType.QUEUE){
+        		AgreeQueueElement agreeQueueElem = new AgreeQueueElement(rhsLustreName, 
+        				rhsAadlName, 
+        				lhsLustreName, 
+        				lhsAadlName, 
+        				new NamedType(agreeDestConn.varType),
+        				(EventDataPort)agreeSourConn.feature,
+        				(EventDataPort)agreeDestConn.feature,
+        				sourInst.getName(), 
+        				destInst.getName(), 
+        				agreeDestConn.queueSize);
+        		
+        		if(queueMap.containsKey(lhsLustreName)){
+        			List<AgreeQueueElement> queues = queueMap.get(lhsLustreName);
+        			queues.add(agreeQueueElem);
+        		}else{
+        			List<AgreeQueueElement> queues = new ArrayList<AgreeQueueElement>();
+        			queues.add(agreeQueueElem);
+        			queueMap.put(lhsLustreName, queues);
+        		}
+        	}else{
+        		Equation connEq = new Equation(new IdExpr(lhsLustreName), new IdExpr(rhsLustreName));
+        		connExpressions.add(connEq);
+        	}
         }
-        
-        
-		return conns;
 	}
     
     private List<AgreeFeature> getAgreeFeatures(String prefix, FeatureInstance featInst){
@@ -1435,8 +1509,6 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
     				}
     			}
     		}
-    		
-    		
     		
     	}else if(featInst.getCategory() == FeatureCategory.DATA_PORT
     			|| featInst.getCategory() == FeatureCategory.EVENT_DATA_PORT){
@@ -1480,6 +1552,7 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
 			
 			for(AgreeVarDecl var : tempSet){
 				AgreeFeature agreeConn = new AgreeFeature();
+				agreeConn.feature = featInst.getFeature();
 				agreeConn.varType = var.type;
 				agreeConn.lustreString = var.jKindStr;
 				agreeConn.aadlString = var.aadlStr;
