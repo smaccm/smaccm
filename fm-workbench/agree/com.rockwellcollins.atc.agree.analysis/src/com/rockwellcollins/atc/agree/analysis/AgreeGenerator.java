@@ -31,9 +31,8 @@ public class AgreeGenerator {
     private String dotChar = "__";
 	private FeatureToConnectionsMap featToConnMap;
 
-    public AgreeGenerator(ComponentInstance compInst, FeatureToConnectionsMap featToConnMap){
+    public AgreeGenerator(ComponentInstance compInst){
         this.compInst = compInst;
-        this.featToConnMap = featToConnMap;
     }
     
     public Program evaluate(){
@@ -44,7 +43,7 @@ public class AgreeGenerator {
         String category = "";
         
         AgreeAnnexEmitter topEmitter = new AgreeAnnexEmitter(
-                compInst, layout, category, featToConnMap, "", "", true, true);
+                compInst, layout, category, "", "", true, true);
         
         this.topEmitter = topEmitter;
         
@@ -82,7 +81,7 @@ public class AgreeGenerator {
             ComponentImplementation subCompImpl = AgreeEmitterUtilities.getInstanceImplementation(subCompInst);
             category = subCompInst.getQualifiedName();
             AgreeAnnexEmitter subEmitter = new AgreeAnnexEmitter(
-                    subCompInst, layout, category, featToConnMap,
+                    subCompInst, layout, category,
                     subCompInst.getName() + dotChar,
                     subCompInst.getName() + ".", false, false);
 
