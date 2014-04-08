@@ -68,11 +68,11 @@ public class AgreeScopeProvider extends
     
     IScope scope_NamedElement(AgreeContract ctx, EReference ref) {
         EObject container = ctx.eContainer().eContainer();
-        while(!(container instanceof ComponentClassifier)){
+        while(container != null && !(container instanceof ComponentClassifier)){
         	container = container.eContainer();
         }
         
-        if(container instanceof ComponentImplementation){
+        if(container != null && container instanceof ComponentImplementation){
             ComponentType compType = ((ComponentImplementation) container).getType();
             for (AnnexSubclause subclause : AnnexUtil.getAllAnnexSubclauses(compType, AgreePackage.eINSTANCE.getAgreeContractSubclause())) {
                 if (subclause instanceof AgreeContractSubclause) {

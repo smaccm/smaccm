@@ -17,6 +17,11 @@ public class AgreeVarDecl implements Comparable<AgreeVarDecl> {
     }
     
     @Override
+    public String toString(){
+    	return jKindStr;
+    }
+    
+    @Override
     public int hashCode() {
         return jKindStr.hashCode();
     }

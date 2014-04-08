@@ -40,10 +40,10 @@ public class AgreeGenerator {
         ComponentImplementation compImpl = AgreeEmitterUtilities.getInstanceImplementation(compInst);
         ComponentType ct = AgreeEmitterUtilities.getInstanceType(compInst);
         AgreeLayout layout = new AgreeLayout();
-        String category = "__TOP_LEVEL";
+        String topCategory = "__TOP_LEVEL";
         
         AgreeAnnexEmitter topEmitter = new AgreeAnnexEmitter(
-                compInst, layout, category, "", "", true, true);
+                compInst, layout, topCategory, topCategory+dotChar, topCategory+".", true, true);
         
         this.topEmitter = topEmitter;
         
@@ -75,6 +75,7 @@ public class AgreeGenerator {
         		continue;
         	}
         	
+        	String category;
         	boolean foundSubAnnex = false;
             ComponentInstance subCompInst = compInst.findSubcomponentInstance(subComp);
             ct = AgreeEmitterUtilities.getInstanceType(subCompInst);
@@ -82,8 +83,8 @@ public class AgreeGenerator {
             category = subCompInst.getQualifiedName();
             AgreeAnnexEmitter subEmitter = new AgreeAnnexEmitter(
                     subCompInst, layout, category,
-                    subCompInst.getName() + dotChar,
-                    subCompInst.getName() + ".", false, false);
+                    topCategory + dotChar + category + dotChar,
+                    topCategory + "." + category + ".", false, false);
 
             
             //TODO: figure out if we actually want to grab this stuff.
