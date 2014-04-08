@@ -40,7 +40,7 @@ public class AgreeGenerator {
         ComponentImplementation compImpl = AgreeEmitterUtilities.getInstanceImplementation(compInst);
         ComponentType ct = AgreeEmitterUtilities.getInstanceType(compInst);
         AgreeLayout layout = new AgreeLayout();
-        String topCategory = "__TOP_LEVEL";
+        String topCategory = compInst.getName();
         
         AgreeAnnexEmitter topEmitter = new AgreeAnnexEmitter(
                 compInst, layout, topCategory, topCategory+dotChar, topCategory+".", true, true);

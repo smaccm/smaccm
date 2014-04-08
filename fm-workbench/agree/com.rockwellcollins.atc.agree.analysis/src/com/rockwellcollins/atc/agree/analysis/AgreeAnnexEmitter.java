@@ -440,7 +440,6 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
 	   			layout.addElement(category, singleQueueCountVar.aadlStr, AgreeLayout.SigType.INPUT);
 	   			countIds.add(singleQueueCountId);
 	   		}
-
 	   		
 		   	//finally, call the node
 		   	List<IdExpr> queueLhs = new ArrayList<>();
@@ -456,14 +455,14 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
 
 // ************** CASE STATEMENTS **********************
     
-    public Expr getQueueCountID(NamedElement comp){
+    public Expr getQueueCountID(String jVarPrefix, String aVarPrefix, NamedElement comp){
 
     	EventDataPort port = (EventDataPort)comp;
 
     	//a variable of the same name as this should be created by setEventPortQueues()
     	//in the AgreeAnnexEmitter which created "this" AgreeAnnexEmitter
-    	AgreeVarDecl countVar = new AgreeVarDecl(queueCountPrefix+comp.getName(),
-    			queueCountPrefix+comp.getName(),
+    	AgreeVarDecl countVar = new AgreeVarDecl(queueCountPrefix+jVarPrefix,
+    			queueCountPrefix+aVarPrefix,
         		NamedType.INT.toString());
     	
     	IdExpr countIdExpr = new IdExpr(countVar.jKindStr);
@@ -481,15 +480,14 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
 
     }
     
-    
-    public Expr getQueueRemoveID(NamedElement comp){
+    public Expr getQueueRemoveID(String jVarPrefix, String aVarPrefix, NamedElement comp){
 
     	EventDataPort port = (EventDataPort)comp;
 
     	//a variable of the same name as this should be created by setEventPortQueues()
     	//in the AgreeAnnexEmitter which created "this" AgreeAnnexEmitter
-    	AgreeVarDecl removeVar = new AgreeVarDecl(queueOutClockPrefix+comp.getName(),
-    			queueOutClockPrefix+comp.getName(),
+    	AgreeVarDecl removeVar = new AgreeVarDecl(queueOutClockPrefix+jVarPrefix,
+    			queueOutClockPrefix+aVarPrefix,
         		NamedType.BOOL.toString());
     	
     	IdExpr removeIdExpr = new IdExpr(removeVar.jKindStr);
@@ -507,14 +505,14 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
     }
     
 
-    public Expr getQueueInsertID(NamedElement comp){
+    public Expr getQueueInsertID(String jVarPrefix, String aVarPrefix, NamedElement comp){
     	
     	EventDataPort port = (EventDataPort)comp;
     	
     	//a variable of the same name as this should be created by setEventPortQueues()
     	//in the AgreeAnnexEmitter which created "this" AgreeAnnexEmitter
-    	AgreeVarDecl insertVar = new AgreeVarDecl(queueInClockPrefix+comp.getName(),
-    			queueInClockPrefix+comp.getName(),
+    	AgreeVarDecl insertVar = new AgreeVarDecl(queueInClockPrefix+jVarPrefix,
+    			queueInClockPrefix+aVarPrefix,
         		NamedType.BOOL.toString());
     	
     	IdExpr insertIdExpr = new IdExpr(insertVar.jKindStr);
@@ -1103,11 +1101,11 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         	case "CLK":
         		return getClockID(namedEl);
         	case "COUNT":
-        		return getQueueCountID(namedEl);
+        		return getQueueCountID(jVarPrefix, aVarPrefix, namedEl);
         	case "INSERT":
-        		return getQueueInsertID(namedEl);
+        		return getQueueInsertID(jVarPrefix, aVarPrefix, namedEl);
         	case "REMOVE":
-        		return getQueueRemoveID(namedEl);
+        		return getQueueRemoveID(jVarPrefix, aVarPrefix, namedEl);
         	default:
         		throw new AgreeException("use of uknown tag: '"+tag+"' in expression: '"+aadlVar+tag+"'");
         	}
@@ -1234,77 +1232,7 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
     //********* end case statements ************//
     
     //********* begin lustre generation *******//
-    
-    private void setConnExprs2(ComponentImplementation compImpl, String initJStr, String initAStr) {
 
-        // use for checking delay
-        Property commTimingProp = EMFIndexRetrieval.getPropertyDefinitionInWorkspace(
-                OsateResourceUtil.getResourceSet(), "Communication_Properties::Timing");
-
-        for (Connection conn : compImpl.getAllConnections()) {
-
-            ConnectedElement absConnDest = conn.getDestination();
-            ConnectedElement absConnSour = conn.getSource();
-
-            boolean delayed = false;
-            try{
-                EnumerationLiteral lit = PropertyUtils.getEnumLiteral(conn, commTimingProp);
-                delayed = lit.getName().equals("delayed");
-            }catch(PropertyDoesNotApplyToHolderException e){
-                delayed = false;
-            }
-
-            ConnectionEnd destConn = absConnDest.getConnectionEnd();
-            ConnectionEnd sourConn = absConnSour.getConnectionEnd();
-            Context destContext = absConnDest.getContext();
-            Context sourContext = absConnSour.getContext();
-
-            //only make connections to things that have annexs
-            if(destContext != null && destContext instanceof Subcomponent){
-            	if(!AgreeEmitterUtilities.containsAgreeAnnex((Subcomponent)destContext)){
-            		continue;
-            	}
-            }
-            if(sourContext != null && sourContext instanceof Subcomponent){
-            	if(!AgreeEmitterUtilities.containsAgreeAnnex((Subcomponent)sourContext)){
-            		continue;
-            	}
-            }
-            
-            Feature port = null;
-            if (destConn != null) {
-            	if(!(destConn instanceof Feature)){ //we don't handle data accesses
-            		continue;
-            	}
-            	
-                port = (Feature)destConn;
-                if(port instanceof FeatureGroup){
-                    FeatureGroupType featType = ((FeatureGroup)port).getAllFeatureGroupType();
-                    for(DataPort dPort: featType.getOwnedDataPorts()){
-                        port = dPort;
-                        setConnExpr(port.getName(), initJStr, initAStr, port, sourContext, sourConn, destContext, destConn, delayed);
-                    }
-                }else{
-                    setConnExpr("", initJStr, initAStr, port, sourContext, sourConn, destContext, destConn, delayed);
-                }
-            } else if (sourConn != null) {
-            	if(!(sourConn instanceof Feature)){ //we don't handle data accesses
-            		continue;
-            	}
-                port = (Feature)sourConn;
-                if(port instanceof FeatureGroup){
-                    FeatureGroupType featType = ((FeatureGroup)port).getAllFeatureGroupType();
-                    for(DataPort dPort: featType.getOwnedDataPorts()){
-                        port = dPort;
-                        setConnExpr(port.getName(), initJStr, initAStr, port, sourContext, sourConn, destContext, destConn, delayed);
-                    }
-                }else{
-                    setConnExpr("", initJStr, initAStr, port, sourContext, sourConn, destContext, destConn, delayed);
-                }
-            }
-        }
-    }
-    
     // fills the connExpressions lists with expressions
     // that equate variables that are connected to one another
     private void setConnExprs(ComponentImplementation compImpl, String initJStr, String initAStr) {
@@ -1326,8 +1254,6 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
                 delayed = false;
             }
 
-            ConnectionEnd destConn = absConnDest.getConnectionEnd();
-            ConnectionEnd sourConn = absConnSour.getConnectionEnd();
             Context destContext = absConnDest.getContext();
             Context sourContext = absConnSour.getContext();
 
@@ -1343,41 +1269,7 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
             	}
             }
             
-            makeConnectionExpressions(absConnSour, absConnDest);
-            
-            
-//            Feature port = null;
-//            if (destConn != null) {
-//            	if(!(destConn instanceof Feature)){ //we don't handle data accesses
-//            		continue;
-//            	}
-//            	
-//                port = (Feature)destConn;
-//                if(port instanceof FeatureGroup){
-//                    FeatureGroupType featType = ((FeatureGroup)port).getAllFeatureGroupType();
-//                    for(DataPort dPort: featType.getOwnedDataPorts()){
-//                        port = dPort;
-//                        setConnExpr(port.getName(), initJStr, initAStr, port, sourContext, sourConn, destContext, destConn, delayed);
-//                    }
-//                }else{
-//                    setConnExpr("", initJStr, initAStr, port, sourContext, sourConn, destContext, destConn, delayed);
-//                }
-//            } else if (sourConn != null) {
-//            	if(!(sourConn instanceof Feature)){ //we don't handle data accesses
-//            		continue;
-//            	}
-//                port = (Feature)sourConn;
-//                if(port instanceof FeatureGroup){
-//                    FeatureGroupType featType = ((FeatureGroup)port).getAllFeatureGroupType();
-//                    for(DataPort dPort: featType.getOwnedDataPorts()){
-//                        port = dPort;
-//                        setConnExpr(port.getName(), initJStr, initAStr, port, sourContext, sourConn, destContext, destConn, delayed);
-//                    }
-//                }else{
-//                    setConnExpr("", initJStr, initAStr, port, sourContext, sourConn, destContext, destConn, delayed);
-//                }
-//            }
-            
+            makeConnectionExpressions(absConnSour, absConnDest); 
         }
         
     }
@@ -1627,231 +1519,6 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
     	return agreeConns;
     }
 
-	private void setConnExpr(String prefix,
-            String initJStr,
-            String initAStr,
-            Feature port,
-            Context sourContext,
-            ConnectionEnd sourConn,
-            Context destContext, 
-            ConnectionEnd destConn,
-            boolean delayed){
-        
-        
-        DataSubcomponentType dataSub;
-        long queueSize = -1;
-        if(port instanceof DataPort){
-            dataSub = ((DataPort)port).getDataFeatureClassifier();
-        }else if (port instanceof EventDataPort){
-            dataSub = ((EventDataPort)port).getDataFeatureClassifier();
-            Property queueSizeProp = EMFIndexRetrieval.getPropertyDefinitionInWorkspace(
-                    OsateResourceUtil.getResourceSet(), "Communication_Properties::Queue_Size");
-            try{
-            	queueSize = PropertyUtils.getIntegerValue(port, queueSizeProp);
-            }catch(PropertyDoesNotApplyToHolderException e){
-                delayed = false;
-            }
-        }else if (port instanceof BusAccess || port instanceof DataAccess){
-        	//TODO: we don't currently support data or bus accesses
-        	return;
-        }else{
-            dataSub = ((DataAccess)port).getDataFeatureClassifier();
-        }
-        
-        if(dataSub instanceof DataType){
-            //we only want to reason about known types
-            if(AgreeEmitterUtilities.dataTypeToVarType((DataType)dataSub) == null){
-                return;
-            }
-        }
-
-        if (!(dataSub instanceof DataImplementation || dataSub instanceof DataType)) {
-            return;
-        }
-
-        String sourStr;
-        String destStr;
-        String aadlSourStr;
-        String aadlDestStr;
-        if (sourContext != null) { // source is not an end point
-            assert (sourContext instanceof Subcomponent || sourContext instanceof FeatureGroup);
-            sourStr = sourContext.getName() + dotChar + sourConn.getName();
-            aadlSourStr = sourContext.getName() + "." + sourConn.getName();
-        } else {
-            sourStr = sourConn.getName();
-            aadlSourStr = sourConn.getName();
-        }
-
-        if (destContext != null) { // destination is not an end point
-            assert (destContext instanceof Subcomponent || destContext instanceof ThreadSubcomponent);
-            destStr = destContext.getName() + dotChar + destConn.getName();
-            aadlDestStr = destContext.getName() + "." + destConn.getName();
-        } else {
-            destStr = destConn.getName();
-            aadlDestStr = destConn.getName();
-        }
-        
-        if(destConn instanceof FeatureGroup){
-        	destStr = destStr + dotChar + port.getName();
-        	aadlDestStr = aadlDestStr + "." + port.getName();
-        }
-        
-        if(sourConn instanceof FeatureGroup){
-        	sourStr = sourStr + dotChar + port.getName();
-        	aadlSourStr = aadlSourStr + "." + port.getName();
-        }
-        
-        if(dataSub instanceof DataImplementation){
-            Set<AgreeVarDecl> tempSet = new HashSet<AgreeVarDecl>();
-            getAllDataNames((DataImplementation) dataSub, tempSet);
-
-            for (AgreeVarDecl destVarType : tempSet) {
-                //stupid hack to handle feature groups correctly
-                if(!prefix.equals("")){
-                    destVarType.jKindStr = prefix + dotChar + destVarType.jKindStr;
-                    destVarType.aadlStr = prefix + "." + destVarType.aadlStr;
-                }
-                String newDestStr = initJStr + destStr + dotChar + destVarType.jKindStr;
-                String newSourStr = initJStr + sourStr + dotChar + destVarType.jKindStr;
-                String newAADLDestStr = initAStr + aadlDestStr + "." + destVarType.aadlStr;
-                String newAADLSourStr = initAStr + aadlSourStr + "." + destVarType.aadlStr;
-
-                // make an internal var for this
-                destVarType.jKindStr = newDestStr;
-                destVarType.aadlStr = newAADLDestStr;
-                
-                AgreeVarDecl sourVarType = new AgreeVarDecl();
-                sourVarType.jKindStr = newSourStr;
-                sourVarType.aadlStr = newAADLSourStr;
-                sourVarType.type = destVarType.type;
-
-                setConnExpr_Helper(sourContext, sourConn, destContext, destConn, 
-                        destVarType, sourVarType, delayed, queueSize);
-            }
-        }else{
-            AgreeVarDecl destVarType = new AgreeVarDecl();
-            
-            String newDestStr = initJStr + destStr;
-            String newSourStr = initJStr + sourStr;
-            String newAADLDestStr = initAStr + aadlDestStr;
-            String newAADLSourStr = initAStr + aadlSourStr;
-            
-            destVarType.jKindStr = newDestStr;
-            destVarType.aadlStr = newAADLDestStr;
-            destVarType.type = AgreeEmitterUtilities.dataTypeToVarType((DataType)dataSub);
-            
-            AgreeVarDecl sourVarType = new AgreeVarDecl();
-            sourVarType.jKindStr = newSourStr;
-            sourVarType.aadlStr = newAADLSourStr;
-            sourVarType.type = destVarType.type;
-            
-            setConnExpr_Helper(sourContext, sourConn, destContext, destConn, 
-                    destVarType, sourVarType, delayed, queueSize);
-
-        }
-
-    }
-    
-    private void setConnExpr_Helper(Context sourContext,
-            ConnectionEnd sourConn,
-            Context destContext, 
-            ConnectionEnd destConn,
-            AgreeVarDecl destVar,
-            AgreeVarDecl sourVar,
-            boolean delayed,
-            long queueSize){
-        
-    	if(delayed && queueSize != -1){
-    		throw new AgreeException("Connection: "+sourVar.aadlStr+
-    				" is delayed, and also an event port, don't do that please...");
-    	}
-    	
-    	//if this is an event port, save them to turn them into queues later
-    	if(queueSize != -1){
-    		String destCategory = destContext == null ? null : destContext.getName();
-    		String sourCategory = sourContext == null ? null : sourContext.getName();
-
-    		AgreeQueueElement agreeQueueElem = new AgreeQueueElement(sourVar.jKindStr, 
-    				sourVar.aadlStr, 
-    				destVar.jKindStr, 
-    				destVar.aadlStr, 
-    				new NamedType(destVar.type),
-    				(EventDataPort)sourConn,
-    				(EventDataPort)destConn,
-    				sourCategory, 
-    				destCategory, 
-    				queueSize);
-    		
-    		if(queueMap.containsKey(destVar.jKindStr)){
-    			List<AgreeQueueElement> queues = queueMap.get(destVar.jKindStr);
-    			queues.add(agreeQueueElem);
-    		}else{
-    			List<AgreeQueueElement> queues = new ArrayList<AgreeQueueElement>();
-    			queues.add(agreeQueueElem);
-    			queueMap.put(destVar.jKindStr, queues);
-    		}
-       	}
-    	
-        if (destContext != null) {
-            layout.addElement(destContext.getName(), destVar.aadlStr,
-                    AgreeLayout.SigType.OUTPUT);
-        }else{
-        	layout.addElement(this.category, destVar.aadlStr,
-                    AgreeLayout.SigType.OUTPUT);
-        }
-
-        refMap.put(destVar.aadlStr, destConn);
-        addToRenaming(destVar.jKindStr, destVar.aadlStr);
-        internalVars.add(destVar);
-
-
-        layout.addElement(category, sourVar.aadlStr,
-                AgreeLayout.SigType.INPUT);
-        addToRenaming(sourVar.jKindStr, sourVar.aadlStr);
-        
-        refMap.put(sourVar.aadlStr, sourConn);
-        inputVars.add(sourVar);
-
-        if(sourConn != null){
-            if(sourConn instanceof DirectedFeature){
-                if(((DirectedFeature)sourConn).getDirection() == DirectionType.OUT){
-                    outputVars.add(sourVar);
-                }
-            }else{
-                assert(sourConn instanceof DataSubcomponent);
-                outputVars.add(sourVar);
-            }
-        }
-
-        
-    	if(queueSize != -1){
-    		//we have added the source and destination vars
-    		//to the reference map and input/output/internal vars
-    		//section.  The queue between these variables
-    		//will be built by a call to "setEventPortQueues()"
-    		//later, so don't add these to the connExpressions yet
-    		return;
-    	}
-        
-        Expr connExpr = null;
-        IdExpr sourId = new IdExpr(sourVar.jKindStr);
-
-        if (sourContext != null && destContext != null && delayed) {
-            // this is not an input, and the output is not a terminal
-            Expr initValExpr = initTypeMap.get(destVar.type);
-            connExpr = new UnaryExpr(UnaryOp.PRE, sourId);
-            connExpr = new BinaryExpr(initValExpr, BinaryOp.ARROW, connExpr);
-            
-        } else {
-            connExpr = sourId;
-        }
-        IdExpr destId = new IdExpr(destVar.jKindStr);
-        Equation connEq = new Equation(destId, connExpr);
-
-        System.out.println(connEq);
-        addConnection(connEq);
-        
-    }
     
     private void getAllDataNames(DataImplementation dataImpl, Set<AgreeVarDecl> subStrTypes) {
 
