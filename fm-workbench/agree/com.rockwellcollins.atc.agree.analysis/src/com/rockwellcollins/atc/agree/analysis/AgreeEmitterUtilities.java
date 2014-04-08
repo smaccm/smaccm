@@ -151,8 +151,6 @@ public class AgreeEmitterUtilities {
 
         } while (type != null);
 
-        // validation should make sure that this never happens
-        assert (false);
         return null;
 
     }

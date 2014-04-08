@@ -41,7 +41,7 @@ thread group UserInputThreads
   		eq dead_chan : real = flight_control_commands.ppm5;
   		eq dead_pos : int = if dead_chan > 1600.0 then deadArmable else deadSafe;
   		eq sticks_corner : bool = (throttle_chan < 1050.0 and rudder_chan > 1900.0);
-  		
+  		 
   		eq dead_pos_armed_past : bool = 
   			dead_pos = deadArmable -> pre (dead_pos_armed_past) or dead_pos = deadArmable;
   		

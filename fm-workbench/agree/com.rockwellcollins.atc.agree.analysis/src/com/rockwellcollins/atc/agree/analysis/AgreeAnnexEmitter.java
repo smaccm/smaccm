@@ -193,7 +193,6 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
     private List<IdExpr> calendar = new ArrayList<IdExpr>();
     private boolean simultaneity = true;
     private final Map<FeatureInstance, List<AgreeFeature>> featInstToAgreeFeatMap = new HashMap<>();
-    private final Set<String> lhsConnections = new HashSet<>();
 
     public AgreeAnnexEmitter(ComponentInstance compInst,
             AgreeLayout layout,
@@ -447,8 +446,9 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
 		   	List<IdExpr> queueLhs = new ArrayList<>();
 		   	queueLhs.add(queueElsId);
 		   	queueLhs.add(new IdExpr(destStr));
+		   	
 		   	Equation queueEq = new Equation(queueLhs, queueCall);
-		   	addConnection(queueEq);
+		   	connExpressions.add(queueEq);
 
 	   	}
 	   
@@ -1388,6 +1388,15 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
 		
     	ConnectionEnd destConn = absConnDest.getConnectionEnd();
         ConnectionEnd sourConn = absConnSour.getConnectionEnd();
+        
+    	//we currently don't handle data accesses or buss accesses	
+        if(destConn instanceof DataAccess
+        	|| sourConn instanceof DataAccess
+        	|| destConn instanceof BusAccess
+        	|| sourConn instanceof BusAccess){
+        	return;
+        }
+        
         Context destContext = absConnDest.getContext();
         Context sourContext = absConnSour.getContext();
         
@@ -1498,17 +1507,11 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         		}
         	}else{
         		Equation connEq = new Equation(new IdExpr(lhsLustreName), new IdExpr(rhsLustreName));
-        		//add left hand side expressions as internal variables
-        		AgreeVarDecl agreeVar = new AgreeVarDecl(lhsLustreName, "", agreeSourConn.varType);
-        		internalVars.add(agreeVar);
-        		
-        		if(lhsConnections.contains(lhsLustreName)){
-        			throw new AgreeException("multiple connections to data port '"+lhsAadlName+"'");
-        		}
-        		
-        		lhsConnections.add(lhsLustreName);
-        		connExpressions.add(connEq);
+        		addConnection(connEq);;
         	}
+        	//add left hand side expressions as internal variables
+    		AgreeVarDecl agreeVar = new AgreeVarDecl(lhsLustreName, lhsAadlName, agreeSourConn.varType);
+    		internalVars.add(agreeVar);
         }
 	}
     
@@ -1541,9 +1544,27 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
     	}else if(featInst.getCategory() == FeatureCategory.DATA_PORT
     			|| featInst.getCategory() == FeatureCategory.EVENT_DATA_PORT){
     		
-    		DataPort dataPort = (DataPort)featInst.getFeature();
-    		DataSubcomponentType dataClass = dataPort.getDataFeatureClassifier();
+    		DataSubcomponentType dataClass;
+    		if(featInst.getFeature() instanceof DataPort){
+    			DataPort dataPort = (DataPort)featInst.getFeature();
+    			dataClass = dataPort.getDataFeatureClassifier();
+    		}else{
+    			EventDataPort eventDataPort = (EventDataPort)featInst.getFeature();
+    			dataClass = eventDataPort.getDataFeatureClassifier();
+    		}
     		Set<AgreeVarDecl> tempSet = new HashSet<>();
+    		
+    		
+    		Direction direction = AgreeFeature.Direction.IN;
+			if(featInst.getDirection() == DirectionType.IN){
+				direction = AgreeFeature.Direction.IN;
+			}else if (featInst.getDirection() == DirectionType.OUT){
+				direction = AgreeFeature.Direction.OUT;
+			}else{
+				//we don't handle in-out data ports
+				return agreeConns;
+				//throw new AgreeException("unable to handle in-out direction type on port '"+featInst.getName()+"'");
+			}
     		
     		if(dataClass instanceof DataType){
     			AgreeVarDecl agreeVar =
@@ -1570,14 +1591,6 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
 				connType = AgreeFeature.ConnType.IMMEDIATE;
 			}
 			
-			Direction direction = AgreeFeature.Direction.IN;
-			if(featInst.getDirection() == DirectionType.IN){
-				direction = AgreeFeature.Direction.IN;
-			}else if (featInst.getDirection() == DirectionType.OUT){
-				direction = AgreeFeature.Direction.OUT;
-			}else{
-				throw new AgreeException("unable to handle in-out direction type on port '"+featInst.getName()+"'");
-			}
 			
 			for(AgreeVarDecl var : tempSet){
 				AgreeFeature agreeConn = new AgreeFeature();
@@ -1593,7 +1606,8 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
 			}
     		
     	}else{
-    		throw new AgreeException("unsure how to handled port '"+featInst.getName()+"'");
+    		//TODO: handle other types of ports
+    		//throw new AgreeException("unsure how to handled port '"+featInst.getName()+"'");
     	}
     	
     	for(AgreeFeature agreeConn : agreeConns){
@@ -2405,7 +2419,7 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
     private void addConnection(Equation connEq){
     	
     	if(connEq.lhs.size() != 1){
-    		throw new AgreeException("attemp to add connection expression with a"
+    		throw new AgreeException("attemp to add connection expression with a "
     				+ "left hand side not equal to one");
     	}
     	
