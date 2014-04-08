@@ -456,14 +456,14 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
 
 // ************** CASE STATEMENTS **********************
     
-    public Expr getQueueCountID(String jVarName, String aVarName, NamedElement comp){
+    public Expr getQueueCountID(NamedElement comp){
 
     	EventDataPort port = (EventDataPort)comp;
 
     	//a variable of the same name as this should be created by setEventPortQueues()
     	//in the AgreeAnnexEmitter which created "this" AgreeAnnexEmitter
-    	AgreeVarDecl countVar = new AgreeVarDecl(queueCountPrefix+jVarName,
-    			queueCountPrefix+aVarName,
+    	AgreeVarDecl countVar = new AgreeVarDecl(queueCountPrefix+comp.getName(),
+    			queueCountPrefix+comp.getName(),
         		NamedType.INT.toString());
     	
     	IdExpr countIdExpr = new IdExpr(countVar.jKindStr);
@@ -482,14 +482,14 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
     }
     
     
-    public Expr getQueueRemoveID(String jVarName, String aVarName, NamedElement comp){
+    public Expr getQueueRemoveID(NamedElement comp){
 
     	EventDataPort port = (EventDataPort)comp;
 
     	//a variable of the same name as this should be created by setEventPortQueues()
     	//in the AgreeAnnexEmitter which created "this" AgreeAnnexEmitter
-    	AgreeVarDecl removeVar = new AgreeVarDecl(queueOutClockPrefix+jVarName,
-    			queueOutClockPrefix+aVarName,
+    	AgreeVarDecl removeVar = new AgreeVarDecl(queueOutClockPrefix+comp.getName(),
+    			queueOutClockPrefix+comp.getName(),
         		NamedType.BOOL.toString());
     	
     	IdExpr removeIdExpr = new IdExpr(removeVar.jKindStr);
@@ -507,14 +507,14 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
     }
     
 
-    public Expr getQueueInsertID(String jVarName, String aVarName, NamedElement comp){
+    public Expr getQueueInsertID(NamedElement comp){
     	
     	EventDataPort port = (EventDataPort)comp;
     	
     	//a variable of the same name as this should be created by setEventPortQueues()
     	//in the AgreeAnnexEmitter which created "this" AgreeAnnexEmitter
-    	AgreeVarDecl insertVar = new AgreeVarDecl(queueInClockPrefix+jVarName,
-    			queueInClockPrefix+aVarName,
+    	AgreeVarDecl insertVar = new AgreeVarDecl(queueInClockPrefix+comp.getName(),
+    			queueInClockPrefix+comp.getName(),
         		NamedType.BOOL.toString());
     	
     	IdExpr insertIdExpr = new IdExpr(insertVar.jKindStr);
@@ -532,14 +532,14 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
     	return insertIdExpr;
     }
     
-    public Expr getClockID(String jVarName, String aVarName, NamedElement comp){
+    public Expr getClockID(NamedElement comp){
     	//IdExpr clockId = new IdExpr(clockIDPrefix+comp.getName());
     	
     	
     	//a variable of the same name as this should be created by setEventPortQueues()
     	//in the AgreeAnnexEmitter which created "this" AgreeAnnexEmitter
-    	AgreeVarDecl clockVar = new AgreeVarDecl(clockIDPrefix+jVarName,
-    			clockIDPrefix+aVarName,
+    	AgreeVarDecl clockVar = new AgreeVarDecl(clockIDPrefix+comp.getName(),
+    			clockIDPrefix+comp.getName(),
         		NamedType.BOOL.toString());
     	
     	IdExpr clockId = new IdExpr(clockVar.jKindStr);
@@ -1101,13 +1101,13 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         	
         	switch(tag){
         	case "CLK":
-        		return getClockID(jVarPrefix, aVarPrefix, namedEl);
+        		return getClockID(namedEl);
         	case "COUNT":
-        		return getQueueCountID(jVarPrefix, aVarPrefix, namedEl);
+        		return getQueueCountID(namedEl);
         	case "INSERT":
-        		return getQueueInsertID(jVarPrefix, aVarPrefix, namedEl);
+        		return getQueueInsertID(namedEl);
         	case "REMOVE":
-        		return getQueueRemoveID(jVarPrefix, aVarPrefix, namedEl);
+        		return getQueueRemoveID(namedEl);
         	default:
         		throw new AgreeException("use of uknown tag: '"+tag+"' in expression: '"+aadlVar+tag+"'");
         	}
