@@ -9,12 +9,18 @@ public
       transfer_switch: in data port Base_Types::Boolean;
       pilot_flying_side: out data port Base_Types::Boolean;
   end Side;
+  
+  system implementation Side.impl
+  end Side.impl;
 	
   system Channel
     features
       input: in data port Base_Types::Boolean;
       output: out data port Base_Types::Boolean;
   end Channel;
+  	
+  system implementation Channel.impl
+  end Channel.impl;
   
   system Top
     features
@@ -23,14 +29,14 @@ public
   
   system implementation Top.impl
     subcomponents
-      left_side: system Side {
+      left_side: system Side.impl {
       	Konrad_Properties::Initial_Pilot_Flying_Side => true;
       };
-      right_side: system Side {
+      right_side: system Side.impl {
       	Konrad_Properties::Initial_Pilot_Flying_Side => false;
       };
-      left_right: system Channel;
-      right_left: system Channel;
+      left_right: system Channel.impl;
+      right_left: system Channel.impl;
       
     connections
       c1 : port left_side.pilot_flying_side -> left_right.input;

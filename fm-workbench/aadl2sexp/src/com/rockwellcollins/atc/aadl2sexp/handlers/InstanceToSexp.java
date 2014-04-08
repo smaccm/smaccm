@@ -15,20 +15,14 @@ public class InstanceToSexp {
         List<Sexp> args = new ArrayList<Sexp>();
         args.add(name(ci));
         args.add(classifier(ci));
-
-        if (!ci.getFeatureInstances().isEmpty()) {
-            args.add(features(ci));
-        }
-
-        if (!ci.getComponentInstances().isEmpty()) {
-            args.add(subcomponents(ci));
-        }
+        args.add(features(ci));
+        args.add(subcomponents(ci));
 
         if (ci.getComponentClassifier() instanceof ComponentImplementation) {
             ComponentImplementation impl = (ComponentImplementation) ci.getComponentClassifier();
-            if (!impl.getOwnedConnections().isEmpty()) {
-                args.add(connections(impl));
-            }
+            args.add(connections(impl));
+        } else {
+            args.add(new Cons("connections"));
         }
 
         return new Cons("ComponentInstance", args);
