@@ -237,7 +237,7 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
 
 	private void recordFeatures(ComponentInstance compInst) {
 		for(FeatureInstance featInst : compInst.getFeatureInstances()){
-        	List<AgreeFeature> featList = getAgreeFeatures(jKindNameTag, aadlNameTag, featInst);
+        	List<AgreeFeature> featList = recordFeatures_Helper(jKindNameTag, aadlNameTag, featInst);
         	//add features to the correct input var or output var location
         	for(AgreeFeature agreeFeat : featList){
         		AgreeVarDecl varDecl = new AgreeVarDecl(agreeFeat.lustreString,
@@ -256,13 +256,13 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
 	   			refMap.put(agreeFeat.aadlString, agreeFeat.feature);
         	}
         	
-        	featInstToAgreeFeatMap.put(featInst, featList);
+        	//featInstToAgreeFeatMap.put(featInst, featList);
         }
         
         //get information about all the features of this components subcomponents
         for(ComponentInstance subCompInst : compInst.getComponentInstances()){
         	for(FeatureInstance featInst : subCompInst.getFeatureInstances()){
-            	List<AgreeFeature> featList = getAgreeFeatures(jKindNameTag + subCompInst.getName() + dotChar,
+            	List<AgreeFeature> featList = recordFeatures_Helper(jKindNameTag + subCompInst.getName() + dotChar,
             			aadlNameTag + subCompInst.getName() + ".",featInst);
             	for(AgreeFeature agreeFeat : featList){
             		AgreeVarDecl varDecl = new AgreeVarDecl(agreeFeat.lustreString,
@@ -279,7 +279,7 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
             		addToRenaming(agreeFeat.lustreString, agreeFeat.aadlString);
             		refMap.put(agreeFeat.aadlString, agreeFeat.feature);
             	}
-            	featInstToAgreeFeatMap.put(featInst, featList);
+            	//featInstToAgreeFeatMap.put(featInst, featList);
         	}
         }
 	}
@@ -312,6 +312,11 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
 		   	List<AgreeQueueElement> queueList = queueMap.get(destStr);
 		   	AgreeQueueElement firstQueue = queueList.get(0);
 		   	long queueSize = firstQueue.queueSize;
+		   	
+		   	if(queueSize < 0){
+		   		throw new AgreeException("The feature '"+firstQueue.aDest+"' must have a queue size specified");
+		   	}
+		   	
 		   	Type type = firstQueue.type;
 		   	int numInputs = queueList.size(); 
 		   	
@@ -1296,19 +1301,45 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
 //        String sourName = (sourContext == null) ? category : sourContext.getName();
 //        String destName = (destContext == null) ? category : destContext.getName();
 
-        ComponentInstance sourInst = (sourContext == null) ? curInst : curInst.findSubcomponentInstance((Subcomponent)sourContext);
-        ComponentInstance destInst = (destContext == null) ? curInst : curInst.findSubcomponentInstance((Subcomponent)destContext);
+        ComponentInstance sourInst = null;
+        FeatureInstance sourBaseFeatInst = null;
+        if(sourContext == null){
+        	sourInst = curInst;
+        }else if(sourContext instanceof Subcomponent){
+        	sourInst = curInst.findSubcomponentInstance((Subcomponent)sourContext);
+        }else{
+        	sourBaseFeatInst = curInst.findFeatureInstance((FeatureGroup)sourContext);
+        }
 
+        ComponentInstance destInst = null;
+        FeatureInstance destBaseFeatInst = null;
+        if(destContext == null){
+        	destInst = curInst;
+        }else if(destContext instanceof Subcomponent){
+        	destInst = curInst.findSubcomponentInstance((Subcomponent)destContext);
+        }else{
+        	destBaseFeatInst = curInst.findFeatureInstance((FeatureGroup)destContext);
+        }
+        
         //get the corresponding feature instances
         FeatureInstance sourFeatInst = null;
         FeatureInstance destFeatInst = null;
-        for(FeatureInstance featInst : sourInst.getFeatureInstances()){
+        
+        List<FeatureInstance> sourFeatInsts = (sourInst == null) ? 
+        		sourBaseFeatInst.getFeatureInstances() : 
+        		sourInst.getFeatureInstances();
+        		
+		List<FeatureInstance> destFeatInsts = (destInst == null) ? 
+        		destBaseFeatInst.getFeatureInstances() : 
+        		destInst.getFeatureInstances();
+        
+        for(FeatureInstance featInst : sourFeatInsts){
         	if(featInst.getFeature() == sourConn){
         		sourFeatInst = featInst;
         		break;
         	}
         }
-        for(FeatureInstance featInst : destInst.getFeatureInstances()){
+        for(FeatureInstance featInst : destFeatInsts){
         	if(featInst.getFeature() == destConn){
         		destFeatInst = featInst;
         		break;
@@ -1379,6 +1410,25 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         	}
         	
         	if(agreeDestConn.connType == AgreeFeature.ConnType.QUEUE){
+        		
+        		String sourInstName;
+        		if(sourInst == null){
+        			sourInstName = sourBaseFeatInst.getName();
+        		}else if(sourInst == curInst){
+        			sourInstName = null;
+        		}else{
+        			sourInstName = sourInst.getName();
+        		}
+        		
+        		String destInstName;
+        		if(destInst == null){
+        			destInstName = destBaseFeatInst.getName();
+        		}else if(destInst == curInst){
+        			destInstName = null;
+        		}else{
+        			destInstName = destInst.getName();
+        		}
+        		
         		AgreeQueueElement agreeQueueElem = new AgreeQueueElement(rhsLustreName, 
         				rhsAadlName, 
         				lhsLustreName, 
@@ -1386,8 +1436,8 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         				new NamedType(agreeDestConn.varType),
         				(EventDataPort)agreeSourConn.feature,
         				(EventDataPort)agreeDestConn.feature,
-        				(sourInst == curInst) ? null : sourInst.getName(), 
-        				(destInst == curInst) ? null : destInst.getName(), 
+        				sourInstName, 
+        				destInstName, 
         				agreeDestConn.queueSize);
         		
         		if(queueMap.containsKey(lhsLustreName)){
@@ -1408,7 +1458,7 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         }
 	}
     
-    private List<AgreeFeature> getAgreeFeatures(String jPrefix, String aPrefix, FeatureInstance featInst){
+    private List<AgreeFeature> recordFeatures_Helper(String jPrefix, String aPrefix, FeatureInstance featInst){
     	
     	List<AgreeFeature> agreeConns = new ArrayList<>();
     	long queueSize = -1;
@@ -1416,10 +1466,9 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
     	if(featInst.getCategory() == FeatureCategory.FEATURE_GROUP){
     		
     		for(FeatureInstance subFeatInst : featInst.getFeatureInstances()){
-    			agreeConns.addAll(getAgreeFeatures(featInst.getName()+dotChar,
+    			agreeConns.addAll(recordFeatures_Helper(featInst.getName()+dotChar,
     					featInst.getName()+".", subFeatInst));
     		}
-    		
     		
     		if(((FeatureGroup)featInst.getFeature()).isInverse()){
     			for(AgreeFeature agreeConn : agreeConns){
@@ -1516,7 +1565,7 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
     		}
     	}
     	
-    	
+    	featInstToAgreeFeatMap.put(featInst, agreeConns);
     	return agreeConns;
     }
 
