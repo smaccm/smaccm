@@ -78,6 +78,7 @@ public class InstanceToSexp {
 
     private static Sexp convert(Connection conn) {
         List<Sexp> args = new ArrayList<Sexp>();
+        args.add(new Symbol(conn.getFullName()));
         args.add(new Symbol(getName(conn.getSource())));
         args.add(new Symbol(getName(conn.getDestination())));
         return new Cons("connection", args);
