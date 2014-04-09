@@ -332,8 +332,9 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
 		   			throw new AgreeException("Something went wrong with book keeping during queue creation");
 		   		}
 		   		
-		   		String jCat = agreeQueEl.sourCategory == null ? "" : agreeQueEl.sourCategory+dotChar;
-		   		String aCat = agreeQueEl.sourCategory == null ? "" : agreeQueEl.sourCategory+".";
+		   		String jCat = agreeQueEl.sourCategory == null ? jKindNameTag : jKindNameTag + agreeQueEl.sourCategory+dotChar;
+		   		String aCat = agreeQueEl.sourCategory == null ? aadlNameTag : aadlNameTag + agreeQueEl.sourCategory+".";
+
 		   		
 		   		IdExpr clockInId = new IdExpr(queueInClockPrefix+jCat+agreeQueEl.sourConn.getName());
 		   		AgreeVarDecl clockInVar = 
@@ -378,8 +379,8 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
 		   	addConnection(multEq);	   	
 		   	
 		   	//add all the stuff for the queuenode call
-		   	String jCat =  firstQueue.destCategory == null ? "" : firstQueue.destCategory+dotChar;
-	   		String aCat = firstQueue.destCategory == null ? "" : firstQueue.destCategory+".";
+		   	String jCat =  firstQueue.destCategory == null ? jKindNameTag : jKindNameTag + firstQueue.destCategory+dotChar;
+	   		String aCat = firstQueue.destCategory == null ? aadlNameTag : aadlNameTag + firstQueue.destCategory+".";
 		   	
 		   	IdExpr clockOutId = new IdExpr(queueOutClockPrefix+jCat+firstQueue.destConn.getName());
 		   	AgreeVarDecl clockOutVar = 
@@ -1385,8 +1386,8 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         				new NamedType(agreeDestConn.varType),
         				(EventDataPort)agreeSourConn.feature,
         				(EventDataPort)agreeDestConn.feature,
-        				sourInst.getName(), 
-        				destInst.getName(), 
+        				(sourInst == curInst) ? null : sourInst.getName(), 
+        				(destInst == curInst) ? null : destInst.getName(), 
         				agreeDestConn.queueSize);
         		
         		if(queueMap.containsKey(lhsLustreName)){
