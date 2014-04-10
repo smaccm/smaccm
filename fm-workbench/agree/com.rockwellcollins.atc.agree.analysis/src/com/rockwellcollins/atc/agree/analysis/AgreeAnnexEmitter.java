@@ -1365,7 +1365,7 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         	//assert(agreeDestConn.aadlString == agreeSourConn.aadlString);
         	assert(agreeDestConn.varType == agreeSourConn.varType);
         	
-        	if(sourContext == null){
+        	if(sourContext == null || sourContext instanceof FeatureGroup){
         		switch(agreeDestConn.direction){
         		case IN:
         			lhsLustreName = agreeDestConn.lustreString;
@@ -1379,7 +1379,7 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         			rhsLustreName = agreeDestConn.lustreString;
         			rhsAadlName = agreeDestConn.aadlString;
         		}
-        	}else if(destContext == null){
+        	}else if(destContext == null || destContext instanceof FeatureGroup){
         		switch(agreeDestConn.direction){
         		case IN:
         			lhsLustreName = agreeSourConn.lustreString;
