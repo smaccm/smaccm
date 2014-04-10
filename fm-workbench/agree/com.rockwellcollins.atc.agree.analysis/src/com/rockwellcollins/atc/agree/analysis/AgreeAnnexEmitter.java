@@ -1365,21 +1365,22 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         	//assert(agreeDestConn.aadlString == agreeSourConn.aadlString);
         	assert(agreeDestConn.varType == agreeSourConn.varType);
         	
-        	if(sourContext == null || sourContext instanceof FeatureGroup){
-        		switch(agreeDestConn.direction){
-        		case IN:
-        			lhsLustreName = agreeDestConn.lustreString;
-        			lhsAadlName = agreeDestConn.aadlString;
-        			rhsLustreName = agreeSourConn.lustreString;
-        			rhsAadlName = agreeSourConn.aadlString;
-        			break;
-        		case OUT:
-        			lhsLustreName = agreeSourConn.lustreString;
-        			lhsAadlName = agreeSourConn.aadlString;
-        			rhsLustreName = agreeDestConn.lustreString;
-        			rhsAadlName = agreeDestConn.aadlString;
-        		}
-        	}else if(destContext == null || destContext instanceof FeatureGroup){
+//        	if(sourContext == null || sourContext instanceof FeatureGroup){
+//        		switch(agreeDestConn.direction){
+//        		case IN:
+//        			lhsLustreName = agreeDestConn.lustreString;
+//        			lhsAadlName = agreeDestConn.aadlString;
+//        			rhsLustreName = agreeSourConn.lustreString;
+//        			rhsAadlName = agreeSourConn.aadlString;
+//        			break;
+//        		case OUT:
+//        			lhsLustreName = agreeSourConn.lustreString;
+//        			lhsAadlName = agreeSourConn.aadlString;
+//        			rhsLustreName = agreeDestConn.lustreString;
+//        			rhsAadlName = agreeDestConn.aadlString;
+//        		}
+//        	}else 
+            if(destContext == null || destContext instanceof FeatureGroup){
         		switch(agreeDestConn.direction){
         		case IN:
         			lhsLustreName = agreeSourConn.lustreString;
