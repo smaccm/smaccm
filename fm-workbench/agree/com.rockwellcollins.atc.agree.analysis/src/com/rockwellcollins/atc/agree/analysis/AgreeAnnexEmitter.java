@@ -255,8 +255,6 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         		addToRenaming(agreeFeat.lustreString, agreeFeat.aadlString);
 	   			refMap.put(agreeFeat.aadlString, agreeFeat.feature);
         	}
-        	
-        	//featInstToAgreeFeatMap.put(featInst, featList);
         }
         
         //get information about all the features of this components subcomponents
@@ -354,7 +352,9 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
 		   			inputVars.add(clockInVar);
 		   			addToRenaming(clockInVar.jKindStr, clockInVar.aadlStr);
 		   			refMap.put(clockInVar.aadlStr, agreeQueEl.sourConn);
-		   	        layout.addElement(category, clockInVar.aadlStr, AgreeLayout.SigType.INPUT);
+		   			
+		   			String sourCategory = (agreeQueEl.sourCategory == null) ? category : agreeQueEl.sourCategory;
+		   	        layout.addElement(sourCategory, clockInVar.aadlStr, AgreeLayout.SigType.INPUT);
 
 		   			List<IdExpr> clockInIds = queueInClockMap.get(agreeQueEl.sourConn);
 
@@ -400,7 +400,8 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
 		   		inputVars.add(clockOutVar);
 		   		addToRenaming(clockOutVar.jKindStr, clockOutVar.aadlStr);
 		   		refMap.put(clockOutVar.aadlStr, firstQueue.destConn);
-		   		layout.addElement(category, clockOutVar.aadlStr, AgreeLayout.SigType.INPUT);
+	   			String destCategory = (firstQueue.destCategory == null) ? category : firstQueue.destCategory;
+		   		layout.addElement(destCategory, clockOutVar.aadlStr, AgreeLayout.SigType.INPUT);
 
 		   		List<IdExpr> clockOutIds = queueInClockMap.get(firstQueue.destConn);
 
@@ -443,7 +444,8 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
 	   			inputVars.add(singleQueueCountVar);
 	   			addToRenaming(singleQueueCountVar.jKindStr, singleQueueCountVar.aadlStr);
 	   			refMap.put(singleQueueCountVar.aadlStr, firstQueue.destConn);
-	   			layout.addElement(category, singleQueueCountVar.aadlStr, AgreeLayout.SigType.INPUT);
+	   			String destCategory = (firstQueue.destCategory == null) ? category : firstQueue.destCategory;
+	   			layout.addElement(destCategory, singleQueueCountVar.aadlStr, AgreeLayout.SigType.INPUT);
 	   			countIds.add(singleQueueCountId);
 	   		}
 	   		
@@ -1297,9 +1299,6 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         
         Context destContext = absConnDest.getContext();
         Context sourContext = absConnSour.getContext();
-        
-//        String sourName = (sourContext == null) ? category : sourContext.getName();
-//        String destName = (destContext == null) ? category : destContext.getName();
 
         ComponentInstance sourInst = null;
         FeatureInstance sourBaseFeatInst = null;
@@ -1349,7 +1348,6 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         //grabs the subnames for all the connections
         List<AgreeFeature> destConns = featInstToAgreeFeatMap.get(destFeatInst);
         List<AgreeFeature> sourConns = featInstToAgreeFeatMap.get(sourFeatInst);
-
     	
         String lhsLustreName = null;
         String rhsLustreName = null;
@@ -1360,26 +1358,8 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         for(i = 0; i < destConns.size(); i++){
         	AgreeFeature agreeDestConn = destConns.get(i);
         	AgreeFeature agreeSourConn = sourConns.get(i);
-        	
-        	//assert(agreeDestConn.lustreString == agreeSourConn.lustreString);
-        	//assert(agreeDestConn.aadlString == agreeSourConn.aadlString);
         	assert(agreeDestConn.varType == agreeSourConn.varType);
         	
-//        	if(sourContext == null || sourContext instanceof FeatureGroup){
-//        		switch(agreeDestConn.direction){
-//        		case IN:
-//        			lhsLustreName = agreeDestConn.lustreString;
-//        			lhsAadlName = agreeDestConn.aadlString;
-//        			rhsLustreName = agreeSourConn.lustreString;
-//        			rhsAadlName = agreeSourConn.aadlString;
-//        			break;
-//        		case OUT:
-//        			lhsLustreName = agreeSourConn.lustreString;
-//        			lhsAadlName = agreeSourConn.aadlString;
-//        			rhsLustreName = agreeDestConn.lustreString;
-//        			rhsAadlName = agreeDestConn.aadlString;
-//        		}
-//        	}else 
             if(destContext == null || destContext instanceof FeatureGroup){
         		switch(agreeDestConn.direction){
         		case IN:
@@ -1461,96 +1441,21 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
     
     private List<AgreeFeature> recordFeatures_Helper(String jPrefix, String aPrefix, FeatureInstance featInst){
     	
-    	List<AgreeFeature> agreeConns = new ArrayList<>();
-    	long queueSize = -1;
+    	List<AgreeFeature> agreeConns = new ArrayList<>();    	
     	
-    	if(featInst.getCategory() == FeatureCategory.FEATURE_GROUP){
-    		
-    		for(FeatureInstance subFeatInst : featInst.getFeatureInstances()){
-    			agreeConns.addAll(recordFeatures_Helper(featInst.getName()+dotChar,
-    					featInst.getName()+".", subFeatInst));
-    		}
-    		
-    		if(((FeatureGroup)featInst.getFeature()).isInverse()){
-    			for(AgreeFeature agreeConn : agreeConns){
-    				switch(agreeConn.direction){
-    				case IN:
-    					agreeConn.direction = Direction.OUT;
-    					break;
-    				case OUT:
-    					agreeConn.direction = Direction.IN;
-    					break;
-    				}
-    			}
-    		}
-    		
-    	}else if(featInst.getCategory() == FeatureCategory.DATA_PORT
-    			|| featInst.getCategory() == FeatureCategory.EVENT_DATA_PORT){
-    		
-    		DataSubcomponentType dataClass;
-    		if(featInst.getFeature() instanceof DataPort){
-    			DataPort dataPort = (DataPort)featInst.getFeature();
-    			dataClass = dataPort.getDataFeatureClassifier();
-    		}else{
-    			EventDataPort eventDataPort = (EventDataPort)featInst.getFeature();
-    			dataClass = eventDataPort.getDataFeatureClassifier();
-    		}
-    		Set<AgreeVarDecl> tempSet = new HashSet<>();
-    		
-    		
-    		Direction direction = AgreeFeature.Direction.IN;
-			if(featInst.getDirection() == DirectionType.IN){
-				direction = AgreeFeature.Direction.IN;
-			}else if (featInst.getDirection() == DirectionType.OUT){
-				direction = AgreeFeature.Direction.OUT;
-			}else{
-				//we don't handle in-out data ports
-				return agreeConns;
-				//throw new AgreeException("unable to handle in-out direction type on port '"+featInst.getName()+"'");
-			}
-    		
-    		if(dataClass instanceof DataType){
-    			AgreeVarDecl agreeVar =
-    				new AgreeVarDecl("",
-    					"", AgreeEmitterUtilities.dataTypeToVarType((DataType)dataClass));
-    			if(agreeVar.type != null){
-        			tempSet.add(agreeVar);
-    			}
-    		}else{
-    			getAllDataNames((DataImplementation)dataClass, tempSet);
-    		}
-    		
-			ConnType connType;
-			
-			if(featInst.getCategory() == FeatureCategory.EVENT_DATA_PORT){
-				connType = AgreeFeature.ConnType.QUEUE;
-	            Property queueSizeProp = EMFIndexRetrieval.getPropertyDefinitionInWorkspace(
-	                    OsateResourceUtil.getResourceSet(), "Communication_Properties::Queue_Size");
-	            try{
-	            	queueSize = PropertyUtils.getIntegerValue(featInst, queueSizeProp);
-	            }catch(PropertyDoesNotApplyToHolderException e){}
-	            
-			}else{
-				connType = AgreeFeature.ConnType.IMMEDIATE;
-			}
-			
-			
-			for(AgreeVarDecl var : tempSet){
-				AgreeFeature agreeConn = new AgreeFeature();
-				agreeConn.feature = featInst.getFeature();
-				agreeConn.varType = var.type;
-				assert(var.type != null);
-				agreeConn.lustreString = (var.jKindStr == "") ? featInst.getName() : featInst.getName() + dotChar + var.jKindStr;
-				agreeConn.aadlString = (var.aadlStr == "") ? featInst.getName() : featInst.getName() + "." + var.aadlStr;
-				agreeConn.connType = connType;
-				agreeConn.direction = direction; 
-				agreeConn.queueSize = queueSize;
-				agreeConns.add(agreeConn);
-			}
-    		
-    	}else{
-    		//TODO: handle other types of ports
-    		//throw new AgreeException("unsure how to handled port '"+featInst.getName()+"'");
+    	switch(featInst.getCategory()){
+    	case FEATURE_GROUP:
+    		recordFeatureGroup(featInst, agreeConns);
+    		break;
+    	case DATA_PORT:
+    	case EVENT_DATA_PORT:
+    		recordPort(featInst, agreeConns);
+    		break;
+    	case DATA_ACCESS:
+    		//recordDataAccess(featInst, agreeConns);
+    		break;
+		default:
+			break; //TODO: handle other types
     	}
     	
     	for(AgreeFeature agreeConn : agreeConns){
@@ -1569,6 +1474,159 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
     	featInstToAgreeFeatMap.put(featInst, agreeConns);
     	return agreeConns;
     }
+
+	private void recordDataAccess(FeatureInstance featInst,
+				List<AgreeFeature> agreeConns) { 
+			DataSubcomponentType dataClass;
+	    	long queueSize = -1;
+
+			if(featInst.getFeature() instanceof DataPort){
+				DataPort dataPort = (DataPort)featInst.getFeature();
+				dataClass = dataPort.getDataFeatureClassifier();
+			}else{
+				EventDataPort eventDataPort = (EventDataPort)featInst.getFeature();
+				dataClass = eventDataPort.getDataFeatureClassifier();
+			}
+			Set<AgreeVarDecl> tempSet = new HashSet<>();
+			
+			
+			Direction direction = AgreeFeature.Direction.IN;
+			if(featInst.getDirection() == DirectionType.IN){
+				direction = AgreeFeature.Direction.IN;
+			}else if (featInst.getDirection() == DirectionType.OUT){
+				direction = AgreeFeature.Direction.OUT;
+			}else{
+				//we don't handle in-out data ports
+				return;
+				//throw new AgreeException("unable to handle in-out direction type on port '"+featInst.getName()+"'");
+			}
+			
+			if(dataClass instanceof DataType){
+				AgreeVarDecl agreeVar =
+					new AgreeVarDecl("",
+						"", AgreeEmitterUtilities.dataTypeToVarType((DataType)dataClass));
+				if(agreeVar.type != null){
+					tempSet.add(agreeVar);
+				}
+			}else{
+				getAllDataNames((DataImplementation)dataClass, tempSet);
+			}
+			
+			ConnType connType;
+			
+			if(featInst.getCategory() == FeatureCategory.EVENT_DATA_PORT){
+				connType = AgreeFeature.ConnType.QUEUE;
+			    Property queueSizeProp = EMFIndexRetrieval.getPropertyDefinitionInWorkspace(
+			            OsateResourceUtil.getResourceSet(), "Communication_Properties::Queue_Size");
+			    try{
+			    	queueSize = PropertyUtils.getIntegerValue(featInst, queueSizeProp);
+			    }catch(PropertyDoesNotApplyToHolderException e){}
+			    
+			}else{
+				connType = AgreeFeature.ConnType.IMMEDIATE;
+			}
+			
+			
+			for(AgreeVarDecl var : tempSet){
+				AgreeFeature agreeConn = new AgreeFeature();
+				agreeConn.feature = featInst.getFeature();
+				agreeConn.varType = var.type;
+				assert(var.type != null);
+				agreeConn.lustreString = (var.jKindStr == "") ? featInst.getName() : featInst.getName() + dotChar + var.jKindStr;
+				agreeConn.aadlString = (var.aadlStr == "") ? featInst.getName() : featInst.getName() + "." + var.aadlStr;
+				agreeConn.connType = connType;
+				agreeConn.direction = direction; 
+				agreeConn.queueSize = queueSize;
+				agreeConns.add(agreeConn);
+			}
+		}
+
+	private void recordFeatureGroup(FeatureInstance featInst,
+			List<AgreeFeature> agreeConns) {
+		for(FeatureInstance subFeatInst : featInst.getFeatureInstances()){
+			agreeConns.addAll(recordFeatures_Helper(featInst.getName()+dotChar,
+					featInst.getName()+".", subFeatInst));
+		}
+		
+//		if(((FeatureGroup)featInst.getFeature()).isInverse()){
+//			for(AgreeFeature agreeConn : agreeConns){
+//				switch(agreeConn.direction){
+//				case IN:
+//					agreeConn.direction = Direction.OUT;
+//					break;
+//				case OUT:
+//					agreeConn.direction = Direction.IN;
+//					break;
+//				}
+//			}
+//		}
+	}
+
+	private void recordPort(FeatureInstance featInst,
+			List<AgreeFeature> agreeConns) {
+		DataSubcomponentType dataClass;
+    	long queueSize = -1;
+
+		if(featInst.getFeature() instanceof DataPort){
+			DataPort dataPort = (DataPort)featInst.getFeature();
+			dataClass = dataPort.getDataFeatureClassifier();
+		}else{
+			EventDataPort eventDataPort = (EventDataPort)featInst.getFeature();
+			dataClass = eventDataPort.getDataFeatureClassifier();
+		}
+		Set<AgreeVarDecl> tempSet = new HashSet<>();
+		
+		
+		Direction direction = AgreeFeature.Direction.IN;
+		if(featInst.getDirection() == DirectionType.IN){
+			direction = AgreeFeature.Direction.IN;
+		}else if (featInst.getDirection() == DirectionType.OUT){
+			direction = AgreeFeature.Direction.OUT;
+		}else{
+			//we don't handle in-out data ports
+			return;
+			//throw new AgreeException("unable to handle in-out direction type on port '"+featInst.getName()+"'");
+		}
+		
+		if(dataClass instanceof DataType){
+			AgreeVarDecl agreeVar =
+				new AgreeVarDecl("",
+					"", AgreeEmitterUtilities.dataTypeToVarType((DataType)dataClass));
+			if(agreeVar.type != null){
+				tempSet.add(agreeVar);
+			}
+		}else{
+			getAllDataNames((DataImplementation)dataClass, tempSet);
+		}
+		
+		ConnType connType;
+		
+		if(featInst.getCategory() == FeatureCategory.EVENT_DATA_PORT){
+			connType = AgreeFeature.ConnType.QUEUE;
+		    Property queueSizeProp = EMFIndexRetrieval.getPropertyDefinitionInWorkspace(
+		            OsateResourceUtil.getResourceSet(), "Communication_Properties::Queue_Size");
+		    try{
+		    	queueSize = PropertyUtils.getIntegerValue(featInst, queueSizeProp);
+		    }catch(PropertyDoesNotApplyToHolderException e){}
+		    
+		}else{
+			connType = AgreeFeature.ConnType.IMMEDIATE;
+		}
+		
+		
+		for(AgreeVarDecl var : tempSet){
+			AgreeFeature agreeConn = new AgreeFeature();
+			agreeConn.feature = featInst.getFeature();
+			agreeConn.varType = var.type;
+			assert(var.type != null);
+			agreeConn.lustreString = (var.jKindStr == "") ? featInst.getName() : featInst.getName() + dotChar + var.jKindStr;
+			agreeConn.aadlString = (var.aadlStr == "") ? featInst.getName() : featInst.getName() + "." + var.aadlStr;
+			agreeConn.connType = connType;
+			agreeConn.direction = direction; 
+			agreeConn.queueSize = queueSize;
+			agreeConns.add(agreeConn);
+		}
+	}
 
     
     private void getAllDataNames(DataImplementation dataImpl, Set<AgreeVarDecl> subStrTypes) {
@@ -1918,7 +1976,6 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
             }
             
             clocks.add(clockExpr);
-
             
             agreeInputVars.addAll(subEmitter.inputVars);
             agreeInternalVars.addAll(subEmitter.internalVars); 
@@ -1950,15 +2007,8 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
             //TODO: set different initial values for outputs
             for(VarDecl var : agreeNode.outputs){
             	NamedType type = (NamedType)var.type;
-            	//queue in and out variables need to be false initially
-            	//if(var.id.startsWith(queueInClockPrefix)
-            	//		|| var.id.startsWith(queueOutClockPrefix)){
-            	//	initOutputs.add(new BoolExpr(false));
-            	//}else{
-
-            		initOutputs.add(initTypeMap.get(type.name));
-            		nodeOutputs.add(new IdExpr(var.id));
-            	//}
+            	initOutputs.add(initTypeMap.get(type.name));
+            	nodeOutputs.add(new IdExpr(var.id));
             }
 
             for(VarDecl var : agreeNode.inputs){

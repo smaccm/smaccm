@@ -39,6 +39,7 @@ import org.osate.aadl2.DataSubcomponentType;
 import org.osate.aadl2.DataType;
 import org.osate.aadl2.Element;
 import org.osate.aadl2.EnumerationType;
+import org.osate.aadl2.EventDataPort;
 import org.osate.aadl2.Feature;
 import org.osate.aadl2.NamedElement;
 import org.osate.aadl2.Property;
@@ -920,6 +921,8 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
             return getAgreeType(namedEl);
         } else if (namedEl instanceof DataPort) {
             return getAgreeType(((DataPort) namedEl).getDataFeatureClassifier());
+        } else if (namedEl instanceof EventDataPort){
+        	return getAgreeType(((EventDataPort)namedEl).getDataFeatureClassifier());
         } else if (namedEl instanceof DataAccess) {
             return getAgreeType((NamedElement) ((DataAccess) namedEl).getFeatureClassifier());
         } else if (namedEl instanceof DataType) {
