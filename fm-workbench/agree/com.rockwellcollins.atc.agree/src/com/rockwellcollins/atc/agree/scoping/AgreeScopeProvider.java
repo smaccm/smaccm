@@ -194,7 +194,11 @@ public class AgreeScopeProvider extends
             for (Element el : component.getAllFeatures()) {
                 result.add(el);
             }
-            //get any equation statements from any annex in the component
+            //get any equation statements from any annex in the component type
+            if(component instanceof ComponentImplementation){
+            	component = ((ComponentImplementation)component).getType();
+            }
+            
             for (AnnexSubclause subclause : AnnexUtil.getAllAnnexSubclauses(component, AgreePackage.eINSTANCE.getAgreeContractSubclause())) {
                 if (subclause instanceof AgreeContractSubclause) {
                     AgreeContractSubclause agreeSubclause = (AgreeContractSubclause)subclause;
