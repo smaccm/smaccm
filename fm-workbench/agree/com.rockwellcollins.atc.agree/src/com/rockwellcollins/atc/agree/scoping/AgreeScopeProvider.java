@@ -32,6 +32,7 @@ import com.rockwellcollins.atc.agree.agree.AgreeContractLibrary;
 import com.rockwellcollins.atc.agree.agree.AgreeContractSubclause;
 import com.rockwellcollins.atc.agree.agree.AgreeLibrary;
 import com.rockwellcollins.atc.agree.agree.AgreePackage;
+import com.rockwellcollins.atc.agree.agree.Arg;
 import com.rockwellcollins.atc.agree.agree.CalenStatement;
 import com.rockwellcollins.atc.agree.agree.EqStatement;
 import com.rockwellcollins.atc.agree.agree.FnDefExpr;
@@ -193,6 +194,22 @@ public class AgreeScopeProvider extends
             for (Element el : component.getAllFeatures()) {
                 result.add(el);
             }
+            //get any equation statements from any annex in the component
+            for (AnnexSubclause subclause : AnnexUtil.getAllAnnexSubclauses(component, AgreePackage.eINSTANCE.getAgreeContractSubclause())) {
+                if (subclause instanceof AgreeContractSubclause) {
+                    AgreeContractSubclause agreeSubclause = (AgreeContractSubclause)subclause;
+                    AgreeContract contract = (AgreeContract)agreeSubclause.getContract();
+                    for(SpecStatement spec : contract.getSpecs()){
+                    	if(spec instanceof EqStatement){
+                    		EqStatement eqStat = (EqStatement)spec;
+                    		for(Arg arg : eqStat.getLhs()){
+                    			result.add(arg);
+                    		}
+                    	}
+                    }
+                }
+            }
+            
         } else {
 
             if (container instanceof AgreeContractLibrary) {
