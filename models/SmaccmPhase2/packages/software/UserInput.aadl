@@ -190,6 +190,9 @@ thread group implementation UserInputThreads.Impl
   	assert law_emitter.COUNT = 0 => not law_emitter.REMOVE;
   	assert ui_emitter.COUNT > 0 => ui_emitter.REMOVE;
   	assert ui_emitter.COUNT = 0 => not ui_emitter.REMOVE;
+  	
+  	--intial armed mode assertion
+  	assert ctrlArmedMode = 0 -> true;
 		
   **};
 	
