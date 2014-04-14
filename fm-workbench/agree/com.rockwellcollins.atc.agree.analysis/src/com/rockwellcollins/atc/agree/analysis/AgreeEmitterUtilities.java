@@ -331,7 +331,9 @@ public class AgreeEmitterUtilities {
         if(emitter.agreeNode == null){
             return conjoin(emitter.assumpExpressions);
         }else{
-            return conjoin(emitter.agreeNode.assumptions);
+            Expr assumps = conjoin(emitter.agreeNode.assumptions);
+            IdExpr clockExpr = new IdExpr(emitter.agreeNode.clockVar.id);
+			return new BinaryExpr(clockExpr, BinaryOp.IMPLIES, assumps);
         }
     }
 
@@ -345,12 +347,15 @@ public class AgreeEmitterUtilities {
 
     static public Expr getLustreContract(AgreeAnnexEmitter emitter) {
         if(emitter.agreeNode == null){
-            return conjoin(conjoin(emitter.assumpExpressions), conjoin(emitter.assertExpressions),
-                    conjoinEqs(emitter.guarExpressions));
+//            return conjoin(conjoin(emitter.assumpExpressions), conjoin(emitter.assertExpressions),
+//                    conjoinEqs(emitter.guarExpressions));
+        	throw new AgreeCombinationalCycleException("depricated use of 'getLustreContract'");
         }else{
-            return conjoin(conjoin(emitter.agreeNode.assertions),
+            Expr contract = conjoin(conjoin(emitter.agreeNode.assertions),
                     conjoin(emitter.agreeNode.assumptions),
                     conjoin(emitter.agreeNode.guarantees));
+            IdExpr clockExpr = new IdExpr(emitter.agreeNode.clockVar.id);
+			return new BinaryExpr(clockExpr, BinaryOp.IMPLIES, contract);
         }
     }
 

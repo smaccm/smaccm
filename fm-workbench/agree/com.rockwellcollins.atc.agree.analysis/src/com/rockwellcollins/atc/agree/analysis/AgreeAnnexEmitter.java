@@ -1471,18 +1471,18 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
     					featInst.getName()+".", subFeatInst));
     		}
     		
-    		if(((FeatureGroup)featInst.getFeature()).isInverse()){
-    			for(AgreeFeature agreeConn : agreeConns){
-    				switch(agreeConn.direction){
-    				case IN:
-    					agreeConn.direction = Direction.OUT;
-    					break;
-    				case OUT:
-    					agreeConn.direction = Direction.IN;
-    					break;
-    				}
-    			}
-    		}
+//    		if(((FeatureGroup)featInst.getFeature()).isInverse()){
+//    			for(AgreeFeature agreeConn : agreeConns){
+//    				switch(agreeConn.direction){
+//    				case IN:
+//    					agreeConn.direction = Direction.OUT;
+//    					break;
+//    				case OUT:
+//    					agreeConn.direction = Direction.IN;
+//    					break;
+//    				}
+//    			}
+//    		}
     		
     	}else if(featInst.getCategory() == FeatureCategory.DATA_PORT
     			|| featInst.getCategory() == FeatureCategory.EVENT_DATA_PORT){
@@ -1735,7 +1735,6 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         // system assumptions
         Expr sysAssumpHist = AgreeEmitterUtilities.getLustreAssumptionsAndAssertions(this);
         eqs.add(AgreeEmitterUtilities.getLustreHistory(sysAssumpHist, sysAssumpHistId));
-
         
         //make the closure map for proving assumptions
         Map<Subcomponent, Set<Subcomponent>> closureMap = new HashMap<>();
@@ -1749,22 +1748,21 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         
         //make a counter for checking finite consistency
         IdExpr countId = addConsistencyConstraints(eqs, internals);
-        
 
-        //get the equations that guarantee that every clock has ticked atleast once
-        List<Equation> tickEqs = AgreeCalendarUtils.getAllClksHaveTicked("__ALL_TICKED", "__CLK_TICKED", clocks);
-        
-        //add all the new clock tick variables to the internal variables list
-        for(Equation eq : tickEqs){
-            internals.add(new VarDecl(eq.lhs.get(0).id, NamedType.BOOL));
-        }
-        
-        eqs.addAll(tickEqs);
-        IdExpr allClksTickedExpr = tickEqs.get(tickEqs.size()-1).lhs.get(0);
+//        //get the equations that guarantee that every clock has ticked atleast once
+//        List<Equation> tickEqs = AgreeCalendarUtils.getAllClksHaveTicked("__ALL_TICKED", "__CLK_TICKED", clocks);
+//        
+//        //add all the new clock tick variables to the internal variables list
+//        for(Equation eq : tickEqs){
+//            internals.add(new VarDecl(eq.lhs.get(0).id, NamedType.BOOL));
+//        }
+//        
+//        eqs.addAll(tickEqs);
+//        IdExpr allClksTickedExpr = tickEqs.get(tickEqs.size()-1).lhs.get(0);
         
         // get the individual history variables and create assumption properties
         addSubcomponentAssumptions(subEmitters, eqs, internals, properties,
-				totalCompHist, sysAssumpHistId, allClksTickedExpr, closureMap, countId);
+				totalCompHist, sysAssumpHistId, closureMap, countId);
         
         
         // create individual properties for guarantees
@@ -1775,7 +1773,7 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
             internals.add(new VarDecl(sysGuaranteesId.id, new NamedType("bool")));
 
             Expr totalSysGuarExpr = new BinaryExpr(sysAssumpHistId, BinaryOp.AND, totalCompHistId);
-            totalSysGuarExpr = new BinaryExpr(totalSysGuarExpr, BinaryOp.AND, allClksTickedExpr);
+//            totalSysGuarExpr = new BinaryExpr(totalSysGuarExpr, BinaryOp.AND, allClksTickedExpr);
             totalSysGuarExpr = new BinaryExpr(totalSysGuarExpr, BinaryOp.IMPLIES, guar.expr);
 
             Equation finalGuar = new Equation(sysGuaranteesId, totalSysGuarExpr);
@@ -1918,7 +1916,6 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
             }
             
             clocks.add(clockExpr);
-
             
             agreeInputVars.addAll(subEmitter.inputVars);
             agreeInternalVars.addAll(subEmitter.internalVars); 
@@ -1998,8 +1995,7 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
 
 	private void addSubcomponentAssumptions(List<AgreeAnnexEmitter> subEmitters,
 			List<Equation> eqs, List<VarDecl> internals,
-			List<String> properties, Expr totalCompHist, Expr sysAssumpHist,
-			IdExpr allClksTickedExpr, Map<Subcomponent, Set<Subcomponent>> closureMap, IdExpr countId) {
+			List<String> properties, Expr totalCompHist, Expr sysAssumpHist, Map<Subcomponent, Set<Subcomponent>> closureMap, IdExpr countId) {
 		for(AgreeAnnexEmitter subEmitter : subEmitters){
 
             Expr higherContracts = new BoolExpr(true);
@@ -2018,11 +2014,11 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
             internals.add(new VarDecl(compId.id, new NamedType("bool")));
 
             Expr leftSide = new UnaryExpr(UnaryOp.PRE, totalCompHist);
-            leftSide = new BinaryExpr(new BoolExpr(true), BinaryOp.ARROW, leftSide);
+//            leftSide = new BinaryExpr(new BoolExpr(true), BinaryOp.ARROW, leftSide);
             leftSide = new BinaryExpr(sysAssumpHist, BinaryOp.AND, leftSide);
             leftSide = new BinaryExpr(higherContracts, BinaryOp.AND, leftSide);
-            IdExpr clockVarId = new IdExpr(subEmitter.agreeNode.clockVar.id);
-            leftSide = new BinaryExpr(clockVarId, BinaryOp.AND, leftSide);
+//            IdExpr clockVarId = new IdExpr(subEmitter.agreeNode.clockVar.id);
+//            leftSide = new BinaryExpr(clockVarId, BinaryOp.AND, leftSide);
 
             Expr contrHistExpr = new BinaryExpr(leftSide, BinaryOp.IMPLIES, contrAssumps);
             Equation contrHist = new Equation(compId, contrHistExpr);
