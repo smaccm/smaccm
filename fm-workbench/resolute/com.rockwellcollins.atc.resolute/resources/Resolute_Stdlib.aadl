@@ -28,35 +28,37 @@ processor_bound(logical : component, physical : component) : bool =
 connected(a : component, conn : connection, b : component) : bool =
   parent(source(conn)) = a and parent(destination(conn)) = b
 
-component_connections(comp : component) : {connection} =
-  {conn for (feat : features(comp)) (conn : connections(feat))}
-
 source_component(c : connection) : component =
   containing_component(source(c))
 
 destination_component(c : connection) : component =
   containing_component(destination(c))
 
+is_port_connection(c : connection) : bool =
+  is_data_port_connection(c) or
+  is_event_port_connection(c) or
+  is_event_data_port_connection(c)
+
 is_data_port_connection(c : connection) : bool =
-  is_data_port_feature(source(c)) or is_data_port_feature(destination(c))
+  source(c) instanceof data_port or destination(c) instanceof data_port
+
+is_event_port_connection(c : connection) : bool =
+  source(c) instanceof event_port or destination(c) instanceof event_port
 
 is_event_data_port_connection(c : connection) : bool =
-  is_event_data_port_feature(source(c)) or is_event_data_port_feature(destination(c))
+  source(c) instanceof event_data_port or destination(c) instanceof event_data_port
+
+is_data_access_connection(c : connection) : bool =
+  (source(c) instanceof data) or (destination(c) instanceof data)
 
 -------------
 -- Features
 -------------
-is_data_port_feature(a : aadl) : bool =
-  (a instanceof feature) and is_data_port((feature) a) 
-
-is_event_data_port_feature(a : aadl) : bool =
-  (a instanceof feature) and is_event_data_port((feature) a) 
-  
 flatten_features(feats : {feature}) : {feature} =
   {f2 for (f1 : feats) (f2 : flatten_feature(f1))}
    
 flatten_feature(f : feature) : {feature} =
-  if is_feature_group(f)
+  if f instanceof feature_group
   then flatten_features(features(f))
   else {f} 
 
