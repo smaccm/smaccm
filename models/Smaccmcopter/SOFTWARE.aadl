@@ -27,22 +27,8 @@ public
     features
       motors_and_radios: feature group UAV::motors_and_radios;
       sensors: feature group UAV::sensors;
-      
-      -- These are disconnected until we want to specify exactly 
-      -- the transition conditions. We would leave them out, but AADL
-      -- requires some condition on each mode transition.
-      e1: in event port;
-      e2: in event port;
-      e3: in event port;
-      e4: in event port;
   end Main_Loop;
-    
-  abstract environment
-  	features
-  		motor_input : in data port DATATYPES::Motor_Commands.Impl;
-  		sensor_output : out data port DATATYPES::Sensor_Data.Impl;
-  end environment;
-  
+
   process implementation Main_Loop.Impl
     subcomponents
       SS: thread Sensors;
@@ -51,7 +37,6 @@ public
       SN: thread Stability_Navigation;
       MC: thread Motor_Control;
       DC: thread Decrypt;
-      ENV: abstract environment;
       
     connections
       conn: feature group sensors <-> SS.sensors_in;
@@ -83,12 +68,9 @@ public
   end Main_Loop.Impl;
   
   thread Decrypt
-  	features 
-  	    private_key : in data port DATATYPES::Private_Key_Data;
+  	features
   		encrypt_in  : in data port DATATYPES::EncryptMAVlink;
   		decrypt_out : out data port DATATYPES::MAVlink;
-  		signal_input : in data port Base_Types::Integer;
-        receive_signal : in data port Base_Types::Boolean;
         
   	properties
   	  Period => 200ms;
@@ -128,8 +110,6 @@ public
       mavlink: in data port DATATYPES::MAVLink;
       sensors: in data port DATATYPES::Sensor_Data.Impl;
       motor_commands: out data port DATATYPES::Motor_Commands.Impl;
-      signal_input : in data port Base_Types::Integer;
-      receive_signal : in data port Base_Types::Boolean;
       
     properties
       Period => 200ms;
@@ -150,37 +130,11 @@ public
       
       
   end Stability_Navigation;
- 
-  thread Backup_Commands
-    features
-      mavlink_out: out data port DATATYPES::MAVLink;
-      signal_input : in data port Base_Types::Integer;
-      receive_signal : in data port Base_Types::Boolean;
-      
-    properties
-    
-      Period => 200ms;
-      Deadline => 200ms;
-      SMACCM::WC_Execution_Time => 10ms;
-    
-      Dispatch_Protocol => Aperiodic;
-      
-      Source_Text => ("src/gcs_receive.c");
-      Initialize_Entrypoint_Source_Text => "gcs_receive_init";
-      Compute_Entrypoint_Source_Text => "gcs_receive_task";
-      
-      Static_Analysis::Writes_to_buffers => ("gcs_shared_state");
-      SMACCM::Always_Sends_Message => true;
-      SMACCM::Language => "Ivory";
-  end Backup_Commands;
 
   thread Command_Control_Telemetry
     features
       mavlink_in: in event data port DATATYPES::MAVLink;
       mavlink_out: out data port DATATYPES::MAVLink;
-      signal_input : in data port Base_Types::Integer;
-      receive_signal : in data port Base_Types::Boolean;
-      
       
     properties
     
@@ -204,9 +158,6 @@ public
     features
       commands_in: in data port DATATYPES::Flight_Control_Commands.Impl;
       commands_out: out data port DATATYPES::Flight_Control_Commands.Impl;
-      signal_input : in data port Base_Types::Integer;
-      receive_signal : in data port Base_Types::Boolean;
-      
     
     properties
       Period => 200ms;
@@ -227,9 +178,6 @@ public
     features
       sensors_in: feature group UAV::sensors;
       sensors_out: out data port DATATYPES::Sensor_Data.Impl;
-      signal_input : in data port Base_Types::Integer;
-      receive_signal : in data port Base_Types::Boolean;
-      
       
     properties
       Period => 200ms;
@@ -254,7 +202,6 @@ public
       servo2_commands: out data port DATATYPES::Servo_Commands;
       servo3_commands: out data port DATATYPES::Servo_Commands;
       servo4_commands: out data port DATATYPES::Servo_Commands;
-      send_signal : in data port DATATYPES::Thread_Signal.Impl_8;
       
       
     properties
