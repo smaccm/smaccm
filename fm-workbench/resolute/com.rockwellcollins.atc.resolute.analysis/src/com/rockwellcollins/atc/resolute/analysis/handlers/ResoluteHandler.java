@@ -3,20 +3,24 @@ package com.rockwellcollins.atc.resolute.analysis.handlers;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.emf.ecore.EClass;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.handlers.IHandlerActivation;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.xtext.EcoreUtil2;
+import org.osate.aadl2.AnnexSubclause;
 import org.osate.aadl2.ComponentCategory;
 import org.osate.aadl2.Element;
 import org.osate.aadl2.NamedElement;
@@ -25,6 +29,7 @@ import org.osate.aadl2.instance.ComponentInstance;
 import org.osate.aadl2.instance.ConnectionInstance;
 import org.osate.aadl2.instance.SystemInstance;
 import org.osate.aadl2.instantiation.InstantiateModel;
+import org.osate.annexsupport.AnnexUtil;
 import org.osate.ui.dialogs.Dialog;
 
 import com.rockwellcollins.atc.resolute.analysis.execution.EvaluationContext;
@@ -34,6 +39,7 @@ import com.rockwellcollins.atc.resolute.analysis.execution.ResoluteInterpreter;
 import com.rockwellcollins.atc.resolute.analysis.results.ResoluteResult;
 import com.rockwellcollins.atc.resolute.analysis.views.AssuranceCaseView;
 import com.rockwellcollins.atc.resolute.resolute.ProveStatement;
+import com.rockwellcollins.atc.resolute.resolute.ResolutePackage;
 import com.rockwellcollins.atc.resolute.resolute.ResoluteSubclause;
 import com.rockwellcollins.atc.resolute.validation.BaseType;
 
@@ -76,20 +82,28 @@ public class ResoluteHandler extends AadlHandler {
         initializeSets(si, sets);
         FeatureToConnectionsMap featToConnsMap = new FeatureToConnectionsMap(si);
 
+        // Right now OSATE has a bug where subclauses will show up twice, 
+        Set<AnnexSubclause> osateBugWorkaround = new HashSet<>();
+        
         List<ResoluteResult> proofTrees = new ArrayList<>();
         for (NamedElement el : sets.get("component")) {
             ComponentInstance compInst = (ComponentInstance) el;
-            for (Element child : compInst.getComponentClassifier().getChildren()) {
-                if (child instanceof ResoluteSubclause) {
+            EClass resoluteSubclauseEClass = ResolutePackage.eINSTANCE.getResoluteSubclause();
+            for (AnnexSubclause subclause : AnnexUtil.getAllAnnexSubclauses(
+                    compInst.getComponentClassifier(), resoluteSubclauseEClass)) {
+                if (osateBugWorkaround.contains(subclause)) {
+                    continue;
+                } else {
+                    osateBugWorkaround.add(subclause);
+                }
+                if (subclause instanceof ResoluteSubclause) {
+                    ResoluteSubclause resoluteSubclause = (ResoluteSubclause) subclause;
                     EvaluationContext context = new EvaluationContext(compInst, sets,
                             featToConnsMap);
                     ResoluteInterpreter interpreter = new ResoluteInterpreter(context);
-                    for (Element element : child.getChildren()) {
-                        if (element instanceof ProveStatement) {
-                            proofTrees.add(interpreter
-                                    .evaluateProveStatement((ProveStatement) element));
-                            drawProofs(proofTrees);
-                        }
+                    for (ProveStatement ps : resoluteSubclause.getProves()) {
+                        proofTrees.add(interpreter.evaluateProveStatement(ps));
+                        drawProofs(proofTrees);
                     }
                 }
             }
