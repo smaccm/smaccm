@@ -4,6 +4,9 @@ public
   with DATATYPES;
  
   system UAS
+    annex agree {**
+    	guarantee "empty" : true;
+    **};
   end UAS;
   
   system implementation UAS.Impl
