@@ -129,7 +129,9 @@ thread group implementation UserInputThreads.Impl
 	conn_control : port controlLawTask_inst.law_emitter -> proxy_controllaw_inst.proxyEvent;
 	
   annex agree {** 
-  	calendar: ppmInputTower_inst, controlLawTask_inst, uiMuxTask_inst;  
+--  	calendar: ppmInputTower_inst, controlLawTask_inst, uiMuxTask_inst;  
+   
+    synchrony: 1 no_simult;
    
   	node time_since(trigger : bool) returns (count : int);
   	let

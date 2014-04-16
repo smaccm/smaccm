@@ -43,7 +43,7 @@ public class AgreeGenerator {
         String topCategory = compInst.getName();
         
         AgreeAnnexEmitter topEmitter = new AgreeAnnexEmitter(
-                compInst, layout, topCategory, topCategory+dotChar, topCategory+".", true, true);
+                compInst, layout, topCategory, topCategory+dotChar, "", true, true);
         
         this.topEmitter = topEmitter;
         
@@ -55,8 +55,6 @@ public class AgreeGenerator {
                 break;
             }
         }
-
-        
         
         for (AnnexSubclause annex : AnnexUtil.getAllAnnexSubclauses(ct, AgreePackage.eINSTANCE.getAgreeContractSubclause())) {
             if (annex instanceof AgreeContractSubclause) {
@@ -84,7 +82,7 @@ public class AgreeGenerator {
             AgreeAnnexEmitter subEmitter = new AgreeAnnexEmitter(
                     subCompInst, layout, category,
                     topCategory + dotChar + category + dotChar,
-                    topCategory + "." + category + ".", false, false);
+                    category + ".", false, false);
 
             
             //TODO: figure out if we actually want to grab this stuff.
