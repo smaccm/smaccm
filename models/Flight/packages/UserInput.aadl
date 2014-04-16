@@ -211,7 +211,7 @@ thread proxy_userinput
   properties
     Source_Text => ("tower_task_usercode_proxy_userinput_132.c");
     Priority => 22;
-    Source_Stack_Size => 256 bytes;
+    Stack_Size => 256 bytes;
     SMACCM::Language => "Ivory";
     Dispatch_Protocol => Sporadic;
     SMACCM::Always_Sends_Message => true;
@@ -233,7 +233,7 @@ thread proxy_controllaw
   properties
     Source_Text => ("tower_task_usercode_proxy_controllaw_141.c");
     Priority => 21;
-    Source_Stack_Size => 256 bytes;
+    Stack_Size => 256 bytes;
     SMACCM::Language => "Ivory";
     Dispatch_Protocol => Sporadic;
 end proxy_controllaw;
@@ -267,7 +267,7 @@ thread uiMuxTask
   properties
     Source_Text => ("tower_task_usercode_uiMuxTask_106.c");
     Priority => 23;
-    Source_Stack_Size => 256 bytes;
+    Stack_Size => 256 bytes;
     SMACCM::Language => "Ivory";
     Dispatch_Protocol => Sporadic;
     SMACCM::Always_Sends_Message => true;
@@ -323,7 +323,7 @@ thread mavlinkInputTask
   properties
     Source_Text => ("tower_task_usercode_mavlinkInputTask_65.c");
     Priority => 25;
-    Source_Stack_Size => 256 bytes;
+    Stack_Size => 256 bytes;
     SMACCM::Language => "Ivory";
     Dispatch_Protocol => Hybrid;
     Period => 5 ms;
@@ -354,7 +354,7 @@ thread controlLawTask
   properties
     Source_Text => ("tower_task_usercode_controlLawTask_87.c");
     Priority => 24;
-    Source_Stack_Size => 256 bytes;
+    Stack_Size => 256 bytes;
     SMACCM::Language => "Ivory";
     Dispatch_Protocol => Sporadic;
     
@@ -425,7 +425,7 @@ thread ppmInputTower
   properties
     Source_Text => ("tower_task_usercode_ppmInputTower_43.c");
     Priority => 26;
-    Source_Stack_Size => 256 bytes;
+    Stack_Size => 256 bytes;
     SMACCM::Language => "Ivory";
     Dispatch_Protocol => Hybrid;
     Period => 50 ms; 

@@ -25,7 +25,7 @@ package AHS
 public
   data Attitude_Heading_Data
     properties
-      Source_Data_Size => 8 Bytes;
+      Data_Size => 8 Bytes;
   end Attitude_Heading_Data;
   
   process Attitude_Heading_Process

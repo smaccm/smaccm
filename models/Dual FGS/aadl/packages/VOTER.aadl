@@ -50,7 +50,7 @@ with TYPES;
       Val: data TYPES::Real;
       Valid: data TYPES::Boolean;
     properties
-      Source_Data_Size => 4 Bytes;
+      Data_Size => 4 Bytes;
   end Selectable_Value.Selectable_Value_Impl;
   
   data implementation Votable_Value.Votable_Value_Impl
@@ -58,6 +58,6 @@ with TYPES;
       Val: data TYPES::Real;
       Valid: data TYPES::Boolean;
     properties
-      Source_Data_Size => 4 Bytes;
+      Data_Size => 4 Bytes;
   end Votable_Value.Votable_Value_Impl;
 end VOTER;

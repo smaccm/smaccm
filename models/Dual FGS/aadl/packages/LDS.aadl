@@ -26,17 +26,17 @@ public
 with Base_Types,META_Properties;
   data Leader_Selection_Active
     properties
-      Source_Data_Size => 8 Bytes;
+      Data_Size => 8 Bytes;
   end Leader_Selection_Active;
   
   data Leader_Selection_Data
     properties
-      Source_Data_Size => 8 Bytes;
+      Data_Size => 8 Bytes;
   end Leader_Selection_Data;
   
   data Leader_Selection_Rank
     properties
-      Source_Data_Size => 8 Bytes;
+      Data_Size => 8 Bytes;
   end Leader_Selection_Rank;
   
   thread Leader_Selection

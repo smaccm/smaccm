@@ -49,7 +49,7 @@ public
       Source_Text => ("app/userInputTask/main.cpp");
       Initialize_Entrypoint_Source_Text => "main";
       Compute_Entrypoint_Source_Text => "main_task";
-	  Source_Stack_Size => 8196 bytes;
+	  Stack_Size => 8196 bytes;
 	  Dispatch_Protocol => Periodic;
 	  Period => 50 ms; 
       Timing_Properties::Compute_Execution_Time => 2 ms .. 5 ms;
@@ -61,8 +61,8 @@ public
 	  -- 	Source_Language: inherit list of Supported_Source_Languages
 	  -- Properties specifying memory requirements of threads
 	  -- 	Source_Code_Size: Size
-	  -- 	Source_Data_Size: Size
-	  -- 	Source_Stack_Size: Size
+	  -- 	Data_Size: Size
+	  -- 	Stack_Size: Size
 	  -- 	Source_Heap_Size: Size
 	  -- Properties specifying thread dispatch properties
 	  -- 	Dispatch_Trigger: list of reference (port)
@@ -93,7 +93,7 @@ public
       Source_Text => ("app/blinkTask/main.cpp");
       Initialize_Entrypoint_Source_Text => "main";
       Compute_Entrypoint_Source_Text => "main_task";
-	  Source_Stack_Size => 8196 bytes;
+	  Stack_Size => 8196 bytes;
 	  Dispatch_Protocol => Periodic;
 	  Period => 50 ms; 
       Compute_Execution_Time => 1 ms .. 3 ms;

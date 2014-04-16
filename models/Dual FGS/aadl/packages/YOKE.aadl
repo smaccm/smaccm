@@ -25,7 +25,7 @@ package YOKE
 public
   data Yoke_Data
     properties
-      Source_Data_Size => 4 Bytes;
+      Data_Size => 4 Bytes;
   end Yoke_Data;
   
   device Yoke

@@ -4,6 +4,9 @@ public
   with DATATYPES;
  
   system UAS
+    annex agree {**
+    	guarantee "empty" : true;
+    **};
   end UAS;
   
   system implementation UAS.Impl
@@ -24,8 +27,8 @@ public
       conn5: port RC.flight_control_commands -> UAV.flight_control_commands;
       
     annex resolute {**
-    	prove all_features_bound()
-    	prove print_all_unimplemented()
+    	--prove all_features_bound()
+    	--prove print_all_unimplemented()
     	prove all_outgoing_through_trusted(this.GS)
     **};
       

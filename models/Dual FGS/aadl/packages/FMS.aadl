@@ -25,7 +25,7 @@ package FMS
 public
   data Flight_Management_Data
     properties
-      Source_Data_Size => 512 Bytes;
+      Data_Size => 512 Bytes;
   end Flight_Management_Data;
   
   process Flight_Management_Process

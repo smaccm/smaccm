@@ -1,0 +1,2005 @@
+<?xml version="1.0" encoding="ASCII"?>
+<pi:Diagram xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:al="http://eclipse.org/graphiti/mm/algorithms" xmlns:pi="http://eclipse.org/graphiti/mm/pictograms" visible="true" gridUnit="10" diagramTypeId="AADL Component Implementation" name="UAV::UAV.Impl" snapToGrid="true" version="0.10.0">
+  <properties key="independentObject" value="classifier UAV::UAV.Impl"/>
+  <graphicsAlgorithm xsi:type="al:Rectangle" background="//@colors.1" foreground="//@colors.0" lineWidth="1" transparency="0.0" width="1000" height="1000"/>
+  <children xsi:type="pi:ContainerShape" visible="true" active="true">
+    <properties key="independentObject" value="classifier UAV::UAV.Impl"/>
+    <properties key="is_ghost" value="false"/>
+    <graphicsAlgorithm xsi:type="al:RoundedRectangle" lineStyle="UNSPECIFIED" width="1001" height="1772" x="50" y="20" style="//@styles.2/@styles.1/@styles.0" cornerHeight="25" cornerWidth="25"/>
+    <children xsi:type="pi:ContainerShape" visible="true" active="true">
+      <properties key="independentObject" value="feature UAV::UAV.radio_access_915Mhz"/>
+      <properties key="is_ghost" value="false"/>
+      <properties key="side" value="right"/>
+      <properties key="layout_side" value="right"/>
+      <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0" width="125" height="34" x="876" y="1220"/>
+      <anchors xsi:type="pi:ChopboxAnchor">
+        <properties key="name" value="chopbox"/>
+      </anchors>
+      <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" incomingConnections="//@connections.1" useAnchorLocationAsConnectionEndpoint="true">
+        <properties key="name" value="innerConnector"/>
+        <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+        <location x="105" y="24"/>
+      </anchors>
+      <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+        <properties key="name" value="outerConnector"/>
+        <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+        <location x="125" y="24"/>
+      </anchors>
+      <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+        <properties key="name" value="flowSpecification"/>
+        <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+        <location x="55" y="24"/>
+      </anchors>
+      <children xsi:type="pi:ContainerShape" visible="true" active="true">
+        <properties key="name" value="feature"/>
+        <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0" width="20" height="20" x="105" y="14">
+          <graphicsAlgorithmChildren xsi:type="al:Polyline" lineStyle="UNSPECIFIED" width="20" height="20" style="//@styles.1">
+            <points x="20"/>
+            <points x="5"/>
+            <points y="10"/>
+            <points x="5" y="20"/>
+            <points x="20" y="20"/>
+            <points x="20"/>
+          </graphicsAlgorithmChildren>
+        </graphicsAlgorithm>
+      </children>
+      <children visible="true">
+        <properties key="independentObject" value="feature UAV::UAV.radio_access_915Mhz"/>
+        <properties key="name" value="label"/>
+        <graphicsAlgorithm xsi:type="al:Text" lineStyle="UNSPECIFIED" width="120" height="14" style="//@styles.0" horizontalAlignment="UNSPECIFIED" verticalAlignment="UNSPECIFIED" value="radio_access_915Mhz"/>
+      </children>
+    </children>
+    <children xsi:type="pi:ContainerShape" visible="true" active="true">
+      <properties key="independentObject" value="feature UAV::UAV.radio_access_2_4Ghz"/>
+      <properties key="is_ghost" value="false"/>
+      <properties key="side" value="right"/>
+      <properties key="layout_side" value="right"/>
+      <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0" width="123" height="34" x="878" y="1170"/>
+      <anchors xsi:type="pi:ChopboxAnchor">
+        <properties key="name" value="chopbox"/>
+      </anchors>
+      <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" incomingConnections="//@connections.0" useAnchorLocationAsConnectionEndpoint="true">
+        <properties key="name" value="innerConnector"/>
+        <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+        <location x="103" y="24"/>
+      </anchors>
+      <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+        <properties key="name" value="outerConnector"/>
+        <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+        <location x="123" y="24"/>
+      </anchors>
+      <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+        <properties key="name" value="flowSpecification"/>
+        <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+        <location x="53" y="24"/>
+      </anchors>
+      <children xsi:type="pi:ContainerShape" visible="true" active="true">
+        <properties key="name" value="feature"/>
+        <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0" width="20" height="20" x="103" y="14">
+          <graphicsAlgorithmChildren xsi:type="al:Polyline" lineStyle="UNSPECIFIED" width="20" height="20" style="//@styles.1">
+            <points x="20"/>
+            <points x="5"/>
+            <points y="10"/>
+            <points x="5" y="20"/>
+            <points x="20" y="20"/>
+            <points x="20"/>
+          </graphicsAlgorithmChildren>
+        </graphicsAlgorithm>
+      </children>
+      <children visible="true">
+        <properties key="independentObject" value="feature UAV::UAV.radio_access_2_4Ghz"/>
+        <properties key="name" value="label"/>
+        <graphicsAlgorithm xsi:type="al:Text" lineStyle="UNSPECIFIED" width="118" height="14" style="//@styles.0" horizontalAlignment="UNSPECIFIED" verticalAlignment="UNSPECIFIED" value="radio_access_2_4Ghz"/>
+      </children>
+    </children>
+    <children xsi:type="pi:ContainerShape" visible="true" active="true">
+      <properties key="independentObject" value="feature UAV::UAV.mavlink"/>
+      <properties key="is_ghost" value="false"/>
+      <properties key="side" value="right"/>
+      <properties key="layout_side" value="right"/>
+      <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0" width="48" height="24" x="953" y="1260"/>
+      <anchors xsi:type="pi:ChopboxAnchor">
+        <properties key="name" value="chopbox"/>
+      </anchors>
+      <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" incomingConnections="//@connections.5" useAnchorLocationAsConnectionEndpoint="true">
+        <properties key="name" value="innerConnector"/>
+        <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+        <location x="18" y="19"/>
+      </anchors>
+      <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+        <properties key="name" value="outerConnector"/>
+        <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+        <location x="48" y="19"/>
+      </anchors>
+      <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+        <properties key="name" value="flowSpecification"/>
+        <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+        <location x="-32" y="19"/>
+      </anchors>
+      <children xsi:type="pi:ContainerShape" visible="true" active="true">
+        <properties key="name" value="feature"/>
+        <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0" width="30" height="10" x="18" y="14" style="//@styles.1">
+          <graphicsAlgorithmChildren xsi:type="al:Polygon" lineStyle="UNSPECIFIED" width="30" height="10" style="//@styles.1">
+            <points x="15"/>
+            <points y="5"/>
+            <points x="15" y="10"/>
+            <points x="30" y="5"/>
+          </graphicsAlgorithmChildren>
+        </graphicsAlgorithm>
+      </children>
+      <children visible="true">
+        <properties key="independentObject" value="feature UAV::UAV.mavlink"/>
+        <properties key="name" value="label"/>
+        <graphicsAlgorithm xsi:type="al:Text" lineStyle="UNSPECIFIED" width="43" height="14" style="//@styles.0" horizontalAlignment="UNSPECIFIED" verticalAlignment="UNSPECIFIED" value="mavlink"/>
+      </children>
+    </children>
+    <children xsi:type="pi:ContainerShape" visible="true" active="true">
+      <properties key="independentObject" value="feature UAV::UAV.flight_control_commands"/>
+      <properties key="is_ghost" value="false"/>
+      <properties key="side" value="right"/>
+      <properties key="layout_side" value="right"/>
+      <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0" width="146" height="24" x="855" y="1310"/>
+      <anchors xsi:type="pi:ChopboxAnchor">
+        <properties key="name" value="chopbox"/>
+      </anchors>
+      <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" outgoingConnections="//@connections.6" useAnchorLocationAsConnectionEndpoint="true">
+        <properties key="name" value="innerConnector"/>
+        <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+        <location x="131" y="19"/>
+      </anchors>
+      <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+        <properties key="name" value="outerConnector"/>
+        <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+        <location x="146" y="19"/>
+      </anchors>
+      <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+        <properties key="name" value="flowSpecification"/>
+        <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+        <location x="81" y="19"/>
+      </anchors>
+      <children xsi:type="pi:ContainerShape" visible="true" active="true">
+        <properties key="name" value="feature"/>
+        <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0" width="15" height="10" x="131" y="14" style="//@styles.1">
+          <graphicsAlgorithmChildren xsi:type="al:Polygon" lineStyle="UNSPECIFIED" width="15" height="10" style="//@styles.1">
+            <points x="15"/>
+            <points y="5"/>
+            <points x="15" y="10"/>
+          </graphicsAlgorithmChildren>
+        </graphicsAlgorithm>
+      </children>
+      <children visible="true">
+        <properties key="independentObject" value="feature UAV::UAV.flight_control_commands"/>
+        <properties key="name" value="label"/>
+        <graphicsAlgorithm xsi:type="al:Text" lineStyle="UNSPECIFIED" width="141" height="14" style="//@styles.0" horizontalAlignment="UNSPECIFIED" verticalAlignment="UNSPECIFIED" value="flight_control_commands"/>
+      </children>
+    </children>
+    <children xsi:type="pi:ContainerShape" visible="true" active="true">
+      <properties key="independentObject" value="subcomponent UAV::UAV.Impl.SW"/>
+      <properties key="is_layed_out" value="true"/>
+      <properties key="is_ghost" value="false"/>
+      <graphicsAlgorithm xsi:type="al:RoundedRectangle" lineStyle="UNSPECIFIED" width="560" height="322" x="200" y="151" style="//@styles.2/@styles.1/@styles.0" cornerHeight="25" cornerWidth="25"/>
+      <anchors xsi:type="pi:ChopboxAnchor">
+        <properties key="name" value="chopbox"/>
+      </anchors>
+      <children xsi:type="pi:ContainerShape" visible="true" active="true">
+        <properties key="independentObject" value="feature SOFTWARE::Software.motors_and_radios"/>
+        <properties key="side" value="right"/>
+        <properties key="is_ghost" value="false"/>
+        <properties key="layout_side" value="right"/>
+        <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0" width="176" height="213" x="384" y="51"/>
+        <anchors xsi:type="pi:ChopboxAnchor">
+          <properties key="name" value="chopbox"/>
+        </anchors>
+        <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+          <properties key="name" value="innerConnector"/>
+          <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+          <location x="146" y="113"/>
+        </anchors>
+        <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" incomingConnections="//@connections.4" useAnchorLocationAsConnectionEndpoint="true">
+          <properties key="name" value="outerConnector"/>
+          <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+          <location x="176" y="113"/>
+        </anchors>
+        <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+          <properties key="name" value="flowSpecification"/>
+          <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+          <location x="96" y="194"/>
+        </anchors>
+        <children xsi:type="pi:ContainerShape" visible="true" active="true">
+          <properties key="name" value="feature"/>
+          <graphicsAlgorithm xsi:type="al:Rectangle" lineStyle="UNSPECIFIED" filled="false" lineVisible="false" width="176" height="199" y="14">
+            <graphicsAlgorithmChildren xsi:type="al:Ellipse" lineStyle="UNSPECIFIED" width="20" height="20" x="156" y="89" style="//@styles.2/@styles.0"/>
+            <graphicsAlgorithmChildren xsi:type="al:Rectangle" lineStyle="UNSPECIFIED" width="10" height="199" x="146" style="//@styles.2/@styles.0"/>
+          </graphicsAlgorithm>
+          <children xsi:type="pi:ContainerShape" visible="true" active="true">
+            <properties key="independentObject" value="feature UAV::motors_and_radios.motor1"/>
+            <properties key="is_ghost" value="false"/>
+            <properties key="layout_side" value="right"/>
+            <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0" width="45" height="24" x="101"/>
+            <anchors xsi:type="pi:ChopboxAnchor">
+              <properties key="name" value="chopbox"/>
+            </anchors>
+            <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+              <properties key="name" value="innerConnector"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+              <location x="30" y="19"/>
+            </anchors>
+            <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+              <properties key="name" value="outerConnector"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+              <location x="45" y="19"/>
+            </anchors>
+            <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+              <properties key="name" value="flowSpecification"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+              <location x="-20" y="19"/>
+            </anchors>
+            <children xsi:type="pi:ContainerShape" visible="true" active="true">
+              <properties key="name" value="feature"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0" width="15" height="10" x="30" y="14" style="//@styles.1">
+                <graphicsAlgorithmChildren xsi:type="al:Polygon" lineStyle="UNSPECIFIED" width="15" height="10" style="//@styles.1">
+                  <points/>
+                  <points x="15" y="5"/>
+                  <points y="10"/>
+                </graphicsAlgorithmChildren>
+              </graphicsAlgorithm>
+            </children>
+            <children visible="true">
+              <properties key="independentObject" value="feature UAV::motors_and_radios.motor1"/>
+              <properties key="name" value="label"/>
+              <graphicsAlgorithm xsi:type="al:Text" lineStyle="UNSPECIFIED" width="40" height="14" style="//@styles.0" horizontalAlignment="UNSPECIFIED" verticalAlignment="UNSPECIFIED" value="motor1"/>
+            </children>
+          </children>
+          <children xsi:type="pi:ContainerShape" visible="true" active="true">
+            <properties key="independentObject" value="feature UAV::motors_and_radios.motor2"/>
+            <properties key="is_ghost" value="false"/>
+            <properties key="layout_side" value="right"/>
+            <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0" width="45" height="24" x="101" y="29"/>
+            <anchors xsi:type="pi:ChopboxAnchor">
+              <properties key="name" value="chopbox"/>
+            </anchors>
+            <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+              <properties key="name" value="innerConnector"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+              <location x="30" y="19"/>
+            </anchors>
+            <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+              <properties key="name" value="outerConnector"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+              <location x="45" y="19"/>
+            </anchors>
+            <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+              <properties key="name" value="flowSpecification"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+              <location x="-20" y="19"/>
+            </anchors>
+            <children xsi:type="pi:ContainerShape" visible="true" active="true">
+              <properties key="name" value="feature"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0" width="15" height="10" x="30" y="14" style="//@styles.1">
+                <graphicsAlgorithmChildren xsi:type="al:Polygon" lineStyle="UNSPECIFIED" width="15" height="10" style="//@styles.1">
+                  <points/>
+                  <points x="15" y="5"/>
+                  <points y="10"/>
+                </graphicsAlgorithmChildren>
+              </graphicsAlgorithm>
+            </children>
+            <children visible="true">
+              <properties key="independentObject" value="feature UAV::motors_and_radios.motor2"/>
+              <properties key="name" value="label"/>
+              <graphicsAlgorithm xsi:type="al:Text" lineStyle="UNSPECIFIED" width="40" height="14" style="//@styles.0" horizontalAlignment="UNSPECIFIED" verticalAlignment="UNSPECIFIED" value="motor2"/>
+            </children>
+          </children>
+          <children xsi:type="pi:ContainerShape" visible="true" active="true">
+            <properties key="independentObject" value="feature UAV::motors_and_radios.motor3"/>
+            <properties key="is_ghost" value="false"/>
+            <properties key="layout_side" value="right"/>
+            <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0" width="45" height="24" x="101" y="58"/>
+            <anchors xsi:type="pi:ChopboxAnchor">
+              <properties key="name" value="chopbox"/>
+            </anchors>
+            <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+              <properties key="name" value="innerConnector"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+              <location x="30" y="19"/>
+            </anchors>
+            <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+              <properties key="name" value="outerConnector"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+              <location x="45" y="19"/>
+            </anchors>
+            <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+              <properties key="name" value="flowSpecification"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+              <location x="-20" y="19"/>
+            </anchors>
+            <children xsi:type="pi:ContainerShape" visible="true" active="true">
+              <properties key="name" value="feature"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0" width="15" height="10" x="30" y="14" style="//@styles.1">
+                <graphicsAlgorithmChildren xsi:type="al:Polygon" lineStyle="UNSPECIFIED" width="15" height="10" style="//@styles.1">
+                  <points/>
+                  <points x="15" y="5"/>
+                  <points y="10"/>
+                </graphicsAlgorithmChildren>
+              </graphicsAlgorithm>
+            </children>
+            <children visible="true">
+              <properties key="independentObject" value="feature UAV::motors_and_radios.motor3"/>
+              <properties key="name" value="label"/>
+              <graphicsAlgorithm xsi:type="al:Text" lineStyle="UNSPECIFIED" width="40" height="14" style="//@styles.0" horizontalAlignment="UNSPECIFIED" verticalAlignment="UNSPECIFIED" value="motor3"/>
+            </children>
+          </children>
+          <children xsi:type="pi:ContainerShape" visible="true" active="true">
+            <properties key="independentObject" value="feature UAV::motors_and_radios.motor4"/>
+            <properties key="is_ghost" value="false"/>
+            <properties key="layout_side" value="right"/>
+            <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0" width="45" height="24" x="101" y="87"/>
+            <anchors xsi:type="pi:ChopboxAnchor">
+              <properties key="name" value="chopbox"/>
+            </anchors>
+            <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+              <properties key="name" value="innerConnector"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+              <location x="30" y="19"/>
+            </anchors>
+            <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+              <properties key="name" value="outerConnector"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+              <location x="45" y="19"/>
+            </anchors>
+            <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+              <properties key="name" value="flowSpecification"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+              <location x="-20" y="19"/>
+            </anchors>
+            <children xsi:type="pi:ContainerShape" visible="true" active="true">
+              <properties key="name" value="feature"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0" width="15" height="10" x="30" y="14" style="//@styles.1">
+                <graphicsAlgorithmChildren xsi:type="al:Polygon" lineStyle="UNSPECIFIED" width="15" height="10" style="//@styles.1">
+                  <points/>
+                  <points x="15" y="5"/>
+                  <points y="10"/>
+                </graphicsAlgorithmChildren>
+              </graphicsAlgorithm>
+            </children>
+            <children visible="true">
+              <properties key="independentObject" value="feature UAV::motors_and_radios.motor4"/>
+              <properties key="name" value="label"/>
+              <graphicsAlgorithm xsi:type="al:Text" lineStyle="UNSPECIFIED" width="40" height="14" style="//@styles.0" horizontalAlignment="UNSPECIFIED" verticalAlignment="UNSPECIFIED" value="motor4"/>
+            </children>
+          </children>
+          <children xsi:type="pi:ContainerShape" visible="true" active="true">
+            <properties key="independentObject" value="feature UAV::motors_and_radios.flight_control_commands"/>
+            <properties key="is_ghost" value="false"/>
+            <properties key="layout_side" value="right"/>
+            <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0" width="146" height="24" y="116"/>
+            <anchors xsi:type="pi:ChopboxAnchor">
+              <properties key="name" value="chopbox"/>
+            </anchors>
+            <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+              <properties key="name" value="innerConnector"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+              <location x="131" y="19"/>
+            </anchors>
+            <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+              <properties key="name" value="outerConnector"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+              <location x="146" y="19"/>
+            </anchors>
+            <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+              <properties key="name" value="flowSpecification"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+              <location x="81" y="19"/>
+            </anchors>
+            <children xsi:type="pi:ContainerShape" visible="true" active="true">
+              <properties key="name" value="feature"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0" width="15" height="10" x="131" y="14" style="//@styles.1">
+                <graphicsAlgorithmChildren xsi:type="al:Polygon" lineStyle="UNSPECIFIED" width="15" height="10" style="//@styles.1">
+                  <points x="15"/>
+                  <points y="5"/>
+                  <points x="15" y="10"/>
+                </graphicsAlgorithmChildren>
+              </graphicsAlgorithm>
+            </children>
+            <children visible="true">
+              <properties key="independentObject" value="feature UAV::motors_and_radios.flight_control_commands"/>
+              <properties key="name" value="label"/>
+              <graphicsAlgorithm xsi:type="al:Text" lineStyle="UNSPECIFIED" width="141" height="14" style="//@styles.0" horizontalAlignment="UNSPECIFIED" verticalAlignment="UNSPECIFIED" value="flight_control_commands"/>
+            </children>
+          </children>
+          <children xsi:type="pi:ContainerShape" visible="true" active="true">
+            <properties key="independentObject" value="feature UAV::motors_and_radios.mavlink"/>
+            <properties key="is_ghost" value="false"/>
+            <properties key="layout_side" value="right"/>
+            <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0" width="48" height="24" x="98" y="145"/>
+            <anchors xsi:type="pi:ChopboxAnchor">
+              <properties key="name" value="chopbox"/>
+            </anchors>
+            <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+              <properties key="name" value="innerConnector"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+              <location x="18" y="19"/>
+            </anchors>
+            <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+              <properties key="name" value="outerConnector"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+              <location x="48" y="19"/>
+            </anchors>
+            <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+              <properties key="name" value="flowSpecification"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+              <location x="-32" y="19"/>
+            </anchors>
+            <children xsi:type="pi:ContainerShape" visible="true" active="true">
+              <properties key="name" value="feature"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0" width="30" height="10" x="18" y="14" style="//@styles.1">
+                <graphicsAlgorithmChildren xsi:type="al:Polygon" lineStyle="UNSPECIFIED" width="30" height="10" style="//@styles.1">
+                  <points x="15"/>
+                  <points y="5"/>
+                  <points x="15" y="10"/>
+                  <points x="30" y="5"/>
+                </graphicsAlgorithmChildren>
+              </graphicsAlgorithm>
+            </children>
+            <children visible="true">
+              <properties key="independentObject" value="feature UAV::motors_and_radios.mavlink"/>
+              <properties key="name" value="label"/>
+              <graphicsAlgorithm xsi:type="al:Text" lineStyle="UNSPECIFIED" width="43" height="14" style="//@styles.0" horizontalAlignment="UNSPECIFIED" verticalAlignment="UNSPECIFIED" value="mavlink"/>
+            </children>
+          </children>
+        </children>
+        <children visible="true">
+          <properties key="independentObject" value="feature SOFTWARE::Software.motors_and_radios"/>
+          <properties key="name" value="label"/>
+          <graphicsAlgorithm xsi:type="al:Text" lineStyle="UNSPECIFIED" width="108" height="14" x="63" style="//@styles.0" horizontalAlignment="UNSPECIFIED" verticalAlignment="UNSPECIFIED" value="motors_and_radios"/>
+        </children>
+      </children>
+      <children xsi:type="pi:ContainerShape" visible="true" active="true">
+        <properties key="independentObject" value="feature SOFTWARE::Software.sensors"/>
+        <properties key="is_ghost" value="false"/>
+        <properties key="side" value="left"/>
+        <properties key="layout_side" value="left"/>
+        <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0" width="147" height="223" y="46"/>
+        <anchors xsi:type="pi:ChopboxAnchor">
+          <properties key="name" value="chopbox"/>
+        </anchors>
+        <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+          <properties key="name" value="innerConnector"/>
+          <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+          <location x="30" y="118"/>
+        </anchors>
+        <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" incomingConnections="//@connections.2" useAnchorLocationAsConnectionEndpoint="true">
+          <properties key="name" value="outerConnector"/>
+          <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+          <location y="118"/>
+        </anchors>
+        <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+          <properties key="name" value="flowSpecification"/>
+          <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+          <location x="80" y="204"/>
+        </anchors>
+        <children xsi:type="pi:ContainerShape" visible="true" active="true">
+          <properties key="name" value="feature"/>
+          <graphicsAlgorithm xsi:type="al:Rectangle" lineStyle="UNSPECIFIED" filled="false" lineVisible="false" width="147" height="209" y="14">
+            <graphicsAlgorithmChildren xsi:type="al:Ellipse" lineStyle="UNSPECIFIED" width="20" height="20" y="94" style="//@styles.2/@styles.0"/>
+            <graphicsAlgorithmChildren xsi:type="al:Rectangle" lineStyle="UNSPECIFIED" width="10" height="209" x="20" style="//@styles.2/@styles.0"/>
+          </graphicsAlgorithm>
+          <children xsi:type="pi:ContainerShape" visible="true" active="true">
+            <properties key="independentObject" value="feature UAV::sensors.magnetometer_data"/>
+            <properties key="is_ghost" value="false"/>
+            <properties key="layout_side" value="left"/>
+            <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0" width="117" height="24" x="30"/>
+            <anchors xsi:type="pi:ChopboxAnchor">
+              <properties key="name" value="chopbox"/>
+            </anchors>
+            <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+              <properties key="name" value="innerConnector"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+              <location x="15" y="19"/>
+            </anchors>
+            <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+              <properties key="name" value="outerConnector"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+              <location y="19"/>
+            </anchors>
+            <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+              <properties key="name" value="flowSpecification"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+              <location x="65" y="19"/>
+            </anchors>
+            <children xsi:type="pi:ContainerShape" visible="true" active="true">
+              <properties key="name" value="feature"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0" width="15" height="10" y="14" style="//@styles.1">
+                <graphicsAlgorithmChildren xsi:type="al:Polygon" lineStyle="UNSPECIFIED" width="15" height="10" style="//@styles.1">
+                  <points/>
+                  <points x="15" y="5"/>
+                  <points y="10"/>
+                </graphicsAlgorithmChildren>
+              </graphicsAlgorithm>
+            </children>
+            <children visible="true">
+              <properties key="independentObject" value="feature UAV::sensors.magnetometer_data"/>
+              <properties key="name" value="label"/>
+              <graphicsAlgorithm xsi:type="al:Text" lineStyle="UNSPECIFIED" width="112" height="14" x="5" style="//@styles.0" horizontalAlignment="UNSPECIFIED" verticalAlignment="UNSPECIFIED" value="magnetometer_data"/>
+            </children>
+          </children>
+          <children xsi:type="pi:ContainerShape" visible="true" active="true">
+            <properties key="independentObject" value="feature UAV::sensors.barometric_data"/>
+            <properties key="is_ghost" value="false"/>
+            <properties key="layout_side" value="left"/>
+            <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0" width="95" height="24" x="30" y="29"/>
+            <anchors xsi:type="pi:ChopboxAnchor">
+              <properties key="name" value="chopbox"/>
+            </anchors>
+            <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+              <properties key="name" value="innerConnector"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+              <location x="15" y="19"/>
+            </anchors>
+            <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+              <properties key="name" value="outerConnector"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+              <location y="19"/>
+            </anchors>
+            <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+              <properties key="name" value="flowSpecification"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+              <location x="65" y="19"/>
+            </anchors>
+            <children xsi:type="pi:ContainerShape" visible="true" active="true">
+              <properties key="name" value="feature"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0" width="15" height="10" y="14" style="//@styles.1">
+                <graphicsAlgorithmChildren xsi:type="al:Polygon" lineStyle="UNSPECIFIED" width="15" height="10" style="//@styles.1">
+                  <points/>
+                  <points x="15" y="5"/>
+                  <points y="10"/>
+                </graphicsAlgorithmChildren>
+              </graphicsAlgorithm>
+            </children>
+            <children visible="true">
+              <properties key="independentObject" value="feature UAV::sensors.barometric_data"/>
+              <properties key="name" value="label"/>
+              <graphicsAlgorithm xsi:type="al:Text" lineStyle="UNSPECIFIED" width="90" height="14" x="5" style="//@styles.0" horizontalAlignment="UNSPECIFIED" verticalAlignment="UNSPECIFIED" value="barometric_data"/>
+            </children>
+          </children>
+          <children xsi:type="pi:ContainerShape" visible="true" active="true">
+            <properties key="independentObject" value="feature UAV::sensors.motion_data"/>
+            <properties key="is_ghost" value="false"/>
+            <properties key="layout_side" value="left"/>
+            <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0" width="73" height="24" x="30" y="58"/>
+            <anchors xsi:type="pi:ChopboxAnchor">
+              <properties key="name" value="chopbox"/>
+            </anchors>
+            <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+              <properties key="name" value="innerConnector"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+              <location x="15" y="19"/>
+            </anchors>
+            <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+              <properties key="name" value="outerConnector"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+              <location y="19"/>
+            </anchors>
+            <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+              <properties key="name" value="flowSpecification"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+              <location x="65" y="19"/>
+            </anchors>
+            <children xsi:type="pi:ContainerShape" visible="true" active="true">
+              <properties key="name" value="feature"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0" width="15" height="10" y="14" style="//@styles.1">
+                <graphicsAlgorithmChildren xsi:type="al:Polygon" lineStyle="UNSPECIFIED" width="15" height="10" style="//@styles.1">
+                  <points/>
+                  <points x="15" y="5"/>
+                  <points y="10"/>
+                </graphicsAlgorithmChildren>
+              </graphicsAlgorithm>
+            </children>
+            <children visible="true">
+              <properties key="independentObject" value="feature UAV::sensors.motion_data"/>
+              <properties key="name" value="label"/>
+              <graphicsAlgorithm xsi:type="al:Text" lineStyle="UNSPECIFIED" width="68" height="14" x="5" style="//@styles.0" horizontalAlignment="UNSPECIFIED" verticalAlignment="UNSPECIFIED" value="motion_data"/>
+            </children>
+          </children>
+          <children xsi:type="pi:ContainerShape" visible="true" active="true">
+            <properties key="independentObject" value="feature UAV::sensors.battery_data"/>
+            <properties key="is_ghost" value="false"/>
+            <properties key="layout_side" value="left"/>
+            <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0" width="73" height="24" x="30" y="87"/>
+            <anchors xsi:type="pi:ChopboxAnchor">
+              <properties key="name" value="chopbox"/>
+            </anchors>
+            <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+              <properties key="name" value="innerConnector"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+              <location x="15" y="19"/>
+            </anchors>
+            <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+              <properties key="name" value="outerConnector"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+              <location y="19"/>
+            </anchors>
+            <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+              <properties key="name" value="flowSpecification"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+              <location x="65" y="19"/>
+            </anchors>
+            <children xsi:type="pi:ContainerShape" visible="true" active="true">
+              <properties key="name" value="feature"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0" width="15" height="10" y="14" style="//@styles.1">
+                <graphicsAlgorithmChildren xsi:type="al:Polygon" lineStyle="UNSPECIFIED" width="15" height="10" style="//@styles.1">
+                  <points/>
+                  <points x="15" y="5"/>
+                  <points y="10"/>
+                </graphicsAlgorithmChildren>
+              </graphicsAlgorithm>
+            </children>
+            <children visible="true">
+              <properties key="independentObject" value="feature UAV::sensors.battery_data"/>
+              <properties key="name" value="label"/>
+              <graphicsAlgorithm xsi:type="al:Text" lineStyle="UNSPECIFIED" width="68" height="14" x="5" style="//@styles.0" horizontalAlignment="UNSPECIFIED" verticalAlignment="UNSPECIFIED" value="battery_data"/>
+            </children>
+          </children>
+          <children xsi:type="pi:ContainerShape" visible="true" active="true">
+            <properties key="independentObject" value="feature UAV::sensors.gps_data"/>
+            <properties key="is_ghost" value="false"/>
+            <properties key="layout_side" value="left"/>
+            <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0" width="55" height="24" x="30" y="116"/>
+            <anchors xsi:type="pi:ChopboxAnchor">
+              <properties key="name" value="chopbox"/>
+            </anchors>
+            <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+              <properties key="name" value="innerConnector"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+              <location x="15" y="19"/>
+            </anchors>
+            <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+              <properties key="name" value="outerConnector"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+              <location y="19"/>
+            </anchors>
+            <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+              <properties key="name" value="flowSpecification"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+              <location x="65" y="19"/>
+            </anchors>
+            <children xsi:type="pi:ContainerShape" visible="true" active="true">
+              <properties key="name" value="feature"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0" width="15" height="10" y="14" style="//@styles.1">
+                <graphicsAlgorithmChildren xsi:type="al:Polygon" lineStyle="UNSPECIFIED" width="15" height="10" style="//@styles.1">
+                  <points/>
+                  <points x="15" y="5"/>
+                  <points y="10"/>
+                </graphicsAlgorithmChildren>
+              </graphicsAlgorithm>
+            </children>
+            <children visible="true">
+              <properties key="independentObject" value="feature UAV::sensors.gps_data"/>
+              <properties key="name" value="label"/>
+              <graphicsAlgorithm xsi:type="al:Text" lineStyle="UNSPECIFIED" width="50" height="14" x="5" style="//@styles.0" horizontalAlignment="UNSPECIFIED" verticalAlignment="UNSPECIFIED" value="gps_data"/>
+            </children>
+          </children>
+          <children xsi:type="pi:ContainerShape" visible="true" active="true">
+            <properties key="independentObject" value="feature UAV::sensors.reset"/>
+            <properties key="is_ghost" value="false"/>
+            <properties key="layout_side" value="left"/>
+            <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0" width="35" height="34" x="30" y="145"/>
+            <anchors xsi:type="pi:ChopboxAnchor">
+              <properties key="name" value="chopbox"/>
+            </anchors>
+            <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+              <properties key="name" value="innerConnector"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+              <location x="25" y="24"/>
+            </anchors>
+            <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+              <properties key="name" value="outerConnector"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+              <location x="25" y="24"/>
+            </anchors>
+            <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+              <properties key="name" value="flowSpecification"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+              <location x="75" y="24"/>
+            </anchors>
+            <children xsi:type="pi:ContainerShape" visible="true" active="true">
+              <properties key="name" value="feature"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0" width="25" height="20" y="14" style="//@styles.1">
+                <graphicsAlgorithmChildren xsi:type="al:Polyline" lineStyle="UNSPECIFIED" width="25" height="20" style="//@styles.1">
+                  <points/>
+                  <points x="25" y="10"/>
+                  <points y="20"/>
+                </graphicsAlgorithmChildren>
+              </graphicsAlgorithm>
+            </children>
+            <children visible="true">
+              <properties key="independentObject" value="feature UAV::sensors.reset"/>
+              <properties key="name" value="label"/>
+              <graphicsAlgorithm xsi:type="al:Text" lineStyle="UNSPECIFIED" width="30" height="14" x="5" style="//@styles.0" horizontalAlignment="UNSPECIFIED" verticalAlignment="UNSPECIFIED" value="reset"/>
+            </children>
+          </children>
+        </children>
+        <children visible="true">
+          <properties key="independentObject" value="feature SOFTWARE::Software.sensors"/>
+          <properties key="name" value="label"/>
+          <graphicsAlgorithm xsi:type="al:Text" lineStyle="UNSPECIFIED" width="47" height="14" x="5" style="//@styles.0" horizontalAlignment="UNSPECIFIED" verticalAlignment="UNSPECIFIED" value="sensors"/>
+        </children>
+      </children>
+      <children visible="true">
+        <properties key="independentObject" value="subcomponent UAV::UAV.Impl.SW"/>
+        <graphicsAlgorithm xsi:type="al:Text" lineStyle="UNSPECIFIED" width="560" height="20" style="//@styles.0" horizontalAlignment="UNSPECIFIED" verticalAlignment="UNSPECIFIED" value="SW"/>
+      </children>
+      <children visible="true">
+        <graphicsAlgorithm xsi:type="al:Text" lineStyle="UNSPECIFIED" width="560" height="20" y="14" style="//@styles.0" horizontalAlignment="UNSPECIFIED" verticalAlignment="UNSPECIFIED" value="SOFTWARE::Software.Impl"/>
+      </children>
+    </children>
+    <children xsi:type="pi:ContainerShape" visible="true" active="true">
+      <properties key="independentObject" value="subcomponent UAV::UAV.Impl.PX4FMU"/>
+      <properties key="is_layed_out" value="true"/>
+      <properties key="is_ghost" value="false"/>
+      <graphicsAlgorithm xsi:type="al:RoundedRectangle" lineStyle="UNSPECIFIED" width="361" height="614" x="90" y="747" style="//@styles.2/@styles.1/@styles.0" cornerHeight="25" cornerWidth="25"/>
+      <anchors xsi:type="pi:ChopboxAnchor">
+        <properties key="name" value="chopbox"/>
+      </anchors>
+      <children xsi:type="pi:ContainerShape" visible="true" active="true">
+        <properties key="independentObject" value="feature PX4FMU::PX4FMU.sensors"/>
+        <properties key="is_ghost" value="false"/>
+        <properties key="side" value="left"/>
+        <properties key="layout_side" value="left"/>
+        <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0" width="147" height="223" y="83"/>
+        <anchors xsi:type="pi:ChopboxAnchor">
+          <properties key="name" value="chopbox"/>
+        </anchors>
+        <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+          <properties key="name" value="innerConnector"/>
+          <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+          <location x="30" y="118"/>
+        </anchors>
+        <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" outgoingConnections="//@connections.2" useAnchorLocationAsConnectionEndpoint="true">
+          <properties key="name" value="outerConnector"/>
+          <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+          <location y="118"/>
+        </anchors>
+        <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+          <properties key="name" value="flowSpecification"/>
+          <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+          <location x="80" y="204"/>
+        </anchors>
+        <children xsi:type="pi:ContainerShape" visible="true" active="true">
+          <properties key="name" value="feature"/>
+          <graphicsAlgorithm xsi:type="al:Rectangle" lineStyle="UNSPECIFIED" filled="false" lineVisible="false" width="147" height="209" y="14">
+            <graphicsAlgorithmChildren xsi:type="al:Ellipse" lineStyle="UNSPECIFIED" width="20" height="20" y="94" style="//@styles.2/@styles.0"/>
+            <graphicsAlgorithmChildren xsi:type="al:Rectangle" lineStyle="UNSPECIFIED" width="10" height="209" x="20" style="//@styles.2/@styles.0"/>
+          </graphicsAlgorithm>
+          <children xsi:type="pi:ContainerShape" visible="true" active="true">
+            <properties key="independentObject" value="feature UAV::sensors.magnetometer_data"/>
+            <properties key="is_ghost" value="false"/>
+            <properties key="layout_side" value="left"/>
+            <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0" width="117" height="24" x="30"/>
+            <anchors xsi:type="pi:ChopboxAnchor">
+              <properties key="name" value="chopbox"/>
+            </anchors>
+            <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+              <properties key="name" value="innerConnector"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+              <location x="15" y="19"/>
+            </anchors>
+            <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+              <properties key="name" value="outerConnector"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+              <location y="19"/>
+            </anchors>
+            <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+              <properties key="name" value="flowSpecification"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+              <location x="65" y="19"/>
+            </anchors>
+            <children xsi:type="pi:ContainerShape" visible="true" active="true">
+              <properties key="name" value="feature"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0" width="15" height="10" y="14" style="//@styles.1">
+                <graphicsAlgorithmChildren xsi:type="al:Polygon" lineStyle="UNSPECIFIED" width="15" height="10" style="//@styles.1">
+                  <points x="15"/>
+                  <points y="5"/>
+                  <points x="15" y="10"/>
+                </graphicsAlgorithmChildren>
+              </graphicsAlgorithm>
+            </children>
+            <children visible="true">
+              <properties key="independentObject" value="feature UAV::sensors.magnetometer_data"/>
+              <properties key="name" value="label"/>
+              <graphicsAlgorithm xsi:type="al:Text" lineStyle="UNSPECIFIED" width="112" height="14" x="5" style="//@styles.0" horizontalAlignment="UNSPECIFIED" verticalAlignment="UNSPECIFIED" value="magnetometer_data"/>
+            </children>
+          </children>
+          <children xsi:type="pi:ContainerShape" visible="true" active="true">
+            <properties key="independentObject" value="feature UAV::sensors.barometric_data"/>
+            <properties key="is_ghost" value="false"/>
+            <properties key="layout_side" value="left"/>
+            <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0" width="95" height="24" x="30" y="29"/>
+            <anchors xsi:type="pi:ChopboxAnchor">
+              <properties key="name" value="chopbox"/>
+            </anchors>
+            <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+              <properties key="name" value="innerConnector"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+              <location x="15" y="19"/>
+            </anchors>
+            <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+              <properties key="name" value="outerConnector"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+              <location y="19"/>
+            </anchors>
+            <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+              <properties key="name" value="flowSpecification"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+              <location x="65" y="19"/>
+            </anchors>
+            <children xsi:type="pi:ContainerShape" visible="true" active="true">
+              <properties key="name" value="feature"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0" width="15" height="10" y="14" style="//@styles.1">
+                <graphicsAlgorithmChildren xsi:type="al:Polygon" lineStyle="UNSPECIFIED" width="15" height="10" style="//@styles.1">
+                  <points x="15"/>
+                  <points y="5"/>
+                  <points x="15" y="10"/>
+                </graphicsAlgorithmChildren>
+              </graphicsAlgorithm>
+            </children>
+            <children visible="true">
+              <properties key="independentObject" value="feature UAV::sensors.barometric_data"/>
+              <properties key="name" value="label"/>
+              <graphicsAlgorithm xsi:type="al:Text" lineStyle="UNSPECIFIED" width="90" height="14" x="5" style="//@styles.0" horizontalAlignment="UNSPECIFIED" verticalAlignment="UNSPECIFIED" value="barometric_data"/>
+            </children>
+          </children>
+          <children xsi:type="pi:ContainerShape" visible="true" active="true">
+            <properties key="independentObject" value="feature UAV::sensors.motion_data"/>
+            <properties key="is_ghost" value="false"/>
+            <properties key="layout_side" value="left"/>
+            <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0" width="73" height="24" x="30" y="58"/>
+            <anchors xsi:type="pi:ChopboxAnchor">
+              <properties key="name" value="chopbox"/>
+            </anchors>
+            <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+              <properties key="name" value="innerConnector"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+              <location x="15" y="19"/>
+            </anchors>
+            <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+              <properties key="name" value="outerConnector"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+              <location y="19"/>
+            </anchors>
+            <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+              <properties key="name" value="flowSpecification"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+              <location x="65" y="19"/>
+            </anchors>
+            <children xsi:type="pi:ContainerShape" visible="true" active="true">
+              <properties key="name" value="feature"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0" width="15" height="10" y="14" style="//@styles.1">
+                <graphicsAlgorithmChildren xsi:type="al:Polygon" lineStyle="UNSPECIFIED" width="15" height="10" style="//@styles.1">
+                  <points x="15"/>
+                  <points y="5"/>
+                  <points x="15" y="10"/>
+                </graphicsAlgorithmChildren>
+              </graphicsAlgorithm>
+            </children>
+            <children visible="true">
+              <properties key="independentObject" value="feature UAV::sensors.motion_data"/>
+              <properties key="name" value="label"/>
+              <graphicsAlgorithm xsi:type="al:Text" lineStyle="UNSPECIFIED" width="68" height="14" x="5" style="//@styles.0" horizontalAlignment="UNSPECIFIED" verticalAlignment="UNSPECIFIED" value="motion_data"/>
+            </children>
+          </children>
+          <children xsi:type="pi:ContainerShape" visible="true" active="true">
+            <properties key="independentObject" value="feature UAV::sensors.battery_data"/>
+            <properties key="is_ghost" value="false"/>
+            <properties key="layout_side" value="left"/>
+            <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0" width="73" height="24" x="30" y="87"/>
+            <anchors xsi:type="pi:ChopboxAnchor">
+              <properties key="name" value="chopbox"/>
+            </anchors>
+            <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+              <properties key="name" value="innerConnector"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+              <location x="15" y="19"/>
+            </anchors>
+            <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+              <properties key="name" value="outerConnector"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+              <location y="19"/>
+            </anchors>
+            <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+              <properties key="name" value="flowSpecification"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+              <location x="65" y="19"/>
+            </anchors>
+            <children xsi:type="pi:ContainerShape" visible="true" active="true">
+              <properties key="name" value="feature"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0" width="15" height="10" y="14" style="//@styles.1">
+                <graphicsAlgorithmChildren xsi:type="al:Polygon" lineStyle="UNSPECIFIED" width="15" height="10" style="//@styles.1">
+                  <points x="15"/>
+                  <points y="5"/>
+                  <points x="15" y="10"/>
+                </graphicsAlgorithmChildren>
+              </graphicsAlgorithm>
+            </children>
+            <children visible="true">
+              <properties key="independentObject" value="feature UAV::sensors.battery_data"/>
+              <properties key="name" value="label"/>
+              <graphicsAlgorithm xsi:type="al:Text" lineStyle="UNSPECIFIED" width="68" height="14" x="5" style="//@styles.0" horizontalAlignment="UNSPECIFIED" verticalAlignment="UNSPECIFIED" value="battery_data"/>
+            </children>
+          </children>
+          <children xsi:type="pi:ContainerShape" visible="true" active="true">
+            <properties key="independentObject" value="feature UAV::sensors.gps_data"/>
+            <properties key="is_ghost" value="false"/>
+            <properties key="layout_side" value="left"/>
+            <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0" width="55" height="24" x="30" y="116"/>
+            <anchors xsi:type="pi:ChopboxAnchor">
+              <properties key="name" value="chopbox"/>
+            </anchors>
+            <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+              <properties key="name" value="innerConnector"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+              <location x="15" y="19"/>
+            </anchors>
+            <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+              <properties key="name" value="outerConnector"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+              <location y="19"/>
+            </anchors>
+            <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+              <properties key="name" value="flowSpecification"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+              <location x="65" y="19"/>
+            </anchors>
+            <children xsi:type="pi:ContainerShape" visible="true" active="true">
+              <properties key="name" value="feature"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0" width="15" height="10" y="14" style="//@styles.1">
+                <graphicsAlgorithmChildren xsi:type="al:Polygon" lineStyle="UNSPECIFIED" width="15" height="10" style="//@styles.1">
+                  <points x="15"/>
+                  <points y="5"/>
+                  <points x="15" y="10"/>
+                </graphicsAlgorithmChildren>
+              </graphicsAlgorithm>
+            </children>
+            <children visible="true">
+              <properties key="independentObject" value="feature UAV::sensors.gps_data"/>
+              <properties key="name" value="label"/>
+              <graphicsAlgorithm xsi:type="al:Text" lineStyle="UNSPECIFIED" width="50" height="14" x="5" style="//@styles.0" horizontalAlignment="UNSPECIFIED" verticalAlignment="UNSPECIFIED" value="gps_data"/>
+            </children>
+          </children>
+          <children xsi:type="pi:ContainerShape" visible="true" active="true">
+            <properties key="independentObject" value="feature UAV::sensors.reset"/>
+            <properties key="is_ghost" value="false"/>
+            <properties key="layout_side" value="left"/>
+            <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0" width="35" height="34" x="30" y="145"/>
+            <anchors xsi:type="pi:ChopboxAnchor">
+              <properties key="name" value="chopbox"/>
+            </anchors>
+            <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+              <properties key="name" value="innerConnector"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+              <location x="25" y="24"/>
+            </anchors>
+            <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+              <properties key="name" value="outerConnector"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+              <location x="25" y="24"/>
+            </anchors>
+            <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+              <properties key="name" value="flowSpecification"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+              <location x="75" y="24"/>
+            </anchors>
+            <children xsi:type="pi:ContainerShape" visible="true" active="true">
+              <properties key="name" value="feature"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0" width="25" height="20" y="14" style="//@styles.1">
+                <graphicsAlgorithmChildren xsi:type="al:Polyline" lineStyle="UNSPECIFIED" width="25" height="20" style="//@styles.1">
+                  <points x="25"/>
+                  <points y="10"/>
+                  <points x="25" y="20"/>
+                </graphicsAlgorithmChildren>
+              </graphicsAlgorithm>
+            </children>
+            <children visible="true">
+              <properties key="independentObject" value="feature UAV::sensors.reset"/>
+              <properties key="name" value="label"/>
+              <graphicsAlgorithm xsi:type="al:Text" lineStyle="UNSPECIFIED" width="30" height="14" x="5" style="//@styles.0" horizontalAlignment="UNSPECIFIED" verticalAlignment="UNSPECIFIED" value="reset"/>
+            </children>
+          </children>
+        </children>
+        <children visible="true">
+          <properties key="independentObject" value="feature PX4FMU::PX4FMU.sensors"/>
+          <properties key="name" value="label"/>
+          <graphicsAlgorithm xsi:type="al:Text" lineStyle="UNSPECIFIED" width="47" height="14" x="5" style="//@styles.0" horizontalAlignment="UNSPECIFIED" verticalAlignment="UNSPECIFIED" value="sensors"/>
+        </children>
+      </children>
+      <children xsi:type="pi:ContainerShape" visible="true" active="true">
+        <properties key="independentObject" value="feature PX4FMU::PX4FMU.expansion_slot"/>
+        <properties key="is_ghost" value="false"/>
+        <properties key="side" value="right"/>
+        <properties key="layout_side" value="right"/>
+        <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0" width="89" height="195" x="272" y="273"/>
+        <anchors xsi:type="pi:ChopboxAnchor">
+          <properties key="name" value="chopbox"/>
+        </anchors>
+        <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+          <properties key="name" value="innerConnector"/>
+          <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+          <location x="59" y="104"/>
+        </anchors>
+        <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" outgoingConnections="//@connections.3" useAnchorLocationAsConnectionEndpoint="true">
+          <properties key="name" value="outerConnector"/>
+          <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+          <location x="89" y="104"/>
+        </anchors>
+        <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+          <properties key="name" value="flowSpecification"/>
+          <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+          <location x="9" y="176"/>
+        </anchors>
+        <children xsi:type="pi:ContainerShape" visible="true" active="true">
+          <properties key="name" value="feature"/>
+          <graphicsAlgorithm xsi:type="al:Rectangle" lineStyle="UNSPECIFIED" filled="false" lineVisible="false" width="70" height="181" x="19" y="14">
+            <graphicsAlgorithmChildren xsi:type="al:Ellipse" lineStyle="UNSPECIFIED" width="20" height="20" x="50" y="80" style="//@styles.2/@styles.0"/>
+            <graphicsAlgorithmChildren xsi:type="al:Rectangle" lineStyle="UNSPECIFIED" width="10" height="181" x="40" style="//@styles.2/@styles.0"/>
+          </graphicsAlgorithm>
+          <children xsi:type="pi:ContainerShape" visible="true" active="true">
+            <properties key="independentObject" value="feature PX4FMU::expansion_slot.usart1"/>
+            <properties key="is_ghost" value="false"/>
+            <properties key="layout_side" value="right"/>
+            <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0" width="40" height="34"/>
+            <anchors xsi:type="pi:ChopboxAnchor">
+              <properties key="name" value="chopbox"/>
+            </anchors>
+            <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+              <properties key="name" value="innerConnector"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+              <location x="20" y="24"/>
+            </anchors>
+            <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+              <properties key="name" value="outerConnector"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+              <location x="40" y="24"/>
+            </anchors>
+            <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+              <properties key="name" value="flowSpecification"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+              <location x="-30" y="24"/>
+            </anchors>
+            <children xsi:type="pi:ContainerShape" visible="true" active="true">
+              <properties key="name" value="feature"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0" width="20" height="20" x="20" y="14">
+                <graphicsAlgorithmChildren xsi:type="al:Polyline" lineStyle="UNSPECIFIED" width="20" height="20" style="//@styles.1">
+                  <points/>
+                  <points x="15"/>
+                  <points x="20" y="10"/>
+                  <points x="15" y="20"/>
+                  <points y="20"/>
+                  <points/>
+                </graphicsAlgorithmChildren>
+              </graphicsAlgorithm>
+            </children>
+            <children visible="true">
+              <properties key="independentObject" value="feature PX4FMU::expansion_slot.usart1"/>
+              <properties key="name" value="label"/>
+              <graphicsAlgorithm xsi:type="al:Text" lineStyle="UNSPECIFIED" width="35" height="14" style="//@styles.0" horizontalAlignment="UNSPECIFIED" verticalAlignment="UNSPECIFIED" value="usart1"/>
+            </children>
+          </children>
+          <children xsi:type="pi:ContainerShape" visible="true" active="true">
+            <properties key="independentObject" value="feature PX4FMU::expansion_slot.usart2"/>
+            <properties key="is_ghost" value="false"/>
+            <properties key="layout_side" value="right"/>
+            <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0" width="40" height="34" y="39"/>
+            <anchors xsi:type="pi:ChopboxAnchor">
+              <properties key="name" value="chopbox"/>
+            </anchors>
+            <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+              <properties key="name" value="innerConnector"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+              <location x="20" y="24"/>
+            </anchors>
+            <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+              <properties key="name" value="outerConnector"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+              <location x="40" y="24"/>
+            </anchors>
+            <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+              <properties key="name" value="flowSpecification"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+              <location x="-30" y="24"/>
+            </anchors>
+            <children xsi:type="pi:ContainerShape" visible="true" active="true">
+              <properties key="name" value="feature"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0" width="20" height="20" x="20" y="14">
+                <graphicsAlgorithmChildren xsi:type="al:Polyline" lineStyle="UNSPECIFIED" width="20" height="20" style="//@styles.1">
+                  <points/>
+                  <points x="15"/>
+                  <points x="20" y="10"/>
+                  <points x="15" y="20"/>
+                  <points y="20"/>
+                  <points/>
+                </graphicsAlgorithmChildren>
+              </graphicsAlgorithm>
+            </children>
+            <children visible="true">
+              <properties key="independentObject" value="feature PX4FMU::expansion_slot.usart2"/>
+              <properties key="name" value="label"/>
+              <graphicsAlgorithm xsi:type="al:Text" lineStyle="UNSPECIFIED" width="35" height="14" style="//@styles.0" horizontalAlignment="UNSPECIFIED" verticalAlignment="UNSPECIFIED" value="usart2"/>
+            </children>
+          </children>
+          <children xsi:type="pi:ContainerShape" visible="true" active="true">
+            <properties key="independentObject" value="feature PX4FMU::expansion_slot.ppm"/>
+            <properties key="is_ghost" value="false"/>
+            <properties key="layout_side" value="right"/>
+            <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0" width="30" height="34" x="10" y="78"/>
+            <anchors xsi:type="pi:ChopboxAnchor">
+              <properties key="name" value="chopbox"/>
+            </anchors>
+            <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+              <properties key="name" value="innerConnector"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+              <location x="10" y="24"/>
+            </anchors>
+            <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+              <properties key="name" value="outerConnector"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+              <location x="30" y="24"/>
+            </anchors>
+            <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+              <properties key="name" value="flowSpecification"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+              <location x="-40" y="24"/>
+            </anchors>
+            <children xsi:type="pi:ContainerShape" visible="true" active="true">
+              <properties key="name" value="feature"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0" width="20" height="20" x="10" y="14">
+                <graphicsAlgorithmChildren xsi:type="al:Polyline" lineStyle="UNSPECIFIED" width="20" height="20" style="//@styles.1">
+                  <points/>
+                  <points x="15"/>
+                  <points x="20" y="10"/>
+                  <points x="15" y="20"/>
+                  <points y="20"/>
+                  <points/>
+                </graphicsAlgorithmChildren>
+              </graphicsAlgorithm>
+            </children>
+            <children visible="true">
+              <properties key="independentObject" value="feature PX4FMU::expansion_slot.ppm"/>
+              <properties key="name" value="label"/>
+              <graphicsAlgorithm xsi:type="al:Text" lineStyle="UNSPECIFIED" width="25" height="14" style="//@styles.0" horizontalAlignment="UNSPECIFIED" verticalAlignment="UNSPECIFIED" value="ppm"/>
+            </children>
+          </children>
+          <children xsi:type="pi:ContainerShape" visible="true" active="true">
+            <properties key="independentObject" value="feature PX4FMU::expansion_slot.alarm"/>
+            <properties key="is_ghost" value="false"/>
+            <properties key="layout_side" value="right"/>
+            <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0" width="36" height="34" x="4" y="117"/>
+            <anchors xsi:type="pi:ChopboxAnchor">
+              <properties key="name" value="chopbox"/>
+            </anchors>
+            <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+              <properties key="name" value="innerConnector"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+              <location x="16" y="24"/>
+            </anchors>
+            <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+              <properties key="name" value="outerConnector"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+              <location x="36" y="24"/>
+            </anchors>
+            <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+              <properties key="name" value="flowSpecification"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+              <location x="-34" y="24"/>
+            </anchors>
+            <children xsi:type="pi:ContainerShape" visible="true" active="true">
+              <properties key="name" value="feature"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0" width="20" height="20" x="16" y="14">
+                <graphicsAlgorithmChildren xsi:type="al:Polyline" lineStyle="UNSPECIFIED" width="20" height="20" style="//@styles.1">
+                  <points/>
+                  <points x="15"/>
+                  <points x="20" y="10"/>
+                  <points x="15" y="20"/>
+                  <points y="20"/>
+                  <points/>
+                </graphicsAlgorithmChildren>
+              </graphicsAlgorithm>
+            </children>
+            <children visible="true">
+              <properties key="independentObject" value="feature PX4FMU::expansion_slot.alarm"/>
+              <properties key="name" value="label"/>
+              <graphicsAlgorithm xsi:type="al:Text" lineStyle="UNSPECIFIED" width="31" height="14" style="//@styles.0" horizontalAlignment="UNSPECIFIED" verticalAlignment="UNSPECIFIED" value="alarm"/>
+            </children>
+          </children>
+        </children>
+        <children visible="true">
+          <properties key="independentObject" value="feature PX4FMU::PX4FMU.expansion_slot"/>
+          <properties key="name" value="label"/>
+          <graphicsAlgorithm xsi:type="al:Text" lineStyle="UNSPECIFIED" width="84" height="14" style="//@styles.0" horizontalAlignment="UNSPECIFIED" verticalAlignment="UNSPECIFIED" value="expansion_slot"/>
+        </children>
+      </children>
+      <children xsi:type="pi:ContainerShape" visible="true" active="true">
+        <properties key="independentObject" value="feature PX4FMU::PX4FMU.i2c2_bus"/>
+        <properties key="is_ghost" value="false"/>
+        <properties key="side" value="left"/>
+        <properties key="layout_side" value="left"/>
+        <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0" width="53" height="34" y="354"/>
+        <anchors xsi:type="pi:ChopboxAnchor">
+          <properties key="name" value="chopbox"/>
+        </anchors>
+        <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+          <properties key="name" value="innerConnector"/>
+          <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+          <location x="20" y="24"/>
+        </anchors>
+        <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+          <properties key="name" value="outerConnector"/>
+          <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+          <location y="24"/>
+        </anchors>
+        <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+          <properties key="name" value="flowSpecification"/>
+          <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+          <location x="70" y="24"/>
+        </anchors>
+        <children xsi:type="pi:ContainerShape" visible="true" active="true">
+          <properties key="name" value="feature"/>
+          <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0" width="20" height="20" y="14">
+            <graphicsAlgorithmChildren xsi:type="al:Polyline" lineStyle="UNSPECIFIED" width="20" height="20" style="//@styles.1">
+              <points x="20"/>
+              <points x="5"/>
+              <points y="10"/>
+              <points x="5" y="20"/>
+              <points x="20" y="20"/>
+              <points x="20"/>
+            </graphicsAlgorithmChildren>
+          </graphicsAlgorithm>
+        </children>
+        <children visible="true">
+          <properties key="independentObject" value="feature PX4FMU::PX4FMU.i2c2_bus"/>
+          <properties key="name" value="label"/>
+          <graphicsAlgorithm xsi:type="al:Text" lineStyle="UNSPECIFIED" width="48" height="14" x="5" style="//@styles.0" horizontalAlignment="UNSPECIFIED" verticalAlignment="UNSPECIFIED" value="i2c2_bus"/>
+        </children>
+      </children>
+      <children visible="true">
+        <properties key="independentObject" value="subcomponent UAV::UAV.Impl.PX4FMU"/>
+        <graphicsAlgorithm xsi:type="al:Text" lineStyle="UNSPECIFIED" width="361" height="20" style="//@styles.0" horizontalAlignment="UNSPECIFIED" verticalAlignment="UNSPECIFIED" value="PX4FMU"/>
+      </children>
+      <children visible="true">
+        <graphicsAlgorithm xsi:type="al:Text" lineStyle="UNSPECIFIED" width="361" height="20" y="14" style="//@styles.0" horizontalAlignment="UNSPECIFIED" verticalAlignment="UNSPECIFIED" value="PX4FMU::PX4FMU.Impl"/>
+      </children>
+    </children>
+    <children xsi:type="pi:ContainerShape" visible="true" active="true">
+      <properties key="independentObject" value="subcomponent UAV::UAV.Impl.PX4IOAR"/>
+      <properties key="is_layed_out" value="true"/>
+      <properties key="is_ghost" value="false"/>
+      <graphicsAlgorithm xsi:type="al:RoundedRectangle" lineStyle="UNSPECIFIED" width="400" height="624" x="520" y="747" style="//@styles.2/@styles.1/@styles.0" cornerHeight="25" cornerWidth="25"/>
+      <anchors xsi:type="pi:ChopboxAnchor">
+        <properties key="name" value="chopbox"/>
+      </anchors>
+      <children xsi:type="pi:ContainerShape" visible="true" active="true">
+        <properties key="independentObject" value="feature PX4IOAR::PX4IOAR.expansion_connector"/>
+        <properties key="is_ghost" value="false"/>
+        <properties key="side" value="left"/>
+        <properties key="layout_side" value="left"/>
+        <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0" width="124" height="195" y="273"/>
+        <anchors xsi:type="pi:ChopboxAnchor">
+          <properties key="name" value="chopbox"/>
+        </anchors>
+        <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+          <properties key="name" value="innerConnector"/>
+          <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+          <location x="30" y="104"/>
+        </anchors>
+        <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" incomingConnections="//@connections.3" useAnchorLocationAsConnectionEndpoint="true">
+          <properties key="name" value="outerConnector"/>
+          <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+          <location y="104"/>
+        </anchors>
+        <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+          <properties key="name" value="flowSpecification"/>
+          <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+          <location x="80" y="176"/>
+        </anchors>
+        <children xsi:type="pi:ContainerShape" visible="true" active="true">
+          <properties key="name" value="feature"/>
+          <graphicsAlgorithm xsi:type="al:Rectangle" lineStyle="UNSPECIFIED" filled="false" lineVisible="false" width="70" height="181" y="14">
+            <graphicsAlgorithmChildren xsi:type="al:Ellipse" lineStyle="UNSPECIFIED" width="20" height="20" y="80" style="//@styles.2/@styles.0"/>
+            <graphicsAlgorithmChildren xsi:type="al:Rectangle" lineStyle="UNSPECIFIED" width="10" height="181" x="20" style="//@styles.2/@styles.0"/>
+          </graphicsAlgorithm>
+          <children xsi:type="pi:ContainerShape" visible="true" active="true">
+            <properties key="independentObject" value="feature PX4FMU::expansion_slot.usart1"/>
+            <properties key="is_ghost" value="false"/>
+            <properties key="layout_side" value="left"/>
+            <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0" width="40" height="34" x="30"/>
+            <anchors xsi:type="pi:ChopboxAnchor">
+              <properties key="name" value="chopbox"/>
+            </anchors>
+            <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+              <properties key="name" value="innerConnector"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+              <location x="20" y="24"/>
+            </anchors>
+            <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+              <properties key="name" value="outerConnector"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+              <location y="24"/>
+            </anchors>
+            <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+              <properties key="name" value="flowSpecification"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+              <location x="70" y="24"/>
+            </anchors>
+            <children xsi:type="pi:ContainerShape" visible="true" active="true">
+              <properties key="name" value="feature"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0" width="20" height="20" y="14">
+                <graphicsAlgorithmChildren xsi:type="al:Polyline" lineStyle="UNSPECIFIED" width="20" height="20" style="//@styles.1">
+                  <points/>
+                  <points x="15"/>
+                  <points x="20" y="10"/>
+                  <points x="15" y="20"/>
+                  <points y="20"/>
+                  <points/>
+                </graphicsAlgorithmChildren>
+              </graphicsAlgorithm>
+            </children>
+            <children visible="true">
+              <properties key="independentObject" value="feature PX4FMU::expansion_slot.usart1"/>
+              <properties key="name" value="label"/>
+              <graphicsAlgorithm xsi:type="al:Text" lineStyle="UNSPECIFIED" width="35" height="14" x="5" style="//@styles.0" horizontalAlignment="UNSPECIFIED" verticalAlignment="UNSPECIFIED" value="usart1"/>
+            </children>
+          </children>
+          <children xsi:type="pi:ContainerShape" visible="true" active="true">
+            <properties key="independentObject" value="feature PX4FMU::expansion_slot.usart2"/>
+            <properties key="is_ghost" value="false"/>
+            <properties key="layout_side" value="left"/>
+            <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0" width="40" height="34" x="30" y="39"/>
+            <anchors xsi:type="pi:ChopboxAnchor">
+              <properties key="name" value="chopbox"/>
+            </anchors>
+            <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+              <properties key="name" value="innerConnector"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+              <location x="20" y="24"/>
+            </anchors>
+            <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+              <properties key="name" value="outerConnector"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+              <location y="24"/>
+            </anchors>
+            <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+              <properties key="name" value="flowSpecification"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+              <location x="70" y="24"/>
+            </anchors>
+            <children xsi:type="pi:ContainerShape" visible="true" active="true">
+              <properties key="name" value="feature"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0" width="20" height="20" y="14">
+                <graphicsAlgorithmChildren xsi:type="al:Polyline" lineStyle="UNSPECIFIED" width="20" height="20" style="//@styles.1">
+                  <points/>
+                  <points x="15"/>
+                  <points x="20" y="10"/>
+                  <points x="15" y="20"/>
+                  <points y="20"/>
+                  <points/>
+                </graphicsAlgorithmChildren>
+              </graphicsAlgorithm>
+            </children>
+            <children visible="true">
+              <properties key="independentObject" value="feature PX4FMU::expansion_slot.usart2"/>
+              <properties key="name" value="label"/>
+              <graphicsAlgorithm xsi:type="al:Text" lineStyle="UNSPECIFIED" width="35" height="14" x="5" style="//@styles.0" horizontalAlignment="UNSPECIFIED" verticalAlignment="UNSPECIFIED" value="usart2"/>
+            </children>
+          </children>
+          <children xsi:type="pi:ContainerShape" visible="true" active="true">
+            <properties key="independentObject" value="feature PX4FMU::expansion_slot.ppm"/>
+            <properties key="is_ghost" value="false"/>
+            <properties key="layout_side" value="left"/>
+            <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0" width="30" height="34" x="30" y="78"/>
+            <anchors xsi:type="pi:ChopboxAnchor">
+              <properties key="name" value="chopbox"/>
+            </anchors>
+            <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+              <properties key="name" value="innerConnector"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+              <location x="20" y="24"/>
+            </anchors>
+            <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+              <properties key="name" value="outerConnector"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+              <location y="24"/>
+            </anchors>
+            <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+              <properties key="name" value="flowSpecification"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+              <location x="70" y="24"/>
+            </anchors>
+            <children xsi:type="pi:ContainerShape" visible="true" active="true">
+              <properties key="name" value="feature"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0" width="20" height="20" y="14">
+                <graphicsAlgorithmChildren xsi:type="al:Polyline" lineStyle="UNSPECIFIED" width="20" height="20" style="//@styles.1">
+                  <points/>
+                  <points x="15"/>
+                  <points x="20" y="10"/>
+                  <points x="15" y="20"/>
+                  <points y="20"/>
+                  <points/>
+                </graphicsAlgorithmChildren>
+              </graphicsAlgorithm>
+            </children>
+            <children visible="true">
+              <properties key="independentObject" value="feature PX4FMU::expansion_slot.ppm"/>
+              <properties key="name" value="label"/>
+              <graphicsAlgorithm xsi:type="al:Text" lineStyle="UNSPECIFIED" width="25" height="14" x="5" style="//@styles.0" horizontalAlignment="UNSPECIFIED" verticalAlignment="UNSPECIFIED" value="ppm"/>
+            </children>
+          </children>
+          <children xsi:type="pi:ContainerShape" visible="true" active="true">
+            <properties key="independentObject" value="feature PX4FMU::expansion_slot.alarm"/>
+            <properties key="is_ghost" value="false"/>
+            <properties key="layout_side" value="left"/>
+            <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0" width="36" height="34" x="30" y="117"/>
+            <anchors xsi:type="pi:ChopboxAnchor">
+              <properties key="name" value="chopbox"/>
+            </anchors>
+            <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+              <properties key="name" value="innerConnector"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+              <location x="20" y="24"/>
+            </anchors>
+            <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+              <properties key="name" value="outerConnector"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+              <location y="24"/>
+            </anchors>
+            <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+              <properties key="name" value="flowSpecification"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+              <location x="70" y="24"/>
+            </anchors>
+            <children xsi:type="pi:ContainerShape" visible="true" active="true">
+              <properties key="name" value="feature"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0" width="20" height="20" y="14">
+                <graphicsAlgorithmChildren xsi:type="al:Polyline" lineStyle="UNSPECIFIED" width="20" height="20" style="//@styles.1">
+                  <points/>
+                  <points x="15"/>
+                  <points x="20" y="10"/>
+                  <points x="15" y="20"/>
+                  <points y="20"/>
+                  <points/>
+                </graphicsAlgorithmChildren>
+              </graphicsAlgorithm>
+            </children>
+            <children visible="true">
+              <properties key="independentObject" value="feature PX4FMU::expansion_slot.alarm"/>
+              <properties key="name" value="label"/>
+              <graphicsAlgorithm xsi:type="al:Text" lineStyle="UNSPECIFIED" width="31" height="14" x="5" style="//@styles.0" horizontalAlignment="UNSPECIFIED" verticalAlignment="UNSPECIFIED" value="alarm"/>
+            </children>
+          </children>
+        </children>
+        <children visible="true">
+          <properties key="independentObject" value="feature PX4IOAR::PX4IOAR.expansion_connector"/>
+          <properties key="name" value="label"/>
+          <graphicsAlgorithm xsi:type="al:Text" lineStyle="UNSPECIFIED" width="119" height="14" x="5" style="//@styles.0" horizontalAlignment="UNSPECIFIED" verticalAlignment="UNSPECIFIED" value="expansion_connector"/>
+        </children>
+      </children>
+      <children xsi:type="pi:ContainerShape" visible="true" active="true">
+        <properties key="independentObject" value="feature PX4IOAR::PX4IOAR.motors_and_radios"/>
+        <properties key="is_ghost" value="false"/>
+        <properties key="side" value="right"/>
+        <properties key="layout_side" value="right"/>
+        <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0" width="176" height="213" x="224" y="113"/>
+        <anchors xsi:type="pi:ChopboxAnchor">
+          <properties key="name" value="chopbox"/>
+        </anchors>
+        <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+          <properties key="name" value="innerConnector"/>
+          <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+          <location x="146" y="113"/>
+        </anchors>
+        <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" outgoingConnections="//@connections.4" useAnchorLocationAsConnectionEndpoint="true">
+          <properties key="name" value="outerConnector"/>
+          <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+          <location x="176" y="113"/>
+        </anchors>
+        <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+          <properties key="name" value="flowSpecification"/>
+          <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+          <location x="96" y="194"/>
+        </anchors>
+        <children xsi:type="pi:ContainerShape" visible="true" active="true">
+          <properties key="name" value="feature"/>
+          <graphicsAlgorithm xsi:type="al:Rectangle" lineStyle="UNSPECIFIED" filled="false" lineVisible="false" width="176" height="199" y="14">
+            <graphicsAlgorithmChildren xsi:type="al:Ellipse" lineStyle="UNSPECIFIED" width="20" height="20" x="156" y="89" style="//@styles.2/@styles.0"/>
+            <graphicsAlgorithmChildren xsi:type="al:Rectangle" lineStyle="UNSPECIFIED" width="10" height="199" x="146" style="//@styles.2/@styles.0"/>
+          </graphicsAlgorithm>
+          <children xsi:type="pi:ContainerShape" visible="true" active="true">
+            <properties key="independentObject" value="feature UAV::motors_and_radios.motor1"/>
+            <properties key="is_ghost" value="false"/>
+            <properties key="layout_side" value="right"/>
+            <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0" width="45" height="24" x="101"/>
+            <anchors xsi:type="pi:ChopboxAnchor">
+              <properties key="name" value="chopbox"/>
+            </anchors>
+            <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+              <properties key="name" value="innerConnector"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+              <location x="30" y="19"/>
+            </anchors>
+            <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+              <properties key="name" value="outerConnector"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+              <location x="45" y="19"/>
+            </anchors>
+            <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+              <properties key="name" value="flowSpecification"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+              <location x="-20" y="19"/>
+            </anchors>
+            <children xsi:type="pi:ContainerShape" visible="true" active="true">
+              <properties key="name" value="feature"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0" width="15" height="10" x="30" y="14" style="//@styles.1">
+                <graphicsAlgorithmChildren xsi:type="al:Polygon" lineStyle="UNSPECIFIED" width="15" height="10" style="//@styles.1">
+                  <points x="15"/>
+                  <points y="5"/>
+                  <points x="15" y="10"/>
+                </graphicsAlgorithmChildren>
+              </graphicsAlgorithm>
+            </children>
+            <children visible="true">
+              <properties key="independentObject" value="feature UAV::motors_and_radios.motor1"/>
+              <properties key="name" value="label"/>
+              <graphicsAlgorithm xsi:type="al:Text" lineStyle="UNSPECIFIED" width="40" height="14" style="//@styles.0" horizontalAlignment="UNSPECIFIED" verticalAlignment="UNSPECIFIED" value="motor1"/>
+            </children>
+          </children>
+          <children xsi:type="pi:ContainerShape" visible="true" active="true">
+            <properties key="independentObject" value="feature UAV::motors_and_radios.motor2"/>
+            <properties key="is_ghost" value="false"/>
+            <properties key="layout_side" value="right"/>
+            <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0" width="45" height="24" x="101" y="29"/>
+            <anchors xsi:type="pi:ChopboxAnchor">
+              <properties key="name" value="chopbox"/>
+            </anchors>
+            <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+              <properties key="name" value="innerConnector"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+              <location x="30" y="19"/>
+            </anchors>
+            <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+              <properties key="name" value="outerConnector"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+              <location x="45" y="19"/>
+            </anchors>
+            <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+              <properties key="name" value="flowSpecification"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+              <location x="-20" y="19"/>
+            </anchors>
+            <children xsi:type="pi:ContainerShape" visible="true" active="true">
+              <properties key="name" value="feature"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0" width="15" height="10" x="30" y="14" style="//@styles.1">
+                <graphicsAlgorithmChildren xsi:type="al:Polygon" lineStyle="UNSPECIFIED" width="15" height="10" style="//@styles.1">
+                  <points x="15"/>
+                  <points y="5"/>
+                  <points x="15" y="10"/>
+                </graphicsAlgorithmChildren>
+              </graphicsAlgorithm>
+            </children>
+            <children visible="true">
+              <properties key="independentObject" value="feature UAV::motors_and_radios.motor2"/>
+              <properties key="name" value="label"/>
+              <graphicsAlgorithm xsi:type="al:Text" lineStyle="UNSPECIFIED" width="40" height="14" style="//@styles.0" horizontalAlignment="UNSPECIFIED" verticalAlignment="UNSPECIFIED" value="motor2"/>
+            </children>
+          </children>
+          <children xsi:type="pi:ContainerShape" visible="true" active="true">
+            <properties key="independentObject" value="feature UAV::motors_and_radios.motor3"/>
+            <properties key="is_ghost" value="false"/>
+            <properties key="layout_side" value="right"/>
+            <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0" width="45" height="24" x="101" y="58"/>
+            <anchors xsi:type="pi:ChopboxAnchor">
+              <properties key="name" value="chopbox"/>
+            </anchors>
+            <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+              <properties key="name" value="innerConnector"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+              <location x="30" y="19"/>
+            </anchors>
+            <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+              <properties key="name" value="outerConnector"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+              <location x="45" y="19"/>
+            </anchors>
+            <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+              <properties key="name" value="flowSpecification"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+              <location x="-20" y="19"/>
+            </anchors>
+            <children xsi:type="pi:ContainerShape" visible="true" active="true">
+              <properties key="name" value="feature"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0" width="15" height="10" x="30" y="14" style="//@styles.1">
+                <graphicsAlgorithmChildren xsi:type="al:Polygon" lineStyle="UNSPECIFIED" width="15" height="10" style="//@styles.1">
+                  <points x="15"/>
+                  <points y="5"/>
+                  <points x="15" y="10"/>
+                </graphicsAlgorithmChildren>
+              </graphicsAlgorithm>
+            </children>
+            <children visible="true">
+              <properties key="independentObject" value="feature UAV::motors_and_radios.motor3"/>
+              <properties key="name" value="label"/>
+              <graphicsAlgorithm xsi:type="al:Text" lineStyle="UNSPECIFIED" width="40" height="14" style="//@styles.0" horizontalAlignment="UNSPECIFIED" verticalAlignment="UNSPECIFIED" value="motor3"/>
+            </children>
+          </children>
+          <children xsi:type="pi:ContainerShape" visible="true" active="true">
+            <properties key="independentObject" value="feature UAV::motors_and_radios.motor4"/>
+            <properties key="is_ghost" value="false"/>
+            <properties key="layout_side" value="right"/>
+            <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0" width="45" height="24" x="101" y="87"/>
+            <anchors xsi:type="pi:ChopboxAnchor">
+              <properties key="name" value="chopbox"/>
+            </anchors>
+            <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+              <properties key="name" value="innerConnector"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+              <location x="30" y="19"/>
+            </anchors>
+            <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+              <properties key="name" value="outerConnector"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+              <location x="45" y="19"/>
+            </anchors>
+            <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+              <properties key="name" value="flowSpecification"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+              <location x="-20" y="19"/>
+            </anchors>
+            <children xsi:type="pi:ContainerShape" visible="true" active="true">
+              <properties key="name" value="feature"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0" width="15" height="10" x="30" y="14" style="//@styles.1">
+                <graphicsAlgorithmChildren xsi:type="al:Polygon" lineStyle="UNSPECIFIED" width="15" height="10" style="//@styles.1">
+                  <points x="15"/>
+                  <points y="5"/>
+                  <points x="15" y="10"/>
+                </graphicsAlgorithmChildren>
+              </graphicsAlgorithm>
+            </children>
+            <children visible="true">
+              <properties key="independentObject" value="feature UAV::motors_and_radios.motor4"/>
+              <properties key="name" value="label"/>
+              <graphicsAlgorithm xsi:type="al:Text" lineStyle="UNSPECIFIED" width="40" height="14" style="//@styles.0" horizontalAlignment="UNSPECIFIED" verticalAlignment="UNSPECIFIED" value="motor4"/>
+            </children>
+          </children>
+          <children xsi:type="pi:ContainerShape" visible="true" active="true">
+            <properties key="independentObject" value="feature UAV::motors_and_radios.flight_control_commands"/>
+            <properties key="is_ghost" value="false"/>
+            <properties key="layout_side" value="right"/>
+            <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0" width="146" height="24" y="116"/>
+            <anchors xsi:type="pi:ChopboxAnchor">
+              <properties key="name" value="chopbox"/>
+            </anchors>
+            <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+              <properties key="name" value="innerConnector"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+              <location x="131" y="19"/>
+            </anchors>
+            <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+              <properties key="name" value="outerConnector"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+              <location x="146" y="19"/>
+            </anchors>
+            <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+              <properties key="name" value="flowSpecification"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+              <location x="81" y="19"/>
+            </anchors>
+            <children xsi:type="pi:ContainerShape" visible="true" active="true">
+              <properties key="name" value="feature"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0" width="15" height="10" x="131" y="14" style="//@styles.1">
+                <graphicsAlgorithmChildren xsi:type="al:Polygon" lineStyle="UNSPECIFIED" width="15" height="10" style="//@styles.1">
+                  <points/>
+                  <points x="15" y="5"/>
+                  <points y="10"/>
+                </graphicsAlgorithmChildren>
+              </graphicsAlgorithm>
+            </children>
+            <children visible="true">
+              <properties key="independentObject" value="feature UAV::motors_and_radios.flight_control_commands"/>
+              <properties key="name" value="label"/>
+              <graphicsAlgorithm xsi:type="al:Text" lineStyle="UNSPECIFIED" width="141" height="14" style="//@styles.0" horizontalAlignment="UNSPECIFIED" verticalAlignment="UNSPECIFIED" value="flight_control_commands"/>
+            </children>
+          </children>
+          <children xsi:type="pi:ContainerShape" visible="true" active="true">
+            <properties key="independentObject" value="feature UAV::motors_and_radios.mavlink"/>
+            <properties key="is_ghost" value="false"/>
+            <properties key="layout_side" value="right"/>
+            <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0" width="48" height="24" x="98" y="145"/>
+            <anchors xsi:type="pi:ChopboxAnchor">
+              <properties key="name" value="chopbox"/>
+            </anchors>
+            <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+              <properties key="name" value="innerConnector"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+              <location x="18" y="19"/>
+            </anchors>
+            <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+              <properties key="name" value="outerConnector"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+              <location x="48" y="19"/>
+            </anchors>
+            <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+              <properties key="name" value="flowSpecification"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+              <location x="-32" y="19"/>
+            </anchors>
+            <children xsi:type="pi:ContainerShape" visible="true" active="true">
+              <properties key="name" value="feature"/>
+              <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0" width="30" height="10" x="18" y="14" style="//@styles.1">
+                <graphicsAlgorithmChildren xsi:type="al:Polygon" lineStyle="UNSPECIFIED" width="30" height="10" style="//@styles.1">
+                  <points x="15"/>
+                  <points y="5"/>
+                  <points x="15" y="10"/>
+                  <points x="30" y="5"/>
+                </graphicsAlgorithmChildren>
+              </graphicsAlgorithm>
+            </children>
+            <children visible="true">
+              <properties key="independentObject" value="feature UAV::motors_and_radios.mavlink"/>
+              <properties key="name" value="label"/>
+              <graphicsAlgorithm xsi:type="al:Text" lineStyle="UNSPECIFIED" width="43" height="14" style="//@styles.0" horizontalAlignment="UNSPECIFIED" verticalAlignment="UNSPECIFIED" value="mavlink"/>
+            </children>
+          </children>
+        </children>
+        <children visible="true">
+          <properties key="independentObject" value="feature PX4IOAR::PX4IOAR.motors_and_radios"/>
+          <properties key="name" value="label"/>
+          <graphicsAlgorithm xsi:type="al:Text" lineStyle="UNSPECIFIED" width="108" height="14" x="63" style="//@styles.0" horizontalAlignment="UNSPECIFIED" verticalAlignment="UNSPECIFIED" value="motors_and_radios"/>
+        </children>
+      </children>
+      <children xsi:type="pi:ContainerShape" visible="true" active="true">
+        <properties key="independentObject" value="feature PX4IOAR::PX4IOAR.rc_radio"/>
+        <properties key="is_ghost" value="false"/>
+        <properties key="side" value="right"/>
+        <properties key="layout_side" value="right"/>
+        <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0" width="50" height="34" x="350" y="423"/>
+        <anchors xsi:type="pi:ChopboxAnchor">
+          <properties key="name" value="chopbox"/>
+        </anchors>
+        <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+          <properties key="name" value="innerConnector"/>
+          <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+          <location x="30" y="24"/>
+        </anchors>
+        <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" outgoingConnections="//@connections.0" useAnchorLocationAsConnectionEndpoint="true">
+          <properties key="name" value="outerConnector"/>
+          <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+          <location x="50" y="24"/>
+        </anchors>
+        <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+          <properties key="name" value="flowSpecification"/>
+          <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+          <location x="-20" y="24"/>
+        </anchors>
+        <children xsi:type="pi:ContainerShape" visible="true" active="true">
+          <properties key="name" value="feature"/>
+          <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0" width="20" height="20" x="30" y="14">
+            <graphicsAlgorithmChildren xsi:type="al:Polyline" lineStyle="UNSPECIFIED" width="20" height="20" style="//@styles.1">
+              <points x="20"/>
+              <points x="5"/>
+              <points y="10"/>
+              <points x="5" y="20"/>
+              <points x="20" y="20"/>
+              <points x="20"/>
+            </graphicsAlgorithmChildren>
+          </graphicsAlgorithm>
+        </children>
+        <children visible="true">
+          <properties key="independentObject" value="feature PX4IOAR::PX4IOAR.rc_radio"/>
+          <properties key="name" value="label"/>
+          <graphicsAlgorithm xsi:type="al:Text" lineStyle="UNSPECIFIED" width="45" height="14" style="//@styles.0" horizontalAlignment="UNSPECIFIED" verticalAlignment="UNSPECIFIED" value="rc_radio"/>
+        </children>
+      </children>
+      <children xsi:type="pi:ContainerShape" visible="true" active="true">
+        <properties key="independentObject" value="feature PX4IOAR::PX4IOAR.x3dr_radio"/>
+        <properties key="is_ghost" value="false"/>
+        <properties key="side" value="right"/>
+        <properties key="layout_side" value="right"/>
+        <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0" width="63" height="34" x="337" y="474"/>
+        <anchors xsi:type="pi:ChopboxAnchor">
+          <properties key="name" value="chopbox"/>
+        </anchors>
+        <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+          <properties key="name" value="innerConnector"/>
+          <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+          <location x="43" y="24"/>
+        </anchors>
+        <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" outgoingConnections="//@connections.1" useAnchorLocationAsConnectionEndpoint="true">
+          <properties key="name" value="outerConnector"/>
+          <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+          <location x="63" y="24"/>
+        </anchors>
+        <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+          <properties key="name" value="flowSpecification"/>
+          <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+          <location x="-7" y="24"/>
+        </anchors>
+        <children xsi:type="pi:ContainerShape" visible="true" active="true">
+          <properties key="name" value="feature"/>
+          <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0" width="20" height="20" x="43" y="14">
+            <graphicsAlgorithmChildren xsi:type="al:Polyline" lineStyle="UNSPECIFIED" width="20" height="20" style="//@styles.1">
+              <points x="20"/>
+              <points x="5"/>
+              <points y="10"/>
+              <points x="5" y="20"/>
+              <points x="20" y="20"/>
+              <points x="20"/>
+            </graphicsAlgorithmChildren>
+          </graphicsAlgorithm>
+        </children>
+        <children visible="true">
+          <properties key="independentObject" value="feature PX4IOAR::PX4IOAR.x3dr_radio"/>
+          <properties key="name" value="label"/>
+          <graphicsAlgorithm xsi:type="al:Text" lineStyle="UNSPECIFIED" width="58" height="14" style="//@styles.0" horizontalAlignment="UNSPECIFIED" verticalAlignment="UNSPECIFIED" value="x3dr_radio"/>
+        </children>
+      </children>
+      <children xsi:type="pi:ContainerShape" visible="true" active="true">
+        <properties key="independentObject" value="feature PX4IOAR::PX4IOAR.mavlink"/>
+        <properties key="is_ghost" value="false"/>
+        <properties key="side" value="right"/>
+        <properties key="layout_side" value="right"/>
+        <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0" width="48" height="24" x="352" y="513"/>
+        <anchors xsi:type="pi:ChopboxAnchor">
+          <properties key="name" value="chopbox"/>
+        </anchors>
+        <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+          <properties key="name" value="innerConnector"/>
+          <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+          <location x="18" y="19"/>
+        </anchors>
+        <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" outgoingConnections="//@connections.5" useAnchorLocationAsConnectionEndpoint="true">
+          <properties key="name" value="outerConnector"/>
+          <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+          <location x="48" y="19"/>
+        </anchors>
+        <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+          <properties key="name" value="flowSpecification"/>
+          <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+          <location x="-32" y="19"/>
+        </anchors>
+        <children xsi:type="pi:ContainerShape" visible="true" active="true">
+          <properties key="name" value="feature"/>
+          <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0" width="30" height="10" x="18" y="14" style="//@styles.1">
+            <graphicsAlgorithmChildren xsi:type="al:Polygon" lineStyle="UNSPECIFIED" width="30" height="10" style="//@styles.1">
+              <points x="15"/>
+              <points y="5"/>
+              <points x="15" y="10"/>
+              <points x="30" y="5"/>
+            </graphicsAlgorithmChildren>
+          </graphicsAlgorithm>
+        </children>
+        <children visible="true">
+          <properties key="independentObject" value="feature PX4IOAR::PX4IOAR.mavlink"/>
+          <properties key="name" value="label"/>
+          <graphicsAlgorithm xsi:type="al:Text" lineStyle="UNSPECIFIED" width="43" height="14" style="//@styles.0" horizontalAlignment="UNSPECIFIED" verticalAlignment="UNSPECIFIED" value="mavlink"/>
+        </children>
+      </children>
+      <children xsi:type="pi:ContainerShape" visible="true" active="true">
+        <properties key="independentObject" value="feature PX4IOAR::PX4IOAR.flight_control_commands"/>
+        <properties key="is_ghost" value="false"/>
+        <properties key="side" value="right"/>
+        <properties key="layout_side" value="right"/>
+        <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0" width="146" height="24" x="254" y="563"/>
+        <anchors xsi:type="pi:ChopboxAnchor">
+          <properties key="name" value="chopbox"/>
+        </anchors>
+        <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+          <properties key="name" value="innerConnector"/>
+          <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+          <location x="131" y="19"/>
+        </anchors>
+        <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" incomingConnections="//@connections.6" useAnchorLocationAsConnectionEndpoint="true">
+          <properties key="name" value="outerConnector"/>
+          <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+          <location x="146" y="19"/>
+        </anchors>
+        <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+          <properties key="name" value="flowSpecification"/>
+          <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+          <location x="81" y="19"/>
+        </anchors>
+        <children xsi:type="pi:ContainerShape" visible="true" active="true">
+          <properties key="name" value="feature"/>
+          <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0" width="15" height="10" x="131" y="14" style="//@styles.1">
+            <graphicsAlgorithmChildren xsi:type="al:Polygon" lineStyle="UNSPECIFIED" width="15" height="10" style="//@styles.1">
+              <points x="15"/>
+              <points y="5"/>
+              <points x="15" y="10"/>
+            </graphicsAlgorithmChildren>
+          </graphicsAlgorithm>
+        </children>
+        <children visible="true">
+          <properties key="independentObject" value="feature PX4IOAR::PX4IOAR.flight_control_commands"/>
+          <properties key="name" value="label"/>
+          <graphicsAlgorithm xsi:type="al:Text" lineStyle="UNSPECIFIED" width="141" height="14" style="//@styles.0" horizontalAlignment="UNSPECIFIED" verticalAlignment="UNSPECIFIED" value="flight_control_commands"/>
+        </children>
+      </children>
+      <children visible="true">
+        <properties key="independentObject" value="subcomponent UAV::UAV.Impl.PX4IOAR"/>
+        <graphicsAlgorithm xsi:type="al:Text" lineStyle="UNSPECIFIED" width="400" height="20" style="//@styles.0" horizontalAlignment="UNSPECIFIED" verticalAlignment="UNSPECIFIED" value="PX4IOAR"/>
+      </children>
+      <children visible="true">
+        <graphicsAlgorithm xsi:type="al:Text" lineStyle="UNSPECIFIED" width="400" height="20" y="14" style="//@styles.0" horizontalAlignment="UNSPECIFIED" verticalAlignment="UNSPECIFIED" value="PX4IOAR::PX4IOAR.Impl"/>
+      </children>
+    </children>
+  </children>
+  <styles foreground="//@colors.2" lineStyle="UNSPECIFIED" filled="false" id="label" font="//@fonts.0"/>
+  <styles background="//@colors.2" foreground="//@colors.2" lineWidth="2" lineVisible="true" id="feature" horizontalAlignment="UNSPECIFIED" verticalAlignment="UNSPECIFIED"/>
+  <styles background="//@colors.1" foreground="//@colors.2" lineWidth="1" lineVisible="true" transparency="0.0" id="classifier" horizontalAlignment="UNSPECIFIED" verticalAlignment="UNSPECIFIED">
+    <styles background="//@colors.2" lineStyle="UNSPECIFIED" id="feature-group" horizontalAlignment="UNSPECIFIED" verticalAlignment="UNSPECIFIED"/>
+    <styles lineWidth="2" lineStyle="UNSPECIFIED" id="system" horizontalAlignment="UNSPECIFIED" verticalAlignment="UNSPECIFIED">
+      <styles lineWidth="3" lineStyle="UNSPECIFIED" id="system-implementation" horizontalAlignment="UNSPECIFIED" verticalAlignment="UNSPECIFIED"/>
+    </styles>
+  </styles>
+  <styles background="//@colors.2" foreground="//@colors.2" lineWidth="2" lineVisible="true" id="decorator" horizontalAlignment="UNSPECIFIED" verticalAlignment="UNSPECIFIED"/>
+  <connections xsi:type="pi:FreeFormConnection" visible="true" active="true" start="//@children.0/@children.6/@children.2/@anchors.2" end="//@children.0/@children.1/@anchors.1">
+    <properties key="independentObject" value="connection UAV::UAV.Impl.conn5"/>
+    <graphicsAlgorithm xsi:type="al:Polyline" lineStyle="UNSPECIFIED" style="//@styles.3"/>
+    <connectionDecorators visible="true" active="true" locationRelative="true" location="0.5">
+      <properties key="independentObject" value="connection UAV::UAV.Impl.conn5"/>
+      <graphicsAlgorithm xsi:type="al:Text" lineWidth="1" filled="false" transparency="0.0" x="5" y="10" style="//@styles.0" font="//@fonts.1" value="conn5"/>
+    </connectionDecorators>
+  </connections>
+  <connections xsi:type="pi:FreeFormConnection" visible="true" active="true" start="//@children.0/@children.6/@children.3/@anchors.2" end="//@children.0/@children.0/@anchors.1">
+    <properties key="independentObject" value="connection UAV::UAV.Impl.conn6"/>
+    <graphicsAlgorithm xsi:type="al:Polyline" lineStyle="UNSPECIFIED" style="//@styles.3"/>
+    <connectionDecorators visible="true" active="true" locationRelative="true" location="0.5">
+      <properties key="independentObject" value="connection UAV::UAV.Impl.conn6"/>
+      <graphicsAlgorithm xsi:type="al:Text" lineWidth="1" filled="false" transparency="0.0" x="5" y="10" style="//@styles.0" font="//@fonts.1" value="conn6"/>
+    </connectionDecorators>
+  </connections>
+  <connections xsi:type="pi:FreeFormConnection" visible="true" active="true" start="//@children.0/@children.5/@children.0/@anchors.2" end="//@children.0/@children.4/@children.1/@anchors.2">
+    <properties key="independentObject" value="connection UAV::UAV.Impl.conn0"/>
+    <graphicsAlgorithm xsi:type="al:Polyline" lineStyle="UNSPECIFIED" style="//@styles.3"/>
+    <connectionDecorators visible="true" active="true" locationRelative="true" location="0.5">
+      <properties key="independentObject" value="connection UAV::UAV.Impl.conn0"/>
+      <graphicsAlgorithm xsi:type="al:Text" lineWidth="1" filled="false" transparency="0.0" x="5" y="10" style="//@styles.0" font="//@fonts.1" value="conn0"/>
+    </connectionDecorators>
+    <bendpoints x="90" y="972"/>
+    <bendpoints x="89" y="333"/>
+  </connections>
+  <connections xsi:type="pi:FreeFormConnection" visible="true" active="true" start="//@children.0/@children.5/@children.1/@anchors.2" end="//@children.0/@children.6/@children.0/@anchors.2">
+    <properties key="independentObject" value="connection UAV::UAV.Impl.conn1"/>
+    <graphicsAlgorithm xsi:type="al:Polyline" lineStyle="UNSPECIFIED" style="//@styles.3"/>
+    <connectionDecorators visible="true" active="true" locationRelative="true" location="0.5">
+      <properties key="independentObject" value="connection UAV::UAV.Impl.conn1"/>
+      <graphicsAlgorithm xsi:type="al:Text" lineWidth="1" filled="false" transparency="0.0" x="5" y="10" style="//@styles.0" font="//@fonts.1" value="conn1"/>
+    </connectionDecorators>
+  </connections>
+  <connections xsi:type="pi:FreeFormConnection" visible="true" active="true" start="//@children.0/@children.6/@children.1/@anchors.2" end="//@children.0/@children.4/@children.0/@anchors.2">
+    <properties key="independentObject" value="connection UAV::UAV.Impl.conn2"/>
+    <graphicsAlgorithm xsi:type="al:Polyline" lineStyle="UNSPECIFIED" style="//@styles.3"/>
+    <connectionDecorators visible="true" active="true" locationRelative="true" location="0.5">
+      <properties key="independentObject" value="connection UAV::UAV.Impl.conn2"/>
+      <graphicsAlgorithm xsi:type="al:Text" lineWidth="1" filled="false" transparency="0.0" x="5" y="10" style="//@styles.0" font="//@fonts.1" value="conn2"/>
+    </connectionDecorators>
+    <bendpoints x="997" y="992"/>
+    <bendpoints x="998" y="333"/>
+  </connections>
+  <connections xsi:type="pi:FreeFormConnection" visible="true" active="true" start="//@children.0/@children.6/@children.4/@anchors.2" end="//@children.0/@children.2/@anchors.1">
+    <properties key="independentObject" value="connection UAV::UAV.Impl.conn3"/>
+    <graphicsAlgorithm xsi:type="al:Polyline" lineStyle="UNSPECIFIED" style="//@styles.3"/>
+    <connectionDecorators visible="true" active="true" locationRelative="true" location="0.5">
+      <properties key="independentObject" value="connection UAV::UAV.Impl.conn3"/>
+      <graphicsAlgorithm xsi:type="al:Text" lineWidth="1" filled="false" transparency="0.0" x="5" y="10" style="//@styles.0" font="//@fonts.1" value="conn3"/>
+    </connectionDecorators>
+  </connections>
+  <connections xsi:type="pi:FreeFormConnection" visible="true" active="true" start="//@children.0/@children.3/@anchors.1" end="//@children.0/@children.6/@children.5/@anchors.2">
+    <properties key="independentObject" value="connection UAV::UAV.Impl.conn4"/>
+    <graphicsAlgorithm xsi:type="al:Polyline" lineStyle="UNSPECIFIED" style="//@styles.3"/>
+    <connectionDecorators visible="true" active="true" locationRelative="true" location="0.5">
+      <properties key="independentObject" value="connection UAV::UAV.Impl.conn4"/>
+      <graphicsAlgorithm xsi:type="al:Text" lineWidth="1" filled="false" transparency="0.0" x="5" y="10" style="//@styles.0" font="//@fonts.1" value="conn4"/>
+    </connectionDecorators>
+  </connections>
+  <colors red="227" green="238" blue="249"/>
+  <colors red="255" green="255" blue="255"/>
+  <colors/>
+  <fonts name="Arial" size="8" bold="true"/>
+  <fonts name="Arial" size="8"/>
+</pi:Diagram>

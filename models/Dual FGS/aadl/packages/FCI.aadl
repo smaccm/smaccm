@@ -26,7 +26,7 @@ public
 with THROTTLE,YOKE;
   data Flight_Crew_Interface_Data
     properties
-      Source_Data_Size => 16 Bytes;
+      Data_Size => 16 Bytes;
   end Flight_Crew_Interface_Data;
   
   system Flight_Crew_Interface

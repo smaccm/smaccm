@@ -26,7 +26,7 @@ public
 with FGS,Base_Types;
   data Control_Surface_Actuator_Data
     properties
-      Source_Data_Size => 8 Bytes;
+      Data_Size => 8 Bytes;
   end Control_Surface_Actuator_Data;
   
   process AutoPilot_Process

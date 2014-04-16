@@ -172,7 +172,7 @@ annex agree {**
       mds: data Flight_Modes.Flight_Modes_Impl;
       cmds: data Guidance_Commands.Guidance_Commands_Impl;
     properties
-      Source_Data_Size => 1024 Bytes;
+      Data_Size => 1024 Bytes;
   end Guidance_Data.Guidance_Data_Impl;
   
   data implementation Lateral_Modes.Lateral_Modes_Impl

@@ -262,7 +262,7 @@ thread gcsTransmitTask_uart5
   properties
     Source_Text => ("tower_task_usercode_gcsTransmitTask_uart5_1003.c");
     Priority => 0;
-    Source_Stack_Size => 1024 bytes;
+    Stack_Size => 1024 bytes;
     SMACCM::Language => "Ivory";
     Dispatch_Protocol => Hybrid;
     Period => 50 ms;
@@ -286,7 +286,7 @@ thread encryptTask_uart5
   properties
     Source_Text => ("tower_task_usercode_encryptTask_uart5_995.c");
     Priority => 1;
-    Source_Stack_Size => 256 bytes;
+    Stack_Size => 256 bytes;
     SMACCM::Language => "Ivory";
     Dispatch_Protocol => Sporadic;
 end encryptTask_uart5;
@@ -669,7 +669,7 @@ thread gcsReceiveTask_uart5
   properties
     Source_Text => ("tower_task_usercode_gcsReceiveTask_uart5_839.c");
     Priority => 2;
-    Source_Stack_Size => 1024 bytes;
+    Stack_Size => 1024 bytes;
     SMACCM::Language => "Ivory";
     Dispatch_Protocol => Sporadic;
     SMACCM::Always_Sends_Message => true;
@@ -697,7 +697,7 @@ thread decryptTask_uart5
   properties
     Source_Text => ("tower_task_usercode_decryptTask_uart5_826.c");
     Priority => 3;
-    Source_Stack_Size => 256 bytes;
+    Stack_Size => 256 bytes;
     SMACCM::Language => "Ivory";
     Dispatch_Protocol => Sporadic;
     SMACCM::Encryption_Algorthim => "AES-128-GCM";
@@ -722,7 +722,7 @@ thread radio_status_uart5
   properties
     Source_Text => ("tower_task_usercode_radio_status_uart5_818.c");
     Priority => 4;
-    Source_Stack_Size => 256 bytes;
+    Stack_Size => 256 bytes;
     SMACCM::Language => "Ivory";
     Dispatch_Protocol => Sporadic;
 end radio_status_uart5;
@@ -767,7 +767,7 @@ thread datalink_uart5
   properties
     Source_Text => ("tower_task_usercode_datalink_uart5_785.c");
     Priority => 5;
-    Source_Stack_Size => 256 bytes;
+    Stack_Size => 256 bytes;
     SMACCM::Language => "Ivory";
     Dispatch_Protocol => Hybrid;
     Period => 1000 ms;
@@ -1012,7 +1012,7 @@ thread gcsTransmitTask_uart1
   properties
     Source_Text => ("tower_task_usercode_gcsTransmitTask_uart1_660.c");
     Priority => 6;
-    Source_Stack_Size => 1024 bytes;
+    Stack_Size => 1024 bytes;
     SMACCM::Language => "Ivory";
     Dispatch_Protocol => Hybrid;
     Period => 50 ms;
@@ -1036,7 +1036,7 @@ thread encryptTask_uart1
   properties
     Source_Text => ("tower_task_usercode_encryptTask_uart1_652.c");
     Priority => 7;
-    Source_Stack_Size => 256 bytes;
+    Stack_Size => 256 bytes;
     SMACCM::Language => "Ivory";
     Dispatch_Protocol => Sporadic;
 end encryptTask_uart1;
@@ -1419,7 +1419,7 @@ thread gcsReceiveTask_uart1
   properties
     Source_Text => ("tower_task_usercode_gcsReceiveTask_uart1_496.c");
     Priority => 8;
-    Source_Stack_Size => 1024 bytes;
+    Stack_Size => 1024 bytes;
     SMACCM::Language => "Ivory";
     Dispatch_Protocol => Sporadic;
 end gcsReceiveTask_uart1;
@@ -1446,7 +1446,7 @@ thread decryptTask_uart1
   properties
     Source_Text => ("tower_task_usercode_decryptTask_uart1_483.c");
     Priority => 9;
-    Source_Stack_Size => 256 bytes;
+    Stack_Size => 256 bytes;
     SMACCM::Language => "Ivory";
     Dispatch_Protocol => Sporadic;
     SMACCM::Encryption_Algorthim => "AES-128-GCM";
@@ -1470,7 +1470,7 @@ thread radio_status_uart1
   properties
     Source_Text => ("tower_task_usercode_radio_status_uart1_475.c");
     Priority => 10;
-    Source_Stack_Size => 256 bytes;
+    Stack_Size => 256 bytes;
     SMACCM::Language => "Ivory";
     Dispatch_Protocol => Sporadic;
 end radio_status_uart1;
@@ -1514,7 +1514,7 @@ thread datalink_uart1
   properties
     Source_Text => ("tower_task_usercode_datalink_uart1_442.c");
     Priority => 11;
-    Source_Stack_Size => 256 bytes;
+    Stack_Size => 256 bytes;
     SMACCM::Language => "Ivory";
     Dispatch_Protocol => Hybrid;
     Period => 1000 ms;
@@ -1556,7 +1556,7 @@ thread px4ioar
   properties
     Source_Text => ("tower_task_usercode_px4ioar_381.c");
     Priority => 12;
-    Source_Stack_Size => 256 bytes;
+    Stack_Size => 256 bytes;
     SMACCM::Language => "Ivory";
     Dispatch_Protocol => Hybrid;
     Period => 1 ms;
@@ -1595,7 +1595,7 @@ thread sensorsCaptureTask
   properties
     Source_Text => ("tower_task_usercode_sensorsCaptureTask_350.c");
     Priority => 13;
-    Source_Stack_Size => 1024 bytes;
+    Stack_Size => 1024 bytes;
     SMACCM::Language => "Ivory";
     Dispatch_Protocol => Hybrid;
     Period => 1 ms;
@@ -1619,7 +1619,7 @@ thread position_state
   properties
     Source_Text => ("tower_task_usercode_position_state_342.c");
     Priority => 14;
-    Source_Stack_Size => 256 bytes;
+    Stack_Size => 256 bytes;
     SMACCM::Language => "Ivory";
     Dispatch_Protocol => Sporadic;
 end position_state;
@@ -1641,7 +1641,7 @@ thread ubloxGPS
   properties
     Source_Text => ("tower_task_usercode_ubloxGPS_323.c");
     Priority => 15;
-    Source_Stack_Size => 256 bytes;
+    Stack_Size => 256 bytes;
     SMACCM::Language => "Ivory";
     Dispatch_Protocol => Sporadic;
 end ubloxGPS;
@@ -1663,7 +1663,7 @@ thread motors_state
   properties
     Source_Text => ("tower_task_usercode_motors_state_307.c");
     Priority => 16;
-    Source_Stack_Size => 256 bytes;
+    Stack_Size => 256 bytes;
     SMACCM::Language => "Ivory";
     Dispatch_Protocol => Sporadic;
 end motors_state;
@@ -1685,7 +1685,7 @@ thread control_state
   properties
     Source_Text => ("tower_task_usercode_control_state_298.c");
     Priority => 17;
-    Source_Stack_Size => 256 bytes;
+    Stack_Size => 256 bytes;
     SMACCM::Language => "Ivory";
     Dispatch_Protocol => Sporadic;
 end control_state;
@@ -1712,7 +1712,7 @@ thread motmix
   properties
     Source_Text => ("tower_task_usercode_motmix_287.c");
     Priority => 18;
-    Source_Stack_Size => 256 bytes;
+    Stack_Size => 256 bytes;
     SMACCM::Language => "Ivory";
     Dispatch_Protocol => Sporadic;
 end motmix;
@@ -1923,7 +1923,7 @@ thread control
   properties
     Source_Text => ("tower_task_usercode_control_157.c");
     Priority => 19;
-    Source_Stack_Size => 256 bytes;
+    Stack_Size => 256 bytes;
     SMACCM::Language => "Ivory";
     Dispatch_Protocol => Hybrid;
     Period => 5 ms;
@@ -1941,7 +1941,7 @@ thread blink
   properties
     Source_Text => ("tower_task_usercode_blink_149.c");
     Priority => 20;
-    Source_Stack_Size => 256 bytes;
+    Stack_Size => 256 bytes;
     SMACCM::Language => "Ivory";
     Dispatch_Protocol => Hybrid;
     Period => 125 ms;
@@ -2464,7 +2464,7 @@ process implementation flight_gen_process.impl
     
     --connections to hardware
     --outgoing connections
-	--ccs      : port motors_and_radios.flight_control_commands -> ppmInputTower_inst.flight_control_commands;
+	--ccs      : port motors_and_radios.flight_control_commands -> UserInputThreads_inst.flight_control_commands;
 	mavconn  : port motors_and_radios.mavlink -> uart5ISR_inst.mavlink;
 	motor1   : port px4ioar_inst.motor1 -> motors_and_radios.motor1;
 	motor2   : port px4ioar_inst.motor2 -> motors_and_radios.motor2;
@@ -2478,7 +2478,7 @@ process implementation flight_gen_process.impl
     
   annex resolute {**
     prove memory_safe()
-    prove all_through_connections(this)
+    --prove all_through_connections(this)
     prove execute_soundness()
   **};
 

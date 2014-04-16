@@ -87,7 +87,7 @@ with Base_Types;
       AirSpeed: data Airspeed.Airspeed_Impl;
       Pitch: data Pitch.Pitch_Impl;
     properties
-      Source_Data_Size => 8 Bytes;
+      Data_Size => 8 Bytes;
   end Air_Data.Air_Data_Impl;
   
   data implementation Airspeed.Airspeed_Impl
@@ -95,7 +95,7 @@ with Base_Types;
       Val: data Base_Types::Float;
       Valid: data Base_Types::Boolean;
     properties
-      Source_Data_Size => 8 Bytes;
+      Data_Size => 8 Bytes;
   end Airspeed.Airspeed_Impl;
   
   data implementation Pitch.Pitch_Impl

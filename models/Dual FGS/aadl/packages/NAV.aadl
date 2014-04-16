@@ -25,7 +25,7 @@ package NAV
 public
   data Navigation_Data
     properties
-      Source_Data_Size => 512 Bytes;
+      Data_Size => 512 Bytes;
   end Navigation_Data;
   
   process Navigation_Process
