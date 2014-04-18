@@ -84,6 +84,11 @@ system Formation
 	annex agree {**
 	
 		const none : int = 3;
+		
+		-- these guarantees are necessary for the squadron guarantees
+		guarantee "initial leader state" : leader = 0 -> true;
+		guarantee "initial right state" : right = 1 -> true;
+		guarantee "initial left state" : left = 2 -> true;
 	
 		guarantee "leader in range" : leader >=0 and leader <= 3;
 		guarantee "right in range" : right >=0 and right <= 3;

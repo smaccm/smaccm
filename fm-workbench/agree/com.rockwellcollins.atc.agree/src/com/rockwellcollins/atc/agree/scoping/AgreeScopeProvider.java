@@ -39,6 +39,7 @@ import com.rockwellcollins.atc.agree.agree.FnDefExpr;
 import com.rockwellcollins.atc.agree.agree.IdExpr;
 import com.rockwellcollins.atc.agree.agree.NestedDotID;
 import com.rockwellcollins.atc.agree.agree.NodeDefExpr;
+import com.rockwellcollins.atc.agree.agree.NodeEq;
 import com.rockwellcollins.atc.agree.agree.SpecStatement;
 
 /**
@@ -64,7 +65,7 @@ public class AgreeScopeProvider extends
         components.addAll(ctx.getArgs());
         components.addAll(ctx.getRets());
         components.addAll(ctx.getNodeBody().getLocs());
-        return Scopes.scopeFor(components, getScope(ctx.eContainer(), ref));
+        return Scopes.scopeFor(components, IScope.NULLSCOPE);
     }
     
     IScope scope_NamedElement(AgreeContract ctx, EReference ref) {
@@ -169,6 +170,8 @@ public class AgreeScopeProvider extends
             } else {
                 return new HashSet<>(); // this will throw a parsing error
             }
+        } else if (container instanceof NodeEq){
+        	return new HashSet<>();
         } else {
             // travel out of the annex and get the component
             // classifier that the annex is contained in.
