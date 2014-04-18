@@ -1,0 +1,216 @@
+package std
+public 
+
+annex agree {**
+	node RisingEdge(i: bool, init: bool) returns (o: bool); 
+	let
+		o = init -> i and (not pre(i));
+	tel; 
+	
+	node re(i: bool, init: bool) returns (o: bool); 
+	let
+		o = RisingEdge(i, init); 
+	tel; 
+	
+	node FallingEdge(i: bool, init: bool) returns (o: bool); 
+	let
+		o = init -> (not i) and pre(i); 
+	tel; 
+	
+	node fe(i: bool, init: bool) returns (o: bool); 
+	let
+		o = FallingEdge(i, init); 
+	tel;
+	
+	node Initially(i: bool) returns (o: bool);
+	let
+		o = i -> true;
+	tel;
+	
+	node After1(i: bool) returns (o: bool); 
+	let
+		o = true -> i; 
+	tel; 
+	
+	node Increase(i: real, init: bool) returns (o: bool); 
+	let
+		o = init -> (i > pre(i));
+	tel;
+	
+	node Decrease(i: real, init: bool) returns (o: bool); 
+	let
+		o = init -> (i < pre(i));
+	tel;
+	
+	node AbsoluteValue(i: real) returns (o: real); 
+	let
+		o = if (i >= 0.0) then i else -i;
+	tel; 
+	
+	node abs(i: real) returns (o: real);
+	let
+		o = AbsoluteValue(i); 
+	tel; 
+	
+	
+	node Delta(i: real, init: real) returns (o: real); 
+	let
+		o = i - (init -> pre(i));
+	tel; 
+	
+	node timer(set: bool, reset: bool) returns (time_val: int);
+	let
+		time_val = 
+			if reset then 0 else 
+				prev(time_val, 0) + (if set then 1 else 0);
+	tel;
+
+	node AfterN(i: bool, n: int) returns (o: bool);
+	let
+		o = if (timer(true, false) >= n) then i else true;
+	tel; 	
+
+	node WithinN(event: bool, i: bool, n: int) returns (o: bool);
+	var
+		after_event: bool; 
+		time: int; 
+	let
+		after_event = if i then false else if event then true else 
+			(false -> pre(after_event)); 
+		time = if i then 0 else 
+				(0 -> pre(time)) + if after_event then 1 else 0;
+		o = time <= n;
+	tel;
+
+	node While(i: bool) returns (o: bool);
+	let
+		o = i -> (i and pre(i)) ; 
+	tel;	
+	
+	node Historically(i: bool) returns (o: bool);
+	let
+		o = i -> i and (pre(o)); 
+	tel; 
+	
+	node Occurred(i: bool) returns (o: bool);  
+	let
+		o = i -> i  or (pre(o)); 
+	tel; 
+	 
+	-- Q: do we want a property to be guaranteed false after it is 
+	-- initially falsified?
+	node WeakUntil(i: bool, j: bool) returns (o: bool); 
+	let
+		o = Historically(i) or Occurred(j);
+	tel; 
+	
+	-- node Precedes(i: bool, j: bool) returns (o: bool); 
+	-- let
+	--	o = Occurred(j) => (false -> pre(Occurred(i))); 
+	-- tel; 
+
+	
+	node true_interval(signal: bool) returns (time_val: int);
+	let
+		time_val = timer(signal, not signal);
+	tel;
+
+	-- One of the property patterns from Lucas.
+			
+	node after_p_a_precedes_b(p : bool, a : bool, b : bool) returns (holds : bool);
+	var
+   		state : int;
+   		pre_state : int;
+   		prop1 : bool;
+	let
+	   pre_state = 0 -> pre(state);
+	   
+	   state = 
+	      if (pre_state = 0)
+	      then
+	         if (not p)
+	         then 0
+	         else if (p and a)
+	         then 0
+	         else if (p and not a and not b)
+	         then 1
+	         else if (p and not a and b)
+	         then 2
+	         else -1
+	      else if (pre_state = 1)
+	      then
+	         if a
+	         then 0
+	         else if (not a and not b)
+	         then 1
+	         else if (not a and b)
+	         then 2
+	         else -1
+	      else if (pre_state = 2)
+	      then 2
+	      else -1;
+	         
+	   holds = (state <> 2);
+	   prop1 = (state <> -1);
+	   lemma "range" : state >= 0 and state <= 2;
+	   --%PROPERTY prop1;
+	tel;
+
+	node before_p_always_a(p : bool, a : bool) returns (holds : bool);
+	var
+	   state : int;
+	   pre_state : int;
+	   prop1 : bool;
+	let
+	   pre_state = 0 -> pre(state);
+	   
+	   state =
+	      if (pre_state = 0)
+	      then
+	         if p
+	         then 1
+	         else if(not p and a)
+	         then 0
+	         else if(not p and not a)
+	         then 2
+	         else -1
+	      else if(pre_state = 1)
+	      then 1
+	      else if(pre_state = 2)
+	      then
+	         if(not p)
+	         then 2
+	         else if p
+	         then 3
+	         else -1
+	      else if(pre_state = 3)
+	      then 3
+	      else -1;
+	
+	   lemma "range": state >= 0 and state <= 3;
+	   holds = (state <> 3);
+	   prop1 = (state <> -1);
+	tel;
+
+	node IncreaseInt(i: int) returns (o: bool); 
+	let
+		o = true -> (i > pre(i));
+	tel;
+	
+	node DecreaseInt(i: int) returns (o: bool); 
+	let
+		o = true -> (i < pre(i));
+	tel;
+	
+	node AbsoluteValueInt(i: int) returns (o: int); 
+	let
+		o = if (i >= 0) then i else -i;
+	tel; 
+	
+	node absi(i: int) returns (o: int);
+	let
+		o = AbsoluteValueInt(i); 
+	tel; 
+**}	;
+
+end std;	
