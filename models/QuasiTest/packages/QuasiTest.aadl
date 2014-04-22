@@ -16,7 +16,19 @@ system Squadron
 		right_shift : in data port Base_types::Boolean;
 
 	annex agree {**
-		guarantee "leader equivalence" : leader_r = leader_l;
+		
+		const none : int = 3;
+		
+		assume "init leader" : leader_l = 0 and leader_r = 0 -> true;
+		assume "init right" : right_l = 1 and right_r = 1 -> true;
+		assume "init left" : left_l = 2 and left_r = 2 -> true;
+		
+		guarantee "leader equivalence" : 
+			true
+			=>
+			(leader_l = leader_r and
+			 right_l = right_r and
+			 left_l = left_r);
 	**};
 		
 end Squadron;
@@ -37,35 +49,54 @@ system implementation Squadron.impl
 
 	annex agree {**
 		
-		const none : int = 3;
-		
+		synchrony : 1; 
+				
+		--initial tick
+		assert form_right.CLK and form_left.CLK -> true;
+				
 		--make sure that everyone shifts the same
 		assert right_shift = form_right.right_shift;
 		assert left_shift = form_right.left_shift;
 		assert form_right.left_shift = form_left.left_shift;
 		assert form_right.right_shift = form_left.right_shift;
 		
-		eq form_left_pend : bool =
-			form_left.pend_leader != none or
-			form_left.pend_left != none or
-			form_left.pend_right != none;
+		eq form_left_not_pend : bool =
+			form_left.leader != none or
+			form_left.left != none or
+			form_left.right != none;
 		
-		eq form_right_pend : bool =
-			form_right.pend_leader != none or
-			form_right.pend_left != none or
-			form_right.pend_right != none;
+		eq form_right_not_pend : bool =
+			form_right.leader != none or
+			form_right.left != none or
+			form_right.right != none;
 			
-		--make sure shifts only happen if nothing is pending
-		assert (form_right_pend or form_left_pend) => not (left_shift or right_shift);
-		
-		assert not (left_shift and right_shift);
+		assert 
+			true -> pre(defs.rising(left_shift)) => left_shift or 
+				((form_right.pend_leader != none) and (form_right.pend_right != none) and (form_right.pend_left != none));
 				
-		assert true -> pre(defs.rising(left_shift)) => left_shift or 
-				not (form_right_pend or form_left_pend);
+		assert 
+			true -> pre(defs.rising(right_shift)) => right_shift or 
+				((form_right.pend_leader != none) and (form_right.pend_right != none) and (form_right.pend_left != none));
 				
-		assert true -> pre(defs.rising(right_shift)) => right_shift or 
-				not (form_right_pend or form_left_pend); 
-		
+		assert
+			defs.rising(left_shift) or defs.rising(right_shift) => 
+				((pre(form_right.leader) != none) and (pre(form_right.right) != none) and (pre(form_right.left) != none));
+				
+	    assert 
+			true -> pre(defs.rising(left_shift)) => left_shift or 
+				((form_left.pend_leader != none) and (form_left.pend_right != none) and (form_left.pend_left != none));
+				
+		assert 
+			true -> pre(defs.rising(right_shift)) => right_shift or 
+				((form_left.pend_leader != none) and (form_left.pend_right != none) and (form_left.pend_left != none));
+				
+		assert
+			defs.rising(left_shift) or defs.rising(right_shift) => 
+				((pre(form_left.leader) != none) and (pre(form_left.right) != none) and (pre(form_left.left) != none));
+			
+				
+	    assert  not (left_shift and right_shift);
+					
 	**};
 
 end Squadron.impl;
@@ -85,11 +116,9 @@ system Formation
 	
 		const none : int = 3;
 		
-		-- these guarantees are necessary for the squadron guarantees
-		guarantee "initial leader state" : leader = 0 -> true;
-		guarantee "initial right state" : right = 1 -> true;
-		guarantee "initial left state" : left = 2 -> true;
-	
+--		guarantee "initial pending values" : 
+--			pend_leader = none and pend_left = none and pend_right = none;
+--	
 		guarantee "leader in range" : leader >=0 and leader <= 3;
 		guarantee "right in range" : right >=0 and right <= 3;
 		guarantee "left in range" : left >=0 and left <= 3;
@@ -124,6 +153,32 @@ system Formation
 		guarantee "atomic pending shift leader":
 			(true -> pre(pend_leader) != none => (pre(pend_leader) != pend_leader => leader = pre(pend_leader)));
 		
+		guarantee "non atomic leader shift":
+			true -> leader != pre(leader) => pre(leader) = none or leader = none;
+			
+		guarantee "non atomic right shift":
+			true -> right != pre(right) => pre(right) = none or right = none;
+		
+		guarantee "non atomic left shift":
+			true -> left != pre(left) => pre(left) = none or left = none;
+		
+		--guarantees about how things move during shifts
+		eq last_shift_left : bool = false -> 
+			defs.rising(left_shift) or (pre(last_shift_left) and not defs.rising(right_shift));
+			
+		eq last_shift_right : bool = false -> 
+			defs.rising(right_shift) or (pre(last_shift_right) and not defs.rising(left_shift));
+			
+		guarantee "right shift behavior" :
+			true -> (pend_right = pre(leader) and pend_right != none => last_shift_right) and
+			        (pend_left = pre(right) and pend_left != none => last_shift_right) and
+			        (pend_leader = pre(left) and pend_leader != none => last_shift_right);
+			        
+	    guarantee "left shift behavior" :
+			true -> (pend_right = pre(left) and pend_right != none => last_shift_left) and
+			        (pend_left = pre(leader) and pend_left != none => last_shift_left) and
+			        (pend_leader = pre(right) and pend_leader != none => last_shift_left);
+				
 		assume "not shifting both same" : not (left_shift and right_shift);
 				
 		assume "all components see left shift" :
@@ -134,9 +189,9 @@ system Formation
 			true -> pre(defs.rising(right_shift)) => right_shift or 
 				((pend_leader != none) and (pend_right != none) and (pend_left != none));
 				
-		assume "only shift if none pending" :
+		assume "only shift if none pending" : true ->
 			defs.rising(left_shift) or defs.rising(right_shift) => 
-				((pend_leader != none) and (pend_right != none) and (pend_left != none));
+				((pre(leader) != none) and (pre(right) != none) and (pre(left) != none));
 					
 	**};
 		 

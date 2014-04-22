@@ -602,12 +602,14 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         for (AnnexSubclause annex : AnnexUtil.getAllAnnexSubclauses(subCompImpl, AgreePackage.eINSTANCE.getAgreeContractSubclause())) {
             if (annex instanceof AgreeContractSubclause) { 
                 subEmitter.doSwitch(annex);
+                break;
             }
         }
 
         for (AnnexSubclause annex : AnnexUtil.getAllAnnexSubclauses(subCompType, AgreePackage.eINSTANCE.getAgreeContractSubclause())) {
             if (annex instanceof AgreeContractSubclause) {
                 subEmitter.doSwitch(annex);
+                break;
             }
         }
         
