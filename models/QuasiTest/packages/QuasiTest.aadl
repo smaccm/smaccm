@@ -24,7 +24,9 @@ system Squadron
 		assume "init left" : left_l = 2 and left_r = 2 -> true;
 		
 		guarantee "leader equivalence" : 
-			true
+			(leader_l != none) and (leader_r != none) and
+			(right_l != none) and (right_r != none) and
+			(left_l != none) and (left_r != none)
 			=>
 			(leader_l = leader_r and
 			 right_l = right_r and

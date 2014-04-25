@@ -1019,7 +1019,7 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
                 if(base instanceof Subcomponent){
                     compInst = compInst.findSubcomponentInstance((Subcomponent)base);
                     nestId = nestId.getSub();
-                }else{
+                }else if (base instanceof FeatureGroup){
                     assert(base instanceof FeatureGroup);
                     FeatureInstance featInst = compInst.findFeatureInstance((Feature)base);
                     
@@ -1038,6 +1038,9 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
                     }
                     
                     return featInst;
+                }else{
+                	assert(base instanceof DataPort);
+                	return compInst.findFeatureInstance((DataPort)base);
                 }
                 
             }
@@ -1796,23 +1799,15 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         }
         
         //make a counter for checking finite consistency
-        IdExpr countId = addConsistencyConstraints(eqs, internals);
-
-//        //get the equations that guarantee that every clock has ticked atleast once
-//        List<Equation> tickEqs = AgreeCalendarUtils.getAllClksHaveTicked("__ALL_TICKED", "__CLK_TICKED", clocks);
-//        
-//        //add all the new clock tick variables to the internal variables list
-//        for(Equation eq : tickEqs){
-//            internals.add(new VarDecl(eq.lhs.get(0).id, NamedType.BOOL));
-//        }
-//        
-//        eqs.addAll(tickEqs);
-//        IdExpr allClksTickedExpr = tickEqs.get(tickEqs.size()-1).lhs.get(0);
+        IdExpr countId = addConsistencyCounter(eqs, internals);
         
         // get the individual history variables and create assumption properties
         addSubcomponentAssumptions(subEmitters, eqs, internals, properties,
-				totalCompHist, sysAssumpHistId, closureMap, countId);
+				totalCompHist, sysAssumpHistId, closureMap);
         
+        
+        //add a property that is true if the contract is a contradiction
+        addSubcomponentConsistency(subEmitters, eqs, internals, properties, countId);
         
         // create individual properties for guarantees
         int i = 0;
@@ -1835,6 +1830,10 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         
         //check for contradiction in total component history
         addTotalCompHistoryConsist(eqs, internals, properties, totalCompHistId,
+				countId);
+        
+        //check to see if this specific components contract makes a contradiction
+        addThisContractConsist(eqs, internals, properties,
 				countId);
 
         //create the assertions for the clocks
@@ -1918,13 +1917,47 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         properties.add(notTotalCompHistId.id);
         consistProps.add(notTotalCompHistId.id);
         //reversePropStatus.add(true);
-        addToRenaming(notTotalCompHistId.id, "Total Contract Consistent");
+        addToRenaming(notTotalCompHistId.id, "Subcomponent Composition Consistency");
         //layout.addElement("Top", "Total Contract Consistants", AgreeLayout.SigType.OUTPUT);
-        layout.addElement(category, "Total Contract Consistents", AgreeLayout.SigType.OUTPUT);
+        layout.addElement(category, "Subcoponent Composition Consistency", AgreeLayout.SigType.OUTPUT);
+	}
+	
+	private void addThisContractConsist(List<Equation> eqs,
+			List<VarDecl> internals, List<String> properties, IdExpr countId) {
+		IdExpr contrHistId = new IdExpr("_THIS_CONTRACT_HIST");
+		
+		Expr guars = new BoolExpr(true);
+		for(Equation guarEq : guarExpressions){
+			guars = new BinaryExpr(guars, BinaryOp.AND, guarEq.expr);
+		}
+		
+		Expr assumps = new BoolExpr(true);
+		for(Expr assump : assumpExpressions){
+			assumps = new BinaryExpr(assumps, BinaryOp.AND, assump);
+		}
+		
+		Equation contrHistEq = AgreeEmitterUtilities.getLustreHistory(new BinaryExpr(assumps, BinaryOp.AND, guars), contrHistId);
+		eqs.add(contrHistEq);
+		
+        Expr finiteConsist = AgreeEmitterUtilities.getFinteConsistancy(contrHistId, countId, consistUnrollDepth);
+        IdExpr contrConsistId = new IdExpr("_THIS_CONTRACT_CONSIST");
+        
+		Equation contrConsistEq = new Equation(contrConsistId, finiteConsist);
+        
+        internals.add(new VarDecl(contrConsistId.id, new NamedType("bool")));
+        internals.add(new VarDecl(contrHistId.id, new NamedType("bool")));
+        eqs.add(contrConsistEq);
+        
+        properties.add(contrConsistId.id);
+        consistProps.add(contrConsistId.id);
+        //reversePropStatus.add(true);
+        addToRenaming(contrConsistId.id, "This Contract Consistency");
+        //layout.addElement("Top", "Total Contract Consistants", AgreeLayout.SigType.OUTPUT);
+        layout.addElement(category, "This Contract Consistency", AgreeLayout.SigType.OUTPUT);
 	}
 
 
-	private IdExpr addConsistencyConstraints(List<Equation> eqs,
+	private IdExpr addConsistencyCounter(List<Equation> eqs,
 			List<VarDecl> internals) {
 		IdExpr countId = new IdExpr("__CONSIST_COUNTER");
         internals.add(new VarDecl(countId.id, new NamedType("int")));
@@ -2037,7 +2070,7 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
 
 	private void addSubcomponentAssumptions(List<AgreeAnnexEmitter> subEmitters,
 			List<Equation> eqs, List<VarDecl> internals,
-			List<String> properties, Expr totalCompHist, Expr sysAssumpHist, Map<Subcomponent, Set<Subcomponent>> closureMap, IdExpr countId) {
+			List<String> properties, Expr totalCompHist, Expr sysAssumpHist, Map<Subcomponent, Set<Subcomponent>> closureMap) {
 		for(AgreeAnnexEmitter subEmitter : subEmitters){
 
             Expr higherContracts = new BoolExpr(true);
@@ -2071,29 +2104,34 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
             addToRenaming(compId.id, propertyName);
             //layout.addElement("Top", propertyName, AgreeLayout.SigType.OUTPUT);
             layout.addElement(category, propertyName, AgreeLayout.SigType.OUTPUT);
-            
-            
-            //add a property that is true if the contract is a contradiction
-            IdExpr contrHistId = new IdExpr("__CONTR_HIST_" + subEmitter.category);
-            IdExpr consistId = new IdExpr("__NULL_CONTR_HIST_" + subEmitter.category);
-
-            Expr contExpr = AgreeEmitterUtilities.getLustreContract(subEmitter);
-            Equation contHist = AgreeEmitterUtilities.getLustreHistory(contExpr, contrHistId);
-            Expr finiteConsist = AgreeEmitterUtilities.getFinteConsistancy(contrHistId, countId, consistUnrollDepth);
-            Equation contrConsistEq = new Equation(consistId, finiteConsist);
-            eqs.add(contrConsistEq);
-            eqs.add(contHist);
-            internals.add(new VarDecl(contrHistId.id, new NamedType("bool")));
-            internals.add(new VarDecl(consistId.id, new NamedType("bool")));
-
-            properties.add(consistId.id);
-            consistProps.add(consistId.id);
-            //reversePropStatus.add(true);
-            String contractName = subEmitter.category + " Consistent";
-            addToRenaming(consistId.id, contractName);
-            //layout.addElement("Top", contractName, AgreeLayout.SigType.OUTPUT);
-            layout.addElement(category, contractName, AgreeLayout.SigType.OUTPUT);
         }
+	}
+
+	private void addSubcomponentConsistency(List<AgreeAnnexEmitter> subEmitters, List<Equation> eqs,
+			List<VarDecl> internals, List<String> properties, IdExpr countId) {
+		
+		for(AgreeAnnexEmitter subEmitter : subEmitters){
+
+			IdExpr contrHistId = new IdExpr("__CONTR_HIST_" + subEmitter.category);
+			IdExpr consistId = new IdExpr("__NULL_CONTR_HIST_" + subEmitter.category);
+
+			Expr contExpr = AgreeEmitterUtilities.getLustreContract(subEmitter);
+			Equation contHist = AgreeEmitterUtilities.getLustreHistory(contExpr, contrHistId);
+			Expr finiteConsist = AgreeEmitterUtilities.getFinteConsistancy(contrHistId, countId, consistUnrollDepth);
+			Equation contrConsistEq = new Equation(consistId, finiteConsist);
+			eqs.add(contrConsistEq);
+			eqs.add(contHist);
+			internals.add(new VarDecl(contrHistId.id, new NamedType("bool")));
+			internals.add(new VarDecl(consistId.id, new NamedType("bool")));
+
+			properties.add(consistId.id);
+			consistProps.add(consistId.id);
+			//reversePropStatus.add(true);
+			String contractName = subEmitter.category + " Consistent";
+			addToRenaming(consistId.id, contractName);
+			//layout.addElement("Top", contractName, AgreeLayout.SigType.OUTPUT);
+			layout.addElement(category, contractName, AgreeLayout.SigType.OUTPUT);
+		}
 	}
     
     
