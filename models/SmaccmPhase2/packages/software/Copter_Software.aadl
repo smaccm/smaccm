@@ -74,7 +74,7 @@ thread px4ioar
   properties
     Source_Text => ("tower_task_usercode_px4ioar_381.c");
     Priority => 12;
-    Source_Stack_Size => 256 bytes;
+    Stack_Size => 256 bytes;
     SMACCM::Language => "Ivory";
     Dispatch_Protocol => Hybrid;
     Period => 1 ms;
@@ -103,7 +103,7 @@ thread position_state
   properties
     Source_Text => ("tower_task_usercode_position_state_342.c");
     Priority => 14;
-    Source_Stack_Size => 256 bytes;
+    Stack_Size => 256 bytes;
     SMACCM::Language => "Ivory";
     Dispatch_Protocol => Sporadic;
 end position_state;
@@ -124,7 +124,7 @@ thread motors_state
   properties
     Source_Text => ("tower_task_usercode_motors_state_307.c");
     Priority => 16;
-    Source_Stack_Size => 256 bytes;
+    Stack_Size => 256 bytes;
     SMACCM::Language => "Ivory";
     Dispatch_Protocol => Sporadic;
 end motors_state;
@@ -151,7 +151,7 @@ thread motmix
   properties
     Source_Text => ("tower_task_usercode_motmix_287.c");
     Priority => 18;
-    Source_Stack_Size => 256 bytes;
+    Stack_Size => 256 bytes;
     SMACCM::Language => "Ivory";
     Dispatch_Protocol => Sporadic;
 end motmix;
@@ -166,7 +166,7 @@ thread blink
   properties
     Source_Text => ("tower_task_usercode_blink_149.c");
     Priority => 20;
-    Source_Stack_Size => 256 bytes;
+    Stack_Size => 256 bytes;
     SMACCM::Language => "Ivory";
     Dispatch_Protocol => Hybrid;
     Period => 125 ms;
@@ -178,6 +178,9 @@ end blink;
     features
       motors_and_radios: feature group UAV::motors_and_radios;
       sensors: feature group UAV::sensors;
+      mission_rc_override_tx: in event data port mavlink_rc_channels_override_msg::rc_channels_override_msg.impl{Queue_Size => 16;};
+	  mission_control_law_request: in event data port control_law_request_type::control_law_request.impl{Queue_Size => 16;};
+      
   end Software;
   
   system implementation Software.Impl 
@@ -187,6 +190,8 @@ end blink;
     connections
       conn0: feature group motors_and_radios <-> ML.motors_and_radios;
       conn1: feature group sensors <-> ML.sensors;
+      conn2: port mission_rc_override_tx -> ML.mission_rc_override_tx;
+      conn3: port mission_control_law_request -> ML.mission_control_law_request;
       
     annex agree {**
       assert ML.system_time >= 0;
@@ -200,6 +205,10 @@ end blink;
       motors_and_radios: feature group UAV::motors_and_radios;
       sensors: feature group UAV::sensors;
       system_time : in data port Base_Types::Integer;
+
+      mission_rc_override_tx: in event data port mavlink_rc_channels_override_msg::rc_channels_override_msg.impl{Queue_Size => 16;};
+	  mission_control_law_request: in event data port control_law_request_type::control_law_request.impl{Queue_Size => 16;};
+      
       
     annex agree {**
       
@@ -225,36 +234,20 @@ process implementation flight_gen_process.impl
     motmix_inst : thread motmix;
     blink_inst : thread blink;
     UserInputThreads_inst : thread group UserInput::UserInputThreads.Impl;
-    Commsec_inst : thread group Commsec::Commsec.Impl;
     Control_inst : thread group Control::ControlThreads.impl; 
     UARTS_inst : thread group UARTS::UARTS.Impl;
 
   connections 
-    conn_1 : port GCS_inst.gcsTxToEncSrc_uart5 -> Commsec_inst.gcsTxToEnc_uart5;
-    conn_2 : port Commsec_inst.encToHxSrc_uart5 -> datalink_uart5_inst.framed_istream;
-    conn_3 : port GCS_inst.rc_override_tx_uart5 -> UserInputThreads_inst.uart5_rcoverride_tx;
-    conn_4 : port GCS_inst.control_law_request_uart5 -> UserInputThreads_inst.uart5_control_law_request;
-    conn_5 : port Commsec_inst.decToGcsRxSrc_uart5 -> GCS_inst.mavStream_uart5;
-    conn_6 : port datalink_uart5_inst.link_ostream -> UARTS_inst.ostream_uart5;
-    conn_7 : port datalink_uart5_inst.stat_ostream -> GCS_inst.radioEvent5;
-    conn_8 : port datalink_uart5_inst.framed_ostream -> Commsec_inst.hxToDecRcv_uart5;
-    conn_11 : port GCS_inst.gcsTxToEncSrc_uart1 -> Commsec_inst.gcsTxToEnc_uart1;
-    conn_12 : port Commsec_inst.encToHxSrc_uart1 -> datalink_uart1_inst.framed_istream;
-    conn_14 : port GCS_inst.rc_override_tx_uart1 -> UserInputThreads_inst.uart1_rcoverride_tx;
-    conn_16 : port GCS_inst.control_law_request_uart1 -> UserInputThreads_inst.uart1_control_law_request;
-    conn_17 : port Commsec_inst.decToGcsRxSrc_uart1 -> GCS_inst.mavStream_uart1;
+    conn_3 : port mission_rc_override_tx -> UserInputThreads_inst.rcoverride_tx;
+    conn_4 : port mission_control_law_request -> UserInputThreads_inst.control_law_request;
     conn_21 : port px4ioar_inst.newstateEmitter -> px4ioar_inst.newstateEvent;
     conn_22 : port px4ioar_inst.uart_ostream -> UARTS_inst.ostream_uart2;
     conn_25 : port Sensors_inst.position -> position_state_inst.proxyEvent;
     conn_26 : port motmix_inst.motors -> px4ioar_inst.motor_istream;
     conn_27 : port motmix_inst.motors -> motors_state_inst.proxyEvent;
     conn_29 : port control_inst.control -> motmix_inst.control;
-    conn_37 : port UARTS_inst.istream_uart5 -> datalink_uart5_inst.link_istream;
     conn_39 : port UARTS_inst.istream_uart6 -> Sensors_inst.istream;
-        
-    conn_151 : data access threadData.commsecInfo5 -> Commsec_inst.commsec_info_src_uart5;
-    conn_152 : data access threadData.radio -> GCS_inst.radioData5;
-    
+            
     conn_266 : data access threadData.sensors -> Sensors_inst.sensors;
     conn_267 : data access threadData.position -> position_state_inst.proxyData;
     conn_268 : data access threadData.motors -> motors_state_inst.proxyData;

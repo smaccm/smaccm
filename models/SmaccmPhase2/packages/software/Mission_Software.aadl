@@ -15,18 +15,18 @@ public
   with userinput_type;
   with mavlink_rc_channels_override_msg;
   
- system Mission_Software
+ system Software
     features
      rcoverride_tx: out event data port mavlink_rc_channels_override_msg::rc_channels_override_msg.impl{Queue_Size => 16;};
 	 control_law_request: out event data port control_law_request_type::control_law_request.impl{Queue_Size => 16;};
       
-  end Mission_Software;
+  end Software;
   
-  system implementation Mission_Software.Impl 
+  system implementation Software.Impl 
     subcomponents
       ML: process flight_gen_process.Impl;
 
-  end Mission_Software.Impl;
+  end Software.Impl;
 
   process flight_gen_process
 	features

@@ -63,7 +63,7 @@ thread sensorsCaptureTask
   properties
     Source_Text => ("tower_task_usercode_sensorsCaptureTask_350.c");
     Priority => 13;
-    Source_Stack_Size => 1024 bytes;
+    Stack_Size => 1024 bytes;
     SMACCM::Language => "Ivory";
     Dispatch_Protocol => Hybrid;
     Period => 1 ms;
@@ -86,7 +86,7 @@ thread ubloxGPS
   properties
     Source_Text => ("tower_task_usercode_ubloxGPS_323.c");
     Priority => 15;
-    Source_Stack_Size => 256 bytes;
+    Stack_Size => 256 bytes;
     SMACCM::Language => "Ivory";
     Dispatch_Protocol => Sporadic;
 end ubloxGPS;

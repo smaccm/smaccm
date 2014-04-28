@@ -17,7 +17,6 @@ public
   with mavlink_hil_state_msg;
   with SMACCM;
   with SMACCM_SYS;
-  with Software;
   with FeatureGroups;
 
   thread group GCS

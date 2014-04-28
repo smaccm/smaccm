@@ -18,7 +18,6 @@ public
   with SMACCM;
   with SMACCM_SYS;
   with userinput_type;
-  with Software;
   with FeatureGroups;
 
 
@@ -104,7 +103,7 @@ thread control_state
   properties
     Source_Text => ("tower_task_usercode_control_state_298.c");
     Priority => 17;
-    Source_Stack_Size => 256 bytes;
+    Stack_Size => 256 bytes;
     SMACCM::Language => "Ivory";
     Dispatch_Protocol => Sporadic;
 end control_state;
@@ -315,7 +314,7 @@ thread control
   properties
     Source_Text => ("tower_task_usercode_control_157.c");
     Priority => 19;
-    Source_Stack_Size => 256 bytes;
+    Stack_Size => 256 bytes;
     SMACCM::Language => "Ivory";
     Dispatch_Protocol => Hybrid;
     Period => 5 ms;
