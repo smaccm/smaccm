@@ -801,6 +801,11 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
                 error(binExpr, "right side of binary expression '" + op + "' is of type '"
                         + typeRight + "' but must be of type 'int'");
             }
+            if(!rightSideConst){
+            	error(binExpr, "right side of binary expression '" + op + "' is not constant."
+            			+ " Non-linear expressions are not allowed");
+            }
+            
             return;
         case "/":
             if (!matches(REAL, typeLeft)) {
