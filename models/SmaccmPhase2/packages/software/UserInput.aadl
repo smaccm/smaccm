@@ -12,8 +12,13 @@ with Base_Types;
 thread group UserInputThreads
 
   features
-    ui_emitter: out event data port userinput_type::userinput_result.impl{Queue_Size => 16;};
-    law_emitter: out event data port control_law_type::control_law.impl{Queue_Size => 16;};
+    cr_emitter_in: in event data port control_law_request_type::control_law_request.impl {Queue_Size => 16;};
+    ui_emitter_in: in event data port userinput_type::userinput_result.impl {Queue_Size => 16;};
+    mav_controllaw_req: out event data port control_law_request_type::control_law_request.impl {Queue_Size => 16;};
+    rcoverride: out event data port mavlink_rc_channels_override_msg::rc_channels_override_msg.impl {Queue_Size => 16;};
+
+    ui_emitter_out: out event data port userinput_type::userinput_result.impl{Queue_Size => 16;};
+    law_emitter_out: out event data port control_law_type::control_law.impl{Queue_Size => 16;};
 	proxyUiData: requires data access userinput_type::userinput_result.impl {
       Access_Right => write_only;
     };
@@ -21,10 +26,8 @@ thread group UserInputThreads
       Access_Right => write_only;
 	};
 	
-	uart5_rcoverride_tx: in event data port mavlink_rc_channels_override_msg::rc_channels_override_msg.impl{Queue_Size => 16;};
-	uart1_rcoverride_tx: in event data port mavlink_rc_channels_override_msg::rc_channels_override_msg.impl{Queue_Size => 16;};
-	uart5_control_law_request: in event data port control_law_request_type::control_law_request.impl{Queue_Size => 16;};
-	uart1_control_law_request: in event data port control_law_request_type::control_law_request.impl{Queue_Size => 16;};
+	rcoverride_tx: in event data port mavlink_rc_channels_override_msg::rc_channels_override_msg.impl{Queue_Size => 16;};
+	control_law_request: in event data port control_law_request_type::control_law_request.impl{Queue_Size => 16;};
     flight_control_commands: in data port DATATYPES::Flight_Control_Commands.Impl;
 	system_time : in data port Base_Types::Integer;
 	
@@ -52,41 +55,41 @@ thread group UserInputThreads
   			sticks_corner_past and dead_pos_armed_past;
   		
   		guarantee "The controller is not armed unless the ppm says so" :
-  			(law_emitter.COUNT > 0 and law_emitter.armed_mode = 2) 
+  			(law_emitter_out.COUNT > 0 and law_emitter_out.armed_mode = 2) 
   				=> armed_past;
   		 
   		guarantee "Queues initially empty" :
-  			(ui_emitter.COUNT = 0 -> true) and
-  			(law_emitter.COUNT = 0 -> true);
+  			(ui_emitter_out.COUNT = 0 -> true) and
+  			(law_emitter_out.COUNT = 0 -> true);
   			
   		guarantee "Queue bounds" :
-  			ui_emitter.COUNT < 2 and
-  			ui_emitter.COUNT >= 0 and
-  			law_emitter.COUNT < 2 and
-  			law_emitter.COUNT >= 0;
+  			ui_emitter_out.COUNT < 2 and
+  			ui_emitter_out.COUNT >= 0 and
+  			law_emitter_out.COUNT < 2 and
+  			law_emitter_out.COUNT >= 0;
   	
   		guarantee "Control law is initially set to safe" :
-  			law_emitter.armed_mode = 0 -> true;
+  			law_emitter_out.armed_mode = 0 -> true;
   			
   		guarantee "User input ranges are bounded" :
-  			ui_emitter.COUNT > 0 =>
-  			(-1.0 <= ui_emitter.roll and ui_emitter.roll <= 1.0) and
-  			(-1.0 <= ui_emitter.pitch and ui_emitter.pitch <= 1.0) and
-  			(-1.0 <= ui_emitter.throttle and ui_emitter.throttle <= 1.0) and
-  			(-1.0 <= ui_emitter.yaw and ui_emitter.yaw <= 1.0); 
+  			ui_emitter_out.COUNT > 0 =>
+  			(-1.0 <= ui_emitter_out.roll and ui_emitter_out.roll <= 1.0) and
+  			(-1.0 <= ui_emitter_out.pitch and ui_emitter_out.pitch <= 1.0) and
+  			(-1.0 <= ui_emitter_out.throttle and ui_emitter_out.throttle <= 1.0) and
+  			(-1.0 <= ui_emitter_out.yaw and ui_emitter_out.yaw <= 1.0); 
   			
   		node ris_edg(signal : bool) returns (result : bool);
   		let
   			result = false -> (signal and not pre(signal));
   		tel;
   			
-		eq ui_insertions : int = (if (ui_emitter.COUNT > 0) then 1 else 0) -> if (ris_edg(ui_emitter.COUNT > 0)) then
+		eq ui_insertions : int = (if (ui_emitter_out.COUNT > 0) then 1 else 0) -> if (ris_edg(ui_emitter_out.COUNT > 0)) then
 										pre(ui_insertions) + 1
 									  else
 									  	pre(ui_insertions);
   			
   		guarantee "User input time always increasing" :
-  			true -> ui_insertions > 1 => (ui_emitter.time >= pre (ui_emitter.time));
+  			true -> ui_insertions > 1 => (ui_emitter_out.time >= pre (ui_emitter_out.time));
   			
   		guarantee "UI insertions is always positive" :
   			ui_insertions >= 0;
@@ -106,23 +109,20 @@ thread group implementation UserInputThreads.Impl
   subcomponents
 	uiMuxTask_inst : thread uiMuxTask;
    	controlLawTask_inst : thread controlLawTask;
-   	mavlinkInputTask_inst : thread mavlinkInputTask;
    	ppmInputTower_inst : thread ppmInputTower;
    	proxy_controllaw_inst : thread proxy_controllaw;
     proxy_userinput_inst : thread proxy_userinput;
 
   connections
-    conn_30 : port uiMuxTask_inst.ui_emitter -> ui_emitter;
+    conn_30 : port uiMuxTask_inst.ui_emitter -> ui_emitter_out;
     conn_32 : port controlLawTask_inst.law_emitter -> uiMuxTask_inst.law;
-    conn_34 : port mavlinkInputTask_inst.ui_emitter -> uiMuxTask_inst.mavlink_ui;
+    conn_34 : port ui_emitter_in -> uiMuxTask_inst.mavlink_ui;
     conn_36 : port ppmInputTower_inst.ui_emitter -> uiMuxTask_inst.ppm_ui;
-    conn_31 : port controlLawTask_inst.law_emitter -> law_emitter;
-    conn_33 : port mavlinkInputTask_inst.cr_emitter -> controlLawTask_inst.mav_req_snk;
+    conn_31 : port controlLawTask_inst.law_emitter -> law_emitter_out;
+    conn_33 : port cr_emitter_in -> controlLawTask_inst.mav_req_snk;
     conn_35 : port ppmInputTower_inst.cr_emitter -> controlLawTask_inst.ppm_req_snk;
-    conn_4 : port uart5_rcoverride_tx -> mavlinkInputTask_inst.rcoverride;
-    conn_14 : port uart1_rcoverride_tx -> mavlinkInputTask_inst.rcoverride;
-    conn_6 : port uart5_control_law_request -> mavlinkInputTask_inst.mav_controllaw_req;
-    conn_7 : port uart1_control_law_request -> mavlinkInputTask_inst.mav_controllaw_req;
+    conn_4 : port rcoverride_tx -> rcoverride;
+    conn_6 : port control_law_request -> mav_controllaw_req;
 	conn_99 : port flight_control_commands -> ppmInputTower_inst.flight_control_commands;
 	conn_time : port system_time -> ppmInputTower_inst.time;
 	conn_ui : port uiMuxTask_inst.ui_emitter -> proxy_userinput_inst.proxyEvent;
@@ -141,7 +141,7 @@ thread group implementation UserInputThreads.Impl
   	eq ppmSetArmed : bool = ppmInputTower_inst.cr_emitter.set_armed;
   	eq ppmSetSafe : bool = ppmInputTower_inst.cr_emitter.set_safe;
   	eq ppmQueueInsert : bool = ppmInputTower_inst.cr_emitter.INSERT;
-  	eq ctrlArmedMode: int = law_emitter.armed_mode;
+  	eq ctrlArmedMode: int = law_emitter_out.armed_mode;
   	
   	eq sincePPMArmed : int = time_since(ris_edg(ppmSetArmed)); 
   	eq sincePPMSafe : int = time_since(ris_edg(ppmSetSafe));
@@ -163,7 +163,7 @@ thread group implementation UserInputThreads.Impl
   	
   	-- needs to be present to prove the followign lemma
 	  lemma "armed mode range" :
-  		law_emitter.COUNT > 0 => ctrlArmedMode <= 2 and ctrlArmedMode >= 0;
+  		law_emitter_out.COUNT > 0 => ctrlArmedMode <= 2 and ctrlArmedMode >= 0;
 
   	lemma "positive counts" :
   		armedCount >= 0 and sincePPMArmed >=0 and sinceCtrlArmed >=0; 
@@ -188,10 +188,10 @@ thread group implementation UserInputThreads.Impl
   	eq ever_safe : bool = ppmSetSafe -> pre (ever_safe) or ppmSetSafe;
 	
   	--remove output elements as they become available
-  	assert law_emitter.COUNT > 0 => law_emitter.REMOVE;
-  	assert law_emitter.COUNT = 0 => not law_emitter.REMOVE;
-  	assert ui_emitter.COUNT > 0 => ui_emitter.REMOVE;
-  	assert ui_emitter.COUNT = 0 => not ui_emitter.REMOVE;
+  	assert law_emitter_out.COUNT > 0 => law_emitter_out.REMOVE;
+  	assert law_emitter_out.COUNT = 0 => not law_emitter_out.REMOVE;
+  	assert ui_emitter_out.COUNT > 0 => ui_emitter_out.REMOVE;
+  	assert ui_emitter_out.COUNT = 0 => not ui_emitter_out.REMOVE;
   	
   	--intial armed mode assertion
   	assert ctrlArmedMode = 0 -> true;

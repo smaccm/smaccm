@@ -1,6 +1,6 @@
-package Software
+package Copter_Software
 public
-	with SMACCM_SYS;
+  with SMACCM_SYS;
   with Base_Types;
   with TowerArrays;
   with gcsstream_timing;
@@ -218,8 +218,6 @@ end blink;
 process implementation flight_gen_process.impl
   subcomponents
     threadData : data SMACCM_DATA::proc_data.impl;
-    datalink_uart5_inst : thread Datalink::datalink_uart5;
-    datalink_uart1_inst : thread Datalink::datalink_uart1;
     px4ioar_inst : thread px4ioar;
     Sensors_inst : thread group Sensors::Sensors.Impl;
     position_state_inst : thread position_state;
@@ -228,7 +226,6 @@ process implementation flight_gen_process.impl
     blink_inst : thread blink;
     UserInputThreads_inst : thread group UserInput::UserInputThreads.Impl;
     Commsec_inst : thread group Commsec::Commsec.Impl;
-    GCS_inst : thread group GCS::GCS.Impl;
     Control_inst : thread group Control::ControlThreads.impl; 
     UARTS_inst : thread group UARTS::UARTS.Impl;
 
@@ -246,9 +243,6 @@ process implementation flight_gen_process.impl
     conn_14 : port GCS_inst.rc_override_tx_uart1 -> UserInputThreads_inst.uart1_rcoverride_tx;
     conn_16 : port GCS_inst.control_law_request_uart1 -> UserInputThreads_inst.uart1_control_law_request;
     conn_17 : port Commsec_inst.decToGcsRxSrc_uart1 -> GCS_inst.mavStream_uart1;
-    conn_18 : port datalink_uart1_inst.link_ostream -> UARTS_inst.ostream_uart1;
-    conn_19 : port datalink_uart1_inst.stat_ostream -> GCS_inst.radioEvent1;
-    conn_20 : port datalink_uart1_inst.framed_ostream -> Commsec_inst.hxToDecRcv_uart1;
     conn_21 : port px4ioar_inst.newstateEmitter -> px4ioar_inst.newstateEvent;
     conn_22 : port px4ioar_inst.uart_ostream -> UARTS_inst.ostream_uart2;
     conn_25 : port Sensors_inst.position -> position_state_inst.proxyEvent;
@@ -256,13 +250,10 @@ process implementation flight_gen_process.impl
     conn_27 : port motmix_inst.motors -> motors_state_inst.proxyEvent;
     conn_29 : port control_inst.control -> motmix_inst.control;
     conn_37 : port UARTS_inst.istream_uart5 -> datalink_uart5_inst.link_istream;
-    conn_38 : port UARTS_inst.istream_uart1 -> datalink_uart1_inst.link_istream;
     conn_39 : port UARTS_inst.istream_uart6 -> Sensors_inst.istream;
         
     conn_151 : data access threadData.commsecInfo5 -> Commsec_inst.commsec_info_src_uart5;
     conn_152 : data access threadData.radio -> GCS_inst.radioData5;
-    conn_264 : data access threadData.commsecInfo1 -> Commsec_inst.commsec_info_src_uart1;
-    conn_12252 : data access threadData.radio -> GCS_inst.radioData1;
     
     conn_266 : data access threadData.sensors -> Sensors_inst.sensors;
     conn_267 : data access threadData.position -> position_state_inst.proxyData;
@@ -296,4 +287,4 @@ process implementation flight_gen_process.impl
 end flight_gen_process.impl;
 	
 	
-end Software;
+end Copter_Software;
