@@ -458,9 +458,11 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
         for (AgreeSubclause subclause : EcoreUtil2.getAllContentsOfType(ci, AgreeSubclause.class)) {
             List<NamedElement> es = EcoreUtil2.getAllContentsOfType(subclause, NamedElement.class);
             for (NamedElement e : es) {
-                if (parentNames.contains(e.getName())) {
-                    error(e, e.getName() + " already defined in component type contract");
-                }
+            	if(!(e.eContainer() instanceof NodeDefExpr)){ //ignore elements in node defs
+            		if (parentNames.contains(e.getName())) {
+            			error(e, e.getName() + " already defined in component type contract");
+            		}
+            	}
             }
         }
     }
@@ -471,7 +473,9 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
         for (AgreeSubclause subclause : EcoreUtil2.getAllContentsOfType(ct, AgreeSubclause.class)) {
             List<NamedElement> es = EcoreUtil2.getAllContentsOfType(subclause, NamedElement.class);
             for (NamedElement e : es) {
-                result.add(e.getName());
+            	if(!(e.eContainer() instanceof NodeDefExpr)){
+            		result.add(e.getName());
+            	}
             }
         }
         return result;
