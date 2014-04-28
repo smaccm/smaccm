@@ -18,6 +18,7 @@ import org.eclipse.xtext.linking.impl.IllegalNodeException;
 import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.resource.IEObjectDescription;
 import org.osate.aadl2.Aadl2Package;
+import org.osate.aadl2.DataType;
 import org.osate.aadl2.Element;
 import org.osate.aadl2.PropertyValue;
 import org.osate.aadl2.UnitLiteral;
@@ -51,6 +52,11 @@ public class AgreeLinkingService extends PropertiesLinkingService {
                 || context instanceof CalenStatement) {
 
             EObject e = findClassifier(context, reference, name);
+            
+            //hack to fix some strange linking behavior by osate
+            if(e instanceof DataType){
+            	e = null;
+            }
             if (e != null) {
                 return Collections.singletonList(e);
             }
