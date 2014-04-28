@@ -722,6 +722,12 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
         AgreeType typeLeft = getAgreeType(binExpr.getLeft());
         AgreeType typeRight = getAgreeType(binExpr.getRight());
         String op = binExpr.getOp();
+        Expr rightSide = binExpr.getRight();
+        Expr leftSide = binExpr.getLeft();
+        
+        boolean rightSideConst = exprIsConst(rightSide);
+        boolean leftSideConst = exprIsConst(leftSide);
+        
 
         switch (op) {
         case "->":
@@ -776,6 +782,14 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
                 error(binExpr, "right side of binary expression '" + op + "' is of type '"
                         + typeRight + "' but must be of type" + "'int' or 'real'");
             }
+            
+            if(op.equals("*")){
+            	if(!rightSideConst && !leftSideConst){
+            		error(binExpr, "neither the right nor the left side of binary expression '"
+            	            + op + "' is constant'.  Non-linear expressions are not allowed");
+            	}
+            }
+            
             return;
         case "mod":
         case "div":
@@ -798,9 +812,9 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
                         + typeRight + "' but must be of type 'real'");
             }
             
-            Expr rightSide = binExpr.getRight();
-            if(!(rightSide instanceof ConstStatement || rightSide instanceof RealLitExpr)){
-            	error(binExpr, "right side of binary expression '" + op + "' is not constant");
+            if(!rightSideConst){
+            	error(binExpr, "right side of binary expression '" + op + "' is not constant."
+            			+ " Non-linear expressions are not allowed");
             }
             
             return;
@@ -808,6 +822,19 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
             assert (false);
         }
     }
+
+	private boolean exprIsConst(Expr expr) {
+		if(expr instanceof NestedDotID){
+        	if((((NestedDotID)expr).getBase() instanceof ConstStatement)){
+        		return true;
+        	}
+        }else if(expr instanceof RealLitExpr
+        		|| expr instanceof IntLitExpr
+        		|| expr instanceof BoolLitExpr){
+        	return true;
+        }
+		return false;
+	}
 
     private Boolean hasCallDefParent(Element e) {
         while (e != null) {
