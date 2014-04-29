@@ -2465,7 +2465,7 @@ process implementation flight_gen_process.impl
     --connections to hardware
     --outgoing connections
 
-	ccs      : port motors_and_radios.flight_control_commands -> UserInputThreads_inst.flight_control_commands;
+	--ccs      : port motors_and_radios.flight_control_commands -> UserInputThreads_inst.flight_control_commands;
 	mavconn  : port motors_and_radios.mavlink -> uart5ISR_inst.mavlink;
 	motor1   : port px4ioar_inst.motor1 -> motors_and_radios.motor1;
 	motor2   : port px4ioar_inst.motor2 -> motors_and_radios.motor2;

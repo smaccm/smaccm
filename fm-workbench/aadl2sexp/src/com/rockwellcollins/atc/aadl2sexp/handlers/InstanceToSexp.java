@@ -3,7 +3,6 @@ package com.rockwellcollins.atc.aadl2sexp.handlers;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.osate.aadl2.AbstractConnectionEnd;
 import org.osate.aadl2.ComponentImplementation;
 import org.osate.aadl2.ConnectedElement;
 import org.osate.aadl2.Connection;
@@ -84,8 +83,7 @@ public class InstanceToSexp {
         return new Cons("connection", args);
     }
 
-    private static String getName(AbstractConnectionEnd e) {
-        ConnectedElement ce = (ConnectedElement) e;
+    private static String getName(ConnectedElement ce) {
         String prefix = "";
         if (ce.getContext() != null) {
             prefix = ce.getContext().getName() + ".";

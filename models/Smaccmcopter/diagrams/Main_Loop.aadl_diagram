@@ -5,11 +5,11 @@
   <children xsi:type="pi:ContainerShape" visible="true" active="true">
     <properties key="independentObject" value="classifier SOFTWARE::Main_Loop.Impl"/>
     <properties key="is_ghost" value="false"/>
-    <graphicsAlgorithm xsi:type="al:Polygon" lineStyle="UNSPECIFIED" width="1411" height="1231" x="50" y="20" style="//@styles.0/@styles.0/@styles.0">
+    <graphicsAlgorithm xsi:type="al:Polygon" lineStyle="UNSPECIFIED" width="1411" height="1219" x="50" y="20" style="//@styles.0/@styles.0/@styles.0">
       <points x="20"/>
       <points x="1411"/>
-      <points x="1391" y="1231"/>
-      <points y="1231"/>
+      <points x="1391" y="1219"/>
+      <points y="1219"/>
     </graphicsAlgorithm>
     <children xsi:type="pi:ContainerShape" visible="true" active="true">
       <properties key="independentObject" value="feature SOFTWARE::Main_Loop.motors_and_radios"/>
@@ -524,7 +524,7 @@
           <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
             <properties key="name" value="outerConnector"/>
             <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
-            <location x="25" y="24"/>
+            <location y="24"/>
           </anchors>
           <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
             <properties key="name" value="flowSpecification"/>
@@ -808,7 +808,7 @@
             <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
               <properties key="name" value="outerConnector"/>
               <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
-              <location x="25" y="24"/>
+              <location y="24"/>
             </anchors>
             <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
               <properties key="name" value="flowSpecification"/>
@@ -1648,6 +1648,20 @@
     <properties key="independentObject" value="connection SOFTWARE::Main_Loop.Impl.conn3"/>
     <properties key="is_ghost" value="false"/>
     <graphicsAlgorithm xsi:type="al:Polyline" lineStyle="UNSPECIFIED" style="//@styles.3"/>
+    <connectionDecorators visible="true" locationRelative="true" location="0.5">
+      <graphicsAlgorithm xsi:type="al:Polyline" lineStyle="UNSPECIFIED" style="//@styles.3">
+        <points x="-1" y="6"/>
+        <points x="-9"/>
+        <points x="-1" y="-6"/>
+      </graphicsAlgorithm>
+    </connectionDecorators>
+    <connectionDecorators visible="true" locationRelative="true" location="0.5">
+      <graphicsAlgorithm xsi:type="al:Polyline" lineStyle="UNSPECIFIED" style="//@styles.3">
+        <points x="9" y="6"/>
+        <points x="1"/>
+        <points x="9" y="-6"/>
+      </graphicsAlgorithm>
+    </connectionDecorators>
     <connectionDecorators visible="true" active="true" locationRelative="true" location="0.5">
       <properties key="independentObject" value="connection SOFTWARE::Main_Loop.Impl.conn3"/>
       <graphicsAlgorithm xsi:type="al:Text" lineWidth="1" filled="false" transparency="0.0" x="5" y="10" style="//@styles.2" font="//@fonts.1" value="conn3"/>
