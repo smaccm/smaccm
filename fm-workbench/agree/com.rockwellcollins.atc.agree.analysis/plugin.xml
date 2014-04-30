@@ -177,6 +177,7 @@
             class="com.rockwellcollins.atc.agree.analysis.preferences.AgreePreferencePage"
             id="com.rockwellcollins.atc.agree.analysis.preferences.AgreePreferencePage"
             name="Analysis">
+            <keywordReference id="com.rockwellcollins.atc.agree.ui.keyword_Agree"/>
       </page>
    </extension>
    <extension
