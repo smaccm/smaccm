@@ -4,8 +4,8 @@ public
   
 system ODROID_XU
   features
-    ide : feature group XU_DAUGHTER_BOARD::Odroid_IDE_Interface;
-    mpi : feature group XU_DAUGHTER_BOARD::Odroid_MIPI_Interface;
+    ide : feature group inverse of XU_DAUGHTER_BOARD::Odroid_IDE_Interface;
+    mpi : feature group inverse of XU_DAUGHTER_BOARD::Odroid_MIPI_Interface;
 end ODROID_XU;
 	
 system implementation ODROID_XU.Impl

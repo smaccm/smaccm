@@ -12,9 +12,9 @@ with Base_Types;
 thread group UserInputThreads
 
   features
-    cr_emitter_in: in event data port control_law_request_type::control_law_request.impl {Queue_Size => 16;};
-    ui_emitter_in: in event data port userinput_type::userinput_result.impl {Queue_Size => 16;};
-    mav_controllaw_req: out event data port control_law_request_type::control_law_request.impl {Queue_Size => 16;};
+    cr_emitter_in: in event data port control_law_request_type::control_law_request.impl;
+    ui_emitter_in: in event data port userinput_type::userinput_result.impl;
+    mav_controllaw_req: out event data port control_law_request_type::control_law_request.impl;
     rcoverride: out event data port mavlink_rc_channels_override_msg::rc_channels_override_msg.impl {Queue_Size => 16;};
 
     ui_emitter_out: out event data port userinput_type::userinput_result.impl{Queue_Size => 16;};

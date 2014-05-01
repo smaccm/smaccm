@@ -438,7 +438,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
         }
 
         Set<SynchStatement> syncs = new HashSet<>();
-        //check that there are zero or more synchrony statments
+        //check that there are zero or more synchrony statements
         for(SpecStatement spec : contract.getSpecs()){
             if(spec instanceof SynchStatement){
                 syncs.add((SynchStatement)spec);
