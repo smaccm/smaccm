@@ -49,7 +49,7 @@ public
       conn3: port SS.sensors_out -> SN.sensors
       {Communication_Properties::Timing => immediate;};
       
-      --conn4: port RC.commands_out -> SN.rc_commands;
+      conn4: port RC.commands_out -> SN.rc_commands;
       conn5: port CCT.mavlink_out -> SN.mavlink;
       
       conn7: port SN.motor_commands -> MC.motor_commands;
