@@ -841,6 +841,12 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
         		|| expr instanceof IntLitExpr
         		|| expr instanceof BoolLitExpr){
         	return true;
+        }else if(expr instanceof BinaryExpr){
+        	BinaryExpr binExpr = (BinaryExpr)expr;
+        	return exprIsConst(binExpr.getLeft()) && exprIsConst(binExpr.getRight());
+        }else if(expr instanceof UnaryExpr){
+        	UnaryExpr unExpr = (UnaryExpr)expr;
+        	return exprIsConst(unExpr.getExpr());
         }
 		return false;
 	}
