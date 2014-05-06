@@ -1001,22 +1001,32 @@ public interface AgreePackage extends EPackage
   int TYPE__OWNED_COMMENT = Aadl2Package.ELEMENT__OWNED_COMMENT;
 
   /**
-   * The feature id for the '<em><b>String</b></em>' attribute.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int TYPE__STRING = Aadl2Package.ELEMENT_FEATURE_COUNT + 0;
-
-  /**
    * The number of structural features of the '<em>Type</em>' class.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int TYPE_FEATURE_COUNT = Aadl2Package.ELEMENT_FEATURE_COUNT + 1;
+  int TYPE_FEATURE_COUNT = Aadl2Package.ELEMENT_FEATURE_COUNT + 0;
+
+  /**
+   * The meta object id for the '{@link com.rockwellcollins.atc.agree.agree.impl.TypeDefExprImpl <em>Type Def Expr</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see com.rockwellcollins.atc.agree.agree.impl.TypeDefExprImpl
+   * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getTypeDefExpr()
+   * @generated
+   */
+  int TYPE_DEF_EXPR = 15;
+
+  /**
+   * The number of structural features of the '<em>Type Def Expr</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int TYPE_DEF_EXPR_FEATURE_COUNT = 0;
 
   /**
    * The meta object id for the '{@link com.rockwellcollins.atc.agree.agree.impl.ExprImpl <em>Expr</em>}' class.
@@ -1026,7 +1036,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getExpr()
    * @generated
    */
-  int EXPR = 15;
+  int EXPR = 16;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -1063,7 +1073,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getNestedDotID()
    * @generated
    */
-  int NESTED_DOT_ID = 16;
+  int NESTED_DOT_ID = 17;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -1127,7 +1137,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getAgreeContractLibrary()
    * @generated
    */
-  int AGREE_CONTRACT_LIBRARY = 17;
+  int AGREE_CONTRACT_LIBRARY = 18;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -1200,7 +1210,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getAgreeContractSubclause()
    * @generated
    */
-  int AGREE_CONTRACT_SUBCLAUSE = 18;
+  int AGREE_CONTRACT_SUBCLAUSE = 19;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -1282,7 +1292,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getAgreeContract()
    * @generated
    */
-  int AGREE_CONTRACT = 19;
+  int AGREE_CONTRACT = 20;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -1328,7 +1338,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getAssumeStatement()
    * @generated
    */
-  int ASSUME_STATEMENT = 20;
+  int ASSUME_STATEMENT = 21;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -1383,7 +1393,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getGuaranteeStatement()
    * @generated
    */
-  int GUARANTEE_STATEMENT = 21;
+  int GUARANTEE_STATEMENT = 22;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -1438,7 +1448,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getAssertStatement()
    * @generated
    */
-  int ASSERT_STATEMENT = 22;
+  int ASSERT_STATEMENT = 23;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -1484,7 +1494,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getParamStatement()
    * @generated
    */
-  int PARAM_STATEMENT = 23;
+  int PARAM_STATEMENT = 24;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -1539,7 +1549,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getLemmaStatement()
    * @generated
    */
-  int LEMMA_STATEMENT = 24;
+  int LEMMA_STATEMENT = 25;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -1594,7 +1604,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getLiftStatement()
    * @generated
    */
-  int LIFT_STATEMENT = 25;
+  int LIFT_STATEMENT = 26;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -1640,7 +1650,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getCalenStatement()
    * @generated
    */
-  int CALEN_STATEMENT = 26;
+  int CALEN_STATEMENT = 27;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -1704,7 +1714,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getNodeEq()
    * @generated
    */
-  int NODE_EQ = 27;
+  int NODE_EQ = 28;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -1759,7 +1769,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getNodeLemma()
    * @generated
    */
-  int NODE_LEMMA = 28;
+  int NODE_LEMMA = 29;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -1807,6 +1817,144 @@ public interface AgreePackage extends EPackage
   int NODE_LEMMA_FEATURE_COUNT = NODE_STMT_FEATURE_COUNT + 1;
 
   /**
+   * The meta object id for the '{@link com.rockwellcollins.atc.agree.agree.impl.PrimTypeImpl <em>Prim Type</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see com.rockwellcollins.atc.agree.agree.impl.PrimTypeImpl
+   * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getPrimType()
+   * @generated
+   */
+  int PRIM_TYPE = 30;
+
+  /**
+   * The feature id for the '<em><b>Owned Element</b></em>' reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int PRIM_TYPE__OWNED_ELEMENT = TYPE__OWNED_ELEMENT;
+
+  /**
+   * The feature id for the '<em><b>Owned Comment</b></em>' containment reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int PRIM_TYPE__OWNED_COMMENT = TYPE__OWNED_COMMENT;
+
+  /**
+   * The feature id for the '<em><b>String</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int PRIM_TYPE__STRING = TYPE_FEATURE_COUNT + 0;
+
+  /**
+   * The number of structural features of the '<em>Prim Type</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int PRIM_TYPE_FEATURE_COUNT = TYPE_FEATURE_COUNT + 1;
+
+  /**
+   * The meta object id for the '{@link com.rockwellcollins.atc.agree.agree.impl.RecordTypeImpl <em>Record Type</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see com.rockwellcollins.atc.agree.agree.impl.RecordTypeImpl
+   * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getRecordType()
+   * @generated
+   */
+  int RECORD_TYPE = 31;
+
+  /**
+   * The feature id for the '<em><b>Owned Element</b></em>' reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int RECORD_TYPE__OWNED_ELEMENT = TYPE__OWNED_ELEMENT;
+
+  /**
+   * The feature id for the '<em><b>Owned Comment</b></em>' containment reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int RECORD_TYPE__OWNED_COMMENT = TYPE__OWNED_COMMENT;
+
+  /**
+   * The feature id for the '<em><b>Feature Group</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int RECORD_TYPE__FEATURE_GROUP = TYPE_FEATURE_COUNT + 0;
+
+  /**
+   * The feature id for the '<em><b>Record</b></em>' reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int RECORD_TYPE__RECORD = TYPE_FEATURE_COUNT + 1;
+
+  /**
+   * The number of structural features of the '<em>Record Type</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int RECORD_TYPE_FEATURE_COUNT = TYPE_FEATURE_COUNT + 2;
+
+  /**
+   * The meta object id for the '{@link com.rockwellcollins.atc.agree.agree.impl.RecordTypeDefExprImpl <em>Record Type Def Expr</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see com.rockwellcollins.atc.agree.agree.impl.RecordTypeDefExprImpl
+   * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getRecordTypeDefExpr()
+   * @generated
+   */
+  int RECORD_TYPE_DEF_EXPR = 32;
+
+  /**
+   * The feature id for the '<em><b>Name</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int RECORD_TYPE_DEF_EXPR__NAME = TYPE_DEF_EXPR_FEATURE_COUNT + 0;
+
+  /**
+   * The feature id for the '<em><b>Args</b></em>' containment reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int RECORD_TYPE_DEF_EXPR__ARGS = TYPE_DEF_EXPR_FEATURE_COUNT + 1;
+
+  /**
+   * The number of structural features of the '<em>Record Type Def Expr</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int RECORD_TYPE_DEF_EXPR_FEATURE_COUNT = TYPE_DEF_EXPR_FEATURE_COUNT + 2;
+
+  /**
    * The meta object id for the '{@link com.rockwellcollins.atc.agree.agree.impl.BinaryExprImpl <em>Binary Expr</em>}' class.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -1814,7 +1962,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getBinaryExpr()
    * @generated
    */
-  int BINARY_EXPR = 29;
+  int BINARY_EXPR = 33;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -1878,7 +2026,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getUnaryExpr()
    * @generated
    */
-  int UNARY_EXPR = 30;
+  int UNARY_EXPR = 34;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -1933,7 +2081,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getIfThenElseExpr()
    * @generated
    */
-  int IF_THEN_ELSE_EXPR = 31;
+  int IF_THEN_ELSE_EXPR = 35;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -1997,7 +2145,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getPrevExpr()
    * @generated
    */
-  int PREV_EXPR = 32;
+  int PREV_EXPR = 36;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -2052,7 +2200,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getGetPropertyExpr()
    * @generated
    */
-  int GET_PROPERTY_EXPR = 33;
+  int GET_PROPERTY_EXPR = 37;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -2107,7 +2255,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getIdExpr()
    * @generated
    */
-  int ID_EXPR = 34;
+  int ID_EXPR = 38;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -2153,7 +2301,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getFnCallExpr()
    * @generated
    */
-  int FN_CALL_EXPR = 35;
+  int FN_CALL_EXPR = 39;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -2208,7 +2356,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getIntLitExpr()
    * @generated
    */
-  int INT_LIT_EXPR = 36;
+  int INT_LIT_EXPR = 40;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -2254,7 +2402,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getPreExpr()
    * @generated
    */
-  int PRE_EXPR = 37;
+  int PRE_EXPR = 41;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -2300,7 +2448,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getRealLitExpr()
    * @generated
    */
-  int REAL_LIT_EXPR = 38;
+  int REAL_LIT_EXPR = 42;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -2346,7 +2494,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getBoolLitExpr()
    * @generated
    */
-  int BOOL_LIT_EXPR = 39;
+  int BOOL_LIT_EXPR = 43;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -2392,7 +2540,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getThisExpr()
    * @generated
    */
-  int THIS_EXPR = 40;
+  int THIS_EXPR = 44;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -2429,6 +2577,125 @@ public interface AgreePackage extends EPackage
    * @ordered
    */
   int THIS_EXPR_FEATURE_COUNT = EXPR_FEATURE_COUNT + 1;
+
+  /**
+   * The meta object id for the '{@link com.rockwellcollins.atc.agree.agree.impl.RecordExprImpl <em>Record Expr</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see com.rockwellcollins.atc.agree.agree.impl.RecordExprImpl
+   * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getRecordExpr()
+   * @generated
+   */
+  int RECORD_EXPR = 45;
+
+  /**
+   * The feature id for the '<em><b>Owned Element</b></em>' reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int RECORD_EXPR__OWNED_ELEMENT = EXPR__OWNED_ELEMENT;
+
+  /**
+   * The feature id for the '<em><b>Owned Comment</b></em>' containment reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int RECORD_EXPR__OWNED_COMMENT = EXPR__OWNED_COMMENT;
+
+  /**
+   * The feature id for the '<em><b>Record</b></em>' reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int RECORD_EXPR__RECORD = EXPR_FEATURE_COUNT + 0;
+
+  /**
+   * The feature id for the '<em><b>Args</b></em>' reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int RECORD_EXPR__ARGS = EXPR_FEATURE_COUNT + 1;
+
+  /**
+   * The feature id for the '<em><b>Arg Expr</b></em>' containment reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int RECORD_EXPR__ARG_EXPR = EXPR_FEATURE_COUNT + 2;
+
+  /**
+   * The number of structural features of the '<em>Record Expr</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int RECORD_EXPR_FEATURE_COUNT = EXPR_FEATURE_COUNT + 3;
+
+  /**
+   * The meta object id for the '{@link com.rockwellcollins.atc.agree.agree.impl.RecordUpdateExprImpl <em>Record Update Expr</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see com.rockwellcollins.atc.agree.agree.impl.RecordUpdateExprImpl
+   * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getRecordUpdateExpr()
+   * @generated
+   */
+  int RECORD_UPDATE_EXPR = 46;
+
+  /**
+   * The feature id for the '<em><b>Owned Element</b></em>' reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int RECORD_UPDATE_EXPR__OWNED_ELEMENT = EXPR__OWNED_ELEMENT;
+
+  /**
+   * The feature id for the '<em><b>Owned Comment</b></em>' containment reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int RECORD_UPDATE_EXPR__OWNED_COMMENT = EXPR__OWNED_COMMENT;
+
+  /**
+   * The feature id for the '<em><b>Args</b></em>' reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int RECORD_UPDATE_EXPR__ARGS = EXPR_FEATURE_COUNT + 0;
+
+  /**
+   * The feature id for the '<em><b>Arg Expr</b></em>' containment reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int RECORD_UPDATE_EXPR__ARG_EXPR = EXPR_FEATURE_COUNT + 1;
+
+  /**
+   * The number of structural features of the '<em>Record Update Expr</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int RECORD_UPDATE_EXPR_FEATURE_COUNT = EXPR_FEATURE_COUNT + 2;
 
 
   /**
@@ -2769,15 +3036,14 @@ public interface AgreePackage extends EPackage
   EClass getType();
 
   /**
-   * Returns the meta object for the attribute '{@link com.rockwellcollins.atc.agree.agree.Type#getString <em>String</em>}'.
+   * Returns the meta object for class '{@link com.rockwellcollins.atc.agree.agree.TypeDefExpr <em>Type Def Expr</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @return the meta object for the attribute '<em>String</em>'.
-   * @see com.rockwellcollins.atc.agree.agree.Type#getString()
-   * @see #getType()
+   * @return the meta object for class '<em>Type Def Expr</em>'.
+   * @see com.rockwellcollins.atc.agree.agree.TypeDefExpr
    * @generated
    */
-  EAttribute getType_String();
+  EClass getTypeDefExpr();
 
   /**
    * Returns the meta object for class '{@link com.rockwellcollins.atc.agree.agree.Expr <em>Expr</em>}'.
@@ -3129,6 +3395,91 @@ public interface AgreePackage extends EPackage
   EAttribute getNodeLemma_Str();
 
   /**
+   * Returns the meta object for class '{@link com.rockwellcollins.atc.agree.agree.PrimType <em>Prim Type</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>Prim Type</em>'.
+   * @see com.rockwellcollins.atc.agree.agree.PrimType
+   * @generated
+   */
+  EClass getPrimType();
+
+  /**
+   * Returns the meta object for the attribute '{@link com.rockwellcollins.atc.agree.agree.PrimType#getString <em>String</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the attribute '<em>String</em>'.
+   * @see com.rockwellcollins.atc.agree.agree.PrimType#getString()
+   * @see #getPrimType()
+   * @generated
+   */
+  EAttribute getPrimType_String();
+
+  /**
+   * Returns the meta object for class '{@link com.rockwellcollins.atc.agree.agree.RecordType <em>Record Type</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>Record Type</em>'.
+   * @see com.rockwellcollins.atc.agree.agree.RecordType
+   * @generated
+   */
+  EClass getRecordType();
+
+  /**
+   * Returns the meta object for the containment reference '{@link com.rockwellcollins.atc.agree.agree.RecordType#getFeatureGroup <em>Feature Group</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference '<em>Feature Group</em>'.
+   * @see com.rockwellcollins.atc.agree.agree.RecordType#getFeatureGroup()
+   * @see #getRecordType()
+   * @generated
+   */
+  EReference getRecordType_FeatureGroup();
+
+  /**
+   * Returns the meta object for the reference '{@link com.rockwellcollins.atc.agree.agree.RecordType#getRecord <em>Record</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the reference '<em>Record</em>'.
+   * @see com.rockwellcollins.atc.agree.agree.RecordType#getRecord()
+   * @see #getRecordType()
+   * @generated
+   */
+  EReference getRecordType_Record();
+
+  /**
+   * Returns the meta object for class '{@link com.rockwellcollins.atc.agree.agree.RecordTypeDefExpr <em>Record Type Def Expr</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>Record Type Def Expr</em>'.
+   * @see com.rockwellcollins.atc.agree.agree.RecordTypeDefExpr
+   * @generated
+   */
+  EClass getRecordTypeDefExpr();
+
+  /**
+   * Returns the meta object for the attribute '{@link com.rockwellcollins.atc.agree.agree.RecordTypeDefExpr#getName <em>Name</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the attribute '<em>Name</em>'.
+   * @see com.rockwellcollins.atc.agree.agree.RecordTypeDefExpr#getName()
+   * @see #getRecordTypeDefExpr()
+   * @generated
+   */
+  EAttribute getRecordTypeDefExpr_Name();
+
+  /**
+   * Returns the meta object for the containment reference list '{@link com.rockwellcollins.atc.agree.agree.RecordTypeDefExpr#getArgs <em>Args</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference list '<em>Args</em>'.
+   * @see com.rockwellcollins.atc.agree.agree.RecordTypeDefExpr#getArgs()
+   * @see #getRecordTypeDefExpr()
+   * @generated
+   */
+  EReference getRecordTypeDefExpr_Args();
+
+  /**
    * Returns the meta object for class '{@link com.rockwellcollins.atc.agree.agree.BinaryExpr <em>Binary Expr</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -3469,6 +3820,81 @@ public interface AgreePackage extends EPackage
   EReference getThisExpr_SubThis();
 
   /**
+   * Returns the meta object for class '{@link com.rockwellcollins.atc.agree.agree.RecordExpr <em>Record Expr</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>Record Expr</em>'.
+   * @see com.rockwellcollins.atc.agree.agree.RecordExpr
+   * @generated
+   */
+  EClass getRecordExpr();
+
+  /**
+   * Returns the meta object for the reference '{@link com.rockwellcollins.atc.agree.agree.RecordExpr#getRecord <em>Record</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the reference '<em>Record</em>'.
+   * @see com.rockwellcollins.atc.agree.agree.RecordExpr#getRecord()
+   * @see #getRecordExpr()
+   * @generated
+   */
+  EReference getRecordExpr_Record();
+
+  /**
+   * Returns the meta object for the reference list '{@link com.rockwellcollins.atc.agree.agree.RecordExpr#getArgs <em>Args</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the reference list '<em>Args</em>'.
+   * @see com.rockwellcollins.atc.agree.agree.RecordExpr#getArgs()
+   * @see #getRecordExpr()
+   * @generated
+   */
+  EReference getRecordExpr_Args();
+
+  /**
+   * Returns the meta object for the containment reference list '{@link com.rockwellcollins.atc.agree.agree.RecordExpr#getArgExpr <em>Arg Expr</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference list '<em>Arg Expr</em>'.
+   * @see com.rockwellcollins.atc.agree.agree.RecordExpr#getArgExpr()
+   * @see #getRecordExpr()
+   * @generated
+   */
+  EReference getRecordExpr_ArgExpr();
+
+  /**
+   * Returns the meta object for class '{@link com.rockwellcollins.atc.agree.agree.RecordUpdateExpr <em>Record Update Expr</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>Record Update Expr</em>'.
+   * @see com.rockwellcollins.atc.agree.agree.RecordUpdateExpr
+   * @generated
+   */
+  EClass getRecordUpdateExpr();
+
+  /**
+   * Returns the meta object for the reference list '{@link com.rockwellcollins.atc.agree.agree.RecordUpdateExpr#getArgs <em>Args</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the reference list '<em>Args</em>'.
+   * @see com.rockwellcollins.atc.agree.agree.RecordUpdateExpr#getArgs()
+   * @see #getRecordUpdateExpr()
+   * @generated
+   */
+  EReference getRecordUpdateExpr_Args();
+
+  /**
+   * Returns the meta object for the containment reference list '{@link com.rockwellcollins.atc.agree.agree.RecordUpdateExpr#getArgExpr <em>Arg Expr</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference list '<em>Arg Expr</em>'.
+   * @see com.rockwellcollins.atc.agree.agree.RecordUpdateExpr#getArgExpr()
+   * @see #getRecordUpdateExpr()
+   * @generated
+   */
+  EReference getRecordUpdateExpr_ArgExpr();
+
+  /**
    * Returns the factory that creates the instances of the model.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -3778,12 +4204,14 @@ public interface AgreePackage extends EPackage
     EClass TYPE = eINSTANCE.getType();
 
     /**
-     * The meta object literal for the '<em><b>String</b></em>' attribute feature.
+     * The meta object literal for the '{@link com.rockwellcollins.atc.agree.agree.impl.TypeDefExprImpl <em>Type Def Expr</em>}' class.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
+     * @see com.rockwellcollins.atc.agree.agree.impl.TypeDefExprImpl
+     * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getTypeDefExpr()
      * @generated
      */
-    EAttribute TYPE__STRING = eINSTANCE.getType_String();
+    EClass TYPE_DEF_EXPR = eINSTANCE.getTypeDefExpr();
 
     /**
      * The meta object literal for the '{@link com.rockwellcollins.atc.agree.agree.impl.ExprImpl <em>Expr</em>}' class.
@@ -4078,6 +4506,76 @@ public interface AgreePackage extends EPackage
     EAttribute NODE_LEMMA__STR = eINSTANCE.getNodeLemma_Str();
 
     /**
+     * The meta object literal for the '{@link com.rockwellcollins.atc.agree.agree.impl.PrimTypeImpl <em>Prim Type</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see com.rockwellcollins.atc.agree.agree.impl.PrimTypeImpl
+     * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getPrimType()
+     * @generated
+     */
+    EClass PRIM_TYPE = eINSTANCE.getPrimType();
+
+    /**
+     * The meta object literal for the '<em><b>String</b></em>' attribute feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EAttribute PRIM_TYPE__STRING = eINSTANCE.getPrimType_String();
+
+    /**
+     * The meta object literal for the '{@link com.rockwellcollins.atc.agree.agree.impl.RecordTypeImpl <em>Record Type</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see com.rockwellcollins.atc.agree.agree.impl.RecordTypeImpl
+     * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getRecordType()
+     * @generated
+     */
+    EClass RECORD_TYPE = eINSTANCE.getRecordType();
+
+    /**
+     * The meta object literal for the '<em><b>Feature Group</b></em>' containment reference feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference RECORD_TYPE__FEATURE_GROUP = eINSTANCE.getRecordType_FeatureGroup();
+
+    /**
+     * The meta object literal for the '<em><b>Record</b></em>' reference feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference RECORD_TYPE__RECORD = eINSTANCE.getRecordType_Record();
+
+    /**
+     * The meta object literal for the '{@link com.rockwellcollins.atc.agree.agree.impl.RecordTypeDefExprImpl <em>Record Type Def Expr</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see com.rockwellcollins.atc.agree.agree.impl.RecordTypeDefExprImpl
+     * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getRecordTypeDefExpr()
+     * @generated
+     */
+    EClass RECORD_TYPE_DEF_EXPR = eINSTANCE.getRecordTypeDefExpr();
+
+    /**
+     * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EAttribute RECORD_TYPE_DEF_EXPR__NAME = eINSTANCE.getRecordTypeDefExpr_Name();
+
+    /**
+     * The meta object literal for the '<em><b>Args</b></em>' containment reference list feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference RECORD_TYPE_DEF_EXPR__ARGS = eINSTANCE.getRecordTypeDefExpr_Args();
+
+    /**
      * The meta object literal for the '{@link com.rockwellcollins.atc.agree.agree.impl.BinaryExprImpl <em>Binary Expr</em>}' class.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -4356,6 +4854,66 @@ public interface AgreePackage extends EPackage
      * @generated
      */
     EReference THIS_EXPR__SUB_THIS = eINSTANCE.getThisExpr_SubThis();
+
+    /**
+     * The meta object literal for the '{@link com.rockwellcollins.atc.agree.agree.impl.RecordExprImpl <em>Record Expr</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see com.rockwellcollins.atc.agree.agree.impl.RecordExprImpl
+     * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getRecordExpr()
+     * @generated
+     */
+    EClass RECORD_EXPR = eINSTANCE.getRecordExpr();
+
+    /**
+     * The meta object literal for the '<em><b>Record</b></em>' reference feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference RECORD_EXPR__RECORD = eINSTANCE.getRecordExpr_Record();
+
+    /**
+     * The meta object literal for the '<em><b>Args</b></em>' reference list feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference RECORD_EXPR__ARGS = eINSTANCE.getRecordExpr_Args();
+
+    /**
+     * The meta object literal for the '<em><b>Arg Expr</b></em>' containment reference list feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference RECORD_EXPR__ARG_EXPR = eINSTANCE.getRecordExpr_ArgExpr();
+
+    /**
+     * The meta object literal for the '{@link com.rockwellcollins.atc.agree.agree.impl.RecordUpdateExprImpl <em>Record Update Expr</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see com.rockwellcollins.atc.agree.agree.impl.RecordUpdateExprImpl
+     * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getRecordUpdateExpr()
+     * @generated
+     */
+    EClass RECORD_UPDATE_EXPR = eINSTANCE.getRecordUpdateExpr();
+
+    /**
+     * The meta object literal for the '<em><b>Args</b></em>' reference list feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference RECORD_UPDATE_EXPR__ARGS = eINSTANCE.getRecordUpdateExpr_Args();
+
+    /**
+     * The meta object literal for the '<em><b>Arg Expr</b></em>' containment reference list feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference RECORD_UPDATE_EXPR__ARG_EXPR = eINSTANCE.getRecordUpdateExpr_ArgExpr();
 
   }
 

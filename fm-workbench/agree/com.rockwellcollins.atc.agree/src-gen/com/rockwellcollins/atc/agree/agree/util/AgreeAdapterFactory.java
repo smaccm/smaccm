@@ -157,6 +157,11 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
         return createTypeAdapter();
       }
       @Override
+      public Adapter caseTypeDefExpr(TypeDefExpr object)
+      {
+        return createTypeDefExprAdapter();
+      }
+      @Override
       public Adapter caseExpr(Expr object)
       {
         return createExprAdapter();
@@ -227,6 +232,21 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
         return createNodeLemmaAdapter();
       }
       @Override
+      public Adapter casePrimType(PrimType object)
+      {
+        return createPrimTypeAdapter();
+      }
+      @Override
+      public Adapter caseRecordType(RecordType object)
+      {
+        return createRecordTypeAdapter();
+      }
+      @Override
+      public Adapter caseRecordTypeDefExpr(RecordTypeDefExpr object)
+      {
+        return createRecordTypeDefExprAdapter();
+      }
+      @Override
       public Adapter caseBinaryExpr(BinaryExpr object)
       {
         return createBinaryExprAdapter();
@@ -285,6 +305,16 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
       public Adapter caseThisExpr(ThisExpr object)
       {
         return createThisExprAdapter();
+      }
+      @Override
+      public Adapter caseRecordExpr(RecordExpr object)
+      {
+        return createRecordExprAdapter();
+      }
+      @Override
+      public Adapter caseRecordUpdateExpr(RecordUpdateExpr object)
+      {
+        return createRecordUpdateExprAdapter();
       }
       @Override
       public Adapter caseElement(Element object)
@@ -564,6 +594,21 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
   }
 
   /**
+   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.TypeDefExpr <em>Type Def Expr</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see com.rockwellcollins.atc.agree.agree.TypeDefExpr
+   * @generated
+   */
+  public Adapter createTypeDefExprAdapter()
+  {
+    return null;
+  }
+
+  /**
    * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.Expr <em>Expr</em>}'.
    * <!-- begin-user-doc -->
    * This default implementation returns null so that we can easily ignore cases;
@@ -774,6 +819,51 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
   }
 
   /**
+   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.PrimType <em>Prim Type</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see com.rockwellcollins.atc.agree.agree.PrimType
+   * @generated
+   */
+  public Adapter createPrimTypeAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.RecordType <em>Record Type</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see com.rockwellcollins.atc.agree.agree.RecordType
+   * @generated
+   */
+  public Adapter createRecordTypeAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.RecordTypeDefExpr <em>Record Type Def Expr</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see com.rockwellcollins.atc.agree.agree.RecordTypeDefExpr
+   * @generated
+   */
+  public Adapter createRecordTypeDefExprAdapter()
+  {
+    return null;
+  }
+
+  /**
    * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.BinaryExpr <em>Binary Expr</em>}'.
    * <!-- begin-user-doc -->
    * This default implementation returns null so that we can easily ignore cases;
@@ -949,6 +1039,36 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
    * @generated
    */
   public Adapter createThisExprAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.RecordExpr <em>Record Expr</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see com.rockwellcollins.atc.agree.agree.RecordExpr
+   * @generated
+   */
+  public Adapter createRecordExprAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.RecordUpdateExpr <em>Record Update Expr</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see com.rockwellcollins.atc.agree.agree.RecordUpdateExpr
+   * @generated
+   */
+  public Adapter createRecordUpdateExprAdapter()
   {
     return null;
   }

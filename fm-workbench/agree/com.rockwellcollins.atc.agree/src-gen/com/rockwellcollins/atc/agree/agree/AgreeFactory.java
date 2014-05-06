@@ -158,6 +158,15 @@ public interface AgreeFactory extends EFactory
   Type createType();
 
   /**
+   * Returns a new object of class '<em>Type Def Expr</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Type Def Expr</em>'.
+   * @generated
+   */
+  TypeDefExpr createTypeDefExpr();
+
+  /**
    * Returns a new object of class '<em>Expr</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -284,6 +293,33 @@ public interface AgreeFactory extends EFactory
   NodeLemma createNodeLemma();
 
   /**
+   * Returns a new object of class '<em>Prim Type</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Prim Type</em>'.
+   * @generated
+   */
+  PrimType createPrimType();
+
+  /**
+   * Returns a new object of class '<em>Record Type</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Record Type</em>'.
+   * @generated
+   */
+  RecordType createRecordType();
+
+  /**
+   * Returns a new object of class '<em>Record Type Def Expr</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Record Type Def Expr</em>'.
+   * @generated
+   */
+  RecordTypeDefExpr createRecordTypeDefExpr();
+
+  /**
    * Returns a new object of class '<em>Binary Expr</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -390,6 +426,24 @@ public interface AgreeFactory extends EFactory
    * @generated
    */
   ThisExpr createThisExpr();
+
+  /**
+   * Returns a new object of class '<em>Record Expr</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Record Expr</em>'.
+   * @generated
+   */
+  RecordExpr createRecordExpr();
+
+  /**
+   * Returns a new object of class '<em>Record Update Expr</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Record Update Expr</em>'.
+   * @generated
+   */
+  RecordUpdateExpr createRecordUpdateExpr();
 
   /**
    * Returns the package supported by this factory.

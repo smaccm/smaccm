@@ -343,23 +343,4 @@
 	    </page>
 	</extension>
 
-  <extension point="org.eclipse.compare.contentViewers">
-    <viewer id="com.rockwellcollins.atc.agree.Agree.compare.contentViewers"
-            class="com.rockwellcollins.atc.agree.ui.AgreeExecutableExtensionFactory:org.eclipse.xtext.ui.compare.InjectableViewerCreator"
-            extensions="agree">
-    </viewer>
-  </extension>
-  <extension point="org.eclipse.compare.contentMergeViewers">
-    <viewer id="com.rockwellcollins.atc.agree.Agree.compare.contentMergeViewers"
-            class="com.rockwellcollins.atc.agree.ui.AgreeExecutableExtensionFactory:org.eclipse.xtext.ui.compare.InjectableViewerCreator"
-            extensions="agree" label="Agree Compare">
-     </viewer>
-  </extension>
-  <extension point="org.eclipse.ui.editors.documentProviders">
-    <provider id="com.rockwellcollins.atc.agree.Agree.editors.documentProviders"
-            class="com.rockwellcollins.atc.agree.ui.AgreeExecutableExtensionFactory:org.eclipse.xtext.ui.editor.model.XtextDocumentProvider"
-            extensions="agree">
-    </provider>
-  </extension>
-
 </plugin>

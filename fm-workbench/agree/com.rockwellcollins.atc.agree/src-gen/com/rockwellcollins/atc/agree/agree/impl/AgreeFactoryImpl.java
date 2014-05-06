@@ -79,6 +79,7 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
       case AgreePackage.NODE_STMT: return createNodeStmt();
       case AgreePackage.ARG: return createArg();
       case AgreePackage.TYPE: return createType();
+      case AgreePackage.TYPE_DEF_EXPR: return createTypeDefExpr();
       case AgreePackage.EXPR: return createExpr();
       case AgreePackage.NESTED_DOT_ID: return createNestedDotID();
       case AgreePackage.AGREE_CONTRACT_LIBRARY: return createAgreeContractLibrary();
@@ -93,6 +94,9 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
       case AgreePackage.CALEN_STATEMENT: return createCalenStatement();
       case AgreePackage.NODE_EQ: return createNodeEq();
       case AgreePackage.NODE_LEMMA: return createNodeLemma();
+      case AgreePackage.PRIM_TYPE: return createPrimType();
+      case AgreePackage.RECORD_TYPE: return createRecordType();
+      case AgreePackage.RECORD_TYPE_DEF_EXPR: return createRecordTypeDefExpr();
       case AgreePackage.BINARY_EXPR: return createBinaryExpr();
       case AgreePackage.UNARY_EXPR: return createUnaryExpr();
       case AgreePackage.IF_THEN_ELSE_EXPR: return createIfThenElseExpr();
@@ -105,6 +109,8 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
       case AgreePackage.REAL_LIT_EXPR: return createRealLitExpr();
       case AgreePackage.BOOL_LIT_EXPR: return createBoolLitExpr();
       case AgreePackage.THIS_EXPR: return createThisExpr();
+      case AgreePackage.RECORD_EXPR: return createRecordExpr();
+      case AgreePackage.RECORD_UPDATE_EXPR: return createRecordUpdateExpr();
       default:
         throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
     }
@@ -280,6 +286,17 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
    * <!-- end-user-doc -->
    * @generated
    */
+  public TypeDefExpr createTypeDefExpr()
+  {
+    TypeDefExprImpl typeDefExpr = new TypeDefExprImpl();
+    return typeDefExpr;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   public Expr createExpr()
   {
     ExprImpl expr = new ExprImpl();
@@ -434,6 +451,39 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
    * <!-- end-user-doc -->
    * @generated
    */
+  public PrimType createPrimType()
+  {
+    PrimTypeImpl primType = new PrimTypeImpl();
+    return primType;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public RecordType createRecordType()
+  {
+    RecordTypeImpl recordType = new RecordTypeImpl();
+    return recordType;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public RecordTypeDefExpr createRecordTypeDefExpr()
+  {
+    RecordTypeDefExprImpl recordTypeDefExpr = new RecordTypeDefExprImpl();
+    return recordTypeDefExpr;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   public BinaryExpr createBinaryExpr()
   {
     BinaryExprImpl binaryExpr = new BinaryExprImpl();
@@ -559,6 +609,28 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
   {
     ThisExprImpl thisExpr = new ThisExprImpl();
     return thisExpr;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public RecordExpr createRecordExpr()
+  {
+    RecordExprImpl recordExpr = new RecordExprImpl();
+    return recordExpr;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public RecordUpdateExpr createRecordUpdateExpr()
+  {
+    RecordUpdateExprImpl recordUpdateExpr = new RecordUpdateExprImpl();
+    return recordUpdateExpr;
   }
 
   /**

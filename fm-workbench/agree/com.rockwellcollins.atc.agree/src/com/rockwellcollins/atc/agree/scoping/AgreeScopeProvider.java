@@ -21,6 +21,8 @@ import org.osate.aadl2.ComponentType;
 import org.osate.aadl2.DataPort;
 import org.osate.aadl2.Element;
 import org.osate.aadl2.EventDataPort;
+import org.osate.aadl2.FeatureGroupType;
+import org.osate.aadl2.NamedElement;
 import org.osate.aadl2.PublicPackageSection;
 import org.osate.aadl2.Subcomponent;
 import org.osate.aadl2.ThreadSubcomponent;
@@ -36,10 +38,12 @@ import com.rockwellcollins.atc.agree.agree.Arg;
 import com.rockwellcollins.atc.agree.agree.CalenStatement;
 import com.rockwellcollins.atc.agree.agree.EqStatement;
 import com.rockwellcollins.atc.agree.agree.FnDefExpr;
-import com.rockwellcollins.atc.agree.agree.IdExpr;
 import com.rockwellcollins.atc.agree.agree.NestedDotID;
 import com.rockwellcollins.atc.agree.agree.NodeDefExpr;
 import com.rockwellcollins.atc.agree.agree.NodeEq;
+import com.rockwellcollins.atc.agree.agree.RecordExpr;
+import com.rockwellcollins.atc.agree.agree.RecordType;
+import com.rockwellcollins.atc.agree.agree.RecordTypeDefExpr;
 import com.rockwellcollins.atc.agree.agree.SpecStatement;
 
 /**
@@ -59,7 +63,15 @@ public class AgreeScopeProvider extends
     IScope scope_NamedElement(EqStatement ctx, EReference ref) {
         return Scopes.scopeFor(ctx.getLhs(), getScope(ctx.eContainer(), ref));
     }
-
+    
+    IScope scope_NamedElement(RecordTypeDefExpr ctx, EReference ref) {
+        return Scopes.scopeFor(ctx.getArgs(), getScope(ctx.eContainer(), ref));
+    }
+    
+    IScope scope_NamedElement(RecordExpr ctx, EReference ref) {
+        return Scopes.scopeFor(ctx.getArgs(), getScope(ctx.eContainer(), ref));
+    }
+    
     IScope scope_NamedElement(NodeDefExpr ctx, EReference ref) {
         Set<Element> components = new HashSet<>();
         components.addAll(ctx.getArgs());
@@ -135,6 +147,7 @@ public class AgreeScopeProvider extends
     
     private Set<Element> getCorrespondingAadlElement(NestedDotID id) {
         EObject container = id.eContainer();
+        Set<Element> result = new HashSet<>();
 
         if (container instanceof NestedDotID) {
             NestedDotID parent = (NestedDotID) container;
@@ -172,6 +185,11 @@ public class AgreeScopeProvider extends
             }
         } else if (container instanceof NodeEq){
         	return new HashSet<>();
+        	
+        }else if (container instanceof RecordType){
+        	while(!(container instanceof AadlPackage)){
+        		container = container.eContainer();
+        	}
         } else {
             // travel out of the annex and get the component
             // classifier that the annex is contained in.
@@ -184,10 +202,8 @@ public class AgreeScopeProvider extends
         }
 
         if (container == null) {
-            return new HashSet<>(); // this will throw a parsing error
+            return result; // this will throw a parsing error
         }
-
-        Set<Element> result = new HashSet<>();
 
         if (container instanceof Classifier) {
             Classifier component = (Classifier) container;
@@ -217,6 +233,15 @@ public class AgreeScopeProvider extends
                 }
             }
             
+        }else if(container instanceof AadlPackage){
+        	AadlPackage aadlPack = (AadlPackage)container;
+        	PublicPackageSection pubSec = aadlPack.getPublicSection();
+        	
+        	for(Element el : pubSec.getOwnedElements()){
+        		if(el instanceof FeatureGroupType){
+        			result.add(el);
+        		}
+        	}
         } else {
 
             if (container instanceof AgreeContractLibrary) {

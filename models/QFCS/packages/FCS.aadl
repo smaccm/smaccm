@@ -41,7 +41,6 @@ system FCS
     
   annex agree {**
     
-    
     eq ailerons_cmd : real = acts_out1.ailerons + acts_out2.ailerons +
                       acts_out3.ailerons + acts_out4.ailerons;
     eq elevators_cmd : real = acts_out1.elevators + acts_out2.elevators +

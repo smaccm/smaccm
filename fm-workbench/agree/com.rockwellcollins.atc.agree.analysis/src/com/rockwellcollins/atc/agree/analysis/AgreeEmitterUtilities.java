@@ -63,6 +63,8 @@ import com.rockwellcollins.atc.agree.agree.Arg;
 import com.rockwellcollins.atc.agree.agree.FnCallExpr;
 import com.rockwellcollins.atc.agree.agree.NestedDotID;
 import com.rockwellcollins.atc.agree.agree.NodeEq;
+import com.rockwellcollins.atc.agree.agree.PrimType;
+import com.rockwellcollins.atc.agree.agree.RecordType;
 import com.rockwellcollins.atc.agree.agree.ThisExpr;
 
 public class AgreeEmitterUtilities {
@@ -176,11 +178,22 @@ public class AgreeEmitterUtilities {
         NamedElement namedEl = getFinalNestId(dotId);
         return namedEl.getName();
     }
+    
+
+    private static String getTypeStr(com.rockwellcollins.atc.agree.agree.Type agreeType){
+    	String typeName;
+		if(agreeType instanceof PrimType){
+        	typeName = ((PrimType)agreeType).getString();
+        }else{
+        	typeName = ((RecordType)agreeType).getRecord().getName();
+        }
+		return typeName;
+    }
 
     static public List<VarDecl> argsToVarDeclList(String nameTag, EList<Arg> args) {
         List<VarDecl> varList = new ArrayList<VarDecl>();
         for (Arg arg : args) {
-            Type type = new NamedType(arg.getType().getString());
+            Type type = new NamedType(getTypeStr(arg.getType()));
             VarDecl varDecl = new VarDecl(nameTag + arg.getName(), type);
             varList.add(varDecl);
         }

@@ -10,6 +10,6 @@ public class AgreeAntlrTokenFileProvider implements IAntlrTokenFileProvider {
 	
 	public InputStream getAntlrTokenFile() {
 		ClassLoader classLoader = getClass().getClassLoader();
-    	return classLoader.getResourceAsStream("com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.tokens");
+    	return classLoader.getResourceAsStream("com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgreeParser.tokens");
 	}
 }

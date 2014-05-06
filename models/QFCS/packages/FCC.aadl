@@ -144,7 +144,6 @@ system FCC
         
 end FCC;
 
-
 system implementation FCC.Impl
   subcomponents
     ISAS_comp : system ISAS::ISAS;
@@ -194,7 +193,7 @@ system implementation FCC.Impl
     conn_ccdl_acts : feature group CCDL_comp.acts -> OSAS_comp.acts_input;
     
   annex agree {**
-
+  	
     lemma "faulty rudder shuts off":
         OSAS_comp.rudder_ccdl_num_fail > 2 and hist_rudder_fault and time > 5 => not sovs.rudder_sov1_open;
     

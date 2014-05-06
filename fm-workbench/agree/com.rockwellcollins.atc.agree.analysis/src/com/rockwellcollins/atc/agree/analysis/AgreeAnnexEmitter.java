@@ -94,8 +94,10 @@ import com.rockwellcollins.atc.agree.agree.NodeLemma;
 import com.rockwellcollins.atc.agree.agree.NodeStmt;
 import com.rockwellcollins.atc.agree.agree.PreExpr;
 import com.rockwellcollins.atc.agree.agree.PrevExpr;
+import com.rockwellcollins.atc.agree.agree.PrimType;
 import com.rockwellcollins.atc.agree.agree.PropertyStatement;
 import com.rockwellcollins.atc.agree.agree.RealLitExpr;
+import com.rockwellcollins.atc.agree.agree.RecordType;
 import com.rockwellcollins.atc.agree.agree.SpecStatement;
 import com.rockwellcollins.atc.agree.agree.SynchStatement;
 import com.rockwellcollins.atc.agree.agree.ThisExpr;
@@ -717,6 +719,16 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         
     }
 
+    private String getTypeStr(com.rockwellcollins.atc.agree.agree.Type agreeType){
+    	String typeName;
+		if(agreeType instanceof PrimType){
+        	typeName = ((PrimType)agreeType).getString();
+        }else{
+        	typeName = ((RecordType)agreeType).getRecord().getName();
+        }
+		return typeName;
+    }
+    
     @Override
     public Expr caseEqStatement(EqStatement state) {
 
@@ -736,7 +748,7 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
             varIds.add(idExpr);
 
             varDecl.aadlStr = aadlNameTag + baseName;
-            varDecl.type = arg.getType().getString();
+            varDecl.type = getTypeStr(arg.getType());
 
             layout.addElement(category, varDecl.aadlStr, AgreeLayout.SigType.OUTPUT);
 
@@ -938,7 +950,7 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         List<VarDecl> inputs = AgreeEmitterUtilities.argsToVarDeclList(jKindNameTag, expr.getArgs());
         Expr bodyExpr = doSwitch(expr.getExpr());
 
-        Type outType = new NamedType(expr.getType().getString());
+        Type outType = new NamedType(getTypeStr(expr.getType()));
         VarDecl outVar = new VarDecl("_outvar", outType);
         List<VarDecl> outputs = Collections.singletonList(outVar);
         Equation eq = new Equation(new IdExpr("_outvar"), bodyExpr);

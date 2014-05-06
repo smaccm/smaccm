@@ -1,7 +1,9 @@
 grammar com.rockwellcollins.atc.agree.Agree with org.osate.xtext.aadl2.properties.Properties
 
 generate agree "http://www.rockwellcollins.com/atc/agree/Agree"
-import "platform:/resource/org.osate.aadl2/model/aadl2.ecore" as aadl2
+
+import "http://aadl.info/AADL/2.0" as aadl2
+import "http://www.eclipse.org/emf/2002/Ecore" as ecore
 
 NamedElement returns aadl2::NamedElement:
 	Arg
@@ -92,8 +94,14 @@ NodeStmt:
 Arg returns Arg:
 	name=ID ':' type=Type;
 
-Type:
-	string=('real' | 'bool' | 'int');
+Type returns Type:
+	{PrimType} string=('real' | 'bool' | 'int')
+|	{RecordType} (=> featureGroup=NestedDotID | record=[RecordTypeDefExpr])
+;
+
+TypeDefExpr:
+	{RecordTypeDefExpr} 'type' name=ID '=' 'struct' '{' (args+=Arg (',' args+=Arg)*)? '}' ';'
+;
 
 Expr returns Expr:
 	ArrowExpr;
@@ -138,6 +146,7 @@ PreDefFnExpr returns Expr:
 	| {GetPropertyExpr} 'Get_Property' '(' component=Expr ',' prop=Expr ')'
 	| TermExpr;
 
+
 PreDefFnNames:
 	'prev'
 	| 'Get_Property';
@@ -150,7 +159,9 @@ TermExpr returns Expr:
 	| {RealLitExpr} val=REAL_LIT
 	| {BoolLitExpr} val=BooleanLiteral
 	| {ThisExpr} 'this' ('.' subThis=NestedDotID)?
-	| '(' Expr ')';
+	| {RecordExpr} record=[RecordType] '{'(args+=[Arg] '=' argExpr+=Expr (';' args+=[Arg] '=' argExpr+=Expr)*)? '}'
+	| {RecordUpdateExpr} (=>('{' args+=[Arg] ':=' argExpr+=Expr '}')+)
+	|'(' Expr ')';
 
 NestedDotID:
 	base=[aadl2::NamedElement|ID] ('.' ((=> tag=ReservedVarTag) | sub=NestedDotID))?;

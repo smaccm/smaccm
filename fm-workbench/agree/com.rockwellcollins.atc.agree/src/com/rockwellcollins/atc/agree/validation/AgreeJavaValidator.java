@@ -41,6 +41,8 @@ import org.osate.aadl2.Element;
 import org.osate.aadl2.EnumerationType;
 import org.osate.aadl2.EventDataPort;
 import org.osate.aadl2.Feature;
+import org.osate.aadl2.FeatureGroup;
+import org.osate.aadl2.FeatureGroupType;
 import org.osate.aadl2.NamedElement;
 import org.osate.aadl2.Property;
 import org.osate.aadl2.PropertyType;
@@ -77,8 +79,13 @@ import com.rockwellcollins.atc.agree.agree.NodeLemma;
 import com.rockwellcollins.atc.agree.agree.NodeStmt;
 import com.rockwellcollins.atc.agree.agree.PreExpr;
 import com.rockwellcollins.atc.agree.agree.PrevExpr;
+import com.rockwellcollins.atc.agree.agree.PrimType;
 import com.rockwellcollins.atc.agree.agree.PropertyStatement;
 import com.rockwellcollins.atc.agree.agree.RealLitExpr;
+import com.rockwellcollins.atc.agree.agree.RecordExpr;
+import com.rockwellcollins.atc.agree.agree.RecordType;
+import com.rockwellcollins.atc.agree.agree.RecordTypeDefExpr;
+import com.rockwellcollins.atc.agree.agree.RecordUpdateExpr;
 import com.rockwellcollins.atc.agree.agree.SpecStatement;
 import com.rockwellcollins.atc.agree.agree.SynchStatement;
 import com.rockwellcollins.atc.agree.agree.ThisExpr;
@@ -231,10 +238,70 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
         }
 
     }
+    
+    @Check(CheckType.FAST)
+    public void checkRecordExpr(RecordExpr recExpr){
+    	
+    	RecordType recType = recExpr.getRecord(); 
+    	List<String> argNames = getArgNames(recType);
+    	
+    	if(recExpr.getArgs().size() != argNames.size()){
+    		error(recExpr, "Incorrect number of arguments");
+    	}
+    	
+    	
+    }
+    
+    private List<String> getArgNames(RecordType recType){
+    	
+    	NestedDotID featNestId = recType.getFeatureGroup();
+    	RecordTypeDefExpr recDef = recType.getRecord();
+    	List<String> names = new ArrayList<String>();
+    	
+    	if(recDef != null){
+    		for(Arg arg : recDef.getArgs()){
+    			names.add(arg.getName());
+    		}
+    	}else{
+    		FeatureGroupType featGroup = (FeatureGroupType)getFinalNestId(featNestId);
+    		for(Feature feat : featGroup.getAllFeatures()){
+    			names.add(feat.getName());
+    		}
+    	}
+    	
+    	return names;
+    }
+    
+    private List<AgreeType> getArgTypes(RecordType recType){
+    	
+    	NestedDotID featNestId = recType.getFeatureGroup();
+    	RecordTypeDefExpr recDef = recType.getRecord();
+    	List<AgreeType> types = new ArrayList<AgreeType>();
+    	
+    	if(recDef != null){
+    		for(Arg arg : recDef.getArgs()){
+    			types.add(getAgreeType(arg.getType()));
+    		}
+    	}else{
+    		FeatureGroupType featGroup = (FeatureGroupType)getFinalNestId(featNestId);
+    		for(Feature feat : featGroup.getAllFeatures()){
+    			types.add(getAgreeType(feat));
+    		}
+    	}
+    	
+    	return types;
+    }
 
     @Check(CheckType.FAST)
+    public void checkRecordUpdateExpr(RecordUpdateExpr recExpr){
+    	
+    }
+    
+    @Check(CheckType.FAST)
     public void checkConstStatement(ConstStatement constStat) {
-        AgreeType expected = new AgreeType(constStat.getType().getString());
+        Type type = constStat.getType();
+
+		AgreeType expected = getAgreeType(type);
         AgreeType actual = getAgreeType(constStat.getExpr());
 
         if (!matches(expected, actual)) {
@@ -276,6 +343,41 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
             }
         }
     }
+
+	private AgreeType getAgreeType(Type type) {
+		String typeName;
+		if(type instanceof PrimType){
+        	typeName = ((PrimType)type).getString();
+        }else{
+        	RecordType recType = (RecordType)type;
+        	RecordTypeDefExpr recordDef = recType.getRecord();
+        	NestedDotID featNestId = recType.getFeatureGroup();
+        	
+        	if(recordDef != null){
+        		typeName = recordDef.getName();
+        	}else{
+        		//get the package name
+        		EObject container = featNestId.eContainer();
+        		while(!(container instanceof AadlPackage)){
+        			container = container.eContainer();
+        		}
+        		StringBuilder sb = new StringBuilder();
+        		String tag = "";
+        		do{
+        			sb.append(tag);
+        			sb.append(featNestId.getBase().getName());
+        			featNestId = featNestId.getSub();
+        			tag = "__";
+        		}while(featNestId != null);
+        		
+        		typeName = ((AadlPackage)container).getName()+tag+sb.toString();
+        				
+        	}
+        	
+        	typeName = ((RecordType)type).getRecord().getName();
+        }
+		return new AgreeType(typeName);
+	}
 
     public boolean isPossibleConstant(Expr e) {
         if (e instanceof PrevExpr || e instanceof PreExpr) {
@@ -390,11 +492,11 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
             if (namedEl instanceof NodeDefExpr) {
                 NodeDefExpr nodeDef = (NodeDefExpr) namedEl;
                 for (Arg var : nodeDef.getRets()) {
-                    agreeRhsTypes.add(new AgreeType(var.getType().getString()));
+                    agreeRhsTypes.add(getAgreeType(var.getType()));
                 }
             } else if (namedEl instanceof FnDefExpr) {
                 FnDefExpr fnDef = (FnDefExpr) namedEl;
-                agreeRhsTypes.add(new AgreeType(fnDef.getType().getString()));
+                agreeRhsTypes.add(getAgreeType(fnDef.getType()));
             } else {
                 return; // parse error
             }
@@ -659,13 +761,13 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
     public void checkFnDefExpr(FnDefExpr fnDef) {
 
         // verify typing
-        Type fnType = fnDef.getType();
+        AgreeType fnType = getAgreeType(fnDef.getType());
         if (fnType == null) {
             return; // this error will be caught in parsing
         }
         AgreeType exprType = getAgreeType(fnDef.getExpr());
-        if (!exprType.equals(new AgreeType(fnType.getString()))) {
-            error(fnDef, "Function '" + fnDef.getName() + "' is of type '" + fnType.getString()
+        if (!exprType.equals(fnType)) {
+            error(fnDef, "Function '" + fnDef.getName() + "' is of type '" + fnType.toString()
                     + "' but its expression is of type '" + exprType + "'");
         }
 
@@ -905,7 +1007,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 
 
     public AgreeType getAgreeType(Arg arg) {
-        return new AgreeType(arg.getType().getString());
+        return getAgreeType(arg.getType());
     }
 
     private AgreeType getAgreeType(UnaryExpr unaryExpr) {
@@ -969,9 +1071,20 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
             return getAgreeType((NamedElement) ((DataAccess) namedEl).getFeatureClassifier());
         } else if (namedEl instanceof DataType) {
             return getAgreeType((ComponentClassifier) namedEl);
+        } else if (namedEl instanceof FeatureGroup){
+        	return getAgreeType((FeatureGroup)namedEl);
         }
 
         return ERROR;
+    }
+    
+    private AgreeType getAgreeType(FeatureGroup featGroup){
+    	EObject container = featGroup.eContainer();
+    	while(!(container instanceof AadlPackage)){
+    		container = container.eContainer();
+    	}
+    	AadlPackage aadlPack = (AadlPackage)container;
+    	return new AgreeType(aadlPack.getName()+"__"+featGroup.getAllFeatureGroupType().getName());
     }
 
     private AgreeType getAgreeType(ComponentClassifier dataClass) {
@@ -1011,7 +1124,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
     }
 
     private AgreeType getAgreeType(ConstStatement constStat) {
-        return new AgreeType(constStat.getType().getString());
+        return getAgreeType(constStat.getType());
     }
 
     private AgreeType getAgreeType(GetPropertyExpr getPropExpr) {
@@ -1048,7 +1161,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
         // extract in/out arguments
         if (namedEl instanceof FnDefExpr) {
             FnDefExpr fnDef = (FnDefExpr) namedEl;
-            return new AgreeType(fnDef.getType().getString());
+            return getAgreeType(fnDef.getType());
         } else if (namedEl instanceof NodeDefExpr) {
             NodeDefExpr nodeDef = (NodeDefExpr) namedEl;
             List<AgreeType> outDefTypes = typesFromArgs(nodeDef.getRets());
