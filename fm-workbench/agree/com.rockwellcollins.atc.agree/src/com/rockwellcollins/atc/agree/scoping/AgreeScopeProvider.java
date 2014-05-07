@@ -3,6 +3,7 @@
  */
 package com.rockwellcollins.atc.agree.scoping;
 
+import java.io.ObjectInputStream.GetField;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -21,6 +22,7 @@ import org.osate.aadl2.ComponentType;
 import org.osate.aadl2.DataPort;
 import org.osate.aadl2.Element;
 import org.osate.aadl2.EventDataPort;
+import org.osate.aadl2.Feature;
 import org.osate.aadl2.FeatureGroupType;
 import org.osate.aadl2.NamedElement;
 import org.osate.aadl2.PublicPackageSection;
@@ -43,7 +45,6 @@ import com.rockwellcollins.atc.agree.agree.NodeDefExpr;
 import com.rockwellcollins.atc.agree.agree.NodeEq;
 import com.rockwellcollins.atc.agree.agree.RecordExpr;
 import com.rockwellcollins.atc.agree.agree.RecordType;
-import com.rockwellcollins.atc.agree.agree.RecordTypeDefExpr;
 import com.rockwellcollins.atc.agree.agree.SpecStatement;
 
 /**
@@ -64,8 +65,8 @@ public class AgreeScopeProvider extends
         return Scopes.scopeFor(ctx.getLhs(), getScope(ctx.eContainer(), ref));
     }
     
-    IScope scope_NamedElement(RecordTypeDefExpr ctx, EReference ref) {
-        return Scopes.scopeFor(ctx.getArgs(), getScope(ctx.eContainer(), ref));
+    IScope scope_NamedElement(RecordType ctx, EReference ref) {
+        return IScope.NULLSCOPE;
     }
     
     IScope scope_NamedElement(RecordExpr ctx, EReference ref) {
@@ -137,13 +138,14 @@ public class AgreeScopeProvider extends
 
     }
     
-    //IScope scope_NamedElement(IdExpr ctx, EReference ref){
+    IScope scope_NamedElement(Arg ctx, EReference ref){
     //	
     //	EObject container = ctx.eContainer();
     //	while(!(container instanceof ComponentClassi)
     //	
      //   return Scopes.scopeFor(getAllElementsFromSpecs(ctx.getSpecs()), IScope.NULLSCOPE);
-    //}
+    	return IScope.NULLSCOPE;
+    }
     
     private Set<Element> getCorrespondingAadlElement(NestedDotID id) {
         EObject container = id.eContainer();
@@ -186,7 +188,8 @@ public class AgreeScopeProvider extends
         } else if (container instanceof NodeEq){
         	return new HashSet<>();
         	
-        }else if (container instanceof RecordType){
+        }else if (container instanceof RecordType
+        		|| container instanceof RecordExpr){
         	while(!(container instanceof AadlPackage)){
         		container = container.eContainer();
         	}

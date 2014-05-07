@@ -29,6 +29,7 @@ import jkind.lustre.VarDecl;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
+import org.osate.aadl2.AadlPackage;
 import org.osate.aadl2.AbstractNamedValue;
 import org.osate.aadl2.AnnexSubclause;
 import org.osate.aadl2.Classifier;
@@ -41,6 +42,7 @@ import org.osate.aadl2.ContainmentPathElement;
 import org.osate.aadl2.Context;
 import org.osate.aadl2.DataSubcomponent;
 import org.osate.aadl2.DataType;
+import org.osate.aadl2.FeatureGroupType;
 import org.osate.aadl2.ModalPropertyValue;
 import org.osate.aadl2.NamedElement;
 import org.osate.aadl2.NamedValue;
@@ -64,6 +66,7 @@ import com.rockwellcollins.atc.agree.agree.FnCallExpr;
 import com.rockwellcollins.atc.agree.agree.NestedDotID;
 import com.rockwellcollins.atc.agree.agree.NodeEq;
 import com.rockwellcollins.atc.agree.agree.PrimType;
+import com.rockwellcollins.atc.agree.agree.RecordDefExpr;
 import com.rockwellcollins.atc.agree.agree.RecordType;
 import com.rockwellcollins.atc.agree.agree.ThisExpr;
 
@@ -178,14 +181,36 @@ public class AgreeEmitterUtilities {
         NamedElement namedEl = getFinalNestId(dotId);
         return namedEl.getName();
     }
-    
 
-    private static String getTypeStr(com.rockwellcollins.atc.agree.agree.Type agreeType){
-    	String typeName;
+    public static String getTypeStr(com.rockwellcollins.atc.agree.agree.Type agreeType){
+    	String typeName = null;
 		if(agreeType instanceof PrimType){
         	typeName = ((PrimType)agreeType).getString();
         }else{
-        	typeName = ((RecordType)agreeType).getRecord().getName();
+        	RecordType recType = (RecordType)agreeType;
+        	NestedDotID recId = recType.getRecord();
+        	NamedElement finalId = getFinalNestId(recId);
+        	
+        	if(finalId instanceof RecordDefExpr){
+        		typeName = finalId.getName();
+        	}else if(finalId instanceof FeatureGroupType){
+        		//get the package name
+        		EObject container = recId.eContainer();
+        		while(!(container instanceof AadlPackage)){
+        			container = container.eContainer();
+        		}
+        		StringBuilder sb = new StringBuilder();
+        		String tag = "";
+        		do{
+        			sb.append(tag);
+        			sb.append(recId.getBase().getName());
+        			recId = recId.getSub();
+        			tag = "__";
+        		}while(recId != null);
+        		
+        		typeName = ((AadlPackage)container).getName()+tag+sb.toString();
+        				
+        	}
         }
 		return typeName;
     }

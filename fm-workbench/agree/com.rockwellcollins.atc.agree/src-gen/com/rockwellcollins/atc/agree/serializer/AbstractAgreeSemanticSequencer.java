@@ -34,9 +34,9 @@ import com.rockwellcollins.atc.agree.agree.PrevExpr;
 import com.rockwellcollins.atc.agree.agree.PrimType;
 import com.rockwellcollins.atc.agree.agree.PropertyStatement;
 import com.rockwellcollins.atc.agree.agree.RealLitExpr;
+import com.rockwellcollins.atc.agree.agree.RecordDefExpr;
 import com.rockwellcollins.atc.agree.agree.RecordExpr;
 import com.rockwellcollins.atc.agree.agree.RecordType;
-import com.rockwellcollins.atc.agree.agree.RecordTypeDefExpr;
 import com.rockwellcollins.atc.agree.agree.RecordUpdateExpr;
 import com.rockwellcollins.atc.agree.agree.SynchStatement;
 import com.rockwellcollins.atc.agree.agree.ThisExpr;
@@ -293,6 +293,8 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 				   context == grammarAccess.getOrExprRule() ||
 				   context == grammarAccess.getOrExprAccess().getBinaryExprLeftAction_1_0_0_0() ||
 				   context == grammarAccess.getPreDefFnExprRule() ||
+				   context == grammarAccess.getRecordUpdateExprsRule() ||
+				   context == grammarAccess.getRecordUpdateExprsAccess().getRecordUpdateExprExprAction_1_0_0() ||
 				   context == grammarAccess.getRelateExprRule() ||
 				   context == grammarAccess.getRelateExprAccess().getBinaryExprLeftAction_1_0_0_0() ||
 				   context == grammarAccess.getTermExprRule() ||
@@ -320,6 +322,8 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 				   context == grammarAccess.getOrExprRule() ||
 				   context == grammarAccess.getOrExprAccess().getBinaryExprLeftAction_1_0_0_0() ||
 				   context == grammarAccess.getPreDefFnExprRule() ||
+				   context == grammarAccess.getRecordUpdateExprsRule() ||
+				   context == grammarAccess.getRecordUpdateExprsAccess().getRecordUpdateExprExprAction_1_0_0() ||
 				   context == grammarAccess.getRelateExprRule() ||
 				   context == grammarAccess.getRelateExprAccess().getBinaryExprLeftAction_1_0_0_0() ||
 				   context == grammarAccess.getTermExprRule() ||
@@ -360,6 +364,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 				   context == grammarAccess.getAndExprAccess().getBinaryExprLeftAction_1_0_0_0() ||
 				   context == grammarAccess.getArrowExprRule() ||
 				   context == grammarAccess.getArrowExprAccess().getBinaryExprLeftAction_1_0_0_0() ||
+				   context == grammarAccess.getComplexExprRule() ||
 				   context == grammarAccess.getElementRule() ||
 				   context == grammarAccess.getEquivExprRule() ||
 				   context == grammarAccess.getEquivExprAccess().getBinaryExprLeftAction_1_0_0_0() ||
@@ -372,11 +377,13 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 				   context == grammarAccess.getOrExprRule() ||
 				   context == grammarAccess.getOrExprAccess().getBinaryExprLeftAction_1_0_0_0() ||
 				   context == grammarAccess.getPreDefFnExprRule() ||
+				   context == grammarAccess.getRecordUpdateExprsRule() ||
+				   context == grammarAccess.getRecordUpdateExprsAccess().getRecordUpdateExprExprAction_1_0_0() ||
 				   context == grammarAccess.getRelateExprRule() ||
 				   context == grammarAccess.getRelateExprAccess().getBinaryExprLeftAction_1_0_0_0() ||
 				   context == grammarAccess.getTermExprRule() ||
 				   context == grammarAccess.getUnaryExprRule()) {
-					sequence_TermExpr(context, (FnCallExpr) semanticObject); 
+					sequence_ComplexExpr(context, (FnCallExpr) semanticObject); 
 					return; 
 				}
 				else break;
@@ -410,6 +417,8 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 				   context == grammarAccess.getOrExprRule() ||
 				   context == grammarAccess.getOrExprAccess().getBinaryExprLeftAction_1_0_0_0() ||
 				   context == grammarAccess.getPreDefFnExprRule() ||
+				   context == grammarAccess.getRecordUpdateExprsRule() ||
+				   context == grammarAccess.getRecordUpdateExprsAccess().getRecordUpdateExprExprAction_1_0_0() ||
 				   context == grammarAccess.getRelateExprRule() ||
 				   context == grammarAccess.getRelateExprAccess().getBinaryExprLeftAction_1_0_0_0() ||
 				   context == grammarAccess.getTermExprRule() ||
@@ -444,6 +453,8 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 				   context == grammarAccess.getOrExprRule() ||
 				   context == grammarAccess.getOrExprAccess().getBinaryExprLeftAction_1_0_0_0() ||
 				   context == grammarAccess.getPreDefFnExprRule() ||
+				   context == grammarAccess.getRecordUpdateExprsRule() ||
+				   context == grammarAccess.getRecordUpdateExprsAccess().getRecordUpdateExprExprAction_1_0_0() ||
 				   context == grammarAccess.getRelateExprRule() ||
 				   context == grammarAccess.getRelateExprAccess().getBinaryExprLeftAction_1_0_0_0() ||
 				   context == grammarAccess.getTermExprRule() ||
@@ -471,6 +482,8 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 				   context == grammarAccess.getOrExprRule() ||
 				   context == grammarAccess.getOrExprAccess().getBinaryExprLeftAction_1_0_0_0() ||
 				   context == grammarAccess.getPreDefFnExprRule() ||
+				   context == grammarAccess.getRecordUpdateExprsRule() ||
+				   context == grammarAccess.getRecordUpdateExprsAccess().getRecordUpdateExprExprAction_1_0_0() ||
 				   context == grammarAccess.getRelateExprRule() ||
 				   context == grammarAccess.getRelateExprAccess().getBinaryExprLeftAction_1_0_0_0() ||
 				   context == grammarAccess.getTermExprRule() ||
@@ -498,6 +511,8 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 				   context == grammarAccess.getOrExprRule() ||
 				   context == grammarAccess.getOrExprAccess().getBinaryExprLeftAction_1_0_0_0() ||
 				   context == grammarAccess.getPreDefFnExprRule() ||
+				   context == grammarAccess.getRecordUpdateExprsRule() ||
+				   context == grammarAccess.getRecordUpdateExprsAccess().getRecordUpdateExprExprAction_1_0_0() ||
 				   context == grammarAccess.getRelateExprRule() ||
 				   context == grammarAccess.getRelateExprAccess().getBinaryExprLeftAction_1_0_0_0() ||
 				   context == grammarAccess.getTermExprRule() ||
@@ -527,6 +542,9 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 				   context == grammarAccess.getAndExprAccess().getBinaryExprLeftAction_1_0_0_0() ||
 				   context == grammarAccess.getArrowExprRule() ||
 				   context == grammarAccess.getArrowExprAccess().getBinaryExprLeftAction_1_0_0_0() ||
+				   context == grammarAccess.getComplexExprRule() ||
+				   context == grammarAccess.getComplexExprAccess().getFnCallExprFnAction_1_0_0_0_0() ||
+				   context == grammarAccess.getComplexExprAccess().getRecordExprRecordAction_1_1_0_0_0() ||
 				   context == grammarAccess.getElementRule() ||
 				   context == grammarAccess.getEquivExprRule() ||
 				   context == grammarAccess.getEquivExprAccess().getBinaryExprLeftAction_1_0_0_0() ||
@@ -540,10 +558,11 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 				   context == grammarAccess.getOrExprRule() ||
 				   context == grammarAccess.getOrExprAccess().getBinaryExprLeftAction_1_0_0_0() ||
 				   context == grammarAccess.getPreDefFnExprRule() ||
+				   context == grammarAccess.getRecordUpdateExprsRule() ||
+				   context == grammarAccess.getRecordUpdateExprsAccess().getRecordUpdateExprExprAction_1_0_0() ||
 				   context == grammarAccess.getRelateExprRule() ||
 				   context == grammarAccess.getRelateExprAccess().getBinaryExprLeftAction_1_0_0_0() ||
 				   context == grammarAccess.getTermExprRule() ||
-				   context == grammarAccess.getTermExprAccess().getFnCallExprFnAction_1_1_0() ||
 				   context == grammarAccess.getUnaryExprRule()) {
 					sequence_NestedDotID(context, (NestedDotID) semanticObject); 
 					return; 
@@ -607,6 +626,8 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 				   context == grammarAccess.getOrExprRule() ||
 				   context == grammarAccess.getOrExprAccess().getBinaryExprLeftAction_1_0_0_0() ||
 				   context == grammarAccess.getPreDefFnExprRule() ||
+				   context == grammarAccess.getRecordUpdateExprsRule() ||
+				   context == grammarAccess.getRecordUpdateExprsAccess().getRecordUpdateExprExprAction_1_0_0() ||
 				   context == grammarAccess.getRelateExprRule() ||
 				   context == grammarAccess.getRelateExprAccess().getBinaryExprLeftAction_1_0_0_0() ||
 				   context == grammarAccess.getTermExprRule() ||
@@ -634,6 +655,8 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 				   context == grammarAccess.getOrExprRule() ||
 				   context == grammarAccess.getOrExprAccess().getBinaryExprLeftAction_1_0_0_0() ||
 				   context == grammarAccess.getPreDefFnExprRule() ||
+				   context == grammarAccess.getRecordUpdateExprsRule() ||
+				   context == grammarAccess.getRecordUpdateExprsAccess().getRecordUpdateExprExprAction_1_0_0() ||
 				   context == grammarAccess.getRelateExprRule() ||
 				   context == grammarAccess.getRelateExprAccess().getBinaryExprLeftAction_1_0_0_0() ||
 				   context == grammarAccess.getTermExprRule() ||
@@ -677,11 +700,22 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 				   context == grammarAccess.getOrExprRule() ||
 				   context == grammarAccess.getOrExprAccess().getBinaryExprLeftAction_1_0_0_0() ||
 				   context == grammarAccess.getPreDefFnExprRule() ||
+				   context == grammarAccess.getRecordUpdateExprsRule() ||
+				   context == grammarAccess.getRecordUpdateExprsAccess().getRecordUpdateExprExprAction_1_0_0() ||
 				   context == grammarAccess.getRelateExprRule() ||
 				   context == grammarAccess.getRelateExprAccess().getBinaryExprLeftAction_1_0_0_0() ||
 				   context == grammarAccess.getTermExprRule() ||
 				   context == grammarAccess.getUnaryExprRule()) {
 					sequence_TermExpr(context, (RealLitExpr) semanticObject); 
+					return; 
+				}
+				else break;
+			case AgreePackage.RECORD_DEF_EXPR:
+				if(context == grammarAccess.getElementRule() ||
+				   context == grammarAccess.getNamedElementRule() ||
+				   context == grammarAccess.getRecordDefExprRule() ||
+				   context == grammarAccess.getSpecStatementRule()) {
+					sequence_RecordDefExpr(context, (RecordDefExpr) semanticObject); 
 					return; 
 				}
 				else break;
@@ -692,6 +726,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 				   context == grammarAccess.getAndExprAccess().getBinaryExprLeftAction_1_0_0_0() ||
 				   context == grammarAccess.getArrowExprRule() ||
 				   context == grammarAccess.getArrowExprAccess().getBinaryExprLeftAction_1_0_0_0() ||
+				   context == grammarAccess.getComplexExprRule() ||
 				   context == grammarAccess.getElementRule() ||
 				   context == grammarAccess.getEquivExprRule() ||
 				   context == grammarAccess.getEquivExprAccess().getBinaryExprLeftAction_1_0_0_0() ||
@@ -704,11 +739,13 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 				   context == grammarAccess.getOrExprRule() ||
 				   context == grammarAccess.getOrExprAccess().getBinaryExprLeftAction_1_0_0_0() ||
 				   context == grammarAccess.getPreDefFnExprRule() ||
+				   context == grammarAccess.getRecordUpdateExprsRule() ||
+				   context == grammarAccess.getRecordUpdateExprsAccess().getRecordUpdateExprExprAction_1_0_0() ||
 				   context == grammarAccess.getRelateExprRule() ||
 				   context == grammarAccess.getRelateExprAccess().getBinaryExprLeftAction_1_0_0_0() ||
 				   context == grammarAccess.getTermExprRule() ||
 				   context == grammarAccess.getUnaryExprRule()) {
-					sequence_TermExpr(context, (RecordExpr) semanticObject); 
+					sequence_ComplexExpr(context, (RecordExpr) semanticObject); 
 					return; 
 				}
 				else break;
@@ -716,12 +753,6 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 				if(context == grammarAccess.getElementRule() ||
 				   context == grammarAccess.getTypeRule()) {
 					sequence_Type(context, (RecordType) semanticObject); 
-					return; 
-				}
-				else break;
-			case AgreePackage.RECORD_TYPE_DEF_EXPR:
-				if(context == grammarAccess.getTypeDefExprRule()) {
-					sequence_TypeDefExpr(context, (RecordTypeDefExpr) semanticObject); 
 					return; 
 				}
 				else break;
@@ -744,11 +775,13 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 				   context == grammarAccess.getOrExprRule() ||
 				   context == grammarAccess.getOrExprAccess().getBinaryExprLeftAction_1_0_0_0() ||
 				   context == grammarAccess.getPreDefFnExprRule() ||
+				   context == grammarAccess.getRecordUpdateExprsRule() ||
+				   context == grammarAccess.getRecordUpdateExprsAccess().getRecordUpdateExprExprAction_1_0_0() ||
 				   context == grammarAccess.getRelateExprRule() ||
 				   context == grammarAccess.getRelateExprAccess().getBinaryExprLeftAction_1_0_0_0() ||
 				   context == grammarAccess.getTermExprRule() ||
 				   context == grammarAccess.getUnaryExprRule()) {
-					sequence_TermExpr(context, (RecordUpdateExpr) semanticObject); 
+					sequence_RecordUpdateExprs(context, (RecordUpdateExpr) semanticObject); 
 					return; 
 				}
 				else break;
@@ -779,6 +812,8 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 				   context == grammarAccess.getOrExprRule() ||
 				   context == grammarAccess.getOrExprAccess().getBinaryExprLeftAction_1_0_0_0() ||
 				   context == grammarAccess.getPreDefFnExprRule() ||
+				   context == grammarAccess.getRecordUpdateExprsRule() ||
+				   context == grammarAccess.getRecordUpdateExprsAccess().getRecordUpdateExprExprAction_1_0_0() ||
 				   context == grammarAccess.getRelateExprRule() ||
 				   context == grammarAccess.getRelateExprAccess().getBinaryExprLeftAction_1_0_0_0() ||
 				   context == grammarAccess.getTermExprRule() ||
@@ -806,6 +841,8 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 				   context == grammarAccess.getOrExprRule() ||
 				   context == grammarAccess.getOrExprAccess().getBinaryExprLeftAction_1_0_0_0() ||
 				   context == grammarAccess.getPreDefFnExprRule() ||
+				   context == grammarAccess.getRecordUpdateExprsRule() ||
+				   context == grammarAccess.getRecordUpdateExprsAccess().getRecordUpdateExprExprAction_1_0_0() ||
 				   context == grammarAccess.getRelateExprRule() ||
 				   context == grammarAccess.getRelateExprAccess().getBinaryExprLeftAction_1_0_0_0() ||
 				   context == grammarAccess.getTermExprRule() ||
@@ -868,6 +905,24 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     (name=ID type=Type)
 	 */
 	protected void sequence_Arg(EObject context, Arg semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Constraint:
+	 *     ((fn=ComplexExpr_FnCallExpr_1_0_0_0_0 (args+=Expr args+=Expr*)?) | fn=ComplexExpr_FnCallExpr_1_0_0_0_0)
+	 */
+	protected void sequence_ComplexExpr(EObject context, FnCallExpr semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Constraint:
+	 *     (record=ComplexExpr_RecordExpr_1_1_0_0_0 args+=Expr argExpr+=Expr (args+=Expr argExpr+=Expr)*)
+	 */
+	protected void sequence_ComplexExpr(EObject context, RecordExpr semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
@@ -982,6 +1037,24 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	
 	/**
 	 * Constraint:
+	 *     (name=ID args+=Arg args+=Arg*)
+	 */
+	protected void sequence_RecordDefExpr(EObject context, RecordDefExpr semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Constraint:
+	 *     (expr=RecordUpdateExprs_RecordUpdateExpr_1_0_0 (args+=Expr argExpr+=Expr))
+	 */
+	protected void sequence_RecordUpdateExprs(EObject context, RecordUpdateExpr semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Constraint:
 	 *     expr=Expr
 	 */
 	protected void sequence_SpecStatement(EObject context, AssertStatement semanticObject) {
@@ -1063,15 +1136,6 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	
 	/**
 	 * Constraint:
-	 *     ((fn=TermExpr_FnCallExpr_1_1_0 (args+=Expr args+=Expr*)?) | fn=TermExpr_FnCallExpr_1_1_0)
-	 */
-	protected void sequence_TermExpr(EObject context, FnCallExpr semanticObject) {
-		genericSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * Constraint:
 	 *     id=[NamedElement|QID]
 	 */
 	protected void sequence_TermExpr(EObject context, IdExpr semanticObject) {
@@ -1108,36 +1172,9 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	
 	/**
 	 * Constraint:
-	 *     (record=[RecordType|ID] (args+=[Arg|ID] argExpr+=Expr (args+=[Arg|ID] argExpr+=Expr)*)?)
-	 */
-	protected void sequence_TermExpr(EObject context, RecordExpr semanticObject) {
-		genericSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * Constraint:
-	 *     (args+=[Arg|ID] argExpr+=Expr)+
-	 */
-	protected void sequence_TermExpr(EObject context, RecordUpdateExpr semanticObject) {
-		genericSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * Constraint:
 	 *     (subThis=NestedDotID?)
 	 */
 	protected void sequence_TermExpr(EObject context, ThisExpr semanticObject) {
-		genericSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * Constraint:
-	 *     (name=ID (args+=Arg args+=Arg*)?)
-	 */
-	protected void sequence_TypeDefExpr(EObject context, RecordTypeDefExpr semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
@@ -1153,7 +1190,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	
 	/**
 	 * Constraint:
-	 *     (featureGroup=NestedDotID | record=[RecordTypeDefExpr|ID])
+	 *     record=NestedDotID
 	 */
 	protected void sequence_Type(EObject context, RecordType semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);

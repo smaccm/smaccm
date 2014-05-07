@@ -21,7 +21,7 @@ import org.eclipse.emf.common.util.EList;
  * @model
  * @generated
  */
-public interface FnCallExpr extends Expr
+public interface FnCallExpr extends ComplexExpr
 {
   /**
    * Returns the value of the '<em><b>Fn</b></em>' containment reference.

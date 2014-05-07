@@ -158,13 +158,13 @@ public interface AgreeFactory extends EFactory
   Type createType();
 
   /**
-   * Returns a new object of class '<em>Type Def Expr</em>'.
+   * Returns a new object of class '<em>Record Def Expr</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @return a new object of class '<em>Type Def Expr</em>'.
+   * @return a new object of class '<em>Record Def Expr</em>'.
    * @generated
    */
-  TypeDefExpr createTypeDefExpr();
+  RecordDefExpr createRecordDefExpr();
 
   /**
    * Returns a new object of class '<em>Expr</em>'.
@@ -174,6 +174,15 @@ public interface AgreeFactory extends EFactory
    * @generated
    */
   Expr createExpr();
+
+  /**
+   * Returns a new object of class '<em>Complex Expr</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Complex Expr</em>'.
+   * @generated
+   */
+  ComplexExpr createComplexExpr();
 
   /**
    * Returns a new object of class '<em>Nested Dot ID</em>'.
@@ -311,15 +320,6 @@ public interface AgreeFactory extends EFactory
   RecordType createRecordType();
 
   /**
-   * Returns a new object of class '<em>Record Type Def Expr</em>'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return a new object of class '<em>Record Type Def Expr</em>'.
-   * @generated
-   */
-  RecordTypeDefExpr createRecordTypeDefExpr();
-
-  /**
    * Returns a new object of class '<em>Binary Expr</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -365,6 +365,15 @@ public interface AgreeFactory extends EFactory
   GetPropertyExpr createGetPropertyExpr();
 
   /**
+   * Returns a new object of class '<em>Record Update Expr</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Record Update Expr</em>'.
+   * @generated
+   */
+  RecordUpdateExpr createRecordUpdateExpr();
+
+  /**
    * Returns a new object of class '<em>Id Expr</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -372,15 +381,6 @@ public interface AgreeFactory extends EFactory
    * @generated
    */
   IdExpr createIdExpr();
-
-  /**
-   * Returns a new object of class '<em>Fn Call Expr</em>'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return a new object of class '<em>Fn Call Expr</em>'.
-   * @generated
-   */
-  FnCallExpr createFnCallExpr();
 
   /**
    * Returns a new object of class '<em>Int Lit Expr</em>'.
@@ -428,6 +428,15 @@ public interface AgreeFactory extends EFactory
   ThisExpr createThisExpr();
 
   /**
+   * Returns a new object of class '<em>Fn Call Expr</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Fn Call Expr</em>'.
+   * @generated
+   */
+  FnCallExpr createFnCallExpr();
+
+  /**
    * Returns a new object of class '<em>Record Expr</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -435,15 +444,6 @@ public interface AgreeFactory extends EFactory
    * @generated
    */
   RecordExpr createRecordExpr();
-
-  /**
-   * Returns a new object of class '<em>Record Update Expr</em>'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return a new object of class '<em>Record Update Expr</em>'.
-   * @generated
-   */
-  RecordUpdateExpr createRecordUpdateExpr();
 
   /**
    * Returns the package supported by this factory.

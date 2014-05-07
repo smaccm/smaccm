@@ -25,12 +25,13 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cFnDefExprParserRuleCall_1 = (RuleCall)cAlternatives.eContents().get(1);
 		private final RuleCall cPropertyStatementParserRuleCall_2 = (RuleCall)cAlternatives.eContents().get(2);
 		private final RuleCall cConstStatementParserRuleCall_3 = (RuleCall)cAlternatives.eContents().get(3);
+		private final RuleCall cRecordDefExprParserRuleCall_4 = (RuleCall)cAlternatives.eContents().get(4);
 		
 		//NamedElement returns aadl2::NamedElement:
-		//	Arg | FnDefExpr | PropertyStatement | ConstStatement;
+		//	Arg | FnDefExpr | PropertyStatement | ConstStatement | RecordDefExpr;
 		public ParserRule getRule() { return rule; }
 
-		//Arg | FnDefExpr | PropertyStatement | ConstStatement
+		//Arg | FnDefExpr | PropertyStatement | ConstStatement | RecordDefExpr
 		public Alternatives getAlternatives() { return cAlternatives; }
 
 		//Arg
@@ -44,6 +45,9 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 
 		//ConstStatement
 		public RuleCall getConstStatementParserRuleCall_3() { return cConstStatementParserRuleCall_3; }
+
+		//RecordDefExpr
+		public RuleCall getRecordDefExprParserRuleCall_4() { return cRecordDefExprParserRuleCall_4; }
 	}
 
 	public class ElementElements extends AbstractParserRuleElementFinder {
@@ -251,18 +255,19 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cEqStatementParserRuleCall_9 = (RuleCall)cAlternatives.eContents().get(9);
 		private final RuleCall cFnDefExprParserRuleCall_10 = (RuleCall)cAlternatives.eContents().get(10);
 		private final RuleCall cNodeDefExprParserRuleCall_11 = (RuleCall)cAlternatives.eContents().get(11);
+		private final RuleCall cRecordDefExprParserRuleCall_12 = (RuleCall)cAlternatives.eContents().get(12);
 		
 		//SpecStatement:
 		//	{AssumeStatement} "assume" str=STRING ":" expr=Expr ";" | {GuaranteeStatement} "guarantee" str=STRING ":" expr=Expr
 		//	";" | {AssertStatement} "assert" expr=Expr ";" | {ParamStatement} "parameter" expr=Expr ":" type=Type ";" |
 		//	{LemmaStatement} "lemma" str=STRING ":" expr=Expr ";" | {LiftStatement} "lift" subcomp=NestedDotID ";" |
-		//	SynchStatement | PropertyStatement | ConstStatement | EqStatement | FnDefExpr | NodeDefExpr;
+		//	SynchStatement | PropertyStatement | ConstStatement | EqStatement | FnDefExpr | NodeDefExpr | RecordDefExpr;
 		public ParserRule getRule() { return rule; }
 
 		//{AssumeStatement} "assume" str=STRING ":" expr=Expr ";" | {GuaranteeStatement} "guarantee" str=STRING ":" expr=Expr ";"
 		//| {AssertStatement} "assert" expr=Expr ";" | {ParamStatement} "parameter" expr=Expr ":" type=Type ";" |
 		//{LemmaStatement} "lemma" str=STRING ":" expr=Expr ";" | {LiftStatement} "lift" subcomp=NestedDotID ";" | SynchStatement
-		//| PropertyStatement | ConstStatement | EqStatement | FnDefExpr | NodeDefExpr
+		//| PropertyStatement | ConstStatement | EqStatement | FnDefExpr | NodeDefExpr | RecordDefExpr
 		public Alternatives getAlternatives() { return cAlternatives; }
 
 		//{AssumeStatement} "assume" str=STRING ":" expr=Expr ";"
@@ -426,6 +431,9 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 
 		//NodeDefExpr
 		public RuleCall getNodeDefExprParserRuleCall_11() { return cNodeDefExprParserRuleCall_11; }
+
+		//RecordDefExpr
+		public RuleCall getRecordDefExprParserRuleCall_12() { return cRecordDefExprParserRuleCall_12; }
 	}
 
 	public class SynchStatementElements extends AbstractParserRuleElementFinder {
@@ -1128,18 +1136,14 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		private final Keyword cStringIntKeyword_0_1_0_2 = (Keyword)cStringAlternatives_0_1_0.eContents().get(2);
 		private final Group cGroup_1 = (Group)cAlternatives.eContents().get(1);
 		private final Action cRecordTypeAction_1_0 = (Action)cGroup_1.eContents().get(0);
-		private final Alternatives cAlternatives_1_1 = (Alternatives)cGroup_1.eContents().get(1);
-		private final Assignment cFeatureGroupAssignment_1_1_0 = (Assignment)cAlternatives_1_1.eContents().get(0);
-		private final RuleCall cFeatureGroupNestedDotIDParserRuleCall_1_1_0_0 = (RuleCall)cFeatureGroupAssignment_1_1_0.eContents().get(0);
-		private final Assignment cRecordAssignment_1_1_1 = (Assignment)cAlternatives_1_1.eContents().get(1);
-		private final CrossReference cRecordRecordTypeDefExprCrossReference_1_1_1_0 = (CrossReference)cRecordAssignment_1_1_1.eContents().get(0);
-		private final RuleCall cRecordRecordTypeDefExprIDTerminalRuleCall_1_1_1_0_1 = (RuleCall)cRecordRecordTypeDefExprCrossReference_1_1_1_0.eContents().get(1);
+		private final Assignment cRecordAssignment_1_1 = (Assignment)cGroup_1.eContents().get(1);
+		private final RuleCall cRecordNestedDotIDParserRuleCall_1_1_0 = (RuleCall)cRecordAssignment_1_1.eContents().get(0);
 		
 		//Type:
-		//	{PrimType} string=("real" | "bool" | "int") | {RecordType} (=> featureGroup=NestedDotID | record=[RecordTypeDefExpr]);
+		//	{PrimType} string=("real" | "bool" | "int") | {RecordType} record=NestedDotID;
 		public ParserRule getRule() { return rule; }
 
-		//{PrimType} string=("real" | "bool" | "int") | {RecordType} (=> featureGroup=NestedDotID | record=[RecordTypeDefExpr])
+		//{PrimType} string=("real" | "bool" | "int") | {RecordType} record=NestedDotID
 		public Alternatives getAlternatives() { return cAlternatives; }
 
 		//{PrimType} string=("real" | "bool" | "int")
@@ -1163,105 +1167,89 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		//"int"
 		public Keyword getStringIntKeyword_0_1_0_2() { return cStringIntKeyword_0_1_0_2; }
 
-		//{RecordType} (=> featureGroup=NestedDotID | record=[RecordTypeDefExpr])
+		//{RecordType} record=NestedDotID
 		public Group getGroup_1() { return cGroup_1; }
 
 		//{RecordType}
 		public Action getRecordTypeAction_1_0() { return cRecordTypeAction_1_0; }
 
-		//=> featureGroup=NestedDotID | record=[RecordTypeDefExpr]
-		public Alternatives getAlternatives_1_1() { return cAlternatives_1_1; }
-
-		//=> featureGroup=NestedDotID
-		public Assignment getFeatureGroupAssignment_1_1_0() { return cFeatureGroupAssignment_1_1_0; }
+		//record=NestedDotID
+		public Assignment getRecordAssignment_1_1() { return cRecordAssignment_1_1; }
 
 		//NestedDotID
-		public RuleCall getFeatureGroupNestedDotIDParserRuleCall_1_1_0_0() { return cFeatureGroupNestedDotIDParserRuleCall_1_1_0_0; }
-
-		//record=[RecordTypeDefExpr]
-		public Assignment getRecordAssignment_1_1_1() { return cRecordAssignment_1_1_1; }
-
-		//[RecordTypeDefExpr]
-		public CrossReference getRecordRecordTypeDefExprCrossReference_1_1_1_0() { return cRecordRecordTypeDefExprCrossReference_1_1_1_0; }
-
-		//ID
-		public RuleCall getRecordRecordTypeDefExprIDTerminalRuleCall_1_1_1_0_1() { return cRecordRecordTypeDefExprIDTerminalRuleCall_1_1_1_0_1; }
+		public RuleCall getRecordNestedDotIDParserRuleCall_1_1_0() { return cRecordNestedDotIDParserRuleCall_1_1_0; }
 	}
 
-	public class TypeDefExprElements extends AbstractParserRuleElementFinder {
-		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "TypeDefExpr");
+	public class RecordDefExprElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "RecordDefExpr");
 		private final Group cGroup = (Group)rule.eContents().get(1);
-		private final Action cRecordTypeDefExprAction_0 = (Action)cGroup.eContents().get(0);
-		private final Keyword cTypeKeyword_1 = (Keyword)cGroup.eContents().get(1);
-		private final Assignment cNameAssignment_2 = (Assignment)cGroup.eContents().get(2);
-		private final RuleCall cNameIDTerminalRuleCall_2_0 = (RuleCall)cNameAssignment_2.eContents().get(0);
-		private final Keyword cEqualsSignKeyword_3 = (Keyword)cGroup.eContents().get(3);
-		private final Keyword cStructKeyword_4 = (Keyword)cGroup.eContents().get(4);
-		private final Keyword cLeftCurlyBracketKeyword_5 = (Keyword)cGroup.eContents().get(5);
-		private final Group cGroup_6 = (Group)cGroup.eContents().get(6);
-		private final Assignment cArgsAssignment_6_0 = (Assignment)cGroup_6.eContents().get(0);
-		private final RuleCall cArgsArgParserRuleCall_6_0_0 = (RuleCall)cArgsAssignment_6_0.eContents().get(0);
-		private final Group cGroup_6_1 = (Group)cGroup_6.eContents().get(1);
-		private final Keyword cCommaKeyword_6_1_0 = (Keyword)cGroup_6_1.eContents().get(0);
-		private final Assignment cArgsAssignment_6_1_1 = (Assignment)cGroup_6_1.eContents().get(1);
-		private final RuleCall cArgsArgParserRuleCall_6_1_1_0 = (RuleCall)cArgsAssignment_6_1_1.eContents().get(0);
-		private final Keyword cRightCurlyBracketKeyword_7 = (Keyword)cGroup.eContents().get(7);
-		private final Keyword cSemicolonKeyword_8 = (Keyword)cGroup.eContents().get(8);
+		private final Keyword cTypeKeyword_0 = (Keyword)cGroup.eContents().get(0);
+		private final Assignment cNameAssignment_1 = (Assignment)cGroup.eContents().get(1);
+		private final RuleCall cNameIDTerminalRuleCall_1_0 = (RuleCall)cNameAssignment_1.eContents().get(0);
+		private final Keyword cEqualsSignKeyword_2 = (Keyword)cGroup.eContents().get(2);
+		private final Keyword cStructKeyword_3 = (Keyword)cGroup.eContents().get(3);
+		private final Keyword cLeftCurlyBracketKeyword_4 = (Keyword)cGroup.eContents().get(4);
+		private final Group cGroup_5 = (Group)cGroup.eContents().get(5);
+		private final Assignment cArgsAssignment_5_0 = (Assignment)cGroup_5.eContents().get(0);
+		private final RuleCall cArgsArgParserRuleCall_5_0_0 = (RuleCall)cArgsAssignment_5_0.eContents().get(0);
+		private final Group cGroup_5_1 = (Group)cGroup_5.eContents().get(1);
+		private final Keyword cCommaKeyword_5_1_0 = (Keyword)cGroup_5_1.eContents().get(0);
+		private final Assignment cArgsAssignment_5_1_1 = (Assignment)cGroup_5_1.eContents().get(1);
+		private final RuleCall cArgsArgParserRuleCall_5_1_1_0 = (RuleCall)cArgsAssignment_5_1_1.eContents().get(0);
+		private final Keyword cRightCurlyBracketKeyword_6 = (Keyword)cGroup.eContents().get(6);
+		private final Keyword cSemicolonKeyword_7 = (Keyword)cGroup.eContents().get(7);
 		
-		//TypeDefExpr:
-		//	{RecordTypeDefExpr} "type" name=ID "=" "struct" "{" (args+=Arg ("," args+=Arg)*)? "}" ";";
+		//RecordDefExpr:
+		//	"type" name=ID "=" "struct" "{" (args+=Arg ("," args+=Arg)*) "}" ";";
 		public ParserRule getRule() { return rule; }
 
-		//{RecordTypeDefExpr} "type" name=ID "=" "struct" "{" (args+=Arg ("," args+=Arg)*)? "}" ";"
+		//"type" name=ID "=" "struct" "{" (args+=Arg ("," args+=Arg)*) "}" ";"
 		public Group getGroup() { return cGroup; }
 
-		//{RecordTypeDefExpr}
-		public Action getRecordTypeDefExprAction_0() { return cRecordTypeDefExprAction_0; }
-
 		//"type"
-		public Keyword getTypeKeyword_1() { return cTypeKeyword_1; }
+		public Keyword getTypeKeyword_0() { return cTypeKeyword_0; }
 
 		//name=ID
-		public Assignment getNameAssignment_2() { return cNameAssignment_2; }
+		public Assignment getNameAssignment_1() { return cNameAssignment_1; }
 
 		//ID
-		public RuleCall getNameIDTerminalRuleCall_2_0() { return cNameIDTerminalRuleCall_2_0; }
+		public RuleCall getNameIDTerminalRuleCall_1_0() { return cNameIDTerminalRuleCall_1_0; }
 
 		//"="
-		public Keyword getEqualsSignKeyword_3() { return cEqualsSignKeyword_3; }
+		public Keyword getEqualsSignKeyword_2() { return cEqualsSignKeyword_2; }
 
 		//"struct"
-		public Keyword getStructKeyword_4() { return cStructKeyword_4; }
+		public Keyword getStructKeyword_3() { return cStructKeyword_3; }
 
 		//"{"
-		public Keyword getLeftCurlyBracketKeyword_5() { return cLeftCurlyBracketKeyword_5; }
+		public Keyword getLeftCurlyBracketKeyword_4() { return cLeftCurlyBracketKeyword_4; }
 
-		//(args+=Arg ("," args+=Arg)*)?
-		public Group getGroup_6() { return cGroup_6; }
+		//args+=Arg ("," args+=Arg)*
+		public Group getGroup_5() { return cGroup_5; }
 
 		//args+=Arg
-		public Assignment getArgsAssignment_6_0() { return cArgsAssignment_6_0; }
+		public Assignment getArgsAssignment_5_0() { return cArgsAssignment_5_0; }
 
 		//Arg
-		public RuleCall getArgsArgParserRuleCall_6_0_0() { return cArgsArgParserRuleCall_6_0_0; }
+		public RuleCall getArgsArgParserRuleCall_5_0_0() { return cArgsArgParserRuleCall_5_0_0; }
 
 		//("," args+=Arg)*
-		public Group getGroup_6_1() { return cGroup_6_1; }
+		public Group getGroup_5_1() { return cGroup_5_1; }
 
 		//","
-		public Keyword getCommaKeyword_6_1_0() { return cCommaKeyword_6_1_0; }
+		public Keyword getCommaKeyword_5_1_0() { return cCommaKeyword_5_1_0; }
 
 		//args+=Arg
-		public Assignment getArgsAssignment_6_1_1() { return cArgsAssignment_6_1_1; }
+		public Assignment getArgsAssignment_5_1_1() { return cArgsAssignment_5_1_1; }
 
 		//Arg
-		public RuleCall getArgsArgParserRuleCall_6_1_1_0() { return cArgsArgParserRuleCall_6_1_1_0; }
+		public RuleCall getArgsArgParserRuleCall_5_1_1_0() { return cArgsArgParserRuleCall_5_1_1_0; }
 
 		//"}"
-		public Keyword getRightCurlyBracketKeyword_7() { return cRightCurlyBracketKeyword_7; }
+		public Keyword getRightCurlyBracketKeyword_6() { return cRightCurlyBracketKeyword_6; }
 
 		//";"
-		public Keyword getSemicolonKeyword_8() { return cSemicolonKeyword_8; }
+		public Keyword getSemicolonKeyword_7() { return cSemicolonKeyword_7; }
 	}
 
 	public class ExprElements extends AbstractParserRuleElementFinder {
@@ -1855,15 +1843,15 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		private final Assignment cPropAssignment_1_5 = (Assignment)cGroup_1.eContents().get(5);
 		private final RuleCall cPropExprParserRuleCall_1_5_0 = (RuleCall)cPropAssignment_1_5.eContents().get(0);
 		private final Keyword cRightParenthesisKeyword_1_6 = (Keyword)cGroup_1.eContents().get(6);
-		private final RuleCall cTermExprParserRuleCall_2 = (RuleCall)cAlternatives.eContents().get(2);
+		private final RuleCall cRecordUpdateExprsParserRuleCall_2 = (RuleCall)cAlternatives.eContents().get(2);
 		
 		//PreDefFnExpr returns Expr:
 		//	{PrevExpr} "prev" "(" delay=Expr "," init=Expr ")" | {GetPropertyExpr} "Get_Property" "(" component=Expr "," prop=Expr
-		//	")" | TermExpr;
+		//	")" | RecordUpdateExprs;
 		public ParserRule getRule() { return rule; }
 
 		//{PrevExpr} "prev" "(" delay=Expr "," init=Expr ")" | {GetPropertyExpr} "Get_Property" "(" component=Expr "," prop=Expr
-		//")" | TermExpr
+		//")" | RecordUpdateExprs
 		public Alternatives getAlternatives() { return cAlternatives; }
 
 		//{PrevExpr} "prev" "(" delay=Expr "," init=Expr ")"
@@ -1926,28 +1914,68 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		//")"
 		public Keyword getRightParenthesisKeyword_1_6() { return cRightParenthesisKeyword_1_6; }
 
-		//TermExpr
-		public RuleCall getTermExprParserRuleCall_2() { return cTermExprParserRuleCall_2; }
+		//RecordUpdateExprs
+		public RuleCall getRecordUpdateExprsParserRuleCall_2() { return cRecordUpdateExprsParserRuleCall_2; }
 	}
 
-	public class PreDefFnNamesElements extends AbstractParserRuleElementFinder {
-		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "PreDefFnNames");
-		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
-		private final Keyword cPrevKeyword_0 = (Keyword)cAlternatives.eContents().get(0);
-		private final Keyword cGet_PropertyKeyword_1 = (Keyword)cAlternatives.eContents().get(1);
+	public class RecordUpdateExprsElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "RecordUpdateExprs");
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final RuleCall cTermExprParserRuleCall_0 = (RuleCall)cGroup.eContents().get(0);
+		private final Group cGroup_1 = (Group)cGroup.eContents().get(1);
+		private final Group cGroup_1_0 = (Group)cGroup_1.eContents().get(0);
+		private final Action cRecordUpdateExprExprAction_1_0_0 = (Action)cGroup_1_0.eContents().get(0);
+		private final Group cGroup_1_0_1 = (Group)cGroup_1_0.eContents().get(1);
+		private final Keyword cLeftCurlyBracketKeyword_1_0_1_0 = (Keyword)cGroup_1_0_1.eContents().get(0);
+		private final Assignment cArgsAssignment_1_0_1_1 = (Assignment)cGroup_1_0_1.eContents().get(1);
+		private final RuleCall cArgsExprParserRuleCall_1_0_1_1_0 = (RuleCall)cArgsAssignment_1_0_1_1.eContents().get(0);
+		private final Keyword cColonEqualsSignKeyword_1_0_1_2 = (Keyword)cGroup_1_0_1.eContents().get(2);
+		private final Assignment cArgExprAssignment_1_0_1_3 = (Assignment)cGroup_1_0_1.eContents().get(3);
+		private final RuleCall cArgExprExprParserRuleCall_1_0_1_3_0 = (RuleCall)cArgExprAssignment_1_0_1_3.eContents().get(0);
+		private final Keyword cRightCurlyBracketKeyword_1_0_1_4 = (Keyword)cGroup_1_0_1.eContents().get(4);
 		
-		//PreDefFnNames:
-		//	"prev" | "Get_Property";
+		//RecordUpdateExprs returns Expr:
+		//	TermExpr => ({RecordUpdateExpr.expr=current} ("{" args+=Expr ":=" argExpr+=Expr "}"))*;
 		public ParserRule getRule() { return rule; }
 
-		//"prev" | "Get_Property"
-		public Alternatives getAlternatives() { return cAlternatives; }
+		//TermExpr => ({RecordUpdateExpr.expr=current} ("{" args+=Expr ":=" argExpr+=Expr "}"))*
+		public Group getGroup() { return cGroup; }
 
-		//"prev"
-		public Keyword getPrevKeyword_0() { return cPrevKeyword_0; }
+		//TermExpr
+		public RuleCall getTermExprParserRuleCall_0() { return cTermExprParserRuleCall_0; }
 
-		//"Get_Property"
-		public Keyword getGet_PropertyKeyword_1() { return cGet_PropertyKeyword_1; }
+		//=> ({RecordUpdateExpr.expr=current} ("{" args+=Expr ":=" argExpr+=Expr "}"))*
+		public Group getGroup_1() { return cGroup_1; }
+
+		//{RecordUpdateExpr.expr=current} ("{" args+=Expr ":=" argExpr+=Expr "}")
+		public Group getGroup_1_0() { return cGroup_1_0; }
+
+		//{RecordUpdateExpr.expr=current}
+		public Action getRecordUpdateExprExprAction_1_0_0() { return cRecordUpdateExprExprAction_1_0_0; }
+
+		//"{" args+=Expr ":=" argExpr+=Expr "}"
+		public Group getGroup_1_0_1() { return cGroup_1_0_1; }
+
+		//"{"
+		public Keyword getLeftCurlyBracketKeyword_1_0_1_0() { return cLeftCurlyBracketKeyword_1_0_1_0; }
+
+		//args+=Expr
+		public Assignment getArgsAssignment_1_0_1_1() { return cArgsAssignment_1_0_1_1; }
+
+		//Expr
+		public RuleCall getArgsExprParserRuleCall_1_0_1_1_0() { return cArgsExprParserRuleCall_1_0_1_1_0; }
+
+		//":="
+		public Keyword getColonEqualsSignKeyword_1_0_1_2() { return cColonEqualsSignKeyword_1_0_1_2; }
+
+		//argExpr+=Expr
+		public Assignment getArgExprAssignment_1_0_1_3() { return cArgExprAssignment_1_0_1_3; }
+
+		//Expr
+		public RuleCall getArgExprExprParserRuleCall_1_0_1_3_0() { return cArgExprExprParserRuleCall_1_0_1_3_0; }
+
+		//"}"
+		public Keyword getRightCurlyBracketKeyword_1_0_1_4() { return cRightCurlyBracketKeyword_1_0_1_4; }
 	}
 
 	public class TermExprElements extends AbstractParserRuleElementFinder {
@@ -1958,19 +1986,7 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		private final Assignment cIdAssignment_0_1 = (Assignment)cGroup_0.eContents().get(1);
 		private final CrossReference cIdNamedElementCrossReference_0_1_0 = (CrossReference)cIdAssignment_0_1.eContents().get(0);
 		private final RuleCall cIdNamedElementQIDParserRuleCall_0_1_0_1 = (RuleCall)cIdNamedElementCrossReference_0_1_0.eContents().get(1);
-		private final Group cGroup_1 = (Group)cAlternatives.eContents().get(1);
-		private final RuleCall cNestedDotIDParserRuleCall_1_0 = (RuleCall)cGroup_1.eContents().get(0);
-		private final Group cGroup_1_1 = (Group)cGroup_1.eContents().get(1);
-		private final Action cFnCallExprFnAction_1_1_0 = (Action)cGroup_1_1.eContents().get(0);
-		private final Keyword cLeftParenthesisKeyword_1_1_1 = (Keyword)cGroup_1_1.eContents().get(1);
-		private final Group cGroup_1_1_2 = (Group)cGroup_1_1.eContents().get(2);
-		private final Assignment cArgsAssignment_1_1_2_0 = (Assignment)cGroup_1_1_2.eContents().get(0);
-		private final RuleCall cArgsExprParserRuleCall_1_1_2_0_0 = (RuleCall)cArgsAssignment_1_1_2_0.eContents().get(0);
-		private final Group cGroup_1_1_2_1 = (Group)cGroup_1_1_2.eContents().get(1);
-		private final Keyword cCommaKeyword_1_1_2_1_0 = (Keyword)cGroup_1_1_2_1.eContents().get(0);
-		private final Assignment cArgsAssignment_1_1_2_1_1 = (Assignment)cGroup_1_1_2_1.eContents().get(1);
-		private final RuleCall cArgsExprParserRuleCall_1_1_2_1_1_0 = (RuleCall)cArgsAssignment_1_1_2_1_1.eContents().get(0);
-		private final Keyword cRightParenthesisKeyword_1_1_3 = (Keyword)cGroup_1_1.eContents().get(3);
+		private final RuleCall cComplexExprParserRuleCall_1 = (RuleCall)cAlternatives.eContents().get(1);
 		private final Group cGroup_2 = (Group)cAlternatives.eContents().get(2);
 		private final Action cIntLitExprAction_2_0 = (Action)cGroup_2.eContents().get(0);
 		private final Assignment cValAssignment_2_1 = (Assignment)cGroup_2.eContents().get(1);
@@ -1998,57 +2014,19 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		private final Assignment cSubThisAssignment_6_2_1 = (Assignment)cGroup_6_2.eContents().get(1);
 		private final RuleCall cSubThisNestedDotIDParserRuleCall_6_2_1_0 = (RuleCall)cSubThisAssignment_6_2_1.eContents().get(0);
 		private final Group cGroup_7 = (Group)cAlternatives.eContents().get(7);
-		private final Action cRecordExprAction_7_0 = (Action)cGroup_7.eContents().get(0);
-		private final Assignment cRecordAssignment_7_1 = (Assignment)cGroup_7.eContents().get(1);
-		private final CrossReference cRecordRecordTypeCrossReference_7_1_0 = (CrossReference)cRecordAssignment_7_1.eContents().get(0);
-		private final RuleCall cRecordRecordTypeIDTerminalRuleCall_7_1_0_1 = (RuleCall)cRecordRecordTypeCrossReference_7_1_0.eContents().get(1);
-		private final Keyword cLeftCurlyBracketKeyword_7_2 = (Keyword)cGroup_7.eContents().get(2);
-		private final Group cGroup_7_3 = (Group)cGroup_7.eContents().get(3);
-		private final Assignment cArgsAssignment_7_3_0 = (Assignment)cGroup_7_3.eContents().get(0);
-		private final CrossReference cArgsArgCrossReference_7_3_0_0 = (CrossReference)cArgsAssignment_7_3_0.eContents().get(0);
-		private final RuleCall cArgsArgIDTerminalRuleCall_7_3_0_0_1 = (RuleCall)cArgsArgCrossReference_7_3_0_0.eContents().get(1);
-		private final Keyword cEqualsSignKeyword_7_3_1 = (Keyword)cGroup_7_3.eContents().get(1);
-		private final Assignment cArgExprAssignment_7_3_2 = (Assignment)cGroup_7_3.eContents().get(2);
-		private final RuleCall cArgExprExprParserRuleCall_7_3_2_0 = (RuleCall)cArgExprAssignment_7_3_2.eContents().get(0);
-		private final Group cGroup_7_3_3 = (Group)cGroup_7_3.eContents().get(3);
-		private final Keyword cSemicolonKeyword_7_3_3_0 = (Keyword)cGroup_7_3_3.eContents().get(0);
-		private final Assignment cArgsAssignment_7_3_3_1 = (Assignment)cGroup_7_3_3.eContents().get(1);
-		private final CrossReference cArgsArgCrossReference_7_3_3_1_0 = (CrossReference)cArgsAssignment_7_3_3_1.eContents().get(0);
-		private final RuleCall cArgsArgIDTerminalRuleCall_7_3_3_1_0_1 = (RuleCall)cArgsArgCrossReference_7_3_3_1_0.eContents().get(1);
-		private final Keyword cEqualsSignKeyword_7_3_3_2 = (Keyword)cGroup_7_3_3.eContents().get(2);
-		private final Assignment cArgExprAssignment_7_3_3_3 = (Assignment)cGroup_7_3_3.eContents().get(3);
-		private final RuleCall cArgExprExprParserRuleCall_7_3_3_3_0 = (RuleCall)cArgExprAssignment_7_3_3_3.eContents().get(0);
-		private final Keyword cRightCurlyBracketKeyword_7_4 = (Keyword)cGroup_7.eContents().get(4);
-		private final Group cGroup_8 = (Group)cAlternatives.eContents().get(8);
-		private final Action cRecordUpdateExprAction_8_0 = (Action)cGroup_8.eContents().get(0);
-		private final Group cGroup_8_1 = (Group)cGroup_8.eContents().get(1);
-		private final Group cGroup_8_1_0 = (Group)cGroup_8_1.eContents().get(0);
-		private final Keyword cLeftCurlyBracketKeyword_8_1_0_0 = (Keyword)cGroup_8_1_0.eContents().get(0);
-		private final Assignment cArgsAssignment_8_1_0_1 = (Assignment)cGroup_8_1_0.eContents().get(1);
-		private final CrossReference cArgsArgCrossReference_8_1_0_1_0 = (CrossReference)cArgsAssignment_8_1_0_1.eContents().get(0);
-		private final RuleCall cArgsArgIDTerminalRuleCall_8_1_0_1_0_1 = (RuleCall)cArgsArgCrossReference_8_1_0_1_0.eContents().get(1);
-		private final Keyword cColonEqualsSignKeyword_8_1_0_2 = (Keyword)cGroup_8_1_0.eContents().get(2);
-		private final Assignment cArgExprAssignment_8_1_0_3 = (Assignment)cGroup_8_1_0.eContents().get(3);
-		private final RuleCall cArgExprExprParserRuleCall_8_1_0_3_0 = (RuleCall)cArgExprAssignment_8_1_0_3.eContents().get(0);
-		private final Keyword cRightCurlyBracketKeyword_8_1_0_4 = (Keyword)cGroup_8_1_0.eContents().get(4);
-		private final Group cGroup_9 = (Group)cAlternatives.eContents().get(9);
-		private final Keyword cLeftParenthesisKeyword_9_0 = (Keyword)cGroup_9.eContents().get(0);
-		private final RuleCall cExprParserRuleCall_9_1 = (RuleCall)cGroup_9.eContents().get(1);
-		private final Keyword cRightParenthesisKeyword_9_2 = (Keyword)cGroup_9.eContents().get(2);
+		private final Keyword cLeftParenthesisKeyword_7_0 = (Keyword)cGroup_7.eContents().get(0);
+		private final RuleCall cExprParserRuleCall_7_1 = (RuleCall)cGroup_7.eContents().get(1);
+		private final Keyword cRightParenthesisKeyword_7_2 = (Keyword)cGroup_7.eContents().get(2);
 		
 		//TermExpr returns Expr:
-		//	{IdExpr} id=[aadl2::NamedElement|QID] | NestedDotID ({FnCallExpr.fn=current} "(" (args+=Expr ("," args+=Expr)*)? ")")?
-		//	| {IntLitExpr} val=INTEGER_LIT | {PreExpr} "pre" "(" expr=Expr ")" | {RealLitExpr} val=REAL_LIT | {BoolLitExpr}
-		//	val=BooleanLiteral | {ThisExpr} "this" ("." subThis=NestedDotID)? | {RecordExpr} record=[RecordType] "{" (args+=[Arg]
-		//	"=" argExpr+=Expr (";" args+=[Arg] "=" argExpr+=Expr)*)? "}" | {RecordUpdateExpr} => ("{" args+=[Arg] ":="
-		//	argExpr+=Expr "}")+ | "(" Expr ")";
+		//	{IdExpr} id=[aadl2::NamedElement|QID] | ComplexExpr | {IntLitExpr} val=INTEGER_LIT | {PreExpr} "pre" "(" expr=Expr ")"
+		//	| {RealLitExpr} val=REAL_LIT | {BoolLitExpr} val=BooleanLiteral | {ThisExpr} "this" ("." subThis=NestedDotID)? | "("
+		//	Expr ")";
 		public ParserRule getRule() { return rule; }
 
-		//{IdExpr} id=[aadl2::NamedElement|QID] | NestedDotID ({FnCallExpr.fn=current} "(" (args+=Expr ("," args+=Expr)*)? ")")? |
-		//{IntLitExpr} val=INTEGER_LIT | {PreExpr} "pre" "(" expr=Expr ")" | {RealLitExpr} val=REAL_LIT | {BoolLitExpr}
-		//val=BooleanLiteral | {ThisExpr} "this" ("." subThis=NestedDotID)? | {RecordExpr} record=[RecordType] "{" (args+=[Arg]
-		//"=" argExpr+=Expr (";" args+=[Arg] "=" argExpr+=Expr)*)? "}" | {RecordUpdateExpr} => ("{" args+=[Arg] ":="
-		//argExpr+=Expr "}")+ | "(" Expr ")"
+		//{IdExpr} id=[aadl2::NamedElement|QID] | ComplexExpr | {IntLitExpr} val=INTEGER_LIT | {PreExpr} "pre" "(" expr=Expr ")" |
+		//{RealLitExpr} val=REAL_LIT | {BoolLitExpr} val=BooleanLiteral | {ThisExpr} "this" ("." subThis=NestedDotID)? | "(" Expr
+		//")"
 		public Alternatives getAlternatives() { return cAlternatives; }
 
 		//{IdExpr} id=[aadl2::NamedElement|QID]
@@ -2066,44 +2044,8 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		//QID
 		public RuleCall getIdNamedElementQIDParserRuleCall_0_1_0_1() { return cIdNamedElementQIDParserRuleCall_0_1_0_1; }
 
-		//NestedDotID ({FnCallExpr.fn=current} "(" (args+=Expr ("," args+=Expr)*)? ")")?
-		public Group getGroup_1() { return cGroup_1; }
-
-		//NestedDotID
-		public RuleCall getNestedDotIDParserRuleCall_1_0() { return cNestedDotIDParserRuleCall_1_0; }
-
-		//({FnCallExpr.fn=current} "(" (args+=Expr ("," args+=Expr)*)? ")")?
-		public Group getGroup_1_1() { return cGroup_1_1; }
-
-		//{FnCallExpr.fn=current}
-		public Action getFnCallExprFnAction_1_1_0() { return cFnCallExprFnAction_1_1_0; }
-
-		//"("
-		public Keyword getLeftParenthesisKeyword_1_1_1() { return cLeftParenthesisKeyword_1_1_1; }
-
-		//(args+=Expr ("," args+=Expr)*)?
-		public Group getGroup_1_1_2() { return cGroup_1_1_2; }
-
-		//args+=Expr
-		public Assignment getArgsAssignment_1_1_2_0() { return cArgsAssignment_1_1_2_0; }
-
-		//Expr
-		public RuleCall getArgsExprParserRuleCall_1_1_2_0_0() { return cArgsExprParserRuleCall_1_1_2_0_0; }
-
-		//("," args+=Expr)*
-		public Group getGroup_1_1_2_1() { return cGroup_1_1_2_1; }
-
-		//","
-		public Keyword getCommaKeyword_1_1_2_1_0() { return cCommaKeyword_1_1_2_1_0; }
-
-		//args+=Expr
-		public Assignment getArgsAssignment_1_1_2_1_1() { return cArgsAssignment_1_1_2_1_1; }
-
-		//Expr
-		public RuleCall getArgsExprParserRuleCall_1_1_2_1_1_0() { return cArgsExprParserRuleCall_1_1_2_1_1_0; }
-
-		//")"
-		public Keyword getRightParenthesisKeyword_1_1_3() { return cRightParenthesisKeyword_1_1_3; }
+		//ComplexExpr
+		public RuleCall getComplexExprParserRuleCall_1() { return cComplexExprParserRuleCall_1; }
 
 		//{IntLitExpr} val=INTEGER_LIT
 		public Group getGroup_2() { return cGroup_2; }
@@ -2183,119 +2125,164 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		//NestedDotID
 		public RuleCall getSubThisNestedDotIDParserRuleCall_6_2_1_0() { return cSubThisNestedDotIDParserRuleCall_6_2_1_0; }
 
-		//{RecordExpr} record=[RecordType] "{" (args+=[Arg] "=" argExpr+=Expr (";" args+=[Arg] "=" argExpr+=Expr)*)? "}"
+		//"(" Expr ")"
 		public Group getGroup_7() { return cGroup_7; }
 
-		//{RecordExpr}
-		public Action getRecordExprAction_7_0() { return cRecordExprAction_7_0; }
-
-		//record=[RecordType]
-		public Assignment getRecordAssignment_7_1() { return cRecordAssignment_7_1; }
-
-		//[RecordType]
-		public CrossReference getRecordRecordTypeCrossReference_7_1_0() { return cRecordRecordTypeCrossReference_7_1_0; }
-
-		//ID
-		public RuleCall getRecordRecordTypeIDTerminalRuleCall_7_1_0_1() { return cRecordRecordTypeIDTerminalRuleCall_7_1_0_1; }
-
-		//"{"
-		public Keyword getLeftCurlyBracketKeyword_7_2() { return cLeftCurlyBracketKeyword_7_2; }
-
-		//(args+=[Arg] "=" argExpr+=Expr (";" args+=[Arg] "=" argExpr+=Expr)*)?
-		public Group getGroup_7_3() { return cGroup_7_3; }
-
-		//args+=[Arg]
-		public Assignment getArgsAssignment_7_3_0() { return cArgsAssignment_7_3_0; }
-
-		//[Arg]
-		public CrossReference getArgsArgCrossReference_7_3_0_0() { return cArgsArgCrossReference_7_3_0_0; }
-
-		//ID
-		public RuleCall getArgsArgIDTerminalRuleCall_7_3_0_0_1() { return cArgsArgIDTerminalRuleCall_7_3_0_0_1; }
-
-		//"="
-		public Keyword getEqualsSignKeyword_7_3_1() { return cEqualsSignKeyword_7_3_1; }
-
-		//argExpr+=Expr
-		public Assignment getArgExprAssignment_7_3_2() { return cArgExprAssignment_7_3_2; }
-
-		//Expr
-		public RuleCall getArgExprExprParserRuleCall_7_3_2_0() { return cArgExprExprParserRuleCall_7_3_2_0; }
-
-		//(";" args+=[Arg] "=" argExpr+=Expr)*
-		public Group getGroup_7_3_3() { return cGroup_7_3_3; }
-
-		//";"
-		public Keyword getSemicolonKeyword_7_3_3_0() { return cSemicolonKeyword_7_3_3_0; }
-
-		//args+=[Arg]
-		public Assignment getArgsAssignment_7_3_3_1() { return cArgsAssignment_7_3_3_1; }
-
-		//[Arg]
-		public CrossReference getArgsArgCrossReference_7_3_3_1_0() { return cArgsArgCrossReference_7_3_3_1_0; }
-
-		//ID
-		public RuleCall getArgsArgIDTerminalRuleCall_7_3_3_1_0_1() { return cArgsArgIDTerminalRuleCall_7_3_3_1_0_1; }
-
-		//"="
-		public Keyword getEqualsSignKeyword_7_3_3_2() { return cEqualsSignKeyword_7_3_3_2; }
-
-		//argExpr+=Expr
-		public Assignment getArgExprAssignment_7_3_3_3() { return cArgExprAssignment_7_3_3_3; }
-
-		//Expr
-		public RuleCall getArgExprExprParserRuleCall_7_3_3_3_0() { return cArgExprExprParserRuleCall_7_3_3_3_0; }
-
-		//"}"
-		public Keyword getRightCurlyBracketKeyword_7_4() { return cRightCurlyBracketKeyword_7_4; }
-
-		//{RecordUpdateExpr} => ("{" args+=[Arg] ":=" argExpr+=Expr "}")+
-		public Group getGroup_8() { return cGroup_8; }
-
-		//{RecordUpdateExpr}
-		public Action getRecordUpdateExprAction_8_0() { return cRecordUpdateExprAction_8_0; }
-
-		//=> ("{" args+=[Arg] ":=" argExpr+=Expr "}")+
-		public Group getGroup_8_1() { return cGroup_8_1; }
-
-		//"{" args+=[Arg] ":=" argExpr+=Expr "}"
-		public Group getGroup_8_1_0() { return cGroup_8_1_0; }
-
-		//"{"
-		public Keyword getLeftCurlyBracketKeyword_8_1_0_0() { return cLeftCurlyBracketKeyword_8_1_0_0; }
-
-		//args+=[Arg]
-		public Assignment getArgsAssignment_8_1_0_1() { return cArgsAssignment_8_1_0_1; }
-
-		//[Arg]
-		public CrossReference getArgsArgCrossReference_8_1_0_1_0() { return cArgsArgCrossReference_8_1_0_1_0; }
-
-		//ID
-		public RuleCall getArgsArgIDTerminalRuleCall_8_1_0_1_0_1() { return cArgsArgIDTerminalRuleCall_8_1_0_1_0_1; }
-
-		//":="
-		public Keyword getColonEqualsSignKeyword_8_1_0_2() { return cColonEqualsSignKeyword_8_1_0_2; }
-
-		//argExpr+=Expr
-		public Assignment getArgExprAssignment_8_1_0_3() { return cArgExprAssignment_8_1_0_3; }
-
-		//Expr
-		public RuleCall getArgExprExprParserRuleCall_8_1_0_3_0() { return cArgExprExprParserRuleCall_8_1_0_3_0; }
-
-		//"}"
-		public Keyword getRightCurlyBracketKeyword_8_1_0_4() { return cRightCurlyBracketKeyword_8_1_0_4; }
-
-		//"(" Expr ")"
-		public Group getGroup_9() { return cGroup_9; }
-
 		//"("
-		public Keyword getLeftParenthesisKeyword_9_0() { return cLeftParenthesisKeyword_9_0; }
+		public Keyword getLeftParenthesisKeyword_7_0() { return cLeftParenthesisKeyword_7_0; }
 
 		//Expr
-		public RuleCall getExprParserRuleCall_9_1() { return cExprParserRuleCall_9_1; }
+		public RuleCall getExprParserRuleCall_7_1() { return cExprParserRuleCall_7_1; }
 
 		//")"
-		public Keyword getRightParenthesisKeyword_9_2() { return cRightParenthesisKeyword_9_2; }
+		public Keyword getRightParenthesisKeyword_7_2() { return cRightParenthesisKeyword_7_2; }
+	}
+
+	public class ComplexExprElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "ComplexExpr");
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final RuleCall cNestedDotIDParserRuleCall_0 = (RuleCall)cGroup.eContents().get(0);
+		private final Alternatives cAlternatives_1 = (Alternatives)cGroup.eContents().get(1);
+		private final Group cGroup_1_0 = (Group)cAlternatives_1.eContents().get(0);
+		private final Group cGroup_1_0_0 = (Group)cGroup_1_0.eContents().get(0);
+		private final Group cGroup_1_0_0_0 = (Group)cGroup_1_0_0.eContents().get(0);
+		private final Action cFnCallExprFnAction_1_0_0_0_0 = (Action)cGroup_1_0_0_0.eContents().get(0);
+		private final Keyword cLeftParenthesisKeyword_1_0_0_0_1 = (Keyword)cGroup_1_0_0_0.eContents().get(1);
+		private final Group cGroup_1_0_1 = (Group)cGroup_1_0.eContents().get(1);
+		private final Assignment cArgsAssignment_1_0_1_0 = (Assignment)cGroup_1_0_1.eContents().get(0);
+		private final RuleCall cArgsExprParserRuleCall_1_0_1_0_0 = (RuleCall)cArgsAssignment_1_0_1_0.eContents().get(0);
+		private final Group cGroup_1_0_1_1 = (Group)cGroup_1_0_1.eContents().get(1);
+		private final Keyword cCommaKeyword_1_0_1_1_0 = (Keyword)cGroup_1_0_1_1.eContents().get(0);
+		private final Assignment cArgsAssignment_1_0_1_1_1 = (Assignment)cGroup_1_0_1_1.eContents().get(1);
+		private final RuleCall cArgsExprParserRuleCall_1_0_1_1_1_0 = (RuleCall)cArgsAssignment_1_0_1_1_1.eContents().get(0);
+		private final Keyword cRightParenthesisKeyword_1_0_2 = (Keyword)cGroup_1_0.eContents().get(2);
+		private final Group cGroup_1_1 = (Group)cAlternatives_1.eContents().get(1);
+		private final Group cGroup_1_1_0 = (Group)cGroup_1_1.eContents().get(0);
+		private final Group cGroup_1_1_0_0 = (Group)cGroup_1_1_0.eContents().get(0);
+		private final Action cRecordExprRecordAction_1_1_0_0_0 = (Action)cGroup_1_1_0_0.eContents().get(0);
+		private final Keyword cLeftCurlyBracketKeyword_1_1_0_0_1 = (Keyword)cGroup_1_1_0_0.eContents().get(1);
+		private final Assignment cArgsAssignment_1_1_1 = (Assignment)cGroup_1_1.eContents().get(1);
+		private final RuleCall cArgsExprParserRuleCall_1_1_1_0 = (RuleCall)cArgsAssignment_1_1_1.eContents().get(0);
+		private final Keyword cEqualsSignKeyword_1_1_2 = (Keyword)cGroup_1_1.eContents().get(2);
+		private final Assignment cArgExprAssignment_1_1_3 = (Assignment)cGroup_1_1.eContents().get(3);
+		private final RuleCall cArgExprExprParserRuleCall_1_1_3_0 = (RuleCall)cArgExprAssignment_1_1_3.eContents().get(0);
+		private final Group cGroup_1_1_4 = (Group)cGroup_1_1.eContents().get(4);
+		private final Keyword cSemicolonKeyword_1_1_4_0 = (Keyword)cGroup_1_1_4.eContents().get(0);
+		private final Assignment cArgsAssignment_1_1_4_1 = (Assignment)cGroup_1_1_4.eContents().get(1);
+		private final RuleCall cArgsExprParserRuleCall_1_1_4_1_0 = (RuleCall)cArgsAssignment_1_1_4_1.eContents().get(0);
+		private final Keyword cEqualsSignKeyword_1_1_4_2 = (Keyword)cGroup_1_1_4.eContents().get(2);
+		private final Assignment cArgExprAssignment_1_1_4_3 = (Assignment)cGroup_1_1_4.eContents().get(3);
+		private final RuleCall cArgExprExprParserRuleCall_1_1_4_3_0 = (RuleCall)cArgExprAssignment_1_1_4_3.eContents().get(0);
+		private final Keyword cRightCurlyBracketKeyword_1_1_5 = (Keyword)cGroup_1_1.eContents().get(5);
+		
+		//ComplexExpr:
+		//	NestedDotID (=> ({FnCallExpr.fn=current} "(") (args+=Expr ("," args+=Expr)*)? ")" | => ({RecordExpr.record=current}
+		//	"{") args+=Expr "=" argExpr+=Expr (";" args+=Expr "=" argExpr+=Expr)* "}")?;
+		public ParserRule getRule() { return rule; }
+
+		//NestedDotID (=> ({FnCallExpr.fn=current} "(") (args+=Expr ("," args+=Expr)*)? ")" | => ({RecordExpr.record=current} "{")
+		//args+=Expr "=" argExpr+=Expr (";" args+=Expr "=" argExpr+=Expr)* "}")?
+		public Group getGroup() { return cGroup; }
+
+		//NestedDotID
+		public RuleCall getNestedDotIDParserRuleCall_0() { return cNestedDotIDParserRuleCall_0; }
+
+		//(=> ({FnCallExpr.fn=current} "(") (args+=Expr ("," args+=Expr)*)? ")" | => ({RecordExpr.record=current} "{") args+=Expr
+		//"=" argExpr+=Expr (";" args+=Expr "=" argExpr+=Expr)* "}")?
+		public Alternatives getAlternatives_1() { return cAlternatives_1; }
+
+		//=> ({FnCallExpr.fn=current} "(") (args+=Expr ("," args+=Expr)*)? ")"
+		public Group getGroup_1_0() { return cGroup_1_0; }
+
+		//=> ({FnCallExpr.fn=current} "(")
+		public Group getGroup_1_0_0() { return cGroup_1_0_0; }
+
+		//{FnCallExpr.fn=current} "("
+		public Group getGroup_1_0_0_0() { return cGroup_1_0_0_0; }
+
+		//{FnCallExpr.fn=current}
+		public Action getFnCallExprFnAction_1_0_0_0_0() { return cFnCallExprFnAction_1_0_0_0_0; }
+
+		//"("
+		public Keyword getLeftParenthesisKeyword_1_0_0_0_1() { return cLeftParenthesisKeyword_1_0_0_0_1; }
+
+		//(args+=Expr ("," args+=Expr)*)?
+		public Group getGroup_1_0_1() { return cGroup_1_0_1; }
+
+		//args+=Expr
+		public Assignment getArgsAssignment_1_0_1_0() { return cArgsAssignment_1_0_1_0; }
+
+		//Expr
+		public RuleCall getArgsExprParserRuleCall_1_0_1_0_0() { return cArgsExprParserRuleCall_1_0_1_0_0; }
+
+		//("," args+=Expr)*
+		public Group getGroup_1_0_1_1() { return cGroup_1_0_1_1; }
+
+		//","
+		public Keyword getCommaKeyword_1_0_1_1_0() { return cCommaKeyword_1_0_1_1_0; }
+
+		//args+=Expr
+		public Assignment getArgsAssignment_1_0_1_1_1() { return cArgsAssignment_1_0_1_1_1; }
+
+		//Expr
+		public RuleCall getArgsExprParserRuleCall_1_0_1_1_1_0() { return cArgsExprParserRuleCall_1_0_1_1_1_0; }
+
+		//")"
+		public Keyword getRightParenthesisKeyword_1_0_2() { return cRightParenthesisKeyword_1_0_2; }
+
+		//=> ({RecordExpr.record=current} "{") args+=Expr "=" argExpr+=Expr (";" args+=Expr "=" argExpr+=Expr)* "}"
+		public Group getGroup_1_1() { return cGroup_1_1; }
+
+		//=> ({RecordExpr.record=current} "{")
+		public Group getGroup_1_1_0() { return cGroup_1_1_0; }
+
+		//{RecordExpr.record=current} "{"
+		public Group getGroup_1_1_0_0() { return cGroup_1_1_0_0; }
+
+		//{RecordExpr.record=current}
+		public Action getRecordExprRecordAction_1_1_0_0_0() { return cRecordExprRecordAction_1_1_0_0_0; }
+
+		//"{"
+		public Keyword getLeftCurlyBracketKeyword_1_1_0_0_1() { return cLeftCurlyBracketKeyword_1_1_0_0_1; }
+
+		//args+=Expr
+		public Assignment getArgsAssignment_1_1_1() { return cArgsAssignment_1_1_1; }
+
+		//Expr
+		public RuleCall getArgsExprParserRuleCall_1_1_1_0() { return cArgsExprParserRuleCall_1_1_1_0; }
+
+		//"="
+		public Keyword getEqualsSignKeyword_1_1_2() { return cEqualsSignKeyword_1_1_2; }
+
+		//argExpr+=Expr
+		public Assignment getArgExprAssignment_1_1_3() { return cArgExprAssignment_1_1_3; }
+
+		//Expr
+		public RuleCall getArgExprExprParserRuleCall_1_1_3_0() { return cArgExprExprParserRuleCall_1_1_3_0; }
+
+		//(";" args+=Expr "=" argExpr+=Expr)*
+		public Group getGroup_1_1_4() { return cGroup_1_1_4; }
+
+		//";"
+		public Keyword getSemicolonKeyword_1_1_4_0() { return cSemicolonKeyword_1_1_4_0; }
+
+		//args+=Expr
+		public Assignment getArgsAssignment_1_1_4_1() { return cArgsAssignment_1_1_4_1; }
+
+		//Expr
+		public RuleCall getArgsExprParserRuleCall_1_1_4_1_0() { return cArgsExprParserRuleCall_1_1_4_1_0; }
+
+		//"="
+		public Keyword getEqualsSignKeyword_1_1_4_2() { return cEqualsSignKeyword_1_1_4_2; }
+
+		//argExpr+=Expr
+		public Assignment getArgExprAssignment_1_1_4_3() { return cArgExprAssignment_1_1_4_3; }
+
+		//Expr
+		public RuleCall getArgExprExprParserRuleCall_1_1_4_3_0() { return cArgExprExprParserRuleCall_1_1_4_3_0; }
+
+		//"}"
+		public Keyword getRightCurlyBracketKeyword_1_1_5() { return cRightCurlyBracketKeyword_1_1_5; }
 	}
 
 	public class NestedDotIDElements extends AbstractParserRuleElementFinder {
@@ -2424,7 +2411,7 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 	private NodeStmtElements pNodeStmt;
 	private ArgElements pArg;
 	private TypeElements pType;
-	private TypeDefExprElements pTypeDefExpr;
+	private RecordDefExprElements pRecordDefExpr;
 	private ExprElements pExpr;
 	private ArrowExprElements pArrowExpr;
 	private ImpliesExprElements pImpliesExpr;
@@ -2438,8 +2425,9 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 	private UnaryExprElements pUnaryExpr;
 	private IfThenElseExprElements pIfThenElseExpr;
 	private PreDefFnExprElements pPreDefFnExpr;
-	private PreDefFnNamesElements pPreDefFnNames;
+	private RecordUpdateExprsElements pRecordUpdateExprs;
 	private TermExprElements pTermExpr;
+	private ComplexExprElements pComplexExpr;
 	private NestedDotIDElements pNestedDotID;
 	private ReservedVarTagElements pReservedVarTag;
 	private QIDElements pQID;
@@ -2483,7 +2471,7 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 
 	
 	//NamedElement returns aadl2::NamedElement:
-	//	Arg | FnDefExpr | PropertyStatement | ConstStatement;
+	//	Arg | FnDefExpr | PropertyStatement | ConstStatement | RecordDefExpr;
 	public NamedElementElements getNamedElementAccess() {
 		return (pNamedElement != null) ? pNamedElement : (pNamedElement = new NamedElementElements());
 	}
@@ -2566,7 +2554,7 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 	//	{AssumeStatement} "assume" str=STRING ":" expr=Expr ";" | {GuaranteeStatement} "guarantee" str=STRING ":" expr=Expr
 	//	";" | {AssertStatement} "assert" expr=Expr ";" | {ParamStatement} "parameter" expr=Expr ":" type=Type ";" |
 	//	{LemmaStatement} "lemma" str=STRING ":" expr=Expr ";" | {LiftStatement} "lift" subcomp=NestedDotID ";" |
-	//	SynchStatement | PropertyStatement | ConstStatement | EqStatement | FnDefExpr | NodeDefExpr;
+	//	SynchStatement | PropertyStatement | ConstStatement | EqStatement | FnDefExpr | NodeDefExpr | RecordDefExpr;
 	public SpecStatementElements getSpecStatementAccess() {
 		return (pSpecStatement != null) ? pSpecStatement : (pSpecStatement = new SpecStatementElements());
 	}
@@ -2688,7 +2676,7 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 	}
 
 	//Type:
-	//	{PrimType} string=("real" | "bool" | "int") | {RecordType} (=> featureGroup=NestedDotID | record=[RecordTypeDefExpr]);
+	//	{PrimType} string=("real" | "bool" | "int") | {RecordType} record=NestedDotID;
 	public TypeElements getTypeAccess() {
 		return (pType != null) ? pType : (pType = new TypeElements());
 	}
@@ -2697,14 +2685,14 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		return getTypeAccess().getRule();
 	}
 
-	//TypeDefExpr:
-	//	{RecordTypeDefExpr} "type" name=ID "=" "struct" "{" (args+=Arg ("," args+=Arg)*)? "}" ";";
-	public TypeDefExprElements getTypeDefExprAccess() {
-		return (pTypeDefExpr != null) ? pTypeDefExpr : (pTypeDefExpr = new TypeDefExprElements());
+	//RecordDefExpr:
+	//	"type" name=ID "=" "struct" "{" (args+=Arg ("," args+=Arg)*) "}" ";";
+	public RecordDefExprElements getRecordDefExprAccess() {
+		return (pRecordDefExpr != null) ? pRecordDefExpr : (pRecordDefExpr = new RecordDefExprElements());
 	}
 	
-	public ParserRule getTypeDefExprRule() {
-		return getTypeDefExprAccess().getRule();
+	public ParserRule getRecordDefExprRule() {
+		return getRecordDefExprAccess().getRule();
 	}
 
 	//Expr:
@@ -2829,7 +2817,7 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 
 	//PreDefFnExpr returns Expr:
 	//	{PrevExpr} "prev" "(" delay=Expr "," init=Expr ")" | {GetPropertyExpr} "Get_Property" "(" component=Expr "," prop=Expr
-	//	")" | TermExpr;
+	//	")" | RecordUpdateExprs;
 	public PreDefFnExprElements getPreDefFnExprAccess() {
 		return (pPreDefFnExpr != null) ? pPreDefFnExpr : (pPreDefFnExpr = new PreDefFnExprElements());
 	}
@@ -2838,28 +2826,37 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		return getPreDefFnExprAccess().getRule();
 	}
 
-	//PreDefFnNames:
-	//	"prev" | "Get_Property";
-	public PreDefFnNamesElements getPreDefFnNamesAccess() {
-		return (pPreDefFnNames != null) ? pPreDefFnNames : (pPreDefFnNames = new PreDefFnNamesElements());
+	//RecordUpdateExprs returns Expr:
+	//	TermExpr => ({RecordUpdateExpr.expr=current} ("{" args+=Expr ":=" argExpr+=Expr "}"))*;
+	public RecordUpdateExprsElements getRecordUpdateExprsAccess() {
+		return (pRecordUpdateExprs != null) ? pRecordUpdateExprs : (pRecordUpdateExprs = new RecordUpdateExprsElements());
 	}
 	
-	public ParserRule getPreDefFnNamesRule() {
-		return getPreDefFnNamesAccess().getRule();
+	public ParserRule getRecordUpdateExprsRule() {
+		return getRecordUpdateExprsAccess().getRule();
 	}
 
 	//TermExpr returns Expr:
-	//	{IdExpr} id=[aadl2::NamedElement|QID] | NestedDotID ({FnCallExpr.fn=current} "(" (args+=Expr ("," args+=Expr)*)? ")")?
-	//	| {IntLitExpr} val=INTEGER_LIT | {PreExpr} "pre" "(" expr=Expr ")" | {RealLitExpr} val=REAL_LIT | {BoolLitExpr}
-	//	val=BooleanLiteral | {ThisExpr} "this" ("." subThis=NestedDotID)? | {RecordExpr} record=[RecordType] "{" (args+=[Arg]
-	//	"=" argExpr+=Expr (";" args+=[Arg] "=" argExpr+=Expr)*)? "}" | {RecordUpdateExpr} => ("{" args+=[Arg] ":="
-	//	argExpr+=Expr "}")+ | "(" Expr ")";
+	//	{IdExpr} id=[aadl2::NamedElement|QID] | ComplexExpr | {IntLitExpr} val=INTEGER_LIT | {PreExpr} "pre" "(" expr=Expr ")"
+	//	| {RealLitExpr} val=REAL_LIT | {BoolLitExpr} val=BooleanLiteral | {ThisExpr} "this" ("." subThis=NestedDotID)? | "("
+	//	Expr ")";
 	public TermExprElements getTermExprAccess() {
 		return (pTermExpr != null) ? pTermExpr : (pTermExpr = new TermExprElements());
 	}
 	
 	public ParserRule getTermExprRule() {
 		return getTermExprAccess().getRule();
+	}
+
+	//ComplexExpr:
+	//	NestedDotID (=> ({FnCallExpr.fn=current} "(") (args+=Expr ("," args+=Expr)*)? ")" | => ({RecordExpr.record=current}
+	//	"{") args+=Expr "=" argExpr+=Expr (";" args+=Expr "=" argExpr+=Expr)* "}")?;
+	public ComplexExprElements getComplexExprAccess() {
+		return (pComplexExpr != null) ? pComplexExpr : (pComplexExpr = new ComplexExprElements());
+	}
+	
+	public ParserRule getComplexExprRule() {
+		return getComplexExprAccess().getRule();
 	}
 
 	//NestedDotID:

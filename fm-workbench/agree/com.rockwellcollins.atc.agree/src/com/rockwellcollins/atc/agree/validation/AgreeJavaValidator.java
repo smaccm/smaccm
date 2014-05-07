@@ -82,9 +82,9 @@ import com.rockwellcollins.atc.agree.agree.PrevExpr;
 import com.rockwellcollins.atc.agree.agree.PrimType;
 import com.rockwellcollins.atc.agree.agree.PropertyStatement;
 import com.rockwellcollins.atc.agree.agree.RealLitExpr;
+import com.rockwellcollins.atc.agree.agree.RecordDefExpr;
 import com.rockwellcollins.atc.agree.agree.RecordExpr;
 import com.rockwellcollins.atc.agree.agree.RecordType;
-import com.rockwellcollins.atc.agree.agree.RecordTypeDefExpr;
 import com.rockwellcollins.atc.agree.agree.RecordUpdateExpr;
 import com.rockwellcollins.atc.agree.agree.SpecStatement;
 import com.rockwellcollins.atc.agree.agree.SynchStatement;
@@ -92,7 +92,7 @@ import com.rockwellcollins.atc.agree.agree.ThisExpr;
 import com.rockwellcollins.atc.agree.agree.Type;
 import com.rockwellcollins.atc.agree.agree.UnaryExpr;
 
-/**
+/** 
  * Custom validation rules.
  * 
  * see http://www.eclipse.org/Xtext/documentation.html#validation
@@ -242,8 +242,9 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
     @Check(CheckType.FAST)
     public void checkRecordExpr(RecordExpr recExpr){
     	
-    	RecordType recType = recExpr.getRecord(); 
+    	NestedDotID recType = recExpr.getRecord(); 
     	List<String> argNames = getArgNames(recType);
+    	List<AgreeType> argTypes = getArgTypes(recType);
     	
     	if(recExpr.getArgs().size() != argNames.size()){
     		error(recExpr, "Incorrect number of arguments");
@@ -252,38 +253,41 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
     	
     }
     
-    private List<String> getArgNames(RecordType recType){
+    private List<String> getArgNames(NestedDotID recId){
     	
-    	NestedDotID featNestId = recType.getFeatureGroup();
-    	RecordTypeDefExpr recDef = recType.getRecord();
+    	NamedElement rec = getFinalNestId(recId);
     	List<String> names = new ArrayList<String>();
     	
-    	if(recDef != null){
+    	if(rec instanceof RecordDefExpr){
+    		RecordDefExpr recDef = (RecordDefExpr)rec;
     		for(Arg arg : recDef.getArgs()){
     			names.add(arg.getName());
     		}
-    	}else{
-    		FeatureGroupType featGroup = (FeatureGroupType)getFinalNestId(featNestId);
+    	}else if(rec instanceof FeatureGroupType){
+    		FeatureGroupType featGroup = (FeatureGroupType)rec;
     		for(Feature feat : featGroup.getAllFeatures()){
     			names.add(feat.getName());
     		}
+    	}else{
+    		error(recId, "Record type '"+rec.getName()+
+    				"' must be a feature group or a record type definition");
     	}
     	
     	return names;
     }
     
-    private List<AgreeType> getArgTypes(RecordType recType){
+    private List<AgreeType> getArgTypes(NestedDotID recId){
     	
-    	NestedDotID featNestId = recType.getFeatureGroup();
-    	RecordTypeDefExpr recDef = recType.getRecord();
+    	NamedElement rec = getFinalNestId(recId);    	
     	List<AgreeType> types = new ArrayList<AgreeType>();
     	
-    	if(recDef != null){
+    	if(rec instanceof RecordDefExpr){
+    		RecordDefExpr recDef = (RecordDefExpr)rec;
     		for(Arg arg : recDef.getArgs()){
     			types.add(getAgreeType(arg.getType()));
     		}
-    	}else{
-    		FeatureGroupType featGroup = (FeatureGroupType)getFinalNestId(featNestId);
+    	}else if(rec instanceof FeatureGroupType){
+    		FeatureGroupType featGroup = (FeatureGroupType)rec;
     		for(Feature feat : featGroup.getAllFeatures()){
     			types.add(getAgreeType(feat));
     		}
@@ -345,19 +349,19 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
     }
 
 	private AgreeType getAgreeType(Type type) {
-		String typeName;
+		String typeName = null;
 		if(type instanceof PrimType){
         	typeName = ((PrimType)type).getString();
         }else{
         	RecordType recType = (RecordType)type;
-        	RecordTypeDefExpr recordDef = recType.getRecord();
-        	NestedDotID featNestId = recType.getFeatureGroup();
+        	NestedDotID recId = recType.getRecord();
+        	NamedElement finalId = getFinalNestId(recId);
         	
-        	if(recordDef != null){
-        		typeName = recordDef.getName();
-        	}else{
+        	if(finalId instanceof RecordDefExpr){
+        		typeName = finalId.getName();
+        	}else if(finalId instanceof FeatureGroupType){
         		//get the package name
-        		EObject container = featNestId.eContainer();
+        		EObject container = recId.eContainer();
         		while(!(container instanceof AadlPackage)){
         			container = container.eContainer();
         		}
@@ -365,16 +369,15 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
         		String tag = "";
         		do{
         			sb.append(tag);
-        			sb.append(featNestId.getBase().getName());
-        			featNestId = featNestId.getSub();
+        			sb.append(recId.getBase().getName());
+        			recId = recId.getSub();
         			tag = "__";
-        		}while(featNestId != null);
+        		}while(recId != null);
         		
         		typeName = ((AadlPackage)container).getName()+tag+sb.toString();
         				
         	}
         	
-        	typeName = ((RecordType)type).getRecord().getName();
         }
 		return new AgreeType(typeName);
 	}
@@ -936,7 +939,8 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 
 	private boolean exprIsConst(Expr expr) {
 		if(expr instanceof NestedDotID){
-        	if((((NestedDotID)expr).getBase() instanceof ConstStatement)){
+			NamedElement finalId = getFinalNestId((NestedDotID)expr);
+        	if(finalId instanceof ConstStatement){
         		return true;
         	}
         }else if(expr instanceof RealLitExpr

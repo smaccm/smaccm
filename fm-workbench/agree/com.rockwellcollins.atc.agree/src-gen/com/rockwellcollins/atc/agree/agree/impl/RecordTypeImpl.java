@@ -5,7 +5,6 @@ package com.rockwellcollins.atc.agree.agree.impl;
 import com.rockwellcollins.atc.agree.agree.AgreePackage;
 import com.rockwellcollins.atc.agree.agree.NestedDotID;
 import com.rockwellcollins.atc.agree.agree.RecordType;
-import com.rockwellcollins.atc.agree.agree.RecordTypeDefExpr;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
@@ -22,7 +21,6 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link com.rockwellcollins.atc.agree.agree.impl.RecordTypeImpl#getFeatureGroup <em>Feature Group</em>}</li>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.impl.RecordTypeImpl#getRecord <em>Record</em>}</li>
  * </ul>
  * </p>
@@ -32,24 +30,14 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 public class RecordTypeImpl extends TypeImpl implements RecordType
 {
   /**
-   * The cached value of the '{@link #getFeatureGroup() <em>Feature Group</em>}' containment reference.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see #getFeatureGroup()
-   * @generated
-   * @ordered
-   */
-  protected NestedDotID featureGroup;
-
-  /**
-   * The cached value of the '{@link #getRecord() <em>Record</em>}' reference.
+   * The cached value of the '{@link #getRecord() <em>Record</em>}' containment reference.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @see #getRecord()
    * @generated
    * @ordered
    */
-  protected RecordTypeDefExpr record;
+  protected NestedDotID record;
 
   /**
    * <!-- begin-user-doc -->
@@ -77,9 +65,9 @@ public class RecordTypeImpl extends TypeImpl implements RecordType
    * <!-- end-user-doc -->
    * @generated
    */
-  public NestedDotID getFeatureGroup()
+  public NestedDotID getRecord()
   {
-    return featureGroup;
+    return record;
   }
 
   /**
@@ -87,13 +75,13 @@ public class RecordTypeImpl extends TypeImpl implements RecordType
    * <!-- end-user-doc -->
    * @generated
    */
-  public NotificationChain basicSetFeatureGroup(NestedDotID newFeatureGroup, NotificationChain msgs)
+  public NotificationChain basicSetRecord(NestedDotID newRecord, NotificationChain msgs)
   {
-    NestedDotID oldFeatureGroup = featureGroup;
-    featureGroup = newFeatureGroup;
+    NestedDotID oldRecord = record;
+    record = newRecord;
     if (eNotificationRequired())
     {
-      ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, AgreePackage.RECORD_TYPE__FEATURE_GROUP, oldFeatureGroup, newFeatureGroup);
+      ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, AgreePackage.RECORD_TYPE__RECORD, oldRecord, newRecord);
       if (msgs == null) msgs = notification; else msgs.add(notification);
     }
     return msgs;
@@ -104,63 +92,20 @@ public class RecordTypeImpl extends TypeImpl implements RecordType
    * <!-- end-user-doc -->
    * @generated
    */
-  public void setFeatureGroup(NestedDotID newFeatureGroup)
+  public void setRecord(NestedDotID newRecord)
   {
-    if (newFeatureGroup != featureGroup)
+    if (newRecord != record)
     {
       NotificationChain msgs = null;
-      if (featureGroup != null)
-        msgs = ((InternalEObject)featureGroup).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - AgreePackage.RECORD_TYPE__FEATURE_GROUP, null, msgs);
-      if (newFeatureGroup != null)
-        msgs = ((InternalEObject)newFeatureGroup).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - AgreePackage.RECORD_TYPE__FEATURE_GROUP, null, msgs);
-      msgs = basicSetFeatureGroup(newFeatureGroup, msgs);
+      if (record != null)
+        msgs = ((InternalEObject)record).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - AgreePackage.RECORD_TYPE__RECORD, null, msgs);
+      if (newRecord != null)
+        msgs = ((InternalEObject)newRecord).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - AgreePackage.RECORD_TYPE__RECORD, null, msgs);
+      msgs = basicSetRecord(newRecord, msgs);
       if (msgs != null) msgs.dispatch();
     }
     else if (eNotificationRequired())
-      eNotify(new ENotificationImpl(this, Notification.SET, AgreePackage.RECORD_TYPE__FEATURE_GROUP, newFeatureGroup, newFeatureGroup));
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public RecordTypeDefExpr getRecord()
-  {
-    if (record != null && record.eIsProxy())
-    {
-      InternalEObject oldRecord = (InternalEObject)record;
-      record = (RecordTypeDefExpr)eResolveProxy(oldRecord);
-      if (record != oldRecord)
-      {
-        if (eNotificationRequired())
-          eNotify(new ENotificationImpl(this, Notification.RESOLVE, AgreePackage.RECORD_TYPE__RECORD, oldRecord, record));
-      }
-    }
-    return record;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public RecordTypeDefExpr basicGetRecord()
-  {
-    return record;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public void setRecord(RecordTypeDefExpr newRecord)
-  {
-    RecordTypeDefExpr oldRecord = record;
-    record = newRecord;
-    if (eNotificationRequired())
-      eNotify(new ENotificationImpl(this, Notification.SET, AgreePackage.RECORD_TYPE__RECORD, oldRecord, record));
+      eNotify(new ENotificationImpl(this, Notification.SET, AgreePackage.RECORD_TYPE__RECORD, newRecord, newRecord));
   }
 
   /**
@@ -173,8 +118,8 @@ public class RecordTypeImpl extends TypeImpl implements RecordType
   {
     switch (featureID)
     {
-      case AgreePackage.RECORD_TYPE__FEATURE_GROUP:
-        return basicSetFeatureGroup(null, msgs);
+      case AgreePackage.RECORD_TYPE__RECORD:
+        return basicSetRecord(null, msgs);
     }
     return super.eInverseRemove(otherEnd, featureID, msgs);
   }
@@ -189,11 +134,8 @@ public class RecordTypeImpl extends TypeImpl implements RecordType
   {
     switch (featureID)
     {
-      case AgreePackage.RECORD_TYPE__FEATURE_GROUP:
-        return getFeatureGroup();
       case AgreePackage.RECORD_TYPE__RECORD:
-        if (resolve) return getRecord();
-        return basicGetRecord();
+        return getRecord();
     }
     return super.eGet(featureID, resolve, coreType);
   }
@@ -208,11 +150,8 @@ public class RecordTypeImpl extends TypeImpl implements RecordType
   {
     switch (featureID)
     {
-      case AgreePackage.RECORD_TYPE__FEATURE_GROUP:
-        setFeatureGroup((NestedDotID)newValue);
-        return;
       case AgreePackage.RECORD_TYPE__RECORD:
-        setRecord((RecordTypeDefExpr)newValue);
+        setRecord((NestedDotID)newValue);
         return;
     }
     super.eSet(featureID, newValue);
@@ -228,11 +167,8 @@ public class RecordTypeImpl extends TypeImpl implements RecordType
   {
     switch (featureID)
     {
-      case AgreePackage.RECORD_TYPE__FEATURE_GROUP:
-        setFeatureGroup((NestedDotID)null);
-        return;
       case AgreePackage.RECORD_TYPE__RECORD:
-        setRecord((RecordTypeDefExpr)null);
+        setRecord((NestedDotID)null);
         return;
     }
     super.eUnset(featureID);
@@ -248,8 +184,6 @@ public class RecordTypeImpl extends TypeImpl implements RecordType
   {
     switch (featureID)
     {
-      case AgreePackage.RECORD_TYPE__FEATURE_GROUP:
-        return featureGroup != null;
       case AgreePackage.RECORD_TYPE__RECORD:
         return record != null;
     }

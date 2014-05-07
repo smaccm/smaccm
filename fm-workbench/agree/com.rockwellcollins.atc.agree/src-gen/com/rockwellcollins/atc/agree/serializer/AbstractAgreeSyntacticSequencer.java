@@ -17,14 +17,14 @@ import org.eclipse.xtext.serializer.sequencer.AbstractSyntacticSequencer;
 public abstract class AbstractAgreeSyntacticSequencer extends AbstractSyntacticSequencer {
 
 	protected AgreeGrammarAccess grammarAccess;
-	protected AbstractElementAlias match_TermExpr_LeftParenthesisKeyword_9_0_a;
-	protected AbstractElementAlias match_TermExpr_LeftParenthesisKeyword_9_0_p;
+	protected AbstractElementAlias match_TermExpr_LeftParenthesisKeyword_7_0_a;
+	protected AbstractElementAlias match_TermExpr_LeftParenthesisKeyword_7_0_p;
 	
 	@Inject
 	protected void init(IGrammarAccess access) {
 		grammarAccess = (AgreeGrammarAccess) access;
-		match_TermExpr_LeftParenthesisKeyword_9_0_a = new TokenAlias(true, true, grammarAccess.getTermExprAccess().getLeftParenthesisKeyword_9_0());
-		match_TermExpr_LeftParenthesisKeyword_9_0_p = new TokenAlias(true, false, grammarAccess.getTermExprAccess().getLeftParenthesisKeyword_9_0());
+		match_TermExpr_LeftParenthesisKeyword_7_0_a = new TokenAlias(true, true, grammarAccess.getTermExprAccess().getLeftParenthesisKeyword_7_0());
+		match_TermExpr_LeftParenthesisKeyword_7_0_p = new TokenAlias(true, false, grammarAccess.getTermExprAccess().getLeftParenthesisKeyword_7_0());
 	}
 	
 	@Override
@@ -39,10 +39,10 @@ public abstract class AbstractAgreeSyntacticSequencer extends AbstractSyntacticS
 		List<INode> transitionNodes = collectNodes(fromNode, toNode);
 		for (AbstractElementAlias syntax : transition.getAmbiguousSyntaxes()) {
 			List<INode> syntaxNodes = getNodesFor(transitionNodes, syntax);
-			if(match_TermExpr_LeftParenthesisKeyword_9_0_a.equals(syntax))
-				emit_TermExpr_LeftParenthesisKeyword_9_0_a(semanticObject, getLastNavigableState(), syntaxNodes);
-			else if(match_TermExpr_LeftParenthesisKeyword_9_0_p.equals(syntax))
-				emit_TermExpr_LeftParenthesisKeyword_9_0_p(semanticObject, getLastNavigableState(), syntaxNodes);
+			if(match_TermExpr_LeftParenthesisKeyword_7_0_a.equals(syntax))
+				emit_TermExpr_LeftParenthesisKeyword_7_0_a(semanticObject, getLastNavigableState(), syntaxNodes);
+			else if(match_TermExpr_LeftParenthesisKeyword_7_0_p.equals(syntax))
+				emit_TermExpr_LeftParenthesisKeyword_7_0_p(semanticObject, getLastNavigableState(), syntaxNodes);
 			else acceptNodes(getLastNavigableState(), syntaxNodes);
 		}
 	}
@@ -51,7 +51,7 @@ public abstract class AbstractAgreeSyntacticSequencer extends AbstractSyntacticS
 	 * Syntax:
 	 *     '('*
 	 */
-	protected void emit_TermExpr_LeftParenthesisKeyword_9_0_a(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
+	protected void emit_TermExpr_LeftParenthesisKeyword_7_0_a(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
 		acceptNodes(transition, nodes);
 	}
 	
@@ -59,7 +59,7 @@ public abstract class AbstractAgreeSyntacticSequencer extends AbstractSyntacticS
 	 * Syntax:
 	 *     '('+
 	 */
-	protected void emit_TermExpr_LeftParenthesisKeyword_9_0_p(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
+	protected void emit_TermExpr_LeftParenthesisKeyword_7_0_p(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
 		acceptNodes(transition, nodes);
 	}
 	

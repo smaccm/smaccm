@@ -36,7 +36,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  *
  * @generated
  */
-public class FnCallExprImpl extends ExprImpl implements FnCallExpr
+public class FnCallExprImpl extends ComplexExprImpl implements FnCallExpr
 {
   /**
    * The cached value of the '{@link #getFn() <em>Fn</em>}' containment reference.

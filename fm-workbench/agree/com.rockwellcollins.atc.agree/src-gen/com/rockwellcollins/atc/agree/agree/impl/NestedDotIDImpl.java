@@ -31,7 +31,7 @@ import org.osate.aadl2.NamedElement;
  *
  * @generated
  */
-public class NestedDotIDImpl extends ExprImpl implements NestedDotID
+public class NestedDotIDImpl extends ComplexExprImpl implements NestedDotID
 {
   /**
    * The cached value of the '{@link #getBase() <em>Base</em>}' reference.

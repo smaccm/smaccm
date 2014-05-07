@@ -50,12 +50,17 @@
     <genClasses ecoreClass="Agree.ecore#//Type">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Agree.ecore#//Type/string"/>
     </genClasses>
-    <genClasses ecoreClass="Agree.ecore#//TypeDefExpr"/>
+    <genClasses ecoreClass="Agree.ecore#//RecordDefExpr">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//RecordDefExpr/args"/>
+    </genClasses>
     <genClasses ecoreClass="Agree.ecore#//Expr"/>
+    <genClasses ecoreClass="Agree.ecore#//ComplexExpr"/>
     <genClasses ecoreClass="Agree.ecore#//NestedDotID">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Agree.ecore#//NestedDotID/base"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Agree.ecore#//NestedDotID/tag"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//NestedDotID/sub"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//NestedDotID/args"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//NestedDotID/argExpr"/>
     </genClasses>
     <genClasses ecoreClass="Agree.ecore#//AgreeContractLibrary">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//AgreeContractLibrary/contract"/>
@@ -101,13 +106,9 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Agree.ecore#//PrimType/string"/>
     </genClasses>
     <genClasses ecoreClass="Agree.ecore#//RecordType">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//RecordType/featureGroup"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Agree.ecore#//RecordType/record"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//RecordType/featureGroup"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Agree.ecore#//RecordType/name"/>
-    </genClasses>
-    <genClasses ecoreClass="Agree.ecore#//RecordTypeDefExpr">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Agree.ecore#//RecordTypeDefExpr/name"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//RecordTypeDefExpr/args"/>
     </genClasses>
     <genClasses ecoreClass="Agree.ecore#//BinaryExpr">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//BinaryExpr/left"/>
@@ -131,12 +132,13 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//GetPropertyExpr/component"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//GetPropertyExpr/prop"/>
     </genClasses>
+    <genClasses ecoreClass="Agree.ecore#//RecordUpdateExpr">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//RecordUpdateExpr/expr"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Agree.ecore#//RecordUpdateExpr/args"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//RecordUpdateExpr/argExpr"/>
+    </genClasses>
     <genClasses ecoreClass="Agree.ecore#//IdExpr">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Agree.ecore#//IdExpr/id"/>
-    </genClasses>
-    <genClasses ecoreClass="Agree.ecore#//FnCallExpr">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//FnCallExpr/fn"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//FnCallExpr/args"/>
     </genClasses>
     <genClasses ecoreClass="Agree.ecore#//IntLitExpr">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Agree.ecore#//IntLitExpr/val"/>
@@ -153,15 +155,27 @@
     <genClasses ecoreClass="Agree.ecore#//ThisExpr">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//ThisExpr/subThis"/>
     </genClasses>
+    <genClasses ecoreClass="Agree.ecore#//FnCallExpr">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//FnCallExpr/fn"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//FnCallExpr/args"/>
+    </genClasses>
     <genClasses ecoreClass="Agree.ecore#//RecordExpr">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Agree.ecore#//RecordExpr/record"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Agree.ecore#//RecordExpr/args"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//RecordExpr/argExpr"/>
     </genClasses>
-    <genClasses ecoreClass="Agree.ecore#//RecordUpdateExpr">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Agree.ecore#//RecordUpdateExpr/args"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//RecordUpdateExpr/argExpr"/>
+    <genClasses ecoreClass="Agree.ecore#//RecordTypeDefExpr">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//RecordTypeDefExpr/args"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ../../../org.osate.aadl2/model/aadl2.ecore#//NamedElement/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ../../../org.osate.aadl2/model/aadl2.ecore#//NamedElement/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ../../../org.osate.aadl2/model/aadl2.ecore#//NamedElement/name"/>
     </genClasses>
+    <genClasses ecoreClass="Agree.ecore#//RecordasdTypeDefExpr">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//RecordasdTypeDefExpr/args"/>
+    </genClasses>
+    <genClasses ecoreClass="Agree.ecore#//asfd"/>
+    <genClasses ecoreClass="Agree.ecore#//NestedDotIDExpr"/>
+    <genClasses ecoreClass="Agree.ecore#//TypeDefExpr"/>
     <genClasses ecoreClass="Agree.ecore#//FeatureGroupType">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//FeatureGroupType/featureGroup"/>
     </genClasses>

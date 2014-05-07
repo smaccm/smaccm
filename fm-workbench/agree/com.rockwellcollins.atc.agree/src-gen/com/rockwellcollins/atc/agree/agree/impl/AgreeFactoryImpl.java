@@ -79,8 +79,9 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
       case AgreePackage.NODE_STMT: return createNodeStmt();
       case AgreePackage.ARG: return createArg();
       case AgreePackage.TYPE: return createType();
-      case AgreePackage.TYPE_DEF_EXPR: return createTypeDefExpr();
+      case AgreePackage.RECORD_DEF_EXPR: return createRecordDefExpr();
       case AgreePackage.EXPR: return createExpr();
+      case AgreePackage.COMPLEX_EXPR: return createComplexExpr();
       case AgreePackage.NESTED_DOT_ID: return createNestedDotID();
       case AgreePackage.AGREE_CONTRACT_LIBRARY: return createAgreeContractLibrary();
       case AgreePackage.AGREE_CONTRACT_SUBCLAUSE: return createAgreeContractSubclause();
@@ -96,21 +97,20 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
       case AgreePackage.NODE_LEMMA: return createNodeLemma();
       case AgreePackage.PRIM_TYPE: return createPrimType();
       case AgreePackage.RECORD_TYPE: return createRecordType();
-      case AgreePackage.RECORD_TYPE_DEF_EXPR: return createRecordTypeDefExpr();
       case AgreePackage.BINARY_EXPR: return createBinaryExpr();
       case AgreePackage.UNARY_EXPR: return createUnaryExpr();
       case AgreePackage.IF_THEN_ELSE_EXPR: return createIfThenElseExpr();
       case AgreePackage.PREV_EXPR: return createPrevExpr();
       case AgreePackage.GET_PROPERTY_EXPR: return createGetPropertyExpr();
+      case AgreePackage.RECORD_UPDATE_EXPR: return createRecordUpdateExpr();
       case AgreePackage.ID_EXPR: return createIdExpr();
-      case AgreePackage.FN_CALL_EXPR: return createFnCallExpr();
       case AgreePackage.INT_LIT_EXPR: return createIntLitExpr();
       case AgreePackage.PRE_EXPR: return createPreExpr();
       case AgreePackage.REAL_LIT_EXPR: return createRealLitExpr();
       case AgreePackage.BOOL_LIT_EXPR: return createBoolLitExpr();
       case AgreePackage.THIS_EXPR: return createThisExpr();
+      case AgreePackage.FN_CALL_EXPR: return createFnCallExpr();
       case AgreePackage.RECORD_EXPR: return createRecordExpr();
-      case AgreePackage.RECORD_UPDATE_EXPR: return createRecordUpdateExpr();
       default:
         throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
     }
@@ -286,10 +286,10 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public TypeDefExpr createTypeDefExpr()
+  public RecordDefExpr createRecordDefExpr()
   {
-    TypeDefExprImpl typeDefExpr = new TypeDefExprImpl();
-    return typeDefExpr;
+    RecordDefExprImpl recordDefExpr = new RecordDefExprImpl();
+    return recordDefExpr;
   }
 
   /**
@@ -301,6 +301,17 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
   {
     ExprImpl expr = new ExprImpl();
     return expr;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public ComplexExpr createComplexExpr()
+  {
+    ComplexExprImpl complexExpr = new ComplexExprImpl();
+    return complexExpr;
   }
 
   /**
@@ -473,17 +484,6 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public RecordTypeDefExpr createRecordTypeDefExpr()
-  {
-    RecordTypeDefExprImpl recordTypeDefExpr = new RecordTypeDefExprImpl();
-    return recordTypeDefExpr;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
   public BinaryExpr createBinaryExpr()
   {
     BinaryExprImpl binaryExpr = new BinaryExprImpl();
@@ -539,10 +539,10 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public IdExpr createIdExpr()
+  public RecordUpdateExpr createRecordUpdateExpr()
   {
-    IdExprImpl idExpr = new IdExprImpl();
-    return idExpr;
+    RecordUpdateExprImpl recordUpdateExpr = new RecordUpdateExprImpl();
+    return recordUpdateExpr;
   }
 
   /**
@@ -550,10 +550,10 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public FnCallExpr createFnCallExpr()
+  public IdExpr createIdExpr()
   {
-    FnCallExprImpl fnCallExpr = new FnCallExprImpl();
-    return fnCallExpr;
+    IdExprImpl idExpr = new IdExprImpl();
+    return idExpr;
   }
 
   /**
@@ -616,10 +616,10 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public RecordExpr createRecordExpr()
+  public FnCallExpr createFnCallExpr()
   {
-    RecordExprImpl recordExpr = new RecordExprImpl();
-    return recordExpr;
+    FnCallExprImpl fnCallExpr = new FnCallExprImpl();
+    return fnCallExpr;
   }
 
   /**
@@ -627,10 +627,10 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public RecordUpdateExpr createRecordUpdateExpr()
+  public RecordExpr createRecordExpr()
   {
-    RecordUpdateExprImpl recordUpdateExpr = new RecordUpdateExprImpl();
-    return recordUpdateExpr;
+    RecordExprImpl recordExpr = new RecordExprImpl();
+    return recordExpr;
   }
 
   /**

@@ -4,11 +4,10 @@ package com.rockwellcollins.atc.agree.agree.impl;
 
 import com.rockwellcollins.atc.agree.agree.AgreePackage;
 import com.rockwellcollins.atc.agree.agree.Arg;
-import com.rockwellcollins.atc.agree.agree.RecordTypeDefExpr;
+import com.rockwellcollins.atc.agree.agree.RecordDefExpr;
 
 import java.util.Collection;
 
-import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 
 import org.eclipse.emf.common.util.EList;
@@ -16,47 +15,26 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 
-import org.eclipse.emf.ecore.impl.ENotificationImpl;
-
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
+import org.osate.aadl2.impl.NamedElementImpl;
+
 /**
  * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Record Type Def Expr</b></em>'.
+ * An implementation of the model object '<em><b>Record Def Expr</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link com.rockwellcollins.atc.agree.agree.impl.RecordTypeDefExprImpl#getName <em>Name</em>}</li>
- *   <li>{@link com.rockwellcollins.atc.agree.agree.impl.RecordTypeDefExprImpl#getArgs <em>Args</em>}</li>
+ *   <li>{@link com.rockwellcollins.atc.agree.agree.impl.RecordDefExprImpl#getArgs <em>Args</em>}</li>
  * </ul>
  * </p>
  *
  * @generated
  */
-public class RecordTypeDefExprImpl extends TypeDefExprImpl implements RecordTypeDefExpr
+public class RecordDefExprImpl extends NamedElementImpl implements RecordDefExpr
 {
-  /**
-   * The default value of the '{@link #getName() <em>Name</em>}' attribute.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see #getName()
-   * @generated
-   * @ordered
-   */
-  protected static final String NAME_EDEFAULT = null;
-
-  /**
-   * The cached value of the '{@link #getName() <em>Name</em>}' attribute.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see #getName()
-   * @generated
-   * @ordered
-   */
-  protected String name = NAME_EDEFAULT;
-
   /**
    * The cached value of the '{@link #getArgs() <em>Args</em>}' containment reference list.
    * <!-- begin-user-doc -->
@@ -72,7 +50,7 @@ public class RecordTypeDefExprImpl extends TypeDefExprImpl implements RecordType
    * <!-- end-user-doc -->
    * @generated
    */
-  protected RecordTypeDefExprImpl()
+  protected RecordDefExprImpl()
   {
     super();
   }
@@ -85,30 +63,7 @@ public class RecordTypeDefExprImpl extends TypeDefExprImpl implements RecordType
   @Override
   protected EClass eStaticClass()
   {
-    return AgreePackage.Literals.RECORD_TYPE_DEF_EXPR;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public String getName()
-  {
-    return name;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public void setName(String newName)
-  {
-    String oldName = name;
-    name = newName;
-    if (eNotificationRequired())
-      eNotify(new ENotificationImpl(this, Notification.SET, AgreePackage.RECORD_TYPE_DEF_EXPR__NAME, oldName, name));
+    return AgreePackage.Literals.RECORD_DEF_EXPR;
   }
 
   /**
@@ -120,7 +75,7 @@ public class RecordTypeDefExprImpl extends TypeDefExprImpl implements RecordType
   {
     if (args == null)
     {
-      args = new EObjectContainmentEList<Arg>(Arg.class, this, AgreePackage.RECORD_TYPE_DEF_EXPR__ARGS);
+      args = new EObjectContainmentEList<Arg>(Arg.class, this, AgreePackage.RECORD_DEF_EXPR__ARGS);
     }
     return args;
   }
@@ -135,7 +90,7 @@ public class RecordTypeDefExprImpl extends TypeDefExprImpl implements RecordType
   {
     switch (featureID)
     {
-      case AgreePackage.RECORD_TYPE_DEF_EXPR__ARGS:
+      case AgreePackage.RECORD_DEF_EXPR__ARGS:
         return ((InternalEList<?>)getArgs()).basicRemove(otherEnd, msgs);
     }
     return super.eInverseRemove(otherEnd, featureID, msgs);
@@ -151,9 +106,7 @@ public class RecordTypeDefExprImpl extends TypeDefExprImpl implements RecordType
   {
     switch (featureID)
     {
-      case AgreePackage.RECORD_TYPE_DEF_EXPR__NAME:
-        return getName();
-      case AgreePackage.RECORD_TYPE_DEF_EXPR__ARGS:
+      case AgreePackage.RECORD_DEF_EXPR__ARGS:
         return getArgs();
     }
     return super.eGet(featureID, resolve, coreType);
@@ -170,10 +123,7 @@ public class RecordTypeDefExprImpl extends TypeDefExprImpl implements RecordType
   {
     switch (featureID)
     {
-      case AgreePackage.RECORD_TYPE_DEF_EXPR__NAME:
-        setName((String)newValue);
-        return;
-      case AgreePackage.RECORD_TYPE_DEF_EXPR__ARGS:
+      case AgreePackage.RECORD_DEF_EXPR__ARGS:
         getArgs().clear();
         getArgs().addAll((Collection<? extends Arg>)newValue);
         return;
@@ -191,10 +141,7 @@ public class RecordTypeDefExprImpl extends TypeDefExprImpl implements RecordType
   {
     switch (featureID)
     {
-      case AgreePackage.RECORD_TYPE_DEF_EXPR__NAME:
-        setName(NAME_EDEFAULT);
-        return;
-      case AgreePackage.RECORD_TYPE_DEF_EXPR__ARGS:
+      case AgreePackage.RECORD_DEF_EXPR__ARGS:
         getArgs().clear();
         return;
     }
@@ -211,29 +158,10 @@ public class RecordTypeDefExprImpl extends TypeDefExprImpl implements RecordType
   {
     switch (featureID)
     {
-      case AgreePackage.RECORD_TYPE_DEF_EXPR__NAME:
-        return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
-      case AgreePackage.RECORD_TYPE_DEF_EXPR__ARGS:
+      case AgreePackage.RECORD_DEF_EXPR__ARGS:
         return args != null && !args.isEmpty();
     }
     return super.eIsSet(featureID);
   }
 
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  @Override
-  public String toString()
-  {
-    if (eIsProxy()) return super.toString();
-
-    StringBuffer result = new StringBuffer(super.toString());
-    result.append(" (name: ");
-    result.append(name);
-    result.append(')');
-    return result.toString();
-  }
-
-} //RecordTypeDefExprImpl
+} //RecordDefExprImpl

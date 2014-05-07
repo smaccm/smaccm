@@ -157,14 +157,19 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
         return createTypeAdapter();
       }
       @Override
-      public Adapter caseTypeDefExpr(TypeDefExpr object)
+      public Adapter caseRecordDefExpr(RecordDefExpr object)
       {
-        return createTypeDefExprAdapter();
+        return createRecordDefExprAdapter();
       }
       @Override
       public Adapter caseExpr(Expr object)
       {
         return createExprAdapter();
+      }
+      @Override
+      public Adapter caseComplexExpr(ComplexExpr object)
+      {
+        return createComplexExprAdapter();
       }
       @Override
       public Adapter caseNestedDotID(NestedDotID object)
@@ -242,11 +247,6 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
         return createRecordTypeAdapter();
       }
       @Override
-      public Adapter caseRecordTypeDefExpr(RecordTypeDefExpr object)
-      {
-        return createRecordTypeDefExprAdapter();
-      }
-      @Override
       public Adapter caseBinaryExpr(BinaryExpr object)
       {
         return createBinaryExprAdapter();
@@ -272,14 +272,14 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
         return createGetPropertyExprAdapter();
       }
       @Override
+      public Adapter caseRecordUpdateExpr(RecordUpdateExpr object)
+      {
+        return createRecordUpdateExprAdapter();
+      }
+      @Override
       public Adapter caseIdExpr(IdExpr object)
       {
         return createIdExprAdapter();
-      }
-      @Override
-      public Adapter caseFnCallExpr(FnCallExpr object)
-      {
-        return createFnCallExprAdapter();
       }
       @Override
       public Adapter caseIntLitExpr(IntLitExpr object)
@@ -307,14 +307,14 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
         return createThisExprAdapter();
       }
       @Override
+      public Adapter caseFnCallExpr(FnCallExpr object)
+      {
+        return createFnCallExprAdapter();
+      }
+      @Override
       public Adapter caseRecordExpr(RecordExpr object)
       {
         return createRecordExprAdapter();
-      }
-      @Override
-      public Adapter caseRecordUpdateExpr(RecordUpdateExpr object)
-      {
-        return createRecordUpdateExprAdapter();
       }
       @Override
       public Adapter caseElement(Element object)
@@ -594,16 +594,16 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
   }
 
   /**
-   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.TypeDefExpr <em>Type Def Expr</em>}'.
+   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.RecordDefExpr <em>Record Def Expr</em>}'.
    * <!-- begin-user-doc -->
    * This default implementation returns null so that we can easily ignore cases;
    * it's useful to ignore a case when inheritance will catch all the cases anyway.
    * <!-- end-user-doc -->
    * @return the new adapter.
-   * @see com.rockwellcollins.atc.agree.agree.TypeDefExpr
+   * @see com.rockwellcollins.atc.agree.agree.RecordDefExpr
    * @generated
    */
-  public Adapter createTypeDefExprAdapter()
+  public Adapter createRecordDefExprAdapter()
   {
     return null;
   }
@@ -619,6 +619,21 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
    * @generated
    */
   public Adapter createExprAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.ComplexExpr <em>Complex Expr</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see com.rockwellcollins.atc.agree.agree.ComplexExpr
+   * @generated
+   */
+  public Adapter createComplexExprAdapter()
   {
     return null;
   }
@@ -849,21 +864,6 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
   }
 
   /**
-   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.RecordTypeDefExpr <em>Record Type Def Expr</em>}'.
-   * <!-- begin-user-doc -->
-   * This default implementation returns null so that we can easily ignore cases;
-   * it's useful to ignore a case when inheritance will catch all the cases anyway.
-   * <!-- end-user-doc -->
-   * @return the new adapter.
-   * @see com.rockwellcollins.atc.agree.agree.RecordTypeDefExpr
-   * @generated
-   */
-  public Adapter createRecordTypeDefExprAdapter()
-  {
-    return null;
-  }
-
-  /**
    * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.BinaryExpr <em>Binary Expr</em>}'.
    * <!-- begin-user-doc -->
    * This default implementation returns null so that we can easily ignore cases;
@@ -939,6 +939,21 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
   }
 
   /**
+   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.RecordUpdateExpr <em>Record Update Expr</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see com.rockwellcollins.atc.agree.agree.RecordUpdateExpr
+   * @generated
+   */
+  public Adapter createRecordUpdateExprAdapter()
+  {
+    return null;
+  }
+
+  /**
    * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.IdExpr <em>Id Expr</em>}'.
    * <!-- begin-user-doc -->
    * This default implementation returns null so that we can easily ignore cases;
@@ -949,21 +964,6 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
    * @generated
    */
   public Adapter createIdExprAdapter()
-  {
-    return null;
-  }
-
-  /**
-   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.FnCallExpr <em>Fn Call Expr</em>}'.
-   * <!-- begin-user-doc -->
-   * This default implementation returns null so that we can easily ignore cases;
-   * it's useful to ignore a case when inheritance will catch all the cases anyway.
-   * <!-- end-user-doc -->
-   * @return the new adapter.
-   * @see com.rockwellcollins.atc.agree.agree.FnCallExpr
-   * @generated
-   */
-  public Adapter createFnCallExprAdapter()
   {
     return null;
   }
@@ -1044,6 +1044,21 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
   }
 
   /**
+   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.FnCallExpr <em>Fn Call Expr</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see com.rockwellcollins.atc.agree.agree.FnCallExpr
+   * @generated
+   */
+  public Adapter createFnCallExprAdapter()
+  {
+    return null;
+  }
+
+  /**
    * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.RecordExpr <em>Record Expr</em>}'.
    * <!-- begin-user-doc -->
    * This default implementation returns null so that we can easily ignore cases;
@@ -1054,21 +1069,6 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
    * @generated
    */
   public Adapter createRecordExprAdapter()
-  {
-    return null;
-  }
-
-  /**
-   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.RecordUpdateExpr <em>Record Update Expr</em>}'.
-   * <!-- begin-user-doc -->
-   * This default implementation returns null so that we can easily ignore cases;
-   * it's useful to ignore a case when inheritance will catch all the cases anyway.
-   * <!-- end-user-doc -->
-   * @return the new adapter.
-   * @see com.rockwellcollins.atc.agree.agree.RecordUpdateExpr
-   * @generated
-   */
-  public Adapter createRecordUpdateExprAdapter()
   {
     return null;
   }

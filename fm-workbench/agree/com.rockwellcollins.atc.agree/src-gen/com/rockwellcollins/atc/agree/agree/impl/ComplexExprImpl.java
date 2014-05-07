@@ -3,29 +3,27 @@
 package com.rockwellcollins.atc.agree.agree.impl;
 
 import com.rockwellcollins.atc.agree.agree.AgreePackage;
-import com.rockwellcollins.atc.agree.agree.TypeDefExpr;
+import com.rockwellcollins.atc.agree.agree.ComplexExpr;
 
 import org.eclipse.emf.ecore.EClass;
 
-import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
-
 /**
  * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Type Def Expr</b></em>'.
+ * An implementation of the model object '<em><b>Complex Expr</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * </p>
  *
  * @generated
  */
-public class TypeDefExprImpl extends MinimalEObjectImpl.Container implements TypeDefExpr
+public class ComplexExprImpl extends ExprImpl implements ComplexExpr
 {
   /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  protected TypeDefExprImpl()
+  protected ComplexExprImpl()
   {
     super();
   }
@@ -38,7 +36,7 @@ public class TypeDefExprImpl extends MinimalEObjectImpl.Container implements Typ
   @Override
   protected EClass eStaticClass()
   {
-    return AgreePackage.Literals.TYPE_DEF_EXPR;
+    return AgreePackage.Literals.COMPLEX_EXPR;
   }
 
-} //TypeDefExprImpl
+} //ComplexExprImpl

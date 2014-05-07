@@ -22,7 +22,7 @@ import org.osate.aadl2.NamedElement;
  * @model
  * @generated
  */
-public interface NestedDotID extends Expr
+public interface NestedDotID extends ComplexExpr
 {
   /**
    * Returns the value of the '<em><b>Base</b></em>' reference.

@@ -9,7 +9,8 @@ NamedElement returns aadl2::NamedElement:
 	Arg
 	| FnDefExpr
 	| PropertyStatement
-	| ConstStatement;
+	| ConstStatement
+	| RecordDefExpr;
 
 Element returns aadl2::Element:
 	Expr
@@ -50,7 +51,8 @@ SpecStatement:
 	| ConstStatement
 	| EqStatement
 	| FnDefExpr
-	| NodeDefExpr;
+	| NodeDefExpr
+	| RecordDefExpr;
 
 SynchStatement:
 	{SynchStatement} 'synchrony' ':' val = INTEGER_LIT  (sim=('simult'|'no_simult'))? ';'
@@ -96,11 +98,11 @@ Arg returns Arg:
 
 Type returns Type:
 	{PrimType} string=('real' | 'bool' | 'int')
-|	{RecordType} (=> featureGroup=NestedDotID | record=[RecordTypeDefExpr])
+|	{RecordType} record=NestedDotID
 ;
 
-TypeDefExpr:
-	{RecordTypeDefExpr} 'type' name=ID '=' 'struct' '{' (args+=Arg (',' args+=Arg)*)? '}' ';'
+RecordDefExpr:
+	'type' name=ID '=' 'struct' '{' (args+=Arg (',' args+=Arg)*) '}' ';'
 ;
 
 Expr returns Expr:
@@ -144,24 +146,29 @@ IfThenElseExpr returns Expr:
 PreDefFnExpr returns Expr:
 	{PrevExpr} 'prev' '(' delay=Expr ',' init=Expr ')'
 	| {GetPropertyExpr} 'Get_Property' '(' component=Expr ',' prop=Expr ')'
-	| TermExpr;
+	| RecordUpdateExprs;
 
-
-PreDefFnNames:
-	'prev'
-	| 'Get_Property';
+RecordUpdateExprs returns Expr:
+	TermExpr (=> ({RecordUpdateExpr.expr=current} ('{' args+=Expr ':=' argExpr+=Expr '}')))*
+;
 
 TermExpr returns Expr:
 	{IdExpr} id=[aadl2::NamedElement|QID]
-	| NestedDotID ({FnCallExpr.fn=current} '(' (args+=Expr (',' args+=Expr)*)? ')')?
+	| ComplexExpr
 	| {IntLitExpr} val=INTEGER_LIT
 	| {PreExpr} 'pre' '(' expr=Expr ')'
 	| {RealLitExpr} val=REAL_LIT
 	| {BoolLitExpr} val=BooleanLiteral
 	| {ThisExpr} 'this' ('.' subThis=NestedDotID)?
-	| {RecordExpr} record=[RecordType] '{'(args+=[Arg] '=' argExpr+=Expr (';' args+=[Arg] '=' argExpr+=Expr)*)? '}'
-	| {RecordUpdateExpr} (=>('{' args+=[Arg] ':=' argExpr+=Expr '}')+)
 	|'(' Expr ')';
+	
+
+ComplexExpr:
+	NestedDotID 
+		(=> ({FnCallExpr.fn=current} '(') (args+=Expr (',' args+=Expr)*)? ')' 
+		|=> ({RecordExpr.record=current} '{') args+=Expr '=' argExpr+=Expr (';' args+=Expr '=' argExpr+=Expr)* '}'
+		)?
+;
 
 NestedDotID:
 	base=[aadl2::NamedElement|ID] ('.' ((=> tag=ReservedVarTag) | sub=NestedDotID))?;
@@ -171,8 +178,6 @@ ReservedVarTag:
 |	'INSERT'
 |	'COUNT'
 |   'CLK';
-
-	
 
 QID:
 	ID '::' ID;
