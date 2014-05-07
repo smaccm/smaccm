@@ -1024,11 +1024,11 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
     	
     	if(tag != null){
     		switch (tag){
-    		case "CLK":
-    		case "INSERT":
-    		case "REMOVE":
+    		case "_CLK":
+    		case "_INSERT":
+    		case "_REMOVE":
     			return BOOL;
-    		case "COUNT":
+    		case "_COUNT":
     			return INT;
     		default: 
     			return ERROR;

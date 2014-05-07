@@ -171,13 +171,13 @@ ComplexExpr:
 ;
 
 NestedDotID:
-	base=[aadl2::NamedElement|ID] ('.' ((=> tag=ReservedVarTag) | sub=NestedDotID))?;
+	base=[aadl2::NamedElement|ID] (=> ('.' (( tag=ReservedVarTag) | sub=NestedDotID)))?;
 
 ReservedVarTag:
-	'REMOVE'
-|	'INSERT'
-|	'COUNT'
-|   'CLK';
+	'_REMOVE'
+|	'_INSERT'
+|	'_COUNT'
+|   '_CLK';
 
 QID:
 	ID '::' ID;

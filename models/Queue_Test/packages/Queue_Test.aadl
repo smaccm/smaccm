@@ -11,16 +11,16 @@ system sys
   		
     --make an assumption about how often data comes into the system
     assume "input frequency" :
-    	(prev(inport.INSERT, false) or 
-    	prev(prev(inport.INSERT,false),false)) => not (inport.INSERT);
+    	(prev(inport._INSERT, false) or  
+    	prev(prev(inport._INSERT,false),false)) => not (inport._INSERT);
     	
     assume "initial outport" : outport = 0 -> true;
     
     assume "positive input" : inport >= 0;
     
-    assume "don't remove" : outport.COUNT <= 0 => not outport.REMOVE;
+    assume "don't remove" : outport._COUNT <= 0 => not outport._REMOVE; 
     	
-    eq in_data : int = if(inport.INSERT) then inport else 0;
+    eq in_data : int = if(inport._INSERT) then inport else 0;
     eq input_total : int = in_data -> pre(input_total) + in_data;
     
   	guarantee "outport bound" :
@@ -30,7 +30,7 @@ system sys
   		true -> outport >= pre(outport);
   		
   	guarantee "output changes only on remove" :
-  		true -> outport != pre(outport) => pre(outport.REMOVE);
+  		true -> outport != pre(outport) => pre(outport._REMOVE);
   		
   	
   	
@@ -55,11 +55,11 @@ system implementation sys.impl
   annex agree {**
   	calendar: sysa, sysc, sysb, sysb;
   	
-  	assert(inport.INSERT => not(sysa.CLK or sysc.CLK));
-  	assert(outport.COUNT > 0 and (not sysb.CLK) => outport.REMOVE);
+  	assert(inport._INSERT => not(sysa._CLK or sysc._CLK));
+  	assert(outport._COUNT > 0 and (not sysb._CLK) => outport._REMOVE);
   	
-  	lemma "outport count bound" : outport.COUNT <= 2;
-  	lemma "outport count positive" : outport.COUNT >= 0;
+  	lemma "outport count bound" : outport._COUNT <= 2;
+  	lemma "outport count positive" : outport._COUNT >= 0;
   	
   **};
 
@@ -73,13 +73,13 @@ system subsysa
 	outport : out event data port Base_Types::Integer;
 	
   annex agree {**
-  	guarantee "foo" : if(inport.COUNT > 0) then
-  						inport.REMOVE and
-  						outport.INSERT and
+  	guarantee "foo" : if(inport._COUNT > 0) then
+  						inport._REMOVE and
+  						outport._INSERT and
   						outport = inport div 2
   					  else
-  					  	not inport.REMOVE and
-  					  	not outport.INSERT;
+  					  	not inport._REMOVE and
+  					  	not outport._INSERT;
   					  	
   	guarantee "initial outport" : outport = 0 -> true;
   	
@@ -93,13 +93,13 @@ system subsysb
 	outport : out event data port Base_Types::Integer;
 
   annex agree {**
-  	guarantee "foo" : if(inport.COUNT > 0) then
-  						inport.REMOVE and
-  						outport.INSERT and
+  	guarantee "foo" : if(inport._COUNT > 0) then
+  						inport._REMOVE and
+  						outport._INSERT and
   						outport = inport + prev(outport,0)
   					  else
-  					  	not inport.REMOVE and
-  					  	not outport.INSERT and
+  					  	not inport._REMOVE and
+  					  	not outport._INSERT and
   					  	outport = prev(outport, 0);
   					  	
   	guarantee "initial outport" : outport = 0 -> true;

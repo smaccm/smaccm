@@ -12,8 +12,8 @@ annex agree {**
     (act : real, act_ret : real, for : int) 
   returns 
     (return : bool);
-  var
-    count : int;
+  var 
+    count : int; 
   let
     count = 0 -> if (fault_occurred(act, act_ret)) then
                     0 else pre(count) + 1;
@@ -34,7 +34,7 @@ annex agree {**
                     pre(count) + 1 else 0;
     return = count >= for;
     
-    lemma "pos count" : count >= 0;
+    lemma "pos count" : count >= 0; 
     
   tel;
     

@@ -1170,8 +1170,8 @@ system ISAS
       
       node latched_if_held_for(input : bool, time : int) returns (return : bool);
       var
-        count : int;
-        count_hit: bool;
+        count : int; 
+        count_hit: bool; 
       let
         count_hit = (count >= time) -> pre(count_hit) or (count >= time);
         count = if(input) then 1 else 0 -> if(input) then pre(count) + 1 else 0;

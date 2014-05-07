@@ -2292,18 +2292,19 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		private final CrossReference cBaseNamedElementCrossReference_0_0 = (CrossReference)cBaseAssignment_0.eContents().get(0);
 		private final RuleCall cBaseNamedElementIDTerminalRuleCall_0_0_1 = (RuleCall)cBaseNamedElementCrossReference_0_0.eContents().get(1);
 		private final Group cGroup_1 = (Group)cGroup.eContents().get(1);
-		private final Keyword cFullStopKeyword_1_0 = (Keyword)cGroup_1.eContents().get(0);
-		private final Alternatives cAlternatives_1_1 = (Alternatives)cGroup_1.eContents().get(1);
-		private final Assignment cTagAssignment_1_1_0 = (Assignment)cAlternatives_1_1.eContents().get(0);
-		private final RuleCall cTagReservedVarTagParserRuleCall_1_1_0_0 = (RuleCall)cTagAssignment_1_1_0.eContents().get(0);
-		private final Assignment cSubAssignment_1_1_1 = (Assignment)cAlternatives_1_1.eContents().get(1);
-		private final RuleCall cSubNestedDotIDParserRuleCall_1_1_1_0 = (RuleCall)cSubAssignment_1_1_1.eContents().get(0);
+		private final Group cGroup_1_0 = (Group)cGroup_1.eContents().get(0);
+		private final Keyword cFullStopKeyword_1_0_0 = (Keyword)cGroup_1_0.eContents().get(0);
+		private final Alternatives cAlternatives_1_0_1 = (Alternatives)cGroup_1_0.eContents().get(1);
+		private final Assignment cTagAssignment_1_0_1_0 = (Assignment)cAlternatives_1_0_1.eContents().get(0);
+		private final RuleCall cTagReservedVarTagParserRuleCall_1_0_1_0_0 = (RuleCall)cTagAssignment_1_0_1_0.eContents().get(0);
+		private final Assignment cSubAssignment_1_0_1_1 = (Assignment)cAlternatives_1_0_1.eContents().get(1);
+		private final RuleCall cSubNestedDotIDParserRuleCall_1_0_1_1_0 = (RuleCall)cSubAssignment_1_0_1_1.eContents().get(0);
 		
 		//NestedDotID:
-		//	base=[aadl2::NamedElement] ("." (=> tag=ReservedVarTag | sub=NestedDotID))?;
+		//	base=[aadl2::NamedElement] => ("." (tag=ReservedVarTag | sub=NestedDotID))?;
 		public ParserRule getRule() { return rule; }
 
-		//base=[aadl2::NamedElement] ("." (=> tag=ReservedVarTag | sub=NestedDotID))?
+		//base=[aadl2::NamedElement] => ("." (tag=ReservedVarTag | sub=NestedDotID))?
 		public Group getGroup() { return cGroup; }
 
 		//base=[aadl2::NamedElement]
@@ -2315,54 +2316,57 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		//ID
 		public RuleCall getBaseNamedElementIDTerminalRuleCall_0_0_1() { return cBaseNamedElementIDTerminalRuleCall_0_0_1; }
 
-		//("." (=> tag=ReservedVarTag | sub=NestedDotID))?
+		//=> ("." (tag=ReservedVarTag | sub=NestedDotID))?
 		public Group getGroup_1() { return cGroup_1; }
 
+		//"." (tag=ReservedVarTag | sub=NestedDotID)
+		public Group getGroup_1_0() { return cGroup_1_0; }
+
 		//"."
-		public Keyword getFullStopKeyword_1_0() { return cFullStopKeyword_1_0; }
+		public Keyword getFullStopKeyword_1_0_0() { return cFullStopKeyword_1_0_0; }
 
-		//=> tag=ReservedVarTag | sub=NestedDotID
-		public Alternatives getAlternatives_1_1() { return cAlternatives_1_1; }
+		//tag=ReservedVarTag | sub=NestedDotID
+		public Alternatives getAlternatives_1_0_1() { return cAlternatives_1_0_1; }
 
-		//=> tag=ReservedVarTag
-		public Assignment getTagAssignment_1_1_0() { return cTagAssignment_1_1_0; }
+		//tag=ReservedVarTag
+		public Assignment getTagAssignment_1_0_1_0() { return cTagAssignment_1_0_1_0; }
 
 		//ReservedVarTag
-		public RuleCall getTagReservedVarTagParserRuleCall_1_1_0_0() { return cTagReservedVarTagParserRuleCall_1_1_0_0; }
+		public RuleCall getTagReservedVarTagParserRuleCall_1_0_1_0_0() { return cTagReservedVarTagParserRuleCall_1_0_1_0_0; }
 
 		//sub=NestedDotID
-		public Assignment getSubAssignment_1_1_1() { return cSubAssignment_1_1_1; }
+		public Assignment getSubAssignment_1_0_1_1() { return cSubAssignment_1_0_1_1; }
 
 		//NestedDotID
-		public RuleCall getSubNestedDotIDParserRuleCall_1_1_1_0() { return cSubNestedDotIDParserRuleCall_1_1_1_0; }
+		public RuleCall getSubNestedDotIDParserRuleCall_1_0_1_1_0() { return cSubNestedDotIDParserRuleCall_1_0_1_1_0; }
 	}
 
 	public class ReservedVarTagElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "ReservedVarTag");
 		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
-		private final Keyword cREMOVEKeyword_0 = (Keyword)cAlternatives.eContents().get(0);
-		private final Keyword cINSERTKeyword_1 = (Keyword)cAlternatives.eContents().get(1);
-		private final Keyword cCOUNTKeyword_2 = (Keyword)cAlternatives.eContents().get(2);
-		private final Keyword cCLKKeyword_3 = (Keyword)cAlternatives.eContents().get(3);
+		private final Keyword c_REMOVEKeyword_0 = (Keyword)cAlternatives.eContents().get(0);
+		private final Keyword c_INSERTKeyword_1 = (Keyword)cAlternatives.eContents().get(1);
+		private final Keyword c_COUNTKeyword_2 = (Keyword)cAlternatives.eContents().get(2);
+		private final Keyword c_CLKKeyword_3 = (Keyword)cAlternatives.eContents().get(3);
 		
 		//ReservedVarTag:
-		//	"REMOVE" | "INSERT" | "COUNT" | "CLK";
+		//	"_REMOVE" | "_INSERT" | "_COUNT" | "_CLK";
 		public ParserRule getRule() { return rule; }
 
-		//"REMOVE" | "INSERT" | "COUNT" | "CLK"
+		//"_REMOVE" | "_INSERT" | "_COUNT" | "_CLK"
 		public Alternatives getAlternatives() { return cAlternatives; }
 
-		//"REMOVE"
-		public Keyword getREMOVEKeyword_0() { return cREMOVEKeyword_0; }
+		//"_REMOVE"
+		public Keyword get_REMOVEKeyword_0() { return c_REMOVEKeyword_0; }
 
-		//"INSERT"
-		public Keyword getINSERTKeyword_1() { return cINSERTKeyword_1; }
+		//"_INSERT"
+		public Keyword get_INSERTKeyword_1() { return c_INSERTKeyword_1; }
 
-		//"COUNT"
-		public Keyword getCOUNTKeyword_2() { return cCOUNTKeyword_2; }
+		//"_COUNT"
+		public Keyword get_COUNTKeyword_2() { return c_COUNTKeyword_2; }
 
-		//"CLK"
-		public Keyword getCLKKeyword_3() { return cCLKKeyword_3; }
+		//"_CLK"
+		public Keyword get_CLKKeyword_3() { return c_CLKKeyword_3; }
 	}
 
 	public class QIDElements extends AbstractParserRuleElementFinder {
@@ -2860,7 +2864,7 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 	}
 
 	//NestedDotID:
-	//	base=[aadl2::NamedElement] ("." (=> tag=ReservedVarTag | sub=NestedDotID))?;
+	//	base=[aadl2::NamedElement] => ("." (tag=ReservedVarTag | sub=NestedDotID))?;
 	public NestedDotIDElements getNestedDotIDAccess() {
 		return (pNestedDotID != null) ? pNestedDotID : (pNestedDotID = new NestedDotIDElements());
 	}
@@ -2870,7 +2874,7 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 	}
 
 	//ReservedVarTag:
-	//	"REMOVE" | "INSERT" | "COUNT" | "CLK";
+	//	"_REMOVE" | "_INSERT" | "_COUNT" | "_CLK";
 	public ReservedVarTagElements getReservedVarTagAccess() {
 		return (pReservedVarTag != null) ? pReservedVarTag : (pReservedVarTag = new ReservedVarTagElements());
 	}

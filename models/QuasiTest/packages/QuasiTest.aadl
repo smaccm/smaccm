@@ -54,7 +54,7 @@ system implementation Squadron.impl
 		synchrony : 1; 
 				
 		--initial tick
-		assert form_right.CLK and form_left.CLK -> true;
+		assert form_right._CLK and form_left._CLK -> true;
 				
 		--make sure that everyone shifts the same
 		assert right_shift = form_right.right_shift;
@@ -232,9 +232,9 @@ system implementation Formation.impl
 		const pend_right_state : int = 5;
 		
 		-- This allows you to reference the clocks if you would like to
-		eq a_clk : bool = VA.CLK;
-		eq b_clk : bool = VB.CLK;
-		eq c_clk : bool = VC.CLK; 
+		eq a_clk : bool = VA._CLK;
+		eq b_clk : bool = VB._CLK;
+		eq c_clk : bool = VC._CLK; 
 		
 		assert a_clk and b_clk and c_clk -> true;
 		

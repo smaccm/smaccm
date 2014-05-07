@@ -1105,13 +1105,13 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         	String aVarPrefix = this.aadlNameTag + aadlVar + namedEl.getName();
         	
         	switch(tag){
-        	case "CLK":
+        	case "_CLK":
         		return getClockID(namedEl);
-        	case "COUNT":
+        	case "_COUNT":
         		return getQueueCountID(jVarPrefix, aVarPrefix, namedEl);
-        	case "INSERT":
+        	case "_INSERT":
         		return getQueueInsertID(jVarPrefix, aVarPrefix, namedEl);
-        	case "REMOVE":
+        	case "_REMOVE":
         		return getQueueRemoveID(jVarPrefix, aVarPrefix, namedEl);
         	default:
         		throw new AgreeException("use of uknown tag: '"+tag+"' in expression: '"+aadlVar+tag+"'");
