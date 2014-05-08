@@ -28,10 +28,11 @@ import org.osate.xtext.aadl2.properties.linking.PropertiesLinkingService;
 import org.osate.xtext.aadl2.properties.util.EMFIndexRetrieval;
 
 import com.rockwellcollins.atc.agree.agree.CalenStatement;
-import com.rockwellcollins.atc.agree.agree.IdExpr;
+import com.rockwellcollins.atc.agree.agree.GetPropertyExpr;
 import com.rockwellcollins.atc.agree.agree.NestedDotID;
 import com.rockwellcollins.atc.agree.agree.NodeEq;
 import com.rockwellcollins.atc.agree.agree.RecordExpr;
+import com.rockwellcollins.atc.agree.agree.RecordType;
 
 public class AgreeLinkingService extends PropertiesLinkingService {
     public AgreeLinkingService() {
@@ -47,11 +48,12 @@ public class AgreeLinkingService extends PropertiesLinkingService {
             return findUnitLiteralAsList((Element) context, name);
         }
 
-        if (context instanceof IdExpr 
-        		|| context instanceof NestedDotID
+        if (context instanceof NestedDotID
                 || context instanceof NodeEq
                 || context instanceof CalenStatement
-                || context instanceof RecordExpr) {
+                || context instanceof RecordExpr
+                || context instanceof RecordType
+                || context instanceof GetPropertyExpr) {
 
             EObject e = findClassifier(context, reference, name);
             

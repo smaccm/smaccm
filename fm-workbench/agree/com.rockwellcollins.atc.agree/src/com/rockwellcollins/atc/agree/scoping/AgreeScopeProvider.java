@@ -3,7 +3,6 @@
  */
 package com.rockwellcollins.atc.agree.scoping;
 
-import java.io.ObjectInputStream.GetField;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -19,10 +18,10 @@ import org.osate.aadl2.Classifier;
 import org.osate.aadl2.ComponentClassifier;
 import org.osate.aadl2.ComponentImplementation;
 import org.osate.aadl2.ComponentType;
+import org.osate.aadl2.DataImplementation;
 import org.osate.aadl2.DataPort;
 import org.osate.aadl2.Element;
 import org.osate.aadl2.EventDataPort;
-import org.osate.aadl2.Feature;
 import org.osate.aadl2.FeatureGroupType;
 import org.osate.aadl2.NamedElement;
 import org.osate.aadl2.PublicPackageSection;
@@ -188,11 +187,20 @@ public class AgreeScopeProvider extends
         } else if (container instanceof NodeEq){
         	return new HashSet<>();
         	
-        }else if (container instanceof RecordType
-        		|| container instanceof RecordExpr){
+        }else if (container instanceof RecordType){
         	while(!(container instanceof AadlPackage)){
         		container = container.eContainer();
         	}
+        }else if (container instanceof RecordExpr){
+        	NestedDotID record = ((RecordExpr)container).getRecord();
+        	if(record != id){
+        		NamedElement recDef = record.getBase();
+        		if(recDef instanceof DataImplementation){
+        			result.addAll(((DataImplementation) recDef).getAllSubcomponents());
+        			return result;
+        		}
+        	}
+        	return new HashSet<>();
         } else {
             // travel out of the annex and get the component
             // classifier that the annex is contained in.
@@ -241,7 +249,7 @@ public class AgreeScopeProvider extends
         	PublicPackageSection pubSec = aadlPack.getPublicSection();
         	
         	for(Element el : pubSec.getOwnedElements()){
-        		if(el instanceof FeatureGroupType){
+        		if(el instanceof DataImplementation){
         			result.add(el);
         		}
         	}

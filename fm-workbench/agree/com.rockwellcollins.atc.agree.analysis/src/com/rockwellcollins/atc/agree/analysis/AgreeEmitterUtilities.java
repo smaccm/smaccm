@@ -40,6 +40,7 @@ import org.osate.aadl2.Connection;
 import org.osate.aadl2.ContainedNamedElement;
 import org.osate.aadl2.ContainmentPathElement;
 import org.osate.aadl2.Context;
+import org.osate.aadl2.DataImplementation;
 import org.osate.aadl2.DataSubcomponent;
 import org.osate.aadl2.DataType;
 import org.osate.aadl2.FeatureGroupType;
@@ -188,29 +189,22 @@ public class AgreeEmitterUtilities {
         	typeName = ((PrimType)agreeType).getString();
         }else{
         	RecordType recType = (RecordType)agreeType;
-        	NestedDotID recId = recType.getRecord();
-        	NamedElement finalId = getFinalNestId(recId);
-        	
-        	if(finalId instanceof RecordDefExpr){
-        		typeName = finalId.getName();
-        	}else if(finalId instanceof FeatureGroupType){
-        		//get the package name
-        		EObject container = recId.eContainer();
-        		while(!(container instanceof AadlPackage)){
-        			container = container.eContainer();
-        		}
-        		StringBuilder sb = new StringBuilder();
-        		String tag = "";
-        		do{
-        			sb.append(tag);
-        			sb.append(recId.getBase().getName());
-        			recId = recId.getSub();
-        			tag = "__";
-        		}while(recId != null);
-        		
-        		typeName = ((AadlPackage)container).getName()+tag+sb.toString();
-        				
+        	NamedElement recId = recType.getRecord();
+        	EObject aadlPack = recId.eContainer();
+        	while(!(aadlPack instanceof AadlPackage)){
+        		aadlPack = aadlPack.eContainer();
         	}
+        	String packName = ((AadlPackage)aadlPack).getName();
+        	
+        	if(recId instanceof RecordDefExpr){
+        		typeName = packName+"_"+recId.getName();
+        	}else if(recId instanceof DataImplementation){
+        		//use two underscores so there are not conflicts
+        		//with record type names
+        		typeName = packName+"__"+recId.getName();
+        		typeName.replace(".", "_");
+        	}
+        	
         }
 		return typeName;
     }

@@ -33,6 +33,7 @@ import org.osate.aadl2.ComponentClassifier;
 import org.osate.aadl2.ComponentImplementation;
 import org.osate.aadl2.ComponentType;
 import org.osate.aadl2.DataAccess;
+import org.osate.aadl2.DataImplementation;
 import org.osate.aadl2.DataPort;
 import org.osate.aadl2.DataSubcomponent;
 import org.osate.aadl2.DataSubcomponentType;
@@ -67,7 +68,6 @@ import com.rockwellcollins.atc.agree.agree.FnCallExpr;
 import com.rockwellcollins.atc.agree.agree.FnDefExpr;
 import com.rockwellcollins.atc.agree.agree.GetPropertyExpr;
 import com.rockwellcollins.atc.agree.agree.GuaranteeStatement;
-import com.rockwellcollins.atc.agree.agree.IdExpr;
 import com.rockwellcollins.atc.agree.agree.IfThenElseExpr;
 import com.rockwellcollins.atc.agree.agree.IntLitExpr;
 import com.rockwellcollins.atc.agree.agree.LemmaStatement;
@@ -354,28 +354,20 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
         	typeName = ((PrimType)type).getString();
         }else{
         	RecordType recType = (RecordType)type;
-        	NestedDotID recId = recType.getRecord();
-        	NamedElement finalId = getFinalNestId(recId);
+        	NamedElement recId = recType.getRecord();
+        	EObject aadlPack = recId.eContainer();
+        	while(!(aadlPack instanceof AadlPackage)){
+        		aadlPack = aadlPack.eContainer();
+        	}
+        	String packName = ((AadlPackage)aadlPack).getName();
         	
-        	if(finalId instanceof RecordDefExpr){
-        		typeName = finalId.getName();
-        	}else if(finalId instanceof FeatureGroupType){
-        		//get the package name
-        		EObject container = recId.eContainer();
-        		while(!(container instanceof AadlPackage)){
-        			container = container.eContainer();
-        		}
-        		StringBuilder sb = new StringBuilder();
-        		String tag = "";
-        		do{
-        			sb.append(tag);
-        			sb.append(recId.getBase().getName());
-        			recId = recId.getSub();
-        			tag = "__";
-        		}while(recId != null);
-        		
-        		typeName = ((AadlPackage)container).getName()+tag+sb.toString();
-        				
+        	if(recId instanceof RecordDefExpr){
+        		typeName = packName+"_"+recId.getName();
+        	}else if(recId instanceof DataImplementation){
+        		//use two underscores so there are not conflicts
+        		//with record type names
+        		typeName = packName+"__"+recId.getName();
+        		typeName.replace(".", "_");
         	}
         	
         }
@@ -669,19 +661,14 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
     public void checkGetPropertyExpr(GetPropertyExpr getPropExpr) {
         AgreeType compType = getAgreeType(getPropExpr.getComponent());
         // AgreeType propType = getAgreeType(propExpr.getName());
-        Expr propExpr = getPropExpr.getProp();
+        NamedElement prop = getPropExpr.getProp();
 
         if (!compType.equals(new AgreeType("component"))) {
             error(getPropExpr.getComponent(), "Expected type component, but found type " + compType);
         }
 
-        if (propExpr instanceof IdExpr) {
-            NamedElement idVal = ((IdExpr) propExpr).getId();
-            if (!(idVal instanceof Property)) {
-                error(getPropExpr.getProp(), "Expected AADL property");
-            }
-        } else {
-            error(getPropExpr.getProp(), "Expected AADL property");
+        if (!(prop instanceof Property)) {
+        	error(getPropExpr.getProp(), "Expected AADL property");
         }
     }
 
@@ -979,20 +966,6 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
         }
     }
 
-    @Check(CheckType.FAST)
-    public void checkIdExpr(IdExpr idExpr) {
-        // Scope check for nodes / functions
-        NamedElement id = idExpr.getId();
-        checkScope(idExpr, id);
-
-        if (id instanceof Property) {
-            if (!(idExpr.eContainer() instanceof GetPropertyExpr)) {
-                error(idExpr,
-                        "References to AADL properties can only appear in 'Get_Property' expressions.");
-            }
-        }
-    }
-
     public NamedElement getFinalNestId(NestedDotID dotId) {
         while (dotId.getSub() != null) {
             dotId = dotId.getSub();
@@ -1216,10 +1189,6 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
         return ERROR;
     }
 
-    private AgreeType getAgreeType(IdExpr idExpr) {
-        return getAgreeType(idExpr.getId());
-    }
-
     private AgreeType getAgreeType(Expr expr) {
         if (expr instanceof BinaryExpr) {
             return getAgreeType((BinaryExpr) expr);
@@ -1235,8 +1204,6 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
             return getAgreeType((NestedDotID) expr);
         } else if (expr instanceof UnaryExpr) {
             return getAgreeType((UnaryExpr) expr);
-        } else if (expr instanceof IdExpr) {
-            return getAgreeType((IdExpr) expr);
         } else if (expr instanceof IntLitExpr) {
             return INT;
         } else if (expr instanceof RealLitExpr) {

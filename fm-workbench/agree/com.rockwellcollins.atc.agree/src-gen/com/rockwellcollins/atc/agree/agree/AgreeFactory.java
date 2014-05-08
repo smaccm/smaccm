@@ -374,15 +374,6 @@ public interface AgreeFactory extends EFactory
   RecordUpdateExpr createRecordUpdateExpr();
 
   /**
-   * Returns a new object of class '<em>Id Expr</em>'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return a new object of class '<em>Id Expr</em>'.
-   * @generated
-   */
-  IdExpr createIdExpr();
-
-  /**
    * Returns a new object of class '<em>Int Lit Expr</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->

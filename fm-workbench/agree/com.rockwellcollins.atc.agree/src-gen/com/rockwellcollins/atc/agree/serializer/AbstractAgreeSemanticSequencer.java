@@ -18,7 +18,6 @@ import com.rockwellcollins.atc.agree.agree.FnCallExpr;
 import com.rockwellcollins.atc.agree.agree.FnDefExpr;
 import com.rockwellcollins.atc.agree.agree.GetPropertyExpr;
 import com.rockwellcollins.atc.agree.agree.GuaranteeStatement;
-import com.rockwellcollins.atc.agree.agree.IdExpr;
 import com.rockwellcollins.atc.agree.agree.IfThenElseExpr;
 import com.rockwellcollins.atc.agree.agree.IntLitExpr;
 import com.rockwellcollins.atc.agree.agree.LemmaStatement;
@@ -431,35 +430,6 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 				if(context == grammarAccess.getElementRule() ||
 				   context == grammarAccess.getSpecStatementRule()) {
 					sequence_SpecStatement(context, (GuaranteeStatement) semanticObject); 
-					return; 
-				}
-				else break;
-			case AgreePackage.ID_EXPR:
-				if(context == grammarAccess.getAddSubExprRule() ||
-				   context == grammarAccess.getAddSubExprAccess().getBinaryExprLeftAction_1_0_0_0() ||
-				   context == grammarAccess.getAndExprRule() ||
-				   context == grammarAccess.getAndExprAccess().getBinaryExprLeftAction_1_0_0_0() ||
-				   context == grammarAccess.getArrowExprRule() ||
-				   context == grammarAccess.getArrowExprAccess().getBinaryExprLeftAction_1_0_0_0() ||
-				   context == grammarAccess.getElementRule() ||
-				   context == grammarAccess.getEquivExprRule() ||
-				   context == grammarAccess.getEquivExprAccess().getBinaryExprLeftAction_1_0_0_0() ||
-				   context == grammarAccess.getExprRule() ||
-				   context == grammarAccess.getIfThenElseExprRule() ||
-				   context == grammarAccess.getImpliesExprRule() ||
-				   context == grammarAccess.getImpliesExprAccess().getBinaryExprLeftAction_1_0_0_0() ||
-				   context == grammarAccess.getMultDivExprRule() ||
-				   context == grammarAccess.getMultDivExprAccess().getBinaryExprLeftAction_1_0_0_0() ||
-				   context == grammarAccess.getOrExprRule() ||
-				   context == grammarAccess.getOrExprAccess().getBinaryExprLeftAction_1_0_0_0() ||
-				   context == grammarAccess.getPreDefFnExprRule() ||
-				   context == grammarAccess.getRecordUpdateExprsRule() ||
-				   context == grammarAccess.getRecordUpdateExprsAccess().getRecordUpdateExprExprAction_1_0_0() ||
-				   context == grammarAccess.getRelateExprRule() ||
-				   context == grammarAccess.getRelateExprAccess().getBinaryExprLeftAction_1_0_0_0() ||
-				   context == grammarAccess.getTermExprRule() ||
-				   context == grammarAccess.getUnaryExprRule()) {
-					sequence_TermExpr(context, (IdExpr) semanticObject); 
 					return; 
 				}
 				else break;
@@ -965,7 +935,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	
 	/**
 	 * Constraint:
-	 *     (base=[NamedElement|ID] (tag=ReservedVarTag | sub=NestedDotID)?)
+	 *     (base=[NamedElement|QCPREF] (tag=ReservedVarTag | sub=NestedDotID)?)
 	 */
 	protected void sequence_NestedDotID(EObject context, NestedDotID semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -1010,7 +980,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	
 	/**
 	 * Constraint:
-	 *     (component=Expr prop=Expr)
+	 *     (component=Expr prop=[NamedElement|QCLREF])
 	 */
 	protected void sequence_PreDefFnExpr(EObject context, GetPropertyExpr semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -1136,15 +1106,6 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	
 	/**
 	 * Constraint:
-	 *     id=[NamedElement|QID]
-	 */
-	protected void sequence_TermExpr(EObject context, IdExpr semanticObject) {
-		genericSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * Constraint:
 	 *     val=INTEGER_LIT
 	 */
 	protected void sequence_TermExpr(EObject context, IntLitExpr semanticObject) {
@@ -1190,7 +1151,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	
 	/**
 	 * Constraint:
-	 *     record=NestedDotID
+	 *     record=[NamedElement|QCREF]
 	 */
 	protected void sequence_Type(EObject context, RecordType semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);

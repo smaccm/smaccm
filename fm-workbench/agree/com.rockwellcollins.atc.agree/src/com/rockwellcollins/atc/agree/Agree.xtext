@@ -98,7 +98,7 @@ Arg returns Arg:
 
 Type returns Type:
 	{PrimType} string=('real' | 'bool' | 'int')
-|	{RecordType} record=NestedDotID
+|	{RecordType} record=[aadl2::NamedElement|QCREF]
 ;
 
 RecordDefExpr:
@@ -145,7 +145,7 @@ IfThenElseExpr returns Expr:
 
 PreDefFnExpr returns Expr:
 	{PrevExpr} 'prev' '(' delay=Expr ',' init=Expr ')'
-	| {GetPropertyExpr} 'Get_Property' '(' component=Expr ',' prop=Expr ')'
+	| {GetPropertyExpr} 'Get_Property' '(' component=Expr ',' prop=[aadl2::NamedElement|QCLREF] ')'
 	| RecordUpdateExprs;
 
 RecordUpdateExprs returns Expr:
@@ -153,8 +153,7 @@ RecordUpdateExprs returns Expr:
 ;
 
 TermExpr returns Expr:
-	{IdExpr} id=[aadl2::NamedElement|QID]
-	| ComplexExpr
+	  ComplexExpr
 	| {IntLitExpr} val=INTEGER_LIT
 	| {PreExpr} 'pre' '(' expr=Expr ')'
 	| {RealLitExpr} val=REAL_LIT
@@ -171,13 +170,16 @@ ComplexExpr:
 ;
 
 NestedDotID:
-	base=[aadl2::NamedElement|ID] (=> ('.' (( tag=ReservedVarTag) | sub=NestedDotID)))?;
+	base=[aadl2::NamedElement|QCPREF] (=> ('.' (( tag=ReservedVarTag) | sub=NestedDotID)))?;
 
+QCPREF:
+	=>(ID '::') ID =>('.' ID)?
+|	ID;
+	
 ReservedVarTag:
 	'_REMOVE'
 |	'_INSERT'
 |	'_COUNT'
 |   '_CLK';
 
-QID:
-	ID '::' ID;
+	

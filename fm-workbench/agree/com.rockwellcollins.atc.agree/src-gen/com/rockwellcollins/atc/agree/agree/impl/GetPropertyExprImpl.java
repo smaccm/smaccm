@@ -10,9 +10,12 @@ import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
+
+import org.osate.aadl2.NamedElement;
 
 /**
  * <!-- begin-user-doc -->
@@ -41,14 +44,14 @@ public class GetPropertyExprImpl extends ExprImpl implements GetPropertyExpr
   protected Expr component;
 
   /**
-   * The cached value of the '{@link #getProp() <em>Prop</em>}' containment reference.
+   * The cached value of the '{@link #getProp() <em>Prop</em>}' reference.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @see #getProp()
    * @generated
    * @ordered
    */
-  protected Expr prop;
+  protected NamedElement prop;
 
   /**
    * <!-- begin-user-doc -->
@@ -124,7 +127,27 @@ public class GetPropertyExprImpl extends ExprImpl implements GetPropertyExpr
    * <!-- end-user-doc -->
    * @generated
    */
-  public Expr getProp()
+  public NamedElement getProp()
+  {
+    if (prop != null && ((EObject)prop).eIsProxy())
+    {
+      InternalEObject oldProp = (InternalEObject)prop;
+      prop = (NamedElement)eResolveProxy(oldProp);
+      if (prop != oldProp)
+      {
+        if (eNotificationRequired())
+          eNotify(new ENotificationImpl(this, Notification.RESOLVE, AgreePackage.GET_PROPERTY_EXPR__PROP, oldProp, prop));
+      }
+    }
+    return prop;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public NamedElement basicGetProp()
   {
     return prop;
   }
@@ -134,37 +157,12 @@ public class GetPropertyExprImpl extends ExprImpl implements GetPropertyExpr
    * <!-- end-user-doc -->
    * @generated
    */
-  public NotificationChain basicSetProp(Expr newProp, NotificationChain msgs)
+  public void setProp(NamedElement newProp)
   {
-    Expr oldProp = prop;
+    NamedElement oldProp = prop;
     prop = newProp;
     if (eNotificationRequired())
-    {
-      ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, AgreePackage.GET_PROPERTY_EXPR__PROP, oldProp, newProp);
-      if (msgs == null) msgs = notification; else msgs.add(notification);
-    }
-    return msgs;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public void setProp(Expr newProp)
-  {
-    if (newProp != prop)
-    {
-      NotificationChain msgs = null;
-      if (prop != null)
-        msgs = ((InternalEObject)prop).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - AgreePackage.GET_PROPERTY_EXPR__PROP, null, msgs);
-      if (newProp != null)
-        msgs = ((InternalEObject)newProp).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - AgreePackage.GET_PROPERTY_EXPR__PROP, null, msgs);
-      msgs = basicSetProp(newProp, msgs);
-      if (msgs != null) msgs.dispatch();
-    }
-    else if (eNotificationRequired())
-      eNotify(new ENotificationImpl(this, Notification.SET, AgreePackage.GET_PROPERTY_EXPR__PROP, newProp, newProp));
+      eNotify(new ENotificationImpl(this, Notification.SET, AgreePackage.GET_PROPERTY_EXPR__PROP, oldProp, prop));
   }
 
   /**
@@ -179,8 +177,6 @@ public class GetPropertyExprImpl extends ExprImpl implements GetPropertyExpr
     {
       case AgreePackage.GET_PROPERTY_EXPR__COMPONENT:
         return basicSetComponent(null, msgs);
-      case AgreePackage.GET_PROPERTY_EXPR__PROP:
-        return basicSetProp(null, msgs);
     }
     return super.eInverseRemove(otherEnd, featureID, msgs);
   }
@@ -198,7 +194,8 @@ public class GetPropertyExprImpl extends ExprImpl implements GetPropertyExpr
       case AgreePackage.GET_PROPERTY_EXPR__COMPONENT:
         return getComponent();
       case AgreePackage.GET_PROPERTY_EXPR__PROP:
-        return getProp();
+        if (resolve) return getProp();
+        return basicGetProp();
     }
     return super.eGet(featureID, resolve, coreType);
   }
@@ -217,7 +214,7 @@ public class GetPropertyExprImpl extends ExprImpl implements GetPropertyExpr
         setComponent((Expr)newValue);
         return;
       case AgreePackage.GET_PROPERTY_EXPR__PROP:
-        setProp((Expr)newValue);
+        setProp((NamedElement)newValue);
         return;
     }
     super.eSet(featureID, newValue);
@@ -237,7 +234,7 @@ public class GetPropertyExprImpl extends ExprImpl implements GetPropertyExpr
         setComponent((Expr)null);
         return;
       case AgreePackage.GET_PROPERTY_EXPR__PROP:
-        setProp((Expr)null);
+        setProp((NamedElement)null);
         return;
     }
     super.eUnset(featureID);

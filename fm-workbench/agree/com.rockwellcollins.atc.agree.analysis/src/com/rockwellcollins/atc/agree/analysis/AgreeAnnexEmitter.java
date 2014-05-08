@@ -1008,8 +1008,6 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
     private NamedElement namedElFromId(EObject obj) {
         if (obj instanceof NestedDotID) {
             return AgreeEmitterUtilities.getFinalNestId((NestedDotID) obj);
-        } else if (obj instanceof com.rockwellcollins.atc.agree.agree.IdExpr) {
-            return ((com.rockwellcollins.atc.agree.agree.IdExpr) obj).getId();
         } else {
             assert (obj instanceof ThisExpr);
            
@@ -1051,14 +1049,6 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
             }
             return compInst;
         }
-    }
-
-    @Override
-    public Expr caseIdExpr(com.rockwellcollins.atc.agree.agree.IdExpr expr) {
-        //I'm pretty sure this is dead code now
-        assert(false);
-        // just make an expression of the NamedElement
-        return new IdExpr(jKindNameTag + expr.getId().getName());
     }
 
     @Override

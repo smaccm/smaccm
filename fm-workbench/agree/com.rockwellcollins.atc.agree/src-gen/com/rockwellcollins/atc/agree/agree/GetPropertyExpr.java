@@ -2,6 +2,7 @@
  */
 package com.rockwellcollins.atc.agree.agree;
 
+import org.osate.aadl2.NamedElement;
 
 /**
  * <!-- begin-user-doc -->
@@ -49,29 +50,29 @@ public interface GetPropertyExpr extends Expr
   void setComponent(Expr value);
 
   /**
-   * Returns the value of the '<em><b>Prop</b></em>' containment reference.
+   * Returns the value of the '<em><b>Prop</b></em>' reference.
    * <!-- begin-user-doc -->
    * <p>
-   * If the meaning of the '<em>Prop</em>' containment reference isn't clear,
+   * If the meaning of the '<em>Prop</em>' reference isn't clear,
    * there really should be more of a description here...
    * </p>
    * <!-- end-user-doc -->
-   * @return the value of the '<em>Prop</em>' containment reference.
-   * @see #setProp(Expr)
+   * @return the value of the '<em>Prop</em>' reference.
+   * @see #setProp(NamedElement)
    * @see com.rockwellcollins.atc.agree.agree.AgreePackage#getGetPropertyExpr_Prop()
-   * @model containment="true"
+   * @model
    * @generated
    */
-  Expr getProp();
+  NamedElement getProp();
 
   /**
-   * Sets the value of the '{@link com.rockwellcollins.atc.agree.agree.GetPropertyExpr#getProp <em>Prop</em>}' containment reference.
+   * Sets the value of the '{@link com.rockwellcollins.atc.agree.agree.GetPropertyExpr#getProp <em>Prop</em>}' reference.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @param value the new value of the '<em>Prop</em>' containment reference.
+   * @param value the new value of the '<em>Prop</em>' reference.
    * @see #getProp()
    * @generated
    */
-  void setProp(Expr value);
+  void setProp(NamedElement value);
 
 } // GetPropertyExpr
