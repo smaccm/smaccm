@@ -172,8 +172,8 @@
   <eClassifiers xsi:type="ecore:EClass" name="RecordExpr" eSuperTypes="#//ComplexExpr">
     <eStructuralFeatures xsi:type="ecore:EReference" name="record" eType="#//NestedDotID"
         containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="args" upperBound="-1" eType="#//Expr"
-        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="args" unique="false" upperBound="-1"
+        eType="ecore:EClass ../../../org.osate.aadl2/model/aadl2.ecore#//NamedElement"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="argExpr" upperBound="-1"
         eType="#//Expr" containment="true"/>
   </eClassifiers>

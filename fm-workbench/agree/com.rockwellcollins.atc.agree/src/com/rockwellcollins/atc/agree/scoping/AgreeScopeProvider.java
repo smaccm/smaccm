@@ -65,11 +65,20 @@ public class AgreeScopeProvider extends
     }
     
     IScope scope_NamedElement(RecordType ctx, EReference ref) {
-        return IScope.NULLSCOPE;
+        //result = getAllElementsFromSpecs(((AgreeContract) container).getSpecs());
+
+        return getScope(ctx.eContainer(), ref);
     }
-    
+
     IScope scope_NamedElement(RecordExpr ctx, EReference ref) {
-        return Scopes.scopeFor(ctx.getArgs(), getScope(ctx.eContainer(), ref));
+    	NestedDotID record = ctx.getRecord();
+    	Set<Element> components = new HashSet<>();
+    	NamedElement recDef = record.getBase();
+    	if(recDef instanceof DataImplementation){
+    		components.addAll(((DataImplementation) recDef).getAllSubcomponents());
+    		return Scopes.scopeFor(components, IScope.NULLSCOPE);
+    	}
+    	return IScope.NULLSCOPE;
     }
     
     IScope scope_NamedElement(NodeDefExpr ctx, EReference ref) {
@@ -129,7 +138,10 @@ public class AgreeScopeProvider extends
     
     IScope scope_NamedElement(NestedDotID ctx, EReference ref) {
         Set<Element> components = getCorrespondingAadlElement(ctx);
-        if(ctx.eContainer() instanceof NestedDotID){
+        EObject container = ctx.eContainer();
+        if(container instanceof NestedDotID){
+        	return Scopes.scopeFor(components, IScope.NULLSCOPE);
+        }else if(container instanceof RecordExpr){
         	return Scopes.scopeFor(components, IScope.NULLSCOPE);
         }else{
         	return Scopes.scopeFor(components, getScope(ctx.eContainer(), ref));
@@ -192,15 +204,14 @@ public class AgreeScopeProvider extends
         		container = container.eContainer();
         	}
         }else if (container instanceof RecordExpr){
-        	NestedDotID record = ((RecordExpr)container).getRecord();
-        	if(record != id){
-        		NamedElement recDef = record.getBase();
-        		if(recDef instanceof DataImplementation){
-        			result.addAll(((DataImplementation) recDef).getAllSubcomponents());
-        			return result;
-        		}
+        	NestedDotID record = ((RecordExpr) container).getRecord();
+        	if(record == id){
+        		return new HashSet<>();
         	}
-        	return new HashSet<>();
+        	//make the container the agree contract so we can get expressions in the scope
+        	while(!(container instanceof AgreeContract)){
+        		container = container.eContainer();
+        	}
         } else {
             // travel out of the annex and get the component
             // classifier that the annex is contained in.

@@ -48,6 +48,7 @@ import org.osate.aadl2.NamedElement;
 import org.osate.aadl2.Property;
 import org.osate.aadl2.PropertyType;
 import org.osate.aadl2.Subcomponent;
+import org.osate.aadl2.impl.DataImpl;
 import org.osate.aadl2.impl.SubcomponentImpl;
 import org.osate.annexsupport.AnnexUtil;
 
@@ -263,10 +264,10 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
     		for(Arg arg : recDef.getArgs()){
     			names.add(arg.getName());
     		}
-    	}else if(rec instanceof FeatureGroupType){
-    		FeatureGroupType featGroup = (FeatureGroupType)rec;
-    		for(Feature feat : featGroup.getAllFeatures()){
-    			names.add(feat.getName());
+    	}else if(rec instanceof DataImplementation){
+    		DataImplementation dataImpl = (DataImplementation)rec;
+    		for(Subcomponent sub : dataImpl.getAllSubcomponents()){
+    			names.add(sub.getName());
     		}
     	}else{
     		error(recId, "Record type '"+rec.getName()+
@@ -366,7 +367,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
         	}else if(recId instanceof DataImplementation){
         		//use two underscores so there are not conflicts
         		//with record type names
-        		typeName = packName+"__"+recId.getName();
+        		typeName = "_"+packName+"__"+recId.getName();
         		typeName.replace(".", "_");
         	}
         	
@@ -1050,9 +1051,21 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
             return getAgreeType((ComponentClassifier) namedEl);
         } else if (namedEl instanceof FeatureGroup){
         	return getAgreeType((FeatureGroup)namedEl);
+        } else if (namedEl instanceof DataImplementation){
+        	return getAgreeType((DataImplementation)namedEl);
         }
 
         return ERROR;
+    }
+    
+    
+    private AgreeType getAgreeType(DataImplementation dataImpl){
+    	AadlPackage aadlPack = (AadlPackage)dataImpl.eContainer().eContainer();
+    	
+    	String typeStr = "_" + aadlPack.getName() + "__" + dataImpl.getName();
+    	typeStr.replace(".", "_");
+    	
+    	return new AgreeType(typeStr);
     }
     
     private AgreeType getAgreeType(FeatureGroup featGroup){
@@ -1214,9 +1227,15 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
             return new AgreeType("component");
         } else if (expr instanceof PreExpr) {
             return getAgreeType(((PreExpr) expr).getExpr());
+        } else if(expr instanceof RecordExpr){
+        	return getAgreeType((RecordExpr)expr);
         }
 
         return ERROR;
+    }
+    
+    private AgreeType getAgreeType(RecordExpr recExpr){
+    	return getAgreeType(recExpr.getRecord());
     }
 
     public static boolean matches(AgreeType expected, AgreeType actual) {

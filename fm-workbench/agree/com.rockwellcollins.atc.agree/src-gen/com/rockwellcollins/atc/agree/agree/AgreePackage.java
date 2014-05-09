@@ -2679,7 +2679,7 @@ public interface AgreePackage extends EPackage
   int RECORD_EXPR__RECORD = COMPLEX_EXPR_FEATURE_COUNT + 0;
 
   /**
-   * The feature id for the '<em><b>Args</b></em>' containment reference list.
+   * The feature id for the '<em><b>Args</b></em>' reference list.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
@@ -3849,10 +3849,10 @@ public interface AgreePackage extends EPackage
   EReference getRecordExpr_Record();
 
   /**
-   * Returns the meta object for the containment reference list '{@link com.rockwellcollins.atc.agree.agree.RecordExpr#getArgs <em>Args</em>}'.
+   * Returns the meta object for the reference list '{@link com.rockwellcollins.atc.agree.agree.RecordExpr#getArgs <em>Args</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @return the meta object for the containment reference list '<em>Args</em>'.
+   * @return the meta object for the reference list '<em>Args</em>'.
    * @see com.rockwellcollins.atc.agree.agree.RecordExpr#getArgs()
    * @see #getRecordExpr()
    * @generated
@@ -4850,7 +4850,7 @@ public interface AgreePackage extends EPackage
     EReference RECORD_EXPR__RECORD = eINSTANCE.getRecordExpr_Record();
 
     /**
-     * The meta object literal for the '<em><b>Args</b></em>' containment reference list feature.
+     * The meta object literal for the '<em><b>Args</b></em>' reference list feature.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated

@@ -60,7 +60,7 @@ thread group UserInputThreads
   		 
   		guarantee "Queues initially empty" :
   			(ui_emitter_out.COUNT = 0 -> true) and
-  			(law_emitter_out.COUNT = 0 -> true);
+  			(law_emitter_out.COUNT = 0 -> true); 
   			
   		guarantee "Queue bounds" :
   			ui_emitter_out.COUNT < 2 and

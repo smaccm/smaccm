@@ -4,6 +4,8 @@ package com.rockwellcollins.atc.agree.agree;
 
 import org.eclipse.emf.common.util.EList;
 
+import org.osate.aadl2.NamedElement;
+
 /**
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>Record Expr</b></em>'.
@@ -51,20 +53,20 @@ public interface RecordExpr extends ComplexExpr
   void setRecord(NestedDotID value);
 
   /**
-   * Returns the value of the '<em><b>Args</b></em>' containment reference list.
-   * The list contents are of type {@link com.rockwellcollins.atc.agree.agree.Expr}.
+   * Returns the value of the '<em><b>Args</b></em>' reference list.
+   * The list contents are of type {@link org.osate.aadl2.NamedElement}.
    * <!-- begin-user-doc -->
    * <p>
-   * If the meaning of the '<em>Args</em>' containment reference list isn't clear,
+   * If the meaning of the '<em>Args</em>' reference list isn't clear,
    * there really should be more of a description here...
    * </p>
    * <!-- end-user-doc -->
-   * @return the value of the '<em>Args</em>' containment reference list.
+   * @return the value of the '<em>Args</em>' reference list.
    * @see com.rockwellcollins.atc.agree.agree.AgreePackage#getRecordExpr_Args()
-   * @model containment="true"
+   * @model
    * @generated
    */
-  EList<Expr> getArgs();
+  EList<NamedElement> getArgs();
 
   /**
    * Returns the value of the '<em><b>Arg Expr</b></em>' containment reference list.

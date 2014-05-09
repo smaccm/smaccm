@@ -20,7 +20,10 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
+import org.eclipse.emf.ecore.util.EObjectResolvingEList;
 import org.eclipse.emf.ecore.util.InternalEList;
+
+import org.osate.aadl2.NamedElement;
 
 /**
  * <!-- begin-user-doc -->
@@ -50,14 +53,14 @@ public class RecordExprImpl extends ComplexExprImpl implements RecordExpr
   protected NestedDotID record;
 
   /**
-   * The cached value of the '{@link #getArgs() <em>Args</em>}' containment reference list.
+   * The cached value of the '{@link #getArgs() <em>Args</em>}' reference list.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @see #getArgs()
    * @generated
    * @ordered
    */
-  protected EList<Expr> args;
+  protected EList<NamedElement> args;
 
   /**
    * The cached value of the '{@link #getArgExpr() <em>Arg Expr</em>}' containment reference list.
@@ -143,11 +146,11 @@ public class RecordExprImpl extends ComplexExprImpl implements RecordExpr
    * <!-- end-user-doc -->
    * @generated
    */
-  public EList<Expr> getArgs()
+  public EList<NamedElement> getArgs()
   {
     if (args == null)
     {
-      args = new EObjectContainmentEList<Expr>(Expr.class, this, AgreePackage.RECORD_EXPR__ARGS);
+      args = new EObjectResolvingEList<NamedElement>(NamedElement.class, this, AgreePackage.RECORD_EXPR__ARGS);
     }
     return args;
   }
@@ -178,8 +181,6 @@ public class RecordExprImpl extends ComplexExprImpl implements RecordExpr
     {
       case AgreePackage.RECORD_EXPR__RECORD:
         return basicSetRecord(null, msgs);
-      case AgreePackage.RECORD_EXPR__ARGS:
-        return ((InternalEList<?>)getArgs()).basicRemove(otherEnd, msgs);
       case AgreePackage.RECORD_EXPR__ARG_EXPR:
         return ((InternalEList<?>)getArgExpr()).basicRemove(otherEnd, msgs);
     }
@@ -222,7 +223,7 @@ public class RecordExprImpl extends ComplexExprImpl implements RecordExpr
         return;
       case AgreePackage.RECORD_EXPR__ARGS:
         getArgs().clear();
-        getArgs().addAll((Collection<? extends Expr>)newValue);
+        getArgs().addAll((Collection<? extends NamedElement>)newValue);
         return;
       case AgreePackage.RECORD_EXPR__ARG_EXPR:
         getArgExpr().clear();

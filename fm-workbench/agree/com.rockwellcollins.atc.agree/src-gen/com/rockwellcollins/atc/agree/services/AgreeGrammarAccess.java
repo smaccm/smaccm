@@ -2148,14 +2148,16 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		private final Action cRecordExprRecordAction_1_1_0_0_0 = (Action)cGroup_1_1_0_0.eContents().get(0);
 		private final Keyword cLeftCurlyBracketKeyword_1_1_0_0_1 = (Keyword)cGroup_1_1_0_0.eContents().get(1);
 		private final Assignment cArgsAssignment_1_1_1 = (Assignment)cGroup_1_1.eContents().get(1);
-		private final RuleCall cArgsExprParserRuleCall_1_1_1_0 = (RuleCall)cArgsAssignment_1_1_1.eContents().get(0);
+		private final CrossReference cArgsNamedElementCrossReference_1_1_1_0 = (CrossReference)cArgsAssignment_1_1_1.eContents().get(0);
+		private final RuleCall cArgsNamedElementIDTerminalRuleCall_1_1_1_0_1 = (RuleCall)cArgsNamedElementCrossReference_1_1_1_0.eContents().get(1);
 		private final Keyword cEqualsSignKeyword_1_1_2 = (Keyword)cGroup_1_1.eContents().get(2);
 		private final Assignment cArgExprAssignment_1_1_3 = (Assignment)cGroup_1_1.eContents().get(3);
 		private final RuleCall cArgExprExprParserRuleCall_1_1_3_0 = (RuleCall)cArgExprAssignment_1_1_3.eContents().get(0);
 		private final Group cGroup_1_1_4 = (Group)cGroup_1_1.eContents().get(4);
 		private final Keyword cSemicolonKeyword_1_1_4_0 = (Keyword)cGroup_1_1_4.eContents().get(0);
 		private final Assignment cArgsAssignment_1_1_4_1 = (Assignment)cGroup_1_1_4.eContents().get(1);
-		private final RuleCall cArgsExprParserRuleCall_1_1_4_1_0 = (RuleCall)cArgsAssignment_1_1_4_1.eContents().get(0);
+		private final CrossReference cArgsNamedElementCrossReference_1_1_4_1_0 = (CrossReference)cArgsAssignment_1_1_4_1.eContents().get(0);
+		private final RuleCall cArgsNamedElementIDTerminalRuleCall_1_1_4_1_0_1 = (RuleCall)cArgsNamedElementCrossReference_1_1_4_1_0.eContents().get(1);
 		private final Keyword cEqualsSignKeyword_1_1_4_2 = (Keyword)cGroup_1_1_4.eContents().get(2);
 		private final Assignment cArgExprAssignment_1_1_4_3 = (Assignment)cGroup_1_1_4.eContents().get(3);
 		private final RuleCall cArgExprExprParserRuleCall_1_1_4_3_0 = (RuleCall)cArgExprAssignment_1_1_4_3.eContents().get(0);
@@ -2163,18 +2165,18 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		
 		//ComplexExpr:
 		//	NestedDotID (=> ({FnCallExpr.fn=current} "(") (args+=Expr ("," args+=Expr)*)? ")" | => ({RecordExpr.record=current}
-		//	"{") args+=Expr "=" argExpr+=Expr (";" args+=Expr "=" argExpr+=Expr)* "}")?;
+		//	"{") args+=[aadl2::NamedElement] "=" argExpr+=Expr (";" args+=[aadl2::NamedElement] "=" argExpr+=Expr)* "}")?;
 		public ParserRule getRule() { return rule; }
 
 		//NestedDotID (=> ({FnCallExpr.fn=current} "(") (args+=Expr ("," args+=Expr)*)? ")" | => ({RecordExpr.record=current} "{")
-		//args+=Expr "=" argExpr+=Expr (";" args+=Expr "=" argExpr+=Expr)* "}")?
+		//args+=[aadl2::NamedElement] "=" argExpr+=Expr (";" args+=[aadl2::NamedElement] "=" argExpr+=Expr)* "}")?
 		public Group getGroup() { return cGroup; }
 
 		//NestedDotID
 		public RuleCall getNestedDotIDParserRuleCall_0() { return cNestedDotIDParserRuleCall_0; }
 
-		//(=> ({FnCallExpr.fn=current} "(") (args+=Expr ("," args+=Expr)*)? ")" | => ({RecordExpr.record=current} "{") args+=Expr
-		//"=" argExpr+=Expr (";" args+=Expr "=" argExpr+=Expr)* "}")?
+		//(=> ({FnCallExpr.fn=current} "(") (args+=Expr ("," args+=Expr)*)? ")" | => ({RecordExpr.record=current} "{")
+		//args+=[aadl2::NamedElement] "=" argExpr+=Expr (";" args+=[aadl2::NamedElement] "=" argExpr+=Expr)* "}")?
 		public Alternatives getAlternatives_1() { return cAlternatives_1; }
 
 		//=> ({FnCallExpr.fn=current} "(") (args+=Expr ("," args+=Expr)*)? ")"
@@ -2216,7 +2218,8 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		//")"
 		public Keyword getRightParenthesisKeyword_1_0_2() { return cRightParenthesisKeyword_1_0_2; }
 
-		//=> ({RecordExpr.record=current} "{") args+=Expr "=" argExpr+=Expr (";" args+=Expr "=" argExpr+=Expr)* "}"
+		//=> ({RecordExpr.record=current} "{") args+=[aadl2::NamedElement] "=" argExpr+=Expr (";" args+=[aadl2::NamedElement] "="
+		//argExpr+=Expr)* "}"
 		public Group getGroup_1_1() { return cGroup_1_1; }
 
 		//=> ({RecordExpr.record=current} "{")
@@ -2231,11 +2234,14 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		//"{"
 		public Keyword getLeftCurlyBracketKeyword_1_1_0_0_1() { return cLeftCurlyBracketKeyword_1_1_0_0_1; }
 
-		//args+=Expr
+		//args+=[aadl2::NamedElement]
 		public Assignment getArgsAssignment_1_1_1() { return cArgsAssignment_1_1_1; }
 
-		//Expr
-		public RuleCall getArgsExprParserRuleCall_1_1_1_0() { return cArgsExprParserRuleCall_1_1_1_0; }
+		//[aadl2::NamedElement]
+		public CrossReference getArgsNamedElementCrossReference_1_1_1_0() { return cArgsNamedElementCrossReference_1_1_1_0; }
+
+		//ID
+		public RuleCall getArgsNamedElementIDTerminalRuleCall_1_1_1_0_1() { return cArgsNamedElementIDTerminalRuleCall_1_1_1_0_1; }
 
 		//"="
 		public Keyword getEqualsSignKeyword_1_1_2() { return cEqualsSignKeyword_1_1_2; }
@@ -2246,17 +2252,20 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		//Expr
 		public RuleCall getArgExprExprParserRuleCall_1_1_3_0() { return cArgExprExprParserRuleCall_1_1_3_0; }
 
-		//(";" args+=Expr "=" argExpr+=Expr)*
+		//(";" args+=[aadl2::NamedElement] "=" argExpr+=Expr)*
 		public Group getGroup_1_1_4() { return cGroup_1_1_4; }
 
 		//";"
 		public Keyword getSemicolonKeyword_1_1_4_0() { return cSemicolonKeyword_1_1_4_0; }
 
-		//args+=Expr
+		//args+=[aadl2::NamedElement]
 		public Assignment getArgsAssignment_1_1_4_1() { return cArgsAssignment_1_1_4_1; }
 
-		//Expr
-		public RuleCall getArgsExprParserRuleCall_1_1_4_1_0() { return cArgsExprParserRuleCall_1_1_4_1_0; }
+		//[aadl2::NamedElement]
+		public CrossReference getArgsNamedElementCrossReference_1_1_4_1_0() { return cArgsNamedElementCrossReference_1_1_4_1_0; }
+
+		//ID
+		public RuleCall getArgsNamedElementIDTerminalRuleCall_1_1_4_1_0_1() { return cArgsNamedElementIDTerminalRuleCall_1_1_4_1_0_1; }
 
 		//"="
 		public Keyword getEqualsSignKeyword_1_1_4_2() { return cEqualsSignKeyword_1_1_4_2; }
@@ -2871,7 +2880,7 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 
 	//ComplexExpr:
 	//	NestedDotID (=> ({FnCallExpr.fn=current} "(") (args+=Expr ("," args+=Expr)*)? ")" | => ({RecordExpr.record=current}
-	//	"{") args+=Expr "=" argExpr+=Expr (";" args+=Expr "=" argExpr+=Expr)* "}")?;
+	//	"{") args+=[aadl2::NamedElement] "=" argExpr+=Expr (";" args+=[aadl2::NamedElement] "=" argExpr+=Expr)* "}")?;
 	public ComplexExprElements getComplexExprAccess() {
 		return (pComplexExpr != null) ? pComplexExpr : (pComplexExpr = new ComplexExprElements());
 	}

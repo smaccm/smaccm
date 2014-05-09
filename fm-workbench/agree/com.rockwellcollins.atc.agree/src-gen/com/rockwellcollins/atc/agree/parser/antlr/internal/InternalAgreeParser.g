@@ -3474,20 +3474,15 @@ KEYWORD_16
     }
 ))(
 (
-		{ 
-	        newCompositeNode(grammarAccess.getComplexExprAccess().getArgsExprParserRuleCall_1_1_1_0()); 
-	    }
-		lv_args_9_0=ruleExpr		{
-	        if ($current==null) {
-	            $current = createModelElementForParent(grammarAccess.getComplexExprRule());
+		{
+			if ($current==null) {
+	            $current = createModelElement(grammarAccess.getComplexExprRule());
 	        }
-       		add(
-       			$current, 
-       			"args",
-        		lv_args_9_0, 
-        		"Expr");
-	        afterParserOrEnumRuleCall();
-	    }
+        }
+	otherlv_9=RULE_ID
+	{
+		newLeafNode(otherlv_9, grammarAccess.getComplexExprAccess().getArgsNamedElementCrossReference_1_1_1_0()); 
+	}
 
 )
 )
@@ -3520,20 +3515,15 @@ KEYWORD_16
     }
 (
 (
-		{ 
-	        newCompositeNode(grammarAccess.getComplexExprAccess().getArgsExprParserRuleCall_1_1_4_1_0()); 
-	    }
-		lv_args_13_0=ruleExpr		{
-	        if ($current==null) {
-	            $current = createModelElementForParent(grammarAccess.getComplexExprRule());
+		{
+			if ($current==null) {
+	            $current = createModelElement(grammarAccess.getComplexExprRule());
 	        }
-       		add(
-       			$current, 
-       			"args",
-        		lv_args_13_0, 
-        		"Expr");
-	        afterParserOrEnumRuleCall();
-	    }
+        }
+	otherlv_13=RULE_ID
+	{
+		newLeafNode(otherlv_13, grammarAccess.getComplexExprAccess().getArgsNamedElementCrossReference_1_1_4_1_0()); 
+	}
 
 )
 )

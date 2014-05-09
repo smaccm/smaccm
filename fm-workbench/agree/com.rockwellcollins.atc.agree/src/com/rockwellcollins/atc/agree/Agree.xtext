@@ -165,7 +165,7 @@ TermExpr returns Expr:
 ComplexExpr:
 	NestedDotID 
 		(=> ({FnCallExpr.fn=current} '(') (args+=Expr (',' args+=Expr)*)? ')' 
-		|=> ({RecordExpr.record=current} '{') args+=Expr '=' argExpr+=Expr (';' args+=Expr '=' argExpr+=Expr)* '}'
+		|=> ({RecordExpr.record=current} '{') args+=[aadl2::NamedElement|ID] '=' argExpr+=Expr (';' args+=[aadl2::NamedElement|ID] '=' argExpr+=Expr)* '}'
 		)?
 ;
 
