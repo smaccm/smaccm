@@ -70,6 +70,7 @@ import com.rockwellcollins.atc.agree.agree.PrimType;
 import com.rockwellcollins.atc.agree.agree.RecordDefExpr;
 import com.rockwellcollins.atc.agree.agree.RecordType;
 import com.rockwellcollins.atc.agree.agree.ThisExpr;
+import com.rockwellcollins.atc.agree.validation.AgreeType;
 
 public class AgreeEmitterUtilities {
 
@@ -189,25 +190,37 @@ public class AgreeEmitterUtilities {
         	typeName = ((PrimType)agreeType).getString();
         }else{
         	RecordType recType = (RecordType)agreeType;
-        	NamedElement recId = recType.getRecord();
-        	EObject aadlPack = recId.eContainer();
-        	while(!(aadlPack instanceof AadlPackage)){
-        		aadlPack = aadlPack.eContainer();
-        	}
-        	String packName = ((AadlPackage)aadlPack).getName();
-        	
-        	if(recId instanceof RecordDefExpr){
-        		typeName = packName+"_"+recId.getName();
-        	}else if(recId instanceof DataImplementation){
-        		//use two underscores so there are not conflicts
-        		//with record type names
-        		typeName = packName+"__"+recId.getName();
-        		typeName.replace(".", "_");
-        	}
+        	NestedDotID recId = recType.getRecord();
+        	typeName = getNestIdAsType(recId);
         	
         }
 		return typeName;
     }
+	
+	private static String getNestIdAsType(NestedDotID recId){
+		String typeName = "";
+    	NamedElement recEl = getFinalNestId(recId);
+    	
+    	if(recEl instanceof RecordDefExpr){
+    		String strTag = "";
+    		while(recId != null){
+    			typeName = typeName + strTag + recId.getBase().getName();
+    			strTag = "__";
+    			recId = recId.getSub();
+    		}
+    	}else if(recEl instanceof DataImplementation){
+    		EObject aadlPack = recEl.eContainer();
+        	while(!(aadlPack instanceof AadlPackage)){
+        		aadlPack = aadlPack.eContainer();
+        	}
+        	String packName = ((AadlPackage)aadlPack).getName();
+    		//use two underscores so there are not conflicts
+    		//with record type names
+    		typeName = "_"+packName+"__"+recEl.getName();
+    		typeName.replace(".", "_");
+    	}
+    	return typeName;
+	}
 
     static public List<VarDecl> argsToVarDeclList(String nameTag, EList<Arg> args) {
         List<VarDecl> varList = new ArrayList<VarDecl>();

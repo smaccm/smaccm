@@ -92,7 +92,7 @@ Workflow {
 			fragment = grammarAccess.GrammarAccessFragment {}
 
 			// generates Java API for the generated EPackages 
-			fragment = ecore.EMFGeneratorFragment {
+			fragment = ecore.EMFGeneratorFragment { 
 			}
 
 //			// the serialization component

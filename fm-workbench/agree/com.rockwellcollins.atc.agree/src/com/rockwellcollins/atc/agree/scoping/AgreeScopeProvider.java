@@ -3,6 +3,7 @@
  */
 package com.rockwellcollins.atc.agree.scoping;
 
+import java.io.ObjectInputStream.GetField;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -42,8 +43,10 @@ import com.rockwellcollins.atc.agree.agree.FnDefExpr;
 import com.rockwellcollins.atc.agree.agree.NestedDotID;
 import com.rockwellcollins.atc.agree.agree.NodeDefExpr;
 import com.rockwellcollins.atc.agree.agree.NodeEq;
+import com.rockwellcollins.atc.agree.agree.RecordDefExpr;
 import com.rockwellcollins.atc.agree.agree.RecordExpr;
 import com.rockwellcollins.atc.agree.agree.RecordType;
+import com.rockwellcollins.atc.agree.agree.RecordUpdateExpr;
 import com.rockwellcollins.atc.agree.agree.SpecStatement;
 
 /**
@@ -72,10 +75,33 @@ public class AgreeScopeProvider extends
 
     IScope scope_NamedElement(RecordExpr ctx, EReference ref) {
     	NestedDotID record = ctx.getRecord();
+    	while(record.getSub() != null){
+    		record = record.getSub();
+    	}
     	Set<Element> components = new HashSet<>();
     	NamedElement recDef = record.getBase();
     	if(recDef instanceof DataImplementation){
     		components.addAll(((DataImplementation) recDef).getAllSubcomponents());
+    		return Scopes.scopeFor(components, IScope.NULLSCOPE);
+    	}else if(recDef instanceof RecordDefExpr){
+    		components.addAll(((RecordDefExpr) recDef).getArgs());
+    		return Scopes.scopeFor(components, IScope.NULLSCOPE);
+    	}
+    	return IScope.NULLSCOPE;
+    }
+    
+    IScope scope_NamedElement(RecordUpdateExpr ctx, EReference ref) {
+    	NestedDotID record = ctx.getRecord();
+    	while(record.getSub() != null){
+    		record = record.getSub();
+    	}
+    	Set<Element> components = new HashSet<>();
+    	NamedElement recDef = record.getBase();
+    	if(recDef instanceof DataImplementation){
+    		components.addAll(((DataImplementation) recDef).getAllSubcomponents());
+    		return Scopes.scopeFor(components, IScope.NULLSCOPE);
+    	}else if(recDef instanceof RecordDefExpr){
+    		components.addAll(((RecordDefExpr) recDef).getArgs());
     		return Scopes.scopeFor(components, IScope.NULLSCOPE);
     	}
     	return IScope.NULLSCOPE;
@@ -137,15 +163,15 @@ public class AgreeScopeProvider extends
     }
     
     IScope scope_NamedElement(NestedDotID ctx, EReference ref) {
-        Set<Element> components = getCorrespondingAadlElement(ctx);
-        EObject container = ctx.eContainer();
-        if(container instanceof NestedDotID){
-        	return Scopes.scopeFor(components, IScope.NULLSCOPE);
-        }else if(container instanceof RecordExpr){
-        	return Scopes.scopeFor(components, IScope.NULLSCOPE);
-        }else{
-        	return Scopes.scopeFor(components, getScope(ctx.eContainer(), ref));
-        }
+    	Set<Element> components = getCorrespondingAadlElement(ctx);
+    	EObject container = ctx.eContainer();
+    	if(container instanceof NestedDotID 
+    	  || container instanceof RecordExpr
+    	  || container instanceof RecordUpdateExpr){
+    		return Scopes.scopeFor(components, IScope.NULLSCOPE);
+    	}else{
+    		return Scopes.scopeFor(components, getScope(ctx.eContainer(), ref));
+    	}
 
     }
     
@@ -199,19 +225,22 @@ public class AgreeScopeProvider extends
         } else if (container instanceof NodeEq){
         	return new HashSet<>();
         	
-        }else if (container instanceof RecordType){
-        	while(!(container instanceof AadlPackage)){
-        		container = container.eContainer();
-        	}
-        }else if (container instanceof RecordExpr){
-        	NestedDotID record = ((RecordExpr) container).getRecord();
-        	if(record == id){
-        		return new HashSet<>();
-        	}
-        	//make the container the agree contract so we can get expressions in the scope
+        }else if (container instanceof RecordType
+        		|| container instanceof RecordExpr
+        		|| container instanceof RecordUpdateExpr){
         	while(!(container instanceof AgreeContract)){
         		container = container.eContainer();
         	}
+        	Set<Element> specs = getAllElementsFromSpecs(((AgreeContract) container).getSpecs());
+        	result.addAll(specs);
+        	
+        	while(!(container instanceof AadlPackage)){
+        		container = container.eContainer();
+        	}
+        	result.add((AadlPackage)container);
+        	
+        	return result;
+
         } else {
             // travel out of the annex and get the component
             // classifier that the annex is contained in.

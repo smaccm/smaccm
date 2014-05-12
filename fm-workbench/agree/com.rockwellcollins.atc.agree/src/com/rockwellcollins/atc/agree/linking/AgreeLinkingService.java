@@ -33,6 +33,7 @@ import com.rockwellcollins.atc.agree.agree.NestedDotID;
 import com.rockwellcollins.atc.agree.agree.NodeEq;
 import com.rockwellcollins.atc.agree.agree.RecordExpr;
 import com.rockwellcollins.atc.agree.agree.RecordType;
+import com.rockwellcollins.atc.agree.agree.RecordUpdateExpr;
 
 public class AgreeLinkingService extends PropertiesLinkingService {
     public AgreeLinkingService() {
@@ -53,7 +54,8 @@ public class AgreeLinkingService extends PropertiesLinkingService {
                 || context instanceof CalenStatement
                 || context instanceof RecordExpr
                 || context instanceof RecordType
-                || context instanceof GetPropertyExpr) {
+                || context instanceof GetPropertyExpr
+                || context instanceof RecordUpdateExpr) {
 
             EObject e = findClassifier(context, reference, name);
             

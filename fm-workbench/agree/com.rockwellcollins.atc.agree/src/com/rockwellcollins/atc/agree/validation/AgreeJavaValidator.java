@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.validation.Check;
@@ -244,30 +245,56 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
     public void checkRecordExpr(RecordExpr recExpr){
     	
     	NestedDotID recType = recExpr.getRecord(); 
-    	List<String> argNames = getArgNames(recType);
-    	List<AgreeType> argTypes = getArgTypes(recType);
+    	List<NamedElement> defArgs = getArgNames(recType);
+    	EList<NamedElement> exprArgs = recExpr.getArgs();
+    	EList<Expr> argExprs = recExpr.getArgExpr();
     	
-    	if(recExpr.getArgs().size() != argNames.size()){
+    	if(exprArgs.size() != defArgs.size()){
     		error(recExpr, "Incorrect number of arguments");
+    		return;
     	}
     	
+    	for(NamedElement argDefName : defArgs){
+    		boolean foundArg = false;
+    		for(NamedElement argExprEl : exprArgs){
+    			if(argExprEl.getName().equals(argDefName.getName())){
+    				foundArg = true;
+    				break;
+    			}
+    		}
+    		if(!foundArg){
+    			error(recExpr, "No assignment to defined variable '"+argDefName+
+    					"' in record expression.");
+    		}
+    	}
     	
+    	//check typing
+    	for(int i = 0; i < defArgs.size(); i++){
+    		NamedElement defArg = defArgs.get(i);
+    		AgreeType defType = getAgreeType(defArg);
+    		AgreeType exprType = getAgreeType(argExprs.get(i));
+    		
+    		if(!matches(defType, exprType)){
+    			error(recExpr, "The expression assigned to '"+defArg.getName()+
+    					"' does not match its definition type of '"+defType);
+    		}	
+    	}
     }
     
-    private List<String> getArgNames(NestedDotID recId){
+    private List<NamedElement> getArgNames(NestedDotID recId){
     	
     	NamedElement rec = getFinalNestId(recId);
-    	List<String> names = new ArrayList<String>();
+    	List<NamedElement> names = new ArrayList<NamedElement>();
     	
     	if(rec instanceof RecordDefExpr){
     		RecordDefExpr recDef = (RecordDefExpr)rec;
     		for(Arg arg : recDef.getArgs()){
-    			names.add(arg.getName());
+    			names.add(arg);
     		}
     	}else if(rec instanceof DataImplementation){
     		DataImplementation dataImpl = (DataImplementation)rec;
     		for(Subcomponent sub : dataImpl.getAllSubcomponents()){
-    			names.add(sub.getName());
+    			names.add(sub);
     		}
     	}else{
     		error(recId, "Record type '"+rec.getName()+
@@ -277,25 +304,25 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
     	return names;
     }
     
-    private List<AgreeType> getArgTypes(NestedDotID recId){
-    	
-    	NamedElement rec = getFinalNestId(recId);    	
-    	List<AgreeType> types = new ArrayList<AgreeType>();
-    	
-    	if(rec instanceof RecordDefExpr){
-    		RecordDefExpr recDef = (RecordDefExpr)rec;
-    		for(Arg arg : recDef.getArgs()){
-    			types.add(getAgreeType(arg.getType()));
-    		}
-    	}else if(rec instanceof FeatureGroupType){
-    		FeatureGroupType featGroup = (FeatureGroupType)rec;
-    		for(Feature feat : featGroup.getAllFeatures()){
-    			types.add(getAgreeType(feat));
-    		}
-    	}
-    	
-    	return types;
-    }
+//    private List<AgreeType> getArgTypes(NestedDotID recId){
+//    	
+//    	NamedElement rec = getFinalNestId(recId);    	
+//    	List<AgreeType> types = new ArrayList<AgreeType>();
+//    	
+//    	if(rec instanceof RecordDefExpr){
+//    		RecordDefExpr recDef = (RecordDefExpr)rec;
+//    		for(Arg arg : recDef.getArgs()){
+//    			types.add(getAgreeType(arg.getType()));
+//    		}
+//    	}else if(rec instanceof FeatureGroupType){
+//    		FeatureGroupType featGroup = (FeatureGroupType)rec;
+//    		for(Feature feat : featGroup.getAllFeatures()){
+//    			types.add(getAgreeType(feat));
+//    		}
+//    	}
+//    	
+//    	return types;
+//    }
 
     @Check(CheckType.FAST)
     public void checkRecordUpdateExpr(RecordUpdateExpr recExpr){
@@ -353,26 +380,37 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 		String typeName = null;
 		if(type instanceof PrimType){
         	typeName = ((PrimType)type).getString();
+        	return new AgreeType(typeName);
         }else{
         	RecordType recType = (RecordType)type;
-        	NamedElement recId = recType.getRecord();
-        	EObject aadlPack = recId.eContainer();
+        	NestedDotID recId = recType.getRecord();
+        	return getNestIdAsType(recId);
+        }
+	}
+	
+	private AgreeType getNestIdAsType(NestedDotID recId){
+		String typeName = "";
+    	NamedElement recEl = getFinalNestId(recId);
+    	
+    	if(recEl instanceof RecordDefExpr){
+    		String strTag = "";
+    		while(recId != null){
+    			typeName = typeName + strTag+recId.getBase().getName();
+    			strTag = "__";
+    			recId = recId.getSub();
+    		}
+    	}else if(recEl instanceof DataImplementation){
+    		EObject aadlPack = recEl.eContainer();
         	while(!(aadlPack instanceof AadlPackage)){
         		aadlPack = aadlPack.eContainer();
         	}
         	String packName = ((AadlPackage)aadlPack).getName();
-        	
-        	if(recId instanceof RecordDefExpr){
-        		typeName = packName+"_"+recId.getName();
-        	}else if(recId instanceof DataImplementation){
-        		//use two underscores so there are not conflicts
-        		//with record type names
-        		typeName = "_"+packName+"__"+recId.getName();
-        		typeName.replace(".", "_");
-        	}
-        	
-        }
-		return new AgreeType(typeName);
+    		//use two underscores so there are not conflicts
+    		//with record type names
+    		typeName = "_"+packName+"__"+recEl.getName();
+    		typeName.replace(".", "_");
+    	}
+    	return new AgreeType(typeName);
 	}
 
     public boolean isPossibleConstant(Expr e) {
@@ -1235,7 +1273,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
     }
     
     private AgreeType getAgreeType(RecordExpr recExpr){
-    	return getAgreeType(recExpr.getRecord());
+    	return getNestIdAsType(recExpr.getRecord());
     }
 
     public static boolean matches(AgreeType expected, AgreeType actual) {

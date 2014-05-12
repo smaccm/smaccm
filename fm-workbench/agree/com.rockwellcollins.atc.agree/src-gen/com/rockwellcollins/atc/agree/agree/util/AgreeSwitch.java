@@ -433,15 +433,6 @@ public class AgreeSwitch<T> extends Switch<T>
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
-      case AgreePackage.RECORD_UPDATE_EXPR:
-      {
-        RecordUpdateExpr recordUpdateExpr = (RecordUpdateExpr)theEObject;
-        T result = caseRecordUpdateExpr(recordUpdateExpr);
-        if (result == null) result = caseExpr(recordUpdateExpr);
-        if (result == null) result = caseElement(recordUpdateExpr);
-        if (result == null) result = defaultCase(theEObject);
-        return result;
-      }
       case AgreePackage.INT_LIT_EXPR:
       {
         IntLitExpr intLitExpr = (IntLitExpr)theEObject;
@@ -504,6 +495,16 @@ public class AgreeSwitch<T> extends Switch<T>
         if (result == null) result = caseComplexExpr(recordExpr);
         if (result == null) result = caseExpr(recordExpr);
         if (result == null) result = caseElement(recordExpr);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case AgreePackage.RECORD_UPDATE_EXPR:
+      {
+        RecordUpdateExpr recordUpdateExpr = (RecordUpdateExpr)theEObject;
+        T result = caseRecordUpdateExpr(recordUpdateExpr);
+        if (result == null) result = caseComplexExpr(recordUpdateExpr);
+        if (result == null) result = caseExpr(recordUpdateExpr);
+        if (result == null) result = caseElement(recordUpdateExpr);
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
@@ -1120,22 +1121,6 @@ public class AgreeSwitch<T> extends Switch<T>
   }
 
   /**
-   * Returns the result of interpreting the object as an instance of '<em>Record Update Expr</em>'.
-   * <!-- begin-user-doc -->
-   * This implementation returns null;
-   * returning a non-null result will terminate the switch.
-   * <!-- end-user-doc -->
-   * @param object the target of the switch.
-   * @return the result of interpreting the object as an instance of '<em>Record Update Expr</em>'.
-   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-   * @generated
-   */
-  public T caseRecordUpdateExpr(RecordUpdateExpr object)
-  {
-    return null;
-  }
-
-  /**
    * Returns the result of interpreting the object as an instance of '<em>Int Lit Expr</em>'.
    * <!-- begin-user-doc -->
    * This implementation returns null;
@@ -1243,6 +1228,22 @@ public class AgreeSwitch<T> extends Switch<T>
    * @generated
    */
   public T caseRecordExpr(RecordExpr object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Record Update Expr</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Record Update Expr</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseRecordUpdateExpr(RecordUpdateExpr object)
   {
     return null;
   }

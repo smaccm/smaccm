@@ -102,7 +102,6 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
       case AgreePackage.IF_THEN_ELSE_EXPR: return createIfThenElseExpr();
       case AgreePackage.PREV_EXPR: return createPrevExpr();
       case AgreePackage.GET_PROPERTY_EXPR: return createGetPropertyExpr();
-      case AgreePackage.RECORD_UPDATE_EXPR: return createRecordUpdateExpr();
       case AgreePackage.INT_LIT_EXPR: return createIntLitExpr();
       case AgreePackage.PRE_EXPR: return createPreExpr();
       case AgreePackage.REAL_LIT_EXPR: return createRealLitExpr();
@@ -110,6 +109,7 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
       case AgreePackage.THIS_EXPR: return createThisExpr();
       case AgreePackage.FN_CALL_EXPR: return createFnCallExpr();
       case AgreePackage.RECORD_EXPR: return createRecordExpr();
+      case AgreePackage.RECORD_UPDATE_EXPR: return createRecordUpdateExpr();
       default:
         throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
     }
@@ -538,17 +538,6 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public RecordUpdateExpr createRecordUpdateExpr()
-  {
-    RecordUpdateExprImpl recordUpdateExpr = new RecordUpdateExprImpl();
-    return recordUpdateExpr;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
   public IntLitExpr createIntLitExpr()
   {
     IntLitExprImpl intLitExpr = new IntLitExprImpl();
@@ -619,6 +608,17 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
   {
     RecordExprImpl recordExpr = new RecordExprImpl();
     return recordExpr;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public RecordUpdateExpr createRecordUpdateExpr()
+  {
+    RecordUpdateExprImpl recordUpdateExpr = new RecordUpdateExprImpl();
+    return recordUpdateExpr;
   }
 
   /**

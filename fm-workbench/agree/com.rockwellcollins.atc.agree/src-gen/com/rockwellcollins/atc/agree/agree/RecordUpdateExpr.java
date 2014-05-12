@@ -4,6 +4,8 @@ package com.rockwellcollins.atc.agree.agree;
 
 import org.eclipse.emf.common.util.EList;
 
+import org.osate.aadl2.NamedElement;
+
 /**
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>Record Update Expr</b></em>'.
@@ -12,7 +14,7 @@ import org.eclipse.emf.common.util.EList;
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link com.rockwellcollins.atc.agree.agree.RecordUpdateExpr#getExpr <em>Expr</em>}</li>
+ *   <li>{@link com.rockwellcollins.atc.agree.agree.RecordUpdateExpr#getRecord <em>Record</em>}</li>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.RecordUpdateExpr#getArgs <em>Args</em>}</li>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.RecordUpdateExpr#getArgExpr <em>Arg Expr</em>}</li>
  * </ul>
@@ -22,49 +24,49 @@ import org.eclipse.emf.common.util.EList;
  * @model
  * @generated
  */
-public interface RecordUpdateExpr extends Expr
+public interface RecordUpdateExpr extends ComplexExpr
 {
   /**
-   * Returns the value of the '<em><b>Expr</b></em>' containment reference.
+   * Returns the value of the '<em><b>Record</b></em>' containment reference.
    * <!-- begin-user-doc -->
    * <p>
-   * If the meaning of the '<em>Expr</em>' containment reference isn't clear,
+   * If the meaning of the '<em>Record</em>' containment reference isn't clear,
    * there really should be more of a description here...
    * </p>
    * <!-- end-user-doc -->
-   * @return the value of the '<em>Expr</em>' containment reference.
-   * @see #setExpr(Expr)
-   * @see com.rockwellcollins.atc.agree.agree.AgreePackage#getRecordUpdateExpr_Expr()
+   * @return the value of the '<em>Record</em>' containment reference.
+   * @see #setRecord(NestedDotID)
+   * @see com.rockwellcollins.atc.agree.agree.AgreePackage#getRecordUpdateExpr_Record()
    * @model containment="true"
    * @generated
    */
-  Expr getExpr();
+  NestedDotID getRecord();
 
   /**
-   * Sets the value of the '{@link com.rockwellcollins.atc.agree.agree.RecordUpdateExpr#getExpr <em>Expr</em>}' containment reference.
+   * Sets the value of the '{@link com.rockwellcollins.atc.agree.agree.RecordUpdateExpr#getRecord <em>Record</em>}' containment reference.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @param value the new value of the '<em>Expr</em>' containment reference.
-   * @see #getExpr()
+   * @param value the new value of the '<em>Record</em>' containment reference.
+   * @see #getRecord()
    * @generated
    */
-  void setExpr(Expr value);
+  void setRecord(NestedDotID value);
 
   /**
-   * Returns the value of the '<em><b>Args</b></em>' containment reference list.
-   * The list contents are of type {@link com.rockwellcollins.atc.agree.agree.Expr}.
+   * Returns the value of the '<em><b>Args</b></em>' reference list.
+   * The list contents are of type {@link org.osate.aadl2.NamedElement}.
    * <!-- begin-user-doc -->
    * <p>
-   * If the meaning of the '<em>Args</em>' containment reference list isn't clear,
+   * If the meaning of the '<em>Args</em>' reference list isn't clear,
    * there really should be more of a description here...
    * </p>
    * <!-- end-user-doc -->
-   * @return the value of the '<em>Args</em>' containment reference list.
+   * @return the value of the '<em>Args</em>' reference list.
    * @see com.rockwellcollins.atc.agree.agree.AgreePackage#getRecordUpdateExpr_Args()
-   * @model containment="true"
+   * @model
    * @generated
    */
-  EList<Expr> getArgs();
+  EList<NamedElement> getArgs();
 
   /**
    * Returns the value of the '<em><b>Arg Expr</b></em>' containment reference list.

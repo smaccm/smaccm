@@ -4,6 +4,7 @@ package com.rockwellcollins.atc.agree.agree.impl;
 
 import com.rockwellcollins.atc.agree.agree.AgreePackage;
 import com.rockwellcollins.atc.agree.agree.Expr;
+import com.rockwellcollins.atc.agree.agree.NestedDotID;
 import com.rockwellcollins.atc.agree.agree.RecordUpdateExpr;
 
 import java.util.Collection;
@@ -19,7 +20,10 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
+import org.eclipse.emf.ecore.util.EObjectResolvingEList;
 import org.eclipse.emf.ecore.util.InternalEList;
+
+import org.osate.aadl2.NamedElement;
 
 /**
  * <!-- begin-user-doc -->
@@ -28,7 +32,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link com.rockwellcollins.atc.agree.agree.impl.RecordUpdateExprImpl#getExpr <em>Expr</em>}</li>
+ *   <li>{@link com.rockwellcollins.atc.agree.agree.impl.RecordUpdateExprImpl#getRecord <em>Record</em>}</li>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.impl.RecordUpdateExprImpl#getArgs <em>Args</em>}</li>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.impl.RecordUpdateExprImpl#getArgExpr <em>Arg Expr</em>}</li>
  * </ul>
@@ -36,27 +40,27 @@ import org.eclipse.emf.ecore.util.InternalEList;
  *
  * @generated
  */
-public class RecordUpdateExprImpl extends ExprImpl implements RecordUpdateExpr
+public class RecordUpdateExprImpl extends ComplexExprImpl implements RecordUpdateExpr
 {
   /**
-   * The cached value of the '{@link #getExpr() <em>Expr</em>}' containment reference.
+   * The cached value of the '{@link #getRecord() <em>Record</em>}' containment reference.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @see #getExpr()
+   * @see #getRecord()
    * @generated
    * @ordered
    */
-  protected Expr expr;
+  protected NestedDotID record;
 
   /**
-   * The cached value of the '{@link #getArgs() <em>Args</em>}' containment reference list.
+   * The cached value of the '{@link #getArgs() <em>Args</em>}' reference list.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @see #getArgs()
    * @generated
    * @ordered
    */
-  protected EList<Expr> args;
+  protected EList<NamedElement> args;
 
   /**
    * The cached value of the '{@link #getArgExpr() <em>Arg Expr</em>}' containment reference list.
@@ -94,9 +98,9 @@ public class RecordUpdateExprImpl extends ExprImpl implements RecordUpdateExpr
    * <!-- end-user-doc -->
    * @generated
    */
-  public Expr getExpr()
+  public NestedDotID getRecord()
   {
-    return expr;
+    return record;
   }
 
   /**
@@ -104,13 +108,13 @@ public class RecordUpdateExprImpl extends ExprImpl implements RecordUpdateExpr
    * <!-- end-user-doc -->
    * @generated
    */
-  public NotificationChain basicSetExpr(Expr newExpr, NotificationChain msgs)
+  public NotificationChain basicSetRecord(NestedDotID newRecord, NotificationChain msgs)
   {
-    Expr oldExpr = expr;
-    expr = newExpr;
+    NestedDotID oldRecord = record;
+    record = newRecord;
     if (eNotificationRequired())
     {
-      ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, AgreePackage.RECORD_UPDATE_EXPR__EXPR, oldExpr, newExpr);
+      ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, AgreePackage.RECORD_UPDATE_EXPR__RECORD, oldRecord, newRecord);
       if (msgs == null) msgs = notification; else msgs.add(notification);
     }
     return msgs;
@@ -121,20 +125,20 @@ public class RecordUpdateExprImpl extends ExprImpl implements RecordUpdateExpr
    * <!-- end-user-doc -->
    * @generated
    */
-  public void setExpr(Expr newExpr)
+  public void setRecord(NestedDotID newRecord)
   {
-    if (newExpr != expr)
+    if (newRecord != record)
     {
       NotificationChain msgs = null;
-      if (expr != null)
-        msgs = ((InternalEObject)expr).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - AgreePackage.RECORD_UPDATE_EXPR__EXPR, null, msgs);
-      if (newExpr != null)
-        msgs = ((InternalEObject)newExpr).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - AgreePackage.RECORD_UPDATE_EXPR__EXPR, null, msgs);
-      msgs = basicSetExpr(newExpr, msgs);
+      if (record != null)
+        msgs = ((InternalEObject)record).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - AgreePackage.RECORD_UPDATE_EXPR__RECORD, null, msgs);
+      if (newRecord != null)
+        msgs = ((InternalEObject)newRecord).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - AgreePackage.RECORD_UPDATE_EXPR__RECORD, null, msgs);
+      msgs = basicSetRecord(newRecord, msgs);
       if (msgs != null) msgs.dispatch();
     }
     else if (eNotificationRequired())
-      eNotify(new ENotificationImpl(this, Notification.SET, AgreePackage.RECORD_UPDATE_EXPR__EXPR, newExpr, newExpr));
+      eNotify(new ENotificationImpl(this, Notification.SET, AgreePackage.RECORD_UPDATE_EXPR__RECORD, newRecord, newRecord));
   }
 
   /**
@@ -142,11 +146,11 @@ public class RecordUpdateExprImpl extends ExprImpl implements RecordUpdateExpr
    * <!-- end-user-doc -->
    * @generated
    */
-  public EList<Expr> getArgs()
+  public EList<NamedElement> getArgs()
   {
     if (args == null)
     {
-      args = new EObjectContainmentEList<Expr>(Expr.class, this, AgreePackage.RECORD_UPDATE_EXPR__ARGS);
+      args = new EObjectResolvingEList<NamedElement>(NamedElement.class, this, AgreePackage.RECORD_UPDATE_EXPR__ARGS);
     }
     return args;
   }
@@ -175,10 +179,8 @@ public class RecordUpdateExprImpl extends ExprImpl implements RecordUpdateExpr
   {
     switch (featureID)
     {
-      case AgreePackage.RECORD_UPDATE_EXPR__EXPR:
-        return basicSetExpr(null, msgs);
-      case AgreePackage.RECORD_UPDATE_EXPR__ARGS:
-        return ((InternalEList<?>)getArgs()).basicRemove(otherEnd, msgs);
+      case AgreePackage.RECORD_UPDATE_EXPR__RECORD:
+        return basicSetRecord(null, msgs);
       case AgreePackage.RECORD_UPDATE_EXPR__ARG_EXPR:
         return ((InternalEList<?>)getArgExpr()).basicRemove(otherEnd, msgs);
     }
@@ -195,8 +197,8 @@ public class RecordUpdateExprImpl extends ExprImpl implements RecordUpdateExpr
   {
     switch (featureID)
     {
-      case AgreePackage.RECORD_UPDATE_EXPR__EXPR:
-        return getExpr();
+      case AgreePackage.RECORD_UPDATE_EXPR__RECORD:
+        return getRecord();
       case AgreePackage.RECORD_UPDATE_EXPR__ARGS:
         return getArgs();
       case AgreePackage.RECORD_UPDATE_EXPR__ARG_EXPR:
@@ -216,12 +218,12 @@ public class RecordUpdateExprImpl extends ExprImpl implements RecordUpdateExpr
   {
     switch (featureID)
     {
-      case AgreePackage.RECORD_UPDATE_EXPR__EXPR:
-        setExpr((Expr)newValue);
+      case AgreePackage.RECORD_UPDATE_EXPR__RECORD:
+        setRecord((NestedDotID)newValue);
         return;
       case AgreePackage.RECORD_UPDATE_EXPR__ARGS:
         getArgs().clear();
-        getArgs().addAll((Collection<? extends Expr>)newValue);
+        getArgs().addAll((Collection<? extends NamedElement>)newValue);
         return;
       case AgreePackage.RECORD_UPDATE_EXPR__ARG_EXPR:
         getArgExpr().clear();
@@ -241,8 +243,8 @@ public class RecordUpdateExprImpl extends ExprImpl implements RecordUpdateExpr
   {
     switch (featureID)
     {
-      case AgreePackage.RECORD_UPDATE_EXPR__EXPR:
-        setExpr((Expr)null);
+      case AgreePackage.RECORD_UPDATE_EXPR__RECORD:
+        setRecord((NestedDotID)null);
         return;
       case AgreePackage.RECORD_UPDATE_EXPR__ARGS:
         getArgs().clear();
@@ -264,8 +266,8 @@ public class RecordUpdateExprImpl extends ExprImpl implements RecordUpdateExpr
   {
     switch (featureID)
     {
-      case AgreePackage.RECORD_UPDATE_EXPR__EXPR:
-        return expr != null;
+      case AgreePackage.RECORD_UPDATE_EXPR__RECORD:
+        return record != null;
       case AgreePackage.RECORD_UPDATE_EXPR__ARGS:
         return args != null && !args.isEmpty();
       case AgreePackage.RECORD_UPDATE_EXPR__ARG_EXPR:
