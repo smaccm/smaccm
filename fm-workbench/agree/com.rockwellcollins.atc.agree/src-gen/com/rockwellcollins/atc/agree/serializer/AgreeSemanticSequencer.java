@@ -71,7 +71,7 @@ import org.osate.aadl2.StringLiteral;
 import org.osate.xtext.aadl2.properties.serializer.PropertiesSemanticSequencer;
 
 @SuppressWarnings("all")
-public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticSequencer {
+public class AgreeSemanticSequencer extends PropertiesSemanticSequencer {
 
 	@Inject
 	private AgreeGrammarAccess grammarAccess;

@@ -14,7 +14,7 @@ import org.eclipse.xtext.serializer.analysis.ISyntacticSequencerPDAProvider.ISyn
 import org.eclipse.xtext.serializer.sequencer.AbstractSyntacticSequencer;
 
 @SuppressWarnings("all")
-public abstract class AbstractAgreeSyntacticSequencer extends AbstractSyntacticSequencer {
+public class AgreeSyntacticSequencer extends AbstractSyntacticSequencer {
 
 	protected AgreeGrammarAccess grammarAccess;
 	protected AbstractElementAlias match_TermExpr_LeftParenthesisKeyword_7_0_a;
