@@ -92,10 +92,10 @@ RULE_WS=14
 '>='=55
 '/'=61
 'then'=66
-':='=73
+':='=70
 'type'=43
 '>'=54
-'this'=71
+'this'=72
 ';'=17
 'calendar'=26
 '_COUNT'=77
@@ -106,8 +106,8 @@ RULE_WS=14
 'no_simult'=25
 '+'=58
 'constant'=80
-'.'=72
-'pre'=70
+'.'=73
+'pre'=71
 '=>'=48
 'simult'=24
 'property'=28

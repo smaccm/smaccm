@@ -24,7 +24,7 @@ import org.osate.aadl2.NamedElement;
  * @model
  * @generated
  */
-public interface RecordUpdateExpr extends ComplexExpr
+public interface RecordUpdateExpr extends Expr
 {
   /**
    * Returns the value of the '<em><b>Record</b></em>' containment reference.
@@ -35,12 +35,12 @@ public interface RecordUpdateExpr extends ComplexExpr
    * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Record</em>' containment reference.
-   * @see #setRecord(NestedDotID)
+   * @see #setRecord(Expr)
    * @see com.rockwellcollins.atc.agree.agree.AgreePackage#getRecordUpdateExpr_Record()
    * @model containment="true"
    * @generated
    */
-  NestedDotID getRecord();
+  Expr getRecord();
 
   /**
    * Sets the value of the '{@link com.rockwellcollins.atc.agree.agree.RecordUpdateExpr#getRecord <em>Record</em>}' containment reference.
@@ -50,7 +50,7 @@ public interface RecordUpdateExpr extends ComplexExpr
    * @see #getRecord()
    * @generated
    */
-  void setRecord(NestedDotID value);
+  void setRecord(Expr value);
 
   /**
    * Returns the value of the '<em><b>Args</b></em>' reference list.

@@ -146,7 +146,11 @@ IfThenElseExpr returns Expr:
 PreDefFnExpr returns Expr:
 	{PrevExpr} 'prev' '(' delay=Expr ',' init=Expr ')'
 	| {GetPropertyExpr} 'Get_Property' '(' component=Expr ',' prop=[aadl2::NamedElement|QCLREF] ')'
-	| TermExpr;
+	| RecordUpdateExpr;
+
+RecordUpdateExpr returns Expr:
+	TermExpr =>({RecordUpdateExpr.record=current} ('{' args+=[aadl2::NamedElement|ID] ':=' argExpr+=Expr '}')*)?
+;
 
 TermExpr returns Expr:
 	  ComplexExpr
@@ -162,7 +166,6 @@ ComplexExpr:
 	NestedDotID 
 		(=> ({FnCallExpr.fn=current} '(') (args+=Expr (',' args+=Expr)*)? ')' 
 		|=> ({RecordExpr.record=current} '{' args+=[aadl2::NamedElement|ID] '=') argExpr+=Expr (';' args+=[aadl2::NamedElement|ID] '=' argExpr+=Expr)* '}'
-		|=> ({RecordUpdateExpr.record=current} '{' args+=[aadl2::NamedElement|ID] ':=') argExpr+=Expr '}' ('{' args+=[aadl2::NamedElement|ID] ':=' argExpr+=Expr '}')*
 		)?
 ;
 

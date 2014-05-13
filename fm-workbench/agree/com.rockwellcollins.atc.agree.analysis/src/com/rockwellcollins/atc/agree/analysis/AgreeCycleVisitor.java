@@ -2,24 +2,30 @@ package com.rockwellcollins.atc.agree.analysis;
 
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Map.Entry;
 import java.util.Set;
 
+import jkind.lustre.ArrayAccessExpr;
+import jkind.lustre.ArrayExpr;
+import jkind.lustre.ArrayUpdateExpr;
 import jkind.lustre.BinaryExpr;
 import jkind.lustre.BoolExpr;
+import jkind.lustre.CastExpr;
 import jkind.lustre.CondactExpr;
 import jkind.lustre.Expr;
-import jkind.lustre.ExprVisitor;
 import jkind.lustre.IdExpr;
 import jkind.lustre.IfThenElseExpr;
 import jkind.lustre.IntExpr;
 import jkind.lustre.NodeCallExpr;
-import jkind.lustre.ProjectionExpr;
 import jkind.lustre.RealExpr;
+import jkind.lustre.RecordAccessExpr;
 import jkind.lustre.RecordExpr;
+import jkind.lustre.RecordUpdateExpr;
+import jkind.lustre.TupleExpr;
 import jkind.lustre.UnaryExpr;
 import jkind.lustre.UnaryOp;
 
-public class AgreeCycleVisitor implements ExprVisitor<Set<String>>{
+public class AgreeCycleVisitor implements jkind.lustre.visitors.ExprVisitor<Set<String>>{
 
     @Override
     public Set<String> visit(BinaryExpr e) {
@@ -70,7 +76,7 @@ public class AgreeCycleVisitor implements ExprVisitor<Set<String>>{
     }
 
     @Override
-    public Set<String> visit(ProjectionExpr e) {
+    public Set<String> visit(RecordAccessExpr e) {
         throw new AgreeException("wtf mate? I didn't think we supported record type sin AGREE");
     }
 
@@ -81,7 +87,12 @@ public class AgreeCycleVisitor implements ExprVisitor<Set<String>>{
 
     @Override
     public Set<String> visit(RecordExpr e) {
-        throw new AgreeException("wtf mate? I didn't think we supported record types in AGREE");
+		Set<String> visits = new HashSet<>();
+
+    	for(Entry<String, Expr> field : e.fields.entrySet()){
+    		visits.addAll(field.getValue().accept(this));
+    	}
+    	return visits;
     }
 
     @Override
@@ -103,5 +114,41 @@ public class AgreeCycleVisitor implements ExprVisitor<Set<String>>{
         
         return argSet;
     }
+
+	@Override
+	public Set<String> visit(ArrayAccessExpr e) {
+        throw new AgreeException("wtf mate? I didn't think we supported array typesin AGREE?");
+	}
+
+	@Override
+	public Set<String> visit(ArrayExpr e) {
+        throw new AgreeException("wtf mate? I didn't think we supported array typesin AGREE?");
+
+	}
+
+	@Override
+	public Set<String> visit(ArrayUpdateExpr e) {
+        throw new AgreeException("wtf mate? I didn't think we supported array typesin AGREE?");
+	}
+
+	@Override
+	public Set<String> visit(CastExpr e) {
+        throw new AgreeException("wtf mate? I didn't think we supported array typesin AGREE?");
+	}
+
+	@Override
+	public Set<String> visit(RecordUpdateExpr e) {
+		Set<String> visits = new HashSet<>();
+		visits.addAll(e.record.accept(this));
+		visits.addAll(e.value.accept(this));
+		
+		return visits;
+	}
+
+	@Override
+	public Set<String> visit(TupleExpr e) {
+        throw new AgreeException("wtf mate? I didn't think we supported array typesin AGREE?");
+
+	}
 
 }

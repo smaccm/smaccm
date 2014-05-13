@@ -23,6 +23,7 @@ import org.osate.aadl2.DataPort;
 import org.osate.aadl2.Element;
 import org.osate.aadl2.EventDataPort;
 import org.osate.aadl2.FeatureGroupType;
+import org.osate.aadl2.NamedElement;
 import org.osate.aadl2.PublicPackageSection;
 import org.osate.aadl2.Subcomponent;
 import org.osate.aadl2.ThreadSubcomponent;
@@ -37,6 +38,7 @@ import com.rockwellcollins.atc.agree.agree.AgreePackage;
 import com.rockwellcollins.atc.agree.agree.Arg;
 import com.rockwellcollins.atc.agree.agree.CalenStatement;
 import com.rockwellcollins.atc.agree.agree.EqStatement;
+import com.rockwellcollins.atc.agree.agree.Expr;
 import com.rockwellcollins.atc.agree.agree.FnDefExpr;
 import com.rockwellcollins.atc.agree.agree.NestedDotID;
 import com.rockwellcollins.atc.agree.agree.NodeDefExpr;
@@ -46,6 +48,7 @@ import com.rockwellcollins.atc.agree.agree.RecordExpr;
 import com.rockwellcollins.atc.agree.agree.RecordType;
 import com.rockwellcollins.atc.agree.agree.RecordUpdateExpr;
 import com.rockwellcollins.atc.agree.agree.SpecStatement;
+import com.rockwellcollins.atc.agree.agree.Type;
 
 /**
  * This class contains custom scoping description.
@@ -76,25 +79,17 @@ public class AgreeScopeProvider extends
     	while(record.getSub() != null){
     		record = record.getSub();
     	}
-    	Set<Element> components = new HashSet<>();
     	NamedElement recDef = record.getBase();
-    	if(recDef instanceof DataImplementation){
-    		components.addAll(((DataImplementation) recDef).getAllSubcomponents());
-    		return Scopes.scopeFor(components, IScope.NULLSCOPE);
-    	}else if(recDef instanceof RecordDefExpr){
-    		components.addAll(((RecordDefExpr) recDef).getArgs());
-    		return Scopes.scopeFor(components, IScope.NULLSCOPE);
-    	}
-    	return IScope.NULLSCOPE;
+    	return getRecordComponents(recDef);
     }
     
     IScope scope_NamedElement(RecordUpdateExpr ctx, EReference ref) {
-    	NestedDotID record = ctx.getRecord();
-    	while(record.getSub() != null){
-    		record = record.getSub();
-    	}
+    	Expr recordExpr = ctx.getRecord();
+    	return RecordExprScoper.getScope(recordExpr);
+    }
+    
+    public static IScope getRecordComponents(NamedElement recDef){
     	Set<Element> components = new HashSet<>();
-    	NamedElement recDef = record.getBase();
     	if(recDef instanceof DataImplementation){
     		components.addAll(((DataImplementation) recDef).getAllSubcomponents());
     		return Scopes.scopeFor(components, IScope.NULLSCOPE);

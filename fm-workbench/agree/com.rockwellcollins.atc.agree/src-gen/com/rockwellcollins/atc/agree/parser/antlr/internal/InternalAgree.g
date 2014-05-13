@@ -2957,14 +2957,106 @@ rulePreDefFnExpr returns [EObject current=null]
 )
     |
     { 
-        newCompositeNode(grammarAccess.getPreDefFnExprAccess().getTermExprParserRuleCall_2()); 
+        newCompositeNode(grammarAccess.getPreDefFnExprAccess().getRecordUpdateExprParserRuleCall_2()); 
     }
-    this_TermExpr_14=ruleTermExpr
+    this_RecordUpdateExpr_14=ruleRecordUpdateExpr
     { 
-        $current = $this_TermExpr_14.current; 
+        $current = $this_RecordUpdateExpr_14.current; 
         afterParserOrEnumRuleCall();
     }
 )
+;
+
+
+
+
+
+// Entry rule entryRuleRecordUpdateExpr
+entryRuleRecordUpdateExpr returns [EObject current=null] 
+	:
+	{ newCompositeNode(grammarAccess.getRecordUpdateExprRule()); }
+	 iv_ruleRecordUpdateExpr=ruleRecordUpdateExpr 
+	 { $current=$iv_ruleRecordUpdateExpr.current; } 
+	 EOF 
+;
+
+// Rule RecordUpdateExpr
+ruleRecordUpdateExpr returns [EObject current=null] 
+    @init { enterRule(); 
+    }
+    @after { leaveRule(); }:
+(
+    { 
+        newCompositeNode(grammarAccess.getRecordUpdateExprAccess().getTermExprParserRuleCall_0()); 
+    }
+    this_TermExpr_0=ruleTermExpr
+    { 
+        $current = $this_TermExpr_0.current; 
+        afterParserOrEnumRuleCall();
+    }
+((((
+)(	'{' 
+(
+(
+	RULE_ID
+
+)
+)	':=' 
+(
+(
+ruleExpr
+)
+)	'}' 
+)*))=>((
+    {
+        $current = forceCreateModelElementAndSet(
+            grammarAccess.getRecordUpdateExprAccess().getRecordUpdateExprRecordAction_1_0_0(),
+            $current);
+    }
+)(	otherlv_2='{' 
+    {
+    	newLeafNode(otherlv_2, grammarAccess.getRecordUpdateExprAccess().getLeftCurlyBracketKeyword_1_0_1_0());
+    }
+(
+(
+		{
+			if ($current==null) {
+	            $current = createModelElement(grammarAccess.getRecordUpdateExprRule());
+	        }
+        }
+	otherlv_3=RULE_ID
+	{
+		newLeafNode(otherlv_3, grammarAccess.getRecordUpdateExprAccess().getArgsNamedElementCrossReference_1_0_1_1_0()); 
+	}
+
+)
+)	otherlv_4=':=' 
+    {
+    	newLeafNode(otherlv_4, grammarAccess.getRecordUpdateExprAccess().getColonEqualsSignKeyword_1_0_1_2());
+    }
+(
+(
+		{ 
+	        newCompositeNode(grammarAccess.getRecordUpdateExprAccess().getArgExprExprParserRuleCall_1_0_1_3_0()); 
+	    }
+		lv_argExpr_5_0=ruleExpr		{
+	        if ($current==null) {
+	            $current = createModelElementForParent(grammarAccess.getRecordUpdateExprRule());
+	        }
+       		add(
+       			$current, 
+       			"argExpr",
+        		lv_argExpr_5_0, 
+        		"Expr");
+	        afterParserOrEnumRuleCall();
+	    }
+
+)
+)	otherlv_6='}' 
+    {
+    	newLeafNode(otherlv_6, grammarAccess.getRecordUpdateExprAccess().getRightCurlyBracketKeyword_1_0_1_4());
+    }
+)*))?)
 ;
 
 
@@ -3340,108 +3432,7 @@ ruleComplexExpr returns [EObject current=null]
     {
     	newLeafNode(otherlv_16, grammarAccess.getComplexExprAccess().getRightCurlyBracketKeyword_1_1_3());
     }
-)
-    |(((((
-)	'{' 
-(
-(
-	RULE_ID
-
-)
-)	':=' 
-))=>((
-    {
-        $current = forceCreateModelElementAndSet(
-            grammarAccess.getComplexExprAccess().getRecordUpdateExprRecordAction_1_2_0_0_0(),
-            $current);
-    }
-)	otherlv_18='{' 
-    {
-    	newLeafNode(otherlv_18, grammarAccess.getComplexExprAccess().getLeftCurlyBracketKeyword_1_2_0_0_1());
-    }
-(
-(
-		{
-			if ($current==null) {
-	            $current = createModelElement(grammarAccess.getComplexExprRule());
-	        }
-        }
-	otherlv_19=RULE_ID
-	{
-		newLeafNode(otherlv_19, grammarAccess.getComplexExprAccess().getArgsNamedElementCrossReference_1_2_0_0_2_0()); 
-	}
-
-)
-)	otherlv_20=':=' 
-    {
-    	newLeafNode(otherlv_20, grammarAccess.getComplexExprAccess().getColonEqualsSignKeyword_1_2_0_0_3());
-    }
-))(
-(
-		{ 
-	        newCompositeNode(grammarAccess.getComplexExprAccess().getArgExprExprParserRuleCall_1_2_1_0()); 
-	    }
-		lv_argExpr_21_0=ruleExpr		{
-	        if ($current==null) {
-	            $current = createModelElementForParent(grammarAccess.getComplexExprRule());
-	        }
-       		add(
-       			$current, 
-       			"argExpr",
-        		lv_argExpr_21_0, 
-        		"Expr");
-	        afterParserOrEnumRuleCall();
-	    }
-
-)
-)	otherlv_22='}' 
-    {
-    	newLeafNode(otherlv_22, grammarAccess.getComplexExprAccess().getRightCurlyBracketKeyword_1_2_2());
-    }
-(	otherlv_23='{' 
-    {
-    	newLeafNode(otherlv_23, grammarAccess.getComplexExprAccess().getLeftCurlyBracketKeyword_1_2_3_0());
-    }
-(
-(
-		{
-			if ($current==null) {
-	            $current = createModelElement(grammarAccess.getComplexExprRule());
-	        }
-        }
-	otherlv_24=RULE_ID
-	{
-		newLeafNode(otherlv_24, grammarAccess.getComplexExprAccess().getArgsNamedElementCrossReference_1_2_3_1_0()); 
-	}
-
-)
-)	otherlv_25=':=' 
-    {
-    	newLeafNode(otherlv_25, grammarAccess.getComplexExprAccess().getColonEqualsSignKeyword_1_2_3_2());
-    }
-(
-(
-		{ 
-	        newCompositeNode(grammarAccess.getComplexExprAccess().getArgExprExprParserRuleCall_1_2_3_3_0()); 
-	    }
-		lv_argExpr_26_0=ruleExpr		{
-	        if ($current==null) {
-	            $current = createModelElementForParent(grammarAccess.getComplexExprRule());
-	        }
-       		add(
-       			$current, 
-       			"argExpr",
-        		lv_argExpr_26_0, 
-        		"Expr");
-	        afterParserOrEnumRuleCall();
-	    }
-
-)
-)	otherlv_27='}' 
-    {
-    	newLeafNode(otherlv_27, grammarAccess.getComplexExprAccess().getRightCurlyBracketKeyword_1_2_3_4());
-    }
-)*))?)
+))?)
 ;
 
 

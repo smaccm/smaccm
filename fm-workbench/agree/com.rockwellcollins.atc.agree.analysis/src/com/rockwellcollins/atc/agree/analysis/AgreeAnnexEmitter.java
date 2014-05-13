@@ -29,6 +29,7 @@ import jkind.lustre.UnaryExpr;
 import jkind.lustre.UnaryOp;
 import jkind.lustre.VarDecl;
 
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.osate.aadl2.AadlPackage;
 import org.osate.aadl2.AnnexSubclause;
@@ -100,7 +101,9 @@ import com.rockwellcollins.atc.agree.agree.PrimType;
 import com.rockwellcollins.atc.agree.agree.PropertyStatement;
 import com.rockwellcollins.atc.agree.agree.RealLitExpr;
 import com.rockwellcollins.atc.agree.agree.RecordDefExpr;
+import com.rockwellcollins.atc.agree.agree.RecordExpr;
 import com.rockwellcollins.atc.agree.agree.RecordType;
+import com.rockwellcollins.atc.agree.agree.RecordUpdateExpr;
 import com.rockwellcollins.atc.agree.agree.SpecStatement;
 import com.rockwellcollins.atc.agree.agree.SynchStatement;
 import com.rockwellcollins.atc.agree.agree.ThisExpr;
@@ -767,6 +770,43 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
     }
 
     @Override
+    public Expr caseRecordUpdateExpr(RecordUpdateExpr upExpr){
+    	EList<NamedElement> args = upExpr.getArgs();
+    	EList<com.rockwellcollins.atc.agree.agree.Expr> argExprs = upExpr.getArgExpr();
+    	
+    	Expr lustreExpr = doSwitch(upExpr.getRecord());
+    	for(int i= 0; i < args.size(); i++){
+    		com.rockwellcollins.atc.agree.agree.Expr argExpr = argExprs.get(i);
+    		NamedElement arg = args.get(i);
+    		Expr lustreArgExpr = doSwitch(argExpr);
+    		lustreExpr = new jkind.lustre.RecordUpdateExpr(lustreExpr, arg.getName(), lustreArgExpr);
+    	}
+    	
+    	return lustreExpr;
+    }
+    
+    @Override
+    public Expr caseRecordExpr(RecordExpr recExpr){
+    	
+    	EList<NamedElement> agreeArgs = recExpr.getArgs();
+    	EList<com.rockwellcollins.atc.agree.agree.Expr> agreeArgExprs = recExpr.getArgExpr();
+    	Map<String, Expr> argExprMap = new HashMap<String, Expr>();
+    	
+    	for(int i = 0; i < agreeArgs.size(); i++){
+    		NamedElement agreeArg = agreeArgs.get(i);
+    		com.rockwellcollins.atc.agree.agree.Expr agreeExpr = agreeArgExprs.get(i);
+    		
+    		Expr lustreExpr = doSwitch(agreeExpr);
+    		String argName = agreeArg.getName();
+    		
+    		argExprMap.put(argName, lustreExpr);
+    		
+    	}
+    	
+    	String recId = recExpr.getRecord()
+    	return new jkind.lustre.RecordExpr(, fields)
+
+    }
 
     public Expr caseBinaryExpr(com.rockwellcollins.atc.agree.agree.BinaryExpr expr) {
 

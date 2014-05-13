@@ -272,6 +272,11 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
         return createGetPropertyExprAdapter();
       }
       @Override
+      public Adapter caseRecordUpdateExpr(RecordUpdateExpr object)
+      {
+        return createRecordUpdateExprAdapter();
+      }
+      @Override
       public Adapter caseIntLitExpr(IntLitExpr object)
       {
         return createIntLitExprAdapter();
@@ -305,11 +310,6 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
       public Adapter caseRecordExpr(RecordExpr object)
       {
         return createRecordExprAdapter();
-      }
-      @Override
-      public Adapter caseRecordUpdateExpr(RecordUpdateExpr object)
-      {
-        return createRecordUpdateExprAdapter();
       }
       @Override
       public Adapter caseElement(Element object)
@@ -934,6 +934,21 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
   }
 
   /**
+   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.RecordUpdateExpr <em>Record Update Expr</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see com.rockwellcollins.atc.agree.agree.RecordUpdateExpr
+   * @generated
+   */
+  public Adapter createRecordUpdateExprAdapter()
+  {
+    return null;
+  }
+
+  /**
    * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.IntLitExpr <em>Int Lit Expr</em>}'.
    * <!-- begin-user-doc -->
    * This default implementation returns null so that we can easily ignore cases;
@@ -1034,21 +1049,6 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
    * @generated
    */
   public Adapter createRecordExprAdapter()
-  {
-    return null;
-  }
-
-  /**
-   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.RecordUpdateExpr <em>Record Update Expr</em>}'.
-   * <!-- begin-user-doc -->
-   * This default implementation returns null so that we can easily ignore cases;
-   * it's useful to ignore a case when inheritance will catch all the cases anyway.
-   * <!-- end-user-doc -->
-   * @return the new adapter.
-   * @see com.rockwellcollins.atc.agree.agree.RecordUpdateExpr
-   * @generated
-   */
-  public Adapter createRecordUpdateExprAdapter()
   {
     return null;
   }

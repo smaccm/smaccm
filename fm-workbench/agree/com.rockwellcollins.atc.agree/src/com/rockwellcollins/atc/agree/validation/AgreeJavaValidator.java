@@ -242,6 +242,30 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
     }
     
     @Check(CheckType.FAST)
+    public void checkRecordUpdateExpr(RecordUpdateExpr upExpr){
+    	
+    	EList<NamedElement> args = upExpr.getArgs();
+    	EList<Expr> argExprs = upExpr.getArgExpr();
+    	
+    	//this should be enforced by the parser
+    	assert(args.size() == argExprs.size());
+    	
+    	for(int i = 0; i < args.size(); i++){
+    		NamedElement arg = args.get(i);
+    		Expr argExpr = argExprs.get(i);
+    		AgreeType argType = getAgreeType(arg);
+    		AgreeType argExprType = getAgreeType(argExpr);
+    		
+    		if(!matches(argType,argExprType)){
+    			error(argExpr, "the update field is of type '"+argType+
+    					"', but the expression is of type '"+argExprType+"'");
+    		}
+    		
+    	}
+    	
+    }
+    
+    @Check(CheckType.FAST)
     public void checkRecordExpr(RecordExpr recExpr){
     	
     	NestedDotID recType = recExpr.getRecord(); 
@@ -323,11 +347,6 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 //    	
 //    	return types;
 //    }
-
-    @Check(CheckType.FAST)
-    public void checkRecordUpdateExpr(RecordUpdateExpr recExpr){
-    	
-    }
     
     @Check(CheckType.FAST)
     public void checkConstStatement(ConstStatement constStat) {
@@ -396,7 +415,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
     		String strTag = "";
     		while(recId != null){
     			typeName = typeName + strTag+recId.getBase().getName();
-    			strTag = "__";
+    			strTag = ".";
     			recId = recId.getSub();
     		}
     	}else if(recEl instanceof DataImplementation){
@@ -407,8 +426,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
         	String packName = ((AadlPackage)aadlPack).getName();
     		//use two underscores so there are not conflicts
     		//with record type names
-    		typeName = "_"+packName+"__"+recEl.getName();
-    		typeName.replace(".", "_");
+    		typeName = packName+"::"+recEl.getName();
     	}
     	return new AgreeType(typeName);
 	}
@@ -1087,8 +1105,6 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
             return getAgreeType((NamedElement) ((DataAccess) namedEl).getFeatureClassifier());
         } else if (namedEl instanceof DataType) {
             return getAgreeType((ComponentClassifier) namedEl);
-        } else if (namedEl instanceof FeatureGroup){
-        	return getAgreeType((FeatureGroup)namedEl);
         } else if (namedEl instanceof DataImplementation){
         	return getAgreeType((DataImplementation)namedEl);
         }
@@ -1100,21 +1116,11 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
     private AgreeType getAgreeType(DataImplementation dataImpl){
     	AadlPackage aadlPack = (AadlPackage)dataImpl.eContainer().eContainer();
     	
-    	String typeStr = "_" + aadlPack.getName() + "__" + dataImpl.getName();
-    	typeStr.replace(".", "_");
+    	String typeStr = aadlPack.getName() + "::" + dataImpl.getName();
     	
     	return new AgreeType(typeStr);
     }
     
-    private AgreeType getAgreeType(FeatureGroup featGroup){
-    	EObject container = featGroup.eContainer();
-    	while(!(container instanceof AadlPackage)){
-    		container = container.eContainer();
-    	}
-    	AadlPackage aadlPack = (AadlPackage)container;
-    	return new AgreeType(aadlPack.getName()+"__"+featGroup.getAllFeatureGroupType().getName());
-    }
-
     private AgreeType getAgreeType(ComponentClassifier dataClass) {
 
         while (dataClass != null) {
@@ -1267,9 +1273,15 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
             return getAgreeType(((PreExpr) expr).getExpr());
         } else if(expr instanceof RecordExpr){
         	return getAgreeType((RecordExpr)expr);
+        } else if(expr instanceof RecordUpdateExpr){
+        	return getAgreeType((RecordUpdateExpr)expr);
         }
 
         return ERROR;
+    }
+    
+    private AgreeType getAgreeType(RecordUpdateExpr upExpr){
+    	return getAgreeType(upExpr.getRecord());
     }
     
     private AgreeType getAgreeType(RecordExpr recExpr){

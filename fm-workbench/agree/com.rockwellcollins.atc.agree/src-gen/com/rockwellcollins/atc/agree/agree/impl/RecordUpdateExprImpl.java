@@ -4,7 +4,6 @@ package com.rockwellcollins.atc.agree.agree.impl;
 
 import com.rockwellcollins.atc.agree.agree.AgreePackage;
 import com.rockwellcollins.atc.agree.agree.Expr;
-import com.rockwellcollins.atc.agree.agree.NestedDotID;
 import com.rockwellcollins.atc.agree.agree.RecordUpdateExpr;
 
 import java.util.Collection;
@@ -40,7 +39,7 @@ import org.osate.aadl2.NamedElement;
  *
  * @generated
  */
-public class RecordUpdateExprImpl extends ComplexExprImpl implements RecordUpdateExpr
+public class RecordUpdateExprImpl extends ExprImpl implements RecordUpdateExpr
 {
   /**
    * The cached value of the '{@link #getRecord() <em>Record</em>}' containment reference.
@@ -50,7 +49,7 @@ public class RecordUpdateExprImpl extends ComplexExprImpl implements RecordUpdat
    * @generated
    * @ordered
    */
-  protected NestedDotID record;
+  protected Expr record;
 
   /**
    * The cached value of the '{@link #getArgs() <em>Args</em>}' reference list.
@@ -98,7 +97,7 @@ public class RecordUpdateExprImpl extends ComplexExprImpl implements RecordUpdat
    * <!-- end-user-doc -->
    * @generated
    */
-  public NestedDotID getRecord()
+  public Expr getRecord()
   {
     return record;
   }
@@ -108,9 +107,9 @@ public class RecordUpdateExprImpl extends ComplexExprImpl implements RecordUpdat
    * <!-- end-user-doc -->
    * @generated
    */
-  public NotificationChain basicSetRecord(NestedDotID newRecord, NotificationChain msgs)
+  public NotificationChain basicSetRecord(Expr newRecord, NotificationChain msgs)
   {
-    NestedDotID oldRecord = record;
+    Expr oldRecord = record;
     record = newRecord;
     if (eNotificationRequired())
     {
@@ -125,7 +124,7 @@ public class RecordUpdateExprImpl extends ComplexExprImpl implements RecordUpdat
    * <!-- end-user-doc -->
    * @generated
    */
-  public void setRecord(NestedDotID newRecord)
+  public void setRecord(Expr newRecord)
   {
     if (newRecord != record)
     {
@@ -219,7 +218,7 @@ public class RecordUpdateExprImpl extends ComplexExprImpl implements RecordUpdat
     switch (featureID)
     {
       case AgreePackage.RECORD_UPDATE_EXPR__RECORD:
-        setRecord((NestedDotID)newValue);
+        setRecord((Expr)newValue);
         return;
       case AgreePackage.RECORD_UPDATE_EXPR__ARGS:
         getArgs().clear();
@@ -244,7 +243,7 @@ public class RecordUpdateExprImpl extends ComplexExprImpl implements RecordUpdat
     switch (featureID)
     {
       case AgreePackage.RECORD_UPDATE_EXPR__RECORD:
-        setRecord((NestedDotID)null);
+        setRecord((Expr)null);
         return;
       case AgreePackage.RECORD_UPDATE_EXPR__ARGS:
         getArgs().clear();

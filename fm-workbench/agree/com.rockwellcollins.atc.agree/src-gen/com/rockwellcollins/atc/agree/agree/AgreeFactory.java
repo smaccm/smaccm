@@ -365,6 +365,15 @@ public interface AgreeFactory extends EFactory
   GetPropertyExpr createGetPropertyExpr();
 
   /**
+   * Returns a new object of class '<em>Record Update Expr</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Record Update Expr</em>'.
+   * @generated
+   */
+  RecordUpdateExpr createRecordUpdateExpr();
+
+  /**
    * Returns a new object of class '<em>Int Lit Expr</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -426,15 +435,6 @@ public interface AgreeFactory extends EFactory
    * @generated
    */
   RecordExpr createRecordExpr();
-
-  /**
-   * Returns a new object of class '<em>Record Update Expr</em>'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return a new object of class '<em>Record Update Expr</em>'.
-   * @generated
-   */
-  RecordUpdateExpr createRecordUpdateExpr();
 
   /**
    * Returns the package supported by this factory.
