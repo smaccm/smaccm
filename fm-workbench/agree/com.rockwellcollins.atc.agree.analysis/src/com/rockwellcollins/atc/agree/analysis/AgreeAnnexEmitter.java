@@ -25,6 +25,7 @@ import jkind.lustre.Node;
 import jkind.lustre.NodeCallExpr;
 import jkind.lustre.RealExpr;
 import jkind.lustre.Type;
+import jkind.lustre.TypeDef;
 import jkind.lustre.UnaryExpr;
 import jkind.lustre.UnaryOp;
 import jkind.lustre.VarDecl;
@@ -123,6 +124,7 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
     public final List<Equation> constExpressions = new ArrayList<>();
     public final List<Node> nodeDefExpressions = new ArrayList<>();
     public final List<Equation> connExpressions = new ArrayList<>();
+    public final List<Type> typeExpressions = new ArrayList<>();
     //this set keeps track of all the left hand sides of connection
     //expressions
     public final Set<String> connLHS = new HashSet<>();
@@ -141,6 +143,7 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
     private final Map<EventDataPort, List<IdExpr>> queueInClockMap = new HashMap<>();
     private final Map<EventDataPort, List<IdExpr>> queueOutClockMap = new HashMap<>();
     private final Map<EventDataPort, List<IdExpr>> queueCountMap = new HashMap<>();
+    private final Map<NamedElement, String> typeMap = new HashMap<>();
     
     //used for pretty printing jkind -> aadl variables
     public final Map<String, String> varRenaming = new HashMap<>();
@@ -803,10 +806,104 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
     		
     	}
     	
-    	String recId = recExpr.getRecord()
-    	return new jkind.lustre.RecordExpr(, fields)
+    	NestedDotID recId = recExpr.getRecord();
+    	String recName = getRecordTypeName(recId);
+    	return new jkind.lustre.RecordExpr(recName, argExprMap);
 
     }
+    
+    private String getRecordTypeName(NamedElement finalId){
+
+    	if(typeMap.containsKey(finalId)){
+    		return typeMap.get(finalId);
+    	}
+    	recordRecExpr(finalId);
+    	return typeMap.get(finalId);
+    }
+    
+    private void recordRecExpr(NamedElement el){
+    	Map<String, Type> subTypeMap = new HashMap<String, Type>();
+    	if(el instanceof ComponentImplementation){
+    		ComponentImplementation compImpl = (ComponentImplementation)el;
+    		for(Subcomponent subComp : compImpl.getAllSubcomponents()){
+    			
+    		}
+    	}else if(el instanceof RecordDefExpr){
+    		RecordDefExpr agreeRecDef = (RecordDefExpr)el;
+    		for(Arg arg : agreeRecDef.getArgs()){
+    			
+    			com.rockwellcollins.atc.agree.agree.Type argType = arg.getType();
+    			String typeStr = null;
+    			if(argType instanceof PrimType){
+    				typeStr = ((PrimType) argType).getString();
+    			}else{
+    				NestedDotID nestId = ((RecordType) argType).getRecord();
+    				NamedElement namedEl = AgreeEmitterUtilities.getFinalNestId(nestId);
+    				typeStr = getRecordTypeName(namedEl);
+    			}
+    			subTypeMap.put(arg.getName(), new NamedType(typeStr));
+    		}
+    		
+    	}
+    	String typeStr = getIDTypeStr(el);
+    	typeMap.put(el, typeStr);
+    	jkind.lustre.RecordType lustreRecord = new jkind.lustre.RecordType(typeStr, subTypeMap);
+    	
+    	typeExpressions.add(lustreRecord);
+    	
+    }
+
+    private String getIDTypeStr(NamedElement record) {
+    	String typeStr = null;
+    	EObject container = record.eContainer();
+    	
+    	if(record instanceof ComponentType){
+    		ComponentType type = (ComponentType)record;
+    		do {
+                String name = type.getQualifiedName();
+                switch (name) {
+                case "Base_Types::Boolean":
+                    return "bool";
+                case "Base_Types::Integer":
+                case "Base_Types::Unsigned":
+                case "Base_Types::Unsigned_32":
+                case "Base_Types::Unsigned_16":
+                case "Base_Types::Unsigned_8":
+                case "Base_Types::Integer_32":
+                case "Base_Types::Integer_16":
+                case "Base_Types::Integer_8":
+                    return "int";
+                case "Base_Types::Float":
+                    return "real";
+                }
+                type = (DataType) type.getExtended();
+
+            } while (type != null);
+    		throw new AgreeException("Reference to component type '"
+    				+record.getName()+"' is not amoung the types reasoned about by AGREE");
+    	}else if(record instanceof ComponentImplementation){
+    		typeStr = record.getName();
+    	}else{
+    		while(!(container instanceof ComponentClassifier) && !(container instanceof AadlPackage)){
+    			container = container.eContainer();
+    		}
+    		if(container instanceof ComponentClassifier){
+    			ComponentClassifier compClass = (ComponentClassifier)container;
+    			typeStr = compClass.getName() + "__" + record.getName();
+    		}else{
+    			typeStr = record.getName();
+    		}
+    	}
+    	//get the name of the containing package
+    	while(!(container instanceof AadlPackage)){
+    		container = container.eContainer();
+    	}
+    	typeStr = ((AadlPackage)container).getName() + "__" + typeStr;
+    	typeStr.replace(".", "__");
+
+    	return typeStr;
+    }
+    
 
     public Expr caseBinaryExpr(com.rockwellcollins.atc.agree.agree.BinaryExpr expr) {
 

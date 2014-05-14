@@ -126,6 +126,36 @@ public class AgreeEmitterUtilities {
         return null;
     }
 
+    
+    static public String subCompToLustreType(DataSubcomponent sub) {
+
+        DataType type = (DataType) sub.getAllClassifier();
+
+        do {
+            String name = type.getQualifiedName();
+            switch (name) {
+            case "Base_Types::Boolean":
+                return "bool";
+            case "Base_Types::Integer":
+            case "Base_Types::Unsigned":
+            case "Base_Types::Unsigned_32":
+            case "Base_Types::Unsigned_16":
+            case "Base_Types::Unsigned_8":
+            case "Base_Types::Integer_32":
+            case "Base_Types::Integer_16":
+            case "Base_Types::Integer_8":
+                return "int";
+            case "Base_Types::Float":
+                return "real";
+            }
+            type = (DataType) type.getExtended();
+
+        } while (type != null);
+
+        return null;
+
+    }
+    
 
     static public AgreeVarDecl dataTypeToVarType(DataSubcomponent sub) {
 
