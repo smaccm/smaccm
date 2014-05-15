@@ -266,6 +266,17 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
     }
     
     @Check(CheckType.FAST)
+    public void checkRecordType(RecordType recType){
+    	NestedDotID recId = recType.getRecord();
+    	NamedElement finalId = getFinalNestId(recId);
+    	
+    	if(!(finalId instanceof ComponentImplementation)
+    	  && !(finalId instanceof RecordDefExpr)){
+    		error(recType, "types must be record definition or component implementation");
+    	}
+    }
+    
+    @Check(CheckType.FAST)
     public void checkRecordExpr(RecordExpr recExpr){
     	
     	NestedDotID recType = recExpr.getRecord(); 
@@ -273,6 +284,14 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
     	EList<NamedElement> exprArgs = recExpr.getArgs();
     	EList<Expr> argExprs = recExpr.getArgExpr();
     	
+    	NestedDotID recId = recExpr.getRecord();
+    	NamedElement finalId = getFinalNestId(recId);
+    	
+    	if(!(finalId instanceof ComponentImplementation)
+    	  && !(finalId instanceof RecordDefExpr)){
+    		error(recId, "types must be record definition or component implementation");
+    	}
+
     	if(exprArgs.size() != defArgs.size()){
     		error(recExpr, "Incorrect number of arguments");
     		return;
@@ -347,6 +366,47 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 //    	
 //    	return types;
 //    }
+    
+    @Check(CheckType.FAST)
+    public void checkRecordDefExpr(RecordDefExpr recordDef){
+    	
+    	Set<RecordDefExpr> recordClosure = new HashSet<RecordDefExpr>();
+    	Set<RecordDefExpr> prevClosure = null;
+
+    	for(Arg arg : recordDef.getArgs()){
+    		Type type = arg.getType();
+    		if(type instanceof RecordType){
+    			NestedDotID subRec = ((RecordType) type).getRecord();
+    			NamedElement finalId = getFinalNestId(subRec);
+    			
+    			if(!(finalId instanceof ComponentImplementation)
+    				&& !(finalId instanceof RecordDefExpr)){
+    				error(type, "types must be record definition or component implementation");
+    			}
+    			
+    			if(finalId instanceof RecordDefExpr){
+    				recordClosure.add((RecordDefExpr)finalId);
+    			}
+    		}
+    	}
+    	do{
+			prevClosure = new HashSet<>(recordClosure);
+			
+			for(RecordDefExpr subRecDef : prevClosure){
+				
+				if(subRecDef == recordDef){
+					error(recordDef, "The definition of type '"+recordDef.getName()+
+							"' is involved in a cyclic definition");
+					break;
+				}
+				for(Arg arg : subRecDef.getArgs()){
+					if(arg instanceof RecordDefExpr){
+						prevClosure.add((RecordDefExpr)arg);
+					}
+				}
+			}
+		}while(!prevClosure.equals(recordClosure));
+    }
     
     @Check(CheckType.FAST)
     public void checkConstStatement(ConstStatement constStat) {

@@ -807,7 +807,8 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
     	}
     	
     	NestedDotID recId = recExpr.getRecord();
-    	String recName = getRecordTypeName(recId);
+    	NamedElement finalId = AgreeEmitterUtilities.getFinalNestId(recId);
+    	String recName = getRecordTypeName(finalId);
     	return new jkind.lustre.RecordExpr(recName, argExprMap);
 
     }
@@ -825,8 +826,16 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
     	Map<String, Type> subTypeMap = new HashMap<String, Type>();
     	if(el instanceof ComponentImplementation){
     		ComponentImplementation compImpl = (ComponentImplementation)el;
+    		String typeStr = null;
     		for(Subcomponent subComp : compImpl.getAllSubcomponents()){
-    			
+    			ComponentImplementation subCompImpl = subComp.getComponentImplementation();
+    			if(subCompImpl == null){
+        			ComponentType subCompType = subComp.getComponentType();
+        			typeStr = getRecordTypeName(subCompType);
+    			}else{
+    				typeStr = getRecordTypeName(subCompImpl);
+    			}
+    			subTypeMap.put(subComp.getName(), new NamedType(typeStr));
     		}
     	}else if(el instanceof RecordDefExpr){
     		RecordDefExpr agreeRecDef = (RecordDefExpr)el;
@@ -844,6 +853,10 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
     			subTypeMap.put(arg.getName(), new NamedType(typeStr));
     		}
     		
+    	}else if(el instanceof ComponentType){
+    		String typeStr = getIDTypeStr(el);
+        	typeMap.put(el, typeStr);
+        	return;
     	}
     	String typeStr = getIDTypeStr(el);
     	typeMap.put(el, typeStr);
