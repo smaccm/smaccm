@@ -400,8 +400,13 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 					break;
 				}
 				for(Arg arg : subRecDef.getArgs()){
-					if(arg instanceof RecordDefExpr){
-						prevClosure.add((RecordDefExpr)arg);
+					Type type = arg.getType();
+					if(type instanceof RecordType){
+						NestedDotID subRecId = ((RecordType) type).getRecord();
+						NamedElement subFinalEl = getFinalNestId(subRecId);
+						if(subFinalEl instanceof RecordDefExpr){
+							recordClosure.add((RecordDefExpr)subFinalEl);
+						}
 					}
 				}
 			}
