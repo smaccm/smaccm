@@ -48,7 +48,7 @@ public
 
   device RC_Controller
     features
-      flight_control_commands: out data port DATATYPES::Flight_Control_Commands;
+      flight_control_commands: out data port DATATYPES::Flight_Control_Commands.Impl;
       radio_access: requires bus access RF_Spectrum.RF_2_4GHz;
   end RC_Controller;
 end UAS;

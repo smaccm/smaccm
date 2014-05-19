@@ -906,8 +906,9 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
                 type = (DataType) type.getExtended();
 
             } while (type != null);
-    		throw new AgreeException("Reference to component type '"
-    				+record.getName()+"' is not amoung the types reasoned about by AGREE");
+    		log.logWarning("Reference to component type '"
+    				+record.getName()+"' is not among the types reasoned about by AGREE");
+    		return "bool";
     	}else if(record instanceof ComponentImplementation){
     		typeStr = record.getName();
     	}else{

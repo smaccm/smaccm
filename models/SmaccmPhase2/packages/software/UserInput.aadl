@@ -83,16 +83,16 @@ thread group UserInputThreads
   			result = false -> (signal and not pre(signal));
   		tel;
   			
-		eq ui__INSERTions : int = (if (ui_emitter_out._COUNT > 0) then 1 else 0) -> if (ris_edg(ui_emitter_out._COUNT > 0)) then
-										pre(ui__INSERTions) + 1
+		eq ui_insertions : int = (if (ui_emitter_out._COUNT > 0) then 1 else 0) -> if (ris_edg(ui_emitter_out._COUNT > 0)) then
+										pre(ui_insertions) + 1
 									  else
-									  	pre(ui__INSERTions);
+									  	pre(ui_insertions);
   			
   		guarantee "User input time always increasing" :
-  			true -> ui__INSERTions > 1 => (ui_emitter_out.time >= pre (ui_emitter_out.time));
+  			true -> ui_insertions > 1 => (ui_emitter_out.time >= pre (ui_emitter_out.time));
   			
   		guarantee "UI _INSERTions is always positive" :
-  			ui__INSERTions >= 0;
+  			ui_insertions >= 0;
   			
   		assume "positive time" :
   			system_time >= 0;

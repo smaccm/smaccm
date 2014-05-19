@@ -77,7 +77,14 @@ public class AgreeCycleVisitor implements jkind.lustre.visitors.ExprVisitor<Set<
 
     @Override
     public Set<String> visit(RecordAccessExpr e) {
-        throw new AgreeException("wtf mate? I didn't think we supported record type sin AGREE");
+    	Set<String> visits = e.record.accept(this);
+    	
+    	Set<String> returnSet = new HashSet<>();
+    	for(String str : visits){
+    		returnSet.add(str+"."+e.field);
+    	}
+    	
+    	return returnSet;
     }
 
     @Override

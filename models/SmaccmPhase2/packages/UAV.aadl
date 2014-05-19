@@ -15,7 +15,7 @@ public
       radio_access_915Mhz: requires bus access UAS::RF_Spectrum.RF_915MHz; 
       radio_access_2_4Ghz: requires bus access UAS::RF_Spectrum.RF_2_4GHz;
       mavlink: in out data port DATATYPES::EncryptMAVLink;
-      flight_control_commands: in data port DATATYPES::Flight_Control_Commands;
+      flight_control_commands: in data port DATATYPES::Flight_Control_Commands.Impl;
   end UAV;
   
   system implementation UAV.Impl 
