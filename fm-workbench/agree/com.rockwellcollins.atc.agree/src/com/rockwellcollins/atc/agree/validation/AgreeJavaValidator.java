@@ -270,9 +270,13 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
     	NestedDotID recId = recType.getRecord();
     	NamedElement finalId = getFinalNestId(recId);
     	
-    	if(!(finalId instanceof ComponentImplementation)
+    	if(!(finalId instanceof DataImplementation)
     	  && !(finalId instanceof RecordDefExpr)){
-    		error(recType, "types must be record definition or component implementation");
+    		error(recType, "types must be record definition or data implementation");
+    	}
+    	
+    	if(finalId instanceof DataImplementation){
+    		dataImplCycleCheck(recId);
     	}
     }
     
@@ -287,9 +291,13 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
     	NestedDotID recId = recExpr.getRecord();
     	NamedElement finalId = getFinalNestId(recId);
     	
-    	if(!(finalId instanceof ComponentImplementation)
+    	if(!(finalId instanceof DataImplementation)
     	  && !(finalId instanceof RecordDefExpr)){
-    		error(recId, "types must be record definition or component implementation");
+    		error(recId, "types must be record definition or data implementation");
+    	}
+    	
+    	if(finalId instanceof DataImplementation){
+    		dataImplCycleCheck(recId);
     	}
 
     	if(exprArgs.size() != defArgs.size()){
@@ -367,6 +375,41 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 //    	return types;
 //    }
     
+    private void dataImplCycleCheck(NestedDotID dataID){
+    	NamedElement finalId = getFinalNestId(dataID);
+    	DataImplementation dataImpl = (DataImplementation)finalId;
+    	Set<DataImplementation> dataClosure = new HashSet<>();
+    	Set<DataImplementation> prevClosure = null;
+    	
+    	for(Subcomponent sub : dataImpl.getAllSubcomponents()){
+    		ComponentImplementation subImpl = sub.getComponentImplementation();
+    		if(subImpl != null){
+    			dataClosure.add((DataImplementation)subImpl);
+    		}
+    	}
+    	
+    	do{
+    		prevClosure = new HashSet<>(dataClosure);
+    		for(DataImplementation subImpl : prevClosure){
+    			if(subImpl == dataImpl){
+    				error(dataID, "The component implementation '"+dataImpl.getName()+
+    						"' has a cyclic definition.  This cannot be reasoned about by AGREE.");
+    				break;
+    			}
+    			for(Subcomponent subSub : subImpl.getAllSubcomponents()){
+    				ComponentImplementation subSubImpl = subSub.getComponentImplementation();
+    				if(subSubImpl != null){
+    					dataClosure.add((DataImplementation)subSubImpl);
+    				}
+    			}
+
+    		}
+
+    	}while(!prevClosure.equals(dataClosure));
+    	
+    }
+    
+    
     @Check(CheckType.FAST)
     public void checkRecordDefExpr(RecordDefExpr recordDef){
     	
@@ -379,13 +422,16 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
     			NestedDotID subRec = ((RecordType) type).getRecord();
     			NamedElement finalId = getFinalNestId(subRec);
     			
-    			if(!(finalId instanceof ComponentImplementation)
+    			if(!(finalId instanceof DataImplementation)
     				&& !(finalId instanceof RecordDefExpr)){
-    				error(type, "types must be record definition or component implementation");
+    				error(type, "types must be record definition or data implementation");
+    				return;
     			}
     			
     			if(finalId instanceof RecordDefExpr){
     				recordClosure.add((RecordDefExpr)finalId);
+    			}else{
+    				dataImplCycleCheck(subRec);
     			}
     		}
     	}
@@ -1151,7 +1197,11 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
             }
         } else if (namedEl instanceof DataSubcomponent) {
             // this is for checking "Base_Types::Boolean" etc...
-            return getAgreeType(((DataSubcomponent) namedEl).getAllClassifier());
+        	ComponentClassifier compClass = ((DataSubcomponent) namedEl).getAllClassifier();
+        	if(compClass instanceof DataImplementation){
+        		return getAgreeType((DataImplementation)compClass);
+        	}
+            return getAgreeType(compClass);
         } else if (namedEl instanceof Arg) {
             return getAgreeType((Arg) namedEl);
         } else if (namedEl instanceof ClassifierType || namedEl instanceof Subcomponent) {

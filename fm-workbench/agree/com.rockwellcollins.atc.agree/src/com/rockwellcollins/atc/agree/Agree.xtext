@@ -149,7 +149,7 @@ PreDefFnExpr returns Expr:
 	| RecordUpdateExpr;
 
 RecordUpdateExpr returns Expr:
-	TermExpr =>({RecordUpdateExpr.record=current} ('{' args+=[aadl2::NamedElement|ID] ':=' argExpr+=Expr '}')*)?
+	TermExpr (=> ({RecordUpdateExpr.record=current} ('{' args+=[aadl2::NamedElement|ID] ':=' argExpr+=Expr '}')+))?
 ;
 
 TermExpr returns Expr:

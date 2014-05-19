@@ -1,11 +1,14 @@
 package com.rockwellcollins.atc.agree.analysis;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import jkind.lustre.CondactExpr;
 import jkind.lustre.Expr;
 import jkind.lustre.IdExpr;
 import jkind.lustre.Node;
+import jkind.lustre.Type;
 import jkind.lustre.VarDecl;
 
 public class AgreeNode {
@@ -21,7 +24,8 @@ public class AgreeNode {
     
     public AgreeNode(List<VarDecl> inputs, List<VarDecl> outputs,
             List<Expr> assumptions, List<Expr> assertions,
-            List<Expr> guarantees, List<Node> nodes, Node mainNode, VarDecl clockVar){
+            List<Expr> guarantees, List<Node> nodes, 
+            Node mainNode, VarDecl clockVar){
         
         this.inputs = inputs;
         this.outputs = outputs;

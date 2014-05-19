@@ -3,6 +3,7 @@
  */
 package com.rockwellcollins.atc.agree.scoping;
 
+import java.io.ObjectInputStream.GetField;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -212,6 +213,19 @@ public class AgreeScopeProvider extends
                 }
             }else if (container instanceof FeatureGroupImpl){
               container = ((FeatureGroupImpl)container).getAllFeatureGroupType();
+            }else if(container instanceof Arg){
+            	Type type = ((Arg) container).getType();
+            	if(type instanceof RecordType){
+            		NestedDotID elID = ((RecordType) type).getRecord();
+            		NamedElement namedEl = elID.getBase();
+            		if(namedEl instanceof ComponentImplementation){
+            			result.addAll(((ComponentImplementation) namedEl).getAllSubcomponents());
+            		}else if(namedEl instanceof RecordDefExpr){
+            			result.addAll(((RecordDefExpr) namedEl).getArgs());
+            		}
+            		return result;
+            	}
+            			
             } else {
                 return new HashSet<>(); // this will throw a parsing error
             }

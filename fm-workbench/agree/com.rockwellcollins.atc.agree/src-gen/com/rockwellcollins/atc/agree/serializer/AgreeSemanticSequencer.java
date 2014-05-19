@@ -1016,7 +1016,7 @@ public class AgreeSemanticSequencer extends PropertiesSemanticSequencer {
 	
 	/**
 	 * Constraint:
-	 *     ((record=RecordUpdateExpr_RecordUpdateExpr_1_0_0 (args+=[NamedElement|ID] argExpr+=Expr)*) | record=RecordUpdateExpr_RecordUpdateExpr_1_0_0)
+	 *     (record=RecordUpdateExpr_RecordUpdateExpr_1_0_0 (args+=[NamedElement|ID] argExpr+=Expr)+)
 	 */
 	protected void sequence_RecordUpdateExpr(EObject context, RecordUpdateExpr semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);

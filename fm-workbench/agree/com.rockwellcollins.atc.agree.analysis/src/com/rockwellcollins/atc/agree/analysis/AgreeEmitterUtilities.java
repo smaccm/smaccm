@@ -41,8 +41,12 @@ import org.osate.aadl2.ContainedNamedElement;
 import org.osate.aadl2.ContainmentPathElement;
 import org.osate.aadl2.Context;
 import org.osate.aadl2.DataImplementation;
+import org.osate.aadl2.DataPort;
 import org.osate.aadl2.DataSubcomponent;
+import org.osate.aadl2.DataSubcomponentType;
 import org.osate.aadl2.DataType;
+import org.osate.aadl2.EventDataPort;
+import org.osate.aadl2.Feature;
 import org.osate.aadl2.FeatureGroupType;
 import org.osate.aadl2.ModalPropertyValue;
 import org.osate.aadl2.NamedElement;
@@ -127,35 +131,6 @@ public class AgreeEmitterUtilities {
     }
 
     
-    static public String subCompToLustreType(DataSubcomponent sub) {
-
-        DataType type = (DataType) sub.getAllClassifier();
-
-        do {
-            String name = type.getQualifiedName();
-            switch (name) {
-            case "Base_Types::Boolean":
-                return "bool";
-            case "Base_Types::Integer":
-            case "Base_Types::Unsigned":
-            case "Base_Types::Unsigned_32":
-            case "Base_Types::Unsigned_16":
-            case "Base_Types::Unsigned_8":
-            case "Base_Types::Integer_32":
-            case "Base_Types::Integer_16":
-            case "Base_Types::Integer_8":
-                return "int";
-            case "Base_Types::Float":
-                return "real";
-            }
-            type = (DataType) type.getExtended();
-
-        } while (type != null);
-
-        return null;
-
-    }
-    
 
     static public AgreeVarDecl dataTypeToVarType(DataSubcomponent sub) {
 
@@ -212,55 +187,6 @@ public class AgreeEmitterUtilities {
         NestedDotID dotId = expr.getFn();
         NamedElement namedEl = getFinalNestId(dotId);
         return namedEl.getName();
-    }
-
-    public static String getTypeStr(com.rockwellcollins.atc.agree.agree.Type agreeType){
-    	String typeName = null;
-		if(agreeType instanceof PrimType){
-        	typeName = ((PrimType)agreeType).getString();
-        }else{
-        	RecordType recType = (RecordType)agreeType;
-        	NestedDotID recId = recType.getRecord();
-        	typeName = getNestIdAsType(recId);
-        	
-        }
-		return typeName;
-    }
-	
-	private static String getNestIdAsType(NestedDotID recId){
-		String typeName = "";
-    	NamedElement recEl = getFinalNestId(recId);
-    	
-    	if(recEl instanceof RecordDefExpr){
-    		String strTag = "";
-    		while(recId != null){
-    			typeName = typeName + strTag + recId.getBase().getName();
-    			strTag = "__";
-    			recId = recId.getSub();
-    		}
-    	}else if(recEl instanceof DataImplementation){
-    		EObject aadlPack = recEl.eContainer();
-        	while(!(aadlPack instanceof AadlPackage)){
-        		aadlPack = aadlPack.eContainer();
-        	}
-        	String packName = ((AadlPackage)aadlPack).getName();
-    		//use two underscores so there are not conflicts
-    		//with record type names
-    		typeName = "_"+packName+"__"+recEl.getName();
-    		typeName.replace(".", "_");
-    	}
-    	return typeName;
-	}
-
-    static public List<VarDecl> argsToVarDeclList(String nameTag, EList<Arg> args) {
-        List<VarDecl> varList = new ArrayList<VarDecl>();
-        for (Arg arg : args) {
-            Type type = new NamedType(getTypeStr(arg.getType()));
-            VarDecl varDecl = new VarDecl(nameTag + arg.getName(), type);
-            varList.add(varDecl);
-        }
-
-        return varList;
     }
 
     public static NamedElement getFinalNestId(NestedDotID dotId) {

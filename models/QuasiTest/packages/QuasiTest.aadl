@@ -19,9 +19,9 @@ system Squadron
 		
 		const none : int = 3;
 		
-		assume "init leader" : leader_l = 0 and leader_r = 0 -> true;
+		assume "init leader" : leader_l = 0 and leader_r = 0 -> true;  
 		assume "init right" : right_l = 1 and right_r = 1 -> true;
-		assume "init left" : left_l = 2 and left_r = 2 -> true;
+		assume "init left" : left_l = 2 and left_r = 2 -> true;  
 		
 		guarantee "leader equivalence" : 
 			(leader_l != none) and (leader_r != none) and

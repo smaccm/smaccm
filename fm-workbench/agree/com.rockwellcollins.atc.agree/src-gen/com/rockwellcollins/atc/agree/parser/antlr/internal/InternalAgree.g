@@ -3007,7 +3007,7 @@ ruleRecordUpdateExpr returns [EObject current=null]
 ruleExpr
 )
 )	'}' 
-)*))=>((
+)+))=>((
     {
         $current = forceCreateModelElementAndSet(
             grammarAccess.getRecordUpdateExprAccess().getRecordUpdateExprRecordAction_1_0_0(),
@@ -3056,7 +3056,7 @@ ruleExpr
     {
     	newLeafNode(otherlv_6, grammarAccess.getRecordUpdateExprAccess().getRightCurlyBracketKeyword_1_0_1_4());
     }
-)*))?)
+)+))?)
 ;
 
 

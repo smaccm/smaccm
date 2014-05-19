@@ -10263,9 +10263,16 @@ rule__RecordUpdateExpr__Group_1_0__1__Impl
     }
 :
 (
+(
+{ before(grammarAccess.getRecordUpdateExprAccess().getGroup_1_0_1()); }
+(rule__RecordUpdateExpr__Group_1_0_1__0)
+{ after(grammarAccess.getRecordUpdateExprAccess().getGroup_1_0_1()); }
+)
+(
 { before(grammarAccess.getRecordUpdateExprAccess().getGroup_1_0_1()); }
 (rule__RecordUpdateExpr__Group_1_0_1__0)*
 { after(grammarAccess.getRecordUpdateExprAccess().getGroup_1_0_1()); }
+)
 )
 
 ;

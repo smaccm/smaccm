@@ -1940,25 +1940,25 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		private final Keyword cRightCurlyBracketKeyword_1_0_1_4 = (Keyword)cGroup_1_0_1.eContents().get(4);
 		
 		//RecordUpdateExpr returns Expr:
-		//	TermExpr => ({RecordUpdateExpr.record=current} ("{" args+=[aadl2::NamedElement] ":=" argExpr+=Expr "}")*)?;
+		//	TermExpr => ({RecordUpdateExpr.record=current} ("{" args+=[aadl2::NamedElement] ":=" argExpr+=Expr "}")+)?;
 		public ParserRule getRule() { return rule; }
 
-		//TermExpr => ({RecordUpdateExpr.record=current} ("{" args+=[aadl2::NamedElement] ":=" argExpr+=Expr "}")*)?
+		//TermExpr => ({RecordUpdateExpr.record=current} ("{" args+=[aadl2::NamedElement] ":=" argExpr+=Expr "}")+)?
 		public Group getGroup() { return cGroup; }
 
 		//TermExpr
 		public RuleCall getTermExprParserRuleCall_0() { return cTermExprParserRuleCall_0; }
 
-		//=> ({RecordUpdateExpr.record=current} ("{" args+=[aadl2::NamedElement] ":=" argExpr+=Expr "}")*)?
+		//=> ({RecordUpdateExpr.record=current} ("{" args+=[aadl2::NamedElement] ":=" argExpr+=Expr "}")+)?
 		public Group getGroup_1() { return cGroup_1; }
 
-		//{RecordUpdateExpr.record=current} ("{" args+=[aadl2::NamedElement] ":=" argExpr+=Expr "}")*
+		//{RecordUpdateExpr.record=current} ("{" args+=[aadl2::NamedElement] ":=" argExpr+=Expr "}")+
 		public Group getGroup_1_0() { return cGroup_1_0; }
 
 		//{RecordUpdateExpr.record=current}
 		public Action getRecordUpdateExprRecordAction_1_0_0() { return cRecordUpdateExprRecordAction_1_0_0; }
 
-		//("{" args+=[aadl2::NamedElement] ":=" argExpr+=Expr "}")*
+		//("{" args+=[aadl2::NamedElement] ":=" argExpr+=Expr "}")+
 		public Group getGroup_1_0_1() { return cGroup_1_0_1; }
 
 		//"{"
@@ -2858,7 +2858,7 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 	}
 
 	//RecordUpdateExpr returns Expr:
-	//	TermExpr => ({RecordUpdateExpr.record=current} ("{" args+=[aadl2::NamedElement] ":=" argExpr+=Expr "}")*)?;
+	//	TermExpr => ({RecordUpdateExpr.record=current} ("{" args+=[aadl2::NamedElement] ":=" argExpr+=Expr "}")+)?;
 	public RecordUpdateExprElements getRecordUpdateExprAccess() {
 		return (pRecordUpdateExpr != null) ? pRecordUpdateExpr : (pRecordUpdateExpr = new RecordUpdateExprElements());
 	}

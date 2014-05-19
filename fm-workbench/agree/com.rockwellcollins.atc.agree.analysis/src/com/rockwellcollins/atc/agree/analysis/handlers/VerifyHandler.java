@@ -190,7 +190,7 @@ public abstract class VerifyHandler extends AadlHandler {
                 nodes.add(node);
         }
         nodes.add(newNode);
-        program = new Program(nodes);
+        program = new Program(program.types, program.constants, nodes);
         Renaming renaming = emitter.getRenaming();
         JKindResult result = new JKindResult("Contract Guarantees", properties, renaming);
         queue.add(result);
@@ -233,7 +233,7 @@ public abstract class VerifyHandler extends AadlHandler {
                 nodes.add(node);
         }
         nodes.add(newNode);
-        program = new Program(nodes);
+        program = new Program(program.types, program.constants, nodes);
         Renaming renaming = emitter.getRenaming();
         JKindResult result = new JKindResult("Contract Assumptions", properties, renaming);
         queue.add(result);
@@ -276,7 +276,7 @@ public abstract class VerifyHandler extends AadlHandler {
                 nodes.add(node);
         }
         nodes.add(newNode);
-        program = new Program(nodes);
+        program = new Program(program.types, program.constants, nodes);
         List<Boolean> reverseStatus = new ArrayList<>();
         for(int i = 0; i < properties.size(); i ++){
             reverseStatus.add(true);
