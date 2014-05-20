@@ -573,6 +573,14 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
         // and for collisions between subcomponent and feature names
 
         EObject container = namedEl.eContainer();
+        
+        if(container instanceof RecordDefExpr
+          || container instanceof NodeDefExpr){
+        	//don't care about arguments to recDefs and nodeDefs
+        	//TODO: perhaps we can ignore all arguments?
+        	return;
+        }
+        
         while (!(container instanceof AadlPackage || container instanceof ComponentImplementation || container instanceof ComponentType)) {
             container = container.eContainer();
         }
@@ -583,10 +591,8 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
             compImpl = (ComponentImplementation) container;
             type = compImpl.getType();
             checkDupNames(namedEl, type, compImpl);
-        } else {
-            if (container instanceof ComponentType) {
-                type = (ComponentType) container;
-            }
+        } else if (container instanceof ComponentType) {
+        	type = (ComponentType) container;
         }
 
         if (type != null) {
@@ -766,7 +772,8 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
         for (NestedDotID dotId : dotIds) {
             NamedElement id = getFinalNestId(dotId);
             if (!(id instanceof Arg) && !(id instanceof ConstStatement)
-                    && !(id instanceof NodeDefExpr) && !(id instanceof FnDefExpr)) {
+                    && !(id instanceof NodeDefExpr) && !(id instanceof FnDefExpr)
+                    && !(id instanceof DataSubcomponent)) {
                 error(dotId, "Only arguments, constants, and node calls allowed within a node");
             }
         }

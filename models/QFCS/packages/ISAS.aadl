@@ -5,31 +5,31 @@ public
 
 system ISAS
   features
-    egi1 : feature group inverse of Feature_Groups::EGI_Features;
-    egi2 : feature group inverse of Feature_Groups::EGI_Features;
-    egi3 : feature group inverse of Feature_Groups::EGI_Features;
-    egi4 : feature group inverse of Feature_Groups::EGI_Features;
+    egi1 : in data port Feature_Groups::EGI_Data.impl;
+    egi2 : in data port Feature_Groups::EGI_Data.impl;
+    egi3 : in data port Feature_Groups::EGI_Data.impl;
+    egi4 : in data port Feature_Groups::EGI_Data.impl;
     
-    egi_select : feature group Feature_Groups::EGI_Features;
+    egi_select : out data port Feature_Groups::EGI_Data.impl;
     
-    aoa1 : feature group inverse of Feature_Groups::AOA_Features;
-    aoa2 : feature group inverse of Feature_Groups::AOA_Features;
+    aoa1 : in data port Feature_Groups::AOA_Data.impl;
+    aoa2 : in data port Feature_Groups::AOA_Data.impl;
     
-    aoa_select: feature group Feature_Groups::AOA_Features;
+    aoa_select: out data port Feature_Groups::AOA_Data.impl;
     
-    ads1 : feature group inverse of Feature_Groups::ADS_Features;
-    ads2 : feature group inverse of Feature_Groups::ADS_Features;
+    ads1 : in data port Feature_Groups::ADS_Data.impl;
+    ads2 : in data port Feature_Groups::ADS_Data.impl;
     
-    ads_select : feature group Feature_Groups::ADS_Features;
+    ads_select : out data port Feature_Groups::ADS_Data.impl;
 
-    acts1_sense : feature group  Feature_Groups::ACTUATORS_Features;
-    acts2_sense : feature group  Feature_Groups::ACTUATORS_Features;
-    acts3_sense : feature group  Feature_Groups::ACTUATORS_Features;
-    acts4_sense : feature group  Feature_Groups::ACTUATORS_Features;
+    acts1_sense : in data port Feature_Groups::ACTUATORS_DATA.impl;
+    acts2_sense : in data port Feature_Groups::ACTUATORS_DATA.impl;
+    acts3_sense : in data port Feature_Groups::ACTUATORS_DATA.impl;
+    acts4_sense : in data port Feature_Groups::ACTUATORS_DATA.impl;
     
-    acts_sense_select : feature group Feature_Groups::ACTUATORS_Features;
+    acts_sense_select : in data port Feature_Groups::ACTUATORS_DATA.impl;
     
-    acts_ret : feature group Feature_Groups::ACTUATORS_Features;
+    acts_ret : in data port Feature_Groups::ACTUATORS_DATA.impl;
     
     --time stamp features
     egi1_time_stamp: in data port Base_Types::Integer;
@@ -53,7 +53,6 @@ system ISAS
     
   annex agree {**
     
-    --variables that indicate if a variable failed to update
     eq acts_ret_failed_update : bool;
     eq acts1_sense_failed_update : bool;
     eq acts2_sense_failed_update : bool;
@@ -62,7 +61,7 @@ system ISAS
     eq ads1_failed_update : bool;
     eq ads2_failed_update : bool;
     eq aoa1_failed_update : bool;
-    eq aoa2_failed_update : bool;
+    eq aoa2_failed_update : bool; 
     eq egi1_failed_update : bool;
     eq egi2_failed_update : bool;
     eq egi3_failed_update : bool;

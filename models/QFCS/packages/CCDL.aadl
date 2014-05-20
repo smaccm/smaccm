@@ -4,7 +4,7 @@ public
   
 system CCDL
   features
-    acts : feature group inverse of Feature_Groups::ACTUATORS_Features;
+    acts : out data port Feature_Groups::ACTUATORS_Data.impl;
     
   annex agree {**
     guarantee "actuator bounds" :

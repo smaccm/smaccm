@@ -3,11 +3,28 @@
  */
 package com.rockwellcollins.atc.agree.ui.contentassist;
 
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.xtext.Assignment;
+import org.eclipse.xtext.RuleCall;
+import org.eclipse.xtext.ui.editor.contentassist.ContentAssistContext;
+import org.eclipse.xtext.ui.editor.contentassist.ICompletionProposalAcceptor;
+
 /**
  * see http://www.eclipse.org/Xtext/documentation.html#contentAssist on how to
  * customize content assistant
  */
 public class AgreeProposalProvider extends
         com.rockwellcollins.atc.agree.ui.contentassist.AbstractAgreeProposalProvider {
+	
+	@Override
+	public void complete_NestedDotID(EObject model, RuleCall ruleCall, ContentAssistContext context, ICompletionProposalAcceptor acceptor) {
+		System.out.println();
+	}
+	
+	@Override
+	public void completeNestedDotID_Sub(EObject model, Assignment assignment, ContentAssistContext context, ICompletionProposalAcceptor acceptor) {
+		System.out.println();
+	}
+    
 
 }

@@ -1,0 +1,201 @@
+package DATA_TYPES
+public
+  with Base_Types;
+
+data Spoilers
+end Spoilers;
+
+data implementation Spoilers.impl
+  subcomponents
+    SPLOB : data Base_Types::Float;
+    SPLIB : data Base_Types::Float;
+    SPROB : data Base_Types::Float;
+    SPRIB : data Base_Types::Float;
+end Spoilers.impl;
+
+data Elevators
+end Elevators;
+
+data implementation Elevators.impl
+  subcomponents
+    ELLOB : data Base_Types::Float;
+    ELLIB : data Base_Types::Float;
+    ELROB : data Base_Types::Float;
+    ELRIB : data Base_Types::Float;
+end Elevators.impl;
+
+data Ailerons
+end Ailerons;
+
+data implementation Ailerons.impl
+  subcomponents
+    AILL : data Base_Types::Float;
+    AILR : data Base_Types::Float;
+end Ailerons.impl;
+
+data Rudders
+end Rudders;
+
+data implementation Rudders.impl
+  subcomponents
+    RUDU : data Base_Types::Float;
+    RUDL : data Base_Types::Float;
+end Rudders.impl;
+
+data Flaps
+end Flaps;
+
+data implementation Flaps.impl
+  subcomponents
+    FLLOB : data Base_Types::Float;
+    FLLIB : data Base_Types::Float;
+    FLROB : data Base_Types::Float;
+    FLRIB : data Base_Types::Float;
+end Flaps.impl;
+
+data AoA extends Base_Types::Float
+end AoA;
+
+data AirData
+end AirData;
+
+data implementation AirData.impl
+  subcomponents
+    TAT : data Base_Types::Float;
+    TotPres : data Base_Types::Float;
+    Pres : data Base_Types::Float;
+    Temp : data Base_Types::Float;
+end AirData.impl;
+
+data EGI
+end EGI;
+
+data implementation EGI.impl
+  subcomponents
+    PHI : data Base_Types::Float;
+    THETA : data Base_Types::Float;
+    PSI : data Base_Types::Float;
+    PB : data Base_Types::Float;
+    QB : data Base_Types::Float;
+    RB : data Base_Types::Float;
+    NX : data Base_Types::Float;
+    NY : data Base_Types::Float;
+    NZ : data Base_Types::Float;
+    VN : data Base_Types::Float;
+    VE : data Base_Types::Float;
+    HDOT : data Base_Types::Float;
+    LAT : data Base_Types::Float;
+    LON : data Base_Types::Float;
+    ALT : data Base_Types::Float;
+    GAMLNS : data Base_Types::Float;
+    GS : data Base_Types::Float;
+    VGOT : data Base_Types::Float;
+    XTACC : data Base_Types::Float;
+    FPACCEL : data Base_Types::Float;
+    HDD : data Base_Types::Float;
+end EGI.impl;
+
+data Actuators
+end Actuators;
+
+data implementation Actuators.impl
+  subcomponents
+    THRTOL : data Base_Types::Float;
+    THROTR : data Base_Types::Float;
+    ELLOB : data Base_Types::Float;
+    ELLIB : data Base_Types::Float;
+    ELROB : data Base_Types::Float;
+    ELRIB : data Base_Types::Float;
+    AILL : data Base_Types::Float;
+    AILR : data Base_Types::Float;
+    RUDUP : data Base_Types::Float;
+    RUDLO : data Base_Types::Float;
+    SPLLIB : data Base_Types::Float;
+    SPLLOB : data Base_Types::Float;
+    SPLRIB : data Base_Types::Float;
+    SPLROB : data Base_Types::Float;
+    FLAPLI : data Base_Types::Float;
+    FLAPLO : data Base_Types::Float;
+    FLAPRI : data Base_Types::Float;
+    FLAPRO : data Base_Types::Float;
+    GEAR : data Base_Types::Float;
+    BRAKE : data Base_Types::Float;
+    STEER : data Base_Types::Float;
+end Actuators.impl;
+
+data NumActuators
+end NumActuators;
+
+data implementation NumActuators.impl
+  subcomponents
+    THRTOL : data Base_Types::Integer;
+    THROTR : data Base_Types::Integer;
+    ELLOB : data Base_Types::Integer;
+    ELLIB : data Base_Types::Integer;
+    ELROB : data Base_Types::Integer;
+    ELRIB : data Base_Types::Integer;
+    AILL : data Base_Types::Integer;
+    AILR : data Base_Types::Integer;
+    RUDUP : data Base_Types::Integer;
+    RUDLO : data Base_Types::Integer;
+    SPLLIB : data Base_Types::Integer;
+    SPLLOB : data Base_Types::Integer;
+    SPLRIB : data Base_Types::Integer;
+    SPLROB : data Base_Types::Integer;
+    FLAPLI : data Base_Types::Integer;
+    FLAPLO : data Base_Types::Integer;
+    FLAPRI : data Base_Types::Integer;
+    FLAPRO : data Base_Types::Integer;
+    GEAR : data Base_Types::Integer;
+    BRAKE : data Base_Types::Integer;
+    STEER : data Base_Types::Integer;
+end NumActuators.impl;
+
+data BoolActuators
+end BoolActuators;
+
+data implementation BoolActuators.impl
+  subcomponents
+    THRTOL : data Base_Types::Boolean;
+    THROTR : data Base_Types::Boolean;
+    ELLOB : data Base_Types::Boolean;
+    ELLIB : data Base_Types::Boolean;
+    ELROB : data Base_Types::Boolean;
+    ELRIB : data Base_Types::Boolean;
+    AILL : data Base_Types::Boolean;
+    AILR : data Base_Types::Boolean;
+    RUDUP : data Base_Types::Boolean;
+    RUDLO : data Base_Types::Boolean;
+    SPLLIB : data Base_Types::Boolean;
+    SPLLOB : data Base_Types::Boolean;
+    SPLRIB : data Base_Types::Boolean;
+    SPLROB : data Base_Types::Boolean;
+    FLAPLI : data Base_Types::Boolean;
+    FLAPLO : data Base_Types::Boolean;
+    FLAPRI : data Base_Types::Boolean;
+    FLAPRO : data Base_Types::Boolean;
+    GEAR : data Base_Types::Boolean;
+    BRAKE : data Base_Types::Boolean;
+    STEER : data Base_Types::Boolean;
+end BoolActuators.impl;
+
+data ACTUATORS_SOV_Data
+end ACTUATORS_SOV_Data;
+
+data implementation ACTUATORS_SOV_Data.impl
+  subcomponents
+    ailerons_sov1_open:  data  Base_Types::Boolean;
+    elevators_sov1_open:  data  Base_Types::Boolean;
+    rudder_sov1_open:  data  Base_Types::Boolean;
+    spoiler_sov1_open:  data  Base_Types::Boolean;
+    flaps_gt_sov1_open:  data  Base_Types::Boolean;
+    flaps_lt_sov1_open:  data  base_Types::Boolean;
+    ailerons_sov2_open:  data  Base_Types::Boolean;
+    elevators_sov2_open:  data  Base_Types::Boolean;
+    rudder_sov2_open:  data  Base_Types::Boolean;
+    spoiler_sov2_open:  data  Base_Types::Boolean;
+    flaps_gt_sov2_open:  data  Base_Types::Boolean;
+    flaps_lt_sov2_open:  data  base_Types::Boolean;
+end ACTUATORS_SOV_Data.impl;
+
+end DATA_TYPES;

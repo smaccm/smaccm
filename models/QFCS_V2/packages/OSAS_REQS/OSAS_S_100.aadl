@@ -1,0 +1,18 @@
+package OSAS_S_100
+public
+
+annex agree {**
+	
+  node req
+    (acts : DATA_TYPES::Actuators.impl,
+    acts_ret : DATA_TYPES::Actuators.impl,
+     act_fail_counts : DATA_TYPES::NumActuators.impl)
+  returns
+    (res : bool);
+  let
+    res = acts. = 3.0;
+  tel;
+	   
+	
+**};
+end OSAS_S_100;

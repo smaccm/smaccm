@@ -1,0 +1,21 @@
+package OSAS
+public
+  with DATA_TYPES;
+
+system OSAS_Sys
+  features
+    acts_in : in data port DATA_TYPES::Actuators.impl;
+    acts_ret : in data port DATA_TYPES::Actuators.impl;
+    acts_claw_fail : in data port DATA_TYPES::BoolActuators.impl;
+    acts_isas_fail : in data port DATA_TYPES::BoolActuators.impl;
+    acts_valid : in data port DATA_TYPES::NumActuators.impl;
+    acts_ccdl_num_fail : in data port DATA_TYPES::NumActuators.impl;
+    
+    acts_out : out data port DATA_TYPES::Actuators.impl;
+	acts_fail : out data port DATA_TYPES::BoolActuators.impl;
+     
+    sovs : out data port DATA_TYPES::ACTUATORS_SOV_Data.impl; 
+end OSAS_Sys;
+
+
+end OSAS;

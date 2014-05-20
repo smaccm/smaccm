@@ -7,13 +7,13 @@ system OSAS
   features
    
     --actuator signals sent from CCDL
-    acts_input: feature group Feature_Groups::ACTUATORS_Features;
+    acts_input: in data port Feature_Groups::ACTUATORS_Data.impl;
     --transmitted actuator signals (after gain is applied)
-    acts: feature group inverse of Feature_Groups::ACTUATORS_Features;
+    acts: out data port Feature_Groups::ACTUATORS_Data.impl;
     --the loop back actuator signals from the actuator
-    acts_ret: feature group Feature_Groups::ACTUATORS_Features;
+    acts_ret : in data port Feature_Groups::ACTUATORS_DATA.impl;
        
-    sovs: feature group inverse of Feature_Groups::ACTUATORS_SOVs;
+    sovs: out data port Feature_Groups::ACTUATORS_SOV_Data.impl;
     ccdl_frame_count: in data port Base_Types::Integer;
     ccdl_failed: out data port Base_Types::Boolean;
     

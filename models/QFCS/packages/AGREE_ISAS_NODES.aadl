@@ -2,7 +2,13 @@ package AGREE_ISAS_NODES
 public
 
 annex agree {**
-  
+	
+  --variables that indicate if a variable failed to update
+  type update_failures = struct {
+  	acts_ret : bool, acts1_sense : bool, acts2_sense : bool, acts3_sense : bool,
+    acts4_sense : bool, ads1 : bool, ads2 : bool, aoa1 : bool, aoa2 : bool,
+    egi1 : bool, egi2 : bool, egi3 : bool, egi4 : bool};
+      
   --returns true if two integers match within a specified tolerance
   node matches_tolerance_int(val1 : int, val2 : int, tol : int) returns (return : bool);
     let

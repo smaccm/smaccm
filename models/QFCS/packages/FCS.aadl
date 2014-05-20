@@ -6,37 +6,38 @@ public
 
 system FCS
   features
-    egi1: feature group inverse of Feature_Groups::EGI_Features;
-    egi2: feature group inverse of Feature_Groups::EGI_Features;
-    egi3: feature group inverse of Feature_Groups::EGI_Features;
-    egi4: feature group inverse of Feature_Groups::EGI_Features;
+     --inputs
+    egi1 : in data port Feature_Groups::EGI_Data.impl;
+    egi2 : in data port Feature_Groups::EGI_Data.impl;
+    egi3 : in data port Feature_Groups::EGI_Data.impl;
+    egi4 : in data port Feature_Groups::EGI_Data.impl;
     
-    ads1: feature group inverse of Feature_Groups::ADS_Features;
-    ads2: feature group inverse of Feature_Groups::ADS_Features;
+    ads1 : in data port Feature_Groups::ADS_Data.impl;
+    ads2 : in data port Feature_Groups::ADS_Data.impl;
     
-    aoa1 : feature group inverse of Feature_Groups::AOA_Features;
-    aoa2 : feature group inverse of Feature_Groups::AOA_Features;
+    aoa1 : in data port Feature_Groups::AOA_Data.impl;
+    aoa2 : in data port Feature_Groups::AOA_Data.impl;
     
-    acts1_sense: feature group Feature_Groups::ACTUATORS_Features;
-    acts2_sense: feature group Feature_Groups::ACTUATORS_Features;
-    acts3_sense: feature group Feature_Groups::ACTUATORS_Features;
-    acts4_sense: feature group Feature_Groups::ACTUATORS_Features;
+    acts1_sense : in data port Feature_Groups::ACTUATORS_DATA.impl;
+    acts2_sense : in data port Feature_Groups::ACTUATORS_DATA.impl;
+    acts3_sense : in data port Feature_Groups::ACTUATORS_DATA.impl;
+    acts4_sense : in data port Feature_Groups::ACTUATORS_DATA.impl;
     
-    acts_ret1 : feature group Feature_Groups::ACTUATORS_Features;
-    acts_ret2 : feature group Feature_Groups::ACTUATORS_Features;
-    acts_ret3 : feature group Feature_Groups::ACTUATORS_Features;
-    acts_ret4 : feature group Feature_Groups::ACTUATORS_Features;
-    
+    acts_ret1 : in data port Feature_Groups::ACTUATORS_DATA.impl;
+    acts_ret2 : in data port Feature_Groups::ACTUATORS_DATA.impl;
+    acts_ret3 : in data port Feature_Groups::ACTUATORS_DATA.impl;
+    acts_ret4 : in data port Feature_Groups::ACTUATORS_DATA.impl;
+  
     --outputs
-    acts_out1 : feature group inverse of Feature_Groups::ACTUATORS_Features;
-    acts_out2 : feature group inverse of Feature_Groups::ACTUATORS_Features;
-    acts_out3 : feature group inverse of Feature_Groups::ACTUATORS_Features;
-    acts_out4 : feature group inverse of Feature_Groups::ACTUATORS_Features;
+    acts_out1 : out data port Feature_Groups::ACTUATORS_DATA.impl;
+    acts_out2 : out data port Feature_Groups::ACTUATORS_DATA.impl;
+    acts_out3 : out data port Feature_Groups::ACTUATORS_DATA.impl;
+    acts_out4 : out data port Feature_Groups::ACTUATORS_DATA.impl;
     
-    sovs1: feature group inverse of Feature_Groups::ACTUATORS_SOVs;
-    sovs2: feature group inverse of Feature_Groups::ACTUATORS_SOVs;
-    sovs3: feature group inverse of Feature_Groups::ACTUATORS_SOVs;
-    sovs4: feature group inverse of Feature_Groups::ACTUATORS_SOVs;
+    sovs1: out data port Feature_Groups::ACTUATORS_SOV_Data.impl;
+    sovs2: out data port Feature_Groups::ACTUATORS_SOV_Data.impl;
+    sovs3: out data port Feature_Groups::ACTUATORS_SOV_Data.impl;
+    sovs4: out data port Feature_Groups::ACTUATORS_SOV_Data.impl;
     
     
   annex agree {**
@@ -81,69 +82,69 @@ system implementation FCS.Impl
     fcc4 : system FCC::FCC.Impl;
     
   connections
-    fcc1_conn_egi1 : feature group egi1 -> fcc1.egi1;
-    fcc1_conn_egi2 : feature group egi2 -> fcc1.egi2;
-    fcc1_conn_egi3 : feature group egi3 -> fcc1.egi3;
-    fcc1_conn_egi4 : feature group egi4 -> fcc1.egi4;
-    fcc1_conn_ads1 : feature group ads1 -> fcc1.ads1;
-    fcc1_conn_ads2 : feature group ads2 -> fcc1.ads2;
-    fcc1_conn_aoa1 : feature group aoa1 -> fcc1.aoa1;
-    fcc1_conn_aoa2 : feature group aoa2 -> fcc1.aoa2;
-    fcc1_conn_acts1 : feature group acts1_sense -> fcc1.acts1_sense;
-    fcc1_conn_acts2 : feature group acts2_sense -> fcc1.acts2_sense;
-    fcc1_conn_acts3 : feature group acts3_sense -> fcc1.acts3_sense;
-    fcc1_conn_acts4 : feature group acts4_sense -> fcc1.acts4_sense;
-    fcc1_conn_acts_ret : feature group acts_ret1 -> fcc1.acts_ret;
-    fcc1_conn_acts_out : feature group fcc1.acts_out -> acts_out1;
-    fcc1_conn_sovs : feature group fcc1.sovs -> sovs1;
+    fcc1_conn_egi1 : port egi1 -> fcc1.egi1;
+    fcc1_conn_egi2 : port egi2 -> fcc1.egi2;
+    fcc1_conn_egi3 : port egi3 -> fcc1.egi3;
+    fcc1_conn_egi4 : port egi4 -> fcc1.egi4;
+    fcc1_conn_ads1 : port ads1 -> fcc1.ads1;
+    fcc1_conn_ads2 : port ads2 -> fcc1.ads2;
+    fcc1_conn_aoa1 : port aoa1 -> fcc1.aoa1;
+    fcc1_conn_aoa2 : port aoa2 -> fcc1.aoa2;
+    fcc1_conn_acts1 : port acts1_sense -> fcc1.acts1_sense;
+    fcc1_conn_acts2 : port acts2_sense -> fcc1.acts2_sense;
+    fcc1_conn_acts3 : port acts3_sense -> fcc1.acts3_sense;
+    fcc1_conn_acts4 : port acts4_sense -> fcc1.acts4_sense;
+    fcc1_conn_acts_ret : port acts_ret1 -> fcc1.acts_ret;
+    fcc1_conn_acts_out : port fcc1.acts_out -> acts_out1;
+    fcc1_conn_sovs : port fcc1.sovs -> sovs1;
     
-    fcc2_conn_egi1 : feature group egi1 -> fcc2.egi1;
-    fcc2_conn_egi2 : feature group egi2 -> fcc2.egi2;
-    fcc2_conn_egi3 : feature group egi3 -> fcc2.egi3;
-    fcc2_conn_egi4 : feature group egi4 -> fcc2.egi4;
-    fcc2_conn_ads1 : feature group ads1 -> fcc2.ads1;
-    fcc2_conn_ads2 : feature group ads2 -> fcc2.ads2;
-    fcc2_conn_aoa1 : feature group aoa1 -> fcc2.aoa1;
-    fcc2_conn_aoa2 : feature group aoa2 -> fcc2.aoa2;
-    fcc2_conn_acts1 : feature group acts1_sense -> fcc2.acts1_sense;
-    fcc2_conn_acts2 : feature group acts2_sense -> fcc2.acts2_sense;
-    fcc2_conn_acts3 : feature group acts3_sense -> fcc2.acts3_sense;
-    fcc2_conn_acts4 : feature group acts4_sense -> fcc2.acts4_sense;
-    fcc2_conn_acts_ret : feature group acts_ret1 -> fcc2.acts_ret;
-    fcc2_conn_acts_out : feature group fcc2.acts_out -> acts_out2;
-    fcc2_conn_sovs : feature group fcc2.sovs -> sovs2;
+    fcc2_conn_egi1 : port egi1 -> fcc2.egi1;
+    fcc2_conn_egi2 : port egi2 -> fcc2.egi2;
+    fcc2_conn_egi3 : port egi3 -> fcc2.egi3;
+    fcc2_conn_egi4 : port egi4 -> fcc2.egi4;
+    fcc2_conn_ads1 : port ads1 -> fcc2.ads1;
+    fcc2_conn_ads2 : port ads2 -> fcc2.ads2;
+    fcc2_conn_aoa1 : port aoa1 -> fcc2.aoa1;
+    fcc2_conn_aoa2 : port aoa2 -> fcc2.aoa2;
+    fcc2_conn_acts1 : port acts1_sense -> fcc2.acts1_sense;
+    fcc2_conn_acts2 : port acts2_sense -> fcc2.acts2_sense;
+    fcc2_conn_acts3 : port acts3_sense -> fcc2.acts3_sense;
+    fcc2_conn_acts4 : port acts4_sense -> fcc2.acts4_sense;
+    fcc2_conn_acts_ret : port acts_ret1 -> fcc2.acts_ret;
+    fcc2_conn_acts_out : port fcc2.acts_out -> acts_out2;
+    fcc2_conn_sovs : port fcc2.sovs -> sovs2;
     
-    fcc3_conn_egi1 : feature group egi1 -> fcc3.egi1;
-    fcc3_conn_egi2 : feature group egi2 -> fcc3.egi2;
-    fcc3_conn_egi3 : feature group egi3 -> fcc3.egi3;
-    fcc3_conn_egi4 : feature group egi4 -> fcc3.egi4;
-    fcc3_conn_ads1 : feature group ads1 -> fcc3.ads1;
-    fcc3_conn_ads2 : feature group ads2 -> fcc3.ads2;
-    fcc3_conn_aoa1 : feature group aoa1 -> fcc3.aoa1;
-    fcc3_conn_aoa2 : feature group aoa2 -> fcc3.aoa2;
-    fcc3_conn_acts1 : feature group acts1_sense -> fcc3.acts1_sense;
-    fcc3_conn_acts2 : feature group acts2_sense -> fcc3.acts2_sense;
-    fcc3_conn_acts3 : feature group acts3_sense -> fcc3.acts3_sense;
-    fcc3_conn_acts4 : feature group acts4_sense -> fcc3.acts4_sense;
-    fcc3_conn_acts_ret : feature group acts_ret1 -> fcc3.acts_ret;
-    fcc3_conn_acts_out : feature group fcc3.acts_out -> acts_out3;
-    fcc3_conn_sovs : feature group fcc3.sovs -> sovs3;
+    fcc3_conn_egi1 : port egi1 -> fcc3.egi1;
+    fcc3_conn_egi2 : port egi2 -> fcc3.egi2;
+    fcc3_conn_egi3 : port egi3 -> fcc3.egi3;
+    fcc3_conn_egi4 : port egi4 -> fcc3.egi4;
+    fcc3_conn_ads1 : port ads1 -> fcc3.ads1;
+    fcc3_conn_ads2 : port ads2 -> fcc3.ads2;
+    fcc3_conn_aoa1 : port aoa1 -> fcc3.aoa1;
+    fcc3_conn_aoa2 : port aoa2 -> fcc3.aoa2;
+    fcc3_conn_acts1 : port acts1_sense -> fcc3.acts1_sense;
+    fcc3_conn_acts2 : port acts2_sense -> fcc3.acts2_sense;
+    fcc3_conn_acts3 : port acts3_sense -> fcc3.acts3_sense;
+    fcc3_conn_acts4 : port acts4_sense -> fcc3.acts4_sense;
+    fcc3_conn_acts_ret : port acts_ret1 -> fcc3.acts_ret;
+    fcc3_conn_acts_out : port fcc3.acts_out -> acts_out3;
+    fcc3_conn_sovs : port fcc3.sovs -> sovs3;
     
-    fcc4_conn_egi1 : feature group egi1 -> fcc4.egi1;
-    fcc4_conn_egi2 : feature group egi2 -> fcc4.egi2;
-    fcc4_conn_egi3 : feature group egi3 -> fcc4.egi3;
-    fcc4_conn_egi4 : feature group egi4 -> fcc4.egi4;
-    fcc4_conn_ads1 : feature group ads1 -> fcc4.ads1;
-    fcc4_conn_ads2 : feature group ads2 -> fcc4.ads2;
-    fcc4_conn_aoa1 : feature group aoa1 -> fcc4.aoa1;
-    fcc4_conn_aoa2 : feature group aoa2 -> fcc4.aoa2;
-    fcc4_conn_acts1 : feature group acts1_sense -> fcc4.acts1_sense;
-    fcc4_conn_acts2 : feature group acts2_sense -> fcc4.acts2_sense;
-    fcc4_conn_acts3 : feature group acts3_sense -> fcc4.acts3_sense;
-    fcc4_conn_acts4 : feature group acts4_sense -> fcc4.acts4_sense;
-    fcc4_conn_acts_ret : feature group acts_ret1 -> fcc4.acts_ret;
-    fcc4_conn_acts_out : feature group fcc4.acts_out -> acts_out4;
-    fcc4_conn_sovs : feature group fcc4.sovs -> sovs4;
+    fcc4_conn_egi1 : port egi1 -> fcc4.egi1;
+    fcc4_conn_egi2 : port egi2 -> fcc4.egi2;
+    fcc4_conn_egi3 : port egi3 -> fcc4.egi3;
+    fcc4_conn_egi4 : port egi4 -> fcc4.egi4;
+    fcc4_conn_ads1 : port ads1 -> fcc4.ads1;
+    fcc4_conn_ads2 : port ads2 -> fcc4.ads2;
+    fcc4_conn_aoa1 : port aoa1 -> fcc4.aoa1;
+    fcc4_conn_aoa2 : port aoa2 -> fcc4.aoa2;
+    fcc4_conn_acts1 : port acts1_sense -> fcc4.acts1_sense;
+    fcc4_conn_acts2 : port acts2_sense -> fcc4.acts2_sense;
+    fcc4_conn_acts3 : port acts3_sense -> fcc4.acts3_sense;
+    fcc4_conn_acts4 : port acts4_sense -> fcc4.acts4_sense;
+    fcc4_conn_acts_ret : port acts_ret1 -> fcc4.acts_ret;
+    fcc4_conn_acts_out : port fcc4.acts_out -> acts_out4;
+    fcc4_conn_sovs : port fcc4.sovs -> sovs4;
     
   properties
     QFCS_PROPS::FCC_INDEX => 1 applies to fcc1;

@@ -10,23 +10,23 @@ public
 system FCC
   features
     --inputs
-    egi1: feature group inverse of Feature_Groups::EGI_Features;
-    egi2: feature group inverse of Feature_Groups::EGI_Features;
-    egi3: feature group inverse of Feature_Groups::EGI_Features;
-    egi4: feature group inverse of Feature_Groups::EGI_Features;
+    egi1 : in data port Feature_Groups::EGI_Data.impl;
+    egi2 : in data port Feature_Groups::EGI_Data.impl;
+    egi3 : in data port Feature_Groups::EGI_Data.impl;
+    egi4 : in data port Feature_Groups::EGI_Data.impl;
     
-    ads1: feature group inverse of Feature_Groups::ADS_Features;
-    ads2: feature group inverse of Feature_Groups::ADS_Features;
+    ads1 : in data port Feature_Groups::ADS_Data.impl;
+    ads2 : in data port Feature_Groups::ADS_Data.impl;
     
-    aoa1 : feature group inverse of Feature_Groups::AOA_Features;
-    aoa2 : feature group inverse of Feature_Groups::AOA_Features;
+    aoa1 : in data port Feature_Groups::AOA_Data.impl;
+    aoa2 : in data port Feature_Groups::AOA_Data.impl;
     
-    acts1_sense: feature group Feature_Groups::ACTUATORS_Features;
-    acts2_sense: feature group Feature_Groups::ACTUATORS_Features;
-    acts3_sense: feature group Feature_Groups::ACTUATORS_Features;
-    acts4_sense: feature group Feature_Groups::ACTUATORS_Features;
+    acts1_sense : in data port Feature_Groups::ACTUATORS_DATA.impl;
+    acts2_sense : in data port Feature_Groups::ACTUATORS_DATA.impl;
+    acts3_sense : in data port Feature_Groups::ACTUATORS_DATA.impl;
+    acts4_sense : in data port Feature_Groups::ACTUATORS_DATA.impl;
     
-    acts_ret : feature group Feature_Groups::ACTUATORS_Features;
+    acts_ret : in data port Feature_Groups::ACTUATORS_DATA.impl;
     
     num_valid_ailerons: in data port Base_Types::Integer;
     num_valid_elevators: in data port Base_Types::Integer;
@@ -36,8 +36,8 @@ system FCC
     num_valid_flaps_lt: in data port Base_Types::Integer;
     
     --outputs
-    acts_out : feature group inverse of Feature_Groups::ACTUATORS_Features;
-    sovs: feature group inverse of Feature_Groups::ACTUATORS_SOVs;
+    acts_out : out data port Feature_Groups::ACTUATORS_Data.impl;
+    sovs: out data port Feature_Groups::ACTUATORS_SOV_Data.impl;
     
     ailerons_failed : out data port Base_Types::Boolean;
     elevators_failed : out data port Base_Types::Boolean;
@@ -152,24 +152,24 @@ system implementation FCC.Impl
     
   connections
     --inputs from the outside world
-    conn_egi1: feature group egi1 -> ISAS_comp.egi1;
-    conn_egi2: feature group egi2 -> ISAS_comp.egi2;
-    conn_egi3: feature group egi3 -> ISAS_comp.egi3;
-    conn_egi4: feature group egi4 -> ISAS_comp.egi4;
+    conn_egi1: port egi1 -> ISAS_comp.egi1; 
+    conn_egi2: port egi2 -> ISAS_comp.egi2;
+    conn_egi3: port egi3 -> ISAS_comp.egi3;
+    conn_egi4: port egi4 -> ISAS_comp.egi4;
     
-    conn_acts1_sense: feature group acts1_sense -> ISAS_comp.acts1_sense;
-    conn_acts2_sense: feature group acts2_sense -> ISAS_comp.acts2_sense;
-    conn_acts3_sense: feature group acts3_sense -> ISAS_comp.acts3_sense;
-    conn_acts4_sense: feature group acts4_sense -> ISAS_comp.acts4_sense;
+    conn_acts1_sense: port acts1_sense -> ISAS_comp.acts1_sense;
+    conn_acts2_sense: port acts2_sense -> ISAS_comp.acts2_sense;
+    conn_acts3_sense: port acts3_sense -> ISAS_comp.acts3_sense;
+    conn_acts4_sense: port acts4_sense -> ISAS_comp.acts4_sense;
     
-    conn_aoa1: feature group aoa1 -> ISAS_comp.aoa1;
-    conn_aoa2: feature group aoa2 -> ISAS_comp.aoa2;
+    conn_aoa1: port aoa1 -> ISAS_comp.aoa1;
+    conn_aoa2: port aoa2 -> ISAS_comp.aoa2;
     
-    conn_ads1: feature group ads1 -> ISAS_comp.ads1;
-    conn_ads2: feature group ads2 -> ISAS_comp.ads2;
+    conn_ads1: port ads1 -> ISAS_comp.ads1;
+    conn_ads2: port ads2 -> ISAS_comp.ads2;
    
-    conn_acts_ret_isas: feature group acts_ret -> ISAS_comp.acts_ret;
-    conn_acts_ret_osas: feature group acts_ret -> OSAS_comp.acts_ret;
+    conn_acts_ret_isas: port acts_ret -> ISAS_comp.acts_ret;
+    conn_acts_ret_osas: port acts_ret -> OSAS_comp.acts_ret;
       
     valid_ailerons_conn: port num_valid_ailerons -> OSAS_comp.num_valid_ailerons;
     valid_elevators_conn: port num_valid_elevators -> OSAS_comp.num_valid_elevators;
@@ -179,8 +179,8 @@ system implementation FCC.Impl
     valid_flaps_lt_conn: port num_valid_flaps_lt -> OSAS_comp.num_valid_flaps_lt;
     
     --outputs to the outside world
-    conn_acts_out: feature group OSAS_comp.acts -> acts_out;
-    conn_sovs: feature group OSAS_comp.sovs -> sovs;
+    conn_acts_out: port OSAS_comp.acts -> acts_out;
+    conn_sovs: port OSAS_comp.sovs -> sovs;  
     
     ailerons_failed_conn: port OSAS_comp.ailerons_failed -> ailerons_failed;
     elevators_failed_conn: port OSAS_comp.elevators_failed -> elevators_failed;
@@ -190,7 +190,7 @@ system implementation FCC.Impl
     flaps_lt_failed_conn: port OSAS_comp.flaps_lt_failed -> flaps_lt_failed;
     
     --internal connections
-    conn_ccdl_acts : feature group CCDL_comp.acts -> OSAS_comp.acts_input;
+    conn_ccdl_acts : port CCDL_comp.acts -> OSAS_comp.acts_input;
     
   annex agree {**
   	
