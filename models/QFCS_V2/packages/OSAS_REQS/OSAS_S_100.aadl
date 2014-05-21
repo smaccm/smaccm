@@ -9,8 +9,8 @@ annex agree {**
      act_fail_counts : DATA_TYPES::NumActuators.impl)
   returns
     (res : bool);
-  let
-    res = acts.THRTOL = 3.0; 
+  let  
+    res = acts.BRAKE = 3.0; 
   tel;
 	
 **};

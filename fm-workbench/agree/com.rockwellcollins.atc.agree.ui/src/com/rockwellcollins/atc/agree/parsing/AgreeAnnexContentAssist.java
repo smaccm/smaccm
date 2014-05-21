@@ -53,20 +53,18 @@ public class AgreeAnnexContentAssist implements AnnexContentAssist {
 	}
 
 	@Override
-	public List<String> callAnnexContentAssist(EObject model, Assignment assignment,
-			ContentAssistContext context, ICompletionProposalAcceptor acceptor) {
+	public List<String> annexCompletionSuggestions(EObject defaultAnnex, int offset) {
 
-		int offset = context.getOffset();
 		offset = (offset <= 0) ? 0 : offset - 1; //get one character back
 		EObjectAtOffsetHelper helper = getOffsetHelper();
 		EObject grammerObject = null;
 		//EObjectAtOffsetHelper
-		if(model instanceof DefaultAnnexLibrary){
-			AnnexLibrary annexLib = ((DefaultAnnexLibrary)model).getParsedAnnexLibrary();
+		if(defaultAnnex instanceof DefaultAnnexLibrary){
+			AnnexLibrary annexLib = ((DefaultAnnexLibrary)defaultAnnex).getParsedAnnexLibrary();
 			XtextResource resource = (XtextResource)annexLib.eResource();
 			grammerObject = helper.resolveContainedElementAt(resource, offset);
-		}else if(model instanceof DefaultAnnexSubclause){
-			AnnexSubclause annexSub = ((DefaultAnnexSubclause)model).getParsedAnnexSubclause();
+		}else if(defaultAnnex instanceof DefaultAnnexSubclause){
+			AnnexSubclause annexSub = ((DefaultAnnexSubclause)defaultAnnex).getParsedAnnexSubclause();
 			XtextResource resource = (XtextResource)annexSub.eResource();
 			grammerObject = helper.resolveContainedElementAt(resource, offset);
 		}
