@@ -15,4 +15,8 @@ public class AgreeRuntimeModule extends com.rockwellcollins.atc.agree.AbstractAg
     public Class<? extends IGenerator> bindIGenerator() {
         return NullGenerator.class;
     }
+    
+	public Class<? extends org.eclipse.xtext.resource.EObjectAtOffsetHelper> bindEObjectAtOffsetHelper() {
+		return org.osate.xtext.aadl2.util.Aadl2EObjectAtOffsetHelper.class;
+	}
 }
