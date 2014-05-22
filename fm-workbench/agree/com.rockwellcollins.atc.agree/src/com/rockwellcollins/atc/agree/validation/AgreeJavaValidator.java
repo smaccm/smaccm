@@ -1272,7 +1272,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
         case "Base_Types::Float":
             return REAL;
         }
-        return AgreeType.ERROR;
+        return new AgreeType(qualName);
     }
 
     private AgreeType getAgreeType(PropertyStatement propStat) {
