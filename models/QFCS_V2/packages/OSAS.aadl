@@ -15,7 +15,8 @@ system OSAS_Sys
     acts_out : out data port DATA_TYPES::Actuators.impl;
 	acts_fail : out data port DATA_TYPES::BoolActuators.impl;
      
-    sovs : out data port DATA_TYPES::ACTUATORS_SOV_Data.impl; 
+    sovs1 : out data port DATA_TYPES::BoolActuators.impl; 
+    sovs2 : out data port DATA_TYPES::BoolActuators.impl; 
     
     ccdl_frame_count: in data port Base_Types::Integer;
     ccdl_failed: out data port Base_Types::Boolean;
@@ -72,6 +73,8 @@ system OSAS_Sys
     guarantee "OSAS-S-190, OSAS-S-240, and OSAS-S-250" : 
       OSAS_S_190_240_250.req(acts_in, acts_out, act_gains, act_claw_fails, osas_failed);
     
+    guarantee "OSAS-S-210, OSAS-S-220, and OSAS-S-230":	
+      OSAS_S_210_220_230.req(sovs1, sovs2, acts_isas_fail, latched_failures, acts_ccdl_num_fail);
     	
   **};
 end OSAS_Sys;

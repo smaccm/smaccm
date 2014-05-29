@@ -9,113 +9,54 @@ annex agree {**
      sovs2 : DATA_TYPES::BoolActuators.impl,
      isas_fails : DATA_TYPES::BoolActuators.impl,
      latched_fails : DATA_TYPES::BoolActuators.impl,
-     ccdl_num_fails : bool)
+     ccdl_num_fails : DATA_TYPES::NumActuators.impl)
   returns
     (res : bool);
   let
-  	res = req_helper(acts_in.AILL, acts_out.AILL, acts_gain.AILL, acts_claw_fail.AILL, osas_failed) and 
-  	      req_helper(acts_in.AILR, acts_out.AILR, acts_gain.AILR, acts_claw_fail.AILR, osas_failed) and
-  	      req_helper(acts_in.BRAKE, acts_out.BRAKE, acts_gain.BRAKE, acts_claw_fail.AILR, osas_failed) and
-  	      req_helper(acts_in.ELLIB, acts_out.ELLIB, acts_gain.ELLIB, acts_claw_fail.ELLIB, osas_failed) and 
-  	      req_helper(acts_in.ELLOB, acts_out.ELLOB, acts_gain.ELLOB, acts_claw_fail.ELLOB, osas_failed) and
-  	      req_helper(acts_in.ELRIB, acts_out.ELRIB, acts_gain.ELRIB, acts_claw_fail.ELRIB, osas_failed) and
-  	      req_helper(acts_in.ELRIB, acts_out.ELROB, acts_gain.ELROB, acts_claw_fail.ELROB, osas_failed) and
-  	      req_helper(acts_in.ELROB, acts_out.ELROB, acts_gain.FLAPLI, acts_claw_fail.ELROB, osas_failed) and
-  	      req_helper(acts_in.FLAPLO, acts_out.FLAPLO, acts_gain.FLAPLO, acts_claw_fail.ELROB, osas_failed) and
-  	      req_helper(acts_in.FLAPRI, acts_out.FLAPRI, acts_gain.FLAPRI, acts_claw_fail.FLAPRI, osas_failed) and
-  	      req_helper(acts_in.FLAPRO, acts_out.FLAPRO, acts_gain.FLAPRO, acts_claw_fail.FLAPRO, osas_failed) and
-  	      req_helper(acts_in.GEAR, acts_out.GEAR, acts_gain.GEAR, acts_claw_fail.GEAR, osas_failed) and
-  	      req_helper(acts_in.RUDLO, acts_out.RUDLO, acts_gain.RUDLO, acts_claw_fail.RUDLO, osas_failed) and
-  	      req_helper(acts_in.RUDUP, acts_out.RUDUP, acts_gain.RUDUP, acts_claw_fail.RUDUP, osas_failed) and
-  	      req_helper(acts_in.SPLLIB, acts_out.SPLLIB, acts_gain.SPLLIB, acts_claw_fail.SPLLIB, osas_failed) and
-  	      req_helper(acts_in.SPLLOB, acts_out.SPLLOB, acts_gain.SPLLOB, acts_claw_fail.SPLLOB, osas_failed) and
-  	      req_helper(acts_in.SPLRIB, acts_out.SPLRIB, acts_gain.SPLRIB, acts_claw_fail.SPLRIB, osas_failed) and
-  	      req_helper(acts_in.SPLROB, acts_out.SPLROB, acts_gain.SPLROB, acts_claw_fail.SPLROB, osas_failed) and
-  	      req_helper(acts_in.SPLROB, acts_out.STEER, acts_gain.STEER, acts_claw_fail.STEER, osas_failed) and
-  	      req_helper(acts_in.THROTR, acts_out.THROTR, acts_gain.THROTR, acts_claw_fail.THROTR, osas_failed) and
-  	      req_helper(acts_in.THRTOL, acts_out.THRTOL, acts_gain.THRTOL, acts_claw_fail.THROTR, osas_failed);
+  	res = req_helper(sovs1.AILL, sovs2.AILL, isas_fails.AILL, latched_fails.AILL, ccdl_num_fails.AILL) and 
+  	      req_helper(sovs1.AILR, sovs2.AILR, isas_fails.AILR, latched_fails.AILR, ccdl_num_fails.AILR) and
+  	      req_helper(sovs1.BRAKE, sovs2.BRAKE, isas_fails.BRAKE, latched_fails.BRAKE, ccdl_num_fails.BRAKE) and
+  	      req_helper(sovs1.ELLIB, sovs2.ELLIB, isas_fails.ELLIB, latched_fails.ELLIB, ccdl_num_fails.ELLIB) and 
+  	      req_helper(sovs1.ELLOB, sovs2.ELLOB, isas_fails.ELLOB, latched_fails.ELLOB, ccdl_num_fails.ELLOB) and
+  	      req_helper(sovs1.ELRIB, sovs2.ELRIB, isas_fails.ELRIB, latched_fails.ELRIB, ccdl_num_fails.ELRIB) and
+  	      req_helper(sovs1.ELROB, sovs2.ELROB, isas_fails.ELROB, latched_fails.ELROB, ccdl_num_fails.ELROB) and
+  	      req_helper(sovs1.FLAPLI, sovs2.FLAPLI, isas_fails.FLAPLI, latched_fails.FLAPLI, ccdl_num_fails.FLAPLI) and
+  	      req_helper(sovs1.FLAPLO, sovs2.FLAPLO, isas_fails.FLAPLO, latched_fails.FLAPLO, ccdl_num_fails.FLAPLO) and
+  	      req_helper(sovs1.FLAPRI, sovs2.FLAPRI, isas_fails.FLAPRI, latched_fails.FLAPRI, ccdl_num_fails.FLAPRI) and
+  	      req_helper(sovs1.FLAPRO, sovs2.FLAPRO, isas_fails.FLAPRO, latched_fails.FLAPRO, ccdl_num_fails.FLAPRO) and
+  	      req_helper(sovs1.GEAR, sovs2.GEAR, isas_fails.GEAR, latched_fails.GEAR, ccdl_num_fails.GEAR) and
+  	      req_helper(sovs1.RUDLO, sovs2.RUDLO, isas_fails.RUDLO, latched_fails.RUDLO, ccdl_num_fails.RUDLO) and
+  	      req_helper(sovs1.RUDUP, sovs2.RUDUP, isas_fails.RUDUP, latched_fails.RUDUP, ccdl_num_fails.RUDUP) and
+  	      req_helper(sovs1.SPLLIB, sovs2.SPLLIB, isas_fails.SPLLIB, latched_fails.SPLLIB, ccdl_num_fails.SPLLIB) and
+  	      req_helper(sovs1.SPLLOB, sovs2.SPLLOB, isas_fails.SPLLOB, latched_fails.SPLLOB, ccdl_num_fails.SPLLOB) and
+  	      req_helper(sovs1.SPLRIB, sovs2.SPLRIB, isas_fails.SPLRIB, latched_fails.SPLRIB, ccdl_num_fails.SPLRIB) and
+  	      req_helper(sovs1.SPLROB, sovs2.SPLROB, isas_fails.SPLROB, latched_fails.SPLROB, ccdl_num_fails.SPLROB) and
+  	      req_helper(sovs1.STEER, sovs2.STEER, isas_fails.STEER, latched_fails.STEER, ccdl_num_fails.STEER) and
+  	      req_helper(sovs1.THROTR, sovs2.THROTR, isas_fails.THROTR, latched_fails.THROTR, ccdl_num_fails.THROTR) and
+  	      req_helper(sovs1.THRTOL, sovs2.THRTOL, isas_fails.THRTOL, latched_fails.THRTOL, ccdl_num_fails.THRTOL);
   tel;
   
   node req_helper
-    (act_in : real,
-     act_out : real,
-     act_gain : int,
-     act_claw_fail : bool,
-     osas_fail : bool)
+    (sov1 : bool,
+     sov2 : bool,
+     isas_fail : bool,
+     latched_fail : bool,
+     ccdl_num_fail : int)
   returns
     (res : bool);
   let  
     res = 
-       act_out = 
-        act_value(act_in, act_gain, act_claw_fail or osas_fail);
+        (sov1 = sov2) and
+      sov1 = true ->
+        if (isas_fail) then
+          false
+        else if(latched_fail and ccdl_num_fail >= 2) then
+          false
+        else
+          pre(sov1);
   tel;		
+
 	
-	node act_value(command : real, gain : int, failure : bool) returns (return : real);
-    let
-      return = if (failure) then
-                  0.0
-               else if(gain = 1) then
-                  command 
-               else if (gain = 2) then
-                  2.0 * command
-               else if (gain = 3) then
-                  (4.0/3.0) * command
-               else if (gain = 4) then
-                  4.0*command
-               else
-                  command;
-    tel;
-	
-	
-	 guarantee "OSAS-S-210, OSAS-S-220, and OSAS-S-230":
-      (sovs.ailerons_sov1_open = sovs.ailerons_sov2_open) and
-      sovs.ailerons_sov1_open = true ->
-        if (ailerons_isas_fail) then
-          false
-        else if(ailerons_failed and ailerons_ccdl_num_fail >= 2) then
-          false
-        else
-          pre(sovs.ailerons_sov1_open) and
-      (sovs.elevators_sov1_open = sovs.elevators_sov2_open) and
-      sovs.elevators_sov1_open = true ->
-        if (elevators_isas_fail) then
-          false
-        else if(elevators_failed and elevators_ccdl_num_fail >= 2) then
-          false
-        else
-          pre(sovs.elevators_sov1_open) and
-      (sovs.rudder_sov1_open = sovs.rudder_sov2_open) and
-      sovs.rudder_sov1_open = true ->
-        if (rudder_isas_fail) then
-          false
-        else if(rudder_failed and rudder_ccdl_num_fail >= 2) then
-          false
-        else
-          pre(sovs.rudder_sov1_open) and
-      (sovs.spoiler_sov1_open = sovs.spoiler_sov2_open) and
-      sovs.spoiler_sov1_open = true ->
-        if (spoiler_isas_fail) then
-          false
-        else if(spoiler_failed and spoiler_ccdl_num_fail >= 2) then
-          false
-        else
-          pre(sovs.spoiler_sov1_open) and
-      (sovs.flaps_gt_sov1_open = sovs.flaps_gt_sov2_open) and
-      sovs.flaps_gt_sov1_open = true ->
-        if (flaps_gt_isas_fail) then
-          false
-        else if(flaps_gt_failed and flaps_gt_ccdl_num_fail >= 2) then
-          false
-        else
-          pre(sovs.flaps_gt_sov1_open) and
-      (sovs.flaps_lt_sov1_open = sovs.flaps_lt_sov2_open) and
-      sovs.flaps_lt_sov1_open = true ->
-        if (flaps_lt_isas_fail) then 
-          false
-        else if(flaps_lt_failed and flaps_lt_ccdl_num_fail >= 2) then
-          false
-        else 
-          pre(sovs.flaps_lt_sov1_open);  
 **};
 
 end OSAS_S_210_220_230;

@@ -182,20 +182,5 @@ end BoolActuators.impl;
 data ACTUATORS_SOV_Data
 end ACTUATORS_SOV_Data;
 
-data implementation ACTUATORS_SOV_Data.impl
-  subcomponents
-    ailerons_sov1_open:  data  Base_Types::Boolean;
-    elevators_sov1_open:  data  Base_Types::Boolean;
-    rudder_sov1_open:  data  Base_Types::Boolean;
-    spoiler_sov1_open:  data  Base_Types::Boolean;
-    flaps_gt_sov1_open:  data  Base_Types::Boolean;
-    flaps_lt_sov1_open:  data  base_Types::Boolean;
-    ailerons_sov2_open:  data  Base_Types::Boolean;
-    elevators_sov2_open:  data  Base_Types::Boolean;
-    rudder_sov2_open:  data  Base_Types::Boolean;
-    spoiler_sov2_open:  data  Base_Types::Boolean;
-    flaps_gt_sov2_open:  data  Base_Types::Boolean;
-    flaps_lt_sov2_open:  data  base_Types::Boolean;
-end ACTUATORS_SOV_Data.impl;
 
 end DATA_TYPES;

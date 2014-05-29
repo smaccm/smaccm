@@ -15,16 +15,4 @@ import org.eclipse.xtext.ui.editor.contentassist.ICompletionProposalAcceptor;
  */
 public class AgreeProposalProvider extends
         com.rockwellcollins.atc.agree.ui.contentassist.AbstractAgreeProposalProvider {
-	
-	@Override
-	public void complete_NestedDotID(EObject model, RuleCall ruleCall, ContentAssistContext context, ICompletionProposalAcceptor acceptor) {
-		System.out.println();
-	}
-	
-	@Override
-	public void completeNestedDotID_Sub(EObject model, Assignment assignment, ContentAssistContext context, ICompletionProposalAcceptor acceptor) {
-		System.out.println();
-	}
-    
-
 }

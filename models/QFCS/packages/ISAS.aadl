@@ -368,7 +368,7 @@ system ISAS
     eq egi2_velocity_z_fault : bool;
     eq egi2_accel_x_fault: bool;
     eq egi2_accel_y_fault: bool;
-    eq egi2_accel_z_fault: bool;    
+    eq egi2_accel_z_fault: bool;   
     
     eq egi3_aoa_fault: bool;
     eq egi3_time_fault: bool;

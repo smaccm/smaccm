@@ -1013,7 +1013,7 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         NestedDotID dotId = expr.getFn();
         NamedElement namedEl = AgreeEmitterUtilities.getFinalNestId(dotId);
      
-        String fnName = jKindNameTag + namedEl.getName();
+        String fnName = getNodeName((NodeDefExpr)namedEl);
 
         boolean found = false;
         for(Node node : nodeDefExpressions){
@@ -1040,12 +1040,29 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         return nodeCall;
     }
 
+    private String getNodeName(NamedElement nodeDef){
+    	String nodeName = "";
+    	EObject container = nodeDef.eContainer();
+    	
+    	while(!(container instanceof AadlPackage)){
+    		if(container instanceof ComponentClassifier){
+    			nodeName = ((ComponentClassifier) container).getName();
+    			nodeName = dotChar + nodeName;
+    			nodeName = nodeName.replace(".", dotChar);
+    		}
+    		container = container.eContainer();
+    	}
+    	nodeName = ((AadlPackage)container).getName() + nodeName + dotChar + nodeDef.getName();
+    	
+    	return nodeName;
+    }
+    
     // TODO: ordering nodes/functions in dependency order
     @Override
     public Expr caseNodeDefExpr(NodeDefExpr expr) {
         // System.out.println("Visiting caseNodeDefExpr");
 
-        String nodeName = jKindNameTag + expr.getName();
+        String nodeName = getNodeName(expr);
         
         for(Node node : nodeDefExpressions){
             if(node.id.equals(nodeName)){
@@ -1108,7 +1125,7 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
     @Override
     public Expr caseFnDefExpr(FnDefExpr expr) {
 
-        String nodeName = jKindNameTag + expr.getName();
+        String nodeName = getNodeName(expr);
 
         for(Node node : nodeDefExpressions){
             if(node.id.equals(nodeName)){
