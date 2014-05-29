@@ -53,8 +53,14 @@ data implementation Flaps.impl
     FLRIB : data Base_Types::Float;
 end Flaps.impl;
 
-data AoA extends Base_Types::Float
+data AoA
 end AoA;
+
+data implementation AoA.impl
+  subcomponents
+    AOA : data Base_Types::Float;  
+    TIME_STAMP : data Base_Types::Integer;
+end AoA.impl;
 
 data AirData
 end AirData;
@@ -65,6 +71,7 @@ data implementation AirData.impl
     TotPres : data Base_Types::Float;
     Pres : data Base_Types::Float;
     Temp : data Base_Types::Float;
+    TIME_STAMP : data Base_Types::Integer;
 end AirData.impl;
 
 data EGI
@@ -93,7 +100,19 @@ data implementation EGI.impl
     XTACC : data Base_Types::Float;
     FPACCEL : data Base_Types::Float;
     HDD : data Base_Types::Float;
+    TIME_STAMP : data Base_Types::Integer;
 end EGI.impl;
+
+data QUAD_EGI
+end QUAD_EGI;
+
+data implementation QUAD_EGI.impl
+  subcomponents
+    egi1 : data EGI.impl;
+    egi2 : data EGI.impl;
+    egi3 : data EGI.impl;
+    egi4 : data EGI.impl;
+end QUAD_EGI.impl;
 
 data Actuators
 end Actuators;

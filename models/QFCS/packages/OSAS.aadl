@@ -177,16 +177,6 @@ system OSAS
         else
           pre (flaps_lt_failed));
       
-    --When an actuator command has been latched failed, OSAS shall set 
-    --that actuator command to 0 (zero).
-    guarantee "OSAS-S-140" : 
-      (ailerons_failed => acts.ailerons = 0.0) and
-      (elevators_failed => acts.elevators = 0.0) and
-      (spoiler_failed => acts.spoiler = 0.0) and
-      (rudder_failed => acts.rudder = 0.0) and
-      (flaps_gt_failed => acts.flaps_gt = 0.0) and
-      (flaps_lt_failed => acts.flaps_lt = 0.0);
-      
     --OSAS shall compare the current CCDL frame counter to the 
     --previous value to determine if CCDL has had a failure.
     
@@ -253,31 +243,48 @@ system OSAS
                   command;
     tel;
     
-    guarantee "OSAS-S-190, OSAS-S-240, and OSAS-S-250" : 
+    --When an actuator command has been latched failed, OSAS shall set 
+    --that actuator command to 0 (zero).
+    guarantee "OSAS-S-140" : 
+      (ailerons_failed => acts.ailerons = 0.0) and
+      (elevators_failed => acts.elevators = 0.0) and
+      (spoiler_failed => acts.spoiler = 0.0) and
+      (rudder_failed => acts.rudder = 0.0) and
+      (flaps_gt_failed => acts.flaps_gt = 0.0) and
+      (flaps_lt_failed => acts.flaps_lt = 0.0);
+    
+    
+    guarantee "OSAS-S-190, OSAS-S-240, and OSAS-S-250" :
+    ((not ailerons_failed)  =>
       acts.ailerons = 
         act_value(acts_input.ailerons, 
                   ailerons_gain, 
-                  ailerons_claw_fail or osas_failed) and
+                  ailerons_claw_fail or osas_failed)) and
+    ((not elevators_failed)  =>
       acts.elevators = 
         act_value(acts_input.elevators,
                   elevators_gain, 
-                  elevators_claw_fail or osas_failed) and
+                  elevators_claw_fail or osas_failed)) and
+    ((not rudder_failed)  =>
       acts.rudder = 
         act_value(acts_input.rudder, 
                   rudder_gain, 
-                  rudder_claw_fail or osas_failed) and
+                  rudder_claw_fail or osas_failed)) and
+    ((not spoiler_failed)  =>
       acts.spoiler = 
         act_value(acts_input.spoiler, 
                   spoiler_gain, 
-                  spoiler_claw_fail or osas_failed) and
+                  spoiler_claw_fail or osas_failed)) and
+    ((not flaps_gt_failed)  =>
       acts.flaps_gt = 
         act_value(acts_input.flaps_gt, 
                   flaps_gt_gain, 
-                  flaps_gt_claw_fail or osas_failed) and
+                  flaps_gt_claw_fail or osas_failed)) and
+    ((not flaps_lt_failed)  =>
       acts.flaps_lt = 
         act_value(acts_input.flaps_lt, 
                   flaps_lt_gain, 
-                  flaps_lt_claw_fail or osas_failed);
+                  flaps_lt_claw_fail or osas_failed));
 
     guarantee "OSAS-S-210, OSAS-S-220, and OSAS-S-230":
       (sovs.ailerons_sov1_open = sovs.ailerons_sov2_open) and

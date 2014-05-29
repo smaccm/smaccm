@@ -2021,7 +2021,21 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
 		for(AgreeAnnexEmitter subEmitter : subEmitters){
             
             AgreeNode agreeNode = subEmitter.getComponentNode();
-            nodeSet.addAll(agreeNode.nodes);
+            
+            //don't add duplicate nodes
+            for(Node node : agreeNode.nodes){
+            	boolean inSet = false;
+            	for(Node subnode : nodeSet){
+            		if(node.id.equals(subnode.id)){
+            			inSet = true;
+            			break;
+            		}
+            	}
+            	if(!inSet){
+            		nodeSet.add(node);
+            	}
+            }
+            //nodeSet.addAll(agreeNode.nodes);
             
             List<Expr> initOutputs = new ArrayList<>();
             List<Expr> nodeInputs = new ArrayList<>();
