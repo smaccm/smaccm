@@ -39,7 +39,7 @@ with AHS,ADS,FMS,NAV,FCI,LDS,Base_Types,IMA,META_Properties,PALS_Properties;
   data Lateral_Modes
   end Lateral_Modes;
   
-  data Vertical_Modes
+  data Vertical_Modes extends Base_Types::Integer
   end Vertical_Modes;
   
   thread Control_Laws
@@ -158,7 +158,7 @@ annex agree {**
     subcomponents
       active: data Base_Types::Boolean;
       lat: data Lateral_Modes.Lateral_Modes_Impl;
-      ver: data Vertical_Modes.Vertical_Modes_Impl;
+      ver: data Vertical_Modes;
   end Flight_Modes.Flight_Modes_Impl;
   
   data implementation Guidance_Commands.Guidance_Commands_Impl

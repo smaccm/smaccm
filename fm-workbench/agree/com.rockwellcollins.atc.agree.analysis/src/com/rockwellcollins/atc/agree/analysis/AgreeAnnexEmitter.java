@@ -841,6 +841,11 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
     	if(el instanceof ComponentImplementation){
     		ComponentImplementation compImpl = (ComponentImplementation)el;
     		String typeStr = null;
+    		if(compImpl.getAllSubcomponents().size() == 0){
+    			throw new AgreeException("The component implementation '"+compImpl.getQualifiedName()
+    					+"' has no subcomponents.  AGREE cannot reason about component implementations"+
+    					" without subcomponents");
+    		}
     		for(Subcomponent subComp : compImpl.getAllSubcomponents()){
     			ComponentImplementation subCompImpl = subComp.getComponentImplementation();
     			if(subCompImpl == null){
@@ -1013,7 +1018,7 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         NestedDotID dotId = expr.getFn();
         NamedElement namedEl = AgreeEmitterUtilities.getFinalNestId(dotId);
      
-        String fnName = getNodeName((NodeDefExpr)namedEl);
+        String fnName = getNodeName(namedEl);
 
         boolean found = false;
         for(Node node : nodeDefExpressions){
