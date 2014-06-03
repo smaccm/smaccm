@@ -121,7 +121,8 @@ public class AgreeGenerator {
     }
 
     public Renaming getRenaming() {
-        return new MapRenaming(topEmitter.varRenaming, MapRenaming.Mode.NULL);
+//        return new MapRenaming(topEmitter.varRenaming, MapRenaming.Mode.NULL);
+    	return topEmitter.agreeRename;
     }
 
     public Layout getLayout() {
