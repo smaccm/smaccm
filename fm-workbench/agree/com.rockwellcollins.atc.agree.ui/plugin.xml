@@ -408,13 +408,5 @@
            id="com.rockwellcollins.atc.agree.parser">
      </parser>
   </extension>
-  <extension
-        point="org.osate.annexsupport.contentassist">
-        <contentassist
-           annexName="agree"
-           class="com.rockwellcollins.atc.agree.parsing.AgreeAnnexContentAssist"
-           id="com.rockwellcollins.atc.agree.contentassist">
-     </contentassist>
-  </extension>
 
 </plugin>
