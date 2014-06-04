@@ -198,12 +198,14 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
     private List<IdExpr> calendar = new ArrayList<IdExpr>();
     private boolean simultaneity = true;
     private final Map<FeatureInstance, List<AgreeFeature>> featInstToAgreeFeatMap = new HashMap<>();
+	private String topLevelPrefix;
 
     public AgreeAnnexEmitter(ComponentInstance compInst,
             AgreeLayout layout,
             String category,
             String jPrefix,
             String aPrefix,
+            String topLevelPrefix,
             boolean ignoreLifts,
             boolean topLevel){
     	
@@ -211,6 +213,7 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         this.curInst = compInst;
         this.category = category;
         this.ignoreLifts  = ignoreLifts;
+        this.topLevelPrefix = topLevelPrefix;
         
         initTypeMap.put("bool", initBool);
         initTypeMap.put("real", initReal);
@@ -224,7 +227,8 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         
         jKindNameTag = jPrefix;
         aadlNameTag = aPrefix;
-        agreeRename =  new AgreeRenaming(jKindNameTag, varRenaming);
+        
+        agreeRename =  new AgreeRenaming(topLevelPrefix, varRenaming);
                 
         ComponentClassifier compClass = compInst.getComponentClassifier();
                 
@@ -259,18 +263,19 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         	for(AgreeFeature agreeFeat : featList){
         		AgreeVarDecl varDecl = new AgreeVarDecl(agreeFeat.lustreString,
         				agreeFeat.aadlString, agreeFeat.varType);
+        		String renameStr = agreeRename.rename(agreeFeat.lustreString);
         		switch(agreeFeat.direction){
         		case IN:
         			inputVars.add(varDecl);
-        			layout.addElement(category, agreeFeat.aadlString, AgreeLayout.SigType.INPUT);
+        			layout.addElement(category, renameStr, AgreeLayout.SigType.INPUT);
         			break;
         		case OUT:
         			outputVars.add(varDecl);
-        			layout.addElement(category, agreeFeat.aadlString, AgreeLayout.SigType.OUTPUT);
+        			layout.addElement(category, renameStr, AgreeLayout.SigType.OUTPUT);
         		}
         		
         		//addToRenaming(agreeFeat.lustreString, agreeFeat.aadlString);
-	   			addToRefMap(agreeFeat.aadlString, agreeFeat.feature);
+	   			addToRefMap(agreeFeat.lustreString, agreeFeat.feature);
         	}
         }
         
@@ -282,17 +287,18 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
             	for(AgreeFeature agreeFeat : featList){
             		AgreeVarDecl varDecl = new AgreeVarDecl(agreeFeat.lustreString,
             				agreeFeat.aadlString, agreeFeat.varType);
+            		String renameStr = agreeRename.rename(agreeFeat.lustreString);
             		switch(agreeFeat.direction){
             		case IN:
             			inputVars.add(varDecl);
-            			layout.addElement(category, agreeFeat.aadlString, AgreeLayout.SigType.INPUT);
+            			layout.addElement(category, renameStr, AgreeLayout.SigType.INPUT);
             			break;
             		case OUT:
             			outputVars.add(varDecl);
-            			layout.addElement(category, agreeFeat.aadlString, AgreeLayout.SigType.OUTPUT);
+            			layout.addElement(category, renameStr, AgreeLayout.SigType.OUTPUT);
             		}
             		//addToRenaming(agreeFeat.lustreString, agreeFeat.aadlString);
-            		addToRefMap(agreeFeat.aadlString, agreeFeat.feature);
+            		addToRefMap(agreeFeat.lustreString, agreeFeat.feature);
             	}
             	//featInstToAgreeFeatMap.put(featInst, featList);
         	}
@@ -497,7 +503,7 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         inputVars.add(countVar);
         //addToRenaming(countVar.jKindStr,countVar.aadlStr);
         addToRefMap(countVar.aadlStr, port);
-        layout.addElement(category, countVar.aadlStr, AgreeLayout.SigType.INPUT);
+        layout.addElement(category, agreeRename.rename(countVar.jKindStr), AgreeLayout.SigType.INPUT);
         
     	return countIdExpr;
 
@@ -522,7 +528,7 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         inputVars.add(removeVar);
         //addToRenaming(removeVar.jKindStr,removeVar.aadlStr);
         addToRefMap(removeVar.aadlStr, port);
-        layout.addElement(category, removeVar.aadlStr, AgreeLayout.SigType.INPUT);
+        layout.addElement(category, agreeRename.rename(removeVar.jKindStr), AgreeLayout.SigType.INPUT);
         
     	return removeIdExpr;
     }
@@ -548,7 +554,7 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         inputVars.add(insertVar);
         //addToRenaming(insertVar.jKindStr,insertVar.aadlStr);
         addToRefMap(insertVar.aadlStr, port);
-        layout.addElement(category, insertVar.aadlStr, AgreeLayout.SigType.INPUT);
+        layout.addElement(category, agreeRename.rename(insertVar.jKindStr), AgreeLayout.SigType.INPUT);
     	
     	return insertIdExpr;
     }
@@ -573,7 +579,7 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         inputVars.add(clockVar);
         //addToRenaming(clockVar.jKindStr,clockVar.aadlStr);
         addToRefMap(clockVar.aadlStr, comp);
-        layout.addElement(category, clockVar.aadlStr, AgreeLayout.SigType.INPUT);
+        layout.addElement(category, agreeRename.rename(clockVar.jKindStr), AgreeLayout.SigType.INPUT);
     	
     	return clockId;
     	
@@ -623,7 +629,8 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         AgreeAnnexEmitter subEmitter = new AgreeAnnexEmitter(
                 subCompInst, layout, category,
                 jKindNameTag + subComp.getName() + dotChar,
-                aadlNameTag + subComp.getFullName() + ".", false, true);
+                aadlNameTag + subComp.getFullName() + ".",
+                topLevelPrefix, false, true);
         
         for (AnnexSubclause annex : AnnexUtil.getAllAnnexSubclauses(subCompImpl, AgreePackage.eINSTANCE.getAgreeContractSubclause())) {
             if (annex instanceof AgreeContractSubclause) { 
@@ -730,7 +737,7 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         varDecl.aadlStr = aadlNameTag + state.getName();
         varDecl.type = "bool";
 
-        layout.addElement(category, varDecl.aadlStr, AgreeLayout.SigType.OUTPUT);
+        layout.addElement(category, agreeRename.rename(varDecl.jKindStr), AgreeLayout.SigType.OUTPUT);
 
         //addToRenaming(varDecl.jKindStr, varDecl.aadlStr);
         addToRefMap(varDecl.aadlStr, state);
@@ -764,7 +771,7 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
             varDecl.aadlStr = aadlNameTag + baseName;
             varDecl.type = getRecordTypeName(arg.getType());
 
-            layout.addElement(category, varDecl.aadlStr, AgreeLayout.SigType.OUTPUT);
+            layout.addElement(category, agreeRename.rename(varDecl.jKindStr), AgreeLayout.SigType.OUTPUT);
 
 
             //addToRenaming(varDecl.jKindStr, varDecl.aadlStr);
@@ -2070,7 +2077,7 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
             	//make it so the clock is visible in the counter example
             	//addToRenaming(clockExpr.id, clockExpr.id);
             	addToRefMap(clockExpr.id, subEmitter.curComp);
-            	layout.addElement(subEmitter.category, clockExpr.id, SigType.INPUT);
+            	layout.addElement(subEmitter.category, agreeRename.rename(clockExpr.id), SigType.INPUT);
             }
             
             clocks.add(clockExpr);

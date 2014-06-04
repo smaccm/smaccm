@@ -44,7 +44,20 @@ public class AgreeLayout implements Layout {
 
 	@Override
 	public String getCategory(String signal) {
-		return signalCategories.get(signal);
+		String retCat = signalCategories.get(signal);
+		if(retCat == null){
+			while(retCat == null && signal.contains(".")){
+				String[] tokens = signal.split("\\.");
+				String delim = "";
+				signal = "";
+				for(int i = 0; i < tokens.length-1; i++){
+					signal += delim + tokens[i];
+					delim = ".";
+				}
+				retCat = signalCategories.get(signal);
+			}
+		}
+		return retCat;
 	}
 	
 	public List<String> getAllInputsFromCategory(String category){

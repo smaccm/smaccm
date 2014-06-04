@@ -27,6 +27,7 @@ public class AgreeRenaming extends Renaming {
 		}
 		
 		renamed = original.replace(prefix, "");
+		renamed = renamed.replaceAll("^_*", "");
 		renamed = renamed.replace("__", ".");
 		return renamed;
 	}

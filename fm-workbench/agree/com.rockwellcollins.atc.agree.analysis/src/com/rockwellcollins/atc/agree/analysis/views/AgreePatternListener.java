@@ -28,8 +28,22 @@ public class AgreePatternListener implements IPatternMatchListener {
         int offset = event.getOffset() + 1;
         int length = event.getLength() - 2;
         try {
-            String name = console.getDocument().get(offset, length);
-            EObject ref = refMap.get(name);
+        	String name = console.getDocument().get(offset, length);
+        	EObject ref = refMap.get(name);
+
+        	if(ref == null){
+        		while(ref == null && name.contains(".")){
+        			String[] tokens = name.split("\\.");
+        			String delim = "";
+        			name = "";
+        			for(int i = 0; i < tokens.length-1; i++){
+        				name += delim + tokens[i];
+        				delim = ".";
+        			}
+        			ref = refMap.get(name);
+        		}
+        	}
+            
             if (ref != null) {
                 IHyperlink hyperlink = new AgreeConsoleHyperLink(ref);
                 console.addHyperlink(hyperlink, offset, length);

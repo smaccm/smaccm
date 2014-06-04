@@ -234,8 +234,9 @@ public class AgreeMenuListener implements IMenuListener {
                         printHLine(out, cex.getLength());
 
                         for (Signal<Value> signal : cex.getSignals()) {
-                            if (category.equals(layout.getCategory(signal.getName()))) {
-                                out.print(String.format("%-60s", "{" + signal.getName() + "}"));
+                        	String sigName = signal.getName();
+                            if (category.equals(layout.getCategory(sigName))) {
+                                out.print(String.format("%-60s", "{" + sigName + "}"));
                                 for (int k = 0; k < cex.getLength(); k++) {
                                     Value val = signal.getValue(k);
                                     if (jkind.util.Util.isArbitrary(val)) {
