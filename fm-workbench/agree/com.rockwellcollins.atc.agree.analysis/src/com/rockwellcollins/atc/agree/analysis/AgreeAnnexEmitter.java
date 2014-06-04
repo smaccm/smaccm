@@ -2166,6 +2166,7 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
             internals.add(new VarDecl(compId.id, new NamedType("bool")));
 
             Expr leftSide = new UnaryExpr(UnaryOp.PRE, totalCompHist);
+            leftSide = new BinaryExpr(new BoolExpr(true), BinaryOp.ARROW, leftSide);
 //            leftSide = new BinaryExpr(new BoolExpr(true), BinaryOp.ARROW, leftSide);
             leftSide = new BinaryExpr(sysAssumpHist, BinaryOp.AND, leftSide);
             leftSide = new BinaryExpr(higherContracts, BinaryOp.AND, leftSide);

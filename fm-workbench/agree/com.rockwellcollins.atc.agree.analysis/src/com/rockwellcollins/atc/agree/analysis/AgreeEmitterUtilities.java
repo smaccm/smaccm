@@ -405,12 +405,6 @@ public class AgreeEmitterUtilities {
                 Context sourContext = absConnSour.getContext();
                 if (sourContext != null && subs.contains(sourContext)) {
                     if (destContext != null && destContext instanceof Subcomponent) {
-                        //assert (destContext instanceof Subcomponent);
-                        if (orig.equals(destContext)) {
-                            // there is a loop
-                            subs.clear();
-                            break;
-                        }
                         subs.add((Subcomponent) destContext);
                     }
                 }
