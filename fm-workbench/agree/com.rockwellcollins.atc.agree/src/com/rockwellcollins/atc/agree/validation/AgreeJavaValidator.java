@@ -1262,7 +1262,33 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
         return AgreeType.ERROR;
     }
 
+   private AgreeType getAgreeType(ComponentType compType){
+    	
+    	while(compType.getExtended() != null){
+    		compType = compType.getExtended();
+    	}
+    	
+    	String qualName = compType.getQualifiedName();
+        switch (qualName) {
+        case "Base_Types::Boolean":
+            return BOOL;
+        case "Base_Types::Integer":
+            return INT;
+        case "Base_Types::Float":
+            return REAL;
+        }
+        
+        return new AgreeType(qualName);
+
+    }
+    
     private AgreeType getAgreeType(DataSubcomponentType data) {
+    	if(data instanceof DataType){
+    		ComponentType compType = ((DataType) data).getExtended();
+    		if(compType != null){
+    			return getAgreeType(compType);
+    		}
+    	}
         String qualName = data.getQualifiedName();
         switch (qualName) {
         case "Base_Types::Boolean":
