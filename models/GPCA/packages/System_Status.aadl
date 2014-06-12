@@ -29,8 +29,7 @@ public
 		-------> if the system is ON and the computed Reservoir_Volume is less than the threshold then Reservoir_Empty = true  <-------
 
 		property empty_reservoir_condition = 
-			--true -> 
-				((TLM_MODE_IN.System_On and (SYS_STAT_OUT.Reservoir_Volume < CONST_IN.Empty_Reservoir) ) -> SYS_STAT_OUT.Reservoir_Empty);
+			((TLM_MODE_IN.System_On and (SYS_STAT_OUT.Reservoir_Volume < CONST_IN.Empty_Reservoir) ) => SYS_STAT_OUT.Reservoir_Empty);
 
 		guarantee "empty_reservoir_condition ":  empty_reservoir_condition;
 
@@ -38,10 +37,17 @@ public
 		-------> if the system is ON and the Current_System_Mode from Infusion manager was > 1 then In_Therapy = true  <-------
 
 		property mode_grt_1_implies_In_Therapy = 
-			--true -> 
-				((TLM_MODE_IN.System_On and (IM_IN.Current_System_Mode > 1)) -> SYS_STAT_OUT.In_Therapy);
+			((TLM_MODE_IN.System_On and (IM_IN.Current_System_Mode > 1)) => SYS_STAT_OUT.In_Therapy);
 
 		guarantee "mode_grt_1_implies_In_Therapy ":  mode_grt_1_implies_In_Therapy; 
+		
+	   -------> if the system is ON and the Current_System_Mode from Infusion manager was > 1 then In_Therapy = true  <-------
+
+		property mode_not_grt_1_implies_not_In_Therapy = 
+			((TLM_MODE_IN.System_On and not(IM_IN.Current_System_Mode > 1)) => not(SYS_STAT_OUT.In_Therapy));
+
+		guarantee "mode_not_grt_1_implies_not_In_Therapy ":  mode_not_grt_1_implies_not_In_Therapy; 
+		
 **};
 
   end System_Status;

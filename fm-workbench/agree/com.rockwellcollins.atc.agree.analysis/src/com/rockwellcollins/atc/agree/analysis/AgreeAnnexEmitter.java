@@ -862,9 +862,9 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
     		ComponentImplementation compImpl = (ComponentImplementation)el;
     		String typeStr = null;
     		if(compImpl.getAllSubcomponents().size() == 0){
-    			throw new AgreeException("The component implementation '"+compImpl.getQualifiedName()
-    					+"' has no subcomponents.  AGREE cannot reason about component implementations"+
-    					" without subcomponents");
+    			typeStr = getIDTypeStr(compImpl.getType());
+            	typeMap.put(el, typeStr);
+            	return;
     		}
     		for(Subcomponent subComp : compImpl.getAllSubcomponents()){
     			ComponentImplementation subCompImpl = subComp.getComponentImplementation();

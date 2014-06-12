@@ -29,41 +29,44 @@ public
 	            
 annex agree {**
 
-	guarantee "output ":  (TLM_MODE_IN.Request_Confirm_Stop -> GPCA_SW_OUT.Request_Confirm_Stop);
+	guarantee "output1 ":  (TLM_MODE_IN.Request_Confirm_Stop <=> GPCA_SW_OUT.Request_Confirm_Stop);
 	
-	guarantee "output1 ": (SYS_STAT_IN.Volume_Infused = GPCA_SW_OUT.Volume_Infused);
-	guarantee "output2 ": (SYS_STAT_IN.Reservoir_Volume = GPCA_SW_OUT.Reservoir_Volume);
+	guarantee "output2 ": (SYS_STAT_IN.Volume_Infused = GPCA_SW_OUT.Volume_Infused);
+	guarantee "output3 ": (SYS_STAT_IN.Reservoir_Volume = GPCA_SW_OUT.Reservoir_Volume);
 	
-	guarantee "output3 ": (ALARM_IN.Is_Audio_Disabled = GPCA_SW_OUT.Is_Audio_Disabled);
-	guarantee "output4 ": (ALARM_IN.Notification_Message = GPCA_SW_OUT.Notification_Message);
+	guarantee "output4 ": (ALARM_IN.Is_Audio_Disabled = GPCA_SW_OUT.Is_Audio_Disabled);
+	guarantee "output5 ": (ALARM_IN.Notification_Message = GPCA_SW_OUT.Notification_Message);
+	guarantee "output6 ": (ALARM_IN.Audio_Notification_Command = GPCA_SW_OUT.Audio_Notification_Command);
 	   
-	guarantee "output5 ": (CONFIG_IN.Patient_ID = GPCA_SW_OUT.Patient_ID);
-	guarantee "output6 ": (CONFIG_IN.Drug_Name = GPCA_SW_OUT.Drug_Name);
-	guarantee "output7 ": (CONFIG_IN.Drug_Concentration = GPCA_SW_OUT.Drug_Concentration);
-	guarantee "output8 ": (CONFIG_IN.Infusion_Total_Duration = GPCA_SW_OUT.Infusion_Total_Duration);
-	guarantee "output9 ": (CONFIG_IN.VTBI_Total = GPCA_SW_OUT.VTBI_Total);
-	guarantee "output11 ": (CONFIG_IN.Flow_Rate_Basal = GPCA_SW_OUT.Flow_Rate_Basal);
-	guarantee "output12 ": (CONFIG_IN.Flow_Rate_Intermittent_Bolus = GPCA_SW_OUT.Flow_Rate_Intermittent_Bolus);
-	guarantee "output13 ": (CONFIG_IN.Duration_Intermittent_Bolus = GPCA_SW_OUT.Duration_Intermittent_Bolus);
-	guarantee "output14 ": (CONFIG_IN.Interval_Intermittent_Bolus = GPCA_SW_OUT.Interval_Intermittent_Bolus);
-	guarantee "output15 ": (CONFIG_IN.Flow_Rate_Patient_Bolus = GPCA_SW_OUT.Flow_Rate_Patient_Bolus);
-	guarantee "output16 ": (CONFIG_IN.Duration_Patient_Bolus = GPCA_SW_OUT.Duration_Patient_Bolus);
-	guarantee "output17 ": (CONFIG_IN.Lockout_Period_Patient_Bolus = GPCA_SW_OUT.Lockout_Period_Patient_Bolus);
-	guarantee "output18 ": (CONFIG_IN.Max_Number_of_Patient_Bolus = GPCA_SW_OUT.Max_Number_of_Patient_Bolus);
-	guarantee "output19 ": (CONFIG_IN.Flow_Rate_KVO = GPCA_SW_OUT.Flow_Rate_KVO);
-	guarantee "output20 ": (CONFIG_IN.Entered_Reservoir_Volume = GPCA_SW_OUT.Entered_Reservoir_Volume);
-	guarantee "output21 ": (CONFIG_IN.Configured = GPCA_SW_OUT.Configured);
-	guarantee "output22 ": (CONFIG_IN.Error_Message_ID = GPCA_SW_OUT.Error_Message_ID);
-	guarantee "output23 ": (CONFIG_IN.Request_Confirm_Infusion_Initiate -> GPCA_SW_OUT.Request_Config_Type);
-	guarantee "output24 ": (CONFIG_IN.Request_Confirm_Infusion_Initiate -> GPCA_SW_OUT.Request_Confirm_Infusion_Initiate);
-	guarantee "output25 ": (CONFIG_IN.Request_Patient_Drug_Info -> GPCA_SW_OUT.Request_Patient_Drug_Info);
-	guarantee "output26 ": (CONFIG_IN.Request_Infusion_Info -> GPCA_SW_OUT.Request_Infusion_Info);
+	guarantee "output7 ": (CONFIG_IN.Patient_ID = GPCA_SW_OUT.Patient_ID);
+	guarantee "output8 ": (CONFIG_IN.Drug_Name =  GPCA_SW_OUT.Drug_Name);
+	guarantee "output9 ": (CONFIG_IN.Drug_Concentration = GPCA_SW_OUT.Drug_Concentration);
+	guarantee "output10 ": (CONFIG_IN.Infusion_Total_Duration = GPCA_SW_OUT.Infusion_Total_Duration);
+	guarantee "output11 ": (CONFIG_IN.VTBI_Total = GPCA_SW_OUT.VTBI_Total);
+	guarantee "output12 ": (CONFIG_IN.Flow_Rate_Basal = GPCA_SW_OUT.Flow_Rate_Basal);
+	guarantee "output13 ": (CONFIG_IN.Flow_Rate_Intermittent_Bolus = GPCA_SW_OUT.Flow_Rate_Intermittent_Bolus);
+	guarantee "output14 ": (CONFIG_IN.Duration_Intermittent_Bolus = GPCA_SW_OUT.Duration_Intermittent_Bolus);
+	guarantee "output15 ": (CONFIG_IN.Interval_Intermittent_Bolus = GPCA_SW_OUT.Interval_Intermittent_Bolus);
+	guarantee "output16 ": (CONFIG_IN.Flow_Rate_Patient_Bolus = GPCA_SW_OUT.Flow_Rate_Patient_Bolus);
+	guarantee "output17 ": (CONFIG_IN.Duration_Patient_Bolus = GPCA_SW_OUT.Duration_Patient_Bolus);
+	guarantee "output18 ": (CONFIG_IN.Lockout_Period_Patient_Bolus = GPCA_SW_OUT.Lockout_Period_Patient_Bolus);
+	guarantee "output19 ": (CONFIG_IN.Max_Number_of_Patient_Bolus = GPCA_SW_OUT.Max_Number_of_Patient_Bolus);
+	guarantee "output20 ": (CONFIG_IN.Flow_Rate_KVO = GPCA_SW_OUT.Flow_Rate_KVO);
+	guarantee "output21 ": (CONFIG_IN.Entered_Reservoir_Volume = GPCA_SW_OUT.Entered_Reservoir_Volume);
+	guarantee "output22 ": (CONFIG_IN.Configured = GPCA_SW_OUT.Configured);
+	guarantee "output23 ": (CONFIG_IN.Error_Message_ID = GPCA_SW_OUT.Error_Message_ID);
+	guarantee "output24 ": (CONFIG_IN.Request_Confirm_Infusion_Initiate <=> GPCA_SW_OUT.Request_Config_Type);
+	guarantee "output25 ": (CONFIG_IN.Request_Confirm_Infusion_Initiate <=> GPCA_SW_OUT.Request_Confirm_Infusion_Initiate);
+	guarantee "output26 ": (CONFIG_IN.Request_Patient_Drug_Info <=> GPCA_SW_OUT.Request_Patient_Drug_Info);
+	guarantee "output27 ": (CONFIG_IN.Request_Infusion_Info <=> GPCA_SW_OUT.Request_Infusion_Info);
 
-	guarantee "output27 ": (IM_IN.Current_System_Mode = GPCA_SW_OUT.Current_System_Mode);
-	guarantee "output28 ": (IM_IN.Current_System_Mode = GPCA_SW_OUT.Actual_Infusion_Duration);
-	guarantee "output29 ": (IM_IN.Commanded_Flow_Rate = GPCA_SW_OUT.Commanded_Flow_Rate);
+	guarantee "output28 ": (IM_IN.Current_System_Mode = GPCA_SW_OUT.Current_System_Mode);
+	guarantee "output29 ": (IM_IN.Actual_Infusion_Duration = GPCA_SW_OUT.Actual_Infusion_Duration);
+	guarantee "output30 ": (IM_IN.Commanded_Flow_Rate = GPCA_SW_OUT.Commanded_Flow_Rate);
+	
+	
 
-	guarantee "output30 ": (LOG_IN.Log = GPCA_SW_OUT.Log);
+	guarantee "output ": (LOG_IN.Log = GPCA_SW_OUT.Log);
 
 **};
  

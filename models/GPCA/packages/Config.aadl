@@ -28,11 +28,25 @@ public
 
 
 	 annex agree {** 
-		 property flow_rate_kvo_gte_0 = 
-			--true -> 
-				(TLM_MODE_IN.System_On => (CONFIG_OUT.Flow_Rate_KVO >= 0));
+		 property flow_rate_kvo_gt_0 = 
+				(TLM_MODE_IN.System_On => (CONFIG_OUT.Flow_Rate_KVO > 0));
 	
-		guarantee "flow_rate_kvo_gte_0":  flow_rate_kvo_gte_0;
+		guarantee "flow_rate_kvo_gt_0":  flow_rate_kvo_gt_0;
+		
+		 property config_range = 
+				(TLM_MODE_IN.System_On => (CONFIG_OUT.Configured >= 0 and CONFIG_OUT.Configured <= 3 ));
+	
+		guarantee "config_range":  config_range;
+		
+		property Infusion_Total_Duration = 
+				(TLM_MODE_IN.System_On => CONFIG_OUT.Infusion_Total_Duration >= 0);	
+		guarantee "Infusion_Total_Duration":  Infusion_Total_Duration;
+		
+		property config_gt_1_implies_values_configured =
+			(TLM_MODE_IN.System_On and CONFIG_OUT.Configured > 0 ) => CONFIG_OUT.Infusion_Total_Duration > 0;
+		guarantee "config_gt_1_implies_values_configured":  config_gt_1_implies_values_configured;
+		
+		
 	
 	**};
 

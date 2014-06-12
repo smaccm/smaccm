@@ -276,6 +276,21 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
     	}
     	
     	if(finalId instanceof DataImplementation){
+    		AgreeType agreeType = getAgreeType((DataImplementation)finalId);
+    		if(agreeType.equals(AgreeType.ERROR)){
+    			error(recType, "Data Implementations with no subcomponents must extend"+
+    					" a Base_Type that AGREE can reason about.");
+    			return;
+    		}
+    		if(((DataImplementation) finalId).getAllSubcomponents().size() != 0){
+    			if(agreeType.equals(AgreeType.BOOL)
+    			  || agreeType.equals(AgreeType.INT)
+    			  || agreeType.equals(AgreeType.REAL)){
+    				error(finalId, "Data implementations with subcomponents cannot be"
+    				      +" interpreted by AGREE if they extend Base_Types");
+    			}
+    		}
+
     		dataImplCycleCheck(recId);
     	}
     }
@@ -530,6 +545,10 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
     			recId = recId.getSub();
     		}
     	}else if(recEl instanceof DataImplementation){
+    		AgreeType nativeType = getNativeType((DataImplementation)recEl);
+    		if(nativeType != null){
+    			return nativeType;
+    		}
     		EObject aadlPack = recEl.eContainer();
         	while(!(aadlPack instanceof AadlPackage)){
         		aadlPack = aadlPack.eContainer();
@@ -1236,12 +1255,27 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
     
     
     private AgreeType getAgreeType(DataImplementation dataImpl){
+    	
+    	AgreeType nativeType = getNativeType(dataImpl);
+    	if(nativeType != null){
+    		return nativeType;
+    	}
+    	
     	AadlPackage aadlPack = (AadlPackage)dataImpl.eContainer().eContainer();
     	
     	String typeStr = aadlPack.getName() + "::" + dataImpl.getName();
     	
     	return new AgreeType(typeStr);
     }
+
+	private AgreeType getNativeType(DataImplementation dataImpl) {
+		EList<Subcomponent> subComps = dataImpl.getAllSubcomponents();
+    	//if there are no subcomponents, use the component type
+    	if(subComps.size() == 0){
+    		return getAgreeType((ComponentClassifier)dataImpl.getType());
+    	}
+    	return null;
+	}
     
     private AgreeType getAgreeType(ComponentClassifier dataClass) {
 

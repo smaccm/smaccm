@@ -1,18 +1,11 @@
----------------------------------------------------------------------------
 -- Copyright (c) 2013 University of Minnesota
--- Author: Mike Whalen
----------------------------------------------------------------------------
-
-----------------------------------------------------------------------------
--- Edited by : Anitha Murugesan 
+-- Author: Anitha Murugesan 
 -- Date 7/18/2013
 -- The features matches the Alarm behavioral model.
 --------------------------------------------------------------------------
 
 package Alarm
-public
-
-  with DATATYPES;
+public  with DATATYPES;
   
   system Alarm
     features
@@ -25,59 +18,97 @@ public
       SENSOR_IN: in data port DATATYPES::Device_Sensor_Inputs.Impl;
       CONST_IN: in data port DATATYPES::Device_Configuration_Inputs.Impl;
       SYS_STAT_IN: in data port DATATYPES::System_Status_Outputs.Impl;
-      CONFIG_IN: in data port DATATYPES::Config_Outputs.Impl;
-            
+      CONFIG_IN: in data port DATATYPES::Config_Outputs.Impl;            
 	  ALARM_OUT: out data port DATATYPES::Alarm_Outputs.Impl;
 	            
-annex agree {**
+	annex agree {**
+			
+		-- Output of ALARM highest_level_alarm >= 3 if the system is ON, In_Therapy and volume infused > vtbi hi from DB.
+		property volume_infused = 
+			 ((TLM_MODE_IN.System_On and (SYS_STAT_IN.In_Therapy) and 
+			 			(SYS_STAT_IN.Volume_Infused > DB_IN.VTBI_High ) ) => (ALARM_OUT.Highest_Level_Alarm >= 3) ); 
+			 		
+		guarantee  "volume_infused": volume_infused; 	
+
+	property alarm_range = 
+					(ALARM_OUT.Highest_Level_Alarm = 1) or 
+					(ALARM_OUT.Highest_Level_Alarm = 2) or 
+					(ALARM_OUT.Highest_Level_Alarm = 3) or 
+					(ALARM_OUT.Highest_Level_Alarm = 4);				
+	guarantee "alarm_range ":  alarm_range;
 
 	-- Output of ALARM highest_level_alarm = 4 if the system is ON, outputs of system status In_Therapy and Reservoir_Empty are true.
 	-- REQ 59	
 	property empty_reservoir_implies_alarm_L4 = 
-		--true -> 
-		 (((TLM_MODE_IN.System_On) and (SYS_STAT_IN.In_Therapy) and (SYS_STAT_IN.Reservoir_Empty) ) => (ALARM_OUT.Highest_Level_Alarm = 4)); 
-	guarantee  "empty_reservoir_implies_alarm_L4": empty_reservoir_implies_alarm_L4;  
-
-	-- Output of ALARM highest_level_alarm >= 3 if the system is ON, In_Therapy and volume infused > vtbi hi from DB.
-	property volume_infused_grt_VTBI_Hi_causes_grt_L3_alarm = 
-		--true -> 
-		 (((TLM_MODE_IN.System_On) and (SYS_STAT_IN.In_Therapy) and (SYS_STAT_IN.Volume_Infused > DB_IN.VTBI_High ) ) => (ALARM_OUT.Highest_Level_Alarm >= 3)); 
-	guarantee  "volume_infused_grt_VTBI_Hi_causes_grt_L3_alarm": volume_infused_grt_VTBI_Hi_causes_grt_L3_alarm; 
+		 ((TLM_MODE_IN.System_On and (SYS_STAT_IN.In_Therapy) and (SYS_STAT_IN.Reservoir_Empty) ) => 
+		 		(ALARM_OUT.Highest_Level_Alarm = 4) ); 
+	guarantee  "empty_reservoir_implies_alarm_L4": empty_reservoir_implies_alarm_L4;	
+	
+	
+	
+	property low_reservoir_implies_alarm_L2 = 
+		 ((TLM_MODE_IN.System_On and (SYS_STAT_IN.In_Therapy) and (SYS_STAT_IN.Reservoir_Volume < CONST_IN.Low_Reservoir) ) => 
+		 		(ALARM_OUT.Highest_Level_Alarm >= 2) ); 
+	guarantee  "low_reservoir_implies_alarm_L2": low_reservoir_implies_alarm_L2;
 
 	-- Output of ALARM highest_level_alarm >= 3 if the system is ON and airineline
 	property air_in_line_implies_grt_L3_alarm = 
-		--true -> 
-		 (((TLM_MODE_IN.System_On) and (SENSOR_IN.Air_In_Line)) => (ALARM_OUT.Highest_Level_Alarm >= 3)); 
+		 ((TLM_MODE_IN.System_On and (SENSOR_IN.Air_In_Line)) => (ALARM_OUT.Highest_Level_Alarm >= 3)); 
     guarantee  "air_in_line_implies_grt_L3_alarm": air_in_line_implies_grt_L3_alarm;
 
 	-- Output of ALARM highest_level_alarm >= 3 if the system is ON and Occlusion
 	property occlusion_implies_grt_L3_alarm = 
-		--true -> 
-		 (((TLM_MODE_IN.System_On) and (SENSOR_IN.Occlusion)) => (ALARM_OUT.Highest_Level_Alarm >= 3)); 
+		 ((TLM_MODE_IN.System_On and (SENSOR_IN.Occlusion)) => (ALARM_OUT.Highest_Level_Alarm >= 3)); 
 	guarantee  "occlusion_implies_grt_L3_alarm": occlusion_implies_grt_L3_alarm;
 
 	-- Output of ALARM highest_level_alarm >= 3 if the system is ON and door_open
 	property door_open_implies_grt_L3_alarm = 
-		--true -> 
-		 (((TLM_MODE_IN.System_On) and (SENSOR_IN.Door_Open)) => (ALARM_OUT.Highest_Level_Alarm >= 3)); 
+		 ((TLM_MODE_IN.System_On and (SENSOR_IN.Door_Open)) => (ALARM_OUT.Highest_Level_Alarm >= 3)); 
 	guarantee  "door_open_implies_grt_L3_alarm": door_open_implies_grt_L3_alarm;
 
--- Output of ALARM audio = set audio level if if the system is ON, the Highest_Level_Alarm is >= 3 and if audio is not disabled.
+    -- Output of ALARM audio = set audio level if if the system is ON, the Highest_Level_Alarm is >= 3 and if audio is not disabled.
 	property alarm_gte_L3_causes_audio_output_EQ_audio_level = 
-		--true -> 
-			(((TLM_MODE_IN.System_On) and (ALARM_OUT.Highest_Level_Alarm >= 3) and (OP_CMD_IN.Disable_Audio = 0)) 
+			((TLM_MODE_IN.System_On and (ALARM_OUT.Highest_Level_Alarm >= 3) and (OP_CMD_IN.Disable_Audio = 0)) 
 				=> (ALARM_OUT.Audio_Notification_Command = CONST_IN.Audio_Level) and (ALARM_OUT.Is_Audio_Disabled = 0) );		
 	guarantee  "alarm_gte_L3_causes_audio_output_EQ_audio_level": alarm_gte_L3_causes_audio_output_EQ_audio_level; 
 
 	-- Output of ALARM audio = 0 if if the system is ON and audio is disabled.
 	property no_audio_if_audio_disabled = 
-	--	true -> 
-	     (((TLM_MODE_IN.System_On) and (OP_CMD_IN.Disable_Audio > 0)) 
+	     ((TLM_MODE_IN.System_On and (OP_CMD_IN.Disable_Audio > 0)) 
 				=> (ALARM_OUT.Audio_Notification_Command = 0) and (ALARM_OUT.Is_Audio_Disabled = OP_CMD_IN.Disable_Audio) );
 	guarantee  "no_audio_if_audio_disabled": no_audio_if_audio_disabled; 
-				
-				
-**};
+	
+	--Other Level 4 alarms
+	  property other_level_4_alarms = 
+			(TLM_MODE_IN.System_On and 
+			 	(SENSOR_IN.Battery_Depleted or SENSOR_IN.RTC_Error or
+			 	 SENSOR_IN.CPU_Error or SENSOR_IN.Memory_Corrupted or
+			 	  SENSOR_IN.Pump_Too_Hot or SENSOR_IN.WatchDog_Interrupt_Detected)) => 
+						(ALARM_OUT.Highest_Level_Alarm = 4);
+		guarantee "other_level_4_alarms ":  other_level_4_alarms;	
+		
+		-- Requirement : If FLOW RATE > Drug DB flow rate_Hi => Overinfusion => Flow_Rate atmost KVO 
+		property flow_rate_exceeds_flow_rate_Hi = 
+			 true -> (TLM_MODE_IN.System_On and (SYS_STAT_IN.In_Therapy) and 
+			 	(SENSOR_IN.Flow_Rate > DB_IN.Flow_Rate_High) ) => 
+						(ALARM_OUT.Highest_Level_Alarm >= 3);						
+		guarantee "flow_rate_exceeds_flow_rate_Hi ":  flow_rate_exceeds_flow_rate_Hi;	
+		
+		-- If alarm level >= 3 and no audsio disabled => audio output
+		property alarm_gt_3_no_audio_disable_implies_audio = 
+			 true -> (TLM_MODE_IN.System_On and (ALARM_OUT.Highest_Level_Alarm >= 3) and
+			 				(OP_CMD_IN.Disable_Audio = 0)) => 
+			 		 (ALARM_OUT.Audio_Notification_Command = CONST_IN.Audio_Level ) and (ALARM_OUT.Is_Audio_Disabled = OP_CMD_IN.Disable_Audio) ;
+		guarantee "alarm_gt_3_no_audio_disable_implies_audio ":  alarm_gt_3_no_audio_disable_implies_audio;
+		
+		-- If empty reservoir  => display output = 1
+		property empty_reservoir_implies_visual_1 = 
+			true -> (TLM_MODE_IN.System_On and 
+			 			(SYS_STAT_IN.In_Therapy) and (SYS_STAT_IN.Reservoir_Empty) ) => 
+			 		 		(ALARM_OUT.Notification_Message = 1) ;
+		guarantee "empty_reservoir_implies_visual_1 ":  empty_reservoir_implies_visual_1;
+		
+	**};
 	
 	
   end Alarm;
@@ -86,3 +117,9 @@ annex agree {**
   end Alarm.Impl;
     
 end Alarm;
+
+
+
+
+--				
+				

@@ -39,12 +39,15 @@ public
 	-------> If System_Start and not System_Stop, then mode is ON<-------
 
 	property system_start_implies_system_on = 
-		--true -> 
-		  ((OP_CMD_IN.System_Start and not(OP_CMD_IN.System_Stop) ) => (TLM_MODE_OUT.System_On)); 
+		  (OP_CMD_IN.System_Start ) => (TLM_MODE_OUT.System_On); 
 	
-	guarantee "system_start_implies_system_on" : system_start_implies_system_on; 
-
-
+	guarantee "system_start_implies_system_on" : system_start_implies_system_on;
+	
+	property not_system_start_implies_system_off = 
+		  not(OP_CMD_IN.System_Start ) => not(TLM_MODE_OUT.System_On); 
+	
+	guarantee "not_system_start_implies_system_off" : not_system_start_implies_system_off;
+	
 	**};
 	
 	
