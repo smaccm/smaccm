@@ -11,7 +11,7 @@ data motors
 end motors;
 
 
-data implementation motors.impl
+data implementation motors.impl 
   subcomponents
     frontleft : data Base_Types::Float;
     frontright : data Base_Types::Float;

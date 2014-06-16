@@ -117,7 +117,7 @@ thread motors_state
       SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_motors_state_307_chan37_314");
     };
     proxyData: requires data access motors_type::motors.impl {
-      Access_Right => write_only;
+      Access_Right => write_only; 
       SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_motors_state_307.h";
       SMACCM_SYS::CommPrim_Source_Text => "write_motors_state_307_dataport306_309";
     };
@@ -143,7 +143,7 @@ thread motmix
       SMACCM_SYS::CommPrim_Source_Text => "receiveFromTask_motmix_287_chan38_293";
       SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_motmix_287_chan38_296");
     };
-    controllaw: requires data access control_law_type::control_law.impl {
+    controllaw: in data port control_law_type::control_law.impl {
       Access_Right => read_only;
       SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_motmix_287.h";
       SMACCM_SYS::CommPrim_Source_Text => "read_motmix_287_dataport140_289";
@@ -154,6 +154,100 @@ thread motmix
     Stack_Size => 256 bytes;
     SMACCM::Language => "Ivory";
     Dispatch_Protocol => Sporadic;
+    
+  annex agree {**
+
+  	const idle : real = 0.15;  	
+  	eq throttle : real = control.throttle;
+  	eq p : real = control.pitch * 0.75;
+  	eq r : real = control.roll * 0.75;
+  	eq y : real = yaw_constrain(control.yaw, imax);
+  	
+  	node yaw_constrain(input : real, threshold : real) returns (res : real);
+  	var
+  	 over : real;
+  	 under : real;
+  	 inside : real;
+  	let
+  	  over = threshold;
+  	  under = (-1.0*threshold);
+  	  inside = input;
+  	  res = if(input > threshold) then
+  	          over
+  	        else if(input < -1.0*threshold) then
+  	          under
+  	        else
+  	          inside;
+  	tel;
+  	
+  	eq fl : real = throttle + p + r - y;
+  	eq fr : real = throttle + p - r + y;
+  	eq bl : real = throttle - p + r + y;
+  	eq br : real = throttle - p - r - y;
+  	
+  	eq fl_adj : real = fl + motor_adj;
+  	eq fr_adj : real = fr + motor_adj;
+  	eq bl_adj : real = bl + motor_adj;
+  	eq br_adj : real = br + motor_adj;
+  	
+  	eq fl_floor : real = if(throttle < idle) then idle else fl;
+  	eq fr_floor : real = if(throttle < idle) then idle else fr;
+  	eq bl_floor : real = if(throttle < idle) then idle else bl;
+  	eq br_floor : real = if(throttle < idle) then idle else br;
+  	
+  	eq fl_sane : real = if(fl < 0.0) then 0.0 else if(fl > 1.0) then 1.0 else fl;
+  	eq fr_sane : real = if(fr < 0.0) then 0.0 else if(fr > 1.0) then 1.0 else fr;
+  	eq bl_sane : real = if(bl < 0.0) then 0.0 else if(bl > 1.0) then 1.0 else bl;
+  	eq br_sane : real = if(br < 0.0) then 0.0 else if(br > 1.0) then 1.0 else br;
+  	
+  	eq imax : real =
+  	 if (throttle / 3.0 > 0.1) then
+  	   throttle / 3.0
+  	 else
+  	   0.1;
+  	
+  	eq max : real = 
+  	  if(fl >= fr and fl >= bl and fl >=br) then
+  	    fl
+  	  else if (fr >= fl and fr >= bl and fr >= br) then
+  	    fr
+  	  else if (bl >= fl and bl >= br and bl >= br) then
+  	    bl
+  	  else
+  	    br;
+  	   
+  	eq min : real = 
+  	  if(fl <= fr and fl <= bl and fl <=br) then
+  	    fl
+  	  else if (fr <= fl and fr <= bl and fr <= br) then
+  	    fr
+  	  else if (bl <= fl and bl <= br and bl <= br) then
+  	    bl
+  	  else
+  	    br;
+  	
+  	eq motor_adj : real =
+  	  if(max > 1.0) then
+  	    1.0 - max
+  	  else if(min < idle) then
+  	    idle - min
+  	  else
+  	    0.0;
+  	  
+  	guarantee "fl value armed" : controllaw.armed_mode = 2 => motors.frontleft = fl_sane;
+  	guarantee "fr value armed" : controllaw.armed_mode = 2 => motors.frontright = fr_sane;
+  	guarantee "bl value armed" : controllaw.armed_mode = 2 => motors.backleft = bl_sane;
+  	guarantee "br value armed" : controllaw.armed_mode = 2 => motors.backright = br_sane;
+  	
+  	guarantee "not armed means zero" : controllaw.armed_mode != 2 => 
+  	  (motors.backleft = 0.0 and
+  	   motors.backright = 0.0 and
+  	   motors.frontleft = 0.0 and
+  	   motors.frontright = 0.0
+  	  );
+  	
+  **};
+    
 end motmix;
 
 thread blink
@@ -181,6 +275,7 @@ end blink;
       mission_rc_override_tx: in event data port mavlink_rc_channels_override_msg::rc_channels_override_msg.impl{Queue_Size => 16;};
 	  mission_control_law_request: in event data port control_law_request_type::control_law_request.impl{Queue_Size => 16;};
       
+    annex agree {** guarantee "dummy" : true; **};
   end Software;
   
   system implementation Software.Impl 
@@ -252,7 +347,7 @@ process implementation flight_gen_process.impl
     conn_267 : data access threadData.position -> position_state_inst.proxyData;
     conn_268 : data access threadData.motors -> motors_state_inst.proxyData;
     conn_269 : data access threadData.control -> Control_inst.proxyData;
-    conn_270 : data access threadData.controllaw -> motmix_inst.controllaw;
+    conn_270 : port threadData.controllaw -> motmix_inst.controllaw;
     conn_271 : data access threadData.att_control -> Control_inst.att_control;
     conn_272 : data access threadData.alt_control -> Control_inst.alt_control;
    
@@ -262,6 +357,7 @@ process implementation flight_gen_process.impl
     conn_310 : data access threadData.controllaw -> blink_inst.controllaw;
     conn_311 : data access threadData.controllaw -> UserInputThreads_inst.proxyControlData;
     conn_312 : data access threadData.userinput -> UserInputThreads_inst.proxyUiData;
+    control_params : data access threadData.control_params -> Control_inst.contParams;
     
     --connections to hardware
     --outgoing connections
@@ -276,6 +372,20 @@ process implementation flight_gen_process.impl
     
   properties 
     SMACCM::OS => "eChronos";
+    
+  annex agree {**
+  	
+  	node unit_range(value : real) returns (res : bool);
+  	let
+  	  res = 0.0 <= value and value <= 1.0;
+  	tel;
+  	
+  	lemma "motor ranges" : 
+  	  unit_range(motmix_inst.motors.frontleft) and
+  	  unit_range(motmix_inst.motors.frontright) and
+  	  unit_range(motmix_inst.motors.backleft) and
+  	  unit_range(motmix_inst.motors.backright);
+  **};
 
 end flight_gen_process.impl;
 	

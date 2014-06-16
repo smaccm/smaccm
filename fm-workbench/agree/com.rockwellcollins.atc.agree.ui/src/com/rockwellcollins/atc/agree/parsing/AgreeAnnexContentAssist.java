@@ -17,6 +17,7 @@ import org.osate.aadl2.ComponentImplementation;
 import org.osate.aadl2.DataPort;
 import org.osate.aadl2.DefaultAnnexLibrary;
 import org.osate.aadl2.DefaultAnnexSubclause;
+import org.osate.aadl2.EventDataPort;
 import org.osate.aadl2.NamedElement;
 import org.osate.annexsupport.AnnexContentAssist;
 import org.osate.annexsupport.AnnexUtil;
@@ -135,6 +136,8 @@ public class AgreeAnnexContentAssist implements AnnexContentAssist {
     		namedEl = elID.getBase();
 		}else if(base instanceof DataPort){
 			namedEl = ((DataPort) base).getDataFeatureClassifier();
+		}else if(base instanceof EventDataPort){
+			namedEl = ((EventDataPort) base).getDataFeatureClassifier();
 		}else if(base instanceof AadlPackage){
 			return getNestedDotIDCandidates((AadlPackage)base);
 		}else{
