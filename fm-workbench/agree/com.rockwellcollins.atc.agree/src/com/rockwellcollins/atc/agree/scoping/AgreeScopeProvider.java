@@ -217,7 +217,11 @@ public class AgreeScopeProvider extends
             	Type type = ((Arg) container).getType();
             	if(type instanceof RecordType){
             		NestedDotID elID = ((RecordType) type).getRecord();
+            		while(elID.getSub() != null){
+            			elID = elID.getSub();
+            		}
             		NamedElement namedEl = elID.getBase();
+            		
             		if(namedEl instanceof ComponentImplementation){
             			result.addAll(((ComponentImplementation) namedEl).getAllSubcomponents());
             		}else if(namedEl instanceof RecordDefExpr){
@@ -233,13 +237,33 @@ public class AgreeScopeProvider extends
         	return new HashSet<>();
         	
         }else if (container instanceof RecordType
-        		|| container instanceof RecordExpr
-        		|| container instanceof RecordUpdateExpr){
+        		|| container instanceof RecordExpr){
+        	
         	while(!(container instanceof AgreeContract)){
         		container = container.eContainer();
         	}
         	Set<Element> specs = getAllElementsFromSpecs(((AgreeContract) container).getSpecs());
-        	result.addAll(specs);
+    		result.addAll(specs);
+    		
+    		while(!(container instanceof AadlPackage)){
+        		container = container.eContainer();
+        	}
+        	result.add((AadlPackage)container);
+        	
+        	return result;
+        	
+        }else if (container instanceof RecordUpdateExpr){
+        	
+        	while(!(container instanceof AgreeContract)
+        		&& !(container instanceof NodeDefExpr)){
+        		container = container.eContainer();
+        	}
+        	if(container instanceof AgreeContract){
+        		Set<Element> specs = getAllElementsFromSpecs(((AgreeContract) container).getSpecs());
+        		result.addAll(specs);
+        	}else if(container instanceof NodeDefExpr){
+        		result.addAll(((NodeDefExpr) container).getArgs());
+        	}
         	
         	while(!(container instanceof AadlPackage)){
         		container = container.eContainer();
@@ -254,7 +278,8 @@ public class AgreeScopeProvider extends
             // If the annex is in a library (not a component),
             // then stop once you hit the contract library
             while (!(container instanceof ComponentClassifier)
-                    && !(container instanceof AgreeContractLibrary)) {
+                    && !(container instanceof AgreeContractLibrary)
+                    && !(container instanceof NodeDefExpr)) {
                 container = container.eContainer();
             }
         }
@@ -300,6 +325,8 @@ public class AgreeScopeProvider extends
         			result.add(el);
         		}
         	}
+        }else if(container instanceof NodeDefExpr){
+        	result.addAll(((NodeDefExpr) container).getArgs());
         } else {
 
             if (container instanceof AgreeContractLibrary) {

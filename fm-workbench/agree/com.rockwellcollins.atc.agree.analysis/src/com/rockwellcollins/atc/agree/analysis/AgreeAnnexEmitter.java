@@ -852,11 +852,11 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
     	if(typeMap.containsKey(finalId)){
     		return typeMap.get(finalId);
     	}
-    	recordRecExpr(finalId);
+    	recordRecType(finalId);
     	return typeMap.get(finalId);
     }
     
-    private void recordRecExpr(NamedElement el){
+    private void recordRecType(NamedElement el){
     	Map<String, Type> subTypeMap = new HashMap<String, Type>();
     	if(el instanceof ComponentImplementation){
     		ComponentImplementation compImpl = (ComponentImplementation)el;

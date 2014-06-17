@@ -1,0 +1,37 @@
+package AGREE_PID
+public
+
+annex agree {**
+	
+	type PIDState = struct {
+    	pid_iState : real,
+    	pid_dState : real,
+    	pid_dReset : int,
+    	pid_pLast : real,
+    	pid_d_Last : real
+    };
+    
+    type PosRatePID = struct {
+    	pos : PIDState,
+    	rate : PIDState
+    };
+    
+    type PitchRollPID = struct {
+    	pitch : PosRatePID ,
+    	roll : PosRatePID 
+    };
+    
+    node pid_reset (pid : PIDState) returns (res : PIDState); 
+    let
+	  res = pid {pid_dReset := 0}{pid_iState := 0.0}; 
+	tel;
+	
+	node pos_rate_reset(prp : PosRatePID) returns (res : PosRatePID); 
+	let 
+	  res = prp {pos := AGREE_PID.pid_reset(prp.pos)};
+	tel;
+	
+**};
+
+
+end AGREE_PID;
