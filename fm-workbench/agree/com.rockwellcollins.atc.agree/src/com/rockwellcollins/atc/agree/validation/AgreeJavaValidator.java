@@ -536,28 +536,36 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 	private AgreeType getNestIdAsType(NestedDotID recId){
 		String typeName = "";
     	NamedElement recEl = getFinalNestId(recId);
+    	EObject aadlPack = recEl.eContainer();
+    	
+    	while(!(aadlPack instanceof AadlPackage)){
+    		aadlPack = aadlPack.eContainer();
+    	}
+    	
+    	String packName = ((AadlPackage)aadlPack).getName();
     	
     	if(recEl instanceof RecordDefExpr){
-    		String strTag = "";
-    		while(recId != null){
-    			typeName = typeName + strTag+recId.getBase().getName();
-    			strTag = ".";
-    			recId = recId.getSub();
+    		EObject component = recEl.eContainer();
+    		while(!(component instanceof ComponentClassifier)
+    			&& !(component instanceof AadlPackage)){
+    			component = component.eContainer();
     		}
+    		
+    		if(component == aadlPack){
+    			typeName = recEl.getName();
+    		}else{
+    			typeName = ((ComponentClassifier)component).getName() + "." + recEl.getName();
+    		}
+    		
     	}else if(recEl instanceof DataImplementation){
     		AgreeType nativeType = getNativeType((DataImplementation)recEl);
     		if(nativeType != null){
     			return nativeType;
     		}
-    		EObject aadlPack = recEl.eContainer();
-        	while(!(aadlPack instanceof AadlPackage)){
-        		aadlPack = aadlPack.eContainer();
-        	}
-        	String packName = ((AadlPackage)aadlPack).getName();
-    		//use two underscores so there are not conflicts
-    		//with record type names
-    		typeName = packName+"::"+recEl.getName();
+    		typeName = recEl.getName();
     	}
+    	typeName = packName+"::"+typeName;
+    	
     	return new AgreeType(typeName);
 	}
 

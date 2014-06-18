@@ -43,7 +43,7 @@ thread group implementation ControlThreads.impl
 
     conn_params : port contParams -> control_inst.control_params;
     conn_307 : data access sensors -> control_inst.sensors;
-    conn_308 : data access userinput -> control_inst.userinput;
+    conn_308 : data access userinput -> control_inst.userinput; 
     conn_309 : data access control_law -> control_inst.control_law;
     conn_271 : data access att_control -> control_inst.att_control_dbg;
     conn_272 : data access alt_control -> control_inst.alt_control_dbg;
@@ -100,12 +100,12 @@ thread control
       SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_157.h";
       SMACCM_SYS::CommPrim_Source_Text => "read_control_157_dataport0_163";
     };
-    userinput: requires data access userinput_type::userinput_result.impl {
+    userinput: in data port userinput_type::userinput_result.impl {
       Access_Right => read_only;
       SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_157.h";
       SMACCM_SYS::CommPrim_Source_Text => "read_control_157_dataport131_161";
     };
-    control_law: requires data access control_law_type::control_law.impl {
+    control_law: in data port control_law_type::control_law.impl {
       Access_Right => read_only;
       SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_157.h";
       SMACCM_SYS::CommPrim_Source_Text => "read_control_157_dataport140_159";
@@ -118,6 +118,23 @@ thread control
     Dispatch_Protocol => Hybrid;
     Period => 5 ms;
     SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_control_157_per5_286");
+    
+  annex agree {**
+  	
+  	const armed : int = 2;
+  	const pi : real = 3.14159;
+  	--TODO: figure out constant param values
+  	const PRUISens : real = 50.0;
+  	const ui_sens_rads : real = PRUISens * pi / 180.0;
+  	
+  	eq pitch_rads : real = userinput.pitch * ui_sens_rads;
+  	eq roll_rads : real = userinput.roll * ui_sens_rads;
+  	
+  	eq prc_control : AGREE_PID.PitchRollPID;
+  	
+  	guarantee "reset pitch roll if not armed" :
+  	  control_law.armed_mode != armed => prc_control = AGREE_PID.prc_reset(prc_control);
+  **};
 end control;
 
 end Control;

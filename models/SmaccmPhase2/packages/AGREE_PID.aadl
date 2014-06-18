@@ -17,19 +17,45 @@ annex agree {**
     };
     
     type PitchRollPID = struct {
-    	pitch : PosRatePID ,
+    	pitch : PosRatePID,
     	roll : PosRatePID 
     };
     
     node pid_reset (pid : PIDState) returns (res : PIDState); 
     let
-	  res = pid {pid_dReset := 0}{pid_iState := 0.0}; 
+	  res = pid {pid_dReset := 0}
+	            {pid_iState := 0.0}; 
 	tel;
 	
 	node pos_rate_reset(prp : PosRatePID) returns (res : PosRatePID); 
 	let 
-	  res = prp {pos := AGREE_PID.pid_reset(prp.pos)};
+	  res = prp {pos := AGREE_PID.pid_reset(prp.pos)}
+	            {rate := AGREE_PID.pid_reset(prp.rate)};
 	tel;
+	
+	node prc_reset(prc : PitchRollPID) returns (res : PitchRollPID);
+	let
+	  res = prc {pitch := AGREE_PID.pos_rate_reset(prc.pitch)}
+	            {roll := AGREE_PID.pos_rate_reset(prc.roll)};
+	tel;
+	
+	node ac_run(prpid : PosRatePID, 
+		setpt : real, 
+		est : real, 
+		deriv_est : real
+	) returns (res : PosRatePID);
+	let
+	  res = prpid;
+	tel;
+	
+	node prc_run(prc_control : PitchRollPID, 
+		pitch_setpt : real, 
+		roll_setpt : real, 
+		sens : sensors_type::sensors_result.impl)
+    returns (ret : PitchRollPID);
+    let
+      ret = 
+    tel;
 	
 **};
 

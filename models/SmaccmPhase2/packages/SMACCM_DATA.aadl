@@ -23,6 +23,13 @@ end control_params;
 
 data implementation control_params.impl
   subcomponents
+      FS_ALT_OFFS: data Base_Types::Float ;
+      FS_ALT_OFFS_292: data Base_Types::Float;
+      POS_UI_SENS: data Base_Types::Float;
+      POS_THRUST_IMAX: data Base_Types::Float;
+      POS_THRUST_D: data Base_Types::Float;
+      POS_THRUST_I: data Base_Types::Float;
+      POS_THRUST_P: data Base_Types::Float;
       ALT_UI_DEAD: data Base_Types::Float ;
       ALT_UI_SENS: data Base_Types::Float ;
       ALT_POS_IMAX: data Base_Types::Float ;
