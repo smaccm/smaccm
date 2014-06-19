@@ -11,6 +11,10 @@ annex agree {**
     	pid_d_Last : real
     };
     
+    type PIDConfig = struct {
+    	pid_TODOFOO : real
+    };
+    
     type PosRatePID = struct {
     	pos : PIDState,
     	rate : PIDState
@@ -39,6 +43,20 @@ annex agree {**
 	            {roll := AGREE_PID.pos_rate_reset(prc.roll)};
 	tel;
 	
+	node stab_f_a(angle_pid : PIDState,
+		angle_cfg : PIDConfig,
+		rate_pid : PIDState,
+		rate_cfg : PIDConfig,
+		stick_angle_rad : real,
+		sensor_angle_rad : real,
+		sensor_rate_rad_s : real,
+		max_servo_rate_deg_s : real
+	) returns(ret : PosRatePID)
+	let
+	
+	tel;
+	
+	
 	node ac_run(prpid : PosRatePID, 
 		setpt : real, 
 		est : real, 
@@ -54,7 +72,9 @@ annex agree {**
 		sens : sensors_type::sensors_result.impl)
     returns (ret : PitchRollPID);
     let
-      ret = 
+      ret = prc_control 
+        {pitch := AGREE_PID.ac_run(prc_control.pitch, -1.0*pitch_setpt, sens.pitch, sens.omega_y)}
+      	{roll := AGREE_PID.ac_run(prc_control.roll, roll_setpt, sens.roll, sens.omega_x)};
     tel;
 	
 **};
