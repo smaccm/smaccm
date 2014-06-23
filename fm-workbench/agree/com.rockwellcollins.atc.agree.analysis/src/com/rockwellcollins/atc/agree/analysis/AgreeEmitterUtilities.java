@@ -135,16 +135,13 @@ public class AgreeEmitterUtilities {
     static public AgreeVarDecl dataTypeToVarType(DataSubcomponent sub) {
 
         DataType type = (DataType) sub.getAllClassifier();
-        AgreeVarDecl newStrType = new AgreeVarDecl();
-        newStrType.jKindStr = sub.getName();
-        newStrType.aadlStr = sub.getName();
+        String varName = sub.getName();
 
         do {
             String name = type.getQualifiedName();
             switch (name) {
             case "Base_Types::Boolean":
-                newStrType.type = "bool";
-                return newStrType;
+                return new AgreeVarDecl(varName, new NamedType("bool"));
             case "Base_Types::Integer":
             case "Base_Types::Unsigned":
             case "Base_Types::Unsigned_32":
@@ -153,11 +150,9 @@ public class AgreeEmitterUtilities {
             case "Base_Types::Integer_32":
             case "Base_Types::Integer_16":
             case "Base_Types::Integer_8":
-                newStrType.type = "int";
-                return newStrType;
+            	return new AgreeVarDecl(varName, new NamedType("int"));
             case "Base_Types::Float":
-                newStrType.type = "real";
-                return newStrType;
+            	return new AgreeVarDecl(varName, new NamedType("real"));
             }
             type = (DataType) type.getExtended();
 

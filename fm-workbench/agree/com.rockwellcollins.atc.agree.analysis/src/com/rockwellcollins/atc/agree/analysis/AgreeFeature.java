@@ -9,7 +9,6 @@ public class AgreeFeature {
 	
 	public Feature feature;
 	public String lustreString;
-	public String aadlString;
 	public String varType;
 	public ConnType connType;
 	public Direction direction;

@@ -20,12 +20,12 @@ public class AgreeNode {
     public List<Expr> guarantees;
     public List<Node> nodes;
     public Node mainNode;
-    public VarDecl clockVar;
+    public AgreeVarDecl clockVar;
     
     public AgreeNode(List<VarDecl> inputs, List<VarDecl> outputs,
             List<Expr> assumptions, List<Expr> assertions,
             List<Expr> guarantees, List<Node> nodes, 
-            Node mainNode, VarDecl clockVar){
+            Node mainNode, AgreeVarDecl clockVar){
         
         this.inputs = inputs;
         this.outputs = outputs;

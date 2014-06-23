@@ -1,40 +1,39 @@
 package com.rockwellcollins.atc.agree.analysis;
 
 import jkind.lustre.IdExpr;
+import jkind.lustre.NamedType;
+import jkind.lustre.Type;
+import jkind.lustre.VarDecl;
 
-public class AgreeVarDecl implements Comparable<AgreeVarDecl> {
-    public String jKindStr = null;
-    public String aadlStr = null;
-    public String type = null;
-
+public class AgreeVarDecl extends VarDecl implements Comparable<AgreeVarDecl>{
     
-    public AgreeVarDecl(){}
-    
-    public AgreeVarDecl(String jKindStr, String aadlStr, String type){
-    	this.jKindStr = jKindStr;
-    	this.aadlStr = aadlStr;
-    	this.type = type;
+    public AgreeVarDecl(String jKindStr, String type){
+    	super(jKindStr, new NamedType(type));
     }
     
-    @Override
+    public AgreeVarDecl(String id, Type type) {
+		super(id, type);
+	}
+
+	@Override
     public String toString(){
-    	return jKindStr;
+    	return id;
     }
     
     @Override
     public int hashCode() {
-        return jKindStr.hashCode();
+        return id.hashCode();
     }
 
     @Override
     public boolean equals(Object o) {
         
         if(o instanceof IdExpr){
-            return ((IdExpr)o).id.equals(jKindStr);
+            return ((IdExpr)o).id.equals(id);
         }
         
         if (o instanceof AgreeVarDecl) {
-            return ((AgreeVarDecl) o).jKindStr.equals(jKindStr);
+            return ((AgreeVarDecl) o).id.equals(id);
         }
         return false;
         
@@ -42,7 +41,7 @@ public class AgreeVarDecl implements Comparable<AgreeVarDecl> {
 
     @Override
     public int compareTo(AgreeVarDecl o) {
-        return jKindStr.compareTo(o.jKindStr);
+        return id.compareTo(o.id);
     }
 
 }
