@@ -83,17 +83,14 @@ public class AgreeGenerator {
                     subCompInst, layout, category,
                     topCategory + dotChar + subComp.getName() + dotChar, false, false);
 
-            
-            //TODO: figure out if we actually want to grab this stuff.
-            //      I am pretty sure this is only needed for lifting
-            //if(subCompImpl != null){
-            //    for (AnnexSubclause annex : subCompImpl.getAllAnnexSubclauses()) {
-            //        if (annex instanceof AgreeContractSubclause) {
-            //            subEmitter.doSwitch(annex);
-            //            foundSubAnnex = foundAnnex = true;
-            //        }
-            //    }
-            //}
+            if(subCompImpl != null){
+                for (AnnexSubclause annex : AnnexUtil.getAllAnnexSubclauses(subCompImpl, AgreePackage.eINSTANCE.getAgreeContractSubclause())) {
+                    if (annex instanceof AgreeContractSubclause) {
+                        subEmitter.doSwitch(annex);
+                        foundSubAnnex = foundAnnex = true;
+                    }
+                }
+            }
 
             for (AnnexSubclause annex : AnnexUtil.getAllAnnexSubclauses(ct, AgreePackage.eINSTANCE.getAgreeContractSubclause())) {
                 if (annex instanceof AgreeContractSubclause) {

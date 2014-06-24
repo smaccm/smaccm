@@ -231,14 +231,10 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         for(Subcomponent subComp : ((ComponentImplementation)compClass).getAllSubcomponents()){
         	getClockID(subComp);
         }
-        //populates the connection equivalences if we are at the top level
-        //this is only here to make sure that "LIFT" statements work correctly
-        if(topLevel){
-            setConnExprs((ComponentImplementation)compClass);
-            //this function must be called after the previous function
-            //setEventPortQueues();
-        }
         
+        setConnExprs((ComponentImplementation)compClass);
+        //this function must be called after the previous function
+        //setEventPortQueues();
     }
     
     private void addAllToRefMap(Map<String, EObject> refs){
@@ -1763,7 +1759,15 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
 				agreeInputVars, agreeInternalVars);
 
         //warn about combinational cycles
-        AgreeEmitterUtilities.logCycleWarning(this, eqs, false);
+        List<Equation> cycleEqs = new ArrayList<>(eqs);
+        for(AgreeAnnexEmitter subEmitter : subEmitters){
+        	cycleEqs.addAll(subEmitter.constExpressions);
+        	cycleEqs.addAll(subEmitter.eqExpressions);
+        	cycleEqs.addAll(subEmitter.propExpressions);
+        	cycleEqs.addAll(subEmitter.connExpressions);
+        }
+        AgreeEmitterUtilities.logCycleWarning(cycleEqs, log, agreeRename, false);
+
         
         agreeInputVars.removeAll(agreeInternalVars);
         

@@ -214,10 +214,11 @@ public class AgreeEmitterUtilities {
     }
     
     //warns the user if there is a cycle
-    static public void logCycleWarning(AgreeAnnexEmitter emitter, List<Equation> eqs, boolean throwException){
+    static public void logCycleWarning(List<Equation> eqs, AgreeLogger log, AgreeRenaming agreeRename, boolean throwException){
         Map<String, Set<String>> idGraph = new HashMap<>();
         List<String> ids = new ArrayList<>();
         AgreeCycleVisitor visitor = new AgreeCycleVisitor();
+        
         
         for(Equation eq : eqs){
             for(IdExpr id : eq.lhs){
@@ -233,21 +234,21 @@ public class AgreeEmitterUtilities {
             if(discovered.contains(id)){
                 continue;
             }
-            List<String> cycle = cycleWarning_Helper(id, id, new HashSet<String>(), idGraph);
+            List<String> cycle = cycleWarning_Helper(id, new HashSet<String>(), idGraph);
             
             if(cycle != null){
                 discovered.addAll(cycle);
-                String aadlString = emitter.varRenaming.get(id);
+                String aadlString = agreeRename.rename(id);
                 StringBuilder cycleStr = new StringBuilder("Possible cycle: "+aadlString);
                 
                 String sep = " -> ";
                 for(String cycleId : cycle){
                     cycleStr.append(sep);
-                    aadlString = emitter.varRenaming.get(cycleId);
+                    aadlString = agreeRename.rename(cycleId);
                     cycleStr.append(aadlString);                
                 }
                 
-                emitter.log.logWarning(cycleStr.toString());
+                log.logWarning(cycleStr.toString());
                 exceptionStr.append(cycleStr);
             }
         }
@@ -256,7 +257,7 @@ public class AgreeEmitterUtilities {
         }
     }
     
-    static public LinkedList<String> cycleWarning_Helper(String visit, String target, 
+    static public LinkedList<String> cycleWarning_Helper(String visit, 
             Set<String> visited, Map<String, Set<String>> graph){
         
         if(visited.contains(visited)){
@@ -268,11 +269,16 @@ public class AgreeEmitterUtilities {
         Set<String> toVisit = graph.get(visit);
         
         if(toVisit != null){
+        	
+        	LinkedList<String> intersection = new LinkedList<>(toVisit);
+        	intersection.retainAll(visited);
+        	 if(intersection.size() != 0){
+        		 String firstLink = intersection.getFirst();
+                 return new LinkedList<>(Collections.singletonList(firstLink));
+             }
+        	 
             for(String nextVisit : toVisit){
-                if(nextVisit.equals(target)){
-                    return new LinkedList<>(Collections.singletonList(target));
-                }
-                LinkedList<String> cycle = cycleWarning_Helper(nextVisit, target, visited, graph);
+                LinkedList<String> cycle = cycleWarning_Helper(nextVisit, visited, graph);
                 if(cycle != null){
                     cycle.push(nextVisit);
                     return cycle;
@@ -345,7 +351,7 @@ public class AgreeEmitterUtilities {
         if(emitter.agreeNode == null){
 //            return conjoin(conjoin(emitter.assumpExpressions), conjoin(emitter.assertExpressions),
 //                    conjoinEqs(emitter.guarExpressions));
-        	throw new AgreeCombinationalCycleException("depricated use of 'getLustreContract'");
+        	throw new AgreeException("depricated use of 'getLustreContract'");
         }else{
             Expr contract = conjoin(conjoin(emitter.agreeNode.assertions),
                     conjoin(emitter.agreeNode.assumptions),
