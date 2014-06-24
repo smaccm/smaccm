@@ -227,14 +227,16 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         //get information about all the features of this component and its subcomponents
         recordFeatures(compInst);
         
-        //create subcomponent clock variables
-        for(Subcomponent subComp : ((ComponentImplementation)compClass).getAllSubcomponents()){
-        	getClockID(subComp);
+        if(topLevel && compClass instanceof ComponentImplementation){
+        	//create subcomponent clock variables
+        	for(Subcomponent subComp : ((ComponentImplementation)compClass).getAllSubcomponents()){
+        		getClockID(subComp);
+        	}
+
+        	setConnExprs((ComponentImplementation)compClass);
+        	//this function must be called after the previous function
+        	//setEventPortQueues();
         }
-        
-        setConnExprs((ComponentImplementation)compClass);
-        //this function must be called after the previous function
-        //setEventPortQueues();
     }
     
     private void addAllToRefMap(Map<String, EObject> refs){
@@ -1632,17 +1634,17 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
 		
 
 		ConnType connType;
-		if(featInst.getCategory() == FeatureCategory.EVENT_DATA_PORT){
-			connType = AgreeFeature.ConnType.QUEUE;
-		    Property queueSizeProp = EMFIndexRetrieval.getPropertyDefinitionInWorkspace(
-		            OsateResourceUtil.getResourceSet(), "Communication_Properties::Queue_Size");
-		    try{
-		    	queueSize = PropertyUtils.getIntegerValue(featInst, queueSizeProp);
-		    }catch(PropertyDoesNotApplyToHolderException e){}
-		    
-		}else{
+//		if(featInst.getCategory() == FeatureCategory.EVENT_DATA_PORT){
+//			connType = AgreeFeature.ConnType.QUEUE;
+//		    Property queueSizeProp = EMFIndexRetrieval.getPropertyDefinitionInWorkspace(
+//		            OsateResourceUtil.getResourceSet(), "Communication_Properties::Queue_Size");
+//		    try{
+//		    	queueSize = PropertyUtils.getIntegerValue(featInst, queueSizeProp);
+//		    }catch(PropertyDoesNotApplyToHolderException e){}
+//		    
+//		}else{
 			connType = AgreeFeature.ConnType.IMMEDIATE;
-		}
+//		}
 		
 
 		AgreeFeature agreeConn = new AgreeFeature();

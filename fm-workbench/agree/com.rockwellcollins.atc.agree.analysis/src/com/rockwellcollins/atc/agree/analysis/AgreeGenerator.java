@@ -83,14 +83,14 @@ public class AgreeGenerator {
                     subCompInst, layout, category,
                     topCategory + dotChar + subComp.getName() + dotChar, false, false);
 
-            if(subCompImpl != null){
-                for (AnnexSubclause annex : AnnexUtil.getAllAnnexSubclauses(subCompImpl, AgreePackage.eINSTANCE.getAgreeContractSubclause())) {
-                    if (annex instanceof AgreeContractSubclause) {
-                        subEmitter.doSwitch(annex);
-                        foundSubAnnex = foundAnnex = true;
-                    }
-                }
-            }
+//            if(subCompImpl != null){
+//                for (AnnexSubclause annex : AnnexUtil.getAllAnnexSubclauses(subCompImpl, AgreePackage.eINSTANCE.getAgreeContractSubclause())) {
+//                    if (annex instanceof AgreeContractSubclause) {
+//                        subEmitter.doSwitch(annex);
+//                        foundSubAnnex = foundAnnex = true;
+//                    }
+//                }
+//            }
 
             for (AnnexSubclause annex : AnnexUtil.getAllAnnexSubclauses(ct, AgreePackage.eINSTANCE.getAgreeContractSubclause())) {
                 if (annex instanceof AgreeContractSubclause) {

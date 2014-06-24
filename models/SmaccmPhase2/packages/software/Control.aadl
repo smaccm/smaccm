@@ -119,22 +119,22 @@ thread control
     Period => 5 ms;
     SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_control_157_per5_286");
     
-  annex agree {**
-  	
-  	const armed : int = 2;
-  	const pi : real = 3.14159;
-  	--TODO: figure out constant param values
-  	const PRUISens : real = 50.0;
-  	const ui_sens_rads : real = PRUISens * pi / 180.0;
-  	
-  	eq pitch_rads : real = userinput.pitch * ui_sens_rads;
-  	eq roll_rads : real = userinput.roll * ui_sens_rads;
-  	
-  	eq prc_control : AGREE_PID.PitchRollPID;
-  	
-  	guarantee "reset pitch roll if not armed" :
-  	  control_law.armed_mode != armed => prc_control = AGREE_PID.prc_reset(prc_control);
-  **};
+--  annex agree {**
+--  	
+--  	const armed : int = 2;
+--  	const pi : real = 3.14159;
+--  	--TODO: figure out constant param values
+--  	const PRUISens : real = 50.0;
+--  	const ui_sens_rads : real = PRUISens * pi / 180.0;
+--  	
+--  	eq pitch_rads : real = userinput.pitch * ui_sens_rads;
+--  	eq roll_rads : real = userinput.roll * ui_sens_rads;
+--  	
+--  	eq prc_control : AGREE_PID.PitchRollPID;
+--  	
+--  	guarantee "reset pitch roll if not armed" :
+--  	  control_law.armed_mode != armed => prc_control = AGREE_PID.prc_reset(prc_control);
+--  **};
 end control;
 
 end Control;

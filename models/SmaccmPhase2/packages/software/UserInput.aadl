@@ -54,25 +54,11 @@ thread group UserInputThreads
   		eq armed_past : bool =  
   			sticks_corner_past and dead_pos_armed_past;
   		
-  		guarantee "The controller is not armed unless the ppm says so" :
-  			(law_emitter_out._COUNT > 0 and law_emitter_out.armed_mode = 2) 
-  				=> armed_past;
-  		 
-  		guarantee "Queues initially empty" :
-  			(ui_emitter_out._COUNT = 0 -> true) and
-  			(law_emitter_out._COUNT = 0 -> true); 
-  			
-  		guarantee "Queue bounds" :
-  			ui_emitter_out._COUNT < 2 and
-  			ui_emitter_out._COUNT >= 0 and
-  			law_emitter_out._COUNT < 2 and
-  			law_emitter_out._COUNT >= 0;
   	
   		guarantee "Control law is initially set to safe" :
   			law_emitter_out.armed_mode = 0 -> true;
   			
   		guarantee "User input ranges are bounded" :
-  			ui_emitter_out._COUNT > 0 =>
   			(-1.0 <= ui_emitter_out.roll and ui_emitter_out.roll <= 1.0) and
   			(-1.0 <= ui_emitter_out.pitch and ui_emitter_out.pitch <= 1.0) and
   			(-1.0 <= ui_emitter_out.throttle and ui_emitter_out.throttle <= 1.0) and
@@ -83,16 +69,6 @@ thread group UserInputThreads
   			result = false -> (signal and not pre(signal));
   		tel;
   			
-		eq ui_insertions : int = (if (ui_emitter_out._COUNT > 0) then 1 else 0) -> if (ris_edg(ui_emitter_out._COUNT > 0)) then
-										pre(ui_insertions) + 1
-									  else
-									  	pre(ui_insertions);
-  			
-  		guarantee "User input time always increasing" :
-  			true -> ui_insertions > 1 => (ui_emitter_out.time >= pre (ui_emitter_out.time));
-  			
-  		guarantee "UI _INSERTions is always positive" :
-  			ui_insertions >= 0;
   			
   		assume "positive time" :
   			system_time >= 0;
@@ -140,19 +116,12 @@ thread group implementation UserInputThreads.Impl
 
   	eq ppmSetArmed : bool = ppmInputTower_inst.cr_emitter.set_armed;
   	eq ppmSetSafe : bool = ppmInputTower_inst.cr_emitter.set_safe;
-  	eq ppmQueue_INSERT : bool = ppmInputTower_inst.cr_emitter._INSERT;
   	eq ctrlArmedMode: int = law_emitter_out.armed_mode;
   	
   	eq sincePPMArmed : int = time_since(ris_edg(ppmSetArmed)); 
   	eq sincePPMSafe : int = time_since(ris_edg(ppmSetSafe));
   	eq sinceCtrlArmed : int = time_since(ctrlArmedMode = 2);
-  	
-  	eq armed_COUNT : int = (if (ppmSetArmed and ppmQueue_INSERT) then 1 else 0) ->
-  		if (ppmSetArmed and ppmQueue_INSERT) then (pre(armed_COUNT) + 1) else pre(armed_COUNT);
-  	
-  	eq safe_COUNT : int = (if (ppmSetSafe and ppmQueue_INSERT) then 1 else 0) ->
-  		if (ppmSetSafe and ppmQueue_INSERT) then (pre(safe_COUNT) + 1) else pre(safe_COUNT);
-  	
+
   	
   	eq dummyTrigger : bool;
   	eq dummySince : int = time_since(dummyTrigger);
@@ -160,39 +129,9 @@ thread group implementation UserInputThreads.Impl
   		(if dummyTrigger then (pre(dummy_COUNT) + 1) else (pre(dummy_COUNT)));
   	
   	eq worldClock : int = 0 -> pre(worldClock) + 1;
-  	
-  	-- needs to be present to prove the followign lemma
-	  lemma "armed mode range" :
-  		law_emitter_out._COUNT > 0 => ctrlArmedMode <= 2 and ctrlArmedMode >= 0;
-
-  	lemma "positive _COUNTs" :
-  		armed_COUNT >= 0 and sincePPMArmed >=0 and sinceCtrlArmed >=0; 
-		
-	  lemma "low queue bound" :
-  		(controlLawTask_inst.ppm_req_snk._COUNT = 0 -> true) and
-  		(uiMuxTask_inst.ppm_ui._COUNT = 0 -> true) and
-  		controlLawTask_inst.ppm_req_snk._COUNT < 2 and
-  		uiMuxTask_inst.ppm_ui._COUNT < 2 and
-  		controlLawTask_inst.ppm_req_snk._COUNT >= 0 and
-  		uiMuxTask_inst.ppm_ui._COUNT >= 0; 
-
-  	lemma "controller not armed initially" :
-  		(not (ctrlArmedMode = 2)) -> true;	 
-		
-  	lemma "controller never arms unless ppm send arm signal" :  
-		ctrlArmedMode = 2 => armed_COUNT > 0;  
-		
-  	lemma "lemma needed to prove that controller being armed is implied by ppm arming" :
-  		armed_COUNT > 0 => armed_past;
 		
   	eq ever_safe : bool = ppmSetSafe -> pre (ever_safe) or ppmSetSafe;
-	
-  	--_REMOVE output elements as they become available
-  	assert law_emitter_out._COUNT > 0 => law_emitter_out._REMOVE;
-  	assert law_emitter_out._COUNT = 0 => not law_emitter_out._REMOVE;
-  	assert ui_emitter_out._COUNT > 0 => ui_emitter_out._REMOVE;
-  	assert ui_emitter_out._COUNT = 0 => not ui_emitter_out._REMOVE;
-  	
+
   	--intial armed mode assertion
   	assert ctrlArmedMode = 0 -> true;
 		
@@ -280,21 +219,8 @@ thread uiMuxTask
   annex agree {**
   	
   		-- for now lets just do a pass through with the ppm ui input
-  		
-  		guarantee "always _REMOVE from ppm" :
-  			(ppm_ui._COUNT > 0 => ppm_ui._REMOVE) and
-  			(ppm_ui._COUNT = 0 => not ppm_ui._REMOVE);
-  			
-  		guarantee "always _INSERT into output if ppm input is available" :
-  			(ppm_ui._COUNT > 0 => ui_emitter._INSERT) and
-  			(ppm_ui._COUNT = 0 => not  ui_emitter._INSERT);
-  		
   		guarantee "queue passthrough" :
-  			ui_emitter.throttle = ppm_ui.throttle and
-  			ui_emitter.roll = ppm_ui.roll and
-  			ui_emitter.pitch = ppm_ui.pitch and
-  			ui_emitter.yaw = ppm_ui.yaw and
-  			ui_emitter.time = ppm_ui.time; 
+  			ui_emitter = ppm_ui;
   	
   **};
     
@@ -379,9 +305,10 @@ thread controlLawTask
   		 armed_mode = safe -> true;
   	
   	guarantee "armed mode behavior" :
-  		if(ppm_req_snk._COUNT = 0) then
-  			armed_mode = prev_armed_mode
-  		else if (prev_armed_mode = safe and (not safe_req)) then
+--  		if(ppm_req_snk._COUNT = 0) then
+--  			armed_mode = prev_armed_mode
+--  		else
+        if (prev_armed_mode = safe and (not safe_req)) then
   			armed_mode = disarmed
   		else if (safe_req) then
   			armed_mode = safe
@@ -391,19 +318,6 @@ thread controlLawTask
   			armed_mode = armed
   		else
   			armed_mode = prev_armed_mode;
-  			
-  			
-  	guarantee "always _REMOVE from queue when possible" :
-  		ppm_req_snk._COUNT > 0 => ppm_req_snk._REMOVE;
-  		
-  	guarantee "don't _REMOVE if you cannot" :
-  		ppm_req_snk._COUNT = 0 => not ppm_req_snk._REMOVE;
-  		
-  	guarantee "don't _INSERT into output if not postive _COUNT" :
-  		ppm_req_snk._COUNT = 0 => not law_emitter._INSERT;
-  		
-  	guarantee "always _INSERT into output if positive _COUNT" :
-  		ppm_req_snk._COUNT > 0 => law_emitter._INSERT;
   	
   **};
     
@@ -562,15 +476,7 @@ thread ppmInputTower
   		
   	guarantee "disarmed signal is always false":
   		cr_emitter.set_disarmed = false;
-  	
-  	guarantee "queue _INSERTion behavior" :
-  		cr_emitter._INSERT and
-  		cr_emitter.set_safe = (dead_last_pos = deadSafe) and
-  		if (arming_state = armingComplete) then
-  			cr_emitter.set_armed = true
-  		else
-  			cr_emitter.set_armed = prev(cr_emitter.set_armed, false);
-  	
+  
   	-- begin ppm processing requirements
   	
   	eq ppmHigh : int = 1900;
@@ -621,9 +527,6 @@ thread ppmInputTower
   			ui_emitter.throttle = scale_proc(ppm_last2) and
   			ui_emitter.yaw = scale_proc(ppm_last3) and
   			ui_emitter.time = time;
-  	
-  	guarantee "always _INSERT into ui queue" :
-  		ui_emitter._INSERT;
   	
   **};
 
