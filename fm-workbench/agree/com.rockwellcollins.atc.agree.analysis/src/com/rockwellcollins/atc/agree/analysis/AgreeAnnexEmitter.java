@@ -1789,6 +1789,9 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
             totalCompHist = new BinaryExpr(totalCompHist, BinaryOp.AND, AgreeEmitterUtilities.getLustreContract(subEmitter));
         }
 
+        Expr assumeAsserts = AgreeEmitterUtilities.getLustreAssumptionsAndAssertions(this);
+        totalCompHist = new BinaryExpr(totalCompHist, BinaryOp.AND, assumeAsserts);
+        
         eqs.add(AgreeEmitterUtilities.getLustreHistory(totalCompHist, totalCompHistId));
 
         // system assumptions

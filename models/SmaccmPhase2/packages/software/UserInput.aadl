@@ -9,6 +9,7 @@ with DATATYPES;
 with mavlink_rc_channels_override_msg;
 with Base_Types;
 
+
 thread group UserInputThreads
 
   features
@@ -53,12 +54,17 @@ thread group UserInputThreads
   		
   		eq armed_past : bool =  
   			sticks_corner_past and dead_pos_armed_past;
+  			
+  		eq output_ready : bool;
   		
+  		guarantee "control armed implies ppm armed in past" :
+  		    law_emitter_out.armed_mode = 2 => armed_past;
   	
   		guarantee "Control law is initially set to safe" :
   			law_emitter_out.armed_mode = 0 -> true;
   			
   		guarantee "User input ranges are bounded" :
+  		  output_ready =>
   			(-1.0 <= ui_emitter_out.roll and ui_emitter_out.roll <= 1.0) and
   			(-1.0 <= ui_emitter_out.pitch and ui_emitter_out.pitch <= 1.0) and
   			(-1.0 <= ui_emitter_out.throttle and ui_emitter_out.throttle <= 1.0) and
@@ -105,7 +111,7 @@ thread group implementation UserInputThreads.Impl
 	conn_control : port controlLawTask_inst.law_emitter -> proxy_controllaw_inst.proxyEvent;
 	
   annex agree {** 
---  	calendar: ppmInputTower_inst, controlLawTask_inst, uiMuxTask_inst;  
+  	--calendar: ppmInputTower_inst, controlLawTask_inst, uiMuxTask_inst;  
    
     synchrony: 1 no_simult;
    
@@ -134,6 +140,13 @@ thread group implementation UserInputThreads.Impl
 
   	--intial armed mode assertion
   	assert ctrlArmedMode = 0 -> true;
+  	assert uiMuxTask_inst._CLK = output_ready;
+
+  	-- make sure that the uiMux doesn't run intil the ppm has run once  	
+  	eq ppm_has_run : bool = ppmInputTower_inst._CLK -> ppmInputTower_inst._CLK or pre (ppm_has_run);
+  	assert uiMuxTask_inst._CLK => ppm_has_run;
+  	
+  	
 		
   **};
 	

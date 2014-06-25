@@ -260,7 +260,7 @@ public class AgreeEmitterUtilities {
     static public LinkedList<String> cycleWarning_Helper(String visit, 
             Set<String> visited, Map<String, Set<String>> graph){
         
-        if(visited.contains(visited)){
+        if(visited.contains(visit)){
             return null;
         }
         
@@ -285,7 +285,8 @@ public class AgreeEmitterUtilities {
                 }
             }
         }
-        
+        visited.remove(visit);
+
         return null;
     }
     
@@ -343,7 +344,10 @@ public class AgreeEmitterUtilities {
         if(emitter.agreeNode == null){
             return conjoin(conjoin(emitter.assumpExpressions), conjoin(emitter.assertExpressions));
         }else{
-            return conjoin(conjoin(emitter.agreeNode.assertions), conjoin(emitter.agreeNode.assumptions));
+        	Expr assumAssert = conjoin(conjoin(emitter.agreeNode.assertions), 
+        			        conjoin(emitter.agreeNode.assumptions));
+        	IdExpr clockExpr = new IdExpr(emitter.agreeNode.clockVar.id);
+			return new BinaryExpr(clockExpr, BinaryOp.IMPLIES, assumAssert);
         }
     }
 
