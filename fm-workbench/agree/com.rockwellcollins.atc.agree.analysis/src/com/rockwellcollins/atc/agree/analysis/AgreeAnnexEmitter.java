@@ -283,11 +283,11 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
             		switch(agreeFeat.direction){
             		case IN:
             			inputVars.add(varDecl);
-            			layout.addElement(category, renameStr, AgreeLayout.SigType.INPUT);
+            			layout.addElement(subCompInst.getName(), renameStr, AgreeLayout.SigType.INPUT);
             			break;
             		case OUT:
             			outputVars.add(varDecl);
-            			layout.addElement(category, renameStr, AgreeLayout.SigType.OUTPUT);
+            			layout.addElement(subCompInst.getName(), renameStr, AgreeLayout.SigType.OUTPUT);
             		}
             		//addToRenaming(agreeFeat.lustreString, agreeFeat.aadlString);
             		addToRefMap(agreeFeat.lustreString, agreeFeat.feature);

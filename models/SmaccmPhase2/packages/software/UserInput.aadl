@@ -127,6 +127,8 @@ thread group implementation UserInputThreads.Impl
   	eq sincePPMArmed : int = time_since(ris_edg(ppmSetArmed)); 
   	eq sincePPMSafe : int = time_since(ris_edg(ppmSetSafe));
   	eq sinceCtrlArmed : int = time_since(ctrlArmedMode = 2);
+  	
+  	eq ppmSetArmedPast : bool = ppmSetArmed -> ppmSetArmed or pre(ppmSetArmedPast);
 
   	
   	eq dummyTrigger : bool;
@@ -138,6 +140,19 @@ thread group implementation UserInputThreads.Impl
 		
   	eq ever_safe : bool = ppmSetSafe -> pre (ever_safe) or ppmSetSafe;
 
+    lemma "armed mode range" :
+  		ctrlArmedMode <= 2 and ctrlArmedMode >= 0;
+    
+    lemma "controller not armed initially" :
+  		(not (ctrlArmedMode = 2)) -> true;
+  		
+  	lemma "ppm says controller armed" :
+  	   law_emitter_out.armed_mode = 2 => ppmSetArmedPast;
+  	   
+  	lemma "sticks past" :
+  	   ppmSetArmedPast => armed_past;
+
+
   	--intial armed mode assertion
   	assert ctrlArmedMode = 0 -> true;
   	assert uiMuxTask_inst._CLK = output_ready;
@@ -145,6 +160,7 @@ thread group implementation UserInputThreads.Impl
   	-- make sure that the uiMux doesn't run intil the ppm has run once  	
   	eq ppm_has_run : bool = ppmInputTower_inst._CLK -> ppmInputTower_inst._CLK or pre (ppm_has_run);
   	assert uiMuxTask_inst._CLK => ppm_has_run;
+  	assert controlLawTask_inst._CLK => ppm_has_run;
   	
   	
 		
@@ -540,6 +556,13 @@ thread ppmInputTower
   			ui_emitter.throttle = scale_proc(ppm_last2) and
   			ui_emitter.yaw = scale_proc(ppm_last3) and
   			ui_emitter.time = time;
+  			
+    guarantee "queue _INSERTion behavior" :
+  		cr_emitter.set_safe = (dead_last_pos = deadSafe) and
+  		if (arming_state = armingComplete) then
+  			cr_emitter.set_armed = true
+  		else
+  			cr_emitter.set_armed = prev(cr_emitter.set_armed, false);
   	
   **};
 
