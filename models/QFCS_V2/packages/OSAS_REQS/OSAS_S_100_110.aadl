@@ -12,7 +12,7 @@ annex agree {**
    --OSAS shall set the actuator command fault counter to 0 (zero) 
    --if the fault clears within 5 frames.
   node req 
-  	(acts : DATA_TYPES::Actuators.impl,
+  	(acts : DATA_TYPES::Actuators.impl,  
   	 acts_ret : DATA_TYPES::Actuators.impl,
   	 fail_counts : DATA_TYPES::NumActuators.impl)
   returns
@@ -28,7 +28,7 @@ annex agree {**
   	      req_helper(acts.FLAPLI, acts_ret.FLAPLI, fail_counts.FLAPLI) and
   	      req_helper(acts.FLAPLO, acts_ret.FLAPLO, fail_counts.FLAPLO) and
   	      req_helper(acts.FLAPRI, acts_ret.FLAPRI, fail_counts.FLAPRI) and
-  	      req_helper(acts.FLAPRO, acts_ret.FLAPRO, fail_counts.FLAPRO) and
+  	      req_helper(acts.FLAPRO, acts_ret.FLAPRO, fail_counts.FLAPRO) and 
   	      req_helper(acts.GEAR, acts_ret.GEAR, fail_counts.GEAR) and
   	      req_helper(acts.RUDLO, acts_ret.RUDLO, fail_counts.RUDLO) and
   	      req_helper(acts.RUDUP, acts_ret.RUDUP, fail_counts.RUDUP) and
@@ -41,7 +41,7 @@ annex agree {**
   	      req_helper(acts.THRTOL, acts_ret.THRTOL, fail_counts.THRTOL);
   tel;    
   
-  
+   
   node req_helper
     (act : real,
      act_ret : real,
@@ -69,7 +69,7 @@ annex agree {**
   returns 
     (return : bool);
   var 
-    count : int; 
+    count : int;  
   let
     count = 0 -> if (fault_occurred(act, act_ret)) then
                     0 else pre(count) + 1;

@@ -5,14 +5,45 @@ public
 
 system ISAS_Sys
   Features
-    elevators : in data port DATA_TYPES::Elevators.impl;
-    ailerons : in data port DATA_TYPES::Ailerons.impl;
-    rudders : in data port DATA_TYPES::Rudders.impl;
-    spoilers : in data port DATA_TYPES::Spoilers.impl;
-    flaps : in data port DATA_TYPES::Flaps.impl;
-    aoa : in data port DATA_TYPES::AoA;
-    air_data : in data port DATA_TYPES::AirData.impl;
-end ISAS_Sys;
+    elevators : in data port DATA_TYPES::QUAD_Elevators.treal;
+    ailerons : in data port DATA_TYPES::QUAD_Ailerons.treal;
+    rudders : in data port DATA_TYPES::QUAD_Rudders.treal;
+    flaps : in data port DATA_TYPES::QUAD_Flaps.treal;
+    aoa : in data port DATA_TYPES::DUAL_AoA.treal;
+    air_data : in data port DATA_TYPES::DUAL_AirData.treal;
+    egi : in data port DATA_TYPES::QUAD_EGI.treal;
+    spoilers : in data port DATA_TYPES::QUAD_Spoilers.treal;
+    
+    elevators_select : out data port DATA_TYPES::Elevators.treal;
+    ailerons_select : out data port DATA_TYPES::Ailerons.treal;
+    rudders_select : out data port DATA_TYPES::Rudders.treal;
+    flaps_select : out data port DATA_TYPES::Flaps.treal;
+    aoa_select : out data port DATA_TYPES::AoA.treal;
+    air_data_select : out data port DATA_TYPES::AirData.treal; 
+    egi_select : out data port DATA_TYPES::EGI.treal;
+    spoilers_select : in data port DATA_TYPES::Spoilers.treal;
+    
+    annex agree {**
+    	    	
+    	eq elevators_failed_update : DATA_TYPES.quad_bool; 
+		eq ailerons_failed_update : DATA_TYPES.quad_bool;
+        eq rudders_failed_update : DATA_TYPES.quad_bool;
+        eq flaps_failed_update : DATA_TYPES.quad_bool;
+        eq aoa_failed_update : DATA_TYPES.dual_bool;
+        eq air_data_failed_update : DATA_TYPES.dual_bool; 
+        eq spoilers_failed_update : DATA_TYPES.quad_bool;
+        
+        
+        guarantee "ISAS_S_100_130" : ISAS_S_100_130.req(elevators,
+		     ailerons , rudders , flaps , aoa , air_data , spoilers ,
+             elevators_failed_update , ailerons_failed_update , rudders_failed_update ,
+             flaps_failed_update , aoa_failed_update , air_data_failed_update , 
+             spoilers_failed_update);
+        
+    **};
+    
+    
+end ISAS_Sys; 
 
 
 end ISAS;

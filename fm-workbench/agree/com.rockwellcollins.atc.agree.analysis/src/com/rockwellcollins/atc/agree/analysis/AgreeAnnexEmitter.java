@@ -196,12 +196,14 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
     private List<IdExpr> calendar = new ArrayList<IdExpr>();
     private boolean simultaneity = true;
     private final Map<FeatureInstance, List<AgreeFeature>> featInstToAgreeFeatMap = new HashMap<>();
+	private String thisPrefix;
 	private String topLevelPrefix;
 
     public AgreeAnnexEmitter(ComponentInstance compInst,
             AgreeLayout layout,
             String category,
             String topLevelPrefix,
+            String thisPrefix,
             boolean ignoreLifts,
             boolean topLevel){
     	
@@ -209,6 +211,7 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         this.curInst = compInst;
         this.category = category;
         this.ignoreLifts  = ignoreLifts;
+        this.thisPrefix = thisPrefix;
         this.topLevelPrefix = topLevelPrefix;
         
         initTypeMap.put("bool", initBool);
@@ -252,7 +255,7 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
     
 	private void recordFeatures(ComponentInstance compInst) {
 		for(FeatureInstance featInst : compInst.getFeatureInstances()){
-        	List<AgreeFeature> featList = recordFeatures_Helper(topLevelPrefix, featInst);
+        	List<AgreeFeature> featList = recordFeatures_Helper(thisPrefix, featInst);
         	//add features to the correct input var or output var location
         	for(AgreeFeature agreeFeat : featList){
         		AgreeVarDecl varDecl = new AgreeVarDecl(agreeFeat.lustreString, agreeFeat.varType);
@@ -275,7 +278,7 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         //get information about all the features of this components subcomponents
         for(ComponentInstance subCompInst : compInst.getComponentInstances()){
         	for(FeatureInstance featInst : subCompInst.getFeatureInstances()){
-            	List<AgreeFeature> featList = recordFeatures_Helper(topLevelPrefix + subCompInst.getName() + dotChar,
+            	List<AgreeFeature> featList = recordFeatures_Helper(thisPrefix + subCompInst.getName() + dotChar,
             			featInst);
             	for(AgreeFeature agreeFeat : featList){
             		AgreeVarDecl varDecl = new AgreeVarDecl(agreeFeat.lustreString, agreeFeat.varType);
@@ -619,7 +622,8 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
 
         AgreeAnnexEmitter subEmitter = new AgreeAnnexEmitter(
                 subCompInst, layout, category,
-                topLevelPrefix + subComp.getName() + dotChar, false, true);
+                topLevelPrefix,
+                thisPrefix + subComp.getName() + dotChar, false, true);
         
         for (AnnexSubclause annex : AnnexUtil.getAllAnnexSubclauses(subCompImpl, AgreePackage.eINSTANCE.getAgreeContractSubclause())) {
             if (annex instanceof AgreeContractSubclause) { 
@@ -722,7 +726,7 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
 
         Expr expr = doSwitch(state.getExpr());
 
-        AgreeVarDecl varDecl = new AgreeVarDecl(topLevelPrefix+state.getName(), "bool");
+        AgreeVarDecl varDecl = new AgreeVarDecl(thisPrefix+state.getName(), "bool");
 
         layout.addElement(category, agreeRename.rename(varDecl.id), AgreeLayout.SigType.OUTPUT);
 
@@ -749,7 +753,7 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
 
         for (Arg arg : state.getLhs()) {
             String baseName = arg.getName();
-            AgreeVarDecl varDecl = new AgreeVarDecl(topLevelPrefix + baseName,
+            AgreeVarDecl varDecl = new AgreeVarDecl(thisPrefix + baseName,
             		 getRecordTypeName(arg.getType()));
 
             IdExpr idExpr = new IdExpr(varDecl.id);
@@ -1074,10 +1078,10 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
             }
         }
 
-        List<VarDecl> inputs = argsToVarDeclList(topLevelPrefix, expr.getArgs());
-        List<VarDecl> outputs = argsToVarDeclList(topLevelPrefix, expr.getRets());
+        List<VarDecl> inputs = argsToVarDeclList(thisPrefix, expr.getArgs());
+        List<VarDecl> outputs = argsToVarDeclList(thisPrefix, expr.getRets());
         NodeBodyExpr body = expr.getNodeBody();
-        List<VarDecl> internals = argsToVarDeclList(topLevelPrefix, body.getLocs());
+        List<VarDecl> internals = argsToVarDeclList(thisPrefix, body.getLocs());
         List<Equation> eqs = new ArrayList<Equation>();
         List<String> props = new ArrayList<String>();
 
@@ -1120,7 +1124,7 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         Expr expr = doSwitch(nodeEq.getExpr());
         List<IdExpr> ids = new ArrayList<IdExpr>();
         for (Arg arg : nodeEq.getLhs()) {
-            ids.add(new IdExpr(topLevelPrefix + arg.getName()));
+            ids.add(new IdExpr(thisPrefix + arg.getName()));
         }
         Equation eq = new Equation(ids, expr);
         return eq;
@@ -1137,7 +1141,7 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
             }
         }
 
-        List<VarDecl> inputs = argsToVarDeclList(topLevelPrefix, expr.getArgs());
+        List<VarDecl> inputs = argsToVarDeclList(thisPrefix, expr.getArgs());
         Expr bodyExpr = doSwitch(expr.getExpr());
 
         Type outType = new NamedType(getRecordTypeName(expr.getType()));
@@ -1293,7 +1297,7 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         String tag = id.getTag();
         if(tag != null){
         	
-        	String jVarPrefix = this.topLevelPrefix + jKindVar + namedEl.getName();
+        	String jVarPrefix = this.thisPrefix + jKindVar + namedEl.getName();
         	
         	switch(tag){
         	case "_CLK":
@@ -1315,7 +1319,7 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
             return doSwitch(((ConstStatement)namedEl).getExpr());
         }
         
-        jKindVar = topLevelPrefix + jKindVar + namedEl.getName();
+        jKindVar = thisPrefix + jKindVar + namedEl.getName();
     	Expr result = new IdExpr(jKindVar);
     	//this is a record accessrecord
     	while(id.getSub() != null){

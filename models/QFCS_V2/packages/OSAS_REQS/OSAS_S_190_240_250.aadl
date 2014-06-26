@@ -34,7 +34,7 @@ annex agree {**
   	      req_helper(acts_in.THROTR, acts_out.THROTR, acts_gain.THROTR, acts_claw_fail.THROTR, osas_failed) and
   	      req_helper(acts_in.THRTOL, acts_out.THRTOL, acts_gain.THRTOL, acts_claw_fail.THRTOL, osas_failed);
   tel;
-  
+   
   node req_helper
     (act_in : real,
      act_out : real,

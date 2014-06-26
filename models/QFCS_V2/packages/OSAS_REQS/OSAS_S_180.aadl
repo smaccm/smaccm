@@ -33,7 +33,7 @@ annex agree {**
   returns
     (res : bool);
   let
-  	res = req_helper(acts_gain.AILL, acts_num_valid.AILL, ccdl_failed) and 
+  	res = req_helper(acts_gain.AILL, acts_num_valid.AILL, ccdl_failed) and  
   	      req_helper(acts_gain.AILR, acts_num_valid.AILR, ccdl_failed) and
   	      req_helper(acts_gain.BRAKE, acts_num_valid.BRAKE, ccdl_failed) and
   	      req_helper(acts_gain.ELLIB, acts_num_valid.ELLIB, ccdl_failed) and 

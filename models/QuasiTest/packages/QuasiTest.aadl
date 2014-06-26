@@ -194,10 +194,10 @@ system Formation
 		assume "only shift if none pending" : true ->
 			defs.rising(left_shift) or defs.rising(right_shift) => 
 				((pre(leader) != none) and (pre(right) != none) and (pre(left) != none));
-				
-		eq test_count : int = 0 -> pre(test_count) + 1;
-		
-		guarantee "test_count blah" : test_count < 4;
+--				
+--		eq test_count : int = 0 -> pre(test_count) + 1;
+--		
+--		guarantee "test_count blah" : test_count < 4;
 				
 					
 	**};

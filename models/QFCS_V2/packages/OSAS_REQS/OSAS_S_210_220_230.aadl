@@ -11,7 +11,7 @@ annex agree {**
      latched_fails : DATA_TYPES::BoolActuators.impl,
      ccdl_num_fails : DATA_TYPES::NumActuators.impl)
   returns
-    (res : bool);
+    (res : bool); 
   let
   	res = req_helper(sovs1.AILL, sovs2.AILL, isas_fails.AILL, latched_fails.AILL, ccdl_num_fails.AILL) and 
   	      req_helper(sovs1.AILR, sovs2.AILR, isas_fails.AILR, latched_fails.AILR, ccdl_num_fails.AILR) and

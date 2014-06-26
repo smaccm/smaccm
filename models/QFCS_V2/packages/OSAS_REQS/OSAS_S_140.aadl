@@ -22,7 +22,7 @@ annex agree {**
   	      req_helper(acts.GEAR, fails.GEAR) and
   	      req_helper(acts.RUDLO, fails.RUDLO) and
   	      req_helper(acts.RUDUP, fails.RUDUP) and
-  	      req_helper(acts.SPLLIB, fails.SPLLIB) and
+  	      req_helper(acts.SPLLIB, fails.SPLLIB) and 
   	      req_helper(acts.SPLLOB, fails.SPLLOB) and
   	      req_helper(acts.SPLRIB, fails.SPLRIB) and
   	      req_helper(acts.SPLROB, fails.SPLROB) and

@@ -43,7 +43,7 @@ public class AgreeGenerator {
         String topCategory = compInst.getName();
         
         AgreeAnnexEmitter topEmitter = new AgreeAnnexEmitter(
-                compInst, layout, topCategory, topCategory + dotChar, true, true);
+                compInst, layout, topCategory, topCategory + dotChar, topCategory + dotChar, true, true);
         
         this.topEmitter = topEmitter;
         
@@ -81,6 +81,7 @@ public class AgreeGenerator {
             category = subCompInst.getQualifiedName();
             AgreeAnnexEmitter subEmitter = new AgreeAnnexEmitter(
                     subCompInst, layout, category,
+                    topCategory + dotChar,
                     topCategory + dotChar + subComp.getName() + dotChar, false, false);
 
 //            if(subCompImpl != null){

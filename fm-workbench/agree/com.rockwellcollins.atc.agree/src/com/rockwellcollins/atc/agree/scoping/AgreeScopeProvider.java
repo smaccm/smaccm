@@ -327,6 +327,15 @@ public class AgreeScopeProvider extends
         	}
         }else if(container instanceof NodeDefExpr){
         	result.addAll(((NodeDefExpr) container).getArgs());
+        	//also add other nodes from the annex
+        	while (!(container instanceof AgreeContract)) {
+                container = container.eContainer();
+            }
+        	for(SpecStatement spec : ((AgreeContract)container).getSpecs()){
+        		if(spec instanceof NodeDefExpr){
+        			result.add(spec);
+        		}
+        	}
         } else {
 
             if (container instanceof AgreeContractLibrary) {
