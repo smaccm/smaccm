@@ -13,6 +13,7 @@ system ISAS_Sys
     air_data : in data port DATA_TYPES::DUAL_AirData.treal;
     egi : in data port DATA_TYPES::QUAD_EGI.treal;
     spoilers : in data port DATA_TYPES::QUAD_Spoilers.treal;
+    stabilizers : in data port DATA_TYPES::QUAD_Stabilizer.treal;
     
     elevators_select : out data port DATA_TYPES::Elevators.treal;
     ailerons_select : out data port DATA_TYPES::Ailerons.treal;
@@ -22,6 +23,7 @@ system ISAS_Sys
     air_data_select : out data port DATA_TYPES::AirData.treal; 
     egi_select : out data port DATA_TYPES::EGI.treal;
     spoilers_select : in data port DATA_TYPES::Spoilers.treal;
+    stabilizers_select : out data port DATA_TYPES::Stabilizer.treal;
     
     annex agree {**
     	    	
@@ -32,13 +34,45 @@ system ISAS_Sys
         eq aoa_failed_update : DATA_TYPES.dual_bool;
         eq air_data_failed_update : DATA_TYPES.dual_bool; 
         eq spoilers_failed_update : DATA_TYPES.quad_bool;
+        eq stabilizers_failed_update : DATA_TYPES.quad_bool;
         
+        eq elevators_in_range : DATA_TYPES::QUAD_Elevators.tbool; 
+		eq ailerons_in_range : DATA_TYPES::QUAD_Ailerons.tbool;
+        eq rudders_in_range : DATA_TYPES::QUAD_Rudders.tbool;
+        eq flaps_in_range : DATA_TYPES::QUAD_Flaps.tbool;
+        eq aoa_in_range : DATA_TYPES::DUAL_AoA.tbool;
+        eq air_data_in_range : DATA_TYPES::DUAL_AirData.tbool; 
+        eq spoilers_in_range :  DATA_TYPES::QUAD_Spoilers.tbool;
+        eq stabilizer_in_range : DATA_TYPES::QUAD_Stabilizer.tbool;
+        
+        eq elevators_within_tol : DATA_TYPES::QUAD_Elevators.tbool; 
+		eq ailerons_within_tol : DATA_TYPES::QUAD_Ailerons.tbool;
+        eq rudders_within_tol : DATA_TYPES::QUAD_Rudders.tbool;
+        eq flaps_within_tol : DATA_TYPES::QUAD_Flaps.tbool;
+        eq aoa_within_tol : DATA_TYPES::DUAL_AoA.tbool;
+        eq air_data_within_tol : DATA_TYPES::DUAL_AirData.tbool; 
+        eq spoilers_within_tol :  DATA_TYPES::QUAD_Spoilers.tbool;
+        eq stabilizer_within_tol : DATA_TYPES::QUAD_Stabilizer.tbool;
+        
+        --For single channel inputs, ISAS shall determine if the data has failed
+        --to update, however the command return value will still be passed to OSAS.
+    
+        --shall check dual and quad inputs to determine if the data has failed
+        --to update from the previous sample frame.
         
         guarantee "ISAS_S_100_130" : ISAS_S_100_130.req(elevators,
-		     ailerons , rudders , flaps , aoa , air_data , spoilers ,
+		     ailerons , rudders , flaps , aoa , air_data , spoilers , stabilizers,
              elevators_failed_update , ailerons_failed_update , rudders_failed_update ,
              flaps_failed_update , aoa_failed_update , air_data_failed_update , 
-             spoilers_failed_update);
+             spoilers_failed_update, stabilizers_failed_update);
+             
+        --ISAS shall determine whether each dual and quad digital
+        --signal input falls outside its operational range.
+        guarantee "ISAS-S-110" : ISAS_S_110.req(elevators,
+		     ailerons , rudders , flaps , aoa , air_data , spoilers , stabilizers,
+             elevators_in_range , ailerons_in_range , rudders_in_range ,
+             flaps_in_range , aoa_in_range , air_data_in_range , 
+             spoilers_in_range, stabilizer_in_range);
         
     **};
     

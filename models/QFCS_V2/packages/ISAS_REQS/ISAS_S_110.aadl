@@ -1,0 +1,179 @@
+package ISAS_S_110
+public
+
+
+annex agree {**
+	
+	node req(elevators : DATA_TYPES::QUAD_Elevators.treal, 
+		     ailerons : DATA_TYPES::QUAD_Ailerons.treal,
+             rudders : DATA_TYPES::QUAD_Rudders.treal,
+             flaps : DATA_TYPES::QUAD_Flaps.treal,
+             aoa : DATA_TYPES::DUAL_AoA.treal,
+             air_data : DATA_TYPES::DUAL_AirData.treal, 
+             spoilers :  DATA_TYPES::QUAD_Spoilers.treal,
+             stabilizer : DATA_TYPES::QUAD_Stabilizer.treal,
+             
+             elevators_in_range : DATA_TYPES::QUAD_Elevators.tbool, 
+		     ailerons_in_range : DATA_TYPES::QUAD_Ailerons.tbool,
+             rudders_in_range : DATA_TYPES::QUAD_Rudders.tbool,
+             flaps_in_range : DATA_TYPES::QUAD_Flaps.tbool,
+             aoa_in_range : DATA_TYPES::DUAL_AoA.tbool,
+             air_data_in_range : DATA_TYPES::DUAL_AirData.tbool, 
+             spoilers_in_range :  DATA_TYPES::QUAD_Spoilers.tbool,
+             stabilizer_in_range : DATA_TYPES::QUAD_Stabilizer.tbool
+             
+	        ) returns (ret : bool);
+	  let
+	    ret = els_in_range(elevators.EL1, elevators_in_range.EL1) and
+	          els_in_range(elevators.EL2, elevators_in_range.EL2) and
+	          els_in_range(elevators.EL3, elevators_in_range.EL3) and
+	          els_in_range(elevators.EL4, elevators_in_range.EL4) and
+	          rud_in_range(rudders.RUDD1, rudders_in_range.RUDD1) and
+	          rud_in_range(rudders.RUDD2, rudders_in_range.RUDD2) and
+	          rud_in_range(rudders.RUDD3, rudders_in_range.RUDD3) and
+	          rud_in_range(rudders.RUDD4, rudders_in_range.RUDD4) and
+	          ails_in_range(ailerons.AIL1, ailerons_in_range.AIL1) and
+	          ails_in_range(ailerons.AIL2, ailerons_in_range.AIL2) and
+	          ails_in_range(ailerons.AIL3, ailerons_in_range.AIL3) and
+	          ails_in_range(ailerons.AIL4, ailerons_in_range.AIL4) and
+	          fl_in_range(flaps.FLAPS1, flaps_in_range.FLAPS1) and
+	          fl_in_range(flaps.FLAPS2, flaps_in_range.FLAPS2) and
+	          fl_in_range(flaps.FLAPS3, flaps_in_range.FLAPS3) and
+	          fl_in_range(flaps.FLAPS4, flaps_in_range.FLAPS4) and
+	          aoa_range(aoa.AOA1, aoa_in_range.AOA1) and
+	          aoa_range(aoa.AOA2, aoa_in_range.AOA2) and
+	          ad_in_range(air_data.AD1, air_data_in_range.AD1) and
+	          ad_in_range(air_data.AD2, air_data_in_range.AD2) and
+	          spoils_in_range(spoilers.SPOIL1, spoilers_in_range.SPOIL1) and
+	          spoils_in_range(spoilers.SPOIL2, spoilers_in_range.SPOIL2) and
+	          spoils_in_range(spoilers.SPOIL3, spoilers_in_range.SPOIL3) and
+	          spoils_in_range(spoilers.SPOIL4, spoilers_in_range.SPOIL4) and
+	          stab_in_range(stabilizer.STAB1, stabilizer_in_range.STAB1) and
+	          stab_in_range(stabilizer.STAB2, stabilizer_in_range.STAB2) and
+	          stab_in_range(stabilizer.STAB3, stabilizer_in_range.STAB3) and
+	          stab_in_range(stabilizer.STAB4, stabilizer_in_range.STAB4);
+	          
+	  tel;
+	        
+    node els_in_range(elevators : DATA_TYPES::Elevators.treal,
+    	              elevators_in_range : DATA_TYPES::Elevators.tbool
+    	             ) returns (ret : bool);
+      let
+    	ret = (elevators_in_range.ELLIB =
+    	        (AGREE_CONSTANTS.ELLIB_range_low <= elevators.ELLIB and
+    	        AGREE_CONSTANTS.ELLIB_range_high >= elevators.ELLIB)) and
+    	        (elevators_in_range.ELLOB =
+    	        (AGREE_CONSTANTS.ELLOB_range_low <= elevators.ELLOB and
+    	        AGREE_CONSTANTS.ELLOB_range_high >= elevators.ELLOB)) and
+    	        (elevators_in_range.ELROB =
+    	        (AGREE_CONSTANTS.ELROB_range_low <= elevators.ELROB and
+    	        AGREE_CONSTANTS.ELROB_range_high >= elevators.ELROB)) and
+    	        (elevators_in_range.ELRIB =
+    	        (AGREE_CONSTANTS.ELRIB_range_low <= elevators.ELRIB and
+    	        AGREE_CONSTANTS.ELRIB_range_high >= elevators.ELRIB));
+      tel;
+      
+      node ails_in_range(ailerons : DATA_TYPES::Ailerons.treal,
+    	              ailerons_in_range : DATA_TYPES::Ailerons.tbool
+    	             ) returns (ret : bool);
+      let
+    	ret = (ailerons_in_range.AILL =
+    	        (AGREE_CONSTANTS.AILL_range_low <= ailerons.AILL and
+    	        AGREE_CONSTANTS.AILL_range_high >= ailerons.AILL)) and
+    	        (ailerons_in_range.AILR =
+    	        (AGREE_CONSTANTS.AILR_range_low <= ailerons.AILR and
+    	        AGREE_CONSTANTS.AILR_range_high >= ailerons.AILR));
+
+      tel;
+    	     
+    node fl_in_range(flaps : DATA_TYPES::Flaps.treal,
+    	              flaps_in_range : DATA_TYPES::Flaps.tbool
+    	             ) returns (ret : bool);
+      let
+    	ret = (flaps_in_range.FLLIB =
+    	        (AGREE_CONSTANTS.FLLIB_range_low <= flaps.FLLIB and
+    	        AGREE_CONSTANTS.FLLIB_range_high >= flaps.FLLIB)) and
+    	        (flaps_in_range.FLLOB =
+    	        (AGREE_CONSTANTS.FLLOB_range_low <= flaps.FLLOB and
+    	        AGREE_CONSTANTS.FLLOB_range_high >= flaps.FLLOB)) and 
+    	        (flaps_in_range.FLROB =
+    	        (AGREE_CONSTANTS.FLROB_range_low <= flaps.FLROB and
+    	        AGREE_CONSTANTS.FLROB_range_high >= flaps.FLROB)) and
+    	        (flaps_in_range.FLRIB =
+    	        (AGREE_CONSTANTS.FLRIB_range_low <= flaps.FLRIB and  
+    	        AGREE_CONSTANTS.FLRIB_range_high >= flaps.FLRIB));
+      tel;       
+      
+      node rud_in_range(rudders : DATA_TYPES::Rudders.treal,
+    	              rudders_in_range : DATA_TYPES::Rudders.tbool
+    	             ) returns (ret : bool);
+      let
+    	ret = (rudders_in_range.RUDU =
+    	        (AGREE_CONSTANTS.RUDU_range_low <= rudders.RUDU and
+    	        AGREE_CONSTANTS.RUDU_range_high >= rudders.RUDU)) and
+    	        (rudders_in_range.RUDL =
+    	        (AGREE_CONSTANTS.RUDL_range_low <= rudders.RUDL and
+    	        AGREE_CONSTANTS.RUDL_range_high >= rudders.RUDL));
+
+      tel;   
+      
+      node aoa_range(aoa : DATA_TYPES::AoA.treal,
+    	              aoa_in_range : DATA_TYPES::AoA.tbool
+    	             ) returns (ret : bool);
+      let
+    	ret = (aoa_in_range.AOA =  
+    	        (AGREE_CONSTANTS.AOA_range_low <= aoa.AOA and  
+    	        AGREE_CONSTANTS.AOA_range_high >= aoa.AOA));
+ 
+      tel;  
+    	             
+      node ad_in_range(air_data : DATA_TYPES::AirData.treal,
+    	              air_data_in_range : DATA_TYPES::AirData.tbool
+    	             ) returns (ret : bool);
+      let 
+    	ret = (air_data_in_range.TAT =
+    	        (AGREE_CONSTANTS.TAT_range_low <= air_data.TAT and
+    	        AGREE_CONSTANTS.TAT_range_high >= air_data.TAT)) and
+    	        (air_data_in_range.TotPres =
+    	        (AGREE_CONSTANTS.TotPres_range_low <= air_data.TotPres and
+    	        AGREE_CONSTANTS.TotPres_range_high >= air_data.TotPres)) and
+    	        (air_data_in_range.Pres =
+    	        (AGREE_CONSTANTS.Pres_range_low <= air_data.Pres and
+    	        AGREE_CONSTANTS.Pres_range_high >= air_data.Pres)) and
+    	        (air_data_in_range.Temp =
+    	        (AGREE_CONSTANTS.Temp_range_low <= air_data.Temp and
+    	        AGREE_CONSTANTS.Temp_range_high >= air_data.Temp));
+
+      tel;
+      
+      node spoils_in_range(spoilers : DATA_TYPES::Spoilers.treal,
+    	              spoilers_in_range : DATA_TYPES::Spoilers.tbool
+    	             ) returns (ret : bool);
+      let
+    	ret = (spoilers_in_range.SPLIB =
+    	        (AGREE_CONSTANTS.SPLIB_range_low <= spoilers.SPLIB and
+    	        AGREE_CONSTANTS.SPLIB_range_high >= spoilers.SPLIB)) and
+    	        (spoilers_in_range.SPLOB =
+    	        (AGREE_CONSTANTS.SPLOB_range_low <= spoilers.SPLOB and
+    	        AGREE_CONSTANTS.SPLOB_range_high >= spoilers.SPLOB)) and
+    	        (spoilers_in_range.SPROB =
+    	        (AGREE_CONSTANTS.SPROB_range_low <= spoilers.SPROB and
+    	        AGREE_CONSTANTS.SPROB_range_high >= spoilers.SPROB)) and
+    	        (spoilers_in_range.SPRIB =
+    	        (AGREE_CONSTANTS.SPRIB_range_low <= spoilers.SPRIB and
+    	        AGREE_CONSTANTS.SPRIB_range_high >= spoilers.SPRIB));
+      tel;
+      
+      node stab_in_range(stabilizer : DATA_TYPES::Stabilizer.treal,
+    	              stabilizer_in_range : bool
+    	             ) returns (ret : bool);
+      let
+    	ret = (stabilizer_in_range =  
+    	        (AGREE_CONSTANTS.STAB_range_low <= stabilizer.VAL and  
+    	        AGREE_CONSTANTS.STAB_range_high >= stabilizer.VAL));
+ 
+      tel;  
+	
+**};
+
+end ISAS_S_110;

@@ -60,10 +60,10 @@ end Elevators.treal;
 
 data implementation Elevators.tbool
   subcomponents
-    ELLOB : data Base_Types::Float;
-    ELLIB : data Base_Types::Float;
-    ELROB : data Base_Types::Float;
-    ELRIB : data Base_Types::Float;
+    ELLOB : data Base_Types::Boolean;
+    ELLIB : data Base_Types::Boolean;
+    ELROB : data Base_Types::Boolean;
+    ELRIB : data Base_Types::Boolean;
 end Elevators.tbool;
 
 data QUAD_Elevators
@@ -190,17 +190,25 @@ data implementation DUAL_AirData.treal
     AD2 : data AirData.treal;
 end DUAL_AirData.treal;
 
-data QUAD_Stabalizer
-end QUAD_Stabalizer;
+data Stabilizer
+end Stabilizer;
 
-data implementation QUAD_Stabalizer.treal
+data implementation Stabilizer.treal
   subcomponents
-    STAB1 : data Base_Types::Float;
-    STAB2 : data Base_Types::Float;
-    STAB3 : data Base_Types::Float;
-    STAB4 : data Base_Types::Float;
+    VAL : data Base_Types::Float;
     TIME_STAMP : data Base_Types::Integer;
-end QUAD_Stabalizer.treal;
+end Stabilizer.treal;
+
+data QUAD_Stabilizer
+end QUAD_Stabilizer;
+
+data implementation QUAD_Stabilizer.treal
+  subcomponents
+    STAB1 : data Stabilizer.treal;
+    STAB2 : data Stabilizer.treal;
+    STAB3 : data Stabilizer.treal;
+    STAB4 : data Stabilizer.treal;
+end QUAD_Stabilizer.treal;
 
 data EGI
 end EGI;
@@ -244,8 +252,8 @@ end QUAD_EGI.treal;
 
 data implementation Ailerons.tbool
   subcomponents
-    AILL : data Base_Types::Float;
-    AILR : data Base_Types::Float;
+    AILL : data Base_Types::Boolean;
+    AILR : data Base_Types::Boolean;
 end Ailerons.tbool;
 
 data implementation QUAD_Ailerons.tbool
@@ -258,8 +266,8 @@ end QUAD_Ailerons.tbool;
 
 data implementation Rudders.tbool
   subcomponents
-    RUDU : data Base_Types::Float;
-    RUDL : data Base_Types::Float;
+    RUDU : data Base_Types::Boolean;
+    RUDL : data Base_Types::Boolean;
 end Rudders.tbool;
 
 data implementation QUAD_Rudders.tbool
@@ -272,10 +280,10 @@ end QUAD_Rudders.tbool;
 
 data implementation Flaps.tbool
   subcomponents
-    FLLOB : data Base_Types::Float;
-    FLLIB : data Base_Types::Float;
-    FLROB : data Base_Types::Float;
-    FLRIB : data Base_Types::Float;
+    FLLOB : data Base_Types::Boolean;
+    FLLIB : data Base_Types::Boolean;
+    FLROB : data Base_Types::Boolean;
+    FLRIB : data Base_Types::Boolean;
 end Flaps.tbool;
 
 data implementation QUAD_Flaps.tbool
@@ -288,7 +296,7 @@ end QUAD_Flaps.tbool;
 
 data implementation AoA.tbool
   subcomponents
-    AOA : data Base_Types::Float;  
+    AOA : data Base_Types::Boolean;  
 end AoA.tbool;
 
 data implementation DUAL_AoA.tbool
@@ -299,10 +307,10 @@ end DUAL_AoA.tbool;
 
 data implementation AirData.tbool
   subcomponents
-    TAT : data Base_Types::Float;
-    TotPres : data Base_Types::Float;
-    Pres : data Base_Types::Float;
-    Temp : data Base_Types::Float;
+    TAT : data Base_Types::Boolean;
+    TotPres : data Base_Types::Boolean;
+    Pres : data Base_Types::Boolean;
+    Temp : data Base_Types::Boolean;
 end AirData.tbool;
 
 data implementation DUAL_AirData.tbool
@@ -311,37 +319,37 @@ data implementation DUAL_AirData.tbool
     AD2 : data AirData.tbool;
 end DUAL_AirData.tbool;
 
-data implementation QUAD_Stabalizer.tbool
+data implementation QUAD_Stabilizer.tbool
   subcomponents
-    STAB1 : data Base_Types::Float;
-    STAB2 : data Base_Types::Float;
-    STAB3 : data Base_Types::Float;
-    STAB4 : data Base_Types::Float;
-end QUAD_Stabalizer.tbool;
+    STAB1 : data Base_Types::Boolean;
+    STAB2 : data Base_Types::Boolean;
+    STAB3 : data Base_Types::Boolean;
+    STAB4 : data Base_Types::Boolean;
+end QUAD_Stabilizer.tbool;
 
 data implementation EGI.tbool
   subcomponents
-    PHI : data Base_Types::Float;
-    THETA : data Base_Types::Float;
-    PSI : data Base_Types::Float;
-    PB : data Base_Types::Float;
-    QB : data Base_Types::Float;
-    RB : data Base_Types::Float;
-    NX : data Base_Types::Float;
-    NY : data Base_Types::Float;
-    NZ : data Base_Types::Float;
-    VN : data Base_Types::Float;
-    VE : data Base_Types::Float;
-    HDOT : data Base_Types::Float;
-    LAT : data Base_Types::Float;
-    LON : data Base_Types::Float;
-    ALT : data Base_Types::Float;
-    GAMLNS : data Base_Types::Float;
-    GS : data Base_Types::Float;
-    VGOT : data Base_Types::Float;
-    XTACC : data Base_Types::Float;
-    FPACCEL : data Base_Types::Float;
-    HDD : data Base_Types::Float;
+    PHI : data Base_Types::Boolean;
+    THETA : data Base_Types::Boolean;
+    PSI : data Base_Types::Boolean;
+    PB : data Base_Types::Boolean;
+    QB : data Base_Types::Boolean;
+    RB : data Base_Types::Boolean;
+    NX : data Base_Types::Boolean;
+    NY : data Base_Types::Boolean;
+    NZ : data Base_Types::Boolean;
+    VN : data Base_Types::Boolean;
+    VE : data Base_Types::Boolean;
+    HDOT : data Base_Types::Boolean;
+    LAT : data Base_Types::Boolean;
+    LON : data Base_Types::Boolean;
+    ALT : data Base_Types::Boolean;
+    GAMLNS : data Base_Types::Boolean;
+    GS : data Base_Types::Boolean;
+    VGOT : data Base_Types::Boolean;
+    XTACC : data Base_Types::Boolean;
+    FPACCEL : data Base_Types::Boolean;
+    HDD : data Base_Types::Boolean;
 end EGI.tbool;
 
 data implementation QUAD_EGI.tbool
