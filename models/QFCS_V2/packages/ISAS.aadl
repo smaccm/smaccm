@@ -54,6 +54,24 @@ system ISAS_Sys
         eq spoilers_within_tol :  DATA_TYPES::QUAD_Spoilers.tbool;
         eq stabilizer_within_tol : DATA_TYPES::QUAD_Stabilizer.tbool;
         
+        eq elevators_faults : DATA_TYPES::QUAD_Elevators.tbool; 
+		eq ailerons_faults : DATA_TYPES::QUAD_Ailerons.tbool;
+        eq rudders_faults : DATA_TYPES::QUAD_Rudders.tbool;
+        eq flaps_faults : DATA_TYPES::QUAD_Flaps.tbool;
+        eq aoa_faults : DATA_TYPES::DUAL_AoA.tbool;
+        eq air_data_faults : DATA_TYPES::DUAL_AirData.tbool; 
+        eq spoilers_faults :  DATA_TYPES::QUAD_Spoilers.tbool;
+        eq stabilizer_faults : DATA_TYPES::QUAD_Stabilizer.tbool;
+        
+        eq elevators_sig_tol : DATA_TYPES::Elevators.treal; 
+		eq ailerons_sig_tol : DATA_TYPES::Ailerons.treal;
+        eq rudders_sig_tol : DATA_TYPES::Rudders.treal;
+        eq flaps_sig_tol : DATA_TYPES::Flaps.treal;
+        eq aoa_sig_tol : DATA_TYPES::AoA.treal;
+        eq air_data_sig_tol : DATA_TYPES::AirData.treal; 
+        eq spoilers_sig_tol :  DATA_TYPES::Spoilers.treal;
+        eq stabilizer_sig_tol : DATA_TYPES::Stabilizer.treal;
+        
         --For single channel inputs, ISAS shall determine if the data has failed
         --to update, however the command return value will still be passed to OSAS.
     
@@ -73,6 +91,47 @@ system ISAS_Sys
              elevators_in_range , ailerons_in_range , rudders_in_range ,
              flaps_in_range , aoa_in_range , air_data_in_range , 
              spoilers_in_range, stabilizer_in_range);
+             
+        
+        --ISAS shall compare dual channel inputs to determine 
+        --if the signals match within a tolerance.
+        
+        --ISAS shall compare quad digital inputs to determine if each channel's  
+        --signal matches within a tolerance to another channel's signal.
+        guarantee "ISAS-S-140-150" : ISAS_S_140_150.req(elevators,
+		     ailerons , rudders , flaps , aoa , air_data , spoilers , stabilizers,
+             elevators_within_tol , ailerons_within_tol , rudders_within_tol ,
+             flaps_within_tol , aoa_within_tol , air_data_within_tol , 
+             spoilers_within_tol, stabilizer_within_tol);
+        
+        --the ISAS-S-160 should be covered by ISAS-S-150 once we have type information
+        --guarantee "ISAS-S-160": true;
+        
+         --ISAS shall determine the selected value of healthy dual 
+         --inputs by averaging the signal values.
+        guarantee "ISAS-S-170" : ISAS_S_170.req(aoa, air_data, aoa_within_tol, air_data_within_tol,
+            aoa_failed_update, air_data_failed_update, aoa_in_range, air_data_in_range,
+            aoa_select, air_data_select);
+            
+        -- ISAS shall determine the selected value for a quad digital signal using the following table:
+        -- 1) 4 good values with total range less than SignalTolerance, average all 4
+        -- 2) 4 good values with total range greater than SignalTolerance, average middle 2
+        -- 3) 3 good values with total range less than SignalTolerance, average all 3
+        -- 4) 3 good values with total range greater than SignalTolerance, select middle value
+        -- 5) 2 good values with total range less than SignalTolerance, average values
+    
+        --note this isn't completely up to standard
+    
+        guarantee "ISAS-S-260" :ISAS_S_260.req(elevators,
+		     ailerons , rudders , flaps   , spoilers , stabilizers,
+             elevators_faults , ailerons_faults , rudders_faults ,
+             flaps_sig_tol  , 
+             spoilers_sig_tol, stabilizer_sig_tol, elevators_sig_tol , ailerons_sig_tol , rudders_sig_tol ,
+             flaps_sig_tol   , 
+             spoilers_sig_tol, stabilizer_sig_tol,
+             elevators_select , ailerons_select , rudders_select ,
+             flaps_select  , 
+             spoilers_select, stabilizers_select);
         
     **};
     

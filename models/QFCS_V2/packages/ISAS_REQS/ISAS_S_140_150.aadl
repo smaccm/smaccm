@@ -1,4 +1,4 @@
-package ISAS_S_140
+package ISAS_S_140_150
 public
 
 annex agree {**
@@ -23,7 +23,14 @@ annex agree {**
              
 	        ) returns (ret : bool);
 	  let
-	    ret = true;
+	    ret = stabilizer_quad_matches(stabilizers, stabilizer_within_tol) and 
+	          spoiler_quad_matches(spoilers, spoilers_within_tol) and
+	          air_data_dual_matches(air_data, air_data_within_tol) and
+	          aoa_dual_matches(aoa, aoa_within_tol) and
+	          flap_quad_matches(flaps, flaps_within_tol) and
+	          rudder_quad_matches(rudders, rudders_within_tol) and
+	          aileron_quad_matches(ailerons, ailerons_within_tol) and
+	          elevator_quad_matches(elevators, elevators_within_tol);
 	  tel;
 	  
   node stabilizer_quad_matches(stabilizers : DATA_TYPES::QUAD_Stabilizer.treal,
@@ -220,4 +227,4 @@ annex agree {**
 
     tel;
 **};
-end ISAS_S_140;
+end ISAS_S_140_150;

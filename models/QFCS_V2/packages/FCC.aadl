@@ -9,13 +9,13 @@ public
 system FCC
   features
     --inputs
-    egi1 : in data port DATA_TYPES::EGI.real;
-    egi2 : in data port DATA_TYPES::EGI.real;
-    egi3 : in data port DATA_TYPES::EGI.real;
-    egi4 : in data port DATA_TYPES::EGI.real;
+    egi1 : in data port DATA_TYPES::EGI.treal;
+    egi2 : in data port DATA_TYPES::EGI.treal;
+    egi3 : in data port DATA_TYPES::EGI.treal; 
+    egi4 : in data port DATA_TYPES::EGI.treal;
     
-    ads1 : in data port DATA_TYPES::AirData.real;
-    ads2 : in data port DATA_TYPES::AirData.real;
+    ads1 : in data port DATA_TYPES::AirData.treal;
+    ads2 : in data port DATA_TYPES::AirData.treal;
     
     aoa1 : in data port DATA_TYPES::AoA;
     aoa2 : in data port DATA_TYPES::AoA;
