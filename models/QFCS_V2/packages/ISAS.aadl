@@ -122,16 +122,50 @@ system ISAS_Sys
     
         --note this isn't completely up to standard
     
-        guarantee "ISAS-S-260" :ISAS_S_260.req(elevators,
-		     ailerons , rudders , flaps   , spoilers , stabilizers,
-             elevators_faults , ailerons_faults , rudders_faults ,
-             flaps_sig_tol  , 
-             spoilers_sig_tol, stabilizer_sig_tol, elevators_sig_tol , ailerons_sig_tol , rudders_sig_tol ,
-             flaps_sig_tol   , 
-             spoilers_sig_tol, stabilizer_sig_tol,
-             elevators_select , ailerons_select , rudders_select ,
-             flaps_select  , 
-             spoilers_select, stabilizers_select);
+        guarantee "ISAS-S-260" : ISAS_S_260.req(
+        	 elevators, ailerons, rudders, flaps, spoilers, stabilizers,
+             elevators_faults, ailerons_faults, rudders_faults, flaps_faults, spoilers_faults, stabilizer_faults,
+             elevators_sig_tol, ailerons_sig_tol, rudders_sig_tol, flaps_sig_tol, spoilers_sig_tol, stabilizer_sig_tol,
+             elevators_select, ailerons_select, rudders_select, flaps_select, spoilers_select, stabilizers_select);
+        
+        -- ISAS-S-240 - ISAS shall latch each signal fault that persists
+        -- for 5 consecutive frames FAILED where it will remain until the FCC is reset.
+        guarantee "ISAS-S-240" : ISAS_S_240.req(
+        	 elevators_within_tol, 
+		     ailerons_within_tol,
+             rudders_within_tol,
+             flaps_within_tol,
+             spoilers_within_tol,
+             stabilizer_within_tol,
+             aoa_within_tol,
+             air_data_within_tol,
+             
+             elevators_failed_update, 
+		     ailerons_failed_update,
+             rudders_failed_update,
+             flaps_failed_update,
+             spoilers_failed_update,
+             stabilizers_failed_update,
+             aoa_failed_update,
+             air_data_failed_update, 
+             
+             elevators_in_range, 
+		     ailerons_in_range,
+             rudders_in_range,
+             flaps_in_range,
+             spoilers_in_range,
+             stabilizer_in_range,
+             aoa_in_range,
+             air_data_in_range,
+             
+             elevators_faults, 
+		     ailerons_faults,
+             rudders_faults,
+             flaps_faults,
+             spoilers_faults,
+             stabilizer_faults,
+             aoa_faults,
+             air_data_faults);
         
     **};
     
