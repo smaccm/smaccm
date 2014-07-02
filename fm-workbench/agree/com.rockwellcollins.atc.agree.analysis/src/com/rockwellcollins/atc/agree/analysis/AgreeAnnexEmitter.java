@@ -883,11 +883,35 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
     	String typeStr = getIDTypeStr(el);
     	typeMap.put(el, typeStr);
     	jkind.lustre.RecordType lustreRecord = new jkind.lustre.RecordType(typeStr, subTypeMap);
-    	
+    	getInitType(lustreRecord);
     	typeExpressions.add(lustreRecord);
     	
     }
-
+    private Expr getInitType(Type type){    	
+    	if(type instanceof jkind.lustre.RecordType){
+    		jkind.lustre.RecordType lustreRecord = (jkind.lustre.RecordType)type;
+    		Expr cachedExpr = initTypeMap.get(lustreRecord.id);
+    		if(cachedExpr != null){
+    			return cachedExpr;
+    		}
+    		Map<String, Expr> initFields = new HashMap<String, Expr>();
+    		for(Entry<String, Type> field : lustreRecord.fields.entrySet()){
+    			Expr fieldInitValue = getInitType(field.getValue());
+    			if(fieldInitValue == null){
+    				throw new AgreeException("null init type found");
+    			}
+				initFields.put(field.getKey(), fieldInitValue);
+    		}
+    		jkind.lustre.RecordExpr lustreExpr = new jkind.lustre.RecordExpr(lustreRecord.id, initFields);
+    		initTypeMap.put(lustreRecord.id, lustreExpr);
+    		return lustreExpr;
+    	}else if(type instanceof NamedType){
+    		return initTypeMap.get(((NamedType)type).name);
+    		
+    	}
+    	throw new AgreeException("AGREE does not reason about type"+type.getClass().toString());
+    }
+    
     private String getIDTypeStr(NamedElement record) {
     	String typeStr = null;
     	EObject container = record.eContainer();
@@ -2058,7 +2082,8 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
             //TODO: set different initial values for outputs
             for(VarDecl var : agreeNode.outputs){
             	NamedType type = (NamedType)var.type;
-            	initOutputs.add(initTypeMap.get(type.name));
+            	Expr initVal = initTypeMap.get(type.name);
+				initOutputs.add(initVal);
             	nodeOutputs.add(new IdExpr(var.id));
             }
 

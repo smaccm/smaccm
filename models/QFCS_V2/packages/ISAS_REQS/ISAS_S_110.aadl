@@ -27,31 +27,31 @@ annex agree {**
 	    ret = els_in_range(elevators.EL1, elevators_in_range.EL1) and
 	          els_in_range(elevators.EL2, elevators_in_range.EL2) and
 	          els_in_range(elevators.EL3, elevators_in_range.EL3) and
-	          els_in_range(elevators.EL4, elevators_in_range.EL4) and
-	          rud_in_range(rudders.RUDD1, rudders_in_range.RUDD1) and
-	          rud_in_range(rudders.RUDD2, rudders_in_range.RUDD2) and
-	          rud_in_range(rudders.RUDD3, rudders_in_range.RUDD3) and
-	          rud_in_range(rudders.RUDD4, rudders_in_range.RUDD4) and
-	          ails_in_range(ailerons.AIL1, ailerons_in_range.AIL1) and
-	          ails_in_range(ailerons.AIL2, ailerons_in_range.AIL2) and
-	          ails_in_range(ailerons.AIL3, ailerons_in_range.AIL3) and
-	          ails_in_range(ailerons.AIL4, ailerons_in_range.AIL4) and
-	          fl_in_range(flaps.FLAPS1, flaps_in_range.FLAPS1) and
-	          fl_in_range(flaps.FLAPS2, flaps_in_range.FLAPS2) and
-	          fl_in_range(flaps.FLAPS3, flaps_in_range.FLAPS3) and
-	          fl_in_range(flaps.FLAPS4, flaps_in_range.FLAPS4) and
-	          aoa_range(aoa.AOA1, aoa_in_range.AOA1) and
-	          aoa_range(aoa.AOA2, aoa_in_range.AOA2) and
-	          ad_in_range(air_data.AD1, air_data_in_range.AD1) and
-	          ad_in_range(air_data.AD2, air_data_in_range.AD2) and
-	          spoils_in_range(spoilers.SPOIL1, spoilers_in_range.SPOIL1) and
-	          spoils_in_range(spoilers.SPOIL2, spoilers_in_range.SPOIL2) and
-	          spoils_in_range(spoilers.SPOIL3, spoilers_in_range.SPOIL3) and
-	          spoils_in_range(spoilers.SPOIL4, spoilers_in_range.SPOIL4) and
-	          stab_in_range(stabilizer.STAB1, stabilizer_in_range.STAB1) and
-	          stab_in_range(stabilizer.STAB2, stabilizer_in_range.STAB2) and
-	          stab_in_range(stabilizer.STAB3, stabilizer_in_range.STAB3) and
-	          stab_in_range(stabilizer.STAB4, stabilizer_in_range.STAB4);
+	          els_in_range(elevators.EL4, elevators_in_range.EL4);-- and
+--	          rud_in_range(rudders.RUDD1, rudders_in_range.RUDD1) and
+--	          rud_in_range(rudders.RUDD2, rudders_in_range.RUDD2) and
+--	          rud_in_range(rudders.RUDD3, rudders_in_range.RUDD3) and
+--	          rud_in_range(rudders.RUDD4, rudders_in_range.RUDD4) and
+--	          ails_in_range(ailerons.AIL1, ailerons_in_range.AIL1) and
+--	          ails_in_range(ailerons.AIL2, ailerons_in_range.AIL2) and
+--	          ails_in_range(ailerons.AIL3, ailerons_in_range.AIL3) and
+--	          ails_in_range(ailerons.AIL4, ailerons_in_range.AIL4) and
+--	          fl_in_range(flaps.FLAPS1, flaps_in_range.FLAPS1) and
+--	          fl_in_range(flaps.FLAPS2, flaps_in_range.FLAPS2) and
+--	          fl_in_range(flaps.FLAPS3, flaps_in_range.FLAPS3) and
+--	          fl_in_range(flaps.FLAPS4, flaps_in_range.FLAPS4) and
+--	          aoa_range(aoa.AOA1, aoa_in_range.AOA1) and
+--	          aoa_range(aoa.AOA2, aoa_in_range.AOA2) and
+--	          ad_in_range(air_data.AD1, air_data_in_range.AD1) and
+--	          ad_in_range(air_data.AD2, air_data_in_range.AD2) and
+--	          spoils_in_range(spoilers.SPOIL1, spoilers_in_range.SPOIL1) and
+--	          spoils_in_range(spoilers.SPOIL2, spoilers_in_range.SPOIL2) and
+--	          spoils_in_range(spoilers.SPOIL3, spoilers_in_range.SPOIL3) and
+--	          spoils_in_range(spoilers.SPOIL4, spoilers_in_range.SPOIL4) and
+--	          stab_in_range(stabilizer.STAB1, stabilizer_in_range.STAB1) and
+--	          stab_in_range(stabilizer.STAB2, stabilizer_in_range.STAB2) and
+--	          stab_in_range(stabilizer.STAB3, stabilizer_in_range.STAB3) and
+--	          stab_in_range(stabilizer.STAB4, stabilizer_in_range.STAB4);
 	          
 	  tel;
 	        

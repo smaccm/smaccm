@@ -9,16 +9,35 @@ public
 system FCC
   features
     --inputs
-    egi1 : in data port DATA_TYPES::EGI.treal;
-    egi2 : in data port DATA_TYPES::EGI.treal;
-    egi3 : in data port DATA_TYPES::EGI.treal; 
-    egi4 : in data port DATA_TYPES::EGI.treal;
+    elevators : in data port DATA_TYPES::QUAD_Elevators.treal;
+    ailerons : in data port DATA_TYPES::QUAD_Ailerons.treal;
+    rudders : in data port DATA_TYPES::QUAD_Rudders.treal;
+    flaps : in data port DATA_TYPES::QUAD_Flaps.treal;
+    aoa : in data port DATA_TYPES::DUAL_AoA.treal;
+    air_data : in data port DATA_TYPES::DUAL_AirData.treal;
+    egi : in data port DATA_TYPES::QUAD_EGI.treal;
+    spoilers : in data port DATA_TYPES::QUAD_Spoilers.treal;
+    stabilizers : in data port DATA_TYPES::QUAD_Stabilizer.treal;
     
-    ads1 : in data port DATA_TYPES::AirData.treal;
-    ads2 : in data port DATA_TYPES::AirData.treal;
+    elevators_faults : out data port DATA_TYPES::QUAD_Elevators.tbool;
+    ailerons_faults : out data port DATA_TYPES::QUAD_Ailerons.tbool;
+    rudders_faults : out data port DATA_TYPES::QUAD_Rudders.tbool;
+    flaps_faults : out data port DATA_TYPES::QUAD_Flaps.tbool;
+    aoa_faults : out data port DATA_TYPES::DUAL_AoA.tbool;
+    air_data_faults : out data port DATA_TYPES::DUAL_AirData.tbool;
+    egi_faults : out data port DATA_TYPES::QUAD_EGI.tbool;
+    spoilers_faults : out data port DATA_TYPES::QUAD_Spoilers.tbool;
+    stabilizers_faults : out data port DATA_TYPES::QUAD_Stabilizer.tbool;
     
-    aoa1 : in data port DATA_TYPES::AoA;
-    aoa2 : in data port DATA_TYPES::AoA;
+    elevators_select : out data port DATA_TYPES::Elevators.treal;
+    ailerons_select : out data port DATA_TYPES::Ailerons.treal;
+    rudders_select : out data port DATA_TYPES::Rudders.treal;
+    flaps_select : out data port DATA_TYPES::Flaps.treal;
+    aoa_select : out data port DATA_TYPES::AoA.treal;
+    air_data_select : out data port DATA_TYPES::AirData.treal; 
+    egi_select : out data port DATA_TYPES::EGI.treal;
+    spoilers_select : out data port DATA_TYPES::Spoilers.treal;
+    stabilizers_select : out data port DATA_TYPES::Stabilizer.treal;
     
     acts1_sense : in data port DATA_TYPES::Actuators.impl;
     acts2_sense : in data port DATA_TYPES::Actuators.impl;
@@ -33,89 +52,27 @@ system FCC
     acts_out : out data port DATA_TYPES::Actuators.impl;
     sovs1: out data port DATA_TYPES::BoolActuators.impl;
     sovs2: out data port DATA_TYPES::BoolActuators.impl;
-    
-    ailerons_failed : out data port Base_Types::Boolean;
-    elevators_failed : out data port Base_Types::Boolean;
-    rudder_failed : out data port Base_Types::Boolean;
-    spoiler_failed : out data port Base_Types::Boolean;
-    flaps_gt_failed : out data port Base_Types::Boolean;
-    flaps_lt_failed : out data port Base_Types::Boolean;
+
         
   annex agree {**
+  	
+  	eq elevator_fault_bound : bool =
+  	  (not (elevators_faults.EL1.ELLOB or elevators_faults.EL2.ELLOB)) => 
+  	    (elevators_select.ELLOB <= AGREE_CONSTANTS.ELLOB_range_high and
+  	    elevators_select.ELLOB >= AGREE_CONSTANTS.ELLOB_range_low);
+  	
+  	guarantee "elevator bound" : elevator_fault_bound;
     
     guarantee "actuators output range bound":
-      output_range(num_valid_acts.THRTOL, acts_out.THRTOL, 
-      	AGREE_CONSTANTS.THRTOL_range_low, AGREE_CONSTANTS.THRTOL_range_high
-      ) and
-      output_range(num_valid_acts.THROTR, acts_out.THROTR, 
-      	AGREE_CONSTANTS.THROTR_range_low, AGREE_CONSTANTS.THROTR_range_high
-      ) and
-      output_range(num_valid_acts.ELLOB, acts_out.ELLOB, 
-      	AGREE_CONSTANTS.ELLOB_range_low, AGREE_CONSTANTS.ELLOB_range_high
-      ) and
-      output_range(num_valid_acts.ELLIB, acts_out.ELLIB, 
-      	AGREE_CONSTANTS.ELLIB_range_low, AGREE_CONSTANTS.ELLIB_range_high
-      ) and
-      output_range(num_valid_acts.ELROB, acts_out.ELROB, 
-      	AGREE_CONSTANTS.ELROB_range_low, AGREE_CONSTANTS.ELROB_range_high
-      ) and
-      output_range(num_valid_acts.ELRIB, acts_out.ELRIB, 
-      	AGREE_CONSTANTS.ELRIB_range_low, AGREE_CONSTANTS.ELRIB_range_high
-      ) and
-      output_range(num_valid_acts.AILL, acts_out.AILL, 
-      	AGREE_CONSTANTS.AILL_range_low, AGREE_CONSTANTS.AILL_range_high
-      ) and
-      output_range(num_valid_acts.AILR, acts_out.AILR, 
-      	AGREE_CONSTANTS.AILR_range_low, AGREE_CONSTANTS.AILR_range_high
-      ) and
-      output_range(num_valid_acts.RUDUP, acts_out.RUDUP, 
-      	AGREE_CONSTANTS.RUDUP_range_low, AGREE_CONSTANTS.RUDUP_range_high
-      ) and
-      output_range(num_valid_acts.RUDLO, acts_out.RUDLO, 
-      	AGREE_CONSTANTS.RUDLO_range_low, AGREE_CONSTANTS.RUDLO_range_high
-      ) and
-      output_range(num_valid_acts.SPLLIB, acts_out.SPLLIB, 
-      	AGREE_CONSTANTS.SPLLIB_range_low, AGREE_CONSTANTS.SPLLIB_range_high
-      ) and
-      output_range(num_valid_acts.SPLLOB, acts_out.SPLLOB, 
-      	AGREE_CONSTANTS.SPLLOB_range_low, AGREE_CONSTANTS.SPLLOB_range_high
-      ) and
-      output_range(num_valid_acts.SPLRIB, acts_out.SPLRIB, 
-      	AGREE_CONSTANTS.SPLRIB_range_low, AGREE_CONSTANTS.SPLRIB_range_high
-      ) and
-      output_range(num_valid_acts.SPLROB, acts_out.SPLROB, 
-      	AGREE_CONSTANTS.SPLROB_range_low, AGREE_CONSTANTS.SPLROB_range_high
-      ) and
-      output_range(num_valid_acts.FLAPLI, acts_out.FLAPLI, 
-      	AGREE_CONSTANTS.FLAPLI_range_low, AGREE_CONSTANTS.FLAPLI_range_high
-      ) and
-      output_range(num_valid_acts.FLAPLO, acts_out.FLAPLO, 
-      	AGREE_CONSTANTS.FLAPLO_range_low, AGREE_CONSTANTS.FLAPLO_range_high
-      ) and
-      output_range(num_valid_acts.FLAPRI, acts_out.FLAPRI, 
-      	AGREE_CONSTANTS.FLAPRI_range_low, AGREE_CONSTANTS.FLAPRI_range_high
-      ) and
-      output_range(num_valid_acts.FLAPRO, acts_out.FLAPRO, 
-      	AGREE_CONSTANTS.FLAPRO_range_low, AGREE_CONSTANTS.FLAPRO_range_high
-      ) and
-      output_range(num_valid_acts.GEAR, acts_out.GEAR, 
-      	AGREE_CONSTANTS.GEAR_range_low, AGREE_CONSTANTS.GEAR_range_high
-      ) and
-      output_range(num_valid_acts.BRAKE, acts_out.BRAKE, 
-      	AGREE_CONSTANTS.BRAKE_range_low, AGREE_CONSTANTS.BRAKE_range_high
-      ) and
-      output_range(num_valid_acts.STEER, acts_out.STEER, 
-      	AGREE_CONSTANTS.STEER_range_low, AGREE_CONSTANTS.STEER_range_high
-      );
-
-    node output_range(num_valid : int, act : real, low : real, high : real)
-    returns (ret : bool);
-    let
-      ret = (num_valid = 0 => (low <= act and act <= 4.0*high)) and
-            (num_valid = 1 => (low <= act and act <= 2.0*high)) and
-            (num_valid = 2 => (low <= act and act <= (4.0/3.0)*high)) and
-            (num_valid = 3 => (low <= act and act <= high));
-    tel;   
+      FCC_RC_2.req (acts_out, num_valid_acts);
+      
+    eq three_select : bool = elevators.EL1.ELLOB = elevators.EL2.ELLOB;
+    eq three_not_fault : bool = (not (elevators_faults.EL1.ELLOB or elevators_faults.EL2.ELLOB));
+    
+    guarantee "selection bound" : three_select and three_not_fault => 
+      elevators_select.ELLOB <= elevators.EL1.ELLOB + AGREE_CONSTANTS.ELLOB_tol +5.0 and
+      elevators_select.ELLOB >= elevators.EL1.ELLOB - AGREE_CONSTANTS.ELLOB_tol -5.0;
+      
        
   **}; 
         
@@ -129,14 +86,43 @@ system implementation FCC.Impl
     
   connections
   
+    --inputs from the outside world
     conn_acts_ret_osas: port acts_ret -> OSAS_comp.acts_ret;
-      
     valid_conn: port num_valid_acts -> OSAS_comp.num_valid_acts;
+    elv_conn: port elevators -> ISAS_comp.elevators;
+    ail_conn: port ailerons -> ISAS_comp.ailerons;
+    rud_conn: port rudders -> ISAS_comp.rudders;
+    spoil_conn: port spoilers -> ISAS_comp.spoilers;
+    flaps_conn: port flaps -> ISAS_comp.flaps;
+    aoa_conn : port aoa -> ISAS_comp.aoa;
+    air_conn : port air_data -> ISAS_comp.air_data;
+    egi_conn : port egi -> ISAS_comp.egi;
+    stab_conn : port stabilizers -> ISAS_comp.stabilizers;
     
     --outputs to the outside world
     conn_acts_out: port OSAS_comp.acts_out -> acts_out;
     conn_sovs1: port OSAS_comp.sovs1 -> sovs1;  
     conn_sovs2: port OSAS_comp.sovs2 -> sovs2;  
+    
+    elv_fault_conn: port ISAS_comp.elevators_faults -> elevators_faults;
+    ail_fault_conn: port ISAS_comp.ailerons_faults -> ailerons_faults;
+    rud_fault_conn: port ISAS_comp.rudders_faults -> rudders_faults;
+    spoil_fault_conn: port ISAS_comp.spoilers_faults -> spoilers_faults;
+    flaps_fault_conn: port ISAS_comp.flaps_faults -> flaps_faults;
+    aoa_fault_conn : port ISAS_comp.aoa_faults -> aoa_faults;
+    air_fault_conn : port ISAS_comp.air_data_faults -> air_data_faults;
+    egi_fault_conn : port ISAS_comp.egi_faults -> egi_faults;
+    stab_fault_conn : port ISAS_comp.stabilizers_faults -> stabilizers_faults;
+    
+    elv_select_conn: port ISAS_comp.elevators_select -> elevators_select;
+    ail_select_conn: port ISAS_comp.ailerons_select -> ailerons_select;
+    rud_select_conn: port ISAS_comp.rudders_select -> rudders_select;
+    spoil_select_conn: port ISAS_comp.spoilers_select -> spoilers_select;
+    flaps_select_conn: port ISAS_comp.flaps_select -> flaps_select;
+    aoa_select_conn : port ISAS_comp.aoa_select -> aoa_select;
+    air_select_conn : port ISAS_comp.air_data_select -> air_data_select;
+    egi_select_conn : port ISAS_comp.egi_select -> egi_select;
+    stab_select_conn : port ISAS_comp.stabilizers_select -> stabilizers_select;
 
     --internal connections
     conn_ccdl_acts : port CLAW_comp.acts -> OSAS_comp.acts_in;

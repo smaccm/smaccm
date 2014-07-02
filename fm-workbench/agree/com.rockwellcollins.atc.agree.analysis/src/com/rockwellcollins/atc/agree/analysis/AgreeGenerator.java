@@ -21,8 +21,12 @@ import org.osate.aadl2.Subcomponent;
 import org.osate.aadl2.instance.ComponentInstance;
 import org.osate.annexsupport.AnnexUtil;
 
+import com.rockwellcollins.atc.agree.agree.AgreeContract;
 import com.rockwellcollins.atc.agree.agree.AgreeContractSubclause;
 import com.rockwellcollins.atc.agree.agree.AgreePackage;
+import com.rockwellcollins.atc.agree.agree.Contract;
+import com.rockwellcollins.atc.agree.agree.LiftStatement;
+import com.rockwellcollins.atc.agree.agree.SpecStatement;
 
 public class AgreeGenerator {
     
@@ -84,14 +88,21 @@ public class AgreeGenerator {
                     topCategory + dotChar,
                     topCategory + dotChar + subComp.getName() + dotChar, false, false);
 
-//            if(subCompImpl != null){
-//                for (AnnexSubclause annex : AnnexUtil.getAllAnnexSubclauses(subCompImpl, AgreePackage.eINSTANCE.getAgreeContractSubclause())) {
-//                    if (annex instanceof AgreeContractSubclause) {
-//                        subEmitter.doSwitch(annex);
-//                        foundSubAnnex = foundAnnex = true;
-//                    }
-//                }
-//            }
+            if(subCompImpl != null){
+                for (AnnexSubclause annex : AnnexUtil.getAllAnnexSubclauses(subCompImpl, AgreePackage.eINSTANCE.getAgreeContractSubclause())) {
+                    if (annex instanceof AgreeContractSubclause) {
+                    	Contract contract = ((AgreeContractSubclause) annex).getContract();
+                    	if(contract instanceof AgreeContract){
+                    		for(SpecStatement spec :  ((AgreeContract) contract).getSpecs()){
+                    			if(spec instanceof LiftStatement){
+                    				subEmitter.doSwitch(spec);
+                    			}
+                    		}
+                    	}
+                        foundSubAnnex = foundAnnex = true;
+                    }
+                }
+            }
 
             for (AnnexSubclause annex : AnnexUtil.getAllAnnexSubclauses(ct, AgreePackage.eINSTANCE.getAgreeContractSubclause())) {
                 if (annex instanceof AgreeContractSubclause) {

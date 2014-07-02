@@ -22,8 +22,18 @@ system ISAS_Sys
     aoa_select : out data port DATA_TYPES::AoA.treal;
     air_data_select : out data port DATA_TYPES::AirData.treal; 
     egi_select : out data port DATA_TYPES::EGI.treal;
-    spoilers_select : in data port DATA_TYPES::Spoilers.treal;
+    spoilers_select : out data port DATA_TYPES::Spoilers.treal;
     stabilizers_select : out data port DATA_TYPES::Stabilizer.treal;
+    
+    elevators_faults : out data port DATA_TYPES::QUAD_Elevators.tbool;
+    ailerons_faults : out data port DATA_TYPES::QUAD_Ailerons.tbool;
+    rudders_faults : out data port DATA_TYPES::QUAD_Rudders.tbool;
+    flaps_faults : out data port DATA_TYPES::QUAD_Flaps.tbool;
+    aoa_faults : out data port DATA_TYPES::DUAL_AoA.tbool;
+    air_data_faults : out data port DATA_TYPES::DUAL_AirData.tbool;
+    egi_faults : out data port DATA_TYPES::QUAD_EGI.tbool;
+    spoilers_faults : out data port DATA_TYPES::QUAD_Spoilers.tbool;
+    stabilizers_faults : out data port DATA_TYPES::QUAD_Stabilizer.tbool;
     
     annex agree {**
     	    	
@@ -54,23 +64,67 @@ system ISAS_Sys
         eq spoilers_within_tol :  DATA_TYPES::QUAD_Spoilers.tbool;
         eq stabilizer_within_tol : DATA_TYPES::QUAD_Stabilizer.tbool;
         
-        eq elevators_faults : DATA_TYPES::QUAD_Elevators.tbool; 
-		eq ailerons_faults : DATA_TYPES::QUAD_Ailerons.tbool;
-        eq rudders_faults : DATA_TYPES::QUAD_Rudders.tbool;
-        eq flaps_faults : DATA_TYPES::QUAD_Flaps.tbool;
-        eq aoa_faults : DATA_TYPES::DUAL_AoA.tbool;
-        eq air_data_faults : DATA_TYPES::DUAL_AirData.tbool; 
-        eq spoilers_faults :  DATA_TYPES::QUAD_Spoilers.tbool;
-        eq stabilizer_faults : DATA_TYPES::QUAD_Stabilizer.tbool;
-        
-        eq elevators_sig_tol : DATA_TYPES::Elevators.treal; 
-		eq ailerons_sig_tol : DATA_TYPES::Ailerons.treal;
-        eq rudders_sig_tol : DATA_TYPES::Rudders.treal;
-        eq flaps_sig_tol : DATA_TYPES::Flaps.treal;
-        eq aoa_sig_tol : DATA_TYPES::AoA.treal;
-        eq air_data_sig_tol : DATA_TYPES::AirData.treal; 
-        eq spoilers_sig_tol :  DATA_TYPES::Spoilers.treal;
-        eq stabilizer_sig_tol : DATA_TYPES::Stabilizer.treal;
+        eq elevators_sig_tol : DATA_TYPES::Elevators.treal =
+         DATA_TYPES::Elevators.treal 
+         {ELLOB = AGREE_CONSTANTS.ELLOB_tol; 
+          ELLIB = AGREE_CONSTANTS.ELLIB_tol; 
+          ELROB = AGREE_CONSTANTS.ELROB_tol; 
+          ELRIB = AGREE_CONSTANTS.ELRIB_tol;
+          TIME_STAMP = 0
+         };
+         
+		eq ailerons_sig_tol : DATA_TYPES::Ailerons.treal =
+		  DATA_TYPES::Ailerons.treal
+		  {AILL = AGREE_CONSTANTS.AILL_tol;
+		   AILR = AGREE_CONSTANTS.AILR_tol;
+		   TIME_STAMP = 0
+		  };
+		  
+        eq rudders_sig_tol : DATA_TYPES::Rudders.treal =
+		  DATA_TYPES::Rudders.treal
+		  {RUDU = AGREE_CONSTANTS.RUDU_tol;
+		   RUDL = AGREE_CONSTANTS.RUDL_tol;
+		   TIME_STAMP = 0
+		  };
+		  
+        eq flaps_sig_tol : DATA_TYPES::Flaps.treal =
+         DATA_TYPES::Flaps.treal 
+         {FLLOB = AGREE_CONSTANTS.FLLOB_tol; 
+          FLLIB = AGREE_CONSTANTS.FLLIB_tol; 
+          FLROB = AGREE_CONSTANTS.FLROB_tol; 
+          FLRIB = AGREE_CONSTANTS.FLRIB_tol;
+          TIME_STAMP = 0
+         };
+         
+        eq aoa_sig_tol : DATA_TYPES::AoA.treal =
+         DATA_TYPES::AoA.treal 
+         {AOA = AGREE_CONSTANTS.AOA_tol; 
+          TIME_STAMP = 0
+         };
+         
+        eq air_data_sig_tol : DATA_TYPES::AirData.treal =
+         DATA_TYPES::AirData.treal 
+         {TAT = AGREE_CONSTANTS.TAT_tol; 
+          TotPres = AGREE_CONSTANTS.TotPres_tol; 
+          Pres = AGREE_CONSTANTS.Pres_tol; 
+          Temp = AGREE_CONSTANTS.Temp_tol;
+          TIME_STAMP = 0
+         };
+         
+        eq spoilers_sig_tol :  DATA_TYPES::Spoilers.treal =
+         DATA_TYPES::Spoilers.treal 
+         {SPLOB = AGREE_CONSTANTS.SPLOB_tol; 
+          SPLIB = AGREE_CONSTANTS.SPLIB_tol; 
+          SPROB = AGREE_CONSTANTS.SPROB_tol; 
+          SPRIB = AGREE_CONSTANTS.SPRIB_tol;
+          TIME_STAMP = 0
+         };
+         
+        eq stabilizer_sig_tol : DATA_TYPES::Stabilizer.treal =
+         DATA_TYPES::Stabilizer.treal 
+         {VAL = AGREE_CONSTANTS.STAB_tol; 
+          TIME_STAMP = 0
+         };
         
         --For single channel inputs, ISAS shall determine if the data has failed
         --to update, however the command return value will still be passed to OSAS.
@@ -119,12 +173,10 @@ system ISAS_Sys
         -- 3) 3 good values with total range less than SignalTolerance, average all 3
         -- 4) 3 good values with total range greater than SignalTolerance, select middle value
         -- 5) 2 good values with total range less than SignalTolerance, average values
-    
-        --note this isn't completely up to standard
-    
+        
         guarantee "ISAS-S-260" : ISAS_S_260.req(
         	 elevators, ailerons, rudders, flaps, spoilers, stabilizers,
-             elevators_faults, ailerons_faults, rudders_faults, flaps_faults, spoilers_faults, stabilizer_faults,
+             elevators_faults, ailerons_faults, rudders_faults, flaps_faults, spoilers_faults, stabilizers_faults,
              elevators_sig_tol, ailerons_sig_tol, rudders_sig_tol, flaps_sig_tol, spoilers_sig_tol, stabilizer_sig_tol,
              elevators_select, ailerons_select, rudders_select, flaps_select, spoilers_select, stabilizers_select);
         
@@ -163,7 +215,7 @@ system ISAS_Sys
              rudders_faults,
              flaps_faults,
              spoilers_faults,
-             stabilizer_faults,
+             stabilizers_faults,
              aoa_faults,
              air_data_faults);
         

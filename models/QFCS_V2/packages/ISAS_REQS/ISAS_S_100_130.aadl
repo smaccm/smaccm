@@ -79,7 +79,7 @@ annex agree {**
 	        
 	node failed_update(timestamp : int, failed : bool) returns (ret : bool);
 	let
-	  ret = false -> timestamp = pre(timestamp);
+	  ret = failed = (false -> timestamp = pre(timestamp));
 	tel;
 **};
 
