@@ -61,18 +61,27 @@ system FCC
   	    (elevators_select.ELLOB <= AGREE_CONSTANTS.ELLOB_range_high and
   	    elevators_select.ELLOB >= AGREE_CONSTANTS.ELLOB_range_low);
   	
-  	guarantee "elevator bound" : elevator_fault_bound;
-    
+  	guarantee "elevator bound" : 
+  	  FCC_RC5.req_els(elevators_faults, elevators_select);
+  	  
+  	guarantee "ailerons bound" : 
+  	  FCC_RC5.req_ails(ailerons_faults, ailerons_select);
+  	  
+  	guarantee "flaps bound" :
+  	  FCC_RC5.req_flaps(flaps_faults, flaps_select);
+  	  
+  	guarantee "rudders bound" :
+  	  FCC_RC5.req_rud(rudders_faults, rudders_select);
+  	  
+  	guarantee "spoilers bound" :
+  	  FCC_RC5.req_spoil(spoilers_faults, spoilers_select);
+  	  
+  	guarantee "stabilzers bound" :
+  	  FCC_RC5.req_stab(stabilizers_faults, stabilizers_select);
+  	 
+  	      
     guarantee "actuators output range bound":
-      FCC_RC_2.req (acts_out, num_valid_acts);
-      
-    eq three_select : bool = elevators.EL1.ELLOB = elevators.EL2.ELLOB;
-    eq three_not_fault : bool = (not (elevators_faults.EL1.ELLOB or elevators_faults.EL2.ELLOB));
-    
-    guarantee "selection bound" : three_select and three_not_fault => 
-      elevators_select.ELLOB <= elevators.EL1.ELLOB + AGREE_CONSTANTS.ELLOB_tol +5.0 and
-      elevators_select.ELLOB >= elevators.EL1.ELLOB - AGREE_CONSTANTS.ELLOB_tol -5.0;
-      
+      FCC_RC_2.req (acts_out, num_valid_acts); 
        
   **}; 
         

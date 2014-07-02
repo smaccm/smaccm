@@ -24,13 +24,13 @@ annex agree {**
 	        ) returns (ret : bool);
 	  let
 	    ret = 
---	          stabilizer_quad_matches(stabilizers, stabilizer_within_tol) and 
---	          spoiler_quad_matches(spoilers, spoilers_within_tol) and
---	          air_data_dual_matches(air_data, air_data_within_tol) and
---	          aoa_dual_matches(aoa, aoa_within_tol) and
---	          flap_quad_matches(flaps, flaps_within_tol) and
---	          rudder_quad_matches(rudders, rudders_within_tol) and
---	          aileron_quad_matches(ailerons, ailerons_within_tol) and
+	          stabilizer_quad_matches(stabilizers, stabilizer_within_tol) and 
+	          spoiler_quad_matches(spoilers, spoilers_within_tol) and
+	          air_data_dual_matches(air_data, air_data_within_tol) and
+	          aoa_dual_matches(aoa, aoa_within_tol) and
+	          flap_quad_matches(flaps, flaps_within_tol) and
+	          rudder_quad_matches(rudders, rudders_within_tol) and
+	          aileron_quad_matches(ailerons, ailerons_within_tol) and
 	          elevator_quad_matches(elevators, elevators_within_tol);
 	  tel;
 	  

@@ -638,6 +638,7 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
                 break;
             }
         }
+        AgreeNode subAgreeNode = subEmitter.getComponentNode();
         
         connExpressions.addAll(subEmitter.connExpressions);
         guarExpressions.addAll(subEmitter.guarExpressions);
@@ -648,6 +649,7 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         nodeDefExpressions.addAll(subEmitter.nodeDefExpressions);
         propExpressions.addAll(subEmitter.propExpressions);
         typeExpressions.addAll(subEmitter.typeExpressions);
+        initTypeMap.putAll(subEmitter.initTypeMap);
         
         subEmitter.inputVars.removeAll(internalVars);
         subEmitter.outputVars.removeAll(internalVars);

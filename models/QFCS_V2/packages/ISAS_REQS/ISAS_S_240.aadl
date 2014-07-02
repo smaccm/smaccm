@@ -42,21 +42,21 @@ annex agree {**
     let
       ret = 
         elevators_faults(elevators_within_tol, elevators_failed_update, 
-    	  elevators_in_range, elevators_latched_faults);-- and 
---    	ailerons_faults(ailerons_within_tol, ailerons_failed_update, 
---    	  ailerons_in_range, ailerons_latched_faults) and 
---    	rudders_faults(rudders_within_tol, rudders_failed_update, 
---    	  rudders_in_range, rudders_latched_faults) and 
---    	flaps_faults(flaps_within_tol, flaps_failed_update, 
---    	  flaps_in_range, flaps_latched_faults) and 
---    	spoilers_faults(spoilers_within_tol, spoilers_failed_update, 
---    	  spoilers_in_range, spoilers_latched_faults) and 
---    	stabilizers_faults(stabilizers_within_tol, stabilizers_failed_update, 
---    	  stabilizers_in_range, stabilizers_latched_faults) and 
---    	aoa_faults(aoa_within_tol, aoa_failed_update, 
---    	  aoa_in_range, aoa_latched_faults) and 
---    	air_data_faults(air_data_within_tol, air_data_failed_update, 
---    	  air_data_in_range, air_data_latched_faults);
+    	  elevators_in_range, elevators_latched_faults) and 
+    	ailerons_faults(ailerons_within_tol, ailerons_failed_update, 
+    	  ailerons_in_range, ailerons_latched_faults) and 
+    	rudders_faults(rudders_within_tol, rudders_failed_update, 
+    	  rudders_in_range, rudders_latched_faults) and 
+    	flaps_faults(flaps_within_tol, flaps_failed_update, 
+    	  flaps_in_range, flaps_latched_faults) and 
+    	spoilers_faults(spoilers_within_tol, spoilers_failed_update, 
+    	  spoilers_in_range, spoilers_latched_faults) and 
+    	stabilizers_faults(stabilizers_within_tol, stabilizers_failed_update, 
+    	  stabilizers_in_range, stabilizers_latched_faults) and 
+    	aoa_faults(aoa_within_tol, aoa_failed_update, 
+    	  aoa_in_range, aoa_latched_faults) and 
+    	air_data_faults(air_data_within_tol, air_data_failed_update, 
+    	  air_data_in_range, air_data_latched_faults);
     tel;
     
     node air_data_faults(air_data_within_tol : DATA_TYPES::DUAL_AirData.tbool,
@@ -303,7 +303,9 @@ annex agree {**
       	    fault(elevators_in_range.EL4.ELLIB, elevators_failed_update.val4,
       	          elevators_in_range.EL4.ELLIB, elevators_latched_faults.EL4.ELLIB) and
       	    fault(elevators_in_range.EL4.ELRIB, elevators_failed_update.val4,
-      	          elevators_in_range.EL4.ELRIB, elevators_latched_faults.EL4.ELRIB);
+      	          elevators_in_range.EL4.ELRIB, elevators_latched_faults.EL4.ELRIB) and
+      	    fault(elevators_in_range.EL4.ELROB, elevators_failed_update.val4,
+      	          elevators_in_range.EL4.ELROB, elevators_latched_faults.EL4.ELROB);
       	   
       	          
     tel;
