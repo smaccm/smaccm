@@ -38,12 +38,7 @@ system FCC
     egi_select : out data port DATA_TYPES::EGI.treal;
     spoilers_select : out data port DATA_TYPES::Spoilers.treal;
     stabilizers_select : out data port DATA_TYPES::Stabilizer.treal;
-    
-    acts1_sense : in data port DATA_TYPES::Actuators.impl;
-    acts2_sense : in data port DATA_TYPES::Actuators.impl;
-    acts3_sense : in data port DATA_TYPES::Actuators.impl;
-    acts4_sense : in data port DATA_TYPES::Actuators.impl;
-    
+
     acts_ret : in data port DATA_TYPES::Actuators.impl;
     
     num_valid_acts : in data port DATA_TYPES::NumActuators.impl;
@@ -55,12 +50,8 @@ system FCC
 
         
   annex agree {**
-  	
-  	eq elevator_fault_bound : bool =
-  	  (not (elevators_faults.EL1.ELLOB or elevators_faults.EL2.ELLOB)) => 
-  	    (elevators_select.ELLOB <= AGREE_CONSTANTS.ELLOB_range_high and
-  	    elevators_select.ELLOB >= AGREE_CONSTANTS.ELLOB_range_low);
-  	
+
+  	--BEGIN RC5 guarantees
   	guarantee "elevator bound" : 
   	  FCC_RC5.req_els(elevators_faults, elevators_select);
   	  
@@ -79,7 +70,7 @@ system FCC
   	guarantee "stabilzers bound" :
   	  FCC_RC5.req_stab(stabilizers_faults, stabilizers_select);
   	 
-  	      
+  	--BEGIN RC2 GUARANTEES     
     guarantee "actuators output range bound":
       FCC_RC_2.req (acts_out, num_valid_acts); 
        

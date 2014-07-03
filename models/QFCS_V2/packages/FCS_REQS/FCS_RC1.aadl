@@ -1,0 +1,71 @@
+package FCS_RC1
+public
+
+annex agree {**
+  node req 
+    (acts1 : DATA_TYPES::Actuators.impl,
+  	 acts2 : DATA_TYPES::Actuators.impl,
+  	 acts3 : DATA_TYPES::Actuators.impl,
+  	 acts4 : DATA_TYPES::Actuators.impl
+  	)
+  returns
+    (res : bool);
+  let
+    res = sum_in_range(acts1.AILL, acts2.AILL, acts2.AILL, acts3.AILL,
+    	AGREE_CONSTANTS.AILL_range_low, AGREE_CONSTANTS.AILL_range_high) and 
+    	sum_in_range(acts1.AILR, acts2.AILR, acts2.AILR, acts3.AILR,
+    	AGREE_CONSTANTS.AILR_range_low, AGREE_CONSTANTS.AILR_range_high) and 
+    	sum_in_range(acts1.BRAKE, acts2.BRAKE, acts2.BRAKE, acts3.BRAKE,
+    	AGREE_CONSTANTS.BRAKE_range_low, AGREE_CONSTANTS.BRAKE_range_high) and 
+    	sum_in_range(acts1.ELLIB, acts2.ELLIB, acts2.ELLIB, acts3.ELLIB,
+    	AGREE_CONSTANTS.ELLIB_range_low, AGREE_CONSTANTS.ELLIB_range_high) and 
+    	sum_in_range(acts1.ELLOB, acts2.ELLOB, acts2.ELLOB, acts3.ELLOB,
+    	AGREE_CONSTANTS.ELLOB_range_low, AGREE_CONSTANTS.ELLOB_range_high) and 
+    	sum_in_range(acts1.ELRIB, acts2.ELRIB, acts2.ELRIB, acts3.ELRIB,
+    	AGREE_CONSTANTS.ELRIB_range_low, AGREE_CONSTANTS.ELRIB_range_high) and 
+    	sum_in_range(acts1.ELROB, acts2.ELROB, acts2.ELROB, acts3.ELROB,
+    	AGREE_CONSTANTS.ELROB_range_low, AGREE_CONSTANTS.ELROB_range_high) and 
+    	sum_in_range(acts1.FLAPLO, acts2.FLAPLO, acts2.FLAPLO, acts3.FLAPLO,
+    	AGREE_CONSTANTS.FLAPLO_range_low, AGREE_CONSTANTS.FLAPLO_range_high) and 
+    	sum_in_range(acts1.FLAPLI, acts2.FLAPLI, acts2.FLAPLI, acts3.FLAPLI,
+    	AGREE_CONSTANTS.FLAPLI_range_low, AGREE_CONSTANTS.FLAPLI_range_high) and 
+    	sum_in_range(acts1.FLAPRI, acts2.FLAPRI, acts2.FLAPRI, acts3.FLAPRI,
+    	AGREE_CONSTANTS.FLAPRI_range_low, AGREE_CONSTANTS.FLAPRI_range_high) and 
+    	sum_in_range(acts1.FLAPRO, acts2.FLAPRO, acts2.FLAPRO, acts3.FLAPRO,
+    	AGREE_CONSTANTS.FLAPRO_range_low, AGREE_CONSTANTS.FLAPRO_range_high) and 
+    	sum_in_range(acts1.GEAR, acts2.GEAR, acts2.GEAR, acts3.GEAR,
+    	AGREE_CONSTANTS.GEAR_range_low, AGREE_CONSTANTS.GEAR_range_high) and 
+    	sum_in_range(acts1.RUDLO, acts2.RUDLO, acts2.RUDLO, acts3.RUDLO,
+    	AGREE_CONSTANTS.RUDLO_range_low, AGREE_CONSTANTS.RUDLO_range_high) and 
+    	sum_in_range(acts1.RUDUP, acts2.RUDUP, acts2.RUDUP, acts3.RUDUP,
+    	AGREE_CONSTANTS.RUDUP_range_low, AGREE_CONSTANTS.RUDUP_range_high) and 
+    	sum_in_range(acts1.SPLLIB, acts2.SPLLIB, acts2.SPLLIB, acts3.SPLLIB,
+    	AGREE_CONSTANTS.SPLLIB_range_low, AGREE_CONSTANTS.SPLLIB_range_high) and 
+    	sum_in_range(acts1.SPLLOB, acts2.SPLLOB, acts2.SPLLOB, acts3.SPLLOB,
+    	AGREE_CONSTANTS.SPLLOB_range_low, AGREE_CONSTANTS.SPLLOB_range_high) and 
+    	sum_in_range(acts1.SPLRIB, acts2.SPLRIB, acts2.SPLRIB, acts3.SPLRIB,
+    	AGREE_CONSTANTS.SPLRIB_range_low, AGREE_CONSTANTS.SPLRIB_range_high) and 
+    	sum_in_range(acts1.SPLROB, acts2.SPLROB, acts2.SPLROB, acts3.SPLROB,
+    	AGREE_CONSTANTS.SPLROB_range_low, AGREE_CONSTANTS.SPLROB_range_high) and 
+    	sum_in_range(acts1.STEER, acts2.STEER, acts2.STEER, acts3.STEER,
+    	AGREE_CONSTANTS.STEER_range_low, AGREE_CONSTANTS.STEER_range_high) and 
+    	sum_in_range(acts1.THRTOL, acts2.THRTOL, acts2.THRTOL, acts3.THRTOL,
+    	AGREE_CONSTANTS.THRTOL_range_low, AGREE_CONSTANTS.THRTOL_range_high) and 
+    	sum_in_range(acts1.THROTR, acts2.THROTR, acts2.THROTR, acts3.THROTR,
+    	AGREE_CONSTANTS.THROTR_range_low, AGREE_CONSTANTS.THROTR_range_high);
+  tel;
+  
+  node sum_in_range(a1 : real, a2 : real, a3 : real, a4 : real, low : real, high : real)
+  returns (res : bool);
+  var
+    avg : real;
+  let
+    avg = (a1 + a2 + a3 + a4) / 4.0;
+    res = low <= avg and avg <= high;
+  tel;
+  
+    
+    
+**};
+
+end FCS_RC1;

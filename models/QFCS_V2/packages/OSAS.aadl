@@ -9,7 +9,6 @@ system OSAS_Sys
     acts_ret : in data port DATA_TYPES::Actuators.impl;
     acts_claw_fail : in data port DATA_TYPES::BoolActuators.impl;
     acts_isas_fail : in data port DATA_TYPES::BoolActuators.impl;
-    acts_valid : in data port DATA_TYPES::NumActuators.impl;
     acts_ccdl_num_fail : in data port DATA_TYPES::NumActuators.impl;
     
     acts_out : out data port DATA_TYPES::Actuators.impl;
