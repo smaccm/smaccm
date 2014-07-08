@@ -666,13 +666,13 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         //internalVars.addAll(subEmitter.internalVars);
         for(VarDecl varDec : agreeNode.outputs){
         	AgreeVarDecl agreeVar = new AgreeVarDecl(varDec.id, varDec.type);
-        	outputVars.add(agreeVar);
-        	inputVars.add(agreeVar);
+        	internalVars.add(agreeVar);
         }
         //internalVars.addAll(agreeNode.outputs);
         for(VarDecl varDec : agreeNode.inputs){
         	AgreeVarDecl agreeVar = new AgreeVarDecl(varDec.id, varDec.type);
         	inputVars.add(agreeVar);
+        	outputVars.add(agreeVar);
         }
        //inputVars.addAll(agreeNode.inputs);
         
@@ -680,8 +680,6 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
             IdExpr varId = (IdExpr)expr;
             AgreeVarDecl agreeVar = new AgreeVarDecl(varId.id, "bool");
             assertExpressions.add(varId);
-            inputVars.remove(agreeVar);
-            outputVars.remove(agreeVar);
             internalVars.add(agreeVar);
         }    
  
@@ -689,8 +687,6 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
             IdExpr varId = (IdExpr)expr;
             AgreeVarDecl agreeVar = new AgreeVarDecl(varId.id, "bool");
             assumpExpressions.add(varId);
-            inputVars.remove(agreeVar);
-            outputVars.remove(agreeVar);
             internalVars.add(agreeVar);
         }    
  
@@ -699,8 +695,6 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
             AgreeVarDecl agreeVar = new AgreeVarDecl(varId.id, "bool");
             Equation dumbEq = new Equation(varId, varId);
             guarExpressions.add(dumbEq);
-            inputVars.remove(agreeVar);
-            outputVars.remove(agreeVar);
             internalVars.add(agreeVar);
         }    
 
