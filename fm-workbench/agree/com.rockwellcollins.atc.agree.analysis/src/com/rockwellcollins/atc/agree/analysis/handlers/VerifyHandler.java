@@ -4,6 +4,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
@@ -11,9 +12,11 @@ import java.util.Queue;
 import jkind.JKindException;
 import jkind.SolverOption;
 import jkind.api.JKindApi;
+import jkind.api.JRealizabilityApi;
 import jkind.api.results.AnalysisResult;
 import jkind.api.results.CompositeAnalysisResult;
 import jkind.api.results.JKindResult;
+import jkind.api.results.JKindResultRealizability;
 import jkind.api.results.Renaming;
 import jkind.lustre.Node;
 import jkind.lustre.Program;
@@ -53,7 +56,7 @@ import com.rockwellcollins.atc.agree.analysis.views.AgreeResultsView;
 
 public abstract class VerifyHandler extends AadlHandler {
     private AgreeResultsLinker linker = new AgreeResultsLinker();
-    private Queue<JKindResult> queue = new ArrayDeque<>();
+    private Queue<AnalysisResult> queue = new ArrayDeque<>();
     
     private static final String RERUN_ID = "com.rockwellcollins.atc.agree.analysis.commands.rerunAgree";
     private IHandlerActivation rerunActivation;
@@ -100,6 +103,7 @@ public abstract class VerifyHandler extends AadlHandler {
                 wrapper.addChild(result);
                 result = wrapper;
             } else {
+            	//wrapper.addChild(createRealizabilityVerification(si));
                 wrapper.addChild(createGuaranteeVerification(si));
                 wrapper.addChild(createAssumptionVerification(si));
                 wrapper.addChild(createConsistVerification(si));
@@ -161,6 +165,50 @@ public abstract class VerifyHandler extends AadlHandler {
         }
 
         return null;
+    }
+    
+    private AnalysisResult createRealizabilityVerification(ComponentInstance ci) {
+        
+        AgreeGenerator emitter = new AgreeGenerator(ci);
+        Program program = emitter.evaluate();
+        if(program == null){
+        	return null;
+        }
+
+
+        List<String> properties = emitter.getGuarProps();
+        Node oldNode = program.getMainNode();
+        Node newNode = new Node(//oldNode.location, 
+                oldNode.id,
+                oldNode.inputs, 
+                oldNode.outputs, 
+                oldNode.locals,
+                oldNode.equations,
+                Collections.EMPTY_LIST,
+                oldNode.assertions,
+                oldNode.realizabilities);
+        
+        
+        List<Node> nodes = new ArrayList<>();
+        for(Node node : program.nodes){
+            if(node != oldNode)
+                nodes.add(node);
+        }
+        nodes.add(newNode);
+        program = new Program(program.types, program.constants, nodes);
+        Renaming renaming = emitter.getRenaming();
+        JKindResultRealizability result = new JKindResultRealizability("Contract Realizabilities", oldNode.realizabilities, renaming);
+        queue.add(result);
+
+        ComponentImplementation compImpl = AgreeEmitterUtilities.getInstanceImplementation(ci);
+        linker.setProgram(result, program);
+        linker.setComponent(result, compImpl);
+        linker.setContract(result, getContract(compImpl));
+        linker.setLayout(result, emitter.getLayout());
+        linker.setReferenceMap(result, emitter.getReferenceMap());
+        linker.setLog(result, emitter.getLog());
+
+        return result;
     }
 
     private AnalysisResult createGuaranteeVerification(ComponentInstance ci) {
@@ -338,14 +386,24 @@ public abstract class VerifyHandler extends AadlHandler {
     }
 
     private IStatus doAnalysis(Element root, IProgressMonitor monitor) {
-        JKindApi api = getJKindApi();
+    	JKindApi japi = getJKindApi();
+        JRealizabilityApi rapi = getJRealizabilityApi();
         while (!queue.isEmpty() && !monitor.isCanceled()) {
-            JKindResult result = queue.remove();
+            AnalysisResult result = queue.remove();
             Program program = linker.getProgram(result);
             try{
-            	api.execute(program, result, monitor);
+            	if(result instanceof JKindResult){
+            	  japi.execute(program, (JKindResult)result, monitor);
+            	}else if(result instanceof JKindResultRealizability){
+              	  rapi.execute(program, (JKindResultRealizability)result, monitor);
+            	}
+            		
             } catch (JKindException e){
-            	System.out.println(result.getText());
+            	if(result instanceof JKindResult){
+            		System.out.println(((JKindResult)result).getText());
+              	}else if(result instanceof JKindResultRealizability){
+              		System.out.println(((JKindResultRealizability)result).getText());
+              	}
             	System.out.println("******** HERE IS THE LUSTRE ********");
             	System.out.println(program);
             	break;
@@ -354,7 +412,12 @@ public abstract class VerifyHandler extends AadlHandler {
         }
 
         while (!queue.isEmpty()) {
-            queue.remove().cancel();
+        	AnalysisResult remove = queue.remove();
+        	if(remove instanceof JKindResult){
+        		((JKindResult)remove).cancel();;
+          	}else if(remove instanceof JKindResultRealizability){
+          		((JKindResultRealizability)remove).cancel();
+          	}
         }
 
         enableRerunHandler(root);
@@ -378,6 +441,18 @@ public abstract class VerifyHandler extends AadlHandler {
         return (IHandlerService) getWindow().getService(IHandlerService.class);
     }
 
+    private JRealizabilityApi getJRealizabilityApi() {
+    	JRealizabilityApi api = new JRealizabilityApi();
+        IPreferenceStore prefs = Activator.getDefault().getPreferenceStore();
+
+           // api.setSolver(SolverOption.Z3);
+        
+        api.setN(prefs.getInt(PreferenceConstants.PREF_DEPTH));
+        api.setTimeout(prefs.getInt(PreferenceConstants.PREF_TIMEOUT));
+        return api;
+    }
+    
+    
     private JKindApi getJKindApi() {
         JKindApi api = new JKindApi();
         IPreferenceStore prefs = Activator.getDefault().getPreferenceStore();

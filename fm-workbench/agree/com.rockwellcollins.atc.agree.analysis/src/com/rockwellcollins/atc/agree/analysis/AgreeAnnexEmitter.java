@@ -1950,7 +1950,12 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         Expr queueInsertRemoveAtomicAssertion = getQueueInsertRemoveAtomicAssertion(subEmitters);
         assertions.add(queueInsertRemoveAtomicAssertion);
         
-        Node topNode = new Node("_MAIN", inputs, outputs, internals, eqs, properties, assertions);
+        List<String> realizabilities = new ArrayList<String>();
+        for(VarDecl in : inputs){
+        	realizabilities.add(in.id);
+        }
+        
+        Node topNode = new Node("_MAIN", inputs, outputs, internals, eqs, properties, assertions, realizabilities);
         nodeSet.add(topNode);
         
         //make the type definitions
