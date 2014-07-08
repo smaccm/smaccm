@@ -673,6 +673,7 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         for(VarDecl varDec : agreeNode.inputs){
         	AgreeVarDecl agreeVar = new AgreeVarDecl(varDec.id, varDec.type);
         	inputVars.add(agreeVar);
+        	outputVars.add(agreeVar);
         }
        //inputVars.addAll(agreeNode.inputs);
         

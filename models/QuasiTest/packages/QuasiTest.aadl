@@ -194,12 +194,8 @@ system Formation
 		assume "only shift if none pending" : true ->
 			defs.rising(left_shift) or defs.rising(right_shift) => 
 				((pre(leader) != none) and (pre(right) != none) and (pre(left) != none));
---				
---		eq test_count : int = 0 -> pre(test_count) + 1;
---		
---		guarantee "test_count blah" : test_count < 4;
 				
-					
+
 	**};
 		 
 end Formation; 
@@ -227,7 +223,7 @@ system implementation Formation.impl
 	annex agree {**
 		-- This states that every subcomponent's clock ticks at most two 
 		-- times since any other subcomponent's clock ticks
-		synchrony : 1 no_simult; 
+		synchrony : 1; 
 		--calendar : VA, VB, VC;
 		
 		const leader_state : int = 0;
