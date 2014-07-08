@@ -1,0 +1,73 @@
+package ISAS_S_200
+public
+
+-- In the case of a single channel of a dual input signal being declared faulty, 
+-- ISAS shall determine the selected value by averaging the remaining channel 
+-- with the equivalent selected value of EGI data.
+
+annex agree {**
+	
+	node req(aoa : DATA_TYPES::DUAL_AoA.treal,
+             air_data : DATA_TYPES::DUAL_AirData.treal, 
+             
+             aoa_failed_update : DATA_TYPES.dual_bool,
+             air_failed_update : DATA_TYPES.dual_bool, 
+             
+             aoa_in_range : DATA_TYPES::DUAL_AoA.tbool,
+             air_data_in_range : DATA_TYPES::DUAL_AirData.tbool,
+             
+             egi_select : Data_Types::EGI.treal,          
+             
+             aoa_within_egi_tolerance: Data_Types::DUAL_AoA.tbool,  
+             air_data_within_egi_tolerance: Data_Types::DUAL_AirData.tbool,
+             
+             aoa_select : DATA_TYPES::AoA.treal,
+             air_data_select : DATA_TYPES::AirData.treal
+              
+	        ) returns (ret : bool);
+	  let
+	    ret = 
+		    -- AOA1 faulty and AOA2 non-faulty - average AOA2 with AOA from EGI
+		    (((aoa_failed_update.val1 or not aoa_in_range.AOA1.AOA) and (not aoa_failed_update.val2 and aoa_in_range.AOA2.AOA) and
+		       aoa_within_egi_tolerance.AOA2.AOA) => (aoa_select.AOA = (aoa.AOA2.AOA + egi_select.AOA) / 2.0))
+	    and
+	        -- AOA2 faulty and AOA1 non-faulty - average AOA1 with AOA from EGI
+	        (((aoa_failed_update.val2 or not aoa_in_range.AOA2.AOA) and (not aoa_failed_update.val1 and aoa_in_range.AOA1.AOA) and
+	           aoa_within_egi_tolerance.AOA1.AOA) => (aoa_select.AOA = (aoa.AOA1.AOA + egi_select.AOA) / 2.0))  
+	    and  
+	       -- TAT1 faulty and TAT2 non-faulty - average TAT2 with TAT from EGI
+		    (((air_failed_update.val1 or not air_data_in_range.AD1.TAT) and (not air_failed_update.val2 and air_data_in_range.AD2.TAT) and
+		       air_data_within_egi_tolerance.AD2.TAT) =>  (air_data_select.TAT = (air_data.AD2.TAT + egi_select.TAT) / 2.0))
+	    and  
+	        -- TAT2 faulty and TAT1 non-faulty - average TAT1 with TAT from EGI
+		    (((air_failed_update.val1 or not air_data_in_range.AD2.TAT) and (not air_failed_update.val1 and air_data_in_range.AD1.TAT) and
+		       air_data_within_egi_tolerance.AD1.TAT) =>  (air_data_select.TAT = (air_data.AD1.TAT + egi_select.TAT) / 2.0))
+	    and  
+	       -- TotPres1 faulty and TotPres2 non-faulty - average TotPres2 with TotPres from EGI
+		    (((air_failed_update.val1 or not air_data_in_range.AD1.TotPres) and (not air_failed_update.val2 and air_data_in_range.AD2.TotPres) and
+		       air_data_within_egi_tolerance.AD2.TotPres) =>  (air_data_select.TotPres = (air_data.AD2.TotPres + egi_select.TotPres) / 2.0))
+        and 
+           -- TotPres2 faulty and TotPres1 non-faulty - average TotPres1 with TotPres from EGI
+		    (((air_failed_update.val2 or not air_data_in_range.AD2.TotPres) and (not air_failed_update.val1 and air_data_in_range.AD1.TotPres) and
+		       air_data_within_egi_tolerance.AD1.TotPres) =>  (air_data_select.TotPres = (air_data.AD1.TotPres + egi_select.TotPres) / 2.0)) 
+	    and 
+	       -- Pres1 faulty and Pres2 non-faulty - average Pres2 with Pres from EGI
+		    (((air_failed_update.val1 or not air_data_in_range.AD1.Pres) and (not air_failed_update.val2 and air_data_in_range.AD2.Pres) and
+		       air_data_within_egi_tolerance.AD2.Pres) =>  (air_data_select.Pres = (air_data.AD2.Pres + egi_select.Pres) / 2.0)) 
+	    and   
+	        -- Pres2 faulty and Pres1 non-faulty - average Pres1 with Pres from EGI
+		    (((air_failed_update.val2 or not air_data_in_range.AD2.Pres) and (not air_failed_update.val1 and air_data_in_range.AD1.Pres) and
+		       air_data_within_egi_tolerance.AD1.Pres) =>  (air_data_select.Pres = (air_data.AD1.Pres + egi_select.Pres) / 2.0)) 
+	    and  
+	        -- Temp1 faulty and Temp2 non-faulty - average Temp2 with Temp from EGI
+		    (((air_failed_update.val1 or not air_data_in_range.AD1.Temp) and (not air_failed_update.val2 and air_data_in_range.AD2.Temp) and
+		       air_data_within_egi_tolerance.AD2.Temp) =>  (air_data_select.Temp = (air_data.AD2.Temp + egi_select.Temp) / 2.0)) 
+	    and  
+	        -- Temp2 faulty and Temp1 non-faulty - average Temp1 with Temp from EGI
+		    (((air_failed_update.val2 or not air_data_in_range.AD2.Temp) and (not air_failed_update.val1 and air_data_in_range.AD1.Temp) and
+		       air_data_within_egi_tolerance.AD1.Temp) =>  (air_data_select.Temp = (air_data.AD1.Temp + egi_select.Temp) / 2.0)); 
+	  tel;
+    	  
+**};
+
+end ISAS_S_200;
