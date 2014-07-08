@@ -267,6 +267,7 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         			layout.addElement(category, renameStr, AgreeLayout.SigType.INPUT);
         			break;
         		case OUT:
+        			inputVars.add(varDecl);
         			outputVars.add(varDecl);
         			layout.addElement(category, renameStr, AgreeLayout.SigType.OUTPUT);
         		}
@@ -290,7 +291,7 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
             			layout.addElement(subCompInst.getName(), renameStr, AgreeLayout.SigType.INPUT);
             			break;
             		case OUT:
-            			outputVars.add(varDecl);
+            			internalVars.add(varDecl);
             			layout.addElement(subCompInst.getName(), renameStr, AgreeLayout.SigType.OUTPUT);
             		}
             		//addToRenaming(agreeFeat.lustreString, agreeFeat.aadlString);
