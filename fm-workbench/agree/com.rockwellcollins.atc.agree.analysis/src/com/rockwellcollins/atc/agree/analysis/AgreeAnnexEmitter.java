@@ -680,6 +680,8 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
             IdExpr varId = (IdExpr)expr;
             AgreeVarDecl agreeVar = new AgreeVarDecl(varId.id, "bool");
             assertExpressions.add(varId);
+            inputVars.remove(agreeVar);
+            outputVars.remove(agreeVar);
             internalVars.add(agreeVar);
         }    
  
@@ -687,6 +689,8 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
             IdExpr varId = (IdExpr)expr;
             AgreeVarDecl agreeVar = new AgreeVarDecl(varId.id, "bool");
             assumpExpressions.add(varId);
+            inputVars.remove(agreeVar);
+            outputVars.remove(agreeVar);
             internalVars.add(agreeVar);
         }    
  
