@@ -31,21 +31,9 @@ import java.util.Set;
 import org.osate.aadl2.DataClassifier;
 import org.osate.aadl2.SystemImplementation;
 import org.osate.aadl2.instance.SystemInstance;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.*;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.*;
 
-import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.Type;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.Connection;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.ExternalIRQ;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.InterruptServiceRoutine;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.LegacyExternalIRQ;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.LegacyIRQEvent;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.LegacyThreadImplementation;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.MyPort;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.SharedData;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.ThreadCalendar;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.ThreadImplementation;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.ThreadImplementationBase;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.ThreadInstance;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.thread.ThreadInstancePort;
 
 public class Model {
 	private SystemImplementation systemImplementation;

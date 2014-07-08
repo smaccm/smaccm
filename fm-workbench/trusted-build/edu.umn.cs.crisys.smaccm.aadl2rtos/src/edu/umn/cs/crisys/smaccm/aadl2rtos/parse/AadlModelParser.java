@@ -49,24 +49,20 @@ import org.osate.aadl2.impl.ThreadTypeImpl;
 import org.osate.aadl2.instance.ComponentInstance;
 import org.osate.aadl2.instance.ConnectionInstance;
 import org.osate.aadl2.instance.ConnectionKind;
-import org.osate.aadl2.instance.InstanceObject;
 import org.osate.aadl2.instance.SystemInstance;
 import org.osate.xtext.aadl2.properties.util.PropertyUtils;
 
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosException;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Logger;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.*;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.Dispatcher.DispatcherType;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.MyPort.PortType;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.SharedDataAccessor.AccessType;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.type.ArrayType;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.type.BoolType;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.type.FloatEnum;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.type.IdType;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.type.IntType;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.type.RealType;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.type.RecordType;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.type.Type;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.*;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.ArrayType;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.BoolType;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.FloatEnum;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.IdType;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.IntType;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.RealType;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.RecordType;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.Type;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.util.PortUtil;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.util.ThreadUtil;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.util.Util;
@@ -185,7 +181,7 @@ public class AadlModelParser {
 		}
 
 		for (ThreadTypeImpl tti : threadTypeImplList) {
-			String threadImplName = tti.getName();
+			//String threadImplName = tti.getName();
 			
 			if (ThreadUtil.getLegacyValue(tti)) {
 				LegacyThreadImplementation lti = constructLegacyThreadImplementation(tti); 
@@ -545,7 +541,7 @@ public class AadlModelParser {
 	private Type getDataType(PortImpl portImpl) {
 	  Type dataType = null;
     DataClassifier classifier = (DataClassifier) portImpl.getClassifier();
-    String dcName = Util.normalizeAadlName(classifier);
+    // String dcName = Util.normalizeAadlName(classifier);
 
 //    if (!this.model.astTypes.containsKey(dcName)) {
 //      System.out.println("Type not found: " + dcName + "\n");

@@ -32,20 +32,20 @@ import org.osate.aadl2.DataClassifier;
 import org.osate.aadl2.SystemImplementation;
 import org.osate.aadl2.instance.SystemInstance;
 
-import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.Connection;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.ExternalIRQ;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.InterruptServiceRoutine;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.LegacyExternalIRQ;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.LegacyIRQEvent;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.LegacyThreadImplementation;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.MyPort;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.SharedData;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.ThreadCalendar;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.ThreadImplementation;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.ThreadImplementationBase;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.ThreadInstance;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.ThreadInstancePort;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.type.Type;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.Connection;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.ExternalIRQ;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.InterruptServiceRoutine;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.LegacyExternalIRQ;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.LegacyIRQEvent;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.LegacyThreadImplementation;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.MyPort;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.SharedData;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.ThreadCalendar;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.ThreadImplementation;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.ThreadImplementationBase;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.ThreadInstance;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.ThreadInstancePort;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.Type;
 
 public class Model {
 	private SystemImplementation systemImplementation;

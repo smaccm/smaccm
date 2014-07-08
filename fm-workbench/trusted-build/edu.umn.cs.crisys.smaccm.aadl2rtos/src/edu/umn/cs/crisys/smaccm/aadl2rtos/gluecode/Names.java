@@ -25,14 +25,14 @@ import org.osate.aadl2.DirectionType;
 
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosException;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosFailure;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.InterruptServiceRoutine;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.MyPort;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.SharedDataAccessor;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.ThreadImplementation;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.type.ArrayType;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.type.IdType;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.type.PointerType;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.type.Type;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.InterruptServiceRoutine;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.MyPort;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.SharedDataAccessor;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.ThreadImplementation;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.ArrayType;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.IdType;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.PointerType;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.Type;
 
 public class Names {
 	// private ArrayList<String> semaphoreList = new ArrayList<String>();

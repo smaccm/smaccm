@@ -78,6 +78,13 @@ public class Aadl2RtosAction extends AadlAction {
 		}
 
 		final SystemImplementation sysimpl = (SystemImplementation) sel;
+		
+		log.info("This is the sysimpl name: "+ sysimpl.getName());
+		log.info("More stuff: " + sysimpl.getFullName());
+		log.info("And more: " + sysimpl.getQualifiedName());
+		
+		
+		
 		monitor.beginTask("Generating BRTOS Configuration for AADL Model", IProgressMonitor.UNKNOWN);
 
 		try {
