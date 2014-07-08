@@ -174,7 +174,7 @@ public abstract class VerifyHandler extends AadlHandler {
 
         List<String> properties = emitter.getGuarProps();
         Node oldNode = program.getMainNode();
-        Node newNode = new Node(oldNode.location, 
+        Node newNode = new Node(//oldNode.location, 
                 oldNode.id,
                 oldNode.inputs, 
                 oldNode.outputs, 
@@ -218,7 +218,7 @@ public abstract class VerifyHandler extends AadlHandler {
         
         List<String> properties = emitter.getAssumeProps();
         Node oldNode = program.getMainNode();
-        Node newNode = new Node(oldNode.location, 
+        Node newNode = new Node(//oldNode.location, 
                 oldNode.id,
                 oldNode.inputs, 
                 oldNode.outputs, 
@@ -261,7 +261,7 @@ public abstract class VerifyHandler extends AadlHandler {
 
         List<String> properties = emitter.getConsistProps();
         Node oldNode = program.getMainNode();
-        Node newNode = new Node(oldNode.location, 
+        Node newNode = new Node(//oldNode.location, 
                 oldNode.id,
                 oldNode.inputs, 
                 oldNode.outputs, 
