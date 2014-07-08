@@ -64,6 +64,9 @@ system ISAS_Sys
         eq spoilers_within_tol :  DATA_TYPES::QUAD_Spoilers.tbool;
         eq stabilizer_within_tol : DATA_TYPES::QUAD_Stabilizer.tbool;
         
+        eq aoa_within_egi_tolerance: DATA_TYPES::DUAL_AoA.tbool;  
+        eq air_data_within_egi_tolerance: DATA_TYPES::DUAL_AirData.tbool;
+        
         eq elevators_sig_tol : DATA_TYPES::Elevators.treal =
          DATA_TYPES::Elevators.treal 
          {ELLOB = AGREE_CONSTANTS.ELLOB_tol; 
@@ -166,6 +169,14 @@ system ISAS_Sys
         guarantee "ISAS-S-170" : ISAS_S_170.req(aoa, air_data, aoa_within_tol, air_data_within_tol,
             aoa_failed_update, air_data_failed_update, aoa_in_range, air_data_in_range,
             aoa_select, air_data_select);
+            
+        -- If a single signal of a dual channel input has been declared faulty due 
+        -- to being stale or out of range, ISAS shall compare the remaining signal against 
+        -- the selected value of the equivalent parameter computed in the EGI,
+        -- using a tolerance relevant to that comparison.
+        guarantee "ISAS-S-190" : ISAS_S_190.req(aoa, air_data, 
+            aoa_failed_update, air_data_failed_update, aoa_in_range, air_data_in_range,
+            egi_select, aoa_within_egi_tolerance, air_data_within_egi_tolerance);
             
         -- ISAS shall determine the selected value for a quad digital signal using the following table:
         -- 1) 4 good values with total range less than SignalTolerance, average all 4
