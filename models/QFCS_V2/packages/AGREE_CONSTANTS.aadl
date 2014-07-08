@@ -21,6 +21,11 @@ annex agree {**
     const Pres_tol : real = tol_range_bound*Pres_range_high;
     const Temp_tol : real = tol_range_bound*Temp_range_high;
     const STAB_tol : real = tol_range_bound*STAB_range_high;
+    const EGI_AOA_tol : real = tol_range_bound*EGI_AOA_range_high;          -- TBD: SPM 2014/07/07: Is there a separate EGI AOA tolerance?
+    const EGI_TAT_tol : real = tol_range_bound*EGI_TAT_range_high;          -- TBD: SPM 2014/07/08: Is there a separate EGI TAT tolerance?
+    const EGI_TotPres_tol : real = tol_range_bound*EGI_TotPres_range_high;  -- TBD: SPM 2014/07/08: Is there a separate EGI TotPres tolerance?
+    const EGI_Pres_tol : real = tol_range_bound*EGI_Pres_range_high;        -- TBD: SPM 2014/07/08: Is there a separate EGI Pres tolerance?
+    const EGI_Temp_tol : real = tol_range_bound*EGI_Temp_range_high;        -- TBD: SPM 2014/07/08: Is there a separate EGI Temp tolerance?
     const PHI_tol : real = tol_range_bound*PHI_range_high;
     const THETA_tol : real = tol_range_bound*THETA_range_high;
     const PSI_tol : real = tol_range_bound*PSI_range_high;
@@ -103,6 +108,11 @@ annex agree {**
     const Pres_range_high : real = 50.0;
     const Temp_range_high : real = 50.0;
     const STAB_range_high : real = 50.0;
+    const EGI_AOA_range_high : real = 50.0;       -- TBD: SPM 2014/07/07: Is there a separate EGI AOA range?
+    const EGI_TAT_range_high : real = 50.0;       -- TBD: SPM 2014/07/08: Is there a separate EGI TAT range?
+    const EGI_TotPres_range_high : real = 50.0;   -- TBD: SPM 2014/07/08: Is there a separate EGI TotPres range?
+    const EGI_Pres_range_high : real = 50.0;      -- TBD: SPM 2014/07/08: Is there a separate EGI Pres range?
+    const EGI_Temp_range_high : real = 50.0;      -- TBD: SPM 2014/07/08: Is there a separate EGI Temp range?
     const PHI_range_high : real = 50.0;
     const THETA_range_high : real = 50.0;
     const PSI_range_high : real = 50.0;
