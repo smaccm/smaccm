@@ -291,7 +291,7 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
             			layout.addElement(subCompInst.getName(), renameStr, AgreeLayout.SigType.INPUT);
             			break;
             		case OUT:
-            			internalVars.add(varDecl);
+            			outputVars.add(varDecl);
             			layout.addElement(subCompInst.getName(), renameStr, AgreeLayout.SigType.OUTPUT);
             		}
             		//addToRenaming(agreeFeat.lustreString, agreeFeat.aadlString);
@@ -666,7 +666,8 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         //internalVars.addAll(subEmitter.internalVars);
         for(VarDecl varDec : agreeNode.outputs){
         	AgreeVarDecl agreeVar = new AgreeVarDecl(varDec.id, varDec.type);
-        	internalVars.add(agreeVar);
+        	outputVars.add(agreeVar);
+        	inputVars.add(agreeVar);
         }
         //internalVars.addAll(agreeNode.outputs);
         for(VarDecl varDec : agreeNode.inputs){
@@ -694,6 +695,8 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
             AgreeVarDecl agreeVar = new AgreeVarDecl(varId.id, "bool");
             Equation dumbEq = new Equation(varId, varId);
             guarExpressions.add(dumbEq);
+            inputVars.remove(agreeVar);
+            outputVars.remove(agreeVar);
             internalVars.add(agreeVar);
         }    
 
@@ -711,7 +714,7 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         Equation nodeEq = new Equation(nodeOutputs, nodeCall);
         
         eqExpressions.add(nodeEq);
-        connExpressions.addAll(subEmitter.connExpressions);
+        //connExpressions.addAll(subEmitter.connExpressions);
         typeExpressions.addAll(subEmitter.typeExpressions);
         initTypeMap.putAll(subEmitter.initTypeMap);
         
@@ -1646,8 +1649,8 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         		addConnection(connEq);;
         	}
         	//add left hand side expressions as internal variables
-    		AgreeVarDecl agreeVar = new AgreeVarDecl(lhsLustreName, agreeSourConn.varType);
-    		internalVars.add(agreeVar);
+    		//AgreeVarDecl agreeVar = new AgreeVarDecl(lhsLustreName, agreeSourConn.varType);
+    		//internalVars.add(agreeVar);
         }
 	}
     
@@ -1762,7 +1765,7 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         eqs.addAll(this.constExpressions);
         eqs.addAll(this.eqExpressions);
         eqs.addAll(this.propExpressions);
-        eqs.addAll(this.connExpressions);
+        //eqs.addAll(this.connExpressions);
 
         inputs.addAll(inputVars);
         inputs.addAll(outputVars);
@@ -2340,7 +2343,8 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
     	}
 
     	connLHS.add(connStr);
-    	connExpressions.add(connEq);
+    	//connExpressions.add(connEq);
+    	assertExpressions.add(new BinaryExpr(connEq.lhs.get(0), BinaryOp.EQUAL, connEq.expr));
     	
     }
         
