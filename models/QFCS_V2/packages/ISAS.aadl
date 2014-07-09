@@ -64,9 +64,6 @@ system ISAS_Sys
         eq spoilers_within_tol :  DATA_TYPES::QUAD_Spoilers.tbool;
         eq stabilizer_within_tol : DATA_TYPES::QUAD_Stabilizer.tbool;
         
-        eq aoa_within_egi_tolerance: DATA_TYPES::DUAL_AoA.tbool;  
-        eq air_data_within_egi_tolerance: DATA_TYPES::DUAL_AirData.tbool;
-        
         eq elevators_sig_tol : DATA_TYPES::Elevators.treal =
          DATA_TYPES::Elevators.treal 
          {ELLOB = AGREE_CONSTANTS.ELLOB_tol; 
@@ -177,15 +174,20 @@ system ISAS_Sys
         -- using a tolerance relevant to that comparison.
         ISAS_S_190.req(aoa, air_data, aoa_failed_update, air_data_failed_update, 
         	           aoa_in_range, air_data_in_range, egi_select, 
-        	           aoa_within_egi_tolerance, air_data_within_egi_tolerance);
+        	           aoa_within_tol, air_data_within_tol);
             
         guarantee "ISAS-S-200" :  
         -- In the case of a single channel of a dual input signal being declared faulty, 
         -- ISAS shall determine the selected value by averaging the remaining channel 
         -- with the equivalent selected value of EGI data.
-        ISAS_S_200.req(aoa, air_data, aoa_failed_update, air_data_failed_update, 
-        	           aoa_in_range, air_data_in_range, egi_select, 
-        	           aoa_within_egi_tolerance, air_data_within_egi_tolerance, 
+        ISAS_S_200.req(aoa, air_data, aoa_faults, air_data_faults, egi_select, 
+        	           aoa_select, air_data_select);
+
+        guarantee "ISAS-S-210" :  
+        -- In the case of both channels of a dual input signal being declared faulty, 
+        -- ISAS shall set the selected value equal to the equivalent selected value 
+        -- of EGI data provided the EGI data is valid.
+        ISAS_S_210.req(aoa, air_data, aoa_faults, air_data_faults, egi_select, 
         	           aoa_select, air_data_select);
             
         -- ISAS shall determine the selected value for a quad digital signal using the following table:

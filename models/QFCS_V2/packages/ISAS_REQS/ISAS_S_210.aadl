@@ -1,0 +1,32 @@
+package ISAS_S_210
+public
+
+-- In the case of both channels of a dual input signal being declared faulty, 
+-- ISAS shall set the selected value equal to the equivalent selected value 
+-- of EGI data provided the EGI data is valid.
+
+annex agree {**
+	
+	node req(aoa : DATA_TYPES::DUAL_AoA.treal,
+             air_data : DATA_TYPES::DUAL_AirData.treal, 
+                        
+             aoa_faults : DATA_TYPES::DUAL_AoA.tbool,
+             air_data_faults : DATA_TYPES::DUAL_AirData.tbool,
+             
+             egi_select : Data_Types::EGI.treal,          
+             
+             aoa_select : DATA_TYPES::AoA.treal,
+             air_data_select : DATA_TYPES::AirData.treal
+              
+	        ) returns (ret : bool);
+	  let
+	    ret = ((aoa_faults.AOA1.AOA         and aoa_faults.AOA2.AOA        ) => aoa_select.AOA          = egi_select.AOA    )
+	      and ((air_data_faults.AD1.TAT     and air_data_faults.AD2.TAT    ) => air_data_select.TAT     = egi_select.TAT    )
+	      and ((air_data_faults.AD1.TotPres and air_data_faults.AD2.TotPres) => air_data_select.TotPres = egi_select.TotPres)
+	      and ((air_data_faults.AD1.Pres    and air_data_faults.AD2.Pres   ) => air_data_select.Pres    = egi_select.Pres   )
+	      and ((air_data_faults.AD1.Temp    and air_data_faults.AD2.Temp   ) => air_data_select.Temp    = egi_select.Temp   );	     
+	 tel;
+    	  
+**};
+
+end ISAS_S_210;
