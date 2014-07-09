@@ -84,6 +84,7 @@ import com.rockwellcollins.atc.agree.agree.AssumeStatement;
 import com.rockwellcollins.atc.agree.agree.BoolLitExpr;
 import com.rockwellcollins.atc.agree.agree.CalenStatement;
 import com.rockwellcollins.atc.agree.agree.ConstStatement;
+import com.rockwellcollins.atc.agree.agree.Contract;
 import com.rockwellcollins.atc.agree.agree.EqStatement;
 import com.rockwellcollins.atc.agree.agree.FnCallExpr;
 import com.rockwellcollins.atc.agree.agree.FnDefExpr;
@@ -634,10 +635,17 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
                 thisPrefix + subComp.getName() + dotChar, false, true);
         
         for (AnnexSubclause annex : AnnexUtil.getAllAnnexSubclauses(subCompImpl, AgreePackage.eINSTANCE.getAgreeContractSubclause())) {
-            if (annex instanceof AgreeContractSubclause) { 
-                subEmitter.doSwitch(annex);
-                break;
+        	if (annex instanceof AgreeContractSubclause) {
+            	Contract contract = ((AgreeContractSubclause) annex).getContract();
+            	if(contract instanceof AgreeContract){
+            		for(SpecStatement spec :  ((AgreeContract) contract).getSpecs()){
+            			if(spec instanceof LiftStatement){
+            				subEmitter.doSwitch(spec);
+            			}
+            		}
+            	}
             }
+            break;
         }
 
         for (AnnexSubclause annex : AnnexUtil.getAllAnnexSubclauses(subCompType, AgreePackage.eINSTANCE.getAgreeContractSubclause())) {
