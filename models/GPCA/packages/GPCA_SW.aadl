@@ -94,7 +94,9 @@ public
 	guarantee "occlusion_implies_flow_at_most_KVO ":  occlusion_implies_flow_at_most_KVO;
  
  
- 	guarantee "bad" : false;
+ 	-- guarantee "bad" : false;
+ 	
+ 	
 	-- Requirement : Door Open => Flow_Rate atmost KVO and audio if not disabled.
 	property door_open_implies_flow_at_most_KVO = 
 		true -> 

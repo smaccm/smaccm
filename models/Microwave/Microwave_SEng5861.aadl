@@ -1,8 +1,7 @@
 package Microwave_SEng5861
 public 
    with Base_Types;
-   with defs;
-   
+	with defs;   
    
 -- This system managed    
 system Mode_Control

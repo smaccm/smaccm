@@ -32,9 +32,18 @@ system C
 		Output: out data port Base_Types::Integer;
 			
 	annex agree {** 
-		guarantee "C output range" : Output = Input1 + Input2;
+		assume "Input1 range" : Input1 < 50; 
+		-- guarantee "C output range" :  (Input1 <= 20) => (Output = Input1 + Input2);
+		-- guarantee "C output range 2" : (Input1 >= 20) => (Output = Input1 + Input2 + 1); 
+		guarantee "C output range 3" : true -> (pre(Output) = Input1 + Input2);
+		-- guarantee "Input range restriction" : Input1 < 30; 
 	**};	
 end C ; 
+
+system implementation C.Impl 
+
+end C.Impl; 
+
    
 system top_level
 	features

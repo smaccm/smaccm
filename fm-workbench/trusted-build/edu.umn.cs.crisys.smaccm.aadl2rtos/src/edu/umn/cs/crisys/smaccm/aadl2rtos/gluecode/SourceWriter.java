@@ -782,7 +782,8 @@ public class SourceWriter extends AbstractCodeWriter {
                 ", " + Integer.toString(1 << signalNumber) + 
                 "/* " + destPort.getName() + " */); \n");
           } else {
-            throw new Aadl2RtosException("Error: unable to find signal number for port: " + destPort.toString());
+            // TODO: for now, fail silently because of how ISRs are handled.  Fix this!
+            // throw new Aadl2RtosException("Error: unable to find signal number for port: " + destPort.toString());
           }
         }
         
