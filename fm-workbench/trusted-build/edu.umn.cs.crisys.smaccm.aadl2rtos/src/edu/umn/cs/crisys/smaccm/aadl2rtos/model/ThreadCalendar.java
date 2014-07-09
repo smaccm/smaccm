@@ -14,17 +14,17 @@ import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosException;
  */
 public class ThreadCalendar {
 
-  List<Dispatcher> periodicDispatchers = new ArrayList<Dispatcher>();
+  List<PeriodicDispatcher> periodicDispatchers = new ArrayList<PeriodicDispatcher>();
   
   public ThreadCalendar() {
     
   }
   
-  public void addPeriodicDispatcher(Dispatcher d) {
+  public void addPeriodicDispatcher(PeriodicDispatcher d) {
     periodicDispatchers.add(d);
   }
   
-  public List<Dispatcher> getPeriodicDispatchers() {
+  public List<PeriodicDispatcher> getPeriodicDispatchers() {
     return periodicDispatchers;
   }
   
@@ -46,7 +46,7 @@ public class ThreadCalendar {
   
   public int getLongestPeriodInMilliseconds() {
     int longest = 0;
-    for (Dispatcher d : periodicDispatchers) {
+    for (PeriodicDispatcher d : periodicDispatchers) {
       longest = java.lang.Math.max(longest, d.getPeriod());
     }
     return longest;
@@ -57,7 +57,7 @@ public class ThreadCalendar {
       throw new Aadl2RtosException("Attempting to compute the GCD of periodic threads, but no periodic threads in model.");
     }
     int gcdVal = periodicDispatchers.get(0).getPeriod();
-    for (Dispatcher d : periodicDispatchers) {
+    for (PeriodicDispatcher d : periodicDispatchers) {
       gcdVal = gcd(d.getPeriod(), gcdVal);
     }
     return gcdVal;

@@ -22,25 +22,23 @@ import edu.umn.cs.crisys.smaccm.aadl2rtos.util.Util;
 
 public class MyPort {
 
-	// private static int portIDCounter = 0;
-	// private int portID = 0;
-	private int queueSize = 0;
-
-	private String portName;
-
-
-	// TODO: refactor this into a proper hierarchy!
+  private String portName;
 	private ThreadImplementation owner = null;
-	//private InterruptServiceRoutine isrOwner = null;
 	private Type dataType = null;
+  private String commprimFnNameOpt = null;
+  private String commprimHeaderNameOpt = null;
+  private String sourceText = null;
+  private List<Connection> connections = new ArrayList<Connection>(); 
+	
+  // TODO: refactor: belongs only on receiver
+  private int queueSize = 0;
+  private List<String> entrypointSourceText = null;
+
+	// TODO: refactor: these can go away as soon as hierarchy is set.
 	private PortType portType = null;
 	private PortCategory category = null;
-	private DirectionType direction = null;
-	private List<String> entrypointSourceText = null;
-	private String commprimFnNameOpt = null;
-	private String commprimHeaderNameOpt = null;
-	private String sourceText = null;
-	private List<Connection> connections = new ArrayList<Connection>(); 
+  private DirectionType direction = null;
+	
 
 	public enum PortType {
 		INPUT_EVENT_PORT, OUTPUT_EVENT_PORT, INPUT_DATA_PORT, OUTPUT_DATA_PORT, INPUT_EVENT_DATA_PORT, OUTPUT_EVENT_DATA_PORT, OUTPUT_ISR

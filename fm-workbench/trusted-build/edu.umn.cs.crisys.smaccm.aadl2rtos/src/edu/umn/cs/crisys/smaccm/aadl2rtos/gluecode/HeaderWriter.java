@@ -14,11 +14,12 @@ import org.osate.aadl2.PortCategory;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosException;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.Dispatcher;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.ExternalHandler;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.InputEventDispatcher;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.MyPort;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.PeriodicDispatcher;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.SharedDataAccessor;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.ThreadImplementation;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.ThreadInstance;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.Dispatcher.DispatcherType;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.SharedDataAccessor.AccessType;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.IdType;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.Type;
@@ -216,14 +217,15 @@ public class HeaderWriter extends AbstractCodeWriter {
 	}
 
 	private String udeEntrypointDecl(Dispatcher d, String fnName) {
-	  if (d.getDispatcherType() == DispatcherType.INPUT_PORT_DISPATCHER &&
-	      d.getEventPort().isInputEventDataPort()) {
-	    return "   void " + fnName
-	        + "(const " + Names.createRefParameter(d.getEventPort().getDataType(), "elem") + " ); \n\n";
+	  if (d instanceof InputEventDispatcher && 
+	      ((InputEventDispatcher)d).getEventPort().isInputEventDataPort()) {
+	    InputEventDispatcher ied = (InputEventDispatcher)d;
+      return "   void " + fnName
+          + "(const " + Names.createRefParameter(ied.getEventPort().getDataType(), "elem") + " ); \n\n";
 	  }
-	  else if (d.getDispatcherType() == DispatcherType.PERIODIC_DISPATCHER) {
-	    return "   void " + fnName
-				+ "(uint32_t *millis_from_sys_start); \n\n";
+	  else if (d instanceof PeriodicDispatcher) {
+      return "   void " + fnName
+          + "(uint32_t *millis_from_sys_start); \n\n";
 	  }
 	  else {
 	    return "   void " + fnName

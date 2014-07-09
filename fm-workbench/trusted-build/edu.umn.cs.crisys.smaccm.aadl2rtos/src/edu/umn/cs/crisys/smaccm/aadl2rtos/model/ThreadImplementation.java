@@ -71,7 +71,7 @@ public class ThreadImplementation extends ThreadImplementationBase {
             s, fileNames.get(0));
           handlerList.add(periodicHandler);
         }
-        Dispatcher dispatcher = new Dispatcher(this, Period, handlerList);
+        PeriodicDispatcher dispatcher = new PeriodicDispatcher(this, handlerList, Period);
         dispatcherList.add(dispatcher);
       } catch (Exception e) {
         throw new Aadl2RtosException(
@@ -306,18 +306,17 @@ public class ThreadImplementation extends ThreadImplementationBase {
 	}
 	
 	public int getSignalNumberForInputEventPort(MyPort port) {
-		int signal = -1;
-		boolean found = false;
 
 		for (int i = 0; i < dispatcherList.size(); i++) {
-			if ((dispatcherList.get(i).getEventPort() == port) && !found) {
-				signal = i;
-				found = true;
-				break;
-			}
+		  Dispatcher d = dispatcherList.get(i);
+      if (d instanceof InputEventDispatcher) {
+        InputEventDispatcher id = (InputEventDispatcher)d;
+        if (id.getEventPort() == port) {
+          return i;
+        }
+      }
 		}
-		
-		return signal;
+		return -1; // didn't find it.
 	}
 	
 	public int getSignalNumberForDispatcher(Dispatcher dispatcher) {

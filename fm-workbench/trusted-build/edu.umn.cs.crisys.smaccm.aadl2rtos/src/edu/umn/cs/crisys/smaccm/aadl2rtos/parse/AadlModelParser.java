@@ -252,7 +252,7 @@ public class AadlModelParser {
 				      ExternalHandler eh = new ExternalHandler(s, file);
 				      ehl.add(eh);
 					}
-				    Dispatcher disp = new Dispatcher(threadImplementation, p, ehl);
+				    InputEventDispatcher disp = new InputEventDispatcher(threadImplementation, ehl, p);
 				    threadImplementation.addDispatcher(disp);
 				  } else {
 				    logger.warn("Warning: event port: " + p.getName() + " does not have a compute entrypoint and will not be dispatched.");
@@ -523,8 +523,9 @@ public class AadlModelParser {
 	  
 	  for (ThreadImplementation ti: this.threadImplementationMap.values()) {
 	    for (Dispatcher d: ti.getDispatcherList()) {
-	      if (d.getDispatcherType() == Dispatcher.DispatcherType.PERIODIC_DISPATCHER) {
-	        this.model.threadCalendar.addPeriodicDispatcher(d);
+	      if (d instanceof PeriodicDispatcher) {
+	        PeriodicDispatcher pd = (PeriodicDispatcher)d;
+          this.model.threadCalendar.addPeriodicDispatcher(pd);
 	      }
 	    }
 	  }

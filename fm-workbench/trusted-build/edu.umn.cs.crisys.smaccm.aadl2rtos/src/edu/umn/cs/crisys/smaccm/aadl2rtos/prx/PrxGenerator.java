@@ -1,6 +1,5 @@
 package edu.umn.cs.crisys.smaccm.aadl2rtos.prx;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -14,13 +13,12 @@ import org.w3c.dom.Document;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Logger;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosException;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.gluecode.Names;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.Dispatcher;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.ExternalIRQ;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.InterruptServiceRoutine;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.LegacyExternalIRQ;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.LegacyIRQEvent;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.PeriodicDispatcher;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.SharedData;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.ThreadImplementation;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.ThreadImplementationBase;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.ThreadInstance;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.ThreadInstancePort;
@@ -398,7 +396,7 @@ public class PrxGenerator {
 	  }
 
 	  // write signal numbers for all periodically dispatched threads.
-	  for (Dispatcher d: model.getThreadCalendar().getPeriodicDispatchers()) {
+	  for (PeriodicDispatcher d: model.getThreadCalendar().getPeriodicDispatchers()) {
 	    String signalName = d.getPeriodicIrqSignalName();
 	    for (ThreadInstance ti: d.getOwner().getThreadInstanceList()) {
 	      String taskId = ti.getThreadImplementation().getName();
