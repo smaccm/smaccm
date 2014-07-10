@@ -40,7 +40,7 @@ thread group implementation ControlThreads.impl
     control_state_inst : thread control_state;
     
   connections
-
+ 
     conn_params : port contParams -> control_inst.control_params;
     conn_307 : data access sensors -> control_inst.sensors;
     conn_308 : data access userinput -> control_inst.userinput; 

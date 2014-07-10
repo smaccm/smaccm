@@ -334,7 +334,7 @@ public class AgreeEmitterUtilities {
         if(emitter.agreeNode == null){
             return conjoin(emitter.assumpExpressions);
         }else{
-            Expr assumps = conjoin(emitter.agreeNode.assumptions);
+            Expr assumps = conjoin(emitter.getComponentNode().assumptions);
             IdExpr clockExpr = new IdExpr(emitter.agreeNode.clockVar.id);
 			return new BinaryExpr(clockExpr, BinaryOp.IMPLIES, assumps);
         }
@@ -344,9 +344,9 @@ public class AgreeEmitterUtilities {
         if(emitter.agreeNode == null){
             return conjoin(conjoin(emitter.assumpExpressions), conjoin(emitter.assertExpressions));
         }else{
-        	Expr assumAssert = conjoin(conjoin(emitter.agreeNode.assertions), 
-        			        conjoin(emitter.agreeNode.assumptions));
-        	IdExpr clockExpr = new IdExpr(emitter.agreeNode.clockVar.id);
+        	Expr assumAssert = conjoin(conjoin(emitter.getComponentNode().assertions), 
+        			        conjoin(emitter.getComponentNode().assumptions));
+        	IdExpr clockExpr = new IdExpr(emitter.getComponentNode().clockVar.id);
 			return new BinaryExpr(clockExpr, BinaryOp.IMPLIES, assumAssert);
         }
     }
@@ -357,10 +357,10 @@ public class AgreeEmitterUtilities {
 //                    conjoinEqs(emitter.guarExpressions));
         	throw new AgreeException("depricated use of 'getLustreContract'");
         }else{
-            Expr contract = conjoin(conjoin(emitter.agreeNode.assertions),
-                    conjoin(emitter.agreeNode.assumptions),
-                    conjoin(emitter.agreeNode.guarantees));
-            IdExpr clockExpr = new IdExpr(emitter.agreeNode.clockVar.id);
+            Expr contract = conjoin(conjoin(emitter.getComponentNode().assertions),
+                    conjoin(emitter.getComponentNode().assumptions),
+                    conjoin(emitter.getComponentNode().guarantees));
+            IdExpr clockExpr = new IdExpr(emitter.getComponentNode().clockVar.id);
 			return new BinaryExpr(clockExpr, BinaryOp.IMPLIES, contract);
         }
     }

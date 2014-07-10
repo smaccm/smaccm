@@ -84,6 +84,7 @@ import com.rockwellcollins.atc.agree.agree.AssumeStatement;
 import com.rockwellcollins.atc.agree.agree.BoolLitExpr;
 import com.rockwellcollins.atc.agree.agree.CalenStatement;
 import com.rockwellcollins.atc.agree.agree.ConstStatement;
+import com.rockwellcollins.atc.agree.agree.Contract;
 import com.rockwellcollins.atc.agree.agree.EqStatement;
 import com.rockwellcollins.atc.agree.agree.FnCallExpr;
 import com.rockwellcollins.atc.agree.agree.FnDefExpr;
@@ -198,6 +199,7 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
     private final Map<FeatureInstance, List<AgreeFeature>> featInstToAgreeFeatMap = new HashMap<>();
 	private String thisPrefix;
 	private String topLevelPrefix;
+	private boolean connectionExpressionsSet = false;
 
     public AgreeAnnexEmitter(ComponentInstance compInst,
             AgreeLayout layout,
@@ -266,6 +268,7 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         			layout.addElement(category, renameStr, AgreeLayout.SigType.INPUT);
         			break;
         		case OUT:
+        			inputVars.add(varDecl);
         			outputVars.add(varDecl);
         			layout.addElement(category, renameStr, AgreeLayout.SigType.OUTPUT);
         		}
@@ -275,7 +278,7 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         	}
         }
         
-        //get information about all the features of this components subcomponents
+        //get information about all the features of this components subcomponents 
         for(ComponentInstance subCompInst : compInst.getComponentInstances()){
         	for(FeatureInstance featInst : subCompInst.getFeatureInstances()){
             	List<AgreeFeature> featList = recordFeatures_Helper(thisPrefix + subCompInst.getName() + dotChar,
@@ -613,6 +616,12 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
             return null;
         }
         
+        //if connections have not been set we need to set them
+        if(!connectionExpressionsSet){
+        	ComponentClassifier compImpl = this.curInst.getComponentClassifier();
+        	setConnExprs((ComponentImplementation) compImpl);
+        }
+        
         NestedDotID nestId = lift.getSubcomp();
         
         Subcomponent subComp = (Subcomponent)nestId.getBase();
@@ -621,15 +630,22 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         ComponentType subCompType = subCompImpl.getType();
 
         AgreeAnnexEmitter subEmitter = new AgreeAnnexEmitter(
-                subCompInst, layout, category,
+                subCompInst, layout, thisPrefix + subComp.getName(),
                 topLevelPrefix,
                 thisPrefix + subComp.getName() + dotChar, false, true);
         
         for (AnnexSubclause annex : AnnexUtil.getAllAnnexSubclauses(subCompImpl, AgreePackage.eINSTANCE.getAgreeContractSubclause())) {
-            if (annex instanceof AgreeContractSubclause) { 
-                subEmitter.doSwitch(annex);
-                break;
+        	if (annex instanceof AgreeContractSubclause) {
+            	Contract contract = ((AgreeContractSubclause) annex).getContract();
+            	if(contract instanceof AgreeContract){
+            		for(SpecStatement spec :  ((AgreeContract) contract).getSpecs()){
+            			if(spec instanceof LiftStatement){
+            				subEmitter.doSwitch(spec);
+            			}
+            		}
+            	}
             }
+            break;
         }
 
         for (AnnexSubclause annex : AnnexUtil.getAllAnnexSubclauses(subCompType, AgreePackage.eINSTANCE.getAgreeContractSubclause())) {
@@ -637,28 +653,76 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
                 subEmitter.doSwitch(annex);
                 break;
             }
-        }
-        AgreeNode subAgreeNode = subEmitter.getComponentNode();
+        }        
         
-        connExpressions.addAll(subEmitter.connExpressions);
-        guarExpressions.addAll(subEmitter.guarExpressions);
-        assumpExpressions.addAll(subEmitter.assumpExpressions);
-        constExpressions.addAll(subEmitter.constExpressions);
-        assertExpressions.addAll(subEmitter.assertExpressions);
-        eqExpressions.addAll(subEmitter.eqExpressions);
-        nodeDefExpressions.addAll(subEmitter.nodeDefExpressions);
-        propExpressions.addAll(subEmitter.propExpressions);
+        AgreeNode agreeNode = subEmitter.getComponentNode();
+        
+        //don't add duplicate nodes
+        for(Node node : agreeNode.nodes){
+            boolean inSet = false;
+            for(Node subnode : nodeDefExpressions){
+                if(node.id.equals(subnode.id)){
+                    inSet = true;
+                    break;
+                }
+            }
+            if(!inSet){
+            	nodeDefExpressions.add(node);
+            }
+        }
+        
+        //internalVars.addAll(subEmitter.internalVars);
+        for(VarDecl varDec : agreeNode.outputs){
+        	AgreeVarDecl agreeVar = new AgreeVarDecl(varDec.id, varDec.type);
+        	internalVars.add(agreeVar);
+        }
+        //internalVars.addAll(agreeNode.outputs);
+        for(VarDecl varDec : agreeNode.inputs){
+        	AgreeVarDecl agreeVar = new AgreeVarDecl(varDec.id, varDec.type);
+        	inputVars.add(agreeVar);
+        	outputVars.add(agreeVar);
+        }
+       //inputVars.addAll(agreeNode.inputs);
+        
+        for(Expr expr : agreeNode.assertions){
+            IdExpr varId = (IdExpr)expr;
+            AgreeVarDecl agreeVar = new AgreeVarDecl(varId.id, "bool");
+            assertExpressions.add(varId);
+            internalVars.add(agreeVar);
+        }    
+ 
+        for(Expr expr : agreeNode.assumptions){
+            IdExpr varId = (IdExpr)expr;
+            AgreeVarDecl agreeVar = new AgreeVarDecl(varId.id, "bool");
+            assumpExpressions.add(varId);
+            internalVars.add(agreeVar);
+        }    
+ 
+        for(Expr expr : agreeNode.guarantees){
+            IdExpr varId = (IdExpr)expr;
+            AgreeVarDecl agreeVar = new AgreeVarDecl(varId.id, "bool");
+            Equation dumbEq = new Equation(varId, varId);
+            guarExpressions.add(dumbEq);
+            internalVars.add(agreeVar);
+        }    
+
+        List<Expr> nodeInputs = new ArrayList<>();
+        for(VarDecl var : agreeNode.inputs){
+			nodeInputs.add(new IdExpr(var.id));
+        }
+        
+        List<IdExpr> nodeOutputs = new ArrayList<>();
+        for(VarDecl var : agreeNode.outputs){
+            nodeOutputs.add(new IdExpr(var.id));
+        }
+
+        NodeCallExpr nodeCall = new NodeCallExpr(agreeNode.mainNode.id, nodeInputs);
+        Equation nodeEq = new Equation(nodeOutputs, nodeCall);
+        
+        eqExpressions.add(nodeEq);
+        //connExpressions.addAll(subEmitter.connExpressions);
         typeExpressions.addAll(subEmitter.typeExpressions);
         initTypeMap.putAll(subEmitter.initTypeMap);
-        
-        subEmitter.inputVars.removeAll(internalVars);
-        subEmitter.outputVars.removeAll(internalVars);
-        inputVars.removeAll(subEmitter.internalVars);
-        outputVars.removeAll(subEmitter.internalVars);
-        
-        inputVars.addAll(subEmitter.inputVars);
-        outputVars.addAll(subEmitter.outputVars);
-        internalVars.addAll(subEmitter.internalVars);
         
         //addToRenamingAll(subEmitter.varRenaming);
         addAllToRefMap(subEmitter.refMap);
@@ -1409,6 +1473,7 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
     // that equate variables that are connected to one another
     private void setConnExprs(ComponentImplementation compImpl) {
 
+    	connectionExpressionsSet  = true;
         // use for checking delay
         Property commTimingProp = EMFIndexRetrieval.getPropertyDefinitionInWorkspace(
                 OsateResourceUtil.getResourceSet(), "Communication_Properties::Timing");
@@ -1590,8 +1655,8 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         		addConnection(connEq);;
         	}
         	//add left hand side expressions as internal variables
-    		AgreeVarDecl agreeVar = new AgreeVarDecl(lhsLustreName, agreeSourConn.varType);
-    		internalVars.add(agreeVar);
+    		//AgreeVarDecl agreeVar = new AgreeVarDecl(lhsLustreName, agreeSourConn.varType);
+    		//internalVars.add(agreeVar);
         }
 	}
     
@@ -1697,8 +1762,8 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         }
         
         List<Equation> eqs = new ArrayList<Equation>();
-        List<VarDecl> inputs = new ArrayList<VarDecl>();
-        List<VarDecl> outputs = new ArrayList<VarDecl>();
+        Set<VarDecl> inputs = new HashSet<VarDecl>();
+        Set<VarDecl> outputs = new HashSet<VarDecl>();
 
         List<Node> nodeSet = new ArrayList<Node>();
 
@@ -1706,10 +1771,12 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         eqs.addAll(this.constExpressions);
         eqs.addAll(this.eqExpressions);
         eqs.addAll(this.propExpressions);
+        //eqs.addAll(this.connExpressions);
 
         inputs.addAll(inputVars);
         inputs.addAll(outputVars);
         outputs.addAll(internalVars);
+        outputs.removeAll(inputs);
         
         //create equations for assumptions, assertions, and guarantees
         List<Expr> guarVars = new ArrayList<>();
@@ -1742,13 +1809,16 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
             eqs.add(new Equation(id, expr));
         }
 
-        Node node = new Node("__NODE_"+this.category, inputs, outputs, Collections.EMPTY_LIST, eqs);
+        ArrayList<VarDecl> inputList = new ArrayList<>(inputs);
+        ArrayList<VarDecl> outputList = new ArrayList<>(outputs);
+        
+        Node node = new Node("__NODE_"+this.category, inputList, outputList, Collections.EMPTY_LIST, eqs);
         AgreeVarDecl clockVar = new AgreeVarDecl(clockIDPrefix+this.curComp.getName(), NamedType.BOOL);
         
         List<Node> agreeNodes = new ArrayList<>(this.nodeDefExpressions);
         agreeNodes.add(node);
         
-        agreeNode = new AgreeNode(inputs, outputs, assumVars,
+        agreeNode = new AgreeNode(inputList, outputList, assumVars,
                 asserVars, guarVars, agreeNodes, node, clockVar);
         
         return agreeNode;
@@ -1780,8 +1850,8 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         eqs.addAll(this.connExpressions);
         types.addAll(this.typeExpressions);
         
-        Set<AgreeVarDecl> agreeInputVars = new HashSet<>();
-        Set<AgreeVarDecl> agreeInternalVars = new HashSet<>();
+        Set<VarDecl> agreeInputVars = new HashSet<>();
+        Set<VarDecl> agreeInternalVars = new HashSet<>();
         
         agreeInputVars.addAll(this.inputVars);
         agreeInputVars.addAll(this.outputVars);
@@ -2019,8 +2089,8 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
 
 	private void addSubEmitterVars(List<AgreeAnnexEmitter> subEmitters,
 			List<Equation> eqs, List<VarDecl> inputs, List<Expr> clocks,
-			List<Node> nodeSet, Set<jkind.lustre.RecordType> types, Set<AgreeVarDecl> agreeInputVars,
-			Set<AgreeVarDecl> agreeInternalVars) {
+			List<Node> nodeSet, Set<jkind.lustre.RecordType> types, Set<VarDecl> agreeInputVars,
+			Set<VarDecl> agreeInternalVars) {
 		for(AgreeAnnexEmitter subEmitter : subEmitters){
             
             AgreeNode agreeNode = subEmitter.getComponentNode();
@@ -2279,7 +2349,8 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
     	}
 
     	connLHS.add(connStr);
-    	connExpressions.add(connEq);
+    	//connExpressions.add(connEq);
+    	assertExpressions.add(new BinaryExpr(connEq.lhs.get(0), BinaryOp.EQUAL, connEq.expr));
     	
     }
         
