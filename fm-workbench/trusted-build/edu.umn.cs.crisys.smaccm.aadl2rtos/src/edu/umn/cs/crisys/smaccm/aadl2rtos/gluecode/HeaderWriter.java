@@ -8,20 +8,19 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.osate.aadl2.DirectionType;
-import org.osate.aadl2.PortCategory;
-
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosException;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.Dispatcher;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.ExternalHandler;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.MyPort;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.SharedDataAccessor;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.ThreadImplementation;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.ThreadInstance;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.Dispatcher.DispatcherType;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.SharedDataAccessor.AccessType;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.type.IdType;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.type.Type;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.SharedDataAccessor;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.ThreadImplementation;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.ThreadInstance;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.SharedDataAccessor.AccessType;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.Dispatcher;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.ExternalHandler;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.InputEventDispatcher;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.PeriodicDispatcher;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.*;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.IdType;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.Type;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.UnitType;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.parse.Model;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.util.Util;
 import edu.umn.cs.crisys.smaccm.topsort.CyclicException;
@@ -122,13 +121,12 @@ public class HeaderWriter extends AbstractCodeWriter {
 	private void writeReaderWriterDecls() throws IOException {
 
 		for (ThreadImplementation tw : allThreads) {
-			for (MyPort dpiw : tw.getPortList()) {
+			for (DataPort dpiw : tw.getPortList()) {
 			  String fnName = Names.getReaderWriterFnName(dpiw);
 				String argString = ""; 
-				if (dpiw.getCategory() == PortCategory.DATA || 
-				    dpiw.getCategory() == PortCategory.EVENT_DATA) {
+				if (!dpiw.getDataType().equals(new UnitType())) {
           argString = Names.createRefParameter(dpiw.getDataType(), "arg");
-          if (dpiw.getDirection() == DirectionType.OUT) {
+          if (dpiw instanceof OutputPort) {
             argString = "const " + argString;
           }
 				}
@@ -216,14 +214,15 @@ public class HeaderWriter extends AbstractCodeWriter {
 	}
 
 	private String udeEntrypointDecl(Dispatcher d, String fnName) {
-	  if (d.getDispatcherType() == DispatcherType.INPUT_PORT_DISPATCHER &&
-	      d.getEventPort().isInputEventDataPort()) {
-	    return "   void " + fnName
-	        + "(const " + Names.createRefParameter(d.getEventPort().getDataType(), "elem") + " ); \n\n";
+	  if (d instanceof InputEventDispatcher && 
+	      ((InputEventDispatcher)d).getEventPort().isInputEventDataPort()) {
+	    InputEventDispatcher ied = (InputEventDispatcher)d;
+      return "   void " + fnName
+          + "(const " + Names.createRefParameter(ied.getEventPort().getDataType(), "elem") + " ); \n\n";
 	  }
-	  else if (d.getDispatcherType() == DispatcherType.PERIODIC_DISPATCHER) {
-	    return "   void " + fnName
-				+ "(uint32_t *millis_from_sys_start); \n\n";
+	  else if (d instanceof PeriodicDispatcher) {
+      return "   void " + fnName
+          + "(uint32_t *millis_from_sys_start); \n\n";
 	  }
 	  else {
 	    return "   void " + fnName

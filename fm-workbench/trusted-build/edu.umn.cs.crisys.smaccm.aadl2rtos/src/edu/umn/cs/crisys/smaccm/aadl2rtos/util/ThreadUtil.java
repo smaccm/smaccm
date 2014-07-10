@@ -16,13 +16,13 @@ import org.osate.aadl2.impl.ThreadTypeImpl;
 import org.osate.xtext.aadl2.properties.util.PropertyUtils;
 
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosException;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.ThreadImplementation;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.ThreadImplementation;
 
 public abstract class ThreadUtil {
 
 	final public static String INITIALIZE_ENTRYPOINT_SOURCE_TEXT_NAME = "Initialize_Entrypoint_Source_Text";
 	final public static String COMPUTE_ENTRYPOINT_SOURCE_TEXT_NAME = "Compute_Entrypoint_Source_Text";
-	final public static String SOURCE_STACK_SIZE_NAME = "Source_Stack_Size";
+	final public static String SOURCE_STACK_SIZE_NAME = "Stack_Size";
 	final public static String SOURCE_TEXT_NAME = "Source_Text";
 	final public static String COMPUTE_EXECUTION_TIME_NAME = "Compute_Execution_Time";
 	final public static String SMACCM_SYS_SIGNAL_NAME_NAME = "SMACCM_SYS::Signal_Name";

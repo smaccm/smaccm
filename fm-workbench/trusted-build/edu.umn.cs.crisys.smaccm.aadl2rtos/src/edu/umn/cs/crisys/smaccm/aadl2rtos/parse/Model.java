@@ -32,20 +32,19 @@ import org.osate.aadl2.DataClassifier;
 import org.osate.aadl2.SystemImplementation;
 import org.osate.aadl2.instance.SystemInstance;
 
-import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.Connection;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.ExternalIRQ;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.InterruptServiceRoutine;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.LegacyExternalIRQ;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.LegacyIRQEvent;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.LegacyThreadImplementation;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.MyPort;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.SharedData;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.ThreadCalendar;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.ThreadImplementation;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.ThreadImplementationBase;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.ThreadInstance;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.ThreadInstancePort;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.type.Type;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.Connection;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.ExternalIRQ;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.InterruptServiceRoutine;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.SharedData;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.ThreadCalendar;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.ThreadImplementation;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.ThreadImplementationBase;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.ThreadInstance;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.ThreadInstancePort;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.legacy.LegacyExternalISR;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.legacy.LegacyIRQEvent;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.legacy.LegacyThreadImplementation;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.Type;
 
 public class Model {
 	private SystemImplementation systemImplementation;
@@ -68,7 +67,7 @@ public class Model {
 	List<LegacyThreadImplementation> legacyThreadList = new ArrayList<LegacyThreadImplementation>();
 	List<String> legacyMutexList = new ArrayList<String>();
 	List<String> legacySemaphoreList = new ArrayList<String>();
-	List<LegacyExternalIRQ> legacyExternalIRQList = new ArrayList<LegacyExternalIRQ>();
+	List<LegacyExternalISR> legacyExternalIRQList = new ArrayList<LegacyExternalISR>();
 	List<LegacyIRQEvent> legacyIRQEventList = new ArrayList<LegacyIRQEvent>();
 	List<ExternalIRQ> externalIRQList = new ArrayList<ExternalIRQ>();
 	List<Connection> connectionList = new ArrayList<Connection>(); 
@@ -97,7 +96,8 @@ public class Model {
 //	public Map<ThreadTypeImpl, ThreadImplementation> getThreadImplementationMap() {
 //		return this.threadImplementationMap;
 //	}
-	
+
+	/* 
 	public List<ThreadInstance> getDestinationThreadsForPort(MyPort pi) {
 		List<ThreadInstance> destThreads = new ArrayList<ThreadInstance>();
 
@@ -106,7 +106,7 @@ public class Model {
 		  destThreads.add(ci.getDestThreadInstance());
 		}
 		return destThreads;
-	}
+	}*/
 
 	public SystemImplementation getSystemImplementation() {
 		return systemImplementation;
@@ -177,7 +177,7 @@ public class Model {
 	
 	
 	
-	public List<LegacyExternalIRQ> getLegacyExternalIRQs() {
+	public List<LegacyExternalISR> getLegacyExternalIRQs() {
 	  return this.legacyExternalIRQList;
 	}
 	
