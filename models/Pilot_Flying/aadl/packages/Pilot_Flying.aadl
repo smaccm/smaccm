@@ -302,7 +302,8 @@ with Base_Types,Signals,QS_Properties,Data_Model;
           (not pre(LPFS) and PRESSED_SEEN(TS, LS._CLK) => LPFS) and 
           (not pre(RPFS) and PRESSED_SEEN(TS, RS._CLK) => RPFS);
 
-	 lemma "Side_Bus_Consistency" : Agree_Nodes.Duration(LS.PFS and RS.PFS and RL.O and LR.O) <  10;
+     eq duration : int = Agree_Nodes.Duration(LS.PFS and RS.PFS and RL.O and LR.O);
+	 lemma "Side_Bus_Consistency" : duration <  10;
 **};
   end Pilot_Flying.Pilot_Flying_Impl;
   
