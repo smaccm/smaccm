@@ -8,8 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Logger;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.MyPort;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.ThreadImplementation;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.ThreadImplementation;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.*;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.parse.Model;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.util.Util;
 
@@ -22,7 +22,7 @@ public class BrtosEntrypointSkeletonGenerator {
 	// private AstHelper astHelper;
 
 	private Logger log;
-	private List<MyPort> events;
+	private List<OutputEventPort> events;
 	// private Map<ThreadImplementation, Set<Pair<MyPort, MyPort>>> threadSourcePorts;
 
 	private File CFile;
@@ -71,11 +71,11 @@ public class BrtosEntrypointSkeletonGenerator {
 
 	// For each thread, get all events (determined by the out-event ports)
 	private void defineSignalSet() {
-		events = new ArrayList<MyPort>();		
+		events = new ArrayList<OutputEventPort>();		
 
 		for (ThreadImplementation tw : allThreads) {
 			events.addAll(tw.getOutputEventPortList());
-			events.addAll(tw.getOutputEventDatatPortList());
+			events.addAll(tw.getOutputEventDataPortList());
 		}
 	}
 

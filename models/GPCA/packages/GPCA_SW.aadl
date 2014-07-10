@@ -5,7 +5,8 @@
 --------------------------------------------------------------------------
 
 package GPCA_SW
-public   with DATATYPES,  System_Status, Config , Alarm, Infusion_Manager, Top_Level_Mode, Logging, System_Monitor, OutputBus, Communication_Properties;
+public   
+	with DATATYPES,  System_Status, Config , Alarm, Infusion_Manager, Top_Level_Mode, Logging, System_Monitor, OutputBus, Communication_Properties;
   
   system GPCA_SW
     features    
@@ -169,7 +170,9 @@ public   with DATATYPES,  System_Status, Config , Alarm, Infusion_Manager, Top_L
 
 		--guarantee "Property Consistency Check": false;		
 
-	  **};
+	guarantee "airInLine_implies_flow_at_most_KVO ":  airInLine_implies_flow_at_most_KVO;
+
+**};
 
 end GPCA_SW;
   
