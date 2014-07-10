@@ -167,7 +167,7 @@ public   with DATATYPES,  System_Status, Config , Alarm, Infusion_Manager, Top_L
 			
 		
 
-		guarantee "Property Consistency Check": false;		
+		--guarantee "Property Consistency Check": false;		
 
 	  **};
 

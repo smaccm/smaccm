@@ -43,8 +43,8 @@ thread group implementation ControlThreads.impl
  
     conn_params : port contParams -> control_inst.control_params;
     conn_307 : data access sensors -> control_inst.sensors;
-    conn_308 : data access userinput -> control_inst.userinput; 
-    conn_309 : data access control_law -> control_inst.control_law;
+    conn_308 : port userinput -> control_inst.userinput; 
+    conn_309 : port control_law -> control_inst.control_law;
     conn_271 : data access att_control -> control_inst.att_control_dbg;
     conn_272 : data access alt_control -> control_inst.alt_control_dbg;
     
