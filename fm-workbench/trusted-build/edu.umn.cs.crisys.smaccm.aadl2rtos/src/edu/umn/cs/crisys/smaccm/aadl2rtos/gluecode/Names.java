@@ -21,18 +21,20 @@ package edu.umn.cs.crisys.smaccm.aadl2rtos.gluecode;
  *   size limits.
  * 
  */
-import org.osate.aadl2.DirectionType;
-
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosException;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosFailure;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.InterruptServiceRoutine;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.MyPort;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.SharedDataAccessor;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.ThreadImplementation;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.type.ArrayType;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.type.IdType;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.type.PointerType;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.type.Type;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.InterruptServiceRoutine;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.SharedDataAccessor;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.ThreadImplementation;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.DataPort;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.InputDataPort;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.InputPort;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.OutputDataPort;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.OutputPort;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.ArrayType;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.IdType;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.PointerType;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.Type;
 
 public class Names {
 	// private ArrayList<String> semaphoreList = new ArrayList<String>();
@@ -69,8 +71,8 @@ public class Names {
     }
   }
   
-  static public String getThreadImplReaderFnName(MyPort inp) {
-    return getThreadImplReaderFnName(inp.getCommPrimFnNameOpt(), inp.getOwner().getName(), inp.getName());
+  static public String getThreadImplReaderFnName(DataPort p) {
+    return getThreadImplReaderFnName(p.getCommprimFnNameOpt(), p.getOwner().getName(), p.getName());
   }
   
   static public String getThreadImplReaderFnName(SharedDataAccessor inp) {
@@ -85,28 +87,28 @@ public class Names {
     }
   }
   
-  static public String getThreadImplWriterFnName(MyPort inp) {
-    return getThreadImplWriterFnName(inp.getCommPrimFnNameOpt(), inp.getOwner().getName(), inp.getName());
+  static public String getThreadImplWriterFnName(DataPort inp) {
+    return getThreadImplWriterFnName(inp.getCommprimFnNameOpt(), inp.getOwner().getName(), inp.getName());
   }
 
   static public String getThreadImplWriterFnName(SharedDataAccessor inp) {
     return getThreadImplWriterFnName(inp.getCommPrimFnNameOpt(), inp.getOwner().getName(), inp.getName());
   }
   
-  static public String getReaderWriterFnName(MyPort inp) {
-    if (inp.getDirection() == DirectionType.IN) {
+  static public String getReaderWriterFnName(DataPort inp) {
+    if (inp instanceof InputPort) {
       return getThreadImplReaderFnName(inp);
-    } else if (inp.getDirection() == DirectionType.OUT){
+    } else if (inp instanceof OutputPort){
       return getThreadImplWriterFnName(inp);
     } else {
-      throw new Aadl2RtosException("Attempting to generate name for unsupported IN_OUT port");
+      throw new Aadl2RtosException("Attempting to generate name for unsupported port type");
     }
     
   }
   
   
-  static public String getInputQueueIsEmptyFnName(ThreadImplementation impl, MyPort inp) {
-    return impl.getName() + "_is_empty_" + inp.getName();
+  static public String getInputQueueIsEmptyFnName(ThreadImplementation impl, DataPort p) {
+    return impl.getName() + "_is_empty_" + p.getName();
   }
   
   static public Type getStructuralType(Type ty) {

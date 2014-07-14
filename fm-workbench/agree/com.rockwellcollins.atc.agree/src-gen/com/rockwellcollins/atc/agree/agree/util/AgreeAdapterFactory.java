@@ -302,6 +302,16 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
         return createThisExprAdapter();
       }
       @Override
+      public Adapter caseFloorCast(FloorCast object)
+      {
+        return createFloorCastAdapter();
+      }
+      @Override
+      public Adapter caseRealCast(RealCast object)
+      {
+        return createRealCastAdapter();
+      }
+      @Override
       public Adapter caseFnCallExpr(FnCallExpr object)
       {
         return createFnCallExprAdapter();
@@ -1019,6 +1029,36 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
    * @generated
    */
   public Adapter createThisExprAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.FloorCast <em>Floor Cast</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see com.rockwellcollins.atc.agree.agree.FloorCast
+   * @generated
+   */
+  public Adapter createFloorCastAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.RealCast <em>Real Cast</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see com.rockwellcollins.atc.agree.agree.RealCast
+   * @generated
+   */
+  public Adapter createRealCastAdapter()
   {
     return null;
   }

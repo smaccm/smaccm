@@ -24,28 +24,25 @@ package edu.umn.cs.crisys.smaccm.aadl2rtos.gluecode;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosException;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.Connection;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.Dispatcher;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.ExternalHandler;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.InterruptServiceRoutine;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.MyPort;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.SharedData;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.SharedDataAccessor;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.ThreadCalendar;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.ThreadImplementation;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.ThreadInstance;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.ThreadInstancePort;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.Dispatcher.DispatcherType;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.SharedDataAccessor.AccessType;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.type.ArrayType;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.type.IntType;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.type.PointerType;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.ast.type.Type;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.Connection;
+//import edu.umn.cs.crisys.smaccm.aadl2rtos.model.InterruptServiceRoutine;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.SharedData;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.SharedDataAccessor;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.ThreadCalendar;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.ThreadImplementation;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.ThreadInstance;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.ThreadInstancePort;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.SharedDataAccessor.AccessType;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.Dispatcher;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.ExternalHandler;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.InputEventDispatcher;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.PeriodicDispatcher;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.*;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.*;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.parse.Model;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.util.Util;
 
@@ -58,7 +55,7 @@ public class SourceWriter extends AbstractCodeWriter {
 			File CFile,
 			File HFile,
 			Model model,
-			List<MyPort> events) {
+			List<OutputEventPort> events) {
 		super(out, CFile, HFile, model);
 		// this.semaphoreList = model.getSemaphores();
 	}
@@ -105,7 +102,7 @@ public class SourceWriter extends AbstractCodeWriter {
     writeReaders();
     writeIsEmptys();
     writeWriters();
-		writeISRs(); 
+		// writeISRs(); 
 
 		// Write top-level tasking functions
 		writeThreadImplMainFunctions();
@@ -225,7 +222,7 @@ public class SourceWriter extends AbstractCodeWriter {
 	  
 	  out.append("bool smaccm_thread_calendar() {\n");
 	  
-	  for (Dispatcher d : tc.getPeriodicDispatchers()) {
+	  for (PeriodicDispatcher d : tc.getPeriodicDispatchers()) {
 	    int ctr = d.getPeriod() / tickInterval;
 	    out.append(ind + "if ((smaccm_calendar_counter % " + Integer.toString(ctr) + ") == 0) { \n");
       out.append(ind + ind + "rtos_irq_event_raise(" + 
@@ -240,6 +237,7 @@ public class SourceWriter extends AbstractCodeWriter {
     writeComment("End dispatch.\n");
 	}
 	
+	/*
 	private void writeISRs() throws IOException {
 	  for (InterruptServiceRoutine r: model.getISRList()) {
 	    out.append("bool " + r.getHandlerName() + "() { \n\n");
@@ -262,6 +260,8 @@ public class SourceWriter extends AbstractCodeWriter {
 	    out.append("}\n\n");
 	  }
 	}
+	*/
+	
 	
 	private void defineMainFunction() throws IOException {
 //		out.append("int main() {\n");
@@ -288,9 +288,9 @@ public class SourceWriter extends AbstractCodeWriter {
 	 * - When handling input events, we need to pump out the queues.
 	 *   
 	 */
-	private void writeThreadEventDataPortDispatcher(Dispatcher d) throws IOException {
+	private void writeThreadEventDataPortDispatcher(InputEventDispatcher d) throws IOException {
     
-	  MyPort p = d.getEventPort();
+	  InputEventPort p = d.getEventPort();
 	  String fnName = Names.getInputQueueIsEmptyFnName(p.getOwner(), p);
     out.append(Util.ind(3) + "while (! " + fnName + "()) {\n");
     Type ty = p.getDataType(); 
@@ -304,8 +304,8 @@ public class SourceWriter extends AbstractCodeWriter {
     out.append(Util.ind(3) + "}\n");
 	}
 
-	private void writeThreadEventPortDispatcher(Dispatcher d) throws IOException {
-    MyPort p = d.getEventPort();
+	private void writeThreadEventPortDispatcher(InputEventDispatcher d) throws IOException {
+    InputEventPort p = d.getEventPort();
     String fnName = Names.getInputQueueIsEmptyFnName(p.getOwner(), p);
     out.append(Util.ind(3) + "while (! " + fnName + "()) {\n");
     out.append(Util.ind(4) + Names.getThreadImplReaderFnName(p) + "();\n");
@@ -316,7 +316,7 @@ public class SourceWriter extends AbstractCodeWriter {
 	}
 
 	
-	private void writeThreadPeriodicDispatcher(Dispatcher d) throws IOException {
+	private void writeThreadPeriodicDispatcher(PeriodicDispatcher d) throws IOException {
     for (ExternalHandler handler: d.getExternalHandlerList()) {
       out.append(Util.ind(3) + "smaccm_millis_from_sys_start = smaccm_get_time_in_ms(); \n");
       out.append(Util.ind(3) + handler.getHandlerName() + "(&smaccm_millis_from_sys_start);\n");
@@ -379,16 +379,19 @@ public class SourceWriter extends AbstractCodeWriter {
 				out.append("if (current_sig == "
 						+ current.getOwner().getSignalNumberForDispatcher(current) + "/*"
 						+ current.getName() + "*/" + ") {\n");
-
-				if (current.getDispatcherType() == DispatcherType.INPUT_PORT_DISPATCHER) {
-				  if (current.getEventPort().isInputEventDataPort()) {
-	          writeThreadEventDataPortDispatcher(current); 				    
-				  } else {
-				    writeThreadEventPortDispatcher(current); 
-				  }
-				} else {
-				  writeThreadPeriodicDispatcher(current); 
+				
+				if (current instanceof InputEventDispatcher) {
+				  InputEventDispatcher ied = (InputEventDispatcher)current;
+          if (ied.getEventPort().getDataType() instanceof UnitType) {
+            writeThreadEventPortDispatcher(ied); 
+          } else {
+            writeThreadEventDataPortDispatcher(ied);
+          }
+				} else if (current instanceof PeriodicDispatcher) {
+				  PeriodicDispatcher pd = (PeriodicDispatcher)current;
+          writeThreadPeriodicDispatcher(pd); 
 				}
+
 				out.append(Util.ind(2) + "}\n");
 				initial = false;
 			}
@@ -444,7 +447,7 @@ public class SourceWriter extends AbstractCodeWriter {
    }
       
    
-  private void writeIsEmpty(ThreadImplementation impl, MyPort inp) throws IOException {
+  private void writeIsEmpty(ThreadImplementation impl, DataPort inp) throws IOException {
     
     String fnName = Names.getInputQueueIsEmptyFnName(impl, inp);
     out.append("bool " + fnName + "(/* THREAD_ID tid,  */ "); 
@@ -466,19 +469,25 @@ public class SourceWriter extends AbstractCodeWriter {
       
       ThreadInstancePort tip = new ThreadInstancePort(ti, inp); 
       //int dstThreadId = c.getDestThreadInstance().getThreadId();
-      MyPort destPort = tip.getPort();
+      DataPort destPort = tip.getPort();
       
       writeEnterCriticalSection(ind, tip.getMutexDefine());
       
-      if (destPort.isInputDataPort()) {
+      if (destPort instanceof InputDataPort) {
         out.append(ind + "result = false; \n");
       }
-      else if (destPort.isInputEventPort()) {
-        out.append(ind + "result = " + tip.getVarName() + " == 0;\n");
+      else if (destPort instanceof InputEventPort) {
+        InputEventPort iep = (InputEventPort)destPort;
+        if (iep.isInputEventPort()) {
+          out.append(ind + "result = " + tip.getVarName() + " == 0;\n");
+        }
+        else if (iep.isInputEventDataPort()) {
+           out.append(ind + "result = " + tip.getVarName() + "_is_empty();\n");
+        }
+      } else {
+        throw new Aadl2RtosException("Thread instance had wrong port!");
       }
-      else if (destPort.isInputEventDataPort()) {
-         out.append(ind + "result = " + tip.getVarName() + "_is_empty();\n");
-      }
+          
 
       // unlock the semaphore
       writeExitCriticalSection(ind, tip.getMutexDefine());
@@ -489,7 +498,7 @@ public class SourceWriter extends AbstractCodeWriter {
 
   private void writeIsEmptys() throws IOException {
     for (ThreadImplementation ti : allThreads) {
-      for (MyPort pi : ti.getInputPorts()) {
+      for (DataPort pi : ti.getInputPorts()) {
         writeIsEmpty(ti, pi);
       }
     }
@@ -505,7 +514,7 @@ public class SourceWriter extends AbstractCodeWriter {
     out.append("\n\n");    
   }
   
-  private void writeReader(ThreadImplementation impl, MyPort inp) throws IOException {
+  private void writeReader(ThreadImplementation impl, InputPort inp) throws IOException {
     
     Type argType = inp.getDataType();
     
@@ -528,7 +537,7 @@ public class SourceWriter extends AbstractCodeWriter {
       writeThreadInstanceComment(ti);
       
       ThreadInstancePort tip = new ThreadInstancePort(ti, inp); 
-      MyPort destPort = tip.getPort();
+      InputPort destPort = (InputPort)tip.getPort();
       Type destPortType = destPort.getDataType();
       
       // lock the semaphore
@@ -581,7 +590,7 @@ public class SourceWriter extends AbstractCodeWriter {
   
   private void writeReaders() throws IOException {
     for (ThreadImplementation ti : allThreads) {
-      for (MyPort pi : ti.getInputPorts()) {
+      for (InputPort pi : ti.getInputPorts()) {
         writeReader(ti, pi);
       }
       for (SharedDataAccessor sda: ti.getSharedDataAccessors()) {
@@ -601,18 +610,17 @@ public class SourceWriter extends AbstractCodeWriter {
     }
   }
   
-  private void writeEventDataPortSharedVars(ThreadInstancePort c, MyPort dstPort, Type portTy) throws IOException {
-    String arraySize = Integer.toString(c.getArraySize());
-    // TODO: fix this.
+  private void writeEventDataPortSharedVars(ThreadInstancePort c, InputEventPort dstPort, Type portTy) throws IOException {
+    String arraySize = Integer.toString(dstPort.getQueueSize());
     String queueName = c.getVarName();
     String isFullName = c.getIsFullName();
     String head = c.getCircBufferFrontVarName();
     String tail = c.getCircBufferBackVarName();
 
-    out.append(c.getQueueType().getCType().varString(queueName) + "; \n");
+    out.append(dstPort.getQueueType().getCType().varString(queueName) + "; \n");
     out.append("bool " + isFullName + " = false; \n");
-    out.append(c.getCircRefType().getCType().varString(head) + "; \n");
-    out.append(c.getCircRefType().getCType().varString(tail) + "; \n\n");
+    out.append(dstPort.getCircRefType().getCType().varString(head) + "; \n");
+    out.append(dstPort.getCircRefType().getCType().varString(tail) + "; \n\n");
     
     // right now we can only support queues 
     // if (queueSize >= )
@@ -669,21 +677,26 @@ public class SourceWriter extends AbstractCodeWriter {
   
   private void writeThreadInstancePortSharedVars(ThreadInstancePort c) throws IOException {
 	  
-	  MyPort dstPort = c.getPort();
-	  Type portTy = dstPort.getDataType();
+    InputPort dstPort; 
+	  Type portTy = c.getPort().getDataType();
+	  
+	  if (c.getPort() instanceof InputPort) {
+	    dstPort = (InputPort)c.getPort();
+	  } else {
+      throw new Aadl2RtosException("When writing connection variables, destination " + 
+          " port type is not one of: {Data, Event, Event Data} \n");
+    }
 	  
     writeComment("Shared data for thread instance port: " + c.getNameRoot() + "\n");
     if (dstPort.isInputDataPort()) {
 	    out.append(portTy.getCType().varString(c.getVarName()) + "; \n");
 	  } else if (dstPort.isInputEventDataPort()) {
-	    writeEventDataPortSharedVars(c, dstPort, portTy);
+	    writeEventDataPortSharedVars(c, (InputEventPort)dstPort, portTy);
 	  } else if (dstPort.isInputEventPort()) {
 	    Type countType = new IntType(32, false);
 	    out.append(countType.getCType().varString(c.getVarName()) + "; \n");
-	  } else {
-	    throw new Aadl2RtosException("When writing connection variables, destination " + 
-	        " port type is not one of: {Data, Event, Event Data} \n");
 	  }
+    
 	  out.append("\n\n");
 	}
 
@@ -714,7 +727,7 @@ public class SourceWriter extends AbstractCodeWriter {
   // we send a signal to the target thread. 
   
 
-  private void writeWriter(ThreadImplementation impl, MyPort outp) throws IOException {
+  private void writeWriter(ThreadImplementation impl, OutputPort outp) throws IOException {
     
     Type argType = outp.getDataType();
     
@@ -741,7 +754,7 @@ public class SourceWriter extends AbstractCodeWriter {
       // for (ThreadInstance ti: impl.getThreadInstanceList()) {
       // }
       for (Connection c: outp.getConnections()) {
-        MyPort destPort = c.getDestPort();
+        InputPort destPort = c.getDestPort();
         Type destPortType = destPort.getDataType();
         ThreadInstance destThread = c.getDestThreadInstance();
         ThreadInstancePort tip = new ThreadInstancePort(destThread, destPort); 
@@ -772,14 +785,15 @@ public class SourceWriter extends AbstractCodeWriter {
           out.append(ind + "result = " + tip.getVarName() + "_enqueue(elem);\n");
         }
         if (destPort.isInputEventPort() || destPort.isInputEventDataPort()) {
-          int signalNumber = destPort.getPortID(); 
+          int signalNumber = destPort.getOwner().getSignalNumberForInputEventPort((InputEventPort)destPort); 
           if (signalNumber != -1) {
             out.append(ind + rtosFnName("signal_send_set(")
                 + c.getDestThreadInstance().getKochabThreadId() + 
                 ", " + Integer.toString(1 << signalNumber) + 
                 "/* " + destPort.getName() + " */); \n");
           } else {
-            // TODO: Log to the logger.
+            // TODO: for now, fail silently because of how ISRs are handled.  Fix this!
+            // throw new Aadl2RtosException("Error: unable to find signal number for port: " + destPort.toString());
           }
         }
         
@@ -817,7 +831,7 @@ public class SourceWriter extends AbstractCodeWriter {
 		for (ThreadImplementation ti : allThreads) {
 			// TODO: check on events: remember we only get 32 total, but they
 			// can be different for each thread.
-			for (MyPort pi : ti.getOutputPorts()) {
+			for (OutputPort pi : ti.getOutputPorts()) {
 			  writeWriter(ti, pi);
 			}
 			for (SharedDataAccessor sda: ti.getSharedDataAccessors()) {

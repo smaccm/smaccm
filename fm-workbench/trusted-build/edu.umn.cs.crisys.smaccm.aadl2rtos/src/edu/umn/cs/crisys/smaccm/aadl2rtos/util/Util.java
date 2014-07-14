@@ -19,7 +19,6 @@ import org.osate.aadl2.Property;
 import org.osate.aadl2.PropertyExpression;
 import org.osate.aadl2.StringLiteral;
 import org.osate.aadl2.impl.ClassifierValueImpl;
-import org.osate.aadl2.impl.DataTypeImpl;
 import org.osate.aadl2.impl.ListValueImpl;
 import org.osate.aadl2.modelsupport.resources.OsateResourceUtil;
 import org.osate.xtext.aadl2.properties.util.EMFIndexRetrieval;

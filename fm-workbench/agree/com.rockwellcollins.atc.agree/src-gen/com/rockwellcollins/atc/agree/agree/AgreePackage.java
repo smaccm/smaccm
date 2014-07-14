@@ -2587,6 +2587,98 @@ public interface AgreePackage extends EPackage
   int THIS_EXPR_FEATURE_COUNT = EXPR_FEATURE_COUNT + 1;
 
   /**
+   * The meta object id for the '{@link com.rockwellcollins.atc.agree.agree.impl.FloorCastImpl <em>Floor Cast</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see com.rockwellcollins.atc.agree.agree.impl.FloorCastImpl
+   * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getFloorCast()
+   * @generated
+   */
+  int FLOOR_CAST = 44;
+
+  /**
+   * The feature id for the '<em><b>Owned Element</b></em>' reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int FLOOR_CAST__OWNED_ELEMENT = EXPR__OWNED_ELEMENT;
+
+  /**
+   * The feature id for the '<em><b>Owned Comment</b></em>' containment reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int FLOOR_CAST__OWNED_COMMENT = EXPR__OWNED_COMMENT;
+
+  /**
+   * The feature id for the '<em><b>Expr</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int FLOOR_CAST__EXPR = EXPR_FEATURE_COUNT + 0;
+
+  /**
+   * The number of structural features of the '<em>Floor Cast</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int FLOOR_CAST_FEATURE_COUNT = EXPR_FEATURE_COUNT + 1;
+
+  /**
+   * The meta object id for the '{@link com.rockwellcollins.atc.agree.agree.impl.RealCastImpl <em>Real Cast</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see com.rockwellcollins.atc.agree.agree.impl.RealCastImpl
+   * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getRealCast()
+   * @generated
+   */
+  int REAL_CAST = 45;
+
+  /**
+   * The feature id for the '<em><b>Owned Element</b></em>' reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int REAL_CAST__OWNED_ELEMENT = EXPR__OWNED_ELEMENT;
+
+  /**
+   * The feature id for the '<em><b>Owned Comment</b></em>' containment reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int REAL_CAST__OWNED_COMMENT = EXPR__OWNED_COMMENT;
+
+  /**
+   * The feature id for the '<em><b>Expr</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int REAL_CAST__EXPR = EXPR_FEATURE_COUNT + 0;
+
+  /**
+   * The number of structural features of the '<em>Real Cast</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int REAL_CAST_FEATURE_COUNT = EXPR_FEATURE_COUNT + 1;
+
+  /**
    * The meta object id for the '{@link com.rockwellcollins.atc.agree.agree.impl.FnCallExprImpl <em>Fn Call Expr</em>}' class.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -2594,7 +2686,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getFnCallExpr()
    * @generated
    */
-  int FN_CALL_EXPR = 44;
+  int FN_CALL_EXPR = 46;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -2649,7 +2741,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getRecordExpr()
    * @generated
    */
-  int RECORD_EXPR = 45;
+  int RECORD_EXPR = 47;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -3796,6 +3888,48 @@ public interface AgreePackage extends EPackage
   EReference getThisExpr_SubThis();
 
   /**
+   * Returns the meta object for class '{@link com.rockwellcollins.atc.agree.agree.FloorCast <em>Floor Cast</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>Floor Cast</em>'.
+   * @see com.rockwellcollins.atc.agree.agree.FloorCast
+   * @generated
+   */
+  EClass getFloorCast();
+
+  /**
+   * Returns the meta object for the containment reference '{@link com.rockwellcollins.atc.agree.agree.FloorCast#getExpr <em>Expr</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference '<em>Expr</em>'.
+   * @see com.rockwellcollins.atc.agree.agree.FloorCast#getExpr()
+   * @see #getFloorCast()
+   * @generated
+   */
+  EReference getFloorCast_Expr();
+
+  /**
+   * Returns the meta object for class '{@link com.rockwellcollins.atc.agree.agree.RealCast <em>Real Cast</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>Real Cast</em>'.
+   * @see com.rockwellcollins.atc.agree.agree.RealCast
+   * @generated
+   */
+  EClass getRealCast();
+
+  /**
+   * Returns the meta object for the containment reference '{@link com.rockwellcollins.atc.agree.agree.RealCast#getExpr <em>Expr</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference '<em>Expr</em>'.
+   * @see com.rockwellcollins.atc.agree.agree.RealCast#getExpr()
+   * @see #getRealCast()
+   * @generated
+   */
+  EReference getRealCast_Expr();
+
+  /**
    * Returns the meta object for class '{@link com.rockwellcollins.atc.agree.agree.FnCallExpr <em>Fn Call Expr</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -4804,6 +4938,42 @@ public interface AgreePackage extends EPackage
      * @generated
      */
     EReference THIS_EXPR__SUB_THIS = eINSTANCE.getThisExpr_SubThis();
+
+    /**
+     * The meta object literal for the '{@link com.rockwellcollins.atc.agree.agree.impl.FloorCastImpl <em>Floor Cast</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see com.rockwellcollins.atc.agree.agree.impl.FloorCastImpl
+     * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getFloorCast()
+     * @generated
+     */
+    EClass FLOOR_CAST = eINSTANCE.getFloorCast();
+
+    /**
+     * The meta object literal for the '<em><b>Expr</b></em>' containment reference feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference FLOOR_CAST__EXPR = eINSTANCE.getFloorCast_Expr();
+
+    /**
+     * The meta object literal for the '{@link com.rockwellcollins.atc.agree.agree.impl.RealCastImpl <em>Real Cast</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see com.rockwellcollins.atc.agree.agree.impl.RealCastImpl
+     * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getRealCast()
+     * @generated
+     */
+    EClass REAL_CAST = eINSTANCE.getRealCast();
+
+    /**
+     * The meta object literal for the '<em><b>Expr</b></em>' containment reference feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference REAL_CAST__EXPR = eINSTANCE.getRealCast_Expr();
 
     /**
      * The meta object literal for the '{@link com.rockwellcollins.atc.agree.agree.impl.FnCallExprImpl <em>Fn Call Expr</em>}' class.
