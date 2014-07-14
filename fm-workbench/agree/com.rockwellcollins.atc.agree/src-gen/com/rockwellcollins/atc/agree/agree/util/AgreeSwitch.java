@@ -487,6 +487,24 @@ public class AgreeSwitch<T> extends Switch<T>
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
+      case AgreePackage.FLOOR_CAST:
+      {
+        FloorCast floorCast = (FloorCast)theEObject;
+        T result = caseFloorCast(floorCast);
+        if (result == null) result = caseExpr(floorCast);
+        if (result == null) result = caseElement(floorCast);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case AgreePackage.REAL_CAST:
+      {
+        RealCast realCast = (RealCast)theEObject;
+        T result = caseRealCast(realCast);
+        if (result == null) result = caseExpr(realCast);
+        if (result == null) result = caseElement(realCast);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
       case AgreePackage.FN_CALL_EXPR:
       {
         FnCallExpr fnCallExpr = (FnCallExpr)theEObject;
@@ -1211,6 +1229,38 @@ public class AgreeSwitch<T> extends Switch<T>
    * @generated
    */
   public T caseThisExpr(ThisExpr object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Floor Cast</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Floor Cast</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseFloorCast(FloorCast object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Real Cast</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Real Cast</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseRealCast(RealCast object)
   {
     return null;
   }
