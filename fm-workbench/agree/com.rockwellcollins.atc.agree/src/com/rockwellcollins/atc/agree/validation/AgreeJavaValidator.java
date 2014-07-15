@@ -1104,8 +1104,9 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
             
             if(op.equals("*")){
             	if(!rightSideConst && !leftSideConst){
-            		error(binExpr, "neither the right nor the left side of binary expression '"
-            	            + op + "' is constant'.  Non-linear expressions are not allowed");
+            		warning(binExpr, "neither the right nor the left side of binary expression '"
+            	            + op + "' is constant'.  Non-linear expressions are only allowed with z3."
+            	            		+ " Even with z3 they are not recomended...");
             	}
             }
             
@@ -1121,8 +1122,9 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
                         + typeRight + "' but must be of type 'int'");
             }
             if(!rightSideConst){
-            	error(binExpr, "right side of binary expression '" + op + "' is not constant."
-            			+ " Non-linear expressions are not allowed");
+            	warning(binExpr, "right side of binary expression '" + op + "' is not constant."
+            			+ " Non-linear expressions are only allowed with z3."
+            	        + " Even with z3 they are not recomended...");
             }
             
             return;
@@ -1137,8 +1139,9 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
             }
             
             if(!rightSideConst){
-            	error(binExpr, "right side of binary expression '" + op + "' is not constant."
-            			+ " Non-linear expressions are not allowed");
+            	warning(binExpr, "right side of binary expression '" + op + "' is not constant."
+            			+ " Non-linear expressions are only allowed with z3."
+            	        + " Even with z3 they are not recomended...");
             }
             
             return;
