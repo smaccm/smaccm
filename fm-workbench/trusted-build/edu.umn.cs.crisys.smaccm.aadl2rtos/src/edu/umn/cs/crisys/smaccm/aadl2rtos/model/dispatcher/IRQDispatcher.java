@@ -59,6 +59,9 @@ public class IRQDispatcher extends Dispatcher {
     return firstLevelInterruptHandler;
   }
 
+  public String getFirstLevelInterruptHandlerWrapper() {
+    return "smaccm_" + this.getFirstLevelInterruptHandler();
+  }
   /**
    * @param firstLevelInterruptHandler the firstLevelInterruptHandler to set
    */

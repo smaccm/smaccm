@@ -27,9 +27,7 @@ import edu.umn.cs.crisys.smaccm.aadl2rtos.model.InterruptServiceRoutine;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.SharedDataAccessor;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.ThreadImplementation;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.DataPort;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.InputDataPort;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.InputPort;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.OutputDataPort;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.OutputPort;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.ArrayType;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.IdType;
@@ -53,10 +51,6 @@ public class Names {
   
   static public String getSystickInitializerFnName() {
     return "smaccm_initialize_px4_systick_interrupt";
-  }
-
-  static public String getISRFnName(InterruptServiceRoutine r) {
-    return r.getHandlerName();
   }
 
   static public String getThreadImplMainFnName(ThreadImplementation tw) {

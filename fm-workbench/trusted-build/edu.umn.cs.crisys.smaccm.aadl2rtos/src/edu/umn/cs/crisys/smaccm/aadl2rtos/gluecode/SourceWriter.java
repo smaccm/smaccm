@@ -26,6 +26,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Logger;
 
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosException;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.Connection;
@@ -39,6 +40,7 @@ import edu.umn.cs.crisys.smaccm.aadl2rtos.model.ThreadInstancePort;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.SharedDataAccessor.AccessType;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.Dispatcher;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.ExternalHandler;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.IRQDispatcher;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.InputEventDispatcher;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.PeriodicDispatcher;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.*;
@@ -102,7 +104,7 @@ public class SourceWriter extends AbstractCodeWriter {
     writeReaders();
     writeIsEmptys();
     writeWriters();
-		// writeISRs(); 
+		writeISRs(); 
 
 		// Write top-level tasking functions
 		writeThreadImplMainFunctions();
@@ -237,30 +239,21 @@ public class SourceWriter extends AbstractCodeWriter {
     writeComment("End dispatch.\n");
 	}
 	
-	/*
+	
+	// For ISRs, I still need to wrap the FLIH handler to know whether to signal
+	// the containing thread or not. 
 	private void writeISRs() throws IOException {
-	  for (InterruptServiceRoutine r: model.getISRList()) {
-	    out.append("bool " + r.getHandlerName() + "() { \n\n");
-	    if (r.getThreadInstances().size() > 1) {
-	      throw new Aadl2RtosException("For SystemBuild translation, Interrupt Service Routines (ISRs)" + 
-	          " can have only one thread instance for the corresponding ISR thread implementation.\n");
-	    }
-	    ThreadInstance ti = r.getThreadInstances().get(0);
-	    ThreadInstancePort tip = new ThreadInstancePort(ti, r.getDestinationPort());
-        if (r.getISRType() == InterruptServiceRoutine.ISRType.SignalingISR) {
-		    out.append(ind + tip.getVarName() + " = 1; \n"); 
-		    out.append(ind + "rtos_irq_event_raise(" + 
-		        r.getIrqSignalDefine() + ");\n");
-        } else if (r.getISRType() == InterruptServiceRoutine.ISRType.InThreadContextISR) {
-        	out.append(ind + r.getTowerHandlerName() + "();\n");
-        } else {
-        	throw new Aadl2RtosException("Unknown ISR Type for ISR: " + r.getIrqSignalName());
-        }
+	  for (IRQDispatcher id: model.getIRQDispatcherList()) {
+	    out.append("bool " + id.getFirstLevelInterruptHandlerWrapper() + "() { \n\n");
+      out.append(ind + "if (" + id.getFirstLevelInterruptHandler() + "()) { \n");  
+	    out.append(ind + ind + "rtos_irq_event_raise(" + 
+          id.getIrqSignalDefine() + ");\n");
+	    out.append(ind + "}\n");
 	    out.append(ind + "return true;\n");
-	    out.append("}\n\n");
+	    out.append("};\n");
 	  }
 	}
-	*/
+	
 	
 	
 	private void defineMainFunction() throws IOException {
@@ -322,6 +315,13 @@ public class SourceWriter extends AbstractCodeWriter {
       out.append(Util.ind(3) + handler.getHandlerName() + "(&smaccm_millis_from_sys_start);\n");
     }	  
 	} 
+
+	private void writeThreadIRQDispatcher(IRQDispatcher d) throws IOException {
+	  for (ExternalHandler handler: d.getExternalHandlerList()) {
+	    out.append(Util.ind(3) + handler.getHandlerName() + "();\n"); 
+	  }
+	}
+	
 	
 	private void writeThreadImplMainFunctions() throws IOException {
 
@@ -390,6 +390,9 @@ public class SourceWriter extends AbstractCodeWriter {
 				} else if (current instanceof PeriodicDispatcher) {
 				  PeriodicDispatcher pd = (PeriodicDispatcher)current;
           writeThreadPeriodicDispatcher(pd); 
+				} else if (current instanceof IRQDispatcher) {
+				  IRQDispatcher id = (IRQDispatcher)current;
+				  writeThreadIRQDispatcher(id);
 				}
 
 				out.append(Util.ind(2) + "}\n");
@@ -461,9 +464,7 @@ public class SourceWriter extends AbstractCodeWriter {
           "allowed per thread implementation.  Violating thread implementation: " + 
           impl.getName());
     }
-    
-    //List<ThreadInstancePort> tips = impl.getThreadInstanceInputPorts(); 
-    
+        
     for (ThreadInstance ti: impl.getThreadInstanceList()) {
       writeThreadInstanceComment(ti);
       
@@ -717,7 +718,7 @@ public class SourceWriter extends AbstractCodeWriter {
     }
   }
   
-  // Here's what we want to do.  First, we want use the thread instance id to 
+  // First, we want use the thread instance id to 
   // determine which connection we write to.  Next, we grab the semaphore 
   // associated with the connection.  Then we perform an appropriate write 
   // action to the shared data; If it is a data port, we update the shared 
@@ -786,15 +787,17 @@ public class SourceWriter extends AbstractCodeWriter {
         }
         if (destPort.isInputEventPort() || destPort.isInputEventDataPort()) {
           int signalNumber = destPort.getOwner().getSignalNumberForInputEventPort((InputEventPort)destPort); 
+          
+          // signalNumber = -1 if input event port does not have a dispatcher.
           if (signalNumber != -1) {
             out.append(ind + rtosFnName("signal_send_set(")
                 + c.getDestThreadInstance().getKochabThreadId() + 
                 ", " + Integer.toString(1 << signalNumber) + 
                 "/* " + destPort.getName() + " */); \n");
-          } else {
-            // TODO: for now, fail silently because of how ISRs are handled.  Fix this!
-            // throw new Aadl2RtosException("Error: unable to find signal number for port: " + destPort.toString());
-          }
+          } 
+          //else {            
+          //  throw new Aadl2RtosException("Error: unable to find signal number for port: " + destPort.getName());
+          //}
         }
         
         // unlock the semaphore
@@ -843,3 +846,28 @@ public class SourceWriter extends AbstractCodeWriter {
 		}
 	}
 }
+
+/*
+private void writeISRs() throws IOException {
+  for (InterruptServiceRoutine r: model.getISRList()) {
+    out.append("bool " + r.getHandlerName() + "() { \n\n");
+    if (r.getThreadInstances().size() > 1) {
+      throw new Aadl2RtosException("For SystemBuild translation, Interrupt Service Routines (ISRs)" + 
+          " can have only one thread instance for the corresponding ISR thread implementation.\n");
+    }
+    ThreadInstance ti = r.getThreadInstances().get(0);
+    ThreadInstancePort tip = new ThreadInstancePort(ti, r.getDestinationPort());
+      if (r.getISRType() == InterruptServiceRoutine.ISRType.SignalingISR) {
+      out.append(ind + tip.getVarName() + " = 1; \n"); 
+      out.append(ind + "rtos_irq_event_raise(" + 
+          r.getIrqSignalDefine() + ");\n");
+      } else if (r.getISRType() == InterruptServiceRoutine.ISRType.InThreadContextISR) {
+        out.append(ind + r.getTowerHandlerName() + "();\n");
+      } else {
+        throw new Aadl2RtosException("Unknown ISR Type for ISR: " + r.getIrqSignalName());
+      }
+    out.append(ind + "return true;\n");
+    out.append("}\n\n");
+  }
+}
+*/

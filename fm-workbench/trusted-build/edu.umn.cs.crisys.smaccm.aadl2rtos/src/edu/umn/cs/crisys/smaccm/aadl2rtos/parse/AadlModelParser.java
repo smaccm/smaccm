@@ -189,6 +189,27 @@ public class AadlModelParser {
 	 * 
 	 ***************************************************************************/
   
+  void addIrqHandler(PortImpl port, ThreadImplementation ti) {
+    try {
+      List<String> entrypoints = ThreadUtil.getComputeEntrypointList(port);
+      if (entrypoints == null) { 
+         throw new Aadl2RtosException("missing entrypoints");
+      }
+      String file = Util.getStringValueOpt(port,ThreadUtil.SOURCE_TEXT);
+      String signal_name = Util.getStringValue(port, ThreadUtil.SMACCM_SYS_SIGNAL_NAME);
+      String flih_handler = Util.getStringValue(port, ThreadUtil.ISR_HANDLER);
+      ArrayList<ExternalHandler> ehl = new ArrayList<ExternalHandler>();
+      for (String s: entrypoints) {
+          ExternalHandler eh = new ExternalHandler(s, file);
+          ehl.add(eh);
+      }
+      IRQDispatcher disp = new IRQDispatcher(ti, ehl, signal_name, flih_handler);
+      ti.addDispatcher(disp);
+    } catch (Exception e) {
+      logger.error("ISR port: " + port.getName() + " is missing one of {Compute_Entrypoint, SMACCM_SYS::Signal_Name, SMACCM_SYS::ISR_Handler}.");
+    }
+  }
+  
 	InputEventPort addInputEventPort(PortImpl port, Type datatype, ThreadImplementation ti) {
     int queueSize = PortUtil.getQueueSize(port); 
     InputEventPort iep = new InputEventPort(port.getName(), new UnitType(), ti, queueSize);
@@ -228,7 +249,13 @@ public class AadlModelParser {
       }
     } else if (port.getCategory() == PortCategory.EVENT) {
       if (port.getDirection() == DirectionType.IN) {
-        dp = addInputEventPort(port, new UnitType(), ti);
+        // handle IRQs specially
+        if (ThreadUtil.getIsIsr(port)) {
+          dp = null;
+          addIrqHandler(port, ti); 
+        } else {
+          dp = addInputEventPort(port, new UnitType(), ti);
+        }
       } else {
         OutputEventPort oep = new OutputEventPort(port.getName(), new UnitType(), ti);
         ti.addOutputEventPort(oep);
@@ -243,7 +270,9 @@ public class AadlModelParser {
         ti.addOutputEventDataPort(oep);
       }
     }
-    portMap.put(port, dp);
+    if (dp != null) {
+      portMap.put(port, dp);
+    }
 	}
 	
   /***************************************************************************

@@ -34,13 +34,14 @@ import org.osate.aadl2.instance.SystemInstance;
 
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.Connection;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.ExternalIRQ;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.InterruptServiceRoutine;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.SharedData;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.ThreadCalendar;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.ThreadImplementation;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.ThreadImplementationBase;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.ThreadInstance;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.ThreadInstancePort;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.Dispatcher;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.IRQDispatcher;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.legacy.LegacyExternalISR;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.legacy.LegacyIRQEvent;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.legacy.LegacyThreadImplementation;
@@ -58,7 +59,6 @@ public class Model {
 
 	// Implementation objects: external.
 	List<ThreadImplementation> threadImplementationList = new ArrayList<ThreadImplementation>();
-	List<InterruptServiceRoutine> isrList = new ArrayList<InterruptServiceRoutine>();
 	List<SharedData> sharedDataList = new ArrayList<SharedData>();
 	ThreadCalendar threadCalendar = new ThreadCalendar();
 	Set<String> sourceFiles = new HashSet<String>();
@@ -140,11 +140,19 @@ public class Model {
 		this.libraryFiles.add(fileName);
 	}	
 	
-	public List<InterruptServiceRoutine> getISRList() {
-	  return this.isrList;
-	}
-	
-	public String getSystemInstanceName() {
+  public List<IRQDispatcher> getIRQDispatcherList() {
+    List<IRQDispatcher> idList = new ArrayList<IRQDispatcher>(); 
+    for (ThreadImplementation ti: this.getThreadImplementations()) {
+      for (Dispatcher d: ti.getDispatcherList()) {
+        if (d instanceof IRQDispatcher) {
+          idList.add((IRQDispatcher)d);
+        }
+      }
+    }
+    return idList;
+  }
+
+  public String getSystemInstanceName() {
 		return systemInstance.getName();
 	}
 	

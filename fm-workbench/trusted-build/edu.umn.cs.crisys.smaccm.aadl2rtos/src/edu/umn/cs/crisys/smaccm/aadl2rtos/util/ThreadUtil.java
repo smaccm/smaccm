@@ -1,7 +1,6 @@
 package edu.umn.cs.crisys.smaccm.aadl2rtos.util;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.emf.common.util.EList;
@@ -16,7 +15,6 @@ import org.osate.aadl2.impl.ThreadTypeImpl;
 import org.osate.xtext.aadl2.properties.util.PropertyUtils;
 
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosException;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.ThreadImplementation;
 
 public abstract class ThreadUtil {
 
@@ -26,6 +24,8 @@ public abstract class ThreadUtil {
 	final public static String SOURCE_TEXT_NAME = "Source_Text";
 	final public static String COMPUTE_EXECUTION_TIME_NAME = "Compute_Execution_Time";
 	final public static String SMACCM_SYS_SIGNAL_NAME_NAME = "SMACCM_SYS::Signal_Name";
+	final public static String SMACCM_SYS_IS_ISR_NAME = "SMACCM_SYS::Is_ISR";
+  
 	final public static String SMACCM_SYS_COMMPRIM_SOURCE_HEADER_NAME = "SMACCM_SYS::CommPrim_Source_Header";
   final public static String SMACCM_SYS_COMMPRIM_SOURCE_TEXT_NAME = "SMACCM_SYS::CommPrim_Source_Text";
   final public static String SMACCM_SYS_COMPUTE_ENTRYPOINT_SOURCE_TEXT_NAME = "SMACCM_SYS::Compute_Entrypoint_Source_Text";
@@ -56,14 +56,18 @@ public abstract class ThreadUtil {
 			.getPropertyDefinitionInWorkspace(SOURCE_TEXT_NAME);
 	final public static Property COMPUTE_EXECUTION_TIME = Util
 			.getPropertyDefinitionInWorkspace(COMPUTE_EXECUTION_TIME_NAME);
+	final public static Property SMACCM_SYS_IS_ISR = Util
+	    .getPropertyDefinitionInWorkspace(SMACCM_SYS_IS_ISR_NAME);
 	final public static Property SMACCM_SYS_SIGNAL_NAME = Util
 			.getPropertyDefinitionInWorkspace(SMACCM_SYS_SIGNAL_NAME_NAME);
 	final public static Property SMACCM_SYS_COMMPRIM_SOURCE_HEADER = Util
 	    .getPropertyDefinitionInWorkspace(SMACCM_SYS_COMMPRIM_SOURCE_HEADER_NAME);
 	final public static Property SMACCM_SYS_COMMPRIM_SOURCE_TEXT = Util
 	    .getPropertyDefinitionInWorkspace(SMACCM_SYS_COMMPRIM_SOURCE_TEXT_NAME);
-	final public static Property PERIOD = Util.getPropertyDefinitionInWorkspace(PERIOD_NAME);
-	final public static Property PRIORITY = Util.getPropertyDefinitionInWorkspace(PRIORITY_NAME);
+	final public static Property PERIOD = 
+	     Util.getPropertyDefinitionInWorkspace(PERIOD_NAME);
+	final public static Property PRIORITY = 
+	    Util.getPropertyDefinitionInWorkspace(PRIORITY_NAME);
 
 	final public static Property LEGACY = Util.getPropertyDefinitionInWorkspace(LEGACY_NAME);
 	final public static Property LEGACY_MUTEX_LIST = Util.getPropertyDefinitionInWorkspace(LEGACY_MUTEX_LIST_NAME);
@@ -81,6 +85,7 @@ public abstract class ThreadUtil {
 	final public static Property SMACCM_SYS_COMPUTE_ENTRYPOINT_SOURCE_TEXT =
 	    Util.getPropertyDefinitionInWorkspace(SMACCM_SYS_COMPUTE_ENTRYPOINT_SOURCE_TEXT_NAME);
 
+	/*
 	public static List<ThreadImplementation> getTaskThreads(Collection<ThreadImplementation> collection) {
 		List<ThreadImplementation> taskThreads = new ArrayList<ThreadImplementation>();
 		for (ThreadImplementation th : collection) {
@@ -101,11 +106,12 @@ public abstract class ThreadUtil {
 		}
 		return taskThreads;
 	}
-
+	
 	public static int getThreadTaskIndex(ThreadImplementation tti, ArrayList<ThreadImplementation> threads) {
 		List<ThreadImplementation> taskThreads = getTaskThreads(threads);
 		return taskThreads.indexOf(tti);
 	}
+*/
 
 	public static int getPriority(ThreadTypeImpl tti) {
 		int priority = 0;
@@ -140,6 +146,13 @@ public abstract class ThreadUtil {
 		return list;
 	}
 
+	public static Boolean getIsIsr(NamedElement tti) {
+	  try {
+	    return PropertyUtils.getBooleanValue(tti, SMACCM_SYS_IS_ISR);
+	  } catch(Exception e) {}
+	  return false;
+	}
+	
   public static List<String> getLegacyMutexList(NamedElement tti) {
     return getStringList(tti, ThreadUtil.LEGACY_MUTEX_LIST);
   }
