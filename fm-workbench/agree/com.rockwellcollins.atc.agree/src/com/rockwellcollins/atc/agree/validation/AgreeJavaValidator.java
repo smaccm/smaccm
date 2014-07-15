@@ -1196,7 +1196,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
         while (dotId.getSub() != null) {
             dotId = dotId.getSub();
         }
-
+        
         return dotId.getBase();
     }
     
