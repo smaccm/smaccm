@@ -396,6 +396,7 @@ public abstract class VerifyHandler extends AadlHandler {
             	  japi.execute(program, (JKindResult)result, monitor);
             	}else if(result instanceof JKindResultRealizability){
               	  rapi.execute(program, (JKindResultRealizability)result, monitor);
+              	  System.out.println(program);
             	}
             		
             } catch (JKindException e){

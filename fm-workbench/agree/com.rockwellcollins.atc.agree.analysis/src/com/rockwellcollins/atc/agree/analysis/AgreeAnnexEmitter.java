@@ -1977,7 +1977,9 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         
         List<String> realizabilities = new ArrayList<String>();
         for(VarDecl in : inputs){
-        	realizabilities.add(in.id);
+        	if(!this.outputVars.contains(in)){
+        		realizabilities.add(in.id);
+        	}
         }
         
         Node topNode = new Node("_MAIN", inputs, outputs, internals, eqs, properties, assertions, realizabilities);
