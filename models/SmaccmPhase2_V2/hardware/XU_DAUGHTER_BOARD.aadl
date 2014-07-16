@@ -1,0 +1,89 @@
+package XU_DAUGHTER_BOARD
+public
+
+system XU_DAUGHTER_BOARD
+  features
+    ide : feature group Odroid_IDE_Interface;
+    mpi : feature group Odroid_MIPI_Interface;
+    exp : feature group Expansion_Slot;
+end XU_DAUGHTER_BOARD;
+
+system implementation XU_DAUGHTER_BOARD.IMPL
+  subcomponents
+    mpu_dev : device MPU;
+    gyro : device Gyroscope;
+    baro : device Barometer;
+    accel : device Accelerometer;
+    
+  connections
+    mpu_spi : bus access ide.SPI_1 <-> mpu_dev.spi;
+    gyro_spi : bus access ide.SPI_1 <-> gyro.spi;
+    baro_spi : bus access ide.SPI_1 <-> baro.spi;
+    accel_spi : bus access ide.SPI_1 <-> accel.spi;
+    uart_0_uart_ext : port ide.UART_0 <-> exp.UART_EXT;
+    
+end XU_DAUGHTER_BOARD.IMPl;
+
+
+--devices
+device MPU
+  features
+    spi : requires bus access SPI_Bus;
+end MPU;
+
+device Gyroscope
+  features
+    spi : requires bus access SPI_Bus;
+end Gyroscope;
+
+device Barometer
+  features
+    spi : requires bus access SPI_Bus;
+end Barometer;
+
+device Accelerometer
+  features
+    spi : requires bus access SPI_Bus;
+end Accelerometer;
+
+--feature groups
+feature group Expansion_Slot
+  features
+    SPI_EXT : requires bus access SPI_Bus;
+    UART_EXT : in out data port UART;
+    I2C_EXT : requires bus access I2C_Bus;
+end Expansion_Slot;
+
+feature group Odroid_IDE_Interface
+  features
+    SPI_1 : requires bus access SPI_Bus;
+    UART_0 : in out data port UART;
+    PWRON : in data port Power_Switch;
+end Odroid_IDE_Interface;
+
+feature group Odroid_MIPI_Interface
+  features
+    I2C_0 : provides bus access I2C_Bus;
+    UART_1 : provides bus access SPI_Bus;
+    UART_3 : provides bus access SPI_Bus;
+    PWM_TOUT3 : out data port PWM;
+end Odroid_MIPI_Interface;
+
+--interfaces
+bus SPI_Bus
+end SPI_Bus;
+
+bus I2C_Bus
+end I2c_Bus;
+
+data UART
+end UART;
+
+data Power_Switch
+end Power_Switch;
+
+data PWM
+end PWM;
+
+
+end XU_DAUGHTER_BOARD;

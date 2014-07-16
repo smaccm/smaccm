@@ -1,0 +1,9 @@
+property set SMACCM_SYS is
+  CommPrim_Source_Header: aadlstring applies to (port, data);
+  CommPrim_Source_Text: aadlstring applies to (port, data);
+  Compute_Entrypoint_Source_Text: list of aadlstring applies to (thread, port);
+  Signal_Name: aadlstring applies to (thread);
+  ISR_Handler: aadlstring applies to (thread);
+  Array_Length: aadlinteger applies to (data);
+  Array_Type: aadlstring applies to (data);
+end SMACCM_SYS;

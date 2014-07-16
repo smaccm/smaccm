@@ -1,0 +1,137 @@
+package Mission_Software
+public
+  with UAV;
+  with Base_Types;
+  with UserInput;
+  with Commsec;
+  with Datalink;
+  with SMACCM_DATA;
+  with GCS;
+  with UARTS;
+  with SMACCM;
+  with SMACCM_SYS;
+  with control_law_type;
+  with control_law_request_type;
+  with userinput_type;
+  with mavlink_rc_channels_override_msg;
+  
+ system Software
+    features
+     rcoverride_tx: out event data port mavlink_rc_channels_override_msg::rc_channels_override_msg.impl{Queue_Size => 16;};
+	 control_law_request: out event data port control_law_request_type::control_law_request.impl{Queue_Size => 16;};
+      
+  end Software;
+  
+  system implementation Software.Impl 
+    subcomponents
+      ML: process flight_gen_process.Impl;
+
+  end Software.Impl;
+
+  process flight_gen_process
+	features
+     rcoverride_tx: out event data port mavlink_rc_channels_override_msg::rc_channels_override_msg.impl{Queue_Size => 16;};
+	 control_law_request: out event data port control_law_request_type::control_law_request.impl{Queue_Size => 16;};
+      
+  end flight_gen_process;
+
+thread mavlinkInputTask
+  features
+    cr_emitter: out event data port control_law_request_type::control_law_request.impl {
+      Queue_Size => 16;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_mavlinkInputTask_65.h";
+      SMACCM_SYS::CommPrim_Source_Text => "emitFromTask_mavlinkInputTask_65_chan64_69";
+    };
+    ui_emitter: out event data port userinput_type::userinput_result.impl {
+      Queue_Size => 16;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_mavlinkInputTask_65.h";
+      SMACCM_SYS::CommPrim_Source_Text => "emitFromTask_mavlinkInputTask_65_chan63_67";
+    };
+    mav_controllaw_req: in event data port control_law_request_type::control_law_request.impl {
+      Queue_Size => 16;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_mavlinkInputTask_65.h";
+      SMACCM_SYS::CommPrim_Source_Text => "receiveFromTask_mavlinkInputTask_65_chan1_78";
+      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_mavlinkInputTask_65_chan1_81");
+    };
+    rcoverride: in event data port mavlink_rc_channels_override_msg::rc_channels_override_msg.impl {
+      Queue_Size => 16;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_mavlinkInputTask_65.h";
+      SMACCM_SYS::CommPrim_Source_Text => "receiveFromTask_mavlinkInputTask_65_chan2_73";
+      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_mavlinkInputTask_65_chan2_76");
+    };
+  properties
+    Source_Text => ("tower_task_usercode_mavlinkInputTask_65.c");
+    Priority => 25;
+    Stack_Size => 256 bytes;
+    SMACCM::Language => "Ivory";
+    Dispatch_Protocol => Hybrid;
+    Period => 5 ms;
+    SMACCM::Always_Sends_Message => true ;
+    SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_mavlinkInputTask_65_per5_85");
+    
+  annex agree {**
+  	
+  	eq time : int;
+  	eq scaled_roll : int, valid_roll : bool = scale (rcoverride.chan1_raw);
+  	eq scaled_pitch : int, valid_pitch : bool = scale(rcoverride.chan2_raw);
+  	eq scaled_thr : int, valid_thr : bool = scale(rcoverride.chan3_raw);
+  	eq scaled_yaw : int, valid_yaw : bool = scale(rcoverride.chan4_raw);
+  	eq deadman : int = rcoverride.chan5_raw;
+  	
+  	eq ui_valid : bool = (deadman = 2000) and
+  	                     valid_thr and
+  	                     valid_roll and
+  	                     valid_pitch and
+  	                     valid_yaw;
+  	
+  	
+  	node scale (raw : int) returns (scaled : int, valid : bool);
+  	let
+  	  scaled = (raw - 1500) div 500;
+  	  valid = raw >= 1000 and raw <= 2000;
+  	tel;
+  	
+  	guarantee "cr_outputs" : cr_emitter.set_ui_mavlink = ui_valid and
+  	                         cr_emitter.set_thr_auto = ui_valid and
+  	                         cr_emitter.time = time;
+  	                         
+    guarantee "ui_emitter" : ui_emitter.throttle = real (scaled_thr) and
+                             ui_emitter.roll = real (scaled_roll) and
+                             ui_emitter.pitch = real (scaled_pitch) and
+                             ui_emitter.yaw = real (scaled_yaw) and
+                             ui_emitter.time = time and
+                             ui_emitter.xsource = 1;
+  	
+  	
+  **};
+    
+end mavlinkInputTask; 
+
+process implementation flight_gen_process.impl
+  subcomponents
+    threadData : data SMACCM_DATA::proc_data.impl;
+    datalink_inst : thread Datalink::datalink_thread;
+    Commsec_inst : thread group Commsec::Commsec.Impl;
+    GCS_inst : thread group GCS::GCS.Impl;
+    UARTS_inst : thread group UARTS::UARTS.Impl;
+   	mavlinkInputTask_inst : thread mavlinkInputTask;
+
+  connections 
+    conn_1 : port GCS_inst.gcsTxToEncSrc -> Commsec_inst.gcsTxToEnc;
+    conn_2 : port Commsec_inst.encToHxSrc -> datalink_inst.framed_istream;
+    conn_3 : port GCS_inst.rc_override_tx -> rcoverride_tx;
+    conn_4 : port GCS_inst.control_law_request -> control_law_request;
+    conn_5 : port Commsec_inst.decToGcsRxSrc -> GCS_inst.mavStream;
+    conn_6 : port datalink_inst.link_ostream -> UARTS_inst.ostream_uart5;
+    conn_7 : port datalink_inst.stat_ostream -> GCS_inst.radioEvent5;
+    conn_8 : port datalink_inst.framed_ostream -> Commsec_inst.hxToDecRcv;
+
+    conn_151 : data access threadData.commsecInfo5 -> Commsec_inst.commsec_info_src;
+    conn_152 : data access threadData.radio -> GCS_inst.radioData5;
+    
+  properties 
+    SMACCM::OS => "Sel4";
+
+end flight_gen_process.impl;
+
+end Mission_Software;

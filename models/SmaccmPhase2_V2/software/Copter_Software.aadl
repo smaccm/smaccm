@@ -1,0 +1,894 @@
+package Copter_Software
+public
+with SMACCM;
+  with SMACCM_SYS;
+  with Base_Types;
+  with mavlink_veh_commsec_msg;
+  with TowerArrays;
+  with gcsstream_timing;
+  with nav_law_type;
+  with pos_control_dbg_type;
+  with att_control_dbg_type;
+  with alt_control_dbg_type;
+  with radio_stat_type;
+  with motors_type;
+  with controloutput_type;
+  with gps_type;
+  with sensors_type;
+  with control_law_type;
+  with nav_command_type;
+  with mavlink_rc_channels_override_msg;
+  with control_law_request_type;
+  with radio_info_type;
+  with control_setpoint_type;
+  with userinput_type;
+	
+  system Software
+  end Software;
+  
+  system implementation Software.Impl 
+  end Software.Impl;
+
+  process flight_process
+    features
+      mavlink_cr_emitter: in event data port control_law_request_type::control_law_request.impl {
+        Queue_Size => 16;
+        SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_mavlinkInputTask_124.h";
+        SMACCM_SYS::CommPrim_Source_Text => "emitFromTask_mavlinkInputTask_124_chan123_128";
+      };
+      mavlink_ui_emitter: in event data port userinput_type::userinput_result.impl {
+        Queue_Size => 16;
+        SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_mavlinkInputTask_124.h";
+        SMACCM_SYS::CommPrim_Source_Text => "emitFromTask_mavlinkInputTask_124_chan122_126";
+      };
+      nav_ctl_law_req: in event data port control_law_request_type::control_law_request.impl {
+        Queue_Size => 16;
+        SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_navigation_199.h";
+        SMACCM_SYS::CommPrim_Source_Text => "emitFromTask_navigation_199_chan99_203";
+      };
+  end flight_process;
+
+  process implementation flight_process.impl
+  subcomponents
+    dataport1082 : data radio_stat_type::radio_stat.impl;
+    dataport686 : data radio_stat_type::radio_stat.impl;
+    dataport632 : data gps_type::position.impl;
+    dataport631 : data mavlink_veh_commsec_msg::veh_commsec_msg.impl;
+    dataport571 : data motors_type::motors.impl;
+    dataport562 : data controloutput_type::controloutput.impl;
+    dataport395 : data att_control_dbg_type::att_control_dbg.impl;
+    dataport394 : data alt_control_dbg_type::alt_control_dbg.impl;
+    dataport384 : data nav_law_type::nav_law.impl;
+    dataport375 : data control_setpoint_type::control_setpoint.impl;
+    dataport366 : data control_law_type::control_law.impl;
+    dataport357 : data userinput_type::userinput_result.impl;
+    dataport198 : data pos_control_dbg_type::pos_control_dbg.impl;
+    dataport97 : data Base_Types::Unsigned_32;
+    dataport45 : data Base_Types::Float;
+    dataport44 : data Base_Types::Float;
+    dataport43 : data Base_Types::Float;
+    dataport42 : data Base_Types::Float;
+    dataport41 : data Base_Types::Float;
+    dataport40 : data Base_Types::Float;
+    dataport39 : data Base_Types::Float;
+    dataport38 : data Base_Types::Float;
+    dataport37 : data Base_Types::Float;
+    dataport36 : data Base_Types::Float;
+    dataport35 : data Base_Types::Float;
+    dataport34 : data Base_Types::Float;
+    dataport33 : data Base_Types::Float;
+    dataport32 : data Base_Types::Float;
+    dataport31 : data Base_Types::Float;
+    dataport30 : data Base_Types::Float;
+    dataport29 : data Base_Types::Float;
+    dataport28 : data Base_Types::Float;
+    dataport27 : data Base_Types::Float;
+    dataport26 : data Base_Types::Float;
+    dataport25 : data Base_Types::Float;
+    dataport24 : data Base_Types::Float;
+    dataport23 : data Base_Types::Float;
+    dataport22 : data Base_Types::Float;
+    dataport21 : data Base_Types::Float;
+    dataport20 : data Base_Types::Float;
+    dataport19 : data Base_Types::Float;
+    dataport18 : data Base_Types::Float;
+    dataport17 : data Base_Types::Float;
+    dataport16 : data Base_Types::Float;
+    dataport15 : data Base_Types::Float;
+    dataport14 : data Base_Types::Float;
+    dataport13 : data Base_Types::Float;
+    dataport12 : data Base_Types::Float;
+    dataport11 : data Base_Types::Float;
+    dataport10 : data Base_Types::Float;
+    dataport9 : data Base_Types::Float;
+    dataport8 : data Base_Types::Float;
+    dataport7 : data Base_Types::Float;
+    dataport6 : data Base_Types::Float;
+    dataport5 : data Base_Types::Float;
+    dataport4 : data Base_Types::Float;
+    dataport0 : data sensors_type::sensors_result.impl;
+    position_state_inst : thread position_state;
+    px4ioar_inst : thread px4ioar;
+    motors_state_inst : thread motors_state;
+    control_state_inst : thread control_state;
+    motmix_inst : thread motmix;
+    proxy_controllaw_inst : thread proxy_controllaw;
+    blink_inst : thread blink;
+    control_inst : thread control;
+    uiMuxTask_inst : thread uiMuxTask;
+    controlLawTask_inst : thread controlLawTask;
+    ppmInputTower_inst : thread ppmInputTower;
+    sensorsCaptureTask_inst : thread sensorsCaptureTask;
+    proxy_userinput_inst : thread proxy_userinput;
+    ubloxGPS_inst : thread ubloxGPS;
+    uart5ISR_inst : thread uart5ISR;
+    uart1ISR_inst : thread uart1ISR;
+    uart2ISR_inst : thread uart2ISR;
+    uart6ISR_inst : thread uart6ISR;
+    
+   connections
+
+    conn_23 : port px4ioar_inst.newstateEmitter -> px4ioar_inst.newstateEvent;
+    conn_24 : port px4ioar_inst.uart_ostream -> uart2ISR_inst.ostream;
+    conn_25 : port motmix_inst.motors -> px4ioar_inst.motor_istream;
+    conn_26 : port motmix_inst.motors -> motors_state_inst.proxyEvent;
+    conn_27 : port control_inst.control -> control_state_inst.proxyEvent;
+    conn_28 : port control_inst.control -> motmix_inst.control;
+    conn_30 : port nav_ctl_law_req -> controlLawTask_inst.nav_req_snk;
+    conn_32 : port uiMuxTask_inst.ui_emitter -> proxy_userinput_inst.proxyEvent;
+    conn_33 : port uiMuxTask_inst.ui_emitter -> navigation_inst.ui_chan_313;
+    conn_34 : port controlLawTask_inst.law_emitter -> proxy_controllaw_inst.proxyEvent;
+    conn_35 : port controlLawTask_inst.law_emitter -> navigation_inst.law_chan_322;
+    conn_36 : port controlLawTask_inst.law_emitter -> uiMuxTask_inst.law;
+    conn_37 : port mavlink_cr_emitter -> controlLawTask_inst.mavlink_req_snk;
+    conn_38 : port mavlink_ui_emitter -> uiMuxTask_inst.mavlink_ui;
+    conn_39 : port ppmInputTower_inst.cr_emitter -> controlLawTask_inst.ppm_req_snk;
+    conn_40 : port ppmInputTower_inst.ui_emitter -> uiMuxTask_inst.ppm_ui;
+    conn_41 : port sensorsCaptureTask_inst.newstateEmitter -> sensorsCaptureTask_inst.newstateEvent;
+    conn_42 : port ubloxGPS_inst.position -> position_state_inst.proxyEvent;
+    conn_43 : port ubloxGPS_inst.position -> navigation_inst.pos_chan_331;
+    conn_44 : port ubloxGPS_inst.position -> sensorsCaptureTask_inst.position;
+    conn_47 : port uart6ISR_inst.istream -> ubloxGPS_inst.istream;
+    
+    conn_330 : data access dataport632 -> position_state_inst.proxyData;
+    conn_331 : data access dataport571 -> motors_state_inst.proxyData;
+    conn_332 : data access dataport562 -> control_state_inst.proxyData;
+    conn_333 : data access dataport366 -> motmix_inst.controllaw;
+    conn_334 : data access dataport97 -> blink_inst.commstatus;
+    conn_335 : data access dataport366 -> blink_inst.controllaw;
+    conn_336 : data access dataport394 -> control_inst.alt_control_dbg;
+    conn_337 : data access dataport45 -> control_inst.param_reader_FS_ALT_OFFS;
+    conn_338 : data access dataport44 -> control_inst.param_reader_POS_UI_SENS;
+    conn_339 : data access dataport43 -> control_inst.param_reader_POS_THRUST_IMAX;
+    conn_340 : data access dataport42 -> control_inst.param_reader_POS_THRUST_D;
+    conn_341 : data access dataport41 -> control_inst.param_reader_POS_THRUST_I;
+    conn_342 : data access dataport40 -> control_inst.param_reader_POS_THRUST_P;
+    conn_343 : data access dataport39 -> control_inst.param_reader_ALT_UI_DEAD;
+    conn_344 : data access dataport38 -> control_inst.param_reader_ALT_UI_SENS;
+    conn_345 : data access dataport37 -> control_inst.param_reader_ALT_POS_IMAX;
+    conn_346 : data access dataport36 -> control_inst.param_reader_ALT_POS_D;
+    conn_347 : data access dataport35 -> control_inst.param_reader_ALT_POS_I;
+    conn_348 : data access dataport34 -> control_inst.param_reader_ALT_POS_P;
+    conn_349 : data access dataport33 -> control_inst.param_reader_ALT_RATE_IMAX;
+    conn_350 : data access dataport32 -> control_inst.param_reader_ALT_RATE_D;
+    conn_351 : data access dataport31 -> control_inst.param_reader_ALT_RATE_I;
+    conn_352 : data access dataport30 -> control_inst.param_reader_ALT_RATE_P;
+    conn_353 : data access dataport29 -> control_inst.param_reader_YAW_UI_SENS;
+    conn_354 : data access dataport28 -> control_inst.param_reader_YAW_RATE_IMAX;
+    conn_355 : data access dataport27 -> control_inst.param_reader_YAW_RATE_D;
+    conn_356 : data access dataport26 -> control_inst.param_reader_YAW_RATE_I;
+    conn_357 : data access dataport25 -> control_inst.param_reader_YAW_RATE_P;
+    conn_358 : data access dataport24 -> control_inst.param_reader_YAW_STAB_IMAX;
+    conn_359 : data access dataport23 -> control_inst.param_reader_YAW_STAB_D;
+    conn_360 : data access dataport22 -> control_inst.param_reader_YAW_STAB_I;
+    conn_361 : data access dataport21 -> control_inst.param_reader_YAW_STAB_P;
+    conn_362 : data access dataport20 -> control_inst.param_reader_PITRLL_UI_SENS;
+    conn_363 : data access dataport19 -> control_inst.param_reader_PIT_RATE_IMAX;
+    conn_364 : data access dataport18 -> control_inst.param_reader_PIT_RATE_D;
+    conn_365 : data access dataport17 -> control_inst.param_reader_PIT_RATE_I;
+    conn_366 : data access dataport16 -> control_inst.param_reader_PIT_RATE_P;
+    conn_367 : data access dataport15 -> control_inst.param_reader_PIT_STAB_IMAX;
+    conn_368 : data access dataport14 -> control_inst.param_reader_PIT_STAB_D;
+    conn_369 : data access dataport13 -> control_inst.param_reader_PIT_STAB_I;
+    conn_370 : data access dataport12 -> control_inst.param_reader_PIT_STAB_P;
+    conn_371 : data access dataport11 -> control_inst.param_reader_RLL_RATE_IMAX;
+    conn_372 : data access dataport10 -> control_inst.param_reader_RLL_RATE_D;
+    conn_373 : data access dataport9 -> control_inst.param_reader_RLL_RATE_I;
+    conn_374 : data access dataport8 -> control_inst.param_reader_RLL_RATE_P;
+    conn_375 : data access dataport7 -> control_inst.param_reader_RLL_STAB_IMAX;
+    conn_376 : data access dataport6 -> control_inst.param_reader_RLL_STAB_D;
+    conn_377 : data access dataport5 -> control_inst.param_reader_RLL_STAB_I;
+    conn_378 : data access dataport4 -> control_inst.param_reader_RLL_STAB_P;
+    conn_379 : data access dataport375 -> control_inst.nav_setpt;
+    conn_380 : data access dataport0 -> control_inst.sensors;
+    conn_381 : data access dataport357 -> control_inst.userinput;
+    conn_382 : data access dataport366 -> control_inst.control_law;
+    
+    conn_433 : data access dataport0 -> sensorsCaptureTask_inst.sensors;
+    
+  end flight_process.impl;
+
+
+thread proxy_userinput
+  features
+    proxyEvent: in event data port userinput_type::userinput_result.impl {
+      Queue_Size => 16;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_proxy_userinput_358.h";
+      SMACCM_SYS::CommPrim_Source_Text => "receiveFromTask_proxy_userinput_358_chan169_362";
+      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_proxy_userinput_358_chan169_365");
+    };
+    proxyData: requires data access userinput_type::userinput_result.impl {
+      Access_Right => write_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_proxy_userinput_358.h";
+      SMACCM_SYS::CommPrim_Source_Text => "write_proxy_userinput_358_dataport357_360";
+    };
+  properties
+    Source_Text => ("tower_task_usercode_proxy_userinput_358.c");
+    Priority => 23;
+    Stack_Size => 256 bytes;
+    SMACCM::Language => "Ivory";
+    Dispatch_Protocol => Sporadic;
+end proxy_userinput;
+
+thread position_state
+  features
+    proxyEvent: in event data port gps_type::position.impl {
+      Queue_Size => 16;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_position_state_633.h";
+      SMACCM_SYS::CommPrim_Source_Text => "receiveFromTask_position_state_633_chan53_637";
+      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_position_state_633_chan53_640");
+    };
+    proxyData: requires data access gps_type::position.impl {
+      Access_Right => write_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_position_state_633.h";
+      SMACCM_SYS::CommPrim_Source_Text => "write_position_state_633_dataport632_635";
+    };
+  properties
+    Source_Text => ("tower_task_usercode_position_state_633.c");
+    Priority => 13;
+    Stack_Size => 256 bytes;
+    SMACCM::Language => "Ivory";
+    Dispatch_Protocol => Sporadic;
+end position_state;
+
+
+thread px4ioar
+  features
+    newstateEmitter: out event data port Base_Types::Unsigned_32 {
+      Queue_Size => 2;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_px4ioar_587.h";
+      SMACCM_SYS::CommPrim_Source_Text => "emitFromTask_px4ioar_587_chan601_603";
+    };
+    uart_ostream: out event data port Base_Types::Unsigned_8 {
+      Queue_Size => 12;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_px4ioar_587.h";
+      SMACCM_SYS::CommPrim_Source_Text => "emitFromTask_px4ioar_587_chan580_589";
+    };
+    newstateEvent: in event data port Base_Types::Unsigned_32 {
+      Queue_Size => 2;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_px4ioar_587.h";
+      SMACCM_SYS::CommPrim_Source_Text => "receiveFromTask_px4ioar_587_chan601_605";
+      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_px4ioar_587_chan601_newstate_loop_630", "eventhandler_px4ioar_587_chan601_newstate_bootCheckComplete_626", "eventhandler_px4ioar_587_chan601_newstate_initMulti_623", "eventhandler_px4ioar_587_chan601_newstate_init4_622", "eventhandler_px4ioar_587_chan601_newstate_init3_619", "eventhandler_px4ioar_587_chan601_newstate_init2_616", "eventhandler_px4ioar_587_chan601_newstate_init1_613", "eventhandler_px4ioar_587_chan601_newstate_bootBegin_610");
+    };
+    motor_istream: in event data port motors_type::motors.impl {
+      Queue_Size => 16;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_px4ioar_587.h";
+      SMACCM_SYS::CommPrim_Source_Text => "receiveFromTask_px4ioar_587_chan98_591";
+      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_px4ioar_587_chan98_loop_629");
+    };
+  properties
+    Source_Text => ("tower_task_usercode_px4ioar_587.c");
+    Priority => 14;
+    Stack_Size => 256 bytes;
+    SMACCM::Language => "Ivory";
+    Dispatch_Protocol => Hybrid;
+    Period => 1 ms;
+    SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_px4ioar_587_per1_loop_628", "eventhandler_px4ioar_587_per1_bootCheckComplete_625", "eventhandler_px4ioar_587_per1_init4_621", "eventhandler_px4ioar_587_per1_init3_618", "eventhandler_px4ioar_587_per1_init2_615", "eventhandler_px4ioar_587_per1_init1_612", "eventhandler_px4ioar_587_per1_bootBegin_609");
+end px4ioar;
+
+
+thread motors_state
+  features
+    proxyEvent: in event data port motors_type::motors.impl {
+      Queue_Size => 16;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_motors_state_572.h";
+      SMACCM_SYS::CommPrim_Source_Text => "receiveFromTask_motors_state_572_chan98_576";
+      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_motors_state_572_chan98_579");
+    };
+    proxyData: requires data access motors_type::motors.impl {
+      Access_Right => write_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_motors_state_572.h";
+      SMACCM_SYS::CommPrim_Source_Text => "write_motors_state_572_dataport571_574";
+    };
+  properties
+    Source_Text => ("tower_task_usercode_motors_state_572.c");
+    Priority => 15;
+    Stack_Size => 256 bytes;
+    SMACCM::Language => "Ivory";
+    Dispatch_Protocol => Sporadic;
+end motors_state;
+
+
+thread control_state
+  features
+    proxyEvent: in event data port controloutput_type::controloutput.impl {
+      Queue_Size => 16;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_state_563.h";
+      SMACCM_SYS::CommPrim_Source_Text => "receiveFromTask_control_state_563_chan393_567";
+      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_control_state_563_chan393_570");
+    };
+    proxyData: requires data access controloutput_type::controloutput.impl {
+      Access_Right => write_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_state_563.h";
+      SMACCM_SYS::CommPrim_Source_Text => "write_control_state_563_dataport562_565";
+    };
+  properties
+    Source_Text => ("tower_task_usercode_control_state_563.c");
+    Priority => 16;
+    Stack_Size => 256 bytes;
+    SMACCM::Language => "Ivory";
+    Dispatch_Protocol => Sporadic;
+end control_state;
+
+
+thread motmix
+  features
+    motors: out event data port motors_type::motors.impl {
+      Queue_Size => 16;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_motmix_552.h";
+      SMACCM_SYS::CommPrim_Source_Text => "emitFromTask_motmix_552_chan98_556";
+    };
+    control: in event data port controloutput_type::controloutput.impl {
+      Queue_Size => 16;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_motmix_552.h";
+      SMACCM_SYS::CommPrim_Source_Text => "receiveFromTask_motmix_552_chan393_558";
+      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_motmix_552_chan393_561");
+    };
+    controllaw: requires data access control_law_type::control_law.impl {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_motmix_552.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_motmix_552_dataport366_554";
+    };
+  properties
+    Source_Text => ("tower_task_usercode_motmix_552.c");
+    Priority => 17;
+    Stack_Size => 256 bytes;
+    SMACCM::Language => "Ivory";
+    Dispatch_Protocol => Sporadic;
+end motmix;
+
+
+thread blink
+  features
+    commstatus: requires data access Base_Types::Unsigned_32 {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_blink_542.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_blink_542_dataport97_546";
+    };
+    controllaw: requires data access control_law_type::control_law.impl {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_blink_542.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_blink_542_dataport366_544";
+    };
+  properties
+    Source_Text => ("tower_task_usercode_blink_542.c");
+    Priority => 18;
+    Stack_Size => 256 bytes;
+    SMACCM::Language => "Ivory";
+    Dispatch_Protocol => Hybrid;
+    Period => 125 ms;
+    SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_blink_542_per125_551");
+end blink;
+
+
+thread control
+  features
+    control: out event data port controloutput_type::controloutput.impl {
+      Queue_Size => 16;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_396.h";
+      SMACCM_SYS::CommPrim_Source_Text => "emitFromTask_control_396_chan393_406";
+    };
+    alt_control_dbg: requires data access alt_control_dbg_type::alt_control_dbg.impl {
+      Access_Right => write_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_396.h";
+      SMACCM_SYS::CommPrim_Source_Text => "write_control_396_dataport394_513";
+    };
+    param_reader_FS_ALT_OFFS: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_396.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_control_396_dataport45_490";
+    };
+    param_reader_POS_UI_SENS: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_396.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_control_396_dataport44_488";
+    };
+    param_reader_POS_THRUST_IMAX: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_396.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_control_396_dataport43_486";
+    };
+    param_reader_POS_THRUST_D: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_396.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_control_396_dataport42_484";
+    };
+    param_reader_POS_THRUST_I: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_396.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_control_396_dataport41_482";
+    };
+    param_reader_POS_THRUST_P: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_396.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_control_396_dataport40_480";
+    };
+    param_reader_ALT_UI_DEAD: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_396.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_control_396_dataport39_478";
+    };
+    param_reader_ALT_UI_SENS: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_396.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_control_396_dataport38_476";
+    };
+    param_reader_ALT_POS_IMAX: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_396.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_control_396_dataport37_474";
+    };
+    param_reader_ALT_POS_D: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_396.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_control_396_dataport36_472";
+    };
+    param_reader_ALT_POS_I: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_396.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_control_396_dataport35_470";
+    };
+    param_reader_ALT_POS_P: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_396.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_control_396_dataport34_468";
+    };
+    param_reader_ALT_RATE_IMAX: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_396.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_control_396_dataport33_466";
+    };
+    param_reader_ALT_RATE_D: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_396.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_control_396_dataport32_464";
+    };
+    param_reader_ALT_RATE_I: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_396.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_control_396_dataport31_462";
+    };
+    param_reader_ALT_RATE_P: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_396.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_control_396_dataport30_460";
+    };
+    param_reader_YAW_UI_SENS: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_396.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_control_396_dataport29_458";
+    };
+    param_reader_YAW_RATE_IMAX: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_396.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_control_396_dataport28_456";
+    };
+    param_reader_YAW_RATE_D: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_396.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_control_396_dataport27_454";
+    };
+    param_reader_YAW_RATE_I: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_396.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_control_396_dataport26_452";
+    };
+    param_reader_YAW_RATE_P: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_396.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_control_396_dataport25_450";
+    };
+    param_reader_YAW_STAB_IMAX: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_396.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_control_396_dataport24_448";
+    };
+    param_reader_YAW_STAB_D: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_396.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_control_396_dataport23_446";
+    };
+    param_reader_YAW_STAB_I: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_396.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_control_396_dataport22_444";
+    };
+    param_reader_YAW_STAB_P: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_396.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_control_396_dataport21_442";
+    };
+    param_reader_PITRLL_UI_SENS: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_396.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_control_396_dataport20_440";
+    };
+    param_reader_PIT_RATE_IMAX: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_396.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_control_396_dataport19_438";
+    };
+    param_reader_PIT_RATE_D: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_396.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_control_396_dataport18_436";
+    };
+    param_reader_PIT_RATE_I: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_396.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_control_396_dataport17_434";
+    };
+    param_reader_PIT_RATE_P: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_396.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_control_396_dataport16_432";
+    };
+    param_reader_PIT_STAB_IMAX: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_396.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_control_396_dataport15_430";
+    };
+    param_reader_PIT_STAB_D: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_396.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_control_396_dataport14_428";
+    };
+    param_reader_PIT_STAB_I: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_396.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_control_396_dataport13_426";
+    };
+    param_reader_PIT_STAB_P: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_396.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_control_396_dataport12_424";
+    };
+    param_reader_RLL_RATE_IMAX: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_396.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_control_396_dataport11_422";
+    };
+    param_reader_RLL_RATE_D: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_396.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_control_396_dataport10_420";
+    };
+    param_reader_RLL_RATE_I: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_396.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_control_396_dataport9_418";
+    };
+    param_reader_RLL_RATE_P: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_396.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_control_396_dataport8_416";
+    };
+    param_reader_RLL_STAB_IMAX: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_396.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_control_396_dataport7_414";
+    };
+    param_reader_RLL_STAB_D: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_396.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_control_396_dataport6_412";
+    };
+    param_reader_RLL_STAB_I: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_396.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_control_396_dataport5_410";
+    };
+    param_reader_RLL_STAB_P: requires data access Base_Types::Float {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_396.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_control_396_dataport4_408";
+    };
+    nav_setpt: requires data access control_setpoint_type::control_setpoint.impl {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_396.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_control_396_dataport375_404";
+    };
+    sensors: requires data access sensors_type::sensors_result.impl {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_396.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_control_396_dataport0_402";
+    };
+    userinput: requires data access userinput_type::userinput_result.impl {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_396.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_control_396_dataport357_400";
+    };
+    control_law: requires data access control_law_type::control_law.impl {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_396.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_control_396_dataport366_398";
+    };
+  properties
+    Source_Text => ("tower_task_usercode_control_396.c");
+    Priority => 19;
+    Stack_Size => 256 bytes;
+    SMACCM::Language => "Ivory";
+    Dispatch_Protocol => Hybrid;
+    Period => 5 ms;
+    SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_control_396_per5_541");
+end control;
+
+thread proxy_controllaw
+  features
+    proxyEvent: in event data port control_law_type::control_law.impl {
+      Queue_Size => 16;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_proxy_controllaw_367.h";
+      SMACCM_SYS::CommPrim_Source_Text => "receiveFromTask_proxy_controllaw_367_chan145_371";
+      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_proxy_controllaw_367_chan145_374");
+    };
+    proxyData: requires data access control_law_type::control_law.impl {
+      Access_Right => write_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_proxy_controllaw_367.h";
+      SMACCM_SYS::CommPrim_Source_Text => "write_proxy_controllaw_367_dataport366_369";
+    };
+  properties
+    Source_Text => ("tower_task_usercode_proxy_controllaw_367.c");
+    Priority => 22;
+    Stack_Size => 256 bytes;
+    SMACCM::Language => "Ivory";
+    Dispatch_Protocol => Sporadic;
+end proxy_controllaw;
+
+
+
+thread uiMuxTask
+  features
+    ui_emitter: out event data port userinput_type::userinput_result.impl {
+      Queue_Size => 16;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_uiMuxTask_170.h";
+      SMACCM_SYS::CommPrim_Source_Text => "emitFromTask_uiMuxTask_170_chan169_179";
+    };
+    mavlink_ui: in event data port userinput_type::userinput_result.impl {
+      Queue_Size => 16;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_uiMuxTask_170.h";
+      SMACCM_SYS::CommPrim_Source_Text => "receiveFromTask_uiMuxTask_170_chan122_191";
+      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_uiMuxTask_170_chan122_194");
+    };
+    ppm_ui: in event data port userinput_type::userinput_result.impl {
+      Queue_Size => 16;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_uiMuxTask_170.h";
+      SMACCM_SYS::CommPrim_Source_Text => "receiveFromTask_uiMuxTask_170_chan100_186";
+      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_uiMuxTask_170_chan100_189");
+    };
+    law: in event data port control_law_type::control_law.impl {
+      Queue_Size => 16;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_uiMuxTask_170.h";
+      SMACCM_SYS::CommPrim_Source_Text => "receiveFromTask_uiMuxTask_170_chan145_181";
+      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_uiMuxTask_170_chan145_184");
+    };
+  properties
+    Source_Text => ("tower_task_usercode_uiMuxTask_170.c");
+    Priority => 25;
+    Stack_Size => 256 bytes;
+    SMACCM::Language => "Ivory";
+    Dispatch_Protocol => Sporadic;
+end uiMuxTask;
+
+
+thread controlLawTask
+  features
+    law_emitter: out event data port control_law_type::control_law.impl {
+      Queue_Size => 16;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_controlLawTask_146.h";
+      SMACCM_SYS::CommPrim_Source_Text => "emitFromTask_controlLawTask_146_chan145_148";
+    };
+    nav_req_snk: in event data port control_law_request_type::control_law_request.impl {
+      Queue_Size => 16;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_controlLawTask_146.h";
+      SMACCM_SYS::CommPrim_Source_Text => "receiveFromTask_controlLawTask_146_chan99_165";
+      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_controlLawTask_146_chan99_168");
+    };
+    mavlink_req_snk: in event data port control_law_request_type::control_law_request.impl {
+      Queue_Size => 16;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_controlLawTask_146.h";
+      SMACCM_SYS::CommPrim_Source_Text => "receiveFromTask_controlLawTask_146_chan123_160";
+      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_controlLawTask_146_chan123_163");
+    };
+    ppm_req_snk: in event data port control_law_request_type::control_law_request.impl {
+      Queue_Size => 16;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_controlLawTask_146.h";
+      SMACCM_SYS::CommPrim_Source_Text => "receiveFromTask_controlLawTask_146_chan101_155";
+      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_controlLawTask_146_chan101_158");
+    };
+  properties
+    Source_Text => ("tower_task_usercode_controlLawTask_146.c");
+    Priority => 26;
+    Stack_Size => 256 bytes;
+    SMACCM::Language => "Ivory";
+    Dispatch_Protocol => Sporadic;
+end controlLawTask;
+
+thread ppmInputTower
+  features
+    cr_emitter: out event data port control_law_request_type::control_law_request.impl {
+      Queue_Size => 16;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_ppmInputTower_102.h";
+      SMACCM_SYS::CommPrim_Source_Text => "emitFromTask_ppmInputTower_102_chan101_106";
+    };
+    ui_emitter: out event data port userinput_type::userinput_result.impl {
+      Queue_Size => 16;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_ppmInputTower_102.h";
+      SMACCM_SYS::CommPrim_Source_Text => "emitFromTask_ppmInputTower_102_chan100_104";
+    };
+  properties
+    Source_Text => ("tower_task_usercode_ppmInputTower_102.c");
+    Priority => 28;
+    Stack_Size => 256 bytes;
+    SMACCM::Language => "Ivory";
+    Dispatch_Protocol => Hybrid;
+    Period => 50 ms;
+    SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_ppmInputTower_102_per50_121");
+end ppmInputTower;
+
+
+thread sensorsCaptureTask
+  features
+    newstateEmitter: out event data port Base_Types::Unsigned_32 {
+      Queue_Size => 2;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_sensorsCaptureTask_72.h";
+      SMACCM_SYS::CommPrim_Source_Text => "emitFromTask_sensorsCaptureTask_72_chan86_88";
+    };
+    newstateEvent: in event data port Base_Types::Unsigned_32 {
+      Queue_Size => 2;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_sensorsCaptureTask_72.h";
+      SMACCM_SYS::CommPrim_Source_Text => "receiveFromTask_sensorsCaptureTask_72_chan86_90";
+      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_sensorsCaptureTask_72_chan86_newstate_captureloop_96", "eventhandler_sensorsCaptureTask_72_chan86_newstate_init_93");
+    };
+    position: in event data port gps_type::position.impl {
+      Queue_Size => 16;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_sensorsCaptureTask_72.h";
+      SMACCM_SYS::CommPrim_Source_Text => "receiveFromTask_sensorsCaptureTask_72_chan53_78";
+      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_sensorsCaptureTask_72_chan53_81");
+    };
+    sensors: requires data access sensors_type::sensors_result.impl {
+      Access_Right => write_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_sensorsCaptureTask_72.h";
+      SMACCM_SYS::CommPrim_Source_Text => "write_sensorsCaptureTask_72_dataport0_74";
+    };
+  properties
+    Source_Text => ("tower_task_usercode_sensorsCaptureTask_72.c");
+    Priority => 29;
+    Stack_Size => 1024 bytes;
+    SMACCM::Language => "Ivory";
+    Dispatch_Protocol => Hybrid;
+    Period => 1 ms;
+    SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_sensorsCaptureTask_72_per1_captureloop_95");
+end sensorsCaptureTask;
+
+
+thread ubloxGPS
+  features
+    position: out event data port gps_type::position.impl {
+      Queue_Size => 16;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_ubloxGPS_54.h";
+      SMACCM_SYS::CommPrim_Source_Text => "emitFromTask_ubloxGPS_54_chan53_60";
+    };
+    istream: in event data port Base_Types::Unsigned_8 {
+      Queue_Size => 256;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_ubloxGPS_54.h";
+      SMACCM_SYS::CommPrim_Source_Text => "receiveFromTask_ubloxGPS_54_chan47_56";
+      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_ubloxGPS_54_chan47_71");
+    };
+  properties
+    Source_Text => ("tower_task_usercode_ubloxGPS_54.c");
+    Priority => 30;
+    Stack_Size => 256 bytes;
+    SMACCM::Language => "Ivory";
+    Dispatch_Protocol => Sporadic;
+end ubloxGPS;
+
+
+thread uart5ISR
+  features
+    istream: out event data port Base_Types::Unsigned_8 {
+      Queue_Size => 1024;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_signal_comm_uart5ISR_1039.h";
+      SMACCM_SYS::CommPrim_Source_Text => "emitFromSig_uart5ISR_1039_chan1038_1043";
+    };
+    ostream: in event data port Base_Types::Unsigned_8 {
+      Queue_Size => 1024;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_signal_comm_uart5ISR_1039.h";
+      SMACCM_SYS::CommPrim_Source_Text => "receiveFromSig_uart5ISR_1039_chan1037_1041";
+    };
+  properties
+    Dispatch_Protocol => Sporadic;
+    Source_Text => ("tower_signal_usercode_uart5ISR_1039.c");
+    Priority => 31;
+    SMACCM::Language => "Ivory";
+    SMACCM_SYS::Signal_Name => "UART5_IRQn";
+    SMACCM_SYS::ISR_Handler => "UART5_IRQHandler";
+end uart5ISR;
+
+
+thread uart1ISR
+  features
+    istream: out event data port Base_Types::Unsigned_8 {
+      Queue_Size => 1024;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_signal_comm_uart1ISR_643.h";
+      SMACCM_SYS::CommPrim_Source_Text => "emitFromSig_uart1ISR_643_chan642_647";
+    };
+    ostream: in event data port Base_Types::Unsigned_8 {
+      Queue_Size => 1024;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_signal_comm_uart1ISR_643.h";
+      SMACCM_SYS::CommPrim_Source_Text => "receiveFromSig_uart1ISR_643_chan641_645";
+    };
+  properties
+    Dispatch_Protocol => Sporadic;
+    Source_Text => ("tower_signal_usercode_uart1ISR_643.c");
+    Priority => 32;
+    SMACCM::Language => "Ivory";
+    SMACCM_SYS::Signal_Name => "USART1_IRQn";
+    SMACCM_SYS::ISR_Handler => "USART1_IRQHandler";
+end uart1ISR;
+
+
+thread uart2ISR
+  features
+    istream: out event data port Base_Types::Unsigned_8 {
+      Queue_Size => 1;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_signal_comm_uart2ISR_582.h";
+      SMACCM_SYS::CommPrim_Source_Text => "emitFromSig_uart2ISR_582_chan581_586";
+    };
+    ostream: in event data port Base_Types::Unsigned_8 {
+      Queue_Size => 12;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_signal_comm_uart2ISR_582.h";
+      SMACCM_SYS::CommPrim_Source_Text => "receiveFromSig_uart2ISR_582_chan580_584";
+    };
+  properties
+    Dispatch_Protocol => Sporadic;
+    Source_Text => ("tower_signal_usercode_uart2ISR_582.c");
+    Priority => 33;
+    SMACCM::Language => "Ivory";
+    SMACCM_SYS::Signal_Name => "USART2_IRQn";
+    SMACCM_SYS::ISR_Handler => "USART2_IRQHandler";
+end uart2ISR;
+
+
+thread uart6ISR
+  features
+    istream: out event data port Base_Types::Unsigned_8 {
+      Queue_Size => 256;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_signal_comm_uart6ISR_48.h";
+      SMACCM_SYS::CommPrim_Source_Text => "emitFromSig_uart6ISR_48_chan47_52";
+    };
+    ostream: in event data port Base_Types::Unsigned_8 {
+      Queue_Size => 2;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_signal_comm_uart6ISR_48.h";
+      SMACCM_SYS::CommPrim_Source_Text => "receiveFromSig_uart6ISR_48_chan46_50";
+    };
+  properties
+    Dispatch_Protocol => Sporadic;
+    Source_Text => ("tower_signal_usercode_uart6ISR_48.c");
+    Priority => 34;
+    SMACCM::Language => "Ivory";
+    SMACCM_SYS::Signal_Name => "USART6_IRQn";
+    SMACCM_SYS::ISR_Handler => "USART6_IRQHandler";
+end uart6ISR;
+	
+	
+end Copter_Software;
