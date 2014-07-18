@@ -39,9 +39,9 @@ public
 
   process flight_gen_process
 	features
-     rcoverride_tx: out event data port mavlink_rc_channels_override_msg::rc_channels_override_msg.impl{Queue_Size => 16;};
-	 control_law_request: out event data port control_law_request_type::control_law_request.impl{Queue_Size => 16;};
-      
+      position: out event data port gps_type::position.impl;
+      mav_ui_emitter: out event data port userinput_type::userinput_result.impl;
+      mav_cr_emitter: out event data port control_law_request_type::control_law_request.impl;
   end flight_gen_process;
 
 process implementation flight_gen_process.impl
@@ -95,11 +95,10 @@ process implementation flight_gen_process.impl
     conn_31 : port navigation_inst.control_setpt -> proxy_navsetpt_inst.proxyEvent;
     --conn_33 : port uiMuxTask_inst.ui_emitter -> navigation_inst.ui_chan_313;
     --conn_35 : port controlLawTask_inst.law_emitter -> navigation_inst.law_chan_322;
-    conn_37 : port mavlinkInputTask_inst.cr_emitter -> controlLawTask_inst.mavlink_req_snk;
-    conn_38 : port mavlinkInputTask_inst.ui_emitter -> uiMuxTask_inst.mavlink_ui;
-    conn_42 : port ubloxGPS_inst.position -> position_state_inst.proxyEvent;
+    conn_37 : port mavlinkInputTask_inst.cr_emitter -> mav_cr_emitter;
+    conn_38 : port mavlinkInputTask_inst.ui_emitter -> mav_ui_emitter;
+    conn_42 : port ubloxGPS_inst.position -> position;
     conn_43 : port ubloxGPS_inst.position -> navigation_inst.pos_chan_331;
-    conn_44 : port ubloxGPS_inst.position -> sensorsCaptureTask_inst.position;
     conn_46 : port uart1ISR_inst.istream -> datalink_uart1_inst.link_istream;
     conn_47 : port uart6ISR_inst.istream -> ubloxGPS_inst.istream;
     conn_48 : data access dataport97 -> commsecRecoveryTask_inst.comm_mon_res;
