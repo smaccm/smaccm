@@ -103,7 +103,7 @@ public abstract class VerifyHandler extends AadlHandler {
                 wrapper.addChild(result);
                 result = wrapper;
             } else {
-            	wrapper.addChild(createRealizabilityVerification(si));
+            	//wrapper.addChild(createRealizabilityVerification(si));
                 wrapper.addChild(createGuaranteeVerification(si));
                 wrapper.addChild(createAssumptionVerification(si));
                 wrapper.addChild(createConsistVerification(si));
