@@ -184,7 +184,7 @@ public abstract class VerifyHandler extends AadlHandler {
                 oldNode.outputs, 
                 oldNode.locals,
                 oldNode.equations,
-                Collections.EMPTY_LIST,
+                properties,
                 oldNode.assertions,
                 oldNode.realizabilities);
         
@@ -396,6 +396,8 @@ public abstract class VerifyHandler extends AadlHandler {
             	  japi.execute(program, (JKindResult)result, monitor);
             	}else if(result instanceof JKindResultRealizability){
               	  rapi.execute(program, (JKindResultRealizability)result, monitor);
+              	  System.out.println(((JKindResultRealizability) result).getText());
+              	  System.out.println("******** HERE IS THE LUSTRE ********");
               	  System.out.println(program);
             	}
             		
