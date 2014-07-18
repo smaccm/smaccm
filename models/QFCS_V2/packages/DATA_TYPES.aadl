@@ -335,6 +335,12 @@ end QUAD_Stabilizer.tbool;
 
 data implementation EGI.tbool
   subcomponents
+    AOA : data Base_Types::Boolean;      -- TBD: SPM 2014/07/16: Is this actually part of the EGI interface?
+    TAT : data Base_Types::Boolean;      -- TBD: SPM 2014/07/16: Is this actually part of the EGI interface?
+    TotPres : data Base_Types::Boolean;  -- TBD: SPM 2014/07/16: Is this actually part of the EGI interface?
+    Pres : data Base_Types::Boolean;     -- TBD: SPM 2014/07/16: Is this actually part of the EGI interface?
+    Temp : data Base_Types::Boolean;     -- TBD: SPM 2014/07/16: Is this actually part of the EGI interface?
+  
     PHI : data Base_Types::Boolean;
     THETA : data Base_Types::Boolean;
     PSI : data Base_Types::Boolean;
