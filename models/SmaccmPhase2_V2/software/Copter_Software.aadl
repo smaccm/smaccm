@@ -32,27 +32,14 @@ with SMACCM;
 
   process flight_process
     features
-      mavlink_cr_emitter: in event data port control_law_request_type::control_law_request.impl {
-        Queue_Size => 16;
-        SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_mavlinkInputTask_124.h";
-        SMACCM_SYS::CommPrim_Source_Text => "emitFromTask_mavlinkInputTask_124_chan123_128";
-      };
-      mavlink_ui_emitter: in event data port userinput_type::userinput_result.impl {
-        Queue_Size => 16;
-        SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_mavlinkInputTask_124.h";
-        SMACCM_SYS::CommPrim_Source_Text => "emitFromTask_mavlinkInputTask_124_chan122_126";
-      };
-      nav_ctl_law_req: in event data port control_law_request_type::control_law_request.impl {
-        Queue_Size => 16;
-        SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_navigation_199.h";
-        SMACCM_SYS::CommPrim_Source_Text => "emitFromTask_navigation_199_chan99_203";
-      };
+      mavlink_cr_emitter: in event data port control_law_request_type::control_law_request.impl;
+      mavlink_ui_emitter: in event data port userinput_type::userinput_result.impl;
+      nav_ctl_law_req: in event data port control_law_request_type::control_law_request.impl;
+      gps_position: in event data port gps_type::position.impl;
   end flight_process;
 
   process implementation flight_process.impl
   subcomponents
-    dataport1082 : data radio_stat_type::radio_stat.impl;
-    dataport686 : data radio_stat_type::radio_stat.impl;
     dataport632 : data gps_type::position.impl;
     dataport631 : data mavlink_veh_commsec_msg::veh_commsec_msg.impl;
     dataport571 : data motors_type::motors.impl;
@@ -80,11 +67,9 @@ with SMACCM;
     ppmInputTower_inst : thread ppmInputTower;
     sensorsCaptureTask_inst : thread sensorsCaptureTask;
     proxy_userinput_inst : thread proxy_userinput;
-    ubloxGPS_inst : thread ubloxGPS;
     uart5ISR_inst : thread uart5ISR;
     uart1ISR_inst : thread uart1ISR;
     uart2ISR_inst : thread uart2ISR;
-    uart6ISR_inst : thread uart6ISR;
     
    connections
 
@@ -96,19 +81,17 @@ with SMACCM;
     conn_28 : port control_inst.control -> motmix_inst.control;
     conn_30 : port nav_ctl_law_req -> controlLawTask_inst.nav_req_snk;
     conn_32 : port uiMuxTask_inst.ui_emitter -> proxy_userinput_inst.proxyEvent;
-    conn_33 : port uiMuxTask_inst.ui_emitter -> navigation_inst.ui_chan_313;
+    --conn_33 : port uiMuxTask_inst.ui_emitter -> navigation_inst.ui_chan_313; --NOTE this should probably change
     conn_34 : port controlLawTask_inst.law_emitter -> proxy_controllaw_inst.proxyEvent;
-    conn_35 : port controlLawTask_inst.law_emitter -> navigation_inst.law_chan_322;
+    --conn_35 : port controlLawTask_inst.law_emitter -> navigation_inst.law_chan_322; --NOTE this should probably change
     conn_36 : port controlLawTask_inst.law_emitter -> uiMuxTask_inst.law;
     conn_37 : port mavlink_cr_emitter -> controlLawTask_inst.mavlink_req_snk;
     conn_38 : port mavlink_ui_emitter -> uiMuxTask_inst.mavlink_ui;
     conn_39 : port ppmInputTower_inst.cr_emitter -> controlLawTask_inst.ppm_req_snk;
     conn_40 : port ppmInputTower_inst.ui_emitter -> uiMuxTask_inst.ppm_ui;
     conn_41 : port sensorsCaptureTask_inst.newstateEmitter -> sensorsCaptureTask_inst.newstateEvent;
-    conn_42 : port ubloxGPS_inst.position -> position_state_inst.proxyEvent;
-    conn_43 : port ubloxGPS_inst.position -> navigation_inst.pos_chan_331;
-    conn_44 : port ubloxGPS_inst.position -> sensorsCaptureTask_inst.position;
-    conn_47 : port uart6ISR_inst.istream -> ubloxGPS_inst.istream;
+    conn_42 : port gps_position -> position_state_inst.proxyEvent;
+    conn_44 : port gps_position -> sensorsCaptureTask_inst.position;
     
     conn_330 : data access dataport632 -> position_state_inst.proxyData;
     conn_331 : data access dataport571 -> motors_state_inst.proxyData;
