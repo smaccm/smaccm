@@ -1,0 +1,72 @@
+package UAV
+public
+  with UAS;
+  with PX4IOAR;
+  with PX4FMU;
+  with ODROID_XU;
+  with XU_DAUGHTER_BOARD;
+  with Copter_Software;
+  with Mission_Software;
+  with DATATYPES;
+  with SMACCM;
+  
+  system UAV
+    features
+      radio_access_915Mhz: requires bus access UAS::RF_Spectrum.RF_915MHz; 
+      radio_access_2_4Ghz: requires bus access UAS::RF_Spectrum.RF_2_4GHz;
+      mavlink: in out data port DATATYPES::EncryptMAVLink;
+      flight_control_commands: in data port DATATYPES::Flight_Control_Commands.Impl;
+  end UAV;
+  
+  system implementation UAV.Impl 
+    subcomponents
+      CSW: system Copter_Software::Software.Impl;
+      MSW: system Mission_Software::Software.Impl;
+      PX4FMU: system PX4FMU::PX4FMU.Impl;
+      PX4IOAR: system PX4IOAR::PX4IOAR.Impl;
+      ODROID_XU: system ODROID_XU::ODROID_XU.Impl;
+      UX_DAUGHTER: system XU_DAUGHTER_BOARD::XU_DAUGHTER_BOARD.IMPL;
+     
+    connections 
+      conn_ide: feature group UX_DAUGHTER.ide <-> ODROID_XU.ide;
+      conn_mpi: feature group UX_DAUGHTER.mpi <-> ODROID_XU.mpi;
+      conn_rc: port MSW.rcoverride_tx -> CSW.mission_rc_override_tx;
+      conn_control: port MSW.control_law_request -> CSW.mission_control_law_request;      conn0: feature group PX4FMU.sensors <-> CSW.sensors;
+      conn1: feature group PX4FMU.expansion_slot <-> PX4IOAR.expansion_connector;
+
+      conn2: feature group PX4IOAR.motors_and_radios <-> CSW.motors_and_radios;
+      conn3: port PX4IOAR.mavlink <-> mavlink;
+      conn4: port flight_control_commands -> PX4IOAR.flight_control_commands;
+      
+      conn5: bus access PX4IOAR.rc_radio <-> radio_access_2_4Ghz;
+      conn6: bus access PX4IOAR.x3dr_radio <-> radio_access_915Mhz;      	
+      
+    properties
+      Actual_Memory_Binding => (reference (PX4FMU.MC.FLASH)) applies to CSW.ML;
+      Actual_Memory_Binding => (reference (ODROID_XU.mem)) applies to MSW.ML;
+      
+  end UAV.Impl;
+
+  feature group motors_and_radios
+    features
+      motor1: out data port DATATYPES::Servo_Commands;
+      motor2: out data port DATATYPES::Servo_Commands;
+      motor3: out data port DATATYPES::Servo_Commands;
+      motor4: out data port DATATYPES::Servo_Commands;
+      
+      flight_control_commands: in data port DATATYPES::Flight_Control_Commands.Impl {
+        SMACCM::Unimplemented => true;
+      };
+      mavlink: in out data port DATATYPES::EncryptMAVLink;
+  end motors_and_radios;
+  
+  feature group sensors
+    features
+      magnetometer_data: in data port DATATYPES::Magnetometer_Data;
+      barometric_data: in data port DATATYPES::Barometric_Data;
+      motion_data: in data port DATATYPES::Motion_Data.Impl;
+      reset: in event data port DATATYPES::Reset_Data;
+      battery_data: in data port DATATYPES::Battery_Data;
+      gps_data: in data port DATATYPES::GPS_Data;
+  end sensors;
+end UAV;

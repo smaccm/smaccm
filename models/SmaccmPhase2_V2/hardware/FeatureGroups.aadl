@@ -1,0 +1,28 @@
+package FeatureGroups
+public
+  with mavlink_veh_commsec_msg;
+  with att_control_dbg_type;
+  with alt_control_dbg_type;
+  with radio_stat_type;
+  with motors_type;
+  with controloutput_type;
+  with gps_type;
+  with sensors_type;
+  with control_law_type;
+  with Base_Types;
+  
+feature group data_conns
+  features
+    commsecInfo: requires data access mavlink_veh_commsec_msg::veh_commsec_msg.impl;
+    att_control: requires data access att_control_dbg_type::att_control_dbg.impl;
+    alt_control: requires data access alt_control_dbg_type::alt_control_dbg.impl;
+    radio: requires data access radio_stat_type::radio_stat.impl;
+    motors: requires data access motors_type::motors.impl;
+    control: requires data access controloutput_type::controloutput.impl;
+    position: requires data access gps_type::position.impl;
+    sensors: requires data access sensors_type::sensors_result.impl;
+    controllaw: requires data access control_law_type::control_law.impl;
+end data_conns;
+
+
+end FeatureGroups;
