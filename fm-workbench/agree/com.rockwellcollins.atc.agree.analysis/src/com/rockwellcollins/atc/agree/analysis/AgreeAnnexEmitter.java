@@ -295,7 +295,7 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
             			layout.addElement(subCompInst.getName(), renameStr, AgreeLayout.SigType.INPUT);
             			break;
             		case OUT:
-            			internalVars.add(varDecl);
+            			outputVars.add(varDecl);
             			layout.addElement(subCompInst.getName(), renameStr, AgreeLayout.SigType.OUTPUT);
             		}
             		//addToRenaming(agreeFeat.lustreString, agreeFeat.aadlString);
@@ -677,8 +677,7 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         //internalVars.addAll(subEmitter.internalVars);
         for(VarDecl varDec : agreeNode.outputs){
         	AgreeVarDecl agreeVar = new AgreeVarDecl(varDec.id, varDec.type);
-        	outputVars.add(agreeVar);
-        	inputVars.add(agreeVar);
+        	internalVars.add(agreeVar);
         }
         //internalVars.addAll(agreeNode.outputs);
         for(VarDecl varDec : agreeNode.inputs){
