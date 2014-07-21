@@ -7,13 +7,16 @@ import java.util.Map;
 
 import jkind.api.results.AnalysisResult;
 import jkind.api.results.PropertyResult;
+import jkind.api.results.RealizabilityResult;
 import jkind.api.ui.AnalysisResultTree;
 import jkind.interval.NumericInterval;
 import jkind.lustre.Program;
 import jkind.lustre.values.Value;
 import jkind.results.Counterexample;
 import jkind.results.InvalidProperty;
+import jkind.results.InvalidRealizability;
 import jkind.results.Property;
+import jkind.results.Realizability;
 import jkind.results.Signal;
 import jkind.results.UnknownProperty;
 import jkind.results.layout.Layout;
@@ -150,7 +153,12 @@ public class AgreeMenuListener implements IMenuListener {
             } else if (prop instanceof UnknownProperty) {
                 return ((UnknownProperty) prop).getInductiveCounterexample();
             }
-        }
+        } else if (result instanceof RealizabilityResult) {
+			Realizability real = ((RealizabilityResult) result).getRealizability();
+			if (real instanceof InvalidRealizability) {
+				return ((InvalidRealizability) real).getCounterexample();
+			}
+		}
 
         return null;
     }
