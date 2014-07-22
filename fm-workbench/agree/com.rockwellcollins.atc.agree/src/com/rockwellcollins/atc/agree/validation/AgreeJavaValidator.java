@@ -66,6 +66,7 @@ import com.rockwellcollins.atc.agree.agree.CallDef;
 import com.rockwellcollins.atc.agree.agree.ConstStatement;
 import com.rockwellcollins.atc.agree.agree.EqStatement;
 import com.rockwellcollins.atc.agree.agree.Expr;
+import com.rockwellcollins.atc.agree.agree.FloorCast;
 import com.rockwellcollins.atc.agree.agree.FnCallExpr;
 import com.rockwellcollins.atc.agree.agree.FnDefExpr;
 import com.rockwellcollins.atc.agree.agree.GetPropertyExpr;
@@ -83,6 +84,7 @@ import com.rockwellcollins.atc.agree.agree.PreExpr;
 import com.rockwellcollins.atc.agree.agree.PrevExpr;
 import com.rockwellcollins.atc.agree.agree.PrimType;
 import com.rockwellcollins.atc.agree.agree.PropertyStatement;
+import com.rockwellcollins.atc.agree.agree.RealCast;
 import com.rockwellcollins.atc.agree.agree.RealLitExpr;
 import com.rockwellcollins.atc.agree.agree.RecordDefExpr;
 import com.rockwellcollins.atc.agree.agree.RecordExpr;
@@ -116,6 +118,25 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
     	}
     }
     
+    @Check(CheckType.FAST)
+    public void checkFloorCast(FloorCast floor){
+    	AgreeType exprType = getAgreeType(floor.getExpr());
+    	
+    	if(!matches(REAL, exprType)){
+    		error(floor, "Argument of floor cast is of type '" + exprType.toString()
+    				+ "' but must be of type 'real'");
+    	}
+    }
+    
+    @Check(CheckType.FAST)
+    public void checkRealCast(RealCast floor){
+    	AgreeType exprType = getAgreeType(floor.getExpr());
+    	
+    	if(!matches(INT, exprType)){
+    		error(floor, "Argument of floor cast is of type '" + exprType.toString()
+    				+ "' but must be of type 'int'");
+    	}
+    }
 
     @Check(CheckType.FAST)
     public void checkSynchStatement(SynchStatement sync){
@@ -1083,8 +1104,9 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
             
             if(op.equals("*")){
             	if(!rightSideConst && !leftSideConst){
-            		error(binExpr, "neither the right nor the left side of binary expression '"
-            	            + op + "' is constant'.  Non-linear expressions are not allowed");
+            		warning(binExpr, "neither the right nor the left side of binary expression '"
+            	            + op + "' is constant'.  Non-linear expressions are only allowed with z3."
+            	            		+ " Even with z3 they are not recomended...");
             	}
             }
             
@@ -1100,8 +1122,9 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
                         + typeRight + "' but must be of type 'int'");
             }
             if(!rightSideConst){
-            	error(binExpr, "right side of binary expression '" + op + "' is not constant."
-            			+ " Non-linear expressions are not allowed");
+            	warning(binExpr, "right side of binary expression '" + op + "' is not constant."
+            			+ " Non-linear expressions are only allowed with z3."
+            	        + " Even with z3 they are not recomended...");
             }
             
             return;
@@ -1116,8 +1139,9 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
             }
             
             if(!rightSideConst){
-            	error(binExpr, "right side of binary expression '" + op + "' is not constant."
-            			+ " Non-linear expressions are not allowed");
+            	warning(binExpr, "right side of binary expression '" + op + "' is not constant."
+            			+ " Non-linear expressions are only allowed with z3."
+            	        + " Even with z3 they are not recomended...");
             }
             
             return;
@@ -1172,7 +1196,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
         while (dotId.getSub() != null) {
             dotId = dotId.getSub();
         }
-
+        
         return dotId.getBase();
     }
     
@@ -1465,6 +1489,10 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
         	return getAgreeType((RecordExpr)expr);
         } else if(expr instanceof RecordUpdateExpr){
         	return getAgreeType((RecordUpdateExpr)expr);
+        } else if(expr instanceof FloorCast){
+        	return INT;
+        } else if(expr instanceof RealCast){
+        	return REAL;
         }
 
         return ERROR;

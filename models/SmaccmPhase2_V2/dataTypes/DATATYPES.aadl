@@ -1,0 +1,157 @@
+package DATATYPES
+public
+  with Data_Model;
+  with Base_Types;
+  
+  data RawMessage
+  end RawMessage;
+  
+  data ParsedMessage
+  end ParsedMessage;  
+  
+  data MAVLink
+  end MAVLink;
+  
+  data EncryptMAVLink
+  end EncryptMAVLink;
+  
+  data Thread_Signal
+  end Thread_Signal;
+  
+  data implementation Thread_Signal.Impl_8
+  subcomponents
+  	sig0 : data Base_Types::Boolean;
+  	sig1 : data Base_Types::Boolean;
+  	sig2 : data Base_Types::Boolean;
+  	sig3 : data Base_Types::Boolean;
+  	sig4 : data Base_Types::Boolean;
+  	sig5 : data Base_Types::Boolean;
+  	sig6 : data Base_Types::Boolean;
+  	sig7 : data Base_Types::Boolean;
+  end Thread_Signal.Impl_8;
+  
+  data Flight_Control_Commands
+  properties
+  	Data_Model::Data_Representation => Struct;
+  end Flight_Control_Commands;
+  
+  data implementation Flight_Control_Commands.Impl
+  subcomponents
+      --ppm inputs
+      ppm0 : data Base_Types::Float;
+      ppm1 : data Base_Types::Float;
+      ppm2 : data Base_Types::Float;
+      ppm3 : data Base_Types::Float;
+      ppm4 : data Base_Types::Float;
+      ppm5 : data Base_Types::Float;
+      ppm6 : data Base_Types::Float;
+      ppm7 : data Base_Types::Float;
+      
+  end Flight_Control_Commands.impl;
+  
+  data Motor_Commands
+  properties
+  	Data_Model::Data_Representation => Struct;
+  end Motor_Commands;
+  
+  data implementation Motor_Commands.Impl
+  subcomponents
+    -- val : data Base_Types::Float_64;
+    -- status : data Base_Types::Integer_8;
+    --changed types for AGREE
+     val : data Base_Types::Float;
+     status : data Base_Types::Integer;
+  end Motor_Commands.impl;
+
+  data Servo_Commands
+  properties
+    Data_Model::Data_Representation => Array;
+    Data_Model::Base_Type => (classifier (Base_Types::Integer_32));
+    Data_Model::Dimension => (10);
+  end Servo_Commands;
+  
+  
+  data Sensor_Data
+  end Sensor_Data;
+  
+  data implementation Sensor_Data.Impl
+  subcomponents
+      speed : data Base_Types::Float;
+  end Sensor_Data.Impl;
+  
+  data Magnetometer_Data
+  end Magnetometer_Data;
+  
+  data Barometric_Data
+  end Barometric_Data;
+  
+  data Motion_Data
+  end Motion_Data;
+  
+  data Reset_Data
+  end Reset_Data;
+  
+  data implementation Motion_Data.Impl
+  subcomponents
+      vertical_speed : data Base_Types::Float;
+  end Motion_Data.Impl;
+  
+  data Battery_Data
+  end Battery_Data;
+  
+  data GPS_Data
+  end GPS_Data;
+  
+  data Private_Key_Data
+  end Private_Key_Data;
+  
+  data control_data
+  end control_data;
+
+data implementation control_data.impl
+  subcomponents
+    param_reader_FS_ALT_OFFS: data Base_Types::Float;
+    param_reader_POS_UI_SENS: data Base_Types::Float;
+    param_reader_POS_THRUST_IMAX: data Base_Types::Float;
+    param_reader_POS_THRUST_D: data Base_Types::Float;
+    param_reader_POS_THRUST_I: data Base_Types::Float;
+    param_reader_POS_THRUST_P: data Base_Types::Float;
+    param_reader_ALT_UI_DEAD: data Base_Types::Float;
+    param_reader_ALT_UI_SENS: data Base_Types::Float;
+    param_reader_ALT_POS_IMAX: data Base_Types::Float;
+    param_reader_ALT_POS_D: data Base_Types::Float;
+    param_reader_ALT_POS_I: data Base_Types::Float;
+    param_reader_ALT_POS_P: data Base_Types::Float;
+    param_reader_ALT_RATE_IMAX: data Base_Types::Float;
+    param_reader_ALT_RATE_D: data Base_Types::Float;
+    param_reader_ALT_RATE_I: data Base_Types::Float;
+    param_reader_ALT_RATE_P: data Base_Types::Float;
+    param_reader_YAW_UI_SENS: data Base_Types::Float;
+    param_reader_YAW_RATE_IMAX: data Base_Types::Float;
+    param_reader_YAW_RATE_D: data Base_Types::Float;
+    param_reader_YAW_RATE_I: data Base_Types::Float;
+    param_reader_YAW_RATE_P: data Base_Types::Float;
+    param_reader_YAW_STAB_IMAX: data Base_Types::Float;
+    param_reader_YAW_STAB_D: data Base_Types::Float;
+    param_reader_YAW_STAB_I: data Base_Types::Float;
+    param_reader_YAW_STAB_P: data Base_Types::Float;
+    param_reader_PITRLL_UI_SENS: data Base_Types::Float;
+    param_reader_PIT_RATE_IMAX: data Base_Types::Float;
+    param_reader_PIT_RATE_D: data Base_Types::Float;
+    param_reader_PIT_RATE_I: data Base_Types::Float;
+    param_reader_PIT_RATE_P: data Base_Types::Float;
+    param_reader_PIT_STAB_IMAX: data Base_Types::Float;
+    param_reader_PIT_STAB_D: data Base_Types::Float;
+    param_reader_PIT_STAB_I: data Base_Types::Float;
+    param_reader_PIT_STAB_P: data Base_Types::Float;
+    param_reader_RLL_RATE_IMAX: data Base_Types::Float;
+    param_reader_RLL_RATE_D: data Base_Types::Float;
+    param_reader_RLL_RATE_I: data Base_Types::Float;
+    param_reader_RLL_RATE_P: data Base_Types::Float;
+    param_reader_RLL_STAB_IMAX: data Base_Types::Float;
+    param_reader_RLL_STAB_D: data Base_Types::Float;
+    param_reader_RLL_STAB_I: data Base_Types::Float;
+    param_reader_RLL_STAB_P: data Base_Types::Float;
+end control_data.impl;
+  
+end DATATYPES;

@@ -52,7 +52,7 @@ thread group UserInputThreads
   		eq sticks_corner_past : bool = 
   			sticks_corner -> pre(sticks_corner_past) or sticks_corner;
   		
-  		eq armed_past : bool =  
+  		eq armed_past : bool =   
   			sticks_corner_past and dead_pos_armed_past;
   			
   		eq output_ready : bool;

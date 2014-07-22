@@ -18,11 +18,6 @@ public abstract class Dispatcher {
 	private ThreadImplementation owner;
 	//private DispatcherType dispatcherType;
 
-	public enum DispatcherType {
-		    INPUT_PORT_DISPATCHER, 
-		    PERIODIC_DISPATCHER
-	}
-	
 	public Dispatcher(ThreadImplementation owner, List<ExternalHandler> externalHandlerList) {
 	  this.owner = owner;
 	  this.externalHandlerList = externalHandlerList;

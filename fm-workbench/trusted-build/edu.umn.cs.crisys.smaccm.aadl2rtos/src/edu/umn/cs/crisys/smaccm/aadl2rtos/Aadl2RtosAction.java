@@ -28,6 +28,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -51,6 +52,7 @@ import org.osate.aadl2.Element;
 import org.osate.aadl2.SystemImplementation;
 import org.osate.aadl2.instance.SystemInstance;
 import org.osate.aadl2.instantiation.InstantiateModel;
+import org.osate.aadl2.modelsupport.errorreporting.AnalysisErrorReporterManager;
 import org.osate.aadl2.modelsupport.resources.OsateResourceUtil;
 import org.w3c.dom.Document;
 
@@ -60,6 +62,8 @@ import edu.umn.cs.crisys.smaccm.aadl2rtos.parse.AadlModelParser;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.parse.Model;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.prx.PrxGenerator;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.util.Util;
+import fr.tpt.aadl.ramses.control.support.analysis.AnalysisException;
+import fr.tpt.aadl.ramses.control.support.config.RamsesConfiguration;
 
 public class Aadl2RtosAction extends AadlAction {
 	private Logger log;
@@ -77,24 +81,28 @@ public class Aadl2RtosAction extends AadlAction {
 			return Status.CANCEL_STATUS;
 		}
 
-		final SystemImplementation sysimpl = (SystemImplementation) sel;
+		return execute(null, (SystemImplementation) sel, monitor, null, logger);
 		
+	}
+	
+	private IStatus execute(SystemInstance si, SystemImplementation sysimpl, IProgressMonitor monitor, File dir, Logger logger) {
+		log = logger;
 		log.info("This is the sysimpl name: "+ sysimpl.getName());
 		log.info("More stuff: " + sysimpl.getFullName());
-		log.info("And more: " + sysimpl.getQualifiedName());
-		
-		
+		log.info("And more: " + sysimpl.getQualifiedName());	
 		
 		monitor.beginTask("Generating BRTOS Configuration for AADL Model", IProgressMonitor.UNKNOWN);
 
 		try {
 			// Create instance model
-			InstantiateModel im = new InstantiateModel(new NullProgressMonitor(), getErrorManager());
-			URI uri = OsateResourceUtil.getInstanceModelURI(sysimpl);
-			Resource resource = OsateResourceUtil.getEmptyAaxl2Resource(uri);
+			if (si == null) {
+				InstantiateModel im = new InstantiateModel(new NullProgressMonitor(), getErrorManager());
+				URI uri = OsateResourceUtil.getInstanceModelURI(sysimpl);
+				Resource resource = OsateResourceUtil.getEmptyAaxl2Resource(uri);
 			
-			// Aha!  The big time sink is here!
-			SystemInstance si = im.createSystemInstance(sysimpl, resource);
+				// Aha!  The big time sink is here!
+			 	si = im.createSystemInstance(sysimpl, resource);
+			}
 
 			// Now harvest the stuff we need from the OSATE AST.
 			Model model = new Model(sysimpl, si);
@@ -104,7 +112,9 @@ public class Aadl2RtosAction extends AadlAction {
 			new AadlModelParser(sysimpl, si, model, logger);
 			
 			// Print out C skeletons
-			File dir = Util.getDirectory(sysimpl);
+			if (dir == null) 
+				dir = Util.getDirectory(sysimpl);
+			
 			BrtosEntrypointSkeletonGenerator gen = new BrtosEntrypointSkeletonGenerator(log, model, dir);
 			gen.write();
 
@@ -188,4 +198,45 @@ public class Aadl2RtosAction extends AadlAction {
 			log.error("UsersXML: Error trying to instantiate DocumentBuilder " + pce);
 		}
 	}
+
+	@Override
+	public void setParameters(Map<String, Object> parameters) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public List<String> getTransformationModuleList() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public static final String PLUGIN_NAME = "AADL2RTOS";
+	
+	@Override
+	public String getRegistryName() {
+		// TODO Auto-generated method stub
+		return PLUGIN_NAME;
+	}
+
+	@Override
+	public String getPluginName() {
+		// TODO Auto-generated method stub
+		return PLUGIN_NAME;
+	}
+
+	@Override
+	public String getPluginId() {
+		// TODO Auto-generated method stub
+		return PLUGIN_NAME;
+	}
+	
+	@Override
+	public void performAnalysis(SystemInstance instance,
+								RamsesConfiguration config,
+	                             AnalysisErrorReporterManager errReporterManager,
+	                             IProgressMonitor monitor) throws AnalysisException {
+
+		this.execute(instance, instance.getSystemImplementation(), monitor, config.getRamsesOutputDir(), new ConsoleLogger(Logger.INFO));
+	}  
 }

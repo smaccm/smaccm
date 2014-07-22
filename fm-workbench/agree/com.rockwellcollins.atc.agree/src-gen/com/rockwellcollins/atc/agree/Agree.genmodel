@@ -146,6 +146,12 @@
     <genClasses ecoreClass="Agree.ecore#//ThisExpr">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//ThisExpr/subThis"/>
     </genClasses>
+    <genClasses ecoreClass="Agree.ecore#//FloorCast">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//FloorCast/expr"/>
+    </genClasses>
+    <genClasses ecoreClass="Agree.ecore#//RealCast">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//RealCast/expr"/>
+    </genClasses>
     <genClasses ecoreClass="Agree.ecore#//FnCallExpr">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//FnCallExpr/fn"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//FnCallExpr/args"/>

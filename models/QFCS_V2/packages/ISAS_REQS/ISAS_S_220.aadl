@@ -1,0 +1,47 @@
+package ISAS_S_220
+public
+
+-- In the case of mismatched dual input signals, ISAS shall set the 
+-- selected value equal to the equivalent selected value of EGI data.
+
+annex agree {**
+	
+	node req(aoa : DATA_TYPES::DUAL_AoA.treal,
+             air_data : DATA_TYPES::DUAL_AirData.treal, 
+             
+             aoa_failed_update : DATA_TYPES.dual_bool,
+             air_failed_update : DATA_TYPES.dual_bool, 
+             
+             aoa_in_range : DATA_TYPES::DUAL_AoA.tbool,
+             air_data_in_range : DATA_TYPES::DUAL_AirData.tbool,
+             
+             aoa_within_tol : DATA_TYPES::DUAL_AoA.tbool,
+             air_data_within_tol : DATA_TYPES::DUAL_AirData.tbool,
+             
+             egi_select : Data_Types::EGI.treal,          
+             
+             aoa_select : DATA_TYPES::AoA.treal,
+             air_data_select : DATA_TYPES::AirData.treal
+              
+	        ) returns (ret : bool);
+	  let
+	    ret = 
+		    (((not aoa_failed_update.val1 and aoa_in_range.AOA1.AOA) and (not aoa_failed_update.val2 and aoa_in_range.AOA2.AOA) and
+		    	not (aoa_within_tol.AOA1.AOA or aoa_within_tol.AOA2.AOA)) => (aoa_select.AOA = egi_select.AOA))
+	    and  
+		    (((air_failed_update.val1 or not air_data_in_range.AD1.TAT) and (air_failed_update.val2 or not air_data_in_range.AD2.TAT) and
+		    	not (air_data_within_tol.AD1.TAT or air_data_within_tol.AD2.TAT)) => (air_data_select.TAT = egi_select.TAT))
+	    and  
+		    (((air_failed_update.val1 or not air_data_in_range.AD1.TotPres) and (air_failed_update.val2 or not air_data_in_range.AD2.TotPres) and
+		    	not (air_data_within_tol.AD1.TotPres or air_data_within_tol.AD2.TotPres)) => (air_data_select.TotPres = egi_select.TotPres))
+        and 
+		    (((air_failed_update.val1 or not air_data_in_range.AD1.Pres) and (air_failed_update.val2 or not air_data_in_range.AD2.Pres) and
+		    	not (air_data_within_tol.AD1.Pres or air_data_within_tol.AD2.Pres)) => (air_data_select.Pres = egi_select.Pres))
+	    and   
+	        (((air_failed_update.val1 or not air_data_in_range.AD1.Temp) and (air_failed_update.val2 or not air_data_in_range.AD2.Temp) and
+		    	not (air_data_within_tol.AD1.Temp or air_data_within_tol.AD2.Temp)) => (air_data_select.Temp = egi_select.Temp));  	 
+	 tel;
+    	  
+**};
+
+end ISAS_S_220;

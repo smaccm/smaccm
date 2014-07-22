@@ -419,6 +419,24 @@ public interface AgreeFactory extends EFactory
   ThisExpr createThisExpr();
 
   /**
+   * Returns a new object of class '<em>Floor Cast</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Floor Cast</em>'.
+   * @generated
+   */
+  FloorCast createFloorCast();
+
+  /**
+   * Returns a new object of class '<em>Real Cast</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Real Cast</em>'.
+   * @generated
+   */
+  RealCast createRealCast();
+
+  /**
    * Returns a new object of class '<em>Fn Call Expr</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->

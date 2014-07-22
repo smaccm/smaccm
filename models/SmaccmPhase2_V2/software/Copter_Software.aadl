@@ -1,0 +1,587 @@
+package Copter_Software
+public
+with SMACCM;
+  with DATATYPES;
+  with SMACCM_SYS;
+  with Base_Types;
+  with mavlink_veh_commsec_msg;
+  with TowerArrays;
+  with gcsstream_timing;
+  with nav_law_type;
+  with pos_control_dbg_type;
+  with att_control_dbg_type;
+  with alt_control_dbg_type;
+  with radio_stat_type;
+  with motors_type;
+  with controloutput_type;
+  with gps_type;
+  with sensors_type;
+  with control_law_type;
+  with nav_command_type;
+  with mavlink_rc_channels_override_msg;
+  with control_law_request_type;
+  with radio_info_type;
+  with control_setpoint_type;
+  with userinput_type;
+	
+  system Software
+  end Software;
+  
+  system implementation Software.Impl 
+  end Software.Impl;
+
+  process flight_process
+    features
+      mavlink_cr_emitter: in event data port control_law_request_type::control_law_request.impl;
+      mavlink_ui_emitter: in event data port userinput_type::userinput_result.impl;
+      nav_ctl_law_req: in event data port control_law_request_type::control_law_request.impl;
+      gps_position: in event data port gps_type::position.impl;
+  end flight_process;
+
+  process implementation flight_process.impl
+  subcomponents
+    dataport632 : data gps_type::position.impl;
+    dataport631 : data mavlink_veh_commsec_msg::veh_commsec_msg.impl;
+    dataport571 : data motors_type::motors.impl;
+    dataport562 : data controloutput_type::controloutput.impl;
+    dataport395 : data att_control_dbg_type::att_control_dbg.impl;
+    dataport394 : data alt_control_dbg_type::alt_control_dbg.impl;
+    dataport384 : data nav_law_type::nav_law.impl;
+    dataport375 : data control_setpoint_type::control_setpoint.impl;
+    dataport366 : data control_law_type::control_law.impl;
+    dataport357 : data userinput_type::userinput_result.impl;
+    dataport198 : data pos_control_dbg_type::pos_control_dbg.impl;
+    blink_data : data Base_Types::Unsigned_32;
+    control_data : data DATATYPES::control_data.impl;
+    dataport0 : data sensors_type::sensors_result.impl;
+    position_state_inst : thread position_state;
+    px4ioar_inst : thread px4ioar;
+    motors_state_inst : thread motors_state;
+    control_state_inst : thread control_state;
+    motmix_inst : thread motmix;
+    proxy_controllaw_inst : thread proxy_controllaw;
+    blink_inst : thread blink;
+    control_inst : thread control;
+    uiMuxTask_inst : thread uiMuxTask;
+    controlLawTask_inst : thread controlLawTask;
+    ppmInputTower_inst : thread ppmInputTower;
+    sensorsCaptureTask_inst : thread sensorsCaptureTask;
+    proxy_userinput_inst : thread proxy_userinput;
+    uart5ISR_inst : thread uart5ISR;
+    uart1ISR_inst : thread uart1ISR;
+    uart2ISR_inst : thread uart2ISR;
+    
+   connections
+
+    conn_23 : port px4ioar_inst.newstateEmitter -> px4ioar_inst.newstateEvent;
+    conn_24 : port px4ioar_inst.uart_ostream -> uart2ISR_inst.ostream;
+    conn_25 : port motmix_inst.motors -> px4ioar_inst.motor_istream;
+    conn_26 : port motmix_inst.motors -> motors_state_inst.proxyEvent;
+    conn_27 : port control_inst.control -> control_state_inst.proxyEvent;
+    conn_28 : port control_inst.control -> motmix_inst.control;
+    conn_30 : port nav_ctl_law_req -> controlLawTask_inst.nav_req_snk;
+    conn_32 : port uiMuxTask_inst.ui_emitter -> proxy_userinput_inst.proxyEvent;
+    --conn_33 : port uiMuxTask_inst.ui_emitter -> navigation_inst.ui_chan_313; --NOTE this should probably change
+    conn_34 : port controlLawTask_inst.law_emitter -> proxy_controllaw_inst.proxyEvent;
+    --conn_35 : port controlLawTask_inst.law_emitter -> navigation_inst.law_chan_322; --NOTE this should probably change
+    conn_36 : port controlLawTask_inst.law_emitter -> uiMuxTask_inst.law;
+    conn_37 : port mavlink_cr_emitter -> controlLawTask_inst.mavlink_req_snk;
+    conn_38 : port mavlink_ui_emitter -> uiMuxTask_inst.mavlink_ui;
+    conn_39 : port ppmInputTower_inst.cr_emitter -> controlLawTask_inst.ppm_req_snk;
+    conn_40 : port ppmInputTower_inst.ui_emitter -> uiMuxTask_inst.ppm_ui;
+    conn_41 : port sensorsCaptureTask_inst.newstateEmitter -> sensorsCaptureTask_inst.newstateEvent;
+    conn_42 : port gps_position -> position_state_inst.proxyEvent;
+    conn_44 : port gps_position -> sensorsCaptureTask_inst.position;
+    
+    conn_330 : data access dataport632 -> position_state_inst.proxyData;
+    conn_331 : data access dataport571 -> motors_state_inst.proxyData;
+    conn_332 : data access dataport562 -> control_state_inst.proxyData;
+    conn_333 : data access dataport366 -> motmix_inst.controllaw;
+    conn_334 : data access blink_data -> blink_inst.commstatus;
+    conn_335 : data access dataport366 -> blink_inst.controllaw;
+    conn_336 : data access dataport394 -> control_inst.alt_control_dbg;
+    conn_337 : port control_data -> controL_inst.control_params;
+    conn_379 : data access dataport375 -> control_inst.nav_setpt;
+    conn_380 : data access dataport0 -> control_inst.sensors;
+    conn_381 : data access dataport357 -> control_inst.userinput;
+    conn_382 : data access dataport366 -> control_inst.control_law;
+    
+    conn_433 : data access dataport0 -> sensorsCaptureTask_inst.sensors;
+    
+  end flight_process.impl;
+
+
+thread proxy_userinput
+  features
+    proxyEvent: in event data port userinput_type::userinput_result.impl {
+      Queue_Size => 16;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_proxy_userinput_358.h";
+      SMACCM_SYS::CommPrim_Source_Text => "receiveFromTask_proxy_userinput_358_chan169_362";
+      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_proxy_userinput_358_chan169_365");
+    };
+    proxyData: requires data access userinput_type::userinput_result.impl {
+      Access_Right => write_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_proxy_userinput_358.h";
+      SMACCM_SYS::CommPrim_Source_Text => "write_proxy_userinput_358_dataport357_360";
+    };
+  properties
+    Source_Text => ("tower_task_usercode_proxy_userinput_358.c");
+    Priority => 23;
+    Stack_Size => 256 bytes;
+    SMACCM::Language => "Ivory";
+    Dispatch_Protocol => Sporadic;
+end proxy_userinput;
+
+thread position_state
+  features
+    proxyEvent: in event data port gps_type::position.impl {
+      Queue_Size => 16;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_position_state_633.h";
+      SMACCM_SYS::CommPrim_Source_Text => "receiveFromTask_position_state_633_chan53_637";
+      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_position_state_633_chan53_640");
+    };
+    proxyData: requires data access gps_type::position.impl {
+      Access_Right => write_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_position_state_633.h";
+      SMACCM_SYS::CommPrim_Source_Text => "write_position_state_633_dataport632_635";
+    };
+  properties
+    Source_Text => ("tower_task_usercode_position_state_633.c");
+    Priority => 13;
+    Stack_Size => 256 bytes;
+    SMACCM::Language => "Ivory";
+    Dispatch_Protocol => Sporadic;
+end position_state;
+
+
+thread px4ioar
+  features
+    newstateEmitter: out event data port Base_Types::Unsigned_32 {
+      Queue_Size => 2;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_px4ioar_587.h";
+      SMACCM_SYS::CommPrim_Source_Text => "emitFromTask_px4ioar_587_chan601_603";
+    };
+    uart_ostream: out event data port Base_Types::Unsigned_8 {
+      Queue_Size => 12;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_px4ioar_587.h";
+      SMACCM_SYS::CommPrim_Source_Text => "emitFromTask_px4ioar_587_chan580_589";
+    };
+    newstateEvent: in event data port Base_Types::Unsigned_32 {
+      Queue_Size => 2;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_px4ioar_587.h";
+      SMACCM_SYS::CommPrim_Source_Text => "receiveFromTask_px4ioar_587_chan601_605";
+      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_px4ioar_587_chan601_newstate_loop_630", "eventhandler_px4ioar_587_chan601_newstate_bootCheckComplete_626", "eventhandler_px4ioar_587_chan601_newstate_initMulti_623", "eventhandler_px4ioar_587_chan601_newstate_init4_622", "eventhandler_px4ioar_587_chan601_newstate_init3_619", "eventhandler_px4ioar_587_chan601_newstate_init2_616", "eventhandler_px4ioar_587_chan601_newstate_init1_613", "eventhandler_px4ioar_587_chan601_newstate_bootBegin_610");
+    };
+    motor_istream: in event data port motors_type::motors.impl {
+      Queue_Size => 16;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_px4ioar_587.h";
+      SMACCM_SYS::CommPrim_Source_Text => "receiveFromTask_px4ioar_587_chan98_591";
+      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_px4ioar_587_chan98_loop_629");
+    };
+  properties
+    Source_Text => ("tower_task_usercode_px4ioar_587.c");
+    Priority => 14;
+    Stack_Size => 256 bytes;
+    SMACCM::Language => "Ivory";
+    Dispatch_Protocol => Hybrid;
+    Period => 1 ms;
+    SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_px4ioar_587_per1_loop_628", "eventhandler_px4ioar_587_per1_bootCheckComplete_625", "eventhandler_px4ioar_587_per1_init4_621", "eventhandler_px4ioar_587_per1_init3_618", "eventhandler_px4ioar_587_per1_init2_615", "eventhandler_px4ioar_587_per1_init1_612", "eventhandler_px4ioar_587_per1_bootBegin_609");
+end px4ioar;
+
+
+thread motors_state
+  features
+    proxyEvent: in event data port motors_type::motors.impl {
+      Queue_Size => 16;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_motors_state_572.h";
+      SMACCM_SYS::CommPrim_Source_Text => "receiveFromTask_motors_state_572_chan98_576";
+      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_motors_state_572_chan98_579");
+    };
+    proxyData: requires data access motors_type::motors.impl {
+      Access_Right => write_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_motors_state_572.h";
+      SMACCM_SYS::CommPrim_Source_Text => "write_motors_state_572_dataport571_574";
+    };
+  properties
+    Source_Text => ("tower_task_usercode_motors_state_572.c");
+    Priority => 15;
+    Stack_Size => 256 bytes;
+    SMACCM::Language => "Ivory";
+    Dispatch_Protocol => Sporadic;
+end motors_state;
+
+
+thread control_state
+  features
+    proxyEvent: in event data port controloutput_type::controloutput.impl {
+      Queue_Size => 16;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_state_563.h";
+      SMACCM_SYS::CommPrim_Source_Text => "receiveFromTask_control_state_563_chan393_567";
+      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_control_state_563_chan393_570");
+    };
+    proxyData: requires data access controloutput_type::controloutput.impl {
+      Access_Right => write_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_state_563.h";
+      SMACCM_SYS::CommPrim_Source_Text => "write_control_state_563_dataport562_565";
+    };
+  properties
+    Source_Text => ("tower_task_usercode_control_state_563.c");
+    Priority => 16;
+    Stack_Size => 256 bytes;
+    SMACCM::Language => "Ivory";
+    Dispatch_Protocol => Sporadic;
+end control_state;
+
+
+thread motmix
+  features
+    motors: out event data port motors_type::motors.impl {
+      Queue_Size => 16;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_motmix_552.h";
+      SMACCM_SYS::CommPrim_Source_Text => "emitFromTask_motmix_552_chan98_556";
+    };
+    control: in event data port controloutput_type::controloutput.impl {
+      Queue_Size => 16;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_motmix_552.h";
+      SMACCM_SYS::CommPrim_Source_Text => "receiveFromTask_motmix_552_chan393_558";
+      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_motmix_552_chan393_561");
+    };
+    controllaw: requires data access control_law_type::control_law.impl {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_motmix_552.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_motmix_552_dataport366_554";
+    };
+  properties
+    Source_Text => ("tower_task_usercode_motmix_552.c");
+    Priority => 17;
+    Stack_Size => 256 bytes;
+    SMACCM::Language => "Ivory";
+    Dispatch_Protocol => Sporadic;
+end motmix;
+
+
+thread blink
+  features
+    commstatus: requires data access Base_Types::Unsigned_32 {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_blink_542.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_blink_542_dataport97_546";
+    };
+    controllaw: requires data access control_law_type::control_law.impl {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_blink_542.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_blink_542_dataport366_544";
+    };
+  properties
+    Source_Text => ("tower_task_usercode_blink_542.c");
+    Priority => 18;
+    Stack_Size => 256 bytes;
+    SMACCM::Language => "Ivory";
+    Dispatch_Protocol => Hybrid;
+    Period => 125 ms;
+    SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_blink_542_per125_551");
+end blink;
+
+
+thread control
+  features
+    control: out event data port controloutput_type::controloutput.impl {
+      Queue_Size => 16;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_396.h";
+      SMACCM_SYS::CommPrim_Source_Text => "emitFromTask_control_396_chan393_406";
+    };
+    alt_control_dbg: requires data access alt_control_dbg_type::alt_control_dbg.impl {
+      Access_Right => write_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_396.h";
+      SMACCM_SYS::CommPrim_Source_Text => "write_control_396_dataport394_513";
+    };
+    control_params : in data port DATATYPES::control_data.impl;
+    nav_setpt: requires data access control_setpoint_type::control_setpoint.impl {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_396.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_control_396_dataport375_404";
+    };
+    sensors: requires data access sensors_type::sensors_result.impl {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_396.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_control_396_dataport0_402";
+    };
+    userinput: requires data access userinput_type::userinput_result.impl {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_396.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_control_396_dataport357_400";
+    };
+    control_law: requires data access control_law_type::control_law.impl {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_396.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_control_396_dataport366_398";
+    };
+  properties
+    Source_Text => ("tower_task_usercode_control_396.c");
+    Priority => 19;
+    Stack_Size => 256 bytes;
+    SMACCM::Language => "Ivory";
+    Dispatch_Protocol => Hybrid;
+    Period => 5 ms;
+    SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_control_396_per5_541");
+end control;
+
+thread proxy_controllaw
+  features
+    proxyEvent: in event data port control_law_type::control_law.impl {
+      Queue_Size => 16;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_proxy_controllaw_367.h";
+      SMACCM_SYS::CommPrim_Source_Text => "receiveFromTask_proxy_controllaw_367_chan145_371";
+      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_proxy_controllaw_367_chan145_374");
+    };
+    proxyData: requires data access control_law_type::control_law.impl {
+      Access_Right => write_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_proxy_controllaw_367.h";
+      SMACCM_SYS::CommPrim_Source_Text => "write_proxy_controllaw_367_dataport366_369";
+    };
+  properties
+    Source_Text => ("tower_task_usercode_proxy_controllaw_367.c");
+    Priority => 22;
+    Stack_Size => 256 bytes;
+    SMACCM::Language => "Ivory";
+    Dispatch_Protocol => Sporadic;
+end proxy_controllaw;
+
+
+
+thread uiMuxTask
+  features
+    ui_emitter: out event data port userinput_type::userinput_result.impl {
+      Queue_Size => 16;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_uiMuxTask_170.h";
+      SMACCM_SYS::CommPrim_Source_Text => "emitFromTask_uiMuxTask_170_chan169_179";
+    };
+    mavlink_ui: in event data port userinput_type::userinput_result.impl {
+      Queue_Size => 16;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_uiMuxTask_170.h";
+      SMACCM_SYS::CommPrim_Source_Text => "receiveFromTask_uiMuxTask_170_chan122_191";
+      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_uiMuxTask_170_chan122_194");
+    };
+    ppm_ui: in event data port userinput_type::userinput_result.impl {
+      Queue_Size => 16;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_uiMuxTask_170.h";
+      SMACCM_SYS::CommPrim_Source_Text => "receiveFromTask_uiMuxTask_170_chan100_186";
+      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_uiMuxTask_170_chan100_189");
+    };
+    law: in event data port control_law_type::control_law.impl {
+      Queue_Size => 16;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_uiMuxTask_170.h";
+      SMACCM_SYS::CommPrim_Source_Text => "receiveFromTask_uiMuxTask_170_chan145_181";
+      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_uiMuxTask_170_chan145_184");
+    };
+  properties
+    Source_Text => ("tower_task_usercode_uiMuxTask_170.c");
+    Priority => 25;
+    Stack_Size => 256 bytes;
+    SMACCM::Language => "Ivory";
+    Dispatch_Protocol => Sporadic;
+end uiMuxTask;
+
+
+thread controlLawTask
+  features
+    law_emitter: out event data port control_law_type::control_law.impl {
+      Queue_Size => 16;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_controlLawTask_146.h";
+      SMACCM_SYS::CommPrim_Source_Text => "emitFromTask_controlLawTask_146_chan145_148";
+    };
+    nav_req_snk: in event data port control_law_request_type::control_law_request.impl {
+      Queue_Size => 16;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_controlLawTask_146.h";
+      SMACCM_SYS::CommPrim_Source_Text => "receiveFromTask_controlLawTask_146_chan99_165";
+      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_controlLawTask_146_chan99_168");
+    };
+    mavlink_req_snk: in event data port control_law_request_type::control_law_request.impl {
+      Queue_Size => 16;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_controlLawTask_146.h";
+      SMACCM_SYS::CommPrim_Source_Text => "receiveFromTask_controlLawTask_146_chan123_160";
+      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_controlLawTask_146_chan123_163");
+    };
+    ppm_req_snk: in event data port control_law_request_type::control_law_request.impl {
+      Queue_Size => 16;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_controlLawTask_146.h";
+      SMACCM_SYS::CommPrim_Source_Text => "receiveFromTask_controlLawTask_146_chan101_155";
+      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_controlLawTask_146_chan101_158");
+    };
+  properties
+    Source_Text => ("tower_task_usercode_controlLawTask_146.c");
+    Priority => 26;
+    Stack_Size => 256 bytes;
+    SMACCM::Language => "Ivory";
+    Dispatch_Protocol => Sporadic;
+end controlLawTask;
+
+thread ppmInputTower
+  features
+    cr_emitter: out event data port control_law_request_type::control_law_request.impl {
+      Queue_Size => 16;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_ppmInputTower_102.h";
+      SMACCM_SYS::CommPrim_Source_Text => "emitFromTask_ppmInputTower_102_chan101_106";
+    };
+    ui_emitter: out event data port userinput_type::userinput_result.impl {
+      Queue_Size => 16;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_ppmInputTower_102.h";
+      SMACCM_SYS::CommPrim_Source_Text => "emitFromTask_ppmInputTower_102_chan100_104";
+    };
+  properties
+    Source_Text => ("tower_task_usercode_ppmInputTower_102.c");
+    Priority => 28;
+    Stack_Size => 256 bytes;
+    SMACCM::Language => "Ivory";
+    Dispatch_Protocol => Hybrid;
+    Period => 50 ms;
+    SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_ppmInputTower_102_per50_121");
+end ppmInputTower;
+
+
+thread sensorsCaptureTask
+  features
+    newstateEmitter: out event data port Base_Types::Unsigned_32 {
+      Queue_Size => 2;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_sensorsCaptureTask_72.h";
+      SMACCM_SYS::CommPrim_Source_Text => "emitFromTask_sensorsCaptureTask_72_chan86_88";
+    };
+    newstateEvent: in event data port Base_Types::Unsigned_32 {
+      Queue_Size => 2;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_sensorsCaptureTask_72.h";
+      SMACCM_SYS::CommPrim_Source_Text => "receiveFromTask_sensorsCaptureTask_72_chan86_90";
+      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_sensorsCaptureTask_72_chan86_newstate_captureloop_96", "eventhandler_sensorsCaptureTask_72_chan86_newstate_init_93");
+    };
+    position: in event data port gps_type::position.impl {
+      Queue_Size => 16;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_sensorsCaptureTask_72.h";
+      SMACCM_SYS::CommPrim_Source_Text => "receiveFromTask_sensorsCaptureTask_72_chan53_78";
+      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_sensorsCaptureTask_72_chan53_81");
+    };
+    sensors: requires data access sensors_type::sensors_result.impl {
+      Access_Right => write_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_sensorsCaptureTask_72.h";
+      SMACCM_SYS::CommPrim_Source_Text => "write_sensorsCaptureTask_72_dataport0_74";
+    };
+  properties
+    Source_Text => ("tower_task_usercode_sensorsCaptureTask_72.c");
+    Priority => 29;
+    Stack_Size => 1024 bytes;
+    SMACCM::Language => "Ivory";
+    Dispatch_Protocol => Hybrid;
+    Period => 1 ms;
+    SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_sensorsCaptureTask_72_per1_captureloop_95");
+end sensorsCaptureTask;
+
+
+thread ubloxGPS
+  features
+    position: out event data port gps_type::position.impl {
+      Queue_Size => 16;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_ubloxGPS_54.h";
+      SMACCM_SYS::CommPrim_Source_Text => "emitFromTask_ubloxGPS_54_chan53_60";
+    };
+    istream: in event data port Base_Types::Unsigned_8 {
+      Queue_Size => 256;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_ubloxGPS_54.h";
+      SMACCM_SYS::CommPrim_Source_Text => "receiveFromTask_ubloxGPS_54_chan47_56";
+      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_ubloxGPS_54_chan47_71");
+    };
+  properties
+    Source_Text => ("tower_task_usercode_ubloxGPS_54.c");
+    Priority => 30;
+    Stack_Size => 256 bytes;
+    SMACCM::Language => "Ivory";
+    Dispatch_Protocol => Sporadic;
+end ubloxGPS;
+
+
+thread uart5ISR
+  features
+    istream: out event data port Base_Types::Unsigned_8 {
+      Queue_Size => 1024;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_signal_comm_uart5ISR_1039.h";
+      SMACCM_SYS::CommPrim_Source_Text => "emitFromSig_uart5ISR_1039_chan1038_1043";
+    };
+    ostream: in event data port Base_Types::Unsigned_8 {
+      Queue_Size => 1024;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_signal_comm_uart5ISR_1039.h";
+      SMACCM_SYS::CommPrim_Source_Text => "receiveFromSig_uart5ISR_1039_chan1037_1041";
+    };
+  properties
+    Dispatch_Protocol => Sporadic;
+    Source_Text => ("tower_signal_usercode_uart5ISR_1039.c");
+    Priority => 31;
+    SMACCM::Language => "Ivory";
+    SMACCM_SYS::Signal_Name => "UART5_IRQn";
+    SMACCM_SYS::ISR_Handler => "UART5_IRQHandler";
+end uart5ISR;
+
+
+thread uart1ISR
+  features
+    istream: out event data port Base_Types::Unsigned_8 {
+      Queue_Size => 1024;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_signal_comm_uart1ISR_643.h";
+      SMACCM_SYS::CommPrim_Source_Text => "emitFromSig_uart1ISR_643_chan642_647";
+    };
+    ostream: in event data port Base_Types::Unsigned_8 {
+      Queue_Size => 1024;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_signal_comm_uart1ISR_643.h";
+      SMACCM_SYS::CommPrim_Source_Text => "receiveFromSig_uart1ISR_643_chan641_645";
+    };
+  properties
+    Dispatch_Protocol => Sporadic;
+    Source_Text => ("tower_signal_usercode_uart1ISR_643.c");
+    Priority => 32;
+    SMACCM::Language => "Ivory";
+    SMACCM_SYS::Signal_Name => "USART1_IRQn";
+    SMACCM_SYS::ISR_Handler => "USART1_IRQHandler";
+end uart1ISR;
+
+
+thread uart2ISR
+  features
+    istream: out event data port Base_Types::Unsigned_8 {
+      Queue_Size => 1;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_signal_comm_uart2ISR_582.h";
+      SMACCM_SYS::CommPrim_Source_Text => "emitFromSig_uart2ISR_582_chan581_586";
+    };
+    ostream: in event data port Base_Types::Unsigned_8 {
+      Queue_Size => 12;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_signal_comm_uart2ISR_582.h";
+      SMACCM_SYS::CommPrim_Source_Text => "receiveFromSig_uart2ISR_582_chan580_584";
+    };
+  properties
+    Dispatch_Protocol => Sporadic;
+    Source_Text => ("tower_signal_usercode_uart2ISR_582.c");
+    Priority => 33;
+    SMACCM::Language => "Ivory";
+    SMACCM_SYS::Signal_Name => "USART2_IRQn";
+    SMACCM_SYS::ISR_Handler => "USART2_IRQHandler";
+end uart2ISR;
+
+
+thread uart6ISR
+  features
+    istream: out event data port Base_Types::Unsigned_8 {
+      Queue_Size => 256;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_signal_comm_uart6ISR_48.h";
+      SMACCM_SYS::CommPrim_Source_Text => "emitFromSig_uart6ISR_48_chan47_52";
+    };
+    ostream: in event data port Base_Types::Unsigned_8 {
+      Queue_Size => 2;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_signal_comm_uart6ISR_48.h";
+      SMACCM_SYS::CommPrim_Source_Text => "receiveFromSig_uart6ISR_48_chan46_50";
+    };
+  properties
+    Dispatch_Protocol => Sporadic;
+    Source_Text => ("tower_signal_usercode_uart6ISR_48.c");
+    Priority => 34;
+    SMACCM::Language => "Ivory";
+    SMACCM_SYS::Signal_Name => "USART6_IRQn";
+    SMACCM_SYS::ISR_Handler => "USART6_IRQHandler";
+end uart6ISR;
+	
+	
+end Copter_Software;
