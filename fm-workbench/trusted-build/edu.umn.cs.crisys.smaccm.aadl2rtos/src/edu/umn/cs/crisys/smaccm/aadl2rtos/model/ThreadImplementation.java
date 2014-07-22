@@ -26,11 +26,12 @@ public class ThreadImplementation extends ThreadImplementationBase {
 	private List<ThreadInstance> threadInstanceList = new ArrayList<ThreadInstance>();
 	private ArrayList<Dispatcher> dispatcherList = new ArrayList<Dispatcher>();
 	private String dispatchProtocol; 
+	private Boolean isPassive; 
 	
 	// private String smaccmSysSignalOpt = null;
 	// private String isrHandlerName = null;
 	
-	// Data port lists
+  // Data port lists
 	private ArrayList<InputDataPort> inputDataPortList = new ArrayList<InputDataPort>();
   private ArrayList<OutputDataPort> outputDataPortList = new ArrayList<OutputDataPort>();
 	private ArrayList<InputEventPort> inputEventPortList = new ArrayList<InputEventPort>();
@@ -42,11 +43,11 @@ public class ThreadImplementation extends ThreadImplementationBase {
 
 	// Constructor
 	public ThreadImplementation(String name, int priority, int stackSize, 
-	    String generatedEntrypoint) {
+	    String generatedEntrypoint, boolean isPassive) {
 	  super(name, priority, stackSize);
 	  this.generatedEntrypoint = generatedEntrypoint;
+	  this.isPassive = isPassive; 
   }
-
 	
   public List<SharedDataAccessor> getSharedDataAccessors() {
     return this.accessorList;
@@ -78,7 +79,22 @@ public class ThreadImplementation extends ThreadImplementationBase {
 		threadInstanceList.add(instance);
 	}
 
-	public List<ThreadInstance> getThreadInstanceList() {
+  /**
+   * @return the isPassive
+   */
+  public Boolean getIsPassive() {
+    return isPassive;
+  }
+
+  /**
+   * @param isPassive the isPassive to set
+   */
+  public void setIsPassive(Boolean isPassive) {
+    this.isPassive = isPassive;
+  }
+
+
+  public List<ThreadInstance> getThreadInstanceList() {
 		return threadInstanceList;
 	}
 

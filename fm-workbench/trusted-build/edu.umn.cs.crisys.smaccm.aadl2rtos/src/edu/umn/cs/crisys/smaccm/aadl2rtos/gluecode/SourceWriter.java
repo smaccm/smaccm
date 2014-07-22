@@ -26,11 +26,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
-import java.util.logging.Logger;
 
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosException;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.Connection;
-//import edu.umn.cs.crisys.smaccm.aadl2rtos.model.InterruptServiceRoutine;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.SharedData;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.SharedDataAccessor;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.ThreadCalendar;
@@ -49,7 +47,6 @@ import edu.umn.cs.crisys.smaccm.aadl2rtos.parse.Model;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.util.Util;
 
 public class SourceWriter extends AbstractCodeWriter {
-	// private ArrayList<String> semaphoreList = new ArrayList<String>();
   static final String ind = "   ";
 
 	public SourceWriter(
@@ -59,7 +56,6 @@ public class SourceWriter extends AbstractCodeWriter {
 			Model model,
 			List<OutputEventPort> events) {
 		super(out, CFile, HFile, model);
-		// this.semaphoreList = model.getSemaphores();
 	}
 
 	public void writeSource() throws IOException {

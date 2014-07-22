@@ -168,7 +168,7 @@ public
 			
 		
 
-		guarantee "Property Consistency Check": false;		
+	-- guarantee "Property Consistency Check": false;		
 
 	guarantee "airInLine_implies_flow_at_most_KVO ":  airInLine_implies_flow_at_most_KVO;
 

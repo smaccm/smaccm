@@ -39,7 +39,8 @@ public abstract class ThreadUtil {
   final public static String LEGACY_EXTERNAL_IRQ_EVENT_LIST_NAME = "SMACCM_SYS::Legacy_IRQ_Event_List";
   final public static String EXTERNAL_IRQ_LIST_NAME = "SMACCM_SYS::External_IRQ_List";
   final public static String GENERATE_SCHEDULER_SYSTICK_IRQ_NAME = "SMACCM_SYS::Generate_Scheduler_Systick_IRQ";
-  final public static String ISR_HANDLER_NAME = "SMACCM_SYS::ISR_Handler";
+  final public static String ISR_HANDLER_NAME = "SMACCM_SYS::First_Level_Interrupt_Handler";
+  final public static String THREAD_TYPE_NAME = "SMACCM_SYS::Thread_Type";
 
 
 	final public static String DISPATCH_PROTOCOL_NAME = "Dispatch_Protocol";
@@ -68,7 +69,7 @@ public abstract class ThreadUtil {
 	     Util.getPropertyDefinitionInWorkspace(PERIOD_NAME);
 	final public static Property PRIORITY = 
 	    Util.getPropertyDefinitionInWorkspace(PRIORITY_NAME);
-
+	
 	final public static Property LEGACY = Util.getPropertyDefinitionInWorkspace(LEGACY_NAME);
 	final public static Property LEGACY_MUTEX_LIST = Util.getPropertyDefinitionInWorkspace(LEGACY_MUTEX_LIST_NAME);
   final public static Property LEGACY_SEMAPHORE_LIST = Util.getPropertyDefinitionInWorkspace(LEGACY_SEMAPHORE_LIST_NAME);
@@ -82,6 +83,7 @@ public abstract class ThreadUtil {
 	final public static Property DISPATCH_PROTOCOL = Util.getPropertyDefinitionInWorkspace(DISPATCH_PROTOCOL_NAME);
 	final public static Property QUEUE_SIZE = Util.getPropertyDefinitionInWorkspace(QUEUE_SIZE_NAME);
 	final public static Property ACCESS_RIGHT = Util.getPropertyDefinitionInWorkspace(ACCESS_RIGHT_NAME);
+  final public static Property THREAD_TYPE = Util.getPropertyDefinitionInWorkspace(THREAD_TYPE_NAME);
 	final public static Property SMACCM_SYS_COMPUTE_ENTRYPOINT_SOURCE_TEXT =
 	    Util.getPropertyDefinitionInWorkspace(SMACCM_SYS_COMPUTE_ENTRYPOINT_SOURCE_TEXT_NAME);
 
@@ -151,6 +153,22 @@ public abstract class ThreadUtil {
 	    return PropertyUtils.getBooleanValue(tti, SMACCM_SYS_IS_ISR);
 	  } catch(Exception e) {}
 	  return false;
+	}
+	
+	public static boolean getThreadType(NamedElement tti) {
+	  EnumerationLiteral lit = null; 
+	  try {
+      lit = PropertyUtils.getEnumLiteral(tti, ThreadUtil.THREAD_TYPE);
+    } catch (Exception e) {
+      throw new Aadl2RtosException("Required property 'Thread_Type' not found for thread: " + tti.getName());
+    }
+    if ("Active".equals(lit.getName())) {
+      return false;
+    } else if ("Passive".equals(lit.getName())) {
+      return true;
+    } else {
+      throw new Aadl2RtosException("Property 'Thread_Type' can only take values 'Active', 'Passive': " + tti.getName());
+    }
 	}
 	
   public static List<String> getLegacyMutexList(NamedElement tti) {

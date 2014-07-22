@@ -23,7 +23,6 @@ package edu.umn.cs.crisys.smaccm.aadl2rtos.gluecode;
  */
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosException;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosFailure;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.InterruptServiceRoutine;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.SharedDataAccessor;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.ThreadImplementation;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.DataPort;

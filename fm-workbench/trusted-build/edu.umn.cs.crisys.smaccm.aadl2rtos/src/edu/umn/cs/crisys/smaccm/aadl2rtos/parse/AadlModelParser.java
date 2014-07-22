@@ -74,7 +74,6 @@ public class AadlModelParser {
 	// Instance objects
   private ArrayList<ComponentInstance> threadInstanceList;
   private ArrayList<ConnectionInstance> connectionInstances;
-	
 
 	// TODO: Thread names do not have to be globally unique: 
 	private Map<ThreadTypeImpl, ThreadImplementation> threadImplementationMap;
@@ -337,10 +336,10 @@ public class AadlModelParser {
     String name = tti.getName().toLowerCase();
     int priority = ThreadUtil.getPriority(tti);
     int stackSize = ThreadUtil.getStackSizeInBytes(tti);
-    
     String generatedEntrypoint = tti.getFullName();
+    boolean isPassive = ThreadUtil.getThreadType(tti);    
     ThreadImplementation ti = 
-        new ThreadImplementation(name, priority, stackSize, generatedEntrypoint);
+        new ThreadImplementation(name, priority, stackSize, generatedEntrypoint, isPassive);
 
     setDispatchProtocol(tti, ti);
     createOptPeriodicHandler(tti, ti); 
@@ -350,6 +349,7 @@ public class AadlModelParser {
         addPort((PortImpl)f, ti); 
       } 
     }
+    
     return ti;
   }
 
