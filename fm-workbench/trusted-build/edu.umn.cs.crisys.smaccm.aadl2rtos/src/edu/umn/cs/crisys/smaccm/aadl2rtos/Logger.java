@@ -23,47 +23,28 @@ package edu.umn.cs.crisys.smaccm.aadl2rtos;
 
 import java.io.PrintStream;
 
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.console.ConsolePlugin;
-import org.eclipse.ui.console.IConsole;
-import org.eclipse.ui.console.IConsoleConstants;
-import org.eclipse.ui.console.IConsoleManager;
-import org.eclipse.ui.console.IConsoleView;
-import org.eclipse.ui.console.MessageConsole;
-
 public class Logger {
-	
-	final public static int STATUS  = 0;
-	final public static int ERROR   = 1;
-	final public static int WARN    = 2;
-	final public static int INFO    = 3;
-	
-	private int verbosity;
-	private PrintStream out;
-	private MessageConsole console;
 
-	public Logger(int verbosity) {
+	public static final int STATUS = 0;
+	public static final int ERROR = 1;
+	public static final int WARN = 2;
+	public static final int INFO = 3;
+	protected int verbosity;
+	protected PrintStream out;
+
+	public Logger(int verbosity, PrintStream out) {
 		this.verbosity = verbosity;
-		this.out = System.out;
+		this.out = out;
 	}
-	
-	public Logger(int verbosity, final String consoleName, final IWorkbenchWindow window) {
-		this.verbosity = verbosity;
-		this.console = findConsole(consoleName);
-		showConsole(window, console);
-		this.out = new PrintStream(console.newMessageStream());
-	}
-	
+
 	public void status(String msg) {
 		log(STATUS, msg);
 	}
-	
+
 	public void error(String msg) {
 		log(ERROR, msg);
 	}
-	
+
 	public void warn(String msg) {
 		log(WARN, msg);
 	}
@@ -71,15 +52,15 @@ public class Logger {
 	public void info(String msg) {
 		log(INFO, msg);
 	}
-	
+
 	public void status(Object obj) {
 		status(String.valueOf(obj));
 	}
-	
+
 	public void error(Object obj) {
 		error(String.valueOf(obj));
 	}
-	
+
 	public void warn(Object obj) {
 		warn(String.valueOf(obj));
 	}
@@ -87,7 +68,7 @@ public class Logger {
 	public void info(Object obj) {
 		info(String.valueOf(obj));
 	}
-	
+
 	private void log(int priority, String msg) {
 		if (verbosity >= priority) {
 			if (priority == ERROR) msg = "*** ERROR: " + msg;
@@ -95,35 +76,5 @@ public class Logger {
 			out.println(msg);
 		}
 	}
-	
-	// See: http://wiki.eclipse.org/FAQ_How_do_I_write_to_the_console_from_a_plug-in%3F
-	private static MessageConsole findConsole(String name) {
-		ConsolePlugin plugin = ConsolePlugin.getDefault();
-		IConsoleManager conMan = plugin.getConsoleManager();
-		for (IConsole console : conMan.getConsoles()) {
-			if (name.equals(console.getName())) {
-				return (MessageConsole) console;
-			}
-		}
-		//no console found, so create a new one
-		MessageConsole myConsole = new MessageConsole(name, null);
-		conMan.addConsoles(new IConsole[]{myConsole});
-		return myConsole;
-	}
-	
-	private static void showConsole(IWorkbenchWindow window, IConsole myConsole) {
-		IWorkbenchPage page = window.getActivePage();
-		String id = IConsoleConstants.ID_CONSOLE_VIEW;
-		IConsoleView view;
-		try {
-			view = (IConsoleView) page.showView(id);
-			view.display(myConsole);
-		} catch (PartInitException e) {
-			e.printStackTrace();
-		}
-	}
 
-	public void clear() {
-		console.clearConsole();
-	}
 }
