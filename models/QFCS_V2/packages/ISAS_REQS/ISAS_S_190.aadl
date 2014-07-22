@@ -27,12 +27,17 @@ annex agree {**
 	  let
 	    ret = 
 		    -- AOA1 stale or out-of-range - determine if AOA2 within tolerance of EGI
-		    ((aoa_failed_update.val1 or not aoa_in_range.AOA1.AOA) => aoa_within_tol.AOA2.AOA = 
+		    ((aoa_failed_update.val1 or not aoa_in_range.AOA1.AOA 
+		    --	or not (matches_tolerance_real(aoa.AOA1.AOA, aoa.AOA2.AOA, AGREE_CONSTANTS.AOA_tol)) -- fix to match table
+		    )
+		    	=> aoa_within_tol.AOA2.AOA = 
 		    	(not aoa_failed_update.val2 and aoa_in_range.AOA2.AOA and not egi_select_fault.AOA and 
 		    	 matches_tolerance_real(aoa.AOA2.AOA, egi_select.AOA, AGREE_CONSTANTS.EGI_AOA_tol)))
 	    
 	    and -- AOA2 stale or out-of-range - determine if AOA1 within tolerance of EGI
-	        ((aoa_failed_update.val2 or not aoa_in_range.AOA2.AOA) => aoa_within_tol.AOA1.AOA =
+	        ((aoa_failed_update.val2 or not aoa_in_range.AOA2.AOA 
+	        -- or not (matches_tolerance_real(aoa.AOA1.AOA, aoa.AOA2.AOA, AGREE_CONSTANTS.AOA_tol))	-- fix to match table
+	        ) => aoa_within_tol.AOA1.AOA =
 	        	(not aoa_failed_update.val1 and aoa_in_range.AOA1.AOA and not egi_select_fault.AOA and 
 	             matches_tolerance_real(aoa.AOA1.AOA, egi_select.AOA, AGREE_CONSTANTS.EGI_AOA_tol)))  
 	   
