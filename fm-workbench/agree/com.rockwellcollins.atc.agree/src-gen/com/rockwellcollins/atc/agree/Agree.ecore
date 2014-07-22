@@ -165,6 +165,12 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="subThis" eType="#//NestedDotID"
         containment="true"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="FloorCast" eSuperTypes="#//Expr">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="expr" eType="#//Expr" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="RealCast" eSuperTypes="#//Expr">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="expr" eType="#//Expr" containment="true"/>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="FnCallExpr" eSuperTypes="#//ComplexExpr">
     <eStructuralFeatures xsi:type="ecore:EReference" name="fn" eType="#//NestedDotID"
         containment="true"/>

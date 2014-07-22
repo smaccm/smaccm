@@ -108,6 +108,8 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
       case AgreePackage.REAL_LIT_EXPR: return createRealLitExpr();
       case AgreePackage.BOOL_LIT_EXPR: return createBoolLitExpr();
       case AgreePackage.THIS_EXPR: return createThisExpr();
+      case AgreePackage.FLOOR_CAST: return createFloorCast();
+      case AgreePackage.REAL_CAST: return createRealCast();
       case AgreePackage.FN_CALL_EXPR: return createFnCallExpr();
       case AgreePackage.RECORD_EXPR: return createRecordExpr();
       default:
@@ -597,6 +599,28 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
   {
     ThisExprImpl thisExpr = new ThisExprImpl();
     return thisExpr;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public FloorCast createFloorCast()
+  {
+    FloorCastImpl floorCast = new FloorCastImpl();
+    return floorCast;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public RealCast createRealCast()
+  {
+    RealCastImpl realCast = new RealCastImpl();
+    return realCast;
   }
 
   /**

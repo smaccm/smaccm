@@ -14,6 +14,7 @@ import java.util.Set;
 import jkind.lustre.BinaryExpr;
 import jkind.lustre.BinaryOp;
 import jkind.lustre.BoolExpr;
+import jkind.lustre.CastExpr;
 import jkind.lustre.CondactExpr;
 import jkind.lustre.Equation;
 import jkind.lustre.Expr;
@@ -86,6 +87,7 @@ import com.rockwellcollins.atc.agree.agree.CalenStatement;
 import com.rockwellcollins.atc.agree.agree.ConstStatement;
 import com.rockwellcollins.atc.agree.agree.Contract;
 import com.rockwellcollins.atc.agree.agree.EqStatement;
+import com.rockwellcollins.atc.agree.agree.FloorCast;
 import com.rockwellcollins.atc.agree.agree.FnCallExpr;
 import com.rockwellcollins.atc.agree.agree.FnDefExpr;
 import com.rockwellcollins.atc.agree.agree.GetPropertyExpr;
@@ -103,6 +105,7 @@ import com.rockwellcollins.atc.agree.agree.PreExpr;
 import com.rockwellcollins.atc.agree.agree.PrevExpr;
 import com.rockwellcollins.atc.agree.agree.PrimType;
 import com.rockwellcollins.atc.agree.agree.PropertyStatement;
+import com.rockwellcollins.atc.agree.agree.RealCast;
 import com.rockwellcollins.atc.agree.agree.RealLitExpr;
 import com.rockwellcollins.atc.agree.agree.RecordDefExpr;
 import com.rockwellcollins.atc.agree.agree.RecordExpr;
@@ -923,7 +926,7 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
     			}else{
     				typeStr = getRecordTypeName(subCompImpl);
     			}
-    			subTypeMap.put(subComp.getName(), new NamedType(typeStr));
+    			subTypeMap.put(subComp.getName(), getNamedType(typeStr));
     		}
     	}else if(el instanceof RecordDefExpr){
     		RecordDefExpr agreeRecDef = (RecordDefExpr)el;
@@ -938,7 +941,7 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
     				NamedElement namedEl = AgreeEmitterUtilities.getFinalNestId(nestId);
     				typeStr = getRecordTypeName(namedEl);
     			}
-    			subTypeMap.put(arg.getName(), new NamedType(typeStr));
+    			subTypeMap.put(arg.getName(), getNamedType(typeStr));
     		}
     		
     	}else if(el instanceof ComponentType){
@@ -1030,7 +1033,21 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
     	return typeStr;
     }
     
-
+    @Override
+    public Expr caseFloorCast(FloorCast floor){
+    	Expr expr = doSwitch(floor.getExpr());
+    	Expr castExpr = new CastExpr(NamedType.INT, expr);
+    	return castExpr;
+    }
+    
+    @Override
+    public Expr caseRealCast(RealCast real){
+    	Expr expr = doSwitch(real.getExpr());
+    	Expr castExpr = new CastExpr(NamedType.REAL, expr);
+    	return castExpr;
+    }
+    
+    @Override
     public Expr caseBinaryExpr(com.rockwellcollins.atc.agree.agree.BinaryExpr expr) {
 
         Expr leftExpr = doSwitch(expr.getLeft());
@@ -1201,7 +1218,7 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
    private List<VarDecl> argsToVarDeclList(String nameTag, EList<Arg> args) {
         List<VarDecl> varList = new ArrayList<VarDecl>();
         for (Arg arg : args) {
-            Type type = new NamedType(getRecordTypeName(arg.getType()));
+            Type type = getNamedType(getRecordTypeName(arg.getType()));
             VarDecl varDecl = new VarDecl(nameTag + arg.getName(), type);
             varList.add(varDecl);
         }
@@ -1234,7 +1251,7 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         List<VarDecl> inputs = argsToVarDeclList(thisPrefix, expr.getArgs());
         Expr bodyExpr = doSwitch(expr.getExpr());
 
-        Type outType = new NamedType(getRecordTypeName(expr.getType()));
+        Type outType = getNamedType(getRecordTypeName(expr.getType()));
         VarDecl outVar = new VarDecl("_outvar", outType);
         List<VarDecl> outputs = Collections.singletonList(outVar);
         Equation eq = new Equation(new IdExpr("_outvar"), bodyExpr);
@@ -1635,7 +1652,7 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         				rhsAadlName, 
         				lhsLustreName, 
         				lhsAadlName, 
-        				new NamedType(agreeDestConn.varType),
+        				getNamedType(agreeDestConn.varType),
         				(EventDataPort)agreeSourConn.feature,
         				(EventDataPort)agreeDestConn.feature,
         				sourInstName, 
@@ -1879,8 +1896,8 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         IdExpr totalCompHistId = new IdExpr("_TOTAL_COMP_HIST");
         IdExpr sysAssumpHistId = new IdExpr("_SYSTEM_ASSUMP_HIST");
 
-        internals.add(new VarDecl(totalCompHistId.id, new NamedType("bool")));
-        internals.add(new VarDecl(sysAssumpHistId.id, new NamedType("bool")));
+        internals.add(new VarDecl(totalCompHistId.id, NamedType.BOOL));
+        internals.add(new VarDecl(sysAssumpHistId.id, NamedType.BOOL));
 
         // total component history
         Expr totalCompHist = new BoolExpr(true);
@@ -1924,7 +1941,7 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         for (Equation guar : guarExpressions) {
             String guarName = guar.lhs.get(0).id;
             IdExpr sysGuaranteesId = new IdExpr(sysGuarTag + i);
-            internals.add(new VarDecl(sysGuaranteesId.id, new NamedType("bool")));
+            internals.add(new VarDecl(sysGuaranteesId.id, NamedType.BOOL));
 
             Expr totalSysGuarExpr = new BinaryExpr(sysAssumpHistId, BinaryOp.AND, totalCompHistId);
 //            totalSysGuarExpr = new BinaryExpr(totalSysGuarExpr, BinaryOp.AND, allClksTickedExpr);
@@ -2028,7 +2045,7 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         Expr finiteConsist = AgreeEmitterUtilities.getFinteConsistancy(totalCompHistId, countId, consistUnrollDepth);
         Equation contrConsistEq = new Equation(notTotalCompHistId, finiteConsist);
         
-        internals.add(new VarDecl(notTotalCompHistId.id, new NamedType("bool")));
+        internals.add(new VarDecl(notTotalCompHistId.id, NamedType.BOOL));
         eqs.add(contrConsistEq);
         
         properties.add(notTotalCompHistId.id);
@@ -2061,8 +2078,8 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         
 		Equation contrConsistEq = new Equation(contrConsistId, finiteConsist);
         
-        internals.add(new VarDecl(contrConsistId.id, new NamedType("bool")));
-        internals.add(new VarDecl(contrHistId.id, new NamedType("bool")));
+        internals.add(new VarDecl(contrConsistId.id, NamedType.BOOL));
+        internals.add(new VarDecl(contrHistId.id, NamedType.BOOL));
         eqs.add(contrConsistEq);
         
         properties.add(contrConsistId.id);
@@ -2077,7 +2094,7 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
 	private IdExpr addConsistencyCounter(List<Equation> eqs,
 			List<VarDecl> internals) {
 		IdExpr countId = new IdExpr("__CONSIST_COUNTER");
-        internals.add(new VarDecl(countId.id, new NamedType("int")));
+        internals.add(new VarDecl(countId.id, NamedType.INT));
         
         Expr countPre = new BinaryExpr(new UnaryExpr(UnaryOp.PRE, countId), BinaryOp.PLUS, new IntExpr(BigInteger.ONE));
         countPre = new BinaryExpr(new IntExpr(BigInteger.ZERO), BinaryOp.ARROW, countPre);
@@ -2210,7 +2227,7 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
             Expr contrAssumps = AgreeEmitterUtilities.getLustreAssumptions(subEmitter);
 
             IdExpr compId = new IdExpr("_Hist_" + subEmitter.category);
-            internals.add(new VarDecl(compId.id, new NamedType("bool")));
+            internals.add(new VarDecl(compId.id, NamedType.BOOL));
 
             Expr leftSide = new UnaryExpr(UnaryOp.PRE, totalCompHist);
             leftSide = new BinaryExpr(new BoolExpr(true), BinaryOp.ARROW, leftSide);
@@ -2246,8 +2263,8 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
 			Equation contrConsistEq = new Equation(consistId, finiteConsist);
 			eqs.add(contrConsistEq);
 			eqs.add(contHist);
-			internals.add(new VarDecl(contrHistId.id, new NamedType("bool")));
-			internals.add(new VarDecl(consistId.id, new NamedType("bool")));
+			internals.add(new VarDecl(contrHistId.id, NamedType.BOOL));
+			internals.add(new VarDecl(consistId.id, NamedType.BOOL));
 
 			properties.add(consistId.id);
 			consistProps.add(consistId.id);
@@ -2354,4 +2371,17 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
     	
     }
         
+    private NamedType getNamedType(String name){
+    	switch(name){
+    	case "bool":
+    		return NamedType.BOOL;
+    	case "real":
+    		return NamedType.REAL;
+    	case "int":
+    		return NamedType.INT;
+    	default:
+    		return new NamedType(name);
+    	}
+    }
+    
 }

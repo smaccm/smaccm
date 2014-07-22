@@ -146,7 +146,13 @@ system ISAS_Sys
              flaps_in_range , aoa_in_range , air_data_in_range , 
              spoilers_in_range, stabilizer_in_range);
              
-        
+        guarantee "ISAS-S-140" : 
+        --ISAS shall compare dual channel inputs to determine 
+        --if the signals match within a tolerance.
+        ISAS_S_140.req(aoa, air_data, aoa_failed_update, air_data_failed_update, 
+        	           aoa_in_range, air_data_in_range, egi_select, 
+        	           aoa_within_tol, air_data_within_tol);
+              
         --ISAS shall compare dual channel inputs to determine 
         --if the signals match within a tolerance.
         
@@ -189,6 +195,13 @@ system ISAS_Sys
         -- of EGI data provided the EGI data is valid.
         ISAS_S_210.req(aoa, air_data, aoa_faults, air_data_faults, egi_select, 
         	           aoa_select, air_data_select);
+       
+        guarantee "ISAS-S-220" :  
+        -- In the case of mismatched dual input signals, ISAS shall set the 
+        -- selected value equal to the equivalent selected value of EGI data.
+        ISAS_S_220.req(aoa, air_data, aoa_failed_update, air_data_failed_update, 
+        	           aoa_in_range, air_data_in_range, aoa_within_tol, air_data_within_tol,
+        	           egi_select, aoa_select, air_data_select);  
             
         -- ISAS shall determine the selected value for a quad digital signal using the following table:
         -- 1) 4 good values with total range less than SignalTolerance, average all 4

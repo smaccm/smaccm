@@ -45,7 +45,7 @@ public class AgreeParser extends AbstractContentAssistParser {
 					put(grammarAccess.getCallDefAccess().getAlternatives(), "rule__CallDef__Alternatives");
 					put(grammarAccess.getNodeStmtAccess().getAlternatives(), "rule__NodeStmt__Alternatives");
 					put(grammarAccess.getTypeAccess().getAlternatives(), "rule__Type__Alternatives");
-					put(grammarAccess.getTypeAccess().getStringAlternatives_0_1_0(), "rule__Type__StringAlternatives_0_1_0");
+					put(grammarAccess.getPrimTypesAccess().getAlternatives(), "rule__PrimTypes__Alternatives");
 					put(grammarAccess.getRelateOpAccess().getAlternatives(), "rule__RelateOp__Alternatives");
 					put(grammarAccess.getAddSubExprAccess().getOpAlternatives_1_0_0_1_0(), "rule__AddSubExpr__OpAlternatives_1_0_0_1_0");
 					put(grammarAccess.getMultDivExprAccess().getOpAlternatives_1_0_0_1_0(), "rule__MultDivExpr__OpAlternatives_1_0_0_1_0");
@@ -150,6 +150,8 @@ public class AgreeParser extends AbstractContentAssistParser {
 					put(grammarAccess.getTermExprAccess().getGroup_5(), "rule__TermExpr__Group_5__0");
 					put(grammarAccess.getTermExprAccess().getGroup_5_2(), "rule__TermExpr__Group_5_2__0");
 					put(grammarAccess.getTermExprAccess().getGroup_6(), "rule__TermExpr__Group_6__0");
+					put(grammarAccess.getTermExprAccess().getGroup_7(), "rule__TermExpr__Group_7__0");
+					put(grammarAccess.getTermExprAccess().getGroup_8(), "rule__TermExpr__Group_8__0");
 					put(grammarAccess.getComplexExprAccess().getGroup(), "rule__ComplexExpr__Group__0");
 					put(grammarAccess.getComplexExprAccess().getGroup_1_0(), "rule__ComplexExpr__Group_1_0__0");
 					put(grammarAccess.getComplexExprAccess().getGroup_1_0_0(), "rule__ComplexExpr__Group_1_0_0__0");
@@ -297,6 +299,8 @@ public class AgreeParser extends AbstractContentAssistParser {
 					put(grammarAccess.getTermExprAccess().getValAssignment_3_1(), "rule__TermExpr__ValAssignment_3_1");
 					put(grammarAccess.getTermExprAccess().getValAssignment_4_1(), "rule__TermExpr__ValAssignment_4_1");
 					put(grammarAccess.getTermExprAccess().getSubThisAssignment_5_2_1(), "rule__TermExpr__SubThisAssignment_5_2_1");
+					put(grammarAccess.getTermExprAccess().getExprAssignment_6_3(), "rule__TermExpr__ExprAssignment_6_3");
+					put(grammarAccess.getTermExprAccess().getExprAssignment_7_3(), "rule__TermExpr__ExprAssignment_7_3");
 					put(grammarAccess.getComplexExprAccess().getArgsAssignment_1_0_1_0(), "rule__ComplexExpr__ArgsAssignment_1_0_1_0");
 					put(grammarAccess.getComplexExprAccess().getArgsAssignment_1_0_1_1_1(), "rule__ComplexExpr__ArgsAssignment_1_0_1_1_1");
 					put(grammarAccess.getComplexExprAccess().getArgsAssignment_1_1_0_0_2(), "rule__ComplexExpr__ArgsAssignment_1_1_0_0_2");

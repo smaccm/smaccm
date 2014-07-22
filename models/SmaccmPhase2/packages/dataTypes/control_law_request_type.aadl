@@ -16,19 +16,19 @@ data implementation control_law_request.impl
     set_safe : data Base_Types::Boolean;
     set_disarmed : data Base_Types::Boolean;
     set_armed : data Base_Types::Boolean;
-    set_stab_ppm : data Base_Types::Boolean;
-    set_stab_mavlink : data Base_Types::Boolean;
-    set_stab_auto : data Base_Types::Boolean;
+    set_ui_ppm : data Base_Types::Boolean;
+    set_ui_mavlink : data Base_Types::Boolean;
     set_yaw_rate : data Base_Types::Boolean;
     set_yaw_heading : data Base_Types::Boolean;
     set_thr_direct : data Base_Types::Boolean;
     set_thr_auto : data Base_Types::Boolean;
-    set_autothr_ppm : data Base_Types::Boolean;
-    set_autothr_mavlink : data Base_Types::Boolean;
-    set_autothr_auto : data Base_Types::Boolean;
+    set_autothr_src_ui : data Base_Types::Boolean;
+    set_autothr_src_nav : data Base_Types::Boolean;
+    set_stab_src_ui : data Base_Types::Boolean;
+    set_stab_src_nav : data Base_Types::Boolean;
+    set_head_src_ui : data Base_Types::Boolean;
+    set_head_src_nav : data Base_Types::Boolean;
     time : data Base_Types::Unsigned_32;
 end control_law_request.impl;
-
-
 
 end control_law_request_type;

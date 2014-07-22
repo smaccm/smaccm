@@ -97,9 +97,12 @@ Arg returns Arg:
 	name=ID ':' type=Type;
 
 Type returns Type:
-	{PrimType} string=('real' | 'bool' | 'int')
+	{PrimType} string=primTypes
 |	{RecordType} record=NestedDotID
 ;
+
+primTypes:
+  'real' | 'bool' | 'int';
 
 RecordDefExpr:
 	'type' name=ID '=' 'struct' '{' (args+=Arg (',' args+=Arg)*) '}' ';'
@@ -159,7 +162,9 @@ TermExpr returns Expr:
 	| {RealLitExpr} val=REAL_LIT
 	| {BoolLitExpr} val=BooleanLiteral
 	| {ThisExpr} 'this' ('.' subThis=NestedDotID)?
-	|'(' Expr ')';
+	| {FloorCast} 'floor' '(' expr=Expr ')'
+	| {RealCast}  'real' '(' expr=Expr ')'
+	| '(' Expr ')';
 	
 
 ComplexExpr:
