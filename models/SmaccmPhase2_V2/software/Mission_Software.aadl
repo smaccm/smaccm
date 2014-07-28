@@ -42,12 +42,13 @@ public
       position: out event data port gps_type::position.impl;
       mav_ui_emitter: out event data port userinput_type::userinput_result.impl;
       mav_cr_emitter: out event data port control_law_request_type::control_law_request.impl;
+      nav_ctl_law_req: out event data port control_law_request_type::control_law_request.impl;
   end flight_gen_process;
 
 process implementation flight_gen_process.impl
   subcomponents
-    dataport686 : data radio_stat_type::radio_stat.impl;
-    dataport632 : data gps_type::position.impl;
+    rad_data : data radio_stat_type::radio_stat.impl;
+    pos_data : data gps_type::position.impl;
     dataport631 : data mavlink_veh_commsec_msg::veh_commsec_msg.impl;
     dataport571 : data motors_type::motors.impl;
     dataport562 : data controloutput_type::controloutput.impl;
@@ -91,7 +92,7 @@ process implementation flight_gen_process.impl
     conn_22 : port datalink_uart1_inst.framed_ostream -> decryptTask_uart1_inst.hxToDecRcv;
 
     conn_29 : port navigation_inst.nav_law -> proxy_nav_law_inst.proxyEvent;
-    conn_30 : port navigation_inst.ctl_law_req -> controlLawTask_inst.nav_req_snk;
+    conn_30 : port navigation_inst.ctl_law_req -> nav_ctl_law_req;
     conn_31 : port navigation_inst.control_setpt -> proxy_navsetpt_inst.proxyEvent;
     --conn_33 : port uiMuxTask_inst.ui_emitter -> navigation_inst.ui_chan_313;
     --conn_35 : port controlLawTask_inst.law_emitter -> navigation_inst.law_chan_322;
@@ -111,15 +112,15 @@ process implementation flight_gen_process.impl
     conn_235 : data access dataport198 -> gcsTransmitTask_uart1_inst.pos_control;
     conn_236 : data access dataport395 -> gcsTransmitTask_uart1_inst.att_control;
     conn_237 : data access dataport394 -> gcsTransmitTask_uart1_inst.alt_control;
-    conn_238 : data access dataport686 -> gcsTransmitTask_uart1_inst.radio;
+    conn_238 : data access rad_data -> gcsTransmitTask_uart1_inst.radio;
     conn_239 : data access dataport571 -> gcsTransmitTask_uart1_inst.motors;
     conn_240 : data access dataport562 -> gcsTransmitTask_uart1_inst.control;
-    conn_241 : data access dataport632 -> gcsTransmitTask_uart1_inst.position;
+    conn_241 : data access pos_data -> gcsTransmitTask_uart1_inst.position;
     conn_242 : data access dataport0 -> gcsTransmitTask_uart1_inst.sensors;
     conn_243 : data access dataport366 -> gcsTransmitTask_uart1_inst.controllaw;
     conn_rec_write : port gcsReceiveTask_uart1_inst.param_writer -> control_data ;
     conn_328 : data access dataport631 -> decryptTask_uart1_inst.commsec_info_src;
-    conn_329 : data access dataport686 -> radio_status_uart1_inst.proxyData;
+    conn_329 : data access rad_data -> radio_status_uart1_inst.proxyData;
     conn_383 : data access dataport384 -> proxy_nav_law_inst.proxyData;
     conn_384 : data access dataport375 -> proxy_navsetpt_inst.proxyData;
     conn_387 : data access dataport198 -> navigation_inst.pos_dbg;
