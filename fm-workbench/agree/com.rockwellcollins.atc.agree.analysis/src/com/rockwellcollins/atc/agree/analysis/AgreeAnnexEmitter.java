@@ -566,7 +566,7 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
     	
     	//a variable of the same name as this should be created by setEventPortQueues()
     	//in the AgreeAnnexEmitter which created "this" AgreeAnnexEmitter
-    	AgreeVarDecl clockVar = new AgreeVarDecl(clockIDPrefix+comp.getName(),
+    	AgreeVarDecl clockVar = new AgreeVarDecl(clockIDPrefix+thisPrefix+comp.getName(),
         		NamedType.BOOL.toString());
     	
     	IdExpr clockId = new IdExpr(clockVar.id);
@@ -589,7 +589,7 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
     @Override
     public Expr caseCalenStatement(CalenStatement calen){
     	for(NamedElement namedEl : calen.getEls()){
-    		IdExpr clockId = new IdExpr(clockIDPrefix+namedEl.getName());
+    		IdExpr clockId = new IdExpr(clockIDPrefix+thisPrefix+namedEl.getName());
     		this.calendar.add(clockId);
     	}
         return null;
@@ -1830,7 +1830,9 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         ArrayList<VarDecl> outputList = new ArrayList<>(outputs);
         
         Node node = new Node("__NODE_"+this.category, inputList, outputList, Collections.EMPTY_LIST, eqs);
-        AgreeVarDecl clockVar = new AgreeVarDecl(clockIDPrefix+this.curComp.getName(), NamedType.BOOL);
+        //stupid hack to get rid of the prefix
+        String clockStr = clockIDPrefix+thisPrefix.replaceFirst(dotChar+"$", "");
+        AgreeVarDecl clockVar = new AgreeVarDecl(clockStr, NamedType.BOOL);
         
         List<Node> agreeNodes = new ArrayList<>(this.nodeDefExpressions);
         agreeNodes.add(node);
