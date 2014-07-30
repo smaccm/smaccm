@@ -30,8 +30,25 @@ public
     connections 
       conn_ide: feature group UX_DAUGHTER.ide <-> ODROID_XU.ide;
       conn_mpi: feature group UX_DAUGHTER.mpi <-> ODROID_XU.mpi;
-      conn_rc: port MSW.rcoverride_tx -> CSW.mission_rc_override_tx;
-      conn_control: port MSW.control_law_request -> CSW.mission_control_law_request;      conn0: feature group PX4FMU.sensors <-> CSW.sensors;
+      
+      --connections between mission and copter software
+      pos_conn : port MSW.position -> CSW.gps_position;
+      mav_ui_conn : port MSW.mav_ui_emitter -> CSW.mavlink_ui_emitter;
+      mav_cr_conn : port MSW.mav_cr_emitter -> CSW.mavlink_cr_emitter;
+      nav_conn : port MSW.nav_ctl_law_req -> CSW.nav_ctl_law_req;
+      mav_conn : port MSW.mav_data_out -> CSW.mav_data_in;
+      motor_conn: port CSW.motor_data_out -> MSW.motor_data_in;
+      control_conn: port CSW.control_out_data_out -> MSW.control_out_data_in;
+      alt_conn : port CSW.alt_data_out -> MSW.alt_data_in;
+      control_point_conn : port MSW.control_point_data_out -> CSW.control_point_data_in;
+      control_law_conn : port CSW.control_law_data_out -> MSW.control_law_data_in;
+      userinput_conn: port CSW.userinput_data_out -> MSW.userinput_data_in;
+      control_data_conn : port MSW.control_data_out -> CSW.control_data_in;
+      sensors_data_conn : port CSW.sensors_data_out -> MSW.sensors_data_in;
+      
+      
+    
+      conn0: feature group PX4FMU.sensors <-> CSW.sensors;
       conn1: feature group PX4FMU.expansion_slot <-> PX4IOAR.expansion_connector;
 
       conn2: feature group PX4IOAR.motors_and_radios <-> CSW.motors_and_radios;
