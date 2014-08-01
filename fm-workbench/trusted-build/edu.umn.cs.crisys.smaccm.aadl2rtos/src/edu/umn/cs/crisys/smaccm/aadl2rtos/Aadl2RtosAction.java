@@ -81,7 +81,16 @@ public class Aadl2RtosAction extends AadlAction {
 			return Status.CANCEL_STATUS;
 		}
 
-		return execute(null, (SystemImplementation) sel, monitor, null, logger);
+		IStatus execStatus = execute(null, (SystemImplementation) sel, monitor, null, logger); 
+				
+		if (execStatus == Status.OK_STATUS) 
+			try {
+				ResourcesPlugin.getWorkspace().getRoot().refreshLocal(0, new NullProgressMonitor());
+			} catch (CoreException e) {
+				e.printStackTrace();
+			}
+
+		return execStatus;
 		
 	}
 	
@@ -140,11 +149,6 @@ public class Aadl2RtosAction extends AadlAction {
 			return Status.CANCEL_STATUS;
 		}
 
-		try {
-			ResourcesPlugin.getWorkspace().getRoot().refreshLocal(0, new NullProgressMonitor());
-		} catch (CoreException e) {
-			e.printStackTrace();
-		}
 
 		return Status.OK_STATUS;
 	}
