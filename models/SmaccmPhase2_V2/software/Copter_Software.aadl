@@ -44,6 +44,8 @@ with SMACCM;
   end Software;
   
   system implementation Software.Impl 
+    subcomponents
+      ML : process flight_process;
   end Software.Impl;
 
   process flight_process
