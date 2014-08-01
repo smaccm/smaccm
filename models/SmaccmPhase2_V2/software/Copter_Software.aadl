@@ -25,48 +25,65 @@ with SMACCM;
   with userinput_type;
 	
   system Software
+    features
+      mavlink_cr_emitter: in event data port control_law_request_type::control_law_request.impl;
+      mavlink_ui_emitter: in event data port userinput_type::userinput_result.impl;
+      nav_ctl_law_req: in event data port control_law_request_type::control_law_request.impl;
+      gps_position: in event data port gps_type::position.impl;
+      
+      --data connections
+      mav_data_in : in data port mavlink_veh_commsec_msg::veh_commsec_msg.impl;
+      motor_data_out : out data port motors_type::motors.impl;
+      control_out_data_out : out data port controloutput_type::controloutput.impl;
+      alt_data_out : out data port alt_control_dbg_type::alt_control_dbg.impl;
+      control_point_data_in : in data port control_setpoint_type::control_setpoint.impl;
+      control_law_data_out : out data port control_law_type::control_law.impl;
+      userinput_data_out : out data port userinput_type::userinput_result.impl;
+      control_data_in : in data port DATATYPES::control_data.impl;
+      sensors_data_out : out data port sensors_type::sensors_result.impl;
   end Software;
   
   system implementation Software.Impl 
+    subcomponents
+      ML : process flight_process;
   end Software.Impl;
 
   process flight_process
     features
-      mavlink_cr_emitter: in event data port control_law_request_type::control_law_request.impl {
-        Queue_Size => 16;
-        SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_mavlinkInputTask_124.h";
-        SMACCM_SYS::CommPrim_Source_Text => "emitFromTask_mavlinkInputTask_124_chan123_128";
-      };
-      mavlink_ui_emitter: in event data port userinput_type::userinput_result.impl {
-        Queue_Size => 16;
-        SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_mavlinkInputTask_124.h";
-        SMACCM_SYS::CommPrim_Source_Text => "emitFromTask_mavlinkInputTask_124_chan122_126";
-      };
-      nav_ctl_law_req: in event data port control_law_request_type::control_law_request.impl {
-        Queue_Size => 16;
-        SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_navigation_199.h";
-        SMACCM_SYS::CommPrim_Source_Text => "emitFromTask_navigation_199_chan99_203";
-      };
+      mavlink_cr_emitter: in event data port control_law_request_type::control_law_request.impl;
+      mavlink_ui_emitter: in event data port userinput_type::userinput_result.impl;
+      nav_ctl_law_req: in event data port control_law_request_type::control_law_request.impl;
+      gps_position: in event data port gps_type::position.impl;
+      
+      --data connections
+      mav_data_in : in data port mavlink_veh_commsec_msg::veh_commsec_msg.impl;
+      motor_data_out : out data port motors_type::motors.impl;
+      control_out_data_out : out data port controloutput_type::controloutput.impl;
+      alt_data_out : out data port alt_control_dbg_type::alt_control_dbg.impl;
+      control_point_data_in : in data port control_setpoint_type::control_setpoint.impl;
+      control_law_data_out : out data port control_law_type::control_law.impl;
+      userinput_data_out : out data port userinput_type::userinput_result.impl;
+      control_data_in : in data port DATATYPES::control_data.impl;
+      sensors_data_out : out data port sensors_type::sensors_result.impl;
+      
   end flight_process;
 
   process implementation flight_process.impl
   subcomponents
-    dataport1082 : data radio_stat_type::radio_stat.impl;
-    dataport686 : data radio_stat_type::radio_stat.impl;
     dataport632 : data gps_type::position.impl;
-    dataport631 : data mavlink_veh_commsec_msg::veh_commsec_msg.impl;
-    dataport571 : data motors_type::motors.impl;
-    dataport562 : data controloutput_type::controloutput.impl;
-    dataport395 : data att_control_dbg_type::att_control_dbg.impl;
-    dataport394 : data alt_control_dbg_type::alt_control_dbg.impl;
-    dataport384 : data nav_law_type::nav_law.impl;
-    dataport375 : data control_setpoint_type::control_setpoint.impl;
-    dataport366 : data control_law_type::control_law.impl;
-    dataport357 : data userinput_type::userinput_result.impl;
-    dataport198 : data pos_control_dbg_type::pos_control_dbg.impl;
+    mav_data : data mavlink_veh_commsec_msg::veh_commsec_msg.impl;
+    motor_data : data motors_type::motors.impl;
+    control_out_data : data controloutput_type::controloutput.impl;
+    att_data : data att_control_dbg_type::att_control_dbg.impl;
+    alt_data : data alt_control_dbg_type::alt_control_dbg.impl;
+    nav_data : data nav_law_type::nav_law.impl;
+    control_point_data : data control_setpoint_type::control_setpoint.impl;
+    control_law_data : data control_law_type::control_law.impl;
+    userinput_data : data userinput_type::userinput_result.impl;
+    pos_control_data : data pos_control_dbg_type::pos_control_dbg.impl;
     blink_data : data Base_Types::Unsigned_32;
     control_data : data DATATYPES::control_data.impl;
-    dataport0 : data sensors_type::sensors_result.impl;
+    sensors_data : data sensors_type::sensors_result.impl;
     position_state_inst : thread position_state;
     px4ioar_inst : thread px4ioar;
     motors_state_inst : thread motors_state;
@@ -80,14 +97,23 @@ with SMACCM;
     ppmInputTower_inst : thread ppmInputTower;
     sensorsCaptureTask_inst : thread sensorsCaptureTask;
     proxy_userinput_inst : thread proxy_userinput;
-    ubloxGPS_inst : thread ubloxGPS;
     uart5ISR_inst : thread uart5ISR;
     uart1ISR_inst : thread uart1ISR;
     uart2ISR_inst : thread uart2ISR;
-    uart6ISR_inst : thread uart6ISR;
     
    connections
 
+	mav_in : port mav_data_in -> mav_data;
+    motor_out : port motor_data -> motor_data_out;
+    control_out_out : port control_out_data -> control_out_data_out;
+    alt_out : port alt_data -> alt_data_out;
+    control_pooutt_in : port control_point_data_in -> control_point_data;
+    control_law_out : port control_law_data -> control_law_data_out;
+    useroutput_out : port userinput_data -> userinput_data_out;
+    control_in : port control_data_in -> control_data;
+    sensors_out : port sensors_data -> sensors_data_out;
+
+    conn_ui : data access userinput_data -> proxy_userinput_inst.proxyData;
     conn_23 : port px4ioar_inst.newstateEmitter -> px4ioar_inst.newstateEvent;
     conn_24 : port px4ioar_inst.uart_ostream -> uart2ISR_inst.ostream;
     conn_25 : port motmix_inst.motors -> px4ioar_inst.motor_istream;
@@ -96,34 +122,32 @@ with SMACCM;
     conn_28 : port control_inst.control -> motmix_inst.control;
     conn_30 : port nav_ctl_law_req -> controlLawTask_inst.nav_req_snk;
     conn_32 : port uiMuxTask_inst.ui_emitter -> proxy_userinput_inst.proxyEvent;
-    conn_33 : port uiMuxTask_inst.ui_emitter -> navigation_inst.ui_chan_313;
+    --conn_33 : port uiMuxTask_inst.ui_emitter -> navigation_inst.ui_chan_313; --NOTE this should probably change
     conn_34 : port controlLawTask_inst.law_emitter -> proxy_controllaw_inst.proxyEvent;
-    conn_35 : port controlLawTask_inst.law_emitter -> navigation_inst.law_chan_322;
+    --conn_35 : port controlLawTask_inst.law_emitter -> navigation_inst.law_chan_322; --NOTE this should probably change
     conn_36 : port controlLawTask_inst.law_emitter -> uiMuxTask_inst.law;
     conn_37 : port mavlink_cr_emitter -> controlLawTask_inst.mavlink_req_snk;
     conn_38 : port mavlink_ui_emitter -> uiMuxTask_inst.mavlink_ui;
     conn_39 : port ppmInputTower_inst.cr_emitter -> controlLawTask_inst.ppm_req_snk;
     conn_40 : port ppmInputTower_inst.ui_emitter -> uiMuxTask_inst.ppm_ui;
     conn_41 : port sensorsCaptureTask_inst.newstateEmitter -> sensorsCaptureTask_inst.newstateEvent;
-    conn_42 : port ubloxGPS_inst.position -> position_state_inst.proxyEvent;
-    conn_43 : port ubloxGPS_inst.position -> navigation_inst.pos_chan_331;
-    conn_44 : port ubloxGPS_inst.position -> sensorsCaptureTask_inst.position;
-    conn_47 : port uart6ISR_inst.istream -> ubloxGPS_inst.istream;
+    conn_42 : port gps_position -> position_state_inst.proxyEvent;
+    conn_44 : port gps_position -> sensorsCaptureTask_inst.position;
     
     conn_330 : data access dataport632 -> position_state_inst.proxyData;
-    conn_331 : data access dataport571 -> motors_state_inst.proxyData;
-    conn_332 : data access dataport562 -> control_state_inst.proxyData;
-    conn_333 : data access dataport366 -> motmix_inst.controllaw;
+    conn_331 : data access motor_data -> motors_state_inst.proxyData;
+    conn_332 : data access control_out_data -> control_state_inst.proxyData;
+    conn_333 : data access control_law_data -> motmix_inst.controllaw;
     conn_334 : data access blink_data -> blink_inst.commstatus;
-    conn_335 : data access dataport366 -> blink_inst.controllaw;
-    conn_336 : data access dataport394 -> control_inst.alt_control_dbg;
-    conn_337 : port control_data -> controL_inst.control_params;
-    conn_379 : data access dataport375 -> control_inst.nav_setpt;
-    conn_380 : data access dataport0 -> control_inst.sensors;
-    conn_381 : data access dataport357 -> control_inst.userinput;
-    conn_382 : data access dataport366 -> control_inst.control_law;
+    conn_335 : data access control_law_data -> blink_inst.controllaw;
+    conn_336 : data access alt_data -> control_inst.alt_control_dbg;
+    conn_337 : port control_data -> control_inst.control_params;
+    conn_379 : data access control_point_data -> control_inst.nav_setpt;
+    conn_380 : data access sensors_data -> control_inst.sensors;
+    conn_381 : data access userinput_data -> control_inst.userinput;
+    conn_382 : data access control_law_data -> control_inst.control_law;
     
-    conn_433 : data access dataport0 -> sensorsCaptureTask_inst.sensors;
+    conn_433 : data access sensors_data -> sensorsCaptureTask_inst.sensors;
     
   end flight_process.impl;
 
@@ -139,7 +163,7 @@ thread proxy_userinput
     proxyData: requires data access userinput_type::userinput_result.impl {
       Access_Right => write_only;
       SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_proxy_userinput_358.h";
-      SMACCM_SYS::CommPrim_Source_Text => "write_proxy_userinput_358_dataport357_360";
+      SMACCM_SYS::CommPrim_Source_Text => "write_proxy_userinput_358_userinput_data_360";
     };
   properties
     Source_Text => ("tower_task_usercode_proxy_userinput_358.c");
@@ -217,7 +241,7 @@ thread motors_state
     proxyData: requires data access motors_type::motors.impl {
       Access_Right => write_only;
       SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_motors_state_572.h";
-      SMACCM_SYS::CommPrim_Source_Text => "write_motors_state_572_dataport571_574";
+      SMACCM_SYS::CommPrim_Source_Text => "write_motors_state_572_motor_data_574";
     };
   properties
     Source_Text => ("tower_task_usercode_motors_state_572.c");
@@ -239,7 +263,7 @@ thread control_state
     proxyData: requires data access controloutput_type::controloutput.impl {
       Access_Right => write_only;
       SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_state_563.h";
-      SMACCM_SYS::CommPrim_Source_Text => "write_control_state_563_dataport562_565";
+      SMACCM_SYS::CommPrim_Source_Text => "write_control_state_563_control_out_data_565";
     };
   properties
     Source_Text => ("tower_task_usercode_control_state_563.c");
@@ -266,7 +290,7 @@ thread motmix
     controllaw: requires data access control_law_type::control_law.impl {
       Access_Right => read_only;
       SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_motmix_552.h";
-      SMACCM_SYS::CommPrim_Source_Text => "read_motmix_552_dataport366_554";
+      SMACCM_SYS::CommPrim_Source_Text => "read_motmix_552_control_law_data_554";
     };
   properties
     Source_Text => ("tower_task_usercode_motmix_552.c");
@@ -282,12 +306,12 @@ thread blink
     commstatus: requires data access Base_Types::Unsigned_32 {
       Access_Right => read_only;
       SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_blink_542.h";
-      SMACCM_SYS::CommPrim_Source_Text => "read_blink_542_dataport97_546";
+      SMACCM_SYS::CommPrim_Source_Text => "read_blink_542_com_data_546";
     };
     controllaw: requires data access control_law_type::control_law.impl {
       Access_Right => read_only;
       SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_blink_542.h";
-      SMACCM_SYS::CommPrim_Source_Text => "read_blink_542_dataport366_544";
+      SMACCM_SYS::CommPrim_Source_Text => "read_blink_542_control_law_data_544";
     };
   properties
     Source_Text => ("tower_task_usercode_blink_542.c");
@@ -310,28 +334,28 @@ thread control
     alt_control_dbg: requires data access alt_control_dbg_type::alt_control_dbg.impl {
       Access_Right => write_only;
       SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_396.h";
-      SMACCM_SYS::CommPrim_Source_Text => "write_control_396_dataport394_513";
+      SMACCM_SYS::CommPrim_Source_Text => "write_control_396_alt_data_513";
     };
     control_params : in data port DATATYPES::control_data.impl;
     nav_setpt: requires data access control_setpoint_type::control_setpoint.impl {
       Access_Right => read_only;
       SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_396.h";
-      SMACCM_SYS::CommPrim_Source_Text => "read_control_396_dataport375_404";
+      SMACCM_SYS::CommPrim_Source_Text => "read_control_396_control_point_data_404";
     };
     sensors: requires data access sensors_type::sensors_result.impl {
       Access_Right => read_only;
       SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_396.h";
-      SMACCM_SYS::CommPrim_Source_Text => "read_control_396_dataport0_402";
+      SMACCM_SYS::CommPrim_Source_Text => "read_control_396_sensors_data_402";
     };
     userinput: requires data access userinput_type::userinput_result.impl {
       Access_Right => read_only;
       SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_396.h";
-      SMACCM_SYS::CommPrim_Source_Text => "read_control_396_dataport357_400";
+      SMACCM_SYS::CommPrim_Source_Text => "read_control_396_userinput_data_400";
     };
     control_law: requires data access control_law_type::control_law.impl {
       Access_Right => read_only;
       SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_control_396.h";
-      SMACCM_SYS::CommPrim_Source_Text => "read_control_396_dataport366_398";
+      SMACCM_SYS::CommPrim_Source_Text => "read_control_396_control_law_data_398";
     };
   properties
     Source_Text => ("tower_task_usercode_control_396.c");
@@ -354,7 +378,7 @@ thread proxy_controllaw
     proxyData: requires data access control_law_type::control_law.impl {
       Access_Right => write_only;
       SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_proxy_controllaw_367.h";
-      SMACCM_SYS::CommPrim_Source_Text => "write_proxy_controllaw_367_dataport366_369";
+      SMACCM_SYS::CommPrim_Source_Text => "write_proxy_controllaw_367_control_law_data_369";
     };
   properties
     Source_Text => ("tower_task_usercode_proxy_controllaw_367.c");
@@ -478,7 +502,7 @@ thread sensorsCaptureTask
     sensors: requires data access sensors_type::sensors_result.impl {
       Access_Right => write_only;
       SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_sensorsCaptureTask_72.h";
-      SMACCM_SYS::CommPrim_Source_Text => "write_sensorsCaptureTask_72_dataport0_74";
+      SMACCM_SYS::CommPrim_Source_Text => "write_sensorsCaptureTask_72_sensors_data_74";
     };
   properties
     Source_Text => ("tower_task_usercode_sensorsCaptureTask_72.c");
