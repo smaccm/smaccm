@@ -14,11 +14,11 @@ import edu.umn.cs.crisys.smaccm.aadl2rtos.Logger;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosException;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.gluecode.Names;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.ExternalIRQ;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.InterruptServiceRoutine;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.SharedData;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.ThreadImplementationBase;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.ThreadInstance;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.ThreadInstancePort;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.IRQDispatcher;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.PeriodicDispatcher;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.legacy.LegacyExternalISR;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.legacy.LegacyIRQEvent;
@@ -69,14 +69,6 @@ public class PrxGenerator {
 		parent.appendChild(c);
 
 		Set<String> fileSet = new HashSet<String>();
-//		for (ThreadImplWrapper w : model.getTaskThreads()) {
-//			fileSet.addAll(Util.assertNonNull(Util.getSourceTextListOpt(w.getThread(), ThreadUtil.SOURCE_TEXT), "Thread" + (w.getName())
-//					+ " is required to have an associated source file for its entrypoint"));
-//		}
-//		for (ThreadImplWrapper w : model.getISRThreads()) {
-//			fileSet.addAll(Util.assertNonNull(Util.getSourceTextListOpt(w.getThread(), ThreadUtil.SOURCE_TEXT), "Thread" + (w.getName())
-//					+ " is required to have an associated source file for its entrypoint"));
-//		}
 		for (String s : fileSet) {
 			e = doc.createElement("module");
 			String moduleName = Util.pathRemoveExtension(s);
@@ -149,9 +141,6 @@ public class PrxGenerator {
 	private void writeVectableEntry(String signalName, String handlerName, org.w3c.dom.Element parent) {
     org.w3c.dom.Element e;
     e = doc.createElement(signalName);
-    // TODO: here is an example why we want a separate class for ISRs.
-    // I have to extract the (single, I hope) entrypoint from the list
-    // of entrypoints for the thread.
     try {
       e.appendChild(doc.createTextNode(handlerName));
       parent.appendChild(e);
@@ -217,9 +206,9 @@ public class PrxGenerator {
 		e.appendChild(ec);
 		ec = doc.createElement("trampolines");
 		e.appendChild(ec);
-		List<InterruptServiceRoutine> ISRs = model.getISRList();
-		for (InterruptServiceRoutine i : ISRs) {
-       writeTrampoline(i.getSignalName(), i.getHandlerName(), ec);
+		List<IRQDispatcher> ISRs = model.getIRQDispatcherList(); 
+		for (IRQDispatcher i : ISRs) {
+       writeTrampoline(i.getSignalName(), i.getFirstLevelInterruptHandlerWrapper(), ec);
 		}
 		// let the shim do it if it wants to.
 		if (model.getThreadCalendar().hasDispatchers() && model.getGenerateSystickIRQ()) {
@@ -251,26 +240,21 @@ public class PrxGenerator {
 		e.appendChild(ec);
 		ec.appendChild(doc.createTextNode("PendSVHandler"));
 	      
-		for (InterruptServiceRoutine i : ISRs) {
+		for (IRQDispatcher i : ISRs) {
 		  if (isInternalIrq(i.getSignalName())) {
-		    writeVectableEntry(i.getSignalName(), i.getHandlerName(), e);
+		    writeVectableEntry(i.getSignalName(), i.getFirstLevelInterruptHandlerWrapper(), e);
 		  } 
-		  // else if (! isExternalIrq(i.getSignalName())) {
-		  //   throw new Aadl2RtosException("IRQ: " + i.getSignalName() + " is not a known internal or external IRQ");
-		  // }
 		}
 		
-		// write lirqs from static list: 
-		//if (!model.getLegacyExternalIRQs().isEmpty()) {
-		  ec = doc.createElement("external_irqs");
-		  e.appendChild(ec);
-		  for (ExternalIRQ eirq: model.getExternalIRQs()) {
-  		  writeLegacyVectableEntry(eirq, ec);
-  		}
-		// }
-        if (model.getThreadCalendar().hasDispatchers() && model.getGenerateSystickIRQ()) {
-           writeVectableEntry("systick", Names.getCalendarFnName(), e);
-        }
+    ec = doc.createElement("external_irqs");
+    e.appendChild(ec);
+    for (ExternalIRQ eirq: model.getExternalIRQs()) {
+      writeLegacyVectableEntry(eirq, ec);
+    }
+    
+    if (model.getThreadCalendar().hasDispatchers() && model.getGenerateSystickIRQ()) {
+       writeVectableEntry("systick", Names.getCalendarFnName(), e);
+    }
 	}
 
 	private void printKochabComponent(ThreadImplementationBase c, Document doc, org.w3c.dom.Element parent) {
@@ -318,27 +302,12 @@ public class PrxGenerator {
 
 		org.w3c.dom.Element e;
 		
-    //e = doc.createElement("num_tasks");
-		//e.appendChild(doc.createTextNode(Integer.toString(tasks.size())));
-		//parent.appendChild(e);
-
 		e = doc.createElement("tasks");
 		parent.appendChild(e);
 		
     List<ThreadImplementationBase> allTasks; 
     
-//	if (model.getISRType() == Model.ISRType.SignalingISR) {
-	    allTasks = model.getAllThreadImplementations();
-//	} else if (model.getISRType() == Model.ISRType.InThreadContextISR) {
-//		allTasks = new ArrayList<ThreadImplementationBase>();
-//		for (ThreadImplementationBase ti : model.getAllThreadImplementations()) {
-//			if (!ti.isISRThread()) {
-//				allTasks.add(ti);
-//			}
-//		}
-//	} else {
-//		throw new Aadl2RtosException("Error: unknonwn ISR type: " + model.getISRType().toString());
-//	}
+	  allTasks = model.getAllThreadImplementations();
 
     int kochabLocation = 0;
     Collections.sort(allTasks, new PriorityComparator());

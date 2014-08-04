@@ -1,0 +1,279 @@
+--------------------------------------------------------------------
+--
+-- This is an encoding of the toy schedulability model that is 
+-- found in the scheduling google document: 
+-- https://docs.google.com/document/d/18XQk4NdzQf9gqa1jzRRPobxFHBw_DUyUoDQ6Hh-tJvQ/edit
+-- 
+-- Most of the schedulability discussion is there. 
+-- 
+-- A few implementation notes:
+-- Right now the "Sends_Events_To" property that describes possible fan-outs is 
+-- constructed per-thread and looks only at local dependencies.  It might be more 
+-- accurate if it were constructed per-input-dispatcher.
+-- It would certainly be more accurate if it contained task chains rather than just
+-- the immediate next threads.
+--
+-- We will circle back to this if necessary to show schedulability.
+--
+--------------------------------------------------------------------
+
+package Schedulability_Toy
+public 
+   with Base_Types;
+   with SMACCM_SYS;   
+   
+-- Example of a periodically dispatched "Active" thread.   
+thread A
+	features
+		Output1: out event data port Base_Types::Integer {
+	      SMACCM_SYS::CommPrim_Source_Header => "A_Output1.h";
+	      SMACCM_SYS::CommPrim_Source_Text => "A_Output1";			
+		};
+		Output2: out event data port Base_Types::Integer {
+	      SMACCM_SYS::CommPrim_Source_Header => "A_Output2.h";
+	      SMACCM_SYS::CommPrim_Source_Text => "A_Output2";			
+		}; 
+		
+	properties 
+	    Dispatch_Protocol => Periodic;
+	    Period => 100 ms;
+		-- periodic event handler.
+		Source_Text => ("eventhandler_periodic_A.c");
+	    Priority => 45;
+
+	    Stack_Size => 256 bytes;
+	    SMACCM_SYS::Language => "Ivory";
+		
+		-- new properties related to structuring and schedulability
+		-- First: is the thread Active or Passive?  If it is periodic or has 
+		-- an IRQ dispatch, it MUST be active, because it is externally dispatched.
+	    SMACCM_SYS::Thread_Type => Active ;
+	    
+	    -- This describes the min/max execution time of the thread.
+	    -- The min time is unnecessary for our analyses, but it is part of the 
+	    -- AADL standard, so it is left in unchanged. 
+	    Compute_Execution_Time => 10 us .. 50 us;
+	    
+	    -- Possible output event patterns: 
+    	-- Either Output_C and Output_D are each invoked 1 time, or
+    	-- Output_D is invoked 2 times
+    	-- Grammar is: 
+    	--  send_list : '{' (send_element ',')* send_element '}'
+    	--  send_element : 
+    	--       '{' '}' |
+    	--       '{' (INT ID ',')* INT ID '}'
+    	-- where the INT should be max # of occurrences and ID should be 
+    	-- the output port.
+	    SMACCM_SYS::Sends_Events_To => "{{1 Output_C, 1 Output_D}, {2 Output_D}}";
+end A ; 
+
+-- Example of a both IRQ dispatched and Periodically dispatched "Active" hybrid thread.   
+
+
+-- Some notes: 
+--    1. You can have a thread contain multiple ISR ports (see below).
+--       In the current implementation, an ISR port is an AADL in event port 
+--       that is not connected to any other thread (in the future, we might connect
+--       it to a processor or device, but this would likely be cosmetic, rather than 
+--       affect the code generation).  It is indicated by setting: 
+--       SMACCM_SYS::Is_ISR property => true.
+--
+--    2. Each ISR dispatcher consists of a first-level interrupt handler and  
+--       a list of second level interrupt handlers.  The first-level interrupt
+--       handler is described by the "First_Level_Interrupt_Handler" property.
+--       It is a function that has no inputs and is expected to return a Boolean
+--       value: the Boolean value describes whether or not a second level interrupt
+--       handler is to be called.
+--
+--    3. The second level interrupt handlers are encoded using 
+-- 		 the Compute_Entrypoint_Source_Text property.  These are like 'normal'
+--       handlers for in event ports: they take no inputs.
+--
+--    4. The Queue Size property normally associated with in event ports 
+--       do not have meaning for ISR ports.  Currently these do not cause an error, 
+--       but are simply ignored.
+
+
+thread B
+	features
+		Input1: in event data port Base_Types::Integer {
+	      SMACCM_SYS::CommPrim_Source_Header => "Signal1_Handlers.h";
+	      SMACCM_SYS::CommPrim_Source_Text => "Signal1_Handlers.c";
+	      
+	      -- Indicates that this port is an ISR port.
+	      SMACCM_SYS::Is_ISR => true;
+		  
+		  -- ISR signal name (as communicated to eChronos)
+		  SMACCM_SYS::Signal_Name => "signal1";
+		  
+		  -- First level interrupt handler (called in the context of the currently 
+		  -- executing thread)
+		  SMACCM_SYS::First_Level_Interrupt_Handler => "flih_signal1";
+	      
+	      -- Second level interrupt handlers
+	      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_signal1_1, eventhandler_signal1_2");
+		};
+		
+		-- Another ISR port
+		Input2: in event data port Base_Types::Integer {
+	      SMACCM_SYS::CommPrim_Source_Header => "Signal2_Handlers.h";
+	      SMACCM_SYS::CommPrim_Source_Text => "Signal2_Handlers.c";
+	      SMACCM_SYS::Is_ISR => true;
+		  SMACCM_SYS::Signal_Name => "signal2";
+		  SMACCM_SYS::First_Level_Interrupt_Handler => "flih_signal2";
+	      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_signal2_1");
+		};
+		
+		Output_D: out event data port Base_Types::Integer {
+	      SMACCM_SYS::CommPrim_Source_Header => "D_Output.h";
+	      SMACCM_SYS::CommPrim_Source_Text => "D_Output";			
+		};
+		
+	properties 
+	    Dispatch_Protocol => Hybrid;
+	    Period => 100 ms;
+		-- periodic event handler.
+		Source_Text => ("eventhandler_periodic_B.c");
+	    Priority => 45;
+
+	    Stack_Size => 256 bytes;
+	    SMACCM_SYS::Language => "Ivory";
+	    SMACCM_SYS::Thread_Type => Active ;
+	    Compute_Execution_Time => 5 us .. 30 us;
+	    
+	    -- Possible output event patterns: 
+	    	-- Either Output_D is invoked 1 time, or 
+	    	-- no output events are generated.
+	    SMACCM_SYS::Sends_Events_To => "{{1 Output_D}, {}}";
+		
+end B ; 
+
+-- Note: you don't *have* to make internally dispatched threads "Passive".  Here 
+-- we could make the internally dispatched thread an Active thread.  You might want to 
+-- do this because you want a 2nd level ISR to return very quickly.  However, if 
+-- you have "fan in" to a single dispatcher, it becomes very hard to perform 
+-- schedulability analysis.  However, to match the model in the scheduling document
+-- we make this a passive thread.
+
+thread C
+	features
+		Input1: in event data port Base_Types::Integer {
+		  SMACCM_SYS::CommPrim_Source_Header => "C_Handlers.h";
+	      SMACCM_SYS::CommPrim_Source_Text => "C_Handlers.c";
+	      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_C_Input1");
+		}; 
+		Output1: out event data port Base_Types::Integer {
+	      SMACCM_SYS::CommPrim_Source_Header => "C_Output.h";
+	      SMACCM_SYS::CommPrim_Source_Text => "C_Output";
+		}; 
+		
+	properties 
+	    Dispatch_Protocol => Sporadic;
+	    Priority => 45;
+	    Stack_Size => 256 bytes;
+	    SMACCM_SYS::Language => "Ivory";
+	    SMACCM_SYS::Thread_Type => Passive ;
+	    Compute_Execution_Time => 5 us .. 30 us;
+	    SMACCM_SYS::Sends_Events_To => "{{1 Output1}, {}}";
+end C ; 
+
+thread D
+	features
+		Input1: in event data port Base_Types::Integer {
+		  SMACCM_SYS::CommPrim_Source_Header => "D_Handlers.h";
+	      SMACCM_SYS::CommPrim_Source_Text => "D_Handlers.c";
+	      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_D_Input1");
+		}; 
+		Output1: out event data port Base_Types::Integer {
+	      SMACCM_SYS::CommPrim_Source_Header => "D_Output.h";
+	      SMACCM_SYS::CommPrim_Source_Text => "D_Output";
+		}; 
+		
+	properties 
+	    Dispatch_Protocol => Sporadic;
+	    Priority => 10;
+
+	    Stack_Size => 256 bytes;
+	    SMACCM_SYS::Language => "Ivory";
+	    SMACCM_SYS::Thread_Type => Passive ;
+	    Compute_Execution_Time => 5 us .. 30 us;
+	    SMACCM_SYS::Sends_Events_To => "{{1 Output1}, {}}";
+end D ; 
+
+thread E
+	features
+		Input1: in event data port Base_Types::Integer {
+		  SMACCM_SYS::CommPrim_Source_Header => "E_Handlers.h";
+	      SMACCM_SYS::CommPrim_Source_Text => "E_Handlers.c";
+	      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_E_Input1");
+		}; 
+		Output1: out event data port Base_Types::Integer {
+	      SMACCM_SYS::CommPrim_Source_Header => "E_Output.h";
+	      SMACCM_SYS::CommPrim_Source_Text => "E_Output";
+		}; 
+		Output2: out data port Base_Types::Integer {
+	      SMACCM_SYS::CommPrim_Source_Header => "E_Output.h";
+	      SMACCM_SYS::CommPrim_Source_Text => "E_Output";
+		}; 
+		
+	properties 
+	    Dispatch_Protocol => Sporadic;
+	    Priority => 10;
+
+	    Stack_Size => 256 bytes;
+	    SMACCM_SYS::Language => "Ivory";
+	    SMACCM_SYS::Thread_Type => Passive ;
+	    Compute_Execution_Time => 5 us .. 30 us;
+	    SMACCM_SYS::Sends_Events_To => "{{1 Output1}, {1 Output2}}";
+end E ; 
+
+   
+thread F
+	features
+		Input1: in event data port Base_Types::Integer {
+		  SMACCM_SYS::CommPrim_Source_Header => "F_Handlers.h";
+	      SMACCM_SYS::CommPrim_Source_Text => "F_Handlers.c";
+	      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_F_Input1");
+		}; 
+		Output1: out data port Base_Types::Integer {
+	      SMACCM_SYS::CommPrim_Source_Header => "F_Output.h";
+	      SMACCM_SYS::CommPrim_Source_Text => "F_Output";
+		}; 
+		
+	properties 
+	    Dispatch_Protocol => Sporadic;
+	    Priority => 10;
+
+	    Stack_Size => 256 bytes;
+	    SMACCM_SYS::Language => "Ivory";
+	    SMACCM_SYS::Thread_Type => Passive ;
+	    Compute_Execution_Time => 5 us .. 30 us;
+	    SMACCM_SYS::Sends_Events_To => "{{1 Output1}}";
+end F ; 
+
+process top_level
+	features
+		Output1: out data port Base_Types::Integer;
+		Output2: out data port Base_Types::Integer;
+end top_level;
+
+process implementation top_level.Impl
+	subcomponents
+		A_sub : thread A ; 
+		B_sub : thread B ; 
+		C_sub : thread C ; 
+		D_sub : thread D ; 
+		E_sub : thread E ;
+		F_sub : thread F ; 
+		
+	connections
+		A_TO_C : port A_sub.Output1 -> C_sub.Input1;
+		A_TO_D : port A_sub.Output1 -> D_sub.Input1;
+		B_TO_D : port A_sub.Output2 -> D_sub.Input1;
+		C_TO_E : port C_sub.Output1 -> E_sub.Input1;
+		D_TO_F : port D_sub.Output1 -> F_sub.Input1;
+		E_TO_Output1 : port E_sub.Output1 -> Output1;
+		F_TO_Output2 : port F_sub.Output1 -> Output2;
+end top_level.Impl;
+	
+end Schedulability_Toy;

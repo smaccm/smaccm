@@ -1,7 +1,6 @@
 package edu.umn.cs.crisys.smaccm.aadl2rtos.util;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.emf.common.util.EList;
@@ -16,7 +15,6 @@ import org.osate.aadl2.impl.ThreadTypeImpl;
 import org.osate.xtext.aadl2.properties.util.PropertyUtils;
 
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosException;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.ThreadImplementation;
 
 public abstract class ThreadUtil {
 
@@ -26,6 +24,8 @@ public abstract class ThreadUtil {
 	final public static String SOURCE_TEXT_NAME = "Source_Text";
 	final public static String COMPUTE_EXECUTION_TIME_NAME = "Compute_Execution_Time";
 	final public static String SMACCM_SYS_SIGNAL_NAME_NAME = "SMACCM_SYS::Signal_Name";
+	final public static String SMACCM_SYS_IS_ISR_NAME = "SMACCM_SYS::Is_ISR";
+  
 	final public static String SMACCM_SYS_COMMPRIM_SOURCE_HEADER_NAME = "SMACCM_SYS::CommPrim_Source_Header";
   final public static String SMACCM_SYS_COMMPRIM_SOURCE_TEXT_NAME = "SMACCM_SYS::CommPrim_Source_Text";
   final public static String SMACCM_SYS_COMPUTE_ENTRYPOINT_SOURCE_TEXT_NAME = "SMACCM_SYS::Compute_Entrypoint_Source_Text";
@@ -39,7 +39,8 @@ public abstract class ThreadUtil {
   final public static String LEGACY_EXTERNAL_IRQ_EVENT_LIST_NAME = "SMACCM_SYS::Legacy_IRQ_Event_List";
   final public static String EXTERNAL_IRQ_LIST_NAME = "SMACCM_SYS::External_IRQ_List";
   final public static String GENERATE_SCHEDULER_SYSTICK_IRQ_NAME = "SMACCM_SYS::Generate_Scheduler_Systick_IRQ";
-  final public static String ISR_HANDLER_NAME = "SMACCM_SYS::ISR_Handler";
+  final public static String ISR_HANDLER_NAME = "SMACCM_SYS::First_Level_Interrupt_Handler";
+  final public static String THREAD_TYPE_NAME = "SMACCM_SYS::Thread_Type";
 
 
 	final public static String DISPATCH_PROTOCOL_NAME = "Dispatch_Protocol";
@@ -56,15 +57,19 @@ public abstract class ThreadUtil {
 			.getPropertyDefinitionInWorkspace(SOURCE_TEXT_NAME);
 	final public static Property COMPUTE_EXECUTION_TIME = Util
 			.getPropertyDefinitionInWorkspace(COMPUTE_EXECUTION_TIME_NAME);
+	final public static Property SMACCM_SYS_IS_ISR = Util
+	    .getPropertyDefinitionInWorkspace(SMACCM_SYS_IS_ISR_NAME);
 	final public static Property SMACCM_SYS_SIGNAL_NAME = Util
 			.getPropertyDefinitionInWorkspace(SMACCM_SYS_SIGNAL_NAME_NAME);
 	final public static Property SMACCM_SYS_COMMPRIM_SOURCE_HEADER = Util
 	    .getPropertyDefinitionInWorkspace(SMACCM_SYS_COMMPRIM_SOURCE_HEADER_NAME);
 	final public static Property SMACCM_SYS_COMMPRIM_SOURCE_TEXT = Util
 	    .getPropertyDefinitionInWorkspace(SMACCM_SYS_COMMPRIM_SOURCE_TEXT_NAME);
-	final public static Property PERIOD = Util.getPropertyDefinitionInWorkspace(PERIOD_NAME);
-	final public static Property PRIORITY = Util.getPropertyDefinitionInWorkspace(PRIORITY_NAME);
-
+	final public static Property PERIOD = 
+	     Util.getPropertyDefinitionInWorkspace(PERIOD_NAME);
+	final public static Property PRIORITY = 
+	    Util.getPropertyDefinitionInWorkspace(PRIORITY_NAME);
+	
 	final public static Property LEGACY = Util.getPropertyDefinitionInWorkspace(LEGACY_NAME);
 	final public static Property LEGACY_MUTEX_LIST = Util.getPropertyDefinitionInWorkspace(LEGACY_MUTEX_LIST_NAME);
   final public static Property LEGACY_SEMAPHORE_LIST = Util.getPropertyDefinitionInWorkspace(LEGACY_SEMAPHORE_LIST_NAME);
@@ -78,9 +83,11 @@ public abstract class ThreadUtil {
 	final public static Property DISPATCH_PROTOCOL = Util.getPropertyDefinitionInWorkspace(DISPATCH_PROTOCOL_NAME);
 	final public static Property QUEUE_SIZE = Util.getPropertyDefinitionInWorkspace(QUEUE_SIZE_NAME);
 	final public static Property ACCESS_RIGHT = Util.getPropertyDefinitionInWorkspace(ACCESS_RIGHT_NAME);
+  final public static Property THREAD_TYPE = Util.getPropertyDefinitionInWorkspace(THREAD_TYPE_NAME);
 	final public static Property SMACCM_SYS_COMPUTE_ENTRYPOINT_SOURCE_TEXT =
 	    Util.getPropertyDefinitionInWorkspace(SMACCM_SYS_COMPUTE_ENTRYPOINT_SOURCE_TEXT_NAME);
 
+	/*
 	public static List<ThreadImplementation> getTaskThreads(Collection<ThreadImplementation> collection) {
 		List<ThreadImplementation> taskThreads = new ArrayList<ThreadImplementation>();
 		for (ThreadImplementation th : collection) {
@@ -101,11 +108,12 @@ public abstract class ThreadUtil {
 		}
 		return taskThreads;
 	}
-
+	
 	public static int getThreadTaskIndex(ThreadImplementation tti, ArrayList<ThreadImplementation> threads) {
 		List<ThreadImplementation> taskThreads = getTaskThreads(threads);
 		return taskThreads.indexOf(tti);
 	}
+*/
 
 	public static int getPriority(ThreadTypeImpl tti) {
 		int priority = 0;
@@ -140,6 +148,29 @@ public abstract class ThreadUtil {
 		return list;
 	}
 
+	public static Boolean getIsIsr(NamedElement tti) {
+	  try {
+	    return PropertyUtils.getBooleanValue(tti, SMACCM_SYS_IS_ISR);
+	  } catch(Exception e) {}
+	  return false;
+	}
+	
+	public static boolean getThreadType(NamedElement tti) {
+	  EnumerationLiteral lit = null; 
+	  try {
+      lit = PropertyUtils.getEnumLiteral(tti, ThreadUtil.THREAD_TYPE);
+    } catch (Exception e) {
+      throw new Aadl2RtosException("Required property 'Thread_Type' not found for thread: " + tti.getName());
+    }
+    if ("Active".equals(lit.getName())) {
+      return false;
+    } else if ("Passive".equals(lit.getName())) {
+      return true;
+    } else {
+      throw new Aadl2RtosException("Property 'Thread_Type' can only take values 'Active', 'Passive': " + tti.getName());
+    }
+	}
+	
   public static List<String> getLegacyMutexList(NamedElement tti) {
     return getStringList(tti, ThreadUtil.LEGACY_MUTEX_LIST);
   }
