@@ -181,7 +181,7 @@ public class ResoluteBuiltInFnCallEvaluator {
 		}
 
 		case "is_event_port": {
-			FeatureInstance feat = (FeatureInstance) args.get(0).getNamedElement();
+			NamedElement feat = (FeatureInstance) args.get(0).getNamedElement();
 			return new BoolValue(feat instanceof EventPort);
 		}
 

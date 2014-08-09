@@ -508,6 +508,7 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 		case "type":
 		case "has_type":
 		case "features":
+		case "is_event_port":
 		case "connections":
 			expectedTypes.add(BaseType.AADL);
 			break;
@@ -530,7 +531,6 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 
 		// Primary type: feature
 		case "direction":
-		case "is_event_port":
 			expectedTypes.add(BaseType.FEATURE);
 			break;
 
