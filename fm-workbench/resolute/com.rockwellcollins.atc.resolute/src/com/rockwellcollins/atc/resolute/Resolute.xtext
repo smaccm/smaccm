@@ -198,6 +198,7 @@ BuiltInFn:
 
 // Primary type: feature
 |	'direction'
+|	'is_event_port'
 
 // Primary type: range
 |	'lower_bound'
