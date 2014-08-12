@@ -18,10 +18,8 @@ Require-Bundle: org.eclipse.ui,
  org.osate.xtext.aadl2.errormodel;resolution:=optional,
  org.eclipse.ui.ide;bundle-version="3.8.2",
  org.eclipse.emf.transaction;bundle-version="1.4.0",
- net.certware.argument.arm;bundle-version="1.2.1";resolution:=optional,
- net.certware.argument.caz;bundle-version="1.2.1";resolution:=optional,
- net.certware.argument.caz.diagram;bundle-version="1.2.1";resolution:=optional,
- org.eclipse.gmf.runtime.notation;bundle-version="1.5.0";resolution:=optional
+ org.eclipse.gmf.runtime.notation;bundle-version="1.5.0";resolution:=optional,
+ net.certware.argument.sfp;bundle-version="1.2.1";resolution:=optional
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Export-Package: com.rockwellcollins.atc.resolute.analysis,

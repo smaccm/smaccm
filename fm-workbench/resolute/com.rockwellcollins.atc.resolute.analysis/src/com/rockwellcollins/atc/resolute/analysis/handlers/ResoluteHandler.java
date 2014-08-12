@@ -117,16 +117,26 @@ public class ResoluteHandler extends AadlHandler {
         return Status.OK_STATUS;
     }
 
-    private void enableRerunHandler(Element root) {
-        IHandlerService handlerService = getHandlerService();
-        rerunActivation = handlerService.activateHandler(RERUN_ID, new RerunHandler(root, this));
+    private void enableRerunHandler(final Element root) {
+        getWindow().getShell().getDisplay().syncExec(new Runnable() {
+            @Override
+            public void run() {
+                IHandlerService handlerService = getHandlerService();
+                rerunActivation = handlerService.activateHandler(RERUN_ID, new RerunHandler(root, ResoluteHandler.this));
+            }
+        });
     }
 
     private void disableRerunHandler() {
         if (rerunActivation != null) {
-            IHandlerService handlerService = getHandlerService();
-            handlerService.deactivateHandler(rerunActivation);
-            rerunActivation = null;
+            getWindow().getShell().getDisplay().syncExec(new Runnable() {
+                @Override
+                public void run() {
+                    IHandlerService handlerService = getHandlerService();
+                    handlerService.deactivateHandler(rerunActivation);
+                    rerunActivation = null;
+                }
+            });
         }
     }
 

@@ -2,11 +2,6 @@ package com.rockwellcollins.atc.resolute.analysis.export;
 
 import java.io.IOException;
 
-import net.certware.argument.caz.ArgumentDiagram;
-import net.certware.argument.caz.CazFactory;
-import net.certware.argument.caz.Claim;
-import net.certware.argument.caz.diagram.part.CazCreationWizard;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -33,7 +28,9 @@ public class CAZExport {
         // Nothing needed since static initialization of this class already tries to load CertWare
     }
 
+    /*
     public static void export(ClaimResult cr) {
+        
         CAZExport export = new CAZExport();
         export.export(null, cr);
         export.save(getProject(cr));
@@ -96,4 +93,5 @@ public class CAZExport {
             });
         }
     }
+    */
 }

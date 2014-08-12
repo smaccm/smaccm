@@ -132,7 +132,7 @@ public class AssuranceCaseView extends ViewPart {
             @Override
             public void run() {
                 try {
-                    CAZExport.export(claim);
+                    // TODO: CAZExport.export(claim);
                 } catch (Throwable t) {
                     MessageDialog.openError(treeViewer.getControl().getShell(),
                             "Error during export to CertWare", t.getMessage());

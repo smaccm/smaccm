@@ -45,6 +45,8 @@ public class ResoluteLinkingService extends PropertiesLinkingService {
     }
 
     private EObject getLinkedObject(EObject context, EReference reference, String name) {
+        name = name.replaceAll("::", ".");
+        
         if (context instanceof PropertyValue) {
             return getUnitLiteral(context, name);
         }
