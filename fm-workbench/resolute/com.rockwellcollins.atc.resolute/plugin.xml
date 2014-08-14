@@ -6,7 +6,7 @@
     <package 
        uri = "http://www.rockwellcollins.com/atc/resolute/Resolute" 
        class = "com.rockwellcollins.atc.resolute.resolute.ResolutePackage"
-       genModel = "com/rockwellcollins/atc/resolute/Resolute.genmodel" /> 	
+       genModel = "src-gen/com/rockwellcollins/atc/resolute/Resolute.genmodel" /> 	
   </extension>
   <extension
     point="org.osate.pluginsupport.aadlcontribution">
