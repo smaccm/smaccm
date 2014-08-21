@@ -34,8 +34,6 @@
  */
 package edu.umn.cs.crisys.smaccm.aadl2rtos;
 
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.CoreException;
@@ -128,10 +126,10 @@ abstract public class AadlAction implements IWorkbenchWindowActionDelegate {
 			}
 		};
 		
-		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-		IProject[] projects = root.getProjects(); 
-		log.info("Here are the projects!");
-		log.info(projects);
+		//IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+		//IProject[] projects = root.getProjects(); 
+		//log.info("Here are the projects!");
+		//log.info(projects);
 		
 		job.setRule(ResourcesPlugin.getWorkspace().getRoot());
 		job.setUser(true);

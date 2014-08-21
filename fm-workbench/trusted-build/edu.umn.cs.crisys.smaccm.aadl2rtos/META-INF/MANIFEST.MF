@@ -15,11 +15,12 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.core.filesystem;bundle-version="1.3.200",
  org.eclipse.emf.ecore
 Bundle-ActivationPolicy: lazy
+Bundle-ClassPath: .,lib/ST-4.0.8.jar
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Export-Package: 
  edu.umn.cs.crisys.smaccm.aadl2rtos,
- edu.umn.cs.crisys.smaccm.aadl2rtos.gluecode,
+ edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.CAmkES,
+ edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.eChronos,
  edu.umn.cs.crisys.smaccm.aadl2rtos.model,
  edu.umn.cs.crisys.smaccm.aadl2rtos.model.type,
- edu.umn.cs.crisys.smaccm.aadl2rtos.prx,
  edu.umn.cs.crisys.smaccm.aadl2rtos.util

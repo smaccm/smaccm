@@ -28,10 +28,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.osate.aadl2.DataClassifier;
-import org.osate.aadl2.SystemImplementation;
-import org.osate.aadl2.instance.SystemInstance;
-
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.Connection;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.ExternalIRQ;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.SharedData;
@@ -45,12 +41,16 @@ import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.IRQDispatcher;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.legacy.LegacyExternalISR;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.legacy.LegacyIRQEvent;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.legacy.LegacyThreadImplementation;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.rpc.RemoteProcedureGroup;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.Type;
 
 public class Model {
-	private SystemImplementation systemImplementation;
-	private SystemInstance systemInstance;
-
+	private String systemImplementationName;
+	private String systemInstanceName;
+	
+	public enum OSTarget {CAmkES, eChronos}; 
+	private OSTarget osTarget = OSTarget.eChronos;
+	
 	// Connection instances - drives number of semaphores
 	// (one function per thread implementation, pass in thread instance id)
 	List<Connection> connectionInstances = new ArrayList<Connection>();
@@ -73,8 +73,8 @@ public class Model {
 	List<Connection> connectionList = new ArrayList<Connection>(); 
 	
 	// type stuff
-	Set<DataClassifier> dataTypes = new HashSet<DataClassifier>();
 	Map<String, Type> astTypes = new HashMap<String, Type>();
+	Map<String, RemoteProcedureGroup> rpcInterfaces = new HashMap<String, RemoteProcedureGroup>(); 
 	
 	boolean generateSystickIRQ;
 	
@@ -84,39 +84,30 @@ public class Model {
 	public enum ISRType {InThreadContextISR, SignalingISR} ; 
 	ISRType isrType = ISRType.InThreadContextISR; 
 	
-	// private Map<ThreadImplementation, Set<Pair<MyPort, MyPort>>> threadSourcePorts = new HashMap<ThreadImplementation, Set<Pair<MyPort, MyPort>>>();
-
 	// Model constructor
-	public Model(SystemImplementation sysImpl, 
-	             SystemInstance sysInst) {
-		this.systemImplementation = sysImpl;
-		this.systemInstance = sysInst;
+	public Model(String systemImplementationName, 
+	             String systemInstanceName) {
+		this.systemImplementationName = systemImplementationName;
+		this.systemInstanceName = systemInstanceName;
 	}
 
-//	public Map<ThreadTypeImpl, ThreadImplementation> getThreadImplementationMap() {
-//		return this.threadImplementationMap;
-//	}
+	/**
+   * @return the osTarget
+   */
+  public OSTarget getOsTarget() {
+    return osTarget;
+  }
 
-	/* 
-	public List<ThreadInstance> getDestinationThreadsForPort(MyPort pi) {
-		List<ThreadInstance> destThreads = new ArrayList<ThreadInstance>();
+  /**
+   * @param osTarget the osTarget to set
+   */
+  public void setOsTarget(OSTarget osTarget) {
+    this.osTarget = osTarget;
+  }
 
-		// find all destinations of the given connection
-		for (Connection ci : pi.getConnections()) {
-		  destThreads.add(ci.getDestThreadInstance());
-		}
-		return destThreads;
-	}*/
 
-	public SystemImplementation getSystemImplementation() {
-		return systemImplementation;
-	}
 
-	public SystemInstance getSystemInstance() {
-		return systemInstance;
-	}
-
-	public Set<String> getSourceFiles()  {
+  public Set<String> getSourceFiles()  {
 	  return this.sourceFiles; 
 	}
 	
@@ -152,8 +143,12 @@ public class Model {
     return idList;
   }
 
+  public String getSystemImplementationName() {
+    return systemImplementationName;
+  }
+
   public String getSystemInstanceName() {
-		return systemInstance.getName();
+		return this.systemInstanceName;
 	}
 	
 	public ThreadCalendar getThreadCalendar() {
@@ -185,7 +180,21 @@ public class Model {
 	
 	
 	
-	public List<LegacyExternalISR> getLegacyExternalIRQs() {
+	/**
+   * @return the rpcInterfaces
+   */
+  public Map<String, RemoteProcedureGroup> getRpcInterfaces() {
+    return rpcInterfaces;
+  }
+
+  /**
+   * @param rpcInterfaces the rpcInterfaces to set
+   */
+  public void setRpcInterfaces(Map<String, RemoteProcedureGroup> rpcInterfaces) {
+    this.rpcInterfaces = rpcInterfaces;
+  }
+
+  public List<LegacyExternalISR> getLegacyExternalIRQs() {
 	  return this.legacyExternalIRQList;
 	}
 	

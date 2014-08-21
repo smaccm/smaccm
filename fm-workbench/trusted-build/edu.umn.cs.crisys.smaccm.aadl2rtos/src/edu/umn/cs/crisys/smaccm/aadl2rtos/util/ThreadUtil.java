@@ -4,17 +4,29 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.xtext.resource.IEObjectDescription;
+import org.osate.aadl2.Aadl2Package;
 import org.osate.aadl2.Element;
 import org.osate.aadl2.EnumerationLiteral;
 import org.osate.aadl2.IntegerLiteral;
 import org.osate.aadl2.NamedElement;
 import org.osate.aadl2.Property;
 import org.osate.aadl2.PropertyExpression;
+import org.osate.aadl2.PropertyType;
+import org.osate.aadl2.PropertyValue;
+import org.osate.aadl2.RangeType;
+import org.osate.aadl2.RangeValue;
+import org.osate.aadl2.UnitLiteral;
+import org.osate.aadl2.UnitsType;
 import org.osate.aadl2.impl.StringLiteralImpl;
 import org.osate.aadl2.impl.ThreadTypeImpl;
+import org.osate.xtext.aadl2.properties.util.EMFIndexRetrieval;
 import org.osate.xtext.aadl2.properties.util.PropertyUtils;
 
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosException;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.Logger;
 
 public abstract class ThreadUtil {
 
@@ -234,6 +246,45 @@ public abstract class ThreadUtil {
     }
   }
   
+  final private static EClass UNITS_TYPE = Aadl2Package.eINSTANCE.getUnitsType();
+  private static UnitLiteral findUnitLiteral(Element context, String name) {
+    for (IEObjectDescription desc : EMFIndexRetrieval
+            .getAllEObjectsOfTypeInWorkspace(UNITS_TYPE)) {
+        UnitsType unitsType = (UnitsType) EcoreUtil.resolve(desc.getEObjectOrProxy(), context);
+        UnitLiteral literal = unitsType.findLiteral(name);
+        if (literal != null) {
+            return literal;
+        }
+    }
+
+    return null;
+}
 
   
+  public static double getMinComputeExecutionTimeInMicroseconds(NamedElement t) {
+    try {
+      final PropertyExpression pv = PropertyUtils.getSimplePropertyValue(t, ThreadUtil.COMPUTE_EXECUTION_TIME);
+      final RangeValue rv = (RangeValue) pv;
+      final PropertyValue minVal = rv.getMinimumValue();
+      IntegerLiteral intLit = (IntegerLiteral) minVal;
+      double valInPicoseconds = intLit.getScaledValue();
+      return valInPicoseconds / 1000000.0; // microseconds per picosecond.
+    } catch (Exception e) {
+      throw new Aadl2RtosException("Required property 'Compute_Execution_Time' not found for thread: " + t.getName());
+    }
+  }
+
+  public static double getMaxComputeExecutionTimeInMicroseconds(NamedElement t) {
+    try {
+      final PropertyExpression pv = PropertyUtils.getSimplePropertyValue(t, ThreadUtil.COMPUTE_EXECUTION_TIME);
+      final RangeValue rv = (RangeValue) pv;
+      final PropertyValue minVal = rv.getMaximumValue();
+      IntegerLiteral intLit = (IntegerLiteral) minVal;
+      double valInPicoseconds = intLit.getScaledValue();
+      return valInPicoseconds / 1000000.0; // microseconds per picosecond.
+    } catch (Exception e) {
+      throw new Aadl2RtosException("Required property 'Compute_Execution_Time' not found for thread: " + t.getName());
+    }
+  }
+
 }
