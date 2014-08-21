@@ -33,6 +33,7 @@ import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosFailure;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Logger;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.common.C_Type_Renderer;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.common.C_Type_Writer;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.common.HeaderDeclarations;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.eChronos.HeaderWriter;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.eChronos.MakefileWriter;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.eChronos.PrxGenerator;
@@ -114,6 +115,7 @@ public class CAmkES_CodeGenerator {
   	  st = templates.getInstanceOf("dispatchInterfaceIdlPostfix"); 
   	  st.add("path", path);
   	  writer.append(st.render());
+  	  writer.close();
   	  
 	  } catch (IOException e) {
 	    log.error("IO Exception occurred when constructing a component dispatch interface.");
@@ -121,16 +123,41 @@ public class CAmkES_CodeGenerator {
 	  }
 	}
 	
-	public void createComponentHeader(ThreadImplementation ti) throws Aadl2RtosFailure {
+	public void createComponentHeader(File componentDirectory, ThreadImplementation ti) throws Aadl2RtosFailure {
 	  String name = ti.getNormalizedName();
-    File interfaceFile = new File(interfacesDirectory, Names.getComponentIdlFileName(ti));
+    File interfaceFile = new File(componentDirectory, Names.getComponentGlueCodeHFileName(ti));
     String path = interfaceFile.getAbsolutePath();
     try (BufferedWriter writer = new BufferedWriter(new FileWriter(interfaceFile))) {
+      ST st = templates.getInstanceOf("componentGlueCodeHeaderPrefix"); 
+      st.add("name", name);
+      st.add("date", date);
+      st.add("path", path);
+      st.add("datatypesHeader", Names.getSystemTypeHeaderName(model));
+      writer.append(st.render());
+      
+      HeaderDeclarations.writeReaderWriterDecl(ti, writer);
+      
+      st = templates.getInstanceOf("componentGlueCodeHeaderPostfix"); 
+      st.add("name", name); 
+      st.add("path", path);
+      writer.close();
       
     } catch (IOException e) {
       log.error("IO Exception occurred when constructing a component header.");
       throw new Aadl2RtosFailure();
     }
+	}
+	
+	public void createComponentCamkesFile(File componentDirectory, ThreadImplementation ti) throws Aadl2RtosFailure {
+    String name = ti.getNormalizedName();
+    File interfaceFile = new File(interfacesDirectory, Names.getComponentCamkesFileName(ti));
+    String path = interfaceFile.getAbsolutePath();
+	  try (BufferedWriter writer = new BufferedWriter(new FileWriter(interfaceFile))) {
+	    // this is a strange thing.
+	  } catch (IOException e) {
+	    
+	  }
+	  
 	}
 	
 	public void createComponent(ThreadImplementation ti) throws Aadl2RtosFailure { 
@@ -155,10 +182,10 @@ public class CAmkES_CodeGenerator {
 	  File componentDirectory = new File(componentsDirectory, name);
 	  componentDirectory.mkdirs();
 	  
-    File camkesFile = new File(componentDirectory, Names.getComponentCamkesFileName(ti));
+	  createComponentHeader(componentDirectory, ti);
+	  createComponentCamkesFile(componentDirectory, ti);
+	  
     File CFile = new File(componentDirectory, Names.getComponentGlueCodeCFileName(ti));
-    File HFile = new File(componentDirectory, Names.getComponentGlueCodeHFileName(ti));
-
     this.model.getSourceFiles().add(CFile.getPath());
 
     // write header for component...is this necessary?
@@ -195,6 +222,7 @@ public class CAmkES_CodeGenerator {
       st.add("sysInstanceName", sysInstanceName);
       st.add("hname", hname);
       hwriter.append(st.render());
+      hwriter.close(); 
       
   	} catch (IOException e) {
       log.error("IOException occurred during CAmkES write: " + e);
