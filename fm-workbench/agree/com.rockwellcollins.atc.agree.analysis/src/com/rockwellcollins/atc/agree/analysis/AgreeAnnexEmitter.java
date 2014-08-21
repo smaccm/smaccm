@@ -161,6 +161,8 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
     private final Set<AgreeVarDecl> inputVars = new HashSet<>();
     private final Set<AgreeVarDecl> internalVars = new HashSet<>();
     private final Set<AgreeVarDecl> outputVars = new HashSet<>();
+	private final Set<AgreeVarDecl> realizeVars = new HashSet<>();
+	
     private final Map<String, List<AgreeQueueElement>> queueMap = new HashMap<>();
     
     //the special string used to replace the "." characters in aadl
@@ -203,7 +205,41 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
 	private String thisPrefix;
 	private String topLevelPrefix;
 	private boolean connectionExpressionsSet = false;
+	private boolean realzabilityCheck = false;
 
+	//constructor for realizability
+	public AgreeAnnexEmitter(ComponentInstance compInst,
+            AgreeLayout layout,
+            String category,
+            String topLevelPrefix,
+            String thisPrefix,
+            boolean ignoreLifts,
+            boolean topLevel,
+            boolean realizabilityCheck){
+		
+		this.layout = layout;
+        this.curInst = compInst;
+        this.category = category;
+        this.ignoreLifts  = ignoreLifts;
+        this.realzabilityCheck = realizabilityCheck;
+        this.thisPrefix = thisPrefix;
+        this.topLevelPrefix = topLevelPrefix;
+        
+        initTypeMap.put("bool", initBool);
+        initTypeMap.put("real", initReal);
+        initTypeMap.put("int", initInt);
+        
+        if(!layout.getCategories().contains(category)){
+            layout.addCategory(category);
+        }
+        
+        curComp = curInst.getSubcomponent();
+        agreeRename =  new AgreeRenaming(topLevelPrefix, varRenaming);
+
+        recordFeatures(compInst);
+	}
+	
+	//normal constructor
     public AgreeAnnexEmitter(ComponentInstance compInst,
             AgreeLayout layout,
             String category,
@@ -268,6 +304,7 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         		switch(agreeFeat.direction){
         		case IN:
         			inputVars.add(varDecl);
+        			realizeVars.add(varDecl);
         			layout.addElement(category, renameStr, AgreeLayout.SigType.INPUT);
         			break;
         		case OUT:
@@ -281,6 +318,11 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         	}
         }
         
+		//we don't care about subcomponent features for realizability
+		if(realzabilityCheck){
+			return;
+		}
+		
         //get information about all the features of this components subcomponents 
         for(ComponentInstance subCompInst : compInst.getComponentInstances()){
         	for(FeatureInstance featInst : subCompInst.getFeatureInstances()){
@@ -1975,13 +2017,76 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         assertions.add(queueInsertRemoveAtomicAssertion);
         
         List<String> realizabilities = new ArrayList<String>();
-        for(VarDecl in : inputs){
-        	if(!this.outputVars.contains(in)){
+        for(VarDecl in : realizeVars){
         		realizabilities.add(in.id);
-        	}
         }
         
         Node topNode = new Node("_MAIN", inputs, outputs, internals, eqs, properties, assertions, realizabilities);
+        nodeSet.add(topNode);
+        
+        //make the type definitions
+        List<TypeDef> typeDefs = new ArrayList<>();
+        for(jkind.lustre.RecordType type : types){
+        	TypeDef typeDef = new TypeDef(type.id, type);
+        	typeDefs.add(typeDef);
+        }
+        
+        return new Program(typeDefs, Collections.EMPTY_LIST, nodeSet);
+    }
+    
+    public Program getRealizabilityLustre(){
+
+        guarProps = new ArrayList<String>();
+        
+        // start constructing the top level node
+        List<Equation> eqs = new ArrayList<Equation>();
+        List<VarDecl> inputs = new ArrayList<VarDecl>();
+        List<VarDecl> outputs = new ArrayList<VarDecl>();
+        List<VarDecl> internals = new ArrayList<VarDecl>();
+        List<String> properties = new ArrayList<String>();
+        Set<jkind.lustre.RecordType> types = new HashSet<>();
+
+        List<Node> nodeSet = new ArrayList<Node>();
+
+        nodeSet.addAll(this.nodeDefExpressions);
+        eqs.addAll(this.constExpressions);
+        eqs.addAll(this.eqExpressions);
+        eqs.addAll(this.propExpressions);
+        types.addAll(this.typeExpressions);
+        
+        Set<VarDecl> agreeInputVars = new HashSet<>();
+        Set<VarDecl> agreeInternalVars = new HashSet<>();
+        
+        agreeInputVars.addAll(this.inputVars);
+        agreeInputVars.addAll(this.outputVars);
+        agreeInternalVars.addAll(this.internalVars);
+
+        agreeInputVars.removeAll(agreeInternalVars);
+        
+        inputs.addAll(agreeInputVars);
+        internals.addAll(agreeInternalVars);
+
+        // create individual properties for guarantees
+        int i = 0;
+        for (Equation guar : guarExpressions) {
+            String guarName = guar.lhs.get(0).id;
+            IdExpr sysGuaranteesId = new IdExpr(sysGuarTag + i);
+            internals.add(new VarDecl(sysGuaranteesId.id, NamedType.BOOL));
+
+            Equation finalGuar = new Equation(sysGuaranteesId, guar.expr);
+            eqs.add(finalGuar);
+            properties.add(sysGuaranteesId.id);
+            guarProps.add(sysGuaranteesId.id);
+            addToRenaming(sysGuaranteesId.id, guarName);
+            layout.addElement(category, "Component Guarantee " + i++, AgreeLayout.SigType.OUTPUT);
+        }
+        
+        List<String> realizabilities = new ArrayList<String>();
+        for(VarDecl in : realizeVars){
+        		realizabilities.add(in.id);
+        }
+        
+        Node topNode = new Node("_MAIN", inputs, outputs, internals, eqs, properties, Collections.EMPTY_LIST, realizabilities);
         nodeSet.add(topNode);
         
         //make the type definitions

@@ -39,6 +39,32 @@ public class AgreeGenerator {
         this.compInst = compInst;
     }
     
+    public Program evaluate_realizability(){
+        
+        ComponentType ct = AgreeEmitterUtilities.getInstanceType(compInst);
+        AgreeLayout layout = new AgreeLayout();
+        String topCategory = compInst.getName();
+        
+        AgreeAnnexEmitter emitter = new AgreeAnnexEmitter(
+                compInst, layout, topCategory, topCategory + dotChar, topCategory + dotChar, true, true, true);
+
+        topEmitter = emitter;
+        boolean foundAnnex = false;
+        for (AnnexSubclause annex : AnnexUtil.getAllAnnexSubclauses(ct, AgreePackage.eINSTANCE.getAgreeContractSubclause())) {
+            if (annex instanceof AgreeContractSubclause) {
+                emitter.doSwitch(annex);
+                foundAnnex = true;
+                break;
+            }
+        }
+       
+        if(!foundAnnex){
+        	return null;
+        }
+        
+        return emitter.getRealizabilityLustre();
+    }
+    
     public Program evaluate(){
         
         ComponentImplementation compImpl = AgreeEmitterUtilities.getInstanceImplementation(compInst);

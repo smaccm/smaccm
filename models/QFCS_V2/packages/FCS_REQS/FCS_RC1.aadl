@@ -64,7 +64,44 @@ annex agree {**
     res = low <= avg and avg <= high;
   tel;
   
+  node bti(f : bool) returns ( ret : int);
+  let
+    ret = if(f) then 1 else 0;
+  tel;
+  
+  node num_faults( num : int, f1 : bool, f2 : bool, f3 : bool) returns (ret : bool);
+  let
+    ret = num = (bti(f1) + bti(f2) + bti(f3));
+  tel;
     
+  node fault_counts(num_valids : DATA_TYPES::NumActuators.impl, 
+  	               f1 : DATA_TYPES::BoolActuators.impl,
+  	               f2 : DATA_TYPES::BoolActuators.impl,
+  	               f3 : DATA_TYPES::BoolActuators.impl)
+  returns(ret : bool);
+  let
+    ret = num_faults(num_valids.AILL, f1.AILL, f2.AILL, f3.AILL) and 
+          num_faults(num_valids.AILR, f1.AILR, f2.AILR, f3.AILR) and
+          num_faults(num_valids.RUDUP, f1.RUDUP, f2.RUDUP, f3.RUDUP) and
+          num_faults(num_valids.RUDLO, f1.RUDLO, f2.RUDLO, f3.RUDLO) and
+          num_faults(num_valids.SPLLIB, f1.SPLLIB, f2.SPLLIB, f3.SPLLIB) and
+          num_faults(num_valids.SPLLOB, f1.SPLLOB, f2.SPLLOB, f3.SPLLOB) and
+          num_faults(num_valids.SPLRIB, f1.SPLRIB, f2.SPLRIB, f3.SPLRIB) and
+          num_faults(num_valids.SPLROB, f1.SPLROB, f2.SPLROB, f3.SPLROB) and
+          num_faults(num_valids.FLAPLI, f1.FLAPLI, f2.FLAPLI, f3.FLAPLI) and
+          num_faults(num_valids.FLAPLO, f1.FLAPLO, f2.FLAPLO, f3.FLAPLO) and
+          num_faults(num_valids.FLAPRI, f1.FLAPRI, f2.FLAPRI, f3.FLAPRI) and
+          num_faults(num_valids.FLAPRO, f1.FLAPRO, f2.FLAPRO, f3.FLAPRO) and
+          num_faults(num_valids.GEAR, f1.GEAR, f2.GEAR, f3.GEAR) and
+          num_faults(num_valids.BRAKE, f1.BRAKE, f2.BRAKE, f3.BRAKE) and
+          num_faults(num_valids.STEER, f1.STEER, f2.STEER, f3.STEER) and
+          num_faults(num_valids.THRTOL, f1.THRTOL, f2.THRTOL, f3.THRTOL) and
+          num_faults(num_valids.THROTR, f1.THROTR, f2.THROTR, f3.THROTR) and
+          num_faults(num_valids.ELLOB, f1.ELLOB, f2.ELLOB, f3.ELLOB) and
+          num_faults(num_valids.ELLIB, f1.ELLIB, f2.ELLIB, f3.ELLIB) and
+          num_faults(num_valids.ELROB, f1.ELROB, f2.ELROB, f3.ELROB) and
+          num_faults(num_valids.ELRIB, f1.ELRIB, f2.ELRIB, f3.ELRIB);
+  tel;
     
 **};
 

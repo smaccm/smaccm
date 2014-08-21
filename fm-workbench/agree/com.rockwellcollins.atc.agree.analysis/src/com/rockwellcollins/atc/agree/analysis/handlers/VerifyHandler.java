@@ -55,8 +55,8 @@ import com.rockwellcollins.atc.agree.analysis.views.AgreeResultsLinker;
 import com.rockwellcollins.atc.agree.analysis.views.AgreeResultsView;
 
 public abstract class VerifyHandler extends AadlHandler {
-    private AgreeResultsLinker linker = new AgreeResultsLinker();
-    private Queue<AnalysisResult> queue = new ArrayDeque<>();
+    protected AgreeResultsLinker linker = new AgreeResultsLinker();
+    protected Queue<AnalysisResult> queue = new ArrayDeque<>();
     
     private static final String RERUN_ID = "com.rockwellcollins.atc.agree.analysis.commands.rerunAgree";
     private IHandlerActivation rerunActivation;
@@ -103,7 +103,6 @@ public abstract class VerifyHandler extends AadlHandler {
                 wrapper.addChild(result);
                 result = wrapper;
             } else {
-            	wrapper.addChild(createRealizabilityVerification(si));
                 wrapper.addChild(createGuaranteeVerification(si));
                 wrapper.addChild(createAssumptionVerification(si));
                 wrapper.addChild(createConsistVerification(si));
@@ -117,7 +116,7 @@ public abstract class VerifyHandler extends AadlHandler {
         }
     }
 
-    private String getNestedMessages(Throwable e) {
+    protected String getNestedMessages(Throwable e) {
         StringWriter sw = new StringWriter();
         PrintWriter pw = new PrintWriter(sw);
         while (e != null) {
@@ -165,50 +164,6 @@ public abstract class VerifyHandler extends AadlHandler {
         }
 
         return null;
-    }
-    
-    private AnalysisResult createRealizabilityVerification(ComponentInstance ci) {
-        
-        AgreeGenerator emitter = new AgreeGenerator(ci);
-        Program program = emitter.evaluate();
-        if(program == null){
-        	return null;
-        }
-
-
-        List<String> properties = emitter.getGuarProps();
-        Node oldNode = program.getMainNode();
-        Node newNode = new Node(//oldNode.location, 
-                oldNode.id,
-                oldNode.inputs, 
-                oldNode.outputs, 
-                oldNode.locals,
-                oldNode.equations,
-                properties,
-                oldNode.assertions,
-                oldNode.realizabilities);
-        
-        
-        List<Node> nodes = new ArrayList<>();
-        for(Node node : program.nodes){
-            if(node != oldNode)
-                nodes.add(node);
-        }
-        nodes.add(newNode);
-        program = new Program(program.types, program.constants, nodes);
-        Renaming renaming = emitter.getRenaming();
-        JKindResultRealizability result = new JKindResultRealizability("Contract Realizabilities", oldNode.realizabilities, renaming);
-        queue.add(result);
-
-        ComponentImplementation compImpl = AgreeEmitterUtilities.getInstanceImplementation(ci);
-        linker.setProgram(result, program);
-        linker.setComponent(result, compImpl);
-        linker.setContract(result, getContract(compImpl));
-        linker.setLayout(result, emitter.getLayout());
-        linker.setReferenceMap(result, emitter.getReferenceMap());
-        linker.setLog(result, emitter.getLog());
-
-        return result;
     }
 
     private AnalysisResult createGuaranteeVerification(ComponentInstance ci) {
@@ -345,7 +300,7 @@ public abstract class VerifyHandler extends AadlHandler {
         return result;
     }
     
-    private AgreeSubclause getContract(ComponentImplementation ci) {
+    protected AgreeSubclause getContract(ComponentImplementation ci) {
         ComponentType ct = ci.getOwnedRealization().getImplemented();
         for (AnnexSubclause annex : ct.getOwnedAnnexSubclauses()) {
             if (annex instanceof AgreeSubclause) {
@@ -387,52 +342,34 @@ public abstract class VerifyHandler extends AadlHandler {
 
     private IStatus doAnalysis(Element root, IProgressMonitor monitor) {
     	JKindApi japi = getJKindApi();
-        JRealizabilityApi rapi = getJRealizabilityApi();
         while (!queue.isEmpty() && !monitor.isCanceled()) {
             AnalysisResult result = queue.remove();
             Program program = linker.getProgram(result);
             try{
-            	if(result instanceof JKindResult){
-            	  japi.execute(program, (JKindResult)result, monitor);
-            	}else if(result instanceof JKindResultRealizability){
-              	  rapi.execute(program, (JKindResultRealizability)result, monitor);
-              	  System.out.println(((JKindResultRealizability) result).getText());
-              	  System.out.println("******** HERE IS THE LUSTRE ********");
-              	  System.out.println(program);
-            	}
-            		
+            	japi.execute(program, (JKindResult)result, monitor);	
             } catch (JKindException e){
-            	if(result instanceof JKindResult){
-            		System.out.println(((JKindResult)result).getText());
-              	}else if(result instanceof JKindResultRealizability){
-              		System.out.println(((JKindResultRealizability)result).getText());
-              	}
+            	System.out.println(((JKindResult)result).getText());
             	System.out.println("******** HERE IS THE LUSTRE ********");
             	System.out.println(program);
             	break;
             }
-            //System.out.println("whatever");
         }
 
         while (!queue.isEmpty()) {
         	AnalysisResult remove = queue.remove();
-        	if(remove instanceof JKindResult){
-        		((JKindResult)remove).cancel();;
-          	}else if(remove instanceof JKindResultRealizability){
-          		((JKindResultRealizability)remove).cancel();
-          	}
+        	((JKindResult)remove).cancel();;
         }
 
         enableRerunHandler(root);
         return monitor.isCanceled() ? Status.CANCEL_STATUS : Status.OK_STATUS;
     }
 
-    private void enableRerunHandler(Element root) {
+    protected void enableRerunHandler(Element root) {
         IHandlerService handlerService = getHandlerService();
         rerunActivation = handlerService.activateHandler(RERUN_ID, new RerunHandler(root, this));
     }
 
-    private void disableRerunHandler() {
+    protected void disableRerunHandler() {
         if (rerunActivation != null) {
             IHandlerService handlerService = getHandlerService();
             handlerService.deactivateHandler(rerunActivation);
@@ -444,18 +381,6 @@ public abstract class VerifyHandler extends AadlHandler {
         return (IHandlerService) getWindow().getService(IHandlerService.class);
     }
 
-    private JRealizabilityApi getJRealizabilityApi() {
-    	JRealizabilityApi api = new JRealizabilityApi();
-        IPreferenceStore prefs = Activator.getDefault().getPreferenceStore();
-
-           // api.setSolver(SolverOption.Z3);
-        
-        api.setN(prefs.getInt(PreferenceConstants.PREF_DEPTH));
-        api.setTimeout(prefs.getInt(PreferenceConstants.PREF_TIMEOUT));
-        return api;
-    }
-    
-    
     private JKindApi getJKindApi() {
         JKindApi api = new JKindApi();
         IPreferenceStore prefs = Activator.getDefault().getPreferenceStore();

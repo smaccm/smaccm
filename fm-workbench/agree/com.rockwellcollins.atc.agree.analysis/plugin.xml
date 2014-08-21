@@ -42,6 +42,12 @@
            id="com.rockwellcollins.atc.agree.analysis.commands.verifyAll"
            name="Verify All Layers">
      </command>
+     <command
+           categoryId="com.rockwellcollins.atc.agree.analysis.commands"
+           description="Runs realizability analysis"
+           id="com.rockwellcollins.atc.agree.analysis.commands.verifyRealize"
+           name="Check Realizability">
+     </command>
    </extension>
    
    <extension
@@ -83,6 +89,13 @@
                   mnemonic="a"
                   style="push">
             </command>
+            <command
+                  commandId="com.rockwellcollins.atc.agree.analysis.commands.verifyRealize"
+                  icon="icons/layers.png"
+                  id="com.rockwellcollins.atc.agree.analysis.menus.verifyRealize"
+                  mnemonic="a"
+                  style="push">
+            </command>
          </menu>
       </menuContribution>
       <menuContribution
@@ -100,6 +113,12 @@
                   commandId="com.rockwellcollins.atc.agree.analysis.commands.verifyAll"
                   icon="icons/layers.png"
                   id="com.rockwellcollins.atc.agree.analysis.menus.verifyAll"
+                  style="push">
+            </command>
+             <command
+                  commandId="com.rockwellcollins.atc.agree.analysis.commands.verifyRealize"
+                  icon="icons/layers.png"
+                  id="com.rockwellcollins.atc.agree.analysis.menus.verifyRealize"
                   style="push">
             </command>
          </toolbar>
@@ -125,6 +144,13 @@
                   mnemonic="a"
                   style="push">
             </command>
+            <command
+                  commandId="com.rockwellcollins.atc.agree.analysis.commands.verifyRealize"
+                  icon="icons/layers.png"
+                  id="com.rockwellcollins.atc.agree.analysis.menus.verifyRealize"
+                  mnemonic="a"
+                  style="push">
+            </command>
          </menu>
       </menuContribution>
    </extension>
@@ -142,6 +168,15 @@
       <handler
             class="com.rockwellcollins.atc.agree.analysis.handlers.VerifyAllHandler"
             commandId="com.rockwellcollins.atc.agree.analysis.commands.verifyAll">
+         <enabledWhen>
+            <reference
+                  definitionId="com.rockwellcollins.atc.agree.analysis.expressions.isSingleOutlineSelection">
+            </reference>
+         </enabledWhen>
+      </handler>
+      <handler
+            class="com.rockwellcollins.atc.agree.analysis.handlers.VerifyRealizabilityHandler"
+            commandId="com.rockwellcollins.atc.agree.analysis.commands.verifyRealize">
          <enabledWhen>
             <reference
                   definitionId="com.rockwellcollins.atc.agree.analysis.expressions.isSingleOutlineSelection">
