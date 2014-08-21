@@ -1,0 +1,12 @@
+package OSAS_S_100
+public
+annex agree {**
+	node req(act : real, act_ret : real) returns (return : bool);
+	var
+		pre_act : real;
+  	let
+  		pre_act = 0.0 -> pre(act);
+    	return = (act_ret > 1.025*pre_act) or (act_ret < 0.975*pre_act);
+  	tel;
+**};
+end OSAS_S_100;

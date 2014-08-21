@@ -377,7 +377,7 @@ end Actuators;
 
 data implementation Actuators.impl
   subcomponents
-    THRTOL : data Base_Types::Float;
+    THROTL : data Base_Types::Float;
     THROTR : data Base_Types::Float;
     ELLOB : data Base_Types::Float;
     ELLIB : data Base_Types::Float;
@@ -405,7 +405,7 @@ end NumActuators;
 
 data implementation NumActuators.impl
   subcomponents
-    THRTOL : data Base_Types::Integer;
+    THROTL : data Base_Types::Integer;
     THROTR : data Base_Types::Integer;
     ELLOB : data Base_Types::Integer;
     ELLIB : data Base_Types::Integer;
@@ -433,7 +433,7 @@ end BoolActuators;
 
 data implementation BoolActuators.impl
   subcomponents
-    THRTOL : data Base_Types::Boolean;
+    THROTL : data Base_Types::Boolean;
     THROTR : data Base_Types::Boolean;
     ELLOB : data Base_Types::Boolean;
     ELLIB : data Base_Types::Boolean;
