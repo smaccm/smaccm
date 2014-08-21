@@ -1,4 +1,4 @@
-package edu.umn.cs.crisys.smaccm.aadl2rtos.gluecode;
+package edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.eChronos;
 
 /**
  * @author Mead, Whalen
@@ -117,7 +117,7 @@ public class SourceWriter extends AbstractCodeWriter {
 	
 	String memcpyStmt(Type ty, String dst, String src) {
     return "memcpy(" + dst + ", " + src +  
-        ", sizeof(" + ty.getCType().varString("") + "))";
+        ", sizeof(" + ty.getCType(0).varString("") + "))";
 	}
 	
 	String writeToAadlMemcpy(Type ty, String sharedDst, String src) {
@@ -283,7 +283,7 @@ public class SourceWriter extends AbstractCodeWriter {
 	  String fnName = Names.getInputQueueIsEmptyFnName(p.getOwner(), p);
     out.append(Util.ind(3) + "while (! " + fnName + "()) {\n");
     Type ty = p.getDataType(); 
-    out.append(Util.ind(4) + ty.getCType().varString("elem") + ";\n");
+    out.append(Util.ind(4) + ty.getCType(0).varString("elem") + ";\n");
     out.append(Util.ind(4) + Names.getThreadImplReaderFnName(p) + "(" + Names.getVarRef(ty, "elem") + ");\n");
     
     for (ExternalHandler handler: d.getExternalHandlerList()) {

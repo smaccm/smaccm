@@ -34,7 +34,7 @@ import org.eclipse.ui.part.ViewPart;
 import org.eclipse.xtext.ui.editor.GlobalURIEditorOpener;
 
 import com.google.inject.Inject;
-import com.rockwellcollins.atc.resolute.analysis.export.CAZExport;
+import com.rockwellcollins.atc.resolute.analysis.export.CertWareExport;
 import com.rockwellcollins.atc.resolute.analysis.export.ResoluteDOTUtils;
 import com.rockwellcollins.atc.resolute.analysis.results.ClaimResult;
 import com.rockwellcollins.atc.resolute.analysis.results.FailResult;
@@ -115,7 +115,7 @@ public class AssuranceCaseView extends ViewPart {
     private static boolean CERTWARE_INSTALLED;
     static {
         try {
-            CAZExport.tryLoad();
+            CertWareExport.tryLoad();
             CERTWARE_INSTALLED = true;
         } catch (NoClassDefFoundError e) {
             CERTWARE_INSTALLED = false;
@@ -132,7 +132,7 @@ public class AssuranceCaseView extends ViewPart {
             @Override
             public void run() {
                 try {
-                    CAZExport.export(claim);
+                    CertWareExport.export(claim);
                 } catch (Throwable t) {
                     MessageDialog.openError(treeViewer.getControl().getShell(),
                             "Error during export to CertWare", t.getMessage());

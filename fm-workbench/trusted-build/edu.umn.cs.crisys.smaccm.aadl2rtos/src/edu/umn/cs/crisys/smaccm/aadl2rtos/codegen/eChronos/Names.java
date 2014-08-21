@@ -1,4 +1,4 @@
-package edu.umn.cs.crisys.smaccm.aadl2rtos.gluecode;
+package edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.eChronos;
 
 /**
  * @author Mead, Whalen
@@ -119,7 +119,7 @@ public class Names {
 	  
     Type elemTy = (getStructuralType(ty) instanceof ArrayType) ?
         ty : new PointerType(ty);
-    return elemTy.getCType().varString(id);
+    return elemTy.getCType(0).varString(id);
   }
   
   static public String getVarRef(Type ty, String id) {

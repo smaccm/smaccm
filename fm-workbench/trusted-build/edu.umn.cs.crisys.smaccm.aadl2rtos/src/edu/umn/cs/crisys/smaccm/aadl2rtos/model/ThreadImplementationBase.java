@@ -1,5 +1,7 @@
 package edu.umn.cs.crisys.smaccm.aadl2rtos.model;
 
+import edu.umn.cs.crisys.smaccm.aadl2rtos.util.Util;
+
 /**
  * @author Mead, Whalen
  * 
@@ -13,6 +15,9 @@ public class ThreadImplementationBase {
 
 	protected int priority = -1;
 	protected int stackSize = 0; 
+	protected double minExecutionTime = -1.0; 
+	protected double maxExecutionTime = -1.0; 
+	
 	protected String name;
 	protected String generatedEntrypoint = null;
   
@@ -36,6 +41,10 @@ public class ThreadImplementationBase {
 		return name;
 	}
 
+	public String getNormalizedName() {
+	  return Util.normalizeAadlName(this.getName());  
+	}
+	
 	public int getPriority() {
 	  return this.priority;
 	}
@@ -47,6 +56,34 @@ public class ThreadImplementationBase {
 	public String getGeneratedEntrypoint() {
 		return generatedEntrypoint;
 	}
+
+  /**
+   * @return the minExecutionTime
+   */
+  public double getMinExecutionTime() {
+    return minExecutionTime;
+  }
+
+  /**
+   * @param minExecutionTime the minExecutionTime to set
+   */
+  public void setMinExecutionTime(double minExecutionTime) {
+    this.minExecutionTime = minExecutionTime;
+  }
+
+  /**
+   * @return the maxExecutionTime
+   */
+  public double getMaxExecutionTime() {
+    return maxExecutionTime;
+  }
+
+  /**
+   * @param maxExecutionTime the maxExecutionTime to set
+   */
+  public void setMaxExecutionTime(double maxExecutionTime) {
+    this.maxExecutionTime = maxExecutionTime;
+  }
 
 }
 

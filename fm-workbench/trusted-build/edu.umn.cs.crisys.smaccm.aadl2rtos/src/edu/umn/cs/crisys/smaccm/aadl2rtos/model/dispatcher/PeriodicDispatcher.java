@@ -3,6 +3,8 @@ package edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher;
 import java.util.List;
 
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.ThreadImplementation;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.IntType;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.Type;
 
 /**
  * @author Mead, Whalen
@@ -32,6 +34,14 @@ public class PeriodicDispatcher extends Dispatcher {
 	public int getPeriod() { return this.period; }
 
 	public String getName() {
+	  return "periodic_" + Integer.toString(this.getPeriod()) + "_ms"; 
+	}
+	
+	public Type getType() {
+	  return new IntType(32, false);
+	}
+	
+	public String getFullName() {
      return "periodic_dispatcher (" + Integer.toString(this.getPeriod()) + " ms)";
 	}
 }

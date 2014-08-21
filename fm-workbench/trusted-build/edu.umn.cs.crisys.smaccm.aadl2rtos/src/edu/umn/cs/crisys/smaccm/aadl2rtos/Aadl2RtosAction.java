@@ -56,11 +56,12 @@ import org.osate.aadl2.modelsupport.errorreporting.AnalysisErrorReporterManager;
 import org.osate.aadl2.modelsupport.resources.OsateResourceUtil;
 import org.w3c.dom.Document;
 
-import edu.umn.cs.crisys.smaccm.aadl2rtos.gluecode.BrtosEntrypointSkeletonGenerator;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.gluecode.MakefileWriter;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.CAmkES.CAmkES_CodeGenerator;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.eChronos.EChronos_CodeGenerator;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.eChronos.MakefileWriter;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.eChronos.PrxGenerator;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.parse.AadlModelParser;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.parse.Model;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.prx.PrxGenerator;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.util.Util;
 import fr.tpt.aadl.ramses.control.support.analysis.AnalysisException;
 import fr.tpt.aadl.ramses.control.support.config.RamsesConfiguration;
@@ -100,11 +101,13 @@ public class Aadl2RtosAction extends AadlAction {
 		log.info("More stuff: " + sysimpl.getFullName());
 		log.info("And more: " + sysimpl.getQualifiedName());	
 		
-		monitor.beginTask("Generating BRTOS Configuration for AADL Model", IProgressMonitor.UNKNOWN);
+		monitor.beginTask("Generating Configuration for AADL Model", IProgressMonitor.UNKNOWN);
 
+		log.status("*****AADL to RTOS Translator******");
 		try {
 			// Create instance model
-			if (si == null) {
+
+		  if (si == null) {
 				InstantiateModel im = new InstantiateModel(new NullProgressMonitor(), getErrorManager());
 				URI uri = OsateResourceUtil.getInstanceModelURI(sysimpl);
 				Resource resource = OsateResourceUtil.getEmptyAaxl2Resource(uri);
@@ -114,29 +117,29 @@ public class Aadl2RtosAction extends AadlAction {
 			}
 
 			// Now harvest the stuff we need from the OSATE AST.
-			Model model = new Model(sysimpl, si);
+			Model model = new Model(sysimpl.getName(), si.getName());
 			
 			// AadlModelParser initializes the Model class from the OSATE hierarchy
 			// (it is a factory).
+			logger.status("Generating and typechecking domain model for code generation...");
 			new AadlModelParser(sysimpl, si, model, logger);
-			
-			// Print out C skeletons
-			if (dir == null) 
-				dir = Util.getDirectory(sysimpl);
-			
-			BrtosEntrypointSkeletonGenerator gen = new BrtosEntrypointSkeletonGenerator(log, model, dir);
-			gen.write();
 
-			// Print out the .prx file
-			List<String> cFiles = new ArrayList<String>();
-			cFiles.add("gen/" + gen.getCFile().getName());
-			genPrxFile(cFiles, dir, model);
+			// logger.status("Generating code (currently disabled)...");
+      logger.status("Generating code...");
+
+      // split on whether eChronos or CAmkES is the target.
+      // Print out C skeletons
+			File dir = Util.getDirectory(sysimpl);
 			
-			// Print out the makefile
-			log.status("Creating Makefile in location: " + dir.getPath());
-			MakefileWriter mw = new MakefileWriter(new File(dir, "out").getPath(), new File(dir, "Makefile"), model);
-			mw.writeMakeFile();
-			
+			model.setOsTarget(Model.OSTarget.CAmkES);
+
+			if (model.getOsTarget() == Model.OSTarget.eChronos) {
+  			EChronos_CodeGenerator gen = new EChronos_CodeGenerator(log, model, dir);
+  			gen.write();
+			} else {
+			  CAmkES_CodeGenerator gen = new CAmkES_CodeGenerator(log, model, dir);
+			  gen.write();
+			}
 		} catch (Aadl2RtosFailure f) {
 			log.error("Analysis Exception");
 			List<String> msgs = f.getMessages();
@@ -144,7 +147,9 @@ public class Aadl2RtosAction extends AadlAction {
 				log.error(msg);
 			}
 			return Status.CANCEL_STATUS;
-		} catch (Exception e) {
+		} catch (ParserConfigurationException pce) {
+      log.error("UsersXML: Error trying to instantiate DocumentBuilder " + pce);
+    } catch (Exception e) {
 			log.error(e);
 			return Status.CANCEL_STATUS;
 		}
@@ -153,55 +158,6 @@ public class Aadl2RtosAction extends AadlAction {
 		return Status.OK_STATUS;
 	}
 
-	private void writeXmlFile(Document dom, File file) {
-		try {
-			Transformer tr = TransformerFactory.newInstance().newTransformer();
-			tr.setOutputProperty(OutputKeys.INDENT, "yes");
-			tr.setOutputProperty(OutputKeys.METHOD, "xml");
-			tr.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
-			// tr.setOutputProperty(OutputKeys.DOCTYPE_SYSTEM, "roles.dtd");
-			tr.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
-
-			// send DOM to file
-			ByteArrayOutputStream bs = new ByteArrayOutputStream();
-
-			tr.transform(new DOMSource(dom), new StreamResult(bs));
-
-			OutputStream outputStream = new FileOutputStream(file);
-			bs.writeTo(outputStream);
-			outputStream.close();
-
-		} catch (TransformerException te) {
-			log.error("writeXmlFile::Error while transforming XML: " + te.getMessage());
-		} catch (IOException ie) {
-			log.error("writeXmlFile::Error while writing file: " + ie.getMessage());
-		}
-	}
-
-	private void genPrxFile(List<String> cFiles, File dir, Model model) throws Aadl2RtosFailure {
-		Document dom;
-		PrxGenerator prxGen;
-
-		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-		try {
-			// use factory to get an instance of document builder
-			DocumentBuilder db = dbf.newDocumentBuilder();
-
-			// create instance of DOM
-			dom = db.newDocument();
-
-			// create the PRX file
-			prxGen = new PrxGenerator(log, dom, model, cFiles);
-			prxGen.writeToDOM();
-
-			File file = new File(dir, Util.normalizeAadlName(model.getSystemImplementation()) + ".prx");
-			log.status("Creating .prx file in location: " + file);
-			writeXmlFile(dom, file);
-
-		} catch (ParserConfigurationException pce) {
-			log.error("UsersXML: Error trying to instantiate DocumentBuilder " + pce);
-		}
-	}
 
 	@Override
 	public void setParameters(Map<String, Object> parameters) {

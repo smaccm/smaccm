@@ -18,6 +18,7 @@ import java.util.List;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosException;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.*;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.*;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.rpc.RemoteProcedureGroup;
 
 public class ThreadImplementation extends ThreadImplementationBase {
 
@@ -41,6 +42,10 @@ public class ThreadImplementation extends ThreadImplementationBase {
 	private ArrayList<SharedDataAccessor> accessorList = new ArrayList<SharedDataAccessor>();
 	private ArrayList<String> legacySemaphoreList = new ArrayList<String>();
 
+	// RPCs
+	private List<RemoteProcedureGroup> providesRPCList = new ArrayList<RemoteProcedureGroup>(); 
+	private List<RemoteProcedureGroup> requiresRPCList = new ArrayList<RemoteProcedureGroup>();
+	
 	// Constructor
 	public ThreadImplementation(String name, int priority, int stackSize, 
 	    String generatedEntrypoint, boolean isPassive) {
@@ -140,6 +145,34 @@ public class ThreadImplementation extends ThreadImplementationBase {
 	}
 	
   
+  /**
+   * @return the providesRPCList
+   */
+  public List<RemoteProcedureGroup> getProvidesRPCList() {
+    return providesRPCList;
+  }
+
+  /**
+   * @param providesRPCList the providesRPCList to set
+   */
+  public void setProvidesRPCList(List<RemoteProcedureGroup> providesRPCList) {
+    this.providesRPCList = providesRPCList;
+  }
+
+  /**
+   * @return the requiresRPCList
+   */
+  public List<RemoteProcedureGroup> getRequiresRPCList() {
+    return requiresRPCList;
+  }
+
+  /**
+   * @param requiresRPCList the requiresRPCList to set
+   */
+  public void setRequiresRPCList(List<RemoteProcedureGroup> requiresRPCList) {
+    this.requiresRPCList = requiresRPCList;
+  }
+
   /**
    * @return the inputDataPortList
    */

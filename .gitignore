@@ -3,3 +3,4 @@ instances
 *.caz
 *.caz_diagram
 .settings
+*.sacm
