@@ -28,6 +28,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -51,6 +52,7 @@ import org.osate.aadl2.Element;
 import org.osate.aadl2.SystemImplementation;
 import org.osate.aadl2.instance.SystemInstance;
 import org.osate.aadl2.instantiation.InstantiateModel;
+import org.osate.aadl2.modelsupport.errorreporting.AnalysisErrorReporterManager;
 import org.osate.aadl2.modelsupport.resources.OsateResourceUtil;
 import org.w3c.dom.Document;
 
@@ -61,6 +63,8 @@ import edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.eChronos.PrxGenerator;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.parse.AadlModelParser;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.parse.Model;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.util.Util;
+import fr.tpt.aadl.ramses.control.support.analysis.AnalysisException;
+import fr.tpt.aadl.ramses.control.support.config.RamsesConfiguration;
 
 public class Aadl2RtosAction extends AadlAction {
 	private Logger log;
@@ -78,20 +82,39 @@ public class Aadl2RtosAction extends AadlAction {
 			return Status.CANCEL_STATUS;
 		}
 
-		final SystemImplementation sysimpl = (SystemImplementation) sel;
+		IStatus execStatus = execute(null, (SystemImplementation) sel, monitor, null, logger); 
+				
+		if (execStatus == Status.OK_STATUS) 
+			try {
+				ResourcesPlugin.getWorkspace().getRoot().refreshLocal(0, new NullProgressMonitor());
+			} catch (CoreException e) {
+				e.printStackTrace();
+			}
+
+		return execStatus;
+		
+	}
+	
+	private IStatus execute(SystemInstance si, SystemImplementation sysimpl, IProgressMonitor monitor, File dir, Logger logger) {
+		log = logger;
+		log.info("This is the sysimpl name: "+ sysimpl.getName());
+		log.info("More stuff: " + sysimpl.getFullName());
+		log.info("And more: " + sysimpl.getQualifiedName());	
 		
 		monitor.beginTask("Generating Configuration for AADL Model", IProgressMonitor.UNKNOWN);
 
 		log.status("*****AADL to RTOS Translator******");
 		try {
 			// Create instance model
-	    log.status("Instantiating Model...");
-			InstantiateModel im = new InstantiateModel(new NullProgressMonitor(), getErrorManager());
-			URI uri = OsateResourceUtil.getInstanceModelURI(sysimpl);
-			Resource resource = OsateResourceUtil.getEmptyAaxl2Resource(uri);
+
+		  if (si == null) {
+				InstantiateModel im = new InstantiateModel(new NullProgressMonitor(), getErrorManager());
+				URI uri = OsateResourceUtil.getInstanceModelURI(sysimpl);
+				Resource resource = OsateResourceUtil.getEmptyAaxl2Resource(uri);
 			
-			// Aha!  The big time sink is here!
-			SystemInstance si = im.createSystemInstance(sysimpl, resource);
+				// Aha!  The big time sink is here!
+			 	si = im.createSystemInstance(sysimpl, resource);
+			}
 
 			// Now harvest the stuff we need from the OSATE AST.
 			Model model = new Model(sysimpl.getName(), si.getName());
@@ -124,19 +147,56 @@ public class Aadl2RtosAction extends AadlAction {
 				log.error(msg);
 			}
 			return Status.CANCEL_STATUS;
-		} catch (Exception e) {
+		} catch (ParserConfigurationException pce) {
+      log.error("UsersXML: Error trying to instantiate DocumentBuilder " + pce);
+    } catch (Exception e) {
 			log.error(e);
 			return Status.CANCEL_STATUS;
 		}
 
-		try {
-			ResourcesPlugin.getWorkspace().getRoot().refreshLocal(0, new NullProgressMonitor());
-		} catch (CoreException e) {
-			e.printStackTrace();
-		}
 
 		return Status.OK_STATUS;
 	}
 
 
+	@Override
+	public void setParameters(Map<String, Object> parameters) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public List<String> getTransformationModuleList() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public static final String PLUGIN_NAME = "AADL2RTOS";
+	
+	@Override
+	public String getRegistryName() {
+		// TODO Auto-generated method stub
+		return PLUGIN_NAME;
+	}
+
+	@Override
+	public String getPluginName() {
+		// TODO Auto-generated method stub
+		return PLUGIN_NAME;
+	}
+
+	@Override
+	public String getPluginId() {
+		// TODO Auto-generated method stub
+		return PLUGIN_NAME;
+	}
+	
+	@Override
+	public void performAnalysis(SystemInstance instance,
+								RamsesConfiguration config,
+	                             AnalysisErrorReporterManager errReporterManager,
+	                             IProgressMonitor monitor) throws AnalysisException {
+
+		this.execute(instance, instance.getSystemImplementation(), monitor, config.getRamsesOutputDir(), new ConsoleLogger(Logger.INFO));
+	}  
 }

@@ -566,7 +566,7 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
     	
     	//a variable of the same name as this should be created by setEventPortQueues()
     	//in the AgreeAnnexEmitter which created "this" AgreeAnnexEmitter
-    	AgreeVarDecl clockVar = new AgreeVarDecl(clockIDPrefix+comp.getName(),
+    	AgreeVarDecl clockVar = new AgreeVarDecl(clockIDPrefix+thisPrefix+comp.getName(),
         		NamedType.BOOL.toString());
     	
     	IdExpr clockId = new IdExpr(clockVar.id);
@@ -589,7 +589,7 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
     @Override
     public Expr caseCalenStatement(CalenStatement calen){
     	for(NamedElement namedEl : calen.getEls()){
-    		IdExpr clockId = new IdExpr(clockIDPrefix+namedEl.getName());
+    		IdExpr clockId = new IdExpr(clockIDPrefix+thisPrefix+namedEl.getName());
     		this.calendar.add(clockId);
     	}
         return null;
@@ -630,25 +630,27 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         Subcomponent subComp = (Subcomponent)nestId.getBase();
         ComponentInstance subCompInst = curInst.findSubcomponentInstance(subComp);
         ComponentImplementation subCompImpl = subComp.getComponentImplementation();
-        ComponentType subCompType = subCompImpl.getType();
+        ComponentType subCompType = subComp.getComponentType();
 
         AgreeAnnexEmitter subEmitter = new AgreeAnnexEmitter(
                 subCompInst, layout, thisPrefix + subComp.getName(),
                 topLevelPrefix,
                 thisPrefix + subComp.getName() + dotChar, false, true);
         
-        for (AnnexSubclause annex : AnnexUtil.getAllAnnexSubclauses(subCompImpl, AgreePackage.eINSTANCE.getAgreeContractSubclause())) {
-        	if (annex instanceof AgreeContractSubclause) {
-            	Contract contract = ((AgreeContractSubclause) annex).getContract();
-            	if(contract instanceof AgreeContract){
-            		for(SpecStatement spec :  ((AgreeContract) contract).getSpecs()){
-            			if(spec instanceof LiftStatement){
-            				subEmitter.doSwitch(spec);
-            			}
-            		}
-            	}
-            }
-            break;
+        if(subCompImpl != null){
+        	for (AnnexSubclause annex : AnnexUtil.getAllAnnexSubclauses(subCompImpl, AgreePackage.eINSTANCE.getAgreeContractSubclause())) {
+        		if (annex instanceof AgreeContractSubclause) {
+        			Contract contract = ((AgreeContractSubclause) annex).getContract();
+        			if(contract instanceof AgreeContract){
+        				for(SpecStatement spec :  ((AgreeContract) contract).getSpecs()){
+        					if(spec instanceof LiftStatement){
+        						subEmitter.doSwitch(spec);
+        					}
+        				}
+        			}
+        		}
+        		break;
+        	}
         }
 
         for (AnnexSubclause annex : AnnexUtil.getAllAnnexSubclauses(subCompType, AgreePackage.eINSTANCE.getAgreeContractSubclause())) {
@@ -719,10 +721,14 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
             nodeOutputs.add(new IdExpr(var.id));
         }
 
-        NodeCallExpr nodeCall = new NodeCallExpr(agreeNode.mainNode.id, nodeInputs);
-        Equation nodeEq = new Equation(nodeOutputs, nodeCall);
-        
-        eqExpressions.add(nodeEq);
+        //if the node has no outputs, then don't include it
+        //perhaps it does not have guarantees?
+        if(nodeOutputs.size() != 0){
+        	NodeCallExpr nodeCall = new NodeCallExpr(agreeNode.mainNode.id, nodeInputs);
+        	Equation nodeEq = new Equation(nodeOutputs, nodeCall);
+
+        	eqExpressions.add(nodeEq);
+        }
         //connExpressions.addAll(subEmitter.connExpressions);
         typeExpressions.addAll(subEmitter.typeExpressions);
         initTypeMap.putAll(subEmitter.initTypeMap);
@@ -1830,7 +1836,9 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         ArrayList<VarDecl> outputList = new ArrayList<>(outputs);
         
         Node node = new Node("__NODE_"+this.category, inputList, outputList, Collections.EMPTY_LIST, eqs);
-        AgreeVarDecl clockVar = new AgreeVarDecl(clockIDPrefix+this.curComp.getName(), NamedType.BOOL);
+        //stupid hack to get rid of the prefix
+        String clockStr = clockIDPrefix+thisPrefix.replaceFirst(dotChar+"$", "");
+        AgreeVarDecl clockVar = new AgreeVarDecl(clockStr, NamedType.BOOL);
         
         List<Node> agreeNodes = new ArrayList<>(this.nodeDefExpressions);
         agreeNodes.add(node);
@@ -2180,11 +2188,13 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
                 nodeInputs.add(new IdExpr(var.id));
             }
 
-            NodeCallExpr nodeCall = new NodeCallExpr(agreeNode.mainNode.id, nodeInputs);
-            
-            CondactExpr condact = new CondactExpr(clockExpr, nodeCall, initOutputs);
-            Equation condactEq = new Equation(nodeOutputs, condact);
-            eqs.add(condactEq);
+            if(agreeNode.outputs.size() != 0){// perhaps there are no guarantees?
+            	NodeCallExpr nodeCall = new NodeCallExpr(agreeNode.mainNode.id, nodeInputs);
+
+            	CondactExpr condact = new CondactExpr(clockExpr, nodeCall, initOutputs);
+            	Equation condactEq = new Equation(nodeOutputs, condact);
+            	eqs.add(condactEq);
+            }
             
             addToRenamingAll(subEmitter.varRenaming);
             addAllToRefMap(subEmitter.refMap);
