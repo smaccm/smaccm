@@ -4,7 +4,7 @@ public
 annex agree {**
 	
   node req 
-  	(acts_gain : DATA_TYPES::NumActuators.impl,
+  	(acts_gain : DATA_TYPES::Actuators.impl,
   	 ccdl_failed : bool)
   returns
     (res : bool);
@@ -29,17 +29,17 @@ annex agree {**
   	      req_helper(acts_gain.SPLROB, ccdl_failed) and
   	      req_helper(acts_gain.STEER, ccdl_failed) and
   	      req_helper(acts_gain.THROTR, ccdl_failed) and
-  	      req_helper(acts_gain.THRTOL, ccdl_failed);
+  	      req_helper(acts_gain.THROTL, ccdl_failed);
   tel;
   
   node req_helper
-    (act_gain : int,
+    (act_gain : real,
      ccdl_failed : bool)
   returns
     (res : bool);
   let  
     res = 
-      ccdl_failed => act_gain = 1;
+      ccdl_failed => act_gain = 1.0;
   tel;
 	
 **};

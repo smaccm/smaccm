@@ -26,7 +26,7 @@ system OSAS_Sys
   	
   	eq fail_counts : DATA_TYPES::NumActuators.impl;
   	eq latched_failures : DATA_TYPES::BoolActuators.impl;
-  	eq act_gains : DATA_TYPES::NumActuators.impl;
+  	eq act_gains : DATA_TYPES::Actuators.impl;
   	eq act_claw_fails : DATA_TYPES::BoolActuators.impl;
   	eq osas_failed : bool;
   	  	
@@ -37,8 +37,8 @@ system OSAS_Sys
     
     --OSAS shall set the actuator command fault counter to 0 (zero) 
     --if the fault clears within 5 frames.
-    guarantee "OSAS-S-100 and OSAS-S-110":
-      OSAS_S_100_110.req(acts_out, acts_ret, fail_counts); 
+    guarantee "OSAS-S-110":
+      OSAS_S_110.req(acts_out, acts_ret, fail_counts); 
     	
     --shall latch the actuator command FAILED if the fault 
     --persists for 5 consecutive frames.
