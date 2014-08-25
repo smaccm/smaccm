@@ -2066,6 +2066,12 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         inputs.addAll(agreeInputVars);
         internals.addAll(agreeInternalVars);
 
+        // system assumptions
+        IdExpr sysAssumpHistId = new IdExpr("_SYSTEM_ASSUMP_HIST");
+        internals.add(new VarDecl(sysAssumpHistId.id, NamedType.BOOL));
+        Expr sysAssumpHist = AgreeEmitterUtilities.getLustreAssumptions(this);
+        eqs.add(AgreeEmitterUtilities.getLustreHistory(sysAssumpHist, sysAssumpHistId));
+        
         // create individual properties for guarantees
         int i = 0;
         for (Equation guar : guarExpressions) {
@@ -2073,7 +2079,7 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
             IdExpr sysGuaranteesId = new IdExpr(sysGuarTag + i);
             internals.add(new VarDecl(sysGuaranteesId.id, NamedType.BOOL));
 
-            Equation finalGuar = new Equation(sysGuaranteesId, guar.expr);
+            Equation finalGuar = new Equation(sysGuaranteesId, new BinaryExpr(sysAssumpHistId, BinaryOp.IMPLIES, guar.expr));
             eqs.add(finalGuar);
             properties.add(sysGuaranteesId.id);
             guarProps.add(sysGuaranteesId.id);
