@@ -331,17 +331,17 @@ system Vehicle
 			state >= 0 and state <= 5;
 
 		guarantee "leader position behavior":
-			true -> ((defs.rising(left_shift) and pre(state) = leader) => state = pend_left)
+			((defs.rising(left_shift) and pre(state) = leader) => state = pend_left)
 			and
 			((defs.rising(right_shift) and pre(state) = leader) => state = pend_right);
 			
 		guarantee "left position behavior":
-			true -> ((defs.rising(left_shift) and pre(state) = left) => state = pend_right)
+			((defs.rising(left_shift) and pre(state) = left) => state = pend_right)
 			and
 			((defs.rising(right_shift) and pre(state) = left) => state = pend_leader);
 			
 		guarantee "right position behavior":
-			true -> ((defs.rising(left_shift) and pre(state) = right) => state = pend_leader)
+			((defs.rising(left_shift) and pre(state) = right) => state = pend_leader)
 			and
 			((defs.rising(right_shift) and pre(state) = right) => state = pend_left);
 			

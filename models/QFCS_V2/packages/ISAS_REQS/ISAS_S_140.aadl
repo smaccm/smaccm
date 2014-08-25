@@ -15,8 +15,6 @@ annex agree {**
              aoa_in_range : DATA_TYPES::DUAL_AoA.tbool,
              air_data_in_range : DATA_TYPES::DUAL_AirData.tbool,
              
-             egi_select : Data_Types::EGI.treal,          
-             
              aoa_within_tol: Data_Types::DUAL_AoA.tbool,  
              air_data_within_tol: Data_Types::DUAL_AirData.tbool
               

@@ -108,20 +108,9 @@ system implementation FCS.impl
     conn_sovs24: port FCC1.sovs2 -> sovs24; 
     
     annex agree {**
-    	eq num_valids1 : DATA_TYPES::NumActuators.impl;
-    	eq num_valids2 : DATA_TYPES::NumActuators.impl;
-    	eq num_valids3 : DATA_TYPES::NumActuators.impl;
-    	eq num_valids4 : DATA_TYPES::NumActuators.impl;
+    	eq num_valids : DATA_TYPES::NumActuators.impl;
     	
-    	assert FCS_RC1.fault_counts(num_valids1, FCC2.acts_fail, FCC3.acts_fail, FCC4.acts_fail);
-    	assert FCS_RC1.fault_counts(num_valids2, FCC1.acts_fail, FCC3.acts_fail, FCC4.acts_fail);
-    	assert FCS_RC1.fault_counts(num_valids3, FCC1.acts_fail, FCC2.acts_fail, FCC4.acts_fail);
-    	assert FCS_RC1.fault_counts(num_valids4, FCC3.acts_fail, FCC2.acts_fail, FCC1.acts_fail);
     	
-    	assert FCC1.num_valid_acts = num_valids1;
-    	assert FCC2.num_valid_acts = num_valids2;
-    	assert FCC3.num_valid_acts = num_valids3;
-    	assert FCC4.num_valid_acts = num_valids4;
     **};
     
 end FCS.impl;

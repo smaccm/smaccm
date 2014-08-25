@@ -1,6 +1,8 @@
 package OSAS_S_120
-public
 
+public
+	with RUN_LENGTH;
+	with OCCURRED;
 annex agree{**
 	
 	
@@ -31,7 +33,7 @@ annex agree{**
   	      req_helper(acts.SPLROB, acts_ret.SPLROB, fails.SPLROB) and
   	      req_helper(acts.STEER, acts_ret.STEER, fails.STEER) and
   	      req_helper(acts.THROTR, acts_ret.THROTR, fails.THROTR) and
-  	      req_helper(acts.THRTOL, acts_ret.THRTOL, fails.THRTOL);
+  	      req_helper(acts.THROTL, acts_ret.THROTL, fails.THROTL);
   tel;
   
   node req_helper
@@ -41,32 +43,15 @@ annex agree{**
   returns
     (res : bool);
   let  
-    res = true ->
+    res = 
     	fail = 
-    		if(fault_persists_for_frames(act, act_ret, 5)) then
+    		if(OCCURRED.f(RUN_LENGTH.f(OSAS_S_100.req(act,act_ret))>= 5)) then
     			true
     		else 
-    			pre (fail);
+    			(true -> pre (fail));
   tel;
 	
-  node fault_persists_for_frames
-    (act : real, act_ret : real, for : int) 
-  returns 
-    (return : bool);
-  var
-    count : int;
-  let
-    count = 0 -> if (fault_occurred(act, act_ret)) then
-                    pre(count) + 1 else 0;
-    return = count >= for;
-    
-    lemma "pos count" : count >= 0; 
-  tel;
   
-  node fault_occurred(act : real, act_ret : real) returns (return : bool);
-  let
-    return = false -> not ((act_ret <= 1.025*pre(act)) and (act_ret >= 0.975*pre(act)));
-  tel;
   
 **};
 

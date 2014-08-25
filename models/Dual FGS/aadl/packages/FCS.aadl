@@ -195,10 +195,10 @@ annex agree {**
 assert (FGS_L.LSO.Valid and FGS_R.LSO.Valid) => FGS_L.LSO.Leader = FGS_R.LSO.Leader;
 			
   -- If a node fails, leadership is transferred to a non-failed node (if one exists)
- 
+  
 assert (prev(not(FGS_L.LSO.Valid), false) => 
 	(FGS_R.LSO.Valid => FGS_R.LSO.Leader != Get_Property(FGS_L, META_Properties::Leader_Select_ID)));		
- 
+  
 assert prev(not(FGS_R.LSO.Valid), false) => 
 	(FGS_L.LSO.Valid => FGS_L.LSO.Leader != Get_Property(FGS_R, META_Properties::Leader_Select_ID));
 			 

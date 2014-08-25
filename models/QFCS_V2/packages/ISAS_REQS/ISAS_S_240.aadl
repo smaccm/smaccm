@@ -66,21 +66,21 @@ annex agree {**
     returns (ret : bool);
     let
       ret = fault(air_data_in_range.AD1.TAT, air_data_failed_update.val1,
-      	          air_data_in_range.AD1.TAT, air_data_latched_faults.AD1.TAT) and
+      	          air_data_within_tol.AD1.TAT, air_data_latched_faults.AD1.TAT) and
       	    fault(air_data_in_range.AD1.TotPres, air_data_failed_update.val1,
-      	          air_data_in_range.AD1.TotPres, air_data_latched_faults.AD1.TotPres) and
+      	          air_data_within_tol.AD1.TotPres, air_data_latched_faults.AD1.TotPres) and
       	    fault(air_data_in_range.AD1.Pres, air_data_failed_update.val1,
-      	          air_data_in_range.AD1.Pres, air_data_latched_faults.AD1.Pres) and
+      	          air_data_within_tol.AD1.Pres, air_data_latched_faults.AD1.Pres) and
       	    fault(air_data_in_range.AD1.Temp, air_data_failed_update.val1,
-      	          air_data_in_range.AD1.Temp, air_data_latched_faults.AD1.Temp) and
+      	          air_data_within_tol.AD1.Temp, air_data_latched_faults.AD1.Temp) and
       	    fault(air_data_in_range.AD2.TAT, air_data_failed_update.val2,
-      	          air_data_in_range.AD2.TAT, air_data_latched_faults.AD2.TAT) and
+      	          air_data_within_tol.AD2.TAT, air_data_latched_faults.AD2.TAT) and
       	    fault(air_data_in_range.AD2.TotPres, air_data_failed_update.val2,
-      	          air_data_in_range.AD2.TotPres, air_data_latched_faults.AD2.TotPres) and
+      	          air_data_within_tol.AD2.TotPres, air_data_latched_faults.AD2.TotPres) and
       	    fault(air_data_in_range.AD2.Pres, air_data_failed_update.val2,
-      	          air_data_in_range.AD2.Pres, air_data_latched_faults.AD2.Pres) and
+      	          air_data_within_tol.AD2.Pres, air_data_latched_faults.AD2.Pres) and
       	    fault(air_data_in_range.AD2.Temp, air_data_failed_update.val2,
-      	          air_data_in_range.AD2.Temp, air_data_latched_faults.AD2.Temp);
+      	          air_data_within_tol.AD2.Temp, air_data_latched_faults.AD2.Temp);
     tel;
     
     node aoa_faults(aoa_within_tol : DATA_TYPES::DUAL_AoA.tbool,
@@ -90,9 +90,9 @@ annex agree {**
     returns (ret : bool);
     let
       ret = fault(aoa_in_range.AOA1.AOA, aoa_failed_update.val1,
-      	          aoa_in_range.AOA1.AOA, aoa_latched_faults.AOA1.AOA) and
+      	          aoa_within_tol.AOA1.AOA, aoa_latched_faults.AOA1.AOA) and
       	    fault(aoa_in_range.AOA2.AOA, aoa_failed_update.val2,
-      	          aoa_in_range.AOA2.AOA, aoa_latched_faults.AOA2.AOA);
+      	          aoa_within_tol.AOA2.AOA, aoa_latched_faults.AOA2.AOA);
     tel;
     
     node stabilizers_faults(stabilizers_within_tol : DATA_TYPES::QUAD_Stabilizer.tbool,
@@ -148,7 +148,7 @@ annex agree {**
       	          spoilers_in_range.SPOIL1.SPLIB, spoilers_latched_faults.SPOIL1.SPLIB) and
       	    fault(spoilers_in_range.SPOIL1.SPRIB, spoilers_failed_update.val1,
       	          spoilers_in_range.SPOIL1.SPRIB, spoilers_latched_faults.SPOIL1.SPRIB) and
-      	    fault(spoilers_in_range.SPOIL1.SPROB, spoilers_failed_update.val1,
+      	    fault(spoilers_in_range.SPOIL1.SPROB, spoilers_failed_update.val1, 
       	          spoilers_in_range.SPOIL1.SPROB, spoilers_latched_faults.SPOIL1.SPROB) and
       	    fault(spoilers_in_range.SPOIL2.SPLOB, spoilers_failed_update.val2,
       	          spoilers_in_range.SPOIL2.SPLOB, spoilers_latched_faults.SPOIL2.SPLOB) and
@@ -317,8 +317,8 @@ annex agree {**
       cur_fault : bool;
       fault_latched : bool;
     let
-      consec_faults = if cur_fault then 1 else 0 -> if cur_fault then pre(consec_faults) + 1 else 0;
       cur_fault = not in_range or failed_update or not within_tol;
+      consec_faults = if cur_fault then 1 else 0 -> if cur_fault then pre(consec_faults) + 1 else 0;
       fault_latched = false -> (pre (fault_latched) or (if(consec_faults = 5) then true else false));
       ret = (fault_latch = if(fault_latched) then true else cur_fault);
     tel;

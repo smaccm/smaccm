@@ -8,7 +8,7 @@ package Alarm
 public  with DATATYPES;
   
   system Alarm
-    features
+    features 
 	  IM_IN: in data port DATATYPES::Infusion_Manager_Outputs.Impl;
       TLM_MODE_IN: in data port DATATYPES::Top_Level_Mode_Outputs.Impl;
       SYS_MON_IN: in data port DATATYPES::System_Monitor_Output.Impl;

@@ -17,7 +17,8 @@ annex agree {**
              aoa_in_range : DATA_TYPES::DUAL_AoA.tbool,
              air_data_in_range : DATA_TYPES::DUAL_AirData.tbool,
              
-             egi_select : Data_Types::EGI.treal,          
+             egi_select : Data_Types::EGI.treal, 
+             egi_select_fault  : Data_Types::EGI.tbool,         
              
              aoa_within_tol: Data_Types::DUAL_AoA.tbool,  
              air_data_within_tol: Data_Types::DUAL_AirData.tbool
@@ -25,45 +26,60 @@ annex agree {**
 	        ) returns (ret : bool);
 	  let
 	    ret = 
-		    -- AOA1 stale or out-of-range and AOA2 not stale or out-of-range - compare AOA2 against AOA from EGI
-		    (((aoa_failed_update.val1 or not aoa_in_range.AOA1.AOA) and (not aoa_failed_update.val2 and aoa_in_range.AOA2.AOA)) =>
-		        (aoa_within_tol.AOA2.AOA = matches_tolerance_real(aoa.AOA2.AOA, egi_select.AOA, AGREE_CONSTANTS.EGI_AOA_tol)))
-	    and
-	        -- AOA2 stale or out-of-range and AOA1 not stale or out-of-range - compare AOA1 against AOA from EGI
-	        (((aoa_failed_update.val2 or not aoa_in_range.AOA2.AOA) and (not aoa_failed_update.val1 and aoa_in_range.AOA1.AOA)) =>
-	              (aoa_within_tol.AOA1.AOA = matches_tolerance_real(aoa.AOA1.AOA, egi_select.AOA, AGREE_CONSTANTS.EGI_AOA_tol)))  
+		    -- AOA1 stale or out-of-range - determine if AOA2 within tolerance of EGI
+		    ((aoa_failed_update.val1 or not aoa_in_range.AOA1.AOA 
+		    	or not (matches_tolerance_real(aoa.AOA1.AOA, aoa.AOA2.AOA, AGREE_CONSTANTS.AOA_tol)) -- fix to match table
+		    )
+		    	=> aoa_within_tol.AOA2.AOA = 
+		    	(not aoa_failed_update.val2 and aoa_in_range.AOA2.AOA and not egi_select_fault.AOA and 
+		    	 matches_tolerance_real(aoa.AOA2.AOA, egi_select.AOA, AGREE_CONSTANTS.EGI_AOA_tol)))
+	    
+	    and -- AOA2 stale or out-of-range - determine if AOA1 within tolerance of EGI
+	        ((aoa_failed_update.val2 or not aoa_in_range.AOA2.AOA 
+	         or not (matches_tolerance_real(aoa.AOA1.AOA, aoa.AOA2.AOA, AGREE_CONSTANTS.AOA_tol))	-- fix to match table
+	        ) => aoa_within_tol.AOA1.AOA =
+	        	(not aoa_failed_update.val1 and aoa_in_range.AOA1.AOA and not egi_select_fault.AOA and 
+	             matches_tolerance_real(aoa.AOA1.AOA, egi_select.AOA, AGREE_CONSTANTS.EGI_AOA_tol)))  
+	   
+	    and -- TAT1 stale or out-of-range - determine if TAT2 within tolerance of EGI
+		    ((air_failed_update.val1 or not air_data_in_range.AD1.TAT) => air_data_within_tol.AD2.TAT = 
+		    	(not air_failed_update.val2 and air_data_in_range.AD2.TAT and not egi_select_fault.TAT and 
+		    	 matches_tolerance_real(air_data.AD2.TAT, egi_select.TAT, AGREE_CONSTANTS.AGREE_CONSTANTS.EGI_TAT_tol)))
+	    
+	    and -- TAT2 stale or out-of-range - determine if TAT1 within tolerance of EGI
+		    ((air_failed_update.val2 or not air_data_in_range.AD2.TAT) => air_data_within_tol.AD1.TAT = 
+		    	(not air_failed_update.val1 and air_data_in_range.AD1.TAT and not egi_select_fault.TAT and 
+		    		matches_tolerance_real(air_data.AD1.TAT, egi_select.TAT, AGREE_CONSTANTS.EGI_TAT_tol)))
+	     
+	    and -- TotPres1 stale or out-of-range - determine it TotPres2 within tolerance of EGI
+		    ((air_failed_update.val1 or not air_data_in_range.AD1.TotPres) => air_data_within_tol.AD2.TotPres = 
+		    	(not air_failed_update.val2 and air_data_in_range.AD2.TotPres and not egi_select_fault.TotPres and 
+		    		matches_tolerance_real(air_data.AD2.TotPres, egi_select.TotPres, AGREE_CONSTANTS.EGI_TotPres_tol)))
+	     
+	    and -- TotPres2 stale or out-of-range - determine it TotPres1 within tolerance of EGI
+		    ((air_failed_update.val2 or not air_data_in_range.AD2.TotPres) => air_data_within_tol.AD1.TotPres = 
+		    	(not air_failed_update.val1 and air_data_in_range.AD1.TotPres and not egi_select_fault.TotPres and 
+		    	 matches_tolerance_real(air_data.AD1.TotPres, egi_select.TotPres, AGREE_CONSTANTS.EGI_TotPres_tol)))
 	    and  
-	       -- TAT1 stale or out-of-range and TAT2 not stale or out-of-range - compare TAT2 against TAT from EGI
-		    (((air_failed_update.val1 or not air_data_in_range.AD1.TAT) and (not air_failed_update.val2 and air_data_in_range.AD2.TAT)) =>
-		        (air_data_within_tol.AD2.TAT = matches_tolerance_real(air_data.AD2.TAT, egi_select.TAT, AGREE_CONSTANTS.AGREE_CONSTANTS.EGI_TAT_tol)))
+	       -- Pres1 stale or out-of-range - determine it Pres2 within tolerance of EGI
+		    ((air_failed_update.val1 or not air_data_in_range.AD1.Pres) => air_data_within_tol.AD2.Pres = 
+		    	(not air_failed_update.val2 and air_data_in_range.AD2.Pres and not egi_select_fault.Pres and 
+		    		matches_tolerance_real(air_data.AD2.Pres, egi_select.Pres, AGREE_CONSTANTS.EGI_Pres_tol)))
+	     
+	    and -- Pres2 stale or out-of-range - determine it Pres2 within tolerance of EGI
+		    ((air_failed_update.val2 or not air_data_in_range.AD2.Pres) => air_data_within_tol.AD1.Pres = 
+		    	(not air_failed_update.val1 and air_data_in_range.AD1.Pres and not egi_select_fault.Pres and 
+		    		matches_tolerance_real(air_data.AD1.Pres, egi_select.Pres, AGREE_CONSTANTS.EGI_Pres_tol)))
+		    
+	    and -- Temp1 stale or out-of-range - determine it Temp2 within tolerance of EGI
+		     ((air_failed_update.val1 or not air_data_in_range.AD1.Temp) => air_data_within_tol.AD2.Temp = 
+		     	(not air_failed_update.val2 and air_data_in_range.AD2.Temp and not egi_select_fault.Temp and 
+		     		matches_tolerance_real(air_data.AD2.Temp, egi_select.Temp, AGREE_CONSTANTS.EGI_Temp_tol)))
 	    and  
-	       -- TAT2 stale or out-of-range and TAT1 not stale or out-of-range - compare TAT1 against TAT from EGI
-		    (((air_failed_update.val2 or not air_data_in_range.AD2.TAT) and (not air_failed_update.val1 and air_data_in_range.AD1.TAT)) =>
-		        (air_data_within_tol.AD1.TAT = matches_tolerance_real(air_data.AD1.TAT, egi_select.TAT, AGREE_CONSTANTS.EGI_TAT_tol)))
-	    and  
-	       -- TotPres1 stale or out-of-range and TotPres2 not stale or out-of-range - compare TotPres2 against TotPres from EGI
-		    (((air_failed_update.val1 or not air_data_in_range.AD1.TotPres) and (not air_failed_update.val2 and air_data_in_range.AD2.TotPres)) =>
-		        (air_data_within_tol.AD2.TotPres = matches_tolerance_real(air_data.AD2.TotPres, egi_select.TotPres, AGREE_CONSTANTS.EGI_TotPres_tol)))
-	    and  
-	       -- TotPres2 stale or out-of-range and TotPres1 not stale or out-of-range - compare TotPres1 against TotPres from EGI
-		    (((air_failed_update.val2 or not air_data_in_range.AD2.TotPres) and (not air_failed_update.val1 and air_data_in_range.AD1.TotPres)) =>
-		        (air_data_within_tol.AD1.TotPres = matches_tolerance_real(air_data.AD1.TotPres, egi_select.TotPres, AGREE_CONSTANTS.EGI_TotPres_tol)))
-	    and  
-	       -- Pres1 stale or out-of-range and Pres2 not stale or out-of-range - compare Pres2 against Pres from EGI
-		    (((air_failed_update.val1 or not air_data_in_range.AD1.Pres) and (not air_failed_update.val2 and air_data_in_range.AD2.Pres)) =>
-		        (air_data_within_tol.AD2.Pres = matches_tolerance_real(air_data.AD2.Pres, egi_select.Pres, AGREE_CONSTANTS.EGI_Pres_tol)))
-	    and  
-	       -- Pres2 stale or out-of-range and Pres1 not stale or out-of-range - compare Pres1 against Pres from EGI
-		    (((air_failed_update.val2 or not air_data_in_range.AD2.Pres) and (not air_failed_update.val1 and air_data_in_range.AD1.Pres)) =>
-		        (air_data_within_tol.AD1.Pres = matches_tolerance_real(air_data.AD1.Pres, egi_select.Pres, AGREE_CONSTANTS.EGI_Pres_tol)))
-	    and  
-	       -- Temp1 stale or out-of-range and Temp2 not stale or out-of-range - compare Temp2 against Temp from EGI
-		    (((air_failed_update.val1 or not air_data_in_range.AD1.Temp) and (not air_failed_update.val2 and air_data_in_range.AD2.Temp)) =>
-		        (air_data_within_tol.AD2.Temp = matches_tolerance_real(air_data.AD2.Temp, egi_select.Temp, AGREE_CONSTANTS.EGI_Temp_tol)))
-	    and  
-	       -- Temp2 stale or out-of-range and Temp1 not stale or out-of-range - compare Temp1 against Temp from EGI
-		    (((air_failed_update.val2 or not air_data_in_range.AD2.Temp) and (not air_failed_update.val1 and air_data_in_range.AD1.Temp)) =>
-		        (air_data_within_tol.AD1.Temp = matches_tolerance_real(air_data.AD1.Temp, egi_select.Temp, AGREE_CONSTANTS.EGI_Temp_tol)));
+	       -- Temp2 stale or out-of-range - determine it Temp1 within tolerance of EGI
+		     ((air_failed_update.val2 or not air_data_in_range.AD2.Temp) => air_data_within_tol.AD1.Temp =
+		     	(not air_failed_update.val1 and air_data_in_range.AD1.Temp and not egi_select_fault.Temp and 
+		     		matches_tolerance_real(air_data.AD1.Temp, egi_select.Temp, AGREE_CONSTANTS.EGI_Temp_tol)));
 	          	
 	  tel;
 

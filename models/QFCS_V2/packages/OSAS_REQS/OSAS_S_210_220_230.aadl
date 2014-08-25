@@ -33,7 +33,7 @@ annex agree {**
   	      req_helper(sovs1.SPLROB, sovs2.SPLROB, isas_fails.SPLROB, latched_fails.SPLROB, ccdl_num_fails.SPLROB) and
   	      req_helper(sovs1.STEER, sovs2.STEER, isas_fails.STEER, latched_fails.STEER, ccdl_num_fails.STEER) and
   	      req_helper(sovs1.THROTR, sovs2.THROTR, isas_fails.THROTR, latched_fails.THROTR, ccdl_num_fails.THROTR) and
-  	      req_helper(sovs1.THRTOL, sovs2.THRTOL, isas_fails.THRTOL, latched_fails.THRTOL, ccdl_num_fails.THRTOL);
+  	      req_helper(sovs1.THROTL, sovs2.THROTL, isas_fails.THROTL, latched_fails.THROTL, ccdl_num_fails.THROTL);
   tel;
   
   node req_helper

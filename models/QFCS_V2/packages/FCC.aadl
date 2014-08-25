@@ -47,41 +47,35 @@ system FCC
     acts_out : out data port DATA_TYPES::Actuators.impl;
     sovs1: out data port DATA_TYPES::BoolActuators.impl;
     sovs2: out data port DATA_TYPES::BoolActuators.impl;
-    acts_fail : out data port DATA_TYPES::BoolActuators.impl;
-   
+
+        
   annex agree {**
 
-  	--BEGIN RC5 guarantees
-  	guarantee "elevator bound" : 
-  	  FCC_RC5.req_els(elevators_faults, elevators_select);
-  	  
-  	guarantee "ailerons bound" : 
-  	  FCC_RC5.req_ails(ailerons_faults, ailerons_select);
-  	  
-  	guarantee "flaps bound" :
-  	  FCC_RC5.req_flaps(flaps_faults, flaps_select);
-  	  
-  	guarantee "rudders bound" :
-  	  FCC_RC5.req_rud(rudders_faults, rudders_select);
-  	  
-  	guarantee "spoilers bound" :
-  	  FCC_RC5.req_spoil(spoilers_faults, spoilers_select);
-  	  
-  	guarantee "stabilzers bound" :
-  	  FCC_RC5.req_stab(stabilizers_faults, stabilizers_select);
-  	 
-  	--BEGIN RC2 GUARANTEES     
-    guarantee "actuators output range bound":
-      FCC_RC_2.req (acts_out, num_valid_acts); 
-       
-       
-    --When an actuator command has been latched failed, OSAS shall set 
-    --that actuator command to 0 (zero).
-    guarantee "OSAS-S-140" : 
-      OSAS_S_140.req(acts_out, acts_fail); 
-       
-  **}; 
-        
+	--BEGIN RC5 guarantees
+	guarantee "elevator bound" :
+	 FCC_RC5.req_els(elevators_faults, elevators_select);
+
+	guarantee "ailerons bound" :
+	 FCC_RC5.req_ails(ailerons_faults, ailerons_select);
+
+	guarantee "flaps bound" :
+	 FCC_RC5.req_flaps(flaps_faults, flaps_select);
+
+	guarantee "rudders bound" :
+	 FCC_RC5.req_rud(rudders_faults, rudders_select);
+
+	guarantee "spoilers bound" :
+	 FCC_RC5.req_spoil(spoilers_faults, spoilers_select);
+
+	guarantee "stabilzers bound" :
+	 FCC_RC5.req_stab(stabilizers_faults, stabilizers_select);
+
+	--BEGIN RC2 GUARANTEES
+	guarantee "actuators output range bound":
+		FCC_RC_2.req (acts_out, num_valid_acts);
+
+  **};
+
 end FCC;
 
 system implementation FCC.Impl
@@ -91,7 +85,8 @@ system implementation FCC.Impl
     CLAW_comp : system CLAW::CLAW;
     
   connections
-  
+ 
+
     --inputs from the outside world
     conn_acts_ret_osas: port acts_ret -> OSAS_comp.acts_ret;
     valid_conn: port num_valid_acts -> OSAS_comp.num_valid_acts;
@@ -129,12 +124,10 @@ system implementation FCC.Impl
     air_select_conn : port ISAS_comp.air_data_select -> air_data_select;
     egi_select_conn : port ISAS_comp.egi_select -> egi_select;
     stab_select_conn : port ISAS_comp.stabilizers_select -> stabilizers_select;
-    
-    act_falures : port OSAS_comp.acts_fail -> acts_fail;
 
     --internal connections
     conn_ccdl_acts : port CLAW_comp.acts -> OSAS_comp.acts_in;
-    
+
 end FCC.Impl;
 
 

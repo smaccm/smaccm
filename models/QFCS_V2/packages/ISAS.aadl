@@ -64,6 +64,8 @@ system ISAS_Sys
         eq spoilers_within_tol :  DATA_TYPES::QUAD_Spoilers.tbool;
         eq stabilizer_within_tol : DATA_TYPES::QUAD_Stabilizer.tbool;
         
+        eq egi_select_fault : DATA_TYPES::EGI.tbool;
+        
         eq elevators_sig_tol : DATA_TYPES::Elevators.treal =
          DATA_TYPES::Elevators.treal 
          {ELLOB = AGREE_CONSTANTS.ELLOB_tol; 
@@ -150,7 +152,7 @@ system ISAS_Sys
         --ISAS shall compare dual channel inputs to determine 
         --if the signals match within a tolerance.
         ISAS_S_140.req(aoa, air_data, aoa_failed_update, air_data_failed_update, 
-        	           aoa_in_range, air_data_in_range, egi_select, 
+        	           aoa_in_range, air_data_in_range, 
         	           aoa_within_tol, air_data_within_tol);
               
         --ISAS shall compare dual channel inputs to determine 
@@ -179,7 +181,7 @@ system ISAS_Sys
         -- the selected value of the equivalent parameter computed in the EGI,
         -- using a tolerance relevant to that comparison.
         ISAS_S_190.req(aoa, air_data, aoa_failed_update, air_data_failed_update, 
-        	           aoa_in_range, air_data_in_range, egi_select, 
+        	           aoa_in_range, air_data_in_range, egi_select, egi_select_fault,
         	           aoa_within_tol, air_data_within_tol);
             
         guarantee "ISAS-S-200" :  
@@ -200,8 +202,7 @@ system ISAS_Sys
         -- In the case of mismatched dual input signals, ISAS shall set the 
         -- selected value equal to the equivalent selected value of EGI data.
         ISAS_S_220.req(aoa, air_data, aoa_failed_update, air_data_failed_update, 
-        	           aoa_in_range, air_data_in_range, aoa_within_tol, air_data_within_tol,
-        	           egi_select, aoa_select, air_data_select);  
+        	           aoa_in_range, air_data_in_range, egi_select, egi_select_fault, aoa_select, air_data_select);  
             
         -- ISAS shall determine the selected value for a quad digital signal using the following table:
         -- 1) 4 good values with total range less than SignalTolerance, average all 4
@@ -254,11 +255,21 @@ system ISAS_Sys
              stabilizers_faults,
              aoa_faults,
              air_data_faults);
-        
-    **};
-    
-    
+             
+     **}; 
+            
 end ISAS_Sys; 
 
+system implementation ISAS_Sys.Impl
+   annex agree {**
+   	   
+   	     lemma "aoa_compare12" :
+   	     (aoa_in_range.AOA1.AOA and not aoa_failed_update.val1 and aoa_within_tol.AOA1.AOA and
+          aoa_in_range.AOA2.AOA and not aoa_failed_update.val2 and aoa_within_tol.AOA2.AOA)  =>
+          	        not (aoa_faults.AOA1.AOA and not aoa_faults.AOA2.AOA);
+ 
+   **};
+   
+end ISAS_Sys.Impl;
 
 end ISAS;
