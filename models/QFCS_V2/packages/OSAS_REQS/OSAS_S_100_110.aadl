@@ -38,7 +38,7 @@ annex agree {**
   	      req_helper(acts.SPLROB, acts_ret.SPLROB, fail_counts.SPLROB) and
   	      req_helper(acts.STEER, acts_ret.STEER, fail_counts.STEER) and
   	      req_helper(acts.THROTR, acts_ret.THROTR, fail_counts.THROTR) and
-  	      req_helper(acts.THRTOL, acts_ret.THRTOL, fail_counts.THRTOL);
+  	      req_helper(acts.THROTL, acts_ret.THROTL, fail_counts.THROTL);
   tel;    
   
    
