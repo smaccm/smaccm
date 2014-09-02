@@ -64,19 +64,16 @@ public abstract class AadlHandler extends AbstractHandler {
         final IHandlerService handlerService = (IHandlerService) window
                 .getService(IHandlerService.class);
         WorkspaceJob job = new WorkspaceJob(getJobName()) {
+            private IHandlerActivation terminateActivation;
+
             @Override
             public IStatus runInWorkspace(final IProgressMonitor monitor) {
-                final IHandlerActivation activation = handlerService.activateHandler(TERMINATE_ID,
-                        new TerminateHandler(monitor));
+                activateTerminateHandler(monitor);
+
                 addJobChangeListener(new JobChangeAdapter() {
                     @Override
                     public void done(IJobChangeEvent event) {
-                        getWindow().getShell().getDisplay().syncExec(new Runnable() {
-                            @Override
-                            public void run() {
-                                handlerService.deactivateHandler(activation);
-                            }
-                        });
+                        deactivateTerminateHandler();
                     }
                 });
 
@@ -92,6 +89,25 @@ public abstract class AadlHandler extends AbstractHandler {
                                 }
                             }
                         });
+            }
+
+            private void activateTerminateHandler(final IProgressMonitor monitor) {
+                getWindow().getShell().getDisplay().syncExec(new Runnable() {
+                    @Override
+                    public void run() {
+                        terminateActivation = handlerService.activateHandler(TERMINATE_ID,
+                                new TerminateHandler(monitor));
+                    }
+                });
+            }
+
+            private void deactivateTerminateHandler() {
+                getWindow().getShell().getDisplay().syncExec(new Runnable() {
+                    @Override
+                    public void run() {
+                        handlerService.deactivateHandler(terminateActivation);
+                    }
+                });
             }
         };
 
