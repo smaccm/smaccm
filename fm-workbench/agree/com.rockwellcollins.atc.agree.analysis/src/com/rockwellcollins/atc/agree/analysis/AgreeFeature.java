@@ -1,5 +1,7 @@
 package com.rockwellcollins.atc.agree.analysis;
 
+import jkind.lustre.Type;
+
 import org.osate.aadl2.Feature;
 
 public class AgreeFeature {
@@ -9,7 +11,7 @@ public class AgreeFeature {
 	
 	public Feature feature;
 	public String lustreString;
-	public String varType;
+	public Type varType;
 	public ConnType connType;
 	public Direction direction;
 	public long queueSize;

@@ -258,6 +258,8 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
     	
     }
     
+    
+    
 	private void recordFeatures(ComponentInstance compInst) {
 		for(FeatureInstance featInst : compInst.getFeatureInstances()){
         	List<AgreeFeature> featList = recordFeatures_Helper(thisPrefix, featInst);
@@ -567,7 +569,7 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
     	//a variable of the same name as this should be created by setEventPortQueues()
     	//in the AgreeAnnexEmitter which created "this" AgreeAnnexEmitter
     	AgreeVarDecl clockVar = new AgreeVarDecl(clockIDPrefix+thisPrefix+comp.getName(),
-        		NamedType.BOOL.toString());
+        		NamedType.BOOL);
     	
     	IdExpr clockId = new IdExpr(clockVar.id);
 
@@ -691,21 +693,21 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         
         for(Expr expr : agreeNode.assertions){
             IdExpr varId = (IdExpr)expr;
-            AgreeVarDecl agreeVar = new AgreeVarDecl(varId.id, "bool");
+            AgreeVarDecl agreeVar = new AgreeVarDecl(varId.id, NamedType.BOOL);
             assertExpressions.add(varId);
             internalVars.add(agreeVar);
         }    
  
         for(Expr expr : agreeNode.assumptions){
             IdExpr varId = (IdExpr)expr;
-            AgreeVarDecl agreeVar = new AgreeVarDecl(varId.id, "bool");
+            AgreeVarDecl agreeVar = new AgreeVarDecl(varId.id, NamedType.BOOL);
             assumpExpressions.add(varId);
             internalVars.add(agreeVar);
         }    
  
         for(Expr expr : agreeNode.guarantees){
             IdExpr varId = (IdExpr)expr;
-            AgreeVarDecl agreeVar = new AgreeVarDecl(varId.id, "bool");
+            AgreeVarDecl agreeVar = new AgreeVarDecl(varId.id, NamedType.BOOL);
             Equation dumbEq = new Equation(varId, varId);
             guarExpressions.add(dumbEq);
             internalVars.add(agreeVar);
@@ -801,7 +803,7 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
 
         Expr expr = doSwitch(state.getExpr());
 
-        AgreeVarDecl varDecl = new AgreeVarDecl(thisPrefix+state.getName(), "bool");
+        AgreeVarDecl varDecl = new AgreeVarDecl(thisPrefix+state.getName(), NamedType.BOOL);
 
         layout.addElement(category, agreeRename.rename(varDecl.id), AgreeLayout.SigType.OUTPUT);
 
@@ -829,7 +831,7 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         for (Arg arg : state.getLhs()) {
             String baseName = arg.getName();
             AgreeVarDecl varDecl = new AgreeVarDecl(thisPrefix + baseName,
-            		 getRecordTypeName(arg.getType()));
+            		 getNamedType(getRecordTypeName(arg.getType())));
 
             IdExpr idExpr = new IdExpr(varDecl.id);
             varIds.add(idExpr);
@@ -1658,7 +1660,7 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         				rhsAadlName, 
         				lhsLustreName, 
         				lhsAadlName, 
-        				getNamedType(agreeDestConn.varType),
+        				agreeDestConn.varType,
         				(EventDataPort)agreeSourConn.feature,
         				(EventDataPort)agreeDestConn.feature,
         				sourInstName, 
@@ -1739,6 +1741,13 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
 			dataClass = eventDataPort.getDataFeatureClassifier();
 		}		
 		
+		if(dataClass == null){
+			//throw new AgreeException("data feature '"+dataFeature.getName()+"' does not have a specified type");
+			//we don't handle untyped connections
+			return;
+		}
+		
+		
 		Direction direction = AgreeFeature.Direction.IN;
 		if(featInst.getDirection() == DirectionType.IN){
 			direction = AgreeFeature.Direction.IN;
@@ -1767,7 +1776,7 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
 
 		AgreeFeature agreeConn = new AgreeFeature();
 		agreeConn.feature = featInst.getFeature();
-		agreeConn.varType = getRecordTypeName(dataClass); 
+		agreeConn.varType = getNamedType(getRecordTypeName(dataClass)); 
 		//			agreeConn.lustreString = (var.jKindStr == "") ? featInst.getName() : featInst.getName() + dotChar + var.jKindStr;
 		//			agreeConn.aadlString = (var.aadlStr == "") ? featInst.getName() : featInst.getName() + "." + var.aadlStr;
 		agreeConn.lustreString = featInst.getName();
@@ -2160,19 +2169,19 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
             //also add new assumption, assertion, and guarantee vars
             for(Expr expr : agreeNode.assertions){
                 IdExpr varId = (IdExpr)expr;
-                AgreeVarDecl agreeVar = new AgreeVarDecl(varId.id, "bool");
+                AgreeVarDecl agreeVar = new AgreeVarDecl(varId.id, NamedType.BOOL);
                 agreeInternalVars.add(agreeVar);
             }
             
             for(Expr expr : agreeNode.assumptions){
                 IdExpr varId = (IdExpr)expr;
-                AgreeVarDecl agreeVar = new AgreeVarDecl(varId.id, "bool");
+                AgreeVarDecl agreeVar = new AgreeVarDecl(varId.id, NamedType.BOOL);
                 agreeInternalVars.add(agreeVar);
             }
             
             for(Expr expr : agreeNode.guarantees){
                 IdExpr varId = (IdExpr)expr;
-                AgreeVarDecl agreeVar = new AgreeVarDecl(varId.id, "bool");
+                AgreeVarDecl agreeVar = new AgreeVarDecl(varId.id, NamedType.BOOL);
                 agreeInternalVars.add(agreeVar);
             }
             
