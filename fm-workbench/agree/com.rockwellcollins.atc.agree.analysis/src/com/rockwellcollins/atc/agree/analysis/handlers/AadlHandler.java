@@ -47,7 +47,7 @@ public abstract class AadlHandler extends AbstractHandler {
         if (window == null) {
             return null;
         }
-        
+
         return executeURI(uri);
     }
 
@@ -71,7 +71,12 @@ public abstract class AadlHandler extends AbstractHandler {
                 addJobChangeListener(new JobChangeAdapter() {
                     @Override
                     public void done(IJobChangeEvent event) {
-                        handlerService.deactivateHandler(activation);
+                        getWindow().getShell().getDisplay().syncExec(new Runnable() {
+                            @Override
+                            public void run() {
+                                handlerService.deactivateHandler(activation);
+                            }
+                        });
                     }
                 });
 
