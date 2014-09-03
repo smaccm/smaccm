@@ -1,12 +1,20 @@
 package com.rockwellcollins.atc.agree.analysis.preferences;
 
-import jkind.SolverOption;
+import jkind.api.KindApi;
 
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.BooleanFieldEditor;
+import org.eclipse.jface.preference.ComboFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.IntegerFieldEditor;
-import org.eclipse.jface.preference.RadioGroupFieldEditor;
+import org.eclipse.jface.preference.StringFieldEditor;
+import org.eclipse.jface.util.PropertyChangeEvent;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
@@ -31,37 +39,134 @@ public class AgreePreferencePage extends FieldEditorPreferencePage implements
         setDescription("Agree Analysis Settings");
     }
 
-    /**
-     * Creates the field editors. Field editors are abstractions of the common
-     * GUI blocks needed to manipulate various types of preferences. Each field
-     * editor knows how to save and restore itself.
-     */
+    private static final String[][] MODEL_CHECKERS = {
+            { PreferenceConstants.MODEL_CHECKER_JKIND, PreferenceConstants.MODEL_CHECKER_JKIND },
+            { PreferenceConstants.MODEL_CHECKER_KIND2, PreferenceConstants.MODEL_CHECKER_KIND2 },
+            { PreferenceConstants.MODEL_CHECKER_KIND2WEB,
+                    PreferenceConstants.MODEL_CHECKER_KIND2WEB } };
+    private ComboFieldEditor modelCheckerFieldEditor;
+    private String selectedModelChecker;
+
+    private StringFieldEditor remoteUrlFieldEditor;
+
+    private static final String[][] SOLVERS = {
+            { PreferenceConstants.SOLVER_YICES, PreferenceConstants.SOLVER_YICES },
+            { PreferenceConstants.SOLVER_Z3, PreferenceConstants.SOLVER_Z3 },
+            { PreferenceConstants.SOLVER_CVC4, PreferenceConstants.SOLVER_CVC4 },
+            { PreferenceConstants.SOLVER_YICES2, PreferenceConstants.SOLVER_YICES2 } };
+    private ComboFieldEditor solverFieldEditor;
+    private String selectedSolver;
+
+    private BooleanFieldEditor inductiveCounterexampleFieldEditor;
+    private BooleanFieldEditor smoothingFieldEditor;
+    private BooleanFieldEditor generalizeFieldEditor;
+    private NonNegativeIntegerFieldEditor depthFieldEditor;
+    private NonNegativeIntegerFieldEditor timeoutFieldEditor;
+
     @Override
     public void createFieldEditors() {
-        addField(new BooleanFieldEditor(PreferenceConstants.PREF_INDUCT_CEX,
-                "Generate inductive counterexamples", getFieldEditorParent()));
-        addField(new BooleanFieldEditor(PreferenceConstants.PREF_SMOOTH_CEX,
+        modelCheckerFieldEditor = new ComboFieldEditor(PreferenceConstants.PREF_MODEL_CHECKER,
+                "Model Checker", MODEL_CHECKERS, getFieldEditorParent());
+        addField(modelCheckerFieldEditor);
+
+        remoteUrlFieldEditor = new StringFieldEditor(PreferenceConstants.PREF_REMOTE_URL, "Remote URL",
+                getFieldEditorParent());
+        addField(remoteUrlFieldEditor);
+
+        solverFieldEditor = new ComboFieldEditor(PreferenceConstants.PREF_SOLVER, "SMT Solver",
+                SOLVERS, getFieldEditorParent());
+        addField(solverFieldEditor);
+
+        inductiveCounterexampleFieldEditor = new BooleanFieldEditor(
+                PreferenceConstants.PREF_INDUCT_CEX, "Generate inductive counterexamples",
+                getFieldEditorParent());
+        addField(inductiveCounterexampleFieldEditor);
+
+        smoothingFieldEditor = new BooleanFieldEditor(PreferenceConstants.PREF_SMOOTH_CEX,
                 "Generate smooth counterexamples (minimal number of input value changes)",
-                getFieldEditorParent()));
-        addField(new BooleanFieldEditor(PreferenceConstants.PREF_BLAME_CEX,
+                getFieldEditorParent());
+        addField(smoothingFieldEditor);
+        
+        generalizeFieldEditor = new BooleanFieldEditor(PreferenceConstants.PREF_BLAME_CEX,
                 "Generate blamed counterexamples (generalized counter examples)",
-                getFieldEditorParent()));
-        addField(new NonNegativeIntegerFieldEditor(PreferenceConstants.PREF_DEPTH,
-                "Maximum depth for k-induction", getFieldEditorParent()));
-        addField(new NonNegativeIntegerFieldEditor(PreferenceConstants.PREF_TIMEOUT,
-                "Timeout per layer in seconds", getFieldEditorParent()));
-        
-        String[][] solverValues = new String[3][2];
-        solverValues[0][0] = SolverOption.YICES.name();
-        solverValues[0][1] = SolverOption.YICES.name();
-        solverValues[1][0] = SolverOption.Z3.name();
-        solverValues[1][1] = SolverOption.Z3.name();
-        solverValues[2][0] = SolverOption.CVC4.name();
-        solverValues[2][1] = SolverOption.CVC4.name();
-        
-        addField(new RadioGroupFieldEditor(PreferenceConstants.PREF_SOLVER, 
-        		"Which solver to use", 3, solverValues, getFieldEditorParent()));
-        
+                getFieldEditorParent());
+        addField(generalizeFieldEditor);
+
+        depthFieldEditor = new NonNegativeIntegerFieldEditor(PreferenceConstants.PREF_DEPTH,
+                "Maximum depth for k-induction", getFieldEditorParent());
+        addField(depthFieldEditor);
+
+        timeoutFieldEditor = new NonNegativeIntegerFieldEditor(PreferenceConstants.PREF_TIMEOUT,
+                "Timeout in seconds", getFieldEditorParent());
+        addField(timeoutFieldEditor);
+
+        Button checkAvailableButton = new Button(getFieldEditorParent(), SWT.PUSH);
+        checkAvailableButton.setText("Check if available");
+        checkAvailableButton.addListener(SWT.Selection, new Listener() {
+            @Override
+            public void handleEvent(Event event) {
+                checkAvailable();
+            }
+        });
+    }
+
+    private void checkAvailable() {
+        try {
+            String remoteUrl = remoteUrlFieldEditor.getStringValue();
+            KindApi api = PreferencesUtil.getKindApi(selectedModelChecker, remoteUrl);
+            api.checkAvailable();
+            MessageDialog.openInformation(getShell(), "Model checker available",
+                    "Model checker available");
+        } catch (Exception e) {
+            MessageDialog.openError(getShell(), "Error running model checker",
+                    "Error running model checker: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent event) {
+        super.propertyChange(event);
+        if (event.getSource().equals(solverFieldEditor)) {
+            selectedSolver = (String) event.getNewValue();
+        } else if (event.getSource().equals(modelCheckerFieldEditor)) {
+            selectedModelChecker = (String) event.getNewValue();
+        }
+        configureEnabledFieldEditors();
+    }
+
+    @Override
+    protected void performDefaults() {
+        super.performDefaults();
+        IPreferenceStore prefs = getPreferenceStore();
+        selectedSolver = prefs.getDefaultString(PreferenceConstants.PREF_SOLVER);
+        selectedModelChecker = prefs.getDefaultString(PreferenceConstants.PREF_MODEL_CHECKER);
+        configureEnabledFieldEditors();
+    }
+
+    private void configureEnabledFieldEditors() {
+        boolean isJKind = selectedModelChecker.equals(PreferenceConstants.MODEL_CHECKER_JKIND);
+        boolean isRemote = selectedModelChecker.equals(PreferenceConstants.MODEL_CHECKER_KIND2WEB);
+        boolean isYices = selectedSolver.equals(PreferenceConstants.SOLVER_YICES);
+
+        remoteUrlFieldEditor.setEnabled(isRemote, getFieldEditorParent());
+        solverFieldEditor.setEnabled(isJKind, getFieldEditorParent());
+        inductiveCounterexampleFieldEditor.setEnabled(isJKind, getFieldEditorParent());
+        smoothingFieldEditor.setEnabled(isJKind && isYices, getFieldEditorParent());
+        generalizeFieldEditor.setEnabled(isJKind, getFieldEditorParent());
+        depthFieldEditor.setEnabled(isJKind, getFieldEditorParent());
+    }
+
+    @Override
+    protected void initialize() {
+        super.initialize();
+        initializeStateVariables();
+        configureEnabledFieldEditors();
+    }
+
+    private void initializeStateVariables() {
+        IPreferenceStore prefs = getPreferenceStore();
+        selectedSolver = prefs.getString(PreferenceConstants.PREF_SOLVER);
+        selectedModelChecker = prefs.getString(PreferenceConstants.PREF_MODEL_CHECKER);
     }
 
     private class NonNegativeIntegerFieldEditor extends IntegerFieldEditor {
