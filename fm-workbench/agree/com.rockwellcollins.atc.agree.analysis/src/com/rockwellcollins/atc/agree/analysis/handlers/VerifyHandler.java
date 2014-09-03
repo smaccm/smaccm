@@ -11,6 +11,7 @@ import java.util.Queue;
 import jkind.JKindException;
 import jkind.SolverOption;
 import jkind.api.JKindApi;
+import jkind.api.KindApi;
 import jkind.api.results.AnalysisResult;
 import jkind.api.results.CompositeAnalysisResult;
 import jkind.api.results.JKindResult;
@@ -46,8 +47,8 @@ import com.rockwellcollins.atc.agree.analysis.Activator;
 import com.rockwellcollins.atc.agree.analysis.AgreeEmitterUtilities;
 import com.rockwellcollins.atc.agree.analysis.AgreeException;
 import com.rockwellcollins.atc.agree.analysis.AgreeGenerator;
-import com.rockwellcollins.atc.agree.analysis.FeatureToConnectionsMap;
 import com.rockwellcollins.atc.agree.analysis.preferences.PreferenceConstants;
+import com.rockwellcollins.atc.agree.analysis.preferences.PreferencesUtil;
 import com.rockwellcollins.atc.agree.analysis.views.AgreeResultsLinker;
 import com.rockwellcollins.atc.agree.analysis.views.AgreeResultsView;
 
@@ -322,7 +323,7 @@ public abstract class VerifyHandler extends AadlHandler {
     }
 
     private IStatus doAnalysis(Element root, IProgressMonitor monitor) {
-        JKindApi api = getJKindApi();
+        KindApi api = PreferencesUtil.getKindApi();
         while (!queue.isEmpty() && !monitor.isCanceled()) {
             JKindResult result = queue.remove();
             Program program = linker.getProgram(result);
