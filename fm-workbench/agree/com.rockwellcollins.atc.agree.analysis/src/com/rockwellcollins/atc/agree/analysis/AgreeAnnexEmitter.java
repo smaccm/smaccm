@@ -1612,7 +1612,11 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         for(i = 0; i < destConns.size(); i++){
         	AgreeFeature agreeDestConn = destConns.get(i);
         	AgreeFeature agreeSourConn = sourConns.get(i);
-        	assert(agreeDestConn.varType == agreeSourConn.varType);
+        	
+        	if(!agreeDestConn.varType.equals(agreeSourConn.varType)){
+        		throw new AgreeException("Variables: '"+agreeDestConn.lustreString.replace("__", ".")+
+        				"' and '"+agreeSourConn.lustreString.replace("__", ".")+"' are of different types");
+        	}
         	
             if(destContext == null || destContext instanceof FeatureGroup){
         		switch(agreeDestConn.direction){
