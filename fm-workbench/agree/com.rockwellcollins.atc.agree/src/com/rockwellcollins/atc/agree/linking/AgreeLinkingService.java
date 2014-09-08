@@ -45,7 +45,7 @@ public class AgreeLinkingService extends PropertiesLinkingService {
             throws IllegalNodeException {
         String name = getCrossRefNodeAsString(node);
         //TODO This will have to be changed in the develop branch
-        //name = name.replaceAll("::", ".");
+        name = name.replaceAll("::", ".");
 
         if (context instanceof PropertyValue) {
             return findUnitLiteralAsList((Element) context, name);
@@ -59,8 +59,9 @@ public class AgreeLinkingService extends PropertiesLinkingService {
                 || context instanceof GetPropertyExpr
                 || context instanceof RecordUpdateExpr) {
 
-            EObject e = findClassifier(context, reference, name);
-            
+            //EObject e = findClassifier(context, reference, name);
+        	EObject e = getIndexedObject(context, reference, name);
+        	
             //hack to fix some strange linking behavior by osate
             if(e instanceof DataType){
             	e = null;
