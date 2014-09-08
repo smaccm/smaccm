@@ -258,6 +258,8 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
     	
     }
     
+    
+    
 	private void recordFeatures(ComponentInstance compInst) {
 		for(FeatureInstance featInst : compInst.getFeatureInstances()){
         	List<AgreeFeature> featList = recordFeatures_Helper(thisPrefix, featInst);
@@ -326,239 +328,6 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
     	varRenaming.put(key, value);
     }
     
-//    private void setEventPortQueues() {
-//
-//    	//queueSignalEqualityAssertion
-//    	for(String destStr : queueMap.keySet()){
-//		   
-//		   	List<AgreeQueueElement> queueList = queueMap.get(destStr);
-//		   	AgreeQueueElement firstQueue = queueList.get(0);
-//		   	long queueSize = firstQueue.queueSize;
-//		   	
-//		   	if(queueSize < 0){
-//		   		throw new AgreeException("The feature '"+firstQueue.aDest+"' must have a queue size specified");
-//		   	}
-//		   	
-//		   	Type type = firstQueue.type;
-//		   	int numInputs = queueList.size(); 
-//		   	
-//	   		Node queueNode = AgreeCalendarUtils.queueNode("__Queue_Node_"+destStr, type, (int)queueSize);
-//	   		Node inputMultiplex = AgreeCalendarUtils.queueMultiplexNode("__Queue_Mult_"+destStr, type, numInputs);
-//
-//	   		nodeDefExpressions.add(queueNode);
-//	   		nodeDefExpressions.add(inputMultiplex);
-//	   		
-//	   		List<Expr> queueMultInputs = new ArrayList<>();
-//	   		List<Expr> queueInputs = new ArrayList<>();
-//	   		
-//	   		Expr queueClockInExpr = new BoolExpr(false);
-//		   	for(AgreeQueueElement agreeQueEl : queueList){
-//		   		
-//		   		//do some sanity checks
-//		   		if(firstQueue.destConn != agreeQueEl.destConn){
-//		   			throw new AgreeException("Something went wrong with book keeping during queue creation");
-//		   		}
-//		   		
-//		   		String jCat = agreeQueEl.sourCategory == null ? jKindNameTag : jKindNameTag + agreeQueEl.sourCategory+dotChar;
-//		   		String aCat = agreeQueEl.sourCategory == null ? aadlNameTag : aadlNameTag + agreeQueEl.sourCategory+".";
-//
-//		   		
-//		   		IdExpr clockInId = new IdExpr(queueInClockPrefix+jCat+agreeQueEl.sourConn.getName());
-//		   		AgreeVarDecl clockInVar = 
-//		   				new AgreeVarDecl(clockInId.id,
-//		   						queueInClockPrefix+aCat+agreeQueEl.sourConn.getName()
-//		   						, NamedType.BOOL.toString());
-//				
-//		   		//if the clock input hasn't been created yet,
-//		   		//do reference mapping and add it to the map
-//		   		//of input clocks
-//		   		if(!inputVars.contains(clockInVar)){
-//		   			inputVars.add(clockInVar);
-//		   			//addToRenaming(clockInVar.jKindStr, clockInVar.aadlStr);
-//		   			addToRefMap(clockInVar.aadlStr, agreeQueEl.sourConn);
-//		   			
-//		   			String sourCategory = (agreeQueEl.sourCategory == null) ? category : agreeQueEl.sourCategory;
-//		   	        layout.addElement(sourCategory, clockInVar.aadlStr, AgreeLayout.SigType.INPUT);
-//
-//		   			List<IdExpr> clockInIds = queueInClockMap.get(agreeQueEl.sourConn);
-//
-//		   			if(clockInIds == null){
-//		   				clockInIds = new ArrayList<>();
-//		   				queueInClockMap.put(agreeQueEl.sourConn, clockInIds);
-//		   			}
-//		   			
-//		   			clockInIds.add(clockInId);
-//		   		}
-//	            
-//		   		queueMultInputs.add(new IdExpr(agreeQueEl.jSour));
-//		   		queueMultInputs.add(clockInId);
-//		   		queueClockInExpr = new BinaryExpr(queueClockInExpr, BinaryOp.OR, clockInId);
-//		   	}
-//		   
-//		   	//add all the stuff for the queue multiplexer
-//		   	NodeCallExpr queueMultCall = new NodeCallExpr(inputMultiplex.id, queueMultInputs);
-//		   	IdExpr queueInputId = new IdExpr("__QUEUE_INPUT_"+destStr);
-//		   	AgreeVarDecl queueInputVar = 
-//		   			new AgreeVarDecl(queueInputId.id, queueInputId.id, type.toString());
-//
-//		   	internalVars.add(queueInputVar);
-//		   	Equation multEq = new Equation(queueInputId, queueMultCall);
-//		   	addConnection(multEq);	   	
-//		   	
-//		   	//add all the stuff for the queuenode call
-//		   	String jCat =  firstQueue.destCategory == null ? jKindNameTag : jKindNameTag + firstQueue.destCategory+dotChar;
-//	   		String aCat = firstQueue.destCategory == null ? aadlNameTag : aadlNameTag + firstQueue.destCategory+".";
-//		   	
-//		   	IdExpr clockOutId = new IdExpr(queueOutClockPrefix+jCat+firstQueue.destConn.getName());
-//		   	AgreeVarDecl clockOutVar = 
-//		   			new AgreeVarDecl(clockOutId.id,
-//		   					queueOutClockPrefix+aCat+firstQueue.destConn.getName(),
-//		   					NamedType.BOOL.toString());
-//
-//	   		//if the clock output hasn't been created yet,
-//		   	//do reference mapping and add it to the map
-//		   	//of output clocks
-//		   	if(!inputVars.contains(clockOutVar)){
-//		   		inputVars.add(clockOutVar);
-//		   		addToRenaming(clockOutVar.jKindStr, clockOutVar.aadlStr);
-//		   		addToRefMap(clockOutVar.aadlStr, firstQueue.destConn);
-//	   			String destCategory = (firstQueue.destCategory == null) ? category : firstQueue.destCategory;
-//		   		layout.addElement(destCategory, clockOutVar.aadlStr, AgreeLayout.SigType.INPUT);
-//
-//		   		List<IdExpr> clockOutIds = queueInClockMap.get(firstQueue.destConn);
-//
-//		   		if(clockOutIds == null){
-//		   			clockOutIds = new ArrayList<>();
-//		   			queueOutClockMap.put(firstQueue.destConn, clockOutIds);
-//		   		}
-//
-//		   		clockOutIds.add(clockOutId);
-//
-//		   	}
-//
-//		   	queueInputs.add(queueInputId);
-//		   	queueInputs.add(queueClockInExpr);
-//		   	queueInputs.add(clockOutId);
-//		   	NodeCallExpr queueCall = new NodeCallExpr(queueNode.id, queueInputs);
-//		   	
-//			IdExpr queueElsId = new IdExpr(queueCountPrefix+destStr);
-//		   	AgreeVarDecl queueElsVar = 
-//		   			new AgreeVarDecl(queueElsId.id, 
-//		   					queueElsId.id, 
-//		   					NamedType.INT.toString());
-//		   	
-//		   	internalVars.add(queueElsVar);
-//		   	List<IdExpr> countIds = queueCountMap.get(firstQueue.destConn);
-//		   	if(countIds == null){
-//		   		countIds = new ArrayList<>();
-//		   		queueCountMap.put(firstQueue.destConn, countIds);
-//		   	}
-//		   	
-//		   	countIds.add(queueElsId);
-//		   	
-//	   		IdExpr singleQueueCountId = new IdExpr(queueCountPrefix+jCat+firstQueue.destConn.getName());
-//	   		AgreeVarDecl singleQueueCountVar = 
-//	   				new AgreeVarDecl(singleQueueCountId.id,
-//	   						queueCountPrefix+aCat+firstQueue.destConn.getName(),
-//	   						NamedType.INT.toString());
-//
-//	   		if(!inputVars.contains(singleQueueCountVar)){
-//	   			inputVars.add(singleQueueCountVar);
-//	   			addToRenaming(singleQueueCountVar.jKindStr, singleQueueCountVar.aadlStr);
-//	   			addToRefMap(singleQueueCountVar.aadlStr, firstQueue.destConn);
-//	   			String destCategory = (firstQueue.destCategory == null) ? category : firstQueue.destCategory;
-//	   			layout.addElement(destCategory, singleQueueCountVar.aadlStr, AgreeLayout.SigType.INPUT);
-//	   			countIds.add(singleQueueCountId);
-//	   		}
-//	   		
-//		   	//finally, call the node
-//		   	List<IdExpr> queueLhs = new ArrayList<>();
-//		   	queueLhs.add(queueElsId);
-//		   	queueLhs.add(new IdExpr(destStr));
-//		   	
-//		   	Equation queueEq = new Equation(queueLhs, queueCall);
-//		   	connExpressions.add(queueEq);
-//
-//	   	}
-//	   
-//    }
-
-// ************** CASE STATEMENTS **********************
-    
-//    public Expr getQueueCountID(String jVarPrefix, String aVarPrefix, NamedElement comp){
-//
-//    	EventDataPort port = (EventDataPort)comp;
-//
-//    	//a variable of the same name as this should be created by setEventPortQueues()
-//    	//in the AgreeAnnexEmitter which created "this" AgreeAnnexEmitter
-//    	AgreeVarDecl countVar = new AgreeVarDecl(queueCountPrefix+jVarPrefix,
-//    			queueCountPrefix+aVarPrefix,
-//        		NamedType.INT.toString());
-//    	
-//    	IdExpr countIdExpr = new IdExpr(countVar.jKindStr);
-//
-//    	//if we have already made the expression then don't make it again
-//        if(inputVars.contains(countVar)){
-//        	return countIdExpr;
-//        }
-//        inputVars.add(countVar);
-//        //addToRenaming(countVar.jKindStr,countVar.aadlStr);
-//        addToRefMap(countVar.aadlStr, port);
-//        layout.addElement(category, agreeRename.rename(countVar.jKindStr), AgreeLayout.SigType.INPUT);
-//        
-//    	return countIdExpr;
-//
-//    }
-    
-//    public Expr getQueueRemoveID(String jVarPrefix, String aVarPrefix, NamedElement comp){
-//
-//    	EventDataPort port = (EventDataPort)comp;
-//
-//    	//a variable of the same name as this should be created by setEventPortQueues()
-//    	//in the AgreeAnnexEmitter which created "this" AgreeAnnexEmitter
-//    	AgreeVarDecl removeVar = new AgreeVarDecl(queueOutClockPrefix+jVarPrefix,
-//    			queueOutClockPrefix+aVarPrefix,
-//        		NamedType.BOOL.toString());
-//    	
-//    	IdExpr removeIdExpr = new IdExpr(removeVar.jKindStr);
-//
-//    	//if we have already made the expression then don't make it again
-//        if(inputVars.contains(removeVar)){
-//        	return removeIdExpr;
-//        }
-//        inputVars.add(removeVar);
-//        //addToRenaming(removeVar.jKindStr,removeVar.aadlStr);
-//        addToRefMap(removeVar.aadlStr, port);
-//        layout.addElement(category, agreeRename.rename(removeVar.jKindStr), AgreeLayout.SigType.INPUT);
-//        
-//    	return removeIdExpr;
-//    }
-    
-
-//    public Expr getQueueInsertID(String jVarPrefix, String aVarPrefix, NamedElement comp){
-//    	
-//    	EventDataPort port = (EventDataPort)comp;
-//    	
-//    	//a variable of the same name as this should be created by setEventPortQueues()
-//    	//in the AgreeAnnexEmitter which created "this" AgreeAnnexEmitter
-//    	AgreeVarDecl insertVar = new AgreeVarDecl(queueInClockPrefix+jVarPrefix,
-//    			queueInClockPrefix+aVarPrefix,
-//        		NamedType.BOOL.toString());
-//    	
-//    	IdExpr insertIdExpr = new IdExpr(insertVar.jKindStr);
-//
-//    	//if we have already made the expression then don't make it again
-//        if(inputVars.contains(insertVar)){
-//        	return insertIdExpr;
-//        }
-//        
-//        inputVars.add(insertVar);
-//        //addToRenaming(insertVar.jKindStr,insertVar.aadlStr);
-//        addToRefMap(insertVar.aadlStr, port);
-//        layout.addElement(category, agreeRename.rename(insertVar.jKindStr), AgreeLayout.SigType.INPUT);
-//    	
-//    	return insertIdExpr;
-//    }
     
     public Expr getClockID(NamedElement comp){
     	//IdExpr clockId = new IdExpr(clockIDPrefix+comp.getName());
@@ -567,7 +336,7 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
     	//a variable of the same name as this should be created by setEventPortQueues()
     	//in the AgreeAnnexEmitter which created "this" AgreeAnnexEmitter
     	AgreeVarDecl clockVar = new AgreeVarDecl(clockIDPrefix+thisPrefix+comp.getName(),
-        		NamedType.BOOL.toString());
+        		NamedType.BOOL);
     	
     	IdExpr clockId = new IdExpr(clockVar.id);
 
@@ -691,21 +460,21 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         
         for(Expr expr : agreeNode.assertions){
             IdExpr varId = (IdExpr)expr;
-            AgreeVarDecl agreeVar = new AgreeVarDecl(varId.id, "bool");
+            AgreeVarDecl agreeVar = new AgreeVarDecl(varId.id, NamedType.BOOL);
             assertExpressions.add(varId);
             internalVars.add(agreeVar);
         }    
  
         for(Expr expr : agreeNode.assumptions){
             IdExpr varId = (IdExpr)expr;
-            AgreeVarDecl agreeVar = new AgreeVarDecl(varId.id, "bool");
+            AgreeVarDecl agreeVar = new AgreeVarDecl(varId.id, NamedType.BOOL);
             assumpExpressions.add(varId);
             internalVars.add(agreeVar);
         }    
  
         for(Expr expr : agreeNode.guarantees){
             IdExpr varId = (IdExpr)expr;
-            AgreeVarDecl agreeVar = new AgreeVarDecl(varId.id, "bool");
+            AgreeVarDecl agreeVar = new AgreeVarDecl(varId.id, NamedType.BOOL);
             Equation dumbEq = new Equation(varId, varId);
             guarExpressions.add(dumbEq);
             internalVars.add(agreeVar);
@@ -801,7 +570,7 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
 
         Expr expr = doSwitch(state.getExpr());
 
-        AgreeVarDecl varDecl = new AgreeVarDecl(thisPrefix+state.getName(), "bool");
+        AgreeVarDecl varDecl = new AgreeVarDecl(thisPrefix+state.getName(), NamedType.BOOL);
 
         layout.addElement(category, agreeRename.rename(varDecl.id), AgreeLayout.SigType.OUTPUT);
 
@@ -829,7 +598,7 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         for (Arg arg : state.getLhs()) {
             String baseName = arg.getName();
             AgreeVarDecl varDecl = new AgreeVarDecl(thisPrefix + baseName,
-            		 getRecordTypeName(arg.getType()));
+            		 getNamedType(getRecordTypeName(arg.getType())));
 
             IdExpr idExpr = new IdExpr(varDecl.id);
             varIds.add(idExpr);
@@ -1610,7 +1379,11 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         for(i = 0; i < destConns.size(); i++){
         	AgreeFeature agreeDestConn = destConns.get(i);
         	AgreeFeature agreeSourConn = sourConns.get(i);
-        	assert(agreeDestConn.varType == agreeSourConn.varType);
+        	
+        	if(!agreeDestConn.varType.equals(agreeSourConn.varType)){
+        		throw new AgreeException("Variables: '"+agreeDestConn.lustreString.replace("__", ".")+
+        				"' and '"+agreeSourConn.lustreString.replace("__", ".")+"' are of different types");
+        	}
         	
             if(destContext == null || destContext instanceof FeatureGroup){
         		switch(agreeDestConn.direction){
@@ -1658,7 +1431,7 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         				rhsAadlName, 
         				lhsLustreName, 
         				lhsAadlName, 
-        				getNamedType(agreeDestConn.varType),
+        				agreeDestConn.varType,
         				(EventDataPort)agreeSourConn.feature,
         				(EventDataPort)agreeDestConn.feature,
         				sourInstName, 
@@ -1739,6 +1512,13 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
 			dataClass = eventDataPort.getDataFeatureClassifier();
 		}		
 		
+		if(dataClass == null){
+			//throw new AgreeException("data feature '"+dataFeature.getName()+"' does not have a specified type");
+			//we don't handle untyped connections
+			return;
+		}
+		
+		
 		Direction direction = AgreeFeature.Direction.IN;
 		if(featInst.getDirection() == DirectionType.IN){
 			direction = AgreeFeature.Direction.IN;
@@ -1767,7 +1547,7 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
 
 		AgreeFeature agreeConn = new AgreeFeature();
 		agreeConn.feature = featInst.getFeature();
-		agreeConn.varType = getRecordTypeName(dataClass); 
+		agreeConn.varType = getNamedType(getRecordTypeName(dataClass)); 
 		//			agreeConn.lustreString = (var.jKindStr == "") ? featInst.getName() : featInst.getName() + dotChar + var.jKindStr;
 		//			agreeConn.aadlString = (var.aadlStr == "") ? featInst.getName() : featInst.getName() + "." + var.aadlStr;
 		agreeConn.lustreString = featInst.getName();
@@ -1923,22 +1703,22 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         Expr sysAssumpHist = AgreeEmitterUtilities.getLustreAssumptionsAndAssertions(this);
         eqs.add(AgreeEmitterUtilities.getLustreHistory(sysAssumpHist, sysAssumpHistId));
         
-        //make the closure map for proving assumptions
-        Map<Subcomponent, Set<Subcomponent>> closureMap = new HashMap<>();
-        for(AgreeAnnexEmitter subEmitter : subEmitters){
-            Set<Subcomponent> outputClosure = new HashSet<Subcomponent>();
-            outputClosure.add(subEmitter.curComp);
-            ComponentImplementation compImpl = (ComponentImplementation) curInst.getComponentClassifier();
-            AgreeEmitterUtilities.getOutputClosure(compImpl.getAllConnections(), outputClosure);
-            closureMap.put(subEmitter.curComp, outputClosure);
-        }
+        //right now we just enforce an ordering based on how 
+//        Map<Subcomponent, Set<Subcomponent>> closureMap = new HashMap<>();
+//        for(AgreeAnnexEmitter subEmitter : subEmitters){
+//            Set<Subcomponent> outputClosure = new HashSet<Subcomponent>();
+//            outputClosure.add(subEmitter.curComp);
+//            ComponentImplementation compImpl = (ComponentImplementation) curInst.getComponentClassifier();
+//            AgreeEmitterUtilities.getOutputClosure(compImpl.getAllConnections(), outputClosure);
+//            closureMap.put(subEmitter.curComp, outputClosure);
+//        }
         
         //make a counter for checking finite consistency
         IdExpr countId = addConsistencyCounter(eqs, internals);
         
         // get the individual history variables and create assumption properties
         addSubcomponentAssumptions(subEmitters, eqs, internals, properties,
-				totalCompHist, sysAssumpHistId, closureMap);
+				totalCompHist, sysAssumpHistId);//, closureMap);
         
         
         //add a property that is true if the contract is a contradiction
@@ -2160,19 +1940,19 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
             //also add new assumption, assertion, and guarantee vars
             for(Expr expr : agreeNode.assertions){
                 IdExpr varId = (IdExpr)expr;
-                AgreeVarDecl agreeVar = new AgreeVarDecl(varId.id, "bool");
+                AgreeVarDecl agreeVar = new AgreeVarDecl(varId.id, NamedType.BOOL);
                 agreeInternalVars.add(agreeVar);
             }
             
             for(Expr expr : agreeNode.assumptions){
                 IdExpr varId = (IdExpr)expr;
-                AgreeVarDecl agreeVar = new AgreeVarDecl(varId.id, "bool");
+                AgreeVarDecl agreeVar = new AgreeVarDecl(varId.id, NamedType.BOOL);
                 agreeInternalVars.add(agreeVar);
             }
             
             for(Expr expr : agreeNode.guarantees){
                 IdExpr varId = (IdExpr)expr;
-                AgreeVarDecl agreeVar = new AgreeVarDecl(varId.id, "bool");
+                AgreeVarDecl agreeVar = new AgreeVarDecl(varId.id, NamedType.BOOL);
                 agreeInternalVars.add(agreeVar);
             }
             
@@ -2221,17 +2001,15 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
 
 	private void addSubcomponentAssumptions(List<AgreeAnnexEmitter> subEmitters,
 			List<Equation> eqs, List<VarDecl> internals,
-			List<String> properties, Expr totalCompHist, Expr sysAssumpHist, Map<Subcomponent, Set<Subcomponent>> closureMap) {
-		for(AgreeAnnexEmitter subEmitter : subEmitters){
-
+			List<String> properties, Expr totalCompHist, Expr sysAssumpHist){//, Map<Subcomponent, Set<Subcomponent>> closureMap) {
+		for(int emitterIndex = 0; emitterIndex < subEmitters.size(); emitterIndex++){
+		
+		    AgreeAnnexEmitter subEmitter = subEmitters.get(emitterIndex);
             Expr higherContracts = new BoolExpr(true);
-            Set<Subcomponent> closureSubs = closureMap.get(subEmitter.curComp);
-            for(AgreeAnnexEmitter closureEmitter : subEmitters){
-                if(closureSubs.contains(closureEmitter.curComp)){
-                    continue;
-                }
+            for(int partialOrderIndex = emitterIndex+1; partialOrderIndex < subEmitters.size(); partialOrderIndex++){
+                AgreeAnnexEmitter partialEmitter = subEmitters.get(partialOrderIndex);
                 higherContracts = new BinaryExpr(higherContracts, BinaryOp.AND,
-                		AgreeEmitterUtilities.getLustreContract(closureEmitter));
+                		AgreeEmitterUtilities.getLustreContract(partialEmitter));
             }
 
             Expr contrAssumps = AgreeEmitterUtilities.getLustreAssumptions(subEmitter);

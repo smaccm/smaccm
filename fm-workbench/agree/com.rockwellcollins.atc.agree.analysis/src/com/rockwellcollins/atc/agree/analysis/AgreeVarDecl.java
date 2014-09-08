@@ -7,10 +7,6 @@ import jkind.lustre.VarDecl;
 
 public class AgreeVarDecl extends VarDecl implements Comparable<AgreeVarDecl>{
     
-    public AgreeVarDecl(String jKindStr, String type){
-    	super(jKindStr, new NamedType(type));
-    }
-    
     public AgreeVarDecl(String id, Type type) {
 		super(id, type);
 	}

@@ -21,6 +21,7 @@ import org.osate.aadl2.ComponentImplementation;
 import org.osate.aadl2.ComponentType;
 import org.osate.aadl2.DataImplementation;
 import org.osate.aadl2.DataPort;
+import org.osate.aadl2.DefaultAnnexSubclause;
 import org.osate.aadl2.Element;
 import org.osate.aadl2.EventDataPort;
 import org.osate.aadl2.FeatureGroupType;
@@ -291,7 +292,9 @@ public class AgreeScopeProvider extends
         if (container instanceof Classifier) {
             Classifier component = (Classifier) container;
             for (Element el : component.getOwnedElements()) {
-                result.add(el);
+            	if(!(el instanceof DefaultAnnexSubclause)){
+            		result.add(el);
+            	}
             }
             for (Element el : component.getAllFeatures()) {
                 result.add(el);

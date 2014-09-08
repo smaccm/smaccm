@@ -1,8 +1,10 @@
-package OSAS_S_100_110
+package OSAS_S_110
 public
-
-annex agree {**
+	with OSAS_S_100;
+	with RUN_LENGTH;
+	with BASE_TYPES;
 	
+annex agree {**
 	
   --For each actuator, OSAS shall determine whether the actuator 
   --command return value is within 2.5% of actuator command from 
@@ -48,36 +50,41 @@ annex agree {**
      fail_count : int)
   returns
     (res : bool);
-  let  
-    res = true ->
+  var
+  	fault : bool;
+  	previous_fail_count : int;
+  let 
+	fault = OSAS_S_100.req(act, act_ret);
+	previous_fail_count = prev(fail_count,0);
+    res = 
     	fail_count = 
-    		if(fault_occurred(act, act_ret)) then
-    			pre(fail_count) + 1
-    		else if(no_fault_for_frames(act, act_ret, 5)) then
-    			0
-    		else
-    			pre(fail_count);
+    		if fault then previous_fail_count + 1
+  			else if(RUN_LENGTH.f(not fault)>=4) then 0
+    		else previous_fail_count;
   tel;
-  
-  node fault_occurred(act : real, act_ret : real) returns (return : bool);
-  let
-    return = false -> not ((act_ret <= 1.025*pre(act)) and (act_ret >= 0.975*pre(act)));
-  tel;
-  
-  node no_fault_for_frames
-    (act : real, act_ret : real, for : int) 
-  returns 
-    (return : bool);
-  var 
-    count : int;  
-  let
-    count = 0 -> if (fault_occurred(act, act_ret)) then
-                    0 else pre(count) + 1;
-    return = count >= for;
-    
-    lemma "pos count" : count >= 0;
-    
-  tel;
-	
 **};
-end OSAS_S_100_110;
+
+system OSAS_S_100_SYS
+  features
+
+  fault : in data port Base_Types::Boolean;
+  count : out data port Base_Types::Integer;
+  annex agree {**
+  guarantee "Expression equivalence": 
+  (if fault then prev(count,0) + 1
+   			else if(RUN_LENGTH.f(not fault)>=5) then 0
+    		else prev(count,0)) = 
+  (if fault then prev(count,0)  + 1
+   			else if fault = prev(fault,true)
+   				and prev(fault,true) = prev(prev(fault,true),true)
+   				and prev(prev(fault,true),true) = prev(prev(prev(fault,true),true),true)
+   				and prev(prev(prev(fault,true),true),true) = prev(prev(prev(prev(fault,true),true),true),true)
+   				then 0
+    		else prev(count,0));
+  **};
+end OSAS_S_100_SYS;
+
+system implementation OSAS_S_100_SYS.i
+end OSAS_S_100_SYS.i;
+  
+end OSAS_S_110;

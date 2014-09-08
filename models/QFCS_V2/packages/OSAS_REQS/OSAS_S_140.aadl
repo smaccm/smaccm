@@ -28,7 +28,7 @@ annex agree {**
   	      req_helper(acts.SPLROB, fails.SPLROB) and
   	      req_helper(acts.STEER, fails.STEER) and
   	      req_helper(acts.THROTR, fails.THROTR) and
-  	      req_helper(acts.THRTOL, fails.THRTOL);
+  	      req_helper(acts.THROTL, fails.THROTL);
   tel;
   
   node req_helper

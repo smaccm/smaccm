@@ -1,0 +1,9 @@
+package OCCURRED
+public
+annex agree {**
+	node f(condition : bool) returns (holds : bool);
+	let
+		holds = condition or prev(holds,condition);
+	tel;
+**};
+end OCCURRED;

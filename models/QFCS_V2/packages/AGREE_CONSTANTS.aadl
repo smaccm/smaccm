@@ -135,7 +135,7 @@ annex agree {**
     const FPACCEL_range_high : real = 50.0;
     const HDD_range_high : real = 50.0;
     
-    const THRTOL_range_high : real = 50.0;
+    const THROTL_range_high : real = 50.0;
     const THROTR_range_high : real = 50.0;
     const ELLOB_range_high : real = 50.0;
     const ELLIB_range_high : real = 50.0;
@@ -157,7 +157,7 @@ annex agree {**
     const BRAKE_range_high : real = 50.0;
     const STEER_range_high : real = 50.0;
     
-    const THRTOL_range_low : real = 0.0;
+    const THROTL_range_low : real = 0.0;
     const THROTR_range_low : real = 0.0;
     const ELLOB_range_low : real = 0.0;
     const ELLIB_range_low : real = 0.0;
