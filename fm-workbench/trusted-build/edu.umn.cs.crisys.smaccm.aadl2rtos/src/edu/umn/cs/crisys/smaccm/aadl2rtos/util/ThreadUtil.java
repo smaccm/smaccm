@@ -53,6 +53,7 @@ public abstract class ThreadUtil {
   final public static String GENERATE_SCHEDULER_SYSTICK_IRQ_NAME = "SMACCM_SYS::Generate_Scheduler_Systick_IRQ";
   final public static String ISR_HANDLER_NAME = "SMACCM_SYS::First_Level_Interrupt_Handler";
   final public static String THREAD_TYPE_NAME = "SMACCM_SYS::Thread_Type";
+  final public static String SMACCM_SYS_SENDS_EVENTS_TO_NAME = "SMACCM_SYS::Sends_Events_To";
 
 
 	final public static String DISPATCH_PROTOCOL_NAME = "Dispatch_Protocol";
@@ -98,6 +99,8 @@ public abstract class ThreadUtil {
   final public static Property THREAD_TYPE = Util.getPropertyDefinitionInWorkspace(THREAD_TYPE_NAME);
 	final public static Property SMACCM_SYS_COMPUTE_ENTRYPOINT_SOURCE_TEXT =
 	    Util.getPropertyDefinitionInWorkspace(SMACCM_SYS_COMPUTE_ENTRYPOINT_SOURCE_TEXT_NAME);
+  final public static Property SMACCM_SYS_SENDS_EVENTS_TO = Util
+      .getPropertyDefinitionInWorkspace(SMACCM_SYS_SENDS_EVENTS_TO_NAME);
 
 	/*
 	public static List<ThreadImplementation> getTaskThreads(Collection<ThreadImplementation> collection) {

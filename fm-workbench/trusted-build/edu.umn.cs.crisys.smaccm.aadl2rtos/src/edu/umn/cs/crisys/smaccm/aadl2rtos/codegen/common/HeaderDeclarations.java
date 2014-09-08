@@ -9,15 +9,15 @@ import java.util.List;
 
 import edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.common.CommonNames;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.eChronos.Names;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.SharedDataAccessor;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.ThreadImplementation;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.SharedDataAccessor.AccessType;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.Dispatcher;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.ExternalHandler;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.InputEventDispatcher;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.PeriodicDispatcher;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.DataPort;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.OutputPort;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.SharedDataAccessor;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.ThreadImplementation;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.SharedDataAccessor.AccessType;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.UnitType;
 
 /**
@@ -31,7 +31,7 @@ public class HeaderDeclarations {
         ((InputEventDispatcher)d).getEventPort().isInputEventDataPort()) {
       InputEventDispatcher ied = (InputEventDispatcher)d;
       return "   void " + fnName
-          + "(const " + Names.createRefParameter(ied.getEventPort().getDataType(), "elem") + " ); \n\n";
+          + "(const " + Names.createRefParameter(ied.getEventPort().getType(), "elem") + " ); \n\n";
     }
     else if (d instanceof PeriodicDispatcher) {
       return "   void " + fnName
@@ -43,11 +43,7 @@ public class HeaderDeclarations {
     }
   }
 
-  // TODO: well-formedness check on model for INOUT ports.
   static public void writeThreadUdeDecls(BufferedWriter out, ThreadImplementation tw) throws IOException {
-    // List<MyPort> dataList = tw.getInputDataPorts();
-
-    // user-level initializer for thread.
     ExternalHandler initHandler = tw.getInitializeEntrypointOpt();
     if ((initHandler != null)) {
       out.append("   void " + initHandler.getHandlerName() + "();\n\n");
@@ -68,8 +64,8 @@ public class HeaderDeclarations {
     for (DataPort dpiw : tw.getPortList()) {
       String fnName = CommonNames.getReaderWriterFnName(dpiw);
       String argString = ""; 
-      if (!dpiw.getDataType().equals(new UnitType())) {
-        argString = CommonNames.createRefParameter(dpiw.getDataType(), "arg");
+      if (!dpiw.getType().equals(new UnitType())) {
+        argString = CommonNames.createRefParameter(dpiw.getType(), "arg");
         if (dpiw instanceof OutputPort) {
           argString = "const " + argString;
         }

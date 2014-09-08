@@ -23,11 +23,11 @@ package edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.eChronos;
  */
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosException;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosFailure;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.SharedDataAccessor;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.ThreadImplementation;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.DataPort;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.InputPort;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.OutputPort;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.SharedDataAccessor;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.ThreadImplementation;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.ArrayType;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.IdType;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.PointerType;

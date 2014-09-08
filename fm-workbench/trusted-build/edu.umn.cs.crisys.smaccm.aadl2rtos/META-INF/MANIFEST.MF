@@ -16,12 +16,12 @@ Require-Bundle: org.eclipse.ui,
  fr.tpt.aadl.ramses.control.support;bundle-version="1.0.0.qualifier",
  org.eclipse.emf.ecore
 Bundle-ActivationPolicy: lazy
-Bundle-ClassPath: .,lib/ST-4.0.8.jar
+Bundle-ClassPath: .,lib/ST-4.0.8.jar,lib/antlr-4.0-complete.jar
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Export-Package: 
  edu.umn.cs.crisys.smaccm.aadl2rtos,
  edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.CAmkES,
  edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.eChronos,
- edu.umn.cs.crisys.smaccm.aadl2rtos.model,
+ edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread,
  edu.umn.cs.crisys.smaccm.aadl2rtos.model.type,
  edu.umn.cs.crisys.smaccm.aadl2rtos.util

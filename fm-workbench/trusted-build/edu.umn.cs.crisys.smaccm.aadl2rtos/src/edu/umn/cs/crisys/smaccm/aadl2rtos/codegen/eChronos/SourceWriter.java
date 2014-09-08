@@ -28,20 +28,20 @@ import java.util.Iterator;
 import java.util.List;
 
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosException;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.Connection;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.SharedData;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.SharedDataAccessor;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.ThreadCalendar;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.ThreadImplementation;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.ThreadInstance;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.ThreadInstancePort;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.SharedDataAccessor.AccessType;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.Dispatcher;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.ExternalHandler;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.IRQDispatcher;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.InputEventDispatcher;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.PeriodicDispatcher;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.*;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.Connection;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.SharedData;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.SharedDataAccessor;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.ThreadCalendar;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.ThreadImplementation;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.ThreadInstance;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.ThreadInstancePort;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.SharedDataAccessor.AccessType;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.*;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.parse.Model;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.util.Util;
@@ -282,7 +282,7 @@ public class SourceWriter extends AbstractCodeWriter {
 	  InputEventPort p = d.getEventPort();
 	  String fnName = Names.getInputQueueIsEmptyFnName(p.getOwner(), p);
     out.append(Util.ind(3) + "while (! " + fnName + "()) {\n");
-    Type ty = p.getDataType(); 
+    Type ty = p.getType(); 
     out.append(Util.ind(4) + ty.getCType(0).varString("elem") + ";\n");
     out.append(Util.ind(4) + Names.getThreadImplReaderFnName(p) + "(" + Names.getVarRef(ty, "elem") + ");\n");
     
@@ -378,7 +378,7 @@ public class SourceWriter extends AbstractCodeWriter {
 				
 				if (current instanceof InputEventDispatcher) {
 				  InputEventDispatcher ied = (InputEventDispatcher)current;
-          if (ied.getEventPort().getDataType() instanceof UnitType) {
+          if (ied.getEventPort().getType() instanceof UnitType) {
             writeThreadEventPortDispatcher(ied); 
           } else {
             writeThreadEventDataPortDispatcher(ied);
@@ -513,7 +513,7 @@ public class SourceWriter extends AbstractCodeWriter {
   
   private void writeReader(ThreadImplementation impl, InputPort inp) throws IOException {
     
-    Type argType = inp.getDataType();
+    Type argType = inp.getType();
     
     out.append("bool " + Names.getThreadImplReaderFnName(inp) 
         + "(/* THREAD_ID tid,  */ "); 
@@ -535,7 +535,7 @@ public class SourceWriter extends AbstractCodeWriter {
       
       ThreadInstancePort tip = new ThreadInstancePort(ti, inp); 
       InputPort destPort = (InputPort)tip.getPort();
-      Type destPortType = destPort.getDataType();
+      Type destPortType = destPort.getType();
       
       // lock the semaphore
       writeEnterCriticalSection(ind, tip.getMutexDefine());
@@ -675,7 +675,7 @@ public class SourceWriter extends AbstractCodeWriter {
   private void writeThreadInstancePortSharedVars(ThreadInstancePort c) throws IOException {
 	  
     InputPort dstPort; 
-	  Type portTy = c.getPort().getDataType();
+	  Type portTy = c.getPort().getType();
 	  
 	  if (c.getPort() instanceof InputPort) {
 	    dstPort = (InputPort)c.getPort();
@@ -726,7 +726,7 @@ public class SourceWriter extends AbstractCodeWriter {
 
   private void writeWriter(ThreadImplementation impl, OutputPort outp) throws IOException {
     
-    Type argType = outp.getDataType();
+    Type argType = outp.getType();
     
     out.append("bool " + Names.getThreadImplWriterFnName(outp) + 
         "(/* THREAD_ID tid,  */ "); 
@@ -752,7 +752,7 @@ public class SourceWriter extends AbstractCodeWriter {
       // }
       for (Connection c: outp.getConnections()) {
         InputPort destPort = c.getDestPort();
-        Type destPortType = destPort.getDataType();
+        Type destPortType = destPort.getType();
         ThreadInstance destThread = c.getDestThreadInstance();
         ThreadInstancePort tip = new ThreadInstancePort(destThread, destPort); 
         

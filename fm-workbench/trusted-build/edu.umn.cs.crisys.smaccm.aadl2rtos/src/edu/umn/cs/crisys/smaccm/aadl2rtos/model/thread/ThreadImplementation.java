@@ -1,4 +1,4 @@
-package edu.umn.cs.crisys.smaccm.aadl2rtos.model;
+package edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread;
 
 /**
  * @author Mead, Whalen
@@ -42,6 +42,9 @@ public class ThreadImplementation extends ThreadImplementationBase {
 	private ArrayList<SharedDataAccessor> accessorList = new ArrayList<SharedDataAccessor>();
 	private ArrayList<String> legacySemaphoreList = new ArrayList<String>();
 
+	// Outgoing dispatch contract (limits on dispatch)
+	private ArrayList<OutgoingDispatchContract> dispatchLimits = new ArrayList<OutgoingDispatchContract>();
+	
 	// RPCs
 	private List<RemoteProcedureGroup> providesRPCList = new ArrayList<RemoteProcedureGroup>(); 
 	private List<RemoteProcedureGroup> requiresRPCList = new ArrayList<RemoteProcedureGroup>();
@@ -83,6 +86,21 @@ public class ThreadImplementation extends ThreadImplementationBase {
 	public void addThreadInstance(ThreadInstance instance) {
 		threadInstanceList.add(instance);
 	}
+
+	
+  /**
+   * @return the dispatchLimits
+   */
+  public ArrayList<OutgoingDispatchContract> getDispatchLimits() {
+    return dispatchLimits;
+  }
+
+  /**
+   * @param dispatchLimits the dispatchLimits to set
+   */
+  public void setDispatchLimits(ArrayList<OutgoingDispatchContract> dispatchLimits) {
+    this.dispatchLimits = dispatchLimits;
+  }
 
   /**
    * @return the isPassive
@@ -303,6 +321,13 @@ public class ThreadImplementation extends ThreadImplementationBase {
     return outputPorts;
   }
 
+  public List<OutputEventPort> getAllOutputEventPorts() {
+    ArrayList<OutputEventPort> outputPorts = new ArrayList<>();
+    outputPorts.addAll(this.outputEventDataPortList);
+    outputPorts.addAll(this.outputEventPortList);
+    return outputPorts;
+  }
+  
   /**
    * @return
    */

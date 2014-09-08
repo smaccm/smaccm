@@ -28,20 +28,20 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.Connection;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.ExternalIRQ;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.SharedData;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.ThreadCalendar;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.ThreadImplementation;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.ThreadImplementationBase;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.ThreadInstance;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.ThreadInstancePort;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.Dispatcher;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.IRQDispatcher;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.legacy.LegacyExternalISR;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.legacy.LegacyIRQEvent;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.legacy.LegacyThreadImplementation;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.rpc.RemoteProcedureGroup;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.Connection;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.ExternalIRQ;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.SharedData;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.ThreadCalendar;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.ThreadImplementation;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.ThreadImplementationBase;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.ThreadInstance;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.ThreadInstancePort;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.Type;
 
 public class Model {
@@ -178,9 +178,27 @@ public class Model {
     return allTasks;
 	}
 	
+	public List<ThreadImplementation> getActiveThreadImplementations() {
+	  List<ThreadImplementation> activeThreads = new ArrayList<ThreadImplementation>(); 
+	  for (ThreadImplementation ti: getThreadImplementations()) {
+	    if (!ti.getIsPassive()) {
+	      activeThreads.add(ti);
+	    }
+	  }
+	  return activeThreads;
+	}
 	
-	
-	/**
+  public List<ThreadImplementation> getPassiveThreadImplementations() {
+    List<ThreadImplementation> t = new ArrayList<ThreadImplementation>(); 
+    for (ThreadImplementation ti: getThreadImplementations()) {
+      if (ti.getIsPassive()) {
+        t.add(ti);
+      }
+    }
+    return t;
+  }
+
+  /**
    * @return the rpcInterfaces
    */
   public Map<String, RemoteProcedureGroup> getRpcInterfaces() {

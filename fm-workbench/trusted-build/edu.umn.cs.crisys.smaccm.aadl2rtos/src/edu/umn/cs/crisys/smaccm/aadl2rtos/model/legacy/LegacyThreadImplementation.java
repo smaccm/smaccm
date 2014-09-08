@@ -12,7 +12,7 @@ package edu.umn.cs.crisys.smaccm.aadl2rtos.model.legacy;
 import java.util.ArrayList;
 import java.util.List;
 
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.ThreadImplementationBase;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.ThreadImplementationBase;
 
 
 public class LegacyThreadImplementation extends ThreadImplementationBase {

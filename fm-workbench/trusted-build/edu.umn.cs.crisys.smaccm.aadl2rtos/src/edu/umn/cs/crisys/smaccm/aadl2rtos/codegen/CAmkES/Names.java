@@ -21,15 +21,13 @@ package edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.CAmkES;
  *   size limits.
  * 
  */
-import java.io.File;
-
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosException;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosFailure;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.SharedDataAccessor;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.ThreadImplementation;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.Dispatcher;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.DataPort;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.InputPort;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.OutputPort;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.OutputEventPort;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.SharedDataAccessor;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.ThreadImplementation;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.ArrayType;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.IdType;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.PointerType;
@@ -39,20 +37,110 @@ import edu.umn.cs.crisys.smaccm.aadl2rtos.parse.Model;
 public class Names {
 	// private ArrayList<String> semaphoreList = new ArrayList<String>();
 
+  static public String getDispatcherInterfaceName(OutputEventPort oep) {
+    return "smaccm_" + oep.getName();
+  }
+  
+  static public String getDispatcherInterfaceUsedName(OutputEventPort oep) {
+    return getDispatcherInterfaceName(oep) + "_used";
+  }
+  static public String getPeriodicDispatcherCamkesFileName(Model m) {
+    return "smaccm_periodic_dispatcher.camkes";
+  }
+  
+  static public String getPeriodicDispatcherComponentName(Model m) {
+    return "smaccm_periodic_dispatcher"; 
+  }
+  
+  static public String getPeriodicDispatcherInstanceName(Model m) {
+    return "smaccm_periodic_dispatcher_inst"; 
+  }
+
+  static public String getSharedDataInterfaceName(Type t) {
+    return "smaccm_" + t.getCType().typeString() + "_shared_var";
+  }    
+  
+  static public String getSharedDataIdlFileName(Type t) {
+    return getReaderWriterInterfaceName(t) + ".idl";
+  }    
+
+  static public String getReaderWriterInterfaceName(Type t) {
+    return "smaccm_" + t.getCType().typeString() + "_writer";
+  }    
+  
+  static public String getReaderWriterMutexName(DataPort dp) {
+    return "smaccm_" + dp.getName() + "_mutex";
+  }
+
+  static public String getReaderWriterIdlFileName(Type t) {
+    return getReaderWriterInterfaceName(t) + ".idl";
+  }    
+
+  static public String getComponentCamkesHFileName(ThreadImplementation ti) {
+    return ti.getNormalizedName() + ".h";
+  }    
+
   static public String getComponentGlueCodeHFileName(ThreadImplementation ti) {
     return "smaccm_" + ti.getNormalizedName() + ".h";
   }    
 
   static public String getComponentGlueCodeCFileName(ThreadImplementation ti) {
-    return "smaccm_" + ti.getNormalizedName() + ".h";
+    return "smaccm_" + ti.getNormalizedName() + ".c";
   }    
 
+  static public String getDispatcherComponentGlueCodeCFileName(ThreadImplementation ti) {
+    return "smaccm_dispatcher_" + ti.getNormalizedName() + ".c";
+  }    
+
+  static public String getComponentCamkesName(ThreadImplementation ti) {
+    return ti.getNormalizedName();
+  }    
+  
+  static public String getDispatcherComponentMutexName(ThreadImplementation ti) {
+    return "smaccm_dispatch_mutex"; 
+  }
+  
+  static public String getComponentInstanceName(ThreadImplementation ti) {
+    return ti.getNormalizedName() + "_inst";
+  }
+
   static public String getComponentCamkesFileName(ThreadImplementation ti) {
-    return "smaccm_" + ti.getNormalizedName() + ".camkes";
+    return getComponentCamkesName(ti) + ".camkes";
+  }    
+
+  static public String getComponentDispatcherProcName(ThreadImplementation ti) {
+    return getComponentCamkesName(ti) + "_dispatch";
+  }
+
+  static public String getDispatcherComponentCamkesName(ThreadImplementation ti) {
+    return "smaccm_" + ti.getNormalizedName() + "_dispatcher";
+  }    
+
+  static public String getDispatcherComponentInstanceName(ThreadImplementation ti) {
+    return ti.getNormalizedName() + "_dispatcher_inst";
+  }    
+  
+  static public String getDispatcherComponentCamkesFileName(ThreadImplementation ti) {
+    return getDispatcherComponentCamkesName(ti) + ".camkes";
+  }    
+
+  static public String getDispatcherComponentDispatchName(ThreadImplementation ti, Dispatcher d) {
+    return "smaccm_" + ti.getNormalizedName() + "_" + d.getName();
+  }
+  static public String getGenericDispatcherCamkesName() {
+    return "smaccm_generic_dispatcher";
+  }    
+
+  static public String getGenericDispatcherCamkesFileName() {
+    return getGenericDispatcherCamkesName() + ".camkes";
   }    
 
   static public String getComponentIdlFileName(ThreadImplementation ti) {
     return "smaccm_" + ti.getNormalizedName() + ".idl4";
+  }    
+
+  static public String getComponentDispatchHeaderFileName(ThreadImplementation ti) {
+    return "smaccm_" + ti.getNormalizedName() + "_dispatch_types.h";
   }    
 
   static public String getCFileName(String sysInstanceName) {
@@ -65,7 +153,11 @@ public class Names {
   }    
 
   static public String getSystemTypeHeaderName(Model m) {
-    return m.getSystemInstanceName() + "_types.h";
+    return "smaccm_" + m.getSystemInstanceName() + "_types.h";
+  }
+
+  static public String getSystemAssemblyFileName(Model m) {
+    return "smaccm_" + m.getSystemInstanceName() + "_assembly.camkes";
   }
   
   static public String getCalendarFnName() {
@@ -110,17 +202,6 @@ public class Names {
 
   static public String getThreadImplWriterFnName(SharedDataAccessor inp) {
     return getThreadImplWriterFnName(inp.getCommPrimFnNameOpt(), inp.getOwner().getName(), inp.getName());
-  }
-  
-  static public String getReaderWriterFnName(DataPort inp) {
-    if (inp instanceof InputPort) {
-      return getThreadImplReaderFnName(inp);
-    } else if (inp instanceof OutputPort){
-      return getThreadImplWriterFnName(inp);
-    } else {
-      throw new Aadl2RtosException("Attempting to generate name for unsupported port type");
-    }
-    
   }
   
   
