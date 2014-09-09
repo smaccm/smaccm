@@ -62,13 +62,19 @@ import org.osate.aadl2.instance.SystemInstance;
 import org.osate.xtext.aadl2.properties.util.PropertyUtils;
 
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosException;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosFailure;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Logger;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.*;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.*;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.legacy.*;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.*;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.*;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.*;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.util.*;
+
+import org.antlr.v4.runtime.*;
+import org.antlr.v4.runtime.tree.*;
+
+import edu.umn.cs.crisys.smaccm.aadl2rtos.parse.antlr.*;
 
 public class AadlModelParser {
 	private SystemImplementation systemImplementation;
@@ -213,7 +219,7 @@ public class AadlModelParser {
       IRQDispatcher disp = new IRQDispatcher(ti, ehl, signal_name, flih_handler);
       ti.addDispatcher(disp);
     } catch (Exception e) {
-      logger.error("ISR port: " + port.getName() + " is missing one of {Compute_Entrypoint, SMACCM_SYS::Signal_Name, SMACCM_SYS::ISR_Handler}.");
+      logger.error("ISR port: " + port.getName() + " is missing one of {Compute_Entrypoint, SMACCM_SYS::Signal_Name, SMACCM_SYS::First_Level_Interrupt_Handler}.");
     }
   }
   
@@ -368,6 +374,66 @@ public class AadlModelParser {
     logger.warn(str);
   }
   
+  public class SendsToWalker extends SendsToBaseListener {
+    ArrayList<OutgoingDispatchContract> contracts = new ArrayList<>();
+    List<OutputEventPort> ports;
+    
+    public SendsToWalker(List<OutputEventPort> ports) {
+      this.ports = ports;
+    }
+    
+    public ArrayList<OutgoingDispatchContract> getContracts() {return contracts;}
+    
+    public OutputEventPort findMatchingPort(String id) {
+      for (OutputEventPort oep : ports) {
+        if (id.equalsIgnoreCase(oep.getName())) {
+          return oep;
+        }
+      }
+      throw new Aadl2RtosException("For dispatch contract, unable to match id: " + id + " to an output port.\n");
+    }
+    
+    @Override
+    public void enterSends_to_tl(SendsToParser.Sends_to_tlContext ctx) {
+      OutgoingDispatchContract contract = new OutgoingDispatchContract(); 
+      int entries = ctx.ID().size();
+      for (int index = 0; index < entries; index++) {
+        String id = ctx.ID(index).getText(); 
+        Integer count = Integer.decode(ctx.INT(index).getText());
+        OutputEventPort oep = findMatchingPort(id);
+        contract.add(oep, count);
+      }
+      contracts.add(contract);
+    }
+  }
+  
+  private void constructDispatchLimits(ThreadTypeImpl tti, ThreadImplementation ti) {
+    try {
+      String sendsEventsTo = Util.getStringValue(tti, ThreadUtil.SMACCM_SYS_SENDS_EVENTS_TO);
+      System.out.println("Sends to value: " + sendsEventsTo);
+      ANTLRInputStream input = new ANTLRInputStream(sendsEventsTo);
+      TokenStream tokens = new CommonTokenStream( new SendsToLexer( input ) );
+      SendsToParser parser = new SendsToParser(tokens); 
+      ParseTree tree = parser.program();
+      ParseTreeWalker walker = new ParseTreeWalker(); 
+      SendsToWalker surrogate = new SendsToWalker(ti.getAllOutputEventPorts()); 
+      walker.walk(surrogate, tree);
+      ti.setDispatchLimits(surrogate.getContracts());
+      
+      // the dispatch limits really should be defined per dispatcher.  For now,
+      // we are setting them per-thread.
+      
+      List<Dispatcher> dispList = ti.getDispatcherList();
+      for (Dispatcher d : dispList) {
+        d.setDispatchLimits(surrogate.getContracts());
+      }
+    }
+    catch (Aadl2RtosException ae) {
+      Aadl2RtosException excp = new Aadl2RtosException("In thread " + ti.getName() + ": " + ae);
+      throw excp;
+    }
+  }
+  
   private ThreadImplementation constructThreadImplementation(ThreadTypeImpl tti) {
     String name = tti.getName().toLowerCase();
     boolean isPassive = ThreadUtil.getThreadType(tti);    
@@ -419,6 +485,8 @@ public class AadlModelParser {
         constructWarning(name, "abstract feature", f.getName(), null);
       }
     }
+
+    constructDispatchLimits(tti, ti); 
     
     return ti;
   }

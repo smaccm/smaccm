@@ -1,7 +1,7 @@
 /**
  * 
  */
-package edu.umn.cs.crisys.smaccm.aadl2rtos.model;
+package edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread;
 
 import java.util.ArrayList;
 import java.util.List;

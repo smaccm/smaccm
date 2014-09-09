@@ -1,4 +1,4 @@
-package edu.umn.cs.crisys.smaccm.aadl2rtos.model;
+package edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread;
 
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.*;
 

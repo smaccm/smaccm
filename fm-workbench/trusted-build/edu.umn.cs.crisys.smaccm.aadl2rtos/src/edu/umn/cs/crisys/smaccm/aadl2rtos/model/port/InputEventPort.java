@@ -3,7 +3,7 @@
  */
 package edu.umn.cs.crisys.smaccm.aadl2rtos.model.port;
 
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.ThreadImplementation;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.ThreadImplementation;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.ArrayType;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.IntType;
 //import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosException;
@@ -47,7 +47,7 @@ public class InputEventPort extends InputPort {
   public boolean isInputDataPort() { return false; }
   
   public boolean isInputEventPort() {
-    return this.getDataType() instanceof UnitType;
+    return this.getType() instanceof UnitType;
   }
   
   public boolean isInputEventDataPort() {
@@ -55,7 +55,7 @@ public class InputEventPort extends InputPort {
   }
   
   public Type getQueueType() {
-    Type ty = this.getDataType();
+    Type ty = this.getType();
     return new ArrayType(ty, this.getQueueSize());
   }
   

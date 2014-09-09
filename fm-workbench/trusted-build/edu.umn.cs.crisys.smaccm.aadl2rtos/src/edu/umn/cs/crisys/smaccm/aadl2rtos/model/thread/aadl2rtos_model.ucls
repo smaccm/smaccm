@@ -23,9 +23,9 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="3" language="java" name="edu.umn.cs.crisys.smaccm.aadl2rtos.model.ThreadImplementation" 
+  <class id="3" language="java" name="edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.ThreadImplementation" 
     project="edu.umn.cs.crisys.smaccm.aadl2rtos" 
-    file="/edu.umn.cs.crisys.smaccm.aadl2rtos/src/edu/umn/cs/crisys/smaccm/aadl2rtos/model/ThreadImplementation.java" 
+    file="/edu.umn.cs.crisys.smaccm.aadl2rtos/src/edu/umn/cs/crisys/smaccm/aadl2rtos/model/thread/ThreadImplementation.java" 
     binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="1040" y="404"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
@@ -133,9 +133,10 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <enumeration id="13" language="java" name="edu.umn.cs.crisys.smaccm.aadl2rtos.model.SharedDataAccessor.AccessType" 
+  <enumeration id="13" language="java" 
+    name="edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.SharedDataAccessor.AccessType" 
     project="edu.umn.cs.crisys.smaccm.aadl2rtos" 
-    file="/edu.umn.cs.crisys.smaccm.aadl2rtos/src/edu/umn/cs/crisys/smaccm/aadl2rtos/model/SharedDataAccessor.java" 
+    file="/edu.umn.cs.crisys.smaccm.aadl2rtos/src/edu/umn/cs/crisys/smaccm/aadl2rtos/model/thread/SharedDataAccessor.java" 
     binary="false" corner="BOTTOM_RIGHT">    
     <position height="142" width="254" x="168" y="282"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
@@ -144,9 +145,9 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </enumeration>  
-  <class id="14" language="java" name="edu.umn.cs.crisys.smaccm.aadl2rtos.model.SharedDataAccessor" 
+  <class id="14" language="java" name="edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.SharedDataAccessor" 
     project="edu.umn.cs.crisys.smaccm.aadl2rtos" 
-    file="/edu.umn.cs.crisys.smaccm.aadl2rtos/src/edu/umn/cs/crisys/smaccm/aadl2rtos/model/SharedDataAccessor.java" 
+    file="/edu.umn.cs.crisys.smaccm.aadl2rtos/src/edu/umn/cs/crisys/smaccm/aadl2rtos/model/thread/SharedDataAccessor.java" 
     binary="false" corner="BOTTOM_RIGHT">    
     <position height="268" width="545" x="168" y="-26"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
@@ -155,9 +156,9 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="15" language="java" name="edu.umn.cs.crisys.smaccm.aadl2rtos.model.SharedData" 
+  <class id="15" language="java" name="edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.SharedData" 
     project="edu.umn.cs.crisys.smaccm.aadl2rtos" 
-    file="/edu.umn.cs.crisys.smaccm.aadl2rtos/src/edu/umn/cs/crisys/smaccm/aadl2rtos/model/SharedData.java" 
+    file="/edu.umn.cs.crisys.smaccm.aadl2rtos/src/edu/umn/cs/crisys/smaccm/aadl2rtos/model/thread/SharedData.java" 
     binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="-68" y="150"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
@@ -167,149 +168,149 @@
     </display>  
   </class>  
   <generalization id="16">    
-    <end type="SOURCE" refId="11"/>    
-    <end type="TARGET" refId="10"/>  
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="1"/>  
   </generalization>  
-  <association id="17">    
-    <end type="SOURCE" refId="14" navigable="false">      
-      <attribute id="18" name="owner"/>      
-      <multiplicity id="19" minimum="0" maximum="1"/>    
-    </end>    
-    <end type="TARGET" refId="3" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <generalization id="20">    
-    <end type="SOURCE" refId="12"/>    
-    <end type="TARGET" refId="10"/>  
-  </generalization>  
-  <association id="21">    
-    <end type="SOURCE" refId="14" navigable="false">      
-      <attribute id="22" name="accessType"/>      
-      <multiplicity id="23" minimum="0" maximum="1"/>    
-    </end>    
-    <end type="TARGET" refId="13" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <generalization id="24">    
-    <end type="SOURCE" refId="9"/>    
+  <generalization id="17">    
+    <end type="SOURCE" refId="7"/>    
     <end type="TARGET" refId="8"/>  
   </generalization>  
-  <association id="25">    
+  <association id="18">    
     <end type="SOURCE" refId="14" navigable="false">      
-      <attribute id="26" name="sharedData"/>      
-      <multiplicity id="27" minimum="0" maximum="1"/>    
+      <attribute id="19" name="sharedData"/>      
+      <multiplicity id="20" minimum="0" maximum="1"/>    
     </end>    
     <end type="TARGET" refId="15" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="28">    
+  <association id="21">    
     <end type="SOURCE" refId="5" navigable="false">      
-      <attribute id="29" name="eventPort"/>      
-      <multiplicity id="30" minimum="0" maximum="1"/>    
+      <attribute id="22" name="eventPort"/>      
+      <multiplicity id="23" minimum="0" maximum="1"/>    
     </end>    
     <end type="TARGET" refId="9" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="31">    
-    <end type="SOURCE" refId="3" navigable="false">      
-      <attribute id="32" name="dispatcherList"/>      
-      <multiplicity id="33" minimum="0" maximum="2147483647"/>    
-    </end>    
-    <end type="TARGET" refId="1" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="34">    
-    <end type="SOURCE" refId="3" navigable="false">      
-      <attribute id="35" name="outputDataPortList"/>      
-      <multiplicity id="36" minimum="0" maximum="2147483647"/>    
-    </end>    
-    <end type="TARGET" refId="11" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <generalization id="37">    
-    <end type="SOURCE" refId="7"/>    
-    <end type="TARGET" refId="8"/>  
-  </generalization>  
-  <association id="38">    
-    <end type="SOURCE" refId="3" navigable="false">      
-      <attribute id="39" name="accessorList"/>      
-      <multiplicity id="40" minimum="0" maximum="2147483647"/>    
-    </end>    
-    <end type="TARGET" refId="14" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <generalization id="41">    
-    <end type="SOURCE" refId="5"/>    
-    <end type="TARGET" refId="1"/>  
-  </generalization>  
-  <association id="42">    
-    <end type="SOURCE" refId="1" navigable="false">      
-      <attribute id="43" name="owner"/>      
-      <multiplicity id="44" minimum="0" maximum="1"/>    
+  <association id="24">    
+    <end type="SOURCE" refId="14" navigable="false">      
+      <attribute id="25" name="owner"/>      
+      <multiplicity id="26" minimum="0" maximum="1"/>    
     </end>    
     <end type="TARGET" refId="3" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <generalization id="45">    
+  <generalization id="27">    
+    <end type="SOURCE" refId="12"/>    
+    <end type="TARGET" refId="10"/>  
+  </generalization>  
+  <association id="28">    
+    <end type="SOURCE" refId="3" navigable="false">      
+      <attribute id="29" name="outputDataPortList"/>      
+      <multiplicity id="30" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="11" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="31">    
+    <end type="SOURCE" refId="3" navigable="false">      
+      <attribute id="32" name="accessorList"/>      
+      <multiplicity id="33" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="14" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="34">    
+    <end type="SOURCE" refId="3" navigable="false">      
+      <attribute id="35" name="outputEventPortList"/>      
+      <multiplicity id="36" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="12" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="37">    
     <end type="SOURCE" refId="10"/>    
     <end type="TARGET" refId="2"/>  
   </generalization>  
-  <generalization id="46">    
+  <generalization id="38">    
+    <end type="SOURCE" refId="11"/>    
+    <end type="TARGET" refId="10"/>  
+  </generalization>  
+  <generalization id="39">    
     <end type="SOURCE" refId="8"/>    
     <end type="TARGET" refId="2"/>  
   </generalization>  
-  <association id="47">    
+  <association id="40">    
     <end type="SOURCE" refId="3" navigable="false">      
-      <attribute id="48" name="inputEventDataPortList"/>      
-      <multiplicity id="49" minimum="0" maximum="2147483647"/>    
+      <attribute id="41" name="dispatcherList"/>      
+      <multiplicity id="42" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="1" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="43">    
+    <end type="SOURCE" refId="3" navigable="false">      
+      <attribute id="44" name="inputEventDataPortList"/>      
+      <multiplicity id="45" minimum="0" maximum="2147483647"/>    
     </end>    
     <end type="TARGET" refId="9" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="50">    
+  <association id="46">    
     <end type="SOURCE" refId="3" navigable="false">      
-      <attribute id="51" name="outputEventPortList"/>      
-      <multiplicity id="52" minimum="0" maximum="2147483647"/>    
+      <attribute id="47" name="outputEventDataPortList"/>      
+      <multiplicity id="48" minimum="0" maximum="2147483647"/>    
     </end>    
     <end type="TARGET" refId="12" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="53">    
+  <association id="49">    
     <end type="SOURCE" refId="3" navigable="false">      
-      <attribute id="54" name="inputEventPortList"/>      
-      <multiplicity id="55" minimum="0" maximum="2147483647"/>    
-    </end>    
-    <end type="TARGET" refId="9" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="56">    
-    <end type="SOURCE" refId="3" navigable="false">      
-      <attribute id="57" name="outputEventDataPortList"/>      
-      <multiplicity id="58" minimum="0" maximum="2147483647"/>    
-    </end>    
-    <end type="TARGET" refId="12" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <generalization id="59">    
-    <end type="SOURCE" refId="6"/>    
-    <end type="TARGET" refId="1"/>  
-  </generalization>  
-  <nesting id="60">    
-    <end type="SOURCE" refId="14"/>    
-    <end type="TARGET" refId="13"/>  
-  </nesting>  
-  <association id="61">    
-    <end type="SOURCE" refId="3" navigable="false">      
-      <attribute id="62" name="inputDataPortList"/>      
-      <multiplicity id="63" minimum="0" maximum="2147483647"/>    
+      <attribute id="50" name="inputDataPortList"/>      
+      <multiplicity id="51" minimum="0" maximum="2147483647"/>    
     </end>    
     <end type="TARGET" refId="7" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <generalization id="64">    
-    <end type="SOURCE" refId="4"/>    
+  <association id="52">    
+    <end type="SOURCE" refId="14" navigable="false">      
+      <attribute id="53" name="accessType"/>      
+      <multiplicity id="54" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="13" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="55">    
+    <end type="SOURCE" refId="6"/>    
     <end type="TARGET" refId="1"/>  
   </generalization>  
+  <nesting id="56">    
+    <end type="SOURCE" refId="14"/>    
+    <end type="TARGET" refId="13"/>  
+  </nesting>  
+  <association id="57">    
+    <end type="SOURCE" refId="3" navigable="false">      
+      <attribute id="58" name="inputEventPortList"/>      
+      <multiplicity id="59" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="9" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="60">    
+    <end type="SOURCE" refId="5"/>    
+    <end type="TARGET" refId="1"/>  
+  </generalization>  
+  <generalization id="61">    
+    <end type="SOURCE" refId="9"/>    
+    <end type="TARGET" refId="8"/>  
+  </generalization>  
+  <association id="62">    
+    <end type="SOURCE" refId="1" navigable="false">      
+      <attribute id="63" name="owner"/>      
+      <multiplicity id="64" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="3" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
   <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
     accessors="true" visibility="true">    
     <attributes public="true" package="true" protected="true" private="true" static="true"/>    

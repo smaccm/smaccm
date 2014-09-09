@@ -2,8 +2,8 @@ package edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher;
 
 import java.util.List;
 
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.ThreadImplementation;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.InputEventPort;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.ThreadImplementation;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.Type;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.UnitType;
 
@@ -30,8 +30,8 @@ public class InputEventDispatcher extends Dispatcher {
 	
 	// we want to return null for unit types to assist with template generation.
 	public Type getType() {
-	  Type dt = this.getEventPort().getDataType();
-	  if (dt == null || this.getEventPort().getDataType() instanceof UnitType) {
+	  Type dt = this.getEventPort().getType();
+	  if (dt == null || this.getEventPort().getType() instanceof UnitType) {
 	    return null;
 	  } else {
 	    return dt;

@@ -21,24 +21,11 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE DATA OR THE USE OR OTHER DEALINGS
 
 package edu.umn.cs.crisys.smaccm.aadl2rtos;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
 
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
@@ -54,12 +41,9 @@ import org.osate.aadl2.instance.SystemInstance;
 import org.osate.aadl2.instantiation.InstantiateModel;
 import org.osate.aadl2.modelsupport.errorreporting.AnalysisErrorReporterManager;
 import org.osate.aadl2.modelsupport.resources.OsateResourceUtil;
-import org.w3c.dom.Document;
 
 import edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.CAmkES.CAmkES_CodeGenerator;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.eChronos.EChronos_CodeGenerator;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.eChronos.MakefileWriter;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.eChronos.PrxGenerator;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.parse.AadlModelParser;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.parse.Model;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.util.Util;
@@ -124,12 +108,13 @@ public class Aadl2RtosAction extends AadlAction {
 			logger.status("Generating and typechecking domain model for code generation...");
 			new AadlModelParser(sysimpl, si, model, logger);
 
-			// logger.status("Generating code (currently disabled)...");
-      logger.status("Generating code...");
+			logger.status("Generating code...");
 
       // split on whether eChronos or CAmkES is the target.
       // Print out C skeletons
-			File dir = Util.getDirectory(sysimpl);
+      if (dir == null) {
+        dir = Util.getDirectory(sysimpl);
+      }
 			
 			model.setOsTarget(Model.OSTarget.CAmkES);
 

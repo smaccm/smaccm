@@ -6,15 +6,16 @@ import java.io.IOException;
 import java.util.List;
 
 import edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.common.C_Type_Writer;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.SharedDataAccessor;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.ThreadImplementation;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.ThreadInstance;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.SharedDataAccessor.AccessType;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.common.HeaderDeclarations;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.Dispatcher;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.ExternalHandler;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.InputEventDispatcher;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.PeriodicDispatcher;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.*;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.SharedDataAccessor;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.ThreadImplementation;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.ThreadInstance;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.SharedDataAccessor.AccessType;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.UnitType;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.parse.Model;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.util.Util;
@@ -108,65 +109,18 @@ public class HeaderWriter extends AbstractCodeWriter {
 		}
 	}
 	
-	static private void writeReaderWriterDecl(ThreadImplementation tw, BufferedWriter out) throws IOException {
-    for (DataPort dpiw : tw.getPortList()) {
-      String fnName = Names.getReaderWriterFnName(dpiw);
-      String argString = ""; 
-      if (!dpiw.getDataType().equals(new UnitType())) {
-        argString = Names.createRefParameter(dpiw.getDataType(), "arg");
-        if (dpiw instanceof OutputPort) {
-          argString = "const " + argString;
-        }
-      }
-      out.append("   bool " + fnName + "(" + argString + "); \n\n");
-    }
-    
-    for (SharedDataAccessor sda: tw.getSharedDataAccessors()) {
-      if (sda.getAccessType() == AccessType.READ || 
-          sda.getAccessType() == AccessType.READ_WRITE) {
-        String fnName = Names.getThreadImplReaderFnName(sda);
-        String argString = Names.createRefParameter(sda.getSharedData().getDataType(), "arg");
-        out.append("   bool " + fnName + "(" + argString + "); \n\n");
-      }
-      if (sda.getAccessType() == AccessType.WRITE || 
-          sda.getAccessType() == AccessType.READ_WRITE) {
-        String fnName = Names.getThreadImplWriterFnName(sda);
-        String argString = Names.createRefParameter(sda.getSharedData().getDataType(), "arg");
-        out.append("   bool " + fnName + "(const " + argString + "); \n\n");
-      }
-    }
-	}
 
 	// TODO: mention that we do not currently support IN/OUT ports
 	private void writeReaderWriterDecls() throws IOException {
 
 		for (ThreadImplementation tw : allThreads) {
-		  writeReaderWriterDecl(tw, out);
+		  HeaderDeclarations.writeReaderWriterDecl(tw, out);
 		}
 	}
 
 	
 	
 
-	// TODO: well-formedness check on model for INOUT ports.
-	private void writeThreadUdeDecls(ThreadImplementation tw) throws IOException {
-		// List<MyPort> dataList = tw.getInputDataPorts();
-
-		// user-level initializer for thread.
-		ExternalHandler initHandler = tw.getInitializeEntrypointOpt();
-		if ((initHandler != null)) {
-			out.append("   void " + initHandler.getHandlerName() + "();\n\n");
-		}
-
-		// compute entrypoints for thread.
-		List<Dispatcher> dl = tw.getDispatcherList();
-		for (Dispatcher d: dl) {
-		  List<ExternalHandler> handlers = d.getExternalHandlerList();
-		  for (ExternalHandler eh: handlers) {
-		    out.append(udeEntrypointDecl(d, eh.getHandlerName()));
-		  }
-		}
-	}
 
 	// For each thread;
 	// record the list of data ports
@@ -174,26 +128,10 @@ public class HeaderWriter extends AbstractCodeWriter {
 	// Perhaps it does not really exist.
 	private void writeUdeDecls(List<ThreadImplementation> allThreads) throws IOException {
 		for (ThreadImplementation tw : allThreads) {
-			writeThreadUdeDecls(tw);
+			HeaderDeclarations.writeThreadUdeDecls(out, tw);
 		}
 	}
 
-	private String udeEntrypointDecl(Dispatcher d, String fnName) {
-	  if (d instanceof InputEventDispatcher && 
-	      ((InputEventDispatcher)d).getEventPort().isInputEventDataPort()) {
-	    InputEventDispatcher ied = (InputEventDispatcher)d;
-      return "   void " + fnName
-          + "(const " + Names.createRefParameter(ied.getEventPort().getDataType(), "elem") + " ); \n\n";
-	  }
-	  else if (d instanceof PeriodicDispatcher) {
-      return "   void " + fnName
-          + "(uint32_t *millis_from_sys_start); \n\n";
-	  }
-	  else {
-	    return "   void " + fnName
-				+ "(); \n\n";
-	  }
-	}
 	
 /*
 	private String dataportArgs(List<MyPort> dpl) {

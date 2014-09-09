@@ -1,7 +1,7 @@
 /**
  * 
  */
-package edu.umn.cs.crisys.smaccm.aadl2rtos.model;
+package edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread;
 
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.DataPort;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.Type;
@@ -63,7 +63,7 @@ public class ThreadInstancePort {
   }
 
   public Type getType() {
-    Type ty = this.getPort().getDataType();
+    Type ty = this.getPort().getType();
     return ty;
   }
 

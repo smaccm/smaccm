@@ -21,17 +21,21 @@ package edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.common;
  *   size limits.
  * 
  */
+import java.util.Map;
+
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosException;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosFailure;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.SharedDataAccessor;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.ThreadImplementation;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.DataPort;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.InputPort;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.OutputEventPort;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.OutputPort;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.SharedDataAccessor;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.ThreadImplementation;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.ArrayType;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.IdType;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.PointerType;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.Type;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.util.Util;
 
 public class CommonNames {
 	// private ArrayList<String> semaphoreList = new ArrayList<String>();
@@ -39,6 +43,12 @@ public class CommonNames {
 
   static public String getThreadImplMainFnName(ThreadImplementation tw) {
     return tw.getGeneratedEntrypoint();
+  }
+
+  static public String getDispatchArrayTypeName(ThreadImplementation ti, 
+      Map.Entry<OutputEventPort, Integer> entry) {
+    return "smaccm_" + Util.normalizeAadlName(entry.getKey().getType().toString()) 
+        + "_array_" + entry.getValue(); 
   }
 
   static public String getThreadImplReaderFnName(String commPrim, String tName, String varName) {
@@ -107,8 +117,14 @@ public class CommonNames {
     return elemTy.getCType(0).varString(id);
   }
   
+  
   static public String getVarRef(Type ty, String id) {
     return (getStructuralType(ty) instanceof ArrayType) ? id : ("&" + id);
   }
-  
+
+  static public String memcpyStmt(Type ty, String dst, String src) {
+    return "memcpy(" + dst + ", " + src +  
+        ", sizeof(" + ty.getCType(0).varString("") + "))";
+  }
+
 }

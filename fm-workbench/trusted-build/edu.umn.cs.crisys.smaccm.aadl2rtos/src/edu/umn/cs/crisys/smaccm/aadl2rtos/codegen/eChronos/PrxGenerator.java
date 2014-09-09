@@ -12,15 +12,15 @@ import org.w3c.dom.Document;
 
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Logger;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosException;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.ExternalIRQ;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.SharedData;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.ThreadImplementationBase;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.ThreadInstance;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.ThreadInstancePort;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.IRQDispatcher;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.PeriodicDispatcher;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.legacy.LegacyExternalISR;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.legacy.LegacyIRQEvent;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.ExternalIRQ;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.SharedData;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.ThreadImplementationBase;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.ThreadInstance;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.ThreadInstancePort;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.parse.Model;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.util.Util;
 
