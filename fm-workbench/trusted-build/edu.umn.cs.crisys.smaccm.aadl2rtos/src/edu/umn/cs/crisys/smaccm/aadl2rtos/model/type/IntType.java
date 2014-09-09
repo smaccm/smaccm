@@ -53,7 +53,7 @@ public class IntType extends Type {
 	}
 
 	@Override
-	public CType getCType() {
+	public CType getCType(int indent) {
 		return new CType(toString(), "");
 	}
 

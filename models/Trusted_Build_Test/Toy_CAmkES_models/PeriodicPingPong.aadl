@@ -1,0 +1,85 @@
+-- Note: this example shows both event communication both via event queues and also via
+-- queued synchronous calls, so both need to be constructed in CAmkES.
+
+package PeriodicPassivePingPong
+public 
+   with Base_Types;
+   with SMACCM_SYS;   
+
+-- Example of a periodically dispatched "Active" thread.   
+thread ping
+	features
+		pi_Output1: out event data port Base_Types::Unsigned_32 {
+	      SMACCM_SYS::CommPrim_Source_Header => "ping_stuff.h";
+	      SMACCM_SYS::CommPrim_Source_Text => "ping_Output1";			
+		}; 
+		pi_Input1: in event data port Base_Types::Unsigned_32 {
+	      SMACCM_SYS::CommPrim_Source_Header => "ping_stuff.h";
+	      SMACCM_SYS::CommPrim_Source_Text => "ping_Input1";			
+		}; 
+		pi_Input2: in data port Base_Types::Unsigned_32 {
+	      SMACCM_SYS::CommPrim_Source_Header => "ping_stuff.h";
+	      SMACCM_SYS::CommPrim_Source_Text => "ping_Input2";			
+		};
+		
+	properties 
+	    Dispatch_Protocol => Periodic;
+	    Period => 100 ms;
+		Source_Text => ("periodic_ping.c");
+	    SMACCM_SYS::Compute_Entrypoint_Source_Text => ("periodic_ping");
+	    Priority => 10;
+	    Stack_Size => 256 bytes;
+	    SMACCM_SYS::Thread_Type => Active ;
+	    Compute_Execution_Time => 10 us .. 50 us;
+	    SMACCM_SYS::Sends_Events_To => "{{1 Output1}}";
+end ping ; 
+
+-- Example of a periodically dispatched "Active" thread.   
+thread pong
+	features
+		po_Input1: in event data port Base_Types::Unsigned_32 {
+	      SMACCM_SYS::CommPrim_Source_Header => "ping_stuff.h";
+	      SMACCM_SYS::CommPrim_Source_Text => "pong_Input1";			
+	      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("ping_received");
+		};
+		po_Output1: out event data port Base_Types::Unsigned_32 {
+	      SMACCM_SYS::CommPrim_Source_Header => "ping_stuff.h";
+	      SMACCM_SYS::CommPrim_Source_Text => "pong_Output1";			
+		}; 
+		po_Output2: out data port Base_Types::Unsigned_32 {
+	      SMACCM_SYS::CommPrim_Source_Header => "ping_stuff.h";
+	      SMACCM_SYS::CommPrim_Source_Text => "pong_Output2";			
+		};
+		
+	properties 
+	    Dispatch_Protocol => Aperiodic;
+	    SMACCM_SYS::Thread_Type => Passive ;
+	    Compute_Execution_Time => 10 us .. 50 us;
+	    SMACCM_SYS::Sends_Events_To => "{{1 Output1}}";
+end pong ; 
+
+process PingPong
+
+end PingPong;
+
+process implementation PingPong.Impl
+	subcomponents
+		ping_sub: thread ping;
+		pong_sub: thread pong;
+		
+	connections
+		pi1_to_po1 : port ping_sub.pi_Output1 -> pong_sub.po_Input1;
+		po1_to_pi1 : port pong_sub.po_Output1 -> ping_sub.pi_Input1;
+		po2_to_pi2 : port pong_sub.po_Output2 -> ping_sub.pi_Input2;
+		
+end PingPong.Impl;
+
+system top_level
+end top_level;
+
+system implementation top_level.impl
+	subcomponents
+		pp_sub: process PingPong.Impl;
+end top_level.impl;
+
+end PeriodicPassivePingPong;

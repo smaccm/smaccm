@@ -3,6 +3,7 @@ package edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher;
 import java.util.List;
 
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.ThreadImplementation;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.Type;
 
 /**
  * @author Mead, Whalen
@@ -25,6 +26,8 @@ public abstract class Dispatcher {
 	
 	
 	public abstract String getName(); 
+	
+	public abstract Type getType(); 
 	
 	public List<ExternalHandler> getExternalHandlerList() {
 	  return this.externalHandlerList;

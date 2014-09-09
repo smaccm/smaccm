@@ -1,4 +1,4 @@
-package edu.umn.cs.crisys.smaccm.aadl2rtos.prx;
+package edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.eChronos;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -12,7 +12,6 @@ import org.w3c.dom.Document;
 
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Logger;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosException;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.gluecode.Names;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.ExternalIRQ;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.SharedData;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.ThreadImplementationBase;

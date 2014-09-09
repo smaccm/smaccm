@@ -8,26 +8,44 @@ annex agree {**
     --returning 4/(number of valid channels). We use
     --this node to do this computation to avoid non-linear
     --arithmatic
-    node actuator_gain(num_valid : int) returns (result : int);
+    node actuator_gain(num_valid : int) returns (result : real);
     let
       result = if(num_valid = 3) then
-                  1
+                  1.0
                else if(num_valid = 2) then
-                  3
+                  4.0/3.0
                else if(num_valid = 1) then
-                  2
+                  2.0
                else if(num_valid = 0) then
-                  4
+                  4.0
                else
-                  1;
+                  1.0;
     tel;
+  
+-- Why no counter-example? Why only inductive-counter example?
+	node actuator_gain_bad(num_valid : int) returns (result : real);
+    let
+      result = if(num_valid = 3) then
+                  1.0
+               else if(num_valid = 2) then
+                  2.0
+               else if(num_valid = 1) then
+                  4.0/3.0
+               else if(num_valid = 0) then
+                  4.0
+               else
+                  1.0;
+    tel;
+  
+  
+  
   
     --OSAS shall compute the actuator command gain as the ratio
     --of the total number of command channels to the number of
     --valid command channels (i.e. 4/(number of valid command channels).
     	
   node req 
-    (acts_gain : DATA_TYPES::NumActuators.impl,
+    (acts_gain : DATA_TYPES::Actuators.impl,
      acts_num_valid : DATA_TYPES::NumActuators.impl,
   	 ccdl_failed : bool)
   returns
@@ -53,11 +71,11 @@ annex agree {**
   	      req_helper(acts_gain.SPLROB, acts_num_valid.SPLROB, ccdl_failed) and
   	      req_helper(acts_gain.STEER, acts_num_valid.STEER, ccdl_failed) and
   	      req_helper(acts_gain.THROTR, acts_num_valid.THROTR, ccdl_failed) and
-  	      req_helper(acts_gain.THRTOL, acts_num_valid.THRTOL, ccdl_failed);
+  	      req_helper(acts_gain.THROTL, acts_num_valid.THROTL, ccdl_failed);
   tel;
   
   node req_helper
-    (act_gain : int,
+    (act_gain : real,
      num_valid : int,	
      ccdl_failed : bool)
   returns

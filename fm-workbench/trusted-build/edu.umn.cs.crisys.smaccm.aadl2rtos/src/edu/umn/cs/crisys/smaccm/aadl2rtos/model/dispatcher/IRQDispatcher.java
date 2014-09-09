@@ -3,6 +3,7 @@ package edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher;
 import java.util.List;
 
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.ThreadImplementation;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.Type;
 
 /**
  * @author Mead, Whalen
@@ -26,6 +27,11 @@ public class IRQDispatcher extends Dispatcher {
 	  return signalName;
 	}
 
+	public Type getType() { 
+	  return null; 
+	  
+	}
+	
   public String getIrqSignalName() {
     return ("smaccm_irq_" + getSignalName()).toLowerCase();
   }

@@ -49,8 +49,8 @@ public class RecordType extends Type {
 	}
 
 	@Override
-	public CType getCType() {
-		return new CType(toString(), "");
+	public CType getCType(int indent) {
+		return new CType(makeString(indent), "");
 	}
 
 	@Override
@@ -65,22 +65,35 @@ public class RecordType extends Type {
 		return deps;
 	}
 
+	public static String indent(int indent) {
+	  StringBuilder outputBuffer = new StringBuilder(indent);
+	  for (int i = 0; i < indent; i++){
+	     outputBuffer.append(" ");
+	  }
+	  return outputBuffer.toString();
+	}
+	
+	public String makeString(int indent) {
+    StringBuilder buf = new StringBuilder();
+    buf.append("\n");
+    buf.append(indent(indent)); 
+    buf.append("struct { \n");
+    Iterator<String> iterator = getFieldNames().iterator();
+    while (iterator.hasNext()) {
+      String field = iterator.next();
+      buf.append(indent(indent+3));
+      buf.append(getField(field).getCType(indent+3).varString(field));
+      buf.append(" ; \n");
+    }
+    buf.append(indent(indent));
+    buf.append("}");
+    return buf.toString();
+	}
+	
 	// TODO: properly indent the darn thing.
 	@Override
 	public String toString() {
-		StringBuilder buf = new StringBuilder();
-		buf.append("struct { \n");
-
-		Iterator<String> iterator = getFieldNames().iterator();
-		while (iterator.hasNext()) {
-			String field = iterator.next();
-			buf.append("   ");
-			buf.append(getField(field).getCType().varString(field));
-			buf.append(" ; \n");
-		}
-
-		buf.append("}");
-		return buf.toString();
+	  return makeString(0);
 	}
 
 	@Override

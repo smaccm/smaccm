@@ -1,0 +1,9 @@
+package HISTORICALLY
+public
+annex agree {**
+	node f(condition : bool) returns (holds : bool);
+	let
+		holds = prev(holds,true) and condition;
+	tel;
+**};
+end HISTORICALLY;

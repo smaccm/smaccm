@@ -24,6 +24,7 @@ package edu.umn.cs.crisys.smaccm.aadl2rtos.model.type;
 import java.util.List;
 import java.util.Map;
 
+import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosException;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosFailure;
 import edu.umn.cs.crisys.smaccm.topsort.DependsOn;
 
@@ -48,6 +49,14 @@ public abstract class Type implements DependsOn<Type> {
 	    return this.prefix + " " + varId + " " + this.postfix;
 	  }
 	  
+	  public String typeString() {
+	    if (postfix == null || "".equals(postfix)) {
+	      return prefix;
+	    } else {
+	      throw new 
+	        Aadl2RtosException("Error: CType.typeString() called on type with postfix");
+	    }
+	  }
 	};
 	
 	@Override
@@ -59,8 +68,10 @@ public abstract class Type implements DependsOn<Type> {
 	// C array types need to be split around identifiers
 	// x : array [20] of (array [10] of int) ==>
 	// int x[20][10];
-	abstract public CType getCType();
+	abstract public CType getCType(int indent);
 
+	public CType getCType() { return this.getCType(0); }
+	
 	public Type getRootType() throws Aadl2RtosFailure {
 		return this;
 	}

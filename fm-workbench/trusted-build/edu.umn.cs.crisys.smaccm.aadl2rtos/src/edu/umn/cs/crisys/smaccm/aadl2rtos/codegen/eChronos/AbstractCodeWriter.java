@@ -1,4 +1,4 @@
-package edu.umn.cs.crisys.smaccm.aadl2rtos.gluecode;
+package edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.eChronos;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -35,7 +35,7 @@ public abstract class AbstractCodeWriter {
 		this.CFile = CFile;
 		this.HFile = HFile;
 		this.model = model;
-		this.sysInstanceName = model.getSystemInstance().getName();
+		this.sysInstanceName = model.getSystemInstanceName();
 		this.astTypesEntrySet = model.getAstTypes().entrySet();
 		this.allThreads = model.getThreadImplementations();
 	}
@@ -51,7 +51,7 @@ public abstract class AbstractCodeWriter {
 	}
 
 	protected void writeComment(String comment) throws IOException {
-		out.append("/**************************************************************************\n"
+		out.append("\n/**************************************************************************\n"
 				+ comment
 				+ " **************************************************************************/\n");
 	}

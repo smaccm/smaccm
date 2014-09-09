@@ -1,14 +1,11 @@
-package edu.umn.cs.crisys.smaccm.aadl2rtos.gluecode;
+package edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.eChronos;
 
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map.Entry;
-import java.util.Set;
 
-import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosException;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.common.C_Type_Writer;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.SharedDataAccessor;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.ThreadImplementation;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.ThreadInstance;
@@ -18,13 +15,11 @@ import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.ExternalHandler;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.InputEventDispatcher;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.PeriodicDispatcher;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.*;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.IdType;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.Type;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.UnitType;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.parse.Model;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.util.Util;
-import edu.umn.cs.crisys.smaccm.topsort.CyclicException;
-import edu.umn.cs.crisys.smaccm.topsort.TopologicalSort;
+
+import org.stringtemplate.v4.*;
 
 public class HeaderWriter extends AbstractCodeWriter {
 	public HeaderWriter(BufferedWriter out, File CFile, File HFile,
@@ -48,25 +43,21 @@ public class HeaderWriter extends AbstractCodeWriter {
 		out.append("\n\n");
 
 		// Write file description
-		writeComment(
-				"   This header file contains the datatypes used for communications between \n"
-						+ "   AADL components as defined in the system implementation "
-						+ sysInstanceName
-						+ ".\n"
-						+ "   It also contains the function declarations for: \n"
-						+ "      1.) The task-level entrypoint functions for each task, \n"
-						+ "      2.) The user-callable writer functions for each task, and \n"
-						+ "      3.) The expected interface for each of the user-defined sub-entrypoints\n\n");
-		out.append("\n\n");
+		STGroup group; 
+		group = new STGroupFile("templates/CommentBlocks.stg");
+    ST st = group.getInstanceOf("HeaderCommentBlock");
+    st.add("sysInstanceName", sysInstanceName);
+    out.append(st.render());
 
+    
 		if (model.getThreadCalendar().hasDispatchers()) {
-		  writeComment("  DECLARATION FOR INITIALIZATION OF SCHEDULER \n");
-		  out.append("void smaccm_initialize_px4_systick_interrupt();\n\n"); 
+	    st = group.getInstanceOf("DispatcherBlock");
+	    out.append(st.render());
 		}
 		
 		// Write AADL type declarations
-		writeComment("   AADL TYPE DECLARATIONS USED BY AT LEAST ONE PORT \n");
-		writeTypes(astTypesEntrySet);
+		writeComment("   AADL TYPE DECLARATIONS \n");
+		C_Type_Writer.writeTypes(out, model, 3);
 		out.append("\n\n");
 
 		// Write task-level entrypoint functions
@@ -116,72 +107,46 @@ public class HeaderWriter extends AbstractCodeWriter {
 			} 
 		}
 	}
+	
+	static private void writeReaderWriterDecl(ThreadImplementation tw, BufferedWriter out) throws IOException {
+    for (DataPort dpiw : tw.getPortList()) {
+      String fnName = Names.getReaderWriterFnName(dpiw);
+      String argString = ""; 
+      if (!dpiw.getDataType().equals(new UnitType())) {
+        argString = Names.createRefParameter(dpiw.getDataType(), "arg");
+        if (dpiw instanceof OutputPort) {
+          argString = "const " + argString;
+        }
+      }
+      out.append("   bool " + fnName + "(" + argString + "); \n\n");
+    }
+    
+    for (SharedDataAccessor sda: tw.getSharedDataAccessors()) {
+      if (sda.getAccessType() == AccessType.READ || 
+          sda.getAccessType() == AccessType.READ_WRITE) {
+        String fnName = Names.getThreadImplReaderFnName(sda);
+        String argString = Names.createRefParameter(sda.getSharedData().getDataType(), "arg");
+        out.append("   bool " + fnName + "(" + argString + "); \n\n");
+      }
+      if (sda.getAccessType() == AccessType.WRITE || 
+          sda.getAccessType() == AccessType.READ_WRITE) {
+        String fnName = Names.getThreadImplWriterFnName(sda);
+        String argString = Names.createRefParameter(sda.getSharedData().getDataType(), "arg");
+        out.append("   bool " + fnName + "(const " + argString + "); \n\n");
+      }
+    }
+	}
 
 	// TODO: mention that we do not currently support IN/OUT ports
 	private void writeReaderWriterDecls() throws IOException {
 
 		for (ThreadImplementation tw : allThreads) {
-			for (DataPort dpiw : tw.getPortList()) {
-			  String fnName = Names.getReaderWriterFnName(dpiw);
-				String argString = ""; 
-				if (!dpiw.getDataType().equals(new UnitType())) {
-          argString = Names.createRefParameter(dpiw.getDataType(), "arg");
-          if (dpiw instanceof OutputPort) {
-            argString = "const " + argString;
-          }
-				}
-        out.append("   bool " + fnName + "(" + argString + "); \n\n");
-			}
-			
-			for (SharedDataAccessor sda: tw.getSharedDataAccessors()) {
-			  if (sda.getAccessType() == AccessType.READ || 
-			      sda.getAccessType() == AccessType.READ_WRITE) {
-			    String fnName = Names.getThreadImplReaderFnName(sda);
-			    String argString = Names.createRefParameter(sda.getSharedData().getDataType(), "arg");
-			    out.append("   bool " + fnName + "(" + argString + "); \n\n");
-			  }
-			  if (sda.getAccessType() == AccessType.WRITE || 
-			      sda.getAccessType() == AccessType.READ_WRITE) {
-          String fnName = Names.getThreadImplWriterFnName(sda);
-          String argString = Names.createRefParameter(sda.getSharedData().getDataType(), "arg");
-          out.append("   bool " + fnName + "(const " + argString + "); \n\n");
-			  }
-			}
+		  writeReaderWriterDecl(tw, out);
 		}
 	}
 
 	
-	private void writeType(IdType ty) throws IOException {
-		// get the underlying type for the id. If it is a structured type,
-		// (which I expect) then emit a 'typedef struct'. Else emit a typedef.
-		StringBuffer typeName = new StringBuffer();
-		typeName.append("typedef ");
-		typeName.append(ty.getTypeRef().getCType().varString(ty.getTypeId()) + "; \n");
-		out.append(typeName.toString());
-	}
-
-	private void writeTypes(Set<Entry<String, Type>> entrySet) throws IOException {
-		try {
-			// First we need to get all of the "top-level" types described as
-			// ID-types, then
-			// we can sort them topologically, then emit them.
-			List<Type> idTypes = new ArrayList<Type>();
-			for (Entry<String, Type> e : entrySet) {
-				idTypes.add(new IdType(e.getKey(), e.getValue()));
-			}
-			List<Type> sortedTypes = TopologicalSort.performTopologicalSort(idTypes);
-
-			for (Type t : sortedTypes) {
-				if (t instanceof IdType) {
-					writeType((IdType) t);
-					out.append("\n");
-				}
-			}
-		} catch (CyclicException e) {
-			throw new Aadl2RtosException(
-					"Error writing datatypes to C header: cyclic reference between types.");
-		}
-	}
+	
 
 	// TODO: well-formedness check on model for INOUT ports.
 	private void writeThreadUdeDecls(ThreadImplementation tw) throws IOException {

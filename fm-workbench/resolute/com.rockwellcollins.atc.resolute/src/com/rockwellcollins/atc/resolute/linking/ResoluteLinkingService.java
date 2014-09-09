@@ -45,6 +45,8 @@ public class ResoluteLinkingService extends PropertiesLinkingService {
     }
 
     private EObject getLinkedObject(EObject context, EReference reference, String name) {
+        name = name.replaceAll("::", ".");
+        
         if (context instanceof PropertyValue) {
             return getUnitLiteral(context, name);
         }
@@ -54,15 +56,15 @@ public class ResoluteLinkingService extends PropertiesLinkingService {
         }
 
         if (context instanceof ClaimArg) {
-            return findClassifier(context, reference, name);
+            return getIndexedObject(context, reference, name);
         }
         
         if(context instanceof QuantArg) {
-            return findClassifier(context, reference, name);
+            return getIndexedObject(context, reference, name);
         }
 
         if (context instanceof IdExpr || context instanceof NestedDotID) {
-            EObject e = findClassifier(context, reference, name);
+            EObject e = getIndexedObject(context, reference, name);
             if (e != null) {
                 return e;
             }

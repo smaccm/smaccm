@@ -1,7 +1,7 @@
 /**
  * 
  */
-package edu.umn.cs.crisys.smaccm.aadl2rtos.gluecode;
+package edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.eChronos;
 
 import java.io.BufferedWriter;
 import java.io.File;

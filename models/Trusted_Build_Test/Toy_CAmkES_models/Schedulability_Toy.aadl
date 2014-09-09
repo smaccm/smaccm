@@ -21,15 +21,42 @@ package Schedulability_Toy
 public 
    with Base_Types;
    with SMACCM_SYS;   
+   with Data_Model;
+
+-- Just so we have some data types to play with :)
+
+data alt_ctl_debug_msg
+  properties
+    Data_Model::Data_Representation => Struct;
+end alt_ctl_debug_msg;
+
+
+data implementation alt_ctl_debug_msg.impl
+  subcomponents
+    alt_est : data Base_Types::Float;
+    alt_rate_est : data Base_Types::Float;
+    thrust_p : data Base_Types::Float;
+    thrust_i : data Base_Types::Float;
+    thrust_d : data Base_Types::Float;
+    thrust_i_reset : data Base_Types::Float;
+    ui_setp : data Base_Types::Float;
+    ui_rate_setp : data Base_Types::Float;
+    pos_p : data Base_Types::Float;
+    pos_i : data Base_Types::Float;
+    pos_d : data Base_Types::Float;
+    pos_setp : data Base_Types::Float;
+    pos_rate_setp : data Base_Types::Float;
+end alt_ctl_debug_msg.impl;
+   
    
 -- Example of a periodically dispatched "Active" thread.   
 thread A
 	features
-		Output1: out event data port Base_Types::Integer {
+		Output1: out event data port Base_Types::Unsigned_32 {
 	      SMACCM_SYS::CommPrim_Source_Header => "A_Output1.h";
 	      SMACCM_SYS::CommPrim_Source_Text => "A_Output1";			
 		};
-		Output2: out event data port Base_Types::Integer {
+		Output2: out event data port Base_Types::Unsigned_32 {
 	      SMACCM_SYS::CommPrim_Source_Header => "A_Output2.h";
 	      SMACCM_SYS::CommPrim_Source_Text => "A_Output2";			
 		}; 
@@ -37,8 +64,10 @@ thread A
 	properties 
 	    Dispatch_Protocol => Periodic;
 	    Period => 100 ms;
-		-- periodic event handler.
+	    
+		-- periodic event handler: source file and function name.
 		Source_Text => ("eventhandler_periodic_A.c");
+	    Compute_Entrypoint_Source_Text => "eventhandler_periodic_A";
 	    Priority => 45;
 
 	    Stack_Size => 256 bytes;
@@ -55,8 +84,8 @@ thread A
 	    Compute_Execution_Time => 10 us .. 50 us;
 	    
 	    -- Possible output event patterns: 
-    	-- Either Output_C and Output_D are each invoked 1 time, or
-    	-- Output_D is invoked 2 times
+    	-- Either Output1 and Output2 are each invoked 1 time, or
+    	-- Output2 is invoked 2 times
     	-- Grammar is: 
     	--  send_list : '{' (send_element ',')* send_element '}'
     	--  send_element : 
@@ -64,7 +93,7 @@ thread A
     	--       '{' (INT ID ',')* INT ID '}'
     	-- where the INT should be max # of occurrences and ID should be 
     	-- the output port.
-	    SMACCM_SYS::Sends_Events_To => "{{1 Output_C, 1 Output_D}, {2 Output_D}}";
+	    SMACCM_SYS::Sends_Events_To => "{{1 Output1, 1 Output2}, {2 Output2}}";
 end A ; 
 
 -- Example of a both IRQ dispatched and Periodically dispatched "Active" hybrid thread.   
@@ -96,7 +125,7 @@ end A ;
 
 thread B
 	features
-		Input1: in event data port Base_Types::Integer {
+		Input1: in event port {
 	      SMACCM_SYS::CommPrim_Source_Header => "Signal1_Handlers.h";
 	      SMACCM_SYS::CommPrim_Source_Text => "Signal1_Handlers.c";
 	      
@@ -115,7 +144,7 @@ thread B
 		};
 		
 		-- Another ISR port
-		Input2: in event data port Base_Types::Integer {
+		Input2: in event port {
 	      SMACCM_SYS::CommPrim_Source_Header => "Signal2_Handlers.h";
 	      SMACCM_SYS::CommPrim_Source_Text => "Signal2_Handlers.c";
 	      SMACCM_SYS::Is_ISR => true;
@@ -124,7 +153,7 @@ thread B
 	      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_signal2_1");
 		};
 		
-		Output_D: out event data port Base_Types::Integer {
+		Output_D: out event data port Base_Types::Unsigned_32 {
 	      SMACCM_SYS::CommPrim_Source_Header => "D_Output.h";
 	      SMACCM_SYS::CommPrim_Source_Text => "D_Output";			
 		};
@@ -134,6 +163,7 @@ thread B
 	    Period => 100 ms;
 		-- periodic event handler.
 		Source_Text => ("eventhandler_periodic_B.c");
+		Compute_Entrypoint_Source_Text => "eventhandler_periodic_B";
 	    Priority => 45;
 
 	    Stack_Size => 256 bytes;
@@ -157,20 +187,20 @@ end B ;
 
 thread C
 	features
-		Input1: in event data port Base_Types::Integer {
+		Input1: in event data port Base_Types::Unsigned_32 {
 		  SMACCM_SYS::CommPrim_Source_Header => "C_Handlers.h";
 	      SMACCM_SYS::CommPrim_Source_Text => "C_Handlers.c";
 	      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_C_Input1");
 		}; 
-		Output1: out event data port Base_Types::Integer {
+		Output1: out event data port Base_Types::Unsigned_32 {
 	      SMACCM_SYS::CommPrim_Source_Header => "C_Output.h";
 	      SMACCM_SYS::CommPrim_Source_Text => "C_Output";
 		}; 
 		
 	properties 
-	    Dispatch_Protocol => Sporadic;
-	    Priority => 45;
-	    Stack_Size => 256 bytes;
+	    Dispatch_Protocol => Aperiodic;
+	    --Priority => 45;
+	    --Stack_Size => 256 bytes;
 	    SMACCM_SYS::Language => "Ivory";
 	    SMACCM_SYS::Thread_Type => Passive ;
 	    Compute_Execution_Time => 5 us .. 30 us;
@@ -179,21 +209,20 @@ end C ;
 
 thread D
 	features
-		Input1: in event data port Base_Types::Integer {
+		Input1: in event data port Base_Types::Unsigned_32 {
 		  SMACCM_SYS::CommPrim_Source_Header => "D_Handlers.h";
 	      SMACCM_SYS::CommPrim_Source_Text => "D_Handlers.c";
 	      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_D_Input1");
 		}; 
-		Output1: out event data port Base_Types::Integer {
+		Output1: out event data port alt_ctl_debug_msg.impl {
 	      SMACCM_SYS::CommPrim_Source_Header => "D_Output.h";
 	      SMACCM_SYS::CommPrim_Source_Text => "D_Output";
 		}; 
 		
 	properties 
-	    Dispatch_Protocol => Sporadic;
-	    Priority => 10;
-
-	    Stack_Size => 256 bytes;
+	    Dispatch_Protocol => Aperiodic;
+	    -- Priority => 10;
+	    -- Stack_Size => 256 bytes;
 	    SMACCM_SYS::Language => "Ivory";
 	    SMACCM_SYS::Thread_Type => Passive ;
 	    Compute_Execution_Time => 5 us .. 30 us;
@@ -202,25 +231,24 @@ end D ;
 
 thread E
 	features
-		Input1: in event data port Base_Types::Integer {
+		Input1: in event data port Base_Types::Unsigned_32 {
 		  SMACCM_SYS::CommPrim_Source_Header => "E_Handlers.h";
 	      SMACCM_SYS::CommPrim_Source_Text => "E_Handlers.c";
 	      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_E_Input1");
 		}; 
-		Output1: out event data port Base_Types::Integer {
+		Output1: out event data port Base_Types::Unsigned_32 {
 	      SMACCM_SYS::CommPrim_Source_Header => "E_Output.h";
 	      SMACCM_SYS::CommPrim_Source_Text => "E_Output";
 		}; 
-		Output2: out data port Base_Types::Integer {
+		Output2: out data port Base_Types::Unsigned_32 {
 	      SMACCM_SYS::CommPrim_Source_Header => "E_Output.h";
 	      SMACCM_SYS::CommPrim_Source_Text => "E_Output";
 		}; 
 		
 	properties 
-	    Dispatch_Protocol => Sporadic;
-	    Priority => 10;
-
-	    Stack_Size => 256 bytes;
+	    Dispatch_Protocol => Aperiodic;
+	    --Priority => 10;
+	    --Stack_Size => 256 bytes;
 	    SMACCM_SYS::Language => "Ivory";
 	    SMACCM_SYS::Thread_Type => Passive ;
 	    Compute_Execution_Time => 5 us .. 30 us;
@@ -230,34 +258,33 @@ end E ;
    
 thread F
 	features
-		Input1: in event data port Base_Types::Integer {
+		Input1: in event data port alt_ctl_debug_msg.impl {
 		  SMACCM_SYS::CommPrim_Source_Header => "F_Handlers.h";
 	      SMACCM_SYS::CommPrim_Source_Text => "F_Handlers.c";
 	      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_F_Input1");
 		}; 
-		Output1: out data port Base_Types::Integer {
+		Output1: out data port Base_Types::Unsigned_32 {
 	      SMACCM_SYS::CommPrim_Source_Header => "F_Output.h";
 	      SMACCM_SYS::CommPrim_Source_Text => "F_Output";
 		}; 
 		
 	properties 
-	    Dispatch_Protocol => Sporadic;
-	    Priority => 10;
-
-	    Stack_Size => 256 bytes;
+	    Dispatch_Protocol => Aperiodic;
+	    -- Priority => 10;
+	    --Stack_Size => 256 bytes;
 	    SMACCM_SYS::Language => "Ivory";
 	    SMACCM_SYS::Thread_Type => Passive ;
 	    Compute_Execution_Time => 5 us .. 30 us;
 	    SMACCM_SYS::Sends_Events_To => "{{1 Output1}}";
 end F ; 
 
-process top_level
+process proc
 	features
-		Output1: out data port Base_Types::Integer;
-		Output2: out data port Base_Types::Integer;
-end top_level;
+		Output1: out data port Base_Types::Unsigned_32;
+		Output2: out data port Base_Types::Unsigned_32;
+end proc;
 
-process implementation top_level.Impl
+process implementation proc.Impl
 	subcomponents
 		A_sub : thread A ; 
 		B_sub : thread B ; 
@@ -272,8 +299,17 @@ process implementation top_level.Impl
 		B_TO_D : port A_sub.Output2 -> D_sub.Input1;
 		C_TO_E : port C_sub.Output1 -> E_sub.Input1;
 		D_TO_F : port D_sub.Output1 -> F_sub.Input1;
-		E_TO_Output1 : port E_sub.Output1 -> Output1;
-		F_TO_Output2 : port F_sub.Output1 -> Output2;
-end top_level.Impl;
-	
+		--E_TO_Output1 : port E_sub.Output1 -> Output1;
+		--F_TO_Output2 : port F_sub.Output1 -> Output2;
+end proc.Impl;
+
+system top_level
+end top_level;
+
+system implementation top_level.impl
+	subcomponents
+		pp_sub: process proc.Impl;
+end top_level.impl;
+
+
 end Schedulability_Toy;

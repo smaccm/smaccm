@@ -46,11 +46,11 @@ annex agree {**
     	sum_in_range(acts1.SPLRIB, acts2.SPLRIB, acts2.SPLRIB, acts3.SPLRIB,
     	AGREE_CONSTANTS.SPLRIB_range_low, AGREE_CONSTANTS.SPLRIB_range_high) and 
     	sum_in_range(acts1.SPLROB, acts2.SPLROB, acts2.SPLROB, acts3.SPLROB,
-    	AGREE_CONSTANTS.SPLROB_range_low, AGREE_CONSTANTS.SPLROB_range_high) and 
+    	AGREE_CONSTANTS.SPLROB_range_low, AGREE_CONSTANTS.SPLROB_range_high) and  
     	sum_in_range(acts1.STEER, acts2.STEER, acts2.STEER, acts3.STEER,
     	AGREE_CONSTANTS.STEER_range_low, AGREE_CONSTANTS.STEER_range_high) and 
-    	sum_in_range(acts1.THRTOL, acts2.THRTOL, acts2.THRTOL, acts3.THRTOL,
-    	AGREE_CONSTANTS.THRTOL_range_low, AGREE_CONSTANTS.THRTOL_range_high) and 
+    	sum_in_range(acts1.THROTL, acts2.THROTL, acts2.THROTL, acts3.THROTL,
+    	AGREE_CONSTANTS.THROTL_range_low, AGREE_CONSTANTS.THROTL_range_high) and 
     	sum_in_range(acts1.THROTR, acts2.THROTR, acts2.THROTR, acts3.THROTR,
     	AGREE_CONSTANTS.THROTR_range_low, AGREE_CONSTANTS.THROTR_range_high);
   tel;

@@ -7,8 +7,9 @@ system CLAW
     acts : out data port DATA_TYPES::ACTUATORS.impl;
     
   annex agree {**
+  	
     guarantee "actuator bounds" :
-      bound_rec(acts.THRTOL, AGREE_CONSTANTS.THRTOL_range_low, AGREE_CONSTANTS.THRTOL_range_high) and
+      bound_rec(acts.THROTL, AGREE_CONSTANTS.THROTL_range_low, AGREE_CONSTANTS.THROTL_range_high) and
       bound_rec(acts.THROTR, AGREE_CONSTANTS.THROTR_range_low, AGREE_CONSTANTS.THROTR_range_high) and
       bound_rec(acts.ELLOB, AGREE_CONSTANTS.ELLOB_range_low, AGREE_CONSTANTS.ELLOB_range_high) and
       bound_rec(acts.ELLIB, AGREE_CONSTANTS.ELLIB_range_low, AGREE_CONSTANTS.ELLIB_range_high) and

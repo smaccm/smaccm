@@ -6,7 +6,7 @@ public
 system ISAS_RC_Dual_Channel_Inputs
      
      annex agree {**
-     	guarantee "dummy" : true;
+     	guarantee "dummy guarantee for AGREE" : true;
    	 **};
     
  end ISAS_RC_Dual_Channel_Inputs;
@@ -115,7 +115,7 @@ system ISAS_RC_Dual_Channel_Inputs
     -------------------------------------------------------------------------------------------------------------------     
     -- Table row 1 
     -------------------------------------------------------------------------------------------------------------------
-    -- TBD
+    -- Extremely improbable during the lifetime of the fleet
  
     -------------------------------------------------------------------------------------------------------------------     
     -- Table row 2 

@@ -37,7 +37,7 @@ public class RealType extends Type {
 	}
 
 	@Override
-	public CType getCType() {
+	public CType getCType(int indent) {
 		return new CType(toString(), "");
 	}
 

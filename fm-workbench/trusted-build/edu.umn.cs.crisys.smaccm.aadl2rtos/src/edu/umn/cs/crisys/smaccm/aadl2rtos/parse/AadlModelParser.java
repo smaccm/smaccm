@@ -23,11 +23,14 @@ package edu.umn.cs.crisys.smaccm.aadl2rtos.parse;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.emf.common.util.EList;
+import org.osate.aadl2.AbstractFeature;
 import org.osate.aadl2.Classifier;
 import org.osate.aadl2.ComponentCategory;
 import org.osate.aadl2.ComponentImplementation;
@@ -37,8 +40,12 @@ import org.osate.aadl2.DirectionType;
 import org.osate.aadl2.Element;
 import org.osate.aadl2.EnumerationLiteral;
 import org.osate.aadl2.Feature;
+import org.osate.aadl2.FeatureGroup;
 import org.osate.aadl2.PortCategory;
+import org.osate.aadl2.SubprogramAccess;
+import org.osate.aadl2.SubprogramGroupAccess;
 import org.osate.aadl2.SystemImplementation;
+import org.osate.aadl2.impl.BusAccessImpl;
 import org.osate.aadl2.impl.DataAccessImpl;
 import org.osate.aadl2.impl.DataImplementationImpl;
 import org.osate.aadl2.impl.DataPortImpl;
@@ -69,7 +76,6 @@ public class AadlModelParser {
 
 	// containers for AADL AST objects
 	private ArrayList<ThreadTypeImpl> threadTypeImplList;
-	// private Set<SystemImpl> systemImplList = new HashSet<SystemImpl>();
 	
 	// Instance objects
   private ArrayList<ComponentInstance> threadInstanceList;
@@ -81,6 +87,8 @@ public class AadlModelParser {
 	    new HashMap<DataSubcomponentImpl, SharedData>();	
 	private HashMap<PortImpl, DataPort> portMap = new HashMap<PortImpl, DataPort>();
 	private Map<ComponentInstance, ThreadInstance> threadInstanceMap;
+	private Set<DataClassifier> dataTypes = new HashSet<DataClassifier>();
+
 	
 	//
 	private Model model;
@@ -211,7 +219,7 @@ public class AadlModelParser {
   
 	InputEventPort addInputEventPort(PortImpl port, Type datatype, ThreadImplementation ti) {
     int queueSize = PortUtil.getQueueSize(port); 
-    InputEventPort iep = new InputEventPort(port.getName(), new UnitType(), ti, queueSize);
+    InputEventPort iep = new InputEventPort(port.getName(), datatype, ti, queueSize);
     ti.addInputEventPort(iep);
     List<String> entrypoints = ThreadUtil.getComputeEntrypointList(port);
     String file = Util.getStringValueOpt(port,ThreadUtil.SOURCE_TEXT);
@@ -232,7 +240,7 @@ public class AadlModelParser {
 	void addPort(PortImpl port, ThreadImplementation ti) {
 	  DataPort dp = null;
 	  if (port.getDirection() == DirectionType.IN_OUT) {
-	    logger.error("Gentlemen do not process IN_OUT ports");
+	    this.constructWarning(ti.getName(), "IN_OUT ports", port.getName(), null);
 	    throw new Aadl2RtosException("Gentlemen do not process IN_OUT ports");
 	  }
     Type datatype = getDataType(port);
@@ -300,13 +308,28 @@ public class AadlModelParser {
     }
   }
   
-  private void setDispatchProtocol(ThreadTypeImpl tti, ThreadImplementation ti) {
+  private void setDispatchProtocol(ThreadTypeImpl tti, ThreadImplementation ti, boolean isPassive) {
     EnumerationLiteral dispatchProtocol;  
     try {
       dispatchProtocol = ThreadUtil.getDispatchProtocol(tti);
     } catch (Exception e) {
       throw new Aadl2RtosException(
           "Dispatch protocol not found for thread: " + tti.getFullName());
+    }
+    String dpName = dispatchProtocol.getName(); 
+    if (isPassive) { 
+      if (!"Aperiodic".equalsIgnoreCase(dpName)) {
+        throw new Aadl2RtosException(
+            "For passive thread " + tti.getFullName() + "'Aperiodic' is the only currently supported dispatch protocol.");
+      }
+    }
+    else {
+      if (!("Sporadic".equalsIgnoreCase(dpName) || 
+            "Periodic".equalsIgnoreCase(dpName) ||
+            "Hybrid".equalsIgnoreCase(dpName))) {
+        throw new Aadl2RtosException(
+            "For active thread " + tti.getFullName() + ", dispatch protocol must be one of {Sporadic, Periodic, Hybrid}.");
+      }
     }
     ti.setDispatchProtocol(dispatchProtocol.getName());
   }
@@ -332,22 +355,69 @@ public class AadlModelParser {
     }
   }
   
+  public void constructWarning(String threadName, String featureType, String featureName, String supportDate) {
+    String str = 
+        "Thread " + threadName + " contains " + featureType + " " +   
+         featureName + ".  Features of type " + featureType + 
+         " are currently unsupported so declaration will be ignored."; 
+    if (supportDate != null) {
+      str += "  Support for " + featureType + " is planned for " + supportDate + ".";
+    } else {
+      str += " No support for " + featureType + " is planned.";
+    }
+    logger.warn(str);
+  }
+  
   private ThreadImplementation constructThreadImplementation(ThreadTypeImpl tti) {
     String name = tti.getName().toLowerCase();
-    int priority = ThreadUtil.getPriority(tti);
-    int stackSize = ThreadUtil.getStackSizeInBytes(tti);
-    String generatedEntrypoint = tti.getFullName();
     boolean isPassive = ThreadUtil.getThreadType(tti);    
+    int priority = -1; 
+    int stackSize = -1;
+    
+    if (!isPassive) {
+      priority = ThreadUtil.getPriority(tti);
+      stackSize = ThreadUtil.getStackSizeInBytes(tti);
+    } else {
+      try {
+        ThreadUtil.getPriority(tti);
+        logger.warn("Warning: priority ignored for passive thread: " + name);
+      } catch (Aadl2RtosException e) {}
+      try {
+        ThreadUtil.getStackSizeInBytes(tti); 
+        logger.warn("Warning: stack size ignored for passive thread: " + name);
+      } catch (Aadl2RtosException e) {}
+    }
+    
+    String generatedEntrypoint = tti.getFullName();
     ThreadImplementation ti = 
         new ThreadImplementation(name, priority, stackSize, generatedEntrypoint, isPassive);
 
-    setDispatchProtocol(tti, ti);
+    double minComputeTime = ThreadUtil.getMinComputeExecutionTimeInMicroseconds(tti);
+    double maxComputeTime = ThreadUtil.getMaxComputeExecutionTimeInMicroseconds(tti);
+    ti.setMinExecutionTime(minComputeTime);
+    ti.setMaxExecutionTime(maxComputeTime);
+    
+    setDispatchProtocol(tti, ti, isPassive);
     createOptPeriodicHandler(tti, ti); 
     
     for (Feature f: tti.getAllFeatures()) {
       if (f instanceof PortImpl) {
         addPort((PortImpl)f, ti); 
       } 
+      else if (f instanceof FeatureGroup) {
+        constructWarning(name, "feature group", f.getName(), "11/2014");
+      }
+      else if (f instanceof SubprogramAccess) {
+        constructWarning(name, "subprogram access", f.getName(), "10/2014");
+      }
+      else if (f instanceof SubprogramGroupAccess) {
+        constructWarning(name, "subprogram group access", f.getName(), "10/2014");
+      }
+      else if (f instanceof BusAccessImpl) {
+        constructWarning(name, "bus access", f.getName(), null);
+      } else if (f instanceof AbstractFeature) {
+        constructWarning(name, "abstract feature", f.getName(), null);
+      }
     }
     
     return ti;
@@ -366,7 +436,6 @@ public class AadlModelParser {
     HashMap<ThreadTypeImpl, List<ComponentInstance>> 
       threadImplToInstanceMap = new HashMap<ThreadTypeImpl, List<ComponentInstance>>(); 
     for (ComponentInstance co : threadInstanceList) {
-      // String threadType = co.getComponentClassifier().getName().toString();
       ThreadTypeImpl threadType = (ThreadTypeImpl)co.getComponentClassifier(); 
       if (!threadImplToInstanceMap.containsKey(threadType)) {
         threadImplToInstanceMap.put(threadType, new ArrayList<ComponentInstance>());
@@ -392,7 +461,7 @@ public class AadlModelParser {
 				this.model.legacySemaphoreList.addAll(lti.getLegacySemaphores());
 			} else {
 				ThreadImplementation threadImplementation = constructThreadImplementation(tti); 
-				if (threadImplToInstanceMap.containsKey(tti)) {
+				if (threadImplToInstanceMap.containsKey(tti )) {
           for (ComponentInstance co: threadImplToInstanceMap.get(tti)) {
             ThreadInstance instance = new ThreadInstance(threadImplementation);
             threadImplementation.addThreadInstance(instance);
@@ -574,14 +643,14 @@ public class AadlModelParser {
 		}
 
 		// create internal ast types from the AADL types
-		for (DataClassifier dc : this.model.dataTypes) {
+		for (DataClassifier dc : this.dataTypes) {
 			Type t = createAstType(dc);
 			if (!t.isBaseType()) {
-				this.model.astTypes.put(Util.normalizeAadlName(dc), t);
+				this.model.getAstTypes().put(Util.normalizeAadlName(dc), t);
 			}
 		}
 		for (Type t : this.model.astTypes.values()) {
-			t.init(this.model.astTypes);
+			t.init(this.model.getAstTypes());
 		}
 	}
 
@@ -592,7 +661,7 @@ public class AadlModelParser {
 			Classifier dpiClass = dpi.getClassifier();
 
 			if (dpiClass instanceof DataTypeImpl || dpiClass instanceof DataImplementationImpl) {
-				this.model.dataTypes.add((DataClassifier) dpiClass);
+				this.dataTypes.add((DataClassifier) dpiClass);
 			}
 		}
 		for (Element child : elem.getChildren()) {
@@ -603,8 +672,8 @@ public class AadlModelParser {
 	public Type lookupType(DataClassifier dc) {
 		String dcName = Util.normalizeAadlName(dc);
 		Type ty = createAstType(dc);
-		if (this.model.astTypes.containsKey(dcName)) {
-			return new IdType(dcName, this.model.astTypes.get(dcName));
+		if (this.model.getAstTypes().containsKey(dcName)) {
+			return new IdType(dcName, this.model.getAstTypes().get(dcName));
 		} else {
 			return ty;
 		}
@@ -617,8 +686,8 @@ public class AadlModelParser {
 		String qualifiedName = dc.getQualifiedName();
 		String normalizedName = Util.normalizeAadlName(qualifiedName);
 
-		if (this.model.astTypes.containsKey(normalizedName)) {
-			return this.model.astTypes.get(normalizedName);
+		if (this.model.getAstTypes().containsKey(normalizedName)) {
+			return this.model.getAstTypes().get(normalizedName);
 		}
 
 		// base types defined by the data modeling annex

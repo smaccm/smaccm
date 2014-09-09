@@ -45,7 +45,7 @@ annex agree {**
      flaps_fault.FLAPS3.FLLOB, flaps_fault.FLAPS4.FLLOB, flaps_select.FLLOB,
      AGREE_CONSTANTS.FLLOB_range_high, AGREE_CONSTANTS.FLLOB_range_low) and 
      
-     two_faults_in_range(flaps_fault.FLAPS1.FLLIB, flaps_fault.FLAPS2.FLLIB, 
+     two_faults_in_range(flaps_fault.FLAPS1.FLLIB,flaps_fault.FLAPS2.FLLIB, 
      flaps_fault.FLAPS3.FLLIB, flaps_fault.FLAPS4.FLLIB, flaps_select.FLLIB,
      AGREE_CONSTANTS.FLLIB_range_high, AGREE_CONSTANTS.FLLIB_range_low) and 
      

@@ -175,14 +175,15 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
             if (!(namedEl instanceof SubcomponentImpl)) {
                 error(lift, "Lift statements must apply to subcomponent implementations. '"
                         + namedEl.getName() + "' is not a subcomponent.");
-            } else {
-                SubcomponentImpl subImpl = (SubcomponentImpl) namedEl;
-                if (subImpl.getComponentImplementation() == null) {
-                    error(lift, "Lift statements must apply to subcomponent implementations. '"
-                            + namedEl.getName()
-                            + "' is a subcomponent type, not a subcomponent implementation.");
-                }
             }
+//            } else {
+//                SubcomponentImpl subImpl = (SubcomponentImpl) namedEl;
+//                if (subImpl.getComponentImplementation() == null) {
+//                    error(lift, "Lift statements must apply to subcomponent implementations. '"
+//                            + namedEl.getName()
+//                            + "' is a subcomponent type, not a subcomponent implementation.");
+//                }
+//            }
         }
     }
 
