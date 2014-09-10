@@ -65,6 +65,7 @@ import com.rockwellcollins.atc.agree.agree.CalenStatement;
 import com.rockwellcollins.atc.agree.agree.CallDef;
 import com.rockwellcollins.atc.agree.agree.ConstStatement;
 import com.rockwellcollins.atc.agree.agree.EqStatement;
+import com.rockwellcollins.atc.agree.agree.EventExpr;
 import com.rockwellcollins.atc.agree.agree.Expr;
 import com.rockwellcollins.atc.agree.agree.FloorCast;
 import com.rockwellcollins.atc.agree.agree.FnCallExpr;
@@ -138,6 +139,15 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
     	}
     }
 
+    @Check(CheckType.FAST)
+    public void checkEventExpr(EventExpr event){
+        NestedDotID nestId = event.getId();
+        NamedElement namedEl = getFinalNestId(nestId);
+        if(!(namedEl instanceof EventDataPort)){
+        	error(event, "Arguement of event expression must be an event data port");
+        }
+    }
+    
     @Check(CheckType.FAST)
     public void checkSynchStatement(SynchStatement sync){
         //TODO: I'm pretty sure INT_LITs are always positive anyway.
@@ -1494,6 +1504,8 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
         	return INT;
         } else if(expr instanceof RealCast){
         	return REAL;
+        } else if(expr instanceof EventExpr){
+        	return BOOL;
         }
 
         return ERROR;

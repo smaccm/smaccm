@@ -132,7 +132,7 @@ assume "don't fail otherside assumption" :
 --         right_side_valid ;
 		  
 assume "valid pitch" :AD_L_Pitch_Step_Delta_Valid and  
-       AD_R_Pitch_Step_Delta_Valid and pitch_lr_ok ;   
+       AD_R_Pitch_Step_Delta_Valid and pitch_lr_ok ; 
 		  
 -- Assertion: our computed pitch deltas are less than some 
 -- maximum amount.

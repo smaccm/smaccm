@@ -6,7 +6,7 @@ import org.osate.aadl2.Feature;
 
 public class AgreeFeature {
 	
-	public enum ConnType {QUEUE,IMMEDIATE,DELAYED}
+	public enum ConnType {EVENT,IMMEDIATE,DELAYED}
 	public enum Direction {IN, OUT};
 	
 	public Feature feature;

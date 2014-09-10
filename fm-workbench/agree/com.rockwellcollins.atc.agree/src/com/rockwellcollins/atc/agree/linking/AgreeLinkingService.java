@@ -34,6 +34,8 @@ import com.rockwellcollins.atc.agree.agree.NodeEq;
 import com.rockwellcollins.atc.agree.agree.RecordExpr;
 import com.rockwellcollins.atc.agree.agree.RecordType;
 import com.rockwellcollins.atc.agree.agree.RecordUpdateExpr;
+import com.rockwellcollins.atc.agree.agree.EventExpr;
+
 
 public class AgreeLinkingService extends PropertiesLinkingService {
     public AgreeLinkingService() {
@@ -57,7 +59,8 @@ public class AgreeLinkingService extends PropertiesLinkingService {
                 || context instanceof RecordExpr
                 || context instanceof RecordType
                 || context instanceof GetPropertyExpr
-                || context instanceof RecordUpdateExpr) {
+                || context instanceof RecordUpdateExpr
+                || context instanceof EventExpr) {
 
             //EObject e = findClassifier(context, reference, name);
         	EObject e = getIndexedObject(context, reference, name);
