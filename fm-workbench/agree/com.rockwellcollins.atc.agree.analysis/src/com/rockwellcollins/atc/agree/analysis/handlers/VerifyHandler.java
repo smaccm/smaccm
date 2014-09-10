@@ -49,15 +49,15 @@ import com.rockwellcollins.atc.agree.analysis.Activator;
 import com.rockwellcollins.atc.agree.analysis.AgreeEmitterUtilities;
 import com.rockwellcollins.atc.agree.analysis.AgreeException;
 import com.rockwellcollins.atc.agree.analysis.AgreeGenerator;
-import com.rockwellcollins.atc.agree.analysis.FeatureToConnectionsMap;
 import com.rockwellcollins.atc.agree.analysis.preferences.PreferenceConstants;
+import com.rockwellcollins.atc.agree.analysis.preferences.PreferencesUtil;
 import com.rockwellcollins.atc.agree.analysis.views.AgreeResultsLinker;
 import com.rockwellcollins.atc.agree.analysis.views.AgreeResultsView;
 
 public abstract class VerifyHandler extends AadlHandler {
     protected AgreeResultsLinker linker = new AgreeResultsLinker();
     protected Queue<AnalysisResult> queue = new ArrayDeque<>();
-    
+       
     private static final String RERUN_ID = "com.rockwellcollins.atc.agree.analysis.commands.rerunAgree";
     private IHandlerActivation rerunActivation;
 
@@ -66,7 +66,7 @@ public abstract class VerifyHandler extends AadlHandler {
     @Override
     protected IStatus runJob(Element root, IProgressMonitor monitor) {
         disableRerunHandler();
-        
+
         if (!(root instanceof SystemImplementation)) {
             return new Status(IStatus.ERROR, Activator.PLUGIN_ID,
                     "Must select an AADL System Implementation");
@@ -74,30 +74,32 @@ public abstract class VerifyHandler extends AadlHandler {
 
         try {
             ComponentImplementation ci = (ComponentImplementation) root;
-            
+
             SystemInstance si = null;
             if (root instanceof SystemImplementation) {
                 final SystemImplementation sysimpl = (SystemImplementation) root;
                 try {
                     si = InstantiateModel.buildInstanceModelFile(sysimpl);
                 } catch (Exception e) {
-                    Dialog.showError("Model Instantiate", "Error while re-instantiating the model: "
-                            + e.getMessage());
+                    Dialog.showError("Model Instantiate",
+                            "Error while re-instantiating the model: " + e.getMessage());
                     return Status.CANCEL_STATUS;
                 }
             }
-            
+
             AnalysisResult result;
             CompositeAnalysisResult wrapper = new CompositeAnalysisResult("");
             LinkedList<NamedElement> modelParents = new LinkedList<>();
-            
+
             SystemType sysType = si.getSystemImplementation().getType();
-            EList<AnnexSubclause> annexSubClauses = AnnexUtil.getAllAnnexSubclauses(sysType, AgreePackage.eINSTANCE.getAgreeContractSubclause());
-            
-            if(annexSubClauses.size() == 0){
-            	throw new AgreeException("There is not an AGREE annex in the '"+sysType.getName()+"' system type.");
+            EList<AnnexSubclause> annexSubClauses = AnnexUtil.getAllAnnexSubclauses(sysType,
+                    AgreePackage.eINSTANCE.getAgreeContractSubclause());
+
+            if (annexSubClauses.size() == 0) {
+                throw new AgreeException("There is not an AGREE annex in the '" + sysType.getName()
+                        + "' system type.");
             }
-            
+
             if (isRecursive()) {
                 result = buildAnalysisResult(ci.getName(), si);
                 wrapper.addChild(result);
@@ -131,49 +133,49 @@ public abstract class VerifyHandler extends AadlHandler {
 
     private AnalysisResult buildAnalysisResult(String name, ComponentInstance ci) {
         CompositeAnalysisResult result = new CompositeAnalysisResult("Verification for " + name);
-        
+
         AnalysisResult tempResult = createGuaranteeVerification(ci);
-        if(tempResult != null){
-        	result.addChild(tempResult);
+        if (tempResult != null) {
+            result.addChild(tempResult);
         }
         tempResult = createAssumptionVerification(ci);
-        if(tempResult != null){
-        	result.addChild(tempResult);
+        if (tempResult != null) {
+            result.addChild(tempResult);
         }
         tempResult = createConsistVerification(ci);
-        if(tempResult != null){
-        	result.addChild(tempResult);
+        if (tempResult != null) {
+            result.addChild(tempResult);
         }
 
         ComponentImplementation compImpl = AgreeEmitterUtilities.getInstanceImplementation(ci);
-        for(Subcomponent subComp : compImpl.getAllSubcomponents()){
+        for (Subcomponent subComp : compImpl.getAllSubcomponents()) {
             ComponentInstance subInst = ci.findSubcomponentInstance(subComp);
-            if(subInst != ci){
-                if(AgreeEmitterUtilities.getInstanceImplementation(subInst) != null){
-                	AnalysisResult buildAnalysisResult = buildAnalysisResult(subInst.getName(), subInst);
-                	if(buildAnalysisResult != null){
-                		result.addChild(buildAnalysisResult);
-                	}
+            if (subInst != ci) {
+                if (AgreeEmitterUtilities.getInstanceImplementation(subInst) != null) {
+                    AnalysisResult buildAnalysisResult = buildAnalysisResult(subInst.getName(),
+                            subInst);
+                    if (buildAnalysisResult != null) {
+                        result.addChild(buildAnalysisResult);
+                    }
                 }
             }
         }
-        
-        if(result.getChildren().size() != 0){
-        	linker.setComponent(result, compImpl);
-        	return result;
+
+        if (result.getChildren().size() != 0) {
+            linker.setComponent(result, compImpl);
+            return result;
         }
 
         return null;
     }
 
     private AnalysisResult createGuaranteeVerification(ComponentInstance ci) {
-        
+
         AgreeGenerator emitter = new AgreeGenerator(ci);
         Program program = emitter.evaluate();
-        if(program == null){
-        	return null;
+        if (program == null) {
+            return null;
         }
-
 
         List<String> properties = emitter.getGuarProps();
         Node oldNode = program.getMainNode();
@@ -186,10 +188,9 @@ public abstract class VerifyHandler extends AadlHandler {
                 properties,
                 oldNode.assertions);
         
-        
         List<Node> nodes = new ArrayList<>();
-        for(Node node : program.nodes){
-            if(node != oldNode)
+        for (Node node : program.nodes) {
+            if (node != oldNode)
                 nodes.add(node);
         }
         nodes.add(newNode);
@@ -208,17 +209,17 @@ public abstract class VerifyHandler extends AadlHandler {
 
         return result;
     }
-    
+
     private AnalysisResult createAssumptionVerification(ComponentInstance ci) {
-        //AgreeEmitter emitter = new AgreeEmitter(ci, modelParents, context);
-        //Program program = emitter.evaluate();
+        // AgreeEmitter emitter = new AgreeEmitter(ci, modelParents, context);
+        // Program program = emitter.evaluate();
 
         AgreeGenerator emitter = new AgreeGenerator(ci);
         Program program = emitter.evaluate();
-        if(program == null){
-        	return null;
+        if (program == null) {
+            return null;
         }
-        
+
         List<String> properties = emitter.getAssumeProps();
         Node oldNode = program.getMainNode();
         Node newNode = new Node(//oldNode.location, 
@@ -231,8 +232,8 @@ public abstract class VerifyHandler extends AadlHandler {
                 oldNode.assertions);
         
         List<Node> nodes = new ArrayList<>();
-        for(Node node : program.nodes){
-            if(node != oldNode)
+        for (Node node : program.nodes) {
+            if (node != oldNode)
                 nodes.add(node);
         }
         nodes.add(newNode);
@@ -253,13 +254,13 @@ public abstract class VerifyHandler extends AadlHandler {
     }
 
     private AnalysisResult createConsistVerification(ComponentInstance ci) {
-        //AgreeEmitter emitter = new AgreeEmitter(ci, modelParents, context);
-        //Program program = emitter.evaluate();
-        
+        // AgreeEmitter emitter = new AgreeEmitter(ci, modelParents, context);
+        // Program program = emitter.evaluate();
+
         AgreeGenerator emitter = new AgreeGenerator(ci);
         Program program = emitter.evaluate();
-        if(program == null){
-        	return null;
+        if (program == null) {
+            return null;
         }
 
         List<String> properties = emitter.getConsistProps();
@@ -274,19 +275,20 @@ public abstract class VerifyHandler extends AadlHandler {
                 oldNode.assertions);
         
         List<Node> nodes = new ArrayList<>();
-        for(Node node : program.nodes){
-            if(node != oldNode)
+        for (Node node : program.nodes) {
+            if (node != oldNode)
                 nodes.add(node);
         }
         nodes.add(newNode);
         program = new Program(program.types, program.constants, nodes);
         List<Boolean> reverseStatus = new ArrayList<>();
-        for(int i = 0; i < properties.size(); i ++){
+        for (int i = 0; i < properties.size(); i++) {
             reverseStatus.add(true);
         }
-       
+
         Renaming renaming = emitter.getRenaming();
-        JKindResult result = new JKindResult("Contract Consistency", properties, reverseStatus, renaming);
+        JKindResult result = new JKindResult("Contract Consistency", properties, reverseStatus,
+                renaming);
         queue.add(result);
 
         ComponentImplementation compImpl = AgreeEmitterUtilities.getInstanceImplementation(ci);
@@ -324,7 +326,7 @@ public abstract class VerifyHandler extends AadlHandler {
             }
         });
     }
-    
+
     protected void clearView() {
         getWindow().getShell().getDisplay().syncExec(new Runnable() {
             @Override
@@ -342,6 +344,7 @@ public abstract class VerifyHandler extends AadlHandler {
 
     private IStatus doAnalysis(Element root, IProgressMonitor monitor) {
     	JKindApi japi = getJKindApi();
+
         while (!queue.isEmpty() && !monitor.isCanceled()) {
             AnalysisResult result = queue.remove();
             Program program = linker.getProgram(result);
@@ -353,6 +356,7 @@ public abstract class VerifyHandler extends AadlHandler {
             	System.out.println(program);
             	break;
             }
+
         }
 
         while (!queue.isEmpty()) {
@@ -364,16 +368,28 @@ public abstract class VerifyHandler extends AadlHandler {
         return monitor.isCanceled() ? Status.CANCEL_STATUS : Status.OK_STATUS;
     }
 
-    protected void enableRerunHandler(Element root) {
-        IHandlerService handlerService = getHandlerService();
-        rerunActivation = handlerService.activateHandler(RERUN_ID, new RerunHandler(root, this));
+
+    protected void enableRerunHandler(final Element root) {
+        getWindow().getShell().getDisplay().syncExec(new Runnable() {
+            @Override
+            public void run() {
+                IHandlerService handlerService = getHandlerService();
+                rerunActivation = handlerService.activateHandler(RERUN_ID, new RerunHandler(root,
+                        VerifyHandler.this));
+            }
+        });
     }
 
     protected void disableRerunHandler() {
         if (rerunActivation != null) {
-            IHandlerService handlerService = getHandlerService();
-            handlerService.deactivateHandler(rerunActivation);
-            rerunActivation = null;
+            getWindow().getShell().getDisplay().syncExec(new Runnable() {
+                @Override
+                public void run() {
+                    IHandlerService handlerService = getHandlerService();
+                    handlerService.deactivateHandler(rerunActivation);
+                    rerunActivation = null;
+                }
+            });
         }
     }
 
@@ -393,8 +409,8 @@ public abstract class VerifyHandler extends AadlHandler {
         if (prefs.getBoolean(PreferenceConstants.PREF_BLAME_CEX)) {
             api.setIntervalGeneralization();
         }
-        
-        switch(prefs.getString(PreferenceConstants.PREF_SOLVER)){
+
+        switch (prefs.getString(PreferenceConstants.PREF_SOLVER)) {
         case "YICES":
             api.setSolver(SolverOption.YICES);
             break;
@@ -405,10 +421,10 @@ public abstract class VerifyHandler extends AadlHandler {
             api.setSolver(SolverOption.CVC4);
             break;
         }
-        
+
         api.setN(prefs.getInt(PreferenceConstants.PREF_DEPTH));
         api.setTimeout(prefs.getInt(PreferenceConstants.PREF_TIMEOUT));
         return api;
     }
-    
+
 }

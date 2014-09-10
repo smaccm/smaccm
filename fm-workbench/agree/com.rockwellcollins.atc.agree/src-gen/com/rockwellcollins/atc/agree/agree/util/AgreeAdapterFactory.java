@@ -287,6 +287,11 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
         return createPreExprAdapter();
       }
       @Override
+      public Adapter caseEventExpr(EventExpr object)
+      {
+        return createEventExprAdapter();
+      }
+      @Override
       public Adapter caseRealLitExpr(RealLitExpr object)
       {
         return createRealLitExprAdapter();
@@ -984,6 +989,21 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
    * @generated
    */
   public Adapter createPreExprAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.EventExpr <em>Event Expr</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see com.rockwellcollins.atc.agree.agree.EventExpr
+   * @generated
+   */
+  public Adapter createEventExprAdapter()
   {
     return null;
   }

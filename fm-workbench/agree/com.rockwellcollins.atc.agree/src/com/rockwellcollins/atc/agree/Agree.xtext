@@ -159,6 +159,7 @@ TermExpr returns Expr:
 	  ComplexExpr
 	| {IntLitExpr} val=INTEGER_LIT
 	| {PreExpr} 'pre' '(' expr=Expr ')'
+	| {EventExpr} 'event' '(' id = NestedDotID ')'
 	| {RealLitExpr} val=REAL_LIT
 	| {BoolLitExpr} val=BooleanLiteral
 	| {ThisExpr} 'this' ('.' subThis=NestedDotID)?

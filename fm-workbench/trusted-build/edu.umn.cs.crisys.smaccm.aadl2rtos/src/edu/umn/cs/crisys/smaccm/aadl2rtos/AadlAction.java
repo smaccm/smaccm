@@ -34,8 +34,6 @@
  */
 package edu.umn.cs.crisys.smaccm.aadl2rtos;
 
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.CoreException;
@@ -59,7 +57,11 @@ import org.osate.aadl2.Element;
 import org.osate.aadl2.instance.SystemInstance;
 import org.osate.aadl2.modelsupport.errorreporting.AnalysisErrorReporterManager;
 
-abstract public class AadlAction implements IWorkbenchWindowActionDelegate {
+import fr.tpt.aadl.ramses.control.support.analysis.AnalysisException;
+import fr.tpt.aadl.ramses.control.support.analysis.Analyzer;
+import fr.tpt.aadl.ramses.control.support.config.RamsesConfiguration;
+
+abstract public class AadlAction implements IWorkbenchWindowActionDelegate, Analyzer {
 	private IWorkbenchWindow window;
 	private Object currentSelection;
 
@@ -75,7 +77,7 @@ abstract public class AadlAction implements IWorkbenchWindowActionDelegate {
 	abstract protected IStatus runJob(Element sel, IProgressMonitor monitor, Logger log);
 	
 	public void run(IAction action) {
-		final Logger log = new Logger(Logger.INFO, "AADL Validation", getWindow());
+		final Logger log = new ConsoleLogger(Logger.INFO, "AADL Validation", getWindow());
 
 		WorkspaceJob job = new WorkspaceJob("AADL Job") {
 			@Override
@@ -128,10 +130,10 @@ abstract public class AadlAction implements IWorkbenchWindowActionDelegate {
 			}
 		};
 		
-		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-		IProject[] projects = root.getProjects(); 
-		log.info("Here are the projects!");
-		log.info(projects);
+		//IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+		//IProject[] projects = root.getProjects(); 
+		//log.info("Here are the projects!");
+		//log.info(projects);
 		
 		job.setRule(ResourcesPlugin.getWorkspace().getRoot());
 		job.setUser(true);
@@ -156,4 +158,5 @@ abstract public class AadlAction implements IWorkbenchWindowActionDelegate {
 	protected AnalysisErrorReporterManager getErrorManager() {
 		return AnalysisErrorReporterManager.NULL_ERROR_MANANGER;
 	}
+	
 }

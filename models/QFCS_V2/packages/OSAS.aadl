@@ -68,7 +68,7 @@ system OSAS_Sys
     --of the total number of command channels to the number of
     --valid command channels (i.e. 4/(number of valid command channels).
     guarantee "OSAS-S-180" :
-      OSAS_S_180.req(act_gains, num_valid_acts, ccdl_failed);
+     OSAS_S_180.req(act_gains, num_valid_acts, ccdl_failed);
     
     guarantee "OSAS-S-190" : 
       OSAS_S_190.req(acts_in, acts_out, act_gains);
@@ -80,8 +80,7 @@ system OSAS_Sys
       OSAS_S_250.req(act_gains, act_claw_fails);
 
     guarantee "OSAS-S-210, OSAS-S-220, and OSAS-S-230":	
-      OSAS_S_210_220_230.req(sovs1, sovs2, acts_isas_fail, latched_failures, acts_ccdl_num_fail);
-    	
+      OSAS_S_210_220_230.req(sovs1, sovs2, acts_isas_fail, latched_failures, acts_ccdl_num_fail);  	
     	    	
   **};
 end OSAS_Sys;

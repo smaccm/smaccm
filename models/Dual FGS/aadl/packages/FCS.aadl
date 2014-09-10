@@ -122,9 +122,9 @@ assume "valid assumption" : some_side_valid ;
 
 -- We assume when a side recovers it does not fail immediately
 assume "don't fail otherside assumption" : 
-	   prev(prev(not left_side_valid, false), false) and
+	   prev(prev(not left_side_valid, false), false) and 
        prev(left_side_valid, false) => 
-           left_side_valid ; 
+           left_side_valid ;  
 
 --assume "dont fail assumption" : 
 --	   prev(prev(not right_side_valid, false), false) and
@@ -132,7 +132,7 @@ assume "don't fail otherside assumption" :
 --         right_side_valid ;
 		  
 assume "valid pitch" :AD_L_Pitch_Step_Delta_Valid and  
-       AD_R_Pitch_Step_Delta_Valid and pitch_lr_ok ;   
+       AD_R_Pitch_Step_Delta_Valid and pitch_lr_ok ; 
 		  
 -- Assertion: our computed pitch deltas are less than some 
 -- maximum amount.
@@ -199,7 +199,7 @@ assert (FGS_L.LSO.Valid and FGS_R.LSO.Valid) => FGS_L.LSO.Leader = FGS_R.LSO.Lea
 assert (prev(not(FGS_L.LSO.Valid), false) => 
 	(FGS_R.LSO.Valid => FGS_R.LSO.Leader != Get_Property(FGS_L, META_Properties::Leader_Select_ID)));		
   
-assert prev(not(FGS_R.LSO.Valid), false) => 
+assert prev(not(FGS_R.LSO.Valid), false) =>  
 	(FGS_L.LSO.Valid => FGS_L.LSO.Leader != Get_Property(FGS_R, META_Properties::Leader_Select_ID));
 			 
   -- If any non-failed nodes exist, one of them will be the leader

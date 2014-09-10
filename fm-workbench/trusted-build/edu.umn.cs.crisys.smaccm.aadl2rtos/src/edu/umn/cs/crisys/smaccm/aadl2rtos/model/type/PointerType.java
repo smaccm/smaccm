@@ -38,8 +38,8 @@ public class PointerType extends Type {
 	}
 
 	@Override
-	public CType getCType() {
-	  CType elemCType = elem.getCType();
+	public CType getCType(int indent) {
+	  CType elemCType = elem.getCType(indent);
 		return new CType(elemCType.getPrefix() + " *", elemCType.getPostfix());
 	}
 

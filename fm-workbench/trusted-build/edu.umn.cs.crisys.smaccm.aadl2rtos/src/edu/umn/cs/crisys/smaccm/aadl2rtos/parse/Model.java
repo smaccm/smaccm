@@ -28,28 +28,29 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.osate.aadl2.DataClassifier;
-import org.osate.aadl2.SystemImplementation;
-import org.osate.aadl2.instance.SystemInstance;
-
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.Connection;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.ExternalIRQ;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.InterruptServiceRoutine;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.SharedData;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.ThreadCalendar;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.ThreadImplementation;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.ThreadImplementationBase;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.ThreadInstance;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.ThreadInstancePort;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.Dispatcher;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.IRQDispatcher;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.legacy.LegacyExternalISR;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.legacy.LegacyIRQEvent;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.legacy.LegacyThreadImplementation;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.rpc.RemoteProcedureGroup;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.Connection;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.ExternalIRQ;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.SharedData;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.ThreadCalendar;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.ThreadImplementation;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.ThreadImplementationBase;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.ThreadInstance;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.ThreadInstancePort;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.Type;
 
 public class Model {
-	private SystemImplementation systemImplementation;
-	private SystemInstance systemInstance;
-
+	private String systemImplementationName;
+	private String systemInstanceName;
+	
+	public enum OSTarget {CAmkES, eChronos}; 
+	private OSTarget osTarget = OSTarget.eChronos;
+	
 	// Connection instances - drives number of semaphores
 	// (one function per thread implementation, pass in thread instance id)
 	List<Connection> connectionInstances = new ArrayList<Connection>();
@@ -58,7 +59,6 @@ public class Model {
 
 	// Implementation objects: external.
 	List<ThreadImplementation> threadImplementationList = new ArrayList<ThreadImplementation>();
-	List<InterruptServiceRoutine> isrList = new ArrayList<InterruptServiceRoutine>();
 	List<SharedData> sharedDataList = new ArrayList<SharedData>();
 	ThreadCalendar threadCalendar = new ThreadCalendar();
 	Set<String> sourceFiles = new HashSet<String>();
@@ -73,8 +73,8 @@ public class Model {
 	List<Connection> connectionList = new ArrayList<Connection>(); 
 	
 	// type stuff
-	Set<DataClassifier> dataTypes = new HashSet<DataClassifier>();
 	Map<String, Type> astTypes = new HashMap<String, Type>();
+	Map<String, RemoteProcedureGroup> rpcInterfaces = new HashMap<String, RemoteProcedureGroup>(); 
 	
 	boolean generateSystickIRQ;
 	
@@ -84,39 +84,30 @@ public class Model {
 	public enum ISRType {InThreadContextISR, SignalingISR} ; 
 	ISRType isrType = ISRType.InThreadContextISR; 
 	
-	// private Map<ThreadImplementation, Set<Pair<MyPort, MyPort>>> threadSourcePorts = new HashMap<ThreadImplementation, Set<Pair<MyPort, MyPort>>>();
-
 	// Model constructor
-	public Model(SystemImplementation sysImpl, 
-	             SystemInstance sysInst) {
-		this.systemImplementation = sysImpl;
-		this.systemInstance = sysInst;
+	public Model(String systemImplementationName, 
+	             String systemInstanceName) {
+		this.systemImplementationName = systemImplementationName;
+		this.systemInstanceName = systemInstanceName;
 	}
 
-//	public Map<ThreadTypeImpl, ThreadImplementation> getThreadImplementationMap() {
-//		return this.threadImplementationMap;
-//	}
+	/**
+   * @return the osTarget
+   */
+  public OSTarget getOsTarget() {
+    return osTarget;
+  }
 
-	/* 
-	public List<ThreadInstance> getDestinationThreadsForPort(MyPort pi) {
-		List<ThreadInstance> destThreads = new ArrayList<ThreadInstance>();
+  /**
+   * @param osTarget the osTarget to set
+   */
+  public void setOsTarget(OSTarget osTarget) {
+    this.osTarget = osTarget;
+  }
 
-		// find all destinations of the given connection
-		for (Connection ci : pi.getConnections()) {
-		  destThreads.add(ci.getDestThreadInstance());
-		}
-		return destThreads;
-	}*/
 
-	public SystemImplementation getSystemImplementation() {
-		return systemImplementation;
-	}
 
-	public SystemInstance getSystemInstance() {
-		return systemInstance;
-	}
-
-	public Set<String> getSourceFiles()  {
+  public Set<String> getSourceFiles()  {
 	  return this.sourceFiles; 
 	}
 	
@@ -140,12 +131,24 @@ public class Model {
 		this.libraryFiles.add(fileName);
 	}	
 	
-	public List<InterruptServiceRoutine> getISRList() {
-	  return this.isrList;
-	}
-	
-	public String getSystemInstanceName() {
-		return systemInstance.getName();
+  public List<IRQDispatcher> getIRQDispatcherList() {
+    List<IRQDispatcher> idList = new ArrayList<IRQDispatcher>(); 
+    for (ThreadImplementation ti: this.getThreadImplementations()) {
+      for (Dispatcher d: ti.getDispatcherList()) {
+        if (d instanceof IRQDispatcher) {
+          idList.add((IRQDispatcher)d);
+        }
+      }
+    }
+    return idList;
+  }
+
+  public String getSystemImplementationName() {
+    return systemImplementationName;
+  }
+
+  public String getSystemInstanceName() {
+		return this.systemInstanceName;
 	}
 	
 	public ThreadCalendar getThreadCalendar() {
@@ -175,9 +178,41 @@ public class Model {
     return allTasks;
 	}
 	
+	public List<ThreadImplementation> getActiveThreadImplementations() {
+	  List<ThreadImplementation> activeThreads = new ArrayList<ThreadImplementation>(); 
+	  for (ThreadImplementation ti: getThreadImplementations()) {
+	    if (!ti.getIsPassive()) {
+	      activeThreads.add(ti);
+	    }
+	  }
+	  return activeThreads;
+	}
 	
-	
-	public List<LegacyExternalISR> getLegacyExternalIRQs() {
+  public List<ThreadImplementation> getPassiveThreadImplementations() {
+    List<ThreadImplementation> t = new ArrayList<ThreadImplementation>(); 
+    for (ThreadImplementation ti: getThreadImplementations()) {
+      if (ti.getIsPassive()) {
+        t.add(ti);
+      }
+    }
+    return t;
+  }
+
+  /**
+   * @return the rpcInterfaces
+   */
+  public Map<String, RemoteProcedureGroup> getRpcInterfaces() {
+    return rpcInterfaces;
+  }
+
+  /**
+   * @param rpcInterfaces the rpcInterfaces to set
+   */
+  public void setRpcInterfaces(Map<String, RemoteProcedureGroup> rpcInterfaces) {
+    this.rpcInterfaces = rpcInterfaces;
+  }
+
+  public List<LegacyExternalISR> getLegacyExternalIRQs() {
 	  return this.legacyExternalIRQList;
 	}
 	

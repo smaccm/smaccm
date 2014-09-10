@@ -34,6 +34,8 @@ import com.rockwellcollins.atc.agree.agree.NodeEq;
 import com.rockwellcollins.atc.agree.agree.RecordExpr;
 import com.rockwellcollins.atc.agree.agree.RecordType;
 import com.rockwellcollins.atc.agree.agree.RecordUpdateExpr;
+import com.rockwellcollins.atc.agree.agree.EventExpr;
+
 
 public class AgreeLinkingService extends PropertiesLinkingService {
     public AgreeLinkingService() {
@@ -44,6 +46,8 @@ public class AgreeLinkingService extends PropertiesLinkingService {
     public List<EObject> getLinkedObjects(EObject context, EReference reference, INode node)
             throws IllegalNodeException {
         String name = getCrossRefNodeAsString(node);
+        //TODO This will have to be changed in the develop branch
+        name = name.replaceAll("::", ".");
 
         if (context instanceof PropertyValue) {
             return findUnitLiteralAsList((Element) context, name);
@@ -55,10 +59,12 @@ public class AgreeLinkingService extends PropertiesLinkingService {
                 || context instanceof RecordExpr
                 || context instanceof RecordType
                 || context instanceof GetPropertyExpr
-                || context instanceof RecordUpdateExpr) {
+                || context instanceof RecordUpdateExpr
+                || context instanceof EventExpr) {
 
-            EObject e = findClassifier(context, reference, name);
-            
+            //EObject e = findClassifier(context, reference, name);
+        	EObject e = getIndexedObject(context, reference, name);
+        	
             //hack to fix some strange linking behavior by osate
             if(e instanceof DataType){
             	e = null;

@@ -3,9 +3,10 @@ package edu.umn.cs.crisys.smaccm.aadl2rtos.model.port;
 import java.util.ArrayList;
 import java.util.List;
 
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.Connection;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.ThreadImplementation;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.Connection;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.ThreadImplementation;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.Type;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.UnitType;
 
 public abstract class DataPort {
 
@@ -59,7 +60,7 @@ public abstract class DataPort {
   /**
    * @return the dataType
    */
-  public Type getDataType() {
+  public Type getType() {
     return dataType;
   }
 
@@ -145,4 +146,7 @@ public abstract class DataPort {
     return false;
   }
 
+  public boolean hasData() {
+    return !(this.getType() instanceof UnitType); 
+  }
 }

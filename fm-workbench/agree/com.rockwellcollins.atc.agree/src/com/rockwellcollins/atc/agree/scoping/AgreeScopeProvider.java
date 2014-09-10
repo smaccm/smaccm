@@ -4,7 +4,10 @@
 package com.rockwellcollins.atc.agree.scoping;
 
 import java.io.ObjectInputStream.GetField;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.eclipse.emf.common.util.EList;
@@ -21,6 +24,7 @@ import org.osate.aadl2.ComponentImplementation;
 import org.osate.aadl2.ComponentType;
 import org.osate.aadl2.DataImplementation;
 import org.osate.aadl2.DataPort;
+import org.osate.aadl2.DefaultAnnexSubclause;
 import org.osate.aadl2.Element;
 import org.osate.aadl2.EventDataPort;
 import org.osate.aadl2.FeatureGroupType;
@@ -39,6 +43,7 @@ import com.rockwellcollins.atc.agree.agree.AgreePackage;
 import com.rockwellcollins.atc.agree.agree.Arg;
 import com.rockwellcollins.atc.agree.agree.CalenStatement;
 import com.rockwellcollins.atc.agree.agree.EqStatement;
+import com.rockwellcollins.atc.agree.agree.EventExpr;
 import com.rockwellcollins.atc.agree.agree.Expr;
 import com.rockwellcollins.atc.agree.agree.FnDefExpr;
 import com.rockwellcollins.atc.agree.agree.NestedDotID;
@@ -65,6 +70,15 @@ public class AgreeScopeProvider extends
         return Scopes.scopeFor(ctx.getArgs(), getScope(ctx.eContainer(), ref));
     }
     
+    IScope scope_NamedElement(EventExpr ctx, EReference ref) {
+    	EObject container = ctx.eContainer();
+        Set<Element> result = getCorrespondingAadlElement(ctx.getId());
+    	
+		return Scopes.scopeFor(result, getScope(ctx.eContainer(), ref));
+
+    	
+    }
+    
     IScope scope_NamedElement(EqStatement ctx, EReference ref) {
         return Scopes.scopeFor(ctx.getLhs(), getScope(ctx.eContainer(), ref));
     }
@@ -86,8 +100,18 @@ public class AgreeScopeProvider extends
     
     IScope scope_NamedElement(RecordUpdateExpr ctx, EReference ref) {
     	Expr recordExpr = ctx.getRecord();
+//    	
+//    	Expr record = ctx.getRecord();
+//    	
+//    	getScope(record, ref);
+//    	if(record instanceof NestedDotID){
+//    		return scope_NamedElement((NestedDotID)record, ref);
+//    	}
+//    	
+//    	return Scopes.scopeFor(Collections.singleton(ctx.getRecord()), getScope(ctx.eContainer(), ref));
     	return RecordExprScoper.getScope(recordExpr);
     }
+    
     
     public static IScope getRecordComponents(NamedElement recDef){
     	Set<Element> components = new HashSet<>();
@@ -159,6 +183,19 @@ public class AgreeScopeProvider extends
     IScope scope_NamedElement(NestedDotID ctx, EReference ref) {
     	Set<Element> components = getCorrespondingAadlElement(ctx);
     	EObject container = ctx.eContainer();
+    	
+    	//so this strange check make sure that we are
+    	//not trying to link inside of a RecordExpr
+    	//or a RecordUpdateExpr.  If we are then we
+    	//do not try to grab the containers scope otherwise
+    	//we will have a cyclic linking error
+    	while(!(container instanceof NestedDotID) &&
+    		  !(container instanceof RecordExpr) &&
+    		  !(container instanceof RecordUpdateExpr) &&
+    		  !(container instanceof AgreeContract)){
+    		container = container.eContainer();
+    	}
+    	
     	if(container instanceof NestedDotID 
     	  || container instanceof RecordExpr
     	  || container instanceof RecordUpdateExpr){
@@ -189,7 +226,9 @@ public class AgreeScopeProvider extends
             if (refs.size() != 1) {
                 return new HashSet<>(); // this will throw a parsing error
             }
-            container = refs.get(0);
+            container = refs.get(0); //figure out what this type this portion
+                                     //of the nest id is so we can figure out
+                                     //what we could possibly link to
 
             if(container instanceof ThreadSubcomponent){
                 container = ((ThreadSubcomponent)container).getComponentType();
@@ -231,10 +270,10 @@ public class AgreeScopeProvider extends
             	}
             			
             } else {
-                return new HashSet<>(); // this will throw a parsing error
+                return result; // this will throw a parsing error
             }
         } else if (container instanceof NodeEq){
-        	return new HashSet<>();
+        	return result;
         	
         }else if (container instanceof RecordType
         		|| container instanceof RecordExpr){
@@ -265,12 +304,13 @@ public class AgreeScopeProvider extends
         		result.addAll(((NodeDefExpr) container).getArgs());
         	}
         	
-        	while(!(container instanceof AadlPackage)){
+        	while(!(container instanceof ComponentClassifier) &&
+        		  !(container instanceof AadlPackage)){
         		container = container.eContainer();
         	}
-        	result.add((AadlPackage)container);
+        	//result.add((AadlPackage)container);
         	
-        	return result;
+        	// return result;
 
         } else {
             // travel out of the annex and get the component
@@ -291,7 +331,9 @@ public class AgreeScopeProvider extends
         if (container instanceof Classifier) {
             Classifier component = (Classifier) container;
             for (Element el : component.getOwnedElements()) {
-                result.add(el);
+            	if(!(el instanceof DefaultAnnexSubclause)){
+            		result.add(el);
+            	}
             }
             for (Element el : component.getAllFeatures()) {
                 result.add(el);
