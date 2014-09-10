@@ -4,7 +4,10 @@
 package com.rockwellcollins.atc.agree.scoping;
 
 import java.io.ObjectInputStream.GetField;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.eclipse.emf.common.util.EList;
@@ -40,6 +43,7 @@ import com.rockwellcollins.atc.agree.agree.AgreePackage;
 import com.rockwellcollins.atc.agree.agree.Arg;
 import com.rockwellcollins.atc.agree.agree.CalenStatement;
 import com.rockwellcollins.atc.agree.agree.EqStatement;
+import com.rockwellcollins.atc.agree.agree.EventExpr;
 import com.rockwellcollins.atc.agree.agree.Expr;
 import com.rockwellcollins.atc.agree.agree.FnDefExpr;
 import com.rockwellcollins.atc.agree.agree.NestedDotID;
@@ -66,6 +70,15 @@ public class AgreeScopeProvider extends
         return Scopes.scopeFor(ctx.getArgs(), getScope(ctx.eContainer(), ref));
     }
     
+    IScope scope_NamedElement(EventExpr ctx, EReference ref) {
+    	EObject container = ctx.eContainer();
+        Set<Element> result = getCorrespondingAadlElement(ctx.getId());
+    	
+		return Scopes.scopeFor(result, getScope(ctx.eContainer(), ref));
+
+    	
+    }
+    
     IScope scope_NamedElement(EqStatement ctx, EReference ref) {
         return Scopes.scopeFor(ctx.getLhs(), getScope(ctx.eContainer(), ref));
     }
@@ -87,6 +100,7 @@ public class AgreeScopeProvider extends
     
     IScope scope_NamedElement(RecordUpdateExpr ctx, EReference ref) {
     	Expr recordExpr = ctx.getRecord();
+    	
     	return RecordExprScoper.getScope(recordExpr);
     }
     

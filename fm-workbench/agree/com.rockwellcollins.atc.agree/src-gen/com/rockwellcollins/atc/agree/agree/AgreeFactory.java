@@ -392,6 +392,15 @@ public interface AgreeFactory extends EFactory
   PreExpr createPreExpr();
 
   /**
+   * Returns a new object of class '<em>Event Expr</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Event Expr</em>'.
+   * @generated
+   */
+  EventExpr createEventExpr();
+
+  /**
    * Returns a new object of class '<em>Real Lit Expr</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
