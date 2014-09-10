@@ -1,6 +1,10 @@
 package com.rockwellcollins.atc.agree.scoping;
 
 import org.eclipse.xtext.scoping.IScope;
+import org.osate.aadl2.DataImplementation;
+import org.osate.aadl2.DataPort;
+import org.osate.aadl2.DataSubcomponentType;
+import org.osate.aadl2.EventDataPort;
 import org.osate.aadl2.NamedElement;
 
 import com.rockwellcollins.atc.agree.agree.Arg;
@@ -75,6 +79,16 @@ public class RecordExprScoper {
     	    		nestExpr = nestExpr.getSub();
     	    	}
     			return AgreeScopeProvider.getRecordComponents(nestExpr.getBase());
+    		}
+    	}else if(recStatement instanceof DataPort){
+    		DataSubcomponentType dataClass = ((DataPort) recStatement).getDataFeatureClassifier();
+    		if(dataClass instanceof DataImplementation){
+    			return AgreeScopeProvider.getRecordComponents(dataClass);
+    		}
+    	}else if(recStatement instanceof EventDataPort){
+    		DataSubcomponentType dataClass = ((EventDataPort) recStatement).getDataFeatureClassifier();
+    		if(dataClass instanceof DataImplementation){
+    			return AgreeScopeProvider.getRecordComponents(dataClass);
     		}
     	}
     	return IScope.NULLSCOPE;

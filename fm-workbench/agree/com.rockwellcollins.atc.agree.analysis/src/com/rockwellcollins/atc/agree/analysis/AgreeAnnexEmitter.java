@@ -259,9 +259,7 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
     	refMap.put(renaming, reference);
     	
     }
-    
-    
-    
+
 	private void recordFeatures(ComponentInstance compInst) {
 		for(FeatureInstance featInst : compInst.getFeatureInstances()){
         	List<AgreeFeature> featList = recordFeatures_Helper(thisPrefix, featInst);

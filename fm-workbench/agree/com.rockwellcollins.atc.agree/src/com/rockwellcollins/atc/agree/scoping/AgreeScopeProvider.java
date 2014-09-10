@@ -100,9 +100,18 @@ public class AgreeScopeProvider extends
     
     IScope scope_NamedElement(RecordUpdateExpr ctx, EReference ref) {
     	Expr recordExpr = ctx.getRecord();
-    	
+//    	
+//    	Expr record = ctx.getRecord();
+//    	
+//    	getScope(record, ref);
+//    	if(record instanceof NestedDotID){
+//    		return scope_NamedElement((NestedDotID)record, ref);
+//    	}
+//    	
+//    	return Scopes.scopeFor(Collections.singleton(ctx.getRecord()), getScope(ctx.eContainer(), ref));
     	return RecordExprScoper.getScope(recordExpr);
     }
+    
     
     public static IScope getRecordComponents(NamedElement recDef){
     	Set<Element> components = new HashSet<>();
@@ -174,6 +183,19 @@ public class AgreeScopeProvider extends
     IScope scope_NamedElement(NestedDotID ctx, EReference ref) {
     	Set<Element> components = getCorrespondingAadlElement(ctx);
     	EObject container = ctx.eContainer();
+    	
+    	//so this strange check make sure that we are
+    	//not trying to link inside of a RecordExpr
+    	//or a RecordUpdateExpr.  If we are then we
+    	//do not try to grab the containers scope otherwise
+    	//we will have a cyclic linking error
+    	while(!(container instanceof NestedDotID) &&
+    		  !(container instanceof RecordExpr) &&
+    		  !(container instanceof RecordUpdateExpr) &&
+    		  !(container instanceof AgreeContract)){
+    		container = container.eContainer();
+    	}
+    	
     	if(container instanceof NestedDotID 
     	  || container instanceof RecordExpr
     	  || container instanceof RecordUpdateExpr){
@@ -204,7 +226,9 @@ public class AgreeScopeProvider extends
             if (refs.size() != 1) {
                 return new HashSet<>(); // this will throw a parsing error
             }
-            container = refs.get(0);
+            container = refs.get(0); //figure out what this type this portion
+                                     //of the nest id is so we can figure out
+                                     //what we could possibly link to
 
             if(container instanceof ThreadSubcomponent){
                 container = ((ThreadSubcomponent)container).getComponentType();
@@ -246,10 +270,10 @@ public class AgreeScopeProvider extends
             	}
             			
             } else {
-                return new HashSet<>(); // this will throw a parsing error
+                return result; // this will throw a parsing error
             }
         } else if (container instanceof NodeEq){
-        	return new HashSet<>();
+        	return result;
         	
         }else if (container instanceof RecordType
         		|| container instanceof RecordExpr){
@@ -280,12 +304,13 @@ public class AgreeScopeProvider extends
         		result.addAll(((NodeDefExpr) container).getArgs());
         	}
         	
-        	while(!(container instanceof AadlPackage)){
+        	while(!(container instanceof ComponentClassifier) &&
+        		  !(container instanceof AadlPackage)){
         		container = container.eContainer();
         	}
-        	result.add((AadlPackage)container);
+        	//result.add((AadlPackage)container);
         	
-        	return result;
+        	// return result;
 
         } else {
             // travel out of the annex and get the component
