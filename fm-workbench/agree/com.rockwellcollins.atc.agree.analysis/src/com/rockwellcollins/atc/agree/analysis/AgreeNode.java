@@ -18,6 +18,7 @@ public class AgreeNode {
     public List<Expr> assertions;
     public List<Expr> assumptions;
     public List<Expr> guarantees;
+    public List<Expr> initials;
     public List<Node> nodes;
     public Node mainNode;
     public AgreeVarDecl clockVar;

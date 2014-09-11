@@ -207,6 +207,11 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
         return createAssertStatementAdapter();
       }
       @Override
+      public Adapter caseInitialStatement(InitialStatement object)
+      {
+        return createInitialStatementAdapter();
+      }
+      @Override
       public Adapter caseParamStatement(ParamStatement object)
       {
         return createParamStatementAdapter();
@@ -749,6 +754,21 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
    * @generated
    */
   public Adapter createAssertStatementAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.InitialStatement <em>Initial Statement</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see com.rockwellcollins.atc.agree.agree.InitialStatement
+   * @generated
+   */
+  public Adapter createInitialStatementAdapter()
   {
     return null;
   }

@@ -75,6 +75,7 @@ public class AgreeParser extends AbstractContentAssistParser {
 					put(grammarAccess.getSpecStatementAccess().getGroup_3(), "rule__SpecStatement__Group_3__0");
 					put(grammarAccess.getSpecStatementAccess().getGroup_4(), "rule__SpecStatement__Group_4__0");
 					put(grammarAccess.getSpecStatementAccess().getGroup_5(), "rule__SpecStatement__Group_5__0");
+					put(grammarAccess.getSpecStatementAccess().getGroup_6(), "rule__SpecStatement__Group_6__0");
 					put(grammarAccess.getSynchStatementAccess().getGroup_0(), "rule__SynchStatement__Group_0__0");
 					put(grammarAccess.getSynchStatementAccess().getGroup_1(), "rule__SynchStatement__Group_1__0");
 					put(grammarAccess.getSynchStatementAccess().getGroup_1_4(), "rule__SynchStatement__Group_1_4__0");
@@ -226,11 +227,12 @@ public class AgreeParser extends AbstractContentAssistParser {
 					put(grammarAccess.getSpecStatementAccess().getStrAssignment_1_2(), "rule__SpecStatement__StrAssignment_1_2");
 					put(grammarAccess.getSpecStatementAccess().getExprAssignment_1_4(), "rule__SpecStatement__ExprAssignment_1_4");
 					put(grammarAccess.getSpecStatementAccess().getExprAssignment_2_2(), "rule__SpecStatement__ExprAssignment_2_2");
-					put(grammarAccess.getSpecStatementAccess().getExprAssignment_3_2(), "rule__SpecStatement__ExprAssignment_3_2");
-					put(grammarAccess.getSpecStatementAccess().getTypeAssignment_3_4(), "rule__SpecStatement__TypeAssignment_3_4");
-					put(grammarAccess.getSpecStatementAccess().getStrAssignment_4_2(), "rule__SpecStatement__StrAssignment_4_2");
-					put(grammarAccess.getSpecStatementAccess().getExprAssignment_4_4(), "rule__SpecStatement__ExprAssignment_4_4");
-					put(grammarAccess.getSpecStatementAccess().getSubcompAssignment_5_2(), "rule__SpecStatement__SubcompAssignment_5_2");
+					put(grammarAccess.getSpecStatementAccess().getExprAssignment_3_3(), "rule__SpecStatement__ExprAssignment_3_3");
+					put(grammarAccess.getSpecStatementAccess().getExprAssignment_4_2(), "rule__SpecStatement__ExprAssignment_4_2");
+					put(grammarAccess.getSpecStatementAccess().getTypeAssignment_4_4(), "rule__SpecStatement__TypeAssignment_4_4");
+					put(grammarAccess.getSpecStatementAccess().getStrAssignment_5_2(), "rule__SpecStatement__StrAssignment_5_2");
+					put(grammarAccess.getSpecStatementAccess().getExprAssignment_5_4(), "rule__SpecStatement__ExprAssignment_5_4");
+					put(grammarAccess.getSpecStatementAccess().getSubcompAssignment_6_2(), "rule__SpecStatement__SubcompAssignment_6_2");
 					put(grammarAccess.getSynchStatementAccess().getValAssignment_0_3(), "rule__SynchStatement__ValAssignment_0_3");
 					put(grammarAccess.getSynchStatementAccess().getSimAssignment_0_4(), "rule__SynchStatement__SimAssignment_0_4");
 					put(grammarAccess.getSynchStatementAccess().getElsAssignment_1_3(), "rule__SynchStatement__ElsAssignment_1_3");

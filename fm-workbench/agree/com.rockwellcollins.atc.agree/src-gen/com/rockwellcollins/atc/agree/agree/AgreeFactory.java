@@ -248,6 +248,15 @@ public interface AgreeFactory extends EFactory
   AssertStatement createAssertStatement();
 
   /**
+   * Returns a new object of class '<em>Initial Statement</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Initial Statement</em>'.
+   * @generated
+   */
+  InitialStatement createInitialStatement();
+
+  /**
    * Returns a new object of class '<em>Param Statement</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->

@@ -21,6 +21,7 @@ import com.rockwellcollins.atc.agree.agree.FnDefExpr;
 import com.rockwellcollins.atc.agree.agree.GetPropertyExpr;
 import com.rockwellcollins.atc.agree.agree.GuaranteeStatement;
 import com.rockwellcollins.atc.agree.agree.IfThenElseExpr;
+import com.rockwellcollins.atc.agree.agree.InitialStatement;
 import com.rockwellcollins.atc.agree.agree.IntLitExpr;
 import com.rockwellcollins.atc.agree.agree.LemmaStatement;
 import com.rockwellcollins.atc.agree.agree.LiftStatement;
@@ -520,6 +521,13 @@ public class AgreeSemanticSequencer extends PropertiesSemanticSequencer {
 				   context == grammarAccess.getTermExprRule() ||
 				   context == grammarAccess.getUnaryExprRule()) {
 					sequence_IfThenElseExpr(context, (IfThenElseExpr) semanticObject); 
+					return; 
+				}
+				else break;
+			case AgreePackage.INITIAL_STATEMENT:
+				if(context == grammarAccess.getElementRule() ||
+				   context == grammarAccess.getSpecStatementRule()) {
+					sequence_SpecStatement(context, (InitialStatement) semanticObject); 
 					return; 
 				}
 				else break;
@@ -1136,6 +1144,15 @@ public class AgreeSemanticSequencer extends PropertiesSemanticSequencer {
 	 *     (str=STRING expr=Expr)
 	 */
 	protected void sequence_SpecStatement(EObject context, GuaranteeStatement semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Constraint:
+	 *     expr=Expr
+	 */
+	protected void sequence_SpecStatement(EObject context, InitialStatement semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	

@@ -73,6 +73,7 @@ import com.rockwellcollins.atc.agree.agree.FnDefExpr;
 import com.rockwellcollins.atc.agree.agree.GetPropertyExpr;
 import com.rockwellcollins.atc.agree.agree.GuaranteeStatement;
 import com.rockwellcollins.atc.agree.agree.IfThenElseExpr;
+import com.rockwellcollins.atc.agree.agree.InitialStatement;
 import com.rockwellcollins.atc.agree.agree.IntLitExpr;
 import com.rockwellcollins.atc.agree.agree.LemmaStatement;
 import com.rockwellcollins.atc.agree.agree.LiftStatement;
@@ -163,9 +164,28 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
     
     @Check(CheckType.FAST)
     public void checkAssume(AssumeStatement assume) {
+    	 Classifier comp = assume.getContainingClassifier();
+         if (!(comp instanceof ComponentType)) {
+             error(assume, "Assume statements are only allowed in component types");
+         }
+    	
         AgreeType exprType = getAgreeType(assume.getExpr());
         if (!matches(BOOL, exprType)) {
             error(assume, "Expression for assume statement is of type '" + exprType.toString()
+                    + "' but must be of type 'bool'");
+        }
+    }
+    
+    @Check(CheckType.FAST)
+    public void checkInitialStatement(InitialStatement statement){
+    	 Classifier comp = statement.getContainingClassifier();
+         if (!(comp instanceof ComponentType)) {
+             error(statement, "Initial statements are only allowed in component types");
+         }
+    	
+    	AgreeType exprType = getAgreeType(statement.getExpr());
+        if (!matches(BOOL, exprType)) {
+            error(statement, "Expression for 'initially' statement is of type '" + exprType.toString()
                     + "' but must be of type 'bool'");
         }
     }

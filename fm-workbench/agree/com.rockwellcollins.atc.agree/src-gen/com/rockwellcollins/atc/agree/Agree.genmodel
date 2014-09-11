@@ -78,6 +78,9 @@
     <genClasses ecoreClass="Agree.ecore#//AssertStatement">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//AssertStatement/expr"/>
     </genClasses>
+    <genClasses ecoreClass="Agree.ecore#//InitialStatement">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//InitialStatement/expr"/>
+    </genClasses>
     <genClasses ecoreClass="Agree.ecore#//ParamStatement">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//ParamStatement/expr"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//ParamStatement/type"/>

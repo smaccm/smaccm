@@ -89,6 +89,7 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
       case AgreePackage.ASSUME_STATEMENT: return createAssumeStatement();
       case AgreePackage.GUARANTEE_STATEMENT: return createGuaranteeStatement();
       case AgreePackage.ASSERT_STATEMENT: return createAssertStatement();
+      case AgreePackage.INITIAL_STATEMENT: return createInitialStatement();
       case AgreePackage.PARAM_STATEMENT: return createParamStatement();
       case AgreePackage.LEMMA_STATEMENT: return createLemmaStatement();
       case AgreePackage.LIFT_STATEMENT: return createLiftStatement();
@@ -391,6 +392,17 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
   {
     AssertStatementImpl assertStatement = new AssertStatementImpl();
     return assertStatement;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public InitialStatement createInitialStatement()
+  {
+    InitialStatementImpl initialStatement = new InitialStatementImpl();
+    return initialStatement;
   }
 
   /**
