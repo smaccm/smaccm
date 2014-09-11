@@ -192,7 +192,7 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
     //TODO: do something more robust about this later
     //holds initial values for types
     private Map<String, Expr> initTypeMap = new HashMap<>();
-    private BoolExpr initBool = new BoolExpr(true);
+    private BoolExpr initBool = new BoolExpr(false);
     private RealExpr initReal = new RealExpr(new BigDecimal("0.0"));
     private IntExpr initInt = new IntExpr(BigInteger.ZERO);
     
@@ -1475,7 +1475,9 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
 
         		if(agreeDestConn.connType == ConnType.EVENT){
         			if(agreeSourConn.connType != ConnType.EVENT){
-        				throw new AgreeException("Somehow a connection between two different types was formed");
+        				throw new AgreeException("The connection between variables '"
+        			      +agreeRename.renameKeepPrefix(agreeDestConn.lustreString)+"' and '"
+        			      +agreeRename.renameKeepPrefix(agreeSourConn.lustreString)+"' are of different types");
         			}
             		Equation eventConnEq = new Equation(new IdExpr(eventPrefix+lhsLustreName), new IdExpr(eventPrefix+rhsLustreName));
             		addConnection(eventConnEq);
@@ -1750,7 +1752,7 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         
         // get the individual history variables and create assumption properties
         addSubcomponentAssumptions(subEmitters, eqs, internals, properties,
-				totalCompHist, sysAssumpHistId);//, closureMap);
+				totalCompHistId, sysAssumpHistId);//, closureMap);
         
         
         //add a property that is true if the contract is a contradiction
