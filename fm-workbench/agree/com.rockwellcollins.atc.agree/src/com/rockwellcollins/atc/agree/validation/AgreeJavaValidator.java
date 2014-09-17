@@ -65,6 +65,7 @@ import com.rockwellcollins.atc.agree.agree.CalenStatement;
 import com.rockwellcollins.atc.agree.agree.CallDef;
 import com.rockwellcollins.atc.agree.agree.ConstStatement;
 import com.rockwellcollins.atc.agree.agree.EqStatement;
+import com.rockwellcollins.atc.agree.agree.EventExpr;
 import com.rockwellcollins.atc.agree.agree.Expr;
 import com.rockwellcollins.atc.agree.agree.FloorCast;
 import com.rockwellcollins.atc.agree.agree.FnCallExpr;
@@ -72,6 +73,7 @@ import com.rockwellcollins.atc.agree.agree.FnDefExpr;
 import com.rockwellcollins.atc.agree.agree.GetPropertyExpr;
 import com.rockwellcollins.atc.agree.agree.GuaranteeStatement;
 import com.rockwellcollins.atc.agree.agree.IfThenElseExpr;
+import com.rockwellcollins.atc.agree.agree.InitialStatement;
 import com.rockwellcollins.atc.agree.agree.IntLitExpr;
 import com.rockwellcollins.atc.agree.agree.LemmaStatement;
 import com.rockwellcollins.atc.agree.agree.LiftStatement;
@@ -139,6 +141,15 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
     }
 
     @Check(CheckType.FAST)
+    public void checkEventExpr(EventExpr event){
+        NestedDotID nestId = event.getId();
+        NamedElement namedEl = getFinalNestId(nestId);
+        if(!(namedEl instanceof EventDataPort)){
+        	error(event, "Arguement of event expression must be an event data port");
+        }
+    }
+    
+    @Check(CheckType.FAST)
     public void checkSynchStatement(SynchStatement sync){
         //TODO: I'm pretty sure INT_LITs are always positive anyway.
         //So this may be redundant
@@ -153,9 +164,28 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
     
     @Check(CheckType.FAST)
     public void checkAssume(AssumeStatement assume) {
+    	 Classifier comp = assume.getContainingClassifier();
+         if (!(comp instanceof ComponentType)) {
+             error(assume, "Assume statements are only allowed in component types");
+         }
+    	
         AgreeType exprType = getAgreeType(assume.getExpr());
         if (!matches(BOOL, exprType)) {
             error(assume, "Expression for assume statement is of type '" + exprType.toString()
+                    + "' but must be of type 'bool'");
+        }
+    }
+    
+    @Check(CheckType.FAST)
+    public void checkInitialStatement(InitialStatement statement){
+    	 Classifier comp = statement.getContainingClassifier();
+         if (!(comp instanceof ComponentType)) {
+             error(statement, "Initial statements are only allowed in component types");
+         }
+    	
+    	AgreeType exprType = getAgreeType(statement.getExpr());
+        if (!matches(BOOL, exprType)) {
+            error(statement, "Expression for 'initially' statement is of type '" + exprType.toString()
                     + "' but must be of type 'bool'");
         }
     }
@@ -1494,6 +1524,8 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
         	return INT;
         } else if(expr instanceof RealCast){
         	return REAL;
+        } else if(expr instanceof EventExpr){
+        	return BOOL;
         }
 
         return ERROR;

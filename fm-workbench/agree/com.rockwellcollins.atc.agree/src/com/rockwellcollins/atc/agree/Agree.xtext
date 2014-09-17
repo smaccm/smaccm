@@ -43,6 +43,7 @@ SpecStatement:
 	{AssumeStatement} 'assume' str=STRING ':' expr=Expr ';'
 	| {GuaranteeStatement} 'guarantee' str=STRING ':' expr=Expr ';'
 	| {AssertStatement} 'assert' expr=Expr ';'
+	| {InitialStatement} 'initially' ':' expr = Expr ';'
 	| {ParamStatement} 'parameter' expr=Expr ':' type=Type ';'
 	| {LemmaStatement} 'lemma' str=STRING ':' expr=Expr ';'
 	| {LiftStatement} 'lift' subcomp=NestedDotID ';'
@@ -159,6 +160,7 @@ TermExpr returns Expr:
 	  ComplexExpr
 	| {IntLitExpr} val=INTEGER_LIT
 	| {PreExpr} 'pre' '(' expr=Expr ')'
+	| {EventExpr} 'event' '(' id = NestedDotID ')'
 	| {RealLitExpr} val=REAL_LIT
 	| {BoolLitExpr} val=BooleanLiteral
 	| {ThisExpr} 'this' ('.' subThis=NestedDotID)?

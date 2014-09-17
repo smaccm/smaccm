@@ -89,6 +89,7 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
       case AgreePackage.ASSUME_STATEMENT: return createAssumeStatement();
       case AgreePackage.GUARANTEE_STATEMENT: return createGuaranteeStatement();
       case AgreePackage.ASSERT_STATEMENT: return createAssertStatement();
+      case AgreePackage.INITIAL_STATEMENT: return createInitialStatement();
       case AgreePackage.PARAM_STATEMENT: return createParamStatement();
       case AgreePackage.LEMMA_STATEMENT: return createLemmaStatement();
       case AgreePackage.LIFT_STATEMENT: return createLiftStatement();
@@ -105,6 +106,7 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
       case AgreePackage.RECORD_UPDATE_EXPR: return createRecordUpdateExpr();
       case AgreePackage.INT_LIT_EXPR: return createIntLitExpr();
       case AgreePackage.PRE_EXPR: return createPreExpr();
+      case AgreePackage.EVENT_EXPR: return createEventExpr();
       case AgreePackage.REAL_LIT_EXPR: return createRealLitExpr();
       case AgreePackage.BOOL_LIT_EXPR: return createBoolLitExpr();
       case AgreePackage.THIS_EXPR: return createThisExpr();
@@ -397,6 +399,17 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
    * <!-- end-user-doc -->
    * @generated
    */
+  public InitialStatement createInitialStatement()
+  {
+    InitialStatementImpl initialStatement = new InitialStatementImpl();
+    return initialStatement;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   public ParamStatement createParamStatement()
   {
     ParamStatementImpl paramStatement = new ParamStatementImpl();
@@ -566,6 +579,17 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
   {
     PreExprImpl preExpr = new PreExprImpl();
     return preExpr;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EventExpr createEventExpr()
+  {
+    EventExprImpl eventExpr = new EventExprImpl();
+    return eventExpr;
   }
 
   /**

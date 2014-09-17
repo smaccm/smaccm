@@ -248,6 +248,15 @@ public interface AgreeFactory extends EFactory
   AssertStatement createAssertStatement();
 
   /**
+   * Returns a new object of class '<em>Initial Statement</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Initial Statement</em>'.
+   * @generated
+   */
+  InitialStatement createInitialStatement();
+
+  /**
    * Returns a new object of class '<em>Param Statement</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -390,6 +399,15 @@ public interface AgreeFactory extends EFactory
    * @generated
    */
   PreExpr createPreExpr();
+
+  /**
+   * Returns a new object of class '<em>Event Expr</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Event Expr</em>'.
+   * @generated
+   */
+  EventExpr createEventExpr();
 
   /**
    * Returns a new object of class '<em>Real Lit Expr</em>'.

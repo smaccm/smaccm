@@ -14,12 +14,14 @@ import com.rockwellcollins.atc.agree.agree.BoolLitExpr;
 import com.rockwellcollins.atc.agree.agree.CalenStatement;
 import com.rockwellcollins.atc.agree.agree.ConstStatement;
 import com.rockwellcollins.atc.agree.agree.EqStatement;
+import com.rockwellcollins.atc.agree.agree.EventExpr;
 import com.rockwellcollins.atc.agree.agree.FloorCast;
 import com.rockwellcollins.atc.agree.agree.FnCallExpr;
 import com.rockwellcollins.atc.agree.agree.FnDefExpr;
 import com.rockwellcollins.atc.agree.agree.GetPropertyExpr;
 import com.rockwellcollins.atc.agree.agree.GuaranteeStatement;
 import com.rockwellcollins.atc.agree.agree.IfThenElseExpr;
+import com.rockwellcollins.atc.agree.agree.InitialStatement;
 import com.rockwellcollins.atc.agree.agree.IntLitExpr;
 import com.rockwellcollins.atc.agree.agree.LemmaStatement;
 import com.rockwellcollins.atc.agree.agree.LiftStatement;
@@ -358,6 +360,35 @@ public class AgreeSemanticSequencer extends PropertiesSemanticSequencer {
 					return; 
 				}
 				else break;
+			case AgreePackage.EVENT_EXPR:
+				if(context == grammarAccess.getAddSubExprRule() ||
+				   context == grammarAccess.getAddSubExprAccess().getBinaryExprLeftAction_1_0_0_0() ||
+				   context == grammarAccess.getAndExprRule() ||
+				   context == grammarAccess.getAndExprAccess().getBinaryExprLeftAction_1_0_0_0() ||
+				   context == grammarAccess.getArrowExprRule() ||
+				   context == grammarAccess.getArrowExprAccess().getBinaryExprLeftAction_1_0_0_0() ||
+				   context == grammarAccess.getElementRule() ||
+				   context == grammarAccess.getEquivExprRule() ||
+				   context == grammarAccess.getEquivExprAccess().getBinaryExprLeftAction_1_0_0_0() ||
+				   context == grammarAccess.getExprRule() ||
+				   context == grammarAccess.getIfThenElseExprRule() ||
+				   context == grammarAccess.getImpliesExprRule() ||
+				   context == grammarAccess.getImpliesExprAccess().getBinaryExprLeftAction_1_0_0_0() ||
+				   context == grammarAccess.getMultDivExprRule() ||
+				   context == grammarAccess.getMultDivExprAccess().getBinaryExprLeftAction_1_0_0_0() ||
+				   context == grammarAccess.getOrExprRule() ||
+				   context == grammarAccess.getOrExprAccess().getBinaryExprLeftAction_1_0_0_0() ||
+				   context == grammarAccess.getPreDefFnExprRule() ||
+				   context == grammarAccess.getRecordUpdateExprRule() ||
+				   context == grammarAccess.getRecordUpdateExprAccess().getRecordUpdateExprRecordAction_1_0_0() ||
+				   context == grammarAccess.getRelateExprRule() ||
+				   context == grammarAccess.getRelateExprAccess().getBinaryExprLeftAction_1_0_0_0() ||
+				   context == grammarAccess.getTermExprRule() ||
+				   context == grammarAccess.getUnaryExprRule()) {
+					sequence_TermExpr(context, (EventExpr) semanticObject); 
+					return; 
+				}
+				else break;
 			case AgreePackage.FLOOR_CAST:
 				if(context == grammarAccess.getAddSubExprRule() ||
 				   context == grammarAccess.getAddSubExprAccess().getBinaryExprLeftAction_1_0_0_0() ||
@@ -490,6 +521,13 @@ public class AgreeSemanticSequencer extends PropertiesSemanticSequencer {
 				   context == grammarAccess.getTermExprRule() ||
 				   context == grammarAccess.getUnaryExprRule()) {
 					sequence_IfThenElseExpr(context, (IfThenElseExpr) semanticObject); 
+					return; 
+				}
+				else break;
+			case AgreePackage.INITIAL_STATEMENT:
+				if(context == grammarAccess.getElementRule() ||
+				   context == grammarAccess.getSpecStatementRule()) {
+					sequence_SpecStatement(context, (InitialStatement) semanticObject); 
 					return; 
 				}
 				else break;
@@ -1112,6 +1150,15 @@ public class AgreeSemanticSequencer extends PropertiesSemanticSequencer {
 	
 	/**
 	 * Constraint:
+	 *     expr=Expr
+	 */
+	protected void sequence_SpecStatement(EObject context, InitialStatement semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Constraint:
 	 *     (str=STRING expr=Expr)
 	 */
 	protected void sequence_SpecStatement(EObject context, LemmaStatement semanticObject) {
@@ -1160,6 +1207,15 @@ public class AgreeSemanticSequencer extends PropertiesSemanticSequencer {
 	 *     val=BooleanLiteral
 	 */
 	protected void sequence_TermExpr(EObject context, BoolLitExpr semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Constraint:
+	 *     id=NestedDotID
+	 */
+	protected void sequence_TermExpr(EObject context, EventExpr semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	

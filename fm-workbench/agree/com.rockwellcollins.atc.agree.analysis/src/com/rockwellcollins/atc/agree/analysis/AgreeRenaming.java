@@ -26,10 +26,37 @@ public class AgreeRenaming extends Renaming {
 			return renamed;
 		}
 		
+		if(original.contains("__EVENT_")){
+			original = original.replace("__EVENT_", "event(");
+			original = original + ")";
+		}
+		
 		renamed = original.replace(prefix, "");
 		renamed = renamed.replaceAll("^_*", "");
 		renamed = renamed.replace("__", ".");
 		return renamed;
 	}
 
+	public String renameKeepPrefix(String original) {
+		
+		if(original.contains("~")){
+			return null;
+		}
+		
+		String renamed = explicitRenames.get(original);
+		
+		if(renamed != null){
+			return renamed;
+		}
+		
+		if(original.contains("__EVENT_")){
+			original = original.replace("__EVENT_", "event(");
+			original = original + ")";
+		}
+		
+		renamed = original.replaceAll("^_*", "");
+		renamed = renamed.replace("__", ".");
+		return renamed;
+	}
+	
 }

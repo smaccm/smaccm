@@ -350,7 +350,7 @@ public class AgreeEmitterUtilities {
 			return new BinaryExpr(clockExpr, BinaryOp.IMPLIES, assumAssert);
         }
     }
-
+    
     static public Expr getLustreContract(AgreeAnnexEmitter emitter) {
         if(emitter.agreeNode == null){
 //            return conjoin(conjoin(emitter.assumpExpressions), conjoin(emitter.assertExpressions),

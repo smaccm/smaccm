@@ -315,6 +315,15 @@ public class AgreeSwitch<T> extends Switch<T>
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
+      case AgreePackage.INITIAL_STATEMENT:
+      {
+        InitialStatement initialStatement = (InitialStatement)theEObject;
+        T result = caseInitialStatement(initialStatement);
+        if (result == null) result = caseSpecStatement(initialStatement);
+        if (result == null) result = caseElement(initialStatement);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
       case AgreePackage.PARAM_STATEMENT:
       {
         ParamStatement paramStatement = (ParamStatement)theEObject;
@@ -457,6 +466,15 @@ public class AgreeSwitch<T> extends Switch<T>
         T result = casePreExpr(preExpr);
         if (result == null) result = caseExpr(preExpr);
         if (result == null) result = caseElement(preExpr);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case AgreePackage.EVENT_EXPR:
+      {
+        EventExpr eventExpr = (EventExpr)theEObject;
+        T result = caseEventExpr(eventExpr);
+        if (result == null) result = caseExpr(eventExpr);
+        if (result == null) result = caseElement(eventExpr);
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
@@ -930,6 +948,22 @@ public class AgreeSwitch<T> extends Switch<T>
   }
 
   /**
+   * Returns the result of interpreting the object as an instance of '<em>Initial Statement</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Initial Statement</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseInitialStatement(InitialStatement object)
+  {
+    return null;
+  }
+
+  /**
    * Returns the result of interpreting the object as an instance of '<em>Param Statement</em>'.
    * <!-- begin-user-doc -->
    * This implementation returns null;
@@ -1181,6 +1215,22 @@ public class AgreeSwitch<T> extends Switch<T>
    * @generated
    */
   public T casePreExpr(PreExpr object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Event Expr</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Event Expr</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseEventExpr(EventExpr object)
   {
     return null;
   }

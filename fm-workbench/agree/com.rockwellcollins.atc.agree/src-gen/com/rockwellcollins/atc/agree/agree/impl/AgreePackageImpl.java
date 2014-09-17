@@ -20,6 +20,7 @@ import com.rockwellcollins.atc.agree.agree.ComplexExpr;
 import com.rockwellcollins.atc.agree.agree.ConstStatement;
 import com.rockwellcollins.atc.agree.agree.Contract;
 import com.rockwellcollins.atc.agree.agree.EqStatement;
+import com.rockwellcollins.atc.agree.agree.EventExpr;
 import com.rockwellcollins.atc.agree.agree.Expr;
 import com.rockwellcollins.atc.agree.agree.FloorCast;
 import com.rockwellcollins.atc.agree.agree.FnCallExpr;
@@ -27,6 +28,7 @@ import com.rockwellcollins.atc.agree.agree.FnDefExpr;
 import com.rockwellcollins.atc.agree.agree.GetPropertyExpr;
 import com.rockwellcollins.atc.agree.agree.GuaranteeStatement;
 import com.rockwellcollins.atc.agree.agree.IfThenElseExpr;
+import com.rockwellcollins.atc.agree.agree.InitialStatement;
 import com.rockwellcollins.atc.agree.agree.IntLitExpr;
 import com.rockwellcollins.atc.agree.agree.LemmaStatement;
 import com.rockwellcollins.atc.agree.agree.LiftStatement;
@@ -251,6 +253,13 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  private EClass initialStatementEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   private EClass paramStatementEClass = null;
 
   /**
@@ -357,6 +366,13 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * @generated
    */
   private EClass preExprEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass eventExprEClass = null;
 
   /**
    * <!-- begin-user-doc -->
@@ -1018,6 +1034,26 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  public EClass getInitialStatement()
+  {
+    return initialStatementEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getInitialStatement_Expr()
+  {
+    return (EReference)initialStatementEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   public EClass getParamStatement()
   {
     return paramStatementEClass;
@@ -1448,6 +1484,26 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  public EClass getEventExpr()
+  {
+    return eventExprEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getEventExpr_Id()
+  {
+    return (EReference)eventExprEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   public EClass getRealLitExpr()
   {
     return realLitExprEClass;
@@ -1722,6 +1778,9 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     assertStatementEClass = createEClass(ASSERT_STATEMENT);
     createEReference(assertStatementEClass, ASSERT_STATEMENT__EXPR);
 
+    initialStatementEClass = createEClass(INITIAL_STATEMENT);
+    createEReference(initialStatementEClass, INITIAL_STATEMENT__EXPR);
+
     paramStatementEClass = createEClass(PARAM_STATEMENT);
     createEReference(paramStatementEClass, PARAM_STATEMENT__EXPR);
     createEReference(paramStatementEClass, PARAM_STATEMENT__TYPE);
@@ -1780,6 +1839,9 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
 
     preExprEClass = createEClass(PRE_EXPR);
     createEReference(preExprEClass, PRE_EXPR__EXPR);
+
+    eventExprEClass = createEClass(EVENT_EXPR);
+    createEReference(eventExprEClass, EVENT_EXPR__ID);
 
     realLitExprEClass = createEClass(REAL_LIT_EXPR);
     createEAttribute(realLitExprEClass, REAL_LIT_EXPR__VAL);
@@ -1872,6 +1934,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     assumeStatementEClass.getESuperTypes().add(this.getSpecStatement());
     guaranteeStatementEClass.getESuperTypes().add(this.getSpecStatement());
     assertStatementEClass.getESuperTypes().add(this.getSpecStatement());
+    initialStatementEClass.getESuperTypes().add(this.getSpecStatement());
     paramStatementEClass.getESuperTypes().add(this.getSpecStatement());
     lemmaStatementEClass.getESuperTypes().add(this.getSpecStatement());
     liftStatementEClass.getESuperTypes().add(this.getSpecStatement());
@@ -1888,6 +1951,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     recordUpdateExprEClass.getESuperTypes().add(this.getExpr());
     intLitExprEClass.getESuperTypes().add(this.getExpr());
     preExprEClass.getESuperTypes().add(this.getExpr());
+    eventExprEClass.getESuperTypes().add(this.getExpr());
     realLitExprEClass.getESuperTypes().add(this.getExpr());
     boolLitExprEClass.getESuperTypes().add(this.getExpr());
     thisExprEClass.getESuperTypes().add(this.getExpr());
@@ -1976,6 +2040,9 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     initEClass(assertStatementEClass, AssertStatement.class, "AssertStatement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getAssertStatement_Expr(), this.getExpr(), null, "expr", null, 0, 1, AssertStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
+    initEClass(initialStatementEClass, InitialStatement.class, "InitialStatement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getInitialStatement_Expr(), this.getExpr(), null, "expr", null, 0, 1, InitialStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
     initEClass(paramStatementEClass, ParamStatement.class, "ParamStatement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getParamStatement_Expr(), this.getExpr(), null, "expr", null, 0, 1, ParamStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getParamStatement_Type(), this.getType(), null, "type", null, 0, 1, ParamStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -2034,6 +2101,9 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
 
     initEClass(preExprEClass, PreExpr.class, "PreExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getPreExpr_Expr(), this.getExpr(), null, "expr", null, 0, 1, PreExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+    initEClass(eventExprEClass, EventExpr.class, "EventExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getEventExpr_Id(), this.getNestedDotID(), null, "id", null, 0, 1, EventExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(realLitExprEClass, RealLitExpr.class, "RealLitExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEAttribute(getRealLitExpr_Val(), theEcorePackage.getEString(), "val", null, 0, 1, RealLitExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
