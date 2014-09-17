@@ -36,7 +36,7 @@ public class SharedData {
     return "var_" + getPortName(); 
   }
   
-  public Type getDataType() {
+  public Type getType() {
     return this.dataType;
   }
   

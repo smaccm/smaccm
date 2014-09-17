@@ -252,7 +252,7 @@ thread E
 	    SMACCM_SYS::Language => "Ivory";
 	    SMACCM_SYS::Thread_Type => Passive ;
 	    Compute_Execution_Time => 5 us .. 30 us;
-	    SMACCM_SYS::Sends_Events_To => "{{1 Output1}, {1 Output2}}";
+	    SMACCM_SYS::Sends_Events_To => "{{1 Output1}}";
 end E ; 
 
    
@@ -275,7 +275,7 @@ thread F
 	    SMACCM_SYS::Language => "Ivory";
 	    SMACCM_SYS::Thread_Type => Passive ;
 	    Compute_Execution_Time => 5 us .. 30 us;
-	    SMACCM_SYS::Sends_Events_To => "{{1 Output1}}";
+	    SMACCM_SYS::Sends_Events_To => "{}";
 end F ; 
 
 process proc

@@ -3,10 +3,16 @@
  */
 package edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.CAmkES;
 
+import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosException;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.common.CommonNames;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.common.SourceDeclarations;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.DataPort;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.InputEventPort;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.OutputDataPort;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.OutputEventPort;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.SharedDataAccessor;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.ArrayType;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.BoolType;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.IntType;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.Type;
 
@@ -22,48 +28,94 @@ public class PortNames {
     this.dp = dp;
   }
   
+  //////////////////////////////////////////////////////////
+  //
+  // Constructors for type names related to port
+  // 
+  //////////////////////////////////////////////////////////
+  public TypeNames getType() {
+    TypeNames tyn = new TypeNames(dp.getType());
+    return tyn;
+  }
   
-  //  For arguments. 
+  public TypeNames getIndexType() {
+    TypeNames tyn = new TypeNames(indexType);
+    return tyn;
+  }
+  
+  //////////////////////////////////////////////////////////
+  //
+  // 'root' name and elements.
+  // 
+  //////////////////////////////////////////////////////////
   
   public String getName() {
     return dp.getName();
   }
   
+  public String getQueueSize() {
+    if (!(dp instanceof InputEventPort)) {
+      throw new Aadl2RtosException("Error: getQueueSize: port " + dp.getName() + " is not an input event port so has no queue.");
+    }
+    InputEventPort iep = (InputEventPort)dp; 
+    return Integer.toString(iep.getQueueSize());
+  }
+
   
-  public String getAsRefParam() {
-    return Names.createRefParameter(dp.getType(), getName());
+  //////////////////////////////////////////////////////////
+  //
+  // functions for creating local declarations with the port name
+  // 
+  //////////////////////////////////////////////////////////
+  
+  public String getNameAsInputParam() {
+    TypeNames tpn = this.getType();
+    return tpn.getOutputType() + " " + getName();
   }
   
   public String getVarDecl() {
     return dp.getType().getCType().varString(getName());
   }
   
+  //////////////////////////////////////////////////////////
+  //
+  // query functions
+  // 
+  //////////////////////////////////////////////////////////
+
   public boolean getHasData() {
     return dp.hasData(); 
   }
   
-  //////////////////////////////////////////////////////////////
-  //
-  // Names for passive dispatch of passive components
-  // 
-  //////////////////////////////////////////////////////////////
-  
-  public String getDataParam() {
-    return Names.createRefParameter(dp.getType(), getData()); 
-  }
-
   public boolean getIsNotArray() {
     return !(dp.getType() instanceof ArrayType);
   }
   
-  public String getIndexParam() {
-    return Names.createRefParameter(indexType,  getIndex());
-  }  
+  public boolean getIsBaseType() { return dp.getType().isBaseType(); }
 
-  public String getIndexDecl() {
-    return indexType.getCType().varString(getIndex());
+  public boolean getIsOutputDataPort() {
+    return (dp instanceof OutputDataPort);
   }
+  //////////////////////////////////////////////////////////////
+  //
+  // Names for mutex function calls
+  // 
+  //////////////////////////////////////////////////////////////
+
   
+  public String getCamkesMutexLockFnCall() {
+    return getMutex() + "_lock()";
+  }
+
+  public String getCamkesMutexUnlockFnCall() {
+    return getMutex() + "_unlock()";
+  }
+
+  //////////////////////////////////////////////////////////////
+  //
+  // Names for passive component global data related to port
+  // 
+  //////////////////////////////////////////////////////////////
   
   public String getGlobalMaxDispatchSize() {
     return "smaccm_max_tmp_array_" + getName(); 
@@ -72,19 +124,7 @@ public class PortNames {
   public String getGlobalIndex() {
     return "smaccm_tmp_used_" + getName();
   }
-  
-  public String getGlobalIndexParam() {
-    return Names.createRefParameter(indexType, getGlobalIndex());
-  }
-  
-  public String getGlobalDataParam() {
-    return Names.createRefParameter(dp.getType(), getGlobalData());
-  }
-  
-  public String getGlobalMaxDispatchSizeParam() {
-    return indexType.toString() + " " + getGlobalMaxDispatchSize(); 
-  }
-  
+
   public String getGlobalData() {
     return "smaccm_tmp_array_" + getName();
   }
@@ -99,48 +139,174 @@ public class PortNames {
 
   //////////////////////////////////////////////////////////////
   //
-  // Names for shared variable queues: 
+  // Names for port dispatchers
   // 
-  // Need: 
-  //    Queue front
-  //    Queue back
-  //    Array for queue
-  //    Name for isEmpty();
-  //
-  // It might be nice to have an idiom to create a "fresh" 
-  // unique variable whenever we want.
-  // 
-  // createNewVarId();
-  // 
-  // Then whenever we perform assignments, we use this new var id
-  // until the next call to createNewVarId().
-  //
   //////////////////////////////////////////////////////////////
+
+  public String getDispatcherCFileDispatcherFnName() {
+    return "smaccm_" + dp.getOwner().getNormalizedName() + "_" + getName() + "_dispatcher";
+  }
   
-  public String getSharedVarBase() { return "smaccm_queue_"; }
+  public String getPassiveComponentDispatcherName() {
+    ThreadImplementationNames tin = new ThreadImplementationNames(dp.getOwner());
+    return tin.getComponentInstanceName() + "_" + 
+        this.getDispatcherCFileDispatcherFnName(); 
+  }  
+  
+  public String getDispatcherInterfaceName() {
+    return "smaccm_" + getName();
+  }
+  
+  public String getDispatcherInterfaceUsedName() {
+    return getDispatcherInterfaceName() + "_used";
+  }
+
+
+  //////////////////////////////////////////////////////////////
+  //
+  // Names for parameters/declarations for port data: 
+  //  Note: these should be replaced by <Type> <Name> 
+  //    declarations.  Much better!
+  // 
+  //////////////////////////////////////////////////////////////
+
+  public String getDataParam() {
+    TypeNames tpn = this.getType(); 
+    return tpn.getOutputType() + " " + this.getData();
+  }
+
+  public String getIndexParam() {
+    TypeNames tpn = new TypeNames(indexType);
+    return tpn.getOutputType() + " " + this.getIndex(); 
+  }  
+
+  public String getIndexDecl() {
+    return indexType.getCType().varString(getIndex());
+  }
+  
+  
+  public String getGlobalIndexParam() {
+    return this.getType().getOutputType() + " " + this.getGlobalData();
+  }
+  
+  public String getGlobalDataParam() {
+    return this.getType().getOutputType() + " " + this.getGlobalData();
+  }
+  
+  public String getGlobalMaxDispatchSizeParam() {
+    return indexType.toString() + " " + getGlobalMaxDispatchSize(); 
+  }
+  
+  //////////////////////////////////////////////////////////////
+  //
+  // Names for dispatcher thread global data for send/receive ports
+  // 
+  //////////////////////////////////////////////////////////////
   
   public String getQueueFrontName() { return "smaccm_queue_front_" + this.getName(); }
   public String getQueueBackName()  { return "smaccm_queue_back_" + this.getName(); }
   public String getQueueDataName()  { return "smaccm_queue_" + this.getName(); }
+  public String getQueueFullName() { return "smaccm_queue_full_" + this.getName(); }
+
+  public String getQueueIsFullName() { return "smaccm_queue_is_full_" + this.getName(); }
   public String getQueueIsEmptyName() { return "smaccm_queue_is_empty_" + this.getName(); }
   public String getQueueReadName() { return "smaccm_queue_read_" + this.getName(); }
   public String getQueueWriteName() { return "smaccm_queue_write_" + this.getName(); }
+
+  public String getThreadImplReaderFnName(String commPrim, String tName, String varName) {
+    if (commPrim != null) {
+      return commPrim;
+    } else {
+      return tName + "_read_" + varName;
+    }
+  }
   
+  public String getThreadImplWriterFnName(String commPrim, String tName, String varName) {
+    if (commPrim != null) {
+      return commPrim;
+    } else {
+      return tName + "_write_" + varName;
+    }
+  }
+  
+  public String getReaderFnName() {
+    ThreadImplementationNames tin = new ThreadImplementationNames(dp.getOwner());
+    return getThreadImplReaderFnName(dp.getCommprimFnNameOpt(), tin.getNormalizedName(), getName());
+  }
+              
+  public String getWriterFnName() {
+    ThreadImplementationNames tin = new ThreadImplementationNames(dp.getOwner());
+    return getThreadImplWriterFnName(dp.getCommprimFnNameOpt(), tin.getNormalizedName(), getName());
+  }
+  
+  //////////////////////////////////////////////////////////////
+  //
+  // Names for dispatcher thread global data for read/write ports
+  // and shared variables. 
+  // 
+  //////////////////////////////////////////////////////////////
+
+  public String getReaderWriterImplVar() {
+    return "smaccm_" + getName() + "_var";
+  }
+
+  public String getMutex() {
+    return "smaccm_" + dp.getName() + "_mutex";
+  }
+  
+  ////////////////////////////////////////////////////////////
+  // 
+  // Decl functions; these should be eliminated and replaced
+  // with a <type> <varName> declaration in stringtemplate.
+  //
+  ////////////////////////////////////////////////////////////
+  
+  public String getQueueDataDecl()  { 
+    if (!(dp instanceof InputEventPort)) {
+      throw new Aadl2RtosException("Error: getQueueDecl: port " + dp.getName() + " is not an input event port so has no queue.");
+    }
+    InputEventPort iep = (InputEventPort)dp; 
+    return iep.getQueueType().getCType().varString(getQueueDataName());
+  }
+  
+  
+  public String getQueueFrontDecl() {
+    return indexType.getCType().varString(getQueueFrontName());
+  }
+  
+  public String getQueueBackDecl() {
+    return indexType.getCType().varString(getQueueBackName()); 
+  }
+
+  public String getQueueFullDecl() {
+    return (new BoolType()).getCType().varString(getQueueBackName()); 
+  }
+
+  ////////////////////////////////////////////////////////////
+  // 
+  // FnCall and Stmt functions; these should be eliminated and replaced
+  // with a <varName>(<args>) declaration in stringtemplate.
+  //
+  ////////////////////////////////////////////////////////////
+
+
+  ////////////////////////////////////////////////////////////
+  // 
+  // FnCall and Stmt functions; these should be eliminated and replaced
+  // with a <varName>(<args>) declaration in stringtemplate.
+  //
+  ////////////////////////////////////////////////////////////
+
   public String getIsEmptyFnCall() {
     return getQueueIsEmptyName() + "()"; 
   }
   
-  
-  public String getReaderFnName() {
-    return Names.getThreadImplReaderFnName(dp); 
-  }
-              
-  public String getWriterFnName() {
-    return Names.getThreadImplWriterFnName(dp); 
+  public String getIsFullFnCall() {
+    return getQueueIsFullName() + "()"; 
   }
   
   public String getGlobalDataSlot() {
-    return getGlobalData() + "[" + getGlobalIndex() + "]";
+    return getGlobalData() + "[*" + getGlobalIndex() + "]";
   }
   
   public String getCopyToGlobalDataStmt() {
@@ -150,34 +316,31 @@ public class PortNames {
       return CommonNames.memcpyStmt(dp.getType(), getGlobalDataSlot(), getName()) + ";";
     }
   }
+
+  public String getCopyToQueueDataStmt() {
+    String location = this.getQueueDataDecl() + "[" + this.getQueueBackDecl() + "]";
+    if (dp.getType().isBaseType()) {
+      return location + " = *" + getName() + ";";
+    } else {
+      return CommonNames.memcpyStmt(dp.getType(), location, getName()) + ";";
+    }
+  }
+
+  public String getCopyFromQueueDataStmt() {
+    String location = this.getQueueDataDecl() + "[" + this.getQueueFrontDecl() + "]";
+    if (dp.getType().isBaseType()) {
+      return "*" + getName() + " = " + location + ";";
+    } else {
+      return CommonNames.memcpyStmt(dp.getType(), getName(), location) + ";";
+    }
+  }
   
   public String getVarRef() {
-    return Names.getVarRef(dp.getType(), getName());
-  }
-
-  public String getMutex() {
-    return Names.getReaderWriterMutexName(dp);
-  }
-  
-  public String getCamkesMutexLockFnCall() {
-    return Names.getReaderWriterMutexName(dp) + "_lock()";
-  }
-
-  public String getCamkesMutexUnlockFnCall() {
-    return Names.getReaderWriterMutexName(dp) + "_unlock()";
-  }
-  
-  public String getReaderWriterImplVar() {
-    return "smaccm_" + getName() + "_var";
+    return this.getType().getName() + this.getName(); 
   }
 
   public String getReaderWriterImplVarDecl() {
     return dp.getType().getCType().varString(getReaderWriterImplVar());
-  }
-  
-  // NOTE: must be the same as DispatcherNames::getDispatcherName() for port dispatchers;
-  public String getDispatcherName() {
-    return "smaccm_" + dp.getOwner().getNormalizedName() + "_" + getName() + "_dispatcher";
   }
   
   public String getCopyToImplVarStmt() {
@@ -196,10 +359,5 @@ public class PortNames {
           CommonNames.getVarRef(dp.getType(), getReaderWriterImplVar())) + ";";
     }
   }
-
-  public String getPassiveComponentDispatcherName() {
-    return Names.getComponentInstanceName(dp.getOwner()) + "_" + 
-        this.getDispatcherName(); 
-  }  
   
 };

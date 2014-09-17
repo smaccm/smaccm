@@ -227,10 +227,10 @@ public class SourceDeclarations {
 
   public void writeSharedDataReader(BufferedWriter out, ThreadImplementation impl, SharedDataAccessor outp) throws IOException {
     SharedData sharedData = outp.getSharedData();
-    Type dt = sharedData.getDataType();
+    Type dt = sharedData.getType();
     out.append("bool " + CommonNames.getThreadImplReaderFnName(outp) + 
       "(/* THREAD_ID tid,  */ " + 
-        CommonNames.createRefParameter(outp.getSharedData().getDataType(), "elem") + ") {\n\n");
+        CommonNames.createRefParameter(outp.getSharedData().getType(), "elem") + ") {\n\n");
     out.append(ind + "bool result = true;\n\n");
     out.append(ind + iosp.lockMutex(outp.getSharedData()));
     if (dt.isBaseType()) {
@@ -343,7 +343,7 @@ public class SourceDeclarations {
   // TODO: normalize ports and shared data in terms of functions.
   public void writeSharedDataVar(BufferedWriter out, SharedData c) throws IOException {
     writeComment(out, "Shared data for shared data port: " + c.getPortName() + "\n");
-    out.append(c.getDataType().getCType().varString(c.getVarName()) + "; \n");
+    out.append(c.getType().getCType().varString(c.getVarName()) + "; \n");
   }
   
   
@@ -414,10 +414,10 @@ public class SourceDeclarations {
 
   public void writeSharedDataWriter(BufferedWriter out, ThreadImplementation impl, SharedDataAccessor outp) throws IOException {
     SharedData sharedData = outp.getSharedData();
-    Type dt = sharedData.getDataType();
+    Type dt = sharedData.getType();
     out.append("bool " + CommonNames.getThreadImplWriterFnName(outp) + 
       "(/* THREAD_ID tid,  */ "); 
-    out.append("const " + CommonNames.createRefParameter(sharedData.getDataType(), "elem") + ") {\n\n");
+    out.append("const " + CommonNames.createRefParameter(sharedData.getType(), "elem") + ") {\n\n");
     out.append(ind + "bool result = true;\n\n");
     out.append(ind + iosp.lockMutex(sharedData));
     if (dt.isBaseType()) {

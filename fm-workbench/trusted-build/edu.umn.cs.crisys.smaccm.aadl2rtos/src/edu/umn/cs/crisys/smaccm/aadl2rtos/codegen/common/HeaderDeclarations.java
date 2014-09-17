@@ -77,13 +77,13 @@ public class HeaderDeclarations {
       if (sda.getAccessType() == AccessType.READ || 
           sda.getAccessType() == AccessType.READ_WRITE) {
         String fnName = CommonNames.getThreadImplReaderFnName(sda);
-        String argString = CommonNames.createRefParameter(sda.getSharedData().getDataType(), "arg");
+        String argString = CommonNames.createRefParameter(sda.getSharedData().getType(), "arg");
         out.append("   bool " + fnName + "(" + argString + "); \n\n");
       }
       if (sda.getAccessType() == AccessType.WRITE || 
           sda.getAccessType() == AccessType.READ_WRITE) {
         String fnName = CommonNames.getThreadImplWriterFnName(sda);
-        String argString = CommonNames.createRefParameter(sda.getSharedData().getDataType(), "arg");
+        String argString = CommonNames.createRefParameter(sda.getSharedData().getType(), "arg");
         out.append("   bool " + fnName + "(const " + argString + "); \n\n");
       }
     }

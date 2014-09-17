@@ -19,6 +19,7 @@ import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosException;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.*;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.*;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.rpc.RemoteProcedureGroup;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.parse.Model;
 
 public class ThreadImplementation extends ThreadImplementationBase {
 
@@ -50,9 +51,9 @@ public class ThreadImplementation extends ThreadImplementationBase {
 	private List<RemoteProcedureGroup> requiresRPCList = new ArrayList<RemoteProcedureGroup>();
 	
 	// Constructor
-	public ThreadImplementation(String name, int priority, int stackSize, 
+	public ThreadImplementation(Model model, String name, int priority, int stackSize, 
 	    String generatedEntrypoint, boolean isPassive) {
-	  super(name, priority, stackSize);
+	  super(model, name, priority, stackSize);
 	  this.generatedEntrypoint = generatedEntrypoint;
 	  this.isPassive = isPassive; 
   }

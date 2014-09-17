@@ -1,5 +1,6 @@
 package edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread;
 
+import edu.umn.cs.crisys.smaccm.aadl2rtos.parse.Model;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.util.Util;
 
 /**
@@ -20,7 +21,7 @@ public class ThreadImplementationBase {
 	
 	protected String name;
 	protected String generatedEntrypoint = null;
-  
+  protected Model model;
   protected int kochabThreadLocation;
   
   public int getKochabThreadLocation() {
@@ -31,10 +32,15 @@ public class ThreadImplementationBase {
     this.kochabThreadLocation = loc;
   }
         
-	public ThreadImplementationBase(String name, int priority, int stackSize) {
+	public ThreadImplementationBase(Model model, String name, int priority, int stackSize) {
 	  this.name = name;
 	  this.priority = priority;
 	  this.stackSize = stackSize;
+	  this.model = model;
+	}
+	
+	public Model getModel() {
+	  return model;
 	}
 	
 	public String getName() {

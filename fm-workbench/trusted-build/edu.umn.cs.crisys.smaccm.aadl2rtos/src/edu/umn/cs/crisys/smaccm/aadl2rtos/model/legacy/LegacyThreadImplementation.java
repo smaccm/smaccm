@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.ThreadImplementationBase;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.parse.Model;
 
 
 public class LegacyThreadImplementation extends ThreadImplementationBase {
@@ -21,9 +22,9 @@ public class LegacyThreadImplementation extends ThreadImplementationBase {
 	private List<String> legacyMutexList = new ArrayList<String>();
   private List<String> legacySemaphoreList = new ArrayList<String>();
 
-  public LegacyThreadImplementation(String name, int priority, int stackSize,  
+  public LegacyThreadImplementation(Model model, String name, int priority, int stackSize,  
       List<String> legacyMutexList, List<String> legacySemaphoreList, String generatedEntrypoint) {
-    super(name, priority, stackSize);
+    super(model, name, priority, stackSize);
     this.legacyMutexList = legacyMutexList;
     this.legacySemaphoreList = legacySemaphoreList;
     this.generatedEntrypoint = generatedEntrypoint;

@@ -13,6 +13,7 @@ import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.IntType;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.Type;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.UnitType;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.*;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.util.Util;
 
 /**
  * @author Whalen
@@ -58,6 +59,12 @@ public class DispatchContractNames {
       targets.add(new PortNames(c.getDestPort()));
     }
     return targets;
+  }
+
+  public String getDispatchArrayTypeName() {
+    TypeNames tni = new TypeNames(oep.getType());
+    return "smaccm_" + Util.normalizeAadlName(tni.getName()) 
+        + "_array_" + this.getMaxDispatchSize(); 
   }
 
 }

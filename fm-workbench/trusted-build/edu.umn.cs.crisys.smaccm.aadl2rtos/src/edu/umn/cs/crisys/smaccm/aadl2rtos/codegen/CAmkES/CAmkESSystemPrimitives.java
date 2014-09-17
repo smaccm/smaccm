@@ -13,11 +13,13 @@ import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.ThreadInstancePort;
  */
 public class CAmkESSystemPrimitives implements IOperatingSystemPrimitives {
   public String lockMutex(ThreadInstancePort tip) {
-    return Names.getReaderWriterMutexName(tip.getPort()) + "_lock();";
+    PortNames pn = new PortNames(tip.getPort());
+    return pn.getMutex() + "_lock();";
   }
   
   public String unlockMutex(ThreadInstancePort tip) {
-    return Names.getReaderWriterMutexName(tip.getPort()) + "_unlock();";
+    PortNames pn = new PortNames(tip.getPort());
+    return pn.getMutex() + "_unlock();";
   }
   
   public String lockMutex(SharedData sd) {
@@ -27,7 +29,9 @@ public class CAmkESSystemPrimitives implements IOperatingSystemPrimitives {
     return "// unlock for SharedData objects currently unimplemented for CAmkES; "; 
   }
   public String signalDispatcherProc(ThreadInstancePort tip) {
-    return Names.getDispatcherComponentMutexName(tip.getThreadInstance().getThreadImplementation());
+    ThreadImplementationNames tin = 
+        new ThreadImplementationNames(tip.getThreadInstance().getThreadImplementation());
+    return tin.getDispatcherComponentMutexName();
   }
   
 }

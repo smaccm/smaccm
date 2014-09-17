@@ -227,6 +227,7 @@ public class AadlModelParser {
     int queueSize = PortUtil.getQueueSize(port); 
     InputEventPort iep = new InputEventPort(port.getName(), datatype, ti, queueSize);
     ti.addInputEventPort(iep);
+    
     List<String> entrypoints = ThreadUtil.getComputeEntrypointList(port);
     String file = Util.getStringValueOpt(port,ThreadUtil.SOURCE_TEXT);
     if (entrypoints != null) {
@@ -283,7 +284,12 @@ public class AadlModelParser {
         ti.addOutputEventDataPort(oep);
       }
     }
+
     if (dp != null) {
+      String commprimFnNameOpt = Util.getStringValueOpt(port, ThreadUtil.SMACCM_SYS_COMMPRIM_SOURCE_TEXT);
+      String commprimHeaderNameOpt = Util.getStringValueOpt(port, ThreadUtil.SMACCM_SYS_COMMPRIM_SOURCE_HEADER);
+      dp.setCommprimFnNameOpt(commprimFnNameOpt);
+      dp.setCommprimHeaderNameOpt(commprimHeaderNameOpt);
       portMap.put(port, dp);
     }
 	}
@@ -307,7 +313,7 @@ public class AadlModelParser {
       legacyMutexList = (ArrayList<String>) ThreadUtil.getLegacyMutexList(tti);
       legacySemaphoreList = (ArrayList<String>) ThreadUtil.getLegacySemaphoreList(tti);
       generatedEntrypoint = Util.getStringValue(tti, ThreadUtil.LEGACY_ENTRYPOINT);
-      return new LegacyThreadImplementation(name, priority, stackSize,  
+      return new LegacyThreadImplementation(model, name, priority, stackSize,  
           legacyMutexList, legacySemaphoreList, generatedEntrypoint);
     } catch (Exception e) {
       throw new Aadl2RtosException("Error: Legacy threads must have a SMACCM_SYS::Legacy_Entrypoint property defined");
@@ -428,7 +434,7 @@ public class AadlModelParser {
         d.setDispatchLimits(surrogate.getContracts());
       }
     }
-    catch (Aadl2RtosException ae) {
+    catch (Exception ae) {
       Aadl2RtosException excp = new Aadl2RtosException("In thread " + ti.getName() + ": " + ae);
       throw excp;
     }
@@ -456,7 +462,7 @@ public class AadlModelParser {
     
     String generatedEntrypoint = tti.getFullName();
     ThreadImplementation ti = 
-        new ThreadImplementation(name, priority, stackSize, generatedEntrypoint, isPassive);
+        new ThreadImplementation(model, name, priority, stackSize, generatedEntrypoint, isPassive);
 
     double minComputeTime = ThreadUtil.getMinComputeExecutionTimeInMicroseconds(tti);
     double maxComputeTime = ThreadUtil.getMaxComputeExecutionTimeInMicroseconds(tti);
@@ -485,9 +491,12 @@ public class AadlModelParser {
         constructWarning(name, "abstract feature", f.getName(), null);
       }
     }
-
-    constructDispatchLimits(tti, ti); 
     
+    if (!ti.getAllOutputEventPorts().isEmpty()) {
+      constructDispatchLimits(tti, ti); 
+    } else {
+      ti.setDispatchLimits(new ArrayList<OutgoingDispatchContract>());
+    }
     return ti;
   }
 

@@ -82,8 +82,6 @@ public class Aadl2RtosAction extends AadlAction {
 	private IStatus execute(SystemInstance si, SystemImplementation sysimpl, IProgressMonitor monitor, File dir, Logger logger) {
 		log = logger;
 		log.info("This is the sysimpl name: "+ sysimpl.getName());
-		log.info("More stuff: " + sysimpl.getFullName());
-		log.info("And more: " + sysimpl.getQualifiedName());	
 		
 		monitor.beginTask("Generating Configuration for AADL Model", IProgressMonitor.UNKNOWN);
 
@@ -125,6 +123,7 @@ public class Aadl2RtosAction extends AadlAction {
 			  CAmkES_CodeGenerator gen = new CAmkES_CodeGenerator(log, model, dir);
 			  gen.write();
 			}
+      logger.status("CAmkES code generation complete.");
 		} catch (Aadl2RtosFailure f) {
 			log.error("Analysis Exception");
 			List<String> msgs = f.getMessages();
