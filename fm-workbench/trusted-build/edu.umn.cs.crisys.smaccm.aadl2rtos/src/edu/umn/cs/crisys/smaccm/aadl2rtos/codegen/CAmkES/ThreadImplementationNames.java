@@ -69,6 +69,10 @@ public class ThreadImplementationNames {
     return constructPortNames(ti.getOutputDataPortList());
   }
   
+  public List<PortNames> getPortList() {
+    return constructPortNames(ti.getPortList());
+  }
+  
   public List<SharedDataAccessorNames> getSharedDataAccessorList() {
     List<SharedDataAccessorNames> sn = new ArrayList<>();
     for (SharedDataAccessor i : ti.getSharedDataAccessors()) {

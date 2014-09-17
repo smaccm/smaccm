@@ -43,6 +43,10 @@ public class PortNames {
     return tyn;
   }
   
+  public ThreadImplementationNames getThreadImplementation() {
+    return new ThreadImplementationNames(dp.getOwner());
+  }
+  
   //////////////////////////////////////////////////////////
   //
   // 'root' name and elements.
@@ -153,15 +157,9 @@ public class PortNames {
         this.getDispatcherCFileDispatcherFnName(); 
   }  
   
-  public String getDispatcherInterfaceName() {
-    return "smaccm_" + getName();
+  public String getIdlDispatcherName() {
+    return "dispatch_" + getName();
   }
-  
-  public String getDispatcherInterfaceUsedName() {
-    return getDispatcherInterfaceName() + "_used";
-  }
-
-
   //////////////////////////////////////////////////////////////
   //
   // Names for parameters/declarations for port data: 
@@ -186,7 +184,7 @@ public class PortNames {
   
   
   public String getGlobalIndexParam() {
-    return this.getType().getOutputType() + " " + this.getGlobalData();
+    return this.getType().getOutputType() + " " + this.getGlobalIndex();
   }
   
   public String getGlobalDataParam() {

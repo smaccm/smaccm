@@ -136,6 +136,9 @@ public class DispatcherNames {
   
   
   public String getIdlDispatcherName() {
+    if (getIsInput()) {
+      return this.getInputEventDispatcherPort().getIdlDispatcherName();
+    }
     return "dispatch_" + getName(); 
   }
   
@@ -160,11 +163,6 @@ public class DispatcherNames {
     } else {
       return "smaccm_dispatcher_" + getName();
     }
-  }
-
-  public String getCamkesRPCDispatchFnName() {
-    TypeNames type = new TypeNames(dp.getType());
-    return (getDispatcherCFileDispatcherFnName()) + "_" + type.getWriterFn();
   }
 
   //////////////////////////////////////////////////////////

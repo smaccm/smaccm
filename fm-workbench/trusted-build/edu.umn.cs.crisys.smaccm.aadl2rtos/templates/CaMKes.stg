@@ -238,12 +238,15 @@ dispatcherPrototype(dispatcher, arg) ::= <<
 <dispatcherDeclaration(dispatcher, arg)>; 
 >>
 
-port_params(port) ::= << 
-<if(port.hasData)>out <port.type.outputTypeName> <port.data>, <endif>out <port.indexType.outputTypeName> <port.index>
+port_params(dispatchContract, port) ::= << 
+<if(port.hasData)><\\>
+out <dispatchContract.dispatchArrayTypeName> <port.data>, 
+<endif>out <port.indexType.outputTypeName> <port.index>
+
 >>
 
 contract_params(dispatchContract) ::= << ,
-			<port_params(dispatchContract.port)>
+			<port_params(dispatchContract, dispatchContract.port)>
 >>
 
 dispatcher(dispatcher) ::= <<
@@ -284,6 +287,93 @@ componentGlueCodeHeaderPrefix(name, date, path, datatypesHeader) ::= <<
 
 <filenameBlockComment(date, path, dispatchInterfaceIdlPurpose(name))>
 
+>>
+
+
+<!
+  static public String udeEntrypointDecl(Dispatcher d, String fnName) {
+    if (d instanceof InputEventDispatcher && 
+        ((InputEventDispatcher)d).getEventPort().isInputEventDataPort()) {
+      InputEventDispatcher ied = (InputEventDispatcher)d;
+      return "   void " + fnName
+          + "(const " + Names.createRefParameter(ied.getEventPort().getType(), "elem") + " ); \n\n";
+    }
+    else if (d instanceof PeriodicDispatcher) {
+      return "   void " + fnName
+          + "(uint32_t *millis_from_sys_start); \n\n";
+    }
+    else {
+      return "   void " + fnName
+        + "(); \n\n";
+    }
+  }
+
+  static public void writeThreadUdeDecls(BufferedWriter out, ThreadImplementation tw) throws IOException {
+    ExternalHandler initHandler = tw.getInitializeEntrypointOpt();
+    if ((initHandler != null)) {
+      out.append("   void " + initHandler.getHandlerName() + "();\n\n");
+    }
+
+    // compute entrypoints for thread.
+    List<Dispatcher> dl = tw.getDispatcherList();
+    for (Dispatcher d: dl) {
+      List<ExternalHandler> handlers = d.getExternalHandlerList();
+      for (ExternalHandler eh: handlers) {
+        out.append(udeEntrypointDecl(d, eh.getHandlerName()));
+      }
+    }
+  }
+
+  
+  static public void writeReaderWriterDecl(ThreadImplementation tw, BufferedWriter out) throws IOException {
+    for (DataPort dpiw : tw.getPortList()) {
+      String fnName = CommonNames.getReaderWriterFnName(dpiw);
+      String argString = ""; 
+      if (!dpiw.getType().equals(new UnitType())) {
+        argString = CommonNames.createRefParameter(dpiw.getType(), "arg");
+        if (dpiw instanceof OutputPort) {
+          argString = "const " + argString;
+        }
+      }
+      out.append("   bool " + fnName + "(" + argString + "); \n\n");
+    }
+    
+    for (SharedDataAccessor sda: tw.getSharedDataAccessors()) {
+      if (sda.getAccessType() == AccessType.READ || 
+          sda.getAccessType() == AccessType.READ_WRITE) {
+        String fnName = CommonNames.getThreadImplReaderFnName(sda);
+        String argString = CommonNames.createRefParameter(sda.getSharedData().getType(), "arg");
+        out.append("   bool " + fnName + "(" + argString + "); \n\n");
+      }
+      if (sda.getAccessType() == AccessType.WRITE || 
+          sda.getAccessType() == AccessType.READ_WRITE) {
+        String fnName = CommonNames.getThreadImplWriterFnName(sda);
+        String argString = CommonNames.createRefParameter(sda.getSharedData().getType(), "arg");
+        out.append("   bool " + fnName + "(const " + argString + "); \n\n");
+      }
+    }
+  }
+!>
+
+writeExternalHandlerUdePrototype(externalHandler, dispatcher) ::= <<
+<if(dispatcher.isEventData || dispatcher.isPeriodic)><\\>
+void <externalHandler.handlerName>(<dispatcher.nameAsInputParam>); 
+<else><\\>
+void <externalHandler.handlerName>();
+<endif>
+>>
+
+writeUdePrototype(dispatcher) ::= <<
+	<dispatcher.externalHandlers:writeExternalHandlerUdePrototype(dispatcher)>
+>>
+
+writePortPrototype(port) ::= <<
+
+>>
+componentGlueCodeHeaderBody(threadImplementation) ::= <<
+	<threadImplementation.dispatchers:writeUdePrototype()>
+	<threadImplementation.portList:writePortPrototype()>
+	<threadImplementation.sharedDataAccessorList:writeSharedDataPrototype()>
 >>
 
 componentGlueCodeHeaderPostfix(name, path) ::= <<
@@ -354,9 +444,11 @@ cDispatchContractOutputArg(dispatchContract) ::= <<
 		<dispatchContract.port.indexParam>
 >>
 
+optDispatcherComma(dispatcher) ::= "<if (dispatcher.hasData && dispatcher.contracts)>,<endif>"
+
 componentDispatcherFn(dispatcher) ::= << 
-void WRONG_<dispatcher.name>(<dispatcher:optDispatcherInputArg()> <if (dispatcher.hasData && dispatcher.contracts)>,<endif>
-	<dispatcher.contracts:cDispatchContractOutputArg()>;separator=",\n") {
+void <dispatcher.threadImplementation.componentName>_<dispatcher.idlDispatcherName><\\>
+(<dispatcher:optDispatcherInputArg()><optDispatcherComma(dispatcher)><dispatcher.contracts:cDispatchContractOutputArg();separator=",\n">) {
 	<dispatcher.contracts:assignGlobals()>
 	<dispatcher.externalHandlers:cUserDispatcher(dispatcher.name)>
 }	
@@ -419,7 +511,7 @@ componentLocalReaderDecl(port) ::= <<
 
 componentCFileDecls(threadImpl) ::= <<
 
-#include <threadImpl.componentGlueCodeHFileName>
+#include <\u003C><threadImpl.componentGlueCodeHFileName><\u003E>
 
 <threadImpl.allOutputEventPorts:cPortTempVarDeclarations()>
 
@@ -497,28 +589,19 @@ while (!<dispatcher.isEmpty>) {
 >>
 
 drainDispatchers(dispatcher) ::= <<
-<if(dispatcher.isPeriodic)><dispatcher:periodicDispatcher()><endif><if(dispatcher.isIRQ)><dispatcher:irqDispatcher()><endif><if(dispatcher.isEvent)><dispatcher:eventDispatcher()><endif><if(dispatcher.isEventData)><dispatcher:eventDataDispatcher()><endif>
+<if(dispatcher.isPeriodic)><\\>
+<dispatcher:periodicDispatcher()>
+<elseif(dispatcher.isIRQ)><\\>
+<dispatcher:irqDispatcher()>
+<elseif(dispatcher.isEvent)><\\>
+<dispatcher:eventDispatcher()>
+<elseif(dispatcher.isEventData)>
+<dispatcher:eventDataDispatcher()>
+<else>
+	ERROR: dispatcher is not of periodic, IRQ, Event, or EventData type.
+<endif>
 >>
 	
-
-dispatcherComponentMainFunction(threadImpl) ::= <<
-int run() {
-	// initialization routines ... skipped for now.
-	
-	// initial lock to await dispatch input.
-	<threadImpl.dispatcherLockStmt>
-	for(;;) {
-		<threadImpl.dispatcherLockStmt>
-		
-		// drain the queues 
-		<threadImpl.dispatchers:drainDispatchers()>
-	}
-	// won't ever get here, but form must be followed
-	return 0;
-}
-
-
->>
 
 dispatcherDeclareData(dispatcherContract) ::= <<
 <dispatcherContract.dataDecl>;
@@ -527,19 +610,19 @@ dispatcherDeclareData(dispatcherContract) ::= <<
 >>
 
 passiveDispatcherCallOutPortArg(port) ::= <<
-<if(port.hasData)>&<port.data>,<endif>
-&<port.index>
+<if(port.hasData)><port.type.valAsOutput><port.data>,<endif>
+<port.type.valAsOutput><port.index>
 >>
 
 writePassiveDispatcherArg(port) ::= <<
-<if(port.hasData)><port.type.valAsRefName>(<port.name>[smaccm_it])<endif>
+<if(port.hasData)><port.type.valAsInput>(<port.data>[smaccm_it])<endif>
 >>
 
 passiveDispatcherCallOutArg(dispatchContract) ::= <<, 
 				<passiveDispatcherCallOutPortArg(dispatchContract.port)> >>
 
 callTargetDispatcher(portDest,portSrc) ::= <<
-<portDest.dispatcherCFileDispatcherFnName>(<writePassiveDispatcherArg(portSrc)>);	
+<portDest.threadImplementation.interfaceInstanceName>_<portDest.idlDispatcherName>(<writePassiveDispatcherArg(portSrc)>);	
 
 >>
 
@@ -551,16 +634,17 @@ for (smaccm_it = 0; smaccm_it \< <dispatchContract.port.index>; smaccm_it++) {
 >>
 
 dispatcherComponentDataDispatchFunction(dispatcher) ::= <<
-void <dispatcher.dispatcherComponentDispatchName>(<dispatcher.nameAsInputParam>) {
+void <dispatcher.dispatcherCFileDispatcherFnName>(<dispatcher.nameAsInputParam>) {
 	<dispatcher.contracts:dispatcherDeclareData()>
 	
 	// make the call: 
 	<dispatcher.passiveComponentDispatcherPathName>(<dispatcher.name> <dispatcher.contracts:passiveDispatcherCallOutArg()>);
 	
+	<if(dispatcher.contracts)>
 	// invoke any resulting `send' operations
 	uint32_t smaccm_it; 
 	<dispatcher.contracts:sendLoop(dispatcher)>
-
+	<endif>
 }
 
 
@@ -615,24 +699,25 @@ bool <port.queueWriteName>(const <port.nameAsInputParam>) {
 
 dispatcherComponentPeriodicEventDecls(dispatcher) ::= <<
 
-boolean <dispatcher.dispatchOccurredVar>;
+bool <dispatcher.dispatchOccurredVar>;
 <dispatcher.type.name> <dispatcher.periodicTimeVar>;
 
-void <dispatcher.camkesRPCDispatchFnName>(<dispatcher.type.inputTypeName> arg) {
+void <dispatcher.dispatcherComponentDispatchName>_<dispatcher.type.writerFn><\\>
+(<dispatcher.type.inputTypeName> arg) {
 	<dispatcher.dispatchOccurredVar> = true;
 	<dispatcher.periodicTimeVar> = arg;
-	<dispatcher.threadImpl.dispatcherUnlockStmt>
+	<dispatcher.threadImplementation.dispatcherUnlockStmt>
 }
 
 >>
 
 dispatcherComponentIRQEventDecls(dispatcher) ::= <<
 
-boolean <dispatcher.dispatchOccurredVar>;
+bool <dispatcher.dispatchOccurredVar>;
 
 void <dispatcher.camkesRPCDispatchName>(<dispatcher.type.inputName> arg) {
 	<dispatcher.dispatchOccurredVar> = true;
-	<dispatcher.threadImpl.dispatcherUnlockStmt>
+	<dispatcher.threadImplementation.dispatcherUnlockStmt>
 }
 
 >> 
@@ -661,6 +746,27 @@ writePassiveDispatchers(threadImpl) ::= <<
 
 >>
 
+
+dispatcherComponentMainFunction(threadImpl) ::= <<
+int run() {
+	// initialization routines ... skipped for now.
+	
+	// initial lock to await dispatch input.
+	<threadImpl.dispatcherLockStmt>
+	for(;;) {
+		<threadImpl.dispatcherLockStmt>
+		
+		// drain the queues 
+		<threadImpl.dispatchers:drainDispatchers()>
+	}
+	// won't ever get here, but form must be followed
+	return 0;
+}
+
+
+>>
+
+
 dispatcherComponentCDecls(model, threadImpl) ::= <<
 
 <if(threadImpl.inputEventPortList)><\\>
@@ -668,7 +774,7 @@ dispatcherComponentCDecls(model, threadImpl) ::= <<
 <endif>
 <threadImpl.inputEventPortList:dispatcherComponentReceiverDecls()>
 
-<model.threadImplementations:writePassiveDispatchers()	>
+<! <model.threadImplementations:writePassiveDispatchers()	> !>
 
 // Functions for managing input dispatchers 
 <threadImpl.dispatchers:dispatcherComponentEventDecls()>
@@ -706,23 +812,28 @@ componentCamkesPostfix(name, path) ::= <<
 
 addPortIdl(port) ::= <<
 import "../../interfaces/<port.type.readerWriterIdlFileName>";
+
 >>
 
 addSharedDataAccessorIdl(sharedDataAccesor) ::= <<
 import "../../interfaces/<sharedDataAccessor.type.sharedDataIdlFileName>";
+
 >>
 
 inputDataPortDecl(port) ::= <<
 provides <port.type.readerWriterInterfaceName> <port.name>; 
 has mutex <port.mutex>; 
+
 >>
 
 outputDataPortDecl(port) ::= <<
 uses <port.type.readerWriterInterfaceName> <port.name>;
+
 >>
 
 sharedDataAccessorDecl(sharedDataAcessor) ::= <<
 uses <sharedDataAccessor.type.readerWriterInterfaceName> <sharedDataAccessor.name>;
+
 >>
 
 componentCamkesBody(threadImpl) ::= <<
@@ -842,7 +953,7 @@ import "../../interfaces/<type.readerWriterIdlFileName>";
 
 component <model.threadCalendar.periodicDispatcherComponentName> {
 	control;
-	<model.activeThreadImplementationList:writePeriodicSenders()>
+	<model.activeThreadImplementations:writePeriodicSenders()>
 }
 
 >>
@@ -889,7 +1000,7 @@ rpcConnection(cid, from1, from2, to1, to2) ::=
 connectPassiveToActive(passiveThreadImpl, activeThreadImpl, model) ::= <<
 <rpcConnection(model.generateConnectionName,
 	activeThreadImpl.dispatcherComponentInstanceName,
-	passiveThreadImpl.normalizedName,
+	passiveThreadImpl.interfaceInstanceName,
 	passiveThreadImpl.componentInstanceName,
 	passiveThreadImpl.componentDispatcherInterfaceVarIdName)>
 
@@ -948,7 +1059,7 @@ assemblyConnectReadersWriters(threadImpl, model) ::= <<
 
 camkesAssemblyBody(model) ::= <<
 
-import <std_connector.camkes>;
+import <\u003C>std_connector.camkes<\u003E>;
 <if(model.threadCalendar.hasDispatchers)>import "<model.threadCalendar.periodicDispatcherPathName>";<endif>
 <model.threadImplementations:assemblyThreadImplementationImports()>
 

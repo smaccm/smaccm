@@ -238,7 +238,7 @@ public class CAmkES_CodeGenerator {
 	    writeBoilerplateHeader(name, path, writer, "dispatchInterfaceIdlPrefix");
 	    
 	    ST di = templates.getInstanceOf("dispatcherProc");
-	    di.add("threadImplementation", tin);
+	    di.add("threadImpl", tin);
 	    di.add("datatypesHeader", m.getSystemTypeHeaderName());
   	  writer.append(di.render());
   	  writeBoilerplateFooter(name, path, writer, "dispatchInterfaceIdlPostfix"); 
@@ -292,7 +292,7 @@ public class CAmkES_CodeGenerator {
       writer.append("\n\n");
       
       ST st = templates.getInstanceOf("componentCFileDecls");
-      st.add("threadImplementation", tin);
+      st.add("threadImpl", tin);
       writer.append(st.render()); 
       
       writeBoilerplateFooter(name, path, writer, "componentGlueCodeCFilePostfix"); 
@@ -319,7 +319,7 @@ public class CAmkES_CodeGenerator {
       writer.append("#include <" + tin.getDispatcherComponentHFileName() + ">\n\n");
       
       ST st = templates.getInstanceOf("dispatcherComponentCDecls");
-      st.add("threadImplementation", tin);
+      st.add("threadImpl", tin);
       st.add("model", mn);
       writer.append(st.render());
       
@@ -347,7 +347,7 @@ public class CAmkES_CodeGenerator {
 	    writeBoilerplateDTHeader(name, path, writer, "componentCamkesPrefix", true);
   
       ST st = templates.getInstanceOf("componentCamkesBody");
-      st.add("threadImplementation", tin);
+      st.add("threadImpl", tin);
       writer.append(st.render());
       
       writeBoilerplateFooter(name, path, writer, "componentCamkesPostfix");
@@ -373,7 +373,7 @@ public class CAmkES_CodeGenerator {
 
       ST st = templates.getInstanceOf("dispatchComponentCDecls"); 
       st.add("model", new ModelNames(model));
-      st.add("threadImplementation", tin);
+      st.add("threadImpl", tin);
       writer.append(st.render());
       
       writeBoilerplateFooter(name, path, writer, "dispatcherComponentCamkesPostfix");
@@ -581,7 +581,7 @@ for (ThreadInstancePort ip : ti.getThreadInstanceInputPorts()) {
     // write 'run' function
     st = templates.getInstanceOf("dispatcherComponentMainFunction");
     ThreadImplementationNames threadImplementation = new ThreadImplementationNames(ti); 
-    st.add("threadImplementation", threadImplementation); 
+    st.add("threadImpl", threadImplementation); 
     writer.append(st.render());
 
     
