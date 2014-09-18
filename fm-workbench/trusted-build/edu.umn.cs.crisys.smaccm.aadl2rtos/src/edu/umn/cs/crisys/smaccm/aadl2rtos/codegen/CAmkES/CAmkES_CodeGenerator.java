@@ -257,8 +257,11 @@ public class CAmkES_CodeGenerator {
     String path = interfaceFile.getAbsolutePath();
     try (BufferedWriter writer = new BufferedWriter(new FileWriter(interfaceFile))) {
       writeBoilerplateDTHeader(name, path, writer, "componentGlueCodeHeaderPrefix", true);
-      HeaderDeclarations.writeReaderWriterDecl(ti, writer);
-      HeaderDeclarations.writeThreadUdeDecls(writer, ti);
+      
+      ST st = templates.getInstanceOf("componentGlueCodeHeaderBody");
+      st.add("threadImpl", tin);
+      writer.append(st.render() + "\n");
+      
       writeBoilerplateFooter(name, path, writer, "componentGlueCodeHeaderPostfix"); 
     } catch (IOException e) {
       log.error("IO Exception occurred when creating a component header.");

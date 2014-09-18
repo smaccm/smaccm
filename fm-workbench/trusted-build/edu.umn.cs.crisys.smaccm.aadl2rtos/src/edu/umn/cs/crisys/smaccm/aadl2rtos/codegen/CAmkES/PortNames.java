@@ -74,9 +74,14 @@ public class PortNames {
   
   public String getNameAsInputParam() {
     TypeNames tpn = this.getType();
-    return tpn.getOutputType() + " " + getName();
+    return tpn.getInputType() + " " + getName();
   }
   
+  public String getNameAsOutputParam() {
+    TypeNames tpn = this.getType();
+    return tpn.getOutputType() + " " + getName();
+  }
+
   public String getVarDecl() {
     return dp.getType().getCType().varString(getName());
   }
@@ -307,32 +312,6 @@ public class PortNames {
     return getGlobalData() + "[*" + getGlobalIndex() + "]";
   }
   
-  public String getCopyToGlobalDataStmt() {
-    if (dp.getType().isBaseType()) {
-      return getGlobalDataSlot() + " = *" + getName() + ";";
-    } else {
-      return CommonNames.memcpyStmt(dp.getType(), getGlobalDataSlot(), getName()) + ";";
-    }
-  }
-
-  public String getCopyToQueueDataStmt() {
-    String location = this.getQueueDataDecl() + "[" + this.getQueueBackDecl() + "]";
-    if (dp.getType().isBaseType()) {
-      return location + " = *" + getName() + ";";
-    } else {
-      return CommonNames.memcpyStmt(dp.getType(), location, getName()) + ";";
-    }
-  }
-
-  public String getCopyFromQueueDataStmt() {
-    String location = this.getQueueDataDecl() + "[" + this.getQueueFrontDecl() + "]";
-    if (dp.getType().isBaseType()) {
-      return "*" + getName() + " = " + location + ";";
-    } else {
-      return CommonNames.memcpyStmt(dp.getType(), getName(), location) + ";";
-    }
-  }
-  
   public String getVarRef() {
     return this.getType().getName() + this.getName(); 
   }
@@ -340,22 +319,5 @@ public class PortNames {
   public String getReaderWriterImplVarDecl() {
     return dp.getType().getCType().varString(getReaderWriterImplVar());
   }
-  
-  public String getCopyToImplVarStmt() {
-    if (dp.getType().isBaseType()) {
-      return getReaderWriterImplVar() + " = *" + getName() + ";";
-    } else {
-      return CommonNames.memcpyStmt(dp.getType(), getReaderWriterImplVar(), getName()) + ";";
-    }
-  }
-  
-  public String getCopyFromImplVarStmt() {
-    if (dp.getType().isBaseType()) {
-      return "*" + getName() + " = " + getReaderWriterImplVar() + ";";
-    } else {
-      return CommonNames.memcpyStmt(dp.getType(), getName(), 
-          CommonNames.getVarRef(dp.getType(), getReaderWriterImplVar())) + ";";
-    }
-  }
-  
+   
 };
