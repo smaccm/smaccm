@@ -1,0 +1,65 @@
+-- Note: this example shows a single send of a scalar type from an
+-- active thread to a passive thread.  It is designed to test:
+-- 	Component naming
+--  Message distribution for scalars
+--  Passive thread dispatch 
+
+package test1
+public 
+   with Base_Types;
+   with SMACCM_SYS;   
+
+-- Example of a periodically dispatched "Active" thread.   
+thread sender
+	features
+		Output1: out event data port Base_Types::Unsigned_32 {
+	      SMACCM_SYS::CommPrim_Source_Text => "ping_Output1";			
+		};
+	
+	properties 
+	    Dispatch_Protocol => Periodic;
+	    Period => 100 ms;
+		Source_Text => ("periodic_ping.c");
+	    SMACCM_SYS::Compute_Entrypoint_Source_Text => ("periodic_ping");
+	    Priority => 10;
+	    Stack_Size => 256 bytes;
+	    SMACCM_SYS::Thread_Type => Active ;
+	    Compute_Execution_Time => 10 us .. 50 us;
+	    SMACCM_SYS::Sends_Events_To => "{{1 Output1}}";
+end sender ; 
+
+-- Example of a periodically dispatched "Active" thread.   
+thread receiver
+	features
+		Input1: in event data port Base_Types::Unsigned_32 {
+	      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("ping_received");
+		}; 
+		
+	properties 
+	    Dispatch_Protocol => Aperiodic;
+	    SMACCM_SYS::Thread_Type => Passive ;
+	    Compute_Execution_Time => 10 us .. 50 us;
+	    SMACCM_SYS::Sends_Events_To => "{{}}";
+end receiver ; 
+
+process proc
+
+end proc;
+
+process implementation proc.Impl
+	subcomponents
+		s: thread sender;
+		r: thread receiver;
+	connections
+		s_to_r : port s.Output1 -> r.Input1;
+end proc.Impl;
+
+system top_level
+end top_level;
+
+system implementation top_level.impl
+	subcomponents
+		tl: process proc.Impl;
+end top_level.impl;
+
+end test1;
