@@ -14,9 +14,13 @@ import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.UnitType;
  *
  */
 public class TypeNames {
-  Type t; 
+  Type t;
+  Type t_structural;
 
-  TypeNames(Type t) {this.t = t;}
+  TypeNames(Type t) {
+    this.t = t;
+    this.t_structural = Names.getStructuralType(t);
+  }
   
   public String getWriterFn() {
     if (getIsUnit()) {
@@ -27,25 +31,36 @@ public class TypeNames {
   }
   
   public boolean getIsUnit() {
-    return (t instanceof UnitType); 
+    return (t_structural instanceof UnitType); 
   }
   
   public boolean getHasData() {
     return !getIsUnit();
   }
+
+  public boolean getIsBaseType() {
+    return t_structural.isBaseType();
+  }
+  
+  ///////////////////////////////////////////////////
+  //
+  // Naming properties
+  //
+  ///////////////////////////////////////////////////
   
   public String getName() {
     return t.getCType().typeString(); 
   }
   
   public Type getOutputType() { 
-//    return (CommonNames.getStructuralType(t) instanceof ArrayType) ?
+//    return (t_structural instanceof ArrayType) ?
 //        t : new PointerType(t);
       return new PointerType(t);
   }
   
   public Type getInputType() {
-    return (t.isBaseType() ? t : getOutputType());
+    return t;
+    //    return (t_structural.isBaseType() ? t : getOutputType());
   }
   
   public String getOutputTypeName() {
@@ -55,31 +70,41 @@ public class TypeNames {
   public String getInputTypeName() {
     return "/* const */" + getInputType().getCType().typeString();
   }
-
-  public String getInputAsValName() {
-    Type t = getInputType(); 
-    if (t instanceof PointerType) { return "*"; } else { return ""; }
-  }
   
-  public String getInputAsOutput() {
-    Type t = getInputType(); 
-    if (t instanceof PointerType) { return "&"; } else { return ""; }
+  public String getInputToOutput() {
+    //Type t = getInputType(); 
+    //if (!(t_structural instanceof PointerType)) { return "&"; } else { return ""; }
+    return "&";
   }
 
-  public String getValAsInput() {
-    if (t.isBaseType()) { return ""; } else { return "&"; }
+  public String getValToInput() {
+    //if (t_structural.isBaseType()) { return ""; } else { return "&"; }
+    return "";
   }
   
-  public String getValAsOutput() {
+  public String getValToOutput() {
+//  if (t_structural instanceof ArrayType || t instanceof PointerType) { return ""; } else { return "*"; }
     return "&";
   }
   
-  public String getOutputAsVal() {
-//    Type t = getRefType(); 
+  public String getOutputToVal() {
+//    WRONG Type t = getRefType(); 
 //    if (t instanceof ArrayType) { return ""; } else { return "*"; }
     return "*"; 
   }
+
+  public String getInputToPtr() {
+    if (t_structural instanceof ArrayType) { return ""; } else { return "&"; }
+  }
   
+  public String getOutputToPtr() {
+    if (t_structural instanceof ArrayType) { return "*"; } else { return ""; }
+  }
+  
+  public String getValToPtr() {
+    if (t_structural instanceof ArrayType) { return ""; } else { return "&"; }
+  }    
+
   public String getReaderWriterInterfaceName() {
     return t.getCType().typeString() + "_writer";
   }    

@@ -189,7 +189,7 @@ public class PortNames {
   
   
   public String getGlobalIndexParam() {
-    return this.getType().getOutputType() + " " + this.getGlobalIndex();
+    return this.getIndexType().getOutputType() + " " + this.getGlobalIndex();
   }
   
   public String getGlobalDataParam() {
@@ -232,12 +232,12 @@ public class PortNames {
     }
   }
   
-  public String getReaderFnName() {
+  public String getAadlReaderFnName() {
     ThreadImplementationNames tin = new ThreadImplementationNames(dp.getOwner());
     return getThreadImplReaderFnName(dp.getCommprimFnNameOpt(), tin.getNormalizedName(), getName());
   }
               
-  public String getWriterFnName() {
+  public String getAadlWriterFnName() {
     ThreadImplementationNames tin = new ThreadImplementationNames(dp.getOwner());
     return getThreadImplWriterFnName(dp.getCommprimFnNameOpt(), tin.getNormalizedName(), getName());
   }
@@ -282,7 +282,7 @@ public class PortNames {
   }
 
   public String getQueueFullDecl() {
-    return (new BoolType()).getCType().varString(getQueueBackName()); 
+    return (new BoolType()).getCType().varString(getQueueFullName()); 
   }
 
   ////////////////////////////////////////////////////////////

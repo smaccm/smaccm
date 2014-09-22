@@ -104,6 +104,20 @@ datatypesPostfix(name, path) ::= <<
 
 ////////////////////////////////////////////////////////////////////////////
 //
+// Generic Declarations 
+// 
+////////////////////////////////////////////////////////////////////////////
+
+inputToValMemcpy(type, dst, src) ::= <<
+memcpy(<type.valToPtr><dst>, <type.inputToPtr><src>, sizeof(<type.name>));
+>>
+
+valToOutputMemcpy(type, dst, src) ::= <<
+memcpy(<type.outputToPtr><dst>, <type.valToPtr><src>, sizeof(<type.name>));
+>>
+
+////////////////////////////////////////////////////////////////////////////
+//
 // Declarations related to component header files for CAmkES
 // 
 ////////////////////////////////////////////////////////////////////////////
@@ -304,11 +318,11 @@ writeUdePrototype(dispatcher) ::= <<
 >>
 
 writePortWriterPrototype(port) ::= <<
-bool <port.writerFnName>(<port.nameAsInputParam>); 
+bool <port.aadlWriterFnName>(<port.nameAsInputParam>); 
 >>
 
 writePortReaderPrototype(port) ::= <<
-bool <port.readerFnName>(<port.nameAsOutputParam>); 
+bool <port.aadlReaderFnName>(<port.nameAsOutputParam>); 
 >>
 
 writeSharedDataPrototype(sda) ::= <<
@@ -389,10 +403,11 @@ cUserDispatcher(externalHandler, dispatcherNameStr) ::= <<
 >>
 
 
-cPortOutputArg(port) ::= "<if(port.hasData)><port.dataParam>, <endif>"
+cPortOutputArg(dispatchContract) ::= 
+"<if(dispatchContract.port.hasData)><dispatchContract.dispatchArrayTypeName> *<dispatchContract.port.data>, <endif>"
 
 cDispatchContractOutputArg(dispatchContract) ::= <<  
-		<cPortOutputArg(dispatchContract.port)>
+		<cPortOutputArg(dispatchContract)>
 		<dispatchContract.port.indexParam>
 >>
 
@@ -412,7 +427,7 @@ void <dispatcher.threadImplementation.componentDispatcherInterfaceVarIdName>_<di
 assignGlobals(dispatchContract) ::= <<
 <dispatchContract.port.globalMaxDispatchSize> = <dispatchContract.maxDispatchSize>;
 <dispatchContract.port.globalIndex> = <dispatchContract.port.index>;
-<if(dispatchContract.port.hasData)><dispatchContract.port.globalData> = <dispatchContract.port.data>;<endif> 
+<if(dispatchContract.port.hasData)><dispatchContract.port.globalData> = *<dispatchContract.port.data>;<endif> 
 *<dispatchContract.port.globalIndex> = 0;
 
 >> 
@@ -420,7 +435,7 @@ assignGlobals(dispatchContract) ::= <<
 copyToGlobalStmt(port) ::= <<
 <if(port.isBaseType)><\\>
 <port.globalDataSlot> = <port.name>;
-<else>memcpy(<port.globalDataSlot>, <port.name>, sizeof(<type.name>));
+<else><inputToValMemcpy(port.type, port.globalDataSlot, port.name)>
 <endif>
 >>
 
@@ -428,7 +443,7 @@ optConstInputArg(port) ::= "<if(port.hasData)>/* const */<port.nameAsInputParam>
 optOutputArg(port) ::= "<if(port.hasData)><port.nameAsOutputParam><endif>"
 
 componentSendFunction(port) ::= << 
-bool <port.writerFnName>(<port:optConstInputArg()>) {
+bool <port.aadlWriterFnName>(<port:optConstInputArg()>) {
 	if (*<port.globalIndex> \< <port.globalMaxDispatchSize>) {
 		<if(port.hasData)><copyToGlobalStmt(port)><endif>
 		(*<port.globalIndex>)++;
@@ -442,35 +457,38 @@ bool <port.writerFnName>(<port:optConstInputArg()>) {
   
 copyToImplVarStmt(port) ::= <<
 <if(port.type.isBaseType)><port.readerWriterImplVar> = <port.name>;
-<else>memcpy(<port.readerWriterImplVar>, <port.name>, sizeof(<port.type.name>));
+<else><inputToValMemcpy(port.type, port.readerWriterImplVar, port.name)>
 <endif>
 >>
 
 copyFromImplVarStmt(port) ::= <<
-<if(port.type.isBaseType)><port.name> = <port.readerWriterImplVar>;
-<else>memcpy(<port.name>, <port.readerWriterImplVar>, sizeof(<port.type.name>));
+<if(port.type.isBaseType)><port.type.outputToVal><port.name> = <port.readerWriterImplVar>;
+<else><valToOutputMemcpy(port.type, port.name, port.readerWriterImplVar)>
 <endif>
 >>
 
 componentLocalWriteFunction(port) ::= <<
-bool <port.writerFnName>(<optConstInputArg(port)>) {
-	<port.camkesMutexLockFunction>; 
-	<port.copyToImplVarStmt>
-	<port.camkesMutexUnlockFunction>;
-	return true;
+
+// The writer function is called remotely through RPC, so follows the 
+// RPC naming and return convention.  
+void <port.name>_<port.type.writerFn>(<optConstInputArg(port)>) {
+	<port.camkesMutexLockFnCall>; 
+	<copyToImplVarStmt(port)>
+	<port.camkesMutexUnlockFnCall>;
 }
 
 >>
 
 componentLocalReadFunction(port) ::= <<
-bool <port.readerFnName>(<optOutputArg(port)>) {
+bool <port.aadlReaderFnName>(<optOutputArg(port)>) {
 	<port.camkesMutexLockFnCall>; 
-	<port.copyFromImplVarStmt>
+	<copyFromImplVarStmt(port)>
 	<port.camkesMutexUnlockFnCall>;
 	return true;
 }
 
 >>
+
 
 componentLocalReaderDecl(port) ::= <<
 <port.readerWriterImplVarDecl>;
@@ -479,10 +497,19 @@ componentLocalReaderDecl(port) ::= <<
 <componentLocalWriteFunction(port)>
 >>
 
+componentRemoteWriterDecl(port) ::= <<
+bool <port.aadlWriterFnName>(<port.nameAsInputParam>) {
+	<port.name>_<port.type.writerFn>(<port.name>);
+	return true;
+}
+
+>>
 
 componentCFileDecls(threadImpl) ::= <<
 
 #include <\u003C><threadImpl.componentGlueCodeHFileName><\u003E>
+#include <\u003C><threadImpl.componentCamkesHFileName><\u003E>
+#include <\u003C>string.h<\u003E>
 
 <threadImpl.allOutputEventPorts:cPortTempVarDeclarations()>
 
@@ -492,6 +519,7 @@ componentCFileDecls(threadImpl) ::= <<
 
 <threadImpl.inputDataPortList:componentLocalReaderDecl()>
 
+<threadImpl.outputDataPortList:componentRemoteWriterDecl()>
 >>
 
 ////////////////////////////////////////////////////////////////////////////
@@ -551,10 +579,10 @@ while (!<dispatcher.isEmpty>) {
 >>
 
 eventDataDispatcher(dispatcher) ::= <<
-while (!<dispatcher.isEmpty>) {
-	<dispatcher.eventPort.varDecl>
-	<dispatcher.eventPort.queueReadName>(<dispatcher.eventPort.varRef>);
-	<dispatcher.dispatcherCFileDispatcherFnName>(<dispatcher.eventPort.name>); 
+while (!<dispatcher.inputEventDispatcherPort.isEmptyFnCall>) {
+	<dispatcher.inputEventDispatcherPort.varDecl>;
+	<dispatcher.inputEventDispatcherPort.queueReadName>(<dispatcher.type.inputToOutput><dispatcher.inputEventDispatcherPort.name>);
+	<dispatcher.dispatcherCFileDispatcherFnName>(<dispatcher.inputEventDispatcherPort.name>); 
 }
 
 >>
@@ -581,12 +609,12 @@ dispatcherDeclareData(dispatcherContract) ::= <<
 >>
 
 passiveDispatcherCallOutPortArg(port) ::= <<
-<if(port.hasData)><port.type.valAsOutput><port.data>,<endif>
-<port.type.valAsOutput><port.index>
+<if(port.hasData)><port.type.valToOutput><port.data>,<endif>
+<port.type.valToOutput><port.index>
 >>
 
 writePassiveDispatcherArg(port) ::= <<
-<if(port.hasData)><port.type.valAsInput>(<port.data>[smaccm_it])<endif>
+<if(port.hasData)><port.type.valToInput>(<port.data>[smaccm_it])<endif>
 >>
 
 passiveDispatcherCallOutArg(dispatchContract) ::= <<, 
@@ -630,14 +658,14 @@ dispatcherComponentReceiverQueueDecls(port) ::= <<
 >>
 
 copyToQueueDataStmt(port) ::= <<
-<if(port.type.isBaseType)><port.queueDataDecl>[<port.queueBackDecl>] = <port.name> ;
-<else>memcpy(<port.queueDataDecl>[<port.queueBackDecl>], <port.name>, sizeof(<port.type.name>));
+<if(port.type.isBaseType)><port.queueDataName>[<port.queueBackName>] = <port.name> ;
+<else><inputToValMemcpy(port.type, {<port.queueDataName>[<port.queueBackName>]}, port.name )>
 <endif>
 >>
 
 copyFromQueueDataStmt(port) ::= <<
-<if(port.type.isBaseType)><port.name> = <port.queueDataDecl>[<port.queueBackDecl>] ;
-<else>memcpy(<port.name>, <port.queueDataDecl>[<port.queueBackDecl>], sizeof(<port.type.name>));
+<if(port.type.isBaseType)><port.type.outputToVal><port.name> = <port.queueDataName>[<port.queueBackName>] ;
+<else><valToOutputMemcpy(port.type, port.name, {<port.queueDataName>[<port.queueBackName>]})>
 <endif>
 >>
 
@@ -656,36 +684,41 @@ bool <port.queueIsEmptyName>() {
 }
 
 bool <port.queueReadName>(<port.nameAsOutputParam>) {
-	if (<port.queueIsFullFnCall>) {
+	if (<port.queueIsEmptyName>()) {
 		return false;
 	} else {
-		<copyToQueueDataStmt(port)>
+		<copyFromQueueDataStmt(port)>
 		<port.queueBackName> = (<port.queueBackName> + 1) % <port.queueSize>; 
-		if (<port.queueBackName> == <port.queueFrontName>) { <port.queueFullName> = true ; }
+		<port.queueFullName> = false ; 
 		return true;
 	}
 }
 
 bool <port.queueWriteName>(const <port.nameAsInputParam>) {
-	if (<port.queueIsEmptyFnCall>) {
+	if (<port.queueIsFullName>()) {
 		return false;
 	} else {
-		<copyFromQueueDataStmt(port)>
+		<copyToQueueDataStmt(port)>
 		<port.queueFrontName> = (<port.queueFrontName> + 1) % <port.queueSize>; 		
-		<port.queueFullName> = false ; 
+		if (<port.queueBackName> == <port.queueFrontName>) { 
+			<port.queueFullName> = true ; 
+		}
 		return true;
 	}
 }
 
 >>
 
+camkesRPCDispatchName(dispatcher) ::= <<
+  <dispatcher.dispatcherComponentDispatchName>_<dispatcher.type.writerFn>
+>>
 
 dispatcherComponentPeriodicEventDecls(dispatcher) ::= <<
 
 bool <dispatcher.dispatchOccurredVar>;
 <dispatcher.type.name> <dispatcher.periodicTimeVar>;
 
-void <dispatcher.dispatcherComponentDispatchName>_<dispatcher.type.writerFn><\\>
+void <camkesRPCDispatchName(dispatcher)><\\>
 (<dispatcher.type.inputTypeName> arg) {
 	<dispatcher.dispatchOccurredVar> = true;
 	<dispatcher.periodicTimeVar> = arg;
@@ -698,7 +731,7 @@ dispatcherComponentIRQEventDecls(dispatcher) ::= <<
 
 bool <dispatcher.dispatchOccurredVar>;
 
-void <dispatcher.camkesRPCDispatchName>(<dispatcher.type.inputName> arg) {
+void <camkesRPCDispatchName(dispatcher)>(<dispatcher.type.inputName> arg) {
 	<dispatcher.dispatchOccurredVar> = true;
 	<dispatcher.threadImplementation.dispatcherUnlockStmt>
 }
@@ -709,8 +742,9 @@ void <dispatcher.camkesRPCDispatchName>(<dispatcher.type.inputName> arg) {
 // TODO: Dispatcher component for input events.
 dispatcherComponentInputEventDecls(dispatcher) ::= <<
 
-void <dispatcher.camkesRPCDispatchName>(<dispatcher.type.inputName> arg) {
-	// TODO: This is unfinished!
+void <camkesRPCDispatchName(dispatcher)>(<dispatcher.type.inputTypeName> arg) {
+	<dispatcher.inputEventDispatcherPort.queueWriteName>(arg);
+	<dispatcher.threadImplementation.dispatcherUnlockStmt>
 }
 
 >>
@@ -719,8 +753,8 @@ dispatcherComponentEventDecls(dispatcher) ::=  <<
 
 <if(dispatcher.isPeriodic)><dispatcherComponentPeriodicEventDecls(dispatcher)>
 <elseif(dispatcher.isIRQ)><dispatcherComponentIRQEventDecls(dispatcher)>
-<elseif(dispatcher.isEvent)><dispatcherComponentInputEventDecls(dispatcher)>
-<else> ERROR: dispatcher is not IRQ, Event, or Periodic
+<elseif(dispatcher.isEventData)><dispatcherComponentInputEventDecls(dispatcher)>
+<else> ERROR: dispatcher is not IRQ, Event Data, or Periodic
 <endif>
 >>
 
@@ -752,12 +786,14 @@ int run() {
 
 dispatcherComponentCDecls(model, threadImpl) ::= <<
 
+#include <\u003C><threadImpl.model.systemTypeHeaderName><\u003E>
+#include <\u003C><threadImpl.dispatcherComponentCamkesHFileName><\u003E>
+#include <\u003C>string.h<\u003E>
+
 <if(threadImpl.inputEventPortList)><\\>
 // Functions for managing event queues 
 <endif>
 <threadImpl.inputEventPortList:dispatcherComponentReceiverDecls()>
-
-<! <model.threadImplementations:writePassiveDispatchers()	> !>
 
 // Functions for managing input dispatchers 
 <threadImpl.dispatchers:dispatcherComponentEventDecls()>
@@ -915,10 +951,77 @@ dispatcherComponentCamkesPostfix(name, path) ::= <<
 
 >>
 
+////////////////////////////////////////////////////////////////////////////
+//
+// Declarations for periodic dispatcher gluecode c file
+// 
+////////////////////////////////////////////////////////////////////////////
+
+periodicDispatcherCPurpose(componentName) ::= <<
+This .c file contains the CAmkES periodic dispatcher component definition.
+>>
+
+periodicDispatcherCPrefix(name, date, path, datatypesHeader) ::= <<
+<DARPALicenseComment()>
+
+<filenameBlockComment(date, path, dispatcherComponentCamkesPurpose(name))>
+
+>>
+
+writePeriodicDispatcher(dispatcher, threadCalendar) ::= <<
+if ((smaccm_calendar_counter % (<dispatcher.periodicDispatcherPeriod> / smaccm_tick_interval)) == 0) {
+	<dispatcher.dispatcherComponentDispatchName>_<dispatcher.type.writerFn>(smaccm_get_time_in_ms()); 
+}
+>>
+
+periodicComponentCBody(threadCalendar) ::= <<
+
+// Declarations for managing periodic thread dispatch
+const uint32_t smaccm_tick_interval = <threadCalendar.greatestCommonDivisorInMilliseconds>;
+const uint32_t smaccm_hyperperiod_subdivisions = <threadCalendar.hyperperiodSubdivisions>;
+uint32_t smaccm_calendar_counter = 0;
+uint32_t smaccm_calendar_ticks = 0;
+
+// TODO: FIX This: we need to use some system function to return the current system time.
+uint32_t smaccm_get_time_in_ms() {
+  return (uint32_t)(smaccm_calendar_ticks * smaccm_tick_interval); 
+}
+
+void smaccm_thread_calendar() {
+	<threadCalendar.periodicDispatchers:writePeriodicDispatcher(threadCalendar)>
+
+	smaccm_calendar_counter = (smaccm_calendar_counter + 1) % smaccm_hyperperiod_subdivisions; 
+	smaccm_calendar_ticks++; 
+}
+
+void smaccm_periodic_irq_callback() {
+	epit_irq_callback();
+	smaccm_thread_calendar(); 
+	irq_reg_callback(smaccm_periodic_irq_callback, NULL);
+}
+
+int run(void)
+{
+	irq_reg_callback(smaccm_periodic_irq_callback, NULL);
+	epit_init();
+	epit_set_interval(<threadCalendar.greatestCommonDivisorInMilliseconds>);
+
+	epit_start_timer();
+
+	return 0;
+}
+ 
+>>
+
+periodicDispatcherCPostfix(name, path) ::= <<
+
+<blockComment(arg={End of autogenerated file: <path>})>
+
+>>
 
 ////////////////////////////////////////////////////////////////////////////
 //
-// Declarations for periodic dispatcher
+// Declarations for periodic dispatcher camkes component
 // 
 ////////////////////////////////////////////////////////////////////////////
 
@@ -929,7 +1032,7 @@ uses <dispatcher.type.readerWriterInterfaceName> <dispatcher.dispatcherComponent
 >>
 
 writePeriodicSenders(threadImpl) ::= <<
-	<threadImpl.dispatchers:writePeriodicSender()>
+<threadImpl.dispatchers:writePeriodicSender()>
 >>
  
 periodicDispatcherCamkesBody(model, type) ::= <<
@@ -938,6 +1041,8 @@ import "../../interfaces/<type.readerWriterIdlFileName>";
 
 component <model.threadCalendar.periodicDispatcherComponentName> {
 	control;
+	consumes DataAvailable irq;
+	dataport Buf mem;
 	<model.activeThreadImplementations:writePeriodicSenders()>
 }
 
@@ -1048,8 +1153,15 @@ import <\u003C>std_connector.camkes<\u003E>;
 <if(model.threadCalendar.hasDispatchers)>import "<model.threadCalendar.periodicDispatcherPathName>";<endif>
 <model.threadImplementations:assemblyThreadImplementationImports()>
 
+component EPIT {
+    hardware;
+    dataport Buf mem;
+    emits DataAvailable irq;
+}
+
 assembly {
 	composition {
+        component EPIT epit;
 		<constructPeriodicComponent(model.threadCalendar)>
 		
 		// component instances for all AADL-defined threads
@@ -1066,12 +1178,23 @@ assembly {
 		
 		// Periodic dispatcher connections
 		<model.activeThreadImplementations:assemblyConnectPeriodic(model)>
+        connection seL4HardwareMMIO epit_mem(from <model.threadCalendar.periodicDispatcherInstanceName>.mem, to epit.mem);
+		connection seL4HardwareInterrupt irq(from epit.irq, to <model.threadCalendar.periodicDispatcherInstanceName>.irq);
 		
 		// Passive component read/write connections
 		<model.threadImplementations:assemblyConnectReadersWriters(model)>
 		
 		// Shared data connections (currently unsupported: under development)
 	}
+    configuration {
+		/* Freescale i.MX31 (KZM) */
+        epit.mem_attributes = "0x53F98000:0x1000";
+		epit.irq_attributes = 27;
+
+		/* Freescale i.MX6 (Sabralite) */
+        // epit.mem_attributes = "0x020D0000:0x1000";
+		//epit.irq_attributes = 88;
+    }
 }
 
 >>

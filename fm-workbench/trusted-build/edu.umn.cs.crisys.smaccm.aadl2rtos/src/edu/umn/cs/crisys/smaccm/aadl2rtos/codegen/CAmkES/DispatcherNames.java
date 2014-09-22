@@ -110,6 +110,15 @@ public class DispatcherNames {
       throw new Aadl2RtosException("getInputEventDispatcherPort() : dispatcher is not an input event dispatcher");
     }
   }
+
+  public String getPeriodicDispatcherPeriod() {
+    if (dp instanceof PeriodicDispatcher) {
+      PeriodicDispatcher pd = (PeriodicDispatcher)dp;
+      return Integer.toString(pd.getPeriod());
+    } else {
+      throw new Aadl2RtosException("getPeriodicDispatcherPeriod() : dispatcher is not a periodic dispatcher");
+    }
+  }
   
   public TypeNames getType() {
     return new TypeNames(dp.getType());
@@ -179,10 +188,6 @@ public class DispatcherNames {
   public String getNameAsInputParam() {
     TypeNames tyn = new TypeNames(dp.getType());
     return tyn.getInputTypeName() + " " + getName();
-  }
-  
-  public String getInputDispatcherIsEmptyFnCall() {
-    return this.getInputEventDispatcherPort().getIsEmptyFnCall(); 
   }
                    
   public String getPassiveComponentDispatcherPathName() {

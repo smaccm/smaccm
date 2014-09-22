@@ -13,6 +13,7 @@ import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.ThreadImplementation;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.Type;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.UnitType;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.parse.Model;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.util.Util;
 
 /**
  * @author Whalen
@@ -79,12 +80,16 @@ public class ModelNames {
   //
   ////////////////////////////////////////////////////////////
 
+  public String getSystemImplementationName() {
+    return Util.normalizeAadlName(m.getSystemImplementationName());
+  }
+  
   public String getSystemTypeHeaderName() {
-    return "smaccm_" + m.getSystemInstanceName() + "_types.h";
+    return "smaccm_" + getSystemImplementationName() + "_types.h";
   }
 
   public String getSystemAssemblyFileName() {
-    return "smaccm_" + m.getSystemInstanceName() + "_assembly.camkes";
+    return getSystemImplementationName() + "_assembly.camkes";
   }
   
   int connNumber = 0; 

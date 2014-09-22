@@ -76,6 +76,10 @@ public class ThreadImplementationNames {
   public List<PortNames> getOutputPortList() {
     return constructPortNames(ti.getOutputPorts());
   }
+
+  public ModelNames getModel() {
+    return new ModelNames(ti.getModel());
+  }
   
   public List<SharedDataAccessorNames> getSharedDataAccessorList() {
     List<SharedDataAccessorNames> sn = new ArrayList<>();
@@ -182,10 +186,6 @@ public class ThreadImplementationNames {
     return "dispatch_" + getNormalizedName();
   }    
   
-  public String getDispatcherComponentHFileName() {
-    return this.getDispatcherComponentName() + ".h";
-  }
-
   public String getDispatcherComponentInstanceName() {
     return getDispatcherComponentName() + "_inst";
   }    
@@ -246,6 +246,14 @@ public class ThreadImplementationNames {
 
   public String getComponentGlueCodeHFileName() {
     return "smaccm_" + getNormalizedName() + ".h";
+  }    
+
+  public String getComponentCamkesHFileName() {
+    return getNormalizedName() + ".h";
+  }    
+
+  public String getDispatcherComponentCamkesHFileName() {
+    return getDispatcherComponentName() + ".h";
   }    
 
   public String getComponentGlueCodeCFileName() {

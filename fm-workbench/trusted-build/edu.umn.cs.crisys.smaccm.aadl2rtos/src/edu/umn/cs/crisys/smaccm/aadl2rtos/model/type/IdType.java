@@ -111,4 +111,14 @@ public class IdType extends Type {
 	public String toString() {
 		return typeId;
 	}
+	
+	public boolean equals(Object obj) {
+	  if (obj instanceof IdType) {
+	    IdType other = (IdType)obj;
+	    if (this.typeId.equals(other.typeId)) {
+	      return (this.getTypeRef().equals(other.getTypeRef()));
+	    }
+	  }
+	  return false;
+	}
 }

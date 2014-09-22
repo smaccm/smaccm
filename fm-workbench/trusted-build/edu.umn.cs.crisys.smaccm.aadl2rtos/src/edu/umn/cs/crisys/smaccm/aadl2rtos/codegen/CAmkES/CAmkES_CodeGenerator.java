@@ -2,8 +2,12 @@ package edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.CAmkES;
 
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.channels.FileChannel;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -14,13 +18,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.runtime.Path;
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STErrorListener;
 import org.stringtemplate.v4.STGroup;
 import org.stringtemplate.v4.STGroupFile;
 
+import com.google.common.io.Files;
+
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosFailure;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Logger;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.PluginActivator;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.common.CGUtil;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.common.C_Type_Writer;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.common.CommonNames;
@@ -122,23 +131,31 @@ public class CAmkES_CodeGenerator {
     //ST st = templates.getInstanceOf("componentGlueCodeHeaderPurpose");
     //writer.append(st.render());
     
-    Map<String, Type> typeMap = new HashMap<String, Type>();      
     for (ThreadImplementation ti : model.getThreadImplementations()) {
       for (Dispatcher d : ti.getDispatcherList()) {
         OutgoingDispatchContract maxCalls = CGUtil.maxDispatcherUse(d.getDispatchLimits());
         for (Map.Entry<OutputEventPort, Integer> entry : maxCalls.getContract().entrySet()) {
           ArrayType dispatchArrayType = new ArrayType(entry.getKey().getType(), entry.getValue());
-          typeMap.put(CommonNames.getDispatchArrayTypeName(ti, entry), dispatchArrayType);
+          model.getAstTypes().put(CommonNames.getDispatchArrayTypeName(ti, entry), dispatchArrayType);
         }
       }
     }
-    C_Type_Writer.writeTypes(writer, typeMap, 2);
+    
+    C_Type_Writer.writeTypes(writer, model, 6);
 	}
 	
-  public Set<Type> getReaderWriterTypes() {
+  public Set<Type> getUserTypes() {
     // write dispatcher types
     Set<Type> rwTypeSet = new HashSet<Type>();
+    
+    // "for free types" that are always necessary; void for event ports
+    // and uint32_t for periodic dispatchers.  Note if the dispatcher 
+    // time type changes, it may break code, so perhaps we should 
+    // store the time type somewhere (model?)
+    
     rwTypeSet.add(new UnitType());
+    rwTypeSet.add(new IntType(32, false));  
+    
     for (ThreadImplementation ti : model.getThreadImplementations()) {
       for (OutputDataPort d : ti.getOutputDataPortList()) {
         rwTypeSet.add(d.getType());
@@ -183,7 +200,7 @@ public class CAmkES_CodeGenerator {
   }
   
   public void createReadWriteIdlInterfaces() throws Aadl2RtosFailure {
-    for (Type t : getReaderWriterTypes()) {
+    for (Type t : getUserTypes()) {
       createReadWriteIdlInterface(t); 
     }
   }
@@ -269,19 +286,6 @@ public class CAmkES_CodeGenerator {
     }
 	}
 
-	public void writeDispatcherCFunction(BufferedWriter writer, Dispatcher d, Type indexType) throws IOException {
-    OutgoingDispatchContract odc = 
-        OutgoingDispatchContract.maxDispatcherUse(d.getDispatchLimits());
-    OutgoingDispatchContractNames odcNames = new OutgoingDispatchContractNames(odc); 
-    
-    List<DispatchContractNames> dispatchContracts = odcNames.getContracts(); 
-    DispatcherNames dispatcher = new DispatcherNames(d);
-    ST st = templates.getInstanceOf("componentDispatcherFn");
-    st.add("dispatcher", dispatcher); 
-    st.add("dispatchContracts", dispatchContracts); 
-    writer.append(st.render());
-	}
-
 	public void createComponentCFile(File componentDirectory, ThreadImplementation ti) throws Aadl2RtosFailure {
     ThreadImplementationNames tin = new ThreadImplementationNames(ti);
 	  
@@ -317,9 +321,6 @@ public class CAmkES_CodeGenerator {
     
     try (BufferedWriter writer = new BufferedWriter(new FileWriter(interfaceFile))) {
       writeBoilerplateHeader(name, path, writer, "dispatcherComponentGlueCodeCFilePrefix");
-      writer.append("\n\n");
-      writer.append("#include <" + mn.getSystemTypeHeaderName() + ">\n");
-      writer.append("#include <" + tin.getDispatcherComponentHFileName() + ">\n\n");
       
       ST st = templates.getInstanceOf("dispatcherComponentCDecls");
       st.add("threadImpl", tin);
@@ -414,6 +415,74 @@ public class CAmkES_CodeGenerator {
     File CFile = new File(componentDirectory, tin.getComponentGlueCodeCFileName());
     this.model.getSourceFiles().add(CFile.getPath());
 	}
+
+	@SuppressWarnings("resource")
+  public void createClockDriver(File srcDirectory, File includeDirectory) throws Aadl2RtosFailure {
+	  
+	  File cdest = new File(srcDirectory, "qemu_clock_driver.c");
+    File hdest = new File(includeDirectory, "clock_driver.h");
+    FileChannel cFileSrcChannel = null;
+    FileChannel hFileSrcChannel = null;
+    FileChannel cFileDstChannel = null;
+    FileChannel hFileDstChannel = null; 
+    // write the .c / .h files to the destination component
+    try {
+      try {
+        InputStream cFileStream = FileLocator.openStream(
+            PluginActivator.getDefault().getBundle(), new Path("templates/qemu_clock_driver.c"), false);
+        InputStream hFileStream = FileLocator.openStream(
+            PluginActivator.getDefault().getBundle(), new Path("templates/clock_driver.h"), false);
+        cFileSrcChannel = ((FileInputStream)cFileStream).getChannel();
+        hFileSrcChannel = ((FileInputStream)hFileStream).getChannel();
+        cFileDstChannel = (new FileOutputStream(cdest)).getChannel();
+        hFileDstChannel = (new FileOutputStream(hdest)).getChannel(); 
+        
+        cFileDstChannel.transferFrom(cFileSrcChannel, 0, cFileSrcChannel.size());
+        hFileDstChannel.transferFrom(hFileSrcChannel, 0, hFileSrcChannel.size());
+      } catch (IOException ioe) {
+        log.error("IOException occurred during clock driver write: " + ioe);
+        log.error("Continuing anyway...");
+        // throw new Aadl2RtosFailure();
+      } finally {
+        if (cFileSrcChannel != null) { cFileSrcChannel.close(); }
+        if (hFileSrcChannel != null) { hFileSrcChannel.close(); }
+        if (cFileDstChannel != null) { cFileDstChannel.close(); }
+        if (hFileDstChannel != null) { hFileDstChannel.close(); }
+      }
+    } catch (IOException ioe) {
+      log.error("IOException occurred during clock driver close: " + ioe);
+      throw new Aadl2RtosFailure();
+    }
+  }
+  
+  public void createPeriodicDispatcherCFile(File srcDirectory) throws Aadl2RtosFailure {
+    ModelNames mn = new ModelNames(model);
+    ThreadCalendarNames tcn = new ThreadCalendarNames(model.getThreadCalendar());
+
+    String name = tcn.getPeriodicDispatcherComponentName();
+    File interfaceFile = new File(srcDirectory, tcn.getPeriodicDispatcherCFileName());
+    String path = interfaceFile.getAbsolutePath();
+    try (BufferedWriter writer = new BufferedWriter(new FileWriter(interfaceFile))) {
+
+      writeBoilerplateHeader(name, path, writer, "periodicDispatcherCPrefix");
+      writer.append("\n"); 
+      writer.append("#include <" + mn.getSystemTypeHeaderName() + ">\n");
+      writer.append("#include <clock_driver.h>\n\n");
+      writer.append("#include <string.h>\n\n");
+      writer.append("#include <" + tcn.getPeriodicDispatcherCamkesHFileName() +  ">\n");
+      
+      ST st = templates.getInstanceOf("periodicComponentCBody"); 
+      st.add("threadCalendar", tcn);
+      writer.append(st.render());
+      
+      writeBoilerplateFooter(name, path, writer, "periodicDispatcherCPostfix");
+    
+    } catch (IOException e) {
+      log.error("Problem creating periodic component c file.");
+      throw new Aadl2RtosFailure(); 
+    }
+    
+  }
 	
 	// create this only if we have periodic threads.
 	
@@ -424,6 +493,14 @@ public class CAmkES_CodeGenerator {
     
     File componentDirectory = new File(componentsDirectory, mn.getThreadCalendar().getPeriodicDispatcherComponentName());
     componentDirectory.mkdirs();
+  
+    File srcDirectory = new File(componentDirectory, "src");
+    srcDirectory.mkdirs();
+    
+    File includeDirectory = new File(componentDirectory, "include");
+    includeDirectory.mkdirs();
+    createClockDriver(srcDirectory, includeDirectory);
+    createPeriodicDispatcherCFile(srcDirectory); 
     
     File interfaceFile = new File(componentDirectory, mn.getThreadCalendar().getPeriodicDispatcherCamkesFileName());
     String path = interfaceFile.getAbsolutePath();
@@ -468,8 +545,6 @@ public class CAmkES_CodeGenerator {
 
     try (BufferedWriter hwriter = new BufferedWriter(new FileWriter(HFile))) { 
       writeBoilerplateHeader(sysInstanceName, path, hwriter, "datatypesPrefix");
-      
-      C_Type_Writer.writeTypes(hwriter, model, 6);
       
       ST st = templates.getInstanceOf("componentGlueCodeHeaderPurpose");
       ST st2 = templates.getInstanceOf("blockComment");
@@ -518,312 +593,3 @@ public class CAmkES_CodeGenerator {
 	}
 }
 
-// read/write ports
-/*
-for (ThreadInstancePort ip : ti.getThreadInstanceInputPorts()) {
-  if (ip.getPort() instanceof InputDataPort) {
-    sd.writeComment(writer, "Writing the shared data declarations and accessors for " + ip.getPort().getName());
-    sd.writeThreadInstancePortSharedVars(writer, ip);
-    sd.writeReader(writer, ti, (InputPort)ip.getPort());
-  }
-}
-    // generate local declarations to OutputEventPorts
-    for (OutputEventPort oep : ti.getAllOutputEventPorts()) {
-      ST st = templates.getInstanceOf("cPortTempVarDeclarations");
-      st.add("port", new PortNames(oep)); 
-      writer.append(st.render());
-    }
-    // generate dispatchers
-    for (Dispatcher d : ti.getDispatcherList()) {
-      writeDispatcherCFunction(writer, d, indexType);
-    }
-    
-    // generate senders to OutputEventPorts
-    for (OutputEventPort oep : ti.getAllOutputEventPorts()) {
-      ST st = templates.getInstanceOf("componentSendFunction");
-      st.add("port", new PortNames(oep));
-      writer.append(st.render());
-    }
-          // generate internal reader/writer functions for input data ports
-    for (InputDataPort idp : ti.getInputDataPortList()) {
-      ST st = templates.getInstanceOf("componentLocalReaderDecl");
-      st.add("port", new PortNames(idp));
-      writer.append(st.render());
-    }
-
-*/
-
-
-/*
- * 
- *       if (!ti.getInputEventPortList().isEmpty()) {
-      writer.append("\n// Functions for managing event queues ");
-    }
-    for (InputEventPort iep : ti.getInputEventPortList()) {
-      st = templates.getInstanceOf("dispatcherComponentReceiverDecls");
-      PortNames port = new PortNames(iep); 
-      st.add("port", port);
-      writer.append(st.render()); 
-    }
-
-    writer.append("\n// passive dispatchers to components \n\n");
-    for (ThreadImplementation other: model.getThreadImplementations()) {
-      for (Dispatcher d: other.getDispatcherList()) {
-        st = templates.getInstanceOf("dispatcherComponentDataDispatchFunction");
-        DispatcherNames dispatcher = new DispatcherNames(d);
-        st.add("dispatcher", dispatcher);
-        writer.append(st.render()); 
-      }
-    }
-    writer.append("\n// Functions for managing input dispatchers ");
-    for (Dispatcher d : ti.getDispatcherList()) {
-      st = templates.getInstanceOf("dispatcherComponentEventDecls");
-      st.add("dispatcher", new DispatcherNames(d));
-      writer.append(st.render());
-    }
-    // write 'run' function
-    st = templates.getInstanceOf("dispatcherComponentMainFunction");
-    ThreadImplementationNames threadImplementation = new ThreadImplementationNames(ti); 
-    st.add("threadImpl", threadImplementation); 
-    writer.append(st.render());
-
-    
-
- */
-
-
-/*
-void addReaderWriterConnection(ST parent, DataPort dp, String direction) {
-  PortNames pn = new PortNames(dp); 
-  TypeNames tn = pn.getType();
-
-  ST stChild = templates.getInstanceOf("camkesDeclaration"); 
-  String type = tn.getReaderWriterInterfaceName();
-  stChild.addAggr("arg.{direction,  type, id}", "provides", type, dp.getName());
-  parent.add("connections", stChild);
-  parent.add("connections", "has mutex " + pn.getMutex() + ";");
-  parent.add("connectionIdls", tn.getReaderWriterIdlFileName());
-}
-
-void addSharedDataConnection(ST parent, SharedDataAccessor sda, String direction) {
-  SharedDataAccessorNames sdan = new SharedDataAccessorNames(sda); 
-  TypeNames tn = sdan.getType();
-  
-  ST stChild = templates.getInstanceOf("camkesDeclaration"); 
-  String type = tn.getSharedDataInterfaceName();
-  stChild.addAggr("arg.{direction,  type, id}", "provides", type, sdan.getName());
-  parent.add("connections", stChild);
-  parent.add("connectionIdls", tn.getSharedDataIdlFileName());
-}
-    st.add("connections", "provides " + tin.getIdlName() + " " +  
-        tin.getComponentDispatcherInterfaceVarIdName() +  "; ");
-    for (InputDataPort idp : ti.getInputDataPortList()) {
-      addReaderWriterConnection(st, idp, "provides");
-    }
-    
-    for (OutputDataPort odp : ti.getOutputDataPortList()) {
-      addReaderWriterConnection(st, odp, "uses");
-    }
-    
-    for (SharedDataAccessor sda : ti.getSharedDataAccessors()) {
-      addSharedDataConnection(st, sda, "uses");
-    }
-*/
-
-/*
-Set<Type> getActiveThreadSRTypes() {
-  Set<Type> srTypes = new HashSet<Type>(); 
-  srTypes.add(new UnitType());
-  for (ThreadImplementation ti: model.getActiveThreadImplementations()) {
-    for (DataPort dp : ti.getOutputEventDataPortList()) {
-      srTypes.add(dp.getType());
-    }
-    for (DataPort dp : ti.getInputEventDataPortList()) {
-      srTypes.add(dp.getType());
-    }
-  }
-  return srTypes;
-}
-
- *       writer.append("// Passive component dispatch interfaces \n\n");
-    for (ThreadImplementation pti : model.getThreadImplementations()) {
-      ThreadImplementationNames ptin = new ThreadImplementationNames(pti); 
-      writer.append("import \"../../interfaces/" + ptin.getIdlFileName() + "\";\n");
-    }
-
-    writer.append("\n // Send/receive interfaces for active components \n\n");
-    for (Type t : getActiveThreadSRTypes()) {
-      TypeNames tn = new TypeNames(t); 
-      writer.append("import \"../../interfaces/" + tn.getReaderWriterIdlFileName() + "\";\n");
-    }
-    writer.append("\n\n");
-    
-    ST st = templates.getInstanceOf("dispatcherComponentCamkesBody");
-    
-    // We need to provide active thread receivers for this thread
-    for (Dispatcher d : ti.getDispatcherList()) {
-     DispatcherNames dn = new DispatcherNames(d); 
-     TypeNames tn = dn.getType();
-      st.add("incomingDispatch", "provides " +  
-          tn.getReaderWriterInterfaceName() + " " +  
-          dn.getDispatcherComponentDispatchName() + "; ");
-      if (d instanceof InputEventDispatcher) {
-        st.add("incomingDispatch", "has mutex " + 
-            dn.getInputEventDispatcherPort().getMutex());
-      } 
-    }
-    st.add("outgoingDispatch", "has mutex " + tin.getDispatcherComponentMutexName() + ";");
-    for (ThreadImplementation oti : model.getThreadImplementations()) {
-      if (oti != ti) {
-        for (Dispatcher d : ti.getDispatcherList()) {
-          if (d instanceof InputEventDispatcher) {
-            DispatcherNames dn = new DispatcherNames(d); 
-            st.add("outgoingDispatch", "uses " + 
-                dn.getType().getReaderWriterInterfaceName() + " " +
-                dn.getDispatcherComponentDispatchName() + "; ");
-          }
-        }
-      }
-    }
-
-    // We finally need to use every active component dispatch interface
-    for (ThreadImplementation pi: model.getThreadImplementations()) {
-      ThreadImplementationNames pin = new ThreadImplementationNames(pi); 
-      st.add("passiveReceivers", "uses " + 
-          pin.getIdlName() + " " +  
-         pin.getInterfaceInstanceName() + "; "); 
-    }
-    
-    // for each send/receive interface, we implement the send/receive interface.
-    st.add("name", name);
-    writer.append(st.render());
- */
-/*
-  void createComponentInstance(ST parent, String type, String name) {
-    ST child = templates.getInstanceOf("componentDef");
-    child.add("ctype", type);
-    child.add("cname", name);
-    parent.add("components", child);
-  }
-  
-  int connNumber = 1; 
-  void createConnection(ST parent, String from, String to) {
-    ST child = templates.getInstanceOf("rpcConnection");
-    child.add("cid", "conn_" + connNumber);
-    connNumber++; 
-    child.add("from", from);
-    child.add("to", to);
-    parent.add("connections", child);
-  }
-
- *       hwriter.append("import <std_connector.camkes>;\n");
-      if (model.getThreadCalendar().hasDispatchers()) {
-        hwriter.append("import \"" + mn.getThreadCalendar().getPeriodicDispatcherPathName() + "\";\n\n"); 
-      }
-
-      // write CAmkES component and connector imports.
-      for (ThreadImplementation ti : model.getThreadImplementations()) {
-        ThreadImplementationNames threadImplementation = new ThreadImplementationNames(ti); 
-        hwriter.append("import \"" + threadImplementation.getRootToCamkesComponentFilePath() + "\";\n");
-        if (!ti.getIsPassive()) {
-          hwriter.append("import \"" + threadImplementation.getRootToCamkesDispatcherComponentFilePath() + "\";\n");
-        }
-      }
-       // write the individual components: one per thread + one dispatcher per active thread.
-      for (ThreadImplementation ti: model.getThreadImplementations()) {
-        ThreadImplementationNames tin = new ThreadImplementationNames(ti);
-        createComponentInstance(st, tin.getComponentName(),
-                                tin.getComponentInstanceName());
-      }
-      
-      for (ThreadImplementation ti: model.getActiveThreadImplementations()) {
-        ThreadImplementationNames tin = new ThreadImplementationNames(ti);
-        createComponentInstance(st, tin.getDispatcherComponentName(), 
-              tin.getDispatcherComponentInstanceName());
-      }
-
-      // create periodic dispatcher component (if any periodic dispatches)
-      if (model.getThreadCalendar().hasDispatchers()) {
-        createComponentInstance(st, mn.getThreadCalendar().getPeriodicDispatcherComponentName(),
-            mn.getThreadCalendar().getPeriodicDispatcherInstanceName());
-      }
-      // connect all dispatchers to all passive dispatch interfaces.
-      for (ThreadImplementation ti: model.getActiveThreadImplementations()) {
-        ThreadImplementationNames tin = new ThreadImplementationNames(ti); 
-        for (ThreadImplementation tj: model.getThreadImplementations()) {
-          ThreadImplementationNames tjn = new ThreadImplementationNames(tj);
-          String from = tin.getDispatcherComponentInstanceName() + "." + tjn.getNormalizedName(); 
-          String to = tjn.getComponentInstanceName() + "." + tjn.getComponentDispatcherInterfaceVarIdName(); 
-          createConnection(st, from, to);
-        }
-      }
-      
-      // connect all dispatchers to all other dispatchable "active" send/receive interfaces
-      for (ThreadImplementation ti: model.getActiveThreadImplementations()) {
-        ThreadImplementationNames tin = new ThreadImplementationNames(ti); 
-        for (ThreadImplementation tj: model.getActiveThreadImplementations()) {
-          if (ti != tj) {
-            ThreadImplementationNames tjn = new ThreadImplementationNames(tj);
-            for (Dispatcher d : tj.getDispatcherList()) {
-              DispatcherNames dn = new DispatcherNames(d);
-              if (d instanceof InputEventDispatcher) {
-                String from = tin.getDispatcherComponentInstanceName() + "." +
-                    dn.getDispatcherComponentDispatchName();
-                String to = tjn.getDispatcherComponentInstanceName() + "." +
-                    dn.getDispatcherComponentDispatchName();
-                createConnection(st, from, to); 
-              }
-            }
-          }
-        }
-      }
-      // connect smaccm_periodic_dispatcher to periodic dispatchers 
-      for (ThreadImplementation ti: model.getActiveThreadImplementations()) {
-        ThreadImplementationNames tin = new ThreadImplementationNames(ti); 
-        for (Dispatcher d: ti.getDispatcherList()) {
-          if (d instanceof PeriodicDispatcher) {
-            DispatcherNames dn = new DispatcherNames(d);
-            String from = mn.getThreadCalendar().getPeriodicDispatcherInstanceName() + "." + 
-                dn.getDispatcherComponentDispatchName() ; 
-            String to = tin.getDispatcherComponentInstanceName() + "." + 
-                dn.getDispatcherComponentDispatchName();
-            createConnection(st, from, to);
-          }
-        }
-      }
-      
-  public ThreadInstance getThreadInstance(ThreadImplementation ti) throws Aadl2RtosFailure {
-    List<ThreadInstance> tii = ti.getThreadInstanceList();
-    if (tii.size() != 1) {
-      log.error("Currently multiple thread instances per implementation are not supported.");
-      throw new Aadl2RtosFailure();
-    }
-    return tii.get(0);
-  }
-  
-      // connect all passive component read/write ports
-      for (ThreadImplementation ti: model.getThreadImplementations()) {
-        ThreadInstance src = this.getThreadInstance(ti);
-        for (Connection c : src.getIsSrcOfConnectionList()) {
-          OutputPort srcPort = c.getSourcePort();
-          PortNames srcpn = new PortNames(srcPort); 
-          if (srcPort instanceof OutputDataPort) {
-            ThreadInstance dst = c.getDestThreadInstance(); 
-            InputPort dstPort = c.getDestPort(); 
-            PortNames dstpn = new PortNames(dstPort); 
-            ThreadImplementation dstImpl = dst.getThreadImplementation(); 
-            
-            ThreadImplementationNames tin = new ThreadImplementationNames(ti); 
-            ThreadImplementationNames dstin = new ThreadImplementationNames(dstImpl);  
-            
-            String from = tin.getComponentInstanceName() + "." + 
-                srcpn.getName();
-            String to = dstin.getComponentInstanceName() + "." +
-                dstpn.getName();
-            createConnection(st, from, to);
-          }
-        }
-      }
-      
-      
-*/
