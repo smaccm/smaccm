@@ -23,7 +23,7 @@ package edu.umn.cs.crisys.smaccm.aadl2rtos;
 
 import java.io.File;
 import java.util.List;
-import java.util.Map;
+//import java.util.Map;
 
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -39,7 +39,7 @@ import org.osate.aadl2.Element;
 import org.osate.aadl2.SystemImplementation;
 import org.osate.aadl2.instance.SystemInstance;
 import org.osate.aadl2.instantiation.InstantiateModel;
-import org.osate.aadl2.modelsupport.errorreporting.AnalysisErrorReporterManager;
+//import org.osate.aadl2.modelsupport.errorreporting.AnalysisErrorReporterManager;
 import org.osate.aadl2.modelsupport.resources.OsateResourceUtil;
 
 import edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.CAmkES.CAmkES_CodeGenerator;
@@ -47,8 +47,8 @@ import edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.eChronos.EChronos_CodeGenerato
 import edu.umn.cs.crisys.smaccm.aadl2rtos.parse.AadlModelParser;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.parse.Model;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.util.Util;
-import fr.tpt.aadl.ramses.control.support.analysis.AnalysisException;
-import fr.tpt.aadl.ramses.control.support.config.RamsesConfiguration;
+//import fr.tpt.aadl.ramses.control.support.analysis.AnalysisException;
+//import fr.tpt.aadl.ramses.control.support.config.RamsesConfiguration;
 
 public class Aadl2RtosAction extends AadlAction {
 	private Logger log;
@@ -142,7 +142,7 @@ public class Aadl2RtosAction extends AadlAction {
 		return Status.OK_STATUS;
 	}
 
-
+/*
 	@Override
 	public void setParameters(Map<String, Object> parameters) {
 		// TODO Auto-generated method stub
@@ -183,4 +183,5 @@ public class Aadl2RtosAction extends AadlAction {
 
 		this.execute(instance, instance.getSystemImplementation(), monitor, config.getRamsesOutputDir(), new ConsoleLogger(Logger.INFO));
 	}  
+  */
 }

@@ -6,6 +6,7 @@ package edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.CAmkES;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosException;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.common.CommonNames;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.common.SourceDeclarations;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.Dispatcher;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.DataPort;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.InputEventPort;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.OutputDataPort;
@@ -46,6 +47,17 @@ public class PortNames {
   public ThreadImplementationNames getThreadImplementation() {
     return new ThreadImplementationNames(dp.getOwner());
   }
+
+  public DispatcherNames getDispatcher() {
+    if (dp instanceof InputEventPort) {
+      Dispatcher d = ((InputEventPort)dp).getOptDispatcher();
+      if (d != null) {
+        return new DispatcherNames(d);
+      }
+    }
+    throw new Aadl2RtosException("GetDispatcher called on port without a dispatcher.");
+  }
+    
   
   //////////////////////////////////////////////////////////
   //
@@ -65,7 +77,6 @@ public class PortNames {
     return Integer.toString(iep.getQueueSize());
   }
 
-  
   //////////////////////////////////////////////////////////
   //
   // functions for creating local declarations with the port name
@@ -96,12 +107,13 @@ public class PortNames {
     return dp.hasData(); 
   }
   
-  public boolean getIsNotArray() {
-    return !(dp.getType() instanceof ArrayType);
+  public boolean getHasDispatcher() {
+    if (dp instanceof InputEventPort) {
+      return ((InputEventPort)dp).getOptDispatcher() != null; 
+    }
+    return false;
   }
   
-  public boolean getIsBaseType() { return dp.getType().isBaseType(); }
-
   public boolean getIsOutputDataPort() {
     return (dp instanceof OutputDataPort);
   }
@@ -155,13 +167,7 @@ public class PortNames {
   public String getDispatcherCFileDispatcherFnName() {
     return "smaccm_" + dp.getOwner().getNormalizedName() + "_" + getName() + "_dispatcher";
   }
-  
-  public String getPassiveComponentDispatcherName() {
-    ThreadImplementationNames tin = new ThreadImplementationNames(dp.getOwner());
-    return tin.getComponentInstanceName() + "_" + 
-        this.getDispatcherCFileDispatcherFnName(); 
-  }  
-  
+    
   public String getIdlDispatcherName() {
     return "dispatch_" + getName();
   }

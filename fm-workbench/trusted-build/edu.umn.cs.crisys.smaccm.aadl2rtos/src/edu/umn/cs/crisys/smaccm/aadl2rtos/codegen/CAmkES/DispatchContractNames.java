@@ -53,14 +53,26 @@ public class DispatchContractNames {
     return pn.getIndexDecl();
   }
   
-  public List<PortNames> getDispatchTargetList() {
+  public List<PortNames> getPassiveDispatchTargetList() {
     List<PortNames> targets = new ArrayList<>(); 
     for (Connection c: this.oep.getConnections()) {
-      targets.add(new PortNames(c.getDestPort()));
+      if (c.getDestPort().getOwner().getIsPassive()) {
+        targets.add(new PortNames(c.getDestPort()));
+      }
     }
     return targets;
   }
 
+  public List<PortNames> getActiveDispatchTargetList() {
+    List<PortNames> targets = new ArrayList<>(); 
+    for (Connection c: this.oep.getConnections()) {
+      if (!c.getDestPort().getOwner().getIsPassive()) {
+        targets.add(new PortNames(c.getDestPort()));
+      }
+    }
+    return targets;
+    
+  }
   public String getDispatchArrayTypeName() {
     TypeNames tni = new TypeNames(oep.getType());
     return "smaccm_" + Util.normalizeAadlName(tni.getName()) 

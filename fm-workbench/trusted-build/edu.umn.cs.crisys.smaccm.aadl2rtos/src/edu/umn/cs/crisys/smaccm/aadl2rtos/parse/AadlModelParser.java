@@ -226,7 +226,11 @@ public class AadlModelParser {
 	InputEventPort addInputEventPort(PortImpl port, Type datatype, ThreadImplementation ti) {
     int queueSize = PortUtil.getQueueSize(port); 
     InputEventPort iep = new InputEventPort(port.getName(), datatype, ti, queueSize);
-    ti.addInputEventPort(iep);
+    if (iep.hasData()) {
+      ti.addInputEventDataPort(iep);
+    } else {
+      ti.addInputEventPort(iep);
+    }
     
     List<String> entrypoints = ThreadUtil.getComputeEntrypointList(port);
     String file = Util.getStringValueOpt(port,ThreadUtil.SOURCE_TEXT);
@@ -237,6 +241,7 @@ public class AadlModelParser {
           ehl.add(eh);
       }
       InputEventDispatcher disp = new InputEventDispatcher(ti, ehl, iep);
+      iep.setDispatcher(disp);
       ti.addDispatcher(disp);
     } else {
       logger.warn("Warning: event port: " + port.getName() + " does not have a compute entrypoint and will not be dispatched.");

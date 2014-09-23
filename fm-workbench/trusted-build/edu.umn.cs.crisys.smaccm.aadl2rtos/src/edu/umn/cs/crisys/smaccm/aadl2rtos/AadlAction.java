@@ -57,11 +57,11 @@ import org.osate.aadl2.Element;
 import org.osate.aadl2.instance.SystemInstance;
 import org.osate.aadl2.modelsupport.errorreporting.AnalysisErrorReporterManager;
 
-import fr.tpt.aadl.ramses.control.support.analysis.AnalysisException;
-import fr.tpt.aadl.ramses.control.support.analysis.Analyzer;
-import fr.tpt.aadl.ramses.control.support.config.RamsesConfiguration;
+//import fr.tpt.aadl.ramses.control.support.analysis.AnalysisException;
+//import fr.tpt.aadl.ramses.control.support.analysis.Analyzer;
+//import fr.tpt.aadl.ramses.control.support.config.RamsesConfiguration;
 
-abstract public class AadlAction implements IWorkbenchWindowActionDelegate, Analyzer {
+abstract public class AadlAction implements IWorkbenchWindowActionDelegate {
 	private IWorkbenchWindow window;
 	private Object currentSelection;
 

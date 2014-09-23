@@ -66,6 +66,10 @@ public class ModelNames {
     return constructThreadImplList(m.getActiveThreadImplementations());
   }
   
+  public List<ThreadImplementationNames> getPassiveThreadImplementations() {
+    return constructThreadImplList(m.getPassiveThreadImplementations());
+  }
+
   public List<ThreadImplementationNames> getThreadImplementations() {
     return constructThreadImplList(m.getThreadImplementations());
   }

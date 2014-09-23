@@ -7,6 +7,7 @@ import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.channels.FileChannel;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -61,9 +62,7 @@ public class CAmkES_CodeGenerator {
 	private File componentsDirectory;
 	private File interfacesDirectory;
 	private File includeDirectory;
-	private STGroup templates;
 	private String date;
-  private SourceDeclarations sd = new SourceDeclarations(new CAmkESSystemPrimitives());
 	private STErrorListener listener; 
   
 	public List<ThreadImplementation> allThreads;
@@ -76,8 +75,6 @@ public class CAmkES_CodeGenerator {
 		this.rootDirectory = dir;
 		
 		listener = new CAmkESSTErrorListener(log);
-		this.templates = new STGroupFile("templates/CaMKes.stg");
-		this.templates.setListener(listener);
 		
 		//this.templates.verbose = true;
 		
@@ -101,8 +98,13 @@ public class CAmkES_CodeGenerator {
     date = dateFormat.format(d);  
 	}
 
-	void writeBoilerplateDTHeader(String name, String path, BufferedWriter writer, String templateId, boolean usesDTHeader) throws IOException {
-    ST st = templates.getInstanceOf(templateId);
+	STGroupFile createTemplate(String path) {
+	  STGroupFile templates = new STGroupFile(path);
+	  templates.setListener(listener);
+	  return templates;
+	}
+	
+	void writeBoilerplateDTHeader(String name, String path, BufferedWriter writer, ST st, boolean usesDTHeader) throws IOException {
     st.add("name", name);
     st.add("date", date);
     st.add("path", path);
@@ -115,12 +117,11 @@ public class CAmkES_CodeGenerator {
 	  
 	}
 	
-	void writeBoilerplateHeader(String name, String path, BufferedWriter writer, String templateId) throws IOException {
-	  writeBoilerplateDTHeader(name, path, writer, templateId, false);
+	void writeBoilerplateHeader(String name, String path, BufferedWriter writer, ST st) throws IOException {
+	  writeBoilerplateDTHeader(name, path, writer, st, false);
 	}
 
-	void writeBoilerplateFooter(String name, String path, BufferedWriter writer, String templateId) throws IOException {
-	  ST st = templates.getInstanceOf(templateId);
+	void writeBoilerplateFooter(String name, String path, BufferedWriter writer, ST st) throws IOException {
 	  st.add("name", name);
 	  st.add("path", path);
 	  writer.append(st.render());
@@ -185,13 +186,15 @@ public class CAmkES_CodeGenerator {
     String path = interfaceFile.getAbsolutePath();
     String name = type.getReaderWriterInterfaceName(); 
     try (BufferedWriter writer = new BufferedWriter(new FileWriter(interfaceFile))) {
-      writeBoilerplateHeader(name, path, writer, "rwInterfaceIdlPrefix");
-      ST st = templates.getInstanceOf("idlProc");
+      STGroupFile stg = this.createTemplate("templates/CamkesIdl4ReaderWriter.stg");
+      ST st; 
+      writeBoilerplateHeader(name, path, writer, stg.getInstanceOf("rwInterfaceIdlPrefix"));
+      st = stg.getInstanceOf("idlProc");
       st.add("type", type);
       st.add("model", m);
       writer.append(st.render());
       
-      writeBoilerplateFooter(name, path, writer, "rwInterfaceIdlPostfix");
+      writeBoilerplateFooter(name, path, writer, stg.getInstanceOf("rwInterfaceIdlPostfix"));
       
     } catch (IOException e) {
       log.error("IO Exception occurred when creating a read/write interface.");
@@ -226,14 +229,16 @@ public class CAmkES_CodeGenerator {
       String path = interfaceFile.getAbsolutePath();
       
       try (BufferedWriter writer = new BufferedWriter(new FileWriter(interfaceFile))) {
-        writeBoilerplateHeader(name, path, writer, "svInterfaceIdlPrefix");
+        STGroupFile stg = this.createTemplate("templates/CamkesIdl4SharedVar.stg");
+        ST st; 
+        writeBoilerplateHeader(name, path, writer, stg.getInstanceOf("svInterfaceIdlPrefix"));
         
-        ST st = templates.getInstanceOf("svProc"); 
+        st = stg.getInstanceOf("svProc"); 
         st.add("type", type);
         st.add("model", m);
         writer.append(st.render());
         
-        writeBoilerplateFooter(name, path, writer, "svInterfaceIdlPostfix");
+        writeBoilerplateFooter(name, path, writer, stg.getInstanceOf("svInterfaceIdlPostfix"));
         
       } catch (IOException e) {
         log.error("IO Exception occurred when creating a shared variable interface.");
@@ -252,13 +257,14 @@ public class CAmkES_CodeGenerator {
     String path = interfaceFile.getAbsolutePath();
     
 	  try (BufferedWriter writer = new BufferedWriter(new FileWriter(interfaceFile))) {
-	    writeBoilerplateHeader(name, path, writer, "dispatchInterfaceIdlPrefix");
+      STGroupFile stg = this.createTemplate("templates/CamkesIdl4Dispatch.stg");
+	    writeBoilerplateHeader(name, path, writer, stg.getInstanceOf("dispatchInterfaceIdlPrefix"));
 	    
-	    ST di = templates.getInstanceOf("dispatcherProc");
+	    ST di = stg.getInstanceOf("dispatcherProc");
 	    di.add("threadImpl", tin);
 	    di.add("datatypesHeader", m.getSystemTypeHeaderName());
   	  writer.append(di.render());
-  	  writeBoilerplateFooter(name, path, writer, "dispatchInterfaceIdlPostfix"); 
+  	  writeBoilerplateFooter(name, path, writer, stg.getInstanceOf("dispatchInterfaceIdlPostfix")); 
 	  } catch (IOException e) {
 	    log.error("IO Exception occurred when creating a component dispatch interface.");
 	    throw new Aadl2RtosFailure();
@@ -273,13 +279,14 @@ public class CAmkES_CodeGenerator {
     File interfaceFile = new File(componentDirectory, tin.getComponentGlueCodeHFileName());
     String path = interfaceFile.getAbsolutePath();
     try (BufferedWriter writer = new BufferedWriter(new FileWriter(interfaceFile))) {
-      writeBoilerplateDTHeader(name, path, writer, "componentGlueCodeHeaderPrefix", true);
+      STGroupFile stg = this.createTemplate("templates/CamkesComponentHeader.stg");
+      writeBoilerplateDTHeader(name, path, writer, stg.getInstanceOf("componentGlueCodeHeaderPrefix"), true);
       
-      ST st = templates.getInstanceOf("componentGlueCodeHeaderBody");
+      ST st = stg.getInstanceOf("componentGlueCodeHeaderBody");
       st.add("threadImpl", tin);
       writer.append(st.render() + "\n");
       
-      writeBoilerplateFooter(name, path, writer, "componentGlueCodeHeaderPostfix"); 
+      writeBoilerplateFooter(name, path, writer, stg.getInstanceOf("componentGlueCodeHeaderPostfix")); 
     } catch (IOException e) {
       log.error("IO Exception occurred when creating a component header.");
       throw new Aadl2RtosFailure();
@@ -295,14 +302,15 @@ public class CAmkES_CodeGenerator {
     
     
     try (BufferedWriter writer = new BufferedWriter(new FileWriter(interfaceFile))) {
-      writeBoilerplateHeader(name, path, writer, "componentGlueCodeCFilePrefix");
+      STGroupFile stg = this.createTemplate("templates/CamkesComponentC.stg");
+      writeBoilerplateHeader(name, path, writer, stg.getInstanceOf("componentGlueCodeCFilePrefix"));
       writer.append("\n\n");
       
-      ST st = templates.getInstanceOf("componentCFileDecls");
+      ST st = stg.getInstanceOf("componentCFileDecls");
       st.add("threadImpl", tin);
       writer.append(st.render()); 
       
-      writeBoilerplateFooter(name, path, writer, "componentGlueCodeCFilePostfix"); 
+      writeBoilerplateFooter(name, path, writer, stg.getInstanceOf("componentGlueCodeCFilePostfix")); 
       
     } catch (IOException e) {
       log.error("IO Exception occurred when creating a component header.");
@@ -320,14 +328,15 @@ public class CAmkES_CodeGenerator {
     
     
     try (BufferedWriter writer = new BufferedWriter(new FileWriter(interfaceFile))) {
-      writeBoilerplateHeader(name, path, writer, "dispatcherComponentGlueCodeCFilePrefix");
+      STGroupFile stg = this.createTemplate("templates/CamkesDispatcherC.stg");
+      writeBoilerplateHeader(name, path, writer, stg.getInstanceOf("dispatcherComponentGlueCodeCFilePrefix"));
       
-      ST st = templates.getInstanceOf("dispatcherComponentCDecls");
+      ST st = stg.getInstanceOf("dispatcherComponentCDecls");
       st.add("threadImpl", tin);
       st.add("model", mn);
       writer.append(st.render());
       
-      writeBoilerplateFooter(name, path, writer, "dispatcherComponentGlueCodeCFilePostfix"); 
+      writeBoilerplateFooter(name, path, writer, stg.getInstanceOf("dispatcherComponentGlueCodeCFilePostfix")); 
       
     } catch (IOException e) {
       log.error("IO Exception occurred when creating a component header.");
@@ -348,13 +357,14 @@ public class CAmkES_CodeGenerator {
     File interfaceFile = new File(componentDirectory, tin.getComponentCamkesFileName());
     String path = interfaceFile.getAbsolutePath();
 	  try (BufferedWriter writer = new BufferedWriter(new FileWriter(interfaceFile))) {
-	    writeBoilerplateDTHeader(name, path, writer, "componentCamkesPrefix", true);
+      STGroupFile stg = this.createTemplate("templates/CamkesComponentCamkes.stg");
+      writeBoilerplateDTHeader(name, path, writer, stg.getInstanceOf("componentCamkesPrefix"), true);
   
-      ST st = templates.getInstanceOf("componentCamkesBody");
+      ST st = stg.getInstanceOf("componentCamkesBody");
       st.add("threadImpl", tin);
       writer.append(st.render());
       
-      writeBoilerplateFooter(name, path, writer, "componentCamkesPostfix");
+      writeBoilerplateFooter(name, path, writer, stg.getInstanceOf("componentCamkesPostfix"));
 	  } catch (IOException e) {
 	    log.error("Problem creating camkes component file.");
 	    throw new Aadl2RtosFailure(); 
@@ -372,15 +382,16 @@ public class CAmkES_CodeGenerator {
     File interfaceFile = new File(componentDirectory, tin.getDispatcherComponentCamkesFileName());
     String path = interfaceFile.getAbsolutePath();
     try (BufferedWriter writer = new BufferedWriter(new FileWriter(interfaceFile))) {
-      writeBoilerplateDTHeader(name, path, writer, "dispatcherComponentCamkesPrefix", true);
+      STGroupFile stg = this.createTemplate("templates/CamkesDispatcherCamkes.stg");
+      writeBoilerplateDTHeader(name, path, writer, stg.getInstanceOf("dispatcherComponentCamkesPrefix"), true);
       writer.append("\n");
 
-      ST st = templates.getInstanceOf("dispatchComponentCDecls"); 
+      ST st = stg.getInstanceOf("dispatchComponentCDecls"); 
       st.add("model", new ModelNames(model));
       st.add("threadImpl", tin);
       writer.append(st.render());
       
-      writeBoilerplateFooter(name, path, writer, "dispatcherComponentCamkesPostfix");
+      writeBoilerplateFooter(name, path, writer, stg.getInstanceOf("dispatcherComponentCamkesPostfix"));
     
     } catch (IOException e) {
       log.error("Problem creating camkes component dispatcher file.");
@@ -416,38 +427,45 @@ public class CAmkES_CodeGenerator {
     this.model.getSourceFiles().add(CFile.getPath());
 	}
 
-	@SuppressWarnings("resource")
+	public void copyFile(InputStream is, OutputStream os) throws IOException {
+    byte[] buffer = new byte[16384];
+    int length;
+    while ((length = is.read(buffer)) > 0) {
+        os.write(buffer, 0, length);
+    }
+	}
+	
   public void createClockDriver(File srcDirectory, File includeDirectory) throws Aadl2RtosFailure {
 	  
 	  File cdest = new File(srcDirectory, "qemu_clock_driver.c");
     File hdest = new File(includeDirectory, "clock_driver.h");
-    FileChannel cFileSrcChannel = null;
-    FileChannel hFileSrcChannel = null;
-    FileChannel cFileDstChannel = null;
-    FileChannel hFileDstChannel = null; 
+    InputStream cSrcFileStream = null;
+    InputStream hSrcFileStream = null;
+    OutputStream cDstFileStream = null;
+    OutputStream hDstFileStream = null;
+    
     // write the .c / .h files to the destination component
     try {
       try {
-        InputStream cFileStream = FileLocator.openStream(
+        cSrcFileStream = FileLocator.openStream(
             PluginActivator.getDefault().getBundle(), new Path("templates/qemu_clock_driver.c"), false);
-        InputStream hFileStream = FileLocator.openStream(
+        hSrcFileStream = FileLocator.openStream(
             PluginActivator.getDefault().getBundle(), new Path("templates/clock_driver.h"), false);
-        cFileSrcChannel = ((FileInputStream)cFileStream).getChannel();
-        hFileSrcChannel = ((FileInputStream)hFileStream).getChannel();
-        cFileDstChannel = (new FileOutputStream(cdest)).getChannel();
-        hFileDstChannel = (new FileOutputStream(hdest)).getChannel(); 
+        cDstFileStream = new FileOutputStream(cdest);
+        hDstFileStream = new FileOutputStream(hdest); 
         
-        cFileDstChannel.transferFrom(cFileSrcChannel, 0, cFileSrcChannel.size());
-        hFileDstChannel.transferFrom(hFileSrcChannel, 0, hFileSrcChannel.size());
+        copyFile(cSrcFileStream, cDstFileStream);
+        copyFile(hSrcFileStream, hDstFileStream);
+        
       } catch (IOException ioe) {
         log.error("IOException occurred during clock driver write: " + ioe);
         log.error("Continuing anyway...");
         // throw new Aadl2RtosFailure();
       } finally {
-        if (cFileSrcChannel != null) { cFileSrcChannel.close(); }
-        if (hFileSrcChannel != null) { hFileSrcChannel.close(); }
-        if (cFileDstChannel != null) { cFileDstChannel.close(); }
-        if (hFileDstChannel != null) { hFileDstChannel.close(); }
+        if (cSrcFileStream != null) { cSrcFileStream.close(); }
+        if (hSrcFileStream != null) { hSrcFileStream.close(); }
+        if (cDstFileStream != null) { cDstFileStream.close(); }
+        if (hDstFileStream != null) { hDstFileStream.close(); }
       }
     } catch (IOException ioe) {
       log.error("IOException occurred during clock driver close: " + ioe);
@@ -463,19 +481,20 @@ public class CAmkES_CodeGenerator {
     File interfaceFile = new File(srcDirectory, tcn.getPeriodicDispatcherCFileName());
     String path = interfaceFile.getAbsolutePath();
     try (BufferedWriter writer = new BufferedWriter(new FileWriter(interfaceFile))) {
+      STGroupFile stg = this.createTemplate("templates/CamkesPeriodicDispatcherC.stg");
 
-      writeBoilerplateHeader(name, path, writer, "periodicDispatcherCPrefix");
+      writeBoilerplateHeader(name, path, writer, stg.getInstanceOf("periodicDispatcherCPrefix"));
       writer.append("\n"); 
       writer.append("#include <" + mn.getSystemTypeHeaderName() + ">\n");
       writer.append("#include <clock_driver.h>\n\n");
       writer.append("#include <string.h>\n\n");
       writer.append("#include <" + tcn.getPeriodicDispatcherCamkesHFileName() +  ">\n");
       
-      ST st = templates.getInstanceOf("periodicComponentCBody"); 
+      ST st = stg.getInstanceOf("periodicComponentCBody"); 
       st.add("threadCalendar", tcn);
       writer.append(st.render());
       
-      writeBoilerplateFooter(name, path, writer, "periodicDispatcherCPostfix");
+      writeBoilerplateFooter(name, path, writer, stg.getInstanceOf("periodicDispatcherCPostfix"));
     
     } catch (IOException e) {
       log.error("Problem creating periodic component c file.");
@@ -505,17 +524,18 @@ public class CAmkES_CodeGenerator {
     File interfaceFile = new File(componentDirectory, mn.getThreadCalendar().getPeriodicDispatcherCamkesFileName());
     String path = interfaceFile.getAbsolutePath();
     try (BufferedWriter writer = new BufferedWriter(new FileWriter(interfaceFile))) {
-      writeBoilerplateDTHeader(name, path, writer, "componentCamkesPrefix", true);
+      STGroupFile stg = this.createTemplate("templates/CamkesPeriodicDispatcherCamkes.stg");
+      writeBoilerplateDTHeader(name, path, writer, stg.getInstanceOf("componentCamkesPrefix"), true);
       writer.append("\n");
   
       writer.append("import \"../../interfaces/" + 
           tn.getReaderWriterIdlFileName() + "\";\n");
       writer.append("\n\n");
-      ST st = templates.getInstanceOf("periodicDispatcherCamkesBody");
+      ST st = stg.getInstanceOf("periodicDispatcherCamkesBody");
       st.add("model", mn);
       st.add("type", tn);
   	  writer.append(st.render());
-      writeBoilerplateFooter(name, path, writer, "componentCamkesPostfix");
+      writeBoilerplateFooter(name, path, writer, stg.getInstanceOf("componentCamkesPostfix"));
 
     } catch (IOException e) {
       log.error("Problem creating camkes component dispatcher file.");
@@ -544,16 +564,12 @@ public class CAmkES_CodeGenerator {
     String path = HFile.getAbsolutePath();
 
     try (BufferedWriter hwriter = new BufferedWriter(new FileWriter(HFile))) { 
-      writeBoilerplateHeader(sysInstanceName, path, hwriter, "datatypesPrefix");
-      
-      ST st = templates.getInstanceOf("componentGlueCodeHeaderPurpose");
-      ST st2 = templates.getInstanceOf("blockComment");
-      st2.add("arg", st.render());
-      hwriter.append(st2.render());
+      STGroupFile stg = this.createTemplate("templates/CamkesTypesHeader.stg");
+      writeBoilerplateHeader(sysInstanceName, path, hwriter, stg.getInstanceOf("datatypesPrefix"));
       
       createComponentDispatchTypes(hwriter);
       
-      writeBoilerplateFooter(sysInstanceName, hname, hwriter, "datatypesPostfix");
+      writeBoilerplateFooter(sysInstanceName, hname, hwriter, stg.getInstanceOf("datatypesPostfix"));
 
     } catch (IOException e) {
       log.error("IOException occurred during CAmkES write: " + e);
@@ -570,13 +586,14 @@ public class CAmkES_CodeGenerator {
     String path = HFile.getAbsolutePath();
 
     try (BufferedWriter hwriter = new BufferedWriter(new FileWriter(HFile))) { 
-      writeBoilerplateHeader(sysInstanceName, path, hwriter, "camkesAssemblyPrefix");
+      STGroupFile stg = this.createTemplate("templates/CamkesAssembly.stg");
+      writeBoilerplateHeader(sysInstanceName, path, hwriter, stg.getInstanceOf("camkesAssemblyPrefix"));
 
-      ST st = templates.getInstanceOf("camkesAssemblyBody");
+      ST st = stg.getInstanceOf("camkesAssemblyBody");
       st.add("model", mn);
       
       hwriter.append(st.render());
-      writeBoilerplateFooter(sysInstanceName, hname, hwriter, "stdFilePostfix");
+      writeBoilerplateFooter(sysInstanceName, hname, hwriter, stg.getInstanceOf("stdFilePostfix"));
 
     } catch (IOException e) {
       log.error("IOException occurred during CAmkES write: " + e);
