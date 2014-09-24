@@ -45,7 +45,8 @@ import com.rockwellcollins.atc.agree.agree.GuaranteeStatement;
 import com.rockwellcollins.atc.agree.analysis.Util;
 
 public class AgreeMenuListener implements IMenuListener {
-    private static GlobalURIEditorOpener globalURIEditorOpener = Util.getGlobalURIEditorOpener();
+    private static final GlobalURIEditorOpener globalURIEditorOpener = Util
+            .getGlobalURIEditorOpener();
     private final IWorkbenchWindow window;
     private final AnalysisResultTree tree;
     private AgreeResultsLinker linker;
@@ -243,23 +244,20 @@ public class AgreeMenuListener implements IMenuListener {
                         out.println();
                         printHLine(out, cex.getLength());
 
-                        for (Signal<Value> signal : cex.getSignals()) {
-                            String sigName = signal.getName();
-                            if (category.equals(layout.getCategory(sigName))) {
-                                out.print(String.format("%-60s", "{" + sigName + "}"));
-                                for (int k = 0; k < cex.getLength(); k++) {
-                                    Value val = signal.getValue(k);
-                                    if (jkind.util.Util.isArbitrary(val)) {
-                                        out.print(String.format("%-15s", "-"));
-                                    } else if (val instanceof NumericInterval) {
-                                        out.print(String.format("%-15s",
-                                                formatInterval((NumericInterval) val)));
-                                    } else {
-                                        out.print(String.format("%-15s", val.toString()));
-                                    }
+                        for (Signal<Value> signal : cex.getCategorySignals(layout, category)) {
+                            out.print(String.format("%-60s", "{" + signal.getName() + "}"));
+                            for (int k = 0; k < cex.getLength(); k++) {
+                                Value val = signal.getValue(k);
+                                if (jkind.util.Util.isArbitrary(val)) {
+                                    out.print(String.format("%-15s", "-"));
+                                } else if (val instanceof NumericInterval) {
+                                    out.print(String.format("%-15s",
+                                            formatInterval((NumericInterval) val)));
+                                } else {
+                                    out.print(String.format("%-15s", val.toString()));
                                 }
-                                out.println();
                             }
+                            out.println();
                         }
                         out.println();
                     }
@@ -299,12 +297,7 @@ public class AgreeMenuListener implements IMenuListener {
     }
 
     private boolean isEmpty(String category, Counterexample cex, Layout layout) {
-        for (Signal<Value> signal : cex.getSignals()) {
-            if (category.equals(layout.getCategory(signal.getName()))) {
-                return false;
-            }
-        }
-        return true;
+        return cex.getCategorySignals(layout, category).isEmpty();
     }
 
     private void printHLine(MessageConsoleStream out, int nVars) {
@@ -344,7 +337,7 @@ public class AgreeMenuListener implements IMenuListener {
         try {
             AgreeCounterexampleView cexView = (AgreeCounterexampleView) window.getActivePage()
                     .showView(AgreeCounterexampleView.ID);
-            cexView.setInput(cex, layout);
+            cexView.setInput(cex, layout, refMap);
             cexView.setFocus();
         } catch (PartInitException e) {
             e.printStackTrace();
