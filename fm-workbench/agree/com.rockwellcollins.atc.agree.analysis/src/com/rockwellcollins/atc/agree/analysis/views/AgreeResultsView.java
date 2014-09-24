@@ -1,7 +1,7 @@
 package com.rockwellcollins.atc.agree.analysis.views;
 
 import jkind.api.results.AnalysisResult;
-import jkind.api.ui.AnalysisResultTree;
+import jkind.api.ui.results.AnalysisResultTree;
 
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.swt.widgets.Composite;
@@ -18,7 +18,7 @@ public class AgreeResultsView extends ViewPart {
         tree = new AnalysisResultTree(parent);
         tree.getViewer().setAutoExpandLevel(2);
 
-        menuListener = new AgreeMenuListener(tree);
+        menuListener = new AgreeMenuListener(getViewSite().getWorkbenchWindow(), tree);
         MenuManager manager = new MenuManager();
         manager.setRemoveAllWhenShown(true);
         manager.addMenuListener(menuListener);

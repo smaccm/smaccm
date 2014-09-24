@@ -7,7 +7,7 @@ import java.util.Map;
 
 import jkind.api.results.AnalysisResult;
 import jkind.api.results.PropertyResult;
-import jkind.api.ui.AnalysisResultTree;
+import jkind.api.ui.results.AnalysisResultTree;
 import jkind.interval.NumericInterval;
 import jkind.lustre.Program;
 import jkind.lustre.values.Value;
@@ -26,6 +26,7 @@ import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.console.ConsolePlugin;
@@ -45,10 +46,12 @@ import com.rockwellcollins.atc.agree.analysis.Util;
 
 public class AgreeMenuListener implements IMenuListener {
     private static GlobalURIEditorOpener globalURIEditorOpener = Util.getGlobalURIEditorOpener();
-    private AnalysisResultTree tree;
+    private final IWorkbenchWindow window;
+    private final AnalysisResultTree tree;
     private AgreeResultsLinker linker;
 
-    public AgreeMenuListener(AnalysisResultTree tree) {
+    public AgreeMenuListener(IWorkbenchWindow window, AnalysisResultTree tree) {
+        this.window = window;
         this.tree = tree;
     }
 
@@ -109,6 +112,13 @@ public class AgreeMenuListener implements IMenuListener {
                 @Override
                 public void run() {
                     viewCexConsole(cex, layout, refMap);
+                }
+            });
+
+            manager.add(new Action("View " + cexType + "Counterexample in Eclipse") {
+                @Override
+                public void run() {
+                    viewCexEclipse(cex, layout, refMap);
                 }
             });
 
@@ -234,7 +244,7 @@ public class AgreeMenuListener implements IMenuListener {
                         printHLine(out, cex.getLength());
 
                         for (Signal<Value> signal : cex.getSignals()) {
-                        	String sigName = signal.getName();
+                            String sigName = signal.getName();
                             if (category.equals(layout.getCategory(sigName))) {
                                 out.print(String.format("%-60s", "{" + sigName + "}"));
                                 for (int k = 0; k < cex.getLength(); k++) {
@@ -327,6 +337,17 @@ public class AgreeMenuListener implements IMenuListener {
             view.display(console);
             view.setScrollLock(true);
         } catch (PartInitException e) {
+        }
+    }
+
+    private void viewCexEclipse(Counterexample cex, Layout layout, Map<String, EObject> refMap) {
+        try {
+            AgreeCounterexampleView cexView = (AgreeCounterexampleView) window.getActivePage()
+                    .showView(AgreeCounterexampleView.ID);
+            cexView.setInput(cex, layout);
+            cexView.setFocus();
+        } catch (PartInitException e) {
+            e.printStackTrace();
         }
     }
 
