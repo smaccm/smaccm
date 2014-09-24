@@ -136,8 +136,10 @@ public class CAmkES_CodeGenerator {
       for (Dispatcher d : ti.getDispatcherList()) {
         OutgoingDispatchContract maxCalls = CGUtil.maxDispatcherUse(d.getDispatchLimits());
         for (Map.Entry<OutputEventPort, Integer> entry : maxCalls.getContract().entrySet()) {
-          ArrayType dispatchArrayType = new ArrayType(entry.getKey().getType(), entry.getValue());
-          model.getAstTypes().put(CommonNames.getDispatchArrayTypeName(ti, entry), dispatchArrayType);
+          if (entry.getKey().hasData()) {
+            ArrayType dispatchArrayType = new ArrayType(entry.getKey().getType(), entry.getValue());
+            model.getAstTypes().put(CommonNames.getDispatchArrayTypeName(ti, entry), dispatchArrayType);
+          }
         }
       }
     }
@@ -414,6 +416,7 @@ public class CAmkES_CodeGenerator {
 	  createComponentCFile(srcDirectory, ti);
 	  createComponentCamkesFile(componentDirectory, ti);
 
+	  /*
 	  if (!ti.getIsPassive()) {
 	    File dispatchersDirectory = new File(componentsDirectory, "dispatch_" + name);
 	    File dispatchersSrcDirectory = new File(dispatchersDirectory, "src"); 
@@ -421,6 +424,7 @@ public class CAmkES_CodeGenerator {
 	    createDispatcherComponent(dispatchersDirectory, ti);
 	    createDispatcherComponentCFile(dispatchersSrcDirectory, ti);
 	  }
+	  */
 	  
 	  ThreadImplementationNames tin = new ThreadImplementationNames(ti); 
     File CFile = new File(componentDirectory, tin.getComponentGlueCodeCFileName());

@@ -3,6 +3,7 @@
  */
 package edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.CAmkES;
 
+import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosException;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.common.CommonNames;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.ArrayType;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.PointerType;
@@ -19,6 +20,9 @@ public class TypeNames {
 
   TypeNames(Type t) {
     this.t = t;
+    if (t == null) {
+      throw new Aadl2RtosException("Unexpected null seen for type when constructing TypeNames object");
+    }
     this.t_structural = Names.getStructuralType(t);
   }
   

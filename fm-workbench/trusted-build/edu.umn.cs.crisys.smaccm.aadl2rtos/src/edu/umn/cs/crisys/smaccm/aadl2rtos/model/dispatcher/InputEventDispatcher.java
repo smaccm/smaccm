@@ -28,14 +28,8 @@ public class InputEventDispatcher extends Dispatcher {
      return this.getEventPort().getName();
 	}
 	
-	// we want to return null for unit types to assist with template generation.
 	public Type getType() {
-	  Type dt = this.getEventPort().getType();
-	  if (dt == null || this.getEventPort().getType() instanceof UnitType) {
-	    return null;
-	  } else {
-	    return dt;
-	  }
+	  return this.getEventPort().getType();
 	}
 	  
 	public InputEventPort getEventPort() { return this.eventPort; }

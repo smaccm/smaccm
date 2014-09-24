@@ -4,7 +4,9 @@
 package edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.CAmkES;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosException;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosFailure;
@@ -16,6 +18,7 @@ import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.Connection;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.SharedDataAccessor;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.ThreadImplementation;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.ThreadInstance;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.Type;
 
 /**
  * @author Whalen
@@ -124,6 +127,18 @@ public class ThreadImplementationNames {
       cl.add(new ConnectionNames(t));
     }
     return cl;
+  }
+  
+  public List<TypeNames> getThreadPortTypes() {
+    Set<Type> usedTypes = new HashSet<>(); 
+    for (DataPort p : ti.getPortList()) {
+      usedTypes.add(p.getType());
+    }
+    List<TypeNames> tn = new ArrayList<>(); 
+    for (Type t : usedTypes) {
+      tn.add(new TypeNames(t));
+    }
+    return tn;
   }
   
   //////////////////////////////////////////////////////////

@@ -42,11 +42,11 @@ writeUdePrototype(dispatcher) ::= <<
 >>
 
 writePortWriterPrototype(port) ::= <<
-bool <port.aadlWriterFnName>(<port.nameAsInputParam>); 
+bool <port.aadlWriterFnName>(<if(port.hasData)><port.nameAsInputParam><endif>); 
 >>
 
 writePortReaderPrototype(port) ::= <<
-bool <port.aadlReaderFnName>(<port.nameAsOutputParam>); 
+bool <port.aadlReaderFnName>(<if(port.hasData)><port.nameAsOutputParam><endif>); 
 >>
 
 writeSharedDataPrototype(sda) ::= <<

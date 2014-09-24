@@ -19,7 +19,7 @@ rwInterfaceIdlPostfix(name, path) ::= <<
 >>
 
 rwPrototype(type) ::= <<
-void <type.writerFn>(in <type.name> arg);  
+bool <type.writerFn>(in <type.name> arg);  
 >>
 
 rwProc(type, model) ::= <<
@@ -33,7 +33,7 @@ procedure <type.readerWriterInterfaceName> {
 rwUnitProc(type) ::= <<
 
 procedure <type.readerWriterInterfaceName> {
-   void <type.writerFn>();
+   bool <type.writerFn>();
 }
 >>
 

@@ -15,18 +15,11 @@ camkesAssemblyPrefix(name, date, path) ::= "<stdFilePrefix(date, path, camkesAss
 
 assemblyThreadImplementationImports(threadImpl) ::= <<
 import "<threadImpl.rootToCamkesComponentFilePath>";
-<if(threadImpl.isActive)><\\>
-import "<threadImpl.rootToCamkesDispatcherComponentFilePath>";
-<endif>
+
 >>
 
 assemblyThreadComponents(threadImpl) ::= <<
 component <threadImpl.componentName> <threadImpl.componentInstanceName>;
-
->>
-
-assemblyActiveThreadComponents(threadImpl) ::= <<
-component <threadImpl.dispatcherComponentName> <threadImpl.dispatcherComponentInstanceName>;
 
 >>
 
@@ -41,7 +34,7 @@ rpcConnection(cid, from1, from2, to1, to2) ::=
 
 connectPassiveToActive(passiveThreadImpl, activeThreadImpl, model) ::= <<
 <rpcConnection(model.generateConnectionName,
-	activeThreadImpl.dispatcherComponentInstanceName,
+	activeThreadImpl.componentInstanceName,
 	passiveThreadImpl.interfaceInstanceName,
 	passiveThreadImpl.componentInstanceName,
 	passiveThreadImpl.componentDispatcherInterfaceVarIdName)>
@@ -50,21 +43,16 @@ connectPassiveToActive(passiveThreadImpl, activeThreadImpl, model) ::= <<
 
 assemblyConnectActiveToPassiveThreads(threadImpl, model) ::= <<
 <model.passiveThreadImplementations:connectPassiveToActive(threadImpl, model)>
-<rpcConnection(model.generateConnectionName, 
-	threadImpl.dispatcherComponentInstanceName,
-	threadImpl.interfaceInstanceName,
-	threadImpl.componentInstanceName,
-	threadImpl.componentDispatcherInterfaceVarIdName)>
-	
+
 >>
 
 
 connectActiveSendToActiveSend(sourcePort, destPort, model) ::= <<
 <if(destPort.threadImplementation.isActive)><\\>
 <rpcConnection(model.generateConnectionName, 
-	sourcePort.threadImplementation.dispatcherComponentInstanceName,
+	sourcePort.threadImplementation.componentInstanceName,
     sourcePort.name, 
-	destPort.threadImplementation.dispatcherComponentInstanceName,
+	destPort.threadImplementation.componentInstanceName,
 	destPort.name)> 
 <endif>
 >>
@@ -82,7 +70,7 @@ connectActivePeriodic(dispatcher, threadImpl, model) ::= <<
 <rpcConnection(model.generateConnectionName, 
 	model.threadCalendar.periodicDispatcherInstanceName,
 	dispatcher.dispatcherComponentDispatchName, 
-	threadImpl.dispatcherComponentInstanceName,
+	threadImpl.componentInstanceName,
 	dispatcher.dispatcherComponentDispatchName)>
 <endif>
 >>
@@ -125,9 +113,6 @@ assembly {
 		// component instances for all AADL-defined threads
 		<model.threadImplementations:assemblyThreadComponents()>
 		
-		// active thread components
-		<model.activeThreadImplementations:assemblyActiveThreadComponents()>
-	
 		// connections from active dispatchers to passive threads
 		<model.activeThreadImplementations:assemblyConnectActiveToPassiveThreads(model)>	
 		
