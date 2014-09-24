@@ -1,0 +1,32 @@
+property set SMACCM_SYS is
+	-- Definitions for making threads "tower compatible"
+	CommPrim_Source_Header: aadlstring applies to (port, access);
+	CommPrim_Source_Text: aadlstring applies to (port, access);
+	Compute_Entrypoint_Source_Text : list of aadlstring applies to (system, system implementation, port, thread);
+
+	-- For including additional libraries into the build process
+	Link_Libraries : list of aadlstring applies to (system, system implementation);
+	
+	-- for dealing with ISR/IRQs
+	Signal_Name: aadlstring applies to (port);
+	First_Level_Interrupt_Handler: aadlstring applies to (port);
+	Is_ISR: aadlboolean => false applies to (port);  
+
+    -- For scheduling
+    Thread_Type: enumeration (Active, Passive) applies to (thread);	
+	Sends_Events_To: aadlstring applies to (thread); 
+	
+	-- For build output.
+	Output_Directory: aadlstring applies to (system implementation);
+	
+	-- For integrating with other code when creating the .prx file.
+	Is_Legacy: aadlboolean => false applies to (thread);
+	Legacy_Mutex_List: list of aadlstring applies to (thread, system implementation);
+	Legacy_Semaphore_List: list of aadlstring applies to (thread, system implementation);
+	Legacy_Entrypoint: aadlstring applies to (thread);
+	Legacy_IRQ_Event_List: list of aadlstring applies to (system implementation);
+	Legacy_IRQ_Handler_List: list of aadlstring applies to (system implementation);
+	External_IRQ_List: list of aadlstring applies to (system implementation);
+	Generate_Scheduler_Systick_IRQ: aadlboolean => true applies to (system implementation);
+	Language: aadlstring applies to (thread, system implementation);
+end SMACCM_SYS;

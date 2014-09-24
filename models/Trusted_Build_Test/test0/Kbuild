@@ -1,2 +1,2 @@
-apps-$(CONFIG_APP_TEST1) += test1
-test1: libsel4 libmuslc libsel4platsupport libsel4muslccamkes libsel4camkes libsel4sync libsel4debug libsel4bench
+apps-$(CONFIG_APP_TEST0) += test0
+test0: libsel4 libmuslc libsel4platsupport libsel4muslccamkes libsel4camkes libsel4sync libsel4debug libsel4bench

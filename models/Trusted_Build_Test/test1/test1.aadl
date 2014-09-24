@@ -54,12 +54,12 @@ process implementation proc.Impl
 		s_to_r : port s.Output1 -> r.Input1;
 end proc.Impl;
 
-system top_level
-end top_level;
+system test1
+end test1;
 
-system implementation top_level.impl
+system implementation test1.impl
 	subcomponents
 		tl: process proc.Impl;
-end top_level.impl;
+end test1.impl;
 
 end test1;

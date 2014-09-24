@@ -1,0 +1,6 @@
+config APP_TEST8
+    bool "AADL Test 8: active -> active threads using struct read/write"
+    default n
+    select APP_CAMKES_EXECUTIVE
+    help
+        AADL Test 8: active -> active threads using struct read/write. 

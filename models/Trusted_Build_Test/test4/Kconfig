@@ -1,0 +1,6 @@
+config APP_TEST4
+    bool "AADL Test 4: active -> active threads using scalar send"
+    default n
+    select APP_CAMKES_EXECUTIVE
+    help
+        AADL Test 4: active -> active threads using scalar send. 

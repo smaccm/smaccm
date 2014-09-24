@@ -1,0 +1,6 @@
+config APP_TEST14
+    bool "AADL Test 14: active -> active threads using pure event"
+    default n
+    select APP_CAMKES_EXECUTIVE
+    help
+        AADL Test 14: active -> active threads using pure event. 
