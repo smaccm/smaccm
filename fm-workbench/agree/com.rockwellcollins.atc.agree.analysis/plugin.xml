@@ -14,6 +14,12 @@
               icon="icons/layers.png"
               id="com.rockwellcollins.atc.agree.analysis.views.agreeResultsView"
               name="AGREE Results"/>
+        <view
+              category="com.rockwellcollins.atc.agree.analysis"
+              class="com.rockwellcollins.atc.agree.analysis.views.AgreeCounterexampleView"
+              icon="icons/counterexample.png"
+              id="com.rockwellcollins.atc.agree.analysis.views.agreeCounterexampleView"
+              name="AGREE Counterexample"/>
    </extension>
   
    <extension point="org.eclipse.ui.commands">
