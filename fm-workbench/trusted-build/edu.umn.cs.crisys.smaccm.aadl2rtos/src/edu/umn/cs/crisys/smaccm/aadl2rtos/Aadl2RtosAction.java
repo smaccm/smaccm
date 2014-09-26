@@ -79,7 +79,7 @@ public class Aadl2RtosAction extends AadlAction {
 		
 	}
 	
-	private IStatus execute(SystemInstance si, SystemImplementation sysimpl, IProgressMonitor monitor, File dir, Logger logger) {
+	public IStatus execute(SystemInstance si, SystemImplementation sysimpl, IProgressMonitor monitor, File dir, Logger logger) {
 		log = logger;
 		log.info("This is the sysimpl name: "+ sysimpl.getName());
 		

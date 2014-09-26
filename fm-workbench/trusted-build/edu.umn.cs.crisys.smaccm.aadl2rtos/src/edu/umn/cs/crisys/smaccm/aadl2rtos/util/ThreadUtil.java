@@ -175,7 +175,7 @@ public abstract class ThreadUtil {
 	  try {
       lit = PropertyUtils.getEnumLiteral(tti, ThreadUtil.THREAD_TYPE);
     } catch (Exception e) {
-      throw new Aadl2RtosException("Required property 'Thread_Type' not found for thread: " + tti.getName());
+      throw new Aadl2RtosException("Required property 'Thread_Type' not found for thread: " + tti.getName() + "Exception: " + e.toString());
     }
     if ("Active".equals(lit.getName())) {
       return false;
