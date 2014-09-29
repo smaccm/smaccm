@@ -44,6 +44,7 @@ system FCC
     num_valid_acts : in data port DATA_TYPES::NumActuators.impl;
     
     --outputs
+    acts_fail : out data port DATA_TYPES::BoolActuators.impl;
     acts_out : out data port DATA_TYPES::Actuators.impl;
     sovs1: out data port DATA_TYPES::BoolActuators.impl;
     sovs2: out data port DATA_TYPES::BoolActuators.impl;
@@ -73,6 +74,11 @@ system FCC
 	--BEGIN RC2 GUARANTEES
 	guarantee "actuators output range bound":
 		FCC_RC_2.req (acts_out, num_valid_acts);
+		
+    --When an actuator command has been latched failed, OSAS shall set 
+    --that actuator command to 0 (zero).
+    guarantee "OSAS-S-140" : 
+      OSAS_S_140.req(acts_out, acts_fail); 
 
   **};
 
@@ -125,6 +131,7 @@ system implementation FCC.Impl
     egi_select_conn : port ISAS_comp.egi_select -> egi_select;
     stab_select_conn : port ISAS_comp.stabilizers_select -> stabilizers_select;
 
+    fail_conn : port OSAS_comp.acts_fail -> acts_fail;
     --internal connections
     conn_ccdl_acts : port CLAW_comp.acts -> OSAS_comp.acts_in;
 
