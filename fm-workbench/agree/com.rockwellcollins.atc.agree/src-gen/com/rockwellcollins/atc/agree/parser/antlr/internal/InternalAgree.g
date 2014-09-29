@@ -1996,9 +1996,9 @@ ruleArrowExpr returns [EObject current=null]
 )))(
 (
 		{ 
-	        newCompositeNode(grammarAccess.getArrowExprAccess().getRightImpliesExprParserRuleCall_1_1_0()); 
+	        newCompositeNode(grammarAccess.getArrowExprAccess().getRightArrowExprParserRuleCall_1_1_0()); 
 	    }
-		lv_right_3_0=ruleImpliesExpr		{
+		lv_right_3_0=ruleArrowExpr		{
 	        if ($current==null) {
 	            $current = createModelElementForParent(grammarAccess.getArrowExprRule());
 	        }
@@ -2006,7 +2006,7 @@ ruleArrowExpr returns [EObject current=null]
        			$current, 
        			"right",
         		lv_right_3_0, 
-        		"ImpliesExpr");
+        		"ArrowExpr");
 	        afterParserOrEnumRuleCall();
 	    }
 
@@ -2072,9 +2072,9 @@ ruleImpliesExpr returns [EObject current=null]
 )))(
 (
 		{ 
-	        newCompositeNode(grammarAccess.getImpliesExprAccess().getRightEquivExprParserRuleCall_1_1_0()); 
+	        newCompositeNode(grammarAccess.getImpliesExprAccess().getRightImpliesExprParserRuleCall_1_1_0()); 
 	    }
-		lv_right_3_0=ruleEquivExpr		{
+		lv_right_3_0=ruleImpliesExpr		{
 	        if ($current==null) {
 	            $current = createModelElementForParent(grammarAccess.getImpliesExprRule());
 	        }
@@ -2082,7 +2082,7 @@ ruleImpliesExpr returns [EObject current=null]
        			$current, 
        			"right",
         		lv_right_3_0, 
-        		"EquivExpr");
+        		"ImpliesExpr");
 	        afterParserOrEnumRuleCall();
 	    }
 

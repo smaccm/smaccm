@@ -17291,8 +17291,8 @@ rule__ArrowExpr__RightAssignment_1_1
     }
 :
 (
-{ before(grammarAccess.getArrowExprAccess().getRightImpliesExprParserRuleCall_1_1_0()); }
-	ruleImpliesExpr{ after(grammarAccess.getArrowExprAccess().getRightImpliesExprParserRuleCall_1_1_0()); }
+{ before(grammarAccess.getArrowExprAccess().getRightArrowExprParserRuleCall_1_1_0()); }
+	ruleArrowExpr{ after(grammarAccess.getArrowExprAccess().getRightArrowExprParserRuleCall_1_1_0()); }
 )
 
 ;
@@ -17329,8 +17329,8 @@ rule__ImpliesExpr__RightAssignment_1_1
     }
 :
 (
-{ before(grammarAccess.getImpliesExprAccess().getRightEquivExprParserRuleCall_1_1_0()); }
-	ruleEquivExpr{ after(grammarAccess.getImpliesExprAccess().getRightEquivExprParserRuleCall_1_1_0()); }
+{ before(grammarAccess.getImpliesExprAccess().getRightImpliesExprParserRuleCall_1_1_0()); }
+	ruleImpliesExpr{ after(grammarAccess.getImpliesExprAccess().getRightImpliesExprParserRuleCall_1_1_0()); }
 )
 
 ;

@@ -386,10 +386,10 @@ public class AgreeEmitterUtilities {
     }
     
     //returns an expression for bounded history
-    static public Expr getFinteConsistancy(IdExpr histId, IdExpr countId, int n) {
+    static public Expr getFinteConsistancy(Expr histExpr, IdExpr countId, int n) {
         Expr countExpr = new BinaryExpr(countId, BinaryOp.EQUAL, new IntExpr(BigInteger.valueOf((long)n)));
 
-        Expr consistExpr = new BinaryExpr(histId, BinaryOp.AND, countExpr);
+        Expr consistExpr = new BinaryExpr(histExpr, BinaryOp.AND, countExpr);
         consistExpr = new UnaryExpr(UnaryOp.NOT, consistExpr);
 
         return consistExpr;

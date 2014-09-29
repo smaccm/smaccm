@@ -1761,17 +1761,7 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         Expr sysAssumpAssertInitial = new BinaryExpr(subInitalConstrs, BinaryOp.AND, sysAssumpHist);
         
         eqs.add(AgreeEmitterUtilities.getLustreHistory(sysAssumpAssertInitial, sysAssumpHistId));
-        
-        //right now we just enforce an ordering based on how 
-//        Map<Subcomponent, Set<Subcomponent>> closureMap = new HashMap<>();
-//        for(AgreeAnnexEmitter subEmitter : subEmitters){
-//            Set<Subcomponent> outputClosure = new HashSet<Subcomponent>();
-//            outputClosure.add(subEmitter.curComp);
-//            ComponentImplementation compImpl = (ComponentImplementation) curInst.getComponentClassifier();
-//            AgreeEmitterUtilities.getOutputClosure(compImpl.getAllConnections(), outputClosure);
-//            closureMap.put(subEmitter.curComp, outputClosure);
-//        }
-        
+                
         //make a counter for checking finite consistency
         IdExpr countId = addConsistencyCounter(eqs, internals);
         
@@ -1803,7 +1793,8 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         }
         
         //check for contradiction in total component history
-        addTotalCompHistoryConsist(eqs, internals, properties, totalCompHistId,
+        addTotalCompHistoryConsist(eqs, internals, properties, 
+        		new BinaryExpr(sysAssumpHistId, BinaryOp.AND, totalCompHistId),
 				countId);
         
         //check to see if this specific components contract makes a contradiction
@@ -1905,9 +1896,9 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
 
 	private void addTotalCompHistoryConsist(List<Equation> eqs,
 			List<VarDecl> internals, List<String> properties,
-			IdExpr totalCompHistId, IdExpr countId) {
+			Expr CompHistSysAssumpAssertInitial, IdExpr countId) {
 		IdExpr notTotalCompHistId = new IdExpr("_TOTAL_COMP_FINITE_CONSIST");
-        Expr finiteConsist = AgreeEmitterUtilities.getFinteConsistancy(totalCompHistId, countId, consistUnrollDepth);
+        Expr finiteConsist = AgreeEmitterUtilities.getFinteConsistancy(CompHistSysAssumpAssertInitial, countId, consistUnrollDepth);
         Equation contrConsistEq = new Equation(notTotalCompHistId, finiteConsist);
         
         internals.add(new VarDecl(notTotalCompHistId.id, NamedType.BOOL));
@@ -2033,11 +2024,16 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
                 agreeInternalVars.add(agreeVar);
             }
             
-            //TODO: set different initial values for outputs
+            //make a dummy variable for the initial value 
+            //of every output.  The initial values
+            //will be constrained by the "initially"
+            //statements in each contract
+            
             for(VarDecl var : agreeNode.outputs){
             	NamedType type = (NamedType)var.type;
-            	Expr initVal = initTypeMap.get(type.name);
-				initOutputs.add(initVal);
+            	VarDecl initVar = new VarDecl("__INIT_VAL_"+var.id, type);
+				inputs.add(initVar);
+				initOutputs.add(new IdExpr(initVar.id));
             	nodeOutputs.add(new IdExpr(var.id));
             }
 
