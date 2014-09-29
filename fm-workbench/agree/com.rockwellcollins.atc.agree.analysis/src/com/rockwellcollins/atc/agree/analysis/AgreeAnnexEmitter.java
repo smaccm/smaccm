@@ -427,19 +427,22 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
                 thisPrefix + subComp.getName() + dotChar, false, true);
         
         if(subCompImpl != null){
-        	for (AnnexSubclause annex : AnnexUtil.getAllAnnexSubclauses(subCompImpl, AgreePackage.eINSTANCE.getAgreeContractSubclause())) {
-        		if (annex instanceof AgreeContractSubclause) {
-        			Contract contract = ((AgreeContractSubclause) annex).getContract();
-        			if(contract instanceof AgreeContract){
-        				for(SpecStatement spec :  ((AgreeContract) contract).getSpecs()){
-        					if(spec instanceof LiftStatement){
-        						subEmitter.doSwitch(spec);
-        					}
-        				}
-        			}
-        		}
-        		break;
+        	for(Subcomponent subSubComp : subCompImpl.getAllSubcomponents()){
+        		subEmitter.doLift(subSubComp);
         	}
+//        	for (AnnexSubclause annex : AnnexUtil.getAllAnnexSubclauses(subCompImpl, AgreePackage.eINSTANCE.getAgreeContractSubclause())) {
+//        		if (annex instanceof AgreeContractSubclause) {
+//        			Contract contract = ((AgreeContractSubclause) annex).getContract();
+//        			if(contract instanceof AgreeContract){
+//        				for(SpecStatement spec :  ((AgreeContract) contract).getSpecs()){
+//        					if(spec instanceof LiftStatement){
+//        						subEmitter.doSwitch(spec);
+//        					}
+//        				}
+//        			}
+//        		}
+//        		break;
+//        	}
         }
 
         for (AnnexSubclause annex : AnnexUtil.getAllAnnexSubclauses(subCompType, AgreePackage.eINSTANCE.getAgreeContractSubclause())) {

@@ -90,20 +90,24 @@ public class AgreeGenerator {
 
             //special code for lifting
             if(subCompImpl != null){
-                for (AnnexSubclause annex : AnnexUtil.getAllAnnexSubclauses(subCompImpl, AgreePackage.eINSTANCE.getAgreeContractSubclause())) {
-                    if (annex instanceof AgreeContractSubclause) {
-                    	Contract contract = ((AgreeContractSubclause) annex).getContract();
-                    	if(contract instanceof AgreeContract){
-                    		for(SpecStatement spec :  ((AgreeContract) contract).getSpecs()){
-                    			if(spec instanceof LiftStatement){
-                    				subEmitter.doSwitch(spec);
-                    			}
-                    		}
-                    	}
-                        foundSubAnnex = foundAnnex = true;
-                    }
-                    break;
-                }
+//                for (AnnexSubclause annex : AnnexUtil.getAllAnnexSubclauses(subCompImpl, AgreePackage.eINSTANCE.getAgreeContractSubclause())) {
+//                    if (annex instanceof AgreeContractSubclause) {
+//                    	Contract contract = ((AgreeContractSubclause) annex).getContract();
+//                    	if(contract instanceof AgreeContract){
+//                    		for(SpecStatement spec :  ((AgreeContract) contract).getSpecs()){
+//                    			if(spec instanceof LiftStatement){
+//                    				subEmitter.doSwitch(spec);
+//                    			}
+//                    		}
+//                    	}
+//                        foundSubAnnex = foundAnnex = true;
+//                    }
+//                    break;
+//                }
+            	
+            	for(Subcomponent subSubComp : subCompImpl.getAllSubcomponents()){
+            		subEmitter.doLift(subSubComp);
+            	}
             }
 
             for (AnnexSubclause annex : AnnexUtil.getAllAnnexSubclauses(ct, AgreePackage.eINSTANCE.getAgreeContractSubclause())) {
