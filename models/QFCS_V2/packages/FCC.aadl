@@ -52,33 +52,7 @@ system FCC
         
   annex agree {**
 
-	--BEGIN RC5 guarantees
-	guarantee "elevator bound" :
-	 FCC_RC5.req_els(elevators_faults, elevators_select);
-
-	guarantee "ailerons bound" :
-	 FCC_RC5.req_ails(ailerons_faults, ailerons_select);
-
-	guarantee "flaps bound" :
-	 FCC_RC5.req_flaps(flaps_faults, flaps_select);
-
-	guarantee "rudders bound" :
-	 FCC_RC5.req_rud(rudders_faults, rudders_select);
-
-	guarantee "spoilers bound" :
-	 FCC_RC5.req_spoil(spoilers_faults, spoilers_select);
-
-	guarantee "stabilzers bound" :
-	 FCC_RC5.req_stab(stabilizers_faults, stabilizers_select);
-
-	--BEGIN RC2 GUARANTEES
-	guarantee "actuators output range bound":
-		FCC_RC_2.req (acts_out, num_valid_acts);
-		
-    --When an actuator command has been latched failed, OSAS shall set 
-    --that actuator command to 0 (zero).
-    guarantee "OSAS-S-140" : 
-      OSAS_S_140.req(acts_out, acts_fail); 
+	guarantee "dummy" : true;
 
   **};
 
