@@ -115,11 +115,13 @@ system implementation FCS.impl
     	assert FCC3.num_valid_acts = num_valids;
     	assert FCC4.num_valid_acts = num_valids;
     	
-    	assert FCS_RC1.fails_to_nums(num_valids,
+    	assert FCS_RC1.valids_to_nums(num_valids,
     		                         FCC1.acts_fail,
     		                         FCC2.acts_fail,
     		                         FCC3.acts_fail,
     		                         FCC4.acts_fail);
+    		                         
+    		                         
     	
     **};
     

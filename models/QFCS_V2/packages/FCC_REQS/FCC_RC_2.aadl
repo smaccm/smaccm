@@ -84,7 +84,8 @@ annex agree {**
     ret = (num_valid = 0 => (low <= act and act <= 4.0*high)) and
           (num_valid = 1 => (low <= act and act <= 2.0*high)) and
           (num_valid = 2 => (low <= act and act <= (4.0/3.0)*high)) and
-          (num_valid = 3 => (low <= act and act <= high));
+          (num_valid = 3 => (low <= act and act <= high)) and
+          (num_valid = 4 => (low <= act and act <= high));
   tel;   
 
 **};
