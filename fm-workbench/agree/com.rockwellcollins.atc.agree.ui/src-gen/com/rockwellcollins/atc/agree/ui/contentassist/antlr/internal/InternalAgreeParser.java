@@ -48234,28 +48234,28 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__ArrowExpr__RightAssignment_1_1"
-    // ../com.rockwellcollins.atc.agree.ui/src-gen/com/rockwellcollins/atc/agree/ui/contentassist/antlr/internal/InternalAgree.g:17288:1: rule__ArrowExpr__RightAssignment_1_1 : ( ruleImpliesExpr ) ;
+    // ../com.rockwellcollins.atc.agree.ui/src-gen/com/rockwellcollins/atc/agree/ui/contentassist/antlr/internal/InternalAgree.g:17288:1: rule__ArrowExpr__RightAssignment_1_1 : ( ruleArrowExpr ) ;
     public final void rule__ArrowExpr__RightAssignment_1_1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
             
         try {
-            // ../com.rockwellcollins.atc.agree.ui/src-gen/com/rockwellcollins/atc/agree/ui/contentassist/antlr/internal/InternalAgree.g:17292:1: ( ( ruleImpliesExpr ) )
-            // ../com.rockwellcollins.atc.agree.ui/src-gen/com/rockwellcollins/atc/agree/ui/contentassist/antlr/internal/InternalAgree.g:17293:1: ( ruleImpliesExpr )
+            // ../com.rockwellcollins.atc.agree.ui/src-gen/com/rockwellcollins/atc/agree/ui/contentassist/antlr/internal/InternalAgree.g:17292:1: ( ( ruleArrowExpr ) )
+            // ../com.rockwellcollins.atc.agree.ui/src-gen/com/rockwellcollins/atc/agree/ui/contentassist/antlr/internal/InternalAgree.g:17293:1: ( ruleArrowExpr )
             {
-            // ../com.rockwellcollins.atc.agree.ui/src-gen/com/rockwellcollins/atc/agree/ui/contentassist/antlr/internal/InternalAgree.g:17293:1: ( ruleImpliesExpr )
-            // ../com.rockwellcollins.atc.agree.ui/src-gen/com/rockwellcollins/atc/agree/ui/contentassist/antlr/internal/InternalAgree.g:17294:1: ruleImpliesExpr
+            // ../com.rockwellcollins.atc.agree.ui/src-gen/com/rockwellcollins/atc/agree/ui/contentassist/antlr/internal/InternalAgree.g:17293:1: ( ruleArrowExpr )
+            // ../com.rockwellcollins.atc.agree.ui/src-gen/com/rockwellcollins/atc/agree/ui/contentassist/antlr/internal/InternalAgree.g:17294:1: ruleArrowExpr
             {
             if ( state.backtracking==0 ) {
-               before(grammarAccess.getArrowExprAccess().getRightImpliesExprParserRuleCall_1_1_0()); 
+               before(grammarAccess.getArrowExprAccess().getRightArrowExprParserRuleCall_1_1_0()); 
             }
-            pushFollow(FOLLOW_ruleImpliesExpr_in_rule__ArrowExpr__RightAssignment_1_134634);
-            ruleImpliesExpr();
+            pushFollow(FOLLOW_ruleArrowExpr_in_rule__ArrowExpr__RightAssignment_1_134634);
+            ruleArrowExpr();
 
             state._fsp--;
             if (state.failed) return ;
             if ( state.backtracking==0 ) {
-               after(grammarAccess.getArrowExprAccess().getRightImpliesExprParserRuleCall_1_1_0()); 
+               after(grammarAccess.getArrowExprAccess().getRightArrowExprParserRuleCall_1_1_0()); 
             }
 
             }
@@ -48332,28 +48332,28 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__ImpliesExpr__RightAssignment_1_1"
-    // ../com.rockwellcollins.atc.agree.ui/src-gen/com/rockwellcollins/atc/agree/ui/contentassist/antlr/internal/InternalAgree.g:17326:1: rule__ImpliesExpr__RightAssignment_1_1 : ( ruleEquivExpr ) ;
+    // ../com.rockwellcollins.atc.agree.ui/src-gen/com/rockwellcollins/atc/agree/ui/contentassist/antlr/internal/InternalAgree.g:17326:1: rule__ImpliesExpr__RightAssignment_1_1 : ( ruleImpliesExpr ) ;
     public final void rule__ImpliesExpr__RightAssignment_1_1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
             
         try {
-            // ../com.rockwellcollins.atc.agree.ui/src-gen/com/rockwellcollins/atc/agree/ui/contentassist/antlr/internal/InternalAgree.g:17330:1: ( ( ruleEquivExpr ) )
-            // ../com.rockwellcollins.atc.agree.ui/src-gen/com/rockwellcollins/atc/agree/ui/contentassist/antlr/internal/InternalAgree.g:17331:1: ( ruleEquivExpr )
+            // ../com.rockwellcollins.atc.agree.ui/src-gen/com/rockwellcollins/atc/agree/ui/contentassist/antlr/internal/InternalAgree.g:17330:1: ( ( ruleImpliesExpr ) )
+            // ../com.rockwellcollins.atc.agree.ui/src-gen/com/rockwellcollins/atc/agree/ui/contentassist/antlr/internal/InternalAgree.g:17331:1: ( ruleImpliesExpr )
             {
-            // ../com.rockwellcollins.atc.agree.ui/src-gen/com/rockwellcollins/atc/agree/ui/contentassist/antlr/internal/InternalAgree.g:17331:1: ( ruleEquivExpr )
-            // ../com.rockwellcollins.atc.agree.ui/src-gen/com/rockwellcollins/atc/agree/ui/contentassist/antlr/internal/InternalAgree.g:17332:1: ruleEquivExpr
+            // ../com.rockwellcollins.atc.agree.ui/src-gen/com/rockwellcollins/atc/agree/ui/contentassist/antlr/internal/InternalAgree.g:17331:1: ( ruleImpliesExpr )
+            // ../com.rockwellcollins.atc.agree.ui/src-gen/com/rockwellcollins/atc/agree/ui/contentassist/antlr/internal/InternalAgree.g:17332:1: ruleImpliesExpr
             {
             if ( state.backtracking==0 ) {
-               before(grammarAccess.getImpliesExprAccess().getRightEquivExprParserRuleCall_1_1_0()); 
+               before(grammarAccess.getImpliesExprAccess().getRightImpliesExprParserRuleCall_1_1_0()); 
             }
-            pushFollow(FOLLOW_ruleEquivExpr_in_rule__ImpliesExpr__RightAssignment_1_134709);
-            ruleEquivExpr();
+            pushFollow(FOLLOW_ruleImpliesExpr_in_rule__ImpliesExpr__RightAssignment_1_134709);
+            ruleImpliesExpr();
 
             state._fsp--;
             if (state.failed) return ;
             if ( state.backtracking==0 ) {
-               after(grammarAccess.getImpliesExprAccess().getRightEquivExprParserRuleCall_1_1_0()); 
+               after(grammarAccess.getImpliesExprAccess().getRightImpliesExprParserRuleCall_1_1_0()); 
             }
 
             }
@@ -54268,9 +54268,9 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
     public static final BitSet FOLLOW_ruleArg_in_rule__RecordDefExpr__ArgsAssignment_5_034528 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_ruleArg_in_rule__RecordDefExpr__ArgsAssignment_5_1_134559 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_91_in_rule__ArrowExpr__OpAssignment_1_0_0_134595 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleImpliesExpr_in_rule__ArrowExpr__RightAssignment_1_134634 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ruleArrowExpr_in_rule__ArrowExpr__RightAssignment_1_134634 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_38_in_rule__ImpliesExpr__OpAssignment_1_0_0_134670 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleEquivExpr_in_rule__ImpliesExpr__RightAssignment_1_134709 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ruleImpliesExpr_in_rule__ImpliesExpr__RightAssignment_1_134709 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_92_in_rule__EquivExpr__OpAssignment_1_0_0_134745 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_ruleOrExpr_in_rule__EquivExpr__RightAssignment_1_134784 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_93_in_rule__OrExpr__OpAssignment_1_0_0_134820 = new BitSet(new long[]{0x0000000000000002L});

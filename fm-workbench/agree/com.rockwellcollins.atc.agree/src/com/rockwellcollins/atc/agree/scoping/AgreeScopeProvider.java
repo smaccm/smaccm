@@ -42,6 +42,7 @@ import com.rockwellcollins.atc.agree.agree.AgreeLibrary;
 import com.rockwellcollins.atc.agree.agree.AgreePackage;
 import com.rockwellcollins.atc.agree.agree.Arg;
 import com.rockwellcollins.atc.agree.agree.CalenStatement;
+import com.rockwellcollins.atc.agree.agree.ConstStatement;
 import com.rockwellcollins.atc.agree.agree.EqStatement;
 import com.rockwellcollins.atc.agree.agree.EventExpr;
 import com.rockwellcollins.atc.agree.agree.Expr;
@@ -308,9 +309,6 @@ public class AgreeScopeProvider extends
         		  !(container instanceof AadlPackage)){
         		container = container.eContainer();
         	}
-        	//result.add((AadlPackage)container);
-        	
-        	// return result;
 
         } else {
             // travel out of the annex and get the component
@@ -324,10 +322,7 @@ public class AgreeScopeProvider extends
             }
         }
 
-        if (container == null) {
-            return result; // this will throw a parsing error
-        }
-
+        //check to see what the type the container is and behave accordingly
         if (container instanceof Classifier) {
             Classifier component = (Classifier) container;
             for (Element el : component.getOwnedElements()) {
@@ -353,6 +348,8 @@ public class AgreeScopeProvider extends
                     		for(Arg arg : eqStat.getLhs()){
                     			result.add(arg);
                     		}
+                    	}else if(spec instanceof ConstStatement){
+                    		result.add(spec);
                     	}
                     }
                 }

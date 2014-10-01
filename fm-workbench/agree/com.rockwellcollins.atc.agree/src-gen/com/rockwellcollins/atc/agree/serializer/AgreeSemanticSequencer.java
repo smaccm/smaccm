@@ -932,8 +932,8 @@ public class AgreeSemanticSequencer extends PropertiesSemanticSequencer {
 	 *         (left=AndExpr_BinaryExpr_1_0_0_0 op='and' right=RelateExpr) | 
 	 *         (left=OrExpr_BinaryExpr_1_0_0_0 op='or' right=AndExpr) | 
 	 *         (left=EquivExpr_BinaryExpr_1_0_0_0 op='<=>' right=OrExpr) | 
-	 *         (left=ImpliesExpr_BinaryExpr_1_0_0_0 op='=>' right=EquivExpr) | 
-	 *         (left=ArrowExpr_BinaryExpr_1_0_0_0 op='->' right=ImpliesExpr)
+	 *         (left=ImpliesExpr_BinaryExpr_1_0_0_0 op='=>' right=ImpliesExpr) | 
+	 *         (left=ArrowExpr_BinaryExpr_1_0_0_0 op='->' right=ArrowExpr)
 	 *     )
 	 */
 	protected void sequence_AddSubExpr_AndExpr_ArrowExpr_EquivExpr_ImpliesExpr_MultDivExpr_OrExpr_RelateExpr(EObject context, BinaryExpr semanticObject) {

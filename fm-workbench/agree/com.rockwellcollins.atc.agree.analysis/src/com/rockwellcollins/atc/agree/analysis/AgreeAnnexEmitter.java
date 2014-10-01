@@ -194,7 +194,7 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
     
     //TODO: do something more robust about this later
     //holds initial values for types
-    private Map<String, Expr> initTypeMap = new HashMap<>();
+    //private Map<String, Expr> initTypeMap = new HashMap<>();
     private BoolExpr initBool = new BoolExpr(false);
     private RealExpr initReal = new RealExpr(new BigDecimal("0.0"));
     private IntExpr initInt = new IntExpr(BigInteger.ZERO);
@@ -224,9 +224,9 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         this.thisPrefix = thisPrefix;
         this.topLevelPrefix = topLevelPrefix;
         
-        initTypeMap.put("bool", initBool);
-        initTypeMap.put("real", initReal);
-        initTypeMap.put("int", initInt);
+//        initTypeMap.put("bool", initBool);
+//        initTypeMap.put("real", initReal);
+//        initTypeMap.put("int", initInt);
         
         if(!layout.getCategories().contains(category)){
             layout.addCategory(category);
@@ -398,13 +398,18 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         return null;
     }
     
-    
     @Override
     public Expr caseLiftStatement(LiftStatement lift){
-        
-        if(ignoreLifts){
-            return null;
-        }
+
+    	if(!ignoreLifts){
+    		NestedDotID nestId = lift.getSubcomp();
+    		Subcomponent subComp = (Subcomponent)nestId.getBase();
+    		doLift(subComp);
+    	}
+    	return null;
+    }
+
+    public void doLift(Subcomponent subComp){
         
         //if connections have not been set we need to set them
         if(!connectionExpressionsSet){
@@ -412,9 +417,6 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         	setConnExprs((ComponentImplementation) compImpl);
         }
         
-        NestedDotID nestId = lift.getSubcomp();
-        
-        Subcomponent subComp = (Subcomponent)nestId.getBase();
         ComponentInstance subCompInst = curInst.findSubcomponentInstance(subComp);
         ComponentImplementation subCompImpl = subComp.getComponentImplementation();
         ComponentType subCompType = subComp.getComponentType();
@@ -518,12 +520,11 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         }
         //connExpressions.addAll(subEmitter.connExpressions);
         typeExpressions.addAll(subEmitter.typeExpressions);
-        initTypeMap.putAll(subEmitter.initTypeMap);
+//        initTypeMap.putAll(subEmitter.initTypeMap);
         
         //addToRenamingAll(subEmitter.varRenaming);
         addAllToRefMap(subEmitter.refMap);
        
-        return null;
     }
 
 	@Override
@@ -753,34 +754,34 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
     	String typeStr = getIDTypeStr(el);
     	typeMap.put(el, typeStr);
     	jkind.lustre.RecordType lustreRecord = new jkind.lustre.RecordType(typeStr, subTypeMap);
-    	getInitType(lustreRecord);
+//    	getInitType(lustreRecord);
     	typeExpressions.add(lustreRecord);
     	
     }
-    private Expr getInitType(Type type){    	
-    	if(type instanceof jkind.lustre.RecordType){
-    		jkind.lustre.RecordType lustreRecord = (jkind.lustre.RecordType)type;
-    		Expr cachedExpr = initTypeMap.get(lustreRecord.id);
-    		if(cachedExpr != null){
-    			return cachedExpr;
-    		}
-    		Map<String, Expr> initFields = new HashMap<String, Expr>();
-    		for(Entry<String, Type> field : lustreRecord.fields.entrySet()){
-    			Expr fieldInitValue = getInitType(field.getValue());
-    			if(fieldInitValue == null){
-    				throw new AgreeException("null init type found");
-    			}
-				initFields.put(field.getKey(), fieldInitValue);
-    		}
-    		jkind.lustre.RecordExpr lustreExpr = new jkind.lustre.RecordExpr(lustreRecord.id, initFields);
-    		initTypeMap.put(lustreRecord.id, lustreExpr);
-    		return lustreExpr;
-    	}else if(type instanceof NamedType){
-    		return initTypeMap.get(((NamedType)type).name);
-    		
-    	}
-    	throw new AgreeException("AGREE does not reason about type"+type.getClass().toString());
-    }
+//    private Expr getInitType(Type type){    	
+//    	if(type instanceof jkind.lustre.RecordType){
+//    		jkind.lustre.RecordType lustreRecord = (jkind.lustre.RecordType)type;
+//    		Expr cachedExpr = initTypeMap.get(lustreRecord.id);
+//    		if(cachedExpr != null){
+//    			return cachedExpr;
+//    		}
+//    		Map<String, Expr> initFields = new HashMap<String, Expr>();
+//    		for(Entry<String, Type> field : lustreRecord.fields.entrySet()){
+//    			Expr fieldInitValue = getInitType(field.getValue());
+//    			if(fieldInitValue == null){
+//    				throw new AgreeException("null init type found");
+//    			}
+//				initFields.put(field.getKey(), fieldInitValue);
+//    		}
+//    		jkind.lustre.RecordExpr lustreExpr = new jkind.lustre.RecordExpr(lustreRecord.id, initFields);
+//    		initTypeMap.put(lustreRecord.id, lustreExpr);
+//    		return lustreExpr;
+//    	}else if(type instanceof NamedType){
+//    		return initTypeMap.get(((NamedType)type).name);
+//    		
+//    	}
+//    	throw new AgreeException("AGREE does not reason about type"+type.getClass().toString());
+//    }
     
     private String getIDTypeStr(NamedElement record) {
     	String typeStr = null;
@@ -1761,17 +1762,7 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         Expr sysAssumpAssertInitial = new BinaryExpr(subInitalConstrs, BinaryOp.AND, sysAssumpHist);
         
         eqs.add(AgreeEmitterUtilities.getLustreHistory(sysAssumpAssertInitial, sysAssumpHistId));
-        
-        //right now we just enforce an ordering based on how 
-//        Map<Subcomponent, Set<Subcomponent>> closureMap = new HashMap<>();
-//        for(AgreeAnnexEmitter subEmitter : subEmitters){
-//            Set<Subcomponent> outputClosure = new HashSet<Subcomponent>();
-//            outputClosure.add(subEmitter.curComp);
-//            ComponentImplementation compImpl = (ComponentImplementation) curInst.getComponentClassifier();
-//            AgreeEmitterUtilities.getOutputClosure(compImpl.getAllConnections(), outputClosure);
-//            closureMap.put(subEmitter.curComp, outputClosure);
-//        }
-        
+                
         //make a counter for checking finite consistency
         IdExpr countId = addConsistencyCounter(eqs, internals);
         
@@ -1803,7 +1794,8 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         }
         
         //check for contradiction in total component history
-        addTotalCompHistoryConsist(eqs, internals, properties, totalCompHistId,
+        addTotalCompHistoryConsist(eqs, internals, properties, 
+        		new BinaryExpr(sysAssumpHistId, BinaryOp.AND, totalCompHistId),
 				countId);
         
         //check to see if this specific components contract makes a contradiction
@@ -1905,9 +1897,9 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
 
 	private void addTotalCompHistoryConsist(List<Equation> eqs,
 			List<VarDecl> internals, List<String> properties,
-			IdExpr totalCompHistId, IdExpr countId) {
+			Expr CompHistSysAssumpAssertInitial, IdExpr countId) {
 		IdExpr notTotalCompHistId = new IdExpr("_TOTAL_COMP_FINITE_CONSIST");
-        Expr finiteConsist = AgreeEmitterUtilities.getFinteConsistancy(totalCompHistId, countId, consistUnrollDepth);
+        Expr finiteConsist = AgreeEmitterUtilities.getFinteConsistancy(CompHistSysAssumpAssertInitial, countId, consistUnrollDepth);
         Equation contrConsistEq = new Equation(notTotalCompHistId, finiteConsist);
         
         internals.add(new VarDecl(notTotalCompHistId.id, NamedType.BOOL));
@@ -2033,11 +2025,16 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
                 agreeInternalVars.add(agreeVar);
             }
             
-            //TODO: set different initial values for outputs
+            //make a dummy variable for the initial value 
+            //of every output.  The initial values
+            //will be constrained by the "initially"
+            //statements in each contract
+            
             for(VarDecl var : agreeNode.outputs){
             	NamedType type = (NamedType)var.type;
-            	Expr initVal = initTypeMap.get(type.name);
-				initOutputs.add(initVal);
+            	VarDecl initVar = new VarDecl("__INIT_VAL_"+var.id, type);
+				inputs.add(initVar);
+				initOutputs.add(new IdExpr(initVar.id));
             	nodeOutputs.add(new IdExpr(var.id));
             }
 

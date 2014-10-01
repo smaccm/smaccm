@@ -113,10 +113,10 @@ Expr returns Expr:
 	ArrowExpr;
 
 ArrowExpr returns Expr:
-	ImpliesExpr (=> ({BinaryExpr.left=current} op='->') right=ImpliesExpr)?;
+	ImpliesExpr (=> ({BinaryExpr.left=current} op='->') right=ArrowExpr)?;
 
 ImpliesExpr returns Expr:
-	EquivExpr (=> ({BinaryExpr.left=current} op='=>') right=EquivExpr)?;
+	EquivExpr (=> ({BinaryExpr.left=current} op='=>') right=ImpliesExpr)?;
 
 EquivExpr returns Expr:
 	OrExpr (=> ({BinaryExpr.left=current} op='<=>') right=OrExpr)?;
@@ -128,7 +128,7 @@ AndExpr returns Expr:
 	RelateExpr (=> ({BinaryExpr.left=current} op='and') right=RelateExpr)*;
 
 RelateOp:
-	'<' | '<=' | '>' | '>=' | '=' | '<>' | '!=';
+	'<' | '<=' | '>' | '>=' | '=' | '<>' | '!='; //todo remove `<>'
 
 RelateExpr returns Expr:
 	AddSubExpr (=> ({BinaryExpr.left=current} op=RelateOp) right=AddSubExpr)?;
@@ -137,7 +137,7 @@ AddSubExpr returns Expr:
 	MultDivExpr (=> ({BinaryExpr.left=current} op=('+' | '-')) right=MultDivExpr)*;
 
 MultDivExpr returns Expr:
-	UnaryExpr (=> ({BinaryExpr.left=current} op=('*' | '/' | 'div' | 'mod')) right=UnaryExpr)*;
+	UnaryExpr (=> ({BinaryExpr.left=current} op=('*' | '/' | 'div' | 'mod')) right=UnaryExpr)*;//todo remove div
 
 UnaryExpr returns Expr:
 	{UnaryExpr} op=('-' | 'not') expr=UnaryExpr

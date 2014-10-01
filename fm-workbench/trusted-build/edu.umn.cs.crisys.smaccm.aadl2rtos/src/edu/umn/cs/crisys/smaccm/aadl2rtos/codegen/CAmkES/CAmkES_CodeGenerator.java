@@ -461,10 +461,12 @@ public class CAmkES_CodeGenerator {
     // write the .c / .h files to the destination component
     try {
       try {
-        cSrcFileStream = FileLocator.openStream(
-            PluginActivator.getDefault().getBundle(), new Path("templates/qemu_clock_driver.c"), false);
-        hSrcFileStream = FileLocator.openStream(
-            PluginActivator.getDefault().getBundle(), new Path("templates/clock_driver.h"), false);
+        cSrcFileStream = new FileInputStream("templates/qemu_clock_driver.c");
+        hSrcFileStream = new FileInputStream("templates/clock_driver.h");
+//        cSrcFileStream = FileLocator.openStream(
+//            PluginActivator.getDefault().getBundle(), new Path("templates/qemu_clock_driver.c"), false);
+//        hSrcFileStream = FileLocator.openStream(
+//            PluginActivator.getDefault().getBundle(), new Path("templates/clock_driver.h"), false);
         cDstFileStream = new FileOutputStream(cdest);
         hDstFileStream = new FileOutputStream(hdest); 
         
