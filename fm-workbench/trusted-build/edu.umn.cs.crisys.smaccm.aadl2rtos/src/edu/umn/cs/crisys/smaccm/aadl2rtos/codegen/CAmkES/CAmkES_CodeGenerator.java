@@ -8,6 +8,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URISyntaxException;
 import java.nio.channels.FileChannel;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -31,6 +32,7 @@ import com.google.common.io.Files;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosFailure;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Logger;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.PluginActivator;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.Util;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.common.CGUtil;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.common.C_Type_Writer;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.common.CommonNames;
@@ -64,7 +66,8 @@ public class CAmkES_CodeGenerator {
 	private File includeDirectory;
 	private String date;
 	private STErrorListener listener; 
-  
+  private File pluginDirectory;
+	
 	public List<ThreadImplementation> allThreads;
 
 	// so write threadName_write_portName for each port.
@@ -73,6 +76,13 @@ public class CAmkES_CodeGenerator {
 		this.log = log;
 		this.model = model;
 		this.rootDirectory = dir;
+		try {
+		  this.pluginDirectory = Util.getFileFromURL(Util.createURLFromClass(getClass()));
+		  System.out.println("CAmkES_CodeGenerator class directory: " + this.pluginDirectory.getPath());
+		} catch (URISyntaxException e) {
+		  System.out.println("Unable to find plugin directory!  Error: " + e.toString());
+		  this.pluginDirectory = null;
+		}
 		
 		listener = new CAmkESSTErrorListener(log);
 		
