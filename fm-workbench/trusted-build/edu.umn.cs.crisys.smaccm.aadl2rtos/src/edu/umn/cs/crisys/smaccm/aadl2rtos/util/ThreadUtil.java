@@ -37,6 +37,9 @@ public abstract class ThreadUtil {
 	final public static String COMPUTE_EXECUTION_TIME_NAME = "Compute_Execution_Time";
 	final public static String SMACCM_SYS_SIGNAL_NAME_NAME = "SMACCM_SYS::Signal_Name";
 	final public static String SMACCM_SYS_IS_ISR_NAME = "SMACCM_SYS::Is_ISR";
+  final public static String SMACCM_SYS_OS_NAME = "SMACCM_SYS::OS";
+  final public static String SMACCM_SYS_HW_NAME = "SMACCM_SYS::HW";
+  final public static String SMACCM_SYS_OUTPUT_DIRECTORY_NAME = "SMACCM_SYS::Output_Directory";
   
 	final public static String SMACCM_SYS_COMMPRIM_SOURCE_HEADER_NAME = "SMACCM_SYS::CommPrim_Source_Header";
   final public static String SMACCM_SYS_COMMPRIM_SOURCE_TEXT_NAME = "SMACCM_SYS::CommPrim_Source_Text";
@@ -78,6 +81,13 @@ public abstract class ThreadUtil {
 	    .getPropertyDefinitionInWorkspace(SMACCM_SYS_COMMPRIM_SOURCE_HEADER_NAME);
 	final public static Property SMACCM_SYS_COMMPRIM_SOURCE_TEXT = Util
 	    .getPropertyDefinitionInWorkspace(SMACCM_SYS_COMMPRIM_SOURCE_TEXT_NAME);
+  final public static Property SMACCM_SYS_OS = Util
+      .getPropertyDefinitionInWorkspace(SMACCM_SYS_OS_NAME);
+  final public static Property SMACCM_SYS_HW = Util
+      .getPropertyDefinitionInWorkspace(SMACCM_SYS_HW_NAME);
+  final public static Property SMACCM_SYS_OUTPUT_DIRECTORY = Util
+      .getPropertyDefinitionInWorkspace(SMACCM_SYS_OUTPUT_DIRECTORY_NAME);
+
 	final public static Property PERIOD = 
 	     Util.getPropertyDefinitionInWorkspace(PERIOD_NAME);
 	final public static Property PRIORITY = 
@@ -186,7 +196,25 @@ public abstract class ThreadUtil {
     }
 	}
 	
-  public static List<String> getLegacyMutexList(NamedElement tti) {
+  public static String getOS(NamedElement tti) {
+    EnumerationLiteral lit = null; 
+    try {
+      lit = PropertyUtils.getEnumLiteral(tti, ThreadUtil.SMACCM_SYS_OS);
+    } catch (Exception e) {
+      throw new Aadl2RtosException("Required property 'OS' not found for system instance: " + tti.getName() + "Exception: " + e.toString());
+    }
+    return lit.getName();
+  }
+
+  public static String getHW(NamedElement tti) {
+    try {
+      return (PropertyUtils.getEnumLiteral(tti, ThreadUtil.SMACCM_SYS_HW).getName());
+    } catch (Exception e) {
+      throw new Aadl2RtosException("Required property 'HW' not found for system instance: " + tti.getName() + "Exception: " + e.toString());
+    }
+  }
+  
+	public static List<String> getLegacyMutexList(NamedElement tti) {
     return getStringList(tti, ThreadUtil.LEGACY_MUTEX_LIST);
   }
 

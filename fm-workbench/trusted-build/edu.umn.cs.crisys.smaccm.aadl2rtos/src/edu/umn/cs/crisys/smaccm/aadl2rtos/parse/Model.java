@@ -50,6 +50,10 @@ public class Model {
 	
 	public enum OSTarget {CAmkES, eChronos}; 
 	private OSTarget osTarget = OSTarget.eChronos;
+		
+	// Currently supported targets: QEMU, ODROID, PX4
+	public String HWTarget ;
+	public String outputDirectory;
 	
 	// Connection instances - drives number of semaphores
 	// (one function per thread implementation, pass in thread instance id)
@@ -106,6 +110,34 @@ public class Model {
   }
 
 
+
+  /**
+   * @return the hWTarget
+   */
+  public String getHWTarget() {
+    return HWTarget;
+  }
+
+  /**
+   * @param hWTarget the hWTarget to set
+   */
+  public void setHWTarget(String hWTarget) {
+    HWTarget = hWTarget;
+  }
+
+  /**
+   * @return the outputDirectory
+   */
+  public String getOutputDirectory() {
+    return outputDirectory;
+  }
+
+  /**
+   * @param outputDirectory the outputDirectory to set
+   */
+  public void setOutputDirectory(String outputDirectory) {
+    this.outputDirectory = outputDirectory;
+  }
 
   public Set<String> getSourceFiles()  {
 	  return this.sourceFiles; 

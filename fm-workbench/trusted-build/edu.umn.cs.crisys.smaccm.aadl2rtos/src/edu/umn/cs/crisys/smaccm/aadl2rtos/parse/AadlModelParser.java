@@ -112,6 +112,23 @@ public class AadlModelParser {
 		Connection.init();
 		ThreadInstance.init();
 		
+		// find the OS and target hardware
+		String OS = ThreadUtil.getOS(sysimpl);
+	  if ("echronos".equalsIgnoreCase(OS)) {
+	    model.setOsTarget(Model.OSTarget.eChronos);
+	  } else if ("camkes".equalsIgnoreCase(OS)) {
+	    model.setOsTarget(Model.OSTarget.CAmkES);
+	  } else {
+	    this.logger.error("OS target: [" + OS + "] not recognized by aadl2rtos");
+	    throw new Aadl2RtosException("Parse failure on OS target property ");
+	  }
+
+	  String HW = ThreadUtil.getHW(sysimpl); 
+	  model.setHWTarget(HW);
+	  
+	  // note: may be null, and that's o.k.
+	  model.setOutputDirectory(Util.getStringValueOpt(sysimpl, ThreadUtil.SMACCM_SYS_OUTPUT_DIRECTORY));
+	  
 		threadTypeImplList = new ArrayList<ThreadTypeImpl>();
 		threadInstanceList = new ArrayList<ComponentInstance>();
 		threadInstanceMap = new HashMap<ComponentInstance, ThreadInstance>();
@@ -208,15 +225,16 @@ public class AadlModelParser {
       if (entrypoints == null) { 
          throw new Aadl2RtosException("missing entrypoints");
       }
-      String file = Util.getStringValueOpt(port,ThreadUtil.SOURCE_TEXT);
+      List<String> files = Util.getSourceTextListOpt(port,ThreadUtil.SOURCE_TEXT);
       String signal_name = Util.getStringValue(port, ThreadUtil.SMACCM_SYS_SIGNAL_NAME);
       String flih_handler = Util.getStringValue(port, ThreadUtil.ISR_HANDLER);
       ArrayList<ExternalHandler> ehl = new ArrayList<ExternalHandler>();
       for (String s: entrypoints) {
-          ExternalHandler eh = new ExternalHandler(s, file);
+          ExternalHandler eh = new ExternalHandler(s);
           ehl.add(eh);
       }
       IRQDispatcher disp = new IRQDispatcher(ti, ehl, signal_name, flih_handler);
+      disp.setImplementationFileList(files);
       ti.addDispatcher(disp);
     } catch (Exception e) {
       logger.error("ISR port: " + port.getName() + " is missing one of {Compute_Entrypoint, SMACCM_SYS::Signal_Name, SMACCM_SYS::First_Level_Interrupt_Handler}.");
@@ -233,14 +251,15 @@ public class AadlModelParser {
     }
     
     List<String> entrypoints = ThreadUtil.getComputeEntrypointList(port);
-    String file = Util.getStringValueOpt(port,ThreadUtil.SOURCE_TEXT);
     if (entrypoints != null) {
       ArrayList<ExternalHandler> ehl = new ArrayList<ExternalHandler>();
       for (String s: entrypoints) {
-          ExternalHandler eh = new ExternalHandler(s, file);
+          ExternalHandler eh = new ExternalHandler(s);
           ehl.add(eh);
       }
       InputEventDispatcher disp = new InputEventDispatcher(ti, ehl, iep);
+      List<String> files = Util.getSourceTextListOpt(port,ThreadUtil.SOURCE_TEXT);
+      disp.setImplementationFileList(files);
       iep.setDispatcher(disp);
       ti.addDispatcher(disp);
     } else {
@@ -310,7 +329,7 @@ public class AadlModelParser {
     String name = tti.getName().toLowerCase();
     int priority = ThreadUtil.getPriority(tti);
     int stackSize = ThreadUtil.getStackSizeInBytes(tti);
-    // List<String> fileNames = Util.getSourceTextListOpt(tti, ThreadUtil.SOURCE_TEXT);
+    List<String> fileNames = Util.getSourceTextListOpt(tti, ThreadUtil.SOURCE_TEXT);
     List<String> legacyMutexList;
     List<String> legacySemaphoreList;
     String generatedEntrypoint;
@@ -318,8 +337,10 @@ public class AadlModelParser {
       legacyMutexList = (ArrayList<String>) ThreadUtil.getLegacyMutexList(tti);
       legacySemaphoreList = (ArrayList<String>) ThreadUtil.getLegacySemaphoreList(tti);
       generatedEntrypoint = Util.getStringValue(tti, ThreadUtil.LEGACY_ENTRYPOINT);
-      return new LegacyThreadImplementation(model, name, priority, stackSize,  
+      LegacyThreadImplementation thread = new LegacyThreadImplementation(model, name, priority, stackSize,  
           legacyMutexList, legacySemaphoreList, generatedEntrypoint);
+      thread.setLegacyReferencedFiles(fileNames);
+      return thread;
     } catch (Exception e) {
       throw new Aadl2RtosException("Error: Legacy threads must have a SMACCM_SYS::Legacy_Entrypoint property defined");
     }
@@ -360,9 +381,11 @@ public class AadlModelParser {
         List<String> entrypointNameList = ThreadUtil.getComputeEntrypointList(tti); 
         List<ExternalHandler> handlerList = new ArrayList<ExternalHandler>();
         for (String entrypoint : entrypointNameList) {
-          handlerList.add(new ExternalHandler(entrypoint, null)); 
+          handlerList.add(new ExternalHandler(entrypoint)); 
         }
-        ti.addDispatcher(new PeriodicDispatcher(ti, handlerList, period));
+        Dispatcher d = new PeriodicDispatcher(ti, handlerList, period);
+        d.setImplementationFileList(Util.getSourceTextListOpt(tti, ThreadUtil.SOURCE_TEXT));
+        ti.addDispatcher(d);
       } catch (Exception e) {
         throw new Aadl2RtosException(
             "For thread " + tti.getFullName()
@@ -864,13 +887,10 @@ public class AadlModelParser {
     // Get dispatcher file names.
     for (ThreadImplementation i: this.getThreadImplementationMap().values()) {
       for (Dispatcher d: i.getDispatcherList()) {
-        for (ExternalHandler h: d.getExternalHandlerList()) {
-          if (h.getOptHandlerFileName() != null) {
-            this.model.sourceFiles.add(h.getOptHandlerFileName());
-          }
+        if (d.getImplementationFileList() != null) {
+          this.model.sourceFiles.addAll(d.getImplementationFileList());
         }
       }
-      //this.model.sourceFiles.addAll(i.getFileNames());
     }
     
     // create initializer handler, if it exists.
