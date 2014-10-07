@@ -444,7 +444,6 @@ public class AadlModelParser {
   private void constructDispatchLimits(ThreadTypeImpl tti, ThreadImplementation ti) {
     try {
       String sendsEventsTo = Util.getStringValue(tti, ThreadUtil.SMACCM_SYS_SENDS_EVENTS_TO);
-      System.out.println("Sends to value: " + sendsEventsTo);
       ANTLRInputStream input = new ANTLRInputStream(sendsEventsTo);
       TokenStream tokens = new CommonTokenStream( new SendsToLexer( input ) );
       SendsToParser parser = new SendsToParser(tokens); 

@@ -66,7 +66,7 @@ public class Aadl2RtosAction extends AadlAction {
 			return Status.CANCEL_STATUS;
 		}
 
-		IStatus execStatus = execute(null, (SystemImplementation) sel, monitor, null, logger); 
+		IStatus execStatus = execute(null, (SystemImplementation) sel, monitor, null, null, logger); 
 				
 		if (execStatus == Status.OK_STATUS) 
 			try {
@@ -79,7 +79,7 @@ public class Aadl2RtosAction extends AadlAction {
 		
 	}
 	
-	public IStatus execute(SystemInstance si, SystemImplementation sysimpl, IProgressMonitor monitor, File outputDir, Logger logger) {
+	public IStatus execute(SystemInstance si, SystemImplementation sysimpl, IProgressMonitor monitor, File aadlDir, File outputDir, Logger logger) {
 		log = logger;
 		log.info("This is the sysimpl name: "+ sysimpl.getName());
 		
@@ -110,7 +110,9 @@ public class Aadl2RtosAction extends AadlAction {
 
       // split on whether eChronos or CAmkES is the target.
       // Print out C skeletons
-			File aadlDir = Util.getDirectory(sysimpl);
+			if (aadlDir == null) {
+			  aadlDir = Util.getDirectory(sysimpl);
+			}
 			
 			if (outputDir == null) {
 			  if (model.getOutputDirectory() != null) {

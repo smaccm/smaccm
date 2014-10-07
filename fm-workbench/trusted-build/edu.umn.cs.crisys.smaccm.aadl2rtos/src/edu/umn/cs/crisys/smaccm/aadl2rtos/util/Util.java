@@ -11,6 +11,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IWorkspaceRoot;
@@ -272,6 +273,7 @@ public static String getCUintTypeForMaxValue(int maxValue) {
 	//   2. A directory titled: "aadl2rtos_resources" in the directory containing the 
 	//      .jar file
 	//   3. A directory titled: "aadl2rtos_resources" within the .jar file itself.
+	//      Note: if running from the command line, this is not available!
 	//
 	// the findConfigFileLocation attempts the first two locations; if it 
 	// 'hits', it returns the canonical path to the location of the file;
@@ -283,6 +285,7 @@ public static String getCUintTypeForMaxValue(int maxValue) {
 	
 	public static String findConfigFileLocation(String fileName) {
     String envAadlDirString = System.getenv("AADL2RTOS_CONFIG_DIR");
+    Map<String, String> myMap = System.getenv(); 
     File envAadlDir = null;
     try {
       if (envAadlDirString != null) {
@@ -296,14 +299,16 @@ public static String getCUintTypeForMaxValue(int maxValue) {
       }
       
       PluginActivator pi = PluginActivator.getDefault(); 
-      URL url = createURLFromClass(pi.getClass());
-      File pluginDir = getFileFromURL(url);
-      if (pluginDir != null && pluginDir.exists()) {
-        File resourceDir = new File(pluginDir, aadl2rtos_resource);
-        if (resourceDir.exists()) {
-          File fileNameLoc = new File(resourceDir, fileName); 
-          if (fileNameLoc.exists()) {
-            return fileNameLoc.getCanonicalPath(); 
+      if (pi != null) {
+        URL url = createURLFromClass(pi.getClass());
+        File pluginDir = getFileFromURL(url);
+        if (pluginDir != null && pluginDir.exists()) {
+          File resourceDir = new File(pluginDir, aadl2rtos_resource);
+          if (resourceDir.exists()) {
+            File fileNameLoc = new File(resourceDir, fileName); 
+            if (fileNameLoc.exists()) {
+              return fileNameLoc.getCanonicalPath(); 
+            }
           }
         }
       }
