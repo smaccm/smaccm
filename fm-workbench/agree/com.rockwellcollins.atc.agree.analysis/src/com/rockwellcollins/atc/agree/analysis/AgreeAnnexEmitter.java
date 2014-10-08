@@ -434,7 +434,9 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         				for(SpecStatement spec :  ((AgreeContract) contract).getSpecs()){
         					if(spec instanceof LiftStatement){
         						subEmitter.doSwitch(spec);
-        					}
+        					}else if(spec instanceof LemmaStatement){
+                				subEmitter.doSwitch(spec);
+                			}
         				}
         			}
         		}

@@ -121,6 +121,28 @@ system implementation FCS.impl
     		                         FCC3.acts_fail,
     		                         FCC4.acts_fail);
     		                         
+        lemma "valids monotonically decreasing" : true ->
+          num_valids.THROTL <= pre(num_valids.THROTL) and
+          num_valids.THROTR <= pre(num_valids.THROTR) and
+          num_valids.ELLOB <= pre(num_valids.ELLOB) and
+          num_valids.ELLIB <= pre(num_valids.ELLIB) and
+          num_valids.ELROB <= pre(num_valids.ELROB) and
+          num_valids.ELRIB <= pre(num_valids.ELRIB) and
+          num_valids.AILL <= pre(num_valids.AILL) and
+          num_valids.AILR <= pre(num_valids.AILR) and
+          num_valids.RUDUP <= pre(num_valids.RUDUP) and
+          num_valids.RUDLO <= pre(num_valids.RUDLO) and
+          num_valids.SPLLOB <= pre(num_valids.SPLLOB) and
+          num_valids.SPLLIB <= pre(num_valids.SPLLIB) and
+          num_valids.SPLROB <= pre(num_valids.SPLROB) and
+          num_valids.SPLRIB <= pre(num_valids.SPLRIB) and
+          num_valids.FLAPLI <= pre(num_valids.FLAPLI) and
+          num_valids.FLAPLO <= pre(num_valids.FLAPLO) and
+          num_valids.FLAPRI <= pre(num_valids.FLAPRI) and
+          num_valids.GEAR <= pre(num_valids.GEAR) and
+          num_valids.BRAKE <= pre(num_valids.BRAKE) and
+          num_valids.STEER <= pre(num_valids.STEER);
+    		                         
     		                         
     	
     **};
