@@ -25,6 +25,8 @@ import com.rockwellcollins.atc.agree.agree.AgreeContract;
 import com.rockwellcollins.atc.agree.agree.AgreeContractSubclause;
 import com.rockwellcollins.atc.agree.agree.AgreePackage;
 import com.rockwellcollins.atc.agree.agree.Contract;
+import com.rockwellcollins.atc.agree.agree.EqStatement;
+import com.rockwellcollins.atc.agree.agree.LemmaStatement;
 import com.rockwellcollins.atc.agree.agree.LiftStatement;
 import com.rockwellcollins.atc.agree.agree.SpecStatement;
 
@@ -80,7 +82,7 @@ public class AgreeGenerator {
         	String category;
         	boolean foundSubAnnex = false;
             ComponentInstance subCompInst = compInst.findSubcomponentInstance(subComp);
-            ct = AgreeEmitterUtilities.getInstanceType(subCompInst);
+            ComponentType subCt = AgreeEmitterUtilities.getInstanceType(subCompInst);
             ComponentImplementation subCompImpl = AgreeEmitterUtilities.getInstanceImplementation(subCompInst);
             category = subCompInst.getQualifiedName();
             AgreeAnnexEmitter subEmitter = new AgreeAnnexEmitter(
@@ -97,6 +99,10 @@ public class AgreeGenerator {
                     		for(SpecStatement spec :  ((AgreeContract) contract).getSpecs()){
                     			if(spec instanceof LiftStatement){
                     				subEmitter.doSwitch(spec);
+                    			}else if(spec instanceof LemmaStatement){//TODO might not be compositional
+                    				subEmitter.doSwitch(spec);
+                    			}else if(spec instanceof EqStatement){//TODO might not be compositional
+                    				subEmitter.doSwitch(spec);
                     			}
                     		}
                     	}
@@ -106,7 +112,7 @@ public class AgreeGenerator {
                 }
             }
 
-            for (AnnexSubclause annex : AnnexUtil.getAllAnnexSubclauses(ct, AgreePackage.eINSTANCE.getAgreeContractSubclause())) {
+            for (AnnexSubclause annex : AnnexUtil.getAllAnnexSubclauses(subCt, AgreePackage.eINSTANCE.getAgreeContractSubclause())) {
                 if (annex instanceof AgreeContractSubclause) {
                     subEmitter.doSwitch(annex);
                     foundSubAnnex = foundAnnex = true;

@@ -434,7 +434,9 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         				for(SpecStatement spec :  ((AgreeContract) contract).getSpecs()){
         					if(spec instanceof LiftStatement){
         						subEmitter.doSwitch(spec);
-        					}else if(spec instanceof LemmaStatement){
+        					}else if(spec instanceof LemmaStatement){//TODO might not be compositional
+                				subEmitter.doSwitch(spec);
+                			}else if(spec instanceof EqStatement){//TODO might not be compositional
                 				subEmitter.doSwitch(spec);
                 			}
         				}
