@@ -19,7 +19,7 @@ thread sender
 	properties 
 	    Dispatch_Protocol => Periodic;
 	    Period => 100 ms;
-		Source_Text => ("periodic_ping.c");
+		Source_Text => ("user_code/user_sender.c");
 	    SMACCM_SYS::Compute_Entrypoint_Source_Text => ("periodic_ping");
 	    Priority => 10;
 	    Stack_Size => 256 bytes;
@@ -33,6 +33,7 @@ thread receiver
 	features
 		Input1: in event data port Base_Types::Unsigned_32 {
 	      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("ping_received");
+		  Source_Text => ("user_code/user_receiver.c");
 		}; 
 		
 	properties 
@@ -60,6 +61,10 @@ end test1;
 system implementation test1.impl
 	subcomponents
 		tl: process proc.Impl;
+	properties
+		SMACCM_SYS::OS => CAmkES; 
+		SMACCM_SYS::HW => QEMU;
+		
 end test1.impl;
 
 end test1;
