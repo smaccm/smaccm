@@ -21,6 +21,7 @@ public class LegacyThreadImplementation extends ThreadImplementationBase {
 	// Data port lists
 	private List<String> legacyMutexList = new ArrayList<String>();
   private List<String> legacySemaphoreList = new ArrayList<String>();
+  private List<String> legacyReferencedFiles = new ArrayList<String>(); 
 
   public LegacyThreadImplementation(Model model, String name, int priority, int stackSize,  
       List<String> legacyMutexList, List<String> legacySemaphoreList, String generatedEntrypoint) {
@@ -41,6 +42,20 @@ public class LegacyThreadImplementation extends ThreadImplementationBase {
 	public List<String> getLegacySemaphores() {
 	  return this.legacySemaphoreList;
 	}
+
+  /**
+   * @return the legacyReferencedFiles
+   */
+  public List<String> getLegacyReferencedFiles() {
+    return legacyReferencedFiles;
+  }
+
+  /**
+   * @param legacyReferencedFiles the legacyReferencedFiles to set
+   */
+  public void setLegacyReferencedFiles(List<String> legacyReferencedFiles) {
+    this.legacyReferencedFiles = legacyReferencedFiles;
+  }
 	  
 }
 

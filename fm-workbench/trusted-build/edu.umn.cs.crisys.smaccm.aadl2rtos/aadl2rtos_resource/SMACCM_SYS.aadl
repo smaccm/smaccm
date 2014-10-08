@@ -19,6 +19,9 @@ property set SMACCM_SYS is
 	-- For build output.
 	Output_Directory: aadlstring applies to (system implementation);
 	
+	OS : enumeration (eChronos, CAmkES) applies to (system implementation); 
+	HW : enumeration (PX4, ODROID, QEMU) applies to (system implementation); 
+	
 	-- For integrating with other code when creating the .prx file.
 	Is_Legacy: aadlboolean => false applies to (thread);
 	Legacy_Mutex_List: list of aadlstring applies to (thread, system implementation);
@@ -29,4 +32,6 @@ property set SMACCM_SYS is
 	External_IRQ_List: list of aadlstring applies to (system implementation);
 	Generate_Scheduler_Systick_IRQ: aadlboolean => true applies to (system implementation);
 	Language: aadlstring applies to (thread, system implementation);
+   
+
 end SMACCM_SYS;

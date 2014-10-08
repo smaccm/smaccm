@@ -14,9 +14,5 @@ public class ExternalHandlerNames {
   public String getHandlerName() {
     return eh.getHandlerName(); 
   }
-  
-  public String getHandlerFile() {
-    return eh.getOptHandlerFileName();
-  }
 }
 

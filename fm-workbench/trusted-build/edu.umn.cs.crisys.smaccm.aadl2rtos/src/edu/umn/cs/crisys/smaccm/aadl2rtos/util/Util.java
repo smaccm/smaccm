@@ -1,12 +1,22 @@
 package edu.umn.cs.crisys.smaccm.aadl2rtos.util;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintStream;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
@@ -20,11 +30,15 @@ import org.osate.aadl2.PropertyExpression;
 import org.osate.aadl2.StringLiteral;
 import org.osate.aadl2.impl.ClassifierValueImpl;
 import org.osate.aadl2.impl.ListValueImpl;
+import org.osate.aadl2.impl.PortImpl;
+import org.osate.aadl2.impl.ThreadTypeImpl;
+import org.osate.aadl2.instance.ConnectionInstanceEnd;
 import org.osate.aadl2.modelsupport.resources.OsateResourceUtil;
 import org.osate.xtext.aadl2.properties.util.EMFIndexRetrieval;
 import org.osate.xtext.aadl2.properties.util.PropertyUtils;
 
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosException;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.PluginActivator;
 
 public abstract class Util {
 
@@ -107,7 +121,22 @@ public abstract class Util {
 		return normalizeAadlName(n.getQualifiedName());
 	}
 
-    public static String getCUintTypeForMaxValue(int maxValue) {
+  public static String throwableToString(Throwable t) {
+    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    PrintStream ps = new PrintStream(baos);
+    t.printStackTrace(ps);
+    return baos.toString();
+}
+
+public static String toSafeString(Object e) {
+    try {
+        return e.toString();
+    } catch (Throwable t) {
+        return "Unable to print toString()";
+    }
+}
+
+public static String getCUintTypeForMaxValue(int maxValue) {
     	if (maxValue <= 256) 
     		return "c_uint8";
     	else if (maxValue <= 65536) {
@@ -118,6 +147,7 @@ public abstract class Util {
     		
     }
 	
+  
 	/*
 	 * getStringValue Fixes a bug in the PropertyUtils version...returns "" if
 	 * the string is not defined, so it is not possible to distinguish between
@@ -205,6 +235,14 @@ public abstract class Util {
 		}
 	}
 
+  public static PortImpl getPortImplFromConnectionInstanceEnd(ConnectionInstanceEnd ci) {
+    return (PortImpl) ci.getInstantiatedObjects().get(0);
+}
+
+  public static ThreadTypeImpl getThreadFromPortImpl(PortImpl pi) {
+      return (ThreadTypeImpl) pi.getContainingClassifier();
+  }
+
 	public static Double getPeriodInPicoSecondsOpt(NamedElement thread) {
 		// Temporary
 		PropertyExpression value = PropertyUtils.getSimplePropertyValue(thread, ThreadUtil.PERIOD);
@@ -227,6 +265,82 @@ public abstract class Util {
 		return file.getParent().getLocation().toFile();
 	}
 
+	/////////////////////////////////////////////////////////////////////
+	//
+	// Attempts to find aadl2rtos configuration files in one of three
+	// places (in order of preference):
+	//   1. A user-defined environment variable: $AADL2RTOS_CONFIG_DIR
+	//   2. A directory titled: "aadl2rtos_resources" in the directory containing the 
+	//      .jar file
+	//   3. A directory titled: "aadl2rtos_resources" within the .jar file itself.
+	//      Note: if running from the command line, this is not available!
+	//
+	// the findConfigFileLocation attempts the first two locations; if it 
+	// 'hits', it returns the canonical path to the location of the file;
+	// otherwise, it returns null.
+	// 
+  /////////////////////////////////////////////////////////////////////
+
+	public static final String aadl2rtos_resource = "aadl2rtos_resource";
+	
+	public static String findConfigFileLocation(String fileName) {
+    String envAadlDirString = System.getenv("AADL2RTOS_CONFIG_DIR");
+    Map<String, String> myMap = System.getenv(); 
+    File envAadlDir = null;
+    try {
+      if (envAadlDirString != null) {
+        envAadlDir = new File(envAadlDirString);
+        if (envAadlDir.exists()) {
+          File fileNameLoc = new File(envAadlDir, fileName);
+          if (fileNameLoc.exists()) {
+            return fileNameLoc.getCanonicalPath();
+          }
+        }
+      }
+      
+      PluginActivator pi = PluginActivator.getDefault(); 
+      if (pi != null) {
+        URL url = createURLFromClass(pi.getClass());
+        File pluginDir = getFileFromURL(url);
+        if (pluginDir != null && pluginDir.exists()) {
+          File resourceDir = new File(pluginDir, aadl2rtos_resource);
+          if (resourceDir.exists()) {
+            File fileNameLoc = new File(resourceDir, fileName); 
+            if (fileNameLoc.exists()) {
+              return fileNameLoc.getCanonicalPath(); 
+            }
+          }
+        }
+      }
+    } catch (URISyntaxException e) { }
+    catch (IOException e) { }
+    
+    return null; 
+	}
+	
+	public static InputStream findConfigFile(String fileName) {
+	  InputStream ins = null;
+	  
+	  try {
+  	  String fileLocation = findConfigFileLocation(fileName);
+  	  if (fileLocation != null) {
+  	    File f = new File(fileLocation); 
+  	    ins = new FileInputStream(f);
+  	  }
+  	  else {
+  	    ins = FileLocator.openStream(
+  	        PluginActivator.getDefault().getBundle(), new Path(aadl2rtos_resource + "/" + fileName), false);
+  	  }
+	  } catch (FileNotFoundException e) {
+	    throw new Aadl2RtosException("Unexpected error in findConfigFile: FileNotFoundException after file known to exist! Error: " + e);
+	  } catch (IOException e) {
+	    // o.k., not able to find the file using the plugin activator.  Nothing more to do here
+	    // but return null.
+	  }
+	  return ins;
+	}
+
+	
 	public static final String DARPA_License = "Copyright (c) 2013, Rockwell Collins and the University of Minnesota.\n"
 			+ "Developed with the sponsorship of the Defense Advanced Research Projects Agency (DARPA).\n"
 			+ "\n"
@@ -246,5 +360,13 @@ public abstract class Util {
 			+ "FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, \n"
 			+ "ARISING FROM, OUT OF OR IN CONNECTION WITH THE DATA OR THE USE OR OTHER DEALINGS IN THE DATA. \n";
 	
+  public static URL createURLFromClass(Class cl) {
+    return cl.getProtectionDomain().getCodeSource().getLocation();
+  }
+  
+  public static File getFileFromURL(URL url) throws URISyntaxException {
+    return new File(url.toURI());
+  }
+  
 	
 }

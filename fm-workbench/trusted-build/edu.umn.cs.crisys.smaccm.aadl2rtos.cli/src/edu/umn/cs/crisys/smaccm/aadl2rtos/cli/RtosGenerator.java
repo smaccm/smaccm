@@ -44,10 +44,13 @@ public class RtosGenerator implements Generator {
 			throws AnalysisException, GenerationException,
 			TransformationException {
 		// TODO Auto-generated method stub
-	
+
+	  // it appears that the last include dir is the directory containing the system instance.
+	  File rootDir = new File(System.getProperty("user.dir"));
+	  String str = config.getTargetId();
 		(new Aadl2RtosAction()).execute(systemInstance, 
 				systemInstance.getSystemImplementation(), monitor, 
-				config.getRamsesOutputDir(), new ConsoleLogger(Logger.INFO));
+				rootDir, config.getRamsesOutputDir(), new ConsoleLogger(Logger.INFO));
 	}
 
 	@Override

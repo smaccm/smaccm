@@ -16,6 +16,7 @@ import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.Type;
 public abstract class Dispatcher {
 
 	private List<ExternalHandler> externalHandlerList;
+	private List<String> implementationFileList;
 	private ThreadImplementation owner;
 
 	 // Outgoing dispatch contract (limits on dispatch)
@@ -42,13 +43,33 @@ public abstract class Dispatcher {
     this.dispatchLimits = dispatchLimits;
   }
 	
-	public abstract String getName(); 
+	/**
+   * @return the implementationFileList
+   */
+  public List<String> getImplementationFileList() {
+    return implementationFileList;
+  }
+
+  /**
+   * @param implementationFileList the implementationFileList to set
+   */
+  public void setImplementationFileList(List<String> implementationFileList) {
+    if (implementationFileList != null) {
+      this.implementationFileList = implementationFileList;
+    } else {
+      this.implementationFileList = new ArrayList<String>(); 
+    }
+  }
+
+  public abstract String getName(); 
 	
 	public abstract Type getType(); 
 	
 	public List<ExternalHandler> getExternalHandlerList() {
 	  return this.externalHandlerList;
 	}
+	
+	
 	
 	public ThreadImplementation getOwner() {
 	  return this.owner;

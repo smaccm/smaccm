@@ -3,6 +3,8 @@ package edu.umn.cs.crisys.smaccm.aadl2rtos;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.PrintStream;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.Collection;
 
 import org.osate.aadl2.NamedElement;
@@ -139,4 +141,12 @@ public class Util {
             + "FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, \n"
             + "ARISING FROM, OUT OF OR IN CONNECTION WITH THE DATA OR THE USE OR OTHER DEALINGS IN THE DATA. \n";
 
+    public static URL createURLFromClass(Class cl) {
+      return cl.getProtectionDomain().getCodeSource().getLocation();
+    }
+    
+    public static File getFileFromURL(URL url) throws URISyntaxException {
+      return new File(url.toURI());
+    }
+    
 }
