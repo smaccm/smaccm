@@ -29,7 +29,7 @@ thread sender
 	    Dispatch_Protocol => Periodic;
 	    SMACCM_SYS::Thread_Type => Active ;
 	    Period => 1000 ms;
-		Source_Text => ("periodic_ping.c");
+		Source_Text => ("user_code/user_sender.c");
 	    SMACCM_SYS::Compute_Entrypoint_Source_Text => ("periodic_ping");
 	    Priority => 10;
 	    Stack_Size => 256 bytes;
@@ -50,7 +50,7 @@ thread receiver
 	    Dispatch_Protocol => Periodic;
 	    SMACCM_SYS::Thread_Type => Active ;
 	    Period => 1000 ms;
-		Source_Text => ("periodic_ping.c");
+		Source_Text => ("user_code/user_receiver.c");
 	    SMACCM_SYS::Compute_Entrypoint_Source_Text => ("periodic_ping");
 	    Priority => 8;
 	    Stack_Size => 256 bytes;
@@ -76,6 +76,9 @@ end test8;
 system implementation test8.impl
 	subcomponents
 		tl: process proc.Impl;
+	properties
+		SMACCM_SYS::OS => CAmkES;
+		SMACCM_SYS::HW => QEMU;
 end test8.impl;
 
 end test8;
