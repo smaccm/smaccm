@@ -119,17 +119,25 @@ ruleNamedElement returns [EObject current=null]
 
     |
     { 
-        newCompositeNode(grammarAccess.getNamedElementAccess().getRecordDefExprParserRuleCall_4()); 
+        newCompositeNode(grammarAccess.getNamedElementAccess().getNodeDefExprParserRuleCall_4()); 
     }
-    this_RecordDefExpr_4=ruleRecordDefExpr
+    this_NodeDefExpr_4=ruleNodeDefExpr
     { 
-        $current = $this_RecordDefExpr_4.current; 
+        $current = $this_NodeDefExpr_4.current; 
+        afterParserOrEnumRuleCall();
+    }
+
+    |
+    { 
+        newCompositeNode(grammarAccess.getNamedElementAccess().getRecordDefExprParserRuleCall_5()); 
+    }
+    this_RecordDefExpr_5=ruleRecordDefExpr
+    { 
+        $current = $this_RecordDefExpr_5.current; 
         afterParserOrEnumRuleCall();
     }
 )
 ;
-
-
 
 
 

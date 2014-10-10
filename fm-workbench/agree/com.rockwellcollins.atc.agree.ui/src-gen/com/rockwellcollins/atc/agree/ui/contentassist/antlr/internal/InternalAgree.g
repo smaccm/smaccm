@@ -91,8 +91,6 @@ finally {
 
 
 
-
-
 // Entry rule entryRuleAgreeLibrary
 entryRuleAgreeLibrary 
 :
@@ -2044,9 +2042,15 @@ rule__NamedElement__Alternatives
 )
 
     |(
-{ before(grammarAccess.getNamedElementAccess().getRecordDefExprParserRuleCall_4()); }
+{ before(grammarAccess.getNamedElementAccess().getNodeDefExprParserRuleCall_4()); }
+	ruleNodeDefExpr
+{ after(grammarAccess.getNamedElementAccess().getNodeDefExprParserRuleCall_4()); }
+)
+
+    |(
+{ before(grammarAccess.getNamedElementAccess().getRecordDefExprParserRuleCall_5()); }
 	ruleRecordDefExpr
-{ after(grammarAccess.getNamedElementAccess().getRecordDefExprParserRuleCall_4()); }
+{ after(grammarAccess.getNamedElementAccess().getRecordDefExprParserRuleCall_5()); }
 )
 
 ;

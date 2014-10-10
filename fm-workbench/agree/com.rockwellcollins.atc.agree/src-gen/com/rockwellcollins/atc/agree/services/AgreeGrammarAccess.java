@@ -25,13 +25,14 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cFnDefExprParserRuleCall_1 = (RuleCall)cAlternatives.eContents().get(1);
 		private final RuleCall cPropertyStatementParserRuleCall_2 = (RuleCall)cAlternatives.eContents().get(2);
 		private final RuleCall cConstStatementParserRuleCall_3 = (RuleCall)cAlternatives.eContents().get(3);
-		private final RuleCall cRecordDefExprParserRuleCall_4 = (RuleCall)cAlternatives.eContents().get(4);
+		private final RuleCall cNodeDefExprParserRuleCall_4 = (RuleCall)cAlternatives.eContents().get(4);
+		private final RuleCall cRecordDefExprParserRuleCall_5 = (RuleCall)cAlternatives.eContents().get(5);
 		
 		//NamedElement returns aadl2::NamedElement:
-		//	Arg | FnDefExpr | PropertyStatement | ConstStatement | RecordDefExpr;
+		//	Arg | FnDefExpr | PropertyStatement | ConstStatement | NodeDefExpr | RecordDefExpr;
 		public ParserRule getRule() { return rule; }
 
-		//Arg | FnDefExpr | PropertyStatement | ConstStatement | RecordDefExpr
+		//Arg | FnDefExpr | PropertyStatement | ConstStatement | NodeDefExpr | RecordDefExpr
 		public Alternatives getAlternatives() { return cAlternatives; }
 
 		//Arg
@@ -46,8 +47,11 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		//ConstStatement
 		public RuleCall getConstStatementParserRuleCall_3() { return cConstStatementParserRuleCall_3; }
 
+		//NodeDefExpr
+		public RuleCall getNodeDefExprParserRuleCall_4() { return cNodeDefExprParserRuleCall_4; }
+
 		//RecordDefExpr
-		public RuleCall getRecordDefExprParserRuleCall_4() { return cRecordDefExprParserRuleCall_4; }
+		public RuleCall getRecordDefExprParserRuleCall_5() { return cRecordDefExprParserRuleCall_5; }
 	}
 
 	public class ElementElements extends AbstractParserRuleElementFinder {
@@ -90,22 +94,12 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		public RuleCall getEqStatementParserRuleCall_6() { return cEqStatementParserRuleCall_6; }
 	}
 
-	public class NamespaceElements extends AbstractParserRuleElementFinder {
-		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "Namespace");
-		private final RuleCall cNodeDefExprParserRuleCall = (RuleCall)rule.eContents().get(1);
-		
-		//Namespace returns aadl2::Namespace:
-		//	NodeDefExpr;
-		public ParserRule getRule() { return rule; }
-
-		//NodeDefExpr
-		public RuleCall getNodeDefExprParserRuleCall() { return cNodeDefExprParserRuleCall; }
-	}
-
 	public class AnnexLibraryElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "AnnexLibrary");
 		private final RuleCall cAgreeLibraryParserRuleCall = (RuleCall)rule.eContents().get(1);
 		
+		////Namespace returns aadl2::Namespace:
+		////	NodeDefExpr;
 		//AnnexLibrary returns aadl2::AnnexLibrary:
 		//	AgreeLibrary;
 		public ParserRule getRule() { return rule; }
@@ -1557,6 +1551,7 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		private final Keyword cLessThanSignGreaterThanSignKeyword_5 = (Keyword)cAlternatives.eContents().get(5);
 		private final Keyword cExclamationMarkEqualsSignKeyword_6 = (Keyword)cAlternatives.eContents().get(6);
 		
+		////todo remove `<>'
 		//RelateOp:
 		//	"<" | "<=" | ">" | ">=" | "=" | "<>" | "!=";
 		public ParserRule getRule() { return rule; }
@@ -1707,6 +1702,7 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		private final Assignment cRightAssignment_1_1 = (Assignment)cGroup_1.eContents().get(1);
 		private final RuleCall cRightUnaryExprParserRuleCall_1_1_0 = (RuleCall)cRightAssignment_1_1.eContents().get(0);
 		
+		////todo remove div
 		//MultDivExpr returns Expr:
 		//	UnaryExpr (=> ({BinaryExpr.left=current} op=("*" | "/" | "div" | "mod")) right=UnaryExpr)*;
 		public ParserRule getRule() { return rule; }
@@ -2551,7 +2547,6 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 	
 	private NamedElementElements pNamedElement;
 	private ElementElements pElement;
-	private NamespaceElements pNamespace;
 	private AnnexLibraryElements pAnnexLibrary;
 	private AnnexSubclauseElements pAnnexSubclause;
 	private AgreeLibraryElements pAgreeLibrary;
@@ -2631,7 +2626,7 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 
 	
 	//NamedElement returns aadl2::NamedElement:
-	//	Arg | FnDefExpr | PropertyStatement | ConstStatement | RecordDefExpr;
+	//	Arg | FnDefExpr | PropertyStatement | ConstStatement | NodeDefExpr | RecordDefExpr;
 	public NamedElementElements getNamedElementAccess() {
 		return (pNamedElement != null) ? pNamedElement : (pNamedElement = new NamedElementElements());
 	}
@@ -2650,16 +2645,8 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		return getElementAccess().getRule();
 	}
 
-	//Namespace returns aadl2::Namespace:
-	//	NodeDefExpr;
-	public NamespaceElements getNamespaceAccess() {
-		return (pNamespace != null) ? pNamespace : (pNamespace = new NamespaceElements());
-	}
-	
-	public ParserRule getNamespaceRule() {
-		return getNamespaceAccess().getRule();
-	}
-
+	////Namespace returns aadl2::Namespace:
+	////	NodeDefExpr;
 	//AnnexLibrary returns aadl2::AnnexLibrary:
 	//	AgreeLibrary;
 	public AnnexLibraryElements getAnnexLibraryAccess() {
@@ -2926,6 +2913,7 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		return getAndExprAccess().getRule();
 	}
 
+	////todo remove `<>'
 	//RelateOp:
 	//	"<" | "<=" | ">" | ">=" | "=" | "<>" | "!=";
 	public RelateOpElements getRelateOpAccess() {
@@ -2956,6 +2944,7 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		return getAddSubExprAccess().getRule();
 	}
 
+	////todo remove div
 	//MultDivExpr returns Expr:
 	//	UnaryExpr (=> ({BinaryExpr.left=current} op=("*" | "/" | "div" | "mod")) right=UnaryExpr)*;
 	public MultDivExprElements getMultDivExprAccess() {

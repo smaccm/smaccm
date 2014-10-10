@@ -10,6 +10,7 @@ NamedElement returns aadl2::NamedElement:
 	| FnDefExpr
 	| PropertyStatement
 	| ConstStatement
+	| NodeDefExpr
 	| RecordDefExpr;
 
 Element returns aadl2::Element:
@@ -21,8 +22,8 @@ Element returns aadl2::Element:
 	| NodeBodyExpr
 	| EqStatement;
 
-Namespace returns aadl2::Namespace:
-	NodeDefExpr;
+//Namespace returns aadl2::Namespace:
+//	NodeDefExpr;
 
 AnnexLibrary returns aadl2::AnnexLibrary:
 	AgreeLibrary;

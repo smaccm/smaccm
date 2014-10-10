@@ -145,7 +145,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
         NestedDotID nestId = event.getId();
         NamedElement namedEl = getFinalNestId(nestId);
         if(!(namedEl instanceof EventDataPort)){
-        	error(event, "Arguement of event expression must be an event data port");
+        	error(event, "Argument of event expression must be an event data port");
         }
     }
     

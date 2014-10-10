@@ -618,7 +618,7 @@ public class AgreeSemanticSequencer extends PropertiesSemanticSequencer {
 				if(context == grammarAccess.getCallDefRule() ||
 				   context == grammarAccess.getElementRule() ||
 				   context == grammarAccess.getNamedCallDefRule() ||
-				   context == grammarAccess.getNamespaceRule() ||
+				   context == grammarAccess.getNamedElementRule() ||
 				   context == grammarAccess.getNodeDefExprRule() ||
 				   context == grammarAccess.getSpecStatementRule()) {
 					sequence_NodeDefExpr(context, (NodeDefExpr) semanticObject); 

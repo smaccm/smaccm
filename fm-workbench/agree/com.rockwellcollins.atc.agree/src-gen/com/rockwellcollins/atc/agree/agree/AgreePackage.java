@@ -706,7 +706,7 @@ public interface AgreePackage extends EPackage
    * @generated
    * @ordered
    */
-  int NODE_DEF_EXPR__OWNED_ELEMENT = Aadl2Package.NAMESPACE__OWNED_ELEMENT;
+  int NODE_DEF_EXPR__OWNED_ELEMENT = Aadl2Package.NAMED_ELEMENT__OWNED_ELEMENT;
 
   /**
    * The feature id for the '<em><b>Owned Comment</b></em>' containment reference list.
@@ -715,7 +715,7 @@ public interface AgreePackage extends EPackage
    * @generated
    * @ordered
    */
-  int NODE_DEF_EXPR__OWNED_COMMENT = Aadl2Package.NAMESPACE__OWNED_COMMENT;
+  int NODE_DEF_EXPR__OWNED_COMMENT = Aadl2Package.NAMED_ELEMENT__OWNED_COMMENT;
 
   /**
    * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -724,7 +724,7 @@ public interface AgreePackage extends EPackage
    * @generated
    * @ordered
    */
-  int NODE_DEF_EXPR__NAME = Aadl2Package.NAMESPACE__NAME;
+  int NODE_DEF_EXPR__NAME = Aadl2Package.NAMED_ELEMENT__NAME;
 
   /**
    * The feature id for the '<em><b>Qualified Name</b></em>' attribute.
@@ -733,7 +733,7 @@ public interface AgreePackage extends EPackage
    * @generated
    * @ordered
    */
-  int NODE_DEF_EXPR__QUALIFIED_NAME = Aadl2Package.NAMESPACE__QUALIFIED_NAME;
+  int NODE_DEF_EXPR__QUALIFIED_NAME = Aadl2Package.NAMED_ELEMENT__QUALIFIED_NAME;
 
   /**
    * The feature id for the '<em><b>Owned Property Association</b></em>' containment reference list.
@@ -742,25 +742,7 @@ public interface AgreePackage extends EPackage
    * @generated
    * @ordered
    */
-  int NODE_DEF_EXPR__OWNED_PROPERTY_ASSOCIATION = Aadl2Package.NAMESPACE__OWNED_PROPERTY_ASSOCIATION;
-
-  /**
-   * The feature id for the '<em><b>Owned Member</b></em>' reference list.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int NODE_DEF_EXPR__OWNED_MEMBER = Aadl2Package.NAMESPACE__OWNED_MEMBER;
-
-  /**
-   * The feature id for the '<em><b>Member</b></em>' reference list.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int NODE_DEF_EXPR__MEMBER = Aadl2Package.NAMESPACE__MEMBER;
+  int NODE_DEF_EXPR__OWNED_PROPERTY_ASSOCIATION = Aadl2Package.NAMED_ELEMENT__OWNED_PROPERTY_ASSOCIATION;
 
   /**
    * The feature id for the '<em><b>Args</b></em>' containment reference list.
@@ -769,7 +751,7 @@ public interface AgreePackage extends EPackage
    * @generated
    * @ordered
    */
-  int NODE_DEF_EXPR__ARGS = Aadl2Package.NAMESPACE_FEATURE_COUNT + 0;
+  int NODE_DEF_EXPR__ARGS = Aadl2Package.NAMED_ELEMENT_FEATURE_COUNT + 0;
 
   /**
    * The feature id for the '<em><b>Rets</b></em>' containment reference list.
@@ -778,7 +760,7 @@ public interface AgreePackage extends EPackage
    * @generated
    * @ordered
    */
-  int NODE_DEF_EXPR__RETS = Aadl2Package.NAMESPACE_FEATURE_COUNT + 1;
+  int NODE_DEF_EXPR__RETS = Aadl2Package.NAMED_ELEMENT_FEATURE_COUNT + 1;
 
   /**
    * The feature id for the '<em><b>Node Body</b></em>' containment reference.
@@ -787,7 +769,7 @@ public interface AgreePackage extends EPackage
    * @generated
    * @ordered
    */
-  int NODE_DEF_EXPR__NODE_BODY = Aadl2Package.NAMESPACE_FEATURE_COUNT + 2;
+  int NODE_DEF_EXPR__NODE_BODY = Aadl2Package.NAMED_ELEMENT_FEATURE_COUNT + 2;
 
   /**
    * The number of structural features of the '<em>Node Def Expr</em>' class.
@@ -796,7 +778,7 @@ public interface AgreePackage extends EPackage
    * @generated
    * @ordered
    */
-  int NODE_DEF_EXPR_FEATURE_COUNT = Aadl2Package.NAMESPACE_FEATURE_COUNT + 3;
+  int NODE_DEF_EXPR_FEATURE_COUNT = Aadl2Package.NAMED_ELEMENT_FEATURE_COUNT + 3;
 
   /**
    * The meta object id for the '{@link com.rockwellcollins.atc.agree.agree.impl.NodeBodyExprImpl <em>Node Body Expr</em>}' class.
