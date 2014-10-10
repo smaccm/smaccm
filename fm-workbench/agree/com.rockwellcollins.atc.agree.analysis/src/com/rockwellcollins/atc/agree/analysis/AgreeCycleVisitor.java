@@ -140,7 +140,7 @@ public class AgreeCycleVisitor implements jkind.lustre.visitors.ExprVisitor<Set<
 
 	@Override
 	public Set<String> visit(CastExpr e) {
-        throw new AgreeException("wtf mate? I didn't think we supported array typesin AGREE?");
+        return e.expr.accept(this);
 	}
 
 	@Override
