@@ -1,0 +1,25 @@
+package Software
+public
+  with Data_Types;
+
+process gpio
+  features
+    gpio1base: in out data port Data_Types::exynos5_gpio.part1;
+    gpio2base: in out data port Data_Types::exynos5_gpio.part2;
+    irqcbase:  in out data port Data_Types::combiner_data.i;
+end gpio;
+
+process gyro
+end gyro;
+
+process i2c
+end i2c;
+
+process can
+  features
+    spi1_can: in out data port;
+    can_buf: in out data port;
+end can;
+
+
+end Software;

@@ -1,0 +1,46 @@
+package ODROID_XU
+public
+  with XU_DAUGHTER_BOARD;
+  
+system ODROID_XU
+  features
+    ide : feature group inverse of XU_DAUGHTER_BOARD::Odroid_IDE_Interface;
+    mpi : feature group inverse of XU_DAUGHTER_BOARD::Odroid_MIPI_Interface;
+end ODROID_XU;
+	
+system implementation ODROID_XU.Impl
+  subcomponents
+    cpu : processor Cortex_A15_Quad;
+    mem : memory DRAM;
+    
+  connections
+    mem_bus : bus access cpu.mem_bus <-> mem.bus_access;
+    
+end ODROID_XU.Impl;
+
+
+bus Memory_Bus
+end Memory_Bus;
+
+memory DRAM
+  features
+    bus_access: requires bus access Memory_Bus;
+    
+  properties
+    Memory_Protocol => read_write;
+    --Base_Address => 16#2000_0000#;
+    Memory_Size => 2 GByte;
+end DRAM;
+
+	
+processor Cortex_A15_Quad
+  features
+    mem_bus : provides bus access Memory_Bus;
+
+  properties
+    Clock_Period => 625ps;
+end Cortex_A15_Quad;
+	
+	
+	
+end ODROID_XU;
