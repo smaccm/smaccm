@@ -1,6 +1,8 @@
 package Software
 public
   with Data_Types;
+  with Base_Types;
+  with Data_Model;
 
 process gpio
   features
@@ -17,9 +19,50 @@ end i2c;
 
 process can
   features
-    spi1_can: in out data port;
-    can_buf: in out data port;
+    spi1_can: in out data port Data_Types::spi_dev_port.i; --these are actually pointers
+    can_buf: in out data port Data_Types::CAN_Data.i; --these are actually pointers
 end can;
+
+process can_bus
+  features
+    spi1_can: in out data port Data_Types::spi_dev_port.i; --these are actually pointers
+    can_buf: in out data port Data_Types::CAN_Data.i; --these are actually pointers
+end can_bus;
+
+process client
+--the client.camkes file contains data ports, but 
+--I do not see them referenced anywhere in the software
+end client;
+
+process mmc
+  features
+    mshc0_phy : in out data port Base_Types::Integer_32
+      {Data_Model::Number_Representation => Unsigned;};
+    mshc1_phy : in out data port Base_Types::Integer_32
+      {Data_Model::Number_Representation => Unsigned;};
+    mshc2_phy : in out data port Base_Types::Integer_32
+      {Data_Model::Number_Representation => Unsigned;};
+    mshc3_phy : in out data port Base_Types::Integer_32
+      {Data_Model::Number_Representation => Unsigned;};
+end mmc;
+
+process spi
+  features
+    spi1_reg : in out data port Data_Types::exynos_spi.i; --actually a pointer
+    spi1_client : in out data port Data_Types::spi_dev_port.i; --actually a pointer
+    spi1_can : in out data port Data_Types::spi_dev_port.i; --actually a pointer
+end spi;
+
+process timer
+  features
+    timerbase : in out data port Data_Types::pwm_timer.i; --actually a pointer
+end timer;
+
+process uart
+  features
+    uart0base : in out data port Data_Types::exynos_uart.i; --actually a pointer
+    client_buf : in out data port Base_Types::Integer_8; --actually a pointer (char *)
+end uart;
 
 
 end Software;

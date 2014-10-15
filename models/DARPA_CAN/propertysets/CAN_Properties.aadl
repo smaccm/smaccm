@@ -1,0 +1,3 @@
+property set CAN_Properties is
+  Volatile : aadlboolean applies to (data);
+end CAN_Properties;
