@@ -4,3 +4,4 @@ instances
 *.caz_diagram
 .settings
 *.sacm
+.svn
