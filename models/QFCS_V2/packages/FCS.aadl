@@ -110,6 +110,7 @@ system implementation FCS.impl
     annex agree {**
     	eq num_valids : DATA_TYPES::NumActuators.impl;
     	
+    	-- this is basically doing the work of the ccdl
     	assert FCC1.num_valid_acts = num_valids;
     	assert FCC2.num_valid_acts = num_valids;
     	assert FCC3.num_valid_acts = num_valids;
