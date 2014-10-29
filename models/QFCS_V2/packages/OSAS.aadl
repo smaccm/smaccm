@@ -74,7 +74,7 @@ system OSAS_Sys
 --      OSAS_S_190.req(acts_in, acts_out, act_gains);
     
 --    guarantee "OSAS-S-240" :
---      OSAS_S_240.req(act_gains, osas_failed);
+--      OSAS_S_240.req(act_gains, osas_failed); 
     
     guarantee "OSAS-S-250" : 
       OSAS_S_250.req(act_gains, act_claw_fails); 
