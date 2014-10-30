@@ -835,6 +835,7 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
     	}
     	typeStr = ((AadlPackage)container).getName() + "__" + typeStr;
     	typeStr = typeStr.replace(".", "__");
+    	typeStr = typeStr.replace("::", "____");
 
     	return typeStr;
     }
