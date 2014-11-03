@@ -1,0 +1,9 @@
+property set SEL4Types is
+  ConnType : enumeration 
+  (seL4HardwareMMIO, 
+  	seL4HardwareInterrupt, 
+  	seL4RPC, 
+  	seL4SharedData,
+  	seL4Asynch
+  ) applies to (connection);
+end SEL4Types; 
