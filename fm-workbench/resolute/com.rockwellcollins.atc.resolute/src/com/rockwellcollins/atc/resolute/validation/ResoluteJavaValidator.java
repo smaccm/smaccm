@@ -517,10 +517,20 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 			expectedTypes.add(BaseType.AADL);
 			expectedTypes.add(BaseType.PROPERTY);
 			break;
+			
+		case "has_member":
+			expectedTypes.add(BaseType.AADL);
+			expectedTypes.add(BaseType.STRING);
+			break;			
 
 		// Primary type: component
 		case "subcomponents":
 			expectedTypes.add(BaseType.COMPONENT);
+			break;
+			
+		case "is_of_type":
+			expectedTypes.add(BaseType.COMPONENT);
+			expectedTypes.add(BaseType.AADL);
 			break;
 
 		// Primary type: connection
@@ -857,6 +867,9 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 		case "is_event_port":
 			return BaseType.BOOL;
 
+		case "is_of_type":
+			return BaseType.BOOL;			
+			
 			// Primary type: range
 		case "upper_bound":
 		case "lower_bound":

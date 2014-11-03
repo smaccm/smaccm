@@ -56,6 +56,7 @@ import org.osate.aadl2.PropertyAssociation;
 import org.osate.aadl2.PropertyConstant;
 import org.osate.aadl2.PropertyExpression;
 import org.osate.aadl2.Subcomponent;
+import org.osate.aadl2.SystemType;
 import org.osate.aadl2.instance.ComponentInstance;
 import org.osate.aadl2.instance.SystemInstance;
 import org.osate.aadl2.modelsupport.util.AadlUtil;
@@ -193,7 +194,10 @@ public class AgreeEmitterUtilities {
 
     public static ComponentImplementation getInstanceImplementation(ComponentInstance compInst){
         if(compInst instanceof SystemInstance){
-            return ((SystemInstance)compInst).getSystemImplementation();
+        	ComponentImplementation ci;
+        	ci = ((SystemInstance) compInst).getComponentImplementation();
+        	return ci;
+//            return ((SystemInstance)compInst).getSystemImplementation();
         }
         try{
             return (ComponentImplementation)compInst.getComponentClassifier();
@@ -204,7 +208,10 @@ public class AgreeEmitterUtilities {
     
     public static ComponentType getInstanceType(ComponentInstance compInst){
         if(compInst instanceof SystemInstance){
-            return ((SystemInstance)compInst).getSystemImplementation().getType();
+//            return ((SystemInstance)compInst).getSystemImplementation().getType();
+        	ComponentType ct;
+        	ct = ((SystemInstance)compInst).getComponentImplementation().getType();
+        	return ct;
         }
         try{
             return ((ComponentImplementation)compInst.getComponentClassifier()).getType();

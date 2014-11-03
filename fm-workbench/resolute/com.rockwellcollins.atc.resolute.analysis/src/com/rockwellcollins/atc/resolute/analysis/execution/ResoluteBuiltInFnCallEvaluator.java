@@ -8,11 +8,14 @@ import java.util.Set;
 import org.eclipse.emf.ecore.EObject;
 import org.osate.aadl2.AbstractNamedValue;
 import org.osate.aadl2.BooleanLiteral;
+import org.osate.aadl2.Classifier;
 import org.osate.aadl2.ComponentClassifier;
 import org.osate.aadl2.ComponentImplementation;
+import org.osate.aadl2.ComponentType;
 import org.osate.aadl2.DataPort;
 import org.osate.aadl2.EnumerationLiteral;
 import org.osate.aadl2.EventPort;
+import org.osate.aadl2.Feature;
 import org.osate.aadl2.IntegerLiteral;
 import org.osate.aadl2.ListValue;
 import org.osate.aadl2.NamedElement;
@@ -21,6 +24,7 @@ import org.osate.aadl2.Property;
 import org.osate.aadl2.PropertyExpression;
 import org.osate.aadl2.RealLiteral;
 import org.osate.aadl2.StringLiteral;
+import org.osate.aadl2.Subcomponent;
 import org.osate.aadl2.instance.ComponentInstance;
 import org.osate.aadl2.instance.ConnectionInstance;
 import org.osate.aadl2.instance.ConnectionReference;
@@ -29,6 +33,7 @@ import org.osate.aadl2.instance.InstanceReferenceValue;
 import org.osate.aadl2.instance.SystemInstance;
 import org.osate.aadl2.properties.PropertyDoesNotApplyToHolderException;
 import org.osate.aadl2.properties.PropertyNotPresentException;
+import org.osate.aadl2.util.OsateDebug;
 import org.osate.xtext.aadl2.errormodel.errorModel.ErrorBehaviorTransition;
 import org.osate.xtext.aadl2.errormodel.errorModel.ErrorPropagation;
 import org.osate.xtext.aadl2.errormodel.errorModel.ErrorTypes;
@@ -114,6 +119,83 @@ public class ResoluteBuiltInFnCallEvaluator {
 			NamedElement type = builtinType(element);
 			return bool(type != null);
 		}
+		
+		case "is_of_type": {
+			NamedElement element = args.get(0).getNamedElement();
+			NamedElement type = args.get(1).getNamedElement();
+			if (element instanceof ComponentInstance)
+			{
+				ComponentInstance ci;
+				ComponentType ct;
+				Classifier cl;
+				ci = (ComponentInstance) element;
+				
+				if ((ci == null) || (ci.getSubcomponent() == null))
+				{
+					return bool (false);
+				}
+				
+				ct = ci.getSubcomponent().getComponentType();
+//				cl = (Classifier) type;
+//				return bool ((ct == cl ) || (ct.isDescendentOf(cl)));
+
+				while (ct != null)
+				{
+					if (ct == type)
+					{
+						return bool(true);
+					}
+					ct = ct.getExtended();
+				}
+				 
+			}
+				return bool (false);
+	
+//			}
+//			
+//			return bool(false);
+		}
+		
+		case "has_member": {
+			boolean hasMember;
+			String       memberName;
+			NamedElement element;
+			
+			hasMember 	= false; 
+			element 	= args.get(0).getNamedElement();
+			memberName 	= args.get(1).getString();
+			
+			if (element instanceof ComponentInstance)
+			{
+				element = ((ComponentInstance) element).getComponentClassifier();
+			}
+			
+			if (element instanceof ComponentClassifier)
+			{
+				ComponentClassifier cc = (ComponentClassifier) element;
+				for (Feature f : cc.getAllFeatures())
+				{
+					if (f.getName().equalsIgnoreCase(memberName))
+					{
+						hasMember = true;
+					}
+				}
+			}
+			
+			if (element instanceof ComponentImplementation)
+			{
+				ComponentImplementation ci = (ComponentImplementation) element;
+				for (Subcomponent s : ci.getAllSubcomponents())
+				{
+					if (s.getName().equalsIgnoreCase(memberName))
+					{
+						hasMember = true;
+					}
+				}
+			}
+			
+			return bool(hasMember);
+		}
 
 		case "features": {
 			NamedElement e = args.get(0).getNamedElement();
@@ -156,7 +238,8 @@ public class ResoluteBuiltInFnCallEvaluator {
 		 */
 		case "subcomponents": {
 			ComponentInstance ci = (ComponentInstance) args.get(0).getNamedElement();
-			return createSetValue(ci.getComponentInstances());
+			SetValue sv = createSetValue(ci.getComponentInstances());
+			return sv;
 		}
 
 		/*

@@ -10981,51 +10981,32 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleContainmentPath"
-    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4026:1: ruleContainmentPath returns [EObject current=null] : ( () ( (lv_containmentPathElement_1_0= ruleContainmentPathElement ) ) (otherlv_2= '.' ( (lv_containmentPathElement_3_0= ruleContainmentPathElement ) ) )* ) ;
+    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4026:1: ruleContainmentPath returns [EObject current=null] : ( (lv_path_0_0= ruleContainmentPathElement ) ) ;
     public final EObject ruleContainmentPath() throws RecognitionException {
         EObject current = null;
 
-        Token otherlv_2=null;
-        EObject lv_containmentPathElement_1_0 = null;
-
-        EObject lv_containmentPathElement_3_0 = null;
+        EObject lv_path_0_0 = null;
 
 
          enterRule(); 
             
         try {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4029:28: ( ( () ( (lv_containmentPathElement_1_0= ruleContainmentPathElement ) ) (otherlv_2= '.' ( (lv_containmentPathElement_3_0= ruleContainmentPathElement ) ) )* ) )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4030:1: ( () ( (lv_containmentPathElement_1_0= ruleContainmentPathElement ) ) (otherlv_2= '.' ( (lv_containmentPathElement_3_0= ruleContainmentPathElement ) ) )* )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4029:28: ( ( (lv_path_0_0= ruleContainmentPathElement ) ) )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4030:1: ( (lv_path_0_0= ruleContainmentPathElement ) )
             {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4030:1: ( () ( (lv_containmentPathElement_1_0= ruleContainmentPathElement ) ) (otherlv_2= '.' ( (lv_containmentPathElement_3_0= ruleContainmentPathElement ) ) )* )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4030:2: () ( (lv_containmentPathElement_1_0= ruleContainmentPathElement ) ) (otherlv_2= '.' ( (lv_containmentPathElement_3_0= ruleContainmentPathElement ) ) )*
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4030:1: ( (lv_path_0_0= ruleContainmentPathElement ) )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4031:1: (lv_path_0_0= ruleContainmentPathElement )
             {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4030:2: ()
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4031:5: 
-            {
-            if ( state.backtracking==0 ) {
-
-                      current = forceCreateModelElement(
-                          grammarAccess.getContainmentPathAccess().getContainedNamedElementAction_0(),
-                          current);
-                  
-            }
-
-            }
-
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4036:2: ( (lv_containmentPathElement_1_0= ruleContainmentPathElement ) )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4037:1: (lv_containmentPathElement_1_0= ruleContainmentPathElement )
-            {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4037:1: (lv_containmentPathElement_1_0= ruleContainmentPathElement )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4038:3: lv_containmentPathElement_1_0= ruleContainmentPathElement
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4031:1: (lv_path_0_0= ruleContainmentPathElement )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4032:3: lv_path_0_0= ruleContainmentPathElement
             {
             if ( state.backtracking==0 ) {
                
-              	        newCompositeNode(grammarAccess.getContainmentPathAccess().getContainmentPathElementContainmentPathElementParserRuleCall_1_0()); 
+              	        newCompositeNode(grammarAccess.getContainmentPathAccess().getPathContainmentPathElementParserRuleCall_0()); 
               	    
             }
-            pushFollow(FOLLOW_ruleContainmentPathElement_in_ruleContainmentPath8995);
-            lv_containmentPathElement_1_0=ruleContainmentPathElement();
+            pushFollow(FOLLOW_ruleContainmentPathElement_in_ruleContainmentPath8985);
+            lv_path_0_0=ruleContainmentPathElement();
 
             state._fsp--;
             if (state.failed) return current;
@@ -11034,84 +11015,16 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
               	        if (current==null) {
               	            current = createModelElementForParent(grammarAccess.getContainmentPathRule());
               	        }
-                     		add(
+                     		set(
                      			current, 
-                     			"containmentPathElement",
-                      		lv_containmentPathElement_1_0, 
+                     			"path",
+                      		lv_path_0_0, 
                       		"ContainmentPathElement");
               	        afterParserOrEnumRuleCall();
               	    
             }
 
             }
-
-
-            }
-
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4054:2: (otherlv_2= '.' ( (lv_containmentPathElement_3_0= ruleContainmentPathElement ) ) )*
-            loop58:
-            do {
-                int alt58=2;
-                int LA58_0 = input.LA(1);
-
-                if ( (LA58_0==75) ) {
-                    alt58=1;
-                }
-
-
-                switch (alt58) {
-            	case 1 :
-            	    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4054:4: otherlv_2= '.' ( (lv_containmentPathElement_3_0= ruleContainmentPathElement ) )
-            	    {
-            	    otherlv_2=(Token)match(input,75,FOLLOW_75_in_ruleContainmentPath9008); if (state.failed) return current;
-            	    if ( state.backtracking==0 ) {
-
-            	          	newLeafNode(otherlv_2, grammarAccess.getContainmentPathAccess().getFullStopKeyword_2_0());
-            	          
-            	    }
-            	    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4058:1: ( (lv_containmentPathElement_3_0= ruleContainmentPathElement ) )
-            	    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4059:1: (lv_containmentPathElement_3_0= ruleContainmentPathElement )
-            	    {
-            	    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4059:1: (lv_containmentPathElement_3_0= ruleContainmentPathElement )
-            	    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4060:3: lv_containmentPathElement_3_0= ruleContainmentPathElement
-            	    {
-            	    if ( state.backtracking==0 ) {
-            	       
-            	      	        newCompositeNode(grammarAccess.getContainmentPathAccess().getContainmentPathElementContainmentPathElementParserRuleCall_2_1_0()); 
-            	      	    
-            	    }
-            	    pushFollow(FOLLOW_ruleContainmentPathElement_in_ruleContainmentPath9029);
-            	    lv_containmentPathElement_3_0=ruleContainmentPathElement();
-
-            	    state._fsp--;
-            	    if (state.failed) return current;
-            	    if ( state.backtracking==0 ) {
-
-            	      	        if (current==null) {
-            	      	            current = createModelElementForParent(grammarAccess.getContainmentPathRule());
-            	      	        }
-            	             		add(
-            	             			current, 
-            	             			"containmentPathElement",
-            	              		lv_containmentPathElement_3_0, 
-            	              		"ContainmentPathElement");
-            	      	        afterParserOrEnumRuleCall();
-            	      	    
-            	    }
-
-            	    }
-
-
-            	    }
-
-
-            	    }
-            	    break;
-
-            	default :
-            	    break loop58;
-                }
-            } while (true);
 
 
             }
@@ -11136,7 +11049,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRuleOptionalModalPropertyValue"
-    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4086:1: entryRuleOptionalModalPropertyValue returns [EObject current=null] : iv_ruleOptionalModalPropertyValue= ruleOptionalModalPropertyValue EOF ;
+    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4058:1: entryRuleOptionalModalPropertyValue returns [EObject current=null] : iv_ruleOptionalModalPropertyValue= ruleOptionalModalPropertyValue EOF ;
     public final EObject entryRuleOptionalModalPropertyValue() throws RecognitionException {
         EObject current = null;
 
@@ -11144,13 +11057,13 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4087:2: (iv_ruleOptionalModalPropertyValue= ruleOptionalModalPropertyValue EOF )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4088:2: iv_ruleOptionalModalPropertyValue= ruleOptionalModalPropertyValue EOF
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4059:2: (iv_ruleOptionalModalPropertyValue= ruleOptionalModalPropertyValue EOF )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4060:2: iv_ruleOptionalModalPropertyValue= ruleOptionalModalPropertyValue EOF
             {
             if ( state.backtracking==0 ) {
                newCompositeNode(grammarAccess.getOptionalModalPropertyValueRule()); 
             }
-            pushFollow(FOLLOW_ruleOptionalModalPropertyValue_in_entryRuleOptionalModalPropertyValue9069);
+            pushFollow(FOLLOW_ruleOptionalModalPropertyValue_in_entryRuleOptionalModalPropertyValue9022);
             iv_ruleOptionalModalPropertyValue=ruleOptionalModalPropertyValue();
 
             state._fsp--;
@@ -11158,7 +11071,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
             if ( state.backtracking==0 ) {
                current =iv_ruleOptionalModalPropertyValue; 
             }
-            match(input,EOF,FOLLOW_EOF_in_entryRuleOptionalModalPropertyValue9079); if (state.failed) return current;
+            match(input,EOF,FOLLOW_EOF_in_entryRuleOptionalModalPropertyValue9032); if (state.failed) return current;
 
             }
 
@@ -11176,7 +11089,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleOptionalModalPropertyValue"
-    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4095:1: ruleOptionalModalPropertyValue returns [EObject current=null] : ( ( (lv_ownedValue_0_0= rulePropertyExpression ) ) (otherlv_1= 'in' otherlv_2= 'modes' otherlv_3= '(' ( (otherlv_4= RULE_ID ) ) (otherlv_5= ',' ( (otherlv_6= RULE_ID ) ) )* otherlv_7= ')' )? ) ;
+    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4067:1: ruleOptionalModalPropertyValue returns [EObject current=null] : ( ( (lv_ownedValue_0_0= rulePropertyExpression ) ) (otherlv_1= 'in' otherlv_2= 'modes' otherlv_3= '(' ( (otherlv_4= RULE_ID ) ) (otherlv_5= ',' ( (otherlv_6= RULE_ID ) ) )* otherlv_7= ')' )? ) ;
     public final EObject ruleOptionalModalPropertyValue() throws RecognitionException {
         EObject current = null;
 
@@ -11193,24 +11106,24 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
          enterRule(); 
             
         try {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4098:28: ( ( ( (lv_ownedValue_0_0= rulePropertyExpression ) ) (otherlv_1= 'in' otherlv_2= 'modes' otherlv_3= '(' ( (otherlv_4= RULE_ID ) ) (otherlv_5= ',' ( (otherlv_6= RULE_ID ) ) )* otherlv_7= ')' )? ) )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4099:1: ( ( (lv_ownedValue_0_0= rulePropertyExpression ) ) (otherlv_1= 'in' otherlv_2= 'modes' otherlv_3= '(' ( (otherlv_4= RULE_ID ) ) (otherlv_5= ',' ( (otherlv_6= RULE_ID ) ) )* otherlv_7= ')' )? )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4070:28: ( ( ( (lv_ownedValue_0_0= rulePropertyExpression ) ) (otherlv_1= 'in' otherlv_2= 'modes' otherlv_3= '(' ( (otherlv_4= RULE_ID ) ) (otherlv_5= ',' ( (otherlv_6= RULE_ID ) ) )* otherlv_7= ')' )? ) )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4071:1: ( ( (lv_ownedValue_0_0= rulePropertyExpression ) ) (otherlv_1= 'in' otherlv_2= 'modes' otherlv_3= '(' ( (otherlv_4= RULE_ID ) ) (otherlv_5= ',' ( (otherlv_6= RULE_ID ) ) )* otherlv_7= ')' )? )
             {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4099:1: ( ( (lv_ownedValue_0_0= rulePropertyExpression ) ) (otherlv_1= 'in' otherlv_2= 'modes' otherlv_3= '(' ( (otherlv_4= RULE_ID ) ) (otherlv_5= ',' ( (otherlv_6= RULE_ID ) ) )* otherlv_7= ')' )? )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4099:2: ( (lv_ownedValue_0_0= rulePropertyExpression ) ) (otherlv_1= 'in' otherlv_2= 'modes' otherlv_3= '(' ( (otherlv_4= RULE_ID ) ) (otherlv_5= ',' ( (otherlv_6= RULE_ID ) ) )* otherlv_7= ')' )?
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4071:1: ( ( (lv_ownedValue_0_0= rulePropertyExpression ) ) (otherlv_1= 'in' otherlv_2= 'modes' otherlv_3= '(' ( (otherlv_4= RULE_ID ) ) (otherlv_5= ',' ( (otherlv_6= RULE_ID ) ) )* otherlv_7= ')' )? )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4071:2: ( (lv_ownedValue_0_0= rulePropertyExpression ) ) (otherlv_1= 'in' otherlv_2= 'modes' otherlv_3= '(' ( (otherlv_4= RULE_ID ) ) (otherlv_5= ',' ( (otherlv_6= RULE_ID ) ) )* otherlv_7= ')' )?
             {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4099:2: ( (lv_ownedValue_0_0= rulePropertyExpression ) )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4100:1: (lv_ownedValue_0_0= rulePropertyExpression )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4071:2: ( (lv_ownedValue_0_0= rulePropertyExpression ) )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4072:1: (lv_ownedValue_0_0= rulePropertyExpression )
             {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4100:1: (lv_ownedValue_0_0= rulePropertyExpression )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4101:3: lv_ownedValue_0_0= rulePropertyExpression
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4072:1: (lv_ownedValue_0_0= rulePropertyExpression )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4073:3: lv_ownedValue_0_0= rulePropertyExpression
             {
             if ( state.backtracking==0 ) {
                
               	        newCompositeNode(grammarAccess.getOptionalModalPropertyValueAccess().getOwnedValuePropertyExpressionParserRuleCall_0_0()); 
               	    
             }
-            pushFollow(FOLLOW_rulePropertyExpression_in_ruleOptionalModalPropertyValue9125);
+            pushFollow(FOLLOW_rulePropertyExpression_in_ruleOptionalModalPropertyValue9078);
             lv_ownedValue_0_0=rulePropertyExpression();
 
             state._fsp--;
@@ -11234,44 +11147,44 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
             }
 
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4117:2: (otherlv_1= 'in' otherlv_2= 'modes' otherlv_3= '(' ( (otherlv_4= RULE_ID ) ) (otherlv_5= ',' ( (otherlv_6= RULE_ID ) ) )* otherlv_7= ')' )?
-            int alt60=2;
-            int LA60_0 = input.LA(1);
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4089:2: (otherlv_1= 'in' otherlv_2= 'modes' otherlv_3= '(' ( (otherlv_4= RULE_ID ) ) (otherlv_5= ',' ( (otherlv_6= RULE_ID ) ) )* otherlv_7= ')' )?
+            int alt59=2;
+            int LA59_0 = input.LA(1);
 
-            if ( (LA60_0==86) ) {
-                int LA60_1 = input.LA(2);
+            if ( (LA59_0==86) ) {
+                int LA59_1 = input.LA(2);
 
-                if ( (LA60_1==88) ) {
-                    alt60=1;
+                if ( (LA59_1==88) ) {
+                    alt59=1;
                 }
             }
-            switch (alt60) {
+            switch (alt59) {
                 case 1 :
-                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4117:4: otherlv_1= 'in' otherlv_2= 'modes' otherlv_3= '(' ( (otherlv_4= RULE_ID ) ) (otherlv_5= ',' ( (otherlv_6= RULE_ID ) ) )* otherlv_7= ')'
+                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4089:4: otherlv_1= 'in' otherlv_2= 'modes' otherlv_3= '(' ( (otherlv_4= RULE_ID ) ) (otherlv_5= ',' ( (otherlv_6= RULE_ID ) ) )* otherlv_7= ')'
                     {
-                    otherlv_1=(Token)match(input,86,FOLLOW_86_in_ruleOptionalModalPropertyValue9138); if (state.failed) return current;
+                    otherlv_1=(Token)match(input,86,FOLLOW_86_in_ruleOptionalModalPropertyValue9091); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                           	newLeafNode(otherlv_1, grammarAccess.getOptionalModalPropertyValueAccess().getInKeyword_1_0());
                           
                     }
-                    otherlv_2=(Token)match(input,88,FOLLOW_88_in_ruleOptionalModalPropertyValue9150); if (state.failed) return current;
+                    otherlv_2=(Token)match(input,88,FOLLOW_88_in_ruleOptionalModalPropertyValue9103); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                           	newLeafNode(otherlv_2, grammarAccess.getOptionalModalPropertyValueAccess().getModesKeyword_1_1());
                           
                     }
-                    otherlv_3=(Token)match(input,34,FOLLOW_34_in_ruleOptionalModalPropertyValue9162); if (state.failed) return current;
+                    otherlv_3=(Token)match(input,34,FOLLOW_34_in_ruleOptionalModalPropertyValue9115); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                           	newLeafNode(otherlv_3, grammarAccess.getOptionalModalPropertyValueAccess().getLeftParenthesisKeyword_1_2());
                           
                     }
-                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4129:1: ( (otherlv_4= RULE_ID ) )
-                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4130:1: (otherlv_4= RULE_ID )
+                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4101:1: ( (otherlv_4= RULE_ID ) )
+                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4102:1: (otherlv_4= RULE_ID )
                     {
-                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4130:1: (otherlv_4= RULE_ID )
-                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4131:3: otherlv_4= RULE_ID
+                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4102:1: (otherlv_4= RULE_ID )
+                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4103:3: otherlv_4= RULE_ID
                     {
                     if ( state.backtracking==0 ) {
 
@@ -11280,7 +11193,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
                       	        }
                               
                     }
-                    otherlv_4=(Token)match(input,RULE_ID,FOLLOW_RULE_ID_in_ruleOptionalModalPropertyValue9182); if (state.failed) return current;
+                    otherlv_4=(Token)match(input,RULE_ID,FOLLOW_RULE_ID_in_ruleOptionalModalPropertyValue9135); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                       		newLeafNode(otherlv_4, grammarAccess.getOptionalModalPropertyValueAccess().getInModeModeCrossReference_1_3_0()); 
@@ -11292,32 +11205,32 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
                     }
 
-                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4142:2: (otherlv_5= ',' ( (otherlv_6= RULE_ID ) ) )*
-                    loop59:
+                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4114:2: (otherlv_5= ',' ( (otherlv_6= RULE_ID ) ) )*
+                    loop58:
                     do {
-                        int alt59=2;
-                        int LA59_0 = input.LA(1);
+                        int alt58=2;
+                        int LA58_0 = input.LA(1);
 
-                        if ( (LA59_0==28) ) {
-                            alt59=1;
+                        if ( (LA58_0==28) ) {
+                            alt58=1;
                         }
 
 
-                        switch (alt59) {
+                        switch (alt58) {
                     	case 1 :
-                    	    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4142:4: otherlv_5= ',' ( (otherlv_6= RULE_ID ) )
+                    	    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4114:4: otherlv_5= ',' ( (otherlv_6= RULE_ID ) )
                     	    {
-                    	    otherlv_5=(Token)match(input,28,FOLLOW_28_in_ruleOptionalModalPropertyValue9195); if (state.failed) return current;
+                    	    otherlv_5=(Token)match(input,28,FOLLOW_28_in_ruleOptionalModalPropertyValue9148); if (state.failed) return current;
                     	    if ( state.backtracking==0 ) {
 
                     	          	newLeafNode(otherlv_5, grammarAccess.getOptionalModalPropertyValueAccess().getCommaKeyword_1_4_0());
                     	          
                     	    }
-                    	    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4146:1: ( (otherlv_6= RULE_ID ) )
-                    	    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4147:1: (otherlv_6= RULE_ID )
+                    	    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4118:1: ( (otherlv_6= RULE_ID ) )
+                    	    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4119:1: (otherlv_6= RULE_ID )
                     	    {
-                    	    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4147:1: (otherlv_6= RULE_ID )
-                    	    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4148:3: otherlv_6= RULE_ID
+                    	    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4119:1: (otherlv_6= RULE_ID )
+                    	    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4120:3: otherlv_6= RULE_ID
                     	    {
                     	    if ( state.backtracking==0 ) {
 
@@ -11326,7 +11239,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
                     	      	        }
                     	              
                     	    }
-                    	    otherlv_6=(Token)match(input,RULE_ID,FOLLOW_RULE_ID_in_ruleOptionalModalPropertyValue9215); if (state.failed) return current;
+                    	    otherlv_6=(Token)match(input,RULE_ID,FOLLOW_RULE_ID_in_ruleOptionalModalPropertyValue9168); if (state.failed) return current;
                     	    if ( state.backtracking==0 ) {
 
                     	      		newLeafNode(otherlv_6, grammarAccess.getOptionalModalPropertyValueAccess().getInModeModeCrossReference_1_4_1_0()); 
@@ -11343,11 +11256,11 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
                     	    break;
 
                     	default :
-                    	    break loop59;
+                    	    break loop58;
                         }
                     } while (true);
 
-                    otherlv_7=(Token)match(input,35,FOLLOW_35_in_ruleOptionalModalPropertyValue9229); if (state.failed) return current;
+                    otherlv_7=(Token)match(input,35,FOLLOW_35_in_ruleOptionalModalPropertyValue9182); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                           	newLeafNode(otherlv_7, grammarAccess.getOptionalModalPropertyValueAccess().getRightParenthesisKeyword_1_5());
@@ -11382,7 +11295,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRulePropertyValue"
-    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4171:1: entryRulePropertyValue returns [EObject current=null] : iv_rulePropertyValue= rulePropertyValue EOF ;
+    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4143:1: entryRulePropertyValue returns [EObject current=null] : iv_rulePropertyValue= rulePropertyValue EOF ;
     public final EObject entryRulePropertyValue() throws RecognitionException {
         EObject current = null;
 
@@ -11390,13 +11303,13 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4172:2: (iv_rulePropertyValue= rulePropertyValue EOF )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4173:2: iv_rulePropertyValue= rulePropertyValue EOF
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4144:2: (iv_rulePropertyValue= rulePropertyValue EOF )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4145:2: iv_rulePropertyValue= rulePropertyValue EOF
             {
             if ( state.backtracking==0 ) {
                newCompositeNode(grammarAccess.getPropertyValueRule()); 
             }
-            pushFollow(FOLLOW_rulePropertyValue_in_entryRulePropertyValue9267);
+            pushFollow(FOLLOW_rulePropertyValue_in_entryRulePropertyValue9220);
             iv_rulePropertyValue=rulePropertyValue();
 
             state._fsp--;
@@ -11404,7 +11317,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
             if ( state.backtracking==0 ) {
                current =iv_rulePropertyValue; 
             }
-            match(input,EOF,FOLLOW_EOF_in_entryRulePropertyValue9277); if (state.failed) return current;
+            match(input,EOF,FOLLOW_EOF_in_entryRulePropertyValue9230); if (state.failed) return current;
 
             }
 
@@ -11422,7 +11335,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "rulePropertyValue"
-    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4180:1: rulePropertyValue returns [EObject current=null] : ( (lv_ownedValue_0_0= rulePropertyExpression ) ) ;
+    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4152:1: rulePropertyValue returns [EObject current=null] : ( (lv_ownedValue_0_0= rulePropertyExpression ) ) ;
     public final EObject rulePropertyValue() throws RecognitionException {
         EObject current = null;
 
@@ -11432,21 +11345,21 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
          enterRule(); 
             
         try {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4183:28: ( ( (lv_ownedValue_0_0= rulePropertyExpression ) ) )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4184:1: ( (lv_ownedValue_0_0= rulePropertyExpression ) )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4155:28: ( ( (lv_ownedValue_0_0= rulePropertyExpression ) ) )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4156:1: ( (lv_ownedValue_0_0= rulePropertyExpression ) )
             {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4184:1: ( (lv_ownedValue_0_0= rulePropertyExpression ) )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4185:1: (lv_ownedValue_0_0= rulePropertyExpression )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4156:1: ( (lv_ownedValue_0_0= rulePropertyExpression ) )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4157:1: (lv_ownedValue_0_0= rulePropertyExpression )
             {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4185:1: (lv_ownedValue_0_0= rulePropertyExpression )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4186:3: lv_ownedValue_0_0= rulePropertyExpression
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4157:1: (lv_ownedValue_0_0= rulePropertyExpression )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4158:3: lv_ownedValue_0_0= rulePropertyExpression
             {
             if ( state.backtracking==0 ) {
                
               	        newCompositeNode(grammarAccess.getPropertyValueAccess().getOwnedValuePropertyExpressionParserRuleCall_0()); 
               	    
             }
-            pushFollow(FOLLOW_rulePropertyExpression_in_rulePropertyValue9322);
+            pushFollow(FOLLOW_rulePropertyExpression_in_rulePropertyValue9275);
             lv_ownedValue_0_0=rulePropertyExpression();
 
             state._fsp--;
@@ -11490,7 +11403,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRulePropertyExpression"
-    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4210:1: entryRulePropertyExpression returns [EObject current=null] : iv_rulePropertyExpression= rulePropertyExpression EOF ;
+    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4182:1: entryRulePropertyExpression returns [EObject current=null] : iv_rulePropertyExpression= rulePropertyExpression EOF ;
     public final EObject entryRulePropertyExpression() throws RecognitionException {
         EObject current = null;
 
@@ -11498,13 +11411,13 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4211:2: (iv_rulePropertyExpression= rulePropertyExpression EOF )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4212:2: iv_rulePropertyExpression= rulePropertyExpression EOF
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4183:2: (iv_rulePropertyExpression= rulePropertyExpression EOF )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4184:2: iv_rulePropertyExpression= rulePropertyExpression EOF
             {
             if ( state.backtracking==0 ) {
                newCompositeNode(grammarAccess.getPropertyExpressionRule()); 
             }
-            pushFollow(FOLLOW_rulePropertyExpression_in_entryRulePropertyExpression9357);
+            pushFollow(FOLLOW_rulePropertyExpression_in_entryRulePropertyExpression9310);
             iv_rulePropertyExpression=rulePropertyExpression();
 
             state._fsp--;
@@ -11512,7 +11425,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
             if ( state.backtracking==0 ) {
                current =iv_rulePropertyExpression; 
             }
-            match(input,EOF,FOLLOW_EOF_in_entryRulePropertyExpression9367); if (state.failed) return current;
+            match(input,EOF,FOLLOW_EOF_in_entryRulePropertyExpression9320); if (state.failed) return current;
 
             }
 
@@ -11530,7 +11443,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "rulePropertyExpression"
-    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4219:1: rulePropertyExpression returns [EObject current=null] : (this_RecordTerm_0= ruleRecordTerm | this_ReferenceTerm_1= ruleReferenceTerm | this_ComponentClassifierTerm_2= ruleComponentClassifierTerm | this_ComputedTerm_3= ruleComputedTerm | this_StringTerm_4= ruleStringTerm | this_NumericRangeTerm_5= ruleNumericRangeTerm | this_RealTerm_6= ruleRealTerm | this_IntegerTerm_7= ruleIntegerTerm | this_ListTerm_8= ruleListTerm | this_BooleanLiteral_9= ruleBooleanLiteral | this_LiteralorReferenceTerm_10= ruleLiteralorReferenceTerm ) ;
+    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4191:1: rulePropertyExpression returns [EObject current=null] : (this_RecordTerm_0= ruleRecordTerm | this_ReferenceTerm_1= ruleReferenceTerm | this_ComponentClassifierTerm_2= ruleComponentClassifierTerm | this_ComputedTerm_3= ruleComputedTerm | this_StringTerm_4= ruleStringTerm | this_NumericRangeTerm_5= ruleNumericRangeTerm | this_RealTerm_6= ruleRealTerm | this_IntegerTerm_7= ruleIntegerTerm | this_ListTerm_8= ruleListTerm | this_BooleanLiteral_9= ruleBooleanLiteral | this_LiteralorReferenceTerm_10= ruleLiteralorReferenceTerm ) ;
     public final EObject rulePropertyExpression() throws RecognitionException {
         EObject current = null;
 
@@ -11560,22 +11473,22 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
          enterRule(); 
             
         try {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4222:28: ( (this_RecordTerm_0= ruleRecordTerm | this_ReferenceTerm_1= ruleReferenceTerm | this_ComponentClassifierTerm_2= ruleComponentClassifierTerm | this_ComputedTerm_3= ruleComputedTerm | this_StringTerm_4= ruleStringTerm | this_NumericRangeTerm_5= ruleNumericRangeTerm | this_RealTerm_6= ruleRealTerm | this_IntegerTerm_7= ruleIntegerTerm | this_ListTerm_8= ruleListTerm | this_BooleanLiteral_9= ruleBooleanLiteral | this_LiteralorReferenceTerm_10= ruleLiteralorReferenceTerm ) )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4223:1: (this_RecordTerm_0= ruleRecordTerm | this_ReferenceTerm_1= ruleReferenceTerm | this_ComponentClassifierTerm_2= ruleComponentClassifierTerm | this_ComputedTerm_3= ruleComputedTerm | this_StringTerm_4= ruleStringTerm | this_NumericRangeTerm_5= ruleNumericRangeTerm | this_RealTerm_6= ruleRealTerm | this_IntegerTerm_7= ruleIntegerTerm | this_ListTerm_8= ruleListTerm | this_BooleanLiteral_9= ruleBooleanLiteral | this_LiteralorReferenceTerm_10= ruleLiteralorReferenceTerm )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4194:28: ( (this_RecordTerm_0= ruleRecordTerm | this_ReferenceTerm_1= ruleReferenceTerm | this_ComponentClassifierTerm_2= ruleComponentClassifierTerm | this_ComputedTerm_3= ruleComputedTerm | this_StringTerm_4= ruleStringTerm | this_NumericRangeTerm_5= ruleNumericRangeTerm | this_RealTerm_6= ruleRealTerm | this_IntegerTerm_7= ruleIntegerTerm | this_ListTerm_8= ruleListTerm | this_BooleanLiteral_9= ruleBooleanLiteral | this_LiteralorReferenceTerm_10= ruleLiteralorReferenceTerm ) )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4195:1: (this_RecordTerm_0= ruleRecordTerm | this_ReferenceTerm_1= ruleReferenceTerm | this_ComponentClassifierTerm_2= ruleComponentClassifierTerm | this_ComputedTerm_3= ruleComputedTerm | this_StringTerm_4= ruleStringTerm | this_NumericRangeTerm_5= ruleNumericRangeTerm | this_RealTerm_6= ruleRealTerm | this_IntegerTerm_7= ruleIntegerTerm | this_ListTerm_8= ruleListTerm | this_BooleanLiteral_9= ruleBooleanLiteral | this_LiteralorReferenceTerm_10= ruleLiteralorReferenceTerm )
             {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4223:1: (this_RecordTerm_0= ruleRecordTerm | this_ReferenceTerm_1= ruleReferenceTerm | this_ComponentClassifierTerm_2= ruleComponentClassifierTerm | this_ComputedTerm_3= ruleComputedTerm | this_StringTerm_4= ruleStringTerm | this_NumericRangeTerm_5= ruleNumericRangeTerm | this_RealTerm_6= ruleRealTerm | this_IntegerTerm_7= ruleIntegerTerm | this_ListTerm_8= ruleListTerm | this_BooleanLiteral_9= ruleBooleanLiteral | this_LiteralorReferenceTerm_10= ruleLiteralorReferenceTerm )
-            int alt61=11;
-            alt61 = dfa61.predict(input);
-            switch (alt61) {
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4195:1: (this_RecordTerm_0= ruleRecordTerm | this_ReferenceTerm_1= ruleReferenceTerm | this_ComponentClassifierTerm_2= ruleComponentClassifierTerm | this_ComputedTerm_3= ruleComputedTerm | this_StringTerm_4= ruleStringTerm | this_NumericRangeTerm_5= ruleNumericRangeTerm | this_RealTerm_6= ruleRealTerm | this_IntegerTerm_7= ruleIntegerTerm | this_ListTerm_8= ruleListTerm | this_BooleanLiteral_9= ruleBooleanLiteral | this_LiteralorReferenceTerm_10= ruleLiteralorReferenceTerm )
+            int alt60=11;
+            alt60 = dfa60.predict(input);
+            switch (alt60) {
                 case 1 :
-                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4224:5: this_RecordTerm_0= ruleRecordTerm
+                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4196:5: this_RecordTerm_0= ruleRecordTerm
                     {
                     if ( state.backtracking==0 ) {
                        
                               newCompositeNode(grammarAccess.getPropertyExpressionAccess().getRecordTermParserRuleCall_0()); 
                           
                     }
-                    pushFollow(FOLLOW_ruleRecordTerm_in_rulePropertyExpression9414);
+                    pushFollow(FOLLOW_ruleRecordTerm_in_rulePropertyExpression9367);
                     this_RecordTerm_0=ruleRecordTerm();
 
                     state._fsp--;
@@ -11590,14 +11503,14 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 2 :
-                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4234:5: this_ReferenceTerm_1= ruleReferenceTerm
+                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4206:5: this_ReferenceTerm_1= ruleReferenceTerm
                     {
                     if ( state.backtracking==0 ) {
                        
                               newCompositeNode(grammarAccess.getPropertyExpressionAccess().getReferenceTermParserRuleCall_1()); 
                           
                     }
-                    pushFollow(FOLLOW_ruleReferenceTerm_in_rulePropertyExpression9441);
+                    pushFollow(FOLLOW_ruleReferenceTerm_in_rulePropertyExpression9394);
                     this_ReferenceTerm_1=ruleReferenceTerm();
 
                     state._fsp--;
@@ -11612,14 +11525,14 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 3 :
-                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4244:5: this_ComponentClassifierTerm_2= ruleComponentClassifierTerm
+                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4216:5: this_ComponentClassifierTerm_2= ruleComponentClassifierTerm
                     {
                     if ( state.backtracking==0 ) {
                        
                               newCompositeNode(grammarAccess.getPropertyExpressionAccess().getComponentClassifierTermParserRuleCall_2()); 
                           
                     }
-                    pushFollow(FOLLOW_ruleComponentClassifierTerm_in_rulePropertyExpression9468);
+                    pushFollow(FOLLOW_ruleComponentClassifierTerm_in_rulePropertyExpression9421);
                     this_ComponentClassifierTerm_2=ruleComponentClassifierTerm();
 
                     state._fsp--;
@@ -11634,14 +11547,14 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 4 :
-                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4254:5: this_ComputedTerm_3= ruleComputedTerm
+                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4226:5: this_ComputedTerm_3= ruleComputedTerm
                     {
                     if ( state.backtracking==0 ) {
                        
                               newCompositeNode(grammarAccess.getPropertyExpressionAccess().getComputedTermParserRuleCall_3()); 
                           
                     }
-                    pushFollow(FOLLOW_ruleComputedTerm_in_rulePropertyExpression9495);
+                    pushFollow(FOLLOW_ruleComputedTerm_in_rulePropertyExpression9448);
                     this_ComputedTerm_3=ruleComputedTerm();
 
                     state._fsp--;
@@ -11656,14 +11569,14 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 5 :
-                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4264:5: this_StringTerm_4= ruleStringTerm
+                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4236:5: this_StringTerm_4= ruleStringTerm
                     {
                     if ( state.backtracking==0 ) {
                        
                               newCompositeNode(grammarAccess.getPropertyExpressionAccess().getStringTermParserRuleCall_4()); 
                           
                     }
-                    pushFollow(FOLLOW_ruleStringTerm_in_rulePropertyExpression9522);
+                    pushFollow(FOLLOW_ruleStringTerm_in_rulePropertyExpression9475);
                     this_StringTerm_4=ruleStringTerm();
 
                     state._fsp--;
@@ -11678,14 +11591,14 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 6 :
-                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4274:5: this_NumericRangeTerm_5= ruleNumericRangeTerm
+                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4246:5: this_NumericRangeTerm_5= ruleNumericRangeTerm
                     {
                     if ( state.backtracking==0 ) {
                        
                               newCompositeNode(grammarAccess.getPropertyExpressionAccess().getNumericRangeTermParserRuleCall_5()); 
                           
                     }
-                    pushFollow(FOLLOW_ruleNumericRangeTerm_in_rulePropertyExpression9549);
+                    pushFollow(FOLLOW_ruleNumericRangeTerm_in_rulePropertyExpression9502);
                     this_NumericRangeTerm_5=ruleNumericRangeTerm();
 
                     state._fsp--;
@@ -11700,14 +11613,14 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 7 :
-                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4284:5: this_RealTerm_6= ruleRealTerm
+                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4256:5: this_RealTerm_6= ruleRealTerm
                     {
                     if ( state.backtracking==0 ) {
                        
                               newCompositeNode(grammarAccess.getPropertyExpressionAccess().getRealTermParserRuleCall_6()); 
                           
                     }
-                    pushFollow(FOLLOW_ruleRealTerm_in_rulePropertyExpression9576);
+                    pushFollow(FOLLOW_ruleRealTerm_in_rulePropertyExpression9529);
                     this_RealTerm_6=ruleRealTerm();
 
                     state._fsp--;
@@ -11722,14 +11635,14 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 8 :
-                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4294:5: this_IntegerTerm_7= ruleIntegerTerm
+                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4266:5: this_IntegerTerm_7= ruleIntegerTerm
                     {
                     if ( state.backtracking==0 ) {
                        
                               newCompositeNode(grammarAccess.getPropertyExpressionAccess().getIntegerTermParserRuleCall_7()); 
                           
                     }
-                    pushFollow(FOLLOW_ruleIntegerTerm_in_rulePropertyExpression9603);
+                    pushFollow(FOLLOW_ruleIntegerTerm_in_rulePropertyExpression9556);
                     this_IntegerTerm_7=ruleIntegerTerm();
 
                     state._fsp--;
@@ -11744,14 +11657,14 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 9 :
-                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4304:5: this_ListTerm_8= ruleListTerm
+                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4276:5: this_ListTerm_8= ruleListTerm
                     {
                     if ( state.backtracking==0 ) {
                        
                               newCompositeNode(grammarAccess.getPropertyExpressionAccess().getListTermParserRuleCall_8()); 
                           
                     }
-                    pushFollow(FOLLOW_ruleListTerm_in_rulePropertyExpression9630);
+                    pushFollow(FOLLOW_ruleListTerm_in_rulePropertyExpression9583);
                     this_ListTerm_8=ruleListTerm();
 
                     state._fsp--;
@@ -11766,14 +11679,14 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 10 :
-                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4314:5: this_BooleanLiteral_9= ruleBooleanLiteral
+                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4286:5: this_BooleanLiteral_9= ruleBooleanLiteral
                     {
                     if ( state.backtracking==0 ) {
                        
                               newCompositeNode(grammarAccess.getPropertyExpressionAccess().getBooleanLiteralParserRuleCall_9()); 
                           
                     }
-                    pushFollow(FOLLOW_ruleBooleanLiteral_in_rulePropertyExpression9657);
+                    pushFollow(FOLLOW_ruleBooleanLiteral_in_rulePropertyExpression9610);
                     this_BooleanLiteral_9=ruleBooleanLiteral();
 
                     state._fsp--;
@@ -11788,14 +11701,14 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 11 :
-                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4324:5: this_LiteralorReferenceTerm_10= ruleLiteralorReferenceTerm
+                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4296:5: this_LiteralorReferenceTerm_10= ruleLiteralorReferenceTerm
                     {
                     if ( state.backtracking==0 ) {
                        
                               newCompositeNode(grammarAccess.getPropertyExpressionAccess().getLiteralorReferenceTermParserRuleCall_10()); 
                           
                     }
-                    pushFollow(FOLLOW_ruleLiteralorReferenceTerm_in_rulePropertyExpression9684);
+                    pushFollow(FOLLOW_ruleLiteralorReferenceTerm_in_rulePropertyExpression9637);
                     this_LiteralorReferenceTerm_10=ruleLiteralorReferenceTerm();
 
                     state._fsp--;
@@ -11832,7 +11745,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRuleLiteralorReferenceTerm"
-    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4340:1: entryRuleLiteralorReferenceTerm returns [EObject current=null] : iv_ruleLiteralorReferenceTerm= ruleLiteralorReferenceTerm EOF ;
+    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4312:1: entryRuleLiteralorReferenceTerm returns [EObject current=null] : iv_ruleLiteralorReferenceTerm= ruleLiteralorReferenceTerm EOF ;
     public final EObject entryRuleLiteralorReferenceTerm() throws RecognitionException {
         EObject current = null;
 
@@ -11840,13 +11753,13 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4341:2: (iv_ruleLiteralorReferenceTerm= ruleLiteralorReferenceTerm EOF )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4342:2: iv_ruleLiteralorReferenceTerm= ruleLiteralorReferenceTerm EOF
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4313:2: (iv_ruleLiteralorReferenceTerm= ruleLiteralorReferenceTerm EOF )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4314:2: iv_ruleLiteralorReferenceTerm= ruleLiteralorReferenceTerm EOF
             {
             if ( state.backtracking==0 ) {
                newCompositeNode(grammarAccess.getLiteralorReferenceTermRule()); 
             }
-            pushFollow(FOLLOW_ruleLiteralorReferenceTerm_in_entryRuleLiteralorReferenceTerm9719);
+            pushFollow(FOLLOW_ruleLiteralorReferenceTerm_in_entryRuleLiteralorReferenceTerm9672);
             iv_ruleLiteralorReferenceTerm=ruleLiteralorReferenceTerm();
 
             state._fsp--;
@@ -11854,7 +11767,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
             if ( state.backtracking==0 ) {
                current =iv_ruleLiteralorReferenceTerm; 
             }
-            match(input,EOF,FOLLOW_EOF_in_entryRuleLiteralorReferenceTerm9729); if (state.failed) return current;
+            match(input,EOF,FOLLOW_EOF_in_entryRuleLiteralorReferenceTerm9682); if (state.failed) return current;
 
             }
 
@@ -11872,21 +11785,21 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleLiteralorReferenceTerm"
-    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4349:1: ruleLiteralorReferenceTerm returns [EObject current=null] : ( ( ruleQPREF ) ) ;
+    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4321:1: ruleLiteralorReferenceTerm returns [EObject current=null] : ( ( ruleQPREF ) ) ;
     public final EObject ruleLiteralorReferenceTerm() throws RecognitionException {
         EObject current = null;
 
          enterRule(); 
             
         try {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4352:28: ( ( ( ruleQPREF ) ) )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4353:1: ( ( ruleQPREF ) )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4324:28: ( ( ( ruleQPREF ) ) )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4325:1: ( ( ruleQPREF ) )
             {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4353:1: ( ( ruleQPREF ) )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4354:1: ( ruleQPREF )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4325:1: ( ( ruleQPREF ) )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4326:1: ( ruleQPREF )
             {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4354:1: ( ruleQPREF )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4355:3: ruleQPREF
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4326:1: ( ruleQPREF )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4327:3: ruleQPREF
             {
             if ( state.backtracking==0 ) {
 
@@ -11900,7 +11813,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
               	        newCompositeNode(grammarAccess.getLiteralorReferenceTermAccess().getNamedValueAbstractNamedValueCrossReference_0()); 
               	    
             }
-            pushFollow(FOLLOW_ruleQPREF_in_ruleLiteralorReferenceTerm9776);
+            pushFollow(FOLLOW_ruleQPREF_in_ruleLiteralorReferenceTerm9729);
             ruleQPREF();
 
             state._fsp--;
@@ -11936,7 +11849,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRuleBooleanLiteral"
-    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4376:1: entryRuleBooleanLiteral returns [EObject current=null] : iv_ruleBooleanLiteral= ruleBooleanLiteral EOF ;
+    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4348:1: entryRuleBooleanLiteral returns [EObject current=null] : iv_ruleBooleanLiteral= ruleBooleanLiteral EOF ;
     public final EObject entryRuleBooleanLiteral() throws RecognitionException {
         EObject current = null;
 
@@ -11944,13 +11857,13 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4377:2: (iv_ruleBooleanLiteral= ruleBooleanLiteral EOF )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4378:2: iv_ruleBooleanLiteral= ruleBooleanLiteral EOF
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4349:2: (iv_ruleBooleanLiteral= ruleBooleanLiteral EOF )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4350:2: iv_ruleBooleanLiteral= ruleBooleanLiteral EOF
             {
             if ( state.backtracking==0 ) {
                newCompositeNode(grammarAccess.getBooleanLiteralRule()); 
             }
-            pushFollow(FOLLOW_ruleBooleanLiteral_in_entryRuleBooleanLiteral9811);
+            pushFollow(FOLLOW_ruleBooleanLiteral_in_entryRuleBooleanLiteral9764);
             iv_ruleBooleanLiteral=ruleBooleanLiteral();
 
             state._fsp--;
@@ -11958,7 +11871,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
             if ( state.backtracking==0 ) {
                current =iv_ruleBooleanLiteral; 
             }
-            match(input,EOF,FOLLOW_EOF_in_entryRuleBooleanLiteral9821); if (state.failed) return current;
+            match(input,EOF,FOLLOW_EOF_in_entryRuleBooleanLiteral9774); if (state.failed) return current;
 
             }
 
@@ -11976,7 +11889,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleBooleanLiteral"
-    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4385:1: ruleBooleanLiteral returns [EObject current=null] : ( () ( ( (lv_value_1_0= 'true' ) ) | otherlv_2= 'false' ) ) ;
+    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4357:1: ruleBooleanLiteral returns [EObject current=null] : ( () ( ( (lv_value_1_0= 'true' ) ) | otherlv_2= 'false' ) ) ;
     public final EObject ruleBooleanLiteral() throws RecognitionException {
         EObject current = null;
 
@@ -11986,14 +11899,14 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
          enterRule(); 
             
         try {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4388:28: ( ( () ( ( (lv_value_1_0= 'true' ) ) | otherlv_2= 'false' ) ) )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4389:1: ( () ( ( (lv_value_1_0= 'true' ) ) | otherlv_2= 'false' ) )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4360:28: ( ( () ( ( (lv_value_1_0= 'true' ) ) | otherlv_2= 'false' ) ) )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4361:1: ( () ( ( (lv_value_1_0= 'true' ) ) | otherlv_2= 'false' ) )
             {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4389:1: ( () ( ( (lv_value_1_0= 'true' ) ) | otherlv_2= 'false' ) )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4389:2: () ( ( (lv_value_1_0= 'true' ) ) | otherlv_2= 'false' )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4361:1: ( () ( ( (lv_value_1_0= 'true' ) ) | otherlv_2= 'false' ) )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4361:2: () ( ( (lv_value_1_0= 'true' ) ) | otherlv_2= 'false' )
             {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4389:2: ()
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4390:5: 
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4361:2: ()
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4362:5: 
             {
             if ( state.backtracking==0 ) {
 
@@ -12005,34 +11918,34 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
             }
 
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4395:2: ( ( (lv_value_1_0= 'true' ) ) | otherlv_2= 'false' )
-            int alt62=2;
-            int LA62_0 = input.LA(1);
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4367:2: ( ( (lv_value_1_0= 'true' ) ) | otherlv_2= 'false' )
+            int alt61=2;
+            int LA61_0 = input.LA(1);
 
-            if ( (LA62_0==89) ) {
-                alt62=1;
+            if ( (LA61_0==89) ) {
+                alt61=1;
             }
-            else if ( (LA62_0==90) ) {
-                alt62=2;
+            else if ( (LA61_0==90) ) {
+                alt61=2;
             }
             else {
                 if (state.backtracking>0) {state.failed=true; return current;}
                 NoViableAltException nvae =
-                    new NoViableAltException("", 62, 0, input);
+                    new NoViableAltException("", 61, 0, input);
 
                 throw nvae;
             }
-            switch (alt62) {
+            switch (alt61) {
                 case 1 :
-                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4395:3: ( (lv_value_1_0= 'true' ) )
+                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4367:3: ( (lv_value_1_0= 'true' ) )
                     {
-                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4395:3: ( (lv_value_1_0= 'true' ) )
-                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4396:1: (lv_value_1_0= 'true' )
+                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4367:3: ( (lv_value_1_0= 'true' ) )
+                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4368:1: (lv_value_1_0= 'true' )
                     {
-                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4396:1: (lv_value_1_0= 'true' )
-                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4397:3: lv_value_1_0= 'true'
+                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4368:1: (lv_value_1_0= 'true' )
+                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4369:3: lv_value_1_0= 'true'
                     {
-                    lv_value_1_0=(Token)match(input,89,FOLLOW_89_in_ruleBooleanLiteral9874); if (state.failed) return current;
+                    lv_value_1_0=(Token)match(input,89,FOLLOW_89_in_ruleBooleanLiteral9827); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                               newLeafNode(lv_value_1_0, grammarAccess.getBooleanLiteralAccess().getValueTrueKeyword_1_0_0());
@@ -12056,9 +11969,9 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 2 :
-                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4411:7: otherlv_2= 'false'
+                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4383:7: otherlv_2= 'false'
                     {
-                    otherlv_2=(Token)match(input,90,FOLLOW_90_in_ruleBooleanLiteral9905); if (state.failed) return current;
+                    otherlv_2=(Token)match(input,90,FOLLOW_90_in_ruleBooleanLiteral9858); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                           	newLeafNode(otherlv_2, grammarAccess.getBooleanLiteralAccess().getFalseKeyword_1_1());
@@ -12093,7 +12006,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRuleConstantValue"
-    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4423:1: entryRuleConstantValue returns [EObject current=null] : iv_ruleConstantValue= ruleConstantValue EOF ;
+    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4395:1: entryRuleConstantValue returns [EObject current=null] : iv_ruleConstantValue= ruleConstantValue EOF ;
     public final EObject entryRuleConstantValue() throws RecognitionException {
         EObject current = null;
 
@@ -12101,13 +12014,13 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4424:2: (iv_ruleConstantValue= ruleConstantValue EOF )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4425:2: iv_ruleConstantValue= ruleConstantValue EOF
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4396:2: (iv_ruleConstantValue= ruleConstantValue EOF )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4397:2: iv_ruleConstantValue= ruleConstantValue EOF
             {
             if ( state.backtracking==0 ) {
                newCompositeNode(grammarAccess.getConstantValueRule()); 
             }
-            pushFollow(FOLLOW_ruleConstantValue_in_entryRuleConstantValue9942);
+            pushFollow(FOLLOW_ruleConstantValue_in_entryRuleConstantValue9895);
             iv_ruleConstantValue=ruleConstantValue();
 
             state._fsp--;
@@ -12115,7 +12028,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
             if ( state.backtracking==0 ) {
                current =iv_ruleConstantValue; 
             }
-            match(input,EOF,FOLLOW_EOF_in_entryRuleConstantValue9952); if (state.failed) return current;
+            match(input,EOF,FOLLOW_EOF_in_entryRuleConstantValue9905); if (state.failed) return current;
 
             }
 
@@ -12133,21 +12046,21 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleConstantValue"
-    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4432:1: ruleConstantValue returns [EObject current=null] : ( ( ruleQPREF ) ) ;
+    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4404:1: ruleConstantValue returns [EObject current=null] : ( ( ruleQPREF ) ) ;
     public final EObject ruleConstantValue() throws RecognitionException {
         EObject current = null;
 
          enterRule(); 
             
         try {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4435:28: ( ( ( ruleQPREF ) ) )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4436:1: ( ( ruleQPREF ) )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4407:28: ( ( ( ruleQPREF ) ) )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4408:1: ( ( ruleQPREF ) )
             {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4436:1: ( ( ruleQPREF ) )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4437:1: ( ruleQPREF )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4408:1: ( ( ruleQPREF ) )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4409:1: ( ruleQPREF )
             {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4437:1: ( ruleQPREF )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4438:3: ruleQPREF
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4409:1: ( ruleQPREF )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4410:3: ruleQPREF
             {
             if ( state.backtracking==0 ) {
 
@@ -12161,7 +12074,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
               	        newCompositeNode(grammarAccess.getConstantValueAccess().getNamedValuePropertyConstantCrossReference_0()); 
               	    
             }
-            pushFollow(FOLLOW_ruleQPREF_in_ruleConstantValue9999);
+            pushFollow(FOLLOW_ruleQPREF_in_ruleConstantValue9952);
             ruleQPREF();
 
             state._fsp--;
@@ -12197,7 +12110,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRuleReferenceTerm"
-    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4459:1: entryRuleReferenceTerm returns [EObject current=null] : iv_ruleReferenceTerm= ruleReferenceTerm EOF ;
+    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4431:1: entryRuleReferenceTerm returns [EObject current=null] : iv_ruleReferenceTerm= ruleReferenceTerm EOF ;
     public final EObject entryRuleReferenceTerm() throws RecognitionException {
         EObject current = null;
 
@@ -12205,13 +12118,13 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4460:2: (iv_ruleReferenceTerm= ruleReferenceTerm EOF )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4461:2: iv_ruleReferenceTerm= ruleReferenceTerm EOF
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4432:2: (iv_ruleReferenceTerm= ruleReferenceTerm EOF )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4433:2: iv_ruleReferenceTerm= ruleReferenceTerm EOF
             {
             if ( state.backtracking==0 ) {
                newCompositeNode(grammarAccess.getReferenceTermRule()); 
             }
-            pushFollow(FOLLOW_ruleReferenceTerm_in_entryRuleReferenceTerm10034);
+            pushFollow(FOLLOW_ruleReferenceTerm_in_entryRuleReferenceTerm9987);
             iv_ruleReferenceTerm=ruleReferenceTerm();
 
             state._fsp--;
@@ -12219,7 +12132,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
             if ( state.backtracking==0 ) {
                current =iv_ruleReferenceTerm; 
             }
-            match(input,EOF,FOLLOW_EOF_in_entryRuleReferenceTerm10044); if (state.failed) return current;
+            match(input,EOF,FOLLOW_EOF_in_entryRuleReferenceTerm9997); if (state.failed) return current;
 
             }
 
@@ -12237,118 +12150,50 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleReferenceTerm"
-    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4468:1: ruleReferenceTerm returns [EObject current=null] : (otherlv_0= 'reference' otherlv_1= '(' ( ( (lv_containmentPathElement_2_0= ruleQualifiedContainmentPathElement ) ) otherlv_3= '.' )? ( (lv_containmentPathElement_4_0= ruleContainmentPathElement ) ) (otherlv_5= '.' ( (lv_containmentPathElement_6_0= ruleContainmentPathElement ) ) )* otherlv_7= ')' ) ;
+    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4440:1: ruleReferenceTerm returns [EObject current=null] : (otherlv_0= 'reference' otherlv_1= '(' ( (lv_path_2_0= ruleContainmentPathElement ) ) otherlv_3= ')' ) ;
     public final EObject ruleReferenceTerm() throws RecognitionException {
         EObject current = null;
 
         Token otherlv_0=null;
         Token otherlv_1=null;
         Token otherlv_3=null;
-        Token otherlv_5=null;
-        Token otherlv_7=null;
-        EObject lv_containmentPathElement_2_0 = null;
-
-        EObject lv_containmentPathElement_4_0 = null;
-
-        EObject lv_containmentPathElement_6_0 = null;
+        EObject lv_path_2_0 = null;
 
 
          enterRule(); 
             
         try {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4471:28: ( (otherlv_0= 'reference' otherlv_1= '(' ( ( (lv_containmentPathElement_2_0= ruleQualifiedContainmentPathElement ) ) otherlv_3= '.' )? ( (lv_containmentPathElement_4_0= ruleContainmentPathElement ) ) (otherlv_5= '.' ( (lv_containmentPathElement_6_0= ruleContainmentPathElement ) ) )* otherlv_7= ')' ) )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4472:1: (otherlv_0= 'reference' otherlv_1= '(' ( ( (lv_containmentPathElement_2_0= ruleQualifiedContainmentPathElement ) ) otherlv_3= '.' )? ( (lv_containmentPathElement_4_0= ruleContainmentPathElement ) ) (otherlv_5= '.' ( (lv_containmentPathElement_6_0= ruleContainmentPathElement ) ) )* otherlv_7= ')' )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4443:28: ( (otherlv_0= 'reference' otherlv_1= '(' ( (lv_path_2_0= ruleContainmentPathElement ) ) otherlv_3= ')' ) )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4444:1: (otherlv_0= 'reference' otherlv_1= '(' ( (lv_path_2_0= ruleContainmentPathElement ) ) otherlv_3= ')' )
             {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4472:1: (otherlv_0= 'reference' otherlv_1= '(' ( ( (lv_containmentPathElement_2_0= ruleQualifiedContainmentPathElement ) ) otherlv_3= '.' )? ( (lv_containmentPathElement_4_0= ruleContainmentPathElement ) ) (otherlv_5= '.' ( (lv_containmentPathElement_6_0= ruleContainmentPathElement ) ) )* otherlv_7= ')' )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4472:3: otherlv_0= 'reference' otherlv_1= '(' ( ( (lv_containmentPathElement_2_0= ruleQualifiedContainmentPathElement ) ) otherlv_3= '.' )? ( (lv_containmentPathElement_4_0= ruleContainmentPathElement ) ) (otherlv_5= '.' ( (lv_containmentPathElement_6_0= ruleContainmentPathElement ) ) )* otherlv_7= ')'
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4444:1: (otherlv_0= 'reference' otherlv_1= '(' ( (lv_path_2_0= ruleContainmentPathElement ) ) otherlv_3= ')' )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4444:3: otherlv_0= 'reference' otherlv_1= '(' ( (lv_path_2_0= ruleContainmentPathElement ) ) otherlv_3= ')'
             {
-            otherlv_0=(Token)match(input,91,FOLLOW_91_in_ruleReferenceTerm10081); if (state.failed) return current;
+            otherlv_0=(Token)match(input,91,FOLLOW_91_in_ruleReferenceTerm10034); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
                   	newLeafNode(otherlv_0, grammarAccess.getReferenceTermAccess().getReferenceKeyword_0());
                   
             }
-            otherlv_1=(Token)match(input,34,FOLLOW_34_in_ruleReferenceTerm10093); if (state.failed) return current;
+            otherlv_1=(Token)match(input,34,FOLLOW_34_in_ruleReferenceTerm10046); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
                   	newLeafNode(otherlv_1, grammarAccess.getReferenceTermAccess().getLeftParenthesisKeyword_1());
                   
             }
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4480:1: ( ( (lv_containmentPathElement_2_0= ruleQualifiedContainmentPathElement ) ) otherlv_3= '.' )?
-            int alt63=2;
-            int LA63_0 = input.LA(1);
-
-            if ( (LA63_0==RULE_ID) ) {
-                int LA63_1 = input.LA(2);
-
-                if ( (LA63_1==77) ) {
-                    alt63=1;
-                }
-            }
-            switch (alt63) {
-                case 1 :
-                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4480:2: ( (lv_containmentPathElement_2_0= ruleQualifiedContainmentPathElement ) ) otherlv_3= '.'
-                    {
-                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4480:2: ( (lv_containmentPathElement_2_0= ruleQualifiedContainmentPathElement ) )
-                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4481:1: (lv_containmentPathElement_2_0= ruleQualifiedContainmentPathElement )
-                    {
-                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4481:1: (lv_containmentPathElement_2_0= ruleQualifiedContainmentPathElement )
-                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4482:3: lv_containmentPathElement_2_0= ruleQualifiedContainmentPathElement
-                    {
-                    if ( state.backtracking==0 ) {
-                       
-                      	        newCompositeNode(grammarAccess.getReferenceTermAccess().getContainmentPathElementQualifiedContainmentPathElementParserRuleCall_2_0_0()); 
-                      	    
-                    }
-                    pushFollow(FOLLOW_ruleQualifiedContainmentPathElement_in_ruleReferenceTerm10115);
-                    lv_containmentPathElement_2_0=ruleQualifiedContainmentPathElement();
-
-                    state._fsp--;
-                    if (state.failed) return current;
-                    if ( state.backtracking==0 ) {
-
-                      	        if (current==null) {
-                      	            current = createModelElementForParent(grammarAccess.getReferenceTermRule());
-                      	        }
-                             		add(
-                             			current, 
-                             			"containmentPathElement",
-                              		lv_containmentPathElement_2_0, 
-                              		"QualifiedContainmentPathElement");
-                      	        afterParserOrEnumRuleCall();
-                      	    
-                    }
-
-                    }
-
-
-                    }
-
-                    otherlv_3=(Token)match(input,75,FOLLOW_75_in_ruleReferenceTerm10127); if (state.failed) return current;
-                    if ( state.backtracking==0 ) {
-
-                          	newLeafNode(otherlv_3, grammarAccess.getReferenceTermAccess().getFullStopKeyword_2_1());
-                          
-                    }
-
-                    }
-                    break;
-
-            }
-
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4502:3: ( (lv_containmentPathElement_4_0= ruleContainmentPathElement ) )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4503:1: (lv_containmentPathElement_4_0= ruleContainmentPathElement )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4452:1: ( (lv_path_2_0= ruleContainmentPathElement ) )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4453:1: (lv_path_2_0= ruleContainmentPathElement )
             {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4503:1: (lv_containmentPathElement_4_0= ruleContainmentPathElement )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4504:3: lv_containmentPathElement_4_0= ruleContainmentPathElement
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4453:1: (lv_path_2_0= ruleContainmentPathElement )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4454:3: lv_path_2_0= ruleContainmentPathElement
             {
             if ( state.backtracking==0 ) {
                
-              	        newCompositeNode(grammarAccess.getReferenceTermAccess().getContainmentPathElementContainmentPathElementParserRuleCall_3_0()); 
+              	        newCompositeNode(grammarAccess.getReferenceTermAccess().getPathContainmentPathElementParserRuleCall_2_0()); 
               	    
             }
-            pushFollow(FOLLOW_ruleContainmentPathElement_in_ruleReferenceTerm10150);
-            lv_containmentPathElement_4_0=ruleContainmentPathElement();
+            pushFollow(FOLLOW_ruleContainmentPathElement_in_ruleReferenceTerm10067);
+            lv_path_2_0=ruleContainmentPathElement();
 
             state._fsp--;
             if (state.failed) return current;
@@ -12357,10 +12202,10 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
               	        if (current==null) {
               	            current = createModelElementForParent(grammarAccess.getReferenceTermRule());
               	        }
-                     		add(
+                     		set(
                      			current, 
-                     			"containmentPathElement",
-                      		lv_containmentPathElement_4_0, 
+                     			"path",
+                      		lv_path_2_0, 
                       		"ContainmentPathElement");
               	        afterParserOrEnumRuleCall();
               	    
@@ -12371,75 +12216,10 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
             }
 
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4520:2: (otherlv_5= '.' ( (lv_containmentPathElement_6_0= ruleContainmentPathElement ) ) )*
-            loop64:
-            do {
-                int alt64=2;
-                int LA64_0 = input.LA(1);
-
-                if ( (LA64_0==75) ) {
-                    alt64=1;
-                }
-
-
-                switch (alt64) {
-            	case 1 :
-            	    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4520:4: otherlv_5= '.' ( (lv_containmentPathElement_6_0= ruleContainmentPathElement ) )
-            	    {
-            	    otherlv_5=(Token)match(input,75,FOLLOW_75_in_ruleReferenceTerm10163); if (state.failed) return current;
-            	    if ( state.backtracking==0 ) {
-
-            	          	newLeafNode(otherlv_5, grammarAccess.getReferenceTermAccess().getFullStopKeyword_4_0());
-            	          
-            	    }
-            	    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4524:1: ( (lv_containmentPathElement_6_0= ruleContainmentPathElement ) )
-            	    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4525:1: (lv_containmentPathElement_6_0= ruleContainmentPathElement )
-            	    {
-            	    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4525:1: (lv_containmentPathElement_6_0= ruleContainmentPathElement )
-            	    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4526:3: lv_containmentPathElement_6_0= ruleContainmentPathElement
-            	    {
-            	    if ( state.backtracking==0 ) {
-            	       
-            	      	        newCompositeNode(grammarAccess.getReferenceTermAccess().getContainmentPathElementContainmentPathElementParserRuleCall_4_1_0()); 
-            	      	    
-            	    }
-            	    pushFollow(FOLLOW_ruleContainmentPathElement_in_ruleReferenceTerm10184);
-            	    lv_containmentPathElement_6_0=ruleContainmentPathElement();
-
-            	    state._fsp--;
-            	    if (state.failed) return current;
-            	    if ( state.backtracking==0 ) {
-
-            	      	        if (current==null) {
-            	      	            current = createModelElementForParent(grammarAccess.getReferenceTermRule());
-            	      	        }
-            	             		add(
-            	             			current, 
-            	             			"containmentPathElement",
-            	              		lv_containmentPathElement_6_0, 
-            	              		"ContainmentPathElement");
-            	      	        afterParserOrEnumRuleCall();
-            	      	    
-            	    }
-
-            	    }
-
-
-            	    }
-
-
-            	    }
-            	    break;
-
-            	default :
-            	    break loop64;
-                }
-            } while (true);
-
-            otherlv_7=(Token)match(input,35,FOLLOW_35_in_ruleReferenceTerm10198); if (state.failed) return current;
+            otherlv_3=(Token)match(input,35,FOLLOW_35_in_ruleReferenceTerm10079); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
-                  	newLeafNode(otherlv_7, grammarAccess.getReferenceTermAccess().getRightParenthesisKeyword_5());
+                  	newLeafNode(otherlv_3, grammarAccess.getReferenceTermAccess().getRightParenthesisKeyword_3());
                   
             }
 
@@ -12465,7 +12245,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRuleRecordTerm"
-    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4554:1: entryRuleRecordTerm returns [EObject current=null] : iv_ruleRecordTerm= ruleRecordTerm EOF ;
+    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4482:1: entryRuleRecordTerm returns [EObject current=null] : iv_ruleRecordTerm= ruleRecordTerm EOF ;
     public final EObject entryRuleRecordTerm() throws RecognitionException {
         EObject current = null;
 
@@ -12473,13 +12253,13 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4555:2: (iv_ruleRecordTerm= ruleRecordTerm EOF )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4556:2: iv_ruleRecordTerm= ruleRecordTerm EOF
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4483:2: (iv_ruleRecordTerm= ruleRecordTerm EOF )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4484:2: iv_ruleRecordTerm= ruleRecordTerm EOF
             {
             if ( state.backtracking==0 ) {
                newCompositeNode(grammarAccess.getRecordTermRule()); 
             }
-            pushFollow(FOLLOW_ruleRecordTerm_in_entryRuleRecordTerm10234);
+            pushFollow(FOLLOW_ruleRecordTerm_in_entryRuleRecordTerm10115);
             iv_ruleRecordTerm=ruleRecordTerm();
 
             state._fsp--;
@@ -12487,7 +12267,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
             if ( state.backtracking==0 ) {
                current =iv_ruleRecordTerm; 
             }
-            match(input,EOF,FOLLOW_EOF_in_entryRuleRecordTerm10244); if (state.failed) return current;
+            match(input,EOF,FOLLOW_EOF_in_entryRuleRecordTerm10125); if (state.failed) return current;
 
             }
 
@@ -12505,7 +12285,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleRecordTerm"
-    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4563:1: ruleRecordTerm returns [EObject current=null] : (otherlv_0= '[' ( (lv_ownedFieldValue_1_0= ruleFieldPropertyAssociation ) )+ otherlv_2= ']' ) ;
+    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4491:1: ruleRecordTerm returns [EObject current=null] : (otherlv_0= '[' ( (lv_ownedFieldValue_1_0= ruleFieldPropertyAssociation ) )+ otherlv_2= ']' ) ;
     public final EObject ruleRecordTerm() throws RecognitionException {
         EObject current = null;
 
@@ -12517,43 +12297,43 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
          enterRule(); 
             
         try {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4566:28: ( (otherlv_0= '[' ( (lv_ownedFieldValue_1_0= ruleFieldPropertyAssociation ) )+ otherlv_2= ']' ) )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4567:1: (otherlv_0= '[' ( (lv_ownedFieldValue_1_0= ruleFieldPropertyAssociation ) )+ otherlv_2= ']' )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4494:28: ( (otherlv_0= '[' ( (lv_ownedFieldValue_1_0= ruleFieldPropertyAssociation ) )+ otherlv_2= ']' ) )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4495:1: (otherlv_0= '[' ( (lv_ownedFieldValue_1_0= ruleFieldPropertyAssociation ) )+ otherlv_2= ']' )
             {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4567:1: (otherlv_0= '[' ( (lv_ownedFieldValue_1_0= ruleFieldPropertyAssociation ) )+ otherlv_2= ']' )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4567:3: otherlv_0= '[' ( (lv_ownedFieldValue_1_0= ruleFieldPropertyAssociation ) )+ otherlv_2= ']'
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4495:1: (otherlv_0= '[' ( (lv_ownedFieldValue_1_0= ruleFieldPropertyAssociation ) )+ otherlv_2= ']' )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4495:3: otherlv_0= '[' ( (lv_ownedFieldValue_1_0= ruleFieldPropertyAssociation ) )+ otherlv_2= ']'
             {
-            otherlv_0=(Token)match(input,92,FOLLOW_92_in_ruleRecordTerm10281); if (state.failed) return current;
+            otherlv_0=(Token)match(input,92,FOLLOW_92_in_ruleRecordTerm10162); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
                   	newLeafNode(otherlv_0, grammarAccess.getRecordTermAccess().getLeftSquareBracketKeyword_0());
                   
             }
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4571:1: ( (lv_ownedFieldValue_1_0= ruleFieldPropertyAssociation ) )+
-            int cnt65=0;
-            loop65:
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4499:1: ( (lv_ownedFieldValue_1_0= ruleFieldPropertyAssociation ) )+
+            int cnt62=0;
+            loop62:
             do {
-                int alt65=2;
-                int LA65_0 = input.LA(1);
+                int alt62=2;
+                int LA62_0 = input.LA(1);
 
-                if ( (LA65_0==RULE_ID) ) {
-                    alt65=1;
+                if ( (LA62_0==RULE_ID) ) {
+                    alt62=1;
                 }
 
 
-                switch (alt65) {
+                switch (alt62) {
             	case 1 :
-            	    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4572:1: (lv_ownedFieldValue_1_0= ruleFieldPropertyAssociation )
+            	    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4500:1: (lv_ownedFieldValue_1_0= ruleFieldPropertyAssociation )
             	    {
-            	    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4572:1: (lv_ownedFieldValue_1_0= ruleFieldPropertyAssociation )
-            	    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4573:3: lv_ownedFieldValue_1_0= ruleFieldPropertyAssociation
+            	    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4500:1: (lv_ownedFieldValue_1_0= ruleFieldPropertyAssociation )
+            	    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4501:3: lv_ownedFieldValue_1_0= ruleFieldPropertyAssociation
             	    {
             	    if ( state.backtracking==0 ) {
             	       
             	      	        newCompositeNode(grammarAccess.getRecordTermAccess().getOwnedFieldValueFieldPropertyAssociationParserRuleCall_1_0()); 
             	      	    
             	    }
-            	    pushFollow(FOLLOW_ruleFieldPropertyAssociation_in_ruleRecordTerm10302);
+            	    pushFollow(FOLLOW_ruleFieldPropertyAssociation_in_ruleRecordTerm10183);
             	    lv_ownedFieldValue_1_0=ruleFieldPropertyAssociation();
 
             	    state._fsp--;
@@ -12579,16 +12359,16 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
             	    break;
 
             	default :
-            	    if ( cnt65 >= 1 ) break loop65;
+            	    if ( cnt62 >= 1 ) break loop62;
             	    if (state.backtracking>0) {state.failed=true; return current;}
                         EarlyExitException eee =
-                            new EarlyExitException(65, input);
+                            new EarlyExitException(62, input);
                         throw eee;
                 }
-                cnt65++;
+                cnt62++;
             } while (true);
 
-            otherlv_2=(Token)match(input,93,FOLLOW_93_in_ruleRecordTerm10315); if (state.failed) return current;
+            otherlv_2=(Token)match(input,93,FOLLOW_93_in_ruleRecordTerm10196); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
                   	newLeafNode(otherlv_2, grammarAccess.getRecordTermAccess().getRightSquareBracketKeyword_2());
@@ -12617,7 +12397,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRuleComputedTerm"
-    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4603:1: entryRuleComputedTerm returns [EObject current=null] : iv_ruleComputedTerm= ruleComputedTerm EOF ;
+    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4531:1: entryRuleComputedTerm returns [EObject current=null] : iv_ruleComputedTerm= ruleComputedTerm EOF ;
     public final EObject entryRuleComputedTerm() throws RecognitionException {
         EObject current = null;
 
@@ -12625,13 +12405,13 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4604:2: (iv_ruleComputedTerm= ruleComputedTerm EOF )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4605:2: iv_ruleComputedTerm= ruleComputedTerm EOF
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4532:2: (iv_ruleComputedTerm= ruleComputedTerm EOF )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4533:2: iv_ruleComputedTerm= ruleComputedTerm EOF
             {
             if ( state.backtracking==0 ) {
                newCompositeNode(grammarAccess.getComputedTermRule()); 
             }
-            pushFollow(FOLLOW_ruleComputedTerm_in_entryRuleComputedTerm10353);
+            pushFollow(FOLLOW_ruleComputedTerm_in_entryRuleComputedTerm10234);
             iv_ruleComputedTerm=ruleComputedTerm();
 
             state._fsp--;
@@ -12639,7 +12419,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
             if ( state.backtracking==0 ) {
                current =iv_ruleComputedTerm; 
             }
-            match(input,EOF,FOLLOW_EOF_in_entryRuleComputedTerm10363); if (state.failed) return current;
+            match(input,EOF,FOLLOW_EOF_in_entryRuleComputedTerm10244); if (state.failed) return current;
 
             }
 
@@ -12657,7 +12437,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleComputedTerm"
-    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4612:1: ruleComputedTerm returns [EObject current=null] : (otherlv_0= 'compute' otherlv_1= '(' ( (lv_function_2_0= RULE_ID ) ) otherlv_3= ')' ) ;
+    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4540:1: ruleComputedTerm returns [EObject current=null] : (otherlv_0= 'compute' otherlv_1= '(' ( (lv_function_2_0= RULE_ID ) ) otherlv_3= ')' ) ;
     public final EObject ruleComputedTerm() throws RecognitionException {
         EObject current = null;
 
@@ -12669,31 +12449,31 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
          enterRule(); 
             
         try {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4615:28: ( (otherlv_0= 'compute' otherlv_1= '(' ( (lv_function_2_0= RULE_ID ) ) otherlv_3= ')' ) )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4616:1: (otherlv_0= 'compute' otherlv_1= '(' ( (lv_function_2_0= RULE_ID ) ) otherlv_3= ')' )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4543:28: ( (otherlv_0= 'compute' otherlv_1= '(' ( (lv_function_2_0= RULE_ID ) ) otherlv_3= ')' ) )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4544:1: (otherlv_0= 'compute' otherlv_1= '(' ( (lv_function_2_0= RULE_ID ) ) otherlv_3= ')' )
             {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4616:1: (otherlv_0= 'compute' otherlv_1= '(' ( (lv_function_2_0= RULE_ID ) ) otherlv_3= ')' )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4616:3: otherlv_0= 'compute' otherlv_1= '(' ( (lv_function_2_0= RULE_ID ) ) otherlv_3= ')'
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4544:1: (otherlv_0= 'compute' otherlv_1= '(' ( (lv_function_2_0= RULE_ID ) ) otherlv_3= ')' )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4544:3: otherlv_0= 'compute' otherlv_1= '(' ( (lv_function_2_0= RULE_ID ) ) otherlv_3= ')'
             {
-            otherlv_0=(Token)match(input,94,FOLLOW_94_in_ruleComputedTerm10400); if (state.failed) return current;
+            otherlv_0=(Token)match(input,94,FOLLOW_94_in_ruleComputedTerm10281); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
                   	newLeafNode(otherlv_0, grammarAccess.getComputedTermAccess().getComputeKeyword_0());
                   
             }
-            otherlv_1=(Token)match(input,34,FOLLOW_34_in_ruleComputedTerm10412); if (state.failed) return current;
+            otherlv_1=(Token)match(input,34,FOLLOW_34_in_ruleComputedTerm10293); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
                   	newLeafNode(otherlv_1, grammarAccess.getComputedTermAccess().getLeftParenthesisKeyword_1());
                   
             }
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4624:1: ( (lv_function_2_0= RULE_ID ) )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4625:1: (lv_function_2_0= RULE_ID )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4552:1: ( (lv_function_2_0= RULE_ID ) )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4553:1: (lv_function_2_0= RULE_ID )
             {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4625:1: (lv_function_2_0= RULE_ID )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4626:3: lv_function_2_0= RULE_ID
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4553:1: (lv_function_2_0= RULE_ID )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4554:3: lv_function_2_0= RULE_ID
             {
-            lv_function_2_0=(Token)match(input,RULE_ID,FOLLOW_RULE_ID_in_ruleComputedTerm10429); if (state.failed) return current;
+            lv_function_2_0=(Token)match(input,RULE_ID,FOLLOW_RULE_ID_in_ruleComputedTerm10310); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
               			newLeafNode(lv_function_2_0, grammarAccess.getComputedTermAccess().getFunctionIDTerminalRuleCall_2_0()); 
@@ -12717,7 +12497,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
             }
 
-            otherlv_3=(Token)match(input,35,FOLLOW_35_in_ruleComputedTerm10446); if (state.failed) return current;
+            otherlv_3=(Token)match(input,35,FOLLOW_35_in_ruleComputedTerm10327); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
                   	newLeafNode(otherlv_3, grammarAccess.getComputedTermAccess().getRightParenthesisKeyword_3());
@@ -12746,7 +12526,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRuleComponentClassifierTerm"
-    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4654:1: entryRuleComponentClassifierTerm returns [EObject current=null] : iv_ruleComponentClassifierTerm= ruleComponentClassifierTerm EOF ;
+    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4582:1: entryRuleComponentClassifierTerm returns [EObject current=null] : iv_ruleComponentClassifierTerm= ruleComponentClassifierTerm EOF ;
     public final EObject entryRuleComponentClassifierTerm() throws RecognitionException {
         EObject current = null;
 
@@ -12754,13 +12534,13 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4655:2: (iv_ruleComponentClassifierTerm= ruleComponentClassifierTerm EOF )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4656:2: iv_ruleComponentClassifierTerm= ruleComponentClassifierTerm EOF
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4583:2: (iv_ruleComponentClassifierTerm= ruleComponentClassifierTerm EOF )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4584:2: iv_ruleComponentClassifierTerm= ruleComponentClassifierTerm EOF
             {
             if ( state.backtracking==0 ) {
                newCompositeNode(grammarAccess.getComponentClassifierTermRule()); 
             }
-            pushFollow(FOLLOW_ruleComponentClassifierTerm_in_entryRuleComponentClassifierTerm10482);
+            pushFollow(FOLLOW_ruleComponentClassifierTerm_in_entryRuleComponentClassifierTerm10363);
             iv_ruleComponentClassifierTerm=ruleComponentClassifierTerm();
 
             state._fsp--;
@@ -12768,7 +12548,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
             if ( state.backtracking==0 ) {
                current =iv_ruleComponentClassifierTerm; 
             }
-            match(input,EOF,FOLLOW_EOF_in_entryRuleComponentClassifierTerm10492); if (state.failed) return current;
+            match(input,EOF,FOLLOW_EOF_in_entryRuleComponentClassifierTerm10373); if (state.failed) return current;
 
             }
 
@@ -12786,7 +12566,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleComponentClassifierTerm"
-    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4663:1: ruleComponentClassifierTerm returns [EObject current=null] : (otherlv_0= 'classifier' otherlv_1= '(' ( ( ruleQCREF ) ) otherlv_3= ')' ) ;
+    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4591:1: ruleComponentClassifierTerm returns [EObject current=null] : (otherlv_0= 'classifier' otherlv_1= '(' ( ( ruleQCREF ) ) otherlv_3= ')' ) ;
     public final EObject ruleComponentClassifierTerm() throws RecognitionException {
         EObject current = null;
 
@@ -12797,29 +12577,29 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
          enterRule(); 
             
         try {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4666:28: ( (otherlv_0= 'classifier' otherlv_1= '(' ( ( ruleQCREF ) ) otherlv_3= ')' ) )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4667:1: (otherlv_0= 'classifier' otherlv_1= '(' ( ( ruleQCREF ) ) otherlv_3= ')' )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4594:28: ( (otherlv_0= 'classifier' otherlv_1= '(' ( ( ruleQCREF ) ) otherlv_3= ')' ) )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4595:1: (otherlv_0= 'classifier' otherlv_1= '(' ( ( ruleQCREF ) ) otherlv_3= ')' )
             {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4667:1: (otherlv_0= 'classifier' otherlv_1= '(' ( ( ruleQCREF ) ) otherlv_3= ')' )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4667:3: otherlv_0= 'classifier' otherlv_1= '(' ( ( ruleQCREF ) ) otherlv_3= ')'
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4595:1: (otherlv_0= 'classifier' otherlv_1= '(' ( ( ruleQCREF ) ) otherlv_3= ')' )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4595:3: otherlv_0= 'classifier' otherlv_1= '(' ( ( ruleQCREF ) ) otherlv_3= ')'
             {
-            otherlv_0=(Token)match(input,95,FOLLOW_95_in_ruleComponentClassifierTerm10529); if (state.failed) return current;
+            otherlv_0=(Token)match(input,95,FOLLOW_95_in_ruleComponentClassifierTerm10410); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
                   	newLeafNode(otherlv_0, grammarAccess.getComponentClassifierTermAccess().getClassifierKeyword_0());
                   
             }
-            otherlv_1=(Token)match(input,34,FOLLOW_34_in_ruleComponentClassifierTerm10541); if (state.failed) return current;
+            otherlv_1=(Token)match(input,34,FOLLOW_34_in_ruleComponentClassifierTerm10422); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
                   	newLeafNode(otherlv_1, grammarAccess.getComponentClassifierTermAccess().getLeftParenthesisKeyword_1());
                   
             }
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4675:1: ( ( ruleQCREF ) )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4676:1: ( ruleQCREF )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4603:1: ( ( ruleQCREF ) )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4604:1: ( ruleQCREF )
             {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4676:1: ( ruleQCREF )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4677:3: ruleQCREF
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4604:1: ( ruleQCREF )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4605:3: ruleQCREF
             {
             if ( state.backtracking==0 ) {
 
@@ -12833,7 +12613,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
               	        newCompositeNode(grammarAccess.getComponentClassifierTermAccess().getClassifierComponentClassifierCrossReference_2_0()); 
               	    
             }
-            pushFollow(FOLLOW_ruleQCREF_in_ruleComponentClassifierTerm10564);
+            pushFollow(FOLLOW_ruleQCREF_in_ruleComponentClassifierTerm10445);
             ruleQCREF();
 
             state._fsp--;
@@ -12849,7 +12629,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
             }
 
-            otherlv_3=(Token)match(input,35,FOLLOW_35_in_ruleComponentClassifierTerm10576); if (state.failed) return current;
+            otherlv_3=(Token)match(input,35,FOLLOW_35_in_ruleComponentClassifierTerm10457); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
                   	newLeafNode(otherlv_3, grammarAccess.getComponentClassifierTermAccess().getRightParenthesisKeyword_3());
@@ -12878,7 +12658,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRuleListTerm"
-    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4702:1: entryRuleListTerm returns [EObject current=null] : iv_ruleListTerm= ruleListTerm EOF ;
+    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4630:1: entryRuleListTerm returns [EObject current=null] : iv_ruleListTerm= ruleListTerm EOF ;
     public final EObject entryRuleListTerm() throws RecognitionException {
         EObject current = null;
 
@@ -12886,13 +12666,13 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4703:2: (iv_ruleListTerm= ruleListTerm EOF )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4704:2: iv_ruleListTerm= ruleListTerm EOF
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4631:2: (iv_ruleListTerm= ruleListTerm EOF )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4632:2: iv_ruleListTerm= ruleListTerm EOF
             {
             if ( state.backtracking==0 ) {
                newCompositeNode(grammarAccess.getListTermRule()); 
             }
-            pushFollow(FOLLOW_ruleListTerm_in_entryRuleListTerm10612);
+            pushFollow(FOLLOW_ruleListTerm_in_entryRuleListTerm10493);
             iv_ruleListTerm=ruleListTerm();
 
             state._fsp--;
@@ -12900,7 +12680,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
             if ( state.backtracking==0 ) {
                current =iv_ruleListTerm; 
             }
-            match(input,EOF,FOLLOW_EOF_in_entryRuleListTerm10622); if (state.failed) return current;
+            match(input,EOF,FOLLOW_EOF_in_entryRuleListTerm10503); if (state.failed) return current;
 
             }
 
@@ -12918,7 +12698,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleListTerm"
-    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4711:1: ruleListTerm returns [EObject current=null] : ( () otherlv_1= '(' ( ( (lv_ownedListElement_2_0= rulePropertyExpression ) ) (otherlv_3= ',' ( (lv_ownedListElement_4_0= rulePropertyExpression ) ) )* )? otherlv_5= ')' ) ;
+    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4639:1: ruleListTerm returns [EObject current=null] : ( () otherlv_1= '(' ( ( (lv_ownedListElement_2_0= rulePropertyExpression ) ) (otherlv_3= ',' ( (lv_ownedListElement_4_0= rulePropertyExpression ) ) )* )? otherlv_5= ')' ) ;
     public final EObject ruleListTerm() throws RecognitionException {
         EObject current = null;
 
@@ -12933,14 +12713,14 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
          enterRule(); 
             
         try {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4714:28: ( ( () otherlv_1= '(' ( ( (lv_ownedListElement_2_0= rulePropertyExpression ) ) (otherlv_3= ',' ( (lv_ownedListElement_4_0= rulePropertyExpression ) ) )* )? otherlv_5= ')' ) )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4715:1: ( () otherlv_1= '(' ( ( (lv_ownedListElement_2_0= rulePropertyExpression ) ) (otherlv_3= ',' ( (lv_ownedListElement_4_0= rulePropertyExpression ) ) )* )? otherlv_5= ')' )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4642:28: ( ( () otherlv_1= '(' ( ( (lv_ownedListElement_2_0= rulePropertyExpression ) ) (otherlv_3= ',' ( (lv_ownedListElement_4_0= rulePropertyExpression ) ) )* )? otherlv_5= ')' ) )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4643:1: ( () otherlv_1= '(' ( ( (lv_ownedListElement_2_0= rulePropertyExpression ) ) (otherlv_3= ',' ( (lv_ownedListElement_4_0= rulePropertyExpression ) ) )* )? otherlv_5= ')' )
             {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4715:1: ( () otherlv_1= '(' ( ( (lv_ownedListElement_2_0= rulePropertyExpression ) ) (otherlv_3= ',' ( (lv_ownedListElement_4_0= rulePropertyExpression ) ) )* )? otherlv_5= ')' )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4715:2: () otherlv_1= '(' ( ( (lv_ownedListElement_2_0= rulePropertyExpression ) ) (otherlv_3= ',' ( (lv_ownedListElement_4_0= rulePropertyExpression ) ) )* )? otherlv_5= ')'
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4643:1: ( () otherlv_1= '(' ( ( (lv_ownedListElement_2_0= rulePropertyExpression ) ) (otherlv_3= ',' ( (lv_ownedListElement_4_0= rulePropertyExpression ) ) )* )? otherlv_5= ')' )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4643:2: () otherlv_1= '(' ( ( (lv_ownedListElement_2_0= rulePropertyExpression ) ) (otherlv_3= ',' ( (lv_ownedListElement_4_0= rulePropertyExpression ) ) )* )? otherlv_5= ')'
             {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4715:2: ()
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4716:5: 
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4643:2: ()
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4644:5: 
             {
             if ( state.backtracking==0 ) {
 
@@ -12952,35 +12732,35 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
             }
 
-            otherlv_1=(Token)match(input,34,FOLLOW_34_in_ruleListTerm10668); if (state.failed) return current;
+            otherlv_1=(Token)match(input,34,FOLLOW_34_in_ruleListTerm10549); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
                   	newLeafNode(otherlv_1, grammarAccess.getListTermAccess().getLeftParenthesisKeyword_1());
                   
             }
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4725:1: ( ( (lv_ownedListElement_2_0= rulePropertyExpression ) ) (otherlv_3= ',' ( (lv_ownedListElement_4_0= rulePropertyExpression ) ) )* )?
-            int alt67=2;
-            int LA67_0 = input.LA(1);
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4653:1: ( ( (lv_ownedListElement_2_0= rulePropertyExpression ) ) (otherlv_3= ',' ( (lv_ownedListElement_4_0= rulePropertyExpression ) ) )* )?
+            int alt64=2;
+            int LA64_0 = input.LA(1);
 
-            if ( ((LA67_0>=RULE_STRING && LA67_0<=RULE_REAL_LIT)||LA67_0==34||(LA67_0>=59 && LA67_0<=60)||(LA67_0>=89 && LA67_0<=92)||(LA67_0>=94 && LA67_0<=95)) ) {
-                alt67=1;
+            if ( ((LA64_0>=RULE_STRING && LA64_0<=RULE_REAL_LIT)||LA64_0==34||(LA64_0>=59 && LA64_0<=60)||(LA64_0>=89 && LA64_0<=92)||(LA64_0>=94 && LA64_0<=95)) ) {
+                alt64=1;
             }
-            switch (alt67) {
+            switch (alt64) {
                 case 1 :
-                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4725:2: ( (lv_ownedListElement_2_0= rulePropertyExpression ) ) (otherlv_3= ',' ( (lv_ownedListElement_4_0= rulePropertyExpression ) ) )*
+                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4653:2: ( (lv_ownedListElement_2_0= rulePropertyExpression ) ) (otherlv_3= ',' ( (lv_ownedListElement_4_0= rulePropertyExpression ) ) )*
                     {
-                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4725:2: ( (lv_ownedListElement_2_0= rulePropertyExpression ) )
-                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4726:1: (lv_ownedListElement_2_0= rulePropertyExpression )
+                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4653:2: ( (lv_ownedListElement_2_0= rulePropertyExpression ) )
+                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4654:1: (lv_ownedListElement_2_0= rulePropertyExpression )
                     {
-                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4726:1: (lv_ownedListElement_2_0= rulePropertyExpression )
-                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4727:3: lv_ownedListElement_2_0= rulePropertyExpression
+                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4654:1: (lv_ownedListElement_2_0= rulePropertyExpression )
+                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4655:3: lv_ownedListElement_2_0= rulePropertyExpression
                     {
                     if ( state.backtracking==0 ) {
                        
                       	        newCompositeNode(grammarAccess.getListTermAccess().getOwnedListElementPropertyExpressionParserRuleCall_2_0_0()); 
                       	    
                     }
-                    pushFollow(FOLLOW_rulePropertyExpression_in_ruleListTerm10690);
+                    pushFollow(FOLLOW_rulePropertyExpression_in_ruleListTerm10571);
                     lv_ownedListElement_2_0=rulePropertyExpression();
 
                     state._fsp--;
@@ -13004,39 +12784,39 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
                     }
 
-                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4743:2: (otherlv_3= ',' ( (lv_ownedListElement_4_0= rulePropertyExpression ) ) )*
-                    loop66:
+                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4671:2: (otherlv_3= ',' ( (lv_ownedListElement_4_0= rulePropertyExpression ) ) )*
+                    loop63:
                     do {
-                        int alt66=2;
-                        int LA66_0 = input.LA(1);
+                        int alt63=2;
+                        int LA63_0 = input.LA(1);
 
-                        if ( (LA66_0==28) ) {
-                            alt66=1;
+                        if ( (LA63_0==28) ) {
+                            alt63=1;
                         }
 
 
-                        switch (alt66) {
+                        switch (alt63) {
                     	case 1 :
-                    	    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4743:4: otherlv_3= ',' ( (lv_ownedListElement_4_0= rulePropertyExpression ) )
+                    	    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4671:4: otherlv_3= ',' ( (lv_ownedListElement_4_0= rulePropertyExpression ) )
                     	    {
-                    	    otherlv_3=(Token)match(input,28,FOLLOW_28_in_ruleListTerm10703); if (state.failed) return current;
+                    	    otherlv_3=(Token)match(input,28,FOLLOW_28_in_ruleListTerm10584); if (state.failed) return current;
                     	    if ( state.backtracking==0 ) {
 
                     	          	newLeafNode(otherlv_3, grammarAccess.getListTermAccess().getCommaKeyword_2_1_0());
                     	          
                     	    }
-                    	    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4747:1: ( (lv_ownedListElement_4_0= rulePropertyExpression ) )
-                    	    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4748:1: (lv_ownedListElement_4_0= rulePropertyExpression )
+                    	    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4675:1: ( (lv_ownedListElement_4_0= rulePropertyExpression ) )
+                    	    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4676:1: (lv_ownedListElement_4_0= rulePropertyExpression )
                     	    {
-                    	    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4748:1: (lv_ownedListElement_4_0= rulePropertyExpression )
-                    	    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4749:3: lv_ownedListElement_4_0= rulePropertyExpression
+                    	    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4676:1: (lv_ownedListElement_4_0= rulePropertyExpression )
+                    	    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4677:3: lv_ownedListElement_4_0= rulePropertyExpression
                     	    {
                     	    if ( state.backtracking==0 ) {
                     	       
                     	      	        newCompositeNode(grammarAccess.getListTermAccess().getOwnedListElementPropertyExpressionParserRuleCall_2_1_1_0()); 
                     	      	    
                     	    }
-                    	    pushFollow(FOLLOW_rulePropertyExpression_in_ruleListTerm10724);
+                    	    pushFollow(FOLLOW_rulePropertyExpression_in_ruleListTerm10605);
                     	    lv_ownedListElement_4_0=rulePropertyExpression();
 
                     	    state._fsp--;
@@ -13065,7 +12845,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
                     	    break;
 
                     	default :
-                    	    break loop66;
+                    	    break loop63;
                         }
                     } while (true);
 
@@ -13075,7 +12855,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
             }
 
-            otherlv_5=(Token)match(input,35,FOLLOW_35_in_ruleListTerm10740); if (state.failed) return current;
+            otherlv_5=(Token)match(input,35,FOLLOW_35_in_ruleListTerm10621); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
                   	newLeafNode(otherlv_5, grammarAccess.getListTermAccess().getRightParenthesisKeyword_3());
@@ -13104,7 +12884,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRuleFieldPropertyAssociation"
-    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4777:1: entryRuleFieldPropertyAssociation returns [EObject current=null] : iv_ruleFieldPropertyAssociation= ruleFieldPropertyAssociation EOF ;
+    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4705:1: entryRuleFieldPropertyAssociation returns [EObject current=null] : iv_ruleFieldPropertyAssociation= ruleFieldPropertyAssociation EOF ;
     public final EObject entryRuleFieldPropertyAssociation() throws RecognitionException {
         EObject current = null;
 
@@ -13112,13 +12892,13 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4778:2: (iv_ruleFieldPropertyAssociation= ruleFieldPropertyAssociation EOF )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4779:2: iv_ruleFieldPropertyAssociation= ruleFieldPropertyAssociation EOF
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4706:2: (iv_ruleFieldPropertyAssociation= ruleFieldPropertyAssociation EOF )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4707:2: iv_ruleFieldPropertyAssociation= ruleFieldPropertyAssociation EOF
             {
             if ( state.backtracking==0 ) {
                newCompositeNode(grammarAccess.getFieldPropertyAssociationRule()); 
             }
-            pushFollow(FOLLOW_ruleFieldPropertyAssociation_in_entryRuleFieldPropertyAssociation10776);
+            pushFollow(FOLLOW_ruleFieldPropertyAssociation_in_entryRuleFieldPropertyAssociation10657);
             iv_ruleFieldPropertyAssociation=ruleFieldPropertyAssociation();
 
             state._fsp--;
@@ -13126,7 +12906,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
             if ( state.backtracking==0 ) {
                current =iv_ruleFieldPropertyAssociation; 
             }
-            match(input,EOF,FOLLOW_EOF_in_entryRuleFieldPropertyAssociation10786); if (state.failed) return current;
+            match(input,EOF,FOLLOW_EOF_in_entryRuleFieldPropertyAssociation10667); if (state.failed) return current;
 
             }
 
@@ -13144,7 +12924,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleFieldPropertyAssociation"
-    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4786:1: ruleFieldPropertyAssociation returns [EObject current=null] : ( ( (otherlv_0= RULE_ID ) ) otherlv_1= '=>' ( (lv_ownedValue_2_0= rulePropertyExpression ) ) otherlv_3= ';' ) ;
+    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4714:1: ruleFieldPropertyAssociation returns [EObject current=null] : ( ( (otherlv_0= RULE_ID ) ) otherlv_1= '=>' ( (lv_ownedValue_2_0= rulePropertyExpression ) ) otherlv_3= ';' ) ;
     public final EObject ruleFieldPropertyAssociation() throws RecognitionException {
         EObject current = null;
 
@@ -13157,17 +12937,17 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
          enterRule(); 
             
         try {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4789:28: ( ( ( (otherlv_0= RULE_ID ) ) otherlv_1= '=>' ( (lv_ownedValue_2_0= rulePropertyExpression ) ) otherlv_3= ';' ) )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4790:1: ( ( (otherlv_0= RULE_ID ) ) otherlv_1= '=>' ( (lv_ownedValue_2_0= rulePropertyExpression ) ) otherlv_3= ';' )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4717:28: ( ( ( (otherlv_0= RULE_ID ) ) otherlv_1= '=>' ( (lv_ownedValue_2_0= rulePropertyExpression ) ) otherlv_3= ';' ) )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4718:1: ( ( (otherlv_0= RULE_ID ) ) otherlv_1= '=>' ( (lv_ownedValue_2_0= rulePropertyExpression ) ) otherlv_3= ';' )
             {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4790:1: ( ( (otherlv_0= RULE_ID ) ) otherlv_1= '=>' ( (lv_ownedValue_2_0= rulePropertyExpression ) ) otherlv_3= ';' )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4790:2: ( (otherlv_0= RULE_ID ) ) otherlv_1= '=>' ( (lv_ownedValue_2_0= rulePropertyExpression ) ) otherlv_3= ';'
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4718:1: ( ( (otherlv_0= RULE_ID ) ) otherlv_1= '=>' ( (lv_ownedValue_2_0= rulePropertyExpression ) ) otherlv_3= ';' )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4718:2: ( (otherlv_0= RULE_ID ) ) otherlv_1= '=>' ( (lv_ownedValue_2_0= rulePropertyExpression ) ) otherlv_3= ';'
             {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4790:2: ( (otherlv_0= RULE_ID ) )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4791:1: (otherlv_0= RULE_ID )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4718:2: ( (otherlv_0= RULE_ID ) )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4719:1: (otherlv_0= RULE_ID )
             {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4791:1: (otherlv_0= RULE_ID )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4792:3: otherlv_0= RULE_ID
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4719:1: (otherlv_0= RULE_ID )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4720:3: otherlv_0= RULE_ID
             {
             if ( state.backtracking==0 ) {
 
@@ -13176,7 +12956,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
               	        }
                       
             }
-            otherlv_0=(Token)match(input,RULE_ID,FOLLOW_RULE_ID_in_ruleFieldPropertyAssociation10831); if (state.failed) return current;
+            otherlv_0=(Token)match(input,RULE_ID,FOLLOW_RULE_ID_in_ruleFieldPropertyAssociation10712); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
               		newLeafNode(otherlv_0, grammarAccess.getFieldPropertyAssociationAccess().getPropertyBasicPropertyCrossReference_0_0()); 
@@ -13188,24 +12968,24 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
             }
 
-            otherlv_1=(Token)match(input,49,FOLLOW_49_in_ruleFieldPropertyAssociation10843); if (state.failed) return current;
+            otherlv_1=(Token)match(input,49,FOLLOW_49_in_ruleFieldPropertyAssociation10724); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
                   	newLeafNode(otherlv_1, grammarAccess.getFieldPropertyAssociationAccess().getEqualsSignGreaterThanSignKeyword_1());
                   
             }
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4807:1: ( (lv_ownedValue_2_0= rulePropertyExpression ) )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4808:1: (lv_ownedValue_2_0= rulePropertyExpression )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4735:1: ( (lv_ownedValue_2_0= rulePropertyExpression ) )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4736:1: (lv_ownedValue_2_0= rulePropertyExpression )
             {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4808:1: (lv_ownedValue_2_0= rulePropertyExpression )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4809:3: lv_ownedValue_2_0= rulePropertyExpression
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4736:1: (lv_ownedValue_2_0= rulePropertyExpression )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4737:3: lv_ownedValue_2_0= rulePropertyExpression
             {
             if ( state.backtracking==0 ) {
                
               	        newCompositeNode(grammarAccess.getFieldPropertyAssociationAccess().getOwnedValuePropertyExpressionParserRuleCall_2_0()); 
               	    
             }
-            pushFollow(FOLLOW_rulePropertyExpression_in_ruleFieldPropertyAssociation10864);
+            pushFollow(FOLLOW_rulePropertyExpression_in_ruleFieldPropertyAssociation10745);
             lv_ownedValue_2_0=rulePropertyExpression();
 
             state._fsp--;
@@ -13229,7 +13009,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
             }
 
-            otherlv_3=(Token)match(input,17,FOLLOW_17_in_ruleFieldPropertyAssociation10876); if (state.failed) return current;
+            otherlv_3=(Token)match(input,17,FOLLOW_17_in_ruleFieldPropertyAssociation10757); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
                   	newLeafNode(otherlv_3, grammarAccess.getFieldPropertyAssociationAccess().getSemicolonKeyword_3());
@@ -13258,7 +13038,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRuleContainmentPathElement"
-    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4837:1: entryRuleContainmentPathElement returns [EObject current=null] : iv_ruleContainmentPathElement= ruleContainmentPathElement EOF ;
+    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4765:1: entryRuleContainmentPathElement returns [EObject current=null] : iv_ruleContainmentPathElement= ruleContainmentPathElement EOF ;
     public final EObject entryRuleContainmentPathElement() throws RecognitionException {
         EObject current = null;
 
@@ -13266,13 +13046,13 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4838:2: (iv_ruleContainmentPathElement= ruleContainmentPathElement EOF )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4839:2: iv_ruleContainmentPathElement= ruleContainmentPathElement EOF
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4766:2: (iv_ruleContainmentPathElement= ruleContainmentPathElement EOF )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4767:2: iv_ruleContainmentPathElement= ruleContainmentPathElement EOF
             {
             if ( state.backtracking==0 ) {
                newCompositeNode(grammarAccess.getContainmentPathElementRule()); 
             }
-            pushFollow(FOLLOW_ruleContainmentPathElement_in_entryRuleContainmentPathElement10912);
+            pushFollow(FOLLOW_ruleContainmentPathElement_in_entryRuleContainmentPathElement10793);
             iv_ruleContainmentPathElement=ruleContainmentPathElement();
 
             state._fsp--;
@@ -13280,7 +13060,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
             if ( state.backtracking==0 ) {
                current =iv_ruleContainmentPathElement; 
             }
-            match(input,EOF,FOLLOW_EOF_in_entryRuleContainmentPathElement10922); if (state.failed) return current;
+            match(input,EOF,FOLLOW_EOF_in_entryRuleContainmentPathElement10803); if (state.failed) return current;
 
             }
 
@@ -13298,28 +13078,34 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleContainmentPathElement"
-    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4846:1: ruleContainmentPathElement returns [EObject current=null] : ( ( (otherlv_0= RULE_ID ) ) ( (lv_arrayRange_1_0= ruleArrayRange ) )? ) ;
+    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4774:1: ruleContainmentPathElement returns [EObject current=null] : ( ( ( (otherlv_0= RULE_ID ) ) ( (lv_arrayRange_1_0= ruleArrayRange ) )? ) (otherlv_2= '.' ( (lv_path_3_0= ruleContainmentPathElement ) ) )? ) ;
     public final EObject ruleContainmentPathElement() throws RecognitionException {
         EObject current = null;
 
         Token otherlv_0=null;
+        Token otherlv_2=null;
         EObject lv_arrayRange_1_0 = null;
+
+        EObject lv_path_3_0 = null;
 
 
          enterRule(); 
             
         try {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4849:28: ( ( ( (otherlv_0= RULE_ID ) ) ( (lv_arrayRange_1_0= ruleArrayRange ) )? ) )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4850:1: ( ( (otherlv_0= RULE_ID ) ) ( (lv_arrayRange_1_0= ruleArrayRange ) )? )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4777:28: ( ( ( ( (otherlv_0= RULE_ID ) ) ( (lv_arrayRange_1_0= ruleArrayRange ) )? ) (otherlv_2= '.' ( (lv_path_3_0= ruleContainmentPathElement ) ) )? ) )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4778:1: ( ( ( (otherlv_0= RULE_ID ) ) ( (lv_arrayRange_1_0= ruleArrayRange ) )? ) (otherlv_2= '.' ( (lv_path_3_0= ruleContainmentPathElement ) ) )? )
             {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4850:1: ( ( (otherlv_0= RULE_ID ) ) ( (lv_arrayRange_1_0= ruleArrayRange ) )? )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4850:2: ( (otherlv_0= RULE_ID ) ) ( (lv_arrayRange_1_0= ruleArrayRange ) )?
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4778:1: ( ( ( (otherlv_0= RULE_ID ) ) ( (lv_arrayRange_1_0= ruleArrayRange ) )? ) (otherlv_2= '.' ( (lv_path_3_0= ruleContainmentPathElement ) ) )? )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4778:2: ( ( (otherlv_0= RULE_ID ) ) ( (lv_arrayRange_1_0= ruleArrayRange ) )? ) (otherlv_2= '.' ( (lv_path_3_0= ruleContainmentPathElement ) ) )?
             {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4850:2: ( (otherlv_0= RULE_ID ) )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4851:1: (otherlv_0= RULE_ID )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4778:2: ( ( (otherlv_0= RULE_ID ) ) ( (lv_arrayRange_1_0= ruleArrayRange ) )? )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4778:3: ( (otherlv_0= RULE_ID ) ) ( (lv_arrayRange_1_0= ruleArrayRange ) )?
             {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4851:1: (otherlv_0= RULE_ID )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4852:3: otherlv_0= RULE_ID
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4778:3: ( (otherlv_0= RULE_ID ) )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4779:1: (otherlv_0= RULE_ID )
+            {
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4779:1: (otherlv_0= RULE_ID )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4780:3: otherlv_0= RULE_ID
             {
             if ( state.backtracking==0 ) {
 
@@ -13328,10 +13114,10 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
               	        }
                       
             }
-            otherlv_0=(Token)match(input,RULE_ID,FOLLOW_RULE_ID_in_ruleContainmentPathElement10967); if (state.failed) return current;
+            otherlv_0=(Token)match(input,RULE_ID,FOLLOW_RULE_ID_in_ruleContainmentPathElement10849); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
-              		newLeafNode(otherlv_0, grammarAccess.getContainmentPathElementAccess().getNamedElementNamedElementCrossReference_0_0()); 
+              		newLeafNode(otherlv_0, grammarAccess.getContainmentPathElementAccess().getNamedElementNamedElementCrossReference_0_0_0()); 
               	
             }
 
@@ -13340,26 +13126,26 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
             }
 
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4863:2: ( (lv_arrayRange_1_0= ruleArrayRange ) )?
-            int alt68=2;
-            int LA68_0 = input.LA(1);
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4791:2: ( (lv_arrayRange_1_0= ruleArrayRange ) )?
+            int alt65=2;
+            int LA65_0 = input.LA(1);
 
-            if ( (LA68_0==92) ) {
-                alt68=1;
+            if ( (LA65_0==92) ) {
+                alt65=1;
             }
-            switch (alt68) {
+            switch (alt65) {
                 case 1 :
-                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4864:1: (lv_arrayRange_1_0= ruleArrayRange )
+                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4792:1: (lv_arrayRange_1_0= ruleArrayRange )
                     {
-                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4864:1: (lv_arrayRange_1_0= ruleArrayRange )
-                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4865:3: lv_arrayRange_1_0= ruleArrayRange
+                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4792:1: (lv_arrayRange_1_0= ruleArrayRange )
+                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4793:3: lv_arrayRange_1_0= ruleArrayRange
                     {
                     if ( state.backtracking==0 ) {
                        
-                      	        newCompositeNode(grammarAccess.getContainmentPathElementAccess().getArrayRangeArrayRangeParserRuleCall_1_0()); 
+                      	        newCompositeNode(grammarAccess.getContainmentPathElementAccess().getArrayRangeArrayRangeParserRuleCall_0_1_0()); 
                       	    
                     }
-                    pushFollow(FOLLOW_ruleArrayRange_in_ruleContainmentPathElement10988);
+                    pushFollow(FOLLOW_ruleArrayRange_in_ruleContainmentPathElement10870);
                     lv_arrayRange_1_0=ruleArrayRange();
 
                     state._fsp--;
@@ -13377,6 +13163,67 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
                       	        afterParserOrEnumRuleCall();
                       	    
                     }
+
+                    }
+
+
+                    }
+                    break;
+
+            }
+
+
+            }
+
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4809:4: (otherlv_2= '.' ( (lv_path_3_0= ruleContainmentPathElement ) ) )?
+            int alt66=2;
+            int LA66_0 = input.LA(1);
+
+            if ( (LA66_0==75) ) {
+                alt66=1;
+            }
+            switch (alt66) {
+                case 1 :
+                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4809:6: otherlv_2= '.' ( (lv_path_3_0= ruleContainmentPathElement ) )
+                    {
+                    otherlv_2=(Token)match(input,75,FOLLOW_75_in_ruleContainmentPathElement10885); if (state.failed) return current;
+                    if ( state.backtracking==0 ) {
+
+                          	newLeafNode(otherlv_2, grammarAccess.getContainmentPathElementAccess().getFullStopKeyword_1_0());
+                          
+                    }
+                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4813:1: ( (lv_path_3_0= ruleContainmentPathElement ) )
+                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4814:1: (lv_path_3_0= ruleContainmentPathElement )
+                    {
+                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4814:1: (lv_path_3_0= ruleContainmentPathElement )
+                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4815:3: lv_path_3_0= ruleContainmentPathElement
+                    {
+                    if ( state.backtracking==0 ) {
+                       
+                      	        newCompositeNode(grammarAccess.getContainmentPathElementAccess().getPathContainmentPathElementParserRuleCall_1_1_0()); 
+                      	    
+                    }
+                    pushFollow(FOLLOW_ruleContainmentPathElement_in_ruleContainmentPathElement10906);
+                    lv_path_3_0=ruleContainmentPathElement();
+
+                    state._fsp--;
+                    if (state.failed) return current;
+                    if ( state.backtracking==0 ) {
+
+                      	        if (current==null) {
+                      	            current = createModelElementForParent(grammarAccess.getContainmentPathElementRule());
+                      	        }
+                             		set(
+                             			current, 
+                             			"path",
+                              		lv_path_3_0, 
+                              		"ContainmentPathElement");
+                      	        afterParserOrEnumRuleCall();
+                      	    
+                    }
+
+                    }
+
 
                     }
 
@@ -13408,112 +13255,8 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
     // $ANTLR end "ruleContainmentPathElement"
 
 
-    // $ANTLR start "entryRuleQualifiedContainmentPathElement"
-    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4889:1: entryRuleQualifiedContainmentPathElement returns [EObject current=null] : iv_ruleQualifiedContainmentPathElement= ruleQualifiedContainmentPathElement EOF ;
-    public final EObject entryRuleQualifiedContainmentPathElement() throws RecognitionException {
-        EObject current = null;
-
-        EObject iv_ruleQualifiedContainmentPathElement = null;
-
-
-        try {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4890:2: (iv_ruleQualifiedContainmentPathElement= ruleQualifiedContainmentPathElement EOF )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4891:2: iv_ruleQualifiedContainmentPathElement= ruleQualifiedContainmentPathElement EOF
-            {
-            if ( state.backtracking==0 ) {
-               newCompositeNode(grammarAccess.getQualifiedContainmentPathElementRule()); 
-            }
-            pushFollow(FOLLOW_ruleQualifiedContainmentPathElement_in_entryRuleQualifiedContainmentPathElement11025);
-            iv_ruleQualifiedContainmentPathElement=ruleQualifiedContainmentPathElement();
-
-            state._fsp--;
-            if (state.failed) return current;
-            if ( state.backtracking==0 ) {
-               current =iv_ruleQualifiedContainmentPathElement; 
-            }
-            match(input,EOF,FOLLOW_EOF_in_entryRuleQualifiedContainmentPathElement11035); if (state.failed) return current;
-
-            }
-
-        }
-         
-            catch (RecognitionException re) { 
-                recover(input,re); 
-                appendSkippedTokens();
-            } 
-        finally {
-        }
-        return current;
-    }
-    // $ANTLR end "entryRuleQualifiedContainmentPathElement"
-
-
-    // $ANTLR start "ruleQualifiedContainmentPathElement"
-    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4898:1: ruleQualifiedContainmentPathElement returns [EObject current=null] : ( ( ruleQCLREF ) ) ;
-    public final EObject ruleQualifiedContainmentPathElement() throws RecognitionException {
-        EObject current = null;
-
-         enterRule(); 
-            
-        try {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4901:28: ( ( ( ruleQCLREF ) ) )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4902:1: ( ( ruleQCLREF ) )
-            {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4902:1: ( ( ruleQCLREF ) )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4903:1: ( ruleQCLREF )
-            {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4903:1: ( ruleQCLREF )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4904:3: ruleQCLREF
-            {
-            if ( state.backtracking==0 ) {
-
-              			if (current==null) {
-              	            current = createModelElement(grammarAccess.getQualifiedContainmentPathElementRule());
-              	        }
-                      
-            }
-            if ( state.backtracking==0 ) {
-               
-              	        newCompositeNode(grammarAccess.getQualifiedContainmentPathElementAccess().getNamedElementNamedElementCrossReference_0()); 
-              	    
-            }
-            pushFollow(FOLLOW_ruleQCLREF_in_ruleQualifiedContainmentPathElement11082);
-            ruleQCLREF();
-
-            state._fsp--;
-            if (state.failed) return current;
-            if ( state.backtracking==0 ) {
-               
-              	        afterParserOrEnumRuleCall();
-              	    
-            }
-
-            }
-
-
-            }
-
-
-            }
-
-            if ( state.backtracking==0 ) {
-               leaveRule(); 
-            }
-        }
-         
-            catch (RecognitionException re) { 
-                recover(input,re); 
-                appendSkippedTokens();
-            } 
-        finally {
-        }
-        return current;
-    }
-    // $ANTLR end "ruleQualifiedContainmentPathElement"
-
-
     // $ANTLR start "entryRulePlusMinus"
-    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4927:1: entryRulePlusMinus returns [String current=null] : iv_rulePlusMinus= rulePlusMinus EOF ;
+    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4841:1: entryRulePlusMinus returns [String current=null] : iv_rulePlusMinus= rulePlusMinus EOF ;
     public final String entryRulePlusMinus() throws RecognitionException {
         String current = null;
 
@@ -13521,13 +13264,13 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4928:2: (iv_rulePlusMinus= rulePlusMinus EOF )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4929:2: iv_rulePlusMinus= rulePlusMinus EOF
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4842:2: (iv_rulePlusMinus= rulePlusMinus EOF )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4843:2: iv_rulePlusMinus= rulePlusMinus EOF
             {
             if ( state.backtracking==0 ) {
                newCompositeNode(grammarAccess.getPlusMinusRule()); 
             }
-            pushFollow(FOLLOW_rulePlusMinus_in_entryRulePlusMinus11120);
+            pushFollow(FOLLOW_rulePlusMinus_in_entryRulePlusMinus10947);
             iv_rulePlusMinus=rulePlusMinus();
 
             state._fsp--;
@@ -13535,7 +13278,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
             if ( state.backtracking==0 ) {
                current =iv_rulePlusMinus.getText(); 
             }
-            match(input,EOF,FOLLOW_EOF_in_entryRulePlusMinus11131); if (state.failed) return current;
+            match(input,EOF,FOLLOW_EOF_in_entryRulePlusMinus10958); if (state.failed) return current;
 
             }
 
@@ -13553,7 +13296,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "rulePlusMinus"
-    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4936:1: rulePlusMinus returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] : (kw= '+' | kw= '-' ) ;
+    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4850:1: rulePlusMinus returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] : (kw= '+' | kw= '-' ) ;
     public final AntlrDatatypeRuleToken rulePlusMinus() throws RecognitionException {
         AntlrDatatypeRuleToken current = new AntlrDatatypeRuleToken();
 
@@ -13562,31 +13305,31 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
          enterRule(); 
             
         try {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4939:28: ( (kw= '+' | kw= '-' ) )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4940:1: (kw= '+' | kw= '-' )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4853:28: ( (kw= '+' | kw= '-' ) )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4854:1: (kw= '+' | kw= '-' )
             {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4940:1: (kw= '+' | kw= '-' )
-            int alt69=2;
-            int LA69_0 = input.LA(1);
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4854:1: (kw= '+' | kw= '-' )
+            int alt67=2;
+            int LA67_0 = input.LA(1);
 
-            if ( (LA69_0==59) ) {
-                alt69=1;
+            if ( (LA67_0==59) ) {
+                alt67=1;
             }
-            else if ( (LA69_0==60) ) {
-                alt69=2;
+            else if ( (LA67_0==60) ) {
+                alt67=2;
             }
             else {
                 if (state.backtracking>0) {state.failed=true; return current;}
                 NoViableAltException nvae =
-                    new NoViableAltException("", 69, 0, input);
+                    new NoViableAltException("", 67, 0, input);
 
                 throw nvae;
             }
-            switch (alt69) {
+            switch (alt67) {
                 case 1 :
-                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4941:2: kw= '+'
+                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4855:2: kw= '+'
                     {
-                    kw=(Token)match(input,59,FOLLOW_59_in_rulePlusMinus11169); if (state.failed) return current;
+                    kw=(Token)match(input,59,FOLLOW_59_in_rulePlusMinus10996); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                               current.merge(kw);
@@ -13597,9 +13340,9 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 2 :
-                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4948:2: kw= '-'
+                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4862:2: kw= '-'
                     {
-                    kw=(Token)match(input,60,FOLLOW_60_in_rulePlusMinus11188); if (state.failed) return current;
+                    kw=(Token)match(input,60,FOLLOW_60_in_rulePlusMinus11015); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                               current.merge(kw);
@@ -13632,7 +13375,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRuleStringTerm"
-    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4961:1: entryRuleStringTerm returns [EObject current=null] : iv_ruleStringTerm= ruleStringTerm EOF ;
+    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4875:1: entryRuleStringTerm returns [EObject current=null] : iv_ruleStringTerm= ruleStringTerm EOF ;
     public final EObject entryRuleStringTerm() throws RecognitionException {
         EObject current = null;
 
@@ -13640,13 +13383,13 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4962:2: (iv_ruleStringTerm= ruleStringTerm EOF )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4963:2: iv_ruleStringTerm= ruleStringTerm EOF
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4876:2: (iv_ruleStringTerm= ruleStringTerm EOF )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4877:2: iv_ruleStringTerm= ruleStringTerm EOF
             {
             if ( state.backtracking==0 ) {
                newCompositeNode(grammarAccess.getStringTermRule()); 
             }
-            pushFollow(FOLLOW_ruleStringTerm_in_entryRuleStringTerm11228);
+            pushFollow(FOLLOW_ruleStringTerm_in_entryRuleStringTerm11055);
             iv_ruleStringTerm=ruleStringTerm();
 
             state._fsp--;
@@ -13654,7 +13397,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
             if ( state.backtracking==0 ) {
                current =iv_ruleStringTerm; 
             }
-            match(input,EOF,FOLLOW_EOF_in_entryRuleStringTerm11238); if (state.failed) return current;
+            match(input,EOF,FOLLOW_EOF_in_entryRuleStringTerm11065); if (state.failed) return current;
 
             }
 
@@ -13672,7 +13415,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleStringTerm"
-    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4970:1: ruleStringTerm returns [EObject current=null] : ( (lv_value_0_0= ruleNoQuoteString ) ) ;
+    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4884:1: ruleStringTerm returns [EObject current=null] : ( (lv_value_0_0= ruleNoQuoteString ) ) ;
     public final EObject ruleStringTerm() throws RecognitionException {
         EObject current = null;
 
@@ -13682,21 +13425,21 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
          enterRule(); 
             
         try {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4973:28: ( ( (lv_value_0_0= ruleNoQuoteString ) ) )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4974:1: ( (lv_value_0_0= ruleNoQuoteString ) )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4887:28: ( ( (lv_value_0_0= ruleNoQuoteString ) ) )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4888:1: ( (lv_value_0_0= ruleNoQuoteString ) )
             {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4974:1: ( (lv_value_0_0= ruleNoQuoteString ) )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4975:1: (lv_value_0_0= ruleNoQuoteString )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4888:1: ( (lv_value_0_0= ruleNoQuoteString ) )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4889:1: (lv_value_0_0= ruleNoQuoteString )
             {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4975:1: (lv_value_0_0= ruleNoQuoteString )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4976:3: lv_value_0_0= ruleNoQuoteString
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4889:1: (lv_value_0_0= ruleNoQuoteString )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4890:3: lv_value_0_0= ruleNoQuoteString
             {
             if ( state.backtracking==0 ) {
                
               	        newCompositeNode(grammarAccess.getStringTermAccess().getValueNoQuoteStringParserRuleCall_0()); 
               	    
             }
-            pushFollow(FOLLOW_ruleNoQuoteString_in_ruleStringTerm11283);
+            pushFollow(FOLLOW_ruleNoQuoteString_in_ruleStringTerm11110);
             lv_value_0_0=ruleNoQuoteString();
 
             state._fsp--;
@@ -13740,7 +13483,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRuleNoQuoteString"
-    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5000:1: entryRuleNoQuoteString returns [String current=null] : iv_ruleNoQuoteString= ruleNoQuoteString EOF ;
+    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4914:1: entryRuleNoQuoteString returns [String current=null] : iv_ruleNoQuoteString= ruleNoQuoteString EOF ;
     public final String entryRuleNoQuoteString() throws RecognitionException {
         String current = null;
 
@@ -13748,13 +13491,13 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5001:2: (iv_ruleNoQuoteString= ruleNoQuoteString EOF )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5002:2: iv_ruleNoQuoteString= ruleNoQuoteString EOF
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4915:2: (iv_ruleNoQuoteString= ruleNoQuoteString EOF )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4916:2: iv_ruleNoQuoteString= ruleNoQuoteString EOF
             {
             if ( state.backtracking==0 ) {
                newCompositeNode(grammarAccess.getNoQuoteStringRule()); 
             }
-            pushFollow(FOLLOW_ruleNoQuoteString_in_entryRuleNoQuoteString11319);
+            pushFollow(FOLLOW_ruleNoQuoteString_in_entryRuleNoQuoteString11146);
             iv_ruleNoQuoteString=ruleNoQuoteString();
 
             state._fsp--;
@@ -13762,7 +13505,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
             if ( state.backtracking==0 ) {
                current =iv_ruleNoQuoteString.getText(); 
             }
-            match(input,EOF,FOLLOW_EOF_in_entryRuleNoQuoteString11330); if (state.failed) return current;
+            match(input,EOF,FOLLOW_EOF_in_entryRuleNoQuoteString11157); if (state.failed) return current;
 
             }
 
@@ -13780,7 +13523,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleNoQuoteString"
-    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5009:1: ruleNoQuoteString returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] : this_STRING_0= RULE_STRING ;
+    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4923:1: ruleNoQuoteString returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] : this_STRING_0= RULE_STRING ;
     public final AntlrDatatypeRuleToken ruleNoQuoteString() throws RecognitionException {
         AntlrDatatypeRuleToken current = new AntlrDatatypeRuleToken();
 
@@ -13789,10 +13532,10 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
          enterRule(); 
             
         try {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5012:28: (this_STRING_0= RULE_STRING )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5013:5: this_STRING_0= RULE_STRING
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4926:28: (this_STRING_0= RULE_STRING )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4927:5: this_STRING_0= RULE_STRING
             {
-            this_STRING_0=(Token)match(input,RULE_STRING,FOLLOW_RULE_STRING_in_ruleNoQuoteString11369); if (state.failed) return current;
+            this_STRING_0=(Token)match(input,RULE_STRING,FOLLOW_RULE_STRING_in_ruleNoQuoteString11196); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
               		current.merge(this_STRING_0);
@@ -13823,7 +13566,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRuleArrayRange"
-    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5028:1: entryRuleArrayRange returns [EObject current=null] : iv_ruleArrayRange= ruleArrayRange EOF ;
+    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4942:1: entryRuleArrayRange returns [EObject current=null] : iv_ruleArrayRange= ruleArrayRange EOF ;
     public final EObject entryRuleArrayRange() throws RecognitionException {
         EObject current = null;
 
@@ -13831,13 +13574,13 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5029:2: (iv_ruleArrayRange= ruleArrayRange EOF )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5030:2: iv_ruleArrayRange= ruleArrayRange EOF
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4943:2: (iv_ruleArrayRange= ruleArrayRange EOF )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4944:2: iv_ruleArrayRange= ruleArrayRange EOF
             {
             if ( state.backtracking==0 ) {
                newCompositeNode(grammarAccess.getArrayRangeRule()); 
             }
-            pushFollow(FOLLOW_ruleArrayRange_in_entryRuleArrayRange11413);
+            pushFollow(FOLLOW_ruleArrayRange_in_entryRuleArrayRange11240);
             iv_ruleArrayRange=ruleArrayRange();
 
             state._fsp--;
@@ -13845,7 +13588,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
             if ( state.backtracking==0 ) {
                current =iv_ruleArrayRange; 
             }
-            match(input,EOF,FOLLOW_EOF_in_entryRuleArrayRange11423); if (state.failed) return current;
+            match(input,EOF,FOLLOW_EOF_in_entryRuleArrayRange11250); if (state.failed) return current;
 
             }
 
@@ -13863,7 +13606,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleArrayRange"
-    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5037:1: ruleArrayRange returns [EObject current=null] : ( () otherlv_1= '[' ( (lv_lowerBound_2_0= ruleINTVALUE ) ) (otherlv_3= '..' ( (lv_upperBound_4_0= ruleINTVALUE ) ) )? otherlv_5= ']' ) ;
+    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4951:1: ruleArrayRange returns [EObject current=null] : ( () otherlv_1= '[' ( (lv_lowerBound_2_0= ruleINTVALUE ) ) (otherlv_3= '..' ( (lv_upperBound_4_0= ruleINTVALUE ) ) )? otherlv_5= ']' ) ;
     public final EObject ruleArrayRange() throws RecognitionException {
         EObject current = null;
 
@@ -13878,14 +13621,14 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
          enterRule(); 
             
         try {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5040:28: ( ( () otherlv_1= '[' ( (lv_lowerBound_2_0= ruleINTVALUE ) ) (otherlv_3= '..' ( (lv_upperBound_4_0= ruleINTVALUE ) ) )? otherlv_5= ']' ) )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5041:1: ( () otherlv_1= '[' ( (lv_lowerBound_2_0= ruleINTVALUE ) ) (otherlv_3= '..' ( (lv_upperBound_4_0= ruleINTVALUE ) ) )? otherlv_5= ']' )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4954:28: ( ( () otherlv_1= '[' ( (lv_lowerBound_2_0= ruleINTVALUE ) ) (otherlv_3= '..' ( (lv_upperBound_4_0= ruleINTVALUE ) ) )? otherlv_5= ']' ) )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4955:1: ( () otherlv_1= '[' ( (lv_lowerBound_2_0= ruleINTVALUE ) ) (otherlv_3= '..' ( (lv_upperBound_4_0= ruleINTVALUE ) ) )? otherlv_5= ']' )
             {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5041:1: ( () otherlv_1= '[' ( (lv_lowerBound_2_0= ruleINTVALUE ) ) (otherlv_3= '..' ( (lv_upperBound_4_0= ruleINTVALUE ) ) )? otherlv_5= ']' )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5041:2: () otherlv_1= '[' ( (lv_lowerBound_2_0= ruleINTVALUE ) ) (otherlv_3= '..' ( (lv_upperBound_4_0= ruleINTVALUE ) ) )? otherlv_5= ']'
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4955:1: ( () otherlv_1= '[' ( (lv_lowerBound_2_0= ruleINTVALUE ) ) (otherlv_3= '..' ( (lv_upperBound_4_0= ruleINTVALUE ) ) )? otherlv_5= ']' )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4955:2: () otherlv_1= '[' ( (lv_lowerBound_2_0= ruleINTVALUE ) ) (otherlv_3= '..' ( (lv_upperBound_4_0= ruleINTVALUE ) ) )? otherlv_5= ']'
             {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5041:2: ()
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5042:5: 
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4955:2: ()
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4956:5: 
             {
             if ( state.backtracking==0 ) {
 
@@ -13897,24 +13640,24 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
             }
 
-            otherlv_1=(Token)match(input,92,FOLLOW_92_in_ruleArrayRange11469); if (state.failed) return current;
+            otherlv_1=(Token)match(input,92,FOLLOW_92_in_ruleArrayRange11296); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
                   	newLeafNode(otherlv_1, grammarAccess.getArrayRangeAccess().getLeftSquareBracketKeyword_1());
                   
             }
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5051:1: ( (lv_lowerBound_2_0= ruleINTVALUE ) )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5052:1: (lv_lowerBound_2_0= ruleINTVALUE )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4965:1: ( (lv_lowerBound_2_0= ruleINTVALUE ) )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4966:1: (lv_lowerBound_2_0= ruleINTVALUE )
             {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5052:1: (lv_lowerBound_2_0= ruleINTVALUE )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5053:3: lv_lowerBound_2_0= ruleINTVALUE
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4966:1: (lv_lowerBound_2_0= ruleINTVALUE )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4967:3: lv_lowerBound_2_0= ruleINTVALUE
             {
             if ( state.backtracking==0 ) {
                
               	        newCompositeNode(grammarAccess.getArrayRangeAccess().getLowerBoundINTVALUEParserRuleCall_2_0()); 
               	    
             }
-            pushFollow(FOLLOW_ruleINTVALUE_in_ruleArrayRange11490);
+            pushFollow(FOLLOW_ruleINTVALUE_in_ruleArrayRange11317);
             lv_lowerBound_2_0=ruleINTVALUE();
 
             state._fsp--;
@@ -13938,35 +13681,35 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
             }
 
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5069:2: (otherlv_3= '..' ( (lv_upperBound_4_0= ruleINTVALUE ) ) )?
-            int alt70=2;
-            int LA70_0 = input.LA(1);
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4983:2: (otherlv_3= '..' ( (lv_upperBound_4_0= ruleINTVALUE ) ) )?
+            int alt68=2;
+            int LA68_0 = input.LA(1);
 
-            if ( (LA70_0==96) ) {
-                alt70=1;
+            if ( (LA68_0==96) ) {
+                alt68=1;
             }
-            switch (alt70) {
+            switch (alt68) {
                 case 1 :
-                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5069:4: otherlv_3= '..' ( (lv_upperBound_4_0= ruleINTVALUE ) )
+                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4983:4: otherlv_3= '..' ( (lv_upperBound_4_0= ruleINTVALUE ) )
                     {
-                    otherlv_3=(Token)match(input,96,FOLLOW_96_in_ruleArrayRange11503); if (state.failed) return current;
+                    otherlv_3=(Token)match(input,96,FOLLOW_96_in_ruleArrayRange11330); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                           	newLeafNode(otherlv_3, grammarAccess.getArrayRangeAccess().getFullStopFullStopKeyword_3_0());
                           
                     }
-                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5073:1: ( (lv_upperBound_4_0= ruleINTVALUE ) )
-                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5074:1: (lv_upperBound_4_0= ruleINTVALUE )
+                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4987:1: ( (lv_upperBound_4_0= ruleINTVALUE ) )
+                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4988:1: (lv_upperBound_4_0= ruleINTVALUE )
                     {
-                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5074:1: (lv_upperBound_4_0= ruleINTVALUE )
-                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5075:3: lv_upperBound_4_0= ruleINTVALUE
+                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4988:1: (lv_upperBound_4_0= ruleINTVALUE )
+                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:4989:3: lv_upperBound_4_0= ruleINTVALUE
                     {
                     if ( state.backtracking==0 ) {
                        
                       	        newCompositeNode(grammarAccess.getArrayRangeAccess().getUpperBoundINTVALUEParserRuleCall_3_1_0()); 
                       	    
                     }
-                    pushFollow(FOLLOW_ruleINTVALUE_in_ruleArrayRange11524);
+                    pushFollow(FOLLOW_ruleINTVALUE_in_ruleArrayRange11351);
                     lv_upperBound_4_0=ruleINTVALUE();
 
                     state._fsp--;
@@ -13996,7 +13739,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
             }
 
-            otherlv_5=(Token)match(input,93,FOLLOW_93_in_ruleArrayRange11538); if (state.failed) return current;
+            otherlv_5=(Token)match(input,93,FOLLOW_93_in_ruleArrayRange11365); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
                   	newLeafNode(otherlv_5, grammarAccess.getArrayRangeAccess().getRightSquareBracketKeyword_4());
@@ -14025,7 +13768,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRuleSignedConstant"
-    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5103:1: entryRuleSignedConstant returns [EObject current=null] : iv_ruleSignedConstant= ruleSignedConstant EOF ;
+    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5017:1: entryRuleSignedConstant returns [EObject current=null] : iv_ruleSignedConstant= ruleSignedConstant EOF ;
     public final EObject entryRuleSignedConstant() throws RecognitionException {
         EObject current = null;
 
@@ -14033,13 +13776,13 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5104:2: (iv_ruleSignedConstant= ruleSignedConstant EOF )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5105:2: iv_ruleSignedConstant= ruleSignedConstant EOF
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5018:2: (iv_ruleSignedConstant= ruleSignedConstant EOF )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5019:2: iv_ruleSignedConstant= ruleSignedConstant EOF
             {
             if ( state.backtracking==0 ) {
                newCompositeNode(grammarAccess.getSignedConstantRule()); 
             }
-            pushFollow(FOLLOW_ruleSignedConstant_in_entryRuleSignedConstant11574);
+            pushFollow(FOLLOW_ruleSignedConstant_in_entryRuleSignedConstant11401);
             iv_ruleSignedConstant=ruleSignedConstant();
 
             state._fsp--;
@@ -14047,7 +13790,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
             if ( state.backtracking==0 ) {
                current =iv_ruleSignedConstant; 
             }
-            match(input,EOF,FOLLOW_EOF_in_entryRuleSignedConstant11584); if (state.failed) return current;
+            match(input,EOF,FOLLOW_EOF_in_entryRuleSignedConstant11411); if (state.failed) return current;
 
             }
 
@@ -14065,7 +13808,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleSignedConstant"
-    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5112:1: ruleSignedConstant returns [EObject current=null] : ( ( (lv_op_0_0= rulePlusMinus ) ) ( (lv_ownedPropertyExpression_1_0= ruleConstantValue ) ) ) ;
+    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5026:1: ruleSignedConstant returns [EObject current=null] : ( ( (lv_op_0_0= rulePlusMinus ) ) ( (lv_ownedPropertyExpression_1_0= ruleConstantValue ) ) ) ;
     public final EObject ruleSignedConstant() throws RecognitionException {
         EObject current = null;
 
@@ -14077,24 +13820,24 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
          enterRule(); 
             
         try {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5115:28: ( ( ( (lv_op_0_0= rulePlusMinus ) ) ( (lv_ownedPropertyExpression_1_0= ruleConstantValue ) ) ) )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5116:1: ( ( (lv_op_0_0= rulePlusMinus ) ) ( (lv_ownedPropertyExpression_1_0= ruleConstantValue ) ) )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5029:28: ( ( ( (lv_op_0_0= rulePlusMinus ) ) ( (lv_ownedPropertyExpression_1_0= ruleConstantValue ) ) ) )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5030:1: ( ( (lv_op_0_0= rulePlusMinus ) ) ( (lv_ownedPropertyExpression_1_0= ruleConstantValue ) ) )
             {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5116:1: ( ( (lv_op_0_0= rulePlusMinus ) ) ( (lv_ownedPropertyExpression_1_0= ruleConstantValue ) ) )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5116:2: ( (lv_op_0_0= rulePlusMinus ) ) ( (lv_ownedPropertyExpression_1_0= ruleConstantValue ) )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5030:1: ( ( (lv_op_0_0= rulePlusMinus ) ) ( (lv_ownedPropertyExpression_1_0= ruleConstantValue ) ) )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5030:2: ( (lv_op_0_0= rulePlusMinus ) ) ( (lv_ownedPropertyExpression_1_0= ruleConstantValue ) )
             {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5116:2: ( (lv_op_0_0= rulePlusMinus ) )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5117:1: (lv_op_0_0= rulePlusMinus )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5030:2: ( (lv_op_0_0= rulePlusMinus ) )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5031:1: (lv_op_0_0= rulePlusMinus )
             {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5117:1: (lv_op_0_0= rulePlusMinus )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5118:3: lv_op_0_0= rulePlusMinus
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5031:1: (lv_op_0_0= rulePlusMinus )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5032:3: lv_op_0_0= rulePlusMinus
             {
             if ( state.backtracking==0 ) {
                
               	        newCompositeNode(grammarAccess.getSignedConstantAccess().getOpPlusMinusParserRuleCall_0_0()); 
               	    
             }
-            pushFollow(FOLLOW_rulePlusMinus_in_ruleSignedConstant11630);
+            pushFollow(FOLLOW_rulePlusMinus_in_ruleSignedConstant11457);
             lv_op_0_0=rulePlusMinus();
 
             state._fsp--;
@@ -14118,18 +13861,18 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
             }
 
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5134:2: ( (lv_ownedPropertyExpression_1_0= ruleConstantValue ) )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5135:1: (lv_ownedPropertyExpression_1_0= ruleConstantValue )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5048:2: ( (lv_ownedPropertyExpression_1_0= ruleConstantValue ) )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5049:1: (lv_ownedPropertyExpression_1_0= ruleConstantValue )
             {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5135:1: (lv_ownedPropertyExpression_1_0= ruleConstantValue )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5136:3: lv_ownedPropertyExpression_1_0= ruleConstantValue
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5049:1: (lv_ownedPropertyExpression_1_0= ruleConstantValue )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5050:3: lv_ownedPropertyExpression_1_0= ruleConstantValue
             {
             if ( state.backtracking==0 ) {
                
               	        newCompositeNode(grammarAccess.getSignedConstantAccess().getOwnedPropertyExpressionConstantValueParserRuleCall_1_0()); 
               	    
             }
-            pushFollow(FOLLOW_ruleConstantValue_in_ruleSignedConstant11651);
+            pushFollow(FOLLOW_ruleConstantValue_in_ruleSignedConstant11478);
             lv_ownedPropertyExpression_1_0=ruleConstantValue();
 
             state._fsp--;
@@ -14176,7 +13919,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRuleIntegerTerm"
-    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5160:1: entryRuleIntegerTerm returns [EObject current=null] : iv_ruleIntegerTerm= ruleIntegerTerm EOF ;
+    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5074:1: entryRuleIntegerTerm returns [EObject current=null] : iv_ruleIntegerTerm= ruleIntegerTerm EOF ;
     public final EObject entryRuleIntegerTerm() throws RecognitionException {
         EObject current = null;
 
@@ -14184,13 +13927,13 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5161:2: (iv_ruleIntegerTerm= ruleIntegerTerm EOF )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5162:2: iv_ruleIntegerTerm= ruleIntegerTerm EOF
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5075:2: (iv_ruleIntegerTerm= ruleIntegerTerm EOF )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5076:2: iv_ruleIntegerTerm= ruleIntegerTerm EOF
             {
             if ( state.backtracking==0 ) {
                newCompositeNode(grammarAccess.getIntegerTermRule()); 
             }
-            pushFollow(FOLLOW_ruleIntegerTerm_in_entryRuleIntegerTerm11687);
+            pushFollow(FOLLOW_ruleIntegerTerm_in_entryRuleIntegerTerm11514);
             iv_ruleIntegerTerm=ruleIntegerTerm();
 
             state._fsp--;
@@ -14198,7 +13941,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
             if ( state.backtracking==0 ) {
                current =iv_ruleIntegerTerm; 
             }
-            match(input,EOF,FOLLOW_EOF_in_entryRuleIntegerTerm11697); if (state.failed) return current;
+            match(input,EOF,FOLLOW_EOF_in_entryRuleIntegerTerm11524); if (state.failed) return current;
 
             }
 
@@ -14216,7 +13959,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleIntegerTerm"
-    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5169:1: ruleIntegerTerm returns [EObject current=null] : ( ( (lv_value_0_0= ruleSignedInt ) ) ( (otherlv_1= RULE_ID ) )? ) ;
+    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5083:1: ruleIntegerTerm returns [EObject current=null] : ( ( (lv_value_0_0= ruleSignedInt ) ) ( (otherlv_1= RULE_ID ) )? ) ;
     public final EObject ruleIntegerTerm() throws RecognitionException {
         EObject current = null;
 
@@ -14227,24 +13970,24 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
          enterRule(); 
             
         try {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5172:28: ( ( ( (lv_value_0_0= ruleSignedInt ) ) ( (otherlv_1= RULE_ID ) )? ) )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5173:1: ( ( (lv_value_0_0= ruleSignedInt ) ) ( (otherlv_1= RULE_ID ) )? )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5086:28: ( ( ( (lv_value_0_0= ruleSignedInt ) ) ( (otherlv_1= RULE_ID ) )? ) )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5087:1: ( ( (lv_value_0_0= ruleSignedInt ) ) ( (otherlv_1= RULE_ID ) )? )
             {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5173:1: ( ( (lv_value_0_0= ruleSignedInt ) ) ( (otherlv_1= RULE_ID ) )? )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5173:2: ( (lv_value_0_0= ruleSignedInt ) ) ( (otherlv_1= RULE_ID ) )?
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5087:1: ( ( (lv_value_0_0= ruleSignedInt ) ) ( (otherlv_1= RULE_ID ) )? )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5087:2: ( (lv_value_0_0= ruleSignedInt ) ) ( (otherlv_1= RULE_ID ) )?
             {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5173:2: ( (lv_value_0_0= ruleSignedInt ) )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5174:1: (lv_value_0_0= ruleSignedInt )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5087:2: ( (lv_value_0_0= ruleSignedInt ) )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5088:1: (lv_value_0_0= ruleSignedInt )
             {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5174:1: (lv_value_0_0= ruleSignedInt )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5175:3: lv_value_0_0= ruleSignedInt
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5088:1: (lv_value_0_0= ruleSignedInt )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5089:3: lv_value_0_0= ruleSignedInt
             {
             if ( state.backtracking==0 ) {
                
               	        newCompositeNode(grammarAccess.getIntegerTermAccess().getValueSignedIntParserRuleCall_0_0()); 
               	    
             }
-            pushFollow(FOLLOW_ruleSignedInt_in_ruleIntegerTerm11743);
+            pushFollow(FOLLOW_ruleSignedInt_in_ruleIntegerTerm11570);
             lv_value_0_0=ruleSignedInt();
 
             state._fsp--;
@@ -14268,19 +14011,19 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
             }
 
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5191:2: ( (otherlv_1= RULE_ID ) )?
-            int alt71=2;
-            int LA71_0 = input.LA(1);
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5105:2: ( (otherlv_1= RULE_ID ) )?
+            int alt69=2;
+            int LA69_0 = input.LA(1);
 
-            if ( (LA71_0==RULE_ID) ) {
-                alt71=1;
+            if ( (LA69_0==RULE_ID) ) {
+                alt69=1;
             }
-            switch (alt71) {
+            switch (alt69) {
                 case 1 :
-                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5192:1: (otherlv_1= RULE_ID )
+                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5106:1: (otherlv_1= RULE_ID )
                     {
-                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5192:1: (otherlv_1= RULE_ID )
-                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5193:3: otherlv_1= RULE_ID
+                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5106:1: (otherlv_1= RULE_ID )
+                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5107:3: otherlv_1= RULE_ID
                     {
                     if ( state.backtracking==0 ) {
 
@@ -14289,7 +14032,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
                       	        }
                               
                     }
-                    otherlv_1=(Token)match(input,RULE_ID,FOLLOW_RULE_ID_in_ruleIntegerTerm11763); if (state.failed) return current;
+                    otherlv_1=(Token)match(input,RULE_ID,FOLLOW_RULE_ID_in_ruleIntegerTerm11590); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                       		newLeafNode(otherlv_1, grammarAccess.getIntegerTermAccess().getUnitUnitLiteralCrossReference_1_0()); 
@@ -14327,7 +14070,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRuleSignedInt"
-    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5212:1: entryRuleSignedInt returns [String current=null] : iv_ruleSignedInt= ruleSignedInt EOF ;
+    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5126:1: entryRuleSignedInt returns [String current=null] : iv_ruleSignedInt= ruleSignedInt EOF ;
     public final String entryRuleSignedInt() throws RecognitionException {
         String current = null;
 
@@ -14335,13 +14078,13 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5213:2: (iv_ruleSignedInt= ruleSignedInt EOF )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5214:2: iv_ruleSignedInt= ruleSignedInt EOF
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5127:2: (iv_ruleSignedInt= ruleSignedInt EOF )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5128:2: iv_ruleSignedInt= ruleSignedInt EOF
             {
             if ( state.backtracking==0 ) {
                newCompositeNode(grammarAccess.getSignedIntRule()); 
             }
-            pushFollow(FOLLOW_ruleSignedInt_in_entryRuleSignedInt11801);
+            pushFollow(FOLLOW_ruleSignedInt_in_entryRuleSignedInt11628);
             iv_ruleSignedInt=ruleSignedInt();
 
             state._fsp--;
@@ -14349,7 +14092,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
             if ( state.backtracking==0 ) {
                current =iv_ruleSignedInt.getText(); 
             }
-            match(input,EOF,FOLLOW_EOF_in_entryRuleSignedInt11812); if (state.failed) return current;
+            match(input,EOF,FOLLOW_EOF_in_entryRuleSignedInt11639); if (state.failed) return current;
 
             }
 
@@ -14367,7 +14110,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleSignedInt"
-    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5221:1: ruleSignedInt returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] : ( (kw= '+' | kw= '-' )? this_INTEGER_LIT_2= RULE_INTEGER_LIT ) ;
+    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5135:1: ruleSignedInt returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] : ( (kw= '+' | kw= '-' )? this_INTEGER_LIT_2= RULE_INTEGER_LIT ) ;
     public final AntlrDatatypeRuleToken ruleSignedInt() throws RecognitionException {
         AntlrDatatypeRuleToken current = new AntlrDatatypeRuleToken();
 
@@ -14377,27 +14120,27 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
          enterRule(); 
             
         try {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5224:28: ( ( (kw= '+' | kw= '-' )? this_INTEGER_LIT_2= RULE_INTEGER_LIT ) )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5225:1: ( (kw= '+' | kw= '-' )? this_INTEGER_LIT_2= RULE_INTEGER_LIT )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5138:28: ( ( (kw= '+' | kw= '-' )? this_INTEGER_LIT_2= RULE_INTEGER_LIT ) )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5139:1: ( (kw= '+' | kw= '-' )? this_INTEGER_LIT_2= RULE_INTEGER_LIT )
             {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5225:1: ( (kw= '+' | kw= '-' )? this_INTEGER_LIT_2= RULE_INTEGER_LIT )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5225:2: (kw= '+' | kw= '-' )? this_INTEGER_LIT_2= RULE_INTEGER_LIT
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5139:1: ( (kw= '+' | kw= '-' )? this_INTEGER_LIT_2= RULE_INTEGER_LIT )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5139:2: (kw= '+' | kw= '-' )? this_INTEGER_LIT_2= RULE_INTEGER_LIT
             {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5225:2: (kw= '+' | kw= '-' )?
-            int alt72=3;
-            int LA72_0 = input.LA(1);
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5139:2: (kw= '+' | kw= '-' )?
+            int alt70=3;
+            int LA70_0 = input.LA(1);
 
-            if ( (LA72_0==59) ) {
-                alt72=1;
+            if ( (LA70_0==59) ) {
+                alt70=1;
             }
-            else if ( (LA72_0==60) ) {
-                alt72=2;
+            else if ( (LA70_0==60) ) {
+                alt70=2;
             }
-            switch (alt72) {
+            switch (alt70) {
                 case 1 :
-                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5226:2: kw= '+'
+                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5140:2: kw= '+'
                     {
-                    kw=(Token)match(input,59,FOLLOW_59_in_ruleSignedInt11851); if (state.failed) return current;
+                    kw=(Token)match(input,59,FOLLOW_59_in_ruleSignedInt11678); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                               current.merge(kw);
@@ -14408,9 +14151,9 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 2 :
-                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5233:2: kw= '-'
+                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5147:2: kw= '-'
                     {
-                    kw=(Token)match(input,60,FOLLOW_60_in_ruleSignedInt11870); if (state.failed) return current;
+                    kw=(Token)match(input,60,FOLLOW_60_in_ruleSignedInt11697); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                               current.merge(kw);
@@ -14423,7 +14166,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
             }
 
-            this_INTEGER_LIT_2=(Token)match(input,RULE_INTEGER_LIT,FOLLOW_RULE_INTEGER_LIT_in_ruleSignedInt11887); if (state.failed) return current;
+            this_INTEGER_LIT_2=(Token)match(input,RULE_INTEGER_LIT,FOLLOW_RULE_INTEGER_LIT_in_ruleSignedInt11714); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
               		current.merge(this_INTEGER_LIT_2);
@@ -14457,7 +14200,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRuleRealTerm"
-    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5253:1: entryRuleRealTerm returns [EObject current=null] : iv_ruleRealTerm= ruleRealTerm EOF ;
+    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5167:1: entryRuleRealTerm returns [EObject current=null] : iv_ruleRealTerm= ruleRealTerm EOF ;
     public final EObject entryRuleRealTerm() throws RecognitionException {
         EObject current = null;
 
@@ -14465,13 +14208,13 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5254:2: (iv_ruleRealTerm= ruleRealTerm EOF )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5255:2: iv_ruleRealTerm= ruleRealTerm EOF
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5168:2: (iv_ruleRealTerm= ruleRealTerm EOF )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5169:2: iv_ruleRealTerm= ruleRealTerm EOF
             {
             if ( state.backtracking==0 ) {
                newCompositeNode(grammarAccess.getRealTermRule()); 
             }
-            pushFollow(FOLLOW_ruleRealTerm_in_entryRuleRealTerm11932);
+            pushFollow(FOLLOW_ruleRealTerm_in_entryRuleRealTerm11759);
             iv_ruleRealTerm=ruleRealTerm();
 
             state._fsp--;
@@ -14479,7 +14222,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
             if ( state.backtracking==0 ) {
                current =iv_ruleRealTerm; 
             }
-            match(input,EOF,FOLLOW_EOF_in_entryRuleRealTerm11942); if (state.failed) return current;
+            match(input,EOF,FOLLOW_EOF_in_entryRuleRealTerm11769); if (state.failed) return current;
 
             }
 
@@ -14497,7 +14240,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleRealTerm"
-    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5262:1: ruleRealTerm returns [EObject current=null] : ( ( (lv_value_0_0= ruleSignedReal ) ) ( (otherlv_1= RULE_ID ) )? ) ;
+    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5176:1: ruleRealTerm returns [EObject current=null] : ( ( (lv_value_0_0= ruleSignedReal ) ) ( (otherlv_1= RULE_ID ) )? ) ;
     public final EObject ruleRealTerm() throws RecognitionException {
         EObject current = null;
 
@@ -14508,24 +14251,24 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
          enterRule(); 
             
         try {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5265:28: ( ( ( (lv_value_0_0= ruleSignedReal ) ) ( (otherlv_1= RULE_ID ) )? ) )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5266:1: ( ( (lv_value_0_0= ruleSignedReal ) ) ( (otherlv_1= RULE_ID ) )? )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5179:28: ( ( ( (lv_value_0_0= ruleSignedReal ) ) ( (otherlv_1= RULE_ID ) )? ) )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5180:1: ( ( (lv_value_0_0= ruleSignedReal ) ) ( (otherlv_1= RULE_ID ) )? )
             {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5266:1: ( ( (lv_value_0_0= ruleSignedReal ) ) ( (otherlv_1= RULE_ID ) )? )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5266:2: ( (lv_value_0_0= ruleSignedReal ) ) ( (otherlv_1= RULE_ID ) )?
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5180:1: ( ( (lv_value_0_0= ruleSignedReal ) ) ( (otherlv_1= RULE_ID ) )? )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5180:2: ( (lv_value_0_0= ruleSignedReal ) ) ( (otherlv_1= RULE_ID ) )?
             {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5266:2: ( (lv_value_0_0= ruleSignedReal ) )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5267:1: (lv_value_0_0= ruleSignedReal )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5180:2: ( (lv_value_0_0= ruleSignedReal ) )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5181:1: (lv_value_0_0= ruleSignedReal )
             {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5267:1: (lv_value_0_0= ruleSignedReal )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5268:3: lv_value_0_0= ruleSignedReal
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5181:1: (lv_value_0_0= ruleSignedReal )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5182:3: lv_value_0_0= ruleSignedReal
             {
             if ( state.backtracking==0 ) {
                
               	        newCompositeNode(grammarAccess.getRealTermAccess().getValueSignedRealParserRuleCall_0_0()); 
               	    
             }
-            pushFollow(FOLLOW_ruleSignedReal_in_ruleRealTerm11988);
+            pushFollow(FOLLOW_ruleSignedReal_in_ruleRealTerm11815);
             lv_value_0_0=ruleSignedReal();
 
             state._fsp--;
@@ -14549,19 +14292,19 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
             }
 
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5284:2: ( (otherlv_1= RULE_ID ) )?
-            int alt73=2;
-            int LA73_0 = input.LA(1);
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5198:2: ( (otherlv_1= RULE_ID ) )?
+            int alt71=2;
+            int LA71_0 = input.LA(1);
 
-            if ( (LA73_0==RULE_ID) ) {
-                alt73=1;
+            if ( (LA71_0==RULE_ID) ) {
+                alt71=1;
             }
-            switch (alt73) {
+            switch (alt71) {
                 case 1 :
-                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5285:1: (otherlv_1= RULE_ID )
+                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5199:1: (otherlv_1= RULE_ID )
                     {
-                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5285:1: (otherlv_1= RULE_ID )
-                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5286:3: otherlv_1= RULE_ID
+                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5199:1: (otherlv_1= RULE_ID )
+                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5200:3: otherlv_1= RULE_ID
                     {
                     if ( state.backtracking==0 ) {
 
@@ -14570,7 +14313,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
                       	        }
                               
                     }
-                    otherlv_1=(Token)match(input,RULE_ID,FOLLOW_RULE_ID_in_ruleRealTerm12008); if (state.failed) return current;
+                    otherlv_1=(Token)match(input,RULE_ID,FOLLOW_RULE_ID_in_ruleRealTerm11835); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                       		newLeafNode(otherlv_1, grammarAccess.getRealTermAccess().getUnitUnitLiteralCrossReference_1_0()); 
@@ -14608,7 +14351,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRuleSignedReal"
-    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5305:1: entryRuleSignedReal returns [String current=null] : iv_ruleSignedReal= ruleSignedReal EOF ;
+    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5219:1: entryRuleSignedReal returns [String current=null] : iv_ruleSignedReal= ruleSignedReal EOF ;
     public final String entryRuleSignedReal() throws RecognitionException {
         String current = null;
 
@@ -14616,13 +14359,13 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5306:2: (iv_ruleSignedReal= ruleSignedReal EOF )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5307:2: iv_ruleSignedReal= ruleSignedReal EOF
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5220:2: (iv_ruleSignedReal= ruleSignedReal EOF )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5221:2: iv_ruleSignedReal= ruleSignedReal EOF
             {
             if ( state.backtracking==0 ) {
                newCompositeNode(grammarAccess.getSignedRealRule()); 
             }
-            pushFollow(FOLLOW_ruleSignedReal_in_entryRuleSignedReal12046);
+            pushFollow(FOLLOW_ruleSignedReal_in_entryRuleSignedReal11873);
             iv_ruleSignedReal=ruleSignedReal();
 
             state._fsp--;
@@ -14630,7 +14373,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
             if ( state.backtracking==0 ) {
                current =iv_ruleSignedReal.getText(); 
             }
-            match(input,EOF,FOLLOW_EOF_in_entryRuleSignedReal12057); if (state.failed) return current;
+            match(input,EOF,FOLLOW_EOF_in_entryRuleSignedReal11884); if (state.failed) return current;
 
             }
 
@@ -14648,7 +14391,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleSignedReal"
-    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5314:1: ruleSignedReal returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] : ( (kw= '+' | kw= '-' )? this_REAL_LIT_2= RULE_REAL_LIT ) ;
+    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5228:1: ruleSignedReal returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] : ( (kw= '+' | kw= '-' )? this_REAL_LIT_2= RULE_REAL_LIT ) ;
     public final AntlrDatatypeRuleToken ruleSignedReal() throws RecognitionException {
         AntlrDatatypeRuleToken current = new AntlrDatatypeRuleToken();
 
@@ -14658,27 +14401,27 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
          enterRule(); 
             
         try {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5317:28: ( ( (kw= '+' | kw= '-' )? this_REAL_LIT_2= RULE_REAL_LIT ) )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5318:1: ( (kw= '+' | kw= '-' )? this_REAL_LIT_2= RULE_REAL_LIT )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5231:28: ( ( (kw= '+' | kw= '-' )? this_REAL_LIT_2= RULE_REAL_LIT ) )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5232:1: ( (kw= '+' | kw= '-' )? this_REAL_LIT_2= RULE_REAL_LIT )
             {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5318:1: ( (kw= '+' | kw= '-' )? this_REAL_LIT_2= RULE_REAL_LIT )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5318:2: (kw= '+' | kw= '-' )? this_REAL_LIT_2= RULE_REAL_LIT
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5232:1: ( (kw= '+' | kw= '-' )? this_REAL_LIT_2= RULE_REAL_LIT )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5232:2: (kw= '+' | kw= '-' )? this_REAL_LIT_2= RULE_REAL_LIT
             {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5318:2: (kw= '+' | kw= '-' )?
-            int alt74=3;
-            int LA74_0 = input.LA(1);
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5232:2: (kw= '+' | kw= '-' )?
+            int alt72=3;
+            int LA72_0 = input.LA(1);
 
-            if ( (LA74_0==59) ) {
-                alt74=1;
+            if ( (LA72_0==59) ) {
+                alt72=1;
             }
-            else if ( (LA74_0==60) ) {
-                alt74=2;
+            else if ( (LA72_0==60) ) {
+                alt72=2;
             }
-            switch (alt74) {
+            switch (alt72) {
                 case 1 :
-                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5319:2: kw= '+'
+                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5233:2: kw= '+'
                     {
-                    kw=(Token)match(input,59,FOLLOW_59_in_ruleSignedReal12096); if (state.failed) return current;
+                    kw=(Token)match(input,59,FOLLOW_59_in_ruleSignedReal11923); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                               current.merge(kw);
@@ -14689,9 +14432,9 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 2 :
-                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5326:2: kw= '-'
+                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5240:2: kw= '-'
                     {
-                    kw=(Token)match(input,60,FOLLOW_60_in_ruleSignedReal12115); if (state.failed) return current;
+                    kw=(Token)match(input,60,FOLLOW_60_in_ruleSignedReal11942); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                               current.merge(kw);
@@ -14704,7 +14447,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
             }
 
-            this_REAL_LIT_2=(Token)match(input,RULE_REAL_LIT,FOLLOW_RULE_REAL_LIT_in_ruleSignedReal12132); if (state.failed) return current;
+            this_REAL_LIT_2=(Token)match(input,RULE_REAL_LIT,FOLLOW_RULE_REAL_LIT_in_ruleSignedReal11959); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
               		current.merge(this_REAL_LIT_2);
@@ -14738,7 +14481,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRuleNumericRangeTerm"
-    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5346:1: entryRuleNumericRangeTerm returns [EObject current=null] : iv_ruleNumericRangeTerm= ruleNumericRangeTerm EOF ;
+    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5260:1: entryRuleNumericRangeTerm returns [EObject current=null] : iv_ruleNumericRangeTerm= ruleNumericRangeTerm EOF ;
     public final EObject entryRuleNumericRangeTerm() throws RecognitionException {
         EObject current = null;
 
@@ -14746,13 +14489,13 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5347:2: (iv_ruleNumericRangeTerm= ruleNumericRangeTerm EOF )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5348:2: iv_ruleNumericRangeTerm= ruleNumericRangeTerm EOF
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5261:2: (iv_ruleNumericRangeTerm= ruleNumericRangeTerm EOF )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5262:2: iv_ruleNumericRangeTerm= ruleNumericRangeTerm EOF
             {
             if ( state.backtracking==0 ) {
                newCompositeNode(grammarAccess.getNumericRangeTermRule()); 
             }
-            pushFollow(FOLLOW_ruleNumericRangeTerm_in_entryRuleNumericRangeTerm12177);
+            pushFollow(FOLLOW_ruleNumericRangeTerm_in_entryRuleNumericRangeTerm12004);
             iv_ruleNumericRangeTerm=ruleNumericRangeTerm();
 
             state._fsp--;
@@ -14760,7 +14503,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
             if ( state.backtracking==0 ) {
                current =iv_ruleNumericRangeTerm; 
             }
-            match(input,EOF,FOLLOW_EOF_in_entryRuleNumericRangeTerm12187); if (state.failed) return current;
+            match(input,EOF,FOLLOW_EOF_in_entryRuleNumericRangeTerm12014); if (state.failed) return current;
 
             }
 
@@ -14778,7 +14521,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleNumericRangeTerm"
-    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5355:1: ruleNumericRangeTerm returns [EObject current=null] : ( ( (lv_minimum_0_0= ruleNumAlt ) ) otherlv_1= '..' ( (lv_maximum_2_0= ruleNumAlt ) ) (otherlv_3= 'delta' ( (lv_delta_4_0= ruleNumAlt ) ) )? ) ;
+    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5269:1: ruleNumericRangeTerm returns [EObject current=null] : ( ( (lv_minimum_0_0= ruleNumAlt ) ) otherlv_1= '..' ( (lv_maximum_2_0= ruleNumAlt ) ) (otherlv_3= 'delta' ( (lv_delta_4_0= ruleNumAlt ) ) )? ) ;
     public final EObject ruleNumericRangeTerm() throws RecognitionException {
         EObject current = null;
 
@@ -14794,24 +14537,24 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
          enterRule(); 
             
         try {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5358:28: ( ( ( (lv_minimum_0_0= ruleNumAlt ) ) otherlv_1= '..' ( (lv_maximum_2_0= ruleNumAlt ) ) (otherlv_3= 'delta' ( (lv_delta_4_0= ruleNumAlt ) ) )? ) )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5359:1: ( ( (lv_minimum_0_0= ruleNumAlt ) ) otherlv_1= '..' ( (lv_maximum_2_0= ruleNumAlt ) ) (otherlv_3= 'delta' ( (lv_delta_4_0= ruleNumAlt ) ) )? )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5272:28: ( ( ( (lv_minimum_0_0= ruleNumAlt ) ) otherlv_1= '..' ( (lv_maximum_2_0= ruleNumAlt ) ) (otherlv_3= 'delta' ( (lv_delta_4_0= ruleNumAlt ) ) )? ) )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5273:1: ( ( (lv_minimum_0_0= ruleNumAlt ) ) otherlv_1= '..' ( (lv_maximum_2_0= ruleNumAlt ) ) (otherlv_3= 'delta' ( (lv_delta_4_0= ruleNumAlt ) ) )? )
             {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5359:1: ( ( (lv_minimum_0_0= ruleNumAlt ) ) otherlv_1= '..' ( (lv_maximum_2_0= ruleNumAlt ) ) (otherlv_3= 'delta' ( (lv_delta_4_0= ruleNumAlt ) ) )? )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5359:2: ( (lv_minimum_0_0= ruleNumAlt ) ) otherlv_1= '..' ( (lv_maximum_2_0= ruleNumAlt ) ) (otherlv_3= 'delta' ( (lv_delta_4_0= ruleNumAlt ) ) )?
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5273:1: ( ( (lv_minimum_0_0= ruleNumAlt ) ) otherlv_1= '..' ( (lv_maximum_2_0= ruleNumAlt ) ) (otherlv_3= 'delta' ( (lv_delta_4_0= ruleNumAlt ) ) )? )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5273:2: ( (lv_minimum_0_0= ruleNumAlt ) ) otherlv_1= '..' ( (lv_maximum_2_0= ruleNumAlt ) ) (otherlv_3= 'delta' ( (lv_delta_4_0= ruleNumAlt ) ) )?
             {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5359:2: ( (lv_minimum_0_0= ruleNumAlt ) )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5360:1: (lv_minimum_0_0= ruleNumAlt )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5273:2: ( (lv_minimum_0_0= ruleNumAlt ) )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5274:1: (lv_minimum_0_0= ruleNumAlt )
             {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5360:1: (lv_minimum_0_0= ruleNumAlt )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5361:3: lv_minimum_0_0= ruleNumAlt
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5274:1: (lv_minimum_0_0= ruleNumAlt )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5275:3: lv_minimum_0_0= ruleNumAlt
             {
             if ( state.backtracking==0 ) {
                
               	        newCompositeNode(grammarAccess.getNumericRangeTermAccess().getMinimumNumAltParserRuleCall_0_0()); 
               	    
             }
-            pushFollow(FOLLOW_ruleNumAlt_in_ruleNumericRangeTerm12233);
+            pushFollow(FOLLOW_ruleNumAlt_in_ruleNumericRangeTerm12060);
             lv_minimum_0_0=ruleNumAlt();
 
             state._fsp--;
@@ -14835,24 +14578,24 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
             }
 
-            otherlv_1=(Token)match(input,96,FOLLOW_96_in_ruleNumericRangeTerm12245); if (state.failed) return current;
+            otherlv_1=(Token)match(input,96,FOLLOW_96_in_ruleNumericRangeTerm12072); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
                   	newLeafNode(otherlv_1, grammarAccess.getNumericRangeTermAccess().getFullStopFullStopKeyword_1());
                   
             }
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5381:1: ( (lv_maximum_2_0= ruleNumAlt ) )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5382:1: (lv_maximum_2_0= ruleNumAlt )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5295:1: ( (lv_maximum_2_0= ruleNumAlt ) )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5296:1: (lv_maximum_2_0= ruleNumAlt )
             {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5382:1: (lv_maximum_2_0= ruleNumAlt )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5383:3: lv_maximum_2_0= ruleNumAlt
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5296:1: (lv_maximum_2_0= ruleNumAlt )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5297:3: lv_maximum_2_0= ruleNumAlt
             {
             if ( state.backtracking==0 ) {
                
               	        newCompositeNode(grammarAccess.getNumericRangeTermAccess().getMaximumNumAltParserRuleCall_2_0()); 
               	    
             }
-            pushFollow(FOLLOW_ruleNumAlt_in_ruleNumericRangeTerm12266);
+            pushFollow(FOLLOW_ruleNumAlt_in_ruleNumericRangeTerm12093);
             lv_maximum_2_0=ruleNumAlt();
 
             state._fsp--;
@@ -14876,35 +14619,35 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
             }
 
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5399:2: (otherlv_3= 'delta' ( (lv_delta_4_0= ruleNumAlt ) ) )?
-            int alt75=2;
-            int LA75_0 = input.LA(1);
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5313:2: (otherlv_3= 'delta' ( (lv_delta_4_0= ruleNumAlt ) ) )?
+            int alt73=2;
+            int LA73_0 = input.LA(1);
 
-            if ( (LA75_0==97) ) {
-                alt75=1;
+            if ( (LA73_0==97) ) {
+                alt73=1;
             }
-            switch (alt75) {
+            switch (alt73) {
                 case 1 :
-                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5399:4: otherlv_3= 'delta' ( (lv_delta_4_0= ruleNumAlt ) )
+                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5313:4: otherlv_3= 'delta' ( (lv_delta_4_0= ruleNumAlt ) )
                     {
-                    otherlv_3=(Token)match(input,97,FOLLOW_97_in_ruleNumericRangeTerm12279); if (state.failed) return current;
+                    otherlv_3=(Token)match(input,97,FOLLOW_97_in_ruleNumericRangeTerm12106); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                           	newLeafNode(otherlv_3, grammarAccess.getNumericRangeTermAccess().getDeltaKeyword_3_0());
                           
                     }
-                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5403:1: ( (lv_delta_4_0= ruleNumAlt ) )
-                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5404:1: (lv_delta_4_0= ruleNumAlt )
+                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5317:1: ( (lv_delta_4_0= ruleNumAlt ) )
+                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5318:1: (lv_delta_4_0= ruleNumAlt )
                     {
-                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5404:1: (lv_delta_4_0= ruleNumAlt )
-                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5405:3: lv_delta_4_0= ruleNumAlt
+                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5318:1: (lv_delta_4_0= ruleNumAlt )
+                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5319:3: lv_delta_4_0= ruleNumAlt
                     {
                     if ( state.backtracking==0 ) {
                        
                       	        newCompositeNode(grammarAccess.getNumericRangeTermAccess().getDeltaNumAltParserRuleCall_3_1_0()); 
                       	    
                     }
-                    pushFollow(FOLLOW_ruleNumAlt_in_ruleNumericRangeTerm12300);
+                    pushFollow(FOLLOW_ruleNumAlt_in_ruleNumericRangeTerm12127);
                     lv_delta_4_0=ruleNumAlt();
 
                     state._fsp--;
@@ -14957,7 +14700,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRuleNumAlt"
-    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5429:1: entryRuleNumAlt returns [EObject current=null] : iv_ruleNumAlt= ruleNumAlt EOF ;
+    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5343:1: entryRuleNumAlt returns [EObject current=null] : iv_ruleNumAlt= ruleNumAlt EOF ;
     public final EObject entryRuleNumAlt() throws RecognitionException {
         EObject current = null;
 
@@ -14965,13 +14708,13 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5430:2: (iv_ruleNumAlt= ruleNumAlt EOF )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5431:2: iv_ruleNumAlt= ruleNumAlt EOF
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5344:2: (iv_ruleNumAlt= ruleNumAlt EOF )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5345:2: iv_ruleNumAlt= ruleNumAlt EOF
             {
             if ( state.backtracking==0 ) {
                newCompositeNode(grammarAccess.getNumAltRule()); 
             }
-            pushFollow(FOLLOW_ruleNumAlt_in_entryRuleNumAlt12338);
+            pushFollow(FOLLOW_ruleNumAlt_in_entryRuleNumAlt12165);
             iv_ruleNumAlt=ruleNumAlt();
 
             state._fsp--;
@@ -14979,7 +14722,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
             if ( state.backtracking==0 ) {
                current =iv_ruleNumAlt; 
             }
-            match(input,EOF,FOLLOW_EOF_in_entryRuleNumAlt12348); if (state.failed) return current;
+            match(input,EOF,FOLLOW_EOF_in_entryRuleNumAlt12175); if (state.failed) return current;
 
             }
 
@@ -14997,7 +14740,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleNumAlt"
-    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5438:1: ruleNumAlt returns [EObject current=null] : (this_RealTerm_0= ruleRealTerm | this_IntegerTerm_1= ruleIntegerTerm | this_SignedConstant_2= ruleSignedConstant | this_ConstantValue_3= ruleConstantValue ) ;
+    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5352:1: ruleNumAlt returns [EObject current=null] : (this_RealTerm_0= ruleRealTerm | this_IntegerTerm_1= ruleIntegerTerm | this_SignedConstant_2= ruleSignedConstant | this_ConstantValue_3= ruleConstantValue ) ;
     public final EObject ruleNumAlt() throws RecognitionException {
         EObject current = null;
 
@@ -15013,34 +14756,34 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
          enterRule(); 
             
         try {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5441:28: ( (this_RealTerm_0= ruleRealTerm | this_IntegerTerm_1= ruleIntegerTerm | this_SignedConstant_2= ruleSignedConstant | this_ConstantValue_3= ruleConstantValue ) )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5442:1: (this_RealTerm_0= ruleRealTerm | this_IntegerTerm_1= ruleIntegerTerm | this_SignedConstant_2= ruleSignedConstant | this_ConstantValue_3= ruleConstantValue )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5355:28: ( (this_RealTerm_0= ruleRealTerm | this_IntegerTerm_1= ruleIntegerTerm | this_SignedConstant_2= ruleSignedConstant | this_ConstantValue_3= ruleConstantValue ) )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5356:1: (this_RealTerm_0= ruleRealTerm | this_IntegerTerm_1= ruleIntegerTerm | this_SignedConstant_2= ruleSignedConstant | this_ConstantValue_3= ruleConstantValue )
             {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5442:1: (this_RealTerm_0= ruleRealTerm | this_IntegerTerm_1= ruleIntegerTerm | this_SignedConstant_2= ruleSignedConstant | this_ConstantValue_3= ruleConstantValue )
-            int alt76=4;
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5356:1: (this_RealTerm_0= ruleRealTerm | this_IntegerTerm_1= ruleIntegerTerm | this_SignedConstant_2= ruleSignedConstant | this_ConstantValue_3= ruleConstantValue )
+            int alt74=4;
             switch ( input.LA(1) ) {
             case 59:
                 {
                 switch ( input.LA(2) ) {
-                case RULE_INTEGER_LIT:
-                    {
-                    alt76=2;
-                    }
-                    break;
                 case RULE_ID:
                     {
-                    alt76=3;
+                    alt74=3;
+                    }
+                    break;
+                case RULE_INTEGER_LIT:
+                    {
+                    alt74=2;
                     }
                     break;
                 case RULE_REAL_LIT:
                     {
-                    alt76=1;
+                    alt74=1;
                     }
                     break;
                 default:
                     if (state.backtracking>0) {state.failed=true; return current;}
                     NoViableAltException nvae =
-                        new NoViableAltException("", 76, 1, input);
+                        new NoViableAltException("", 74, 1, input);
 
                     throw nvae;
                 }
@@ -15050,25 +14793,25 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
             case 60:
                 {
                 switch ( input.LA(2) ) {
-                case RULE_ID:
-                    {
-                    alt76=3;
-                    }
-                    break;
                 case RULE_INTEGER_LIT:
                     {
-                    alt76=2;
+                    alt74=2;
                     }
                     break;
                 case RULE_REAL_LIT:
                     {
-                    alt76=1;
+                    alt74=1;
+                    }
+                    break;
+                case RULE_ID:
+                    {
+                    alt74=3;
                     }
                     break;
                 default:
                     if (state.backtracking>0) {state.failed=true; return current;}
                     NoViableAltException nvae =
-                        new NoViableAltException("", 76, 2, input);
+                        new NoViableAltException("", 74, 2, input);
 
                     throw nvae;
                 }
@@ -15077,37 +14820,37 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
                 break;
             case RULE_REAL_LIT:
                 {
-                alt76=1;
+                alt74=1;
                 }
                 break;
             case RULE_INTEGER_LIT:
                 {
-                alt76=2;
+                alt74=2;
                 }
                 break;
             case RULE_ID:
                 {
-                alt76=4;
+                alt74=4;
                 }
                 break;
             default:
                 if (state.backtracking>0) {state.failed=true; return current;}
                 NoViableAltException nvae =
-                    new NoViableAltException("", 76, 0, input);
+                    new NoViableAltException("", 74, 0, input);
 
                 throw nvae;
             }
 
-            switch (alt76) {
+            switch (alt74) {
                 case 1 :
-                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5443:5: this_RealTerm_0= ruleRealTerm
+                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5357:5: this_RealTerm_0= ruleRealTerm
                     {
                     if ( state.backtracking==0 ) {
                        
                               newCompositeNode(grammarAccess.getNumAltAccess().getRealTermParserRuleCall_0()); 
                           
                     }
-                    pushFollow(FOLLOW_ruleRealTerm_in_ruleNumAlt12395);
+                    pushFollow(FOLLOW_ruleRealTerm_in_ruleNumAlt12222);
                     this_RealTerm_0=ruleRealTerm();
 
                     state._fsp--;
@@ -15122,14 +14865,14 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 2 :
-                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5453:5: this_IntegerTerm_1= ruleIntegerTerm
+                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5367:5: this_IntegerTerm_1= ruleIntegerTerm
                     {
                     if ( state.backtracking==0 ) {
                        
                               newCompositeNode(grammarAccess.getNumAltAccess().getIntegerTermParserRuleCall_1()); 
                           
                     }
-                    pushFollow(FOLLOW_ruleIntegerTerm_in_ruleNumAlt12422);
+                    pushFollow(FOLLOW_ruleIntegerTerm_in_ruleNumAlt12249);
                     this_IntegerTerm_1=ruleIntegerTerm();
 
                     state._fsp--;
@@ -15144,14 +14887,14 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 3 :
-                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5463:5: this_SignedConstant_2= ruleSignedConstant
+                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5377:5: this_SignedConstant_2= ruleSignedConstant
                     {
                     if ( state.backtracking==0 ) {
                        
                               newCompositeNode(grammarAccess.getNumAltAccess().getSignedConstantParserRuleCall_2()); 
                           
                     }
-                    pushFollow(FOLLOW_ruleSignedConstant_in_ruleNumAlt12449);
+                    pushFollow(FOLLOW_ruleSignedConstant_in_ruleNumAlt12276);
                     this_SignedConstant_2=ruleSignedConstant();
 
                     state._fsp--;
@@ -15166,14 +14909,14 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 4 :
-                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5473:5: this_ConstantValue_3= ruleConstantValue
+                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5387:5: this_ConstantValue_3= ruleConstantValue
                     {
                     if ( state.backtracking==0 ) {
                        
                               newCompositeNode(grammarAccess.getNumAltAccess().getConstantValueParserRuleCall_3()); 
                           
                     }
-                    pushFollow(FOLLOW_ruleConstantValue_in_ruleNumAlt12476);
+                    pushFollow(FOLLOW_ruleConstantValue_in_ruleNumAlt12303);
                     this_ConstantValue_3=ruleConstantValue();
 
                     state._fsp--;
@@ -15210,7 +14953,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRuleINTVALUE"
-    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5489:1: entryRuleINTVALUE returns [String current=null] : iv_ruleINTVALUE= ruleINTVALUE EOF ;
+    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5403:1: entryRuleINTVALUE returns [String current=null] : iv_ruleINTVALUE= ruleINTVALUE EOF ;
     public final String entryRuleINTVALUE() throws RecognitionException {
         String current = null;
 
@@ -15218,13 +14961,13 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5490:2: (iv_ruleINTVALUE= ruleINTVALUE EOF )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5491:2: iv_ruleINTVALUE= ruleINTVALUE EOF
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5404:2: (iv_ruleINTVALUE= ruleINTVALUE EOF )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5405:2: iv_ruleINTVALUE= ruleINTVALUE EOF
             {
             if ( state.backtracking==0 ) {
                newCompositeNode(grammarAccess.getINTVALUERule()); 
             }
-            pushFollow(FOLLOW_ruleINTVALUE_in_entryRuleINTVALUE12512);
+            pushFollow(FOLLOW_ruleINTVALUE_in_entryRuleINTVALUE12339);
             iv_ruleINTVALUE=ruleINTVALUE();
 
             state._fsp--;
@@ -15232,7 +14975,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
             if ( state.backtracking==0 ) {
                current =iv_ruleINTVALUE.getText(); 
             }
-            match(input,EOF,FOLLOW_EOF_in_entryRuleINTVALUE12523); if (state.failed) return current;
+            match(input,EOF,FOLLOW_EOF_in_entryRuleINTVALUE12350); if (state.failed) return current;
 
             }
 
@@ -15250,7 +14993,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleINTVALUE"
-    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5498:1: ruleINTVALUE returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] : this_INTEGER_LIT_0= RULE_INTEGER_LIT ;
+    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5412:1: ruleINTVALUE returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] : this_INTEGER_LIT_0= RULE_INTEGER_LIT ;
     public final AntlrDatatypeRuleToken ruleINTVALUE() throws RecognitionException {
         AntlrDatatypeRuleToken current = new AntlrDatatypeRuleToken();
 
@@ -15259,10 +15002,10 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
          enterRule(); 
             
         try {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5501:28: (this_INTEGER_LIT_0= RULE_INTEGER_LIT )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5502:5: this_INTEGER_LIT_0= RULE_INTEGER_LIT
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5415:28: (this_INTEGER_LIT_0= RULE_INTEGER_LIT )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5416:5: this_INTEGER_LIT_0= RULE_INTEGER_LIT
             {
-            this_INTEGER_LIT_0=(Token)match(input,RULE_INTEGER_LIT,FOLLOW_RULE_INTEGER_LIT_in_ruleINTVALUE12562); if (state.failed) return current;
+            this_INTEGER_LIT_0=(Token)match(input,RULE_INTEGER_LIT,FOLLOW_RULE_INTEGER_LIT_in_ruleINTVALUE12389); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
               		current.merge(this_INTEGER_LIT_0);
@@ -15293,7 +15036,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRuleQCLREF"
-    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5517:1: entryRuleQCLREF returns [String current=null] : iv_ruleQCLREF= ruleQCLREF EOF ;
+    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5431:1: entryRuleQCLREF returns [String current=null] : iv_ruleQCLREF= ruleQCLREF EOF ;
     public final String entryRuleQCLREF() throws RecognitionException {
         String current = null;
 
@@ -15301,13 +15044,13 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5518:2: (iv_ruleQCLREF= ruleQCLREF EOF )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5519:2: iv_ruleQCLREF= ruleQCLREF EOF
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5432:2: (iv_ruleQCLREF= ruleQCLREF EOF )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5433:2: iv_ruleQCLREF= ruleQCLREF EOF
             {
             if ( state.backtracking==0 ) {
                newCompositeNode(grammarAccess.getQCLREFRule()); 
             }
-            pushFollow(FOLLOW_ruleQCLREF_in_entryRuleQCLREF12607);
+            pushFollow(FOLLOW_ruleQCLREF_in_entryRuleQCLREF12434);
             iv_ruleQCLREF=ruleQCLREF();
 
             state._fsp--;
@@ -15315,7 +15058,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
             if ( state.backtracking==0 ) {
                current =iv_ruleQCLREF.getText(); 
             }
-            match(input,EOF,FOLLOW_EOF_in_entryRuleQCLREF12618); if (state.failed) return current;
+            match(input,EOF,FOLLOW_EOF_in_entryRuleQCLREF12445); if (state.failed) return current;
 
             }
 
@@ -15333,7 +15076,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleQCLREF"
-    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5526:1: ruleQCLREF returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] : (this_ID_0= RULE_ID kw= '::' this_ID_2= RULE_ID ) ;
+    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5440:1: ruleQCLREF returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] : (this_ID_0= RULE_ID kw= '::' this_ID_2= RULE_ID ) ;
     public final AntlrDatatypeRuleToken ruleQCLREF() throws RecognitionException {
         AntlrDatatypeRuleToken current = new AntlrDatatypeRuleToken();
 
@@ -15344,13 +15087,13 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
          enterRule(); 
             
         try {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5529:28: ( (this_ID_0= RULE_ID kw= '::' this_ID_2= RULE_ID ) )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5530:1: (this_ID_0= RULE_ID kw= '::' this_ID_2= RULE_ID )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5443:28: ( (this_ID_0= RULE_ID kw= '::' this_ID_2= RULE_ID ) )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5444:1: (this_ID_0= RULE_ID kw= '::' this_ID_2= RULE_ID )
             {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5530:1: (this_ID_0= RULE_ID kw= '::' this_ID_2= RULE_ID )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5530:6: this_ID_0= RULE_ID kw= '::' this_ID_2= RULE_ID
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5444:1: (this_ID_0= RULE_ID kw= '::' this_ID_2= RULE_ID )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5444:6: this_ID_0= RULE_ID kw= '::' this_ID_2= RULE_ID
             {
-            this_ID_0=(Token)match(input,RULE_ID,FOLLOW_RULE_ID_in_ruleQCLREF12658); if (state.failed) return current;
+            this_ID_0=(Token)match(input,RULE_ID,FOLLOW_RULE_ID_in_ruleQCLREF12485); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
               		current.merge(this_ID_0);
@@ -15361,14 +15104,14 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
                   newLeafNode(this_ID_0, grammarAccess.getQCLREFAccess().getIDTerminalRuleCall_0()); 
                   
             }
-            kw=(Token)match(input,77,FOLLOW_77_in_ruleQCLREF12676); if (state.failed) return current;
+            kw=(Token)match(input,77,FOLLOW_77_in_ruleQCLREF12503); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
                       current.merge(kw);
                       newLeafNode(kw, grammarAccess.getQCLREFAccess().getColonColonKeyword_1()); 
                   
             }
-            this_ID_2=(Token)match(input,RULE_ID,FOLLOW_RULE_ID_in_ruleQCLREF12691); if (state.failed) return current;
+            this_ID_2=(Token)match(input,RULE_ID,FOLLOW_RULE_ID_in_ruleQCLREF12518); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
               		current.merge(this_ID_2);
@@ -15402,7 +15145,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRuleQPREF"
-    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5558:1: entryRuleQPREF returns [String current=null] : iv_ruleQPREF= ruleQPREF EOF ;
+    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5472:1: entryRuleQPREF returns [String current=null] : iv_ruleQPREF= ruleQPREF EOF ;
     public final String entryRuleQPREF() throws RecognitionException {
         String current = null;
 
@@ -15410,13 +15153,13 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5559:2: (iv_ruleQPREF= ruleQPREF EOF )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5560:2: iv_ruleQPREF= ruleQPREF EOF
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5473:2: (iv_ruleQPREF= ruleQPREF EOF )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5474:2: iv_ruleQPREF= ruleQPREF EOF
             {
             if ( state.backtracking==0 ) {
                newCompositeNode(grammarAccess.getQPREFRule()); 
             }
-            pushFollow(FOLLOW_ruleQPREF_in_entryRuleQPREF12737);
+            pushFollow(FOLLOW_ruleQPREF_in_entryRuleQPREF12564);
             iv_ruleQPREF=ruleQPREF();
 
             state._fsp--;
@@ -15424,7 +15167,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
             if ( state.backtracking==0 ) {
                current =iv_ruleQPREF.getText(); 
             }
-            match(input,EOF,FOLLOW_EOF_in_entryRuleQPREF12748); if (state.failed) return current;
+            match(input,EOF,FOLLOW_EOF_in_entryRuleQPREF12575); if (state.failed) return current;
 
             }
 
@@ -15442,7 +15185,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleQPREF"
-    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5567:1: ruleQPREF returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] : (this_ID_0= RULE_ID (kw= '::' this_ID_2= RULE_ID )? ) ;
+    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5481:1: ruleQPREF returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] : (this_ID_0= RULE_ID (kw= '::' this_ID_2= RULE_ID )? ) ;
     public final AntlrDatatypeRuleToken ruleQPREF() throws RecognitionException {
         AntlrDatatypeRuleToken current = new AntlrDatatypeRuleToken();
 
@@ -15453,13 +15196,13 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
          enterRule(); 
             
         try {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5570:28: ( (this_ID_0= RULE_ID (kw= '::' this_ID_2= RULE_ID )? ) )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5571:1: (this_ID_0= RULE_ID (kw= '::' this_ID_2= RULE_ID )? )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5484:28: ( (this_ID_0= RULE_ID (kw= '::' this_ID_2= RULE_ID )? ) )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5485:1: (this_ID_0= RULE_ID (kw= '::' this_ID_2= RULE_ID )? )
             {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5571:1: (this_ID_0= RULE_ID (kw= '::' this_ID_2= RULE_ID )? )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5571:6: this_ID_0= RULE_ID (kw= '::' this_ID_2= RULE_ID )?
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5485:1: (this_ID_0= RULE_ID (kw= '::' this_ID_2= RULE_ID )? )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5485:6: this_ID_0= RULE_ID (kw= '::' this_ID_2= RULE_ID )?
             {
-            this_ID_0=(Token)match(input,RULE_ID,FOLLOW_RULE_ID_in_ruleQPREF12788); if (state.failed) return current;
+            this_ID_0=(Token)match(input,RULE_ID,FOLLOW_RULE_ID_in_ruleQPREF12615); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
               		current.merge(this_ID_0);
@@ -15470,25 +15213,25 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
                   newLeafNode(this_ID_0, grammarAccess.getQPREFAccess().getIDTerminalRuleCall_0()); 
                   
             }
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5578:1: (kw= '::' this_ID_2= RULE_ID )?
-            int alt77=2;
-            int LA77_0 = input.LA(1);
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5492:1: (kw= '::' this_ID_2= RULE_ID )?
+            int alt75=2;
+            int LA75_0 = input.LA(1);
 
-            if ( (LA77_0==77) ) {
-                alt77=1;
+            if ( (LA75_0==77) ) {
+                alt75=1;
             }
-            switch (alt77) {
+            switch (alt75) {
                 case 1 :
-                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5579:2: kw= '::' this_ID_2= RULE_ID
+                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5493:2: kw= '::' this_ID_2= RULE_ID
                     {
-                    kw=(Token)match(input,77,FOLLOW_77_in_ruleQPREF12807); if (state.failed) return current;
+                    kw=(Token)match(input,77,FOLLOW_77_in_ruleQPREF12634); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                               current.merge(kw);
                               newLeafNode(kw, grammarAccess.getQPREFAccess().getColonColonKeyword_1_0()); 
                           
                     }
-                    this_ID_2=(Token)match(input,RULE_ID,FOLLOW_RULE_ID_in_ruleQPREF12822); if (state.failed) return current;
+                    this_ID_2=(Token)match(input,RULE_ID,FOLLOW_RULE_ID_in_ruleQPREF12649); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                       		current.merge(this_ID_2);
@@ -15528,7 +15271,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRuleQCREF"
-    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5599:1: entryRuleQCREF returns [String current=null] : iv_ruleQCREF= ruleQCREF EOF ;
+    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5513:1: entryRuleQCREF returns [String current=null] : iv_ruleQCREF= ruleQCREF EOF ;
     public final String entryRuleQCREF() throws RecognitionException {
         String current = null;
 
@@ -15536,13 +15279,13 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5600:2: (iv_ruleQCREF= ruleQCREF EOF )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5601:2: iv_ruleQCREF= ruleQCREF EOF
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5514:2: (iv_ruleQCREF= ruleQCREF EOF )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5515:2: iv_ruleQCREF= ruleQCREF EOF
             {
             if ( state.backtracking==0 ) {
                newCompositeNode(grammarAccess.getQCREFRule()); 
             }
-            pushFollow(FOLLOW_ruleQCREF_in_entryRuleQCREF12870);
+            pushFollow(FOLLOW_ruleQCREF_in_entryRuleQCREF12697);
             iv_ruleQCREF=ruleQCREF();
 
             state._fsp--;
@@ -15550,7 +15293,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
             if ( state.backtracking==0 ) {
                current =iv_ruleQCREF.getText(); 
             }
-            match(input,EOF,FOLLOW_EOF_in_entryRuleQCREF12881); if (state.failed) return current;
+            match(input,EOF,FOLLOW_EOF_in_entryRuleQCREF12708); if (state.failed) return current;
 
             }
 
@@ -15568,7 +15311,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleQCREF"
-    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5608:1: ruleQCREF returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] : ( (this_ID_0= RULE_ID kw= '::' )* this_ID_2= RULE_ID (kw= '.' this_ID_4= RULE_ID )? ) ;
+    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5522:1: ruleQCREF returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] : ( (this_ID_0= RULE_ID kw= '::' )* this_ID_2= RULE_ID (kw= '.' this_ID_4= RULE_ID )? ) ;
     public final AntlrDatatypeRuleToken ruleQCREF() throws RecognitionException {
         AntlrDatatypeRuleToken current = new AntlrDatatypeRuleToken();
 
@@ -15580,34 +15323,34 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
          enterRule(); 
             
         try {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5611:28: ( ( (this_ID_0= RULE_ID kw= '::' )* this_ID_2= RULE_ID (kw= '.' this_ID_4= RULE_ID )? ) )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5612:1: ( (this_ID_0= RULE_ID kw= '::' )* this_ID_2= RULE_ID (kw= '.' this_ID_4= RULE_ID )? )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5525:28: ( ( (this_ID_0= RULE_ID kw= '::' )* this_ID_2= RULE_ID (kw= '.' this_ID_4= RULE_ID )? ) )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5526:1: ( (this_ID_0= RULE_ID kw= '::' )* this_ID_2= RULE_ID (kw= '.' this_ID_4= RULE_ID )? )
             {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5612:1: ( (this_ID_0= RULE_ID kw= '::' )* this_ID_2= RULE_ID (kw= '.' this_ID_4= RULE_ID )? )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5612:2: (this_ID_0= RULE_ID kw= '::' )* this_ID_2= RULE_ID (kw= '.' this_ID_4= RULE_ID )?
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5526:1: ( (this_ID_0= RULE_ID kw= '::' )* this_ID_2= RULE_ID (kw= '.' this_ID_4= RULE_ID )? )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5526:2: (this_ID_0= RULE_ID kw= '::' )* this_ID_2= RULE_ID (kw= '.' this_ID_4= RULE_ID )?
             {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5612:2: (this_ID_0= RULE_ID kw= '::' )*
-            loop78:
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5526:2: (this_ID_0= RULE_ID kw= '::' )*
+            loop76:
             do {
-                int alt78=2;
-                int LA78_0 = input.LA(1);
+                int alt76=2;
+                int LA76_0 = input.LA(1);
 
-                if ( (LA78_0==RULE_ID) ) {
-                    int LA78_1 = input.LA(2);
+                if ( (LA76_0==RULE_ID) ) {
+                    int LA76_1 = input.LA(2);
 
-                    if ( (LA78_1==77) ) {
-                        alt78=1;
+                    if ( (LA76_1==77) ) {
+                        alt76=1;
                     }
 
 
                 }
 
 
-                switch (alt78) {
+                switch (alt76) {
             	case 1 :
-            	    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5612:7: this_ID_0= RULE_ID kw= '::'
+            	    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5526:7: this_ID_0= RULE_ID kw= '::'
             	    {
-            	    this_ID_0=(Token)match(input,RULE_ID,FOLLOW_RULE_ID_in_ruleQCREF12922); if (state.failed) return current;
+            	    this_ID_0=(Token)match(input,RULE_ID,FOLLOW_RULE_ID_in_ruleQCREF12749); if (state.failed) return current;
             	    if ( state.backtracking==0 ) {
 
             	      		current.merge(this_ID_0);
@@ -15618,7 +15361,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
             	          newLeafNode(this_ID_0, grammarAccess.getQCREFAccess().getIDTerminalRuleCall_0_0()); 
             	          
             	    }
-            	    kw=(Token)match(input,77,FOLLOW_77_in_ruleQCREF12940); if (state.failed) return current;
+            	    kw=(Token)match(input,77,FOLLOW_77_in_ruleQCREF12767); if (state.failed) return current;
             	    if ( state.backtracking==0 ) {
 
             	              current.merge(kw);
@@ -15630,11 +15373,11 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
             	    break;
 
             	default :
-            	    break loop78;
+            	    break loop76;
                 }
             } while (true);
 
-            this_ID_2=(Token)match(input,RULE_ID,FOLLOW_RULE_ID_in_ruleQCREF12957); if (state.failed) return current;
+            this_ID_2=(Token)match(input,RULE_ID,FOLLOW_RULE_ID_in_ruleQCREF12784); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
               		current.merge(this_ID_2);
@@ -15645,25 +15388,25 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
                   newLeafNode(this_ID_2, grammarAccess.getQCREFAccess().getIDTerminalRuleCall_1()); 
                   
             }
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5632:1: (kw= '.' this_ID_4= RULE_ID )?
-            int alt79=2;
-            int LA79_0 = input.LA(1);
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5546:1: (kw= '.' this_ID_4= RULE_ID )?
+            int alt77=2;
+            int LA77_0 = input.LA(1);
 
-            if ( (LA79_0==75) ) {
-                alt79=1;
+            if ( (LA77_0==75) ) {
+                alt77=1;
             }
-            switch (alt79) {
+            switch (alt77) {
                 case 1 :
-                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5633:2: kw= '.' this_ID_4= RULE_ID
+                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5547:2: kw= '.' this_ID_4= RULE_ID
                     {
-                    kw=(Token)match(input,75,FOLLOW_75_in_ruleQCREF12976); if (state.failed) return current;
+                    kw=(Token)match(input,75,FOLLOW_75_in_ruleQCREF12803); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                               current.merge(kw);
                               newLeafNode(kw, grammarAccess.getQCREFAccess().getFullStopKeyword_2_0()); 
                           
                     }
-                    this_ID_4=(Token)match(input,RULE_ID,FOLLOW_RULE_ID_in_ruleQCREF12991); if (state.failed) return current;
+                    this_ID_4=(Token)match(input,RULE_ID,FOLLOW_RULE_ID_in_ruleQCREF12818); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
                       		current.merge(this_ID_4);
@@ -15703,7 +15446,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRuleSTAR"
-    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5653:1: entryRuleSTAR returns [String current=null] : iv_ruleSTAR= ruleSTAR EOF ;
+    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5567:1: entryRuleSTAR returns [String current=null] : iv_ruleSTAR= ruleSTAR EOF ;
     public final String entryRuleSTAR() throws RecognitionException {
         String current = null;
 
@@ -15711,13 +15454,13 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5654:2: (iv_ruleSTAR= ruleSTAR EOF )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5655:2: iv_ruleSTAR= ruleSTAR EOF
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5568:2: (iv_ruleSTAR= ruleSTAR EOF )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5569:2: iv_ruleSTAR= ruleSTAR EOF
             {
             if ( state.backtracking==0 ) {
                newCompositeNode(grammarAccess.getSTARRule()); 
             }
-            pushFollow(FOLLOW_ruleSTAR_in_entryRuleSTAR13039);
+            pushFollow(FOLLOW_ruleSTAR_in_entryRuleSTAR12866);
             iv_ruleSTAR=ruleSTAR();
 
             state._fsp--;
@@ -15725,7 +15468,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
             if ( state.backtracking==0 ) {
                current =iv_ruleSTAR.getText(); 
             }
-            match(input,EOF,FOLLOW_EOF_in_entryRuleSTAR13050); if (state.failed) return current;
+            match(input,EOF,FOLLOW_EOF_in_entryRuleSTAR12877); if (state.failed) return current;
 
             }
 
@@ -15743,7 +15486,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleSTAR"
-    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5662:1: ruleSTAR returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] : kw= '*' ;
+    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5576:1: ruleSTAR returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] : kw= '*' ;
     public final AntlrDatatypeRuleToken ruleSTAR() throws RecognitionException {
         AntlrDatatypeRuleToken current = new AntlrDatatypeRuleToken();
 
@@ -15752,10 +15495,10 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
          enterRule(); 
             
         try {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5665:28: (kw= '*' )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5667:2: kw= '*'
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5579:28: (kw= '*' )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:5581:2: kw= '*'
             {
-            kw=(Token)match(input,61,FOLLOW_61_in_ruleSTAR13087); if (state.failed) return current;
+            kw=(Token)match(input,61,FOLLOW_61_in_ruleSTAR12914); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
                       current.merge(kw);
@@ -16088,18 +15831,18 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
         }
 
         // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:3060:2: ( '{' ( ( RULE_ID ) ) ':=' ( ( ruleExpr ) ) '}' )+
-        int cnt80=0;
-        loop80:
+        int cnt78=0;
+        loop78:
         do {
-            int alt80=2;
-            int LA80_0 = input.LA(1);
+            int alt78=2;
+            int LA78_0 = input.LA(1);
 
-            if ( (LA80_0==46) ) {
-                alt80=1;
+            if ( (LA78_0==46) ) {
+                alt78=1;
             }
 
 
-            switch (alt80) {
+            switch (alt78) {
         	case 1 :
         	    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:3060:4: '{' ( ( RULE_ID ) ) ':=' ( ( ruleExpr ) ) '}'
         	    {
@@ -16141,13 +15884,13 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
         	    break;
 
         	default :
-        	    if ( cnt80 >= 1 ) break loop80;
+        	    if ( cnt78 >= 1 ) break loop78;
         	    if (state.backtracking>0) {state.failed=true; return ;}
                     EarlyExitException eee =
-                        new EarlyExitException(80, input);
+                        new EarlyExitException(78, input);
                     throw eee;
             }
-            cnt80++;
+            cnt78++;
         } while (true);
 
 
@@ -16226,23 +15969,23 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
         {
         match(input,75,FOLLOW_75_in_synpred12_InternalAgree8023); if (state.failed) return ;
         // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:3645:1: ( ( ( ruleReservedVarTag ) ) | ( ( ruleNestedDotID ) ) )
-        int alt81=2;
-        int LA81_0 = input.LA(1);
+        int alt79=2;
+        int LA79_0 = input.LA(1);
 
-        if ( ((LA81_0>=78 && LA81_0<=81)) ) {
-            alt81=1;
+        if ( ((LA79_0>=78 && LA79_0<=81)) ) {
+            alt79=1;
         }
-        else if ( (LA81_0==RULE_ID) ) {
-            alt81=2;
+        else if ( (LA79_0==RULE_ID) ) {
+            alt79=2;
         }
         else {
             if (state.backtracking>0) {state.failed=true; return ;}
             NoViableAltException nvae =
-                new NoViableAltException("", 81, 0, input);
+                new NoViableAltException("", 79, 0, input);
 
             throw nvae;
         }
-        switch (alt81) {
+        switch (alt79) {
             case 1 :
                 // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgree.g:3645:2: ( ( ruleReservedVarTag ) )
                 {
@@ -16538,7 +16281,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
     protected DFA30 dfa30 = new DFA30(this);
     protected DFA42 dfa42 = new DFA42(this);
-    protected DFA61 dfa61 = new DFA61(this);
+    protected DFA60 dfa60 = new DFA60(this);
     static final String DFA30_eotS =
         "\12\uffff";
     static final String DFA30_eofS =
@@ -16550,10 +16293,9 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
     static final String DFA30_acceptS =
         "\10\uffff\1\2\1\1";
     static final String DFA30_specialS =
-        "\1\uffff\1\1\1\0\1\3\1\4\1\5\1\6\1\2\2\uffff}>";
+        "\1\uffff\1\6\1\5\1\4\1\3\1\1\1\2\1\0\2\uffff}>";
     static final String[] DFA30_transitionS = {
-            "\2\10\12\uffff\1\10\1\uffff\1\5\4\uffff\1\10\13\uffff\6\10\1"+
-            "\1\1\2\1\3\1\4\1\6\1\7\6\10\2\uffff\2\10",
+            "\2\10\12\uffff\1\10\1\uffff\1\5\4\uffff\1\10\13\uffff\6\10\1\1\1\2\1\3\1\4\1\6\1\7\6\10\2\uffff\2\10",
             "\1\uffff",
             "\1\uffff",
             "\1\uffff",
@@ -16602,36 +16344,6 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
         	int _s = s;
             switch ( s ) {
                     case 0 : 
-                        int LA30_2 = input.LA(1);
-
-                         
-                        int index30_2 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (synpred6_InternalAgree()) ) {s = 9;}
-
-                        else if ( (true) ) {s = 8;}
-
-                         
-                        input.seek(index30_2);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 1 : 
-                        int LA30_1 = input.LA(1);
-
-                         
-                        int index30_1 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (synpred6_InternalAgree()) ) {s = 9;}
-
-                        else if ( (true) ) {s = 8;}
-
-                         
-                        input.seek(index30_1);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 2 : 
                         int LA30_7 = input.LA(1);
 
                          
@@ -16646,37 +16358,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
                         input.seek(index30_7);
                         if ( s>=0 ) return s;
                         break;
-                    case 3 : 
-                        int LA30_3 = input.LA(1);
-
-                         
-                        int index30_3 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (synpred6_InternalAgree()) ) {s = 9;}
-
-                        else if ( (true) ) {s = 8;}
-
-                         
-                        input.seek(index30_3);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 4 : 
-                        int LA30_4 = input.LA(1);
-
-                         
-                        int index30_4 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (synpred6_InternalAgree()) ) {s = 9;}
-
-                        else if ( (true) ) {s = 8;}
-
-                         
-                        input.seek(index30_4);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 5 : 
+                    case 1 : 
                         int LA30_5 = input.LA(1);
 
                          
@@ -16691,7 +16373,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
                         input.seek(index30_5);
                         if ( s>=0 ) return s;
                         break;
-                    case 6 : 
+                    case 2 : 
                         int LA30_6 = input.LA(1);
 
                          
@@ -16704,6 +16386,66 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
                          
                         input.seek(index30_6);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 3 : 
+                        int LA30_4 = input.LA(1);
+
+                         
+                        int index30_4 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (synpred6_InternalAgree()) ) {s = 9;}
+
+                        else if ( (true) ) {s = 8;}
+
+                         
+                        input.seek(index30_4);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 4 : 
+                        int LA30_3 = input.LA(1);
+
+                         
+                        int index30_3 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (synpred6_InternalAgree()) ) {s = 9;}
+
+                        else if ( (true) ) {s = 8;}
+
+                         
+                        input.seek(index30_3);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 5 : 
+                        int LA30_2 = input.LA(1);
+
+                         
+                        int index30_2 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (synpred6_InternalAgree()) ) {s = 9;}
+
+                        else if ( (true) ) {s = 8;}
+
+                         
+                        input.seek(index30_2);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 6 : 
+                        int LA30_1 = input.LA(1);
+
+                         
+                        int index30_1 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (synpred6_InternalAgree()) ) {s = 9;}
+
+                        else if ( (true) ) {s = 8;}
+
+                         
+                        input.seek(index30_1);
                         if ( s>=0 ) return s;
                         break;
             }
@@ -16727,8 +16469,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
     static final String DFA42_specialS =
         "\13\uffff}>";
     static final String[] DFA42_transitionS = {
-            "\1\2\1\1\1\5\32\uffff\1\12\6\uffff\1\11\36\uffff\1\3\1\4\1\7"+
-            "\1\uffff\1\10\14\uffff\2\6",
+            "\1\2\1\1\1\5\32\uffff\1\12\6\uffff\1\11\36\uffff\1\3\1\4\1\7\1\uffff\1\10\14\uffff\2\6",
             "",
             "",
             "",
@@ -16774,24 +16515,20 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
             return "3142:1: (this_ComplexExpr_0= ruleComplexExpr | ( () ( (lv_val_2_0= RULE_INTEGER_LIT ) ) ) | ( () otherlv_4= 'pre' otherlv_5= '(' ( (lv_expr_6_0= ruleExpr ) ) otherlv_7= ')' ) | ( () otherlv_9= 'event' otherlv_10= '(' ( (lv_id_11_0= ruleNestedDotID ) ) otherlv_12= ')' ) | ( () ( (lv_val_14_0= RULE_REAL_LIT ) ) ) | ( () ( (lv_val_16_0= ruleBooleanLiteral ) ) ) | ( () otherlv_18= 'this' (otherlv_19= '.' ( (lv_subThis_20_0= ruleNestedDotID ) ) )? ) | ( () otherlv_22= 'floor' otherlv_23= '(' ( (lv_expr_24_0= ruleExpr ) ) otherlv_25= ')' ) | ( () otherlv_27= 'real' otherlv_28= '(' ( (lv_expr_29_0= ruleExpr ) ) otherlv_30= ')' ) | (otherlv_31= '(' this_Expr_32= ruleExpr otherlv_33= ')' ) )";
         }
     }
-    static final String DFA61_eotS =
+    static final String DFA60_eotS =
         "\25\uffff";
-    static final String DFA61_eofS =
+    static final String DFA60_eofS =
         "\10\uffff\1\17\1\21\1\23\3\uffff\1\17\1\uffff\1\21\3\uffff\1\23";
-    static final String DFA61_minS =
-        "\1\4\5\uffff\2\5\2\6\1\21\3\uffff\1\21\1\uffff\1\21\1\uffff\1\6"+
-        "\1\uffff\1\21";
-    static final String DFA61_maxS =
-        "\1\137\5\uffff\2\7\3\140\3\uffff\1\140\1\uffff\1\140\1\uffff\1\6"+
-        "\1\uffff\1\140";
-    static final String DFA61_acceptS =
-        "\1\uffff\1\1\1\2\1\3\1\4\1\5\5\uffff\1\11\1\12\1\6\1\uffff\1\7\1"+
-        "\uffff\1\10\1\uffff\1\13\1\uffff";
-    static final String DFA61_specialS =
+    static final String DFA60_minS =
+        "\1\4\5\uffff\2\5\2\6\1\21\3\uffff\1\21\1\uffff\1\21\1\uffff\1\6\1\uffff\1\21";
+    static final String DFA60_maxS =
+        "\1\137\5\uffff\2\7\3\140\3\uffff\1\140\1\uffff\1\140\1\uffff\1\6\1\uffff\1\140";
+    static final String DFA60_acceptS =
+        "\1\uffff\1\1\1\2\1\3\1\4\1\5\5\uffff\1\11\1\12\1\6\1\uffff\1\7\1\uffff\1\10\1\uffff\1\13\1\uffff";
+    static final String DFA60_specialS =
         "\25\uffff}>";
-    static final String[] DFA61_transitionS = {
-            "\1\5\1\11\1\12\1\10\32\uffff\1\13\30\uffff\1\6\1\7\34\uffff"+
-            "\2\14\1\2\1\1\1\uffff\1\4\1\3",
+    static final String[] DFA60_transitionS = {
+            "\1\5\1\11\1\12\1\10\32\uffff\1\13\30\uffff\1\6\1\7\34\uffff\2\14\1\2\1\1\1\uffff\1\4\1\3",
             "",
             "",
             "",
@@ -16799,58 +16536,52 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
             "",
             "\1\11\1\15\1\10",
             "\1\11\1\15\1\10",
-            "\1\16\12\uffff\1\17\12\uffff\1\17\6\uffff\1\17\60\uffff\1\17"+
-            "\1\uffff\1\17\11\uffff\1\15",
-            "\1\20\12\uffff\1\21\12\uffff\1\21\6\uffff\1\21\60\uffff\1\21"+
-            "\1\uffff\1\21\11\uffff\1\15",
-            "\1\23\12\uffff\1\23\6\uffff\1\23\51\uffff\1\22\6\uffff\1\23"+
-            "\1\uffff\1\23\11\uffff\1\15",
+            "\1\16\12\uffff\1\17\12\uffff\1\17\6\uffff\1\17\60\uffff\1\17\1\uffff\1\17\11\uffff\1\15",
+            "\1\20\12\uffff\1\21\12\uffff\1\21\6\uffff\1\21\60\uffff\1\21\1\uffff\1\21\11\uffff\1\15",
+            "\1\23\12\uffff\1\23\6\uffff\1\23\51\uffff\1\22\6\uffff\1\23\1\uffff\1\23\11\uffff\1\15",
             "",
             "",
             "",
-            "\1\17\12\uffff\1\17\6\uffff\1\17\60\uffff\1\17\1\uffff\1\17"+
-            "\11\uffff\1\15",
+            "\1\17\12\uffff\1\17\6\uffff\1\17\60\uffff\1\17\1\uffff\1\17\11\uffff\1\15",
             "",
-            "\1\21\12\uffff\1\21\6\uffff\1\21\60\uffff\1\21\1\uffff\1\21"+
-            "\11\uffff\1\15",
+            "\1\21\12\uffff\1\21\6\uffff\1\21\60\uffff\1\21\1\uffff\1\21\11\uffff\1\15",
             "",
             "\1\24",
             "",
-            "\1\23\12\uffff\1\23\6\uffff\1\23\60\uffff\1\23\1\uffff\1\23"+
-            "\11\uffff\1\15"
+            "\1\23\12\uffff\1\23\6\uffff\1\23\60\uffff\1\23\1\uffff\1\23\11\uffff\1\15"
     };
 
-    static final short[] DFA61_eot = DFA.unpackEncodedString(DFA61_eotS);
-    static final short[] DFA61_eof = DFA.unpackEncodedString(DFA61_eofS);
-    static final char[] DFA61_min = DFA.unpackEncodedStringToUnsignedChars(DFA61_minS);
-    static final char[] DFA61_max = DFA.unpackEncodedStringToUnsignedChars(DFA61_maxS);
-    static final short[] DFA61_accept = DFA.unpackEncodedString(DFA61_acceptS);
-    static final short[] DFA61_special = DFA.unpackEncodedString(DFA61_specialS);
-    static final short[][] DFA61_transition;
+    static final short[] DFA60_eot = DFA.unpackEncodedString(DFA60_eotS);
+    static final short[] DFA60_eof = DFA.unpackEncodedString(DFA60_eofS);
+    static final char[] DFA60_min = DFA.unpackEncodedStringToUnsignedChars(DFA60_minS);
+    static final char[] DFA60_max = DFA.unpackEncodedStringToUnsignedChars(DFA60_maxS);
+    static final short[] DFA60_accept = DFA.unpackEncodedString(DFA60_acceptS);
+    static final short[] DFA60_special = DFA.unpackEncodedString(DFA60_specialS);
+    static final short[][] DFA60_transition;
 
     static {
-        int numStates = DFA61_transitionS.length;
-        DFA61_transition = new short[numStates][];
+        int numStates = DFA60_transitionS.length;
+        DFA60_transition = new short[numStates][];
         for (int i=0; i<numStates; i++) {
-            DFA61_transition[i] = DFA.unpackEncodedString(DFA61_transitionS[i]);
+            DFA60_transition[i] = DFA.unpackEncodedString(DFA60_transitionS[i]);
         }
     }
 
-    class DFA61 extends DFA {
+    class DFA60 extends DFA {
 
-        public DFA61(BaseRecognizer recognizer) {
+        public DFA60(BaseRecognizer recognizer) {
             this.recognizer = recognizer;
-            this.decisionNumber = 61;
-            this.eot = DFA61_eot;
-            this.eof = DFA61_eof;
-            this.min = DFA61_min;
-            this.max = DFA61_max;
-            this.accept = DFA61_accept;
-            this.special = DFA61_special;
-            this.transition = DFA61_transition;
+            this.decisionNumber = 60;
+            this.eot = DFA60_eot;
+            this.eof = DFA60_eof;
+            this.min = DFA60_min;
+            this.max = DFA60_max;
+            this.accept = DFA60_accept;
+            this.special = DFA60_special;
+            this.transition = DFA60_transition;
         }
         public String getDescription() {
-            return "4223:1: (this_RecordTerm_0= ruleRecordTerm | this_ReferenceTerm_1= ruleReferenceTerm | this_ComponentClassifierTerm_2= ruleComponentClassifierTerm | this_ComputedTerm_3= ruleComputedTerm | this_StringTerm_4= ruleStringTerm | this_NumericRangeTerm_5= ruleNumericRangeTerm | this_RealTerm_6= ruleRealTerm | this_IntegerTerm_7= ruleIntegerTerm | this_ListTerm_8= ruleListTerm | this_BooleanLiteral_9= ruleBooleanLiteral | this_LiteralorReferenceTerm_10= ruleLiteralorReferenceTerm )";
+            return "4195:1: (this_RecordTerm_0= ruleRecordTerm | this_ReferenceTerm_1= ruleReferenceTerm | this_ComponentClassifierTerm_2= ruleComponentClassifierTerm | this_ComputedTerm_3= ruleComputedTerm | this_StringTerm_4= ruleStringTerm | this_NumericRangeTerm_5= ruleNumericRangeTerm | this_RealTerm_6= ruleRealTerm | this_IntegerTerm_7= ruleIntegerTerm | this_ListTerm_8= ruleListTerm | this_BooleanLiteral_9= ruleBooleanLiteral | this_LiteralorReferenceTerm_10= ruleLiteralorReferenceTerm )";
         }
     }
  
@@ -17214,167 +16945,160 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
     public static final BitSet FOLLOW_17_in_ruleContainedPropertyAssociation8890 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_ruleContainmentPath_in_entryRuleContainmentPath8930 = new BitSet(new long[]{0x0000000000000000L});
     public static final BitSet FOLLOW_EOF_in_entryRuleContainmentPath8940 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleContainmentPathElement_in_ruleContainmentPath8995 = new BitSet(new long[]{0x0000000000000002L,0x0000000000000800L});
-    public static final BitSet FOLLOW_75_in_ruleContainmentPath9008 = new BitSet(new long[]{0x0000000000000040L});
-    public static final BitSet FOLLOW_ruleContainmentPathElement_in_ruleContainmentPath9029 = new BitSet(new long[]{0x0000000000000002L,0x0000000000000800L});
-    public static final BitSet FOLLOW_ruleOptionalModalPropertyValue_in_entryRuleOptionalModalPropertyValue9069 = new BitSet(new long[]{0x0000000000000000L});
-    public static final BitSet FOLLOW_EOF_in_entryRuleOptionalModalPropertyValue9079 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_rulePropertyExpression_in_ruleOptionalModalPropertyValue9125 = new BitSet(new long[]{0x0000000000000002L,0x0000000000400000L});
-    public static final BitSet FOLLOW_86_in_ruleOptionalModalPropertyValue9138 = new BitSet(new long[]{0x0000000000000000L,0x0000000001000000L});
-    public static final BitSet FOLLOW_88_in_ruleOptionalModalPropertyValue9150 = new BitSet(new long[]{0x0000000400000000L});
-    public static final BitSet FOLLOW_34_in_ruleOptionalModalPropertyValue9162 = new BitSet(new long[]{0x0000000000000040L});
-    public static final BitSet FOLLOW_RULE_ID_in_ruleOptionalModalPropertyValue9182 = new BitSet(new long[]{0x0000000810000000L});
-    public static final BitSet FOLLOW_28_in_ruleOptionalModalPropertyValue9195 = new BitSet(new long[]{0x0000000000000040L});
-    public static final BitSet FOLLOW_RULE_ID_in_ruleOptionalModalPropertyValue9215 = new BitSet(new long[]{0x0000000810000000L});
-    public static final BitSet FOLLOW_35_in_ruleOptionalModalPropertyValue9229 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_rulePropertyValue_in_entryRulePropertyValue9267 = new BitSet(new long[]{0x0000000000000000L});
-    public static final BitSet FOLLOW_EOF_in_entryRulePropertyValue9277 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_rulePropertyExpression_in_rulePropertyValue9322 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_rulePropertyExpression_in_entryRulePropertyExpression9357 = new BitSet(new long[]{0x0000000000000000L});
-    public static final BitSet FOLLOW_EOF_in_entryRulePropertyExpression9367 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleRecordTerm_in_rulePropertyExpression9414 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleReferenceTerm_in_rulePropertyExpression9441 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleComponentClassifierTerm_in_rulePropertyExpression9468 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleComputedTerm_in_rulePropertyExpression9495 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleStringTerm_in_rulePropertyExpression9522 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleNumericRangeTerm_in_rulePropertyExpression9549 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleRealTerm_in_rulePropertyExpression9576 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleIntegerTerm_in_rulePropertyExpression9603 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleListTerm_in_rulePropertyExpression9630 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleBooleanLiteral_in_rulePropertyExpression9657 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleLiteralorReferenceTerm_in_rulePropertyExpression9684 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleLiteralorReferenceTerm_in_entryRuleLiteralorReferenceTerm9719 = new BitSet(new long[]{0x0000000000000000L});
-    public static final BitSet FOLLOW_EOF_in_entryRuleLiteralorReferenceTerm9729 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleQPREF_in_ruleLiteralorReferenceTerm9776 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleBooleanLiteral_in_entryRuleBooleanLiteral9811 = new BitSet(new long[]{0x0000000000000000L});
-    public static final BitSet FOLLOW_EOF_in_entryRuleBooleanLiteral9821 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_89_in_ruleBooleanLiteral9874 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_90_in_ruleBooleanLiteral9905 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleConstantValue_in_entryRuleConstantValue9942 = new BitSet(new long[]{0x0000000000000000L});
-    public static final BitSet FOLLOW_EOF_in_entryRuleConstantValue9952 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleQPREF_in_ruleConstantValue9999 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleReferenceTerm_in_entryRuleReferenceTerm10034 = new BitSet(new long[]{0x0000000000000000L});
-    public static final BitSet FOLLOW_EOF_in_entryRuleReferenceTerm10044 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_91_in_ruleReferenceTerm10081 = new BitSet(new long[]{0x0000000400000000L});
-    public static final BitSet FOLLOW_34_in_ruleReferenceTerm10093 = new BitSet(new long[]{0x0000000000000040L});
-    public static final BitSet FOLLOW_ruleQualifiedContainmentPathElement_in_ruleReferenceTerm10115 = new BitSet(new long[]{0x0000000000000000L,0x0000000000000800L});
-    public static final BitSet FOLLOW_75_in_ruleReferenceTerm10127 = new BitSet(new long[]{0x0000000000000040L});
-    public static final BitSet FOLLOW_ruleContainmentPathElement_in_ruleReferenceTerm10150 = new BitSet(new long[]{0x0000000800000000L,0x0000000000000800L});
-    public static final BitSet FOLLOW_75_in_ruleReferenceTerm10163 = new BitSet(new long[]{0x0000000000000040L});
-    public static final BitSet FOLLOW_ruleContainmentPathElement_in_ruleReferenceTerm10184 = new BitSet(new long[]{0x0000000800000000L,0x0000000000000800L});
-    public static final BitSet FOLLOW_35_in_ruleReferenceTerm10198 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleRecordTerm_in_entryRuleRecordTerm10234 = new BitSet(new long[]{0x0000000000000000L});
-    public static final BitSet FOLLOW_EOF_in_entryRuleRecordTerm10244 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_92_in_ruleRecordTerm10281 = new BitSet(new long[]{0x0000000000000040L});
-    public static final BitSet FOLLOW_ruleFieldPropertyAssociation_in_ruleRecordTerm10302 = new BitSet(new long[]{0x0000000000000040L,0x0000000020000000L});
-    public static final BitSet FOLLOW_93_in_ruleRecordTerm10315 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleComputedTerm_in_entryRuleComputedTerm10353 = new BitSet(new long[]{0x0000000000000000L});
-    public static final BitSet FOLLOW_EOF_in_entryRuleComputedTerm10363 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_94_in_ruleComputedTerm10400 = new BitSet(new long[]{0x0000000400000000L});
-    public static final BitSet FOLLOW_34_in_ruleComputedTerm10412 = new BitSet(new long[]{0x0000000000000040L});
-    public static final BitSet FOLLOW_RULE_ID_in_ruleComputedTerm10429 = new BitSet(new long[]{0x0000000800000000L});
-    public static final BitSet FOLLOW_35_in_ruleComputedTerm10446 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleComponentClassifierTerm_in_entryRuleComponentClassifierTerm10482 = new BitSet(new long[]{0x0000000000000000L});
-    public static final BitSet FOLLOW_EOF_in_entryRuleComponentClassifierTerm10492 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_95_in_ruleComponentClassifierTerm10529 = new BitSet(new long[]{0x0000000400000000L});
-    public static final BitSet FOLLOW_34_in_ruleComponentClassifierTerm10541 = new BitSet(new long[]{0x0000000000000040L});
-    public static final BitSet FOLLOW_ruleQCREF_in_ruleComponentClassifierTerm10564 = new BitSet(new long[]{0x0000000800000000L});
-    public static final BitSet FOLLOW_35_in_ruleComponentClassifierTerm10576 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleListTerm_in_entryRuleListTerm10612 = new BitSet(new long[]{0x0000000000000000L});
-    public static final BitSet FOLLOW_EOF_in_entryRuleListTerm10622 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_34_in_ruleListTerm10668 = new BitSet(new long[]{0x1800000C000000F0L,0x00000000DE080000L});
-    public static final BitSet FOLLOW_rulePropertyExpression_in_ruleListTerm10690 = new BitSet(new long[]{0x0000000810000000L});
-    public static final BitSet FOLLOW_28_in_ruleListTerm10703 = new BitSet(new long[]{0x18000004000000F0L,0x00000000DE080000L});
-    public static final BitSet FOLLOW_rulePropertyExpression_in_ruleListTerm10724 = new BitSet(new long[]{0x0000000810000000L});
-    public static final BitSet FOLLOW_35_in_ruleListTerm10740 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleFieldPropertyAssociation_in_entryRuleFieldPropertyAssociation10776 = new BitSet(new long[]{0x0000000000000000L});
-    public static final BitSet FOLLOW_EOF_in_entryRuleFieldPropertyAssociation10786 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_RULE_ID_in_ruleFieldPropertyAssociation10831 = new BitSet(new long[]{0x0002000000000000L});
-    public static final BitSet FOLLOW_49_in_ruleFieldPropertyAssociation10843 = new BitSet(new long[]{0x18000004000000F0L,0x00000000DE080000L});
-    public static final BitSet FOLLOW_rulePropertyExpression_in_ruleFieldPropertyAssociation10864 = new BitSet(new long[]{0x0000000000020000L});
-    public static final BitSet FOLLOW_17_in_ruleFieldPropertyAssociation10876 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleContainmentPathElement_in_entryRuleContainmentPathElement10912 = new BitSet(new long[]{0x0000000000000000L});
-    public static final BitSet FOLLOW_EOF_in_entryRuleContainmentPathElement10922 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_RULE_ID_in_ruleContainmentPathElement10967 = new BitSet(new long[]{0x0000000000000002L,0x0000000010000000L});
-    public static final BitSet FOLLOW_ruleArrayRange_in_ruleContainmentPathElement10988 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleQualifiedContainmentPathElement_in_entryRuleQualifiedContainmentPathElement11025 = new BitSet(new long[]{0x0000000000000000L});
-    public static final BitSet FOLLOW_EOF_in_entryRuleQualifiedContainmentPathElement11035 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleQCLREF_in_ruleQualifiedContainmentPathElement11082 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_rulePlusMinus_in_entryRulePlusMinus11120 = new BitSet(new long[]{0x0000000000000000L});
-    public static final BitSet FOLLOW_EOF_in_entryRulePlusMinus11131 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_59_in_rulePlusMinus11169 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_60_in_rulePlusMinus11188 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleStringTerm_in_entryRuleStringTerm11228 = new BitSet(new long[]{0x0000000000000000L});
-    public static final BitSet FOLLOW_EOF_in_entryRuleStringTerm11238 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleNoQuoteString_in_ruleStringTerm11283 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleNoQuoteString_in_entryRuleNoQuoteString11319 = new BitSet(new long[]{0x0000000000000000L});
-    public static final BitSet FOLLOW_EOF_in_entryRuleNoQuoteString11330 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_RULE_STRING_in_ruleNoQuoteString11369 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleArrayRange_in_entryRuleArrayRange11413 = new BitSet(new long[]{0x0000000000000000L});
-    public static final BitSet FOLLOW_EOF_in_entryRuleArrayRange11423 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_92_in_ruleArrayRange11469 = new BitSet(new long[]{0x0000000000000020L});
-    public static final BitSet FOLLOW_ruleINTVALUE_in_ruleArrayRange11490 = new BitSet(new long[]{0x0000000000000000L,0x0000000120000000L});
-    public static final BitSet FOLLOW_96_in_ruleArrayRange11503 = new BitSet(new long[]{0x0000000000000020L});
-    public static final BitSet FOLLOW_ruleINTVALUE_in_ruleArrayRange11524 = new BitSet(new long[]{0x0000000000000000L,0x0000000020000000L});
-    public static final BitSet FOLLOW_93_in_ruleArrayRange11538 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleSignedConstant_in_entryRuleSignedConstant11574 = new BitSet(new long[]{0x0000000000000000L});
-    public static final BitSet FOLLOW_EOF_in_entryRuleSignedConstant11584 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_rulePlusMinus_in_ruleSignedConstant11630 = new BitSet(new long[]{0x18000000000000E0L});
-    public static final BitSet FOLLOW_ruleConstantValue_in_ruleSignedConstant11651 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleIntegerTerm_in_entryRuleIntegerTerm11687 = new BitSet(new long[]{0x0000000000000000L});
-    public static final BitSet FOLLOW_EOF_in_entryRuleIntegerTerm11697 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleSignedInt_in_ruleIntegerTerm11743 = new BitSet(new long[]{0x0000000000000042L});
-    public static final BitSet FOLLOW_RULE_ID_in_ruleIntegerTerm11763 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleSignedInt_in_entryRuleSignedInt11801 = new BitSet(new long[]{0x0000000000000000L});
-    public static final BitSet FOLLOW_EOF_in_entryRuleSignedInt11812 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_59_in_ruleSignedInt11851 = new BitSet(new long[]{0x0000000000000020L});
-    public static final BitSet FOLLOW_60_in_ruleSignedInt11870 = new BitSet(new long[]{0x0000000000000020L});
-    public static final BitSet FOLLOW_RULE_INTEGER_LIT_in_ruleSignedInt11887 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleRealTerm_in_entryRuleRealTerm11932 = new BitSet(new long[]{0x0000000000000000L});
-    public static final BitSet FOLLOW_EOF_in_entryRuleRealTerm11942 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleSignedReal_in_ruleRealTerm11988 = new BitSet(new long[]{0x0000000000000042L});
-    public static final BitSet FOLLOW_RULE_ID_in_ruleRealTerm12008 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleSignedReal_in_entryRuleSignedReal12046 = new BitSet(new long[]{0x0000000000000000L});
-    public static final BitSet FOLLOW_EOF_in_entryRuleSignedReal12057 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_59_in_ruleSignedReal12096 = new BitSet(new long[]{0x0000000000000080L});
-    public static final BitSet FOLLOW_60_in_ruleSignedReal12115 = new BitSet(new long[]{0x0000000000000080L});
-    public static final BitSet FOLLOW_RULE_REAL_LIT_in_ruleSignedReal12132 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleNumericRangeTerm_in_entryRuleNumericRangeTerm12177 = new BitSet(new long[]{0x0000000000000000L});
-    public static final BitSet FOLLOW_EOF_in_entryRuleNumericRangeTerm12187 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleNumAlt_in_ruleNumericRangeTerm12233 = new BitSet(new long[]{0x0000000000000000L,0x0000000100000000L});
-    public static final BitSet FOLLOW_96_in_ruleNumericRangeTerm12245 = new BitSet(new long[]{0x18000000000000E0L});
-    public static final BitSet FOLLOW_ruleNumAlt_in_ruleNumericRangeTerm12266 = new BitSet(new long[]{0x0000000000000002L,0x0000000200000000L});
-    public static final BitSet FOLLOW_97_in_ruleNumericRangeTerm12279 = new BitSet(new long[]{0x18000000000000E0L});
-    public static final BitSet FOLLOW_ruleNumAlt_in_ruleNumericRangeTerm12300 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleNumAlt_in_entryRuleNumAlt12338 = new BitSet(new long[]{0x0000000000000000L});
-    public static final BitSet FOLLOW_EOF_in_entryRuleNumAlt12348 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleRealTerm_in_ruleNumAlt12395 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleIntegerTerm_in_ruleNumAlt12422 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleSignedConstant_in_ruleNumAlt12449 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleConstantValue_in_ruleNumAlt12476 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleINTVALUE_in_entryRuleINTVALUE12512 = new BitSet(new long[]{0x0000000000000000L});
-    public static final BitSet FOLLOW_EOF_in_entryRuleINTVALUE12523 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_RULE_INTEGER_LIT_in_ruleINTVALUE12562 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleQCLREF_in_entryRuleQCLREF12607 = new BitSet(new long[]{0x0000000000000000L});
-    public static final BitSet FOLLOW_EOF_in_entryRuleQCLREF12618 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_RULE_ID_in_ruleQCLREF12658 = new BitSet(new long[]{0x0000000000000000L,0x0000000000002000L});
-    public static final BitSet FOLLOW_77_in_ruleQCLREF12676 = new BitSet(new long[]{0x0000000000000040L});
-    public static final BitSet FOLLOW_RULE_ID_in_ruleQCLREF12691 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleQPREF_in_entryRuleQPREF12737 = new BitSet(new long[]{0x0000000000000000L});
-    public static final BitSet FOLLOW_EOF_in_entryRuleQPREF12748 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_RULE_ID_in_ruleQPREF12788 = new BitSet(new long[]{0x0000000000000002L,0x0000000000002000L});
-    public static final BitSet FOLLOW_77_in_ruleQPREF12807 = new BitSet(new long[]{0x0000000000000040L});
-    public static final BitSet FOLLOW_RULE_ID_in_ruleQPREF12822 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleQCREF_in_entryRuleQCREF12870 = new BitSet(new long[]{0x0000000000000000L});
-    public static final BitSet FOLLOW_EOF_in_entryRuleQCREF12881 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_RULE_ID_in_ruleQCREF12922 = new BitSet(new long[]{0x0000000000000000L,0x0000000000002000L});
-    public static final BitSet FOLLOW_77_in_ruleQCREF12940 = new BitSet(new long[]{0x0000000000000040L});
-    public static final BitSet FOLLOW_RULE_ID_in_ruleQCREF12957 = new BitSet(new long[]{0x0000000000000002L,0x0000000000000800L});
-    public static final BitSet FOLLOW_75_in_ruleQCREF12976 = new BitSet(new long[]{0x0000000000000040L});
-    public static final BitSet FOLLOW_RULE_ID_in_ruleQCREF12991 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleSTAR_in_entryRuleSTAR13039 = new BitSet(new long[]{0x0000000000000000L});
-    public static final BitSet FOLLOW_EOF_in_entryRuleSTAR13050 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_61_in_ruleSTAR13087 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ruleContainmentPathElement_in_ruleContainmentPath8985 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ruleOptionalModalPropertyValue_in_entryRuleOptionalModalPropertyValue9022 = new BitSet(new long[]{0x0000000000000000L});
+    public static final BitSet FOLLOW_EOF_in_entryRuleOptionalModalPropertyValue9032 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_rulePropertyExpression_in_ruleOptionalModalPropertyValue9078 = new BitSet(new long[]{0x0000000000000002L,0x0000000000400000L});
+    public static final BitSet FOLLOW_86_in_ruleOptionalModalPropertyValue9091 = new BitSet(new long[]{0x0000000000000000L,0x0000000001000000L});
+    public static final BitSet FOLLOW_88_in_ruleOptionalModalPropertyValue9103 = new BitSet(new long[]{0x0000000400000000L});
+    public static final BitSet FOLLOW_34_in_ruleOptionalModalPropertyValue9115 = new BitSet(new long[]{0x0000000000000040L});
+    public static final BitSet FOLLOW_RULE_ID_in_ruleOptionalModalPropertyValue9135 = new BitSet(new long[]{0x0000000810000000L});
+    public static final BitSet FOLLOW_28_in_ruleOptionalModalPropertyValue9148 = new BitSet(new long[]{0x0000000000000040L});
+    public static final BitSet FOLLOW_RULE_ID_in_ruleOptionalModalPropertyValue9168 = new BitSet(new long[]{0x0000000810000000L});
+    public static final BitSet FOLLOW_35_in_ruleOptionalModalPropertyValue9182 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_rulePropertyValue_in_entryRulePropertyValue9220 = new BitSet(new long[]{0x0000000000000000L});
+    public static final BitSet FOLLOW_EOF_in_entryRulePropertyValue9230 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_rulePropertyExpression_in_rulePropertyValue9275 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_rulePropertyExpression_in_entryRulePropertyExpression9310 = new BitSet(new long[]{0x0000000000000000L});
+    public static final BitSet FOLLOW_EOF_in_entryRulePropertyExpression9320 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ruleRecordTerm_in_rulePropertyExpression9367 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ruleReferenceTerm_in_rulePropertyExpression9394 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ruleComponentClassifierTerm_in_rulePropertyExpression9421 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ruleComputedTerm_in_rulePropertyExpression9448 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ruleStringTerm_in_rulePropertyExpression9475 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ruleNumericRangeTerm_in_rulePropertyExpression9502 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ruleRealTerm_in_rulePropertyExpression9529 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ruleIntegerTerm_in_rulePropertyExpression9556 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ruleListTerm_in_rulePropertyExpression9583 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ruleBooleanLiteral_in_rulePropertyExpression9610 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ruleLiteralorReferenceTerm_in_rulePropertyExpression9637 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ruleLiteralorReferenceTerm_in_entryRuleLiteralorReferenceTerm9672 = new BitSet(new long[]{0x0000000000000000L});
+    public static final BitSet FOLLOW_EOF_in_entryRuleLiteralorReferenceTerm9682 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ruleQPREF_in_ruleLiteralorReferenceTerm9729 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ruleBooleanLiteral_in_entryRuleBooleanLiteral9764 = new BitSet(new long[]{0x0000000000000000L});
+    public static final BitSet FOLLOW_EOF_in_entryRuleBooleanLiteral9774 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_89_in_ruleBooleanLiteral9827 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_90_in_ruleBooleanLiteral9858 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ruleConstantValue_in_entryRuleConstantValue9895 = new BitSet(new long[]{0x0000000000000000L});
+    public static final BitSet FOLLOW_EOF_in_entryRuleConstantValue9905 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ruleQPREF_in_ruleConstantValue9952 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ruleReferenceTerm_in_entryRuleReferenceTerm9987 = new BitSet(new long[]{0x0000000000000000L});
+    public static final BitSet FOLLOW_EOF_in_entryRuleReferenceTerm9997 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_91_in_ruleReferenceTerm10034 = new BitSet(new long[]{0x0000000400000000L});
+    public static final BitSet FOLLOW_34_in_ruleReferenceTerm10046 = new BitSet(new long[]{0x0000000000000040L});
+    public static final BitSet FOLLOW_ruleContainmentPathElement_in_ruleReferenceTerm10067 = new BitSet(new long[]{0x0000000800000000L});
+    public static final BitSet FOLLOW_35_in_ruleReferenceTerm10079 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ruleRecordTerm_in_entryRuleRecordTerm10115 = new BitSet(new long[]{0x0000000000000000L});
+    public static final BitSet FOLLOW_EOF_in_entryRuleRecordTerm10125 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_92_in_ruleRecordTerm10162 = new BitSet(new long[]{0x0000000000000040L});
+    public static final BitSet FOLLOW_ruleFieldPropertyAssociation_in_ruleRecordTerm10183 = new BitSet(new long[]{0x0000000000000040L,0x0000000020000000L});
+    public static final BitSet FOLLOW_93_in_ruleRecordTerm10196 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ruleComputedTerm_in_entryRuleComputedTerm10234 = new BitSet(new long[]{0x0000000000000000L});
+    public static final BitSet FOLLOW_EOF_in_entryRuleComputedTerm10244 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_94_in_ruleComputedTerm10281 = new BitSet(new long[]{0x0000000400000000L});
+    public static final BitSet FOLLOW_34_in_ruleComputedTerm10293 = new BitSet(new long[]{0x0000000000000040L});
+    public static final BitSet FOLLOW_RULE_ID_in_ruleComputedTerm10310 = new BitSet(new long[]{0x0000000800000000L});
+    public static final BitSet FOLLOW_35_in_ruleComputedTerm10327 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ruleComponentClassifierTerm_in_entryRuleComponentClassifierTerm10363 = new BitSet(new long[]{0x0000000000000000L});
+    public static final BitSet FOLLOW_EOF_in_entryRuleComponentClassifierTerm10373 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_95_in_ruleComponentClassifierTerm10410 = new BitSet(new long[]{0x0000000400000000L});
+    public static final BitSet FOLLOW_34_in_ruleComponentClassifierTerm10422 = new BitSet(new long[]{0x0000000000000040L});
+    public static final BitSet FOLLOW_ruleQCREF_in_ruleComponentClassifierTerm10445 = new BitSet(new long[]{0x0000000800000000L});
+    public static final BitSet FOLLOW_35_in_ruleComponentClassifierTerm10457 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ruleListTerm_in_entryRuleListTerm10493 = new BitSet(new long[]{0x0000000000000000L});
+    public static final BitSet FOLLOW_EOF_in_entryRuleListTerm10503 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_34_in_ruleListTerm10549 = new BitSet(new long[]{0x1800000C000000F0L,0x00000000DE080000L});
+    public static final BitSet FOLLOW_rulePropertyExpression_in_ruleListTerm10571 = new BitSet(new long[]{0x0000000810000000L});
+    public static final BitSet FOLLOW_28_in_ruleListTerm10584 = new BitSet(new long[]{0x18000004000000F0L,0x00000000DE080000L});
+    public static final BitSet FOLLOW_rulePropertyExpression_in_ruleListTerm10605 = new BitSet(new long[]{0x0000000810000000L});
+    public static final BitSet FOLLOW_35_in_ruleListTerm10621 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ruleFieldPropertyAssociation_in_entryRuleFieldPropertyAssociation10657 = new BitSet(new long[]{0x0000000000000000L});
+    public static final BitSet FOLLOW_EOF_in_entryRuleFieldPropertyAssociation10667 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_RULE_ID_in_ruleFieldPropertyAssociation10712 = new BitSet(new long[]{0x0002000000000000L});
+    public static final BitSet FOLLOW_49_in_ruleFieldPropertyAssociation10724 = new BitSet(new long[]{0x18000004000000F0L,0x00000000DE080000L});
+    public static final BitSet FOLLOW_rulePropertyExpression_in_ruleFieldPropertyAssociation10745 = new BitSet(new long[]{0x0000000000020000L});
+    public static final BitSet FOLLOW_17_in_ruleFieldPropertyAssociation10757 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ruleContainmentPathElement_in_entryRuleContainmentPathElement10793 = new BitSet(new long[]{0x0000000000000000L});
+    public static final BitSet FOLLOW_EOF_in_entryRuleContainmentPathElement10803 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_RULE_ID_in_ruleContainmentPathElement10849 = new BitSet(new long[]{0x0000000000000002L,0x0000000010000800L});
+    public static final BitSet FOLLOW_ruleArrayRange_in_ruleContainmentPathElement10870 = new BitSet(new long[]{0x0000000000000002L,0x0000000000000800L});
+    public static final BitSet FOLLOW_75_in_ruleContainmentPathElement10885 = new BitSet(new long[]{0x0000000000000040L});
+    public static final BitSet FOLLOW_ruleContainmentPathElement_in_ruleContainmentPathElement10906 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_rulePlusMinus_in_entryRulePlusMinus10947 = new BitSet(new long[]{0x0000000000000000L});
+    public static final BitSet FOLLOW_EOF_in_entryRulePlusMinus10958 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_59_in_rulePlusMinus10996 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_60_in_rulePlusMinus11015 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ruleStringTerm_in_entryRuleStringTerm11055 = new BitSet(new long[]{0x0000000000000000L});
+    public static final BitSet FOLLOW_EOF_in_entryRuleStringTerm11065 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ruleNoQuoteString_in_ruleStringTerm11110 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ruleNoQuoteString_in_entryRuleNoQuoteString11146 = new BitSet(new long[]{0x0000000000000000L});
+    public static final BitSet FOLLOW_EOF_in_entryRuleNoQuoteString11157 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_RULE_STRING_in_ruleNoQuoteString11196 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ruleArrayRange_in_entryRuleArrayRange11240 = new BitSet(new long[]{0x0000000000000000L});
+    public static final BitSet FOLLOW_EOF_in_entryRuleArrayRange11250 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_92_in_ruleArrayRange11296 = new BitSet(new long[]{0x0000000000000020L});
+    public static final BitSet FOLLOW_ruleINTVALUE_in_ruleArrayRange11317 = new BitSet(new long[]{0x0000000000000000L,0x0000000120000000L});
+    public static final BitSet FOLLOW_96_in_ruleArrayRange11330 = new BitSet(new long[]{0x0000000000000020L});
+    public static final BitSet FOLLOW_ruleINTVALUE_in_ruleArrayRange11351 = new BitSet(new long[]{0x0000000000000000L,0x0000000020000000L});
+    public static final BitSet FOLLOW_93_in_ruleArrayRange11365 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ruleSignedConstant_in_entryRuleSignedConstant11401 = new BitSet(new long[]{0x0000000000000000L});
+    public static final BitSet FOLLOW_EOF_in_entryRuleSignedConstant11411 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_rulePlusMinus_in_ruleSignedConstant11457 = new BitSet(new long[]{0x18000000000000E0L});
+    public static final BitSet FOLLOW_ruleConstantValue_in_ruleSignedConstant11478 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ruleIntegerTerm_in_entryRuleIntegerTerm11514 = new BitSet(new long[]{0x0000000000000000L});
+    public static final BitSet FOLLOW_EOF_in_entryRuleIntegerTerm11524 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ruleSignedInt_in_ruleIntegerTerm11570 = new BitSet(new long[]{0x0000000000000042L});
+    public static final BitSet FOLLOW_RULE_ID_in_ruleIntegerTerm11590 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ruleSignedInt_in_entryRuleSignedInt11628 = new BitSet(new long[]{0x0000000000000000L});
+    public static final BitSet FOLLOW_EOF_in_entryRuleSignedInt11639 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_59_in_ruleSignedInt11678 = new BitSet(new long[]{0x0000000000000020L});
+    public static final BitSet FOLLOW_60_in_ruleSignedInt11697 = new BitSet(new long[]{0x0000000000000020L});
+    public static final BitSet FOLLOW_RULE_INTEGER_LIT_in_ruleSignedInt11714 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ruleRealTerm_in_entryRuleRealTerm11759 = new BitSet(new long[]{0x0000000000000000L});
+    public static final BitSet FOLLOW_EOF_in_entryRuleRealTerm11769 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ruleSignedReal_in_ruleRealTerm11815 = new BitSet(new long[]{0x0000000000000042L});
+    public static final BitSet FOLLOW_RULE_ID_in_ruleRealTerm11835 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ruleSignedReal_in_entryRuleSignedReal11873 = new BitSet(new long[]{0x0000000000000000L});
+    public static final BitSet FOLLOW_EOF_in_entryRuleSignedReal11884 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_59_in_ruleSignedReal11923 = new BitSet(new long[]{0x0000000000000080L});
+    public static final BitSet FOLLOW_60_in_ruleSignedReal11942 = new BitSet(new long[]{0x0000000000000080L});
+    public static final BitSet FOLLOW_RULE_REAL_LIT_in_ruleSignedReal11959 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ruleNumericRangeTerm_in_entryRuleNumericRangeTerm12004 = new BitSet(new long[]{0x0000000000000000L});
+    public static final BitSet FOLLOW_EOF_in_entryRuleNumericRangeTerm12014 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ruleNumAlt_in_ruleNumericRangeTerm12060 = new BitSet(new long[]{0x0000000000000000L,0x0000000100000000L});
+    public static final BitSet FOLLOW_96_in_ruleNumericRangeTerm12072 = new BitSet(new long[]{0x18000000000000E0L});
+    public static final BitSet FOLLOW_ruleNumAlt_in_ruleNumericRangeTerm12093 = new BitSet(new long[]{0x0000000000000002L,0x0000000200000000L});
+    public static final BitSet FOLLOW_97_in_ruleNumericRangeTerm12106 = new BitSet(new long[]{0x18000000000000E0L});
+    public static final BitSet FOLLOW_ruleNumAlt_in_ruleNumericRangeTerm12127 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ruleNumAlt_in_entryRuleNumAlt12165 = new BitSet(new long[]{0x0000000000000000L});
+    public static final BitSet FOLLOW_EOF_in_entryRuleNumAlt12175 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ruleRealTerm_in_ruleNumAlt12222 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ruleIntegerTerm_in_ruleNumAlt12249 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ruleSignedConstant_in_ruleNumAlt12276 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ruleConstantValue_in_ruleNumAlt12303 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ruleINTVALUE_in_entryRuleINTVALUE12339 = new BitSet(new long[]{0x0000000000000000L});
+    public static final BitSet FOLLOW_EOF_in_entryRuleINTVALUE12350 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_RULE_INTEGER_LIT_in_ruleINTVALUE12389 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ruleQCLREF_in_entryRuleQCLREF12434 = new BitSet(new long[]{0x0000000000000000L});
+    public static final BitSet FOLLOW_EOF_in_entryRuleQCLREF12445 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_RULE_ID_in_ruleQCLREF12485 = new BitSet(new long[]{0x0000000000000000L,0x0000000000002000L});
+    public static final BitSet FOLLOW_77_in_ruleQCLREF12503 = new BitSet(new long[]{0x0000000000000040L});
+    public static final BitSet FOLLOW_RULE_ID_in_ruleQCLREF12518 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ruleQPREF_in_entryRuleQPREF12564 = new BitSet(new long[]{0x0000000000000000L});
+    public static final BitSet FOLLOW_EOF_in_entryRuleQPREF12575 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_RULE_ID_in_ruleQPREF12615 = new BitSet(new long[]{0x0000000000000002L,0x0000000000002000L});
+    public static final BitSet FOLLOW_77_in_ruleQPREF12634 = new BitSet(new long[]{0x0000000000000040L});
+    public static final BitSet FOLLOW_RULE_ID_in_ruleQPREF12649 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ruleQCREF_in_entryRuleQCREF12697 = new BitSet(new long[]{0x0000000000000000L});
+    public static final BitSet FOLLOW_EOF_in_entryRuleQCREF12708 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_RULE_ID_in_ruleQCREF12749 = new BitSet(new long[]{0x0000000000000000L,0x0000000000002000L});
+    public static final BitSet FOLLOW_77_in_ruleQCREF12767 = new BitSet(new long[]{0x0000000000000040L});
+    public static final BitSet FOLLOW_RULE_ID_in_ruleQCREF12784 = new BitSet(new long[]{0x0000000000000002L,0x0000000000000800L});
+    public static final BitSet FOLLOW_75_in_ruleQCREF12803 = new BitSet(new long[]{0x0000000000000040L});
+    public static final BitSet FOLLOW_RULE_ID_in_ruleQCREF12818 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ruleSTAR_in_entryRuleSTAR12866 = new BitSet(new long[]{0x0000000000000000L});
+    public static final BitSet FOLLOW_EOF_in_entryRuleSTAR12877 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_61_in_ruleSTAR12914 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_48_in_synpred1_InternalAgree4231 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_49_in_synpred2_InternalAgree4413 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_50_in_synpred3_InternalAgree4595 = new BitSet(new long[]{0x0000000000000002L});

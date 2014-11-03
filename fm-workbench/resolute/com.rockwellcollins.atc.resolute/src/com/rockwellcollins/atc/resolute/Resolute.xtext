@@ -186,6 +186,8 @@ BuiltInFn:
 |	'name'
 |	'type'
 |	'has_type'
+|   'is_of_type'
+|	'has_member'
 |   'features'
 |	'connections'
 
