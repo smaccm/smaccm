@@ -64,5 +64,23 @@ process uart
     client_buf : in out data port Base_Types::Integer_8; --actually a pointer (char *)
 end uart;
 
+system darpa_software
+end darap_software;
+
+system implementation darpa_software.i
+  subcomponents
+    uart_sub : process uart;
+    timer_sub : process timer;
+    spi_sub : process spi;
+    mmc_sub : process mmc;
+    client_sub : process client;
+    can_bus_sub : process can_bus;
+    can_sub : process can;
+    i2c_sub : process i2c;
+    gyro_sub : process gyro;
+    gpio_sub : process gpio;
+ 
+end darpa_software.i;
+
 
 end Software;
