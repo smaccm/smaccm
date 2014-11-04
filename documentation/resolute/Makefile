@@ -1,4 +1,5 @@
-EPSFILES=
+EPSFILES=imgs/resolute-selection.pdf \
+         imgs/resolute-result.pdf
 
 
 TEXFILES = $(BASE).tex $(wildcard section_?.tex)
