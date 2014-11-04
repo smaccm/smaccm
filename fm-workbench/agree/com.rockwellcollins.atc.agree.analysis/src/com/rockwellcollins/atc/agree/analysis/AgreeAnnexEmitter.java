@@ -224,10 +224,6 @@ public class AgreeAnnexEmitter extends AgreeSwitch<Expr> {
         this.thisPrefix = thisPrefix;
         this.topLevelPrefix = topLevelPrefix;
         
-//        initTypeMap.put("bool", initBool);
-//        initTypeMap.put("real", initReal);
-//        initTypeMap.put("int", initInt);
-        
         if(!layout.getCategories().contains(category)){
             layout.addCategory(category);
         }
