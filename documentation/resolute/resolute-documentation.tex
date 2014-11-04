@@ -1,0 +1,113 @@
+\documentclass[times, 10pt]{article}
+%\usepackage{latex8}
+\usepackage{times}
+
+\usepackage{listings}
+
+\usepackage{tabularx}
+
+\lstdefinelanguage{aadl}
+{morekeywords={aadlboolean,aadlinteger,aadlreal,aadlstring,access,all,and,
+        annex,applies,binding,bus,calls,classifier,connections,constant,
+        data,delta,device,end,enumeration,event,extends,false,features,flow,
+        flows,group,implementation,in,inherit,initial,inverse,is,list,memory,
+        mode,modes,none,not,of,or,out,package,parameter,path,port,private,
+        process,processor,properties,property,provides,public,range,
+        reference,refined,refines,requires,server,set,sink,source,
+        subcomponents,subprogram,system,thread,to,true,type,units,value},
+morecomment=[l]{--}}
+
+\lstset{language=aadl,
+        basicstyle=\scriptsize\sffamily,
+        aboveskip=.1cm, % \smallskipamount, % \bigskipamount,
+        belowskip=.1cm, % \smallskipamount, % \bigskipamount,
+        abovecaptionskip=.1cm, % \smallskipamount, % \medskipamount,
+        belowcaptionskip=.1cm, % \smallskipamount, % \bigskipamount,
+        xleftmargin=.0cm,
+        captionpos=b,
+        tabsize=3}
+
+
+
+
+
+\title{RESOLUTE documentation}
+
+\author{\textsc{Julien Delange}}\\
+  Software Engineering Institute\\
+  \texttt{jdelange@sei.cmu.edu}
+}
+
+\begin{document}
+
+\maketitle
+
+\section{Functions list}
+\begin{itemize}
+    \item
+	    \textbf{has\_property}
+    \item
+	    \textbf{property}
+    \item
+	    \textbf{has\_parent}
+    \item
+	    \textbf{parent}
+    \item
+	    \textbf{name}
+    \item
+	    \textbf{type}
+    \item
+	    \textbf{has\_type}
+    \item
+        \textbf{is\_of\_type}
+    \item
+	    \textbf{has\_member}
+    \item
+   '    \textbf{features}
+    \item
+	'   \textbf{connections}
+
+    \item
+	    \textbf{subcomponents}
+
+    \item
+        \textbf{source}
+
+    \item
+        \textbf{destination}
+
+    \item
+        \textbf{direction}
+
+    \item
+        \textbf{is\_event\_port}
+    \item
+        \textbf{lower\_bound}
+    \item
+        \textbf{upper\_bound}
+    \item
+        \textbf{member}
+    \item
+        \textbf{sum}
+    \item
+        \textbf{union}
+    \item
+        \textbf{intersect}
+    \item
+        \textbf{instance}
+    \item
+        \textbf{instances}
+    \item
+        \textbf{analysis}
+    \item
+        \textbf{receive\_error}
+    \item
+        \textbf{contain\_error}
+    \item
+        \textbf{propagate\_error}
+    \item
+        \textbf{error\_state\_reachable}
+\end{itemize}
+
+
+\end{document}
