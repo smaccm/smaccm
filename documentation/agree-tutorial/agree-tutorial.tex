@@ -71,7 +71,9 @@ user-manual\footnote{\url{https://github.com/smaccm/smaccm/tree/master/documenta
 This document is a way to learn how to use the language and its associated tools
 through several case studies.
 
-    \subsection{Use of AGREE}
+\onemedfig{imgs/agree-usage}{AGREE menu in OSATE outline}{fig:agree-usage}
+
+    \subsection{Use Analysis Tools}
     To use AGREE, model components must be annotated with AGREE annex
     subclauses. Then, invoking AGREE can be done by selecting the top-level
     system instance and make a right-click and select two options:
@@ -83,9 +85,8 @@ through several case studies.
             \textbf{Verify All Layers}: analyze the complete components
             hierarchy.
     \end{enumerate}
-\onefullfig{imgs/agree-usage}{AGREE menu in OSATE outline}{fig:agree-usage}
 
-    \subsection{Limitations of AGREE}
+    \subsection{Limitations}
     When using AGREE, your models must enforce some constraints. There is the
     list of the constraints your model has to enforce:
     \begin{itemize}
@@ -109,5 +110,10 @@ annex agree {**
 **};
 end mysystem;
 \end{lstlisting}
+
+
+    \subsection{Understanding Analysis Results}
+
+\onefullfig{imgs/agree-results}{AGREE Results View in OSATE}{fig:agree-results}
 
 \end{document}
