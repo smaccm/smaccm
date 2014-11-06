@@ -1,12 +1,12 @@
-EPSFILES=imgs/resolute-selection.pdf \
-         imgs/resolute-result.pdf
-
+EPSFILES=imgs/property_verification.pdf \
+ 		 imgs/double-fanin-instance.pdf \
+ 		 imgs/double-fanin-result.pdf
 
 TEXFILES = $(BASE).tex $(wildcard section_?.tex)
 
 BIBFILES=
 
-BASE=resolute-documentation
+BASE=resolute-tutorial
 
 all: $(BASE).pdf
 

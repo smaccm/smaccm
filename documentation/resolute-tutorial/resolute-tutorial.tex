@@ -3,6 +3,7 @@
 \usepackage{times}
 \usepackage{pslatex}
 \usepackage{epsfig}
+\usepackage{url}
 
 \usepackage{listings}
 
@@ -15,7 +16,8 @@
         flows,group,implementation,in,inherit,initial,inverse,is,list,memory,
         mode,modes,none,not,of,or,out,package,parameter,path,port,private,
         process,processor,properties,property,provides,public,range,
-        reference,refined,refines,requires,server,set,sink,source,
+        reference, check, component,forall,features,
+        false,true,contained,has_property,refined,refines,requires,server,set,sink,source,
         subcomponents,subprogram,system,thread,to,true,type,units,value},
 morecomment=[l]{--}}
 
@@ -30,6 +32,14 @@ morecomment=[l]{--}}
         tabsize=3}
 
 
+\newcommand{\onemedfig}[3]{%
+  \begin{figure}[htbp]
+    \centerline{\epsfig{file=#1.pdf,width=.4\textwidth}}
+    \caption{#2}
+    \label{#3}
+  \end{figure}
+}
+
 
 
 \newcommand{\onefullfig}[3]{%
@@ -42,7 +52,7 @@ morecomment=[l]{--}}
 
 
 
-\title{RESOLUTE documentation}
+\title{RESOLUTE tutorial}
 
 \author{\textsc{Julien Delange}\\
   Software Engineering Institute\\
@@ -53,112 +63,153 @@ morecomment=[l]{--}}
 
 \maketitle
 
-\section{RESOLUTE annex overview}
-RESOLUTE is an AADL annex language used to validate AADL components with specific constraints.
-The language is supported by an analysis tool that can verify the constraints
-again the model. The analysis tool is implemented within OSATE, the AADL toolset
-reference.
+\section{Introduction}
+This tutorial gives a tour of the functionality of RESOLUTE.
+It does not provide a complete description of the language, which
+is rather provided by the user-manual of RESOLUTE\footnote{Documentation
+avaialble on
+\url{https://github.com/juli1/smaccm-improvements/tree/sei-improvements/documentation/resolute}}. This tutorial assumes that you have a working installation of RESOLUTE
+and that you are able to use the validation tool.
 
+This tutorial uses several examples hosted on OSATE github
+repository. You can get the examples on the OSATE example
+repository (see \url{https://github.com/osate/examples/}) under
+the directory \texttt{core-examples/resolute}.
 
-\section{Adding RESOLUTE annex to AADL components}
-Adding resolute to AADL components is done by using the AADL annex mechanism.
+\section{Verifying property definition}
+This first example checks the definition of a property
+on a component. The related file is \texttt{property\_verification.aadl}.
+The instance model is shown in figure \ref{fig:property-verification}.
 
+\onemedfig{imgs/property_verification}{System instance in the \texttt{property\_verification.aadl}}{fig:property-verification}
 
-\onefullfig{imgs/resolute-selection}{Invoking the tool on a system instance}{fig:resolute-invoke}
-
-\section{Verifying a theorem}
-
-
-\onefullfig{imgs/resolute-result}{The Assurance Case View in OSATE}{fig:assurance-case-view}
-
-
-\section{Functions list}
+In this model, each \texttt{thread} has the property
+\texttt{resoluteps::foobar} defined:
 \begin{itemize}
     \item
-	    \textbf{has\_property (namedelement, property): boolean} - the
-        namedlement passed as argument has the property passed as the 2nd
-        argument.
+        \textbf{t1} has a value of 10
     \item
-	    \textbf{property (namedelement, property): value} - returns
-        the value of the property defined on the namedelement.
-    \item
-	    \textbf{has\_parent (namedelement): boolean} - returns
-        true if the component has a parent.
-    \item
-	    \textbf{parent (namedelement): namedlement} - returns
-        the parent of the namedelelement.
-    \item
-	    \textbf{name (namedelement): string} - returns the name of the
-        namedlement.
-    \item
-	    \textbf{type (namedelement): namedelement} - returns the type
-        of the component passed as argument.
-    \item
-	    \textbf{has\_type (namedlement): boolean} - returns true
-        is the argument as an associated type. Typically, this function
-        is used on feature to know if this is a data port, an event port, etc.
-    \item
-        \textbf{is\_of\_type (namedelement, namedelement): boolean} - check
-        that the element passed as first argument has the type
-        defined as the second argument or one of its type extension.
-    \item
-	    \textbf{has\_member (namedelement, string): boolean} - the namedelement
-        passed as first argument has a member (subcomponent, feature)
-        which name is defined by the second argument.
-    \item
-   '    \textbf{features (namedelement): set} - returns a set containing
-        all the features of the namedlement.
-    \item
-	'   \textbf{connections (namedelement): set} - returns all
-        the incoming or outgoing connections for the component.
-    \item
-	    \textbf{subcomponents (namedelement): set} - returns
-        a set containing all the subcomponents of the namedelement.
-    \item
-        \textbf{source (connection): namedelement}  - returns
-        the source (mostly a feature) of a connection.
-    \item
-        \textbf{destination (connection): namedelement} - returns
-        the destination (most of the time, a feature) of a connection.
-    \item
-        \textbf{direction (namedelement): string} - returns a string
-        that shows the direction of a namedelement.
-    \item
-        \textbf{is\_event\_port (namedelement): string} - returns
-        true is the namedlement is an event port.
-    \item
-        \textbf{lower\_bound (range): value} - returns
-        the value of the lower bound of a range
-    \item
-        \textbf{upper\_bound (range): value} - returns the value
-        of the upper bound of a range.
-    \item
-        \textbf{member(value, set): boolean}
-    \item
-        \textbf{sum (set): value}
-    \item
-        \textbf{length (set): value} - returns the size of the set
-    \item
-        \textbf{union (set, set): set}
-    \item
-        \textbf{intersect (set, set): set}
-    \item
-        \textbf{instance (namedelement): namedelement} - returns the instance
-        component of the of declarative component passed as argument.
-    \item
-        \textbf{instances (namedlement): set} - returns all
-        the instances of the declarative component passed as argument.
-    \item
-        \textbf{analysis}
-    \item
-        \textbf{receive\_error}
-    \item
-        \textbf{contain\_error}
-    \item
-        \textbf{propagate\_error (namedelement, string): boolean}
-    \item
-        \textbf{error\_state\_reachable(namedelement, string): boolean}
+        \textbf{t1} has a value of 20
 \end{itemize}
+
+We define a theorem (\texttt{have\_good\_foobar}, see
+file \texttt{theorems.aadl} in the textual model) to check
+that all threads have a value for the \texttt{resoluteps::foobar}
+greater than 15.
+
+The theorem works as follow:
+\begin{enumerate}
+    \item
+        It retrieves all the \texttt{thread} components
+        associated to the process
+    \item
+        It calls the theorem \texttt{check\_thread} on each component.
+    \item
+        The \texttt{check\_thread} checks that the value
+        of the \texttt{resoluteps::foobar} is greater than 15.
+\end{enumerate}
+
+\begin{lstlisting}
+have_good_foobar(p : component) <=
+	** " Check threads in component " p **
+    forall(t : thread). contained(t, p) => check_thread (t)
+
+check_thread(t : thread) <=
+  	** "The thread " t " as a foobar bigger than 15"  **
+  		(has_property (t, resoluteps::foobar)) and 
+  		(property (t, resoluteps::foobar) > 15)
+\end{lstlisting}
+
+When running resolute on the initial model, the model
+is not validated because \textbf{t1} has
+a value of 10. To be able to validate the model,
+change the definition of t1 and associate a value greater
+than 15. For example, changing the definition
+of the task as follow will be sufficient to validate the model.
+
+\begin{lstlisting}
+t1 : thread t.i {resoluteps::foobar => 20;};
+\end{lstlisting}
+
+After changing the model, run the analysis again, the
+model would be validated.
+
+In this part, we introduce the following RESOLUTE concepts:
+\begin{enumerate}
+    \item
+        Call to another RESOLUTE theorem
+    \item
+        Use the \texttt{forall} keyword
+    \item
+        Use the \texttt{has\_property} built-in function to check
+        that a property is defined on a component.
+    \item
+        Use the \texttt{property} built-in function to get the value
+        of a property.
+\end{enumerate}
+
+
+
+\section{Analyzing Connections}
+Now that we have discussed the verification of property values
+in the components, we will present how you can analyze connections.
+In this example, we will check that each incoming port
+has only one incoming connection. This is a validation
+oen might want to validate in the model in order to ensure
+that there is only one sender for each communication port.
+This type of modeling restriction is required by some tools such
+as AGREE\footnote{AGREE actually does not support multiple fan-in, such
+a validation tool can then help designers to check compliance of their model
+against AGREE constraints}.
+
+\onemedfig{imgs/double-fanin-instance}{System
+Instance}{fig:double-fanin-instance}
+
+The file related to this example is \texttt{check\_fanin.aadl}.
+The related instance model is shown in figure \ref{fig:double-fanin-instance}.
+The theorem \texttt{no\_double\_fanin} retrieves
+all components within the model and validate them
+using the \texttt{has\_single\_fanin} theorem. This theorem
+gets all the incoming component features in a set and checks
+that they only have one connection.
+
+\begin{lstlisting}
+no_double_fanin() <=
+	** " All incoming feature have only one connection" **
+    forall (c : component) . true => has_single_fanin (c)
+ 
+
+has_single_fanin (comp : component) <=
+	** " All incoming feature have only one connection on " comp **
+	forall (f : features (comp)) . (direction(f) = "in") => (length (connections (f)) = 1) 
+\end{lstlisting}
+
+The model is not validated (result shown in figure
+\ref{fig:double-fanin-result}) because components \texttt{snd1}
+and \texttt{snd2} are connected to \texttt{recv} through
+the same incoming feature. In order to be able to validate the model,
+one solution is to add a new feature on \texttt{recv} and connect
+\texttt{snd1} and \texttt{snd2} to a single and distinct port.
+
+\onemedfig{imgs/double-fanin-result}{Analysis result for the double fanin system}{fig:double-fanin-result}
+
+In this part, we introduce the following RESOLUTE concepts:
+\begin{enumerate}
+    \item
+        Call to another RESOLUTE theorem
+    \item
+        Use the \texttt{forall} keyword
+    \item
+        Use the \texttt{direction} built-in function (returns
+        either \texttt{"in"}, \texttt{"out"} or \texttt{"inout"}).
+    \item
+        Use the \texttt{length} built-in function that returns
+        the size of a set
+\end{enumerate}
+
+\section{Analyzing Connections Consistency}
+
+\section{Checking Compliance of an Architecture}
 
 
 \end{document}
