@@ -446,8 +446,8 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 			return;
 		}
 
-		if (!(actualTypes.get(1) instanceof SetType)) {
-			error(funCall.getArgs().get(1), "Expected set type but found type " + actualTypes.get(1));
+		if (!(actualTypes.get(0) instanceof SetType)) {
+			error(funCall.getArgs().get(0), "Expected set type but found type " + actualTypes.get(1));
 			return;
 		}
 
@@ -551,6 +551,11 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 			expectedTypes.add(BaseType.COMPONENT);
 			expectedTypes.add(BaseType.AADL);
 			break;
+			
+		case "is_bound_to":
+			expectedTypes.add(BaseType.COMPONENT);
+			expectedTypes.add(BaseType.COMPONENT);
+			break;			
 
 		// Primary type: connection
 		case "source":
@@ -888,6 +893,9 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 
 		case "is_of_type":
 			return BaseType.BOOL;			
+
+		case "is_bound_to":
+			return BaseType.BOOL;				
 			
 			// Primary type: range
 		case "upper_bound":
