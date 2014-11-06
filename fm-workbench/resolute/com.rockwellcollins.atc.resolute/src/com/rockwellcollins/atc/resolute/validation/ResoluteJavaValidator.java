@@ -358,6 +358,11 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 		case "member":
 			checkMemberCall(funCall, actualTypes);
 			return;
+			
+		case "length":
+			checkLengthCall(funCall, actualTypes);
+			return;	
+			
 		case "sum":
 			checkSumCall(funCall, actualTypes);
 			return;
@@ -433,6 +438,20 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 				error(funCall.getArgs().get(i + 1), "Expected type " + expectedType + " but found type " + actualType);
 			}
 		}
+	}
+	
+	private void checkLengthCall(BuiltInFnCallExpr funCall, List<ResoluteType> actualTypes) {
+		if (actualTypes.size() != 1) {
+			error(funCall, "function 'length' expects two arguments");
+			return;
+		}
+
+		if (!(actualTypes.get(1) instanceof SetType)) {
+			error(funCall.getArgs().get(1), "Expected set type but found type " + actualTypes.get(1));
+			return;
+		}
+
+		return;
 	}
 
 	private void checkMemberCall(BuiltInFnCallExpr funCall, List<ResoluteType> actualTypes) {
@@ -878,6 +897,8 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 			// Primary type: set
 		case "member":
 			return BaseType.BOOL;
+		case "length":
+			return BaseType.INT;
 		case "sum":
 			return getSumType(funCall);
 		case "union":

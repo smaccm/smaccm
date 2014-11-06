@@ -288,6 +288,12 @@ public class ResoluteBuiltInFnCallEvaluator {
 			return bool(args.get(1).getSet().contains(args.get(0)));
 		}
 
+		case "length": {
+			Set<ResoluteValue> set = args.get(0).getSet();
+			int setsize = set.size();
+			return new IntValue(setsize);
+		}
+		
 		case "sum": {
 			Set<ResoluteValue> set = args.get(0).getSet();
 			if (set.isEmpty()) {
