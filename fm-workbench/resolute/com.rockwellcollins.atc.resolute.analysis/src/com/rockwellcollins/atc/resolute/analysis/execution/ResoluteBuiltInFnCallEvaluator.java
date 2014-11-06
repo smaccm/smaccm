@@ -39,6 +39,7 @@ import org.osate.xtext.aadl2.errormodel.errorModel.ErrorPropagation;
 import org.osate.xtext.aadl2.errormodel.errorModel.ErrorTypes;
 import org.osate.xtext.aadl2.errormodel.errorModel.TypeToken;
 import org.osate.xtext.aadl2.errormodel.util.EMV2Util;
+import org.osate.xtext.aadl2.properties.util.GetProperties;
 import org.osate.xtext.aadl2.properties.util.PropertyUtils;
 
 import com.rockwellcollins.atc.resolute.analysis.values.BoolValue;
@@ -118,6 +119,44 @@ public class ResoluteBuiltInFnCallEvaluator {
 			NamedElement element = args.get(0).getNamedElement();
 			NamedElement type = builtinType(element);
 			return bool(type != null);
+		}
+		
+		case "is_bound_to": {
+			NamedElement component = args.get(0).getNamedElement();
+			NamedElement resource = args.get(1).getNamedElement();
+			if ((component instanceof ComponentInstance) &&
+				(resource instanceof ComponentInstance))
+			{
+				ComponentInstance componentInstance = (ComponentInstance) component;
+				ComponentInstance resourceInstance = (ComponentInstance) resource;
+				
+
+				/**
+				 * Check the processor binding
+				 */
+				
+				for (ComponentInstance binding : GetProperties.getActualProcessorBinding(componentInstance))
+				{
+					if (binding == resourceInstance)
+					{
+						return bool(true);
+					}
+				}
+				
+				/**
+				 * Check the memory binding
+				 */
+				for (ComponentInstance binding : GetProperties.getActualMemoryBinding(componentInstance))
+				{
+					if (binding == resourceInstance)
+					{
+						return bool(true);
+					}
+				}
+				
+			}
+			return bool(false);
+				
 		}
 		
 		case "is_of_type": {
