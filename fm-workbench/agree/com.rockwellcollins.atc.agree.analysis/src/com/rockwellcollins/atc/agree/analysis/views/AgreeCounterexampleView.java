@@ -21,7 +21,7 @@ import com.rockwellcollins.atc.agree.analysis.Util;
 
 public class AgreeCounterexampleView extends ViewPart {
     public static final String ID = "com.rockwellcollins.atc.agree.analysis.views.agreeCounterexampleView";
-    private static final GlobalURIEditorOpener globalURIEditorOpener = Util
+    private static final GlobalURIEditorOpener globalURIEditorOpener = Util 
             .getGlobalURIEditorOpener();
 
     private CounterexampleTreeViewer tree;

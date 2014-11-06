@@ -214,7 +214,7 @@ public class AgreeEmitterUtilities {
     }
     
     //warns the user if there is a cycle
-    static public void logCycleWarning(List<Equation> eqs, AgreeLogger log, AgreeRenaming agreeRename, boolean throwException){
+    static public void logCycleWarning(List<Equation> eqs, AgreeRenaming agreeRename, boolean throwException){
         Map<String, Set<String>> idGraph = new HashMap<>();
         List<String> ids = new ArrayList<>();
         AgreeCycleVisitor visitor = new AgreeCycleVisitor();
@@ -248,7 +248,7 @@ public class AgreeEmitterUtilities {
                     cycleStr.append(aadlString);                
                 }
                 
-                log.logWarning(cycleStr.toString());
+                AgreeLogger.logWarning(cycleStr.toString());
                 exceptionStr.append(cycleStr);
             }
         }
@@ -290,11 +290,11 @@ public class AgreeEmitterUtilities {
         return null;
     }
     
-    static public AgreeAnnexEmitter getSubcomponentEmitter(Subcomponent sub, 
-            List<AgreeAnnexEmitter> subEmitters){
-        for(AgreeAnnexEmitter subEmitter : subEmitters){
-            if(subEmitter.curComp == sub){
-                return subEmitter;
+    static public AgreeEmitterState getSubcomponentEmitter(Subcomponent sub, 
+            List<AgreeEmitterState> subStates){
+        for(AgreeEmitterState subState : subStates){
+            if(subState.curComp == sub){
+                return subState;
             }
         }
         return null;
@@ -330,47 +330,36 @@ public class AgreeEmitterUtilities {
         return conjoin(Arrays.asList(exprs));
     }
 
-    static public Expr getLustreAssumptions(AgreeAnnexEmitter emitter) {
-        if(emitter.agreeNode == null){
-            return conjoin(emitter.assumpExpressions);
-        }else{
-            Expr assumps = conjoin(emitter.getComponentNode().assumptions);
-            IdExpr clockExpr = new IdExpr(emitter.agreeNode.clockVar.id);
+    static public Expr getLustreAssumptions(AgreeEmitterState state) {
+    	AgreeNode agreeNode = AgreeAnnexEmitter.getComponentNode(state);
+            Expr assumps = conjoin(agreeNode.assumptions);
+            IdExpr clockExpr = new IdExpr(agreeNode.clockVar.id);
 			return new BinaryExpr(clockExpr, BinaryOp.IMPLIES, assumps);
-        }
     }
 
-    static public Expr getLustreAssumptionsAndAssertions(AgreeAnnexEmitter emitter) {
-        if(emitter.agreeNode == null){
-            return conjoin(conjoin(emitter.assumpExpressions), conjoin(emitter.assertExpressions));
-        }else{
-        	Expr assumAssert = conjoin(conjoin(emitter.getComponentNode().assertions), 
-        			        conjoin(emitter.getComponentNode().assumptions));
-        	IdExpr clockExpr = new IdExpr(emitter.getComponentNode().clockVar.id);
-			return new BinaryExpr(clockExpr, BinaryOp.IMPLIES, assumAssert);
-        }
-    }
-    
-    static public Expr getLustreContract(AgreeAnnexEmitter emitter) {
-        if(emitter.agreeNode == null){
-//            return conjoin(conjoin(emitter.assumpExpressions), conjoin(emitter.assertExpressions),
-//                    conjoinEqs(emitter.guarExpressions));
-        	throw new AgreeException("depricated use of 'getLustreContract'");
-        }else{
-            Expr contract = conjoin(conjoin(emitter.getComponentNode().assertions),
-                    conjoin(emitter.getComponentNode().assumptions),
-                    conjoin(emitter.getComponentNode().guarantees));
-            IdExpr clockExpr = new IdExpr(emitter.getComponentNode().clockVar.id);
-			return new BinaryExpr(clockExpr, BinaryOp.IMPLIES, contract);
-        }
+    static public Expr getLustreAssumptionsAndAssertions(AgreeEmitterState state) {
+    	AgreeNode agreeNode = AgreeAnnexEmitter.getComponentNode(state);
+    	Expr assumAssert = conjoin(conjoin(agreeNode.assertions), 
+    			conjoin(agreeNode.assumptions));
+    	IdExpr clockExpr = new IdExpr(agreeNode.clockVar.id);
+    	return new BinaryExpr(clockExpr, BinaryOp.IMPLIES, assumAssert);
+
     }
 
-    static public Expr getLustreGuarantee(AgreeAnnexEmitter emitter) {
-        if(emitter.agreeNode == null){
-            return conjoinEqs(emitter.guarExpressions);
-        }else{
-            return conjoin(emitter.agreeNode.guarantees);
-        }
+    static public Expr getLustreContract(AgreeEmitterState state) {
+
+    	AgreeNode agreeNode = AgreeAnnexEmitter.getComponentNode(state);
+    	Expr contract = conjoin(conjoin(agreeNode.assertions),
+    			conjoin(agreeNode.assumptions),
+    			conjoin(agreeNode.guarantees));
+    	IdExpr clockExpr = new IdExpr(agreeNode.clockVar.id);
+    	return new BinaryExpr(clockExpr, BinaryOp.IMPLIES, contract);
+        
+    }
+
+    static public Expr getLustreGuarantee(AgreeEmitterState state) {
+    	AgreeNode agreeNode = AgreeAnnexEmitter.getComponentNode(state);
+    	return conjoin(agreeNode.guarantees);
     }
     
     static public Equation getLustreHistory(Expr expr, IdExpr histId) {
