@@ -64,5 +64,50 @@ morecomment=[l]{--}}
 \maketitle
 
 \section{Introduction}
+This document is a tutorial to learn to use the AGREE language and its
+associated toolset. This is not a user-manual that covers all aspect of the
+language features, all these aspects are described in the AGREE 
+user-manual\footnote{\url{https://github.com/smaccm/smaccm/tree/master/documentation/agree}}.
+This document is a way to learn how to use the language and its associated tools
+through several case studies.
+
+    \subsection{Use of AGREE}
+    To use AGREE, model components must be annotated with AGREE annex
+    subclauses. Then, invoking AGREE can be done by selecting the top-level
+    system instance and make a right-click and select two options:
+    \begin{enumerate}
+        \item
+            \textbf{Verify Single Layer}: analyze and verify only one depth
+            of the component hierarchy.
+        \item
+            \textbf{Verify All Layers}: analyze the complete components
+            hierarchy.
+    \end{enumerate}
+\onefullfig{imgs/agree-usage}{AGREE menu in OSATE outline}{fig:agree-usage}
+
+    \subsection{Limitations of AGREE}
+    When using AGREE, your models must enforce some constraints. There is the
+    list of the constraints your model has to enforce:
+    \begin{itemize}
+        \item
+            \textbf{Execution Order}: the execution order of the model is
+            done in the order of the declaration of the subcomponents.
+        \item
+            \textbf{Multiple fanin} are \textbf{not} supported. In other words,
+            an incoming feature can have only one incoming connection.
+        \item
+            \textbf{Top-level component} must have an AGREE subclause, even
+            if you do not want to verify anything and want to validate the
+            subcomponent. Hopefully, you can insert a dummy subclause like the
+            one shown below.
+    \end{itemize}
+
+\begin{lstlisting}
+system mysystem
+annex agree {**
+	guarantee "dummy" : true;
+**};
+end mysystem;
+\end{lstlisting}
 
 \end{document}

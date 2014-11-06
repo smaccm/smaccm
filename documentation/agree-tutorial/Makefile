@@ -1,4 +1,4 @@
-EPSFILES=
+EPSFILES=imgs/agree-usage.pdf
 
 TEXFILES = $(BASE).tex $(wildcard section_?.tex)
 
