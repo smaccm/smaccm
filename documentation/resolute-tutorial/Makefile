@@ -1,4 +1,6 @@
 EPSFILES=imgs/property_verification.pdf \
+ 		 imgs/checkdataflow-instance.pdf \
+ 		 imgs/arinc653-instance.pdf \
  		 imgs/double-fanin-instance.pdf \
  		 imgs/double-fanin-result.pdf
 

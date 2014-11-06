@@ -191,9 +191,9 @@ the same incoming feature. In order to be able to validate the model,
 one solution is to add a new feature on \texttt{recv} and connect
 \texttt{snd1} and \texttt{snd2} to a single and distinct port.
 
-\onemedfig{imgs/double-fanin-result}{Analysis result for the double fanin system}{fig:double-fanin-result}
+\onefullfig{imgs/double-fanin-result}{Analysis result for the double fanin system}{fig:double-fanin-result}
 
-In this part, we introduce the following RESOLUTE concepts:
+In this part, we introduced the following RESOLUTE concepts:
 \begin{enumerate}
     \item
         Call to another RESOLUTE theorem
@@ -208,8 +208,272 @@ In this part, we introduce the following RESOLUTE concepts:
 \end{enumerate}
 
 \section{Analyzing Connections Consistency}
+Something one might want to check is the consistency of connections
+in an architecture. For example, checking a characteristic (such as
+a property value) on features of all connections or on the sending/receiving
+component.
+
+This new example defines several connected components with a property defined
+on their features (the same property as in the first example,
+\texttt{resoluteps::foobar}). We will then use RESOLUTE to check
+that the value on the connection source is lower than
+the value on the connection destination.
+
+\onemedfig{imgs/checkdataflow-instance}{System
+Instance}{fig:checkdataflow-instance}
+
+The architecture of the system is shown in figure
+\ref{fig:checkdataflow-instance} and we associated
+the following value on the components interfaces:
+\begin{itemize}
+    \item
+        The outgoing feature of \texttt{snd} has a value of 5
+    \item
+        The incoming feature of \texttt{mid} has a value of 4
+    \item
+        The outgoing feature of \texttt{mid} has a value of 5
+    \item
+        The outgoing feature of \texttt{snd} has a value of 10
+\end{itemize}
+
+In order to check the architecture, we used theorem \texttt{minfoobarvalue}
+defined in \texttt{theorems.aadl}. The theorem get all the outgoing
+and incoming connections related to the component such as their source
+and destination have the property \texttt{resolute::foobar} defined.
+Then, for the source and the destination, the theorem checks that the 
+property value on the source is lower than the property on the destination.
+
+\begin{lstlisting}
+  minfoobarvalue(c : component) <=
+    ** " Check the minimum foobar for features on " c  **
+    forall (conn : connections (c)) . has_property (source(conn), resoluteps::foobar) and
+	                                  has_property (destination(conn), resoluteps::foobar) => 
+	(property(source(conn), resoluteps::foobar) < property(destination(conn), resoluteps::foobar))
+\end{lstlisting}
+
+Considering this constraint, the model will not be validated because
+in connection between \texttt{snd} and \texttt{mid}, the property value
+associated with the source is bigger than the one associated with the
+destination. Changing the property value on the source is then sufficient to
+validate this constraint.
+
+
+In this part, we introduced the following RESOLUTE concepts:
+\begin{enumerate}
+    \item
+        Get the source and destination of a connection
+    \item
+        Get the property value associated with a feature
+\end{enumerate}
+
 
 \section{Checking Compliance of an Architecture}
+For the last part of this tutorial, we will show how to check
+the structure of an architecture using RESOLUTE. To illustrate
+that, we will check the compliance of a model against the modeling
+guidelines to design ARINC653 systems. The AADL ARINC653 annex
+defines these rules. In a nutshell, there are the main guidelines:
+\begin{itemize}
+    \item
+        Each AADL \texttt{process} must be bound to an AADL \texttt{virtual processor}
+    \item
+        Each AADL \texttt{virtual processor} must be contained in an AADL \texttt{processor}
+    \item
+        An AADL \texttt{processor} must define its configuration using
+        appropriate properties (health monitoring, scheduling, etc.)
+    \item
+        Each AADL \texttt{process} must be bound to an AADL \texttt{memory} (a
+        memory segment),
+        which it itself contained in another AADL \texttt{memory} (the physical
+        memory)
+    \item
+        Communication interfaces (\texttt{event data port} or \texttt{data
+        port}) must define their requirements (sampling period, queueing
+        protocol, etc.)
+\end{itemize}
 
+We plan to validate these rules against a model introduced in the ARINC653
+annex. The graphical representation of the model is shown in
+figure \ref{fig:arinc653-instance}.
+
+\onefullfig{imgs/arinc653-instance}{System
+Instance}{fig:arinc653-instance}
+
+In order to validate the architecture compliance with the ARINC653 modeling
+guidelines, we define several theorems. The top-level theorem
+\texttt{check\_arinc653\_compliance} works as follow:
+\begin{enumerate}
+    \item
+        Check the compliance of the architecture with
+        the modeling guidelines to represent ARINC653 partitions
+        by calling\texttt{check\_arinc653\_processes}. This theorem
+        performs the following actions for each AADL \texttt{process}:
+        \begin{enumerate}
+            \item
+                Call \texttt{check\_arinc653\_process\_memory} to check
+                that the AADL \texttt{process} is bound to an AADL
+                \texttt{memory}. It also calls
+                \texttt{check\_arinc653\_memory\_segment} on the memory to make
+                sure that the memory associated with the process is contained
+                in a top-level (physical) memory.
+
+            \item
+                Call \texttt{check\_interfaces} to check that all communication
+                requirements are defined using AADL properties:
+                \begin{itemize}
+                    \item
+                        AADL \texttt{data port} define the property
+                        \texttt{ARINC653::Sampling\_Refresh}
+                    \item
+                        AADL \texttt{event data port} define the property
+                        \texttt{ARINC653::Queueing\_Discipline}
+                \end{itemize}
+
+            \item
+                Call \texttt{check\_tasks} to check the requirements of AADL
+                \texttt{thread} components contained in AADL \texttt{process}
+                components. Mostly, the \texttt{check\_tasks} check the
+                interfaces for the \texttt{thread} components.
+            \item
+                Call \texttt{check\_arinc653\_process\_virtual\_processor} to check
+                that the AADL \texttt{process} under validation is bound
+                to an AADL \texttt{virtual processor} component.
+        \end{enumerate}
+    \item
+        Check the compliance of the architecture with
+        the modeling guidelines to represent ARINC653 modules
+        by calling\texttt{check\_arinc653\_processors}. This theorem
+        performs the following actions for each AADL \texttt{processor}:
+        \begin{enumerate}
+            \item
+                Check that the AADL \texttt{processor} defines
+                the properties to define its scheduling policy
+                by calling the \texttt{check\_arinc653\_processor\_scheduling}
+                theorem. This theorem checks that the scheduling-related
+                properties are correctly defined on the component
+                (\texttt{ARINC653::Module\_Schedule} and 
+                \texttt{ARINC653::Module\_Major\_Frame})
+            \item
+                Check that the AADL \texttt{processor} defines
+                the properties to define its health monitoring policy
+                by calling the \texttt{check\_arinc653\_processor\_hm}
+                theorem. This theorem checks that the health-monitoring related
+                properties are correctly defined on the component
+                (\texttt{ARINC653::HM\_Error\_ID\_Levels} and 
+                \texttt{ARINC653::HM\_Error\_ID\_Actions})
+        \end{enumerate}
+    \item
+        Check the compliance of the architecture with
+        the modeling guidelines to represent ARINC653 partition runtime
+        by calling\texttt{check\_arinc653\_virtual\_processors}.
+        For each AADL \texttt{virtual processor}, this theorem checks
+        that it is contained in an AADL \texttt{processor} component but also
+        defines appropriate configuration properties
+        (\texttt{ARINC653::Partition\_Identifier} and
+        \texttt{ARINC653::Partition\_Name}).
+\end{enumerate}
+
+When trying to validate the model, the validation fails because the health
+monitoring properties are not declared (they are commented in the model).
+Once the properties are correctly defined, the model is validated.
+
+
+In this part, we introduced the following RESOLUTE concepts:
+\begin{enumerate}
+    \item
+        Get the resource (processor or memory) bound to a component (built-in
+        function \texttt{is\_bound\_to}
+    \item
+        Verify the containment rules of components (built-in function
+        \texttt{parent})
+    \item
+        Call many RESOLUTE statements within several theorems
+\end{enumerate}
+
+
+\begin{lstlisting}
+check_arinc653_compliance () <=
+	** "Check compliance of the model with ARINC653 annex" **
+	check_arinc653_processes() and
+	check_arinc653_processors() and
+	check_arinc653_virtual_processors ()
+
+
+--
+-- Procesor checks
+--
+    
+check_arinc653_processors () <=
+	** "Check compliance of the processors" **
+	forall (cpu : processor) . true => check_arinc653_procesor (cpu)
+
+check_arinc653_procesor (cpu : processor) <=
+	** "Check compliance of processor " cpu **
+	 check_arinc653_procesor_scheduling (cpu) and
+	 check_arinc653_procesor_hm (cpu)
+		 
+check_arinc653_procesor_hm (cpu : processor) <=
+	** "Check compliance of processor " cpu " for Health-Monitoring properties" **
+	 has_property (cpu, ARINC653::HM_Error_ID_Levels) and
+	 has_property (cpu, ARINC653::HM_Error_ID_Actions)
+
+check_arinc653_procesor_scheduling (cpu : processor) <=
+	** "Check compliance of processor " cpu " for scheduling properties" **
+	 has_property (cpu, ARINC653::Module_Schedule) and
+	 has_property (cpu, ARINC653::Module_Major_Frame)
+	
+	
+-- 
+-- Virtual Processor checks
+--
+	
+check_arinc653_virtual_processors () <=
+	** "Virtual Processors are in processors" **
+	forall (vp : virtual_processor) . true => 
+	             (exists (cpu : processor) . parent(vp) = cpu) and
+	             (has_property (vp, ARINC653::Partition_Identifier)) and
+	             (has_property (vp, ARINC653::Partition_Name))
+
+--
+-- Process checks
+--
+check_arinc653_processes() <=
+   ** "All processes are bound to a memory segment and a virtual processor" **
+   forall (p : process) . true =>  check_arinc653_process_memory (p) and 
+                                   check_interfaces (p) and
+                                   check_tasks (p) and 
+                                   check_arinc653_process_virtual_processor (p)
+
+check_tasks (p : process) <=
+   ** "Check tasks from process " p **
+   forall (thr : thread) . (parent (thr) = p) => check_interfaces (thr) 
+
+check_interfaces (comp : component) <=
+	** "Check that component " comp " declares all necessary properties on its ports" **
+	forall (poevent : features (comp)) . is_event_port (poevent) and (direction(poevent) = "in") => has_property (poevent, ARINC653::Queueing_Discipline)
+	and
+	forall (pononevent : features (comp)) . (is_event_port (pononevent) = false) and (direction(pononevent) = "in") => has_property (pononevent, ARINC653::Sampling_Refresh_Period)
+
+
+check_arinc653_process_memory (p : process) <=
+	** "Check that process " p " is associated with a memory" **
+	exists (segment : memory) . (is_bound_to (p, segment)) and check_arinc653_memory_segment (segment)
+
+check_arinc653_memory_segment (segment : memory) <=
+	** "Check that the memory segment " segment " is contained in a memory" **
+	exists (mem : memory) . (parent(segment) = mem)
+
+check_arinc653_process_virtual_processor (p : process) <=
+	** "Check that process " p " is associated with a virtual processor" **
+	exists (runtime : virtual_processor) . (is_bound_to (p, runtime))		
+\end{lstlisting}
+
+
+\section{Conclusion}
+This tutorial explains the core principles of RESOLUTE and how to use
+the language to validate an architecture. If you have any question
+or experience issue, please visit the project page 
+\footnote{project page on github on \url{https://github.com/smaccm/smaccm}}
+and submit an issue on the issue tracker.
 
 \end{document}
