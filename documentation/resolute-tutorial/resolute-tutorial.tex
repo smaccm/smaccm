@@ -127,10 +127,6 @@ Adding resolute to AADL components is done by using the AADL annex mechanism.
         \textbf{is\_event\_port (namedelement): string} - returns
         true is the namedlement is an event port.
     \item
-        \textbf{is\_bound\_to (namedelement1, namedelement2): string} - returns
-        true if namedelement1 is bound to namedelement2 (either processor
-        or memory binding)
-    \item
         \textbf{lower\_bound (range): value} - returns
         the value of the lower bound of a range
     \item
@@ -139,17 +135,13 @@ Adding resolute to AADL components is done by using the AADL annex mechanism.
     \item
         \textbf{member(value, set): boolean}
     \item
-        \textbf{sum (set): value} - returns the sum of the elements
-        of the set. The elements must be a value (integer, real)
+        \textbf{sum (set): value}
     \item
-        \textbf{length (set): value} - returns the size of the set.
-        The set can contain any type.
+        \textbf{length (set): value} - returns the size of the set
     \item
-        \textbf{union (set, set): set} - returns the union of the two set.
-        Elements of the sets can be namedelement, components, values.
+        \textbf{union (set, set): set}
     \item
-        \textbf{intersect (set, set): set} - returns the intersection
-        of the two sets. Sets can be values, components or namedelement.
+        \textbf{intersect (set, set): set}
     \item
         \textbf{instance (namedelement): namedelement} - returns the instance
         component of the of declarative component passed as argument.
