@@ -1,0 +1,68 @@
+\documentclass[times, 10pt]{article}
+%\usepackage{latex8}
+\usepackage{times}
+\usepackage{pslatex}
+\usepackage{epsfig}
+\usepackage{url}
+
+\usepackage{listings}
+
+\usepackage{tabularx}
+
+\lstdefinelanguage{aadl}
+{morekeywords={aadlboolean,aadlinteger,aadlreal,aadlstring,access,all,and,
+        annex,applies,binding,bus,calls,classifier,connections,constant,
+        data,delta,device,end,enumeration,event,extends,false,features,flow,
+        flows,group,implementation,in,inherit,initial,inverse,is,list,memory,
+        mode,modes,none,not,of,or,out,package,parameter,path,port,private,
+        process,processor,properties,property,provides,public,range,
+        reference, check, component,forall,features,
+        false,true,contained,has_property,refined,refines,requires,server,set,sink,source,
+        subcomponents,subprogram,system,thread,to,true,type,units,value},
+morecomment=[l]{--}}
+
+\lstset{language=aadl,
+        basicstyle=\scriptsize\sffamily,
+        aboveskip=.1cm, % \smallskipamount, % \bigskipamount,
+        belowskip=.1cm, % \smallskipamount, % \bigskipamount,
+        abovecaptionskip=.1cm, % \smallskipamount, % \medskipamount,
+        belowcaptionskip=.1cm, % \smallskipamount, % \bigskipamount,
+        xleftmargin=.0cm,
+        captionpos=b,
+        tabsize=3}
+
+
+\newcommand{\onemedfig}[3]{%
+  \begin{figure}[htbp]
+    \centerline{\epsfig{file=#1.pdf,width=.4\textwidth}}
+    \caption{#2}
+    \label{#3}
+  \end{figure}
+}
+
+
+
+\newcommand{\onefullfig}[3]{%
+  \begin{figure}[htbp]
+    \centerline{\epsfig{file=#1.pdf,width=.7\textwidth}}
+    \caption{#2}
+    \label{#3}
+  \end{figure}
+}
+
+
+
+\title{AGREE tutorial}
+
+\author{\textsc{Julien Delange}\\
+  Software Engineering Institute\\
+  \texttt{jdelange@sei.cmu.edu}
+}
+
+\begin{document}
+
+\maketitle
+
+\section{Introduction}
+
+\end{document}
