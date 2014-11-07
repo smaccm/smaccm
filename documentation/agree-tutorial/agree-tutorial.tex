@@ -16,7 +16,8 @@
         flows,group,implementation,in,inherit,initial,inverse,is,list,memory,
         mode,modes,none,not,of,or,out,package,parameter,path,port,private,
         process,processor,properties,property,provides,public,range,
-        reference, check, component,forall,features,
+        reference, check,
+        component,forall,features,eq,assert,assume,guarantee,int,pre,
         false,true,contained,has_property,refined,refines,requires,server,set,sink,source,
         subcomponents,subprogram,system,thread,to,true,type,units,value},
 morecomment=[l]{--}}
@@ -71,6 +72,13 @@ user-manual\footnote{\url{https://github.com/smaccm/smaccm/tree/master/documenta
 This document is a way to learn how to use the language and its associated tools
 through several case studies.
 
+    \subsection{Examples location}
+    All the examples used in this tutorial are available online on the public
+    OSATE github repository\footnote{\url{https://github.com/osate/examples/}}.
+    You can import the model into your workspace directly to reproduce the
+    examples presented through this tutorial.
+
+
 \onemedfig{imgs/agree-usage}{AGREE menu in OSATE outline}{fig:agree-usage}
 
     \subsection{Use Analysis Tools}
@@ -113,7 +121,105 @@ end mysystem;
 
 
     \subsection{Understanding Analysis Results}
+    For each component, AGREE provides the following analysis:
+    \begin{enumerate}
+        \item
+            \textbf{Contract Guarantees}
+        \item
+            \textbf{Contract Assumptions}
+        \item
+            \textbf{Contract Consistency}
+    \end{enumerate}
+
 
 \onefullfig{imgs/agree-results}{AGREE Results View in OSATE}{fig:agree-results}
+
+
+\section{First AGREE model}
+To understand AGREE basics, we will design a first model with some basics
+validation contracts. In this example, we will design a system with a sender
+and a receiver. The sender sends an integer through its outgoing interface.
+
+The integration contract will then guarantee that the value sent through
+the interfaces is bound (with a range between 0 and 100) and the one received
+by the receiver has the same bound as well.
+
+    \subsection{Defining guarantees}
+    In the following listing, we show the guarantee contract in the component type
+    (the section defined with the \texttt{guarantee} keyword). The component
+    implementation defines the behavior: the integer starts at 1, is incremented at
+    each \textit{tick} and eventually set to 10 when the value reached 90.
+
+    \begin{lstlisting}
+system sender
+features
+    dataout : out data port base_types::integer;
+annex agree {**
+    guarantee "data sent is between 0 and 100": dataout < 100 and dataout > 0;
+**};
+end sender;
+
+system implementation sender.i
+annex agree {**
+    eq k : int = 1 -> if (pre(k) > 90) then 10 else pre(k) + 1;
+    assert (dataout = k);
+**};
+end sender.i;
+\end{lstlisting}
+
+
+
+    \subsection{Defining assumptions}
+    We also need to define components assumptions so that the analysis tool
+    can check that they are consistent with the guarantees. In the following
+    listing, we define the assumption for the receiver, specifying that the
+    data received is bound within a range of 0 and 100.
+\begin{lstlisting}
+system receiver
+features
+	datain : in data port base_types::integer;
+annex agree {**
+	assume "data produced between 0 and 100": (datain < 100) and (datain > 0);
+**};
+end receiver;
+\end{lstlisting}
+
+    \subsection{Running the tool}
+    Once both \texttt{assume} and \texttt{guarantee} are defined, we integrate
+    the components and can start the analysis tool. The results are shown in
+    figure \ref{fig:agree-results}.
+
+    To show how AGREE can help you to investigate errors within your system, we
+    will introduce an error in the contract. Let's change the \texttt{guarantee}
+    of the sender component and specify that the data sent be within a range of
+    0 to 150. The component type specification should then looks like the
+    following.
+
+    \begin{lstlisting}
+system sender
+features
+    dataout : out data port base_types::integer;
+annex agree {**
+    guarantee "data sent is between 0 and 150": dataout < 150 and dataout > 0;
+**};
+end sender;
+\end{lstlisting}
+
+When invoking the analysis tool again, it reports that the assumptions of the 
+\texttt{rcv} component are not met, as shown in figure \ref{fig:agree-results-ko}.
+When a contract is not validated, AGREE can then provide a counter example that
+details the different execution paths that lead to the validation error. To get
+the trace, right click on the assumption/guarantee/consistency contract not met
+and select the option to show a counter example. Counter examples can be shown
+in different format: text-based, spreadsheet (with Excel or OpenOffice) or in
+Eclipse, as shown in figure \ref{fig:counter-examples}.
+
+\onefullfig{imgs/system1-result-ko}{AGREE Results View in OSATE - Contracts not
+validated}{fig:agree-results-ko}
+
+\onefullfig{imgs/system1-counter-example}{Counter Example in
+Eclipse}{fig:counter-examples}
+
+
 
 \end{document}

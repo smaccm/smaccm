@@ -1,4 +1,6 @@
 EPSFILES=imgs/agree-usage.pdf \
+		 imgs/system1-counter-example.pdf \
+		 imgs/system1-result-ko.pdf \
          imgs/agree-results.pdf
 
 TEXFILES = $(BASE).tex $(wildcard section_?.tex)
