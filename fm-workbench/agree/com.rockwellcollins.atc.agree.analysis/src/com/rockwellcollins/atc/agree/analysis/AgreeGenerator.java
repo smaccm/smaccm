@@ -28,6 +28,7 @@ import com.rockwellcollins.atc.agree.agree.Contract;
 import com.rockwellcollins.atc.agree.agree.EqStatement;
 import com.rockwellcollins.atc.agree.agree.LemmaStatement;
 import com.rockwellcollins.atc.agree.agree.LiftStatement;
+import com.rockwellcollins.atc.agree.agree.NestedDotID;
 import com.rockwellcollins.atc.agree.agree.SpecStatement;
 
 public class AgreeGenerator {
@@ -88,7 +89,7 @@ public class AgreeGenerator {
             ComponentImplementation subCompImpl = AgreeEmitterUtilities.getInstanceImplementation(subCompInst);
             category = subCompInst.getQualifiedName();
             
-            AgreeEmitterState subState = new AgreeEmitterState(topCategory + dotChar, topCategory + dotChar + subComp.getName(),
+            AgreeEmitterState subState = new AgreeEmitterState(topCategory + dotChar, topCategory + dotChar + subComp.getName() + dotChar,
             		layout, category, subCompInst, subComp);
 
             //special code for lifting
@@ -99,7 +100,9 @@ public class AgreeGenerator {
                     	if(contract instanceof AgreeContract){
                     		for(SpecStatement spec :  ((AgreeContract) contract).getSpecs()){
                     			if(spec instanceof LiftStatement){
-                    				emitter.doLift(subComp, subState);
+                    				NestedDotID subSubID = ((LiftStatement) spec).getSubcomp();
+            						Subcomponent subSubComp = (Subcomponent) subSubID.getBase();
+                    				emitter.doLift(subSubComp, subState);
                     			}else if(spec instanceof LemmaStatement){//TODO might not be compositional
                     				subState.doSwitch(spec);
                     			}else if(spec instanceof EqStatement){//TODO might not be compositional

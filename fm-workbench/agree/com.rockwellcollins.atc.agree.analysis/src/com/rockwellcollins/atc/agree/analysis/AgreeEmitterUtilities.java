@@ -330,15 +330,13 @@ public class AgreeEmitterUtilities {
         return conjoin(Arrays.asList(exprs));
     }
 
-    static public Expr getLustreAssumptions(AgreeEmitterState state) {
-    	AgreeNode agreeNode = AgreeAnnexEmitter.getComponentNode(state);
+    static public Expr getLustreAssumptions(AgreeNode agreeNode) {
             Expr assumps = conjoin(agreeNode.assumptions);
             IdExpr clockExpr = new IdExpr(agreeNode.clockVar.id);
 			return new BinaryExpr(clockExpr, BinaryOp.IMPLIES, assumps);
     }
 
-    static public Expr getLustreAssumptionsAndAssertions(AgreeEmitterState state) {
-    	AgreeNode agreeNode = AgreeAnnexEmitter.getComponentNode(state);
+    static public Expr getLustreAssumptionsAndAssertions(AgreeNode agreeNode) {
     	Expr assumAssert = conjoin(conjoin(agreeNode.assertions), 
     			conjoin(agreeNode.assumptions));
     	IdExpr clockExpr = new IdExpr(agreeNode.clockVar.id);
@@ -346,9 +344,7 @@ public class AgreeEmitterUtilities {
 
     }
 
-    static public Expr getLustreContract(AgreeEmitterState state) {
-
-    	AgreeNode agreeNode = AgreeAnnexEmitter.getComponentNode(state);
+    static public Expr getLustreContract(AgreeNode agreeNode) {
     	Expr contract = conjoin(conjoin(agreeNode.assertions),
     			conjoin(agreeNode.assumptions),
     			conjoin(agreeNode.guarantees));
@@ -357,8 +353,7 @@ public class AgreeEmitterUtilities {
         
     }
 
-    static public Expr getLustreGuarantee(AgreeEmitterState state) {
-    	AgreeNode agreeNode = AgreeAnnexEmitter.getComponentNode(state);
+    static public Expr getLustreGuarantee(AgreeNode agreeNode) {
     	return conjoin(agreeNode.guarantees);
     }
     

@@ -1,6 +1,5 @@
 package com.rockwellcollins.atc.agree.analysis;
  
-import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -8,13 +7,11 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 
 import jkind.lustre.BinaryExpr;
 import jkind.lustre.BinaryOp;
 import jkind.lustre.BoolExpr;
-import jkind.lustre.CastExpr;
 import jkind.lustre.CondactExpr;
 import jkind.lustre.Equation;
 import jkind.lustre.Expr;
@@ -25,19 +22,12 @@ import jkind.lustre.NamedType;
 import jkind.lustre.Node;
 import jkind.lustre.NodeCallExpr;
 import jkind.lustre.Program;
-import jkind.lustre.RealExpr;
-import jkind.lustre.RecordAccessExpr;
-import jkind.lustre.Type;
 import jkind.lustre.TypeDef;
 import jkind.lustre.UnaryExpr;
 import jkind.lustre.UnaryOp;
 import jkind.lustre.VarDecl;
 
-import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.ecore.EObject;
-import org.osate.aadl2.AadlPackage;
 import org.osate.aadl2.AnnexSubclause;
-import org.osate.aadl2.BooleanLiteral;
 import org.osate.aadl2.BusAccess;
 import org.osate.aadl2.ComponentClassifier;
 import org.osate.aadl2.ComponentImplementation;
@@ -47,25 +37,14 @@ import org.osate.aadl2.Connection;
 import org.osate.aadl2.ConnectionEnd;
 import org.osate.aadl2.Context;
 import org.osate.aadl2.DataAccess;
-import org.osate.aadl2.DataImplementation;
 import org.osate.aadl2.DataPort;
-import org.osate.aadl2.DataSubcomponent;
 import org.osate.aadl2.DataSubcomponentType;
-import org.osate.aadl2.DataType;
-import org.osate.aadl2.DirectedFeature;
 import org.osate.aadl2.DirectionType;
 import org.osate.aadl2.EnumerationLiteral;
 import org.osate.aadl2.EventDataPort;
 import org.osate.aadl2.Feature;
 import org.osate.aadl2.FeatureGroup;
-import org.osate.aadl2.FeatureGroupType;
-import org.osate.aadl2.IntegerLiteral;
-import org.osate.aadl2.NamedElement;
-import org.osate.aadl2.NamedValue;
 import org.osate.aadl2.Property;
-import org.osate.aadl2.PropertyExpression;
-import org.osate.aadl2.RealLiteral;
-import org.osate.aadl2.StringLiteral;
 import org.osate.aadl2.Subcomponent;
 import org.osate.aadl2.instance.ComponentInstance;
 import org.osate.aadl2.instance.FeatureCategory;
@@ -79,44 +58,12 @@ import org.osate.xtext.aadl2.properties.util.PropertyUtils;
 import com.rockwellcollins.atc.agree.agree.AgreeContract;
 import com.rockwellcollins.atc.agree.agree.AgreeContractSubclause;
 import com.rockwellcollins.atc.agree.agree.AgreePackage;
-import com.rockwellcollins.atc.agree.agree.Arg;
-import com.rockwellcollins.atc.agree.agree.AssertStatement;
-import com.rockwellcollins.atc.agree.agree.AssumeStatement;
-import com.rockwellcollins.atc.agree.agree.BoolLitExpr;
-import com.rockwellcollins.atc.agree.agree.CalenStatement;
-import com.rockwellcollins.atc.agree.agree.ConstStatement;
 import com.rockwellcollins.atc.agree.agree.Contract;
 import com.rockwellcollins.atc.agree.agree.EqStatement;
-import com.rockwellcollins.atc.agree.agree.EventExpr;
-import com.rockwellcollins.atc.agree.agree.FloorCast;
-import com.rockwellcollins.atc.agree.agree.FnCallExpr;
-import com.rockwellcollins.atc.agree.agree.FnDefExpr;
-import com.rockwellcollins.atc.agree.agree.GetPropertyExpr;
-import com.rockwellcollins.atc.agree.agree.GuaranteeStatement;
-import com.rockwellcollins.atc.agree.agree.InitialStatement;
-import com.rockwellcollins.atc.agree.agree.IntLitExpr;
 import com.rockwellcollins.atc.agree.agree.LemmaStatement;
 import com.rockwellcollins.atc.agree.agree.LiftStatement;
 import com.rockwellcollins.atc.agree.agree.NestedDotID;
-import com.rockwellcollins.atc.agree.agree.NodeBodyExpr;
-import com.rockwellcollins.atc.agree.agree.NodeDefExpr;
-import com.rockwellcollins.atc.agree.agree.NodeEq;
-import com.rockwellcollins.atc.agree.agree.NodeLemma;
-import com.rockwellcollins.atc.agree.agree.NodeStmt;
-import com.rockwellcollins.atc.agree.agree.PreExpr;
-import com.rockwellcollins.atc.agree.agree.PrevExpr;
-import com.rockwellcollins.atc.agree.agree.PrimType;
-import com.rockwellcollins.atc.agree.agree.PropertyStatement;
-import com.rockwellcollins.atc.agree.agree.RealCast;
-import com.rockwellcollins.atc.agree.agree.RealLitExpr;
-import com.rockwellcollins.atc.agree.agree.RecordDefExpr;
-import com.rockwellcollins.atc.agree.agree.RecordExpr;
-import com.rockwellcollins.atc.agree.agree.RecordType;
-import com.rockwellcollins.atc.agree.agree.RecordUpdateExpr;
 import com.rockwellcollins.atc.agree.agree.SpecStatement;
-import com.rockwellcollins.atc.agree.agree.SynchStatement;
-import com.rockwellcollins.atc.agree.agree.ThisExpr;
-import com.rockwellcollins.atc.agree.agree.util.AgreeSwitch;
 import com.rockwellcollins.atc.agree.analysis.AgreeFeature.ConnType;
 import com.rockwellcollins.atc.agree.analysis.AgreeFeature.Direction;
 import com.rockwellcollins.atc.agree.analysis.AgreeLayout.SigType;
@@ -208,20 +155,26 @@ public class AgreeAnnexEmitter  {
 	}
 
     public void doLift(Subcomponent subComp, AgreeEmitterState parentState){
-        
-        //if connections have not been set we need to set them
-        if(!parentState.connectionExpressionsSet){
-        	setConnExprs(parentState);
-        }
-        
-        ComponentInstance subCompInst = parentState.curInst.findSubcomponentInstance(subComp);
+
+    	//if there are multiple lifts within a component
+    	//we do not want to record its features or set
+    	//its connection expressions more than once
+    	if(!parentState.connectionExpressionsSet){
+    		recordFeatures(parentState);
+    		setConnExprs(parentState);
+    	}
+    	
+
+    	ComponentInstance subCompInst = parentState.curInst.findSubcomponentInstance(subComp);
         ComponentImplementation subCompImpl = subComp.getComponentImplementation();
         ComponentType subCompType = subComp.getComponentType();
 
         AgreeEmitterState subState = new AgreeEmitterState(parentState.topLevelPrefix, 
         		parentState.thisPrefix + subComp.getName() + dotChar, parentState.layout,
         		parentState.thisPrefix + subComp.getName(), subCompInst, subComp);
-        
+
+    	recordFeatures(subState);
+
         
         if(subCompImpl != null){
         	for (AnnexSubclause annex : AnnexUtil.getAllAnnexSubclauses(subCompImpl, AgreePackage.eINSTANCE.getAgreeContractSubclause())) {
@@ -659,7 +612,7 @@ public class AgreeAnnexEmitter  {
         agreeNodes.add(node);
         
         AgreeNode agreeNode = new AgreeNode(inputList, outputList, assumVars,
-                asserVars, guarVars, agreeNodes, node, clockVar);
+                asserVars, guarVars, agreeNodes, node, clockVar, state.category);
         
         return agreeNode;
     }
@@ -673,6 +626,13 @@ public class AgreeAnnexEmitter  {
     	}
     	
     	setConnExprs(state);
+    	
+    	AgreeNode stateNode = getComponentNode(state);
+    	
+    	List<AgreeNode> subStateNodes = new ArrayList<>();
+    	for(AgreeEmitterState subState : subStates){
+    		subStateNodes.add(getComponentNode(subState));
+    	}
 
     	assumProps = new ArrayList<String>();
     	consistProps = new ArrayList<String>();
@@ -689,19 +649,50 @@ public class AgreeAnnexEmitter  {
 
         List<Node> nodeSet = new ArrayList<Node>();
 
-        nodeSet.addAll(state.nodeDefExpressions);
-        eqs.addAll(state.constExpressions);
-        eqs.addAll(state.eqExpressions);
-        eqs.addAll(state.propExpressions);
-        eqs.addAll(state.connExpressions);
+        nodeSet.addAll(stateNode.nodes);
+        nodeSet.remove(stateNode.mainNode);//this node is kind of generated implicitly
+        eqs.addAll(stateNode.mainNode.equations);
         types.addAll(state.typeExpressions);
         
-        Set<VarDecl> agreeInputVars = new HashSet<>();
-        Set<VarDecl> agreeInternalVars = new HashSet<>();
+        Set<AgreeVarDecl> agreeInputVars = new HashSet<>();
+        Set<AgreeVarDecl> agreeInternalVars = new HashSet<>();
         
-        agreeInputVars.addAll(state.inputVars);
-        agreeInputVars.addAll(state.outputVars);
-        agreeInternalVars.addAll(state.internalVars);
+        for(VarDecl input : stateNode.inputs){
+        	agreeInputVars.add(new AgreeVarDecl(input));
+        }
+        for(VarDecl output : stateNode.outputs){
+        	agreeInputVars.add(new AgreeVarDecl(output));
+        }
+        for(VarDecl internal : stateNode.mainNode.outputs){
+        	agreeInternalVars.add(new AgreeVarDecl(internal));
+        }
+        
+//        for(Expr expr : stateNode.assertions){
+//            IdExpr varId = (IdExpr)expr;
+//            AgreeVarDecl agreeVar = new AgreeVarDecl(varId.id, NamedType.BOOL);
+//            agreeInternalVars.add(agreeVar);
+//            agreeInputVars.remove(agreeVar);
+//        }
+//        
+//        for(Expr expr : stateNode.assumptions){
+//            IdExpr varId = (IdExpr)expr;
+//            AgreeVarDecl agreeVar = new AgreeVarDecl(varId.id, NamedType.BOOL);
+//            agreeInternalVars.add(agreeVar);
+//            agreeInputVars.remove(agreeVar);
+//        }
+//        
+//        for(Expr expr : stateNode.guarantees){
+//            IdExpr varId = (IdExpr)expr;
+//            AgreeVarDecl agreeVar = new AgreeVarDecl(varId.id, NamedType.BOOL);
+//            agreeInternalVars.add(agreeVar);
+//            agreeInputVars.remove(agreeVar);
+//        }
+        
+        //make the parent component clock always true
+        agreeInternalVars.add(stateNode.clockVar);
+        Equation clockEq = new Equation(new IdExpr(stateNode.clockVar.id), new BoolExpr(true));
+        eqs.add(clockEq);
+        
 
         addSubEmitterVars(state, subStates, eqs, inputs, clocks, nodeSet, types,
 				agreeInputVars, agreeInternalVars); 
@@ -731,17 +722,17 @@ public class AgreeAnnexEmitter  {
         // total component history
         Expr totalCompHist = new BoolExpr(true);
 
-        for(AgreeEmitterState subState : subStates){
-            totalCompHist = new BinaryExpr(totalCompHist, BinaryOp.AND, AgreeEmitterUtilities.getLustreContract(subState));
+        for(AgreeNode subStateNode : subStateNodes){
+            totalCompHist = new BinaryExpr(totalCompHist, BinaryOp.AND, AgreeEmitterUtilities.getLustreContract(subStateNode));
         }
 
-        Expr assumeAsserts = AgreeEmitterUtilities.getLustreAssumptionsAndAssertions(state);
+        Expr assumeAsserts = AgreeEmitterUtilities.getLustreAssumptionsAndAssertions(stateNode);
         totalCompHist = new BinaryExpr(totalCompHist, BinaryOp.AND, assumeAsserts);
         
         eqs.add(AgreeEmitterUtilities.getLustreHistory(totalCompHist, totalCompHistId));
 
         // system assumptions
-        Expr sysAssumpHist = AgreeEmitterUtilities.getLustreAssumptionsAndAssertions(state);
+        Expr sysAssumpHist = AgreeEmitterUtilities.getLustreAssumptionsAndAssertions(stateNode);
         //initial constraints of the subcomponents
         Expr subInitalConstrs = addInitialConstraints(subStates, eqs, internals);
         Expr sysAssumpAssertInitial = new BinaryExpr(subInitalConstrs, BinaryOp.AND, sysAssumpHist);
@@ -752,23 +743,23 @@ public class AgreeAnnexEmitter  {
         IdExpr countId = addConsistencyCounter(eqs, internals);
         
         // get the individual history variables and create assumption properties
-        addSubcomponentAssumptions(state, subStates, eqs, internals, properties,
+        addSubcomponentAssumptions(state, subStateNodes, eqs, internals, properties,
 				totalCompHistId, sysAssumpHistId);//, closureMap);
         
         
         //add a property that is true if the contract is a contradiction
-        addSubcomponentConsistency(state, subStates, eqs, internals, properties, countId);
+        addSubcomponentConsistency(state, subStateNodes, eqs, internals, properties, countId);
         
         // create individual properties for guarantees
         int i = 0;
-        for (Equation guar : state.guarExpressions) {
-            String guarName = guar.lhs.get(0).id;
+        for (Expr guar : stateNode.guarantees) {
+            String guarName = state.guarExpressions.get(i).lhs.get(0).id; //the string from the guarantee
             IdExpr sysGuaranteesId = new IdExpr(sysGuarTag + i);
             internals.add(new VarDecl(sysGuaranteesId.id, NamedType.BOOL));
 
             Expr totalSysGuarExpr = new BinaryExpr(sysAssumpHistId, BinaryOp.AND, totalCompHistId);
 //            totalSysGuarExpr = new BinaryExpr(totalSysGuarExpr, BinaryOp.AND, allClksTickedExpr);
-            totalSysGuarExpr = new BinaryExpr(totalSysGuarExpr, BinaryOp.IMPLIES, guar.expr);
+            totalSysGuarExpr = new BinaryExpr(totalSysGuarExpr, BinaryOp.IMPLIES, guar);
 
             Equation finalGuar = new Equation(sysGuaranteesId, totalSysGuarExpr);
             eqs.add(finalGuar);
@@ -940,8 +931,8 @@ public class AgreeAnnexEmitter  {
 
 	private void addSubEmitterVars(AgreeEmitterState state, List<AgreeEmitterState> subStates,
 			List<Equation> eqs, List<VarDecl> inputs, List<Expr> clocks,
-			List<Node> nodeSet, Set<jkind.lustre.RecordType> types, Set<VarDecl> agreeInputVars,
-			Set<VarDecl> agreeInternalVars) {
+			List<Node> nodeSet, Set<jkind.lustre.RecordType> types, Set<AgreeVarDecl> agreeInputVars,
+			Set<AgreeVarDecl> agreeInternalVars) {
 		for(AgreeEmitterState subState : subStates){
             
             AgreeNode agreeNode = getComponentNode(subState); 
@@ -1050,22 +1041,22 @@ public class AgreeAnnexEmitter  {
 	}
 
 
-	private void addSubcomponentAssumptions(AgreeEmitterState state, List<AgreeEmitterState> subStates,
+	private void addSubcomponentAssumptions(AgreeEmitterState state, List<AgreeNode> subStateNodes,
 			List<Equation> eqs, List<VarDecl> internals,
 			List<String> properties, Expr totalCompHist, Expr sysAssumpHist){//, Map<Subcomponent, Set<Subcomponent>> closureMap) {
-		for(int stateIndex = 0; stateIndex < subStates.size(); stateIndex++){
+		for(int stateIndex = 0; stateIndex < subStateNodes.size(); stateIndex++){
 		
-		    AgreeEmitterState subState = subStates.get(stateIndex);
+		    AgreeNode subStateNode = subStateNodes.get(stateIndex);
             Expr higherContracts = new BoolExpr(true);
-            for(int partialOrderIndex = stateIndex+1; partialOrderIndex < subStates.size(); partialOrderIndex++){
-                AgreeEmitterState partialState = subStates.get(partialOrderIndex);
+            for(int partialOrderIndex = stateIndex+1; partialOrderIndex < subStateNodes.size(); partialOrderIndex++){
+                AgreeNode partialStateNode = subStateNodes.get(partialOrderIndex);
                 higherContracts = new BinaryExpr(higherContracts, BinaryOp.AND,
-                		AgreeEmitterUtilities.getLustreContract(partialState));
+                		AgreeEmitterUtilities.getLustreContract(partialStateNode));
             }
 
-            Expr contrAssumps = AgreeEmitterUtilities.getLustreAssumptions(subState);
+            Expr contrAssumps = AgreeEmitterUtilities.getLustreAssumptions(subStateNode);
 
-            IdExpr compId = new IdExpr("_Hist_" + subState.category);
+            IdExpr compId = new IdExpr("_Hist_" + subStateNode.category);
             internals.add(new VarDecl(compId.id, NamedType.BOOL));
 
             Expr leftSide = new UnaryExpr(UnaryOp.PRE, totalCompHist);
@@ -1081,22 +1072,22 @@ public class AgreeAnnexEmitter  {
             eqs.add(contrHist);
             properties.add(compId.id);
             this.assumProps .add(compId.id);
-            String propertyName = subState.category + " Assumptions";
+            String propertyName = subStateNode.category + " Assumptions";
             AgreeStateUtils.addToRenaming(compId.id, propertyName, state.varRenaming);
             //layout.addElement("Top", propertyName, AgreeLayout.SigType.OUTPUT);
             state.layout.addElement(state.category, propertyName, AgreeLayout.SigType.OUTPUT);
         }
 	}
 
-	private void addSubcomponentConsistency(AgreeEmitterState state, List<AgreeEmitterState> subStates, List<Equation> eqs,
+	private void addSubcomponentConsistency(AgreeEmitterState state, List<AgreeNode> subStateNodes, List<Equation> eqs,
 			List<VarDecl> internals, List<String> properties, IdExpr countId) {
 		
-		for(AgreeEmitterState subState : subStates){
+		for(AgreeNode subStateNode: subStateNodes){
 
-			IdExpr contrHistId = new IdExpr("_CONTR_HIST_" + subState.category);
-			IdExpr consistId = new IdExpr("_NULL_CONTR_HIST_" + subState.category);
+			IdExpr contrHistId = new IdExpr("_CONTR_HIST_" + subStateNode.category);
+			IdExpr consistId = new IdExpr("_NULL_CONTR_HIST_" + subStateNode.category);
 
-			Expr contExpr = AgreeEmitterUtilities.getLustreContract(subState);
+			Expr contExpr = AgreeEmitterUtilities.getLustreContract(subStateNode);
 			Equation contHist = AgreeEmitterUtilities.getLustreHistory(contExpr, contrHistId);
 			Expr finiteConsist = AgreeEmitterUtilities.getFinteConsistancy(contrHistId, countId, consistUnrollDepth);
 			Equation contrConsistEq = new Equation(consistId, finiteConsist);
@@ -1108,7 +1099,7 @@ public class AgreeAnnexEmitter  {
 			properties.add(consistId.id);
 			consistProps.add(consistId.id);
 			//reversePropStatus.add(true);
-			String contractName = subState.category + " Consistent";
+			String contractName = subStateNode.category + " Consistent";
 			AgreeStateUtils.addToRenaming(consistId.id, contractName, state.varRenaming);
 			//layout.addElement("Top", contractName, AgreeLayout.SigType.OUTPUT);
 			state.layout.addElement(state.category, contractName, AgreeLayout.SigType.OUTPUT);
