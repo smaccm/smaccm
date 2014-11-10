@@ -82,6 +82,7 @@ import com.rockwellcollins.atc.agree.agree.NodeDefExpr;
 import com.rockwellcollins.atc.agree.agree.NodeEq;
 import com.rockwellcollins.atc.agree.agree.NodeLemma;
 import com.rockwellcollins.atc.agree.agree.NodeStmt;
+import com.rockwellcollins.atc.agree.agree.OrderStatement;
 import com.rockwellcollins.atc.agree.agree.PreExpr;
 import com.rockwellcollins.atc.agree.agree.PrevExpr;
 import com.rockwellcollins.atc.agree.agree.PrimType;
@@ -112,11 +113,59 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
     }
     
     @Check(CheckType.FAST)
+    public void checkOrderStatement(OrderStatement order){
+    	for(NamedElement el : order.getComps()){
+    		if(!(el instanceof Subcomponent)){
+    			error(el, "Only elements of subcomponent type are allowed in ordering statements");
+    		}
+    	}
+    	Classifier container = order.getContainingClassifier();
+    	if(container instanceof ComponentImplementation){
+    		ComponentImplementation compImpl = (ComponentImplementation)container;
+    		List<NamedElement> notPresent = new ArrayList<>();
+    		for(Subcomponent subcomp : compImpl.getAllSubcomponents()){
+    			boolean found = false;
+    			for(NamedElement el : order.getComps()){
+    				if(el.equals(subcomp)){
+    					found = true;
+    					break;
+    				}
+    			}
+    			if(!found){
+    				notPresent.add(subcomp);
+    			}
+    		}
+    		
+    		if(notPresent.size() != 0){
+    			String delim = "";
+    			StringBuilder errorStr = new StringBuilder("The following subcomponents are not present in the ordering: ");
+    			for(NamedElement subcomp : notPresent){
+    				errorStr.append(delim);
+    				errorStr.append(subcomp.getName());
+    				delim = ", ";
+    			}
+    			error(order, errorStr.toString());
+    		}
+
+    	}else{
+    		error(order, "Ordering statements can only appear in component implementations");
+    	}
+    	
+    	
+    		
+    	
+    }
+    
+    @Check(CheckType.FAST)
     public void checkCalenStatement(CalenStatement calen){
     	for(NamedElement el : calen.getEls()){
     		if(!(el instanceof Subcomponent)){
     			error(calen, "Element '"+el.getName()+"' is not a subcomponent");
     		}
+    	}
+    	Classifier container = calen.getContainingClassifier();
+    	if(!(container instanceof ComponentImplementation)){
+    		error(calen, "Calendar statements can only appear in component implementations");
     	}
     }
     
@@ -160,6 +209,11 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
         if(Integer.valueOf(sync.getVal()) < 0){
             error(sync, "The value of synchrony statments must be positive");
         }
+        
+        Classifier container = sync.getContainingClassifier();
+    	if(!(container instanceof ComponentImplementation)){
+    		error(sync, "Synchrony statements can only appear in component implementations");
+    	}
     }
     
     @Check(CheckType.FAST)

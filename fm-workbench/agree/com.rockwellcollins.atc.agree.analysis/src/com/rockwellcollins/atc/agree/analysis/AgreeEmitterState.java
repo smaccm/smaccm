@@ -68,6 +68,7 @@ import com.rockwellcollins.atc.agree.agree.NodeDefExpr;
 import com.rockwellcollins.atc.agree.agree.NodeEq;
 import com.rockwellcollins.atc.agree.agree.NodeLemma;
 import com.rockwellcollins.atc.agree.agree.NodeStmt;
+import com.rockwellcollins.atc.agree.agree.OrderStatement;
 import com.rockwellcollins.atc.agree.agree.PreExpr;
 import com.rockwellcollins.atc.agree.agree.PrevExpr;
 import com.rockwellcollins.atc.agree.agree.PropertyStatement;
@@ -129,6 +130,7 @@ public class AgreeEmitterState  extends AgreeSwitch<Expr> {
     //the current implementation
     public final ComponentInstance curInst;
 	public final Subcomponent curComp;
+	public final List<Subcomponent> ordering = new ArrayList<>();
     
     //used for string formatting
 	private static final String dotChar = "__";
@@ -148,6 +150,14 @@ public class AgreeEmitterState  extends AgreeSwitch<Expr> {
              layout.addCategory(category);
          }
     	
+    }
+    
+    @Override
+    public Expr caseOrderStatement(OrderStatement order){
+    	for(NamedElement el : order.getComps()){
+    		ordering.add((Subcomponent)el);
+    	}
+    	return null;
     }
     
     

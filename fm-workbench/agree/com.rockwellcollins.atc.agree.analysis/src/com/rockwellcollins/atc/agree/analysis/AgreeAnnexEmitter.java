@@ -619,6 +619,24 @@ public class AgreeAnnexEmitter  {
     
     public Program getLustreWithCondacts(AgreeEmitterState state, List<AgreeEmitterState> subStates){
 
+    	//if there is an ordering present in the parent state
+    	//then reorder the subStates list. This is used to determine
+    	//the order for proving assumptions
+    	if(state.ordering.size() != 0){
+    		List<AgreeEmitterState> newStateList = new ArrayList<>();
+    		for(Subcomponent subcomp : state.ordering){
+    			for(AgreeEmitterState subState : subStates){
+    				if(subState.curComp.equals(subcomp)){
+    					newStateList.add(subState);
+    				}
+    			}
+    		}
+    		if(subStates.size() != newStateList.size()){
+				throw new AgreeException("Something went wrong with the subcomponent ordering");
+    		}
+    		subStates = newStateList;
+    	}
+    	
     	//get information about all the features of this component and its subcomponents
     	recordFeatures(state);
     	for(AgreeEmitterState subState : subStates){
@@ -667,26 +685,6 @@ public class AgreeAnnexEmitter  {
         	agreeInternalVars.add(new AgreeVarDecl(internal));
         }
         
-//        for(Expr expr : stateNode.assertions){
-//            IdExpr varId = (IdExpr)expr;
-//            AgreeVarDecl agreeVar = new AgreeVarDecl(varId.id, NamedType.BOOL);
-//            agreeInternalVars.add(agreeVar);
-//            agreeInputVars.remove(agreeVar);
-//        }
-//        
-//        for(Expr expr : stateNode.assumptions){
-//            IdExpr varId = (IdExpr)expr;
-//            AgreeVarDecl agreeVar = new AgreeVarDecl(varId.id, NamedType.BOOL);
-//            agreeInternalVars.add(agreeVar);
-//            agreeInputVars.remove(agreeVar);
-//        }
-//        
-//        for(Expr expr : stateNode.guarantees){
-//            IdExpr varId = (IdExpr)expr;
-//            AgreeVarDecl agreeVar = new AgreeVarDecl(varId.id, NamedType.BOOL);
-//            agreeInternalVars.add(agreeVar);
-//            agreeInputVars.remove(agreeVar);
-//        }
         
         //make the parent component clock always true
         agreeInternalVars.add(stateNode.clockVar);
