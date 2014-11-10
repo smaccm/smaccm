@@ -49,6 +49,7 @@ SpecStatement:
 	| {LemmaStatement} 'lemma' str=STRING ':' expr=Expr ';'
 	| {LiftStatement} 'lift' subcomp=NestedDotID ';'
 	| SynchStatement
+	| OrderStatement
 	| PropertyStatement
 	| ConstStatement
 	| EqStatement
@@ -59,6 +60,10 @@ SpecStatement:
 SynchStatement:
 	{SynchStatement} 'synchrony' ':' val = INTEGER_LIT  (sim=('simult'|'no_simult'))? ';'
 |   {CalenStatement} 'calendar' ':' els+=([aadl2::NamedElement]) ("," els+=[aadl2::NamedElement])*  ';'
+;
+
+OrderStatement:
+	'ordering' ':' comps += [aadl2::NamedElement] ("," comps+=[aadl2::NamedElement])* ';'
 ;
 
 NamedCallDef returns aadl2::NamedElement:

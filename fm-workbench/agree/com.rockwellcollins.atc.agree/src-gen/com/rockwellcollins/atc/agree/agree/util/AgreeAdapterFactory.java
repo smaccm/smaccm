@@ -106,6 +106,11 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
         return createSynchStatementAdapter();
       }
       @Override
+      public Adapter caseOrderStatement(OrderStatement object)
+      {
+        return createOrderStatementAdapter();
+      }
+      @Override
       public Adapter caseCallDef(CallDef object)
       {
         return createCallDefAdapter();
@@ -448,6 +453,21 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
    * @generated
    */
   public Adapter createSynchStatementAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.OrderStatement <em>Order Statement</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see com.rockwellcollins.atc.agree.agree.OrderStatement
+   * @generated
+   */
+  public Adapter createOrderStatementAdapter()
   {
     return null;
   }

@@ -15,6 +15,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.xtext.scoping.IScope;
 import org.eclipse.xtext.scoping.Scopes;
+import org.eclipse.xtext.scoping.impl.SimpleScope;
 import org.osate.aadl2.AadlPackage;
 import org.osate.aadl2.AnnexLibrary;
 import org.osate.aadl2.AnnexSubclause;
@@ -50,6 +51,7 @@ import com.rockwellcollins.atc.agree.agree.FnDefExpr;
 import com.rockwellcollins.atc.agree.agree.NestedDotID;
 import com.rockwellcollins.atc.agree.agree.NodeDefExpr;
 import com.rockwellcollins.atc.agree.agree.NodeEq;
+import com.rockwellcollins.atc.agree.agree.OrderStatement;
 import com.rockwellcollins.atc.agree.agree.RecordDefExpr;
 import com.rockwellcollins.atc.agree.agree.RecordExpr;
 import com.rockwellcollins.atc.agree.agree.RecordType;
@@ -166,6 +168,27 @@ public class AgreeScopeProvider extends
             }
         }
         return result;
+    }
+    
+    IScope scope_NamedElement(OrderStatement ctx, EReference ref) {
+        
+    	EObject container = ctx.getContainingClassifier();
+    	while(!(container instanceof ComponentClassifier)){
+    		container = container.eContainer();
+    	}
+    	
+//    	IScope scope = IScope.NULLSCOPE;
+    	IScope outerScope = IScope.NULLSCOPE;
+    	if(container instanceof ComponentImplementation){
+    		ComponentImplementation compImpl = (ComponentImplementation)container;
+//    		do{
+    			outerScope = Scopes.scopeFor(compImpl.getAllSubcomponents());
+//    			scope = new SimpleScope(outerScope, scope.getAllElements());
+//    			compImpl = compImpl.getExtended();
+//    		}while(compImpl != null);
+    	}
+//    	return scope;
+        return outerScope;
     }
 
     IScope scope_NamedElement(CalenStatement ctx, EReference ref) {

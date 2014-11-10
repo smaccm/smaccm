@@ -22,11 +22,12 @@ public class AgreeNode {
     public List<Node> nodes;
     public Node mainNode;
     public AgreeVarDecl clockVar;
+	public String category;
     
     public AgreeNode(List<VarDecl> inputs, List<VarDecl> outputs,
             List<Expr> assumptions, List<Expr> assertions,
             List<Expr> guarantees, List<Node> nodes, 
-            Node mainNode, AgreeVarDecl clockVar){
+            Node mainNode, AgreeVarDecl clockVar, String category){
         
         this.inputs = inputs;
         this.outputs = outputs;
@@ -36,6 +37,7 @@ public class AgreeNode {
         this.nodes = nodes;
         this.mainNode = mainNode;
         this.clockVar = clockVar;
+        this.category = category;
     }
     
 }

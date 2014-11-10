@@ -10,7 +10,11 @@ public class AgreeVarDecl extends VarDecl implements Comparable<AgreeVarDecl>{
     public AgreeVarDecl(String id, Type type) {
 		super(id, type);
 	}
-
+    
+    public AgreeVarDecl(VarDecl varDec){
+    	super(varDec.id, varDec.type);
+    }
+ 
 	@Override
     public String toString(){
     	return id;
@@ -31,6 +35,11 @@ public class AgreeVarDecl extends VarDecl implements Comparable<AgreeVarDecl>{
         if (o instanceof AgreeVarDecl) {
             return ((AgreeVarDecl) o).id.equals(id);
         }
+        
+        if(o instanceof VarDecl){
+        	return id.equals(((VarDecl) o).id);
+        }
+        
         return false;
         
     }

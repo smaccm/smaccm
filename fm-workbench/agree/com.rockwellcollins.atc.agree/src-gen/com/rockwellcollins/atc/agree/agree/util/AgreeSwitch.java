@@ -124,6 +124,15 @@ public class AgreeSwitch<T> extends Switch<T>
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
+      case AgreePackage.ORDER_STATEMENT:
+      {
+        OrderStatement orderStatement = (OrderStatement)theEObject;
+        T result = caseOrderStatement(orderStatement);
+        if (result == null) result = caseSpecStatement(orderStatement);
+        if (result == null) result = caseElement(orderStatement);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
       case AgreePackage.CALL_DEF:
       {
         CallDef callDef = (CallDef)theEObject;
@@ -621,6 +630,22 @@ public class AgreeSwitch<T> extends Switch<T>
    * @generated
    */
   public T caseSynchStatement(SynchStatement object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Order Statement</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Order Statement</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseOrderStatement(OrderStatement object)
   {
     return null;
   }

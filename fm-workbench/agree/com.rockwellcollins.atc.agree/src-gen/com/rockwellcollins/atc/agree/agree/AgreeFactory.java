@@ -68,6 +68,15 @@ public interface AgreeFactory extends EFactory
   SynchStatement createSynchStatement();
 
   /**
+   * Returns a new object of class '<em>Order Statement</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Order Statement</em>'.
+   * @generated
+   */
+  OrderStatement createOrderStatement();
+
+  /**
    * Returns a new object of class '<em>Call Def</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->

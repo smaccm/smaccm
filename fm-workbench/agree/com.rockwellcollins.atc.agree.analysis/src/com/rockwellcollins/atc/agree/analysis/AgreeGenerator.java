@@ -28,12 +28,14 @@ import com.rockwellcollins.atc.agree.agree.Contract;
 import com.rockwellcollins.atc.agree.agree.EqStatement;
 import com.rockwellcollins.atc.agree.agree.LemmaStatement;
 import com.rockwellcollins.atc.agree.agree.LiftStatement;
+import com.rockwellcollins.atc.agree.agree.NestedDotID;
 import com.rockwellcollins.atc.agree.agree.SpecStatement;
 
 public class AgreeGenerator {
     
     private ComponentInstance compInst;
     private AgreeAnnexEmitter topEmitter;
+    private AgreeEmitterState topState;
     private String dotChar = "__";
 	private FeatureToConnectionsMap featToConnMap;
 
@@ -48,15 +50,16 @@ public class AgreeGenerator {
         AgreeLayout layout = new AgreeLayout();
         String topCategory = compInst.getName();
         
-        AgreeAnnexEmitter topEmitter = new AgreeAnnexEmitter(
-                compInst, layout, topCategory, topCategory + dotChar, topCategory + dotChar, true, true);
-        
-        this.topEmitter = topEmitter;
-        
+        AgreeEmitterState state = new AgreeEmitterState(topCategory + dotChar, topCategory + dotChar,
+        		layout, topCategory, compInst, null);
+        this.topState = state;
+        AgreeAnnexEmitter emitter = new AgreeAnnexEmitter();
+        this.topEmitter = emitter;
+                
         boolean foundAnnex = false;
         for (AnnexSubclause annex : AnnexUtil.getAllAnnexSubclauses(compImpl, AgreePackage.eINSTANCE.getAgreeContractSubclause())) {
             if (annex instanceof AgreeContractSubclause) {
-                topEmitter.doSwitch(annex);
+                state.doSwitch(annex);
                 foundAnnex = true;
                 break;
             }
@@ -64,13 +67,13 @@ public class AgreeGenerator {
         
         for (AnnexSubclause annex : AnnexUtil.getAllAnnexSubclauses(ct, AgreePackage.eINSTANCE.getAgreeContractSubclause())) {
             if (annex instanceof AgreeContractSubclause) {
-                topEmitter.doSwitch(annex);
+                state.doSwitch(annex);
                 foundAnnex = true;
                 break;
             }
         }
         
-        List<AgreeAnnexEmitter> subEmitters = new ArrayList<>();
+        List<AgreeEmitterState> subStates = new ArrayList<>();
         for(Subcomponent subComp : compImpl.getAllSubcomponents()){
         	//don't check data subcomponents
         	if(subComp instanceof DataSubcomponent
@@ -85,10 +88,9 @@ public class AgreeGenerator {
             ComponentType subCt = AgreeEmitterUtilities.getInstanceType(subCompInst);
             ComponentImplementation subCompImpl = AgreeEmitterUtilities.getInstanceImplementation(subCompInst);
             category = subCompInst.getQualifiedName();
-            AgreeAnnexEmitter subEmitter = new AgreeAnnexEmitter(
-                    subCompInst, layout, category,
-                    topCategory + dotChar,
-                    topCategory + dotChar + subComp.getName() + dotChar, false, false);
+            
+            AgreeEmitterState subState = new AgreeEmitterState(topCategory + dotChar, topCategory + dotChar + subComp.getName() + dotChar,
+            		layout, category, subCompInst, subComp);
 
             //special code for lifting
             if(subCompImpl != null){
@@ -98,11 +100,13 @@ public class AgreeGenerator {
                     	if(contract instanceof AgreeContract){
                     		for(SpecStatement spec :  ((AgreeContract) contract).getSpecs()){
                     			if(spec instanceof LiftStatement){
-                    				subEmitter.doSwitch(spec);
+                    				NestedDotID subSubID = ((LiftStatement) spec).getSubcomp();
+            						Subcomponent subSubComp = (Subcomponent) subSubID.getBase();
+                    				emitter.doLift(subSubComp, subState);
                     			}else if(spec instanceof LemmaStatement){//TODO might not be compositional
-                    				subEmitter.doSwitch(spec);
+                    				subState.doSwitch(spec);
                     			}else if(spec instanceof EqStatement){//TODO might not be compositional
-                    				subEmitter.doSwitch(spec);
+                    				subState.doSwitch(spec);
                     			}
                     		}
                     	}
@@ -114,14 +118,14 @@ public class AgreeGenerator {
 
             for (AnnexSubclause annex : AnnexUtil.getAllAnnexSubclauses(subCt, AgreePackage.eINSTANCE.getAgreeContractSubclause())) {
                 if (annex instanceof AgreeContractSubclause) {
-                    subEmitter.doSwitch(annex);
+                    subState.doSwitch(annex);
                     foundSubAnnex = foundAnnex = true;
                     break;
                 }
             }
 
             if(foundSubAnnex){
-            	subEmitters.add(subEmitter);
+            	subStates.add(subState);
             }
 
         }
@@ -129,25 +133,25 @@ public class AgreeGenerator {
         	return null;
         }
         
-        return topEmitter.getLustreWithCondacts(subEmitters);
+        return emitter.getLustreWithCondacts(state, subStates);
 
     }
 
     public Map<String, EObject> getReferenceMap() {
-        return topEmitter.refMap;
+        return topState.refMap;
     }
 
     public Renaming getRenaming() {
 //        return new MapRenaming(topEmitter.varRenaming, MapRenaming.Mode.NULL);
-    	return topEmitter.agreeRename;
+    	return topState.agreeRename;
     }
 
     public Layout getLayout() {
-        return topEmitter.layout;
+        return topState.layout;
     }
 
     public String getLog() {
-        return topEmitter.log.toString();
+        return AgreeLogger.getLog();
     }
 
     public List<String> getAssumeProps() {
@@ -159,7 +163,7 @@ public class AgreeGenerator {
     }
 
     public List<String> getGuarProps() {
-        return topEmitter.guarProps;
+        return topEmitter.guarProps; 
     }
 
 
