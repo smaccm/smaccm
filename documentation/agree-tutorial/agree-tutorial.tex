@@ -139,6 +139,8 @@ end mysystem;
 To understand AGREE basics, we will design a first model with some basics
 validation contracts. In this example, we will design a system with a sender
 and a receiver. The sender sends an integer through its outgoing interface.
+The related example is located in the \texttt{core-examples/agree/basic.aadl} model on the OSATE
+examples repository\footnote{\url{https://github.com/osate/examples/}}.
 
 The integration contract will then guarantee that the value sent through
 the interfaces is bound (with a range between 0 and 100) and the one received
@@ -364,8 +366,16 @@ end controller.impl;
 \begin{lstlisting}
 system implementation controller.impl
 annex agree {**
-	eq heating_request : bool = false -> if ((user_request.heater_on = true) and (user_request.cooler_on = false)) then true else false;
-	eq cooling_request  : bool = false -> if ((user_request.cooler_on = true) and (user_request.heater_on = false)) then true else false;
+	eq heating_request : bool = false -> if ((user_request.heater_on = true) and 
+                                            (user_request.cooler_on = false)) then 
+                                            true 
+                                                else 
+                                            false;
+	eq cooling_request  : bool = false -> 
+      if ((user_request.cooler_on = true) and (user_request.heater_on = false)) then 
+         true 
+      else 
+         false;
 	
 	assert (heater_on = (heating_request and (tempin <= 20)));
 	assert (cooler_on = (cooling_request and (tempin > 0)));
@@ -392,9 +402,12 @@ features
 	tempin2 		: in data port temperature_type;
 	tempout 		: out data port temperature_type;
 annex agree {**
-    assume "incoming temperature on sensor1 between 0 and 20 (both included)": tempin1 <= 20 and tempin1 >= 0;
-    assume "incoming temperature on sensor2 between 0 and 20 (both included)": tempin2 <= 20 and tempin2 >= 0;
-    guarantee "outgoing temperature is between 0 and 20 (both included)": tempout <= 20 and tempout >= 0;
+    assume "incoming temperature on sensor1 between 0 and 20 (both included)": 
+            tempin1 <= 20 and tempin1 >= 0;
+    assume "incoming temperature on sensor2 between 0 and 20 (both included)": 
+            tempin2 <= 20 and tempin2 >= 0;
+    guarantee "outgoing temperature is between 0 and 20 (both included)": 
+            tempout <= 20 and tempout >= 0;
 **}; 
 end voter;
 \end{lstlisting}
