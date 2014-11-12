@@ -155,7 +155,7 @@ Now that we have discussed the verification of property values
 in the components, we will present how you can analyze connections.
 In this example, we will check that each incoming port
 has only one incoming connection. This is a validation
-oen might want to validate in the model in order to ensure
+one might want to validate in the model in order to ensure
 that there is only one sender for each communication port.
 This type of modeling restriction is required by some tools such
 as AGREE\footnote{AGREE actually does not support multiple fan-in, such
@@ -217,7 +217,10 @@ This new example defines several connected components with a property defined
 on their features (the same property as in the first example,
 \texttt{resoluteps::foobar}). We will then use RESOLUTE to check
 that the value on the connection source is lower than
-the value on the connection destination.
+the value on the connection destination. This example
+is available in the file \texttt{core-examples/resolute/check\_data\_flow.aadl}
+file on the OSATE examples
+repository\footnote{\url{https://github.com/osate/examples/}}.
 
 \onemedfig{imgs/checkdataflow-instance}{System
 Instance}{fig:checkdataflow-instance}
@@ -246,8 +249,10 @@ property value on the source is lower than the property on the destination.
 \begin{lstlisting}
   minfoobarvalue(c : component) <=
     ** " Check the minimum foobar for features on " c  **
-    forall (conn : connections (c)) . has_property (source(conn), resoluteps::foobar) and
-	                                  has_property (destination(conn), resoluteps::foobar) => 
+    forall (conn : connections (c)) . has_property (source(conn), 
+                                                    resoluteps::foobar) and
+	                                  has_property (destination(conn), 
+                                                   resoluteps::foobar) => 
 	(property(source(conn), resoluteps::foobar) < property(destination(conn), resoluteps::foobar))
 \end{lstlisting}
 
@@ -295,6 +300,13 @@ defines these rules. In a nutshell, there are the main guidelines:
 We plan to validate these rules against a model introduced in the ARINC653
 annex. The graphical representation of the model is shown in
 figure \ref{fig:arinc653-instance}.
+This example
+is available in the file
+\texttt{core-examples/resolute/check\_arinc653\_compliance.aadl}
+file on the OSATE examples
+repository\footnote{\url{https://github.com/osate/examples/}}.
+
+
 
 \onefullfig{imgs/arinc653-instance}{System
 Instance}{fig:arinc653-instance}
@@ -306,7 +318,7 @@ guidelines, we define several theorems. The top-level theorem
     \item
         Check the compliance of the architecture with
         the modeling guidelines to represent ARINC653 partitions
-        by calling\texttt{check\_arinc653\_processes}. This theorem
+        by calling \texttt{check\_arinc653\_processes}. This theorem
         performs the following actions for each AADL \texttt{process}:
         \begin{enumerate}
             \item
@@ -351,7 +363,7 @@ guidelines, we define several theorems. The top-level theorem
                 by calling the \texttt{check\_arinc653\_processor\_scheduling}
                 theorem. This theorem checks that the scheduling-related
                 properties are correctly defined on the component
-                (\texttt{ARINC653::Module\_Schedule} and 
+                (\texttt{ARINC653::Module\_Schedule} and \\ 
                 \texttt{ARINC653::Module\_Major\_Frame})
             \item
                 Check that the AADL \texttt{processor} defines
@@ -450,14 +462,19 @@ check_tasks (p : process) <=
 
 check_interfaces (comp : component) <=
 	** "Check that component " comp " declares all necessary properties on its ports" **
-	forall (poevent : features (comp)) . is_event_port (poevent) and (direction(poevent) = "in") => has_property (poevent, ARINC653::Queueing_Discipline)
+	forall (poevent : features (comp)) . 
+           is_event_port (poevent) and (direction(poevent) = "in") => 
+           has_property (poevent, ARINC653::Queueing_Discipline)
 	and
-	forall (pononevent : features (comp)) . (is_event_port (pononevent) = false) and (direction(pononevent) = "in") => has_property (pononevent, ARINC653::Sampling_Refresh_Period)
+	forall (pononevent : features (comp)) . 
+          (is_event_port (pononevent) = false) and (direction(pononevent) = "in") => 
+          has_property (pononevent, ARINC653::Sampling_Refresh_Period)
 
 
 check_arinc653_process_memory (p : process) <=
 	** "Check that process " p " is associated with a memory" **
-	exists (segment : memory) . (is_bound_to (p, segment)) and check_arinc653_memory_segment (segment)
+	exists (segment : memory) . 
+          (is_bound_to (p, segment)) and check_arinc653_memory_segment (segment)
 
 check_arinc653_memory_segment (segment : memory) <=
 	** "Check that the memory segment " segment " is contained in a memory" **
