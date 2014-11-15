@@ -1,0 +1,78 @@
+\begin{figure}
+\noindent\fbox{%
+    \parbox{\textwidth}{%
+
+{\color{color18} \textbf{data}} STANAG\_4586\_message  
+
+{\color{color18} \textbf{end}} STANAG\_4586\_message;    
+
+\vspace{12pt}
+{\color{color18} \textbf{data}} {\color{color18} \textbf{implementation}} STANAG\_4586\_message.i 
+   
+
+{\color{color18} \textbf{subcomponents      }}
+
+\parindent=21pt
+m\_id : {\color{color18} \textbf{data}} Base\_Types::Integer;      
+
+m\_data : {\color{color18} \textbf{data}} STANAG\_4586\_message\_data.i;  
+
+\parindent=0pt
+{\color{color18} \textbf{end}} STANAG\_4586\_message.i;    
+
+\vspace{12pt}
+{\color{color18} \textbf{data}} STANAG\_4586\_message\_data  
+
+{\color{color18} \textbf{end}} STANAG\_4586\_message\_data;    
+
+\vspace{12pt}
+{\color{color18} \textbf{data}} {\color{color18} \textbf{implementation}} STANAG\_4586\_message\_data.i 
+   
+
+{\color{color18} \textbf{subcomponents      }}
+
+\parindent=21pt
+cucs\_auth\_req : {\color{color18} \textbf{data}} STANAG\_4586\_message.cucs\_auth\_req; 
+     
+
+payload\_steer : {\color{color18} \textbf{data}} STANAG\_4586\_message.payload\_steer; 
+ 
+
+\parindent=0pt
+{\color{color18} \textbf{end}} STANAG\_4586\_message\_data.i;    
+
+\vspace{12pt}
+{\color{color18} \textbf{data}} {\color{color18} \textbf{implementation}} STANAG\_4586\_message.cucs\_auth\_req 
+   
+
+{\color{color18} \textbf{subcomponents      }}
+
+\parindent=21pt
+tstamp : {\color{color18} \textbf{data}} Base\_Types::Integer;      
+
+vid : {\color{color18} \textbf{data}} Base\_Types::Integer;      
+
+cucsid : {\color{color18} \textbf{data}} Base\_Types::Integer;      
+
+vtype : {\color{color18} \textbf{data}} Base\_Types::Integer;      
+
+vsubtype : {\color{color18} \textbf{data}} Base\_Types::Integer;      
+
+dlid : {\color{color18} \textbf{data}} Base\_Types::Integer;      
+
+rloi : {\color{color18} \textbf{data}} Base\_Types::Integer;      
+
+cs : {\color{color18} \textbf{data}} Base\_Types::Integer;      
+
+csm : {\color{color18} \textbf{data}} Base\_Types::Integer;      
+
+wait : {\color{color18} \textbf{data}} Base\_Types::Integer;  
+
+\parindent=0pt
+{\color{color18} \textbf{end}} STANAG\_4586\_message.cucs\_auth\_req;
+
+}%
+}
+\caption{The AADL data implementation for STANAG 4586 message}
+\label{fig:stanag-data}
+\end{figure}

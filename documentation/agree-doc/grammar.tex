@@ -1,0 +1,57 @@
+\begin{figure}
+\begin{grammar}
+<contr> ::= <contr-stmt> <contr> | <contr-stmt>
+
+<contr-stmt> ::= `guarantee' <STR> `:' <expr> `;'
+\alt `assume' <STR> `:' <expr> `;'
+\alt `initially' `:' <expr> `;'
+\alt <eq-stmt>
+\alt <node-stmt>
+
+<impl> ::= <impl-stmt> <impl> | <impl-stmt>
+
+<impl-stmt> ::= `assert' <expr> `;'
+\alt `synchrony' `:' <INT-LIT> (`no_simult')? `;'
+\alt `lemma' <STR> `:' <expr> `;'
+\alt <eq-stmt>
+\alt <node-stmt>
+
+<eq-stmt> ::= `eq' <arg-lst> `=' <expr> `;'
+\alt `eq' <arg-lst> `;'
+
+<node-stmnt> ::= `node' <ID> `(' <arg-lst> `)' \\
+`returns' `(' <arg-lst> `)' `;' \\
+(`var' <arg-lst>)? \\
+`let' <eq-lst> `tel' `;'
+
+<expr> ::= <BOOL-LIT>
+\alt <INT-LIT>
+\alt <REAL-LIT>
+\alt <ID>
+\alt <ID> `(' <expr-lst> `)'
+\alt `pre' `(' <expr> `)'
+\alt `event' `(' <ID> `)'
+\alt `floor' `(' <expr> `)'
+\alt `real' `(' <expr> `)'
+\alt `Get_Property' `(' <expr> `,' <aadl-property> `)'
+\alt `-' <expr>
+\alt `not' <expr>
+\alt <expr> `{' <ID> `:=' <expr> `}'
+\alt <expr> (`*'|`/'|`mod'|`+'|`-') <expr>
+\alt <expr> (`<'|`<='|`>'|`>='|`='|`!=') <expr>
+\alt <expr> (`and'|`or') <expr>
+\alt <expr> `=>' <expr>
+\alt <expr> `->' <expr>
+
+<type> ::= `int' | `real' | `bool' | <aadl-type>
+
+<arg-lst> ::= <ID> `:' <type> `,' <arg-lst> | <ID> `:' <type>
+
+<eq-lst> ::= <eq-stmt> <eq-lst> | <eq-stmt>
+
+<expr-lst> ::= <expr> `,' <expr-lst> | <expr>
+
+\end{grammar}
+\caption{A simplified description of the grammar for AGREE}
+\label{fig:grammar}
+\end{figure}

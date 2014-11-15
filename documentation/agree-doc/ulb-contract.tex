@@ -1,0 +1,92 @@
+
+\begin{figure}
+
+\noindent\fbox{%
+    \parbox{\textwidth}{%
+{\color{color17} -{}-points to the decrypted stanag messages}
+
+{\color{color18} \textbf{eq}} auth\_in {\color{color18} \textbf{:}} ULB\_Device\_Types{\color{color18} \textbf{::}}STANAG\_4586\_message{\color{color18} \textbf{.}}cucs\_auth\_req{\color{color18} \textbf{;}}
+
+{\color{color18} \textbf{eq}} stanag\_in {\color{color18} \textbf{:}} ULB\_Device\_Types{\color{color18} \textbf{::}}STANAG\_4586\_message{\color{color18} \textbf{.}}i{\color{color18} \textbf{;}}
+
+\vspace{12pt}
+{\color{color18} \textbf{eq}} loi {\color{color18} \textbf{:}} {\color{color18} \textbf{int;}}
+
+{\color{color18} \textbf{eq}} override\_control {\color{color18} \textbf{:}} {\color{color18} \textbf{bool;}}
+
+{\color{color18} \textbf{eq}} cucs\_id {\color{color18} \textbf{:}} {\color{color18} \textbf{int;}}
+
+{\color{color18} \textbf{eq}} camera\_commands {\color{color18} \textbf{:}} ULB\_Device\_Types{\color{color18} \textbf{::}}camera\_command{\color{color18} \textbf{.}}i{\color{color18} \textbf{;}}
+
+{\color{color18} \textbf{eq}} stanag\_received {\color{color18} \textbf{:}} {\color{color18} \textbf{bool;}} 
+
+\vspace{12pt}
+{\color{color18} \textbf{guarantee}} {\color{color19} \texttt{"}allowed to override\texttt{"}} 
+{\color{color18} \textbf{:}} {\color{color18} \textbf{true}} {\color{color18} \textbf{-\texttt{>} 
+ }}
+
+\parindent=7pt
+stanag\_received {\color{color18} \textbf{and}}    
+
+stanag\_in{\color{color18} \textbf{.}}m\_id {\color{color18} \textbf{=}} 1 {\color{color18} \textbf{and}} 
+  
+
+\parindent=0pt
+{\color{color18} \textbf{not}} {\color{color18} \textbf{pre(}}override\_control{\color{color18} \textbf{)}} 
+{\color{color18} \textbf{and}}   
+
+\parindent=7pt
+auth\_in{\color{color18} \textbf{.}}csm {\color{color18} \textbf{=}} 2     
+
+\parindent=0pt
+{\color{color18} \textbf{=\texttt{>}}} cucs\_id {\color{color18} \textbf{=}} auth\_in{\color{color18} \textbf{.}}cucsid{\color{color18} \textbf{; 
+ }}
+
+\vspace{12pt}
+{\color{color18} \textbf{eq}} message\_with\_loi\_gt\_3 {\color{color18} \textbf{:}} 
+{\color{color18} \textbf{bool}} {\color{color18} \textbf{=}}    
+
+\parindent=10pt
+stanag\_received {\color{color18} \textbf{and}} stanag\_in{\color{color18} \textbf{.}}m\_id 
+{\color{color18} \textbf{=}} 1 {\color{color18} \textbf{and}}    
+
+\parindent=0pt
+{\color{color18} \textbf{(}}auth\_in{\color{color18} \textbf{.}}csm {\color{color18} \textbf{=}} 
+1 {\color{color18} \textbf{or}} auth\_in{\color{color18} \textbf{.}}csm {\color{color18} \textbf{=}} 
+2{\color{color18} \textbf{)}}   {\color{color18} \textbf{and}} auth\_in{\color{color18} \textbf{.}}rloi 
+{\color{color18} \textbf{\texttt{>}}} 3{\color{color18} \textbf{;      }}
+
+\vspace{12pt}
+{\color{color18} \textbf{guarantee}} {\color{color19} \texttt{"}loi greater than 
+three always gets control\texttt{"}} {\color{color18} \textbf{:  }}
+
+\parindent=7pt
+message\_with\_loi\_gt\_3 {\color{color18} \textbf{and}} {\color{color18} \textbf{(false}} 
+{\color{color18} \textbf{-\texttt{>}}} {\color{color18} \textbf{pre(}}loi {\color{color18} \textbf{=}} 
+3{\color{color18} \textbf{))}} {\color{color18} \textbf{=\texttt{>}    }}
+
+\parindent=14pt
+loi {\color{color18} \textbf{=}} auth\_in{\color{color18} \textbf{.}}rloi {\color{color18} \textbf{and}} 
+cucs\_id {\color{color18} \textbf{=}} auth\_in{\color{color18} \textbf{.}}cucsid{\color{color18} \textbf{;}}
+
+\vspace{12pt}
+\parindent=0pt
+{\color{color18} \textbf{eq}} loi\_was\_3 {\color{color18} \textbf{:}} {\color{color18} \textbf{bool}} 
+{\color{color18} \textbf{=}} loi {\color{color18} \textbf{=}} 3 {\color{color18} \textbf{-\texttt{>}}} 
+loi {\color{color18} \textbf{=}} 3 {\color{color18} \textbf{or}} {\color{color18} \textbf{pre(}}loi\_was\_3{\color{color18} \textbf{);}}
+
+\vspace{12pt}
+{\color{color18} \textbf{guarantee}} {\color{color19} \texttt{"}if the camera moved, 
+then loi was three\texttt{"}}{\color{color18} \textbf{:}} {\color{color18} \textbf{true}} 
+{\color{color18} \textbf{-\texttt{>}  }}
+
+\parindent=7pt
+camera\_commands {\color{color18} \textbf{!=}} {\color{color18} \textbf{pre(}}camera\_commands{\color{color18} \textbf{)}} 
+{\color{color18} \textbf{=\texttt{>}}} loi\_was\_3{\color{color18} \textbf{;}}
+{\color{color18} \textbf{;}}
+
+}%
+}
+\caption{The contract in the ULB}
+\label{fig:ulb}
+\end{figure}

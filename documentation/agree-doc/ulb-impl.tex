@@ -1,0 +1,76 @@
+\begin{figure}
+
+\noindent\fbox{%
+    \parbox{\textwidth}{%
+
+{\color{color18} \textbf{synchrony:}} 5 {\color{color18} \textbf{no\_simult;}}
+
+\vspace{12pt}
+{\color{color18} \textbf{eq}} loi\_clk {\color{color18} \textbf{:}} {\color{color18} \textbf{bool;}}
+
+{\color{color18} \textbf{eq}} cam\_clk {\color{color18} \textbf{:}} {\color{color18} \textbf{bool;}}
+
+{\color{color18} \textbf{assert}} loi\_clk {\color{color18} \textbf{=}} loi\_sw{\color{color18} \textbf{.\_CLK;}}
+
+{\color{color18} \textbf{assert}} cam\_clk {\color{color18} \textbf{=}} wescam\_vsm\_sw{\color{color18} \textbf{.\_CLK;}}
+
+\vspace{12pt}
+{\color{color17} -{}-grabbing variables out of subcomponents}
+
+{\color{color18} \textbf{assert}} loi\_sw{\color{color18} \textbf{.}}id\_in\_control 
+{\color{color18} \textbf{=}} cucs\_id{\color{color18} \textbf{;}}
+
+{\color{color18} \textbf{assert}} loi\_sw{\color{color18} \textbf{.}}override\_control 
+{\color{color18} \textbf{=}} override\_control{\color{color18} \textbf{;}}
+
+{\color{color18} \textbf{assert}} loi\_sw{\color{color18} \textbf{.}}loi {\color{color18} \textbf{=}} 
+loi{\color{color18} \textbf{;}}
+
+{\color{color18} \textbf{assert}} loi\_sw{\color{color18} \textbf{.}}outside\_stanag\_in 
+{\color{color18} \textbf{=}} stanag\_in{\color{color18} \textbf{;}}
+
+{\color{color18} \textbf{assert}} loi\_sw{\color{color18} \textbf{.}}outside\_stanag\_in{\color{color18} \textbf{.}}m\_data{\color{color18} \textbf{.}}cucs\_auth\_req 
+{\color{color18} \textbf{=}} auth\_in{\color{color18} \textbf{;}}
+
+{\color{color18} \textbf{assert}} wescam\_vsm\_sw{\color{color18} \textbf{.}}camera\_commands 
+{\color{color18} \textbf{=}} camera\_commands{\color{color18} \textbf{;}}
+
+{\color{color18} \textbf{assert}} stanag\_received {\color{color18} \textbf{=}} 
+{\color{color18} \textbf{(event(}}loi\_sw{\color{color18} \textbf{.}}outside\_stanag\_in{\color{color18} \textbf{)}} 
+{\color{color18} \textbf{and}} loi\_clk{\color{color18} \textbf{);}}       
+
+\vspace{12pt}
+{\color{color17} -{}-wescam vsm sees all messages sent to it}
+
+{\color{color18} \textbf{assert}} {\color{color18} \textbf{(true}} {\color{color18} \textbf{-\texttt{>}}} 
+{\color{color18} \textbf{(pre(event(}}wescam\_vsm\_sw{\color{color18} \textbf{.}}stanag\_in{\color{color18} \textbf{))}} 
+{\color{color18} \textbf{and}} {\color{color18} \textbf{not}} {\color{color18} \textbf{pre(}}cam\_clk{\color{color18} \textbf{)) 
+ }}
+{\color{color18} \textbf{=\texttt{>}}} {\color{color18} \textbf{(}}wescam\_vsm\_sw{\color{color18} \textbf{.}}stanag\_in 
+{\color{color18} \textbf{=}} {\color{color18} \textbf{pre(}}wescam\_vsm\_sw{\color{color18} \textbf{.}}stanag\_in{\color{color18} \textbf{)}} 
+{\color{color18} \textbf{and}}      
+
+{\color{color18} \textbf{event(}}wescam\_vsm\_sw{\color{color18} \textbf{.}}stanag\_in{\color{color18} \textbf{)}} 
+{\color{color18} \textbf{=}} {\color{color18} \textbf{true));        }}
+
+\vspace{12pt}
+{\color{color18} \textbf{lemma}} {\color{color19} \texttt{"}if the wescam gets 
+a message, then the loi is 3\texttt{"}} {\color{color18} \textbf{:  }}
+
+{\color{color18} \textbf{event(}}wescam\_vsm\_sw{\color{color18} \textbf{.}}stanag\_in{\color{color18} \textbf{)}} 
+{\color{color18} \textbf{=\texttt{>}}} loi {\color{color18} \textbf{=}} 3{\color{color18} \textbf{;}}
+
+\vspace{12pt}
+{\color{color18} \textbf{lemma}} {\color{color19} \texttt{"}if the loi was never 
+3, then an event was never sent to the wescam\texttt{"}} {\color{color18} \textbf{: 
+ }}
+
+\baselineskip=13pt
+{\color{color18} \textbf{not}} loi\_was\_3 {\color{color18} \textbf{=\texttt{>}}} 
+{\color{color18} \textbf{not}} wescam\_vsm\_sw{\color{color18} \textbf{.}}event\_in\_past{\color{color18} \textbf{;}}
+
+}%
+}
+\caption{Assert statements in the ULB implementation}
+\label{fig:ulb-impl}
+\end{figure}
