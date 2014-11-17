@@ -1,0 +1,313 @@
+package Data_Types
+public
+  with Base_Types;
+  with Data_Model;
+  with CAN_Properties;
+
+data exynos_uart
+end exynos_uart;
+
+data implementation exynos_uart.i
+  subcomponents
+    ULCON : data Base_Types::Integer_32
+      {Data_Model::Number_Representation => Unsigned;
+       CAN_Properties::Volatile => true;};
+    UCON : data Base_Types::Integer_32
+      {Data_Model::Number_Representation => Unsigned;
+       CAN_Properties::Volatile => true;};
+    UFCON : data Base_Types::Integer_32
+      {Data_Model::Number_Representation => Unsigned;
+       CAN_Properties::Volatile => true;};
+    UMCON : data Base_Types::Integer_32
+      {Data_Model::Number_Representation => Unsigned;
+       CAN_Properties::Volatile => true;};
+    UTRSTAT : data Base_Types::Integer_32
+      {Data_Model::Number_Representation => Unsigned;
+       CAN_Properties::Volatile => true;};
+    UERSTAT : data Base_Types::Integer_32
+      {Data_Model::Number_Representation => Unsigned;
+       CAN_Properties::Volatile => true;};
+    UFSTAT : data Base_Types::Integer_32
+      {Data_Model::Number_Representation => Unsigned;
+       CAN_Properties::Volatile => true;};
+    UMSTAT : data Base_Types::Integer_32
+      {Data_Model::Number_Representation => Unsigned;
+       CAN_Properties::Volatile => true;};
+    UTXH : data Base_Types::Integer_32
+      {Data_Model::Number_Representation => Unsigned;
+       CAN_Properties::Volatile => true;};
+    URXH : data Base_Types::Integer_32
+      {Data_Model::Number_Representation => Unsigned;
+       CAN_Properties::Volatile => true;};
+    UBRDIV : data Base_Types::Integer_32
+      {Data_Model::Number_Representation => Unsigned;
+       CAN_Properties::Volatile => true;};
+    UFRACVAL : data Base_Types::Integer_32
+      {Data_Model::Number_Representation => Unsigned;
+       CAN_Properties::Volatile => true;};
+    UINTP : data Base_Types::Integer_32
+      {Data_Model::Number_Representation => Unsigned;
+       CAN_Properties::Volatile => true;};
+    UINTSP : data Base_Types::Integer_32
+      {Data_Model::Number_Representation => Unsigned;
+       CAN_Properties::Volatile => true;};
+    UINTM : data Base_Types::Integer_32
+      {Data_Model::Number_Representation => Unsigned;
+       CAN_Properties::Volatile => true;};
+end exynos_uart.i;
+
+data pwm_timer
+end pwm_timer;
+
+data implementation pwm_timer.i
+  subcomponents
+    TCFG0 : data Base_Types::Integer_32
+      {Data_Model::Number_Representation => Unsigned;
+       CAN_Properties::Volatile => true;};
+    TCFG1 : data Base_Types::Integer_32
+      {Data_Model::Number_Representation => Unsigned;
+       CAN_Properties::Volatile => true;};
+    TCON : data Base_Types::Integer_32
+      {Data_Model::Number_Representation => Unsigned;
+       CAN_Properties::Volatile => true;};
+    TCNTB0 : data Base_Types::Integer_32
+      {Data_Model::Number_Representation => Unsigned;
+       CAN_Properties::Volatile => true;};
+    TCMPB0 : data Base_Types::Integer_32
+      {Data_Model::Number_Representation => Unsigned;
+       CAN_Properties::Volatile => true;};
+    TCNTO0 : data Base_Types::Integer_32
+      {Data_Model::Number_Representation => Unsigned;
+       CAN_Properties::Volatile => true;};
+    TCNTB1 : data Base_Types::Integer_32
+      {Data_Model::Number_Representation => Unsigned;
+       CAN_Properties::Volatile => true;};
+    TCMPB1 : data Base_Types::Integer_32
+      {Data_Model::Number_Representation => Unsigned;
+       CAN_Properties::Volatile => true;};
+    TCNTO1 : data Base_Types::Integer_32
+      {Data_Model::Number_Representation => Unsigned;
+       CAN_Properties::Volatile => true;};
+    TCNTB2 : data Base_Types::Integer_32
+      {Data_Model::Number_Representation => Unsigned;
+       CAN_Properties::Volatile => true;};
+    TCMPB2 : data Base_Types::Integer_32
+      {Data_Model::Number_Representation => Unsigned;
+       CAN_Properties::Volatile => true;};
+    TCNTO2 : data Base_Types::Integer_32
+      {Data_Model::Number_Representation => Unsigned;
+       CAN_Properties::Volatile => true;};
+    TCNTB3 : data Base_Types::Integer_32
+      {Data_Model::Number_Representation => Unsigned;
+       CAN_Properties::Volatile => true;};
+    TCMPB3 : data Base_Types::Integer_32
+      {Data_Model::Number_Representation => Unsigned;
+       CAN_Properties::Volatile => true;};
+    TCNTO3 : data Base_Types::Integer_32
+      {Data_Model::Number_Representation => Unsigned;
+       CAN_Properties::Volatile => true;};
+    TCNTB4 : data Base_Types::Integer_32
+      {Data_Model::Number_Representation => Unsigned;
+       CAN_Properties::Volatile => true;};
+    TCNTO4 : data Base_Types::Integer_32
+      {Data_Model::Number_Representation => Unsigned;
+       CAN_Properties::Volatile => true;};
+    TINT_CSTAT : data Base_Types::Integer_32
+      {Data_Model::Number_Representation => Unsigned;
+       CAN_Properties::Volatile => true;};
+    
+    
+end pwm_timer.i;
+
+data exynos_spi
+end exynos_spi;
+
+data implementation exynos_spi.i
+  subcomponents
+    ch_cfg : data Base_Types::Integer_32
+      {Data_Model::Number_Representation => Unsigned;};
+    pad0 : data Base_Types::Integer_32
+      {Data_Model::Number_Representation => Unsigned;};
+    mode_cfg : data Base_Types::Integer_32
+      {Data_Model::Number_Representation => Unsigned;};
+    cs_reg : data Base_Types::Integer_32
+      {Data_Model::Number_Representation => Unsigned;};
+    spi_int_en : data Base_Types::Integer_32
+      {Data_Model::Number_Representation => Unsigned;};
+    spi_status : data Base_Types::Integer_32
+      {Data_Model::Number_Representation => Unsigned;};
+    spi_tx_data : data Base_Types::Integer_32
+      {Data_Model::Number_Representation => Unsigned;};
+    spi_rx_data : data Base_Types::Integer_32
+      {Data_Model::Number_Representation => Unsigned;};
+    packet_cnt_reg : data Base_Types::Integer_32
+      {Data_Model::Number_Representation => Unsigned;};
+    pending_clr_reg : data Base_Types::Integer_32
+      {Data_Model::Number_Representation => Unsigned;};
+    swap_cfg : data Base_Types::Integer_32
+      {Data_Model::Number_Representation => Unsigned;};
+    fb_clk_sel : data Base_Types::Integer_32
+      {Data_Model::Number_Representation => Unsigned;};
+end exynos_spi.i;
+
+
+data CAN_data
+end CAN_data;
+
+data implementation CAN_Data.i
+  subcomponents
+    rx : data CAN_msg.i;
+    tx : data CAN_msg.i;
+end CAN_Data.i;
+
+data CAN_msg
+end CAN_msg;
+
+data implementation CAN_msg.i
+  subcomponents
+    id : data Base_Types::Integer_32
+      {Data_Model::Number_Representation => Unsigned;};
+    exide : data Base_Types::Integer
+      { Data_Size => 1 bits;
+      	Data_Model::Number_Representation => Unsigned;
+      };
+    rtr : data Base_Types::Integer
+      { Data_Size => 1 bits;
+      	Data_Model::Number_Representation => Unsigned;
+      };
+    length : data Base_Types::Integer
+      { Data_Size => 4 bits;
+      	Data_Model::Number_Representation => Unsigned;
+      };
+    --note that this is actually called "data" in the file
+    --but this is an aadl keyword so it cannot be named that here
+    idata : data array{ 
+      Data_Model::Base_Type => (classifier (Base_Types::Integer_8));
+      Data_Model::Dimension => (8);
+      Data_Model::Number_Representation => Unsigned;
+    };
+      
+end CAN_msg.i;
+
+data spi_dev_port
+end spi_dev_port;
+
+data implementation spi_dev_port.i
+  subcomponents
+    txbuf : data array{
+      Data_Model::Base_Type => (classifier (Base_Types::Integer_8));
+      Data_Model::Dimension => (255);
+      Data_Model::Number_Representation => Unsigned;
+    };
+    rxbuf : data array{
+      Data_Model::Base_Type => (classifier (Base_Types::Integer_8));
+      Data_Model::Dimension => (255);
+      Data_Model::Number_Representation => Unsigned;
+    };
+    lock : data Base_Types::Boolean{
+      --Is there already this type of property in the 
+      --plugin resources?
+      CAN_Properties::Volatile => true; 
+    };
+end spi_dev_port.i;
+
+data gpio_bank
+end gpio_bank;
+
+data array
+  properties
+    Data_Model::Data_Representation => Array;
+end array;
+
+data combiner_data
+end combiner_data;
+
+data implementation combiner_data.i
+  subcomponents
+    IESR : data Base_Types::Integer_32
+      {Data_Model::Number_Representation => Unsigned;};
+    IECR : data Base_Types::Integer_32
+      {Data_Model::Number_Representation => Unsigned;};
+    ISTR : data Base_Types::Integer_32
+      {Data_Model::Number_Representation => Unsigned;};
+    IMSR : data Base_Types::Integer_32
+      {Data_Model::Number_Representation => Unsigned;};
+end combiner_data.i;
+
+data exynos5_gpio
+end exynos5_gpio;
+
+data implementation exynos5_gpio.part1
+  subcomponents
+    a0 : data gpio_bank.i;
+    a1 : data gpio_bank.i;
+    a2 : data gpio_bank.i;
+    b0 : data gpio_bank.i;
+    b1 : data gpio_bank.i;
+    b2 : data gpio_bank.i;
+    b3 : data gpio_bank.i;
+    c0 : data gpio_bank.i;
+    c1 : data gpio_bank.i;
+    c2 : data gpio_bank.i;
+    c3 : data gpio_bank.i;
+    d0 : data gpio_bank.i;
+    d1 : data gpio_bank.i;
+    y0 : data gpio_bank.i;
+    y1 : data gpio_bank.i;
+    y2 : data gpio_bank.i;
+    y3 : data gpio_bank.i;
+    y4 : data gpio_bank.i;
+    y5 : data gpio_bank.i;
+    y6 : data gpio_bank.i;
+    res1 : data array{
+    	Data_Model::Base_Type => (classifier (gpio_bank));
+    	Data_Model::Dimension => (3);
+    };
+    c4 : data gpio_bank.i;
+    res2 : data array{
+    	Data_Model::Base_Type => (classifier (gpio_bank));
+    	Data_Model::Dimension => (72);
+    };
+    x0 : data gpio_bank.i;
+    x1 : data gpio_bank.i;
+    x2 : data gpio_bank.i;
+    x3 : data gpio_bank.i;
+end exynos5_gpio.part1;
+
+data implementation exynos5_gpio.part2
+  subcomponents
+    e0 : data gpio_bank.i;
+    e1 : data gpio_bank.i;
+    f0 : data gpio_bank.i;
+    f1 : data gpio_bank.i;
+    g0 : data gpio_bank.i;
+    g1 : data gpio_bank.i;
+    g2 : data gpio_bank.i;
+    h0 : data gpio_bank.i;
+    h1 : data gpio_bank.i;
+end exynos5_gpio.part2;
+
+
+data implementation gpio_bank.i
+  subcomponents
+    con : data Base_Types::Integer_32
+      {Data_Model::Number_Representation => Unsigned;};
+    dat : data Base_Types::Integer_32
+      {Data_Model::Number_Representation => Unsigned;};
+    pull : data Base_Types::Integer_32
+      {Data_Model::Number_Representation => Unsigned;};
+    drv : data Base_Types::Integer_32
+      {Data_Model::Number_Representation => Unsigned;};
+    pdn_con : data Base_Types::Integer_32
+      {Data_Model::Number_Representation => Unsigned;};
+    pdn_pull : data Base_Types::Integer_32
+      {Data_Model::Number_Representation => Unsigned;};
+    res1 : data array{
+    	Data_Model::Base_Type => (classifier (Base_Types::Integer_8));
+    	Data_Model::Number_Representation => Unsigned;
+    	Data_Model::Dimension => (8);
+    };
+    
+end gpio_bank.i;
+
+end Data_Types;

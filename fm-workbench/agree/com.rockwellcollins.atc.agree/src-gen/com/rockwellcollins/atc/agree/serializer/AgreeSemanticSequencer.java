@@ -30,6 +30,7 @@ import com.rockwellcollins.atc.agree.agree.NodeBodyExpr;
 import com.rockwellcollins.atc.agree.agree.NodeDefExpr;
 import com.rockwellcollins.atc.agree.agree.NodeEq;
 import com.rockwellcollins.atc.agree.agree.NodeLemma;
+import com.rockwellcollins.atc.agree.agree.OrderStatement;
 import com.rockwellcollins.atc.agree.agree.ParamStatement;
 import com.rockwellcollins.atc.agree.agree.PreExpr;
 import com.rockwellcollins.atc.agree.agree.PrevExpr;
@@ -618,7 +619,7 @@ public class AgreeSemanticSequencer extends PropertiesSemanticSequencer {
 				if(context == grammarAccess.getCallDefRule() ||
 				   context == grammarAccess.getElementRule() ||
 				   context == grammarAccess.getNamedCallDefRule() ||
-				   context == grammarAccess.getNamespaceRule() ||
+				   context == grammarAccess.getNamedElementRule() ||
 				   context == grammarAccess.getNodeDefExprRule() ||
 				   context == grammarAccess.getSpecStatementRule()) {
 					sequence_NodeDefExpr(context, (NodeDefExpr) semanticObject); 
@@ -636,6 +637,14 @@ public class AgreeSemanticSequencer extends PropertiesSemanticSequencer {
 				if(context == grammarAccess.getElementRule() ||
 				   context == grammarAccess.getNodeStmtRule()) {
 					sequence_NodeStmt(context, (NodeLemma) semanticObject); 
+					return; 
+				}
+				else break;
+			case AgreePackage.ORDER_STATEMENT:
+				if(context == grammarAccess.getElementRule() ||
+				   context == grammarAccess.getOrderStatementRule() ||
+				   context == grammarAccess.getSpecStatementRule()) {
+					sequence_OrderStatement(context, (OrderStatement) semanticObject); 
 					return; 
 				}
 				else break;
@@ -1072,6 +1081,15 @@ public class AgreeSemanticSequencer extends PropertiesSemanticSequencer {
 	 *     (str=STRING expr=Expr)
 	 */
 	protected void sequence_NodeStmt(EObject context, NodeLemma semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Constraint:
+	 *     (comps+=[NamedElement|ID] comps+=[NamedElement|ID]*)
+	 */
+	protected void sequence_OrderStatement(EObject context, OrderStatement semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	

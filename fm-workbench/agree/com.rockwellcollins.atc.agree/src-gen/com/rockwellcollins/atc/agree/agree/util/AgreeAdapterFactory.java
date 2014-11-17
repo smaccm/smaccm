@@ -16,7 +16,6 @@ import org.osate.aadl2.AnnexSubclause;
 import org.osate.aadl2.Element;
 import org.osate.aadl2.ModalElement;
 import org.osate.aadl2.NamedElement;
-import org.osate.aadl2.Namespace;
 
 /**
  * <!-- begin-user-doc -->
@@ -105,6 +104,11 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
       public Adapter caseSynchStatement(SynchStatement object)
       {
         return createSynchStatementAdapter();
+      }
+      @Override
+      public Adapter caseOrderStatement(OrderStatement object)
+      {
+        return createOrderStatementAdapter();
       }
       @Override
       public Adapter caseCallDef(CallDef object)
@@ -357,11 +361,6 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
         return createAnnexSubclauseAdapter();
       }
       @Override
-      public Adapter caseNamespace(Namespace object)
-      {
-        return createNamespaceAdapter();
-      }
-      @Override
       public Adapter defaultCase(EObject object)
       {
         return createEObjectAdapter();
@@ -454,6 +453,21 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
    * @generated
    */
   public Adapter createSynchStatementAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.OrderStatement <em>Order Statement</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see com.rockwellcollins.atc.agree.agree.OrderStatement
+   * @generated
+   */
+  public Adapter createOrderStatementAdapter()
   {
     return null;
   }
@@ -1204,21 +1218,6 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
    * @generated
    */
   public Adapter createAnnexSubclauseAdapter()
-  {
-    return null;
-  }
-
-  /**
-   * Creates a new adapter for an object of class '{@link org.osate.aadl2.Namespace <em>Namespace</em>}'.
-   * <!-- begin-user-doc -->
-   * This default implementation returns null so that we can easily ignore cases;
-   * it's useful to ignore a case when inheritance will catch all the cases anyway.
-   * <!-- end-user-doc -->
-   * @return the new adapter.
-   * @see org.osate.aadl2.Namespace
-   * @generated
-   */
-  public Adapter createNamespaceAdapter()
   {
     return null;
   }

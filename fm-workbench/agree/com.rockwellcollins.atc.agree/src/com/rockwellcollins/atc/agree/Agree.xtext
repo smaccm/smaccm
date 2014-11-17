@@ -10,6 +10,7 @@ NamedElement returns aadl2::NamedElement:
 	| FnDefExpr
 	| PropertyStatement
 	| ConstStatement
+	| NodeDefExpr
 	| RecordDefExpr;
 
 Element returns aadl2::Element:
@@ -21,8 +22,8 @@ Element returns aadl2::Element:
 	| NodeBodyExpr
 	| EqStatement;
 
-Namespace returns aadl2::Namespace:
-	NodeDefExpr;
+//Namespace returns aadl2::Namespace:
+//	NodeDefExpr;
 
 AnnexLibrary returns aadl2::AnnexLibrary:
 	AgreeLibrary;
@@ -48,6 +49,7 @@ SpecStatement:
 	| {LemmaStatement} 'lemma' str=STRING ':' expr=Expr ';'
 	| {LiftStatement} 'lift' subcomp=NestedDotID ';'
 	| SynchStatement
+	| OrderStatement
 	| PropertyStatement
 	| ConstStatement
 	| EqStatement
@@ -58,6 +60,10 @@ SpecStatement:
 SynchStatement:
 	{SynchStatement} 'synchrony' ':' val = INTEGER_LIT  (sim=('simult'|'no_simult'))? ';'
 |   {CalenStatement} 'calendar' ':' els+=([aadl2::NamedElement]) ("," els+=[aadl2::NamedElement])*  ';'
+;
+
+OrderStatement:
+	'ordering' ':' comps += [aadl2::NamedElement] ("," comps+=[aadl2::NamedElement])* ';'
 ;
 
 NamedCallDef returns aadl2::NamedElement:

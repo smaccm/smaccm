@@ -38,6 +38,7 @@ import com.rockwellcollins.atc.agree.agree.NodeDefExpr;
 import com.rockwellcollins.atc.agree.agree.NodeEq;
 import com.rockwellcollins.atc.agree.agree.NodeLemma;
 import com.rockwellcollins.atc.agree.agree.NodeStmt;
+import com.rockwellcollins.atc.agree.agree.OrderStatement;
 import com.rockwellcollins.atc.agree.agree.ParamStatement;
 import com.rockwellcollins.atc.agree.agree.PreExpr;
 import com.rockwellcollins.atc.agree.agree.PrevExpr;
@@ -107,6 +108,13 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * @generated
    */
   private EClass synchStatementEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass orderStatementEClass = null;
 
   /**
    * <!-- begin-user-doc -->
@@ -557,6 +565,26 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
   public EAttribute getSynchStatement_Sim()
   {
     return (EAttribute)synchStatementEClass.getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getOrderStatement()
+  {
+    return orderStatementEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getOrderStatement_Comps()
+  {
+    return (EReference)orderStatementEClass.getEStructuralFeatures().get(0);
   }
 
   /**
@@ -1711,6 +1739,9 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     createEAttribute(synchStatementEClass, SYNCH_STATEMENT__VAL);
     createEAttribute(synchStatementEClass, SYNCH_STATEMENT__SIM);
 
+    orderStatementEClass = createEClass(ORDER_STATEMENT);
+    createEReference(orderStatementEClass, ORDER_STATEMENT__COMPS);
+
     callDefEClass = createEClass(CALL_DEF);
 
     propertyStatementEClass = createEClass(PROPERTY_STATEMENT);
@@ -1906,6 +1937,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     contractEClass.getESuperTypes().add(theAadl2Package.getElement());
     specStatementEClass.getESuperTypes().add(theAadl2Package.getElement());
     synchStatementEClass.getESuperTypes().add(this.getSpecStatement());
+    orderStatementEClass.getESuperTypes().add(this.getSpecStatement());
     callDefEClass.getESuperTypes().add(theAadl2Package.getNamedElement());
     propertyStatementEClass.getESuperTypes().add(theAadl2Package.getNamedElement());
     propertyStatementEClass.getESuperTypes().add(this.getSpecStatement());
@@ -1916,7 +1948,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     fnDefExprEClass.getESuperTypes().add(theAadl2Package.getNamedElement());
     fnDefExprEClass.getESuperTypes().add(this.getSpecStatement());
     fnDefExprEClass.getESuperTypes().add(this.getCallDef());
-    nodeDefExprEClass.getESuperTypes().add(theAadl2Package.getNamespace());
+    nodeDefExprEClass.getESuperTypes().add(theAadl2Package.getNamedElement());
     nodeDefExprEClass.getESuperTypes().add(this.getSpecStatement());
     nodeDefExprEClass.getESuperTypes().add(this.getCallDef());
     nodeBodyExprEClass.getESuperTypes().add(theAadl2Package.getElement());
@@ -1972,6 +2004,9 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     initEClass(synchStatementEClass, SynchStatement.class, "SynchStatement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEAttribute(getSynchStatement_Val(), theEcorePackage.getEString(), "val", null, 0, 1, SynchStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEAttribute(getSynchStatement_Sim(), theEcorePackage.getEString(), "sim", null, 0, 1, SynchStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+    initEClass(orderStatementEClass, OrderStatement.class, "OrderStatement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getOrderStatement_Comps(), theAadl2Package.getNamedElement(), null, "comps", null, 0, -1, OrderStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(callDefEClass, CallDef.class, "CallDef", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 

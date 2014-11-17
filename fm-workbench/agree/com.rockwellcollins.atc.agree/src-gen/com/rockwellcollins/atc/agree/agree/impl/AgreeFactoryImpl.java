@@ -69,6 +69,7 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
       case AgreePackage.CONTRACT: return createContract();
       case AgreePackage.SPEC_STATEMENT: return createSpecStatement();
       case AgreePackage.SYNCH_STATEMENT: return createSynchStatement();
+      case AgreePackage.ORDER_STATEMENT: return createOrderStatement();
       case AgreePackage.CALL_DEF: return createCallDef();
       case AgreePackage.PROPERTY_STATEMENT: return createPropertyStatement();
       case AgreePackage.CONST_STATEMENT: return createConstStatement();
@@ -172,6 +173,17 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
   {
     SynchStatementImpl synchStatement = new SynchStatementImpl();
     return synchStatement;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public OrderStatement createOrderStatement()
+  {
+    OrderStatementImpl orderStatement = new OrderStatementImpl();
+    return orderStatement;
   }
 
   /**

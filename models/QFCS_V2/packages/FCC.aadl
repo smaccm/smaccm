@@ -51,8 +51,6 @@ system FCC
 
         
   annex agree {**
-    guarantee "dummy" : true;
-
 	--BEGIN RC5 guarantees
 	guarantee "elevator bound" :
 	 FCC_RC5.req_els(elevators_faults, elevators_select);
@@ -103,7 +101,9 @@ system FCC
       (pre(acts_fail.BRAKE) => acts_fail.BRAKE) and
       (pre(acts_fail.STEER) => acts_fail.STEER);
       
-      
+    eq claw_acts : DATA_TYPES::Actuators.impl;
+    eq osas_failure : bool;
+
   **};
 
 end FCC;
@@ -158,6 +158,10 @@ system implementation FCC.Impl
     fail_conn : port OSAS_comp.acts_fail -> acts_fail;
     --internal connections
     conn_ccdl_acts : port CLAW_comp.acts -> OSAS_comp.acts_in;
+    
+    annex agree {**
+    	assert claw_acts = CLAW_comp.acts;
+    **};
     
 --  annex agree {**
 --  	lift ISAS_comp;
