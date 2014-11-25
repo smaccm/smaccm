@@ -206,12 +206,12 @@ public class AgreeStateUtils {
     	return nodeName;
     }
     
-    public static List<VarDecl> argsToVarDeclList(String nameTag, EList<Arg> args,
+    public static List<VarDecl> argsToVarDeclList(EList<Arg> args,
     		Map<NamedElement, String> typeMap, Set<jkind.lustre.RecordType> typeExpressions) {
         List<VarDecl> varList = new ArrayList<VarDecl>();
         for (Arg arg : args) {
             Type type = getNamedType(getRecordTypeName(arg.getType(), typeMap, typeExpressions)); 
-            VarDecl varDecl = new VarDecl(nameTag + arg.getName(), type);
+            VarDecl varDecl = new VarDecl(arg.getName(), type);
             varList.add(varDecl);
         }
 

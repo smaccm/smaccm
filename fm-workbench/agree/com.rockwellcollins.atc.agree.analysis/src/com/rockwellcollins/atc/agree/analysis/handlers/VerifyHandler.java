@@ -44,9 +44,11 @@ import org.osate.ui.dialogs.Dialog;
 import com.rockwellcollins.atc.agree.agree.AgreePackage;
 import com.rockwellcollins.atc.agree.agree.AgreeSubclause;
 import com.rockwellcollins.atc.agree.analysis.Activator;
+import com.rockwellcollins.atc.agree.analysis.AgreeEmitterState;
 import com.rockwellcollins.atc.agree.analysis.AgreeEmitterUtilities;
 import com.rockwellcollins.atc.agree.analysis.AgreeException;
 import com.rockwellcollins.atc.agree.analysis.AgreeGenerator;
+import com.rockwellcollins.atc.agree.analysis.AgreeLogger;
 import com.rockwellcollins.atc.agree.analysis.preferences.PreferenceConstants;
 import com.rockwellcollins.atc.agree.analysis.preferences.PreferencesUtil;
 import com.rockwellcollins.atc.agree.analysis.views.AgreeResultsLinker;
@@ -104,8 +106,8 @@ public abstract class VerifyHandler extends AadlHandler {
                 result = wrapper;
             } else {
                 wrapper.addChild(createGuaranteeVerification(si));
-                wrapper.addChild(createAssumptionVerification(si));
-                wrapper.addChild(createConsistVerification(si));
+                //wrapper.addChild(createAssumptionVerification(si));
+                //wrapper.addChild(createConsistVerification(si));
                 result = wrapper;
             }
             showView(result, linker);
@@ -136,14 +138,14 @@ public abstract class VerifyHandler extends AadlHandler {
         if (tempResult != null) {
             result.addChild(tempResult);
         }
-        tempResult = createAssumptionVerification(ci);
-        if (tempResult != null) {
-            result.addChild(tempResult);
-        }
-        tempResult = createConsistVerification(ci);
-        if (tempResult != null) {
-            result.addChild(tempResult);
-        }
+//        tempResult = createAssumptionVerification(ci);
+//        if (tempResult != null) {
+//            result.addChild(tempResult);
+//        }
+//        tempResult = createConsistVerification(ci);
+//        if (tempResult != null) {
+//            result.addChild(tempResult);
+//        }
 
         ComponentImplementation compImpl = AgreeEmitterUtilities.getInstanceImplementation(ci);
         for (Subcomponent subComp : compImpl.getAllSubcomponents()) {
@@ -169,118 +171,123 @@ public abstract class VerifyHandler extends AadlHandler {
 
     private AnalysisResult createGuaranteeVerification(ComponentInstance ci) {
 
-        AgreeGenerator emitter = new AgreeGenerator(ci);
-        Program program = emitter.evaluate();
+        //AgreeGenerator emitter = new AgreeGenerator(ci);
+        //Program program = emitter.evaluate();
+    	
+    	AgreeEmitterState state = AgreeGenerator.generate(ci, null);
+    	Program program = AgreeGenerator.getLustre(state);
         if (program == null) {
             return null;
         }
 
-        List<String> properties = emitter.getGuarProps();
-        Node oldNode = program.getMainNode();
-        Node newNode = new Node(oldNode.location, oldNode.id, oldNode.inputs, oldNode.outputs,
-                oldNode.locals, oldNode.equations, properties, oldNode.assertions);
-
-        List<Node> nodes = new ArrayList<>();
-        for (Node node : program.nodes) {
-            if (node != oldNode)
-                nodes.add(node);
-        }
-        nodes.add(newNode);
-        program = new Program(program.types, program.constants, nodes);
-        Renaming renaming = emitter.getRenaming();
-        JKindResult result = new JKindResult("Contract Guarantees", properties, renaming);
+//        List<String> properties = emitter.getGuarProps();
+//        Node oldNode = program.getMainNode();
+//        Node newNode = new Node(oldNode.location, oldNode.id, oldNode.inputs, oldNode.outputs,
+//                oldNode.locals, oldNode.equations, properties, oldNode.assertions);
+//
+//        List<Node> nodes = new ArrayList<>();
+//        for (Node node : program.nodes) {
+//            if (node != oldNode)
+//                nodes.add(node);
+//        }
+//        nodes.add(newNode);
+//        program = new Program(program.types, program.constants, nodes);
+//        Renaming renaming = emitter.getRenaming();
+//        JKindResult result = new JKindResult("Contract Guarantees", properties, renaming);
+        List<String> properties = program.nodes.get(program.nodes.size()-1).properties;
+        JKindResult result = new JKindResult("Contract Guarantees", properties, state.renaming);
         queue.add(result);
 
         ComponentImplementation compImpl = AgreeEmitterUtilities.getInstanceImplementation(ci);
         linker.setProgram(result, program);
         linker.setComponent(result, compImpl);
         linker.setContract(result, getContract(compImpl));
-        linker.setLayout(result, emitter.getLayout());
-        linker.setReferenceMap(result, emitter.getReferenceMap());
-        linker.setLog(result, emitter.getLog());
+        linker.setLayout(result, state.layout);
+        linker.setReferenceMap(result, state.refMap);
+        linker.setLog(result, AgreeLogger.getLog());
 
         return result;
     }
 
-    private AnalysisResult createAssumptionVerification(ComponentInstance ci) {
-        // AgreeEmitter emitter = new AgreeEmitter(ci, modelParents, context);
-        // Program program = emitter.evaluate();
-
-        AgreeGenerator emitter = new AgreeGenerator(ci);
-        Program program = emitter.evaluate();
-        if (program == null) {
-            return null;
-        }
-
-        List<String> properties = emitter.getAssumeProps();
-        Node oldNode = program.getMainNode();
-        Node newNode = new Node(oldNode.location, oldNode.id, oldNode.inputs, oldNode.outputs,
-                oldNode.locals, oldNode.equations, properties, oldNode.assertions);
-
-        List<Node> nodes = new ArrayList<>();
-        for (Node node : program.nodes) {
-            if (node != oldNode)
-                nodes.add(node);
-        }
-        nodes.add(newNode);
-        program = new Program(program.types, program.constants, nodes);
-        Renaming renaming = emitter.getRenaming();
-        JKindResult result = new JKindResult("Contract Assumptions", properties, renaming);
-        queue.add(result);
-
-        ComponentImplementation compImpl = AgreeEmitterUtilities.getInstanceImplementation(ci);
-        linker.setProgram(result, program);
-        linker.setComponent(result, compImpl);
-        linker.setContract(result, getContract(compImpl));
-        linker.setLayout(result, emitter.getLayout());
-        linker.setReferenceMap(result, emitter.getReferenceMap());
-        linker.setLog(result, emitter.getLog());
-
-        return result;
-    }
-
-    private AnalysisResult createConsistVerification(ComponentInstance ci) {
-        // AgreeEmitter emitter = new AgreeEmitter(ci, modelParents, context);
-        // Program program = emitter.evaluate();
-
-        AgreeGenerator emitter = new AgreeGenerator(ci);
-        Program program = emitter.evaluate();
-        if (program == null) {
-            return null;
-        }
-
-        List<String> properties = emitter.getConsistProps();
-        Node oldNode = program.getMainNode();
-        Node newNode = new Node(oldNode.location, oldNode.id, oldNode.inputs, oldNode.outputs,
-                oldNode.locals, oldNode.equations, properties, oldNode.assertions);
-
-        List<Node> nodes = new ArrayList<>();
-        for (Node node : program.nodes) {
-            if (node != oldNode)
-                nodes.add(node);
-        }
-        nodes.add(newNode);
-        program = new Program(program.types, program.constants, nodes);
-        List<Boolean> reverseStatus = new ArrayList<>();
-        for (int i = 0; i < properties.size(); i++) {
-            reverseStatus.add(true);
-        }
-
-        Renaming renaming = emitter.getRenaming();
-        JKindResult result = new JKindResult("Contract Consistency", properties, reverseStatus,
-                renaming);
-        queue.add(result);
-
-        ComponentImplementation compImpl = AgreeEmitterUtilities.getInstanceImplementation(ci);
-        linker.setProgram(result, program);
-        linker.setComponent(result, compImpl);
-        linker.setContract(result, getContract(compImpl));
-        linker.setLayout(result, emitter.getLayout());
-        linker.setReferenceMap(result, emitter.getReferenceMap());
-        linker.setLog(result, emitter.getLog());
-
-        return result;
-    }
+//    private AnalysisResult createAssumptionVerification(ComponentInstance ci) {
+//        // AgreeEmitter emitter = new AgreeEmitter(ci, modelParents, context);
+//        // Program program = emitter.evaluate();
+//
+//        AgreeGenerator emitter = new AgreeGenerator(ci);
+//        Program program = emitter.evaluate();
+//        if (program == null) {
+//            return null;
+//        }
+//
+//        List<String> properties = emitter.getAssumeProps();
+//        Node oldNode = program.getMainNode();
+//        Node newNode = new Node(oldNode.location, oldNode.id, oldNode.inputs, oldNode.outputs,
+//                oldNode.locals, oldNode.equations, properties, oldNode.assertions);
+//
+//        List<Node> nodes = new ArrayList<>();
+//        for (Node node : program.nodes) {
+//            if (node != oldNode)
+//                nodes.add(node);
+//        }
+//        nodes.add(newNode);
+//        program = new Program(program.types, program.constants, nodes);
+//        Renaming renaming = emitter.getRenaming();
+//        JKindResult result = new JKindResult("Contract Assumptions", properties, renaming);
+//        queue.add(result);
+//
+//        ComponentImplementation compImpl = AgreeEmitterUtilities.getInstanceImplementation(ci);
+//        linker.setProgram(result, program);
+//        linker.setComponent(result, compImpl);
+//        linker.setContract(result, getContract(compImpl));
+//        linker.setLayout(result, emitter.getLayout());
+//        linker.setReferenceMap(result, emitter.getReferenceMap());
+//        linker.setLog(result, emitter.getLog());
+//
+//        return result;
+//    }
+//
+//    private AnalysisResult createConsistVerification(ComponentInstance ci) {
+//        // AgreeEmitter emitter = new AgreeEmitter(ci, modelParents, context);
+//        // Program program = emitter.evaluate();
+//
+//        AgreeGenerator emitter = new AgreeGenerator(ci);
+//        Program program = emitter.evaluate();
+//        if (program == null) {
+//            return null;
+//        }
+//
+//        List<String> properties = emitter.getConsistProps();
+//        Node oldNode = program.getMainNode();
+//        Node newNode = new Node(oldNode.location, oldNode.id, oldNode.inputs, oldNode.outputs,
+//                oldNode.locals, oldNode.equations, properties, oldNode.assertions);
+//
+//        List<Node> nodes = new ArrayList<>();
+//        for (Node node : program.nodes) {
+//            if (node != oldNode)
+//                nodes.add(node);
+//        }
+//        nodes.add(newNode);
+//        program = new Program(program.types, program.constants, nodes);
+//        List<Boolean> reverseStatus = new ArrayList<>();
+//        for (int i = 0; i < properties.size(); i++) {
+//            reverseStatus.add(true);
+//        }
+//
+//        Renaming renaming = emitter.getRenaming();
+//        JKindResult result = new JKindResult("Contract Consistency", properties, reverseStatus,
+//                renaming);
+//        queue.add(result);
+//
+//        ComponentImplementation compImpl = AgreeEmitterUtilities.getInstanceImplementation(ci);
+//        linker.setProgram(result, program);
+//        linker.setComponent(result, compImpl);
+//        linker.setContract(result, getContract(compImpl));
+//        linker.setLayout(result, emitter.getLayout());
+//        linker.setReferenceMap(result, emitter.getReferenceMap());
+//        linker.setLog(result, emitter.getLog());
+//
+//        return result;
+//    }
 
     private AgreeSubclause getContract(ComponentImplementation ci) {
         ComponentType ct = ci.getOwnedRealization().getImplemented();
