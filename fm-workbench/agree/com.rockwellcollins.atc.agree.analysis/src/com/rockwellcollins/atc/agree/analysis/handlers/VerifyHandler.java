@@ -89,7 +89,8 @@ public abstract class VerifyHandler extends AadlHandler {
             CompositeAnalysisResult wrapper = new CompositeAnalysisResult("");
             LinkedList<NamedElement> modelParents = new LinkedList<>();
 
-            SystemType sysType = si.getSystemImplementation().getType();
+//            SystemType sysType = si.getSystemImplementation().getType();
+            SystemType sysType = (SystemType) si.getComponentImplementation().getType();
             EList<AnnexSubclause> annexSubClauses = AnnexUtil.getAllAnnexSubclauses(sysType,
                     AgreePackage.eINSTANCE.getAgreeContractSubclause());
 

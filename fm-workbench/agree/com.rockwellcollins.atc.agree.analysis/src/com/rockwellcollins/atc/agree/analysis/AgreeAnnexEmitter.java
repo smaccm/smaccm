@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import jkind.lustre.BinaryExpr;
+import jkind.lustre.BinaryExpr; 
 import jkind.lustre.BinaryOp;
 import jkind.lustre.BoolExpr;
 import jkind.lustre.CondactExpr;
