@@ -84,12 +84,12 @@ public class AgreeGenerator {
         		new AgreeEmitterState(compInst, comp);
     	
     	FeatureUtils.recordFeatures(state);
-    	ConnectionUtils.recordConnections(state);
     	boolean result = doSwitchAgreeAnnex(state, compType); 
         if(!result){
         	throw new AgreeException("Could not find annex in component '"+compType.getName()+"'");
         }
         if(compImpl != null){
+        	ConnectionUtils.recordConnections(state);
         	doSwitchAgreeAnnex(state, compImpl);
 
         	//go through the component implementation and build a program for each subcomponent
