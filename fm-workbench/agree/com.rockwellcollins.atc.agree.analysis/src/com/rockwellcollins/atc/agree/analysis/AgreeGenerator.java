@@ -17,6 +17,10 @@ import jkind.lustre.NamedType;
 import jkind.lustre.Node;
 import jkind.lustre.NodeCallExpr;
 import jkind.lustre.Program;
+import jkind.lustre.RecordType;
+import jkind.lustre.TypeDef;
+import jkind.lustre.UnaryExpr;
+import jkind.lustre.UnaryOp;
 import jkind.lustre.VarDecl;
 import jkind.results.layout.Layout;
 
@@ -60,19 +64,33 @@ public class AgreeGenerator {
         Node subNode = nodeFromState(state);
     	
     	List<Node> nodes = new ArrayList<>(state.nodeDefExpressions);
-    	nodes.add(subNode);
-    	return new Program(nodes);
+    	
+    	List<Expr> assertions = new ArrayList<Expr>();
+    	if(subNode.outputs.size() != 1){
+    		throw new AgreeException("Something went wrong with node generation");
+    	}
+    	assertions.add(new IdExpr(subNode.outputs.get(0).id));
+    	
+    	Node mainNode = new Node(subNode.location, subNode.id, subNode.inputs, subNode.outputs,
+    			subNode.locals, subNode.equations, subNode.properties, assertions,
+    			subNode.assumptions, subNode.guarantees);
+    	
+    	nodes.add(mainNode);
+    	
+    	//have to convert the type expressions
+    	List<TypeDef> typeDefs = new ArrayList<>();
+    	for(RecordType type : state.typeExpressions){
+    		TypeDef typeDef = new TypeDef(type.id, type);
+    		typeDefs.add(typeDef);
+    	}
+    	
+    	return new Program(typeDefs, null, nodes);
     }
     
     public static Program getLustre(ComponentInstance compInst){
     	
     	AgreeEmitterState state = generate(compInst, null);
-    	Node subNode = nodeFromState(state);
-    	
-    	List<Node> nodes = new ArrayList<>(state.nodeDefExpressions);
-    	nodes.add(subNode);
-    	return new Program(nodes);
-    	
+    	return getLustre(state);
     }
     
     public static AgreeEmitterState generate(ComponentInstance compInst, Subcomponent comp){
@@ -86,8 +104,10 @@ public class AgreeGenerator {
     	FeatureUtils.recordFeatures(state);
     	boolean result = doSwitchAgreeAnnex(state, compType); 
         if(!result){
-        	throw new AgreeException("Could not find annex in component '"+compType.getName()+"'");
+        	//throw new AgreeException("Could not find annex in component '"+compType.getName()+"'");
+        	return null;
         }
+        
         if(compImpl != null){
         	ConnectionUtils.recordConnections(state);
         	doSwitchAgreeAnnex(state, compImpl);
@@ -97,8 +117,10 @@ public class AgreeGenerator {
         		ComponentInstance subCompInst = compInst.findSubcomponentInstance(subComp);
         		String subCompPrefix = subComp.getName()+"__";
         		AgreeEmitterState subState = generate(subCompInst, subComp);
-        		Node subNode = nodeFromState(subState);
-        		addSubcomponentNodeCall(subCompPrefix, state, subState, subNode);
+        		if(subState != null){
+        			Node subNode = nodeFromState(subState);
+        			addSubcomponentNodeCall(subCompPrefix, state, subState, subNode);
+        		}
         	}
         }
     	
@@ -109,10 +131,11 @@ public class AgreeGenerator {
 			AgreeEmitterState state, AgreeEmitterState subState, Node subNode) {
 		for(AgreeVarDecl output : subState.outputVars){
 			state.subcompOutputVars.add(new AgreeVarDecl(prefix+output.id, output.type));
+			state.outputVars.add(new AgreeVarDecl(prefix+output.id, output.type));
 		}
-		for(AgreeVarDecl output : subState.subcompOutputVars){
-			state.subcompOutputVars.add(new AgreeVarDecl(prefix+output.id, output.type));
-		}
+//		for(AgreeVarDecl output : subState.subcompOutputVars){
+//			state.subcompOutputVars.add(new AgreeVarDecl(prefix+output.id, output.type));
+//		}
 		for(AgreeVarDecl input : subState.inputVars){
 			state.inputVars.add(new AgreeVarDecl(prefix+input.id, input.type));
 		}
@@ -141,6 +164,7 @@ public class AgreeGenerator {
 		
 		NodeCallExpr nodeCall = new NodeCallExpr(subNode.id, callArgs);
 		state.assertExpressions.add(nodeCall);
+		state.typeExpressions.addAll(subState.typeExpressions);
 	}
     
     public static Node nodeFromState(AgreeEmitterState subState){
@@ -160,21 +184,32 @@ public class AgreeGenerator {
     	inputs.addAll(subState.inputVars);
     	inputs.addAll(subState.outputVars);
     	locals.addAll(subState.internalVars);
-    	IdExpr assertId = new IdExpr("_ASSERT");
-    	outputs.add(new VarDecl(assertId.id, NamedType.BOOL));
-    	
-    	//add all the assertions as the single output of the node
-    	Expr finalAssert = new BoolExpr(true);
-    	for(Expr assertExpr : subState.assertExpressions){
-    		finalAssert = new BinaryExpr(finalAssert, BinaryOp.AND, assertExpr);
-    	}
-    	Equation assertEq = new Equation(assertId, finalAssert);
-    	equations.add(assertEq);
     	
     	for(Equation guarEq : subState.guarExpressions){
     		guarantees.add(guarEq.expr);
     	}
     	assumptions.addAll(subState.assumpExpressions);
+    	equations.addAll(subState.eqExpressions);
+    	
+    	IdExpr assertId = new IdExpr("_ASSERT");
+    	outputs.add(new VarDecl(assertId.id, NamedType.BOOL));
+    	
+
+    	ComponentClassifier compClass = subState.curInst.getComponentClassifier();
+    	Expr finalAssert;
+    	//if this subcomponent is a component type (not an implementation)
+    	//the contract bottoms out here and we need to assert it
+    	if(compClass instanceof ComponentType){
+    		finalAssert = assertContract(locals, equations, assumptions, guarantees);	
+    	}else{
+    		finalAssert = new BoolExpr(true);
+    	}
+    	for(Expr assertExpr : subState.assertExpressions){
+    		finalAssert = new BinaryExpr(finalAssert, BinaryOp.AND, assertExpr);
+    	}
+    	
+    	Equation assertEq = new Equation(assertId, finalAssert);
+    	equations.add(assertEq);
     	
     	Node subNode = new Node(Location.NULL, nodeId, inputs, outputs, locals, equations,
     			null, null, assumptions, guarantees);
@@ -182,6 +217,45 @@ public class AgreeGenerator {
     	return subNode;
     	
     }
+
+	private static Expr assertContract(List<VarDecl> locals,
+			List<Equation> equations, List<Expr> assumptions,
+			List<Expr> guarantees) {
+		//the component has bottomed out so we should assert the contract
+		IdExpr assumpHistId = new IdExpr("_HIST_ASSUM");
+		VarDecl assumpHistVar = new VarDecl(assumpHistId.id, NamedType.BOOL);
+		IdExpr assumpId = new IdExpr("_ASSUM");
+		VarDecl assumpVar = new VarDecl(assumpId.id, NamedType.BOOL);
+		locals.add(assumpHistVar);
+		locals.add(assumpVar);
+		
+		Expr assumpExpr = new BoolExpr(true);
+		for(Expr assum : assumptions){
+			assumpExpr = new BinaryExpr(assumpExpr, BinaryOp.AND, assum);
+		}
+		Equation assumEq = new Equation(assumpId, assumpExpr);
+		equations.add(assumEq);
+		
+		Expr assumpHistExpr = new UnaryExpr(UnaryOp.PRE, assumpHistId);
+		assumpHistExpr = new BinaryExpr(assumpHistExpr, BinaryOp.AND, assumpId);
+		assumpHistExpr = new BinaryExpr(assumpId, BinaryOp.ARROW, assumpHistExpr);
+		Equation assumpHistEq = new Equation(assumpHistId, assumpHistExpr);
+		equations.add(assumpHistEq);
+		
+		IdExpr guarId = new IdExpr("_GUAR");
+		VarDecl guarVar = new VarDecl(guarId.id, NamedType.BOOL);
+		locals.add(guarVar);
+		
+		Expr guarExpr = new BoolExpr(true);
+		for(Expr guar : guarantees){
+			guarExpr = new BinaryExpr(guarExpr, BinaryOp.AND, guar);
+		}
+		
+		Equation guarEq = new Equation(guarId, guarExpr);
+		equations.add(guarEq);
+		
+		return new BinaryExpr(assumpHistId, BinaryOp.IMPLIES, guarId);
+	}
     
 //    
 //    
