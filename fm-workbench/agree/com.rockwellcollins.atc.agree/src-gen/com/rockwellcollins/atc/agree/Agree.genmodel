@@ -5,8 +5,8 @@
     forceOverwrite="true" modelName="Agree" updateClasspath="false" rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container"
     complianceLevel="5.0" copyrightFields="false" editPluginID="com.rockwellcollins.atc.agree.edit"
     editorPluginID="com.rockwellcollins.atc.agree.editor" runtimeVersion="2.10" usedGenPackages="platform:/resource/org.eclipse.emf.ecore/model/Ecore.genmodel#//ecore platform:/resource/org.osate.aadl2/model/aadl2.genmodel#//aadl2">
-  <genPackages prefix="Agree" basePackage="com.rockwellcollins.atc.agree" resource="XML"
-      disposableProviderFactory="true" ecorePackage="Agree.ecore#/">
+  <genPackages prefix="Agree" basePackage="com.rockwellcollins.atc.agree" disposableProviderFactory="true"
+      ecorePackage="Agree.ecore#/">
     <genClasses ecoreClass="Agree.ecore#//AgreeLibrary"/>
     <genClasses ecoreClass="Agree.ecore#//AgreeSubclause"/>
     <genClasses ecoreClass="Agree.ecore#//Contract"/>

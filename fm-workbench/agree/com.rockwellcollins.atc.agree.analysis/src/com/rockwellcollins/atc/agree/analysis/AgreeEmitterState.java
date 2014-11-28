@@ -89,10 +89,9 @@ public class AgreeEmitterState  extends AgreeSwitch<Expr> {
     public final List<Expr> assumpExpressions = new ArrayList<>();
     public final List<Equation> guarExpressions = new ArrayList<>();
     public final List<Expr> assertExpressions = new ArrayList<>();
-    public final List<Equation> propExpressions = new ArrayList<>();
     public final List<Equation> eqExpressions = new ArrayList<>();
     public final List<Equation> constExpressions = new ArrayList<>();
-    public final List<Node> nodeDefExpressions = new ArrayList<>();
+    public final Set<Node> nodeDefExpressions = new HashSet<>();
     public final List<Equation> connExpressions = new ArrayList<>();
 	public final List<Expr> initialExpressions = new ArrayList<>();
 
@@ -130,8 +129,8 @@ public class AgreeEmitterState  extends AgreeSwitch<Expr> {
     public final Map<FeatureInstance, List<AgreeFeature>> featInstToAgreeFeatMap = new HashMap<>();
     public final Set<String> connLHS = new HashSet<>();
     
-    public final AgreeRenaming renaming = new AgreeRenaming("", null);
-    public final Layout layout = new AgreeLayout();
+    public final AgreeRenaming renaming = new AgreeRenaming();
+    public final AgreeLayout layout = new AgreeLayout();
 
     
     public AgreeEmitterState(ComponentInstance compInst, Subcomponent subComp){
@@ -255,7 +254,7 @@ public class AgreeEmitterState  extends AgreeSwitch<Expr> {
 
         IdExpr id = new IdExpr(varDecl.id);
         Equation eq = new Equation(id, expr);
-        propExpressions.add(eq);
+        eqExpressions.add(eq);
         return expr;
         
     }

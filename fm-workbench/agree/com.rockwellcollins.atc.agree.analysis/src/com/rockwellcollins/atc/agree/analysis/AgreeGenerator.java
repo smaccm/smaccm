@@ -84,6 +84,12 @@ public class AgreeGenerator {
     		typeDefs.add(typeDef);
     	}
     	
+    	//add the guarantees to the renaming
+    	int i = 0;
+    	for(Equation eq : state.guarExpressions){
+    		state.renaming.addExplicitRename("~~GUARANTEE"+i++, eq.lhs.get(0).id);
+    	}
+    	
     	return new Program(typeDefs, null, nodes);
     }
     
@@ -129,19 +135,24 @@ public class AgreeGenerator {
 
 	private static void addSubcomponentNodeCall(final String prefix,
 			AgreeEmitterState state, AgreeEmitterState subState, Node subNode) {
+		
+		for(String category : subState.layout.getCategories()){
+			state.layout.addCategory(prefix+category);
+		}
+		
 		for(AgreeVarDecl output : subState.outputVars){
 			state.subcompOutputVars.add(new AgreeVarDecl(prefix+output.id, output.type));
 			state.outputVars.add(new AgreeVarDecl(prefix+output.id, output.type));
+			state.layout.addElement(prefix+subState.layout.getCategory(output.id), prefix+output.id, AgreeLayout.SigType.OUTPUT);
 		}
 //		for(AgreeVarDecl output : subState.subcompOutputVars){
 //			state.subcompOutputVars.add(new AgreeVarDecl(prefix+output.id, output.type));
 //		}
 		for(AgreeVarDecl input : subState.inputVars){
 			state.inputVars.add(new AgreeVarDecl(prefix+input.id, input.type));
+			state.layout.addElement(prefix+subState.layout.getCategory(input.id), prefix+input.id, AgreeLayout.SigType.INPUT);
 		}
-		for(Node node : subState.nodeDefExpressions){
-			state.nodeDefExpressions.add(node);
-		}
+		state.nodeDefExpressions.addAll(subState.nodeDefExpressions);
 		//
 		IdRewriter prefixRewrite = new IdRewriter() {
 			public IdExpr rewrite(IdExpr id) {
