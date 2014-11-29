@@ -1,6 +1,8 @@
 package com.rockwellcollins.atc.agree.analysis;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import jkind.api.results.Renaming;
@@ -8,7 +10,16 @@ import jkind.api.results.Renaming;
 public class AgreeRenaming extends Renaming {
 	
 	private String prefix;
-	private Map<String, String> explicitRenames = new HashMap<String, String>();
+	private Map<String, String> explicitRenames = new HashMap<>();
+	private List<String> blackList = new ArrayList<>();
+	
+	public AgreeRenaming(){
+		blackList.add("__ASSUM");
+		blackList.add("__ASSERT");
+		blackList.add("__GUAR");
+		blackList.add("~~GUARANTEE");
+		blackList.add("~~ASSUME");
+	}
 
 	public void addExplicitRename(String oldName, String newName){
 		this.explicitRenames.put(oldName, newName);
@@ -21,52 +32,21 @@ public class AgreeRenaming extends Renaming {
 		if(newName != null){
 			return newName;
 		}
-		return original;
 		
-		//return original;
-		
-		
-//		if(original.contains("~")){
-//			return null;
-//		}
-//		
-//		String renamed = explicitRenames.get(original);
-//		
-//		if(renamed != null){
-//			return renamed;
-//		}
-//		
-//		if(original.contains("__EVENT_")){
-//			original = original.replace("__EVENT_", "event(");
-//			original = original + ")";
-//		}
-//		
-//		renamed = original.replace(prefix, "");
-//		renamed = renamed.replaceAll("^_*", "");
-//		renamed = renamed.replace("__", ".");
-//		return renamed;
-	}
-
-	public String renameKeepPrefix(String original) {
-		
-		if(original.contains("~")){
-			return null;
+		//check if it contains a blacklisted string
+		for(String black : blackList){
+			if(original.contains(black)){
+				return null;
+			}
 		}
 		
-		String renamed = explicitRenames.get(original);
+		//magic to remove the prefix
+		newName = original.replace("__", ".");
+		newName = newName.replaceFirst("_Node[^\\.]*\\.", "");
+		newName = newName.replaceAll("~[0-9]*", "");
 		
-		if(renamed != null){
-			return renamed;
-		}
+		return newName;
 		
-		if(original.contains("__EVENT_")){
-			original = original.replace("__EVENT_", "event(");
-			original = original + ")";
-		}
-		
-		renamed = original.replaceAll("^_*", "");
-		renamed = renamed.replace("__", ".");
-		return renamed;
 	}
 	
 }

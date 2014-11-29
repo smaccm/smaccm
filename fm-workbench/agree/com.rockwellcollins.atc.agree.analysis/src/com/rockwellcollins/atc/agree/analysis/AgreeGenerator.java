@@ -90,6 +90,9 @@ public class AgreeGenerator {
     		state.renaming.addExplicitRename("~~GUARANTEE"+i++, eq.lhs.get(0).id);
     	}
     	
+    	//also add a new top level category to the layout
+    	state.layout.addCategory(state.curInst.getName());
+    	
     	return new Program(typeDefs, null, nodes);
     }
     
@@ -136,21 +139,24 @@ public class AgreeGenerator {
 	private static void addSubcomponentNodeCall(final String prefix,
 			AgreeEmitterState state, AgreeEmitterState subState, Node subNode) {
 		
-		for(String category : subState.layout.getCategories()){
-			state.layout.addCategory(prefix+category);
+		if(subState.layout.getCategories().size() == 0){
+			state.layout.addCategory(prefix.replace("__",""));
+		}else{
+			for(String category : subState.layout.getCategories()){
+				String newCat = prefix+category;
+				newCat = newCat.replace("__", ".");
+				state.layout.addCategory(newCat);
+			}
 		}
 		
 		for(AgreeVarDecl output : subState.outputVars){
-			state.subcompOutputVars.add(new AgreeVarDecl(prefix+output.id, output.type));
-			state.outputVars.add(new AgreeVarDecl(prefix+output.id, output.type));
-			state.layout.addElement(prefix+subState.layout.getCategory(output.id), prefix+output.id, AgreeLayout.SigType.OUTPUT);
+			String outputStr = prefix+output.id;
+			state.subcompOutputVars.add(new AgreeVarDecl(outputStr, output.type));
+			state.outputVars.add(new AgreeVarDecl(outputStr, output.type));
 		}
-//		for(AgreeVarDecl output : subState.subcompOutputVars){
-//			state.subcompOutputVars.add(new AgreeVarDecl(prefix+output.id, output.type));
-//		}
+
 		for(AgreeVarDecl input : subState.inputVars){
 			state.inputVars.add(new AgreeVarDecl(prefix+input.id, input.type));
-			state.layout.addElement(prefix+subState.layout.getCategory(input.id), prefix+input.id, AgreeLayout.SigType.INPUT);
 		}
 		state.nodeDefExpressions.addAll(subState.nodeDefExpressions);
 		//
@@ -202,7 +208,7 @@ public class AgreeGenerator {
     	assumptions.addAll(subState.assumpExpressions);
     	equations.addAll(subState.eqExpressions);
     	
-    	IdExpr assertId = new IdExpr("_ASSERT");
+    	IdExpr assertId = new IdExpr("__ASSERT");
     	outputs.add(new VarDecl(assertId.id, NamedType.BOOL));
     	
 
@@ -233,9 +239,9 @@ public class AgreeGenerator {
 			List<Equation> equations, List<Expr> assumptions,
 			List<Expr> guarantees) {
 		//the component has bottomed out so we should assert the contract
-		IdExpr assumpHistId = new IdExpr("_HIST_ASSUM");
+		IdExpr assumpHistId = new IdExpr("__HIST__ASSUM");
 		VarDecl assumpHistVar = new VarDecl(assumpHistId.id, NamedType.BOOL);
-		IdExpr assumpId = new IdExpr("_ASSUM");
+		IdExpr assumpId = new IdExpr("__ASSUM");
 		VarDecl assumpVar = new VarDecl(assumpId.id, NamedType.BOOL);
 		locals.add(assumpHistVar);
 		locals.add(assumpVar);
@@ -253,7 +259,7 @@ public class AgreeGenerator {
 		Equation assumpHistEq = new Equation(assumpHistId, assumpHistExpr);
 		equations.add(assumpHistEq);
 		
-		IdExpr guarId = new IdExpr("_GUAR");
+		IdExpr guarId = new IdExpr("__GUAR");
 		VarDecl guarVar = new VarDecl(guarId.id, NamedType.BOOL);
 		locals.add(guarVar);
 		

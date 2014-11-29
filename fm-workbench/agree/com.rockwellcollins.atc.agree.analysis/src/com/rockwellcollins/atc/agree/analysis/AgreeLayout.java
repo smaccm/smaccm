@@ -14,10 +14,6 @@ public class AgreeLayout implements Layout {
 	private Map<String, List<String>> compOutputSignals = new HashMap<>();
 	public enum SigType{INPUT, OUTPUT}
 	
-	public AgreeLayout(){
-		categories.add("main");
-	}
-	
 	public void addCategory(String category) {
 		categories.add(category);
 	}
@@ -48,21 +44,14 @@ public class AgreeLayout implements Layout {
 
 	@Override
 	public String getCategory(String signal) {
-		return categories.get(0);
-//		String retCat = signalCategories.get(signal);
-//		if(retCat == null){
-//			while(retCat == null && signal.contains(".")){
-//				String[] tokens = signal.split("\\.");
-//				String delim = "";
-//				signal = "";
-//				for(int i = 0; i < tokens.length-1; i++){
-//					signal += delim + tokens[i];
-//					delim = ".";
-//				}
-//				retCat = signalCategories.get(signal);
-//			}
-//		}
-//		return retCat;
+		//TODO this could give false results 
+		for(String cat : categories){
+			if(signal.contains(cat)){
+				return cat;
+			}
+		}
+		return categories.get(categories.size()-1);
+
 	}
 	
 	public List<String> getAllInputsFromCategory(String category){
