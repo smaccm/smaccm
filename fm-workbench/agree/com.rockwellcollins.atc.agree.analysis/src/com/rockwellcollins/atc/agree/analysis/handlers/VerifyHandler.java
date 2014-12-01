@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
+import java.util.Map.Entry;
 
 import jkind.JKindException;
 import jkind.SolverOption;
@@ -23,6 +24,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.handlers.IHandlerActivation;
@@ -175,6 +177,7 @@ public abstract class VerifyHandler extends AadlHandler {
         //Program program = emitter.evaluate();
     	
     	AgreeEmitterState state = AgreeGenerator.generate(ci, null);
+    	
     	Program program = AgreeGenerator.getLustre(state);
         if (program == null) {
             return null;

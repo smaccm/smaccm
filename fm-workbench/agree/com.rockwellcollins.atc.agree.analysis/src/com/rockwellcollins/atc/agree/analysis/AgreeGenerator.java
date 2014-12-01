@@ -1,14 +1,19 @@
 package com.rockwellcollins.atc.agree.analysis;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import jkind.api.results.MapRenaming;
 import jkind.api.results.Renaming;
 import jkind.lustre.BinaryExpr;
 import jkind.lustre.BinaryOp;
 import jkind.lustre.BoolExpr;
+import jkind.lustre.CondactExpr;
 import jkind.lustre.Equation;
 import jkind.lustre.Expr;
 import jkind.lustre.IdExpr;
@@ -113,7 +118,8 @@ public class AgreeGenerator {
     	FeatureUtils.recordFeatures(state);
     	boolean result = doSwitchAgreeAnnex(state, compType); 
         if(!result){
-        	//throw new AgreeException("Could not find annex in component '"+compType.getName()+"'");
+        	//there is no annex in this component so we do not care
+        	//TODO dig into components to check for annexes
         	return null;
         }
         
@@ -132,6 +138,18 @@ public class AgreeGenerator {
         		}
         	}
         }
+        
+        //handle any quasi-synchronous constraints
+        if(state.calendar.size() != 0){
+        	throw new AgreeException("oops");
+        }else if(state.synchrony != 0){
+        	throw new AgreeException("oops");
+        }else{
+        	for(AgreeVarDecl clockVar : state.clockVars){
+        		state.assertExpressions.add(new IdExpr(clockVar.id));
+        	}
+        }
+        
     	
     	return state;
     }
@@ -139,6 +157,19 @@ public class AgreeGenerator {
 	private static void addSubcomponentNodeCall(final String prefix,
 			AgreeEmitterState state, AgreeEmitterState subState, Node subNode) {
 		
+		//add the input and output variables
+		for(AgreeVarDecl output : subState.outputVars){
+			String outputStr = prefix+output.id;
+			AgreeVarDecl outputVar = new AgreeVarDecl(outputStr, output.type);
+			state.subcompOutputVars.add(outputVar);
+			state.outputVars.add(outputVar);
+		}
+
+		for(AgreeVarDecl input : subState.inputVars){
+			state.inputVars.add(new AgreeVarDecl(prefix+input.id, input.type));
+		}
+		
+		//add the all of the sub categories
 		if(subState.layout.getCategories().size() == 0){
 			state.layout.addCategory(prefix.replace("__",""));
 		}else{
@@ -149,17 +180,11 @@ public class AgreeGenerator {
 			}
 		}
 		
-		for(AgreeVarDecl output : subState.outputVars){
-			String outputStr = prefix+output.id;
-			state.subcompOutputVars.add(new AgreeVarDecl(outputStr, output.type));
-			state.outputVars.add(new AgreeVarDecl(outputStr, output.type));
-		}
-
-		for(AgreeVarDecl input : subState.inputVars){
-			state.inputVars.add(new AgreeVarDecl(prefix+input.id, input.type));
-		}
+		//add all the nodes defined by substates
 		state.nodeDefExpressions.addAll(subState.nodeDefExpressions);
-		//
+		
+		//re-write the "intially" expression to have the ids in
+		//the namespace of the parent
 		IdRewriter prefixRewrite = new IdRewriter() {
 			public IdExpr rewrite(IdExpr id) {
 				return new IdExpr(prefix + id.id);
@@ -179,9 +204,27 @@ public class AgreeGenerator {
 			callArgs.add(new IdExpr(prefix+input.id));
 		}
 		
+		//just assert that the assertion is true initially in the condact expression
+		IdExpr clockId = new IdExpr(state.clockIDPrefix+subState.curComp.getName());
+		//the clockId may or may not already be a part of the inputs
+		AgreeVarDecl clockVar = new AgreeVarDecl(clockId.id, NamedType.BOOL);
+		state.inputVars.add(clockVar);
+		state.clockVars.add(clockVar);
+		
+		//make the assertion var true initially
+		List<Expr> args = new ArrayList<>();
+		args.add(new BoolExpr(true));
+		
 		NodeCallExpr nodeCall = new NodeCallExpr(subNode.id, callArgs);
-		state.assertExpressions.add(nodeCall);
+		CondactExpr condactCall = new CondactExpr(clockId, nodeCall, args);
+		
+		state.assertExpressions.add(condactCall);
 		state.typeExpressions.addAll(subState.typeExpressions);
+		
+		for(Entry<String, EObject> entry : subState.refMap.entrySet()){
+			String newName = prefix+entry.getKey();
+			state.refMap.put(newName, entry.getValue());
+		}
 	}
     
     public static Node nodeFromState(AgreeEmitterState subState){
@@ -274,107 +317,4 @@ public class AgreeGenerator {
 		return new BinaryExpr(assumpHistId, BinaryOp.IMPLIES, guarId);
 	}
     
-//    
-//    
-//    
-//    
-//    public Program evaluate(){
-//        
-//        ComponentImplementation compImpl = AgreeEmitterUtilities.getInstanceImplementation(compInst);
-//        ComponentType ct = AgreeEmitterUtilities.getInstanceType(compInst);
-//        AgreeLayout layout = new AgreeLayout();
-//        String topCategory = compInst.getName();
-//        
-//        AgreeEmitterState state = new AgreeEmitterState(topCategory + dotChar, topCategory + dotChar,
-//        		layout, topCategory, compInst, null);
-//        this.topState = state;
-//        AgreeAnnexEmitter emitter = new AgreeAnnexEmitter();
-//        this.topEmitter = emitter;
-//                
-//        boolean foundAnnex = false;
-//        for (AnnexSubclause annex : AnnexUtil.getAllAnnexSubclauses(compImpl, AgreePackage.eINSTANCE.getAgreeContractSubclause())) {
-//            if (annex instanceof AgreeContractSubclause) {
-//                state.doSwitch(annex);
-//                foundAnnex = true;
-//                break;
-//            }
-//        }
-//        
-//        for (AnnexSubclause annex : AnnexUtil.getAllAnnexSubclauses(ct, AgreePackage.eINSTANCE.getAgreeContractSubclause())) {
-//            if (annex instanceof AgreeContractSubclause) {
-//                state.doSwitch(annex);
-//                foundAnnex = true;
-//                break;
-//            }
-//        }
-//        
-//        List<AgreeEmitterState> subStates = new ArrayList<>();
-//        for(Subcomponent subComp : compImpl.getAllSubcomponents()){
-//        	//don't check data subcomponents
-//        	if(subComp instanceof DataSubcomponent
-//        			|| subComp instanceof DataSubcomponentType
-//        			|| subComp instanceof BusSubcomponent){
-//        		continue;
-//        	}
-//        	
-//        	String category;
-//        	boolean foundSubAnnex = false;
-//            ComponentInstance subCompInst = compInst.findSubcomponentInstance(subComp);
-//            ComponentType subCt = AgreeEmitterUtilities.getInstanceType(subCompInst);
-//            ComponentImplementation subCompImpl = AgreeEmitterUtilities.getInstanceImplementation(subCompInst);
-//            category = subCompInst.getQualifiedName();
-//            
-//            AgreeEmitterState subState = new AgreeEmitterState(topCategory + dotChar, topCategory + dotChar + subComp.getName() + dotChar,
-//            		layout, category, subCompInst, subComp);
-//
-//            //special code for lifting
-//            if(subCompImpl != null){
-//                for (AnnexSubclause annex : AnnexUtil.getAllAnnexSubclauses(subCompImpl, AgreePackage.eINSTANCE.getAgreeContractSubclause())) {
-//                    if (annex instanceof AgreeContractSubclause) {
-//                    	Contract contract = ((AgreeContractSubclause) annex).getContract();
-//                    	if(contract instanceof AgreeContract){
-//                    		for(SpecStatement spec :  ((AgreeContract) contract).getSpecs()){
-//                    			if(spec instanceof LiftStatement){
-//                    				NestedDotID subSubID = ((LiftStatement) spec).getSubcomp();
-//            						Subcomponent subSubComp = (Subcomponent) subSubID.getBase();
-//                    				emitter.doLift(subSubComp, subState);
-//                    			}else if(spec instanceof LemmaStatement){//TODO might not be compositional
-//                    				subState.doSwitch(spec);
-//                    			}else if(spec instanceof EqStatement){//TODO might not be compositional
-//                    				subState.doSwitch(spec);
-//                    			}
-//                    		}
-//                    	}
-//                        foundSubAnnex = foundAnnex = true;
-//                    }
-//                    break;
-//                }
-//            }
-//
-//            for (AnnexSubclause annex : AnnexUtil.getAllAnnexSubclauses(subCt, AgreePackage.eINSTANCE.getAgreeContractSubclause())) {
-//                if (annex instanceof AgreeContractSubclause) {
-//                    subState.doSwitch(annex);
-//                    foundSubAnnex = foundAnnex = true;
-//                    break;
-//                }
-//            }
-//
-//            if(foundSubAnnex){
-//            	subStates.add(subState);
-//            }
-//
-//        }
-//        if(!foundAnnex){
-//        	return null;
-//        }
-//        
-//        return emitter.getLustreWithCondacts(state, subStates);
-//
-//    }
-//
-//    public Map<String, EObject> getReferenceMap() {
-//        return topState.refMap;
-//    }
-
-
 }

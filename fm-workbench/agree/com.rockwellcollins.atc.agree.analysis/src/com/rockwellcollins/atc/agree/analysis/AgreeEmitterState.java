@@ -108,14 +108,14 @@ public class AgreeEmitterState  extends AgreeSwitch<Expr> {
     public final Set<AgreeVarDecl> internalVars = new HashSet<>();
     public final Set<AgreeVarDecl> outputVars = new HashSet<>();
     public final Set<AgreeVarDecl> subcompOutputVars = new HashSet<>();
-    
+	public final Set<AgreeVarDecl> clockVars = new HashSet<>();
 
     public int synchrony = 0;
-    private List<IdExpr> calendar = new ArrayList<IdExpr>();
+    public List<IdExpr> calendar = new ArrayList<IdExpr>();
     public boolean simultaneity = true;
 	public boolean connectionExpressionsSet = false;
 
-    private final String clockIDPrefix = "__CLOCK_";
+    public final String clockIDPrefix = "__CLOCK_";
     public final String eventPrefix = "__EVENT_";
     
     //the current implementation
@@ -131,7 +131,6 @@ public class AgreeEmitterState  extends AgreeSwitch<Expr> {
     
     public final AgreeRenaming renaming = new AgreeRenaming();
     public final AgreeLayout layout = new AgreeLayout();
-
     
     public AgreeEmitterState(ComponentInstance compInst, Subcomponent subComp){
     	this.curInst = compInst;
