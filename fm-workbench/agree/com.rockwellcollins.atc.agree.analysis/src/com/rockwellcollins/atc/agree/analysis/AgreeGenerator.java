@@ -75,7 +75,7 @@ public class AgreeGenerator {
     		throw new AgreeException("Something went wrong with node generation");
     	}
     	assertions.add(new IdExpr(subNode.outputs.get(0).id));
-    	
+    	    	
     	Node mainNode = new Node(subNode.location, subNode.id, subNode.inputs, subNode.outputs,
     			subNode.locals, subNode.equations, subNode.properties, assertions,
     			subNode.assumptions, subNode.guarantees);
@@ -140,49 +140,119 @@ public class AgreeGenerator {
         }
         
         //handle any quasi-synchronous constraints
-        if(state.calendar.size() != 0){
-        	throw new AgreeException("oops");
-        }else if(state.synchrony != 0){
-        	throw new AgreeException("oops");
-        }else{
-        	for(AgreeVarDecl clockVar : state.clockVars){
-        		state.assertExpressions.add(new IdExpr(clockVar.id));
-        	}
-        }
-        
+        addQSConstraints(state);
     	
     	return state;
     }
 
+	private static void addQSConstraints(AgreeEmitterState state) {
+    	String dfaNodeName = "__DFA_NODE_"+state.curInst.getComponentInstancePath();
+    	dfaNodeName = dfaNodeName.replace(".", "__");
+    	String calenNodeName = "__CALENDAR_NODE_"+state.curInst.getInstanceObjectPath();
+    	calenNodeName = calenNodeName.replace(".", "__");
+
+		if(state.calendar.size() != 0){
+        	List<Expr> clockIds = new ArrayList<>();
+        	for(AgreeVarDecl clockVar : state.clockVars){
+        		clockIds.add(new IdExpr(clockVar.id));
+        	}
+        	
+        	Node calNode = AgreeCalendarUtils.getExplicitCalendarNode(calenNodeName, state.calendar, clockIds);
+        	state.nodeDefExpressions.add(calNode);
+        	state.assertExpressions.add(new NodeCallExpr(calNode.id, clockIds));
+        	
+        }else if(state.synchrony != 0){
+        	List<Expr> clockIds = new ArrayList<>();
+        	for(AgreeVarDecl clockVar : state.clockVars){
+        		clockIds.add(new IdExpr(clockVar.id));
+        	}
+        	Node dfaNode = AgreeCalendarUtils.getDFANode(
+        			dfaNodeName, state.synchrony);
+        	Node calNode = AgreeCalendarUtils.getCalendarNode(
+        			calenNodeName, dfaNode.id, clockIds.size());
+        	state.nodeDefExpressions.add(dfaNode);
+        	state.nodeDefExpressions.add(calNode);
+        	state.assertExpressions.add(new NodeCallExpr(calNode.id, clockIds));
+        }else{
+        	for(AgreeVarDecl clockVar : state.clockVars){
+        		state.assertExpressions.add(new IdExpr(clockVar.id));
+        	}
+        }		
+		
+	}
+
 	private static void addSubcomponentNodeCall(final String prefix,
 			AgreeEmitterState state, AgreeEmitterState subState, Node subNode) {
 		
-		//add the input and output variables
-		for(AgreeVarDecl output : subState.outputVars){
-			String outputStr = prefix+output.id;
-			AgreeVarDecl outputVar = new AgreeVarDecl(outputStr, output.type);
-			state.subcompOutputVars.add(outputVar);
-			state.outputVars.add(outputVar);
-		}
-
-		for(AgreeVarDecl input : subState.inputVars){
-			state.inputVars.add(new AgreeVarDecl(prefix+input.id, input.type));
-		}
+		//get the id for the subcomponent clock
+		IdExpr clockId = addSubcompClock(state, subState);
+		
+		//add the and output variables and hold equations
+		//create the hold equation for subcomponent outputs
+		addOutputsAndHolds(prefix, state, subState, clockId);
+		
+		//add the input variables
+		addInputs(prefix, state, subState);
 		
 		//add the all of the sub categories
-		if(subState.layout.getCategories().size() == 0){
-			state.layout.addCategory(prefix.replace("__",""));
-		}else{
-			for(String category : subState.layout.getCategories()){
-				String newCat = prefix+category;
-				newCat = newCat.replace("__", ".");
-				state.layout.addCategory(newCat);
-			}
-		}
+		addCategories(prefix, state, subState);
 		
 		//add all the nodes defined by substates
 		state.nodeDefExpressions.addAll(subState.nodeDefExpressions);
 		
+		//add all the "initially" expressions
+		addInitialConstraints(prefix, state, subState, clockId);
+		
+		//add the call to the subcomponent node and wrap it in a condact
+		addNodeAndCondactCall(prefix, state, subState, subNode, clockId);
+		
+		//add subcomponent variable references (for cex output)
+		addReferences(prefix, state, subState);
+	}
+
+	private static IdExpr addSubcompClock(AgreeEmitterState state,
+			AgreeEmitterState subState) {
+		IdExpr clockId = new IdExpr(state.clockIDPrefix+subState.curComp.getName());
+		//the clockId may or may not already be a part of the inputs
+		AgreeVarDecl clockVar = new AgreeVarDecl(clockId.id, NamedType.BOOL);
+		state.inputVars.add(clockVar);
+		state.clockVars.add(clockVar);
+		return clockId;
+	}
+
+	private static void addReferences(final String prefix,
+			AgreeEmitterState state, AgreeEmitterState subState) {
+		for(Entry<String, EObject> entry : subState.refMap.entrySet()){
+			String newName = prefix+entry.getKey();
+			state.refMap.put(newName, entry.getValue());
+		}
+	}
+
+	private static void addNodeAndCondactCall(final String prefix,
+			AgreeEmitterState state, AgreeEmitterState subState, Node subNode,
+			IdExpr clockId) {
+		
+		//create the call to the node and add it to the assertions
+		List<Expr> callArgs = new ArrayList<>();
+		for(VarDecl input : subNode.inputs){
+			callArgs.add(new IdExpr(prefix+input.id));
+		}
+		
+		//just assert that the assertion is true initially in the condact expression
+		List<Expr> args = new ArrayList<>();
+		args.add(new BoolExpr(true));
+		
+		NodeCallExpr nodeCall = new NodeCallExpr(subNode.id, callArgs);
+		CondactExpr condactCall = new CondactExpr(clockId, nodeCall, args);
+		
+		state.assertExpressions.add(condactCall);
+		state.typeExpressions.addAll(subState.typeExpressions);
+		state.nodeDefExpressions.add(subNode);
+
+	}
+
+	private static void addInitialConstraints(final String prefix,
+			AgreeEmitterState state, AgreeEmitterState subState, IdExpr clockId) {
 		//re-write the "intially" expression to have the ids in
 		//the namespace of the parent
 		IdRewriter prefixRewrite = new IdRewriter() {
@@ -192,46 +262,67 @@ public class AgreeGenerator {
 		};
 		IdRewriteVisitor initialExprRewriter = new IdRewriteVisitor(prefixRewrite);
 		
-		for(Expr initialExpr : subState.initialExpressions){
-			state.initialExpressions.add(initialExpr.accept(initialExprRewriter));
+		for(Expr subInitExpr : subState.initialExpressions){
+			Expr newInitExpr = subInitExpr.accept(initialExprRewriter);
+			AgreeVarDecl initVar = new AgreeVarDecl("__INITIALIZED_"+subState.curComp.getName(), NamedType.BOOL);
+			IdExpr initId = new IdExpr(initVar.id);
+			Expr initializedExpr = new UnaryExpr(UnaryOp.PRE, initId);
+			initializedExpr = new BinaryExpr(clockId, BinaryOp.OR, initializedExpr);
+			initializedExpr = new BinaryExpr(clockId, BinaryOp.ARROW, initializedExpr);
+			Equation initializedEq = new Equation(initId, initializedExpr);
+			
+			Expr notInitialzedConstraint = new UnaryExpr(UnaryOp.NOT, initId);
+			notInitialzedConstraint = new BinaryExpr(notInitialzedConstraint, BinaryOp.IMPLIES, newInitExpr);
+			
+			state.internalVars.add(initVar);
+			state.eqExpressions.add(initializedEq);
+			state.assertExpressions.add(notInitialzedConstraint);
+		}
+	}
+
+	private static void addCategories(final String prefix,
+			AgreeEmitterState state, AgreeEmitterState subState) {
+		for(String category : subState.layout.getCategories()){
+			String newCat = prefix+category;
+			newCat = newCat.replace("__", ".");
+			state.layout.addCategory(newCat);
+		}
+		state.layout.addCategory(prefix.replace("__",""));
+	}
+
+	private static void addInputs(final String prefix, AgreeEmitterState state,
+			AgreeEmitterState subState) {
+		for(AgreeVarDecl input : subState.inputVars){
+			state.inputVars.add(new AgreeVarDecl(prefix+input.id, input.type));
+		}
+	}
+
+	private static void addOutputsAndHolds(final String prefix,
+			AgreeEmitterState state, AgreeEmitterState subState, IdExpr clockId) {
+		Expr finalSameAsPrev = new BoolExpr(true);
+		for(AgreeVarDecl output : subState.outputVars){
+			String outputStr = prefix+output.id;
+			AgreeVarDecl outputVar = new AgreeVarDecl(outputStr, output.type);
+
+			//add hold equations for subcomponent outputs
+			IdExpr outputId = new IdExpr(outputVar.id);
+			Expr sameAsPrev = new UnaryExpr(UnaryOp.PRE, outputId);
+			sameAsPrev = new BinaryExpr(sameAsPrev, BinaryOp.EQUAL, outputId);
+			finalSameAsPrev = new BinaryExpr(finalSameAsPrev, BinaryOp.AND, sameAsPrev);
+			state.outputVars.add(outputVar);
 		}
 		
-		state.nodeDefExpressions.add(subNode);
-		
-		//create the call to the node and add it to the assertions
-		List<Expr> callArgs = new ArrayList<>();
-		for(VarDecl input : subNode.inputs){
-			callArgs.add(new IdExpr(prefix+input.id));
-		}
-		
-		//just assert that the assertion is true initially in the condact expression
-		IdExpr clockId = new IdExpr(state.clockIDPrefix+subState.curComp.getName());
-		//the clockId may or may not already be a part of the inputs
-		AgreeVarDecl clockVar = new AgreeVarDecl(clockId.id, NamedType.BOOL);
-		state.inputVars.add(clockVar);
-		state.clockVars.add(clockVar);
-		
-		//make the assertion var true initially
-		List<Expr> args = new ArrayList<>();
-		args.add(new BoolExpr(true));
-		
-		NodeCallExpr nodeCall = new NodeCallExpr(subNode.id, callArgs);
-		CondactExpr condactCall = new CondactExpr(clockId, nodeCall, args);
-		
-		state.assertExpressions.add(condactCall);
-		state.typeExpressions.addAll(subState.typeExpressions);
-		
-		for(Entry<String, EObject> entry : subState.refMap.entrySet()){
-			String newName = prefix+entry.getKey();
-			state.refMap.put(newName, entry.getValue());
-		}
+		//add the final hold equations
+		Expr holdPrevExpr = new BinaryExpr(new UnaryExpr(UnaryOp.NOT, clockId), BinaryOp.IMPLIES, finalSameAsPrev);
+		holdPrevExpr = new BinaryExpr(new BoolExpr(true), BinaryOp.ARROW, holdPrevExpr);
+		state.assertExpressions.add(holdPrevExpr);
 	}
     
     public static Node nodeFromState(AgreeEmitterState subState){
     	
     	
     	//create the body for the subnode
-    	String nodeId = "_Node_"+subState.curInst.getInstanceObjectPath();
+    	String nodeId = "___Node_"+subState.curInst.getInstanceObjectPath();
     	nodeId = nodeId.replace(".", "__");
     	List<VarDecl> inputs = new ArrayList<>();
     	List<VarDecl> outputs = new ArrayList<>();

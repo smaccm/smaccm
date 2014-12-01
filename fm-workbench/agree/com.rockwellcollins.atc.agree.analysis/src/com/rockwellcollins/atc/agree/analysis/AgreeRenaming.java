@@ -14,11 +14,17 @@ public class AgreeRenaming extends Renaming {
 	private List<String> blackList = new ArrayList<>();
 	
 	public AgreeRenaming(){
-		blackList.add("__ASSUM");
-		blackList.add("__ASSERT");
-		blackList.add("__GUAR");
-		blackList.add("~~GUARANTEE");
-		blackList.add("~~ASSUME");
+		blackList.add(".*__ASSUM.*");
+		blackList.add(".*__ASSERT.*");
+		blackList.add(".*__GUAR.*");
+		blackList.add(".*~~GUARANTEE.*");
+		blackList.add(".*~~ASSUME.*");
+		blackList.add(".*__CALENDAR_NODE.*");
+		blackList.add(".*__INITIALIZED.*");
+		blackList.add(".*~[^_]*$.*");
+		blackList.add(".*\\._.*");
+
+		
 	}
 
 	public void addExplicitRename(String oldName, String newName){
@@ -35,15 +41,17 @@ public class AgreeRenaming extends Renaming {
 		
 		//check if it contains a blacklisted string
 		for(String black : blackList){
-			if(original.contains(black)){
+			if(original.matches(black)){
 				return null;
 			}
 		}
 		
 		//magic to remove the prefix
-		newName = original.replace("__", ".");
-		newName = newName.replaceFirst("_Node[^\\.]*\\.", "");
+		newName = original.replaceAll("___Nod([^_]_?)*_", "");
+		newName = newName.replace("~condact", "");	
 		newName = newName.replaceAll("~[0-9]*", "");
+
+		newName = newName.replace("__", ".");
 		
 		return newName;
 		

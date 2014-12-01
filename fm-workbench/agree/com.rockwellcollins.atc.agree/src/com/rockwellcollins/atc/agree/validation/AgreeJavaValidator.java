@@ -206,9 +206,11 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
     		return;
     	}
     	
-        if(Integer.valueOf(sync.getVal()) < 0){
-            error(sync, "The value of synchrony statments must be positive");
-        }
+    	try{
+    		if(Integer.valueOf(sync.getVal()) < 0){
+    			error(sync, "The value of synchrony statments must be positive");
+    		}
+    	}catch(NumberFormatException e){};
         
         Classifier container = sync.getContainingClassifier();
     	if(!(container instanceof ComponentImplementation)){

@@ -44,6 +44,7 @@ public class FeatureUtils {
 			AgreeVarDecl eventDecl = null;
 			if(agreeFeat.connType == ConnType.EVENT){
 				eventStr = state.eventPrefix+agreeFeat.lustreString;
+				eventDecl = new AgreeVarDecl(eventStr, NamedType.BOOL);
 			}
 			switch(agreeFeat.direction){
 			case IN:
