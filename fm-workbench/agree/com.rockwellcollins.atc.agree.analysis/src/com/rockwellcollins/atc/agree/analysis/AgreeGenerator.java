@@ -300,6 +300,7 @@ public class AgreeGenerator {
 	private static void addOutputsAndHolds(final String prefix,
 			AgreeEmitterState state, AgreeEmitterState subState, IdExpr clockId) {
 		Expr finalSameAsPrev = new BoolExpr(true);
+		
 		for(AgreeVarDecl output : subState.outputVars){
 			String outputStr = prefix+output.id;
 			AgreeVarDecl outputVar = new AgreeVarDecl(outputStr, output.type);

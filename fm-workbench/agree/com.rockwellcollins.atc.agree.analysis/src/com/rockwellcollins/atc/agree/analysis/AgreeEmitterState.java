@@ -24,6 +24,7 @@ import jkind.lustre.Node;
 import jkind.lustre.NodeCallExpr;
 import jkind.lustre.RealExpr;
 import jkind.lustre.RecordAccessExpr;
+import jkind.lustre.TupleExpr;
 import jkind.lustre.UnaryExpr;
 import jkind.lustre.UnaryOp;
 import jkind.lustre.VarDecl;
@@ -249,11 +250,12 @@ public class AgreeEmitterState  extends AgreeSwitch<Expr> {
 
         AgreeVarDecl varDecl = new AgreeVarDecl(state.getName(), NamedType.BOOL);
         refMap.put(varDecl.id, state);
-        internalVars.add(varDecl);
+        outputVars.add(varDecl);
 
         IdExpr id = new IdExpr(varDecl.id);
-        Equation eq = new Equation(id, expr);
-        eqExpressions.add(eq);
+        Expr assertExpr = new BinaryExpr(id, BinaryOp.EQUAL, expr);
+        assertExpressions.add(assertExpr);
+        
         return expr;
         
     }
@@ -278,16 +280,20 @@ public class AgreeEmitterState  extends AgreeSwitch<Expr> {
             varIds.add(idExpr);
 
             refMap.put(varDecl.id,state);            
-            if(expr != null){
-                internalVars.add(varDecl);
-            }else{
-                outputVars.add(varDecl);
-            }
+            outputVars.add(varDecl);
+
         }
 
         if(expr != null){
-            Equation eq = new Equation(varIds, expr);
-            eqExpressions.add(eq);
+        	
+        	Expr assertExpr;
+        	if(varIds.size() != 1){
+        		Expr tupleExpr = new TupleExpr(varIds);
+        		assertExpr = new BinaryExpr(tupleExpr, BinaryOp.EQUAL, expr);
+        	}else{
+        		assertExpr = new BinaryExpr(varIds.get(0), BinaryOp.EQUAL, expr);
+        	}
+        	assertExpressions.add(assertExpr);
         }
 
         return null;

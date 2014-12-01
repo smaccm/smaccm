@@ -837,20 +837,19 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 
     @Check(CheckType.FAST)
     public void checkNameOverlap(AgreeContract contract) {
-        ComponentImplementation ci = EcoreUtil2.getContainerOfType(contract,
-                ComponentImplementation.class);
-        if (ci == null) {
-            return;
-        }
 
         Set<SynchStatement> syncs = new HashSet<>();
+        Set<InitialStatement> inits = new HashSet<>();
         //check that there are zero or more synchrony statements
         for(SpecStatement spec : contract.getSpecs()){
             if(spec instanceof SynchStatement){
                 syncs.add((SynchStatement)spec);
             }
-            if(spec instanceof CalenStatement){
+            else if(spec instanceof CalenStatement){
             	syncs.add((CalenStatement)spec);
+            }
+            else if(spec instanceof InitialStatement){
+            	inits.add((InitialStatement) spec);
             }
         }
         
@@ -858,6 +857,18 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
             for(SynchStatement sync : syncs){
                 error(sync, "Multiple synchrony or calender statements in a single contract");
             }
+        }
+        
+        if(inits.size() > 1){
+            for(InitialStatement init : inits){
+                error(init, "Multiple initially statements in a single contract");
+            }
+        }
+        
+        ComponentImplementation ci = EcoreUtil2.getContainerOfType(contract,
+                ComponentImplementation.class);
+        if (ci == null) {
+            return;
         }
         
         Set<String> parentNames = getParentNames(ci);
