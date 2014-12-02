@@ -66,7 +66,7 @@ public class AgreeGenerator {
     }
     
     public static Program getLustre(AgreeEmitterState state){
-        Node subNode = nodeFromState(state);
+        Node subNode = nodeFromState(state, false);
     	
     	List<Node> nodes = new ArrayList<>(state.nodeDefExpressions);
     	
@@ -76,6 +76,14 @@ public class AgreeGenerator {
     	}
     	assertions.add(new IdExpr(subNode.outputs.get(0).id));
     	    	
+    	
+    	//get the guarantees as properties and add them to the renaming
+    	int i = 0;
+    	for(Equation eq : state.guarExpressions){
+    		String propName = "~~GUARANTEE"+i++;
+    		state.renaming.addExplicitRename(propName, eq.lhs.get(0).id);
+    	}
+    	
     	Node mainNode = new Node(subNode.location, subNode.id, subNode.inputs, subNode.outputs,
     			subNode.locals, subNode.equations, subNode.properties, assertions,
     			subNode.assumptions, subNode.guarantees);
@@ -89,12 +97,6 @@ public class AgreeGenerator {
     		typeDefs.add(typeDef);
     	}
     	
-    	//add the guarantees to the renaming
-    	int i = 0;
-    	for(Equation eq : state.guarExpressions){
-    		state.renaming.addExplicitRename("~~GUARANTEE"+i++, eq.lhs.get(0).id);
-    	}
-    	
     	//also add a new top level category to the layout
     	state.layout.addCategory(state.curInst.getName());
     	
@@ -103,11 +105,11 @@ public class AgreeGenerator {
     
     public static Program getLustre(ComponentInstance compInst){
     	
-    	AgreeEmitterState state = generate(compInst, null);
+    	AgreeEmitterState state = generate(compInst, null, false);
     	return getLustre(state);
     }
     
-    public static AgreeEmitterState generate(ComponentInstance compInst, Subcomponent comp){
+    public static AgreeEmitterState generate(ComponentInstance compInst, Subcomponent comp, boolean singleLayer){
     	 
     	ComponentType compType = AgreeEmitterUtilities.getInstanceType(compInst);
     	ComponentImplementation compImpl = AgreeEmitterUtilities.getInstanceImplementation(compInst);
@@ -123,7 +125,7 @@ public class AgreeGenerator {
         	return null;
         }
         
-        if(compImpl != null){
+        if(compImpl != null && !singleLayer){
         	ConnectionUtils.recordConnections(state);
         	doSwitchAgreeAnnex(state, compImpl);
 
@@ -131,16 +133,16 @@ public class AgreeGenerator {
         	for(Subcomponent subComp : compImpl.getAllSubcomponents()){
         		ComponentInstance subCompInst = compInst.findSubcomponentInstance(subComp);
         		String subCompPrefix = subComp.getName()+"__";
-        		AgreeEmitterState subState = generate(subCompInst, subComp);
+        		AgreeEmitterState subState = generate(subCompInst, subComp, true);
         		if(subState != null){
-        			Node subNode = nodeFromState(subState);
+        			Node subNode = nodeFromState(subState, true);
         			addSubcomponentNodeCall(subCompPrefix, state, subState, subNode);
         		}
         	}
+        	
+        	//handle any quasi-synchronous constraints
+            addQSConstraints(state);	
         }
-        
-        //handle any quasi-synchronous constraints
-        addQSConstraints(state);
     	
     	return state;
     }
@@ -212,7 +214,7 @@ public class AgreeGenerator {
 
 	private static IdExpr addSubcompClock(AgreeEmitterState state,
 			AgreeEmitterState subState) {
-		IdExpr clockId = new IdExpr(state.clockIDPrefix+subState.curComp.getName());
+		IdExpr clockId = new IdExpr(subState.curComp.getName()+state.clockIDSuffix);
 		//the clockId may or may not already be a part of the inputs
 		AgreeVarDecl clockVar = new AgreeVarDecl(clockId.id, NamedType.BOOL);
 		state.inputVars.add(clockVar);
@@ -319,7 +321,7 @@ public class AgreeGenerator {
 		state.assertExpressions.add(holdPrevExpr);
 	}
     
-    public static Node nodeFromState(AgreeEmitterState subState){
+    public static Node nodeFromState(AgreeEmitterState subState, boolean assertConract){
     	
     	
     	//create the body for the subnode
@@ -351,7 +353,7 @@ public class AgreeGenerator {
     	Expr finalAssert;
     	//if this subcomponent is a component type (not an implementation)
     	//the contract bottoms out here and we need to assert it
-    	if(compClass instanceof ComponentType){
+    	if(compClass instanceof ComponentType || assertConract){
     		finalAssert = assertContract(locals, equations, assumptions, guarantees);	
     	}else{
     		finalAssert = new BoolExpr(true);

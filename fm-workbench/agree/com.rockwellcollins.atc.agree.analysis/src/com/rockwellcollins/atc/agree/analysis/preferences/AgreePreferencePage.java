@@ -58,10 +58,12 @@ public class AgreePreferencePage extends FieldEditorPreferencePage implements
     private String selectedSolver;
 
     private BooleanFieldEditor inductiveCounterexampleFieldEditor;
+    private BooleanFieldEditor noKInductionEditor;
     private BooleanFieldEditor smoothingFieldEditor;
     private BooleanFieldEditor generalizeFieldEditor;
     private NonNegativeIntegerFieldEditor depthFieldEditor;
     private NonNegativeIntegerFieldEditor timeoutFieldEditor;
+    private NonNegativeIntegerFieldEditor pdrMaxEditor;
 
     @Override
     public void createFieldEditors() {
@@ -77,6 +79,11 @@ public class AgreePreferencePage extends FieldEditorPreferencePage implements
                 SOLVERS, getFieldEditorParent());
         addField(solverFieldEditor);
 
+        noKInductionEditor = new BooleanFieldEditor(
+        		PreferenceConstants.PREF_NO_KINDUCTION, "Disable K-Induction", 
+        		getFieldEditorParent());
+        addField(noKInductionEditor);
+        
         inductiveCounterexampleFieldEditor = new BooleanFieldEditor(
                 PreferenceConstants.PREF_INDUCT_CEX, "Generate inductive counterexamples",
                 getFieldEditorParent());
@@ -96,6 +103,11 @@ public class AgreePreferencePage extends FieldEditorPreferencePage implements
                 "Maximum depth for k-induction", getFieldEditorParent());
         addField(depthFieldEditor);
 
+        pdrMaxEditor = new NonNegativeIntegerFieldEditor(
+        		PreferenceConstants.PREF_PDR_MAX, "Maximum Number of PDR Instances",
+        		getFieldEditorParent());
+        addField(pdrMaxEditor);
+        
         timeoutFieldEditor = new NonNegativeIntegerFieldEditor(PreferenceConstants.PREF_TIMEOUT,
                 "Timeout in seconds", getFieldEditorParent());
         addField(timeoutFieldEditor);
@@ -152,6 +164,8 @@ public class AgreePreferencePage extends FieldEditorPreferencePage implements
         solverFieldEditor.setEnabled(isJKind, getFieldEditorParent());
         inductiveCounterexampleFieldEditor.setEnabled(isJKind, getFieldEditorParent());
         smoothingFieldEditor.setEnabled(isJKind && isYices, getFieldEditorParent());
+        noKInductionEditor.setEnabled(isJKind, getFieldEditorParent());
+        pdrMaxEditor.setEnabled(isJKind, getFieldEditorParent());
         generalizeFieldEditor.setEnabled(isJKind, getFieldEditorParent());
         depthFieldEditor.setEnabled(isJKind, getFieldEditorParent());
     }

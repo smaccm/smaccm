@@ -164,7 +164,7 @@ public class ConnectionUtils {
 							+agreeDestConn.lustreString+"' and '"
 							+agreeSourConn.lustreString+"' are of different types");
 				}
-				Equation eventConnEq = new Equation(new IdExpr(state.eventPrefix+lhsLustreName), new IdExpr(state.eventPrefix+rhsLustreName));
+				Equation eventConnEq = new Equation(new IdExpr(lhsLustreName+state.eventSuffix), new IdExpr(rhsLustreName+state.eventSuffix));
 				addConnection(state, eventConnEq);
 			}
 		}

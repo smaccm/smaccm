@@ -43,7 +43,7 @@ public class FeatureUtils {
 			String eventStr = null;
 			AgreeVarDecl eventDecl = null;
 			if(agreeFeat.connType == ConnType.EVENT){
-				eventStr = state.eventPrefix+agreeFeat.lustreString;
+				eventStr = agreeFeat.lustreString+state.eventSuffix;
 				eventDecl = new AgreeVarDecl(eventStr, NamedType.BOOL);
 			}
 			switch(agreeFeat.direction){

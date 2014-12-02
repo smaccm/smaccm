@@ -17,6 +17,7 @@ import jkind.api.results.AnalysisResult;
 import jkind.api.results.CompositeAnalysisResult;
 import jkind.api.results.JKindResult;
 import jkind.api.results.Renaming;
+import jkind.lustre.Equation;
 import jkind.lustre.Node;
 import jkind.lustre.Program;
 
@@ -69,31 +70,28 @@ public abstract class VerifyHandler extends AadlHandler {
     protected IStatus runJob(Element root, IProgressMonitor monitor) {
         disableRerunHandler();
 
-        if (!(root instanceof SystemImplementation)) {
+        if (!(root instanceof ComponentImplementation)) {
             return new Status(IStatus.ERROR, Activator.PLUGIN_ID,
-                    "Must select an AADL System Implementation");
+                    "Must select an AADL Component Implementation");
         }
 
         try {
-            ComponentImplementation ci = (ComponentImplementation) root;
+        	ComponentImplementation ci = (ComponentImplementation) root;
 
-            SystemInstance si = null;
-            if (root instanceof SystemImplementation) {
-                final SystemImplementation sysimpl = (SystemImplementation) root;
-                try {
-                    si = InstantiateModel.buildInstanceModelFile(sysimpl);
-                } catch (Exception e) {
-                    Dialog.showError("Model Instantiate",
-                            "Error while re-instantiating the model: " + e.getMessage());
-                    return Status.CANCEL_STATUS;
-                }
-            }
+        	SystemInstance si = null;
+        	final ComponentImplementation sysimpl = ci;
+        	try {
+        		si = InstantiateModel.buildInstanceModelFile(sysimpl);
+        	} catch (Exception e) {
+        		Dialog.showError("Model Instantiate",
+        				"Error while re-instantiating the model: " + e.getMessage());
+        		return Status.CANCEL_STATUS;
+        	}
 
             AnalysisResult result;
             CompositeAnalysisResult wrapper = new CompositeAnalysisResult("");
-            LinkedList<NamedElement> modelParents = new LinkedList<>();
 
-            SystemType sysType = (SystemType) si.getComponentImplementation().getType();
+            ComponentType sysType = si.getComponentImplementation().getType();
             EList<AnnexSubclause> annexSubClauses = AnnexUtil.getAllAnnexSubclauses(sysType,
                     AgreePackage.eINSTANCE.getAgreeContractSubclause());
 
@@ -176,28 +174,20 @@ public abstract class VerifyHandler extends AadlHandler {
         //AgreeGenerator emitter = new AgreeGenerator(ci);
         //Program program = emitter.evaluate();
     	
-    	AgreeEmitterState state = AgreeGenerator.generate(ci, null);
+    	AgreeEmitterState state = AgreeGenerator.generate(ci, null, false);
     	
     	Program program = AgreeGenerator.getLustre(state);
         if (program == null) {
             return null;
         }
 
-//        List<String> properties = emitter.getGuarProps();
-//        Node oldNode = program.getMainNode();
-//        Node newNode = new Node(oldNode.location, oldNode.id, oldNode.inputs, oldNode.outputs,
-//                oldNode.locals, oldNode.equations, properties, oldNode.assertions);
-//
-//        List<Node> nodes = new ArrayList<>();
-//        for (Node node : program.nodes) {
-//            if (node != oldNode)
-//                nodes.add(node);
-//        }
-//        nodes.add(newNode);
-//        program = new Program(program.types, program.constants, nodes);
-//        Renaming renaming = emitter.getRenaming();
-//        JKindResult result = new JKindResult("Contract Guarantees", properties, renaming);
-        List<String> properties = program.nodes.get(program.nodes.size()-1).properties;
+        //get the properties to check
+        List<String> properties = new ArrayList<>();
+        for(int i = 0; i < state.guarExpressions.size(); i++){
+    		String propName = "~~GUARANTEE"+i;
+    		properties.add(propName);
+    	}
+        
         JKindResult result = new JKindResult("Contract Guarantees", properties, state.renaming);
         queue.add(result);
 
@@ -332,28 +322,34 @@ public abstract class VerifyHandler extends AadlHandler {
         });
     }
 
-    private IStatus doAnalysis(Element root, IProgressMonitor monitor) {
-        KindApi api = PreferencesUtil.getKindApi();
-        while (!queue.isEmpty() && !monitor.isCanceled()) {
-            JKindResult result = queue.remove();
-            Program program = linker.getProgram(result);
-            try {
-                api.execute(program, result, monitor);
-            } catch (JKindException e) {
-                System.out.println(result.getText());
-                System.out.println("******** HERE IS THE LUSTRE ********");
-                System.out.println(program);
-                break;
-            }
-            // System.out.println("whatever");
-        }
+    private IStatus doAnalysis(final Element root, final IProgressMonitor monitor) {
+    	
+    	
+    	Thread analysisThread = new Thread(){
+    		public void run(){
+    			KindApi api = PreferencesUtil.getKindApi();
+    			while (!queue.isEmpty() && !monitor.isCanceled()) {
+    				JKindResult result = queue.remove();
+    				Program program = linker.getProgram(result);
+    				try {
+    					api.execute(program, result, monitor);
+    				} catch (JKindException e) {
+    					System.out.println(result.getText());
+    					System.out.println("******** HERE IS THE LUSTRE ********");
+    					System.out.println(program);
+    					break;
+    				}
+    			}
 
-        while (!queue.isEmpty()) {
-            queue.remove().cancel();
-        }
+    			while (!queue.isEmpty()) {
+    				queue.remove().cancel();
+    			}
 
-        enableRerunHandler(root);
-        return monitor.isCanceled() ? Status.CANCEL_STATUS : Status.OK_STATUS;
+    			enableRerunHandler(root);
+    		}
+    	};
+    	analysisThread.start();
+        return Status.OK_STATUS;
     }
 
     private void enableRerunHandler(final Element root) {
@@ -383,35 +379,4 @@ public abstract class VerifyHandler extends AadlHandler {
     private IHandlerService getHandlerService() {
         return (IHandlerService) getWindow().getService(IHandlerService.class);
     }
-
-    private JKindApi getJKindApi() {
-        JKindApi api = new JKindApi();
-        IPreferenceStore prefs = Activator.getDefault().getPreferenceStore();
-        if (prefs.getBoolean(PreferenceConstants.PREF_INDUCT_CEX)) {
-            api.setInductiveCounterexamples();
-        }
-        if (prefs.getBoolean(PreferenceConstants.PREF_SMOOTH_CEX)) {
-            api.setSmoothCounterexamples();
-        }
-        if (prefs.getBoolean(PreferenceConstants.PREF_BLAME_CEX)) {
-            api.setIntervalGeneralization();
-        }
-
-        switch (prefs.getString(PreferenceConstants.PREF_SOLVER)) {
-        case "YICES":
-            api.setSolver(SolverOption.YICES);
-            break;
-        case "Z3":
-            api.setSolver(SolverOption.Z3);
-            break;
-        case "CVC4":
-            api.setSolver(SolverOption.CVC4);
-            break;
-        }
-
-        api.setN(prefs.getInt(PreferenceConstants.PREF_DEPTH));
-        api.setTimeout(prefs.getInt(PreferenceConstants.PREF_TIMEOUT));
-        return api;
-    }
-
 }

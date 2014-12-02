@@ -116,8 +116,8 @@ public class AgreeEmitterState  extends AgreeSwitch<Expr> {
     public boolean simultaneity = true;
 	public boolean connectionExpressionsSet = false;
 
-    public final String clockIDPrefix = "__CLOCK_";
-    public final String eventPrefix = "__EVENT_";
+    public final String clockIDSuffix = "___CLOCK_";
+    public final String eventSuffix = "___EVENT_";
     
     //the current implementation
     public final ComponentInstance curInst;
@@ -150,7 +150,7 @@ public class AgreeEmitterState  extends AgreeSwitch<Expr> {
     @Override
     public Expr caseCalenStatement(CalenStatement calen){
     	for(NamedElement namedEl : calen.getEls()){
-    		IdExpr clockId = new IdExpr(clockIDPrefix+namedEl.getName());
+    		IdExpr clockId = new IdExpr(namedEl.getName()+clockIDSuffix);
     		this.calendar.add(clockId);
     	}
         return null;
@@ -627,7 +627,7 @@ public class AgreeEmitterState  extends AgreeSwitch<Expr> {
         	case "_CLK":
         		//a variable of the same name as this should be created by setEventPortQueues()
             	//in the AgreeAnnexEmitter which created "this" AgreeAnnexEmitter
-            	AgreeVarDecl clockVar = new AgreeVarDecl(clockIDPrefix+namedEl.getName(),
+            	AgreeVarDecl clockVar = new AgreeVarDecl(namedEl.getName()+clockIDSuffix,
                 		NamedType.BOOL);
             	
             	IdExpr clockId = new IdExpr(clockVar.id);
@@ -677,8 +677,8 @@ public class AgreeEmitterState  extends AgreeSwitch<Expr> {
     public Expr caseEventExpr(EventExpr expr){
     	
     	IdExpr nestIdExpr = (IdExpr) doSwitch(expr.getId());
-    	String eventStr = eventPrefix+nestIdExpr.id;
-    	return new IdExpr(eventStr);
+    	String eventStr = nestIdExpr.id+eventSuffix;
+    	return new IdExpr(eventStr); 
     }
     
     @Override

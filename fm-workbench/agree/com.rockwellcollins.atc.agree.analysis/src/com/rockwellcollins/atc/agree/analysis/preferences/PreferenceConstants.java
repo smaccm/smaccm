@@ -9,10 +9,14 @@ public class PreferenceConstants {
     public static final String PREF_SMOOTH_CEX = "smoothCounterexamples";
     
     public static final String PREF_BLAME_CEX = "blameCounterexamples";
+    
+    public static final String PREF_NO_KINDUCTION = "disableKInduction";
 
     public static final String PREF_DEPTH = "inductionDepth";
 
     public static final String PREF_TIMEOUT = "timeout";
+    
+    public static final String PREF_PDR_MAX = "pdrMax";
     
     public static final String PREF_SOLVER = "solver";
 

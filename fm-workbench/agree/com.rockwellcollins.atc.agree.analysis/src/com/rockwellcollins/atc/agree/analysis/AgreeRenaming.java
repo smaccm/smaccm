@@ -22,9 +22,9 @@ public class AgreeRenaming extends Renaming {
 		blackList.add(".*__CALENDAR_NODE.*");
 		blackList.add(".*__INITIALIZED.*");
 		blackList.add(".*~[^_]*$.*");
+		blackList.add(".*~state[0-9]*.*");
 		blackList.add(".*\\._.*");
 
-		
 	}
 
 	public void addExplicitRename(String oldName, String newName){
