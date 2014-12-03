@@ -21,6 +21,7 @@ import jkind.lustre.Equation;
 import jkind.lustre.Node;
 import jkind.lustre.Program;
 
+import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -63,12 +64,16 @@ public abstract class VerifyHandler extends AadlHandler {
 
     private static final String RERUN_ID = "com.rockwellcollins.atc.agree.analysis.commands.rerunAgree";
     private IHandlerActivation rerunActivation;
-
+    private IHandlerActivation terminateActivation;
+    private IHandlerService handlerService;
+   
     protected abstract boolean isRecursive();
 
     @Override
     protected IStatus runJob(Element root, IProgressMonitor monitor) {
         disableRerunHandler();
+        handlerService = (IHandlerService) getWindow()
+                .getService(IHandlerService.class);
 
         if (!(root instanceof ComponentImplementation)) {
             return new Status(IStatus.ERROR, Activator.PLUGIN_ID,
@@ -327,6 +332,8 @@ public abstract class VerifyHandler extends AadlHandler {
     	
     	Thread analysisThread = new Thread(){
     		public void run(){
+    			
+                activateTerminateHandler(monitor);
     			KindApi api = PreferencesUtil.getKindApi();
     			while (!queue.isEmpty() && !monitor.isCanceled()) {
     				JKindResult result = queue.remove();
@@ -345,13 +352,34 @@ public abstract class VerifyHandler extends AadlHandler {
     				queue.remove().cancel();
     			}
 
+    			deactivateTerminateHandler();
     			enableRerunHandler(root);
+    			
     		}
     	};
     	analysisThread.start();
         return Status.OK_STATUS;
     }
 
+    private void activateTerminateHandler(final IProgressMonitor monitor) {
+        getWindow().getShell().getDisplay().syncExec(new Runnable() {
+            @Override
+            public void run() {
+                terminateActivation = handlerService.activateHandler(TERMINATE_ID,
+                        new TerminateHandler(monitor));
+            }
+        });
+    }
+    
+    private void deactivateTerminateHandler() {
+        getWindow().getShell().getDisplay().syncExec(new Runnable() {
+            @Override
+            public void run() {
+                handlerService.deactivateHandler(terminateActivation);
+            }
+        });
+    }
+    
     private void enableRerunHandler(final Element root) {
         getWindow().getShell().getDisplay().syncExec(new Runnable() {
             @Override

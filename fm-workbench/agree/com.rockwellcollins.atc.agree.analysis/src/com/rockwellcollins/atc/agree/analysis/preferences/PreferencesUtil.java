@@ -52,8 +52,8 @@ public class PreferencesUtil {
 		}
 		api.setN(prefs.getInt(PreferenceConstants.PREF_DEPTH));
 		api.setTimeout(prefs.getInt(PreferenceConstants.PREF_TIMEOUT));
-		//api.setPdrMax(prefs.getInt(PreferenceConstants.PREF_PDR_MAX));
-		//api.disableKInduction(prefs.getBoolean(PreferenceConstants.PREF_NO_KINDUCTION));
+		api.setPdrMax(prefs.getInt(PreferenceConstants.PREF_PDR_MAX));
+		api.disableKInduction(prefs.getBoolean(PreferenceConstants.PREF_NO_KINDUCTION));
 		return api;
 	}
 
