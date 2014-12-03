@@ -70,13 +70,19 @@ public class AgreeGenerator {
     	
     	List<Node> nodes = new ArrayList<>(state.nodeDefExpressions);
     	
-    	List<Expr> assertions = new ArrayList<Expr>();
     	if(subNode.outputs.size() != 1){
     		throw new AgreeException("Something went wrong with node generation");
     	}
-    	assertions.add(new IdExpr(subNode.outputs.get(0).id));
-    	    	
     	
+    	//add the assertions to he system level assumptions
+    	IdExpr assertId = new IdExpr(subNode.outputs.get(0).id);
+    	List<Expr> assumptions = new ArrayList<>();
+    	for(Equation assumEq : state.assumpExpressions){
+    		assumptions.add(assumEq.expr);
+    	}
+    	assumptions.addAll(state.assertExpressions);
+    	assumptions.add(assertId);
+
     	//get the guarantees as properties and add them to the renaming
     	int i = 0;
     	for(Equation eq : state.guarExpressions){
@@ -85,8 +91,8 @@ public class AgreeGenerator {
     	}
     	
     	Node mainNode = new Node(subNode.location, subNode.id, subNode.inputs, subNode.outputs,
-    			subNode.locals, subNode.equations, subNode.properties, assertions,
-    			subNode.assumptions, subNode.guarantees);
+    			subNode.locals, subNode.equations, subNode.properties, assumptions,
+    			null, subNode.guarantees);
     	
     	nodes.add(mainNode);
     	
@@ -109,7 +115,8 @@ public class AgreeGenerator {
     	return getLustre(state);
     }
     
-    public static AgreeEmitterState generate(ComponentInstance compInst, Subcomponent comp, boolean singleLayer){
+    public static AgreeEmitterState generate(ComponentInstance compInst,
+    		Subcomponent comp, boolean singleLayer){
     	 
     	ComponentType compType = AgreeEmitterUtilities.getInstanceType(compInst);
     	ComponentImplementation compImpl = AgreeEmitterUtilities.getInstanceImplementation(compInst);
@@ -133,9 +140,9 @@ public class AgreeGenerator {
         	for(Subcomponent subComp : compImpl.getAllSubcomponents()){
         		ComponentInstance subCompInst = compInst.findSubcomponentInstance(subComp);
         		String subCompPrefix = subComp.getName()+"__";
-        		AgreeEmitterState subState = generate(subCompInst, subComp, true);
+        		AgreeEmitterState subState = generate(subCompInst, subComp, false);
         		if(subState != null){
-        			Node subNode = nodeFromState(subState, true);
+        			Node subNode = nodeFromState(subState, false);
         			addSubcomponentNodeCall(subCompPrefix, state, subState, subNode);
         		}
         	}
@@ -168,6 +175,10 @@ public class AgreeGenerator {
         	for(AgreeVarDecl clockVar : state.clockVars){
         		clockIds.add(new IdExpr(clockVar.id));
         	}
+        	if(clockIds.size() <= 0){
+        		throw new AgreeException("Somehow there are no clocks in the system implementation?");
+        	}
+        	
         	Node dfaNode = AgreeCalendarUtils.getDFANode(
         			dfaNodeName, state.synchrony);
         	Node calNode = AgreeCalendarUtils.getCalendarNode(
@@ -175,6 +186,20 @@ public class AgreeGenerator {
         	state.nodeDefExpressions.add(dfaNode);
         	state.nodeDefExpressions.add(calNode);
         	state.assertExpressions.add(new NodeCallExpr(calNode.id, clockIds));
+        	
+        	//assert that at least someone ticks
+        	Expr atLeastOneExpr = new BoolExpr(false);
+        	for(Expr clock : clockIds){
+        		atLeastOneExpr = new BinaryExpr(atLeastOneExpr, BinaryOp.OR, clock);
+        	}
+        	state.assertExpressions.add(atLeastOneExpr);
+        	
+        	if(!state.simultaneity){
+        		//assert that no two clocks tick at the same time
+        		Expr singleTick = AgreeCalendarUtils.getSingleTick(clockIds);
+        		state.assertExpressions.add(singleTick);
+        	}
+        	
         }else{
         	for(AgreeVarDecl clockVar : state.clockVars){
         		state.assertExpressions.add(new IdExpr(clockVar.id));
@@ -210,6 +235,22 @@ public class AgreeGenerator {
 		
 		//add subcomponent variable references (for cex output)
 		addReferences(prefix, state, subState);
+		
+		//add assumption renamings
+		int i = 0;
+		for(Equation assumEq : subState.assumpExpressions){
+			String lustreVarName = getLustreNodeName(subState);
+			lustreVarName = lustreVarName+"~condact~0.~~ASSUME"+i+"~clocked_property";
+			String assumeDisplayText = assumEq.lhs.get(0).id;
+			assumeDisplayText = state.renaming.rename(
+					subState.curInst.getInstanceObjectPath()+" : \""+assumeDisplayText+"\"");
+			assumeDisplayText = assumeDisplayText.replaceAll(".*\\.", "");
+			state.renaming.addExplicitRename(lustreVarName, assumeDisplayText);
+		}
+		//includes renaming of assumptions for subnodes
+		state.renaming.addRenamings(subState.renaming);
+		
+		
 	}
 
 	private static IdExpr addSubcompClock(AgreeEmitterState state,
@@ -245,9 +286,9 @@ public class AgreeGenerator {
 		args.add(new BoolExpr(true));
 		
 		NodeCallExpr nodeCall = new NodeCallExpr(subNode.id, callArgs);
-		//CondactExpr condactCall = new CondactExpr(clockId, nodeCall, args);
+		CondactExpr condactCall = new CondactExpr(clockId, nodeCall, args);
 		
-		state.assertExpressions.add(nodeCall);
+		state.assertExpressions.add(condactCall);
 		state.typeExpressions.addAll(subState.typeExpressions);
 		state.nodeDefExpressions.add(subNode);
 
@@ -325,8 +366,7 @@ public class AgreeGenerator {
     	
     	
     	//create the body for the subnode
-    	String nodeId = "___Node_"+subState.curInst.getInstanceObjectPath();
-    	nodeId = nodeId.replace(".", "__");
+    	String nodeId = getLustreNodeName(subState);
     	List<VarDecl> inputs = new ArrayList<>();
     	List<VarDecl> outputs = new ArrayList<>();
     	List<VarDecl> locals = new ArrayList<>();
@@ -342,7 +382,9 @@ public class AgreeGenerator {
     	for(Equation guarEq : subState.guarExpressions){
     		guarantees.add(guarEq.expr);
     	}
-    	assumptions.addAll(subState.assumpExpressions);
+    	for(Equation assumEq : subState.assumpExpressions){
+    		assumptions.add(assumEq.expr);
+    	}
     	equations.addAll(subState.eqExpressions);
     	
     	IdExpr assertId = new IdExpr("__ASSERT");
@@ -372,43 +414,52 @@ public class AgreeGenerator {
     	
     }
 
+	private static String getLustreNodeName(AgreeEmitterState subState) {
+		String nodeId = "___Node_"+subState.curInst.getInstanceObjectPath();
+		nodeId = nodeId.replace(".", "__");
+		return nodeId;
+	}
+
 	private static Expr assertContract(List<VarDecl> locals,
 			List<Equation> equations, List<Expr> assumptions,
 			List<Expr> guarantees) {
-		//the component has bottomed out so we should assert the contract
-		IdExpr assumpHistId = new IdExpr("__HIST__ASSUM");
-		VarDecl assumpHistVar = new VarDecl(assumpHistId.id, NamedType.BOOL);
-		IdExpr assumpId = new IdExpr("__ASSUM");
-		VarDecl assumpVar = new VarDecl(assumpId.id, NamedType.BOOL);
-		locals.add(assumpHistVar);
-		locals.add(assumpVar);
-		
-		Expr assumpExpr = new BoolExpr(true);
-		for(Expr assum : assumptions){
-			assumpExpr = new BinaryExpr(assumpExpr, BinaryOp.AND, assum);
-		}
-		Equation assumEq = new Equation(assumpId, assumpExpr);
-		equations.add(assumEq);
-		
-		Expr assumpHistExpr = new UnaryExpr(UnaryOp.PRE, assumpHistId);
-		assumpHistExpr = new BinaryExpr(assumpHistExpr, BinaryOp.AND, assumpId);
-		assumpHistExpr = new BinaryExpr(assumpId, BinaryOp.ARROW, assumpHistExpr);
-		Equation assumpHistEq = new Equation(assumpHistId, assumpHistExpr);
-		equations.add(assumpHistEq);
-		
-		IdExpr guarId = new IdExpr("__GUAR");
-		VarDecl guarVar = new VarDecl(guarId.id, NamedType.BOOL);
-		locals.add(guarVar);
+//		//the component has bottomed out so we should assert the contract
+//		IdExpr assumpHistId = new IdExpr("__HIST__ASSUM");
+//		VarDecl assumpHistVar = new VarDecl(assumpHistId.id, NamedType.BOOL);
+//		IdExpr assumpId = new IdExpr("__ASSUM");
+//		VarDecl assumpVar = new VarDecl(assumpId.id, NamedType.BOOL);
+//		locals.add(assumpHistVar);
+//		locals.add(assumpVar);
+//		
+//		Expr assumpExpr = new BoolExpr(true);
+//		for(Expr assum : assumptions){
+//			assumpExpr = new BinaryExpr(assumpExpr, BinaryOp.AND, assum);
+//		}
+//		Equation assumEq = new Equation(assumpId, assumpExpr);
+//		equations.add(assumEq);
+//		
+//		Expr assumpHistExpr = new UnaryExpr(UnaryOp.PRE, assumpHistId);
+//		assumpHistExpr = new BinaryExpr(assumpHistExpr, BinaryOp.AND, assumpId);
+//		assumpHistExpr = new BinaryExpr(assumpId, BinaryOp.ARROW, assumpHistExpr);
+//		Equation assumpHistEq = new Equation(assumpHistId, assumpHistExpr);
+//		equations.add(assumpHistEq);
+//		
+//		IdExpr guarId = new IdExpr("__GUAR");
+//		VarDecl guarVar = new VarDecl(guarId.id, NamedType.BOOL);
+//		locals.add(guarVar);
 		
 		Expr guarExpr = new BoolExpr(true);
 		for(Expr guar : guarantees){
 			guarExpr = new BinaryExpr(guarExpr, BinaryOp.AND, guar);
 		}
 		
-		Equation guarEq = new Equation(guarId, guarExpr);
-		equations.add(guarEq);
+//		Equation guarEq = new Equation(guarId, guarExpr);
+//		equations.add(guarEq);
+//		
+//		return new BinaryExpr(assumpHistId, BinaryOp.IMPLIES, guarId);
 		
-		return new BinaryExpr(assumpHistId, BinaryOp.IMPLIES, guarId);
+		return guarExpr;
+		
 	}
     
 }

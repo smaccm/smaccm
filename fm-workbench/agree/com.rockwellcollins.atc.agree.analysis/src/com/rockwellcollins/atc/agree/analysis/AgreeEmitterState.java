@@ -87,7 +87,7 @@ import com.rockwellcollins.atc.agree.agree.util.AgreeSwitch;
 public class AgreeEmitterState  extends AgreeSwitch<Expr> {
 
 	  //lists of all the jkind expressions from the annex
-    public final List<Expr> assumpExpressions = new ArrayList<>();
+    public final List<Equation> assumpExpressions = new ArrayList<>();
     public final List<Equation> guarExpressions = new ArrayList<>();
     public final List<Expr> assertExpressions = new ArrayList<>();
     public final List<Equation> eqExpressions = new ArrayList<>();
@@ -198,7 +198,8 @@ public class AgreeEmitterState  extends AgreeSwitch<Expr> {
     public Expr caseAssumeStatement(AssumeStatement state) {
 
         Expr expr = doSwitch(state.getExpr());
-        assumpExpressions.add(expr);
+        IdExpr assumId = new IdExpr(state.getStr());
+        assumpExpressions.add(new Equation(assumId, expr));
         return expr;
     }
 

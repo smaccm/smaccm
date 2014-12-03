@@ -26,6 +26,10 @@ public class AgreeRenaming extends Renaming {
 		blackList.add(".*\\._.*");
 
 	}
+	
+	public void addRenamings(AgreeRenaming renaming){
+		this.explicitRenames.putAll(renaming.explicitRenames);
+	}
 
 	public void addExplicitRename(String oldName, String newName){
 		this.explicitRenames.put(oldName, newName);
@@ -50,7 +54,6 @@ public class AgreeRenaming extends Renaming {
 		newName = original.replaceAll("___Nod([^_]_?)*_", "");
 		newName = newName.replace("~condact", "");	
 		newName = newName.replaceAll("~[0-9]*", "");
-
 		newName = newName.replace("__", ".");
 		
 		return newName;
