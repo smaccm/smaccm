@@ -328,8 +328,7 @@ public abstract class VerifyHandler extends AadlHandler {
     }
 
     private IStatus doAnalysis(final Element root, final IProgressMonitor monitor) {
-    	
-    	
+    	    	
     	Thread analysisThread = new Thread(){
     		public void run(){
     			

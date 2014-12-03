@@ -245,9 +245,9 @@ public class AgreeGenerator {
 		args.add(new BoolExpr(true));
 		
 		NodeCallExpr nodeCall = new NodeCallExpr(subNode.id, callArgs);
-		CondactExpr condactCall = new CondactExpr(clockId, nodeCall, args);
+		//CondactExpr condactCall = new CondactExpr(clockId, nodeCall, args);
 		
-		state.assertExpressions.add(condactCall);
+		state.assertExpressions.add(nodeCall);
 		state.typeExpressions.addAll(subState.typeExpressions);
 		state.nodeDefExpressions.add(subNode);
 
