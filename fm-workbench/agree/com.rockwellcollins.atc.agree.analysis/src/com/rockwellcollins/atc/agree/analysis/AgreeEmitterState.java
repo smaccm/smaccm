@@ -201,8 +201,10 @@ public class AgreeEmitterState  extends AgreeSwitch<Expr> {
     @Override
     public Expr caseAgreeContract(AgreeContract contract) {
 
-        for (SpecStatement spec : contract.getSpecs()) {
-            doSwitch(spec);
+    	for (SpecStatement spec : contract.getSpecs()) {
+    		if(!(spec instanceof LiftStatement)){
+    			doSwitch(spec);
+    		}
         }
 
         return null;
