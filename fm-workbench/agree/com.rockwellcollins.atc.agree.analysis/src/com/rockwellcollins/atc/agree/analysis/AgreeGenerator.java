@@ -74,7 +74,7 @@ public class AgreeGenerator {
     		throw new AgreeException("Something went wrong with node generation");
     	}
     	
-    	//add the assertions to he system level assumptions
+    	//add the assertions to the system level assumptions
     	IdExpr assertId = new IdExpr(subNode.outputs.get(0).id);
     	List<Expr> assumptions = new ArrayList<>();
     	for(Equation assumEq : state.assumpExpressions){

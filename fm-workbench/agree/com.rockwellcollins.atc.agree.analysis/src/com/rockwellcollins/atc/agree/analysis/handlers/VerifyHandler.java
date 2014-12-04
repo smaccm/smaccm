@@ -68,6 +68,7 @@ public abstract class VerifyHandler extends AadlHandler {
     private IHandlerService handlerService;
    
     protected abstract boolean isRecursive();
+    protected abstract boolean isMonolithic();
 
     @Override
     protected IStatus runJob(Element root, IProgressMonitor monitor) {
