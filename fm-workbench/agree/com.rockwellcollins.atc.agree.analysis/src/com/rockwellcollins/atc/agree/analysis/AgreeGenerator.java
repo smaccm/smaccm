@@ -91,8 +91,8 @@ public class AgreeGenerator {
     	}
     	
     	Node mainNode = new Node(subNode.location, subNode.id, subNode.inputs, subNode.outputs,
-    			subNode.locals, subNode.equations, subNode.properties, assumptions,
-    			null, subNode.guarantees);
+    			subNode.locals, subNode.equations, subNode.properties, null,
+    			assumptions, subNode.guarantees);
     	
     	nodes.add(mainNode);
     	
