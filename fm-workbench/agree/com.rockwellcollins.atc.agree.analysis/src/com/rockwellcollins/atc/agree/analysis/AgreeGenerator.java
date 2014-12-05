@@ -140,9 +140,9 @@ public class AgreeGenerator {
         	for(Subcomponent subComp : compImpl.getAllSubcomponents()){
         		ComponentInstance subCompInst = compInst.findSubcomponentInstance(subComp);
         		String subCompPrefix = subComp.getName()+"__";
-        		AgreeEmitterState subState = generate(subCompInst, subComp, false);
+        		AgreeEmitterState subState = generate(subCompInst, subComp, true);
         		if(subState != null){
-        			Node subNode = nodeFromState(subState, false);
+        			Node subNode = nodeFromState(subState, true);
         			addSubcomponentNodeCall(subCompPrefix, state, subState, subNode);
         		}
         	}
