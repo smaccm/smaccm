@@ -95,6 +95,11 @@ public class AgreeEmitterState  extends AgreeSwitch<Expr> {
     public final Set<Node> nodeDefExpressions = new HashSet<>();
     public final List<Equation> connExpressions = new ArrayList<>();
 	public final List<Expr> initialExpressions = new ArrayList<>();
+	
+	public final List<Equation> subcomponentExprs = new ArrayList<>();
+	public final List<String> assumeProps = new ArrayList<>();
+	public final List<String> guarProps = new ArrayList<>();
+	public final List<String> consistProps = new ArrayList<>();
 
     public final Set<jkind.lustre.RecordType> typeExpressions = new HashSet<>();
     //this set keeps track of all the left hand sides of connection

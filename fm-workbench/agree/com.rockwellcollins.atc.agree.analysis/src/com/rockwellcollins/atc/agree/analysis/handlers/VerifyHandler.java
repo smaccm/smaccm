@@ -53,6 +53,7 @@ import com.rockwellcollins.atc.agree.analysis.AgreeEmitterUtilities;
 import com.rockwellcollins.atc.agree.analysis.AgreeException;
 import com.rockwellcollins.atc.agree.analysis.AgreeGenerator;
 import com.rockwellcollins.atc.agree.analysis.AgreeLogger;
+import com.rockwellcollins.atc.agree.analysis.AgreeProgram;
 import com.rockwellcollins.atc.agree.analysis.preferences.PreferenceConstants;
 import com.rockwellcollins.atc.agree.analysis.preferences.PreferencesUtil;
 import com.rockwellcollins.atc.agree.analysis.views.AgreeResultsLinker;
@@ -111,9 +112,10 @@ public abstract class VerifyHandler extends AadlHandler {
                 wrapper.addChild(result);
                 result = wrapper;
             } else {
-                wrapper.addChild(createGuaranteeVerification(si));
+            	AgreeProgram agreeProgram = AgreeGenerator.getLustre(si);
+                wrapper.addChild(createGuaranteeVerification(agreeProgram));
                 //wrapper.addChild(createAssumptionVerification(si));
-                //wrapper.addChild(createConsistVerification(si));
+                wrapper.addChild(creatConsistencyVerification(agreeProgram));
                 result = wrapper;
             }
             showView(result, linker);
@@ -140,7 +142,8 @@ public abstract class VerifyHandler extends AadlHandler {
     private AnalysisResult buildAnalysisResult(String name, ComponentInstance ci) {
         CompositeAnalysisResult result = new CompositeAnalysisResult("Verification for " + name);
 
-        AnalysisResult tempResult = createGuaranteeVerification(ci);
+        AgreeProgram agreeProgram = AgreeGenerator.getLustre(ci);
+        AnalysisResult tempResult = createGuaranteeVerification(agreeProgram);
         if (tempResult != null) {
             result.addChild(tempResult);
         }
@@ -175,38 +178,47 @@ public abstract class VerifyHandler extends AadlHandler {
         return null;
     }
 
-    private AnalysisResult createGuaranteeVerification(ComponentInstance ci) {
+    private AnalysisResult createGuaranteeVerification(AgreeProgram agreeProgram) {
 
-        //AgreeGenerator emitter = new AgreeGenerator(ci);
-        //Program program = emitter.evaluate();
+    	List<String> props = new ArrayList<>();
+    	props.addAll(agreeProgram.state.guarProps);
+    	props.addAll(agreeProgram.state.assumeProps);
     	
-    	AgreeEmitterState state = AgreeGenerator.generate(ci, null, false);
-    	
-    	Program program = AgreeGenerator.getLustre(state);
-        if (program == null) {
-            return null;
-        }
-
-        //get the properties to check
-        List<String> properties = new ArrayList<>();
-        for(int i = 0; i < state.guarExpressions.size(); i++){
-    		String propName = "~~GUARANTEE"+i;
-    		properties.add(propName);
-    	}
-        
-        JKindResult result = new JKindResult("Contract Guarantees", properties, state.renaming);
+        JKindResult result = new JKindResult("Contract Guarantees", props, agreeProgram.state.renaming);
         queue.add(result);
 
-        ComponentImplementation compImpl = AgreeEmitterUtilities.getInstanceImplementation(ci);
-        linker.setProgram(result, program);
+        ComponentImplementation compImpl = AgreeEmitterUtilities.getInstanceImplementation(agreeProgram.state.curInst);
+        linker.setProgram(result, agreeProgram.assumeGuaranteeProgram);
         linker.setComponent(result, compImpl);
         linker.setContract(result, getContract(compImpl));
-        linker.setLayout(result, state.layout);
-        linker.setReferenceMap(result, state.refMap);
+        linker.setLayout(result, agreeProgram.state.layout);
+        linker.setReferenceMap(result, agreeProgram.state.refMap);
         linker.setLog(result, AgreeLogger.getLog());
 
         return result;
     }
+    
+    private AnalysisResult creatConsistencyVerification(AgreeProgram agreeProgram) {
+
+    	List<Boolean> statusInversionList = new ArrayList<>();
+    	for(int i = 0; i < agreeProgram.state.consistProps.size(); i++){
+    		statusInversionList.add(true);
+    	}
+    	
+        JKindResult result = new JKindResult("Contract Guarantees", agreeProgram.state.consistProps, statusInversionList, agreeProgram.state.renaming);
+        queue.add(result);
+
+        ComponentImplementation compImpl = AgreeEmitterUtilities.getInstanceImplementation(agreeProgram.state.curInst);
+        linker.setProgram(result, agreeProgram.consistProgram);
+        linker.setComponent(result, compImpl);
+        linker.setContract(result, getContract(compImpl));
+        linker.setLayout(result, agreeProgram.state.layout);
+        linker.setReferenceMap(result, agreeProgram.state.refMap);
+        linker.setLog(result, AgreeLogger.getLog());
+
+        return result;
+    }
+    
 
 //    private AnalysisResult createAssumptionVerification(ComponentInstance ci) {
 //        // AgreeEmitter emitter = new AgreeEmitter(ci, modelParents, context);
