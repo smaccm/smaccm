@@ -34,6 +34,20 @@ public class PreferencesUtil {
 			throw new IllegalArgumentException("Unknown model checker setting: " + modelChecker);
 		}
 	}
+	
+	public static KindApi getConsistencyApi(){
+		KindApi api = getKindApi();
+		
+		if(api instanceof JKindApi){
+			IPreferenceStore prefs = getPreferenceStore();
+			int depth = prefs.getInt(PreferenceConstants.PREF_CONSIST_DEPTH) + 1;
+			((JKindApi) api).setN(depth);
+			((JKindApi) api).disableInvariantGeneration();
+			((JKindApi) api).disableKInduction();
+			((JKindApi) api).setPdrMax(0);
+		}
+		return api;
+	}
 
 	private static JKindApi getJKindApi() {
 		IPreferenceStore prefs = getPreferenceStore();
@@ -53,7 +67,9 @@ public class PreferencesUtil {
 		api.setN(prefs.getInt(PreferenceConstants.PREF_DEPTH));
 		api.setTimeout(prefs.getInt(PreferenceConstants.PREF_TIMEOUT));
 		api.setPdrMax(prefs.getInt(PreferenceConstants.PREF_PDR_MAX));
-		api.disableKInduction(prefs.getBoolean(PreferenceConstants.PREF_NO_KINDUCTION));
+		if(prefs.getBoolean(PreferenceConstants.PREF_NO_KINDUCTION)){
+			api.disableKInduction();
+		}
 		return api;
 	}
 

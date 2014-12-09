@@ -64,6 +64,7 @@ public class AgreePreferencePage extends FieldEditorPreferencePage implements
     private NonNegativeIntegerFieldEditor depthFieldEditor;
     private NonNegativeIntegerFieldEditor timeoutFieldEditor;
     private NonNegativeIntegerFieldEditor pdrMaxEditor;
+    private NonNegativeIntegerFieldEditor consistDepthEditor;
 
     @Override
     public void createFieldEditors() {
@@ -111,6 +112,11 @@ public class AgreePreferencePage extends FieldEditorPreferencePage implements
         timeoutFieldEditor = new NonNegativeIntegerFieldEditor(PreferenceConstants.PREF_TIMEOUT,
                 "Timeout in seconds", getFieldEditorParent());
         addField(timeoutFieldEditor);
+        
+        consistDepthEditor = new NonNegativeIntegerFieldEditor(PreferenceConstants.PREF_CONSIST_DEPTH,
+                "Depth to check consistency up to", getFieldEditorParent());
+        addField(consistDepthEditor);
+        
 
         Button checkAvailableButton = new Button(getFieldEditorParent(), SWT.PUSH);
         checkAvailableButton.setText("Check if available");

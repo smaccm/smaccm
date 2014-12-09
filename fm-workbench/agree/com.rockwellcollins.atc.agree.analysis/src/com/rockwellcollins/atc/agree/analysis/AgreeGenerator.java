@@ -43,6 +43,7 @@ import org.eclipse.emf.ecore.EOperation;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.osate.aadl2.AnnexSubclause;
 import org.osate.aadl2.BusSubcomponent;
 import org.osate.aadl2.Classifier;
@@ -71,6 +72,7 @@ import com.rockwellcollins.atc.agree.agree.LiftStatement;
 import com.rockwellcollins.atc.agree.agree.NestedDotID;
 import com.rockwellcollins.atc.agree.agree.SpecStatement;
 import com.rockwellcollins.atc.agree.analysis.AgreeFeature.ConnType;
+import com.rockwellcollins.atc.agree.analysis.preferences.PreferenceConstants;
 import com.rockwellcollins.atc.agree.translation.InlineAssumptionGuarantees;
 
 public class AgreeGenerator {
@@ -133,6 +135,9 @@ public class AgreeGenerator {
     }
     
     private static Program getConistProgram(AgreeEmitterState state){
+    	
+    	IPreferenceStore prefs = Activator.getDefault().getPreferenceStore();
+    	int consistDetph = prefs.getInt(PreferenceConstants.PREF_CONSIST_DEPTH);
 
     	Node subNode = nodeFromState(state, false);
     	List<VarDecl> locals = new ArrayList<>(subNode.locals);
@@ -150,9 +155,8 @@ public class AgreeGenerator {
     	locals.add(consistCountVar);
     	eqs.add(consistCountEq);
     	
-    	Expr countEqExpr = new BinaryExpr(consistCountId, BinaryOp.EQUAL, new IntExpr(BigInteger.valueOf(5)));
+    	Expr countEqExpr = new BinaryExpr(consistCountId, BinaryOp.EQUAL, new IntExpr(BigInteger.valueOf(consistDetph)));
     	
-
     	//get the "this contract consistency" property
     	Expr sysGuarConjExpr = new BoolExpr(true);
     	for(Equation guarEq : state.guarExpressions){
@@ -316,6 +320,91 @@ public class AgreeGenerator {
     	return agreeProgram;
     }
     
+    
+    public static AgreeEmitterState generateSingleLayer(ComponentInstance compInst,
+    		Subcomponent comp){
+    	 
+    	ComponentType compType = AgreeEmitterUtilities.getInstanceType(compInst);
+    	ComponentImplementation compImpl = AgreeEmitterUtilities.getInstanceImplementation(compInst);
+       
+    	AgreeEmitterState state = 
+        		new AgreeEmitterState(compInst, comp);
+    	
+    	FeatureUtils.recordFeatures(state);
+    	boolean result = doSwitchAgreeAnnex(state, compType);
+    	
+        if(!result){
+        	throw new AgreeException("No contract to verify for analysis");
+        }
+        if(compImpl == null){
+        	throw new AgreeException("No implementation to verify");
+        }
+        
+        ConnectionUtils.recordConnections(state);
+        doSwitchAgreeAnnex(state, compImpl);
+
+        //go through the component implementation and build a program for each subcomponent
+        for(Subcomponent subComp : compImpl.getAllSubcomponents()){
+        	ComponentInstance subCompInst = compInst.findSubcomponentInstance(subComp);
+        	String subCompPrefix = subComp.getName()+"__";
+        	AgreeEmitterState subState = new AgreeEmitterState(subCompInst, subComp);
+        	ComponentType subCompType = AgreeEmitterUtilities.getInstanceType(subCompInst);
+
+        	FeatureUtils.recordFeatures(subState);
+        	boolean subResult = doSwitchAgreeAnnex(subState, subCompType);
+        	if(subResult){
+        		Node subNode = nodeFromState(subState, true);
+        		addSubcomponentNodeCall(subCompPrefix, state, subState, subNode);
+        	}
+        }
+
+        //handle any quasi-synchronous constraints
+        addQSConstraints(state);	
+
+    	return state;
+    }
+    
+    
+    public static AgreeEmitterState generateMonolithic(ComponentInstance compInst,
+    		Subcomponent comp){
+    	 
+    	ComponentType compType = AgreeEmitterUtilities.getInstanceType(compInst);
+    	ComponentImplementation compImpl = AgreeEmitterUtilities.getInstanceImplementation(compInst);
+       
+    	AgreeEmitterState state = 
+        		new AgreeEmitterState(compInst, comp);
+    	
+    	FeatureUtils.recordFeatures(state);
+    	boolean result = doSwitchAgreeAnnex(state, compType);
+    	
+        if(!result && compImpl == null){
+        	//we cannot drill down any further
+        	return null;
+        }
+        
+        if(compImpl != null){
+        	ConnectionUtils.recordConnections(state);
+        	doSwitchAgreeAnnex(state, compImpl);
+
+        	//go through the component implementation and build a program for each subcomponent
+        	for(Subcomponent subComp : compImpl.getAllSubcomponents()){
+        		ComponentInstance subCompInst = compInst.findSubcomponentInstance(subComp);
+        		String subCompPrefix = subComp.getName()+"__";
+        		AgreeEmitterState subState = generateMonolithic(subCompInst, subComp);
+        		if(subState != null){
+        			Node subNode = nodeFromState(subState, false);
+        			addSubcomponentNodeCall(subCompPrefix, state, subState, subNode);
+        		}
+        	}
+        	
+        	//handle any quasi-synchronous constraints
+            addQSConstraints(state);	
+        }
+    	
+    	return state;
+    }
+    
+    
     public static AgreeEmitterState generate(ComponentInstance compInst,
     		Subcomponent comp, boolean singleLayer){
     	 
@@ -326,10 +415,10 @@ public class AgreeGenerator {
         		new AgreeEmitterState(compInst, comp);
     	
     	FeatureUtils.recordFeatures(state);
-    	boolean result = doSwitchAgreeAnnex(state, compType); 
+    	boolean result = doSwitchAgreeAnnex(state, compType);
+    	
         if(!result){
-        	//there is no annex in this component so we do not care
-        	//TODO dig into components to check for annexes
+        	//there is no annex in this component so we do not care about it
         	return null;
         }
         
