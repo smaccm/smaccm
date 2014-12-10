@@ -309,10 +309,17 @@ public class AgreeGenerator {
     }
     
     
-    public static AgreeProgram getLustre(ComponentInstance compInst){
+    public static AgreeProgram getLustre(ComponentInstance compInst, boolean monolithic){
     	
     	AgreeProgram agreeProgram = new AgreeProgram();
-    	AgreeEmitterState state = generate(compInst, null, false);
+    	AgreeEmitterState state;
+    	
+    	if(monolithic){
+    		state = generateMonolithic(compInst, null);
+    	}else{
+    		state = generateSingleLayer(compInst, null);
+    	}
+    	
     	agreeProgram.state = state;
     	agreeProgram.assumeGuaranteeProgram = getAssumeGuaranteeProgram(state);
     	agreeProgram.consistProgram = getConistProgram(state);
@@ -321,7 +328,7 @@ public class AgreeGenerator {
     }
     
     
-    public static AgreeEmitterState generateSingleLayer(ComponentInstance compInst,
+    private static AgreeEmitterState generateSingleLayer(ComponentInstance compInst,
     		Subcomponent comp){
     	 
     	ComponentType compType = AgreeEmitterUtilities.getInstanceType(compInst);
@@ -365,7 +372,7 @@ public class AgreeGenerator {
     }
     
     
-    public static AgreeEmitterState generateMonolithic(ComponentInstance compInst,
+    private static AgreeEmitterState generateMonolithic(ComponentInstance compInst,
     		Subcomponent comp){
     	 
     	ComponentType compType = AgreeEmitterUtilities.getInstanceType(compInst);
@@ -384,7 +391,7 @@ public class AgreeGenerator {
         
         if(compImpl != null){
         	ConnectionUtils.recordConnections(state);
-        	doSwitchAgreeAnnex(state, compImpl);
+        	 boolean foundSubAnnex = doSwitchAgreeAnnex(state, compImpl);
 
         	//go through the component implementation and build a program for each subcomponent
         	for(Subcomponent subComp : compImpl.getAllSubcomponents()){
@@ -392,51 +399,14 @@ public class AgreeGenerator {
         		String subCompPrefix = subComp.getName()+"__";
         		AgreeEmitterState subState = generateMonolithic(subCompInst, subComp);
         		if(subState != null){
+        			foundSubAnnex = true;
         			Node subNode = nodeFromState(subState, false);
         			addSubcomponentNodeCall(subCompPrefix, state, subState, subNode);
         		}
         	}
-        	
-        	//handle any quasi-synchronous constraints
-            addQSConstraints(state);	
-        }
-    	
-    	return state;
-    }
-    
-    
-    public static AgreeEmitterState generate(ComponentInstance compInst,
-    		Subcomponent comp, boolean singleLayer){
-    	 
-    	ComponentType compType = AgreeEmitterUtilities.getInstanceType(compInst);
-    	ComponentImplementation compImpl = AgreeEmitterUtilities.getInstanceImplementation(compInst);
-       
-    	AgreeEmitterState state = 
-        		new AgreeEmitterState(compInst, comp);
-    	
-    	FeatureUtils.recordFeatures(state);
-    	boolean result = doSwitchAgreeAnnex(state, compType);
-    	
-        if(!result){
-        	//there is no annex in this component so we do not care about it
-        	return null;
-        }
-        
-        if(compImpl != null && !singleLayer){
-        	ConnectionUtils.recordConnections(state);
-        	doSwitchAgreeAnnex(state, compImpl);
-
-        	//go through the component implementation and build a program for each subcomponent
-        	for(Subcomponent subComp : compImpl.getAllSubcomponents()){
-        		ComponentInstance subCompInst = compInst.findSubcomponentInstance(subComp);
-        		String subCompPrefix = subComp.getName()+"__";
-        		AgreeEmitterState subState = generate(subCompInst, subComp, true);
-        		if(subState != null){
-        			Node subNode = nodeFromState(subState, true);
-        			addSubcomponentNodeCall(subCompPrefix, state, subState, subNode);
-        		}
+        	if(!foundSubAnnex){
+        		return null;
         	}
-        	
         	//handle any quasi-synchronous constraints
             addQSConstraints(state);	
         }
@@ -564,7 +534,7 @@ public class AgreeGenerator {
 
 	private static void addNodeAndCondactCall(final String prefix,
 			AgreeEmitterState state, AgreeEmitterState subState, Node subNode,
-			IdExpr clockId) {
+			Expr clockId) {
 		
 		//create the call to the node and add it to the assertions
 		List<Expr> callArgs = new ArrayList<>();
@@ -577,6 +547,10 @@ public class AgreeGenerator {
 		args.add(new BoolExpr(true));
 		
 		NodeCallExpr nodeCall = new NodeCallExpr(subNode.id, callArgs);
+		
+		if(state.synchrony == 0 && state.calendar.size() == 0){
+			clockId = new BoolExpr(true);
+		}
 		CondactExpr condactCall = new CondactExpr(clockId, nodeCall, args);
 		
 		state.assertExpressions.add(condactCall);

@@ -116,7 +116,7 @@ public abstract class VerifyHandler extends AadlHandler {
                 wrapper.addChild(result);
                 result = wrapper;
             } else {
-            	AgreeProgram agreeProgram = AgreeGenerator.getLustre(si);//, isMonolithic());
+            	AgreeProgram agreeProgram = AgreeGenerator.getLustre(si, isMonolithic());//, isMonolithic());
                 wrapper.addChild(createGuaranteeVerification(agreeProgram));
                 //wrapper.addChild(createAssumptionVerification(si));
                 wrapper.addChild(creatConsistencyVerification(agreeProgram));
@@ -147,7 +147,7 @@ public abstract class VerifyHandler extends AadlHandler {
         CompositeAnalysisResult result = new CompositeAnalysisResult("Verification for " + name);
         
         if(containsAGREEAnnex(ci)){
-        	AgreeProgram agreeProgram = AgreeGenerator.getLustre(ci);//, isMonolithic());
+        	AgreeProgram agreeProgram = AgreeGenerator.getLustre(ci, isMonolithic());//, isMonolithic());
         	AnalysisResult tempResult = createGuaranteeVerification(agreeProgram);
         	if (tempResult != null) {
         		result.addChild(tempResult);
