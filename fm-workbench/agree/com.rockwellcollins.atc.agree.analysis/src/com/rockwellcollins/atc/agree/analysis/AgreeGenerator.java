@@ -1,17 +1,10 @@
 package com.rockwellcollins.atc.agree.analysis;
 
-import java.lang.reflect.InvocationTargetException;
 import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 
-import jkind.api.results.MapRenaming;
-import jkind.api.results.Renaming;
 import jkind.lustre.BinaryExpr;
 import jkind.lustre.BinaryOp;
 import jkind.lustre.BoolExpr;
@@ -30,48 +23,19 @@ import jkind.lustre.TypeDef;
 import jkind.lustre.UnaryExpr;
 import jkind.lustre.UnaryOp;
 import jkind.lustre.VarDecl;
-import jkind.results.layout.Layout;
 
-import org.eclipse.emf.common.notify.Adapter;
-import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.common.util.DiagnosticChain;
-import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.common.util.TreeIterator;
-import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EOperation;
-import org.eclipse.emf.ecore.EReference;
-import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.osate.aadl2.AnnexSubclause;
-import org.osate.aadl2.BusSubcomponent;
-import org.osate.aadl2.Classifier;
-import org.osate.aadl2.Comment;
 import org.osate.aadl2.ComponentClassifier;
 import org.osate.aadl2.ComponentImplementation;
 import org.osate.aadl2.ComponentType;
-import org.osate.aadl2.DataSubcomponent;
-import org.osate.aadl2.DataSubcomponentType;
-import org.osate.aadl2.Element;
-import org.osate.aadl2.NamedElement;
 import org.osate.aadl2.Subcomponent;
 import org.osate.aadl2.instance.ComponentInstance;
-import org.osate.aadl2.instance.FeatureInstance;
-import org.osate.aadl2.parsesupport.LocationReference;
 import org.osate.annexsupport.AnnexUtil;
 
-import com.rockwellcollins.atc.agree.agree.AgreeContract;
 import com.rockwellcollins.atc.agree.agree.AgreeContractSubclause;
 import com.rockwellcollins.atc.agree.agree.AgreePackage;
-import com.rockwellcollins.atc.agree.agree.Contract;
-import com.rockwellcollins.atc.agree.agree.EqStatement;
-import com.rockwellcollins.atc.agree.agree.IntLitExpr;
-import com.rockwellcollins.atc.agree.agree.LemmaStatement;
-import com.rockwellcollins.atc.agree.agree.LiftStatement;
-import com.rockwellcollins.atc.agree.agree.NestedDotID;
-import com.rockwellcollins.atc.agree.agree.SpecStatement;
-import com.rockwellcollins.atc.agree.analysis.AgreeFeature.ConnType;
 import com.rockwellcollins.atc.agree.analysis.preferences.PreferenceConstants;
 import com.rockwellcollins.atc.agree.translation.InlineAssumptionGuarantees;
 
