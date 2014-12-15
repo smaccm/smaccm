@@ -479,26 +479,47 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		private final Keyword cSimNo_simultKeyword_0_4_0_1 = (Keyword)cSimAlternatives_0_4_0.eContents().get(1);
 		private final Keyword cSemicolonKeyword_0_5 = (Keyword)cGroup_0.eContents().get(5);
 		private final Group cGroup_1 = (Group)cAlternatives.eContents().get(1);
-		private final Action cCalenStatementAction_1_0 = (Action)cGroup_1.eContents().get(0);
-		private final Keyword cCalendarKeyword_1_1 = (Keyword)cGroup_1.eContents().get(1);
+		private final Action cMNSynchStatementAction_1_0 = (Action)cGroup_1.eContents().get(0);
+		private final Keyword cSynchronyKeyword_1_1 = (Keyword)cGroup_1.eContents().get(1);
 		private final Keyword cColonKeyword_1_2 = (Keyword)cGroup_1.eContents().get(2);
-		private final Assignment cElsAssignment_1_3 = (Assignment)cGroup_1.eContents().get(3);
-		private final CrossReference cElsNamedElementCrossReference_1_3_0 = (CrossReference)cElsAssignment_1_3.eContents().get(0);
-		private final RuleCall cElsNamedElementIDTerminalRuleCall_1_3_0_1 = (RuleCall)cElsNamedElementCrossReference_1_3_0.eContents().get(1);
-		private final Group cGroup_1_4 = (Group)cGroup_1.eContents().get(4);
-		private final Keyword cCommaKeyword_1_4_0 = (Keyword)cGroup_1_4.eContents().get(0);
-		private final Assignment cElsAssignment_1_4_1 = (Assignment)cGroup_1_4.eContents().get(1);
-		private final CrossReference cElsNamedElementCrossReference_1_4_1_0 = (CrossReference)cElsAssignment_1_4_1.eContents().get(0);
-		private final RuleCall cElsNamedElementIDTerminalRuleCall_1_4_1_0_1 = (RuleCall)cElsNamedElementCrossReference_1_4_1_0.eContents().get(1);
-		private final Keyword cSemicolonKeyword_1_5 = (Keyword)cGroup_1.eContents().get(5);
+		private final Group cGroup_1_3 = (Group)cGroup_1.eContents().get(3);
+		private final Assignment cComp1Assignment_1_3_0 = (Assignment)cGroup_1_3.eContents().get(0);
+		private final CrossReference cComp1NamedElementCrossReference_1_3_0_0 = (CrossReference)cComp1Assignment_1_3_0.eContents().get(0);
+		private final RuleCall cComp1NamedElementIDTerminalRuleCall_1_3_0_0_1 = (RuleCall)cComp1NamedElementCrossReference_1_3_0_0.eContents().get(1);
+		private final Keyword cCommaKeyword_1_3_1 = (Keyword)cGroup_1_3.eContents().get(1);
+		private final Assignment cComp2Assignment_1_3_2 = (Assignment)cGroup_1_3.eContents().get(2);
+		private final CrossReference cComp2NamedElementCrossReference_1_3_2_0 = (CrossReference)cComp2Assignment_1_3_2.eContents().get(0);
+		private final RuleCall cComp2NamedElementIDTerminalRuleCall_1_3_2_0_1 = (RuleCall)cComp2NamedElementCrossReference_1_3_2_0.eContents().get(1);
+		private final Keyword cColonKeyword_1_3_3 = (Keyword)cGroup_1_3.eContents().get(3);
+		private final Assignment cMaxAssignment_1_3_4 = (Assignment)cGroup_1_3.eContents().get(4);
+		private final RuleCall cMaxINTEGER_LITTerminalRuleCall_1_3_4_0 = (RuleCall)cMaxAssignment_1_3_4.eContents().get(0);
+		private final Keyword cCommaKeyword_1_3_5 = (Keyword)cGroup_1_3.eContents().get(5);
+		private final Assignment cMinAssignment_1_3_6 = (Assignment)cGroup_1_3.eContents().get(6);
+		private final RuleCall cMinINTEGER_LITTerminalRuleCall_1_3_6_0 = (RuleCall)cMinAssignment_1_3_6.eContents().get(0);
+		private final Keyword cSemicolonKeyword_1_4 = (Keyword)cGroup_1.eContents().get(4);
+		private final Group cGroup_2 = (Group)cAlternatives.eContents().get(2);
+		private final Action cCalenStatementAction_2_0 = (Action)cGroup_2.eContents().get(0);
+		private final Keyword cCalendarKeyword_2_1 = (Keyword)cGroup_2.eContents().get(1);
+		private final Keyword cColonKeyword_2_2 = (Keyword)cGroup_2.eContents().get(2);
+		private final Assignment cElsAssignment_2_3 = (Assignment)cGroup_2.eContents().get(3);
+		private final CrossReference cElsNamedElementCrossReference_2_3_0 = (CrossReference)cElsAssignment_2_3.eContents().get(0);
+		private final RuleCall cElsNamedElementIDTerminalRuleCall_2_3_0_1 = (RuleCall)cElsNamedElementCrossReference_2_3_0.eContents().get(1);
+		private final Group cGroup_2_4 = (Group)cGroup_2.eContents().get(4);
+		private final Keyword cCommaKeyword_2_4_0 = (Keyword)cGroup_2_4.eContents().get(0);
+		private final Assignment cElsAssignment_2_4_1 = (Assignment)cGroup_2_4.eContents().get(1);
+		private final CrossReference cElsNamedElementCrossReference_2_4_1_0 = (CrossReference)cElsAssignment_2_4_1.eContents().get(0);
+		private final RuleCall cElsNamedElementIDTerminalRuleCall_2_4_1_0_1 = (RuleCall)cElsNamedElementCrossReference_2_4_1_0.eContents().get(1);
+		private final Keyword cSemicolonKeyword_2_5 = (Keyword)cGroup_2.eContents().get(5);
 		
 		//SynchStatement:
-		//	{SynchStatement} "synchrony" ":" val=INTEGER_LIT sim=("simult" | "no_simult")? ";" | {CalenStatement} "calendar" ":"
-		//	els+=[aadl2::NamedElement] ("," els+=[aadl2::NamedElement])* ";";
+		//	{SynchStatement} "synchrony" ":" val=INTEGER_LIT sim=("simult" | "no_simult")? ";" | {MNSynchStatement} "synchrony"
+		//	":" (comp1+=[aadl2::NamedElement] "," comp2+=[aadl2::NamedElement] ":" max+=INTEGER_LIT "," min+=INTEGER_LIT)+ ";" |
+		//	{CalenStatement} "calendar" ":" els+=[aadl2::NamedElement] ("," els+=[aadl2::NamedElement])* ";";
 		public ParserRule getRule() { return rule; }
 
-		//{SynchStatement} "synchrony" ":" val=INTEGER_LIT sim=("simult" | "no_simult")? ";" | {CalenStatement} "calendar" ":"
-		//els+=[aadl2::NamedElement] ("," els+=[aadl2::NamedElement])* ";"
+		//{SynchStatement} "synchrony" ":" val=INTEGER_LIT sim=("simult" | "no_simult")? ";" | {MNSynchStatement} "synchrony" ":"
+		//(comp1+=[aadl2::NamedElement] "," comp2+=[aadl2::NamedElement] ":" max+=INTEGER_LIT "," min+=INTEGER_LIT)+ ";" |
+		//{CalenStatement} "calendar" ":" els+=[aadl2::NamedElement] ("," els+=[aadl2::NamedElement])* ";"
 		public Alternatives getAlternatives() { return cAlternatives; }
 
 		//{SynchStatement} "synchrony" ":" val=INTEGER_LIT sim=("simult" | "no_simult")? ";"
@@ -534,44 +555,102 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		//";"
 		public Keyword getSemicolonKeyword_0_5() { return cSemicolonKeyword_0_5; }
 
-		//{CalenStatement} "calendar" ":" els+=[aadl2::NamedElement] ("," els+=[aadl2::NamedElement])* ";"
+		//{MNSynchStatement} "synchrony" ":" (comp1+=[aadl2::NamedElement] "," comp2+=[aadl2::NamedElement] ":" max+=INTEGER_LIT
+		//"," min+=INTEGER_LIT)+ ";"
 		public Group getGroup_1() { return cGroup_1; }
 
-		//{CalenStatement}
-		public Action getCalenStatementAction_1_0() { return cCalenStatementAction_1_0; }
+		//{MNSynchStatement}
+		public Action getMNSynchStatementAction_1_0() { return cMNSynchStatementAction_1_0; }
 
-		//"calendar"
-		public Keyword getCalendarKeyword_1_1() { return cCalendarKeyword_1_1; }
+		//"synchrony"
+		public Keyword getSynchronyKeyword_1_1() { return cSynchronyKeyword_1_1; }
 
 		//":"
 		public Keyword getColonKeyword_1_2() { return cColonKeyword_1_2; }
 
-		//els+=[aadl2::NamedElement]
-		public Assignment getElsAssignment_1_3() { return cElsAssignment_1_3; }
+		//(comp1+=[aadl2::NamedElement] "," comp2+=[aadl2::NamedElement] ":" max+=INTEGER_LIT "," min+=INTEGER_LIT)+
+		public Group getGroup_1_3() { return cGroup_1_3; }
+
+		//comp1+=[aadl2::NamedElement]
+		public Assignment getComp1Assignment_1_3_0() { return cComp1Assignment_1_3_0; }
 
 		//[aadl2::NamedElement]
-		public CrossReference getElsNamedElementCrossReference_1_3_0() { return cElsNamedElementCrossReference_1_3_0; }
+		public CrossReference getComp1NamedElementCrossReference_1_3_0_0() { return cComp1NamedElementCrossReference_1_3_0_0; }
 
 		//ID
-		public RuleCall getElsNamedElementIDTerminalRuleCall_1_3_0_1() { return cElsNamedElementIDTerminalRuleCall_1_3_0_1; }
-
-		//("," els+=[aadl2::NamedElement])*
-		public Group getGroup_1_4() { return cGroup_1_4; }
+		public RuleCall getComp1NamedElementIDTerminalRuleCall_1_3_0_0_1() { return cComp1NamedElementIDTerminalRuleCall_1_3_0_0_1; }
 
 		//","
-		public Keyword getCommaKeyword_1_4_0() { return cCommaKeyword_1_4_0; }
+		public Keyword getCommaKeyword_1_3_1() { return cCommaKeyword_1_3_1; }
 
-		//els+=[aadl2::NamedElement]
-		public Assignment getElsAssignment_1_4_1() { return cElsAssignment_1_4_1; }
+		//comp2+=[aadl2::NamedElement]
+		public Assignment getComp2Assignment_1_3_2() { return cComp2Assignment_1_3_2; }
 
 		//[aadl2::NamedElement]
-		public CrossReference getElsNamedElementCrossReference_1_4_1_0() { return cElsNamedElementCrossReference_1_4_1_0; }
+		public CrossReference getComp2NamedElementCrossReference_1_3_2_0() { return cComp2NamedElementCrossReference_1_3_2_0; }
 
 		//ID
-		public RuleCall getElsNamedElementIDTerminalRuleCall_1_4_1_0_1() { return cElsNamedElementIDTerminalRuleCall_1_4_1_0_1; }
+		public RuleCall getComp2NamedElementIDTerminalRuleCall_1_3_2_0_1() { return cComp2NamedElementIDTerminalRuleCall_1_3_2_0_1; }
+
+		//":"
+		public Keyword getColonKeyword_1_3_3() { return cColonKeyword_1_3_3; }
+
+		//max+=INTEGER_LIT
+		public Assignment getMaxAssignment_1_3_4() { return cMaxAssignment_1_3_4; }
+
+		//INTEGER_LIT
+		public RuleCall getMaxINTEGER_LITTerminalRuleCall_1_3_4_0() { return cMaxINTEGER_LITTerminalRuleCall_1_3_4_0; }
+
+		//","
+		public Keyword getCommaKeyword_1_3_5() { return cCommaKeyword_1_3_5; }
+
+		//min+=INTEGER_LIT
+		public Assignment getMinAssignment_1_3_6() { return cMinAssignment_1_3_6; }
+
+		//INTEGER_LIT
+		public RuleCall getMinINTEGER_LITTerminalRuleCall_1_3_6_0() { return cMinINTEGER_LITTerminalRuleCall_1_3_6_0; }
 
 		//";"
-		public Keyword getSemicolonKeyword_1_5() { return cSemicolonKeyword_1_5; }
+		public Keyword getSemicolonKeyword_1_4() { return cSemicolonKeyword_1_4; }
+
+		//{CalenStatement} "calendar" ":" els+=[aadl2::NamedElement] ("," els+=[aadl2::NamedElement])* ";"
+		public Group getGroup_2() { return cGroup_2; }
+
+		//{CalenStatement}
+		public Action getCalenStatementAction_2_0() { return cCalenStatementAction_2_0; }
+
+		//"calendar"
+		public Keyword getCalendarKeyword_2_1() { return cCalendarKeyword_2_1; }
+
+		//":"
+		public Keyword getColonKeyword_2_2() { return cColonKeyword_2_2; }
+
+		//els+=[aadl2::NamedElement]
+		public Assignment getElsAssignment_2_3() { return cElsAssignment_2_3; }
+
+		//[aadl2::NamedElement]
+		public CrossReference getElsNamedElementCrossReference_2_3_0() { return cElsNamedElementCrossReference_2_3_0; }
+
+		//ID
+		public RuleCall getElsNamedElementIDTerminalRuleCall_2_3_0_1() { return cElsNamedElementIDTerminalRuleCall_2_3_0_1; }
+
+		//("," els+=[aadl2::NamedElement])*
+		public Group getGroup_2_4() { return cGroup_2_4; }
+
+		//","
+		public Keyword getCommaKeyword_2_4_0() { return cCommaKeyword_2_4_0; }
+
+		//els+=[aadl2::NamedElement]
+		public Assignment getElsAssignment_2_4_1() { return cElsAssignment_2_4_1; }
+
+		//[aadl2::NamedElement]
+		public CrossReference getElsNamedElementCrossReference_2_4_1_0() { return cElsNamedElementCrossReference_2_4_1_0; }
+
+		//ID
+		public RuleCall getElsNamedElementIDTerminalRuleCall_2_4_1_0_1() { return cElsNamedElementIDTerminalRuleCall_2_4_1_0_1; }
+
+		//";"
+		public Keyword getSemicolonKeyword_2_5() { return cSemicolonKeyword_2_5; }
 	}
 
 	public class OrderStatementElements extends AbstractParserRuleElementFinder {
@@ -2815,8 +2894,9 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 	}
 
 	//SynchStatement:
-	//	{SynchStatement} "synchrony" ":" val=INTEGER_LIT sim=("simult" | "no_simult")? ";" | {CalenStatement} "calendar" ":"
-	//	els+=[aadl2::NamedElement] ("," els+=[aadl2::NamedElement])* ";";
+	//	{SynchStatement} "synchrony" ":" val=INTEGER_LIT sim=("simult" | "no_simult")? ";" | {MNSynchStatement} "synchrony"
+	//	":" (comp1+=[aadl2::NamedElement] "," comp2+=[aadl2::NamedElement] ":" max+=INTEGER_LIT "," min+=INTEGER_LIT)+ ";" |
+	//	{CalenStatement} "calendar" ":" els+=[aadl2::NamedElement] ("," els+=[aadl2::NamedElement])* ";";
 	public SynchStatementElements getSynchStatementAccess() {
 		return pSynchStatement;
 	}

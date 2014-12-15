@@ -32,6 +32,7 @@ import com.rockwellcollins.atc.agree.agree.InitialStatement;
 import com.rockwellcollins.atc.agree.agree.IntLitExpr;
 import com.rockwellcollins.atc.agree.agree.LemmaStatement;
 import com.rockwellcollins.atc.agree.agree.LiftStatement;
+import com.rockwellcollins.atc.agree.agree.MNSynchStatement;
 import com.rockwellcollins.atc.agree.agree.NestedDotID;
 import com.rockwellcollins.atc.agree.agree.NodeBodyExpr;
 import com.rockwellcollins.atc.agree.agree.NodeDefExpr;
@@ -283,6 +284,13 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * @generated
    */
   private EClass liftStatementEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass mnSynchStatementEClass = null;
 
   /**
    * <!-- begin-user-doc -->
@@ -1162,6 +1170,56 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  public EClass getMNSynchStatement()
+  {
+    return mnSynchStatementEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getMNSynchStatement_Comp1()
+  {
+    return (EReference)mnSynchStatementEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getMNSynchStatement_Comp2()
+  {
+    return (EReference)mnSynchStatementEClass.getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getMNSynchStatement_Max()
+  {
+    return (EAttribute)mnSynchStatementEClass.getEStructuralFeatures().get(2);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getMNSynchStatement_Min()
+  {
+    return (EAttribute)mnSynchStatementEClass.getEStructuralFeatures().get(3);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   public EClass getCalenStatement()
   {
     return calenStatementEClass;
@@ -1823,6 +1881,12 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     liftStatementEClass = createEClass(LIFT_STATEMENT);
     createEReference(liftStatementEClass, LIFT_STATEMENT__SUBCOMP);
 
+    mnSynchStatementEClass = createEClass(MN_SYNCH_STATEMENT);
+    createEReference(mnSynchStatementEClass, MN_SYNCH_STATEMENT__COMP1);
+    createEReference(mnSynchStatementEClass, MN_SYNCH_STATEMENT__COMP2);
+    createEAttribute(mnSynchStatementEClass, MN_SYNCH_STATEMENT__MAX);
+    createEAttribute(mnSynchStatementEClass, MN_SYNCH_STATEMENT__MIN);
+
     calenStatementEClass = createEClass(CALEN_STATEMENT);
     createEReference(calenStatementEClass, CALEN_STATEMENT__ELS);
 
@@ -1970,6 +2034,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     paramStatementEClass.getESuperTypes().add(this.getSpecStatement());
     lemmaStatementEClass.getESuperTypes().add(this.getSpecStatement());
     liftStatementEClass.getESuperTypes().add(this.getSpecStatement());
+    mnSynchStatementEClass.getESuperTypes().add(this.getSynchStatement());
     calenStatementEClass.getESuperTypes().add(this.getSynchStatement());
     nodeEqEClass.getESuperTypes().add(this.getNodeStmt());
     nodeLemmaEClass.getESuperTypes().add(this.getNodeStmt());
@@ -2088,6 +2153,12 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
 
     initEClass(liftStatementEClass, LiftStatement.class, "LiftStatement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getLiftStatement_Subcomp(), this.getNestedDotID(), null, "subcomp", null, 0, 1, LiftStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+    initEClass(mnSynchStatementEClass, MNSynchStatement.class, "MNSynchStatement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getMNSynchStatement_Comp1(), theAadl2Package.getNamedElement(), null, "comp1", null, 0, -1, MNSynchStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getMNSynchStatement_Comp2(), theAadl2Package.getNamedElement(), null, "comp2", null, 0, -1, MNSynchStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEAttribute(getMNSynchStatement_Max(), theEcorePackage.getEString(), "max", null, 0, -1, MNSynchStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEAttribute(getMNSynchStatement_Min(), theEcorePackage.getEString(), "min", null, 0, -1, MNSynchStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(calenStatementEClass, CalenStatement.class, "CalenStatement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getCalenStatement_Els(), theAadl2Package.getNamedElement(), null, "els", null, 0, -1, CalenStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

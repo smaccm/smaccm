@@ -293,6 +293,15 @@ public interface AgreeFactory extends EFactory
   LiftStatement createLiftStatement();
 
   /**
+   * Returns a new object of class '<em>MN Synch Statement</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>MN Synch Statement</em>'.
+   * @generated
+   */
+  MNSynchStatement createMNSynchStatement();
+
+  /**
    * Returns a new object of class '<em>Calen Statement</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->

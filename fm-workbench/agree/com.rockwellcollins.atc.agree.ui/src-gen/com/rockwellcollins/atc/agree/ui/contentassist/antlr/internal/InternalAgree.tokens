@@ -4,7 +4,7 @@
 '*'=15
 '+'=28
 '+=>'=96
-','=51
+','=50
 '-'=29
 '->'=92
 '.'=77
@@ -35,7 +35,7 @@
 'assume'=40
 'binding'=83
 'bool'=19
-'calendar'=50
+'calendar'=51
 'classifier'=89
 'compute'=88
 'const'=54

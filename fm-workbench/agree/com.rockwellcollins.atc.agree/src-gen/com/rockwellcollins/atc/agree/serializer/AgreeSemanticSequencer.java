@@ -25,6 +25,7 @@ import com.rockwellcollins.atc.agree.agree.InitialStatement;
 import com.rockwellcollins.atc.agree.agree.IntLitExpr;
 import com.rockwellcollins.atc.agree.agree.LemmaStatement;
 import com.rockwellcollins.atc.agree.agree.LiftStatement;
+import com.rockwellcollins.atc.agree.agree.MNSynchStatement;
 import com.rockwellcollins.atc.agree.agree.NestedDotID;
 import com.rockwellcollins.atc.agree.agree.NodeBodyExpr;
 import com.rockwellcollins.atc.agree.agree.NodeDefExpr;
@@ -568,6 +569,14 @@ public class AgreeSemanticSequencer extends PropertiesSemanticSequencer {
 				if(context == grammarAccess.getElementRule() ||
 				   context == grammarAccess.getSpecStatementRule()) {
 					sequence_SpecStatement(context, (LiftStatement) semanticObject); 
+					return; 
+				}
+				else break;
+			case AgreePackage.MN_SYNCH_STATEMENT:
+				if(context == grammarAccess.getElementRule() ||
+				   context == grammarAccess.getSpecStatementRule() ||
+				   context == grammarAccess.getSynchStatementRule()) {
+					sequence_SynchStatement(context, (MNSynchStatement) semanticObject); 
 					return; 
 				}
 				else break;
@@ -1203,6 +1212,15 @@ public class AgreeSemanticSequencer extends PropertiesSemanticSequencer {
 	 *     (els+=[NamedElement|ID] els+=[NamedElement|ID]*)
 	 */
 	protected void sequence_SynchStatement(EObject context, CalenStatement semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Constraint:
+	 *     (comp1+=[NamedElement|ID] comp2+=[NamedElement|ID] max+=INTEGER_LIT min+=INTEGER_LIT)+
+	 */
+	protected void sequence_SynchStatement(EObject context, MNSynchStatement semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	

@@ -84,7 +84,6 @@ public class AgreeAnnexEmitter  {
     
     //the depth of which to check consistency
     private int consistUnrollDepth = 5;
-    private List<IdExpr> calendar = new ArrayList<IdExpr>();
     private final Map<FeatureInstance, List<AgreeFeature>> featInstToAgreeFeatMap = new HashMap<>();
 	public List<String> consistProps;
 	public List<String> assumProps;
@@ -819,7 +818,31 @@ public class AgreeAnnexEmitter  {
 		}
 		
 		Expr clockAssertion;
-        if(state.synchrony > 0){
+		if(state.mnSyncEls.size() != 0){
+			//this set is used to make sure that we do not make a definition for the same
+			//calendar twice (a user might have multiple 3-2 synchrony constraints for example)
+			Set<String> nodeNames = new HashSet<>();
+			clockAssertion = new BoolExpr(true);
+			
+			for(MNSynchronyElement elem : state.mnSyncEls){
+				String nodeName = "__calendar_node_"+elem.max+"_"+elem.min;
+				if(!nodeNames.contains(nodeName)){
+					Node calNode = AgreeCalendarUtils.getMNCalendar(nodeName, elem.max, elem.min);
+					nodeSet.add(calNode);
+				}
+				NodeCallExpr nodeCall = new NodeCallExpr(nodeName, elem.maxClock, elem.minClock);
+				clockAssertion = new BinaryExpr(clockAssertion, BinaryOp.AND, nodeCall);
+				nodeCall = new NodeCallExpr(nodeName, elem.minClock, elem.maxClock);
+				clockAssertion = new BinaryExpr(clockAssertion, BinaryOp.AND, nodeCall);
+			}
+			
+		}else if(state.calendar.size() != 0){
+        	
+        	Node calNode = AgreeCalendarUtils.getExplicitCalendarNode("__calendar_node_"+state.category, state.calendar, clocks);
+        	nodeSet.add(calNode);
+        	
+        	clockAssertion = new NodeCallExpr(calNode.id, clocks);
+		}else if(state.synchrony > 0){
             Node dfaNode = AgreeCalendarUtils.getDFANode("__dfa_node_"+state.category, state.synchrony); 
             Node calNode = AgreeCalendarUtils.getCalendarNode("__calendar_node_"+state.category, clocks.size());
             nodeSet.add(dfaNode);
@@ -832,13 +855,6 @@ public class AgreeAnnexEmitter  {
             	Expr onlyOneTick = AgreeCalendarUtils.getSingleTick(clocks);
             	clockAssertion = new BinaryExpr(clockAssertion, BinaryOp.AND, onlyOneTick);
             }
-            
-        }else if(this.calendar.size() > 0){
-        	
-        	Node calNode = AgreeCalendarUtils.getExplicitCalendarNode("__calendar_node_"+state.category, calendar, clocks);
-        	nodeSet.add(calNode);
-        	
-        	clockAssertion = new NodeCallExpr(calNode.id, clocks);
         	
         }else{
             clockAssertion = new BoolExpr(true);

@@ -791,18 +791,18 @@ ruleSynchStatement returns [EObject current=null]
     |((
     {
         $current = forceCreateModelElement(
-            grammarAccess.getSynchStatementAccess().getCalenStatementAction_1_0(),
+            grammarAccess.getSynchStatementAccess().getMNSynchStatementAction_1_0(),
             $current);
     }
-)	otherlv_7='calendar' 
+)	otherlv_7='synchrony' 
     {
-    	newLeafNode(otherlv_7, grammarAccess.getSynchStatementAccess().getCalendarKeyword_1_1());
+    	newLeafNode(otherlv_7, grammarAccess.getSynchStatementAccess().getSynchronyKeyword_1_1());
     }
 	otherlv_8=':' 
     {
     	newLeafNode(otherlv_8, grammarAccess.getSynchStatementAccess().getColonKeyword_1_2());
     }
-(
+((
 (
 		{
 			if ($current==null) {
@@ -811,13 +811,13 @@ ruleSynchStatement returns [EObject current=null]
         }
 	otherlv_9=RULE_ID
 	{
-		newLeafNode(otherlv_9, grammarAccess.getSynchStatementAccess().getElsNamedElementCrossReference_1_3_0()); 
+		newLeafNode(otherlv_9, grammarAccess.getSynchStatementAccess().getComp1NamedElementCrossReference_1_3_0_0()); 
 	}
 
 )
-)(	otherlv_10=',' 
+)	otherlv_10=',' 
     {
-    	newLeafNode(otherlv_10, grammarAccess.getSynchStatementAccess().getCommaKeyword_1_4_0());
+    	newLeafNode(otherlv_10, grammarAccess.getSynchStatementAccess().getCommaKeyword_1_3_1());
     }
 (
 (
@@ -828,13 +828,106 @@ ruleSynchStatement returns [EObject current=null]
         }
 	otherlv_11=RULE_ID
 	{
-		newLeafNode(otherlv_11, grammarAccess.getSynchStatementAccess().getElsNamedElementCrossReference_1_4_1_0()); 
+		newLeafNode(otherlv_11, grammarAccess.getSynchStatementAccess().getComp2NamedElementCrossReference_1_3_2_0()); 
 	}
 
 )
-))*	otherlv_12=';' 
+)	otherlv_12=':' 
     {
-    	newLeafNode(otherlv_12, grammarAccess.getSynchStatementAccess().getSemicolonKeyword_1_5());
+    	newLeafNode(otherlv_12, grammarAccess.getSynchStatementAccess().getColonKeyword_1_3_3());
+    }
+(
+(
+		lv_max_13_0=RULE_INTEGER_LIT
+		{
+			newLeafNode(lv_max_13_0, grammarAccess.getSynchStatementAccess().getMaxINTEGER_LITTerminalRuleCall_1_3_4_0()); 
+		}
+		{
+	        if ($current==null) {
+	            $current = createModelElement(grammarAccess.getSynchStatementRule());
+	        }
+       		addWithLastConsumed(
+       			$current, 
+       			"max",
+        		lv_max_13_0, 
+        		"INTEGER_LIT");
+	    }
+
+)
+)	otherlv_14=',' 
+    {
+    	newLeafNode(otherlv_14, grammarAccess.getSynchStatementAccess().getCommaKeyword_1_3_5());
+    }
+(
+(
+		lv_min_15_0=RULE_INTEGER_LIT
+		{
+			newLeafNode(lv_min_15_0, grammarAccess.getSynchStatementAccess().getMinINTEGER_LITTerminalRuleCall_1_3_6_0()); 
+		}
+		{
+	        if ($current==null) {
+	            $current = createModelElement(grammarAccess.getSynchStatementRule());
+	        }
+       		addWithLastConsumed(
+       			$current, 
+       			"min",
+        		lv_min_15_0, 
+        		"INTEGER_LIT");
+	    }
+
+)
+))+	otherlv_16=';' 
+    {
+    	newLeafNode(otherlv_16, grammarAccess.getSynchStatementAccess().getSemicolonKeyword_1_4());
+    }
+)
+    |((
+    {
+        $current = forceCreateModelElement(
+            grammarAccess.getSynchStatementAccess().getCalenStatementAction_2_0(),
+            $current);
+    }
+)	otherlv_18='calendar' 
+    {
+    	newLeafNode(otherlv_18, grammarAccess.getSynchStatementAccess().getCalendarKeyword_2_1());
+    }
+	otherlv_19=':' 
+    {
+    	newLeafNode(otherlv_19, grammarAccess.getSynchStatementAccess().getColonKeyword_2_2());
+    }
+(
+(
+		{
+			if ($current==null) {
+	            $current = createModelElement(grammarAccess.getSynchStatementRule());
+	        }
+        }
+	otherlv_20=RULE_ID
+	{
+		newLeafNode(otherlv_20, grammarAccess.getSynchStatementAccess().getElsNamedElementCrossReference_2_3_0()); 
+	}
+
+)
+)(	otherlv_21=',' 
+    {
+    	newLeafNode(otherlv_21, grammarAccess.getSynchStatementAccess().getCommaKeyword_2_4_0());
+    }
+(
+(
+		{
+			if ($current==null) {
+	            $current = createModelElement(grammarAccess.getSynchStatementRule());
+	        }
+        }
+	otherlv_22=RULE_ID
+	{
+		newLeafNode(otherlv_22, grammarAccess.getSynchStatementAccess().getElsNamedElementCrossReference_2_4_1_0()); 
+	}
+
+)
+))*	otherlv_23=';' 
+    {
+    	newLeafNode(otherlv_23, grammarAccess.getSynchStatementAccess().getSemicolonKeyword_2_5());
     }
 ))
 ;

@@ -231,6 +231,11 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
         return createLiftStatementAdapter();
       }
       @Override
+      public Adapter caseMNSynchStatement(MNSynchStatement object)
+      {
+        return createMNSynchStatementAdapter();
+      }
+      @Override
       public Adapter caseCalenStatement(CalenStatement object)
       {
         return createCalenStatementAdapter();
@@ -828,6 +833,21 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
    * @generated
    */
   public Adapter createLiftStatementAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.MNSynchStatement <em>MN Synch Statement</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see com.rockwellcollins.atc.agree.agree.MNSynchStatement
+   * @generated
+   */
+  public Adapter createMNSynchStatementAdapter()
   {
     return null;
   }
