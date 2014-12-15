@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: AGREE Analysis
 Bundle-SymbolicName: com.rockwellcollins.atc.agree.analysis; singleton:=true
-Bundle-Version: 1.0.0
+Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: com.rockwellcollins.atc.agree.analysis.Activator
 Bundle-Vendor: Rockwell Collins, Inc.
 Require-Bundle: org.eclipse.ui,

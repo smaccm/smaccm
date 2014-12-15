@@ -44,6 +44,7 @@ import org.osate.ui.dialogs.Dialog;
 import com.rockwellcollins.atc.agree.agree.AgreePackage;
 import com.rockwellcollins.atc.agree.agree.AgreeSubclause;
 import com.rockwellcollins.atc.agree.analysis.Activator;
+import com.rockwellcollins.atc.agree.analysis.AgreeCalendarUtils;
 import com.rockwellcollins.atc.agree.analysis.AgreeEmitterUtilities;
 import com.rockwellcollins.atc.agree.analysis.AgreeException;
 import com.rockwellcollins.atc.agree.analysis.AgreeGenerator;
@@ -64,7 +65,7 @@ public abstract class VerifyHandler extends AadlHandler {
     @Override
     protected IStatus runJob(Element root, IProgressMonitor monitor) {
         disableRerunHandler();
-
+        
         if (!(root instanceof SystemImplementation)) {
             return new Status(IStatus.ERROR, Activator.PLUGIN_ID,
                     "Must select an AADL System Implementation");
@@ -89,7 +90,8 @@ public abstract class VerifyHandler extends AadlHandler {
             CompositeAnalysisResult wrapper = new CompositeAnalysisResult("");
             LinkedList<NamedElement> modelParents = new LinkedList<>();
 
-            SystemType sysType = si.getSystemImplementation().getType();
+//            SystemType sysType = si.getSystemImplementation().getType();
+            SystemType sysType = (SystemType) si.getComponentImplementation().getType();
             EList<AnnexSubclause> annexSubClauses = AnnexUtil.getAllAnnexSubclauses(sysType,
                     AgreePackage.eINSTANCE.getAgreeContractSubclause());
 

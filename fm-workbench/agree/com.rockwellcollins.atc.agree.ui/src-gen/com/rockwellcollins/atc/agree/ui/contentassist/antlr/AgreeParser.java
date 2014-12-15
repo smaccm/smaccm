@@ -78,7 +78,9 @@ public class AgreeParser extends AbstractContentAssistParser {
 					put(grammarAccess.getSpecStatementAccess().getGroup_6(), "rule__SpecStatement__Group_6__0");
 					put(grammarAccess.getSynchStatementAccess().getGroup_0(), "rule__SynchStatement__Group_0__0");
 					put(grammarAccess.getSynchStatementAccess().getGroup_1(), "rule__SynchStatement__Group_1__0");
-					put(grammarAccess.getSynchStatementAccess().getGroup_1_4(), "rule__SynchStatement__Group_1_4__0");
+					put(grammarAccess.getSynchStatementAccess().getGroup_1_3(), "rule__SynchStatement__Group_1_3__0");
+					put(grammarAccess.getSynchStatementAccess().getGroup_2(), "rule__SynchStatement__Group_2__0");
+					put(grammarAccess.getSynchStatementAccess().getGroup_2_4(), "rule__SynchStatement__Group_2_4__0");
 					put(grammarAccess.getOrderStatementAccess().getGroup(), "rule__OrderStatement__Group__0");
 					put(grammarAccess.getOrderStatementAccess().getGroup_3(), "rule__OrderStatement__Group_3__0");
 					put(grammarAccess.getPropertyStatementAccess().getGroup(), "rule__PropertyStatement__Group__0");
@@ -185,8 +187,6 @@ public class AgreeParser extends AbstractContentAssistParser {
 					put(grammarAccess.getPropertyAssociationAccess().getGroup_3_1(), "rule__PropertyAssociation__Group_3_1__0");
 					put(grammarAccess.getPropertyAssociationAccess().getGroup_4(), "rule__PropertyAssociation__Group_4__0");
 					put(grammarAccess.getBasicPropertyAssociationAccess().getGroup(), "rule__BasicPropertyAssociation__Group__0");
-					put(grammarAccess.getContainmentPathAccess().getGroup(), "rule__ContainmentPath__Group__0");
-					put(grammarAccess.getContainmentPathAccess().getGroup_2(), "rule__ContainmentPath__Group_2__0");
 					put(grammarAccess.getModalPropertyValueAccess().getGroup(), "rule__ModalPropertyValue__Group__0");
 					put(grammarAccess.getModalPropertyValueAccess().getGroup_5(), "rule__ModalPropertyValue__Group_5__0");
 					put(grammarAccess.getOptionalModalPropertyValueAccess().getGroup(), "rule__OptionalModalPropertyValue__Group__0");
@@ -194,8 +194,6 @@ public class AgreeParser extends AbstractContentAssistParser {
 					put(grammarAccess.getOptionalModalPropertyValueAccess().getGroup_1_4(), "rule__OptionalModalPropertyValue__Group_1_4__0");
 					put(grammarAccess.getBooleanLiteralAccess().getGroup(), "rule__BooleanLiteral__Group__0");
 					put(grammarAccess.getReferenceTermAccess().getGroup(), "rule__ReferenceTerm__Group__0");
-					put(grammarAccess.getReferenceTermAccess().getGroup_2(), "rule__ReferenceTerm__Group_2__0");
-					put(grammarAccess.getReferenceTermAccess().getGroup_4(), "rule__ReferenceTerm__Group_4__0");
 					put(grammarAccess.getRecordTermAccess().getGroup(), "rule__RecordTerm__Group__0");
 					put(grammarAccess.getOldRecordTermAccess().getGroup(), "rule__OldRecordTerm__Group__0");
 					put(grammarAccess.getComputedTermAccess().getGroup(), "rule__ComputedTerm__Group__0");
@@ -205,6 +203,8 @@ public class AgreeParser extends AbstractContentAssistParser {
 					put(grammarAccess.getListTermAccess().getGroup_2_1(), "rule__ListTerm__Group_2_1__0");
 					put(grammarAccess.getFieldPropertyAssociationAccess().getGroup(), "rule__FieldPropertyAssociation__Group__0");
 					put(grammarAccess.getContainmentPathElementAccess().getGroup(), "rule__ContainmentPathElement__Group__0");
+					put(grammarAccess.getContainmentPathElementAccess().getGroup_0(), "rule__ContainmentPathElement__Group_0__0");
+					put(grammarAccess.getContainmentPathElementAccess().getGroup_1(), "rule__ContainmentPathElement__Group_1__0");
 					put(grammarAccess.getANNEXREFAccess().getGroup(), "rule__ANNEXREF__Group__0");
 					put(grammarAccess.getArrayRangeAccess().getGroup(), "rule__ArrayRange__Group__0");
 					put(grammarAccess.getArrayRangeAccess().getGroup_3(), "rule__ArrayRange__Group_3__0");
@@ -237,8 +237,12 @@ public class AgreeParser extends AbstractContentAssistParser {
 					put(grammarAccess.getSpecStatementAccess().getSubcompAssignment_6_2(), "rule__SpecStatement__SubcompAssignment_6_2");
 					put(grammarAccess.getSynchStatementAccess().getValAssignment_0_3(), "rule__SynchStatement__ValAssignment_0_3");
 					put(grammarAccess.getSynchStatementAccess().getSimAssignment_0_4(), "rule__SynchStatement__SimAssignment_0_4");
-					put(grammarAccess.getSynchStatementAccess().getElsAssignment_1_3(), "rule__SynchStatement__ElsAssignment_1_3");
-					put(grammarAccess.getSynchStatementAccess().getElsAssignment_1_4_1(), "rule__SynchStatement__ElsAssignment_1_4_1");
+					put(grammarAccess.getSynchStatementAccess().getComp1Assignment_1_3_0(), "rule__SynchStatement__Comp1Assignment_1_3_0");
+					put(grammarAccess.getSynchStatementAccess().getComp2Assignment_1_3_2(), "rule__SynchStatement__Comp2Assignment_1_3_2");
+					put(grammarAccess.getSynchStatementAccess().getMaxAssignment_1_3_4(), "rule__SynchStatement__MaxAssignment_1_3_4");
+					put(grammarAccess.getSynchStatementAccess().getMinAssignment_1_3_6(), "rule__SynchStatement__MinAssignment_1_3_6");
+					put(grammarAccess.getSynchStatementAccess().getElsAssignment_2_3(), "rule__SynchStatement__ElsAssignment_2_3");
+					put(grammarAccess.getSynchStatementAccess().getElsAssignment_2_4_1(), "rule__SynchStatement__ElsAssignment_2_4_1");
 					put(grammarAccess.getOrderStatementAccess().getCompsAssignment_2(), "rule__OrderStatement__CompsAssignment_2");
 					put(grammarAccess.getOrderStatementAccess().getCompsAssignment_3_1(), "rule__OrderStatement__CompsAssignment_3_1");
 					put(grammarAccess.getPropertyStatementAccess().getNameAssignment_1(), "rule__PropertyStatement__NameAssignment_1");
@@ -334,8 +338,7 @@ public class AgreeParser extends AbstractContentAssistParser {
 					put(grammarAccess.getPropertyAssociationAccess().getInBindingAssignment_4_3(), "rule__PropertyAssociation__InBindingAssignment_4_3");
 					put(grammarAccess.getBasicPropertyAssociationAccess().getPropertyAssignment_0(), "rule__BasicPropertyAssociation__PropertyAssignment_0");
 					put(grammarAccess.getBasicPropertyAssociationAccess().getOwnedValueAssignment_2(), "rule__BasicPropertyAssociation__OwnedValueAssignment_2");
-					put(grammarAccess.getContainmentPathAccess().getContainmentPathElementAssignment_1(), "rule__ContainmentPath__ContainmentPathElementAssignment_1");
-					put(grammarAccess.getContainmentPathAccess().getContainmentPathElementAssignment_2_1(), "rule__ContainmentPath__ContainmentPathElementAssignment_2_1");
+					put(grammarAccess.getContainmentPathAccess().getPathAssignment(), "rule__ContainmentPath__PathAssignment");
 					put(grammarAccess.getModalPropertyValueAccess().getOwnedValueAssignment_0(), "rule__ModalPropertyValue__OwnedValueAssignment_0");
 					put(grammarAccess.getModalPropertyValueAccess().getInModeAssignment_4(), "rule__ModalPropertyValue__InModeAssignment_4");
 					put(grammarAccess.getModalPropertyValueAccess().getInModeAssignment_5_1(), "rule__ModalPropertyValue__InModeAssignment_5_1");
@@ -346,9 +349,7 @@ public class AgreeParser extends AbstractContentAssistParser {
 					put(grammarAccess.getLiteralorReferenceTermAccess().getNamedValueAssignment(), "rule__LiteralorReferenceTerm__NamedValueAssignment");
 					put(grammarAccess.getBooleanLiteralAccess().getValueAssignment_1_0(), "rule__BooleanLiteral__ValueAssignment_1_0");
 					put(grammarAccess.getConstantValueAccess().getNamedValueAssignment(), "rule__ConstantValue__NamedValueAssignment");
-					put(grammarAccess.getReferenceTermAccess().getContainmentPathElementAssignment_2_0(), "rule__ReferenceTerm__ContainmentPathElementAssignment_2_0");
-					put(grammarAccess.getReferenceTermAccess().getContainmentPathElementAssignment_3(), "rule__ReferenceTerm__ContainmentPathElementAssignment_3");
-					put(grammarAccess.getReferenceTermAccess().getContainmentPathElementAssignment_4_1(), "rule__ReferenceTerm__ContainmentPathElementAssignment_4_1");
+					put(grammarAccess.getReferenceTermAccess().getPathAssignment_2(), "rule__ReferenceTerm__PathAssignment_2");
 					put(grammarAccess.getRecordTermAccess().getOwnedFieldValueAssignment_1(), "rule__RecordTerm__OwnedFieldValueAssignment_1");
 					put(grammarAccess.getOldRecordTermAccess().getOwnedFieldValueAssignment_1(), "rule__OldRecordTerm__OwnedFieldValueAssignment_1");
 					put(grammarAccess.getComputedTermAccess().getFunctionAssignment_2(), "rule__ComputedTerm__FunctionAssignment_2");
@@ -357,9 +358,9 @@ public class AgreeParser extends AbstractContentAssistParser {
 					put(grammarAccess.getListTermAccess().getOwnedListElementAssignment_2_1_1(), "rule__ListTerm__OwnedListElementAssignment_2_1_1");
 					put(grammarAccess.getFieldPropertyAssociationAccess().getPropertyAssignment_0(), "rule__FieldPropertyAssociation__PropertyAssignment_0");
 					put(grammarAccess.getFieldPropertyAssociationAccess().getOwnedValueAssignment_2(), "rule__FieldPropertyAssociation__OwnedValueAssignment_2");
-					put(grammarAccess.getContainmentPathElementAccess().getNamedElementAssignment_0(), "rule__ContainmentPathElement__NamedElementAssignment_0");
-					put(grammarAccess.getContainmentPathElementAccess().getArrayRangeAssignment_1(), "rule__ContainmentPathElement__ArrayRangeAssignment_1");
-					put(grammarAccess.getQualifiedContainmentPathElementAccess().getNamedElementAssignment(), "rule__QualifiedContainmentPathElement__NamedElementAssignment");
+					put(grammarAccess.getContainmentPathElementAccess().getNamedElementAssignment_0_0(), "rule__ContainmentPathElement__NamedElementAssignment_0_0");
+					put(grammarAccess.getContainmentPathElementAccess().getArrayRangeAssignment_0_1(), "rule__ContainmentPathElement__ArrayRangeAssignment_0_1");
+					put(grammarAccess.getContainmentPathElementAccess().getPathAssignment_1_1(), "rule__ContainmentPathElement__PathAssignment_1_1");
 					put(grammarAccess.getStringTermAccess().getValueAssignment(), "rule__StringTerm__ValueAssignment");
 					put(grammarAccess.getArrayRangeAccess().getLowerBoundAssignment_2(), "rule__ArrayRange__LowerBoundAssignment_2");
 					put(grammarAccess.getArrayRangeAccess().getUpperBoundAssignment_3_1(), "rule__ArrayRange__UpperBoundAssignment_3_1");

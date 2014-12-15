@@ -62,6 +62,7 @@ import com.rockwellcollins.atc.agree.agree.InitialStatement;
 import com.rockwellcollins.atc.agree.agree.IntLitExpr;
 import com.rockwellcollins.atc.agree.agree.LemmaStatement;
 import com.rockwellcollins.atc.agree.agree.LiftStatement;
+import com.rockwellcollins.atc.agree.agree.MNSynchStatement;
 import com.rockwellcollins.atc.agree.agree.NestedDotID;
 import com.rockwellcollins.atc.agree.agree.NodeBodyExpr;
 import com.rockwellcollins.atc.agree.agree.NodeDefExpr;
@@ -113,7 +114,8 @@ public class AgreeEmitterState  extends AgreeSwitch<Expr> {
     
 
     public int synchrony = 0;
-    private List<IdExpr> calendar = new ArrayList<IdExpr>();
+    public List<IdExpr> calendar = new ArrayList<IdExpr>();
+    public List<MNSynchronyElement> mnSyncEls = new ArrayList<>();
     public boolean simultaneity = true;
 	public boolean connectionExpressionsSet = false;
 
@@ -173,7 +175,8 @@ public class AgreeEmitterState  extends AgreeSwitch<Expr> {
     @Override
     public Expr caseSynchStatement(SynchStatement sync){
     	
-    	if(sync instanceof CalenStatement){
+    	if(sync instanceof CalenStatement
+    		|| sync instanceof MNSynchStatement){
     		return null;
     	}
     	
@@ -185,6 +188,26 @@ public class AgreeEmitterState  extends AgreeSwitch<Expr> {
         }
         
         return null;
+    }
+    
+    @Override
+    public Expr caseMNSynchStatement(MNSynchStatement sync){
+    	
+    	for(int i = 0; i < sync.getComp1().size(); i++){
+    		Subcomponent maxComp = (Subcomponent) sync.getComp1().get(i);
+    		Subcomponent minComp = (Subcomponent) sync.getComp2().get(i);
+    		
+    		Expr maxClock = new IdExpr(clockIDPrefix+thisPrefix+maxComp.getName());
+    		Expr minClock = new IdExpr(clockIDPrefix+thisPrefix+minComp.getName());
+    		int max = Integer.valueOf(sync.getMax().get(i));
+    		int min = Integer.valueOf(sync.getMin().get(i));
+    		
+    		MNSynchronyElement elem = new MNSynchronyElement(maxClock, minClock, max, min);
+    		
+    		mnSyncEls.add(elem);
+    	}
+    	
+    	return null;
     }
     
     @Override

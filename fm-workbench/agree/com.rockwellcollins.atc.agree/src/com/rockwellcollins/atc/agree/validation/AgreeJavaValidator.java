@@ -77,6 +77,7 @@ import com.rockwellcollins.atc.agree.agree.InitialStatement;
 import com.rockwellcollins.atc.agree.agree.IntLitExpr;
 import com.rockwellcollins.atc.agree.agree.LemmaStatement;
 import com.rockwellcollins.atc.agree.agree.LiftStatement;
+import com.rockwellcollins.atc.agree.agree.MNSynchStatement;
 import com.rockwellcollins.atc.agree.agree.NestedDotID;
 import com.rockwellcollins.atc.agree.agree.NodeDefExpr;
 import com.rockwellcollins.atc.agree.agree.NodeEq;
@@ -200,19 +201,47 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
     
     @Check(CheckType.FAST)
     public void checkSynchStatement(SynchStatement sync){
-        //TODO: I'm pretty sure INT_LITs are always positive anyway.
-        //So this may be redundant
-    	if(sync instanceof CalenStatement){
+
+    	Classifier container = sync.getContainingClassifier();
+    	if(!(container instanceof ComponentImplementation)){
+    		error(sync, "Synchrony statements can only appear in component implementations");
+    	}
+    	
+    	if(sync instanceof CalenStatement
+    		|| sync instanceof MNSynchStatement){
     		return;
     	}
     	
+        //TODO: I'm pretty sure INT_LITs are always positive anyway.
+        //So this may be redundant    	
         if(Integer.valueOf(sync.getVal()) < 0){
             error(sync, "The value of synchrony statments must be positive");
         }
-        
-        Classifier container = sync.getContainingClassifier();
-    	if(!(container instanceof ComponentImplementation)){
-    		error(sync, "Synchrony statements can only appear in component implementations");
+    }
+    
+    @Check(CheckType.FAST)
+    public void checkMNSynchStatement(MNSynchStatement sync){
+    	
+    	if(sync.getMax().size() != sync.getMin().size()
+    		&& sync.getMax().size() != sync.getComp1().size()
+    		&& sync.getMax().size() != sync.getComp2().size()){
+    		return; //this should throw a parser error
+    	}
+    	
+    	for (int i = 0; i < sync.getMax().size() ; i++){
+    		String maxStr = sync.getMax().get(i);
+    		String minStr = sync.getMin().get(i);
+    		
+    		int max = Integer.valueOf(maxStr);
+    		int min = Integer.valueOf(minStr);
+    		
+    		if(max < 1 || min < 1){
+    			error(sync, "Quasi-synchronous values must be greater than zero");
+    		}
+    		
+    		if(min > max){
+    			error("Left hand side quasi-synchronous values must be greater than the right hand side");
+    		}
     	}
     }
     
@@ -846,9 +875,6 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
         for(SpecStatement spec : contract.getSpecs()){
             if(spec instanceof SynchStatement){
                 syncs.add((SynchStatement)spec);
-            }
-            if(spec instanceof CalenStatement){
-            	syncs.add((CalenStatement)spec);
             }
         }
         

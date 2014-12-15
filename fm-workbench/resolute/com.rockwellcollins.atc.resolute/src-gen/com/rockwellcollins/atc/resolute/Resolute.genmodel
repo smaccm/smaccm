@@ -4,10 +4,10 @@
     editorDirectory="/com.rockwellcollins.atc.resolute.editor/src" modelPluginID="com.rockwellcollins.atc.resolute"
     forceOverwrite="true" modelName="Resolute" updateClasspath="false" rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container"
     complianceLevel="5.0" copyrightFields="false" editPluginID="com.rockwellcollins.atc.resolute.edit"
-    editorPluginID="com.rockwellcollins.atc.resolute.editor" runtimeVersion="2.9"
-    usedGenPackages="../../../../../../org.osate.aadl2/model/aadl2-nouml.genmodel#//aadl2">
-  <genPackages prefix="Resolute" basePackage="com.rockwellcollins.atc.resolute" resource="XML"
-      disposableProviderFactory="true" ecorePackage="Resolute.ecore#/">
+    editorPluginID="com.rockwellcollins.atc.resolute.editor" runtimeVersion="2.10"
+    usedGenPackages="platform:/resource/org.eclipse.emf.ecore/model/Ecore.genmodel#//ecore platform:/resource/org.osate.aadl2/model/aadl2.genmodel#//aadl2">
+  <genPackages prefix="Resolute" basePackage="com.rockwellcollins.atc.resolute" disposableProviderFactory="true"
+      ecorePackage="Resolute.ecore#/">
     <genClasses ecoreClass="Resolute.ecore#//ResoluteLibrary">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Resolute.ecore#//ResoluteLibrary/definitions"/>
     </genClasses>

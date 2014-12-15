@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Resolute back-end
 Bundle-Vendor: Rockwell Collins, Inc.
-Bundle-Version: 1.0.0
+Bundle-Version: 1.0.0.qualifier
 Bundle-SymbolicName: com.rockwellcollins.atc.resolute; singleton:=true
 Bundle-ActivationPolicy: lazy
 Require-Bundle: org.eclipse.xtext;visibility:=reexport,
@@ -19,7 +19,8 @@ Require-Bundle: org.eclipse.xtext;visibility:=reexport,
  org.eclipse.xtext.common.types,
  org.osate.xtext.aadl2.properties;bundle-version="1.0.0",
  org.osate.xtext.aadl2;bundle-version="1.0.0",
- org.osate.aadl2;bundle-version="1.0.0"
+ org.osate.aadl2;bundle-version="1.0.0",
+ org.objectweb.asm;bundle-version="[5.0.1,6.0.0)";resolution:=optional
 Import-Package: org.apache.log4j,
  org.eclipse.xtext.xbase.lib
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
