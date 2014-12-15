@@ -1,0 +1,143 @@
+import "Common.stg"
+
+////////////////////////////////////////////////////////////////////////////
+//
+// Declarations for camkes assembly
+// 
+////////////////////////////////////////////////////////////////////////////
+
+camkesAssemblyPurpose(sysInstanceName) ::= <<
+This header file contains the main CAmkES assembly for the  
+AADL system instance rooted at <sysInstanceName>.
+>>
+
+camkesAssemblyPrefix(name, date, path) ::= "<stdFilePrefix(date, path, camkesAssemblyPurpose(name))>"
+
+assemblyThreadImplementationImports(threadImpl) ::= <<
+import "<threadImpl.rootToCamkesComponentFilePath>";
+
+>>
+
+assemblyThreadComponents(threadImpl) ::= <<
+component <threadImpl.componentName> <threadImpl.componentInstanceName>;
+
+>>
+
+constructPeriodicComponent(calendar) ::= <<
+<if(calendar.hasDispatchers)><\\>
+component <calendar.periodicDispatcherComponentName> <calendar.periodicDispatcherInstanceName>;
+<endif>
+>>	
+
+rpcConnection(cid, from1, from2, to1, to2) ::= 
+   "connection seL4RPCCall <cid> (from <from1>.<from2>, to <to1>.<to2>);"
+
+connectPassiveToActive(passiveThreadImpl, activeThreadImpl, model) ::= <<
+<rpcConnection(model.generateConnectionName,
+	activeThreadImpl.componentInstanceName,
+	passiveThreadImpl.interfaceInstanceName,
+	passiveThreadImpl.componentInstanceName,
+	passiveThreadImpl.componentDispatcherInterfaceVarIdName)>
+
+>>
+
+assemblyConnectActiveToPassiveThreads(threadImpl, model) ::= <<
+<model.passiveThreadImplementations:connectPassiveToActive(threadImpl, model)>
+
+>>
+
+
+connectActiveSendToActiveSend(sourcePort, destPort, model) ::= <<
+<if(destPort.threadImplementation.isActive)><\\>
+<rpcConnection(model.generateConnectionName, 
+	sourcePort.threadImplementation.componentInstanceName,
+    sourcePort.name, 
+	destPort.threadImplementation.componentInstanceName,
+	destPort.name)> 
+<endif>
+>>
+
+connectActiveToActive(connection, model) ::= <<
+<connectActiveSendToActiveSend(connection.sourcePort, connection.destPort, model)>
+>>
+
+assemblyConnectActiveToActiveThreads(threadImpl, model) ::= <<
+<threadImpl.isSrcOfConnectionList:connectActiveToActive(model)>
+>>
+
+connectActivePeriodic(dispatcher, threadImpl, model) ::= <<
+<if(dispatcher.isPeriodic)><\\>
+<rpcConnection(model.generateConnectionName, 
+	model.threadCalendar.periodicDispatcherInstanceName,
+	dispatcher.dispatcherComponentDispatchName, 
+	threadImpl.componentInstanceName,
+	dispatcher.dispatcherComponentDispatchName)>
+<endif>
+>>
+
+assemblyConnectPeriodic(threadImpl, model) ::= <<
+<threadImpl.dispatchers:connectActivePeriodic(threadImpl, model)>
+>>
+
+connectReaderWriter(connection, srcThreadImpl, model) ::= <<
+<if(connection.sourcePort.isOutputDataPort)><\\>
+<rpcConnection(model.generateConnectionName, 
+	srcThreadImpl.componentInstanceName,
+	connection.sourcePort.name,
+	connection.destPortThreadImplementation.componentInstanceName,
+	connection.destPort.name)>
+<endif>
+>>
+
+assemblyConnectReadersWriters(threadImpl, model) ::= <<
+<threadImpl.isSrcOfConnectionList:connectReaderWriter(threadImpl, model)>
+>>
+
+camkesAssemblyBody(model) ::= <<
+
+import <\u003C>std_connector.camkes<\u003E>;
+<if(model.threadCalendar.hasDispatchers)>import "<model.threadCalendar.periodicDispatcherPathName>";<endif>
+<model.threadImplementations:assemblyThreadImplementationImports()>
+
+component EPIT {
+    hardware;
+    dataport Buf mem;
+    emits DataAvailable irq;
+}
+
+assembly {
+	composition {
+        component EPIT epit;
+		<constructPeriodicComponent(model.threadCalendar)>
+		
+		// component instances for all AADL-defined threads
+		<model.threadImplementations:assemblyThreadComponents()>
+		
+		// connections from active dispatchers to passive threads
+		<model.activeThreadImplementations:assemblyConnectActiveToPassiveThreads(model)>	
+		
+		// connections from active dispatcher send/receive to other active dispatcher send/receive
+		<model.activeThreadImplementations:assemblyConnectActiveToActiveThreads(model)>
+		
+		// Periodic dispatcher connections
+		<model.activeThreadImplementations:assemblyConnectPeriodic(model)>
+        connection seL4HardwareMMIO epit_mem(from <model.threadCalendar.periodicDispatcherInstanceName>.mem, to epit.mem);
+		connection seL4HardwareInterrupt irq(from epit.irq, to <model.threadCalendar.periodicDispatcherInstanceName>.irq);
+		
+		// Passive component read/write connections
+		<model.threadImplementations:assemblyConnectReadersWriters(model)>
+		
+		// Shared data connections (currently unsupported: under development)
+	}
+    configuration {
+		/* Freescale i.MX31 (KZM) */
+        epit.mem_attributes = "0x53F98000:0x1000";
+		epit.irq_attributes = 27;
+
+		/* Freescale i.MX6 (Sabralite) */
+        // epit.mem_attributes = "0x020D0000:0x1000";
+		//epit.irq_attributes = 88;
+    }
+}
+
+>>
