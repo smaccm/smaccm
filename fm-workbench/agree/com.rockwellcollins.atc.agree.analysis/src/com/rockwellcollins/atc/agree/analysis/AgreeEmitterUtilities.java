@@ -170,7 +170,7 @@ public class AgreeEmitterUtilities {
 	public static ComponentImplementation getInstanceImplementation(ComponentInstance compInst) {
 		if (compInst instanceof SystemInstance) {
 			ComponentImplementation ci;
-			ci = ((SystemInstance) compInst).getComponentImplementation();
+			ci = ((SystemInstance) compInst).getSystemImplementation();
 			return ci;
 		}
 		try {
@@ -184,7 +184,7 @@ public class AgreeEmitterUtilities {
 		if (compInst instanceof SystemInstance) {
 
 			ComponentType ct;
-			ct = ((SystemInstance) compInst).getComponentImplementation().getType();
+			ct = ((SystemInstance) compInst).getSystemImplementation().getType();
 			return ct;
 
 		}
