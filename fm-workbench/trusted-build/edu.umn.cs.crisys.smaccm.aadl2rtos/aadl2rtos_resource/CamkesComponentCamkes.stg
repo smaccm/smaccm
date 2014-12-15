@@ -72,9 +72,16 @@ uses <sharedDataAccessor.type.readerWriterInterfaceName> <sharedDataAccessor.nam
 
 >>
 
+constructMemoryInterface(memoryRegion, dispatcher) ::= <<
+dataport Buf <memoryRegion.name>;
+>>
+
 writeProvidedInterface(dispatcher) ::= <<
-<if(dispatcher.isIRQ || dispatcher.isPeriodic)><\\>
+<if(dispatcher.isPeriodic)><\\>
 provides <dispatcher.type.readerWriterInterfaceName> <dispatcher.dispatcherComponentDispatchName>;
+<elseif(dispatcher.isIRQ)><\\>
+consumes Interrupt <dispatcher.name>;
+<dispatcher.memoryRegions:constructMemoryInterface(dispatcher)>
 <endif>
 >>
 
@@ -99,25 +106,24 @@ component <threadImpl.componentName> {
 	control;
     has mutex <threadImpl.dispatcherComponentMutexName>;
 
-	// references to other active thread send interfaces
+	// references to other active thread send interfaces (if any)
 	<writeSenders(threadImpl)>
 
-	// references to passive receivers	
+	// references to passive receivers	(if any)
 	<threadImpl.model.passiveThreadImplementations:writeToPassiveReceiver()>
 <else><\\>
 	provides <threadImpl.idlName> <threadImpl.componentDispatcherInterfaceVarIdName>;
 <endif>
 
-
-	// dispatch interfaces for Periodic and IRQ ports.
+	// interfaces for Periodic and IRQ port dispatchers.
 	<threadImpl.dispatchers:writeProvidedInterface()>	
+	
+	// provided interfaces for data / shared data ports (if any)
 	<threadImpl.inputDataPortList:inputPortDecl()>
 	<threadImpl.outputDataPortList:outputDataPortDecl()>
 	<threadImpl.sharedDataAccessorList:sharedDataAccessorDecl()>
 
-	<if(threadImpl.inputEventPortList || threadImpl.inputEventDataPortList)>
-	// provided interfaces for input event / event data ports.
-	<endif>
+	// provided interfaces for input event / event data ports (if any)
 	<threadImpl.inputEventPortList:inputPortDecl()>
 	<threadImpl.inputEventDataPortList:inputPortDecl()>
 }
