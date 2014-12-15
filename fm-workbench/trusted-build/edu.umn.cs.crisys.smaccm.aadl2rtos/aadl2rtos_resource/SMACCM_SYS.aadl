@@ -9,8 +9,10 @@ property set SMACCM_SYS is
 	
 	-- for dealing with ISR/IRQs
 	Signal_Name: aadlstring applies to (port);
+	Signal_Number: aadlinteger applies to (port);
 	First_Level_Interrupt_Handler: aadlstring applies to (port);
 	Is_ISR: aadlboolean => false applies to (port);  
+	Memory_Pages : list of aadlstring applies to (port); 
 
     -- For scheduling
     Thread_Type: enumeration (Active, Passive) applies to (thread);	
@@ -22,16 +24,19 @@ property set SMACCM_SYS is
 	OS : enumeration (eChronos, CAmkES) applies to (system implementation); 
 	HW : enumeration (PX4, ODROID, QEMU) applies to (system implementation); 
 	
-	-- For integrating with other code when creating the .prx file.
+	-- For integrating with other code 
 	Is_Legacy: aadlboolean => false applies to (thread);
-	Legacy_Mutex_List: list of aadlstring applies to (thread, system implementation);
-	Legacy_Semaphore_List: list of aadlstring applies to (thread, system implementation);
-	Legacy_Entrypoint: aadlstring applies to (thread);
-	Legacy_IRQ_Event_List: list of aadlstring applies to (system implementation);
-	Legacy_IRQ_Handler_List: list of aadlstring applies to (system implementation);
+	External_Mutex_List: list of aadlstring applies to (thread, system implementation);
+	External_Semaphore_List: list of aadlstring applies to (thread, system implementation);
+	External_Entrypoint: aadlstring applies to (thread);
+	
+	
+	External_IRQ_Event_List: list of aadlstring applies to (system implementation);
+	External_IRQ_Handler_List: list of aadlstring applies to (system implementation);
 	External_IRQ_List: list of aadlstring applies to (system implementation);
 	Generate_Scheduler_Systick_IRQ: aadlboolean => true applies to (system implementation);
-	Language: aadlstring applies to (thread, system implementation);
+	
+	-- Language: aadlstring applies to (thread, system implementation);
    
 
 end SMACCM_SYS;

@@ -45,7 +45,7 @@ public class ThreadImplementation extends ThreadImplementationBase {
 
 	// Outgoing dispatch contract (limits on dispatch)
 	private ArrayList<OutgoingDispatchContract> dispatchLimits = new ArrayList<OutgoingDispatchContract>();
-	
+		
 	// RPCs
 	private List<RemoteProcedureGroup> providesRPCList = new ArrayList<RemoteProcedureGroup>(); 
 	private List<RemoteProcedureGroup> requiresRPCList = new ArrayList<RemoteProcedureGroup>();
@@ -83,12 +83,16 @@ public class ThreadImplementation extends ThreadImplementationBase {
 		return this.initEntrypointHandler;
 	}
 
+	public void setInitializeEntrypointOpt(ExternalHandler handler) {
+	  this.initEntrypointHandler = handler;
+	}
 
 	public void addThreadInstance(ThreadInstance instance) {
 		threadInstanceList.add(instance);
 	}
 
 	
+ 
   /**
    * @return the dispatchLimits
    */

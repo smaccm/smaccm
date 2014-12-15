@@ -57,7 +57,15 @@ public class PortNames {
     }
     throw new Aadl2RtosException("GetDispatcher called on port without a dispatcher.");
   }
-    
+  
+  public boolean getHasInitializeEntrypoint() {
+    boolean result = dp.getInitializeEntrypointSourceText() != null;
+    return result;
+  }
+  
+  public ExternalHandlerNames getInitializeEntrypointOpt() {
+    return new ExternalHandlerNames(dp.getInitializeEntrypointSourceText());
+  }
   
   //////////////////////////////////////////////////////////
   //
