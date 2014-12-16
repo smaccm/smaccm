@@ -217,6 +217,16 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
         if(Integer.valueOf(sync.getVal()) < 0){
             error(sync, "The value of synchrony statments must be positive");
         }
+        String val2 = sync.getVal2();
+        if(val2 != null){
+        	if(Integer.valueOf(val2) <= 0){
+        		error(sync, "The second value of a synchrony statment must be greater than zero");
+        	}
+        	if(Integer.valueOf(sync.getVal()) <= Integer.valueOf(val2)){
+        		error(sync, "The second value of a synchrony argument must be less than the first");
+        	}
+        }
+        
     }
     
     @Check(CheckType.FAST)

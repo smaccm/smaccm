@@ -114,6 +114,7 @@ public class AgreeEmitterState  extends AgreeSwitch<Expr> {
     
 
     public int synchrony = 0;
+    public int synchrony2 = 0;
     public List<IdExpr> calendar = new ArrayList<IdExpr>();
     public List<MNSynchronyElement> mnSyncEls = new ArrayList<>();
     public boolean simultaneity = true;
@@ -181,8 +182,13 @@ public class AgreeEmitterState  extends AgreeSwitch<Expr> {
     	}
     	
         this.synchrony  = Integer.valueOf(sync.getVal());
-        String simVal = sync.getSim();
+        String val2Str = sync.getVal2();
         
+        if(val2Str != null){
+        	this.synchrony2 = Integer.valueOf(val2Str);
+        }
+        
+        String simVal = sync.getSim();
         if(simVal != null){
         	this.simultaneity = !simVal.equals("no_simult");
         }
