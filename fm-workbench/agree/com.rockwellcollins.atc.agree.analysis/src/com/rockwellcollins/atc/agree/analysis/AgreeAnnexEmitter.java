@@ -827,6 +827,7 @@ public class AgreeAnnexEmitter  {
 			for(MNSynchronyElement elem : state.mnSyncEls){
 				String nodeName = "__calendar_node_"+elem.max+"_"+elem.min;
 				if(!nodeNames.contains(nodeName)){
+					nodeNames.add(nodeName);
 					Node calNode = AgreeCalendarUtils.getMNCalendar(nodeName, elem.max, elem.min);
 					nodeSet.add(calNode);
 				}
