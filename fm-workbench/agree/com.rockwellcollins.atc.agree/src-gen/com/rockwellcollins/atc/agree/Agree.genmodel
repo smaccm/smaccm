@@ -13,6 +13,7 @@
     <genClasses ecoreClass="Agree.ecore#//SpecStatement"/>
     <genClasses ecoreClass="Agree.ecore#//SynchStatement">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Agree.ecore#//SynchStatement/val"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Agree.ecore#//SynchStatement/val2"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Agree.ecore#//SynchStatement/sim"/>
     </genClasses>
     <genClasses ecoreClass="Agree.ecore#//OrderStatement">
