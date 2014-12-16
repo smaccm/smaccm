@@ -1,6 +1,6 @@
 config APP_TEST_IRQ1
-    bool "AADL Test IRQ 1: active -> passive threads using scalar send and IRQ"
+    bool "AADL Test IRQ: active -> passive threads using struct send"
     default n
     select APP_CAMKES_EXECUTIVE
     help
-        AADL Test 1: active -> passive threads using scalar send and IRQ. 
+        AADL Test IRQ: active -> passive threads using struct send. 

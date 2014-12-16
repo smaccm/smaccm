@@ -15,7 +15,7 @@
 #include <autoconf.h>
 #include <stdio.h>
 #include <clock_driver.h>
-#include <dispatch_periodic.h>
+#include <sender.h>
 
 
 #define KZM_EPIT_BASE_ADDR  (unsigned int)mem

@@ -39,6 +39,7 @@ void <externalHandler.handlerName>();
 
 writeUdePrototype(dispatcher) ::= <<
 <dispatcher.externalHandlers:writeExternalHandlerUdePrototype(dispatcher)>
+<if(dispatcher.isIRQ)>void <dispatcher.firstLevelInterruptHandler>();<endif>
 >>
 
 writePortWriterPrototype(port) ::= <<
@@ -58,11 +59,19 @@ bool <sda.writerFnName>(<sda.nameAsOutputParam>);
 
 >>
 
+portInitializer(port) ::= <<
+<if(port.hasInitializeEntrypoint)>void <port.initializeEntrypointOpt.handlerName>();
+<endif>
+>>
+
 componentGlueCodeHeaderBody(threadImpl) ::= <<
 	<threadImpl.dispatchers:writeUdePrototype()>
 	<threadImpl.outputPortList:writePortWriterPrototype()>
 	<threadImpl.inputPortList:writePortReaderPrototype()>
 	<threadImpl.sharedDataAccessorList:writeSharedDataPrototype()>
+
+	<threadImpl.portList:portInitializer()>
+	<if(threadImpl.hasInitializeEntrypoint)>void <threadImpl.initializeEntrypointOpt.handlerName>();<endif>
 	
 >>
 

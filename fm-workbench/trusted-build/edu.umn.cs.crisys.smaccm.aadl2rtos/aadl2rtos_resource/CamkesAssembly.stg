@@ -45,7 +45,7 @@ constructIRQComponent(dispatcher) ::= <<
 component <dispatcher.irqComponent> {
     hardware;
     <dispatcher.memoryRegions:irqComponentMemoryRegion()>
-    emits InterruptSignal irq;
+    emits DataAvailable irq;
 }
 
 >>
@@ -56,13 +56,13 @@ component <dispatcher.irqComponent> <dispatcher.irqObject>;
 >>
 
 constructIRQConfig(dispatcher) ::= <<
-<dispatcher.memoryRegions:{memoryRegion | <dispatcher.irqComponent>.<memoryRegion.name>_attributes = "<memoryRegion.region>:0x1000"; }>
-<dispatcher.irqComponent>.irq_attributes = <dispatcher.signalNumber> ; 
+<dispatcher.memoryRegions:{memoryRegion | <dispatcher.irqObject>.<memoryRegion.name>_attributes = "<memoryRegion.region>:0x1000"; }>
+<dispatcher.irqObject>.irq_attributes = <dispatcher.signalNumber> ; 
 
 >>
 
 constructIRQMemoryConnection(memoryRegion, dispatcher) ::= <<
-connection seL4HardwareMMIO <dispatcher.name>_<memoryRegion.name>(from <dispatcher.irqObject>.<memoryRegion.name>, to <dispatcher.threadImplementation.componentInstanceName>.<memoryRegion.name>);
+connection seL4HardwareMMIO <dispatcher.name>_<memoryRegion.name>(from <dispatcher.threadImplementation.componentInstanceName>.<memoryRegion.name>, to <dispatcher.irqObject>.<memoryRegion.name>);
 
 >>
 

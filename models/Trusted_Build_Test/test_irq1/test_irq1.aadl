@@ -20,7 +20,7 @@ thread sender
 		  SMACCM_SYS::Is_ISR => true; 
 		  SMACCM_SYS::First_Level_Interrupt_Handler => "timer_flih";
 	      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("timer_slih");
-		  SMACCM_SYS::Signal_Name => "timer";
+		  SMACCM_SYS::Signal_Name => "irq";
 		  SMACCM_SYS::Memory_Pages => ("mem", "0x53F98000");
 		  SMACCM_SYS::Signal_Number => 27;			
 		};

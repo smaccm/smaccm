@@ -80,7 +80,7 @@ writeProvidedInterface(dispatcher) ::= <<
 <if(dispatcher.isPeriodic)><\\>
 provides <dispatcher.type.readerWriterInterfaceName> <dispatcher.dispatcherComponentDispatchName>;
 <elseif(dispatcher.isIRQ)><\\>
-consumes Interrupt <dispatcher.name>;
+consumes DataAvailable <dispatcher.name>;
 <dispatcher.memoryRegions:constructMemoryInterface(dispatcher)>
 <endif>
 >>

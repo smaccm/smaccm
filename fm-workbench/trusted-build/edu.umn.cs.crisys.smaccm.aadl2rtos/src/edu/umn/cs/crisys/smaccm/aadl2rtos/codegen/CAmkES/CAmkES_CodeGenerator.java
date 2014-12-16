@@ -376,7 +376,7 @@ public class CAmkES_CodeGenerator {
 
 	
 	
-	public void copyComponentFiles(File dstDirectory, ThreadImplementation ti) throws Aadl2RtosFailure {
+	public void copyComponentFiles(File srcDirectory, File includeDirectory, ThreadImplementation ti) throws Aadl2RtosFailure {
 	  // determine the list of source files.
 	  Set<String> srcFiles = new HashSet<String>(); 
 	  for (Dispatcher d: ti.getDispatcherList()) {
@@ -389,8 +389,14 @@ public class CAmkES_CodeGenerator {
 	    try { 
 	      if (srcFilePath.isFile()) {
   	      String srcFileName = srcFilePath.getName();
-  	      File dstPath = new File(dstDirectory, srcFileName);
-  	      this.copyFile(new FileInputStream(srcFilePath), new FileOutputStream(dstPath));
+  	      String extension = srcFileName.substring(srcFileName.indexOf("."));
+  	      if (extension.equalsIgnoreCase(".h") || extension.equalsIgnoreCase(".hpp")) {
+            File dstPath = new File(includeDirectory, srcFileName);
+            this.copyFile(new FileInputStream(srcFilePath), new FileOutputStream(dstPath));
+  	      } else {
+  	        File dstPath = new File(srcDirectory, srcFileName);
+  	        this.copyFile(new FileInputStream(srcFilePath), new FileOutputStream(dstPath));
+  	      }
   	    } else {
   	        log.warn("For thread: " + ti.getNormalizedName() + ", File: [" + s + "] does not exist as a relative path from the " + 
   	            "directory containing the top-level AADL file, and was not copied into the component src directory");
@@ -417,7 +423,7 @@ public class CAmkES_CodeGenerator {
 	  createComponentHeader(includeDirectory, ti);
 	  createComponentCFile(srcDirectory, ti);
 	  createComponentCamkesFile(componentDirectory, ti);
-	  copyComponentFiles(srcDirectory, ti); 
+	  copyComponentFiles(srcDirectory, includeDirectory, ti); 
 	  
 	  ThreadImplementationNames tin = new ThreadImplementationNames(ti); 
     File CFile = new File(componentDirectory, tin.getComponentGlueCodeCFileName());

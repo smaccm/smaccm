@@ -471,12 +471,11 @@ dispatcherComponentIRQEventDecls(dispatcher) ::= <<
 
 bool <dispatcher.dispatchOccurredVar>;
 
-bool <camkesRPCDispatchName(dispatcher)>() {
+void <camkesRPCDispatchName(dispatcher)>() {
 	<dispatcher.firstLevelInterruptHandler>();
 	<dispatcher.dispatchOccurredVar> = true;
 	<dispatcher.threadImplementation.dispatcherUnlockStmt>
-	irq_reg_callback(<camkesRPCDispatchName(dispatcher)>, NULL); 
-	return true;
+	<dispatcher.name>_reg_callback(<camkesRPCDispatchName(dispatcher)>, NULL); 
 }
 
 >> 
@@ -505,7 +504,7 @@ portInitializer(port) ::= <<
 <endif>
 >>
 
-registerIRQs(dispatcher) ::= << <if(dispatcher.isIRQ)>irq_reg_callback(<camkesRPCDispatchName(dispatcher)>, NULL);
+registerIRQs(dispatcher) ::= << <if(dispatcher.isIRQ)><dispatcher.name>_reg_callback(<camkesRPCDispatchName(dispatcher)>, NULL);
 <endif> >>
 
 dispatcherComponentMainFunction(threadImpl) ::= <<
