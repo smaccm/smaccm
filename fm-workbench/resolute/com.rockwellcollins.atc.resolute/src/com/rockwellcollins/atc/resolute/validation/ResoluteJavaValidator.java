@@ -229,6 +229,26 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 	}
 
 	@Check
+	public void checkLetExpr(LetExpr letExpr) {
+		ResoluteType exprType;
+		Type letType;
+		exprType = getExprType(letExpr.getBinding().getExpr());
+		letType = letExpr.getBinding().getType();
+		if (!exprType.similar(letType)) {
+			error(letExpr, "types mismatch");
+		}
+
+//		System.out.println("binding=" + letExpr.getBinding());
+//
+//		System.out.println("binding=" + letExpr.getBinding().getType());
+//		System.out.println("binding=" + letExpr.getBinding().getExpr());
+//		System.out.println("expr   =" + letExpr.getExpr());
+//		System.out.println("exprType   =" + exprType);
+//		System.out.println("letType    =" + letType);
+
+	}
+
+	@Check
 	public void checkBinExprCall(BinaryExpr binExpr) {
 		String op = binExpr.getOp();
 		ResoluteType typeLeft = getExprType(binExpr.getLeft());
@@ -358,11 +378,11 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 		case "member":
 			checkMemberCall(funCall, actualTypes);
 			return;
-			
+
 		case "length":
 			checkLengthCall(funCall, actualTypes);
-			return;	
-			
+			return;
+
 		case "sum":
 			checkSumCall(funCall, actualTypes);
 			return;
@@ -439,7 +459,7 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 			}
 		}
 	}
-	
+
 	private void checkLengthCall(BuiltInFnCallExpr funCall, List<ResoluteType> actualTypes) {
 		if (actualTypes.size() != 1) {
 			error(funCall, "function 'length' expects two arguments");
@@ -536,26 +556,26 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 			expectedTypes.add(BaseType.AADL);
 			expectedTypes.add(BaseType.PROPERTY);
 			break;
-			
+
 		case "has_member":
 			expectedTypes.add(BaseType.AADL);
 			expectedTypes.add(BaseType.STRING);
-			break;			
+			break;
 
 		// Primary type: component
 		case "subcomponents":
 			expectedTypes.add(BaseType.COMPONENT);
 			break;
-			
+
 		case "is_of_type":
 			expectedTypes.add(BaseType.COMPONENT);
 			expectedTypes.add(BaseType.AADL);
 			break;
-			
+
 		case "is_bound_to":
 			expectedTypes.add(BaseType.COMPONENT);
 			expectedTypes.add(BaseType.COMPONENT);
-			break;			
+			break;
 
 		// Primary type: connection
 		case "source":
@@ -892,11 +912,11 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 			return BaseType.BOOL;
 
 		case "is_of_type":
-			return BaseType.BOOL;			
+			return BaseType.BOOL;
 
 		case "is_bound_to":
-			return BaseType.BOOL;				
-			
+			return BaseType.BOOL;
+
 			// Primary type: range
 		case "upper_bound":
 		case "lower_bound":
