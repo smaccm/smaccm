@@ -20,9 +20,9 @@ import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.xtext.EcoreUtil2;
 import org.osate.aadl2.AnnexSubclause;
 import org.osate.aadl2.ComponentCategory;
+import org.osate.aadl2.ComponentImplementation;
 import org.osate.aadl2.Element;
 import org.osate.aadl2.NamedElement;
-import org.osate.aadl2.SystemImplementation;
 import org.osate.aadl2.instance.ComponentInstance;
 import org.osate.aadl2.instance.ConnectionInstance;
 import org.osate.aadl2.instance.SystemInstance;
@@ -57,16 +57,16 @@ public class ResoluteHandler extends AadlHandler {
 
 		long start = System.currentTimeMillis();
 		SystemInstance si;
-		if (root instanceof SystemImplementation) {
-			SystemImplementation sysimpl = (SystemImplementation) root;
+		if (root instanceof ComponentImplementation) {
+			ComponentImplementation compImpl = (ComponentImplementation) root;
 			try {
-				si = InstantiateModel.buildInstanceModelFile(sysimpl);
+				si = InstantiateModel.buildInstanceModelFile(compImpl);
 			} catch (Exception e) {
 				Dialog.showError("Model Instantiate", "Error while re-instantiating the model: " + e.getMessage());
 				return Status.CANCEL_STATUS;
 			}
 		} else {
-			Dialog.showError("Model Instantiate", "You must select a System Implementation to instantiate");
+			Dialog.showError("Model Instantiate", "You must select a Component Implementation to instantiate");
 			return Status.CANCEL_STATUS;
 		}
 		long stop = System.currentTimeMillis();
