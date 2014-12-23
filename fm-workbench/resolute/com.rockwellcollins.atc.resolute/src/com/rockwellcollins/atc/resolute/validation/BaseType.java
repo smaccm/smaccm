@@ -108,6 +108,11 @@ public class BaseType extends ResoluteType {
 			return true;
 		}
 
+		if ((name.equalsIgnoreCase("real")) && (otherType.toString().equalsIgnoreCase("int"))) {
+//			System.out.println("case from int to real");
+			return true;
+		}
+
 		if (otherType instanceof BaseType) {
 			BaseType bt = (BaseType) otherType;
 			switch (bt.name) {
@@ -143,8 +148,11 @@ public class BaseType extends ResoluteType {
 			case "subprogram_group_access":
 				return subtypeOf(PROVIDES_SUBPROGRAM_GROUP_ACCESS) || subtypeOf(REQUIRES_SUBPROGRAM_GROUP_ACCESS);
 
-			default:
+			default: {
+//				System.out.println("this=" + this.name);
+//				System.out.println("other=" + otherType.toString());
 				return false;
+			}
 			}
 		}
 
