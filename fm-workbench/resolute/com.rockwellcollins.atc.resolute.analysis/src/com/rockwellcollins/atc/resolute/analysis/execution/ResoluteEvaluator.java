@@ -81,23 +81,7 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
 	@Override
 	public ResoluteValue caseFailExpr(FailExpr object) {
 		if (object.getVal() != null) {
-			String str;
-			str = "unknown failure";
-
-			if (object.getVal() instanceof BinaryExpr) {
-				BinaryExpr binExpr = (BinaryExpr) object.getVal();
-				Object val = doSwitch(binExpr);
-				StringValue strVal = (StringValue) val;
-				str = strVal.getString();
-			}
-
-			if (object.getVal() instanceof StringExpr) {
-				StringExpr stringExpr = (StringExpr) object.getVal();
-				str = stringExpr.getVal().getValue();
-			}
-//			throw new ResoluteFailException("Fail Statement Reached", object);
-
-			throw new ResoluteFailException(str.replace("\"", ""), object);
+			return FALSE;
 		} else {
 			throw new ResoluteFailException("Fail Statement Reached", object);
 		}
@@ -151,12 +135,20 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
 			return new BoolValue(!leftValue.equals(rightValue));
 
 		case "+":
-			if (leftValue.isInt()) {
+			if (leftValue.isInt() && rightValue.isInt()) {
 				return new IntValue(leftValue.getInt() + rightValue.getInt());
 			}
 
-			if (leftValue.isReal()) {
+			if (leftValue.isReal() && rightValue.isReal()) {
 				return new RealValue(leftValue.getReal() + rightValue.getReal());
+			}
+
+			if (leftValue.isInt() && rightValue.isReal()) {
+				return new RealValue((double) leftValue.getInt() + rightValue.getReal());
+			}
+
+			if (leftValue.isReal() && rightValue.isInt()) {
+				return new RealValue(leftValue.getInt() + (double) rightValue.getInt());
 			}
 
 			if (leftValue.isString()) {
@@ -164,24 +156,54 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
 			}
 
 		case "-":
-			if (leftValue.isInt()) {
+			if (leftValue.isInt() && rightValue.isInt()) {
 				return new IntValue(leftValue.getInt() - rightValue.getInt());
-			} else {
+			}
+
+			if (leftValue.isReal() && rightValue.isReal()) {
 				return new RealValue(leftValue.getReal() - rightValue.getReal());
 			}
 
+			if (leftValue.isInt() && rightValue.isReal()) {
+				return new RealValue((double) leftValue.getInt() - rightValue.getReal());
+			}
+
+			if (leftValue.isReal() && rightValue.isInt()) {
+				return new RealValue(leftValue.getInt() - (double) rightValue.getInt());
+			}
+
 		case "*":
-			if (leftValue.isInt()) {
+			if (leftValue.isInt() && rightValue.isInt()) {
 				return new IntValue(leftValue.getInt() * rightValue.getInt());
-			} else {
+			}
+
+			if (leftValue.isReal() && rightValue.isReal()) {
 				return new RealValue(leftValue.getReal() * rightValue.getReal());
 			}
 
+			if (leftValue.isInt() && rightValue.isReal()) {
+				return new RealValue((double) leftValue.getInt() * rightValue.getReal());
+			}
+
+			if (leftValue.isReal() && rightValue.isInt()) {
+				return new RealValue(leftValue.getInt() * (double) rightValue.getInt());
+			}
+
 		case "/":
-			if (leftValue.isInt()) {
+			if (leftValue.isInt() && rightValue.isInt()) {
 				return new IntValue(leftValue.getInt() / rightValue.getInt());
-			} else {
+			}
+
+			if (leftValue.isReal() && rightValue.isReal()) {
 				return new RealValue(leftValue.getReal() / rightValue.getReal());
+			}
+
+			if (leftValue.isInt() && rightValue.isReal()) {
+				return new RealValue((double) leftValue.getInt() / rightValue.getReal());
+			}
+
+			if (leftValue.isReal() && rightValue.isInt()) {
+				return new RealValue(leftValue.getInt() / (double) rightValue.getInt());
 			}
 
 		case "<":
