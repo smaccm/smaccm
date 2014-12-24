@@ -840,7 +840,7 @@ public class ResoluteSemanticSequencer extends PropertiesSemanticSequencer {
 	
 	/**
 	 * Constraint:
-	 *     (val=StringTerm?)
+	 *     val=Expr
 	 */
 	protected void sequence_AtomicExpr(EObject context, FailExpr semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);

@@ -157,7 +157,7 @@ PrefixExpr returns Expr:
 AtomicExpr returns Expr:
 	{IdExpr} id=[aadl2::NamedElement | QCREF]
 |	{ThisExpr} 'this' ('.' sub=NestedDotID)?
-|   {FailExpr} 'fail' (val=StringTerm)?
+|   {FailExpr} 'fail' val=Expr
 |	{IntExpr} val=IntegerTerm
 |   {RealExpr} val=RealTerm
 |	{BoolExpr} val=BooleanLiteral

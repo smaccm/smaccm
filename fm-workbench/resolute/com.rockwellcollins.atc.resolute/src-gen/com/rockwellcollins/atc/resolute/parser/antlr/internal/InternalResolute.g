@@ -2146,9 +2146,9 @@ ruleAtomicExpr returns [EObject current=null]
 (
 (
 		{ 
-	        newCompositeNode(grammarAccess.getAtomicExprAccess().getValStringTermParserRuleCall_2_2_0()); 
+	        newCompositeNode(grammarAccess.getAtomicExprAccess().getValExprParserRuleCall_2_2_0()); 
 	    }
-		lv_val_8_0=ruleStringTerm		{
+		lv_val_8_0=ruleExpr		{
 	        if ($current==null) {
 	            $current = createModelElementForParent(grammarAccess.getAtomicExprRule());
 	        }
@@ -2156,12 +2156,12 @@ ruleAtomicExpr returns [EObject current=null]
        			$current, 
        			"val",
         		lv_val_8_0, 
-        		"StringTerm");
+        		"Expr");
 	        afterParserOrEnumRuleCall();
 	    }
 
 )
-)?)
+))
     |((
     {
         $current = forceCreateModelElement(

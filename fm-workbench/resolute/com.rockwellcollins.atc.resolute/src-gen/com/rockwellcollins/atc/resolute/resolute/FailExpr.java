@@ -2,7 +2,6 @@
  */
 package com.rockwellcollins.atc.resolute.resolute;
 
-import org.osate.aadl2.StringLiteral;
 
 /**
  * <!-- begin-user-doc -->
@@ -31,12 +30,12 @@ public interface FailExpr extends Expr
    * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Val</em>' containment reference.
-   * @see #setVal(StringLiteral)
+   * @see #setVal(Expr)
    * @see com.rockwellcollins.atc.resolute.resolute.ResolutePackage#getFailExpr_Val()
    * @model containment="true"
    * @generated
    */
-  StringLiteral getVal();
+  Expr getVal();
 
   /**
    * Sets the value of the '{@link com.rockwellcollins.atc.resolute.resolute.FailExpr#getVal <em>Val</em>}' containment reference.
@@ -46,6 +45,6 @@ public interface FailExpr extends Expr
    * @see #getVal()
    * @generated
    */
-  void setVal(StringLiteral value);
+  void setVal(Expr value);
 
 } // FailExpr

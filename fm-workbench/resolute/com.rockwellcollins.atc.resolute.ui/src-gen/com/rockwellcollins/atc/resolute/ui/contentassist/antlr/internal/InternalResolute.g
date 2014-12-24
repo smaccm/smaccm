@@ -6333,7 +6333,7 @@ rule__AtomicExpr__Group_2__2__Impl
 :
 (
 { before(grammarAccess.getAtomicExprAccess().getValAssignment_2_2()); }
-(rule__AtomicExpr__ValAssignment_2_2)?
+(rule__AtomicExpr__ValAssignment_2_2)
 { after(grammarAccess.getAtomicExprAccess().getValAssignment_2_2()); }
 )
 
@@ -12667,8 +12667,8 @@ rule__AtomicExpr__ValAssignment_2_2
     }
 :
 (
-{ before(grammarAccess.getAtomicExprAccess().getValStringTermParserRuleCall_2_2_0()); }
-	ruleStringTerm{ after(grammarAccess.getAtomicExprAccess().getValStringTermParserRuleCall_2_2_0()); }
+{ before(grammarAccess.getAtomicExprAccess().getValExprParserRuleCall_2_2_0()); }
+	ruleExpr{ after(grammarAccess.getAtomicExprAccess().getValExprParserRuleCall_2_2_0()); }
 )
 
 ;

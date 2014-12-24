@@ -277,6 +277,9 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 			if (typeLeft.subtypeOf(BaseType.REAL) && typeRight.subtypeOf(BaseType.REAL)) {
 				return;
 			}
+			if (typeLeft.subtypeOf(BaseType.STRING) && typeRight.subtypeOf(BaseType.STRING)) {
+				return;
+			}
 			break;
 
 		case "=":

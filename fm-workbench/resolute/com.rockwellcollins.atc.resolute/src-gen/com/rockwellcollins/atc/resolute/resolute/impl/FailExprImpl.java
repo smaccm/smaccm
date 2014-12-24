@@ -2,6 +2,7 @@
  */
 package com.rockwellcollins.atc.resolute.resolute.impl;
 
+import com.rockwellcollins.atc.resolute.resolute.Expr;
 import com.rockwellcollins.atc.resolute.resolute.FailExpr;
 import com.rockwellcollins.atc.resolute.resolute.ResolutePackage;
 
@@ -12,8 +13,6 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-
-import org.osate.aadl2.StringLiteral;
 
 /**
  * <!-- begin-user-doc -->
@@ -38,7 +37,7 @@ public class FailExprImpl extends ExprImpl implements FailExpr
    * @generated
    * @ordered
    */
-  protected StringLiteral val;
+  protected Expr val;
 
   /**
    * <!-- begin-user-doc -->
@@ -66,7 +65,7 @@ public class FailExprImpl extends ExprImpl implements FailExpr
    * <!-- end-user-doc -->
    * @generated
    */
-  public StringLiteral getVal()
+  public Expr getVal()
   {
     return val;
   }
@@ -76,9 +75,9 @@ public class FailExprImpl extends ExprImpl implements FailExpr
    * <!-- end-user-doc -->
    * @generated
    */
-  public NotificationChain basicSetVal(StringLiteral newVal, NotificationChain msgs)
+  public NotificationChain basicSetVal(Expr newVal, NotificationChain msgs)
   {
-    StringLiteral oldVal = val;
+    Expr oldVal = val;
     val = newVal;
     if (eNotificationRequired())
     {
@@ -93,7 +92,7 @@ public class FailExprImpl extends ExprImpl implements FailExpr
    * <!-- end-user-doc -->
    * @generated
    */
-  public void setVal(StringLiteral newVal)
+  public void setVal(Expr newVal)
   {
     if (newVal != val)
     {
@@ -152,7 +151,7 @@ public class FailExprImpl extends ExprImpl implements FailExpr
     switch (featureID)
     {
       case ResolutePackage.FAIL_EXPR__VAL:
-        setVal((StringLiteral)newValue);
+        setVal((Expr)newValue);
         return;
     }
     super.eSet(featureID, newValue);
@@ -169,7 +168,7 @@ public class FailExprImpl extends ExprImpl implements FailExpr
     switch (featureID)
     {
       case ResolutePackage.FAIL_EXPR__VAL:
-        setVal((StringLiteral)null);
+        setVal((Expr)null);
         return;
     }
     super.eUnset(featureID);
