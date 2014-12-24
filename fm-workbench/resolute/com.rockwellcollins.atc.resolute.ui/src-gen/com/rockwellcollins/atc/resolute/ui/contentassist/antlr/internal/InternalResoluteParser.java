@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
 @SuppressWarnings("all")
-@SuppressWarnings("all")
 public class InternalResoluteParser extends AbstractInternalContentAssistParser {
     public static final String[] tokenNames = new String[] {
         "<invalid>", "<EOR>", "<DOWN>", "<UP>", "RULE_REAL_LIT", "RULE_INTEGER_LIT", "RULE_STRING", "RULE_ID", "RULE_SL_COMMENT", "RULE_DIGIT", "RULE_EXPONENT", "RULE_INT_EXPONENT", "RULE_BASED_INTEGER", "RULE_EXTENDED_DIGIT", "RULE_WS", "'*'", "'int'", "'real'", "'string'", "'bool'", "'range'", "'aadl'", "'component'", "'abstract'", "'bus'", "'data'", "'device'", "'memory'", "'processor'", "'process'", "'subprogram_group'", "'subprogram'", "'system'", "'thread_group'", "'thread'", "'virtual_bus'", "'virtual_processor'", "'connection'", "'property'", "'feature'", "'port'", "'data_port'", "'event_port'", "'event_data_port'", "'feature_group'", "'access'", "'bus_access'", "'provides_bus_access'", "'requires_bus_access'", "'data_access'", "'provides_data_access'", "'requires_data_access'", "'subprogram_access'", "'provides_subprogram_access'", "'requires_subprogram_access'", "'subprogram_group_access'", "'provides_subprogram_group_access'", "'requires_subprogram_group_access'", "'<'", "'<='", "'>'", "'>='", "'='", "'<>'", "'+'", "'-'", "'/'", "'not'", "'forall'", "'exists'", "'has_property'", "'has_parent'", "'parent'", "'name'", "'type'", "'has_type'", "'is_of_type'", "'is_bound_to'", "'has_member'", "'features'", "'connections'", "'subcomponents'", "'source'", "'destination'", "'direction'", "'is_event_port'", "'lower_bound'", "'upper_bound'", "'member'", "'sum'", "'union'", "'length'", "'intersect'", "'instance'", "'instances'", "'analysis'", "'receive_error'", "'contain_error'", "'propagate_error'", "'error_state_reachable'", "'=>'", "'false'", "'{'", "'}'", "':'", "'('", "')'", "','", "'**'", "'instanceof'", "'this'", "'.'", "'fail'", "'if'", "'then'", "'else'", "'for'", "'|'", "'let'", "';'", "'prove'", "'applies'", "'to'", "'in'", "'binding'", "'modes'", "'reference'", "'['", "']'", "'compute'", "'classifier'", "'..'", "'delta'", "'::'", "'or'", "'and'", "'+=>'", "'constant'", "'true'"
@@ -1298,7 +1297,7 @@ public class InternalResoluteParser extends AbstractInternalContentAssistParser 
     public final void entryRuleAndExpr() throws RecognitionException {
         try {
             // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:434:1: ( ruleAndExpr EOF )
-            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalRepr EOF
+            // ../com.rockwellcollins.atc.resolute.ui/src-gen/com/rockwellcollins/atc/resolute/ui/contentassist/antlr/internal/InternalResolute.g:435:1: ruleAndExpr EOF
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getAndExprRule()); 
