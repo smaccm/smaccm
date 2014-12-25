@@ -1,33 +1,23 @@
 package com.rockwellcollins.atc.resolute.analysis.values;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
 
 import com.rockwellcollins.atc.resolute.validation.ResoluteType;
 import com.rockwellcollins.atc.resolute.validation.SetType;
 
 public class SetValue extends ResoluteValue {
-	// Use a SortedSet to ensure deterministic ordering
-	final private SortedSet<ResoluteValue> values;
-
-	public SetValue(Set<? extends ResoluteValue> values) {
-		if (values == null) {
-			throw new IllegalArgumentException("Cannot create null SetValue");
-		}
-
-		this.values = Collections.unmodifiableSortedSet(new TreeSet<ResoluteValue>(values));
-	}
+	// Use a List to ensure deterministic ordering
+	final private List<ResoluteValue> values;
 
 	public SetValue(List<? extends ResoluteValue> list) {
 		if (list == null) {
 			throw new IllegalArgumentException("Cannot create null SetValue");
 		}
 
-		this.values = Collections.unmodifiableSortedSet(new TreeSet<ResoluteValue>(list));
+		this.values = Collections.unmodifiableList(new ArrayList<ResoluteValue>(list));
 	}
 
 	@Override
@@ -36,7 +26,7 @@ public class SetValue extends ResoluteValue {
 	}
 
 	@Override
-	public SortedSet<ResoluteValue> getSet() {
+	public List<ResoluteValue> getSet() {
 		return values;
 	}
 

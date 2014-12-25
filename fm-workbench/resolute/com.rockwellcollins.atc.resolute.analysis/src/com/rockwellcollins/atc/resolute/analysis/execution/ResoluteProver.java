@@ -65,7 +65,7 @@ public class ResoluteProver extends ResoluteSwitch<ResoluteResult> {
 		return createResoluteEvaluator().doSwitch(e);
 	}
 
-	protected Set<ResoluteValue> getArgSet(Arg arg) {
+	protected List<ResoluteValue> getArgSet(Arg arg) {
 		return createResoluteEvaluator().getArgSet(arg);
 	}
 

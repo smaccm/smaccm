@@ -7,8 +7,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.SortedSet;
-import java.util.TreeSet;
 
 import org.eclipse.emf.ecore.EObject;
 import org.osate.aadl2.Classifier;
@@ -349,12 +347,12 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
 		}
 	}
 
-	public SortedSet<ResoluteValue> getArgSet(Arg arg) {
+	public List<ResoluteValue> getArgSet(Arg arg) {
 		if (arg instanceof QuantArg) {
 			QuantArg quantArg = (QuantArg) arg;
 			return doSwitch(quantArg.getExpr()).getSet();
 		} else {
-			SortedSet<ResoluteValue> values = new TreeSet<ResoluteValue>();
+			List<ResoluteValue> values = new ArrayList<ResoluteValue>();
 			BaseType type = (BaseType) arg.getType();
 			for (NamedElement ne : context.getSet(type.getType())) {
 				values.add(new NamedElementValue(ne));
@@ -397,13 +395,13 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
 		return new SetValue(filterMap(object.getArgs(), object.getMap(), object.getFilter()));
 	}
 
-	private SortedSet<ResoluteValue> filterMap(List<Arg> args, Expr map, Expr filter) {
+	private List<ResoluteValue> filterMap(List<Arg> args, Expr map, Expr filter) {
 		if (args.isEmpty()) {
 			return filter(map, filter);
 		} else {
 			Arg arg = args.get(0);
 			List<Arg> rest = args.subList(1, args.size());
-			SortedSet<ResoluteValue> result = new TreeSet<ResoluteValue>();
+			List<ResoluteValue> result = new ArrayList<ResoluteValue>();
 			for (ResoluteValue value : getArgSet(arg)) {
 				varStack.peek().put(arg, value);
 				result.addAll(filterMap(rest, map, filter));
@@ -412,8 +410,8 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
 		}
 	}
 
-	private SortedSet<ResoluteValue> filter(Expr map, Expr filter) {
-		TreeSet<ResoluteValue> result = new TreeSet<ResoluteValue>();
+	private List<ResoluteValue> filter(Expr map, Expr filter) {
+		List<ResoluteValue> result = new ArrayList<ResoluteValue>();
 		if (filter == null || doSwitch(filter).getBool()) {
 			result.add(doSwitch(map));
 		}
