@@ -406,7 +406,7 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 			return;
 		}
 
-		for (int i = 0; i < actualTypes.size(); i++) {
+		for (int i = 0; i < expectedTypes.size(); i++) {
 			ResoluteType expected = expectedTypes.get(i);
 			ResoluteType actual = getExprType(actuals.get(i));
 
@@ -558,6 +558,12 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 		case "property":
 			expectedTypes.add(BaseType.AADL);
 			expectedTypes.add(BaseType.PROPERTY);
+			break;
+
+		case "property_default":
+			expectedTypes.add(BaseType.AADL);
+			expectedTypes.add(BaseType.PROPERTY);
+			expectedTypes.add(BaseType.ANY);
 			break;
 
 		case "has_member":
@@ -896,6 +902,10 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 		// Primary type: aadl
 		case "property":
 			return getPropertyType(funCall);
+
+		case "property_default":
+			return getExprType(funCall.getArgs().get(2));
+
 		case "parent":
 			return BaseType.AADL;
 		case "name":
@@ -968,6 +978,8 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 		if (funCall.getArgs().size() != 2) {
 			return BaseType.FAIL;
 		}
+//		EList<Expr> actuals = funCall.getArgs();
+//		getExprType (funCall.getArgs().get(1));
 
 		Expr propExpr = funCall.getArgs().get(1);
 		if (!(propExpr instanceof IdExpr)) {
@@ -976,12 +988,27 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 		}
 
 		IdExpr idExpr = (IdExpr) propExpr;
-		if (!(idExpr.getId() instanceof Property)) {
+		Property prop = null;
+		if (idExpr.getId() instanceof Property) {
+			prop = (Property) idExpr.getId();
+		}
+//		if (idExpr.getId() instanceof Arg) {
+//			Arg arg = (Arg) idExpr.getId();
+//
+//			System.out.println("arg  =" + arg);
+//			System.out.println("getexpr=" + getExprType(propExpr));
+//
+//			for (org.osate.aadl2.Element e : arg.getChildren()) {
+//				System.out.println("e=" + e);
+//
+//			}
+//		}
+
+		if (prop == null) {
 			error(funCall, "Cannot perform property lookup without literal property reference");
 			return BaseType.FAIL;
 		}
 
-		Property prop = (Property) idExpr.getId();
 		ResoluteType type = convertPropertyType(prop.getPropertyType());
 		if (type == null) {
 			error(funCall.getArgs().get(1), "Unknown property type");

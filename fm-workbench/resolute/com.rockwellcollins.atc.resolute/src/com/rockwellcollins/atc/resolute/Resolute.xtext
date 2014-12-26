@@ -181,6 +181,7 @@ BuiltInFn:
 // Primary type: aadl
 	'has_property'
 |	'property'
+|	'property_default'
 |	'has_parent'
 |	'parent'
 |	'name'

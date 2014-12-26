@@ -7,6 +7,7 @@ import org.osate.aadl2.instance.FeatureInstance;
 import com.rockwellcollins.atc.resolute.resolute.Type;
 
 public class BaseType extends ResoluteType {
+	public static final BaseType ANY = new BaseType("any");
 	public static final BaseType INT = new BaseType("int");
 	public static final BaseType REAL = new BaseType("real");
 	public static final BaseType STRING = new BaseType("string");
@@ -101,6 +102,10 @@ public class BaseType extends ResoluteType {
 	@Override
 	public boolean subtypeOf(ResoluteType otherType) {
 		if (this.equals(FAIL) || otherType.equals(FAIL)) {
+			return true;
+		}
+
+		if (this.equals(ANY) || otherType.equals(ANY)) {
 			return true;
 		}
 

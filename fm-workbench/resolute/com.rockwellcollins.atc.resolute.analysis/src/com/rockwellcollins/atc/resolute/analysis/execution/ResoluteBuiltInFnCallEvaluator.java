@@ -83,6 +83,19 @@ public class ResoluteBuiltInFnCallEvaluator {
 			return exprToValue(expr);
 		}
 
+		case "property_default": {
+			NamedElement element = args.get(0).getNamedElement();
+			Property prop = (Property) args.get(1).getNamedElement();
+			PropertyExpression expr = getPropertyExpression(element, prop);
+
+			if (expr == null) {
+				return args.get(2);
+
+			}
+
+			return exprToValue(expr);
+		}
+
 		case "has_parent": {
 			NamedElement element = args.get(0).getNamedElement();
 			EObject parent = element.eContainer();
