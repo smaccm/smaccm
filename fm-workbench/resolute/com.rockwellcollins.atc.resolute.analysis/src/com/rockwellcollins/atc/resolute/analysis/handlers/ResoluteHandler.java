@@ -54,6 +54,9 @@ public class ResoluteHandler extends AadlHandler {
 	protected IStatus runJob(Element root, IProgressMonitor monitor) {
 		clearProofs();
 		disableRerunHandler();
+		String theorem;
+
+		theorem = this.getExecutionEvent().getParameter("com.rockwellcollins.atc.resolute.analysis.theorem");
 
 		long start = System.currentTimeMillis();
 		SystemInstance si;
@@ -79,23 +82,29 @@ public class ResoluteHandler extends AadlHandler {
 		FeatureToConnectionsMap featToConnsMap = new FeatureToConnectionsMap(si);
 
 		List<ResoluteResult> proofTrees = new ArrayList<>();
-		for (NamedElement el : sets.get("component")) {
-			ComponentInstance compInst = (ComponentInstance) el;
-			EClass resoluteSubclauseEClass = ResolutePackage.eINSTANCE.getResoluteSubclause();
-			for (AnnexSubclause subclause : AnnexUtil.getAllAnnexSubclauses(compInst.getComponentClassifier(),
-					resoluteSubclauseEClass)) {
 
-				if (subclause instanceof ResoluteSubclause) {
-					ResoluteSubclause resoluteSubclause = (ResoluteSubclause) subclause;
-					EvaluationContext context = new EvaluationContext(compInst, sets, featToConnsMap);
-					ResoluteInterpreter interpreter = new ResoluteInterpreter(context);
-					for (ProveStatement ps : resoluteSubclause.getProves()) {
-						proofTrees.add(interpreter.evaluateProveStatement(ps));
-						drawProofs(proofTrees);
+		if (theorem == null) {
+			for (NamedElement el : sets.get("component")) {
+				ComponentInstance compInst = (ComponentInstance) el;
+				EClass resoluteSubclauseEClass = ResolutePackage.eINSTANCE.getResoluteSubclause();
+				for (AnnexSubclause subclause : AnnexUtil.getAllAnnexSubclauses(compInst.getComponentClassifier(),
+						resoluteSubclauseEClass)) {
+
+					if (subclause instanceof ResoluteSubclause) {
+						ResoluteSubclause resoluteSubclause = (ResoluteSubclause) subclause;
+						EvaluationContext context = new EvaluationContext(compInst, sets, featToConnsMap);
+						ResoluteInterpreter interpreter = new ResoluteInterpreter(context);
+						for (ProveStatement ps : resoluteSubclause.getProves()) {
+							proofTrees.add(interpreter.evaluateProveStatement(ps));
+							drawProofs(proofTrees);
+						}
 					}
 				}
 			}
+		} else {
+			System.out.println("should check theorem=" + theorem);
 		}
+
 		stop = System.currentTimeMillis();
 		System.out.println("Evaluation time: " + (stop - start) / 1000.0 + "s");
 
