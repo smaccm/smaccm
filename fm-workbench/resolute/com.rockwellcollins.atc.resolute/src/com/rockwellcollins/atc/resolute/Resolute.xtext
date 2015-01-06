@@ -109,8 +109,10 @@ DefinitionBody:
 
 ClaimText:
 	 {ClaimString} str=STRING 
-| 	 {ClaimArg} arg=[Arg]
+| 	 {ClaimArg} arg=[ClaimTextVar] ('%' unit=[aadl2::UnitLiteral])?
 ;
+
+ClaimTextVar: Arg | ConstantDefinition | LetBinding;
 
 Expr:
 	ImpliesExpr

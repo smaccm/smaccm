@@ -31,6 +31,7 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Resolute.ecore#//DefinitionBody/expr"/>
     </genClasses>
     <genClasses ecoreClass="Resolute.ecore#//ClaimText"/>
+    <genClasses ecoreClass="Resolute.ecore#//ClaimTextVar"/>
     <genClasses ecoreClass="Resolute.ecore#//Expr"/>
     <genClasses ecoreClass="Resolute.ecore#//LetBinding">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Resolute.ecore#//LetBinding/type"/>
@@ -63,6 +64,7 @@
     </genClasses>
     <genClasses ecoreClass="Resolute.ecore#//ClaimArg">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Resolute.ecore#//ClaimArg/arg"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Resolute.ecore#//ClaimArg/unit"/>
     </genClasses>
     <genClasses ecoreClass="Resolute.ecore#//BinaryExpr">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Resolute.ecore#//BinaryExpr/left"/>

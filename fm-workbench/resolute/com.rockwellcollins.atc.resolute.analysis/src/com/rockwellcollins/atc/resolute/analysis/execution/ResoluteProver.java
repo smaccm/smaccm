@@ -15,6 +15,7 @@ import org.eclipse.xtext.nodemodel.ICompositeNode;
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 import org.osate.aadl2.Element;
 import org.osate.aadl2.NamedElement;
+import org.osate.aadl2.UnitLiteral;
 import org.osate.aadl2.instance.ComponentInstance;
 import org.osate.aadl2.instance.ConnectionInstance;
 import org.osate.aadl2.instance.FeatureInstance;
@@ -22,7 +23,9 @@ import org.osate.aadl2.instance.FeatureInstance;
 import com.rockwellcollins.atc.resolute.analysis.results.ClaimResult;
 import com.rockwellcollins.atc.resolute.analysis.results.FailResult;
 import com.rockwellcollins.atc.resolute.analysis.results.ResoluteResult;
+import com.rockwellcollins.atc.resolute.analysis.values.IntValue;
 import com.rockwellcollins.atc.resolute.analysis.values.NamedElementValue;
+import com.rockwellcollins.atc.resolute.analysis.values.RealValue;
 import com.rockwellcollins.atc.resolute.analysis.values.ResoluteValue;
 import com.rockwellcollins.atc.resolute.analysis.values.StringValue;
 import com.rockwellcollins.atc.resolute.resolute.Arg;
@@ -31,6 +34,8 @@ import com.rockwellcollins.atc.resolute.resolute.ClaimArg;
 import com.rockwellcollins.atc.resolute.resolute.ClaimBody;
 import com.rockwellcollins.atc.resolute.resolute.ClaimString;
 import com.rockwellcollins.atc.resolute.resolute.ClaimText;
+import com.rockwellcollins.atc.resolute.resolute.ClaimTextVar;
+import com.rockwellcollins.atc.resolute.resolute.ConstantDefinition;
 import com.rockwellcollins.atc.resolute.resolute.Expr;
 import com.rockwellcollins.atc.resolute.resolute.FailExpr;
 import com.rockwellcollins.atc.resolute.resolute.FnCallExpr;
@@ -240,9 +245,34 @@ public class ResoluteProver extends ResoluteSwitch<ResoluteResult> {
 
 		for (Element claim : claimBody.getClaim()) {
 			if (claim instanceof ClaimArg) {
-				Arg claimArg = ((ClaimArg) claim).getArg();
+				ClaimTextVar claimArg = ((ClaimArg) claim).getArg();
+				UnitLiteral claimArgUnit = ((ClaimArg) claim).getUnit();
 				text.append("'");
-				text.append(varStack.peek().get(claimArg));
+				ResoluteValue val = varStack.peek().get(claimArg);
+				if (val == null) {
+					if (claimArg instanceof ConstantDefinition) {
+						val = eval(((ConstantDefinition) claimArg).getExpr());
+					} else if (claimArg instanceof LetBinding) {
+						val = eval(((LetBinding) claimArg).getExpr());
+					}
+				}
+				if (claimArgUnit != null) {
+					if (val instanceof IntValue) {
+						IntValue ival = (IntValue) val;
+						long sval = ival.getScaledInt(claimArgUnit);
+						if (sval != 0 && ival.getInt() != 0) {
+							val = new IntValue(sval);
+						} else {
+							val = new RealValue(ival.getScaledIntAsDouble(claimArgUnit));
+						}
+					} else if (val instanceof RealValue) {
+						val = new RealValue(((RealValue) val).getScaledReal(claimArgUnit));
+					}
+				}
+				text.append(val);
+				if (claimArgUnit != null) {
+					text.append(" " + claimArgUnit.getName());
+				}
 				text.append("'");
 			} else if (claim instanceof ClaimString) {
 				text.append(((ClaimString) claim).getStr());
@@ -258,9 +288,12 @@ public class ResoluteProver extends ResoluteSwitch<ResoluteResult> {
 		Map<String, EObject> result = new HashMap<>();
 		for (ClaimText claim : body.getClaim()) {
 			if (claim instanceof ClaimArg) {
-				Arg claimArg = ((ClaimArg) claim).getArg();
+				ClaimTextVar claimArg = ((ClaimArg) claim).getArg();
 				ResoluteValue argVal = varStack.peek().get(claimArg);
-				if (argVal.isNamedElement()) {
+//				if (argVal == null && claimArg instanceof LetBinding) {
+//					argVal = eval(((LetBinding) claimArg).getExpr());
+//				}
+				if (argVal != null && argVal.isNamedElement()) {
 					EObject modelElement = getModelElement(argVal.getNamedElement());
 					if (modelElement != null) {
 						result.put(argVal.toString(), modelElement);

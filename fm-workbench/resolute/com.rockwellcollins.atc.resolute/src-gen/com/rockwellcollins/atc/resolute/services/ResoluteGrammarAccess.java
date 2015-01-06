@@ -242,8 +242,8 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		//	"memory" | "processor" | "process" | "subprogram_group" | "subprogram" | "system" | "thread_group" | "thread" |
 		//	"virtual_bus" | "virtual_processor" | "connection" | "property" | "feature" | "port" | "data_port" | "event_port" |
 		//	"event_data_port" | "feature_group" | "access" | "bus_access" | "provides_bus_access" | "requires_bus_access" |
-		//	"data_access" | "provides_data_access" | "requires_data_access" | "subprogram_access" | "provides_subprogram_access" |
-		//	"requires_subprogram_access" | "subprogram_group_access" | "provides_subprogram_group_access" |
+		//	"data_access" | "provides_data_access" | "requires_data_access" | "subprogram_access" | "provides_subprogram_access"
+		//	| "requires_subprogram_access" | "subprogram_group_access" | "provides_subprogram_group_access" |
 		//	"requires_subprogram_group_access");
 		public ParserRule getRule() { return rule; }
 
@@ -258,8 +258,8 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 
 		//"int" | "real" | "string" | "bool" | "range" | "aadl" | "component" | "abstract" | "bus" | "data" | "device" | "memory"
 		//| "processor" | "process" | "subprogram_group" | "subprogram" | "system" | "thread_group" | "thread" | "virtual_bus" |
-		//"virtual_processor" | "connection" | "property" | "feature" | "port" | "data_port" | "event_port" | "event_data_port" |
-		//"feature_group" | "access" | "bus_access" | "provides_bus_access" | "requires_bus_access" | "data_access" |
+		//"virtual_processor" | "connection" | "property" | "feature" | "port" | "data_port" | "event_port" | "event_data_port"
+		//| "feature_group" | "access" | "bus_access" | "provides_bus_access" | "requires_bus_access" | "data_access" |
 		//"provides_data_access" | "requires_data_access" | "subprogram_access" | "provides_subprogram_access" |
 		//"requires_subprogram_access" | "subprogram_group_access" | "provides_subprogram_group_access" |
 		//"requires_subprogram_group_access"
@@ -663,14 +663,19 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		private final Group cGroup_1 = (Group)cAlternatives.eContents().get(1);
 		private final Action cClaimArgAction_1_0 = (Action)cGroup_1.eContents().get(0);
 		private final Assignment cArgAssignment_1_1 = (Assignment)cGroup_1.eContents().get(1);
-		private final CrossReference cArgArgCrossReference_1_1_0 = (CrossReference)cArgAssignment_1_1.eContents().get(0);
-		private final RuleCall cArgArgIDTerminalRuleCall_1_1_0_1 = (RuleCall)cArgArgCrossReference_1_1_0.eContents().get(1);
+		private final CrossReference cArgClaimTextVarCrossReference_1_1_0 = (CrossReference)cArgAssignment_1_1.eContents().get(0);
+		private final RuleCall cArgClaimTextVarIDTerminalRuleCall_1_1_0_1 = (RuleCall)cArgClaimTextVarCrossReference_1_1_0.eContents().get(1);
+		private final Group cGroup_1_2 = (Group)cGroup_1.eContents().get(2);
+		private final Keyword cPercentSignKeyword_1_2_0 = (Keyword)cGroup_1_2.eContents().get(0);
+		private final Assignment cUnitAssignment_1_2_1 = (Assignment)cGroup_1_2.eContents().get(1);
+		private final CrossReference cUnitUnitLiteralCrossReference_1_2_1_0 = (CrossReference)cUnitAssignment_1_2_1.eContents().get(0);
+		private final RuleCall cUnitUnitLiteralIDTerminalRuleCall_1_2_1_0_1 = (RuleCall)cUnitUnitLiteralCrossReference_1_2_1_0.eContents().get(1);
 		
 		//ClaimText:
-		//	{ClaimString} str=STRING | {ClaimArg} arg=[Arg];
+		//	{ClaimString} str=STRING | {ClaimArg} arg=[ClaimTextVar] ("%" unit=[aadl2::UnitLiteral])?;
 		public ParserRule getRule() { return rule; }
 
-		//{ClaimString} str=STRING | {ClaimArg} arg=[Arg]
+		//{ClaimString} str=STRING | {ClaimArg} arg=[ClaimTextVar] ("%" unit=[aadl2::UnitLiteral])?
 		public Alternatives getAlternatives() { return cAlternatives; }
 
 		//{ClaimString} str=STRING
@@ -685,20 +690,59 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		//STRING
 		public RuleCall getStrSTRINGTerminalRuleCall_0_1_0() { return cStrSTRINGTerminalRuleCall_0_1_0; }
 
-		//{ClaimArg} arg=[Arg]
+		//{ClaimArg} arg=[ClaimTextVar] ("%" unit=[aadl2::UnitLiteral])?
 		public Group getGroup_1() { return cGroup_1; }
 
 		//{ClaimArg}
 		public Action getClaimArgAction_1_0() { return cClaimArgAction_1_0; }
 
-		//arg=[Arg]
+		//arg=[ClaimTextVar]
 		public Assignment getArgAssignment_1_1() { return cArgAssignment_1_1; }
 
-		//[Arg]
-		public CrossReference getArgArgCrossReference_1_1_0() { return cArgArgCrossReference_1_1_0; }
+		//[ClaimTextVar]
+		public CrossReference getArgClaimTextVarCrossReference_1_1_0() { return cArgClaimTextVarCrossReference_1_1_0; }
 
 		//ID
-		public RuleCall getArgArgIDTerminalRuleCall_1_1_0_1() { return cArgArgIDTerminalRuleCall_1_1_0_1; }
+		public RuleCall getArgClaimTextVarIDTerminalRuleCall_1_1_0_1() { return cArgClaimTextVarIDTerminalRuleCall_1_1_0_1; }
+
+		//("%" unit=[aadl2::UnitLiteral])?
+		public Group getGroup_1_2() { return cGroup_1_2; }
+
+		//"%"
+		public Keyword getPercentSignKeyword_1_2_0() { return cPercentSignKeyword_1_2_0; }
+
+		//unit=[aadl2::UnitLiteral]
+		public Assignment getUnitAssignment_1_2_1() { return cUnitAssignment_1_2_1; }
+
+		//[aadl2::UnitLiteral]
+		public CrossReference getUnitUnitLiteralCrossReference_1_2_1_0() { return cUnitUnitLiteralCrossReference_1_2_1_0; }
+
+		//ID
+		public RuleCall getUnitUnitLiteralIDTerminalRuleCall_1_2_1_0_1() { return cUnitUnitLiteralIDTerminalRuleCall_1_2_1_0_1; }
+	}
+
+	public class ClaimTextVarElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "ClaimTextVar");
+		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
+		private final RuleCall cArgParserRuleCall_0 = (RuleCall)cAlternatives.eContents().get(0);
+		private final RuleCall cConstantDefinitionParserRuleCall_1 = (RuleCall)cAlternatives.eContents().get(1);
+		private final RuleCall cLetBindingParserRuleCall_2 = (RuleCall)cAlternatives.eContents().get(2);
+		
+		//ClaimTextVar:
+		//	Arg | ConstantDefinition | LetBinding;
+		public ParserRule getRule() { return rule; }
+
+		//Arg | ConstantDefinition | LetBinding
+		public Alternatives getAlternatives() { return cAlternatives; }
+
+		//Arg
+		public RuleCall getArgParserRuleCall_0() { return cArgParserRuleCall_0; }
+
+		//ConstantDefinition
+		public RuleCall getConstantDefinitionParserRuleCall_1() { return cConstantDefinitionParserRuleCall_1; }
+
+		//LetBinding
+		public RuleCall getLetBindingParserRuleCall_2() { return cLetBindingParserRuleCall_2; }
 	}
 
 	public class ExprElements extends AbstractParserRuleElementFinder {
@@ -1311,17 +1355,17 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		//	{IfThenElseExpr} "if" cond=Expr "then" then=Expr "else" else=Expr | {QuantifiedExpr} quant=("forall" | "exists") ("("
 		//	args+=Arg ")")+ "." expr=Expr | {BuiltInFnCallExpr} fn=BuiltInFn "(" (args+=Expr ("," args+=Expr)*)? ")" |
 		//	{FnCallExpr} fn=[FunctionDefinition] "(" (args+=Expr ("," args+=Expr)*)? ")" | "{" Expr ({FilterMapExpr.map=current}
-		//	"for" ("(" args+=Arg ")")+ ("|" filter=Expr)? | {SetExpr.exprs+=current} ("," exprs+=Expr)*) "}" | {SetExpr} "{" "}" |
-		//	{LetExpr} "let" binding=LetBinding ";" expr=Expr | "(" Expr ")";
+		//	"for" ("(" args+=Arg ")")+ ("|" filter=Expr)? | {SetExpr.exprs+=current} ("," exprs+=Expr)*) "}" | {SetExpr} "{" "}"
+		//	| {LetExpr} "let" binding=LetBinding ";" expr=Expr | "(" Expr ")";
 		public ParserRule getRule() { return rule; }
 
 		//{IdExpr} id=[aadl2::NamedElement|QCREF] | {ThisExpr} "this" ("." sub=NestedDotID)? | {FailExpr} "fail" val=Expr |
 		//{IntExpr} val=IntegerTerm | {RealExpr} val=RealTerm | {BoolExpr} val=BooleanLiteral | {StringExpr} val=StringTerm |
 		//{IfThenElseExpr} "if" cond=Expr "then" then=Expr "else" else=Expr | {QuantifiedExpr} quant=("forall" | "exists") ("("
-		//args+=Arg ")")+ "." expr=Expr | {BuiltInFnCallExpr} fn=BuiltInFn "(" (args+=Expr ("," args+=Expr)*)? ")" | {FnCallExpr}
-		//fn=[FunctionDefinition] "(" (args+=Expr ("," args+=Expr)*)? ")" | "{" Expr ({FilterMapExpr.map=current} "for" ("("
-		//args+=Arg ")")+ ("|" filter=Expr)? | {SetExpr.exprs+=current} ("," exprs+=Expr)*) "}" | {SetExpr} "{" "}" | {LetExpr}
-		//"let" binding=LetBinding ";" expr=Expr | "(" Expr ")"
+		//args+=Arg ")")+ "." expr=Expr | {BuiltInFnCallExpr} fn=BuiltInFn "(" (args+=Expr ("," args+=Expr)*)? ")" |
+		//{FnCallExpr} fn=[FunctionDefinition] "(" (args+=Expr ("," args+=Expr)*)? ")" | "{" Expr ({FilterMapExpr.map=current}
+		//"for" ("(" args+=Arg ")")+ ("|" filter=Expr)? | {SetExpr.exprs+=current} ("," exprs+=Expr)*) "}" | {SetExpr} "{" "}" |
+		//{LetExpr} "let" binding=LetBinding ";" expr=Expr | "(" Expr ")"
 		public Alternatives getAlternatives() { return cAlternatives; }
 
 		//{IdExpr} id=[aadl2::NamedElement|QCREF]
@@ -1787,9 +1831,9 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		//	// Other
 		//	// Error Annex
 		//	| "property" | "property_default" | "has_parent" | "parent" | "name" | "type" | "has_type" | "is_of_type" |
-		//	"is_bound_to" | "has_member" | "features" | "connections" | "subcomponents" | "source" | "destination" | "direction" |
-		//	"is_event_port" | "lower_bound" | "upper_bound" | "member" | "sum" | "union" | "length" | "intersect" | "instance" |
-		//	"instances" | "analysis" | // the component can receive an incoming error
+		//	"is_bound_to" | "has_member" | "features" | "connections" | "subcomponents" | "source" | "destination" | "direction"
+		//	| "is_event_port" | "lower_bound" | "upper_bound" | "member" | "sum" | "union" | "length" | "intersect" | "instance"
+		//	| "instances" | "analysis" | // the component can receive an incoming error
 		//	"receive_error" | // the component contain the error
 		//	"contain_error" | // the component propagate an error
 		//	"propagate_error" | // the error state is reachable
@@ -2107,6 +2151,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	private final FunctionDefinitionElements pFunctionDefinition;
 	private final DefinitionBodyElements pDefinitionBody;
 	private final ClaimTextElements pClaimText;
+	private final ClaimTextVarElements pClaimTextVar;
 	private final ExprElements pExpr;
 	private final ImpliesExprElements pImpliesExpr;
 	private final OrExprElements pOrExpr;
@@ -2151,6 +2196,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		this.pFunctionDefinition = new FunctionDefinitionElements();
 		this.pDefinitionBody = new DefinitionBodyElements();
 		this.pClaimText = new ClaimTextElements();
+		this.pClaimTextVar = new ClaimTextVarElements();
 		this.pExpr = new ExprElements();
 		this.pImpliesExpr = new ImpliesExprElements();
 		this.pOrExpr = new OrExprElements();
@@ -2285,8 +2331,8 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	//	"memory" | "processor" | "process" | "subprogram_group" | "subprogram" | "system" | "thread_group" | "thread" |
 	//	"virtual_bus" | "virtual_processor" | "connection" | "property" | "feature" | "port" | "data_port" | "event_port" |
 	//	"event_data_port" | "feature_group" | "access" | "bus_access" | "provides_bus_access" | "requires_bus_access" |
-	//	"data_access" | "provides_data_access" | "requires_data_access" | "subprogram_access" | "provides_subprogram_access" |
-	//	"requires_subprogram_access" | "subprogram_group_access" | "provides_subprogram_group_access" |
+	//	"data_access" | "provides_data_access" | "requires_data_access" | "subprogram_access" | "provides_subprogram_access"
+	//	| "requires_subprogram_access" | "subprogram_group_access" | "provides_subprogram_group_access" |
 	//	"requires_subprogram_group_access");
 	public BaseTypeElements getBaseTypeAccess() {
 		return pBaseType;
@@ -2338,13 +2384,23 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	}
 
 	//ClaimText:
-	//	{ClaimString} str=STRING | {ClaimArg} arg=[Arg];
+	//	{ClaimString} str=STRING | {ClaimArg} arg=[ClaimTextVar] ("%" unit=[aadl2::UnitLiteral])?;
 	public ClaimTextElements getClaimTextAccess() {
 		return pClaimText;
 	}
 	
 	public ParserRule getClaimTextRule() {
 		return getClaimTextAccess().getRule();
+	}
+
+	//ClaimTextVar:
+	//	Arg | ConstantDefinition | LetBinding;
+	public ClaimTextVarElements getClaimTextVarAccess() {
+		return pClaimTextVar;
+	}
+	
+	public ParserRule getClaimTextVarRule() {
+		return getClaimTextVarAccess().getRule();
 	}
 
 	//Expr:
@@ -2453,8 +2509,8 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	//	{IfThenElseExpr} "if" cond=Expr "then" then=Expr "else" else=Expr | {QuantifiedExpr} quant=("forall" | "exists") ("("
 	//	args+=Arg ")")+ "." expr=Expr | {BuiltInFnCallExpr} fn=BuiltInFn "(" (args+=Expr ("," args+=Expr)*)? ")" |
 	//	{FnCallExpr} fn=[FunctionDefinition] "(" (args+=Expr ("," args+=Expr)*)? ")" | "{" Expr ({FilterMapExpr.map=current}
-	//	"for" ("(" args+=Arg ")")+ ("|" filter=Expr)? | {SetExpr.exprs+=current} ("," exprs+=Expr)*) "}" | {SetExpr} "{" "}" |
-	//	{LetExpr} "let" binding=LetBinding ";" expr=Expr | "(" Expr ")";
+	//	"for" ("(" args+=Arg ")")+ ("|" filter=Expr)? | {SetExpr.exprs+=current} ("," exprs+=Expr)*) "}" | {SetExpr} "{" "}"
+	//	| {LetExpr} "let" binding=LetBinding ";" expr=Expr | "(" Expr ")";
 	public AtomicExprElements getAtomicExprAccess() {
 		return pAtomicExpr;
 	}
@@ -2482,9 +2538,9 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	//	// Other
 	//	// Error Annex
 	//	| "property" | "property_default" | "has_parent" | "parent" | "name" | "type" | "has_type" | "is_of_type" |
-	//	"is_bound_to" | "has_member" | "features" | "connections" | "subcomponents" | "source" | "destination" | "direction" |
-	//	"is_event_port" | "lower_bound" | "upper_bound" | "member" | "sum" | "union" | "length" | "intersect" | "instance" |
-	//	"instances" | "analysis" | // the component can receive an incoming error
+	//	"is_bound_to" | "has_member" | "features" | "connections" | "subcomponents" | "source" | "destination" | "direction"
+	//	| "is_event_port" | "lower_bound" | "upper_bound" | "member" | "sum" | "union" | "length" | "intersect" | "instance"
+	//	| "instances" | "analysis" | // the component can receive an incoming error
 	//	"receive_error" | // the component contain the error
 	//	"contain_error" | // the component propagate an error
 	//	"propagate_error" | // the error state is reachable

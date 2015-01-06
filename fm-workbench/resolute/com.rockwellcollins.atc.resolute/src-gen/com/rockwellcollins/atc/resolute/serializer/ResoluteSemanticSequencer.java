@@ -228,6 +228,7 @@ public class ResoluteSemanticSequencer extends PropertiesSemanticSequencer {
 		else if(semanticObject.eClass().getEPackage() == ResolutePackage.eINSTANCE) switch(semanticObject.eClass().getClassifierID()) {
 			case ResolutePackage.ARG:
 				if(context == grammarAccess.getArgRule() ||
+				   context == grammarAccess.getClaimTextVarRule() ||
 				   context == grammarAccess.getNamedElementRule()) {
 					sequence_Arg(context, (Arg) semanticObject); 
 					return; 
@@ -362,7 +363,8 @@ public class ResoluteSemanticSequencer extends PropertiesSemanticSequencer {
 				}
 				else break;
 			case ResolutePackage.CONSTANT_DEFINITION:
-				if(context == grammarAccess.getConstantDefinitionRule() ||
+				if(context == grammarAccess.getClaimTextVarRule() ||
+				   context == grammarAccess.getConstantDefinitionRule() ||
 				   context == grammarAccess.getDefinitionRule() ||
 				   context == grammarAccess.getNamedElementRule()) {
 					sequence_ConstantDefinition(context, (ConstantDefinition) semanticObject); 
@@ -561,7 +563,8 @@ public class ResoluteSemanticSequencer extends PropertiesSemanticSequencer {
 				}
 				else break;
 			case ResolutePackage.LET_BINDING:
-				if(context == grammarAccess.getLetBindingRule() ||
+				if(context == grammarAccess.getClaimTextVarRule() ||
+				   context == grammarAccess.getLetBindingRule() ||
 				   context == grammarAccess.getNamedElementRule()) {
 					sequence_LetBinding(context, (LetBinding) semanticObject); 
 					return; 
@@ -607,6 +610,7 @@ public class ResoluteSemanticSequencer extends PropertiesSemanticSequencer {
 				else break;
 			case ResolutePackage.QUANT_ARG:
 				if(context == grammarAccess.getArgRule() ||
+				   context == grammarAccess.getClaimTextVarRule() ||
 				   context == grammarAccess.getNamedElementRule()) {
 					sequence_Arg(context, (QuantArg) semanticObject); 
 					return; 
@@ -1000,7 +1004,7 @@ public class ResoluteSemanticSequencer extends PropertiesSemanticSequencer {
 	
 	/**
 	 * Constraint:
-	 *     arg=[Arg|ID]
+	 *     (arg=[ClaimTextVar|ID] unit=[UnitLiteral|ID]?)
 	 */
 	protected void sequence_ClaimText(EObject context, ClaimArg semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);

@@ -12,6 +12,7 @@ import com.rockwellcollins.atc.resolute.resolute.ClaimArg;
 import com.rockwellcollins.atc.resolute.resolute.ClaimBody;
 import com.rockwellcollins.atc.resolute.resolute.ClaimString;
 import com.rockwellcollins.atc.resolute.resolute.ClaimText;
+import com.rockwellcollins.atc.resolute.resolute.ClaimTextVar;
 import com.rockwellcollins.atc.resolute.resolute.ConstantDefinition;
 import com.rockwellcollins.atc.resolute.resolute.Definition;
 import com.rockwellcollins.atc.resolute.resolute.DefinitionBody;
@@ -123,6 +124,13 @@ public class ResolutePackageImpl extends EPackageImpl implements ResolutePackage
    * @generated
    */
   private EClass claimTextEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass claimTextVarEClass = null;
 
   /**
    * <!-- begin-user-doc -->
@@ -569,6 +577,16 @@ public class ResolutePackageImpl extends EPackageImpl implements ResolutePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  public EClass getClaimTextVar()
+  {
+    return claimTextVarEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   public EClass getExpr()
   {
     return exprEClass;
@@ -792,6 +810,16 @@ public class ResolutePackageImpl extends EPackageImpl implements ResolutePackage
   public EReference getClaimArg_Arg()
   {
     return (EReference)claimArgEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getClaimArg_Unit()
+  {
+    return (EReference)claimArgEClass.getEStructuralFeatures().get(1);
   }
 
   /**
@@ -1350,6 +1378,8 @@ public class ResolutePackageImpl extends EPackageImpl implements ResolutePackage
 
     claimTextEClass = createEClass(CLAIM_TEXT);
 
+    claimTextVarEClass = createEClass(CLAIM_TEXT_VAR);
+
     exprEClass = createEClass(EXPR);
 
     letBindingEClass = createEClass(LET_BINDING);
@@ -1383,6 +1413,7 @@ public class ResolutePackageImpl extends EPackageImpl implements ResolutePackage
 
     claimArgEClass = createEClass(CLAIM_ARG);
     createEReference(claimArgEClass, CLAIM_ARG__ARG);
+    createEReference(claimArgEClass, CLAIM_ARG__UNIT);
 
     binaryExprEClass = createEClass(BINARY_EXPR);
     createEReference(binaryExprEClass, BINARY_EXPR__LEFT);
@@ -1490,13 +1521,16 @@ public class ResolutePackageImpl extends EPackageImpl implements ResolutePackage
     definitionEClass.getESuperTypes().add(theAadl2Package.getNamedElement());
     baseTypeEClass.getESuperTypes().add(this.getType());
     argEClass.getESuperTypes().add(theAadl2Package.getNamedElement());
+    argEClass.getESuperTypes().add(this.getClaimTextVar());
     constantDefinitionEClass.getESuperTypes().add(this.getDefinition());
+    constantDefinitionEClass.getESuperTypes().add(this.getClaimTextVar());
     functionDefinitionEClass.getESuperTypes().add(theAadl2Package.getNamespace());
     functionDefinitionEClass.getESuperTypes().add(this.getDefinition());
     definitionBodyEClass.getESuperTypes().add(theAadl2Package.getElement());
     claimTextEClass.getESuperTypes().add(theAadl2Package.getElement());
     exprEClass.getESuperTypes().add(theAadl2Package.getElement());
     letBindingEClass.getESuperTypes().add(theAadl2Package.getNamedElement());
+    letBindingEClass.getESuperTypes().add(this.getClaimTextVar());
     resoluteSubclauseEClass.getESuperTypes().add(theAadl2Package.getAnnexSubclause());
     proveStatementEClass.getESuperTypes().add(theAadl2Package.getElement());
     setTypeEClass.getESuperTypes().add(this.getType());
@@ -1551,6 +1585,8 @@ public class ResolutePackageImpl extends EPackageImpl implements ResolutePackage
 
     initEClass(claimTextEClass, ClaimText.class, "ClaimText", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
+    initEClass(claimTextVarEClass, ClaimTextVar.class, "ClaimTextVar", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
     initEClass(exprEClass, Expr.class, "Expr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
     initEClass(letBindingEClass, LetBinding.class, "LetBinding", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -1583,7 +1619,8 @@ public class ResolutePackageImpl extends EPackageImpl implements ResolutePackage
     initEAttribute(getClaimString_Str(), theEcorePackage.getEString(), "str", null, 0, 1, ClaimString.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(claimArgEClass, ClaimArg.class, "ClaimArg", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getClaimArg_Arg(), this.getArg(), null, "arg", null, 0, 1, ClaimArg.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getClaimArg_Arg(), this.getClaimTextVar(), null, "arg", null, 0, 1, ClaimArg.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getClaimArg_Unit(), theAadl2Package.getUnitLiteral(), null, "unit", null, 0, 1, ClaimArg.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(binaryExprEClass, BinaryExpr.class, "BinaryExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getBinaryExpr_Left(), this.getExpr(), null, "left", null, 0, 1, BinaryExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

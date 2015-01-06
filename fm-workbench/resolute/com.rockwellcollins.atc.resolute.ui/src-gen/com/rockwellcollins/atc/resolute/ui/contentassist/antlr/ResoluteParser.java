@@ -45,6 +45,7 @@ public class ResoluteParser extends AbstractContentAssistParser {
 					put(grammarAccess.getArgAccess().getAlternatives(), "rule__Arg__Alternatives");
 					put(grammarAccess.getDefinitionBodyAccess().getAlternatives(), "rule__DefinitionBody__Alternatives");
 					put(grammarAccess.getClaimTextAccess().getAlternatives(), "rule__ClaimText__Alternatives");
+					put(grammarAccess.getClaimTextVarAccess().getAlternatives(), "rule__ClaimTextVar__Alternatives");
 					put(grammarAccess.getRelationalOpAccess().getAlternatives(), "rule__RelationalOp__Alternatives");
 					put(grammarAccess.getPlusExprAccess().getOpAlternatives_1_0_0_1_0(), "rule__PlusExpr__OpAlternatives_1_0_0_1_0");
 					put(grammarAccess.getTimesExprAccess().getOpAlternatives_1_0_0_1_0(), "rule__TimesExpr__OpAlternatives_1_0_0_1_0");
@@ -76,6 +77,7 @@ public class ResoluteParser extends AbstractContentAssistParser {
 					put(grammarAccess.getDefinitionBodyAccess().getGroup_1_2(), "rule__DefinitionBody__Group_1_2__0");
 					put(grammarAccess.getClaimTextAccess().getGroup_0(), "rule__ClaimText__Group_0__0");
 					put(grammarAccess.getClaimTextAccess().getGroup_1(), "rule__ClaimText__Group_1__0");
+					put(grammarAccess.getClaimTextAccess().getGroup_1_2(), "rule__ClaimText__Group_1_2__0");
 					put(grammarAccess.getImpliesExprAccess().getGroup(), "rule__ImpliesExpr__Group__0");
 					put(grammarAccess.getImpliesExprAccess().getGroup_1(), "rule__ImpliesExpr__Group_1__0");
 					put(grammarAccess.getImpliesExprAccess().getGroup_1_0(), "rule__ImpliesExpr__Group_1_0__0");
@@ -202,6 +204,7 @@ public class ResoluteParser extends AbstractContentAssistParser {
 					put(grammarAccess.getDefinitionBodyAccess().getExprAssignment_1_3(), "rule__DefinitionBody__ExprAssignment_1_3");
 					put(grammarAccess.getClaimTextAccess().getStrAssignment_0_1(), "rule__ClaimText__StrAssignment_0_1");
 					put(grammarAccess.getClaimTextAccess().getArgAssignment_1_1(), "rule__ClaimText__ArgAssignment_1_1");
+					put(grammarAccess.getClaimTextAccess().getUnitAssignment_1_2_1(), "rule__ClaimText__UnitAssignment_1_2_1");
 					put(grammarAccess.getImpliesExprAccess().getOpAssignment_1_0_0_1(), "rule__ImpliesExpr__OpAssignment_1_0_0_1");
 					put(grammarAccess.getImpliesExprAccess().getRightAssignment_1_1(), "rule__ImpliesExpr__RightAssignment_1_1");
 					put(grammarAccess.getOrExprAccess().getOpAssignment_1_0_0_1(), "rule__OrExpr__OpAssignment_1_0_0_1");

@@ -33,140 +33,142 @@ import com.rockwellcollins.atc.resolute.resolute.QuantArg;
 import com.rockwellcollins.atc.resolute.resolute.ResolutePackage;
 
 public class ResoluteLinkingService extends PropertiesLinkingService {
-    @Override
-    public List<EObject> getLinkedObjects(EObject context, EReference reference, INode node)
-            throws IllegalNodeException {
-        String name = getCrossRefNodeAsString(node);
-        EObject e = getLinkedObject(context, reference, name);
-        if (e != null) {
-            return Collections.singletonList(e);
-        }
-        return super.getLinkedObjects(context, reference, node);
-    }
+	@Override
+	public List<EObject> getLinkedObjects(EObject context, EReference reference, INode node)
+			throws IllegalNodeException {
+		String name = getCrossRefNodeAsString(node);
+		EObject e = getLinkedObject(context, reference, name);
+		if (e != null) {
+			return Collections.singletonList(e);
+		}
+		return super.getLinkedObjects(context, reference, node);
+	}
 
-    private EObject getLinkedObject(EObject context, EReference reference, String name) {
-        name = name.replaceAll("::", ".");
-        
-        if (context instanceof PropertyValue) {
-            return getUnitLiteral(context, name);
-        }
+	private EObject getLinkedObject(EObject context, EReference reference, String name) {
+		name = name.replaceAll("::", ".");
 
-        if (context instanceof FnCallExpr) {
-            return getFunctionDefinition(context, name);
-        }
+		if (context instanceof PropertyValue) {
+			return getUnitLiteral(context, name);
+		}
 
-        if (context instanceof ClaimArg) {
-            return getIndexedObject(context, reference, name);
-        }
-        
-        if(context instanceof QuantArg) {
-            return getIndexedObject(context, reference, name);
-        }
+		if (context instanceof FnCallExpr) {
+			return getFunctionDefinition(context, name);
+		}
 
-        if (context instanceof IdExpr || context instanceof NestedDotID) {
-            EObject e = getIndexedObject(context, reference, name);
-            if (e != null) {
-                return e;
-            }
-            
-            Iterable<IEObjectDescription> allObjectTypes = 
-                    EMFIndexRetrieval.getAllEObjectsOfTypeInWorkspace(context, reference.getEReferenceType());
-            
-            URI contextUri = context.eResource().getURI();
-            String contextProject = contextUri.segment(1);
-            for (IEObjectDescription eod : allObjectTypes) {
-                if (eod.getName().toString().equalsIgnoreCase(name)) {
-                    EObject res = eod.getEObjectOrProxy();
-                    res = EcoreUtil.resolve(res, context.eResource().getResourceSet());
-                    if (!Aadl2Util.isNull(res)){
-                        URI linkUri = res.eResource().getURI();
-                        if(linkUri.segment(1).equals(contextProject)){
-                            return res;
-                        }
-                    }
-                }
-            }
-            
-           // e = EMFIndexRetrieval.getEObjectOfType(context, reference.getEReferenceType(), name);
-           // if (e != null) {
-           //     return e;
-           // }
+		if (context instanceof ClaimArg) {
+			if (reference == ResolutePackage.eINSTANCE.getClaimArg_Unit()) {
+				return getUnitLiteral(context, name);
+			}
+			return getIndexedObject(context, reference, name);
+		}
 
-            e = getConstantDefinition(context, name);
-            if (e != null) {
-                return e;
-            }
-        }
+		if (context instanceof QuantArg) {
+			return getIndexedObject(context, reference, name);
+		}
 
-        return null;
-    }
+		if (context instanceof IdExpr || context instanceof NestedDotID) {
+			EObject e = getIndexedObject(context, reference, name);
+			if (e != null) {
+				return e;
+			}
 
-    private static EObject getFunctionDefinition(EObject context, String name) {
-        return getNamedElementByType(context, name, ResolutePackage.Literals.FUNCTION_DEFINITION);
-    }
+			Iterable<IEObjectDescription> allObjectTypes = EMFIndexRetrieval.getAllEObjectsOfTypeInWorkspace(context,
+					reference.getEReferenceType());
 
-    private static EObject getConstantDefinition(EObject context, String name) {
-        return getNamedElementByType(context, name, ResolutePackage.Literals.CONSTANT_DEFINITION);
-    }
+			URI contextUri = context.eResource().getURI();
+			String contextProject = contextUri.segment(1);
+			for (IEObjectDescription eod : allObjectTypes) {
+				if (eod.getName().toString().equalsIgnoreCase(name)) {
+					EObject res = eod.getEObjectOrProxy();
+					res = EcoreUtil.resolve(res, context.eResource().getResourceSet());
+					if (!Aadl2Util.isNull(res)) {
+						URI linkUri = res.eResource().getURI();
+						if (linkUri.segment(1).equals(contextProject)) {
+							return res;
+						}
+					}
+				}
+			}
 
-    private static EObject getNamedElementByType(EObject context, String name, EClass eclass) {
-        // This code will only link to objects in the projects visible from the current project
-        Iterable<IEObjectDescription> allObjectTypes = EMFIndexRetrieval
-                .getAllEObjectsOfTypeInWorkspace(context, eclass);
+			// e = EMFIndexRetrieval.getEObjectOfType(context, reference.getEReferenceType(), name);
+			// if (e != null) {
+			// return e;
+			// }
 
-        String contextProject = context.eResource().getURI().segment(1);
-        List<String> visibleProjects = getVisibleProjects(contextProject);
+			e = getConstantDefinition(context, name);
+			if (e != null) {
+				return e;
+			}
+		}
 
-        for (IEObjectDescription eod : allObjectTypes) {
-            if (eod.getName().getLastSegment().equalsIgnoreCase(name)) {
-                EObject res = eod.getEObjectOrProxy();
-                res = EcoreUtil.resolve(res, context.eResource().getResourceSet());
-                if (!Aadl2Util.isNull(res)) {
-                    URI linkUri = res.eResource().getURI();
-                    String linkProject = linkUri.segment(1);
-                    if (visibleProjects.contains(linkProject)) {
-                        return res;
-                    }
-                }
-            }
-        }
+		return null;
+	}
 
-        return null;
-    }
+	private static EObject getFunctionDefinition(EObject context, String name) {
+		return getNamedElementByType(context, name, ResolutePackage.Literals.FUNCTION_DEFINITION);
+	}
 
-    private static List<String> getVisibleProjects(String contextProjectName) {
-        List<String> result = new ArrayList<>();
-        result.add(contextProjectName);
+	private static EObject getConstantDefinition(EObject context, String name) {
+		return getNamedElementByType(context, name, ResolutePackage.Literals.CONSTANT_DEFINITION);
+	}
 
-        IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-        IProject contextProject = root.getProject(URI.decode(contextProjectName));
-        try {
-            IProjectDescription description = contextProject.getDescription();
-            for (IProject referencedProject : description.getReferencedProjects()) {
-                result.add(URI.encodeSegment(referencedProject.getName(), false));
-            }
-        } catch (CoreException ex) {
-            ex.printStackTrace();
-        }
+	private static EObject getNamedElementByType(EObject context, String name, EClass eclass) {
+		// This code will only link to objects in the projects visible from the current project
+		Iterable<IEObjectDescription> allObjectTypes = EMFIndexRetrieval.getAllEObjectsOfTypeInWorkspace(context,
+				eclass);
 
-        return result;
-    }
+		String contextProject = context.eResource().getURI().segment(1);
+		List<String> visibleProjects = getVisibleProjects(contextProject);
 
-    final private static EClass UNITS_TYPE = Aadl2Package.eINSTANCE.getUnitsType();
+		for (IEObjectDescription eod : allObjectTypes) {
+			if (eod.getName().getLastSegment().equalsIgnoreCase(name)) {
+				EObject res = eod.getEObjectOrProxy();
+				res = EcoreUtil.resolve(res, context.eResource().getResourceSet());
+				if (!Aadl2Util.isNull(res)) {
+					URI linkUri = res.eResource().getURI();
+					String linkProject = linkUri.segment(1);
+					if (visibleProjects.contains(linkProject)) {
+						return res;
+					}
+				}
+			}
+		}
 
-    private static UnitLiteral getUnitLiteral(EObject context, String name) {
-        // TODO: Scope literals by type, but how to do we know the type of an
-        // expression?
-        for (IEObjectDescription desc : EMFIndexRetrieval.getAllEObjectsOfTypeInWorkspace(context,
-                UNITS_TYPE)) {
-            UnitsType unitsType = (UnitsType) EcoreUtil.resolve(desc.getEObjectOrProxy(), context);
-            UnitLiteral literal = unitsType.findLiteral(name);
-            if (literal != null) {
-                return literal;
-            }
-        }
+		return null;
+	}
 
-        return null;
-    }
-    
+	private static List<String> getVisibleProjects(String contextProjectName) {
+		List<String> result = new ArrayList<>();
+		result.add(contextProjectName);
+
+		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+		IProject contextProject = root.getProject(URI.decode(contextProjectName));
+		try {
+			IProjectDescription description = contextProject.getDescription();
+			for (IProject referencedProject : description.getReferencedProjects()) {
+				result.add(URI.encodeSegment(referencedProject.getName(), false));
+			}
+		} catch (CoreException ex) {
+			ex.printStackTrace();
+		}
+
+		return result;
+	}
+
+	final private static EClass UNITS_TYPE = Aadl2Package.eINSTANCE.getUnitsType();
+
+	private static UnitLiteral getUnitLiteral(EObject context, String name) {
+		// TODO: Scope literals by type, but how to do we know the type of an
+		// expression?
+		for (IEObjectDescription desc : EMFIndexRetrieval.getAllEObjectsOfTypeInWorkspace(context, UNITS_TYPE)) {
+			UnitsType unitsType = (UnitsType) EcoreUtil.resolve(desc.getEObjectOrProxy(), context);
+			UnitLiteral literal = unitsType.findLiteral(name);
+			if (literal != null) {
+				return literal;
+			}
+		}
+
+		return null;
+	}
+
 }

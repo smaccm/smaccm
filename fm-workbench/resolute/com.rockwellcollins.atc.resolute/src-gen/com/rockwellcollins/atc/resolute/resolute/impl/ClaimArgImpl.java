@@ -2,16 +2,19 @@
  */
 package com.rockwellcollins.atc.resolute.resolute.impl;
 
-import com.rockwellcollins.atc.resolute.resolute.Arg;
 import com.rockwellcollins.atc.resolute.resolute.ClaimArg;
+import com.rockwellcollins.atc.resolute.resolute.ClaimTextVar;
 import com.rockwellcollins.atc.resolute.resolute.ResolutePackage;
 
 import org.eclipse.emf.common.notify.Notification;
 
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
+
+import org.osate.aadl2.UnitLiteral;
 
 /**
  * <!-- begin-user-doc -->
@@ -21,6 +24,7 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  * The following features are implemented:
  * <ul>
  *   <li>{@link com.rockwellcollins.atc.resolute.resolute.impl.ClaimArgImpl#getArg <em>Arg</em>}</li>
+ *   <li>{@link com.rockwellcollins.atc.resolute.resolute.impl.ClaimArgImpl#getUnit <em>Unit</em>}</li>
  * </ul>
  * </p>
  *
@@ -36,7 +40,17 @@ public class ClaimArgImpl extends ClaimTextImpl implements ClaimArg
    * @generated
    * @ordered
    */
-  protected Arg arg;
+  protected ClaimTextVar arg;
+
+  /**
+   * The cached value of the '{@link #getUnit() <em>Unit</em>}' reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #getUnit()
+   * @generated
+   * @ordered
+   */
+  protected UnitLiteral unit;
 
   /**
    * <!-- begin-user-doc -->
@@ -64,12 +78,12 @@ public class ClaimArgImpl extends ClaimTextImpl implements ClaimArg
    * <!-- end-user-doc -->
    * @generated
    */
-  public Arg getArg()
+  public ClaimTextVar getArg()
   {
     if (arg != null && arg.eIsProxy())
     {
       InternalEObject oldArg = (InternalEObject)arg;
-      arg = (Arg)eResolveProxy(oldArg);
+      arg = (ClaimTextVar)eResolveProxy(oldArg);
       if (arg != oldArg)
       {
         if (eNotificationRequired())
@@ -84,7 +98,7 @@ public class ClaimArgImpl extends ClaimTextImpl implements ClaimArg
    * <!-- end-user-doc -->
    * @generated
    */
-  public Arg basicGetArg()
+  public ClaimTextVar basicGetArg()
   {
     return arg;
   }
@@ -94,12 +108,55 @@ public class ClaimArgImpl extends ClaimTextImpl implements ClaimArg
    * <!-- end-user-doc -->
    * @generated
    */
-  public void setArg(Arg newArg)
+  public void setArg(ClaimTextVar newArg)
   {
-    Arg oldArg = arg;
+    ClaimTextVar oldArg = arg;
     arg = newArg;
     if (eNotificationRequired())
       eNotify(new ENotificationImpl(this, Notification.SET, ResolutePackage.CLAIM_ARG__ARG, oldArg, arg));
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public UnitLiteral getUnit()
+  {
+    if (unit != null && ((EObject)unit).eIsProxy())
+    {
+      InternalEObject oldUnit = (InternalEObject)unit;
+      unit = (UnitLiteral)eResolveProxy(oldUnit);
+      if (unit != oldUnit)
+      {
+        if (eNotificationRequired())
+          eNotify(new ENotificationImpl(this, Notification.RESOLVE, ResolutePackage.CLAIM_ARG__UNIT, oldUnit, unit));
+      }
+    }
+    return unit;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public UnitLiteral basicGetUnit()
+  {
+    return unit;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public void setUnit(UnitLiteral newUnit)
+  {
+    UnitLiteral oldUnit = unit;
+    unit = newUnit;
+    if (eNotificationRequired())
+      eNotify(new ENotificationImpl(this, Notification.SET, ResolutePackage.CLAIM_ARG__UNIT, oldUnit, unit));
   }
 
   /**
@@ -115,6 +172,9 @@ public class ClaimArgImpl extends ClaimTextImpl implements ClaimArg
       case ResolutePackage.CLAIM_ARG__ARG:
         if (resolve) return getArg();
         return basicGetArg();
+      case ResolutePackage.CLAIM_ARG__UNIT:
+        if (resolve) return getUnit();
+        return basicGetUnit();
     }
     return super.eGet(featureID, resolve, coreType);
   }
@@ -130,7 +190,10 @@ public class ClaimArgImpl extends ClaimTextImpl implements ClaimArg
     switch (featureID)
     {
       case ResolutePackage.CLAIM_ARG__ARG:
-        setArg((Arg)newValue);
+        setArg((ClaimTextVar)newValue);
+        return;
+      case ResolutePackage.CLAIM_ARG__UNIT:
+        setUnit((UnitLiteral)newValue);
         return;
     }
     super.eSet(featureID, newValue);
@@ -147,7 +210,10 @@ public class ClaimArgImpl extends ClaimTextImpl implements ClaimArg
     switch (featureID)
     {
       case ResolutePackage.CLAIM_ARG__ARG:
-        setArg((Arg)null);
+        setArg((ClaimTextVar)null);
+        return;
+      case ResolutePackage.CLAIM_ARG__UNIT:
+        setUnit((UnitLiteral)null);
         return;
     }
     super.eUnset(featureID);
@@ -165,6 +231,8 @@ public class ClaimArgImpl extends ClaimTextImpl implements ClaimArg
     {
       case ResolutePackage.CLAIM_ARG__ARG:
         return arg != null;
+      case ResolutePackage.CLAIM_ARG__UNIT:
+        return unit != null;
     }
     return super.eIsSet(featureID);
   }

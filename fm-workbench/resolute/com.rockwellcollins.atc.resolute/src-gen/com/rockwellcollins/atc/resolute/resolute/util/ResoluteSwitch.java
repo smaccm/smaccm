@@ -118,6 +118,7 @@ public class ResoluteSwitch<T> extends Switch<T>
         Arg arg = (Arg)theEObject;
         T result = caseArg(arg);
         if (result == null) result = caseNamedElement(arg);
+        if (result == null) result = caseClaimTextVar(arg);
         if (result == null) result = caseElement(arg);
         if (result == null) result = defaultCase(theEObject);
         return result;
@@ -127,6 +128,7 @@ public class ResoluteSwitch<T> extends Switch<T>
         ConstantDefinition constantDefinition = (ConstantDefinition)theEObject;
         T result = caseConstantDefinition(constantDefinition);
         if (result == null) result = caseDefinition(constantDefinition);
+        if (result == null) result = caseClaimTextVar(constantDefinition);
         if (result == null) result = caseNamedElement(constantDefinition);
         if (result == null) result = caseElement(constantDefinition);
         if (result == null) result = defaultCase(theEObject);
@@ -159,6 +161,13 @@ public class ResoluteSwitch<T> extends Switch<T>
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
+      case ResolutePackage.CLAIM_TEXT_VAR:
+      {
+        ClaimTextVar claimTextVar = (ClaimTextVar)theEObject;
+        T result = caseClaimTextVar(claimTextVar);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
       case ResolutePackage.EXPR:
       {
         Expr expr = (Expr)theEObject;
@@ -172,6 +181,7 @@ public class ResoluteSwitch<T> extends Switch<T>
         LetBinding letBinding = (LetBinding)theEObject;
         T result = caseLetBinding(letBinding);
         if (result == null) result = caseNamedElement(letBinding);
+        if (result == null) result = caseClaimTextVar(letBinding);
         if (result == null) result = caseElement(letBinding);
         if (result == null) result = defaultCase(theEObject);
         return result;
@@ -216,6 +226,7 @@ public class ResoluteSwitch<T> extends Switch<T>
         T result = caseQuantArg(quantArg);
         if (result == null) result = caseArg(quantArg);
         if (result == null) result = caseNamedElement(quantArg);
+        if (result == null) result = caseClaimTextVar(quantArg);
         if (result == null) result = caseElement(quantArg);
         if (result == null) result = defaultCase(theEObject);
         return result;
@@ -562,6 +573,22 @@ public class ResoluteSwitch<T> extends Switch<T>
    * @generated
    */
   public T caseClaimText(ClaimText object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Claim Text Var</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Claim Text Var</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseClaimTextVar(ClaimTextVar object)
   {
     return null;
   }
