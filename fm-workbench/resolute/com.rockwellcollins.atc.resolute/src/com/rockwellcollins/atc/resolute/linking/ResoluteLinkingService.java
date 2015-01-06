@@ -99,9 +99,23 @@ public class ResoluteLinkingService extends PropertiesLinkingService {
 			if (e != null) {
 				return e;
 			}
+
+			e = findPropertySetElement(context, reference, name);
+			if (e != null) {
+				return e;
+			}
 		}
 
 		return null;
+	}
+
+	@Override
+	public String getQualifiedName(String packageOrPropertySetName, String elementName) {
+		if (packageOrPropertySetName == null) {
+			return elementName;
+		} else {
+			return packageOrPropertySetName + "." + elementName;
+		}
 	}
 
 	private static EObject getFunctionDefinition(EObject context, String name) {

@@ -101,6 +101,10 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 			if (fnCallExpr.getFn().getBody() instanceof ClaimBody) {
 				return;
 			}
+			if (fnCallExpr.getFn().eIsProxy()) {
+				error(prove, "Could not find claim function");
+				return;
+			}
 		}
 
 		error(prove, "Prove statements must contain a claim");
@@ -397,13 +401,15 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 			return;
 		}
 
-		if (actualTypes.size() != expectedTypes.size()) {
+		if (actualTypes.size() != expectedTypes.size() &&
+		// handle optional third parameter
+				(funCall.getFn().equalsIgnoreCase("property") && actualTypes.size() + 1 != expectedTypes.size())) {
 			error(funCall, "Function expects " + expectedTypes.size() + " arguments but found " + actualTypes.size()
 					+ " arguments");
 			return;
 		}
 
-		for (int i = 0; i < expectedTypes.size(); i++) {
+		for (int i = 0; i < actuals.size(); i++) {
 			ResoluteType expected = expectedTypes.get(i);
 			ResoluteType actual = getExprType(actuals.get(i));
 
@@ -552,15 +558,13 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 			expectedTypes.add(BaseType.AADL);
 			break;
 		case "has_property":
-		case "property":
 			expectedTypes.add(BaseType.AADL);
 			expectedTypes.add(BaseType.PROPERTY);
 			break;
-
-		case "property_default":
+		case "property":
 			expectedTypes.add(BaseType.AADL);
 			expectedTypes.add(BaseType.PROPERTY);
-			expectedTypes.add(BaseType.ANY);
+			expectedTypes.add(BaseType.ANY); // this one is optional
 			break;
 
 		case "has_member":
