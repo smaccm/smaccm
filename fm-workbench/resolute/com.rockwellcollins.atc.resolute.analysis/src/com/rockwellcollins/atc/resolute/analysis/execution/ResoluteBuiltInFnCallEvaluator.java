@@ -76,21 +76,12 @@ public class ResoluteBuiltInFnCallEvaluator {
 
 			PropertyExpression expr = getPropertyExpression(element, prop);
 			if (expr == null) {
+				if (args.size() > 2) {
+					return args.get(2);
+
+				}
 				throw new ResoluteFailException("Property " + prop.getName() + " not defined on "
 						+ element.getContainingClassifier().getName(), fnCallExpr);
-			}
-
-			return exprToValue(expr);
-		}
-
-		case "property_default": {
-			NamedElement element = args.get(0).getNamedElement();
-			Property prop = (Property) args.get(1).getNamedElement();
-			PropertyExpression expr = getPropertyExpression(element, prop);
-
-			if (expr == null) {
-				return args.get(2);
-
 			}
 
 			return exprToValue(expr);

@@ -898,10 +898,11 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 		switch (funCall.getFn()) {
 		// Primary type: aadl
 		case "property":
-			return getPropertyType(funCall);
-
-		case "property_default":
-			return getExprType(funCall.getArgs().get(2));
+			if (funCall.getArgs().size() > 2) {
+				return getExprType(funCall.getArgs().get(2));
+			} else {
+				return getPropertyType(funCall);
+			}
 
 		case "parent":
 			return BaseType.AADL;
