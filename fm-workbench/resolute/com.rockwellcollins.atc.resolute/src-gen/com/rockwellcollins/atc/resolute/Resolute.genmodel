@@ -91,6 +91,7 @@
     </genClasses>
     <genClasses ecoreClass="Resolute.ecore#//FailExpr">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Resolute.ecore#//FailExpr/val"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Resolute.ecore#//FailExpr/failmsg"/>
     </genClasses>
     <genClasses ecoreClass="Resolute.ecore#//IntExpr">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Resolute.ecore#//IntExpr/val"/>

@@ -1563,13 +1563,22 @@ public interface ResolutePackage extends EPackage
   int FAIL_EXPR__VAL = EXPR_FEATURE_COUNT + 0;
 
   /**
+   * The feature id for the '<em><b>Failmsg</b></em>' containment reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int FAIL_EXPR__FAILMSG = EXPR_FEATURE_COUNT + 1;
+
+  /**
    * The number of structural features of the '<em>Fail Expr</em>' class.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int FAIL_EXPR_FEATURE_COUNT = EXPR_FEATURE_COUNT + 1;
+  int FAIL_EXPR_FEATURE_COUNT = EXPR_FEATURE_COUNT + 2;
 
   /**
    * The meta object id for the '{@link com.rockwellcollins.atc.resolute.resolute.impl.IntExprImpl <em>Int Expr</em>}' class.
@@ -2803,6 +2812,17 @@ public interface ResolutePackage extends EPackage
   EReference getFailExpr_Val();
 
   /**
+   * Returns the meta object for the containment reference list '{@link com.rockwellcollins.atc.resolute.resolute.FailExpr#getFailmsg <em>Failmsg</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference list '<em>Failmsg</em>'.
+   * @see com.rockwellcollins.atc.resolute.resolute.FailExpr#getFailmsg()
+   * @see #getFailExpr()
+   * @generated
+   */
+  EReference getFailExpr_Failmsg();
+
+  /**
    * Returns the meta object for class '{@link com.rockwellcollins.atc.resolute.resolute.IntExpr <em>Int Expr</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -3698,6 +3718,14 @@ public interface ResolutePackage extends EPackage
      * @generated
      */
     EReference FAIL_EXPR__VAL = eINSTANCE.getFailExpr_Val();
+
+    /**
+     * The meta object literal for the '<em><b>Failmsg</b></em>' containment reference list feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference FAIL_EXPR__FAILMSG = eINSTANCE.getFailExpr_Failmsg();
 
     /**
      * The meta object literal for the '{@link com.rockwellcollins.atc.resolute.resolute.impl.IntExprImpl <em>Int Expr</em>}' class.

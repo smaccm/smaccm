@@ -1017,6 +1017,16 @@ public class ResolutePackageImpl extends EPackageImpl implements ResolutePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  public EReference getFailExpr_Failmsg()
+  {
+    return (EReference)failExprEClass.getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   public EClass getIntExpr()
   {
     return intExprEClass;
@@ -1440,6 +1450,7 @@ public class ResolutePackageImpl extends EPackageImpl implements ResolutePackage
 
     failExprEClass = createEClass(FAIL_EXPR);
     createEReference(failExprEClass, FAIL_EXPR__VAL);
+    createEReference(failExprEClass, FAIL_EXPR__FAILMSG);
 
     intExprEClass = createEClass(INT_EXPR);
     createEReference(intExprEClass, INT_EXPR__VAL);
@@ -1647,6 +1658,7 @@ public class ResolutePackageImpl extends EPackageImpl implements ResolutePackage
 
     initEClass(failExprEClass, FailExpr.class, "FailExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getFailExpr_Val(), this.getExpr(), null, "val", null, 0, 1, FailExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getFailExpr_Failmsg(), this.getClaimText(), null, "failmsg", null, 0, -1, FailExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(intExprEClass, IntExpr.class, "IntExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getIntExpr_Val(), theAadl2Package.getIntegerLiteral(), null, "val", null, 0, 1, IntExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

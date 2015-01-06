@@ -1239,8 +1239,14 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		private final Group cGroup_2 = (Group)cAlternatives.eContents().get(2);
 		private final Action cFailExprAction_2_0 = (Action)cGroup_2.eContents().get(0);
 		private final Keyword cFailKeyword_2_1 = (Keyword)cGroup_2.eContents().get(1);
-		private final Assignment cValAssignment_2_2 = (Assignment)cGroup_2.eContents().get(2);
-		private final RuleCall cValExprParserRuleCall_2_2_0 = (RuleCall)cValAssignment_2_2.eContents().get(0);
+		private final Alternatives cAlternatives_2_2 = (Alternatives)cGroup_2.eContents().get(2);
+		private final Assignment cValAssignment_2_2_0 = (Assignment)cAlternatives_2_2.eContents().get(0);
+		private final RuleCall cValExprParserRuleCall_2_2_0_0 = (RuleCall)cValAssignment_2_2_0.eContents().get(0);
+		private final Group cGroup_2_2_1 = (Group)cAlternatives_2_2.eContents().get(1);
+		private final Keyword cAsteriskAsteriskKeyword_2_2_1_0 = (Keyword)cGroup_2_2_1.eContents().get(0);
+		private final Assignment cFailmsgAssignment_2_2_1_1 = (Assignment)cGroup_2_2_1.eContents().get(1);
+		private final RuleCall cFailmsgClaimTextParserRuleCall_2_2_1_1_0 = (RuleCall)cFailmsgAssignment_2_2_1_1.eContents().get(0);
+		private final Keyword cAsteriskAsteriskKeyword_2_2_1_2 = (Keyword)cGroup_2_2_1.eContents().get(2);
 		private final Group cGroup_3 = (Group)cAlternatives.eContents().get(3);
 		private final Action cIntExprAction_3_0 = (Action)cGroup_3.eContents().get(0);
 		private final Assignment cValAssignment_3_1 = (Assignment)cGroup_3.eContents().get(1);
@@ -1350,22 +1356,22 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		private final Keyword cRightParenthesisKeyword_14_2 = (Keyword)cGroup_14.eContents().get(2);
 		
 		//AtomicExpr returns Expr:
-		//	{IdExpr} id=[aadl2::NamedElement|QCREF] | {ThisExpr} "this" ("." sub=NestedDotID)? | {FailExpr} "fail" val=Expr |
-		//	{IntExpr} val=IntegerTerm | {RealExpr} val=RealTerm | {BoolExpr} val=BooleanLiteral | {StringExpr} val=StringTerm |
-		//	{IfThenElseExpr} "if" cond=Expr "then" then=Expr "else" else=Expr | {QuantifiedExpr} quant=("forall" | "exists") ("("
-		//	args+=Arg ")")+ "." expr=Expr | {BuiltInFnCallExpr} fn=BuiltInFn "(" (args+=Expr ("," args+=Expr)*)? ")" |
-		//	{FnCallExpr} fn=[FunctionDefinition] "(" (args+=Expr ("," args+=Expr)*)? ")" | "{" Expr ({FilterMapExpr.map=current}
-		//	"for" ("(" args+=Arg ")")+ ("|" filter=Expr)? | {SetExpr.exprs+=current} ("," exprs+=Expr)*) "}" | {SetExpr} "{" "}"
-		//	| {LetExpr} "let" binding=LetBinding ";" expr=Expr | "(" Expr ")";
+		//	{IdExpr} id=[aadl2::NamedElement|QCREF] | {ThisExpr} "this" ("." sub=NestedDotID)? | {FailExpr} "fail" (val=Expr |
+		//	"**" failmsg+=ClaimText+ "**") | {IntExpr} val=IntegerTerm | {RealExpr} val=RealTerm | {BoolExpr} val=BooleanLiteral
+		//	| {StringExpr} val=StringTerm | {IfThenElseExpr} "if" cond=Expr "then" then=Expr "else" else=Expr | {QuantifiedExpr}
+		//	quant=("forall" | "exists") ("(" args+=Arg ")")+ "." expr=Expr | {BuiltInFnCallExpr} fn=BuiltInFn "(" (args+=Expr
+		//	("," args+=Expr)*)? ")" | {FnCallExpr} fn=[FunctionDefinition] "(" (args+=Expr ("," args+=Expr)*)? ")" | "{" Expr
+		//	({FilterMapExpr.map=current} "for" ("(" args+=Arg ")")+ ("|" filter=Expr)? | {SetExpr.exprs+=current} (","
+		//	exprs+=Expr)*) "}" | {SetExpr} "{" "}" | {LetExpr} "let" binding=LetBinding ";" expr=Expr | "(" Expr ")";
 		public ParserRule getRule() { return rule; }
 
-		//{IdExpr} id=[aadl2::NamedElement|QCREF] | {ThisExpr} "this" ("." sub=NestedDotID)? | {FailExpr} "fail" val=Expr |
-		//{IntExpr} val=IntegerTerm | {RealExpr} val=RealTerm | {BoolExpr} val=BooleanLiteral | {StringExpr} val=StringTerm |
-		//{IfThenElseExpr} "if" cond=Expr "then" then=Expr "else" else=Expr | {QuantifiedExpr} quant=("forall" | "exists") ("("
-		//args+=Arg ")")+ "." expr=Expr | {BuiltInFnCallExpr} fn=BuiltInFn "(" (args+=Expr ("," args+=Expr)*)? ")" |
-		//{FnCallExpr} fn=[FunctionDefinition] "(" (args+=Expr ("," args+=Expr)*)? ")" | "{" Expr ({FilterMapExpr.map=current}
-		//"for" ("(" args+=Arg ")")+ ("|" filter=Expr)? | {SetExpr.exprs+=current} ("," exprs+=Expr)*) "}" | {SetExpr} "{" "}" |
-		//{LetExpr} "let" binding=LetBinding ";" expr=Expr | "(" Expr ")"
+		//{IdExpr} id=[aadl2::NamedElement|QCREF] | {ThisExpr} "this" ("." sub=NestedDotID)? | {FailExpr} "fail" (val=Expr | "**"
+		//failmsg+=ClaimText+ "**") | {IntExpr} val=IntegerTerm | {RealExpr} val=RealTerm | {BoolExpr} val=BooleanLiteral |
+		//{StringExpr} val=StringTerm | {IfThenElseExpr} "if" cond=Expr "then" then=Expr "else" else=Expr | {QuantifiedExpr}
+		//quant=("forall" | "exists") ("(" args+=Arg ")")+ "." expr=Expr | {BuiltInFnCallExpr} fn=BuiltInFn "(" (args+=Expr (","
+		//args+=Expr)*)? ")" | {FnCallExpr} fn=[FunctionDefinition] "(" (args+=Expr ("," args+=Expr)*)? ")" | "{" Expr
+		//({FilterMapExpr.map=current} "for" ("(" args+=Arg ")")+ ("|" filter=Expr)? | {SetExpr.exprs+=current} (","
+		//exprs+=Expr)*) "}" | {SetExpr} "{" "}" | {LetExpr} "let" binding=LetBinding ";" expr=Expr | "(" Expr ")"
 		public Alternatives getAlternatives() { return cAlternatives; }
 
 		//{IdExpr} id=[aadl2::NamedElement|QCREF]
@@ -1404,7 +1410,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		//NestedDotID
 		public RuleCall getSubNestedDotIDParserRuleCall_1_2_1_0() { return cSubNestedDotIDParserRuleCall_1_2_1_0; }
 
-		//{FailExpr} "fail" val=Expr
+		//{FailExpr} "fail" (val=Expr | "**" failmsg+=ClaimText+ "**")
 		public Group getGroup_2() { return cGroup_2; }
 
 		//{FailExpr}
@@ -1413,11 +1419,29 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		//"fail"
 		public Keyword getFailKeyword_2_1() { return cFailKeyword_2_1; }
 
+		//val=Expr | "**" failmsg+=ClaimText+ "**"
+		public Alternatives getAlternatives_2_2() { return cAlternatives_2_2; }
+
 		//val=Expr
-		public Assignment getValAssignment_2_2() { return cValAssignment_2_2; }
+		public Assignment getValAssignment_2_2_0() { return cValAssignment_2_2_0; }
 
 		//Expr
-		public RuleCall getValExprParserRuleCall_2_2_0() { return cValExprParserRuleCall_2_2_0; }
+		public RuleCall getValExprParserRuleCall_2_2_0_0() { return cValExprParserRuleCall_2_2_0_0; }
+
+		//"**" failmsg+=ClaimText+ "**"
+		public Group getGroup_2_2_1() { return cGroup_2_2_1; }
+
+		//"**"
+		public Keyword getAsteriskAsteriskKeyword_2_2_1_0() { return cAsteriskAsteriskKeyword_2_2_1_0; }
+
+		//failmsg+=ClaimText+
+		public Assignment getFailmsgAssignment_2_2_1_1() { return cFailmsgAssignment_2_2_1_1; }
+
+		//ClaimText
+		public RuleCall getFailmsgClaimTextParserRuleCall_2_2_1_1_0() { return cFailmsgClaimTextParserRuleCall_2_2_1_1_0; }
+
+		//"**"
+		public Keyword getAsteriskAsteriskKeyword_2_2_1_2() { return cAsteriskAsteriskKeyword_2_2_1_2; }
 
 		//{IntExpr} val=IntegerTerm
 		public Group getGroup_3() { return cGroup_3; }
@@ -2504,13 +2528,13 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	}
 
 	//AtomicExpr returns Expr:
-	//	{IdExpr} id=[aadl2::NamedElement|QCREF] | {ThisExpr} "this" ("." sub=NestedDotID)? | {FailExpr} "fail" val=Expr |
-	//	{IntExpr} val=IntegerTerm | {RealExpr} val=RealTerm | {BoolExpr} val=BooleanLiteral | {StringExpr} val=StringTerm |
-	//	{IfThenElseExpr} "if" cond=Expr "then" then=Expr "else" else=Expr | {QuantifiedExpr} quant=("forall" | "exists") ("("
-	//	args+=Arg ")")+ "." expr=Expr | {BuiltInFnCallExpr} fn=BuiltInFn "(" (args+=Expr ("," args+=Expr)*)? ")" |
-	//	{FnCallExpr} fn=[FunctionDefinition] "(" (args+=Expr ("," args+=Expr)*)? ")" | "{" Expr ({FilterMapExpr.map=current}
-	//	"for" ("(" args+=Arg ")")+ ("|" filter=Expr)? | {SetExpr.exprs+=current} ("," exprs+=Expr)*) "}" | {SetExpr} "{" "}"
-	//	| {LetExpr} "let" binding=LetBinding ";" expr=Expr | "(" Expr ")";
+	//	{IdExpr} id=[aadl2::NamedElement|QCREF] | {ThisExpr} "this" ("." sub=NestedDotID)? | {FailExpr} "fail" (val=Expr |
+	//	"**" failmsg+=ClaimText+ "**") | {IntExpr} val=IntegerTerm | {RealExpr} val=RealTerm | {BoolExpr} val=BooleanLiteral
+	//	| {StringExpr} val=StringTerm | {IfThenElseExpr} "if" cond=Expr "then" then=Expr "else" else=Expr | {QuantifiedExpr}
+	//	quant=("forall" | "exists") ("(" args+=Arg ")")+ "." expr=Expr | {BuiltInFnCallExpr} fn=BuiltInFn "(" (args+=Expr
+	//	("," args+=Expr)*)? ")" | {FnCallExpr} fn=[FunctionDefinition] "(" (args+=Expr ("," args+=Expr)*)? ")" | "{" Expr
+	//	({FilterMapExpr.map=current} "for" ("(" args+=Arg ")")+ ("|" filter=Expr)? | {SetExpr.exprs+=current} (","
+	//	exprs+=Expr)*) "}" | {SetExpr} "{" "}" | {LetExpr} "let" binding=LetBinding ";" expr=Expr | "(" Expr ")";
 	public AtomicExprElements getAtomicExprAccess() {
 		return pAtomicExpr;
 	}

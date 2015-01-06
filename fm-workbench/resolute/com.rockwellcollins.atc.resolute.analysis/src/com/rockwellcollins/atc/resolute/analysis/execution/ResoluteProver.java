@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xtext.nodemodel.ICompositeNode;
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
@@ -199,6 +200,10 @@ public class ResoluteProver extends ResoluteSwitch<ResoluteResult> {
 			str = stringExpr.getVal().getValue();
 		}
 
+		if (!object.getFailmsg().isEmpty()) {
+			str = createClaimText(object.getFailmsg());
+		}
+
 		return new FailResult("Fail Statement: " + str.replaceAll("\"", ""), object);
 	}
 
@@ -225,7 +230,7 @@ public class ResoluteProver extends ResoluteSwitch<ResoluteResult> {
 		claimCallContexts.add(context);
 		varStack.push(ResoluteEvaluator.pairArguments(funcDef.getArgs(), argVals));
 
-		String text = createClaimText(body);
+		String text = createClaimText(body.getClaim());
 		Map<String, EObject> references = createClaimReferences(body);
 		ResoluteResult subResult;
 		try {
@@ -240,10 +245,10 @@ public class ResoluteProver extends ResoluteSwitch<ResoluteResult> {
 		return new ClaimResult(text, subResult, references, funcDef);
 	}
 
-	private String createClaimText(ClaimBody claimBody) {
+	private String createClaimText(EList<ClaimText> claimBody) {
 		StringBuilder text = new StringBuilder();
 
-		for (Element claim : claimBody.getClaim()) {
+		for (Element claim : claimBody) {
 			if (claim instanceof ClaimArg) {
 				ClaimTextVar claimArg = ((ClaimArg) claim).getArg();
 				UnitLiteral claimArgUnit = ((ClaimArg) claim).getUnit();
@@ -290,9 +295,6 @@ public class ResoluteProver extends ResoluteSwitch<ResoluteResult> {
 			if (claim instanceof ClaimArg) {
 				ClaimTextVar claimArg = ((ClaimArg) claim).getArg();
 				ResoluteValue argVal = varStack.peek().get(claimArg);
-//				if (argVal == null && claimArg instanceof LetBinding) {
-//					argVal = eval(((LetBinding) claimArg).getExpr());
-//				}
 				if (argVal != null && argVal.isNamedElement()) {
 					EObject modelElement = getModelElement(argVal.getNamedElement());
 					if (modelElement != null) {
