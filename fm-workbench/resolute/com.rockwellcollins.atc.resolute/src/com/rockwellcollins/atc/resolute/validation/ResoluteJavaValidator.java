@@ -340,10 +340,7 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 
 		if (context instanceof BinaryExpr) {
 			BinaryExpr be = (BinaryExpr) context;
-			if (be.getOp().equals("=>")) {
-				return be.getRight().equals(obj);
-			}
-			if (be.getOp().equals("and") || be.getOp().equals("or")) {
+			if (be.getOp().equals("and") || be.getOp().equals("or") || (be.getOp().equals("=>"))) {
 				return inClaimContext(be);
 			}
 		}
