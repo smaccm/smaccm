@@ -307,13 +307,22 @@ public interface AgreePackage extends EPackage
   int SYNCH_STATEMENT__VAL = SPEC_STATEMENT_FEATURE_COUNT + 0;
 
   /**
+   * The feature id for the '<em><b>Val2</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int SYNCH_STATEMENT__VAL2 = SPEC_STATEMENT_FEATURE_COUNT + 1;
+
+  /**
    * The feature id for the '<em><b>Sim</b></em>' attribute.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int SYNCH_STATEMENT__SIM = SPEC_STATEMENT_FEATURE_COUNT + 1;
+  int SYNCH_STATEMENT__SIM = SPEC_STATEMENT_FEATURE_COUNT + 2;
 
   /**
    * The number of structural features of the '<em>Synch Statement</em>' class.
@@ -322,7 +331,7 @@ public interface AgreePackage extends EPackage
    * @generated
    * @ordered
    */
-  int SYNCH_STATEMENT_FEATURE_COUNT = SPEC_STATEMENT_FEATURE_COUNT + 2;
+  int SYNCH_STATEMENT_FEATURE_COUNT = SPEC_STATEMENT_FEATURE_COUNT + 3;
 
   /**
    * The meta object id for the '{@link com.rockwellcollins.atc.agree.agree.impl.OrderStatementImpl <em>Order Statement</em>}' class.
@@ -1845,6 +1854,15 @@ public interface AgreePackage extends EPackage
   int MN_SYNCH_STATEMENT__VAL = SYNCH_STATEMENT__VAL;
 
   /**
+   * The feature id for the '<em><b>Val2</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int MN_SYNCH_STATEMENT__VAL2 = SYNCH_STATEMENT__VAL2;
+
+  /**
    * The feature id for the '<em><b>Sim</b></em>' attribute.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -1934,6 +1952,15 @@ public interface AgreePackage extends EPackage
    * @ordered
    */
   int CALEN_STATEMENT__VAL = SYNCH_STATEMENT__VAL;
+
+  /**
+   * The feature id for the '<em><b>Val2</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int CALEN_STATEMENT__VAL2 = SYNCH_STATEMENT__VAL2;
 
   /**
    * The feature id for the '<em><b>Sim</b></em>' attribute.
@@ -3069,6 +3096,17 @@ public interface AgreePackage extends EPackage
    * @generated
    */
   EAttribute getSynchStatement_Val();
+
+  /**
+   * Returns the meta object for the attribute '{@link com.rockwellcollins.atc.agree.agree.SynchStatement#getVal2 <em>Val2</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the attribute '<em>Val2</em>'.
+   * @see com.rockwellcollins.atc.agree.agree.SynchStatement#getVal2()
+   * @see #getSynchStatement()
+   * @generated
+   */
+  EAttribute getSynchStatement_Val2();
 
   /**
    * Returns the meta object for the attribute '{@link com.rockwellcollins.atc.agree.agree.SynchStatement#getSim <em>Sim</em>}'.
@@ -4412,6 +4450,14 @@ public interface AgreePackage extends EPackage
      * @generated
      */
     EAttribute SYNCH_STATEMENT__VAL = eINSTANCE.getSynchStatement_Val();
+
+    /**
+     * The meta object literal for the '<em><b>Val2</b></em>' attribute feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EAttribute SYNCH_STATEMENT__VAL2 = eINSTANCE.getSynchStatement_Val2();
 
     /**
      * The meta object literal for the '<em><b>Sim</b></em>' attribute feature.

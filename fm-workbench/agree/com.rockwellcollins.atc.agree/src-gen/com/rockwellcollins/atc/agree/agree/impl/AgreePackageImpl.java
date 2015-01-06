@@ -570,9 +570,19 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EAttribute getSynchStatement_Sim()
+  public EAttribute getSynchStatement_Val2()
   {
     return (EAttribute)synchStatementEClass.getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getSynchStatement_Sim()
+  {
+    return (EAttribute)synchStatementEClass.getEStructuralFeatures().get(2);
   }
 
   /**
@@ -1795,6 +1805,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
 
     synchStatementEClass = createEClass(SYNCH_STATEMENT);
     createEAttribute(synchStatementEClass, SYNCH_STATEMENT__VAL);
+    createEAttribute(synchStatementEClass, SYNCH_STATEMENT__VAL2);
     createEAttribute(synchStatementEClass, SYNCH_STATEMENT__SIM);
 
     orderStatementEClass = createEClass(ORDER_STATEMENT);
@@ -2068,6 +2079,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
 
     initEClass(synchStatementEClass, SynchStatement.class, "SynchStatement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEAttribute(getSynchStatement_Val(), theEcorePackage.getEString(), "val", null, 0, 1, SynchStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEAttribute(getSynchStatement_Val2(), theEcorePackage.getEString(), "val2", null, 0, 1, SynchStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEAttribute(getSynchStatement_Sim(), theEcorePackage.getEString(), "sim", null, 0, 1, SynchStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(orderStatementEClass, OrderStatement.class, "OrderStatement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);

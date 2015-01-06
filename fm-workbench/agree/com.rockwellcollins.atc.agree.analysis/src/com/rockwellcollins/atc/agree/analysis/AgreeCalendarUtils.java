@@ -80,6 +80,7 @@ public class AgreeCalendarUtils {
 		}
 		
 		Expr okExpr = new IdExpr("c_q_"+(max-1));
+		okExpr = new UnaryExpr(UnaryOp.PRE, okExpr);
 		okExpr = new BinaryExpr(new IntExpr(BigInteger.valueOf(2*min)), BinaryOp.ARROW, okExpr);
 		okExpr = new BinaryExpr(okExpr, BinaryOp.GREATEREQUAL, new IntExpr(BigInteger.valueOf(min)));
 		okExpr = new BinaryExpr(pId, BinaryOp.IMPLIES, okExpr);

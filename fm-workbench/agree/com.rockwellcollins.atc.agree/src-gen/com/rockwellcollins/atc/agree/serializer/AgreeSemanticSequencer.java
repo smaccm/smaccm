@@ -1231,7 +1231,7 @@ public class AgreeSemanticSequencer extends PropertiesSemanticSequencer {
 	
 	/**
 	 * Constraint:
-	 *     (val=INTEGER_LIT (sim='simult' | sim='no_simult')?)
+	 *     (val=INTEGER_LIT val2=INTEGER_LIT? (sim='simult' | sim='no_simult')?)
 	 */
 	protected void sequence_SynchStatement(EObject context, SynchStatement semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);

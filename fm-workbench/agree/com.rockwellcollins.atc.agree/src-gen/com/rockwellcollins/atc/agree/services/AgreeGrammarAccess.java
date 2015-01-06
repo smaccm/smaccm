@@ -473,11 +473,15 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		private final Keyword cColonKeyword_0_2 = (Keyword)cGroup_0.eContents().get(2);
 		private final Assignment cValAssignment_0_3 = (Assignment)cGroup_0.eContents().get(3);
 		private final RuleCall cValINTEGER_LITTerminalRuleCall_0_3_0 = (RuleCall)cValAssignment_0_3.eContents().get(0);
-		private final Assignment cSimAssignment_0_4 = (Assignment)cGroup_0.eContents().get(4);
-		private final Alternatives cSimAlternatives_0_4_0 = (Alternatives)cSimAssignment_0_4.eContents().get(0);
-		private final Keyword cSimSimultKeyword_0_4_0_0 = (Keyword)cSimAlternatives_0_4_0.eContents().get(0);
-		private final Keyword cSimNo_simultKeyword_0_4_0_1 = (Keyword)cSimAlternatives_0_4_0.eContents().get(1);
-		private final Keyword cSemicolonKeyword_0_5 = (Keyword)cGroup_0.eContents().get(5);
+		private final Group cGroup_0_4 = (Group)cGroup_0.eContents().get(4);
+		private final Keyword cCommaKeyword_0_4_0 = (Keyword)cGroup_0_4.eContents().get(0);
+		private final Assignment cVal2Assignment_0_4_1 = (Assignment)cGroup_0_4.eContents().get(1);
+		private final RuleCall cVal2INTEGER_LITTerminalRuleCall_0_4_1_0 = (RuleCall)cVal2Assignment_0_4_1.eContents().get(0);
+		private final Assignment cSimAssignment_0_5 = (Assignment)cGroup_0.eContents().get(5);
+		private final Alternatives cSimAlternatives_0_5_0 = (Alternatives)cSimAssignment_0_5.eContents().get(0);
+		private final Keyword cSimSimultKeyword_0_5_0_0 = (Keyword)cSimAlternatives_0_5_0.eContents().get(0);
+		private final Keyword cSimNo_simultKeyword_0_5_0_1 = (Keyword)cSimAlternatives_0_5_0.eContents().get(1);
+		private final Keyword cSemicolonKeyword_0_6 = (Keyword)cGroup_0.eContents().get(6);
 		private final Group cGroup_1 = (Group)cAlternatives.eContents().get(1);
 		private final Action cMNSynchStatementAction_1_0 = (Action)cGroup_1.eContents().get(0);
 		private final Keyword cSynchronyKeyword_1_1 = (Keyword)cGroup_1.eContents().get(1);
@@ -512,17 +516,19 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		private final Keyword cSemicolonKeyword_2_5 = (Keyword)cGroup_2.eContents().get(5);
 		
 		//SynchStatement:
-		//	{SynchStatement} "synchrony" ":" val=INTEGER_LIT sim=("simult" | "no_simult")? ";" | {MNSynchStatement} "synchrony"
-		//	":" (comp1+=[aadl2::NamedElement] "," comp2+=[aadl2::NamedElement] ":" max+=INTEGER_LIT "," min+=INTEGER_LIT)+ ";" |
-		//	{CalenStatement} "calendar" ":" els+=[aadl2::NamedElement] ("," els+=[aadl2::NamedElement])* ";";
+		//	{SynchStatement} "synchrony" ":" val=INTEGER_LIT ("," val2=INTEGER_LIT)? sim=("simult" | "no_simult")? ";" |
+		//	{MNSynchStatement} "synchrony" ":" (comp1+=[aadl2::NamedElement] "," comp2+=[aadl2::NamedElement] ":"
+		//	max+=INTEGER_LIT "," min+=INTEGER_LIT)+ ";" | {CalenStatement} "calendar" ":" els+=[aadl2::NamedElement] (","
+		//	els+=[aadl2::NamedElement])* ";";
 		public ParserRule getRule() { return rule; }
 
-		//{SynchStatement} "synchrony" ":" val=INTEGER_LIT sim=("simult" | "no_simult")? ";" | {MNSynchStatement} "synchrony" ":"
-		//(comp1+=[aadl2::NamedElement] "," comp2+=[aadl2::NamedElement] ":" max+=INTEGER_LIT "," min+=INTEGER_LIT)+ ";" |
-		//{CalenStatement} "calendar" ":" els+=[aadl2::NamedElement] ("," els+=[aadl2::NamedElement])* ";"
+		//{SynchStatement} "synchrony" ":" val=INTEGER_LIT ("," val2=INTEGER_LIT)? sim=("simult" | "no_simult")? ";" |
+		//{MNSynchStatement} "synchrony" ":" (comp1+=[aadl2::NamedElement] "," comp2+=[aadl2::NamedElement] ":" max+=INTEGER_LIT
+		//"," min+=INTEGER_LIT)+ ";" | {CalenStatement} "calendar" ":" els+=[aadl2::NamedElement] (","
+		//els+=[aadl2::NamedElement])* ";"
 		public Alternatives getAlternatives() { return cAlternatives; }
 
-		//{SynchStatement} "synchrony" ":" val=INTEGER_LIT sim=("simult" | "no_simult")? ";"
+		//{SynchStatement} "synchrony" ":" val=INTEGER_LIT ("," val2=INTEGER_LIT)? sim=("simult" | "no_simult")? ";"
 		public Group getGroup_0() { return cGroup_0; }
 
 		//{SynchStatement}
@@ -540,20 +546,32 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		//INTEGER_LIT
 		public RuleCall getValINTEGER_LITTerminalRuleCall_0_3_0() { return cValINTEGER_LITTerminalRuleCall_0_3_0; }
 
+		//("," val2=INTEGER_LIT)?
+		public Group getGroup_0_4() { return cGroup_0_4; }
+
+		//","
+		public Keyword getCommaKeyword_0_4_0() { return cCommaKeyword_0_4_0; }
+
+		//val2=INTEGER_LIT
+		public Assignment getVal2Assignment_0_4_1() { return cVal2Assignment_0_4_1; }
+
+		//INTEGER_LIT
+		public RuleCall getVal2INTEGER_LITTerminalRuleCall_0_4_1_0() { return cVal2INTEGER_LITTerminalRuleCall_0_4_1_0; }
+
 		//sim=("simult" | "no_simult")?
-		public Assignment getSimAssignment_0_4() { return cSimAssignment_0_4; }
+		public Assignment getSimAssignment_0_5() { return cSimAssignment_0_5; }
 
 		//"simult" | "no_simult"
-		public Alternatives getSimAlternatives_0_4_0() { return cSimAlternatives_0_4_0; }
+		public Alternatives getSimAlternatives_0_5_0() { return cSimAlternatives_0_5_0; }
 
 		//"simult"
-		public Keyword getSimSimultKeyword_0_4_0_0() { return cSimSimultKeyword_0_4_0_0; }
+		public Keyword getSimSimultKeyword_0_5_0_0() { return cSimSimultKeyword_0_5_0_0; }
 
 		//"no_simult"
-		public Keyword getSimNo_simultKeyword_0_4_0_1() { return cSimNo_simultKeyword_0_4_0_1; }
+		public Keyword getSimNo_simultKeyword_0_5_0_1() { return cSimNo_simultKeyword_0_5_0_1; }
 
 		//";"
-		public Keyword getSemicolonKeyword_0_5() { return cSemicolonKeyword_0_5; }
+		public Keyword getSemicolonKeyword_0_6() { return cSemicolonKeyword_0_6; }
 
 		//{MNSynchStatement} "synchrony" ":" (comp1+=[aadl2::NamedElement] "," comp2+=[aadl2::NamedElement] ":" max+=INTEGER_LIT
 		//"," min+=INTEGER_LIT)+ ";"
@@ -2852,9 +2870,10 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 	}
 
 	//SynchStatement:
-	//	{SynchStatement} "synchrony" ":" val=INTEGER_LIT sim=("simult" | "no_simult")? ";" | {MNSynchStatement} "synchrony"
-	//	":" (comp1+=[aadl2::NamedElement] "," comp2+=[aadl2::NamedElement] ":" max+=INTEGER_LIT "," min+=INTEGER_LIT)+ ";" |
-	//	{CalenStatement} "calendar" ":" els+=[aadl2::NamedElement] ("," els+=[aadl2::NamedElement])* ";";
+	//	{SynchStatement} "synchrony" ":" val=INTEGER_LIT ("," val2=INTEGER_LIT)? sim=("simult" | "no_simult")? ";" |
+	//	{MNSynchStatement} "synchrony" ":" (comp1+=[aadl2::NamedElement] "," comp2+=[aadl2::NamedElement] ":"
+	//	max+=INTEGER_LIT "," min+=INTEGER_LIT)+ ";" | {CalenStatement} "calendar" ":" els+=[aadl2::NamedElement] (","
+	//	els+=[aadl2::NamedElement])* ";";
 	public SynchStatementElements getSynchStatementAccess() {
 		return (pSynchStatement != null) ? pSynchStatement : (pSynchStatement = new SynchStatementElements());
 	}

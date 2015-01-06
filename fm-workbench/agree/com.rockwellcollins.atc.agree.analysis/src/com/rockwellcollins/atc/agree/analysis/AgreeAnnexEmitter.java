@@ -827,6 +827,7 @@ public class AgreeAnnexEmitter  {
 			for(MNSynchronyElement elem : state.mnSyncEls){
 				String nodeName = "__calendar_node_"+elem.max+"_"+elem.min;
 				if(!nodeNames.contains(nodeName)){
+					nodeNames.add(nodeName);
 					Node calNode = AgreeCalendarUtils.getMNCalendar(nodeName, elem.max, elem.min);
 					nodeSet.add(calNode);
 				}
@@ -843,18 +844,37 @@ public class AgreeAnnexEmitter  {
         	
         	clockAssertion = new NodeCallExpr(calNode.id, clocks);
 		}else if(state.synchrony > 0){
-            Node dfaNode = AgreeCalendarUtils.getDFANode("__dfa_node_"+state.category, state.synchrony); 
-            Node calNode = AgreeCalendarUtils.getCalendarNode("__calendar_node_"+state.category, clocks.size());
-            nodeSet.add(dfaNode);
-            nodeSet.add(calNode);
+			
+			if(state.synchrony2 == 0){
+				Node dfaNode = AgreeCalendarUtils.getDFANode("__dfa_node_"+state.category, state.synchrony); 
+				Node calNode = AgreeCalendarUtils.getCalendarNode("__calendar_node_"+state.category, clocks.size());
+				nodeSet.add(dfaNode);
+				nodeSet.add(calNode);
 
-            clockAssertion = new NodeCallExpr(calNode.id, clocks);
-            
-            //don't let multiple clocks tick together
-            if(!state.simultaneity){
-            	Expr onlyOneTick = AgreeCalendarUtils.getSingleTick(clocks);
-            	clockAssertion = new BinaryExpr(clockAssertion, BinaryOp.AND, onlyOneTick);
-            }
+				clockAssertion = new NodeCallExpr(calNode.id, clocks);
+
+				//don't let multiple clocks tick together
+				if(!state.simultaneity){
+					Expr onlyOneTick = AgreeCalendarUtils.getSingleTick(clocks);
+					clockAssertion = new BinaryExpr(clockAssertion, BinaryOp.AND, onlyOneTick);
+				}
+			}else{
+				String nodeName = "__calendar_node_"+state.synchrony+"_"+state.synchrony2;
+				Node calNode = AgreeCalendarUtils.getMNCalendar(nodeName, state.synchrony, state.synchrony2);
+				nodeSet.add(calNode);
+				clockAssertion = new BoolExpr(true);
+				int i,j;
+				for(i = 0; i < clocks.size(); i++){
+					Expr clock1 = clocks.get(i);
+					for(j = i+1; j < clocks.size(); j++){
+						Expr clock2 = clocks.get(j);
+						NodeCallExpr nodeCall = new NodeCallExpr(nodeName, clock1, clock2);
+						clockAssertion = new BinaryExpr(clockAssertion, BinaryOp.AND, nodeCall);
+						nodeCall = new NodeCallExpr(nodeName, clock2, clock1);
+						clockAssertion = new BinaryExpr(clockAssertion, BinaryOp.AND, nodeCall);
+					}
+				}
+			}
         	
         }else{
             clockAssertion = new BoolExpr(true);
