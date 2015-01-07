@@ -37,6 +37,7 @@ import com.rockwellcollins.atc.resolute.resolute.ClaimString;
 import com.rockwellcollins.atc.resolute.resolute.ClaimText;
 import com.rockwellcollins.atc.resolute.resolute.ClaimTextVar;
 import com.rockwellcollins.atc.resolute.resolute.ConstantDefinition;
+import com.rockwellcollins.atc.resolute.resolute.DefinitionBody;
 import com.rockwellcollins.atc.resolute.resolute.Expr;
 import com.rockwellcollins.atc.resolute.resolute.FailExpr;
 import com.rockwellcollins.atc.resolute.resolute.FnCallExpr;
@@ -171,16 +172,34 @@ public class ResoluteProver extends ResoluteSwitch<ResoluteResult> {
 			Arg arg = args.get(0);
 			List<Arg> rest = args.subList(1, args.size());
 			List<ResoluteResult> children = new ArrayList<>();
+			boolean claimCall = false;
+			if (body instanceof FnCallExpr) {
+				FunctionDefinition fn = ((FnCallExpr) body).getFn();
+				DefinitionBody bod = fn.getBody();
+				if (bod instanceof ClaimBody)
+					claimCall = true;
+			}
 			for (ResoluteValue value : getArgSet(arg)) {
 				varStack.peek().put(arg, value);
 				ResoluteResult subResult = forall(rest, body);
 				children.add(subResult);
-				if (!subResult.isValid()) {
+				// shortcut only if call is not to a claim
+				if (!subResult.isValid() && !claimCall && !containsClaim(subResult)) {
 					break;
 				}
 			}
 			return new ResoluteResult(children);
 		}
+	}
+
+	private boolean containsClaim(ResoluteResult result) {
+		if (result instanceof ClaimResult)
+			return true;
+		for (ResoluteResult cres : result.getChildren()) {
+			if (containsClaim(cres))
+				return true;
+		}
+		return false;
 	}
 
 	@Override
