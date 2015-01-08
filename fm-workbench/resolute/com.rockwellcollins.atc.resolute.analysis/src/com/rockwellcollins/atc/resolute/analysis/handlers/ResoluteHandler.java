@@ -103,6 +103,38 @@ public class ResoluteHandler extends AadlHandler {
 			}
 		} else {
 			System.out.println("should check theorem=" + theorem);
+//
+//			XtextResourceSet resourceSet = new XtextResourceSet();
+////			resourceSet.addLoadOption(XtextResource.OPTION_RESOLVE_ALL, Boolean.TRUE);
+//
+//			File f;
+//			try {
+//				f = File.createTempFile("theorem", ".aadl");
+//
+//				Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(f)));
+//				writer.write("annex resolute {** \n prove ( check_deos_compliance (this)) \n**};");
+//				writer.close();
+//
+//				System.out.println("writing in=" + f.getAbsolutePath().toString());
+//
+//				Resource resource = resourceSet.getResource(URI.createURI("file://" + f.getAbsolutePath()), true);
+//
+//				System.out.println("got the following=" + resource.getContents().get(0));
+//
+////				Model model = (Model) resource.getContents().get(0);
+//			} catch (IOException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//			ResoluteSubclause subclause;
+//			subclause = ResoluteFactory.eINSTANCE.createResoluteSubclause();
+//
+//			EvaluationContext context = new EvaluationContext(si.getComponentInstance(), sets, featToConnsMap);
+//			ResoluteInterpreter interpreter = new ResoluteInterpreter(context);
+//			for (ProveStatement ps : subclause.getProves()) {
+//				proofTrees.add(interpreter.evaluateProveStatement(ps));
+//				drawProofs(proofTrees);
+//			}
 		}
 
 		stop = System.currentTimeMillis();
