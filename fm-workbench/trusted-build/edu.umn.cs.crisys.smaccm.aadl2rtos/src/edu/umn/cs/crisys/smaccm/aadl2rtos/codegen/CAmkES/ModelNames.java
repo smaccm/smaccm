@@ -110,4 +110,29 @@ public class ModelNames {
     connNumber++; 
     return "conn" + connNumber;
   }
+
+  public boolean getIsCamkesTarget() {
+    return m.getOsTarget().equals(Model.OSTarget.CAmkES);
+  }
+  
+  public boolean getIsEChronosTarget() {
+    return m.getOsTarget().equals(Model.OSTarget.eChronos);
+  }
+  
+  public boolean getIsOdroidTarget() {
+    return m.getHWTarget().equalsIgnoreCase("odroid");
+  }
+  
+  public boolean getIsQemuTarget() {
+    return m.getHWTarget().equalsIgnoreCase("qemu");
+  }
+    
+  public String getOsTarget() {
+    return m.getOsTarget().toString();
+  }
+  
+  public String getHwTarget() {
+    return m.getHWTarget();
+  }
+  
 }
