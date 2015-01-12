@@ -47,7 +47,7 @@ public class InlineAssumptionGuarantees extends AstMapVisitor {
 				}
 				agNode = new Node(node.location, node.id, node.inputs,
 						node.outputs, node.locals,node.equations, properties, 
-						node.assertions, null, null);
+						node.assertions, null, null, null);
 			}else{
 				agNode = new AstMapVisitor().visit(node);
 			}

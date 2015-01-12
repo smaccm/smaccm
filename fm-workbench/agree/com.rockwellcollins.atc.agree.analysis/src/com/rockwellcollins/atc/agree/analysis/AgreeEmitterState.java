@@ -128,6 +128,7 @@ public class AgreeEmitterState  extends AgreeSwitch<Expr> {
     public final ComponentInstance curInst;
 	public final Subcomponent curComp;
 	public final List<Subcomponent> ordering = new ArrayList<>();
+	public final List<String> nodeOrdering = new ArrayList<>();
     
     //used for string formatting
 	private static final String dotChar = "__";

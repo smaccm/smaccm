@@ -79,7 +79,7 @@ public class AgreeGenerator {
     	
     	Node mainNode = new Node(subNode.location, subNode.id, subNode.inputs, subNode.outputs,
     			subNode.locals, subNode.equations, subNode.properties, assumptions,
-    			null, subNode.guarantees);
+    			null, subNode.guarantees, subNode.ordering);
     	
     	nodes.add(mainNode);
     	
@@ -98,7 +98,7 @@ public class AgreeGenerator {
     	return assumeGuaranteeProgram;
     }
     
-    private static Program getConistProgram(AgreeEmitterState state){
+    private static Program getConsistProgram(AgreeEmitterState state){
     	
     	IPreferenceStore prefs = Activator.getDefault().getPreferenceStore();
     	int consistDetph = prefs.getInt(PreferenceConstants.PREF_CONSIST_DEPTH);
@@ -286,7 +286,7 @@ public class AgreeGenerator {
     	
     	agreeProgram.state = state;
     	agreeProgram.assumeGuaranteeProgram = getAssumeGuaranteeProgram(state);
-    	agreeProgram.consistProgram = getConistProgram(state);
+    	agreeProgram.consistProgram = getConsistProgram(state);
     	
     	return agreeProgram;
     }
@@ -314,6 +314,7 @@ public class AgreeGenerator {
         ConnectionUtils.recordConnections(state);
         doSwitchAgreeAnnex(state, compImpl);
 
+        List<String> ordering = new ArrayList<>();
         //go through the component implementation and build a program for each subcomponent
         for(Subcomponent subComp : compImpl.getAllSubcomponents()){
         	ComponentInstance subCompInst = compInst.findSubcomponentInstance(subComp);
@@ -325,14 +326,34 @@ public class AgreeGenerator {
         	boolean subResult = doSwitchAgreeAnnex(subState, subCompType);
         	if(subResult){
         		Node subNode = nodeFromState(subState, true);
+        		ordering.add(subNode.id);
         		addSubcomponentNodeCall(subCompPrefix, state, subState, subNode);
         	}
         }
 
         //handle any quasi-synchronous constraints
         addQSConstraints(state);	
+        createOrdering(compInst, state);
 
     	return state;
+    }
+    
+    private static void createOrdering(ComponentInstance compInst, AgreeEmitterState state){
+    	//TODO with karl's code this should always be true (unless there are no subcomponents)
+    	List<Subcomponent> subComps;
+    	if(state.ordering.size() != 0){
+    		subComps = state.ordering;
+    	}else{
+    		ComponentImplementation compImpl = AgreeEmitterUtilities.getInstanceImplementation(compInst);
+    		subComps = compImpl.getAllSubcomponents();
+    	}
+
+    	for(Subcomponent subComp : subComps){
+    		ComponentInstance subCompInst = compInst.findSubcomponentInstance(subComp);
+    		String nodeName = getLustreNodeName(subCompInst);
+    		state.nodeOrdering.add(nodeName);
+    	}
+    	
     }
     
     
@@ -639,7 +660,7 @@ public class AgreeGenerator {
     	equations.add(assertEq);
     	
     	Node subNode = new Node(Location.NULL, nodeId, inputs, outputs, locals, equations,
-    			null, null, assumptions, guarantees);
+    			null, null, assumptions, guarantees, null);
     	
     	return subNode;
     	
@@ -647,6 +668,12 @@ public class AgreeGenerator {
 
 	private static String getLustreNodeName(AgreeEmitterState subState) {
 		String nodeId = "___Node_"+subState.curInst.getInstanceObjectPath();
+		nodeId = nodeId.replace(".", "__");
+		return nodeId;
+	}
+	
+	private static String getLustreNodeName(ComponentInstance compInst) {
+		String nodeId = "___Node_"+compInst.getInstanceObjectPath();
 		nodeId = nodeId.replace(".", "__");
 		return nodeId;
 	}
