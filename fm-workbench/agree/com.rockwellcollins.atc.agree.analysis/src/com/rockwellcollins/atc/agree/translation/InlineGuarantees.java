@@ -20,13 +20,19 @@ import jkind.lustre.VarDecl;
 import jkind.lustre.visitors.AstMapVisitor;
 import jkind.util.Util;
 
-public class InlineAssumptionGuarantees extends AstMapVisitor {
+public class InlineGuarantees extends AstMapVisitor {
 	
 	final String assumeVarPrefix = "___ASSUME";
 	final String guaranteeVarPrefix = "___GUARANTEE";
+	private List<String> leafNodes;
+	
+	
+	public InlineGuarantees(List<String> leafNodes){
+		this.leafNodes = Util.safeList(leafNodes);
+	}
 	
 	public static Program program(Program program){
-		return new InlineAssumptionGuarantees().visit(program);
+		return new InlineGuarantees(null).visit(program);
 	}
 	
 	@Override 
@@ -38,19 +44,7 @@ public class InlineAssumptionGuarantees extends AstMapVisitor {
 		//and add assumption properties to all but the main node
 		List<Node> finalNodes = new ArrayList<>();
 		for(Node node : nodes){
-			Node agNode;
-			if(!node.id.equals(program.main)){
-				//add assumption properties too
-				List<String> properties = new ArrayList<>(node.properties);
-				for(int i = 0; i < node.assumptions.size(); i++){
-					properties.add(assumeVarPrefix+i);
-				}
-				agNode = new Node(node.location, node.id, node.inputs,
-						node.outputs, node.locals,node.equations, properties, 
-						node.assertions, null, null, null);
-			}else{
-				agNode = new AstMapVisitor().visit(node);
-			}
+			Node agNode = new AstMapVisitor().visit(node);
 			finalNodes.add(agNode);
 		}
 		return new Program(program.location, types, constants, finalNodes, program.main);
@@ -110,7 +104,7 @@ public class InlineAssumptionGuarantees extends AstMapVisitor {
 		}
 		
 		return new Node(node.location, node.id, inputs, outputs, locals, equations, 
-				properties, assertions, node.assumptions, node.guarantees);
+				properties, assertions, node.assumptions, node.guarantees, node.ordering);
 	}
 
 }

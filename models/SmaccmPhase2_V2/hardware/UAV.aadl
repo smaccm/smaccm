@@ -46,12 +46,7 @@ public
       control_data_conn : port MSW.control_data_out -> CSW.control_data_in;
       sensors_data_conn : port CSW.sensors_data_out -> MSW.sensors_data_in;
       
-      
-    
-   --   conn0: feature group PX4FMU.sensors <-> CSW.sensors;
       conn1: feature group PX4FMU.expansion_slot <-> PX4IOAR.expansion_connector;
-
-     -- conn2: feature group PX4IOAR.motors_and_radios <-> CSW.motors_and_radios;
       conn3: port PX4IOAR.mavlink <-> mavlink;
       conn4: port flight_control_commands -> PX4IOAR.flight_control_commands;
       

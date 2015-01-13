@@ -37,7 +37,7 @@ import org.osate.annexsupport.AnnexUtil;
 import com.rockwellcollins.atc.agree.agree.AgreeContractSubclause;
 import com.rockwellcollins.atc.agree.agree.AgreePackage;
 import com.rockwellcollins.atc.agree.analysis.preferences.PreferenceConstants;
-import com.rockwellcollins.atc.agree.translation.InlineAssumptionGuarantees;
+import com.rockwellcollins.atc.agree.translation.InlineGuarantees;
 
 public class AgreeGenerator {
 
@@ -52,7 +52,7 @@ public class AgreeGenerator {
     }
     
     private static Program getAssumeGuaranteeProgram(AgreeEmitterState state){
-        Node subNode = nodeFromState(state, false);
+        Node subNode = nodeFromState(state);
     	
     	List<Node> nodes = new ArrayList<>(state.nodeDefExpressions);
     	
@@ -93,7 +93,7 @@ public class AgreeGenerator {
     	//also add a new top level category to the layout
     	state.layout.addCategory(state.curInst.getName());
     	Program assumeGuaranteeProgram = new Program(typeDefs, null, nodes);
-    	assumeGuaranteeProgram = InlineAssumptionGuarantees.program(assumeGuaranteeProgram);
+    	assumeGuaranteeProgram = InlineGuarantees.program(assumeGuaranteeProgram);
     	
     	return assumeGuaranteeProgram;
     }
@@ -103,7 +103,7 @@ public class AgreeGenerator {
     	IPreferenceStore prefs = Activator.getDefault().getPreferenceStore();
     	int consistDetph = prefs.getInt(PreferenceConstants.PREF_CONSIST_DEPTH);
 
-    	Node subNode = nodeFromState(state, false);
+    	Node subNode = nodeFromState(state);
     	List<VarDecl> locals = new ArrayList<>(subNode.locals);
     	List<String> props = new ArrayList<>();
     	List<Equation> eqs = new ArrayList<>(subNode.equations);
@@ -260,7 +260,7 @@ public class AgreeGenerator {
     	Program program = new Program(typeDefs, null, nodes);
     	state.consistProps.addAll(props);
     	
-    	return InlineAssumptionGuarantees.program(program); //strip assumptions and guarantees
+    	return InlineGuarantees.program(program); //strip assumptions and guarantees
     }
     
     private static Equation getHistEq(VarDecl var, Expr expr){
@@ -325,7 +325,7 @@ public class AgreeGenerator {
         	FeatureUtils.recordFeatures(subState);
         	boolean subResult = doSwitchAgreeAnnex(subState, subCompType);
         	if(subResult){
-        		Node subNode = nodeFromState(subState, true);
+        		Node subNode = nodeFromState(subState);
         		ordering.add(subNode.id);
         		addSubcomponentNodeCall(subCompPrefix, state, subState, subNode);
         	}
@@ -385,7 +385,7 @@ public class AgreeGenerator {
         		AgreeEmitterState subState = generateMonolithic(subCompInst, subComp);
         		if(subState != null){
         			foundSubAnnex = true;
-        			Node subNode = nodeFromState(subState, false);
+        			Node subNode = nodeFromState(subState);
         			addSubcomponentNodeCall(subCompPrefix, state, subState, subNode);
         		}
         	}
@@ -614,7 +614,7 @@ public class AgreeGenerator {
 		state.assertExpressions.add(holdPrevExpr);
 	}
     
-    public static Node nodeFromState(AgreeEmitterState subState, boolean assertConract){
+    public static Node nodeFromState(AgreeEmitterState subState){
     	
     	
     	//create the body for the subnode
@@ -641,17 +641,8 @@ public class AgreeGenerator {
     	
     	IdExpr assertId = new IdExpr("__ASSERT");
     	outputs.add(new VarDecl(assertId.id, NamedType.BOOL));
-    	
 
-    	ComponentClassifier compClass = subState.curInst.getComponentClassifier();
-    	Expr finalAssert;
-    	//if this subcomponent is a component type (not an implementation)
-    	//the contract bottoms out here and we need to assert it
-    	if(compClass instanceof ComponentType || assertConract){
-    		finalAssert = assertContract(locals, equations, assumptions, guarantees);	
-    	}else{
-    		finalAssert = new BoolExpr(true);
-    	}
+    	Expr finalAssert = new BoolExpr(true);
     	for(Expr assertExpr : subState.assertExpressions){
     		finalAssert = new BinaryExpr(finalAssert, BinaryOp.AND, assertExpr);
     	}
