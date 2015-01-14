@@ -15,18 +15,5 @@
         id="com.rockwellcollins.atc.resolute.aadlcontribution1">
       </aadlcontribution>
    </extension>
-  <extension
-    point="org.osate.pluginsupport.aadlcontribution">
-    <aadlcontribution
-        file="resources/resolute-deoslib.aadl"
-        id="com.rockwellcollins.atc.resolute.aadlcontribution_deos">
-      </aadlcontribution>
-   </extension>
-  <extension
-    point="org.osate.pluginsupport.aadlcontribution">
-    <aadlcontribution
-        file="resources/resolute-arinc653lib.aadl"
-        id="com.rockwellcollins.atc.resolute.aadlcontribution_arinc653">
-      </aadlcontribution>
-   </extension>
+
 </plugin>
