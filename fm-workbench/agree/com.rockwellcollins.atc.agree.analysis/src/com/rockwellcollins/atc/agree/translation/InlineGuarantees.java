@@ -28,6 +28,7 @@ public class InlineGuarantees extends AstMapVisitor {
 	
 	
 	public InlineGuarantees(List<String> leafNodes){
+		//leaf nodes are those in which we should assert the guarantees
 		this.leafNodes = Util.safeList(leafNodes);
 	}
 	
@@ -41,7 +42,6 @@ public class InlineGuarantees extends AstMapVisitor {
 		List<Constant> constants = visitConstants(program.constants);
 		List<Node> nodes = visitNodes(program.nodes);	
 		//quick hack to strip the assumptions and guarantees from all nodes
-		//and add assumption properties to all but the main node
 		List<Node> finalNodes = new ArrayList<>();
 		for(Node node : nodes){
 			Node agNode = new AstMapVisitor().visit(node);

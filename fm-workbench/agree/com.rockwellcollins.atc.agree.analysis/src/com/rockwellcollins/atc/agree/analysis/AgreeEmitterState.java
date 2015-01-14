@@ -96,6 +96,8 @@ public class AgreeEmitterState  extends AgreeSwitch<Expr> {
     public final List<Equation> connExpressions = new ArrayList<>();
 	public final List<Expr> initialExpressions = new ArrayList<>();
 	
+	public final List<IdExpr> subGuarIds = new ArrayList<>(); //used for consistency
+	public final List<IdExpr> subAssumIds = new ArrayList<>(); //used for consistency
 	public final List<Equation> subcomponentExprs = new ArrayList<>();
 	public final List<String> assumeProps = new ArrayList<>();
 	public final List<String> guarProps = new ArrayList<>();
@@ -138,10 +140,17 @@ public class AgreeEmitterState  extends AgreeSwitch<Expr> {
     
     public final AgreeRenaming renaming = new AgreeRenaming();
     public final AgreeLayout layout = new AgreeLayout();
-    
+        
+	private static final String assumeVarName = "___ASSUME";
+	private static final String guaranteeVarName = "___GUARANTEE";
+	
     public AgreeEmitterState(ComponentInstance compInst, Subcomponent subComp){
     	this.curInst = compInst;
     	this.curComp = subComp;
+    	AgreeVarDecl guarVar = new AgreeVarDecl(guaranteeVarName, NamedType.BOOL);
+    	AgreeVarDecl assumeVar = new AgreeVarDecl(assumeVarName, NamedType.BOOL);
+    	this.outputVars.add(guarVar);
+    	this.outputVars.add(assumeVar);
     }
     
     @Override

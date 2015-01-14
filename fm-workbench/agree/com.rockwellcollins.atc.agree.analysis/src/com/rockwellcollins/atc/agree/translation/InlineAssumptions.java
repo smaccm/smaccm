@@ -24,9 +24,15 @@ public class InlineAssumptions extends AstMapVisitor {
 	
 	final String assumeVarPrefix = "___ASSUME";
 	final String guaranteeVarPrefix = "___GUARANTEE";
+	private List<String> leafNodes;
+
+	
+	public InlineAssumptions(List<String> leafNodes){
+		this.leafNodes = Util.safeList(leafNodes);
+	}
 	
 	public static Program program(Program program){
-		return new InlineAssumptions().visit(program);
+		return new InlineGuarantees(null).visit(program);
 	}
 	
 	@Override 

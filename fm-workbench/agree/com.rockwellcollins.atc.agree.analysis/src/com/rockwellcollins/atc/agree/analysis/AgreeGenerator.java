@@ -23,6 +23,7 @@ import jkind.lustre.TypeDef;
 import jkind.lustre.UnaryExpr;
 import jkind.lustre.UnaryOp;
 import jkind.lustre.VarDecl;
+import jkind.lustre.visitors.AstMapVisitor;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -41,6 +42,9 @@ import com.rockwellcollins.atc.agree.translation.InlineGuarantees;
 
 public class AgreeGenerator {
 
+	private static final String assumeVarName = "___ASSUME";
+	private static final String guaranteeVarName = "___GUARANTEE";
+	
     private static boolean doSwitchAgreeAnnex(AgreeEmitterState state, ComponentClassifier comp){
     	 for (AnnexSubclause annex : AnnexUtil.getAllAnnexSubclauses(comp, AgreePackage.eINSTANCE.getAgreeContractSubclause())) {
              if (annex instanceof AgreeContractSubclause) {
@@ -52,8 +56,13 @@ public class AgreeGenerator {
     }
     
     private static Program getAssumeGuaranteeProgram(AgreeEmitterState state){
-        Node subNode = nodeFromState(state);
-    	
+        Node subNode = nodeFromState(state);    	
+        
+        //items we change for the final node
+    	List<VarDecl> locals = new ArrayList<>(subNode.locals);
+    	List<Equation> equations = new ArrayList<>(subNode.equations);
+    	List<String> properties = new ArrayList<>(subNode.properties);
+
     	List<Node> nodes = new ArrayList<>(state.nodeDefExpressions);
     	
     	if(subNode.outputs.size() != 1){
@@ -69,17 +78,46 @@ public class AgreeGenerator {
     	assumptions.addAll(state.assertExpressions);
     	assumptions.add(assertId);
 
-    	//get the guarantees as properties and add them to the renaming
+    	//add the subcomponent guarantees into the assumptions
+    	for(VarDecl var : subNode.inputs){
+    		if(var.id.endsWith(guaranteeVarName) && !var.id.equals(guaranteeVarName)){
+    			assumptions.add(new IdExpr(var.id));
+    		}
+    	}
+    	//create a variable that historically tracks the assumptions/assertions/subcomponent guarantees
+    	AgreeVarDecl assumHist = new AgreeVarDecl("__HIST_ASSUM", NamedType.BOOL);
+    	IdExpr assumHistId = new IdExpr(assumHist.id);
+    	locals.add(assumHist);
+    	
+    	Expr assums = new BoolExpr(true);
+    	for(Expr expr : assumptions){
+    		assums = new BinaryExpr(assums, BinaryOp.AND, expr);
+    	}
+    	
+    	Expr histExpr = new UnaryExpr(UnaryOp.PRE, assumHistId);
+    	histExpr = new BinaryExpr(histExpr, BinaryOp.AND, assums);
+    	histExpr = new BinaryExpr(assums, BinaryOp.ARROW, histExpr);
+    	
+    	equations.add(new Equation(assumHistId, histExpr));
+    	
+    	
+    	//get the guarantees as properties and add them to the renaming and node properties
     	int i = 0;
     	for(Equation eq : state.guarExpressions){
-    		String propName = "___GUARANTEE"+i++;
-    		state.renaming.addExplicitRename(propName, eq.lhs.get(0).id);
-    		state.guarProps.add(propName);
+    		String guarName = guaranteeVarName+i++;
+    		VarDecl guarVar = new VarDecl(guarName, NamedType.BOOL);
+    		IdExpr guarId = new IdExpr(guarVar.id);
+    		locals.add(guarVar);
+    		equations.add(new Equation(guarId, eq.expr));
+    		properties.add(guarId.id);
+
+    		state.renaming.addExplicitRename(guarName, eq.lhs.get(0).id);
+    		state.guarProps.add(guarName);
     	}
     	
     	Node mainNode = new Node(subNode.location, subNode.id, subNode.inputs, subNode.outputs,
-    			subNode.locals, subNode.equations, subNode.properties, assumptions,
-    			null, subNode.guarantees, subNode.ordering);
+    			locals, equations, properties, assumptions,
+    			null, null, null);
     	
     	nodes.add(mainNode);
     	
@@ -93,7 +131,8 @@ public class AgreeGenerator {
     	//also add a new top level category to the layout
     	state.layout.addCategory(state.curInst.getName());
     	Program assumeGuaranteeProgram = new Program(typeDefs, null, nodes);
-    	assumeGuaranteeProgram = InlineGuarantees.program(assumeGuaranteeProgram);
+    	assumeGuaranteeProgram = new AstMapVisitor().visit(assumeGuaranteeProgram);
+    	//assumeGuaranteeProgram = InlineGuarantees.program(assumeGuaranteeProgram);
     	
     	return assumeGuaranteeProgram;
     }
@@ -171,16 +210,29 @@ public class AgreeGenerator {
     	
     	//get the composition and individual consistency checks
     	Expr subExprConjExpr = new BoolExpr(true);
+    	int i = 0;
     	for(Equation subEq : state.subcomponentExprs){
+    		
+    		IdExpr subGuarId = state.subGuarIds.get(i);
+    		IdExpr subAssumId = state.subAssumIds.get(i++);
+    		
     		subExprConjExpr = new BinaryExpr(subExprConjExpr, BinaryOp.AND, subEq.expr);
+    		subExprConjExpr = new BinaryExpr(subExprConjExpr, BinaryOp.AND, subGuarId);
+    		subExprConjExpr = new BinaryExpr(subExprConjExpr, BinaryOp.AND, subAssumId);
+    		
+    		Expr condactClock = ((CondactExpr)subEq.expr).clock;
+
+    		Expr consistHistExpr = new BinaryExpr(subEq.expr, BinaryOp.AND, condactClock);
+    		consistHistExpr = new BinaryExpr(consistHistExpr, BinaryOp.AND, subGuarId);
+    		consistHistExpr = new BinaryExpr(consistHistExpr, BinaryOp.AND, subAssumId);
     		    		
     		String compName = subEq.lhs.get(0).id;
-    		Expr condactClock = ((CondactExpr)subEq.expr).clock;
 
     		VarDecl subHistVar = new VarDecl("___SUB__"+compName+"__HIST", NamedType.BOOL);
     		IdExpr subHistId = new IdExpr(subHistVar.id);
     		//for consistency of a single subcomponent we assert that the clock is always ticking
-    		Equation subHistEq = getHistEq(subHistVar, new BinaryExpr(subEq.expr, BinaryOp.AND, condactClock));
+
+    		Equation subHistEq = getHistEq(subHistVar, consistHistExpr);
     		locals.add(subHistVar);
     		eqs.add(subHistEq);
     		
@@ -260,7 +312,8 @@ public class AgreeGenerator {
     	Program program = new Program(typeDefs, null, nodes);
     	state.consistProps.addAll(props);
     	
-    	return InlineGuarantees.program(program); //strip assumptions and guarantees
+//    	return InlineGuarantees.program(program); //strip assumptions and guarantees
+    	return new AstMapVisitor().visit(program);
     }
     
     private static Equation getHistEq(VarDecl var, Expr expr){
@@ -477,7 +530,7 @@ public class AgreeGenerator {
 		
 		//add the call to the subcomponent node and wrap it in a condact
 		addNodeAndCondactCall(prefix, state, subState, subNode, clockId);
-		
+				
 		//add subcomponent variable references (for cex output)
 		addReferences(prefix, state, subState);
 		
@@ -543,6 +596,8 @@ public class AgreeGenerator {
 		state.nodeDefExpressions.add(subNode);
 		Equation subCompEq = new Equation(new IdExpr(subState.curComp.getName()), condactCall);
 		state.subcomponentExprs.add(subCompEq); //these are kept track of for checking consistency
+		state.subGuarIds.add(new IdExpr(prefix+guaranteeVarName));
+		state.subAssumIds.add(new IdExpr(prefix+assumeVarName));
 
 	}
 
@@ -631,25 +686,43 @@ public class AgreeGenerator {
     	inputs.addAll(subState.outputVars);
     	locals.addAll(subState.internalVars);
     	
+    	IdExpr assertId = new IdExpr("__ASSERT");
+    	IdExpr guarId = new IdExpr(guaranteeVarName); //these should already be created by the constructor for the  AgreeEmitterState
+    	IdExpr assumpId = new IdExpr(assumeVarName);
+    	    	
+    	outputs.add(new VarDecl(assertId.id, NamedType.BOOL));
+    	
+    	Expr guarExpr = new BoolExpr(true);
     	for(Equation guarEq : subState.guarExpressions){
     		guarantees.add(guarEq.expr);
+    		guarExpr = new BinaryExpr(guarExpr, BinaryOp.AND, guarEq.expr);
+    	}    	
+    	//add guarantees of any subnodes
+    	for(IdExpr subGuarId : subState.subGuarIds){
+    		guarExpr = new BinaryExpr(guarExpr, BinaryOp.AND, subGuarId);
     	}
+    	Expr assumExpr = new BoolExpr(true);
     	for(Equation assumEq : subState.assumpExpressions){
     		assumptions.add(assumEq.expr);
+    		assumExpr = new BinaryExpr(assumExpr, BinaryOp.AND, assumEq.expr);
     	}
-    	equations.addAll(subState.eqExpressions);
-    	
-    	IdExpr assertId = new IdExpr("__ASSERT");
-    	outputs.add(new VarDecl(assertId.id, NamedType.BOOL));
-
+    	//add assumptions of any subnodes
+    	for(IdExpr subAssumId : subState.subAssumIds){
+    		assumExpr = new BinaryExpr(assumExpr, BinaryOp.AND, subAssumId);
+    	}
     	Expr finalAssert = new BoolExpr(true);
     	for(Expr assertExpr : subState.assertExpressions){
     		finalAssert = new BinaryExpr(finalAssert, BinaryOp.AND, assertExpr);
     	}
     	
-    	Equation assertEq = new Equation(assertId, finalAssert);
-    	equations.add(assertEq);
+    	Expr guarEq = new BinaryExpr(guarId, BinaryOp.EQUAL, guarExpr);
+    	Expr assumEq = new BinaryExpr(assumpId, BinaryOp.EQUAL, assumExpr);
     	
+    	finalAssert = new BinaryExpr(finalAssert, BinaryOp.AND, guarEq);
+    	finalAssert = new BinaryExpr(finalAssert, BinaryOp.AND, assumEq);
+    	equations.add(new Equation(assertId, finalAssert));
+    	equations.addAll(subState.eqExpressions);
+
     	Node subNode = new Node(Location.NULL, nodeId, inputs, outputs, locals, equations,
     			null, null, assumptions, guarantees, null);
     	

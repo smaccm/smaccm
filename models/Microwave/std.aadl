@@ -70,12 +70,12 @@ annex agree {**
 		o = if (timer(true, false) >= n) then i else true;
 	tel; 	
 
-	node WithinN(event: bool, i: bool, n: int) returns (o: bool);
+	node WithinN(event1: bool, i: bool, n: int) returns (o: bool);
 	var
 		after_event: bool; 
 		time: int; 
 	let
-		after_event = if i then false else if event then true else 
+		after_event = if i then false else if event1 then true else 
 			(false -> pre(after_event)); 
 		time = if i then 0 else 
 				(0 -> pre(time)) + if after_event then 1 else 0;
