@@ -114,7 +114,9 @@ public class AgreeGenerator {
         Expr guarConj = new BoolExpr(true);
         for(VarDecl var : subNode.inputs){
             if(var.id.endsWith(guaranteeVarName) && !var.id.equals(guaranteeVarName)){
-                guarConj = new BinaryExpr(guarConj, BinaryOp.AND, new IdExpr(var.id));
+                IdExpr clockId = state.varToClock.get(var.id);
+                Expr ifClockThenGuar = new BinaryExpr(clockId, BinaryOp.IMPLIES, new IdExpr(var.id));
+                guarConj = new BinaryExpr(guarConj, BinaryOp.AND, ifClockThenGuar);
             }
         }
         equations.add(new Equation(guarConjId, guarConj));
@@ -146,11 +148,15 @@ public class AgreeGenerator {
             for(IdExpr guarId : guarIds){
                 if(usedAssumesAndGuarantees.contains(guarId.id)){
                     //this component did indeed have guarantees (otherwise we don't use them)
-                    assumPropExpr = new BinaryExpr(assumPropExpr, BinaryOp.AND, guarId);
+                    IdExpr clockId = state.varToClock.get(guarId.id);
+                    Expr ifClockThenGuar = new BinaryExpr(clockId, BinaryOp.IMPLIES, guarId);                   
+                    assumPropExpr = new BinaryExpr(assumPropExpr, BinaryOp.AND, ifClockThenGuar);
                 }
             }
+            Expr clockedAssume = state.varToClock.get(assumId.id);
+            clockedAssume = new BinaryExpr(clockedAssume, BinaryOp.IMPLIES, assumId);
             assumPropExpr = new BinaryExpr(assumPropExpr, BinaryOp.AND, preHistGuar);
-            assumPropExpr = new BinaryExpr(assumPropExpr, BinaryOp.IMPLIES, assumId);
+            assumPropExpr = new BinaryExpr(assumPropExpr, BinaryOp.IMPLIES, clockedAssume);
             equations.add(new Equation(assumPropId, assumPropExpr));
             properties.add(assumPropId.id);
             
@@ -206,7 +212,9 @@ public class AgreeGenerator {
         //add the subcomponent guarantees into the assumptions
         for(VarDecl var : subNode.inputs){
             if(var.id.endsWith(guaranteeVarName) && !var.id.equals(guaranteeVarName)){
-                assumptions.add(new IdExpr(var.id));
+                IdExpr clockId = state.varToClock.get(var.id);
+                Expr ifClockThenGuar = new BinaryExpr(clockId, BinaryOp.IMPLIES, new IdExpr(var.id));
+                assumptions.add(ifClockThenGuar);
             }
         }
         //create a variable that historically tracks the assumptions/assertions/subcomponent guarantees
@@ -341,11 +349,13 @@ public class AgreeGenerator {
             IdExpr subGuarId = state.subGuarIds.get(i);
             IdExpr subAssumId = state.subAssumIds.get(i++);
 
-            subExprConjExpr = new BinaryExpr(subExprConjExpr, BinaryOp.AND, subEq.expr);
-            subExprConjExpr = new BinaryExpr(subExprConjExpr, BinaryOp.AND, subGuarId);
-            subExprConjExpr = new BinaryExpr(subExprConjExpr, BinaryOp.AND, subAssumId);
-
             Expr condactClock = ((CondactExpr)subEq.expr).clock;
+            
+            Expr clockedAssumGuar = new BinaryExpr(subAssumId, BinaryOp.AND, subGuarId);
+            clockedAssumGuar = new BinaryExpr(condactClock, BinaryOp.IMPLIES, clockedAssumGuar);
+            
+            subExprConjExpr = new BinaryExpr(subExprConjExpr, BinaryOp.AND, subEq.expr);
+            subExprConjExpr = new BinaryExpr(subExprConjExpr, BinaryOp.AND, clockedAssumGuar);
 
             Expr consistHistExpr = new BinaryExpr(subEq.expr, BinaryOp.AND, condactClock);
             consistHistExpr = new BinaryExpr(consistHistExpr, BinaryOp.AND, subGuarId);
@@ -662,22 +672,28 @@ public class AgreeGenerator {
         //the assumptions for this component
         addAssumptionProvingMap(prefix, state, subState);
 
-//        //add assumption renamings
-//        int i = 0;
-//        for(Equation assumEq : subState.assumpExpressions){
-//            String lustreVarName = getLustreNodeName(subState);
-//            lustreVarName = lustreVarName+"~condact~0.___ASSUME"+i+"~clocked_property";
-//            String assumeDisplayText = assumEq.lhs.get(0).id;
-//            assumeDisplayText = state.renaming.rename(
-//                    subState.curInst.getInstanceObjectPath()+" : \""+assumeDisplayText+"\"");
-//            assumeDisplayText = assumeDisplayText.replaceAll(".*\\.", "");
-//            state.renaming.addExplicitRename(lustreVarName, assumeDisplayText);
-//            state.assumeProps.add(lustreVarName);
-//        }
+        addVarsToClockMap(prefix, state, subState, clockId);
+        
         //includes renaming of assumptions for subnodes
         state.renaming.addRenamings(subState.renaming);
 
 
+    }
+
+    private static void addVarsToClockMap(String prefix, AgreeEmitterState state,
+            AgreeEmitterState subState, IdExpr clockId) {
+        for(AgreeVarDecl outVar : subState.outputVars){
+            state.varToClock.put(prefix+outVar.id, clockId);
+        }
+        
+        for(Entry<String, IdExpr> entry : subState.varToClock.entrySet()){
+            String oldVar = entry.getKey();
+            String newVar = prefix+oldVar;
+            IdExpr oldClock = entry.getValue();
+            IdExpr newClock = new IdExpr(prefix+oldClock.id);
+            state.varToClock.put(newVar, newClock);
+        }
+        
     }
 
     private static void addAssumptionProvingMap(String prefix,

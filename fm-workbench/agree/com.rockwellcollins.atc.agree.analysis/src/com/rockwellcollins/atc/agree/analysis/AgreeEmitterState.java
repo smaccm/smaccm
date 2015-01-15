@@ -145,6 +145,9 @@ public class AgreeEmitterState  extends AgreeSwitch<Expr> {
 	private static final String guaranteeVarName = "___GUARANTEE";
 	
 	public final Map<IdExpr, List<IdExpr>> guarsForAssums = new HashMap<>();
+	//maps a variable (in the form of an AgreeVarDecl) to it's corresponding clock
+	//variable (in the form of an IdExpr)
+	public final Map<String, IdExpr> varToClock = new HashMap<>();
 	
     public AgreeEmitterState(ComponentInstance compInst, Subcomponent subComp){
     	this.curInst = compInst;
