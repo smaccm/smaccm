@@ -6,8 +6,9 @@ import java.util.List;
 import jkind.lustre.Program;
 
 public class AgreeProgram {
-	public Program assumeGuaranteeProgram;
+	public Program guaranteeProgram;
 	public Program consistProgram;
+    public Program assumeProgram;
 
 	public List<String> assumeGuaranteeProps = new ArrayList<>();
 	public List<String> consistProps = new ArrayList<>();

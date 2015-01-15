@@ -292,9 +292,10 @@ end Microwave_Control ;
 
 system implementation Microwave_Control.Impl
 	subcomponents
-		MC : system Mode_Control ; 
 		DC : system Display_Control; 
 		OP : system Output_Processing ; 
+		MC : system Mode_Control ; 
+		
 	connections
 		clear_TO_MC_clear : port clear -> MC.clear {Communication_Properties::Timing => immediate;};
 		clear_TO_DC_clear : port clear -> DC.clear {Communication_Properties::Timing => immediate;};

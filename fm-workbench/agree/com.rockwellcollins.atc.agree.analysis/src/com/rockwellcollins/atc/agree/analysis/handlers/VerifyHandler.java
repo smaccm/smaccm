@@ -118,7 +118,7 @@ public abstract class VerifyHandler extends AadlHandler {
             } else {
             	AgreeProgram agreeProgram = AgreeGenerator.getLustre(si, isMonolithic());//, isMonolithic());
                 wrapper.addChild(createGuaranteeVerification(agreeProgram));
-                //wrapper.addChild(createAssumptionVerification(si));
+                wrapper.addChild(createAssumptionVerification(agreeProgram));
                 wrapper.addChild(creatConsistencyVerification(agreeProgram));
                 result = wrapper;
             }
@@ -152,6 +152,10 @@ public abstract class VerifyHandler extends AadlHandler {
         	if (tempResult != null) {
         		result.addChild(tempResult);
         	}
+        	tempResult = createAssumptionVerification(agreeProgram);
+            if (tempResult != null) {
+                result.addChild(tempResult);
+            }
         	tempResult = creatConsistencyVerification(agreeProgram);
         	if (tempResult != null) {
         		result.addChild(tempResult);
@@ -192,17 +196,36 @@ public abstract class VerifyHandler extends AadlHandler {
 		return false;
 	}
     
+    private AnalysisResult createAssumptionVerification(AgreeProgram agreeProgram) {
+
+        List<String> props = new ArrayList<>();
+        props.addAll(agreeProgram.state.assumProps);
+        
+        JKindResult result = new JKindResult("Subcomponent Assumptions", props, agreeProgram.state.renaming);
+        queue.add(result);
+
+        ComponentImplementation compImpl = AgreeEmitterUtilities.getInstanceImplementation(agreeProgram.state.curInst);
+        linker.setProgram(result, agreeProgram.assumeProgram);
+        linker.setComponent(result, compImpl);
+        linker.setContract(result, getContract(compImpl));
+        linker.setLayout(result, agreeProgram.state.layout);
+        linker.setReferenceMap(result, agreeProgram.state.refMap);
+        linker.setLog(result, AgreeLogger.getLog());
+
+        return result;
+    }
+    
+    
 	private AnalysisResult createGuaranteeVerification(AgreeProgram agreeProgram) {
 
     	List<String> props = new ArrayList<>();
     	props.addAll(agreeProgram.state.guarProps);
-    	props.addAll(agreeProgram.state.assumeProps);
     	
         JKindResult result = new JKindResult("Contract Guarantees", props, agreeProgram.state.renaming);
         queue.add(result);
 
         ComponentImplementation compImpl = AgreeEmitterUtilities.getInstanceImplementation(agreeProgram.state.curInst);
-        linker.setProgram(result, agreeProgram.assumeGuaranteeProgram);
+        linker.setProgram(result, agreeProgram.guaranteeProgram);
         linker.setComponent(result, compImpl);
         linker.setContract(result, getContract(compImpl));
         linker.setLayout(result, agreeProgram.state.layout);

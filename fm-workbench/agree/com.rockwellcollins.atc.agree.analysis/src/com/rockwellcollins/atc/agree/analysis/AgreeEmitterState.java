@@ -99,9 +99,9 @@ public class AgreeEmitterState  extends AgreeSwitch<Expr> {
 	public final List<IdExpr> subGuarIds = new ArrayList<>(); //used for consistency
 	public final List<IdExpr> subAssumIds = new ArrayList<>(); //used for consistency
 	public final List<Equation> subcomponentExprs = new ArrayList<>();
-	public final List<String> assumeProps = new ArrayList<>();
 	public final List<String> guarProps = new ArrayList<>();
 	public final List<String> consistProps = new ArrayList<>();
+	public final List<String> assumProps = new ArrayList<>();
 
     public final Set<jkind.lustre.RecordType> typeExpressions = new HashSet<>();
     //this set keeps track of all the left hand sides of connection
@@ -143,6 +143,8 @@ public class AgreeEmitterState  extends AgreeSwitch<Expr> {
         
 	private static final String assumeVarName = "___ASSUME";
 	private static final String guaranteeVarName = "___GUARANTEE";
+	
+	public final Map<IdExpr, List<IdExpr>> guarsForAssums = new HashMap<>();
 	
     public AgreeEmitterState(ComponentInstance compInst, Subcomponent subComp){
     	this.curInst = compInst;
