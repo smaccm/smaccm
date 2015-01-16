@@ -12,7 +12,12 @@ import com.rockwellcollins.atc.resolute.generator.NullGenerator;
  * Equinox extension registry.
  */
 public class ResoluteRuntimeModule extends AbstractResoluteRuntimeModule {
-    public Class<? extends IGenerator> bindIGenerator() {
-        return NullGenerator.class;
-    }
+	public Class<? extends IGenerator> bindIGenerator() {
+		return NullGenerator.class;
+	}
+
+	public Class<? extends org.eclipse.xtext.naming.IQualifiedNameConverter> bindIQualifiedNameConverter() {
+		return com.rockwellcollins.atc.resolute.naming.ResoluteQualifiedNameConverter.class;
+	}
+
 }

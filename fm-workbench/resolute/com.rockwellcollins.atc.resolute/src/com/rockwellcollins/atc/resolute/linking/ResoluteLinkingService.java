@@ -157,6 +157,8 @@ public class ResoluteLinkingService extends PropertiesLinkingService {
 
 		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
 		IProject contextProject = root.getProject(URI.decode(contextProjectName));
+		if (!contextProject.exists())
+			return result;
 		try {
 			IProjectDescription description = contextProject.getDescription();
 			for (IProject referencedProject : description.getReferencedProjects()) {
