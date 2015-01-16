@@ -109,6 +109,10 @@ public class AgreeGenerator {
             assumptions.add(assumEq.expr);
         }
         assumptions.addAll(state.assertExpressions);
+        
+        Expr clockHolds = getClockHoldExprs(state);
+        assumptions.add(clockHolds);
+        
         //assumptions.add(assertId);
 
         Expr guarConj = new BoolExpr(true);
@@ -208,6 +212,9 @@ public class AgreeGenerator {
         }
         assumptions.addAll(state.assertExpressions);
         //assumptions.add(assertId);
+        
+        Expr clockHolds = getClockHoldExprs(state);
+        assumptions.add(clockHolds);
 
         //add the subcomponent guarantees into the assumptions
         for(VarDecl var : subNode.inputs){
@@ -389,6 +396,9 @@ public class AgreeGenerator {
         for(Expr assertExpr : state.assertExpressions){
             assertConjExpr = new BinaryExpr(assertConjExpr, BinaryOp.AND, assertExpr);
         }
+        
+        Expr clockHolds = getClockHoldExprs(state);
+        assertConjExpr = new BinaryExpr(assertConjExpr, BinaryOp.AND, clockHolds);
 
         locals.add(assertConjVar);
         Equation assertConjEq = new Equation(assertConjId, assertConjExpr);
@@ -520,29 +530,9 @@ public class AgreeGenerator {
 
         //handle any quasi-synchronous constraints
         addQSConstraints(state);	
-        createOrdering(compInst, state);
-
+        
         return state;
     }
-
-    private static void createOrdering(ComponentInstance compInst, AgreeEmitterState state){
-        //TODO with karl's code this should always be true (unless there are no subcomponents)
-        List<Subcomponent> subComps;
-        if(state.ordering.size() != 0){
-            subComps = state.ordering;
-        }else{
-            ComponentImplementation compImpl = AgreeEmitterUtilities.getInstanceImplementation(compInst);
-            subComps = compImpl.getAllSubcomponents();
-        }
-
-        for(Subcomponent subComp : subComps){
-            ComponentInstance subCompInst = compInst.findSubcomponentInstance(subComp);
-            String nodeName = getLustreNodeName(subCompInst);
-            state.nodeOrdering.add(nodeName);
-        }
-
-    }
-
 
     private static AgreeEmitterState generateMonolithic(ComponentInstance compInst,
             Subcomponent comp){
@@ -932,5 +922,36 @@ public class AgreeGenerator {
         return nodeId;
     }
 
+    private static Expr getClockHoldExprs(AgreeEmitterState state){
+        //for monolithic verification we need to add assertions that
+        //no clock within a subcomponent ticks unless it's parent clock
+        //ticks
+        
+        //first get all the clock variables
+        List<IdExpr> clockIds = new ArrayList<>();
+        for(AgreeVarDecl var : state.inputVars){
+            if(var.id.endsWith(state.clockIDSuffix)){
+                clockIds.add(new IdExpr(var.id));
+            }
+        }
+
+        Expr clockHolds = new BoolExpr(true);
+        for(IdExpr parentClockId : clockIds){
+            Expr notParent = new UnaryExpr(UnaryOp.NOT, parentClockId);
+            String prefix = parentClockId.id.replace(state.clockIDSuffix, "");
+            Expr notClocks = new BoolExpr(true);
+            for(IdExpr childClockId : clockIds){
+                if(childClockId.id.startsWith(prefix) && !childClockId.id.equals(parentClockId.id)){
+                    Expr notThisClock = new UnaryExpr(UnaryOp.NOT, new IdExpr(childClockId.id));
+                    notClocks = new BinaryExpr(notClocks, BinaryOp.AND, notThisClock);
+                }
+            }
+            notClocks = new BinaryExpr(notParent, BinaryOp.IMPLIES, notClocks);
+            clockHolds = new BinaryExpr(clockHolds, BinaryOp.AND, notClocks);
+        }
+
+        return clockHolds;
+    }
+    
 
 }
