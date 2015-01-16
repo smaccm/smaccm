@@ -18,7 +18,6 @@ system implementation ODROID_XU.Impl
     
 end ODROID_XU.Impl;
 
-
 bus Memory_Bus
 end Memory_Bus;
 
