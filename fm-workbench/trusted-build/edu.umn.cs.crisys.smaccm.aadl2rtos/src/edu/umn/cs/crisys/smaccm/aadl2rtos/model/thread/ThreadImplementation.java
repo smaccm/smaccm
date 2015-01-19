@@ -18,7 +18,7 @@ import java.util.List;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosException;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.*;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.*;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.rpc.RemoteProcedureGroup;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.rpc.RemoteProcedureGroupEndpoint;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.parse.Model;
 
 public class ThreadImplementation extends ThreadImplementationBase {
@@ -41,14 +41,16 @@ public class ThreadImplementation extends ThreadImplementationBase {
 	private ArrayList<OutputEventPort> outputEventDataPortList = new ArrayList<OutputEventPort>();
 	private ArrayList<InputEventPort> inputEventDataPortList = new ArrayList<InputEventPort>();
 	private ArrayList<SharedDataAccessor> accessorList = new ArrayList<SharedDataAccessor>();
+  
 	private ArrayList<String> legacySemaphoreList = new ArrayList<String>();
-
+	private List<String> sourceFileList = new ArrayList<String>(); 
+	
 	// Outgoing dispatch contract (limits on dispatch)
 	private ArrayList<OutgoingDispatchContract> dispatchLimits = new ArrayList<OutgoingDispatchContract>();
 		
 	// RPCs
-	private List<RemoteProcedureGroup> providesRPCList = new ArrayList<RemoteProcedureGroup>(); 
-	private List<RemoteProcedureGroup> requiresRPCList = new ArrayList<RemoteProcedureGroup>();
+	private List<RemoteProcedureGroupEndpoint> providesRPGList = new ArrayList<>(); 
+	private List<RemoteProcedureGroupEndpoint> requiresRPGList = new ArrayList<>();
 	
 	// Constructor
 	public ThreadImplementation(Model model, String name, int priority, int stackSize, 
@@ -171,29 +173,37 @@ public class ThreadImplementation extends ThreadImplementationBase {
   /**
    * @return the providesRPCList
    */
-  public List<RemoteProcedureGroup> getProvidesRPCList() {
-    return providesRPCList;
+  public List<RemoteProcedureGroupEndpoint> getProvidesRPGList() {
+    return providesRPGList;
   }
 
+  public void addProvidesRPG(RemoteProcedureGroupEndpoint rpg) {
+    providesRPGList.add(rpg);
+  }
+  
   /**
    * @param providesRPCList the providesRPCList to set
    */
-  public void setProvidesRPCList(List<RemoteProcedureGroup> providesRPCList) {
-    this.providesRPCList = providesRPCList;
+  public void setProvidesRPGList(List<RemoteProcedureGroupEndpoint> providesRPGList) {
+    this.providesRPGList = providesRPGList;
   }
 
   /**
    * @return the requiresRPCList
    */
-  public List<RemoteProcedureGroup> getRequiresRPCList() {
-    return requiresRPCList;
+  public List<RemoteProcedureGroupEndpoint> getRequiresRPGList() {
+    return requiresRPGList;
   }
 
+  public void addRequiresRPG(RemoteProcedureGroupEndpoint rpg) {
+    requiresRPGList.add(rpg);
+  }
+  
   /**
    * @param requiresRPCList the requiresRPCList to set
    */
-  public void setRequiresRPCList(List<RemoteProcedureGroup> requiresRPCList) {
-    this.requiresRPCList = requiresRPCList;
+  public void setRequiresRPGList(List<RemoteProcedureGroupEndpoint> requiresRPGList) {
+    this.requiresRPGList = requiresRPGList;
   }
 
   /**
@@ -341,6 +351,20 @@ public class ThreadImplementation extends ThreadImplementationBase {
     ports.addAll(getOutputPorts());
     ports.addAll(getInputPorts()); 
     return ports;
+  }
+
+  /**
+   * @return the sourceFileList
+   */
+  public List<String> getSourceFileList() {
+    return sourceFileList;
+  }
+
+  /**
+   * @param sourceFileList the sourceFileList to set
+   */
+  public void setSourceFileList(List<String> sourceFileList) {
+    this.sourceFileList = sourceFileList;
   }
   
   

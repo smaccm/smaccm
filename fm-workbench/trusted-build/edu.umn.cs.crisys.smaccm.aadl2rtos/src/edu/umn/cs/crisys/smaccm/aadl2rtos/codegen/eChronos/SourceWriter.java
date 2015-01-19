@@ -34,7 +34,7 @@ import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.IRQDispatcher;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.InputEventDispatcher;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.PeriodicDispatcher;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.*;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.Connection;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.PortConnection;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.SharedData;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.SharedDataAccessor;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.ThreadCalendar;
@@ -750,7 +750,7 @@ public class SourceWriter extends AbstractCodeWriter {
       
       // for (ThreadInstance ti: impl.getThreadInstanceList()) {
       // }
-      for (Connection c: outp.getConnections()) {
+      for (PortConnection c: outp.getConnections()) {
         InputPort destPort = c.getDestPort();
         Type destPortType = destPort.getType();
         ThreadInstance destThread = c.getDestThreadInstance();

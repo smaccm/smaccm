@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.ExternalHandler;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.Connection;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.PortConnection;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.ThreadImplementation;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.Type;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.UnitType;
@@ -19,7 +19,7 @@ public abstract class DataPort {
   private String commprimHeaderNameOpt = null;
   private ExternalHandler initializeEntrypointSourceText = null;
   private String sourceText = null;
-  private List<Connection> connections = new ArrayList<Connection>(); 
+  private List<PortConnection> connections = new ArrayList<PortConnection>(); 
 
 	public DataPort(String portName, 
 	                Type dataType,
@@ -136,18 +136,18 @@ public abstract class DataPort {
   /**
    * @return the connections
    */
-  public List<Connection> getConnections() {
+  public List<PortConnection> getConnections() {
     return connections;
   }
 
   /**
    * @param connections the connections to set
    */
-  public void setConnections(List<Connection> connections) {
+  public void setConnections(List<PortConnection> connections) {
     this.connections = connections;
   }
 
-  public void addConnection(Connection conn) {
+  public void addConnection(PortConnection conn) {
     this.connections.add(conn);
   }
 

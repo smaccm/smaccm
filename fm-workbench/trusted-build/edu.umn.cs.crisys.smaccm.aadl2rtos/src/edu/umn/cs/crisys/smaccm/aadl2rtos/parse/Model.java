@@ -33,8 +33,9 @@ import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.IRQDispatcher;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.legacy.LegacyExternalISR;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.legacy.LegacyIRQEvent;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.legacy.LegacyThreadImplementation;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.rpc.RemoteProcedure;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.rpc.RemoteProcedureGroup;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.Connection;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.PortConnection;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.ExternalIRQ;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.SharedData;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.ThreadCalendar;
@@ -57,7 +58,7 @@ public class Model {
 	
 	// Connection instances - drives number of semaphores
 	// (one function per thread implementation, pass in thread instance id)
-	List<Connection> connectionInstances = new ArrayList<Connection>();
+	List<PortConnection> connectionInstances = new ArrayList<PortConnection>();
 	// private ArrayList<String> semaphoreList = new ArrayList<String>();
 
 
@@ -74,11 +75,12 @@ public class Model {
 	List<LegacyExternalISR> legacyExternalIRQList = new ArrayList<LegacyExternalISR>();
 	List<LegacyIRQEvent> legacyIRQEventList = new ArrayList<LegacyIRQEvent>();
 	List<ExternalIRQ> externalIRQList = new ArrayList<ExternalIRQ>();
-	List<Connection> connectionList = new ArrayList<Connection>(); 
+	List<PortConnection> connectionList = new ArrayList<PortConnection>(); 
 	
 	// type stuff
 	Map<String, Type> astTypes = new HashMap<String, Type>();
-	Map<String, RemoteProcedureGroup> rpcInterfaces = new HashMap<String, RemoteProcedureGroup>(); 
+	Map<String, RemoteProcedureGroup> remoteProcedureGroupMap = new HashMap<>(); 
+	Map<String, RemoteProcedure> remoteProcedureMap = new HashMap<>();
 	
 	boolean generateSystickIRQ;
 	
@@ -233,15 +235,31 @@ public class Model {
   /**
    * @return the rpcInterfaces
    */
-  public Map<String, RemoteProcedureGroup> getRpcInterfaces() {
-    return rpcInterfaces;
+  public Map<String, RemoteProcedureGroup> getRemoteProcedureGroupMap() {
+    return remoteProcedureGroupMap;
   }
 
   /**
    * @param rpcInterfaces the rpcInterfaces to set
    */
-  public void setRpcInterfaces(Map<String, RemoteProcedureGroup> rpcInterfaces) {
-    this.rpcInterfaces = rpcInterfaces;
+  public void setRemoteProcedureGroupMap(Map<String, RemoteProcedureGroup> rpcInterfaces) {
+    this.remoteProcedureGroupMap = rpcInterfaces;
+  }
+
+  
+  /**
+   * @return the remoteProcedureMap
+   */
+  public Map<String, RemoteProcedure> getRemoteProcedureMap() {
+    return remoteProcedureMap;
+  }
+
+  /**
+   * @param remoteProcedureMap the remoteProcedureMap to set
+   */
+  public void setRemoteProcedureMap(
+      Map<String, RemoteProcedure> remoteProcedureMap) {
+    this.remoteProcedureMap = remoteProcedureMap;
   }
 
   public List<LegacyExternalISR> getLegacyExternalIRQs() {
@@ -289,7 +307,7 @@ public class Model {
 //	}
 
 	
-	public List<Connection> getConnections() {
+	public List<PortConnection> getConnections() {
 	  return this.connectionInstances;
 	}
 

@@ -41,6 +41,7 @@ import org.osate.aadl2.Element;
 import org.osate.aadl2.EnumerationLiteral;
 import org.osate.aadl2.Feature;
 import org.osate.aadl2.FeatureGroup;
+import org.osate.aadl2.Parameter;
 import org.osate.aadl2.PortCategory;
 import org.osate.aadl2.SubprogramAccess;
 import org.osate.aadl2.SubprogramGroupAccess;
@@ -53,18 +54,30 @@ import org.osate.aadl2.impl.DataSubcomponentImpl;
 import org.osate.aadl2.impl.DataTypeImpl;
 import org.osate.aadl2.impl.PortImpl;
 import org.osate.aadl2.impl.SubcomponentImpl;
+import org.osate.aadl2.impl.SubprogramGroupAccessImpl;
+import org.osate.aadl2.impl.SubprogramGroupTypeImpl;
+import org.osate.aadl2.impl.SubprogramTypeImpl;
 import org.osate.aadl2.impl.ThreadSubcomponentImpl;
 import org.osate.aadl2.impl.ThreadTypeImpl;
 import org.osate.aadl2.instance.ComponentInstance;
 import org.osate.aadl2.instance.ConnectionInstance;
+import org.osate.aadl2.instance.ConnectionInstanceEnd;
 import org.osate.aadl2.instance.ConnectionKind;
+import org.osate.aadl2.instance.FeatureCategory;
 import org.osate.aadl2.instance.SystemInstance;
+import org.osate.aadl2.instance.impl.FeatureInstanceImpl;
 import org.osate.xtext.aadl2.properties.util.PropertyUtils;
 
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosException;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Logger;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.*;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.legacy.*;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.rpc.Direction;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.rpc.RemoteProcedure;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.rpc.RemoteProcedureGroup;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.rpc.RemoteProcedureGroupEndpoint;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.rpc.RemoteProcedureGroupEndpoint.AccessType;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.rpc.RemoteProcedureParameter;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.*;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.*;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.*;
@@ -108,7 +121,7 @@ public class AadlModelParser {
 		this.model = model;
 		
 		// re-init the counters.
-		Connection.init();
+		PortConnection.init();
 		ThreadInstance.init();
 		
 		// find the OS and target hardware
@@ -524,7 +537,10 @@ public class AadlModelParser {
     setDispatchProtocol(tti, ti, isPassive);
     createOptPeriodicHandler(tti, ti); 
     createOptInitializeEntrypoint(tti, ti); 
-    
+
+    List<String> fileNames = Util.getSourceTextListOpt(tti, ThreadUtil.SOURCE_TEXT);
+    ti.setSourceFileList(fileNames);
+
     for (Feature f: tti.getAllFeatures()) {
       if (f instanceof PortImpl) {
         addPort((PortImpl)f, ti); 
@@ -535,9 +551,9 @@ public class AadlModelParser {
       else if (f instanceof SubprogramAccess) {
         constructWarning(name, "subprogram access", f.getName(), "11/2014");
       }
-      else if (f instanceof SubprogramGroupAccess) {
+      /* else if (f instanceof SubprogramGroupAccess) {
         constructWarning(name, "subprogram group access", f.getName(), "11/2014");
-      }
+      } */
       else if (f instanceof BusAccessImpl) {
         constructWarning(name, "bus access", f.getName(), null);
       } else if (f instanceof AbstractFeature) {
@@ -640,8 +656,17 @@ public class AadlModelParser {
     }
     return accessType;
 	}
-	
-	private Connection constructConnection(ConnectionInstance ci) {
+
+	ThreadInstance getThreadInstance(ComponentInstance inst) {
+	  ThreadInstance threadInst = this.threadInstanceMap.get(inst); 
+	  if (threadInst == null) {
+	    throw new Aadl2RtosException("For connection instance: " + inst.getName() + 
+	        " one of source/destination thread instances was not defined ('null').");
+	  }
+	  return threadInst;
+	}
+
+	private PortConnection constructPortConnection(ConnectionInstance ci) {
     PortImpl destPortImpl = PortUtil.getPortImplFromConnectionInstanceEnd(ci.getDestination());
     PortImpl sourcePortImpl = PortUtil.getPortImplFromConnectionInstanceEnd(ci.getSource());
 
@@ -662,17 +687,11 @@ public class AadlModelParser {
     InputPort destPort = (InputPort)dPort;
             
     // find source and destination thread instances.
-    ComponentInstance aadlSrcThreadInstance = ci.getSource().getComponentInstance(); 
-    ComponentInstance aadlDstThreadInstance = ci.getDestination().getComponentInstance(); 
-    ThreadInstance srcThreadInstance = this.threadInstanceMap.get(aadlSrcThreadInstance); 
-    ThreadInstance dstThreadInstance = this.threadInstanceMap.get(aadlDstThreadInstance);
-    if ((srcThreadInstance == null) || (dstThreadInstance == null)) {
-      throw new Aadl2RtosException("For connection instance: " + ci.getName() + 
-          " one of source/destination thread instances was not defined ('null').");
-    }
+    ThreadInstance srcThreadInstance = getThreadInstance(ci.getSource().getComponentInstance());
+    ThreadInstance dstThreadInstance = getThreadInstance(ci.getDestination().getComponentInstance()); 
     
     // create connection object and connect to ports and thread instances.
-    Connection conn = new Connection(srcThreadInstance, dstThreadInstance, sourcePort, destPort);
+    PortConnection conn = new PortConnection(srcThreadInstance, dstThreadInstance, sourcePort, destPort);
     srcThreadInstance.addIsSrcOfConnection(conn);
     dstThreadInstance.addIsDstOfConnection(conn);
     sourcePort.addConnection(conn);
@@ -680,9 +699,10 @@ public class AadlModelParser {
     return conn;
 	}
 	
-	private SharedDataAccessor constructDataAccess(ConnectionInstance ci) {
-    DataAccessImpl destAccessImpl = 
-        PortUtil.getDataAccessImplFromConnectionInstanceEnd(ci.getDestination());
+	private SharedDataAccessor constructAccess(ConnectionInstance ci) {
+    ConnectionInstanceEnd destination = ci.getDestination();
+	  DataAccessImpl destAccessImpl = 
+        PortUtil.getDataAccessImplFromConnectionInstanceEnd(destination);
     DataSubcomponentImpl srcDataComponent = 
         PortUtil.getDataSubcomponentImplFromConnectionInstanceEnd(ci.getSource());
     String commprimFnNameOpt = Util.getStringValueOpt(destAccessImpl, ThreadUtil.SMACCM_SYS_COMMPRIM_SOURCE_TEXT);
@@ -715,15 +735,101 @@ public class AadlModelParser {
 
     return sharedDataAccess;
 	}
+
+	private RemoteProcedureGroup lookupRemoteProcedureGroup(SubprogramGroupTypeImpl subGroup) {
+	  RemoteProcedureGroup rpg;
+	  if (model.getRemoteProcedureGroupMap().containsKey(subGroup.getName())) {
+      rpg = model.getRemoteProcedureGroupMap().get(subGroup.getName());
+    } else {
+      // construct remote procedure group!
+      ArrayList<RemoteProcedure> remoteProcedures = new ArrayList<>(); 
+      for (SubprogramAccess sa: subGroup.getOwnedSubprogramAccesses()) {
+        SubprogramTypeImpl sub = (SubprogramTypeImpl)sa.getFeatureClassifier();
+        List<RemoteProcedureParameter> args = new ArrayList<>(); 
+        for (Parameter parm : sub.getOwnedParameters()) {
+          Type t = lookupType((DataClassifier)parm.getClassifier());
+          String id = parm.getName();
+          Direction dir = 
+              (parm.getDirection() == DirectionType.IN) ? Direction.IN :
+                (parm.getDirection() == DirectionType.OUT) ? Direction.OUT :
+                  Direction.IN_OUT; 
+          RemoteProcedureParameter modelParam = new RemoteProcedureParameter(t, dir, id);
+          args.add(modelParam);
+        }
+        Type t = new UnitType();
+        remoteProcedures.add(new RemoteProcedure(sub.getName(), args, t));
+      }
+      rpg = new RemoteProcedureGroup(remoteProcedures, subGroup.getName());
+      model.getRemoteProcedureGroupMap().put(subGroup.getName(), rpg);
+    }
+	  return rpg;
+	}
 	
+	
+	private EndpointConnection constructSubprogramAccess(ConnectionInstance ci) {
+	  FeatureInstanceImpl provides = (FeatureInstanceImpl)ci.getDestination(); 
+	  FeatureInstanceImpl requires = (FeatureInstanceImpl)ci.getSource(); 
+    if (provides.getCategory() != FeatureCategory.SUBPROGRAM_GROUP_ACCESS ||
+        requires.getCategory() != FeatureCategory.SUBPROGRAM_GROUP_ACCESS) {
+      throw new Aadl2RtosException("For subprogram access: " + provides.getCategory() + " is not currently supported by SystemBuild (only subprogram groups are supported).");
+    }
+    SubprogramGroupAccessImpl providesAccess = (SubprogramGroupAccessImpl)provides.getFeature(); 
+    SubprogramGroupTypeImpl subGroup = (SubprogramGroupTypeImpl)providesAccess.getClassifier();
+
+    ThreadInstance requiresInstance = getThreadInstance(requires.getComponentInstance());
+    ThreadInstance providesInstance = getThreadInstance(provides.getComponentInstance()); 
+
+    RemoteProcedureGroup rpg = lookupRemoteProcedureGroup(subGroup);
+    RemoteProcedureGroupEndpoint requiresEnd = 
+        new RemoteProcedureGroupEndpoint(requiresInstance.getThreadImplementation(), rpg, 
+              requires.getName(), AccessType.REQUIRES);
+    
+    RemoteProcedureGroupEndpoint providesEnd = 
+        new RemoteProcedureGroupEndpoint(providesInstance.getThreadImplementation(), rpg, 
+            provides.getName(), AccessType.PROVIDES);
+    
+    EndpointConnection ec = new EndpointConnection(requiresInstance, requiresEnd, 
+        providesInstance, providesEnd);
+
+    requiresInstance.addIsRequiresOfEndpointConnectionList(ec);
+    providesInstance.addIsProvidesOfEndpointConnectionList(ec);
+    
+    requiresInstance.getThreadImplementation().addRequiresRPG(requiresEnd);
+    providesInstance.getThreadImplementation().addProvidesRPG(providesEnd);
+    
+    return ec;
+	}
+	/*
+	 * 
+	 *     if (destination instanceof FeatureInstanceImpl) {
+      FeatureInstanceImpl impl = (FeatureInstanceImpl)destination;
+      if (impl.getCategory() == FeatureCategory.SUBPROGRAM_GROUP_ACCESS) {
+        if (ci.getInstantiatedObjects().size() != 1) {
+          throw new Aadl2RtosException("Internal error: more than one connection instance per port");
+        }
+        Object obj = ci.getInstantiatedObjects().get(0);
+        
+        if (!(ci.getInstantiatedObjects().get(0) instanceof BusSubcomponentImpl)) {
+          return null;
+        }
+        
+      }
+    }
+
+	 */
 	private void initializeConnections() {
 		try {
 			for (ConnectionInstance ci : connectionInstances) {
 			  if (ci.getKind() == ConnectionKind.PORT_CONNECTION) {
-			    Connection conn = constructConnection(ci);
+			    PortConnection conn = constructPortConnection(ci);
 			    this.model.connectionList.add(conn);
+	      } else if (ci.getKind() == ConnectionKind.ACCESS_CONNECTION && 
+	                 ci.getDestination() instanceof FeatureInstanceImpl &&
+	                 ci.getSource() instanceof FeatureInstanceImpl) {
+	        constructSubprogramAccess(ci);
 	      } else if (ci.getKind() == ConnectionKind.ACCESS_CONNECTION) {
-	        constructDataAccess(ci); 
+	        // TODO: add additional qualifier to accurately identify kind as Data Access Connection
+	        constructAccess(ci); 
 	      } else {
 	        throw new Aadl2RtosException("ConnectionKind: " + ci.getKind() + " is not currently supported by SystemBuild.");
 	      }

@@ -14,9 +14,11 @@ public class ThreadInstance {
   private ThreadImplementation impl;
 	
 	private ComponentInstance aadlInstance;
-	private ArrayList<Connection> isSrcOfConnectionList = new ArrayList<Connection>();
-	private ArrayList<Connection> isDstOfConnectionList = new ArrayList<Connection>(); 
-	
+	private ArrayList<PortConnection> isSrcOfPortConnectionList = new ArrayList<PortConnection>();
+	private ArrayList<PortConnection> isDstOfPortConnectionList = new ArrayList<PortConnection>(); 
+	private ArrayList<EndpointConnection> isRequiresOfEndpointConnectionList = new ArrayList<>();
+	private ArrayList<EndpointConnection> isProvidesOfEndpointConnectionList = new ArrayList<>();
+  
 	public static void init() {
 	  ThreadInstance.threadIdCounter = 0;
 	}
@@ -48,12 +50,12 @@ public class ThreadInstance {
 	  return ports;
 	}
 	
-	public void addIsSrcOfConnection(Connection c) {
-		 this.isSrcOfConnectionList.add(c);
+	public void addIsSrcOfConnection(PortConnection c) {
+		 this.isSrcOfPortConnectionList.add(c);
 	}
 
-  public void addIsDstOfConnection(Connection c) {
-     this.isDstOfConnectionList.add(c);
+  public void addIsDstOfConnection(PortConnection c) {
+     this.isDstOfPortConnectionList.add(c);
   }
 
   public ThreadImplementation getThreadImplementation() {
@@ -67,15 +69,54 @@ public class ThreadInstance {
 	  return this.aadlInstance;
 	}
 	
-	public ArrayList<Connection> getIsSrcOfConnectionList() {
-		return isSrcOfConnectionList;
+	public ArrayList<PortConnection> getIsSrcOfConnectionList() {
+		return isSrcOfPortConnectionList;
 	}
 	
-	public ArrayList<Connection> getIsDstOfConnectionList() {
-	  return isDstOfConnectionList;
+	public ArrayList<PortConnection> getIsDstOfConnectionList() {
+	  return isDstOfPortConnectionList;
 	}
 	
 	public int getStackSize() {
 		return this.impl.getStackSize();
 	}
+
+  /**
+   * @return the isSrcOfEndpointConnectionList
+   */
+  public ArrayList<EndpointConnection> getIsRequiresOfEndpointConnectionList() {
+    return isRequiresOfEndpointConnectionList;
+  }
+
+  public void addIsRequiresOfEndpointConnectionList(EndpointConnection ec) {
+    this.isRequiresOfEndpointConnectionList.add(ec);
+  }
+  /**
+   * @param isSrcOfEndpointConnectionList the isSrcOfEndpointConnectionList to set
+   */
+  public void setIsRequiresOfEndpointConnectionList(
+      ArrayList<EndpointConnection> isRequiresOfEndpointConnectionList) {
+    this.isRequiresOfEndpointConnectionList = isRequiresOfEndpointConnectionList;
+  }
+
+  /**
+   * @return the isDstOfEndpointConnectionList
+   */
+  public ArrayList<EndpointConnection> getIsProvidesOfEndpointConnectionList() {
+    return isProvidesOfEndpointConnectionList;
+  }
+  
+  public void addIsProvidesOfEndpointConnectionList(EndpointConnection ec) {
+    this.isProvidesOfEndpointConnectionList.add(ec);
+  }
+
+  /**
+   * @param isDstOfEndpointConnectionList the isDstOfEndpointConnectionList to set
+   */
+  public void setIsProvidesOfEndpointConnectionList(
+      ArrayList<EndpointConnection> isDstOfEndpointConnectionList) {
+    this.isProvidesOfEndpointConnectionList = isDstOfEndpointConnectionList;
+  }
+	
+	
 }

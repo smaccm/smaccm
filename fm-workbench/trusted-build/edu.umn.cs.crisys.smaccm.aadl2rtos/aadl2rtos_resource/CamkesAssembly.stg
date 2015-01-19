@@ -154,6 +154,18 @@ assemblyConnectReadersWriters(threadImpl, model) ::= <<
 <threadImpl.isSrcOfConnectionList:connectReaderWriter(threadImpl, model)>
 >>
 
+connectRpg(endpointConnection, srcThreadImpl, model) ::= <<
+<rpcConnection(model.generateConnectionName, 
+	srcThreadImpl.componentInstanceName,
+	endpointConnection.requiresEndpoint.name,
+	endpointConnection.providesThreadImplementation.componentInstanceName,
+	endpointConnection.providesEndpoint.name)>
+>>
+
+assemblyConnectRpgs(threadImpl, model) ::= <<
+<threadImpl.isRequiresOfConnectionList:connectRpg(threadImpl, model)>
+>>
+
 camkesAssemblyBody(model) ::= <<
 
 import <\u003C>std_connector.camkes<\u003E>;
@@ -203,7 +215,8 @@ assembly {
 		// Passive component read/write connections
 		<model.threadImplementations:assemblyConnectReadersWriters(model)>
 		
-		// Shared data connections (currently unsupported: under development)
+		// Direct RPC connections
+		<model.threadImplementations:assemblyConnectRpgs(model)>
 	}
     configuration {
 		<if(model.threadCalendar.hasDispatchers)>

@@ -17,9 +17,7 @@ import org.osate.aadl2.IntegerLiteral;
 import org.osate.aadl2.NamedElement;
 import org.osate.aadl2.Property;
 import org.osate.aadl2.PropertyExpression;
-import org.osate.aadl2.PropertyType;
 import org.osate.aadl2.PropertyValue;
-import org.osate.aadl2.RangeType;
 import org.osate.aadl2.RangeValue;
 import org.osate.aadl2.UnitLiteral;
 import org.osate.aadl2.UnitsType;
@@ -29,7 +27,6 @@ import org.osate.xtext.aadl2.properties.util.EMFIndexRetrieval;
 import org.osate.xtext.aadl2.properties.util.PropertyUtils;
 
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosException;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.Logger;
 
 public abstract class ThreadUtil {
 
@@ -308,7 +305,7 @@ public abstract class ThreadUtil {
   }
   
   final private static EClass UNITS_TYPE = Aadl2Package.eINSTANCE.getUnitsType();
-  private static UnitLiteral findUnitLiteral(Element context, String name) {
+  public static UnitLiteral findUnitLiteral(Element context, String name) {
     for (IEObjectDescription desc : EMFIndexRetrieval
             .getAllEObjectsOfTypeInWorkspace(UNITS_TYPE)) {
         UnitsType unitsType = (UnitsType) EcoreUtil.resolve(desc.getEObjectOrProxy(), context);
@@ -318,9 +315,9 @@ public abstract class ThreadUtil {
         }
     }
 
-    return null;
+    return null; 
 }
-
+ 
   
   public static double getMinComputeExecutionTimeInMicroseconds(NamedElement t) {
     try {
