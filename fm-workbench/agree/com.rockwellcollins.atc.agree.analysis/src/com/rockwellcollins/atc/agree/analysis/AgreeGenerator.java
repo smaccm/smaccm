@@ -333,27 +333,8 @@ public class AgreeGenerator {
 
         //handle any quasi-synchronous constraints
         addQSConstraints(state);	
-        createOrdering(compInst, state);
 
     	return state;
-    }
-    
-    private static void createOrdering(ComponentInstance compInst, AgreeEmitterState state){
-    	//TODO with karl's code this should always be true (unless there are no subcomponents)
-    	List<Subcomponent> subComps;
-    	if(state.ordering.size() != 0){
-    		subComps = state.ordering;
-    	}else{
-    		ComponentImplementation compImpl = AgreeEmitterUtilities.getInstanceImplementation(compInst);
-    		subComps = compImpl.getAllSubcomponents();
-    	}
-
-    	for(Subcomponent subComp : subComps){
-    		ComponentInstance subCompInst = compInst.findSubcomponentInstance(subComp);
-    		String nodeName = getLustreNodeName(subCompInst);
-    		state.nodeOrdering.add(nodeName);
-    	}
-    	
     }
     
     
@@ -389,7 +370,7 @@ public class AgreeGenerator {
         			addSubcomponentNodeCall(subCompPrefix, state, subState, subNode);
         		}
         	}
-        	if(!foundSubAnnex){
+        	if(!foundSubAnnex && !result){
         		return null;
         	}
         	//handle any quasi-synchronous constraints
@@ -482,10 +463,27 @@ public class AgreeGenerator {
 		addReferences(prefix, state, subState);
 		
 		//add assumption renamings
-		int i = 0;
+		addAssumptionRenamings(state, subState);
+		
+		//includes renaming of assumptions for subnodes
+		state.renaming.addRenamings(subState.renaming);
+		
+		
+	}
+
+    private static void addAssumptionRenamings(AgreeEmitterState state,
+            AgreeEmitterState subState) {
+        int i = 0;
+        String condactStr = "~0";
+        String clockedPropTag = "";
+        if(state.synchrony != 0 || state.calendar.size() != 0){
+            condactStr = "~condact~0";
+            clockedPropTag = "~clocked_property";
+        }
+        
 		for(Equation assumEq : subState.assumpExpressions){
 			String lustreVarName = getLustreNodeName(subState);
-			lustreVarName = lustreVarName+"~condact~0.___ASSUME"+i+"~clocked_property";
+			lustreVarName = lustreVarName+condactStr+".___ASSUME"+i+clockedPropTag;
 			String assumeDisplayText = assumEq.lhs.get(0).id;
 			assumeDisplayText = state.renaming.rename(
 					subState.curInst.getInstanceObjectPath()+" : \""+assumeDisplayText+"\"");
@@ -493,11 +491,17 @@ public class AgreeGenerator {
 			state.renaming.addExplicitRename(lustreVarName, assumeDisplayText);
 			state.assumeProps.add(lustreVarName);
 		}
-		//includes renaming of assumptions for subnodes
-		state.renaming.addRenamings(subState.renaming);
 		
-		
-	}
+		//this part is only relevant for the monolithic case
+		for(String subAssum : subState.assumeProps){
+		    String lustreVarName = getLustreNodeName(subState);
+            lustreVarName = lustreVarName+condactStr+"."+subAssum;
+            String assumeDisplayText = subState.renaming.rename(subAssum);
+            assumeDisplayText = subState.curComp.getName()+"."+assumeDisplayText;
+            state.renaming.addExplicitRename(lustreVarName, assumeDisplayText);
+            state.assumeProps.add(lustreVarName);
+		}
+    }
 
 	private static IdExpr addSubcompClock(AgreeEmitterState state,
 			AgreeEmitterState subState) {

@@ -110,7 +110,7 @@ public class InlineAssumptionGuarantees extends AstMapVisitor {
 		}
 		
 		return new Node(node.location, node.id, inputs, outputs, locals, equations, 
-				properties, assertions, node.assumptions, node.guarantees);
+				properties, assertions, node.assumptions, node.guarantees, null);
 	}
 
 }
