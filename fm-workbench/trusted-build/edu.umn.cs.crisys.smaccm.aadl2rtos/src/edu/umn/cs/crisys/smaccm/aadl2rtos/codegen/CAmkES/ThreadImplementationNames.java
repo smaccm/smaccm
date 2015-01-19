@@ -79,6 +79,10 @@ public class ThreadImplementationNames {
   public List<PortNames> getOutputPortList() {
     return constructPortNames(ti.getOutputPorts());
   }
+  
+  public List<PortNames> getPortList() {
+    return constructPortNames(ti.getPortList());
+  }
 
   public ModelNames getModel() {
     return new ModelNames(ti.getModel());
@@ -204,6 +208,14 @@ public class ThreadImplementationNames {
   public String getDispatcherComponentInstanceName() {
     return getDispatcherComponentName() + "_inst";
   }    
+
+  public boolean getHasInitializeEntrypoint() {
+    return ti.getInitializeEntrypointOpt() != null;
+  }
+  
+  public ExternalHandlerNames getInitializeEntrypointOpt() {
+    return new ExternalHandlerNames(ti.getInitializeEntrypointOpt()); 
+  }
   
   public String getComponentName() {
     return ti.getNormalizedName();

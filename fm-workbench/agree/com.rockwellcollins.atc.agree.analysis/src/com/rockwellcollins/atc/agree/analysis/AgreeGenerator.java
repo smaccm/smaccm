@@ -2,7 +2,9 @@ package com.rockwellcollins.atc.agree.analysis;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.Map.Entry;
 
 import jkind.lustre.BinaryExpr;
@@ -386,8 +388,28 @@ public class AgreeGenerator {
     	String calenNodeName = "__CALENDAR_NODE_"+state.curInst.getInstanceObjectPath();
     	calenNodeName = calenNodeName.replace(".", "__");
 
-		if(state.calendar.size() != 0){
-        	List<Expr> clockIds = new ArrayList<>();
+    	
+    	if(state.mnSyncEls.size() != 0){
+    	    //this set is used to make sure that we do not make a definition for the same
+    	    //calendar twice (a user might have multiple 3-2 synchrony constraints for example)
+    	    Set<String> nodeNames = new HashSet<>();
+    	    Expr clockAssertion = new BoolExpr(true);
+
+    	    for(MNSynchronyElement elem : state.mnSyncEls){
+    	        String nodeName = "__calendar_node_"+elem.max+"_"+elem.min;
+    	        if(!nodeNames.contains(nodeName)){
+    	            nodeNames.add(nodeName);
+    	            Node calNode = AgreeCalendarUtils.getMNCalendar(nodeName, elem.max, elem.min);
+    	            state.nodeDefExpressions.add(calNode);
+    	        }
+    	        NodeCallExpr nodeCall = new NodeCallExpr(nodeName, elem.maxClock, elem.minClock);
+    	        clockAssertion = new BinaryExpr(clockAssertion, BinaryOp.AND, nodeCall);
+    	        nodeCall = new NodeCallExpr(nodeName, elem.minClock, elem.maxClock);
+    	        clockAssertion = new BinaryExpr(clockAssertion, BinaryOp.AND, nodeCall);
+    	    }
+    	    state.assertExpressions.add(clockAssertion);
+    	}else if(state.calendar.size() != 0){
+    	    List<Expr> clockIds = new ArrayList<>();
         	for(AgreeVarDecl clockVar : state.clockVars){
         		clockIds.add(new IdExpr(clockVar.id));
         	}
@@ -397,35 +419,41 @@ public class AgreeGenerator {
         	state.assertExpressions.add(new NodeCallExpr(calNode.id, clockIds));
         	
         }else if(state.synchrony != 0){
-        	List<Expr> clockIds = new ArrayList<>();
-        	for(AgreeVarDecl clockVar : state.clockVars){
-        		clockIds.add(new IdExpr(clockVar.id));
-        	}
-        	if(clockIds.size() <= 0){
-        		throw new AgreeException("Somehow there are no clocks in the system implementation?");
-        	}
-        	
-        	Node dfaNode = AgreeCalendarUtils.getDFANode(
-        			dfaNodeName, state.synchrony);
-        	Node calNode = AgreeCalendarUtils.getCalendarNode(
-        			calenNodeName, dfaNode.id, clockIds.size());
-        	state.nodeDefExpressions.add(dfaNode);
-        	state.nodeDefExpressions.add(calNode);
-        	state.assertExpressions.add(new NodeCallExpr(calNode.id, clockIds));
-        	
-        	//assert that at least someone ticks
-        	Expr atLeastOneExpr = new BoolExpr(false);
-        	for(Expr clock : clockIds){
-        		atLeastOneExpr = new BinaryExpr(atLeastOneExpr, BinaryOp.OR, clock);
-        	}
-        	state.assertExpressions.add(atLeastOneExpr);
-        	
-        	if(!state.simultaneity){
-        		//assert that no two clocks tick at the same time
-        		Expr singleTick = AgreeCalendarUtils.getSingleTick(clockIds);
-        		state.assertExpressions.add(singleTick);
-        	}
-        	
+            List<Expr> clockIds = new ArrayList<>();
+            for(AgreeVarDecl clockVar : state.clockVars){
+                clockIds.add(new IdExpr(clockVar.id));
+            }
+            
+            if(state.synchrony2 == 0){
+                Node dfaNode = AgreeCalendarUtils.getDFANode(dfaNodeName, state.synchrony); 
+                Node calNode = AgreeCalendarUtils.getCalendarNode(calenNodeName, dfaNode.id, state.clockVars.size());
+                state.nodeDefExpressions.add(dfaNode);
+                state.nodeDefExpressions.add(calNode);
+
+                Expr clockAssertion = new NodeCallExpr(calNode.id, clockIds);
+
+                //don't let multiple clocks tick together
+                if(!state.simultaneity){
+                    Expr onlyOneTick = AgreeCalendarUtils.getSingleTick(clockIds);
+                    clockAssertion = new BinaryExpr(clockAssertion, BinaryOp.AND, onlyOneTick);
+                }
+            }else{
+                String nodeName = "__calendar_node_"+state.synchrony+"_"+state.synchrony2;
+                Node calNode = AgreeCalendarUtils.getMNCalendar(nodeName, state.synchrony, state.synchrony2);
+                state.nodeDefExpressions.add(calNode);
+                Expr clockAssertion = new BoolExpr(true);
+                int i,j;
+                for(i = 0; i < clockIds.size(); i++){
+                    Expr clock1 = clockIds.get(i);
+                    for(j = i+1; j < clockIds.size(); j++){
+                        Expr clock2 = clockIds.get(j);
+                        NodeCallExpr nodeCall = new NodeCallExpr(nodeName, clock1, clock2);
+                        clockAssertion = new BinaryExpr(clockAssertion, BinaryOp.AND, nodeCall);
+                        nodeCall = new NodeCallExpr(nodeName, clock2, clock1);
+                        clockAssertion = new BinaryExpr(clockAssertion, BinaryOp.AND, nodeCall);
+                    }
+                }
+            }
         }else{
         	for(AgreeVarDecl clockVar : state.clockVars){
         		state.assertExpressions.add(new IdExpr(clockVar.id));

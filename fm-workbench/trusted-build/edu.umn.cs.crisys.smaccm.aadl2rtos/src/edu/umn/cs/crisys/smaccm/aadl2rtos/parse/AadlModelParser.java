@@ -62,7 +62,6 @@ import org.osate.aadl2.instance.SystemInstance;
 import org.osate.xtext.aadl2.properties.util.PropertyUtils;
 
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosException;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosFailure;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Logger;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.*;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.legacy.*;
@@ -228,16 +227,26 @@ public class AadlModelParser {
       List<String> files = Util.getSourceTextListOpt(port,ThreadUtil.SOURCE_TEXT);
       String signal_name = Util.getStringValue(port, ThreadUtil.SMACCM_SYS_SIGNAL_NAME);
       String flih_handler = Util.getStringValue(port, ThreadUtil.ISR_HANDLER);
+      int signal_number ;
+      try {
+        signal_number = (int)PropertyUtils.getIntegerValue(port, ThreadUtil.SMACCM_SYS_SIGNAL_NUMBER);
+      } catch (NumberFormatException nfe) {
+        logger.error("ISR Port " + port.getName() + ": signal number is not a positive integer. Original error: " + nfe.toString());
+        throw new Aadl2RtosException("ISR construction error");
+      }
+      Map<String, Long> memoryRegions;
+      memoryRegions = ThreadUtil.getMemoryRegions(port);
       ArrayList<ExternalHandler> ehl = new ArrayList<ExternalHandler>();
       for (String s: entrypoints) {
           ExternalHandler eh = new ExternalHandler(s);
           ehl.add(eh);
       }
-      IRQDispatcher disp = new IRQDispatcher(ti, ehl, signal_name, flih_handler);
+      IRQDispatcher disp = new IRQDispatcher(ti, ehl, signal_name, signal_number, flih_handler, memoryRegions);
       disp.setImplementationFileList(files);
       ti.addDispatcher(disp);
     } catch (Exception e) {
-      logger.error("ISR port: " + port.getName() + " is missing one of {Compute_Entrypoint, SMACCM_SYS::Signal_Name, SMACCM_SYS::First_Level_Interrupt_Handler}.");
+      logger.error("Exception in construction of ISR port: " + port.getName() + " (likely missing one of {Compute_Entrypoint, SMACCM_SYS::Signal_Name, SMACCM_SYS::First_Level_Interrupt_Handler}).  Error code: " + 
+          e.toString());
     }
   }
   
@@ -301,7 +310,12 @@ public class AadlModelParser {
       }
     } else if (port.getCategory() == PortCategory.EVENT_DATA) {
       if (port.getDirection() == DirectionType.IN) {
-        dp = addInputEventPort(port, datatype, ti);
+        if (ThreadUtil.getIsIsr(port)) {
+          dp = null;
+          throw new Aadl2RtosException("ISR ports can only be event ports.");
+        } else {
+          dp = addInputEventPort(port, datatype, ti);
+        }
       } else {
         OutputEventPort oep = new OutputEventPort(port.getName(), datatype, ti);
         dp = oep;
@@ -310,10 +324,14 @@ public class AadlModelParser {
     }
 
     if (dp != null) {
+      String initializeEntrypointSourceText = Util.getStringValueOpt(port, ThreadUtil.INITIALIZE_ENTRYPOINT_SOURCE_TEXT);
       String commprimFnNameOpt = Util.getStringValueOpt(port, ThreadUtil.SMACCM_SYS_COMMPRIM_SOURCE_TEXT);
       String commprimHeaderNameOpt = Util.getStringValueOpt(port, ThreadUtil.SMACCM_SYS_COMMPRIM_SOURCE_HEADER);
       dp.setCommprimFnNameOpt(commprimFnNameOpt);
       dp.setCommprimHeaderNameOpt(commprimHeaderNameOpt);
+      if (initializeEntrypointSourceText != null) {
+        dp.setInitializeEntrypointSourceText(new ExternalHandler(initializeEntrypointSourceText));
+      }
       portMap.put(port, dp);
     }
 	}
@@ -467,6 +485,13 @@ public class AadlModelParser {
     }
   }
   
+  private void createOptInitializeEntrypoint(ThreadTypeImpl tti, ThreadImplementation ti) {
+    String initializer = Util.getStringValueOpt(tti, ThreadUtil.INITIALIZE_ENTRYPOINT_SOURCE_TEXT);
+    if (initializer != null) {
+      ti.setInitializeEntrypointOpt(new ExternalHandler(initializer));
+    }
+  }
+  
   private ThreadImplementation constructThreadImplementation(ThreadTypeImpl tti) {
     String name = tti.getName().toLowerCase();
     boolean isPassive = ThreadUtil.getThreadType(tti);    
@@ -498,6 +523,7 @@ public class AadlModelParser {
     
     setDispatchProtocol(tti, ti, isPassive);
     createOptPeriodicHandler(tti, ti); 
+    createOptInitializeEntrypoint(tti, ti); 
     
     for (Feature f: tti.getAllFeatures()) {
       if (f instanceof PortImpl) {
@@ -507,10 +533,10 @@ public class AadlModelParser {
         constructWarning(name, "feature group", f.getName(), "11/2014");
       }
       else if (f instanceof SubprogramAccess) {
-        constructWarning(name, "subprogram access", f.getName(), "10/2014");
+        constructWarning(name, "subprogram access", f.getName(), "11/2014");
       }
       else if (f instanceof SubprogramGroupAccess) {
-        constructWarning(name, "subprogram group access", f.getName(), "10/2014");
+        constructWarning(name, "subprogram group access", f.getName(), "11/2014");
       }
       else if (f instanceof BusAccessImpl) {
         constructWarning(name, "bus access", f.getName(), null);

@@ -358,6 +358,11 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 		case "member":
 			checkMemberCall(funCall, actualTypes);
 			return;
+			
+		case "length":
+			checkLengthCall(funCall, actualTypes);
+			return;	
+			
 		case "sum":
 			checkSumCall(funCall, actualTypes);
 			return;
@@ -433,6 +438,20 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 				error(funCall.getArgs().get(i + 1), "Expected type " + expectedType + " but found type " + actualType);
 			}
 		}
+	}
+	
+	private void checkLengthCall(BuiltInFnCallExpr funCall, List<ResoluteType> actualTypes) {
+		if (actualTypes.size() != 1) {
+			error(funCall, "function 'length' expects two arguments");
+			return;
+		}
+
+		if (!(actualTypes.get(0) instanceof SetType)) {
+			error(funCall.getArgs().get(0), "Expected set type but found type " + actualTypes.get(1));
+			return;
+		}
+
+		return;
 	}
 
 	private void checkMemberCall(BuiltInFnCallExpr funCall, List<ResoluteType> actualTypes) {
@@ -517,11 +536,26 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 			expectedTypes.add(BaseType.AADL);
 			expectedTypes.add(BaseType.PROPERTY);
 			break;
+			
+		case "has_member":
+			expectedTypes.add(BaseType.AADL);
+			expectedTypes.add(BaseType.STRING);
+			break;			
 
 		// Primary type: component
 		case "subcomponents":
 			expectedTypes.add(BaseType.COMPONENT);
 			break;
+			
+		case "is_of_type":
+			expectedTypes.add(BaseType.COMPONENT);
+			expectedTypes.add(BaseType.AADL);
+			break;
+			
+		case "is_bound_to":
+			expectedTypes.add(BaseType.COMPONENT);
+			expectedTypes.add(BaseType.COMPONENT);
+			break;			
 
 		// Primary type: connection
 		case "source":
@@ -857,6 +891,12 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 		case "is_event_port":
 			return BaseType.BOOL;
 
+		case "is_of_type":
+			return BaseType.BOOL;			
+
+		case "is_bound_to":
+			return BaseType.BOOL;				
+			
 			// Primary type: range
 		case "upper_bound":
 		case "lower_bound":
@@ -865,6 +905,8 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 			// Primary type: set
 		case "member":
 			return BaseType.BOOL;
+		case "length":
+			return BaseType.INT;
 		case "sum":
 			return getSumType(funCall);
 		case "union":

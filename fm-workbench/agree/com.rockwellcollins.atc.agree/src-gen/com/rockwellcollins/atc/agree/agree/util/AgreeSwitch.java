@@ -358,6 +358,16 @@ public class AgreeSwitch<T> extends Switch<T>
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
+      case AgreePackage.MN_SYNCH_STATEMENT:
+      {
+        MNSynchStatement mnSynchStatement = (MNSynchStatement)theEObject;
+        T result = caseMNSynchStatement(mnSynchStatement);
+        if (result == null) result = caseSynchStatement(mnSynchStatement);
+        if (result == null) result = caseSpecStatement(mnSynchStatement);
+        if (result == null) result = caseElement(mnSynchStatement);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
       case AgreePackage.CALEN_STATEMENT:
       {
         CalenStatement calenStatement = (CalenStatement)theEObject;
@@ -1030,6 +1040,22 @@ public class AgreeSwitch<T> extends Switch<T>
    * @generated
    */
   public T caseLiftStatement(LiftStatement object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>MN Synch Statement</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>MN Synch Statement</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseMNSynchStatement(MNSynchStatement object)
   {
     return null;
   }

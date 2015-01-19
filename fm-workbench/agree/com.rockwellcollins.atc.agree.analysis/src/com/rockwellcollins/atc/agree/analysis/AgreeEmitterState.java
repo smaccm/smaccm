@@ -28,7 +28,6 @@ import jkind.lustre.TupleExpr;
 import jkind.lustre.UnaryExpr;
 import jkind.lustre.UnaryOp;
 import jkind.lustre.VarDecl;
-import jkind.results.layout.Layout;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
@@ -65,7 +64,8 @@ import com.rockwellcollins.atc.agree.agree.InitialStatement;
 import com.rockwellcollins.atc.agree.agree.IntLitExpr;
 import com.rockwellcollins.atc.agree.agree.LemmaStatement;
 import com.rockwellcollins.atc.agree.agree.LiftStatement;
-import com.rockwellcollins.atc.agree.agree.NestedDotID; 
+import com.rockwellcollins.atc.agree.agree.MNSynchStatement;
+import com.rockwellcollins.atc.agree.agree.NestedDotID;
 import com.rockwellcollins.atc.agree.agree.NodeBodyExpr;
 import com.rockwellcollins.atc.agree.agree.NodeDefExpr;
 import com.rockwellcollins.atc.agree.agree.NodeEq;
@@ -117,7 +117,9 @@ public class AgreeEmitterState  extends AgreeSwitch<Expr> {
 	public final Set<AgreeVarDecl> clockVars = new HashSet<>();
 
     public int synchrony = 0;
+    public int synchrony2 = 0;
     public List<IdExpr> calendar = new ArrayList<IdExpr>();
+    public List<MNSynchronyElement> mnSyncEls = new ArrayList<>();
     public boolean simultaneity = true;
 	public boolean connectionExpressionsSet = false;
 
@@ -164,18 +166,44 @@ public class AgreeEmitterState  extends AgreeSwitch<Expr> {
     @Override
     public Expr caseSynchStatement(SynchStatement sync){
     	
-    	if(sync instanceof CalenStatement){
+    	if(sync instanceof CalenStatement
+    		|| sync instanceof MNSynchStatement){
     		return null;
     	}
     	
         this.synchrony  = Integer.valueOf(sync.getVal());
-        String simVal = sync.getSim();
+        String val2Str = sync.getVal2();
         
+        if(val2Str != null){
+        	this.synchrony2 = Integer.valueOf(val2Str);
+        }
+        
+        String simVal = sync.getSim();
         if(simVal != null){
         	this.simultaneity = !simVal.equals("no_simult");
         }
         
         return null;
+    }
+    
+    @Override
+    public Expr caseMNSynchStatement(MNSynchStatement sync){
+    	
+    	for(int i = 0; i < sync.getComp1().size(); i++){
+    		Subcomponent maxComp = (Subcomponent) sync.getComp1().get(i);
+    		Subcomponent minComp = (Subcomponent) sync.getComp2().get(i);
+    		
+    		Expr maxClock = new IdExpr(maxComp.getName()+clockIDSuffix);
+    		Expr minClock = new IdExpr(minComp.getName()+clockIDSuffix);
+    		int max = Integer.valueOf(sync.getMax().get(i));
+    		int min = Integer.valueOf(sync.getMin().get(i));
+    		
+    		MNSynchronyElement elem = new MNSynchronyElement(maxClock, minClock, max, min);
+    		
+    		mnSyncEls.add(elem);
+    	}
+    	
+    	return null;
     }
     
     @Override

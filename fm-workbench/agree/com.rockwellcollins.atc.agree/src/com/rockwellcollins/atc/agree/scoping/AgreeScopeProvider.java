@@ -57,6 +57,7 @@ import com.rockwellcollins.atc.agree.agree.RecordExpr;
 import com.rockwellcollins.atc.agree.agree.RecordType;
 import com.rockwellcollins.atc.agree.agree.RecordUpdateExpr;
 import com.rockwellcollins.atc.agree.agree.SpecStatement;
+import com.rockwellcollins.atc.agree.agree.SynchStatement;
 import com.rockwellcollins.atc.agree.agree.Type;
 
 /**
@@ -191,7 +192,7 @@ public class AgreeScopeProvider extends
         return outerScope;
     }
 
-    IScope scope_NamedElement(CalenStatement ctx, EReference ref) {
+    IScope scope_NamedElement(SynchStatement ctx, EReference ref) {
         
     	EObject container = ctx.getContainingClassifier();
     	while(!(container instanceof ComponentClassifier)){

@@ -3,6 +3,7 @@ package edu.umn.cs.crisys.smaccm.aadl2rtos.model.port;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.ExternalHandler;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.Connection;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.ThreadImplementation;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.Type;
@@ -16,6 +17,7 @@ public abstract class DataPort {
   private Type dataType = null;
   private String commprimFnNameOpt = null;
   private String commprimHeaderNameOpt = null;
+  private ExternalHandler initializeEntrypointSourceText = null;
   private String sourceText = null;
   private List<Connection> connections = new ArrayList<Connection>(); 
 
@@ -41,6 +43,24 @@ public abstract class DataPort {
    */
   public void setName(String portName) {
     this.name = portName;
+  }
+
+  
+  /**
+   * @return the initializeEntrypointSourceText
+   */
+  public ExternalHandler getInitializeEntrypointSourceText() {
+    return initializeEntrypointSourceText;
+  }
+
+
+
+  /**
+   * @param initializeEntrypointSourceText the initializeEntrypointSourceText to set
+   */
+  public void setInitializeEntrypointSourceText(
+      ExternalHandler initializeEntrypointSourceText) {
+    this.initializeEntrypointSourceText = initializeEntrypointSourceText;
   }
 
   /**

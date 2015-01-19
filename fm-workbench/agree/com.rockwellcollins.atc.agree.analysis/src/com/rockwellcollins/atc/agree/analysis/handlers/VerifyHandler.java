@@ -4,30 +4,19 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
-import java.util.Map.Entry;
-
 import jkind.JKindException;
-import jkind.SolverOption;
-import jkind.api.JKindApi;
 import jkind.api.KindApi;
 import jkind.api.results.AnalysisResult;
 import jkind.api.results.CompositeAnalysisResult;
 import jkind.api.results.JKindResult;
-import jkind.api.results.Renaming;
-import jkind.api.xml.XmlParseThread;
-import jkind.lustre.Equation;
-import jkind.lustre.Node;
 import jkind.lustre.Program;
 
-import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.handlers.IHandlerActivation;
@@ -37,7 +26,6 @@ import org.osate.aadl2.ComponentClassifier;
 import org.osate.aadl2.ComponentImplementation;
 import org.osate.aadl2.ComponentType;
 import org.osate.aadl2.Element;
-import org.osate.aadl2.NamedElement;
 import org.osate.aadl2.Subcomponent;
 import org.osate.aadl2.SystemImplementation;
 import org.osate.aadl2.SystemType;
@@ -51,7 +39,6 @@ import com.rockwellcollins.atc.agree.agree.AgreeContractSubclause;
 import com.rockwellcollins.atc.agree.agree.AgreePackage;
 import com.rockwellcollins.atc.agree.agree.AgreeSubclause;
 import com.rockwellcollins.atc.agree.analysis.Activator;
-import com.rockwellcollins.atc.agree.analysis.AgreeEmitterState;
 import com.rockwellcollins.atc.agree.analysis.AgreeEmitterUtilities;
 import com.rockwellcollins.atc.agree.analysis.AgreeException;
 import com.rockwellcollins.atc.agree.analysis.AgreeGenerator;
@@ -102,7 +89,8 @@ public abstract class VerifyHandler extends AadlHandler {
             AnalysisResult result;
             CompositeAnalysisResult wrapper = new CompositeAnalysisResult("");
 
-            SystemType sysType = si.getSystemImplementation().getType();
+//            SystemType sysType = si.getSystemImplementation().getType();
+            SystemType sysType = (SystemType) si.getSystemImplementation().getType();
             EList<AnnexSubclause> annexSubClauses = AnnexUtil.getAllAnnexSubclauses(sysType,
                     AgreePackage.eINSTANCE.getAgreeContractSubclause());
 

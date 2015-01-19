@@ -36,6 +36,7 @@ import com.rockwellcollins.atc.agree.agree.RecordExpr;
 import com.rockwellcollins.atc.agree.agree.RecordType;
 import com.rockwellcollins.atc.agree.agree.RecordUpdateExpr;
 import com.rockwellcollins.atc.agree.agree.EventExpr;
+import com.rockwellcollins.atc.agree.agree.SynchStatement;
 
 
 public class AgreeLinkingService extends PropertiesLinkingService {
@@ -56,7 +57,7 @@ public class AgreeLinkingService extends PropertiesLinkingService {
 
         if (context instanceof NestedDotID
                 || context instanceof NodeEq
-                || context instanceof CalenStatement
+                || context instanceof SynchStatement
                 || context instanceof RecordExpr
                 || context instanceof RecordType
                 || context instanceof GetPropertyExpr

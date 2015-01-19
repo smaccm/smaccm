@@ -58,7 +58,8 @@ SpecStatement:
 	| RecordDefExpr;
 
 SynchStatement:
-	{SynchStatement} 'synchrony' ':' val = INTEGER_LIT  (sim=('simult'|'no_simult'))? ';'
+	{SynchStatement} 'synchrony' ':' val = INTEGER_LIT (',' val2=INTEGER_LIT)? (sim=('simult'|'no_simult'))? ';'
+|	{MNSynchStatement} 'synchrony' ':' (comp1+=[aadl2::NamedElement] ',' comp2+=[aadl2::NamedElement] ':' max+=INTEGER_LIT ',' min+=INTEGER_LIT)+ ';'
 |   {CalenStatement} 'calendar' ':' els+=([aadl2::NamedElement]) ("," els+=[aadl2::NamedElement])*  ';'
 ;
 

@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.IRQDispatcher;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.DataPort;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.ThreadImplementation;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.Type;
@@ -78,6 +79,14 @@ public class ModelNames {
     return new ThreadCalendarNames(m.getThreadCalendar());
   }
 
+  public List<DispatcherNames> getIrqDispatchers() {
+    List<DispatcherNames> irqs = new ArrayList<>(); 
+    for (IRQDispatcher disp : m.getIRQDispatcherList()) {
+      irqs.add(new DispatcherNames(disp));
+    }
+    return irqs;
+  }
+  
   ////////////////////////////////////////////////////////////
   //
   // Names for system information
@@ -101,4 +110,29 @@ public class ModelNames {
     connNumber++; 
     return "conn" + connNumber;
   }
+
+  public boolean getIsCamkesTarget() {
+    return m.getOsTarget().equals(Model.OSTarget.CAmkES);
+  }
+  
+  public boolean getIsEChronosTarget() {
+    return m.getOsTarget().equals(Model.OSTarget.eChronos);
+  }
+  
+  public boolean getIsOdroidTarget() {
+    return m.getHWTarget().equalsIgnoreCase("odroid");
+  }
+  
+  public boolean getIsQemuTarget() {
+    return m.getHWTarget().equalsIgnoreCase("qemu");
+  }
+    
+  public String getOsTarget() {
+    return m.getOsTarget().toString();
+  }
+  
+  public String getHwTarget() {
+    return m.getHWTarget();
+  }
+  
 }

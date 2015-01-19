@@ -345,31 +345,6 @@ public class CAmkES_CodeGenerator {
     }
 	}
 
-  public void createDispatcherComponentCFile(File componentDirectory, ThreadImplementation ti) throws Aadl2RtosFailure {
-    String name = ti.getNormalizedName();
-    ThreadImplementationNames tin = new ThreadImplementationNames(ti);
-    ModelNames mn = new ModelNames(model);
-    
-    File interfaceFile = new File(componentDirectory, tin.getDispatcherComponentGlueCodeCFileName());
-    String path = interfaceFile.getAbsolutePath();
-    
-    
-    try (BufferedWriter writer = new BufferedWriter(new FileWriter(interfaceFile))) {
-      STGroupFile stg = this.createTemplate("CamkesDispatcherC.stg");
-      writeBoilerplateHeader(name, path, writer, stg.getInstanceOf("dispatcherComponentGlueCodeCFilePrefix"));
-      
-      ST st = stg.getInstanceOf("dispatcherComponentCDecls");
-      st.add("threadImpl", tin);
-      st.add("model", mn);
-      writer.append(st.render());
-      
-      writeBoilerplateFooter(name, path, writer, stg.getInstanceOf("dispatcherComponentGlueCodeCFilePostfix")); 
-      
-    } catch (IOException e) {
-      log.error("IO Exception occurred when creating a component header.");
-      throw new Aadl2RtosFailure();
-    }
-  }
 	
 
   // For a given thread implementation, how do we connect it to the other components?
@@ -400,33 +375,8 @@ public class CAmkES_CodeGenerator {
 	}
 
 	
-	// the dispatcher component implements all the incoming interfaces for the components that are called by the 
-	// computation tree possible from the originating active thread as a proxy.  It also uses the same interfaces
-	// to make the actual queued calls once the component has completed its execution.
-	public void createDispatcherComponent(File componentDirectory, ThreadImplementation ti) throws Aadl2RtosFailure {
-    ThreadImplementationNames tin = new ThreadImplementationNames(ti);
-    String name = tin.getDispatcherComponentName();
-    File interfaceFile = new File(componentDirectory, tin.getDispatcherComponentCamkesFileName());
-    String path = interfaceFile.getAbsolutePath();
-    try (BufferedWriter writer = new BufferedWriter(new FileWriter(interfaceFile))) {
-      STGroupFile stg = this.createTemplate("CamkesDispatcherCamkes.stg");
-      writeBoilerplateDTHeader(name, path, writer, stg.getInstanceOf("dispatcherComponentCamkesPrefix"), true);
-      writer.append("\n");
-
-      ST st = stg.getInstanceOf("dispatchComponentCDecls"); 
-      st.add("model", new ModelNames(model));
-      st.add("threadImpl", tin);
-      writer.append(st.render());
-      
-      writeBoilerplateFooter(name, path, writer, stg.getInstanceOf("dispatcherComponentCamkesPostfix"));
-    
-    } catch (IOException e) {
-      log.error("Problem creating camkes component dispatcher file.");
-      throw new Aadl2RtosFailure(); 
-    }
-	}
 	
-	public void copyComponentFiles(File dstDirectory, ThreadImplementation ti) throws Aadl2RtosFailure {
+	public void copyComponentFiles(File srcDirectory, File includeDirectory, ThreadImplementation ti) throws Aadl2RtosFailure {
 	  // determine the list of source files.
 	  Set<String> srcFiles = new HashSet<String>(); 
 	  for (Dispatcher d: ti.getDispatcherList()) {
@@ -439,8 +389,14 @@ public class CAmkES_CodeGenerator {
 	    try { 
 	      if (srcFilePath.isFile()) {
   	      String srcFileName = srcFilePath.getName();
-  	      File dstPath = new File(dstDirectory, srcFileName);
-  	      this.copyFile(new FileInputStream(srcFilePath), new FileOutputStream(dstPath));
+  	      String extension = srcFileName.substring(srcFileName.indexOf("."));
+  	      if (extension.equalsIgnoreCase(".h") || extension.equalsIgnoreCase(".hpp")) {
+            File dstPath = new File(includeDirectory, srcFileName);
+            this.copyFile(new FileInputStream(srcFilePath), new FileOutputStream(dstPath));
+  	      } else {
+  	        File dstPath = new File(srcDirectory, srcFileName);
+  	        this.copyFile(new FileInputStream(srcFilePath), new FileOutputStream(dstPath));
+  	      }
   	    } else {
   	        log.warn("For thread: " + ti.getNormalizedName() + ", File: [" + s + "] does not exist as a relative path from the " + 
   	            "directory containing the top-level AADL file, and was not copied into the component src directory");
@@ -467,7 +423,7 @@ public class CAmkES_CodeGenerator {
 	  createComponentHeader(includeDirectory, ti);
 	  createComponentCFile(srcDirectory, ti);
 	  createComponentCamkesFile(componentDirectory, ti);
-	  copyComponentFiles(srcDirectory, ti); 
+	  copyComponentFiles(srcDirectory, includeDirectory, ti); 
 	  
 	  ThreadImplementationNames tin = new ThreadImplementationNames(ti); 
     File CFile = new File(componentDirectory, tin.getComponentGlueCodeCFileName());

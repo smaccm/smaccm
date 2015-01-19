@@ -69,7 +69,7 @@ public class DispatcherNames {
     return (getIsInput()) &&
         ((InputEventDispatcher)dp).getEventPort().hasData(); 
   }
-
+  
   //////////////////////////////////////////////////////////
   //
   // Constructors for name classes related to port
@@ -82,6 +82,52 @@ public class DispatcherNames {
        ehl.add(new ExternalHandlerNames(eh)); 
      }
      return ehl;
+  }
+
+  ///////////////////////////////////////////////////
+  //
+  // IRQ Dispatcher things 
+  //
+  ///////////////////////////////////////////////////
+  
+  public List<MemoryRegionName> getMemoryRegions() {
+    if (dp instanceof IRQDispatcher) {
+      IRQDispatcher pd = (IRQDispatcher)dp;
+      List<MemoryRegionName> regions = new ArrayList<>();
+      for (Map.Entry<String, Long> entry : pd.getMemoryRegions().entrySet()) {
+        MemoryRegionName region = new MemoryRegionName(entry.getKey(), entry.getValue());
+        regions.add(region);
+      }
+      return regions; 
+    } else {
+      throw new Aadl2RtosException("getPeriodicDispatcherPeriod() : dispatcher is not a periodic dispatcher");
+    }    
+  }
+  
+  public String getSignalNumber() {
+    if (dp instanceof IRQDispatcher) {
+      IRQDispatcher pd = (IRQDispatcher)dp;
+      return Integer.toString(pd.getNumber()); 
+    } else {
+      throw new Aadl2RtosException("getPeriodicDispatcherPeriod() : dispatcher is not a periodic dispatcher");
+    }    
+  }
+
+  public String getIrqObject() {
+    return getName() + "_obj";
+  }
+
+  public String getIrqComponent() {
+    return getName() + "_hw"; 
+  }
+
+  public String getFirstLevelInterruptHandler() {
+    if (dp instanceof IRQDispatcher) {
+      IRQDispatcher pd = (IRQDispatcher)dp;
+      return pd.getFirstLevelInterruptHandler(); 
+    } else {
+      throw new Aadl2RtosException("getPeriodicDispatcherPeriod() : dispatcher is not a periodic dispatcher");
+    }
   }
   
   public OutgoingDispatchContractNames getMaxDispatchContracts() {

@@ -1,7 +1,10 @@
 package edu.umn.cs.crisys.smaccm.aadl2rtos.util;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
@@ -36,7 +39,9 @@ public abstract class ThreadUtil {
 	final public static String SOURCE_TEXT_NAME = "Source_Text";
 	final public static String COMPUTE_EXECUTION_TIME_NAME = "Compute_Execution_Time";
 	final public static String SMACCM_SYS_SIGNAL_NAME_NAME = "SMACCM_SYS::Signal_Name";
+  final public static String SMACCM_SYS_SIGNAL_NUMBER_NAME = "SMACCM_SYS::Signal_Number";
 	final public static String SMACCM_SYS_IS_ISR_NAME = "SMACCM_SYS::Is_ISR";
+  final public static String SMACCM_SYS_MEMORY_PAGES_NAME = "SMACCM_SYS::Memory_Pages";
   final public static String SMACCM_SYS_OS_NAME = "SMACCM_SYS::OS";
   final public static String SMACCM_SYS_HW_NAME = "SMACCM_SYS::HW";
   final public static String SMACCM_SYS_OUTPUT_DIRECTORY_NAME = "SMACCM_SYS::Output_Directory";
@@ -75,8 +80,12 @@ public abstract class ThreadUtil {
 			.getPropertyDefinitionInWorkspace(COMPUTE_EXECUTION_TIME_NAME);
 	final public static Property SMACCM_SYS_IS_ISR = Util
 	    .getPropertyDefinitionInWorkspace(SMACCM_SYS_IS_ISR_NAME);
+  final public static Property SMACCM_SYS_MEMORY_PAGES = Util
+      .getPropertyDefinitionInWorkspace(SMACCM_SYS_MEMORY_PAGES_NAME);
 	final public static Property SMACCM_SYS_SIGNAL_NAME = Util
 			.getPropertyDefinitionInWorkspace(SMACCM_SYS_SIGNAL_NAME_NAME);
+  final public static Property SMACCM_SYS_SIGNAL_NUMBER = Util
+      .getPropertyDefinitionInWorkspace(SMACCM_SYS_SIGNAL_NUMBER_NAME);
 	final public static Property SMACCM_SYS_COMMPRIM_SOURCE_HEADER = Util
 	    .getPropertyDefinitionInWorkspace(SMACCM_SYS_COMMPRIM_SOURCE_HEADER_NAME);
 	final public static Property SMACCM_SYS_COMMPRIM_SOURCE_TEXT = Util
@@ -160,6 +169,25 @@ public abstract class ThreadUtil {
 		return legacy;
 	}
 
+	public static Map<String, Long> getMemoryRegions(NamedElement tti) {
+	  Map<String, Long> m = new HashMap<>();
+    List<String> elems = getStringList(tti, ThreadUtil.SMACCM_SYS_MEMORY_PAGES);
+    if (elems.size() % 2 != 0) {
+      throw new Aadl2RtosException("Property 'Memory_Regions' should be list of strings arranged as string, hexidecimal integer pairs representing the name and memory region");	      
+    }
+    try { 
+      for (Iterator<String> it = elems.iterator(); it.hasNext(); ) {
+        String name = it.next();
+        String intName = it.next();
+        Long i = Long.decode(intName);
+        m.put(name, i);
+      }
+    } catch (NumberFormatException nfe) {
+      throw new Aadl2RtosException("Property 'Memory_Regions' should be list of strings arranged as as string, hexidecimal integer pairs representing the name and memory region");
+    }
+    return m;
+	}
+
 	public static List<String> getStringList(NamedElement tti, Property p) {
 		ArrayList<String> list = new ArrayList<String>();
 
@@ -169,7 +197,9 @@ public abstract class ThreadUtil {
 			for (Element e : eList) {
 				StringLiteralImpl str = (StringLiteralImpl) e;
 				list.add(str.getValue());			}
-		} catch(Exception e) {}
+		} catch(Exception e) {
+		  // throw new Aadl2RtosException("Expected property " + p.getName() + " not found in component: " + tti.getName());
+	  }
 		return list;
 	}
 
