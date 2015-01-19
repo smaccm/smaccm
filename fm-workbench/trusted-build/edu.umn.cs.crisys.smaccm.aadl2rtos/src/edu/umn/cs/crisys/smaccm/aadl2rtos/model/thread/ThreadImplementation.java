@@ -364,7 +364,9 @@ public class ThreadImplementation extends ThreadImplementationBase {
    * @param sourceFileList the sourceFileList to set
    */
   public void setSourceFileList(List<String> sourceFileList) {
-    this.sourceFileList = sourceFileList;
+    if (sourceFileList != null) {
+      this.sourceFileList = sourceFileList;
+    }
   }
   
   
