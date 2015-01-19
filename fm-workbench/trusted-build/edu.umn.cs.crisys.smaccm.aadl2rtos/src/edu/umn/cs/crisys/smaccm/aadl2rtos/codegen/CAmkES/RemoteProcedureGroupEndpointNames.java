@@ -27,7 +27,7 @@ public class RemoteProcedureGroupEndpointNames {
   }
   
   public String getProvidesOrRequires() {
-    return (rpge.getAccessType() == AccessType.PROVIDES) ? "provides" : "requires";
+    return (rpge.getAccessType() == AccessType.PROVIDES) ? "provides" : "uses";
   }
   
 }
