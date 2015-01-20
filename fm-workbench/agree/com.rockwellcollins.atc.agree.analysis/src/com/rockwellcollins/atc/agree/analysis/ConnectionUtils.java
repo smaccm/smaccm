@@ -5,7 +5,10 @@ import java.util.List;
 import jkind.lustre.BinaryExpr;
 import jkind.lustre.BinaryOp;
 import jkind.lustre.Equation;
+import jkind.lustre.Expr;
 import jkind.lustre.IdExpr;
+import jkind.lustre.UnaryExpr;
+import jkind.lustre.UnaryOp;
 
 import org.osate.aadl2.BusAccess;
 import org.osate.aadl2.ComponentClassifier;
@@ -62,11 +65,11 @@ public class ConnectionUtils {
 					continue;
 				}
 			}
-			makeConnectionExpressions(state, absConnSour, absConnDest);
+			makeConnectionExpressions(state, absConnSour, absConnDest, delayed);
 		}
 	}
 	private static void makeConnectionExpressions(AgreeEmitterState state,
-			ConnectedElement absConnSour, ConnectedElement absConnDest) {
+			ConnectedElement absConnSour, ConnectedElement absConnDest, boolean delayed) {
 		ConnectionEnd destConn = absConnDest.getConnectionEnd();
 		ConnectionEnd sourConn = absConnSour.getConnectionEnd();
 		//we currently don't handle data accesses or buss accesses
@@ -156,15 +159,30 @@ public class ConnectionUtils {
 					rhsLustreName = agreeDestConn.lustreString;
 				}
 			}
-			Equation connEq = new Equation(new IdExpr(lhsLustreName), new IdExpr(rhsLustreName));
-			addConnection(state, connEq);;
+			Equation connEq;
+			
+			if(delayed){
+			    Expr connExpr = new UnaryExpr(UnaryOp.PRE, new IdExpr(rhsLustreName));
+			    connExpr = new BinaryExpr(agreeSourConn.initState, BinaryOp.ARROW, connExpr);
+			    connEq = new Equation(new IdExpr(lhsLustreName), connExpr);
+			}else{
+			    connEq = new Equation(new IdExpr(lhsLustreName), new IdExpr(rhsLustreName));
+			}
+			addConnection(state, connEq);
 			if(agreeDestConn.connType == ConnType.EVENT){
 				if(agreeSourConn.connType != ConnType.EVENT){
 					throw new AgreeException("The connection between variables '"
 							+agreeDestConn.lustreString+"' and '"
 							+agreeSourConn.lustreString+"' are of different types");
 				}
-				Equation eventConnEq = new Equation(new IdExpr(lhsLustreName+state.eventSuffix), new IdExpr(rhsLustreName+state.eventSuffix));
+				Equation eventConnEq;
+				if(delayed){
+				    Expr connExpr = new UnaryExpr(UnaryOp.PRE, new IdExpr(rhsLustreName+state.eventSuffix));
+	                connExpr = new BinaryExpr(agreeSourConn.initState, BinaryOp.ARROW, connExpr);
+	                eventConnEq = new Equation(new IdExpr(lhsLustreName+state.eventSuffix), connExpr);
+				}else{
+				    eventConnEq = new Equation(new IdExpr(lhsLustreName+state.eventSuffix), new IdExpr(rhsLustreName+state.eventSuffix));
+				}
 				addConnection(state, eventConnEq);
 			}
 		}

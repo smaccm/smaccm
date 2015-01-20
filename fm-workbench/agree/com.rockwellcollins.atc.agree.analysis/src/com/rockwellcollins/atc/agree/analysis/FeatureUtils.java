@@ -146,6 +146,7 @@ public class FeatureUtils {
 		agreeConn.connType = connType;
 		agreeConn.direction = direction;
 		agreeConn.queueSize = queueSize;
+		agreeConn.initState = AgreeStateUtils.getInitialType(agreeConn.varType.toString(), state.typeExpressions);
 		agreeConns.add(agreeConn);
 	}
 

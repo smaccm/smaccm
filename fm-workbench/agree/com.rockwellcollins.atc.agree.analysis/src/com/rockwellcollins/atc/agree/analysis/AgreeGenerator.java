@@ -387,7 +387,6 @@ public class AgreeGenerator {
     	dfaNodeName = dfaNodeName.replace(".", "__");
     	String calenNodeName = "__CALENDAR_NODE_"+state.curInst.getInstanceObjectPath();
     	calenNodeName = calenNodeName.replace(".", "__");
-
     	
     	if(state.mnSyncEls.size() != 0){
     	    //this set is used to make sure that we do not make a definition for the same
