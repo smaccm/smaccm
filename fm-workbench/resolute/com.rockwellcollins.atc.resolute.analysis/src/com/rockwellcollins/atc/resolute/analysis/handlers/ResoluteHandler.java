@@ -12,12 +12,15 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.handlers.IHandlerActivation;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.xtext.EcoreUtil2;
+import org.eclipse.xtext.resource.IEObjectDescription;
 import org.osate.aadl2.AnnexSubclause;
 import org.osate.aadl2.ComponentCategory;
 import org.osate.aadl2.ComponentImplementation;
@@ -29,6 +32,7 @@ import org.osate.aadl2.instance.SystemInstance;
 import org.osate.aadl2.instantiation.InstantiateModel;
 import org.osate.annexsupport.AnnexUtil;
 import org.osate.ui.dialogs.Dialog;
+import org.osate.xtext.aadl2.properties.util.EMFIndexRetrieval;
 
 import com.rockwellcollins.atc.resolute.analysis.execution.EvaluationContext;
 import com.rockwellcollins.atc.resolute.analysis.execution.FeatureToConnectionsMap;
@@ -36,7 +40,10 @@ import com.rockwellcollins.atc.resolute.analysis.execution.NamedElementComparato
 import com.rockwellcollins.atc.resolute.analysis.execution.ResoluteInterpreter;
 import com.rockwellcollins.atc.resolute.analysis.results.ResoluteResult;
 import com.rockwellcollins.atc.resolute.analysis.views.AssuranceCaseView;
+import com.rockwellcollins.atc.resolute.resolute.FnCallExpr;
+import com.rockwellcollins.atc.resolute.resolute.FunctionDefinition;
 import com.rockwellcollins.atc.resolute.resolute.ProveStatement;
+import com.rockwellcollins.atc.resolute.resolute.ResoluteFactory;
 import com.rockwellcollins.atc.resolute.resolute.ResolutePackage;
 import com.rockwellcollins.atc.resolute.resolute.ResoluteSubclause;
 import com.rockwellcollins.atc.resolute.validation.BaseType;
@@ -102,8 +109,95 @@ public class ResoluteHandler extends AadlHandler {
 				}
 			}
 		} else {
-			System.out.println("should check theorem=" + theorem);
+
+//			for (FunctionDefinition fd : EcoreUtil2.getAllContentsOfType(root.eResource().getResourceSet(),
+//					FunctionDefinition.class)) {
+//				System.out.println("fd=" + fd);
+//			}
+
+//			for (Resource res : root.eResource().getResourceSet().getResources()) {
+//				System.out.println("res=" + res);
+//				TreeIterator<EObject> iterator = res.getAllContents();
+//				while (iterator.hasNext()) {
+//					EObject eobj = (EObject) iterator.next();
+//					if (eobj instanceof AadlPackage) {
 //
+//						System.out.println("pkg=" + eobj);
+//					}
+//
+//				}
+//			}
+//			IProject pluginResources = ResourcesPlugin.getWorkspace().getRoot().getProject("Plugin_Resources");
+//			try {
+//				for (IResource ires : pluginResources.members()) {
+//					System.out.println("ires=" + ires);
+//					System.out.println("res class=" + ires.getClass());
+//
+//					if (ires instanceof Resource) {
+//
+//						Resource res = (Resource) ires;
+//						System.out.println("res=" + res);
+//
+//						TreeIterator<EObject> iterator = res.getAllContents();
+//						while (iterator.hasNext()) {
+//							EObject eobj = (EObject) iterator.next();
+//							if (eobj instanceof AadlPackage) {
+//
+//								System.out.println("pkg=" + eobj);
+//							} else {
+//								System.out.println("eobj=" + eobj);
+//
+//							}
+//
+//						}
+//					}
+//
+//				}
+//
+//			} catch (CoreException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+			ResoluteSubclause subclause;
+			ProveStatement proveStatement;
+			FnCallExpr fnCallExpr;
+
+			subclause = ResoluteFactory.eINSTANCE.createResoluteSubclause();
+			proveStatement = ResoluteFactory.eINSTANCE.createProveStatement();
+			fnCallExpr = ResoluteFactory.eINSTANCE.createFnCallExpr();
+			fnCallExpr.getArgs().add(ResoluteFactory.eINSTANCE.createThisExpr());
+
+			for (IEObjectDescription tmp : EMFIndexRetrieval.getAllEObjectsOfTypeInWorkspace(ResolutePackage.eINSTANCE
+					.getFunctionDefinition())) {
+				if (tmp.getName().getLastSegment().contains("arinc")) {
+					System.out.println("tmp=" + tmp);
+					System.out.println("last=" + tmp.getName().getLastSegment());
+
+				}
+				if (tmp.getName().getLastSegment().equalsIgnoreCase(theorem)) {
+					EObject eobj = tmp.getEObjectOrProxy();
+
+					EObject resolved = EcoreUtil.resolve(eobj, root.eResource().getResourceSet());
+					System.out.println("resolved=" + resolved);
+
+					FunctionDefinition functionDefinition = (FunctionDefinition) resolved;
+					fnCallExpr.setFn(functionDefinition);
+
+				}
+			}
+			proveStatement.setExpr(fnCallExpr);
+			subclause.getProves().add(proveStatement);
+
+//			System.out.println("should check theorem=" + theorem);
+//
+			EvaluationContext context = new EvaluationContext((ComponentInstance) si, sets, featToConnsMap);
+			ResoluteInterpreter interpreter = new ResoluteInterpreter(context);
+			for (ProveStatement ps : subclause.getProves()) {
+				proofTrees.add(interpreter.evaluateProveStatement(ps));
+				drawProofs(proofTrees);
+			}
+//			System.out.println("theorem checked=" + theorem);
+			//
 //			XtextResourceSet resourceSet = new XtextResourceSet();
 ////			resourceSet.addLoadOption(XtextResource.OPTION_RESOLVE_ALL, Boolean.TRUE);
 //
