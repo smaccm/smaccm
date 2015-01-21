@@ -1,0 +1,689 @@
+package Mission_Software
+public
+  with SMACCM;
+  with SMACCM_SYS;
+  with Base_Types;
+  with mavlink_veh_commsec_msg;
+  with TowerArrays;
+  with gcsstream_timing;
+  with nav_law_type;
+  with pos_control_dbg_type;
+  with att_control_dbg_type;
+  with alt_control_dbg_type;
+  with radio_stat_type;
+  with motors_type;
+  with controloutput_type;
+  with gps_type;
+  with sensors_type;
+  with control_law_type;
+  with nav_command_type;
+  with mavlink_rc_channels_override_msg;
+  with control_law_request_type;
+  with radio_info_type;
+  with control_setpoint_type;
+  with userinput_type;
+  with DATATYPES;
+
+ system Software
+    features
+      position: out event data port gps_type::position.impl;
+      mav_ui_emitter: out event data port userinput_type::userinput_result.impl;
+      mav_cr_emitter: out event data port control_law_request_type::control_law_request.impl;
+      nav_ctl_law_req: out event data port control_law_request_type::control_law_request.impl;
+      
+      --data connections
+      mav_data_out : out data port mavlink_veh_commsec_msg::veh_commsec_msg.impl;
+      motor_data_in : in data port motors_type::motors.impl;
+      control_out_data_in : in data port controloutput_type::controloutput.impl;
+      alt_data_in : in data port alt_control_dbg_type::alt_control_dbg.impl;
+      control_point_data_out : out data port control_setpoint_type::control_setpoint.impl;
+      control_law_data_in : in data port control_law_type::control_law.impl;
+      userinput_data_in : in data port userinput_type::userinput_result.impl;
+      control_data_out : out data port DATATYPES::control_data.impl;
+      sensors_data_in : in data port sensors_type::sensors_result.impl;
+      mavlink: in out data port DATATYPES::EncryptMAVLink;
+      
+  end Software;
+  
+  system implementation Software.Impl 
+    subcomponents
+      ML: process flight_gen_process.Impl;
+      
+    connections
+      conn_pos : port ML.position -> position;
+      conn_ui_emitter: port ML.mav_ui_emitter -> mav_ui_emitter;
+      conn_cr_emitter: port ML.mav_cr_emitter -> mav_cr_emitter;
+      conn_nav_ctl_law_req: port ML.nav_ctl_law_req -> nav_ctl_law_req;
+      
+      conn_mav_data_out: port ML.mav_data_out -> mav_data_out;
+      conn_motor_data_in: port motor_data_in -> ML.motor_data_in;
+      conn_control_out_data_in : port control_out_data_in -> ML.control_out_data_in;
+      conn_alt_data_in : port alt_data_in -> ML.alt_data_in;
+      conn_control_point_data_out : port ML.control_point_data_out -> control_point_data_out;
+      conn_control_law_data_in : port control_law_data_in -> ML.control_law_data_in;
+      conn_control_data_out : port ML.control_data_out -> control_data_out;
+      conn_sensors_data_in : port sensors_data_in -> ML.sensors_data_in;
+      conn_mavlink : port mavlink <-> ML.mavlink;
+
+  end Software.Impl;
+
+  process flight_gen_process
+	features
+      position: out event data port gps_type::position.impl;
+      mav_ui_emitter: out event data port userinput_type::userinput_result.impl;
+      mav_cr_emitter: out event data port control_law_request_type::control_law_request.impl;
+      nav_ctl_law_req: out event data port control_law_request_type::control_law_request.impl;
+      
+      --data connections
+      mav_data_out : out data port mavlink_veh_commsec_msg::veh_commsec_msg.impl;
+      motor_data_in : in data port motors_type::motors.impl;
+      control_out_data_in : in data port controloutput_type::controloutput.impl;
+      alt_data_in : in data port alt_control_dbg_type::alt_control_dbg.impl;
+      control_point_data_out : out data port control_setpoint_type::control_setpoint.impl;
+      control_law_data_in : in data port control_law_type::control_law.impl;
+      control_data_out : out data port DATATYPES::control_data.impl;
+      sensors_data_in : in data port sensors_type::sensors_result.impl;
+      mavlink: in out data port DATATYPES::EncryptMAVLink;
+       
+  end flight_gen_process;
+
+process implementation flight_gen_process.impl
+  subcomponents
+    rad_data : data radio_stat_type::radio_stat.impl;
+    pos_data : data gps_type::position.impl;
+    mav_data : data mavlink_veh_commsec_msg::veh_commsec_msg.impl;
+    motor_data : data motors_type::motors.impl;
+    control_out_data : data controloutput_type::controloutput.impl;
+    att_data : data att_control_dbg_type::att_control_dbg.impl;
+    alt_data : data alt_control_dbg_type::alt_control_dbg.impl;
+    nav_data : data nav_law_type::nav_law.impl;
+    control_point_data : data control_setpoint_type::control_setpoint.impl;
+    control_law_data : data control_law_type::control_law.impl;
+    pos_control_data : data pos_control_dbg_type::pos_control_dbg.impl;
+    com_data : data Base_Types::Unsigned_32;
+    control_data : data DATATYPES::control_data.impl;
+    sensors_data : data sensors_type::sensors_result.impl;
+    commsecRecoveryTask_inst : thread commsecRecoveryTask;
+    gcsTransmitTask_uart1_inst : thread gcsTransmitTask_uart1;
+    encryptTask_uart1_inst : thread encryptTask_uart1;
+    gcsReceiveTask_uart1_inst : thread gcsReceiveTask_uart1;
+    decryptTask_uart1_inst : thread decryptTask_uart1;
+    radio_status_uart1_inst : thread radio_status_uart1;
+    datalink_uart1_inst : thread datalink_uart1;
+    proxy_nav_law_inst : thread proxy_nav_law;
+    proxy_navsetpt_inst : thread proxy_navsetpt;
+    navigation_inst : thread navigation;
+    mavlinkInputTask_inst : thread mavlinkInputTask;
+    ubloxGPS_inst : thread ubloxGPS;
+    uart1ISR_inst : thread uart1ISR;
+    uart6ISR_inst : thread uart6ISR;
+  connections
+    encrypt_mav_in : port mavlink <-> uart1ISR_inst.mavlink;
+    mav_out : port mav_data -> mav_data_out;
+    motor_in : port motor_data_in -> motor_data;
+    control_out_in : port control_out_data_in -> control_out_data;
+    alt_in : port alt_data_in -> alt_data;
+    control_point_out : port control_point_data -> control_point_data_out;
+    control_law_in : port control_law_data_in -> control_law_data;
+    control_out : port control_data -> control_data_out;
+    sensors_in : port sensors_data_in -> sensors_data;
+    
+    conn_12 : port gcsTransmitTask_uart1_inst.gcsTxToEncSrc -> encryptTask_uart1_inst.gcsTxToEnc;
+    conn_13 : port encryptTask_uart1_inst.encToHxSrc -> datalink_uart1_inst.framed_istream;
+    conn_14 : port gcsReceiveTask_uart1_inst.streamperiods -> gcsTransmitTask_uart1_inst.streamPeriod;
+    conn_15 : port gcsReceiveTask_uart1_inst.nav_cmd -> navigation_inst.nav_cmd;
+    conn_16 : port gcsReceiveTask_uart1_inst.rc_override_tx -> mavlinkInputTask_inst.rcoverride;
+    conn_17 : port gcsReceiveTask_uart1_inst.param_req -> gcsTransmitTask_uart1_inst.paramReqs;
+    conn_18 : port gcsReceiveTask_uart1_inst.ctl_req -> mavlinkInputTask_inst.mav_controllaw_req;
+    conn_19 : port decryptTask_uart1_inst.decToGcsRxSrc -> gcsReceiveTask_uart1_inst.mavStream;
+    conn_20 : port datalink_uart1_inst.link_ostream -> uart1ISR_inst.ostream;
+    conn_21 : port datalink_uart1_inst.stat_ostream -> radio_status_uart1_inst.proxyEvent;
+    conn_22 : port datalink_uart1_inst.framed_ostream -> decryptTask_uart1_inst.hxToDecRcv;
+
+    conn_29 : port navigation_inst.nav_law -> proxy_nav_law_inst.proxyEvent;
+    conn_30 : port navigation_inst.ctl_law_req -> nav_ctl_law_req;
+    conn_31 : port navigation_inst.control_setpt -> proxy_navsetpt_inst.proxyEvent;
+    --conn_33 : port uiMuxTask_inst.ui_emitter -> navigation_inst.ui_chan_313;
+    --conn_35 : port controlLawTask_inst.law_emitter -> navigation_inst.law_chan_322;
+    conn_37 : port mavlinkInputTask_inst.cr_emitter -> mav_cr_emitter;
+    conn_38 : port mavlinkInputTask_inst.ui_emitter -> mav_ui_emitter;
+    conn_42 : port ubloxGPS_inst.position -> position;
+    conn_43 : port ubloxGPS_inst.position -> navigation_inst.pos_chan_331;
+    conn_46 : port uart1ISR_inst.istream -> datalink_uart1_inst.link_istream;
+    conn_47 : port uart6ISR_inst.istream -> ubloxGPS_inst.istream;
+    conn_48 : data access com_data -> commsecRecoveryTask_inst.comm_mon_res;
+    conn_49 : data access mav_data -> commsecRecoveryTask_inst.commsec_info_snk;
+    
+    conn_tran_ctrl_data : port control_data -> gcsTransmitTask_uart1_inst.param_reader;
+    conn_232 : data access nav_data -> gcsTransmitTask_uart1_inst.navlaw;
+    conn_233 : data access com_data -> gcsTransmitTask_uart1_inst.commsecMonitor;
+    conn_234 : data access mav_data -> gcsTransmitTask_uart1_inst.commsecInfo;
+    conn_235 : data access pos_control_data -> gcsTransmitTask_uart1_inst.pos_control;
+    conn_236 : data access att_data -> gcsTransmitTask_uart1_inst.att_control;
+    conn_237 : data access alt_data -> gcsTransmitTask_uart1_inst.alt_control;
+    conn_238 : data access rad_data -> gcsTransmitTask_uart1_inst.radio;
+    conn_239 : data access motor_data -> gcsTransmitTask_uart1_inst.motors;
+    conn_240 : data access control_out_data -> gcsTransmitTask_uart1_inst.control;
+    conn_241 : data access pos_data -> gcsTransmitTask_uart1_inst.position;
+    conn_242 : data access sensors_data -> gcsTransmitTask_uart1_inst.sensors;
+    conn_243 : data access control_law_data -> gcsTransmitTask_uart1_inst.controllaw;
+    conn_rec_write : port gcsReceiveTask_uart1_inst.param_writer -> control_data ;
+    conn_328 : data access mav_data -> decryptTask_uart1_inst.commsec_info_src;
+    conn_329 : data access rad_data -> radio_status_uart1_inst.proxyData;
+    conn_383 : data access nav_data -> proxy_nav_law_inst.proxyData;
+    conn_384 : data access control_point_data -> proxy_navsetpt_inst.proxyData;
+    conn_387 : data access pos_control_data -> navigation_inst.pos_dbg;
+    conn_nav_ctrl_params : port control_data -> navigation_inst.param_reader;
+    conn_389 : data access com_data -> navigation_inst.commsec_status;
+    conn_432 : data access sensors_data -> navigation_inst.sensors;
+  properties 
+    SMACCM::OS => "Sel4";
+
+end flight_gen_process.impl;
+
+thread commsecRecoveryTask
+  features
+    comm_mon_res: requires data access Base_Types::Unsigned_32 {
+      Access_Right => write_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_commsecRecoveryTask_1433.h";
+      SMACCM_SYS::CommPrim_Source_Text => "write_commsecRecoveryTask_1433_com_data_1437";
+    };
+    commsec_info_snk: requires data access mavlink_veh_commsec_msg::veh_commsec_msg.impl {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_commsecRecoveryTask_1433.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_commsecRecoveryTask_1433_mav_data_1435";
+    };
+  properties
+    Source_Text => ("tower_task_usercode_commsecRecoveryTask_1433.c");
+    Priority => 0;
+    Stack_Size => 256 bytes;
+    SMACCM::Language => "Ivory";
+    Dispatch_Protocol => Hybrid;
+    Period => 20 ms;
+    SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_commsecRecoveryTask_1433_per20_1446");
+end commsecRecoveryTask;
+
+thread gcsTransmitTask_uart1
+  features
+    gcsTxToEncSrc: out event data port TowerArrays::ArrTy_80TyBase_Types_Unsigned_8.impl {
+      Queue_Size => 16;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsTransmitTask_uart1_906.h";
+      SMACCM_SYS::CommPrim_Source_Text => "emitFromTask_gcsTransmitTask_uart1_906_chan897_932";
+    };
+    streamPeriod: in event data port gcsstream_timing::gcsstream_timing.impl {
+      Queue_Size => 16;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsTransmitTask_uart1_906.h";
+      SMACCM_SYS::CommPrim_Source_Text => "receiveFromTask_gcsTransmitTask_uart1_906_chan648_1029";
+      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_gcsTransmitTask_uart1_906_chan648_1032");
+    };
+    paramReqs: in event data port Base_Types::Integer_16 {
+      Queue_Size => 64;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsTransmitTask_uart1_906.h";
+      SMACCM_SYS::CommPrim_Source_Text => "receiveFromTask_gcsTransmitTask_uart1_906_chan649_937";
+    };
+    param_reader : in event data port DATATYPES::control_data.impl;
+    navlaw: requires data access nav_law_type::nav_law.impl {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsTransmitTask_uart1_906.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsTransmitTask_uart1_906_nav_data_930";
+    };
+    commsecMonitor: requires data access Base_Types::Unsigned_32 {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsTransmitTask_uart1_906.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsTransmitTask_uart1_906_com_data_928";
+    };
+    commsecInfo: requires data access mavlink_veh_commsec_msg::veh_commsec_msg.impl {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsTransmitTask_uart1_906.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsTransmitTask_uart1_906_mav_data_926";
+    };
+    pos_control: requires data access pos_control_dbg_type::pos_control_dbg.impl {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsTransmitTask_uart1_906.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsTransmitTask_uart1_906_pos_control_data_924";
+    };
+    att_control: requires data access att_control_dbg_type::att_control_dbg.impl {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsTransmitTask_uart1_906.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsTransmitTask_uart1_906_att_data_922";
+    };
+    alt_control: requires data access alt_control_dbg_type::alt_control_dbg.impl {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsTransmitTask_uart1_906.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsTransmitTask_uart1_906_alt_data_920";
+    };
+    radio: requires data access radio_stat_type::radio_stat.impl {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsTransmitTask_uart1_906.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsTransmitTask_uart1_906_dataport686_918";
+    };
+    motors: requires data access motors_type::motors.impl {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsTransmitTask_uart1_906.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsTransmitTask_uart1_906_motor_data_916";
+    };
+    control: requires data access controloutput_type::controloutput.impl {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsTransmitTask_uart1_906.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsTransmitTask_uart1_906_control_out_data_914";
+    };
+    position: requires data access gps_type::position.impl {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsTransmitTask_uart1_906.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsTransmitTask_uart1_906_dataport632_912";
+    };
+    sensors: requires data access sensors_type::sensors_result.impl {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsTransmitTask_uart1_906.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsTransmitTask_uart1_906_sensors_data_910";
+    };
+    controllaw: requires data access control_law_type::control_law.impl {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsTransmitTask_uart1_906.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_gcsTransmitTask_uart1_906_control_law_data_908";
+    };
+  properties
+    Source_Text => ("tower_task_usercode_gcsTransmitTask_uart1_906.c");
+    Priority => 7;
+    Stack_Size => 1024 bytes;
+    SMACCM::Language => "Ivory";
+    Dispatch_Protocol => Hybrid;
+    Period => 50 ms;
+    SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_gcsTransmitTask_uart1_906_per50_1036");
+end gcsTransmitTask_uart1;
+
+
+thread encryptTask_uart1
+  features
+    encToHxSrc: out event data port TowerArrays::ArrTy_96TyBase_Types_Unsigned_8.impl {
+      Queue_Size => 8;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_encryptTask_uart1_898.h";
+      SMACCM_SYS::CommPrim_Source_Text => "emitFromTask_encryptTask_uart1_898_chan650_900";
+    };
+    gcsTxToEnc: in event data port TowerArrays::ArrTy_80TyBase_Types_Unsigned_8.impl {
+      Queue_Size => 16;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_encryptTask_uart1_898.h";
+      SMACCM_SYS::CommPrim_Source_Text => "receiveFromTask_encryptTask_uart1_898_chan897_902";
+      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_encryptTask_uart1_898_chan897_905");
+    };
+  properties
+    Source_Text => ("tower_task_usercode_encryptTask_uart1_898.c");
+    Priority => 8;
+    Stack_Size => 256 bytes;
+    SMACCM::Language => "Ivory";
+    Dispatch_Protocol => Sporadic;
+end encryptTask_uart1;
+
+
+thread gcsReceiveTask_uart1
+  features
+    streamperiods: out event data port gcsstream_timing::gcsstream_timing.impl {
+      Queue_Size => 16;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart1_709.h";
+      SMACCM_SYS::CommPrim_Source_Text => "emitFromTask_gcsReceiveTask_uart1_709_chan648_889";
+    };
+    nav_cmd: out event data port nav_command_type::nav_command.impl {
+      Queue_Size => 16;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart1_709.h";
+      SMACCM_SYS::CommPrim_Source_Text => "emitFromTask_gcsReceiveTask_uart1_709_chan3_717";
+    };
+    rc_override_tx: out event data port mavlink_rc_channels_override_msg::rc_channels_override_msg.impl {
+      Queue_Size => 16;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart1_709.h";
+      SMACCM_SYS::CommPrim_Source_Text => "emitFromTask_gcsReceiveTask_uart1_709_chan2_715";
+    };
+    param_req: out event data port Base_Types::Integer_16 {
+      Queue_Size => 64;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart1_709.h";
+      SMACCM_SYS::CommPrim_Source_Text => "emitFromTask_gcsReceiveTask_uart1_709_chan649_713";
+    };
+    ctl_req: out event data port control_law_request_type::control_law_request.impl {
+      Queue_Size => 16;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart1_709.h";
+      SMACCM_SYS::CommPrim_Source_Text => "emitFromTask_gcsReceiveTask_uart1_709_chan1_711";
+    };
+    mavStream: in event data port TowerArrays::ArrTy_80TyBase_Types_Unsigned_8.impl {
+      Queue_Size => 16;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_gcsReceiveTask_uart1_709.h";
+      SMACCM_SYS::CommPrim_Source_Text => "receiveFromTask_gcsReceiveTask_uart1_709_chan695_893";
+      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_gcsReceiveTask_uart1_709_chan695_896");
+    };
+    
+    param_writer : out event data port DATATYPES::control_data.impl;
+    param_reader : in event data port DATATYPES::control_data.impl;
+   
+  properties
+    Source_Text => ("tower_task_usercode_gcsReceiveTask_uart1_709.c");
+    Priority => 9;
+    Stack_Size => 1024 bytes;
+    SMACCM::Language => "Ivory";
+    Dispatch_Protocol => Sporadic;
+end gcsReceiveTask_uart1;
+
+
+thread decryptTask_uart1
+  features
+    decToGcsRxSrc: out event data port TowerArrays::ArrTy_80TyBase_Types_Unsigned_8.impl {
+      Queue_Size => 16;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_decryptTask_uart1_696.h";
+      SMACCM_SYS::CommPrim_Source_Text => "emitFromTask_decryptTask_uart1_696_chan695_698";
+    };
+    hxToDecRcv: in event data port TowerArrays::ArrTy_96TyBase_Types_Unsigned_8.impl {
+      Queue_Size => 8;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_decryptTask_uart1_696.h";
+      SMACCM_SYS::CommPrim_Source_Text => "receiveFromTask_decryptTask_uart1_696_chan651_705";
+      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_decryptTask_uart1_696_chan651_708");
+    };
+    commsec_info_src: requires data access mavlink_veh_commsec_msg::veh_commsec_msg.impl {
+      Access_Right => write_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_decryptTask_uart1_696.h";
+      SMACCM_SYS::CommPrim_Source_Text => "write_decryptTask_uart1_696_mav_data_700";
+    };
+  properties
+    Source_Text => ("tower_task_usercode_decryptTask_uart1_696.c");
+    Priority => 10;
+    Stack_Size => 256 bytes;
+    SMACCM::Language => "Ivory";
+    Dispatch_Protocol => Sporadic;
+end decryptTask_uart1;
+
+
+thread radio_status_uart1
+  features
+    proxyEvent: in event data port radio_stat_type::radio_stat.impl {
+      Queue_Size => 2;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_radio_status_uart1_687.h";
+      SMACCM_SYS::CommPrim_Source_Text => "receiveFromTask_radio_status_uart1_687_chan652_691";
+      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_radio_status_uart1_687_chan652_694");
+    };
+    proxyData: requires data access radio_stat_type::radio_stat.impl {
+      Access_Right => write_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_radio_status_uart1_687.h";
+      SMACCM_SYS::CommPrim_Source_Text => "write_radio_status_uart1_687_dataport686_689";
+    };
+  properties
+    Source_Text => ("tower_task_usercode_radio_status_uart1_687.c");
+    Priority => 11;
+    Stack_Size => 256 bytes;
+    SMACCM::Language => "Ivory";
+    Dispatch_Protocol => Sporadic;
+end radio_status_uart1;
+
+
+thread datalink_uart1
+  features
+    link_ostream: out event data port Base_Types::Unsigned_8 {
+      Queue_Size => 1024;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_datalink_uart1_654.h";
+      SMACCM_SYS::CommPrim_Source_Text => "emitFromTask_datalink_uart1_654_chan641_676";
+    };
+    info_ostream: out event data port radio_info_type::radio_info.impl {
+      Queue_Size => 2;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_datalink_uart1_654.h";
+      SMACCM_SYS::CommPrim_Source_Text => "emitFromTask_datalink_uart1_654_chan653_664";
+    };
+    stat_ostream: out event data port radio_stat_type::radio_stat.impl {
+      Queue_Size => 2;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_datalink_uart1_654.h";
+      SMACCM_SYS::CommPrim_Source_Text => "emitFromTask_datalink_uart1_654_chan652_662";
+    };
+    framed_ostream: out event data port TowerArrays::ArrTy_96TyBase_Types_Unsigned_8.impl {
+      Queue_Size => 8;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_datalink_uart1_654.h";
+      SMACCM_SYS::CommPrim_Source_Text => "emitFromTask_datalink_uart1_654_chan651_660";
+    };
+    framed_istream: in event data port TowerArrays::ArrTy_96TyBase_Types_Unsigned_8.impl {
+      Queue_Size => 8;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_datalink_uart1_654.h";
+      SMACCM_SYS::CommPrim_Source_Text => "receiveFromTask_datalink_uart1_654_chan650_678";
+      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_datalink_uart1_654_chan650_681");
+    };
+    link_istream: in event data port Base_Types::Unsigned_8 {
+      Queue_Size => 1024;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_datalink_uart1_654.h";
+      SMACCM_SYS::CommPrim_Source_Text => "receiveFromTask_datalink_uart1_654_chan642_656";
+      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_datalink_uart1_654_chan642_674");
+    };
+  properties
+    Source_Text => ("tower_task_usercode_datalink_uart1_654.c");
+    Priority => 12;
+    Stack_Size => 256 bytes;
+    SMACCM::Language => "Ivory";
+    Dispatch_Protocol => Hybrid;
+    Period => 1000 ms;
+    SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_datalink_uart1_654_per1000_685");
+end datalink_uart1;
+
+
+thread position_state
+  features
+    proxyEvent: in event data port gps_type::position.impl {
+      Queue_Size => 16;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_position_state_633.h";
+      SMACCM_SYS::CommPrim_Source_Text => "receiveFromTask_position_state_633_chan53_637";
+      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_position_state_633_chan53_640");
+    };
+    proxyData: requires data access gps_type::position.impl {
+      Access_Right => write_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_position_state_633.h";
+      SMACCM_SYS::CommPrim_Source_Text => "write_position_state_633_dataport632_635";
+    };
+  properties
+    Source_Text => ("tower_task_usercode_position_state_633.c");
+    Priority => 13;
+    Stack_Size => 256 bytes;
+    SMACCM::Language => "Ivory";
+    Dispatch_Protocol => Sporadic;
+end position_state;
+
+thread proxy_nav_law
+  features
+    proxyEvent: in event data port nav_law_type::nav_law.impl {
+      Queue_Size => 16;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_proxy_nav_law_385.h";
+      SMACCM_SYS::CommPrim_Source_Text => "receiveFromTask_proxy_nav_law_385_chan197_389";
+      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_proxy_nav_law_385_chan197_392");
+    };
+    proxyData: requires data access nav_law_type::nav_law.impl {
+      Access_Right => write_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_proxy_nav_law_385.h";
+      SMACCM_SYS::CommPrim_Source_Text => "write_proxy_nav_law_385_nav_data_387";
+    };
+  properties
+    Source_Text => ("tower_task_usercode_proxy_nav_law_385.c");
+    Priority => 20;
+    Stack_Size => 256 bytes;
+    SMACCM::Language => "Ivory";
+    Dispatch_Protocol => Sporadic;
+end proxy_nav_law;
+
+
+thread proxy_navsetpt
+  features
+    proxyEvent: in event data port control_setpoint_type::control_setpoint.impl {
+      Queue_Size => 16;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_proxy_navsetpt_376.h";
+      SMACCM_SYS::CommPrim_Source_Text => "receiveFromTask_proxy_navsetpt_376_chan196_380";
+      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_proxy_navsetpt_376_chan196_383");
+    };
+    proxyData: requires data access control_setpoint_type::control_setpoint.impl {
+      Access_Right => write_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_proxy_navsetpt_376.h";
+      SMACCM_SYS::CommPrim_Source_Text => "write_proxy_navsetpt_376_control_point_data_378";
+    };
+  properties
+    Source_Text => ("tower_task_usercode_proxy_navsetpt_376.c");
+    Priority => 21;
+    Stack_Size => 256 bytes;
+    SMACCM::Language => "Ivory";
+    Dispatch_Protocol => Sporadic;
+end proxy_navsetpt;
+
+
+thread navigation
+  features
+    nav_law: out event data port nav_law_type::nav_law.impl {
+      Queue_Size => 16;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_navigation_199.h";
+      SMACCM_SYS::CommPrim_Source_Text => "emitFromTask_navigation_199_chan197_209";
+    };
+    ctl_law_req: out event data port control_law_request_type::control_law_request.impl {
+      Queue_Size => 16;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_navigation_199.h";
+      SMACCM_SYS::CommPrim_Source_Text => "emitFromTask_navigation_199_chan99_203";
+    };
+    control_setpt: out event data port control_setpoint_type::control_setpoint.impl {
+      Queue_Size => 16;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_navigation_199.h";
+      SMACCM_SYS::CommPrim_Source_Text => "emitFromTask_navigation_199_chan196_201";
+    };
+    nav_cmd: in event data port nav_command_type::nav_command.impl {
+      Queue_Size => 16;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_navigation_199.h";
+      SMACCM_SYS::CommPrim_Source_Text => "receiveFromTask_navigation_199_chan3_353";
+      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_navigation_199_chan3_356");
+    };
+    pos_chan_331: in event data port gps_type::position.impl {
+      Queue_Size => 16;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_navigation_199.h";
+      SMACCM_SYS::CommPrim_Source_Text => "receiveFromTask_navigation_199_chan53_336";
+      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_navigation_199_chan53_339");
+    };
+    law_chan_322: in event data port control_law_type::control_law.impl {
+      Queue_Size => 16;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_navigation_199.h";
+      SMACCM_SYS::CommPrim_Source_Text => "receiveFromTask_navigation_199_chan145_327";
+      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_navigation_199_chan145_330");
+    };
+    ui_chan_313: in event data port userinput_type::userinput_result.impl {
+      Queue_Size => 16;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_navigation_199.h";
+      SMACCM_SYS::CommPrim_Source_Text => "receiveFromTask_navigation_199_chan169_318";
+      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_navigation_199_chan169_321");
+    };
+    pos_dbg: requires data access pos_control_dbg_type::pos_control_dbg.impl {
+      Access_Right => write_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_navigation_199.h";
+      SMACCM_SYS::CommPrim_Source_Text => "write_navigation_199_pos_control_data_207";
+    };
+   
+    commsec_status: requires data access Base_Types::Unsigned_32 {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_navigation_199.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_navigation_199_com_data_345";
+    };
+    param_reader : in event data port DATATYPES::control_data.impl;
+    sensors: requires data access sensors_type::sensors_result.impl {
+      Access_Right => read_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_navigation_199.h";
+      SMACCM_SYS::CommPrim_Source_Text => "read_navigation_199_sensors_data_205";
+    };
+  properties
+    Source_Text => ("tower_task_usercode_navigation_199.c");
+    Priority => 24;
+    Stack_Size => 256 bytes;
+    SMACCM::Language => "Ivory";
+    Dispatch_Protocol => Hybrid;
+    Period => 5 ms;
+    SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_navigation_199_per5_351");
+end navigation;
+
+thread mavlinkInputTask
+  features
+    cr_emitter: out event data port control_law_request_type::control_law_request.impl {
+      Queue_Size => 16;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_mavlinkInputTask_124.h";
+      SMACCM_SYS::CommPrim_Source_Text => "emitFromTask_mavlinkInputTask_124_chan123_128";
+    };
+    ui_emitter: out event data port userinput_type::userinput_result.impl {
+      Queue_Size => 16;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_mavlinkInputTask_124.h";
+      SMACCM_SYS::CommPrim_Source_Text => "emitFromTask_mavlinkInputTask_124_chan122_126";
+    };
+    mav_controllaw_req: in event data port control_law_request_type::control_law_request.impl {
+      Queue_Size => 16;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_mavlinkInputTask_124.h";
+      SMACCM_SYS::CommPrim_Source_Text => "receiveFromTask_mavlinkInputTask_124_chan1_137";
+      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_mavlinkInputTask_124_chan1_140");
+    };
+    rcoverride: in event data port mavlink_rc_channels_override_msg::rc_channels_override_msg.impl {
+      Queue_Size => 16;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_mavlinkInputTask_124.h";
+      SMACCM_SYS::CommPrim_Source_Text => "receiveFromTask_mavlinkInputTask_124_chan2_132";
+      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_mavlinkInputTask_124_chan2_135");
+    };
+  properties
+    Source_Text => ("tower_task_usercode_mavlinkInputTask_124.c");
+    Priority => 27;
+    Stack_Size => 256 bytes;
+    SMACCM::Language => "Ivory";
+    Dispatch_Protocol => Hybrid;
+    Period => 5 ms;
+    SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_mavlinkInputTask_124_per5_144");
+end mavlinkInputTask;
+
+thread ubloxGPS
+  features
+    position: out event data port gps_type::position.impl {
+      Queue_Size => 16;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_ubloxGPS_54.h";
+      SMACCM_SYS::CommPrim_Source_Text => "emitFromTask_ubloxGPS_54_chan53_60";
+    };
+    istream: in event data port Base_Types::Unsigned_8 {
+      Queue_Size => 256;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_ubloxGPS_54.h";
+      SMACCM_SYS::CommPrim_Source_Text => "receiveFromTask_ubloxGPS_54_chan47_56";
+      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_ubloxGPS_54_chan47_71");
+    };
+  properties
+    Source_Text => ("tower_task_usercode_ubloxGPS_54.c");
+    Priority => 30;
+    Stack_Size => 256 bytes;
+    SMACCM::Language => "Ivory";
+    Dispatch_Protocol => Sporadic;
+end ubloxGPS;
+
+thread uart1ISR
+  features
+    mavlink: in out data port DATATYPES::EncryptMAVLink;
+    istream: out event data port Base_Types::Unsigned_8 {
+      Queue_Size => 1024;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_signal_comm_uart1ISR_643.h";
+      SMACCM_SYS::CommPrim_Source_Text => "emitFromSig_uart1ISR_643_chan642_647";
+    };
+    ostream: in event data port Base_Types::Unsigned_8 {
+      Queue_Size => 1024;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_signal_comm_uart1ISR_643.h";
+      SMACCM_SYS::CommPrim_Source_Text => "receiveFromSig_uart1ISR_643_chan641_645";
+    };
+  properties
+    Dispatch_Protocol => Sporadic;
+    Source_Text => ("tower_signal_usercode_uart1ISR_643.c");
+    Priority => 32;
+    SMACCM::Language => "Ivory";
+    SMACCM_SYS::Signal_Name => "USART1_IRQn";
+    SMACCM_SYS::ISR_Handler => "USART1_IRQHandler";
+end uart1ISR;
+
+thread uart6ISR
+  features
+    istream: out event data port Base_Types::Unsigned_8 {
+      Queue_Size => 256;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_signal_comm_uart6ISR_48.h";
+      SMACCM_SYS::CommPrim_Source_Text => "emitFromSig_uart6ISR_48_chan47_52";
+    };
+    ostream: in event data port Base_Types::Unsigned_8 {
+      Queue_Size => 2;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_signal_comm_uart6ISR_48.h";
+      SMACCM_SYS::CommPrim_Source_Text => "receiveFromSig_uart6ISR_48_chan46_50";
+    };
+  properties
+    Dispatch_Protocol => Sporadic;
+    Source_Text => ("tower_signal_usercode_uart6ISR_48.c");
+    Priority => 34;
+    SMACCM::Language => "Ivory";
+    SMACCM_SYS::Signal_Name => "USART6_IRQn";
+    SMACCM_SYS::ISR_Handler => "USART6_IRQHandler";
+end uart6ISR;
+
+end Mission_Software;

@@ -1,0 +1,71 @@
+package CORTEX
+public
+  system STM32F415
+    features
+      otg_fs: provides bus access AHB_Bus_Matrix;
+      adc123: provides bus access AHB_Bus_Matrix;
+      usart6: provides bus access AHB_Bus_Matrix; 
+      i2c2: provides bus access AHB_Bus_Matrix;
+      spi1: provides bus access AHB_Bus_Matrix;
+      
+      usart1: provides bus access AHB_Bus_Matrix;
+      usart2: provides bus access AHB_Bus_Matrix;
+      ppm: provides bus access AHB_Bus_Matrix;
+      alarm: provides bus access AHB_Bus_Matrix;
+  end STM32F415;
+   
+  system implementation STM32F415.Impl
+    subcomponents
+      CPU: processor ARM_Cortex_M4;
+      SRAM: memory SRAM;
+      FLASH: memory Flash;
+      MATRIX: bus AHB_Bus_Matrix;
+      
+    connections
+      conn0: bus access CPU.bus_access <-> MATRIX;
+      conn1: bus access SRAM.bus_access <-> MATRIX;
+      conn2: bus access Flash.bus_access <-> MATRIX;
+      
+      conn3: bus access MATRIX <-> otg_fs;
+      conn4: bus access MATRIX <-> adc123;
+      conn5: bus access MATRIX <-> usart6;
+      conn6: bus access MATRIX <-> i2c2;
+      conn7: bus access MATRIX <-> spi1;
+      
+      conn8: bus access MATRIX <-> usart1;
+      conn9: bus access MATRIX <-> usart2;
+      conn10: bus access MATRIX <-> ppm;
+      conn11: bus access MATRIX <-> alarm;
+  end STM32F415.Impl;
+  
+  processor ARM_Cortex_M4
+    features
+      bus_access: requires bus access AHB_Bus_Matrix;
+    
+    properties
+      Clock_Period => 60us;
+  end ARM_Cortex_M4;
+  
+  memory SRAM
+    features
+      bus_access: requires bus access AHB_Bus_Matrix;
+    
+    properties
+      Memory_Protocol => read_write;
+      Base_Address => 16#2000_0000#;
+      Memory_Size => 128 KByte;
+  end SRAM;
+  
+  memory Flash
+    features
+      bus_access: requires bus access AHB_Bus_Matrix;
+      
+    properties
+      Memory_Protocol => execute_only;
+      Base_Address => 16#0800_0000#;
+      Memory_Size => 1 MByte;
+  end Flash;
+
+  bus AHB_Bus_Matrix
+  end AHB_Bus_Matrix;
+end CORTEX;

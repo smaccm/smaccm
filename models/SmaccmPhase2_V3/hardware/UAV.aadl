@@ -1,0 +1,82 @@
+package UAV
+public
+  with UAS;
+  with PixHawk;
+  with ODROID_XU;
+  with XU_DAUGHTER_BOARD;
+  with Copter_Software;
+  with Mission_Software;
+  with DATATYPES;
+  with SMACCM;
+  
+  system UAV
+    features
+      radio_access_915Mhz: requires bus access UAS::RF_Spectrum.RF_915MHz; 
+      radio_access_2_4Ghz: requires bus access UAS::RF_Spectrum.RF_2_4GHz;
+      mavlink: in out data port DATATYPES::EncryptMAVLink;
+      flight_control_commands: in data port DATATYPES::Flight_Control_Commands.Impl;
+  end UAV;
+  
+  system implementation UAV.Impl 
+    subcomponents
+      CSW: system Copter_Software::Software.Impl;
+      MSW: system Mission_Software::Software.Impl;
+      PIXHAWK: system PixHawk::PixHawk.i;
+      ODROID_XU: system ODROID_XU::ODROID_XU.Impl;
+      UX_DAUGHTER: system XU_DAUGHTER_BOARD::XU_DAUGHTER_BOARD.IMPL;
+     
+    connections 
+      conn_ide: feature group UX_DAUGHTER.ide <-> ODROID_XU.ide;
+      conn_mpi: feature group UX_DAUGHTER.mpi <-> ODROID_XU.mpi;
+      
+      --connections between mission and copter software
+      pos_conn : port MSW.position -> CSW.gps_position;
+      mav_ui_conn : port MSW.mav_ui_emitter -> CSW.mavlink_ui_emitter;
+      mav_cr_conn : port MSW.mav_cr_emitter -> CSW.mavlink_cr_emitter;
+      nav_conn : port MSW.nav_ctl_law_req -> CSW.nav_ctl_law_req;
+      mav_conn : port MSW.mav_data_out -> CSW.mav_data_in;
+      motor_conn: port CSW.motor_data_out -> MSW.motor_data_in;
+      control_conn: port CSW.control_out_data_out -> MSW.control_out_data_in;
+      alt_conn : port CSW.alt_data_out -> MSW.alt_data_in;
+      control_point_conn : port MSW.control_point_data_out -> CSW.control_point_data_in;
+      control_law_conn : port CSW.control_law_data_out -> MSW.control_law_data_in;
+      userinput_conn: port CSW.userinput_data_out -> MSW.userinput_data_in;
+      control_data_conn : port MSW.control_data_out -> CSW.control_data_in;
+      sensors_data_conn : port CSW.sensors_data_out -> MSW.sensors_data_in;
+
+     -- conn2: feature group PX4IOAR.motors_and_radios <-> CSW.motors_and_radios;
+      conn3: port MSW.mavlink <-> mavlink;
+      conn4: port flight_control_commands -> PX4IOAR.flight_control_commands;
+      
+      conn5: bus access PX4IOAR.rc_radio <-> radio_access_2_4Ghz;
+      conn6: bus access PX4IOAR.x3dr_radio <-> radio_access_915Mhz;      	
+      
+    properties
+      Actual_Memory_Binding => (reference (PX4FMU.MC.FLASH)) applies to CSW.ML;
+      Actual_Memory_Binding => (reference (ODROID_XU.mem)) applies to MSW.ML;
+      
+  end UAV.Impl;
+
+  feature group motors_and_radios
+    features
+      motor1: out data port DATATYPES::Servo_Commands;
+      motor2: out data port DATATYPES::Servo_Commands;
+      motor3: out data port DATATYPES::Servo_Commands;
+      motor4: out data port DATATYPES::Servo_Commands;
+      
+      flight_control_commands: in data port DATATYPES::Flight_Control_Commands.Impl {
+        SMACCM::Unimplemented => true;
+      };
+      mavlink: in out data port DATATYPES::EncryptMAVLink;
+  end motors_and_radios;
+  
+  feature group sensors
+    features
+      magnetometer_data: in data port DATATYPES::Magnetometer_Data;
+      barometric_data: in data port DATATYPES::Barometric_Data;
+      motion_data: in data port DATATYPES::Motion_Data.Impl;
+      reset: in event data port DATATYPES::Reset_Data;
+      battery_data: in data port DATATYPES::Battery_Data;
+      gps_data: in data port DATATYPES::GPS_Data;
+  end sensors;
+end UAV;
