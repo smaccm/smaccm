@@ -11,7 +11,6 @@ import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.OutputEventPort;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.ArrayType;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.IntType;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.Type;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.UnitType;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.*;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.util.Util;
 
@@ -55,7 +54,7 @@ public class DispatchContractNames {
   
   public List<PortNames> getPassiveDispatchTargetList() {
     List<PortNames> targets = new ArrayList<>(); 
-    for (Connection c: this.oep.getConnections()) {
+    for (PortConnection c: this.oep.getConnections()) {
       if (c.getDestPort().getOwner().getIsPassive()) {
         targets.add(new PortNames(c.getDestPort()));
       }
@@ -65,7 +64,7 @@ public class DispatchContractNames {
 
   public List<PortNames> getActiveDispatchTargetList() {
     List<PortNames> targets = new ArrayList<>(); 
-    for (Connection c: this.oep.getConnections()) {
+    for (PortConnection c: this.oep.getConnections()) {
       if (!c.getDestPort().getOwner().getIsPassive()) {
         targets.add(new PortNames(c.getDestPort()));
       }

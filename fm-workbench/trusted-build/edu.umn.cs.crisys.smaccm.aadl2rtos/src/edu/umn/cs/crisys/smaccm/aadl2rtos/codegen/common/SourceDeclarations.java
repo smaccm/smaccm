@@ -5,28 +5,21 @@ package edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.common;
  * 
  */
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.IOException;
-import java.util.Iterator;
-import java.util.List;
 
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosException;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.Dispatcher;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.ExternalHandler;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.IRQDispatcher;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.InputEventDispatcher;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.PeriodicDispatcher;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.*;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.Connection;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.PortConnection;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.SharedData;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.SharedDataAccessor;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.ThreadCalendar;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.ThreadImplementation;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.ThreadInstance;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.ThreadInstancePort;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.SharedDataAccessor.AccessType;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.*;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.parse.Model;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.util.Util;
 
 public class SourceDeclarations {
@@ -371,7 +364,7 @@ public class SourceDeclarations {
       writeThreadInstanceComment(out, ti);
       
       
-      for (Connection c: outp.getConnections()) {
+      for (PortConnection c: outp.getConnections()) {
         InputPort destPort = c.getDestPort();
         Type destPortType = destPort.getType();
         ThreadInstance destThread = c.getDestThreadInstance();

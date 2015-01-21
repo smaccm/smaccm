@@ -3,17 +3,17 @@
  */
 package edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.CAmkES;
 
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.Connection;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.PortConnection;
 
 /**
  * @author Whalen
  *
  */
-public class ConnectionNames {
+public class PortConnectionNames {
 
-  Connection c;
+  PortConnection c;
   
-  public ConnectionNames(Connection c) {
+  public PortConnectionNames(PortConnection c) {
     this.c = c;
   }
   

@@ -37,6 +37,10 @@ importSharedDataAccessorIdl(sharedDataAccesor) ::= <<
 import "../../interfaces/<sharedDataAccessor.type.sharedDataIdlFileName>";
 >>
 
+importRpgIdl(remoteProcedureGroup) ::= <<
+import "../../interfaces/<remoteProcedureGroup.idlName>";
+>>
+
 writeToPassiveReceiver(threadImpl) ::= <<
 <if(threadImpl.isPassive)>
 uses <threadImpl.idlName> <threadImpl.interfaceInstanceName>;
@@ -85,6 +89,11 @@ consumes DataAvailable <dispatcher.name>;
 <endif>
 >>
 
+writeRpgInterface(endpoint) ::= <<
+<endpoint.providesOrRequires> <endpoint.remoteProcedureGroup.name> <endpoint.name>;
+
+>>
+
 
 componentCamkesBody(threadImpl) ::= <<
 
@@ -95,6 +104,9 @@ import "../../interfaces/<threadImpl.idlFileName>";
 
 // Idl files for shared data accessors
 <threadImpl.sharedDataAccessorList:importSharedDataAccessorIdl();separator="\n">
+
+// Idl files for RPCs
+<threadImpl.usedRpgs:importRpgIdl();separator="\n">
 
 <if(threadImpl.isActive)><\\>
 // Passive component dispatch interfaces 
@@ -114,7 +126,7 @@ component <threadImpl.componentName> {
 <else><\\>
 	provides <threadImpl.idlName> <threadImpl.componentDispatcherInterfaceVarIdName>;
 <endif>
-
+	<threadImpl.endpoints:writeRpgInterface()>
 	// interfaces for Periodic and IRQ port dispatchers.
 	<threadImpl.dispatchers:writeProvidedInterface()>	
 	

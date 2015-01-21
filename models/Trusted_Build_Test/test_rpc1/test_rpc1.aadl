@@ -1,0 +1,95 @@
+-- AADL Test RPC 1: active -> passive threads using scalar argument RPC.
+
+package test_rpc1
+public 
+   with Base_Types;
+   with SMACCM_SYS;   
+   with Data_Model;
+
+
+data a_struct
+  properties
+    Data_Model::Data_Representation => Struct;
+end a_struct;
+
+data implementation a_struct.impl
+  subcomponents
+    field1 : data Base_Types::Float;
+    field2 : data Base_Types::Float;
+end a_struct.impl;
+
+subprogram add_two_numbers
+features
+	A: in parameter Base_Types::Unsigned_32;
+	B: in parameter Base_Types::Unsigned_32;
+	result: out parameter Base_Types::Unsigned_32;
+end add_two_numbers;
+
+subprogram subtract_two_numbers
+features
+	A: in parameter Base_Types::Unsigned_32;
+	B: in parameter Base_Types::Unsigned_32;
+	result: out parameter Base_Types::Unsigned_32;
+end subtract_two_numbers;
+
+subprogram group add_subtract_interface
+features
+	add: provides subprogram access add_two_numbers;
+	subtract: provides subprogram access subtract_two_numbers;  
+end add_subtract_interface;
+
+-- Example of a periodically dispatched "Active" thread.   
+thread sender
+	features
+		add_subtract: requires subprogram group access add_subtract_interface; 
+	
+	properties 
+	    Dispatch_Protocol => Periodic;
+	    SMACCM_SYS::Thread_Type => Active ;
+	    Period => 250 ms;
+		Source_Text => ("user_code/user_sender.c");
+	    SMACCM_SYS::Compute_Entrypoint_Source_Text => ("periodic_ping");
+	    Priority => 10;
+	    Stack_Size => 256 bytes;
+	    Compute_Execution_Time => 10 us .. 50 us;
+	    SMACCM_SYS::Sends_Events_To => "{{1 Output1}}";
+end sender ; 
+
+-- Example of a passive thread providing an RPC interface  
+thread receiver
+	features
+		add_subtract: provides subprogram group access add_subtract_interface; 
+		
+	properties 
+	    Dispatch_Protocol => Aperiodic;
+	    SMACCM_SYS::Thread_Type => Passive ;
+	    Source_Text => ("user_code/user_receiver.c");
+	    Compute_Execution_Time => 10 us .. 50 us;
+	    SMACCM_SYS::Sends_Events_To => "{{}}";
+end receiver ; 
+
+process proc
+
+end proc;
+
+process implementation proc.Impl
+	subcomponents
+		s: thread sender;
+		r: thread receiver;
+	connections
+		s_to_r : subprogram group access s.add_subtract -> r.add_subtract;
+end proc.Impl;
+
+system test_rpc1
+end test_rpc1;
+
+system implementation test_rpc1.impl
+	subcomponents
+		tl: process proc.Impl;
+	properties
+		SMACCM_SYS::OS => CAmkES;
+		SMACCM_SYS::HW => QEMU;
+
+end test_rpc1.impl;
+
+end test_rpc1;

@@ -14,7 +14,6 @@ import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.IRQDispatcher;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.InputEventDispatcher;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.PeriodicDispatcher;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.OutputEventPort;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.Connection;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.OutgoingDispatchContract;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.UnitType;
 

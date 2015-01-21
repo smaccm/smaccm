@@ -5,7 +5,6 @@ import java.util.List;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.InputEventPort;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.ThreadImplementation;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.Type;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.UnitType;
 
 /**
  * @author Mead, Whalen

@@ -4,17 +4,20 @@
 package edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.CAmkES;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosException;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosFailure;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.Dispatcher;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.DataPort;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.InputDataPort;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.OutputEventPort;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.Connection;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.rpc.RemoteProcedureGroup;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.rpc.RemoteProcedureGroupEndpoint;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.EndpointConnection;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.PortConnection;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.SharedDataAccessor;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.ThreadImplementation;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.ThreadInstance;
@@ -43,6 +46,32 @@ public class ThreadImplementationNames {
       dnList.add(new DispatcherNames(d));
     }
     return dnList;
+  }
+  
+  
+  public List<RemoteProcedureGroupEndpointNames> getEndpoints() {
+    ArrayList<RemoteProcedureGroupEndpointNames> endpoints = new ArrayList<>();
+    for (RemoteProcedureGroupEndpoint rpge : ti.getRequiresRPGList()) {
+      endpoints.add(new RemoteProcedureGroupEndpointNames(rpge));
+    }
+    for (RemoteProcedureGroupEndpoint rpge : ti.getProvidesRPGList()) {
+      endpoints.add(new RemoteProcedureGroupEndpointNames(rpge));
+    }
+    return endpoints;
+  }
+  
+  
+  public Collection<RemoteProcedureGroupNames> getUsedRpgs() {
+    Map<String, RemoteProcedureGroupNames> rpgMap = new HashMap<>();
+    for (RemoteProcedureGroupEndpoint rpge : ti.getRequiresRPGList()) {
+      rpgMap.put(rpge.getRemoteProcedureGroup().getId(), 
+          new RemoteProcedureGroupNames(rpge.getRemoteProcedureGroup()));
+    }
+    for (RemoteProcedureGroupEndpoint rpge : ti.getProvidesRPGList()) {
+      rpgMap.put(rpge.getRemoteProcedureGroup().getId(), 
+          new RemoteProcedureGroupNames(rpge.getRemoteProcedureGroup()));
+    }
+    return rpgMap.values();
   }
   
   public <U extends DataPort> List<PortNames> constructPortNames(List<U> ports) {
@@ -124,11 +153,20 @@ public class ThreadImplementationNames {
     return tii.get(0);
   }
   
-  public List<ConnectionNames> getIsSrcOfConnectionList() {
-    List<ConnectionNames> cl = new ArrayList<>(); 
+  public List<PortConnectionNames> getIsSrcOfConnectionList() {
+    List<PortConnectionNames> cl = new ArrayList<>(); 
     ThreadInstance tii = getThreadInstance(); 
-    for (Connection t: tii.getIsSrcOfConnectionList()) {
-      cl.add(new ConnectionNames(t));
+    for (PortConnection t: tii.getIsSrcOfConnectionList()) {
+      cl.add(new PortConnectionNames(t));
+    }
+    return cl;
+  }
+
+  public List<EndpointConnectionNames> getIsRequiresOfConnectionList() {
+    List<EndpointConnectionNames> cl = new ArrayList<>(); 
+    ThreadInstance tii = getThreadInstance(); 
+    for (EndpointConnection t: tii.getIsRequiresOfEndpointConnectionList()) {
+      cl.add(new EndpointConnectionNames(t));
     }
     return cl;
   }

@@ -11,7 +11,6 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IWorkspaceRoot;
@@ -285,7 +284,7 @@ public static String getCUintTypeForMaxValue(int maxValue) {
 	
 	public static String findConfigFileLocation(String fileName) {
     String envAadlDirString = System.getenv("AADL2RTOS_CONFIG_DIR");
-    Map<String, String> myMap = System.getenv(); 
+    //Map<String, String> myMap = System.getenv(); 
     File envAadlDir = null;
     try {
       if (envAadlDirString != null) {
@@ -360,7 +359,7 @@ public static String getCUintTypeForMaxValue(int maxValue) {
 			+ "FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, \n"
 			+ "ARISING FROM, OUT OF OR IN CONNECTION WITH THE DATA OR THE USE OR OTHER DEALINGS IN THE DATA. \n";
 	
-  public static URL createURLFromClass(Class cl) {
+  public static URL createURLFromClass(@SuppressWarnings("rawtypes") Class cl) {
     return cl.getProtectionDomain().getCodeSource().getLocation();
   }
   

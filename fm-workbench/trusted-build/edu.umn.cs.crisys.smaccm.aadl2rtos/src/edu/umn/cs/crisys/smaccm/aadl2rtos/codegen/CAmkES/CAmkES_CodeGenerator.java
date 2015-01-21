@@ -9,48 +9,31 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URISyntaxException;
-import java.nio.channels.FileChannel;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.eclipse.core.runtime.FileLocator;
-import org.eclipse.core.runtime.Path;
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STErrorListener;
-import org.stringtemplate.v4.STGroup;
 import org.stringtemplate.v4.STGroupFile;
 
-import com.google.common.io.Files;
-
-import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosException;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosFailure;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Logger;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.PluginActivator;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.util.Util;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.common.CGUtil;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.common.C_Type_Writer;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.common.CommonNames;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.common.HeaderDeclarations;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.common.SourceDeclarations;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.Dispatcher;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.ExternalHandler;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.InputEventDispatcher;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.PeriodicDispatcher;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.*;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.Connection;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.rpc.RemoteProcedureGroup;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.OutgoingDispatchContract;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.SharedData;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.SharedDataAccessor;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.ThreadImplementation;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.ThreadInstance;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.ThreadInstancePort;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.ArrayType;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.IntType;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.Type;
@@ -228,13 +211,43 @@ public class CAmkES_CodeGenerator {
       throw new Aadl2RtosFailure();
     }
   }
-  
+
   public void createReadWriteIdlInterfaces() throws Aadl2RtosFailure {
     for (Type t : getUserTypes()) {
       createReadWriteIdlInterface(t); 
     }
   }
   
+  public void createRpcIdlInterface(RemoteProcedureGroup rpg) throws Aadl2RtosFailure {
+    RemoteProcedureGroupNames rpgn = new RemoteProcedureGroupNames(rpg); 
+    ModelNames m = new ModelNames(model); 
+    
+    File interfaceFile = new File(interfacesDirectory, rpgn.getIdlName());
+    String path = interfaceFile.getAbsolutePath();
+    String name = rpgn.getName(); 
+    try (BufferedWriter writer = new BufferedWriter(new FileWriter(interfaceFile))) {
+      STGroupFile stg = this.createTemplate("CamkesIdl4Rpc.stg");
+      ST st; 
+      writeBoilerplateHeader(name, path, writer, stg.getInstanceOf("rpcInterfaceIdlPrefix"));
+      st = stg.getInstanceOf("rpgDeclaration");
+      st.add("remoteProcedureGroup", rpgn);
+      st.add("model", m);
+      writer.append(st.render());
+      
+      writeBoilerplateFooter(name, path, writer, stg.getInstanceOf("rpcInterfaceIdlPostfix"));
+      
+    } catch (IOException e) {
+      log.error("IO Exception occurred when creating a remote procedure interface.");
+      throw new Aadl2RtosFailure();
+    }
+  }
+  
+  public void createRpcIdlInterfaces() throws Aadl2RtosFailure {
+    for (RemoteProcedureGroup t : model.getRemoteProcedureGroupMap().values()) {
+      createRpcIdlInterface(t); 
+    }
+  }
+
   public Set<Type> getSharedVariableTypes() {
     // write dispatcher types
     Set<Type> svTypeSet = new HashSet<Type>();
@@ -382,6 +395,7 @@ public class CAmkES_CodeGenerator {
 	  for (Dispatcher d: ti.getDispatcherList()) {
 	    srcFiles.addAll(d.getImplementationFileList());
 	  }
+	  srcFiles.addAll(ti.getSourceFileList());
 	  
 	  for (String s : srcFiles) {
 	    File srcFilePath = new File(aadlDirectory, s); 
@@ -615,6 +629,7 @@ public class CAmkES_CodeGenerator {
 	public void write() throws Aadl2RtosFailure {
 	  createTypesHeader();
     createReadWriteIdlInterfaces();
+    createRpcIdlInterfaces();
     createSharedVariableIdlInterfaces();
     createComponents();
     createAssembly(); 

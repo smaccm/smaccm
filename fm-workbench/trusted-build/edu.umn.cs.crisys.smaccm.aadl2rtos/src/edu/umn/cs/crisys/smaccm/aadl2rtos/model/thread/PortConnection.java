@@ -6,7 +6,7 @@ import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.*;
 
 //import edu.umn.cs.crisys.smaccm.aadl2rtos.AstHelper;
 
-public class Connection {
+public class PortConnection {
 	private static int connectionIDCounter = 0;
 	private int connectionID = 0;
 	//private ConnectionType connectionType;
@@ -28,10 +28,10 @@ public class Connection {
 	}
 		
 	public static void init() {
-	  Connection.connectionIDCounter = 0;
+	  PortConnection.connectionIDCounter = 0;
 	}
 	
-	public Connection(ThreadInstance sourceThreadInstance, 
+	public PortConnection(ThreadInstance sourceThreadInstance, 
 	                  ThreadInstance destThreadInstance, 
 	                  OutputPort sourcePort, 
 	                  InputPort destPort) {	
@@ -45,7 +45,7 @@ public class Connection {
 		//this.destination = connectionInstance.getDestination();
 		//this.semaphore = "connection_" + sourcePort.getName() + 
 		//       "_to_" + destPort.getName() + "_" + (Integer.toString(connectionIDCounter));
-		Connection.connectionIDCounter++;
+		PortConnection.connectionIDCounter++;
 	}
 
 	public ThreadInstance getSourceThreadInstance() {
