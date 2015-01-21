@@ -2,12 +2,12 @@ package Copter_Software
 public
   with software_types;
   
-  
 process main
   features
-    mavlink_in : in event data port software_types::MavLink;
-    mavlink_out : out event data port software_types::MavLink;
+    mavlink_in : in event data port software_types::can_data;
+    mavlink_out : out event data port software_types::can_data;
     ppm_in : in event data port software_types::Flight_Control_Commands.Impl;
+    motors_data : out event data port software_types::motors_data;
 end main;
 
 
@@ -15,30 +15,97 @@ process implementation main.i
   subcomponents
     can : thread can_px4_t;
     ppm : thread ppm_t;
-    control_law : thread control_law_t;
     control : thread control_t;
     ui_mux : thread ui_mux_t;
     gps : thread ublox_gps_t;
     sensors : thread sensors_t;
     motmix : thread motmix_t;
+    
+    control_params : data software_types::control_data.impl;
+    
+  connections
+  
+    conn0 : port sensors.sensor_data -> can.sensor_data;
+    conn1 : port control.control_out -> can.control_data;
+    conn2 : port motmix.motors -> can.motmix_data;
+    conn3 : port mavlink_in -> can.mission_in;
+    conn4 : port can.mission_out -> mavlink_out;
+    conn5 : port can.user_input -> ui_mux.mavlink_input;
+    conn16 : port can.control_law_out -> ui_mux.mavlink_control;
+    
+    conn6 : port ppm_in -> ppm.flight_command;
+    conn7 : port ppm.user_input -> ui_mux.ppm_input;
+    conn17 : port ppm.control_law_out -> ui_mux.ppm_control;
+    
+    conn8 : port ui_mux.input_select -> control.user_input;
+    conn9 : port control_params -> control.control_params;
+    conn10 : port ui_mux.control_law -> control.control_law;
+    conn11 : port control.control_out -> motmix.control_in;
+    
+    conn12 : port ui_mux.control_law -> motmix.control_law_in;
+    
+    conn13 : port gps.position -> sensors.position;
+    
+    conn14 : port sensors.sensor_data -> control.sensor_data;
+    
+    conn15 : port motmix.motors -> motors_data;
 end main.i;
 
 thread can_px4_t
   features
-    sensor_data : in event data port software_types::sensor_data;
-    control_data : in event data port software_types::control_data;
-    motmix_data : in event data port software_types::motmix_data;
+    sensor_data : in event data port software_types::position.impl;
+    control_data : in event data port software_types::controloutput.impl;
+    motmix_data : in event data port software_types::motors_data;
     mission_out : out event data port software_types::can_data;
     mission_in : in event data port software_types::can_data;
-    user_input : out event data port software_types::user_input_data;
+    user_input : out event data port software_types::userinput_result.impl;
+    control_law_out : out event data port software_types::control_law.impl;
 end can_px4_t;
 
 thread ppm_t
   features
-    user_input : in event data port software_types::Flight_control_commands.Impl;
+    flight_command : in event data port software_types::Flight_control_commands.Impl;
+    user_input : out event data port software_types::userinput_result.impl;
+    control_law_out : out event data port software_types::control_law.impl;
 end ppm_t;
 
+thread control_t
+  features
+    user_input : in event data port software_types::userinput_result.impl;
+    control_params : in data port software_types::control_data.impl;
+    control_law : in data port software_types::control_law.impl;
+    control_out : out data port software_types::controloutput.impl;
+    sensor_data : in event data port software_types::position.impl;
+end control_t;
 
+thread ui_mux_t
+  features
+    ppm_input : in event data port software_types::userinput_result.impl;
+    mavlink_input : in event data port software_types::userinput_result.impl;
+    
+    ppm_control : in event data port software_types::control_law.impl;
+    mavlink_control : in event data port software_types::control_law.impl;
+    --determines armed state
+    control_law : out event data port software_types::control_law.impl;
+    input_select : out event data port software_types::userinput_result.impl;
+end ui_mux_t;
 
+thread ublox_gps_t
+  features
+    position : out event data port software_types::position.impl;
+end ublox_gps_t;
+
+thread sensors_t
+  features
+    position : in event data port software_types::position.impl;
+    sensor_data : out event data port software_types::position.impl;
+end sensors_t;
+
+thread motmix_t
+  features
+    motors : out data port software_types::motors_data;
+    control_in : in data port software_types::controloutput.impl;
+    control_law_in : in event data port software_types::control_law.impl;
+end motmix_t;
 	
 end Copter_Software;

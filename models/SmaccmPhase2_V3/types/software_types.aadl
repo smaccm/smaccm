@@ -49,28 +49,6 @@ public
       
   end Flight_Control_Commands.impl;
   
-  data Motor_Commands
-  properties
-  	Data_Model::Data_Representation => Struct;
-  end Motor_Commands;
-  
-  data implementation Motor_Commands.Impl
-  subcomponents
-    -- val : data Base_Types::Float_64;
-    -- status : data Base_Types::Integer_8;
-    --changed types for AGREE
-     val : data Base_Types::Float;
-     status : data Base_Types::Integer;
-  end Motor_Commands.impl;
-
-  data Servo_Commands
-  properties
-    Data_Model::Data_Representation => Array;
-    Data_Model::Base_Type => (classifier (Base_Types::Integer_32));
-    Data_Model::Dimension => (10);
-  end Servo_Commands;
-  
-  
   data Sensor_Data
   end Sensor_Data;
   
@@ -113,9 +91,6 @@ public
   
   data can_data
   end can_data;
-  
-  data user_input_data
-  end user_intput_data;
 
 data implementation control_data.impl
   subcomponents
@@ -162,5 +137,84 @@ data implementation control_data.impl
     param_reader_RLL_STAB_I: data Base_Types::Float;
     param_reader_RLL_STAB_P: data Base_Types::Float;
 end control_data.impl;
+
+data control_law
+  properties
+    Data_Model::Data_Representation => Struct;
+end control_law;
+
+
+data implementation control_law.impl
+  subcomponents
+    armed_mode : data Base_Types::Unsigned_32;
+    ui_source : data Base_Types::Unsigned_32;
+    yaw_mode : data Base_Types::Unsigned_32;
+    thr_mode : data Base_Types::Unsigned_32;
+    autothr_source : data Base_Types::Unsigned_32;
+    stab_source : data Base_Types::Unsigned_32;
+    head_source : data Base_Types::Unsigned_32;
+    time : data Base_Types::Unsigned_32;
+end control_law.impl;
+
+
+data userinput_result
+  properties
+    Data_Model::Data_Representation => Struct;
+end userinput_result;
+
+
+data implementation userinput_result.impl
+  subcomponents
+    throttle : data Base_Types::Float;
+    roll : data Base_Types::Float;
+    pitch : data Base_Types::Float;
+    yaw : data Base_Types::Float;
+    time : data Base_Types::Unsigned_32;
+    xsource : data Base_Types::Unsigned_32;
+end userinput_result.impl;
+
+
+data position
+  properties
+    Data_Model::Data_Representation => Struct;
+end position;
+
+
+data implementation position.impl
+  subcomponents
+    fix : data Base_Types::Unsigned_32;
+    num_sv : data Base_Types::Unsigned_8;
+    dop : data Base_Types::Float;
+    lat : data Base_Types::Integer_32;
+    lon : data Base_Types::Integer_32;
+    alt : data Base_Types::Integer_32;
+    vnorth : data Base_Types::Integer_32;
+    veast : data Base_Types::Integer_32;
+    vdown : data Base_Types::Integer_32;
+    vground : data Base_Types::Unsigned_32;
+    heading : data Base_Types::Float;
+    time : data Base_Types::Unsigned_32;
+end position.impl;
+
+data motors_data
+end motors_data;
+
+data controloutput
+  properties
+    Data_Model::Data_Representation => Struct;
+end controloutput;
+
+
+data implementation controloutput.impl
+  subcomponents
+    armed : data Base_Types::Boolean;
+    throttle : data Base_Types::Float;
+    roll : data Base_Types::Float;
+    pitch : data Base_Types::Float;
+    yaw : data Base_Types::Float;
+    time : data Base_Types::Unsigned_32;
+end controloutput.impl;
+
+
   
 end software_types;
