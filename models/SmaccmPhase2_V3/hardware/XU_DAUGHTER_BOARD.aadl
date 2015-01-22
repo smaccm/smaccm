@@ -7,7 +7,7 @@ system XU_DAUGHTER_BOARD
     ide : feature group Odroid_IDE_Interface;
     mpi : feature group Odroid_MIPI_Interface;
     exp : feature group Expansion_Slot;
-    can : provides bus access hardware_types::CAN;
+    can : requires bus access hardware_types::CAN;
 end XU_DAUGHTER_BOARD;
 
 system implementation XU_DAUGHTER_BOARD.IMPL
@@ -16,14 +16,12 @@ system implementation XU_DAUGHTER_BOARD.IMPL
     gyro : device Gyroscope;
     baro : device Barometer;
     accel : device Accelerometer;
-    can_bus : bus hardware_types::CAN;
   connections
     mpu_spi : bus access ide.SPI_1 <-> mpu_dev.spi;
     gyro_spi : bus access ide.SPI_1 <-> gyro.spi;
     baro_spi : bus access ide.SPI_1 <-> baro.spi;
     accel_spi : bus access ide.SPI_1 <-> accel.spi;
     uart_0_uart_ext : port ide.UART_0 <-> exp.UART_EXT;
-    can_conn : bus access can_bus <-> can;
     
 end XU_DAUGHTER_BOARD.IMPl;
 

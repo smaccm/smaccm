@@ -7,6 +7,7 @@ public
   with Copter_Software;
   with Mission_Software;
   with software_types;
+  with hardware_types;
   
   system UAV
     features
@@ -24,13 +25,14 @@ public
       PIXHAWK: system PixHawk::PixHawk.i;
       ODROID_XU: system ODROID_XU::ODROID_XU.Impl;
       XU_DAUGHTER: system XU_DAUGHTER_BOARD::XU_DAUGHTER_BOARD.IMPL;
-     
+      can_bus : bus hardware_types::can;
     connections 
       --hardware connections
       conn_ide: feature group XU_DAUGHTER.ide <-> ODROID_XU.ide;
       conn_mpi: feature group XU_DAUGHTER.mpi <-> ODROID_XU.mpi;
       
-      conn_can : bus access XU_DAUGHTER.can <-> PIXHAWK.can0;
+      conn_can_odroid : bus access XU_DAUGHTER.can <-> can_bus;
+      conn_can_pixhawk : bus access PIXHAWK.can0 <-> can_bus;
       
       --software connections
       conn_ppm: port ppm_commands -> CSW.ppm_in;
@@ -40,8 +42,8 @@ public
       conn_mav_out : port MSW.enc_mavlink_out -> mavlink_out;
             
     properties
-      Actual_Connection_Binding => (reference (XU_DAUGHTER.can_bus)) applies to conn_mission0;
-      Actual_Connection_Binding => (reference (XU_DAUGHTER.can_bus)) applies to conn_mission1;
+      Actual_Connection_Binding => (reference (can_bus)) applies to conn_mission0;
+      Actual_Connection_Binding => (reference (can_bus)) applies to conn_mission1;
       Actual_Memory_Binding => (reference (ODROID_XU)) applies to MSW;
       Actual_Memory_Binding => (reference (PIXHAWK.MC.FLASH)) applies to CSW;
       
