@@ -4,10 +4,9 @@ public
   
 process main
   features
-    mavlink_in : in event data port software_types::can_data;
-    mavlink_out : out event data port software_types::can_data;
+    mission_out : out event data port software_types::can_data;
+    mission_in : in event data port software_types::can_data;
     ppm_in : in event data port software_types::Flight_Control_Commands.Impl;
-    motors_data : out event data port software_types::motors_data;
 end main;
 
 
@@ -28,8 +27,8 @@ process implementation main.i
     conn0 : port sensors.sensor_data -> can.sensor_data;
     conn1 : port control.control_out -> can.control_data;
     conn2 : port motmix.motors -> can.motmix_data;
-    conn3 : port mavlink_in -> can.mission_in;
-    conn4 : port can.mission_out -> mavlink_out;
+    conn3 : port mission_in -> can.mission_in;
+    conn4 : port can.mission_out -> mission_out;
     conn5 : port can.user_input -> ui_mux.mavlink_input;
     conn16 : port can.control_law_out -> ui_mux.mavlink_control;
     
@@ -48,11 +47,11 @@ process implementation main.i
     
     conn14 : port sensors.sensor_data -> control.sensor_data;
     
-    conn15 : port motmix.motors -> motors_data;
 end main.i;
 
 thread can_px4_t
   features
+    waypoints : out event data port software_types::waypoint;
     sensor_data : in event data port software_types::position.impl;
     control_data : in event data port software_types::controloutput.impl;
     motmix_data : in event data port software_types::motors_data;

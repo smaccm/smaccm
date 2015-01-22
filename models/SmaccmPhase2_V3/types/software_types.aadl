@@ -215,6 +215,7 @@ data implementation controloutput.impl
     time : data Base_Types::Unsigned_32;
 end controloutput.impl;
 
-
+data waypoint
+end waypoint;
   
 end software_types;

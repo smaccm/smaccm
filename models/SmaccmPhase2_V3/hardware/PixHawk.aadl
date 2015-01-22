@@ -1,6 +1,7 @@
 package PixHawk
 public
   with hardware_types;
+  with CORTEX;
 
 system PixHawk
   features
@@ -11,8 +12,8 @@ system PixHawk
     uart4 : in out data port hardware_types::UART;
     ppm : in out data port hardware_types::ppm;
     adc : in out data port hardware_types::adc;
-    can0 : provides bus access hardware_types::CAN;
-    can1 : provides bus access hardware_types::CAN;
+    can0 : requires bus access hardware_types::CAN;
+    can1 : requires bus access hardware_types::CAN;
     spi : provides bus access hardware_types::SPI_Bus;
     i2c : provides bus access hardware_types::I2C_Bus;
     usb : provides bus access hardware_types::USB;
@@ -24,6 +25,7 @@ system implementation PixHawk.i
     accel0 : system ST_Micro_LSM303D_Accel;
     accel1 : system Invensense_MPU_6000_Accel;
     baro : system MEAS_MS5611_Baro;
+    MC: system CORTEX::STM32F415.Impl;
 end PixHawk.i;
 
 system ST_Micro_L3GD20_Gyro

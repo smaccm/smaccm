@@ -12,6 +12,8 @@ system implementation ODROID_XU.Impl
   subcomponents
     cpu : processor Cortex_A15_Quad;
     mem : memory DRAM;
+    emmc : memory EMMC;
+    sd : memory SD;
     
   connections
     mem_bus : bus access cpu.mem_bus <-> mem.bus_access;
@@ -20,6 +22,12 @@ end ODROID_XU.Impl;
 
 bus Memory_Bus
 end Memory_Bus;
+
+memory EMMC
+end EMMC;
+
+memory SD
+end SD;
 
 memory DRAM
   features
