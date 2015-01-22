@@ -1,13 +1,9 @@
 package UAS
 public
   with UAV;
-  with DATATYPES;
+  with software_types;
  
   system UAS
-  
-    annex agree {**
-      guarantee "asfd": true;
-    **};
   end UAS;
   
   system implementation UAS.Impl
@@ -19,19 +15,26 @@ public
       RC: device RC_Controller; 
 
     connections
-      conn0: bus access UAV.radio_access_915Mhz <-> RF_915Mhz_Spectrum;
-      conn1: bus access UAV.radio_access_2_4Ghz <-> RF_2_4Ghz_Spectrum;
+      rf915: bus access UAV.radio_access_915Mhz <-> RF_915Mhz_Spectrum;
+      rf24: bus access UAV.radio_access_2_4Ghz <-> RF_2_4Ghz_Spectrum;
       conn2: bus access RC.radio_access <-> RF_2_4Ghz_Spectrum;
       conn3: bus access GS.radio_access <-> RF_915Mhz_Spectrum;
       
-      conn4: port GS.mavlink <-> UAV.mavlink;
-      conn5: port RC.flight_control_commands -> UAV.flight_control_commands;
+      conn4: port GS.mavlink_out -> UAV.mavlink_in;
+      conn5: port UAV.mavlink_out -> GS.mavlink_in;
+      conn7: port RC.flight_control_commands -> UAV.ppm_commands;
+      
+    properties
+      Actual_Connection_Binding => (reference (RF_915Mhz_Spectrum)) applies to rf915;
+      Actual_Connection_Binding => (reference (RF_2_4Ghz_Spectrum)) applies to rf24;
+      
   end UAS.Impl;
 
   system Ground_Station
     features
       radio_access: requires bus access RF_Spectrum.RF_915MHz;
-      mavlink: in out data port DATATYPES::EncryptMAVLink;
+      mavlink_in: in data port software_types::EncryptMAVLink;
+      mavlink_out: out data port software_types::EncryptMAVLink;
   end Ground_Station;
   
   system implementation Ground_Station.Impl
@@ -48,7 +51,7 @@ public
 
   device RC_Controller
     features
-      flight_control_commands: out data port DATATYPES::Flight_Control_Commands.Impl;
+      flight_control_commands: out data port software_types::Flight_Control_Commands.Impl;
       radio_access: requires bus access RF_Spectrum.RF_2_4GHz;
   end RC_Controller;
 end UAS;
