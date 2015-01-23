@@ -6,7 +6,11 @@ process main
   features
     mission_out : out event data port software_types::can_data;
     mission_in : in event data port software_types::can_data;
-    ppm_in : in event data port software_types::Flight_Control_Commands.Impl;
+    ppm_in : in event data port software_types::Flight_Control_Commands.i;
+    
+  annex agree {**
+  	eq time : int;
+  **};
 end main;
 
 
@@ -47,6 +51,9 @@ process implementation main.i
     
     conn14 : port sensors.sensor_data -> control.sensor_data;
     
+  annex agree {**
+  	assert time = can.time;
+  **};
 end main.i;
 
 thread can_px4_t
@@ -58,14 +65,22 @@ thread can_px4_t
     mission_out : out event data port software_types::can_data;
     mission_in : in event data port software_types::can_data;
     user_input : out event data port software_types::userinput_result.impl;
-    control_law_out : out event data port software_types::control_law.impl;
+    control_law_out : out event data port software_types::control_law_request.impl;
+  
+  annex agree {**
+  	eq time : int;
+  **};
 end can_px4_t;
 
 thread ppm_t
   features
-    flight_command : in event data port software_types::Flight_control_commands.Impl;
+    flight_command : in event data port software_types::Flight_Control_Commands.i;
     user_input : out event data port software_types::userinput_result.impl;
-    control_law_out : out event data port software_types::control_law.impl;
+    control_law_out : out event data port software_types::control_law_request.impl;
+    
+  annex agree {**
+  	eq time : int;
+  **};
 end ppm_t;
 
 thread control_t
@@ -82,8 +97,8 @@ thread ui_mux_t
     ppm_input : in event data port software_types::userinput_result.impl;
     mavlink_input : in event data port software_types::userinput_result.impl;
     
-    ppm_control : in event data port software_types::control_law.impl;
-    mavlink_control : in event data port software_types::control_law.impl;
+    ppm_control : in event data port software_types::control_law_request.impl;
+    mavlink_control : in event data port software_types::control_law_request.impl;
     --determines armed state
     control_law : out event data port software_types::control_law.impl;
     input_select : out event data port software_types::userinput_result.impl;

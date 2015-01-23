@@ -15,7 +15,13 @@ public
       radio_access_2_4Ghz: requires bus access UAS::RF_Spectrum.RF_2_4GHz;
       mavlink_in : in data port software_types::EncryptMAVLink;
       mavlink_out : out data port software_types::EncryptMAVLink;
-      ppm_commands: in data port software_types::Flight_Control_Commands.Impl;
+      ppm_commands: in data port software_types::Flight_Control_Commands.i;
+      
+    annex agree {**
+    	eq time : int;
+    	
+    	assume "time is positive" : time >= 0;
+    **};
   end UAV;
   
   system implementation UAV.Impl 
@@ -23,8 +29,8 @@ public
       CSW: process Copter_Software::main.i;
       MSW: system Mission_Software::Software.i;
       PIXHAWK: system PixHawk::PixHawk.i;
-      ODROID_XU: system ODROID_XU::ODROID_XU.Impl;
-      XU_DAUGHTER: system XU_DAUGHTER_BOARD::XU_DAUGHTER_BOARD.IMPL;
+      ODROID_XU: system ODROID_XU::ODROID_XU.i;
+      XU_DAUGHTER: system XU_DAUGHTER_BOARD::XU_DAUGHTER_BOARD.i;
       can_bus : bus hardware_types::can;
     connections 
       --hardware connections
@@ -46,6 +52,10 @@ public
       Actual_Connection_Binding => (reference (can_bus)) applies to conn_mission1;
       Actual_Memory_Binding => (reference (ODROID_XU)) applies to MSW;
       Actual_Memory_Binding => (reference (PIXHAWK.MC.FLASH)) applies to CSW;
+      
+    annex agree {**
+    	assert time = CSW.time;
+    **};
       
   end UAV.Impl;
 

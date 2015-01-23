@@ -35,7 +35,7 @@ public
   	Data_Model::Data_Representation => Struct;
   end Flight_Control_Commands;
   
-  data implementation Flight_Control_Commands.Impl
+  data implementation Flight_Control_Commands.i
   subcomponents
       --ppm inputs
       ppm0 : data Base_Types::Float;
@@ -47,7 +47,7 @@ public
       ppm6 : data Base_Types::Float;
       ppm7 : data Base_Types::Float;
       
-  end Flight_Control_Commands.impl;
+  end Flight_Control_Commands.i;
   
   data Sensor_Data
   end Sensor_Data;
@@ -154,6 +154,7 @@ data implementation control_law.impl
     stab_source : data Base_Types::Unsigned_32;
     head_source : data Base_Types::Unsigned_32;
     time : data Base_Types::Unsigned_32;
+    flight_mode : data Base_Types::Unsigned_32;
 end control_law.impl;
 
 
@@ -214,6 +215,32 @@ data implementation controloutput.impl
     yaw : data Base_Types::Float;
     time : data Base_Types::Unsigned_32;
 end controloutput.impl;
+
+data control_law_request
+  properties
+    Data_Model::Data_Representation => Struct;
+end control_law_request;
+
+
+data implementation control_law_request.impl
+  subcomponents
+    set_safe : data Base_Types::Boolean;
+    set_disarmed : data Base_Types::Boolean;
+    set_armed : data Base_Types::Boolean;
+    set_ui_ppm : data Base_Types::Boolean;
+    set_ui_mavlink : data Base_Types::Boolean;
+    set_yaw_rate : data Base_Types::Boolean;
+    set_yaw_heading : data Base_Types::Boolean;
+    set_thr_direct : data Base_Types::Boolean;
+    set_thr_auto : data Base_Types::Boolean;
+    set_autothr_src_ui : data Base_Types::Boolean;
+    set_autothr_src_nav : data Base_Types::Boolean;
+    set_stab_src_ui : data Base_Types::Boolean;
+    set_stab_src_nav : data Base_Types::Boolean;
+    set_head_src_ui : data Base_Types::Boolean;
+    set_head_src_nav : data Base_Types::Boolean;
+    time : data Base_Types::Unsigned_32;
+end control_law_request.impl;
 
 data waypoint
 end waypoint;
