@@ -69,7 +69,7 @@ public class AgreeGenerator {
     		assumptions.add(assumEq.expr);
     	}
     	assumptions.addAll(state.assertExpressions);
-    	assumptions.add(assertId);
+    	//assumptions.add(assertId);
 
     	//get the guarantees as properties and add them to the renaming
     	int i = 0;
@@ -388,11 +388,12 @@ public class AgreeGenerator {
     	String calenNodeName = "__CALENDAR_NODE_"+state.curInst.getInstanceObjectPath();
     	calenNodeName = calenNodeName.replace(".", "__");
     	
+    	Expr clockAssertion = null;
     	if(state.mnSyncEls.size() != 0){
     	    //this set is used to make sure that we do not make a definition for the same
     	    //calendar twice (a user might have multiple 3-2 synchrony constraints for example)
     	    Set<String> nodeNames = new HashSet<>();
-    	    Expr clockAssertion = new BoolExpr(true);
+    	    clockAssertion = new BoolExpr(true);
 
     	    for(MNSynchronyElement elem : state.mnSyncEls){
     	        String nodeName = "__calendar_node_"+elem.max+"_"+elem.min;
@@ -406,7 +407,6 @@ public class AgreeGenerator {
     	        nodeCall = new NodeCallExpr(nodeName, elem.minClock, elem.maxClock);
     	        clockAssertion = new BinaryExpr(clockAssertion, BinaryOp.AND, nodeCall);
     	    }
-    	    state.assertExpressions.add(clockAssertion);
     	}else if(state.calendar.size() != 0){
     	    List<Expr> clockIds = new ArrayList<>();
         	for(AgreeVarDecl clockVar : state.clockVars){
@@ -422,25 +422,18 @@ public class AgreeGenerator {
             for(AgreeVarDecl clockVar : state.clockVars){
                 clockIds.add(new IdExpr(clockVar.id));
             }
-            
             if(state.synchrony2 == 0){
                 Node dfaNode = AgreeCalendarUtils.getDFANode(dfaNodeName, state.synchrony); 
                 Node calNode = AgreeCalendarUtils.getCalendarNode(calenNodeName, dfaNode.id, state.clockVars.size());
                 state.nodeDefExpressions.add(dfaNode);
                 state.nodeDefExpressions.add(calNode);
 
-                Expr clockAssertion = new NodeCallExpr(calNode.id, clockIds);
-
-                //don't let multiple clocks tick together
-                if(!state.simultaneity){
-                    Expr onlyOneTick = AgreeCalendarUtils.getSingleTick(clockIds);
-                    clockAssertion = new BinaryExpr(clockAssertion, BinaryOp.AND, onlyOneTick);
-                }
+                clockAssertion = new NodeCallExpr(calNode.id, clockIds);
             }else{
                 String nodeName = "__calendar_node_"+state.synchrony+"_"+state.synchrony2;
                 Node calNode = AgreeCalendarUtils.getMNCalendar(nodeName, state.synchrony, state.synchrony2);
                 state.nodeDefExpressions.add(calNode);
-                Expr clockAssertion = new BoolExpr(true);
+                clockAssertion = new BoolExpr(true);
                 int i,j;
                 for(i = 0; i < clockIds.size(); i++){
                     Expr clock1 = clockIds.get(i);
@@ -453,11 +446,26 @@ public class AgreeGenerator {
                     }
                 }
             }
+            //don't let multiple clocks tick together
+            if(!state.simultaneity){
+                Expr onlyOneTick = AgreeCalendarUtils.getSingleTick(clockIds);
+                clockAssertion = new BinaryExpr(clockAssertion, BinaryOp.AND, onlyOneTick);
+            }
         }else{
+            clockAssertion = new BoolExpr(true);
         	for(AgreeVarDecl clockVar : state.clockVars){
-        		state.assertExpressions.add(new IdExpr(clockVar.id));
+        		clockAssertion = new BinaryExpr(clockAssertion, BinaryOp.AND, new IdExpr(clockVar.id));
         	}
-        }		
+        }
+    	//assert that at least one clock ticks
+    	if(state.clockVars.size() != 0){
+    	    Expr oneMustTick = new BoolExpr(false);
+    	    for(AgreeVarDecl clockVar : state.clockVars){
+    	        oneMustTick = new BinaryExpr(oneMustTick, BinaryOp.OR, new IdExpr(clockVar.id));
+    	    }
+    	    clockAssertion = new BinaryExpr(clockAssertion, BinaryOp.AND, oneMustTick);
+    	}
+    	state.assertExpressions.add(clockAssertion);
 		
 	}
 
@@ -603,6 +611,7 @@ public class AgreeGenerator {
 			state.internalVars.add(initVar);
 			state.eqExpressions.add(initializedEq);
 			state.assertExpressions.add(notInitialzedConstraint);
+			//state.initialExpressions.add(newInitExpr);
 		}
 	}
 

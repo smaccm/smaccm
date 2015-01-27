@@ -10,7 +10,7 @@ process main
     
   annex agree {**
   	eq time : int;
-  **};
+  	  **};
 end main;
 
 
@@ -53,6 +53,11 @@ process implementation main.i
     
   annex agree {**
   	assert time = can.time;
+  	assert time = control.time;
+  	assert time = ppm.time;
+  	
+  	assert time = 0 -> time > pre(time);
+  	
   **};
 end main.i;
 
@@ -87,9 +92,45 @@ thread control_t
   features
     user_input : in event data port software_types::userinput_result.impl;
     control_params : in data port software_types::control_data.impl;
-    control_law : in data port software_types::control_law.impl;
+    control_law : in event data port software_types::control_law.impl;
     control_out : out data port software_types::controloutput.impl;
     sensor_data : in event data port software_types::position.impl;
+    
+    annex agree {**
+   
+      const LANDING_TIMEOUT : int = 300;
+   
+      eq mode : int;
+  	  eq time : int;
+  	  eq time_of_last_event : int = if(event(user_input)) then time else 0 -> pre(time);
+  	  
+  	  initially :
+  	    mode = AGREE_CONSTS.DISARMED_MODE and
+  	    time_of_last_event = 0;
+  	    
+  	  assume "control and input events occur simultaneously":
+  	    event(user_input) = event(control_law);
+  	    
+  	  assume "valid modes for control input":
+  	    control_law.armed_mode = AGREE_CONSTS.LAND_MODE or
+  	    control_law.armed_mode = AGREE_CONSTS.ARMED_MODE or
+  	    control_law.armed_mode = AGREE_CONSTS.DISARMED_MODE;
+  	    
+  	  assume "mode doesn't change unless userinput changes'" :
+  	    not event(user_input) => control_law.armed_mode = pre(control_law.armed_mode);
+  	    
+  	  guarantee "mode behavior":
+  	    if(event(user_input)) then
+  	      mode = control_law.armed_mode
+  	    else if(time_of_last_event >= LANDING_TIMEOUT) then
+  	      mode = AGREE_CONSTS.LAND_MODE
+  	    else
+  	      mode = pre(mode);
+
+  	  
+  	  
+    **};
+    
 end control_t;
 
 thread ui_mux_t
@@ -102,6 +143,26 @@ thread ui_mux_t
     --determines armed state
     control_law : out event data port software_types::control_law.impl;
     input_select : out event data port software_types::userinput_result.impl;
+    
+   annex agree {**
+   	
+   	  assume "control inputs occur with user inputs":
+   	    event(ppm_input) = event(ppm_control) and
+   	    event(mavlink_input) = event(mavlink_control);
+   	
+   	  guarantee "armed mode ranges" :
+   	    control_law.armed_mode = AGREE_CONSTS.LAND_MODE or
+  	    control_law.armed_mode = AGREE_CONSTS.ARMED_MODE or
+  	    control_law.armed_mode = AGREE_CONSTS.DISARMED_MODE;
+  	    
+--  	  guarantee "output constant if nothing is received":
+--  	    not (event(ppm_input) or event(mavlink_input)) => 
+--  	      (not (event(control_law) and event(input_select)) and
+--  	      	;
+  	    
+  	    
+   **};
+    
 end ui_mux_t;
 
 thread ublox_gps_t
