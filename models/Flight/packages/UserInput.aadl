@@ -1,0 +1,633 @@
+package UserInput
+public
+with SMACCM;
+with SMACCM_SYS;
+with control_law_type;
+with control_law_request_type;
+with userinput_type;
+with DATATYPES;
+with mavlink_rc_channels_override_msg;
+with Base_Types;
+
+thread group UserInputThreads
+
+  features
+    ui_emitter: out event data port userinput_type::userinput_result.impl{Queue_Size => 16;};
+    law_emitter: out event data port control_law_type::control_law.impl{Queue_Size => 16;};
+	proxyUiData: requires data access userinput_type::userinput_result.impl {
+      Access_Right => write_only;
+    };
+    proxyControlData: requires data access control_law_type::control_law.impl {
+      Access_Right => write_only;
+	};
+	
+	uart5_rcoverride_tx: in event data port mavlink_rc_channels_override_msg::rc_channels_override_msg.impl{Queue_Size => 16;};
+	uart1_rcoverride_tx: in event data port mavlink_rc_channels_override_msg::rc_channels_override_msg.impl{Queue_Size => 16;};
+	uart5_control_law_request: in event data port control_law_request_type::control_law_request.impl{Queue_Size => 16;};
+	uart1_control_law_request: in event data port control_law_request_type::control_law_request.impl{Queue_Size => 16;};
+    flight_control_commands: in data port DATATYPES::Flight_Control_Commands.Impl;
+	system_time : in data port Base_Types::Integer;
+	
+	
+  annex agree {**
+  	
+  	  	-- begin constants --
+  		const deadSafe : int = AGREE_Arming_Logic.deadSafe;
+  		const deadArmable : int = AGREE_Arming_Logic.deadArmable;
+  	
+  		--equations for reading the state of control sticks
+  		eq throttle_chan : real = flight_control_commands.ppm2;
+  		eq rudder_chan : real = flight_control_commands.ppm3;
+  		eq dead_chan : real = flight_control_commands.ppm5;
+  		eq dead_pos : int = if dead_chan > 1600.0 then deadArmable else deadSafe;
+  		eq sticks_corner : bool = (throttle_chan < 1050.0 and rudder_chan > 1900.0);
+  		 
+  		eq dead_pos_armed_past : bool = 
+  			dead_pos = deadArmable -> pre (dead_pos_armed_past) or dead_pos = deadArmable;
+  		
+  		eq sticks_corner_past : bool = 
+  			sticks_corner -> pre(sticks_corner_past) or sticks_corner;
+  		
+  		eq armed_past : bool = 
+  			sticks_corner_past and dead_pos_armed_past;
+  		
+  		guarantee "The controller is not armed unless the ppm says so" :
+  			(law_emitter.COUNT > 0 and law_emitter.armed_mode = 2) 
+  				=> armed_past;
+  		 
+  		guarantee "Queues initially empty" :
+  			(ui_emitter.COUNT = 0 -> true) and
+  			(law_emitter.COUNT = 0 -> true);
+  			
+  		guarantee "Queue bounds" :
+  			ui_emitter.COUNT < 2 and
+  			ui_emitter.COUNT >= 0 and
+  			law_emitter.COUNT < 2 and
+  			law_emitter.COUNT >= 0;
+  	
+  		guarantee "Control law is initially set to safe" :
+  			law_emitter.armed_mode = 0 -> true;
+  			
+  		guarantee "User input ranges are bounded" :
+  			ui_emitter.COUNT > 0 =>
+  			(-1.0 <= ui_emitter.roll and ui_emitter.roll <= 1.0) and
+  			(-1.0 <= ui_emitter.pitch and ui_emitter.pitch <= 1.0) and
+  			(-1.0 <= ui_emitter.throttle and ui_emitter.throttle <= 1.0) and
+  			(-1.0 <= ui_emitter.yaw and ui_emitter.yaw <= 1.0); 
+  			
+  		node ris_edg(signal : bool) returns (result : bool);
+  		let
+  			result = false -> (signal and not pre(signal));
+  		tel;
+  			
+		eq ui_insertions : int = (if (ui_emitter.COUNT > 0) then 1 else 0) -> if (ris_edg(ui_emitter.COUNT > 0)) then
+										pre(ui_insertions) + 1
+									  else
+									  	pre(ui_insertions);
+  			
+  		guarantee "User input time always increasing" :
+  			true -> ui_insertions > 1 => (ui_emitter.time >= pre (ui_emitter.time));
+  			
+  		guarantee "UI insertions is always positive" :
+  			ui_insertions >= 0;
+  			
+  		assume "positive time" :
+  			system_time >= 0;
+  	
+  		assume "the time value is always increasing" :
+  			true -> system_time > pre(system_time);
+  			
+  **};
+	  
+end UserInputThreads;
+
+thread group implementation UserInputThreads.Impl
+
+  subcomponents
+	uiMuxTask_inst : thread uiMuxTask;
+   	controlLawTask_inst : thread controlLawTask;
+   	mavlinkInputTask_inst : thread mavlinkInputTask;
+   	ppmInputTower_inst : thread ppmInputTower;
+   	proxy_controllaw_inst : thread proxy_controllaw;
+    proxy_userinput_inst : thread proxy_userinput;
+
+  connections
+    conn_30 : port uiMuxTask_inst.ui_emitter -> ui_emitter;
+    conn_32 : port controlLawTask_inst.law_emitter -> uiMuxTask_inst.law;
+    conn_34 : port mavlinkInputTask_inst.ui_emitter -> uiMuxTask_inst.mavlink_ui;
+    conn_36 : port ppmInputTower_inst.ui_emitter -> uiMuxTask_inst.ppm_ui;
+    conn_31 : port controlLawTask_inst.law_emitter -> law_emitter;
+    conn_33 : port mavlinkInputTask_inst.cr_emitter -> controlLawTask_inst.mav_req_snk;
+    conn_35 : port ppmInputTower_inst.cr_emitter -> controlLawTask_inst.ppm_req_snk;
+    conn_4 : port uart5_rcoverride_tx -> mavlinkInputTask_inst.rcoverride;
+    conn_14 : port uart1_rcoverride_tx -> mavlinkInputTask_inst.rcoverride;
+    conn_6 : port uart5_control_law_request -> mavlinkInputTask_inst.mav_controllaw_req;
+    conn_7 : port uart1_control_law_request -> mavlinkInputTask_inst.mav_controllaw_req;
+	conn_99 : port flight_control_commands -> ppmInputTower_inst.flight_control_commands;
+	conn_time : port system_time -> ppmInputTower_inst.time;
+	conn_ui : port uiMuxTask_inst.ui_emitter -> proxy_userinput_inst.proxyEvent;
+	conn_control : port controlLawTask_inst.law_emitter -> proxy_controllaw_inst.proxyEvent;
+	
+  annex agree {** 
+--  	calendar: ppmInputTower_inst, controlLawTask_inst, uiMuxTask_inst;  
+   
+    synchrony: 1 no_simult;
+   
+  	node time_since(trigger : bool) returns (count : int);
+  	let
+  		count = 0 -> (if(trigger) then 0 else (pre(count) + 1));
+  	tel;
+
+  	eq ppmSetArmed : bool = ppmInputTower_inst.cr_emitter.set_armed;
+  	eq ppmSetSafe : bool = ppmInputTower_inst.cr_emitter.set_safe;
+  	eq ppmQueueInsert : bool = ppmInputTower_inst.cr_emitter.INSERT;
+  	eq ctrlArmedMode: int = law_emitter.armed_mode;
+  	
+  	eq sincePPMArmed : int = time_since(ris_edg(ppmSetArmed)); 
+  	eq sincePPMSafe : int = time_since(ris_edg(ppmSetSafe));
+  	eq sinceCtrlArmed : int = time_since(ctrlArmedMode = 2);
+  	
+  	eq armedCount : int = (if (ppmSetArmed and ppmQueueInsert) then 1 else 0) ->
+  		if (ppmSetArmed and ppmQueueInsert) then (pre(armedCount) + 1) else pre(armedCount);
+  	
+  	eq safeCount : int = (if (ppmSetSafe and ppmQueueInsert) then 1 else 0) ->
+  		if (ppmSetSafe and ppmQueueInsert) then (pre(safeCount) + 1) else pre(safeCount);
+  	
+  	
+  	eq dummyTrigger : bool;
+  	eq dummySince : int = time_since(dummyTrigger);
+  	eq dummyCount : int = (if dummyTrigger then 1 else 0) -> 
+  		(if dummyTrigger then (pre(dummyCount) + 1) else (pre(dummyCount)));
+  	
+  	eq worldClock : int = 0 -> pre(worldClock) + 1;
+  	
+  	-- needs to be present to prove the followign lemma
+	  lemma "armed mode range" :
+  		law_emitter.COUNT > 0 => ctrlArmedMode <= 2 and ctrlArmedMode >= 0;
+
+  	lemma "positive counts" :
+  		armedCount >= 0 and sincePPMArmed >=0 and sinceCtrlArmed >=0; 
+		
+	  lemma "low queue bound" :
+  		(controlLawTask_inst.ppm_req_snk.COUNT = 0 -> true) and
+  		(uiMuxTask_inst.ppm_ui.COUNT = 0 -> true) and
+  		controlLawTask_inst.ppm_req_snk.COUNT < 2 and
+  		uiMuxTask_inst.ppm_ui.COUNT < 2 and
+  		controlLawTask_inst.ppm_req_snk.COUNT >= 0 and
+  		uiMuxTask_inst.ppm_ui.COUNT >= 0; 
+
+  	lemma "controller not armed initially" :
+  		(not (ctrlArmedMode = 2)) -> true;	
+		
+  	lemma "controller never arms unless ppm send arm signal" :  
+		ctrlArmedMode = 2 => armedCount > 0;  
+		
+  	lemma "lemma needed to prove that controller being armed is implied by ppm arming" :
+  		armedCount > 0 => armed_past;
+		
+  	eq ever_safe : bool = ppmSetSafe -> pre (ever_safe) or ppmSetSafe;
+	
+  	--remove output elements as they become available
+  	assert law_emitter.COUNT > 0 => law_emitter.REMOVE;
+  	assert law_emitter.COUNT = 0 => not law_emitter.REMOVE;
+  	assert ui_emitter.COUNT > 0 => ui_emitter.REMOVE;
+  	assert ui_emitter.COUNT = 0 => not ui_emitter.REMOVE;
+  	
+  	--intial armed mode assertion
+  	assert ctrlArmedMode = 0 -> true;
+		
+  **};
+	
+end UserInputThreads.Impl;
+
+thread proxy_userinput
+  features
+    proxyEvent: in event data port userinput_type::userinput_result.impl {
+      Queue_Size => 16;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_proxy_userinput_132.h";
+      SMACCM_SYS::CommPrim_Source_Text => "receiveFromTask_proxy_userinput_132_chan105_136";
+      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_proxy_userinput_132_chan105_139");
+    };
+    proxyData: requires data access userinput_type::userinput_result.impl {
+      Access_Right => write_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_proxy_userinput_132.h";
+      SMACCM_SYS::CommPrim_Source_Text => "write_proxy_userinput_132_dataport131_134";
+    };
+  properties
+    Source_Text => ("tower_task_usercode_proxy_userinput_132.c");
+    Priority => 22;
+    Stack_Size => 256 bytes;
+    SMACCM::Language => "Ivory";
+    Dispatch_Protocol => Sporadic;
+    SMACCM::Always_Sends_Message => true;
+end proxy_userinput;
+
+thread proxy_controllaw
+  features
+    proxyEvent: in event data port control_law_type::control_law.impl {
+      Queue_Size => 16;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_proxy_controllaw_141.h";
+      SMACCM_SYS::CommPrim_Source_Text => "receiveFromTask_proxy_controllaw_141_chan86_145";
+      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_proxy_controllaw_141_chan86_148");
+    };
+    proxyData: requires data access control_law_type::control_law.impl {
+      Access_Right => write_only;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_proxy_controllaw_141.h";
+      SMACCM_SYS::CommPrim_Source_Text => "write_proxy_controllaw_141_dataport140_143";
+    };
+  properties
+    Source_Text => ("tower_task_usercode_proxy_controllaw_141.c");
+    Priority => 21;
+    Stack_Size => 256 bytes;
+    SMACCM::Language => "Ivory";
+    Dispatch_Protocol => Sporadic;
+end proxy_controllaw;
+
+
+thread uiMuxTask
+  features
+    ui_emitter: out event data port userinput_type::userinput_result.impl {
+      Queue_Size => 16;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_uiMuxTask_106.h";
+      SMACCM_SYS::CommPrim_Source_Text => "emitFromTask_uiMuxTask_106_chan105_115";
+    };
+    mavlink_ui: in event data port userinput_type::userinput_result.impl {
+      Queue_Size => 16;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_uiMuxTask_106.h";
+      SMACCM_SYS::CommPrim_Source_Text => "receiveFromTask_uiMuxTask_106_chan63_127";
+      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_uiMuxTask_106_chan63_130");
+    };
+    ppm_ui: in event data port userinput_type::userinput_result.impl {
+      Queue_Size => 16;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_uiMuxTask_106.h";
+      SMACCM_SYS::CommPrim_Source_Text => "receiveFromTask_uiMuxTask_106_chan41_122";
+      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_uiMuxTask_106_chan41_125");
+    };
+    law: in event data port control_law_type::control_law.impl {
+      Queue_Size => 16;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_uiMuxTask_106.h";
+      SMACCM_SYS::CommPrim_Source_Text => "receiveFromTask_uiMuxTask_106_chan86_117";
+      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_uiMuxTask_106_chan86_120");
+    };
+  properties
+    Source_Text => ("tower_task_usercode_uiMuxTask_106.c");
+    Priority => 23;
+    Stack_Size => 256 bytes;
+    SMACCM::Language => "Ivory";
+    Dispatch_Protocol => Sporadic;
+    SMACCM::Always_Sends_Message => true;
+    
+  annex agree {**
+  	
+  		-- for now lets just do a pass through with the ppm ui input
+  		
+  		guarantee "always remove from ppm" :
+  			(ppm_ui.COUNT > 0 => ppm_ui.REMOVE) and
+  			(ppm_ui.COUNT = 0 => not ppm_ui.REMOVE);
+  			
+  		guarantee "always insert into output if ppm input is available" :
+  			(ppm_ui.COUNT > 0 => ui_emitter.INSERT) and
+  			(ppm_ui.COUNT = 0 => not  ui_emitter.INSERT);
+  		
+  		guarantee "queue passthrough" :
+  			ui_emitter.throttle = ppm_ui.throttle and
+  			ui_emitter.roll = ppm_ui.roll and
+  			ui_emitter.pitch = ppm_ui.pitch and
+  			ui_emitter.yaw = ppm_ui.yaw and
+  			ui_emitter.time = ppm_ui.time; 
+  	
+  **};
+    
+    
+end uiMuxTask;
+
+thread mavlinkInputTask
+  features
+    cr_emitter: out event data port control_law_request_type::control_law_request.impl {
+      Queue_Size => 16;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_mavlinkInputTask_65.h";
+      SMACCM_SYS::CommPrim_Source_Text => "emitFromTask_mavlinkInputTask_65_chan64_69";
+    };
+    ui_emitter: out event data port userinput_type::userinput_result.impl {
+      Queue_Size => 16;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_mavlinkInputTask_65.h";
+      SMACCM_SYS::CommPrim_Source_Text => "emitFromTask_mavlinkInputTask_65_chan63_67";
+    };
+    mav_controllaw_req: in event data port control_law_request_type::control_law_request.impl {
+      Queue_Size => 16;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_mavlinkInputTask_65.h";
+      SMACCM_SYS::CommPrim_Source_Text => "receiveFromTask_mavlinkInputTask_65_chan1_78";
+      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_mavlinkInputTask_65_chan1_81");
+    };
+    rcoverride: in event data port mavlink_rc_channels_override_msg::rc_channels_override_msg.impl {
+      Queue_Size => 16;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_mavlinkInputTask_65.h";
+      SMACCM_SYS::CommPrim_Source_Text => "receiveFromTask_mavlinkInputTask_65_chan2_73";
+      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_mavlinkInputTask_65_chan2_76");
+    };
+  properties
+    Source_Text => ("tower_task_usercode_mavlinkInputTask_65.c");
+    Priority => 25;
+    Stack_Size => 256 bytes;
+    SMACCM::Language => "Ivory";
+    Dispatch_Protocol => Hybrid;
+    Period => 5 ms;
+    SMACCM::Always_Sends_Message => true ;
+    SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_mavlinkInputTask_65_per5_85");
+end mavlinkInputTask;
+
+
+thread controlLawTask
+  features
+    law_emitter: out event data port control_law_type::control_law.impl {
+      Queue_Size => 16;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_controlLawTask_87.h";
+      SMACCM_SYS::CommPrim_Source_Text => "emitFromTask_controlLawTask_87_chan86_89";
+    };
+    mav_req_snk: in event data port control_law_request_type::control_law_request.impl {
+      Queue_Size => 16;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_controlLawTask_87.h";
+      SMACCM_SYS::CommPrim_Source_Text => "receiveFromTask_controlLawTask_87_chan64_101";
+      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_controlLawTask_87_chan64_104");
+    };
+    ppm_req_snk: in event data port control_law_request_type::control_law_request.impl {
+      Queue_Size => 16;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_controlLawTask_87.h";
+      SMACCM_SYS::CommPrim_Source_Text => "receiveFromTask_controlLawTask_87_chan42_96";
+      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_controlLawTask_87_chan42_99");
+    };
+  properties
+    Source_Text => ("tower_task_usercode_controlLawTask_87.c");
+    Priority => 24;
+    Stack_Size => 256 bytes;
+    SMACCM::Language => "Ivory";
+    Dispatch_Protocol => Sporadic;
+    
+  annex agree {**
+  	
+  	const safe : int = 0;
+  	const disarmed : int = 1;
+  	const armed : int = 2;
+  	
+  	eq safe_req : bool = ppm_req_snk.set_safe; 
+  	eq arm_req : bool = ppm_req_snk.set_armed;
+  	eq disarm_req : bool = ppm_req_snk.set_disarmed;
+  	eq armed_mode : int = law_emitter.armed_mode;
+  	eq prev_armed_mode : int = safe -> pre(armed_mode);
+  	
+  	guarantee "initial armed mode" :
+  		 armed_mode = safe -> true;
+  	
+  	guarantee "armed mode behavior" :
+  		if(ppm_req_snk.COUNT = 0) then
+  			armed_mode = prev_armed_mode
+  		else if (prev_armed_mode = safe and (not safe_req)) then
+  			armed_mode = disarmed
+  		else if (safe_req) then
+  			armed_mode = safe
+  		else if (disarm_req) then
+  			armed_mode = disarmed
+  		else if (arm_req) then
+  			armed_mode = armed
+  		else
+  			armed_mode = prev_armed_mode;
+  			
+  			
+  	guarantee "always remove from queue when possible" :
+  		ppm_req_snk.COUNT > 0 => ppm_req_snk.REMOVE;
+  		
+  	guarantee "don't remove if you cannot" :
+  		ppm_req_snk.COUNT = 0 => not ppm_req_snk.REMOVE;
+  		
+  	guarantee "don't insert into output if not postive count" :
+  		ppm_req_snk.COUNT = 0 => not law_emitter.INSERT;
+  		
+  	guarantee "always insert into output if positive count" :
+  		ppm_req_snk.COUNT > 0 => law_emitter.INSERT;
+  	
+  **};
+    
+end controlLawTask;
+
+
+thread ppmInputTower
+  features
+    cr_emitter: out event data port control_law_request_type::control_law_request.impl {
+      Queue_Size => 16;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_ppmInputTower_43.h";
+      SMACCM_SYS::CommPrim_Source_Text => "emitFromTask_ppmInputTower_43_chan42_47";
+    };
+    ui_emitter: out event data port userinput_type::userinput_result.impl {
+      Queue_Size => 16;
+      SMACCM_SYS::CommPrim_Source_Header => "tower_task_loop_ppmInputTower_43.h";
+      SMACCM_SYS::CommPrim_Source_Text => "emitFromTask_ppmInputTower_43_chan41_45";
+    };
+    
+    --added by Backes
+    flight_control_commands: in data port DATATYPES::Flight_Control_Commands.Impl;
+    time : in data port Base_Types::Integer;
+    
+  properties
+    Source_Text => ("tower_task_usercode_ppmInputTower_43.c");
+    Priority => 26;
+    Stack_Size => 256 bytes;
+    SMACCM::Language => "Ivory";
+    Dispatch_Protocol => Hybrid;
+    Period => 50 ms; 
+    SMACCM_SYS::Compute_Entrypoint_Source_Text => ("eventhandler_ppmInputTower_43_per50_62");
+
+  annex agree {** 
+  	-- begin constants --
+  	const deadSafe : int = AGREE_Arming_Logic.deadSafe;
+  	const deadArmable : int = AGREE_Arming_Logic.deadArmable; 
+  	const armingIdle : int = AGREE_Arming_Logic.armingIdle;
+  	const armingActive : int = AGREE_Arming_Logic.armingActive;
+  	const armingComplete : int = AGREE_Arming_Logic.armingComplete;
+  	const hystresis : int = AGREE_Arming_Logic.hystresis;
+  	const timeout_limit : int = AGREE_Arming_Logic.timeout_limit;
+  	const minBound : real = AGREE_Arming_Logic.minBound;
+  	const maxBound : real = AGREE_Arming_Logic.maxBound;
+ 
+ 	-- begin state varaibles --
+   	eq ppm_valid : bool;
+ 	--all ppm last signals
+  	eq ppm_last0 : real;
+  	eq ppm_last1 : real;
+  	eq ppm_last2 : real;
+  	eq ppm_last3 : real;
+  	eq ppm_last4 : real;
+  	eq ppm_last5 : real;
+  	eq ppm_last6 : real;
+  	eq ppm_last7 : real; 
+   	eq ppm_last_time : int;
+  	eq arming_state : int;
+  	eq arming_state_time : int;
+  	eq dead_last_pos : int;
+	
+  	-- begin inputs --
+  	eq captured : bool; --TODO: plug this variable into the model
+  	eq ppm0 : real = flight_control_commands.ppm0;
+  	eq ppm1 : real = flight_control_commands.ppm1;
+  	eq ppm2 : real = flight_control_commands.ppm2;
+  	eq ppm3 : real = flight_control_commands.ppm3;
+  	eq ppm4 : real = flight_control_commands.ppm4;
+  	eq ppm5 : real = flight_control_commands.ppm5;
+  	eq ppm6 : real = flight_control_commands.ppm6;
+  	eq ppm7 : real = flight_control_commands.ppm7; 
+	
+	-- begin intermediate vars --
+  	eq throttle_chan : real = flight_control_commands.ppm2;
+  	eq rudder_chan : real = flight_control_commands.ppm3; 
+  	eq dead_chan : real = flight_control_commands.ppm5;
+  	eq dead_pos : int = if dead_chan > 1600.0 then deadArmable else deadSafe;
+  	eq prev_ppm_last_time : int = 0 -> pre (ppm_last_time);
+  	eq sticks_corner : bool = (throttle_chan < 1050.0 and rudder_chan > 1900.0);
+  	eq done_waiting : bool = (time - prev_arming_state_time) > hystresis;
+  	eq prev_arming_state_time : int = prev(arming_state_time, 0);
+  	eq prev_arming_state : int = prev(arming_state, armingIdle);
+  	
+  	eq all_good : bool = (ppm0 > minBound and ppm0 < maxBound) and
+  		(ppm1 > minBound and ppm1 < maxBound) and
+  		(ppm2 > minBound and ppm2 < maxBound) and
+  		(ppm3 > minBound and ppm3 < maxBound) and
+  		(ppm4 > minBound and ppm4 < maxBound) and
+  		(ppm5 > minBound and ppm5 < maxBound) and
+  		(ppm6 > minBound and ppm6 < maxBound) and
+  		(ppm7 > minBound and ppm7 < maxBound);
+  	
+  	-- begin arming logic requirements --
+  	
+  	guarantee "arming_state and time behavior" :
+  		if (captured and all_good) then
+  			if (dead_pos = deadSafe) then
+  				arming_state = armingIdle and
+  				arming_state_time = time
+  			else if (prev_arming_state = armingIdle and sticks_corner) then
+  				arming_state = armingActive and
+  				arming_state_time = time
+  			else if (prev_arming_state = armingActive and sticks_corner and done_waiting) then
+  				arming_state = armingComplete and
+  				arming_state_time = prev_arming_state_time
+  			else
+  				arming_state = armingIdle and
+  				arming_state_time = prev_arming_state_time
+  		else
+  			arming_state = prev_arming_state and
+  			arming_state_time = prev_arming_state_time;
+  			
+  	guarantee "dead_last_pos behavior" :
+  		if (captured and all_good) then
+  			dead_last_pos = dead_pos
+  		else if(not captured) then
+  			dead_last_pos = deadSafe
+  		else
+  			dead_last_pos = prev(dead_last_pos, deadSafe);
+  		
+  	guarantee "ppm_last_time behavior":
+  		if (captured and all_good) then 
+  			ppm_last_time = time
+  		else
+  			ppm_last_time = prev_ppm_last_time;
+  			
+  	guarantee "ppm_valid behavior":
+  		if (captured) then
+  			if (all_good) then
+  				ppm_valid = true
+  			else
+  				ppm_valid = prev(ppm_valid, false)
+  		else if ((time - ppm_last_time) > timeout_limit) then
+  			ppm_valid = false
+  		else
+  			ppm_valid = prev(ppm_valid, false);
+  		
+  	guarantee "ppm_last behavior":
+  		if (all_good) then
+  			ppm_last0 = ppm0 and
+  			ppm_last1 = ppm1 and
+  			ppm_last2 = ppm2 and
+  			ppm_last3 = ppm3 and
+  			ppm_last4 = ppm4 and
+  			ppm_last5 = ppm5 and
+  			ppm_last6 = ppm6 and
+  			ppm_last7 = ppm6
+  		else
+  			ppm_last0 = prev(ppm_last0, ppm0) and
+  			ppm_last1 = prev(ppm_last1, ppm1) and
+  			ppm_last2 = prev(ppm_last2, ppm2) and
+  			ppm_last3 = prev(ppm_last3, ppm3) and
+  			ppm_last4 = prev(ppm_last4, ppm4) and
+  			ppm_last5 = prev(ppm_last5, ppm5) and
+  			ppm_last6 = prev(ppm_last6, ppm6) and
+  			ppm_last7 = prev(ppm_last7, ppm7);
+  		
+  	guarantee "disarmed signal is always false":
+  		cr_emitter.set_disarmed = false;
+  	
+  	guarantee "queue insertion behavior" :
+  		cr_emitter.INSERT and
+  		cr_emitter.set_safe = (dead_last_pos = deadSafe) and
+  		if (arming_state = armingComplete) then
+  			cr_emitter.set_armed = true
+  		else
+  			cr_emitter.set_armed = prev(cr_emitter.set_armed, false);
+  	
+  	-- begin ppm processing requirements
+  	
+  	eq ppmHigh : int = 1900;
+  	eq ppmLow : int = 1100;
+  	eq ppmCenter : int = 1500;
+  	
+  	node scale_proc(input : real) returns (result : real);
+  	var
+  		outmin : real;
+  		outmax : real;
+  		centered : real;
+  		ranged : real;
+  	let
+  		outmin = -1.0;
+  		outmax = 1.0;
+  		centered = input - 1500.0;
+  		ranged = centered / 500.0; 
+  		
+  		result = if (ranged < -1.0) then
+  					-1.0
+  				 else if (ranged > 1.0) then
+  				 	1.0
+  				 else
+  				 	ranged;
+  	tel;
+  	
+  	assume "positive time" :
+  		time >= 0;
+  	
+  	assume "the time value is always increasing" :
+  		true -> time > pre(time);
+  	
+  	guarantee "helpful guarantee for monotonic time" :
+  		time >= ui_emitter.time;
+  	
+  	guarantee "invalid ppm signal behavior" :
+  		(not ppm_valid) =>
+  			ui_emitter.roll = 0.0 and
+  			ui_emitter.pitch = 0.0 and
+  			ui_emitter.throttle = -1.0 and
+  			ui_emitter.yaw = 0.0 and
+  			ui_emitter.time = (0 -> pre(ui_emitter.time));
+  			
+  	guarantee "valid ppm signal behavior" :
+  		ppm_valid => 
+  			ui_emitter.roll = scale_proc(ppm_last0) and
+  			ui_emitter.pitch = scale_proc(ppm_last1) and
+  			ui_emitter.throttle = scale_proc(ppm_last2) and
+  			ui_emitter.yaw = scale_proc(ppm_last3) and
+  			ui_emitter.time = time;
+  	
+  	guarantee "always insert into ui queue" :
+  		ui_emitter.INSERT;
+  	
+  **};
+
+end ppmInputTower;
+
+
+end UserInput;
