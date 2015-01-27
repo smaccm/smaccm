@@ -48,15 +48,7 @@ public
       ppm7 : data Base_Types::Float;
       
   end Flight_Control_Commands.i;
-  
-  data Sensor_Data
-  end Sensor_Data;
-  
-  data implementation Sensor_Data.Impl
-  subcomponents
-      speed : data Base_Types::Float;
-  end Sensor_Data.Impl;
-  
+
   data Magnetometer_Data
   end Magnetometer_Data;
   
@@ -66,19 +58,19 @@ public
   data Motion_Data
   end Motion_Data;
   
-  data Reset_Data
-  end Reset_Data;
-  
   data implementation Motion_Data.Impl
   subcomponents
       vertical_speed : data Base_Types::Float;
   end Motion_Data.Impl;
   
+  data Reset_Data
+  end Reset_Data;
+  
   data Battery_Data
   end Battery_Data;
-  
-  data GPS_Data
-  end GPS_Data;
+
+  data Sensor_Data
+  end Sensor_Data;
   
   data Private_Key_Data
   end Private_Key_Data;
