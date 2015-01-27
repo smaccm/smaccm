@@ -15,18 +15,19 @@ public
       RC: device RC_Controller; 
 
     connections
-      rf915: bus access UAV.radio_access_915Mhz <-> RF_915Mhz_Spectrum;
-      rf24: bus access UAV.radio_access_2_4Ghz <-> RF_2_4Ghz_Spectrum;
-      conn2: bus access RC.radio_access <-> RF_2_4Ghz_Spectrum;
-      conn3: bus access GS.radio_access <-> RF_915Mhz_Spectrum;
+      conn1: bus access UAV.radio_access_915Mhz <-> RF_915Mhz_Spectrum;
+      conn2: bus access UAV.radio_access_2_4Ghz <-> RF_2_4Ghz_Spectrum;
+      conn3: bus access RC.radio_access <-> RF_2_4Ghz_Spectrum;
+      conn4: bus access GS.radio_access <-> RF_915Mhz_Spectrum;
       
-      conn4: port GS.mavlink_out -> UAV.mavlink_in;
-      conn5: port UAV.mavlink_out -> GS.mavlink_in;
+      conn5: port GS.mavlink_out -> UAV.mavlink_in;
+      conn6: port UAV.mavlink_out -> GS.mavlink_in;
       conn7: port RC.flight_control_commands -> UAV.ppm_commands;
       
     properties
-      Actual_Connection_Binding => (reference (RF_915Mhz_Spectrum)) applies to rf915;
-      Actual_Connection_Binding => (reference (RF_2_4Ghz_Spectrum)) applies to rf24;
+      Actual_Connection_Binding => (reference (RF_915Mhz_Spectrum)) applies to conn5;
+      Actual_Connection_Binding => (reference (RF_915Mhz_Spectrum)) applies to conn6;
+      Actual_Connection_Binding => (reference (RF_2_4Ghz_Spectrum)) applies to conn7;
       
   end UAS.Impl;
 

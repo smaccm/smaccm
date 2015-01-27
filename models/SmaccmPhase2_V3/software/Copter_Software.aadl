@@ -1,6 +1,7 @@
 package Copter_Software
 public
   with software_types;
+  with SMACCM;
   
 process main
   features
@@ -27,7 +28,6 @@ process implementation main.i
     control_params : data software_types::control_data.impl;
     
   connections
-  
     conn0 : port sensors.sensor_data -> can.sensor_data;
     conn1 : port control.control_out -> can.control_data;
     conn2 : port motmix.motors -> can.motmix_data;
@@ -47,10 +47,13 @@ process implementation main.i
     
     conn12 : port ui_mux.control_law -> motmix.control_law_in;
     
-    conn13 : port gps.position -> sensors.position;
+    conn13 : port gps.position -> sensors.gps;
     
     conn14 : port sensors.sensor_data -> control.sensor_data;
-    
+  
+  properties
+    SMACCM::OS => "eChronos";
+  
   annex agree {**
   	assert time = can.time;
   	assert time = control.time;
@@ -59,18 +62,25 @@ process implementation main.i
   	assert time = 0 -> time > pre(time);
   	
   **};
+  
+  annex resolute {** 
+    	prove only_receive_gs(this.motmix)
+  **};
 end main.i;
 
 thread can_px4_t
   features
     waypoints : out event data port software_types::waypoint;
-    sensor_data : in event data port software_types::position.impl;
+    sensor_data : in event data port software_types::Sensor_Data;
     control_data : in event data port software_types::controloutput.impl;
     motmix_data : in event data port software_types::motors_data;
     mission_out : out event data port software_types::can_data;
     mission_in : in event data port software_types::can_data;
     user_input : out event data port software_types::userinput_result.impl;
     control_law_out : out event data port software_types::control_law_request.impl;
+  
+  properties
+    SMACCM::Language => "Ivory";
   
   annex agree {**
   	eq time : int;
@@ -82,7 +92,10 @@ thread ppm_t
     flight_command : in event data port software_types::Flight_Control_Commands.i;
     user_input : out event data port software_types::userinput_result.impl;
     control_law_out : out event data port software_types::control_law_request.impl;
-    
+      
+  properties
+    SMACCM::Language => "Ivory";
+   
   annex agree {**
   	eq time : int;
   **};
@@ -94,7 +107,10 @@ thread control_t
     control_params : in data port software_types::control_data.impl;
     control_law : in event data port software_types::control_law.impl;
     control_out : out data port software_types::controloutput.impl;
-    sensor_data : in event data port software_types::position.impl;
+    sensor_data : in event data port software_types::Sensor_Data;
+      
+  properties
+    SMACCM::Language => "Ivory";
     
     annex agree {**
    
@@ -143,6 +159,9 @@ thread ui_mux_t
     --determines armed state
     control_law : out event data port software_types::control_law.impl;
     input_select : out event data port software_types::userinput_result.impl;
+      
+  properties
+    SMACCM::Language => "Ivory";
     
    annex agree {**
    	
@@ -167,13 +186,24 @@ end ui_mux_t;
 
 thread ublox_gps_t
   features
-    position : out event data port software_types::position.impl;
+    position : out event data port software_types::position.impl;  
+  properties
+    SMACCM::Language => "Ivory";
 end ublox_gps_t;
 
 thread sensors_t
   features
-    position : in event data port software_types::position.impl;
-    sensor_data : out event data port software_types::position.impl;
+    magnetometer : in data port software_types::Magnetometer_Data;
+    barometer : in data port software_types::Barometric_Data;
+    motion : in data port software_types::Motion_Data.Impl;
+    reset : in event data port software_types::Reset_Data;
+    battery : in data port software_types::Battery_Data;
+    gps : in data port software_types::Position.Impl;
+    
+    sensor_data : out event data port software_types::Sensor_Data;  
+
+  properties
+    SMACCM::Language => "Ivory";
 end sensors_t;
 
 thread motmix_t
@@ -181,6 +211,9 @@ thread motmix_t
     motors : out data port software_types::motors_data;
     control_in : in data port software_types::controloutput.impl;
     control_law_in : in event data port software_types::control_law.impl;
+  
+  properties
+    SMACCM::Language => "Ivory";
 end motmix_t;
 	
 end Copter_Software;

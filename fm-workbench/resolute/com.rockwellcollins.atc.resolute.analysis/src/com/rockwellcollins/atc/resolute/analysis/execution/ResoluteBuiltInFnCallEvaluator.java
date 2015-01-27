@@ -80,7 +80,7 @@ public class ResoluteBuiltInFnCallEvaluator {
 			PropertyExpression expr = getPropertyExpression(element, prop);
 			if (expr == null) {
 				throw new ResoluteFailException("Property " + prop.getName() + " not defined on "
-						+ element.getContainingClassifier().getName(), fnCallExpr);
+						+ element.getName(), fnCallExpr);
 			}
 
 			return exprToValue(expr);
