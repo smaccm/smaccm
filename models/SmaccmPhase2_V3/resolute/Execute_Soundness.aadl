@@ -24,7 +24,7 @@ only_receive_decrypt(x : component) <=
   forall (c : connection).  
     (parent(destination(c)) = x) =>
       non_command_channel(c) or only_receive_decrypt_channel(c)
-    
+
 only_receive_decrypt_channel(c : connection) <=
   ** "The connection " c " only carries messages that pass Decrypt" **
   let src : component = parent(source(c));
