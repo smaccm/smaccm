@@ -70,6 +70,9 @@ public class AgreeGenerator {
     	}
     	assumptions.addAll(state.assertExpressions);
     	//assumptions.add(assertId);
+    	
+    	Expr clockHolds = getClockHoldExprs(state);
+    	assumptions.add(clockHolds);
 
     	//get the guarantees as properties and add them to the renaming
     	int i = 0;
@@ -226,12 +229,14 @@ public class AgreeGenerator {
     	Equation subCompHistEq = getHistEq(subCompExprHistVar, subCompConjId);
     	locals.add(subCompExprHistVar);
     	eqs.add(subCompHistEq);
-
+    	
+    	Expr clockHolds = getClockHoldExprs(state);
     	
     	Expr compositionConsistExpr = new BinaryExpr(assertHistId, BinaryOp.AND, sysAssumHistId);
     	compositionConsistExpr = new BinaryExpr(compositionConsistExpr, BinaryOp.AND, sysGuarHistId);
     	compositionConsistExpr = new BinaryExpr(compositionConsistExpr, BinaryOp.AND, subCompExprHistId);
     	compositionConsistExpr = new BinaryExpr(compositionConsistExpr, BinaryOp.AND, countEqExpr);
+    	compositionConsistExpr = new BinaryExpr(compositionConsistExpr, BinaryOp.AND, clockHolds);
     	compositionConsistExpr = new UnaryExpr(UnaryOp.NOT, compositionConsistExpr);
     	
     	VarDecl compositionConsistVar = new VarDecl("___COMPOSITION_CONSIST", NamedType.BOOL);
@@ -506,6 +511,37 @@ public class AgreeGenerator {
 		
 	}
 
+	private static Expr getClockHoldExprs(AgreeEmitterState state){
+        //for monolithic verification we need to add assertions that
+        //no clock within a subcomponent ticks unless it's parent clock
+        //ticks
+        
+        //first get all the clock variables
+        List<IdExpr> clockIds = new ArrayList<>();
+        for(AgreeVarDecl var : state.inputVars){
+            if(var.id.endsWith(state.clockIDSuffix)){
+                clockIds.add(new IdExpr(var.id));
+            }
+        }
+
+        Expr clockHolds = new BoolExpr(true);
+        for(IdExpr parentClockId : clockIds){
+            Expr notParent = new UnaryExpr(UnaryOp.NOT, parentClockId);
+            String prefix = parentClockId.id.replace(state.clockIDSuffix, "");
+            Expr notClocks = new BoolExpr(true);
+            for(IdExpr childClockId : clockIds){
+                if(childClockId.id.startsWith(prefix) && !childClockId.id.equals(parentClockId.id)){
+                    Expr notThisClock = new UnaryExpr(UnaryOp.NOT, new IdExpr(childClockId.id));
+                    notClocks = new BinaryExpr(notClocks, BinaryOp.AND, notThisClock);
+                }
+            }
+            notClocks = new BinaryExpr(notParent, BinaryOp.IMPLIES, notClocks);
+            clockHolds = new BinaryExpr(clockHolds, BinaryOp.AND, notClocks);
+        }
+
+        return clockHolds;
+    }
+	
     private static void addAssumptionRenamings(AgreeEmitterState state,
             AgreeEmitterState subState) {
         int i = 0;
@@ -611,7 +647,7 @@ public class AgreeGenerator {
 			state.internalVars.add(initVar);
 			state.eqExpressions.add(initializedEq);
 			state.assertExpressions.add(notInitialzedConstraint);
-			//state.initialExpressions.add(newInitExpr);
+			state.initialExpressions.add(newInitExpr);
 		}
 	}
 
