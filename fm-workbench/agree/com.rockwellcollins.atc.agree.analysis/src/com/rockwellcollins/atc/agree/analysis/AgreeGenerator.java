@@ -308,7 +308,7 @@ public class AgreeGenerator {
     	AgreeEmitterState state = 
         		new AgreeEmitterState(compInst, comp);
     	
-    	FeatureUtils.recordFeatures(state);
+    	FeatureUtils.recordFeatures(state, true);
     	boolean result = doSwitchAgreeAnnex(state, compType);
     	
         if(!result){
@@ -329,7 +329,7 @@ public class AgreeGenerator {
         	AgreeEmitterState subState = new AgreeEmitterState(subCompInst, subComp);
         	ComponentType subCompType = AgreeEmitterUtilities.getInstanceType(subCompInst);
 
-        	FeatureUtils.recordFeatures(subState);
+        	FeatureUtils.recordFeatures(subState, false);
         	boolean subResult = doSwitchAgreeAnnex(subState, subCompType);
         	if(subResult){
         		Node subNode = nodeFromState(subState, true);
@@ -354,7 +354,7 @@ public class AgreeGenerator {
     	AgreeEmitterState state = 
         		new AgreeEmitterState(compInst, comp);
     	
-    	FeatureUtils.recordFeatures(state);
+    	FeatureUtils.recordFeatures(state, true);
     	boolean result = doSwitchAgreeAnnex(state, compType);
     	
         if(!result && compImpl == null){
@@ -373,7 +373,7 @@ public class AgreeGenerator {
         		AgreeEmitterState subState = generateMonolithic(subCompInst, subComp);
         		if(subState != null){
         			foundSubAnnex = true;
-        			Node subNode = nodeFromState(subState, false);
+        			Node subNode = nodeFromState(subState, true);
         			addSubcomponentNodeCall(subCompPrefix, state, subState, subNode);
         		}
         	}
@@ -757,42 +757,44 @@ public class AgreeGenerator {
 	private static Expr assertContract(List<VarDecl> locals,
 			List<Equation> equations, List<Expr> assumptions,
 			List<Expr> guarantees) {
-//		//the component has bottomed out so we should assert the contract
-//		IdExpr assumpHistId = new IdExpr("__HIST__ASSUM");
-//		VarDecl assumpHistVar = new VarDecl(assumpHistId.id, NamedType.BOOL);
-//		IdExpr assumpId = new IdExpr("__ASSUM");
-//		VarDecl assumpVar = new VarDecl(assumpId.id, NamedType.BOOL);
-//		locals.add(assumpHistVar);
-//		locals.add(assumpVar);
-//		
-//		Expr assumpExpr = new BoolExpr(true);
-//		for(Expr assum : assumptions){
-//			assumpExpr = new BinaryExpr(assumpExpr, BinaryOp.AND, assum);
-//		}
-//		Equation assumEq = new Equation(assumpId, assumpExpr);
-//		equations.add(assumEq);
-//		
-//		Expr assumpHistExpr = new UnaryExpr(UnaryOp.PRE, assumpHistId);
-//		assumpHistExpr = new BinaryExpr(assumpHistExpr, BinaryOp.AND, assumpId);
-//		assumpHistExpr = new BinaryExpr(assumpId, BinaryOp.ARROW, assumpHistExpr);
-//		Equation assumpHistEq = new Equation(assumpHistId, assumpHistExpr);
-//		equations.add(assumpHistEq);
-//		
-//		IdExpr guarId = new IdExpr("__GUAR");
-//		VarDecl guarVar = new VarDecl(guarId.id, NamedType.BOOL);
-//		locals.add(guarVar);
-		
-		Expr guarExpr = new BoolExpr(true);
-		for(Expr guar : guarantees){
-			guarExpr = new BinaryExpr(guarExpr, BinaryOp.AND, guar);
-		}
-		
-//		Equation guarEq = new Equation(guarId, guarExpr);
-//		equations.add(guarEq);
-//		
-//		return new BinaryExpr(assumpHistId, BinaryOp.IMPLIES, guarId);
-		
-		return guarExpr;
+		//the component has bottomed out so we should assert the contract
+	    
+	    IdExpr guarId = new IdExpr("__GUAR");
+        VarDecl guarVar = new VarDecl(guarId.id, NamedType.BOOL);
+        locals.add(guarVar);
+        
+        Expr guarExpr = new BoolExpr(true);
+        for(Expr guar : guarantees){
+            guarExpr = new BinaryExpr(guarExpr, BinaryOp.AND, guar);
+        }
+        
+        Equation guarEq = new Equation(guarId, guarExpr);
+        equations.add(guarEq);
+	    
+	    if(assumptions.size() != 0){
+	        IdExpr assumpHistId = new IdExpr("__HIST__ASSUM");
+	        VarDecl assumpHistVar = new VarDecl(assumpHistId.id, NamedType.BOOL);
+	        IdExpr assumpId = new IdExpr("__ASSUM");
+	        VarDecl assumpVar = new VarDecl(assumpId.id, NamedType.BOOL);
+	        locals.add(assumpHistVar);
+	        locals.add(assumpVar);
+
+	        Expr assumpExpr = new BoolExpr(true);
+	        for(Expr assum : assumptions){
+	            assumpExpr = new BinaryExpr(assumpExpr, BinaryOp.AND, assum);
+	        }
+	        Equation assumEq = new Equation(assumpId, assumpExpr);
+	        equations.add(assumEq);
+
+	        Expr assumpHistExpr = new UnaryExpr(UnaryOp.PRE, assumpHistId);
+	        assumpHistExpr = new BinaryExpr(assumpHistExpr, BinaryOp.AND, assumpId);
+	        assumpHistExpr = new BinaryExpr(assumpId, BinaryOp.ARROW, assumpHistExpr);
+	        Equation assumpHistEq = new Equation(assumpHistId, assumpHistExpr);
+	        equations.add(assumpHistEq);
+	        return new BinaryExpr(assumpHistId, BinaryOp.IMPLIES, guarId);
+	    }
+
+		return guarId;
 		
 	}
     

@@ -21,7 +21,7 @@ public class FeatureUtils {
 
 	private static final String dotChar = "__";
 
-	public static  void recordFeatures(AgreeEmitterState state) {
+	public static  void recordFeatures(AgreeEmitterState state, boolean recordSubFeatures) {
 		ComponentInstance compInst = state.curInst;
 		for(FeatureInstance featInst : compInst.getFeatureInstances()){
 			List<AgreeFeature> featList = recordFeatures_Helper(state, "", featInst);
@@ -29,12 +29,14 @@ public class FeatureUtils {
 			addFeatureInputsOutputs(state, featList, false);
 		}
 		//get information about all the features of this components subcomponents
-		for(ComponentInstance subCompInst : compInst.getComponentInstances()){
-			for(FeatureInstance featInst : subCompInst.getFeatureInstances()){
-				List<AgreeFeature> featList = recordFeatures_Helper(state,  subCompInst.getName() + dotChar,
-						featInst);
-				addFeatureInputsOutputs(state, featList, true);
-			}
+		if(recordSubFeatures){
+		    for(ComponentInstance subCompInst : compInst.getComponentInstances()){
+		        for(FeatureInstance featInst : subCompInst.getFeatureInstances()){
+		            List<AgreeFeature> featList = recordFeatures_Helper(state,  subCompInst.getName() + dotChar,
+		                    featInst);
+		            addFeatureInputsOutputs(state, featList, true);
+		        }
+		    }
 		}
 	}
 	private static void addFeatureInputsOutputs(AgreeEmitterState state, List<AgreeFeature> featList, boolean fSubcomponent) {
