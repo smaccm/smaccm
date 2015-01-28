@@ -14,7 +14,6 @@ import java.util.Set;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosException;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.Dispatcher;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.DataPort;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.rpc.RemoteProcedureGroup;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.rpc.RemoteProcedureGroupEndpoint;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.EndpointConnection;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.PortConnection;

@@ -3,7 +3,9 @@ import "Common.stg"
 
 ////////////////////////////////////////////////////////////////////////////
 //
-// Declarations related to component gluecode header files for CAmkES
+// CamkesComponentHeader.stg
+// 
+// component gluecode header files for CAmkES
 // 
 ////////////////////////////////////////////////////////////////////////////
 
@@ -31,7 +33,7 @@ componentGlueCodeHeaderPrefix(name, date, path, datatypesHeader) ::= <<
 
 writeExternalHandlerUdePrototype(externalHandler, dispatcher) ::= <<
 <if(dispatcher.isEventData || dispatcher.isPeriodic)><\\>
-void <externalHandler.handlerName>(<dispatcher.nameAsInputParam>); 
+void <externalHandler.handlerName>(<dispatcher.type.aadlInputType.name> <dispatcher.name>); 
 <else><\\>
 void <externalHandler.handlerName>();
 <endif>
@@ -43,11 +45,11 @@ writeUdePrototype(dispatcher) ::= <<
 >>
 
 writePortWriterPrototype(port) ::= <<
-bool <port.aadlWriterFnName>(<if(port.hasData)><port.nameAsInputParam><endif>); 
+bool <port.aadlWriterFnName>(<if(port.hasData)><port.type.aadlInputType.name> <port.name><endif>); 
 >>
 
 writePortReaderPrototype(port) ::= <<
-bool <port.aadlReaderFnName>(<if(port.hasData)><port.nameAsOutputParam><endif>); 
+bool <port.aadlReaderFnName>(<if(port.hasData)><port.type.aadlOutputType.name> <port.name><endif>); 
 >>
 
 writeSharedDataPrototype(sda) ::= <<

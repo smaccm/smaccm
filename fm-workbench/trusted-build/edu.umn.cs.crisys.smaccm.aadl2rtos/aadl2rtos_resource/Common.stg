@@ -64,11 +64,20 @@ stdFilePostfix(name, path) ::= <<
 
 >>
 
-inputToValMemcpy(type, dst, src) ::= <<
-memcpy(<type.valToPtr><dst>, <type.inputToPtr><src>, sizeof(<type.name>));
+aadlInputToValMemcpy(type, dst, src) ::= <<
+memcpy(<type.valToPtr><dst>, <type.aadlInputToPtr><src>, sizeof(<type.name>));
 >>
 
-valToOutputMemcpy(type, dst, src) ::= <<
-memcpy(<type.outputToPtr><dst>, <type.valToPtr><src>, sizeof(<type.name>));
+valToAadlOutputMemcpy(type, dst, src) ::= <<
+memcpy(<type.aadlOutputToPtr><dst>, <type.valToPtr><src>, sizeof(<type.name>));
 >>
+
+camkesInputToValMemcpy(type, dst, src) ::= <<
+memcpy(<type.valToPtr><dst>, <type.camkesInputToPtr><src>, sizeof(<type.name>));
+>>
+
+valToCamkesOutputMemcpy(type, dst, src) ::= <<
+memcpy(<type.camkesOutputToPtr><dst>, <type.valToPtr><src>, sizeof(<type.name>));
+>>
+
 

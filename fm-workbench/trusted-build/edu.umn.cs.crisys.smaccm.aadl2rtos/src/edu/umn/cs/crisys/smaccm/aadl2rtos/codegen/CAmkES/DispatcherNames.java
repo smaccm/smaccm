@@ -225,16 +225,6 @@ public class DispatcherNames {
   // 
   //////////////////////////////////////////////////////////
 
-  public String getNameAsOutputParam() {
-    TypeNames tyn = new TypeNames(dp.getType());
-    return tyn.getOutputTypeName() + " " + getName();
-  }
-  
-  public String getNameAsInputParam() {
-    TypeNames tyn = new TypeNames(dp.getType());
-    return tyn.getInputTypeName() + " " + getName();
-  }
-                   
   public String getPassiveComponentDispatcherPathName() {
     return this.getThreadImplementation().getInterfaceInstanceName() + "_" + 
         this.getIdlDispatcherName(); 

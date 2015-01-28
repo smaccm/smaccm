@@ -25,7 +25,7 @@ property set SMACCM_SYS is
 	HW : enumeration (PX4, ODROID, QEMU) applies to (system implementation); 
 	
 	-- For integrating with other code 
-	Is_Legacy: aadlboolean => false applies to (thread);
+	Is_External: aadlboolean => false applies to (thread);
 	External_Mutex_List: list of aadlstring applies to (thread, system implementation);
 	External_Semaphore_List: list of aadlstring applies to (thread, system implementation);
 	External_Entrypoint: aadlstring applies to (thread);
