@@ -271,7 +271,7 @@ public class ResoluteProver extends ResoluteSwitch<ResoluteResult> {
 			if (claim instanceof ClaimArg) {
 				ClaimTextVar claimArg = ((ClaimArg) claim).getArg();
 				UnitLiteral claimArgUnit = ((ClaimArg) claim).getUnit();
-				text.append("'");
+//				text.append("'");
 				ResoluteValue val = varStack.peek().get(claimArg);
 				if (val == null) {
 					if (claimArg instanceof ConstantDefinition) {
@@ -297,7 +297,7 @@ public class ResoluteProver extends ResoluteSwitch<ResoluteResult> {
 				if (claimArgUnit != null) {
 					text.append(" " + claimArgUnit.getName());
 				}
-				text.append("'");
+//				text.append("'");
 			} else if (claim instanceof ClaimString) {
 				text.append(((ClaimString) claim).getStr());
 			} else {
