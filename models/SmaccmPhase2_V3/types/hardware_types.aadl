@@ -28,4 +28,12 @@ end PPM;
 data ADC
 end ADC;
 
+data GPS
+end GPS;
+
+feature group Sensors
+  features
+    gps : in event data port GPS;
+end Sensors;
+
 end hardware_types;

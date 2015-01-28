@@ -1,6 +1,7 @@
-package Copter_Software
+package Flight_Software
 public
   with software_types;
+  with hardware_types;
   with SMACCM;
   
 process main
@@ -9,6 +10,8 @@ process main
     mission_in : in event data port software_types::can_data;
     ppm_in : in event data port software_types::Flight_Control_Commands.i;
     
+    sensors_group : feature group hardware_types::Sensors;
+
   annex agree {**
   	eq time : int;
   	  **};
@@ -18,14 +21,14 @@ end main;
 process implementation main.i
   subcomponents
     can : thread can_px4_t;
-    ppm : thread ppm_t;
+    --ppm : thread ppm_t;
     control : thread control_t;
     ui_mux : thread ui_mux_t;
     gps : thread ublox_gps_t;
     sensors : thread sensors_t;
     motmix : thread motmix_t;
     
-    control_params : data software_types::control_data.impl;
+    control_params : data software_types::control_data.impl { SMACCM::Trusted => true; };
     
   connections
     conn0 : port sensors.sensor_data -> can.sensor_data;
@@ -36,9 +39,9 @@ process implementation main.i
     conn5 : port can.user_input -> ui_mux.mavlink_input;
     conn16 : port can.control_law_out -> ui_mux.mavlink_control;
     
-    conn6 : port ppm_in -> ppm.flight_command;
-    conn7 : port ppm.user_input -> ui_mux.ppm_input;
-    conn17 : port ppm.control_law_out -> ui_mux.ppm_control;
+    --conn6 : port ppm_in -> ppm.flight_command;
+    --conn7 : port ppm.user_input -> ui_mux.ppm_input;
+    --conn17 : port ppm.control_law_out -> ui_mux.ppm_control;
     
     conn8 : port ui_mux.input_select -> control.user_input;
     conn9 : port control_params -> control.control_params;
@@ -50,6 +53,8 @@ process implementation main.i
     conn13 : port gps.position -> sensors.gps;
     
     conn14 : port sensors.sensor_data -> control.sensor_data;
+    
+    conn15 : port sensors_group.gps -> gps.input;
   
   properties
     SMACCM::OS => "eChronos";
@@ -63,8 +68,8 @@ process implementation main.i
   	
   **};
   
-  annex resolute {** 
-    	prove only_receive_gs(this.motmix)
+  annex resolute {**
+    	prove only_receive_legit(this.motmix)
   **};
 end main.i;
 
@@ -81,6 +86,7 @@ thread can_px4_t
   
   properties
     SMACCM::Language => "Ivory";
+    SMACCM::Trusted => true;
   
   annex agree {**
   	eq time : int;
@@ -95,6 +101,7 @@ thread ppm_t
       
   properties
     SMACCM::Language => "Ivory";
+    SMACCM::Trusted => true;
    
   annex agree {**
   	eq time : int;
@@ -111,6 +118,7 @@ thread control_t
       
   properties
     SMACCM::Language => "Ivory";
+    SMACCM::Trusted => true;
     
     annex agree {**
    
@@ -162,6 +170,7 @@ thread ui_mux_t
       
   properties
     SMACCM::Language => "Ivory";
+    SMACCM::Trusted => true;
     
    annex agree {**
    	
@@ -186,9 +195,12 @@ end ui_mux_t;
 
 thread ublox_gps_t
   features
+    input : in event data port hardware_types::GPS;
     position : out event data port software_types::position.impl;  
+
   properties
     SMACCM::Language => "Ivory";
+    SMACCM::Trusted => true;
 end ublox_gps_t;
 
 thread sensors_t
@@ -204,6 +216,7 @@ thread sensors_t
 
   properties
     SMACCM::Language => "Ivory";
+    SMACCM::Trusted => true;
 end sensors_t;
 
 thread motmix_t
@@ -214,6 +227,7 @@ thread motmix_t
   
   properties
     SMACCM::Language => "Ivory";
+    SMACCM::Trusted => true;
 end motmix_t;
 	
-end Copter_Software;
+end Flight_Software;
