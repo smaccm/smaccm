@@ -4,6 +4,56 @@ package Execute_Soundness
     
     annex resolute {**
 
+-- TODO: Define legitimate
+-- TODO: Define trusted (legit => legit)
+
+only_receive_legit(c : component) <=
+  ** c " only receives legitimate data" **
+  is_trusted(c) and
+  all_trusted_components_only_receive_legit()
+
+is_trusted(c : component) <=
+  ** c " is a trusted component" **
+  trusted(c)
+  
+trusted(c : component) : bool =
+  has_property(c, SMACCM::Trusted) and property(c, SMACCM::Trusted)
+  
+all_trusted_components_only_receive_legit() <=
+  ** "All trusted components receive only legitimate data" **
+  forall (c : component). trusted(c) => only_receive_legit_assuming(c)
+
+incoming(t : component) : {connection} =
+  { c for (c : connections(t)) | destination_component(c) = t }
+
+only_receive_legit_assuming(c : component) <=
+  ** c " only receives legitimate data, data from trusted components, or data from an authenticator" **
+  -- TODO: memory_protected(c)
+  forall (conn : incoming(c)).
+    only_carries_legitimate_data(conn) or
+    source_is_trusted(conn) or
+    source_is_authenticator(conn)
+
+only_carries_legitimate_data(c : connection) <=
+  ** c " only carries legitimate data" **
+  false
+
+source_is_trusted(c : connection) <=
+  ** "The source of " c " is trusted" **
+  trusted(source_component(c))
+
+source_is_authenticator(c : connection) <=
+  ** "The source of " c " is an authenticator" **
+  property(source_component(c), SMACCM::Authenticator)
+
+
+
+
+
+
+
+
+
 only_receive_gs(x : component) <=
   ** x " only receives messages from the Ground Station" **
   only_gs_encrypt() and only_receive_decrypt(x)
