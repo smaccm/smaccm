@@ -19,8 +19,6 @@ system PixHawk
     i2c : provides bus access hardware_types::I2C_Bus;
     usb : provides bus access hardware_types::USB;
     
-    battery : in data port software_types::Battery_Data;
-    
     sensors_group : feature group inverse of hardware_types::Sensors;
 end PixHawk;
 
@@ -37,7 +35,6 @@ system implementation PixHawk.i
   connections
     sensors_conn1 : port baro.barometer -> sensors_group.barometer;
     sensors_conn2 : port accel0.motion -> sensors_group.motion;
-    sensors_conn3 : port battery -> sensors_group.battery;
     sensors_conn4 : port gps.gps -> sensors_group.gps;
 end PixHawk.i;
 

@@ -36,7 +36,6 @@ feature group Sensors
   features
     barometer : in data port software_types::Barometric_Data;
     motion : in data port software_types::Motion_Data.Impl;
-    battery : in data port software_types::Battery_Data;
     gps : in event data port GPS;
 end Sensors;
 

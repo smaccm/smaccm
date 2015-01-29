@@ -11,6 +11,7 @@ process main
     ppm_in : in event data port software_types::Flight_Control_Commands.i;
     
     sensors_group : feature group hardware_types::Sensors;
+    battery : in data port software_types::Battery_Data;
 
   annex agree {**
   	eq time : int;
@@ -56,8 +57,8 @@ process implementation main.i
 
     conn15 : port sensors_group.barometer -> sensors.barometer;
     conn16 : port sensors_group.motion -> sensors.motion;
-    conn17 : port sensors_group.battery -> sensors.battery;
-    conn18 : port sensors_group.gps -> gps.input;
+    conn17 : port sensors_group.gps -> gps.input;
+    conn18 : port battery -> sensors.battery;
   
   properties
     SMACCM::OS => "eChronos";

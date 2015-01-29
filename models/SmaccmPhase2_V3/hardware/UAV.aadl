@@ -43,7 +43,7 @@ public
       
       conn_sensors: feature group PIXHAWK.sensors_group <-> FSW.sensors_group;
       
-      battery_conn: port BATTERY.battery -> PIXHAWK.battery;
+      battery_conn: port BATTERY.battery -> FSW.battery;
       
       --software connections
       conn_ppm: port ppm_commands -> FSW.ppm_in;

@@ -43,7 +43,8 @@ is_sensor_data(conn_type : aadl) <=
   ** conn_type " is sensor data" **
   (conn_type = hardware_types::GPS) or
   (conn_type = software_types::Motion_Data.Impl) or
-  (conn_type = software_types::Barometric_Data)
+  (conn_type = software_types::Barometric_Data) or
+  (conn_type = software_types::Battery_Data)
 
 source_is_trusted(c : connection) <=
   ** "The source of " c " is trusted" **
