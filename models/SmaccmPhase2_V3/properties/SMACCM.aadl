@@ -1,5 +1,5 @@
 property set SMACCM is
-  OS: aadlstring applies to (process);
+  OS: aadlstring applies to (process, system);
   Language: aadlstring applies to (thread, process);
   Encryption_Algorthim: aadlstring applies to (system, process, thread, device);
   Trusted: aadlboolean applies to (thread, process, data);

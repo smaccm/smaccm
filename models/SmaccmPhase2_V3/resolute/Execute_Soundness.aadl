@@ -30,15 +30,85 @@ only_receive_legit_generalized(c : component) <=
   ** c " only receives legitimate data, data from trusted components, or data from an authenticator" **
   -- TODO: c is memory protected
   forall (conn : incoming(c)).
-    -- TODO: conn is secure
-    only_carries_legitimate_data(conn) or
-    source_is_trusted(conn) or
-    source_is_authenticator(conn)
+    only_receive_legit_generalized_connection(conn)
+     
+only_receive_legit_generalized_connection(conn : connection) <=
+  ** conn " only receives legitimate data, data from trusted components, or data from an authenticator" **
+    connection_secure(conn) and
+    (only_carries_legitimate_data(conn) or
+     source_is_trusted(conn) or
+     source_is_authenticator(conn))
+
+connection_secure(conn : connection) <=
+  ** conn " preserves legitimate data" **
+  internal_sel4(conn) or
+  internal_process(conn) or
+  secure_can_connection(conn) or
+  hardware_connection(conn)
+
+internal_sel4(conn : connection) <=
+  ** conn " is an internal SeL4 connection" **
+  exists (s : system).
+    is_sel4(s) and
+    contained(source_component(conn), s) and
+    contained(destination_component(conn), s)
+    
+is_sel4(s : system) <=
+  ** s " is running SeL4" **
+  property(s, SMACCM::OS) = "SeL4"
+  
+internal_process(conn : connection) <=
+  ** conn " is internal to a memory protected process" **
+  exists (p : process).
+    contained(source_component(conn), p) and
+    contained(destination_component(conn), p) and
+    memory_protected(p)
+
+memory_protected(p : process) <=
+  ** "The memory of process " p " is protected from alterations by other processes" **
+  is_eChronos(p) and
+   forall (mem : memory). bound(p, mem) =>
+     forall (q : process). bound(q, mem) => memory_safe_process(q)
+
+is_eChronos(p : process) <=
+  ** p " is running eChronos" **
+  property(p, SMACCM::OS) = "eChronos"
+
+memory_safe_process(p : process) <=
+  ** "The process " p " only writes to its own memory space" **
+  forall (t : thread). contained(t, p) => memory_safe_thread(t)
+
+memory_safe_thread(t : thread) <=
+  ** "The thread " t " only writes to its own memory space" **
+  ivory_thread(t)
+
+ivory_thread(t : thread) <=
+  ** "The thread " t " is generated from Ivory" **
+  property(t, SMACCM::Language) = "Ivory"
+
+secure_can_connection(conn : connection) <=
+  ** conn " is over secure CAN bus" **
+  exists (b : bus).
+    is_bound(conn, b) and
+    is_secure_bus(b)
+
+is_bound(conn : connection, b : bus) <=
+  ** conn " is bound to " b **
+  bound(conn, b)
+
+is_secure_bus(b : bus) <=
+  ** b " is only connected to trusted components" **
+  false
+
+-- TODO: What exactly makes a connection a hardware connection? What if it goes over a bus, etc?
+hardware_connection(conn : connection) <=
+  ** conn " is a hardware connection" **
+  source_component(conn) instanceof device
 
 only_carries_legitimate_data(c : connection) <=
   ** c " only carries legitimate data" **
   is_sensor_data(type(c))
-  
+
 is_sensor_data(conn_type : aadl) <=
   ** conn_type " is sensor data" **
   (conn_type = hardware_types::GPS) or
@@ -53,7 +123,6 @@ source_is_trusted(c : connection) <=
 source_is_authenticator(c : connection) <=
   ** "The source of " c " is an authenticator" **
   property(source_component(c), SMACCM::Authenticator)
-
 
 **};
     
