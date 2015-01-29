@@ -41,8 +41,8 @@ public class InlineAssumptionGuarantees extends AstMapVisitor {
 			Node agNode;
 			if(!node.id.equals(program.main)){
 				//add assumption properties too
-//				List<String> properties = new ArrayList<>(node.properties);
-                List<String> properties = new ArrayList<>();
+				List<String> properties = new ArrayList<>(node.properties);
+//                List<String> properties = new ArrayList<>();
 				for(int i = 0; i < node.assumptions.size(); i++){
 					properties.add(assumeVarPrefix+i);
 				}
@@ -67,43 +67,60 @@ public class InlineAssumptionGuarantees extends AstMapVisitor {
 		List<VarDecl> inputs = Util.safeList(node.inputs);
 		List<VarDecl> outputs = Util.safeList(node.outputs);
 		
+		if(guarantees.size() == 0){
+		    return new Node(node.location, node.id, node.inputs, node.outputs, node.locals, node.equations, 
+	                node.properties, node.assertions);
+		}
+		
 		//things we do modify
 		ArrayList<VarDecl> locals = new ArrayList<>(node.locals);
 		ArrayList<Equation> equations = new ArrayList<>(node.equations);
 		ArrayList<String> properties = new ArrayList<>(node.properties);
 		
-		VarDecl assumeHistVar = new VarDecl(assumeVarPrefix+"__HIST", NamedType.BOOL);
-		IdExpr assumeHistVarId = new IdExpr(assumeHistVar.id);
-		locals.add(assumeHistVar);
+		int i;
+		Expr assumeHistVarId = null;
+		if(assumptions.size() != 0){
 		
-		Expr assumeConjExpr = new BoolExpr(true);
-		int i = 0;
-		for(Expr assumeExpr : assumptions){
-			
-			VarDecl assumeVar = new VarDecl(assumeVarPrefix+i++, NamedType.BOOL);
-			IdExpr assumeVarId = new IdExpr(assumeVar.id);
-			locals.add(assumeVar);
-			Equation assumEq = new Equation(assumeVarId, assumeExpr);
-			equations.add(assumEq);
-			
-			assumeConjExpr = new BinaryExpr(assumeConjExpr, BinaryOp.AND, assumeVarId);
+		    VarDecl assumeHistVar = new VarDecl(assumeVarPrefix+"__HIST", NamedType.BOOL);
+		    assumeHistVarId = new IdExpr(assumeHistVar.id);
+		    locals.add(assumeHistVar);
+
+		    Expr assumeConjExpr = new BoolExpr(true);
+		    i = 0;
+		    for(Expr assumeExpr : assumptions){
+
+		        VarDecl assumeVar = new VarDecl(assumeVarPrefix+i++, NamedType.BOOL);
+		        IdExpr assumeVarId = new IdExpr(assumeVar.id);
+		        locals.add(assumeVar);
+		        Equation assumEq = new Equation(assumeVarId, assumeExpr);
+		        equations.add(assumEq);
+
+		        assumeConjExpr = new BinaryExpr(assumeConjExpr, BinaryOp.AND, assumeVarId);
+		    }
+
+		    VarDecl assumeVarConj = new VarDecl(assumeVarPrefix+"__CONJ", NamedType.BOOL);
+		    locals.add(assumeVarConj);
+		    IdExpr assumeVarConjId = new IdExpr(assumeVarConj.id);
+		    equations.add(new Equation(assumeVarConjId, assumeConjExpr));
+
+		    Expr assumeHistExpr =  new UnaryExpr(UnaryOp.PRE, assumeHistVarId);
+		    assumeHistExpr = new BinaryExpr(assumeHistExpr, BinaryOp.AND, assumeVarConjId);
+		    assumeHistExpr = new BinaryExpr(assumeVarConjId, BinaryOp.ARROW, assumeHistExpr);
+		    Equation assumeHistEq = new Equation((IdExpr)assumeHistVarId, assumeHistExpr);
+		    equations.add(assumeHistEq);
 		}
 		
-		VarDecl assumeVarConj = new VarDecl(assumeVarPrefix+"__CONJ", NamedType.BOOL);
-		locals.add(assumeVarConj);
-		IdExpr assumeVarConjId = new IdExpr(assumeVarConj.id);
-		equations.add(new Equation(assumeVarConjId, assumeConjExpr));
-
-		Expr assumeHistExpr =  new UnaryExpr(UnaryOp.PRE, assumeHistVarId);
-		assumeHistExpr = new BinaryExpr(assumeHistExpr, BinaryOp.AND, assumeVarConjId);
-		assumeHistExpr = new BinaryExpr(assumeVarConjId, BinaryOp.ARROW, assumeHistExpr);
-		Equation assumeHistEq = new Equation(assumeHistVarId, assumeHistExpr);
-		equations.add(assumeHistEq);
-
 		i = 0;
 		for(Expr guarExpr : guarantees){
 			VarDecl guarVar = new VarDecl(guaranteeVarPrefix+i++, NamedType.BOOL);
-			Expr propExpr = new BinaryExpr(assumeHistVarId, BinaryOp.IMPLIES, guarExpr);
+			
+			Expr propExpr;
+			if(assumeHistVarId == null){ //no assumptions
+			    propExpr = guarExpr;
+			}else{
+			    propExpr = new BinaryExpr(assumeHistVarId, BinaryOp.IMPLIES, guarExpr);
+			}
+			
 			Equation guarEq = new Equation(new IdExpr(guarVar.id), propExpr);
 			locals.add(guarVar);
 			equations.add(guarEq);

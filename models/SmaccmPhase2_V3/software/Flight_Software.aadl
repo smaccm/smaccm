@@ -21,7 +21,7 @@ end main;
 process implementation main.i
   subcomponents
     can : thread can_px4_t;
-    --ppm : thread ppm_t;
+    ppm : thread ppm_t;
     control : thread control_t;
     ui_mux : thread ui_mux_t;
     gps : thread ublox_gps_t;

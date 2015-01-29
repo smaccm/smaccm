@@ -54,7 +54,7 @@ public class AgreeGenerator {
     }
     
     private static Program getAssumeGuaranteeProgram(AgreeEmitterState state){
-        Node subNode = nodeFromState(state, false);
+        Node subNode = nodeFromState(state, false, false);
     	
     	List<Node> nodes = new ArrayList<>(state.nodeDefExpressions);
     	
@@ -108,7 +108,7 @@ public class AgreeGenerator {
     	IPreferenceStore prefs = Activator.getDefault().getPreferenceStore();
     	int consistDetph = prefs.getInt(PreferenceConstants.PREF_CONSIST_DEPTH);
 
-    	Node subNode = nodeFromState(state, false);
+    	Node subNode = nodeFromState(state, false, false);
     	List<VarDecl> locals = new ArrayList<>(subNode.locals);
     	List<String> props = new ArrayList<>();
     	List<Equation> eqs = new ArrayList<>(subNode.equations);
@@ -332,7 +332,7 @@ public class AgreeGenerator {
         	FeatureUtils.recordFeatures(subState, false);
         	boolean subResult = doSwitchAgreeAnnex(subState, subCompType);
         	if(subResult){
-        		Node subNode = nodeFromState(subState, true);
+        		Node subNode = nodeFromState(subState, true, false);
         		ordering.add(subNode.id);
         		addSubcomponentNodeCall(subCompPrefix, state, subState, subNode);
         	}
@@ -373,7 +373,7 @@ public class AgreeGenerator {
         		AgreeEmitterState subState = generateMonolithic(subCompInst, subComp);
         		if(subState != null){
         			foundSubAnnex = true;
-        			Node subNode = nodeFromState(subState, true);
+        			Node subNode = nodeFromState(subState, false, true);
         			addSubcomponentNodeCall(subCompPrefix, state, subState, subNode);
         		}
         	}
@@ -632,24 +632,24 @@ public class AgreeGenerator {
 		};
 		IdRewriteVisitor initialExprRewriter = new IdRewriteVisitor(prefixRewrite);
 
-        AgreeVarDecl initVar = new AgreeVarDecl("__INITIALIZED_"+subState.curComp.getName(), NamedType.BOOL);
-        IdExpr initId = new IdExpr(initVar.id);
-        Expr initializedExpr = new UnaryExpr(UnaryOp.PRE, initId);
-        initializedExpr = new BinaryExpr(clockId, BinaryOp.OR, initializedExpr);
-        initializedExpr = new BinaryExpr(clockId, BinaryOp.ARROW, initializedExpr);
-        Equation initializedEq = new Equation(initId, initializedExpr);
-        Expr notInitialzedConstraint = new UnaryExpr(UnaryOp.NOT, initId);
+//        AgreeVarDecl initVar = new AgreeVarDecl("__INITIALIZED_"+subState.curComp.getName(), NamedType.BOOL);
+//        IdExpr initId = new IdExpr(initVar.id);
+//        Expr initializedExpr = new UnaryExpr(UnaryOp.PRE, initId);
+//        initializedExpr = new BinaryExpr(clockId, BinaryOp.OR, initializedExpr);
+//        initializedExpr = new BinaryExpr(clockId, BinaryOp.ARROW, initializedExpr);
+//        Equation initializedEq = new Equation(initId, initializedExpr);
+//        Expr notInitialzedConstraint = new UnaryExpr(UnaryOp.NOT, initId);
         
-        state.internalVars.add(initVar);
-        state.eqExpressions.add(initializedEq);
+//        state.internalVars.add(initVar);
+//        state.eqExpressions.add(initializedEq);
         Expr initConjExpr = new BoolExpr(true);
 		for(Expr subInitExpr : subState.initialExpressions){
 			Expr newInitExpr = subInitExpr.accept(initialExprRewriter);
 			initConjExpr = new BinaryExpr(initConjExpr, BinaryOp.AND, newInitExpr);
 		}
-		notInitialzedConstraint = new BinaryExpr(notInitialzedConstraint, BinaryOp.IMPLIES, initConjExpr);
+//		notInitialzedConstraint = new BinaryExpr(notInitialzedConstraint, BinaryOp.IMPLIES, initConjExpr);
 
-        state.assertExpressions.add(notInitialzedConstraint);
+//        state.assertExpressions.add(notInitialzedConstraint);
         state.initialExpressions.add(initConjExpr);
 	}
 
@@ -692,7 +692,7 @@ public class AgreeGenerator {
 		state.assertExpressions.add(holdPrevExpr);
 	}
     
-    public static Node nodeFromState(AgreeEmitterState subState, boolean assertConract){
+    public static Node nodeFromState(AgreeEmitterState subState, boolean assertConract, boolean monolothicCheck){
     	
     	
     	//create the body for the subnode
@@ -709,9 +709,15 @@ public class AgreeGenerator {
     	inputs.addAll(subState.outputVars);
     	locals.addAll(subState.internalVars);
     	
-    	for(Equation guarEq : subState.guarExpressions){
-    		guarantees.add(guarEq.expr);
+    	if(!monolothicCheck){
+    	    for(Equation guarEq : subState.guarExpressions){
+    	        guarantees.add(guarEq.expr);
+    	    }
     	}
+    	
+    	for(Equation guarEq : subState.lemmaExpressions){
+            guarantees.add(guarEq.expr);
+        }
     	for(Equation assumEq : subState.assumpExpressions){
     		assumptions.add(assumEq.expr);
     	}
@@ -727,6 +733,8 @@ public class AgreeGenerator {
     	//the contract bottoms out here and we need to assert it
     	if(compClass instanceof ComponentType || assertConract){
     		finalAssert = assertContract(locals, equations, assumptions, guarantees);	
+    		guarantees = null;
+    		assumptions = null;
     	}else{
     		finalAssert = new BoolExpr(true);
     	}

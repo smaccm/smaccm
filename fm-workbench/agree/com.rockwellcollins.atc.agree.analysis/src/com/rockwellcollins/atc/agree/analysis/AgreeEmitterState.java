@@ -89,6 +89,7 @@ public class AgreeEmitterState  extends AgreeSwitch<Expr> {
 	  //lists of all the jkind expressions from the annex
     public final List<Equation> assumpExpressions = new ArrayList<>();
     public final List<Equation> guarExpressions = new ArrayList<>();
+    public final List<Equation> lemmaExpressions = new ArrayList<>();
     public final List<Expr> assertExpressions = new ArrayList<>();
     public final List<Equation> eqExpressions = new ArrayList<>();
     public final List<Equation> constExpressions = new ArrayList<>();
@@ -246,7 +247,7 @@ public class AgreeEmitterState  extends AgreeSwitch<Expr> {
         refMap.put(guarStr, state);
         IdExpr strId = new IdExpr(guarStr);
         Equation eq = new Equation(strId, expr);
-        guarExpressions.add(eq);
+        lemmaExpressions.add(eq);
         return expr;
     }
 
