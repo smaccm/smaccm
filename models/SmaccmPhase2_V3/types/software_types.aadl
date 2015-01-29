@@ -49,9 +49,6 @@ public
       
   end Flight_Control_Commands.i;
 
-  data Magnetometer_Data
-  end Magnetometer_Data;
-  
   data Barometric_Data
   end Barometric_Data;
   
@@ -62,9 +59,6 @@ public
   subcomponents
       vertical_speed : data Base_Types::Float;
   end Motion_Data.Impl;
-  
-  data Reset_Data
-  end Reset_Data;
   
   data Battery_Data
   end Battery_Data;

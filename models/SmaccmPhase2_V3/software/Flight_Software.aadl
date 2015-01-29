@@ -37,11 +37,11 @@ process implementation main.i
     conn3 : port mission_in -> can.mission_in;
     conn4 : port can.mission_out -> mission_out;
     conn5 : port can.user_input -> ui_mux.mavlink_input;
-    conn16 : port can.control_law_out -> ui_mux.mavlink_control;
+    conn7 : port can.control_law_out -> ui_mux.mavlink_control;
     
-    --conn6 : port ppm_in -> ppm.flight_command;
-    --conn7 : port ppm.user_input -> ui_mux.ppm_input;
-    --conn17 : port ppm.control_law_out -> ui_mux.ppm_control;
+    --ppm1 : port ppm_in -> ppm.flight_command;
+    --ppm2 : port ppm.user_input -> ui_mux.ppm_input;
+    --ppm3 : port ppm.control_law_out -> ui_mux.ppm_control;
     
     conn8 : port ui_mux.input_select -> control.user_input;
     conn9 : port control_params -> control.control_params;
@@ -53,8 +53,11 @@ process implementation main.i
     conn13 : port gps.position -> sensors.gps;
     
     conn14 : port sensors.sensor_data -> control.sensor_data;
-    
-    conn15 : port sensors_group.gps -> gps.input;
+
+    conn15 : port sensors_group.barometer -> sensors.barometer;
+    conn16 : port sensors_group.motion -> sensors.motion;
+    conn17 : port sensors_group.battery -> sensors.battery;
+    conn18 : port sensors_group.gps -> gps.input;
   
   properties
     SMACCM::OS => "eChronos";
@@ -205,10 +208,8 @@ end ublox_gps_t;
 
 thread sensors_t
   features
-    magnetometer : in data port software_types::Magnetometer_Data;
     barometer : in data port software_types::Barometric_Data;
     motion : in data port software_types::Motion_Data.Impl;
-    reset : in event data port software_types::Reset_Data;
     battery : in data port software_types::Battery_Data;
     gps : in data port software_types::Position.Impl;
     

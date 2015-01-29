@@ -21,22 +21,29 @@ trusted(c : component) : bool =
   
 all_trusted_components_only_receive_legit() <=
   ** "All trusted components receive only legitimate data" **
-  forall (c : component). trusted(c) => only_receive_legit_assuming(c)
+  forall (c : component). trusted(c) => only_receive_legit_generalized(c)
 
 incoming(t : component) : {connection} =
   { c for (c : connections(t)) | destination_component(c) = t }
 
-only_receive_legit_assuming(c : component) <=
+only_receive_legit_generalized(c : component) <=
   ** c " only receives legitimate data, data from trusted components, or data from an authenticator" **
-  -- TODO: memory_protected(c)
+  -- TODO: c is memory protected
   forall (conn : incoming(c)).
+    -- TODO: conn is secure
     only_carries_legitimate_data(conn) or
     source_is_trusted(conn) or
     source_is_authenticator(conn)
 
 only_carries_legitimate_data(c : connection) <=
   ** c " only carries legitimate data" **
-  false
+  is_sensor_data(type(c))
+  
+is_sensor_data(conn_type : aadl) <=
+  ** conn_type " is sensor data" **
+  (conn_type = hardware_types::GPS) or
+  (conn_type = software_types::Motion_Data.Impl) or
+  (conn_type = software_types::Barometric_Data)
 
 source_is_trusted(c : connection) <=
   ** "The source of " c " is trusted" **
@@ -47,96 +54,6 @@ source_is_authenticator(c : connection) <=
   property(source_component(c), SMACCM::Authenticator)
 
 
-
-
-
-
-
-
-
-only_receive_gs(x : component) <=
-  ** x " only receives messages from the Ground Station" **
-  only_gs_encrypt() and only_receive_decrypt(x)
-
--- TODO: Fill in more encryption details
-only_gs_encrypt() <=
-  ** "Only the Ground Station can send messages that pass Decrypt" ** 
-  authenticated_encryption()
-
-authenticated_encryption() <= 
-  ** "The encryption algorithm is strong and authenticated. "
-     "Messages cannot be forged or manipulated" **
- true
-
--- The component x only receives messages that pass Decrypt.
-only_receive_decrypt(x : component) <=
-  ** "The component " x " only receives messages that pass Decrypt" **
-  forall (c : connection).  
-    (parent(destination(c)) = x) =>
-      non_command_channel(c) or only_receive_decrypt_channel(c)
-
-only_receive_decrypt_channel(c : connection) <=
-  ** "The connection " c " only carries messages that pass Decrypt" **
-  let src : component = parent(source(c));
-  unalterable_channel(c) and (is_decrypter(src) or only_receive_decrypt(src))      
-
-is_decrypter(comp : component) <=
-  ** comp " is the decrypter" **
-  type(comp) = Mission_Software::decrypt_t
-
-non_command_channel(c : connection) <=
-  ** "The connection " c " only carries sensor data" **
-  has_type(c) and
-    (type(c) = software_types::Magnetometer_Data or
-  	 type(c) = software_types::Barometric_Data or
-  	 type(c) = software_types::Motion_Data.Impl or
-  	 type(c) = software_types::Reset_Data or
-  	 type(c) = software_types::Battery_Data or
-  	 type(c) = software_types::Position.Impl)
-    
--- The connection c delivers data without alteration.
--- "contained" means write permissions
-unalterable_channel(c : connection) <=
-  ** "The connection " c " delivers data without alteration" **
-  internal_process_connection(c) --or sel4_connection(c)
-
-internal_process_connection(c : connection) <=
-  ** "The connection " c " is fully contained within a single process" **
-  exists (p : process).
-  	internal_process_connection_process(c, p)
-
-internal_process_connection_process(c : connection, p : process) <=
-  ** "The connection " c " is fully contained within " p **
-  	contained(source(c), p) and
-  	contained(destination(c), p) and
-  	memory_protected(p)
-
-sel4_connection(c : connection) <=
-  ** "The connection " c " is protected by SeL4" **
-  exists (s : system).
-    contained(source(c), s) and
-    contained(destination(c), s) and
-    property(s, SMACCM::OS) = "SeL4"
-
-memory_protected(p : process) <=
-  ** "The memory of process " p " is protected from alterations by other processes" **
-  property(p, SMACCM::OS) = "SeL4" or
-  (property(p, SMACCM::OS) = "eChronos" and
-   forall (mem : memory). bound(p, mem) =>
-     forall (q : process). bound(q, mem) => memory_safe_process(q))
-
-memory_safe_process(p : process) <=
-  ** "The process " p " only writes to its own memory space" **
-  forall (t : thread). contained(t, p) => memory_safe_thread(t)
-
-memory_safe_thread(t : thread) <=
-  ** "The thread " t " only writes to its own memory space" **
-  ivory_thread(t)
-  
-ivory_thread(t : thread) <=
-  ** "The thread " t " is generated from Ivory" **
-  property(t, SMACCM::Language) = "Ivory"
-  
 **};
     
 end Execute_Soundness;
