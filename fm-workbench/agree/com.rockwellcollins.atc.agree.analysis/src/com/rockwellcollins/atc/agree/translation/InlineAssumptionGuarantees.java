@@ -41,7 +41,8 @@ public class InlineAssumptionGuarantees extends AstMapVisitor {
 			Node agNode;
 			if(!node.id.equals(program.main)){
 				//add assumption properties too
-				List<String> properties = new ArrayList<>(node.properties);
+//				List<String> properties = new ArrayList<>(node.properties);
+                List<String> properties = new ArrayList<>();
 				for(int i = 0; i < node.assumptions.size(); i++){
 					properties.add(assumeVarPrefix+i);
 				}

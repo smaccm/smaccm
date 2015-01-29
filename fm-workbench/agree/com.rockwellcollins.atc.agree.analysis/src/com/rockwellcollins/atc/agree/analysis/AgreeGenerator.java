@@ -631,24 +631,26 @@ public class AgreeGenerator {
 			}
 		};
 		IdRewriteVisitor initialExprRewriter = new IdRewriteVisitor(prefixRewrite);
-		
+
+        AgreeVarDecl initVar = new AgreeVarDecl("__INITIALIZED_"+subState.curComp.getName(), NamedType.BOOL);
+        IdExpr initId = new IdExpr(initVar.id);
+        Expr initializedExpr = new UnaryExpr(UnaryOp.PRE, initId);
+        initializedExpr = new BinaryExpr(clockId, BinaryOp.OR, initializedExpr);
+        initializedExpr = new BinaryExpr(clockId, BinaryOp.ARROW, initializedExpr);
+        Equation initializedEq = new Equation(initId, initializedExpr);
+        Expr notInitialzedConstraint = new UnaryExpr(UnaryOp.NOT, initId);
+        
+        state.internalVars.add(initVar);
+        state.eqExpressions.add(initializedEq);
+        Expr initConjExpr = new BoolExpr(true);
 		for(Expr subInitExpr : subState.initialExpressions){
 			Expr newInitExpr = subInitExpr.accept(initialExprRewriter);
-			AgreeVarDecl initVar = new AgreeVarDecl("__INITIALIZED_"+subState.curComp.getName(), NamedType.BOOL);
-			IdExpr initId = new IdExpr(initVar.id);
-			Expr initializedExpr = new UnaryExpr(UnaryOp.PRE, initId);
-			initializedExpr = new BinaryExpr(clockId, BinaryOp.OR, initializedExpr);
-			initializedExpr = new BinaryExpr(clockId, BinaryOp.ARROW, initializedExpr);
-			Equation initializedEq = new Equation(initId, initializedExpr);
-			
-			Expr notInitialzedConstraint = new UnaryExpr(UnaryOp.NOT, initId);
-			notInitialzedConstraint = new BinaryExpr(notInitialzedConstraint, BinaryOp.IMPLIES, newInitExpr);
-			
-			state.internalVars.add(initVar);
-			state.eqExpressions.add(initializedEq);
-			state.assertExpressions.add(notInitialzedConstraint);
-			state.initialExpressions.add(newInitExpr);
+			initConjExpr = new BinaryExpr(initConjExpr, BinaryOp.AND, newInitExpr);
 		}
+		notInitialzedConstraint = new BinaryExpr(notInitialzedConstraint, BinaryOp.IMPLIES, initConjExpr);
+
+        state.assertExpressions.add(notInitialzedConstraint);
+        state.initialExpressions.add(initConjExpr);
 	}
 
 	private static void addCategories(final String prefix,
