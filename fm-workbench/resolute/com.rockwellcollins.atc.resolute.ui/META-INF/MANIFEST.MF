@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Resolute front-end
 Bundle-Vendor: Rockwell Collins, Inc.
-Bundle-Version: 1.0.0.qualifier
+Bundle-Version: 1.0.0
 Bundle-SymbolicName: com.rockwellcollins.atc.resolute.ui; singleton:=true
 Bundle-ActivationPolicy: lazy
 Require-Bundle: com.rockwellcollins.atc.resolute;visibility:=reexport,

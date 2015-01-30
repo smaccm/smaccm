@@ -44,7 +44,7 @@ system implementation software.i
     conn13 : port mission_in -> can.mission_in;
     
   properties
-    SMACCM::OS => "SeL4";
+    SMACCM::OS => "seL4";
 end software.i;
 
 process decrypt_t

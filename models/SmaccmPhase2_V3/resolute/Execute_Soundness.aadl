@@ -28,7 +28,7 @@ incoming(t : component) : {connection} =
 
 only_receive_legit_generalized(c : component) <=
   ** c " only receives legitimate data, data from trusted components, or data from an authenticator" **
-  -- TODO: c is memory protected
+  -- TODO: memory_protected(c) and
   forall (conn : incoming(c)).
     only_receive_legit_generalized_connection(conn)
      
@@ -55,7 +55,7 @@ internal_sel4(conn : connection) <=
     
 is_sel4(s : system) <=
   ** s " is running SeL4" **
-  property(s, SMACCM::OS) = "SeL4"
+  property(s, SMACCM::OS) = "seL4"
   
 internal_process(conn : connection) <=
   ** conn " is internal to a memory protected process" **
@@ -90,15 +90,31 @@ secure_can_connection(conn : connection) <=
   ** conn " is over secure CAN bus" **
   exists (b : bus).
     is_bound(conn, b) and
-    is_secure_bus(b)
+    bus_only_trusted_software(b) and
+    bus_only_trusted_hardware(b)
 
 is_bound(conn : connection, b : bus) <=
   ** conn " is bound to " b **
   bound(conn, b)
 
-is_secure_bus(b : bus) <=
-  ** b " is only connected to trusted components" **
-  false
+bus_only_trusted_software(b : bus) <=
+  ** b " is only connected to trusted software components" **
+  forall (conn : connection).
+    bound(conn, b) => connection_only_trusted_endpoints(conn)
+    
+connection_only_trusted_endpoints(conn : connection) <=
+  ** "Both endpoints of " conn " are trusted software components" **
+  is_trusted(source_component(conn)) and is_trusted(destination_component(conn))
+  
+bus_only_trusted_hardware(b : bus) <=
+  ** b " is only connected to trusted hardware components" **
+  forall (conn : connection).
+    source_component(conn) = b => is_trusted_hardware(destination_component(conn))
+
+is_trusted_hardware(hw : aadl) <=
+  ** hw " is trusted hardware" **
+  hw = instance(XU_DAUGHTER_BOARD::XU_DAUGHTER_BOARD) or
+  hw = instance(PixHawk::PixHawk)
 
 -- TODO: What exactly makes a connection a hardware connection? What if it goes over a bus, etc?
 hardware_connection(conn : connection) <=
