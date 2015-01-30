@@ -53,6 +53,12 @@ public class AgreeGenerator {
     	 return false;
     }
     
+    
+    private static void assertInitialStatements(AgreeEmitterState state){
+        
+        Expr initExpr
+    }
+    
     private static Program getAssumeGuaranteeProgram(AgreeEmitterState state){
         Node subNode = nodeFromState(state, false, false);
     	
@@ -63,13 +69,11 @@ public class AgreeGenerator {
     	}
     	
     	//add the assertions to the system level assumptions
-    	IdExpr assertId = new IdExpr(subNode.outputs.get(0).id);
     	List<Expr> assumptions = new ArrayList<>();
     	for(Equation assumEq : state.assumpExpressions){
     		assumptions.add(assumEq.expr);
     	}
     	assumptions.addAll(state.assertExpressions);
-    	//assumptions.add(assertId);
     	
     	Expr clockHolds = getClockHoldExprs(state);
     	assumptions.add(clockHolds);
