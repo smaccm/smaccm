@@ -2,6 +2,7 @@ package PixHawk
 public
   with hardware_types;
   with CORTEX;
+with software_types;
 
 system PixHawk
   features
@@ -23,16 +24,18 @@ end PixHawk;
 
 system implementation PixHawk.i
   subcomponents
-    gyro : system ST_Micro_L3GD20_Gyro;
-    accel0 : system ST_Micro_LSM303D_Accel;
-    accel1 : system Invensense_MPU_6000_Accel;
-    baro : system MEAS_MS5611_Baro;
+    gyro : device ST_Micro_L3GD20_Gyro;
+    accel0 : device ST_Micro_LSM303D_Accel;
+    accel1 : device Invensense_MPU_6000_Accel;
+    baro : device MEAS_MS5611_Baro;
     MC: system CORTEX::STM32F415.Impl;
     
     gps : device GPS;
     
   connections
-    sensors_conn : port GPS.gps -> sensors_group.gps;
+    sensors_conn1 : port baro.barometer -> sensors_group.barometer;
+    sensors_conn2 : port accel0.motion -> sensors_group.motion;
+    sensors_conn4 : port gps.gps -> sensors_group.gps;
 end PixHawk.i;
 
 device GPS
@@ -40,16 +43,20 @@ device GPS
     gps : out event data port hardware_types::GPS;
 end GPS;
 
-system ST_Micro_L3GD20_Gyro
+device ST_Micro_L3GD20_Gyro
 end ST_Micro_L3GD20_Gyro;
 
-system ST_Micro_LSM303D_Accel
+device ST_Micro_LSM303D_Accel
+  features
+    motion : out data port software_types::Motion_Data.Impl;
 end ST_Micro_LSM303D_Accel;
 
-system Invensense_MPU_6000_Accel
+device Invensense_MPU_6000_Accel
 end Invensense_MPU_6000_Accel;
 
-system MEAS_MS5611_Baro
+device MEAS_MS5611_Baro
+  features
+    barometer : out data port software_types::Barometric_Data;
 end MEAS_MS5611_Baro;
 
 end PixHawk;

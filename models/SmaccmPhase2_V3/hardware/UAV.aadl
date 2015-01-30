@@ -32,6 +32,7 @@ public
       ODROID_XU: system ODROID_XU::ODROID_XU.i;
       XU_DAUGHTER: system XU_DAUGHTER_BOARD::XU_DAUGHTER_BOARD.i;
       can_bus : bus hardware_types::can;
+      BATTERY : device Battery;
     connections 
       --hardware connections
       conn_ide: feature group XU_DAUGHTER.ide <-> ODROID_XU.ide;
@@ -41,6 +42,8 @@ public
       conn_can_pixhawk : bus access PIXHAWK.can0 <-> can_bus;
       
       conn_sensors: feature group PIXHAWK.sensors_group <-> FSW.sensors_group;
+      
+      battery_conn: port BATTERY.battery -> FSW.battery;
       
       --software connections
       conn_ppm: port ppm_commands -> FSW.ppm_in;
@@ -60,5 +63,10 @@ public
     **};
       
   end UAV.Impl;
+
+device Battery
+  features
+    battery : out data port software_types::Battery_Data;
+end Battery;
 
 end UAV;
