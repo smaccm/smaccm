@@ -1,11 +1,23 @@
 -- AADL Test Boeing1: active -> passive threads using mixed scalar/struct argument RPC.
 
 -- Changes made to Boeing files: 
--- 		No one defines the prototype to doCall in outa component; added 
---			reference to smaccm_compa.h
--- 		All includes are #include "foo.h".  For CAmkES, these need to be 
---			#include <foo.h>, or we need to restructure directories somewhat.
--- 			Modified all includes to #include <foo.h>				
+-- No one defines the prototype to doCall in outa component; added 
+--		reference to smaccm_compa.h
+-- All C files use #include "foo.h".  For CAmkES, these need to be 
+--	 #include <foo.h>, or we need to restructure directories somewhat.
+-- Modified all C files to #include <foo.h>				
+-- Record type LOIConfig is defined in "common.h".
+-- No one defines the prototype to doCall in outa
+-- We do #typedef struct, Ivory just does struct; several changes related to this. 
+-- All includes are "" rather than <>
+-- Removed __packed__ from structs in common.h
+-- Removed return value from doCall(...) and added it as an int32 argument. 
+-- Changed name of doCall(...) to aadl_do_doCall(...) to match AADL conventions
+-- Removed type declaration of LOIConfig from Common.h and replaced it with reference to 
+--		"smaccm_compa.h"
+-- Removed all of the "struct" references in variable declarations from compb.
+-- AADL code generator makes all fields lowercase for structures, due to AADL case insensitivity.  
+-- In compacompa.h, compacompa.c, Changed void caller() to void caller(uint32_t arg);
 
 
 package test_boeing1
