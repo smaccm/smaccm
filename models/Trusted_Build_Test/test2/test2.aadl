@@ -72,7 +72,7 @@ system implementation test2.impl
 		tl: process proc.Impl;
 	properties
 		SMACCM_SYS::OS => CAmkES;
-		SMACCM_SYS::HW => ODROID;
+		SMACCM_SYS::HW => QEMU;
 end test2.impl;
 
 end test2;
