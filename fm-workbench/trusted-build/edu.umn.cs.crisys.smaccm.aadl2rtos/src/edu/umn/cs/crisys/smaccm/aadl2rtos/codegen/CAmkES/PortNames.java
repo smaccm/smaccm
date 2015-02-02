@@ -8,6 +8,7 @@ import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.Dispatcher;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.DataPort;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.InputEventPort;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.OutputDataPort;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.OutputEventPort;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.BoolType;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.IntType;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.Type;
@@ -110,6 +111,10 @@ public class PortNames {
   
   public boolean getIsOutputDataPort() {
     return (dp instanceof OutputDataPort);
+  }
+  
+  public boolean getIsOutputEventPort() {
+    return (dp instanceof OutputEventPort);
   }
   //////////////////////////////////////////////////////////////
   //

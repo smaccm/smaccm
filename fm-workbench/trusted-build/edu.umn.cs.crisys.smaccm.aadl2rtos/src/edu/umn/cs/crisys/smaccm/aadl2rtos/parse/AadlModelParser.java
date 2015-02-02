@@ -888,7 +888,10 @@ public class AadlModelParser {
 	}
 
 	public Type lookupType(DataClassifier dc) {
-
+	  if (dc == null) {
+	    return null;
+	  }
+	  
 	  String dcName = getDataClassifierName(dc);
 		
 	  Type ty = createAstType(dc);

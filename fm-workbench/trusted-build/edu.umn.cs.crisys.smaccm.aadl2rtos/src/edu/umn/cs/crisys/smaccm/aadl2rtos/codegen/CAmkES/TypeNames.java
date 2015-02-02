@@ -148,6 +148,9 @@ public class TypeNames {
         t_structural.isBaseType()) { return ""; } else { return "*"; }
   }
 
+  public String getCamkesInputToPtr() {
+    if (isNativePointerArg()) { return ""; } else { return "&"; }
+  }
   public String getCamkesOutputToAadlOutput() {
     return ""; 
   }

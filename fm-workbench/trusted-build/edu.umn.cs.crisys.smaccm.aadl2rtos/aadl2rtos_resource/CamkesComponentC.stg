@@ -152,10 +152,10 @@ bool <port.queueWriteName>(const <port.type.aadlInputType.name> <port.name>) {
 	}
 }
 
-bool <port.name>_<port.type.writerFn>(<port.type.aadlInputType.name> arg) {
+bool <port.name>_<port.type.writerFn>(<port.type.camkesInputType.name> arg) {
 	bool result;
 	<port.camkesMutexLockFnCall>; 
-	result = <port.queueWriteName>(arg);
+	result = <port.queueWriteName>(<port.type.camkesInputToAadlInput> arg);
 	<port.camkesMutexUnlockFnCall>;
 	<if(port.hasDispatcher)><port.threadImplementation.dispatcherUnlockStmt><endif>
 	return result;
@@ -251,6 +251,8 @@ optInputEventPortDecls(port) ::= <<
 //
 ///////////////////////////////////////////////////////////////////////////
 
+optConstCamkesInputArg(port) ::= "<if(port.hasData)><port.type.camkesInputType.name> <port.name><endif>"
+
 componentRemoteWriteFunction(port) ::= <<
 
 // The writer function is called remotely through RPC, so follows the 
@@ -287,8 +289,8 @@ componentLocalReaderDecl(port) ::= <<
 >>
 
 componentRemoteWriterDecl(port) ::= <<
-bool <port.aadlWriterFnName>(<port.type.name> <port.name> >) {
-	<port.name>_<port.type.writerFn>(<port.name>);
+bool <port.aadlWriterFnName>(<port.type.aadlInputType.name> <port.name>) {
+	<port.name>_<port.type.writerFn>(<port.type.aadlInputToCamkesInput> <port.name>);
 	return true;
 }
 
@@ -328,8 +330,8 @@ while (<dispatcher.inputEventDispatcherPort.aadlReaderFnName>()) {
 eventDataDispatcher(dispatcher) ::= <<
 while (!<dispatcher.inputEventDispatcherPort.isEmptyFnCall>) {
 	<dispatcher.inputEventDispatcherPort.varDecl>;
-	<dispatcher.inputEventDispatcherPort.queueReadName>(<dispatcher.type.inputToOutput><dispatcher.inputEventDispatcherPort.name>);
-	<dispatcher.dispatcherCFileDispatcherFnName>(<dispatcher.inputEventDispatcherPort.name>); 
+	<dispatcher.inputEventDispatcherPort.queueReadName>(<dispatcher.type.valToAadlOutput><dispatcher.inputEventDispatcherPort.name>);
+	<dispatcher.dispatcherCFileDispatcherFnName>(<dispatcher.type.valToAadlOutput><dispatcher.inputEventDispatcherPort.name>); 
 }
 
 >>
@@ -353,12 +355,9 @@ dispatcherInputArg(dispatcher) ::=  << <dispatcher.type.camkesInputType.name> <d
 
 
 dispatcherDataOutputArg(dispatchContract) ::= 
-<< <dispatchContract.dispatchArrayTypeName> *<dispatchContract.port.data>,  
+<< <if(dispatchContract.port.hasData)><dispatchContract.dispatchArrayTypeName> *<dispatchContract.port.data>, <endif><\\> 
   <dispatchContract.port.indexType.aadlOutputType.name> <dispatchContract.port.index> 
 >>
-
-dispatcherNoDataOutputArg(dispatchContract) ::= 
-<< <dispatchContract.port.indexParam> >>
 
 componentCamkesDispatcherFnName(dispatcher) ::=
 	"<dispatcher.threadImplementation.componentDispatcherInterfaceVarIdName>_<dispatcher.idlDispatcherName>"
@@ -367,9 +366,17 @@ componentCamkesDispatcherFnArgs(dispatcher) ::= <<
 <if(dispatcher.hasData)>
 <[dispatcherInputArg(dispatcher), dispatcher.contracts:dispatcherDataOutputArg()]; separator=",\n">
 <else>
-<dispatcher.contracts:dispatcherNoDataOutputArg();separator=",\n">
+<dispatcher.contracts:dispatcherDataOutputArg();separator=",\n">
 <endif>
 >>
+
+assignGlobals(dispatchContract) ::= <<
+<dispatchContract.port.globalMaxDispatchSize> = <dispatchContract.maxDispatchSize>;
+<dispatchContract.port.globalIndex> = <dispatchContract.port.index>;
+<if(dispatchContract.port.hasData)><dispatchContract.port.globalData> = *<dispatchContract.port.data>;<endif> 
+*<dispatchContract.port.globalIndex> = 0;
+
+>> 
 
 componentCamkesDispatcherFn(dispatcher) ::= << 
 void <componentCamkesDispatcherFnName(dispatcher)>(<componentCamkesDispatcherFnArgs(dispatcher)>) {
@@ -386,15 +393,6 @@ void <componentCamkesDispatcherFnName(dispatcher)>(<componentCamkesDispatcherFnA
 // declarations for creating the component `send' callback function
 //
 /////////////////////////////////////////////////////////////////////
-
-
-assignGlobals(dispatchContract) ::= <<
-<dispatchContract.port.globalMaxDispatchSize> = <dispatchContract.maxDispatchSize>;
-<dispatchContract.port.globalIndex> = <dispatchContract.port.index>;
-<if(dispatchContract.port.hasData)><dispatchContract.port.globalData> = *<dispatchContract.port.data>;<endif> 
-*<dispatchContract.port.globalIndex> = 0;
-
->> 
 
 copyAadlInputToGlobalStmt(port) ::= <<
 <if(port.type.isBaseType)><\\>
@@ -467,12 +465,12 @@ aadlDispatcherFunctionName(dispatcher) ::= <<
 >>
 
 aadlDispatcherFunctionArgs(dispatcher) ::= <<
-		<if(dispatcher.hasData)><[dispatcher.name, dispatcher.contracts:passiveDispatcherCallOutArg() ];separator=", \n"> <else><\\>
+		<if(dispatcher.hasData)><[{<dispatcher.type.aadlInputToCamkesInput> <dispatcher.name>}, dispatcher.contracts:passiveDispatcherCallOutArg() ];separator=", \n"> <else><\\>
 		<dispatcher.contracts:passiveDispatcherCallOutArg();separator=", \n"> <endif>
 >>
 
 aadlDispatcherFunction(dispatcher) ::= <<
-void <dispatcher.dispatcherCFileDispatcherFnName>(<if(dispatcher.hasData)><dispatcher.type.name> <dispatcher.name><endif>) {
+void <dispatcher.dispatcherCFileDispatcherFnName>(<if(dispatcher.hasData)><dispatcher.type.aadlInputType.name> <dispatcher.name><endif>) {
 	<dispatcher.contracts:dispatcherDeclareData()>
 	
 	// make the call: 
