@@ -21,7 +21,7 @@ public class RemoteProcedureParameterNames {
     Direction d = rpp.getParamDirection();
     String name = 
         (d == Direction.IN) ? "in" : 
-          (d == Direction.OUT) ? "out" : "in out";
+          (d == Direction.OUT) ? "out" : "inout";
     return name;
   }
   
@@ -31,5 +31,9 @@ public class RemoteProcedureParameterNames {
   
   public TypeNames getType() {
     return new TypeNames(rpp.getParamType());
+  }
+
+  public boolean getIsInput() {
+    return (rpp.getParamDirection() == Direction.IN);
   }
 }

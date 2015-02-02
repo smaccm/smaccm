@@ -48,12 +48,12 @@ public abstract class ThreadUtil {
   final public static String SMACCM_SYS_COMPUTE_ENTRYPOINT_SOURCE_TEXT_NAME = "SMACCM_SYS::Compute_Entrypoint_Source_Text";
   final public static String PERIOD_NAME = "Period";
 	final public static String PRIORITY_NAME = "Priority";
-	final public static String LEGACY_NAME = "SMACCM_SYS::Is_Legacy";
-	final public static String LEGACY_MUTEX_LIST_NAME = "SMACCM_SYS::Legacy_Mutex_List";
-  final public static String LEGACY_SEMAPHORE_LIST_NAME = "SMACCM_SYS::Legacy_Semaphore_List";
-	final public static String LEGACY_ENTRYPOINT_NAME = "SMACCM_SYS::Legacy_Entrypoint";
-  final public static String LEGACY_EXTERNAL_IRQ_LIST_NAME = "SMACCM_SYS::Legacy_IRQ_Handler_List";
-  final public static String LEGACY_EXTERNAL_IRQ_EVENT_LIST_NAME = "SMACCM_SYS::Legacy_IRQ_Event_List";
+	final public static String LEGACY_NAME = "SMACCM_SYS::Is_External";
+	final public static String LEGACY_MUTEX_LIST_NAME = "SMACCM_SYS::External_Mutex_List";
+  final public static String LEGACY_SEMAPHORE_LIST_NAME = "SMACCM_SYS::External_Semaphore_List";
+	final public static String LEGACY_ENTRYPOINT_NAME = "SMACCM_SYS::External_Entrypoint";
+  final public static String LEGACY_EXTERNAL_IRQ_LIST_NAME = "SMACCM_SYS::External_IRQ_Handler_List";
+  final public static String LEGACY_EXTERNAL_IRQ_EVENT_LIST_NAME = "SMACCM_SYS::External_IRQ_Event_List";
   final public static String EXTERNAL_IRQ_LIST_NAME = "SMACCM_SYS::External_IRQ_List";
   final public static String GENERATE_SCHEDULER_SYSTICK_IRQ_NAME = "SMACCM_SYS::Generate_Scheduler_Systick_IRQ";
   final public static String ISR_HANDLER_NAME = "SMACCM_SYS::First_Level_Interrupt_Handler";
@@ -157,7 +157,7 @@ public abstract class ThreadUtil {
 		return priority;
 	}
 
-	public static boolean getLegacyValue(ThreadTypeImpl tti) {
+	public static boolean getIsExternal(NamedElement tti) {
 		boolean legacy = false;
 
 		try {
@@ -241,11 +241,11 @@ public abstract class ThreadUtil {
     }
   }
   
-	public static List<String> getLegacyMutexList(NamedElement tti) {
+	public static List<String> getExternalMutexList(NamedElement tti) {
     return getStringList(tti, ThreadUtil.LEGACY_MUTEX_LIST);
   }
 
-  public static List<String> getLegacySemaphoreList(NamedElement tti) {
+  public static List<String> getExternalSemaphoreList(NamedElement tti) {
     return getStringList(tti, ThreadUtil.LEGACY_SEMAPHORE_LIST);
   }
 

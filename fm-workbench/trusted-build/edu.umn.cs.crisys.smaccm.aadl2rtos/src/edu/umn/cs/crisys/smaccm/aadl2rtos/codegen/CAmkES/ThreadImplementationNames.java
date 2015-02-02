@@ -59,6 +59,21 @@ public class ThreadImplementationNames {
     return endpoints;
   }
   
+  public List<RemoteProcedureGroupEndpointNames> getProvidedEndpoints() {
+    ArrayList<RemoteProcedureGroupEndpointNames> endpoints = new ArrayList<>();
+    for (RemoteProcedureGroupEndpoint rpge : ti.getProvidesRPGList()) {
+      endpoints.add(new RemoteProcedureGroupEndpointNames(rpge));
+    }
+    return endpoints;
+  }
+
+  public List<RemoteProcedureGroupEndpointNames> getRequiredEndpoints() {
+    ArrayList<RemoteProcedureGroupEndpointNames> endpoints = new ArrayList<>();
+    for (RemoteProcedureGroupEndpoint rpge : ti.getRequiresRPGList()) {
+      endpoints.add(new RemoteProcedureGroupEndpointNames(rpge));
+    }
+    return endpoints;
+  }
   
   public Collection<RemoteProcedureGroupNames> getUsedRpgs() {
     Map<String, RemoteProcedureGroupNames> rpgMap = new HashMap<>();
@@ -126,7 +141,7 @@ public class ThreadImplementationNames {
   
   public List<ThreadImplementationNames> getOtherThreadImplementations() {
     List<ThreadImplementationNames> others = new ArrayList<>(); 
-    for (ThreadImplementation t: ti.getModel().getThreadImplementations()) {
+    for (ThreadImplementation t: ti.getModel().getAllThreadImplementations()) {
       if (t != ti) {
         others.add(new ThreadImplementationNames(t));
       }
@@ -182,6 +197,14 @@ public class ThreadImplementationNames {
     return tn;
   }
   
+  public List<String> getExternalMutexes() {
+    return ti.getExternalMutexList();
+  }
+  
+  public List<String> getExternalSemaphores() {
+    return ti.getExternalSemaphoreList();
+  }
+  
   //////////////////////////////////////////////////////////
   //
   // query functions
@@ -194,6 +217,10 @@ public class ThreadImplementationNames {
   
   public boolean getIsPassive() {
     return ti.getIsPassive();
+  }
+  
+  public boolean getIsExternal() {
+    return ti.getIsExternal();
   }
   
   //////////////////////////////////////////////////////////

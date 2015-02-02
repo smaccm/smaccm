@@ -140,7 +140,7 @@ public class CAmkES_CodeGenerator {
     //ST st = templates.getInstanceOf("componentGlueCodeHeaderPurpose");
     //writer.append(st.render());
     
-    for (ThreadImplementation ti : model.getThreadImplementations()) {
+    for (ThreadImplementation ti : model.getAllThreadImplementations()) {
       for (Dispatcher d : ti.getDispatcherList()) {
         OutgoingDispatchContract maxCalls = CGUtil.maxDispatcherUse(d.getDispatchLimits());
         for (Map.Entry<OutputEventPort, Integer> entry : maxCalls.getContract().entrySet()) {
@@ -167,7 +167,7 @@ public class CAmkES_CodeGenerator {
     rwTypeSet.add(new UnitType());
     rwTypeSet.add(new IntType(32, false));  
     
-    for (ThreadImplementation ti : model.getThreadImplementations()) {
+    for (ThreadImplementation ti : model.getAllThreadImplementations()) {
       for (OutputDataPort d : ti.getOutputDataPortList()) {
         rwTypeSet.add(d.getType());
       }
@@ -455,9 +455,11 @@ public class CAmkES_CodeGenerator {
   public void createClockDriver(File srcDirectory, File includeDirectory) throws Aadl2RtosFailure {
 	  
     String concrete_driver = null; 
-    if (model.getHWTarget().equalsIgnoreCase("QEMU")) {
-      concrete_driver = "qemu_clock_driver.c";
-    } else {
+    if (model.getHWTarget().equalsIgnoreCase("QEMU") || 
+        model.getHWTarget().equalsIgnoreCase("ODROID")) {
+      concrete_driver = "qemu_odroid_clock_driver.c";
+    } 
+    else {
       log.warn("Clock driver for HW platform: " + model.getHWTarget() + " is currently unimplemented.  " + 
           "Please implement interface as specified in clock_driver.h for this platform, and place the resulting .c file in the dispatch_periodic directory.");
     }
@@ -570,7 +572,7 @@ public class CAmkES_CodeGenerator {
 	}
 	
 	public void createComponents() throws Aadl2RtosFailure {
-	  List<ThreadImplementation> tis = model.getThreadImplementations();
+	  List<ThreadImplementation> tis = model.getAllThreadImplementations();
 	  for (ThreadImplementation ti: tis) {
 	    createComponent(ti);
 	  }

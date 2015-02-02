@@ -61,6 +61,15 @@ bool <sda.writerFnName>(<sda.nameAsOutputParam>);
 
 >>
 
+writeAadlCRpcPrototypeSemi(rpc, endpoint) ::= <<<writeAadlCRpcPrototype(rpc, endpoint)>;>>
+
+writeEndpointPrototype(endpoint) ::= <<
+<if(!endpoint.isExternal)><\\>
+<endpoint.remoteProcedureGroup.remoteProcedures:writeAadlCRpcPrototypeSemi(endpoint); separator="\n">
+<endif>
+>>
+
+
 portInitializer(port) ::= <<
 <if(port.hasInitializeEntrypoint)>void <port.initializeEntrypointOpt.handlerName>();
 <endif>
@@ -71,10 +80,16 @@ componentGlueCodeHeaderBody(threadImpl) ::= <<
 	<threadImpl.outputPortList:writePortWriterPrototype()>
 	<threadImpl.inputPortList:writePortReaderPrototype()>
 	<threadImpl.sharedDataAccessorList:writeSharedDataPrototype()>
-
+	<threadImpl.endpoints:writeEndpointPrototype()>
 	<threadImpl.portList:portInitializer()>
 	<if(threadImpl.hasInitializeEntrypoint)>void <threadImpl.initializeEntrypointOpt.handlerName>();<endif>
-	
+	<if(threadImpl.isExternal)>
+		//////////////////////////////////////////////////////////////////////////
+		// 
+		// Note: thread is declared EXTERNAL; user should provide run() function.
+		//
+		//////////////////////////////////////////////////////////////////////////
+	<endif>	
 >>
 
 componentGlueCodeHeaderPostfix(name, path) ::= <<

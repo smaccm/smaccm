@@ -221,11 +221,11 @@ assembly {
     configuration {
 		<if(model.threadCalendar.hasDispatchers)>
 		<if(model.isQemuTarget)>
-		/* Freescale i.MX31 (KZM) */
+		/* Freescale i.MX31 (KZM) QEMU Configuration */
         epit.mem_attributes = "0x53F98000:0x1000";
 		epit.irq_attributes = 27;
 		<elseif(model.isOdroidTarget)>
-		/* Freescale i.MX6 (Sabralite) */
+		/* Freescale i.MX6 (Sabralite) ODROID Configuration */
         epit.mem_attributes = "0x020D0000:0x1000";
 		epit.irq_attributes = 88;
 		<else>

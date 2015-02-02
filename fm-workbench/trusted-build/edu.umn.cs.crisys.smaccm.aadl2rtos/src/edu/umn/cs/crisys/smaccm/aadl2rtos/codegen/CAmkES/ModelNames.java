@@ -72,7 +72,7 @@ public class ModelNames {
   }
 
   public List<ThreadImplementationNames> getThreadImplementations() {
-    return constructThreadImplList(m.getThreadImplementations());
+    return constructThreadImplList(m.getAllThreadImplementations());
   }
 
   public ThreadCalendarNames getThreadCalendar() {

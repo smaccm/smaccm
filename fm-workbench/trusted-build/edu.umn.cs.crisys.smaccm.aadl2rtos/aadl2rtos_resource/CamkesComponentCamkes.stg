@@ -126,6 +126,8 @@ component <threadImpl.componentName> {
 <else><\\>
 	provides <threadImpl.idlName> <threadImpl.componentDispatcherInterfaceVarIdName>;
 <endif>
+	<threadImpl.externalSemaphores:{ sem | has semaphore <sem>; }; separator="\n">
+	<threadImpl.externalMutexes:{mut | has mutex <mut>; }; separator="\n">
 	<threadImpl.endpoints:writeRpgInterface()>
 	// interfaces for Periodic and IRQ port dispatchers.
 	<threadImpl.dispatchers:writeProvidedInterface()>	

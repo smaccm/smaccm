@@ -20,15 +20,28 @@ import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.*;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.*;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.rpc.RemoteProcedureGroupEndpoint;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.parse.Model;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.util.Util;
 
-public class ThreadImplementation extends ThreadImplementationBase {
+public class ThreadImplementation {
 
 	private ExternalHandler initEntrypointHandler = null;
-	
+	private int priority = -1;
+  private int stackSize = 0; 
+  private double minExecutionTime = -1.0; 
+  private double maxExecutionTime = -1.0; 
+  
+  private String name;
+  private String generatedEntrypoint = null;
+  private  Model model;
+  
 	private List<ThreadInstance> threadInstanceList = new ArrayList<ThreadInstance>();
 	private ArrayList<Dispatcher> dispatcherList = new ArrayList<Dispatcher>();
 	private String dispatchProtocol; 
 	private Boolean isPassive; 
+	private Boolean isExternal = false;
+	
+	// Necessary for eChronos build.  "Location" defines number of thread.
+	private int eChronosThreadLocation; 
 	
 	// private String smaccmSysSignalOpt = null;
 	// private String isrHandlerName = null;
@@ -42,7 +55,9 @@ public class ThreadImplementation extends ThreadImplementationBase {
 	private ArrayList<InputEventPort> inputEventDataPortList = new ArrayList<InputEventPort>();
 	private ArrayList<SharedDataAccessor> accessorList = new ArrayList<SharedDataAccessor>();
   
-	private ArrayList<String> legacySemaphoreList = new ArrayList<String>();
+  private List<String> externalMutexList = new ArrayList<String>();
+  private List<String> externalSemaphoreList = new ArrayList<String>();
+  private List<String> externalReferencedFiles = new ArrayList<String>(); 
 	private List<String> sourceFileList = new ArrayList<String>(); 
 	
 	// Outgoing dispatch contract (limits on dispatch)
@@ -55,11 +70,95 @@ public class ThreadImplementation extends ThreadImplementationBase {
 	// Constructor
 	public ThreadImplementation(Model model, String name, int priority, int stackSize, 
 	    String generatedEntrypoint, boolean isPassive) {
-	  super(model, name, priority, stackSize);
+    this.name = name;
+    this.priority = priority;
+    this.stackSize = stackSize;
+    this.model = model;
 	  this.generatedEntrypoint = generatedEntrypoint;
 	  this.isPassive = isPassive; 
   }
 	
+  public Model getModel() {
+    return model;
+  }
+  
+  public String getName() {
+    return name;
+  }
+
+  public String getNormalizedName() {
+    return Util.normalizeAadlName(this.getName());  
+  }
+  
+  public int getPriority() {
+    return this.priority;
+  }
+  
+  public int getStackSize() {
+    return this.stackSize;
+  }
+
+  public String getGeneratedEntrypoint() {
+    return generatedEntrypoint;
+  }
+
+  
+  /**
+   * @return the eChronosThreadLocation
+   */
+  public int geteChronosThreadLocation() {
+    return eChronosThreadLocation;
+  }
+
+  /**
+   * @param eChronosThreadLocation the eChronosThreadLocation to set
+   */
+  public void seteChronosThreadLocation(int eChronosThreadLocation) {
+    this.eChronosThreadLocation = eChronosThreadLocation;
+  }
+
+  /**
+   * @return the isExternal
+   */
+  public Boolean getIsExternal() {
+    return isExternal;
+  }
+
+  /**
+   * @param isExternal the isExternal to set
+   */
+  public void setIsExternal(Boolean isExternal) {
+    this.isExternal = isExternal;
+  }
+
+  /**
+   * @return the minExecutionTime
+   */
+  public double getMinExecutionTime() {
+    return minExecutionTime;
+  }
+
+  /**
+   * @param minExecutionTime the minExecutionTime to set
+   */
+  public void setMinExecutionTime(double minExecutionTime) {
+    this.minExecutionTime = minExecutionTime;
+  }
+
+  /**
+   * @return the maxExecutionTime
+   */
+  public double getMaxExecutionTime() {
+    return maxExecutionTime;
+  }
+
+  /**
+   * @param maxExecutionTime the maxExecutionTime to set
+   */
+  public void setMaxExecutionTime(double maxExecutionTime) {
+    this.maxExecutionTime = maxExecutionTime;
+  }
+
   public List<SharedDataAccessor> getSharedDataAccessors() {
     return this.accessorList;
   }
@@ -77,10 +176,6 @@ public class ThreadImplementation extends ThreadImplementationBase {
 	  return this.dispatcherList; 
 	}
 	
-	public List<String> getLegacySemaphores() {
-	    return this.legacySemaphoreList;
-	}
-	  
 	public ExternalHandler getInitializeEntrypointOpt() {
 		return this.initEntrypointHandler;
 	}
@@ -95,6 +190,48 @@ public class ThreadImplementation extends ThreadImplementationBase {
 
 	
  
+  /**
+   * @return the externalMutexList
+   */
+  public List<String> getExternalMutexList() {
+    return externalMutexList;
+  }
+
+  /**
+   * @param externalMutexList the externalMutexList to set
+   */
+  public void setExternalMutexList(List<String> externalMutexList) {
+    this.externalMutexList = externalMutexList;
+  }
+
+  /**
+   * @return the externalSemaphoreList
+   */
+  public List<String> getExternalSemaphoreList() {
+    return externalSemaphoreList;
+  }
+
+  /**
+   * @param externalSemaphoreList the externalSemaphoreList to set
+   */
+  public void setExternalSemaphoreList(List<String> externalSemaphoreList) {
+    this.externalSemaphoreList = externalSemaphoreList;
+  }
+
+  /**
+   * @return the externalReferencedFiles
+   */
+  public List<String> getExternalReferencedFiles() {
+    return externalReferencedFiles;
+  }
+
+  /**
+   * @param externalReferencedFiles the externalReferencedFiles to set
+   */
+  public void setExternalReferencedFiles(List<String> externalReferencedFiles) {
+    this.externalReferencedFiles = externalReferencedFiles;
+  }
+
   /**
    * @return the dispatchLimits
    */

@@ -44,7 +44,7 @@ import org.osate.aadl2.FeatureGroup;
 import org.osate.aadl2.Parameter;
 import org.osate.aadl2.PortCategory;
 import org.osate.aadl2.SubprogramAccess;
-import org.osate.aadl2.SubprogramGroupAccess;
+// import org.osate.aadl2.SubprogramGroupAccess;
 import org.osate.aadl2.SystemImplementation;
 import org.osate.aadl2.impl.BusAccessImpl;
 import org.osate.aadl2.impl.DataAccessImpl;
@@ -355,27 +355,6 @@ public class AadlModelParser {
    * 
    ***************************************************************************/
 
-  private LegacyThreadImplementation constructLegacyThreadImplementation(ThreadTypeImpl tti) {
-    // For thread base, 
-    String name = tti.getName().toLowerCase();
-    int priority = ThreadUtil.getPriority(tti);
-    int stackSize = ThreadUtil.getStackSizeInBytes(tti);
-    List<String> fileNames = Util.getSourceTextListOpt(tti, ThreadUtil.SOURCE_TEXT);
-    List<String> legacyMutexList;
-    List<String> legacySemaphoreList;
-    String generatedEntrypoint;
-    try { 
-      legacyMutexList = (ArrayList<String>) ThreadUtil.getLegacyMutexList(tti);
-      legacySemaphoreList = (ArrayList<String>) ThreadUtil.getLegacySemaphoreList(tti);
-      generatedEntrypoint = Util.getStringValue(tti, ThreadUtil.LEGACY_ENTRYPOINT);
-      LegacyThreadImplementation thread = new LegacyThreadImplementation(model, name, priority, stackSize,  
-          legacyMutexList, legacySemaphoreList, generatedEntrypoint);
-      thread.setLegacyReferencedFiles(fileNames);
-      return thread;
-    } catch (Exception e) {
-      throw new Aadl2RtosException("Error: Legacy threads must have a SMACCM_SYS::Legacy_Entrypoint property defined");
-    }
-  }
   
   private void setDispatchProtocol(ThreadTypeImpl tti, ThreadImplementation ti, boolean isPassive) {
     EnumerationLiteral dispatchProtocol;  
@@ -531,8 +510,17 @@ public class AadlModelParser {
 
     double minComputeTime = ThreadUtil.getMinComputeExecutionTimeInMicroseconds(tti);
     double maxComputeTime = ThreadUtil.getMaxComputeExecutionTimeInMicroseconds(tti);
+    boolean isExternal = ThreadUtil.getIsExternal(tti);
+    List<String> externalMutexList = (ArrayList<String>) ThreadUtil.getExternalMutexList(tti);
+    List<String> externalSemaphoreList = (ArrayList<String>) ThreadUtil.getExternalSemaphoreList(tti);
+            
     ti.setMinExecutionTime(minComputeTime);
     ti.setMaxExecutionTime(maxComputeTime);
+    ti.setIsExternal(isExternal);
+    ti.setExternalMutexList(externalMutexList);
+    ti.setExternalSemaphoreList(externalSemaphoreList);
+    
+    //generatedEntrypoint = Util.getStringValue(tti, ThreadUtil.LEGACY_ENTRYPOINT);
     
     setDispatchProtocol(tti, ti, isPassive);
     createOptPeriodicHandler(tti, ti); 
@@ -600,26 +588,21 @@ public class AadlModelParser {
 		      constructThreadImplToInstanceMap();
 		
 		for (ThreadTypeImpl tti : threadTypeImplList) {
-			if (ThreadUtil.getLegacyValue(tti)) {
-				LegacyThreadImplementation lti = constructLegacyThreadImplementation(tti); 
-				this.model.legacyThreadList.add(lti);
-				this.model.legacyMutexList.addAll(lti.getLegacyMutexes());
-				this.model.legacySemaphoreList.addAll(lti.getLegacySemaphores());
-			} else {
-				ThreadImplementation threadImplementation = constructThreadImplementation(tti); 
-				if (threadImplToInstanceMap.containsKey(tti )) {
-          for (ComponentInstance co: threadImplToInstanceMap.get(tti)) {
-            ThreadInstance instance = new ThreadInstance(threadImplementation);
-            threadImplementation.addThreadInstance(instance);
-            // TODO: why do I need the thread instance map?
-            this.threadInstanceMap.put(co, instance);
-          }
-				}
-				else {
-          throw new Aadl2RtosException("Unable to find any thread instances for implementation: " + tti.getName()) ; 
-				}
-				threadImplementationMap.put(tti, threadImplementation);
+			ThreadImplementation threadImplementation = constructThreadImplementation(tti); 
+			if (threadImplToInstanceMap.containsKey(tti )) {
+        for (ComponentInstance co: threadImplToInstanceMap.get(tti)) {
+          ThreadInstance instance = new ThreadInstance(threadImplementation);
+          threadImplementation.addThreadInstance(instance);
+          // TODO: why do I need the thread instance map?
+          this.threadInstanceMap.put(co, instance);
+        }
 			}
+			else {
+        throw new Aadl2RtosException("Unable to find any thread instances for implementation: " + tti.getName()) ; 
+			}
+			threadImplementationMap.put(tti, threadImplementation);
+      this.model.legacyMutexList.addAll(threadImplementation.getExternalMutexList());
+      this.model.legacySemaphoreList.addAll(threadImplementation.getExternalSemaphoreList());
 		}
 	}
 
@@ -746,6 +729,8 @@ public class AadlModelParser {
       for (SubprogramAccess sa: subGroup.getOwnedSubprogramAccesses()) {
         SubprogramTypeImpl sub = (SubprogramTypeImpl)sa.getFeatureClassifier();
         List<RemoteProcedureParameter> args = new ArrayList<>(); 
+        logger.info("The subprogram type name is: " + sub.getName());
+        logger.info("The subprogram access name is: " + sa.getName());
         for (Parameter parm : sub.getOwnedParameters()) {
           Type t = lookupType((DataClassifier)parm.getClassifier());
           String id = parm.getName();
@@ -757,7 +742,7 @@ public class AadlModelParser {
           args.add(modelParam);
         }
         Type t = new UnitType();
-        remoteProcedures.add(new RemoteProcedure(sub.getName(), args, t));
+        remoteProcedures.add(new RemoteProcedure(sa.getName(), args, t));
       }
       rpg = new RemoteProcedureGroup(remoteProcedures, subGroup.getName());
       model.getRemoteProcedureGroupMap().put(subGroup.getName(), rpg);
@@ -782,11 +767,11 @@ public class AadlModelParser {
     RemoteProcedureGroup rpg = lookupRemoteProcedureGroup(subGroup);
     RemoteProcedureGroupEndpoint requiresEnd = 
         new RemoteProcedureGroupEndpoint(requiresInstance.getThreadImplementation(), rpg, 
-              requires.getName(), AccessType.REQUIRES);
+              requires.getName(), AccessType.REQUIRES, ThreadUtil.getIsExternal(requires));
     
     RemoteProcedureGroupEndpoint providesEnd = 
         new RemoteProcedureGroupEndpoint(providesInstance.getThreadImplementation(), rpg, 
-            provides.getName(), AccessType.PROVIDES);
+            provides.getName(), AccessType.PROVIDES, ThreadUtil.getIsExternal(provides));
     
     EndpointConnection ec = new EndpointConnection(requiresInstance, requiresEnd, 
         providesInstance, providesEnd);
@@ -880,10 +865,7 @@ public class AadlModelParser {
 
 		// create internal ast types from the AADL types
 		for (DataClassifier dc : this.dataTypes) {
-			Type t = createAstType(dc);
-			if (!t.isBaseType()) {
-				this.model.getAstTypes().put(Util.normalizeAadlName(dc), t);
-			}
+			createAstType(dc);
 		}
 		for (Type t : this.model.astTypes.values()) {
 			t.init(this.model.getAstTypes());
@@ -906,8 +888,10 @@ public class AadlModelParser {
 	}
 
 	public Type lookupType(DataClassifier dc) {
-		String dcName = Util.normalizeAadlName(dc);
-		Type ty = createAstType(dc);
+
+	  String dcName = getDataClassifierName(dc);
+		
+	  Type ty = createAstType(dc);
 		if (this.model.getAstTypes().containsKey(dcName)) {
 			return new IdType(dcName, this.model.getAstTypes().get(dcName));
 		} else {
@@ -915,12 +899,21 @@ public class AadlModelParser {
 		}
 	}
 
+	private String getDataClassifierName(DataClassifier dc) {
+    String typeNameOpt = Util.getStringValueOpt(dc, 
+        ThreadUtil.SMACCM_SYS_COMMPRIM_SOURCE_TEXT);
+    String qualifiedName = dc.getQualifiedName();
+    String normalizedName = Util.normalizeAadlName(qualifiedName);
+	  return (typeNameOpt != null) ? typeNameOpt : normalizedName; 
+	}
+	
 	public Type createAstType(DataClassifier dc) {
 		if (dc == null) {
 			return null;
 		}
+		
 		String qualifiedName = dc.getQualifiedName();
-		String normalizedName = Util.normalizeAadlName(qualifiedName);
+    String normalizedName = getDataClassifierName(dc);
 
 		if (this.model.getAstTypes().containsKey(normalizedName)) {
 			return this.model.getAstTypes().get(normalizedName);
@@ -962,6 +955,8 @@ public class AadlModelParser {
 		  int size = Util.getDimension(dti);
 			Type childElem = createAstType(childDc); 
 			if ((el.getName()).equalsIgnoreCase("Array")) {
+			  Type at = new ArrayType(childElem, size);
+			  this.model.astTypes.put(normalizedName, at);
 			  return new ArrayType(childElem, size);
 			} else {
 			  throw new Aadl2RtosException("Examining type: " + dc.getFullName() + 
@@ -992,6 +987,7 @@ public class AadlModelParser {
 					Classifier subClass = c.getClassifier();
 					if (subClass instanceof DataClassifier) {
 						Type subType = createAstType((DataClassifier) subClass);
+						this.logger.info("The name of the field is: " + c.getName());
 						rt.addField(c.getName(), subType);
 					} else {
 						throw new Aadl2RtosException(
@@ -1051,7 +1047,7 @@ public class AadlModelParser {
     while (it1.hasNext()) {
       String name = it1.next();
       String handlerName = it1.next();
-      LegacyExternalISR irq = new LegacyExternalISR(name, handlerName);
+      ExternalISR irq = new ExternalISR(name, handlerName);
       this.model.legacyExternalIRQList.add(irq);
     }
     
@@ -1070,7 +1066,7 @@ public class AadlModelParser {
       } catch (NumberFormatException e) {
           throw new Aadl2RtosException("Error: legacy IRQ event property: third argument of triple not a number.");
       }
-      LegacyIRQEvent evt = new LegacyIRQEvent(eventName, taskName, signal);
+      ExternalIRQEvent evt = new ExternalIRQEvent(eventName, taskName, signal);
       this.model.legacyIRQEventList.add(evt);
     }
     
@@ -1143,5 +1139,28 @@ public class AadlModelParser {
       isr.addThreadInstance(ti);
     }
   }
+
+  private LegacyThreadImplementation constructLegacyThreadImplementation(ThreadTypeImpl tti) {
+    // For thread base, 
+    String name = tti.getName().toLowerCase();
+    int priority = ThreadUtil.getPriority(tti);
+    int stackSize = ThreadUtil.getStackSizeInBytes(tti);
+    List<String> fileNames = Util.getSourceTextListOpt(tti, ThreadUtil.SOURCE_TEXT);
+    List<String> legacyMutexList;
+    List<String> legacySemaphoreList;
+    String generatedEntrypoint;
+    try { 
+      legacyMutexList = (ArrayList<String>) ThreadUtil.getExternalMutexList(tti);
+      legacySemaphoreList = (ArrayList<String>) ThreadUtil.getExternalSemaphoreList(tti);
+      generatedEntrypoint = Util.getStringValue(tti, ThreadUtil.LEGACY_ENTRYPOINT);
+      LegacyThreadImplementation thread = new LegacyThreadImplementation(model, name, priority, stackSize,  
+          legacyMutexList, legacySemaphoreList, generatedEntrypoint);
+      thread.setExternalReferencedFiles(fileNames);
+      return thread;
+    } catch (Exception e) {
+      throw new Aadl2RtosException("Error: Legacy threads must have a SMACCM_SYS::Legacy_Entrypoint property defined");
+    }
+  }
+
   */ 
 }
