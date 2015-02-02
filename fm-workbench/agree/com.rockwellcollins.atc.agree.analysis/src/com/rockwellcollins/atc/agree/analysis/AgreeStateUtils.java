@@ -1,5 +1,7 @@
 package com.rockwellcollins.atc.agree.analysis;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -7,7 +9,12 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
 
+import jkind.lustre.BoolExpr;
+import jkind.lustre.Expr;
+import jkind.lustre.IntExpr;
 import jkind.lustre.NamedType;
+import jkind.lustre.RealExpr;
+import jkind.lustre.RecordExpr;
 import jkind.lustre.Type;
 import jkind.lustre.VarDecl;
 
@@ -36,6 +43,9 @@ import com.rockwellcollins.atc.agree.agree.ThisExpr;
 public class AgreeStateUtils {
 	
 	private static final String dotChar = "__";
+	private static final Expr initBool = new BoolExpr(false);
+	private static final Expr initReal = new RealExpr(BigDecimal.ZERO);
+	private static final Expr initInt = new IntExpr(BigInteger.ZERO);
 	
     public static void addAllToRefMap(Map<String, EObject> refs, Map<String, EObject> refMap){
     	refMap.putAll(refs);
@@ -123,6 +133,38 @@ public class AgreeStateUtils {
     	
     }
     
+    public static Expr getInitialType(String typeStr, Set<jkind.lustre.RecordType> typeExpressions){
+        
+        switch(typeStr){
+          case "bool" : return initBool;
+          case "real" : return initReal;
+          case "int" : return initInt;
+          default:
+        }
+        
+        boolean foundType = false;
+        Map<String, Expr> fieldExprs = new HashMap<>();
+        for(jkind.lustre.RecordType type : typeExpressions){
+            if(type.id.equals(typeStr)){
+                foundType = true;
+                for(Entry<String, Type> field : type.fields.entrySet()){
+                    Type fieldType = field.getValue();
+                    if(!(fieldType instanceof NamedType) &&
+                       !(fieldType instanceof RecordType)){
+                        throw new AgreeException("Unhandled type: '"+fieldType.getClass().getTypeName()+"'");
+                    }
+                    Expr fieldExpr = getInitialType(fieldType.toString(), typeExpressions);
+                    fieldExprs.put(field.getKey(), fieldExpr);
+                }
+            }
+        }
+        if(!foundType){
+            throw new AgreeException("Could not find type: '"+typeStr+"'");
+        }
+        
+        return new RecordExpr(typeStr, fieldExprs);
+    }
+    
     private static String getIDTypeStr(NamedElement record) {
     	String typeStr = null;
     	EObject container = record.eContainer();
@@ -206,12 +248,12 @@ public class AgreeStateUtils {
     	return nodeName;
     }
     
-    public static List<VarDecl> argsToVarDeclList(String nameTag, EList<Arg> args,
+    public static List<VarDecl> argsToVarDeclList(EList<Arg> args,
     		Map<NamedElement, String> typeMap, Set<jkind.lustre.RecordType> typeExpressions) {
         List<VarDecl> varList = new ArrayList<VarDecl>();
         for (Arg arg : args) {
             Type type = getNamedType(getRecordTypeName(arg.getType(), typeMap, typeExpressions)); 
-            VarDecl varDecl = new VarDecl(nameTag + arg.getName(), type);
+            VarDecl varDecl = new VarDecl(arg.getName(), type);
             varList.add(varDecl);
         }
 

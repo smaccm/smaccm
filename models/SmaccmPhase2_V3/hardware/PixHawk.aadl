@@ -1,0 +1,62 @@
+package PixHawk
+public
+  with hardware_types;
+  with CORTEX;
+with software_types;
+
+system PixHawk
+  features
+    uart0 : in out data port hardware_types::UART;
+    uart1 : in out data port hardware_types::UART;
+    uart2 : in out data port hardware_types::UART;
+    uart3 : in out data port hardware_types::UART;
+    uart4 : in out data port hardware_types::UART;
+    ppm : in out data port hardware_types::ppm;
+    adc : in out data port hardware_types::adc;
+    can0 : requires bus access hardware_types::CAN;
+    can1 : requires bus access hardware_types::CAN;
+    spi : provides bus access hardware_types::SPI_Bus;
+    i2c : provides bus access hardware_types::I2C_Bus;
+    usb : provides bus access hardware_types::USB;
+    
+    sensors_group : feature group inverse of hardware_types::Sensors;
+end PixHawk;
+
+system implementation PixHawk.i
+  subcomponents
+    gyro : device ST_Micro_L3GD20_Gyro;
+    accel0 : device ST_Micro_LSM303D_Accel;
+    accel1 : device Invensense_MPU_6000_Accel;
+    baro : device MEAS_MS5611_Baro;
+    MC: system CORTEX::STM32F415.Impl;
+    
+    gps : device GPS;
+    
+  connections
+    sensors_conn1 : port baro.barometer -> sensors_group.barometer;
+    sensors_conn2 : port accel0.motion -> sensors_group.motion;
+    sensors_conn4 : port gps.gps -> sensors_group.gps;
+end PixHawk.i;
+
+device GPS
+  features
+    gps : out event data port hardware_types::GPS;
+end GPS;
+
+device ST_Micro_L3GD20_Gyro
+end ST_Micro_L3GD20_Gyro;
+
+device ST_Micro_LSM303D_Accel
+  features
+    motion : out data port software_types::Motion_Data.Impl;
+end ST_Micro_LSM303D_Accel;
+
+device Invensense_MPU_6000_Accel
+end Invensense_MPU_6000_Accel;
+
+device MEAS_MS5611_Baro
+  features
+    barometer : out data port software_types::Barometric_Data;
+end MEAS_MS5611_Baro;
+
+end PixHawk;

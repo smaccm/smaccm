@@ -68,14 +68,6 @@ public abstract class AadlHandler extends AbstractHandler {
 
             @Override
             public IStatus runInWorkspace(final IProgressMonitor monitor) {
-                activateTerminateHandler(monitor);
-
-                addJobChangeListener(new JobChangeAdapter() {
-                    @Override
-                    public void done(IJobChangeEvent event) {
-                        deactivateTerminateHandler();
-                    }
-                });
 
                 return xtextEditor.getDocument().readOnly(
                         new IUnitOfWork<IStatus, XtextResource>() {
@@ -89,25 +81,6 @@ public abstract class AadlHandler extends AbstractHandler {
                                 }
                             }
                         });
-            }
-
-            private void activateTerminateHandler(final IProgressMonitor monitor) {
-                getWindow().getShell().getDisplay().syncExec(new Runnable() {
-                    @Override
-                    public void run() {
-                        terminateActivation = handlerService.activateHandler(TERMINATE_ID,
-                                new TerminateHandler(monitor));
-                    }
-                });
-            }
-
-            private void deactivateTerminateHandler() {
-                getWindow().getShell().getDisplay().syncExec(new Runnable() {
-                    @Override
-                    public void run() {
-                        handlerService.deactivateHandler(terminateActivation);
-                    }
-                });
             }
         };
 

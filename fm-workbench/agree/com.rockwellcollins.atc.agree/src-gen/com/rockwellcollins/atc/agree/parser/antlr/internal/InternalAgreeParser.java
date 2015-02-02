@@ -24,68 +24,8 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
     public static final String[] tokenNames = new String[] {
         "<invalid>", "<EOR>", "<DOWN>", "<UP>", "RULE_STRING", "RULE_INTEGER_LIT", "RULE_ID", "RULE_REAL_LIT", "RULE_SL_COMMENT", "RULE_DIGIT", "RULE_EXPONENT", "RULE_INT_EXPONENT", "RULE_BASED_INTEGER", "RULE_EXTENDED_DIGIT", "RULE_WS", "'assume'", "':'", "';'", "'guarantee'", "'assert'", "'initially'", "'parameter'", "'lemma'", "'lift'", "'synchrony'", "','", "'simult'", "'no_simult'", "'calendar'", "'ordering'", "'property'", "'='", "'const'", "'eq'", "'fun'", "'('", "')'", "'node'", "'returns'", "'var'", "'let'", "'tel'", "'real'", "'bool'", "'int'", "'type'", "'struct'", "'{'", "'}'", "'->'", "'=>'", "'<=>'", "'or'", "'and'", "'<'", "'<='", "'>'", "'>='", "'<>'", "'!='", "'+'", "'-'", "'*'", "'/'", "'div'", "'mod'", "'not'", "'if'", "'then'", "'else'", "'prev'", "'Get_Property'", "':='", "'pre'", "'event'", "'this'", "'.'", "'floor'", "'::'", "'_REMOVE'", "'_INSERT'", "'_COUNT'", "'_CLK'", "'+=>'", "'constant'", "'applies'", "'to'", "'in'", "'binding'", "'modes'", "'true'", "'false'", "'reference'", "'['", "']'", "'compute'", "'classifier'", "'..'", "'delta'"
     };
-    public static final int RULE_ID=6;
-    public static final int T__29=29;
-    public static final int T__28=28;
-    public static final int RULE_REAL_LIT=7;
-    public static final int T__27=27;
-    public static final int T__26=26;
-    public static final int T__25=25;
-    public static final int T__24=24;
-    public static final int T__23=23;
-    public static final int T__22=22;
-    public static final int T__21=21;
-    public static final int T__20=20;
-    public static final int EOF=-1;
-    public static final int T__93=93;
-    public static final int T__19=19;
-    public static final int T__94=94;
-    public static final int T__91=91;
-    public static final int T__92=92;
-    public static final int T__16=16;
-    public static final int T__15=15;
-    public static final int T__90=90;
-    public static final int T__18=18;
-    public static final int T__17=17;
-    public static final int T__98=98;
-    public static final int T__97=97;
-    public static final int T__96=96;
-    public static final int RULE_EXTENDED_DIGIT=13;
-    public static final int T__95=95;
-    public static final int T__80=80;
-    public static final int T__81=81;
-    public static final int T__82=82;
-    public static final int T__83=83;
-    public static final int T__85=85;
-    public static final int T__84=84;
-    public static final int T__87=87;
-    public static final int T__86=86;
-    public static final int T__89=89;
-    public static final int T__88=88;
-    public static final int RULE_STRING=4;
-    public static final int T__71=71;
-    public static final int T__72=72;
-    public static final int T__70=70;
-    public static final int RULE_EXPONENT=10;
-    public static final int T__76=76;
-    public static final int RULE_DIGIT=9;
-    public static final int T__75=75;
-    public static final int T__74=74;
-    public static final int T__73=73;
-    public static final int T__79=79;
-    public static final int T__78=78;
-    public static final int T__77=77;
-    public static final int T__68=68;
-    public static final int T__69=69;
-    public static final int T__66=66;
-    public static final int T__67=67;
-    public static final int T__64=64;
-    public static final int T__65=65;
-    public static final int T__62=62;
-    public static final int RULE_INTEGER_LIT=5;
-    public static final int T__63=63;
-    public static final int T__61=61;
-    public static final int T__60=60;
+    public static final int T__50=50;
+    public static final int T__59=59;
     public static final int T__55=55;
     public static final int T__56=56;
     public static final int T__57=57;
@@ -94,32 +34,92 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
     public static final int T__52=52;
     public static final int T__53=53;
     public static final int T__54=54;
-    public static final int T__59=59;
-    public static final int T__50=50;
-    public static final int T__42=42;
-    public static final int T__43=43;
-    public static final int T__40=40;
-    public static final int T__41=41;
-    public static final int T__46=46;
-    public static final int T__47=47;
-    public static final int T__44=44;
-    public static final int T__45=45;
-    public static final int T__48=48;
-    public static final int T__49=49;
-    public static final int RULE_BASED_INTEGER=12;
-    public static final int RULE_SL_COMMENT=8;
-    public static final int T__30=30;
-    public static final int T__31=31;
-    public static final int T__32=32;
+    public static final int T__60=60;
+    public static final int T__61=61;
+    public static final int RULE_ID=6;
+    public static final int RULE_DIGIT=9;
+    public static final int T__66=66;
+    public static final int T__67=67;
+    public static final int T__68=68;
+    public static final int T__69=69;
+    public static final int T__62=62;
+    public static final int T__63=63;
+    public static final int T__64=64;
+    public static final int T__65=65;
+    public static final int RULE_REAL_LIT=7;
+    public static final int T__37=37;
+    public static final int T__38=38;
+    public static final int T__39=39;
     public static final int T__33=33;
     public static final int T__34=34;
     public static final int T__35=35;
     public static final int T__36=36;
-    public static final int T__37=37;
-    public static final int T__38=38;
-    public static final int T__39=39;
+    public static final int T__30=30;
+    public static final int T__31=31;
+    public static final int T__32=32;
+    public static final int RULE_EXPONENT=10;
+    public static final int T__48=48;
+    public static final int T__49=49;
+    public static final int T__44=44;
+    public static final int RULE_EXTENDED_DIGIT=13;
+    public static final int T__45=45;
+    public static final int T__46=46;
+    public static final int T__47=47;
+    public static final int T__40=40;
+    public static final int T__41=41;
+    public static final int T__42=42;
+    public static final int T__43=43;
+    public static final int T__91=91;
+    public static final int T__92=92;
+    public static final int T__93=93;
+    public static final int T__94=94;
+    public static final int T__90=90;
     public static final int RULE_INT_EXPONENT=11;
+    public static final int T__19=19;
+    public static final int T__15=15;
+    public static final int T__16=16;
+    public static final int T__17=17;
+    public static final int T__18=18;
+    public static final int T__95=95;
+    public static final int T__96=96;
+    public static final int RULE_BASED_INTEGER=12;
+    public static final int T__97=97;
+    public static final int T__98=98;
+    public static final int T__26=26;
+    public static final int T__27=27;
+    public static final int T__28=28;
+    public static final int T__29=29;
+    public static final int T__22=22;
+    public static final int T__23=23;
+    public static final int T__24=24;
+    public static final int T__25=25;
+    public static final int T__20=20;
+    public static final int RULE_INTEGER_LIT=5;
+    public static final int T__21=21;
+    public static final int T__70=70;
+    public static final int T__71=71;
+    public static final int T__72=72;
+    public static final int RULE_STRING=4;
+    public static final int RULE_SL_COMMENT=8;
+    public static final int T__77=77;
+    public static final int T__78=78;
+    public static final int T__79=79;
+    public static final int T__73=73;
+    public static final int EOF=-1;
+    public static final int T__74=74;
+    public static final int T__75=75;
+    public static final int T__76=76;
+    public static final int T__80=80;
+    public static final int T__81=81;
+    public static final int T__82=82;
+    public static final int T__83=83;
     public static final int RULE_WS=14;
+    public static final int T__88=88;
+    public static final int T__89=89;
+    public static final int T__84=84;
+    public static final int T__85=85;
+    public static final int T__86=86;
+    public static final int T__87=87;
 
     // delegates
     // delegators
@@ -10571,11 +10571,11 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
             if ( (LA53_0==RULE_ID) ) {
                 int LA53_1 = input.LA(2);
 
-                if ( (LA53_1==EOF||(LA53_1>=16 && LA53_1<=17)||LA53_1==25||LA53_1==31||(LA53_1>=35 && LA53_1<=36)||(LA53_1>=47 && LA53_1<=65)||(LA53_1>=68 && LA53_1<=69)||LA53_1==76) ) {
-                    alt53=2;
-                }
-                else if ( (LA53_1==78) && (synpred13_InternalAgree())) {
+                if ( (LA53_1==78) && (synpred13_InternalAgree())) {
                     alt53=1;
+                }
+                else if ( (LA53_1==EOF||(LA53_1>=16 && LA53_1<=17)||LA53_1==25||LA53_1==31||(LA53_1>=35 && LA53_1<=36)||(LA53_1>=47 && LA53_1<=65)||(LA53_1>=68 && LA53_1<=69)||LA53_1==76) ) {
+                    alt53=2;
                 }
                 else {
                     if (state.backtracking>0) {state.failed=true; return current;}
@@ -15524,9 +15524,9 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
             case 60:
                 {
                 switch ( input.LA(2) ) {
-                case RULE_ID:
+                case RULE_REAL_LIT:
                     {
-                    alt79=3;
+                    alt79=1;
                     }
                     break;
                 case RULE_INTEGER_LIT:
@@ -15534,9 +15534,9 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
                     alt79=2;
                     }
                     break;
-                case RULE_REAL_LIT:
+                case RULE_ID:
                     {
-                    alt79=1;
+                    alt79=3;
                     }
                     break;
                 default:
@@ -15552,9 +15552,9 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
             case 61:
                 {
                 switch ( input.LA(2) ) {
-                case RULE_INTEGER_LIT:
+                case RULE_ID:
                     {
-                    alt79=2;
+                    alt79=3;
                     }
                     break;
                 case RULE_REAL_LIT:
@@ -15562,9 +15562,9 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
                     alt79=1;
                     }
                     break;
-                case RULE_ID:
+                case RULE_INTEGER_LIT:
                     {
-                    alt79=3;
+                    alt79=2;
                     }
                     break;
                 default:
@@ -16840,53 +16840,11 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
     // Delegated rules
 
-    public final boolean synpred1_InternalAgree() {
+    public final boolean synpred11_InternalAgree() {
         state.backtracking++;
         int start = input.mark();
         try {
-            synpred1_InternalAgree_fragment(); // can never throw exception
-        } catch (RecognitionException re) {
-            System.err.println("impossible: "+re);
-        }
-        boolean success = !state.failed;
-        input.rewind(start);
-        state.backtracking--;
-        state.failed=false;
-        return success;
-    }
-    public final boolean synpred8_InternalAgree() {
-        state.backtracking++;
-        int start = input.mark();
-        try {
-            synpred8_InternalAgree_fragment(); // can never throw exception
-        } catch (RecognitionException re) {
-            System.err.println("impossible: "+re);
-        }
-        boolean success = !state.failed;
-        input.rewind(start);
-        state.backtracking--;
-        state.failed=false;
-        return success;
-    }
-    public final boolean synpred4_InternalAgree() {
-        state.backtracking++;
-        int start = input.mark();
-        try {
-            synpred4_InternalAgree_fragment(); // can never throw exception
-        } catch (RecognitionException re) {
-            System.err.println("impossible: "+re);
-        }
-        boolean success = !state.failed;
-        input.rewind(start);
-        state.backtracking--;
-        state.failed=false;
-        return success;
-    }
-    public final boolean synpred9_InternalAgree() {
-        state.backtracking++;
-        int start = input.mark();
-        try {
-            synpred9_InternalAgree_fragment(); // can never throw exception
+            synpred11_InternalAgree_fragment(); // can never throw exception
         } catch (RecognitionException re) {
             System.err.println("impossible: "+re);
         }
@@ -16910,81 +16868,11 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
         state.failed=false;
         return success;
     }
-    public final boolean synpred14_InternalAgree() {
+    public final boolean synpred9_InternalAgree() {
         state.backtracking++;
         int start = input.mark();
         try {
-            synpred14_InternalAgree_fragment(); // can never throw exception
-        } catch (RecognitionException re) {
-            System.err.println("impossible: "+re);
-        }
-        boolean success = !state.failed;
-        input.rewind(start);
-        state.backtracking--;
-        state.failed=false;
-        return success;
-    }
-    public final boolean synpred11_InternalAgree() {
-        state.backtracking++;
-        int start = input.mark();
-        try {
-            synpred11_InternalAgree_fragment(); // can never throw exception
-        } catch (RecognitionException re) {
-            System.err.println("impossible: "+re);
-        }
-        boolean success = !state.failed;
-        input.rewind(start);
-        state.backtracking--;
-        state.failed=false;
-        return success;
-    }
-    public final boolean synpred13_InternalAgree() {
-        state.backtracking++;
-        int start = input.mark();
-        try {
-            synpred13_InternalAgree_fragment(); // can never throw exception
-        } catch (RecognitionException re) {
-            System.err.println("impossible: "+re);
-        }
-        boolean success = !state.failed;
-        input.rewind(start);
-        state.backtracking--;
-        state.failed=false;
-        return success;
-    }
-    public final boolean synpred12_InternalAgree() {
-        state.backtracking++;
-        int start = input.mark();
-        try {
-            synpred12_InternalAgree_fragment(); // can never throw exception
-        } catch (RecognitionException re) {
-            System.err.println("impossible: "+re);
-        }
-        boolean success = !state.failed;
-        input.rewind(start);
-        state.backtracking--;
-        state.failed=false;
-        return success;
-    }
-    public final boolean synpred2_InternalAgree() {
-        state.backtracking++;
-        int start = input.mark();
-        try {
-            synpred2_InternalAgree_fragment(); // can never throw exception
-        } catch (RecognitionException re) {
-            System.err.println("impossible: "+re);
-        }
-        boolean success = !state.failed;
-        input.rewind(start);
-        state.backtracking--;
-        state.failed=false;
-        return success;
-    }
-    public final boolean synpred7_InternalAgree() {
-        state.backtracking++;
-        int start = input.mark();
-        try {
-            synpred7_InternalAgree_fragment(); // can never throw exception
+            synpred9_InternalAgree_fragment(); // can never throw exception
         } catch (RecognitionException re) {
             System.err.println("impossible: "+re);
         }
@@ -17008,11 +16896,11 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
         state.failed=false;
         return success;
     }
-    public final boolean synpred3_InternalAgree() {
+    public final boolean synpred4_InternalAgree() {
         state.backtracking++;
         int start = input.mark();
         try {
-            synpred3_InternalAgree_fragment(); // can never throw exception
+            synpred4_InternalAgree_fragment(); // can never throw exception
         } catch (RecognitionException re) {
             System.err.println("impossible: "+re);
         }
@@ -17027,6 +16915,118 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
         int start = input.mark();
         try {
             synpred6_InternalAgree_fragment(); // can never throw exception
+        } catch (RecognitionException re) {
+            System.err.println("impossible: "+re);
+        }
+        boolean success = !state.failed;
+        input.rewind(start);
+        state.backtracking--;
+        state.failed=false;
+        return success;
+    }
+    public final boolean synpred12_InternalAgree() {
+        state.backtracking++;
+        int start = input.mark();
+        try {
+            synpred12_InternalAgree_fragment(); // can never throw exception
+        } catch (RecognitionException re) {
+            System.err.println("impossible: "+re);
+        }
+        boolean success = !state.failed;
+        input.rewind(start);
+        state.backtracking--;
+        state.failed=false;
+        return success;
+    }
+    public final boolean synpred7_InternalAgree() {
+        state.backtracking++;
+        int start = input.mark();
+        try {
+            synpred7_InternalAgree_fragment(); // can never throw exception
+        } catch (RecognitionException re) {
+            System.err.println("impossible: "+re);
+        }
+        boolean success = !state.failed;
+        input.rewind(start);
+        state.backtracking--;
+        state.failed=false;
+        return success;
+    }
+    public final boolean synpred1_InternalAgree() {
+        state.backtracking++;
+        int start = input.mark();
+        try {
+            synpred1_InternalAgree_fragment(); // can never throw exception
+        } catch (RecognitionException re) {
+            System.err.println("impossible: "+re);
+        }
+        boolean success = !state.failed;
+        input.rewind(start);
+        state.backtracking--;
+        state.failed=false;
+        return success;
+    }
+    public final boolean synpred13_InternalAgree() {
+        state.backtracking++;
+        int start = input.mark();
+        try {
+            synpred13_InternalAgree_fragment(); // can never throw exception
+        } catch (RecognitionException re) {
+            System.err.println("impossible: "+re);
+        }
+        boolean success = !state.failed;
+        input.rewind(start);
+        state.backtracking--;
+        state.failed=false;
+        return success;
+    }
+    public final boolean synpred8_InternalAgree() {
+        state.backtracking++;
+        int start = input.mark();
+        try {
+            synpred8_InternalAgree_fragment(); // can never throw exception
+        } catch (RecognitionException re) {
+            System.err.println("impossible: "+re);
+        }
+        boolean success = !state.failed;
+        input.rewind(start);
+        state.backtracking--;
+        state.failed=false;
+        return success;
+    }
+    public final boolean synpred14_InternalAgree() {
+        state.backtracking++;
+        int start = input.mark();
+        try {
+            synpred14_InternalAgree_fragment(); // can never throw exception
+        } catch (RecognitionException re) {
+            System.err.println("impossible: "+re);
+        }
+        boolean success = !state.failed;
+        input.rewind(start);
+        state.backtracking--;
+        state.failed=false;
+        return success;
+    }
+    public final boolean synpred3_InternalAgree() {
+        state.backtracking++;
+        int start = input.mark();
+        try {
+            synpred3_InternalAgree_fragment(); // can never throw exception
+        } catch (RecognitionException re) {
+            System.err.println("impossible: "+re);
+        }
+        boolean success = !state.failed;
+        input.rewind(start);
+        state.backtracking--;
+        state.failed=false;
+        return success;
+    }
+    public final boolean synpred2_InternalAgree() {
+        state.backtracking++;
+        int start = input.mark();
+        try {
+            synpred2_InternalAgree_fragment(); // can never throw exception
         } catch (RecognitionException re) {
             System.err.println("impossible: "+re);
         }
@@ -17052,7 +17052,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
     static final String DFA33_acceptS =
         "\10\uffff\1\2\1\1";
     static final String DFA33_specialS =
-        "\1\uffff\1\6\1\3\1\2\1\5\1\4\1\0\1\1\2\uffff}>";
+        "\1\uffff\1\0\1\1\1\2\1\3\1\4\1\5\1\6\2\uffff}>";
     static final String[] DFA33_transitionS = {
             "\2\10\7\uffff\1\10\5\uffff\1\5\4\uffff\1\10\13\uffff\6\10\1"+
             "\1\1\2\1\3\1\4\1\6\1\7\6\10\2\uffff\2\10",
@@ -17104,10 +17104,10 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
         	int _s = s;
             switch ( s ) {
                     case 0 : 
-                        int LA33_6 = input.LA(1);
+                        int LA33_1 = input.LA(1);
 
                          
-                        int index33_6 = input.index();
+                        int index33_1 = input.index();
                         input.rewind();
                         s = -1;
                         if ( (synpred6_InternalAgree()) ) {s = 9;}
@@ -17115,14 +17115,14 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
                         else if ( (true) ) {s = 8;}
 
                          
-                        input.seek(index33_6);
+                        input.seek(index33_1);
                         if ( s>=0 ) return s;
                         break;
                     case 1 : 
-                        int LA33_7 = input.LA(1);
+                        int LA33_2 = input.LA(1);
 
                          
-                        int index33_7 = input.index();
+                        int index33_2 = input.index();
                         input.rewind();
                         s = -1;
                         if ( (synpred6_InternalAgree()) ) {s = 9;}
@@ -17130,7 +17130,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
                         else if ( (true) ) {s = 8;}
 
                          
-                        input.seek(index33_7);
+                        input.seek(index33_2);
                         if ( s>=0 ) return s;
                         break;
                     case 2 : 
@@ -17149,10 +17149,10 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
                         if ( s>=0 ) return s;
                         break;
                     case 3 : 
-                        int LA33_2 = input.LA(1);
+                        int LA33_4 = input.LA(1);
 
                          
-                        int index33_2 = input.index();
+                        int index33_4 = input.index();
                         input.rewind();
                         s = -1;
                         if ( (synpred6_InternalAgree()) ) {s = 9;}
@@ -17160,7 +17160,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
                         else if ( (true) ) {s = 8;}
 
                          
-                        input.seek(index33_2);
+                        input.seek(index33_4);
                         if ( s>=0 ) return s;
                         break;
                     case 4 : 
@@ -17179,10 +17179,10 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
                         if ( s>=0 ) return s;
                         break;
                     case 5 : 
-                        int LA33_4 = input.LA(1);
+                        int LA33_6 = input.LA(1);
 
                          
-                        int index33_4 = input.index();
+                        int index33_6 = input.index();
                         input.rewind();
                         s = -1;
                         if ( (synpred6_InternalAgree()) ) {s = 9;}
@@ -17190,14 +17190,14 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
                         else if ( (true) ) {s = 8;}
 
                          
-                        input.seek(index33_4);
+                        input.seek(index33_6);
                         if ( s>=0 ) return s;
                         break;
                     case 6 : 
-                        int LA33_1 = input.LA(1);
+                        int LA33_7 = input.LA(1);
 
                          
-                        int index33_1 = input.index();
+                        int index33_7 = input.index();
                         input.rewind();
                         s = -1;
                         if ( (synpred6_InternalAgree()) ) {s = 9;}
@@ -17205,7 +17205,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
                         else if ( (true) ) {s = 8;}
 
                          
-                        input.seek(index33_1);
+                        input.seek(index33_7);
                         if ( s>=0 ) return s;
                         break;
             }

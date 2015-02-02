@@ -1,0 +1,9 @@
+package AGREE_CONSTS
+public
+  annex agree {**
+      const LAND_MODE : int = 0;
+      const ARMED_MODE : int = 1;
+      const DISARMED_MODE : int = 2;
+  **};
+
+end AGREE_CONSTS;

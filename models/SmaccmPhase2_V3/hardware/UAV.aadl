@@ -1,0 +1,72 @@
+package UAV
+public
+  with UAS;
+  with PixHawk;
+  with ODROID_XU;
+  with XU_DAUGHTER_BOARD;
+  with Flight_Software;
+  with Mission_Software;
+  with software_types;
+  with hardware_types;
+  
+  system UAV
+    features
+      radio_access_915Mhz: requires bus access UAS::RF_Spectrum.RF_915MHz; 
+      radio_access_2_4Ghz: requires bus access UAS::RF_Spectrum.RF_2_4GHz;
+      mavlink_in : in data port software_types::EncryptMAVLink;
+      mavlink_out : out data port software_types::EncryptMAVLink;
+      ppm_commands: in data port software_types::Flight_Control_Commands.i;
+      
+    annex agree {**
+    	eq time : int;
+    	
+    	assume "time is positive" : time >= 0;
+    **};
+  end UAV;
+  
+  system implementation UAV.Impl 
+    subcomponents
+      FSW: process Flight_Software::main.i;
+      MSW: system Mission_Software::Software.i;
+      PIXHAWK: system PixHawk::PixHawk.i;
+      ODROID_XU: system ODROID_XU::ODROID_XU.i;
+      XU_DAUGHTER: system XU_DAUGHTER_BOARD::XU_DAUGHTER_BOARD.i;
+      can_bus : bus hardware_types::can;
+      BATTERY : device Battery;
+    connections 
+      --hardware connections
+      conn_ide: feature group XU_DAUGHTER.ide <-> ODROID_XU.ide;
+      conn_mpi: feature group XU_DAUGHTER.mpi <-> ODROID_XU.mpi;
+      
+      conn_can_odroid : bus access XU_DAUGHTER.can <-> can_bus;
+      conn_can_pixhawk : bus access PIXHAWK.can0 <-> can_bus;
+      
+      conn_sensors: feature group PIXHAWK.sensors_group <-> FSW.sensors_group;
+      
+      battery_conn: port BATTERY.battery -> FSW.battery;
+      
+      --software connections
+      conn_ppm: port ppm_commands -> FSW.ppm_in;
+      conn_mission0 : port MSW.mission_out -> FSW.mission_in;
+      conn_mission1 : port FSW.mission_out -> MSW.mission_in;
+      conn_mav_in : port mavlink_in -> MSW.enc_mavlink_in;
+      conn_mav_out : port MSW.enc_mavlink_out -> mavlink_out;
+            
+    properties
+      Actual_Connection_Binding => (reference (can_bus)) applies to conn_mission0;
+      Actual_Connection_Binding => (reference (can_bus)) applies to conn_mission1;
+      Actual_Memory_Binding => (reference (ODROID_XU)) applies to MSW;
+      Actual_Memory_Binding => (reference (PIXHAWK.MC.FLASH)) applies to FSW;
+      
+    annex agree {**
+    	assert time = FSW.time;
+    **};
+      
+  end UAV.Impl;
+
+device Battery
+  features
+    battery : out data port software_types::Battery_Data;
+end Battery;
+
+end UAV;

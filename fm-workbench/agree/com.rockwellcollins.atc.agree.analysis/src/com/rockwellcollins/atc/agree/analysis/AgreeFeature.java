@@ -1,5 +1,6 @@
 package com.rockwellcollins.atc.agree.analysis;
 
+import jkind.lustre.Expr;
 import jkind.lustre.Type;
 
 import org.osate.aadl2.Feature;
@@ -15,6 +16,7 @@ public class AgreeFeature {
 	public ConnType connType;
 	public Direction direction;
 	public long queueSize;
+	Expr initState;
 	
 	@Override
 	public String toString(){

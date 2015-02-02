@@ -242,8 +242,8 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		//	"memory" | "processor" | "process" | "subprogram_group" | "subprogram" | "system" | "thread_group" | "thread" |
 		//	"virtual_bus" | "virtual_processor" | "connection" | "property" | "feature" | "port" | "data_port" | "event_port" |
 		//	"event_data_port" | "feature_group" | "access" | "bus_access" | "provides_bus_access" | "requires_bus_access" |
-		//	"data_access" | "provides_data_access" | "requires_data_access" | "subprogram_access" | "provides_subprogram_access" |
-		//	"requires_subprogram_access" | "subprogram_group_access" | "provides_subprogram_group_access" |
+		//	"data_access" | "provides_data_access" | "requires_data_access" | "subprogram_access" | "provides_subprogram_access"
+		//	| "requires_subprogram_access" | "subprogram_group_access" | "provides_subprogram_group_access" |
 		//	"requires_subprogram_group_access");
 		public ParserRule getRule() { return rule; }
 
@@ -258,8 +258,8 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 
 		//"int" | "real" | "string" | "bool" | "range" | "aadl" | "component" | "abstract" | "bus" | "data" | "device" | "memory"
 		//| "processor" | "process" | "subprogram_group" | "subprogram" | "system" | "thread_group" | "thread" | "virtual_bus" |
-		//"virtual_processor" | "connection" | "property" | "feature" | "port" | "data_port" | "event_port" | "event_data_port" |
-		//"feature_group" | "access" | "bus_access" | "provides_bus_access" | "requires_bus_access" | "data_access" |
+		//"virtual_processor" | "connection" | "property" | "feature" | "port" | "data_port" | "event_port" | "event_data_port"
+		//| "feature_group" | "access" | "bus_access" | "provides_bus_access" | "requires_bus_access" | "data_access" |
 		//"provides_data_access" | "requires_data_access" | "subprogram_access" | "provides_subprogram_access" |
 		//"requires_subprogram_access" | "subprogram_group_access" | "provides_subprogram_group_access" |
 		//"requires_subprogram_group_access"
@@ -1306,22 +1306,22 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		private final Keyword cRightParenthesisKeyword_14_2 = (Keyword)cGroup_14.eContents().get(2);
 		
 		//AtomicExpr returns Expr:
-		//	{IdExpr} id=[aadl2::NamedElement|QCREF] | {ThisExpr} "this" ("." sub=NestedDotID)? | {FailExpr} "fail" val=StringTerm?
-		//	| {IntExpr} val=IntegerTerm | {RealExpr} val=RealTerm | {BoolExpr} val=BooleanLiteral | {StringExpr} val=StringTerm |
-		//	{IfThenElseExpr} "if" cond=Expr "then" then=Expr "else" else=Expr | {QuantifiedExpr} quant=("forall" | "exists") ("("
-		//	args+=Arg ")")+ "." expr=Expr | {BuiltInFnCallExpr} fn=BuiltInFn "(" (args+=Expr ("," args+=Expr)*)? ")" |
-		//	{FnCallExpr} fn=[FunctionDefinition] "(" (args+=Expr ("," args+=Expr)*)? ")" | "{" Expr ({FilterMapExpr.map=current}
-		//	"for" ("(" args+=Arg ")")+ ("|" filter=Expr)? | {SetExpr.exprs+=current} ("," exprs+=Expr)*) "}" | {SetExpr} "{" "}" |
-		//	{LetExpr} "let" binding=LetBinding ";" expr=Expr | "(" Expr ")";
+		//	{IdExpr} id=[aadl2::NamedElement|QCREF] | {ThisExpr} "this" ("." sub=NestedDotID)? | {FailExpr} "fail"
+		//	val=StringTerm? | {IntExpr} val=IntegerTerm | {RealExpr} val=RealTerm | {BoolExpr} val=BooleanLiteral | {StringExpr}
+		//	val=StringTerm | {IfThenElseExpr} "if" cond=Expr "then" then=Expr "else" else=Expr | {QuantifiedExpr} quant=("forall"
+		//	| "exists") ("(" args+=Arg ")")+ "." expr=Expr | {BuiltInFnCallExpr} fn=BuiltInFn "(" (args+=Expr ("," args+=Expr)*)?
+		//	")" | {FnCallExpr} fn=[FunctionDefinition] "(" (args+=Expr ("," args+=Expr)*)? ")" | "{" Expr
+		//	({FilterMapExpr.map=current} "for" ("(" args+=Arg ")")+ ("|" filter=Expr)? | {SetExpr.exprs+=current} (","
+		//	exprs+=Expr)*) "}" | {SetExpr} "{" "}" | {LetExpr} "let" binding=LetBinding ";" expr=Expr | "(" Expr ")";
 		public ParserRule getRule() { return rule; }
 
 		//{IdExpr} id=[aadl2::NamedElement|QCREF] | {ThisExpr} "this" ("." sub=NestedDotID)? | {FailExpr} "fail" val=StringTerm? |
 		//{IntExpr} val=IntegerTerm | {RealExpr} val=RealTerm | {BoolExpr} val=BooleanLiteral | {StringExpr} val=StringTerm |
 		//{IfThenElseExpr} "if" cond=Expr "then" then=Expr "else" else=Expr | {QuantifiedExpr} quant=("forall" | "exists") ("("
-		//args+=Arg ")")+ "." expr=Expr | {BuiltInFnCallExpr} fn=BuiltInFn "(" (args+=Expr ("," args+=Expr)*)? ")" | {FnCallExpr}
-		//fn=[FunctionDefinition] "(" (args+=Expr ("," args+=Expr)*)? ")" | "{" Expr ({FilterMapExpr.map=current} "for" ("("
-		//args+=Arg ")")+ ("|" filter=Expr)? | {SetExpr.exprs+=current} ("," exprs+=Expr)*) "}" | {SetExpr} "{" "}" | {LetExpr}
-		//"let" binding=LetBinding ";" expr=Expr | "(" Expr ")"
+		//args+=Arg ")")+ "." expr=Expr | {BuiltInFnCallExpr} fn=BuiltInFn "(" (args+=Expr ("," args+=Expr)*)? ")" |
+		//{FnCallExpr} fn=[FunctionDefinition] "(" (args+=Expr ("," args+=Expr)*)? ")" | "{" Expr ({FilterMapExpr.map=current}
+		//"for" ("(" args+=Arg ")")+ ("|" filter=Expr)? | {SetExpr.exprs+=current} ("," exprs+=Expr)*) "}" | {SetExpr} "{" "}" |
+		//{LetExpr} "let" binding=LetBinding ";" expr=Expr | "(" Expr ")"
 		public Alternatives getAlternatives() { return cAlternatives; }
 
 		//{IdExpr} id=[aadl2::NamedElement|QCREF]
@@ -1804,8 +1804,9 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		//// Other
 		//// Error Annex
 		//| "property" | "has_parent" | "parent" | "name" | "type" | "has_type" | "is_of_type" | "is_bound_to" | "has_member" |
-		//"features" | "connections" | "subcomponents" | "source" | "destination" | "direction" | "is_event_port" | "lower_bound"
-		//| "upper_bound" | "member" | "sum" | "union" | "length" | "intersect" | "instance" | "instances" | "analysis" | // the component can receive an incoming error
+		//"features" | "connections" | "subcomponents" | "source" | "destination" | "direction" | "is_event_port" |
+		//"lower_bound" | "upper_bound" | "member" | "sum" | "union" | "length" | "intersect" | "instance" | "instances" |
+		//"analysis" | // the component can receive an incoming error
 		//"receive_error" | // the component contain the error
 		//"contain_error" | // the component propagate an error
 		//"propagate_error" | // the error state is reachable
@@ -2088,84 +2089,50 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	
-	private final AnnexLibraryElements pAnnexLibrary;
-	private final AnnexSubclauseElements pAnnexSubclause;
-	private final NamespaceElements pNamespace;
-	private final NamedElementElements pNamedElement;
-	private final ElementElements pElement;
-	private final ResoluteLibraryElements pResoluteLibrary;
-	private final DefinitionElements pDefinition;
-	private final TypeElements pType;
-	private final BaseTypeElements pBaseType;
-	private final ArgElements pArg;
-	private final ConstantDefinitionElements pConstantDefinition;
-	private final FunctionDefinitionElements pFunctionDefinition;
-	private final DefinitionBodyElements pDefinitionBody;
-	private final ClaimTextElements pClaimText;
-	private final ExprElements pExpr;
-	private final ImpliesExprElements pImpliesExpr;
-	private final OrExprElements pOrExpr;
-	private final AndExprElements pAndExpr;
-	private final InstanceOfExprElements pInstanceOfExpr;
-	private final RelationalOpElements pRelationalOp;
-	private final RelationalExprElements pRelationalExpr;
-	private final PlusExprElements pPlusExpr;
-	private final TimesExprElements pTimesExpr;
-	private final PrefixExprElements pPrefixExpr;
-	private final AtomicExprElements pAtomicExpr;
-	private final LetBindingElements pLetBinding;
-	private final BuiltInFnElements pBuiltInFn;
-	private final RealTermElements pRealTerm;
-	private final UnsignedRealElements pUnsignedReal;
-	private final IntegerTermElements pIntegerTerm;
-	private final UnsignedIntElements pUnsignedInt;
-	private final ResoluteSubclauseElements pResoluteSubclause;
-	private final NestedDotIDElements pNestedDotID;
-	private final ProveStatementElements pProveStatement;
+	private AnnexLibraryElements pAnnexLibrary;
+	private AnnexSubclauseElements pAnnexSubclause;
+	private NamespaceElements pNamespace;
+	private NamedElementElements pNamedElement;
+	private ElementElements pElement;
+	private ResoluteLibraryElements pResoluteLibrary;
+	private DefinitionElements pDefinition;
+	private TypeElements pType;
+	private BaseTypeElements pBaseType;
+	private ArgElements pArg;
+	private ConstantDefinitionElements pConstantDefinition;
+	private FunctionDefinitionElements pFunctionDefinition;
+	private DefinitionBodyElements pDefinitionBody;
+	private ClaimTextElements pClaimText;
+	private ExprElements pExpr;
+	private ImpliesExprElements pImpliesExpr;
+	private OrExprElements pOrExpr;
+	private AndExprElements pAndExpr;
+	private InstanceOfExprElements pInstanceOfExpr;
+	private RelationalOpElements pRelationalOp;
+	private RelationalExprElements pRelationalExpr;
+	private PlusExprElements pPlusExpr;
+	private TimesExprElements pTimesExpr;
+	private PrefixExprElements pPrefixExpr;
+	private AtomicExprElements pAtomicExpr;
+	private LetBindingElements pLetBinding;
+	private BuiltInFnElements pBuiltInFn;
+	private RealTermElements pRealTerm;
+	private UnsignedRealElements pUnsignedReal;
+	private IntegerTermElements pIntegerTerm;
+	private UnsignedIntElements pUnsignedInt;
+	private ResoluteSubclauseElements pResoluteSubclause;
+	private NestedDotIDElements pNestedDotID;
+	private ProveStatementElements pProveStatement;
 	
 	private final Grammar grammar;
 
-	private final PropertiesGrammarAccess gaProperties;
+	private PropertiesGrammarAccess gaProperties;
 
 	@Inject
 	public ResoluteGrammarAccess(GrammarProvider grammarProvider,
 		PropertiesGrammarAccess gaProperties) {
 		this.grammar = internalFindGrammar(grammarProvider);
 		this.gaProperties = gaProperties;
-		this.pAnnexLibrary = new AnnexLibraryElements();
-		this.pAnnexSubclause = new AnnexSubclauseElements();
-		this.pNamespace = new NamespaceElements();
-		this.pNamedElement = new NamedElementElements();
-		this.pElement = new ElementElements();
-		this.pResoluteLibrary = new ResoluteLibraryElements();
-		this.pDefinition = new DefinitionElements();
-		this.pType = new TypeElements();
-		this.pBaseType = new BaseTypeElements();
-		this.pArg = new ArgElements();
-		this.pConstantDefinition = new ConstantDefinitionElements();
-		this.pFunctionDefinition = new FunctionDefinitionElements();
-		this.pDefinitionBody = new DefinitionBodyElements();
-		this.pClaimText = new ClaimTextElements();
-		this.pExpr = new ExprElements();
-		this.pImpliesExpr = new ImpliesExprElements();
-		this.pOrExpr = new OrExprElements();
-		this.pAndExpr = new AndExprElements();
-		this.pInstanceOfExpr = new InstanceOfExprElements();
-		this.pRelationalOp = new RelationalOpElements();
-		this.pRelationalExpr = new RelationalExprElements();
-		this.pPlusExpr = new PlusExprElements();
-		this.pTimesExpr = new TimesExprElements();
-		this.pPrefixExpr = new PrefixExprElements();
-		this.pAtomicExpr = new AtomicExprElements();
-		this.pLetBinding = new LetBindingElements();
-		this.pBuiltInFn = new BuiltInFnElements();
-		this.pRealTerm = new RealTermElements();
-		this.pUnsignedReal = new UnsignedRealElements();
-		this.pIntegerTerm = new IntegerTermElements();
-		this.pUnsignedInt = new UnsignedIntElements();
-		this.pResoluteSubclause = new ResoluteSubclauseElements();
-		this.pNestedDotID = new NestedDotIDElements();
-		this.pProveStatement = new ProveStatementElements();
 	}
 	
 	protected Grammar internalFindGrammar(GrammarProvider grammarProvider) {
@@ -2198,7 +2165,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	//AnnexLibrary returns aadl2::AnnexLibrary:
 	//	ResoluteLibrary;
 	public AnnexLibraryElements getAnnexLibraryAccess() {
-		return pAnnexLibrary;
+		return (pAnnexLibrary != null) ? pAnnexLibrary : (pAnnexLibrary = new AnnexLibraryElements());
 	}
 	
 	public ParserRule getAnnexLibraryRule() {
@@ -2208,7 +2175,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	//AnnexSubclause returns aadl2::AnnexSubclause:
 	//	ResoluteSubclause;
 	public AnnexSubclauseElements getAnnexSubclauseAccess() {
-		return pAnnexSubclause;
+		return (pAnnexSubclause != null) ? pAnnexSubclause : (pAnnexSubclause = new AnnexSubclauseElements());
 	}
 	
 	public ParserRule getAnnexSubclauseRule() {
@@ -2218,7 +2185,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	//Namespace returns aadl2::Namespace:
 	//	FunctionDefinition;
 	public NamespaceElements getNamespaceAccess() {
-		return pNamespace;
+		return (pNamespace != null) ? pNamespace : (pNamespace = new NamespaceElements());
 	}
 	
 	public ParserRule getNamespaceRule() {
@@ -2228,7 +2195,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	//NamedElement returns aadl2::NamedElement:
 	//	Definition | Arg | LetBinding;
 	public NamedElementElements getNamedElementAccess() {
-		return pNamedElement;
+		return (pNamedElement != null) ? pNamedElement : (pNamedElement = new NamedElementElements());
 	}
 	
 	public ParserRule getNamedElementRule() {
@@ -2238,7 +2205,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	//Element returns aadl2::Element:
 	//	Expr | ProveStatement | ClaimText | DefinitionBody;
 	public ElementElements getElementAccess() {
-		return pElement;
+		return (pElement != null) ? pElement : (pElement = new ElementElements());
 	}
 	
 	public ParserRule getElementRule() {
@@ -2248,7 +2215,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	//ResoluteLibrary:
 	//	{ResoluteLibrary} definitions+=Definition*;
 	public ResoluteLibraryElements getResoluteLibraryAccess() {
-		return pResoluteLibrary;
+		return (pResoluteLibrary != null) ? pResoluteLibrary : (pResoluteLibrary = new ResoluteLibraryElements());
 	}
 	
 	public ParserRule getResoluteLibraryRule() {
@@ -2258,7 +2225,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	//Definition:
 	//	ConstantDefinition | FunctionDefinition;
 	public DefinitionElements getDefinitionAccess() {
-		return pDefinition;
+		return (pDefinition != null) ? pDefinition : (pDefinition = new DefinitionElements());
 	}
 	
 	public ParserRule getDefinitionRule() {
@@ -2268,7 +2235,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	//Type:
 	//	{SetType} "{" type=Type "}" | BaseType;
 	public TypeElements getTypeAccess() {
-		return pType;
+		return (pType != null) ? pType : (pType = new TypeElements());
 	}
 	
 	public ParserRule getTypeRule() {
@@ -2280,11 +2247,11 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	//	"memory" | "processor" | "process" | "subprogram_group" | "subprogram" | "system" | "thread_group" | "thread" |
 	//	"virtual_bus" | "virtual_processor" | "connection" | "property" | "feature" | "port" | "data_port" | "event_port" |
 	//	"event_data_port" | "feature_group" | "access" | "bus_access" | "provides_bus_access" | "requires_bus_access" |
-	//	"data_access" | "provides_data_access" | "requires_data_access" | "subprogram_access" | "provides_subprogram_access" |
-	//	"requires_subprogram_access" | "subprogram_group_access" | "provides_subprogram_group_access" |
+	//	"data_access" | "provides_data_access" | "requires_data_access" | "subprogram_access" | "provides_subprogram_access"
+	//	| "requires_subprogram_access" | "subprogram_group_access" | "provides_subprogram_group_access" |
 	//	"requires_subprogram_group_access");
 	public BaseTypeElements getBaseTypeAccess() {
-		return pBaseType;
+		return (pBaseType != null) ? pBaseType : (pBaseType = new BaseTypeElements());
 	}
 	
 	public ParserRule getBaseTypeRule() {
@@ -2295,7 +2262,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	//Arg:
 	//	=> (name=ID ":" type=Type) | {QuantArg} name=ID ":" expr=Expr;
 	public ArgElements getArgAccess() {
-		return pArg;
+		return (pArg != null) ? pArg : (pArg = new ArgElements());
 	}
 	
 	public ParserRule getArgRule() {
@@ -2305,7 +2272,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	//ConstantDefinition:
 	//	name=ID ":" type=Type "=" expr=Expr;
 	public ConstantDefinitionElements getConstantDefinitionAccess() {
-		return pConstantDefinition;
+		return (pConstantDefinition != null) ? pConstantDefinition : (pConstantDefinition = new ConstantDefinitionElements());
 	}
 	
 	public ParserRule getConstantDefinitionRule() {
@@ -2315,7 +2282,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	//FunctionDefinition:
 	//	name=ID "(" (args+=Arg ("," args+=Arg)*)? ")" body=DefinitionBody;
 	public FunctionDefinitionElements getFunctionDefinitionAccess() {
-		return pFunctionDefinition;
+		return (pFunctionDefinition != null) ? pFunctionDefinition : (pFunctionDefinition = new FunctionDefinitionElements());
 	}
 	
 	public ParserRule getFunctionDefinitionRule() {
@@ -2325,7 +2292,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	//DefinitionBody:
 	//	{FunctionBody} ":" type=Type "=" expr=Expr | {ClaimBody} "<=" ("**" claim+=ClaimText+ "**") expr=Expr;
 	public DefinitionBodyElements getDefinitionBodyAccess() {
-		return pDefinitionBody;
+		return (pDefinitionBody != null) ? pDefinitionBody : (pDefinitionBody = new DefinitionBodyElements());
 	}
 	
 	public ParserRule getDefinitionBodyRule() {
@@ -2335,7 +2302,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	//ClaimText:
 	//	{ClaimString} str=STRING | {ClaimArg} arg=[Arg];
 	public ClaimTextElements getClaimTextAccess() {
-		return pClaimText;
+		return (pClaimText != null) ? pClaimText : (pClaimText = new ClaimTextElements());
 	}
 	
 	public ParserRule getClaimTextRule() {
@@ -2345,7 +2312,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	//Expr:
 	//	ImpliesExpr;
 	public ExprElements getExprAccess() {
-		return pExpr;
+		return (pExpr != null) ? pExpr : (pExpr = new ExprElements());
 	}
 	
 	public ParserRule getExprRule() {
@@ -2355,7 +2322,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	//ImpliesExpr returns Expr:
 	//	OrExpr (=> ({BinaryExpr.left=current} op="=>") right=ImpliesExpr)?;
 	public ImpliesExprElements getImpliesExprAccess() {
-		return pImpliesExpr;
+		return (pImpliesExpr != null) ? pImpliesExpr : (pImpliesExpr = new ImpliesExprElements());
 	}
 	
 	public ParserRule getImpliesExprRule() {
@@ -2365,7 +2332,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	//OrExpr returns Expr:
 	//	AndExpr (=> ({BinaryExpr.left=current} op="or") right=AndExpr)*;
 	public OrExprElements getOrExprAccess() {
-		return pOrExpr;
+		return (pOrExpr != null) ? pOrExpr : (pOrExpr = new OrExprElements());
 	}
 	
 	public ParserRule getOrExprRule() {
@@ -2375,7 +2342,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	//AndExpr returns Expr:
 	//	InstanceOfExpr (=> ({BinaryExpr.left=current} op="and") right=InstanceOfExpr)*;
 	public AndExprElements getAndExprAccess() {
-		return pAndExpr;
+		return (pAndExpr != null) ? pAndExpr : (pAndExpr = new AndExprElements());
 	}
 	
 	public ParserRule getAndExprRule() {
@@ -2385,7 +2352,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	//InstanceOfExpr returns Expr:
 	//	RelationalExpr (=> ({InstanceOfExpr.expr=current} "instanceof") type=BaseType)?;
 	public InstanceOfExprElements getInstanceOfExprAccess() {
-		return pInstanceOfExpr;
+		return (pInstanceOfExpr != null) ? pInstanceOfExpr : (pInstanceOfExpr = new InstanceOfExprElements());
 	}
 	
 	public ParserRule getInstanceOfExprRule() {
@@ -2395,7 +2362,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	//RelationalOp:
 	//	"<" | "<=" | ">" | ">=" | "=" | "<>";
 	public RelationalOpElements getRelationalOpAccess() {
-		return pRelationalOp;
+		return (pRelationalOp != null) ? pRelationalOp : (pRelationalOp = new RelationalOpElements());
 	}
 	
 	public ParserRule getRelationalOpRule() {
@@ -2405,7 +2372,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	//RelationalExpr returns Expr:
 	//	PlusExpr (=> ({BinaryExpr.left=current} op=RelationalOp) right=PlusExpr)?;
 	public RelationalExprElements getRelationalExprAccess() {
-		return pRelationalExpr;
+		return (pRelationalExpr != null) ? pRelationalExpr : (pRelationalExpr = new RelationalExprElements());
 	}
 	
 	public ParserRule getRelationalExprRule() {
@@ -2415,7 +2382,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	//PlusExpr returns Expr:
 	//	TimesExpr (=> ({BinaryExpr.left=current} op=("+" | "-")) right=TimesExpr)*;
 	public PlusExprElements getPlusExprAccess() {
-		return pPlusExpr;
+		return (pPlusExpr != null) ? pPlusExpr : (pPlusExpr = new PlusExprElements());
 	}
 	
 	public ParserRule getPlusExprRule() {
@@ -2425,7 +2392,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	//TimesExpr returns Expr:
 	//	PrefixExpr (=> ({BinaryExpr.left=current} op=("*" | "/")) right=PrefixExpr)*;
 	public TimesExprElements getTimesExprAccess() {
-		return pTimesExpr;
+		return (pTimesExpr != null) ? pTimesExpr : (pTimesExpr = new TimesExprElements());
 	}
 	
 	public ParserRule getTimesExprRule() {
@@ -2435,7 +2402,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	//PrefixExpr returns Expr:
 	//	{UnaryExpr} op=("-" | "not") expr=PrefixExpr | {CastExpr} "(" type=BaseType ")" expr=PrefixExpr | AtomicExpr;
 	public PrefixExprElements getPrefixExprAccess() {
-		return pPrefixExpr;
+		return (pPrefixExpr != null) ? pPrefixExpr : (pPrefixExpr = new PrefixExprElements());
 	}
 	
 	public ParserRule getPrefixExprRule() {
@@ -2443,15 +2410,15 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	}
 
 	//AtomicExpr returns Expr:
-	//	{IdExpr} id=[aadl2::NamedElement|QCREF] | {ThisExpr} "this" ("." sub=NestedDotID)? | {FailExpr} "fail" val=StringTerm?
-	//	| {IntExpr} val=IntegerTerm | {RealExpr} val=RealTerm | {BoolExpr} val=BooleanLiteral | {StringExpr} val=StringTerm |
-	//	{IfThenElseExpr} "if" cond=Expr "then" then=Expr "else" else=Expr | {QuantifiedExpr} quant=("forall" | "exists") ("("
-	//	args+=Arg ")")+ "." expr=Expr | {BuiltInFnCallExpr} fn=BuiltInFn "(" (args+=Expr ("," args+=Expr)*)? ")" |
-	//	{FnCallExpr} fn=[FunctionDefinition] "(" (args+=Expr ("," args+=Expr)*)? ")" | "{" Expr ({FilterMapExpr.map=current}
-	//	"for" ("(" args+=Arg ")")+ ("|" filter=Expr)? | {SetExpr.exprs+=current} ("," exprs+=Expr)*) "}" | {SetExpr} "{" "}" |
-	//	{LetExpr} "let" binding=LetBinding ";" expr=Expr | "(" Expr ")";
+	//	{IdExpr} id=[aadl2::NamedElement|QCREF] | {ThisExpr} "this" ("." sub=NestedDotID)? | {FailExpr} "fail"
+	//	val=StringTerm? | {IntExpr} val=IntegerTerm | {RealExpr} val=RealTerm | {BoolExpr} val=BooleanLiteral | {StringExpr}
+	//	val=StringTerm | {IfThenElseExpr} "if" cond=Expr "then" then=Expr "else" else=Expr | {QuantifiedExpr} quant=("forall"
+	//	| "exists") ("(" args+=Arg ")")+ "." expr=Expr | {BuiltInFnCallExpr} fn=BuiltInFn "(" (args+=Expr ("," args+=Expr)*)?
+	//	")" | {FnCallExpr} fn=[FunctionDefinition] "(" (args+=Expr ("," args+=Expr)*)? ")" | "{" Expr
+	//	({FilterMapExpr.map=current} "for" ("(" args+=Arg ")")+ ("|" filter=Expr)? | {SetExpr.exprs+=current} (","
+	//	exprs+=Expr)*) "}" | {SetExpr} "{" "}" | {LetExpr} "let" binding=LetBinding ";" expr=Expr | "(" Expr ")";
 	public AtomicExprElements getAtomicExprAccess() {
-		return pAtomicExpr;
+		return (pAtomicExpr != null) ? pAtomicExpr : (pAtomicExpr = new AtomicExprElements());
 	}
 	
 	public ParserRule getAtomicExprRule() {
@@ -2461,7 +2428,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	//LetBinding:
 	//	name=ID ":" type=Type "=" expr=Expr;
 	public LetBindingElements getLetBindingAccess() {
-		return pLetBinding;
+		return (pLetBinding != null) ? pLetBinding : (pLetBinding = new LetBindingElements());
 	}
 	
 	public ParserRule getLetBindingRule() {
@@ -2485,7 +2452,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	//	"propagate_error" | // the error state is reachable
 	//	"error_state_reachable";
 	public BuiltInFnElements getBuiltInFnAccess() {
-		return pBuiltInFn;
+		return (pBuiltInFn != null) ? pBuiltInFn : (pBuiltInFn = new BuiltInFnElements());
 	}
 	
 	public ParserRule getBuiltInFnRule() {
@@ -2495,7 +2462,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	//RealTerm returns aadl2::RealLiteral:
 	//	value=UnsignedReal unit=[aadl2::UnitLiteral]?;
 	public RealTermElements getRealTermAccess() {
-		return pRealTerm;
+		return (pRealTerm != null) ? pRealTerm : (pRealTerm = new RealTermElements());
 	}
 	
 	public ParserRule getRealTermRule() {
@@ -2505,7 +2472,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	//UnsignedReal returns aadl2::Real:
 	//	REAL_LIT;
 	public UnsignedRealElements getUnsignedRealAccess() {
-		return pUnsignedReal;
+		return (pUnsignedReal != null) ? pUnsignedReal : (pUnsignedReal = new UnsignedRealElements());
 	}
 	
 	public ParserRule getUnsignedRealRule() {
@@ -2515,7 +2482,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	//IntegerTerm returns aadl2::IntegerLiteral:
 	//	value=UnsignedInt unit=[aadl2::UnitLiteral]?;
 	public IntegerTermElements getIntegerTermAccess() {
-		return pIntegerTerm;
+		return (pIntegerTerm != null) ? pIntegerTerm : (pIntegerTerm = new IntegerTermElements());
 	}
 	
 	public ParserRule getIntegerTermRule() {
@@ -2525,7 +2492,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	//UnsignedInt returns aadl2::Integer:
 	//	INTEGER_LIT;
 	public UnsignedIntElements getUnsignedIntAccess() {
-		return pUnsignedInt;
+		return (pUnsignedInt != null) ? pUnsignedInt : (pUnsignedInt = new UnsignedIntElements());
 	}
 	
 	public ParserRule getUnsignedIntRule() {
@@ -2535,7 +2502,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	//ResoluteSubclause:
 	//	{ResoluteSubclause} proves+=ProveStatement*;
 	public ResoluteSubclauseElements getResoluteSubclauseAccess() {
-		return pResoluteSubclause;
+		return (pResoluteSubclause != null) ? pResoluteSubclause : (pResoluteSubclause = new ResoluteSubclauseElements());
 	}
 	
 	public ParserRule getResoluteSubclauseRule() {
@@ -2545,7 +2512,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	//NestedDotID:
 	//	base=[aadl2::NamedElement] ("." sub=NestedDotID)?;
 	public NestedDotIDElements getNestedDotIDAccess() {
-		return pNestedDotID;
+		return (pNestedDotID != null) ? pNestedDotID : (pNestedDotID = new NestedDotIDElements());
 	}
 	
 	public ParserRule getNestedDotIDRule() {
@@ -2555,7 +2522,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	//ProveStatement:
 	//	"prove" expr=Expr;
 	public ProveStatementElements getProveStatementAccess() {
-		return pProveStatement;
+		return (pProveStatement != null) ? pProveStatement : (pProveStatement = new ProveStatementElements());
 	}
 	
 	public ParserRule getProveStatementRule() {
@@ -2608,7 +2575,8 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 
 	////	( 'annex' containmentPathElement+=AnnexPath )?
 	//ContainmentPath returns aadl2::ContainedNamedElement:
-	//	path=ContainmentPathElement;
+	//	{aadl2::ContainedNamedElement} containmentPathElement+=ContainmentPathElement ("."
+	//	containmentPathElement+=ContainmentPathElement)*;
 	public PropertiesGrammarAccess.ContainmentPathElements getContainmentPathAccess() {
 		return gaProperties.getContainmentPathAccess();
 	}
@@ -2693,7 +2661,8 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	}
 
 	//ReferenceTerm returns aadl2::ReferenceValue:
-	//	"reference" "(" path=ContainmentPathElement //	( 'annex' ID '{**' 
+	//	"reference" "(" (containmentPathElement+=QualifiedContainmentPathElement ".")?
+	//	containmentPathElement+=ContainmentPathElement ("." containmentPathElement+=ContainmentPathElement)* //	( 'annex' ID '{**' 
 	//	//	containmentPathElement+=ContainmentPathElement
 	//	//	( '.' containmentPathElement+=ContainmentPathElement)*
 	//	//	'**}')?
@@ -2770,13 +2739,23 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	//// need to add annex path element
 	////	 | 	 'annex' namedElement=[aadl2::NamedElement|ID]
 	//ContainmentPathElement returns aadl2::ContainmentPathElement:
-	//	(namedElement=[aadl2::NamedElement] arrayRange+=ArrayRange?) ("." path=ContainmentPathElement)?;
+	//	namedElement=[aadl2::NamedElement] arrayRange+=ArrayRange?;
 	public PropertiesGrammarAccess.ContainmentPathElementElements getContainmentPathElementAccess() {
 		return gaProperties.getContainmentPathElementAccess();
 	}
 	
 	public ParserRule getContainmentPathElementRule() {
 		return getContainmentPathElementAccess().getRule();
+	}
+
+	//QualifiedContainmentPathElement returns aadl2::ContainmentPathElement:
+	//	namedElement=[aadl2::NamedElement|QCLREF];
+	public PropertiesGrammarAccess.QualifiedContainmentPathElementElements getQualifiedContainmentPathElementAccess() {
+		return gaProperties.getQualifiedContainmentPathElementAccess();
+	}
+	
+	public ParserRule getQualifiedContainmentPathElementRule() {
+		return getQualifiedContainmentPathElementAccess().getRule();
 	}
 
 	//ANNEXREF: // check what values are ok inside ** **

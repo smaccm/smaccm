@@ -11,4 +11,9 @@ public class VerifyAllHandler extends VerifyHandler {
     protected String getJobName() {
         return "AGREE - Verify All Layers";
     }
+
+	@Override
+	protected boolean isMonolithic() {
+		return false;
+	}
 }

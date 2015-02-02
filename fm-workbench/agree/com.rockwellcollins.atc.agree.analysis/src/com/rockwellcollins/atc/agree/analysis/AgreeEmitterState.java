@@ -24,6 +24,7 @@ import jkind.lustre.Node;
 import jkind.lustre.NodeCallExpr;
 import jkind.lustre.RealExpr;
 import jkind.lustre.RecordAccessExpr;
+import jkind.lustre.TupleExpr;
 import jkind.lustre.UnaryExpr;
 import jkind.lustre.UnaryOp;
 import jkind.lustre.VarDecl;
@@ -42,6 +43,7 @@ import org.osate.aadl2.RealLiteral;
 import org.osate.aadl2.StringLiteral;
 import org.osate.aadl2.Subcomponent;
 import org.osate.aadl2.instance.ComponentInstance;
+import org.osate.aadl2.instance.FeatureInstance;
 
 import com.rockwellcollins.atc.agree.agree.AgreeContract;
 import com.rockwellcollins.atc.agree.agree.AgreeContractSubclause;
@@ -85,15 +87,20 @@ import com.rockwellcollins.atc.agree.agree.util.AgreeSwitch;
 public class AgreeEmitterState  extends AgreeSwitch<Expr> {
 
 	  //lists of all the jkind expressions from the annex
-    public final List<Expr> assumpExpressions = new ArrayList<>();
+    public final List<Equation> assumpExpressions = new ArrayList<>();
     public final List<Equation> guarExpressions = new ArrayList<>();
+    public final List<Equation> lemmaExpressions = new ArrayList<>();
     public final List<Expr> assertExpressions = new ArrayList<>();
-    public final List<Equation> propExpressions = new ArrayList<>();
     public final List<Equation> eqExpressions = new ArrayList<>();
     public final List<Equation> constExpressions = new ArrayList<>();
-    public final List<Node> nodeDefExpressions = new ArrayList<>();
+    public final Set<Node> nodeDefExpressions = new HashSet<>();
     public final List<Equation> connExpressions = new ArrayList<>();
 	public final List<Expr> initialExpressions = new ArrayList<>();
+	
+	public final List<Equation> subcomponentExprs = new ArrayList<>();
+	public final List<String> assumeProps = new ArrayList<>();
+	public final List<String> guarProps = new ArrayList<>();
+	public final List<String> consistProps = new ArrayList<>();
 
     public final Set<jkind.lustre.RecordType> typeExpressions = new HashSet<>();
     //this set keeps track of all the left hand sides of connection
@@ -103,15 +110,12 @@ public class AgreeEmitterState  extends AgreeSwitch<Expr> {
     public final Map<String, EObject> refMap = new HashMap<>();
     public final Map<NamedElement, String> typeMap = new HashMap<>();
     
-    //used for pretty printing jkind -> aadl variables
-    public final Map<String, String> varRenaming = new HashMap<>();
-    public final AgreeRenaming agreeRename;
-    
     //keeps track of new variables
     public final Set<AgreeVarDecl> inputVars = new HashSet<>();
     public final Set<AgreeVarDecl> internalVars = new HashSet<>();
     public final Set<AgreeVarDecl> outputVars = new HashSet<>();
-    
+    public final Set<AgreeVarDecl> subcompOutputVars = new HashSet<>();
+	public final Set<AgreeVarDecl> clockVars = new HashSet<>();
 
     public int synchrony = 0;
     public int synchrony2 = 0;
@@ -120,15 +124,8 @@ public class AgreeEmitterState  extends AgreeSwitch<Expr> {
     public boolean simultaneity = true;
 	public boolean connectionExpressionsSet = false;
 
-    private final String clockIDPrefix = "__CLOCK_";
-    private final String eventPrefix = "__EVENT_";
-    
-	public final String thisPrefix;
-	public final String topLevelPrefix;
-	
-    //used for printing results
-    public final AgreeLayout layout;
-    public final String category;
+    public final String clockIDSuffix = "___CLOCK_";
+    public final String eventSuffix = "___EVENT_";
     
     //the current implementation
     public final ComponentInstance curInst;
@@ -138,21 +135,15 @@ public class AgreeEmitterState  extends AgreeSwitch<Expr> {
     //used for string formatting
 	private static final String dotChar = "__";
 
+    public final Map<FeatureInstance, List<AgreeFeature>> featInstToAgreeFeatMap = new HashMap<>();
+    public final Set<String> connLHS = new HashSet<>();
     
-    public AgreeEmitterState(String topPrefix, String thisPrefix, AgreeLayout layout, String category,
-    		ComponentInstance compInst, Subcomponent subComp){
-    	agreeRename = new AgreeRenaming(topPrefix, varRenaming);
-    	this.thisPrefix = thisPrefix;
-    	this.topLevelPrefix = topPrefix;
-    	this.layout = layout;
-    	this.category = category;
+    public final AgreeRenaming renaming = new AgreeRenaming();
+    public final AgreeLayout layout = new AgreeLayout();
+    
+    public AgreeEmitterState(ComponentInstance compInst, Subcomponent subComp){
     	this.curInst = compInst;
     	this.curComp = subComp;
-
-    	 if(!layout.getCategories().contains(category)){
-             layout.addCategory(category);
-         }
-    	
     }
     
     @Override
@@ -167,7 +158,7 @@ public class AgreeEmitterState  extends AgreeSwitch<Expr> {
     @Override
     public Expr caseCalenStatement(CalenStatement calen){
     	for(NamedElement namedEl : calen.getEls()){
-    		IdExpr clockId = new IdExpr(clockIDPrefix+thisPrefix+namedEl.getName());
+    		IdExpr clockId = new IdExpr(namedEl.getName()+clockIDSuffix);
     		this.calendar.add(clockId);
     	}
         return null;
@@ -203,8 +194,8 @@ public class AgreeEmitterState  extends AgreeSwitch<Expr> {
     		Subcomponent maxComp = (Subcomponent) sync.getComp1().get(i);
     		Subcomponent minComp = (Subcomponent) sync.getComp2().get(i);
     		
-    		Expr maxClock = new IdExpr(clockIDPrefix+thisPrefix+maxComp.getName());
-    		Expr minClock = new IdExpr(clockIDPrefix+thisPrefix+minComp.getName());
+    		Expr maxClock = new IdExpr(maxComp.getName()+clockIDSuffix);
+    		Expr minClock = new IdExpr(minComp.getName()+clockIDSuffix);
     		int max = Integer.valueOf(sync.getMax().get(i));
     		int min = Integer.valueOf(sync.getMin().get(i));
     		
@@ -243,7 +234,8 @@ public class AgreeEmitterState  extends AgreeSwitch<Expr> {
     public Expr caseAssumeStatement(AssumeStatement state) {
 
         Expr expr = doSwitch(state.getExpr());
-        assumpExpressions.add(expr);
+        IdExpr assumId = new IdExpr(state.getStr());
+        assumpExpressions.add(new Equation(assumId, expr));
         return expr;
     }
 
@@ -252,10 +244,10 @@ public class AgreeEmitterState  extends AgreeSwitch<Expr> {
         Expr expr = doSwitch(state.getExpr());
         String guarStr = state.getStr();
         guarStr = guarStr.replace("\"", "");
-        AgreeStateUtils.addToRefMap(guarStr, state, agreeRename, refMap);
+        refMap.put(guarStr, state);
         IdExpr strId = new IdExpr(guarStr);
         Equation eq = new Equation(strId, expr);
-        guarExpressions.add(eq);
+        lemmaExpressions.add(eq);
         return expr;
     }
 
@@ -264,7 +256,7 @@ public class AgreeEmitterState  extends AgreeSwitch<Expr> {
         Expr expr = doSwitch(state.getExpr());
         String guarStr = state.getStr();
         guarStr = guarStr.replace("\"", "");
-        AgreeStateUtils.addToRefMap(guarStr, state, agreeRename, refMap);
+        refMap.put(guarStr, state);
         IdExpr strId = new IdExpr(guarStr);
         Equation eq = new Equation(strId, expr);
         guarExpressions.add(eq);
@@ -293,17 +285,14 @@ public class AgreeEmitterState  extends AgreeSwitch<Expr> {
 
         Expr expr = doSwitch(state.getExpr());
 
-        AgreeVarDecl varDecl = new AgreeVarDecl(thisPrefix+state.getName(), NamedType.BOOL);
-
-        layout.addElement(category, agreeRename.rename(varDecl.id), AgreeLayout.SigType.OUTPUT);
-
-        //addToRenaming(varDecl.jKindStr, varDecl.aadlStr);
-        AgreeStateUtils.addToRefMap(varDecl.id, state, agreeRename, refMap);
-        internalVars.add(varDecl);
+        AgreeVarDecl varDecl = new AgreeVarDecl(state.getName(), NamedType.BOOL);
+        refMap.put(varDecl.id, state);
+        outputVars.add(varDecl);
 
         IdExpr id = new IdExpr(varDecl.id);
-        Equation eq = new Equation(id, expr);
-        propExpressions.add(eq);
+        Expr assertExpr = new BinaryExpr(id, BinaryOp.EQUAL, expr);
+        assertExpressions.add(assertExpr);
+        
         return expr;
         
     }
@@ -321,25 +310,27 @@ public class AgreeEmitterState  extends AgreeSwitch<Expr> {
         for (Arg arg : state.getLhs()) {
             String baseName = arg.getName();
             String recordTypeName = AgreeStateUtils.getRecordTypeName(arg.getType(), typeMap, typeExpressions);
-			AgreeVarDecl varDecl = new AgreeVarDecl(thisPrefix + baseName,
+			AgreeVarDecl varDecl = new AgreeVarDecl(baseName,
             		AgreeStateUtils.getNamedType(recordTypeName));
 
             IdExpr idExpr = new IdExpr(varDecl.id);
             varIds.add(idExpr);
 
-            layout.addElement(category, agreeRename.rename(varDecl.id), AgreeLayout.SigType.OUTPUT);
-            AgreeStateUtils.addToRefMap(varDecl.id, state, agreeRename, refMap);
-            
-            if(expr != null){
-                internalVars.add(varDecl);
-            }else{
-                outputVars.add(varDecl);
-            }
+            refMap.put(varDecl.id,state);            
+            outputVars.add(varDecl);
+
         }
 
         if(expr != null){
-            Equation eq = new Equation(varIds, expr);
-            eqExpressions.add(eq);
+        	
+        	Expr assertExpr;
+        	if(varIds.size() != 1){
+        		Expr tupleExpr = new TupleExpr(varIds);
+        		assertExpr = new BinaryExpr(tupleExpr, BinaryOp.EQUAL, expr);
+        	}else{
+        		assertExpr = new BinaryExpr(varIds.get(0), BinaryOp.EQUAL, expr);
+        	}
+        	assertExpressions.add(assertExpr);
         }
 
         return null;
@@ -515,7 +506,7 @@ public class AgreeEmitterState  extends AgreeSwitch<Expr> {
     			return null;
     		}
     	}
-    	List<VarDecl> inputs = AgreeStateUtils.argsToVarDeclList(thisPrefix, expr.getArgs(), typeMap, typeExpressions);
+    	List<VarDecl> inputs = AgreeStateUtils.argsToVarDeclList(expr.getArgs(), typeMap, typeExpressions); 
     	Expr bodyExpr = doSwitch(expr.getExpr());
     	NamedType outType = AgreeStateUtils.getNamedType(AgreeStateUtils.getRecordTypeName(expr.getType(), typeMap, typeExpressions));
     	VarDecl outVar = new VarDecl("_outvar", outType);
@@ -539,10 +530,10 @@ public class AgreeEmitterState  extends AgreeSwitch<Expr> {
             }
         }
 
-        List<VarDecl> inputs = AgreeStateUtils.argsToVarDeclList(thisPrefix, expr.getArgs(), typeMap, typeExpressions);
-        List<VarDecl> outputs = AgreeStateUtils.argsToVarDeclList(thisPrefix, expr.getRets(), typeMap, typeExpressions);
+        List<VarDecl> inputs = AgreeStateUtils.argsToVarDeclList(expr.getArgs(), typeMap, typeExpressions);
+        List<VarDecl> outputs = AgreeStateUtils.argsToVarDeclList(expr.getRets(), typeMap, typeExpressions);
         NodeBodyExpr body = expr.getNodeBody();
-        List<VarDecl> internals = AgreeStateUtils.argsToVarDeclList(thisPrefix, body.getLocs(), typeMap, typeExpressions);
+        List<VarDecl> internals = AgreeStateUtils.argsToVarDeclList(body.getLocs(), typeMap, typeExpressions);
         List<Equation> eqs = new ArrayList<Equation>();
         List<String> props = new ArrayList<String>();
 
@@ -574,7 +565,7 @@ public class AgreeEmitterState  extends AgreeSwitch<Expr> {
         Expr expr = doSwitch(nodeEq.getExpr());
         List<IdExpr> ids = new ArrayList<IdExpr>();
         for (Arg arg : nodeEq.getLhs()) {
-            ids.add(new IdExpr(thisPrefix + arg.getName()));
+            ids.add(new IdExpr(arg.getName()));
         }
         Equation eq = new Equation(ids, expr);
         return eq;
@@ -668,14 +659,12 @@ public class AgreeEmitterState  extends AgreeSwitch<Expr> {
         
         String tag = id.getTag();
         if(tag != null){
-        	
-        	String jVarPrefix = this.thisPrefix + jKindVar + namedEl.getName();
-        	
+        	        	
         	switch(tag){
         	case "_CLK":
         		//a variable of the same name as this should be created by setEventPortQueues()
             	//in the AgreeAnnexEmitter which created "this" AgreeAnnexEmitter
-            	AgreeVarDecl clockVar = new AgreeVarDecl(clockIDPrefix+thisPrefix+namedEl.getName(),
+            	AgreeVarDecl clockVar = new AgreeVarDecl(namedEl.getName()+clockIDSuffix,
                 		NamedType.BOOL);
             	
             	IdExpr clockId = new IdExpr(clockVar.id);
@@ -687,8 +676,7 @@ public class AgreeEmitterState  extends AgreeSwitch<Expr> {
                 
                 inputVars.add(clockVar);
                 //addToRenaming(clockVar.jKindStr,clockVar.aadlStr);
-                AgreeStateUtils.addToRefMap(clockVar.id, namedEl, agreeRename, refMap);
-                layout.addElement(category, agreeRename.rename(clockVar.id), AgreeLayout.SigType.INPUT);
+                refMap.put(clockVar.id, namedEl);
             	
             	return clockId;
         	default:
@@ -702,7 +690,7 @@ public class AgreeEmitterState  extends AgreeSwitch<Expr> {
             return doSwitch(((ConstStatement)namedEl).getExpr());
         }
         
-        jKindVar = thisPrefix + jKindVar + namedEl.getName();
+        jKindVar =  jKindVar + namedEl.getName();
     	Expr result = new IdExpr(jKindVar);
     	//this is a record accessrecord
     	while(id.getSub() != null){
@@ -726,8 +714,8 @@ public class AgreeEmitterState  extends AgreeSwitch<Expr> {
     public Expr caseEventExpr(EventExpr expr){
     	
     	IdExpr nestIdExpr = (IdExpr) doSwitch(expr.getId());
-    	String eventStr = eventPrefix+nestIdExpr.id;
-    	return new IdExpr(eventStr);
+    	String eventStr = nestIdExpr.id+eventSuffix;
+    	return new IdExpr(eventStr); 
     }
     
     @Override

@@ -4,6 +4,7 @@ import java.util.SortedSet;
 
 import org.osate.aadl2.NamedElement;
 
+import com.rockwellcollins.atc.resolute.analysis.execution.NamedElementComparator;
 import com.rockwellcollins.atc.resolute.validation.ResoluteType;
 
 public abstract class ResoluteValue implements Comparable<ResoluteValue> {
@@ -30,7 +31,7 @@ public abstract class ResoluteValue implements Comparable<ResoluteValue> {
     public boolean isNamedElement() {
         return false;
     }
-    
+
     public boolean isRange() {
         return false;
     }
@@ -58,11 +59,11 @@ public abstract class ResoluteValue implements Comparable<ResoluteValue> {
     public NamedElement getNamedElement() {
         throw new IllegalArgumentException();
     }
-    
+
     public RangeValue getRange() {
-       throw new IllegalArgumentException();
+        throw new IllegalArgumentException();
     }
-    
+
     public abstract ResoluteType getType();
 
     @Override
@@ -74,10 +75,9 @@ public abstract class ResoluteValue implements Comparable<ResoluteValue> {
         } else if (isReal() && other.isReal()) {
             return Double.compare(getReal(), other.getReal());
         } else if (isString() && other.isString()) {
-            return String.CASE_INSENSITIVE_ORDER.compare(getString(), other.getString());
+            return getString().compareToIgnoreCase(other.getString());
         } else if (isNamedElement() && other.isNamedElement()) {
-            return String.CASE_INSENSITIVE_ORDER.compare(getNamedElement().getName(), other
-                    .getNamedElement().getName());
+            return new NamedElementComparator().compare(getNamedElement(), other.getNamedElement());
         } else if (isSet() && other.isSet()) {
             return Integer.compare(getSet().hashCode(), other.getSet().hashCode());
         } else if (isRange() && other.isRange()) {
