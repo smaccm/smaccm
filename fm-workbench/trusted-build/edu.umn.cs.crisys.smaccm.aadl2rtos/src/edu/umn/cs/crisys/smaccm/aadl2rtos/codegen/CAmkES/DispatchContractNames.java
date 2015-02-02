@@ -47,10 +47,6 @@ public class DispatchContractNames {
     return aty.getCType().varString(pn.getData()); 
   }
   
-  public String getIndexDecl() {
-    PortNames pn = new PortNames(oep); 
-    return pn.getIndexDecl();
-  }
   
   public List<PortNames> getPassiveDispatchTargetList() {
     List<PortNames> targets = new ArrayList<>(); 

@@ -3,7 +3,9 @@ import "Common.stg"
 
 ////////////////////////////////////////////////////////////////////////////
 //
-// Declarations related to component gluecode header files for CAmkES
+// CamkesComponentHeader.stg
+// 
+// component gluecode header files for CAmkES
 // 
 ////////////////////////////////////////////////////////////////////////////
 
@@ -31,7 +33,7 @@ componentGlueCodeHeaderPrefix(name, date, path, datatypesHeader) ::= <<
 
 writeExternalHandlerUdePrototype(externalHandler, dispatcher) ::= <<
 <if(dispatcher.isEventData || dispatcher.isPeriodic)><\\>
-void <externalHandler.handlerName>(<dispatcher.nameAsInputParam>); 
+void <externalHandler.handlerName>(<dispatcher.type.aadlInputType.name> <dispatcher.name>); 
 <else><\\>
 void <externalHandler.handlerName>();
 <endif>
@@ -43,11 +45,11 @@ writeUdePrototype(dispatcher) ::= <<
 >>
 
 writePortWriterPrototype(port) ::= <<
-bool <port.aadlWriterFnName>(<if(port.hasData)><port.nameAsInputParam><endif>); 
+bool <port.aadlWriterFnName>(<if(port.hasData)><port.type.aadlInputType.name> <port.name><endif>); 
 >>
 
 writePortReaderPrototype(port) ::= <<
-bool <port.aadlReaderFnName>(<if(port.hasData)><port.nameAsOutputParam><endif>); 
+bool <port.aadlReaderFnName>(<if(port.hasData)><port.type.aadlOutputType.name> <port.name><endif>); 
 >>
 
 writeSharedDataPrototype(sda) ::= <<
@@ -59,6 +61,15 @@ bool <sda.writerFnName>(<sda.nameAsOutputParam>);
 
 >>
 
+writeAadlCRpcPrototypeSemi(rpc, endpoint) ::= <<<writeAadlCRpcPrototype(rpc, endpoint)>;>>
+
+writeEndpointPrototype(endpoint) ::= <<
+<if(!endpoint.isExternal)><\\>
+<endpoint.remoteProcedureGroup.remoteProcedures:writeAadlCRpcPrototypeSemi(endpoint); separator="\n">
+<endif>
+>>
+
+
 portInitializer(port) ::= <<
 <if(port.hasInitializeEntrypoint)>void <port.initializeEntrypointOpt.handlerName>();
 <endif>
@@ -69,10 +80,16 @@ componentGlueCodeHeaderBody(threadImpl) ::= <<
 	<threadImpl.outputPortList:writePortWriterPrototype()>
 	<threadImpl.inputPortList:writePortReaderPrototype()>
 	<threadImpl.sharedDataAccessorList:writeSharedDataPrototype()>
-
+	<threadImpl.endpoints:writeEndpointPrototype()>
 	<threadImpl.portList:portInitializer()>
 	<if(threadImpl.hasInitializeEntrypoint)>void <threadImpl.initializeEntrypointOpt.handlerName>();<endif>
-	
+	<if(threadImpl.isExternal)>
+		//////////////////////////////////////////////////////////////////////////
+		// 
+		// Note: thread is declared EXTERNAL; user should provide run() function.
+		//
+		//////////////////////////////////////////////////////////////////////////
+	<endif>	
 >>
 
 componentGlueCodeHeaderPostfix(name, path) ::= <<

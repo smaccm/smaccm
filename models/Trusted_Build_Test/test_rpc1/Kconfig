@@ -1,6 +1,0 @@
-config APP_TEST_RPC1
-    bool "AADL Test RPC 1: active -> passive thread AADL RPC comm"
-    default n
-    select APP_CAMKES_EXECUTIVE
-    help
-        AADL Test RPC 1: active -> passive thread AADL RPC comm 

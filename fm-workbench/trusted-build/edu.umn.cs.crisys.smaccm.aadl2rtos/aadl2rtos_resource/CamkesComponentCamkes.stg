@@ -49,7 +49,8 @@ uses <threadImpl.idlName> <threadImpl.interfaceInstanceName>;
 
 
 constructSenderInterface(connection) ::= <<
-<if(connection.destPort.threadImplementation.isActive)><\\>
+<if(connection.destPort.threadImplementation.isActive && 
+    connection.sourcePort.isOutputEventPort)><\\>
 uses <connection.destPort.type.readerWriterInterfaceName> <connection.sourcePort.name>;
 <endif>
 >>
@@ -126,6 +127,8 @@ component <threadImpl.componentName> {
 <else><\\>
 	provides <threadImpl.idlName> <threadImpl.componentDispatcherInterfaceVarIdName>;
 <endif>
+	<threadImpl.externalSemaphores:{ sem | has semaphore <sem>; }; separator="\n">
+	<threadImpl.externalMutexes:{mut | has mutex <mut>; }; separator="\n">
 	<threadImpl.endpoints:writeRpgInterface()>
 	// interfaces for Periodic and IRQ port dispatchers.
 	<threadImpl.dispatchers:writeProvidedInterface()>	

@@ -1,7 +1,7 @@
 property set SMACCM_SYS is
 	-- Definitions for making threads "tower compatible"
 	CommPrim_Source_Header: aadlstring applies to (port, access);
-	CommPrim_Source_Text: aadlstring applies to (port, access);
+	CommPrim_Source_Text: aadlstring applies to (port, access, data, data implementation);
 	Compute_Entrypoint_Source_Text : list of aadlstring applies to (system, system implementation, port, thread);
 
 	-- For including additional libraries into the build process
@@ -13,7 +13,7 @@ property set SMACCM_SYS is
 	First_Level_Interrupt_Handler: aadlstring applies to (port);
 	Is_ISR: aadlboolean => false applies to (port);  
 	Memory_Pages : list of aadlstring applies to (port); 
-
+	
     -- For scheduling
     Thread_Type: enumeration (Active, Passive) applies to (thread);	
 	Sends_Events_To: aadlstring applies to (thread); 
@@ -25,7 +25,7 @@ property set SMACCM_SYS is
 	HW : enumeration (PX4, ODROID, QEMU) applies to (system implementation); 
 	
 	-- For integrating with other code 
-	Is_Legacy: aadlboolean => false applies to (thread);
+	Is_External: aadlboolean => false applies to (thread, subprogram group access, data);
 	External_Mutex_List: list of aadlstring applies to (thread, system implementation);
 	External_Semaphore_List: list of aadlstring applies to (thread, system implementation);
 	External_Entrypoint: aadlstring applies to (thread);

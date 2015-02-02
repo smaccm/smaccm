@@ -25,6 +25,7 @@ thread sender
 		};
 	
 	properties 
+	    --SMACCM_SYS::Is_External => true;
 	    Dispatch_Protocol => Periodic;
 	    Period => 100 ms;
 		Source_Text => ("user_code/user_sender.c");

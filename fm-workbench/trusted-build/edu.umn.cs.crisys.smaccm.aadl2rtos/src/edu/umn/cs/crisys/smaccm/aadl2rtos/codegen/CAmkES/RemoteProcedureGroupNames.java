@@ -24,6 +24,10 @@ public class RemoteProcedureGroupNames {
     return rpg.getId(); 
   }
   
+  public String getAadlName() {
+    return "aadl_" + getName(); 
+  }
+  
   public String getIdlName() {
     return getName() + ".idl4";
   }

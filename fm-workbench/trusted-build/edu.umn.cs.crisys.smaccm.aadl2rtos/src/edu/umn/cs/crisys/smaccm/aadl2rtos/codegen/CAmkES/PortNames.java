@@ -8,6 +8,7 @@ import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.Dispatcher;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.DataPort;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.InputEventPort;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.OutputDataPort;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.OutputEventPort;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.BoolType;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.IntType;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.Type;
@@ -86,15 +87,6 @@ public class PortNames {
   // 
   //////////////////////////////////////////////////////////
   
-  public String getNameAsInputParam() {
-    TypeNames tpn = this.getType();
-    return tpn.getInputType() + " " + getName();
-  }
-  
-  public String getNameAsOutputParam() {
-    TypeNames tpn = this.getType();
-    return tpn.getOutputType() + " " + getName();
-  }
 
   public String getVarDecl() {
     return dp.getType().getCType().varString(getName());
@@ -119,6 +111,10 @@ public class PortNames {
   
   public boolean getIsOutputDataPort() {
     return (dp instanceof OutputDataPort);
+  }
+  
+  public boolean getIsOutputEventPort() {
+    return (dp instanceof OutputEventPort);
   }
   //////////////////////////////////////////////////////////////
   //
@@ -174,40 +170,7 @@ public class PortNames {
   public String getIdlDispatcherName() {
     return "dispatch_" + getName();
   }
-  //////////////////////////////////////////////////////////////
-  //
-  // Names for parameters/declarations for port data: 
-  //  Note: these should be replaced by <Type> <Name> 
-  //    declarations.  Much better!
-  // 
-  //////////////////////////////////////////////////////////////
-
-  public String getDataParam() {
-    TypeNames tpn = this.getType(); 
-    return tpn.getOutputType() + " " + this.getData();
-  }
-
-  public String getIndexParam() {
-    TypeNames tpn = new TypeNames(indexType);
-    return tpn.getOutputType() + " " + this.getIndex(); 
-  }  
-
-  public String getIndexDecl() {
-    return indexType.getCType().varString(getIndex());
-  }
   
-  
-  public String getGlobalIndexParam() {
-    return this.getIndexType().getOutputType() + " " + this.getGlobalIndex();
-  }
-  
-  public String getGlobalDataParam() {
-    return this.getType().getOutputType() + " " + this.getGlobalData();
-  }
-  
-  public String getGlobalMaxDispatchSizeParam() {
-    return indexType.toString() + " " + getGlobalMaxDispatchSize(); 
-  }
   
   //////////////////////////////////////////////////////////////
   //
@@ -294,12 +257,6 @@ public class PortNames {
     return (new BoolType()).getCType().varString(getQueueFullName()); 
   }
 
-  ////////////////////////////////////////////////////////////
-  // 
-  // FnCall and Stmt functions; these should be eliminated and replaced
-  // with a <varName>(<args>) declaration in stringtemplate.
-  //
-  ////////////////////////////////////////////////////////////
 
 
   ////////////////////////////////////////////////////////////

@@ -14,7 +14,6 @@ import java.util.Set;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosException;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.Dispatcher;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.DataPort;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.rpc.RemoteProcedureGroup;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.rpc.RemoteProcedureGroupEndpoint;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.EndpointConnection;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.PortConnection;
@@ -60,6 +59,21 @@ public class ThreadImplementationNames {
     return endpoints;
   }
   
+  public List<RemoteProcedureGroupEndpointNames> getProvidedEndpoints() {
+    ArrayList<RemoteProcedureGroupEndpointNames> endpoints = new ArrayList<>();
+    for (RemoteProcedureGroupEndpoint rpge : ti.getProvidesRPGList()) {
+      endpoints.add(new RemoteProcedureGroupEndpointNames(rpge));
+    }
+    return endpoints;
+  }
+
+  public List<RemoteProcedureGroupEndpointNames> getRequiredEndpoints() {
+    ArrayList<RemoteProcedureGroupEndpointNames> endpoints = new ArrayList<>();
+    for (RemoteProcedureGroupEndpoint rpge : ti.getRequiresRPGList()) {
+      endpoints.add(new RemoteProcedureGroupEndpointNames(rpge));
+    }
+    return endpoints;
+  }
   
   public Collection<RemoteProcedureGroupNames> getUsedRpgs() {
     Map<String, RemoteProcedureGroupNames> rpgMap = new HashMap<>();
@@ -127,7 +141,7 @@ public class ThreadImplementationNames {
   
   public List<ThreadImplementationNames> getOtherThreadImplementations() {
     List<ThreadImplementationNames> others = new ArrayList<>(); 
-    for (ThreadImplementation t: ti.getModel().getThreadImplementations()) {
+    for (ThreadImplementation t: ti.getModel().getAllThreadImplementations()) {
       if (t != ti) {
         others.add(new ThreadImplementationNames(t));
       }
@@ -183,6 +197,14 @@ public class ThreadImplementationNames {
     return tn;
   }
   
+  public List<String> getExternalMutexes() {
+    return ti.getExternalMutexList();
+  }
+  
+  public List<String> getExternalSemaphores() {
+    return ti.getExternalSemaphoreList();
+  }
+  
   //////////////////////////////////////////////////////////
   //
   // query functions
@@ -195,6 +217,10 @@ public class ThreadImplementationNames {
   
   public boolean getIsPassive() {
     return ti.getIsPassive();
+  }
+  
+  public boolean getIsExternal() {
+    return ti.getIsExternal();
   }
   
   //////////////////////////////////////////////////////////

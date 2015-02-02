@@ -69,14 +69,4 @@ public class SharedDataAccessorNames {
     return sda.getCommPrimHeaderNameOpt();
   }
   
-  public String getNameAsInputParam() {
-    TypeNames tpn = this.getType();
-    return tpn.getInputType() + " " + getName();
-  }
-  
-  public String getNameAsOutputParam() {
-    TypeNames tpn = this.getType();
-    return tpn.getOutputType() + " " + getName();
-  }
-
 }

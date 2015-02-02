@@ -15,6 +15,7 @@ import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.InputEventDispatcher;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.PeriodicDispatcher;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.OutputEventPort;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.OutgoingDispatchContract;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.Type;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.UnitType;
 
 /**
@@ -45,7 +46,9 @@ public class DispatcherNames {
   //////////////////////////////////////////////////////////////////////
 
   public boolean getHasData() {
-    return !(dp.getType() instanceof UnitType); 
+    Type ty = dp.getType();
+    boolean hasData = !(ty instanceof UnitType);
+    return hasData; 
   }
   
   public boolean getIsPeriodic() {
@@ -225,16 +228,6 @@ public class DispatcherNames {
   // 
   //////////////////////////////////////////////////////////
 
-  public String getNameAsOutputParam() {
-    TypeNames tyn = new TypeNames(dp.getType());
-    return tyn.getOutputTypeName() + " " + getName();
-  }
-  
-  public String getNameAsInputParam() {
-    TypeNames tyn = new TypeNames(dp.getType());
-    return tyn.getInputTypeName() + " " + getName();
-  }
-                   
   public String getPassiveComponentDispatcherPathName() {
     return this.getThreadImplementation().getInterfaceInstanceName() + "_" + 
         this.getIdlDispatcherName(); 

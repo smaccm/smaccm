@@ -34,7 +34,7 @@ thread receiver
 	features
 		Input1: in event data port Base_Types::Unsigned_32 {
 	      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("ping_received");
-		  Source_Text => ("user_code/user_receiver.c");
+		  Source_Text => ("user_code/user_receiver1.c");
 		}; 
 
 		Output1: out event data port Base_Types::Unsigned_32 {
@@ -52,7 +52,7 @@ end receiver ;
 thread receiver2
 	features
 		Input1: in event data port Base_Types::Unsigned_32 {
-	      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("token_received");
+	      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("ping_received");
 		  Source_Text => ("user_code/user_receiver2.c");
 		}; 
 				

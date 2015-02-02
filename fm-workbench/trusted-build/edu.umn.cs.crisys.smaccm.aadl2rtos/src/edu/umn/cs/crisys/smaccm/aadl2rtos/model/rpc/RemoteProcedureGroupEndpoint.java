@@ -15,6 +15,7 @@ public class RemoteProcedureGroupEndpoint {
 
   private ThreadImplementation owner;
   private RemoteProcedureGroup rpg;
+  private boolean isExternal; 
   private String accessorName;
   public enum AccessType {PROVIDES, REQUIRES};
   private AccessType accessType;
@@ -22,11 +23,13 @@ public class RemoteProcedureGroupEndpoint {
   public RemoteProcedureGroupEndpoint(ThreadImplementation owner, 
                             RemoteProcedureGroup rpg,
                             String endpointName, 
-                            AccessType accessType) {
+                            AccessType accessType, 
+                            boolean isExternal) {
     this.rpg = rpg;
     this.owner = owner;
     this.accessorName = endpointName;
     this.accessType = accessType;
+    this.isExternal = isExternal;
   }
   
   public String getName() {
@@ -44,5 +47,13 @@ public class RemoteProcedureGroupEndpoint {
   
   public RemoteProcedureGroup getRemoteProcedureGroup() {
     return this.rpg;
+  }
+
+  /**
+   * @return
+   */
+  public boolean getIsExternal() {
+    // TODO Auto-generated method stub
+    return isExternal;
   }
 }

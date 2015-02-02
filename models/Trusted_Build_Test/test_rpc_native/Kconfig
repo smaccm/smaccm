@@ -1,0 +1,6 @@
+config APP_TEST_RPC_NATIVE
+    bool "AADL Test RPC Native: active -> passive thread Native RPC comm"
+    default n
+    select APP_CAMKES_EXECUTIVE
+    help
+        AADL Test RPC Native: active -> passive thread Native RPC comm 
