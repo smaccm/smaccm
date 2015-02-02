@@ -269,7 +269,8 @@ public abstract class VerifyHandler extends AadlHandler {
     			KindApi api = PreferencesUtil.getKindApi();
     			KindApi consistApi = PreferencesUtil.getConsistencyApi();
     			while (!queue.isEmpty() && !monitor.isCanceled()) {
-    				JKindResult result = queue.remove();
+    			    JKindResult result = queue.peek();
+//    				JKindResult result = queue.remove();
     				Program program = linker.getProgram(result);
     				try {
     					if(result instanceof ConsistencyResult){
@@ -283,6 +284,7 @@ public abstract class VerifyHandler extends AadlHandler {
     					System.out.println(program);
     					break;
     				}
+    				queue.remove();
     			}
 
     			while (!queue.isEmpty()) {
@@ -303,7 +305,7 @@ public abstract class VerifyHandler extends AadlHandler {
             @Override
             public void run() {
                 terminateActivation = handlerService.activateHandler(TERMINATE_ID,
-                        new TerminateHandler(monitor));
+                        new TerminateHandler(monitor, queue));
             }
         });
     }

@@ -84,7 +84,7 @@ public class AgreeGenerator {
     	
     	Node mainNode = new Node(subNode.location, subNode.id, subNode.inputs, subNode.outputs,
     			subNode.locals, subNode.equations, subNode.properties, assumptions,
-    			null, subNode.guarantees, subNode.ordering);
+    			null, subNode.guarantees);
     	
     	nodes.add(mainNode);
     	
@@ -746,7 +746,7 @@ public class AgreeGenerator {
     	equations.add(assertEq);
     	
     	Node subNode = new Node(Location.NULL, nodeId, inputs, outputs, locals, equations,
-    			null, null, assumptions, guarantees, null);
+    			null, null, assumptions, guarantees);
     	
     	return subNode;
     	
