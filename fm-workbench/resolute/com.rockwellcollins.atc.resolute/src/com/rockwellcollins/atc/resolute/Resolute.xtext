@@ -129,7 +129,7 @@ OrExpr returns Expr:
 ;
 
 AndExpr returns Expr:
-	InstanceOfExpr (=>({BinaryExpr.left=current} op='and') right=InstanceOfExpr)*
+	InstanceOfExpr (=>({BinaryExpr.left=current} (op='and'|op='andthen')) right=InstanceOfExpr)*
 ;
 
 InstanceOfExpr returns Expr:
@@ -216,6 +216,7 @@ BuiltInFn:
 |	'sum'
 |	'union'
 |   'length'
+| 	'size'
 |	'intersect'
 
 // Other

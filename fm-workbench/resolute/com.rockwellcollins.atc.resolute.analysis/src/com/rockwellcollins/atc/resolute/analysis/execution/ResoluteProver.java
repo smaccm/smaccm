@@ -93,7 +93,7 @@ public class ResoluteProver extends ResoluteSwitch<ResoluteResult> {
 	public ResoluteResult caseBinaryExpr(BinaryExpr object) {
 		String op = object.getOp();
 
-		if (op.equals("and") || op.equals("or") || op.equals("=>")) {
+		if (op.equals("and") || op.equals("or") || op.equals("andthen") || op.equals("=>")) {
 			ResoluteResult leftResult = doSwitch(object.getLeft());
 			switch (op) {
 			case "and": {
@@ -107,6 +107,12 @@ public class ResoluteProver extends ResoluteSwitch<ResoluteResult> {
 			case "or":
 				if (leftResult.isValid()) {
 					return leftResult;
+				} else {
+					return doSwitch(object.getRight());
+				}
+			case "andthen":
+				if (!leftResult.isValid()) {
+					return new ResoluteResult(false);
 				} else {
 					return doSwitch(object.getRight());
 				}

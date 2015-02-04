@@ -861,38 +861,50 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		private final Group cGroup_1_0 = (Group)cGroup_1.eContents().get(0);
 		private final Group cGroup_1_0_0 = (Group)cGroup_1_0.eContents().get(0);
 		private final Action cBinaryExprLeftAction_1_0_0_0 = (Action)cGroup_1_0_0.eContents().get(0);
-		private final Assignment cOpAssignment_1_0_0_1 = (Assignment)cGroup_1_0_0.eContents().get(1);
-		private final Keyword cOpAndKeyword_1_0_0_1_0 = (Keyword)cOpAssignment_1_0_0_1.eContents().get(0);
+		private final Alternatives cAlternatives_1_0_0_1 = (Alternatives)cGroup_1_0_0.eContents().get(1);
+		private final Assignment cOpAssignment_1_0_0_1_0 = (Assignment)cAlternatives_1_0_0_1.eContents().get(0);
+		private final Keyword cOpAndKeyword_1_0_0_1_0_0 = (Keyword)cOpAssignment_1_0_0_1_0.eContents().get(0);
+		private final Assignment cOpAssignment_1_0_0_1_1 = (Assignment)cAlternatives_1_0_0_1.eContents().get(1);
+		private final Keyword cOpAndthenKeyword_1_0_0_1_1_0 = (Keyword)cOpAssignment_1_0_0_1_1.eContents().get(0);
 		private final Assignment cRightAssignment_1_1 = (Assignment)cGroup_1.eContents().get(1);
 		private final RuleCall cRightInstanceOfExprParserRuleCall_1_1_0 = (RuleCall)cRightAssignment_1_1.eContents().get(0);
 		
 		//AndExpr returns Expr:
-		//	InstanceOfExpr (=> ({BinaryExpr.left=current} op="and") right=InstanceOfExpr)*;
+		//	InstanceOfExpr (=> ({BinaryExpr.left=current} (op="and" | op="andthen")) right=InstanceOfExpr)*;
 		public ParserRule getRule() { return rule; }
 
-		//InstanceOfExpr (=> ({BinaryExpr.left=current} op="and") right=InstanceOfExpr)*
+		//InstanceOfExpr (=> ({BinaryExpr.left=current} (op="and" | op="andthen")) right=InstanceOfExpr)*
 		public Group getGroup() { return cGroup; }
 
 		//InstanceOfExpr
 		public RuleCall getInstanceOfExprParserRuleCall_0() { return cInstanceOfExprParserRuleCall_0; }
 
-		//(=> ({BinaryExpr.left=current} op="and") right=InstanceOfExpr)*
+		//(=> ({BinaryExpr.left=current} (op="and" | op="andthen")) right=InstanceOfExpr)*
 		public Group getGroup_1() { return cGroup_1; }
 
-		//=> ({BinaryExpr.left=current} op="and")
+		//=> ({BinaryExpr.left=current} (op="and" | op="andthen"))
 		public Group getGroup_1_0() { return cGroup_1_0; }
 
-		//{BinaryExpr.left=current} op="and"
+		//{BinaryExpr.left=current} (op="and" | op="andthen")
 		public Group getGroup_1_0_0() { return cGroup_1_0_0; }
 
 		//{BinaryExpr.left=current}
 		public Action getBinaryExprLeftAction_1_0_0_0() { return cBinaryExprLeftAction_1_0_0_0; }
 
+		//op="and" | op="andthen"
+		public Alternatives getAlternatives_1_0_0_1() { return cAlternatives_1_0_0_1; }
+
 		//op="and"
-		public Assignment getOpAssignment_1_0_0_1() { return cOpAssignment_1_0_0_1; }
+		public Assignment getOpAssignment_1_0_0_1_0() { return cOpAssignment_1_0_0_1_0; }
 
 		//"and"
-		public Keyword getOpAndKeyword_1_0_0_1_0() { return cOpAndKeyword_1_0_0_1_0; }
+		public Keyword getOpAndKeyword_1_0_0_1_0_0() { return cOpAndKeyword_1_0_0_1_0_0; }
+
+		//op="andthen"
+		public Assignment getOpAssignment_1_0_0_1_1() { return cOpAssignment_1_0_0_1_1; }
+
+		//"andthen"
+		public Keyword getOpAndthenKeyword_1_0_0_1_1_0() { return cOpAndthenKeyword_1_0_0_1_1_0; }
 
 		//right=InstanceOfExpr
 		public Assignment getRightAssignment_1_1() { return cRightAssignment_1_1; }
@@ -1836,14 +1848,15 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		private final Keyword cSumKeyword_20 = (Keyword)cAlternatives.eContents().get(20);
 		private final Keyword cUnionKeyword_21 = (Keyword)cAlternatives.eContents().get(21);
 		private final Keyword cLengthKeyword_22 = (Keyword)cAlternatives.eContents().get(22);
-		private final Keyword cIntersectKeyword_23 = (Keyword)cAlternatives.eContents().get(23);
-		private final Keyword cInstanceKeyword_24 = (Keyword)cAlternatives.eContents().get(24);
-		private final Keyword cInstancesKeyword_25 = (Keyword)cAlternatives.eContents().get(25);
-		private final Keyword cAnalysisKeyword_26 = (Keyword)cAlternatives.eContents().get(26);
-		private final Keyword cReceive_errorKeyword_27 = (Keyword)cAlternatives.eContents().get(27);
-		private final Keyword cContain_errorKeyword_28 = (Keyword)cAlternatives.eContents().get(28);
-		private final Keyword cPropagate_errorKeyword_29 = (Keyword)cAlternatives.eContents().get(29);
-		private final Keyword cError_state_reachableKeyword_30 = (Keyword)cAlternatives.eContents().get(30);
+		private final Keyword cSizeKeyword_23 = (Keyword)cAlternatives.eContents().get(23);
+		private final Keyword cIntersectKeyword_24 = (Keyword)cAlternatives.eContents().get(24);
+		private final Keyword cInstanceKeyword_25 = (Keyword)cAlternatives.eContents().get(25);
+		private final Keyword cInstancesKeyword_26 = (Keyword)cAlternatives.eContents().get(26);
+		private final Keyword cAnalysisKeyword_27 = (Keyword)cAlternatives.eContents().get(27);
+		private final Keyword cReceive_errorKeyword_28 = (Keyword)cAlternatives.eContents().get(28);
+		private final Keyword cContain_errorKeyword_29 = (Keyword)cAlternatives.eContents().get(29);
+		private final Keyword cPropagate_errorKeyword_30 = (Keyword)cAlternatives.eContents().get(30);
+		private final Keyword cError_state_reachableKeyword_31 = (Keyword)cAlternatives.eContents().get(31);
 		
 		//BuiltInFn: // Primary type: aadl
 		//	"has_property" // Primary type: component
@@ -1855,8 +1868,8 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		//	// Error Annex
 		//	| "property" | "has_parent" | "parent" | "name" | "type" | "has_type" | "is_of_type" | "is_bound_to" | "has_member" |
 		//	"features" | "connections" | "subcomponents" | "source" | "destination" | "direction" | "is_event_port" |
-		//	"lower_bound" | "upper_bound" | "member" | "sum" | "union" | "length" | "intersect" | "instance" | "instances" |
-		//	"analysis" | // the component can receive an incoming error
+		//	"lower_bound" | "upper_bound" | "member" | "sum" | "union" | "length" | "size" | "intersect" | "instance" |
+		//	"instances" | "analysis" | // the component can receive an incoming error
 		//	"receive_error" | // the component contain the error
 		//	"contain_error" | // the component propagate an error
 		//	"propagate_error" | // the error state is reachable
@@ -1873,8 +1886,8 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		//// Error Annex
 		//| "property" | "has_parent" | "parent" | "name" | "type" | "has_type" | "is_of_type" | "is_bound_to" | "has_member" |
 		//"features" | "connections" | "subcomponents" | "source" | "destination" | "direction" | "is_event_port" |
-		//"lower_bound" | "upper_bound" | "member" | "sum" | "union" | "length" | "intersect" | "instance" | "instances" |
-		//"analysis" | // the component can receive an incoming error
+		//"lower_bound" | "upper_bound" | "member" | "sum" | "union" | "length" | "size" | "intersect" | "instance" |
+		//"instances" | "analysis" | // the component can receive an incoming error
 		//"receive_error" | // the component contain the error
 		//"contain_error" | // the component propagate an error
 		//"propagate_error" | // the error state is reachable
@@ -1951,33 +1964,36 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		//"length"
 		public Keyword getLengthKeyword_22() { return cLengthKeyword_22; }
 
+		//"size"
+		public Keyword getSizeKeyword_23() { return cSizeKeyword_23; }
+
 		//"intersect"
-		public Keyword getIntersectKeyword_23() { return cIntersectKeyword_23; }
+		public Keyword getIntersectKeyword_24() { return cIntersectKeyword_24; }
 
 		//"instance"
-		public Keyword getInstanceKeyword_24() { return cInstanceKeyword_24; }
+		public Keyword getInstanceKeyword_25() { return cInstanceKeyword_25; }
 
 		//"instances"
-		public Keyword getInstancesKeyword_25() { return cInstancesKeyword_25; }
+		public Keyword getInstancesKeyword_26() { return cInstancesKeyword_26; }
 
 		//"analysis"
-		public Keyword getAnalysisKeyword_26() { return cAnalysisKeyword_26; }
+		public Keyword getAnalysisKeyword_27() { return cAnalysisKeyword_27; }
 
 		//// the component can receive an incoming error
 		//"receive_error"
-		public Keyword getReceive_errorKeyword_27() { return cReceive_errorKeyword_27; }
+		public Keyword getReceive_errorKeyword_28() { return cReceive_errorKeyword_28; }
 
 		//// the component contain the error
 		//"contain_error"
-		public Keyword getContain_errorKeyword_28() { return cContain_errorKeyword_28; }
+		public Keyword getContain_errorKeyword_29() { return cContain_errorKeyword_29; }
 
 		//// the component propagate an error
 		//"propagate_error"
-		public Keyword getPropagate_errorKeyword_29() { return cPropagate_errorKeyword_29; }
+		public Keyword getPropagate_errorKeyword_30() { return cPropagate_errorKeyword_30; }
 
 		//// the error state is reachable
 		//"error_state_reachable"
-		public Keyword getError_state_reachableKeyword_30() { return cError_state_reachableKeyword_30; }
+		public Keyword getError_state_reachableKeyword_31() { return cError_state_reachableKeyword_31; }
 	}
 
 	public class RealTermElements extends AbstractParserRuleElementFinder {
@@ -2454,7 +2470,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	}
 
 	//AndExpr returns Expr:
-	//	InstanceOfExpr (=> ({BinaryExpr.left=current} op="and") right=InstanceOfExpr)*;
+	//	InstanceOfExpr (=> ({BinaryExpr.left=current} (op="and" | op="andthen")) right=InstanceOfExpr)*;
 	public AndExprElements getAndExprAccess() {
 		return pAndExpr;
 	}
@@ -2559,8 +2575,8 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	//	// Error Annex
 	//	| "property" | "has_parent" | "parent" | "name" | "type" | "has_type" | "is_of_type" | "is_bound_to" | "has_member" |
 	//	"features" | "connections" | "subcomponents" | "source" | "destination" | "direction" | "is_event_port" |
-	//	"lower_bound" | "upper_bound" | "member" | "sum" | "union" | "length" | "intersect" | "instance" | "instances" |
-	//	"analysis" | // the component can receive an incoming error
+	//	"lower_bound" | "upper_bound" | "member" | "sum" | "union" | "length" | "size" | "intersect" | "instance" |
+	//	"instances" | "analysis" | // the component can receive an incoming error
 	//	"receive_error" | // the component contain the error
 	//	"contain_error" | // the component propagate an error
 	//	"propagate_error" | // the error state is reachable
