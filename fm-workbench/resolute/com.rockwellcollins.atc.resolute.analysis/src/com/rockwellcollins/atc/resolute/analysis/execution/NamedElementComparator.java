@@ -4,6 +4,8 @@ import java.util.Comparator;
 
 import org.osate.aadl2.NamedElement;
 
+import com.rockwellcollins.atc.resolute.analysis.values.NamedElementValue;
+
 public class NamedElementComparator implements Comparator<NamedElement> {
     @Override
     public int compare(NamedElement arg0, NamedElement arg1) {
@@ -11,7 +13,9 @@ public class NamedElementComparator implements Comparator<NamedElement> {
             return 0;
         }
         
-        int r = arg0.getName().compareToIgnoreCase(arg1.getName());
+        String text0 = new NamedElementValue(arg0).toString();
+        String text1 = new NamedElementValue(arg1).toString();
+        int r = text0.compareToIgnoreCase(text1);
         if (r != 0) {
             return r;
         }

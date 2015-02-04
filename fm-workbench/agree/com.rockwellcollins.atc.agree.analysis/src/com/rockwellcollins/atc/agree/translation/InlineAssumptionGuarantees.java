@@ -48,7 +48,7 @@ public class InlineAssumptionGuarantees extends AstMapVisitor {
 				}
 				agNode = new Node(node.location, node.id, node.inputs,
 						node.outputs, node.locals,node.equations, properties, 
-						node.assertions, null, null, null);
+						node.assertions, null, null);
 			}else{
 				agNode = new AstMapVisitor().visit(node);
 			}
@@ -128,7 +128,7 @@ public class InlineAssumptionGuarantees extends AstMapVisitor {
 		}
 		
 		return new Node(node.location, node.id, inputs, outputs, locals, equations, 
-				properties, assertions, node.assumptions, node.guarantees, null);
+				properties, assertions, node.assumptions, node.guarantees);
 	}
 
 }
