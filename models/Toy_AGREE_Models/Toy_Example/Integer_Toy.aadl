@@ -9,7 +9,7 @@ system A
 		Output: out data port Base_Types::Integer;
 			
 	annex agree {** 
-		assume "A input range" : Input < 20;
+		assume "A input range" : Input < 5;
 		guarantee "A output range" : Output < 2*Input;
 	**};	
 end A ; 

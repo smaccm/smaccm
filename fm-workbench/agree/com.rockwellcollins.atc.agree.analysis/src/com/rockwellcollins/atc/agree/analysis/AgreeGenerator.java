@@ -733,8 +733,8 @@ public class AgreeGenerator {
     	//the contract bottoms out here and we need to assert it
     	if(compClass instanceof ComponentType || assertConract){
     		finalAssert = assertContract(locals, equations, assumptions, guarantees);	
-    		guarantees = null;
-    		assumptions = null;
+//    		guarantees = null;
+//    		assumptions = null;
     	}else{
     		finalAssert = new BoolExpr(true);
     	}
