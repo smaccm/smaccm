@@ -951,6 +951,29 @@ ruleSynchStatement returns [EObject current=null]
     {
     	newLeafNode(otherlv_25, grammarAccess.getSynchStatementAccess().getSemicolonKeyword_2_5());
     }
+)
+    |((
+    {
+        $current = forceCreateModelElement(
+            grammarAccess.getSynchStatementAccess().getAsynchStatementAction_3_0(),
+            $current);
+    }
+)	otherlv_27='synchrony' 
+    {
+    	newLeafNode(otherlv_27, grammarAccess.getSynchStatementAccess().getSynchronyKeyword_3_1());
+    }
+	otherlv_28=':' 
+    {
+    	newLeafNode(otherlv_28, grammarAccess.getSynchStatementAccess().getColonKeyword_3_2());
+    }
+	otherlv_29='asynchronous' 
+    {
+    	newLeafNode(otherlv_29, grammarAccess.getSynchStatementAccess().getAsynchronousKeyword_3_3());
+    }
+	otherlv_30=';' 
+    {
+    	newLeafNode(otherlv_30, grammarAccess.getSynchStatementAccess().getSemicolonKeyword_3_4());
+    }
 ))
 ;
 

@@ -105,6 +105,7 @@
     <genClasses ecoreClass="Agree.ecore#//CalenStatement">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Agree.ecore#//CalenStatement/els"/>
     </genClasses>
+    <genClasses ecoreClass="Agree.ecore#//AsynchStatement"/>
     <genClasses ecoreClass="Agree.ecore#//NodeEq">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Agree.ecore#//NodeEq/lhs"/>
     </genClasses>

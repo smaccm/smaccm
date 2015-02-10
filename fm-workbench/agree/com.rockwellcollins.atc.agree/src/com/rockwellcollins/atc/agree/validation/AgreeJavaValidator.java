@@ -59,6 +59,7 @@ import com.rockwellcollins.atc.agree.agree.AgreeSubclause;
 import com.rockwellcollins.atc.agree.agree.Arg;
 import com.rockwellcollins.atc.agree.agree.AssertStatement;
 import com.rockwellcollins.atc.agree.agree.AssumeStatement;
+import com.rockwellcollins.atc.agree.agree.AsynchStatement;
 import com.rockwellcollins.atc.agree.agree.BinaryExpr;
 import com.rockwellcollins.atc.agree.agree.BoolLitExpr;
 import com.rockwellcollins.atc.agree.agree.CalenStatement;
@@ -208,7 +209,8 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
     	}
     	
     	if(sync instanceof CalenStatement
-    		|| sync instanceof MNSynchStatement){
+    		|| sync instanceof MNSynchStatement
+    		|| sync instanceof AsynchStatement){
     		return;
     	}
     	

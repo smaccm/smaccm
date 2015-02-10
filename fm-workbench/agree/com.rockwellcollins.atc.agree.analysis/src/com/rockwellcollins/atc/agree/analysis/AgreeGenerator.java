@@ -82,6 +82,12 @@ public class AgreeGenerator {
     		state.guarProps.add(propName);
     	}
     	
+    	for(Equation eq : state.lemmaExpressions){
+            String propName = "___GUARANTEE"+i++;
+            state.renaming.addExplicitRename(propName, eq.lhs.get(0).id);
+            state.guarProps.add(propName);
+        }
+    	
     	Node mainNode = new Node(subNode.location, subNode.id, subNode.inputs, subNode.outputs,
     			subNode.locals, subNode.equations, subNode.properties, assumptions,
     			null, subNode.guarantees);
@@ -394,7 +400,12 @@ public class AgreeGenerator {
     	calenNodeName = calenNodeName.replace(".", "__");
     	
     	Expr clockAssertion = null;
-    	if(state.mnSyncEls.size() != 0){
+    	if(state.asynchronous){
+    	    //the only constraint that will get made is one
+    	    //asserting that atleast one clock ticks.  This should
+    	    //happen after this if then else block
+    	    clockAssertion = new BoolExpr(true);
+    	}else if(state.mnSyncEls.size() != 0){
     	    //this set is used to make sure that we do not make a definition for the same
     	    //calendar twice (a user might have multiple 3-2 synchrony constraints for example)
     	    Set<String> nodeNames = new HashSet<>();
@@ -456,7 +467,7 @@ public class AgreeGenerator {
                 Expr onlyOneTick = AgreeCalendarUtils.getSingleTick(clockIds);
                 clockAssertion = new BinaryExpr(clockAssertion, BinaryOp.AND, onlyOneTick);
             }
-        }else{
+        }else{ //completely synchronous
             clockAssertion = new BoolExpr(true);
         	for(AgreeVarDecl clockVar : state.clockVars){
         		clockAssertion = new BinaryExpr(clockAssertion, BinaryOp.AND, new IdExpr(clockVar.id));

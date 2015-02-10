@@ -9,6 +9,7 @@ import com.rockwellcollins.atc.agree.agree.AgreePackage;
 import com.rockwellcollins.atc.agree.agree.Arg;
 import com.rockwellcollins.atc.agree.agree.AssertStatement;
 import com.rockwellcollins.atc.agree.agree.AssumeStatement;
+import com.rockwellcollins.atc.agree.agree.AsynchStatement;
 import com.rockwellcollins.atc.agree.agree.BinaryExpr;
 import com.rockwellcollins.atc.agree.agree.BoolLitExpr;
 import com.rockwellcollins.atc.agree.agree.CalenStatement;
@@ -276,6 +277,14 @@ public class AgreeSemanticSequencer extends PropertiesSemanticSequencer {
 				if(context == grammarAccess.getElementRule() ||
 				   context == grammarAccess.getSpecStatementRule()) {
 					sequence_SpecStatement(context, (AssumeStatement) semanticObject); 
+					return; 
+				}
+				else break;
+			case AgreePackage.ASYNCH_STATEMENT:
+				if(context == grammarAccess.getElementRule() ||
+				   context == grammarAccess.getSpecStatementRule() ||
+				   context == grammarAccess.getSynchStatementRule()) {
+					sequence_SynchStatement(context, (AsynchStatement) semanticObject); 
 					return; 
 				}
 				else break;
@@ -1207,6 +1216,15 @@ public class AgreeSemanticSequencer extends PropertiesSemanticSequencer {
 	 *     (expr=Expr type=Type)
 	 */
 	protected void sequence_SpecStatement(EObject context, ParamStatement semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Constraint:
+	 *     {AsynchStatement}
+	 */
+	protected void sequence_SynchStatement(EObject context, AsynchStatement semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
