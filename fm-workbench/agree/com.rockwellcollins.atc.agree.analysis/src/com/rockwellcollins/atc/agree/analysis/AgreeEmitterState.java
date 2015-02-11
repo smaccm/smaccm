@@ -50,6 +50,7 @@ import com.rockwellcollins.atc.agree.agree.AgreeContractSubclause;
 import com.rockwellcollins.atc.agree.agree.Arg;
 import com.rockwellcollins.atc.agree.agree.AssertStatement;
 import com.rockwellcollins.atc.agree.agree.AssumeStatement;
+import com.rockwellcollins.atc.agree.agree.AsynchStatement;
 import com.rockwellcollins.atc.agree.agree.BoolLitExpr;
 import com.rockwellcollins.atc.agree.agree.CalenStatement;
 import com.rockwellcollins.atc.agree.agree.ConstStatement;
@@ -122,6 +123,8 @@ public class AgreeEmitterState  extends AgreeSwitch<Expr> {
     public List<IdExpr> calendar = new ArrayList<IdExpr>();
     public List<MNSynchronyElement> mnSyncEls = new ArrayList<>();
     public boolean simultaneity = true;
+    public boolean asynchronous = false;
+    //this variable will be set by the generator
 	public boolean connectionExpressionsSet = false;
 
     public final String clockIDSuffix = "___CLOCK_";
@@ -170,6 +173,11 @@ public class AgreeEmitterState  extends AgreeSwitch<Expr> {
     	if(sync instanceof CalenStatement
     		|| sync instanceof MNSynchStatement){
     		return null;
+    	}
+    	
+    	if(sync instanceof AsynchStatement){
+    	    this.asynchronous = true;
+    	    return null;
     	}
     	
         this.synchrony  = Integer.valueOf(sync.getVal());

@@ -378,6 +378,16 @@ public class AgreeSwitch<T> extends Switch<T>
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
+      case AgreePackage.ASYNCH_STATEMENT:
+      {
+        AsynchStatement asynchStatement = (AsynchStatement)theEObject;
+        T result = caseAsynchStatement(asynchStatement);
+        if (result == null) result = caseSynchStatement(asynchStatement);
+        if (result == null) result = caseSpecStatement(asynchStatement);
+        if (result == null) result = caseElement(asynchStatement);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
       case AgreePackage.NODE_EQ:
       {
         NodeEq nodeEq = (NodeEq)theEObject;
@@ -1072,6 +1082,22 @@ public class AgreeSwitch<T> extends Switch<T>
    * @generated
    */
   public T caseCalenStatement(CalenStatement object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Asynch Statement</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Asynch Statement</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseAsynchStatement(AsynchStatement object)
   {
     return null;
   }

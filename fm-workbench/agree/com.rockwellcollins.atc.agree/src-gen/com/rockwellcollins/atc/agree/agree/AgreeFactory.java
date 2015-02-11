@@ -311,6 +311,15 @@ public interface AgreeFactory extends EFactory
   CalenStatement createCalenStatement();
 
   /**
+   * Returns a new object of class '<em>Asynch Statement</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Asynch Statement</em>'.
+   * @generated
+   */
+  AsynchStatement createAsynchStatement();
+
+  /**
    * Returns a new object of class '<em>Node Eq</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
