@@ -1,0 +1,41 @@
+package PixHawk
+public
+  with hardware_types;
+
+system PixHawk
+  features
+    uart0 : in out data port hardware_types::UART;
+    uart1 : in out data port hardware_types::UART;
+    uart2 : in out data port hardware_types::UART;
+    uart3 : in out data port hardware_types::UART;
+    uart4 : in out data port hardware_types::UART;
+    ppm : in out data port hardware_types::ppm;
+    adc : in out data port hardware_types::adc;
+    can0 : provides bus access hardware_types::CAN;
+    can1 : provides bus access hardware_types::CAN;
+    spi : provides bus access hardware_types::SPI_Bus;
+    i2c : provides bus access hardware_types::I2C_Bus;
+    usb : provides bus access hardware_types::USB;
+end PixHawk;
+
+system implementation PixHawk.i
+  subcomponents
+    gyro : system ST_Micro_L3GD20_Gyro;
+    accel0 : system ST_Micro_LSM303D_Accel;
+    accel1 : system Invensense_MPU_6000_Accel;
+    baro : system MEAS_MS5611_Baro;
+end PixHawk.i;
+
+system ST_Micro_L3GD20_Gyro
+end ST_Micro_L3GD20_Gyro;
+
+system ST_Micro_LSM303D_Accel
+end ST_Micro_LSM303D_Accel;
+
+system Invensense_MPU_6000_Accel
+end Invensense_MPU_6000_Accel;
+
+system MEAS_MS5611_Baro
+end MEAS_MS5611_Baro;
+
+end PixHawk;

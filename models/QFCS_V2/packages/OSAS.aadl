@@ -18,7 +18,7 @@ system OSAS_Sys
     sovs2 : out data port DATA_TYPES::BoolActuators.impl; 
     
     ccdl_frame_count: in data port Base_Types::Integer;
-    ccdl_failed: out data port Base_Types::Boolean;
+    ccdl_failed: in data port Base_Types::Boolean;
     
     num_valid_acts: in data port DATA_TYPES::NumActuators.impl;
     osas_failed : in data port Base_Types::Boolean;

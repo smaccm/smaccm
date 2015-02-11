@@ -96,6 +96,7 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
       case AgreePackage.LIFT_STATEMENT: return createLiftStatement();
       case AgreePackage.MN_SYNCH_STATEMENT: return createMNSynchStatement();
       case AgreePackage.CALEN_STATEMENT: return createCalenStatement();
+      case AgreePackage.ASYNCH_STATEMENT: return createAsynchStatement();
       case AgreePackage.NODE_EQ: return createNodeEq();
       case AgreePackage.NODE_LEMMA: return createNodeLemma();
       case AgreePackage.PRIM_TYPE: return createPrimType();
@@ -471,6 +472,17 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
   {
     CalenStatementImpl calenStatement = new CalenStatementImpl();
     return calenStatement;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public AsynchStatement createAsynchStatement()
+  {
+    AsynchStatementImpl asynchStatement = new AsynchStatementImpl();
+    return asynchStatement;
   }
 
   /**

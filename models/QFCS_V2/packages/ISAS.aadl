@@ -261,14 +261,14 @@ system ISAS_Sys
 end ISAS_Sys; 
 
 system implementation ISAS_Sys.Impl
-   annex agree {**
-   	   
-   	     lemma "aoa_compare12" :
-   	     (aoa_in_range.AOA1.AOA and not aoa_failed_update.val1 and aoa_within_tol.AOA1.AOA and
-          aoa_in_range.AOA2.AOA and not aoa_failed_update.val2 and aoa_within_tol.AOA2.AOA)  =>
-          	        not (aoa_faults.AOA1.AOA and not aoa_faults.AOA2.AOA);
- 
-   **};
+--   annex agree {**
+--   	   
+--   	     lemma "aoa_compare12" :
+--   	     (aoa_in_range.AOA1.AOA and not aoa_failed_update.val1 and aoa_within_tol.AOA1.AOA and
+--          aoa_in_range.AOA2.AOA and not aoa_failed_update.val2 and aoa_within_tol.AOA2.AOA)  =>
+--          	        not (aoa_faults.AOA1.AOA and not aoa_faults.AOA2.AOA);
+-- 
+--   **};
    
 end ISAS_Sys.Impl;
 

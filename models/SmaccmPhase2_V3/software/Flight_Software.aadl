@@ -1,0 +1,235 @@
+package Flight_Software
+public
+  with software_types;
+  with hardware_types;
+  with SMACCM;
+  
+process main
+  features
+    mission_out : out event data port software_types::can_data;
+    mission_in : in event data port software_types::can_data;
+    ppm_in : in event data port software_types::Flight_Control_Commands.i;
+    
+    sensors_group : feature group hardware_types::Sensors;
+    battery : in data port software_types::Battery_Data;
+
+  annex agree {**
+  	eq time : int;
+  	  **};
+end main;
+
+
+process implementation main.i
+  subcomponents
+    can : thread can_px4_t;
+    ppm : thread ppm_t;
+    control : thread control_t;
+    ui_mux : thread ui_mux_t;
+    gps : thread ublox_gps_t;
+    sensors : thread sensors_t;
+    motmix : thread motmix_t;
+    
+    control_params : data software_types::control_data.impl { SMACCM::Trusted => true; };
+    
+  connections
+    conn0 : port sensors.sensor_data -> can.sensor_data;
+    conn1 : port control.control_out -> can.control_data;
+    conn2 : port motmix.motors -> can.motmix_data;
+    conn3 : port mission_in -> can.mission_in;
+    conn4 : port can.mission_out -> mission_out;
+    conn5 : port can.user_input -> ui_mux.mavlink_input;
+    conn7 : port can.control_law_out -> ui_mux.mavlink_control;
+    
+    --ppm1 : port ppm_in -> ppm.flight_command;
+    --ppm2 : port ppm.user_input -> ui_mux.ppm_input;
+    --ppm3 : port ppm.control_law_out -> ui_mux.ppm_control;
+    
+    conn8 : port ui_mux.input_select -> control.user_input;
+    conn9 : port control_params -> control.control_params;
+    conn10 : port ui_mux.control_law -> control.control_law;
+    conn11 : port control.control_out -> motmix.control_in;
+    
+    conn12 : port ui_mux.control_law -> motmix.control_law_in;
+    
+    conn13 : port gps.position -> sensors.gps;
+    
+    conn14 : port sensors.sensor_data -> control.sensor_data;
+
+    conn15 : port sensors_group.barometer -> sensors.barometer;
+    conn16 : port sensors_group.motion -> sensors.motion;
+    conn17 : port sensors_group.gps -> gps.input;
+    conn18 : port battery -> sensors.battery;
+  
+  properties
+    SMACCM::OS => "eChronos";
+  
+  annex agree {**
+  	assert time = can.time;
+  	assert time = control.time;
+  	assert time = ppm.time;
+  	
+  	assert time = 0 -> time > pre(time);
+  	
+  **};
+  
+  annex resolute {**
+    	prove only_receive_legit(this.motmix)
+  **};
+end main.i;
+
+thread can_px4_t
+  features
+    waypoints : out event data port software_types::waypoint;
+    sensor_data : in event data port software_types::Sensor_Data;
+    control_data : in event data port software_types::controloutput.impl;
+    motmix_data : in event data port software_types::motors_data;
+    mission_out : out event data port software_types::can_data;
+    mission_in : in event data port software_types::can_data;
+    user_input : out event data port software_types::userinput_result.impl;
+    control_law_out : out event data port software_types::control_law_request.impl;
+  
+  properties
+    SMACCM::Language => "Ivory";
+    SMACCM::Trusted => true;
+  
+  annex agree {**
+  	eq time : int;
+  **};
+end can_px4_t;
+
+thread ppm_t
+  features
+    flight_command : in event data port software_types::Flight_Control_Commands.i;
+    user_input : out event data port software_types::userinput_result.impl;
+    control_law_out : out event data port software_types::control_law_request.impl;
+      
+  properties
+    SMACCM::Language => "Ivory";
+    SMACCM::Trusted => true;
+   
+  annex agree {**
+  	eq time : int;
+  **};
+end ppm_t;
+
+thread control_t
+  features
+    user_input : in event data port software_types::userinput_result.impl;
+    control_params : in data port software_types::control_data.impl;
+    control_law : in event data port software_types::control_law.impl;
+    control_out : out data port software_types::controloutput.impl;
+    sensor_data : in event data port software_types::Sensor_Data;
+      
+  properties
+    SMACCM::Language => "Ivory";
+    SMACCM::Trusted => true;
+    
+    annex agree {**
+   
+      const LANDING_TIMEOUT : int = 300;
+   
+      eq mode : int;
+  	  eq time : int;
+  	  eq time_of_last_event : int = if(event(user_input)) then time else 0 -> pre(time);
+  	  
+  	  initially :
+  	    mode = AGREE_CONSTS.DISARMED_MODE and
+  	    time_of_last_event = 0;
+  	    
+  	  assume "control and input events occur simultaneously":
+  	    event(user_input) = event(control_law);
+  	    
+  	  assume "valid modes for control input":
+  	    control_law.armed_mode = AGREE_CONSTS.LAND_MODE or
+  	    control_law.armed_mode = AGREE_CONSTS.ARMED_MODE or
+  	    control_law.armed_mode = AGREE_CONSTS.DISARMED_MODE;
+  	    
+  	  assume "mode doesn't change unless userinput changes'" :
+  	    not event(user_input) => control_law.armed_mode = pre(control_law.armed_mode);
+  	    
+  	  guarantee "mode behavior":
+  	    if(event(user_input)) then
+  	      mode = control_law.armed_mode
+  	    else if(time_of_last_event >= LANDING_TIMEOUT) then
+  	      mode = AGREE_CONSTS.LAND_MODE
+  	    else
+  	      mode = pre(mode);
+
+  	  
+  	  
+    **};
+    
+end control_t;
+
+thread ui_mux_t
+  features
+    ppm_input : in event data port software_types::userinput_result.impl;
+    mavlink_input : in event data port software_types::userinput_result.impl;
+    
+    ppm_control : in event data port software_types::control_law_request.impl;
+    mavlink_control : in event data port software_types::control_law_request.impl;
+    --determines armed state
+    control_law : out event data port software_types::control_law.impl;
+    input_select : out event data port software_types::userinput_result.impl;
+      
+  properties
+    SMACCM::Language => "Ivory";
+    SMACCM::Trusted => true;
+    
+   annex agree {**
+   	
+   	  assume "control inputs occur with user inputs":
+   	    event(ppm_input) = event(ppm_control) and
+   	    event(mavlink_input) = event(mavlink_control);
+   	
+   	  guarantee "armed mode ranges" :
+   	    control_law.armed_mode = AGREE_CONSTS.LAND_MODE or
+  	    control_law.armed_mode = AGREE_CONSTS.ARMED_MODE or
+  	    control_law.armed_mode = AGREE_CONSTS.DISARMED_MODE;
+  	    
+--  	  guarantee "output constant if nothing is received":
+--  	    not (event(ppm_input) or event(mavlink_input)) => 
+--  	      (not (event(control_law) and event(input_select)) and
+--  	      	;
+  	    
+  	    
+   **};
+    
+end ui_mux_t;
+
+thread ublox_gps_t
+  features
+    input : in event data port hardware_types::GPS;
+    position : out event data port software_types::position.impl;  
+
+  properties
+    SMACCM::Language => "Ivory";
+    SMACCM::Trusted => true;
+end ublox_gps_t;
+
+thread sensors_t
+  features
+    barometer : in data port software_types::Barometric_Data;
+    motion : in data port software_types::Motion_Data.Impl;
+    battery : in data port software_types::Battery_Data;
+    gps : in data port software_types::Position.Impl;
+    
+    sensor_data : out event data port software_types::Sensor_Data;  
+
+  properties
+    SMACCM::Language => "Ivory";
+    SMACCM::Trusted => true;
+end sensors_t;
+
+thread motmix_t
+  features
+    motors : out data port software_types::motors_data;
+    control_in : in data port software_types::controloutput.impl;
+    control_law_in : in event data port software_types::control_law.impl;
+  
+  properties
+    SMACCM::Language => "Ivory";
+    SMACCM::Trusted => true;
+end motmix_t;
+	
+end Flight_Software;

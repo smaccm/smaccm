@@ -241,6 +241,11 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
         return createCalenStatementAdapter();
       }
       @Override
+      public Adapter caseAsynchStatement(AsynchStatement object)
+      {
+        return createAsynchStatementAdapter();
+      }
+      @Override
       public Adapter caseNodeEq(NodeEq object)
       {
         return createNodeEqAdapter();
@@ -863,6 +868,21 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
    * @generated
    */
   public Adapter createCalenStatementAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.AsynchStatement <em>Asynch Statement</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see com.rockwellcollins.atc.agree.agree.AsynchStatement
+   * @generated
+   */
+  public Adapter createAsynchStatementAdapter()
   {
     return null;
   }

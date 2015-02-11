@@ -81,7 +81,7 @@ public class ResoluteBuiltInFnCallEvaluator {
 
 				}
 				throw new ResoluteFailException("Property " + prop.getName() + " not defined on "
-						+ element.getContainingClassifier().getName(), fnCallExpr);
+						+ element.getName(), fnCallExpr);
 			}
 
 			return exprToValue(expr);

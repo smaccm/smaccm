@@ -1,0 +1,14 @@
+ML_COMMENT=10
+REAL=4
+WS=8
+INT=6
+ERROR=11
+ID=7
+T__1=2
+T__0=3
+SL_COMMENT=9
+BOOL=5
+T__2=1
+'}'=3
+','=2
+'{'=1

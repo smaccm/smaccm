@@ -24,6 +24,7 @@ import jkind.lustre.UnaryOp;
 import jkind.lustre.VarDecl;
 
 public class AgreeCalendarUtils {
+
 	
     static private String dfaName = null;
     
@@ -80,6 +81,7 @@ public class AgreeCalendarUtils {
 		}
 		
 		Expr okExpr = new IdExpr("c_q_"+(max-1));
+		okExpr = new UnaryExpr(UnaryOp.PRE, okExpr);
 		okExpr = new BinaryExpr(new IntExpr(BigInteger.valueOf(2*min)), BinaryOp.ARROW, okExpr);
 		okExpr = new BinaryExpr(okExpr, BinaryOp.GREATEREQUAL, new IntExpr(BigInteger.valueOf(min)));
 		okExpr = new BinaryExpr(pId, BinaryOp.IMPLIES, okExpr);
@@ -93,9 +95,6 @@ public class AgreeCalendarUtils {
         if(synchrony <= 0){
             throw new AgreeException("Attempt to use quasi-synchrony of value: "+synchrony);
         }
-        
-        
-        dfaName = name;
         
         //VarDecl rVar = new VarDecl("_r", 
         //        new SubrangeIntType(BigInteger.valueOf(-synchrony), 
@@ -178,7 +177,7 @@ public class AgreeCalendarUtils {
         List<String> properties = new ArrayList<>();
         properties.add(rIsBounded.id);
         
-        return new Node(dfaName, inputs, outputs, locals, equations, properties);
+        return new Node(name, inputs, outputs, locals, equations, properties);
     }
     
     public static Node getExplicitCalendarNode(String nodeName, List<IdExpr> calendar, List<Expr> clocks) {
@@ -267,12 +266,7 @@ public class AgreeCalendarUtils {
 		return new Node(nodeName, inputs, outputs, locals, equations);
 	}
     
-    static public Node getCalendarNode(String name, int numClks){
-        
-        if(dfaName == null){
-            throw new AgreeException("Each call to getCalendarNode must be preeceded by a call to getDFANode");
-        }
-        
+    static public Node getCalendarNode(String name, String dfaName, int numClks){
         Node calendarNode;
         Expr nodeExpr = null;
         String clkVarPrefix = "_clk_";
@@ -293,7 +287,7 @@ public class AgreeCalendarUtils {
             Expr clk0 = clks.get(i);
             for(int j = i+1; j < clks.size(); j++){
                 Expr clk1 = clks.get(j);
-                Expr dfaExpr = getDFAExpr(clk0, clk1);
+                Expr dfaExpr = getDFAExpr(dfaName, clk0, clk1);
                 if(nodeExpr == null){
                     nodeExpr = dfaExpr;
                 }else{
@@ -335,7 +329,7 @@ public class AgreeCalendarUtils {
         return new Equation(clkTickedId, new BinaryExpr(clkExpr, BinaryOp.ARROW, tickExpr));
     }
     
-    static private Expr getDFAExpr(Expr clk0, Expr clk1){
+    static private Expr getDFAExpr(String dfaName, Expr clk0, Expr clk1){
         return new NodeCallExpr(dfaName, clk0, clk1);
     }
     

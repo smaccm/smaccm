@@ -1,0 +1,9 @@
+Attacks to attempt vs assurance case
+
+1. Connection from VM
+2. 3rd party on CAN bus
+3. PPM in flight software
+4. Untrusted component on FSW or MSW
+5. Turn off seL4
+6. Set VM to trusted
+7. Bypass decrypt

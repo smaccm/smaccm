@@ -1,0 +1,2 @@
+apps-$(CONFIG_APP_TEST_RPC_NATIVE) += test_rpc_native
+test_rpc_native: libsel4 libmuslc libsel4platsupport libsel4muslccamkes libsel4camkes libsel4sync libsel4debug libsel4bench

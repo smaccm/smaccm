@@ -4,19 +4,14 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
 import jkind.JKindException;
-import jkind.SolverOption;
-import jkind.api.JKindApi;
 import jkind.api.KindApi;
 import jkind.api.results.AnalysisResult;
 import jkind.api.results.CompositeAnalysisResult;
 import jkind.api.results.JKindResult;
-import jkind.api.results.Renaming;
-import jkind.lustre.Node;
 import jkind.lustre.Program;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -28,10 +23,10 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.handlers.IHandlerActivation;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.osate.aadl2.AnnexSubclause;
+import org.osate.aadl2.ComponentClassifier;
 import org.osate.aadl2.ComponentImplementation;
 import org.osate.aadl2.ComponentType;
 import org.osate.aadl2.Element;
-import org.osate.aadl2.NamedElement;
 import org.osate.aadl2.Subcomponent;
 import org.osate.aadl2.SystemImplementation;
 import org.osate.aadl2.SystemType;
@@ -41,369 +36,311 @@ import org.osate.aadl2.instantiation.InstantiateModel;
 import org.osate.annexsupport.AnnexUtil;
 import org.osate.ui.dialogs.Dialog;
 
+import com.rockwellcollins.atc.agree.agree.AgreeContractSubclause;
 import com.rockwellcollins.atc.agree.agree.AgreePackage;
 import com.rockwellcollins.atc.agree.agree.AgreeSubclause;
 import com.rockwellcollins.atc.agree.analysis.Activator;
-import com.rockwellcollins.atc.agree.analysis.AgreeCalendarUtils;
 import com.rockwellcollins.atc.agree.analysis.AgreeEmitterUtilities;
 import com.rockwellcollins.atc.agree.analysis.AgreeException;
 import com.rockwellcollins.atc.agree.analysis.AgreeGenerator;
+import com.rockwellcollins.atc.agree.analysis.AgreeLogger;
+import com.rockwellcollins.atc.agree.analysis.AgreeProgram;
+import com.rockwellcollins.atc.agree.analysis.ConsistencyResult;
 import com.rockwellcollins.atc.agree.analysis.preferences.PreferenceConstants;
 import com.rockwellcollins.atc.agree.analysis.preferences.PreferencesUtil;
 import com.rockwellcollins.atc.agree.analysis.views.AgreeResultsLinker;
 import com.rockwellcollins.atc.agree.analysis.views.AgreeResultsView;
 
 public abstract class VerifyHandler extends AadlHandler {
-    private AgreeResultsLinker linker = new AgreeResultsLinker();
-    private Queue<JKindResult> queue = new ArrayDeque<>();
+	private AgreeResultsLinker linker = new AgreeResultsLinker();
+	private Queue<JKindResult> queue = new ArrayDeque<>();
 
-    private static final String RERUN_ID = "com.rockwellcollins.atc.agree.analysis.commands.rerunAgree";
-    private IHandlerActivation rerunActivation;
+	private static final String RERUN_ID = "com.rockwellcollins.atc.agree.analysis.commands.rerunAgree";
+	private IHandlerActivation rerunActivation;
+	private IHandlerActivation terminateActivation;
+	private IHandlerService handlerService;
 
-    protected abstract boolean isRecursive();
+	protected abstract boolean isRecursive();
 
-    @Override
-    protected IStatus runJob(Element root, IProgressMonitor monitor) {
-        disableRerunHandler();
-        
-        if (!(root instanceof SystemImplementation)) {
-            return new Status(IStatus.ERROR, Activator.PLUGIN_ID,
-                    "Must select an AADL System Implementation");
-        }
+	protected abstract boolean isMonolithic();
 
-        try {
-            ComponentImplementation ci = (ComponentImplementation) root;
+	@Override
+	protected IStatus runJob(Element root, IProgressMonitor monitor) {
+		disableRerunHandler();
+		handlerService = (IHandlerService) getWindow().getService(IHandlerService.class);
 
-            SystemInstance si = null;
-            if (root instanceof SystemImplementation) {
-                final SystemImplementation sysimpl = (SystemImplementation) root;
-                try {
-                    si = InstantiateModel.buildInstanceModelFile(sysimpl);
-                } catch (Exception e) {
-                    Dialog.showError("Model Instantiate",
-                            "Error while re-instantiating the model: " + e.getMessage());
-                    return Status.CANCEL_STATUS;
-                }
-            }
+		if (!(root instanceof SystemImplementation)) {
+			return new Status(IStatus.ERROR, Activator.PLUGIN_ID, "Must select an AADL System Implementation");
+		}
 
-            AnalysisResult result;
-            CompositeAnalysisResult wrapper = new CompositeAnalysisResult("");
-            LinkedList<NamedElement> modelParents = new LinkedList<>();
+		try {
+			SystemImplementation ci = (SystemImplementation) root;
+
+			SystemInstance si = null;
+			final SystemImplementation sysimpl = ci;
+			try {
+				si = InstantiateModel.buildInstanceModelFile(sysimpl);
+			} catch (Exception e) {
+				Dialog.showError("Model Instantiate", "Error while re-instantiating the model: " + e.getMessage());
+				return Status.CANCEL_STATUS;
+			}
+
+			AnalysisResult result;
+			CompositeAnalysisResult wrapper = new CompositeAnalysisResult("");
 
 //            SystemType sysType = si.getSystemImplementation().getType();
-            SystemType sysType = (SystemType) si.getComponentImplementation().getType();
-            EList<AnnexSubclause> annexSubClauses = AnnexUtil.getAllAnnexSubclauses(sysType,
-                    AgreePackage.eINSTANCE.getAgreeContractSubclause());
+			SystemType sysType = (SystemType) si.getComponentImplementation().getType();
+			EList<AnnexSubclause> annexSubClauses = AnnexUtil.getAllAnnexSubclauses(sysType,
+					AgreePackage.eINSTANCE.getAgreeContractSubclause());
 
-            if (annexSubClauses.size() == 0) {
-                throw new AgreeException("There is not an AGREE annex in the '" + sysType.getName()
-                        + "' system type.");
-            }
+			if (annexSubClauses.size() == 0) {
+				throw new AgreeException("There is not an AGREE annex in the '" + sysType.getName() + "' system type.");
+			}
 
-            if (isRecursive()) {
-                result = buildAnalysisResult(ci.getName(), si);
-                wrapper.addChild(result);
-                result = wrapper;
-            } else {
-                wrapper.addChild(createGuaranteeVerification(si));
-                wrapper.addChild(createAssumptionVerification(si));
-                wrapper.addChild(createConsistVerification(si));
-                result = wrapper;
-            }
-            showView(result, linker);
-            return doAnalysis(root, monitor);
-        } catch (Throwable e) {
-            String messages = getNestedMessages(e);
-            return new Status(IStatus.ERROR, Activator.PLUGIN_ID, 0, messages, e);
-        }
-    }
+			if (isRecursive()) {
+				result = buildAnalysisResult(ci.getName(), si);
+				wrapper.addChild(result);
+				result = wrapper;
+			} else {
+				AgreeProgram agreeProgram = AgreeGenerator.getLustre(si, isMonolithic());// , isMonolithic());
+				wrapper.addChild(createGuaranteeVerification(agreeProgram));
+				// wrapper.addChild(createAssumptionVerification(si));
+				wrapper.addChild(creatConsistencyVerification(agreeProgram));
+				result = wrapper;
+			}
+			showView(result, linker);
+			return doAnalysis(root, monitor);
+		} catch (Throwable e) {
+			String messages = getNestedMessages(e);
+			return new Status(IStatus.ERROR, Activator.PLUGIN_ID, 0, messages, e);
+		}
+	}
 
-    private String getNestedMessages(Throwable e) {
-        StringWriter sw = new StringWriter();
-        PrintWriter pw = new PrintWriter(sw);
-        while (e != null) {
-            if (e.getMessage() != null && !e.getMessage().isEmpty()) {
-                pw.println(e.getMessage());
-            }
-            e = e.getCause();
-        }
-        pw.close();
-        return sw.toString();
-    }
+	private String getNestedMessages(Throwable e) {
+		StringWriter sw = new StringWriter();
+		PrintWriter pw = new PrintWriter(sw);
+		while (e != null) {
+			if (e.getMessage() != null && !e.getMessage().isEmpty()) {
+				pw.println(e.getMessage());
+			}
+			e = e.getCause();
+		}
+		pw.close();
+		return sw.toString();
+	}
 
-    private AnalysisResult buildAnalysisResult(String name, ComponentInstance ci) {
-        CompositeAnalysisResult result = new CompositeAnalysisResult("Verification for " + name);
+	private AnalysisResult buildAnalysisResult(String name, ComponentInstance ci) {
+		CompositeAnalysisResult result = new CompositeAnalysisResult("Verification for " + name);
 
-        AnalysisResult tempResult = createGuaranteeVerification(ci);
-        if (tempResult != null) {
-            result.addChild(tempResult);
-        }
-        tempResult = createAssumptionVerification(ci);
-        if (tempResult != null) {
-            result.addChild(tempResult);
-        }
-        tempResult = createConsistVerification(ci);
-        if (tempResult != null) {
-            result.addChild(tempResult);
-        }
+		if (containsAGREEAnnex(ci)) {
+			AgreeProgram agreeProgram = AgreeGenerator.getLustre(ci, isMonolithic());// , isMonolithic());
+			AnalysisResult tempResult = createGuaranteeVerification(agreeProgram);
+			if (tempResult != null) {
+				result.addChild(tempResult);
+			}
+			tempResult = creatConsistencyVerification(agreeProgram);
+			if (tempResult != null) {
+				result.addChild(tempResult);
+			}
 
-        ComponentImplementation compImpl = AgreeEmitterUtilities.getInstanceImplementation(ci);
-        for (Subcomponent subComp : compImpl.getAllSubcomponents()) {
-            ComponentInstance subInst = ci.findSubcomponentInstance(subComp);
-            if (subInst != ci) {
-                if (AgreeEmitterUtilities.getInstanceImplementation(subInst) != null) {
-                    AnalysisResult buildAnalysisResult = buildAnalysisResult(subInst.getName(),
-                            subInst);
-                    if (buildAnalysisResult != null) {
-                        result.addChild(buildAnalysisResult);
-                    }
-                }
-            }
-        }
+			ComponentImplementation compImpl = AgreeEmitterUtilities.getInstanceImplementation(ci);
+			for (Subcomponent subComp : compImpl.getAllSubcomponents()) {
+				ComponentInstance subInst = ci.findSubcomponentInstance(subComp);
+				if (subInst != ci) {
+					if (AgreeEmitterUtilities.getInstanceImplementation(subInst) != null) {
+						AnalysisResult buildAnalysisResult = buildAnalysisResult(subInst.getName(), subInst);
+						if (buildAnalysisResult != null) {
+							result.addChild(buildAnalysisResult);
+						}
+					}
+				}
+			}
 
-        if (result.getChildren().size() != 0) {
-            linker.setComponent(result, compImpl);
-            return result;
-        }
+			if (result.getChildren().size() != 0) {
+				linker.setComponent(result, compImpl);
+				return result;
+			}
+		}
+		return null;
+	}
 
-        return null;
-    }
+	private boolean containsAGREEAnnex(ComponentInstance ci) {
+		ComponentClassifier compClass = ci.getComponentClassifier();
+		if (compClass instanceof ComponentImplementation) {
+			compClass = ((ComponentImplementation) compClass).getType();
+		}
+		for (AnnexSubclause annex : AnnexUtil.getAllAnnexSubclauses(compClass,
+				AgreePackage.eINSTANCE.getAgreeContractSubclause())) {
+			if (annex instanceof AgreeContractSubclause) {
+				return true;
+			}
+		}
+		return false;
+	}
 
-    private AnalysisResult createGuaranteeVerification(ComponentInstance ci) {
+	private AnalysisResult createGuaranteeVerification(AgreeProgram agreeProgram) {
 
-        AgreeGenerator emitter = new AgreeGenerator(ci);
-        Program program = emitter.evaluate();
-        if (program == null) {
-            return null;
-        }
+		List<String> props = new ArrayList<>();
+		props.addAll(agreeProgram.state.guarProps);
+		props.addAll(agreeProgram.state.assumeProps);
 
-        List<String> properties = emitter.getGuarProps();
-        Node oldNode = program.getMainNode();
-        Node newNode = new Node(oldNode.location, oldNode.id, oldNode.inputs, oldNode.outputs,
-                oldNode.locals, oldNode.equations, properties, oldNode.assertions);
+		JKindResult result = new JKindResult("Contract Guarantees", props, agreeProgram.state.renaming);
+		queue.add(result);
 
-        List<Node> nodes = new ArrayList<>();
-        for (Node node : program.nodes) {
-            if (node != oldNode)
-                nodes.add(node);
-        }
-        nodes.add(newNode);
-        program = new Program(program.types, program.constants, nodes);
-        Renaming renaming = emitter.getRenaming();
-        JKindResult result = new JKindResult("Contract Guarantees", properties, renaming);
-        queue.add(result);
+		ComponentImplementation compImpl = AgreeEmitterUtilities.getInstanceImplementation(agreeProgram.state.curInst);
+		linker.setProgram(result, agreeProgram.assumeGuaranteeProgram);
+		linker.setComponent(result, compImpl);
+		linker.setContract(result, getContract(compImpl));
+		linker.setLayout(result, agreeProgram.state.layout);
+		linker.setReferenceMap(result, agreeProgram.state.refMap);
+		linker.setLog(result, AgreeLogger.getLog());
 
-        ComponentImplementation compImpl = AgreeEmitterUtilities.getInstanceImplementation(ci);
-        linker.setProgram(result, program);
-        linker.setComponent(result, compImpl);
-        linker.setContract(result, getContract(compImpl));
-        linker.setLayout(result, emitter.getLayout());
-        linker.setReferenceMap(result, emitter.getReferenceMap());
-        linker.setLog(result, emitter.getLog());
+		return result;
+	}
 
-        return result;
-    }
+	private AnalysisResult creatConsistencyVerification(AgreeProgram agreeProgram) {
 
-    private AnalysisResult createAssumptionVerification(ComponentInstance ci) {
-        // AgreeEmitter emitter = new AgreeEmitter(ci, modelParents, context);
-        // Program program = emitter.evaluate();
+		IPreferenceStore prefs = Activator.getDefault().getPreferenceStore();
+		int consistDetph = prefs.getInt(PreferenceConstants.PREF_CONSIST_DEPTH);
 
-        AgreeGenerator emitter = new AgreeGenerator(ci);
-        Program program = emitter.evaluate();
-        if (program == null) {
-            return null;
-        }
+		JKindResult result = new ConsistencyResult("Contract Consistency", agreeProgram.state.consistProps,
+				agreeProgram.state.renaming, consistDetph);
+		queue.add(result);
 
-        List<String> properties = emitter.getAssumeProps();
-        Node oldNode = program.getMainNode();
-        Node newNode = new Node(oldNode.location, oldNode.id, oldNode.inputs, oldNode.outputs,
-                oldNode.locals, oldNode.equations, properties, oldNode.assertions);
+		ComponentImplementation compImpl = AgreeEmitterUtilities.getInstanceImplementation(agreeProgram.state.curInst);
+		linker.setProgram(result, agreeProgram.consistProgram);
+		linker.setComponent(result, compImpl);
+		linker.setContract(result, getContract(compImpl));
+		linker.setLayout(result, agreeProgram.state.layout);
+		linker.setReferenceMap(result, agreeProgram.state.refMap);
+		linker.setLog(result, AgreeLogger.getLog());
 
-        List<Node> nodes = new ArrayList<>();
-        for (Node node : program.nodes) {
-            if (node != oldNode)
-                nodes.add(node);
-        }
-        nodes.add(newNode);
-        program = new Program(program.types, program.constants, nodes);
-        Renaming renaming = emitter.getRenaming();
-        JKindResult result = new JKindResult("Contract Assumptions", properties, renaming);
-        queue.add(result);
+		return result;
+	}
 
-        ComponentImplementation compImpl = AgreeEmitterUtilities.getInstanceImplementation(ci);
-        linker.setProgram(result, program);
-        linker.setComponent(result, compImpl);
-        linker.setContract(result, getContract(compImpl));
-        linker.setLayout(result, emitter.getLayout());
-        linker.setReferenceMap(result, emitter.getReferenceMap());
-        linker.setLog(result, emitter.getLog());
+	private AgreeSubclause getContract(ComponentImplementation ci) {
+		ComponentType ct = ci.getOwnedRealization().getImplemented();
+		for (AnnexSubclause annex : ct.getOwnedAnnexSubclauses()) {
+			if (annex instanceof AgreeSubclause) {
+				return (AgreeSubclause) annex;
+			}
+		}
+		return null;
+	}
 
-        return result;
-    }
+	protected void showView(final AnalysisResult result, final AgreeResultsLinker linker) {
+		getWindow().getShell().getDisplay().syncExec(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					AgreeResultsView page = (AgreeResultsView) getWindow().getActivePage()
+							.showView(AgreeResultsView.ID);
+					page.setInput(result, linker);
+				} catch (PartInitException e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
 
-    private AnalysisResult createConsistVerification(ComponentInstance ci) {
-        // AgreeEmitter emitter = new AgreeEmitter(ci, modelParents, context);
-        // Program program = emitter.evaluate();
+	protected void clearView() {
+		getWindow().getShell().getDisplay().syncExec(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					AgreeResultsView page = (AgreeResultsView) getWindow().getActivePage()
+							.showView(AgreeResultsView.ID);
+					page.setInput(new CompositeAnalysisResult("empty"), null);
+				} catch (PartInitException e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
 
-        AgreeGenerator emitter = new AgreeGenerator(ci);
-        Program program = emitter.evaluate();
-        if (program == null) {
-            return null;
-        }
+	private IStatus doAnalysis(final Element root, final IProgressMonitor monitor) {
 
-        List<String> properties = emitter.getConsistProps();
-        Node oldNode = program.getMainNode();
-        Node newNode = new Node(oldNode.location, oldNode.id, oldNode.inputs, oldNode.outputs,
-                oldNode.locals, oldNode.equations, properties, oldNode.assertions);
+		Thread analysisThread = new Thread() {
+			public void run() {
 
-        List<Node> nodes = new ArrayList<>();
-        for (Node node : program.nodes) {
-            if (node != oldNode)
-                nodes.add(node);
-        }
-        nodes.add(newNode);
-        program = new Program(program.types, program.constants, nodes);
-        List<Boolean> reverseStatus = new ArrayList<>();
-        for (int i = 0; i < properties.size(); i++) {
-            reverseStatus.add(true);
-        }
+				activateTerminateHandler(monitor);
+				KindApi api = PreferencesUtil.getKindApi();
+				KindApi consistApi = PreferencesUtil.getConsistencyApi();
+				while (!queue.isEmpty() && !monitor.isCanceled()) {
+					JKindResult result = queue.peek();
+//    				JKindResult result = queue.remove();
+					Program program = linker.getProgram(result);
+					try {
+						if (result instanceof ConsistencyResult) {
+							consistApi.execute(program, result, monitor);
+						} else {
+							api.execute(program, result, monitor);
+						}
+					} catch (JKindException e) {
+						System.out.println(result.getText());
+						System.out.println("******** HERE IS THE LUSTRE ********");
+						System.out.println(program);
+						break;
+					}
+					queue.remove();
+				}
 
-        Renaming renaming = emitter.getRenaming();
-        JKindResult result = new JKindResult("Contract Consistency", properties, reverseStatus,
-                renaming);
-        queue.add(result);
+				while (!queue.isEmpty()) {
+					queue.remove().cancel();
+				}
 
-        ComponentImplementation compImpl = AgreeEmitterUtilities.getInstanceImplementation(ci);
-        linker.setProgram(result, program);
-        linker.setComponent(result, compImpl);
-        linker.setContract(result, getContract(compImpl));
-        linker.setLayout(result, emitter.getLayout());
-        linker.setReferenceMap(result, emitter.getReferenceMap());
-        linker.setLog(result, emitter.getLog());
+				deactivateTerminateHandler();
+				enableRerunHandler(root);
 
-        return result;
-    }
+			}
+		};
+		analysisThread.start();
+		return Status.OK_STATUS;
+	}
 
-    private AgreeSubclause getContract(ComponentImplementation ci) {
-        ComponentType ct = ci.getOwnedRealization().getImplemented();
-        for (AnnexSubclause annex : ct.getOwnedAnnexSubclauses()) {
-            if (annex instanceof AgreeSubclause) {
-                return (AgreeSubclause) annex;
-            }
-        }
-        return null;
-    }
+	private void activateTerminateHandler(final IProgressMonitor monitor) {
+		getWindow().getShell().getDisplay().syncExec(new Runnable() {
+			@Override
+			public void run() {
+				terminateActivation = handlerService
+						.activateHandler(TERMINATE_ID, new TerminateHandler(monitor, queue));
+			}
+		});
+	}
 
-    protected void showView(final AnalysisResult result, final AgreeResultsLinker linker) {
-        getWindow().getShell().getDisplay().syncExec(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    AgreeResultsView page = (AgreeResultsView) getWindow().getActivePage()
-                            .showView(AgreeResultsView.ID);
-                    page.setInput(result, linker);
-                } catch (PartInitException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-    }
+	private void deactivateTerminateHandler() {
+		getWindow().getShell().getDisplay().syncExec(new Runnable() {
+			@Override
+			public void run() {
+				handlerService.deactivateHandler(terminateActivation);
+			}
+		});
+	}
 
-    protected void clearView() {
-        getWindow().getShell().getDisplay().syncExec(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    AgreeResultsView page = (AgreeResultsView) getWindow().getActivePage()
-                            .showView(AgreeResultsView.ID);
-                    page.setInput(new CompositeAnalysisResult("empty"), null);
-                } catch (PartInitException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-    }
+	private void enableRerunHandler(final Element root) {
+		getWindow().getShell().getDisplay().syncExec(new Runnable() {
+			@Override
+			public void run() {
+				IHandlerService handlerService = getHandlerService();
+				rerunActivation = handlerService.activateHandler(RERUN_ID, new RerunHandler(root, VerifyHandler.this));
+			}
+		});
+	}
 
-    private IStatus doAnalysis(Element root, IProgressMonitor monitor) {
-        KindApi api = PreferencesUtil.getKindApi();
-        while (!queue.isEmpty() && !monitor.isCanceled()) {
-            JKindResult result = queue.remove();
-            Program program = linker.getProgram(result);
-            try {
-                api.execute(program, result, monitor);
-            } catch (JKindException e) {
-                System.out.println(result.getText());
-                System.out.println("******** HERE IS THE LUSTRE ********");
-                System.out.println(program);
-                break;
-            }
-            // System.out.println("whatever");
-        }
+	private void disableRerunHandler() {
+		if (rerunActivation != null) {
+			getWindow().getShell().getDisplay().syncExec(new Runnable() {
+				@Override
+				public void run() {
+					IHandlerService handlerService = getHandlerService();
+					handlerService.deactivateHandler(rerunActivation);
+					rerunActivation = null;
+				}
+			});
+		}
+	}
 
-        while (!queue.isEmpty()) {
-            queue.remove().cancel();
-        }
-
-        enableRerunHandler(root);
-        return monitor.isCanceled() ? Status.CANCEL_STATUS : Status.OK_STATUS;
-    }
-
-    private void enableRerunHandler(final Element root) {
-        getWindow().getShell().getDisplay().syncExec(new Runnable() {
-            @Override
-            public void run() {
-                IHandlerService handlerService = getHandlerService();
-                rerunActivation = handlerService.activateHandler(RERUN_ID, new RerunHandler(root,
-                        VerifyHandler.this));
-            }
-        });
-    }
-
-    private void disableRerunHandler() {
-        if (rerunActivation != null) {
-            getWindow().getShell().getDisplay().syncExec(new Runnable() {
-                @Override
-                public void run() {
-                    IHandlerService handlerService = getHandlerService();
-                    handlerService.deactivateHandler(rerunActivation);
-                    rerunActivation = null;
-                }
-            });
-        }
-    }
-
-    private IHandlerService getHandlerService() {
-        return (IHandlerService) getWindow().getService(IHandlerService.class);
-    }
-
-    private JKindApi getJKindApi() {
-        JKindApi api = new JKindApi();
-        IPreferenceStore prefs = Activator.getDefault().getPreferenceStore();
-        if (prefs.getBoolean(PreferenceConstants.PREF_INDUCT_CEX)) {
-            api.setInductiveCounterexamples();
-        }
-        if (prefs.getBoolean(PreferenceConstants.PREF_SMOOTH_CEX)) {
-            api.setSmoothCounterexamples();
-        }
-        if (prefs.getBoolean(PreferenceConstants.PREF_BLAME_CEX)) {
-            api.setIntervalGeneralization();
-        }
-
-        switch (prefs.getString(PreferenceConstants.PREF_SOLVER)) {
-        case "YICES":
-            api.setSolver(SolverOption.YICES);
-            break;
-        case "Z3":
-            api.setSolver(SolverOption.Z3);
-            break;
-        case "CVC4":
-            api.setSolver(SolverOption.CVC4);
-            break;
-        }
-
-        api.setN(prefs.getInt(PreferenceConstants.PREF_DEPTH));
-        api.setTimeout(prefs.getInt(PreferenceConstants.PREF_TIMEOUT));
-        return api;
-    }
-
+	private IHandlerService getHandlerService() {
+		return (IHandlerService) getWindow().getService(IHandlerService.class);
+	}
 }

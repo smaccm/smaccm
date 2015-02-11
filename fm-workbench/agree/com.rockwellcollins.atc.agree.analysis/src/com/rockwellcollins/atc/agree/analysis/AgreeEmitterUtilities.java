@@ -55,7 +55,6 @@ import com.rockwellcollins.atc.agree.agree.NestedDotID;
 
 public class AgreeEmitterUtilities {
 
-
 	static public PropertyExpression getPropExpression(NamedElement comp, Property prop) {
 
 		PropertyExpression expr;

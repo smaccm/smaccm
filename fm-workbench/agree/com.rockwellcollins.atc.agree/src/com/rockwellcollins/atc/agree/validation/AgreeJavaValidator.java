@@ -59,6 +59,7 @@ import com.rockwellcollins.atc.agree.agree.AgreeSubclause;
 import com.rockwellcollins.atc.agree.agree.Arg;
 import com.rockwellcollins.atc.agree.agree.AssertStatement;
 import com.rockwellcollins.atc.agree.agree.AssumeStatement;
+import com.rockwellcollins.atc.agree.agree.AsynchStatement;
 import com.rockwellcollins.atc.agree.agree.BinaryExpr;
 import com.rockwellcollins.atc.agree.agree.BoolLitExpr;
 import com.rockwellcollins.atc.agree.agree.CalenStatement;
@@ -208,7 +209,8 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
     	}
     	
     	if(sync instanceof CalenStatement
-    		|| sync instanceof MNSynchStatement){
+    		|| sync instanceof MNSynchStatement
+    		|| sync instanceof AsynchStatement){
     		return;
     	}
     	
@@ -217,6 +219,16 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
         if(Integer.valueOf(sync.getVal()) < 0){
             error(sync, "The value of synchrony statments must be positive");
         }
+        String val2 = sync.getVal2();
+        if(val2 != null){
+        	if(Integer.valueOf(val2) <= 0){
+        		error(sync, "The second value of a synchrony statment must be greater than zero");
+        	}
+        	if(Integer.valueOf(sync.getVal()) <= Integer.valueOf(val2)){
+        		error(sync, "The second value of a synchrony argument must be less than the first");
+        	}
+        }
+        
     }
     
     @Check(CheckType.FAST)
@@ -864,24 +876,39 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 
     @Check(CheckType.FAST)
     public void checkNameOverlap(AgreeContract contract) {
-        ComponentImplementation ci = EcoreUtil2.getContainerOfType(contract,
-                ComponentImplementation.class);
-        if (ci == null) {
-            return;
-        }
 
         Set<SynchStatement> syncs = new HashSet<>();
+        Set<InitialStatement> inits = new HashSet<>();
         //check that there are zero or more synchrony statements
         for(SpecStatement spec : contract.getSpecs()){
             if(spec instanceof SynchStatement){
                 syncs.add((SynchStatement)spec);
             }
+            else if(spec instanceof CalenStatement){
+            	syncs.add((CalenStatement)spec);
+            }
+            else if(spec instanceof InitialStatement){
+            	inits.add((InitialStatement) spec);
+            }
+
         }
         
         if(syncs.size() > 1){
             for(SynchStatement sync : syncs){
                 error(sync, "Multiple synchrony or calender statements in a single contract");
             }
+        }
+        
+        if(inits.size() > 1){
+            for(InitialStatement init : inits){
+                error(init, "Multiple initially statements in a single contract");
+            }
+        }
+        
+        ComponentImplementation ci = EcoreUtil2.getContainerOfType(contract,
+                ComponentImplementation.class);
+        if (ci == null) {
+            return;
         }
         
         Set<String> parentNames = getParentNames(ci);

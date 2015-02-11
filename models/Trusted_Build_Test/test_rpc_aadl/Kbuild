@@ -1,0 +1,2 @@
+apps-$(CONFIG_APP_TEST_RPC_AADL) += test_rpc_aadl
+test_rpc_aadl: libsel4 libmuslc libsel4platsupport libsel4muslccamkes libsel4camkes libsel4sync libsel4debug libsel4bench

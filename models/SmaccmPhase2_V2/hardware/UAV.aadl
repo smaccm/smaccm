@@ -1,8 +1,7 @@
 package UAV
 public
   with UAS;
-  with PX4IOAR;
-  with PX4FMU;
+  with PixHawk;
   with ODROID_XU;
   with XU_DAUGHTER_BOARD;
   with Copter_Software;
@@ -22,8 +21,7 @@ public
     subcomponents
       CSW: system Copter_Software::Software.Impl;
       MSW: system Mission_Software::Software.Impl;
-      PX4FMU: system PX4FMU::PX4FMU.Impl;
-      PX4IOAR: system PX4IOAR::PX4IOAR.Impl;
+      PIXHAWK: system PixHawk::PixHawk.i;
       ODROID_XU: system ODROID_XU::ODROID_XU.Impl;
       UX_DAUGHTER: system XU_DAUGHTER_BOARD::XU_DAUGHTER_BOARD.IMPL;
      
@@ -45,14 +43,9 @@ public
       userinput_conn: port CSW.userinput_data_out -> MSW.userinput_data_in;
       control_data_conn : port MSW.control_data_out -> CSW.control_data_in;
       sensors_data_conn : port CSW.sensors_data_out -> MSW.sensors_data_in;
-      
-      
-    
-   --   conn0: feature group PX4FMU.sensors <-> CSW.sensors;
-      conn1: feature group PX4FMU.expansion_slot <-> PX4IOAR.expansion_connector;
 
      -- conn2: feature group PX4IOAR.motors_and_radios <-> CSW.motors_and_radios;
-      conn3: port PX4IOAR.mavlink <-> mavlink;
+      conn3: port MSW.mavlink <-> mavlink;
       conn4: port flight_control_commands -> PX4IOAR.flight_control_commands;
       
       conn5: bus access PX4IOAR.rc_radio <-> radio_access_2_4Ghz;

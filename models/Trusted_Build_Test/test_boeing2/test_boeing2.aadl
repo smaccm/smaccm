@@ -1,0 +1,112 @@
+-- AADL Test Boeing2: active -> passive threads using mixed scalar/struct argument RPC
+-- Using scaffolding and trying for minimal changes to Ivory code.
+
+-- Changes made to Boeing files: 
+-- In common.h: added 
+--		#include <stdio.h>
+--		int32_t doCall(struct LOIConfig *ivoryConfig);
+
+
+package test_boeing2
+public 
+   with Base_Types;
+   with SMACCM_SYS;   
+   with Data_Model;
+
+
+data LOIConfig_Struct
+  properties
+    Data_Model::Data_Representation => Struct;
+end LOIConfig_Struct;
+
+data implementation LOIConfig_Struct.impl
+  subcomponents
+    vehicleType : data Base_Types::Unsigned_16;
+    vehicleSubType : data Base_Types::Unsigned_16;
+    vehicleId : data Base_Types::Integer_32;
+  properties 
+  	SMACCM_SYS::CommPrim_Source_Text => "LOIConfig_AADL";
+end LOIConfig_Struct.impl;
+
+
+subprogram doCall
+features
+	n_var0: in out parameter LOIConfig_Struct.impl;
+	output: out parameter Base_Types::Integer_32;
+end doCall;
+
+
+subprogram group doCall_interface
+features
+	doCall: provides subprogram access doCall;
+end doCall_interface;
+
+-- Example of a periodically dispatched "Active" thread.   
+thread compa
+	features
+		do: requires subprogram group access doCall_interface; 
+	
+	properties 
+	    Dispatch_Protocol => Periodic;
+	    SMACCM_SYS::Thread_Type => Active ;
+	    Period => 100 ms;
+		Source_Text => ("user_skeleton_code/compa.c",
+					    "outa/common.c", 
+		                "outa/common.h", 
+		                "outa/compacompa.c",
+		                "outa/compacompa.h", 
+		                "outa/ivory.h",
+		                "outa/ivory_asserts.h",
+		                "outa/ivory_templates.h");
+	    SMACCM_SYS::Compute_Entrypoint_Source_Text => ("periodic_entrypoint");
+	    Priority => 10;
+	    Stack_Size => 4096 bytes;
+	    Compute_Execution_Time => 10 us .. 50 us;
+	    SMACCM_SYS::Sends_Events_To => "{{}}";
+end compa ; 
+
+-- Example of a passive thread providing an RPC interface  
+thread compb
+	features
+		do: provides subprogram group access doCall_interface;
+		
+	properties 
+	    Dispatch_Protocol => Aperiodic;
+	    SMACCM_SYS::Thread_Type => Passive ;
+	    Source_Text => ("user_skeleton_code/compb.c",
+					    "outb/common.c", 
+		                "outb/common.h", 
+		                "outb/compbcompb.c",
+		                "outb/compbcompb.h", 
+		                "outb/ivory.h",
+		                "outb/ivory_asserts.h",
+		                "outb/ivory_templates.h");
+	    Compute_Execution_Time => 10 us .. 50 us;
+	    SMACCM_SYS::Sends_Events_To => "{{}}";
+end compb ; 
+
+process proc
+
+end proc;
+
+process implementation proc.Impl
+	subcomponents
+		s: thread compa;
+		r: thread compb;
+	connections
+		s_to_r : subprogram group access s.do -> r.do;
+end proc.Impl;
+
+system test_boeing2
+end test_boeing2;
+
+system implementation test_boeing2.impl
+	subcomponents
+		tl: process proc.Impl;
+	properties
+		SMACCM_SYS::OS => CAmkES;
+		SMACCM_SYS::HW => QEMU;
+
+end test_boeing2.impl;
+
+end test_boeing2;
