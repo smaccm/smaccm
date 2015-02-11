@@ -41,7 +41,7 @@ system M2
     output : out event data port Base_Types::Integer;
   
   annex agree {**
-  	const exec_time : real = 1.0;
+  	const exec_time : real = 2.0;
   **};
     
 end M2;
@@ -53,7 +53,7 @@ system M3
     output : out event data port Base_Types::Integer;
   
   annex agree {**
-  	const exec_time : real = 1.0;
+  	const exec_time : real = 3.0;
   **};
     
 end M3;
@@ -93,8 +93,24 @@ system implementation top_level.i
   	
   	 synchrony : asynchronous;
   	 
-  	 const a1_period : real = 10.0;
-  	 const a2_period : real = 5.0;
+  	 node sig_monitor(event_sig : bool, sender_clock : bool, receiver_clock : bool) returns (ret : bool);
+  	 let
+  	   ret = false -> if pre(event_sig and sender_clock) then
+  	                   true
+  	                 else if pre(receiver_clock) then
+  	                   false
+  	                 else
+  	                   pre(ret);
+  	 tel;
+  	 
+  	 node clock_counter(clock : bool) returns (ret : int);
+  	 let
+  	   ret = prev(ret, 0) + (if clock then 1 else 0); 
+  	 tel;
+  	 
+  	 
+  	 const a1_period : real = 20.0;
+  	 const a2_period : real = 10.0;
   	
   	 eq clock_a1 : bool = a1._CLK;
   	 eq clock_a2 : bool = a2._CLK;
@@ -102,22 +118,25 @@ system implementation top_level.i
   	 eq clock_m2 : bool = m2._CLK;
   	 eq clock_m3 : bool = m3._CLK;
   	 
-  	 eq sig_a1 : bool;
-  	 eq sig_a2 : bool;
-  	 eq sig_m1 : bool;
-  	 eq sig_m2 : bool;
-  	 eq sig_m3 : bool;
+  	 eq sig_a1_count : int = floor(t/a1_period) + 1;
+  	 eq sig_a2_count : int = floor(t/a2_period) + 1;
   	 
-  	 eq a1_last: real =  0.0 -> if(not pre(sig_a1) and sig_a1) then t else pre(a1_last);
-  	 eq a2_last: real =  0.0 -> if(not pre(sig_a2) and sig_a2) then t else pre(a2_last);
---  	 eq m1_last: real =  0 -> if(not pre(sig_m1) and sig_m1) then t else pre(m1_last);
---  	 eq m2_last: real =  0 -> if(not pre(sig_m2) and sig_m2) then t else pre(m2_last);
---  	 eq m3_last: real =  0 -> if(not pre(sig_m3) and sig_m3) then t else pre(m3_last); 
+  	 eq clock_a1_count : int = clock_counter(clock_a1);
+  	 eq clock_a2_count : int = clock_counter(clock_a2);
   	 
+--  	 eq sig_a2 : bool = a2_last + a2_period <= t;
+  	 
+  	 eq sig_a1 : bool = sig_a1_count > prev(clock_a1_count,0);
+  	 eq sig_a2 : bool = sig_a2_count > prev(clock_a2_count,0);
+  	 eq sig_m1 : bool = sig_monitor(event(m1.input), clock_a1, clock_m1);
+  	 eq sig_m2 : bool = sig_monitor(event(m2.input), clock_a2, clock_m2);
+  	 eq sig_m3 : bool = sig_monitor(event(m3.input1), clock_m1, clock_m3) or 
+  	                    sig_monitor(event(m3.input2), clock_m2, clock_m3);
+ 	 
   	 --figure out how much time has progressed
   	 assert t = if (clock_a1) then prev(t,0.0) + a1.exec_time else 
   	            if (clock_a2) then prev(t,0.0) + a2.exec_time else 
-  	            if (clock_m1) then prev(t,0.0) + m1.exec_time else 
+  	            if (clock_m1) then prev(t,0.0) + m1.exec_time else
   	            if (clock_m2) then prev(t,0.0) + m2.exec_time else 
   	            if (clock_m3) then prev(t,0.0) + m3.exec_time else -1.0;
   	  
@@ -128,15 +147,6 @@ system implementation top_level.i
   	        not(clock_a2 and clock_m3) and not(clock_m1 and clock_m2) and
   	        not(clock_m1 and clock_m3) and not(clock_m2 and clock_m3);
   	  
-	 --if a period has passed, send a signal to be scheduled
-	 assert if a1_last + a1_period < t then sig_a1 else true -> sig_a1 = pre(sig_a1);
-	 assert if a2_last + a2_period < t then sig_a2 else true -> sig_a2 = pre(sig_a2);
-	 
-	 --events cause signals
-	 assert event(m1.input) and clock_a1 => sig_m1;
-	 assert event(m2.input) and clock_a2 => sig_m2;
-	 assert event(m3.input1) and clock_m1 => sig_m3;
-	 assert event(m3.input2) and clock_m2 => sig_m3;
 	
 	 --schedule constraints
 	 assert if sig_a1 then clock_a1 else
@@ -146,23 +156,12 @@ system implementation top_level.i
 	        if sig_m3 then clock_m3 else true;
 	        
 	 --clocks only tick if they have been signaled
-	 assert clock_a1 => sig_a1 and clock_a2 => sig_a2 and 
-	        clock_m1 => sig_m1 and clock_m2 => sig_m2 and 
-	        clock_m3 => sig_m3;
-	 
+	 assert (clock_a1 => sig_a1) and (clock_a2 => sig_a2) and 
+	        (clock_m1 => sig_m1) and (clock_m2 => sig_m2) and 
+	        (clock_m3 => sig_m3);
 	
-	 --need to find away to get rid fo signals. there
-	 --shoudl be a cleaner way than this
-	 assert true -> (pre(clock_a1) => not sig_a1) and
-	                (pre(clock_a2) => not sig_a2) and
-	                (pre(clock_m1) => not sig_m1) and
-	                (pre(clock_m2) => not sig_m2) and
-	                (pre(clock_m3) => not sig_m3);
-	
-	 lemma "a1 never misses its deadline" : 2.0*a1_period > t - a1_last;
-	 lemma "a2 never misses its deadline" : 2.0*a2_period > t - a2_last;
-	 
-	 
+	 lemma "a1 never misses its deadline" : sig_a1_count = clock_a1_count or sig_a1_count = clock_a1_count + 1;
+	 lemma "a2 never misses its deadline" : sig_a2_count = clock_a2_count or sig_a2_count = clock_a2_count + 1;	 
   	  
   **};
     

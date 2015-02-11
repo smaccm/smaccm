@@ -46,7 +46,7 @@ public class AgreeLayout implements Layout {
 	public String getCategory(String signal) {
 		//TODO this could give false results 
 		for(String cat : categories){
-			if(signal.contains(cat)){
+			if(signal.contains(cat+".")){
 				return cat;
 			}
 		}
