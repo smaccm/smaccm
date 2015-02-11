@@ -104,6 +104,10 @@ public abstract class VerifyHandler extends AadlHandler {
                 result = buildAnalysisResult(ci.getName(), si);
                 wrapper.addChild(result);
                 result = wrapper;
+            }else if (isRealizability()){
+                AgreeProgram agreeProgram = AgreeGenerator.getRealizabilityLustre(si);
+                wrapper.addChild(createRealizabilityVerification(agreeProgram));
+                result = wrapper;
             } else {
             	AgreeProgram agreeProgram = AgreeGenerator.getLustre(si, isMonolithic());//, isMonolithic());
                 wrapper.addChild(createGuaranteeVerification(agreeProgram));
@@ -119,6 +123,24 @@ public abstract class VerifyHandler extends AadlHandler {
         }
     }
 
+    private AnalysisResult createRealizabilityVerification(
+            AgreeProgram agreeProgram) {
+        List<String> props = new ArrayList<>();
+        props.addAll(agreeProgram.state.guarProps);
+        
+        JKindResult result = new JKindResult("Realizability Analysis", props, agreeProgram.state.renaming);
+        queue.add(result);
+
+        ComponentImplementation compImpl = AgreeEmitterUtilities.getInstanceImplementation(agreeProgram.state.curInst);
+        linker.setProgram(result, agreeProgram.realizeProgram);
+        linker.setComponent(result, compImpl);
+        linker.setContract(result, getContract(compImpl));
+        linker.setLayout(result, agreeProgram.state.layout);
+        linker.setReferenceMap(result, agreeProgram.state.refMap);
+        linker.setLog(result, AgreeLogger.getLog());
+
+        return result;
+    }
     protected String getNestedMessages(Throwable e) {
         StringWriter sw = new StringWriter();
         PrintWriter pw = new PrintWriter(sw);

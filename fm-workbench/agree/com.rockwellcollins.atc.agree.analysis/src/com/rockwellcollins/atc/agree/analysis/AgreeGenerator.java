@@ -4,6 +4,7 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.Map.Entry;
 
@@ -90,7 +91,7 @@ public class AgreeGenerator {
     	
     	Node mainNode = new Node(subNode.location, subNode.id, subNode.inputs, subNode.outputs,
     			subNode.locals, subNode.equations, subNode.properties, assumptions,
-    			null, subNode.guarantees);
+    			null, subNode.guarantees, null);
     	
     	nodes.add(mainNode);
     	
@@ -283,6 +284,75 @@ public class AgreeGenerator {
     	histExpr = new BinaryExpr(expr, BinaryOp.ARROW, histExpr);
     	Equation histEq = new Equation(varId, histExpr);
     	return histEq;
+    }
+    
+    
+    public static AgreeProgram getRealizabilityLustre(ComponentInstance compInst){
+        
+        
+        ComponentType compType = AgreeEmitterUtilities.getInstanceType(compInst);
+        AgreeEmitterState state = new AgreeEmitterState(compInst, null);
+        FeatureUtils.recordFeatures(state, true);
+        boolean result = doSwitchAgreeAnnex(state, compType);
+        
+        if(!result){
+            throw new AgreeException("No contract to verify for analysis");
+
+        }
+        
+        Node subNode = nodeFromState(state, false, false);
+        
+        List<Node> nodes = new ArrayList<>(state.nodeDefExpressions);
+        
+        if(subNode.outputs.size() != 1){
+            throw new AgreeException("Something went wrong with node generation");
+        }
+        
+        //add the assertions to the system level assumptions
+        List<Expr> assumptions = new ArrayList<>();
+        for(Equation assumEq : state.assumpExpressions){
+            assumptions.add(assumEq.expr);
+        }
+        assumptions.addAll(state.assertExpressions);
+
+        //get the guarantees as properties and add them to the renaming
+        int i = 0;
+        for(Equation eq : state.guarExpressions){
+            String propName = "___GUARANTEE"+i++;
+            state.renaming.addExplicitRename(propName, eq.lhs.get(0).id);
+            state.guarProps.add(propName);
+        }
+        
+        //get the names of the inputs for realizability checking
+        List<String> inputStrs = new ArrayList<String>();
+        for(VarDecl inputVar : subNode.inputs){
+            inputStrs.add(inputVar.id);
+        }
+        
+        Node mainNode = new Node(subNode.location, subNode.id, subNode.inputs, subNode.outputs,
+                subNode.locals, subNode.equations, subNode.properties, assumptions,
+                null, subNode.guarantees, Optional.of(inputStrs));
+        
+        nodes.add(mainNode);
+        
+        //have to convert the type expressions
+        List<TypeDef> typeDefs = new ArrayList<>();
+        for(RecordType type : state.typeExpressions){
+            TypeDef typeDef = new TypeDef(type.id, type);
+            typeDefs.add(typeDef);
+        }
+        
+        //also add a new top level category to the layout
+        state.layout.addCategory(state.curInst.getName());
+        Program realizeProgram = new Program(typeDefs, null, nodes);
+        realizeProgram = InlineAssumptionGuarantees.program(realizeProgram);
+        
+        AgreeProgram agreeProgram = new AgreeProgram();
+        agreeProgram.realizeProgram = realizeProgram;
+        agreeProgram.state = state;
+        
+        return agreeProgram;
+
     }
     
     
@@ -758,7 +828,7 @@ public class AgreeGenerator {
     	equations.add(assertEq);
     	
     	Node subNode = new Node(Location.NULL, nodeId, inputs, outputs, locals, equations,
-    			null, null, assumptions, guarantees);
+    			null, null, assumptions, guarantees, null);
     	
     	return subNode;
     	

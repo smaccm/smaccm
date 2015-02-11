@@ -2,6 +2,7 @@ package com.rockwellcollins.atc.agree.translation;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import jkind.lustre.BinaryExpr;
 import jkind.lustre.BinaryOp;
@@ -48,7 +49,7 @@ public class InlineAssumptionGuarantees extends AstMapVisitor {
 				}
 				agNode = new Node(node.location, node.id, node.inputs,
 						node.outputs, node.locals,node.equations, properties, 
-						node.assertions, null, null);
+						node.assertions, null, null, null);
 			}else{
 				agNode = new AstMapVisitor().visit(node);
 			}
@@ -69,7 +70,7 @@ public class InlineAssumptionGuarantees extends AstMapVisitor {
 		
 		if(guarantees.size() == 0){
 		    return new Node(node.location, node.id, node.inputs, node.outputs, node.locals, node.equations, 
-	                node.properties, node.assertions);
+	                node.properties, node.assertions, null, null, node.realizabilityInputs);
 		}
 		
 		//things we do modify
@@ -128,7 +129,7 @@ public class InlineAssumptionGuarantees extends AstMapVisitor {
 		}
 		
 		return new Node(node.location, node.id, inputs, outputs, locals, equations, 
-				properties, assertions, node.assumptions, node.guarantees);
+				properties, assertions, node.assumptions, node.guarantees, node.realizabilityInputs);
 	}
 
 }
