@@ -316,9 +316,6 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 		if (funDef.getBody() instanceof ClaimBody && !inClaimContext(funCall)) {
 			error(funCall, "A claim cannot appear in this context.");
 		}
-//		if (funDef.getBody() instanceof ClaimBody && inImpliesContext(funCall)) {
-//			warning(funCall, "Deprecated. Please use the operators 'andthen' or 'or' instead of '=>' (implies).");
-//		}
 
 		if (actuals.size() != formals.size()) {
 			error(funCall, "Function expects " + formals.size() + " arguments but found " + actuals.size()
@@ -348,43 +345,11 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 
 		if (context instanceof BinaryExpr) {
 			BinaryExpr be = (BinaryExpr) context;
-			if (be.getOp().equals("and") || be.getOp().equals("or") || be.getOp().equals("=>")
-					|| (be.getOp().equals("andthen"))) {
-				return inClaimContext(be);
+			if (be.getOp().equals("=>")) {
+				return be.getRight().equals(obj);
 			}
-		}
-
-		if (context instanceof QuantifiedExpr) {
-			QuantifiedExpr qe = (QuantifiedExpr) context;
-			if (qe.getExpr().equals(obj)) {
-				return inClaimContext(qe);
-			}
-		}
-
-		if (context instanceof LetExpr) {
-			LetExpr le = (LetExpr) context;
-			if (le.getExpr().equals(obj)) {
-				return inClaimContext(le);
-			}
-		}
-
-		return false;
-	}
-
-	private boolean inImpliesContext(EObject obj) {
-		EObject context = obj.eContainer();
-
-		if (context instanceof ClaimBody || context instanceof ProveStatement) {
-			return false;
-		}
-
-		if (context instanceof BinaryExpr) {
-			BinaryExpr be = (BinaryExpr) context;
 			if (be.getOp().equals("and") || be.getOp().equals("or") || (be.getOp().equals("andthen"))) {
 				return inClaimContext(be);
-			}
-			if (be.getOp().equals("=>")) {
-				return true;
 			}
 		}
 
