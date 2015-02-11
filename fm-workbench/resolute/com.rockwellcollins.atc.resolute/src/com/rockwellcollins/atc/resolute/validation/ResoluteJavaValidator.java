@@ -824,6 +824,7 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 		case "=>":
 		case "or":
 		case "and":
+		case "andthen":
 		case "<":
 		case "<=":
 		case ">":
