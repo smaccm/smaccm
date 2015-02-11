@@ -1,7 +1,10 @@
 package edu.umn.cs.crisys.smaccm.aadl2rtos.util;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
@@ -14,9 +17,7 @@ import org.osate.aadl2.IntegerLiteral;
 import org.osate.aadl2.NamedElement;
 import org.osate.aadl2.Property;
 import org.osate.aadl2.PropertyExpression;
-import org.osate.aadl2.PropertyType;
 import org.osate.aadl2.PropertyValue;
-import org.osate.aadl2.RangeType;
 import org.osate.aadl2.RangeValue;
 import org.osate.aadl2.UnitLiteral;
 import org.osate.aadl2.UnitsType;
@@ -26,7 +27,6 @@ import org.osate.xtext.aadl2.properties.util.EMFIndexRetrieval;
 import org.osate.xtext.aadl2.properties.util.PropertyUtils;
 
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosException;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.Logger;
 
 public abstract class ThreadUtil {
 
@@ -36,19 +36,24 @@ public abstract class ThreadUtil {
 	final public static String SOURCE_TEXT_NAME = "Source_Text";
 	final public static String COMPUTE_EXECUTION_TIME_NAME = "Compute_Execution_Time";
 	final public static String SMACCM_SYS_SIGNAL_NAME_NAME = "SMACCM_SYS::Signal_Name";
+  final public static String SMACCM_SYS_SIGNAL_NUMBER_NAME = "SMACCM_SYS::Signal_Number";
 	final public static String SMACCM_SYS_IS_ISR_NAME = "SMACCM_SYS::Is_ISR";
+  final public static String SMACCM_SYS_MEMORY_PAGES_NAME = "SMACCM_SYS::Memory_Pages";
+  final public static String SMACCM_SYS_OS_NAME = "SMACCM_SYS::OS";
+  final public static String SMACCM_SYS_HW_NAME = "SMACCM_SYS::HW";
+  final public static String SMACCM_SYS_OUTPUT_DIRECTORY_NAME = "SMACCM_SYS::Output_Directory";
   
 	final public static String SMACCM_SYS_COMMPRIM_SOURCE_HEADER_NAME = "SMACCM_SYS::CommPrim_Source_Header";
   final public static String SMACCM_SYS_COMMPRIM_SOURCE_TEXT_NAME = "SMACCM_SYS::CommPrim_Source_Text";
   final public static String SMACCM_SYS_COMPUTE_ENTRYPOINT_SOURCE_TEXT_NAME = "SMACCM_SYS::Compute_Entrypoint_Source_Text";
   final public static String PERIOD_NAME = "Period";
 	final public static String PRIORITY_NAME = "Priority";
-	final public static String LEGACY_NAME = "SMACCM_SYS::Is_Legacy";
-	final public static String LEGACY_MUTEX_LIST_NAME = "SMACCM_SYS::Legacy_Mutex_List";
-  final public static String LEGACY_SEMAPHORE_LIST_NAME = "SMACCM_SYS::Legacy_Semaphore_List";
-	final public static String LEGACY_ENTRYPOINT_NAME = "SMACCM_SYS::Legacy_Entrypoint";
-  final public static String LEGACY_EXTERNAL_IRQ_LIST_NAME = "SMACCM_SYS::Legacy_IRQ_Handler_List";
-  final public static String LEGACY_EXTERNAL_IRQ_EVENT_LIST_NAME = "SMACCM_SYS::Legacy_IRQ_Event_List";
+	final public static String LEGACY_NAME = "SMACCM_SYS::Is_External";
+	final public static String LEGACY_MUTEX_LIST_NAME = "SMACCM_SYS::External_Mutex_List";
+  final public static String LEGACY_SEMAPHORE_LIST_NAME = "SMACCM_SYS::External_Semaphore_List";
+	final public static String LEGACY_ENTRYPOINT_NAME = "SMACCM_SYS::External_Entrypoint";
+  final public static String LEGACY_EXTERNAL_IRQ_LIST_NAME = "SMACCM_SYS::External_IRQ_Handler_List";
+  final public static String LEGACY_EXTERNAL_IRQ_EVENT_LIST_NAME = "SMACCM_SYS::External_IRQ_Event_List";
   final public static String EXTERNAL_IRQ_LIST_NAME = "SMACCM_SYS::External_IRQ_List";
   final public static String GENERATE_SCHEDULER_SYSTICK_IRQ_NAME = "SMACCM_SYS::Generate_Scheduler_Systick_IRQ";
   final public static String ISR_HANDLER_NAME = "SMACCM_SYS::First_Level_Interrupt_Handler";
@@ -72,12 +77,23 @@ public abstract class ThreadUtil {
 			.getPropertyDefinitionInWorkspace(COMPUTE_EXECUTION_TIME_NAME);
 	final public static Property SMACCM_SYS_IS_ISR = Util
 	    .getPropertyDefinitionInWorkspace(SMACCM_SYS_IS_ISR_NAME);
+  final public static Property SMACCM_SYS_MEMORY_PAGES = Util
+      .getPropertyDefinitionInWorkspace(SMACCM_SYS_MEMORY_PAGES_NAME);
 	final public static Property SMACCM_SYS_SIGNAL_NAME = Util
 			.getPropertyDefinitionInWorkspace(SMACCM_SYS_SIGNAL_NAME_NAME);
+  final public static Property SMACCM_SYS_SIGNAL_NUMBER = Util
+      .getPropertyDefinitionInWorkspace(SMACCM_SYS_SIGNAL_NUMBER_NAME);
 	final public static Property SMACCM_SYS_COMMPRIM_SOURCE_HEADER = Util
 	    .getPropertyDefinitionInWorkspace(SMACCM_SYS_COMMPRIM_SOURCE_HEADER_NAME);
 	final public static Property SMACCM_SYS_COMMPRIM_SOURCE_TEXT = Util
 	    .getPropertyDefinitionInWorkspace(SMACCM_SYS_COMMPRIM_SOURCE_TEXT_NAME);
+  final public static Property SMACCM_SYS_OS = Util
+      .getPropertyDefinitionInWorkspace(SMACCM_SYS_OS_NAME);
+  final public static Property SMACCM_SYS_HW = Util
+      .getPropertyDefinitionInWorkspace(SMACCM_SYS_HW_NAME);
+  final public static Property SMACCM_SYS_OUTPUT_DIRECTORY = Util
+      .getPropertyDefinitionInWorkspace(SMACCM_SYS_OUTPUT_DIRECTORY_NAME);
+
 	final public static Property PERIOD = 
 	     Util.getPropertyDefinitionInWorkspace(PERIOD_NAME);
 	final public static Property PRIORITY = 
@@ -141,13 +157,32 @@ public abstract class ThreadUtil {
 		return priority;
 	}
 
-	public static boolean getLegacyValue(ThreadTypeImpl tti) {
+	public static boolean getIsExternal(NamedElement tti) {
 		boolean legacy = false;
 
 		try {
 			legacy = (boolean) PropertyUtils.getBooleanValue(tti, ThreadUtil.LEGACY);
 		} catch(Exception e) {}
 		return legacy;
+	}
+
+	public static Map<String, Long> getMemoryRegions(NamedElement tti) {
+	  Map<String, Long> m = new HashMap<>();
+    List<String> elems = getStringList(tti, ThreadUtil.SMACCM_SYS_MEMORY_PAGES);
+    if (elems.size() % 2 != 0) {
+      throw new Aadl2RtosException("Property 'Memory_Regions' should be list of strings arranged as string, hexidecimal integer pairs representing the name and memory region");	      
+    }
+    try { 
+      for (Iterator<String> it = elems.iterator(); it.hasNext(); ) {
+        String name = it.next();
+        String intName = it.next();
+        Long i = Long.decode(intName);
+        m.put(name, i);
+      }
+    } catch (NumberFormatException nfe) {
+      throw new Aadl2RtosException("Property 'Memory_Regions' should be list of strings arranged as as string, hexidecimal integer pairs representing the name and memory region");
+    }
+    return m;
 	}
 
 	public static List<String> getStringList(NamedElement tti, Property p) {
@@ -159,7 +194,9 @@ public abstract class ThreadUtil {
 			for (Element e : eList) {
 				StringLiteralImpl str = (StringLiteralImpl) e;
 				list.add(str.getValue());			}
-		} catch(Exception e) {}
+		} catch(Exception e) {
+		  // throw new Aadl2RtosException("Expected property " + p.getName() + " not found in component: " + tti.getName());
+	  }
 		return list;
 	}
 
@@ -175,7 +212,7 @@ public abstract class ThreadUtil {
 	  try {
       lit = PropertyUtils.getEnumLiteral(tti, ThreadUtil.THREAD_TYPE);
     } catch (Exception e) {
-      throw new Aadl2RtosException("Required property 'Thread_Type' not found for thread: " + tti.getName());
+      throw new Aadl2RtosException("Required property 'Thread_Type' not found for thread: " + tti.getName() + "Exception: " + e.toString());
     }
     if ("Active".equals(lit.getName())) {
       return false;
@@ -186,11 +223,29 @@ public abstract class ThreadUtil {
     }
 	}
 	
-  public static List<String> getLegacyMutexList(NamedElement tti) {
+  public static String getOS(NamedElement tti) {
+    EnumerationLiteral lit = null; 
+    try {
+      lit = PropertyUtils.getEnumLiteral(tti, ThreadUtil.SMACCM_SYS_OS);
+    } catch (Exception e) {
+      throw new Aadl2RtosException("Required property 'OS' not found for system instance: " + tti.getName() + "Exception: " + e.toString());
+    }
+    return lit.getName();
+  }
+
+  public static String getHW(NamedElement tti) {
+    try {
+      return (PropertyUtils.getEnumLiteral(tti, ThreadUtil.SMACCM_SYS_HW).getName());
+    } catch (Exception e) {
+      throw new Aadl2RtosException("Required property 'HW' not found for system instance: " + tti.getName() + "Exception: " + e.toString());
+    }
+  }
+  
+	public static List<String> getExternalMutexList(NamedElement tti) {
     return getStringList(tti, ThreadUtil.LEGACY_MUTEX_LIST);
   }
 
-  public static List<String> getLegacySemaphoreList(NamedElement tti) {
+  public static List<String> getExternalSemaphoreList(NamedElement tti) {
     return getStringList(tti, ThreadUtil.LEGACY_SEMAPHORE_LIST);
   }
 
@@ -250,7 +305,7 @@ public abstract class ThreadUtil {
   }
   
   final private static EClass UNITS_TYPE = Aadl2Package.eINSTANCE.getUnitsType();
-  private static UnitLiteral findUnitLiteral(Element context, String name) {
+  public static UnitLiteral findUnitLiteral(Element context, String name) {
     for (IEObjectDescription desc : EMFIndexRetrieval
             .getAllEObjectsOfTypeInWorkspace(UNITS_TYPE)) {
         UnitsType unitsType = (UnitsType) EcoreUtil.resolve(desc.getEObjectOrProxy(), context);
@@ -260,9 +315,9 @@ public abstract class ThreadUtil {
         }
     }
 
-    return null;
+    return null; 
 }
-
+ 
   
   public static double getMinComputeExecutionTimeInMicroseconds(NamedElement t) {
     try {

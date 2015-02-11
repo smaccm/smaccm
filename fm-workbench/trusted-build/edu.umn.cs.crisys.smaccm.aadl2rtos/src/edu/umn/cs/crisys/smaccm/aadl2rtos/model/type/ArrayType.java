@@ -70,6 +70,11 @@ public class ArrayType extends Type {
 
 	@Override
 	public boolean equals(Object obj) {
-		return (obj instanceof RealType);
+	  if (obj instanceof ArrayType) {
+	    ArrayType other = (ArrayType)obj;
+	    return ((other.dimension == this.dimension) &&
+	        other.elem.equals(this.elem));
+	  }
+		return false;
 	}
 }

@@ -1,0 +1,46 @@
+-- Note: this example shows a single send of a scalar type from an
+-- active thread to a passive thread.  It is designed to test:
+-- 	Component naming
+--  Message distribution for scalars
+--  Passive thread dispatch 
+
+package test0
+public 
+   with Base_Types;
+   with SMACCM_SYS;   
+
+-- Example of a periodically dispatched "Active" thread.   
+thread sender
+	properties 
+	    Dispatch_Protocol => Periodic;
+	    Period => 100 ms;
+		Source_Text => ("user_code/user_sender.c");
+	    SMACCM_SYS::Compute_Entrypoint_Source_Text => ("periodic_ping");
+	    Priority => 10;
+	    Stack_Size => 256 bytes;
+	    SMACCM_SYS::Thread_Type => Active ;
+	    Compute_Execution_Time => 10 us .. 50 us;
+	    SMACCM_SYS::Sends_Events_To => "{{1 Output1}}";
+end sender ; 
+
+process proc
+
+end proc;
+
+process implementation proc.Impl
+	subcomponents
+		s: thread sender;
+end proc.Impl;
+
+system test0
+end test0;
+
+system implementation test0.impl
+	subcomponents
+		tl: process proc.Impl;
+	properties
+		SMACCM_SYS::OS => CAmkES;
+		SMACCM_SYS::HW => QEMU;
+end test0.impl;
+
+end test0;

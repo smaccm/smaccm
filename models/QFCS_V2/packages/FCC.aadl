@@ -44,13 +44,13 @@ system FCC
     num_valid_acts : in data port DATA_TYPES::NumActuators.impl;
     
     --outputs
+    acts_fail : out data port DATA_TYPES::BoolActuators.impl;
     acts_out : out data port DATA_TYPES::Actuators.impl;
     sovs1: out data port DATA_TYPES::BoolActuators.impl;
     sovs2: out data port DATA_TYPES::BoolActuators.impl;
 
         
   annex agree {**
-
 	--BEGIN RC5 guarantees
 	guarantee "elevator bound" :
 	 FCC_RC5.req_els(elevators_faults, elevators_select);
@@ -73,6 +73,36 @@ system FCC
 	--BEGIN RC2 GUARANTEES
 	guarantee "actuators output range bound":
 		FCC_RC_2.req (acts_out, num_valid_acts);
+		
+    --When an actuator command has been latched failed, OSAS shall set 
+    --that actuator command to 0 (zero).
+    guarantee "OSAS-S-140" : 
+      OSAS_S_140.req(acts_out, acts_fail);
+      
+    guarantee "once failed always failed" : true ->
+      (pre(acts_fail.THROTL) => acts_fail.THROTL) and
+      (pre(acts_fail.THROTR) => acts_fail.THROTR) and
+      (pre(acts_fail.ELLOB) => acts_fail.ELLOB) and
+      (pre(acts_fail.ELLIB) => acts_fail.ELLIB) and
+      (pre(acts_fail.ELROB) => acts_fail.ELROB) and
+      (pre(acts_fail.ELRIB) => acts_fail.ELRIB) and
+      (pre(acts_fail.AILL) => acts_fail.AILL) and
+      (pre(acts_fail.AILR) => acts_fail.AILR) and
+      (pre(acts_fail.RUDUP) => acts_fail.RUDUP) and
+      (pre(acts_fail.RUDLO) => acts_fail.RUDLO) and
+      (pre(acts_fail.SPLLOB) => acts_fail.SPLLOB) and
+      (pre(acts_fail.SPLLIB) => acts_fail.SPLLIB) and
+      (pre(acts_fail.SPLROB) => acts_fail.SPLROB) and
+      (pre(acts_fail.SPLRIB) => acts_fail.SPLRIB) and
+      (pre(acts_fail.FLAPLI) => acts_fail.FLAPLI) and
+      (pre(acts_fail.FLAPLO) => acts_fail.FLAPLO) and
+      (pre(acts_fail.FLAPRI) => acts_fail.FLAPRI) and
+      (pre(acts_fail.GEAR) => acts_fail.GEAR) and
+      (pre(acts_fail.BRAKE) => acts_fail.BRAKE) and
+      (pre(acts_fail.STEER) => acts_fail.STEER);
+      
+    eq claw_acts : DATA_TYPES::Actuators.impl;
+    eq osas_failure : bool;
 
   **};
 
@@ -125,8 +155,19 @@ system implementation FCC.Impl
     egi_select_conn : port ISAS_comp.egi_select -> egi_select;
     stab_select_conn : port ISAS_comp.stabilizers_select -> stabilizers_select;
 
+    fail_conn : port OSAS_comp.acts_fail -> acts_fail;
     --internal connections
     conn_ccdl_acts : port CLAW_comp.acts -> OSAS_comp.acts_in;
+    
+    annex agree {**
+    	assert claw_acts = CLAW_comp.acts;
+    **};
+    
+--  annex agree {**
+--  	lift ISAS_comp;
+--  	lift OSAS_comp;
+--  	lift CLAW_comp;
+--  **};
 
 end FCC.Impl;
 

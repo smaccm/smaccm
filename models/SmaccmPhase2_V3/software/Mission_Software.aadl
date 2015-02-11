@@ -1,0 +1,124 @@
+package Mission_Software
+public
+  with software_types;
+with SMACCM;
+  
+system software
+  features
+    mission_out : out event data port software_types::can_data;
+    mission_in : in event data port software_types::can_data;
+    enc_mavlink_in : in event data port software_types::EncryptMAVLink;
+    enc_mavlink_out : out event data port software_types::EncryptMAVLink;
+end software;
+ 
+system implementation software.i
+  subcomponents
+    decrypt : process decrypt_t;
+    receive : process receive_t;
+    nav : process nav_t;
+    mavlink : process mavlink_t;
+    can : process can_a15_t;
+    transmit : process transmit_t;
+    encrypt : process encrypt_t;
+    
+  connections
+    conn0 : port enc_mavlink_in -> decrypt.enc_mavlink;
+    conn1 : port decrypt.mavlink_out -> receive.mavlink_in;
+    
+    conn2 : port receive.nav_mav -> nav.mavlink_in;
+    conn3 : port receive.user_input_mav -> mavlink.mavlink_in;
+    
+    conn4 : port mavlink.user_input -> can.user_input;
+    conn5 : port mavlink.control_law_out -> can.control_law;
+    
+    conn6 : port nav.waypoints -> can.waypoints;
+    
+    conn7 : port can.sensor_data -> transmit.sensor_data;
+    conn8 : port can.control_data -> transmit.control_data;
+    conn9 : port can.motmix_data -> transmit.motmix_data;
+    
+    conn10 : port transmit.mavlink_out -> encrypt.mavlink;
+    conn11 : port encrypt.enc_mavlink -> enc_mavlink_out;
+    
+    conn12 : port can.mission_out -> mission_out;
+    conn13 : port mission_in -> can.mission_in;
+    
+  properties
+    SMACCM::OS => "seL4";
+end software.i;
+
+process decrypt_t
+  features
+    enc_mavlink : in event data port software_types::EncryptMAVLink;
+    mavlink_out : out event data port software_types::MAVLink;
+    
+  properties
+    SMACCM::Authenticator => true;
+end decrypt_t;
+
+process receive_t
+  features
+    mavlink_in : in event data port software_types::MAVLink;
+    nav_mav : out event data port software_types::MAVLink;
+    user_input_mav : out event data port software_types::MAVLink;
+    
+  properties
+    SMACCM::Trusted => true;
+end receive_t;
+
+process mavlink_t
+  features
+    mavlink_in : in event data port software_types::MAVLink;
+    user_input : out event data port software_types::userinput_result.impl;
+    control_law_out : out event data port software_types::control_law.impl;
+    
+  properties
+    SMACCM::Trusted => true;
+end mavlink_t;
+
+process nav_t
+  features
+    mavlink_in : in event data port software_types::MAVLink;
+    waypoints : out event data port software_types::waypoint;
+    
+  properties
+    SMACCM::Trusted => true;
+end nav_t;
+
+process can_a15_t
+  features
+    waypoints : in event data port software_types::waypoint;
+    user_input : in event data port software_types::userinput_result.impl;
+    control_law  : in event data port software_types::control_law.impl;
+    mission_out : out event data port software_types::can_data;
+    mission_in : in event data port software_types::can_data;
+    mavlink_out : out event data port software_types::MAVLink;
+    sensor_data : out event data port software_types::position.impl;
+    control_data : out event data port software_types::controloutput.impl;
+    motmix_data : out event data port software_types::motors_data;
+    
+  properties
+    SMACCM::Trusted => true;
+end can_a15_t;
+
+process transmit_t
+  features
+    sensor_data : in event data port software_types::position.impl;
+    control_data : in event data port software_types::controloutput.impl;
+    motmix_data : in event data port software_types::motors_data;
+    mavlink_out : out event data port software_types::MAVLink;
+    
+  properties
+    SMACCM::Trusted => true;
+end transmit_t;
+
+process encrypt_t
+  features
+    enc_mavlink : out event data port software_types::EncryptMAVLink;
+    mavlink : in event data port software_types::MAVLink;
+    
+  properties
+    SMACCM::Trusted => true;
+end encrypt_t;
+
+end Mission_Software;

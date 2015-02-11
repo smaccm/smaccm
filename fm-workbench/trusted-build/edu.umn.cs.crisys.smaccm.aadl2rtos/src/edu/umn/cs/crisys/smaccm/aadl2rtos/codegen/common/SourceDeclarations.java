@@ -5,28 +5,21 @@ package edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.common;
  * 
  */
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.IOException;
-import java.util.Iterator;
-import java.util.List;
 
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosException;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.Dispatcher;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.ExternalHandler;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.IRQDispatcher;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.InputEventDispatcher;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.PeriodicDispatcher;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.*;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.Connection;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.PortConnection;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.SharedData;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.SharedDataAccessor;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.ThreadCalendar;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.ThreadImplementation;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.ThreadInstance;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.ThreadInstancePort;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.SharedDataAccessor.AccessType;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.*;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.parse.Model;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.util.Util;
 
 public class SourceDeclarations {
@@ -227,10 +220,10 @@ public class SourceDeclarations {
 
   public void writeSharedDataReader(BufferedWriter out, ThreadImplementation impl, SharedDataAccessor outp) throws IOException {
     SharedData sharedData = outp.getSharedData();
-    Type dt = sharedData.getDataType();
+    Type dt = sharedData.getType();
     out.append("bool " + CommonNames.getThreadImplReaderFnName(outp) + 
       "(/* THREAD_ID tid,  */ " + 
-        CommonNames.createRefParameter(outp.getSharedData().getDataType(), "elem") + ") {\n\n");
+        CommonNames.createRefParameter(outp.getSharedData().getType(), "elem") + ") {\n\n");
     out.append(ind + "bool result = true;\n\n");
     out.append(ind + iosp.lockMutex(outp.getSharedData()));
     if (dt.isBaseType()) {
@@ -343,7 +336,7 @@ public class SourceDeclarations {
   // TODO: normalize ports and shared data in terms of functions.
   public void writeSharedDataVar(BufferedWriter out, SharedData c) throws IOException {
     writeComment(out, "Shared data for shared data port: " + c.getPortName() + "\n");
-    out.append(c.getDataType().getCType().varString(c.getVarName()) + "; \n");
+    out.append(c.getType().getCType().varString(c.getVarName()) + "; \n");
   }
   
   
@@ -371,7 +364,7 @@ public class SourceDeclarations {
       writeThreadInstanceComment(out, ti);
       
       
-      for (Connection c: outp.getConnections()) {
+      for (PortConnection c: outp.getConnections()) {
         InputPort destPort = c.getDestPort();
         Type destPortType = destPort.getType();
         ThreadInstance destThread = c.getDestThreadInstance();
@@ -414,10 +407,10 @@ public class SourceDeclarations {
 
   public void writeSharedDataWriter(BufferedWriter out, ThreadImplementation impl, SharedDataAccessor outp) throws IOException {
     SharedData sharedData = outp.getSharedData();
-    Type dt = sharedData.getDataType();
+    Type dt = sharedData.getType();
     out.append("bool " + CommonNames.getThreadImplWriterFnName(outp) + 
       "(/* THREAD_ID tid,  */ "); 
-    out.append("const " + CommonNames.createRefParameter(sharedData.getDataType(), "elem") + ") {\n\n");
+    out.append("const " + CommonNames.createRefParameter(sharedData.getType(), "elem") + ") {\n\n");
     out.append(ind + "bool result = true;\n\n");
     out.append(ind + iosp.lockMutex(sharedData));
     if (dt.isBaseType()) {

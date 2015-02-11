@@ -16,7 +16,6 @@ import org.osate.aadl2.AnnexSubclause;
 import org.osate.aadl2.Element;
 import org.osate.aadl2.ModalElement;
 import org.osate.aadl2.NamedElement;
-import org.osate.aadl2.Namespace;
 
 /**
  * <!-- begin-user-doc -->
@@ -105,6 +104,11 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
       public Adapter caseSynchStatement(SynchStatement object)
       {
         return createSynchStatementAdapter();
+      }
+      @Override
+      public Adapter caseOrderStatement(OrderStatement object)
+      {
+        return createOrderStatementAdapter();
       }
       @Override
       public Adapter caseCallDef(CallDef object)
@@ -207,6 +211,11 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
         return createAssertStatementAdapter();
       }
       @Override
+      public Adapter caseInitialStatement(InitialStatement object)
+      {
+        return createInitialStatementAdapter();
+      }
+      @Override
       public Adapter caseParamStatement(ParamStatement object)
       {
         return createParamStatementAdapter();
@@ -222,9 +231,19 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
         return createLiftStatementAdapter();
       }
       @Override
+      public Adapter caseMNSynchStatement(MNSynchStatement object)
+      {
+        return createMNSynchStatementAdapter();
+      }
+      @Override
       public Adapter caseCalenStatement(CalenStatement object)
       {
         return createCalenStatementAdapter();
+      }
+      @Override
+      public Adapter caseAsynchStatement(AsynchStatement object)
+      {
+        return createAsynchStatementAdapter();
       }
       @Override
       public Adapter caseNodeEq(NodeEq object)
@@ -352,11 +371,6 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
         return createAnnexSubclauseAdapter();
       }
       @Override
-      public Adapter caseNamespace(Namespace object)
-      {
-        return createNamespaceAdapter();
-      }
-      @Override
       public Adapter defaultCase(EObject object)
       {
         return createEObjectAdapter();
@@ -449,6 +463,21 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
    * @generated
    */
   public Adapter createSynchStatementAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.OrderStatement <em>Order Statement</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see com.rockwellcollins.atc.agree.agree.OrderStatement
+   * @generated
+   */
+  public Adapter createOrderStatementAdapter()
   {
     return null;
   }
@@ -754,6 +783,21 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
   }
 
   /**
+   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.InitialStatement <em>Initial Statement</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see com.rockwellcollins.atc.agree.agree.InitialStatement
+   * @generated
+   */
+  public Adapter createInitialStatementAdapter()
+  {
+    return null;
+  }
+
+  /**
    * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.ParamStatement <em>Param Statement</em>}'.
    * <!-- begin-user-doc -->
    * This default implementation returns null so that we can easily ignore cases;
@@ -799,6 +843,21 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
   }
 
   /**
+   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.MNSynchStatement <em>MN Synch Statement</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see com.rockwellcollins.atc.agree.agree.MNSynchStatement
+   * @generated
+   */
+  public Adapter createMNSynchStatementAdapter()
+  {
+    return null;
+  }
+
+  /**
    * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.CalenStatement <em>Calen Statement</em>}'.
    * <!-- begin-user-doc -->
    * This default implementation returns null so that we can easily ignore cases;
@@ -809,6 +868,21 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
    * @generated
    */
   public Adapter createCalenStatementAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.AsynchStatement <em>Asynch Statement</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see com.rockwellcollins.atc.agree.agree.AsynchStatement
+   * @generated
+   */
+  public Adapter createAsynchStatementAdapter()
   {
     return null;
   }
@@ -1184,21 +1258,6 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
    * @generated
    */
   public Adapter createAnnexSubclauseAdapter()
-  {
-    return null;
-  }
-
-  /**
-   * Creates a new adapter for an object of class '{@link org.osate.aadl2.Namespace <em>Namespace</em>}'.
-   * <!-- begin-user-doc -->
-   * This default implementation returns null so that we can easily ignore cases;
-   * it's useful to ignore a case when inheritance will catch all the cases anyway.
-   * <!-- end-user-doc -->
-   * @return the new adapter.
-   * @see org.osate.aadl2.Namespace
-   * @generated
-   */
-  public Adapter createNamespaceAdapter()
   {
     return null;
   }

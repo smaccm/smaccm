@@ -30,16 +30,15 @@ import java.util.Set;
 
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.Dispatcher;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.IRQDispatcher;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.legacy.LegacyExternalISR;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.legacy.LegacyIRQEvent;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.legacy.LegacyThreadImplementation;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.legacy.ExternalISR;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.legacy.ExternalIRQEvent;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.rpc.RemoteProcedure;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.rpc.RemoteProcedureGroup;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.Connection;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.PortConnection;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.ExternalIRQ;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.SharedData;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.ThreadCalendar;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.ThreadImplementation;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.ThreadImplementationBase;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.ThreadInstance;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.ThreadInstancePort;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.Type;
@@ -50,10 +49,14 @@ public class Model {
 	
 	public enum OSTarget {CAmkES, eChronos}; 
 	private OSTarget osTarget = OSTarget.eChronos;
+		
+	// Currently supported targets: QEMU, ODROID, PX4
+	public String HWTarget ;
+	public String outputDirectory;
 	
 	// Connection instances - drives number of semaphores
 	// (one function per thread implementation, pass in thread instance id)
-	List<Connection> connectionInstances = new ArrayList<Connection>();
+	List<PortConnection> connectionInstances = new ArrayList<PortConnection>();
 	// private ArrayList<String> semaphoreList = new ArrayList<String>();
 
 
@@ -64,17 +67,17 @@ public class Model {
 	Set<String> sourceFiles = new HashSet<String>();
 	List<String> libraryFiles = new ArrayList<String>(); 	
 
-	List<LegacyThreadImplementation> legacyThreadList = new ArrayList<LegacyThreadImplementation>();
 	List<String> legacyMutexList = new ArrayList<String>();
 	List<String> legacySemaphoreList = new ArrayList<String>();
-	List<LegacyExternalISR> legacyExternalIRQList = new ArrayList<LegacyExternalISR>();
-	List<LegacyIRQEvent> legacyIRQEventList = new ArrayList<LegacyIRQEvent>();
+	List<ExternalISR> legacyExternalIRQList = new ArrayList<ExternalISR>();
+	List<ExternalIRQEvent> legacyIRQEventList = new ArrayList<ExternalIRQEvent>();
 	List<ExternalIRQ> externalIRQList = new ArrayList<ExternalIRQ>();
-	List<Connection> connectionList = new ArrayList<Connection>(); 
+	List<PortConnection> connectionList = new ArrayList<PortConnection>(); 
 	
 	// type stuff
 	Map<String, Type> astTypes = new HashMap<String, Type>();
-	Map<String, RemoteProcedureGroup> rpcInterfaces = new HashMap<String, RemoteProcedureGroup>(); 
+	Map<String, RemoteProcedureGroup> remoteProcedureGroupMap = new HashMap<>(); 
+	Map<String, RemoteProcedure> remoteProcedureMap = new HashMap<>();
 	
 	boolean generateSystickIRQ;
 	
@@ -107,6 +110,34 @@ public class Model {
 
 
 
+  /**
+   * @return the hWTarget
+   */
+  public String getHWTarget() {
+    return HWTarget;
+  }
+
+  /**
+   * @param hWTarget the hWTarget to set
+   */
+  public void setHWTarget(String hWTarget) {
+    HWTarget = hWTarget;
+  }
+
+  /**
+   * @return the outputDirectory
+   */
+  public String getOutputDirectory() {
+    return outputDirectory;
+  }
+
+  /**
+   * @param outputDirectory the outputDirectory to set
+   */
+  public void setOutputDirectory(String outputDirectory) {
+    this.outputDirectory = outputDirectory;
+  }
+
   public Set<String> getSourceFiles()  {
 	  return this.sourceFiles; 
 	}
@@ -133,7 +164,7 @@ public class Model {
 	
   public List<IRQDispatcher> getIRQDispatcherList() {
     List<IRQDispatcher> idList = new ArrayList<IRQDispatcher>(); 
-    for (ThreadImplementation ti: this.getThreadImplementations()) {
+    for (ThreadImplementation ti: this.getAllThreadImplementations()) {
       for (Dispatcher d: ti.getDispatcherList()) {
         if (d instanceof IRQDispatcher) {
           idList.add((IRQDispatcher)d);
@@ -159,28 +190,34 @@ public class Model {
 	  return this.sharedDataList;
 	}
 	
-	public List<ThreadImplementation> getThreadImplementations() {
-		return this.threadImplementationList;
+	/*
+	public List<ThreadImplementation> getInternalThreadImplementations() {
+	  List<ThreadImplementation> internalThreads = new ArrayList<ThreadImplementation>();
+	  for (ThreadImplementation ti: this.threadImplementationList) {
+	    if (!ti.getIsExternal()) {
+	      internalThreads.add(ti);
+	    }
+	  }
+	  return internalThreads;
 	}
 	
-	public List<LegacyThreadImplementation> getLegacyThreadImplementations() {
-		return this.legacyThreadList;
+	public List<ThreadImplementation> getExternalThreadImplementations() {
+    List<ThreadImplementation> externalThreads = new ArrayList<ThreadImplementation>();
+    for (ThreadImplementation ti: this.threadImplementationList) {
+      if (!ti.getIsExternal()) {
+        externalThreads.add(ti);
+      }
+    }
+    return externalThreads;
 	}
-	
-	public List<ThreadImplementationBase> getAllThreadImplementations() {
-    List<ThreadImplementationBase> allTasks = new ArrayList<ThreadImplementationBase>();
-    for (ThreadImplementation ti: getThreadImplementations()) {
-      allTasks.add(ti);
-    }
-    for (LegacyThreadImplementation lti: getLegacyThreadImplementations()) {
-      allTasks.add(lti);
-    }
-    return allTasks;
+	*/
+	public List<ThreadImplementation> getAllThreadImplementations() {
+    return this.threadImplementationList;
 	}
 	
 	public List<ThreadImplementation> getActiveThreadImplementations() {
 	  List<ThreadImplementation> activeThreads = new ArrayList<ThreadImplementation>(); 
-	  for (ThreadImplementation ti: getThreadImplementations()) {
+	  for (ThreadImplementation ti: getAllThreadImplementations()) {
 	    if (!ti.getIsPassive()) {
 	      activeThreads.add(ti);
 	    }
@@ -190,7 +227,7 @@ public class Model {
 	
   public List<ThreadImplementation> getPassiveThreadImplementations() {
     List<ThreadImplementation> t = new ArrayList<ThreadImplementation>(); 
-    for (ThreadImplementation ti: getThreadImplementations()) {
+    for (ThreadImplementation ti: getAllThreadImplementations()) {
       if (ti.getIsPassive()) {
         t.add(ti);
       }
@@ -201,22 +238,38 @@ public class Model {
   /**
    * @return the rpcInterfaces
    */
-  public Map<String, RemoteProcedureGroup> getRpcInterfaces() {
-    return rpcInterfaces;
+  public Map<String, RemoteProcedureGroup> getRemoteProcedureGroupMap() {
+    return remoteProcedureGroupMap;
   }
 
   /**
    * @param rpcInterfaces the rpcInterfaces to set
    */
-  public void setRpcInterfaces(Map<String, RemoteProcedureGroup> rpcInterfaces) {
-    this.rpcInterfaces = rpcInterfaces;
+  public void setRemoteProcedureGroupMap(Map<String, RemoteProcedureGroup> rpcInterfaces) {
+    this.remoteProcedureGroupMap = rpcInterfaces;
   }
 
-  public List<LegacyExternalISR> getLegacyExternalIRQs() {
+  
+  /**
+   * @return the remoteProcedureMap
+   */
+  public Map<String, RemoteProcedure> getRemoteProcedureMap() {
+    return remoteProcedureMap;
+  }
+
+  /**
+   * @param remoteProcedureMap the remoteProcedureMap to set
+   */
+  public void setRemoteProcedureMap(
+      Map<String, RemoteProcedure> remoteProcedureMap) {
+    this.remoteProcedureMap = remoteProcedureMap;
+  }
+
+  public List<ExternalISR> getLegacyExternalIRQs() {
 	  return this.legacyExternalIRQList;
 	}
 	
-	public List<LegacyIRQEvent> getLegacyIRQEvents() {
+	public List<ExternalIRQEvent> getLegacyIRQEvents() {
 	  return this.legacyIRQEventList;
 	}
 	
@@ -226,7 +279,7 @@ public class Model {
 	
 	public List<ThreadInstance> getAllThreadInstances() {
 	  List<ThreadInstance> list = new ArrayList<ThreadInstance>(); 
-	  for (ThreadImplementation t: getThreadImplementations()) {
+	  for (ThreadImplementation t: getAllThreadImplementations()) {
 	    list.addAll(t.getThreadInstanceList()); 
 	  }
 	  return list;
@@ -257,7 +310,7 @@ public class Model {
 //	}
 
 	
-	public List<Connection> getConnections() {
+	public List<PortConnection> getConnections() {
 	  return this.connectionInstances;
 	}
 

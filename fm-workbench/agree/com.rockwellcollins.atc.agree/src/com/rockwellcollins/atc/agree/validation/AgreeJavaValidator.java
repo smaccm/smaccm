@@ -59,6 +59,7 @@ import com.rockwellcollins.atc.agree.agree.AgreeSubclause;
 import com.rockwellcollins.atc.agree.agree.Arg;
 import com.rockwellcollins.atc.agree.agree.AssertStatement;
 import com.rockwellcollins.atc.agree.agree.AssumeStatement;
+import com.rockwellcollins.atc.agree.agree.AsynchStatement;
 import com.rockwellcollins.atc.agree.agree.BinaryExpr;
 import com.rockwellcollins.atc.agree.agree.BoolLitExpr;
 import com.rockwellcollins.atc.agree.agree.CalenStatement;
@@ -73,14 +74,17 @@ import com.rockwellcollins.atc.agree.agree.FnDefExpr;
 import com.rockwellcollins.atc.agree.agree.GetPropertyExpr;
 import com.rockwellcollins.atc.agree.agree.GuaranteeStatement;
 import com.rockwellcollins.atc.agree.agree.IfThenElseExpr;
+import com.rockwellcollins.atc.agree.agree.InitialStatement;
 import com.rockwellcollins.atc.agree.agree.IntLitExpr;
 import com.rockwellcollins.atc.agree.agree.LemmaStatement;
 import com.rockwellcollins.atc.agree.agree.LiftStatement;
+import com.rockwellcollins.atc.agree.agree.MNSynchStatement;
 import com.rockwellcollins.atc.agree.agree.NestedDotID;
 import com.rockwellcollins.atc.agree.agree.NodeDefExpr;
 import com.rockwellcollins.atc.agree.agree.NodeEq;
 import com.rockwellcollins.atc.agree.agree.NodeLemma;
 import com.rockwellcollins.atc.agree.agree.NodeStmt;
+import com.rockwellcollins.atc.agree.agree.OrderStatement;
 import com.rockwellcollins.atc.agree.agree.PreExpr;
 import com.rockwellcollins.atc.agree.agree.PrevExpr;
 import com.rockwellcollins.atc.agree.agree.PrimType;
@@ -111,11 +115,59 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
     }
     
     @Check(CheckType.FAST)
+    public void checkOrderStatement(OrderStatement order){
+    	for(NamedElement el : order.getComps()){
+    		if(!(el instanceof Subcomponent)){
+    			error(el, "Only elements of subcomponent type are allowed in ordering statements");
+    		}
+    	}
+    	Classifier container = order.getContainingClassifier();
+    	if(container instanceof ComponentImplementation){
+    		ComponentImplementation compImpl = (ComponentImplementation)container;
+    		List<NamedElement> notPresent = new ArrayList<>();
+    		for(Subcomponent subcomp : compImpl.getAllSubcomponents()){
+    			boolean found = false;
+    			for(NamedElement el : order.getComps()){
+    				if(el.equals(subcomp)){
+    					found = true;
+    					break;
+    				}
+    			}
+    			if(!found){
+    				notPresent.add(subcomp);
+    			}
+    		}
+    		
+    		if(notPresent.size() != 0){
+    			String delim = "";
+    			StringBuilder errorStr = new StringBuilder("The following subcomponents are not present in the ordering: ");
+    			for(NamedElement subcomp : notPresent){
+    				errorStr.append(delim);
+    				errorStr.append(subcomp.getName());
+    				delim = ", ";
+    			}
+    			error(order, errorStr.toString());
+    		}
+
+    	}else{
+    		error(order, "Ordering statements can only appear in component implementations");
+    	}
+    	
+    	
+    		
+    	
+    }
+    
+    @Check(CheckType.FAST)
     public void checkCalenStatement(CalenStatement calen){
     	for(NamedElement el : calen.getEls()){
     		if(!(el instanceof Subcomponent)){
     			error(calen, "Element '"+el.getName()+"' is not a subcomponent");
     		}
+    	}
+    	Classifier container = calen.getContainingClassifier();
+    	if(!(container instanceof ComponentImplementation)){
+    		error(calen, "Calendar statements can only appear in component implementations");
     	}
     }
     
@@ -144,28 +196,91 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
         NestedDotID nestId = event.getId();
         NamedElement namedEl = getFinalNestId(nestId);
         if(!(namedEl instanceof EventDataPort)){
-        	error(event, "Arguement of event expression must be an event data port");
+        	error(event, "Argument of event expression must be an event data port");
         }
     }
     
     @Check(CheckType.FAST)
     public void checkSynchStatement(SynchStatement sync){
-        //TODO: I'm pretty sure INT_LITs are always positive anyway.
-        //So this may be redundant
-    	if(sync instanceof CalenStatement){
+
+    	Classifier container = sync.getContainingClassifier();
+    	if(!(container instanceof ComponentImplementation)){
+    		error(sync, "Synchrony statements can only appear in component implementations");
+    	}
+    	
+    	if(sync instanceof CalenStatement
+    		|| sync instanceof MNSynchStatement
+    		|| sync instanceof AsynchStatement){
     		return;
     	}
     	
+        //TODO: I'm pretty sure INT_LITs are always positive anyway.
+        //So this may be redundant    	
         if(Integer.valueOf(sync.getVal()) < 0){
             error(sync, "The value of synchrony statments must be positive");
         }
+        String val2 = sync.getVal2();
+        if(val2 != null){
+        	if(Integer.valueOf(val2) <= 0){
+        		error(sync, "The second value of a synchrony statment must be greater than zero");
+        	}
+        	if(Integer.valueOf(sync.getVal()) <= Integer.valueOf(val2)){
+        		error(sync, "The second value of a synchrony argument must be less than the first");
+        	}
+        }
+        
+    }
+    
+    @Check(CheckType.FAST)
+    public void checkMNSynchStatement(MNSynchStatement sync){
+    	
+    	if(sync.getMax().size() != sync.getMin().size()
+    		&& sync.getMax().size() != sync.getComp1().size()
+    		&& sync.getMax().size() != sync.getComp2().size()){
+    		return; //this should throw a parser error
+    	}
+    	
+    	for (int i = 0; i < sync.getMax().size() ; i++){
+    		String maxStr = sync.getMax().get(i);
+    		String minStr = sync.getMin().get(i);
+    		
+    		int max = Integer.valueOf(maxStr);
+    		int min = Integer.valueOf(minStr);
+    		
+    		if(max < 1 || min < 1){
+    			error(sync, "Quasi-synchronous values must be greater than zero");
+    		}
+    		
+    		if(min > max){
+    			error("Left hand side quasi-synchronous values must be greater than the right hand side");
+    		}
+    	}
     }
     
     @Check(CheckType.FAST)
     public void checkAssume(AssumeStatement assume) {
+    	 Classifier comp = assume.getContainingClassifier();
+         if (!(comp instanceof ComponentType)) {
+             error(assume, "Assume statements are only allowed in component types");
+         }
+    	
         AgreeType exprType = getAgreeType(assume.getExpr());
         if (!matches(BOOL, exprType)) {
             error(assume, "Expression for assume statement is of type '" + exprType.toString()
+                    + "' but must be of type 'bool'");
+        }
+    }
+    
+    @Check(CheckType.FAST)
+    public void checkInitialStatement(InitialStatement statement){
+    	 Classifier comp = statement.getContainingClassifier();
+         if (!(comp instanceof ComponentType)) {
+             error(statement, "Initial statements are only allowed in component types");
+         }
+    	
+    	AgreeType exprType = getAgreeType(statement.getExpr());
+        if (!matches(BOOL, exprType)) {
+            error(statement, "Expression for 'initially' statement is of type '" + exprType.toString()
                     + "' but must be of type 'bool'");
         }
     }
@@ -761,27 +876,39 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 
     @Check(CheckType.FAST)
     public void checkNameOverlap(AgreeContract contract) {
-        ComponentImplementation ci = EcoreUtil2.getContainerOfType(contract,
-                ComponentImplementation.class);
-        if (ci == null) {
-            return;
-        }
 
         Set<SynchStatement> syncs = new HashSet<>();
+        Set<InitialStatement> inits = new HashSet<>();
         //check that there are zero or more synchrony statements
         for(SpecStatement spec : contract.getSpecs()){
             if(spec instanceof SynchStatement){
                 syncs.add((SynchStatement)spec);
             }
-            if(spec instanceof CalenStatement){
+            else if(spec instanceof CalenStatement){
             	syncs.add((CalenStatement)spec);
             }
+            else if(spec instanceof InitialStatement){
+            	inits.add((InitialStatement) spec);
+            }
+
         }
         
         if(syncs.size() > 1){
             for(SynchStatement sync : syncs){
                 error(sync, "Multiple synchrony or calender statements in a single contract");
             }
+        }
+        
+        if(inits.size() > 1){
+            for(InitialStatement init : inits){
+                error(init, "Multiple initially statements in a single contract");
+            }
+        }
+        
+        ComponentImplementation ci = EcoreUtil2.getContainerOfType(contract,
+                ComponentImplementation.class);
+        if (ci == null) {
+            return;
         }
         
         Set<String> parentNames = getParentNames(ci);

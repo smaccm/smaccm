@@ -69,6 +69,7 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
       case AgreePackage.CONTRACT: return createContract();
       case AgreePackage.SPEC_STATEMENT: return createSpecStatement();
       case AgreePackage.SYNCH_STATEMENT: return createSynchStatement();
+      case AgreePackage.ORDER_STATEMENT: return createOrderStatement();
       case AgreePackage.CALL_DEF: return createCallDef();
       case AgreePackage.PROPERTY_STATEMENT: return createPropertyStatement();
       case AgreePackage.CONST_STATEMENT: return createConstStatement();
@@ -89,10 +90,13 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
       case AgreePackage.ASSUME_STATEMENT: return createAssumeStatement();
       case AgreePackage.GUARANTEE_STATEMENT: return createGuaranteeStatement();
       case AgreePackage.ASSERT_STATEMENT: return createAssertStatement();
+      case AgreePackage.INITIAL_STATEMENT: return createInitialStatement();
       case AgreePackage.PARAM_STATEMENT: return createParamStatement();
       case AgreePackage.LEMMA_STATEMENT: return createLemmaStatement();
       case AgreePackage.LIFT_STATEMENT: return createLiftStatement();
+      case AgreePackage.MN_SYNCH_STATEMENT: return createMNSynchStatement();
       case AgreePackage.CALEN_STATEMENT: return createCalenStatement();
+      case AgreePackage.ASYNCH_STATEMENT: return createAsynchStatement();
       case AgreePackage.NODE_EQ: return createNodeEq();
       case AgreePackage.NODE_LEMMA: return createNodeLemma();
       case AgreePackage.PRIM_TYPE: return createPrimType();
@@ -171,6 +175,17 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
   {
     SynchStatementImpl synchStatement = new SynchStatementImpl();
     return synchStatement;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public OrderStatement createOrderStatement()
+  {
+    OrderStatementImpl orderStatement = new OrderStatementImpl();
+    return orderStatement;
   }
 
   /**
@@ -398,6 +413,17 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
    * <!-- end-user-doc -->
    * @generated
    */
+  public InitialStatement createInitialStatement()
+  {
+    InitialStatementImpl initialStatement = new InitialStatementImpl();
+    return initialStatement;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   public ParamStatement createParamStatement()
   {
     ParamStatementImpl paramStatement = new ParamStatementImpl();
@@ -431,10 +457,32 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
    * <!-- end-user-doc -->
    * @generated
    */
+  public MNSynchStatement createMNSynchStatement()
+  {
+    MNSynchStatementImpl mnSynchStatement = new MNSynchStatementImpl();
+    return mnSynchStatement;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   public CalenStatement createCalenStatement()
   {
     CalenStatementImpl calenStatement = new CalenStatementImpl();
     return calenStatement;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public AsynchStatement createAsynchStatement()
+  {
+    AsynchStatementImpl asynchStatement = new AsynchStatementImpl();
+    return asynchStatement;
   }
 
   /**

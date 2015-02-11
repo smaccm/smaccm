@@ -1,0 +1,2 @@
+apps-$(CONFIG_APP_TEST_BOEING1) += test_boeing1
+test_boeing1: libsel4 libmuslc libsel4platsupport libsel4muslccamkes libsel4camkes libsel4sync libsel4debug libsel4bench

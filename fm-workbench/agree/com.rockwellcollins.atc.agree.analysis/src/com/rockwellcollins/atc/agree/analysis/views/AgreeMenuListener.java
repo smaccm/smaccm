@@ -7,16 +7,13 @@ import java.util.Map;
 
 import jkind.api.results.AnalysisResult;
 import jkind.api.results.PropertyResult;
-import jkind.api.results.RealizabilityResult;
-import jkind.api.ui.AnalysisResultTree;
+import jkind.api.ui.results.AnalysisResultTree;
 import jkind.interval.NumericInterval;
 import jkind.lustre.Program;
 import jkind.lustre.values.Value;
 import jkind.results.Counterexample;
 import jkind.results.InvalidProperty;
-import jkind.results.InvalidRealizability;
 import jkind.results.Property;
-import jkind.results.Realizability;
 import jkind.results.Signal;
 import jkind.results.UnknownProperty;
 import jkind.results.layout.Layout;
@@ -29,6 +26,7 @@ import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.console.ConsolePlugin;
@@ -47,11 +45,14 @@ import com.rockwellcollins.atc.agree.agree.GuaranteeStatement;
 import com.rockwellcollins.atc.agree.analysis.Util;
 
 public class AgreeMenuListener implements IMenuListener {
-    private static GlobalURIEditorOpener globalURIEditorOpener = Util.getGlobalURIEditorOpener();
-    private AnalysisResultTree tree;
+    private static final GlobalURIEditorOpener globalURIEditorOpener = Util
+            .getGlobalURIEditorOpener();
+    private final IWorkbenchWindow window;
+    private final AnalysisResultTree tree;
     private AgreeResultsLinker linker;
 
-    public AgreeMenuListener(AnalysisResultTree tree) {
+    public AgreeMenuListener(IWorkbenchWindow window, AnalysisResultTree tree) {
+        this.window = window;
         this.tree = tree;
     }
 
@@ -115,6 +116,13 @@ public class AgreeMenuListener implements IMenuListener {
                 }
             });
 
+            manager.add(new Action("View " + cexType + "Counterexample in Eclipse") {
+                @Override
+                public void run() {
+                    viewCexEclipse(cex, layout, refMap);
+                }
+            });
+
             manager.add(new Action("View " + cexType + "Counterexample in Spreadsheet") {
                 @Override
                 public void run() {
@@ -153,12 +161,7 @@ public class AgreeMenuListener implements IMenuListener {
             } else if (prop instanceof UnknownProperty) {
                 return ((UnknownProperty) prop).getInductiveCounterexample();
             }
-        } else if (result instanceof RealizabilityResult) {
-			Realizability real = ((RealizabilityResult) result).getRealizability();
-			if (real instanceof InvalidRealizability) {
-				return ((InvalidRealizability) real).getCounterexample();
-			}
-		}
+        }
 
         return null;
     }
@@ -241,24 +244,20 @@ public class AgreeMenuListener implements IMenuListener {
                         out.println();
                         printHLine(out, cex.getLength());
 
-                        for (Signal<Value> signal : cex.getSignals()) {
-                        	String sigName = signal.getName();
-                        	System.out.println(sigName);
-                            if (category.equals(layout.getCategory(sigName))) {
-                                out.print(String.format("%-60s", "{" + sigName + "}"));
-                                for (int k = 0; k < cex.getLength(); k++) {
-                                    Value val = signal.getValue(k);
-                                    if (jkind.util.Util.isArbitrary(val)) {
-                                        out.print(String.format("%-15s", "-"));
-                                    } else if (val instanceof NumericInterval) {
-                                        out.print(String.format("%-15s",
-                                                formatInterval((NumericInterval) val)));
-                                    } else {
-                                        out.print(String.format("%-15s", val.toString()));
-                                    }
+                        for (Signal<Value> signal : cex.getCategorySignals(layout, category)) {
+                            out.print(String.format("%-60s", "{" + signal.getName() + "}"));
+                            for (int k = 0; k < cex.getLength(); k++) {
+                                Value val = signal.getValue(k);
+                                if (jkind.util.Util.isArbitrary(val)) {
+                                    out.print(String.format("%-15s", "-"));
+                                } else if (val instanceof NumericInterval) {
+                                    out.print(String.format("%-15s",
+                                            formatInterval((NumericInterval) val)));
+                                } else {
+                                    out.print(String.format("%-15s", val.toString()));
                                 }
-                                out.println();
                             }
+                            out.println();
                         }
                         out.println();
                     }
@@ -298,12 +297,7 @@ public class AgreeMenuListener implements IMenuListener {
     }
 
     private boolean isEmpty(String category, Counterexample cex, Layout layout) {
-        for (Signal<Value> signal : cex.getSignals()) {
-            if (category.equals(layout.getCategory(signal.getName()))) {
-                return false;
-            }
-        }
-        return true;
+        return cex.getCategorySignals(layout, category).isEmpty();
     }
 
     private void printHLine(MessageConsoleStream out, int nVars) {
@@ -336,6 +330,17 @@ public class AgreeMenuListener implements IMenuListener {
             view.display(console);
             view.setScrollLock(true);
         } catch (PartInitException e) {
+        }
+    }
+
+    private void viewCexEclipse(Counterexample cex, Layout layout, Map<String, EObject> refMap) {
+        try {
+            AgreeCounterexampleView cexView = (AgreeCounterexampleView) window.getActivePage()
+                    .showView(AgreeCounterexampleView.ID);
+            cexView.setInput(cex, layout, refMap);
+            cexView.setFocus();
+        } catch (PartInitException e) {
+            e.printStackTrace();
         }
     }
 

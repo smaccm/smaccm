@@ -15,6 +15,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.xtext.scoping.IScope;
 import org.eclipse.xtext.scoping.Scopes;
+import org.eclipse.xtext.scoping.impl.SimpleScope;
 import org.osate.aadl2.AadlPackage;
 import org.osate.aadl2.AnnexLibrary;
 import org.osate.aadl2.AnnexSubclause;
@@ -42,6 +43,7 @@ import com.rockwellcollins.atc.agree.agree.AgreeLibrary;
 import com.rockwellcollins.atc.agree.agree.AgreePackage;
 import com.rockwellcollins.atc.agree.agree.Arg;
 import com.rockwellcollins.atc.agree.agree.CalenStatement;
+import com.rockwellcollins.atc.agree.agree.ConstStatement;
 import com.rockwellcollins.atc.agree.agree.EqStatement;
 import com.rockwellcollins.atc.agree.agree.EventExpr;
 import com.rockwellcollins.atc.agree.agree.Expr;
@@ -49,11 +51,13 @@ import com.rockwellcollins.atc.agree.agree.FnDefExpr;
 import com.rockwellcollins.atc.agree.agree.NestedDotID;
 import com.rockwellcollins.atc.agree.agree.NodeDefExpr;
 import com.rockwellcollins.atc.agree.agree.NodeEq;
+import com.rockwellcollins.atc.agree.agree.OrderStatement;
 import com.rockwellcollins.atc.agree.agree.RecordDefExpr;
 import com.rockwellcollins.atc.agree.agree.RecordExpr;
 import com.rockwellcollins.atc.agree.agree.RecordType;
 import com.rockwellcollins.atc.agree.agree.RecordUpdateExpr;
 import com.rockwellcollins.atc.agree.agree.SpecStatement;
+import com.rockwellcollins.atc.agree.agree.SynchStatement;
 import com.rockwellcollins.atc.agree.agree.Type;
 
 /**
@@ -166,8 +170,29 @@ public class AgreeScopeProvider extends
         }
         return result;
     }
+    
+    IScope scope_NamedElement(OrderStatement ctx, EReference ref) {
+        
+    	EObject container = ctx.getContainingClassifier();
+    	while(!(container instanceof ComponentClassifier)){
+    		container = container.eContainer();
+    	}
+    	
+//    	IScope scope = IScope.NULLSCOPE;
+    	IScope outerScope = IScope.NULLSCOPE;
+    	if(container instanceof ComponentImplementation){
+    		ComponentImplementation compImpl = (ComponentImplementation)container;
+//    		do{
+    			outerScope = Scopes.scopeFor(compImpl.getAllSubcomponents());
+//    			scope = new SimpleScope(outerScope, scope.getAllElements());
+//    			compImpl = compImpl.getExtended();
+//    		}while(compImpl != null);
+    	}
+//    	return scope;
+        return outerScope;
+    }
 
-    IScope scope_NamedElement(CalenStatement ctx, EReference ref) {
+    IScope scope_NamedElement(SynchStatement ctx, EReference ref) {
         
     	EObject container = ctx.getContainingClassifier();
     	while(!(container instanceof ComponentClassifier)){
@@ -308,9 +333,6 @@ public class AgreeScopeProvider extends
         		  !(container instanceof AadlPackage)){
         		container = container.eContainer();
         	}
-        	//result.add((AadlPackage)container);
-        	
-        	// return result;
 
         } else {
             // travel out of the annex and get the component
@@ -324,10 +346,7 @@ public class AgreeScopeProvider extends
             }
         }
 
-        if (container == null) {
-            return result; // this will throw a parsing error
-        }
-
+        //check to see what the type the container is and behave accordingly
         if (container instanceof Classifier) {
             Classifier component = (Classifier) container;
             for (Element el : component.getOwnedElements()) {
@@ -353,6 +372,8 @@ public class AgreeScopeProvider extends
                     		for(Arg arg : eqStat.getLhs()){
                     			result.add(arg);
                     		}
+                    	}else if(spec instanceof ConstStatement){
+                    		result.add(spec);
                     	}
                     }
                 }

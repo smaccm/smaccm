@@ -1,0 +1,134 @@
+package Software
+public
+  with Data_Types;
+  with Base_Types;
+  with Data_Model;
+  with SEL4Types;
+
+memory gpio_base
+  features
+    gpio1base: in out data port Data_Types::exynos5_gpio.part1;
+    gpio2base: in out data port Data_Types::exynos5_gpio.part2;
+    irqcbase:  in out data port Data_Types::combiner_data.i;
+end gpio_base;
+
+process gpio
+  features
+    gpio1base: in out data port Data_Types::exynos5_gpio.part1;
+    gpio2base: in out data port Data_Types::exynos5_gpio.part2;
+    irqcbase:  in out data port Data_Types::combiner_data.i;
+end gpio;
+
+process gyro
+end gyro;
+
+process i2c
+end i2c;
+
+process can
+  features
+    spi1_can: in out data port Data_Types::spi_dev_port.i; --these are actually pointers
+    can_buf: in out data port Data_Types::CAN_Data.i; --these are actually pointers
+end can;
+
+process can_bus
+  features
+    spi1_can: in out data port Data_Types::spi_dev_port.i; --these are actually pointers
+    can_buf: in out data port Data_Types::CAN_Data.i; --these are actually pointers
+end can_bus;
+
+process client
+--the client.camkes file contains data ports, but 
+--I do not see them referenced anywhere in the software
+end client;
+
+process mmc
+  features
+    mshc0_phy : in out data port Base_Types::Integer_32
+      {Data_Model::Number_Representation => Unsigned;};
+    mshc1_phy : in out data port Base_Types::Integer_32
+      {Data_Model::Number_Representation => Unsigned;};
+    mshc2_phy : in out data port Base_Types::Integer_32
+      {Data_Model::Number_Representation => Unsigned;};
+    mshc3_phy : in out data port Base_Types::Integer_32
+      {Data_Model::Number_Representation => Unsigned;};
+end mmc;
+
+memory spi_base
+  features
+    spi1_reg : in out data port Data_Types::exynos_spi.i; --actually a pointer
+    spi1_client : in out data port Data_Types::spi_dev_port.i; --actually a pointer
+    spi1_can : in out data port Data_Types::spi_dev_port.i; --actually a pointer
+    clk_reg : in out data port; --I could not ascertain the type for this
+    spi1_int : in out data port; -- I could not ascertain the type for this
+end spi_base;
+
+process spi
+  features
+    spi1_reg : in out data port Data_Types::exynos_spi.i; --actually a pointer
+    spi1_client : in out data port Data_Types::spi_dev_port.i; --actually a pointer
+    spi1_can : in out data port Data_Types::spi_dev_port.i; --actually a pointer
+    clk_reg : in out data port; --I could not ascertain the type for this
+    spi1_int : in out data port; -- I could not ascertain the type for this
+end spi;
+
+process timer
+  features
+    timerbase : in out data port Data_Types::pwm_timer.i; --actually a pointer
+end timer;
+
+memory uart_base
+  features
+    uart0base : in out data port Data_Types::exynos_uart.i; --actually a pointer
+    client_buf : in out data port Base_Types::Integer_8; --actually a pointer (char *)
+    interrupt : in out data port; -- I could not ascertain the type for this
+end uart_base;
+
+process uart
+  features
+    uart0base : in out data port Data_Types::exynos_uart.i; --actually a pointer
+    client_buf : in out data port Base_Types::Integer_8; --actually a pointer (char *)
+    interrupt : in out data port; -- I could not ascertain the type for this
+end uart;
+
+system darpa_software
+end darpa_software;
+
+system implementation darpa_software.i
+  subcomponents
+    uart_sub : process uart;
+    timer_sub : process timer;
+    spi_sub : process spi;
+    mmc_sub : process mmc;
+    client_sub : process client;
+    can_bus_sub : process can_bus;
+    can_sub : process can;
+    i2c_sub : process i2c;
+    gyro_sub : process gyro;
+    gpio_sub : process gpio;
+    spi_base_sub : memory spi_base;
+    gpio_base_sub : memory gpio_base;
+    uart_base_sub : memory uart_base;
+    
+  connections
+    gpio_mem1 : port gpio_sub.gpio1base -> gpio_base_sub.gpio1base
+     {SEL4Types::ConnType => seL4HardwareMMIO;};
+    gpio_mem2 : port gpio_sub.gpio2base -> gpio_base_sub.gpio2base
+     {SEL4Types::ConnType => seL4HardwareMMIO;};
+    gpio_mem3 : port gpio_sub.irqcbase -> gpio_base_sub.irqcbase
+     {SEL4Types::ConnType => seL4HardwareMMIO;};
+    uart0_mem : port uart_sub.uart0base -> uart_base_sub.uart0base
+     {SEL4Types::ConnType => seL4HardwareMMIO;};
+     
+    spi1_mem : port spi_sub.spi1_reg -> spi_base_sub.spi1_reg
+     {SEL4Types::ConnType => seL4HardwareMMIO;};
+    spi1_clk_mem : port spi_sub.clk_reg -> spi_base_sub.clk_reg
+     {SEL4Types::ConnType => seL4HardwareMMIO;};
+    
+    uart1_irq : port uart_base_sub.interrupt -> uart_sub.interrupt;
+    spi1_irq : port spi_sub.spi1_int -> spi_base_sub.spi1_int;
+    
+end darpa_software.i;
+
+
+end Software;

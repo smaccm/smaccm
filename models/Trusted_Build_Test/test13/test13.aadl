@@ -1,0 +1,64 @@
+-- AADL Test 13: active -> passive threads using pure event.
+package test13
+public 
+   with Base_Types;
+   with SMACCM_SYS;   
+
+-- Example of a periodically dispatched "Active" thread.   
+thread sender
+	features
+		Output1: out event port {
+	      SMACCM_SYS::CommPrim_Source_Text => "ping_Output1";			
+		};
+	
+	properties 
+	    Dispatch_Protocol => Periodic;
+	    Period => 100 ms;
+		Source_Text => ("user_code/user_sender.c");
+	    SMACCM_SYS::Compute_Entrypoint_Source_Text => ("periodic_ping");
+	    Priority => 10;
+	    Stack_Size => 256 bytes;
+	    SMACCM_SYS::Thread_Type => Active ;
+	    Compute_Execution_Time => 10 us .. 50 us;
+	    SMACCM_SYS::Sends_Events_To => "{{1 Output1}}";
+end sender ; 
+
+-- Example of a periodically dispatched "Active" thread.   
+thread receiver
+	features
+		Input1: in event port {
+	      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("ping_received");
+	      Source_Text => ("user_code/user_receiver.c");
+		}; 
+		
+	properties 
+	    Dispatch_Protocol => Aperiodic;
+	    SMACCM_SYS::Thread_Type => Passive ;
+	    Compute_Execution_Time => 10 us .. 50 us;
+	    SMACCM_SYS::Sends_Events_To => "{{}}";
+end receiver ; 
+
+process proc
+
+end proc;
+
+process implementation proc.Impl
+	subcomponents
+		s: thread sender;
+		r: thread receiver;
+	connections
+		s_to_r : port s.Output1 -> r.Input1;
+end proc.Impl;
+
+system test13
+end test13;
+
+system implementation test13.impl
+	subcomponents
+		tl: process proc.Impl;
+	properties
+		SMACCM_SYS::OS => CAmkES;
+		SMACCM_SYS::HW => QEMU;
+end test13.impl;
+
+end test13;

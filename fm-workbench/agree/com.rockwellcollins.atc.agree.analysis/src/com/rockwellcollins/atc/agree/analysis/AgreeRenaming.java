@@ -1,5 +1,8 @@
 package com.rockwellcollins.atc.agree.analysis;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import jkind.api.results.Renaming;
@@ -7,34 +10,54 @@ import jkind.api.results.Renaming;
 public class AgreeRenaming extends Renaming {
 	
 	private String prefix;
-	private Map<String, String> explicitRenames;
-	public AgreeRenaming(String prefix, Map<String, String> explicitRenames){
-		this.prefix = prefix;
-		this.explicitRenames = explicitRenames;
+	private Map<String, String> explicitRenames = new HashMap<>();
+	private List<String> blackList = new ArrayList<>();
+	
+	public AgreeRenaming(){
+		blackList.add(".*__ASSUM.*");
+		blackList.add(".*__ASSERT.*");
+		blackList.add(".*__GUAR.*");
+		blackList.add(".*~~GUARANTEE.*");
+		blackList.add(".*~~ASSUME.*");
+		blackList.add(".*__CALENDAR_NODE.*");
+		blackList.add(".*__INITIALIZED.*");
+		blackList.add(".*~[^_]*$.*");
+		blackList.add(".*~state[0-9]*.*");
+		blackList.add(".*\\._.*");
+
+	}
+	
+	public void addRenamings(AgreeRenaming renaming){
+		this.explicitRenames.putAll(renaming.explicitRenames);
 	}
 
+	public void addExplicitRename(String oldName, String newName){
+		this.explicitRenames.put(oldName, newName);
+	}
+	
 	@Override
 	public String rename(String original) {
 		
-		if(original.contains("~")){
-			return null;
+		String newName = this.explicitRenames.get(original);
+		if(newName != null){
+			return newName;
 		}
 		
-		String renamed = explicitRenames.get(original);
-		
-		if(renamed != null){
-			return renamed;
+		//check if it contains a blacklisted string
+		for(String black : blackList){
+			if(original.matches(black)){
+				return null;
+			}
 		}
 		
-		if(original.contains("__EVENT_")){
-			original = original.replace("__EVENT_", "event(");
-			original = original + ")";
-		}
+		//magic to remove the prefix
+		newName = original.replaceAll("___Nod([^_]_?)*_", "");
+		newName = newName.replace("~condact", "");	
+		newName = newName.replaceAll("~[0-9]*", "");
+		newName = newName.replace("__", ".");
 		
-		renamed = original.replace(prefix, "");
-		renamed = renamed.replaceAll("^_*", "");
-		renamed = renamed.replace("__", ".");
-		return renamed;
+		return newName;
+		
 	}
-
+	
 }

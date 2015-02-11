@@ -20,7 +20,18 @@ public class TopologicalSort {
 				}
 			}
 			assoc.put(elem, Color.BLACK);
-			sorted.add(elem);
+			
+			// check for duplicates...this is currently inefficient!
+			boolean found = false;
+			for (T2 other: sorted) {
+			  if (other.equals(elem)) {
+			    found = true;
+			  }
+			}
+			if (!found) {
+			  sorted.add(elem);
+			}
+			
 		} else if (c == Color.GRAY) {
 			throw new CyclicException("Cycle detected during topological sort.");
 		}

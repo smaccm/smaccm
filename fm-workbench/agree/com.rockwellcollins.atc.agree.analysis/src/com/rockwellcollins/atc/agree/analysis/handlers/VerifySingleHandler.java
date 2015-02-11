@@ -11,4 +11,14 @@ public class VerifySingleHandler extends VerifyHandler {
     protected String getJobName() {
         return "AGREE - Verify Single Layer";
     }
+
+	@Override
+	protected boolean isMonolithic() {
+		return false;
+	}
+
+    @Override
+    protected boolean isRealizability() {
+        return false;
+    }
 }

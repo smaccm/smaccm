@@ -57,7 +57,7 @@ public class EChronos_CodeGenerator {
 	private void defineSignalSet() {
 		events = new ArrayList<OutputEventPort>();		
 
-		for (ThreadImplementation tw : model.getThreadImplementations()) {
+		for (ThreadImplementation tw : model.getAllThreadImplementations()) {
 			events.addAll(tw.getOutputEventPortList());
 			events.addAll(tw.getOutputEventDataPortList());
 		}

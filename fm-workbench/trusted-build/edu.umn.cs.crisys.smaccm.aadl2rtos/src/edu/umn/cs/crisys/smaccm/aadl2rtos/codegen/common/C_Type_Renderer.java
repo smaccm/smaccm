@@ -3,12 +3,9 @@
  */
 package edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.common;
 
-import java.io.IOException;
-import java.util.List;
 import java.util.Locale;
 
 import org.stringtemplate.v4.AttributeRenderer;
-import org.stringtemplate.v4.AutoIndentWriter;
 
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.Type;
 

@@ -23,7 +23,7 @@ package edu.umn.cs.crisys.smaccm.aadl2rtos;
 
 import java.io.File;
 import java.util.List;
-import java.util.Map;
+//import java.util.Map;
 
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -39,7 +39,7 @@ import org.osate.aadl2.Element;
 import org.osate.aadl2.SystemImplementation;
 import org.osate.aadl2.instance.SystemInstance;
 import org.osate.aadl2.instantiation.InstantiateModel;
-import org.osate.aadl2.modelsupport.errorreporting.AnalysisErrorReporterManager;
+//import org.osate.aadl2.modelsupport.errorreporting.AnalysisErrorReporterManager;
 import org.osate.aadl2.modelsupport.resources.OsateResourceUtil;
 
 import edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.CAmkES.CAmkES_CodeGenerator;
@@ -47,8 +47,8 @@ import edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.eChronos.EChronos_CodeGenerato
 import edu.umn.cs.crisys.smaccm.aadl2rtos.parse.AadlModelParser;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.parse.Model;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.util.Util;
-import fr.tpt.aadl.ramses.control.support.analysis.AnalysisException;
-import fr.tpt.aadl.ramses.control.support.config.RamsesConfiguration;
+//import fr.tpt.aadl.ramses.control.support.analysis.AnalysisException;
+//import fr.tpt.aadl.ramses.control.support.config.RamsesConfiguration;
 
 public class Aadl2RtosAction extends AadlAction {
 	private Logger log;
@@ -66,7 +66,7 @@ public class Aadl2RtosAction extends AadlAction {
 			return Status.CANCEL_STATUS;
 		}
 
-		IStatus execStatus = execute(null, (SystemImplementation) sel, monitor, null, logger); 
+		IStatus execStatus = execute(null, (SystemImplementation) sel, monitor, null, null, logger); 
 				
 		if (execStatus == Status.OK_STATUS) 
 			try {
@@ -79,11 +79,9 @@ public class Aadl2RtosAction extends AadlAction {
 		
 	}
 	
-	private IStatus execute(SystemInstance si, SystemImplementation sysimpl, IProgressMonitor monitor, File dir, Logger logger) {
+	public IStatus execute(SystemInstance si, SystemImplementation sysimpl, IProgressMonitor monitor, File aadlDir, File outputDir, Logger logger) {
 		log = logger;
 		log.info("This is the sysimpl name: "+ sysimpl.getName());
-		log.info("More stuff: " + sysimpl.getFullName());
-		log.info("And more: " + sysimpl.getQualifiedName());	
 		
 		monitor.beginTask("Generating Configuration for AADL Model", IProgressMonitor.UNKNOWN);
 
@@ -112,19 +110,29 @@ public class Aadl2RtosAction extends AadlAction {
 
       // split on whether eChronos or CAmkES is the target.
       // Print out C skeletons
-      if (dir == null) {
-        dir = Util.getDirectory(sysimpl);
+			if (aadlDir == null) {
+			  aadlDir = Util.getDirectory(sysimpl);
+			}
+			
+			if (outputDir == null) {
+			  if (model.getOutputDirectory() != null) {
+			    outputDir = new File(model.getOutputDirectory());
+			    outputDir.mkdirs(); 
+			  } else {
+			    outputDir = aadlDir;
+			  }
       }
 			
-			model.setOsTarget(Model.OSTarget.CAmkES);
-
 			if (model.getOsTarget() == Model.OSTarget.eChronos) {
-  			EChronos_CodeGenerator gen = new EChronos_CodeGenerator(log, model, dir);
+  			EChronos_CodeGenerator gen = new EChronos_CodeGenerator(log, model, outputDir);
   			gen.write();
-			} else {
-			  CAmkES_CodeGenerator gen = new CAmkES_CodeGenerator(log, model, dir);
+			} else if (model.getOsTarget() == Model.OSTarget.CAmkES ){
+			  CAmkES_CodeGenerator gen = new CAmkES_CodeGenerator(log, model, aadlDir, outputDir);
 			  gen.write();
+			} else {
+			  logger.error("aadl2rtos OS target: [" + model.getOsTarget() + "] not recognized.");
 			}
+      logger.status("CAmkES code generation complete.");
 		} catch (Aadl2RtosFailure f) {
 			log.error("Analysis Exception");
 			List<String> msgs = f.getMessages();
@@ -143,7 +151,7 @@ public class Aadl2RtosAction extends AadlAction {
 		return Status.OK_STATUS;
 	}
 
-
+/*
 	@Override
 	public void setParameters(Map<String, Object> parameters) {
 		// TODO Auto-generated method stub
@@ -184,4 +192,5 @@ public class Aadl2RtosAction extends AadlAction {
 
 		this.execute(instance, instance.getSystemImplementation(), monitor, config.getRamsesOutputDir(), new ConsoleLogger(Logger.INFO));
 	}  
+  */
 }

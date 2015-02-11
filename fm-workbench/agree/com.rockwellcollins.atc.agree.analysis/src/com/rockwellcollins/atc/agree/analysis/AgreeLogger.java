@@ -1,21 +1,25 @@
 package com.rockwellcollins.atc.agree.analysis;
 
 public class AgreeLogger {
-    private StringBuilder log = new StringBuilder();
+    private static StringBuilder log = new StringBuilder();
     private static String newline = System.getProperty("line.separator");
 
-    public void logWarning(String message) {
+    public static void logWarning(String message) {
         log.append("[WARNING]: ");
         log.append(message);
         log.append(newline);
     }
 
-    public void logError(String message) {
+    public static void logError(String message) {
         log.append("[ERROR]: ");
         log.append(message);
         log.append(newline);
     }
 
+    public static String getLog(){
+    	return log.toString();
+    }
+    
     @Override
     public String toString() {
         return log.toString();

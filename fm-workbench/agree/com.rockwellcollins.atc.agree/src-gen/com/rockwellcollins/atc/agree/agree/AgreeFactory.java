@@ -68,6 +68,15 @@ public interface AgreeFactory extends EFactory
   SynchStatement createSynchStatement();
 
   /**
+   * Returns a new object of class '<em>Order Statement</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Order Statement</em>'.
+   * @generated
+   */
+  OrderStatement createOrderStatement();
+
+  /**
    * Returns a new object of class '<em>Call Def</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -248,6 +257,15 @@ public interface AgreeFactory extends EFactory
   AssertStatement createAssertStatement();
 
   /**
+   * Returns a new object of class '<em>Initial Statement</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Initial Statement</em>'.
+   * @generated
+   */
+  InitialStatement createInitialStatement();
+
+  /**
    * Returns a new object of class '<em>Param Statement</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -275,6 +293,15 @@ public interface AgreeFactory extends EFactory
   LiftStatement createLiftStatement();
 
   /**
+   * Returns a new object of class '<em>MN Synch Statement</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>MN Synch Statement</em>'.
+   * @generated
+   */
+  MNSynchStatement createMNSynchStatement();
+
+  /**
    * Returns a new object of class '<em>Calen Statement</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -282,6 +309,15 @@ public interface AgreeFactory extends EFactory
    * @generated
    */
   CalenStatement createCalenStatement();
+
+  /**
+   * Returns a new object of class '<em>Asynch Statement</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Asynch Statement</em>'.
+   * @generated
+   */
+  AsynchStatement createAsynchStatement();
 
   /**
    * Returns a new object of class '<em>Node Eq</em>'.

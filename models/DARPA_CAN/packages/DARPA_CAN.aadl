@@ -1,0 +1,16 @@
+package DARPA_CAN
+public
+  with ODROID_XU;
+  with XU_DAUGHTER_BOARD;
+
+system sys
+end sys;
+
+system implementation sys.i
+  subcomponents
+    ODROID_XU: system ODROID_XU::ODROID_XU.Impl;
+    UX_DAUGHTER: system XU_DAUGHTER_BOARD::XU_DAUGHTER_BOARD.impl;
+end sys.i;
+
+
+end DARPA_CAN;

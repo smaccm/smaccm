@@ -31,10 +31,12 @@ import com.rockwellcollins.atc.agree.agree.CalenStatement;
 import com.rockwellcollins.atc.agree.agree.GetPropertyExpr;
 import com.rockwellcollins.atc.agree.agree.NestedDotID;
 import com.rockwellcollins.atc.agree.agree.NodeEq;
+import com.rockwellcollins.atc.agree.agree.OrderStatement;
 import com.rockwellcollins.atc.agree.agree.RecordExpr;
 import com.rockwellcollins.atc.agree.agree.RecordType;
 import com.rockwellcollins.atc.agree.agree.RecordUpdateExpr;
 import com.rockwellcollins.atc.agree.agree.EventExpr;
+import com.rockwellcollins.atc.agree.agree.SynchStatement;
 
 
 public class AgreeLinkingService extends PropertiesLinkingService {
@@ -55,12 +57,13 @@ public class AgreeLinkingService extends PropertiesLinkingService {
 
         if (context instanceof NestedDotID
                 || context instanceof NodeEq
-                || context instanceof CalenStatement
+                || context instanceof SynchStatement
                 || context instanceof RecordExpr
                 || context instanceof RecordType
                 || context instanceof GetPropertyExpr
                 || context instanceof RecordUpdateExpr
-                || context instanceof EventExpr) {
+                || context instanceof EventExpr
+                || context instanceof OrderStatement) {
 
             //EObject e = findClassifier(context, reference, name);
         	EObject e = getIndexedObject(context, reference, name);

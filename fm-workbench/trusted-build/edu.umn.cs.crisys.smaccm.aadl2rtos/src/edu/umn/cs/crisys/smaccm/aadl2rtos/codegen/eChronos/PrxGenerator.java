@@ -14,11 +14,11 @@ import edu.umn.cs.crisys.smaccm.aadl2rtos.Logger;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosException;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.IRQDispatcher;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.PeriodicDispatcher;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.legacy.LegacyExternalISR;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.legacy.LegacyIRQEvent;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.legacy.ExternalISR;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.legacy.ExternalIRQEvent;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.ExternalIRQ;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.SharedData;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.ThreadImplementationBase;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.ThreadImplementation;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.ThreadInstance;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.ThreadInstancePort;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.parse.Model;
@@ -213,7 +213,7 @@ public class PrxGenerator {
 		if (model.getThreadCalendar().hasDispatchers() && model.getGenerateSystickIRQ()) {
 		  writeTrampoline("systick", Names.getCalendarFnName(), ec);
 		}
-		for (LegacyExternalISR lirq: model.getLegacyExternalIRQs()) {
+		for (ExternalISR lirq: model.getLegacyExternalIRQs()) {
 		  writeTrampoline(lirq.getName(), lirq.getHandlerName(), ec);
 		}
 		
@@ -256,7 +256,7 @@ public class PrxGenerator {
     }
 	}
 
-	private void printKochabComponent(ThreadImplementationBase c, Document doc, org.w3c.dom.Element parent) {
+	private void printeChronosComponent(ThreadImplementation c, Document doc, org.w3c.dom.Element parent) {
 		org.w3c.dom.Element e;
 		
 		e = doc.createElement("task");
@@ -282,15 +282,15 @@ public class PrxGenerator {
 		parent.appendChild(e);
 	}
 
-	public class PriorityComparator implements Comparator<ThreadImplementationBase> {
+	public class PriorityComparator implements Comparator<ThreadImplementation> {
 
     /* (non-Javadoc)
      * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
      */
     @Override
     public int compare(
-        ThreadImplementationBase arg0,
-        ThreadImplementationBase arg1) {
+        ThreadImplementation arg0,
+        ThreadImplementation arg1) {
       // TODO Auto-generated method stub
       return Integer.compare(arg1.getPriority(), arg0.getPriority());
     }
@@ -304,18 +304,18 @@ public class PrxGenerator {
 		e = doc.createElement("tasks");
 		parent.appendChild(e);
 		
-    List<ThreadImplementationBase> allTasks; 
+    List<ThreadImplementation> allTasks; 
     
 	  allTasks = model.getAllThreadImplementations();
 
     int kochabLocation = 0;
     Collections.sort(allTasks, new PriorityComparator());
-    for (ThreadImplementationBase i : allTasks) {
-      i.setKochabThreadLocation(kochabLocation);
+    for (ThreadImplementation i : allTasks) {
+      i.seteChronosThreadLocation(kochabLocation);
       kochabLocation++;
     }
-    for (ThreadImplementationBase ti: allTasks) {
-		  printKochabComponent(ti, doc, e);
+    for (ThreadImplementation ti: allTasks) {
+		  printeChronosComponent(ti, doc, e);
 		}
 	}
 
@@ -336,8 +336,8 @@ public class PrxGenerator {
     eec.appendChild(doc.createTextNode(Integer.toString(1 << signalNumber)));	  
 	}
 	
-	private ThreadImplementationBase findTIB(String name) {
-    for (ThreadImplementationBase elem: model.getAllThreadImplementations()) {
+	private ThreadImplementation findTIB(String name) {
+    for (ThreadImplementation elem: model.getAllThreadImplementations()) {
       if (elem.getName().equals(name)) {
         return elem;
       }
@@ -372,19 +372,19 @@ public class PrxGenerator {
 	    for (ThreadInstance ti: d.getOwner().getThreadInstanceList()) {
 	      String taskId = ti.getThreadImplementation().getName();
 	      String taskName = d.getOwner().getName();
-	      int eventTask = ti.getThreadImplementation().getKochabThreadLocation();
+	      int eventTask = ti.getThreadImplementation().geteChronosThreadLocation();
 	      int signalNumber = d.getOwner().getSignalNumberForDispatcher(d);
 	      writeIrqEvent(e, signalName, taskId, eventTask, taskName, signalNumber);
 	    }
 	  }
 	  
 	  // write external irq events.
-	  for (LegacyIRQEvent lie: model.getLegacyIRQEvents()) {
-	    ThreadImplementationBase tib = findTIB(lie.getTaskName());
+	  for (ExternalIRQEvent lie: model.getLegacyIRQEvents()) {
+	    ThreadImplementation tib = findTIB(lie.getTaskName());
 	    if (tib == null) {
 	      throw new Aadl2RtosException("Unable to find thread with name: '" + lie.getTaskName() + "'.");
 	    }
-	    writeIrqEvent(e, lie.getName(), tib.getName(), tib.getKochabThreadLocation(), lie.getTaskName(), lie.getSigSet());
+	    writeIrqEvent(e, lie.getName(), tib.getName(), tib.geteChronosThreadLocation(), lie.getTaskName(), lie.getSigSet());
 	  }
 	}
 	

@@ -9,6 +9,7 @@ import com.rockwellcollins.atc.agree.agree.AgreePackage;
 import com.rockwellcollins.atc.agree.agree.Arg;
 import com.rockwellcollins.atc.agree.agree.AssertStatement;
 import com.rockwellcollins.atc.agree.agree.AssumeStatement;
+import com.rockwellcollins.atc.agree.agree.AsynchStatement;
 import com.rockwellcollins.atc.agree.agree.BinaryExpr;
 import com.rockwellcollins.atc.agree.agree.BoolLitExpr;
 import com.rockwellcollins.atc.agree.agree.CalenStatement;
@@ -21,14 +22,17 @@ import com.rockwellcollins.atc.agree.agree.FnDefExpr;
 import com.rockwellcollins.atc.agree.agree.GetPropertyExpr;
 import com.rockwellcollins.atc.agree.agree.GuaranteeStatement;
 import com.rockwellcollins.atc.agree.agree.IfThenElseExpr;
+import com.rockwellcollins.atc.agree.agree.InitialStatement;
 import com.rockwellcollins.atc.agree.agree.IntLitExpr;
 import com.rockwellcollins.atc.agree.agree.LemmaStatement;
 import com.rockwellcollins.atc.agree.agree.LiftStatement;
+import com.rockwellcollins.atc.agree.agree.MNSynchStatement;
 import com.rockwellcollins.atc.agree.agree.NestedDotID;
 import com.rockwellcollins.atc.agree.agree.NodeBodyExpr;
 import com.rockwellcollins.atc.agree.agree.NodeDefExpr;
 import com.rockwellcollins.atc.agree.agree.NodeEq;
 import com.rockwellcollins.atc.agree.agree.NodeLemma;
+import com.rockwellcollins.atc.agree.agree.OrderStatement;
 import com.rockwellcollins.atc.agree.agree.ParamStatement;
 import com.rockwellcollins.atc.agree.agree.PreExpr;
 import com.rockwellcollins.atc.agree.agree.PrevExpr;
@@ -273,6 +277,14 @@ public class AgreeSemanticSequencer extends PropertiesSemanticSequencer {
 				if(context == grammarAccess.getElementRule() ||
 				   context == grammarAccess.getSpecStatementRule()) {
 					sequence_SpecStatement(context, (AssumeStatement) semanticObject); 
+					return; 
+				}
+				else break;
+			case AgreePackage.ASYNCH_STATEMENT:
+				if(context == grammarAccess.getElementRule() ||
+				   context == grammarAccess.getSpecStatementRule() ||
+				   context == grammarAccess.getSynchStatementRule()) {
+					sequence_SynchStatement(context, (AsynchStatement) semanticObject); 
 					return; 
 				}
 				else break;
@@ -523,6 +535,13 @@ public class AgreeSemanticSequencer extends PropertiesSemanticSequencer {
 					return; 
 				}
 				else break;
+			case AgreePackage.INITIAL_STATEMENT:
+				if(context == grammarAccess.getElementRule() ||
+				   context == grammarAccess.getSpecStatementRule()) {
+					sequence_SpecStatement(context, (InitialStatement) semanticObject); 
+					return; 
+				}
+				else break;
 			case AgreePackage.INT_LIT_EXPR:
 				if(context == grammarAccess.getAddSubExprRule() ||
 				   context == grammarAccess.getAddSubExprAccess().getBinaryExprLeftAction_1_0_0_0() ||
@@ -563,6 +582,14 @@ public class AgreeSemanticSequencer extends PropertiesSemanticSequencer {
 				if(context == grammarAccess.getElementRule() ||
 				   context == grammarAccess.getSpecStatementRule()) {
 					sequence_SpecStatement(context, (LiftStatement) semanticObject); 
+					return; 
+				}
+				else break;
+			case AgreePackage.MN_SYNCH_STATEMENT:
+				if(context == grammarAccess.getElementRule() ||
+				   context == grammarAccess.getSpecStatementRule() ||
+				   context == grammarAccess.getSynchStatementRule()) {
+					sequence_SynchStatement(context, (MNSynchStatement) semanticObject); 
 					return; 
 				}
 				else break;
@@ -610,7 +637,7 @@ public class AgreeSemanticSequencer extends PropertiesSemanticSequencer {
 				if(context == grammarAccess.getCallDefRule() ||
 				   context == grammarAccess.getElementRule() ||
 				   context == grammarAccess.getNamedCallDefRule() ||
-				   context == grammarAccess.getNamespaceRule() ||
+				   context == grammarAccess.getNamedElementRule() ||
 				   context == grammarAccess.getNodeDefExprRule() ||
 				   context == grammarAccess.getSpecStatementRule()) {
 					sequence_NodeDefExpr(context, (NodeDefExpr) semanticObject); 
@@ -628,6 +655,14 @@ public class AgreeSemanticSequencer extends PropertiesSemanticSequencer {
 				if(context == grammarAccess.getElementRule() ||
 				   context == grammarAccess.getNodeStmtRule()) {
 					sequence_NodeStmt(context, (NodeLemma) semanticObject); 
+					return; 
+				}
+				else break;
+			case AgreePackage.ORDER_STATEMENT:
+				if(context == grammarAccess.getElementRule() ||
+				   context == grammarAccess.getOrderStatementRule() ||
+				   context == grammarAccess.getSpecStatementRule()) {
+					sequence_OrderStatement(context, (OrderStatement) semanticObject); 
 					return; 
 				}
 				else break;
@@ -924,8 +959,8 @@ public class AgreeSemanticSequencer extends PropertiesSemanticSequencer {
 	 *         (left=AndExpr_BinaryExpr_1_0_0_0 op='and' right=RelateExpr) | 
 	 *         (left=OrExpr_BinaryExpr_1_0_0_0 op='or' right=AndExpr) | 
 	 *         (left=EquivExpr_BinaryExpr_1_0_0_0 op='<=>' right=OrExpr) | 
-	 *         (left=ImpliesExpr_BinaryExpr_1_0_0_0 op='=>' right=EquivExpr) | 
-	 *         (left=ArrowExpr_BinaryExpr_1_0_0_0 op='->' right=ImpliesExpr)
+	 *         (left=ImpliesExpr_BinaryExpr_1_0_0_0 op='=>' right=ImpliesExpr) | 
+	 *         (left=ArrowExpr_BinaryExpr_1_0_0_0 op='->' right=ArrowExpr)
 	 *     )
 	 */
 	protected void sequence_AddSubExpr_AndExpr_ArrowExpr_EquivExpr_ImpliesExpr_MultDivExpr_OrExpr_RelateExpr(EObject context, BinaryExpr semanticObject) {
@@ -1070,6 +1105,15 @@ public class AgreeSemanticSequencer extends PropertiesSemanticSequencer {
 	
 	/**
 	 * Constraint:
+	 *     (comps+=[NamedElement|ID] comps+=[NamedElement|ID]*)
+	 */
+	protected void sequence_OrderStatement(EObject context, OrderStatement semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Constraint:
 	 *     (component=Expr prop=[NamedElement|QCLREF])
 	 */
 	protected void sequence_PreDefFnExpr(EObject context, GetPropertyExpr semanticObject) {
@@ -1142,6 +1186,15 @@ public class AgreeSemanticSequencer extends PropertiesSemanticSequencer {
 	
 	/**
 	 * Constraint:
+	 *     expr=Expr
+	 */
+	protected void sequence_SpecStatement(EObject context, InitialStatement semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Constraint:
 	 *     (str=STRING expr=Expr)
 	 */
 	protected void sequence_SpecStatement(EObject context, LemmaStatement semanticObject) {
@@ -1169,6 +1222,15 @@ public class AgreeSemanticSequencer extends PropertiesSemanticSequencer {
 	
 	/**
 	 * Constraint:
+	 *     {AsynchStatement}
+	 */
+	protected void sequence_SynchStatement(EObject context, AsynchStatement semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Constraint:
 	 *     (els+=[NamedElement|ID] els+=[NamedElement|ID]*)
 	 */
 	protected void sequence_SynchStatement(EObject context, CalenStatement semanticObject) {
@@ -1178,7 +1240,16 @@ public class AgreeSemanticSequencer extends PropertiesSemanticSequencer {
 	
 	/**
 	 * Constraint:
-	 *     (val=INTEGER_LIT (sim='simult' | sim='no_simult')?)
+	 *     (comp1+=[NamedElement|ID] comp2+=[NamedElement|ID] max+=INTEGER_LIT min+=INTEGER_LIT)+
+	 */
+	protected void sequence_SynchStatement(EObject context, MNSynchStatement semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Constraint:
+	 *     (val=INTEGER_LIT val2=INTEGER_LIT? (sim='simult' | sim='no_simult')?)
 	 */
 	protected void sequence_SynchStatement(EObject context, SynchStatement semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);

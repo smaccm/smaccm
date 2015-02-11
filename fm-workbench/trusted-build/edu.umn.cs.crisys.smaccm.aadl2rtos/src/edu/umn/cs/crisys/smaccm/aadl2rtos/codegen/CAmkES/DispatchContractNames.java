@@ -11,8 +11,8 @@ import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.OutputEventPort;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.ArrayType;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.IntType;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.Type;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.UnitType;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.*;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.util.Util;
 
 /**
  * @author Whalen
@@ -47,17 +47,31 @@ public class DispatchContractNames {
     return aty.getCType().varString(pn.getData()); 
   }
   
-  public String getIndexDecl() {
-    PortNames pn = new PortNames(oep); 
-    return pn.getIndexDecl();
-  }
   
-  public List<PortNames> getDispatchTargetList() {
+  public List<PortNames> getPassiveDispatchTargetList() {
     List<PortNames> targets = new ArrayList<>(); 
-    for (Connection c: this.oep.getConnections()) {
-      targets.add(new PortNames(c.getDestPort()));
+    for (PortConnection c: this.oep.getConnections()) {
+      if (c.getDestPort().getOwner().getIsPassive()) {
+        targets.add(new PortNames(c.getDestPort()));
+      }
     }
     return targets;
+  }
+
+  public List<PortNames> getActiveDispatchTargetList() {
+    List<PortNames> targets = new ArrayList<>(); 
+    for (PortConnection c: this.oep.getConnections()) {
+      if (!c.getDestPort().getOwner().getIsPassive()) {
+        targets.add(new PortNames(c.getDestPort()));
+      }
+    }
+    return targets;
+    
+  }
+  public String getDispatchArrayTypeName() {
+    TypeNames tni = new TypeNames(oep.getType());
+    return "smaccm_" + Util.normalizeAadlName(tni.getName()) 
+        + "_array_" + this.getMaxDispatchSize(); 
   }
 
 }

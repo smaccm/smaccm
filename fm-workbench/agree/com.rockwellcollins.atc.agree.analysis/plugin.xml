@@ -14,6 +14,12 @@
               icon="icons/layers.png"
               id="com.rockwellcollins.atc.agree.analysis.views.agreeResultsView"
               name="AGREE Results"/>
+        <view
+              category="com.rockwellcollins.atc.agree.analysis"
+              class="com.rockwellcollins.atc.agree.analysis.views.AgreeCounterexampleView"
+              icon="icons/counterexample.png"
+              id="com.rockwellcollins.atc.agree.analysis.views.agreeCounterexampleView"
+              name="AGREE Counterexample"/>
    </extension>
   
    <extension point="org.eclipse.ui.commands">
@@ -44,9 +50,15 @@
      </command>
      <command
            categoryId="com.rockwellcollins.atc.agree.analysis.commands"
+<<<<<<< HEAD
            description="Runs realizability analysis"
            id="com.rockwellcollins.atc.agree.analysis.commands.verifyRealize"
            name="Check Realizability">
+=======
+           description="Verify the contract of the selected component using the contracts of all of the components descendants"
+           id="com.rockwellcollins.atc.agree.analysis.commands.verifyMonolithic"
+           name="Verify Monolithically">
+>>>>>>> develop
      </command>
    </extension>
    
@@ -90,9 +102,15 @@
                   style="push">
             </command>
             <command
+<<<<<<< HEAD
                   commandId="com.rockwellcollins.atc.agree.analysis.commands.verifyRealize"
                   icon="icons/layers.png"
                   id="com.rockwellcollins.atc.agree.analysis.menus.verifyRealize"
+=======
+                  commandId="com.rockwellcollins.atc.agree.analysis.commands.verifyMonolithic"
+                  icon="icons/layers.png"
+                  id="com.rockwellcollins.atc.agree.analysis.menus.verifyMonolithic"
+>>>>>>> develop
                   mnemonic="a"
                   style="push">
             </command>
@@ -115,10 +133,18 @@
                   id="com.rockwellcollins.atc.agree.analysis.menus.verifyAll"
                   style="push">
             </command>
+<<<<<<< HEAD
              <command
                   commandId="com.rockwellcollins.atc.agree.analysis.commands.verifyRealize"
                   icon="icons/layers.png"
                   id="com.rockwellcollins.atc.agree.analysis.menus.verifyRealize"
+=======
+            <command
+                  commandId="com.rockwellcollins.atc.agree.analysis.commands.verifyMonolithic"
+                  icon="icons/layers.png"
+                  id="com.rockwellcollins.atc.agree.analysis.menus.verifyMonolithic"
+                  mnemonic="a"
+>>>>>>> develop
                   style="push">
             </command>
          </toolbar>
@@ -145,9 +171,15 @@
                   style="push">
             </command>
             <command
+<<<<<<< HEAD
                   commandId="com.rockwellcollins.atc.agree.analysis.commands.verifyRealize"
                   icon="icons/layers.png"
                   id="com.rockwellcollins.atc.agree.analysis.menus.verifyRealize"
+=======
+                  commandId="com.rockwellcollins.atc.agree.analysis.commands.verifyMonolithic"
+                  icon="icons/layers.png"
+                  id="com.rockwellcollins.atc.agree.analysis.menus.verifyMonolithic"
+>>>>>>> develop
                   mnemonic="a"
                   style="push">
             </command>
@@ -175,8 +207,13 @@
          </enabledWhen>
       </handler>
       <handler
+<<<<<<< HEAD
             class="com.rockwellcollins.atc.agree.analysis.handlers.VerifyRealizabilityHandler"
             commandId="com.rockwellcollins.atc.agree.analysis.commands.verifyRealize">
+=======
+            class="com.rockwellcollins.atc.agree.analysis.handlers.VerifyMonolithicHandler"
+            commandId="com.rockwellcollins.atc.agree.analysis.commands.verifyMonolithic">
+>>>>>>> develop
          <enabledWhen>
             <reference
                   definitionId="com.rockwellcollins.atc.agree.analysis.expressions.isSingleOutlineSelection">

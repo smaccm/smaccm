@@ -1,0 +1,6 @@
+config APP_TEST_BOEING1
+    bool "AADL Test Boeing 1: active -> passive thread AADL RPC comm"
+    default n
+    select APP_CAMKES_EXECUTIVE
+    help
+        AADL Test Boeing 1: active -> passive thread AADL RPC comm 

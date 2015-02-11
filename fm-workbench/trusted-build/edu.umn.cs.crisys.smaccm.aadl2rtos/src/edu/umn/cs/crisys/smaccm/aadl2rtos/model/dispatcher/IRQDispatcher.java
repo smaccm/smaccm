@@ -1,6 +1,7 @@
 package edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher;
 
 import java.util.List;
+import java.util.Map;
 
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.ThreadImplementation;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.Type;
@@ -14,20 +15,29 @@ import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.UnitType;
  */
 public class IRQDispatcher extends Dispatcher {
 
+  private int signalNumber;
   private String signalName;
   private String firstLevelInterruptHandler;
+  private Map<String, Long> memoryRegions; 
 	
 	public IRQDispatcher(ThreadImplementation owner, List<ExternalHandler> externalHandlerList, 
-	    String signalName, String firstLevelInterruptHandler) {
+	    String signalName, int signalNumber, 
+	    String firstLevelInterruptHandler, Map<String, Long> memoryRegions) {
 	  super(owner, externalHandlerList);
 	  this.signalName = signalName;
+	  this.signalNumber = signalNumber;
 	  this.firstLevelInterruptHandler = firstLevelInterruptHandler;
+	  this.memoryRegions = memoryRegions;
 	}
 	
 	public String getName() {
 	  return signalName;
 	}
 
+	public int getNumber() {
+	  return signalNumber;
+	}
+	
 	public Type getType() { 
 	  return new UnitType(); 
 	}
@@ -44,6 +54,9 @@ public class IRQDispatcher extends Dispatcher {
     return ("IRQ_EVENT_ID_" + this.getIrqSignalName()).toUpperCase();
   }
 	
+  public Map<String, Long> getMemoryRegions() {
+    return memoryRegions;
+  }
   /**
    * @return the signalName
    */

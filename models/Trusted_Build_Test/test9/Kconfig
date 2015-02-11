@@ -1,0 +1,6 @@
+config APP_TEST9
+    bool "AADL Test 9: active -> active threads using array read/write"
+    default n
+    select APP_CAMKES_EXECUTIVE
+    help
+        AADL Test 9: active -> active threads using array read/write. 

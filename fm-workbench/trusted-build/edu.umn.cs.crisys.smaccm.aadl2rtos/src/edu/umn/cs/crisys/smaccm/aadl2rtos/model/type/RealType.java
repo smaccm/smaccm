@@ -67,6 +67,10 @@ public class RealType extends Type {
 
 	@Override
 	public boolean equals(Object obj) {
-		return (obj instanceof RealType);
+		if (obj instanceof RealType) {
+		  RealType other = (RealType)obj;
+		  return (this.realKind.equals(other.realKind));
+		}
+	  return false;
 	}
 }

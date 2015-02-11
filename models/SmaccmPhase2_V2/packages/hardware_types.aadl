@@ -1,0 +1,31 @@
+package hardware_types
+public
+
+bus SPI_Bus
+end SPI_Bus;
+
+bus I2C_Bus
+end I2c_Bus;
+
+bus CAN
+end CAN;
+
+bus USB
+end USB;
+
+data UART
+end UART;
+
+data Power_Switch
+end Power_Switch;
+
+data PWM
+end PWM;
+
+data PPM
+end PPM;
+
+data ADC
+end ADC;
+
+end hardware_types;

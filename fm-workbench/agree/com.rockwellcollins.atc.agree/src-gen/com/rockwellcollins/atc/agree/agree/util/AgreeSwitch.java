@@ -14,7 +14,6 @@ import org.osate.aadl2.AnnexSubclause;
 import org.osate.aadl2.Element;
 import org.osate.aadl2.ModalElement;
 import org.osate.aadl2.NamedElement;
-import org.osate.aadl2.Namespace;
 
 /**
  * <!-- begin-user-doc -->
@@ -125,6 +124,15 @@ public class AgreeSwitch<T> extends Switch<T>
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
+      case AgreePackage.ORDER_STATEMENT:
+      {
+        OrderStatement orderStatement = (OrderStatement)theEObject;
+        T result = caseOrderStatement(orderStatement);
+        if (result == null) result = caseSpecStatement(orderStatement);
+        if (result == null) result = caseElement(orderStatement);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
       case AgreePackage.CALL_DEF:
       {
         CallDef callDef = (CallDef)theEObject;
@@ -178,7 +186,6 @@ public class AgreeSwitch<T> extends Switch<T>
       {
         NodeDefExpr nodeDefExpr = (NodeDefExpr)theEObject;
         T result = caseNodeDefExpr(nodeDefExpr);
-        if (result == null) result = caseNamespace(nodeDefExpr);
         if (result == null) result = caseSpecStatement(nodeDefExpr);
         if (result == null) result = caseCallDef(nodeDefExpr);
         if (result == null) result = caseNamedElement(nodeDefExpr);
@@ -315,6 +322,15 @@ public class AgreeSwitch<T> extends Switch<T>
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
+      case AgreePackage.INITIAL_STATEMENT:
+      {
+        InitialStatement initialStatement = (InitialStatement)theEObject;
+        T result = caseInitialStatement(initialStatement);
+        if (result == null) result = caseSpecStatement(initialStatement);
+        if (result == null) result = caseElement(initialStatement);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
       case AgreePackage.PARAM_STATEMENT:
       {
         ParamStatement paramStatement = (ParamStatement)theEObject;
@@ -342,6 +358,16 @@ public class AgreeSwitch<T> extends Switch<T>
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
+      case AgreePackage.MN_SYNCH_STATEMENT:
+      {
+        MNSynchStatement mnSynchStatement = (MNSynchStatement)theEObject;
+        T result = caseMNSynchStatement(mnSynchStatement);
+        if (result == null) result = caseSynchStatement(mnSynchStatement);
+        if (result == null) result = caseSpecStatement(mnSynchStatement);
+        if (result == null) result = caseElement(mnSynchStatement);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
       case AgreePackage.CALEN_STATEMENT:
       {
         CalenStatement calenStatement = (CalenStatement)theEObject;
@@ -349,6 +375,16 @@ public class AgreeSwitch<T> extends Switch<T>
         if (result == null) result = caseSynchStatement(calenStatement);
         if (result == null) result = caseSpecStatement(calenStatement);
         if (result == null) result = caseElement(calenStatement);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case AgreePackage.ASYNCH_STATEMENT:
+      {
+        AsynchStatement asynchStatement = (AsynchStatement)theEObject;
+        T result = caseAsynchStatement(asynchStatement);
+        if (result == null) result = caseSynchStatement(asynchStatement);
+        if (result == null) result = caseSpecStatement(asynchStatement);
+        if (result == null) result = caseElement(asynchStatement);
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
@@ -614,6 +650,22 @@ public class AgreeSwitch<T> extends Switch<T>
    * @generated
    */
   public T caseSynchStatement(SynchStatement object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Order Statement</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Order Statement</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseOrderStatement(OrderStatement object)
   {
     return null;
   }
@@ -939,6 +991,22 @@ public class AgreeSwitch<T> extends Switch<T>
   }
 
   /**
+   * Returns the result of interpreting the object as an instance of '<em>Initial Statement</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Initial Statement</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseInitialStatement(InitialStatement object)
+  {
+    return null;
+  }
+
+  /**
    * Returns the result of interpreting the object as an instance of '<em>Param Statement</em>'.
    * <!-- begin-user-doc -->
    * This implementation returns null;
@@ -987,6 +1055,22 @@ public class AgreeSwitch<T> extends Switch<T>
   }
 
   /**
+   * Returns the result of interpreting the object as an instance of '<em>MN Synch Statement</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>MN Synch Statement</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseMNSynchStatement(MNSynchStatement object)
+  {
+    return null;
+  }
+
+  /**
    * Returns the result of interpreting the object as an instance of '<em>Calen Statement</em>'.
    * <!-- begin-user-doc -->
    * This implementation returns null;
@@ -998,6 +1082,22 @@ public class AgreeSwitch<T> extends Switch<T>
    * @generated
    */
   public T caseCalenStatement(CalenStatement object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Asynch Statement</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Asynch Statement</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseAsynchStatement(AsynchStatement object)
   {
     return null;
   }
@@ -1398,22 +1498,6 @@ public class AgreeSwitch<T> extends Switch<T>
    * @generated
    */
   public T caseAnnexSubclause(AnnexSubclause object)
-  {
-    return null;
-  }
-
-  /**
-   * Returns the result of interpreting the object as an instance of '<em>Namespace</em>'.
-   * <!-- begin-user-doc -->
-   * This implementation returns null;
-   * returning a non-null result will terminate the switch.
-   * <!-- end-user-doc -->
-   * @param object the target of the switch.
-   * @return the result of interpreting the object as an instance of '<em>Namespace</em>'.
-   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-   * @generated
-   */
-  public T caseNamespace(Namespace object)
   {
     return null;
   }

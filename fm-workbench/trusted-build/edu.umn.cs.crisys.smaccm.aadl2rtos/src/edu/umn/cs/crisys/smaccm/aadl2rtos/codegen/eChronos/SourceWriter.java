@@ -34,7 +34,7 @@ import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.IRQDispatcher;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.InputEventDispatcher;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.PeriodicDispatcher;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.*;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.Connection;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.PortConnection;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.SharedData;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.SharedDataAccessor;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.ThreadCalendar;
@@ -568,10 +568,10 @@ public class SourceWriter extends AbstractCodeWriter {
 
   private void writeSharedDataReader(ThreadImplementation impl, SharedDataAccessor outp) throws IOException {
     SharedData sharedData = outp.getSharedData();
-    Type dt = sharedData.getDataType();
+    Type dt = sharedData.getType();
     out.append("bool " + Names.getThreadImplReaderFnName(outp) + 
       "(/* THREAD_ID tid,  */ " + 
-        Names.createRefParameter(outp.getSharedData().getDataType(), "elem") + ") {\n\n");
+        Names.createRefParameter(outp.getSharedData().getType(), "elem") + ") {\n\n");
     // unlock the semaphore
     out.append(ind + "bool result = true;\n\n");
     writeEnterCriticalSection(ind, outp.getSharedData().getMutexDefine()); 
@@ -700,7 +700,7 @@ public class SourceWriter extends AbstractCodeWriter {
   // TODO: normalize ports and shared data in terms of functions.
   private void writeSharedDataVar(SharedData c) throws IOException {
     writeComment("Shared data for shared data port: " + c.getPortName() + "\n");
-    out.append(c.getDataType().getCType().varString(c.getVarName()) + "; \n");
+    out.append(c.getType().getCType().varString(c.getVarName()) + "; \n");
   }
   
   private void writeAllSharedVars() throws IOException {
@@ -750,7 +750,7 @@ public class SourceWriter extends AbstractCodeWriter {
       
       // for (ThreadInstance ti: impl.getThreadInstanceList()) {
       // }
-      for (Connection c: outp.getConnections()) {
+      for (PortConnection c: outp.getConnections()) {
         InputPort destPort = c.getDestPort();
         Type destPortType = destPort.getType();
         ThreadInstance destThread = c.getDestThreadInstance();
@@ -806,10 +806,10 @@ public class SourceWriter extends AbstractCodeWriter {
 
   private void writeSharedDataWriter(ThreadImplementation impl, SharedDataAccessor outp) throws IOException {
     SharedData sharedData = outp.getSharedData();
-    Type dt = sharedData.getDataType();
+    Type dt = sharedData.getType();
     out.append("bool " + Names.getThreadImplWriterFnName(outp) + 
       "(/* THREAD_ID tid,  */ "); 
-    out.append("const " + Names.createRefParameter(outp.getSharedData().getDataType(), "elem") + ") {\n\n");
+    out.append("const " + Names.createRefParameter(outp.getSharedData().getType(), "elem") + ") {\n\n");
     // unlock the semaphore
     out.append(ind + "bool result = true;\n\n");
     writeEnterCriticalSection(ind, outp.getSharedData().getMutexDefine());

@@ -1,0 +1,248 @@
+import "Common.stg"
+
+////////////////////////////////////////////////////////////////////////////
+//
+// Declarations for camkes assembly
+// 
+////////////////////////////////////////////////////////////////////////////
+
+camkesAssemblyPurpose(sysInstanceName) ::= <<
+This header file contains the main CAmkES assembly for the  
+AADL system instance rooted at <sysInstanceName>.
+>>
+
+camkesAssemblyPrefix(name, date, path) ::= "<stdFilePrefix(date, path, camkesAssemblyPurpose(name))>"
+
+assemblyThreadImplementationImports(threadImpl) ::= <<
+import "<threadImpl.rootToCamkesComponentFilePath>";
+
+>>
+
+assemblyThreadComponent(threadImpl) ::= <<
+component <threadImpl.componentName> <threadImpl.componentInstanceName>;
+
+>>
+
+assemblyIrqComponent(dispatcher) ::= <<
+component <dispatcher.irqComponent> <dispatcher.irqObject>;
+
+>>
+
+
+////////////////////////////////////////////////////////////////////////////
+//
+// Declarations for IRQ components
+// 
+////////////////////////////////////////////////////////////////////////////
+
+
+irqComponentMemoryRegion(memoryRegion) ::= <<
+dataport Buf <memoryRegion.name>;
+
+>>
+
+constructIRQComponent(dispatcher) ::= <<
+component <dispatcher.irqComponent> {
+    hardware;
+    <dispatcher.memoryRegions:irqComponentMemoryRegion()>
+    emits DataAvailable irq;
+}
+
+>>
+
+instantiateIRQComponent(dispatcher) ::= << 
+component <dispatcher.irqComponent> <dispatcher.irqObject>;
+
+>>
+
+constructIRQConfig(dispatcher) ::= <<
+<dispatcher.memoryRegions:{memoryRegion | <dispatcher.irqObject>.<memoryRegion.name>_attributes = "<memoryRegion.region>:0x1000"; }>
+<dispatcher.irqObject>.irq_attributes = <dispatcher.signalNumber> ; 
+
+>>
+
+constructIRQMemoryConnection(memoryRegion, dispatcher) ::= <<
+connection seL4HardwareMMIO <dispatcher.name>_<memoryRegion.name>(from <dispatcher.threadImplementation.componentInstanceName>.<memoryRegion.name>, to <dispatcher.irqObject>.<memoryRegion.name>);
+
+>>
+
+constructIRQSignal(dispatcher) ::= <<
+connection seL4HardwareInterrupt <dispatcher.name>_irq(from <dispatcher.irqObject>.irq, to <dispatcher.threadImplementation.componentInstanceName>.<dispatcher.name>);
+
+>>
+
+constructIRQConnections(dispatcher) ::= <<
+<dispatcher.memoryRegions:constructIRQMemoryConnection(dispatcher)>
+<constructIRQSignal(dispatcher)>
+
+>>
+
+
+////////////////////////////////////////////////////////////////////////////
+//
+// Declarations for periodic components
+// 
+////////////////////////////////////////////////////////////////////////////
+
+constructPeriodicComponent(calendar) ::= <<
+<if(calendar.hasDispatchers)><\\>
+component <calendar.periodicDispatcherComponentName> <calendar.periodicDispatcherInstanceName>;
+<endif>
+>>	
+
+rpcConnection(cid, from1, from2, to1, to2) ::= 
+   "connection seL4RPCCall <cid> (from <from1>.<from2>, to <to1>.<to2>);"
+
+connectPassiveToActive(passiveThreadImpl, activeThreadImpl, model) ::= <<
+<rpcConnection(model.generateConnectionName,
+	activeThreadImpl.componentInstanceName,
+	passiveThreadImpl.interfaceInstanceName,
+	passiveThreadImpl.componentInstanceName,
+	passiveThreadImpl.componentDispatcherInterfaceVarIdName)>
+
+>>
+
+assemblyConnectActiveToPassiveThreads(threadImpl, model) ::= <<
+<model.passiveThreadImplementations:connectPassiveToActive(threadImpl, model)>
+
+>>
+
+
+connectActiveSendToActiveSend(sourcePort, destPort, model) ::= <<
+<if(destPort.threadImplementation.isActive)><\\>
+<rpcConnection(model.generateConnectionName, 
+	sourcePort.threadImplementation.componentInstanceName,
+    sourcePort.name, 
+	destPort.threadImplementation.componentInstanceName,
+	destPort.name)> 
+<endif>
+>>
+
+connectActiveToActive(connection, model) ::= <<
+<connectActiveSendToActiveSend(connection.sourcePort, connection.destPort, model)>
+>>
+
+assemblyConnectActiveToActiveThreads(threadImpl, model) ::= <<
+<threadImpl.isSrcOfConnectionList:connectActiveToActive(model)>
+>>
+
+connectActivePeriodic(dispatcher, threadImpl, model) ::= <<
+<if(dispatcher.isPeriodic)><\\>
+<rpcConnection(model.generateConnectionName, 
+	model.threadCalendar.periodicDispatcherInstanceName,
+	dispatcher.dispatcherComponentDispatchName, 
+	threadImpl.componentInstanceName,
+	dispatcher.dispatcherComponentDispatchName)>
+<endif>
+>>
+
+assemblyConnectPeriodic(threadImpl, model) ::= <<
+<threadImpl.dispatchers:connectActivePeriodic(threadImpl, model)>
+>>
+
+connectReaderWriter(connection, srcThreadImpl, model) ::= <<
+<if(connection.sourcePort.isOutputDataPort)><\\>
+<rpcConnection(model.generateConnectionName, 
+	srcThreadImpl.componentInstanceName,
+	connection.sourcePort.name,
+	connection.destPortThreadImplementation.componentInstanceName,
+	connection.destPort.name)>
+<endif>
+>>
+
+assemblyConnectReadersWriters(threadImpl, model) ::= <<
+<threadImpl.isSrcOfConnectionList:connectReaderWriter(threadImpl, model)>
+>>
+
+connectRpg(endpointConnection, srcThreadImpl, model) ::= <<
+<rpcConnection(model.generateConnectionName, 
+	srcThreadImpl.componentInstanceName,
+	endpointConnection.requiresEndpoint.name,
+	endpointConnection.providesThreadImplementation.componentInstanceName,
+	endpointConnection.providesEndpoint.name)>
+>>
+
+assemblyConnectRpgs(threadImpl, model) ::= <<
+<threadImpl.isRequiresOfConnectionList:connectRpg(threadImpl, model)>
+>>
+
+camkesAssemblyBody(model) ::= <<
+
+import <\u003C>std_connector.camkes<\u003E>;
+<if(model.threadCalendar.hasDispatchers)>import "<model.threadCalendar.periodicDispatcherPathName>";
+component EPIT {
+    hardware;
+    dataport Buf mem;
+    emits DataAvailable irq;
+}
+
+<endif>
+
+<model.threadImplementations:assemblyThreadImplementationImports()>
+
+<model.irqDispatchers:constructIRQComponent()>
+
+assembly {
+	composition {
+        <if(model.threadCalendar.hasDispatchers)>
+        // Periodic components
+        component EPIT epit;
+		<constructPeriodicComponent(model.threadCalendar)>
+		<endif>
+		
+		// IRQ-handling hardware components
+		<model.irqDispatchers:assemblyIrqComponent()>
+		
+		// component instances for all AADL-defined threads
+		<model.threadImplementations:assemblyThreadComponent()>
+		
+		// connections from active dispatchers to passive threads
+		<model.activeThreadImplementations:assemblyConnectActiveToPassiveThreads(model)>	
+		
+		// connections from active dispatcher send/receive to other active dispatcher send/receive
+		<model.activeThreadImplementations:assemblyConnectActiveToActiveThreads(model)>
+
+		<if(model.threadCalendar.hasDispatchers)>
+		// Periodic dispatcher connections
+		<model.activeThreadImplementations:assemblyConnectPeriodic(model)>
+        connection seL4HardwareMMIO epit_mem(from <model.threadCalendar.periodicDispatcherInstanceName>.mem, to epit.mem);
+		connection seL4HardwareInterrupt irq(from epit.irq, to <model.threadCalendar.periodicDispatcherInstanceName>.irq);
+		<endif>
+		
+		// IRQ connections (if any)
+		<model.irqDispatchers:constructIRQConnections()>
+		
+		// Passive component read/write connections
+		<model.threadImplementations:assemblyConnectReadersWriters(model)>
+		
+		// Direct RPC connections
+		<model.threadImplementations:assemblyConnectRpgs(model)>
+	}
+    configuration {
+		<if(model.threadCalendar.hasDispatchers)>
+		<if(model.isQemuTarget)>
+		/* Freescale i.MX31 (KZM) QEMU Configuration */
+        epit.mem_attributes = "0x53F98000:0x1000";
+		epit.irq_attributes = 27;
+		<elseif(model.isOdroidTarget)>
+		/* Freescale i.MX6 (Sabralite) ODROID Configuration */
+        epit.mem_attributes = "0x020D0000:0x1000";
+		epit.irq_attributes = 88;
+		<else>
+		AADL Translation Error: unknown target <model.hwTarget>; 
+		I don't know how to configure clock interrupt for this hardware target. 
+		<endif>
+		<endif>
+		<model.irqDispatchers:constructIRQConfig()>
+    }
+}
+
+>>
+
+
+
+//
+// connections for IRQ dispatchers
+// <model.irqDispatchers:constructIRQConnections()>
+
+// 	<model.irqDispatchers:constructIRQConfig()>
