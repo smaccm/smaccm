@@ -277,17 +277,7 @@ public class AgreeGenerator {
     	return InlineAssumptionGuarantees.program(program); //strip assumptions and guarantees
     }
     
-    private static Equation getHistEq(VarDecl var, Expr expr){
-    	IdExpr varId = new IdExpr(var.id);
-    	Expr histExpr = new UnaryExpr(UnaryOp.PRE, varId);
-    	histExpr = new BinaryExpr(histExpr, BinaryOp.AND, expr);
-    	histExpr = new BinaryExpr(expr, BinaryOp.ARROW, histExpr);
-    	Equation histEq = new Equation(varId, histExpr);
-    	return histEq;
-    }
-    
-    
-    public static AgreeProgram getRealizabilityLustre(ComponentInstance compInst){
+ public static AgreeProgram getRealizabilityLustre(ComponentInstance compInst){
         
         
         ComponentType compType = AgreeEmitterUtilities.getInstanceType(compInst);
@@ -325,7 +315,7 @@ public class AgreeGenerator {
         
         //get the names of the inputs for realizability checking
         List<String> inputStrs = new ArrayList<String>();
-        for(VarDecl inputVar : subNode.inputs){
+        for(VarDecl inputVar : state.inputVars){
             inputStrs.add(inputVar.id);
         }
         
@@ -355,7 +345,15 @@ public class AgreeGenerator {
 
     }
     
-    
+    private static Equation getHistEq(VarDecl var, Expr expr){
+    	IdExpr varId = new IdExpr(var.id);
+    	Expr histExpr = new UnaryExpr(UnaryOp.PRE, varId);
+    	histExpr = new BinaryExpr(histExpr, BinaryOp.AND, expr);
+    	histExpr = new BinaryExpr(expr, BinaryOp.ARROW, histExpr);
+    	Equation histEq = new Equation(varId, histExpr);
+    	return histEq;
+    }
+
     public static AgreeProgram getLustre(ComponentInstance compInst, boolean monolithic){
     	
     	AgreeProgram agreeProgram = new AgreeProgram();

@@ -6,6 +6,7 @@ import java.text.DecimalFormat;
 import java.util.Map;
 
 import jkind.api.results.AnalysisResult;
+import jkind.api.results.JRealizabilityResult;
 import jkind.api.results.PropertyResult;
 import jkind.api.ui.results.AnalysisResultTree;
 import jkind.interval.NumericInterval;
@@ -161,6 +162,13 @@ public class AgreeMenuListener implements IMenuListener {
             } else if (prop instanceof UnknownProperty) {
                 return ((UnknownProperty) prop).getInductiveCounterexample();
             }
+        }else if(result instanceof JRealizabilityResult){
+            PropertyResult propResult = ((JRealizabilityResult) result).getPropertyResult();
+            Property prop = propResult.getProperty();
+            if(prop instanceof InvalidProperty){
+                return ((InvalidProperty) prop).getCounterexample();
+            }
+            
         }
 
         return null;

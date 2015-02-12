@@ -2,6 +2,7 @@ package com.rockwellcollins.atc.agree.analysis.preferences;
 
 import jkind.SolverOption;
 import jkind.api.JKindApi;
+import jkind.api.JRealizabilityApi;
 import jkind.api.Kind2Api;
 import jkind.api.Kind2WebApi;
 import jkind.api.KindApi;
@@ -72,6 +73,16 @@ public class PreferencesUtil {
 		}
 		return api;
 	}
+	
+	public static JRealizabilityApi getJRealizabilityApi() {
+        IPreferenceStore prefs = getPreferenceStore();
+        JRealizabilityApi api = new JRealizabilityApi();
+
+        api.setN(prefs.getInt(PreferenceConstants.PREF_DEPTH));
+        api.setTimeout(prefs.getInt(PreferenceConstants.PREF_TIMEOUT));
+        
+        return api;
+    }
 
 	private static Kind2Api getKind2Api() {
 		IPreferenceStore prefs = getPreferenceStore();

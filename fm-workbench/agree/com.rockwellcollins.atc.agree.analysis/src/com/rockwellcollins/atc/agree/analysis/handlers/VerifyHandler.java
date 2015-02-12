@@ -6,11 +6,14 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
+
 import jkind.JKindException;
+import jkind.api.JRealizabilityApi;
 import jkind.api.KindApi;
 import jkind.api.results.AnalysisResult;
 import jkind.api.results.CompositeAnalysisResult;
 import jkind.api.results.JKindResult;
+import jkind.api.results.JRealizabilityResult;
 import jkind.lustre.Program;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -106,8 +109,8 @@ public abstract class VerifyHandler extends AadlHandler {
                 result = wrapper;
             }else if (isRealizability()){
                 AgreeProgram agreeProgram = AgreeGenerator.getRealizabilityLustre(si);
-                wrapper.addChild(createRealizabilityVerification(agreeProgram));
-                result = wrapper;
+                result = createRealizabilityVerification(agreeProgram);
+                //result = wrapper;
             } else {
             	AgreeProgram agreeProgram = AgreeGenerator.getLustre(si, isMonolithic());//, isMonolithic());
                 wrapper.addChild(createGuaranteeVerification(agreeProgram));
@@ -128,7 +131,7 @@ public abstract class VerifyHandler extends AadlHandler {
         List<String> props = new ArrayList<>();
         props.addAll(agreeProgram.state.guarProps);
         
-        JKindResult result = new JKindResult("Realizability Analysis", props, agreeProgram.state.renaming);
+        JRealizabilityResult result = new JRealizabilityResult("Realizability Analysis", agreeProgram.state.renaming);
         queue.add(result);
 
         ComponentImplementation compImpl = AgreeEmitterUtilities.getInstanceImplementation(agreeProgram.state.curInst);
@@ -291,6 +294,8 @@ public abstract class VerifyHandler extends AadlHandler {
                 activateTerminateHandler(monitor);
     			KindApi api = PreferencesUtil.getKindApi();
     			KindApi consistApi = PreferencesUtil.getConsistencyApi();
+    			JRealizabilityApi realApi = PreferencesUtil.getJRealizabilityApi();
+    			
     			while (!queue.isEmpty() && !monitor.isCanceled()) {
     			    JKindResult result = queue.peek();
 //    				JKindResult result = queue.remove();
@@ -298,6 +303,8 @@ public abstract class VerifyHandler extends AadlHandler {
     				try {
     					if(result instanceof ConsistencyResult){
     						consistApi.execute(program, result, monitor);
+    					}else if (result instanceof JRealizabilityResult){
+    					    realApi.execute(program, (JRealizabilityResult) result, monitor);
     					}else{
     						api.execute(program, result, monitor);
     					}
