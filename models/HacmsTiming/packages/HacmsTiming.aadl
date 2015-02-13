@@ -19,7 +19,7 @@ system A2
     output : out event data port Base_Types::Integer;
   
   annex agree {**
-  	const exec_time : real = 1.0;
+  	const exec_time : real = 2.0;
   **};
     
 end A2;
@@ -91,39 +91,53 @@ system implementation top_level.i
   	 synchrony : asynchronous;
   	 
   	 const a1_period : real = 20.0;
-  	 const a2_period : real = 10.0;
+  	 eq a2_period : real;-- = 10.0;
+  	 
+  	 assert 8.0 <= a2_period and a2_period <= 12.0;
   	
   	 eq clock_a1 : bool = a1._CLK;
   	 eq clock_a2 : bool = a2._CLK;
-
+  	 
+  	 
+  	 node getLastSignal(time : real, period : real) returns (ret : real);
+  	 let
+  	   ret = 0.0 -> if time < pre(ret) + period then
+  	                  pre(ret)
+  	                else
+  	                  pre(ret + period);
+  	 tel;
+  	 
+  	 node getSignalCleared(time : real, clock : bool, exec_time : real) returns (ret : real);
+  	 let
+  	   ret = if clock then time - exec_time else prev(ret, -1.0);
+  	 tel;
   	 
   	 --these variables indicate the last time that a signal's period has passed
-  	 eq a1_sig_last : real =  0.0 -> if t < pre(a1_sig_last) + a1_period then
-  	                           pre(a1_sig_last)
-  	                         else
-  	                           pre(a1_sig_last) + a1_period;
-  	 
-  	 eq a2_sig_last : real =  0.0 -> if t < pre(a2_sig_last) + a2_period then
-  	                           pre(a2_sig_last)
-  	                         else
-  	                           pre(a2_sig_last) + a2_period;
+  	 eq a1_sig_last : real = getLastSignal(t, a1_period);
+  	 eq a2_sig_last : real = getLastSignal(t, a2_period);
   	 
   	 --these variables indicate the last time that a component ticked                          
-  	 eq a1_sig_cleared : real = if clock_a1 then t else prev(a1_sig_cleared, -1.0);
-  	 eq a2_sig_cleared : real = if clock_a2 then t else prev(a2_sig_cleared, -1.0);           
+  	 eq a1_sig_cleared : real = getSignalCleared(t, clock_a1, a1.exec_time);
+  	 eq a2_sig_cleared : real = getSignalCleared(t, clock_a2, a2.exec_time); 
                  
      --these variables are true if a component has yet to execute during its period           
-  	 eq sig_a1 : bool = a1_sig_last >= prev(a1_sig_cleared, -1.0);
-  	 eq sig_a2 : bool = a2_sig_last >= prev(a2_sig_cleared, -1.0);
-  	 
+  	 eq sig_a1 : bool = true -> a1_sig_last > pre(a1_sig_cleared);
+  	 eq sig_a2 : bool = true -> a2_sig_last > pre(a2_sig_cleared);
 
      --time is positive and always increasing
 	 assert t >= 0.0 and (true -> t > pre(t)); 
-
-  	 --figure out how much time has progressed. Note that more time
-  	 --may pass between clock ticks than just the execution time of a component
-  	 assert clock_a1 => t >= prev(t,0.0) + a1.exec_time;
-  	 assert clock_a2 => t >= prev(t,0.0) + a2.exec_time;
+	 
+	 --something executes right away
+	 assert t = a1.exec_time or t = a2.exec_time -> true;
+	 
+	 --if something was ready to execute in the last step but did not, 
+	 --then it should execute in this step if it has the highest priority
+	 assert true -> if pre(sig_a1) and not pre(clock_a1) then --this is actually not possible
+	                  t - pre(t) = a1.exec_time 
+	                else if pre(sig_a2) and not pre(clock_a2) then
+	 				  t - pre(t) = a2.exec_time
+	 				else 
+	 				  t = pre(a2_sig_last) + a2_period; --this should always be the minimum period
   	  
   	 --no two clocks tick at the same time
   	 assert not(clock_a1 and clock_a2);
@@ -151,14 +165,12 @@ system implementation top_level.i
 --	        (clock_m3 => sig_m3);
   
      --assert that clocks meet their deadlines
-     assert true -> pre(a1_sig_last) != a1_sig_last => 
-       (pre(a1_sig_last) <= a1_sig_cleared and a1_sig_cleared <= a1_sig_last);
+     lemma "a1 never misses its deadline" : true -> pre(a1_sig_last) != a1_sig_last => 
+       pre(clock_a1) or clock_a1 or (pre(a1_sig_last) <= a1_sig_cleared and a1_sig_cleared <= a1_sig_last);
        
-     assert true -> pre(a2_sig_last) != a2_sig_last => 
-       (pre(a2_sig_last) <= a2_sig_cleared and a2_sig_cleared <= a2_sig_last);
-       
-     lemma "check for consistency" : true;
-  	  
+     lemma "a2 never misses its deadline" : true -> pre(a2_sig_last) != a2_sig_last => 
+       pre(clock_a2) or clock_a2 or (pre(a2_sig_last) <= a2_sig_cleared and a2_sig_cleared <= a2_sig_last);
+         	  
   **};
     
     

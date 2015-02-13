@@ -959,7 +959,8 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
             NamedElement id = getFinalNestId(dotId);
             if (!(id instanceof Arg) && !(id instanceof ConstStatement)
                     && !(id instanceof NodeDefExpr) && !(id instanceof FnDefExpr)
-                    && !(id instanceof DataSubcomponent)) {
+                    && !(id instanceof DataSubcomponent)
+                    && !(id instanceof RecordType)) {
                 error(dotId, "Only arguments, constants, and node calls allowed within a node");
             }
         }
