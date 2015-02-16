@@ -1,17 +1,16 @@
 package com.rockwellcollins.atc.agree.analysis;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import jkind.api.results.Renaming;
 
 public class AgreeRenaming extends Renaming {
 	
-	private String prefix;
 	private Map<String, String> explicitRenames = new HashMap<>();
-	private List<String> blackList = new ArrayList<>();
+	private Set<String> blackList = new HashSet<>();
 	
 	public AgreeRenaming(){
 		blackList.add(".*__ASSUM.*");
@@ -24,11 +23,22 @@ public class AgreeRenaming extends Renaming {
 		blackList.add(".*~[^_]*$.*");
 		blackList.add(".*~state[0-9]*.*");
 		blackList.add(".*\\._.*");
-
+		blackList.add("__CONSIST_COUNTER");
+        blackList.add("__SUBCOMP_HIST");
+        blackList.add("___SUBCOMP_CONJ");
+        blackList.add("___SYS_ASSUM_HIST");
+        blackList.add("___SYS_GUAR_CONJ");
+        blackList.add("___SYS_GUAR_HIST");
+        blackList.add("___SYS_ASSUM_CONJ");
+	}
+	
+	public void addToBlackList(String regex){
+	    blackList.add(regex);
 	}
 	
 	public void addRenamings(AgreeRenaming renaming){
 		this.explicitRenames.putAll(renaming.explicitRenames);
+		this.blackList.addAll(renaming.blackList);
 	}
 
 	public void addExplicitRename(String oldName, String newName){

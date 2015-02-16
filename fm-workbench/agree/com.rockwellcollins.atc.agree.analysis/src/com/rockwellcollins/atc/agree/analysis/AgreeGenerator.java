@@ -571,7 +571,7 @@ public class AgreeGenerator {
 		addCategories(prefix, state, subState);
 		
 		//add all the nodes defined by substates
-		state.nodeDefExpressions.addAll(subState.nodeDefExpressions);
+		addNodes(state, subState);
 		
 		//add all the "initially" expressions
 		addInitialConstraints(prefix, state, subState, clockId);
@@ -590,6 +590,17 @@ public class AgreeGenerator {
 		
 		
 	}
+
+    private static void addNodes(AgreeEmitterState state,
+            AgreeEmitterState subState) {
+        
+        //we need to blacklist any node names so they do not appear
+        //in the counter example results dialog
+        for(Node node : state.nodeDefExpressions){
+            state.renaming.addToBlackList(".*"+node.id+"~.*");
+        }
+        state.nodeDefExpressions.addAll(subState.nodeDefExpressions);
+    }
 
 	private static Expr getClockHoldExprs(AgreeEmitterState state){
         //for monolithic verification we need to add assertions that
@@ -627,7 +638,7 @@ public class AgreeGenerator {
         int i = 0;
         String condactStr = "~0";
         String clockedPropTag = "";
-        if(state.synchrony != 0 || state.calendar.size() != 0){
+        if(state.synchrony != 0 || state.calendar.size() != 0 || state.asynchronous){
             condactStr = "~condact~0";
             clockedPropTag = "~clocked_property";
         }
