@@ -239,8 +239,14 @@ public class AgreeGenerator {
     	
     	Expr clockHolds = getClockHoldExprs(state);
     	
-    	Expr compositionConsistExpr = new BinaryExpr(assertHistId, BinaryOp.AND, sysAssumHistId);
-    	compositionConsistExpr = new BinaryExpr(compositionConsistExpr, BinaryOp.AND, sysGuarHistId);
+    	Expr compositionConsistExpr = assertHistId;
+    	
+    	//NOTE: We used to include system assumption history and system guarantee history in the 
+    	//composition consistency check, but this can lead to inconsistency when the system level
+    	//contract is not provable, it's probably better to not include these terms.
+    	
+//    	Expr compositionConsistExpr = new BinaryExpr(assertHistId, BinaryOp.AND, sysAssumHistId);
+//    	compositionConsistExpr = new BinaryExpr(compositionConsistExpr, BinaryOp.AND, sysGuarHistId);
     	compositionConsistExpr = new BinaryExpr(compositionConsistExpr, BinaryOp.AND, subCompExprHistId);
     	compositionConsistExpr = new BinaryExpr(compositionConsistExpr, BinaryOp.AND, countEqExpr);
     	compositionConsistExpr = new BinaryExpr(compositionConsistExpr, BinaryOp.AND, clockHolds);
@@ -645,7 +651,7 @@ public class AgreeGenerator {
         
 		for(Equation assumEq : subState.assumpExpressions){
 			String lustreVarName = getLustreNodeName(subState);
-			lustreVarName = lustreVarName+condactStr+".___ASSUME"+i+clockedPropTag;
+			lustreVarName = lustreVarName+condactStr+".___ASSUME"+i+++clockedPropTag;
 			String assumeDisplayText = assumEq.lhs.get(0).id;
 			assumeDisplayText = state.renaming.rename(
 					subState.curInst.getInstanceObjectPath()+" : \""+assumeDisplayText+"\"");
@@ -699,7 +705,7 @@ public class AgreeGenerator {
 		
 		NodeCallExpr nodeCall = new NodeCallExpr(subNode.id, callArgs);
 		
-		if(state.synchrony == 0 && state.calendar.size() == 0){
+		if(state.synchrony == 0 && state.calendar.size() == 0 && !state.asynchronous){
 			clockId = new BoolExpr(true);
 		}
 		CondactExpr condactCall = new CondactExpr(clockId, nodeCall, args);
@@ -800,7 +806,10 @@ public class AgreeGenerator {
     	inputs.addAll(subState.outputVars);
     	locals.addAll(subState.internalVars);
     	
-    	if(!monolothicCheck){
+    	ComponentClassifier compClass = subState.curInst.getComponentClassifier();
+    	
+    	//throw away intermediate guarantees
+    	if((compClass instanceof ComponentType) || !monolothicCheck){
     	    for(Equation guarEq : subState.guarExpressions){
     	        guarantees.add(guarEq.expr);
     	    }
@@ -816,9 +825,7 @@ public class AgreeGenerator {
     	
     	IdExpr assertId = new IdExpr("__ASSERT");
     	outputs.add(new VarDecl(assertId.id, NamedType.BOOL));
-    	
 
-    	ComponentClassifier compClass = subState.curInst.getComponentClassifier();
     	Expr finalAssert;
     	//if this subcomponent is a component type (not an implementation)
     	//the contract bottoms out here and we need to assert it

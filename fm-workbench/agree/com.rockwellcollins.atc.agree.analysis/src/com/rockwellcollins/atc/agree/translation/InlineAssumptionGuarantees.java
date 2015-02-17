@@ -68,7 +68,7 @@ public class InlineAssumptionGuarantees extends AstMapVisitor {
 		List<VarDecl> inputs = Util.safeList(node.inputs);
 		List<VarDecl> outputs = Util.safeList(node.outputs);
 		
-		if(guarantees.size() == 0){
+		if(guarantees.size() == 0 && assumptions.size() == 0){
 		    return new Node(node.location, node.id, node.inputs, node.outputs, node.locals, node.equations, 
 	                node.properties, node.assertions, null, null, node.realizabilityInputs);
 		}
