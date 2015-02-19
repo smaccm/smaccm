@@ -18,6 +18,7 @@ import org.osate.aadl2.Connection;
 import org.osate.aadl2.ConnectionEnd;
 import org.osate.aadl2.Context;
 import org.osate.aadl2.DataAccess;
+import org.osate.aadl2.DataSubcomponent;
 import org.osate.aadl2.EnumerationLiteral;
 import org.osate.aadl2.FeatureGroup;
 import org.osate.aadl2.Property;
@@ -76,7 +77,9 @@ public class ConnectionUtils {
 		if(destConn instanceof DataAccess
 				|| sourConn instanceof DataAccess
 				|| destConn instanceof BusAccess
-				|| sourConn instanceof BusAccess){
+				|| sourConn instanceof BusAccess
+				|| destConn instanceof DataSubcomponent
+				|| sourConn instanceof DataSubcomponent){
 			return;
 		}
 		Context destContext = absConnDest.getContext();

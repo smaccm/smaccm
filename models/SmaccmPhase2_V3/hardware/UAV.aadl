@@ -15,7 +15,7 @@ public
       radio_access_2_4Ghz: requires bus access UAS::RF_Spectrum.RF_2_4GHz;
       mavlink_in : in data port software_types::EncryptMAVLink;
       mavlink_out : out data port software_types::EncryptMAVLink;
-      ppm_commands: in data port software_types::Flight_Control_Commands.i;
+      ppm_commands: in event data port software_types::Flight_Control_Commands.i;
       
     annex agree {**
     	eq time : int;
@@ -57,10 +57,6 @@ public
       Actual_Connection_Binding => (reference (can_bus)) applies to conn_mission1;
       Actual_Memory_Binding => (reference (ODROID_XU)) applies to MSW;
       Actual_Memory_Binding => (reference (PIXHAWK.MC.FLASH)) applies to FSW;
-      
-    annex agree {**
-    	assert time = FSW.time;
-    **};
       
   end UAV.Impl;
 

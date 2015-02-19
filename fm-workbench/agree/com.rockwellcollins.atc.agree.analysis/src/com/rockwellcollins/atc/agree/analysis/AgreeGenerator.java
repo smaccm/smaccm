@@ -239,14 +239,8 @@ public class AgreeGenerator {
     	
     	Expr clockHolds = getClockHoldExprs(state);
     	
-    	Expr compositionConsistExpr = assertHistId;
-    	
-    	//NOTE: We used to include system assumption history and system guarantee history in the 
-    	//composition consistency check, but this can lead to inconsistency when the system level
-    	//contract is not provable, it's probably better to not include these terms.
-    	
-//    	Expr compositionConsistExpr = new BinaryExpr(assertHistId, BinaryOp.AND, sysAssumHistId);
-//    	compositionConsistExpr = new BinaryExpr(compositionConsistExpr, BinaryOp.AND, sysGuarHistId);
+    	Expr compositionConsistExpr = new BinaryExpr(assertHistId, BinaryOp.AND, sysAssumHistId);
+    	compositionConsistExpr = new BinaryExpr(compositionConsistExpr, BinaryOp.AND, sysGuarHistId);
     	compositionConsistExpr = new BinaryExpr(compositionConsistExpr, BinaryOp.AND, subCompExprHistId);
     	compositionConsistExpr = new BinaryExpr(compositionConsistExpr, BinaryOp.AND, countEqExpr);
     	compositionConsistExpr = new BinaryExpr(compositionConsistExpr, BinaryOp.AND, clockHolds);
@@ -365,10 +359,12 @@ public class AgreeGenerator {
     	AgreeProgram agreeProgram = new AgreeProgram();
     	AgreeEmitterState state;
     	
+    	Subcomponent subComp = compInst.getSubcomponent();
+    	
     	if(monolithic){
-    		state = generateMonolithic(compInst, null);
+    		state = generateMonolithic(compInst, subComp);
     	}else{
-    		state = generateSingleLayer(compInst, null);
+    		state = generateSingleLayer(compInst, subComp);
     	}
     	
     	agreeProgram.state = state;
@@ -599,12 +595,7 @@ public class AgreeGenerator {
 
     private static void addNodes(AgreeEmitterState state,
             AgreeEmitterState subState) {
-        
-        //we need to blacklist any node names so they do not appear
-        //in the counter example results dialog
-        for(Node node : state.nodeDefExpressions){
-            state.renaming.addToBlackList(".*"+node.id+"~.*");
-        }
+
         state.nodeDefExpressions.addAll(subState.nodeDefExpressions);
     }
 
@@ -653,7 +644,7 @@ public class AgreeGenerator {
 			String lustreVarName = getLustreNodeName(subState);
 			lustreVarName = lustreVarName+condactStr+".___ASSUME"+i+++clockedPropTag;
 			String assumeDisplayText = assumEq.lhs.get(0).id;
-			assumeDisplayText = state.renaming.rename(
+			assumeDisplayText = state.renaming.forceRename(
 					subState.curInst.getInstanceObjectPath()+" : \""+assumeDisplayText+"\"");
 			assumeDisplayText = assumeDisplayText.replaceAll(".*\\.", "");
 			state.renaming.addExplicitRename(lustreVarName, assumeDisplayText);
@@ -664,7 +655,7 @@ public class AgreeGenerator {
 		for(String subAssum : subState.assumeProps){
 		    String lustreVarName = getLustreNodeName(subState);
             lustreVarName = lustreVarName+condactStr+"."+subAssum;
-            String assumeDisplayText = subState.renaming.rename(subAssum);
+            String assumeDisplayText = subState.renaming.forceRename(subAssum);
             assumeDisplayText = subState.curComp.getName()+"."+assumeDisplayText;
             state.renaming.addExplicitRename(lustreVarName, assumeDisplayText);
             state.assumeProps.add(lustreVarName);

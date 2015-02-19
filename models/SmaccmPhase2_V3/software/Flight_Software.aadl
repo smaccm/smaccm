@@ -3,6 +3,7 @@ public
   with software_types;
   with hardware_types;
   with SMACCM;
+  with Base_Types;
   
 process main
   features
@@ -14,8 +15,25 @@ process main
     battery : in data port software_types::Battery_Data;
 
   annex agree {**
-  	eq time : int;
-  	  **};
+  	eq time : real;
+  	eq control_mode : int;
+  	eq mavlink_has_control : bool;
+  	  	
+  	eq time_of_last_can : real = 
+  	  if event(mission_in) then time else prev(time_of_last_can, -1.0);
+    eq time_since_mavlink_in_control : real = 
+      if not mavlink_has_control then 0.0 else prev(time_since_mavlink_in_control, 0.0);
+  	
+  	eq was_armed : bool = 
+  	  control_mode = AGREE_CONSTS.ARMED_MODE -> pre(was_armed) or control_mode = AGREE_CONSTS.ARMED_MODE;
+  	
+  	guarantee "if time passes with no message then the mode is landing" :
+  	  was_armed => 
+  	    time - time_since_mavlink_in_control > 800.0 and
+  	    time - time_of_last_can > 800.0 => 
+  	      control_mode = AGREE_CONSTS.LAND_MODE;
+  	
+  **};
 end main;
 
 
@@ -40,9 +58,9 @@ process implementation main.i
     conn5 : port can.user_input -> ui_mux.mavlink_input;
     conn7 : port can.control_law_out -> ui_mux.mavlink_control;
     
-    --ppm1 : port ppm_in -> ppm.flight_command;
-    --ppm2 : port ppm.user_input -> ui_mux.ppm_input;
-    --ppm3 : port ppm.control_law_out -> ui_mux.ppm_control;
+    ppm1 : port ppm_in -> ppm.flight_command;
+    ppm2 : port ppm.user_input -> ui_mux.ppm_input;
+    ppm3 : port ppm.control_law_out -> ui_mux.ppm_control;
     
     conn8 : port ui_mux.input_select -> control.user_input;
     conn9 : port control_params -> control.control_params;
@@ -67,8 +85,17 @@ process implementation main.i
   	assert time = can.time;
   	assert time = control.time;
   	assert time = ppm.time;
+  	assert time = ui_mux.time;
+  	assert control_mode = control.mode;
+  	assert mavlink_has_control = ui_mux.mavlink_has_control;
   	
-  	assert time = 0 -> time > pre(time);
+  	--should be greater than the worst case execution time of the
+  	--whole system
+  	synchrony : 1;
+  	const period : real = 50.0;
+  	
+  	assert time = period -> time = (pre(time) + period);
+  	assert time >= 0.0;
   	
   **};
   
@@ -87,13 +114,25 @@ thread can_px4_t
     mission_in : in event data port software_types::can_data;
     user_input : out event data port software_types::userinput_result.impl;
     control_law_out : out event data port software_types::control_law_request.impl;
-  
+    time : in data port Base_Types::Float;
+    --TODO: the type for control_law_out is surely different then from the ppm controller
   properties
     SMACCM::Language => "Ivory";
     SMACCM::Trusted => true;
   
   annex agree {**
-  	eq time : int;
+  	
+  	initially:
+  	  not(event(user_input) or event(control_law_out));
+  	
+  	--nothing is sent if can_data does not arrive.
+  	guarantee "no can data" :
+  	  not event(mission_in) => not event(user_input);
+  	  
+  	guarantee "we only send user input if we send contol input" :
+  	  event(user_input) = event(control_law_out);
+  
+  	
   **};
 end can_px4_t;
 
@@ -102,13 +141,26 @@ thread ppm_t
     flight_command : in event data port software_types::Flight_Control_Commands.i;
     user_input : out event data port software_types::userinput_result.impl;
     control_law_out : out event data port software_types::control_law_request.impl;
+    time : in data port Base_Types::Float;
       
   properties
     SMACCM::Language => "Ivory";
     SMACCM::Trusted => true;
    
   annex agree {**
-  	eq time : int;
+  	
+  	initially:
+  	  not (event(user_input) or event(control_law_out));
+
+  	guarantee "events generated simultaneously" :
+  	  event(user_input) = event(control_law_out) and
+  	  event(user_input) = event(flight_command);
+  	  
+  	guarantee "no ambiguous user_input_selects" :
+  	  not control_law_out.set_ui_ppm and control_law_out.set_ui_mavlink and
+   	    (control_law_out.set_ui_ppm or control_law_out.set_ui_mavlink);
+  	
+  	
   **};
 end ppm_t;
 
@@ -117,8 +169,9 @@ thread control_t
     user_input : in event data port software_types::userinput_result.impl;
     control_params : in data port software_types::control_data.impl;
     control_law : in event data port software_types::control_law.impl;
-    control_out : out data port software_types::controloutput.impl;
+    control_out : out event data port software_types::controloutput.impl;
     sensor_data : in event data port software_types::Sensor_Data;
+    time : in data port Base_Types::Float;
       
   properties
     SMACCM::Language => "Ivory";
@@ -126,26 +179,23 @@ thread control_t
     
     annex agree {**
    
-      const LANDING_TIMEOUT : int = 300;
+      const LANDING_TIMEOUT : real = 100.0;
    
       eq mode : int;
-  	  eq time : int;
-  	  eq time_of_last_event : int = if(event(user_input)) then time else 0 -> pre(time);
+  	  eq time_of_last_event : real = if event(user_input) then time else -1.0 -> pre(time);
   	  
   	  initially :
   	    mode = AGREE_CONSTS.DISARMED_MODE and
-  	    time_of_last_event = 0;
+  	    time_of_last_event = 0.0;
   	    
   	  assume "control and input events occur simultaneously":
   	    event(user_input) = event(control_law);
   	    
   	  assume "valid modes for control input":
-  	    control_law.armed_mode = AGREE_CONSTS.LAND_MODE or
-  	    control_law.armed_mode = AGREE_CONSTS.ARMED_MODE or
-  	    control_law.armed_mode = AGREE_CONSTS.DISARMED_MODE;
-  	    
-  	  assume "mode doesn't change unless userinput changes'" :
-  	    not event(user_input) => control_law.armed_mode = pre(control_law.armed_mode);
+  	    event(control_law) =>
+  	      control_law.armed_mode = AGREE_CONSTS.LAND_MODE or
+  	      control_law.armed_mode = AGREE_CONSTS.ARMED_MODE or
+  	      control_law.armed_mode = AGREE_CONSTS.DISARMED_MODE;
   	    
   	  guarantee "mode behavior":
   	    if(event(user_input)) then
@@ -153,10 +203,8 @@ thread control_t
   	    else if(time_of_last_event >= LANDING_TIMEOUT) then
   	      mode = AGREE_CONSTS.LAND_MODE
   	    else
-  	      mode = pre(mode);
+  	      mode = prev(mode, AGREE_CONSTS.DISARMED_MODE);
 
-  	  
-  	  
     **};
     
 end control_t;
@@ -171,12 +219,24 @@ thread ui_mux_t
     --determines armed state
     control_law : out event data port software_types::control_law.impl;
     input_select : out event data port software_types::userinput_result.impl;
+    time : in data port Base_Types::Float;
       
   properties
     SMACCM::Language => "Ivory";
     SMACCM::Trusted => true;
     
    annex agree {**
+   	
+   	  eq ppm_has_control : bool = true -> if event(ppm_control) then ppm_control.set_ui_ppm else pre(ppm_has_control);
+   	  eq mavlink_has_control : bool = true -> if event(ppm_control) then ppm_control.set_ui_mavlink else pre(ppm_has_control);
+   	
+   	  initially:
+   	    not (event(control_law) or event(input_select));
+   	
+   	  assume "never ambiguous about control" : 
+   	    event(ppm_control) =>
+   	      not ppm_control.set_ui_ppm and ppm_control.set_ui_mavlink and
+   	      (ppm_control.set_ui_ppm or ppm_control.set_ui_mavlink);
    	
    	  assume "control inputs occur with user inputs":
    	    event(ppm_input) = event(ppm_control) and
@@ -187,11 +247,21 @@ thread ui_mux_t
   	    control_law.armed_mode = AGREE_CONSTS.ARMED_MODE or
   	    control_law.armed_mode = AGREE_CONSTS.DISARMED_MODE;
   	    
---  	  guarantee "output constant if nothing is received":
---  	    not (event(ppm_input) or event(mavlink_input)) => 
---  	      (not (event(control_law) and event(input_select)) and
---  	      	;
-  	    
+  	  guarantee "no output events if neither received":
+  	    not (event(ppm_input) or event(mavlink_input)) => 
+  	      not (event(control_law) and event(input_select));
+  	      
+  	  guarantee "ppm has precedence" :
+  	    if event(ppm_input) and ppm_has_control then
+  	      event(input_select) and
+  	      event(control_law) and
+  	      input_select = ppm_input
+  	    else if event(mavlink_input) and mavlink_has_control then
+  	      event(input_select) and
+  	      event(control_law) and
+  	      input_select = mavlink_input
+  	    else
+  	      not (event(input_select) or event(control_law));
   	    
    **};
     
@@ -200,7 +270,8 @@ end ui_mux_t;
 thread ublox_gps_t
   features
     input : in event data port hardware_types::GPS;
-    position : out event data port software_types::position.impl;  
+    position : out event data port software_types::position.impl;
+    time : in data port Base_Types::Float;
 
   properties
     SMACCM::Language => "Ivory";
@@ -226,6 +297,7 @@ thread motmix_t
     motors : out data port software_types::motors_data;
     control_in : in data port software_types::controloutput.impl;
     control_law_in : in event data port software_types::control_law.impl;
+    time : in data port Base_Types::Float;
   
   properties
     SMACCM::Language => "Ivory";

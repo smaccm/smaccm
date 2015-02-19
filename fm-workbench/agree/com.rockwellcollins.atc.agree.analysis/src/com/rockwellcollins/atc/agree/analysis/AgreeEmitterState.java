@@ -141,7 +141,7 @@ public class AgreeEmitterState  extends AgreeSwitch<Expr> {
     public final Map<FeatureInstance, List<AgreeFeature>> featInstToAgreeFeatMap = new HashMap<>();
     public final Set<String> connLHS = new HashSet<>();
     
-    public final AgreeRenaming renaming = new AgreeRenaming();
+    public final AgreeRenaming renaming = new AgreeRenaming(refMap);
     public final AgreeLayout layout = new AgreeLayout();
     
     public AgreeEmitterState(ComponentInstance compInst, Subcomponent subComp){
