@@ -9,6 +9,14 @@ system software
     mission_in : in event data port software_types::can_data;
     enc_mavlink_in : in event data port software_types::EncryptMAVLink;
     enc_mavlink_out : out event data port software_types::EncryptMAVLink;
+    
+  annex agree {**
+  	guarantee "if no message is received on the mavlink then nothing is passed to the mission board" : true;
+  	
+  	guarantee "if messasage fails to decrypt then nothing is sent to the mission board" : true;
+  	
+  **};
+    
 end software;
  
 system implementation software.i
@@ -54,6 +62,17 @@ process decrypt_t
     
   properties
     SMACCM::Authenticator => true;
+    
+    
+  annex agree {**
+  	
+  	eq message_passed_decryption : bool;
+  	
+  	guarantee "if no message is received, then nothing decrypted" : 
+  	  not event(mavlink_out) -> event(mavlink_out) => pre(event(enc_mavlink)) and message_passed_decryption;
+  	
+  **};
+    
 end decrypt_t;
 
 process receive_t

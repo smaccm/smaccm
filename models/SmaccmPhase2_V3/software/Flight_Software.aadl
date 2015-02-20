@@ -15,12 +15,25 @@ process main
     battery : in data port software_types::Battery_Data;
 
   annex agree {**
+  	
+  	--this is an arbitrary constant that we
+  	--will eventually use to represent the latency
+  	--of running all the tasks back to back
+  	const latency : real = 50.0;
+  	
+  	--this is an arbitarry constant that we will
+  	--use to represent the total time passed
+  	--without receiving a can message until the 
+  	--mode should be set to landing
+  	const total_landing_timeout : real = 800.0;
+  	
   	eq time : real;
   	eq control_mode : int;
   	eq mavlink_has_control : bool;
   	  	
   	eq time_of_last_can : real = 
   	  if event(mission_in) then time else prev(time_of_last_can, -1.0);
+  	  
     eq time_since_mavlink_in_control : real = 
       if not mavlink_has_control then 0.0 else prev(time_since_mavlink_in_control, 0.0);
   	
@@ -29,9 +42,13 @@ process main
   	
   	guarantee "if time passes with no message then the mode is landing" :
   	  was_armed => 
-  	    time - time_since_mavlink_in_control > 800.0 and
-  	    time - time_of_last_can > 800.0 => 
+  	    time - time_since_mavlink_in_control > total_landing_timeout and
+  	    time - time_of_last_can > total_landing_timeout => 
   	      control_mode = AGREE_CONSTS.LAND_MODE;
+  	      
+  	guarantee "if the controller is armed, then the ppm sent armed signal in the past" : true;
+  	
+  	guarantee "if an arm signal is sent from the ppm controller the controller will be armed" : true;
   	
   **};
 end main;
@@ -46,6 +63,7 @@ process implementation main.i
     gps : thread ublox_gps_t;
     sensors : thread sensors_t;
     motmix : thread motmix_t;
+    control_law : thread control_law_t;
     
     control_params : data software_types::control_data.impl { SMACCM::Trusted => true; };
     
@@ -55,20 +73,19 @@ process implementation main.i
     conn2 : port motmix.motors -> can.motmix_data;
     conn3 : port mission_in -> can.mission_in;
     conn4 : port can.mission_out -> mission_out;
-    conn5 : port can.user_input -> ui_mux.mavlink_input;
-    conn7 : port can.control_law_out -> ui_mux.mavlink_control;
+    conn5 : port can.mav_user_input -> ui_mux.mavlink_input;
+    conn7 : port can.mav_control_law -> control_law.mav_law;
+    navlaw : port can.nav_control_law -> control_law.nav_law;
     
     ppm1 : port ppm_in -> ppm.flight_command;
     ppm2 : port ppm.user_input -> ui_mux.ppm_input;
-    ppm3 : port ppm.control_law_out -> ui_mux.ppm_control;
+    ppm3 : port ppm.control_law_out -> control_law.ppm_law;
     
     conn8 : port ui_mux.input_select -> control.user_input;
     conn9 : port control_params -> control.control_params;
-    conn10 : port ui_mux.control_law -> control.control_law;
     conn11 : port control.control_out -> motmix.control_in;
-    
-    conn12 : port ui_mux.control_law -> motmix.control_law_in;
-    
+    law : port control_law.out_law -> control.control_law;
+       
     conn13 : port gps.position -> sensors.gps;
     
     conn14 : port sensors.sensor_data -> control.sensor_data;
@@ -89,12 +106,7 @@ process implementation main.i
   	assert control_mode = control.mode;
   	assert mavlink_has_control = ui_mux.mavlink_has_control;
   	
-  	--should be greater than the worst case execution time of the
-  	--whole system
-  	synchrony : 1;
-  	const period : real = 50.0;
-  	
-  	assert time = period -> time = (pre(time) + period);
+  	assert time = latency -> time = (pre(time) + latency);
   	assert time >= 0.0;
   	
   **};
@@ -112,8 +124,10 @@ thread can_px4_t
     motmix_data : in event data port software_types::motors_data;
     mission_out : out event data port software_types::can_data;
     mission_in : in event data port software_types::can_data;
-    user_input : out event data port software_types::userinput_result.impl;
-    control_law_out : out event data port software_types::control_law_request.impl;
+    mav_user_input : out event data port software_types::userinput_result.impl;
+    mav_control_law : out event data port software_types::control_law_request.impl;
+    nav_user_input : out event data port software_types::userinput_result.impl;
+    nav_control_law : out event data port software_types::control_law_request.impl;
     time : in data port Base_Types::Float;
     --TODO: the type for control_law_out is surely different then from the ppm controller
   properties
@@ -121,20 +135,31 @@ thread can_px4_t
     SMACCM::Trusted => true;
   
   annex agree {**
-  	
-  	initially:
-  	  not(event(user_input) or event(control_law_out));
-  	
+
   	--nothing is sent if can_data does not arrive.
-  	guarantee "no can data" : not event(user_input) ->
-  	  not pre(event(mission_in)) => not event(user_input);
+  	guarantee "no can data" : not event(mission_in) ->
+  	  not pre(event(mission_in)) => not (event(mav_user_input) or event(nav_user_input));
   	  
   	guarantee "we only send user input if we send contol input" :
-  	  event(user_input) = event(control_law_out);
-  
+  	  event(mav_user_input) = event(mav_control_law) and
+  	  event(nav_user_input) = event(nav_control_law);
   	
   **};
+  
 end can_px4_t;
+
+thread control_law_t
+  features
+    mav_law : in event data port software_types::control_law_request.impl;
+    nav_law : in event data port software_types::control_law_request.impl;
+    ppm_law : in event data port software_types::control_law_request.impl;
+    out_law : out event data port software_types::control_law.impl;
+
+  properties
+    SMACCM::Language => "Ivory";
+    SMACCM::Trusted => true;
+    
+end control_law_t;
 
 thread ppm_t
   features
@@ -169,10 +194,10 @@ thread control_t
     user_input : in event data port software_types::userinput_result.impl;
     control_params : in data port software_types::control_data.impl;
     control_law : in event data port software_types::control_law.impl;
-    control_out : out event data port software_types::controloutput.impl;
     sensor_data : in event data port software_types::Sensor_Data;
     time : in data port Base_Types::Float;
-      
+    control_out : out event data port software_types::controloutput.impl;
+
   properties
     SMACCM::Language => "Ivory";
     SMACCM::Trusted => true;
@@ -214,10 +239,10 @@ thread ui_mux_t
     ppm_input : in event data port software_types::userinput_result.impl;
     mavlink_input : in event data port software_types::userinput_result.impl;
     
-    ppm_control : in event data port software_types::control_law_request.impl;
-    mavlink_control : in event data port software_types::control_law_request.impl;
-    --determines armed state
-    control_law : out event data port software_types::control_law.impl;
+--    ppm_control : in event data port software_types::control_law_request.impl;
+--    mavlink_control : in event data port software_types::control_law_request.impl;
+--    --determines armed state
+--    control_law : out event data port software_types::control_law.impl;
     input_select : out event data port software_types::userinput_result.impl;
     time : in data port Base_Types::Float;
       
