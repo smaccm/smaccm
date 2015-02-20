@@ -667,6 +667,7 @@ public class AgreeGenerator {
 		IdExpr clockId = new IdExpr(subState.curComp.getName()+state.clockIDSuffix);
 		//the clockId may or may not already be a part of the inputs
 		AgreeVarDecl clockVar = new AgreeVarDecl(clockId.id, NamedType.BOOL);
+		state.refMap.put(clockId.id, subState.curComp);
 		state.inputVars.add(clockVar);
 		state.clockVars.add(clockVar);
 		return clockId;

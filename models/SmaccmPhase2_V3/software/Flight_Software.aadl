@@ -29,8 +29,8 @@ process main
   	
   	guarantee "if time passes with no message then the mode is landing" :
   	  was_armed => 
-  	    time - time_since_mavlink_in_control > 800.0 and
-  	    time - time_of_last_can > 800.0 => 
+  	    time - time_since_mavlink_in_control > 1800.0 and
+  	    time - time_of_last_can > 1800.0 => 
   	      control_mode = AGREE_CONSTS.LAND_MODE;
   	
   **};
@@ -126,8 +126,8 @@ thread can_px4_t
   	  not(event(user_input) or event(control_law_out));
   	
   	--nothing is sent if can_data does not arrive.
-  	guarantee "no can data" :
-  	  not event(mission_in) => not event(user_input);
+  	guarantee "no can data" : not event(user_input) ->
+  	  not pre(event(mission_in)) => not event(user_input);
   	  
   	guarantee "we only send user input if we send contol input" :
   	  event(user_input) = event(control_law_out);
@@ -198,7 +198,7 @@ thread control_t
   	      control_law.armed_mode = AGREE_CONSTS.DISARMED_MODE;
   	    
   	  guarantee "mode behavior":
-  	    if(event(user_input)) then
+  	    if(prev(event(user_input), false)) then
   	      mode = control_law.armed_mode
   	    else if(time_of_last_event >= LANDING_TIMEOUT) then
   	      mode = AGREE_CONSTS.LAND_MODE
@@ -227,14 +227,14 @@ thread ui_mux_t
     
    annex agree {**
    	
-   	  eq ppm_has_control : bool = true -> if event(ppm_control) then ppm_control.set_ui_ppm else pre(ppm_has_control);
-   	  eq mavlink_has_control : bool = true -> if event(ppm_control) then ppm_control.set_ui_mavlink else pre(ppm_has_control);
+   	  eq ppm_has_control : bool = false -> if pre(event(ppm_control)) then ppm_control.set_ui_ppm else pre(ppm_has_control);
+   	  eq mavlink_has_control : bool = false -> if pre(event(ppm_control)) then ppm_control.set_ui_mavlink else pre(ppm_has_control);
    	
    	  initially:
    	    not (event(control_law) or event(input_select));
    	
-   	  assume "never ambiguous about control" : 
-   	    event(ppm_control) =>
+   	  assume "never ambiguous about control" : true ->
+   	    pre(event(ppm_control)) =>
    	      not ppm_control.set_ui_ppm and ppm_control.set_ui_mavlink and
    	      (ppm_control.set_ui_ppm or ppm_control.set_ui_mavlink);
    	
@@ -247,16 +247,16 @@ thread ui_mux_t
   	    control_law.armed_mode = AGREE_CONSTS.ARMED_MODE or
   	    control_law.armed_mode = AGREE_CONSTS.DISARMED_MODE;
   	    
-  	  guarantee "no output events if neither received":
-  	    not (event(ppm_input) or event(mavlink_input)) => 
-  	      not (event(control_law) and event(input_select));
+  	  guarantee "no output events if neither received": not (event(input_select) or event(control_law)) ->
+  	    not (pre(event(ppm_input) or event(mavlink_input))) => 
+  	      not (event(control_law) or event(input_select));
   	      
-  	  guarantee "ppm has precedence" :
-  	    if event(ppm_input) and ppm_has_control then
+  	  guarantee "ppm has precedence" : true ->
+  	    if pre(event(ppm_input)) and ppm_has_control then
   	      event(input_select) and
   	      event(control_law) and
   	      input_select = ppm_input
-  	    else if event(mavlink_input) and mavlink_has_control then
+  	    else if pre(event(mavlink_input)) and mavlink_has_control then
   	      event(input_select) and
   	      event(control_law) and
   	      input_select = mavlink_input
