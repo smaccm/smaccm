@@ -29,8 +29,8 @@ process main
   	
   	guarantee "if time passes with no message then the mode is landing" :
   	  was_armed => 
-  	    time - time_since_mavlink_in_control > 1800.0 and
-  	    time - time_of_last_can > 1800.0 => 
+  	    time - time_since_mavlink_in_control > 800.0 and
+  	    time - time_of_last_can > 800.0 => 
   	      control_mode = AGREE_CONSTS.LAND_MODE;
   	
   **};
