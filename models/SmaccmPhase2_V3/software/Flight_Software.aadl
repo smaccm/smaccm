@@ -150,14 +150,6 @@ thread can_px4_t
   
 end can_px4_t;
 
-data test_data
-end test_data;
-
-data implementation test_data.i
-  subcomponents
-    a : data Base_types::Boolean;
-end test_data.i;
-
 thread control_law_t
   features
     mav_law : in event data port software_types::control_law_request.impl;
@@ -172,13 +164,6 @@ thread control_law_t
 
   annex agree {**
   	--TODO why do mavlink changes not get published?
-  	
-  	node test_node (x : Flight_Software::test_data.i) returns (y : Flight_Software::test_data.i);
-  	let
-  	  y = Flight_Software::test_data.i { a = true};
-  	tel;  
-  	
-  	
   	
   	eq init_law : software_types::control_law.impl = 
   	   software_types::control_law.impl { 
