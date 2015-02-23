@@ -86,7 +86,7 @@ process implementation main.i
     conn11 : port control.control_out -> motmix.control_in;
     law : port control_law.out_law -> control.control_law;
        
-    conn13 : port gps.position -> sensors.gps;
+    conn13 : port gps.position -> sensors.gps; 
     
     conn14 : port sensors.sensor_data -> control.sensor_data;
 
@@ -94,6 +94,8 @@ process implementation main.i
     conn16 : port sensors_group.motion -> sensors.motion;
     conn17 : port sensors_group.gps -> gps.input;
     conn18 : port battery -> sensors.battery;
+    
+    clawmux : port control_law.out_law -> ui_mux.control_law;
   
   properties
     SMACCM::OS => "eChronos";
@@ -104,7 +106,7 @@ process implementation main.i
   	assert time = ppm.time;
   	assert time = ui_mux.time;
   	assert control_mode = control.mode;
-  	assert mavlink_has_control = ui_mux.mavlink_has_control;
+  	assert mavlink_has_control = not ui_mux.ppm_has_control;
   	
   	assert time = latency -> time = (pre(time) + latency);
   	assert time >= 0.0;
@@ -148,6 +150,14 @@ thread can_px4_t
   
 end can_px4_t;
 
+data test_data
+end test_data;
+
+data implementation test_data.i
+  subcomponents
+    a : data Base_types::Boolean;
+end test_data.i;
+
 thread control_law_t
   features
     mav_law : in event data port software_types::control_law_request.impl;
@@ -158,6 +168,45 @@ thread control_law_t
   properties
     SMACCM::Language => "Ivory";
     SMACCM::Trusted => true;
+
+
+  annex agree {**
+  	--TODO why do mavlink changes not get published?
+  	
+  	node test_node (x : Flight_Software::test_data.i) returns (y : Flight_Software::test_data.i);
+  	let
+  	  y = Flight_Software::test_data.i { a = true};
+  	tel;  
+  	
+  	
+  	
+  	eq init_law : software_types::control_law.impl = 
+  	   software_types::control_law.impl { 
+  	   	armed_mode = 0;
+  	   	ui_source = 0;
+        yaw_mode = 0;
+        thr_mode = 0;
+        autothr_source = 0;
+        stab_source = 0;
+        head_source = 0;
+        time = 0;
+        flight_mode = 0
+		};
+  	
+  	eq cur_law : software_types::control_law.impl;
+  	
+  	
+  	guarantee "law is always initialized to the initial state" :
+  	  cur_law = init_law -> true;
+  	  
+  	guarantee "if ppm input arrives" : true -> true;
+  	  
+  	
+  	guarantee "no events in means no events out" : not event(out_law) ->
+  	  event(out_law) => pre(event(mav_law) or event(nav_law) or event(ppm_law));
+  	  
+  	
+  **};
     
 end control_law_t;
 
@@ -239,10 +288,7 @@ thread ui_mux_t
     ppm_input : in event data port software_types::userinput_result.impl;
     mavlink_input : in event data port software_types::userinput_result.impl;
     
---    ppm_control : in event data port software_types::control_law_request.impl;
---    mavlink_control : in event data port software_types::control_law_request.impl;
---    --determines armed state
---    control_law : out event data port software_types::control_law.impl;
+	control_law : in event data port software_types::control_law.impl;
     input_select : out event data port software_types::userinput_result.impl;
     time : in data port Base_Types::Float;
       
@@ -252,38 +298,30 @@ thread ui_mux_t
     
    annex agree {**
    	
-   	  eq ppm_has_control : bool = false -> if pre(event(ppm_control)) then ppm_control.set_ui_ppm else pre(ppm_has_control);
-   	  eq mavlink_has_control : bool = false -> if pre(event(ppm_control)) then ppm_control.set_ui_mavlink else pre(ppm_has_control);
+   	  const ppm_source : int = 0;
+   	  const mavlink_source : int = 1;
+   	
+   	  eq ppm_has_control : bool = 
+   	    false -> if pre(event(control_law)) then control_law.ui_source = ppm_source else pre(ppm_has_control);
    	
    	  initially:
    	    not (event(control_law) or event(input_select));
-   	
-   	  assume "never ambiguous about control" : true ->
-   	    pre(event(ppm_control)) =>
-   	      not ppm_control.set_ui_ppm and ppm_control.set_ui_mavlink and
-   	      (ppm_control.set_ui_ppm or ppm_control.set_ui_mavlink);
-   	
-   	  assume "control inputs occur with user inputs":
-   	    event(ppm_input) = event(ppm_control) and
-   	    event(mavlink_input) = event(mavlink_control);
    	
    	  guarantee "armed mode ranges" :
    	    control_law.armed_mode = AGREE_CONSTS.LAND_MODE or
   	    control_law.armed_mode = AGREE_CONSTS.ARMED_MODE or
   	    control_law.armed_mode = AGREE_CONSTS.DISARMED_MODE;
   	    
-  	  guarantee "no output events if neither received": not (event(input_select) or event(control_law)) ->
+  	  guarantee "no output events if neither received": not event(input_select) ->
   	    not (pre(event(ppm_input) or event(mavlink_input))) => 
-  	      not (event(control_law) or event(input_select));
+  	      not event(input_select);
   	      
   	  guarantee "ppm has precedence" : true ->
   	    if pre(event(ppm_input)) and ppm_has_control then
   	      event(input_select) and
-  	      event(control_law) and
   	      input_select = ppm_input
-  	    else if pre(event(mavlink_input)) and mavlink_has_control then
+  	    else if pre(event(mavlink_input)) and not ppm_has_control then
   	      event(input_select) and
-  	      event(control_law) and
   	      input_select = mavlink_input
   	    else
   	      not (event(input_select) or event(control_law));
