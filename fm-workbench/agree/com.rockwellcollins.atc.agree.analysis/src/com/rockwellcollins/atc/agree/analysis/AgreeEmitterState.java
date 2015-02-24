@@ -100,8 +100,10 @@ public class AgreeEmitterState  extends AgreeSwitch<Expr> {
 	
 	public final List<Equation> subcomponentExprs = new ArrayList<>();
 	public final List<String> assumeProps = new ArrayList<>();
+    public final List<String> lemmaProps = new ArrayList<>();
 	public final List<String> guarProps = new ArrayList<>();
 	public final List<String> consistProps = new ArrayList<>();
+	public final List<String> nodeLemmmaProps = new ArrayList<>();
 
     public final Set<jkind.lustre.RecordType> typeExpressions = new HashSet<>();
     //this set keeps track of all the left hand sides of connection
@@ -143,6 +145,8 @@ public class AgreeEmitterState  extends AgreeSwitch<Expr> {
     
     public final AgreeRenaming renaming = new AgreeRenaming(refMap);
     public final AgreeLayout layout = new AgreeLayout();
+    
+    public final Map<String, Map<String, String>> nodeLemmaNames = new HashMap<>();
     
     public AgreeEmitterState(ComponentInstance compInst, Subcomponent subComp){
     	this.curInst = compInst;
@@ -547,11 +551,13 @@ public class AgreeEmitterState  extends AgreeSwitch<Expr> {
 
         String lemmaName = "nodeLemma";
         int lemmaIndex = 0;
+        Map<String, String> lemmaNames = new HashMap<>();
         for (NodeStmt stmt : body.getStmts()) {
             if (stmt instanceof NodeLemma) {
                 NodeLemma nodeLemma = (NodeLemma) stmt;
                 //String propName = ((NodeLemma) stmt).getStr();
                 String propName = lemmaName + lemmaIndex++;
+                lemmaNames.put(propName, nodeLemma.getStr());
                 props.add(propName);
                 IdExpr eqId = new IdExpr(propName);
                 Expr eqExpr = doSwitch(nodeLemma.getExpr());
@@ -563,7 +569,7 @@ public class AgreeEmitterState  extends AgreeSwitch<Expr> {
                 eqs.add(nodeEqToEq((NodeEq) stmt));
             }
         }
-
+        nodeLemmaNames.put(nodeName, lemmaNames);
         nodeDefExpressions.add(new Node(nodeName, inputs, outputs, internals, eqs, props));
         return null;
     }

@@ -179,16 +179,37 @@ thread control_law_t
 		};
   	
   	eq cur_law : software_types::control_law.impl;
+  	eq ppm_req : software_types::control_law_request.impl;
+  	eq mav_req : software_types::control_law_request.impl;
+  	eq nav_req : software_types::control_law_request.impl;
   	
+  	eq mavlink_has_control : bool = false ->
+  	  mav_req.set_ui_mavlink and ppm_req.set_ui_mavlink;
   	
+  	--update the request variables if an event occured
+  	guarantee "the mav_req variables update if a mav_event has occurred" : true ->
+  	  if pre(event(mav_law)) then mav_req = pre(mav_law) else mav_req = pre(mav_req);
+  	
+  	guarantee "the nav_req variables update if a nav_event has occurred" : true ->
+  	  if pre(event(nav_law)) then nav_req = pre(nav_law) else nav_req = pre(nav_req);
+  	
+  	guarantee "the ppm_req variables update if a ppm_event has occurred" : true ->
+  	  if pre(event(ppm_law)) then ppm_req = pre(ppm_law) else ppm_req = pre(ppm_req);
+  	  
   	guarantee "law is always initialized to the initial state" :
   	  cur_law = init_law -> true;
-  	  
-  	guarantee "if ppm input arrives" : true -> true;
-  	  
   	
-  	guarantee "no events in means no events out" : not event(out_law) ->
-  	  event(out_law) => pre(event(mav_law) or event(nav_law) or event(ppm_law));
+  	guarantee "constrain the ppm_req initially" :
+  	  (ppm_req.set_ui_ppm = true and
+  	  ppm_req.set_thr_direct = true and
+  	  ppm_req.set_autothr_src_ui = true and
+  	  ppm_req.set_stab_src_ui = true and
+  	  ppm_req.set_head_src_ui = true) -> true;
+  	  
+--  	guarantee "ppm arrival behavior" : true ->
+--  	    	
+--  	guarantee "no events in means no events out" : not event(out_law) ->
+--  	  event(out_law) => pre(event(mav_law) or event(nav_law) or event(ppm_law));
   	  
   	
   **};

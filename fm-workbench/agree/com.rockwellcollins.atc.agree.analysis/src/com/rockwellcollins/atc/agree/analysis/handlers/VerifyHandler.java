@@ -211,6 +211,7 @@ public abstract class VerifyHandler extends AadlHandler {
     	List<String> props = new ArrayList<>();
     	props.addAll(agreeProgram.state.guarProps);
     	props.addAll(agreeProgram.state.assumeProps);
+    	props.addAll(agreeProgram.state.lemmaProps);
     	
         JKindResult result = new JKindResult("Contract Guarantees", props, agreeProgram.state.renaming);
         queue.add(result);
