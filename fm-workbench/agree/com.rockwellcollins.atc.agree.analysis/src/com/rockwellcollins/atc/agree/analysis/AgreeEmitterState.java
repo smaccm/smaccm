@@ -146,7 +146,7 @@ public class AgreeEmitterState  extends AgreeSwitch<Expr> {
     public final AgreeRenaming renaming = new AgreeRenaming(refMap);
     public final AgreeLayout layout = new AgreeLayout();
     
-    public final Map<String, Map<String, String>> nodeLemmaNames = new HashMap<>();
+    private final Map<String, Map<String, String>> nodeLemmaNames = new HashMap<>();
     
     public AgreeEmitterState(ComponentInstance compInst, Subcomponent subComp){
     	this.curInst = compInst;
@@ -248,16 +248,31 @@ public class AgreeEmitterState  extends AgreeSwitch<Expr> {
         Expr expr = doSwitch(state.getExpr());
         IdExpr assumId = new IdExpr(state.getStr());
         assumpExpressions.add(new Equation(assumId, expr));
+        
+        String displayPrefix = "";
+        if(this.curComp != null){
+            displayPrefix = this.curComp.getName()+" assume: ";
+        }
+        String assumeStr = state.getStr();
+        assumeStr = displayPrefix + "\""+assumeStr+"\"";
+        refMap.put(assumeStr, state);
+        
         return expr;
     }
 
     @Override
     public Expr caseLemmaStatement(LemmaStatement state) {
         Expr expr = doSwitch(state.getExpr());
-        String guarStr = state.getStr();
-        guarStr = guarStr.replace("\"", "");
-        refMap.put(guarStr, state);
-        IdExpr strId = new IdExpr(guarStr);
+        String lemmaStr = state.getStr();
+        String displayPrefix = "";
+        if(this.curComp != null){
+            displayPrefix = this.curComp.getName()+" lemma: ";
+            lemmaStr = displayPrefix + "\""+lemmaStr+"\"";
+        }else{
+            lemmaStr = lemmaStr.replace("\"", "");
+        }
+        refMap.put(lemmaStr, state);
+        IdExpr strId = new IdExpr(state.getStr());
         Equation eq = new Equation(strId, expr);
         lemmaExpressions.add(eq);
         return expr;

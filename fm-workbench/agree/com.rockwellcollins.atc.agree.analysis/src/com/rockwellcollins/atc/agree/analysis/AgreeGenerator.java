@@ -593,47 +593,12 @@ public class AgreeGenerator {
         addLemmaRenamings(state, subState);
 		
 		//add node lemma renamings
-//		addNodeLemmaRenamings(state, subState);
+		addNodeLemmaRenamings(state, subState);
 		
 		//includes renaming of assumptions for subnodes
 		state.renaming.addRenamings(subState.renaming);
 
 	}
-
-    private static void addNodeLemmaRenamings(AgreeEmitterState state,
-            AgreeEmitterState subState) {
-        int i = 0;
-        String condactStr = "~0";
-        String clockedPropTag = "";
-        if(state.synchrony != 0 || state.calendar.size() != 0 || state.asynchronous){
-            condactStr = "~condact~0";
-            clockedPropTag = "~clocked_property";
-        }
-        
-        String lustreVarName = getLustreNodeName(subState);
-        for(Entry<String, Map<String, String>> nodeEntry : subState.nodeLemmaNames.entrySet()){
-            lustreVarName = lustreVarName+condactStr+".___ASSUME"+i+++clockedPropTag;
-        }
-        
-        for(Equation assumEq : subState.assumpExpressions){
-            lustreVarName = lustreVarName+condactStr+".___ASSUME"+i+++clockedPropTag;
-            String assumeDisplayText = assumEq.lhs.get(0).id;
-            assumeDisplayText = state.renaming.forceRename(
-                    subState.curInst.getInstanceObjectPath()+" : \""+assumeDisplayText+"\"");
-            assumeDisplayText = assumeDisplayText.replaceAll(".*\\.", "");
-            state.renaming.addExplicitRename(lustreVarName, assumeDisplayText);
-            state.lemmaProps.add(lustreVarName);
-        }
-        
-        //this part is only relevant for the monolithic case
-        for(String subAssum : subState.assumeProps){
-            lustreVarName = lustreVarName+condactStr+"."+subAssum;
-            String assumeDisplayText = subState.renaming.forceRename(subAssum);
-            assumeDisplayText = subState.curComp.getName()+"."+assumeDisplayText;
-            state.renaming.addExplicitRename(lustreVarName, assumeDisplayText);
-            state.lemmaProps.add(lustreVarName);
-        }
-    }
 
     private static void addNodes(AgreeEmitterState state,
             AgreeEmitterState subState) {
@@ -734,6 +699,48 @@ public class AgreeGenerator {
             state.renaming.addExplicitRename(lustreVarName, lemmaDisplayText);
             state.lemmaProps.add(lustreVarName);
         }
+    }
+    
+    private static void addNodeLemmaRenamings(AgreeEmitterState state,
+            AgreeEmitterState subState) {
+//        int i = 0;
+//        String condactStr = "~0";
+//        String clockedPropTag = "";
+//        if(state.synchrony != 0 || state.calendar.size() != 0 || state.asynchronous){
+//            condactStr = "~condact~0";
+//            clockedPropTag = "~clocked_property";
+//        }
+//
+//        for(Equation lemmaEq : subState.lemmaExpressions){
+//            String lustreVarName = getLustreNodeName(subState);
+//            for(Entry<String, Map<String, String>> nodes : subState.nodeLemmaNames.entrySet()){
+//                String nodeName = nodes.getKey();
+//                
+//                for(Entry<String,String> nodeLemmas : nodes.getValue().entrySet()){
+//                    String lemmaName = nodeLemmas.getKey();
+//                    lustreVarName = lustreVarName+condactStr+"."+nodeName+"."+lemmaName+clockedPropTag;
+//
+//                }
+//            }
+//            
+//            lustreVarName = lustreVarName+condactStr+".___GUARANTEE"+i+++clockedPropTag;
+//            String lemmaDisplayText = lemmaEq.lhs.get(0).id;
+//            lemmaDisplayText = state.renaming.forceRename(
+//                    subState.curInst.getInstanceObjectPath()+" lemma: \""+lemmaDisplayText+"\"");
+//            lemmaDisplayText = lemmaDisplayText.replaceAll(".*\\.", "");
+//            state.renaming.addExplicitRename(lustreVarName, lemmaDisplayText);
+//            state.lemmaProps.add(lustreVarName);
+//        }
+//        
+//        //this part is only relevant for the monolithic case
+//        for(String subLemma : subState.lemmaProps){
+//            String lustreVarName = getLustreNodeName(subState);
+//            lustreVarName = lustreVarName+condactStr+"."+subLemma;
+//            String lemmaDisplayText = subState.renaming.forceRename(subLemma);
+//            lemmaDisplayText = subState.curComp.getName()+"."+lemmaDisplayText;
+//            state.renaming.addExplicitRename(lustreVarName, lemmaDisplayText);
+//            state.lemmaProps.add(lustreVarName);
+//        }
     }
 
 	private static IdExpr addSubcompClock(AgreeEmitterState state,

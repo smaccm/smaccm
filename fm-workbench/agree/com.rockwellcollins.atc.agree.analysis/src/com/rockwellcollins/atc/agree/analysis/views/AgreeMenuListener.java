@@ -42,7 +42,9 @@ import org.osate.aadl2.ComponentImplementation;
 import org.osate.ui.dialogs.Dialog;
 
 import com.rockwellcollins.atc.agree.agree.AgreeSubclause;
+import com.rockwellcollins.atc.agree.agree.AssumeStatement;
 import com.rockwellcollins.atc.agree.agree.GuaranteeStatement;
+import com.rockwellcollins.atc.agree.agree.LemmaStatement;
 import com.rockwellcollins.atc.agree.analysis.Util;
 
 public class AgreeMenuListener implements IMenuListener {
@@ -149,7 +151,13 @@ public class AgreeMenuListener implements IMenuListener {
             Map<String, EObject> refMap = linker.getReferenceMap(pr.getParent());
             EObject guarantee = refMap.get(pr.getName());
             if (guarantee instanceof GuaranteeStatement) {
-                manager.add(createHyperlinkAction("Open Guarantee", guarantee));
+                manager.add(createHyperlinkAction("Go To Guarantee", guarantee));
+            }
+            if (guarantee instanceof LemmaStatement) {
+                manager.add(createHyperlinkAction("Go To Lemma", guarantee));
+            }
+            if (guarantee instanceof AssumeStatement) {
+                manager.add(createHyperlinkAction("Go To Assumption", guarantee));
             }
         }
     }
