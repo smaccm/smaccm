@@ -135,9 +135,9 @@ public class AgreePreferencePage extends FieldEditorPreferencePage implements
             api.checkAvailable();
             MessageDialog.openInformation(getShell(), "Model checker available",
                     "Model checker available");
-        } catch (Exception e) {
+        } catch (Throwable t) {
             MessageDialog.openError(getShell(), "Error running model checker",
-                    "Error running model checker: " + e.getMessage());
+                    "Error running model checker: " + t.getMessage());
         }
     }
 
