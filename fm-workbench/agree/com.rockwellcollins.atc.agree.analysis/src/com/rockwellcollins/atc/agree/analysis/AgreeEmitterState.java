@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import jkind.lustre.BinaryExpr;
@@ -103,7 +104,7 @@ public class AgreeEmitterState  extends AgreeSwitch<Expr> {
     public final List<String> lemmaProps = new ArrayList<>();
 	public final List<String> guarProps = new ArrayList<>();
 	public final List<String> consistProps = new ArrayList<>();
-	public final List<String> nodeLemmmaProps = new ArrayList<>();
+	public final List<String> nodeLemmaProps = new ArrayList<>();
 
     public final Set<jkind.lustre.RecordType> typeExpressions = new HashSet<>();
     //this set keeps track of all the left hand sides of connection
@@ -147,6 +148,7 @@ public class AgreeEmitterState  extends AgreeSwitch<Expr> {
     public final AgreeLayout layout = new AgreeLayout();
     
     private final Map<String, Map<String, String>> nodeLemmaNames = new HashMap<>();
+    private final Map<String, Integer> nodeCallCount = new HashMap<>(); //used to keep track of renamings for node lemmas
     
     public AgreeEmitterState(ComponentInstance compInst, Subcomponent subComp){
     	this.curInst = compInst;
@@ -520,8 +522,26 @@ public class AgreeEmitterState  extends AgreeSwitch<Expr> {
             argResults.add(doSwitch(argExpr));
         }
 
-        NodeCallExpr nodeCall = new NodeCallExpr(fnName, argResults);
+        //keep track of node lemmas for node calls
+        if(namedEl instanceof NodeDefExpr){
+            Integer count = nodeCallCount.get(fnName);
+            if(count == null){
+                count = Integer.valueOf(0);
+            }else{
+                count = count + 1;
+            }
+            nodeCallCount.put(fnName, count);
 
+            Map<String, String> lemmaNames = nodeLemmaNames.get(fnName);
+            for(Entry<String, String> lemmaRenames : lemmaNames.entrySet()){
+                String lemmaName = fnName+"~"+count+"."+lemmaRenames.getKey();
+                refMap.put(lemmaName, expr);
+                this.renaming.addExplicitRename(lemmaName, "("+fnName+"["+count+"]) : "+"\""+lemmaRenames.getValue()+"\"");
+                nodeLemmaProps.add(lemmaName);
+            }
+        }
+        
+        NodeCallExpr nodeCall = new NodeCallExpr(fnName, argResults);
         return nodeCall;
     }
     

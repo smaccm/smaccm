@@ -43,6 +43,7 @@ import org.osate.ui.dialogs.Dialog;
 
 import com.rockwellcollins.atc.agree.agree.AgreeSubclause;
 import com.rockwellcollins.atc.agree.agree.AssumeStatement;
+import com.rockwellcollins.atc.agree.agree.FnCallExpr;
 import com.rockwellcollins.atc.agree.agree.GuaranteeStatement;
 import com.rockwellcollins.atc.agree.agree.LemmaStatement;
 import com.rockwellcollins.atc.agree.analysis.Util;
@@ -78,7 +79,7 @@ public class AgreeMenuListener implements IMenuListener {
         addViewLogMenu(manager, result);
         addViewCounterexampleMenu(manager, result);
         addViewLustreMenu(manager, result);
-        addOpenGuaranteeMenu(manager, result);
+        addResultsLinkingMenu(manager, result);
     }
 
     private void addOpenComponentMenu(IMenuManager manager, AnalysisResult result) {
@@ -145,19 +146,22 @@ public class AgreeMenuListener implements IMenuListener {
         }
     }
 
-    private void addOpenGuaranteeMenu(IMenuManager manager, AnalysisResult result) {
+    private void addResultsLinkingMenu(IMenuManager manager, AnalysisResult result) {
         if (result instanceof PropertyResult) {
             PropertyResult pr = (PropertyResult) result;
             Map<String, EObject> refMap = linker.getReferenceMap(pr.getParent());
-            EObject guarantee = refMap.get(pr.getName());
-            if (guarantee instanceof GuaranteeStatement) {
-                manager.add(createHyperlinkAction("Go To Guarantee", guarantee));
+            EObject property = refMap.get(pr.getName());
+            if (property instanceof GuaranteeStatement) {
+                manager.add(createHyperlinkAction("Go To Guarantee", property));
             }
-            if (guarantee instanceof LemmaStatement) {
-                manager.add(createHyperlinkAction("Go To Lemma", guarantee));
+            if (property instanceof LemmaStatement) {
+                manager.add(createHyperlinkAction("Go To Lemma", property));
             }
-            if (guarantee instanceof AssumeStatement) {
-                manager.add(createHyperlinkAction("Go To Assumption", guarantee));
+            if (property instanceof AssumeStatement) {
+                manager.add(createHyperlinkAction("Go To Assumption", property));
+            }
+            if (property instanceof FnCallExpr){
+                manager.add(createHyperlinkAction("Go To Node Call", property));
             }
         }
     }

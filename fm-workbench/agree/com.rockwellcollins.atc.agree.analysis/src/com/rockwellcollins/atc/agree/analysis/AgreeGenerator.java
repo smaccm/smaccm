@@ -91,6 +91,19 @@ public class AgreeGenerator {
             guarsAndLemmas.add(eq.expr);
         }
     	
+    	//add properties for node lemmas
+    	for(String lemmaStr : state.nodeLemmaProps){
+            String lustreVarName;
+            lustreVarName = lemmaStr;
+            String lemmaDisplayText = state.renaming.rename(lemmaStr);
+            lemmaDisplayText = state.renaming.forceRename(lemmaDisplayText);
+
+            state.renaming.addExplicitRename(lustreVarName, lemmaDisplayText);
+            state.refMap.put(lemmaDisplayText, state.refMap.get(lemmaStr));
+            state.lemmaProps.add(lustreVarName);
+        }
+    	
+    	
     	Node mainNode = new Node(subNode.location, subNode.id, subNode.inputs, subNode.outputs,
     			subNode.locals, subNode.equations, subNode.properties, assumptions,
     			null, guarsAndLemmas, null);
@@ -694,7 +707,7 @@ public class AgreeGenerator {
         for(String subLemma : subState.lemmaProps){
             String lustreVarName = getLustreNodeName(subState);
             lustreVarName = lustreVarName+condactStr+"."+subLemma;
-            String lemmaDisplayText = subState.renaming.forceRename(subLemma);
+            String lemmaDisplayText = subState.renaming.rename(subLemma);
             lemmaDisplayText = subState.curComp.getName()+"."+lemmaDisplayText;
             state.renaming.addExplicitRename(lustreVarName, lemmaDisplayText);
             state.lemmaProps.add(lustreVarName);
@@ -703,44 +716,39 @@ public class AgreeGenerator {
     
     private static void addNodeLemmaRenamings(AgreeEmitterState state,
             AgreeEmitterState subState) {
-//        int i = 0;
-//        String condactStr = "~0";
-//        String clockedPropTag = "";
-//        if(state.synchrony != 0 || state.calendar.size() != 0 || state.asynchronous){
-//            condactStr = "~condact~0";
-//            clockedPropTag = "~clocked_property";
-//        }
-//
-//        for(Equation lemmaEq : subState.lemmaExpressions){
-//            String lustreVarName = getLustreNodeName(subState);
-//            for(Entry<String, Map<String, String>> nodes : subState.nodeLemmaNames.entrySet()){
-//                String nodeName = nodes.getKey();
-//                
-//                for(Entry<String,String> nodeLemmas : nodes.getValue().entrySet()){
-//                    String lemmaName = nodeLemmas.getKey();
-//                    lustreVarName = lustreVarName+condactStr+"."+nodeName+"."+lemmaName+clockedPropTag;
-//
-//                }
-//            }
-//            
-//            lustreVarName = lustreVarName+condactStr+".___GUARANTEE"+i+++clockedPropTag;
-//            String lemmaDisplayText = lemmaEq.lhs.get(0).id;
-//            lemmaDisplayText = state.renaming.forceRename(
-//                    subState.curInst.getInstanceObjectPath()+" lemma: \""+lemmaDisplayText+"\"");
-//            lemmaDisplayText = lemmaDisplayText.replaceAll(".*\\.", "");
-//            state.renaming.addExplicitRename(lustreVarName, lemmaDisplayText);
-//            state.lemmaProps.add(lustreVarName);
-//        }
-//        
-//        //this part is only relevant for the monolithic case
-//        for(String subLemma : subState.lemmaProps){
+        String condactStr = "~0";
+        String clockedPropTag = "";
+        if(state.synchrony != 0 || state.calendar.size() != 0 || state.asynchronous){
+            condactStr = "~condact~0";
+            clockedPropTag = "~clocked_property";
+        }
+
+        for(String lemmaStr : subState.nodeLemmaProps){
+            String lustreVarName = getLustreNodeName(subState);
+           
+            lustreVarName = lustreVarName+condactStr+"."+lemmaStr+clockedPropTag;
+            String lemmaDisplayText = subState.renaming.rename(lemmaStr);
+            lemmaDisplayText = state.renaming.forceRename(
+                    subState.curInst.getInstanceObjectPath()+" "+lemmaDisplayText);
+            int dotIndex = lemmaDisplayText.indexOf(".");
+            lemmaDisplayText = lemmaDisplayText.substring(dotIndex+1);
+            state.renaming.addExplicitRename(lustreVarName, lemmaDisplayText);
+            state.refMap.put(lustreVarName, subState.refMap.get(lemmaStr));
+            state.refMap.put(lemmaDisplayText, subState.refMap.get(lemmaStr));
+            //state.lemmaProps.add(lustreVarName);
+            state.nodeLemmaProps.add(lustreVarName);
+        }
+        
+//      //this part is only relevant for the monolithic case
+//        for(String subLemma : subState.nodeLemmaProps){
 //            String lustreVarName = getLustreNodeName(subState);
 //            lustreVarName = lustreVarName+condactStr+"."+subLemma;
-//            String lemmaDisplayText = subState.renaming.forceRename(subLemma);
+//            String lemmaDisplayText = subState.renaming.rename(subLemma);
 //            lemmaDisplayText = subState.curComp.getName()+"."+lemmaDisplayText;
 //            state.renaming.addExplicitRename(lustreVarName, lemmaDisplayText);
-//            state.lemmaProps.add(lustreVarName);
+//            state.nodeLemmaProps.add(lustreVarName);
 //        }
+        
     }
 
 	private static IdExpr addSubcompClock(AgreeEmitterState state,
