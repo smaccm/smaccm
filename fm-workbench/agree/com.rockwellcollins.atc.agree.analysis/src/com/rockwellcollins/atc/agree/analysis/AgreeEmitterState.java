@@ -101,8 +101,6 @@ public class AgreeEmitterState  extends AgreeSwitch<Expr> {
 	public final List<Expr> initialExpressions = new ArrayList<>();
 	
 	public final List<Equation> subcomponentExprs = new ArrayList<>();
-	public final List<String> assumeProps = new ArrayList<>();
-    public final List<String> lemmaProps = new ArrayList<>();
 	public final List<String> guarProps = new ArrayList<>();
 	public final List<String> consistProps = new ArrayList<>();
 	public final List<String> nodeLemmaProps = new ArrayList<>();

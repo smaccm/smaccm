@@ -574,7 +574,7 @@ public class AgreeGenerator {
 		addInputs(prefix, state, subState);
 		
 		//add assumption and guarantee variables
-		addAssumeGuarantees(prefix, state, subState, clockId);
+		addAssumeGuaranteesLemmaNodeProps(prefix, state, subState, clockId);
 		
 		//add the all of the sub categories
 		addCategories(prefix, state, subState);
@@ -599,7 +599,7 @@ public class AgreeGenerator {
 
 	}
 
-    private static void addAssumeGuarantees(String prefix,
+    private static void addAssumeGuaranteesLemmaNodeProps(String prefix,
             AgreeEmitterState state, AgreeEmitterState subState, IdExpr clockId) {
         int i = 0;
         for(Equation guarEq : subState.guarExpressions){
@@ -613,7 +613,6 @@ public class AgreeGenerator {
             //stupid hack for renaming
             String replaceStr = lemmaStr.startsWith("lemma :") ? " " : ".";
             lemmaStr = prefix.replace("__", replaceStr)+lemmaStr;
-              
             state.lemmaExpressions.add(new Equation(new IdExpr(lemmaStr), lemmaExpr));
             state.refMap.put(lemmaVar.id, subState.refMap.get(lemmaEq.lhs.get(0).id));
         }
