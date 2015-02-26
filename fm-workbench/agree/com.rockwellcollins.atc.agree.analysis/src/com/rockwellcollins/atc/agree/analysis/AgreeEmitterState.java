@@ -89,6 +89,7 @@ import com.rockwellcollins.atc.agree.agree.util.AgreeSwitch;
 public class AgreeEmitterState  extends AgreeSwitch<Expr> {
 
 	  //lists of all the jkind expressions from the annex
+
     public final List<Equation> assumpExpressions = new ArrayList<>();
     public final List<Equation> guarExpressions = new ArrayList<>();
     public final List<Equation> lemmaExpressions = new ArrayList<>();
@@ -248,15 +249,10 @@ public class AgreeEmitterState  extends AgreeSwitch<Expr> {
     public Expr caseAssumeStatement(AssumeStatement state) {
 
         Expr expr = doSwitch(state.getExpr());
-        IdExpr assumId = new IdExpr(state.getStr());
-        assumpExpressions.add(new Equation(assumId, expr));
-        
-        String displayPrefix = "";
-        if(this.curComp != null){
-            displayPrefix = this.curComp.getName()+" assume: ";
-        }
         String assumeStr = state.getStr();
-        assumeStr = displayPrefix + "\""+assumeStr+"\"";
+        assumeStr = "assume : \""+assumeStr+"\"";
+        IdExpr assumId = new IdExpr(assumeStr);
+        assumpExpressions.add(new Equation(assumId, expr));
         refMap.put(assumeStr, state);
         
         return expr;
@@ -266,15 +262,9 @@ public class AgreeEmitterState  extends AgreeSwitch<Expr> {
     public Expr caseLemmaStatement(LemmaStatement state) {
         Expr expr = doSwitch(state.getExpr());
         String lemmaStr = state.getStr();
-        String displayPrefix = "";
-        if(this.curComp != null){
-            displayPrefix = this.curComp.getName()+" lemma: ";
-            lemmaStr = displayPrefix + "\""+lemmaStr+"\"";
-        }else{
-            lemmaStr = lemmaStr.replace("\"", "");
-        }
+        lemmaStr = "lemma : \""+lemmaStr+"\"";
         refMap.put(lemmaStr, state);
-        IdExpr strId = new IdExpr(state.getStr());
+        IdExpr strId = new IdExpr(lemmaStr);
         Equation eq = new Equation(strId, expr);
         lemmaExpressions.add(eq);
         return expr;

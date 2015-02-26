@@ -41,10 +41,13 @@ import org.osate.annexsupport.AnnexUtil;
 import com.rockwellcollins.atc.agree.agree.AgreeContractSubclause;
 import com.rockwellcollins.atc.agree.agree.AgreePackage;
 import com.rockwellcollins.atc.agree.analysis.preferences.PreferenceConstants;
-import com.rockwellcollins.atc.agree.translation.InlineAssumptionGuarantees;
 
 public class AgreeGenerator {
 
+    private static final String nodeGuarName = "__GUARANTEE";
+    private static final String nodeAssumeName = "__ASSUME";
+    private static final String nodeLemmaName = "__LEMMA";
+    
     private static boolean doSwitchAgreeAnnex(AgreeEmitterState state, ComponentClassifier comp){
     	 for (AnnexSubclause annex : AnnexUtil.getAllAnnexSubclauses(comp, AgreePackage.eINSTANCE.getAgreeContractSubclause())) {
              if (annex instanceof AgreeContractSubclause) {
@@ -57,7 +60,7 @@ public class AgreeGenerator {
     
     private static Program getAssumeGuaranteeProgram(AgreeEmitterState state){
         Node subNode = nodeFromState(state, false, false);
-    	
+    	List<String> properties = new ArrayList<>();
     	List<Node> nodes = new ArrayList<>(state.nodeDefExpressions);
     	
     	if(subNode.outputs.size() != 1){
@@ -66,47 +69,34 @@ public class AgreeGenerator {
     	
     	//add the assertions to the system level assumptions
     	List<Expr> assumptions = new ArrayList<>();
+    	int assumeIndex = 0;
     	for(Equation assumEq : state.assumpExpressions){
-    		assumptions.add(assumEq.expr);
+    		assumptions.add(new IdExpr(nodeAssumeName+assumeIndex++));
     	}
-    	assumptions.addAll(state.assertExpressions);
+    	assumptions.addAll(subNode.assertions);
     	
     	Expr clockHolds = getClockHoldExprs(state);
     	assumptions.add(clockHolds);
 
     	//get the guarantees as properties and add them to the renaming
-    	List<Expr> guarsAndLemmas = new ArrayList<>();
     	int i = 0;
     	for(Equation eq : state.guarExpressions){
-    		String propName = "___GUARANTEE"+i++;
+    		String propName =nodeGuarName+i++;
     		state.renaming.addExplicitRename(propName, eq.lhs.get(0).id);
+    		properties.add(propName);
     		state.guarProps.add(propName);
-    		guarsAndLemmas.add(eq.expr);
     	}
     	
     	for(Equation eq : state.lemmaExpressions){
-            String propName = "___GUARANTEE"+i++;
+            String propName = nodeGuarName+i++;
             state.renaming.addExplicitRename(propName, eq.lhs.get(0).id);
+            properties.add(propName);
             state.guarProps.add(propName);
-            guarsAndLemmas.add(eq.expr);
         }
-    	
-    	//add properties for node lemmas
-    	for(String lemmaStr : state.nodeLemmaProps){
-            String lustreVarName;
-            lustreVarName = lemmaStr;
-            String lemmaDisplayText = state.renaming.rename(lemmaStr);
-            lemmaDisplayText = state.renaming.forceRename(lemmaDisplayText);
-
-            state.renaming.addExplicitRename(lustreVarName, lemmaDisplayText);
-            state.refMap.put(lemmaDisplayText, state.refMap.get(lemmaStr));
-            state.lemmaProps.add(lustreVarName);
-        }
-    	
     	
     	Node mainNode = new Node(subNode.location, subNode.id, subNode.inputs, subNode.outputs,
-    			subNode.locals, subNode.equations, subNode.properties, assumptions,
-    			null, guarsAndLemmas, null);
+    			subNode.locals, subNode.equations, properties, assumptions,
+    			null, null, null);
     	
     	nodes.add(mainNode);
     	
@@ -120,7 +110,6 @@ public class AgreeGenerator {
     	//also add a new top level category to the layout
     	state.layout.addCategory(state.curInst.getName());
     	Program assumeGuaranteeProgram = new Program(typeDefs, null, nodes);
-    	assumeGuaranteeProgram = InlineAssumptionGuarantees.program(assumeGuaranteeProgram);
     	
     	return assumeGuaranteeProgram;
     }
@@ -289,7 +278,7 @@ public class AgreeGenerator {
     	Program program = new Program(typeDefs, null, nodes);
     	state.consistProps.addAll(props);
     	
-    	return InlineAssumptionGuarantees.program(program); //strip assumptions and guarantees
+    	return program;
     }
     
  public static AgreeProgram getRealizabilityLustre(ComponentInstance compInst){
@@ -350,7 +339,7 @@ public class AgreeGenerator {
         //also add a new top level category to the layout
         state.layout.addCategory(state.curInst.getName());
         Program realizeProgram = new Program(typeDefs, null, nodes);
-        realizeProgram = InlineAssumptionGuarantees.program(realizeProgram);
+//        realizeProgram = InlineAssumptionGuarantees.program(realizeProgram);
         
         AgreeProgram agreeProgram = new AgreeProgram();
         agreeProgram.realizeProgram = realizeProgram;
@@ -584,6 +573,9 @@ public class AgreeGenerator {
 		//add the input variables
 		addInputs(prefix, state, subState);
 		
+		//add assumption and guarantee variables
+		addAssumeGuarantees(prefix, state, subState, clockId);
+		
 		//add the all of the sub categories
 		addCategories(prefix, state, subState);
 		
@@ -599,19 +591,46 @@ public class AgreeGenerator {
 		//add subcomponent variable references (for cex output)
 		addReferences(prefix, state, subState);
 		
-		//add assumption renamings
-		addAssumptionRenamings(state, subState);
-		
-		//add component lemma renamings (NOTE THIS ONLY MATTERS FOR MONOLTHIC VERIFICATION)
-        addLemmaRenamings(state, subState);
-		
 		//add node lemma renamings
-		addNodeLemmaRenamings(state, subState);
+		//addNodeLemmaRenamings(state, subState);
 		
 		//includes renaming of assumptions for subnodes
 		state.renaming.addRenamings(subState.renaming);
 
 	}
+
+    private static void addAssumeGuarantees(String prefix,
+            AgreeEmitterState state, AgreeEmitterState subState, IdExpr clockId) {
+        int i = 0;
+        for(Equation guarEq : subState.guarExpressions){
+            state.inputVars.add(new AgreeVarDecl(prefix+nodeGuarName+i++, NamedType.BOOL));
+        }
+        for(Equation lemmaEq : subState.lemmaExpressions){
+            AgreeVarDecl lemmaVar = new AgreeVarDecl(prefix+nodeGuarName+i++, NamedType.BOOL);
+            state.inputVars.add(lemmaVar);
+            Expr lemmaExpr = new BinaryExpr(clockId, BinaryOp.IMPLIES, new IdExpr(lemmaVar.id));
+            String lemmaStr = lemmaEq.lhs.get(0).id;
+            //stupid hack for renaming
+            String replaceStr = lemmaStr.startsWith("lemma :") ? " " : ".";
+            lemmaStr = prefix.replace("__", replaceStr)+lemmaStr;
+              
+            state.lemmaExpressions.add(new Equation(new IdExpr(lemmaStr), lemmaExpr));
+            state.refMap.put(lemmaVar.id, subState.refMap.get(lemmaEq.lhs.get(0).id));
+        }
+        i = 0; 
+        for(Equation assumeEq : subState.assumpExpressions){
+            AgreeVarDecl assumeVar = new AgreeVarDecl(prefix+nodeAssumeName+i++, NamedType.BOOL);
+            state.inputVars.add(assumeVar);
+            Expr assumeExpr = new BinaryExpr(clockId, BinaryOp.IMPLIES, new IdExpr(assumeVar.id));
+            String assumeStr = assumeEq.lhs.get(0).id;
+            //stupid hack for renaming
+            String replaceStr = assumeStr.startsWith("assume :") ? " " : ".";
+            assumeStr = prefix.replace("__", replaceStr)+assumeStr;
+            state.lemmaExpressions.add(new Equation(new IdExpr(assumeStr), assumeExpr));
+            state.refMap.put(assumeStr, subState.refMap.get(assumeEq.lhs.get(0).id));
+            state.renaming.addExplicitRename(assumeVar.id, assumeStr);
+        }
+    }
 
     private static void addNodes(AgreeEmitterState state,
             AgreeEmitterState subState) {
@@ -650,106 +669,6 @@ public class AgreeGenerator {
         return clockHolds;
     }
 	
-    private static void addAssumptionRenamings(AgreeEmitterState state,
-            AgreeEmitterState subState) {
-        int i = 0;
-        String condactStr = "~0";
-        String clockedPropTag = "";
-        if(state.synchrony != 0 || state.calendar.size() != 0 || state.asynchronous){
-            condactStr = "~condact~0";
-            clockedPropTag = "~clocked_property";
-        }
-        
-		for(Equation assumEq : subState.assumpExpressions){
-			String lustreVarName = getLustreNodeName(subState);
-			lustreVarName = lustreVarName+condactStr+".___ASSUME"+i+++clockedPropTag;
-			String assumeDisplayText = assumEq.lhs.get(0).id;
-			assumeDisplayText = state.renaming.forceRename(
-					subState.curInst.getInstanceObjectPath()+" assume: \""+assumeDisplayText+"\"");
-			assumeDisplayText = assumeDisplayText.replaceAll(".*\\.", "");
-			state.renaming.addExplicitRename(lustreVarName, assumeDisplayText);
-			state.assumeProps.add(lustreVarName);
-		}
-		
-		//this part is only relevant for the monolithic case
-		for(String subAssum : subState.assumeProps){
-		    String lustreVarName = getLustreNodeName(subState);
-            lustreVarName = lustreVarName+condactStr+"."+subAssum;
-            String assumeDisplayText = subState.renaming.forceRename(subAssum);
-            assumeDisplayText = subState.curComp.getName()+"."+assumeDisplayText;
-            state.renaming.addExplicitRename(lustreVarName, assumeDisplayText);
-            state.assumeProps.add(lustreVarName);
-		}
-    }
-    
-    private static void addLemmaRenamings(AgreeEmitterState state,
-            AgreeEmitterState subState) {
-        int i = 0;
-        String condactStr = "~0";
-        String clockedPropTag = "";
-        if(state.synchrony != 0 || state.calendar.size() != 0 || state.asynchronous){
-            condactStr = "~condact~0";
-            clockedPropTag = "~clocked_property";
-        }
-        
-        for(Equation lemmaEq : subState.lemmaExpressions){
-            String lustreVarName = getLustreNodeName(subState);
-            lustreVarName = lustreVarName+condactStr+".___GUARANTEE"+i+++clockedPropTag;
-            String lemmaDisplayText = lemmaEq.lhs.get(0).id;
-            lemmaDisplayText = state.renaming.forceRename(
-                    subState.curInst.getInstanceObjectPath()+" lemma: \""+lemmaDisplayText+"\"");
-            lemmaDisplayText = lemmaDisplayText.replaceAll(".*\\.", "");
-            state.renaming.addExplicitRename(lustreVarName, lemmaDisplayText);
-            state.lemmaProps.add(lustreVarName);
-        }
-        
-        //this part is only relevant for the monolithic case
-        for(String subLemma : subState.lemmaProps){
-            String lustreVarName = getLustreNodeName(subState);
-            lustreVarName = lustreVarName+condactStr+"."+subLemma;
-            String lemmaDisplayText = subState.renaming.rename(subLemma);
-            lemmaDisplayText = subState.curComp.getName()+"."+lemmaDisplayText;
-            state.renaming.addExplicitRename(lustreVarName, lemmaDisplayText);
-            state.lemmaProps.add(lustreVarName);
-        }
-    }
-    
-    private static void addNodeLemmaRenamings(AgreeEmitterState state,
-            AgreeEmitterState subState) {
-        String condactStr = "~0";
-        String clockedPropTag = "";
-        if(state.synchrony != 0 || state.calendar.size() != 0 || state.asynchronous){
-            condactStr = "~condact~0";
-            clockedPropTag = "~clocked_property";
-        }
-
-        for(String lemmaStr : subState.nodeLemmaProps){
-            String lustreVarName = getLustreNodeName(subState);
-           
-            lustreVarName = lustreVarName+condactStr+"."+lemmaStr+clockedPropTag;
-            String lemmaDisplayText = subState.renaming.rename(lemmaStr);
-            lemmaDisplayText = state.renaming.forceRename(
-                    subState.curInst.getInstanceObjectPath()+" "+lemmaDisplayText);
-            int dotIndex = lemmaDisplayText.indexOf(".");
-            lemmaDisplayText = lemmaDisplayText.substring(dotIndex+1);
-            state.renaming.addExplicitRename(lustreVarName, lemmaDisplayText);
-            state.refMap.put(lustreVarName, subState.refMap.get(lemmaStr));
-            state.refMap.put(lemmaDisplayText, subState.refMap.get(lemmaStr));
-            //state.lemmaProps.add(lustreVarName);
-            state.nodeLemmaProps.add(lustreVarName);
-        }
-        
-//      //this part is only relevant for the monolithic case
-//        for(String subLemma : subState.nodeLemmaProps){
-//            String lustreVarName = getLustreNodeName(subState);
-//            lustreVarName = lustreVarName+condactStr+"."+subLemma;
-//            String lemmaDisplayText = subState.renaming.rename(subLemma);
-//            lemmaDisplayText = subState.curComp.getName()+"."+lemmaDisplayText;
-//            state.renaming.addExplicitRename(lustreVarName, lemmaDisplayText);
-//            state.nodeLemmaProps.add(lustreVarName);
-//        }
-        
-    }
 
 	private static IdExpr addSubcompClock(AgreeEmitterState state,
 			AgreeEmitterState subState) {
@@ -846,6 +765,7 @@ public class AgreeGenerator {
 		for(AgreeVarDecl input : subState.inputVars){
 			state.inputVars.add(new AgreeVarDecl(prefix+input.id, input.type));
 		}
+		
 	}
 
 	private static void addOutputsAndHolds(final String prefix,
@@ -880,7 +800,7 @@ public class AgreeGenerator {
     	List<Equation> equations = new ArrayList<>();
     	List<Expr> assumptions = new ArrayList<>();
     	List<Expr> guarantees = new ArrayList<>();
-    	List<Expr> propGuarantees = new ArrayList<>();
+    	List<Expr> assertions = new ArrayList<>();
 
     	inputs.addAll(subState.inputVars);
     	inputs.addAll(subState.outputVars);
@@ -889,18 +809,32 @@ public class AgreeGenerator {
     	ComponentClassifier compClass = subState.curInst.getComponentClassifier();
     	
     	//throw away intermediate guarantees
+    	int guarIndex = 0;
     	for(Equation guarEq : subState.guarExpressions){
-    	    //propGuarantees.add(guarEq.expr);
     	    guarantees.add(guarEq.expr);
+    	    String guarName = nodeGuarName+guarIndex++;
+    	    Expr guarEquality = new BinaryExpr(new IdExpr(guarName), BinaryOp.EQUAL, guarEq.expr);
+    	    assertions.add(guarEquality);
+    	    inputs.add(new VarDecl(guarName, NamedType.BOOL));
     	}
 
-    	for(Equation guarEq : subState.lemmaExpressions){
-    	    propGuarantees.add(guarEq.expr);
-        }
+    	for(Equation lemmaEq : subState.lemmaExpressions){
+    	    String lemmaName = nodeGuarName+guarIndex++;
+    	    Expr lemmaEquality = new BinaryExpr(new IdExpr(lemmaName), BinaryOp.EQUAL, lemmaEq.expr);
+    	    assertions.add(lemmaEquality);        
+            inputs.add(new VarDecl(lemmaName, NamedType.BOOL));
+    	}
+
+    	int assumeIndex = 0;
     	for(Equation assumEq : subState.assumpExpressions){
     		assumptions.add(assumEq.expr);
+    		String assumeName = nodeAssumeName+assumeIndex++;
+            Expr assumeEquality = new BinaryExpr(new IdExpr(assumeName), BinaryOp.EQUAL, assumEq.expr);
+            assertions.add(assumeEquality);
+            inputs.add(new VarDecl(assumeName, NamedType.BOOL));
     	}
     	equations.addAll(subState.eqExpressions);
+    	assertions.addAll(subState.assertExpressions);
     	
     	IdExpr assertId = new IdExpr("__ASSERT");
     	outputs.add(new VarDecl(assertId.id, NamedType.BOOL));
@@ -915,7 +849,8 @@ public class AgreeGenerator {
     	}else{
     		finalAssert = new BoolExpr(true);
     	}
-    	for(Expr assertExpr : subState.assertExpressions){
+    	
+    	for(Expr assertExpr : assertions){
     		finalAssert = new BinaryExpr(finalAssert, BinaryOp.AND, assertExpr);
     	}
     	
@@ -923,7 +858,7 @@ public class AgreeGenerator {
     	equations.add(assertEq);
     	
     	Node subNode = new Node(Location.NULL, nodeId, inputs, outputs, locals, equations,
-    			null, null, assumptions, propGuarantees, null);
+    			null, assertions, null, null, null);
     	
     	return subNode;
     	
@@ -940,7 +875,7 @@ public class AgreeGenerator {
 			List<Expr> guarantees) {
 		//the component has bottomed out so we should assert the contract
 	    
-	    IdExpr guarId = new IdExpr("__GUAR");
+	    IdExpr guarId = new IdExpr("__GUAR_CONJ");
         VarDecl guarVar = new VarDecl(guarId.id, NamedType.BOOL);
         locals.add(guarVar);
         
@@ -955,7 +890,7 @@ public class AgreeGenerator {
 	    if(assumptions.size() != 0){
 	        IdExpr assumpHistId = new IdExpr("__HIST__ASSUM");
 	        VarDecl assumpHistVar = new VarDecl(assumpHistId.id, NamedType.BOOL);
-	        IdExpr assumpId = new IdExpr("__ASSUM");
+	        IdExpr assumpId = new IdExpr("__ASSUM_CONJ");
 	        VarDecl assumpVar = new VarDecl(assumpId.id, NamedType.BOOL);
 	        locals.add(assumpHistVar);
 	        locals.add(assumpVar);
