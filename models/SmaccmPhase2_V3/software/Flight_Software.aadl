@@ -183,7 +183,7 @@ thread control_law_t
   	eq mav_req : software_types::control_law_request.impl;
   	eq nav_req : software_types::control_law_request.impl;
   	
-  	eq mavlink_has_control : bool = false ->
+  	eq ui_source_mavlink : bool = false ->
   	  mav_req.set_ui_mavlink and ppm_req.set_ui_mavlink;
   	
   	--update the request variables if an event occured
@@ -206,10 +206,19 @@ thread control_law_t
   	  ppm_req.set_stab_src_ui = true and
   	  ppm_req.set_head_src_ui = true) -> true;
   	  
---  	guarantee "ppm arrival behavior" : true ->
---  	    	
---  	guarantee "no events in means no events out" : not event(out_law) ->
---  	  event(out_law) => pre(event(mav_law) or event(nav_law) or event(ppm_law));
+  	guarantee "ppm arrival behavior" : true -> true;
+  	    	
+  	--note that only  ppm and nav events cause an event to be emitted
+  	guarantee "no events in means no events out" : not event(out_law) ->
+  	  event(out_law) => pre(event(nav_law) or event(ppm_law));
+  	  
+  	  
+    node update(ui_source_mavlink : bool, 
+    	        law_req : software_types::control_law_request.impl,
+    	        law : software_types::control_law.impl) returns (ret : bool);
+    let
+      ret = true;
+    tel;
   	  
   	
   **};

@@ -303,11 +303,20 @@ public class AgreeScopeProvider extends
         }else if (container instanceof RecordType
         		|| container instanceof RecordExpr){
         	
-        	while(!(container instanceof AgreeContract)){
+        	while(!(container instanceof AgreeContract) &&
+        	      !(container instanceof NodeDefExpr)){
         		container = container.eContainer();
         	}
-        	Set<Element> specs = getAllElementsFromSpecs(((AgreeContract) container).getSpecs());
-    		result.addAll(specs);
+        	
+        	if(container instanceof AgreeContract){
+        	    Set<Element> specs = getAllElementsFromSpecs(((AgreeContract) container).getSpecs());
+        	    result.addAll(specs);
+        	}else{
+        	    if(!(container instanceof NodeDefExpr)){
+        	        throw new AgreeScopingException("container should be an AgreeContract or a NodeDefExpr");
+        	    }
+        	    result.addAll(((NodeDefExpr)container).getArgs());
+        	}
     		
     		while(!(container instanceof AadlPackage)){
         		container = container.eContainer();
@@ -325,7 +334,10 @@ public class AgreeScopeProvider extends
         	if(container instanceof AgreeContract){
         		Set<Element> specs = getAllElementsFromSpecs(((AgreeContract) container).getSpecs());
         		result.addAll(specs);
-        	}else if(container instanceof NodeDefExpr){
+        	}else{
+                if(!(container instanceof NodeDefExpr)){
+                    throw new AgreeScopingException("container should be an AgreeContract or a NodeDefExpr");
+                }
         		result.addAll(((NodeDefExpr) container).getArgs());
         	}
         	
