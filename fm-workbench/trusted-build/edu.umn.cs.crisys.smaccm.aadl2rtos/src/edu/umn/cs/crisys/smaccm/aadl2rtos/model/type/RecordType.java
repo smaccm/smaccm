@@ -37,11 +37,11 @@ public class RecordType extends Type {
 	}
 
 	public void addField(String name, Type type) {
-		fields.put(name.toLowerCase(), type);
+		fields.put(name, type);
 	}
 
 	public Type getField(String name) {
-		return fields.get(name.toLowerCase());
+		return fields.get(name);
 	}
 
 	public Set<String> getFieldNames() {

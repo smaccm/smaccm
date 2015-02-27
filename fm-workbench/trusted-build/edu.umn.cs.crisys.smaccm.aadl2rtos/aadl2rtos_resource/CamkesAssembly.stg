@@ -94,12 +94,13 @@ rpcConnection(cid, from1, from2, to1, to2) ::=
    "connection seL4RPCCall <cid> (from <from1>.<from2>, to <to1>.<to2>);"
 
 connectPassiveToActive(passiveThreadImpl, activeThreadImpl, model) ::= <<
+<if(passiveThreadImpl.containsDispatchers)><\\>
 <rpcConnection(model.generateConnectionName,
 	activeThreadImpl.componentInstanceName,
 	passiveThreadImpl.interfaceInstanceName,
 	passiveThreadImpl.componentInstanceName,
 	passiveThreadImpl.componentDispatcherInterfaceVarIdName)>
-
+<endif>
 >>
 
 assemblyConnectActiveToPassiveThreads(threadImpl, model) ::= <<

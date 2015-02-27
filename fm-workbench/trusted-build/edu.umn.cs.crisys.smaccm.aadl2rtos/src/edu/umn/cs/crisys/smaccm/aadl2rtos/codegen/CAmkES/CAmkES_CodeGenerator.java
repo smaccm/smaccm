@@ -142,7 +142,8 @@ public class CAmkES_CodeGenerator {
     
     for (ThreadImplementation ti : model.getAllThreadImplementations()) {
       for (Dispatcher d : ti.getDispatcherList()) {
-        OutgoingDispatchContract maxCalls = CGUtil.maxDispatcherUse(d.getDispatchLimits());
+        OutgoingDispatchContract maxCalls = 
+           CGUtil.maxDispatcherUse(d.getDispatchLimits(), ti.getAllOutputEventPorts());
         for (Map.Entry<OutputEventPort, Integer> entry : maxCalls.getContract().entrySet()) {
           if (entry.getKey().hasData()) {
             ArrayType dispatchArrayType = new ArrayType(entry.getKey().getType(), entry.getValue());
@@ -574,7 +575,9 @@ public class CAmkES_CodeGenerator {
 	public void createComponents() throws Aadl2RtosFailure {
 	  List<ThreadImplementation> tis = model.getAllThreadImplementations();
 	  for (ThreadImplementation ti: tis) {
-	    createComponent(ti);
+      if (!ti.getIsExternal()) {
+        createComponent(ti);
+      }
 	  }
 	  if (model.getThreadCalendar().hasDispatchers()) {
 	    createPeriodicDispatcherComponent();

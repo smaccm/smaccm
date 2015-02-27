@@ -17,8 +17,17 @@ public class OutgoingDispatchContract {
   
   HashMap<OutputEventPort, Integer> contract;
 
-  public OutgoingDispatchContract() {
+  protected OutgoingDispatchContract() {
     contract = new HashMap<OutputEventPort, Integer>();
+  }
+  
+  public OutgoingDispatchContract(List<OutputEventPort> ports) {
+    contract = new HashMap<OutputEventPort, Integer>();
+    
+    // initializing all output ports to zero.
+    for (OutputEventPort p : ports) {
+      this.add(p, 0);
+    }
   }
   
   /**

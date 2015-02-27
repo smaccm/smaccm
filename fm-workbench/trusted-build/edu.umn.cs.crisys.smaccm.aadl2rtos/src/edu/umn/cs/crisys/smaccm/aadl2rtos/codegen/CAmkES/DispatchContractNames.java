@@ -41,6 +41,10 @@ public class DispatchContractNames {
     return Integer.toString(size); 
   }
   
+  public boolean getCanDispatch() {
+    return size > 0;
+  }
+  
   public String getDataDecl() {
     PortNames pn = new PortNames(oep); 
     ArrayType aty = new ArrayType(oep.getType(), this.size);

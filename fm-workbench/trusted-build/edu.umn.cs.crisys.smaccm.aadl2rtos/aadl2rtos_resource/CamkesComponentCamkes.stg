@@ -33,7 +33,7 @@ importReaderWriterIdl(type) ::= <<
 import "../../interfaces/<type.readerWriterIdlFileName>";
 >>
 
-importSharedDataAccessorIdl(sharedDataAccesor) ::= <<
+importSharedDataAccessorIdl(sharedDataAccessor) ::= <<
 import "../../interfaces/<sharedDataAccessor.type.sharedDataIdlFileName>";
 >>
 
@@ -72,7 +72,7 @@ uses <port.type.readerWriterInterfaceName> <port.name>;
 
 >>
 
-sharedDataAccessorDecl(sharedDataAcessor) ::= <<
+sharedDataAccessorDecl(sharedDataAccessor) ::= <<
 uses <sharedDataAccessor.type.readerWriterInterfaceName> <sharedDataAccessor.name>;
 
 >>
@@ -124,7 +124,7 @@ component <threadImpl.componentName> {
 
 	// references to passive receivers	(if any)
 	<threadImpl.model.passiveThreadImplementations:writeToPassiveReceiver()>
-<else><\\>
+<elseif(threadImpl.containsDispatchers)><\\>
 	provides <threadImpl.idlName> <threadImpl.componentDispatcherInterfaceVarIdName>;
 <endif>
 	<threadImpl.externalSemaphores:{ sem | has semaphore <sem>; }; separator="\n">

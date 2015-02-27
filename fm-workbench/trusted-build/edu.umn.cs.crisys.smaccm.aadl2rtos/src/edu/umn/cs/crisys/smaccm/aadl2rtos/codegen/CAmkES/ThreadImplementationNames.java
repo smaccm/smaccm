@@ -131,6 +131,11 @@ public class ThreadImplementationNames {
     return new ModelNames(ti.getModel());
   }
   
+  public boolean getContainsDispatchers() {
+    return !(ti.getDispatcherList().isEmpty());
+  }
+
+  
   public List<SharedDataAccessorNames> getSharedDataAccessorList() {
     List<SharedDataAccessorNames> sn = new ArrayList<>();
     for (SharedDataAccessor i : ti.getSharedDataAccessors()) {
