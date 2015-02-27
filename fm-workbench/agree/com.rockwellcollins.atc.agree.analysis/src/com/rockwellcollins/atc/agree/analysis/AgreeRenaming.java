@@ -51,6 +51,9 @@ public class AgreeRenaming extends Renaming {
 		newName = forceRename(original);
 		
 		if(findBestReference(original) == null){
+		    if(original.equals("%REALIZABLE")){
+		        return "Realizability Result";
+		    }
 		    return null;
 		}
 		

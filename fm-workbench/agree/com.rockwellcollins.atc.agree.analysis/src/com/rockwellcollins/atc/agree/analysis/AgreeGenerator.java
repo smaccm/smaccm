@@ -308,11 +308,12 @@ public class AgreeGenerator {
             assumptions.add(assumEq.expr);
         }
         assumptions.addAll(state.assertExpressions);
+        assumptions.addAll(subNode.assertions);
 
         //get the guarantees as properties and add them to the renaming
         int i = 0;
         for(Equation eq : state.guarExpressions){
-            String propName = "___GUARANTEE"+i++;
+            String propName = nodeGuarName+i++;
             state.renaming.addExplicitRename(propName, eq.lhs.get(0).id);
             state.guarProps.add(propName);
         }
@@ -324,8 +325,8 @@ public class AgreeGenerator {
         }
         
         Node mainNode = new Node(subNode.location, subNode.id, subNode.inputs, subNode.outputs,
-                subNode.locals, subNode.equations, subNode.properties, assumptions,
-                null, subNode.guarantees, Optional.of(inputStrs));
+                subNode.locals, subNode.equations, state.guarProps, assumptions,
+                null, null, Optional.of(inputStrs));
         
         nodes.add(mainNode);
         

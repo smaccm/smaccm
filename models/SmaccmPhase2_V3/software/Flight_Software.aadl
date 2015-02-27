@@ -165,6 +165,9 @@ thread control_law_t
   annex agree {**
   	--TODO why do mavlink changes not get published?
   	
+  	const yaw_mode_rate : int = 0;
+  	const yaw_mode_heading : int = 1;
+  	
   	eq init_law : software_types::control_law.impl = 
   	   software_types::control_law.impl { 
   	   	armed_mode = 0;
@@ -185,6 +188,8 @@ thread control_law_t
   	
   	eq ui_source_mavlink : bool = false ->
   	  mav_req.set_ui_mavlink and ppm_req.set_ui_mavlink;
+  	  
+  	eq ui_source_ppm : bool = not ui_source_mavlink;
   	
   	--update the request variables if an event occured
   	guarantee "the mav_req variables update if a mav_event has occurred" : true ->
@@ -199,6 +204,11 @@ thread control_law_t
   	guarantee "law is always initialized to the initial state" :
   	  cur_law = init_law -> true;
   	
+  	
+    --note that only  ppm and nav events cause an event to be emitted
+  	guarantee "no events in means no events out" : not event(out_law) ->
+  	  event(out_law) => pre(event(nav_law) or event(ppm_law));
+  	
   	guarantee "constrain the ppm_req initially" :
   	  (ppm_req.set_ui_ppm = true and
   	  ppm_req.set_thr_direct = true and
@@ -206,19 +216,13 @@ thread control_law_t
   	  ppm_req.set_stab_src_ui = true and
   	  ppm_req.set_head_src_ui = true) -> true;
   	  
-  	guarantee "ppm arrival behavior" : true -> true;
-  	    	
-  	--note that only  ppm and nav events cause an event to be emitted
-  	guarantee "no events in means no events out" : not event(out_law) ->
-  	  event(out_law) => pre(event(nav_law) or event(ppm_law));
-  	  
-  	  
-    node update(ui_source_mavlink : bool, 
-    	        law_req : software_types::control_law_request.impl,
-    	        law : software_types::control_law.impl) returns (ret : bool);
-    let
-      ret = true;
-    tel;
+  	guarantee "yaw mode": out_law.yaw_mode = 
+      if ui_source_ppm and ppm_req.set_yaw_heading then
+        yaw_mode_heading
+      else if ui_source_mavlink and mav_req.set_yaw_heading then
+        yaw_mode_heading
+      else
+        yaw_mode_rate;
   	  
   	
   **};

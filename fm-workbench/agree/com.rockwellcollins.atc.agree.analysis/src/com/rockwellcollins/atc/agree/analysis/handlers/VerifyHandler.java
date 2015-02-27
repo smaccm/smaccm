@@ -128,8 +128,6 @@ public abstract class VerifyHandler extends AadlHandler {
 
     private AnalysisResult createRealizabilityVerification(
             AgreeProgram agreeProgram) {
-        List<String> props = new ArrayList<>();
-        props.addAll(agreeProgram.state.guarProps);
         
         JRealizabilityResult result = new JRealizabilityResult("Realizability Analysis", agreeProgram.state.renaming);
         queue.add(result);
