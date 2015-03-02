@@ -45,7 +45,7 @@ void smaccm_thread_calendar() {
 }
 
 void smaccm_periodic_irq_callback() {
-	epit_irq_callback();
+	clock_irq_callback();
 	smaccm_thread_calendar(); 
 	irq_reg_callback(smaccm_periodic_irq_callback, NULL);
 }
@@ -53,10 +53,10 @@ void smaccm_periodic_irq_callback() {
 int run(void)
 {
 	irq_reg_callback(smaccm_periodic_irq_callback, NULL);
-	epit_init();
-	epit_set_interval(<threadCalendar.greatestCommonDivisorInMilliseconds>);
+	clock_init();
+	clock_set_interval(<threadCalendar.greatestCommonDivisorInMilliseconds>);
 
-	epit_start_timer();
+	clock_start_timer();
 
 	return 0;
 }

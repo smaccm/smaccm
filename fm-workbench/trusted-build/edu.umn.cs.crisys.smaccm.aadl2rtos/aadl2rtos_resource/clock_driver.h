@@ -3,10 +3,10 @@
 
 #include <stdint.h>
 
-void epit_init();
-void epit_set_interval(uint32_t interval);
-void epit_start_timer(void);
-void epit_irq_callback(void);
+void clock_init();
+void clock_set_interval(uint32_t interval);
+void clock_start_timer(void);
+void clock_irq_callback(void);
 
 
 #endif

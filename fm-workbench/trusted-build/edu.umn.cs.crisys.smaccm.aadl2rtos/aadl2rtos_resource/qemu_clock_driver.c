@@ -42,7 +42,7 @@
 #define CLKSRC_IPG_HIGH   (0x2)     /* IPG clock high frequency */
 #define CLKSRC_IPG_32K    (0x3)     /* IPG 32K clock */
 
-void epit_init()
+void clock_init()
 {
 	REG_VAL(KZM_EPIT_CTRL_ADDR) = 0;
 
@@ -61,13 +61,13 @@ void epit_init()
 }
 
 /* Set interrupt interval, in milliseconds. */
-void epit_set_interval(uint32_t interval)
+void clock_set_interval(uint32_t interval)
 {
 	REG_VAL(KZM_EPIT_LOAD_ADDR) = (IPG_CLK_KHZ * interval) ;
 	REG_VAL(KZM_EPIT_COMP_ADDR) = 0;
 }
 
-void epit_start_timer(void)
+void clock_start_timer(void)
 {
 	REG_VAL(KZM_EPIT_STAT_ADDR) = 0x1;
 
@@ -75,7 +75,7 @@ void epit_start_timer(void)
 	REG_VAL(KZM_EPIT_CTRL_ADDR) |= CTRL_EN;
 }
 
-void epit_irq_callback(void)
+void clock_irq_callback(void)
 {
 	/* Clear status bit. */
 	REG_VAL(KZM_EPIT_STAT_ADDR) = 0x1;
