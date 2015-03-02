@@ -375,11 +375,19 @@ thread motmix_t
     
     
   annex agree {**
-  	  	
-  	const disabled : software_types::motors_data.impl = 
+  	
+  	const disabled2 : software_types::motors_data.impl = 
   	  software_types::motors_data.impl {
   	    frontleft = 0.0;
   	    frontright = 0.0;
+  	    backleft = 0.0;
+  	    backright = 0.0 
+  	   };
+  	  	
+  	const disabled : software_types::motors_data.impl = 
+  	  software_types::motors_data.impl {
+  	    frontleft = disabled2.frontleft;  
+  	    frontright = 0.0; 
   	    backleft = 0.0;
   	    backright = 0.0 
   	   };

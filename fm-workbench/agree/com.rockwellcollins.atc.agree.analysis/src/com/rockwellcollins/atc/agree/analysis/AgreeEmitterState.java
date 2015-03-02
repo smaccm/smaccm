@@ -722,13 +722,15 @@ public class AgreeEmitterState  extends AgreeSwitch<Expr> {
         }
         
 
-        //special case for constants
+        Expr result;
         if(namedEl instanceof ConstStatement){
-            return doSwitch(((ConstStatement)namedEl).getExpr());
+            //evaluate the constant
+            result = doSwitch(((ConstStatement)namedEl).getExpr()); 
+        }else{
+            jKindVar =  jKindVar + namedEl.getName();
+            result = new IdExpr(jKindVar);
         }
-        
-        jKindVar =  jKindVar + namedEl.getName();
-    	Expr result = new IdExpr(jKindVar);
+
     	//this is a record accessrecord
     	while(id.getSub() != null){
     		id = id.getSub();
