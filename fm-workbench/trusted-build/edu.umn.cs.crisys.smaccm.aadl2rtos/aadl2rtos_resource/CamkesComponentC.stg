@@ -355,8 +355,8 @@ dispatcherInputArg(dispatcher) ::=  << <dispatcher.type.camkesInputType.name> <d
 
 
 dispatcherDataOutputArg(dispatchContract) ::= 
-<< <if(dispatchContract.port.hasData)><dispatchContract.dispatchArrayTypeName> *<dispatchContract.port.data>, <endif><\\> 
-  <dispatchContract.port.indexType.aadlOutputType.name> <dispatchContract.port.index> 
+<< <if(dispatchContract.canDispatch)> <if(dispatchContract.port.hasData)><dispatchContract.dispatchArrayTypeName> *<dispatchContract.port.data>, <endif><\\> 
+  <dispatchContract.port.indexType.aadlOutputType.name> <dispatchContract.port.index> <endif>
 >>
 
 componentCamkesDispatcherFnName(dispatcher) ::=
@@ -364,7 +364,7 @@ componentCamkesDispatcherFnName(dispatcher) ::=
 
 componentCamkesDispatcherFnArgs(dispatcher) ::= <<
 <if(dispatcher.hasData)>
-<[dispatcherInputArg(dispatcher), dispatcher.contracts:dispatcherDataOutputArg()]; separator=",\n">
+<[dispatcherInputArg(dispatcher), dispatcher.dispatchableContracts:dispatcherDataOutputArg()]; separator=",\n">
 <else>
 <dispatcher.contracts:dispatcherDataOutputArg();separator=",\n">
 <endif>

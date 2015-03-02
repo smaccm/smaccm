@@ -13,10 +13,11 @@
 #include <platsupport/mach/pwm.h>
 #include <platsupport/timer.h>
 
-#include <timer.h>
+#include <clock_driver.h>
+#include <dispatch_periodic.h>
+
 
 #define NS_IN_SECOND 1000000000
-#define NS_IN_MS     1000000
 
 pstimer_t *timer_drv = NULL;
 
@@ -28,14 +29,12 @@ void clock_init()
 	/*
 	 * Provide hardware info to platsupport.
 	 */
-	config.vaddr = (void*)timerbase;
+	config.vaddr = (void*)mem;
 
 	timer_drv = pwm_get_timer(&config);
 	if (!timer_drv) {
 		printf("PWM timer does not exist.\n");
 	}
-
-	irq_reg_callback(pwm_irq_callback, NULL);
 }
 
 /* Set interrupt interval, in milliseconds. */
@@ -52,6 +51,6 @@ void clock_irq_callback() {
 	/* Hardware routine. */
 	timer_handle_irq(timer_drv, PWM_T4_INTERRUPT);
 
-	/* Signal other components. */
-	timer_update_emit();
+	/* Signal other components (currently unimplemented) */
+	/* timer_update_emit(); */
 }
