@@ -645,16 +645,19 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
                 List<NestedDotID> nestIds = EcoreUtil2.getAllContentsOfType(constFrontElem,
                         NestedDotID.class);
                 for (NestedDotID nestId : nestIds) {
-                    NamedElement base = getFinalNestId(nestId);
-                    if (base instanceof ConstStatement) {
-                        ConstStatement closConst = (ConstStatement) base;
-                        if (closConst.equals(constStat)) {
-                            error(constStat,
-                                    "The expression for constant statment '" + constStat.getName()
-                                            + "' is in a cyclic definition");
-                            break;
+                    while(nestId != null){
+                        NamedElement base = nestId.getBase();
+                        if (base instanceof ConstStatement) {
+                            ConstStatement closConst = (ConstStatement) base;
+                            if (closConst.equals(constStat)) {
+                                error(constStat,
+                                        "The expression for constant statment '" + constStat.getName()
+                                        + "' is part of a cyclic definition");
+                                break;
+                            }
+                            constClosure.add(closConst);
                         }
-                        constClosure.add(closConst);
+                        nestId = nestId.getSub();
                     }
                 }
             }

@@ -109,6 +109,7 @@ public class AgreeGenerator {
     	
     	//also add a new top level category to the layout
     	state.layout.addCategory(state.curInst.getName());
+    	    	
     	Program assumeGuaranteeProgram = new Program(typeDefs, null, nodes);
     	
     	return assumeGuaranteeProgram;
