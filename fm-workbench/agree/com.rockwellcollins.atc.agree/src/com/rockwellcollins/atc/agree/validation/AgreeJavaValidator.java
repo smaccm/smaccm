@@ -733,7 +733,13 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
             }
             
             NamedElement base = getFinalNestId((NestedDotID) e);
-            return base instanceof ConstStatement;
+            
+            if(base instanceof DataImplementation ||
+               base instanceof ConstStatement ||
+               base instanceof RecordExpr){
+                return true;
+            }
+            return false;
         }
 
         return true;

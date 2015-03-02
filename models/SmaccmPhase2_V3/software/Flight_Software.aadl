@@ -46,7 +46,7 @@ process main
   	    time - time_of_last_can > total_landing_timeout => 
   	      control_mode = AGREE_CONSTS.LAND_MODE;
   	      
-  	guarantee "if the controller is armed, then the ppm sent armed signal in the past" : true;
+  	guarantee "if the controller is armed, then an armed signal in the past" : true;
   	
   	guarantee "if an arm signal is sent from the ppm controller the controller will be armed" : true;
   	
@@ -106,7 +106,6 @@ process implementation main.i
   	assert time = ppm.time;
   	assert time = ui_mux.time;
   	assert control_mode = control.mode;
-  	assert mavlink_has_control = not ui_mux.ppm_has_control;
   	
   	assert time = latency -> time = (pre(time) + latency);
   	assert time >= 0.0;
@@ -128,7 +127,6 @@ thread can_px4_t
     mission_in : in event data port software_types::can_data;
     mav_user_input : out event data port software_types::userinput_result.impl;
     mav_control_law : out event data port software_types::control_law_request.impl;
-    nav_user_input : out event data port software_types::userinput_result.impl;
     nav_control_law : out event data port software_types::control_law_request.impl;
     time : in data port Base_Types::Float;
     --TODO: the type for control_law_out is surely different then from the ppm controller
@@ -140,11 +138,11 @@ thread can_px4_t
 
   	--nothing is sent if can_data does not arrive.
   	guarantee "no can data" : not event(mission_in) ->
-  	  not pre(event(mission_in)) => not (event(mav_user_input) or event(nav_user_input));
+  	  not pre(event(mission_in)) => not event(mav_user_input);
   	  
   	guarantee "we only send user input if we send contol input" :
   	  event(mav_user_input) = event(mav_control_law) and
-  	  event(nav_user_input) = event(nav_control_law);
+  	  event(mav_control_law) = event(nav_control_law);
   	
   **};
   
@@ -167,6 +165,11 @@ thread control_law_t
   	
   	const yaw_mode_rate : int = 0;
   	const yaw_mode_heading : int = 1;
+  	const ui_mavlink : int = 1;
+  	const ui_ppm : int = 0;
+  	const auto_throttle : int = 1;
+  	const direct_throttle : int = 0;
+  	
   	
   	eq init_law : software_types::control_law.impl = 
   	   software_types::control_law.impl { 
@@ -216,6 +219,9 @@ thread control_law_t
   	  ppm_req.set_stab_src_ui = true and
   	  ppm_req.set_head_src_ui = true) -> true;
   	  
+  	guarantee "source selection":
+  	  out_law.ui_source = if ui_source_mavlink then ui_mavlink else ui_ppm;
+  	    	  
   	guarantee "yaw mode": out_law.yaw_mode = 
       if ui_source_ppm and ppm_req.set_yaw_heading then
         yaw_mode_heading
@@ -223,6 +229,15 @@ thread control_law_t
         yaw_mode_heading
       else
         yaw_mode_rate;
+        
+    guarantee "throttle mode" : out_law.thr_mode =
+      if ui_source_ppm and ppm_req.set_thr_auto then 
+        auto_throttle
+      else if ui_source_mavlink and mav_req.set_thr_auto then
+        auto_throttle
+      else
+        direct_throttle;
+        
   	  
   	
   **};
@@ -317,34 +332,7 @@ thread ui_mux_t
     
    annex agree {**
    	
-   	  const ppm_source : int = 0;
-   	  const mavlink_source : int = 1;
-   	
-   	  eq ppm_has_control : bool = 
-   	    false -> if pre(event(control_law)) then control_law.ui_source = ppm_source else pre(ppm_has_control);
-   	
-   	  initially:
-   	    not (event(control_law) or event(input_select));
-   	
-   	  guarantee "armed mode ranges" :
-   	    control_law.armed_mode = AGREE_CONSTS.LAND_MODE or
-  	    control_law.armed_mode = AGREE_CONSTS.ARMED_MODE or
-  	    control_law.armed_mode = AGREE_CONSTS.DISARMED_MODE;
-  	    
-  	  guarantee "no output events if neither received": not event(input_select) ->
-  	    not (pre(event(ppm_input) or event(mavlink_input))) => 
-  	      not event(input_select);
-  	      
-  	  guarantee "ppm has precedence" : true ->
-  	    if pre(event(ppm_input)) and ppm_has_control then
-  	      event(input_select) and
-  	      input_select = ppm_input
-  	    else if pre(event(mavlink_input)) and not ppm_has_control then
-  	      event(input_select) and
-  	      input_select = mavlink_input
-  	    else
-  	      not (event(input_select) or event(control_law));
-  	    
+     eq blah : int = 0;
    **};
     
 end ui_mux_t;
@@ -376,7 +364,7 @@ end sensors_t;
 
 thread motmix_t
   features
-    motors : out data port software_types::motors_data;
+    motors : out data port software_types::motors_data.impl;
     control_in : in data port software_types::controloutput.impl;
     control_law_in : in event data port software_types::control_law.impl;
     time : in data port Base_Types::Float;
@@ -384,6 +372,25 @@ thread motmix_t
   properties
     SMACCM::Language => "Ivory";
     SMACCM::Trusted => true;
+    
+    
+  annex agree {**
+  	  	
+  	const disabled : software_types::motors_data.impl = 
+  	  software_types::motors_data.impl {
+  	    frontleft = 0.0;
+  	    frontright = 0.0;
+  	    backleft = 0.0;
+  	    backright = 0.0 
+  	   };
+  	   
+  	initially:
+  	  motors = disabled;
+  	   
+    guarantee "motors are initially disabled" : motors = disabled -> true;
+  	   
+  **};
+    
 end motmix_t;
 	
 end Flight_Software;
