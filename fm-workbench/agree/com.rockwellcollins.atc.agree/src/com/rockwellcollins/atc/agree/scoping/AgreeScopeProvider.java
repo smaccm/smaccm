@@ -277,8 +277,15 @@ public class AgreeScopeProvider extends
                 }
             }else if (container instanceof FeatureGroupImpl){
               container = ((FeatureGroupImpl)container).getAllFeatureGroupType();
-            }else if(container instanceof Arg){
-            	Type type = ((Arg) container).getType();
+            }else if(container instanceof Arg || container instanceof ConstStatement){
+                Type type;
+            
+                if(container instanceof Arg){
+            	  type = ((Arg) container).getType();
+                }else{
+                    type = ((ConstStatement)container).getType();
+                }
+                    
             	if(type instanceof RecordType){
             		NestedDotID elID = ((RecordType) type).getRecord();
             		while(elID.getSub() != null){

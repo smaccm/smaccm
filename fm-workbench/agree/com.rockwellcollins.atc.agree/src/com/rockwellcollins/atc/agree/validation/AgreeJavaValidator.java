@@ -736,7 +736,8 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
             
             if(base instanceof DataImplementation ||
                base instanceof ConstStatement ||
-               base instanceof RecordExpr){
+               base instanceof RecordExpr ||
+               base instanceof DataSubcomponent){
                 return true;
             }
             return false;
