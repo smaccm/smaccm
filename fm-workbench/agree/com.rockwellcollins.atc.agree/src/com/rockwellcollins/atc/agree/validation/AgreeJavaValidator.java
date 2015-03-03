@@ -874,39 +874,39 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
             }
         }
         
-        // check for constant cycles
-        Set<EObject> eqClosure = new HashSet<EObject>();
-        Set<EObject> prevClosure;
-        eqClosure.add(src);
-
-        // quick and dirty cycle check
-        do {
-            prevClosure = new HashSet<EObject>(eqClosure);
-            for (EObject constFrontElem : prevClosure) {
-                List<NestedDotID> nestIds = EcoreUtil2.getAllContentsOfType(constFrontElem,
-                        NestedDotID.class);
-                for (NestedDotID nestId : nestIds) {
-                    while(nestId != null){
-                        NamedElement base = nestId.getBase();
-                        if (base instanceof Arg) {
-                            EObject container = base;
-                            while(!(container instanceof EqStatement) &&
-                                  !(container instanceof NodeEq)){
-                                container = container.eContainer();
-                            }
-                            if (lhsArgs.contains(base)) {
-                                warning(src,
-                                        "The expression for eq statment '" + base.getName()
-                                        + "' may be part of a cyclic definition");
-                                break;
-                            } 
-                            eqClosure.add(container);
-                        }
-                        nestId = nestId.getSub();
-                    }
-                }
-            }
-        } while (!prevClosure.equals(eqClosure));
+//        // check for constant cycles
+//        Set<EObject> eqClosure = new HashSet<EObject>();
+//        Set<EObject> prevClosure;
+//        eqClosure.add(src);
+//
+//        // quick and dirty cycle check
+//        do {
+//            prevClosure = new HashSet<EObject>(eqClosure);
+//            for (EObject constFrontElem : prevClosure) {
+//                List<NestedDotID> nestIds = EcoreUtil2.getAllContentsOfType(constFrontElem,
+//                        NestedDotID.class);
+//                for (NestedDotID nestId : nestIds) {
+//                    while(nestId != null){
+//                        NamedElement base = nestId.getBase();
+//                        if (base instanceof Arg) {
+//                            EObject container = base;
+//                            while(!(container instanceof EqStatement) &&
+//                                  !(container instanceof NodeEq)){
+//                                container = container.eContainer();
+//                            }
+//                            if (lhsArgs.contains(base)) {
+//                                warning(src,
+//                                        "The expression for eq statment '" + base.getName()
+//                                        + "' may be part of a cyclic definition");
+//                                break;
+//                            } 
+//                            eqClosure.add(container);
+//                        }
+//                        nestId = nestId.getSub();
+//                    }
+//                }
+//            }
+//        } while (!prevClosure.equals(eqClosure));
         
     }
 

@@ -24,7 +24,7 @@ public class FeatureUtils {
 	public static  void recordFeatures(AgreeEmitterState state, boolean recordSubFeatures) {
 		ComponentInstance compInst = state.curInst;
 		for(FeatureInstance featInst : compInst.getFeatureInstances()){
-			List<AgreeFeature> featList = recordFeatures_Helper(state, "", featInst);
+			List<AgreeFeature> featList = recordFeatures_Helper(state, "", featInst, compInst);
 			//add features to the correct input var or output var location
 			addFeatureInputsOutputs(state, featList, false);
 		}
@@ -33,7 +33,7 @@ public class FeatureUtils {
 		    for(ComponentInstance subCompInst : compInst.getComponentInstances()){
 		        for(FeatureInstance featInst : subCompInst.getFeatureInstances()){
 		            List<AgreeFeature> featList = recordFeatures_Helper(state,  subCompInst.getName() + dotChar,
-		                    featInst);
+		                    featInst, subCompInst);
 		            addFeatureInputsOutputs(state, featList, true);
 		        }
 		    }
@@ -68,11 +68,11 @@ public class FeatureUtils {
 		}
 	}
 
-	private static List<AgreeFeature> recordFeatures_Helper(AgreeEmitterState state, String jPrefix, FeatureInstance featInst){
+	private static List<AgreeFeature> recordFeatures_Helper(AgreeEmitterState state, String jPrefix, FeatureInstance featInst, ComponentInstance compInst){
 		List<AgreeFeature> agreeConns = new ArrayList<>();
 		switch(featInst.getCategory()){
 		case FEATURE_GROUP:
-			recordFeatureGroup(state, featInst, agreeConns);
+			recordFeatureGroup(state, featInst, agreeConns, compInst);
 			break;
 		case DATA_PORT:
 		case EVENT_DATA_PORT:
@@ -90,15 +90,17 @@ public class FeatureUtils {
 			}else{
 				agreeConn.lustreString = jPrefix + agreeConn.lustreString;
 			}
+			agreeConn.compInst = compInst;
 		}
+		
 		state.featInstToAgreeFeatMap.put(featInst, agreeConns);
 		return agreeConns;
 	}
 	
 	private static void recordFeatureGroup(AgreeEmitterState state, FeatureInstance featInst,
-			List<AgreeFeature> agreeConns) {
+			List<AgreeFeature> agreeConns, ComponentInstance compInst) {
 		for(FeatureInstance subFeatInst : featInst.getFeatureInstances()){
-			agreeConns.addAll(recordFeatures_Helper(state, featInst.getName()+dotChar, subFeatInst));
+			agreeConns.addAll(recordFeatures_Helper(state, featInst.getName()+dotChar, subFeatInst, compInst));
 		}
 	}
 	
@@ -141,6 +143,7 @@ public class FeatureUtils {
 		}else{
 			connType = AgreeFeature.ConnType.IMMEDIATE;
 		}
+		
 		AgreeFeature agreeConn = new AgreeFeature();
 		agreeConn.feature = featInst.getFeature();
 		agreeConn.varType = getNamedType(AgreeStateUtils.getRecordTypeName(dataClass, state.typeMap, state.typeExpressions));
