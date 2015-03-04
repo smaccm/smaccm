@@ -79,7 +79,7 @@ PropertyStatement:
 	'property' name=ID '=' expr=Expr ';';
 
 ConstStatement:
-	'const' name=ID ':' type=Type '=' expr=Expr ';'; --this should really be an "Arg"
+	'const' name=ID ':' type=Type '=' expr=Expr ';'; //this should really be an "Arg"
 
 EqStatement:
 	'eq' (lhs+=Arg (',' lhs+=Arg)*) ('=' expr=Expr)? ';';

@@ -7,7 +7,7 @@
     <package 
        uri = "http://www.rockwellcollins.com/atc/agree/Agree" 
        class = "com.rockwellcollins.atc.agree.agree.AgreePackage"
-       genModel = "com/rockwellcollins/atc/agree/Agree.genmodel" /> 
+       genModel = "model/generated/Agree.genmodel" /> 
 	
   </extension>
 

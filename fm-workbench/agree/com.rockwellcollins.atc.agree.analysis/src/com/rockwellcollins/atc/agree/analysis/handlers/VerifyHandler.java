@@ -72,18 +72,17 @@ public abstract class VerifyHandler extends AadlHandler {
         handlerService = (IHandlerService) getWindow()
                 .getService(IHandlerService.class);
 
-        if (!(root instanceof SystemImplementation)) {
+        if (!(root instanceof ComponentImplementation)) {
             return new Status(IStatus.ERROR, Activator.PLUGIN_ID,
-                    "Must select an AADL System Implementation");
+                    "Must select an AADL Component Implementation");
         }
 
         try {
-        	SystemImplementation ci = (SystemImplementation) root;
+        	ComponentImplementation ci = (ComponentImplementation) root;
 
         	SystemInstance si = null;
-        	final SystemImplementation sysimpl = ci;
         	try {
-        		si = InstantiateModel.buildInstanceModelFile(sysimpl);
+        		si = InstantiateModel.buildInstanceModelFile(ci);
         	} catch (Exception e) {
         		Dialog.showError("Model Instantiate",
         				"Error while re-instantiating the model: " + e.getMessage());
@@ -94,7 +93,7 @@ public abstract class VerifyHandler extends AadlHandler {
             CompositeAnalysisResult wrapper = new CompositeAnalysisResult("");
 
 //            SystemType sysType = si.getSystemImplementation().getType();
-            SystemType sysType = (SystemType) si.getSystemImplementation().getType();
+            ComponentType sysType = AgreeEmitterUtilities.getInstanceType(si);
             EList<AnnexSubclause> annexSubClauses = AnnexUtil.getAllAnnexSubclauses(sysType,
                     AgreePackage.eINSTANCE.getAgreeContractSubclause());
 

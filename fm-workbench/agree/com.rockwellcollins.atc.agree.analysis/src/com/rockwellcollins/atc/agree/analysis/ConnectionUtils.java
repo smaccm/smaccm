@@ -144,21 +144,25 @@ public class ConnectionUtils {
 						"' and '"+agreeSourConn.lustreString.replace("__", ".")+"' are of different types");
 			}
 			
-			IdExpr lhsClock = null;
-			IdExpr rhsClock = null;
+			Expr lhsClock = null;
+			Expr rhsClock = null;
+			Subcomponent sourSub = agreeSourConn.compInst.getSubcomponent();
+			Subcomponent destSub = agreeDestConn.compInst.getSubcomponent();
+			String sourConnName = sourSub == null ? null : sourSub.getName();
+			String destConnName = destSub == null ? null : destSub.getName();
 			if(destContext == null || destContext instanceof FeatureGroup){
 				switch(agreeDestConn.direction){
 				case IN:
 					lhsLustreName = agreeSourConn.lustreString;
 					rhsLustreName = agreeDestConn.lustreString;
-					lhsClock = new IdExpr(agreeSourConn.compInst.getSubcomponent().getName()+state.clockIDSuffix);
-                    rhsClock = new IdExpr(agreeDestConn.compInst.getSubcomponent().getName()+state.clockIDSuffix);
+					lhsClock = sourConnName == null ? new BoolExpr(true) : new IdExpr(sourConnName+state.clockIDSuffix);
+                    rhsClock = destConnName == null ? new BoolExpr(true) : new IdExpr(destConnName+state.clockIDSuffix);
 					break;
 				case OUT:
 					lhsLustreName = agreeDestConn.lustreString;
 					rhsLustreName = agreeSourConn.lustreString;
-                    lhsClock = new IdExpr(agreeDestConn.compInst.getSubcomponent().getName()+state.clockIDSuffix);
-                    rhsClock = new IdExpr(agreeSourConn.compInst.getSubcomponent().getName()+state.clockIDSuffix);
+                    lhsClock = destConnName == null ? new BoolExpr(true) : new IdExpr(destConnName+state.clockIDSuffix);
+                    rhsClock = sourConnName == null ? new BoolExpr(true) : new IdExpr(sourConnName+state.clockIDSuffix);
                     break;
 				}
 			}else{
@@ -166,14 +170,14 @@ public class ConnectionUtils {
 				case IN:
 					lhsLustreName = agreeDestConn.lustreString;
 					rhsLustreName = agreeSourConn.lustreString;
-                    lhsClock = new IdExpr(agreeDestConn.compInst.getSubcomponent().getName()+state.clockIDSuffix);
-                    rhsClock = new IdExpr(agreeSourConn.compInst.getSubcomponent().getName()+state.clockIDSuffix);
+                    lhsClock = destConnName == null ? new BoolExpr(true) : new IdExpr(destConnName+state.clockIDSuffix);
+                    rhsClock = sourConnName == null ? new BoolExpr(true) : new IdExpr(sourConnName+state.clockIDSuffix);
 					break;
 				case OUT:
 					lhsLustreName = agreeSourConn.lustreString;
 					rhsLustreName = agreeDestConn.lustreString;
-                    lhsClock = new IdExpr(agreeSourConn.compInst.getSubcomponent().getName()+state.clockIDSuffix);
-                    rhsClock = new IdExpr(agreeDestConn.compInst.getSubcomponent().getName()+state.clockIDSuffix);
+                    lhsClock = sourConnName == null ? new BoolExpr(true) : new IdExpr(sourConnName+state.clockIDSuffix);
+                    rhsClock =destConnName == null ? new BoolExpr(true) : new IdExpr(destConnName+state.clockIDSuffix);
                     break;
 				}
 			}
