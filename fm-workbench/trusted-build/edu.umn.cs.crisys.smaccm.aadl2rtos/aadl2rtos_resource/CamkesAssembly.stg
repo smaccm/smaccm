@@ -94,12 +94,13 @@ rpcConnection(cid, from1, from2, to1, to2) ::=
    "connection seL4RPCCall <cid> (from <from1>.<from2>, to <to1>.<to2>);"
 
 connectPassiveToActive(passiveThreadImpl, activeThreadImpl, model) ::= <<
+<if(passiveThreadImpl.containsDispatchers)><\\>
 <rpcConnection(model.generateConnectionName,
 	activeThreadImpl.componentInstanceName,
 	passiveThreadImpl.interfaceInstanceName,
 	passiveThreadImpl.componentInstanceName,
 	passiveThreadImpl.componentDispatcherInterfaceVarIdName)>
-
+<endif>
 >>
 
 assemblyConnectActiveToPassiveThreads(threadImpl, model) ::= <<
@@ -226,8 +227,8 @@ assembly {
 		epit.irq_attributes = 27;
 		<elseif(model.isOdroidTarget)>
 		/* Freescale i.MX6 (Sabralite) ODROID Configuration */
-        epit.mem_attributes = "0x020D0000:0x1000";
-		epit.irq_attributes = 88;
+        epit.mem_attributes = "0x12DD0000:0x1000";
+		epit.irq_attributes = 72;
 		<else>
 		AADL Translation Error: unknown target <model.hwTarget>; 
 		I don't know how to configure clock interrupt for this hardware target. 

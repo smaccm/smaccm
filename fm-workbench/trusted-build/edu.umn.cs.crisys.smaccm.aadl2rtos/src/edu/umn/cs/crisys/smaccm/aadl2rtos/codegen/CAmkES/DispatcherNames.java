@@ -147,9 +147,21 @@ public class DispatcherNames {
       pdl.add(new DispatchContractNames(elem));
     }
     return pdl;
-    
   }
-  
+
+  public List<DispatchContractNames> getDispatchableContracts() {
+    OutgoingDispatchContract odc = 
+        OutgoingDispatchContract.maxDispatcherUse(dp.getDispatchLimits());
+    List<DispatchContractNames> pdl = new ArrayList<>(); 
+    for (Map.Entry<OutputEventPort, Integer> elem : odc.getContract().entrySet()) {
+      DispatchContractNames names = new DispatchContractNames(elem);
+      if (names.getCanDispatch()) {
+        pdl.add(new DispatchContractNames(elem));
+      }
+    }
+    return pdl;
+  }
+
   public PortNames getInputEventDispatcherPort() {
     if (dp instanceof InputEventDispatcher) {
       PortNames port = new PortNames(((InputEventDispatcher) dp).getEventPort());

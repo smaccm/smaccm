@@ -132,7 +132,7 @@ public class Aadl2RtosAction extends AadlAction {
 			} else {
 			  logger.error("aadl2rtos OS target: [" + model.getOsTarget() + "] not recognized.");
 			}
-      logger.status("CAmkES code generation complete.");
+			logger.status("CAmkES code generation complete.");
 		} catch (Aadl2RtosFailure f) {
 			log.error("Analysis Exception");
 			List<String> msgs = f.getMessages();

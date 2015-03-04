@@ -18,7 +18,8 @@ public abstract class Dispatcher {
 	private List<ExternalHandler> externalHandlerList;
 	private List<String> implementationFileList;
 	private ThreadImplementation owner;
-
+  private String optSendsEventsToString = null;
+	
 	 // Outgoing dispatch contract (limits on dispatch)
   private ArrayList<OutgoingDispatchContract> dispatchLimits = new ArrayList<OutgoingDispatchContract>();
 
@@ -71,7 +72,21 @@ public abstract class Dispatcher {
 	
 	
 	
-	public ThreadImplementation getOwner() {
+	/**
+   * @return the optSendsEventsToString
+   */
+  public String getOptSendsEventsToString() {
+    return optSendsEventsToString;
+  }
+
+  /**
+   * @param optSendsEventsToString the optSendsEventsToString to set
+   */
+  public void setOptSendsEventsToString(String optSendsEventsToString) {
+    this.optSendsEventsToString = optSendsEventsToString;
+  }
+
+  public ThreadImplementation getOwner() {
 	  return this.owner;
 	}
 }

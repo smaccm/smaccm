@@ -21,7 +21,7 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.gmf.runtime.notation;bundle-version="1.5.0";resolution:=optional,
  net.certware.sacm;bundle-version="1.0.0";resolution:=optional  
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Export-Package: com.rockwellcollins.atc.resolute.analysis,
  com.rockwellcollins.atc.resolute.analysis.execution,
  com.rockwellcollins.atc.resolute.analysis.results,

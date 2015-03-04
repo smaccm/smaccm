@@ -142,7 +142,8 @@ public class CAmkES_CodeGenerator {
     
     for (ThreadImplementation ti : model.getAllThreadImplementations()) {
       for (Dispatcher d : ti.getDispatcherList()) {
-        OutgoingDispatchContract maxCalls = CGUtil.maxDispatcherUse(d.getDispatchLimits());
+        OutgoingDispatchContract maxCalls = 
+           CGUtil.maxDispatcherUse(d.getDispatchLimits(), ti.getAllOutputEventPorts());
         for (Map.Entry<OutputEventPort, Integer> entry : maxCalls.getContract().entrySet()) {
           if (entry.getKey().hasData()) {
             ArrayType dispatchArrayType = new ArrayType(entry.getKey().getType(), entry.getValue());
@@ -436,7 +437,9 @@ public class CAmkES_CodeGenerator {
     
 	  createComponentHeader(includeDirectory, ti);
 	  createComponentCFile(srcDirectory, ti);
-	  createComponentCamkesFile(componentDirectory, ti);
+    if (!ti.getIsExternal()) {
+      createComponentCamkesFile(componentDirectory, ti);
+    }
 	  copyComponentFiles(srcDirectory, includeDirectory, ti); 
 	  
 	  ThreadImplementationNames tin = new ThreadImplementationNames(ti); 
@@ -455,10 +458,11 @@ public class CAmkES_CodeGenerator {
   public void createClockDriver(File srcDirectory, File includeDirectory) throws Aadl2RtosFailure {
 	  
     String concrete_driver = null; 
-    if (model.getHWTarget().equalsIgnoreCase("QEMU") || 
-        model.getHWTarget().equalsIgnoreCase("ODROID")) {
-      concrete_driver = "qemu_odroid_clock_driver.c";
-    } 
+    if (model.getHWTarget().equalsIgnoreCase("QEMU")) {
+      concrete_driver = "qemu_clock_driver.c";
+    } else if (model.getHWTarget().equalsIgnoreCase("ODROID")) {
+      concrete_driver = "odroid_clock_driver.c";
+    }
     else {
       log.warn("Clock driver for HW platform: " + model.getHWTarget() + " is currently unimplemented.  " + 
           "Please implement interface as specified in clock_driver.h for this platform, and place the resulting .c file in the dispatch_periodic directory.");
@@ -574,7 +578,7 @@ public class CAmkES_CodeGenerator {
 	public void createComponents() throws Aadl2RtosFailure {
 	  List<ThreadImplementation> tis = model.getAllThreadImplementations();
 	  for (ThreadImplementation ti: tis) {
-	    createComponent(ti);
+      createComponent(ti);
 	  }
 	  if (model.getThreadCalendar().hasDispatchers()) {
 	    createPeriodicDispatcherComponent();

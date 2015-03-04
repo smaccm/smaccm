@@ -16,7 +16,7 @@ property set SMACCM_SYS is
 	
     -- For scheduling
     Thread_Type: enumeration (Active, Passive) applies to (thread);	
-	Sends_Events_To: aadlstring applies to (thread); 
+	Sends_Events_To: aadlstring applies to (thread, port); 
 	
 	-- For build output.
 	Output_Directory: aadlstring applies to (system implementation);

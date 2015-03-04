@@ -30,7 +30,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE DATA OR THE USE OR OTHER DEALINGS
 
 >>
 
-DARPALicenseComment() ::= <commentBlock(DARPALicense())>
+DARPALicenseComment() ::= <<commentblock(DARPALicense())>>
 
 HeaderCommentBlock(sysInstanceName) ::= <<
 /**************************************************************************

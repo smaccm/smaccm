@@ -355,8 +355,8 @@ dispatcherInputArg(dispatcher) ::=  << <dispatcher.type.camkesInputType.name> <d
 
 
 dispatcherDataOutputArg(dispatchContract) ::= 
-<< <if(dispatchContract.port.hasData)><dispatchContract.dispatchArrayTypeName> *<dispatchContract.port.data>, <endif><\\> 
-  <dispatchContract.port.indexType.aadlOutputType.name> <dispatchContract.port.index> 
+<< <if(dispatchContract.canDispatch)> <if(dispatchContract.port.hasData)><dispatchContract.dispatchArrayTypeName> *<dispatchContract.port.data>, <endif><\\> 
+  <dispatchContract.port.indexType.aadlOutputType.name> <dispatchContract.port.index> <endif>
 >>
 
 componentCamkesDispatcherFnName(dispatcher) ::=
@@ -364,7 +364,7 @@ componentCamkesDispatcherFnName(dispatcher) ::=
 
 componentCamkesDispatcherFnArgs(dispatcher) ::= <<
 <if(dispatcher.hasData)>
-<[dispatcherInputArg(dispatcher), dispatcher.contracts:dispatcherDataOutputArg()]; separator=",\n">
+<[dispatcherInputArg(dispatcher), dispatcher.dispatchableContracts:dispatcherDataOutputArg()]; separator=",\n">
 <else>
 <dispatcher.contracts:dispatcherDataOutputArg();separator=",\n">
 <endif>
@@ -372,15 +372,17 @@ componentCamkesDispatcherFnArgs(dispatcher) ::= <<
 
 assignGlobals(dispatchContract) ::= <<
 <dispatchContract.port.globalMaxDispatchSize> = <dispatchContract.maxDispatchSize>;
+<if(dispatchContract.canDispatch)><\\>
 <dispatchContract.port.globalIndex> = <dispatchContract.port.index>;
 <if(dispatchContract.port.hasData)><dispatchContract.port.globalData> = *<dispatchContract.port.data>;<endif> 
-*<dispatchContract.port.globalIndex> = 0;
-
+*<dispatchContract.port.globalIndex> = 0; <endif>
 >> 
 
+// TODO: fix: if dispatcher port has no contract, then we get seg fault writing to null 
 componentCamkesDispatcherFn(dispatcher) ::= << 
 void <componentCamkesDispatcherFnName(dispatcher)>(<componentCamkesDispatcherFnArgs(dispatcher)>) {
 	<dispatcher.contracts:assignGlobals()>
+	// globals assigned!
 	<dispatcher.externalHandlers:externalHandlerDispatcher(dispatcher)>
 }	
 
@@ -406,7 +408,8 @@ optAadlOutputArg(port) ::= "<if(port.hasData)><port.type.aadlOutputType.name> <p
 
 componentSendFunction(port) ::= << 
 bool <port.aadlWriterFnName>(<port:optConstAadlInputArg()>) {
-	if (*<port.globalIndex> \< <port.globalMaxDispatchSize>) {
+	if (<port.globalMaxDispatchSize> > 0 && 
+		 *<port.globalIndex> \< <port.globalMaxDispatchSize>) {
 		<if(port.hasData)><copyAadlInputToGlobalStmt(port)><endif>
 		(*<port.globalIndex>)++;
 		return true;
@@ -531,7 +534,7 @@ void <camkesRPCDispatchName(dispatcher)>() {
 ///////////////////////////////////////////////////////////////////////////
 
 
-drainDispatchers(dispatcher) ::= <<
+drainDispatcher(dispatcher) ::= <<
 <if(dispatcher.isPeriodic)><\\>
 <dispatcher:periodicDispatcher()>
 <elseif(dispatcher.isIRQ)><\\>
@@ -579,7 +582,7 @@ int run() {
 		<threadImpl.dispatcherLockStmt>
 		
 		// drain the queues 
-		<threadImpl.dispatchers:drainDispatchers()>
+		<threadImpl.dispatchers:drainDispatcher()>
 	}
 	// won't ever get here, but form must be followed
 	return 0;

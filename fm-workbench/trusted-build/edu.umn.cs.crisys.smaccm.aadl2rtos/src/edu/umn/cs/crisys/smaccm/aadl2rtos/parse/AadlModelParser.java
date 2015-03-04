@@ -194,9 +194,6 @@ public class AadlModelParser {
       }
     }
   }
-
-  // TODO: rewrite: this is a killer; it does a scan of *EVERY ELEMENT* of an 
-  // aadl model.  We can grab the thread implementations from the thread instances.
   
   private void findThreadTypeImpls(Element elem) {
     if (elem instanceof SubcomponentImpl) {
@@ -255,6 +252,8 @@ public class AadlModelParser {
           ehl.add(eh);
       }
       IRQDispatcher disp = new IRQDispatcher(ti, ehl, signal_name, signal_number, flih_handler, memoryRegions);
+      String sendsEventsTo = Util.getStringValueOpt(port, ThreadUtil.SMACCM_SYS_SENDS_EVENTS_TO);
+      disp.setOptSendsEventsToString(sendsEventsTo);
       disp.setImplementationFileList(files);
       ti.addDispatcher(disp);
     } catch (Exception e) {
@@ -281,6 +280,8 @@ public class AadlModelParser {
       }
       InputEventDispatcher disp = new InputEventDispatcher(ti, ehl, iep);
       List<String> files = Util.getSourceTextListOpt(port,ThreadUtil.SOURCE_TEXT);
+      String sendsEventsTo = Util.getStringValueOpt(port, ThreadUtil.SMACCM_SYS_SENDS_EVENTS_TO);
+      disp.setOptSendsEventsToString(sendsEventsTo);
       disp.setImplementationFileList(files);
       iep.setDispatcher(disp);
       ti.addDispatcher(disp);
@@ -394,7 +395,10 @@ public class AadlModelParser {
           handlerList.add(new ExternalHandler(entrypoint)); 
         }
         Dispatcher d = new PeriodicDispatcher(ti, handlerList, period);
+        String sendsEventsTo = Util.getStringValueOpt(tti, ThreadUtil.SMACCM_SYS_SENDS_EVENTS_TO);
+        d.setOptSendsEventsToString(sendsEventsTo);
         d.setImplementationFileList(Util.getSourceTextListOpt(tti, ThreadUtil.SOURCE_TEXT));
+        // TODO: Put the OutgoingDispatchContract here!
         ti.addDispatcher(d);
       } catch (Exception e) {
         throw new Aadl2RtosException(
@@ -439,7 +443,7 @@ public class AadlModelParser {
     
     @Override
     public void enterSends_to_tl(SendsToParser.Sends_to_tlContext ctx) {
-      OutgoingDispatchContract contract = new OutgoingDispatchContract(); 
+      OutgoingDispatchContract contract = new OutgoingDispatchContract(this.ports); 
       int entries = ctx.ID().size();
       for (int index = 0; index < entries; index++) {
         String id = ctx.ID(index).getText(); 
@@ -451,24 +455,42 @@ public class AadlModelParser {
     }
   }
   
+  private SendsToWalker constructDispatchLimit(String sendsEventsTo, List<OutputEventPort> outputPorts) {
+    ANTLRInputStream input = new ANTLRInputStream(sendsEventsTo);
+    TokenStream tokens = new CommonTokenStream( new SendsToLexer( input ) );
+    SendsToParser parser = new SendsToParser(tokens); 
+    ParseTree tree = parser.program();
+    ParseTreeWalker walker = new ParseTreeWalker(); 
+    SendsToWalker surrogate = new SendsToWalker(outputPorts); 
+    walker.walk(surrogate, tree);
+    return surrogate;
+  }
+  
   private void constructDispatchLimits(ThreadTypeImpl tti, ThreadImplementation ti) {
     try {
-      String sendsEventsTo = Util.getStringValue(tti, ThreadUtil.SMACCM_SYS_SENDS_EVENTS_TO);
-      ANTLRInputStream input = new ANTLRInputStream(sendsEventsTo);
-      TokenStream tokens = new CommonTokenStream( new SendsToLexer( input ) );
-      SendsToParser parser = new SendsToParser(tokens); 
-      ParseTree tree = parser.program();
-      ParseTreeWalker walker = new ParseTreeWalker(); 
-      SendsToWalker surrogate = new SendsToWalker(ti.getAllOutputEventPorts()); 
-      walker.walk(surrogate, tree);
-      ti.setDispatchLimits(surrogate.getContracts());
+      String sendsEventsTo = Util.getStringValueOpt(tti, ThreadUtil.SMACCM_SYS_SENDS_EVENTS_TO);
+      List<OutputEventPort> outputs = ti.getAllOutputEventPorts();
+      SendsToWalker threadSurrogate = null;
       
+      if (sendsEventsTo != null) {
+        threadSurrogate = constructDispatchLimit(sendsEventsTo, outputs); 
+      }
+      
+      // ti.setDispatchLimits(surrogate.getContracts());
       // the dispatch limits really should be defined per dispatcher.  For now,
       // we are setting them per-thread.
       
       List<Dispatcher> dispList = ti.getDispatcherList();
       for (Dispatcher d : dispList) {
-        d.setDispatchLimits(surrogate.getContracts());
+        if (d.getOptSendsEventsToString() != null) {
+          String set = d.getOptSendsEventsToString();
+          SendsToWalker s = constructDispatchLimit(set, outputs);
+          d.setDispatchLimits(s.getContracts());
+        } else if (threadSurrogate != null){
+          d.setDispatchLimits(threadSurrogate.getContracts());
+        } else {
+          throw new Aadl2RtosException("No dispatch limit (Sends_Outputs_To) specified for dispatcher " + d.getName());
+        }
       }
     }
     catch (Exception ae) {

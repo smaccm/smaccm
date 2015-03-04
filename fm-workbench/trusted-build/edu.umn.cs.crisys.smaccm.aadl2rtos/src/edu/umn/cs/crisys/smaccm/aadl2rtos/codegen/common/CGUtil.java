@@ -5,6 +5,7 @@ package edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.common;
 
 import java.util.List;
 
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.OutputEventPort;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.OutgoingDispatchContract;
 
 /**
@@ -13,8 +14,8 @@ import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.OutgoingDispatchContract;
  */
 public class CGUtil {
 
-  public static OutgoingDispatchContract maxDispatcherUse(List<OutgoingDispatchContract> dl) {
-    OutgoingDispatchContract max = new OutgoingDispatchContract();
+  public static OutgoingDispatchContract maxDispatcherUse(List<OutgoingDispatchContract> dl, List<OutputEventPort> oeps) {
+    OutgoingDispatchContract max = new OutgoingDispatchContract(oeps);
     for (OutgoingDispatchContract d: dl) {
       max.mergeLargest(d);
     }

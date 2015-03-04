@@ -293,7 +293,7 @@ public abstract class ThreadUtil {
       return (new Integer((int) (valInBits / 8.0))); // bits per byte.
     }
     catch (Exception ee) { }
-    throw new Aadl2RtosException("Required property 'Source_Stack_Size' not found or in incorrect format for thread: " + thread.getName());
+    throw new Aadl2RtosException("Required property 'Stack_Size' not found or in incorrect format for thread: " + thread.getName());
   }
 
   public static EnumerationLiteral getDispatchProtocol(ThreadTypeImpl tti) {
