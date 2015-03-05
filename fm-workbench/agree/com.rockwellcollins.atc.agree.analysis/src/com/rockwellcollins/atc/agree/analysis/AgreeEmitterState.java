@@ -100,7 +100,11 @@ public class AgreeEmitterState  extends AgreeSwitch<Expr> {
     public final List<Equation> connExpressions = new ArrayList<>();
 	public final List<Expr> initialExpressions = new ArrayList<>();
 	
+	//we cheat a little using the IdExpr part of the equation for the
+	//subcomponentExprs to just contain the name of the subcomponent
+	//this name is used for generating the results
 	public final List<Equation> subcomponentExprs = new ArrayList<>();
+	public final List<Expr> subcomponentConsistClocks = new ArrayList<>();
 	public final List<String> guarProps = new ArrayList<>();
 	public final List<String> consistProps = new ArrayList<>();
 	public final List<String> nodeLemmaProps = new ArrayList<>();
@@ -125,7 +129,7 @@ public class AgreeEmitterState  extends AgreeSwitch<Expr> {
     public List<IdExpr> calendar = new ArrayList<IdExpr>();
     public List<MNSynchronyElement> mnSyncEls = new ArrayList<>();
     public boolean simultaneity = true;
-    public boolean asynchronous = false;
+    public boolean latchedClocks = false;
     //this variable will be set by the generator
 	public boolean connectionExpressionsSet = false;
 
@@ -181,7 +185,7 @@ public class AgreeEmitterState  extends AgreeSwitch<Expr> {
     	}
     	
     	if(sync instanceof AsynchStatement){
-    	    this.asynchronous = true;
+    	    this.latchedClocks = true;
     	    return null;
     	}
     	

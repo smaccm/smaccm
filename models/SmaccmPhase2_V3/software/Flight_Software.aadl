@@ -35,7 +35,8 @@ process main
   	
   	eq time : real;
   	eq control_mode : int;
-  	
+  	eq ppm_clock : bool;
+  	eq can_clock : bool;
   	  	
   	eq time_of_last_can : real = 
   	  if event(mission_in) then time else prev(time_of_last_can, -1.0);
@@ -51,10 +52,10 @@ process main
   	
   	--assumptions about how often events can occur
   	assume "not frequent ppms" : true ->
-  	  time - pre(time) < ppm_period => not (event(ppm_in) and pre(event(ppm_in)));
+  	  time - time_of_last_ppm < ppm_period => not event(ppm_in) or ppm_clock;
   	  
   	assume "not frequent can" : true ->
-  	  time - pre(time) < mission_period => not (event(mission_in) and pre(event(mission_in)));
+  	  time - time_of_last_can < mission_period => not event(mission_in) or can_clock;
   	
   	guarantee "if time passes with no message then the mode is landing" :
   	  was_armed => 
@@ -125,6 +126,10 @@ process implementation main.i
   	const control_period : real = 5.0;  	
   	assert control_mode = control.mode;
   	
+  	--refer to clocks in the type
+  	assert ppm_clock = ppm._CLK;
+  	assert can_clock = can._CLK;
+  	
   	--precidence for whose clock ticks
   	assert if event(ppm_in) then ppm._CLK else
   	       if event(mission_in) then can._CLK else
@@ -134,11 +139,7 @@ process implementation main.i
   	       if event(ui_mux.ppm_input) then ui_mux._CLK else
   	       if event(ui_mux.mavlink_input) then ui_mux._CLK else
   	       if event(ui_mux.control_law) then ui_mux._CLK else true;
-  	       
-  	       
 
-
-  	
   **};
   
   annex resolute {**
