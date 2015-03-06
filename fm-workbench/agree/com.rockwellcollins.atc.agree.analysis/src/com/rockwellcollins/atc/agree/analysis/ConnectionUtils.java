@@ -203,7 +203,12 @@ public class ConnectionUtils {
 				if(delayed){
 				    Expr defaultExpr = new UnaryExpr(UnaryOp.PRE, lhsEvent);
                     defaultExpr = new BinaryExpr(rhsEvent, BinaryOp.ARROW, defaultExpr);
-                    Expr connExpr = new IfThenElseExpr(rhsClock, rhsEvent, 
+                    Expr dontClear = new UnaryExpr(UnaryOp.PRE, lhsEvent);
+                    dontClear = new UnaryExpr(UnaryOp.NOT, dontClear);
+                    dontClear = new BinaryExpr(dontClear, BinaryOp.IMPLIES, rhsEvent);
+                    dontClear = new BinaryExpr(rhsEvent, BinaryOp.ARROW, dontClear);
+                    
+                    Expr connExpr = new IfThenElseExpr(rhsClock, dontClear, 
                                     new IfThenElseExpr(new UnaryExpr(UnaryOp.PRE, lhsClock), new BoolExpr(false),
                                         defaultExpr));
                     
@@ -213,7 +218,12 @@ public class ConnectionUtils {
 				}else{
 				    Expr defaultExpr = new UnaryExpr(UnaryOp.PRE, lhsEvent);
 				    defaultExpr = new BinaryExpr(rhsEvent, BinaryOp.ARROW, defaultExpr);
-				    Expr connExpr = new IfThenElseExpr(rhsClock, rhsEvent, 
+				    Expr dontClear = new UnaryExpr(UnaryOp.PRE, lhsEvent);
+				    dontClear = new UnaryExpr(UnaryOp.NOT, dontClear);
+				    dontClear = new BinaryExpr(dontClear, BinaryOp.IMPLIES, rhsEvent);
+				    dontClear = new BinaryExpr(rhsEvent, BinaryOp.ARROW, dontClear);
+				    
+				    Expr connExpr = new IfThenElseExpr(rhsClock, dontClear, 
                                     new IfThenElseExpr(new UnaryExpr(UnaryOp.PRE, lhsClock), new BoolExpr(false),
                                         defaultExpr));
 				    eventConnEq = new Equation(lhsEvent, connExpr);

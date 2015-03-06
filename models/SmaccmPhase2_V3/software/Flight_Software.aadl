@@ -28,15 +28,14 @@ process main
   	const total_landing_timeout : real = 800.0;
   	
   	--bounds frequency for ppms to occur
-  	const ppm_period : real = 10.0;
+  	const PPM_PERIOD : real = 100.0;
   	
   	--bounds frequency for can messages
-  	const mission_period : real = 10.0;
-  	
+  	const CAN_PERIOD : real = 100.0;
+
   	eq time : real;
   	eq control_mode : int;
-  	eq ppm_clock : bool;
-  	eq can_clock : bool;
+
   	  	
   	eq time_of_last_can : real = 
   	  if event(mission_in) then time else prev(time_of_last_can, -1.0);
@@ -47,15 +46,15 @@ process main
   	eq was_armed : bool =  
   	  control_mode = AGREE_CONSTS.ARMED_MODE -> pre(was_armed) or control_mode = AGREE_CONSTS.ARMED_MODE;
   	
-  	assume "time is positive and increasing" :
-  	  time >= 0.0 and (true -> time > pre(time));
-  	
   	--assumptions about how often events can occur
   	assume "not frequent ppms" : true ->
-  	  time - time_of_last_ppm < ppm_period => not event(ppm_in) or ppm_clock;
+  	  time - time_of_last_ppm < PPM_PERIOD => not event(ppm_in);
   	  
   	assume "not frequent can" : true ->
-  	  time - time_of_last_can < mission_period => not event(mission_in) or can_clock;
+  	  time - time_of_last_can < CAN_PERIOD => not event(mission_in);
+  	
+  	guarantee "time is positive and increasing" :
+  	  time >= 0.0 and (true -> time > pre(time));
   	
   	guarantee "if time passes with no message then the mode is landing" :
   	  was_armed => 
@@ -123,22 +122,123 @@ process implementation main.i
   	
   	synchrony : asynchronous;
   	
-  	const control_period : real = 5.0;  	
-  	assert control_mode = control.mode;
+  	const CAN_EXEC_TIME : real = 5.0;
+  	const PPM_EXEC_TIME : real = 5.0;
+  	const UI_MUX_EXEC_TIME : real = 5.0;
+  	const CONTROL_LAW_EXEC_TIME : real = 5.0;
+  	const CONTROL_EXEC_TIME : real = 5.0;
+  	
+  	const CONTROL_PERIOD : real = 50.0;
+  	
+  	eq control_law_clock : bool;
+  	eq ui_mux_clock : bool;
+  	eq control_clock : bool;
+  	eq ppm_clock : bool;
+  	eq can_clock : bool;
   	
   	--refer to clocks in the type
   	assert ppm_clock = ppm._CLK;
   	assert can_clock = can._CLK;
+  	assert control_law_clock = control_law._CLK;
+  	assert ui_mux_clock = ui_mux._CLK;
+  	assert control_clock = control._CLK;
   	
+  	  	
   	--precidence for whose clock ticks
-  	assert if event(ppm_in) then ppm._CLK else
-  	       if event(mission_in) then can._CLK else
-  	       if event(control_law.ppm_law) then control_law._CLK else
-  	       if event(control_law.nav_law) then control_law._CLK else
-  	       if event(control_law.mav_law) then control_law._CLK else
-  	       if event(ui_mux.ppm_input) then ui_mux._CLK else
-  	       if event(ui_mux.mavlink_input) then ui_mux._CLK else
-  	       if event(ui_mux.control_law) then ui_mux._CLK else true;
+  	assert if event(ppm_in) and not control_law_clock and not ui_mux_clock then ppm_clock else
+  	       if event(mission_in) then can_clock else
+  	       if event(control_law.ppm_law) then control_law_clock else
+  	       if event(control_law.nav_law) then control_law_clock else
+  	       if event(control_law.mav_law) then control_law_clock else
+  	       if event(ui_mux.ppm_input) then ui_mux_clock else
+  	       if event(ui_mux.mavlink_input) then ui_mux_clock else
+  	       if event(ui_mux.control_law) then ui_mux_clock else true;
+  	       
+  	assert control_mode = control.mode;
+  	
+  	--keep track of how long active tasks which can preempted have run
+  	eq ppm_run_time : real = 0.0 ->
+  	  if fall(ppm_clock) then
+  	    0.0
+  	  else if pre(rise(ppm_clock)) then
+  	    time - pre(time)
+  	  else if fall(control_clock) then
+  	    pre(ppm_run_time)
+  	  else
+  	    pre(ppm_run_time) + (time - pre(time));
+  	  
+  	eq can_run_time : real = 0.0 ->
+  	  if fall(can_clock) then
+  	    0.0
+  	  else if pre(rise(can_clock)) then
+  	    time - pre(time)
+  	  else if fall(control_clock) or fall(ppm_clock) then
+  	    pre(can_run_time)
+  	  else
+  	    pre(can_run_time) + (time - pre(time));
+  	    
+  	--keep track of next active events
+  	eq time_of_next_control : real = 0.0 ->
+  	  if rise(control_clock) then
+  	    time + CONTROL_PERIOD
+  	  else
+  	    pre(time_of_next_control);
+  	    
+  	eq time_of_next_ppm : real;
+  	eq time_of_next_can : real;
+  	
+  	assert true -> 
+  	  if event(ppm_in) then
+        time_of_next_ppm > time + PPM_PERIOD
+      else
+       time_of_next_ppm = pre(time_of_next_ppm);
+    
+    assert true ->
+      if event(mission_in) then
+        time_of_next_can > time + CAN_PERIOD
+      else
+        time_of_next_can = pre(time_of_next_can);
+  	
+  	--constrain how time progresses
+  	assert time = 0.0 -> true;
+  	assert time >= 0.0 and (true -> time > pre(time));
+  	assert true -> time <=
+  	  if pre(control_clock) then pre(time) + CONTROL_EXEC_TIME else
+  	  if pre(ppm_clock) then pre(time) + (PPM_EXEC_TIME - pre(ppm_run_time)) else
+  	  if pre(can_clock) then pre(time) + (CAN_EXEC_TIME - pre(can_run_time)) else
+  	  if pre(control_law_clock) then pre(time) + CONTROL_LAW_EXEC_TIME else
+  	  if pre(ui_mux_clock) then pre(time) + UI_MUX_EXEC_TIME else 
+  	    AGREE_LIB.min(pre(time_of_next_control), AGREE_LIB.min(time_of_next_can, time_of_next_ppm));
+  	
+  	       
+  	--runtime constraints
+  	assert ppm_run_time <= PPM_EXEC_TIME;
+  	assert can_run_time <= CAN_EXEC_TIME;
+  	assert last_fall(control_clock, time) - last_rise(control_clock, time) <= CONTROL_EXEC_TIME;
+  	assert last_fall(control_law_clock, time) - last_rise(control_law_clock, time) <= CONTROL_LAW_EXEC_TIME;
+  	assert last_fall(ui_mux_clock, time) - last_rise(ui_mux_clock, time) <= UI_MUX_EXEC_TIME;
+  
+  	       
+  	--nodes to compute the rising and falling edges of the clock       
+  	node rise (clock : bool) returns (ret : bool);
+  	let
+  	  ret = clock -> not pre(clock) and clock;
+  	tel;
+  	
+  	node fall (clock : bool) returns (ret : bool);
+  	let
+  	  ret = false -> pre(clock) and not clock;
+  	tel;
+
+    node last_rise(clock : bool, time : real) returns (ret : real);
+    let
+      ret = if rise(clock) then time else prev(ret, -1.0);
+    tel;
+    
+    node last_fall(clock : bool, time : real) returns (ret : real);
+    let
+      ret = if fall(clock) then time else prev(ret, -1.0);
+    tel;
 
   **};
   
@@ -152,7 +252,7 @@ thread can_px4_t
     waypoints : out event data port software_types::waypoint;
     sensor_data : in event data port software_types::Sensor_Data;
     control_data : in event data port software_types::controloutput.impl;
-    motmix_data : in event data port software_types::motors_data;
+    motmix_data : in event data port software_types::motors_data.impl;
     mission_out : out event data port software_types::can_data;
     mission_in : in event data port software_types::can_data;
     mav_user_input : out event data port software_types::userinput_result.impl;
@@ -406,7 +506,7 @@ end sensors_t;
 
 thread motmix_t
   features
-    motors : out data port software_types::motors_data.impl;
+    motors : out event data port software_types::motors_data.impl;
     control_in : in data port software_types::controloutput.impl;
     control_law_in : in event data port software_types::control_law.impl;
     time : in data port Base_Types::Float;

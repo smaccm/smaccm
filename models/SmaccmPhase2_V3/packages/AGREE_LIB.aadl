@@ -1,0 +1,10 @@
+package AGREE_LIB
+public
+  annex agree {**
+  	node min(a : real, b : real) returns (res : real);
+  	let
+  	  res = if (a < b) then a else b;
+  	tel;
+  **}
+	
+end AGREE_LIB;
