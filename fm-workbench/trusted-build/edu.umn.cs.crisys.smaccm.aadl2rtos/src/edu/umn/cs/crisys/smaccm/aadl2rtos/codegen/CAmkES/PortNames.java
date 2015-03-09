@@ -73,6 +73,10 @@ public class PortNames {
     return dp.getName();
   }
   
+  public String getQualifiedName() {
+    return dp.getOwner().getName() + "_" + getName();
+  }
+  
   public String getQueueSize() {
     if (!(dp instanceof InputEventPort)) {
       throw new Aadl2RtosException("Error: getQueueSize: port " + dp.getName() + " is not an input event port so has no queue.");

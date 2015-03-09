@@ -1,0 +1,80 @@
+-- Note: this example shows a single send of a scalar type from an
+-- active thread to a passive thread.  It is designed to test:
+-- 	Component naming
+--  Message distribution for scalars
+--  Passive thread dispatch 
+
+
+package test_uart
+public 
+   with Base_Types;
+   with SMACCM_SYS;   
+
+subprogram putchar
+features
+	A: in parameter Base_Types::Unsigned_8;
+end putchar;
+
+
+subprogram group putchar_interface
+features
+	putchar: provides subprogram access putchar;
+end putchar_interface;
+
+thread client
+	features
+		putchar: provides subprogram group access putchar_interface {
+			SMACCM_SYS::Is_External => true;
+		}; 
+	
+	properties 
+	    Dispatch_Protocol => Aperiodic;
+		Source_Text => ("user_code/client.c");
+	    SMACCM_SYS::Thread_Type => Passive ;
+	    Compute_Execution_Time => 10 us .. 50 us;
+	    SMACCM_SYS::Sends_Events_To => "{{}}";
+end client ; 
+
+thread wrapped_driver
+	features
+		putchar: requires subprogram group access putchar_interface {
+			SMACCM_SYS::Is_External => true;
+		}; 
+				
+	properties 
+	    Dispatch_Protocol => Sporadic;
+	    SMACCM_SYS::Thread_Type => Active ;
+	    SMACCM_SYS::Is_External => true ;
+	    Period => 100us ;
+	    Stack_Size => 1024 bytes;
+	    Priority => 12;
+	    Compute_Execution_Time => 1 us .. 5 us;
+	    SMACCM_SYS::Sends_Events_To => "{{}}";
+end wrapped_driver; 
+
+
+process proc
+
+end proc;
+
+process implementation proc.Impl
+	subcomponents
+		c: thread client;
+		wd: thread wrapped_driver;
+	connections
+		wd_to_c : subprogram group access wd.putchar -> c.putchar;
+end proc.Impl;
+
+system test_uart
+end test_uart;
+
+system implementation test_uart.impl
+	subcomponents
+		tl: process proc.Impl;
+	properties 
+		SMACCM_SYS::OS => CAmkES; 
+		SMACCM_SYS::HW => ODROID;
+		
+end test_uart.impl;
+
+end test_uart;

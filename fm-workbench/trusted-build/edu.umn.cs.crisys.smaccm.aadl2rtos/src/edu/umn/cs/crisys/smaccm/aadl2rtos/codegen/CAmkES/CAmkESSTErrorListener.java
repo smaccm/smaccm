@@ -5,7 +5,6 @@ package edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.CAmkES;
 
 import java.lang.reflect.InvocationTargetException;
 
-import org.antlr.v4.tool.ErrorType;
 import org.stringtemplate.v4.STErrorListener;
 import org.stringtemplate.v4.misc.STMessage;
 import org.stringtemplate.v4.misc.STNoSuchPropertyException;
@@ -72,6 +71,7 @@ public class CAmkESSTErrorListener implements STErrorListener {
     // TODO Auto-generated method stub
     // System.out.println(arg0);
     log.error("StringTemplate exception: " + arg0.cause + " due to: " + userCodeException(arg0));
+    log.error("Error at: " + arg0.arg + ", " + arg0.arg2 + ", " + arg0.arg3);
   }
 
 }

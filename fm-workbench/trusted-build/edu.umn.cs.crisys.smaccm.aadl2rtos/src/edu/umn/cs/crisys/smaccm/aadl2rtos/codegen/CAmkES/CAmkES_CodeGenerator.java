@@ -24,18 +24,16 @@ import org.stringtemplate.v4.STGroupFile;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosFailure;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Logger;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.util.Util;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.common.CGUtil;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.common.C_Type_Writer;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.common.CommonNames;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.Dispatcher;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.PeriodicDispatcher;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.common.*;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.*;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.*;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.rpc.RemoteProcedureGroup;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.OutgoingDispatchContract;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.SharedData;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.ThreadImplementation;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.ArrayType;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.IdType;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.IntType;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.RecordType;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.Type;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.UnitType;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.parse.Model;
@@ -147,7 +145,13 @@ public class CAmkES_CodeGenerator {
         for (Map.Entry<OutputEventPort, Integer> entry : maxCalls.getContract().entrySet()) {
           if (entry.getKey().hasData()) {
             ArrayType dispatchArrayType = new ArrayType(entry.getKey().getType(), entry.getValue());
-            model.getAstTypes().put(CommonNames.getDispatchArrayTypeName(ti, entry), dispatchArrayType);
+            //String arrayTypeName = CommonNames.getDispatchArrayTypeName(ti, entry);
+            //model.getAstTypes().put(arrayTypeName, dispatchArrayType);
+            
+            // To get around CAmkES array bug!
+            RecordType dispatchRecordType = new RecordType();
+            dispatchRecordType.addField("f", dispatchArrayType);
+            model.getAstTypes().put(CommonNames.getDispatchStructTypeName(ti, entry.getKey(), entry.getValue()), dispatchRecordType);
           }
         }
       }

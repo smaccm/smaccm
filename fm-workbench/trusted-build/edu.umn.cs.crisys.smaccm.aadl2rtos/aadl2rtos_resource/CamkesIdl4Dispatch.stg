@@ -31,7 +31,7 @@ dispatcherPrototype(dispatcher, arg) ::= <<
 
 port_params(dispatchContract, port) ::= <<
 <if(dispatchContract.canDispatch)>, <if(port.hasData)><\\>
-out <dispatchContract.dispatchArrayTypeName> <port.data>, 
+out <dispatchContract.dispatchStructTypeName> <port.data>, 
 <endif>out <port.indexType.name> <port.index>
 <endif> >>
 

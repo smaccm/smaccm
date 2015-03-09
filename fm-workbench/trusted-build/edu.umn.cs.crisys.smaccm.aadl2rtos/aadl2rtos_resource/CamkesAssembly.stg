@@ -109,22 +109,19 @@ assemblyConnectActiveToPassiveThreads(threadImpl, model) ::= <<
 >>
 
 
-connectActiveSendToActiveSend(sourcePort, destPort, model) ::= <<
-<if(destPort.threadImplementation.isActive)><\\>
+connectActiveToDispatcher(connection, threadImpl, model) ::= <<
 <rpcConnection(model.generateConnectionName, 
-	sourcePort.threadImplementation.componentInstanceName,
-    sourcePort.name, 
-	destPort.threadImplementation.componentInstanceName,
-	destPort.name)> 
-<endif>
+	threadImpl.componentInstanceName,
+    connection.sourcePort.qualifiedName, 
+	connection.destPort.threadImplementation.componentInstanceName,
+	connection.destPort.name)> 
+	
 >>
 
-connectActiveToActive(connection, model) ::= <<
-<connectActiveSendToActiveSend(connection.sourcePort, connection.destPort, model)>
->>
+// assemblyConnectActiveChildToActiveThreads(threadImpl, model)
 
 assemblyConnectActiveToActiveThreads(threadImpl, model) ::= <<
-<threadImpl.isSrcOfConnectionList:connectActiveToActive(model)>
+<threadImpl.nonlocalActiveThreadConnectionFrontier:connectActiveToDispatcher(threadImpl, model)>
 >>
 
 connectActivePeriodic(dispatcher, threadImpl, model) ::= <<

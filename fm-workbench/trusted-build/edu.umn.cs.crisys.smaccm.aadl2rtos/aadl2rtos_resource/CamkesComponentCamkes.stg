@@ -49,15 +49,8 @@ uses <threadImpl.idlName> <threadImpl.interfaceInstanceName>;
 
 
 constructSenderInterface(connection) ::= <<
-<if(connection.destPort.threadImplementation.isActive && 
-    connection.sourcePort.isOutputEventPort)><\\>
-uses <connection.destPort.type.readerWriterInterfaceName> <connection.sourcePort.name>;
-<endif>
->>
+uses <connection.destPort.type.readerWriterInterfaceName> <connection.sourcePort.qualifiedName>;
 
-
-writeSenders(threadImpl) ::= <<
-<threadImpl.isSrcOfConnectionList:constructSenderInterface()>
 >>
 
 
@@ -119,10 +112,11 @@ component <threadImpl.componentName> {
 	control;
     has mutex <threadImpl.dispatcherComponentMutexName>;
 
-	// references to other active thread send interfaces (if any)
-	<writeSenders(threadImpl)>
+	// references to other active thread send interfaces from passive
+	// thread region controlled by active thread (if any)
+	<threadImpl.nonlocalActiveThreadConnectionFrontier:constructSenderInterface()>
 
-	// references to passive receivers	(if any)
+	// references to passive thread receivers	(if any)
 	<threadImpl.model.passiveThreadImplementations:writeToPassiveReceiver()>
 <elseif(threadImpl.containsDispatchers)><\\>
 	provides <threadImpl.idlName> <threadImpl.componentDispatcherInterfaceVarIdName>;
