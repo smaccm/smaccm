@@ -186,6 +186,14 @@ end position.impl;
 data motors_data
 end motors_data;
 
+data implementation motors_data.impl
+  subcomponents
+    frontleft : data Base_types::Float;
+    frontright : data Base_types::Float;
+    backleft : data Base_types::Float;
+    backright : data Base_types::Float;
+end motors_data.impl;
+
 data controloutput
   properties
     Data_Model::Data_Representation => Struct;

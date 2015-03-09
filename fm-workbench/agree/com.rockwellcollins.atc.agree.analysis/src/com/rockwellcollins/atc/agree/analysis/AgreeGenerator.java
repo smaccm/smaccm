@@ -16,6 +16,7 @@ import jkind.lustre.CondactExpr;
 import jkind.lustre.Equation;
 import jkind.lustre.Expr;
 import jkind.lustre.IdExpr;
+import jkind.lustre.IfThenElseExpr;
 import jkind.lustre.IntExpr;
 import jkind.lustre.Location;
 import jkind.lustre.NamedType;
@@ -51,8 +52,16 @@ public class AgreeGenerator {
     private static boolean doSwitchAgreeAnnex(AgreeEmitterState state, ComponentClassifier comp){
     	 for (AnnexSubclause annex : AnnexUtil.getAllAnnexSubclauses(comp, AgreePackage.eINSTANCE.getAgreeContractSubclause())) {
              if (annex instanceof AgreeContractSubclause) {
-                 state.doSwitch(annex);
-                 return true;
+                 //in newer versions of osate the annex this returns annexes in the type
+                 //as well as the implementation. We want the annex in the specific component
+                 EObject container = annex.eContainer();
+                 while(!(container instanceof ComponentClassifier)){
+                     container = container.eContainer();
+                 }
+                 if(container == comp){
+                     state.doSwitch(annex);
+                     return true;
+                 }
              }
          }
     	 return false;
@@ -109,6 +118,7 @@ public class AgreeGenerator {
     	
     	//also add a new top level category to the layout
     	state.layout.addCategory(state.curInst.getName());
+    	    	
     	Program assumeGuaranteeProgram = new Program(typeDefs, null, nodes);
     	
     	return assumeGuaranteeProgram;
@@ -185,13 +195,18 @@ public class AgreeGenerator {
     	
     	state.renaming.addExplicitRename(thisConsistVar.id, "This Contract Consistency");
     	
+    	if( state.subcomponentConsistClocks.size() != state.subcomponentExprs.size()){
+    	    throw new AgreeException("Something went wrong generating the constraints for consistency checking");
+    	}
+    	
     	//get the composition and individual consistency checks
     	Expr subExprConjExpr = new BoolExpr(true);
+    	int subIndex = 0;
     	for(Equation subEq : state.subcomponentExprs){
     		subExprConjExpr = new BinaryExpr(subExprConjExpr, BinaryOp.AND, subEq.expr);
     		    		
     		String compName = subEq.lhs.get(0).id;
-    		Expr condactClock = ((CondactExpr)subEq.expr).clock;
+    		Expr condactClock = state.subcomponentConsistClocks.get(subIndex++);
 
     		VarDecl subHistVar = new VarDecl("___SUB__"+compName+"__HIST", NamedType.BOOL);
     		IdExpr subHistId = new IdExpr(subHistVar.id);
@@ -308,11 +323,12 @@ public class AgreeGenerator {
             assumptions.add(assumEq.expr);
         }
         assumptions.addAll(state.assertExpressions);
+        assumptions.addAll(subNode.assertions);
 
         //get the guarantees as properties and add them to the renaming
         int i = 0;
         for(Equation eq : state.guarExpressions){
-            String propName = "___GUARANTEE"+i++;
+            String propName = nodeGuarName+i++;
             state.renaming.addExplicitRename(propName, eq.lhs.get(0).id);
             state.guarProps.add(propName);
         }
@@ -324,8 +340,8 @@ public class AgreeGenerator {
         }
         
         Node mainNode = new Node(subNode.location, subNode.id, subNode.inputs, subNode.outputs,
-                subNode.locals, subNode.equations, subNode.properties, assumptions,
-                null, subNode.guarantees, Optional.of(inputStrs));
+                subNode.locals, subNode.equations, state.guarProps, assumptions,
+                null, null, Optional.of(inputStrs));
         
         nodes.add(mainNode);
         
@@ -475,7 +491,7 @@ public class AgreeGenerator {
     	calenNodeName = calenNodeName.replace(".", "__");
     	
     	Expr clockAssertion = null;
-    	if(state.asynchronous){
+    	if(state.latchedClocks){
     	    //the only constraint that will get made is one
     	    //asserting that atleast one clock ticks.  This should
     	    //happen after this if then else block
@@ -549,15 +565,16 @@ public class AgreeGenerator {
         	}
         }
     	//assert that at least one clock ticks
-    	if(state.clockVars.size() != 0){
-    	    Expr oneMustTick = new BoolExpr(false);
-    	    for(AgreeVarDecl clockVar : state.clockVars){
-    	        oneMustTick = new BinaryExpr(oneMustTick, BinaryOp.OR, new IdExpr(clockVar.id));
+    	if(!state.latchedClocks){
+    	    if(state.clockVars.size() != 0){
+    	        Expr oneMustTick = new BoolExpr(false);
+    	        for(AgreeVarDecl clockVar : state.clockVars){
+    	            oneMustTick = new BinaryExpr(oneMustTick, BinaryOp.OR, new IdExpr(clockVar.id));
+    	        }
+    	        clockAssertion = new BinaryExpr(clockAssertion, BinaryOp.AND, oneMustTick);
     	    }
-    	    clockAssertion = new BinaryExpr(clockAssertion, BinaryOp.AND, oneMustTick);
+    	    state.assertExpressions.add(clockAssertion);
     	}
-    	state.assertExpressions.add(clockAssertion);
-		
 	}
 
 	private static void addSubcomponentNodeCall(final String prefix,
@@ -586,6 +603,7 @@ public class AgreeGenerator {
 		addInitialConstraints(prefix, state, subState, clockId);
 		
 		//add the call to the subcomponent node and wrap it in a condact
+		//this call also records information for consistency checking
 		addNodeAndCondactCall(prefix, state, subState, subNode, clockId);
 		
 		//add subcomponent variable references (for cex output)
@@ -690,31 +708,105 @@ public class AgreeGenerator {
 
 	private static void addNodeAndCondactCall(final String prefix,
 			AgreeEmitterState state, AgreeEmitterState subState, Node subNode,
-			Expr clockId) {
-		
-		//create the call to the node and add it to the assertions
-		List<Expr> callArgs = new ArrayList<>();
-		for(VarDecl input : subNode.inputs){
-			callArgs.add(new IdExpr(prefix+input.id));
-		}
-		
-		//just assert that the assertion is true initially in the condact expression
-		List<Expr> args = new ArrayList<>();
-		args.add(new BoolExpr(true));
-		
-		NodeCallExpr nodeCall = new NodeCallExpr(subNode.id, callArgs);
-		
-		if(state.synchrony == 0 && state.calendar.size() == 0 && !state.asynchronous){
-			clockId = new BoolExpr(true);
-		}
-		CondactExpr condactCall = new CondactExpr(clockId, nodeCall, args);
-		
-		state.assertExpressions.add(condactCall);
-		state.typeExpressions.addAll(subState.typeExpressions);
-		state.nodeDefExpressions.add(subNode);
-		Equation subCompEq = new Equation(new IdExpr(subState.curComp.getName()), condactCall);
-		state.subcomponentExprs.add(subCompEq); //these are kept track of for checking consistency
+			IdExpr clockId) {
 
+		//each node should just have a single boolean output
+		//which is initially true
+		List<Expr> condactArgs = new ArrayList<>();
+        condactArgs.add(new BoolExpr(true));
+        Expr nodeCallExpr = null;
+        Expr consistClockExpr = null;
+		if(state.latchedClocks){
+		    
+		    //create the input holding node
+		    
+		    //get the list of internal nodes
+		    List<VarDecl> locals = new ArrayList<>();
+		    List<VarDecl> inputs = new ArrayList<>();
+		    List<VarDecl> outputs = new ArrayList<>();
+		    List<Equation> equations = new ArrayList<>();
+		    
+		    outputs.addAll(subNode.outputs);
+	        inputs.addAll(subNode.inputs);
+            inputs.add(new VarDecl(clockId.id, NamedType.BOOL));
+		    
+            List<Expr> callArgs = new ArrayList<>();
+            for(VarDecl holdVar : subNode.inputs){
+                boolean varIsInput = false;
+                for(VarDecl inputVar : subState.inputVars){
+                    if(holdVar.id.equals(inputVar.id)){
+                        IdExpr holdId = new IdExpr("__HOLD_"+holdVar.id);
+                        IdExpr freeId = new IdExpr(holdVar.id);
+                        locals.add(new VarDecl(holdId.id, holdVar.type));
+                        
+                        Expr holdExpr = new IfThenElseExpr(new UnaryExpr(UnaryOp.PRE, clockId),
+                                                           new UnaryExpr(UnaryOp.PRE, holdId),
+                                                           freeId);
+                        holdExpr = new BinaryExpr(freeId, BinaryOp.ARROW, holdExpr);
+                        equations.add(new Equation(holdId, holdExpr));
+                        callArgs.add(holdId);
+                        varIsInput = true;
+                        break;
+                    }
+                }
+                if(!varIsInput){
+                    callArgs.add(new IdExpr(holdVar.id));
+                }
+            }
+
+            
+            //call the subnode in a condact with the hold equations and new clock expression
+            Expr edgeClock = new UnaryExpr(UnaryOp.PRE, clockId);
+            edgeClock = new BinaryExpr(edgeClock, BinaryOp.AND, new UnaryExpr(UnaryOp.NOT, clockId));
+            edgeClock = new BinaryExpr(new BoolExpr(false), BinaryOp.ARROW, edgeClock);
+            
+            NodeCallExpr nodeCall = new NodeCallExpr(subNode.id, callArgs);
+            CondactExpr condactCall = new CondactExpr(edgeClock, nodeCall, condactArgs);
+            
+            if(subNode.outputs.size() != 1){
+                throw new AgreeException("The subnode should only have a single output");
+            }
+            VarDecl outputVar = subNode.outputs.get(0);
+            
+            equations.add(new Equation(new IdExpr(outputVar.id), condactCall));
+		    Node holdNode = new Node("__HOLD_"+subNode.id, inputs, outputs, locals, equations);
+		    state.nodeDefExpressions.add(holdNode);
+		    
+		    List<Expr> holdCallArgs = new ArrayList<>();
+		    for(VarDecl input : subNode.inputs){
+                holdCallArgs.add(new IdExpr(prefix+input.id));
+            }
+		    holdCallArgs.add(clockId);
+		    
+		    nodeCallExpr = new NodeCallExpr(holdNode.id, holdCallArgs);
+		    consistClockExpr = new UnaryExpr(UnaryOp.PRE, clockId);
+		    consistClockExpr = new BinaryExpr(consistClockExpr, BinaryOp.NOTEQUAL, clockId);
+		    consistClockExpr = new BinaryExpr(new BoolExpr(true), BinaryOp.ARROW, consistClockExpr);
+		}else{
+		    List<Expr> callArgs = new ArrayList<>();
+
+		    for(VarDecl input : subNode.inputs){
+	            callArgs.add(new IdExpr(prefix+input.id));
+	        }
+		    Expr clockExpr;
+
+		    NodeCallExpr nodeCall = new NodeCallExpr(subNode.id, callArgs);
+
+		    if(state.synchrony == 0 && state.calendar.size() == 0){
+		        clockExpr = new BoolExpr(true);
+		    }else{
+		        clockExpr = clockId;
+		    }
+		    nodeCallExpr = new CondactExpr(clockExpr, nodeCall, condactArgs);
+		    consistClockExpr = clockId;
+		}
+		
+		 state.assertExpressions.add(nodeCallExpr);
+         state.typeExpressions.addAll(subState.typeExpressions);
+         state.nodeDefExpressions.add(subNode);
+         Equation subCompEq = new Equation(new IdExpr(subState.curComp.getName()), nodeCallExpr);
+         state.subcomponentExprs.add(subCompEq); //these are kept track of for checking consistency
+         state.subcomponentConsistClocks.add(consistClockExpr);
 	}
 
 	private static void addInitialConstraints(final String prefix,
@@ -728,11 +820,21 @@ public class AgreeGenerator {
 		};
 		IdRewriteVisitor initialExprRewriter = new IdRewriteVisitor(prefixRewrite);
 
+		Expr clockExpr;
+		if(state.latchedClocks){
+		    //change the clock condition for latched clocks
+		    clockExpr = new UnaryExpr(UnaryOp.PRE, clockId);
+		    clockExpr = new BinaryExpr(clockExpr, BinaryOp.AND, new UnaryExpr(UnaryOp.NOT, clockId));
+		    clockExpr = new BinaryExpr(new BoolExpr(false), BinaryOp.ARROW, clockExpr);
+		}else{
+		    clockExpr = clockId;
+		}
+		
         AgreeVarDecl initVar = new AgreeVarDecl("__INITIALIZED_"+subState.curComp.getName(), NamedType.BOOL);
         IdExpr initId = new IdExpr(initVar.id);
         Expr initializedExpr = new UnaryExpr(UnaryOp.PRE, initId);
-        initializedExpr = new BinaryExpr(clockId, BinaryOp.OR, initializedExpr);
-        initializedExpr = new BinaryExpr(clockId, BinaryOp.ARROW, initializedExpr);
+        initializedExpr = new BinaryExpr(clockExpr, BinaryOp.OR, initializedExpr);
+        initializedExpr = new BinaryExpr(clockExpr, BinaryOp.ARROW, initializedExpr);
         Equation initializedEq = new Equation(initId, initializedExpr);
         Expr notInitialzedConstraint = new UnaryExpr(UnaryOp.NOT, initId);
         
@@ -770,23 +872,36 @@ public class AgreeGenerator {
 	private static void addOutputsAndHolds(final String prefix,
 			AgreeEmitterState state, AgreeEmitterState subState, IdExpr clockId) {
 		Expr finalSameAsPrev = new BoolExpr(true);
-		
-		for(AgreeVarDecl output : subState.outputVars){
-			String outputStr = prefix+output.id;
-			AgreeVarDecl outputVar = new AgreeVarDecl(outputStr, output.type);
 
-			//add hold equations for subcomponent outputs
-			IdExpr outputId = new IdExpr(outputVar.id);
-			Expr sameAsPrev = new UnaryExpr(UnaryOp.PRE, outputId);
-			sameAsPrev = new BinaryExpr(sameAsPrev, BinaryOp.EQUAL, outputId);
-			finalSameAsPrev = new BinaryExpr(finalSameAsPrev, BinaryOp.AND, sameAsPrev);
-			state.outputVars.add(outputVar);
-		}
+		    for(AgreeVarDecl output : subState.outputVars){
+		        String outputStr = prefix+output.id;
+		        AgreeVarDecl outputVar = new AgreeVarDecl(outputStr, output.type);
+
+		        //add hold equations for subcomponent outputs
+		        IdExpr outputId = new IdExpr(outputVar.id);
+		        Expr sameAsPrev = new UnaryExpr(UnaryOp.PRE, outputId);
+		        sameAsPrev = new BinaryExpr(sameAsPrev, BinaryOp.EQUAL, outputId);
+		        finalSameAsPrev = new BinaryExpr(finalSameAsPrev, BinaryOp.AND, sameAsPrev);
+		        state.outputVars.add(outputVar);
+		    }
+
+            //add the final hold equations
+		    Expr holdPrevExpr = new BoolExpr(true);
+		    if(state.latchedClocks){
+		        //output vars should always be latched as long as there is not a falling edge
+		        Expr latchExpr = new UnaryExpr(UnaryOp.PRE, clockId);
+		        latchExpr = new BinaryExpr(latchExpr, BinaryOp.AND, new UnaryExpr(UnaryOp.NOT, clockId));
+		        latchExpr = new UnaryExpr(UnaryOp.NOT, latchExpr);
+		        holdPrevExpr = new BinaryExpr(latchExpr, BinaryOp.IMPLIES, finalSameAsPrev);
+		        holdPrevExpr = new BinaryExpr(new BoolExpr(true), BinaryOp.ARROW, holdPrevExpr);
+		    }else{
+		        //output vars should always be latched as long as the clock is low
+		        holdPrevExpr = new BinaryExpr(new UnaryExpr(UnaryOp.NOT, clockId), BinaryOp.IMPLIES, finalSameAsPrev);
+		        holdPrevExpr = new BinaryExpr(new BoolExpr(true), BinaryOp.ARROW, holdPrevExpr);
+		    }
+		    
+            state.assertExpressions.add(holdPrevExpr);
 		
-		//add the final hold equations
-		Expr holdPrevExpr = new BinaryExpr(new UnaryExpr(UnaryOp.NOT, clockId), BinaryOp.IMPLIES, finalSameAsPrev);
-		holdPrevExpr = new BinaryExpr(new BoolExpr(true), BinaryOp.ARROW, holdPrevExpr);
-		state.assertExpressions.add(holdPrevExpr);
 	}
     
     public static Node nodeFromState(AgreeEmitterState subState, boolean assertConract, boolean monolothicCheck){

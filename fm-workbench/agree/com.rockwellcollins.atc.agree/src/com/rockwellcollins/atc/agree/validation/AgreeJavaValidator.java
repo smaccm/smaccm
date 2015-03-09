@@ -645,16 +645,19 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
                 List<NestedDotID> nestIds = EcoreUtil2.getAllContentsOfType(constFrontElem,
                         NestedDotID.class);
                 for (NestedDotID nestId : nestIds) {
-                    NamedElement base = getFinalNestId(nestId);
-                    if (base instanceof ConstStatement) {
-                        ConstStatement closConst = (ConstStatement) base;
-                        if (closConst.equals(constStat)) {
-                            error(constStat,
-                                    "The expression for constant statment '" + constStat.getName()
-                                            + "' is in a cyclic definition");
-                            break;
+                    while(nestId != null){
+                        NamedElement base = nestId.getBase();
+                        if (base instanceof ConstStatement) {
+                            ConstStatement closConst = (ConstStatement) base;
+                            if (closConst.equals(constStat)) {
+                                error(constStat,
+                                        "The expression for constant statment '" + constStat.getName()
+                                        + "' is part of a cyclic definition");
+                                break;
+                            }
+                            constClosure.add(closConst);
                         }
-                        constClosure.add(closConst);
+                        nestId = nestId.getSub();
                     }
                 }
             }
@@ -733,7 +736,14 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
             }
             
             NamedElement base = getFinalNestId((NestedDotID) e);
-            return base instanceof ConstStatement;
+            
+            if(base instanceof DataImplementation ||
+               base instanceof ConstStatement ||
+               base instanceof RecordExpr ||
+               base instanceof DataSubcomponent){
+                return true;
+            }
+            return false;
         }
 
         return true;
@@ -863,6 +873,41 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
                         + "' but must be of type '" + rhsType + "'");
             }
         }
+        
+//        // check for constant cycles
+//        Set<EObject> eqClosure = new HashSet<EObject>();
+//        Set<EObject> prevClosure;
+//        eqClosure.add(src);
+//
+//        // quick and dirty cycle check
+//        do {
+//            prevClosure = new HashSet<EObject>(eqClosure);
+//            for (EObject constFrontElem : prevClosure) {
+//                List<NestedDotID> nestIds = EcoreUtil2.getAllContentsOfType(constFrontElem,
+//                        NestedDotID.class);
+//                for (NestedDotID nestId : nestIds) {
+//                    while(nestId != null){
+//                        NamedElement base = nestId.getBase();
+//                        if (base instanceof Arg) {
+//                            EObject container = base;
+//                            while(!(container instanceof EqStatement) &&
+//                                  !(container instanceof NodeEq)){
+//                                container = container.eContainer();
+//                            }
+//                            if (lhsArgs.contains(base)) {
+//                                warning(src,
+//                                        "The expression for eq statment '" + base.getName()
+//                                        + "' may be part of a cyclic definition");
+//                                break;
+//                            } 
+//                            eqClosure.add(container);
+//                        }
+//                        nestId = nestId.getSub();
+//                    }
+//                }
+//            }
+//        } while (!prevClosure.equals(eqClosure));
+        
     }
 
     @Check(CheckType.FAST)

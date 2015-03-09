@@ -4,6 +4,7 @@ import jkind.lustre.Expr;
 import jkind.lustre.Type;
 
 import org.osate.aadl2.Feature;
+import org.osate.aadl2.instance.ComponentInstance;
 
 public class AgreeFeature {
 	
@@ -16,7 +17,10 @@ public class AgreeFeature {
 	public ConnType connType;
 	public Direction direction;
 	public long queueSize;
+	public ComponentInstance compInst;
 	Expr initState;
+	
+	public AgreeFeature(){};
 	
 	@Override
 	public String toString(){

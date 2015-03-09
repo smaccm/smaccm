@@ -23,7 +23,6 @@ public
     	
     	guarantee "if no ppm message is received and mavlink fails to decrypt then landing mode" : true;
     	
-    	
     **};
   end UAV;
   

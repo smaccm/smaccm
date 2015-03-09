@@ -4,9 +4,11 @@ import java.util.List;
 
 import jkind.lustre.BinaryExpr;
 import jkind.lustre.BinaryOp;
+import jkind.lustre.BoolExpr;
 import jkind.lustre.Equation;
 import jkind.lustre.Expr;
 import jkind.lustre.IdExpr;
+import jkind.lustre.IfThenElseExpr;
 import jkind.lustre.UnaryExpr;
 import jkind.lustre.UnaryOp;
 
@@ -141,25 +143,42 @@ public class ConnectionUtils {
 				throw new AgreeException("Variables: '"+agreeDestConn.lustreString.replace("__", ".")+
 						"' and '"+agreeSourConn.lustreString.replace("__", ".")+"' are of different types");
 			}
+			
+			Expr lhsClock = null;
+			Expr rhsClock = null;
+			Subcomponent sourSub = agreeSourConn.compInst.getSubcomponent();
+			Subcomponent destSub = agreeDestConn.compInst.getSubcomponent();
+			String sourConnName = sourSub == null ? null : sourSub.getName();
+			String destConnName = destSub == null ? null : destSub.getName();
 			if(destContext == null || destContext instanceof FeatureGroup){
 				switch(agreeDestConn.direction){
 				case IN:
 					lhsLustreName = agreeSourConn.lustreString;
 					rhsLustreName = agreeDestConn.lustreString;
+					lhsClock = sourConnName == null ? new BoolExpr(true) : new IdExpr(sourConnName+state.clockIDSuffix);
+                    rhsClock = destConnName == null ? new BoolExpr(true) : new IdExpr(destConnName+state.clockIDSuffix);
 					break;
 				case OUT:
 					lhsLustreName = agreeDestConn.lustreString;
 					rhsLustreName = agreeSourConn.lustreString;
+                    lhsClock = destConnName == null ? new BoolExpr(true) : new IdExpr(destConnName+state.clockIDSuffix);
+                    rhsClock = sourConnName == null ? new BoolExpr(true) : new IdExpr(sourConnName+state.clockIDSuffix);
+                    break;
 				}
 			}else{
 				switch(agreeDestConn.direction){
 				case IN:
 					lhsLustreName = agreeDestConn.lustreString;
 					rhsLustreName = agreeSourConn.lustreString;
+                    lhsClock = destConnName == null ? new BoolExpr(true) : new IdExpr(destConnName+state.clockIDSuffix);
+                    rhsClock = sourConnName == null ? new BoolExpr(true) : new IdExpr(sourConnName+state.clockIDSuffix);
 					break;
 				case OUT:
 					lhsLustreName = agreeSourConn.lustreString;
 					rhsLustreName = agreeDestConn.lustreString;
+                    lhsClock = sourConnName == null ? new BoolExpr(true) : new IdExpr(sourConnName+state.clockIDSuffix);
+                    rhsClock =destConnName == null ? new BoolExpr(true) : new IdExpr(destConnName+state.clockIDSuffix);
+                    break;
 				}
 			}
 			Equation connEq;
@@ -179,12 +198,36 @@ public class ConnectionUtils {
 							+agreeSourConn.lustreString+"' are of different types");
 				}
 				Equation eventConnEq;
+				IdExpr rhsEvent = new IdExpr(rhsLustreName+state.eventSuffix);
+				IdExpr lhsEvent = new IdExpr(lhsLustreName+state.eventSuffix);
 				if(delayed){
-				    Expr connExpr = new UnaryExpr(UnaryOp.PRE, new IdExpr(rhsLustreName+state.eventSuffix));
-	                connExpr = new BinaryExpr(agreeSourConn.initState, BinaryOp.ARROW, connExpr);
-	                eventConnEq = new Equation(new IdExpr(lhsLustreName+state.eventSuffix), connExpr);
+				    Expr defaultExpr = new UnaryExpr(UnaryOp.PRE, lhsEvent);
+                    defaultExpr = new BinaryExpr(rhsEvent, BinaryOp.ARROW, defaultExpr);
+                    Expr dontClear = new UnaryExpr(UnaryOp.PRE, lhsEvent);
+                    dontClear = new UnaryExpr(UnaryOp.NOT, dontClear);
+                    dontClear = new BinaryExpr(dontClear, BinaryOp.IMPLIES, rhsEvent);
+                    dontClear = new BinaryExpr(rhsEvent, BinaryOp.ARROW, dontClear);
+                    
+                    Expr connExpr = new IfThenElseExpr(rhsClock, dontClear, 
+                                    new IfThenElseExpr(new UnaryExpr(UnaryOp.PRE, lhsClock), new BoolExpr(false),
+                                        defaultExpr));
+                    
+                    defaultExpr = new UnaryExpr(UnaryOp.PRE, connExpr);
+                    defaultExpr = new BinaryExpr(new BoolExpr(false), BinaryOp.ARROW, defaultExpr);
+	                eventConnEq = new Equation(lhsEvent, defaultExpr);
 				}else{
-				    eventConnEq = new Equation(new IdExpr(lhsLustreName+state.eventSuffix), new IdExpr(rhsLustreName+state.eventSuffix));
+				    Expr defaultExpr = new UnaryExpr(UnaryOp.PRE, lhsEvent);
+				    defaultExpr = new BinaryExpr(rhsEvent, BinaryOp.ARROW, defaultExpr);
+				    Expr dontClear = new UnaryExpr(UnaryOp.PRE, lhsEvent);
+				    dontClear = new UnaryExpr(UnaryOp.NOT, dontClear);
+				    dontClear = new BinaryExpr(dontClear, BinaryOp.IMPLIES, rhsEvent);
+				    dontClear = new BinaryExpr(rhsEvent, BinaryOp.ARROW, dontClear);
+				    
+				    Expr connExpr = new IfThenElseExpr(rhsClock, dontClear, 
+                                    new IfThenElseExpr(new UnaryExpr(UnaryOp.PRE, lhsClock), new BoolExpr(false),
+                                        defaultExpr));
+				    eventConnEq = new Equation(lhsEvent, connExpr);
+				    
 				}
 				addConnection(state, eventConnEq);
 			}
@@ -192,6 +235,10 @@ public class ConnectionUtils {
 
 	}
 
+	
+	private static void addConnection(AgreeEmitterState state, Expr connExpr){
+	    state.assertExpressions.add(connExpr);
+	}
 
 	private static void addConnection(AgreeEmitterState state, Equation connEq){
 		if(connEq.lhs.size() != 1){
@@ -203,8 +250,7 @@ public class ConnectionUtils {
 			throw new AgreeException("multiple assignments of connection variable '"+connStr+"'");
 		}
 		state.connLHS.add(connStr);
-		//connExpressions.add(connEq);
-		state.assertExpressions.add(new BinaryExpr(connEq.lhs.get(0), BinaryOp.EQUAL, connEq.expr));
+		addConnection(state, new BinaryExpr(new IdExpr(connStr), BinaryOp.EQUAL, connEq.expr));
 	}
 
 }

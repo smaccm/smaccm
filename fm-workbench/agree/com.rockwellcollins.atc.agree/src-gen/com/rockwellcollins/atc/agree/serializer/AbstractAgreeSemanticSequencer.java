@@ -77,7 +77,7 @@ import org.osate.aadl2.StringLiteral;
 import org.osate.xtext.aadl2.properties.serializer.PropertiesSemanticSequencer;
 
 @SuppressWarnings("all")
-public class AgreeSemanticSequencer extends PropertiesSemanticSequencer {
+public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticSequencer {
 
 	@Inject
 	private AgreeGrammarAccess grammarAccess;
@@ -126,10 +126,6 @@ public class AgreeSemanticSequencer extends PropertiesSemanticSequencer {
 			case Aadl2Package.CONTAINMENT_PATH_ELEMENT:
 				if(context == grammarAccess.getContainmentPathElementRule()) {
 					sequence_ContainmentPathElement(context, (ContainmentPathElement) semanticObject); 
-					return; 
-				}
-				else if(context == grammarAccess.getQualifiedContainmentPathElementRule()) {
-					sequence_QualifiedContainmentPathElement(context, (ContainmentPathElement) semanticObject); 
 					return; 
 				}
 				else break;
