@@ -62,8 +62,10 @@ public class FeatureUtils {
 				}
 			}
 			state.refMap.put(agreeFeat.lustreString, agreeFeat.feature);
+			state.featInstMap.put(agreeFeat.lustreString, agreeFeat.featureInstance);
 			if(eventStr != null){
 				state.refMap.put(eventStr, agreeFeat.feature);
+				state.featInstMap.put(eventStr, agreeFeat.featureInstance);
 			}
 		}
 	}
@@ -145,6 +147,7 @@ public class FeatureUtils {
 		}
 		
 		AgreeFeature agreeConn = new AgreeFeature();
+		agreeConn.featureInstance = featInst;
 		agreeConn.feature = featInst.getFeature();
 		agreeConn.varType = getNamedType(AgreeStateUtils.getRecordTypeName(dataClass, state.typeMap, state.typeExpressions));
 		agreeConn.lustreString = featInst.getName();

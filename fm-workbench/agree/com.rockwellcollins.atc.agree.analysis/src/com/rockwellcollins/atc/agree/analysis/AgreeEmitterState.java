@@ -115,6 +115,7 @@ public class AgreeEmitterState  extends AgreeSwitch<Expr> {
     
     //reference map used for hyperlinking from the console
     public final Map<String, EObject> refMap = new HashMap<>();
+    public final Map<String, FeatureInstance> featInstMap = new HashMap<>();
     public final Map<NamedElement, String> typeMap = new HashMap<>();
     
     //keeps track of new variables
