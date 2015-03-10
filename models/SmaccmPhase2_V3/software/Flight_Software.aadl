@@ -130,21 +130,13 @@ process implementation main.i
   	
   	const CONTROL_PERIOD : real = 50.0;
   	
-  	eq control_law_clock : bool;
-  	eq ui_mux_clock : bool;
-  	eq control_clock : bool;
-  	eq ppm_clock : bool;
-  	eq can_clock : bool;
-  	
-  	--refer to clocks in the type
-  	assert ppm_clock = ppm._CLK;
-  	assert can_clock = can._CLK;
-  	assert control_law_clock = control_law._CLK;
-  	assert ui_mux_clock = ui_mux._CLK;
-  	assert control_clock = control._CLK;
+  	eq control_law_clock : bool = control_law._CLK;
+  	eq ui_mux_clock : bool = ui_mux._CLK;
+  	eq control_clock : bool = control._CLK;
+  	eq ppm_clock : bool = ppm._CLK;
+  	eq can_clock : bool = can._CLK;
   	
   	assert control_mode = control.mode;
-
   	  	
   	--precidence for preemption
   	assert control_clock => 
