@@ -22,4 +22,14 @@ Bundle-ClassPath: .,
  dependencies/jxl.jar
 Import-Package: org.osate.aadl2.instantiation,
  org.osate.annexsupport
-Export-Package: com.rockwellcollins.atc.agree.analysis
+Export-Package: com.rockwellcollins.atc.agree.analysis,
+ com.rockwellcollins.atc.agree.analysis.preferences,
+ jkind,
+ jkind.api,
+ jkind.api.results,
+ jkind.api.workarounds,
+ jkind.lustre,
+ jkind.lustre.builders,
+ jkind.lustre.visitors,
+ jkind.results,
+ jkind.util
