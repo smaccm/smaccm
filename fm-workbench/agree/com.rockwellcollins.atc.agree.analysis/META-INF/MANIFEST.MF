@@ -30,6 +30,7 @@ Export-Package: com.rockwellcollins.atc.agree.analysis,
  jkind.api.workarounds,
  jkind.lustre,
  jkind.lustre.builders,
+ jkind.lustre.values,
  jkind.lustre.visitors,
  jkind.results,
  jkind.util

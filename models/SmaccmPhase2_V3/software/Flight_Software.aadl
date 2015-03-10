@@ -146,7 +146,7 @@ process implementation main.i
   	assert control_mode = control.mode;
 
   	  	
-  	--precidence for whose clock ticks
+  	--precidence for preemption
   	assert control_clock => 
   	  not (rise(ppm_clock) or rise(can_clock));
   	
@@ -158,7 +158,37 @@ process implementation main.i
   	       
   	assert ui_mux_clock =>
   	  not (rise(control_clock) or rise(ppm_clock) or rise(can_clock));
-  	    	  
+  	  
+  	--signals don't occur unless the are scheduled or driven by an event
+  	assert rise(control_clock) => control_scheduled;
+  	assert rise(ppm_clock) => ppm_scheduled;
+  	assert rise(can_clock) => can_scheduled;
+  	assert rise(control_law_clock) => event(control_law.ppm_law) or 
+  	                                  event(control_law.nav_law) or 
+  	                                  event(control_law.mav_law);
+  	                                  
+    assert rise(ui_mux_clock) => event(ui_mux.ppm_input) or 
+                                 event(ui_mux.mavlink_input) or
+  	                             event(ui_mux.control_law);
+  	  
+  	
+  	--when a clock can start ticking
+  	assert if control_scheduled and not control_law_clock and not ui_mux_clock then
+  	         control_clock
+  	       else if ppm_scheduled and not control_clock and not control_law_clock and 
+  	        not ui_mux_clock then
+  	         ppm_clock
+  	       else if can_scheduled and not control_clock and not ppm_clock and 
+  	        not control_law_clock and not ui_mux_clock then
+  	         can_clock
+  	       else if event(control_law.ppm_law) or event(control_law.nav_law) or 
+  	        event(control_law.mav_law) then
+  	         control_law_clock
+  	       else if event(ui_mux.ppm_input) or event(ui_mux.mavlink_input) or
+  	        event(ui_mux.control_law) then
+  	         ui_mux_clock
+  	       else true;
+  	
   	--keep track of how long tasks have been running
   	eq control_run_time : real = 0.0 ->
   	  if pre(control_clock) then
@@ -181,62 +211,89 @@ process implementation main.i
   	eq ppm_run_time : real = 0.0 ->
   	  if pre(ppm_clock and not(control_clock)) then
   	    pre(ppm_run_time) + time - pre(time)
-  	  else if rise(ppm_clock) then
-  	    0.0
-  	  else
-  	    pre(ppm_run_time);
+  	  else 
+  	    0.0;
   	  
   	eq can_run_time : real = 0.0 ->
   	  if pre(can_clock and not(control_clock or ppm_clock)) then
   	    pre(can_run_time) + time - pre(time)
-  	  else if rise(can_clock) then
-  	    0.0
   	  else
-  	    pre(can_run_time);
+  	    0.0;
   	    
   	--keep track of next active events
-  	eq time_of_next_control : real = 0.0 ->
+  	eq time_of_next_control : real = CONTROL_PERIOD ->
   	  if time < pre(time_of_next_control) then
   	    pre(time_of_next_control)
   	  else
   	    pre(time_of_next_control) + CONTROL_PERIOD;
   	    
-  	eq time_of_next_ppm : real = 0.0 ->
+  	eq time_of_next_ppm : real = PPM_PERIOD ->
   	  if time < pre(time_of_next_ppm) then
   	    pre(time_of_next_ppm)
   	  else
   	    pre(time_of_next_ppm) + PPM_PERIOD;
   	    
-  	eq time_of_next_can : real = 0.0 ->
+  	eq time_of_next_can : real = CAN_PERIOD ->
   	  if time < pre(time_of_next_can) then
   	    pre(time_of_next_can)
   	  else
   	    pre(time_of_next_can) + CAN_PERIOD;
   	    
-  	--keep track of events finishing
-  	eq control_finishes : real = 0.0 ->
-  	  pre(control_finishes) + CONTROL_EXEC_TIME - control_run_time;
-  	  
-  	eq ppm_finishes : real = 0.0 ->
-  	  pre(ppm_finishes) + PPM_EXEC_TIME - ppm_run_time;
+  	--compute when an active task is scheduled to run
+  	eq control_scheduled : bool = true ->
+  	  if time = pre(time_of_next_control) then
+  	    true
+  	  else if pre(control_clock) then
+  	    false
+  	  else
+  	    pre(control_scheduled);
   	    
-  	eq can_finishes : real = 0.0 ->
-  	  pre(can_finishes) + CAN_EXEC_TIME - can_run_time;
+  	eq ppm_scheduled : bool = true ->
+  	  if time = pre(time_of_next_ppm) then
+  	    true
+  	  else if pre(ppm_clock) then
+  	    false
+  	  else
+  	    pre(ppm_scheduled);
+  	    
+  	eq can_scheduled : bool = true ->
+  	  if time = pre(time_of_next_can) then
+  	    true
+  	  else if pre(can_clock) then
+  	    false
+  	  else
+  	    pre(can_scheduled);
+  	    
+  	    
+  	--keep track of events finishing
+  	eq control_finishes : real =
+  	  time + CONTROL_EXEC_TIME - control_run_time;
   	  
-  	eq control_law_finishes : real = 0.0 ->
-  	  pre(control_law_finishes) + CONTROL_LAW_EXEC_TIME - control_law_run_time;
+  	eq ppm_finishes : real = 
+  	  time + PPM_EXEC_TIME - ppm_run_time;
+  	    
+  	eq can_finishes : real =
+  	  time + CAN_EXEC_TIME - can_run_time;
+  	  
+  	eq control_law_finishes : real = 
+  	  time + CONTROL_LAW_EXEC_TIME - control_law_run_time;
 
-    eq ui_mux_finishes : real = 0.0 ->
-  	  pre(ui_mux_finishes) + UI_MUX_EXEC_TIME - ui_mux_run_time;
+    eq ui_mux_finishes : real = 
+  	  time + UI_MUX_EXEC_TIME - ui_mux_run_time;
 
   	
   	--constrain how time progresses
   	assert time = 0.0 -> true;
   	assert time >= 0.0 and (true -> time > pre(time));
   	assert true -> time =
-  	    AGREE_LIB.min(time_of_next_control, 
-  	    AGREE_LIB.min(time_of_next_can, time_of_next_ppm)
-  	    );
+  	    AGREE_LIB.min_if(pre(control_clock), pre(control_finishes),
+  	    AGREE_LIB.min_if(pre(ppm_clock and not control_clock), pre(ppm_finishes),
+  	    AGREE_LIB.min_if(pre(can_clock and not ppm_clock and not control_clock), pre(can_finishes),
+  	    AGREE_LIB.min_if(pre(control_law_clock), pre(control_law_finishes),
+  	    AGREE_LIB.min_if(pre(ui_mux_clock), pre(ui_mux_finishes),
+  	    AGREE_LIB.min(pre(time_of_next_control), 
+  	    AGREE_LIB.min(pre(time_of_next_can), pre(time_of_next_ppm))))))));
+
   	
   	       
   	--runtime constraints
@@ -244,15 +301,17 @@ process implementation main.i
   	assert true -> pre(control_law_clock) and control_law_run_time < CONTROL_LAW_EXEC_TIME => control_law_clock;
   	assert true -> pre(ui_mux_clock) and ui_mux_run_time < UI_MUX_EXEC_TIME => ui_mux_clock;
   	assert true -> pre(ppm_clock) and ppm_run_time < PPM_EXEC_TIME => ppm_clock;
-  	assert true -> pre(can_clock) and can_run_time <= CAN_EXEC_TIME => can_clock;
+  	assert true -> pre(can_clock) and can_run_time < CAN_EXEC_TIME => can_clock;
   	
-  	assert true -> time = pre(control_finishes) => not control_clock;
-  	
-  	assert last_fall(control_clock, time) - last_rise(control_clock, time) <= CONTROL_EXEC_TIME;
-  	assert last_fall(control_law_clock, time) - last_rise(control_law_clock, time) <= CONTROL_LAW_EXEC_TIME;
-  	assert last_fall(ui_mux_clock, time) - last_rise(ui_mux_clock, time) <= UI_MUX_EXEC_TIME;
+  	assert true -> pre(control_clock) and time = control_finishes => not control_clock;
+  	assert true -> pre(ppm_clock) and time = ppm_finishes => not ppm_clock;
+  	assert true -> pre(can_clock) and time = can_finishes => not can_clock;
+  	assert true -> pre(control_law_clock) and time = control_law_finishes => not control_law_clock;
+  	assert true -> pre(ui_mux_clock) and time = ui_mux_finishes => not ui_mux_clock;
   
+  	
   	       
+  	
   	--nodes to compute the rising and falling edges of the clock       
   	node rise (clock : bool) returns (ret : bool);
   	let
@@ -264,15 +323,6 @@ process implementation main.i
   	  ret = false -> pre(clock) and not clock;
   	tel;
 
-    node last_rise(clock : bool, time : real) returns (ret : real);
-    let
-      ret = if rise(clock) then time else prev(ret, -1.0);
-    tel;
-    
-    node last_fall(clock : bool, time : real) returns (ret : real);
-    let
-      ret = if fall(clock) then time else prev(ret, -1.0);
-    tel;
 
   **};
   
@@ -348,6 +398,9 @@ thread control_law_t
   	const ARMED_SAFE : int = 0;
   	const ARMED_DISARMED : int = 1;
   	const ARMED_ARMED : int = 2;
+  	
+  	initially:
+  	  not event(out_law);
   	
   	const init_law : software_types::control_law.impl = 
   	   software_types::control_law.impl { 
@@ -453,9 +506,11 @@ thread ppm_t
   	initially:
   	  not (event(user_input) or event(control_law_out));
 
-  	guarantee "events generated simultaneously" :
-  	  event(user_input) = event(control_law_out) and
-  	  event(user_input) = event(flight_command);
+--  	guarantee "events generated simultaneously" :
+--  	  event(user_input) = event(control_law_out) and
+--  	  event(user_input) = event(flight_command);
+
+    guarantee "always output for testing" : event(user_input);
   	  
   	guarantee "no ambiguous user_input_selects" :
   	  not control_law_out.set_ui_ppm and control_law_out.set_ui_mavlink and
