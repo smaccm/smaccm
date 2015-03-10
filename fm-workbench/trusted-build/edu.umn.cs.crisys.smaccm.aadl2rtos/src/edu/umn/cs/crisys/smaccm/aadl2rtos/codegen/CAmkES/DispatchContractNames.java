@@ -7,8 +7,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.common.CommonNames;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.OutputEventPort;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.ArrayType;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.IdType;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.IntType;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.Type;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.*;
@@ -19,6 +21,7 @@ import edu.umn.cs.crisys.smaccm.aadl2rtos.util.Util;
  *
  */
 public class DispatchContractNames {
+  Map.Entry<OutputEventPort, Integer> odc;
   OutputEventPort oep;
   int size;
   Type indexType = new IntType(32, false); 
@@ -47,7 +50,7 @@ public class DispatchContractNames {
   
   public String getDataDecl() {
     PortNames pn = new PortNames(oep); 
-    ArrayType aty = new ArrayType(oep.getType(), this.size);
+    IdType aty = new IdType(getDispatchStructTypeName());
     return aty.getCType().varString(pn.getData()); 
   }
   
@@ -72,10 +75,8 @@ public class DispatchContractNames {
     return targets;
     
   }
-  public String getDispatchArrayTypeName() {
-    TypeNames tni = new TypeNames(oep.getType());
-    return "smaccm_" + Util.normalizeAadlName(tni.getName()) 
-        + "_array_" + this.getMaxDispatchSize(); 
+  public String getDispatchStructTypeName() {
+    return CommonNames.getDispatchStructTypeName(oep.getOwner(), oep, size);
   }
 
 }

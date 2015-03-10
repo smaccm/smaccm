@@ -5,8 +5,8 @@ package edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.common;
 
 import java.util.List;
 
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.OutgoingDispatchContract;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.OutputEventPort;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.OutgoingDispatchContract;
 
 /**
  * @author Whalen

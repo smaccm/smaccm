@@ -47,7 +47,41 @@ public class ThreadImplementationNames {
     return dnList;
   }
   
+  // includes passive thread dispatchers invoked by this component.
+  public List<DispatcherNames> getPassiveDispatcherRegion() {
+    ArrayList<DispatcherNames> dnList = new ArrayList<>();
+    for (Dispatcher d : ti.getPassiveDispatcherRegion()) {
+      dnList.add(new DispatcherNames(d));
+    }
+    return dnList;
+  }
   
+  public List<ThreadImplementationNames> getPassiveThreadRegion() {
+    Set<ThreadImplementation> threads = ti.getPassiveThreadRegion();
+    List<ThreadImplementationNames> threadNames = new ArrayList<>();
+    for (ThreadImplementation ti: threads) {
+      threadNames.add(new ThreadImplementationNames(ti));
+    }
+    return threadNames;
+  }
+  
+  
+  public List<PortConnectionNames> getNonlocalActiveThreadConnectionFrontier() {
+    ArrayList<PortConnectionNames> dnList = new ArrayList<>();
+    for (PortConnection d : ti.getNonlocalActiveThreadConnectionFrontier()) {
+      dnList.add(new PortConnectionNames(d));
+    }
+    return dnList;
+  }
+  
+  public List<PortConnectionNames> getLocalActiveThreadConnectionFrontier() {
+    ArrayList<PortConnectionNames> dnList = new ArrayList<>();
+    for (PortConnection d : ti.getLocalActiveThreadConnectionFrontier()) {
+      dnList.add(new PortConnectionNames(d));
+    }
+    return dnList;
+  }
+
   public List<RemoteProcedureGroupEndpointNames> getEndpoints() {
     ArrayList<RemoteProcedureGroupEndpointNames> endpoints = new ArrayList<>();
     for (RemoteProcedureGroupEndpoint rpge : ti.getRequiresRPGList()) {

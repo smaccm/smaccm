@@ -13,7 +13,9 @@ package edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread;
  */
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosException;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.*;
@@ -246,6 +248,41 @@ public class ThreadImplementation {
     this.dispatchLimits = dispatchLimits;
   }
 
+  public Set<Dispatcher> getPassiveDispatcherRegion() {
+    HashSet<Dispatcher> dispatchers = new HashSet<>();
+    for (Dispatcher d : getDispatcherList()) {
+      DispatcherTraverser dt = new DispatcherTraverser(); 
+      dt.passiveDispatchersFromActiveThread(dispatchers, d);
+    }
+    return dispatchers;
+  }
+  
+  public Set<PortConnection> getNonlocalActiveThreadConnectionFrontier() {
+    Set<PortConnection> frontier = new HashSet<>(); 
+    for (Dispatcher d : getDispatcherList()) {
+      DispatcherTraverser dt = new DispatcherTraverser();
+      dt.dispatcherNonlocalActiveThreadConnectionFrontier(d, frontier);
+    }
+    return frontier;
+  }
+
+  public Set<PortConnection> getLocalActiveThreadConnectionFrontier() {
+    Set<PortConnection> frontier = new HashSet<>(); 
+    for (Dispatcher d : getDispatcherList()) {
+      DispatcherTraverser dt = new DispatcherTraverser();
+      dt.dispatcherLocalActiveThreadConnectionFrontier(d, frontier);
+    }
+    return frontier;
+  }
+
+  public Set<ThreadImplementation> getPassiveThreadRegion() {
+    HashSet<ThreadImplementation> threads = new HashSet<>();
+    for (Dispatcher d : getPassiveDispatcherRegion()) {
+      threads.add(d.getOwner());
+    }
+    return threads;
+  }
+  
   /**
    * @return the isPassive
    */

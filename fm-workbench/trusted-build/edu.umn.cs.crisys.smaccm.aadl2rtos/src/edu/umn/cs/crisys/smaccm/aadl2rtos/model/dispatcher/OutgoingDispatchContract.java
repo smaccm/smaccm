@@ -1,9 +1,10 @@
 /**
  * 
  */
-package edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread;
+package edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -62,6 +63,18 @@ public class OutgoingDispatchContract {
     OutgoingDispatchContract max = new OutgoingDispatchContract();
     for (OutgoingDispatchContract d: dl) {
       max.mergeLargest(d);
+    }
+    return max;
+  }
+  
+  public static OutgoingDispatchContract usedDispatchers(List<OutgoingDispatchContract> dl) {
+    OutgoingDispatchContract max = maxDispatcherUse(dl); 
+    Iterator<Map.Entry<OutputEventPort, Integer>> it = max.getContract().entrySet().iterator(); 
+    while (it.hasNext()) {
+      Map.Entry<OutputEventPort, Integer> elem = it.next();
+      if (elem.getValue() <= 0) {
+        it.remove();
+      }
     }
     return max;
   }

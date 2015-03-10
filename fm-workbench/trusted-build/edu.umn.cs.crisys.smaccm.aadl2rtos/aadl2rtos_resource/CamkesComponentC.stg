@@ -93,6 +93,10 @@ writeRequiresEndpoint(endpoint) ::= <<
 //
 /////////////////////////////////////////////////////////////////////
 
+LocalPortWriterName(port) ::= <<
+<port.name>_<port.type.writerFn>
+>>
+
 ReceiverQueueDecls(port) ::= <<
 // Static variables for input receiver <port.name>
 <port.queueDataDecl>;
@@ -152,7 +156,7 @@ bool <port.queueWriteName>(const <port.type.aadlInputType.name> <port.name>) {
 	}
 }
 
-bool <port.name>_<port.type.writerFn>(<port.type.camkesInputType.name> arg) {
+bool <LocalPortWriterName(port)>(<port.type.camkesInputType.name> arg) {
 	bool result;
 	<port.camkesMutexLockFnCall>; 
 	result = <port.queueWriteName>(<port.type.camkesInputToAadlInput> arg);
@@ -192,7 +196,7 @@ bool <port.queueIsEmptyName>() {
 	return <port.index> == 0; 
 }
 
-bool <port.name>_<port.type.writerFn>() {
+bool <LocalPortWriterName(port)> {
 	<port.camkesMutexLockFnCall>; 
 	// Note: possibility for overflow here - should I worry about MAXINT messages?
 	<port.index>++;
@@ -257,7 +261,7 @@ componentRemoteWriteFunction(port) ::= <<
 
 // The writer function is called remotely through RPC, so follows the 
 // RPC naming and return convention.  
-bool <port.name>_<port.type.writerFn>(<optConstCamkesInputArg(port)>) {
+bool <LocalPortWriterName(port)>(<optConstCamkesInputArg(port)>) {
 	<port.camkesMutexLockFnCall>; 
 	<if(port.type.isBaseType)><port.readerWriterImplVar> = <port.name>;
 	<else><camkesInputToValMemcpy(port.type, port.readerWriterImplVar, port.name)>
@@ -269,7 +273,7 @@ bool <port.name>_<port.type.writerFn>(<optConstCamkesInputArg(port)>) {
 >>
 
 componentLocalReadFunction(port) ::= <<
-bool <port.aadlReaderFnName>(<optAadlOutputArg(port)>) {
+bool <port.aadlReaderFnName>(<userSendOptAadlOutputArg(port)>) {
 	<port.camkesMutexLockFnCall>; 
 	<if(port.type.isBaseType)><port.type.aadlOutputToVal><port.name> = <port.readerWriterImplVar>;
 	<else><valToAadlOutputMemcpy(port.type, port.name, port.readerWriterImplVar)>
@@ -290,7 +294,7 @@ componentLocalReaderDecl(port) ::= <<
 
 componentRemoteWriterDecl(port) ::= <<
 bool <port.aadlWriterFnName>(<port.type.aadlInputType.name> <port.name>) {
-	<port.name>_<port.type.writerFn>(<port.type.aadlInputToCamkesInput> <port.name>);
+	<LocalPortWriterName(port)>(<port.type.aadlInputToCamkesInput> <port.name>);
 	return true;
 }
 
@@ -338,12 +342,20 @@ while (!<dispatcher.inputEventDispatcherPort.isEmptyFnCall>) {
 
 /////////////////////////////////////////////////////////////////////
 //
-// Constructing the dispatcher functions for each port
+// UserEntrypointCaller functions
+// 
+// These functions provide the "scaffolding" functions necessary to 
+// set up the output event ports prior to making a call to the user
+// code.
+// 
+// These are the implementations of the RPC functions for passive 
+// components that are called using CAmkES.  They are also used 
+// in active components to set up local procedure calls to user code.
 //
 /////////////////////////////////////////////////////////////////////
 
 
-externalHandlerDispatcher(externalHandler, dispatcher) ::= <<
+userEntrypointCallerCall(externalHandler, dispatcher) ::= <<
 <if(dispatcher.hasData)>
 <externalHandler.handlerName>(<dispatcher.type.camkesInputToAadlInput><dispatcher.name>); 
 <else><externalHandler.handlerName>();
@@ -351,39 +363,38 @@ externalHandlerDispatcher(externalHandler, dispatcher) ::= <<
 >>
 
 
-dispatcherInputArg(dispatcher) ::=  << <dispatcher.type.camkesInputType.name> <dispatcher.name> >>
+userEntrypointCallerInputArg(dispatcher) ::=  << <dispatcher.type.camkesInputType.name> <dispatcher.name> >>
 
 
-dispatcherDataOutputArg(dispatchContract) ::= 
-<< <if(dispatchContract.canDispatch)> <if(dispatchContract.port.hasData)><dispatchContract.dispatchArrayTypeName> *<dispatchContract.port.data>, <endif><\\> 
+userEntrypointCallerDataOutputArg(dispatchContract) ::= 
+<< <if(dispatchContract.canDispatch)> <if(dispatchContract.port.hasData)><dispatchContract.dispatchStructTypeName> *<dispatchContract.port.data>, <endif><\\> 
   <dispatchContract.port.indexType.aadlOutputType.name> <dispatchContract.port.index> <endif>
 >>
 
-componentCamkesDispatcherFnName(dispatcher) ::=
+userEntrypointCallerFnName(dispatcher) ::=
 	"<dispatcher.threadImplementation.componentDispatcherInterfaceVarIdName>_<dispatcher.idlDispatcherName>"
 
-componentCamkesDispatcherFnArgs(dispatcher) ::= <<
+userEntrypointCallerFnArgs(dispatcher) ::= <<
 <if(dispatcher.hasData)>
-<[dispatcherInputArg(dispatcher), dispatcher.dispatchableContracts:dispatcherDataOutputArg()]; separator=",\n">
+<[userEntrypointCallerInputArg(dispatcher), dispatcher.dispatchableContracts:userEntrypointCallerDataOutputArg()]; separator=",\n">
 <else>
-<dispatcher.contracts:dispatcherDataOutputArg();separator=",\n">
+<dispatcher.dispatchableContracts:userEntrypointCallerDataOutputArg();separator=",\n">
 <endif>
 >>
 
-assignGlobals(dispatchContract) ::= <<
+userEntrypointCallerAssignGlobals(dispatchContract) ::= <<
 <dispatchContract.port.globalMaxDispatchSize> = <dispatchContract.maxDispatchSize>;
 <if(dispatchContract.canDispatch)><\\>
 <dispatchContract.port.globalIndex> = <dispatchContract.port.index>;
-<if(dispatchContract.port.hasData)><dispatchContract.port.globalData> = *<dispatchContract.port.data>;<endif> 
-*<dispatchContract.port.globalIndex> = 0; <endif>
+<if(dispatchContract.port.hasData)><dispatchContract.port.globalData> = <dispatchContract.port.data>->f;<endif> 
+*<dispatchContract.port.globalIndex> = 0; 
+<endif>
 >> 
 
-// TODO: fix: if dispatcher port has no contract, then we get seg fault writing to null 
-componentCamkesDispatcherFn(dispatcher) ::= << 
-void <componentCamkesDispatcherFnName(dispatcher)>(<componentCamkesDispatcherFnArgs(dispatcher)>) {
-	<dispatcher.contracts:assignGlobals()>
-	// globals assigned!
-	<dispatcher.externalHandlers:externalHandlerDispatcher(dispatcher)>
+userEntrypointCallerFn(dispatcher) ::= << 
+void <userEntrypointCallerFnName(dispatcher)>(<userEntrypointCallerFnArgs(dispatcher)>) {
+	<dispatcher.contracts:userEntrypointCallerAssignGlobals()>
+	<dispatcher.externalHandlers:userEntrypointCallerCall(dispatcher)>
 }	
 
 
@@ -392,25 +403,51 @@ void <componentCamkesDispatcherFnName(dispatcher)>(<componentCamkesDispatcherFnA
 
 /////////////////////////////////////////////////////////////////////
 //
-// declarations for creating the component `send' callback function
+// localSendDecl: 
+// 
+// This creates a local call to the queuing function 
+/////////////////////////////////////////////////////////////////////
+
+localSendDecl(connection) ::= <<
+<if(connection.sourcePort.hasData)>
+void <connection.sourcePort.qualifiedName>_<connection.destPort.type.writerFn>(<connection.sourcePort.type.camkesInputType.name> arg) {
+	<LocalPortWriterName(connection.destPort)>(arg);
+}
+<else>
+void <connection.sourcePort.qualifiedName>_<connection.destPort.type.writerFn>() {
+	<LocalPortWriterName(connection.destPort)>();
+}
+
+<endif>
+
+>>
+
+/////////////////////////////////////////////////////////////////////
+//
+// userSendDefinition: 
+// 
+// These declarations construct the callback functions for user code
+// in order to 'send' a message to other components.  In truth, they
+// queue the message to be sent in local data; the actual 'send' is
+// performed on the queued messages after the user code completes. 
 //
 /////////////////////////////////////////////////////////////////////
 
-copyAadlInputToGlobalStmt(port) ::= <<
+userSendCopyAadlInputToGlobalStmt(port) ::= <<
 <if(port.type.isBaseType)><\\>
 <port.globalDataSlot> = <port.name>;
 <else><aadlInputToValMemcpy(port.type, port.globalDataSlot, port.name)>
 <endif>
 >>
 
-optConstAadlInputArg(port) ::= "<if(port.hasData)><port.type.aadlInputType.name> <port.name><endif>"
-optAadlOutputArg(port) ::= "<if(port.hasData)><port.type.aadlOutputType.name> <port.name><endif>"
+userSendOptConstAadlInputArg(port) ::= "<if(port.hasData)><port.type.aadlInputType.name> <port.name><endif>"
+userSendOptAadlOutputArg(port) ::= "<if(port.hasData)><port.type.aadlOutputType.name> <port.name><endif>"
 
-componentSendFunction(port) ::= << 
-bool <port.aadlWriterFnName>(<port:optConstAadlInputArg()>) {
+userSendDefinition(port) ::= << 
+bool <port.aadlWriterFnName>(<port:userSendOptConstAadlInputArg()>) {
 	if (<port.globalMaxDispatchSize> > 0 && 
 		 *<port.globalIndex> \< <port.globalMaxDispatchSize>) {
-		<if(port.hasData)><copyAadlInputToGlobalStmt(port)><endif>
+		<if(port.hasData)><userSendCopyAadlInputToGlobalStmt(port)><endif>
 		(*<port.globalIndex>)++;
 		return true;
 	} else {
@@ -422,72 +459,97 @@ bool <port.aadlWriterFnName>(<port:optConstAadlInputArg()>) {
   
 /////////////////////////////////////////////////////////////////////
 //
-// Declarations for C function implementing AADL dispatcher
+// aadlDispatcher declarations
+//
+// These declarations are used to construct the AADL event loop 
+// dispatcher for an AADL 'send' primitive.  They take as input the 
+// input to be 'sent'.  They define the queues to be used 
+// for any resulting messages to be transmitted based on the 
+// user code's response to the message.  To interface with the user 
+// code, they call the userEntrypointCaller function matching the 
+// 'send' interface.  Then they drain the queues of generated 
+// messages, calling an aadlDispatcher function for each message, 
+// which will repeat the process for the next 'send'...
 //
 /////////////////////////////////////////////////////////////////////
 
 
-dispatcherDeclareData(dispatcherContract) ::= <<
+aadlDispatcherDeclareData(dispatcherContract) ::= <<
 <if(dispatcherContract.port.hasData)><dispatcherContract.dataDecl>;<endif>
 <dispatcherContract.port.indexType.name> <dispatcherContract.port.index>;
 
 >>
 
-passiveDispatcherCallOutPortArg(port) ::= <<
-<if(port.hasData)><port.type.valToAadlOutput><port.data>,<endif>
-<port.type.valToAadlOutput><port.index>
+aadlDispatcherPassiveCallOutPortArg(port) ::= <<
+<if(port.hasData)>		<port.type.valToAadlOutput><port.data>,<endif>
+		<port.type.valToAadlOutput><port.index> >>
+
+aadlDispatcherWritePassiveArg(port) ::= <<
+<if(port.hasData)><port.type.valToAadlInput>(<port.data>.f[smaccm_it])<endif>
 >>
 
-writePassiveDispatcherArg(port) ::= <<
-<if(port.hasData)><port.type.valToCamkesInput>(<port.data>[smaccm_it])<endif>
+aadlDispatcherWriteActiveArg(port) ::= <<
+<if(port.hasData)><port.type.valToCamkesInput>(<port.data>.f[smaccm_it])<endif>
 >>
 
-passiveDispatcherCallOutArg(dispatchContract) ::= "<passiveDispatcherCallOutPortArg(dispatchContract.port)>"
+aadlDispatcherPassiveCallOutArg(dispatchContract) ::= "<aadlDispatcherPassiveCallOutPortArg(dispatchContract.port)>"
 
-callPassiveTargetDispatcher(portDest,portSrc) ::= <<
-<portDest.threadImplementation.interfaceInstanceName>_<portDest.idlDispatcherName>(<writePassiveDispatcherArg(portSrc)>);	
+aadlDispatcherCallPassiveTarget(portDest,portSrc) ::= <<
+<portDest.dispatcher.dispatcherCFileDispatcherFnName>(<aadlDispatcherWritePassiveArg(portSrc)>);	
 >>
 
-callActiveTargetDispatcher(portDest,portSrc) ::= <<
-<portSrc.name>_<portDest.type.writerFn>(<writePassiveDispatcherArg(portSrc)>);	
+aadlDispatcherCallActiveTarget(portDest,portSrc) ::= <<
+<portSrc.qualifiedName>_<portDest.type.writerFn>(<aadlDispatcherWriteActiveArg(portSrc)>);	
 
 >>
 
-sendLoop(dispatchContract,dispatcher) ::= <<
+aadlDispatcherSendLoop(dispatchContract,dispatcher) ::= <<
 for (smaccm_it = 0; smaccm_it \< <dispatchContract.port.index>; smaccm_it++) {
-   <dispatchContract.passiveDispatchTargetList:callPassiveTargetDispatcher(dispatchContract.port)>
-   <dispatchContract.activeDispatchTargetList:callActiveTargetDispatcher(dispatchContract.port)>
+   <dispatchContract.passiveDispatchTargetList:aadlDispatcherCallPassiveTarget(dispatchContract.port)>
+   <dispatchContract.activeDispatchTargetList:aadlDispatcherCallActiveTarget(dispatchContract.port)>
 }
 
 >>
 
+
+// TODO: is this function wrong?  I think it should always be the 
+// passiveComponentDispatcherPathName...
+
 aadlDispatcherFunctionName(dispatcher) ::= <<
 <if(dispatcher.threadImplementation.isPassive)><\\>
-<dispatcher.passiveComponentDispatcherPathName>
-<else><componentCamkesDispatcherFnName(dispatcher)><endif>
+<dispatcher.passiveComponentDispatcherPathName><\\>
+<else><userEntrypointCallerFnName(dispatcher)><endif>
 >>
 
-aadlDispatcherFunctionArgs(dispatcher) ::= <<
-		<if(dispatcher.hasData)><[{<dispatcher.type.aadlInputToCamkesInput> <dispatcher.name>}, dispatcher.contracts:passiveDispatcherCallOutArg() ];separator=", \n"> <else><\\>
-		<dispatcher.contracts:passiveDispatcherCallOutArg();separator=", \n"> <endif>
+ 
+aadlDispatcherFunctionArgs(dispatcher) ::= 
+<< <if(dispatcher.hasData)><\\>
+	 <[{ <dispatcher.type.aadlInputToCamkesInput> <dispatcher.name>}, dispatcher.dispatchableContracts:aadlDispatcherPassiveCallOutArg() ];separator=", \n"> 
+	 <else><\\>
+	<dispatcher.dispatchableContracts:aadlDispatcherPassiveCallOutArg();separator=", \n"> <endif>
 >>
 
 aadlDispatcherFunction(dispatcher) ::= <<
 void <dispatcher.dispatcherCFileDispatcherFnName>(<if(dispatcher.hasData)><dispatcher.type.aadlInputType.name> <dispatcher.name><endif>) {
-	<dispatcher.contracts:dispatcherDeclareData()>
+	<dispatcher.dispatchableContracts:aadlDispatcherDeclareData()>
 	
 	// make the call: 
-	<aadlDispatcherFunctionName(dispatcher)>(<aadlDispatcherFunctionArgs(dispatcher)>); 
+	<aadlDispatcherFunctionName(dispatcher)>(<aadlDispatcherFunctionArgs(dispatcher)>	
+		); 
 
-<if(dispatcher.contracts)>
-	// invoke any resulting `send' operations
+<if(dispatcher.dispatchableContracts)>
+	// call the aadl dispatchers for any generated output events.
 	uint32_t smaccm_it; 
-	<dispatcher.contracts:sendLoop(dispatcher)>
+	<dispatcher.dispatchableContracts:aadlDispatcherSendLoop(dispatcher)>
 <endif>
 }
 
 >>
 
+aadlDispatcherFunctionPrototype(dispatcher) ::=  <<
+void <dispatcher.dispatcherCFileDispatcherFnName>(<if(dispatcher.hasData)><dispatcher.type.aadlInputType.name> <dispatcher.name><endif>); 
+
+>>
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -619,6 +681,15 @@ componentCFileDecls(threadImpl) ::= <<
 #include <\u003C><threadImpl.componentCamkesHFileName><\u003E>
 #include <\u003C>string.h<\u003E>
 
+<if(threadImpl.isActive)><\\>
+///////////////////////////////////////////////////////////////////////////
+//
+// Local prototypes for AADL dispatchers
+//
+///////////////////////////////////////////////////////////////////////////
+<threadImpl.passiveDispatcherRegion:aadlDispatcherFunctionPrototype()> 
+<endif>
+
 ///////////////////////////////////////////////////////////////////////////
 //
 // Functions for managed RPCs
@@ -641,18 +712,19 @@ componentCFileDecls(threadImpl) ::= <<
 
 ///////////////////////////////////////////////////////////////////////////
 //
-// Functions for dispatching IRQs and Periodic Events
+// Functions for dispatching IRQs, Local Send, and Periodic Events
 //
 ///////////////////////////////////////////////////////////////////////////
 <threadImpl.dispatchers:dispatcherComponentEventDecls()>
-<threadImpl.dispatchers:componentCamkesDispatcherFn()>
-<threadImpl.allOutputEventPorts:componentSendFunction()>
+<threadImpl.dispatchers:userEntrypointCallerFn()>
+<threadImpl.allOutputEventPorts:userSendDefinition()>
 <threadImpl.inputDataPortList:componentLocalReaderDecl()>
 <threadImpl.outputDataPortList:componentRemoteWriterDecl()>
+<threadImpl.localActiveThreadConnectionFrontier:localSendDecl()>
 
 <if(threadImpl.isActive)><\\>
 // Writing dispatchers...
-<threadImpl.dispatchers:aadlDispatcherFunction()> 
+<threadImpl.passiveDispatcherRegion:aadlDispatcherFunction()> 
 <if(threadImpl.isExternal)><\\>
 ////////////////////////////////////////////////////////////////////////////
 //

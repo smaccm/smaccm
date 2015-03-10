@@ -51,6 +51,12 @@ public class CommonNames {
         + "_array_" + entry.getValue(); 
   }
 
+  static public String getDispatchStructTypeName(ThreadImplementation ti, 
+      OutputEventPort key, Integer val) {
+    return "smaccm_" + Util.normalizeAadlName(key.getType().toString()) 
+        + "_struct_" + val; 
+  }
+
   static public String getThreadImplReaderFnName(String commPrim, String tName, String varName) {
     if (commPrim != null) {
       return commPrim;
