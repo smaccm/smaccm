@@ -415,9 +415,14 @@ public class AgreeGenerator {
         if(compImpl == null){
         	throw new AgreeException("No implementation to verify");
         }
-        
-        ConnectionUtils.recordConnections(state);
+
         doSwitchAgreeAnnex(state, compImpl);
+        
+        //note that doSwitch needs to be called on the annex of
+        //the implementation before the connections are recorded
+        //this is only becaus the semantics of event ports changes
+        //depending on if you are doing "asynchronous" or "latched" analysis
+        ConnectionUtils.recordConnections(state);
 
         List<String> ordering = new ArrayList<>();
         //go through the component implementation and build a program for each subcomponent

@@ -41,7 +41,6 @@ public class ConnectionUtils {
 	public static void recordConnections(AgreeEmitterState state) {
 		ComponentClassifier compClass = state.curInst.getComponentClassifier();
 		ComponentImplementation compImpl = (ComponentImplementation)compClass; //should always been an implementation
-		state.connectionExpressionsSet = true;
 		// use for checking delay
 		Property commTimingProp = EMFIndexRetrieval.getPropertyDefinitionInWorkspace(
 				OsateResourceUtil.getResourceSet(), "Communication_Properties::Timing");
@@ -71,6 +70,7 @@ public class ConnectionUtils {
 			makeConnectionExpressions(state, absConnSour, absConnDest, delayed);
 		}
 	}
+	
 	private static void makeConnectionExpressions(AgreeEmitterState state,
 			ConnectedElement absConnSour, ConnectedElement absConnDest, boolean delayed) {
 		ConnectionEnd destConn = absConnDest.getConnectionEnd();
@@ -132,8 +132,6 @@ public class ConnectionUtils {
 		List<AgreeFeature> sourConns = state.featInstToAgreeFeatMap.get(sourFeatInst);
 		String lhsLustreName = null;
 		String rhsLustreName = null;
-		String lhsAadlName = null;
-		String rhsAadlName = null;
 		int i;
 		assert(destConns.size() == sourConns.size());
 		for(i = 0; i < destConns.size(); i++){
@@ -183,6 +181,18 @@ public class ConnectionUtils {
 			}
 			Equation connEq;
 			
+			//this is a stupid hack to deal with the new asynchronous analysis
+			if(state.latchedClocks){
+			    //if we are using latched clocks the clock should only trigger on the
+			    //falling edge
+			    if(rhsClock instanceof IdExpr){
+			        rhsClock = new BinaryExpr(new UnaryExpr(UnaryOp.NOT, rhsClock), 
+			                BinaryOp.AND, 
+			                new UnaryExpr(UnaryOp.PRE, rhsClock));
+			        rhsClock = new BinaryExpr(new BoolExpr(false), BinaryOp.ARROW, rhsClock);
+			    }
+			}
+			
 			if(delayed){
 			    Expr connExpr = new UnaryExpr(UnaryOp.PRE, new IdExpr(rhsLustreName));
 			    connExpr = new BinaryExpr(agreeSourConn.initState, BinaryOp.ARROW, connExpr);
@@ -197,43 +207,49 @@ public class ConnectionUtils {
 							+agreeDestConn.lustreString+"' and '"
 							+agreeSourConn.lustreString+"' are of different types");
 				}
-				Equation eventConnEq;
-				IdExpr rhsEvent = new IdExpr(rhsLustreName+state.eventSuffix);
-				IdExpr lhsEvent = new IdExpr(lhsLustreName+state.eventSuffix);
-				if(delayed){
-				    Expr defaultExpr = new UnaryExpr(UnaryOp.PRE, lhsEvent);
-                    defaultExpr = new BinaryExpr(rhsEvent, BinaryOp.ARROW, defaultExpr);
-                    Expr dontClear = new UnaryExpr(UnaryOp.PRE, lhsEvent);
-                    dontClear = new UnaryExpr(UnaryOp.NOT, dontClear);
-                    dontClear = new BinaryExpr(dontClear, BinaryOp.IMPLIES, rhsEvent);
-                    dontClear = new BinaryExpr(rhsEvent, BinaryOp.ARROW, dontClear);
-                    
-                    Expr connExpr = new IfThenElseExpr(rhsClock, dontClear, 
-                                    new IfThenElseExpr(new UnaryExpr(UnaryOp.PRE, lhsClock), new BoolExpr(false),
-                                        defaultExpr));
-                    
-                    defaultExpr = new UnaryExpr(UnaryOp.PRE, connExpr);
-                    defaultExpr = new BinaryExpr(new BoolExpr(false), BinaryOp.ARROW, defaultExpr);
-	                eventConnEq = new Equation(lhsEvent, defaultExpr);
-				}else{
-				    Expr defaultExpr = new UnaryExpr(UnaryOp.PRE, lhsEvent);
-				    defaultExpr = new BinaryExpr(rhsEvent, BinaryOp.ARROW, defaultExpr);
-				    Expr dontClear = new UnaryExpr(UnaryOp.PRE, lhsEvent);
-				    dontClear = new UnaryExpr(UnaryOp.NOT, dontClear);
-				    dontClear = new BinaryExpr(dontClear, BinaryOp.IMPLIES, rhsEvent);
-				    dontClear = new BinaryExpr(rhsEvent, BinaryOp.ARROW, dontClear);
-				    
-				    Expr connExpr = new IfThenElseExpr(rhsClock, dontClear, 
-                                    new IfThenElseExpr(new UnaryExpr(UnaryOp.PRE, lhsClock), new BoolExpr(false),
-                                        defaultExpr));
-				    eventConnEq = new Equation(lhsEvent, connExpr);
-				    
-				}
-				addConnection(state, eventConnEq);
+				addEventConnection(state, delayed, lhsLustreName,
+                        rhsLustreName, lhsClock, rhsClock);
 			}
 		}
 
 	}
+    private static void addEventConnection(AgreeEmitterState state,
+            boolean delayed, String lhsLustreName, String rhsLustreName,
+            Expr lhsClock, Expr rhsClock) {
+        Equation eventConnEq;
+        IdExpr rhsEvent = new IdExpr(rhsLustreName+state.eventSuffix);
+        IdExpr lhsEvent = new IdExpr(lhsLustreName+state.eventSuffix);
+        if(delayed){
+            Expr defaultExpr = new UnaryExpr(UnaryOp.PRE, lhsEvent);
+            defaultExpr = new BinaryExpr(rhsEvent, BinaryOp.ARROW, defaultExpr);
+            Expr dontClear = new UnaryExpr(UnaryOp.PRE, lhsEvent);
+            dontClear = new UnaryExpr(UnaryOp.NOT, dontClear);
+            dontClear = new BinaryExpr(dontClear, BinaryOp.IMPLIES, rhsEvent);
+            dontClear = new BinaryExpr(rhsEvent, BinaryOp.ARROW, dontClear);
+            
+            Expr connExpr = new IfThenElseExpr(rhsClock, dontClear, 
+                            new IfThenElseExpr(new UnaryExpr(UnaryOp.PRE, lhsClock), new BoolExpr(false),
+                                defaultExpr));
+            
+            defaultExpr = new UnaryExpr(UnaryOp.PRE, connExpr);
+            defaultExpr = new BinaryExpr(new BoolExpr(false), BinaryOp.ARROW, defaultExpr);
+            eventConnEq = new Equation(lhsEvent, defaultExpr);
+        }else{
+            Expr defaultExpr = new UnaryExpr(UnaryOp.PRE, lhsEvent);
+            defaultExpr = new BinaryExpr(rhsEvent, BinaryOp.ARROW, defaultExpr);
+            Expr dontClear = new UnaryExpr(UnaryOp.PRE, lhsEvent);
+            dontClear = new UnaryExpr(UnaryOp.NOT, dontClear);
+            dontClear = new BinaryExpr(dontClear, BinaryOp.IMPLIES, rhsEvent);
+            dontClear = new BinaryExpr(rhsEvent, BinaryOp.ARROW, dontClear);
+            
+            Expr connExpr = new IfThenElseExpr(rhsClock, dontClear, 
+                            new IfThenElseExpr(new UnaryExpr(UnaryOp.PRE, lhsClock), new BoolExpr(false),
+                                defaultExpr));
+            eventConnEq = new Equation(lhsEvent, connExpr);
+            
+        }
+        addConnection(state, eventConnEq);
+    }
 
 	
 	private static void addConnection(AgreeEmitterState state, Expr connExpr){

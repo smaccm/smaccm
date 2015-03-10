@@ -56,11 +56,11 @@ process main
   	guarantee "time is positive and increasing" :
   	  time >= 0.0 and (true -> time > pre(time));
   	
-  	guarantee "if time passes with no message then the mode is landing" :
-  	  was_armed => 
-  	    time - time_of_last_ppm > total_landing_timeout and
-  	    time - time_of_last_can > total_landing_timeout => 
-  	      control_mode = AGREE_CONSTS.LAND_MODE;
+--  	guarantee "if time passes with no message then the mode is landing" :
+--  	  was_armed => 
+--  	    time - time_of_last_ppm > total_landing_timeout and
+--  	    time - time_of_last_can > total_landing_timeout => 
+--  	      control_mode = AGREE_CONSTS.LAND_MODE;
   	      
   	guarantee "if the controller is armed, then an armed signal in the past" : true;
   	
@@ -159,7 +159,7 @@ process implementation main.i
   	assert ui_mux_clock =>
   	  not (rise(control_clock) or rise(ppm_clock) or rise(can_clock));
   	  
-  	--signals don't occur unless the are scheduled or driven by an event
+  	--clocks don't tick unless the are scheduled or driven by an event
   	assert rise(control_clock) => control_scheduled;
   	assert rise(ppm_clock) => ppm_scheduled;
   	assert rise(can_clock) => can_scheduled;
@@ -172,7 +172,7 @@ process implementation main.i
   	                             event(ui_mux.control_law);
   	  
   	
-  	--when a clock can start ticking
+  	--constrain when a clock can start ticking
   	assert if control_scheduled and not control_law_clock and not ui_mux_clock then
   	         control_clock
   	       else if ppm_scheduled and not control_clock and not control_law_clock and 
@@ -263,8 +263,7 @@ process implementation main.i
   	    false
   	  else
   	    pre(can_scheduled);
-  	    
-  	    
+  	        
   	--keep track of events finishing
   	eq control_finishes : real =
   	  time + CONTROL_EXEC_TIME - control_run_time;
@@ -281,7 +280,6 @@ process implementation main.i
     eq ui_mux_finishes : real = 
   	  time + UI_MUX_EXEC_TIME - ui_mux_run_time;
 
-  	
   	--constrain how time progresses
   	assert time = 0.0 -> true;
   	assert time >= 0.0 and (true -> time > pre(time));
@@ -293,9 +291,7 @@ process implementation main.i
   	    AGREE_LIB.min_if(pre(ui_mux_clock), pre(ui_mux_finishes),
   	    AGREE_LIB.min(pre(time_of_next_control), 
   	    AGREE_LIB.min(pre(time_of_next_can), pre(time_of_next_ppm))))))));
-
-  	
-  	       
+    
   	--runtime constraints
   	assert true -> pre(control_clock) and control_run_time < CONTROL_EXEC_TIME => control_clock;
   	assert true -> pre(control_law_clock) and control_law_run_time < CONTROL_LAW_EXEC_TIME => control_law_clock;
@@ -309,9 +305,6 @@ process implementation main.i
   	assert true -> pre(control_law_clock) and time = control_law_finishes => not control_law_clock;
   	assert true -> pre(ui_mux_clock) and time = ui_mux_finishes => not ui_mux_clock;
   
-  	
-  	       
-  	
   	--nodes to compute the rising and falling edges of the clock       
   	node rise (clock : bool) returns (ret : bool);
   	let
@@ -322,7 +315,51 @@ process implementation main.i
   	let
   	  ret = false -> pre(clock) and not clock;
   	tel;
+  	
+  	-------------- BEGIN LEMMAS ABOUT SCHEDULABILITY -------------
+  	
+  	--these lemmas about runtime
+  	lemma "control runtime is bounded" :
+  	  0.0 <= control_run_time and control_run_time <= CONTROL_EXEC_TIME;
+  	  
+  	lemma "ppm runtime is bounded" :
+  	  0.0 <= ppm_run_time and ppm_run_time <= PPM_EXEC_TIME;
+  	  
+  	lemma "can runtime is bounded" :
+  	  0.0 <= can_run_time and can_run_time <= CAN_EXEC_TIME;
+  	  
+  	lemma "control_law runtime is bounded" :
+  	  0.0 <= control_law_run_time and control_law_run_time <= CONTROL_LAW_EXEC_TIME;
+  	  
+  	lemma "ui_mux runtime is bounded" :
+  	  0.0 <= ui_mux_run_time and ui_mux_run_time <= UI_MUX_EXEC_TIME;
+  	
 
+  	eq last_control_finished : real = -1.0 * CONTROL_EXEC_TIME ->
+  	  if fall(control_clock) then time else pre(last_control_finished);
+  	  
+  	eq last_control_scheduled : real = 0.0 ->
+  	  if time_of_next_control != pre(time_of_next_control) then
+  	    pre(time_of_next_control)
+  	  else
+  	    pre(last_control_scheduled);
+  	    
+  	lemma "last_control_finished less than or equal to time" : 
+  	  last_control_finished <= time;
+  	  
+  	lemma "last_control_scheduled and finished greater than exec time" : 
+  	  abs(last_control_scheduled - last_control_finished) >= CONTROL_EXEC_TIME;
+  	
+  	lemma "control scheduled if last finished less than last scheduled" :
+  	  last_control_finished < last_control_scheduled => control_scheduled or control_clock;
+  	  
+  	lemma "control task meets its deadline" : true ->
+  	  pre(last_control_scheduled) != last_control_scheduled => last_control_finished > pre(last_control_scheduled);
+
+    node abs(n : real) returns (ret : real);
+    let
+      ret = if n < 0.0 then -1.0 * n else n;
+    tel;
 
   **};
   
@@ -506,11 +543,9 @@ thread ppm_t
   	initially:
   	  not (event(user_input) or event(control_law_out));
 
---  	guarantee "events generated simultaneously" :
---  	  event(user_input) = event(control_law_out) and
---  	  event(user_input) = event(flight_command);
-
-    guarantee "always output for testing" : event(user_input);
+  	guarantee "events generated simultaneously" :
+  	  event(user_input) = event(control_law_out) and
+  	  event(user_input) = event(flight_command);
   	  
   	guarantee "no ambiguous user_input_selects" :
   	  not control_law_out.set_ui_ppm and control_law_out.set_ui_mavlink and

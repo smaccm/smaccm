@@ -265,6 +265,10 @@ public class AgreeMenuListener implements IMenuListener {
                         printHLine(out, cex.getLength());
 
                         for (Signal<Value> signal : cex.getCategorySignals(layout, category)) {
+                            //dont' print out values for properties
+                            if(signal.getName().contains(":")){
+                                continue;
+                            }
                             out.print(String.format("%-60s", "{" + signal.getName() + "}"));
                             for (int k = 0; k < cex.getLength(); k++) {
                                 Value val = signal.getValue(k);
