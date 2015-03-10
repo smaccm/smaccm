@@ -37,6 +37,7 @@ import org.osate.aadl2.ComponentImplementation;
 import org.osate.aadl2.ComponentType;
 import org.osate.aadl2.Subcomponent;
 import org.osate.aadl2.instance.ComponentInstance;
+import org.osate.aadl2.instance.FeatureInstance;
 import org.osate.annexsupport.AnnexUtil;
 
 import com.rockwellcollins.atc.agree.agree.AgreeContractSubclause;
@@ -703,6 +704,10 @@ public class AgreeGenerator {
 		for(Entry<String, EObject> entry : subState.refMap.entrySet()){
 			String newName = prefix+entry.getKey();
 			state.refMap.put(newName, entry.getValue());
+		}
+		for(Entry<String, FeatureInstance> entry : subState.featInstMap.entrySet()){
+		    String newName = prefix+entry.getKey();
+		    state.featInstMap.put(newName, entry.getValue());
 		}
 	}
 
