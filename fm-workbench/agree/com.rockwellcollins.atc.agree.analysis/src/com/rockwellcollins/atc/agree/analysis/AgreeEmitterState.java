@@ -115,6 +115,7 @@ public class AgreeEmitterState  extends AgreeSwitch<Expr> {
     
     //reference map used for hyperlinking from the console
     public final Map<String, EObject> refMap = new HashMap<>();
+    public final Map<String, FeatureInstance> featInstMap = new HashMap<>();
     public final Map<NamedElement, String> typeMap = new HashMap<>();
     
     //keeps track of new variables
@@ -130,9 +131,6 @@ public class AgreeEmitterState  extends AgreeSwitch<Expr> {
     public List<MNSynchronyElement> mnSyncEls = new ArrayList<>();
     public boolean simultaneity = true;
     public boolean latchedClocks = false;
-    //this variable will be set by the generator
-	public boolean connectionExpressionsSet = false;
-
     public final String clockIDSuffix = "___CLOCK_";
     public final String eventSuffix = "___EVENT_";
     

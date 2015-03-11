@@ -37,6 +37,7 @@ import org.osate.aadl2.ComponentImplementation;
 import org.osate.aadl2.ComponentType;
 import org.osate.aadl2.Subcomponent;
 import org.osate.aadl2.instance.ComponentInstance;
+import org.osate.aadl2.instance.FeatureInstance;
 import org.osate.annexsupport.AnnexUtil;
 
 import com.rockwellcollins.atc.agree.agree.AgreeContractSubclause;
@@ -414,9 +415,14 @@ public class AgreeGenerator {
         if(compImpl == null){
         	throw new AgreeException("No implementation to verify");
         }
-        
-        ConnectionUtils.recordConnections(state);
+
         doSwitchAgreeAnnex(state, compImpl);
+        
+        //note that doSwitch needs to be called on the annex of
+        //the implementation before the connections are recorded
+        //this is only becaus the semantics of event ports changes
+        //depending on if you are doing "asynchronous" or "latched" analysis
+        ConnectionUtils.recordConnections(state);
 
         List<String> ordering = new ArrayList<>();
         //go through the component implementation and build a program for each subcomponent
@@ -703,6 +709,10 @@ public class AgreeGenerator {
 		for(Entry<String, EObject> entry : subState.refMap.entrySet()){
 			String newName = prefix+entry.getKey();
 			state.refMap.put(newName, entry.getValue());
+		}
+		for(Entry<String, FeatureInstance> entry : subState.featInstMap.entrySet()){
+		    String newName = prefix+entry.getKey();
+		    state.featInstMap.put(newName, entry.getValue());
 		}
 	}
 
