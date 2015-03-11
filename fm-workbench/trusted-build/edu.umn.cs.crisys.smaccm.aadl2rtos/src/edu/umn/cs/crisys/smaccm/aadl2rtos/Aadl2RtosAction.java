@@ -25,6 +25,7 @@ import java.io.File;
 import java.util.List;
 //import java.util.Map;
 
+
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -99,6 +100,7 @@ public class Aadl2RtosAction extends AadlAction {
 			}
 
 			// Now harvest the stuff we need from the OSATE AST.
+		  
 			Model model = new Model(sysimpl.getName(), si.getName());
 			
 			// AadlModelParser initializes the Model class from the OSATE hierarchy
@@ -120,6 +122,7 @@ public class Aadl2RtosAction extends AadlAction {
 			    outputDir.mkdirs(); 
 			  } else {
 			    outputDir = aadlDir;
+			    model.setOutputDirectory(aadlDir.getPath());
 			  }
       }
 			

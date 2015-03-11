@@ -9,6 +9,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URISyntaxException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -48,6 +50,7 @@ public class CAmkES_CodeGenerator {
 	private File componentsDirectory;
 	private File interfacesDirectory;
 	private File includeDirectory;
+	private File makeTemplateDirectory; 
 	private String date;
 	private STErrorListener listener; 
   private File pluginDirectory;
@@ -76,14 +79,18 @@ public class CAmkES_CodeGenerator {
 		
 		//templates.registerRenderer(Type.class, new C_Type_Renderer());
 
-		// Create component directory
+		// Create directories
 		componentsDirectory = 
 		    new File(outputDirectory, "components");
 		
 		includeDirectory = 
 		    new File(outputDirectory, "include");
 		includeDirectory.mkdirs();
-		
+
+    makeTemplateDirectory = 
+        new File(outputDirectory, "make_template");
+    makeTemplateDirectory.mkdirs();
+
 		interfacesDirectory = 
 		    new File(outputDirectory, "interfaces");
 		interfacesDirectory.mkdirs();
@@ -636,6 +643,72 @@ public class CAmkES_CodeGenerator {
     }
   }
 	
+	public void createTemplateMakefile() throws Aadl2RtosFailure {
+    ModelNames mn = new ModelNames(model); 
+    String sysInstanceName = model.getSystemInstanceName(); 
+
+    File HFile = new File(makeTemplateDirectory, "Makefile");
+    String path = HFile.getAbsolutePath();
+    try (BufferedWriter hwriter = new BufferedWriter(new FileWriter(HFile))) { 
+      STGroupFile stg = this.createTemplate("CamkesMakefile.stg");
+      writeBoilerplateHeader(sysInstanceName, path, hwriter, stg.getInstanceOf("camkesMakefilePrefix"));
+
+      ST st = stg.getInstanceOf("camkesMakefileBody");
+      st.add("model", mn);
+      
+      hwriter.append(st.render());
+      writeBoilerplateFooter(sysInstanceName, "unused", hwriter, stg.getInstanceOf("camkesMakefilePostfix"));
+
+    } catch (IOException e) {
+      log.error("IOException occurred during CAmkES write: " + e);
+      throw new Aadl2RtosFailure();
+    }
+	  
+	}
+
+	private String getLastDir() throws Aadl2RtosFailure {
+	  String outputDir = model.getOutputDirectory(); 
+	  if (outputDir == null) {
+	    log.warn("No output directory specified: setting Makefile path to system impl name.");
+	    return model.getSystemImplementationName();
+	  } else {
+	    Path p = Paths.get(outputDir); 
+	    return p.getName(p.getNameCount() - 1).toString();
+	  }
+	}
+	
+  public void createTemplateKbuild() throws Aadl2RtosFailure {
+    File HFile = new File(makeTemplateDirectory, "Kbuild");
+    try (BufferedWriter hwriter = new BufferedWriter(new FileWriter(HFile))) { 
+      STGroupFile stg = this.createTemplate("CamkesMakefile.stg");
+      String name = getLastDir(); 
+      String CapName = name.toUpperCase();
+      ST st = stg.getInstanceOf("camkesKbuild");
+      st.add("name", name);
+      st.add("CapName", CapName);
+      hwriter.append(st.render());
+    } catch (IOException e) {
+      log.error("IOException occurred during CAmkES write: " + e);
+      throw new Aadl2RtosFailure();
+    }
+  }
+
+  public void createTemplateKconfig() throws Aadl2RtosFailure {
+    File HFile = new File(makeTemplateDirectory, "Kconfig");
+    try (BufferedWriter hwriter = new BufferedWriter(new FileWriter(HFile))) { 
+      STGroupFile stg = this.createTemplate("CamkesMakefile.stg");
+      String name = getLastDir(); 
+      String CapName = name.toUpperCase();
+      ST st = stg.getInstanceOf("camkesKconfig");
+      st.add("name", name);
+      st.add("CapName", CapName);
+      hwriter.append(st.render());
+    } catch (IOException e) {
+      log.error("IOException occurred during CAmkES write: " + e);
+      throw new Aadl2RtosFailure();
+    }
+  }
+  
 	public void write() throws Aadl2RtosFailure {
 	  createTypesHeader();
     createReadWriteIdlInterfaces();
@@ -643,6 +716,9 @@ public class CAmkES_CodeGenerator {
     createSharedVariableIdlInterfaces();
     createComponents();
     createAssembly(); 
+    createTemplateMakefile(); 
+    createTemplateKconfig(); 
+    createTemplateKbuild();
 	}
 }
 
