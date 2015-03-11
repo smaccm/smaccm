@@ -110,7 +110,7 @@ import "../../interfaces/<threadImpl.idlFileName>";
 component <threadImpl.componentName> {
 <if(threadImpl.isActive)><\\>
 	control;
-    has mutex <threadImpl.dispatcherComponentMutexName>;
+    has semaphore <threadImpl.dispatcherComponentSemaphoreName>;
 
 	// references to other active thread send interfaces from passive
 	// thread region controlled by active thread (if any)

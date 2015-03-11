@@ -31,7 +31,7 @@ public class CAmkESSystemPrimitives implements IOperatingSystemPrimitives {
   public String signalDispatcherProc(ThreadInstancePort tip) {
     ThreadImplementationNames tin = 
         new ThreadImplementationNames(tip.getThreadInstance().getThreadImplementation());
-    return tin.getDispatcherComponentMutexName();
+    return tin.getDispatcherComponentSemaphoreName();
   }
   
 }

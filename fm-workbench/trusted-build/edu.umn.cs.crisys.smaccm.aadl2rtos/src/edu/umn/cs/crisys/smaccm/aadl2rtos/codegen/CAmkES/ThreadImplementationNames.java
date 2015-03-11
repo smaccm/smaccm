@@ -279,11 +279,11 @@ public class ThreadImplementationNames {
   //////////////////////////////////////////////////////////
   
   public String getDispatcherLockStmt() {
-    return getDispatcherComponentMutexName() + "_lock();\n";
+    return getDispatcherComponentSemaphoreName() + "_wait();\n";
   }
   
   public String getDispatcherUnlockStmt() {
-    return getDispatcherComponentMutexName() + "_unlock();\n";
+    return getDispatcherComponentSemaphoreName() + "_post();\n";
   }
 
   //////////////////////////////////////////////////////////
@@ -324,8 +324,8 @@ public class ThreadImplementationNames {
     return ti.getNormalizedName();
   }    
   
-  public String getDispatcherComponentMutexName() {
-    return "smaccm_dispatch_mutex"; 
+  public String getDispatcherComponentSemaphoreName() {
+    return "smaccm_dispatch_sem"; 
   }
   
   public String getInterfaceInstanceName() {

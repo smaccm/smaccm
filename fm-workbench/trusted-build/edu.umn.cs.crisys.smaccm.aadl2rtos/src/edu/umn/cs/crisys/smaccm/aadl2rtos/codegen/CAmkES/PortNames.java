@@ -230,7 +230,7 @@ public class PortNames {
   }
 
   public String getMutex() {
-    return "smaccm_" + dp.getName() + "_mutex";
+    return "smaccm_" + dp.getName() + "_sem";
   }
   
   ////////////////////////////////////////////////////////////
