@@ -115,17 +115,21 @@ public class Aadl2RtosAction extends AadlAction {
 			if (aadlDir == null) {
 			  aadlDir = Util.getDirectory(sysimpl);
 			}
+
+			// for output directory: choose command line outputDir first, then 
+			// AADL property outputDir, then directory containing AADL file.
 			
-			if (outputDir == null) {
-			  if (model.getOutputDirectory() != null) {
-			    outputDir = new File(model.getOutputDirectory());
-			    outputDir.mkdirs(); 
-			  } else {
-			    outputDir = aadlDir;
-			    model.setOutputDirectory(aadlDir.getPath());
-			  }
-      }
-			
+			if (outputDir != null) {
+			  model.setOutputDirectory(outputDir.getPath());
+			}
+			else if (model.getOutputDirectory() != null) {
+			  outputDir = new File(model.getOutputDirectory());
+			} else {
+			  outputDir = aadlDir;
+			  model.setOutputDirectory(aadlDir.getPath());
+			}
+      outputDir.mkdirs(); 
+      
 			if (model.getOsTarget() == Model.OSTarget.eChronos) {
   			EChronos_CodeGenerator gen = new EChronos_CodeGenerator(log, model, outputDir);
   			gen.write();
