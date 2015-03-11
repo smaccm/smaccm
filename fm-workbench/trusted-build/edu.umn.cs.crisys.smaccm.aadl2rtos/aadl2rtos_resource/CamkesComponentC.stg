@@ -393,7 +393,7 @@ userEntrypointCallerAssignGlobals(dispatchContract) ::= <<
 
 userEntrypointCallerFn(dispatcher) ::= << 
 void <userEntrypointCallerFnName(dispatcher)>(<userEntrypointCallerFnArgs(dispatcher)>) {
-	<dispatcher.contracts:userEntrypointCallerAssignGlobals()>
+	<dispatcher.maxDispatchContracts.contracts:userEntrypointCallerAssignGlobals()>
 	<dispatcher.externalHandlers:userEntrypointCallerCall(dispatcher)>
 }	
 

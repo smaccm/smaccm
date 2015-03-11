@@ -67,7 +67,7 @@ public class OutgoingDispatchContract {
     return max;
   }
   
-  public static OutgoingDispatchContract usedDispatchers(List<OutgoingDispatchContract> dl) {
+  public static OutgoingDispatchContract maxUsedDispatchers(List<OutgoingDispatchContract> dl) {
     OutgoingDispatchContract max = maxDispatcherUse(dl); 
     Iterator<Map.Entry<OutputEventPort, Integer>> it = max.getContract().entrySet().iterator(); 
     while (it.hasNext()) {

@@ -21,12 +21,12 @@ public class C_Type_Writer {
 		// get the underlying type for the id. If it is a structured type,
 		// (which I expect) then emit a 'typedef struct'. Else emit a typedef.
 		StringBuffer typeName = new StringBuffer();
-		typeName.append("#ifndef " + ty.getTypeId() + "\n");
+//		typeName.append("#ifndef " + ty.getTypeId() + "\n");
 		typeName.append("typedef ");
 		typeName.append(ty.getTypeRef().getCType(indent).varString(ty.getTypeId()) + "; \n");
-		typeName.append("#else \n");
-		typeName.append("#warning Type: " + ty.getTypeId() + " is not being defined by AADL but by an external source. \n");
-		typeName.append("#endif \n \n");
+//		typeName.append("#else \n");
+//		typeName.append("#warning Type: " + ty.getTypeId() + " is not being defined by AADL but by an external source. \n");
+//		typeName.append("#endif \n \n");
 		out.append(typeName.toString());
 	}
 

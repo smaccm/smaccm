@@ -148,7 +148,7 @@ public class CAmkES_CodeGenerator {
     for (ThreadImplementation ti : model.getAllThreadImplementations()) {
       for (Dispatcher d : ti.getDispatcherList()) {
         OutgoingDispatchContract maxCalls = 
-           CGUtil.maxDispatcherUse(d.getDispatchLimits(), ti.getAllOutputEventPorts());
+           OutgoingDispatchContract.maxUsedDispatchers(d.getDispatchLimits());
         for (Map.Entry<OutputEventPort, Integer> entry : maxCalls.getContract().entrySet()) {
           if (entry.getKey().hasData()) {
             ArrayType dispatchArrayType = new ArrayType(entry.getKey().getType(), entry.getValue());
