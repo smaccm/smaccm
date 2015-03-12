@@ -25,7 +25,7 @@ process main
   	--use to represent the total time passed
   	--without receiving a can message until the 
   	--mode should be set to landing
-  	const total_landing_timeout : real = 800.0;
+  	const total_landing_timeout : real = 500.0;
   	
   	--bounds frequency for ppms to occur
   	const PPM_PERIOD : real = 100.0;
@@ -56,11 +56,11 @@ process main
   	guarantee "time is positive and increasing" :
   	  time >= 0.0 and (true -> time > pre(time));
   	
---  	guarantee "if time passes with no message then the mode is landing" :
---  	  was_armed => 
---  	    time - time_of_last_ppm > total_landing_timeout and
---  	    time - time_of_last_can > total_landing_timeout => 
---  	      control_mode = AGREE_CONSTS.LAND_MODE;
+  	guarantee "if time passes with no message then the mode is landing" :
+  	  was_armed => 
+  	    time - time_of_last_ppm > total_landing_timeout and
+  	    time - time_of_last_can > total_landing_timeout => 
+  	      control_mode = AGREE_CONSTS.LAND_MODE;
   	      
   	guarantee "if the controller is armed, then an armed signal in the past" : true;
   	
@@ -394,7 +394,7 @@ thread can_px4_t
 
   	--nothing is sent if can_data does not arrive.
   	guarantee "no can data" : no_ouput_events ->
-  	  not pre(event(mission_in)) => no_ouput_events;
+  	  not event(mission_in) => no_ouput_events;
   	
   **};
   
@@ -561,17 +561,24 @@ thread control_t
     
     annex agree {**
    
-      const LANDING_TIMEOUT : real = 100.0;
-   
       eq mode : int = control_law.flight_mode;
+	  eq execs_since_last_control_law : int = 
+	    if event(control_law) then
+	      0
+	    else
+	      prev(execs_since_last_control_law, 0) + 1;
   	  
   	  initially :
   	    mode = AGREE_CONSTS.DISARMED_MODE;
 
   	  assume "valid modes for control input":
+  	    event(control_law) =>
   	      control_law.armed_mode = AGREE_CONSTS.LAND_MODE or
   	      control_law.armed_mode = AGREE_CONSTS.ARMED_MODE or
   	      control_law.armed_mode = AGREE_CONSTS.DISARMED_MODE;
+  	      
+  	  guarantee "if we have not seen a control input for a while go in landing mode" :
+  	    execs_since_last_control_law >= 5 => mode = AGREE_CONSTS.LAND_MODE;
 
     **};
     
