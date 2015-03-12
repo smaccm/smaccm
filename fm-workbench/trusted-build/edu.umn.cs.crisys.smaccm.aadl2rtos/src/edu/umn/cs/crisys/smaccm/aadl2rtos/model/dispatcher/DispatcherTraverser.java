@@ -58,7 +58,7 @@ public class DispatcherTraverser {
     if (!visited.contains(d) && d.getOwner().getIsPassive()) {
       visited.add(d);
       OutgoingDispatchContract used = 
-          OutgoingDispatchContract.usedDispatchers(d.getDispatchLimits());
+          OutgoingDispatchContract.maxUsedDispatchers(d.getDispatchLimits());
       for (HashMap.Entry<OutputEventPort, Integer> elem : used.getContract().entrySet()) {
         for (PortConnection pc : elem.getKey().getConnections()) {
           // should be only output event ports, so connection should be to input event ports! 

@@ -335,7 +335,7 @@ eventDataDispatcher(dispatcher) ::= <<
 while (!<dispatcher.inputEventDispatcherPort.isEmptyFnCall>) {
 	<dispatcher.inputEventDispatcherPort.varDecl>;
 	<dispatcher.inputEventDispatcherPort.queueReadName>(<dispatcher.type.valToAadlOutput><dispatcher.inputEventDispatcherPort.name>);
-	<dispatcher.dispatcherCFileDispatcherFnName>(<dispatcher.type.valToAadlOutput><dispatcher.inputEventDispatcherPort.name>); 
+	<dispatcher.dispatcherCFileDispatcherFnName>(<dispatcher.type.valToAadlInput><dispatcher.inputEventDispatcherPort.name>); 
 }
 
 >>
@@ -393,7 +393,7 @@ userEntrypointCallerAssignGlobals(dispatchContract) ::= <<
 
 userEntrypointCallerFn(dispatcher) ::= << 
 void <userEntrypointCallerFnName(dispatcher)>(<userEntrypointCallerFnArgs(dispatcher)>) {
-	<dispatcher.contracts:userEntrypointCallerAssignGlobals()>
+	<dispatcher.maxDispatchContracts.contracts:userEntrypointCallerAssignGlobals()>
 	<dispatcher.externalHandlers:userEntrypointCallerCall(dispatcher)>
 }	
 
@@ -504,7 +504,7 @@ aadlDispatcherCallActiveTarget(portDest,portSrc) ::= <<
 >>
 
 aadlDispatcherSendLoop(dispatchContract,dispatcher) ::= <<
-for (smaccm_it = 0; smaccm_it \< <dispatchContract.port.index>; smaccm_it++) {
+for (smaccm_it = 0; smaccm_it \< <dispatchContract.port.index> && smaccm_it \< <dispatchContract.maxDispatchSize>; smaccm_it++) {
    <dispatchContract.passiveDispatchTargetList:aadlDispatcherCallPassiveTarget(dispatchContract.port)>
    <dispatchContract.activeDispatchTargetList:aadlDispatcherCallActiveTarget(dispatchContract.port)>
 }
@@ -539,6 +539,8 @@ void <dispatcher.dispatcherCFileDispatcherFnName>(<if(dispatcher.hasData)><dispa
 
 <if(dispatcher.dispatchableContracts)>
 	// call the aadl dispatchers for any generated output events.
+	// to prevent misuse by malicious clients, we ensure that the number 
+	// of dispatches is less than the maximum allowed dispatch count.
 	uint32_t smaccm_it; 
 	<dispatcher.dispatchableContracts:aadlDispatcherSendLoop(dispatcher)>
 <endif>

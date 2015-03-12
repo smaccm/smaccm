@@ -139,15 +139,6 @@ public class DispatcherNames {
     return odcNames;
   }
   
-  public List<DispatchContractNames> getContracts() {
-    OutgoingDispatchContract odc = 
-        OutgoingDispatchContract.maxDispatcherUse(dp.getDispatchLimits());
-    List<DispatchContractNames> pdl = new ArrayList<>(); 
-    for (Map.Entry<OutputEventPort, Integer> elem : odc.getContract().entrySet()) {
-      pdl.add(new DispatchContractNames(elem));
-    }
-    return pdl;
-  }
 
   public List<DispatchContractNames> getDispatchableContracts() {
     OutgoingDispatchContract odc = 
