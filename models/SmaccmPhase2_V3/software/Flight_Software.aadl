@@ -38,20 +38,20 @@ process main
 
   	  	
   	eq time_of_last_can : real = 
-  	  if event(mission_in) then time else prev(time_of_last_can, -1.0);
+  	  0.0 -> if event(mission_in) then time else pre(time_of_last_can);
   	
   	eq time_of_last_ppm : real =
-  	  if event(ppm_in) then time else prev(time_of_last_ppm, -1.0);    
+  	  0.0 -> if event(ppm_in) then time else pre(time_of_last_ppm);    
   	
   	eq was_armed : bool =  
   	  control_mode = AGREE_CONSTS.ARMED_MODE -> pre(was_armed) or control_mode = AGREE_CONSTS.ARMED_MODE;
   	
   	--assumptions about how often events can occur
   	assume "not frequent ppms" : true ->
-  	  time - time_of_last_ppm < PPM_PERIOD => not event(ppm_in);
+  	  time != time_of_last_ppm => time - time_of_last_ppm < PPM_PERIOD => not event(ppm_in);
   	  
   	assume "not frequent can" : true ->
-  	  time - time_of_last_can < CAN_PERIOD => not event(mission_in);
+  	  time != time_of_last_can => time - time_of_last_can < CAN_PERIOD => not event(mission_in);
   	
   	guarantee "time is positive and increasing" :
   	  time >= 0.0 and (true -> time > pre(time));
@@ -61,6 +61,10 @@ process main
   	    time - time_of_last_ppm > total_landing_timeout and
   	    time - time_of_last_can > total_landing_timeout => 
   	      control_mode = AGREE_CONSTS.LAND_MODE;
+  	      
+  	guarantee "time_of_last_ppm and time_of_last_can less than time (lemma for other property)":
+  	  time_of_last_ppm <= time and time_of_last_can <= time and
+  	  time_of_last_ppm >= 0.0 and time_of_last_can >= 0.0;
   	      
   	guarantee "if the controller is armed, then an armed signal in the past" : true;
   	
@@ -352,6 +356,11 @@ process implementation main.i
     let
       ret = if n < 0.0 then -1.0 * n else n;
     tel;
+    
+    
+    -------- LEMMAS TO PROVE OTHER GUARANTEES ---------
+    lemma "positive execs_since_control_law" : control.execs_since_last_control_law >= 0;
+    lemma "time of next control bound" : time_of_next_control <= time + CONTROL_PERIOD;
 
   **};
   
@@ -566,19 +575,21 @@ thread control_t
 	    if event(control_law) then
 	      0
 	    else
-	      prev(execs_since_last_control_law, 0) + 1;
+	      (0 -> pre(execs_since_last_control_law)) + 1;
   	  
   	  initially :
-  	    mode = AGREE_CONSTS.DISARMED_MODE;
+  	    mode = AGREE_CONSTS.DISARMED_MODE and
+  	    execs_since_last_control_law = 0;
 
-  	  assume "valid modes for control input":
-  	    event(control_law) =>
-  	      control_law.armed_mode = AGREE_CONSTS.LAND_MODE or
-  	      control_law.armed_mode = AGREE_CONSTS.ARMED_MODE or
-  	      control_law.armed_mode = AGREE_CONSTS.DISARMED_MODE;
+--  	  assume "valid modes for control input":
+--  	    event(control_law) =>
+--  	      control_law.armed_mode = AGREE_CONSTS.LAND_MODE or
+--  	      control_law.armed_mode = AGREE_CONSTS.ARMED_MODE or
+--  	      control_law.armed_mode = AGREE_CONSTS.DISARMED_MODE;
   	      
   	  guarantee "if we have not seen a control input for a while go in landing mode" :
-  	    execs_since_last_control_law >= 5 => mode = AGREE_CONSTS.LAND_MODE;
+  	    execs_since_last_control_law >= 2 => mode = AGREE_CONSTS.LAND_MODE;
+  	    
 
     **};
     

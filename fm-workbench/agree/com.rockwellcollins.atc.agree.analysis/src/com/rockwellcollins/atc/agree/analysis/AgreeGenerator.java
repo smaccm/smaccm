@@ -624,8 +624,17 @@ public class AgreeGenerator {
 	}
 
     private static void addAssumeGuaranteesLemmaNodeProps(String prefix,
-            AgreeEmitterState state, AgreeEmitterState subState, IdExpr clockId) {
+            AgreeEmitterState state, AgreeEmitterState subState, Expr clockId) {
         int i = 0;
+        
+        if(state.latchedClocks){
+            //change the clock to only be high on the falling edge
+            Expr fallingEdge = new UnaryExpr(UnaryOp.NOT, clockId);
+            fallingEdge = new BinaryExpr(new UnaryExpr(UnaryOp.PRE, clockId), BinaryOp.AND, fallingEdge);
+            fallingEdge = new BinaryExpr(new BoolExpr(false), BinaryOp.ARROW, fallingEdge);
+            clockId = fallingEdge;
+        }
+        
         for(Equation guarEq : subState.guarExpressions){
             state.inputVars.add(new AgreeVarDecl(prefix+nodeGuarName+i++, NamedType.BOOL));
         }
