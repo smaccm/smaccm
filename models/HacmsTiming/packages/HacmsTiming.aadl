@@ -38,7 +38,7 @@ system M1
   	 eq input_hold : int = if event(input) then input else prev(input, 0);
   	 
   	 guarantee "output behavior" : output = input_hold;
-  	 
+  	  
   	 guarantee "pass events" : event(output) = event(input);
   	 
   	

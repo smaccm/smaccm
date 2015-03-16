@@ -376,27 +376,13 @@ public class AgreeScopeProvider extends
             for (Element el : component.getAllFeatures()) {
                 result.add(el);
             }
-            //get any equation statements from any annex in the component type
+            //if the classifier is a component implementation, get all the elements
+            //from the implementation as well as the type
             if(component instanceof ComponentImplementation){
+                getAllAgreeElements(result, component);
             	component = ((ComponentImplementation)component).getType();
             }
-            
-            for (AnnexSubclause subclause : AnnexUtil.getAllAnnexSubclauses(component, AgreePackage.eINSTANCE.getAgreeContractSubclause())) {
-                if (subclause instanceof AgreeContractSubclause) {
-                    AgreeContractSubclause agreeSubclause = (AgreeContractSubclause)subclause;
-                    AgreeContract contract = (AgreeContract)agreeSubclause.getContract();
-                    for(SpecStatement spec : contract.getSpecs()){
-                    	if(spec instanceof EqStatement){
-                    		EqStatement eqStat = (EqStatement)spec;
-                    		for(Arg arg : eqStat.getLhs()){
-                    			result.add(arg);
-                    		}
-                    	}else if(spec instanceof ConstStatement){
-                    		result.add(spec);
-                    	}
-                    }
-                }
-            }
+            getAllAgreeElements(result, component);
             
         }else if(container instanceof AadlPackage){
         	AadlPackage aadlPack = (AadlPackage)container;
@@ -430,6 +416,16 @@ public class AgreeScopeProvider extends
         }
 
         return result;
+    }
+
+    private void getAllAgreeElements(Set<Element> result, Classifier component) {
+        for (AnnexSubclause subclause : AnnexUtil.getAllAnnexSubclauses(component, AgreePackage.eINSTANCE.getAgreeContractSubclause())) {
+            if (subclause instanceof AgreeContractSubclause) {
+                AgreeContractSubclause agreeSubclause = (AgreeContractSubclause)subclause;
+                AgreeContract contract = (AgreeContract)agreeSubclause.getContract();
+                result.addAll(getAllElementsFromSpecs(contract.getSpecs()));
+            }
+        }
     }
 
 }

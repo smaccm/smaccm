@@ -11,6 +11,9 @@ system software
     enc_mavlink_out : out event data port software_types::EncryptMAVLink;
     
   annex agree {**
+  		
+  	eq time : real;
+  	
   	guarantee "if no message is received on the mavlink then nothing is passed to the mission board" : true;
   	
   	guarantee "if messasage fails to decrypt then nothing is sent to the mission board" : true;
@@ -53,6 +56,86 @@ system implementation software.i
     
   properties
     SMACCM::OS => "seL4";
+    
+  annex agree {**
+  		
+  	synchrony : asynchronous;
+  	
+  	const DECRYPT_EXEC_TIME : real = 5.0;
+  	const ENCRYPT_EXEC_TIME : real = 5.0;
+  	const NAV_EXEC_TIME : real = 5.0;
+  	const MAVLINK_EXEC_TIME : real = 5.0;
+  	const CAN_EXEC_TIME : real = 5.0;
+  	const TRANSMIT_EXEC_TIME : real = 5.0;
+  	const RECEIVE_EXEC_TIME : real = 5.0;
+  	
+  	const RECEIVE_PERIOD : real = 50.0;
+  	
+  	eq decrypt_clock : bool = decrypt._CLK;
+  	eq encrypt_clock : bool = encrypt._CLK;
+  	eq nav_clock : bool = nav._CLK;
+  	eq mavlink_clock : bool = mavlink._CLK;
+  	eq can_clock : bool = can._CLK;
+  	eq transmit_clock : bool = transmit._CLK;
+  	eq receive_clock : bool = receive._CLK;
+  	
+  	--assert that no one can preempt
+  	assert decrypt_clock =>
+  	  not (rise(encrypt_clock) or rise(nav_clock) or rise(mavlink_clock) or
+  	  	   rise(can_clock) or rise(transmit_clock) or rise(receive_clock));
+  	
+  	assert encrypt_clock =>
+  	  not (rise(decrypt_clock) or rise(nav_clock) or rise(mavlink_clock) or
+  	  	   rise(can_clock) or rise(transmit_clock) or rise(receive_clock));
+  	
+  	assert nav_clock =>
+  	  not (rise(encrypt_clock) or rise(decrypt_clock) or rise(mavlink_clock) or
+  	  	   rise(can_clock) or rise(transmit_clock) or rise(receive_clock));
+  	
+  	assert mavlink_clock =>
+  	  not (rise(encrypt_clock) or rise(nav_clock) or rise(decrypt_clock) or
+  	  	   rise(can_clock) or rise(transmit_clock) or rise(receive_clock));
+  	
+  	assert can_clock =>
+  	  not (rise(encrypt_clock) or rise(nav_clock) or rise(mavlink_clock) or
+  	  	   rise(decrypt_clock) or rise(transmit_clock) or rise(receive_clock));
+  	
+  	assert transmit_clock =>
+  	  not (rise(encrypt_clock) or rise(nav_clock) or rise(mavlink_clock) or
+  	  	   rise(can_clock) or rise(decrypt_clock) or rise(receive_clock));
+  	  	   
+  	--assert that a thread only begins computation if it is scheduled or 
+  	--event driven to do so
+  	assert rise(receive_clock) => receive_scheduled;
+  	assert rise(decrypt_clock) => event(decrypt.enc_mavlink);
+  	
+  	
+  	eq time_of_next_receive : real = RECEIVE_PERIOD ->
+  	  if time < pre(time_of_next_receive) then
+  	    pre(time_of_next_receive)
+  	  else
+  	    pre(time_of_next_receive) + RECEIVE_PERIOD;
+  	
+  	eq receive_scheduled : bool = true ->
+  	  if time = pre(time_of_next_receive) then
+  	    true
+  	  else if pre(receive_clock) then
+  	    false
+  	  else
+  	    pre(receive_scheduled);
+  	  	   
+  	node rise (clock : bool) returns (ret : bool);
+  	let
+  	  ret = clock -> not pre(clock) and clock;
+  	tel;
+  	
+  	node fall (clock : bool) returns (ret : bool);
+  	let
+  	  ret = false -> pre(clock) and not clock;
+  	tel;
+  	
+  **};
+    
 end software.i;
 
 process decrypt_t
