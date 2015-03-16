@@ -1,0 +1,6 @@
+config APP_SWITCHBASEDCOMM
+    bool "AADL Model where clients communicate through a switch."
+    default n
+    select APP_CAMKES_EXECUTIVE
+    help
+        AADL Model where clients communicate through a switch.
