@@ -19,7 +19,6 @@
 		<module>../../agree/com.rockwellcollins.atc.agree</module>
 		<module>../../agree/com.rockwellcollins.atc.agree.analysis</module>
 		<module>../../agree/com.rockwellcollins.atc.agree.feature</module>
-		<module>../../agree/com.rockwellcollins.atc.agree.source.feature</module>
 		<module>../../agree/com.rockwellcollins.atc.agree.ui</module>
 		<module>../../resolute/com.rockwellcollins.atc.resolute</module>
 		<module>../../resolute/com.rockwellcollins.atc.resolute.analysis</module>
@@ -28,6 +27,7 @@
 		<module>../../resolute/com.rockwellcollins.atc.resolute.schedule.analysis</module>
 		<module>../../resolute/com.rockwellcollins.atc.resolute.source.feature</module>
 		<module>../../resolute/com.rockwellcollins.atc.resolute.ui</module>
+		<module>../../agree/com.rockwellcollins.atc.agree.source.feature</module>
 	</modules>
 
 	<profiles>
