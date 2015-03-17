@@ -13,15 +13,32 @@ public
     features
       radio_access_915Mhz: requires bus access UAS::RF_Spectrum.RF_915MHz; 
       radio_access_2_4Ghz: requires bus access UAS::RF_Spectrum.RF_2_4GHz;
-      mavlink_in : in data port software_types::EncryptMAVLink;
-      mavlink_out : out data port software_types::EncryptMAVLink;
+      mavlink_in : in event data port software_types::EncryptMAVLink;
+      mavlink_out : out event data port software_types::EncryptMAVLink;
       ppm_commands: in event data port software_types::Flight_Control_Commands.i;
       
     annex agree {**
+    		
+      const TOTAL_LANDING_TIMEOUT : real = 500.0;
+      const MAVLINK_TO_CAN_LATENCY_BOUND : real = 300.0;
+      
+      eq time : real;
+  	  eq control_mode : int;
+  	  
+  	  eq last_mavlink_received_time : real =
+  	    if event(mavlink_in) then time else prev(last_mavlink_received_time, -1.0);
+  	  
+  	  eq time_of_last_ppm : real =
+  	    0.0 -> if event(ppm_commands) then time else pre(time_of_last_ppm);
     	
-    	guarantee "if no ppm or mavlink commands are received then then vehicle is in landing mode" : true;
+      guarantee "if no ppm or mavlink commands are received then then vehicle is in landing mode" : true;
     	
-    	guarantee "if no ppm message is received and mavlink fails to decrypt then landing mode" : true;
+      guarantee "if no ppm message is received and mavlink fails to decrypt then landing mode" : true;
+    	
+      guarantee "if no mavlink is received for a certain timeout than the vehicle is in land mode" : 
+        time - last_mavlink_received_time > MAVLINK_TO_CAN_LATENCY_BOUND and
+        time - time_of_last_ppm > TOTAL_LANDING_TIMEOUT 
+          => control_mode = AGREE_CONSTS.LAND_MODE;
     	
     **};
   end UAV;
@@ -59,6 +76,17 @@ public
       Actual_Connection_Binding => (reference (can_bus)) applies to conn_mission1;
       Actual_Memory_Binding => (reference (ODROID_XU)) applies to MSW;
       Actual_Memory_Binding => (reference (PIXHAWK.MC.FLASH)) applies to FSW;
+      
+      
+    annex agree {**    		
+    		
+    	assert control_mode = FSW.control_mode;
+    	assert FSW.time = time;
+    	assert MSW.time = time;
+    	
+    	assert time = 0.0 -> true;
+    	assert time >= 0.0 and (true -> time >= pre(time));
+    **};
       
   end UAV.Impl;
 

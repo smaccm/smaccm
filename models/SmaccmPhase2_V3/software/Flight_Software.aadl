@@ -25,7 +25,7 @@ process main
   	--use to represent the total time passed
   	--without receiving a can message until the 
   	--mode should be set to landing
-  	const total_landing_timeout : real = 500.0;
+  	const TOTAL_LANDING_TIMEOUT : real = 500.0;
   	
   	--bounds frequency for ppms to occur
   	const PPM_PERIOD : real = 100.0;
@@ -48,18 +48,18 @@ process main
   	
   	--assumptions about how often events can occur
   	assume "not frequent ppms" : true ->
-  	  time != time_of_last_ppm => time - time_of_last_ppm < PPM_PERIOD => not event(ppm_in);
+  	 time - pre(time_of_last_ppm) < PPM_PERIOD => not event(ppm_in);
   	  
   	assume "not frequent can" : true ->
-  	  time != time_of_last_can => time - time_of_last_can < CAN_PERIOD => not event(mission_in);
+  	 time - pre(time_of_last_can) < CAN_PERIOD => not event(mission_in);
   	
   	guarantee "time is positive and increasing" :
   	  time >= 0.0 and (true -> time > pre(time));
   	
   	guarantee "if time passes with no message then the mode is landing" :
   	  was_armed => 
-  	    time - time_of_last_ppm > total_landing_timeout and
-  	    time - time_of_last_can > total_landing_timeout => 
+  	    time - time_of_last_ppm > TOTAL_LANDING_TIMEOUT and
+  	    time - time_of_last_can > TOTAL_LANDING_TIMEOUT => 
   	      control_mode = AGREE_CONSTS.LAND_MODE;
   	      
   	guarantee "time_of_last_ppm and time_of_last_can less than time (lemma for other property)":
@@ -403,7 +403,8 @@ thread can_px4_t
 
   	--nothing is sent if can_data does not arrive.
   	guarantee "no can data" : no_ouput_events ->
-  	  not event(mission_in) => no_ouput_events;
+  	  event(nav_control_law) or event(mav_control_law) or
+  	  event(mav_user_input) or event(waypoints) => event(mission_in);
   	
   **};
   

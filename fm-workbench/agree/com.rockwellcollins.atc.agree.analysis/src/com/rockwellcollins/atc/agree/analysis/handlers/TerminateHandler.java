@@ -21,7 +21,9 @@ public class TerminateHandler extends AbstractHandler {
     public Object execute(ExecutionEvent event) {
 //        monitor.setCanceled(true);
         JKindResult result = queue.peek();
-        result.cancel();
+        if(result != null){
+            result.cancel();
+        }
         return null;
     }
 }
