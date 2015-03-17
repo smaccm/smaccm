@@ -1,0 +1,6 @@
+config APP_PINGTWINS
+    bool "AADL Model where one active thread pings two passive threads simultaneously."
+    default n
+    select APP_CAMKES_EXECUTIVE
+    help
+    	AADL Model where one active thread pings two passive threads simultaneously.
