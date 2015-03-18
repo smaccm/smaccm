@@ -41,7 +41,12 @@ public class FeatureUtils {
 	}
 	private static void addFeatureInputsOutputs(AgreeEmitterState state, List<AgreeFeature> featList, boolean fSubcomponent) {
 		for(AgreeFeature agreeFeat : featList){
-			AgreeVarDecl varDecl = new AgreeVarDecl(agreeFeat.lustreString, agreeFeat.varType);
+		    AgreeVarDecl varDecl;
+		    if(agreeFeat.varType == null){
+		        varDecl = null;
+		    }else{
+		        varDecl = new AgreeVarDecl(agreeFeat.lustreString, agreeFeat.varType);
+		    }
 			String eventStr = null;
 			AgreeVarDecl eventDecl = null;
 			if(agreeFeat.connType == ConnType.EVENT){
@@ -50,13 +55,17 @@ public class FeatureUtils {
 			}
 			switch(agreeFeat.direction){
 			case IN:
-				state.inputVars.add(varDecl);
-				if(eventStr != null){
-					state.inputVars.add(eventDecl);
+			    if(varDecl != null){
+			        state.inputVars.add(varDecl);
+			    }
+			    if(eventStr != null){
+			        state.inputVars.add(eventDecl);
 				}
 				break;
 			case OUT:
-				state.outputVars.add(varDecl);
+			    if(varDecl != null){
+			        state.outputVars.add(varDecl);
+			    }
 				if(eventStr != null){
 					state.outputVars.add(eventDecl);
 				}
@@ -154,11 +163,18 @@ public class FeatureUtils {
 		agreeConn.connType = connType;
 		agreeConn.direction = direction;
 		agreeConn.queueSize = queueSize;
-		agreeConn.initState = AgreeStateUtils.getInitialType(agreeConn.varType.toString(), state.typeExpressions);
+		if(agreeConn.varType != null){
+		    agreeConn.initState = AgreeStateUtils.getInitialType(agreeConn.varType.toString(), state.typeExpressions);
+		}else{
+		    agreeConn.initState = null;
+		}
 		agreeConns.add(agreeConn);
 	}
 
 	private static NamedType getNamedType(String name){
+	    if(name == null){
+	        return null;
+	    }
 		switch(name){
 		case "bool":
 			return NamedType.BOOL;

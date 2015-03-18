@@ -137,7 +137,12 @@ public class ConnectionUtils {
 		for(i = 0; i < destConns.size(); i++){
 			AgreeFeature agreeDestConn = destConns.get(i);
 			AgreeFeature agreeSourConn = sourConns.get(i);
-			if(!agreeDestConn.varType.equals(agreeSourConn.varType)){
+			if(agreeDestConn.varType == null || agreeSourConn.varType == null){
+			    if(agreeDestConn.varType != agreeSourConn.varType){
+			        throw new AgreeException("Either variable: '"+agreeDestConn.lustreString.replace("__", ".")+
+	                        "' or '"+agreeSourConn.lustreString.replace("__", ".")+"' is reasoned about by AGREE and the other is not.");
+			    }
+			}else if(!agreeDestConn.varType.equals(agreeSourConn.varType)){
 				throw new AgreeException("Variables: '"+agreeDestConn.lustreString.replace("__", ".")+
 						"' and '"+agreeSourConn.lustreString.replace("__", ".")+"' are of different types");
 			}
@@ -200,14 +205,17 @@ public class ConnectionUtils {
 			    }
 			}
 			
-			if(delayed){
-			    Expr connExpr = new UnaryExpr(UnaryOp.PRE, new IdExpr(rhsLustreName));
-			    connExpr = new BinaryExpr(agreeSourConn.initState, BinaryOp.ARROW, connExpr);
-			    connEq = new Equation(new IdExpr(lhsLustreName), connExpr);
-			}else{
-			    connEq = new Equation(new IdExpr(lhsLustreName), new IdExpr(rhsLustreName));
+			if(agreeDestConn.varType != null && agreeSourConn.varType != null){
+			    //we only make these connections of the features are reasoned about by agree
+			    if(delayed){
+			        Expr connExpr = new UnaryExpr(UnaryOp.PRE, new IdExpr(rhsLustreName));
+			        connExpr = new BinaryExpr(agreeSourConn.initState, BinaryOp.ARROW, connExpr);
+			        connEq = new Equation(new IdExpr(lhsLustreName), connExpr);
+			    }else{
+			        connEq = new Equation(new IdExpr(lhsLustreName), new IdExpr(rhsLustreName));
+			    }
+			    addConnection(state, connEq);
 			}
-			addConnection(state, connEq);
 			if(agreeDestConn.connType == ConnType.EVENT){
 				if(agreeSourConn.connType != ConnType.EVENT){
 					throw new AgreeException("The connection between variables '"

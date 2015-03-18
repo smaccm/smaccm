@@ -44,28 +44,33 @@ process main
   	eq time_of_last_ppm : real =
   	  0.0 -> if event(ppm_in) then time else pre(time_of_last_ppm);    
   	
-  	eq was_armed : bool =  
-  	  control_mode = AGREE_CONSTS.ARMED_MODE -> pre(was_armed) or control_mode = AGREE_CONSTS.ARMED_MODE;
   	
   	--assumptions about how often events can occur
-  	assume "not frequent ppms" : true ->
-  	 time - pre(time_of_last_ppm) < PPM_PERIOD => not event(ppm_in);
-  	  
-  	assume "not frequent can" : true ->
-  	 time - pre(time_of_last_can) < CAN_PERIOD => not event(mission_in);
+--  	assume "not frequent ppms" : true ->
+--  	 time - pre(time_of_last_ppm) < PPM_PERIOD => not event(ppm_in);
+--  	  
+--  	assume "not frequent can" : true ->
+--  	 time - pre(time_of_last_can) < CAN_PERIOD => not event(mission_in);
   	
   	guarantee "time is positive and increasing" :
   	  time >= 0.0 and (true -> time > pre(time));
+  	  
+  	guarantee "next time greater than current" :
+  	  next_time > time and (true -> pre(next_time) = time);
+  	  
+  	guarantee "time change bound" : next_time - time < 200.0;
   	
   	guarantee "if time passes with no message then the mode is landing" :
-  	  was_armed => 
   	    time - time_of_last_ppm > TOTAL_LANDING_TIMEOUT and
   	    time - time_of_last_can > TOTAL_LANDING_TIMEOUT => 
-  	      control_mode = AGREE_CONSTS.LAND_MODE;
+  	      control_mode = AGREE_CONSTS.LAND_MODE or control_mode = AGREE_CONSTS.DISARMED_MODE;
   	      
   	guarantee "time_of_last_ppm and time_of_last_can less than time (lemma for other property)":
   	  time_of_last_ppm <= time and time_of_last_can <= time and
   	  time_of_last_ppm >= 0.0 and time_of_last_can >= 0.0;
+  	  
+  	guarantee "time positive and increasing" :
+  	  	time = 0.0 -> true and time >= 0.0 and (true -> time > pre(time));
   	      
   	guarantee "if the controller is armed, then an armed signal in the past" : true;
   	
@@ -592,7 +597,7 @@ thread control_t
 --  	      control_law.armed_mode = AGREE_CONSTS.DISARMED_MODE;
   	      
   	  guarantee "if we have not seen a control input for a while go in landing mode" :
-  	    execs_since_last_control_law >= 2 => mode = AGREE_CONSTS.LAND_MODE;
+  	    mode != AGREE_CONSTS.DISARMED_MODE and execs_since_last_control_law >= 2 => mode = AGREE_CONSTS.LAND_MODE;
   	    
 
     **};

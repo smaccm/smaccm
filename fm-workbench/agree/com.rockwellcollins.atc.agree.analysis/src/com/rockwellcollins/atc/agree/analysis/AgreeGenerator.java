@@ -811,7 +811,7 @@ public class AgreeGenerator {
 
 		    NodeCallExpr nodeCall = new NodeCallExpr(subNode.id, callArgs);
 
-		    if(state.synchrony == 0 && state.calendar.size() == 0){
+		    if(state.synchrony == 0 && state.calendar.size() == 0 && !state.asynchClocks){
 		        clockExpr = new BoolExpr(true);
 		    }else{
 		        clockExpr = clockId;

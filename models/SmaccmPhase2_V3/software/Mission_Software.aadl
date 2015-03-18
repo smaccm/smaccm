@@ -36,6 +36,14 @@ system software
   	guarantee "if a message is sent to the flight board then it was received over mavlink" : 
   	  event(mission_out) => mavlink_received_within_bound;
   	
+  	guarantee "time positive and increasing" :
+  	  	time = 0.0 -> true and time >= 0.0 and (true -> time > pre(time));
+  	  	
+  	guarantee "next time greater than current" :
+  	  next_time > time and (true -> pre(next_time) = time);
+  	  
+    guarantee "time change bound" : next_time - time < 200.0;
+  	  
 --  	guarantee "if messasage fails to decrypt then nothing is sent to the mission board" : true;
   	
   **};

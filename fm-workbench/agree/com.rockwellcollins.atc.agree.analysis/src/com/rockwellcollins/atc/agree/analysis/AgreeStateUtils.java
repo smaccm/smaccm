@@ -193,7 +193,7 @@ public class AgreeStateUtils {
             } while (type != null);
     		AgreeLogger.logWarning("Reference to component type '"
     				+record.getName()+"' is not among the types reasoned about by AGREE");
-    		return "bool";
+    		return null;
     	}else if(record instanceof ComponentImplementation){
     		typeStr = record.getName();
     	}else{

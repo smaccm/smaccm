@@ -19,8 +19,8 @@ public
       
     annex agree {**
     		
-      const TOTAL_LANDING_TIMEOUT : real = 500.0;
-      const MAVLINK_TO_CAN_LATENCY_BOUND : real = 300.0;
+      const TOTAL_LANDING_TIMEOUT : real = 1500.0;
+      const MAVLINK_TO_CAN_LATENCY_BOUND : real = 1300.0;
       
       eq time : real;
   	  eq control_mode : int;
@@ -40,10 +40,10 @@ public
     	
       guarantee "if no ppm message is received and mavlink fails to decrypt then landing mode" : true;
     	
-      guarantee "if no mavlink is received for a certain timeout than the vehicle is in land mode" : 
-        time - last_mavlink_received_time > MAVLINK_TO_CAN_LATENCY_BOUND and
+      guarantee "if no mavlink or ppm is received for a certain timeout than the vehicle is in landing mode" : 
+        time - last_mavlink_received_time > TOTAL_LANDING_TIMEOUT and
         time - time_of_last_ppm > TOTAL_LANDING_TIMEOUT 
-          => control_mode = AGREE_CONSTS.LAND_MODE;
+          => control_mode = AGREE_CONSTS.LAND_MODE or control_mode = AGREE_CONSTS.DISARMED_MODE;
     	
     **};
   end UAV;
@@ -85,14 +85,24 @@ public
       
     annex agree {**    		
     		
-    	assert control_mode = FSW.control_mode;
-    	assert FSW.time = time;
-    	assert MSW.time = time;
+      synchrony : asynchronous;
+      assert control_mode = FSW.control_mode;
+
+	  eq fsw_clock : bool = FSW._CLK;
+	  eq msw_clock : bool = MSW._CLK;
+
+      --initialize the FSW and MSW
+      assert fsw_clock and msw_clock and time = FSW.time -> true;
+      
+      assert true ->
+        if pre(FSW.next_time) < pre(MSW.next_time) then
+          fsw_clock and not msw_clock and time = FSW.time
+        else if pre(MSW.next_time) < pre(FSW.next_time) then
+          msw_clock and not fsw_clock and time = MSW.time
+        else
+          msw_clock and fsw_clock and time = MSW.time;
     	
-    	assert time = 0.0 -> true;
-    	assert time >= 0.0 and (true -> time >= pre(time));
-    	
-    	lemma "time of last ppm the same" : time_of_last_ppm = FSW.time_of_last_ppm;
+      lemma "time of last ppm the same" : time_of_last_ppm = FSW.time_of_last_ppm;
     **};
       
   end UAV.Impl;
