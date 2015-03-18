@@ -520,18 +520,26 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		private final Keyword cColonKeyword_3_2 = (Keyword)cGroup_3.eContents().get(2);
 		private final Keyword cAsynchronousKeyword_3_3 = (Keyword)cGroup_3.eContents().get(3);
 		private final Keyword cSemicolonKeyword_3_4 = (Keyword)cGroup_3.eContents().get(4);
+		private final Group cGroup_4 = (Group)cAlternatives.eContents().get(4);
+		private final Action cLatchedStatementAction_4_0 = (Action)cGroup_4.eContents().get(0);
+		private final Keyword cSynchronyKeyword_4_1 = (Keyword)cGroup_4.eContents().get(1);
+		private final Keyword cColonKeyword_4_2 = (Keyword)cGroup_4.eContents().get(2);
+		private final Keyword cLatchedKeyword_4_3 = (Keyword)cGroup_4.eContents().get(3);
+		private final Keyword cSemicolonKeyword_4_4 = (Keyword)cGroup_4.eContents().get(4);
 		
 		//SynchStatement:
 		//	{SynchStatement} "synchrony" ":" val=INTEGER_LIT ("," val2=INTEGER_LIT)? sim=("simult" | "no_simult")? ";" |
 		//	{MNSynchStatement} "synchrony" ":" (comp1+=[aadl2::NamedElement] "," comp2+=[aadl2::NamedElement] ":"
 		//	max+=INTEGER_LIT "," min+=INTEGER_LIT)+ ";" | {CalenStatement} "calendar" ":" els+=[aadl2::NamedElement] (","
-		//	els+=[aadl2::NamedElement])* ";" | {AsynchStatement} "synchrony" ":" "asynchronous" ";";
+		//	els+=[aadl2::NamedElement])* ";" | {AsynchStatement} "synchrony" ":" "asynchronous" ";" | {LatchedStatement}
+		//	"synchrony" ":" "latched" ";";
 		public ParserRule getRule() { return rule; }
 
 		//{SynchStatement} "synchrony" ":" val=INTEGER_LIT ("," val2=INTEGER_LIT)? sim=("simult" | "no_simult")? ";" |
 		//{MNSynchStatement} "synchrony" ":" (comp1+=[aadl2::NamedElement] "," comp2+=[aadl2::NamedElement] ":" max+=INTEGER_LIT
 		//"," min+=INTEGER_LIT)+ ";" | {CalenStatement} "calendar" ":" els+=[aadl2::NamedElement] (","
-		//els+=[aadl2::NamedElement])* ";" | {AsynchStatement} "synchrony" ":" "asynchronous" ";"
+		//els+=[aadl2::NamedElement])* ";" | {AsynchStatement} "synchrony" ":" "asynchronous" ";" | {LatchedStatement}
+		//"synchrony" ":" "latched" ";"
 		public Alternatives getAlternatives() { return cAlternatives; }
 
 		//{SynchStatement} "synchrony" ":" val=INTEGER_LIT ("," val2=INTEGER_LIT)? sim=("simult" | "no_simult")? ";"
@@ -693,6 +701,24 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 
 		//";"
 		public Keyword getSemicolonKeyword_3_4() { return cSemicolonKeyword_3_4; }
+
+		//{LatchedStatement} "synchrony" ":" "latched" ";"
+		public Group getGroup_4() { return cGroup_4; }
+
+		//{LatchedStatement}
+		public Action getLatchedStatementAction_4_0() { return cLatchedStatementAction_4_0; }
+
+		//"synchrony"
+		public Keyword getSynchronyKeyword_4_1() { return cSynchronyKeyword_4_1; }
+
+		//":"
+		public Keyword getColonKeyword_4_2() { return cColonKeyword_4_2; }
+
+		//"latched"
+		public Keyword getLatchedKeyword_4_3() { return cLatchedKeyword_4_3; }
+
+		//";"
+		public Keyword getSemicolonKeyword_4_4() { return cSemicolonKeyword_4_4; }
 	}
 
 	public class OrderStatementElements extends AbstractParserRuleElementFinder {
@@ -2940,7 +2966,8 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 	//	{SynchStatement} "synchrony" ":" val=INTEGER_LIT ("," val2=INTEGER_LIT)? sim=("simult" | "no_simult")? ";" |
 	//	{MNSynchStatement} "synchrony" ":" (comp1+=[aadl2::NamedElement] "," comp2+=[aadl2::NamedElement] ":"
 	//	max+=INTEGER_LIT "," min+=INTEGER_LIT)+ ";" | {CalenStatement} "calendar" ":" els+=[aadl2::NamedElement] (","
-	//	els+=[aadl2::NamedElement])* ";" | {AsynchStatement} "synchrony" ":" "asynchronous" ";";
+	//	els+=[aadl2::NamedElement])* ";" | {AsynchStatement} "synchrony" ":" "asynchronous" ";" | {LatchedStatement}
+	//	"synchrony" ":" "latched" ";";
 	public SynchStatementElements getSynchStatementAccess() {
 		return pSynchStatement;
 	}

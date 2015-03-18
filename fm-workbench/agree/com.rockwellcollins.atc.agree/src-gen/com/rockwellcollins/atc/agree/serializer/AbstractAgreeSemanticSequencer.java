@@ -24,6 +24,7 @@ import com.rockwellcollins.atc.agree.agree.GuaranteeStatement;
 import com.rockwellcollins.atc.agree.agree.IfThenElseExpr;
 import com.rockwellcollins.atc.agree.agree.InitialStatement;
 import com.rockwellcollins.atc.agree.agree.IntLitExpr;
+import com.rockwellcollins.atc.agree.agree.LatchedStatement;
 import com.rockwellcollins.atc.agree.agree.LemmaStatement;
 import com.rockwellcollins.atc.agree.agree.LiftStatement;
 import com.rockwellcollins.atc.agree.agree.MNSynchStatement;
@@ -564,6 +565,14 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 				   context == grammarAccess.getTermExprRule() ||
 				   context == grammarAccess.getUnaryExprRule()) {
 					sequence_TermExpr(context, (IntLitExpr) semanticObject); 
+					return; 
+				}
+				else break;
+			case AgreePackage.LATCHED_STATEMENT:
+				if(context == grammarAccess.getElementRule() ||
+				   context == grammarAccess.getSpecStatementRule() ||
+				   context == grammarAccess.getSynchStatementRule()) {
+					sequence_SynchStatement(context, (LatchedStatement) semanticObject); 
 					return; 
 				}
 				else break;
@@ -1230,6 +1239,15 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     (els+=[NamedElement|ID] els+=[NamedElement|ID]*)
 	 */
 	protected void sequence_SynchStatement(EObject context, CalenStatement semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Constraint:
+	 *     {LatchedStatement}
+	 */
+	protected void sequence_SynchStatement(EObject context, LatchedStatement semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	

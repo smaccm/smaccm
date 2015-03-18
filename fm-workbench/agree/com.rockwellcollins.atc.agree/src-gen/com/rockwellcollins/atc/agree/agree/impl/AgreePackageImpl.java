@@ -31,6 +31,7 @@ import com.rockwellcollins.atc.agree.agree.GuaranteeStatement;
 import com.rockwellcollins.atc.agree.agree.IfThenElseExpr;
 import com.rockwellcollins.atc.agree.agree.InitialStatement;
 import com.rockwellcollins.atc.agree.agree.IntLitExpr;
+import com.rockwellcollins.atc.agree.agree.LatchedStatement;
 import com.rockwellcollins.atc.agree.agree.LemmaStatement;
 import com.rockwellcollins.atc.agree.agree.LiftStatement;
 import com.rockwellcollins.atc.agree.agree.MNSynchStatement;
@@ -306,6 +307,13 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * @generated
    */
   private EClass asynchStatementEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass latchedStatementEClass = null;
 
   /**
    * <!-- begin-user-doc -->
@@ -1268,6 +1276,16 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  public EClass getLatchedStatement()
+  {
+    return latchedStatementEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   public EClass getNodeEq()
   {
     return nodeEqEClass;
@@ -1921,6 +1939,8 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
 
     asynchStatementEClass = createEClass(ASYNCH_STATEMENT);
 
+    latchedStatementEClass = createEClass(LATCHED_STATEMENT);
+
     nodeEqEClass = createEClass(NODE_EQ);
     createEReference(nodeEqEClass, NODE_EQ__LHS);
 
@@ -2068,6 +2088,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     mnSynchStatementEClass.getESuperTypes().add(this.getSynchStatement());
     calenStatementEClass.getESuperTypes().add(this.getSynchStatement());
     asynchStatementEClass.getESuperTypes().add(this.getSynchStatement());
+    latchedStatementEClass.getESuperTypes().add(this.getSynchStatement());
     nodeEqEClass.getESuperTypes().add(this.getNodeStmt());
     nodeLemmaEClass.getESuperTypes().add(this.getNodeStmt());
     primTypeEClass.getESuperTypes().add(this.getType());
@@ -2197,6 +2218,8 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     initEReference(getCalenStatement_Els(), theAadl2Package.getNamedElement(), null, "els", null, 0, -1, CalenStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(asynchStatementEClass, AsynchStatement.class, "AsynchStatement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+    initEClass(latchedStatementEClass, LatchedStatement.class, "LatchedStatement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
     initEClass(nodeEqEClass, NodeEq.class, "NodeEq", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getNodeEq_Lhs(), this.getArg(), null, "lhs", null, 0, -1, NodeEq.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

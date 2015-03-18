@@ -31,6 +31,11 @@ public
   	  eq time_of_last_ppm : real =
   	    0.0 -> if event(ppm_commands) then time else pre(time_of_last_ppm);
     	
+      const PPM_PERIOD : real = 100.0;
+      
+  	  assume "not frequent ppms" : true ->
+  	    time - pre(time_of_last_ppm) < PPM_PERIOD => not event(ppm_commands); 
+    	
       guarantee "if no ppm or mavlink commands are received then then vehicle is in landing mode" : true;
     	
       guarantee "if no ppm message is received and mavlink fails to decrypt then landing mode" : true;
@@ -86,6 +91,8 @@ public
     	
     	assert time = 0.0 -> true;
     	assert time >= 0.0 and (true -> time >= pre(time));
+    	
+    	lemma "time of last ppm the same" : time_of_last_ppm = FSW.time_of_last_ppm;
     **};
       
   end UAV.Impl;

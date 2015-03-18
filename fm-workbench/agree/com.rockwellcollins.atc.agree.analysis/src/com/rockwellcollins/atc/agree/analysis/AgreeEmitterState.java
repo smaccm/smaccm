@@ -64,6 +64,7 @@ import com.rockwellcollins.atc.agree.agree.GetPropertyExpr;
 import com.rockwellcollins.atc.agree.agree.GuaranteeStatement;
 import com.rockwellcollins.atc.agree.agree.InitialStatement;
 import com.rockwellcollins.atc.agree.agree.IntLitExpr;
+import com.rockwellcollins.atc.agree.agree.LatchedStatement;
 import com.rockwellcollins.atc.agree.agree.LemmaStatement;
 import com.rockwellcollins.atc.agree.agree.LiftStatement;
 import com.rockwellcollins.atc.agree.agree.MNSynchStatement;
@@ -131,6 +132,7 @@ public class AgreeEmitterState  extends AgreeSwitch<Expr> {
     public List<MNSynchronyElement> mnSyncEls = new ArrayList<>();
     public boolean simultaneity = true;
     public boolean latchedClocks = false;
+    public boolean asynchClocks = false;
     public final String clockIDSuffix = "___CLOCK_";
     public final String eventSuffix = "___EVENT_";
     
@@ -182,8 +184,13 @@ public class AgreeEmitterState  extends AgreeSwitch<Expr> {
     		return null;
     	}
     	
-    	if(sync instanceof AsynchStatement){
+    	if(sync instanceof LatchedStatement){
     	    this.latchedClocks = true;
+    	    return null;
+    	}
+    	
+    	if(sync instanceof AsynchStatement){
+    	    this.asynchClocks = true;
     	    return null;
     	}
     	

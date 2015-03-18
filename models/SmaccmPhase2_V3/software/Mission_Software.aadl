@@ -12,7 +12,10 @@ system software
     
   annex agree {**
   		
+  	const FSW_MAX_CAN_FREQ : real = 100.0;
+  		
   	eq time : real;
+  	eq next_time : real;
   	const MAVLINK_TO_CAN_LATENCY_BOUND : real = 300.0;
   	
   	eq last_mavlink_received_time : real =
@@ -23,6 +26,12 @@ system software
   	  
   	eq mavlink_received_within_bound : bool =
   	  mavlink_received_in_past and (time - last_mavlink_received_time) < MAVLINK_TO_CAN_LATENCY_BOUND;
+  	
+  	eq time_of_last_can : real = 
+  	  -1.0 * FSW_MAX_CAN_FREQ -> if event(mission_out) then time else pre(time_of_last_can);
+  	  
+  	guarantee "not frequent can" : true ->
+  	 time - pre(time_of_last_can) < FSW_MAX_CAN_FREQ => not event(mission_out); 
   	
   	guarantee "if a message is sent to the flight board then it was received over mavlink" : 
   	  event(mission_out) => mavlink_received_within_bound;
@@ -70,7 +79,7 @@ system implementation software.i
     
   annex agree {**
   		
-  	synchrony : asynchronous;
+  	synchrony : latched;
   	
   	const DECRYPT_EXEC_TIME : real = 5.0;
   	const ENCRYPT_EXEC_TIME : real = 5.0;
@@ -81,7 +90,7 @@ system implementation software.i
   	const RECEIVE_EXEC_TIME : real = 5.0;
   	
   	const RECEIVE_PERIOD : real = 50.0;
-  	const CAN_PERIOD : real = 50.0;
+  	const CAN_PERIOD : real = 150.0;
   	
   	eq decrypt_clock : bool = decrypt._CLK;
   	eq encrypt_clock : bool = encrypt._CLK;
@@ -148,15 +157,17 @@ system implementation software.i
   	--constrain how time progresses
   	assert time = 0.0 -> true;
   	assert time >= 0.0 and (true -> time > pre(time));
-  	assert true -> time =
-  	    AGREE_LIB.min_if(pre(decrypt_clock), pre(decrypt_finishes),
-  	    AGREE_LIB.min_if(pre(receive_clock), pre(receive_finishes),
-  	    AGREE_LIB.min_if(pre(mavlink_clock), pre(mavlink_finishes),
-  	    AGREE_LIB.min_if(pre(nav_clock), pre(nav_finishes),
-  	    AGREE_LIB.min_if(pre(can_clock), pre(can_finishes),
-  	    AGREE_LIB.min_if(pre(transmit_clock), pre(transmit_finishes),
-  	    AGREE_LIB.min_if(pre(encrypt_clock), pre(encrypt_finishes),
-  	    AGREE_LIB.min(pre(time_of_next_receive), pre(time_of_next_can))))))))); 
+  	assert true -> time = pre(next_time);
+  	    
+  	assert next_time =
+  	    AGREE_LIB.min_if(decrypt_clock, decrypt_finishes,
+  	    AGREE_LIB.min_if(receive_clock, receive_finishes,
+  	    AGREE_LIB.min_if(mavlink_clock, mavlink_finishes,
+  	    AGREE_LIB.min_if(nav_clock, nav_finishes,
+  	    AGREE_LIB.min_if(can_clock, can_finishes,
+  	    AGREE_LIB.min_if(transmit_clock, transmit_finishes,
+  	    AGREE_LIB.min_if(encrypt_clock, encrypt_finishes,
+  	    AGREE_LIB.min(time_of_next_receive, time_of_next_can)))))))); 
   	    
   	    
   	assert true -> pre(decrypt_clock) and decrypt_run_time < DECRYPT_EXEC_TIME => decrypt_clock;
@@ -282,6 +293,13 @@ system implementation software.i
   	let
   	  ret = false -> pre(clock) and not clock;
   	tel;
+  	
+  	
+  	------- begin lemmas -------
+  	lemma "positive runtimes" : 
+  	  can_run_time >= 0.0 and decrypt_run_time >= 0.0 and receive_run_time >= 0.0 and
+  	  mavlink_run_time >= 0.0 and nav_run_time >= 0.0 and transmit_run_time >= 0.0 and encrypt_run_time >= 0.0;
+  	
   	
   **};
     

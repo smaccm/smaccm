@@ -497,7 +497,7 @@ public class AgreeGenerator {
     	calenNodeName = calenNodeName.replace(".", "__");
     	
     	Expr clockAssertion = null;
-    	if(state.latchedClocks){
+    	if(state.latchedClocks || state.asynchClocks){
     	    //the only constraint that will get made is one
     	    //asserting that atleast one clock ticks.  This should
     	    //happen after this if then else block
@@ -571,7 +571,7 @@ public class AgreeGenerator {
         	}
         }
     	//assert that at least one clock ticks
-    	if(!state.latchedClocks){
+    	if(!(state.latchedClocks || state.asynchClocks)){
     	    if(state.clockVars.size() != 0){
     	        Expr oneMustTick = new BoolExpr(false);
     	        for(AgreeVarDecl clockVar : state.clockVars){
