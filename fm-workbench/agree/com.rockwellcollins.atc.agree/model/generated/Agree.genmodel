@@ -100,6 +100,10 @@
     <genClasses ecoreClass="Agree.ecore#//LiftStatement">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//LiftStatement/subcomp"/>
     </genClasses>
+    <genClasses ecoreClass="Agree.ecore#//ConnectionStatement">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Agree.ecore#//ConnectionStatement/conn"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//ConnectionStatement/expr"/>
+    </genClasses>
     <genClasses ecoreClass="Agree.ecore#//MNSynchStatement">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Agree.ecore#//MNSynchStatement/comp1"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Agree.ecore#//MNSynchStatement/comp2"/>

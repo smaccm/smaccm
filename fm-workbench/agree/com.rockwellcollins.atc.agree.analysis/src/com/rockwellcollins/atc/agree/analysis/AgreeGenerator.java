@@ -944,9 +944,10 @@ public class AgreeGenerator {
     	//throw away intermediate guarantees
     	int guarIndex = 0;
     	for(Equation guarEq : subState.guarExpressions){
-    	    guarantees.add(guarEq.expr);
     	    String guarName = nodeGuarName+guarIndex++;
-    	    Expr guarEquality = new BinaryExpr(new IdExpr(guarName), BinaryOp.EQUAL, guarEq.expr);
+    	    IdExpr guarId = new IdExpr(guarName);
+            guarantees.add(guarId);
+    	    Expr guarEquality = new BinaryExpr(guarId, BinaryOp.EQUAL, guarEq.expr);
     	    assertions.add(guarEquality);
     	    inputs.add(new VarDecl(guarName, NamedType.BOOL));
     	}
@@ -960,9 +961,10 @@ public class AgreeGenerator {
 
     	int assumeIndex = 0;
     	for(Equation assumEq : subState.assumpExpressions){
-    		assumptions.add(assumEq.expr);
     		String assumeName = nodeAssumeName+assumeIndex++;
-            Expr assumeEquality = new BinaryExpr(new IdExpr(assumeName), BinaryOp.EQUAL, assumEq.expr);
+    		IdExpr assumeId = new IdExpr(assumeName);
+            assumptions.add(assumeId);
+            Expr assumeEquality = new BinaryExpr(assumeId, BinaryOp.EQUAL, assumEq.expr);
             assertions.add(assumeEquality);
             inputs.add(new VarDecl(assumeName, NamedType.BOOL));
     	}
@@ -1008,17 +1010,17 @@ public class AgreeGenerator {
 			List<Expr> guarantees) {
 		//the component has bottomed out so we should assert the contract
 	    
-	    IdExpr guarId = new IdExpr("__GUAR_CONJ");
-        VarDecl guarVar = new VarDecl(guarId.id, NamedType.BOOL);
-        locals.add(guarVar);
+//	    IdExpr guarId = new IdExpr("__GUAR_CONJ");
+//        VarDecl guarVar = new VarDecl(guarId.id, NamedType.BOOL);
+//        locals.add(guarVar);
         
         Expr guarExpr = new BoolExpr(true);
         for(Expr guar : guarantees){
             guarExpr = new BinaryExpr(guarExpr, BinaryOp.AND, guar);
         }
         
-        Equation guarEq = new Equation(guarId, guarExpr);
-        equations.add(guarEq);
+//        Equation guarEq = new Equation(guarId, guarExpr);
+//        equations.add(guarEq);
 	    
 	    if(assumptions.size() != 0){
 	        IdExpr assumpHistId = new IdExpr("__HIST__ASSUM");
@@ -1040,10 +1042,10 @@ public class AgreeGenerator {
 	        assumpHistExpr = new BinaryExpr(assumpId, BinaryOp.ARROW, assumpHistExpr);
 	        Equation assumpHistEq = new Equation(assumpHistId, assumpHistExpr);
 	        equations.add(assumpHistEq);
-	        return new BinaryExpr(assumpHistId, BinaryOp.IMPLIES, guarId);
+	        return new BinaryExpr(assumpHistId, BinaryOp.IMPLIES, guarExpr);
 	    }
 
-		return guarId;
+		return guarExpr;
 		
 	}
     

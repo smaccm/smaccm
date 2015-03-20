@@ -13,6 +13,7 @@ import com.rockwellcollins.atc.agree.agree.AsynchStatement;
 import com.rockwellcollins.atc.agree.agree.BinaryExpr;
 import com.rockwellcollins.atc.agree.agree.BoolLitExpr;
 import com.rockwellcollins.atc.agree.agree.CalenStatement;
+import com.rockwellcollins.atc.agree.agree.ConnectionStatement;
 import com.rockwellcollins.atc.agree.agree.ConstStatement;
 import com.rockwellcollins.atc.agree.agree.EqStatement;
 import com.rockwellcollins.atc.agree.agree.EventExpr;
@@ -348,6 +349,13 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 				   context == grammarAccess.getSpecStatementRule() ||
 				   context == grammarAccess.getSynchStatementRule()) {
 					sequence_SynchStatement(context, (CalenStatement) semanticObject); 
+					return; 
+				}
+				else break;
+			case AgreePackage.CONNECTION_STATEMENT:
+				if(context == grammarAccess.getElementRule() ||
+				   context == grammarAccess.getSpecStatementRule()) {
+					sequence_SpecStatement(context, (ConnectionStatement) semanticObject); 
 					return; 
 				}
 				else break;
@@ -1176,6 +1184,15 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     (str=STRING expr=Expr)
 	 */
 	protected void sequence_SpecStatement(EObject context, AssumeStatement semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Constraint:
+	 *     (conn=[NamedElement|ID] expr=Expr)
+	 */
+	protected void sequence_SpecStatement(EObject context, ConnectionStatement semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	

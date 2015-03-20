@@ -36,7 +36,6 @@ process main
   	eq time : real;
   	eq next_time : real;
   	eq control_mode : int;
-
   	  	
   	eq time_of_last_can : real = 
   	  0.0 -> if event(mission_in) then time else pre(time_of_last_can);
@@ -44,6 +43,10 @@ process main
   	eq time_of_last_ppm : real =
   	  0.0 -> if event(ppm_in) then time else pre(time_of_last_ppm);    
   	
+  	initially:
+  	  time = 0.0 and
+  	  time_of_last_can = 0.0 and
+  	  time_of_last_ppm = 0.0;
   	
   	--assumptions about how often events can occur
 --  	assume "not frequent ppms" : true ->
@@ -53,12 +56,13 @@ process main
 --  	 time - pre(time_of_last_can) < CAN_PERIOD => not event(mission_in);
   	
   	guarantee "time is positive and increasing" :
-  	  time >= 0.0 and (true -> time > pre(time));
+  	  (time = 0.0 -> true) and time >= 0.0 and (true -> time > pre(time));
   	  
   	guarantee "next time greater than current" :
   	  next_time > time and (true -> pre(next_time) = time);
   	  
-  	guarantee "time change bound" : next_time - time < 200.0;
+  	guarantee "time change bound" : 
+      5.0 <= next_time - time and next_time - time < 50.0;
   	
   	guarantee "if time passes with no message then the mode is landing" :
   	    time - time_of_last_ppm > TOTAL_LANDING_TIMEOUT and
@@ -68,15 +72,12 @@ process main
   	guarantee "time_of_last_ppm and time_of_last_can less than time (lemma for other property)":
   	  time_of_last_ppm <= time and time_of_last_can <= time and
   	  time_of_last_ppm >= 0.0 and time_of_last_can >= 0.0;
-  	  
-  	guarantee "time positive and increasing" :
-  	  	time = 0.0 -> true and time >= 0.0 and (true -> time > pre(time));
   	      
-  	guarantee "if the controller is armed, then an armed signal in the past" : true;
-  	
-  	guarantee "if an arm signal is sent from the ppm controller the controller will be armed" : true;
-  	
-  	guarantee "if the controller is not armed then the motors should not spin" : true;
+--  	guarantee "if the controller is armed, then an armed signal in the past" : true;
+--  	
+--  	guarantee "if an arm signal is sent from the ppm controller the controller will be armed" : true;
+--  	
+--  	guarantee "if the controller is not armed then the motors should not spin" : true;
   	
   **};
 end main;

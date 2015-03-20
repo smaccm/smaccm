@@ -13,13 +13,19 @@ system software
   annex agree {**
   		
   	const FSW_MAX_CAN_FREQ : real = 100.0;
-  		
+  	
+  	initially:
+  	  not event(mission_out) and
+  	  time = 0.0 and
+  	  last_mavlink_received_time = 0.0 and
+  	  not mavlink_received_in_past;
+  		    
   	eq time : real;
   	eq next_time : real;
-  	const MAVLINK_TO_CAN_LATENCY_BOUND : real = 300.0;
+  	const MAVLINK_TO_CAN_LATENCY_BOUND : real = 25.0;
   	
   	eq last_mavlink_received_time : real =
-  	  if event(enc_mavlink_in) then time else prev(last_mavlink_received_time, -1.0);
+  	  if event(enc_mavlink_in) then time else prev(last_mavlink_received_time, 0.0);
   	  
   	eq mavlink_received_in_past : bool = 
   	  event(enc_mavlink_in) -> pre(mavlink_received_in_past) or event(enc_mavlink_in);
@@ -42,7 +48,8 @@ system software
   	guarantee "next time greater than current" :
   	  next_time > time and (true -> pre(next_time) = time);
   	  
-    guarantee "time change bound" : next_time - time < 200.0;
+    guarantee "time change bound" : 
+      5.0 <= next_time - time and next_time - time < 50.0;
   	  
 --  	guarantee "if messasage fails to decrypt then nothing is sent to the mission board" : true;
   	
@@ -154,7 +161,7 @@ system implementation software.i
   	         decrypt_clock
   	       else if event(encrypt.mavlink) then
   	         encrypt_clock
-  	       else if event(nav.mavlink_in) then
+  	       else if event(nav.mavlink_in) then 
   	         nav_clock
   	       else if event(mavlink.mavlink_in) then
   	         mavlink_clock

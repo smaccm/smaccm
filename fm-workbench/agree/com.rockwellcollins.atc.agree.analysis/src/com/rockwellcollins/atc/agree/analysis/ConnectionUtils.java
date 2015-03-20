@@ -45,6 +45,11 @@ public class ConnectionUtils {
 		Property commTimingProp = EMFIndexRetrieval.getPropertyDefinitionInWorkspace(
 				OsateResourceUtil.getResourceSet(), "Communication_Properties::Timing");
 		for (Connection conn : compImpl.getAllConnections()) {
+		    
+		    if(state.overridenConnections.contains(conn)){
+		        //this connection was manually overriden with an expression
+		        continue;
+		    }
 			ConnectedElement absConnDest = conn.getDestination();
 			ConnectedElement absConnSour = conn.getSource();
 			boolean delayed = false;

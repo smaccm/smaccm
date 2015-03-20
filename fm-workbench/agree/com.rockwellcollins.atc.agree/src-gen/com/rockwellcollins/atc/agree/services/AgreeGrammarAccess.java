@@ -250,28 +250,40 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		private final Assignment cSubcompAssignment_6_2 = (Assignment)cGroup_6.eContents().get(2);
 		private final RuleCall cSubcompNestedDotIDParserRuleCall_6_2_0 = (RuleCall)cSubcompAssignment_6_2.eContents().get(0);
 		private final Keyword cSemicolonKeyword_6_3 = (Keyword)cGroup_6.eContents().get(3);
-		private final RuleCall cSynchStatementParserRuleCall_7 = (RuleCall)cAlternatives.eContents().get(7);
-		private final RuleCall cOrderStatementParserRuleCall_8 = (RuleCall)cAlternatives.eContents().get(8);
-		private final RuleCall cPropertyStatementParserRuleCall_9 = (RuleCall)cAlternatives.eContents().get(9);
-		private final RuleCall cConstStatementParserRuleCall_10 = (RuleCall)cAlternatives.eContents().get(10);
-		private final RuleCall cEqStatementParserRuleCall_11 = (RuleCall)cAlternatives.eContents().get(11);
-		private final RuleCall cFnDefExprParserRuleCall_12 = (RuleCall)cAlternatives.eContents().get(12);
-		private final RuleCall cNodeDefExprParserRuleCall_13 = (RuleCall)cAlternatives.eContents().get(13);
-		private final RuleCall cRecordDefExprParserRuleCall_14 = (RuleCall)cAlternatives.eContents().get(14);
+		private final Group cGroup_7 = (Group)cAlternatives.eContents().get(7);
+		private final Action cConnectionStatementAction_7_0 = (Action)cGroup_7.eContents().get(0);
+		private final Keyword cConnectionKeyword_7_1 = (Keyword)cGroup_7.eContents().get(1);
+		private final Assignment cConnAssignment_7_2 = (Assignment)cGroup_7.eContents().get(2);
+		private final CrossReference cConnNamedElementCrossReference_7_2_0 = (CrossReference)cConnAssignment_7_2.eContents().get(0);
+		private final RuleCall cConnNamedElementIDTerminalRuleCall_7_2_0_1 = (RuleCall)cConnNamedElementCrossReference_7_2_0.eContents().get(1);
+		private final Keyword cColonKeyword_7_3 = (Keyword)cGroup_7.eContents().get(3);
+		private final Assignment cExprAssignment_7_4 = (Assignment)cGroup_7.eContents().get(4);
+		private final RuleCall cExprExprParserRuleCall_7_4_0 = (RuleCall)cExprAssignment_7_4.eContents().get(0);
+		private final Keyword cSemicolonKeyword_7_5 = (Keyword)cGroup_7.eContents().get(5);
+		private final RuleCall cSynchStatementParserRuleCall_8 = (RuleCall)cAlternatives.eContents().get(8);
+		private final RuleCall cOrderStatementParserRuleCall_9 = (RuleCall)cAlternatives.eContents().get(9);
+		private final RuleCall cPropertyStatementParserRuleCall_10 = (RuleCall)cAlternatives.eContents().get(10);
+		private final RuleCall cConstStatementParserRuleCall_11 = (RuleCall)cAlternatives.eContents().get(11);
+		private final RuleCall cEqStatementParserRuleCall_12 = (RuleCall)cAlternatives.eContents().get(12);
+		private final RuleCall cFnDefExprParserRuleCall_13 = (RuleCall)cAlternatives.eContents().get(13);
+		private final RuleCall cNodeDefExprParserRuleCall_14 = (RuleCall)cAlternatives.eContents().get(14);
+		private final RuleCall cRecordDefExprParserRuleCall_15 = (RuleCall)cAlternatives.eContents().get(15);
 		
 		//SpecStatement:
 		//	{AssumeStatement} "assume" str=STRING ":" expr=Expr ";" | {GuaranteeStatement} "guarantee" str=STRING ":" expr=Expr
 		//	";" | {AssertStatement} "assert" expr=Expr ";" | {InitialStatement} "initially" ":" expr=Expr ";" | {ParamStatement}
 		//	"parameter" expr=Expr ":" type=Type ";" | {LemmaStatement} "lemma" str=STRING ":" expr=Expr ";" | {LiftStatement}
-		//	"lift" subcomp=NestedDotID ";" | SynchStatement | OrderStatement | PropertyStatement | ConstStatement | EqStatement |
-		//	FnDefExpr | NodeDefExpr | RecordDefExpr;
+		//	"lift" subcomp=NestedDotID ";" | {ConnectionStatement} "connection" conn=[aadl2::NamedElement] ":" expr=Expr ";" |
+		//	SynchStatement | OrderStatement | PropertyStatement | ConstStatement | EqStatement | FnDefExpr | NodeDefExpr |
+		//	RecordDefExpr;
 		public ParserRule getRule() { return rule; }
 
 		//{AssumeStatement} "assume" str=STRING ":" expr=Expr ";" | {GuaranteeStatement} "guarantee" str=STRING ":" expr=Expr ";"
 		//| {AssertStatement} "assert" expr=Expr ";" | {InitialStatement} "initially" ":" expr=Expr ";" | {ParamStatement}
 		//"parameter" expr=Expr ":" type=Type ";" | {LemmaStatement} "lemma" str=STRING ":" expr=Expr ";" | {LiftStatement}
-		//"lift" subcomp=NestedDotID ";" | SynchStatement | OrderStatement | PropertyStatement | ConstStatement | EqStatement |
-		//FnDefExpr | NodeDefExpr | RecordDefExpr
+		//"lift" subcomp=NestedDotID ";" | {ConnectionStatement} "connection" conn=[aadl2::NamedElement] ":" expr=Expr ";" |
+		//SynchStatement | OrderStatement | PropertyStatement | ConstStatement | EqStatement | FnDefExpr | NodeDefExpr |
+		//RecordDefExpr
 		public Alternatives getAlternatives() { return cAlternatives; }
 
 		//{AssumeStatement} "assume" str=STRING ":" expr=Expr ";"
@@ -439,29 +451,59 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		//";"
 		public Keyword getSemicolonKeyword_6_3() { return cSemicolonKeyword_6_3; }
 
+		//{ConnectionStatement} "connection" conn=[aadl2::NamedElement] ":" expr=Expr ";"
+		public Group getGroup_7() { return cGroup_7; }
+
+		//{ConnectionStatement}
+		public Action getConnectionStatementAction_7_0() { return cConnectionStatementAction_7_0; }
+
+		//"connection"
+		public Keyword getConnectionKeyword_7_1() { return cConnectionKeyword_7_1; }
+
+		//conn=[aadl2::NamedElement]
+		public Assignment getConnAssignment_7_2() { return cConnAssignment_7_2; }
+
+		//[aadl2::NamedElement]
+		public CrossReference getConnNamedElementCrossReference_7_2_0() { return cConnNamedElementCrossReference_7_2_0; }
+
+		//ID
+		public RuleCall getConnNamedElementIDTerminalRuleCall_7_2_0_1() { return cConnNamedElementIDTerminalRuleCall_7_2_0_1; }
+
+		//":"
+		public Keyword getColonKeyword_7_3() { return cColonKeyword_7_3; }
+
+		//expr=Expr
+		public Assignment getExprAssignment_7_4() { return cExprAssignment_7_4; }
+
+		//Expr
+		public RuleCall getExprExprParserRuleCall_7_4_0() { return cExprExprParserRuleCall_7_4_0; }
+
+		//";"
+		public Keyword getSemicolonKeyword_7_5() { return cSemicolonKeyword_7_5; }
+
 		//SynchStatement
-		public RuleCall getSynchStatementParserRuleCall_7() { return cSynchStatementParserRuleCall_7; }
+		public RuleCall getSynchStatementParserRuleCall_8() { return cSynchStatementParserRuleCall_8; }
 
 		//OrderStatement
-		public RuleCall getOrderStatementParserRuleCall_8() { return cOrderStatementParserRuleCall_8; }
+		public RuleCall getOrderStatementParserRuleCall_9() { return cOrderStatementParserRuleCall_9; }
 
 		//PropertyStatement
-		public RuleCall getPropertyStatementParserRuleCall_9() { return cPropertyStatementParserRuleCall_9; }
+		public RuleCall getPropertyStatementParserRuleCall_10() { return cPropertyStatementParserRuleCall_10; }
 
 		//ConstStatement
-		public RuleCall getConstStatementParserRuleCall_10() { return cConstStatementParserRuleCall_10; }
+		public RuleCall getConstStatementParserRuleCall_11() { return cConstStatementParserRuleCall_11; }
 
 		//EqStatement
-		public RuleCall getEqStatementParserRuleCall_11() { return cEqStatementParserRuleCall_11; }
+		public RuleCall getEqStatementParserRuleCall_12() { return cEqStatementParserRuleCall_12; }
 
 		//FnDefExpr
-		public RuleCall getFnDefExprParserRuleCall_12() { return cFnDefExprParserRuleCall_12; }
+		public RuleCall getFnDefExprParserRuleCall_13() { return cFnDefExprParserRuleCall_13; }
 
 		//NodeDefExpr
-		public RuleCall getNodeDefExprParserRuleCall_13() { return cNodeDefExprParserRuleCall_13; }
+		public RuleCall getNodeDefExprParserRuleCall_14() { return cNodeDefExprParserRuleCall_14; }
 
 		//RecordDefExpr
-		public RuleCall getRecordDefExprParserRuleCall_14() { return cRecordDefExprParserRuleCall_14; }
+		public RuleCall getRecordDefExprParserRuleCall_15() { return cRecordDefExprParserRuleCall_15; }
 	}
 
 	public class SynchStatementElements extends AbstractParserRuleElementFinder {
@@ -2952,8 +2994,9 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 	//	{AssumeStatement} "assume" str=STRING ":" expr=Expr ";" | {GuaranteeStatement} "guarantee" str=STRING ":" expr=Expr
 	//	";" | {AssertStatement} "assert" expr=Expr ";" | {InitialStatement} "initially" ":" expr=Expr ";" | {ParamStatement}
 	//	"parameter" expr=Expr ":" type=Type ";" | {LemmaStatement} "lemma" str=STRING ":" expr=Expr ";" | {LiftStatement}
-	//	"lift" subcomp=NestedDotID ";" | SynchStatement | OrderStatement | PropertyStatement | ConstStatement | EqStatement |
-	//	FnDefExpr | NodeDefExpr | RecordDefExpr;
+	//	"lift" subcomp=NestedDotID ";" | {ConnectionStatement} "connection" conn=[aadl2::NamedElement] ":" expr=Expr ";" |
+	//	SynchStatement | OrderStatement | PropertyStatement | ConstStatement | EqStatement | FnDefExpr | NodeDefExpr |
+	//	RecordDefExpr;
 	public SpecStatementElements getSpecStatementAccess() {
 		return pSpecStatement;
 	}

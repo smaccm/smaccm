@@ -94,6 +94,7 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
       case AgreePackage.PARAM_STATEMENT: return createParamStatement();
       case AgreePackage.LEMMA_STATEMENT: return createLemmaStatement();
       case AgreePackage.LIFT_STATEMENT: return createLiftStatement();
+      case AgreePackage.CONNECTION_STATEMENT: return createConnectionStatement();
       case AgreePackage.MN_SYNCH_STATEMENT: return createMNSynchStatement();
       case AgreePackage.CALEN_STATEMENT: return createCalenStatement();
       case AgreePackage.ASYNCH_STATEMENT: return createAsynchStatement();
@@ -451,6 +452,17 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
   {
     LiftStatementImpl liftStatement = new LiftStatementImpl();
     return liftStatement;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public ConnectionStatement createConnectionStatement()
+  {
+    ConnectionStatementImpl connectionStatement = new ConnectionStatementImpl();
+    return connectionStatement;
   }
 
   /**
