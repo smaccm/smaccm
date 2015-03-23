@@ -128,7 +128,7 @@ public
         MSW.time - last_mavlink_received_time > 50.0 => event(MSW.enc_mavlink_in) = false;
        
       lemma "when MSW sends mavlink message" :
-        MSW.time - last_mavlink_received_time > 200.0 => event(MSW.mission_out) = false;
+        MSW.time - last_mavlink_received_time > 300.0 => event(MSW.mission_out) = false;
         
       lemma "when FSW sees ppm message" :
         FSW.time - last_ppm_received_time > 50.0 => event(FSW.ppm_in) = false;
@@ -140,7 +140,7 @@ public
         FSW.time_of_last_ppm > last_ppm_received_time  => FSW.time_of_last_ppm - last_ppm_received_time <= 100.0;
         
       lemma "fsw last mav difference" :
-        FSW.time_of_last_can > last_mavlink_received_time => FSW.time_of_last_can - last_mavlink_received_time <= 300.0;
+        FSW.time_of_last_can > last_mavlink_received_time => FSW.time_of_last_can - last_mavlink_received_time <= 400.0;
       
       lemma "if no mavlink or ppm is received for a certain timeout then the vehicle is in landing mode" : 
         time - last_mavlink_received_time > TOTAL_LANDING_TIMEOUT and

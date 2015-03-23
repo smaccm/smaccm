@@ -636,8 +636,17 @@ public class AgreeGenerator {
         }
         
         for(Equation guarEq : subState.guarExpressions){
-            state.inputVars.add(new AgreeVarDecl(prefix+nodeGuarName+i++, NamedType.BOOL));
+            AgreeVarDecl guarVar = new AgreeVarDecl(prefix+nodeGuarName+i++, NamedType.BOOL);
+            state.inputVars.add(guarVar);
+//            Expr lemmaExpr = new BinaryExpr(clockId, BinaryOp.IMPLIES, new IdExpr(guarVar.id));
+//            String lemmaStr = guarEq.lhs.get(0).id;
+//            //stupid hack for renaming
+//            String replaceStr = lemmaStr.startsWith("guarantee :") ? " " : ".";
+//            lemmaStr = prefix.replace("__", replaceStr)+lemmaStr;
+//            state.lemmaExpressions.add(new Equation(new IdExpr(lemmaStr), lemmaExpr));
+//            state.refMap.put(guarVar.id, subState.refMap.get(guarEq.lhs.get(0).id));
         }
+        
         for(Equation lemmaEq : subState.lemmaExpressions){
             AgreeVarDecl lemmaVar = new AgreeVarDecl(prefix+nodeGuarName+i++, NamedType.BOOL);
             state.inputVars.add(lemmaVar);

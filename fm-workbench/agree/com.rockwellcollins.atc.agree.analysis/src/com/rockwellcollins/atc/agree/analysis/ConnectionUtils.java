@@ -156,6 +156,18 @@ public class ConnectionUtils {
 			Expr rhsClock = null;
 			Subcomponent sourSub = agreeSourConn.compInst.getSubcomponent();
 			Subcomponent destSub = agreeDestConn.compInst.getSubcomponent();
+			
+			//check to see if the destination or source subcomponent is actually the parent
+			//if this is the case then we are doing monolithic verification and the parent
+			//subcomponent clock should just be true
+			if(sourSub != null && destSub != null){
+			    if(subcomponentContainsSubcomponent(sourSub, destSub)){
+			        sourSub = null;
+			    }else if(subcomponentContainsSubcomponent(destSub, sourSub)){
+			        destSub = null;
+			    }
+			}
+			
 			String sourConnName = sourSub == null ? null : sourSub.getName();
 			String destConnName = destSub == null ? null : destSub.getName();
 			if(destContext == null || destContext instanceof FeatureGroup){
@@ -233,6 +245,22 @@ public class ConnectionUtils {
 		}
 
 	}
+	
+	private static boolean subcomponentContainsSubcomponent(Subcomponent outerSub, Subcomponent innerSub){
+	    
+	    ComponentImplementation compImpl = outerSub.getComponentImplementation();
+	    if(compImpl == null){
+	        return false;
+	    }
+	    
+	    for(Subcomponent sub : compImpl.getAllSubcomponents()){
+	        if(sub.equals(innerSub)){
+	            return true;
+	        }
+	    }
+	    return false;
+	}
+	
     private static void addEventConnection(AgreeEmitterState state,
             boolean delayed, String lhsLustreName, String rhsLustreName,
             Expr lhsClock, Expr rhsClock) {
