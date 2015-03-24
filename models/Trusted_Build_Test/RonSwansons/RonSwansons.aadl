@@ -1,0 +1,111 @@
+package RonSwansons
+public 
+   with Base_Types;
+   with SMACCM_SYS; 
+   with Data_Model;
+
+data pollresp
+  properties
+    Data_Model::Data_Representation => Struct;
+end pollresp;
+
+data implementation pollresp.impl
+  subcomponents
+  	reqfork1 : data Base_Types::Boolean;
+  	reqfork2 : data Base_Types::Integer_32;
+end pollresp.impl;
+
+data fork
+  properties
+    Data_Model::Data_Representation => Struct;
+end fork;
+
+data implementation fork.impl
+  subcomponents
+    forkid : data Base_Types::Integer_32;
+end fork.impl;
+
+thread ronswanson1
+	features
+		pollport : in event port {
+	      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("poll");
+		};
+		
+		pollresponseport : out event data port pollresp.impl {
+		  SMACCM_SYS::CommPrim_Source_Text => "pollresponse";
+		};
+		
+		getforkport : in event data port fork.impl {
+	      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("getfork");
+		};
+		
+		giveforkport : out event data port fork.impl {
+		  SMACCM_SYS::CommPrim_Source_Text => "givefork";	
+		};
+	properties 
+		Source_Text => ("user_code/user_rs.c", "user_code/includes/rs1/user_rs.h");
+	    Dispatch_Protocol => Aperiodic;
+	    SMACCM_SYS::Thread_Type => Passive ;
+	    Compute_Execution_Time => 10 us .. 50 us;
+	    SMACCM_SYS::Sends_Events_To => "{{1 pollresponseport, 2 giveforkport}}";
+end ronswanson1; 
+
+thread manager
+	features
+		pollport1 : out event port {
+		  SMACCM_SYS::CommPrim_Source_Text => "poll1";
+		};
+		
+		pollresponseport1 : in event data port pollresp.impl {
+		  SMACCM_SYS::Compute_Entrypoint_Source_Text => ("pollresponse1");
+		};
+		
+		giveforkport1 : out event data port fork.impl {
+		  SMACCM_SYS::CommPrim_Source_Text => "givefork1";
+		};
+		
+		getforkport1 : in event data port fork.impl {
+		  SMACCM_SYS::Compute_Entrypoint_Source_Text => ("getfork1");
+		};
+		
+	properties 
+		Dispatch_Protocol => Periodic;
+		Period => 50 ms;
+		Source_Text => ("user_code/user_mgr.c");
+	    SMACCM_SYS::Compute_Entrypoint_Source_Text => ("process");
+	   	Priority => 10;
+	    Stack_Size => 256 bytes;
+	    SMACCM_SYS::Thread_Type => Active ;
+	    Compute_Execution_Time => 10 us .. 50 us;
+	    SMACCM_SYS::Sends_Events_To => "{{1 pollport1}}";
+end manager ; 
+
+
+
+process proc
+
+end proc;
+
+process implementation proc.Impl
+	subcomponents
+		rs1 : thread RonSwanson1;
+		mgr : thread Manager;
+	connections
+		rs1_to_mgr_pollresponse : port rs1.pollresponseport -> mgr.pollresponseport1;
+		rs1_to_mgr_givefork : port rs1.giveforkport -> mgr.getforkport1;
+		mgr_to_rs1_poll1    : port mgr.pollport1 -> rs1.pollport;
+		mgr_to_rs1_givefork1: port mgr.giveforkport1 -> rs1.getforkport;
+end proc.Impl;
+
+system ronswansons
+end ronswansons;
+
+system implementation ronswansons.impl
+	subcomponents
+		tl: process proc.Impl;
+	properties
+		SMACCM_SYS::OS => CAmkES;
+		SMACCM_SYS::HW => QEMU;
+end ronswansons.impl;
+
+end RonSwansons;
