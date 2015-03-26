@@ -12,7 +12,7 @@ system software
     
   annex agree {**
   		
-  	const FSW_MAX_CAN_FREQ : real = 100.0;
+  	const FSW_MAX_CAN_FREQ : real = 20.0;
   	
   	initially:
   	  not event(mission_out) and
@@ -22,7 +22,7 @@ system software
   		    
   	eq time : real;
   	eq next_time : real;
-  	const MAVLINK_TO_CAN_LATENCY_BOUND : real = 25.0;
+  	const MAVLINK_TO_CAN_LATENCY_BOUND : real = 150.0;
   	
   	eq last_mavlink_received_time : real =
   	  if event(enc_mavlink_in) then time else prev(last_mavlink_received_time, 0.0);
@@ -36,8 +36,8 @@ system software
   	eq time_of_last_can : real = 
   	  -1.0 * FSW_MAX_CAN_FREQ -> if event(mission_out) then time else pre(time_of_last_can);
   	  
-  	guarantee "not frequent can" : true ->
-  	 time - pre(time_of_last_can) < FSW_MAX_CAN_FREQ => not event(mission_out); 
+--  	guarantee "not frequent can" : true ->
+--  	 time - pre(time_of_last_can) < FSW_MAX_CAN_FREQ => not event(mission_out); 
   	
   	guarantee "if a message is sent to the flight board then it was received over mavlink" : 
   	  event(mission_out) => mavlink_received_within_bound;
@@ -104,8 +104,8 @@ system implementation software.i
   	const TRANSMIT_EXEC_TIME : real = 5.0;
   	const RECEIVE_EXEC_TIME : real = 5.0;
   	
-  	const RECEIVE_PERIOD : real = 50.0;
-  	const CAN_PERIOD : real = 150.0;
+  	const DECRYPT_PERIOD : real = 25.0;
+  	const CAN_PERIOD : real = 25.0;
   	
   	eq decrypt_clock : bool = decrypt._CLK;
   	eq encrypt_clock : bool = encrypt._CLK;
@@ -116,9 +116,9 @@ system implementation software.i
   	eq receive_clock : bool = receive._CLK;
   	
   	--assert that no one can preempt monitors
-  	assert decrypt_clock =>
+  	assert receive_clock =>
   	  not (rise(encrypt_clock) or rise(nav_clock) or rise(mavlink_clock) or
-  	  	   rise(can_clock) or rise(transmit_clock) or rise(receive_clock));
+  	  	   rise(can_clock) or rise(transmit_clock) or rise(decrypt_clock));
   	
   	assert encrypt_clock =>
   	  not (rise(decrypt_clock) or rise(nav_clock) or rise(mavlink_clock) or
@@ -137,14 +137,14 @@ system implementation software.i
   	  	   rise(can_clock) or rise(decrypt_clock) or rise(receive_clock));
   	  	   
   	--assert that the can thread cannot preempt the receive thread
-  	assert receive_clock =>
+  	assert decrypt_clock =>
   	  not rise(can_clock);
   	  	   
   	--assert that a thread only begins computation if it is scheduled or 
   	--event driven to do so
-  	assert rise(receive_clock) => receive_scheduled;
+  	assert rise(decrypt_clock) => decrypt_scheduled;
   	assert rise(can_clock) => can_scheduled;
-  	assert rise(decrypt_clock) => event(decrypt.enc_mavlink);
+  	assert rise(receive_clock) => event(receive.mavlink_in);
   	assert rise(encrypt_clock) => event(encrypt.mavlink);
   	assert rise(nav_clock) => event(nav.mavlink_in);
   	assert rise(mavlink_clock) => event(mavlink.mavlink_in);
@@ -153,12 +153,12 @@ system implementation software.i
                                    event(transmit.motmix_data);
   	
   	--constrain when a clock can start ticking
-  	assert if receive_scheduled and not monitor_is_running then
-  	         receive_clock
+  	assert if decrypt_scheduled and not monitor_is_running then
+  	         decrypt_clock
   	       else if can_scheduled and not monitor_is_running then
   	         can_clock
-  	       else if event(decrypt.enc_mavlink) then
-  	         decrypt_clock
+  	       else if event(receive.mavlink_in) then
+  	         receive_clock
   	       else if event(encrypt.mavlink) then
   	         encrypt_clock
   	       else if event(nav.mavlink_in) then 
@@ -182,7 +182,7 @@ system implementation software.i
   	    AGREE_LIB.min_if(can_clock, can_finishes,
   	    AGREE_LIB.min_if(transmit_clock, transmit_finishes,
   	    AGREE_LIB.min_if(encrypt_clock, encrypt_finishes,
-  	    AGREE_LIB.min(time_of_next_receive, time_of_next_can)))))))); 
+  	    AGREE_LIB.min(time_of_next_decrypt, time_of_next_can)))))))); 
   	    
   	    
   	assert true -> pre(decrypt_clock) and decrypt_run_time < DECRYPT_EXEC_TIME => decrypt_clock;
@@ -203,9 +203,9 @@ system implementation software.i
   	
   	    
   	--keep track of how long tasks have been running
-  	eq receive_run_time : real = 0.0 ->
-  	  if pre(receive_clock) then
-  	    pre(receive_run_time) + (time - pre(time))
+  	eq decrypt_run_time : real = 0.0 ->
+  	  if pre(decrypt_clock) then
+  	    pre(decrypt_run_time) + (time - pre(time))
   	  else
   	    0.0;
   	    
@@ -215,9 +215,9 @@ system implementation software.i
   	  else 
   	    0.0;
   	    
-  	eq decrypt_run_time : real = 0.0 ->
-  	  if pre(decrypt_clock) then
-  	    pre(decrypt_run_time) + (time - pre(time))
+  	eq receive_run_time : real = 0.0 ->
+  	  if pre(receive_clock) then
+  	    pre(receive_run_time) + (time - pre(time))
   	  else
   	    0.0;
   	
@@ -268,19 +268,19 @@ system implementation software.i
   	  time + ENCRYPT_EXEC_TIME - encrypt_run_time;
   	  
   	--keep track of when things are scheduled
-  	eq time_of_next_receive : real = RECEIVE_PERIOD ->
-  	  if time < pre(time_of_next_receive) then
-  	    pre(time_of_next_receive)
+  	eq time_of_next_decrypt : real = DECRYPT_PERIOD ->
+  	  if time < pre(time_of_next_decrypt) then
+  	    pre(time_of_next_decrypt)
   	  else
-  	    pre(time_of_next_receive) + RECEIVE_PERIOD;
+  	    pre(time_of_next_decrypt) + DECRYPT_PERIOD;
   	
-  	eq receive_scheduled : bool = true ->
-  	  if time = pre(time_of_next_receive) then
+  	eq decrypt_scheduled : bool = true ->
+  	  if time = pre(time_of_next_decrypt) then
   	    true
-  	  else if pre(receive_clock) then
+  	  else if pre(decrypt_clock) then
   	    false
   	  else
-  	    pre(receive_scheduled);
+  	    pre(decrypt_scheduled);
   	    
   	eq time_of_next_can : real = CAN_PERIOD ->
   	  if time < pre(time_of_next_can) then
@@ -297,7 +297,7 @@ system implementation software.i
   	    pre(can_scheduled);
   	    
   	eq monitor_is_running : bool =
-  	  decrypt_clock or encrypt_clock or transmit_clock or nav_clock or mavlink_clock;
+  	  receive_clock or encrypt_clock or transmit_clock or nav_clock or mavlink_clock;
   	  	   
   	node rise (clock : bool) returns (ret : bool);
   	let
