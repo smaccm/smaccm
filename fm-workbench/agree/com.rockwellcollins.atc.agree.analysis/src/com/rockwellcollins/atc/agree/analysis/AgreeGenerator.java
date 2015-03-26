@@ -69,7 +69,7 @@ public class AgreeGenerator {
     }
     
     private static Program getAssumeGuaranteeProgram(AgreeEmitterState state){
-        Node subNode = nodeFromState(state, false, false);
+        Node subNode = nodeFromState(state, false);
     	List<String> properties = new ArrayList<>();
     	List<Node> nodes = new ArrayList<>(state.nodeDefExpressions);
     	
@@ -90,11 +90,18 @@ public class AgreeGenerator {
 
     	//get the guarantees as properties and add them to the renaming
     	int i = 0;
+    	List<VarDecl> locals = new ArrayList<>();
+    	List<VarDecl> inputs = new ArrayList<>();
+    	List<Equation> equations = new ArrayList<>();
+    	
     	for(Equation eq : state.guarExpressions){
-    		String propName =nodeGuarName+i++;
+    		String propName = nodeGuarName+i++;
     		state.renaming.addExplicitRename(propName, eq.lhs.get(0).id);
     		properties.add(propName);
     		state.guarProps.add(propName);
+    		//have to add guarantees as local variables for kind 2.0
+    		locals.add(new VarDecl(propName, NamedType.BOOL));
+    		equations.add(new Equation(new IdExpr(propName), eq.expr));
     	}
     	
     	for(Equation eq : state.lemmaExpressions){
@@ -102,10 +109,21 @@ public class AgreeGenerator {
             state.renaming.addExplicitRename(propName, eq.lhs.get(0).id);
             properties.add(propName);
             state.guarProps.add(propName);
+            //have to add guarantees as local variables for kind 2.0
+            locals.add(new VarDecl(propName, NamedType.BOOL));
+            equations.add(new Equation(new IdExpr(propName), eq.expr));
         }
     	
-    	Node mainNode = new Node(subNode.location, subNode.id, subNode.inputs, subNode.outputs,
-    			subNode.locals, subNode.equations, properties, assumptions,
+    	//remove guarantee variables from inputs for kind 2.0
+    	for(VarDecl var : subNode.inputs){
+    	    if(!var.id.startsWith("__GUARANTEE")){
+    	        inputs.add(var);
+    	    }
+    	}
+    	locals.addAll(subNode.locals);
+    	equations.addAll(subNode.equations);
+    	Node mainNode = new Node(subNode.location, subNode.id, inputs, subNode.outputs,
+    			locals, equations, properties, assumptions,
     			null, null, null);
     	
     	nodes.add(mainNode);
@@ -130,7 +148,7 @@ public class AgreeGenerator {
     	IPreferenceStore prefs = Activator.getDefault().getPreferenceStore();
     	int consistDetph = prefs.getInt(PreferenceConstants.PREF_CONSIST_DEPTH);
 
-    	Node subNode = nodeFromState(state, false, false);
+    	Node subNode = nodeFromState(state, false);
     	List<VarDecl> locals = new ArrayList<>(subNode.locals);
     	List<String> props = new ArrayList<>();
     	List<Equation> eqs = new ArrayList<>(subNode.equations);
@@ -310,7 +328,7 @@ public class AgreeGenerator {
 
         }
         
-        Node subNode = nodeFromState(state, false, false);
+        Node subNode = nodeFromState(state, false);
         
         List<Node> nodes = new ArrayList<>(state.nodeDefExpressions);
         
@@ -435,9 +453,9 @@ public class AgreeGenerator {
         	FeatureUtils.recordFeatures(subState, false);
         	boolean subResult = doSwitchAgreeAnnex(subState, subCompType);
         	if(subResult){
-        		Node subNode = nodeFromState(subState, true, false);
+        		Node subNode = nodeFromState(subState, true);
         		ordering.add(subNode.id);
-        		addSubcomponentNodeCall(subCompPrefix, state, subState, subNode);
+        		addSubcomponentNodeCall(subCompPrefix, state, subState, subNode, false);
         	}
         }
 
@@ -476,8 +494,8 @@ public class AgreeGenerator {
         		AgreeEmitterState subState = generateMonolithic(subCompInst, subComp);
         		if(subState != null){
         			foundSubAnnex = true;
-        			Node subNode = nodeFromState(subState, false, true);
-        			addSubcomponentNodeCall(subCompPrefix, state, subState, subNode);
+        			Node subNode = nodeFromState(subState, false);
+        			addSubcomponentNodeCall(subCompPrefix, state, subState, subNode, true);
         		}
         	}
         	if(!foundSubAnnex && !result){
@@ -584,7 +602,7 @@ public class AgreeGenerator {
 	}
 
 	private static void addSubcomponentNodeCall(final String prefix,
-			AgreeEmitterState state, AgreeEmitterState subState, Node subNode) {
+			AgreeEmitterState state, AgreeEmitterState subState, Node subNode, boolean monolithic) {
 		
 		//get the id for the subcomponent clock
 		IdExpr clockId = addSubcompClock(state, subState);
@@ -597,7 +615,7 @@ public class AgreeGenerator {
 		addInputs(prefix, state, subState);
 		
 		//add assumption and guarantee variables
-		addAssumeGuaranteesLemmaNodeProps(prefix, state, subState, clockId);
+		addAssumeGuaranteesLemmaNodeProps(prefix, state, subState, clockId, monolithic);
 		
 		//add the all of the sub categories
 		addCategories(prefix, state, subState);
@@ -624,7 +642,7 @@ public class AgreeGenerator {
 	}
 
     private static void addAssumeGuaranteesLemmaNodeProps(String prefix,
-            AgreeEmitterState state, AgreeEmitterState subState, Expr clockId) {
+            AgreeEmitterState state, AgreeEmitterState subState, Expr clockId, boolean monolithic) {
         int i = 0;
         
         if(state.latchedClocks){
@@ -635,16 +653,21 @@ public class AgreeGenerator {
             clockId = fallingEdge;
         }
         
+        ComponentClassifier compClass = subState.curInst.getComponentClassifier();
         for(Equation guarEq : subState.guarExpressions){
             AgreeVarDecl guarVar = new AgreeVarDecl(prefix+nodeGuarName+i++, NamedType.BOOL);
             state.inputVars.add(guarVar);
-//            Expr lemmaExpr = new BinaryExpr(clockId, BinaryOp.IMPLIES, new IdExpr(guarVar.id));
-//            String lemmaStr = guarEq.lhs.get(0).id;
-//            //stupid hack for renaming
-//            String replaceStr = lemmaStr.startsWith("guarantee :") ? " " : ".";
-//            lemmaStr = prefix.replace("__", replaceStr)+lemmaStr;
-//            state.lemmaExpressions.add(new Equation(new IdExpr(lemmaStr), lemmaExpr));
-//            state.refMap.put(guarVar.id, subState.refMap.get(guarEq.lhs.get(0).id));
+            if(monolithic && compClass instanceof ComponentImplementation){
+                //add guarantees as lemmas if we are doing monolithic verification
+                //and this is a component implementation
+                Expr lemmaExpr = new BinaryExpr(clockId, BinaryOp.IMPLIES, new IdExpr(guarVar.id));
+                String lemmaStr = guarEq.lhs.get(0).id;
+                //stupid hack for renaming
+                
+                lemmaStr = prefix.replace("__", " guarantee: ")+ "\""+lemmaStr+"\"";
+                state.lemmaExpressions.add(new Equation(new IdExpr(lemmaStr), lemmaExpr));
+                state.refMap.put(guarVar.id, subState.refMap.get(guarEq.lhs.get(0).id));
+            }
         }
         
         for(Equation lemmaEq : subState.lemmaExpressions){
@@ -932,7 +955,7 @@ public class AgreeGenerator {
 		
 	}
     
-    public static Node nodeFromState(AgreeEmitterState subState, boolean assertConract, boolean monolothicCheck){
+    public static Node nodeFromState(AgreeEmitterState subState, boolean assertConract){
     	
     	//create the body for the subnode
     	String nodeId = getLustreNodeName(subState);
