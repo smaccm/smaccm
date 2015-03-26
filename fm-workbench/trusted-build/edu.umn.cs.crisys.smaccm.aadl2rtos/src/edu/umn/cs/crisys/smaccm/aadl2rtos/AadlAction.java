@@ -61,6 +61,7 @@ import org.osate.aadl2.modelsupport.errorreporting.AnalysisErrorReporterManager;
 //import fr.tpt.aadl.ramses.control.support.analysis.Analyzer;
 //import fr.tpt.aadl.ramses.control.support.config.RamsesConfiguration;
 
+@Deprecated
 abstract public class AadlAction implements IWorkbenchWindowActionDelegate {
 	private IWorkbenchWindow window;
 	private Object currentSelection;

@@ -73,28 +73,27 @@ public class TypeNames {
    * 
    * 
    */ 
+  public boolean isNativePointerArg() {
+	    return (t_structural instanceof PointerType) || 
+	           (t_structural instanceof ArrayType);
+	  }
   
   public TypeNames getAadlOutputType() { 
-    return new TypeNames((t_structural instanceof ArrayType) ?
+    return new TypeNames(isNativePointerArg() ?
         t : new PointerType(t));
   }
   
   public TypeNames getAadlInputType() {
-    return (t_structural.isBaseType() ? new TypeNames(t) : 
-        getAadlOutputType());
+    return getAadlOutputType();
   }
   
-  public boolean isNativePointerArg() {
-    return (t_structural instanceof PointerType) || 
-           (t_structural instanceof ArrayType);
-  }
   
   public String getAadlInputToAadlOutput() {
-    if (t_structural.isBaseType()) { return "&"; } else { return ""; }
+    return "";
   }
 
   public String getValToAadlInput() {
-    if (t_structural.isBaseType()) { return ""; } else { return "&"; }
+    if (isNativePointerArg()) { return ""; } else { return "&"; }
   }
   
   public String getValToAadlOutput() {
@@ -106,8 +105,12 @@ public class TypeNames {
     return "*"; 
   }
 
+  public String getAadlInputToVal() {
+	    return "*"; 
+	  }
+
   public String getAadlInputToPtr() {
-    if (t_structural.isBaseType()) { return "&"; } else { return ""; }
+    return ""; 
   }
   
   public String getAadlOutputToPtr() {
@@ -115,41 +118,44 @@ public class TypeNames {
   }
   
   public String getValToPtr() {
-    if (t_structural instanceof ArrayType) { return ""; } else { return "&"; }
+    if (isNativePointerArg()) { return ""; } else { return "&"; }
   }    
 
   /* Conversion to CAMKES types */
-  /* AADL-native types for inputs and outputs + conversion functions */ 
+  /* CAmkES-native types for inputs and outputs + conversion functions;
+   * now these follow the same conventions as AADL */ 
   public TypeNames getCamkesOutputType() { 
     if (t_structural instanceof ArrayType) {
       throw new Aadl2RtosException("Error during code generation: Array types are incorrectly implemented in CAmkES");
     }
-    return new TypeNames(new PointerType(t));
+    return getAadlOutputType();
   }
   
   public TypeNames getCamkesInputType() {
     if (t_structural instanceof ArrayType) {
       throw new Aadl2RtosException("Error during code generation: Array types are incorrectly implemented in CAmkES");
     }
-    return new TypeNames(t);
+    return getAadlInputType();
   }
 
   public String getValToCamkesInput() {
-    return "";
+    return getValToAadlInput();
   }
-  
+
+  public String getCamkesInputToVal() {
+	    return getAadlInputToVal();
+	  }
+
   public String getCamkesInputToAadlInput() {
-    if (isNativePointerArg() || 
-        t_structural.isBaseType()) { return ""; } else { return "&"; }
+	  return ""; 
   }
 
   public String getAadlInputToCamkesInput() {
-    if (isNativePointerArg() || 
-        t_structural.isBaseType()) { return ""; } else { return "*"; }
+	  return "";
   }
 
   public String getCamkesInputToPtr() {
-    if (isNativePointerArg()) { return ""; } else { return "&"; }
+	  return getAadlInputToPtr();
   }
   public String getCamkesOutputToAadlOutput() {
     return ""; 

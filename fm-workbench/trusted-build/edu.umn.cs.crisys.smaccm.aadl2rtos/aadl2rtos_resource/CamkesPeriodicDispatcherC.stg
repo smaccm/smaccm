@@ -20,7 +20,8 @@ periodicDispatcherCPrefix(name, date, path, datatypesHeader) ::= <<
 
 writePeriodicDispatcher(dispatcher, threadCalendar) ::= <<
 if ((smaccm_calendar_counter % (<dispatcher.periodicDispatcherPeriod> / smaccm_tick_interval)) == 0) {
-	<dispatcher.dispatcherComponentDispatchName>_<dispatcher.type.writerFn>(smaccm_get_time_in_ms()); 
+	uint64_t the_time = clock_get_time();
+	<dispatcher.dispatcherComponentDispatchName>_<dispatcher.type.writerFn>(&the_time); 
 }
 >>
 
@@ -32,10 +33,6 @@ const uint32_t smaccm_hyperperiod_subdivisions = <threadCalendar.hyperperiodSubd
 uint32_t smaccm_calendar_counter = 0;
 uint32_t smaccm_calendar_ticks = 0;
 
-// TODO: FIX This: we need to use some system function to return the current system time.
-uint32_t smaccm_get_time_in_ms() {
-  return (uint32_t)(smaccm_calendar_ticks * smaccm_tick_interval); 
-}
 
 void smaccm_thread_calendar() {
 	<threadCalendar.periodicDispatchers:writePeriodicDispatcher(threadCalendar)>
@@ -54,7 +51,7 @@ int run(void)
 {
 	irq_reg_callback(smaccm_periodic_irq_callback, NULL);
 	clock_init();
-	clock_set_interval(<threadCalendar.greatestCommonDivisorInMilliseconds>);
+	clock_set_interval_in_ms(<threadCalendar.greatestCommonDivisorInMilliseconds>);
 
 	clock_start_timer();
 

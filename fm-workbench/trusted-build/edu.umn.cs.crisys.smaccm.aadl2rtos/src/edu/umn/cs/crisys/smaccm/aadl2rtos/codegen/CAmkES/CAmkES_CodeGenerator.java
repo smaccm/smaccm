@@ -174,10 +174,12 @@ public class CAmkES_CodeGenerator {
     // "for free types" that are always necessary; void for event ports
     // and uint32_t for periodic dispatchers.  Note if the dispatcher 
     // time type changes, it may break code, so perhaps we should 
-    // store the time type somewhere (model?)
+    // store the time type somewhere (model?); 
+    // MWW: updated: store this in the periodic dispatcher class.
     
     rwTypeSet.add(new UnitType());
-    rwTypeSet.add(new IntType(32, false));  
+    //rwTypeSet.add(new IntType(32, false));  
+    rwTypeSet.add(PeriodicDispatcher.getPeriodicDispatcherType());  
     
     for (ThreadImplementation ti : model.getAllThreadImplementations()) {
       for (OutputDataPort d : ti.getOutputDataPortList()) {
@@ -349,7 +351,11 @@ public class CAmkES_CodeGenerator {
     ThreadImplementationNames tin = new ThreadImplementationNames(ti);
 	  
 	  String name = tin.getNormalizedName();
-    File interfaceFile = new File(componentDirectory, tin.getComponentGlueCodeCFileName());
+	  String fname = tin.getComponentGlueCodeCFileName();
+	  if (ti.getIsExternal()) {
+		  fname += ".template";
+	  }
+    File interfaceFile = new File(componentDirectory, fname);
     String path = interfaceFile.getAbsolutePath();
     
     
@@ -379,9 +385,13 @@ public class CAmkES_CodeGenerator {
   // other thread implementations.  From here, we can grab the idl file for that thread implementation.  
 
 	public void createComponentCamkesFile(File componentDirectory, ThreadImplementation ti) throws Aadl2RtosFailure {
-    ThreadImplementationNames tin = new ThreadImplementationNames(ti); 
+      ThreadImplementationNames tin = new ThreadImplementationNames(ti); 
 	  String name = tin.getComponentName();
-    File interfaceFile = new File(componentDirectory, tin.getComponentCamkesFileName());
+	  String fname = tin.getComponentCamkesFileName(); 
+	  if (ti.getIsExternal()) {
+		  fname += ".template";
+	  }
+    File interfaceFile = new File(componentDirectory, fname);
     String path = interfaceFile.getAbsolutePath();
 	  try (BufferedWriter writer = new BufferedWriter(new FileWriter(interfaceFile))) {
       STGroupFile stg = this.createTemplate("CamkesComponentCamkes.stg");
@@ -443,15 +453,13 @@ public class CAmkES_CodeGenerator {
 	  File componentDirectory = new File(componentsDirectory, name);
 	  File srcDirectory = new File(componentDirectory, "src");
 	  File includeDirectory = new File(componentDirectory, "include");
-    srcDirectory.mkdirs();
+      srcDirectory.mkdirs();
 	  includeDirectory.mkdirs();
     
 	  createComponentHeader(includeDirectory, ti);
 	  createComponentCFile(srcDirectory, ti);
-    if (!ti.getIsExternal()) {
       createComponentCamkesFile(componentDirectory, ti);
-    }
-	  copyComponentFiles(srcDirectory, includeDirectory, ti); 
+      copyComponentFiles(srcDirectory, includeDirectory, ti); 
 	  
 	  ThreadImplementationNames tin = new ThreadImplementationNames(ti); 
     File CFile = new File(componentDirectory, tin.getComponentGlueCodeCFileName());

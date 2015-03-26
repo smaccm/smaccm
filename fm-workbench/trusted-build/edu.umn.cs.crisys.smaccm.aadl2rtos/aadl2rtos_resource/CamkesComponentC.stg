@@ -106,7 +106,7 @@ ReceiverQueueDecls(port) ::= <<
 >>
 
 copyToQueueDataStmt(port) ::= <<
-<if(port.type.isBaseType)><port.queueDataName>[<port.queueFrontName>] = <port.name> ;
+<if(port.type.isBaseType)><port.queueDataName>[<port.queueFrontName>] = *<port.name> ;
 <else><aadlInputToValMemcpy(port.type, {<port.queueDataName>[<port.queueFrontName>]}, port.name )>
 <endif>
 >>
@@ -263,7 +263,7 @@ componentRemoteWriteFunction(port) ::= <<
 // RPC naming and return convention.  
 bool <LocalPortWriterName(port)>(<optConstCamkesInputArg(port)>) {
 	<port.camkesMutexLockFnCall>; 
-	<if(port.type.isBaseType)><port.readerWriterImplVar> = <port.name>;
+	<if(port.type.isBaseType)><port.readerWriterImplVar> = *<port.name>;
 	<else><camkesInputToValMemcpy(port.type, port.readerWriterImplVar, port.name)>
 	<endif>
 	<port.camkesMutexUnlockFnCall>;
@@ -311,7 +311,7 @@ bool <port.aadlWriterFnName>(<port.type.aadlInputType.name> <port.name>) {
 periodicDispatcher(dispatcher) ::= <<
 if (<dispatcher.dispatchOccurredVar>) {
 	<dispatcher.dispatchOccurredVar> = false;
-	<dispatcher.dispatcherCFileDispatcherFnName>(<dispatcher.periodicTimeVar>);
+	<dispatcher.dispatcherCFileDispatcherFnName>(&<dispatcher.periodicTimeVar>);
 }
 
 >>
@@ -392,6 +392,8 @@ userEntrypointCallerAssignGlobals(dispatchContract) ::= <<
 >> 
 
 userEntrypointCallerFn(dispatcher) ::= << 
+// <userEntrypointCallerFnName(dispatcher)>: this function defines the 
+// caller function for the external handlers for <dispatcher.name>
 void <userEntrypointCallerFnName(dispatcher)>(<userEntrypointCallerFnArgs(dispatcher)>) {
 	<dispatcher.maxDispatchContracts.contracts:userEntrypointCallerAssignGlobals()>
 	<dispatcher.externalHandlers:userEntrypointCallerCall(dispatcher)>
@@ -435,7 +437,7 @@ void <connection.sourcePort.qualifiedName>_<connection.destPort.type.writerFn>()
 
 userSendCopyAadlInputToGlobalStmt(port) ::= <<
 <if(port.type.isBaseType)><\\>
-<port.globalDataSlot> = <port.name>;
+<port.globalDataSlot> = *<port.name>;
 <else><aadlInputToValMemcpy(port.type, port.globalDataSlot, port.name)>
 <endif>
 >>
@@ -571,7 +573,7 @@ bool <dispatcher.dispatchOccurredVar>;
 bool <camkesRPCDispatchName(dispatcher)><\\>
 (<dispatcher.type.camkesInputType.name> arg) {
 	<dispatcher.dispatchOccurredVar> = true;
-	<dispatcher.periodicTimeVar> = arg;
+	<dispatcher.periodicTimeVar> = <dispatcher.type.camkesInputToVal>arg;
 	<dispatcher.threadImplementation.dispatcherUnlockStmt>
 	return true;
 }

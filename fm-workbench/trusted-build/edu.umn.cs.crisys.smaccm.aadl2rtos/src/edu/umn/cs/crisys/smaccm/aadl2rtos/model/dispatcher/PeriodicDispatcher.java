@@ -38,7 +38,7 @@ public class PeriodicDispatcher extends Dispatcher {
 	}
 	
 	static public Type getPeriodicDispatcherType() {
-    return new IntType(32, false);
+    return new IntType(64, false);
 	}
 	
 	public Type getType() {

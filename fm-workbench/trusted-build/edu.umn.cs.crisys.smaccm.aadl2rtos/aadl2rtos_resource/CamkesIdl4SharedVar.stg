@@ -32,7 +32,7 @@ svProc(type, model) ::= <<
 procedure <type.sharedDataInterfaceName> {
     include <\u003C><model.systemTypeHeaderName><\u003E>;
 	void <type.sharedDataInterfaceReadFnName>(out <type.name> arg);
-	void <type.sharedDataInterfaceWriteFnName>(in <type.name> arg);  
+	void <type.sharedDataInterfaceWriteFnName>(refin <type.name> arg);  
 }
 
 >>

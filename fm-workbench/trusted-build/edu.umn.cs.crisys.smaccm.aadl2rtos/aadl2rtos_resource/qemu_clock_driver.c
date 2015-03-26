@@ -42,6 +42,9 @@
 #define CLKSRC_IPG_HIGH   (0x2)     /* IPG clock high frequency */
 #define CLKSRC_IPG_32K    (0x3)     /* IPG 32K clock */
 
+uint64_t ticks = 0;
+uint32_t the_interval = 0;
+
 void clock_init()
 {
 	REG_VAL(KZM_EPIT_CTRL_ADDR) = 0;
@@ -61,14 +64,16 @@ void clock_init()
 }
 
 /* Set interrupt interval, in milliseconds. */
-void clock_set_interval(uint32_t interval)
+void clock_set_interval_in_ms(uint32_t interval)
 {
 	REG_VAL(KZM_EPIT_LOAD_ADDR) = (IPG_CLK_KHZ * interval) ;
 	REG_VAL(KZM_EPIT_COMP_ADDR) = 0;
+	the_interval = interval;
 }
 
 void clock_start_timer(void)
 {
+	ticks = 0;
 	REG_VAL(KZM_EPIT_STAT_ADDR) = 0x1;
 
 	/* Enable timer */
@@ -79,4 +84,12 @@ void clock_irq_callback(void)
 {
 	/* Clear status bit. */
 	REG_VAL(KZM_EPIT_STAT_ADDR) = 0x1;
+
+	ticks++;
+}
+
+
+uint64_t clock_get_time()
+{
+	return ticks*((uint64_t)the_interval) ;
 }
