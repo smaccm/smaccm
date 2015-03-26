@@ -8,6 +8,7 @@ import static com.rockwellcollins.atc.agree.validation.AgreeType.ERROR;
 import static com.rockwellcollins.atc.agree.validation.AgreeType.INT;
 import static com.rockwellcollins.atc.agree.validation.AgreeType.REAL;
 
+import java.awt.Component;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -33,6 +34,7 @@ import org.osate.aadl2.ClassifierType;
 import org.osate.aadl2.ComponentClassifier;
 import org.osate.aadl2.ComponentImplementation;
 import org.osate.aadl2.ComponentType;
+import org.osate.aadl2.Connection;
 import org.osate.aadl2.DataAccess;
 import org.osate.aadl2.DataImplementation;
 import org.osate.aadl2.DataPort;
@@ -64,6 +66,7 @@ import com.rockwellcollins.atc.agree.agree.BinaryExpr;
 import com.rockwellcollins.atc.agree.agree.BoolLitExpr;
 import com.rockwellcollins.atc.agree.agree.CalenStatement;
 import com.rockwellcollins.atc.agree.agree.CallDef;
+import com.rockwellcollins.atc.agree.agree.ConnectionStatement;
 import com.rockwellcollins.atc.agree.agree.ConstStatement;
 import com.rockwellcollins.atc.agree.agree.EqStatement;
 import com.rockwellcollins.atc.agree.agree.EventExpr;
@@ -76,6 +79,7 @@ import com.rockwellcollins.atc.agree.agree.GuaranteeStatement;
 import com.rockwellcollins.atc.agree.agree.IfThenElseExpr;
 import com.rockwellcollins.atc.agree.agree.InitialStatement;
 import com.rockwellcollins.atc.agree.agree.IntLitExpr;
+import com.rockwellcollins.atc.agree.agree.LatchedStatement;
 import com.rockwellcollins.atc.agree.agree.LemmaStatement;
 import com.rockwellcollins.atc.agree.agree.LiftStatement;
 import com.rockwellcollins.atc.agree.agree.MNSynchStatement;
@@ -112,6 +116,25 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
     @Override
     protected boolean isResponsible(Map<Object, Object> context, EObject eObject) {
         return (eObject.eClass().getEPackage() == AgreePackage.eINSTANCE);
+    }
+    
+    @Check(CheckType.FAST)
+    public void checkConnectionStatement(ConnectionStatement conn){
+        Classifier container = conn.getContainingClassifier();
+        if(container instanceof ComponentImplementation){
+            NamedElement aadlConn = conn.getConn();
+            if(aadlConn == null){
+                return;
+            }
+            if(!(aadlConn instanceof Connection)){
+                error(conn, "The connection label in the connection statement is not a connection");
+                return;
+            }
+            
+            
+        }else{
+            error(conn, "Connection statements are only allowed in component implementations.");
+        }
     }
     
     @Check(CheckType.FAST)
@@ -210,7 +233,8 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
     	
     	if(sync instanceof CalenStatement
     		|| sync instanceof MNSynchStatement
-    		|| sync instanceof AsynchStatement){
+    		|| sync instanceof AsynchStatement
+    		|| sync instanceof LatchedStatement){
     		return;
     	}
     	
@@ -924,6 +948,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 
         Set<SynchStatement> syncs = new HashSet<>();
         Set<InitialStatement> inits = new HashSet<>();
+        List<ConnectionStatement> conns = new ArrayList<>();
         //check that there are zero or more synchrony statements
         for(SpecStatement spec : contract.getSpecs()){
             if(spec instanceof SynchStatement){
@@ -934,6 +959,8 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
             }
             else if(spec instanceof InitialStatement){
             	inits.add((InitialStatement) spec);
+            }else if(spec instanceof ConnectionStatement){
+                conns.add((ConnectionStatement) spec);
             }
 
         }
@@ -947,6 +974,22 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
         if(inits.size() > 1){
             for(InitialStatement init : inits){
                 error(init, "Multiple initially statements in a single contract");
+            }
+        }
+        
+        for(int i = 0; i < conns.size(); i++){
+            ConnectionStatement connStat0 = conns.get(i);
+            NamedElement conn0 = connStat0.getConn();
+            for(int j = i+1; j < conns.size(); j++){
+                ConnectionStatement connStat1 = conns.get(j);
+                NamedElement conn1 = connStat1.getConn();
+                if(conn0 == null || conn1 == null){
+                    break;
+                }
+                if(conn0.equals(conn1)){
+                    error(connStat0, "Multiple connection overrides for connection: '"+conn0.getName()+"'");
+                    error(connStat1, "Multiple connection overrides for connection: '"+conn1.getName()+"'");
+                }
             }
         }
         

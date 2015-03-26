@@ -34,6 +34,7 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.osate.aadl2.AadlPackage;
 import org.osate.aadl2.BooleanLiteral;
+import org.osate.aadl2.Connection;
 import org.osate.aadl2.FeatureGroup;
 import org.osate.aadl2.IntegerLiteral;
 import org.osate.aadl2.NamedElement;
@@ -54,6 +55,7 @@ import com.rockwellcollins.atc.agree.agree.AssumeStatement;
 import com.rockwellcollins.atc.agree.agree.AsynchStatement;
 import com.rockwellcollins.atc.agree.agree.BoolLitExpr;
 import com.rockwellcollins.atc.agree.agree.CalenStatement;
+import com.rockwellcollins.atc.agree.agree.ConnectionStatement;
 import com.rockwellcollins.atc.agree.agree.ConstStatement;
 import com.rockwellcollins.atc.agree.agree.EqStatement;
 import com.rockwellcollins.atc.agree.agree.EventExpr;
@@ -64,6 +66,7 @@ import com.rockwellcollins.atc.agree.agree.GetPropertyExpr;
 import com.rockwellcollins.atc.agree.agree.GuaranteeStatement;
 import com.rockwellcollins.atc.agree.agree.InitialStatement;
 import com.rockwellcollins.atc.agree.agree.IntLitExpr;
+import com.rockwellcollins.atc.agree.agree.LatchedStatement;
 import com.rockwellcollins.atc.agree.agree.LemmaStatement;
 import com.rockwellcollins.atc.agree.agree.LiftStatement;
 import com.rockwellcollins.atc.agree.agree.MNSynchStatement;
@@ -131,6 +134,7 @@ public class AgreeEmitterState  extends AgreeSwitch<Expr> {
     public List<MNSynchronyElement> mnSyncEls = new ArrayList<>();
     public boolean simultaneity = true;
     public boolean latchedClocks = false;
+    public boolean asynchClocks = false;
     public final String clockIDSuffix = "___CLOCK_";
     public final String eventSuffix = "___EVENT_";
     
@@ -151,9 +155,18 @@ public class AgreeEmitterState  extends AgreeSwitch<Expr> {
     private final Map<String, Map<String, String>> nodeLemmaNames = new HashMap<>();
     private final Map<String, Integer> nodeCallCount = new HashMap<>(); //used to keep track of renamings for node lemmas
     
+    public final Set<Connection> overridenConnections = new HashSet<Connection>();
     public AgreeEmitterState(ComponentInstance compInst, Subcomponent subComp){
     	this.curInst = compInst;
     	this.curComp = subComp;
+    }
+    
+    @Override
+    public Expr caseConnectionStatement(ConnectionStatement conn){
+        Expr connExpr = doSwitch(conn.getExpr());
+        overridenConnections.add((Connection) conn.getConn());
+        assertExpressions.add(connExpr);
+        return null;
     }
     
     @Override
@@ -182,8 +195,13 @@ public class AgreeEmitterState  extends AgreeSwitch<Expr> {
     		return null;
     	}
     	
-    	if(sync instanceof AsynchStatement){
+    	if(sync instanceof LatchedStatement){
     	    this.latchedClocks = true;
+    	    return null;
+    	}
+    	
+    	if(sync instanceof AsynchStatement){
+    	    this.asynchClocks = true;
     	    return null;
     	}
     	

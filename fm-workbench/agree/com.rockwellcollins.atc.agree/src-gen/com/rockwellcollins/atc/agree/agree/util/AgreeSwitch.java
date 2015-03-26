@@ -358,6 +358,15 @@ public class AgreeSwitch<T> extends Switch<T>
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
+      case AgreePackage.CONNECTION_STATEMENT:
+      {
+        ConnectionStatement connectionStatement = (ConnectionStatement)theEObject;
+        T result = caseConnectionStatement(connectionStatement);
+        if (result == null) result = caseSpecStatement(connectionStatement);
+        if (result == null) result = caseElement(connectionStatement);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
       case AgreePackage.MN_SYNCH_STATEMENT:
       {
         MNSynchStatement mnSynchStatement = (MNSynchStatement)theEObject;
@@ -385,6 +394,16 @@ public class AgreeSwitch<T> extends Switch<T>
         if (result == null) result = caseSynchStatement(asynchStatement);
         if (result == null) result = caseSpecStatement(asynchStatement);
         if (result == null) result = caseElement(asynchStatement);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case AgreePackage.LATCHED_STATEMENT:
+      {
+        LatchedStatement latchedStatement = (LatchedStatement)theEObject;
+        T result = caseLatchedStatement(latchedStatement);
+        if (result == null) result = caseSynchStatement(latchedStatement);
+        if (result == null) result = caseSpecStatement(latchedStatement);
+        if (result == null) result = caseElement(latchedStatement);
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
@@ -1055,6 +1074,22 @@ public class AgreeSwitch<T> extends Switch<T>
   }
 
   /**
+   * Returns the result of interpreting the object as an instance of '<em>Connection Statement</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Connection Statement</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseConnectionStatement(ConnectionStatement object)
+  {
+    return null;
+  }
+
+  /**
    * Returns the result of interpreting the object as an instance of '<em>MN Synch Statement</em>'.
    * <!-- begin-user-doc -->
    * This implementation returns null;
@@ -1098,6 +1133,22 @@ public class AgreeSwitch<T> extends Switch<T>
    * @generated
    */
   public T caseAsynchStatement(AsynchStatement object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Latched Statement</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Latched Statement</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseLatchedStatement(LatchedStatement object)
   {
     return null;
   }
