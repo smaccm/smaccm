@@ -1,7 +1,7 @@
 /**
  * 
  */
-package edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.CAmkES;
+package edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.common;
 
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosException;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.Dispatcher;

@@ -1,13 +1,13 @@
 /**
  * 
  */
-package edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.CAmkES;
+package edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.common;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.common.CommonNames;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.eChronos.CommonNames;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.OutputEventPort;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.ArrayType;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.IdType;
@@ -76,7 +76,7 @@ public class DispatchContractNames {
     
   }
   public String getDispatchStructTypeName() {
-    return CommonNames.getDispatchStructTypeName(oep.getOwner(), oep, size);
+    return TypeNames.getDispatchStructTypeName(oep.getOwner(), oep, size);
   }
 
 }

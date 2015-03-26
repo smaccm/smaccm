@@ -73,7 +73,7 @@ public class CAmkES_CodeGenerator {
 		  this.pluginDirectory = null;
 		}
 		
-		listener = new CAmkESSTErrorListener(log);
+		listener = new Aadl2RtosSTErrorListener(log);
 		
 		//this.templates.verbose = true;
 		
@@ -158,7 +158,7 @@ public class CAmkES_CodeGenerator {
             // To get around CAmkES array bug!
             RecordType dispatchRecordType = new RecordType();
             dispatchRecordType.addField("f", dispatchArrayType);
-            model.getAstTypes().put(CommonNames.getDispatchStructTypeName(ti, entry.getKey(), entry.getValue()), dispatchRecordType);
+            model.getAstTypes().put(TypeNames.getDispatchStructTypeName(ti, entry.getKey(), entry.getValue()), dispatchRecordType);
           }
         }
       }

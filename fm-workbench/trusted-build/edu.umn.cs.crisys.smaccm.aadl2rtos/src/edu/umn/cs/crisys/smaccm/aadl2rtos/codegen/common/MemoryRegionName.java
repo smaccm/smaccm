@@ -1,7 +1,7 @@
 /**
  * 
  */
-package edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.CAmkES;
+package edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.common;
 
 /**
  * @author Whalen

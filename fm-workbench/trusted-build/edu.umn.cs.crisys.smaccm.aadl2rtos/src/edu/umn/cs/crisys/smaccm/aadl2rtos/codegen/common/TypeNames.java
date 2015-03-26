@@ -1,13 +1,18 @@
 /**
  * 
  */
-package edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.CAmkES;
+package edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.common;
 
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosException;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosFailure;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.OutputEventPort;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.ThreadImplementation;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.ArrayType;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.IdType;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.PointerType;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.Type;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.UnitType;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.util.Util;
 
 /**
  * @author Whalen
@@ -17,12 +22,23 @@ public class TypeNames {
   Type t;
   Type t_structural;
 
-  TypeNames(Type t) {
+  static public Type getStructuralType(Type ty) {
+	  try {
+		  if (ty instanceof IdType) {
+			  Type returnType = ((IdType) ty).getRootType();
+			  return returnType;
+		  } else return ty;
+	  } catch (Aadl2RtosFailure r) {
+		  throw new Aadl2RtosException(r.toString());
+	  }
+  }
+  
+  public TypeNames(Type t) {
     this.t = t;
     if (t == null) {
       throw new Aadl2RtosException("Unexpected null seen for type when constructing TypeNames object");
     }
-    this.t_structural = Names.getStructuralType(t);
+    this.t_structural = getStructuralType(t);
   }
   
   public String getWriterFn() {
@@ -184,5 +200,13 @@ public class TypeNames {
   public String getSharedDataInterfaceWriteFnName() {
     return "write_" + getName();
   }
+  
+  // for creating dispatcher structures for components
+  static public String getDispatchStructTypeName(ThreadImplementation ti, 
+	      OutputEventPort key, Integer val) {
+	    return "smaccm_" + Util.normalizeAadlName(key.getType().toString()) 
+	        + "_struct_" + val; 
+  }
+  
 }
 

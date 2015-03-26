@@ -15,7 +15,7 @@ import edu.umn.cs.crisys.smaccm.aadl2rtos.Logger;
  * @author Whalen
  *
  */
-public class CAmkESSTErrorListener implements STErrorListener {
+public class Aadl2RtosSTErrorListener implements STErrorListener {
 
   Logger log; 
   
@@ -31,7 +31,7 @@ public class CAmkESSTErrorListener implements STErrorListener {
     return "<Unknown>";
   }
   
-  public CAmkESSTErrorListener(Logger log) {
+  public Aadl2RtosSTErrorListener(Logger log) {
     this.log = log;
   }
   /* (non-Javadoc)

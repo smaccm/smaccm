@@ -1,14 +1,12 @@
 /**
  * 
  */
-package edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.common;
+package edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.eChronos;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.util.List;
 
-import edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.common.CommonNames;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.eChronos.Names;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.Dispatcher;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.ExternalHandler;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.InputEventDispatcher;

@@ -1,4 +1,4 @@
-package edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.CAmkES;
+package edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.eChronos;
 
 /**
  * @author Mead, Whalen
@@ -21,18 +21,68 @@ package edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.CAmkES;
  *   size limits.
  * 
  */
+import java.util.Map;
+
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosException;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosFailure;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.DataPort;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.InputPort;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.OutputEventPort;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.OutputPort;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.SharedDataAccessor;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.ThreadImplementation;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.ArrayType;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.IdType;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.PointerType;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.Type;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.util.Util;
 
-public class Names {
+public class CommonNames {
 	// private ArrayList<String> semaphoreList = new ArrayList<String>();
 
+
+  static public String getThreadImplReaderFnName(String commPrim, String tName, String varName) {
+    if (commPrim != null) {
+      return commPrim;
+    } else {
+      return tName + "_read_" + varName;
+    }
+  }
+  
+  static public String getThreadImplReaderFnName(DataPort p) {
+    return getThreadImplReaderFnName(p.getCommprimFnNameOpt(), p.getOwner().getName(), p.getName());
+  }
+  
+  static public String getThreadImplReaderFnName(SharedDataAccessor inp) {
+    return getThreadImplReaderFnName(inp.getCommPrimFnNameOpt(), inp.getOwner().getName(), inp.getName());
+  }
+
+  static public String getThreadImplWriterFnName(String commPrim, String tName, String varName) {
+    if (commPrim != null) {
+      return commPrim;
+    } else {
+      return tName + "_write_" + varName;
+    }
+  }
+  
+  static public String getThreadImplWriterFnName(DataPort inp) {
+    return getThreadImplWriterFnName(inp.getCommprimFnNameOpt(), inp.getOwner().getName(), inp.getName());
+  }
+
+  static public String getThreadImplWriterFnName(SharedDataAccessor inp) {
+    return getThreadImplWriterFnName(inp.getCommPrimFnNameOpt(), inp.getOwner().getName(), inp.getName());
+  }
+  
+  static public String getReaderWriterFnName(DataPort inp) {
+    if (inp instanceof InputPort) {
+      return getThreadImplReaderFnName(inp);
+    } else if (inp instanceof OutputPort){
+      return getThreadImplWriterFnName(inp);
+    } else {
+      throw new Aadl2RtosException("Attempting to generate name for unsupported port type");
+    }
+    
+  }
   
   
   static public String getInputQueueIsEmptyFnName(ThreadImplementation impl, DataPort p) {
@@ -54,11 +104,17 @@ public class Names {
 	  
     Type elemTy = (getStructuralType(ty) instanceof ArrayType) ?
         ty : new PointerType(ty);
-    return elemTy.getCType().varString(id);
+    return elemTy.getCType(0).varString(id);
   }
+  
   
   static public String getVarRef(Type ty, String id) {
     return (getStructuralType(ty) instanceof ArrayType) ? id : ("&" + id);
   }
-  
+
+  static public String memcpyStmt(Type ty, String dst, String src) {
+    return "memcpy(" + dst + ", " + src +  
+        ", sizeof(" + ty.getCType(0).varString("") + "))";
+  }
+
 }
