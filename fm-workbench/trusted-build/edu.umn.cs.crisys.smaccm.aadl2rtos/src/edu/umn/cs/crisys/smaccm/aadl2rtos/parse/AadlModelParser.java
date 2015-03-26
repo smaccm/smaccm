@@ -1012,7 +1012,7 @@ public class AadlModelParser {
 					Classifier subClass = c.getClassifier();
 					if (subClass instanceof DataClassifier) {
 						Type subType = createAstType((DataClassifier) subClass);
-						this.logger.info("The name of the field is: " + c.getName());
+						// this.logger.info("The name of the field is: " + c.getName());
 						rt.addField(c.getName(), subType);
 					} else {
 						throw new Aadl2RtosException(

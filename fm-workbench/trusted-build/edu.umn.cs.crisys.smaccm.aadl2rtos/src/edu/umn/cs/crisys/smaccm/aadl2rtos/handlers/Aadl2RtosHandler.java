@@ -19,11 +19,16 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TOR
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE DATA OR THE USE OR OTHER DEALINGS IN THE DATA.
  */
 
-package edu.umn.cs.crisys.smaccm.aadl2rtos;
+package edu.umn.cs.crisys.smaccm.aadl2rtos.handlers;
 
 import java.io.File;
 import java.util.List;
 //import java.util.Map;
+
+
+
+
+
 
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -40,9 +45,13 @@ import org.osate.aadl2.Element;
 import org.osate.aadl2.SystemImplementation;
 import org.osate.aadl2.instance.SystemInstance;
 import org.osate.aadl2.instantiation.InstantiateModel;
+import org.osate.aadl2.modelsupport.errorreporting.AnalysisErrorReporterManager;
 //import org.osate.aadl2.modelsupport.errorreporting.AnalysisErrorReporterManager;
 import org.osate.aadl2.modelsupport.resources.OsateResourceUtil;
 
+import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosFailure;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.ConsoleLogger;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.Logger;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.CAmkES.CAmkES_CodeGenerator;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.eChronos.EChronos_CodeGenerator;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.parse.AadlModelParser;
@@ -50,24 +59,24 @@ import edu.umn.cs.crisys.smaccm.aadl2rtos.parse.Model;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.util.Util;
 //import fr.tpt.aadl.ramses.control.support.analysis.AnalysisException;
 //import fr.tpt.aadl.ramses.control.support.config.RamsesConfiguration;
-@Deprecated 
-public class Aadl2RtosAction extends AadlAction {
-	private Logger log;
+
+public class Aadl2RtosHandler extends AadlHandler {
+	//private Logger log;
 
 	// Model object contains information from the AST nicely collated.
 	// TODO: Figure out a principled way to deal with file locations.
 	// Allow overriding file names as properties?
 
 	@Override
-	public IStatus runJob(Element sel, IProgressMonitor monitor, Logger logger) {
-		log = logger;
+	public IStatus runJob(Element sel, IProgressMonitor monitor) {
+		// log = new ConsoleLogger(Logger.INFO, "AADL Validation", getWindow());
 
 		if (!(sel instanceof SystemImplementation)) {
 			log.error("Aadl2RtosAction.runJob: Must select a system implementation");
 			return Status.CANCEL_STATUS;
 		}
 
-		IStatus execStatus = execute(null, (SystemImplementation) sel, monitor, null, null, logger); 
+		IStatus execStatus = execute(null, (SystemImplementation) sel, monitor, null, null, log); 
 				
 		if (execStatus == Status.OK_STATUS) 
 			try {
@@ -80,7 +89,15 @@ public class Aadl2RtosAction extends AadlAction {
 		
 	}
 	
-	public IStatus execute(SystemInstance si, SystemImplementation sysimpl, IProgressMonitor monitor, File aadlDir, File outputDir, Logger logger) {
+    protected String getJobName() {
+        return "aadl2rtos - translate model";
+    }
+
+	protected AnalysisErrorReporterManager getErrorManager() {
+		return AnalysisErrorReporterManager.NULL_ERROR_MANANGER;
+	}
+
+    public IStatus execute(SystemInstance si, SystemImplementation sysimpl, IProgressMonitor monitor, File aadlDir, File outputDir, Logger logger) {
 		log = logger;
 		log.info("This is the sysimpl name: "+ sysimpl.getName());
 		

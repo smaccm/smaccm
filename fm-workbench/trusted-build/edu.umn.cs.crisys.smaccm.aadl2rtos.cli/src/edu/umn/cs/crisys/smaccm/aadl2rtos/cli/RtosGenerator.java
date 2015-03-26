@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.osate.aadl2.SystemImplementation;
 import org.osate.aadl2.instance.SystemInstance;
 import org.osate.aadl2.modelsupport.errorreporting.AnalysisErrorReporterManager;
 
@@ -49,7 +50,7 @@ public class RtosGenerator implements Generator {
 	  File rootDir = new File(System.getProperty("user.dir"));
 	  String str = config.getTargetId();
 		(new Aadl2RtosAction()).execute(systemInstance, 
-				systemInstance.getSystemImplementation(), monitor, 
+				(SystemImplementation)systemInstance.getComponentImplementation(), monitor, 
 				rootDir, config.getRamsesOutputDir(), new ConsoleLogger(Logger.INFO));
 	}
 

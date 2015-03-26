@@ -38,13 +38,17 @@ void clock_init()
 }
 
 /* Set interrupt interval, in milliseconds. */
-void clock_set_interval(uint32_t interval)
+void clock_set_interval_in_ms(uint32_t interval)
 {
 	timer_periodic(timer_drv, ((uint64_t)interval)*NS_IN_MS);
 }
 
 void clock_start_timer(void) {
 	timer_start(timer_drv);
+}
+
+uint64_t clock_get_time() {
+	return timer_get_time(timer_drv);
 }
 
 void clock_irq_callback() {
