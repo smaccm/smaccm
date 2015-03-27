@@ -4,15 +4,12 @@
 // 
 ////////////////////////////////////////////////////////////////////////////
 
-
-blockComment(arg) ::= <<
-
-/**************************************************************************
-  <arg>
- **************************************************************************/
+blockComment(elem) ::= <<
+ \<!-- 
+ <elem>
+ --\>
 
 >>
-
 
 DARPALicense() ::= <<
 Copyright (c) 2013, 2014, 2015 Rockwell Collins and the University of Minnesota.
@@ -36,10 +33,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE DATA OR THE USE OR OTHER DEALINGS
 
 >>
 
-DARPALicenseComment() ::= "<blockComment(DARPALicense())>"
-
-filenameBlockComment(date, path, purpose) ::= <<
-/**************************************************************************
+filenameBlockCommentInternal(date, path, purpose) ::= <<
 
    File: <path>
    Created on: <date>
@@ -49,8 +43,9 @@ filenameBlockComment(date, path, purpose) ::= <<
 
   <purpose>
 
- **************************************************************************/
 >>
+
+filenameBlockComment(date, path, purpose) ::= << <blockComment(filenameBlockCommentInternal)> >>
 
 stdFilePrefix(date, path, purpose) ::= <<
 <DARPALicenseComment()>

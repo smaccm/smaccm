@@ -1,7 +1,7 @@
 /**
  * 
  */
-package edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.common;
+package edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.names;
 
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.rpc.Direction;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.rpc.RemoteProcedureParameter;
