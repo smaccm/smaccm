@@ -3,7 +3,7 @@
 #include <inttypes.h>
 
 void ping_received(const uint32_t * test_data) {
-   printf("receiver: ping_received invoked (%d)\n", test_data);
+   printf("receiver: ping_received invoked (%" PRIu64 ")\n", test_data);
 }
 
 void periodic_ping( const uint64_t * periodic_1000_ms) {
