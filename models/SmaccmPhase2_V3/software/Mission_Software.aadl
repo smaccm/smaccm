@@ -12,11 +12,46 @@ system software
     
   annex agree {**
   		
+  	const FSW_MAX_CAN_FREQ : real = 20.0;
+  	
+  	initially:
+  	  not event(mission_out) and
+  	  time = 0.0 and
+  	  last_mavlink_received_time = 0.0 and
+  	  not mavlink_received_in_past;
+  		    
   	eq time : real;
+  	eq next_time : real;
+  	const MAVLINK_TO_CAN_LATENCY_BOUND : real = 150.0;
   	
-  	guarantee "if no message is received on the mavlink then nothing is passed to the mission board" : true;
+  	eq last_mavlink_received_time : real =
+  	  if event(enc_mavlink_in) then time else prev(last_mavlink_received_time, 0.0);
+  	  
+  	eq mavlink_received_in_past : bool = 
+  	  event(enc_mavlink_in) -> pre(mavlink_received_in_past) or event(enc_mavlink_in);
+  	  
+  	eq mavlink_received_within_bound : bool =
+  	  mavlink_received_in_past and (time - last_mavlink_received_time) < MAVLINK_TO_CAN_LATENCY_BOUND;
   	
-  	guarantee "if messasage fails to decrypt then nothing is sent to the mission board" : true;
+  	eq time_of_last_can : real = 
+  	  -1.0 * FSW_MAX_CAN_FREQ -> if event(mission_out) then time else pre(time_of_last_can);
+  	  
+--  	guarantee "not frequent can" : true ->
+--  	 time - pre(time_of_last_can) < FSW_MAX_CAN_FREQ => not event(mission_out); 
+  	
+  	guarantee "if a message is sent to the flight board then it was received over mavlink" : 
+  	  event(mission_out) => mavlink_received_within_bound;
+  	
+  	guarantee "time positive and increasing" :
+  	  	time = 0.0 -> true and time >= 0.0 and (true -> time > pre(time));
+  	  	
+  	guarantee "next time greater than current" :
+  	  next_time > time and (true -> pre(next_time) = time);
+  	  
+    guarantee "time change bound" : 
+      5.0 <= next_time - time and next_time - time < 50.0;
+  	  
+--  	guarantee "if messasage fails to decrypt then nothing is sent to the mission board" : true;
   	
   **};
     
@@ -59,7 +94,7 @@ system implementation software.i
     
   annex agree {**
   		
-  	synchrony : asynchronous;
+  	synchrony : latched;
   	
   	const DECRYPT_EXEC_TIME : real = 5.0;
   	const ENCRYPT_EXEC_TIME : real = 5.0;
@@ -69,7 +104,8 @@ system implementation software.i
   	const TRANSMIT_EXEC_TIME : real = 5.0;
   	const RECEIVE_EXEC_TIME : real = 5.0;
   	
-  	const RECEIVE_PERIOD : real = 50.0;
+  	const DECRYPT_PERIOD : real = 25.0;
+  	const CAN_PERIOD : real = 25.0;
   	
   	eq decrypt_clock : bool = decrypt._CLK;
   	eq encrypt_clock : bool = encrypt._CLK;
@@ -79,10 +115,10 @@ system implementation software.i
   	eq transmit_clock : bool = transmit._CLK;
   	eq receive_clock : bool = receive._CLK;
   	
-  	--assert that no one can preempt
-  	assert decrypt_clock =>
+  	--assert that no one can preempt monitors
+  	assert receive_clock =>
   	  not (rise(encrypt_clock) or rise(nav_clock) or rise(mavlink_clock) or
-  	  	   rise(can_clock) or rise(transmit_clock) or rise(receive_clock));
+  	  	   rise(can_clock) or rise(transmit_clock) or rise(decrypt_clock));
   	
   	assert encrypt_clock =>
   	  not (rise(decrypt_clock) or rise(nav_clock) or rise(mavlink_clock) or
@@ -96,33 +132,172 @@ system implementation software.i
   	  not (rise(encrypt_clock) or rise(nav_clock) or rise(decrypt_clock) or
   	  	   rise(can_clock) or rise(transmit_clock) or rise(receive_clock));
   	
-  	assert can_clock =>
-  	  not (rise(encrypt_clock) or rise(nav_clock) or rise(mavlink_clock) or
-  	  	   rise(decrypt_clock) or rise(transmit_clock) or rise(receive_clock));
-  	
   	assert transmit_clock =>
   	  not (rise(encrypt_clock) or rise(nav_clock) or rise(mavlink_clock) or
   	  	   rise(can_clock) or rise(decrypt_clock) or rise(receive_clock));
   	  	   
+  	--assert that the can thread cannot preempt the receive thread
+  	assert decrypt_clock =>
+  	  not rise(can_clock);
+  	  	   
   	--assert that a thread only begins computation if it is scheduled or 
   	--event driven to do so
-  	assert rise(receive_clock) => receive_scheduled;
-  	assert rise(decrypt_clock) => event(decrypt.enc_mavlink);
+  	assert rise(decrypt_clock) => decrypt_scheduled;
+  	assert rise(can_clock) => can_scheduled;
+  	assert rise(receive_clock) => event(receive.mavlink_in);
+  	assert rise(encrypt_clock) => event(encrypt.mavlink);
+  	assert rise(nav_clock) => event(nav.mavlink_in);
+  	assert rise(mavlink_clock) => event(mavlink.mavlink_in);
+  	assert rise(transmit_clock) => event(transmit.sensor_data) or
+                                   event(transmit.control_data) or
+                                   event(transmit.motmix_data);
   	
+  	--constrain when a clock can start ticking
+  	assert if decrypt_scheduled and not monitor_is_running then
+  	         decrypt_clock
+  	       else if can_scheduled and not monitor_is_running then
+  	         can_clock
+  	       else if event(receive.mavlink_in) then
+  	         receive_clock
+  	       else if event(encrypt.mavlink) then
+  	         encrypt_clock
+  	       else if event(nav.mavlink_in) then 
+  	         nav_clock
+  	       else if event(mavlink.mavlink_in) then
+  	         mavlink_clock
+  	       else if event(transmit.sensor_data) or event(transmit.control_data) or event(transmit.motmix_data) then
+  	         transmit_clock
+  	       else true;
   	
-  	eq time_of_next_receive : real = RECEIVE_PERIOD ->
-  	  if time < pre(time_of_next_receive) then
-  	    pre(time_of_next_receive)
+  	--constrain how time progresses
+  	assert time = 0.0 -> true;
+  	assert time >= 0.0 and (true -> time > pre(time));
+  	assert true -> time = pre(next_time);
+  	    
+  	assert next_time =
+  	    AGREE_LIB.min_if(decrypt_clock, decrypt_finishes,
+  	    AGREE_LIB.min_if(receive_clock, receive_finishes,
+  	    AGREE_LIB.min_if(mavlink_clock, mavlink_finishes,
+  	    AGREE_LIB.min_if(nav_clock, nav_finishes,
+  	    AGREE_LIB.min_if(can_clock, can_finishes,
+  	    AGREE_LIB.min_if(transmit_clock, transmit_finishes,
+  	    AGREE_LIB.min_if(encrypt_clock, encrypt_finishes,
+  	    AGREE_LIB.min(time_of_next_decrypt, time_of_next_can)))))))); 
+  	    
+  	    
+  	assert true -> pre(decrypt_clock) and decrypt_run_time < DECRYPT_EXEC_TIME => decrypt_clock;
+  	assert true -> pre(receive_clock) and receive_run_time < RECEIVE_EXEC_TIME => receive_clock;
+  	assert true -> pre(mavlink_clock) and mavlink_run_time < MAVLINK_EXEC_TIME => mavlink_clock;
+  	assert true -> pre(nav_clock) and nav_run_time < NAV_EXEC_TIME => nav_clock;
+  	assert true -> pre(can_clock) and can_run_time < CAN_EXEC_TIME => can_clock;
+  	assert true -> pre(transmit_clock) and transmit_run_time < TRANSMIT_EXEC_TIME => transmit_clock;
+  	assert true -> pre(encrypt_clock) and encrypt_run_time < ENCRYPT_EXEC_TIME => encrypt_clock;
+  	
+  	assert true -> pre(decrypt_clock) and time = decrypt_finishes => not decrypt_clock;
+  	assert true -> pre(receive_clock) and time = receive_finishes => not receive_clock;
+  	assert true -> pre(mavlink_clock) and time = mavlink_finishes => not mavlink_clock;
+  	assert true -> pre(nav_clock) and time = nav_finishes => not nav_clock;
+  	assert true -> pre(can_clock) and time = can_finishes => not can_clock;
+  	assert true -> pre(transmit_clock) and time = transmit_finishes => not transmit_clock;
+  	assert true -> pre(encrypt_clock) and time = encrypt_finishes => not encrypt_clock;
+  	
+  	    
+  	--keep track of how long tasks have been running
+  	eq decrypt_run_time : real = 0.0 ->
+  	  if pre(decrypt_clock) then
+  	    pre(decrypt_run_time) + (time - pre(time))
   	  else
-  	    pre(time_of_next_receive) + RECEIVE_PERIOD;
+  	    0.0;
+  	    
+  	eq can_run_time : real = 0.0 ->
+  	  if pre(can_clock and not(receive_clock)) then
+  	    pre(can_run_time) + time - pre(time)
+  	  else 
+  	    0.0;
+  	    
+  	eq receive_run_time : real = 0.0 ->
+  	  if pre(receive_clock) then
+  	    pre(receive_run_time) + (time - pre(time))
+  	  else
+  	    0.0;
   	
-  	eq receive_scheduled : bool = true ->
-  	  if time = pre(time_of_next_receive) then
+  	eq encrypt_run_time : real = 0.0 ->
+  	  if pre(encrypt_clock) then
+  	    pre(encrypt_run_time) + (time - pre(time))
+  	  else
+  	    0.0;
+  	    
+  	eq mavlink_run_time : real = 0.0 ->
+  	  if pre(mavlink_clock) then
+  	    pre(mavlink_run_time) + (time - pre(time))
+  	  else
+  	    0.0;
+  	
+  	eq nav_run_time : real = 0.0 ->
+  	  if pre(nav_clock) then
+  	    pre(nav_run_time) + (time - pre(time))
+  	  else
+  	    0.0;
+  	
+  	eq transmit_run_time : real = 0.0 ->
+  	  if pre(transmit_clock) then
+  	    pre(transmit_run_time) + (time - pre(time))
+  	  else
+  	    0.0;
+  	
+  	--keep track of events finishing
+  	eq decrypt_finishes : real =
+  	  time + DECRYPT_EXEC_TIME - decrypt_run_time;
+  	  
+  	eq receive_finishes : real =
+  	  time + RECEIVE_EXEC_TIME - receive_run_time;
+  	
+  	eq mavlink_finishes : real =
+  	  time + MAVLINK_EXEC_TIME - mavlink_run_time;
+  	  
+  	eq nav_finishes : real =
+  	  time + NAV_EXEC_TIME - nav_run_time;
+  	  
+  	eq can_finishes : real =
+  	  time + CAN_EXEC_TIME - can_run_time;
+  	  
+  	eq transmit_finishes : real =
+  	  time + TRANSMIT_EXEC_TIME - transmit_run_time;
+  	  
+  	eq encrypt_finishes : real =
+  	  time + ENCRYPT_EXEC_TIME - encrypt_run_time;
+  	  
+  	--keep track of when things are scheduled
+  	eq time_of_next_decrypt : real = DECRYPT_PERIOD ->
+  	  if time < pre(time_of_next_decrypt) then
+  	    pre(time_of_next_decrypt)
+  	  else
+  	    pre(time_of_next_decrypt) + DECRYPT_PERIOD;
+  	
+  	eq decrypt_scheduled : bool = true ->
+  	  if time = pre(time_of_next_decrypt) then
   	    true
-  	  else if pre(receive_clock) then
+  	  else if pre(decrypt_clock) then
   	    false
   	  else
-  	    pre(receive_scheduled);
+  	    pre(decrypt_scheduled);
+  	    
+  	eq time_of_next_can : real = CAN_PERIOD ->
+  	  if time < pre(time_of_next_can) then
+  	    pre(time_of_next_can)
+  	  else
+  	    pre(time_of_next_can) + CAN_PERIOD;
+  	
+  	eq can_scheduled : bool = true ->
+  	  if time = pre(time_of_next_can) then
+  	    true
+  	  else if pre(can_clock) then
+  	    false
+  	  else
+  	    pre(can_scheduled);
+  	    
+  	eq monitor_is_running : bool =
+  	  receive_clock or encrypt_clock or transmit_clock or nav_clock or mavlink_clock;
   	  	   
   	node rise (clock : bool) returns (ret : bool);
   	let
@@ -133,6 +308,13 @@ system implementation software.i
   	let
   	  ret = false -> pre(clock) and not clock;
   	tel;
+  	
+  	
+  	------- begin lemmas -------
+  	lemma "positive runtimes" : 
+  	  can_run_time >= 0.0 and decrypt_run_time >= 0.0 and receive_run_time >= 0.0 and
+  	  mavlink_run_time >= 0.0 and nav_run_time >= 0.0 and transmit_run_time >= 0.0 and encrypt_run_time >= 0.0;
+  	
   	
   **};
     
@@ -151,9 +333,15 @@ process decrypt_t
   	
   	eq message_passed_decryption : bool;
   	
-  	guarantee "if no message is received, then nothing decrypted" : 
-  	  not event(mavlink_out) -> event(mavlink_out) => pre(event(enc_mavlink)) and message_passed_decryption;
+  	initially:
+  	  not event(mavlink_out);
   	
+  	guarantee "if no message is received, then nothing decrypted" : 
+      event(mavlink_out) => event(enc_mavlink);  
+      
+    guarantee "if message does not decrypt, then nothing is sent":
+      event(mavlink_out) => message_passed_decryption;
+      	
   **};
     
 end decrypt_t;
@@ -166,6 +354,15 @@ process receive_t
     
   properties
     SMACCM::Trusted => true;
+    
+  annex agree {**
+  	  initially:
+  	    not (event(nav_mav) or event(user_input_mav));
+  	    
+  	   guarantee "no output events if no input events" :
+  	    event(nav_mav) or event(user_input_mav) => event(mavlink_in);
+  **};
+    
 end receive_t;
 
 process mavlink_t
@@ -176,6 +373,15 @@ process mavlink_t
     
   properties
     SMACCM::Trusted => true;
+    
+  annex agree {**
+  	  initially:
+  	    not (event(user_input) or event(control_law_out));
+  	    
+  	  guarantee "output events only happen if input events happen" :
+  	    event(control_law_out) or event(user_input) => event(mavlink_in);
+  	    
+  **};
 end mavlink_t;
 
 process nav_t
@@ -185,6 +391,14 @@ process nav_t
     
   properties
     SMACCM::Trusted => true;
+    
+  annex agree {**
+      initially:
+        not event(waypoints);
+        
+      guarantee "waypoints only sent of they are recieved" :
+        event(waypoints) => event(mavlink_in);
+  **};
 end nav_t;
 
 process can_a15_t
@@ -201,6 +415,19 @@ process can_a15_t
     
   properties
     SMACCM::Trusted => true;
+    
+  annex agree{**
+  	initially:
+  	  not (event(mission_out) or event(mavlink_out) or event(sensor_data) or
+  	  	   event(control_data) or event(motmix_data));
+  	  	   
+  	guarantee "only send data to flight board if userinput is received" :
+  	  event(mission_out) => event(waypoints) or event(user_input) or event(control_law);
+  	  
+  	guarantee "only send data to transmit if flight data received" :
+  	  event(mavlink_out) or event(sensor_data) or event(control_data) or event(motmix_data) =>
+  	    event(mission_in);
+  **};
 end can_a15_t;
 
 process transmit_t
@@ -212,6 +439,14 @@ process transmit_t
     
   properties
     SMACCM::Trusted => true;
+    
+  annex agree {**
+  	initially:
+  	  not event(mavlink_out);
+  	  
+  	guarantee "only send mavlink data out if data received" :
+  	  event(mavlink_out) => event(sensor_data) or event(control_data) or event(motmix_data);
+  **};
 end transmit_t;
 
 process encrypt_t
@@ -221,6 +456,14 @@ process encrypt_t
     
   properties
     SMACCM::Trusted => true;
+    
+  annex agree {**
+  	initially:
+  	  event(enc_mavlink);
+  	  
+  	guarantee "only send output if input received" :
+  	  event(enc_mavlink) => event(mavlink);
+  **};
 end encrypt_t;
 
 end Mission_Software;

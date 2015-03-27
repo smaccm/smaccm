@@ -59,7 +59,7 @@ public class ConsistencyResult extends JKindResult {
 				} else if (property instanceof InvalidProperty) {
 					setStatus(Status.VALID);
 				} else if (property instanceof UnknownProperty) {
-					setStatus(Status.INVALID);
+					setStatus(Status.UNKNOWN);
 				}
 			}
 		};

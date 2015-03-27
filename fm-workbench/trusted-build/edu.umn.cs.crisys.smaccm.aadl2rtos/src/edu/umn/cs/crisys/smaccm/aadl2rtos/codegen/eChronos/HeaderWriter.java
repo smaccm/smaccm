@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.util.List;
 
 import edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.common.C_Type_Writer;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.common.HeaderDeclarations;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.ThreadImplementation;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.ThreadInstance;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.parse.Model;

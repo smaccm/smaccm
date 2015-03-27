@@ -28,6 +28,7 @@ import org.osate.xtext.aadl2.properties.linking.PropertiesLinkingService;
 import org.osate.xtext.aadl2.properties.util.EMFIndexRetrieval;
 
 import com.rockwellcollins.atc.agree.agree.CalenStatement;
+import com.rockwellcollins.atc.agree.agree.ConnectionStatement;
 import com.rockwellcollins.atc.agree.agree.GetPropertyExpr;
 import com.rockwellcollins.atc.agree.agree.NestedDotID;
 import com.rockwellcollins.atc.agree.agree.NodeEq;
@@ -63,7 +64,8 @@ public class AgreeLinkingService extends PropertiesLinkingService {
                 || context instanceof GetPropertyExpr
                 || context instanceof RecordUpdateExpr
                 || context instanceof EventExpr
-                || context instanceof OrderStatement) {
+                || context instanceof OrderStatement
+                || context instanceof ConnectionStatement) {
 
             //EObject e = findClassifier(context, reference, name);
         	EObject e = getIndexedObject(context, reference, name);

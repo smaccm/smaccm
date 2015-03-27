@@ -231,6 +231,11 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
         return createLiftStatementAdapter();
       }
       @Override
+      public Adapter caseConnectionStatement(ConnectionStatement object)
+      {
+        return createConnectionStatementAdapter();
+      }
+      @Override
       public Adapter caseMNSynchStatement(MNSynchStatement object)
       {
         return createMNSynchStatementAdapter();
@@ -244,6 +249,11 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
       public Adapter caseAsynchStatement(AsynchStatement object)
       {
         return createAsynchStatementAdapter();
+      }
+      @Override
+      public Adapter caseLatchedStatement(LatchedStatement object)
+      {
+        return createLatchedStatementAdapter();
       }
       @Override
       public Adapter caseNodeEq(NodeEq object)
@@ -843,6 +853,21 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
   }
 
   /**
+   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.ConnectionStatement <em>Connection Statement</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see com.rockwellcollins.atc.agree.agree.ConnectionStatement
+   * @generated
+   */
+  public Adapter createConnectionStatementAdapter()
+  {
+    return null;
+  }
+
+  /**
    * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.MNSynchStatement <em>MN Synch Statement</em>}'.
    * <!-- begin-user-doc -->
    * This default implementation returns null so that we can easily ignore cases;
@@ -883,6 +908,21 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
    * @generated
    */
   public Adapter createAsynchStatementAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.LatchedStatement <em>Latched Statement</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see com.rockwellcollins.atc.agree.agree.LatchedStatement
+   * @generated
+   */
+  public Adapter createLatchedStatementAdapter()
   {
     return null;
   }

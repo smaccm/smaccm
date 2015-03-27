@@ -43,6 +43,7 @@ import com.rockwellcollins.atc.agree.agree.AgreeLibrary;
 import com.rockwellcollins.atc.agree.agree.AgreePackage;
 import com.rockwellcollins.atc.agree.agree.Arg;
 import com.rockwellcollins.atc.agree.agree.CalenStatement;
+import com.rockwellcollins.atc.agree.agree.ConnectionStatement;
 import com.rockwellcollins.atc.agree.agree.ConstStatement;
 import com.rockwellcollins.atc.agree.agree.EqStatement;
 import com.rockwellcollins.atc.agree.agree.EventExpr;
@@ -171,24 +172,25 @@ public class AgreeScopeProvider extends
         return result;
     }
     
+    IScope scope_NamedElement(ConnectionStatement ctx, EReference ref){
+        EObject container = ctx.getContainingClassifier();
+        IScope outerScope = IScope.NULLSCOPE;
+        if(container instanceof ComponentImplementation){
+            ComponentImplementation compImpl = (ComponentImplementation)container;
+            outerScope = Scopes.scopeFor(compImpl.getAllConnections());
+        }
+        return outerScope;
+    }
+
     IScope scope_NamedElement(OrderStatement ctx, EReference ref) {
-        
-    	EObject container = ctx.getContainingClassifier();
-    	while(!(container instanceof ComponentClassifier)){
-    		container = container.eContainer();
-    	}
-    	
-//    	IScope scope = IScope.NULLSCOPE;
-    	IScope outerScope = IScope.NULLSCOPE;
-    	if(container instanceof ComponentImplementation){
-    		ComponentImplementation compImpl = (ComponentImplementation)container;
-//    		do{
-    			outerScope = Scopes.scopeFor(compImpl.getAllSubcomponents());
-//    			scope = new SimpleScope(outerScope, scope.getAllElements());
-//    			compImpl = compImpl.getExtended();
-//    		}while(compImpl != null);
-    	}
-//    	return scope;
+
+        EObject container = ctx.getContainingClassifier();
+
+        IScope outerScope = IScope.NULLSCOPE;
+        if(container instanceof ComponentImplementation){
+            ComponentImplementation compImpl = (ComponentImplementation)container;
+            outerScope = Scopes.scopeFor(compImpl.getAllSubcomponents());
+        }
         return outerScope;
     }
 

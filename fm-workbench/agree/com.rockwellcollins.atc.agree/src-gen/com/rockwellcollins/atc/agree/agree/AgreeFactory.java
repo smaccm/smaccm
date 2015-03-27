@@ -293,6 +293,15 @@ public interface AgreeFactory extends EFactory
   LiftStatement createLiftStatement();
 
   /**
+   * Returns a new object of class '<em>Connection Statement</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Connection Statement</em>'.
+   * @generated
+   */
+  ConnectionStatement createConnectionStatement();
+
+  /**
    * Returns a new object of class '<em>MN Synch Statement</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -318,6 +327,15 @@ public interface AgreeFactory extends EFactory
    * @generated
    */
   AsynchStatement createAsynchStatement();
+
+  /**
+   * Returns a new object of class '<em>Latched Statement</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Latched Statement</em>'.
+   * @generated
+   */
+  LatchedStatement createLatchedStatement();
 
   /**
    * Returns a new object of class '<em>Node Eq</em>'.

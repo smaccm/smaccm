@@ -31,5 +31,4 @@ dispatch_periodic_HFILES := \
     $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/dispatch_periodic/include/*.h)) \
     $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/include/*.h))
 
-include ${PWD}/tools/common/camkes.mk
-#include ${SOURCE_DIR}/../../tools/common/camkes.mk
+include ${PWD}/tools/camkes/camkes.mk

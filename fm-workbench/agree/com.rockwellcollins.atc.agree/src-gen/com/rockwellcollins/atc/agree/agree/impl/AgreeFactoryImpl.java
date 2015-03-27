@@ -94,9 +94,11 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
       case AgreePackage.PARAM_STATEMENT: return createParamStatement();
       case AgreePackage.LEMMA_STATEMENT: return createLemmaStatement();
       case AgreePackage.LIFT_STATEMENT: return createLiftStatement();
+      case AgreePackage.CONNECTION_STATEMENT: return createConnectionStatement();
       case AgreePackage.MN_SYNCH_STATEMENT: return createMNSynchStatement();
       case AgreePackage.CALEN_STATEMENT: return createCalenStatement();
       case AgreePackage.ASYNCH_STATEMENT: return createAsynchStatement();
+      case AgreePackage.LATCHED_STATEMENT: return createLatchedStatement();
       case AgreePackage.NODE_EQ: return createNodeEq();
       case AgreePackage.NODE_LEMMA: return createNodeLemma();
       case AgreePackage.PRIM_TYPE: return createPrimType();
@@ -457,6 +459,17 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
    * <!-- end-user-doc -->
    * @generated
    */
+  public ConnectionStatement createConnectionStatement()
+  {
+    ConnectionStatementImpl connectionStatement = new ConnectionStatementImpl();
+    return connectionStatement;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   public MNSynchStatement createMNSynchStatement()
   {
     MNSynchStatementImpl mnSynchStatement = new MNSynchStatementImpl();
@@ -483,6 +496,17 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
   {
     AsynchStatementImpl asynchStatement = new AsynchStatementImpl();
     return asynchStatement;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public LatchedStatement createLatchedStatement()
+  {
+    LatchedStatementImpl latchedStatement = new LatchedStatementImpl();
+    return latchedStatement;
   }
 
   /**

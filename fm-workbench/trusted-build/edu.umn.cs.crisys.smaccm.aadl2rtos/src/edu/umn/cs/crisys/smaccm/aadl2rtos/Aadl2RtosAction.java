@@ -50,7 +50,7 @@ import edu.umn.cs.crisys.smaccm.aadl2rtos.parse.Model;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.util.Util;
 //import fr.tpt.aadl.ramses.control.support.analysis.AnalysisException;
 //import fr.tpt.aadl.ramses.control.support.config.RamsesConfiguration;
-
+@Deprecated 
 public class Aadl2RtosAction extends AadlAction {
 	private Logger log;
 

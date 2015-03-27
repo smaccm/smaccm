@@ -7,7 +7,7 @@ import "Common.stg"
 ////////////////////////////////////////////////////////////////////////////
 
 camkesAssemblyPurpose(sysInstanceName) ::= <<
-This header file contains the main CAmkES assembly for the  
+This file contains the main CAmkES assembly for the  
 AADL system instance rooted at <sysInstanceName>.
 >>
 

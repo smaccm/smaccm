@@ -51,7 +51,7 @@ public class DispatcherTraverser {
   
   private void traversePassiveDispatchersInternal(Set<Dispatcher> visited, Deque<Dispatcher> path, Dispatcher d, String indent) {
     
-    System.out.println(indent + "Visiting dispatcher: " + d.getOwner().getName() + "." + d.getName()); 
+    // System.out.println(indent + "Visiting dispatcher: " + d.getOwner().getName() + "." + d.getName()); 
     if (path.contains(d) && !allowRecursion) {
       throw new Aadl2RtosException("AADL2RTOS: Error: circular reference between dispatchers");
     } 
