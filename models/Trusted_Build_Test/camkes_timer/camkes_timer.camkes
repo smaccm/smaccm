@@ -1,0 +1,18 @@
+import <std_connector.camkes>;
+
+import "components/timer/timer.camkes";
+
+assembly {
+    composition {
+        component timerbase timerbase_obj;
+        component timer	   timer_obj;
+
+	/* PWM timer connections */
+        connection seL4HardwareMMIO timer_mem(from timer_obj.timerbase, to timerbase_obj.timer_reg);
+        connection seL4HardwareInterrupt timer_irq(from timerbase_obj.irq, to timer_obj.irq);
+    }
+    configuration {
+        timerbase_obj.timer_reg_attributes     = "0x12DD0000:0x1000";	//PWM timers
+        timerbase_obj.irq_attributes	       = 72;			//Timer interrupt
+    }
+}

@@ -76,5 +76,5 @@ dispatch_receiver_ASMFILES := \
     $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/dispatch_receiver/src/arch/${ARCH}/*.S)) \
     $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/dispatch_receiver/src/plat/${PLAT}/*.S))
 
-include ${PWD}/tools/common/camkes.mk
+include ${PWD}/tools/camkes/camkes.mk
 #include ${SOURCE_DIR}/../../tools/common/camkes.mk

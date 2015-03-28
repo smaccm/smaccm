@@ -1,0 +1,2 @@
+apps-$(CONFIG_APP_PING_PONG) += ping_pong
+ping_pong: libsel4 libmuslc libsel4platsupport libsel4muslccamkes libsel4camkes libsel4sync libsel4debug libsel4bench

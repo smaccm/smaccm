@@ -1,0 +1,6 @@
+config APP_TEST_PER
+    bool "AADL generic message for implementation test_per"
+    default n
+    select APP_CAMKES_EXECUTIVE
+    help
+        AADL generic message for implementation test_per. 

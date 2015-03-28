@@ -1,0 +1,6 @@
+config APP_PING_PONG
+    bool "AADL generic message for implementation ping_pong"
+    default n
+    select APP_CAMKES_EXECUTIVE
+    help
+        AADL generic message for implementation ping_pong. 

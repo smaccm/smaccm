@@ -1,0 +1,6 @@
+config APP_TEST1
+    bool "AADL Test 1: active -> passive threads using scalar send"
+    default n
+    select APP_CAMKES_EXECUTIVE
+    help
+        AADL Test 1: active -> passive threads using scalar send. 
