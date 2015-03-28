@@ -5,9 +5,12 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.osate.aadl2.SystemImplementation;
 import org.osate.aadl2.instance.SystemInstance;
 import org.osate.aadl2.modelsupport.errorreporting.AnalysisErrorReporterManager;
+
 
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosAction;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.ConsoleLogger;
@@ -49,9 +52,12 @@ public class RtosGenerator implements Generator {
 	  // it appears that the last include dir is the directory containing the system instance.
 	  File rootDir = new File(System.getProperty("user.dir"));
 	  String str = config.getTargetId();
-		(new Aadl2RtosAction()).execute(systemInstance, 
-				(SystemImplementation)systemInstance.getComponentImplementation(), monitor, 
+	  
+	  IStatus execStatus = (new Aadl2RtosAction()).execute(systemInstance, 
+				systemInstance.getSystemImplementation(), monitor, 
 				rootDir, config.getRamsesOutputDir(), new ConsoleLogger(Logger.INFO));
+	  if (execStatus != Status.OK_STATUS)
+		  throw new GenerationException("Error during RTOS code generation");
 	}
 
 	@Override
