@@ -20,7 +20,7 @@ void putfork(int fork) {
 	forks[fork] = 0;
 }
 
-void givefork(int client,RonSwansons__fork_impl * fork) {
+void givefork(int client,const RonSwansons__fork_impl * fork) {
 	switch(client) {
 		case 1:
 			givefork1(fork);
@@ -31,7 +31,7 @@ void givefork(int client,RonSwansons__fork_impl * fork) {
 }
 
 
-void pollresponse(int client, RonSwansons__pollresp_impl * pollresp) {
+void pollresponse(int client, const RonSwansons__pollresp_impl * pollresp) {
 	if(pollresp->reqfork1 == 1) {
 		int fork = getfork(0,FORKS-1);
 		if(fork < 0) {
@@ -64,17 +64,17 @@ void pollclient(int client) {
 	}
 }
 
-void process(const uint32_t periodic) {
+void process(const uint64_t * periodic) {
 	int i = 0;
 	for(;i<CLIENTS;i++) {
 		pollclient(1);
 	}
 }
 
-void pollresponse1(RonSwansons__pollresp_impl * pollresp) {
+void pollresponse1(const RonSwansons__pollresp_impl * pollresp) {
 	pollresponse(1,pollresp);
 }
 
-void getfork1(RonSwansons__fork_impl * fork) {
+void getfork1(const RonSwansons__fork_impl * fork) {
 	putfork(fork->forkid);
 }

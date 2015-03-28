@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 
-void ping(const uint32_t periodic_100_m) {
+void ping(const uint64_t * periodic_100_m) {
    PingTwins__msg_impl msg_data;
    int dice = rand()%4;
    switch(dice) {
@@ -30,10 +30,10 @@ void ping(const uint32_t periodic_100_m) {
    
 }
 
-void In1(PingTwins__msg_impl * msg_data) {
+void In1(const PingTwins__msg_impl * msg_data) {
 	printf("Pong recv'd on i1\n");
 }
 
-void In2(PingTwins__msg_impl * msg_data) {
+void In2(const PingTwins__msg_impl * msg_data) {
 	printf("Pong recv'd on i2\n");
 }

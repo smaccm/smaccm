@@ -50,7 +50,7 @@ void poll() {
 	}
 }
 
-void getfork(RonSwansons__fork_impl * fork_data) {
+void getfork(const RonSwansons__fork_impl * fork_data) {
 	if (fork1 < 0) {
 		fork1 = fork_data->forkid;
 		printf("Ron %i: I received an initial fork with id %i.\n",ID,fork1);		
