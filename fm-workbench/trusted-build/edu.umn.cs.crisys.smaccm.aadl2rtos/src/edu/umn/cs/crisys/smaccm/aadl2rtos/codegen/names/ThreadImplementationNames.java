@@ -272,6 +272,14 @@ public class ThreadImplementationNames {
     return ti.getNormalizedName();
   }
   
+  public String getStackSize() {
+	  return Integer.toString(ti.getStackSize());
+  }
+  
+  public String getPriority() {
+	  return Integer.toString(ti.getPriority());
+  }
+  
   //////////////////////////////////////////////////////////
   //
   // Lock and unlocks for dispatcher component

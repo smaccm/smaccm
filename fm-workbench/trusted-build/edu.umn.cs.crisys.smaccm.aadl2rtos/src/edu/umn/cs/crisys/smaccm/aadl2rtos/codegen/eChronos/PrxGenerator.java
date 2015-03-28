@@ -213,7 +213,7 @@ public class PrxGenerator {
 		if (model.getThreadCalendar().hasDispatchers() && model.getGenerateSystickIRQ()) {
 		  writeTrampoline("systick", Names.getCalendarFnName(), ec);
 		}
-		for (ExternalISR lirq: model.getLegacyExternalIRQs()) {
+		for (ExternalISR lirq: model.getExternalISRs()) {
 		  writeTrampoline(lirq.getName(), lirq.getHandlerName(), ec);
 		}
 		
@@ -379,7 +379,7 @@ public class PrxGenerator {
 	  }
 	  
 	  // write external irq events.
-	  for (ExternalIRQEvent lie: model.getLegacyIRQEvents()) {
+	  for (ExternalIRQEvent lie: model.getExternalIRQEvents()) {
 	    ThreadImplementation tib = findTIB(lie.getTaskName());
 	    if (tib == null) {
 	      throw new Aadl2RtosException("Unable to find thread with name: '" + lie.getTaskName() + "'.");
@@ -407,10 +407,10 @@ public class PrxGenerator {
         parent.appendChild(e);
         // for building 'flight' the legacy list has to be first in file order so 
         // that these semaphores are assigned starting at ID 0. 
-		for (String name : model.getLegacyMutexList()) {
+		for (String name : model.getExternalMutexList()) {
 			  createMutexOrSemaphore(e, name, "mutex");
 		}
-		if (model.getCommMutexPrimitive() == Model.CommMutualExclusionPrimitive.Semaphore) {
+		if (model.getCommMutexPrimitive() == Model.CommMutualExclusionPrimitive.MUTEX) {
 			for (ThreadInstancePort i : instances) {
 			  createMutexOrSemaphore(e, i.getMutexName(), "mutex");
 			}
@@ -420,7 +420,7 @@ public class PrxGenerator {
 		}
 		e = doc.createElement("semaphores");
         parent.appendChild(e);
-		for (String name: model.getLegacySemaphoreList()) {
+		for (String name: model.getExternalSemaphoreList()) {
 		    createMutexOrSemaphore(e, name, "semaphore");
 		}
 	}

@@ -56,7 +56,7 @@ component <dispatcher.irqComponent> <dispatcher.irqObject>;
 >>
 
 constructIRQConfig(dispatcher) ::= <<
-<dispatcher.memoryRegions:{memoryRegion | <dispatcher.irqObject>.<memoryRegion.name>_attributes = "<memoryRegion.region>:0x1000"; }>
+<dispatcher.memoryRegions:{memoryRegion | <dispatcher.irqObject>.<memoryRegion.name>_attributes = "<memoryRegion.region>"; }>
 <dispatcher.irqObject>.irq_attributes = <dispatcher.signalNumber> ; 
 
 >>

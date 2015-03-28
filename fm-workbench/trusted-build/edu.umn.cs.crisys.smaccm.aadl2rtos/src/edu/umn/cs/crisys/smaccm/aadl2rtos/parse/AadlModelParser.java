@@ -1073,7 +1073,7 @@ public class AadlModelParser {
       String name = it1.next();
       String handlerName = it1.next();
       ExternalISR irq = new ExternalISR(name, handlerName);
-      this.model.legacyExternalIRQList.add(irq);
+      this.model.externalISRList.add(irq);
     }
     
     List<String> irqEventStrings = ThreadUtil.getLegacyIRQEventList(this.systemImplementation);

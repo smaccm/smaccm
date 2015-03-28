@@ -156,7 +156,8 @@ bool <port.queueWriteName>(const <port.type.aadlInputType.name> <port.name>) {
 	}
 }
 
-bool <LocalPortWriterName(port)>(const <port.type.camkesInputType.name> arg) {
+// This is the function invoked via RPC when sending a message to this thread.
+bool <LocalPortWriterName(port)>(<port.type.camkesInputType.name> arg) {
 	bool result;
 	<port.camkesMutexLockFnCall>; 
 	result = <port.queueWriteName>(<port.type.camkesInputToAadlInput> arg);
@@ -196,7 +197,7 @@ bool <port.queueIsEmptyName>() {
 	return <port.index> == 0; 
 }
 
-bool <LocalPortWriterName(port)> {
+bool <LocalPortWriterName(port)>() {
 	<port.camkesMutexLockFnCall>; 
 	// Note: possibility for overflow here - should I worry about MAXINT messages?
 	<port.index>++;
@@ -255,7 +256,7 @@ optInputEventPortDecls(port) ::= <<
 //
 ///////////////////////////////////////////////////////////////////////////
 
-optConstCamkesInputArg(port) ::= "<if(port.hasData)>const <port.type.camkesInputType.name> <port.name><endif>"
+optConstCamkesInputArg(port) ::= "<if(port.hasData)><port.type.camkesInputType.name> <port.name><endif>"
 
 componentRemoteWriteFunction(port) ::= <<
 
@@ -294,7 +295,8 @@ componentLocalReaderDecl(port) ::= <<
 
 componentRemoteWriterDecl(port) ::= <<
 bool <port.aadlWriterFnName>(const <port.type.aadlInputType.name> <port.name>) {
-	<LocalPortWriterName(port)>(<port.type.aadlInputToCamkesInput> <port.name>);
+	// cast is necessary because CAmkES does not support passing constant arguments
+	<LocalPortWriterName(port)>((<port.type.aadlInputType.name>)<port.type.aadlInputToCamkesInput> <port.name>);
 	return true;
 }
 
@@ -413,7 +415,7 @@ void <userEntrypointCallerFnName(dispatcher)>(<userEntrypointCallerFnArgs(dispat
 localSendDecl(connection) ::= <<
 <if(connection.sourcePort.hasData)>
 void <connection.sourcePort.qualifiedName>_<connection.destPort.type.writerFn>(const <connection.sourcePort.type.camkesInputType.name> arg) {
-	<LocalPortWriterName(connection.destPort)>(arg);
+	<LocalPortWriterName(connection.destPort)>((<connection.sourcePort.type.camkesInputType.name>) arg);
 }
 <else>
 void <connection.sourcePort.qualifiedName>_<connection.destPort.type.writerFn>() {
