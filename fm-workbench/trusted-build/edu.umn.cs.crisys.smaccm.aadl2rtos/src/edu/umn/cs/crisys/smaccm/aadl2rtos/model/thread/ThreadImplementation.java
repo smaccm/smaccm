@@ -101,7 +101,7 @@ public class ThreadImplementation {
   }
 
   public String getGeneratedEntrypoint() {
-    return generatedEntrypoint;
+    return "smaccm_" + generatedEntrypoint;
   }
 
   

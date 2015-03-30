@@ -69,7 +69,7 @@ public class Model {
 
 	List<String> legacyMutexList = new ArrayList<String>();
 	List<String> legacySemaphoreList = new ArrayList<String>();
-	List<ExternalISR> legacyExternalIRQList = new ArrayList<ExternalISR>();
+	List<ExternalISR> externalISRList = new ArrayList<ExternalISR>();
 	List<ExternalIRQEvent> legacyIRQEventList = new ArrayList<ExternalIRQEvent>();
 	List<ExternalIRQ> externalIRQList = new ArrayList<ExternalIRQ>();
 	List<PortConnection> connectionList = new ArrayList<PortConnection>(); 
@@ -81,8 +81,8 @@ public class Model {
 	
 	boolean generateSystickIRQ;
 	
-	public enum CommMutualExclusionPrimitive {Semaphore, SuspendInterrupt} ; 
-	CommMutualExclusionPrimitive commMutexPrimitive = CommMutualExclusionPrimitive.SuspendInterrupt; 
+	public enum CommMutualExclusionPrimitive {MUTEX, SUSPEND_INTERRUPT} ; 
+	CommMutualExclusionPrimitive commMutexPrimitive = CommMutualExclusionPrimitive.MUTEX; 
 	
 	public enum ISRType {InThreadContextISR, SignalingISR} ; 
 	ISRType isrType = ISRType.InThreadContextISR; 
@@ -265,11 +265,11 @@ public class Model {
     this.remoteProcedureMap = remoteProcedureMap;
   }
 
-  public List<ExternalISR> getLegacyExternalIRQs() {
-	  return this.legacyExternalIRQList;
+  public List<ExternalISR> getExternalISRs() {
+	  return this.externalISRList;
 	}
 	
-	public List<ExternalIRQEvent> getLegacyIRQEvents() {
+	public List<ExternalIRQEvent> getExternalIRQEvents() {
 	  return this.legacyIRQEventList;
 	}
 	
@@ -314,11 +314,11 @@ public class Model {
 	  return this.connectionInstances;
 	}
 
-	public List<String> getLegacyMutexList() {
+	public List<String> getExternalMutexList() {
 		return this.legacyMutexList;
 	}
 	
-  public List<String> getLegacySemaphoreList() {
+  public List<String> getExternalSemaphoreList() {
     return this.legacySemaphoreList;
   }
 

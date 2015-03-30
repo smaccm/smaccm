@@ -243,7 +243,7 @@ public class SourceWriter extends AbstractCodeWriter {
 	    out.append("bool " + id.getFirstLevelInterruptHandlerWrapper() + "() { \n\n");
       out.append(ind + "if (" + id.getFirstLevelInterruptHandler() + "()) { \n");  
 	    out.append(ind + ind + "rtos_irq_event_raise(" + 
-          id.getIrqSignalDefine() + ");\n");
+          id.getEChronosIrqSignalDefine() + ");\n");
 	    out.append(ind + "}\n");
 	    out.append(ind + "return true;\n");
 	    out.append("};\n");
@@ -429,7 +429,7 @@ public class SourceWriter extends AbstractCodeWriter {
 
    private void writeEnterCriticalSection(String ind, String mutexDefine) throws IOException {
       // start critical section
-      if (model.getCommMutexPrimitive() == Model.CommMutualExclusionPrimitive.Semaphore) {
+      if (model.getCommMutexPrimitive() == Model.CommMutualExclusionPrimitive.MUTEX) {
     	  out.append(ind + rtosFnName("mutex_lock(") + mutexDefine + ");\n");
       } else {
     	  out.append(ind + "ivory_echronos_begin_atomic(); \n");
@@ -438,7 +438,7 @@ public class SourceWriter extends AbstractCodeWriter {
 
    private void writeExitCriticalSection(String ind, String mutexDefine) throws IOException {
       // finish critical section
-      if (model.getCommMutexPrimitive() == Model.CommMutualExclusionPrimitive.Semaphore) {
+      if (model.getCommMutexPrimitive() == Model.CommMutualExclusionPrimitive.MUTEX) {
     	  out.append(ind + rtosFnName("mutex_unlock(") + mutexDefine + ");\n");
       } else {
     	  out.append(ind + "ivory_echronos_end_atomic(); \n");

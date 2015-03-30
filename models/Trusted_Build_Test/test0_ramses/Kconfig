@@ -1,0 +1,6 @@
+config APP_TEST0
+    bool "AADL Test 0: single active periodic thread"
+    default n
+    select APP_CAMKES_EXECUTIVE
+    help
+        AADL Test 0: single active periodic thread. 

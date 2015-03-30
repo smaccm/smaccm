@@ -2,7 +2,7 @@
 #include <receiver.h>
 #include <inttypes.h>
 
-void periodic_ping(const uint32_t * periodic_1000_ms) {
+void periodic_ping(const uint64_t * periodic_1000_ms) {
 	printf("receiver: periodic dispatch received at time: %" PRIu64 "", *periodic_1000_ms); 
 
 	bool result = true; 

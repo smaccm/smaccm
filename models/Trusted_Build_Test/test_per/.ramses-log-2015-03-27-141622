@@ -1,0 +1,154 @@
+<INFO> logger is set to TRACE (RamsesConfiguration.java::setupLogging line 459 ; 2015-03-27 14:16:22,441)
+<INFO> 
+
+********************************************************************************
+*                           Starting RAMSES CLI ...                            *
+
+RAMSES arguments are:
+ -g rtos -i /Users/leepike/Galois/SMACCM/smaccm-project/source/smaccmpilot-build/phase2/ramses-demo/aadl2rtos_resource -o . -l trace -s sys.impl -m SMACCM_SYS.aadl,tick_2.aadl,sys.aadl
+
+VM settings are:
+java.runtime.name=Java(TM) SE Runtime Environment
+sun.boot.library.path=/Library/Java/JavaVirtualMachines/jdk1.7.0_51.jdk/Contents/Home/jre/lib
+java.vm.version=24.51-b03
+gopherProxySet=false
+java.vm.vendor=Oracle Corporation
+java.vendor.url=http://java.oracle.com/
+path.separator=:
+java.vm.name=Java HotSpot(TM) 64-Bit Server VM
+file.encoding.pkg=sun.io
+user.country=US
+sun.java.launcher=SUN_STANDARD
+sun.os.patch.level=unknown
+java.vm.specification.name=Java Virtual Machine Specification
+user.dir=/Users/leepike/Galois/SMACCM/smaccm-project/source/smaccmpilot-build/tower/tower-aadl/test_per
+java.runtime.version=1.7.0_51-b13
+java.awt.graphicsenv=sun.awt.CGraphicsEnvironment
+java.endorsed.dirs=/Library/Java/JavaVirtualMachines/jdk1.7.0_51.jdk/Contents/Home/jre/lib/endorsed
+os.arch=x86_64
+java.io.tmpdir=/var/folders/kq/799krw0j05q5g3l25dv1hjwh0000gp/T/
+line.separator=
+
+java.vm.specification.vendor=Oracle Corporation
+os.name=Mac OS X
+sun.jnu.encoding=UTF-8
+java.library.path=/Users/leepike/Library/Java/Extensions:/Library/Java/Extensions:/Network/Library/Java/Extensions:/System/Library/Java/Extensions:/usr/lib/java:.
+java.specification.name=Java Platform API Specification
+java.class.version=51.0
+sun.management.compiler=HotSpot 64-Bit Tiered Compilers
+os.version=10.10.2
+http.nonProxyHosts=local|*.local|169.254/16|*.169.254/16
+user.home=/Users/leepike
+user.timezone=America/Los_Angeles
+java.awt.printerjob=sun.lwawt.macosx.CPrinterJob
+file.encoding=UTF-8
+java.specification.version=1.7
+java.class.path=/Users/leepike/Galois/SMACCM/smaccm-project/source/smaccmpilot-build/phase2/ramses-demo/ramses.jar
+user.name=leepike
+java.vm.specification.version=1.7
+sun.java.command=/Users/leepike/Galois/SMACCM/smaccm-project/source/smaccmpilot-build/phase2/ramses-demo/ramses.jar -g rtos -i /Users/leepike/Galois/SMACCM/smaccm-project/source/smaccmpilot-build/phase2/ramses-demo/aadl2rtos_resource -o . -l trace -s sys.impl -m SMACCM_SYS.aadl,tick_2.aadl,sys.aadl
+java.home=/Library/Java/JavaVirtualMachines/jdk1.7.0_51.jdk/Contents/Home/jre
+sun.arch.data.model=64
+user.language=en
+java.specification.vendor=Oracle Corporation
+awt.toolkit=sun.lwawt.macosx.LWCToolkit
+java.vm.info=mixed mode
+java.version=1.7.0_51
+java.ext.dirs=/Users/leepike/Library/Java/Extensions:/Library/Java/JavaVirtualMachines/jdk1.7.0_51.jdk/Contents/Home/jre/lib/ext:/Library/Java/Extensions:/Network/Library/Java/Extensions:/System/Library/Java/Extensions:/usr/lib/java
+sun.boot.class.path=/Library/Java/JavaVirtualMachines/jdk1.7.0_51.jdk/Contents/Home/jre/lib/resources.jar:/Library/Java/JavaVirtualMachines/jdk1.7.0_51.jdk/Contents/Home/jre/lib/rt.jar:/Library/Java/JavaVirtualMachines/jdk1.7.0_51.jdk/Contents/Home/jre/lib/sunrsasign.jar:/Library/Java/JavaVirtualMachines/jdk1.7.0_51.jdk/Contents/Home/jre/lib/jsse.jar:/Library/Java/JavaVirtualMachines/jdk1.7.0_51.jdk/Contents/Home/jre/lib/jce.jar:/Library/Java/JavaVirtualMachines/jdk1.7.0_51.jdk/Contents/Home/jre/lib/charsets.jar:/Library/Java/JavaVirtualMachines/jdk1.7.0_51.jdk/Contents/Home/jre/lib/jfr.jar:/Library/Java/JavaVirtualMachines/jdk1.7.0_51.jdk/Contents/Home/jre/classes
+java.vendor=Oracle Corporation
+file.separator=/
+java.vendor.url.bug=http://bugreport.sun.com/bugreport/
+sun.io.unicode.encoding=UnicodeBig
+sun.cpu.endian=little
+socksNonProxyHosts=local|*.local|169.254/16|*.169.254/16
+ftp.nonProxyHosts=local|*.local|169.254/16|*.169.254/16
+sun.cpu.isalist=
+
+Environment variables are:
+$TERM=screen-256color
+$ZSH=/Users/leepike/.oh-my-zsh
+$AUTOJUMP_DATA_DIR=/Users/leepike/.local/share/autojump
+$SHLVL=3
+$TERM_PROGRAM=iTerm.app
+$__CF_USER_TEXT_ENCODING=0x1F6:0x0:0x0
+$AADL2RTOS_CONFIG_DIR=/Users/leepike/Galois/SMACCM/smaccm-project/source/smaccmpilot-build/phase2/ramses-demo/aadl2rtos_resource
+$XPC_FLAGS=0x0
+$TMUX=/private/var/folders/kq/799krw0j05q5g3l25dv1hjwh0000gp/T/tmux-502/default,71943,5
+$PWD=/Users/leepike/Galois/SMACCM/smaccm-project/source/smaccmpilot-build/tower/tower-aadl/test_per
+$JAVA_ARCH=x86_64
+$LOGNAME=leepike
+$_=/usr/bin/java
+$SSH_AUTH_SOCK=/private/tmp/com.apple.launchd.pHvbxFbLcm/Listeners
+$OLDPWD=/Users/leepike/Galois/SMACCM/smaccm-project/source/smaccmpilot-build/tower/tower-aadl
+$SHELL=/bin/zsh
+$LC_CTYPE=en_US.UTF-8
+$TMPDIR=/var/folders/kq/799krw0j05q5g3l25dv1hjwh0000gp/T/
+$ITERM_SESSION_ID=w1t0p0
+$JAVA_MAIN_CLASS_87326=fr.tpt.aadl.ramses.control.cli.ToolSuiteLauncher
+$PATH=/Users/leepike/.cabal/bin:/Users/leepike/Home/bin:/Users/leepike/bin/z3/bin:/Users/leepike/Src/liquidhaskell/.cabal-sandbox/bin:/Users/leepike/Galois/SMACCM/smaccm-project/OutsideSrcs/gcc-arm-none-eabi-4_8-2014q1/bin:/Users/leepike/bin/coverity/bin:/opt/local/bin:/Users/leepike/bin/k/bin:/usr/local/bin:/Users/leepike/Src/arcanist/bin:/usr/bin:/bin:/usr/local/texlive/2013/bin/universal-darwin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Users/leepike/.cabal/bin:/Users/leepike/Home/bin:/Users/leepike/bin/z3/bin:/Users/leepike/Src/liquidhaskell/.cabal-sandbox/bin:/Users/leepike/Galois/SMACCM/smaccm-project/OutsideSrcs/gcc-arm-none-eabi-4_8-2014q1/bin:/Users/leepike/bin/coverity/bin:/opt/local/bin:/Users/leepike/bin/k/bin:/Users/leepike/Src/arcanist/bin:/usr/local/texlive/2013/bin/universal-darwin
+$DISPLAY=/private/tmp/com.apple.launchd.Mc3spRs63E/org.macosforge.xquartz:0
+$USER=leepike
+$LESS=-R
+$PAGER=less
+$com.apple.java.jvmTask=CommandLine
+$HOME=/Users/leepike
+$XPC_SERVICE_NAME=0
+$RAMSES_DIR=/Users/leepike/Galois/SMACCM/smaccm-project/source/smaccmpilot-build/phase2/ramses-demo/ramses_resource
+$Apple_PubSub_Socket_Render=/private/tmp/com.apple.launchd.tFUefnagPd/Render
+$LSCOLORS=Gxfxcxdxbxegedabagacad
+$TMUX_PANE=%6
+$LANG=en_US.UTF-8
+$ITERM_PROFILE=Default
+********************************************************************************
+ (ToolSuiteLauncherCommand.java::commonOptionsHandler line 391 ; 2015-03-27 14:16:22,444)
+<INFO> set RAMSES resource directory to '/Users/leepike/Galois/SMACCM/smaccm-project/source/smaccmpilot-build/phase2/ramses-demo/ramses_resource' (RamsesConfiguration.java::setRamsesResourceDir line 73 ; 2015-03-27 14:16:22,448)
+<INFO> set ATL resource directory to '/Users/leepike/Galois/SMACCM/smaccm-project/source/smaccmpilot-build/phase2/ramses-demo/ramses_resource' (RamsesConfiguration.java::setAtlResourceDir line 134 ; 2015-03-27 14:16:22,448)
+<INFO> set AADL predefined resource directory to '/Users/leepike/Galois/SMACCM/smaccm-project/source/smaccmpilot-build/phase2/ramses-demo/ramses_resource/aadl_resources' (RamsesConfiguration.java::setPredefinedResourceDir line 164 ; 2015-03-27 14:16:22,448)
+<INFO> set output directory to '.' (RamsesConfiguration.java::setRamsesOutputDir line 241 ; 2015-03-27 14:16:25,058)
+<INFO> set generation target id to 'rtos' (RamsesConfiguration.java::setGenerationTargetId line 341 ; 2015-03-27 14:16:25,058)
+<INFO> runtime path has not been set. It can be the normal behavior. Otherwise, 'rtos' generator will try to fetch the runtime path from the '$null' environment variable. (RamsesConfiguration.java::setRuntimePath line 266 ; 2015-03-27 14:16:25,058)
+<INFO> set runtime path to 'null' (RamsesConfiguration.java::setRuntimePath line 276 ; 2015-03-27 14:16:25,058)
+<INFO> Begin task 'Generate code for rtos' (RamsesProgressMonitor.java::beginTask line 48 ; 2015-03-27 14:16:25,059)
+<INFO> Begin sub task 'Parse predefined AADL models' (RamsesProgressMonitor.java::subTask line 104 ; 2015-03-27 14:16:25,059)
+<INFO> Begin sub task 'Parse AADL models' (RamsesProgressMonitor.java::subTask line 104 ; 2015-03-27 14:16:33,230)
+<TRACE> parse behavior_specification in Get_Queueing_Port_Count from ARINC653_runtime.aadl2 (AnnexJob.java::parse line 99 ; 2015-03-27 14:16:35,482)
+<TRACE> parse behavior_specification in Display_Blackboard from ARINC653_runtime.aadl2 (AnnexJob.java::parse line 99 ; 2015-03-27 14:16:36,260)
+<TRACE> parse behavior_specification in Read_Blackboard from ARINC653_runtime.aadl2 (AnnexJob.java::parse line 99 ; 2015-03-27 14:16:36,590)
+<TRACE> parse behavior_specification in Receive_Input from PeriodicDelayed_runtime.aadl2 (AnnexJob.java::parse line 99 ; 2015-03-27 14:16:36,659)
+<TRACE> parse behavior_specification in Next_Value from PeriodicDelayed_runtime.aadl2 (AnnexJob.java::parse line 99 ; 2015-03-27 14:16:38,081)
+<TRACE> parse behavior_specification in Put_Value from PeriodicDelayed_runtime.aadl2 (AnnexJob.java::parse line 99 ; 2015-03-27 14:16:41,460)
+<TRACE> parse behavior_specification in Send_Output from PeriodicDelayed_runtime.aadl2 (AnnexJob.java::parse line 99 ; 2015-03-27 14:16:41,587)
+<TRACE> parse behavior_specification in Receive_Input_LowFP from PeriodicDelayed_runtime.aadl2 (AnnexJob.java::parse line 99 ; 2015-03-27 14:16:41,765)
+<TRACE> parse behavior_specification in Put_Value_LowFP from PeriodicDelayed_runtime.aadl2 (AnnexJob.java::parse line 99 ; 2015-03-27 14:16:42,319)
+<TRACE> parse behavior_specification in Init_Prototype from PeriodicDelayedMutex_runtime.aadl2 (AnnexJob.java::parse line 99 ; 2015-03-27 14:16:42,533)
+<TRACE> parse behavior_specification in Put_Value.impl from PeriodicDelayedMutex_runtime.aadl2 (AnnexJob.java::parse line 99 ; 2015-03-27 14:16:43,140)
+<TRACE> parse behavior_specification in Receive_Input.impl from PeriodicDelayedMutex_runtime.aadl2 (AnnexJob.java::parse line 99 ; 2015-03-27 14:16:45,830)
+<TRACE> parse behavior_specification in Next_Value.impl from PeriodicDelayedMutex_runtime.aadl2 (AnnexJob.java::parse line 99 ; 2015-03-27 14:16:46,888)
+<TRACE> parse behavior_specification in Send_Output from PeriodicDelayedMutex_runtime.aadl2 (AnnexJob.java::parse line 99 ; 2015-03-27 14:16:48,367)
+<TRACE> resolve behavior_specification in Get_Queueing_Port_Count from ARINC653_runtime.aadl2 (AnnexJob.java::resolve line 149 ; 2015-03-27 14:16:48,372)
+<TRACE> resolve behavior_specification in Display_Blackboard from ARINC653_runtime.aadl2 (AnnexJob.java::resolve line 149 ; 2015-03-27 14:16:48,429)
+<TRACE> resolve behavior_specification in Read_Blackboard from ARINC653_runtime.aadl2 (AnnexJob.java::resolve line 149 ; 2015-03-27 14:16:48,471)
+<TRACE> resolve behavior_specification in Receive_Input from PeriodicDelayed_runtime.aadl2 (AnnexJob.java::resolve line 149 ; 2015-03-27 14:16:48,504)
+<TRACE> resolve behavior_specification in Next_Value from PeriodicDelayed_runtime.aadl2 (AnnexJob.java::resolve line 149 ; 2015-03-27 14:16:48,531)
+<TRACE> resolve behavior_specification in Put_Value from PeriodicDelayed_runtime.aadl2 (AnnexJob.java::resolve line 149 ; 2015-03-27 14:16:48,558)
+<TRACE> resolve behavior_specification in Send_Output from PeriodicDelayed_runtime.aadl2 (AnnexJob.java::resolve line 149 ; 2015-03-27 14:16:48,563)
+<TRACE> resolve behavior_specification in Receive_Input_LowFP from PeriodicDelayed_runtime.aadl2 (AnnexJob.java::resolve line 149 ; 2015-03-27 14:16:48,572)
+<TRACE> resolve behavior_specification in Put_Value_LowFP from PeriodicDelayed_runtime.aadl2 (AnnexJob.java::resolve line 149 ; 2015-03-27 14:16:48,602)
+<TRACE> resolve behavior_specification in Init_Prototype from PeriodicDelayedMutex_runtime.aadl2 (AnnexJob.java::resolve line 149 ; 2015-03-27 14:16:48,618)
+<TRACE> resolve behavior_specification in Put_Value.impl from PeriodicDelayedMutex_runtime.aadl2 (AnnexJob.java::resolve line 149 ; 2015-03-27 14:16:48,636)
+<TRACE> resolve behavior_specification in Receive_Input.impl from PeriodicDelayedMutex_runtime.aadl2 (AnnexJob.java::resolve line 149 ; 2015-03-27 14:16:48,707)
+<TRACE> resolve behavior_specification in Next_Value.impl from PeriodicDelayedMutex_runtime.aadl2 (AnnexJob.java::resolve line 149 ; 2015-03-27 14:16:48,719)
+<TRACE> resolve behavior_specification in Send_Output from PeriodicDelayedMutex_runtime.aadl2 (AnnexJob.java::resolve line 149 ; 2015-03-27 14:16:48,731)
+<INFO> Begin sub task 'Instantiate AADL models' (RamsesProgressMonitor.java::subTask line 104 ; 2015-03-27 14:16:48,747)
+<INFO> Begin sub task 'Creating instances in p0' (RamsesProgressMonitor.java::subTask line 104 ; 2015-03-27 14:16:48,802)
+<INFO> Begin sub task 'Creating system operation modes' (RamsesProgressMonitor.java::subTask line 104 ; 2015-03-27 14:16:48,804)
+<INFO> Begin sub task 'Creating connections in  p0' (RamsesProgressMonitor.java::subTask line 104 ; 2015-03-27 14:16:48,810)
+<INFO> Begin sub task 'Creating end-to-end flows in p0' (RamsesProgressMonitor.java::subTask line 104 ; 2015-03-27 14:16:48,813)
+<INFO> Begin sub task 'Caching contained property associations in p0' (RamsesProgressMonitor.java::subTask line 104 ; 2015-03-27 14:16:48,815)
+<INFO> Begin sub task 'Caching system instance contained property associations' (RamsesProgressMonitor.java::subTask line 104 ; 2015-03-27 14:16:48,815)
+<INFO> Begin sub task 'Caching 2 property associations' (RamsesProgressMonitor.java::subTask line 104 ; 2015-03-27 14:16:48,818)
+<INFO> Begin sub task 'Caching property associations in p0' (RamsesProgressMonitor.java::subTask line 104 ; 2015-03-27 14:16:48,821)
+<INFO> Begin sub task 'Saving instance model' (RamsesProgressMonitor.java::subTask line 104 ; 2015-03-27 14:16:48,828)
+<INFO> Begin task 'Generating Configuration for AADL Model' (RamsesProgressMonitor.java::beginTask line 48 ; 2015-03-27 14:16:48,840)
+<INFO> Task Generating Configuration for AADL Model is done (RamsesProgressMonitor.java::done line 59 ; 2015-03-27 14:16:49,350)

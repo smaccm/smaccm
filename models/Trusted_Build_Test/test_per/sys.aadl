@@ -1,0 +1,31 @@
+-- File generated from Tower-AADL compiler
+
+package sys
+public
+  with Base_Types;
+  with Data_Model;
+  with SMACCM_SYS;
+  with tick_2;
+
+process sys_process
+  
+end sys_process;
+
+process implementation sys_process.impl
+  subcomponents
+    th0: thread tick_2::tick_2;
+end sys_process.impl;
+
+system sys
+  
+end sys;
+
+system implementation sys.impl
+  subcomponents
+    p0:process sys_process.impl;
+  properties
+    SMACCM_SYS::OS => CAmkES;
+    SMACCM_SYS::HW => QEMU;
+end sys.impl;
+
+end sys;

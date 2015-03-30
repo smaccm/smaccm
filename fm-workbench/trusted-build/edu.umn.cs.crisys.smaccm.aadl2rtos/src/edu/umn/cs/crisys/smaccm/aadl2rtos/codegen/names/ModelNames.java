@@ -10,6 +10,7 @@ import java.util.Set;
 
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.IRQDispatcher;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.DataPort;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.ExternalIRQ;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.ThreadImplementation;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.Type;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.UnitType;
@@ -105,6 +106,15 @@ public class ModelNames {
     return getSystemImplementationName() + "_assembly.camkes";
   }
   
+  public boolean getGenerateSystickIrq() {
+	  return m.getGenerateSystickIRQ();
+  }
+  
+  public List<ExternalIRQ> getExternalIRQs() {
+		return m.getExternalIRQs();
+  }
+
+  
   int connNumber = 0; 
   public String getGenerateConnectionName() {
     connNumber++; 
@@ -135,4 +145,8 @@ public class ModelNames {
     return m.getHWTarget();
   }
   
+  public List<String> getExternalMutexList() {
+	return m.getExternalMutexList();
+  }
+
 }

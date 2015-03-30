@@ -42,16 +42,16 @@ public class IRQDispatcher extends Dispatcher {
 	  return new UnitType(); 
 	}
 	
-  public String getIrqSignalName() {
+  public String getEChronosIrqSmaccmFlihName() {
     return ("smaccm_irq_" + getSignalName()).toLowerCase();
   }
   
-  public String getIrqSignalSetDefine() {
-    return ("SIGNAL_SET_" + this.getIrqSignalName()).toUpperCase(); 
+  public String getEChronosIrqSignalSetDefine() {
+    return ("SIGNAL_SET_" + this.getEChronosIrqSmaccmFlihName()).toUpperCase(); 
   }
   
-  public String getIrqSignalDefine() {
-    return ("IRQ_EVENT_ID_" + this.getIrqSignalName()).toUpperCase();
+  public String getEChronosIrqSignalDefine() {
+    return ("IRQ_EVENT_ID_" + this.getEChronosIrqSmaccmFlihName()).toUpperCase();
   }
 	
   public Map<String, Long> getMemoryRegions() {
