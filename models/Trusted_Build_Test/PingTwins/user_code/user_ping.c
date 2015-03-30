@@ -1,6 +1,7 @@
 #include <smaccm_ping.h>
 #include <stdlib.h>
 #include <stdint.h>
+#include <stdio.h>
 
 void ping(const uint64_t * periodic_100_m) {
    PingTwins__msg_impl msg_data;

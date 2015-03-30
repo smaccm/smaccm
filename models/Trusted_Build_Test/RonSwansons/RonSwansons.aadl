@@ -77,7 +77,7 @@ thread manager
 	    Stack_Size => 256 bytes;
 	    SMACCM_SYS::Thread_Type => Active ;
 	    Compute_Execution_Time => 10 us .. 50 us;
-	    SMACCM_SYS::Sends_Events_To => "{{1 pollport1}}";
+	    SMACCM_SYS::Sends_Events_To => "{{1 pollport1; 1 giveforkport1}}";
 end manager ; 
 
 

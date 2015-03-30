@@ -1,5 +1,5 @@
 #include <user_pong.h>
-
+#include <stdio.h>
 
 void In(const PingTwins__msg_impl * msg_data) {
 	printf("In%i: Ping recv'd, sending pong.\n",ID);
