@@ -132,6 +132,10 @@ public class DispatcherNames {
     }
   }
   
+  public String getEChronosSignalNumberForDispatcher() {
+	  return Integer.toString(dp.getOwner().getSignalNumberForDispatcher(dp));
+  }
+  
   public OutgoingDispatchContractNames getMaxDispatchContracts() {
     OutgoingDispatchContract odc = 
         OutgoingDispatchContract.maxDispatcherUse(dp.getDispatchLimits());
@@ -208,7 +212,8 @@ public class DispatcherNames {
   // 
   //////////////////////////////////////////////////////////
 
-  public String getDispatcherComponentDispatchName() {
+  // TODO: change this freakin' name.
+  public String getQualifiedName() {
     ThreadImplementationNames tin = new ThreadImplementationNames(dp.getOwner());
     return tin.getNormalizedName() + "_" + dp.getName();
   }
@@ -217,7 +222,7 @@ public class DispatcherNames {
   // be the same as PortNames::getDispatcherName(); 
   // That is why the custom case with getIsInput().
 
-  public String getDispatcherCFileDispatcherFnName() {
+  public String getCamkesDispatcherFnName() {
     if (getIsInput()) {
       return this.getInputEventDispatcherPort().getDispatcherCFileDispatcherFnName(); 
     } else {

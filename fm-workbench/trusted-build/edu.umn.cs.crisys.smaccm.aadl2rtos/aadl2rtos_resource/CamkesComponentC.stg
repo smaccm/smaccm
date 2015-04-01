@@ -1,3 +1,37 @@
 import "CommonComponentC.stg"
 
+/*
+ * Overrides for OS-specific behavior for generated C code.
+ * 
+ */
+incomingPortWriterName(port) ::= <<
+<port.name>_<port.type.writerFn>
+>>
 
+incomingRPCDispatchName(dispatcher) ::= <<
+  <dispatcher.qualifiedName>_<dispatcher.type.writerFn>
+>>
+
+dispatcherWriterName(dispatcher) ::= << 
+<dispatcher.camkesDispatcherFnName>
+>>
+
+portLockStmt(port) ::= <<
+	<port.camkesMutexLockFnCall>; 
+>>
+
+portUnlockStmt(port) ::= <<
+	<port.camkesMutexUnlockFnCall>; 
+>>
+
+portDispatcherLock(dispatcher) ::= " "
+
+portDispatcherUnlock(dispatcher) ::= " "
+
+dispatcherMainInitializeLockStmt(threadImpl) ::= "<threadImpl.camkesDispatcherLockStmt>"
+
+dispatcherMainLockWaitStmt(threadImpl) ::= "<threadImpl.camkesDispatcherLockStmt>"	
+
+dispatcherMainLockReleaseStmt(threadImpl) ::= "<threadImpl.camkesDispatcherUnlockStmt>"
+
+dispatcherIsrMainLockReleaseStmt(threadImpl) ::= "<dispatcherMainLockReleaseStmt(threadImpl)>"

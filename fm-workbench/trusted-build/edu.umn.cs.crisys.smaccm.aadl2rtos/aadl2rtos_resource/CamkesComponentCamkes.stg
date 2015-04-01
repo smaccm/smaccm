@@ -49,6 +49,7 @@ uses <threadImpl.idlName> <threadImpl.interfaceInstanceName>;
 
 
 constructSenderInterface(connection) ::= <<
+// connection to active thread 'send' interface
 uses <connection.destPort.type.readerWriterInterfaceName> <connection.sourcePort.qualifiedName>;
 
 >>
@@ -76,7 +77,7 @@ dataport Buf <memoryRegion.name>;
 
 writeProvidedInterface(dispatcher) ::= <<
 <if(dispatcher.isPeriodic)><\\>
-provides <dispatcher.type.readerWriterInterfaceName> <dispatcher.dispatcherComponentDispatchName>;
+provides <dispatcher.type.readerWriterInterfaceName> <dispatcher.qualifiedName>;
 <elseif(dispatcher.isIRQ)><\\>
 consumes DataAvailable <dispatcher.name>;
 <dispatcher.memoryRegions:constructMemoryInterface(dispatcher)>
@@ -112,29 +113,31 @@ component <threadImpl.componentName> {
 	control;
     has semaphore <threadImpl.dispatcherComponentSemaphoreName>;
 
-	// references to other active thread send interfaces from passive
-	// thread region controlled by active thread (if any)
 	<threadImpl.nonlocalActiveThreadConnectionFrontier:constructSenderInterface()>
 
 	// references to passive thread receivers	(if any)
 	<threadImpl.model.passiveThreadImplementations:writeToPassiveReceiver()>
-<elseif(threadImpl.containsDispatchers)><\\>
+
+	// provided interfaces for input event / event data ports (if any)
+	<threadImpl.inputEventPortList:inputPortDecl()>
+	<threadImpl.inputEventDataPortList:inputPortDecl()>
+
+	// interfaces for Periodic and IRQ port dispatchers (if any).
+	<threadImpl.dispatchers:writeProvidedInterface()>	
+<elseif(threadImpl.containsDispatchers)>
 	provides <threadImpl.idlName> <threadImpl.componentDispatcherInterfaceVarIdName>;
 <endif>
 	<threadImpl.externalSemaphores:{ sem | has semaphore <sem>; }; separator="\n">
 	<threadImpl.externalMutexes:{mut | has mutex <mut>; }; separator="\n">
 	<threadImpl.endpoints:writeRpgInterface()>
-	// interfaces for Periodic and IRQ port dispatchers.
-	<threadImpl.dispatchers:writeProvidedInterface()>	
+
 	
 	// provided interfaces for data / shared data ports (if any)
 	<threadImpl.inputDataPortList:inputPortDecl()>
 	<threadImpl.outputDataPortList:outputDataPortDecl()>
 	<threadImpl.sharedDataAccessorList:sharedDataAccessorDecl()>
 
-	// provided interfaces for input event / event data ports (if any)
-	<threadImpl.inputEventPortList:inputPortDecl()>
-	<threadImpl.inputEventDataPortList:inputPortDecl()>
+
 }
 
 

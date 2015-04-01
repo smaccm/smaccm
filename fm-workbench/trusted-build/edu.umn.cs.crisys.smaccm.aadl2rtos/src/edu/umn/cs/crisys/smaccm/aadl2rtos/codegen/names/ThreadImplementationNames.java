@@ -236,6 +236,18 @@ public class ThreadImplementationNames {
     return tn;
   }
   
+  public String getEChronosThreadDispatcherMutex() {
+	  return "smaccm_" + ti.getNormalizedName() + "_dispatcher_mtx";
+  }
+  
+  public String getEChronosThreadDispatcherMutexConst() {
+	  return (ModelNames.getEChronosPrefix() + "_MUTEX_ID_" + this.getEChronosThreadDispatcherMutex()).toUpperCase();
+  }
+
+  public String getEChronosTaskIdConst() {
+	  return (ModelNames.getEChronosPrefix() + "_TASK_ID_" + this.getNormalizedName()).toUpperCase();
+  }
+  
   public List<String> getExternalMutexes() {
     return ti.getExternalMutexList();
   }
@@ -286,11 +298,11 @@ public class ThreadImplementationNames {
   // 
   //////////////////////////////////////////////////////////
   
-  public String getDispatcherLockStmt() {
+  public String getCamkesDispatcherLockStmt() {
     return getDispatcherComponentSemaphoreName() + "_wait();\n";
   }
   
-  public String getDispatcherUnlockStmt() {
+  public String getCamkesDispatcherUnlockStmt() {
     return getDispatcherComponentSemaphoreName() + "_post();\n";
   }
 

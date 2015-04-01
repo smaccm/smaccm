@@ -230,7 +230,11 @@ public class PortNames {
   }
 
   public String getMutex() {
-    return "smaccm_" + dp.getName() + "_sem";
+    return "smaccm_" + dp.getOwner().getNormalizedName() + "_" + dp.getName() + "_mut";
+  }
+  
+  public String getEChronosMutexConst() {
+	  return (ModelNames.getEChronosPrefix() + "_MUTEX_ID_" + getMutex()).toUpperCase();
   }
   
   ////////////////////////////////////////////////////////////

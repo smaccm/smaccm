@@ -789,11 +789,11 @@ public class AadlModelParser {
     RemoteProcedureGroup rpg = lookupRemoteProcedureGroup(subGroup);
     RemoteProcedureGroupEndpoint requiresEnd = 
         new RemoteProcedureGroupEndpoint(requiresInstance.getThreadImplementation(), rpg, 
-              requires.getName(), AccessType.REQUIRES, ThreadUtil.getIsExternal(requires));
+              requires.getName(), AccessType.REQUIRES);
     
     RemoteProcedureGroupEndpoint providesEnd = 
         new RemoteProcedureGroupEndpoint(providesInstance.getThreadImplementation(), rpg, 
-            provides.getName(), AccessType.PROVIDES, ThreadUtil.getIsExternal(provides));
+            provides.getName(), AccessType.PROVIDES);
     
     EndpointConnection ec = new EndpointConnection(requiresInstance, requiresEnd, 
         providesInstance, providesEnd);

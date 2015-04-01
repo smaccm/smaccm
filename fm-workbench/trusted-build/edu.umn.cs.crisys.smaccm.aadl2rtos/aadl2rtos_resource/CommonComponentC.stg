@@ -4,13 +4,6 @@ import "Common.stg"
 //
 // Declarations related to component gluecode C files for CAmkES
 // 
-// Some design notes: 
-//   TBD 
-//      
-//   
-// 
-//
-//
 // 
 ////////////////////////////////////////////////////////////////////////////
 
@@ -45,65 +38,89 @@ componentGlueCodeCFilePostfix(name, path) ::= <<
 
 
 /////////////////////////////////////////////////////////////////////
-//
-// Functions for managing RPCs
+// OS-specific naming functions.
 //
 /////////////////////////////////////////////////////////////////////
+/*********************************************************************
+ * OS-specific naming functions required by this file: 
+ *   incomingPortWriterName
+ *   incomingRPCDispatchName
+ *   dispatcherWriterName
+ * 	 portDispatcherLock
+ *   portDispatcherUnlock
+ *   dispatcherMainInitializeLockStmt
+ *   dispatcherMainLockWaitStmt
+ *   dispatcherMainLockReleaseStmt
+>>
+ 
+ */
 
-writeAadlArgument(parameter) ::= 
-<< <if(parameter.isInput)><parameter.type.camkesInputToAadlInput><endif><parameter.name> >>
+genericFailure(template) ::= 
+<< INTERNAL ERROR: template: <template> not overridden for host OS. >>  
 
-writeProvidesEndpointRpc(rpc, endpoint) ::= << 
-<writeCamkesCRpcPrototype(rpc, endpoint)>
-{
-	<endpoint.aadlName>_<rpc.name>(<rpc.parameters:writeAadlArgument();separator=", ">);
-}
+incomingPortWriterName(port) ::= << 
+<genericFailure("incomingPortWriterName")>
+<port.dummyFieldForError>
 >>
 
-
-writeProvidesEndpoint(endpoint) ::= <<
-<if(!endpoint.isExternal)><\\>
-<endpoint.remoteProcedureGroup.remoteProcedures:writeProvidesEndpointRpc(endpoint); separator="\n">
-<endif>
+incomingRPCDispatchName(dispatcher) ::= <<
+<genericFailure("incomingRPCDispatchName")>
+<dispatcher.dummyFieldForError>
 >>
 
-
-writeCamkesArgument(parameter) ::= 
-<< <if(parameter.isInput)><parameter.type.aadlInputToCamkesInput><endif><parameter.name> >>
-
-writeRequiresEndpointRpc(rpc, endpoint) ::= << 
-<writeAadlCRpcPrototype(rpc, endpoint)>
-{
-	<endpoint.name>_<rpc.name>(<rpc.parameters:writeCamkesArgument();separator=", ">);
-}
+dispatcherWriterName(dispatcher) ::= << 
+<genericFailure("dispatcherWriterName")>
+<port.dummyFieldForError>
 >>
 
-writeRequiresEndpoint(endpoint) ::= << 
-<if(!endpoint.isExternal)><\\>
-<endpoint.remoteProcedureGroup.remoteProcedures:writeRequiresEndpointRpc(endpoint); separator="\n">
-<endif>
+portDispatcherLock(dispatcher) ::= <<
+<genericFailure("portDispatcherLock")>
+<dispatcher.dummyFieldForError>
 >>
+
+portDispatcherUnlock(dispatcher) ::= <<
+<genericFailure("portDispatcherUnlock")>
+<dispatcher.dummyFieldForError>
+>>
+
+portLockStmt(port) ::= <<
+<genericFailure("portLockStmt")>
+<port.dummyFieldForError>
+>>
+
+portUnlockStmt(port) ::= <<
+<genericFailure("portLockStmt")>
+<port.dummyFieldForError>
+>>
+
+dispatcherMainInitializeLockStmt(threadImpl) ::= <<
+<genericFailure("dispatcherMainInitializeLockStmt")>
+<threadImpl.dummyFieldForError>
+>>
+
+dispatcherMainLockWaitStmt(threadImpl) ::= <<
+<genericFailure("dispatcherMainLockWaitStmt")>
+<threadImpl.dummyFieldForError>
+>>
+
+dispatcherMainLockReleaseStmt(threadImpl) ::= <<
+<genericFailure("dispatcherMainLockReleaseStmt")>
+<threadImpl.dummyFieldForError>
+>>
+
+dispatcherIsrMainLockReleaseStmt(threadImpl) ::= <<
+<genericFailure("dispatcherIsrMainLockReleaseStmt")>
+<threadImpl.dummyFieldForError>
+>>
+
 
 /////////////////////////////////////////////////////////////////////
 //
 // Functions for managing send/receive queues for event data ports, 
 // used for active thread to active thread communications.
 //
-// TODO: writer and reader functions have different format...why?
-//
 /////////////////////////////////////////////////////////////////////
 
-LocalPortWriterName(port) ::= <<
-<port.name>_<port.type.writerFn>
->>
-
-ReceiverQueueDecls(port) ::= <<
-// Static variables for input receiver <port.name>
-<port.queueDataDecl>;
-<port.queueFrontDecl>;
-<port.queueBackDecl>;
-<port.queueFullDecl>;
->>
 
 copyToQueueDataStmt(port) ::= <<
 <if(port.type.isBaseType)><port.queueDataName>[<port.queueFrontName>] = *<port.name> ;
@@ -119,6 +136,13 @@ copyFromQueueDataStmt(port) ::= <<
 
 InputEventDataPortDecls(port) ::= <<
 
+/************************************************************************
+ * 
+ * Static variables and queue management functions for port:
+ * 	<port.name>
+ * 
+ ************************************************************************/
+ 
 <port.queueDataDecl>;
 <port.queueFullDecl> = false;
 <port.queueFrontDecl> = 0;
@@ -156,22 +180,39 @@ bool <port.queueWriteName>(const <port.type.aadlInputType.name> <port.name>) {
 	}
 }
 
-// This is the function invoked via RPC when sending a message to this thread.
-bool <LocalPortWriterName(port)>(<port.type.camkesInputType.name> arg) {
+/************************************************************************
+ *  <incomingPortWriterName(port)>: 
+ * Invoked by: remote interface.
+ * 
+ * This is the function invoked by CAmkES to write to an active-thread
+ * input event data port.  It queues the input message into a circular buffer.
+ * 
+ ************************************************************************/
+ 
+bool <incomingPortWriterName(port)>(<port.type.camkesInputType.name> arg) {
 	bool result;
 	<port.camkesMutexLockFnCall>; 
 	result = <port.queueWriteName>(<port.type.camkesInputToAadlInput> arg);
-	<port.camkesMutexUnlockFnCall>;
-	<if(port.hasDispatcher)><port.threadImplementation.dispatcherUnlockStmt><endif>
+	<portUnlockStmt(port)>
+	<if(port.hasDispatcher)><dispatcherMainLockReleaseStmt(port.threadImplementation)><endif>
 	return result;
 }
 
 
+/************************************************************************
+ *  <port.aadlReaderFnName>: 
+ * Invoked from local active thread.
+ * 
+ * This is the function invoked by the active thread to read from the 
+ * input event data queue circular buffer.
+ * 
+ ************************************************************************/
+
 bool <port.aadlReaderFnName>(<port.type.aadlOutputType.name> arg) {
 	bool result; 
-	<port.camkesMutexLockFnCall>; 
+	<portLockStmt(port)> 
 	result = <port.queueReadName>(arg);
-	<port.camkesMutexUnlockFnCall>;
+	<portUnlockStmt(port)>
 	return result;
 }
 
@@ -197,25 +238,43 @@ bool <port.queueIsEmptyName>() {
 	return <port.index> == 0; 
 }
 
-bool <LocalPortWriterName(port)>() {
-	<port.camkesMutexLockFnCall>; 
+/************************************************************************
+ *  <incomingPortWriterName(port)>: 
+ * Invoked by: CAmkES
+ * 
+ * This is the function invoked by CAmkES to write to an active-thread
+ * input event port.  It increments a count of received messages.
+ * 
+ ************************************************************************/
+
+bool <incomingPortWriterName(port)>() {
+	<portLockStmt(port)> 
 	// Note: possibility for overflow here - should I worry about MAXINT messages?
 	<port.index>++;
-	<port.camkesMutexUnlockFnCall>;
-	<if(port.hasDispatcher)><port.threadImplementation.dispatcherUnlockStmt><endif>
+	<portUnlockStmt(port)>
+	<if(port.hasDispatcher)><dispatcherMainLockReleaseStmt(port.threadImplementation)><endif>
 	return true;
 }
 
+/************************************************************************
+ *  <port.aadlReaderFnName>: 
+ * Invoked from local active thread.
+ * 
+ * This is the function invoked by the active thread to decrement the 
+ * input event index.
+ * 
+ ************************************************************************/
+
 bool <port.aadlReaderFnName>() {
 	bool result; 
-	<port.camkesMutexLockFnCall>; 
+	<portLockStmt(port)> 
 	if (<port.index> > 0) {
 		<port.index>--;
 		result = true;
 	} else {
 		result = false;
 	}
-	<port.camkesMutexUnlockFnCall>;
+	<portUnlockStmt(port)>
 	return result;
 }
 
@@ -225,12 +284,6 @@ optInputEventDataPortDecls(port) ::= <<
 <if(port.threadImplementation.isActive || 
     !port.hasDispatcher)>
 
-//////////////////////////////////////////////////////
-//
-// Global data for event data port <port.name>
-//
-//////////////////////////////////////////////////////
-
 <InputEventDataPortDecls(port)>
 <endif>
 >>
@@ -238,12 +291,6 @@ optInputEventDataPortDecls(port) ::= <<
 
 optInputEventPortDecls(port) ::= <<
 <if(port.threadImplementation.isActive || !port.hasDispatcher)>
-
-//////////////////////////////////////////////////////
-//
-// Global data for event port <port.name>
-//
-//////////////////////////////////////////////////////
 
 <InputEventPortDecls(port)>
 <endif>
@@ -260,26 +307,40 @@ optConstCamkesInputArg(port) ::= "<if(port.hasData)><port.type.camkesInputType.n
 
 componentRemoteWriteFunction(port) ::= <<
 
-// The writer function is called remotely through RPC, so follows the 
-// RPC naming and return convention.  
-bool <LocalPortWriterName(port)>(<optConstCamkesInputArg(port)>) {
-	<port.camkesMutexLockFnCall>; 
+/************************************************************************
+ *  <incomingPortWriterName(port)>: 
+ * Invoked by CAmkES.
+ * 
+ * This is the function that is invoked by CAmkES to write to a data port.
+ * 
+ ************************************************************************/
+ 
+bool <incomingPortWriterName(port)>(<optConstCamkesInputArg(port)>) {
+	<portLockStmt(port)> 
 	<if(port.type.isBaseType)><port.readerWriterImplVar> = *<port.name>;
 	<else><camkesInputToValMemcpy(port.type, port.readerWriterImplVar, port.name)>
 	<endif>
-	<port.camkesMutexUnlockFnCall>;
+	<portUnlockStmt(port)>
 	return true;
 }
 
 >>
 
 componentLocalReadFunction(port) ::= <<
+/************************************************************************
+ *  <port.aadlReaderFnName>: 
+ * Invoked from local active thread.
+ * 
+ * This is the function invoked by the active thread to read from a data port.
+ * 
+ ************************************************************************/
+
 bool <port.aadlReaderFnName>(<userSendOptAadlOutputArg(port)>) {
-	<port.camkesMutexLockFnCall>; 
+	<portLockStmt(port)> 
 	<if(port.type.isBaseType)><port.type.aadlOutputToVal><port.name> = <port.readerWriterImplVar>;
 	<else><valToAadlOutputMemcpy(port.type, port.name, port.readerWriterImplVar)>
 	<endif>
-	<port.camkesMutexUnlockFnCall>;
+	<portUnlockStmt(port)>
 	return true;
 }
 
@@ -294,53 +355,24 @@ componentLocalReaderDecl(port) ::= <<
 >>
 
 componentRemoteWriterDecl(port) ::= <<
+/************************************************************************
+ *  <port.aadlWriterFnName>: 
+ * Invoked from user code in the local thread.
+ * 
+ * This is the function invoked by the local active thread to make a 
+ * call to write to a remote data port.
+ * 
+ ************************************************************************/
+
 bool <port.aadlWriterFnName>(const <port.type.aadlInputType.name> <port.name>) {
 	// cast is necessary because CAmkES does not support passing constant arguments
-	<LocalPortWriterName(port)>((<port.type.aadlInputType.name>)<port.type.aadlInputToCamkesInput> <port.name>);
+	<incomingPortWriterName(port)>((<port.type.aadlInputType.name>)<port.type.aadlInputToCamkesInput> <port.name>);
 	return true;
 }
 
 >>
 
 
-/////////////////////////////////////////////////////////////////////
-//
-// Code for dispatching active threads based on external 
-// stimulus to its dispatcher fn.
-//
-/////////////////////////////////////////////////////////////////////
-
-periodicDispatcher(dispatcher) ::= <<
-if (<dispatcher.dispatchOccurredVar>) {
-	<dispatcher.dispatchOccurredVar> = false;
-	<dispatcher.dispatcherCFileDispatcherFnName>(&<dispatcher.periodicTimeVar>);
-}
-
->>
-
-irqDispatcher(dispatcher) ::= <<
-if (<dispatcher.dispatchOccurredVar>) {
-	<dispatcher.dispatchOccurredVar> = false;
-	<dispatcher.dispatcherCFileDispatcherFnName>();
-}
-
->>
-
-eventDispatcher(dispatcher) ::= <<
-while (<dispatcher.inputEventDispatcherPort.aadlReaderFnName>()) {
-	<dispatcher.dispatcherCFileDispatcherFnName>();
-}
-
->>
-
-eventDataDispatcher(dispatcher) ::= <<
-while (!<dispatcher.inputEventDispatcherPort.isEmptyFnCall>) {
-	<dispatcher.inputEventDispatcherPort.varDecl>;
-	<dispatcher.inputEventDispatcherPort.queueReadName>(<dispatcher.type.valToAadlOutput><dispatcher.inputEventDispatcherPort.name>);
-	<dispatcher.dispatcherCFileDispatcherFnName>(<dispatcher.type.valToAadlInput><dispatcher.inputEventDispatcherPort.name>); 
-}
-
->>
 
 /////////////////////////////////////////////////////////////////////
 //
@@ -373,9 +405,6 @@ userEntrypointCallerDataOutputArg(dispatchContract) ::=
   <dispatchContract.port.indexType.aadlOutputType.name> <dispatchContract.port.index> <endif>
 >>
 
-userEntrypointCallerFnName(dispatcher) ::=
-	"<dispatcher.threadImplementation.componentDispatcherInterfaceVarIdName>_<dispatcher.idlDispatcherName>"
-
 userEntrypointCallerFnArgs(dispatcher) ::= <<
 <if(dispatcher.hasData)>
 <[userEntrypointCallerInputArg(dispatcher), dispatcher.dispatchableContracts:userEntrypointCallerDataOutputArg()]; separator=",\n">
@@ -393,9 +422,19 @@ userEntrypointCallerAssignGlobals(dispatchContract) ::= <<
 <endif>
 >> 
 
+userEntrypointCallerFnName(dispatcher) ::=
+	"<dispatcher.threadImplementation.componentDispatcherInterfaceVarIdName>_<dispatcher.idlDispatcherName>"
+
 userEntrypointCallerFn(dispatcher) ::= << 
-// <userEntrypointCallerFnName(dispatcher)>: this function defines the 
-// caller function for the external handlers for <dispatcher.name>
+/************************************************************************
+ *  <userEntrypointCallerFnName(dispatcher)>: 
+ * Invoked from local active thread.
+ * 
+ * This is the function invoked by a local active thread dispatcher to 
+ * call to a user-defined entrypoint function after setting up the dispatch
+ * context for the user-defined entrypoint.
+ * 
+ ************************************************************************/
 void <userEntrypointCallerFnName(dispatcher)>(<userEntrypointCallerFnArgs(dispatcher)>) {
 	<dispatcher.maxDispatchContracts.contracts:userEntrypointCallerAssignGlobals()>
 	<dispatcher.externalHandlers:userEntrypointCallerCall(dispatcher)>
@@ -405,26 +444,6 @@ void <userEntrypointCallerFnName(dispatcher)>(<userEntrypointCallerFnArgs(dispat
 >>	 
 
 
-/////////////////////////////////////////////////////////////////////
-//
-// localSendDecl: 
-// 
-// This creates a local call to the queuing function 
-/////////////////////////////////////////////////////////////////////
-
-localSendDecl(connection) ::= <<
-<if(connection.sourcePort.hasData)>
-void <connection.sourcePort.qualifiedName>_<connection.destPort.type.writerFn>(const <connection.sourcePort.type.camkesInputType.name> arg) {
-	<LocalPortWriterName(connection.destPort)>((<connection.sourcePort.type.camkesInputType.name>) arg);
-}
-<else>
-void <connection.sourcePort.qualifiedName>_<connection.destPort.type.writerFn>() {
-	<LocalPortWriterName(connection.destPort)>();
-}
-
-<endif>
-
->>
 
 /////////////////////////////////////////////////////////////////////
 //
@@ -448,6 +467,16 @@ userSendOptConstAadlInputArg(port) ::= "<if(port.hasData)>const <port.type.aadlI
 userSendOptAadlOutputArg(port) ::= "<if(port.hasData)><port.type.aadlOutputType.name> <port.name><endif>"
 
 userSendDefinition(port) ::= << 
+/************************************************************************
+ * <port.aadlWriterFnName> 
+ * Invoked from local active or passive thread.
+ * 
+ * This is the comm function invoked by a user-level thread to send a message 
+ * to another thread.  It enqueues the request to be sent when the user thread
+ * completes execution.
+ * 
+ ************************************************************************/
+
 bool <port.aadlWriterFnName>(<port:userSendOptConstAadlInputArg()>) {
 	if (<port.globalMaxDispatchSize> > 0 && 
 		 *<port.globalIndex> \< <port.globalMaxDispatchSize>) {
@@ -488,22 +517,24 @@ aadlDispatcherPassiveCallOutPortArg(port) ::= <<
 <if(port.hasData)>		<port.type.valToAadlOutput><port.data>,<endif>
 		<port.type.valToAadlOutput><port.index> >>
 
+aadlDispatcherPassiveCallOutArg(dispatchContract) ::= "<aadlDispatcherPassiveCallOutPortArg(dispatchContract.port)>"
+
 aadlDispatcherWritePassiveArg(port) ::= <<
 <if(port.hasData)><port.type.valToAadlInput>(<port.data>.f[smaccm_it])<endif>
 >>
 
 aadlDispatcherWriteActiveArg(port) ::= <<
-<if(port.hasData)><port.type.valToCamkesInput>(<port.data>.f[smaccm_it])<endif>
+<if(port.hasData)>
+/* cast is necessary because CAmkES does not yet make inputs const */ (<port.type.camkesInputType.name>)(<port.type.valToCamkesInput>(<port.data>.f[smaccm_it]))
+<endif>
 >>
 
-aadlDispatcherPassiveCallOutArg(dispatchContract) ::= "<aadlDispatcherPassiveCallOutPortArg(dispatchContract.port)>"
-
 aadlDispatcherCallPassiveTarget(portDest,portSrc) ::= <<
-<portDest.dispatcher.dispatcherCFileDispatcherFnName>(<aadlDispatcherWritePassiveArg(portSrc)>);	
+<dispatcherWriterName(portDest.dispatcher)>(<aadlDispatcherWritePassiveArg(portSrc)>);	
 >>
 
 aadlDispatcherCallActiveTarget(portDest,portSrc) ::= <<
-<portSrc.qualifiedName>_<portDest.type.writerFn>(<aadlDispatcherWriteActiveArg(portSrc)>);	
+<incomingPortWriterName(portSrc)>(<aadlDispatcherWriteActiveArg(portSrc)>);	
 
 >>
 
@@ -515,9 +546,12 @@ for (smaccm_it = 0; smaccm_it \< <dispatchContract.port.index> && smaccm_it \< <
 
 >>
 
-
-// TODO: is this function wrong?  I think it should always be the 
-// passiveComponentDispatcherPathName...
+/////////////////////////////////////////////////////////////
+// if the thread is *not* passive and it is a dispatcher, 
+// then it is the currently running active thread.  It
+// might be better to pass in the threadImpl and do this
+// comparison directly.
+/////////////////////////////////////////////////////////////
 
 aadlDispatcherFunctionName(dispatcher) ::= <<
 <if(dispatcher.threadImplementation.isPassive)><\\>
@@ -534,13 +568,23 @@ aadlDispatcherFunctionArgs(dispatcher) ::=
 >>
 
 aadlDispatcherFunction(dispatcher) ::= <<
-void <dispatcher.dispatcherCFileDispatcherFnName>(<if(dispatcher.hasData)><dispatcher.type.aadlInputType.name> <dispatcher.name><endif>) {
+/************************************************************************
+ * <dispatcherWriterName(dispatcher)>
+ * Invoked from local active thread.
+ * 
+ * This is the dispatcher function invoked to respond to an incoming thread 
+ * stimulus: an ISR, a periodic dispatch, or a queued event.
+ * 
+ ******************************************************************************/
+void <dispatcherWriterName(dispatcher)>(<if(dispatcher.hasData)><dispatcher.type.aadlInputType.name> <dispatcher.name><endif>) {
 	<dispatcher.dispatchableContracts:aadlDispatcherDeclareData()>
 	
+	<portDispatcherLock(dispatcher)>
 	// make the call: 
 	<aadlDispatcherFunctionName(dispatcher)>(<aadlDispatcherFunctionArgs(dispatcher)>	
 		); 
-
+	<portDispatcherUnlock(dispatcher)>
+	
 <if(dispatcher.dispatchableContracts)>
 	// call the aadl dispatchers for any generated output events.
 	// to prevent misuse by malicious clients, we ensure that the number 
@@ -553,7 +597,7 @@ void <dispatcher.dispatcherCFileDispatcherFnName>(<if(dispatcher.hasData)><dispa
 >>
 
 aadlDispatcherFunctionPrototype(dispatcher) ::=  <<
-void <dispatcher.dispatcherCFileDispatcherFnName>(<if(dispatcher.hasData)><dispatcher.type.aadlInputType.name> <dispatcher.name><endif>); 
+void <dispatcherWriterName(dispatcher)>(<if(dispatcher.hasData)><dispatcher.type.aadlInputType.name> <dispatcher.name><endif>); 
 
 >>
 
@@ -563,20 +607,31 @@ void <dispatcher.dispatcherCFileDispatcherFnName>(<if(dispatcher.hasData)><dispa
 //
 ///////////////////////////////////////////////////////////////////////////
 
-camkesRPCDispatchName(dispatcher) ::= <<
-  <dispatcher.dispatcherComponentDispatchName>_<dispatcher.type.writerFn>
->>
 
 dispatcherComponentPeriodicEventDecls(dispatcher) ::= <<
+
+/************************************************************************
+ * <dispatcher.name> Declarations
+ * 
+ ************************************************************************/
 
 bool <dispatcher.dispatchOccurredVar>;
 <dispatcher.type.name> <dispatcher.periodicTimeVar>;
 
-bool <camkesRPCDispatchName(dispatcher)><\\>
+/************************************************************************
+ * <incomingRPCDispatchName(dispatcher)>
+ * Invoked from CAmkES thread.
+ * 
+ * This function records the current time and triggers the active thread 
+ * dispatch from a periodic event.
+ * 
+ ************************************************************************/
+
+bool <incomingRPCDispatchName(dispatcher)><\\>
 (<dispatcher.type.camkesInputType.name> arg) {
 	<dispatcher.dispatchOccurredVar> = true;
 	<dispatcher.periodicTimeVar> = <dispatcher.type.camkesInputToVal>arg;
-	<dispatcher.threadImplementation.dispatcherUnlockStmt>
+	<dispatcherMainLockReleaseStmt(dispatcher.threadImplementation)>
 	return true;
 }
 
@@ -586,11 +641,20 @@ dispatcherComponentIRQEventDecls(dispatcher) ::= <<
 
 bool <dispatcher.dispatchOccurredVar>;
 
-void <camkesRPCDispatchName(dispatcher)>() {
+/************************************************************************
+ * <incomingRPCDispatchName(dispatcher)>
+ * Invoked from CAmkES thread.
+ * 
+ * This function records an IRQ event, calls the first-level interrupt handler,
+ * and triggers the thread to dispatch (which will invoke the second-level
+ * interrupt handler).
+ * 
+ ************************************************************************/
+void <incomingRPCDispatchName(dispatcher)>() {
 	<dispatcher.firstLevelInterruptHandler>();
 	<dispatcher.dispatchOccurredVar> = true;
-	<dispatcher.threadImplementation.dispatcherUnlockStmt>
-	<dispatcher.name>_reg_callback(<camkesRPCDispatchName(dispatcher)>, NULL); 
+	<dispatcherMainLockReleaseStmt(dispatcher.threadImplementation)>
+	<dispatcher.name>_reg_callback(<incomingRPCDispatchName(dispatcher)>, NULL); 
 }
 
 >> 
@@ -601,6 +665,38 @@ void <camkesRPCDispatchName(dispatcher)>() {
 //
 ///////////////////////////////////////////////////////////////////////////
 
+
+periodicDispatcher(dispatcher) ::= <<
+if (<dispatcher.dispatchOccurredVar>) {
+	<dispatcher.dispatchOccurredVar> = false;
+	<dispatcherWriterName(dispatcher)>(&<dispatcher.periodicTimeVar>);
+}
+
+>>
+
+irqDispatcher(dispatcher) ::= <<
+if (<dispatcher.dispatchOccurredVar>) {
+	<dispatcher.dispatchOccurredVar> = false;
+	<dispatcherWriterName(dispatcher)>();
+}
+
+>>
+
+eventDispatcher(dispatcher) ::= <<
+while (<dispatcher.inputEventDispatcherPort.aadlReaderFnName>()) {
+	<dispatcherWriterName(dispatcher)>();
+}
+
+>>
+
+eventDataDispatcher(dispatcher) ::= <<
+while (!<dispatcher.inputEventDispatcherPort.isEmptyFnCall>) {
+	<dispatcher.inputEventDispatcherPort.varDecl>;
+	<dispatcher.inputEventDispatcherPort.queueReadName>(<dispatcher.type.valToAadlOutput><dispatcher.inputEventDispatcherPort.name>);
+	<dispatcherWriterName(dispatcher)>(<dispatcher.type.valToAadlInput><dispatcher.inputEventDispatcherPort.name>); 
+}
+
+>>
 
 drainDispatcher(dispatcher) ::= <<
 <if(dispatcher.isPeriodic)><\\>
@@ -630,10 +726,16 @@ portInitializer(port) ::= <<
 <endif>
 >>
 
-registerIRQs(dispatcher) ::= << <if(dispatcher.isIRQ)><dispatcher.name>_reg_callback(<camkesRPCDispatchName(dispatcher)>, NULL);
+registerIRQs(dispatcher) ::= << <if(dispatcher.isIRQ)><dispatcher.name>_reg_callback(<incomingRPCDispatchName(dispatcher)>, NULL);
 <endif> >>
 
 dispatcherComponentMainFunction(threadImpl) ::= <<
+/************************************************************************
+ * run()
+ * Main active thread function.
+ * 
+ ************************************************************************/
+
 int run() {
 	// port initialization routines (if any)... 
 	<threadImpl.portList:portInitializer()>
@@ -645,9 +747,9 @@ int run() {
 	<threadImpl.dispatchers:registerIRQs()>
 	
 	// initial lock to await dispatch input.
-	<threadImpl.dispatcherLockStmt>
+	<dispatcherMainInitializeLockStmt(threadImpl)>
 	for(;;) {
-		<threadImpl.dispatcherLockStmt>
+		<dispatcherMainLockWaitStmt(threadImpl)>
 		
 		// drain the queues 
 		<threadImpl.dispatchers:drainDispatcher()>
@@ -696,40 +798,19 @@ componentCFileDecls(threadImpl) ::= <<
 <threadImpl.passiveDispatcherRegion:aadlDispatcherFunctionPrototype()> 
 <endif>
 
-///////////////////////////////////////////////////////////////////////////
-//
-// Functions for managed RPCs
-//
-///////////////////////////////////////////////////////////////////////////
-<threadImpl.requiredEndpoints:writeRequiresEndpoint()>
-
-<threadImpl.providedEndpoints:writeProvidesEndpoint()>
-
-///////////////////////////////////////////////////////////////////////////
-//
-// Functions and declarations for queued inputs
-//
-///////////////////////////////////////////////////////////////////////////
 
 <threadImpl.inputEventDataPortList:optInputEventDataPortDecls()>
 <threadImpl.inputEventPortList:optInputEventPortDecls()>
 
 <threadImpl.allOutputEventPorts:portDispatchVarDeclarations()>
 
-///////////////////////////////////////////////////////////////////////////
-//
-// Functions for dispatching IRQs, Local Send, and Periodic Events
-//
-///////////////////////////////////////////////////////////////////////////
 <threadImpl.dispatchers:dispatcherComponentEventDecls()>
 <threadImpl.dispatchers:userEntrypointCallerFn()>
 <threadImpl.allOutputEventPorts:userSendDefinition()>
 <threadImpl.inputDataPortList:componentLocalReaderDecl()>
 <threadImpl.outputDataPortList:componentRemoteWriterDecl()>
-<threadImpl.localActiveThreadConnectionFrontier:localSendDecl()>
 
 <if(threadImpl.isActive)><\\>
-// Writing dispatchers...
 <threadImpl.passiveDispatcherRegion:aadlDispatcherFunction()> 
 <if(threadImpl.isExternal)><\\>
 ////////////////////////////////////////////////////////////////////////////
@@ -738,10 +819,41 @@ componentCFileDecls(threadImpl) ::= <<
 //
 ////////////////////////////////////////////////////////////////////////////
 <else>
-// thread main function
 <dispatcherComponentMainFunction(threadImpl)>
 <endif>
 <endif>
 
 >>
 
+// <threadImpl.localActiveThreadConnectionFrontier:localSendDecl()>
+
+/////////////////////////////////////////////////////////////////////
+//
+// localSendDecl: 
+// 
+// This creates a local call to the queuing function 
+/////////////////////////////////////////////////////////////////////
+/************************************************************************
+ *  <connection.sourcePort.qualifiedName>_<connection.destPort.type.writerFn>: 
+ * Invoked from local active thread.
+ * 
+ * This function wraps an event queue call to an active thread that was a result 
+ * of one of the passive thread "children" of this thread.
+ * 
+ ************************************************************************/
+/*
+localSendDecl(connection) ::= <<
+
+<if(connection.sourcePort.hasData)>
+void <RemotePortWriterName(connection.sourcePort)>(const <connection.sourcePort.type.camkesInputType.name> arg) {
+	<incomingPortWriterName(connection.destPort)>((<connection.sourcePort.type.camkesInputType.name>) arg);
+}
+<else>
+void <RemotePortWriterName(connection.sourcePort)>() {
+	<incomingPortWriterName(connection.destPort)>();
+}
+
+<endif>
+
+>>
+*/

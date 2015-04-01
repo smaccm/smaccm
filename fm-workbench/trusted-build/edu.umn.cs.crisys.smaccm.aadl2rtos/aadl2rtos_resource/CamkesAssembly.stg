@@ -128,9 +128,9 @@ connectActivePeriodic(dispatcher, threadImpl, model) ::= <<
 <if(dispatcher.isPeriodic)><\\>
 <rpcConnection(model.generateConnectionName, 
 	model.threadCalendar.periodicDispatcherInstanceName,
-	dispatcher.dispatcherComponentDispatchName, 
+	dispatcher.qualifiedName, 
 	threadImpl.componentInstanceName,
-	dispatcher.dispatcherComponentDispatchName)>
+	dispatcher.qualifiedName)>
 <endif>
 >>
 

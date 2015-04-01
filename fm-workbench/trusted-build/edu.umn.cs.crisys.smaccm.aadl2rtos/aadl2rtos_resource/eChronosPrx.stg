@@ -91,21 +91,69 @@ writeMutex(name) ::= <<
 >>
 
 // Fill in more stuff HERE!
-writeInputPortMutex(port) ::= << >> 
+writeInputPortMutex(port) ::= << 
+	$writeMutex(port.mutex)$
+>> 
 
 writeActiveThreadMutexes(threadImpl) ::= <<
-	$threadImpl.inputPortList:writeInputPortMutex()$
+$writeMutex(threadImpl.eChronosThreadDispatcherMutex)$
+$threadImpl.inputPortList:writeInputPortMutex()$
+$threadImpl.externalMutexes:writeMutex()$
+>>
+
+writePassiveThreadMutexes(threadImpl) ::= <<
+$writeMutex(threadImpl.eChronosThreadDispatcherMutex)$
+$threadImpl.externalMutexes:writeMutex()$
 >>
 
 writeMutexes(model) ::= <<
-	$model.externalMutexList:writeMutex()$
-	$model.activeThreadImplementations:writeActiveThreadMutexes()$
+$model.externalMutexList:writeMutex()$
+$model.activeThreadImplementations:writeActiveThreadMutexes()$
+$model.passiveThreadImplementations:writePassiveThreadMutexes()$
+>>
+
+writeSemaphore(name) ::= <<
+	<semaphore>$name$</semaphore>
+>>
+
+writeThreadSemaphores(threadImpl) ::= <<
+$threadImpl.externalSemaphores:writeSemaphore()$
 >>
 
 writeSemaphores(model) ::= <<
+	$model.externalSemaphoreList:writeSemaphore()$
+	$model.threadImplementations:writeThreadSemaphores()$
+>>
 
+
+writeInterruptEvent(name, taskName, signalSet) ::= <<
+	<interrupt_event>
+		<name>$name$</name>
+		<task>$taskName$</task>
+		<sig_set>$signalSet$</sig_set>
+	</interrupt_event>
+>>
+
+writeExternalIrqEvent(externalIrqEvent) ::= <<
+$writeInterruptEvent(
+	externalIrqEvent.name, 
+	externalIrqEvent.taskName,
+	externalIrqEvent.signalSet)$
+>>
+
+writeActiveThreadIrqDispatcher(dispatcher) ::= << 
+$if(dispatcher.isIRQ)$ 
+$writeInterruptEvent(dispatcher.name, 
+	dispatcher.threadImplementation.normalizedName,
+	1)$
+$endif$
+>>
+
+writeActiveThreadIrqDispatchers(threadImpl) ::= <<
+$threadImpl.dispatchers:writeActiveThreadIrqDispatcher()$
 >>
 
 writeInterruptEvents(model) ::= <<
-
+	$model.externalIrqEvents:writeExternalIrqEvent()$
+	$model.activeThreadImplementations:writeActiveThreadIrqDispatchers()$
 >>
