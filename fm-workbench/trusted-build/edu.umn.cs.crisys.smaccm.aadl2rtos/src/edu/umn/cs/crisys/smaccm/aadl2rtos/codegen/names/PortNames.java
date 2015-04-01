@@ -3,12 +3,16 @@
  */
 package edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.names;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosException;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.Dispatcher;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.DataPort;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.InputEventPort;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.OutputDataPort;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.OutputEventPort;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.PortConnection;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.BoolType;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.IntType;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.Type;
@@ -120,6 +124,30 @@ public class PortNames {
   public boolean getIsOutputEventPort() {
     return (dp instanceof OutputEventPort);
   }
+
+  //////////////////////////////////////////////////////////
+  //
+  // Destination function (for input ports)
+  // 
+  //////////////////////////////////////////////////////////
+  public List<PortConnectionNames> getConnections() {
+	  
+	  List<PortConnectionNames> connections = new ArrayList<>();
+	  for (PortConnection i: dp.getConnections()) {
+		  connections.add(new PortConnectionNames(i));
+	  }
+	  return connections;
+  }
+  
+  public PortConnectionNames getSingletonConnection() {
+	  if (dp.getConnections().size() != 1) {
+		  throw new Aadl2RtosException("Error: getSingletonConnection: cardinality of connection != 1");
+	  }
+	  else {
+		  return new PortConnectionNames(dp.getConnections().get(0));
+	  }
+  }
+  
   //////////////////////////////////////////////////////////////
   //
   // Names for mutex function calls

@@ -1,0 +1,97 @@
+/*********************************************************************
+ * OS-specific naming functions required by C files: 
+ *   incomingPortWriterName
+ *   outgoingPortWriterName
+ *   incomingActiveThreadDispatchName
+ *   outgoingActiveThreadDispatchName
+ *   incomingUserEntrypointCallerName
+ *   outgoingUserEntrypointCallerName
+ * 	 portDispatcherLock
+ *   portDispatcherUnlock
+ *   dispatcherMainInitializeLockStmt
+ *   dispatcherMainLockWaitStmt
+ *   dispatcherMainLockReleaseStmt
+ *   osSpecificIncludeFiles
+ * This file just 'fails' for each of these calls.
+>>
+ 
+ */
+
+genericFailure(template) ::= 
+<< INTERNAL ERROR: template: <template> not overridden for host OS. >>  
+
+incomingPortWriterName(port) ::= << 
+<genericFailure("incomingPortWriterName")>
+<port.incomingPortWriterNameDoesntExist>
+>>
+
+outgoingPortWriterName(destPort, srcPort) ::= << 
+<genericFailure("outgoingPortWriterName")>
+<port.outgoingPortWriterNameDoesntExist>
+>>
+
+incomingActiveThreadDispatchName(dispatcher) ::= <<
+<genericFailure("incomingActiveThreadDispatchName")>
+<dispatcher.incomingActiveThreadDispatchNameDoesntExist>
+>>
+
+outgoingActiveThreadDispatchName(dispatcher) ::= <<
+<genericFailure("outgoingActiveThreadDispatchName")>
+<dispatcher.outgoingActiveThreadDispatchNameDoesntExist>
+>>
+
+incomingUserEntrypointCallerName(dispatcher) ::= <<
+<genericFailure("incomingUserEntrypointCallerName")>
+<dispatcher.incomingUserEntrypointCallerNameDoesntExist>
+>>
+
+outgoingUserEntrypointCallerName(dispatcher) ::= <<
+<genericFailure("outgoingUserEntrypointCallerName")>
+<dispatcher.outgoingUserEntrypointCallerNameDoesntExist>
+>>
+
+portDispatcherLock(dispatcher) ::= <<
+<genericFailure("portDispatcherLock")>
+<dispatcher.portDispatcherLockDoesntExist>
+>>
+
+portDispatcherUnlock(dispatcher) ::= <<
+<genericFailure("portDispatcherUnlock")>
+<dispatcher.portDispatcherUnlockDoesntExist>
+>>
+
+portLockStmt(port) ::= <<
+<genericFailure("portLockStmt")>
+<port.portLockStmtDoesntExist>
+>>
+
+portUnlockStmt(port) ::= <<
+<genericFailure("portUnlockStmt")>
+<port.portUnlockStmtDoesntExist>
+>>
+
+dispatcherMainInitializeLockStmt(threadImpl) ::= <<
+<genericFailure("dispatcherMainInitializeLockStmt")>
+<threadImpl.dispatcherMainInitializeLockStmtDoesntExist>
+>>
+
+dispatcherMainLockWaitStmt(threadImpl) ::= <<
+<genericFailure("dispatcherMainLockWaitStmt")>
+<threadImpl.dispatcherMainLockWaitStmtDoesntExist>
+>>
+
+dispatcherMainLockReleaseStmt(threadImpl) ::= <<
+<genericFailure("dispatcherMainLockReleaseStmt")>
+<threadImpl.dispatcherMainLockReleaseStmtDoesntExist>
+>>
+
+dispatcherIsrMainLockReleaseStmt(threadImpl) ::= <<
+<genericFailure("dispatcherIsrMainLockReleaseStmt")>
+<threadImpl.dispatcherIsrMainLockReleaseStmtDoesntExist>
+>>
+
+osSpecificIncludeFiles(threadImpl) ::= <<
+<genericFailure("osSpecificIncludeFiles")>
+<threadImpl.osSpecificIncludeFiles>
+>>
+

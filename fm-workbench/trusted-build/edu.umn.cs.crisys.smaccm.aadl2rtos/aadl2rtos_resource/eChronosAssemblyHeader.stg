@@ -1,4 +1,5 @@
 import "Common.stg"
+import "CommonOSSpecificNames.stg"
 
 
 ////////////////////////////////////////////////////////////////////////////
@@ -37,27 +38,34 @@ headerPostfix(name, path) ::= <<
 
 >>
 
-localPortWriterName(port) ::= << 
-<genericFailure("localPortWriterName")>
-<port.dummyFieldForError>
->>
-
-portDispatcherWriterName(port) ::= << 
-<genericFailure("portDispatcherWriterName")>
-<port.dummyFieldForError>
->>
 
 dataWriterDecl(port) ::= <<
-bool <localPortWriterName(port)>(<port.type.camkesInputType.name> arg); 
+bool <incomingPortWriterName(port)>(<port.type.camkesInputType.name> arg); 
 >> 
 
 eventWriterDecl(port) ::= <<
-bool <localPortWriterName(port)>(); 
+bool <incomingPortWriterName(port)>(); 
 >>
 
+/*
+ * In CAmkES, we write to the output port.
+ * In eChronos, we should write to the input port.
+ * So, we only want the input ports.  We don't 
+ * even want the dispatchers.  However, for event
+ * and event data ports, we need to know whether 
+ * the thread is active or passive so that we know 
+ * what can subsequently dispatch.
+ */
 
 activeThreadDecls(threadImpl) ::= <<
-<threadImpl.
+<threadImpl.inputDataPortList:dataWriterDecl()>
+<threadImpl.inputEventDataPortList:dataWriterDecl()>	
+<threadImpl.inputEventPortList:eventWriterDecl()>
+>>
+
+passiveThreadDecls(threadImpl) ::= <<
+<threadImpl.inputDataPortList:dataWriterDecl()>
+<threadImpl.dispatchers:userEntrypointCallerPrototype()>
 >>
 
 headerBody(model) ::= <<

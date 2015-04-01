@@ -1,16 +1,21 @@
 import "CommonComponentC.stg"
 
 /*
- * Overrides for OS-specific behavior for generated C code.
+ * Overrides for OS-specific names/behavior for generated C code.
  * 
  */
-localPortWriterName(port) ::= <<
-"smaccm_"<port.qualifiedName>_<port.type.writerFn>
->>
+// import "eChronosCNames.stg"
+// import does not override declarations.  Why?
 
-portDispatcherWriterName(port) ::= << 
-<port.dispatcher.eChronosDispatcherFnName>
->>
+incomingPortWriterName(port) ::= "smaccm_<port.qualifiedName>_<port.type.writerFn>"
+
+outgoingPortWriterName(destPort, srcPort) ::= "<incomingPortWriterName(destPort)>"
+
+incomingActiveThreadDispatchName(dispatcher) ::= "<dispatcher.qualifiedName>"
+
+incomingUserEntrypointCallerName(dispatcher) ::= "smaccm_entrypoint_<dispatcher.qualifiedName>"
+
+outgoingUserEntrypointCallerName(dispatcher) ::= "<incomingUserEntrypointCallerName(dispatcher)>"
 
 portLockStmt(port) ::= <<
 	rtos_mutex_lock(<port.eChronosMutexConst>); 
@@ -40,4 +45,8 @@ dispatcherMainLockReleaseStmt(threadImpl) ::= <<
 
 dispatcherIsrMainLockReleaseStmt(threadImpl) ::= <<
 	rtos_interrupt_event_raise(<threadImpl.interruptEventIdConst>);
+>>
+
+osSpecificIncludeFiles(threadImpl) ::= <<
+#include <\u003C>smaccm_decls.h<\u003E>
 >>

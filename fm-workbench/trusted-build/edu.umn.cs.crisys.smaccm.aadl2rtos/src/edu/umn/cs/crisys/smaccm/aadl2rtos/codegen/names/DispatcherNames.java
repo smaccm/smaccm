@@ -222,7 +222,7 @@ public class DispatcherNames {
   // be the same as PortNames::getDispatcherName(); 
   // That is why the custom case with getIsInput().
 
-  public String getCamkesDispatcherFnName() {
+  public String getActiveThreadInternalDispatcherFnName() {
     if (getIsInput()) {
       return this.getInputEventDispatcherPort().getDispatcherCFileDispatcherFnName(); 
     } else {

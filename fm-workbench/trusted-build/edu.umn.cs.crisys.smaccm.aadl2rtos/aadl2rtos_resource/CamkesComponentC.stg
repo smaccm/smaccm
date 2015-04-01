@@ -1,28 +1,25 @@
 import "CommonComponentC.stg"
 
 /*
- * Overrides for OS-specific behavior for generated C code.
+ * Overrides for OS-specific names/behavior for generated C code.
  * 
  */
-incomingPortWriterName(port) ::= <<
-<port.name>_<port.type.writerFn>
->>
+// Import does not override earlier definitions!  Why?
+// import "CamkesCNames.stg"
 
-incomingRPCDispatchName(dispatcher) ::= <<
-  <dispatcher.qualifiedName>_<dispatcher.type.writerFn>
->>
+incomingPortWriterName(port) ::= "<port.name>_<port.type.writerFn>"
 
-dispatcherWriterName(dispatcher) ::= << 
-<dispatcher.camkesDispatcherFnName>
->>
+outgoingPortWriterName(destPort, srcPort) ::= "<srcPort.name>_<srcPort.type.writerFn>"
 
-portLockStmt(port) ::= <<
-	<port.camkesMutexLockFnCall>; 
->>
+incomingActiveThreadDispatchName(dispatcher) ::= "<dispatcher.qualifiedName>_<dispatcher.type.writerFn>"
 
-portUnlockStmt(port) ::= <<
-	<port.camkesMutexUnlockFnCall>; 
->>
+incomingUserEntrypointCallerName(dispatcher) ::= "<dispatcher.threadImplementation.componentDispatcherInterfaceVarIdName>_<dispatcher.idlDispatcherName>"
+
+outgoingUserEntrypointCallerName(dispatcher) ::= "<dispatcher.passiveComponentDispatcherPathName>"
+
+portLockStmt(port) ::= "<port.camkesMutexLockFnCall>;"
+
+portUnlockStmt(port) ::= "<port.camkesMutexUnlockFnCall>; "
 
 portDispatcherLock(dispatcher) ::= " "
 
@@ -35,3 +32,7 @@ dispatcherMainLockWaitStmt(threadImpl) ::= "<threadImpl.camkesDispatcherLockStmt
 dispatcherMainLockReleaseStmt(threadImpl) ::= "<threadImpl.camkesDispatcherUnlockStmt>"
 
 dispatcherIsrMainLockReleaseStmt(threadImpl) ::= "<dispatcherMainLockReleaseStmt(threadImpl)>"
+
+osSpecificIncludeFiles(threadImpl) ::= <<
+#include <\u003C><threadImpl.componentCamkesHFileName><\u003E>
+>>
