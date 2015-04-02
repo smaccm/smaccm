@@ -32,4 +32,3 @@ sender_ASMFILES := \
     $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/sender/src/plat/${PLAT}/*.S))
 
 include ${PWD}/tools/common/camkes.mk
-#include ${SOURCE_DIR}/../../tools/common/camkes.mk
