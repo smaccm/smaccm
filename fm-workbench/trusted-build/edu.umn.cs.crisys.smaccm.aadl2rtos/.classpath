@@ -4,7 +4,6 @@
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="lib" path="lib/ST-4.0.8.jar"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/fr.tpt.aadl.ramses.control.support"/>
-	<classpathentry kind="lib" path="C:/apps/ANTLR_4/antlr-4.0-complete.jar"/>
+	<classpathentry kind="lib" path="lib/antlr-4.1-complete.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 
-void create_msg(const uint32_t periodic_100_m) {
+void create_msg(const uint64_t * periodic_100_m) {
    SwitchBasedComm__msg_impl msg_data;
    msg_data.toclient = rand()%3;
    msg_data.fromclient = ID; 
@@ -10,6 +10,6 @@ void create_msg(const uint32_t periodic_100_m) {
    Out(&msg_data);
 }
 
-void In(SwitchBasedComm__msg_impl * msg_data) {
+void In(const SwitchBasedComm__msg_impl * msg_data) {
 	printf("Client %i received message from %i\n",ID,msg_data->fromclient);
 }
