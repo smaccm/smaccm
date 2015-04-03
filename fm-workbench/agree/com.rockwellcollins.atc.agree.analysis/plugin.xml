@@ -35,7 +35,12 @@
      <command categoryId="com.rockwellcollins.atc.agree.analysis.commands"
             description="Terminate the current AGREE analysis"
             id="com.rockwellcollins.atc.agree.analysis.commands.terminate"
-            name="Terminate AGREE Analysis">
+            name="Terminate One AGREE Analysis">
+     </command>     
+     <command categoryId="com.rockwellcollins.atc.agree.analysis.commands"
+            description="Terminate all AGREE analyses"
+            id="com.rockwellcollins.atc.agree.analysis.commands.terminateAll"
+            name="Terminate All AGREE Analyses">
      </command>
      <command categoryId="com.rockwellcollins.atc.agree.analysis.commands"
            description="Verify the contract of the selected component"
@@ -77,6 +82,12 @@
                commandId="com.rockwellcollins.atc.agree.analysis.commands.terminate"
                icon="icons/terminate.png"
                label="Terminate"
+               style="push">
+         </command>
+         <command
+               commandId="com.rockwellcollins.atc.agree.analysis.commands.terminateAll"
+               icon="icons/terminateAll.png"
+               label="Terminate All"
                style="push">
          </command>
       </menuContribution>

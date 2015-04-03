@@ -64,6 +64,7 @@ public abstract class VerifyHandler extends AadlHandler {
     private static final String RERUN_ID = "com.rockwellcollins.atc.agree.analysis.commands.rerunAgree";
     private IHandlerActivation rerunActivation;
     private IHandlerActivation terminateActivation;
+    private IHandlerActivation terminateAllActivation;
     private IHandlerService handlerService;
    
     protected abstract boolean isRecursive();
@@ -290,7 +291,7 @@ public abstract class VerifyHandler extends AadlHandler {
     	    	
     	Thread analysisThread = new Thread(){
     		public void run(){
-                activateTerminateHandler();
+                activateTerminateHandlers(globalMonitor);
     			KindApi api = PreferencesUtil.getKindApi();
     			KindApi consistApi = PreferencesUtil.getConsistencyApi();
     			JRealizabilityApi realApi = PreferencesUtil.getJRealizabilityApi();
@@ -322,7 +323,7 @@ public abstract class VerifyHandler extends AadlHandler {
     				queue.remove().cancel();
     			}
 
-    			deactivateTerminateHandler();
+    			deactivateTerminateHandlers();
     			enableRerunHandler(root);
     			
     		}
@@ -331,21 +332,24 @@ public abstract class VerifyHandler extends AadlHandler {
         return Status.OK_STATUS;
     }
 
-    private void activateTerminateHandler() {
+    private void activateTerminateHandlers(final IProgressMonitor globalMonitor) {
         getWindow().getShell().getDisplay().syncExec(new Runnable() {
             @Override
             public void run() {
                 terminateActivation = handlerService.activateHandler(TERMINATE_ID,
                         new TerminateHandler(monitorRef));
+                terminateAllActivation = handlerService.activateHandler(TERMINATE_ALL_ID,
+                        new TerminateHandler(monitorRef, globalMonitor));
             }
         });
     }
     
-    private void deactivateTerminateHandler() {
+    private void deactivateTerminateHandlers() {
         getWindow().getShell().getDisplay().syncExec(new Runnable() {
             @Override
             public void run() {
                 handlerService.deactivateHandler(terminateActivation);
+                handlerService.deactivateHandler(terminateAllActivation);
             }
         });
     }
