@@ -7,7 +7,7 @@ int fork1 = -1;
 int fork2 = -1;
 
 
-void poll() {
+void poll(const RonSwansons__fork_impl * fork_data) {
 	
 	printf("Ron %i: I have been polled.\n",ID);
 
@@ -45,19 +45,27 @@ void poll() {
 		fork1 = -1;
 		fork2msg.forkid = fork2;
 		fork2 = -1;
-		givefork(&fork1msg);
-		givefork(&fork2msg);
+		bool f1 = givefork(&fork1msg);
+		if(!f1) {
+			printf("Ron %i: failed to return fork %i.\n",ID,fork1);
+		}
+		bool f2 = givefork(&fork2msg);
+		if(!f2) {
+			printf("Ron %i: failed to return fork %i.\n",ID,fork2);
+		}
 	}
 }
 
 void getfork(const RonSwansons__fork_impl * fork_data) {
 	if (fork1 < 0) {
 		fork1 = fork_data->forkid;
-		printf("Ron %i: I received an initial fork with id %i.\n",ID,fork1);		
+		printf("Ron %i: I received an initial fork with id %i.\n",ID,fork1);
+		waiting--;		
 	} else if (fork2 < 0) {
 		fork2 = fork_data->forkid;
-		eatpolls = rand()%50;
+		eatpolls = (rand()%50)+10;
 		printf("Ron %i: I received a second fork with id %i and will eat for %i polls.\n",ID,fork2,eatpolls);
+		waiting--;
 	} else {
 		printf("getfork: already have two forks!\n");
 	}

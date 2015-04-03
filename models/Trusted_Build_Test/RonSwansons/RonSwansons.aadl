@@ -27,8 +27,9 @@ end fork.impl;
 
 thread ronswanson1
 	features
-		pollport : in event port {
+		pollport : in event data port fork.impl {
 	      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("poll");
+	      Queue_Size => 8; 
 		};
 		
 		pollresponseport : out event data port pollresp.impl {
@@ -37,6 +38,7 @@ thread ronswanson1
 		
 		getforkport : in event data port fork.impl {
 	      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("getfork");
+	      Queue_Size => 8;
 		};
 		
 		giveforkport : out event data port fork.impl {
@@ -47,12 +49,12 @@ thread ronswanson1
 	    Dispatch_Protocol => Aperiodic;
 	    SMACCM_SYS::Thread_Type => Passive ;
 	    Compute_Execution_Time => 10 us .. 50 us;
-	    SMACCM_SYS::Sends_Events_To => "{{1 pollresponseport, 2 giveforkport}}";
+	    SMACCM_SYS::Sends_Events_To => "{{1 pollresponseport,  2 giveforkport}}";
 end ronswanson1; 
 
 thread manager
 	features
-		pollport1 : out event port {
+		pollport1 : out event data port fork.impl {
 		  SMACCM_SYS::CommPrim_Source_Text => "poll1";
 		};
 		
@@ -77,7 +79,7 @@ thread manager
 	    Stack_Size => 256 bytes;
 	    SMACCM_SYS::Thread_Type => Active ;
 	    Compute_Execution_Time => 10 us .. 50 us;
-	    SMACCM_SYS::Sends_Events_To => "{{1 pollport1; 1 giveforkport1}}";
+	    SMACCM_SYS::Sends_Events_To => "{{2 pollport1, 1 giveforkport1}}";
 end manager ; 
 
 
