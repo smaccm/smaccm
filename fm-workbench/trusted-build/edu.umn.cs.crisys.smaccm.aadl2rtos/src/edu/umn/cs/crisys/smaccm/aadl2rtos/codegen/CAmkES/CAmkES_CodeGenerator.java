@@ -354,7 +354,7 @@ public class CAmkES_CodeGenerator extends CodeGeneratorBase {
 
 	void createAssembly() throws Aadl2RtosFailure {
 	  ModelNames mn = new ModelNames(model); 
-	  String hname = mn.getSystemAssemblyFileName();
+	  String hname = mn.getCamkesSystemAssemblyFileName();
     String sysInstanceName = model.getSystemInstanceName(); 
 
     File HFile = new File(outputDirectory, hname);

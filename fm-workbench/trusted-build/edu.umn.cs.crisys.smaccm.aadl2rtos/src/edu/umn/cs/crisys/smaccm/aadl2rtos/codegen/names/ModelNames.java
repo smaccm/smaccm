@@ -108,10 +108,13 @@ public class ModelNames {
     return "smaccm_" + getSystemImplementationName() + "_types.h";
   }
 
-  public String getSystemAssemblyFileName() {
+  public String getCamkesSystemAssemblyFileName() {
     return getSystemImplementationName() + "_assembly.camkes";
   }
   
+  public String getEChronosPrxFileName() {
+    return getSystemImplementationName() + ".prx";
+  }
   public boolean getGenerateSystickIrq() {
 	  return m.getGenerateSystickIRQ();
   }
