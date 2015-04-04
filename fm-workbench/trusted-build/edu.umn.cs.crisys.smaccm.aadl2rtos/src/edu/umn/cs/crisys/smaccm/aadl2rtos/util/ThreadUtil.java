@@ -166,21 +166,16 @@ public abstract class ThreadUtil {
 		return legacy;
 	}
 
-	public static Map<String, Long> getMemoryRegions(NamedElement tti) {
-	  Map<String, Long> m = new HashMap<>();
+	public static Map<String, String> getMemoryRegions(NamedElement tti) {
+	  Map<String, String> m = new HashMap<>();
     List<String> elems = getStringList(tti, ThreadUtil.SMACCM_SYS_MEMORY_PAGES);
     if (elems.size() % 2 != 0) {
       throw new Aadl2RtosException("Property 'Memory_Regions' should be list of strings arranged as string, hexidecimal integer pairs representing the name and memory region");	      
     }
-    try { 
-      for (Iterator<String> it = elems.iterator(); it.hasNext(); ) {
-        String name = it.next();
-        String intName = it.next();
-        Long i = Long.decode(intName);
-        m.put(name, i);
-      }
-    } catch (NumberFormatException nfe) {
-      throw new Aadl2RtosException("Property 'Memory_Regions' should be list of strings arranged as as string, hexidecimal integer pairs representing the name and memory region");
+    for (Iterator<String> it = elems.iterator(); it.hasNext(); ) {
+      String name = it.next();
+      String regionName = it.next();
+      m.put(name, regionName);
     }
     return m;
 	}

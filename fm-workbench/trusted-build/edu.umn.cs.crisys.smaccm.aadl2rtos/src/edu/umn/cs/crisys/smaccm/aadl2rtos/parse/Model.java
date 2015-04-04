@@ -70,7 +70,7 @@ public class Model {
 	List<String> legacyMutexList = new ArrayList<String>();
 	List<String> legacySemaphoreList = new ArrayList<String>();
 	List<ExternalISR> externalISRList = new ArrayList<ExternalISR>();
-	List<ExternalIRQEvent> legacyIRQEventList = new ArrayList<ExternalIRQEvent>();
+	List<ExternalIRQEvent> externalIRQEventList = new ArrayList<ExternalIRQEvent>();
 	List<ExternalIRQ> externalIRQList = new ArrayList<ExternalIRQ>();
 	List<PortConnection> connectionList = new ArrayList<PortConnection>(); 
 	
@@ -270,7 +270,7 @@ public class Model {
 	}
 	
 	public List<ExternalIRQEvent> getExternalIRQEvents() {
-	  return this.legacyIRQEventList;
+	  return this.externalIRQEventList;
 	}
 	
 	public List<ExternalIRQ> getExternalIRQs() {

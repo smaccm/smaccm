@@ -3,12 +3,7 @@ package edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread;
 /**
  * @author Mead, Whalen
  * 
- * TODO:    In "ThreadImplementation"
- *    ! FIXED: only one thread instance for thread implementation (should be list)
- *    -> ISR threads are not distinguished from "regular" threads
  * 
- * TODO: Why the fuck do we have "legacy semaphores" stored in threads?
- * TODO: Get rid of isrThread, all the other ISR shit.
  * 
  */
 
@@ -45,8 +40,6 @@ public class ThreadImplementation {
 	// Necessary for eChronos build.  "Location" defines number of thread.
 	private int eChronosThreadLocation; 
 	
-	// private String smaccmSysSignalOpt = null;
-	// private String isrHandlerName = null;
 	
   // Data port lists
 	private ArrayList<InputDataPort> inputDataPortList = new ArrayList<InputDataPort>();

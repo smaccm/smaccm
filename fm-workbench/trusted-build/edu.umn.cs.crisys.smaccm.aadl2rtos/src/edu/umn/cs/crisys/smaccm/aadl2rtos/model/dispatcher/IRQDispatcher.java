@@ -18,11 +18,11 @@ public class IRQDispatcher extends Dispatcher {
   private int signalNumber;
   private String signalName;
   private String firstLevelInterruptHandler;
-  private Map<String, Long> memoryRegions; 
+  private Map<String, String> memoryRegions; 
 	
 	public IRQDispatcher(ThreadImplementation owner, List<ExternalHandler> externalHandlerList, 
 	    String signalName, int signalNumber, 
-	    String firstLevelInterruptHandler, Map<String, Long> memoryRegions) {
+	    String firstLevelInterruptHandler, Map<String, String> memoryRegions) {
 	  super(owner, externalHandlerList);
 	  this.signalName = signalName;
 	  this.signalNumber = signalNumber;
@@ -54,7 +54,7 @@ public class IRQDispatcher extends Dispatcher {
     return ("IRQ_EVENT_ID_" + this.getEChronosIrqSmaccmFlihName()).toUpperCase();
   }
 	
-  public Map<String, Long> getMemoryRegions() {
+  public Map<String, String> getMemoryRegions() {
     return memoryRegions;
   }
   /**

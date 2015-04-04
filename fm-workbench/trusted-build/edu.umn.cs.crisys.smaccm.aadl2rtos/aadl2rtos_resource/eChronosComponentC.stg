@@ -1,0 +1,52 @@
+import "CommonComponentC.stg"
+
+/*
+ * Overrides for OS-specific names/behavior for generated C code.
+ * 
+ */
+// import "eChronosCNames.stg"
+// import does not override declarations.  Why?
+
+incomingPortWriterName(port) ::= "smaccm_<port.qualifiedName>_<port.type.writerFn>"
+
+outgoingPortWriterName(destPort, srcPort) ::= "<incomingPortWriterName(destPort)>"
+
+incomingActiveThreadDispatchName(dispatcher) ::= "<dispatcher.qualifiedName>"
+
+incomingUserEntrypointCallerName(dispatcher) ::= "smaccm_entrypoint_<dispatcher.qualifiedName>"
+
+outgoingUserEntrypointCallerName(dispatcher) ::= "<incomingUserEntrypointCallerName(dispatcher)>"
+
+portLockStmt(port) ::= <<
+	rtos_mutex_lock(<port.eChronosMutexConst>); 
+>>
+
+portUnlockStmt(port) ::= <<
+	rtos_mutex_unlock(<port.eChronosMutextConst>); 
+>>
+
+portDispatcherLock(dispatcher) ::= <<
+	rtos_mutex_lock(<dispatcher.threadImplementation.eChronosThreadDispatcherMutexConst>);
+>>
+
+portDispatcherUnlock(dispatcher) ::= <<
+	rtos_mutex_unlock(<dispatcher.threadImplementation.eChronosThreadDispatcherMutexConst>);
+>>
+
+dispatcherMainInitializeLockStmt(threadImpl) ::= " "
+
+dispatcherMainLockWaitStmt(threadImpl) ::= <<
+	rtos_signal_wait(1);
+>>
+
+dispatcherMainLockReleaseStmt(threadImpl) ::= <<
+	rtos_signal_send(<threadImpl.eChronosTaskIdConst>, 1);
+>>
+
+dispatcherIsrMainLockReleaseStmt(threadImpl) ::= <<
+	rtos_interrupt_event_raise(<threadImpl.interruptEventIdConst>);
+>>
+
+osSpecificIncludeFiles(threadImpl) ::= <<
+#include <\u003C>smaccm_decls.h<\u003E>
+>>

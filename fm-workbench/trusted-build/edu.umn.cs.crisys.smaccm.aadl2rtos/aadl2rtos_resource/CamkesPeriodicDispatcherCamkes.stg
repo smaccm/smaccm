@@ -26,7 +26,7 @@ componentCamkesPostfix(name, path) ::= <<
 
 writePeriodicSender(dispatcher) ::= <<
 <if(dispatcher.isPeriodic)><\\>
-uses <dispatcher.type.readerWriterInterfaceName> <dispatcher.dispatcherComponentDispatchName>; 
+uses <dispatcher.type.readerWriterInterfaceName> <dispatcher.qualifiedName>; 
 <endif>
 >>
 

@@ -1,3 +1,40 @@
 import "CommonComponentC.stg"
 
+/*
+ * Overrides for OS-specific names/behavior for generated C code.
+ * 
+ */
+// Import does not override earlier definitions!  Why?
+// import "CamkesCNames.stg"
 
+incomingPortWriterName(port) ::= "<port.name>_<port.type.writerFn>"
+
+outgoingPortWriterName(destPort, srcPort) ::= <<
+<srcPort.qualifiedName>_<srcPort.type.writerFn>
+>>
+
+incomingActiveThreadDispatchName(dispatcher) ::= "<dispatcher.qualifiedName>_<dispatcher.type.writerFn>"
+
+incomingUserEntrypointCallerName(dispatcher) ::= "<dispatcher.threadImplementation.componentDispatcherInterfaceVarIdName>_<dispatcher.idlDispatcherName>"
+
+outgoingUserEntrypointCallerName(dispatcher) ::= "<dispatcher.passiveComponentDispatcherPathName>"
+
+portLockStmt(port) ::= "<port.camkesMutexLockFnCall>;"
+
+portUnlockStmt(port) ::= "<port.camkesMutexUnlockFnCall>; "
+
+portDispatcherLock(dispatcher) ::= " "
+
+portDispatcherUnlock(dispatcher) ::= " "
+
+dispatcherMainInitializeLockStmt(threadImpl) ::= "<threadImpl.camkesDispatcherLockStmt>"
+
+dispatcherMainLockWaitStmt(threadImpl) ::= "<threadImpl.camkesDispatcherLockStmt>"	
+
+dispatcherMainLockReleaseStmt(threadImpl) ::= "<threadImpl.camkesDispatcherUnlockStmt>"
+
+dispatcherIsrMainLockReleaseStmt(threadImpl) ::= "<dispatcherMainLockReleaseStmt(threadImpl)>"
+
+osSpecificIncludeFiles(threadImpl) ::= <<
+#include <\u003C><threadImpl.componentCamkesHFileName><\u003E>
+>>

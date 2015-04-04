@@ -21,11 +21,7 @@ public class RemoteProcedureGroupEndpointNames {
   public String getName() {
     return rpge.getName(); 
   }
-  
-  public boolean getIsExternal() {
-    return rpge.getIsExternal();
-  }
-  
+    
   public String getAadlName() {
     return "aadl_" + rpge.getName(); 
   }

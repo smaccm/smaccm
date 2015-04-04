@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Set;
 
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.IRQDispatcher;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.legacy.ExternalIRQEvent;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.legacy.ExternalISR;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.DataPort;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.ExternalIRQ;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.ThreadImplementation;
@@ -26,6 +28,10 @@ public class ModelNames {
   
   public ModelNames(Model m) {
     this.m = m; 
+  }
+  
+  static public String getEChronosPrefix() {
+	  return "rtos";
   }
   
   ////////////////////////////////////////////////////////////
@@ -147,6 +153,18 @@ public class ModelNames {
   
   public List<String> getExternalMutexList() {
 	return m.getExternalMutexList();
+  }
+  
+  public List<ExternalISR> getExternalISRs() {
+    return m.getExternalISRs();
+  }
+
+  public List<String> getExternalSemaphoreList() {
+	  return m.getExternalSemaphoreList();
+  }
+  
+  public List<ExternalIRQEvent> getExternalIRQEvents() {
+	return m.getExternalIRQEvents();
   }
 
 }

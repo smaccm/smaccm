@@ -29,6 +29,7 @@ import org.osate.aadl2.Element;
 
 public abstract class AadlHandler extends AbstractHandler {
     protected static final String TERMINATE_ID = "com.rockwellcollins.atc.agree.analysis.commands.terminate";
+    protected static final String TERMINATE_ALL_ID = "com.rockwellcollins.atc.agree.analysis.commands.terminateAll";
     private IWorkbenchWindow window;
 
     abstract protected IStatus runJob(Element sel, IProgressMonitor monitor);

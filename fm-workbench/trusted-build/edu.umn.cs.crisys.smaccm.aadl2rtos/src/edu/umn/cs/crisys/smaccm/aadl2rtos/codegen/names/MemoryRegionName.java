@@ -10,15 +10,15 @@ package edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.names;
 public class MemoryRegionName {
   
   private String name; 
-  private Long region;
+  private String region;
   
-  public MemoryRegionName(String name, Long region) {
+  public MemoryRegionName(String name, String region) {
     this.name = name;
     this.region = region;
   }
 
   public String getName() { return name; }
   
-  public String getRegion() { return Long.toHexString(region.longValue()); }
+  public String getRegion() { return region; }
     
 }

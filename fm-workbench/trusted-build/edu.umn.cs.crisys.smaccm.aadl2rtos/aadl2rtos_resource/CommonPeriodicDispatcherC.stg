@@ -21,7 +21,7 @@ periodicDispatcherCPrefix(name, date, path, datatypesHeader) ::= <<
 writePeriodicDispatcher(dispatcher, threadCalendar) ::= <<
 if ((smaccm_calendar_counter % (<dispatcher.periodicDispatcherPeriod> / smaccm_tick_interval)) == 0) {
 	uint64_t the_time = clock_get_time();
-	<dispatcher.dispatcherComponentDispatchName>_<dispatcher.type.writerFn>(&the_time); 
+	<dispatcher.qualifiedName>_<dispatcher.type.writerFn>(&the_time); 
 }
 >>
 
@@ -74,7 +74,7 @@ periodicDispatcherCPostfix(name, path) ::= <<
 
 writePeriodicSender(dispatcher) ::= <<
 <if(dispatcher.isPeriodic)><\\>
-uses <dispatcher.type.readerWriterInterfaceName> <dispatcher.dispatcherComponentDispatchName>; 
+uses <dispatcher.type.readerWriterInterfaceName> <dispatcher.qualifiedName>; 
 <endif>
 >>
 

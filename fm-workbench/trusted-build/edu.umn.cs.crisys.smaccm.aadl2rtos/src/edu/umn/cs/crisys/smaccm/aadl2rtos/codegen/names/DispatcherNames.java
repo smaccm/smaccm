@@ -96,7 +96,7 @@ public class DispatcherNames {
     if (dp instanceof IRQDispatcher) {
       IRQDispatcher pd = (IRQDispatcher)dp;
       List<MemoryRegionName> regions = new ArrayList<>();
-      for (Map.Entry<String, Long> entry : pd.getMemoryRegions().entrySet()) {
+      for (Map.Entry<String, String> entry : pd.getMemoryRegions().entrySet()) {
         MemoryRegionName region = new MemoryRegionName(entry.getKey(), entry.getValue());
         regions.add(region);
       }
@@ -130,6 +130,10 @@ public class DispatcherNames {
     } else {
       throw new Aadl2RtosException("getPeriodicDispatcherPeriod() : dispatcher is not a periodic dispatcher");
     }
+  }
+  
+  public String getEChronosSignalNumberForDispatcher() {
+	  return Integer.toString(dp.getOwner().getSignalNumberForDispatcher(dp));
   }
   
   public OutgoingDispatchContractNames getMaxDispatchContracts() {
@@ -208,7 +212,8 @@ public class DispatcherNames {
   // 
   //////////////////////////////////////////////////////////
 
-  public String getDispatcherComponentDispatchName() {
+  // TODO: change this freakin' name.
+  public String getQualifiedName() {
     ThreadImplementationNames tin = new ThreadImplementationNames(dp.getOwner());
     return tin.getNormalizedName() + "_" + dp.getName();
   }
@@ -217,7 +222,7 @@ public class DispatcherNames {
   // be the same as PortNames::getDispatcherName(); 
   // That is why the custom case with getIsInput().
 
-  public String getDispatcherCFileDispatcherFnName() {
+  public String getActiveThreadInternalDispatcherFnName() {
     if (getIsInput()) {
       return this.getInputEventDispatcherPort().getDispatcherCFileDispatcherFnName(); 
     } else {

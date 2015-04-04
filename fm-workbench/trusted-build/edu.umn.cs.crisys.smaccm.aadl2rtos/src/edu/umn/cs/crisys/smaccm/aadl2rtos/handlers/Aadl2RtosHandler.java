@@ -148,7 +148,7 @@ public class Aadl2RtosHandler extends AadlHandler {
       outputDir.mkdirs(); 
       
 			if (model.getOsTarget() == Model.OSTarget.eChronos) {
-  			EChronos_CodeGenerator gen = new EChronos_CodeGenerator(log, model, outputDir);
+  			EChronos_CodeGenerator gen = new EChronos_CodeGenerator(log, model, aadlDir, outputDir);
   			gen.write();
 			} else if (model.getOsTarget() == Model.OSTarget.CAmkES ){
 			  CAmkES_CodeGenerator gen = new CAmkES_CodeGenerator(log, model, aadlDir, outputDir);
@@ -156,7 +156,7 @@ public class Aadl2RtosHandler extends AadlHandler {
 			} else {
 			  logger.error("aadl2rtos OS target: [" + model.getOsTarget() + "] not recognized.");
 			}
-			logger.status("CAmkES code generation complete.");
+			logger.status("aadl2rtos code generation complete.");
 		} catch (Aadl2RtosFailure f) {
 			log.error("Analysis Exception");
 			List<String> msgs = f.getMessages();

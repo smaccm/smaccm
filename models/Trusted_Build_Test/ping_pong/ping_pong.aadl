@@ -23,7 +23,7 @@ thread sender
 	
 	properties 
 	    Dispatch_Protocol => Periodic;
-	    Period => 10000 ms;
+	    Period => 1000 ms;
 		Source_Text => ("user_code/user_sender.c");
 	    SMACCM_SYS::Compute_Entrypoint_Source_Text => ("periodic_ping");
 	    Priority => 10;
@@ -74,7 +74,7 @@ system implementation ping_pong.impl
 		tl: process proc.Impl;
 	properties
 		SMACCM_SYS::OS => CAmkES; 
-		SMACCM_SYS::HW => ODROID;
+		SMACCM_SYS::HW => QEMU;
 		
 end ping_pong.impl;
 

@@ -1,0 +1,39 @@
+import "Common.stg"
+import "CommonOSSpecificNames.stg"
+
+
+/////////////////////////////////////////////////////////////////////
+//
+// UserEntrypointCaller functions
+// 
+// These functions provide the "scaffolding" functions necessary to 
+// set up the output event ports prior to making a call to the user
+// code.
+// 
+/////////////////////////////////////////////////////////////////////
+
+
+userEntrypointCallerInputArg(dispatcher) ::=  <<const <dispatcher.type.camkesInputType.name> <dispatcher.name> >>
+
+userEntrypointCallerDataOutputArg(dispatchContract) ::= 
+<< <if(dispatchContract.canDispatch)> <if(dispatchContract.port.hasData)><dispatchContract.dispatchStructTypeName> *<dispatchContract.port.data>, <endif><\\> 
+  <dispatchContract.port.indexType.aadlOutputType.name> <dispatchContract.port.index> <endif>
+>>
+
+userEntrypointCallerFnArgs(dispatcher) ::= <<
+<if(dispatcher.hasData)>
+<[userEntrypointCallerInputArg(dispatcher), dispatcher.dispatchableContracts:userEntrypointCallerDataOutputArg()]; separator=",\n">
+<else>
+<dispatcher.dispatchableContracts:userEntrypointCallerDataOutputArg();separator=",\n">
+<endif>
+>>
+
+userEntrypointCallerPrototype(dispatcher) ::= << 
+void <incomingUserEntrypointCallerName(dispatcher)>(<userEntrypointCallerFnArgs(dispatcher)>)
+>>
+
+userEntrypointCallerDecl(dispatcher) ::= <<
+
+<userEntrypointCallerPrototype(dispatcher)>;
+
+>>
