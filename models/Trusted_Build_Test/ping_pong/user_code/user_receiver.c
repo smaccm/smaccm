@@ -4,10 +4,10 @@
 
 uint32_t counter = 0;
 
-void pong_received(const uint32_t periodic_100_ms) {
+void pong_received(const uint32_t *elem) {
 
-   printf("receiver1 ping received (%d)\n", periodic_100_ms);
+   printf("receiver1 ping received (%u)\n", *elem);
    counter++; 
-   pong_Output1(counter);
+   pong_Output1(&counter);
 }
 
