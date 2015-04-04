@@ -96,7 +96,7 @@ public class DispatcherNames {
     if (dp instanceof IRQDispatcher) {
       IRQDispatcher pd = (IRQDispatcher)dp;
       List<MemoryRegionName> regions = new ArrayList<>();
-      for (Map.Entry<String, Long> entry : pd.getMemoryRegions().entrySet()) {
+      for (Map.Entry<String, String> entry : pd.getMemoryRegions().entrySet()) {
         MemoryRegionName region = new MemoryRegionName(entry.getKey(), entry.getValue());
         regions.add(region);
       }

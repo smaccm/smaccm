@@ -50,7 +50,7 @@ $if(model.threadCalendar.hasDispatchers &&
 	model.generateSystickIrq)$
 $writeTrampoline("systick", model.threadCalendar.calendarFnName)$
 $endif$
-$model.externalIsrs:writeExternalIsrTrampoline()$
+$model.externalISRs:writeExternalIsrTrampoline()$
 >>
 
 writeInterruptHandler(signalName) ::= <<
@@ -154,6 +154,6 @@ $threadImpl.dispatchers:writeActiveThreadIrqDispatcher()$
 >>
 
 writeInterruptEvents(model) ::= <<
-	$model.externalIrqEvents:writeExternalIrqEvent()$
+	$model.externalIRQEvents:writeExternalIrqEvent()$
 	$model.activeThreadImplementations:writeActiveThreadIrqDispatchers()$
 >>

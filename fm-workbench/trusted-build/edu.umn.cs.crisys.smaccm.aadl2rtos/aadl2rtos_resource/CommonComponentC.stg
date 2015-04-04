@@ -138,9 +138,9 @@ bool <port.queueWriteName>(const <port.type.aadlInputType.name> <port.name>) {
  * 
  ************************************************************************/
  
-bool <incomingPortWriterName(port)>(<port.type.camkesInputType.name> arg) {
+bool <incomingPortWriterName(port)>(const <port.type.camkesInputType.name> arg) {
 	bool result;
-	<portLockStmt(port)>; 
+	<portLockStmt(port)> 
 	result = <port.queueWriteName>(<port.type.camkesInputToAadlInput> arg);
 	<portUnlockStmt(port)>
 	<if(port.hasDispatcher)><dispatcherMainLockReleaseStmt(port.threadImplementation)><endif>
@@ -252,7 +252,7 @@ optInputEventPortDecls(port) ::= <<
 //
 ///////////////////////////////////////////////////////////////////////////
 
-optConstCamkesInputArg(port) ::= "<if(port.hasData)><port.type.camkesInputType.name> <port.name><endif>"
+optConstCamkesInputArg(port) ::= "<if(port.hasData)>const <port.type.camkesInputType.name> <port.name><endif>"
 
 componentRemoteWriteFunction(port) ::= <<
 
@@ -303,9 +303,25 @@ componentLocalReaderDecl(port) ::= <<
 <componentRemoteWriteFunction(port)>
 >>
 
+componentLocalCallerFunction(connection) ::= <<
+/************************************************************************
+ *  <connection.sourcePort.dispatcherCFileDispatcherFnName>: 
+ * Invoked from user code in the local thread.
+ * 
+ * This function is necessary to mimic a remote call by a passive
+ * thread to a remote active thread, but redirects to the local 
+ * active thread.
+ * 
+ ************************************************************************/
+
+bool <outgoingPortWriterName(connection.destPort,connection.sourcePort)>(const <connection.sourcePort.type.aadlInputType.name> <connection.sourcePort.name>) {
+	return <incomingPortWriterName(connection.destPort)>(<connection.sourcePort.name>);
+}
+>>
+
 componentRemoteCallerFunction(destPort, srcPort) ::= <<
 /************************************************************************
- *  <port.aadlWriterFnName>: 
+ *  <srcPort.aadlWriterFnName>: 
  * Invoked from user code in the local thread.
  * 
  * This is the function invoked by the local active thread to make a 
@@ -314,9 +330,7 @@ componentRemoteCallerFunction(destPort, srcPort) ::= <<
  ************************************************************************/
 
 bool <srcPort.aadlWriterFnName>(const <srcPort.type.aadlInputType.name> <srcPort.name>) {
-	// cast is necessary because CAmkES does not support passing constant arguments
-	<outgoingPortWriterName(destPort, srcPort)>((<srcPort.type.aadlInputType.name>)<srcPort.type.aadlInputToCamkesInput> <srcPort.name>);
-	return true;
+	return <outgoingPortWriterName(destPort, srcPort)>(<srcPort.name>);
 }
 
 >>
@@ -456,7 +470,7 @@ aadlDispatcherWritePassiveArg(port) ::= <<
 
 aadlDispatcherWriteActiveArg(port) ::= <<
 <if(port.hasData)>
-/* cast is necessary because CAmkES does not yet make inputs const */ (<port.type.camkesInputType.name>)(<port.type.valToCamkesInput>(<port.data>.f[smaccm_it]))
+(<port.type.valToCamkesInput>(<port.data>.f[smaccm_it]))
 <endif>
 >>
 
@@ -465,10 +479,12 @@ activeThreadInternalDispatcherName(dispatcher) ::= <<
 >>
 
 aadlDispatcherCallPassiveTarget(portDest,portSrc) ::= <<
+// Calling a passive dispatch target.
 <activeThreadInternalDispatcherName(portDest.dispatcher)>(<aadlDispatcherWritePassiveArg(portSrc)>);	
 >>
 
 aadlDispatcherCallActiveTarget(portDest,portSrc) ::= <<
+// Calling an active dispatch target.
 <outgoingPortWriterName(portDest,portSrc)>(<aadlDispatcherWriteActiveArg(portSrc)>);	
 
 >>
@@ -563,7 +579,7 @@ bool <dispatcher.dispatchOccurredVar>;
  ************************************************************************/
 
 bool <incomingActiveThreadDispatchName(dispatcher)><\\>
-(<dispatcher.type.camkesInputType.name> arg) {
+(const <dispatcher.type.camkesInputType.name> arg) {
 	<dispatcher.dispatchOccurredVar> = true;
 	<dispatcher.periodicTimeVar> = <dispatcher.type.camkesInputToVal>arg;
 	<dispatcherMainLockReleaseStmt(dispatcher.threadImplementation)>
@@ -746,6 +762,7 @@ componentCFileDecls(threadImpl) ::= <<
 <threadImpl.outputDataPortList:componentRemoteWriterDecl()>
 
 <if(threadImpl.isActive)><\\>
+<threadImpl.localActiveThreadConnectionFrontier:componentLocalCallerFunction()>
 <threadImpl.passiveDispatcherRegion:aadlDispatcherFunction()> 
 <if(threadImpl.isExternal)><\\>
 ////////////////////////////////////////////////////////////////////////////

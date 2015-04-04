@@ -1,7 +1,7 @@
 /**
  * 
  */
-package edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.CAmkES;
+package edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.common;
 
 import java.lang.reflect.InvocationTargetException;
 
@@ -71,7 +71,7 @@ public class Aadl2RtosSTErrorListener implements STErrorListener {
     // TODO Auto-generated method stub
     // System.out.println(arg0);
     log.error("StringTemplate exception: " + arg0.cause + " due to: " + userCodeException(arg0));
-    log.error("Error at: " + arg0.arg + ", " + arg0.arg2 + ", " + arg0.arg3);
+    log.error(arg0);
   }
 
 }

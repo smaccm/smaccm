@@ -1,6 +1,4 @@
-import "Common.stg"
-import "CommonOSSpecificNames.stg"
-
+import "eChronosComponentC.stg"
 
 ////////////////////////////////////////////////////////////////////////////
 //
@@ -47,6 +45,7 @@ eventWriterDecl(port) ::= <<
 bool <incomingPortWriterName(port)>(); 
 >>
 
+
 /*
  * In CAmkES, we write to the output port.
  * In eChronos, we should write to the input port.
@@ -65,7 +64,7 @@ activeThreadDecls(threadImpl) ::= <<
 
 passiveThreadDecls(threadImpl) ::= <<
 <threadImpl.inputDataPortList:dataWriterDecl()>
-<threadImpl.dispatchers:userEntrypointCallerPrototype()>
+<threadImpl.dispatchers:userEntrypointCallerDecl()>
 >>
 
 headerBody(model) ::= <<

@@ -244,7 +244,7 @@ public class AadlModelParser {
         logger.error("ISR Port " + port.getName() + ": signal number is not a positive integer. Original error: " + nfe.toString());
         throw new Aadl2RtosException("ISR construction error");
       }
-      Map<String, Long> memoryRegions;
+      Map<String, String> memoryRegions;
       memoryRegions = ThreadUtil.getMemoryRegions(port);
       ArrayList<ExternalHandler> ehl = new ArrayList<ExternalHandler>();
       for (String s: entrypoints) {
@@ -1092,7 +1092,7 @@ public class AadlModelParser {
           throw new Aadl2RtosException("Error: legacy IRQ event property: third argument of triple not a number.");
       }
       ExternalIRQEvent evt = new ExternalIRQEvent(eventName, taskName, signal);
-      this.model.legacyIRQEventList.add(evt);
+      this.model.externalIRQEventList.add(evt);
     }
     
     List<String> externalIrqStrings = ThreadUtil.getExternalIRQList(this.systemImplementation);

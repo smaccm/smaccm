@@ -9,7 +9,9 @@ import "CommonComponentC.stg"
 
 incomingPortWriterName(port) ::= "<port.name>_<port.type.writerFn>"
 
-outgoingPortWriterName(destPort, srcPort) ::= "<srcPort.name>_<srcPort.type.writerFn>"
+outgoingPortWriterName(destPort, srcPort) ::= <<
+<srcPort.qualifiedName>_<srcPort.type.writerFn>
+>>
 
 incomingActiveThreadDispatchName(dispatcher) ::= "<dispatcher.qualifiedName>_<dispatcher.type.writerFn>"
 
