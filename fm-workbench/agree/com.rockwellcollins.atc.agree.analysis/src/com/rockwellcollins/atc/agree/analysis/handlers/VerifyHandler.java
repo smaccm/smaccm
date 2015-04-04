@@ -2,10 +2,12 @@ package com.rockwellcollins.atc.agree.analysis.handlers;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.lang.ref.Reference;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
+import java.util.concurrent.atomic.AtomicReference;
 
 import jkind.JKindException;
 import jkind.api.JRealizabilityApi;
@@ -18,6 +20,7 @@ import jkind.lustre.Program;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -56,10 +59,12 @@ import com.rockwellcollins.atc.agree.analysis.views.AgreeResultsView;
 public abstract class VerifyHandler extends AadlHandler {
     protected AgreeResultsLinker linker = new AgreeResultsLinker();
     protected Queue<JKindResult> queue = new ArrayDeque<>();
+    protected AtomicReference<IProgressMonitor> monitorRef = new AtomicReference<>();
        
     private static final String RERUN_ID = "com.rockwellcollins.atc.agree.analysis.commands.rerunAgree";
     private IHandlerActivation rerunActivation;
     private IHandlerActivation terminateActivation;
+    private IHandlerActivation terminateAllActivation;
     private IHandlerService handlerService;
    
     protected abstract boolean isRecursive();
@@ -282,27 +287,28 @@ public abstract class VerifyHandler extends AadlHandler {
         });
     }
 
-    private IStatus doAnalysis(final Element root, final IProgressMonitor monitor) {
+    private IStatus doAnalysis(final Element root, final IProgressMonitor globalMonitor) {
     	    	
     	Thread analysisThread = new Thread(){
     		public void run(){
-    			
-                activateTerminateHandler(monitor);
+                activateTerminateHandlers(globalMonitor);
     			KindApi api = PreferencesUtil.getKindApi();
     			KindApi consistApi = PreferencesUtil.getConsistencyApi();
     			JRealizabilityApi realApi = PreferencesUtil.getJRealizabilityApi();
     			
-    			while (!queue.isEmpty() && !monitor.isCanceled()) {
+    			while (!queue.isEmpty() && !globalMonitor.isCanceled()) {
     			    JKindResult result = queue.peek();
-//    				JKindResult result = queue.remove();
+    			    NullProgressMonitor subMonitor = new NullProgressMonitor();
+    			    monitorRef.set(subMonitor);
+    			    
     				Program program = linker.getProgram(result);
     				try {
     					if(result instanceof ConsistencyResult){
-    						consistApi.execute(program, result, monitor);
+    						consistApi.execute(program, result, subMonitor);
     					}else if (result instanceof JRealizabilityResult){
-    					    realApi.execute(program, (JRealizabilityResult) result, monitor);
+    					    realApi.execute(program, (JRealizabilityResult) result, subMonitor);
     					}else{
-    						api.execute(program, result, monitor);
+    						api.execute(program, result, subMonitor);
     					}
     				} catch (JKindException e) {
     					System.out.println(result.getText());
@@ -317,7 +323,7 @@ public abstract class VerifyHandler extends AadlHandler {
     				queue.remove().cancel();
     			}
 
-    			deactivateTerminateHandler();
+    			deactivateTerminateHandlers();
     			enableRerunHandler(root);
     			
     		}
@@ -326,21 +332,24 @@ public abstract class VerifyHandler extends AadlHandler {
         return Status.OK_STATUS;
     }
 
-    private void activateTerminateHandler(final IProgressMonitor monitor) {
+    private void activateTerminateHandlers(final IProgressMonitor globalMonitor) {
         getWindow().getShell().getDisplay().syncExec(new Runnable() {
             @Override
             public void run() {
                 terminateActivation = handlerService.activateHandler(TERMINATE_ID,
-                        new TerminateHandler(monitor, queue));
+                        new TerminateHandler(monitorRef));
+                terminateAllActivation = handlerService.activateHandler(TERMINATE_ALL_ID,
+                        new TerminateHandler(monitorRef, globalMonitor));
             }
         });
     }
     
-    private void deactivateTerminateHandler() {
+    private void deactivateTerminateHandlers() {
         getWindow().getShell().getDisplay().syncExec(new Runnable() {
             @Override
             public void run() {
                 handlerService.deactivateHandler(terminateActivation);
+                handlerService.deactivateHandler(terminateAllActivation);
             }
         });
     }
