@@ -11,6 +11,7 @@ end pollresp;
 
 data implementation pollresp.impl
   subcomponents
+  	clientid : data Base_Types::Integer_32;
   	reqfork1 : data Base_Types::Boolean;
   	reqfork2 : data Base_Types::Integer_32;
 end pollresp.impl;
@@ -22,6 +23,7 @@ end fork;
 
 data implementation fork.impl
   subcomponents
+  	clientid : data Base_Types::Integer_32;
     forkid : data Base_Types::Integer_32;
 end fork.impl;
 
@@ -29,16 +31,14 @@ thread ronswanson1
 	features
 		pollport : in event data port fork.impl {
 	      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("poll");
-	      Queue_Size => 8; 
 		};
 		
 		pollresponseport : out event data port pollresp.impl {
-		  SMACCM_SYS::CommPrim_Source_Text => "pollresponse";
+		  SMACCM_SYS::CommPrim_Source_Text => "pollresponse"; 
 		};
 		
 		getforkport : in event data port fork.impl {
 	      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("getfork");
-	      Queue_Size => 8;
 		};
 		
 		giveforkport : out event data port fork.impl {
@@ -52,23 +52,192 @@ thread ronswanson1
 	    SMACCM_SYS::Sends_Events_To => "{{1 pollresponseport,  2 giveforkport}}";
 end ronswanson1; 
 
+thread ronswanson2
+	features
+		pollport : in event data port fork.impl {
+	      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("poll");
+		};
+		
+		pollresponseport : out event data port pollresp.impl {
+		  SMACCM_SYS::CommPrim_Source_Text => "pollresponse"; 
+		};
+		
+		getforkport : in event data port fork.impl {
+	      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("getfork");
+		};
+		
+		giveforkport : out event data port fork.impl {
+		  SMACCM_SYS::CommPrim_Source_Text => "givefork";	
+		};
+	properties 
+		Source_Text => ("user_code/user_rs.c", "user_code/includes/rs2/user_rs.h");
+	    Dispatch_Protocol => Aperiodic;
+	    SMACCM_SYS::Thread_Type => Passive ;
+	    Compute_Execution_Time => 10 us .. 50 us;
+	    SMACCM_SYS::Sends_Events_To => "{{1 pollresponseport,  2 giveforkport}}";
+end ronswanson2; 
+
+thread ronswanson3
+	features
+		pollport : in event data port fork.impl {
+	      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("poll");
+		};
+		
+		pollresponseport : out event data port pollresp.impl {
+		  SMACCM_SYS::CommPrim_Source_Text => "pollresponse"; 
+		};
+		
+		getforkport : in event data port fork.impl {
+	      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("getfork");
+		};
+		
+		giveforkport : out event data port fork.impl {
+		  SMACCM_SYS::CommPrim_Source_Text => "givefork";	
+		};
+	properties 
+		Source_Text => ("user_code/user_rs.c", "user_code/includes/rs3/user_rs.h");
+	    Dispatch_Protocol => Aperiodic;
+	    SMACCM_SYS::Thread_Type => Passive ;
+	    Compute_Execution_Time => 10 us .. 50 us;
+	    SMACCM_SYS::Sends_Events_To => "{{1 pollresponseport,  2 giveforkport}}";
+end ronswanson3; 
+
+thread ronswanson4
+	features
+		pollport : in event data port fork.impl {
+	      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("poll");
+		};
+		
+		pollresponseport : out event data port pollresp.impl {
+		  SMACCM_SYS::CommPrim_Source_Text => "pollresponse"; 
+		};
+		
+		getforkport : in event data port fork.impl {
+	      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("getfork");
+		};
+		
+		giveforkport : out event data port fork.impl {
+		  SMACCM_SYS::CommPrim_Source_Text => "givefork";	
+		};
+	properties 
+		Source_Text => ("user_code/user_rs.c", "user_code/includes/rs4/user_rs.h");
+	    Dispatch_Protocol => Aperiodic;
+	    SMACCM_SYS::Thread_Type => Passive ;
+	    Compute_Execution_Time => 10 us .. 50 us;
+	    SMACCM_SYS::Sends_Events_To => "{{1 pollresponseport,  2 giveforkport}}";
+end ronswanson4; 
+
+thread ronswanson5
+	features
+		pollport : in event data port fork.impl {
+	      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("poll");
+		};
+		
+		pollresponseport : out event data port pollresp.impl {
+		  SMACCM_SYS::CommPrim_Source_Text => "pollresponse"; 
+		};
+		
+		getforkport : in event data port fork.impl {
+	      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("getfork");
+		};
+		
+		giveforkport : out event data port fork.impl {
+		  SMACCM_SYS::CommPrim_Source_Text => "givefork";	
+		};
+	properties 
+		Source_Text => ("user_code/user_rs.c", "user_code/includes/rs5/user_rs.h");
+	    Dispatch_Protocol => Aperiodic;
+	    SMACCM_SYS::Thread_Type => Passive ;
+	    Compute_Execution_Time => 10 us .. 50 us;
+	    SMACCM_SYS::Sends_Events_To => "{{1 pollresponseport,  2 giveforkport}}";
+end ronswanson5; 
+
+thread ronswanson6
+	features
+		pollport : in event data port fork.impl {
+	      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("poll");
+		};
+		
+		pollresponseport : out event data port pollresp.impl {
+		  SMACCM_SYS::CommPrim_Source_Text => "pollresponse"; 
+		};
+		
+		getforkport : in event data port fork.impl {
+	      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("getfork");
+		};
+		
+		giveforkport : out event data port fork.impl {
+		  SMACCM_SYS::CommPrim_Source_Text => "givefork";	
+		};
+	properties 
+		Source_Text => ("user_code/user_rs.c", "user_code/includes/rs6/user_rs.h");
+	    Dispatch_Protocol => Aperiodic;
+	    SMACCM_SYS::Thread_Type => Passive ;
+	    Compute_Execution_Time => 10 us .. 50 us;
+	    SMACCM_SYS::Sends_Events_To => "{{1 pollresponseport,  2 giveforkport}}";
+end ronswanson6; 
+
+
 thread manager
 	features
+		
 		pollport1 : out event data port fork.impl {
 		  SMACCM_SYS::CommPrim_Source_Text => "poll1";
 		};
 		
-		pollresponseport1 : in event data port pollresp.impl {
-		  SMACCM_SYS::Compute_Entrypoint_Source_Text => ("pollresponse1");
+		pollport2 : out event data port fork.impl {
+		  SMACCM_SYS::CommPrim_Source_Text => "poll2";
+		};
+		
+		pollport3 : out event data port fork.impl {
+		  SMACCM_SYS::CommPrim_Source_Text => "poll3";
+		};
+		pollport4 : out event data port fork.impl {
+		  SMACCM_SYS::CommPrim_Source_Text => "poll4";
+		};
+		
+		pollport5 : out event data port fork.impl {
+		  SMACCM_SYS::CommPrim_Source_Text => "poll5";
+		};
+		
+		pollport6 : out event data port fork.impl {
+		  SMACCM_SYS::CommPrim_Source_Text => "poll6";
 		};
 		
 		giveforkport1 : out event data port fork.impl {
 		  SMACCM_SYS::CommPrim_Source_Text => "givefork1";
 		};
 		
-		getforkport1 : in event data port fork.impl {
-		  SMACCM_SYS::Compute_Entrypoint_Source_Text => ("getfork1");
+		giveforkport2 : out event data port fork.impl {
+		  SMACCM_SYS::CommPrim_Source_Text => "givefork2";
 		};
+		
+		giveforkport3 : out event data port fork.impl {
+		  SMACCM_SYS::CommPrim_Source_Text => "givefork3";
+		};
+		
+		giveforkport4 : out event data port fork.impl {
+		  SMACCM_SYS::CommPrim_Source_Text => "givefork4";
+		};
+		
+		giveforkport5 : out event data port fork.impl {
+		  SMACCM_SYS::CommPrim_Source_Text => "givefork5";
+		};
+		
+		giveforkport6 : out event data port fork.impl {
+		  SMACCM_SYS::CommPrim_Source_Text => "givefork6";
+		};
+		
+		getforkport : in event data port fork.impl {
+		  SMACCM_SYS::Compute_Entrypoint_Source_Text => ("getfork");
+		  Queue_Size => 4; 
+		};
+				
+		pollresponseport : in event data port pollresp.impl {
+		  SMACCM_SYS::Compute_Entrypoint_Source_Text => ("pollresponse");
+		  Queue_Size => 2;
+		};
+		
 		
 	properties 
 		Dispatch_Protocol => Periodic;
@@ -79,10 +248,20 @@ thread manager
 	    Stack_Size => 256 bytes;
 	    SMACCM_SYS::Thread_Type => Active ;
 	    Compute_Execution_Time => 10 us .. 50 us;
-	    SMACCM_SYS::Sends_Events_To => "{{2 pollport1, 1 giveforkport1}}";
+	    SMACCM_SYS::Sends_Events_To => 
+	    "{{ 2 pollport1
+		 , 2 pollport2
+		 , 2 pollport3
+		 , 2 pollport4
+		 , 2 pollport5
+		 , 2 pollport6
+		 , 1 giveforkport1
+		 , 1 giveforkport2 
+		 , 1 giveforkport3 
+		 , 1 giveforkport4 
+		 , 1 giveforkport5  
+	     , 1 giveforkport6 }}";
 end manager ; 
-
-
 
 process proc
 
@@ -91,12 +270,41 @@ end proc;
 process implementation proc.Impl
 	subcomponents
 		rs1 : thread RonSwanson1;
+		rs2 : thread RonSwanson2;
+		rs3 : thread RonSwanson3;
+		rs4 : thread RonSwanson4;
+		rs5 : thread RonSwanson5;
+		rs6 : thread RonSwanson6;
 		mgr : thread Manager;
 	connections
-		rs1_to_mgr_pollresponse : port rs1.pollresponseport -> mgr.pollresponseport1;
-		rs1_to_mgr_givefork : port rs1.giveforkport -> mgr.getforkport1;
+		
+		rs1_to_mgr_pollresponse : port rs1.pollresponseport -> mgr.pollresponseport;
+		rs1_to_mgr_givefork : port rs1.giveforkport -> mgr.getforkport;
+		rs2_to_mgr_pollresponse : port rs2.pollresponseport -> mgr.pollresponseport;
+		rs2_to_mgr_givefork : port rs2.giveforkport -> mgr.getforkport;
+		rs3_to_mgr_pollresponse : port rs3.pollresponseport -> mgr.pollresponseport;
+		rs3_to_mgr_givefork : port rs3.giveforkport -> mgr.getforkport;
+		rs4_to_mgr_pollresponse : port rs4.pollresponseport -> mgr.pollresponseport;
+		rs4_to_mgr_givefork : port rs4.giveforkport -> mgr.getforkport;
+		rs5_to_mgr_pollresponse : port rs5.pollresponseport -> mgr.pollresponseport;
+		rs5_to_mgr_givefork : port rs5.giveforkport -> mgr.getforkport;
+		rs6_to_mgr_pollresponse : port rs6.pollresponseport -> mgr.pollresponseport;
+		rs6_to_mgr_givefork : port rs6.giveforkport -> mgr.getforkport;
+		
+		
 		mgr_to_rs1_poll1    : port mgr.pollport1 -> rs1.pollport;
 		mgr_to_rs1_givefork1: port mgr.giveforkport1 -> rs1.getforkport;
+		mgr_to_rs1_poll2    : port mgr.pollport2 -> rs2.pollport;
+		mgr_to_rs1_givefork2: port mgr.giveforkport2 -> rs2.getforkport;
+		mgr_to_rs1_poll3    : port mgr.pollport3 -> rs3.pollport;
+		mgr_to_rs1_givefork3: port mgr.giveforkport3 -> rs3.getforkport;
+		mgr_to_rs1_poll4    : port mgr.pollport4 -> rs4.pollport;
+		mgr_to_rs1_givefork4: port mgr.giveforkport4 -> rs4.getforkport;
+		mgr_to_rs1_poll5    : port mgr.pollport5 -> rs5.pollport;
+		mgr_to_rs1_givefork5: port mgr.giveforkport5 -> rs5.getforkport;
+		mgr_to_rs1_poll6    : port mgr.pollport6 -> rs6.pollport;
+		mgr_to_rs1_givefork6: port mgr.giveforkport6 -> rs6.getforkport;
+
 end proc.Impl;
 
 system ronswansons

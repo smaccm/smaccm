@@ -2,10 +2,11 @@
 #include <manager.h>
 
 #define FORKS 4
-#define CLIENTS 1
+#define CLIENTS 6
 int forks[FORKS+1] = {0,0,0,0,0};
+int start = 0;
 
-int getfork(int minfork, int maxfork) {
+int allocfork(int minfork, int maxfork) {
 	int i = minfork;
 	for(;i<=maxfork;i++) {
 		if(forks[i] == 0) break;
@@ -27,18 +28,37 @@ void givefork(int client,const RonSwansons__fork_impl * fork) {
 		case 1:
 			givefork1(fork);
 			break;
+		case 2:
+			givefork2(fork);
+			break;
+		case 3:
+			givefork3(fork);
+			break;
+		case 4:
+			givefork4(fork);
+			break;
+		case 5:
+			givefork5(fork);
+			break;
+		case 6:
+			givefork6(fork);
+			break;
 		default:
 			printf("givefork: bad client number received.\n");
 	}
 }
 
 
-void pollresponse(int client, const RonSwansons__pollresp_impl * pollresp) {
+void pollresponse(const RonSwansons__pollresp_impl * pollresp) {
+	int client = pollresp->clientid;
 	if(pollresp->reqfork1 == 1) {
 		printf("pollresponse: received initial fork request from Ron %i.\n",client);
-		int fork = getfork(0,FORKS-1);
+		int fork = allocfork(0,FORKS-1);
 		if(fork < 0) {
-			printf("pollresponse: could not find initial fork for Ron %i",client);
+			printf("pollresponse: could not find initial fork for Ron %i.\n",client);
+			RonSwansons__fork_impl forkmsg;
+			forkmsg.forkid = -1;
+			givefork(client,&forkmsg);
 			return;
 		}
 		RonSwansons__fork_impl forkmsg;
@@ -46,9 +66,12 @@ void pollresponse(int client, const RonSwansons__pollresp_impl * pollresp) {
 		givefork(client,&forkmsg);
 	} else if (pollresp->reqfork2 >= 0 && pollresp->reqfork2 < FORKS) {
 	    printf("pollresponse: received second fork request from Ron %i for fork id greater than %i.\n",client,pollresp->reqfork2);
-		int fork = getfork(pollresp->reqfork2,FORKS);
+		int fork = allocfork(pollresp->reqfork2,FORKS);
 		if(fork < 0) {
-			printf("pollresponse: could not find second fork for Ron %i",client);
+			printf("pollresponse: could not find second fork for Ron %i.\n",client);
+			RonSwansons__fork_impl forkmsg;
+			forkmsg.forkid = -1;
+			givefork(client,&forkmsg);
 			return;
 		} 
 		RonSwansons__fork_impl forkmsg;
@@ -66,6 +89,21 @@ void pollclient(int client) {
 		case 1:
 			poll1(&fork_data);
 			break;
+		case 2:
+			poll2(&fork_data);
+			break;	
+		case 3:
+			poll3(&fork_data);
+			break;	
+		case 4:
+			poll4(&fork_data);
+			break;
+		case 5:
+			poll5(&fork_data);
+			break;	
+		case 6:
+			poll6(&fork_data);
+			break;	
 		default:
 			printf("pollclient: bad client number received %i.\n",client);
 	}
@@ -74,14 +112,11 @@ void pollclient(int client) {
 void process(const uint64_t * periodic) {
 	int i = 0;
 	for(;i<CLIENTS;i++) {
-		pollclient(i+1);
+		pollclient(((i+start)%CLIENTS)+1);
 	}
+	start++;
 }
 
-void pollresponse1(const RonSwansons__pollresp_impl * pollresp) {
-	pollresponse(1,pollresp);
-}
-
-void getfork1(const RonSwansons__fork_impl * fork) {
-	putfork(1,fork->forkid);
+void getfork(const RonSwansons__fork_impl * fork) {
+	putfork(fork->clientid,fork->forkid);
 }
