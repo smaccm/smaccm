@@ -93,4 +93,8 @@ public class ThreadCalendarNames {
     return Integer.toString(c.getGreatestCommonDivisorInMilliseconds());
   }
   
+  public String getPriority() {
+    return "50";
+  }
+  
 }

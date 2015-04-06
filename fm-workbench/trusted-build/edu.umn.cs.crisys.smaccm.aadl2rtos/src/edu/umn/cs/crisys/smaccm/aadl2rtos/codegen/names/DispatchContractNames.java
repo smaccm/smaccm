@@ -7,14 +7,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.eChronos.CommonNames;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.OutputEventPort;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.ArrayType;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.IdType;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.IntType;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.Type;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.*;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.util.Util;
 
 /**
  * @author Whalen

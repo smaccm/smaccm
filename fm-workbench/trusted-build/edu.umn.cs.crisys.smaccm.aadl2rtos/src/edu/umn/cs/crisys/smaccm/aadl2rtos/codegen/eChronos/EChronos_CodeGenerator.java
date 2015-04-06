@@ -45,7 +45,7 @@ public class EChronos_CodeGenerator extends CodeGeneratorBase {
 
  public void createPrxFile() throws Aadl2RtosFailure {
      ModelNames mn = new ModelNames(model);
-     String name = "smaccm_decls.h";
+     String name = mn.getEChronosPrxFileName();
      File file = new File(outputDirectory, name);
      String path = file.getAbsolutePath();
      String platform; 

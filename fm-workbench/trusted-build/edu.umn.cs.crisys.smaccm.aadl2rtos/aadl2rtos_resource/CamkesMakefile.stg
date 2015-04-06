@@ -72,7 +72,7 @@ writeComponent(component) ::= <<
 camkesMakefileBody(model) ::= <<
 
 TARGETS := $(notdir ${SOURCE_DIR}).cdl
-ADL := <model.systemAssemblyFileName>
+ADL := <model.camkesSystemAssemblyFileName>
 
 <model.threadImplementations:writeComponent()>
 <if(model.threadCalendar.hasDispatchers)>
