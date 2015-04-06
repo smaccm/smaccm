@@ -59,7 +59,7 @@ public class DispatcherTraverser {
       visited.add(d);
       OutgoingDispatchContract used = 
           OutgoingDispatchContract.maxUsedDispatchers(d.getDispatchLimits());
-      for (HashMap.Entry<OutputEventPort, Integer> elem : used.getContract().entrySet()) {
+      for (Map.Entry<OutputEventPort, Integer> elem : used.getContract().entrySet()) {
         for (PortConnection pc : elem.getKey().getConnections()) {
           // should be only output event ports, so connection should be to input event ports! 
           InputEventPort iep = (InputEventPort)pc.getDestPort();
@@ -97,7 +97,7 @@ public class DispatcherTraverser {
     passiveDispatchersFromActiveThread(visited, init);
     for (Dispatcher d : visited) {
       for (OutgoingDispatchContract limit : d.getDispatchLimits()) {
-        for (HashMap.Entry<OutputEventPort, Integer> elem : limit.getContract().entrySet()) {
+        for (Map.Entry<OutputEventPort, Integer> elem : limit.getContract().entrySet()) {
           for (PortConnection pc : elem.getKey().getConnections()) {
             InputEventPort iep = (InputEventPort)pc.getDestPort();
             if (!iep.getOwner().getIsPassive()) {
@@ -157,7 +157,7 @@ public class DispatcherTraverser {
   public void passiveDispatchersFromActiveThread(Set<Dispatcher> visited, Dispatcher d) {
     visited.add(d);
     for (OutgoingDispatchContract limit : d.getDispatchLimits()) {
-      for (HashMap.Entry<OutputEventPort, Integer> elem : limit.getContract().entrySet()) {
+      for (Map.Entry<OutputEventPort, Integer> elem : limit.getContract().entrySet()) {
         for (PortConnection pc : elem.getKey().getConnections()) {
           InputEventPort iep = (InputEventPort)pc.getDestPort();
           InputEventDispatcher ied = iep.getOptDispatcher();

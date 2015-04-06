@@ -1,0 +1,6 @@
+config APP_RONSWANSONS
+    bool "AADL Model that mitigates the dining philosophers problem using a resource hierarchy."
+    default n
+    select APP_CAMKES_EXECUTIVE
+    help
+        AADL Model that mitigates the dining philosophers problem using a resource hierarchy.
