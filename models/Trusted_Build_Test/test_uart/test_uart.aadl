@@ -65,7 +65,7 @@ thread uart
 		-- This handler is designed to be called only from the driver
 		-- it is there so that we can kick off the AADL dispatch loop
 		-- in response to a received UART message. 
-		recv_handler : in event data port uart_packet.impl {
+		recv_dummy : in event data port uart_packet.impl {
 			Compute_Entrypoint_Source_Text => "recv_handler";
 	    	SMACCM_SYS::Sends_Events_To => "{{1 recv}}";
 		};

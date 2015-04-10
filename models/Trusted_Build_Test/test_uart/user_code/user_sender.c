@@ -2,7 +2,7 @@
 #include <sender.h>
 
 
-void periodic_ping(const uint32_t periodic_100_ms) {
+void periodic_ping(const uint64_t *periodic_100_ms) {
 
    test_uart__uart_packet_impl packet;
    printf("sender ping received (%d).  Writing to receiver \n", periodic_100_ms);
