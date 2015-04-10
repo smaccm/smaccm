@@ -1,3 +1,28 @@
 import "CommonPeriodicDispatcherC.stg"
 
+// Copied from "CamkesComponentC.stg"
+incomingActiveThreadDispatchName(dispatcher) ::= "<dispatcher.qualifiedName>_<dispatcher.type.writerFn>"
+outgoingActiveThreadDispatchName(dispatcher) ::= "<incomingActiveThreadDispatchName(dispatcher)>"
 
+periodicComponentCBody(threadCalendar) ::= <<
+
+<periodicComponentCDispatchers(threadCalendar)>
+
+void smaccm_periodic_irq_callback() {
+	clock_irq_callback();
+	smaccm_thread_calendar(); 
+	irq_reg_callback(smaccm_periodic_irq_callback, NULL);
+}
+
+int run(void)
+{
+	irq_reg_callback(smaccm_periodic_irq_callback, NULL);
+	clock_init();
+	clock_set_interval_in_ms(<threadCalendar.greatestCommonDivisorInMilliseconds>);
+
+	clock_start_timer();
+
+	return 0;
+}
+
+>>

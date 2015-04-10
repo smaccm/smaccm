@@ -45,6 +45,9 @@ eventWriterDecl(port) ::= <<
 bool <incomingPortWriterName(port)>(); 
 >>
 
+periodicDispatcherDecl(dispatcher) ::= <<
+void <outgoingActiveThreadDispatchName(dispatcher)>(<dispatcher.type.aadlInputType.name> arg); 
+>>
 
 /*
  * In CAmkES, we write to the output port.
@@ -60,6 +63,7 @@ activeThreadDecls(threadImpl) ::= <<
 <threadImpl.inputDataPortList:dataWriterDecl()>
 <threadImpl.inputEventDataPortList:dataWriterDecl()>	
 <threadImpl.inputEventPortList:eventWriterDecl()>
+<threadImpl.periodicDispatchers:periodicDispatcherDecl()>
 >>
 
 passiveThreadDecls(threadImpl) ::= <<

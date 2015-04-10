@@ -52,23 +52,6 @@ writePortReaderPrototype(port) ::= <<
 bool <port.aadlReaderFnName>(<if(port.hasData)><port.type.aadlOutputType.name> <port.name><endif>); 
 >>
 
-writeSharedDataPrototype(sda) ::= <<
-<if(sda.accessContainsInput)><\\>
-bool <sda.readerFnName>(<sda.nameAsInputParam>);
-<endif><if(sda.accessContainsOutput)><\\>
-bool <sda.writerFnName>(<sda.nameAsOutputParam>);
-<endif>
-
->>
-
-writeAadlCRpcPrototypeSemi(rpc, endpoint) ::= <<<writeAadlCRpcPrototype(rpc, endpoint)>;>>
-
-writeEndpointPrototype(endpoint) ::= <<
-<if(!endpoint.isExternal)><\\>
-<endpoint.remoteProcedureGroup.remoteProcedures:writeAadlCRpcPrototypeSemi(endpoint); separator="\n">
-<endif>
->>
-
 
 portInitializer(port) ::= <<
 <if(port.hasInitializeEntrypoint)>void <port.initializeEntrypointOpt.handlerName>();
@@ -79,8 +62,6 @@ componentGlueCodeHeaderBody(threadImpl) ::= <<
 	<threadImpl.dispatchers:writeUdePrototype()>
 	<threadImpl.outputPortList:writePortWriterPrototype()>
 	<threadImpl.inputPortList:writePortReaderPrototype()>
-	<threadImpl.sharedDataAccessorList:writeSharedDataPrototype()>
-	<threadImpl.endpoints:writeEndpointPrototype()>
 	<threadImpl.portList:portInitializer()>
 	<if(threadImpl.hasInitializeEntrypoint)>void <threadImpl.initializeEntrypointOpt.handlerName>();<endif>
 	<if(threadImpl.isExternal)>

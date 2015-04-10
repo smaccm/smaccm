@@ -135,26 +135,3 @@ valToCamkesOutputMemcpy(type, dst, src) ::= <<
 memcpy(<type.camkesOutputToPtr><dst>, <type.valToPtr><src>, sizeof(<type.name>));
 >>
 
-
-///////////////////////////////////////////////////////////////////////////////
-//
-// RPC Parameters for C
-// 
-///////////////////////////////////////////////////////////////////////////////
-
-writeAadlCRpcParameter(parameter) ::= 
-<< <if(parameter.isInput)><parameter.type.aadlInputType.name> <parameter.name><\\>
-<else><parameter.type.aadlOutputType.name> <parameter.name><endif> >>
-
-writeAadlCRpcPrototype(rpc, endpoint) ::= <<
-void <endpoint.aadlName>_<rpc.name>(<rpc.parameters:writeAadlCRpcParameter(); separator=", ">)
->>
-
-writeCamkesCRpcParameter(parameter) ::= <<
-<if(parameter.isInput)><parameter.type.camkesInputType.name> <parameter.name><\\>
-<else><parameter.type.camkesOutputType.name> <parameter.name><endif>
->>
-
-writeCamkesCRpcPrototype(rpc, endpoint) ::= <<
-void <endpoint.name>_<rpc.name>(<rpc.parameters:writeCamkesCRpcParameter(); separator=", ">)
->>

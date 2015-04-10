@@ -164,6 +164,22 @@ assemblyConnectRpgs(threadImpl, model) ::= <<
 <threadImpl.isRequiresOfConnectionList:connectRpg(threadImpl, model)>
 >>
 
+sdaConnection(cid, from1, from2, to1, to2) ::= 
+   "connection seL4SharedData <cid> (from <from1>.<from2>, to <to1>.<to2>);"
+   
+
+assemblyConnectAccessor(sharedDataAccessor, otherSda, model) ::= <<
+<sdaConnection(model.generateConnectionName, 
+			   sharedDataAccessor.owner.componentInstanceName, 
+			   sharedDataAccessor.name, 
+			   otherSda.owner.componentInstanceName, 
+			   otherSda.name)>
+>>
+
+assemblyConnectSharedData(sharedData, model) ::= <<
+<sharedData.nonChosenAccessList:assemblyConnectAccessor(sharedData.chosenAccess, model)>
+>>
+
 camkesAssemblyBody(model) ::= <<
 
 import <\u003C>std_connector.camkes<\u003E>;
@@ -210,11 +226,14 @@ assembly {
 		// IRQ connections (if any)
 		<model.irqDispatchers:constructIRQConnections()>
 		
-		// Passive component read/write connections
+		// component read/write connections
 		<model.threadImplementations:assemblyConnectReadersWriters(model)>
 		
 		// Direct RPC connections
 		<model.threadImplementations:assemblyConnectRpgs(model)>
+		
+		// Shared memory connections
+		<model.sharedData:assemblyConnectSharedData(model)>
 	}
     configuration {
 		<if(model.threadCalendar.hasDispatchers)>

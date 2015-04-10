@@ -653,8 +653,6 @@ public class AadlModelParser {
       accessType = SharedDataAccessor.AccessType.READ;
     } else if (access.getName().equalsIgnoreCase("read_write")) {
       accessType = SharedDataAccessor.AccessType.READ_WRITE;
-      throw new Aadl2RtosException("Required property 'Access_Right' has value: " + access.getName() + 
-          " which is unsupported: currently only write_only and read_only are supported.");
     } else {
       throw new Aadl2RtosException("Required property 'Access_Right' has value: " + access.getName() + 
           " which is unsupported.");
