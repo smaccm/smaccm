@@ -271,6 +271,7 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 		case "+":
 		case "-":
 		case "*":
+		case "%":
 		case "/":
 		case "<":
 		case "<=":
@@ -836,6 +837,7 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 		case "+":
 		case "-":
 		case "*":
+		case "%":
 		case "/": {
 			if (leftType.equals(BaseType.REAL) && rightType.equals(BaseType.INT)) {
 				return BaseType.REAL;

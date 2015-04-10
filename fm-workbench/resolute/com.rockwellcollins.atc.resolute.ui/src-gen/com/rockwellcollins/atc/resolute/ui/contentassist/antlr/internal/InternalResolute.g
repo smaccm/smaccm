@@ -2242,6 +2242,14 @@ rule__TimesExpr__OpAlternatives_1_0_0_1_0
 { after(grammarAccess.getTimesExprAccess().getOpSolidusKeyword_1_0_0_1_0_1()); }
 )
 
+    |(
+{ before(grammarAccess.getTimesExprAccess().getOpPercentSignKeyword_1_0_0_1_0_2()); }
+
+	'%' 
+
+{ after(grammarAccess.getTimesExprAccess().getOpPercentSignKeyword_1_0_0_1_0_2()); }
+)
+
 ;
 finally {
 	restoreStackSize(stackSize);

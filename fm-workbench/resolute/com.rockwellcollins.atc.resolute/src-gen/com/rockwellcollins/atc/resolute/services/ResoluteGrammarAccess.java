@@ -242,8 +242,8 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		//	"memory" | "processor" | "process" | "subprogram_group" | "subprogram" | "system" | "thread_group" | "thread" |
 		//	"virtual_bus" | "virtual_processor" | "connection" | "property" | "feature" | "port" | "data_port" | "event_port" |
 		//	"event_data_port" | "feature_group" | "access" | "bus_access" | "provides_bus_access" | "requires_bus_access" |
-		//	"data_access" | "provides_data_access" | "requires_data_access" | "subprogram_access" | "provides_subprogram_access"
-		//	| "requires_subprogram_access" | "subprogram_group_access" | "provides_subprogram_group_access" |
+		//	"data_access" | "provides_data_access" | "requires_data_access" | "subprogram_access" | "provides_subprogram_access" |
+		//	"requires_subprogram_access" | "subprogram_group_access" | "provides_subprogram_group_access" |
 		//	"requires_subprogram_group_access");
 		public ParserRule getRule() { return rule; }
 
@@ -258,8 +258,8 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 
 		//"int" | "real" | "string" | "bool" | "range" | "aadl" | "component" | "abstract" | "bus" | "data" | "device" | "memory"
 		//| "processor" | "process" | "subprogram_group" | "subprogram" | "system" | "thread_group" | "thread" | "virtual_bus" |
-		//"virtual_processor" | "connection" | "property" | "feature" | "port" | "data_port" | "event_port" | "event_data_port"
-		//| "feature_group" | "access" | "bus_access" | "provides_bus_access" | "requires_bus_access" | "data_access" |
+		//"virtual_processor" | "connection" | "property" | "feature" | "port" | "data_port" | "event_port" | "event_data_port" |
+		//"feature_group" | "access" | "bus_access" | "provides_bus_access" | "requires_bus_access" | "data_access" |
 		//"provides_data_access" | "requires_data_access" | "subprogram_access" | "provides_subprogram_access" |
 		//"requires_subprogram_access" | "subprogram_group_access" | "provides_subprogram_group_access" |
 		//"requires_subprogram_group_access"
@@ -1109,35 +1109,36 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		private final Alternatives cOpAlternatives_1_0_0_1_0 = (Alternatives)cOpAssignment_1_0_0_1.eContents().get(0);
 		private final Keyword cOpAsteriskKeyword_1_0_0_1_0_0 = (Keyword)cOpAlternatives_1_0_0_1_0.eContents().get(0);
 		private final Keyword cOpSolidusKeyword_1_0_0_1_0_1 = (Keyword)cOpAlternatives_1_0_0_1_0.eContents().get(1);
+		private final Keyword cOpPercentSignKeyword_1_0_0_1_0_2 = (Keyword)cOpAlternatives_1_0_0_1_0.eContents().get(2);
 		private final Assignment cRightAssignment_1_1 = (Assignment)cGroup_1.eContents().get(1);
 		private final RuleCall cRightPrefixExprParserRuleCall_1_1_0 = (RuleCall)cRightAssignment_1_1.eContents().get(0);
 		
 		//TimesExpr returns Expr:
-		//	PrefixExpr (=> ({BinaryExpr.left=current} op=("*" | "/")) right=PrefixExpr)*;
+		//	PrefixExpr (=> ({BinaryExpr.left=current} op=("*" | "/" | "%")) right=PrefixExpr)*;
 		public ParserRule getRule() { return rule; }
 
-		//PrefixExpr (=> ({BinaryExpr.left=current} op=("*" | "/")) right=PrefixExpr)*
+		//PrefixExpr (=> ({BinaryExpr.left=current} op=("*" | "/" | "%")) right=PrefixExpr)*
 		public Group getGroup() { return cGroup; }
 
 		//PrefixExpr
 		public RuleCall getPrefixExprParserRuleCall_0() { return cPrefixExprParserRuleCall_0; }
 
-		//(=> ({BinaryExpr.left=current} op=("*" | "/")) right=PrefixExpr)*
+		//(=> ({BinaryExpr.left=current} op=("*" | "/" | "%")) right=PrefixExpr)*
 		public Group getGroup_1() { return cGroup_1; }
 
-		//=> ({BinaryExpr.left=current} op=("*" | "/"))
+		//=> ({BinaryExpr.left=current} op=("*" | "/" | "%"))
 		public Group getGroup_1_0() { return cGroup_1_0; }
 
-		//{BinaryExpr.left=current} op=("*" | "/")
+		//{BinaryExpr.left=current} op=("*" | "/" | "%")
 		public Group getGroup_1_0_0() { return cGroup_1_0_0; }
 
 		//{BinaryExpr.left=current}
 		public Action getBinaryExprLeftAction_1_0_0_0() { return cBinaryExprLeftAction_1_0_0_0; }
 
-		//op=("*" | "/")
+		//op=("*" | "/" | "%")
 		public Assignment getOpAssignment_1_0_0_1() { return cOpAssignment_1_0_0_1; }
 
-		//"*" | "/"
+		//"*" | "/" | "%"
 		public Alternatives getOpAlternatives_1_0_0_1_0() { return cOpAlternatives_1_0_0_1_0; }
 
 		//"*"
@@ -1145,6 +1146,9 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 
 		//"/"
 		public Keyword getOpSolidusKeyword_1_0_0_1_0_1() { return cOpSolidusKeyword_1_0_0_1_0_1; }
+
+		//"%"
+		public Keyword getOpPercentSignKeyword_1_0_0_1_0_2() { return cOpPercentSignKeyword_1_0_0_1_0_2; }
 
 		//right=PrefixExpr
 		public Assignment getRightAssignment_1_1() { return cRightAssignment_1_1; }
@@ -1369,10 +1373,10 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		
 		//AtomicExpr returns Expr:
 		//	{IdExpr} id=[aadl2::NamedElement|QCREF] | {ThisExpr} "this" ("." sub=NestedDotID)? | {FailExpr} "fail" (val=Expr |
-		//	"**" failmsg+=ClaimText+ "**") | {IntExpr} val=IntegerTerm | {RealExpr} val=RealTerm | {BoolExpr} val=BooleanLiteral
-		//	| {StringExpr} val=StringTerm | {IfThenElseExpr} "if" cond=Expr "then" then=Expr "else" else=Expr | {QuantifiedExpr}
-		//	quant=("forall" | "exists") ("(" args+=Arg ")")+ "." expr=Expr | {BuiltInFnCallExpr} fn=BuiltInFn "(" (args+=Expr
-		//	("," args+=Expr)*)? ")" | {FnCallExpr} fn=[FunctionDefinition] "(" (args+=Expr ("," args+=Expr)*)? ")" | "{" Expr
+		//	"**" failmsg+=ClaimText+ "**") | {IntExpr} val=IntegerTerm | {RealExpr} val=RealTerm | {BoolExpr} val=BooleanLiteral |
+		//	{StringExpr} val=StringTerm | {IfThenElseExpr} "if" cond=Expr "then" then=Expr "else" else=Expr | {QuantifiedExpr}
+		//	quant=("forall" | "exists") ("(" args+=Arg ")")+ "." expr=Expr | {BuiltInFnCallExpr} fn=BuiltInFn "(" (args+=Expr (","
+		//	args+=Expr)*)? ")" | {FnCallExpr} fn=[FunctionDefinition] "(" (args+=Expr ("," args+=Expr)*)? ")" | "{" Expr
 		//	({FilterMapExpr.map=current} "for" ("(" args+=Arg ")")+ ("|" filter=Expr)? | {SetExpr.exprs+=current} (","
 		//	exprs+=Expr)*) "}" | {SetExpr} "{" "}" | {LetExpr} "let" binding=LetBinding ";" expr=Expr | "(" Expr ")";
 		public ParserRule getRule() { return rule; }
@@ -1885,9 +1889,9 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		//// Other
 		//// Error Annex
 		//| "property" | "has_parent" | "parent" | "name" | "type" | "has_type" | "is_of_type" | "is_bound_to" | "has_member" |
-		//"features" | "connections" | "subcomponents" | "source" | "destination" | "direction" | "is_event_port" |
-		//"lower_bound" | "upper_bound" | "member" | "sum" | "union" | "length" | "size" | "intersect" | "instance" |
-		//"instances" | "analysis" | // the component can receive an incoming error
+		//"features" | "connections" | "subcomponents" | "source" | "destination" | "direction" | "is_event_port" | "lower_bound"
+		//| "upper_bound" | "member" | "sum" | "union" | "length" | "size" | "intersect" | "instance" | "instances" | "analysis"
+		//| // the component can receive an incoming error
 		//"receive_error" | // the component contain the error
 		//"contain_error" | // the component propagate an error
 		//"propagate_error" | // the error state is reachable
@@ -2367,8 +2371,8 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	//	"memory" | "processor" | "process" | "subprogram_group" | "subprogram" | "system" | "thread_group" | "thread" |
 	//	"virtual_bus" | "virtual_processor" | "connection" | "property" | "feature" | "port" | "data_port" | "event_port" |
 	//	"event_data_port" | "feature_group" | "access" | "bus_access" | "provides_bus_access" | "requires_bus_access" |
-	//	"data_access" | "provides_data_access" | "requires_data_access" | "subprogram_access" | "provides_subprogram_access"
-	//	| "requires_subprogram_access" | "subprogram_group_access" | "provides_subprogram_group_access" |
+	//	"data_access" | "provides_data_access" | "requires_data_access" | "subprogram_access" | "provides_subprogram_access" |
+	//	"requires_subprogram_access" | "subprogram_group_access" | "provides_subprogram_group_access" |
 	//	"requires_subprogram_group_access");
 	public BaseTypeElements getBaseTypeAccess() {
 		return pBaseType;
@@ -2520,7 +2524,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	}
 
 	//TimesExpr returns Expr:
-	//	PrefixExpr (=> ({BinaryExpr.left=current} op=("*" | "/")) right=PrefixExpr)*;
+	//	PrefixExpr (=> ({BinaryExpr.left=current} op=("*" | "/" | "%")) right=PrefixExpr)*;
 	public TimesExprElements getTimesExprAccess() {
 		return pTimesExpr;
 	}
@@ -2541,10 +2545,10 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 
 	//AtomicExpr returns Expr:
 	//	{IdExpr} id=[aadl2::NamedElement|QCREF] | {ThisExpr} "this" ("." sub=NestedDotID)? | {FailExpr} "fail" (val=Expr |
-	//	"**" failmsg+=ClaimText+ "**") | {IntExpr} val=IntegerTerm | {RealExpr} val=RealTerm | {BoolExpr} val=BooleanLiteral
-	//	| {StringExpr} val=StringTerm | {IfThenElseExpr} "if" cond=Expr "then" then=Expr "else" else=Expr | {QuantifiedExpr}
-	//	quant=("forall" | "exists") ("(" args+=Arg ")")+ "." expr=Expr | {BuiltInFnCallExpr} fn=BuiltInFn "(" (args+=Expr
-	//	("," args+=Expr)*)? ")" | {FnCallExpr} fn=[FunctionDefinition] "(" (args+=Expr ("," args+=Expr)*)? ")" | "{" Expr
+	//	"**" failmsg+=ClaimText+ "**") | {IntExpr} val=IntegerTerm | {RealExpr} val=RealTerm | {BoolExpr} val=BooleanLiteral |
+	//	{StringExpr} val=StringTerm | {IfThenElseExpr} "if" cond=Expr "then" then=Expr "else" else=Expr | {QuantifiedExpr}
+	//	quant=("forall" | "exists") ("(" args+=Arg ")")+ "." expr=Expr | {BuiltInFnCallExpr} fn=BuiltInFn "(" (args+=Expr (","
+	//	args+=Expr)*)? ")" | {FnCallExpr} fn=[FunctionDefinition] "(" (args+=Expr ("," args+=Expr)*)? ")" | "{" Expr
 	//	({FilterMapExpr.map=current} "for" ("(" args+=Arg ")")+ ("|" filter=Expr)? | {SetExpr.exprs+=current} (","
 	//	exprs+=Expr)*) "}" | {SetExpr} "{" "}" | {LetExpr} "let" binding=LetBinding ";" expr=Expr | "(" Expr ")";
 	public AtomicExprElements getAtomicExprAccess() {
