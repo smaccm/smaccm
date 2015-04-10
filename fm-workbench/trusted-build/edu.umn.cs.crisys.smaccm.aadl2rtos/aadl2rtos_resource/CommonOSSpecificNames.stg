@@ -27,7 +27,7 @@ incomingPortWriterName(port) ::= <<
 
 outgoingPortWriterName(destPort, srcPort) ::= << 
 <genericFailure("outgoingPortWriterName")>
-<port.outgoingPortWriterNameDoesntExist>
+<destPort.outgoingPortWriterNameDoesntExist>
 >>
 
 incomingActiveThreadDispatchName(dispatcher) ::= <<

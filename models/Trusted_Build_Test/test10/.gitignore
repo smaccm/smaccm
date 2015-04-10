@@ -1,0 +1,6 @@
+*.camkes
+components
+include
+instances
+interfaces
+make_template

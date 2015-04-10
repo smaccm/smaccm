@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>test_uart_passive</name>
+	<name>PingTwins</name>
 	<comment></comment>
 	<projects>
 		<project>Plugin_Resources</project>
