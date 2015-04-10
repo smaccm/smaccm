@@ -23,11 +23,8 @@ public
     	Stack_Size => 1 KByte;
     	Compute_Execution_Time => 0ms .. 50ms;
     	Dispatch_Protocol => Sporadic;
-    	
-      Source_Text => ("user_code/uart.c") applies to input;
-      Compute_Entrypoint_Source_Text => "recv" applies to input;
   end uart_thread;
-  
+
   
   --
   -- Code to exercise the UART
@@ -43,7 +40,7 @@ public
       Stack_Size => 1 KByte;
       Compute_Execution_Time => 0ms .. 50ms;
       Dispatch_Protocol => Periodic;
-      Period => 100ms;
+      Period => 500 ms;
       Source_Text => ("user_code/sender.c");
       Compute_Entrypoint_Source_Text => "send";
       SMACCM_SYS::Sends_Events_To => "{{1 output}}";
