@@ -22,14 +22,21 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE DATA OR THE USE OR OTHER DEALINGS
 package edu.umn.cs.crisys.smaccm.aadl2rtos.model.type;
 
 import java.util.ArrayList;
-import java.util.Hashtable;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
+
+/* TO DO: make this a list instead of a set */
 
 public class RecordType extends Type {
-	final private Map<String, Type> fields = new Hashtable<String, Type>();
+	public class RecordField {
+	  public String name; 
+	  public Type type;
+	  RecordField(String name, Type type) {
+	    this.name = name;
+	    this.type = type;
+	  }
+	}
+  
+  final private List<RecordField> fields = new ArrayList<RecordField>();
 
 	@Override
 	public boolean isBaseType() {
@@ -37,17 +44,23 @@ public class RecordType extends Type {
 	}
 
 	public void addField(String name, Type type) {
-		fields.put(name, type);
+		fields.add(new RecordField(name, type));
 	}
 
 	public Type getField(String name) {
-		return fields.get(name);
+	  for (RecordField rf : fields) {
+	    if (name.equals(rf.name)) {
+	      return rf.type;
+	    }
+	  }
+	  return null;
 	}
 
-	public Set<String> getFieldNames() {
+/*	public Set<String> getFieldNames() {
 		return fields.keySet();
 	}
-
+*/
+	
 	@Override
 	public CType getCType(int indent) {
 		return new CType(makeString(indent), "");
@@ -56,8 +69,8 @@ public class RecordType extends Type {
 	@Override
 	public List<Type> dependencies() {
 		ArrayList<Type> deps = new ArrayList<Type>();
-		for (Type t : fields.values()) {
-			List<Type> childDeps = t.dependencies();
+		for (RecordField rf: fields) {
+			List<Type> childDeps = rf.type.dependencies();
 			if (childDeps != null) {
 				deps.addAll(childDeps);
 			}
@@ -78,13 +91,13 @@ public class RecordType extends Type {
     buf.append("\n");
     buf.append(indent(indent)); 
     buf.append("struct { \n");
-    Iterator<String> iterator = getFieldNames().iterator();
-    while (iterator.hasNext()) {
-      String field = iterator.next();
+    //Iterator<String> iterator = this.fields.iterator();
+    for (RecordField rf: fields) {
       buf.append(indent(indent+3));
-      buf.append(getField(field).getCType(indent+3).varString(field));
+      buf.append(rf.type.getCType(indent+3).varString(rf.name));
       buf.append(" ; \n");
     }
+    
     buf.append(indent(indent));
     buf.append("}");
     return buf.toString();

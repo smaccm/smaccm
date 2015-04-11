@@ -356,6 +356,10 @@ public abstract class CodeGeneratorBase {
       STGroupFile stg = this.createTemplate("TypesHeader.stg");
       writeBoilerplateHeader(sysInstanceName, path, hwriter, stg.getInstanceOf("datatypesPrefix"));
       
+      ST st = stg.getInstanceOf("externalTypeDecls");
+      st.add("model", mn);
+      hwriter.append(st.render()); 
+      
       createComponentDispatchTypes(hwriter);
       
       writeBoilerplateFooter(sysInstanceName, hname, hwriter, stg.getInstanceOf("datatypesPostfix"));

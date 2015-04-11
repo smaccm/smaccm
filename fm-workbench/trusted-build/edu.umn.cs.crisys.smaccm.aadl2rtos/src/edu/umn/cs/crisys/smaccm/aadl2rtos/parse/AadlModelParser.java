@@ -749,8 +749,11 @@ public class AadlModelParser {
       for (SubprogramAccess sa: subGroup.getOwnedSubprogramAccesses()) {
         SubprogramTypeImpl sub = (SubprogramTypeImpl)sa.getFeatureClassifier();
         List<RemoteProcedureParameter> args = new ArrayList<>(); 
-        logger.info("The subprogram type name is: " + sub.getName());
-        logger.info("The subprogram access name is: " + sa.getName());
+                
+        // if the initial parameter is an out parameter of type 
+        // "returns", treat it as the return value of the function. 
+        boolean initial = true;
+        Type returnType = new UnitType();
         for (Parameter parm : sub.getOwnedParameters()) {
           Type t = lookupType((DataClassifier)parm.getClassifier());
           String id = parm.getName();
@@ -759,10 +762,17 @@ public class AadlModelParser {
                 (parm.getDirection() == DirectionType.OUT) ? Direction.OUT :
                   Direction.IN_OUT; 
           RemoteProcedureParameter modelParam = new RemoteProcedureParameter(t, dir, id);
-          args.add(modelParam);
+          
+          // kludge for function return values.
+          if (initial && id.equalsIgnoreCase("returns") && 
+              dir == Direction.OUT) {
+            returnType = t;
+          } else {
+            args.add(modelParam);
+          }
+          initial = false;
         }
-        Type t = new UnitType();
-        remoteProcedures.add(new RemoteProcedure(sa.getName(), args, t));
+        remoteProcedures.add(new RemoteProcedure(sa.getName(), args, returnType));
       }
       rpg = new RemoteProcedureGroup(remoteProcedures, subGroup.getName());
       model.getRemoteProcedureGroupMap().put(subGroup.getName(), rpg);
@@ -883,6 +893,11 @@ public class AadlModelParser {
 			collectDataTypes(t);
 		}
 
+		// CHANGE: MWW: for externally defined types,
+		// Do not create the type but record the header
+		// for inclusion into the AADL types header.
+		
+		
 		// create internal ast types from the AADL types
 		for (DataClassifier dc : this.dataTypes) {
 			createAstType(dc);
@@ -939,7 +954,9 @@ public class AadlModelParser {
     String normalizedName = getDataClassifierName(dc);
 
 		if (this.model.getAstTypes().containsKey(normalizedName)) {
-			return this.model.getAstTypes().get(normalizedName);
+			// return this.model.getAstTypes().get(normalizedName);
+		  Type t = this.model.getAstTypes().get(normalizedName);
+		  return new IdType(normalizedName, t);
 		}
 
 		// base types defined by the data modeling annex
@@ -971,6 +988,19 @@ public class AadlModelParser {
 			throw new Aadl2RtosException("Character types are currently unsupported");
 		} else if ("Base_Types::String" == qualifiedName) {
 			throw new Aadl2RtosException("String types are currently unsupported");
+		} else if (ThreadUtil.getIsExternal(dc)) {
+		  try {
+		    String name = dc.getName();
+		    String header = Util.getStringValue(dc, ThreadUtil.SMACCM_SYS_COMMPRIM_SOURCE_HEADER);
+		    Type et = new ExternalType(name, header);
+		    this.model.astTypes.put(name, et);
+		    this.model.externalTypeHeaders.add(header);
+		    logger.info("Creating external type: " + name);
+		    return et;
+		  } catch (Exception e) {
+		    //logger.error("Error: Property " + ThreadUtil.SMACCM_SYS_COMMPRIM_SOURCE_HEADER_NAME + " must be provided for external types");
+		    throw new Aadl2RtosException("Error: Property " + ThreadUtil.SMACCM_SYS_COMMPRIM_SOURCE_HEADER_NAME + " must be provided for external types");
+		  }
 		} else if (dc instanceof DataTypeImpl) {
 		  DataTypeImpl dti = (DataTypeImpl)dc;
 			EnumerationLiteral el = Util.getDataRepresentationName(dti);
@@ -980,7 +1010,8 @@ public class AadlModelParser {
 			if ((el.getName()).equalsIgnoreCase("Array")) {
 			  Type at = new ArrayType(childElem, size);
 			  this.model.astTypes.put(normalizedName, at);
-			  return new ArrayType(childElem, size);
+			  // return new ArrayType(childElem, size);
+	      return new IdType(normalizedName, at);
 			} else {
 			  throw new Aadl2RtosException("Examining type: " + dc.getFullName() + 
 			      " found unexpected representation type: '"+ el.getName() + "'; expecting 'Array'.");
@@ -998,7 +1029,8 @@ public class AadlModelParser {
 				if ((el.getName()).equalsIgnoreCase("Array")) {
 				    ArrayType at = new ArrayType(childElem, size); 
 				    this.model.astTypes.put(normalizedName, at);
-				    return at;
+				    // return at;
+		        return new IdType(normalizedName, at);
 				} else {
 				   throw new Aadl2RtosException("Examining type: " + dc.getFullName() + 
 				      " found unexpected representation type: '"+ dc.getName() + "'; expecting 'Array'.");
@@ -1018,7 +1050,8 @@ public class AadlModelParser {
 					}
 				}
 				this.model.astTypes.put(normalizedName, rt);
-				return rt;
+				// return rt;
+        return new IdType(normalizedName, rt);
 			}
 		} else {
 			throw new Aadl2RtosException(

@@ -113,6 +113,14 @@ public class ModelNames {
     return Util.normalizeAadlName(m.getSystemImplementationName());
   }
   
+  public List<String> getExternalTypeHeaders() {
+    List<String> eths = new ArrayList<String>();
+    for (String h: m.getExternalTypeHeaders()) {
+      eths.add(h);
+    }
+    return eths;
+  }
+  
   public String getSystemTypeHeaderName() {
     return "smaccm_" + getSystemImplementationName() + "_types.h";
   }

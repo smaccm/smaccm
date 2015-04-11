@@ -1,6 +1,6 @@
 property set SMACCM_SYS is
 	-- Definitions for making threads "tower compatible"
-	CommPrim_Source_Header: aadlstring applies to (port, access);
+	CommPrim_Source_Header: aadlstring applies to (port, access, data);
 	CommPrim_Source_Text: aadlstring applies to (port, access, data, data implementation);
 	Compute_Entrypoint_Source_Text : list of aadlstring applies to (system, system implementation, port, thread);
 
