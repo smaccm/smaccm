@@ -1,0 +1,73 @@
+package test_uart
+public
+  with Base_Types;
+  with SMACCM_SYS;
+  
+  data uart_packet
+  end uart_packet;
+  
+  data implementation uart_packet.i
+    subcomponents
+      uart_num: data Base_Types::Integer_32;
+      charmander: data Base_Types::Unsigned_8;
+  end uart_packet.i;
+  
+  thread uart_thread
+    features
+      input: in event data port uart_packet.i;
+      
+    properties
+    	SMACCM_SYS::Is_External => true;
+    	SMACCM_SYS::Thread_Type => Active;
+    	Priority => 11;
+    	Stack_Size => 1 KByte;
+    	Compute_Execution_Time => 0ms .. 50ms;
+    	Dispatch_Protocol => Sporadic;
+  end uart_thread;
+
+  
+  --
+  -- Code to exercise the UART
+  --
+  
+  thread sender_thread
+    features
+      output: out event data port uart_packet.i;
+      
+    properties
+      SMACCM_SYS::Thread_Type => Active;
+      Priority => 11;
+      Stack_Size => 1 KByte;
+      Compute_Execution_Time => 0ms .. 50ms;
+      Dispatch_Protocol => Periodic;
+      Period => 500 ms;
+      Source_Text => ("user_code/sender.c");
+      Compute_Entrypoint_Source_Text => "send";
+      SMACCM_SYS::Sends_Events_To => "{{1 output}}";
+  end sender_thread;
+  
+  process proc
+  end proc;
+  
+  process implementation proc.i
+  	subcomponents
+  		uart: thread uart_thread;
+  		sender: thread sender_thread;
+  		
+    connections
+    	sender_to_uart: port sender.output -> uart.input;
+  end proc.i;
+  
+  system wrapper
+  end wrapper;
+  
+  system implementation wrapper.i
+  	subcomponents
+  		proc: process proc.i;
+  		
+  	properties
+  		SMACCM_SYS::OS => CAmkES;
+  		SMACCM_SYS::HW => ODROID;
+  end wrapper.i;
+  
+end test_uart;

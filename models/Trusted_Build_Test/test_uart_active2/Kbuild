@@ -1,0 +1,2 @@
+apps-$(CONFIG_APP_TEST_UART_ACTIVE2) += test_uart_active2
+test_uart_active2: libsel4 libmuslc libsel4platsupport libsel4muslccamkes libsel4camkes libsel4sync libsel4debug libsel4bench

@@ -1,0 +1,6 @@
+config APP_TEST_UART_ACTIVE2
+    bool "AADL generic message for implementation test_uart_active2"
+    default n
+    select APP_CAMKES_EXECUTIVE
+    help
+        AADL generic message for implementation test_uart_active2. 
