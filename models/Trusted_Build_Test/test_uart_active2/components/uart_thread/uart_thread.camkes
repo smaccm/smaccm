@@ -33,19 +33,19 @@ assembly {
   }
   
   configuration {
-    // UART #1 - GPS on daughterboard (unconfirmed)
+    // GPS on daughterboard (unconfirmed)
     // uartbase_comm1.mem_attributes = "0x12C30000:0x1000";
     // uartbase_comm1.irq_attributes = 86;
 
-    // UART #3 - Telem on daughterboard (unconfirmed)
+    // Telem on daughterboard (Ihor says UART #3 but the memory address is UART #1)
     uartbase_comm1.mem_attributes = "0x12C10000:0x1000";
     uartbase_comm1.irq_attributes = 84;
 
-    // UART #2 - Serial console on ODROID-XU (confirmed)
+    // UART #2 - Serial console on ODROID-XU
     // uartbase_comm1.mem_attributes = "0x12C20000:0x1000";
     // uartbase_comm1.irq_attributes = 85;
 
-    // UART #0 - LIDAR on daughterboard
+    // UART #0 - LIDAR on daughterboard (unconfirmed)
     // uartbase_comm1.mem_attributes = "0x12C00000:0x1000";
     // uartbase_comm1.irq_attributes = 83;
 
