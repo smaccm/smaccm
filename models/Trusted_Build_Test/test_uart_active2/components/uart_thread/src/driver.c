@@ -47,7 +47,7 @@ void uart__init(void)
 {
     /* Iniitialise the UART */
     printf("Initialising UART driver\n");
-    if(exynos_serial_init(DEV_ID, uart0base, NULL, NULL, &serial_device)){
+    if(exynos_serial_init(DEV_ID, vaddr, NULL, NULL, &serial_device)){
         printf("Failed to initialise UART\n");
         while(1);
     }

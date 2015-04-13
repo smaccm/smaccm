@@ -16,7 +16,7 @@ component uart_thread {
   has mutex smaccm_uart_thread_input_mut; 
 	
   provides uart_inf       uart;
-  dataport Buf            uart0base;
+  dataport Buf            vaddr;
   consumes DataAvailable  interrupt;
   has semaphore           read_sem;
   has semaphore           write_sem;
@@ -28,7 +28,7 @@ assembly {
     component uartbase uartbase_comm1;
     
     /* UART hardware connection */
-    connection seL4HardwareMMIO uartbase_mem(from uart_thread_inst.uart0base, to uartbase_comm1.mem);
+    connection seL4HardwareMMIO uartbase_mem(from uart_thread_inst.vaddr, to uartbase_comm1.mem);
     connection seL4HardwareInterrupt uartbase_irq(from uartbase_comm1.irq, to uart_thread_inst.interrupt);
   }
   
