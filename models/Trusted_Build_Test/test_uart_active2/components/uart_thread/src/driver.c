@@ -15,8 +15,8 @@
 #include <utils/util.h>
 #include <uart_thread.h>
 
-//#define BAUD_RATE 115200
-#define BAUD_RATE 57600
+#define BAUD_RATE 115200
+//#define BAUD_RATE 57600
 
 #ifdef CONFIG_PLAT_EXYNOS5410
 #define DEV_ID  PS_SERIAL1
@@ -43,45 +43,11 @@ interrupt_event(void* token)
     interrupt_reg_callback(&interrupt_event, token);
 }
 
-/* UART 1 dummy input clock */
-static freq_t
-dummy_get_freq(clk_t* clk) {
-    return 24000000;
-}
-
-static freq_t
-dummy_set_freq(clk_t* clk, UNUSED freq_t hz){
-    return dummy_get_freq(clk);
-}
-
-#define DUMMY_CLK(cust_id)              \
-    {                                   \
-        .id = cust_id,                  \
-        .name = "DUMMY " #cust_id,      \
-        .priv = NULL,                   \
-        .req_freq = 0,                  \
-        .parent = NULL,                 \
-        .sibling = NULL,                \
-        .child = NULL,                  \
-        .clk_sys = NULL,                \
-        .init = NULL,                   \
-        .get_freq = &dummy_get_freq,    \
-        .set_freq = &dummy_set_freq,    \
-        .recal = NULL                   \
-    }
-
-#if DEV_ID == 1
-clk_t uart_dummy_clk = DUMMY_CLK(CLK_UART1);
-#else
-clk_t uart_dummy_clk = DUMMY_CLK(CLK_UART3);
-#endif
-
 void uart__init(void)
 {
     /* Iniitialise the UART */
     printf("Initialising UART driver\n");
-    if(exynos_serial_init(DEV_ID, uart0base, NULL, &uart_dummy_clk,
-            &serial_device)){
+    if(exynos_serial_init(DEV_ID, uart0base, NULL, NULL, &serial_device)){
         printf("Failed to initialise UART\n");
         while(1);
     }
@@ -92,7 +58,6 @@ void uart__init(void)
     /* Register for IRQs */
     interrupt_reg_callback(&interrupt_event, &serial_device);
 }
-
 
 static void
 read_callback(ps_chardevice_t* device, enum chardev_status stat,

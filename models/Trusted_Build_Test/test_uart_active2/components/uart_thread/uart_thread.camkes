@@ -9,11 +9,11 @@ component uartbase {
 }
 
 component uart_thread {
-	control;
+  control;
 
   include "smaccm_wrapper_i_types.h";
-	provides test_uart__uart_packet_i_writer input; 
-	has mutex smaccm_uart_thread_input_mut; 
+  provides test_uart__uart_packet_i_writer input; 
+  has mutex smaccm_uart_thread_input_mut; 
 	
   provides uart_inf       uart;
   dataport Buf            uart0base;
