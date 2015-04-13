@@ -30,7 +30,7 @@ dispatcherPrototype(dispatcher, arg) ::= <<
 >>
 
 port_params(dispatchContract, port) ::= <<
-<if(dispatchContract.canDispatch)>, <if(port.hasData)><\\>
+<if(dispatchContract.canDispatch)> <if(port.hasData)><\\>
 out <dispatchContract.dispatchStructTypeName> <port.data>, 
 <endif>out <port.indexType.name> <port.index>
 <endif> >>
@@ -41,9 +41,10 @@ contract_params(dispatchContract) ::= <<
 
 dispatcher(dispatcher) ::= <<
 <if(dispatcher.hasData)>
-void <dispatcher.idlDispatcherName>(refin <dispatcher.type.name> smaccm_in <dispatcher.dispatchableContracts:contract_params()>); 
+void <dispatcher.idlDispatcherName>(<[{refin <dispatcher.type.name> smaccm_in}, 
+	  dispatcher.dispatchableContracts:contract_params()]; separator=",\n">); 
 <else>
-void <dispatcher.idlDispatcherName>();
+void <dispatcher.idlDispatcherName>(<dispatcher.dispatchableContracts:contract_params(); separator=",">);
 <endif>
 >>
 

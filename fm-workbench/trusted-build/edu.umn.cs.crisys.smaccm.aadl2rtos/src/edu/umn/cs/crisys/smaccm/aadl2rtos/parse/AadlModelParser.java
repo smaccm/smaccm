@@ -388,7 +388,8 @@ public class AadlModelParser {
     if ((dpName.equalsIgnoreCase("Periodic") || 
          dpName.equalsIgnoreCase("Hybrid"))) {
       try {
-        int period = (int) PropertyUtils.getIntegerValue(tti, ThreadUtil.PERIOD);
+        double periodInUs = ThreadUtil.getPeriodInMicroseconds(tti);
+        int period = (int)(periodInUs / 1000.0);
         List<String> entrypointNameList = ThreadUtil.getComputeEntrypointList(tti); 
         List<ExternalHandler> handlerList = new ArrayList<ExternalHandler>();
         for (String entrypoint : entrypointNameList) {
