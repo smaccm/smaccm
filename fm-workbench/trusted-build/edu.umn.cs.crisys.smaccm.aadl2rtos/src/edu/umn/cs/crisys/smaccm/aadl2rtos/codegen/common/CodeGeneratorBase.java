@@ -47,7 +47,7 @@ public abstract class CodeGeneratorBase {
 	protected File includeDirectory;
 	protected File makeTemplateDirectory; 
 	protected String date;
-	protected STErrorListener listener; 
+	protected Aadl2RtosSTErrorListener listener; 
 	protected File pluginDirectory;
 	protected String templatePrefix;
 	
@@ -72,6 +72,7 @@ public abstract class CodeGeneratorBase {
 		  this.pluginDirectory = null;
 		}
 		
+		// throw exception at first error.
 		listener = new Aadl2RtosSTErrorListener(log);
 		
 		//this.templates.verbose = true;

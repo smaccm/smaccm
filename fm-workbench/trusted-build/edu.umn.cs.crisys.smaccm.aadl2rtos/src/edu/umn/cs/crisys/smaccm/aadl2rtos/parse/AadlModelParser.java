@@ -690,9 +690,17 @@ public class AadlModelParser {
     OutputPort sourcePort = (OutputPort)sPort;
     InputPort destPort = (InputPort)dPort;
             
+    // MWW 4/13/2015: check types, since AADL doesn't!!!
+    if (!sourcePort.getType().equals(destPort.getType())) {
+      throw new Aadl2RtosException("For connection instance: " + ci.getName() 
+          + " source port [" + sourcePort.getName() + "] type [" + sourcePort.getType().toString() + "] " + 
+          "does not match destination port [" + destPort.getName() + "] type [" + destPort.getType().toString() + "]");
+    }
+    
     // find source and destination thread instances.
     ThreadInstance srcThreadInstance = getThreadInstance(ci.getSource().getComponentInstance());
     ThreadInstance dstThreadInstance = getThreadInstance(ci.getDestination().getComponentInstance()); 
+    
     
     // create connection object and connect to ports and thread instances.
     PortConnection conn = new PortConnection(srcThreadInstance, dstThreadInstance, sourcePort, destPort);

@@ -9,6 +9,7 @@ import org.stringtemplate.v4.STErrorListener;
 import org.stringtemplate.v4.misc.STMessage;
 import org.stringtemplate.v4.misc.STNoSuchPropertyException;
 
+import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosException;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Logger;
 
 /**
@@ -17,7 +18,8 @@ import edu.umn.cs.crisys.smaccm.aadl2rtos.Logger;
  */
 public class Aadl2RtosSTErrorListener implements STErrorListener {
 
-  Logger log; 
+  Logger log;
+  boolean errorOccurred = false;
   
   public String userCodeException(STMessage arg) {
     Throwable t = arg.cause;
@@ -39,8 +41,8 @@ public class Aadl2RtosSTErrorListener implements STErrorListener {
    */
   @Override
   public void IOError(STMessage arg0) {
-    // System.out.println(arg0); 
     log.error(arg0);
+    errorOccurred = true;
   }
 
   /* (non-Javadoc)
@@ -48,9 +50,8 @@ public class Aadl2RtosSTErrorListener implements STErrorListener {
    */
   @Override
   public void compileTimeError(STMessage arg0) {
-    // TODO Auto-generated method stub
-    // System.out.println(arg0);
     log.error(arg0);
+    errorOccurred = true;
   }
 
   /* (non-Javadoc)
@@ -58,9 +59,8 @@ public class Aadl2RtosSTErrorListener implements STErrorListener {
    */
   @Override
   public void internalError(STMessage arg0) {
-    // TODO Auto-generated method stub
-    // System.out.println(arg0);
     log.error(arg0);
+    errorOccurred = true;
   }
 
   /* (non-Javadoc)
@@ -68,10 +68,17 @@ public class Aadl2RtosSTErrorListener implements STErrorListener {
    */
   @Override
   public void runTimeError(STMessage arg0) {
-    // TODO Auto-generated method stub
-    // System.out.println(arg0);
     log.error("StringTemplate exception: " + arg0.cause + " due to: " + userCodeException(arg0));
     log.error(arg0);
+    errorOccurred = true;
+  }
+
+  public boolean isErrorOccurred() {
+    return errorOccurred;
+  }
+
+  public void setErrorOccurred(boolean errorOccurred) {
+    this.errorOccurred = errorOccurred;
   }
 
 }
