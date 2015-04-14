@@ -79,6 +79,7 @@ public abstract class AadlHandler extends AbstractHandler {
                         new IUnitOfWork<IStatus, XtextResource>() {
                             @Override
                             public IStatus exec(XtextResource resource) throws Exception {
+                                OsateResourceUtil.refreshResourceSet();
                                 EObject eobj = OsateResourceUtil.getResourceSet().getEObject(uri, true);
                                 if (eobj instanceof Element) {
                                     return runJob((Element) eobj, monitor);

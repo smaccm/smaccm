@@ -286,7 +286,7 @@ public class AadlModelParser {
       iep.setDispatcher(disp);
       ti.addDispatcher(disp);
     } else {
-      logger.warn("Warning: event port: " + port.getName() + " does not have a compute entrypoint and will not be dispatched.");
+      logger.warn("Warning: event port: " + port.getName() + " in thread: " + ti.getName() + " does not have a compute entrypoint and will not be dispatched.");
     }
     return iep;
 	}
