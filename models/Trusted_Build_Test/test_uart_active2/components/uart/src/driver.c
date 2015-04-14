@@ -135,13 +135,18 @@ int uart_write(int uart_num, char datum)
 
 int run(void)
 {
-	char c;
+    char c;
 
-	while (1) {
-		uart_read(0, &c, 1);
-		// TODO: Support recv
-		// pilot_recv(ID, (int)c);
-	}
+    while (1) {
+        int r = uart_read(0, &c, 1);
+        if (r > 0) {
+            uart__packet_i packet;
+            packet.uart_num = 0;
+            packet.datum = c;
+	    output_write_uart__packet_i(&packet);
+            //uart_read_input(&packet);
+        }
+    }
 
-	return 0;
+  return 0;
 }

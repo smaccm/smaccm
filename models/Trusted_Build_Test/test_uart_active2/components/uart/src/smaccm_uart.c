@@ -1,4 +1,3 @@
-#include <smaccm_uart.h>
 #include <uart.h>
 
 bool input_write_uart__packet_i(const uart__packet_i * input) {

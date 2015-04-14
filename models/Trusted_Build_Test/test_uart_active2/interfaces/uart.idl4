@@ -9,6 +9,5 @@
  */
 
 procedure uart_inf {
-//  int read(in int uart_num, in int rsize);
   int write(in int uart_num, in char datum);
 };
