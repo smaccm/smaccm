@@ -144,9 +144,8 @@ int run(void)
             packet.uart_num = 0;
             packet.datum = c;
 	    output_write_uart__packet_i(&packet);
-            //uart_read_input(&packet);
         }
     }
 
-  return 0;
+    return 0;
 }
