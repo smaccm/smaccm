@@ -1,20 +1,20 @@
-package test_uart
+package uart
 public
   with Base_Types;
   with SMACCM_SYS;
   
-  data uart_packet
-  end uart_packet;
+  data packet
+  end packet;
   
-  data implementation uart_packet.i
+  data implementation packet.i
     subcomponents
       uart_num: data Base_Types::Integer_32;
-      charmander: data Base_Types::Unsigned_8;
-  end uart_packet.i;
+      datum: data Base_Types::Unsigned_8;
+  end packet.i;
   
-  thread uart_thread
+  thread uart
     features
-      input: in event data port uart_packet.i;
+      input: in event data port packet.i;
       
     properties
     	SMACCM_SYS::Is_External => true;
@@ -23,16 +23,16 @@ public
     	Stack_Size => 1 KByte;
     	Compute_Execution_Time => 0ms .. 50ms;
     	Dispatch_Protocol => Sporadic;
-  end uart_thread;
+  end uart;
 
   
   --
   -- Code to exercise the UART
   --
   
-  thread sender_thread
+  thread sender
     features
-      output: out event data port uart_packet.i;
+      output: out event data port packet.i;
       
     properties
       SMACCM_SYS::Thread_Type => Active;
@@ -44,30 +44,30 @@ public
       Source_Text => ("user_code/sender.c");
       Compute_Entrypoint_Source_Text => "send";
       SMACCM_SYS::Sends_Events_To => "{{1 output}}";
-  end sender_thread;
+  end sender;
   
   process proc
   end proc;
   
   process implementation proc.i
-  	subcomponents
-  		uart: thread uart_thread;
-  		sender: thread sender_thread;
+    subcomponents
+      uart: thread uart;
+      sender: thread sender;
   		
     connections
-    	sender_to_uart: port sender.output -> uart.input;
+      sender_to_uart: port sender.output -> uart.input;
   end proc.i;
   
   system wrapper
   end wrapper;
   
   system implementation wrapper.i
-  	subcomponents
-  		proc: process proc.i;
-  		
-  	properties
-  		SMACCM_SYS::OS => CAmkES;
-  		SMACCM_SYS::HW => ODROID;
+    subcomponents
+      proc: process proc.i;
+      
+    properties
+      SMACCM_SYS::OS => CAmkES;
+      SMACCM_SYS::HW => ODROID;
   end wrapper.i;
   
-end test_uart;
+end uart;

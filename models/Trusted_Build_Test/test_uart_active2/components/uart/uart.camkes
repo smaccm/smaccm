@@ -1,6 +1,6 @@
-import "../../interfaces/uart_thread_interface.idl4";
-import "../../interfaces/test_uart__uart_packet_i_writer.idl4";
-import "../../interfaces/uart.idl4"; 
+import "../../interfaces/uart.idl4";
+import "../../interfaces/uart_interface.idl4";
+import "../../interfaces/uart__packet_i_writer.idl4";
 
 component uartbase {
   hardware;
@@ -8,12 +8,12 @@ component uartbase {
   emits DataAvailable irq;
 }
 
-component uart_thread {
+component uart {
   control;
 
   include "smaccm_wrapper_i_types.h";
-  provides test_uart__uart_packet_i_writer input; 
-  has mutex smaccm_uart_thread_input_mut; 
+  provides uart__packet_i_writer input; 
+  has mutex smaccm_uart_input_mut; 
 	
   provides uart_inf       uart;
   dataport Buf            vaddr;
@@ -28,8 +28,8 @@ assembly {
     component uartbase uartbase_comm1;
     
     /* UART hardware connection */
-    connection seL4HardwareMMIO uartbase_mem(from uart_thread_inst.vaddr, to uartbase_comm1.mem);
-    connection seL4HardwareInterrupt uartbase_irq(from uartbase_comm1.irq, to uart_thread_inst.interrupt);
+    connection seL4HardwareMMIO uartbase_mem(from uart_inst.vaddr, to uartbase_comm1.mem);
+    connection seL4HardwareInterrupt uartbase_irq(from uartbase_comm1.irq, to uart_inst.interrupt);
   }
   
   configuration {
@@ -49,19 +49,6 @@ assembly {
     // uartbase_comm1.mem_attributes = "0x12C00000:0x1000";
     // uartbase_comm1.irq_attributes = 83;
 
-    /**
-     From libs/libplatsupport/plat_include/exynos5/platsupport/plat/serial.h
-     #define EXYNOS_UART0_PADDR  0x12C00000
-     #define EXYNOS_UART1_PADDR  0x12C10000
-     #define EXYNOS_UART2_PADDR  0x12C20000
-     #define EXYNOS_UART3_PADDR  0x12C30000
-    
-     #define EXYNOS_UART0_IRQ    83
-     #define EXYNOS_UART1_IRQ    84
-     #define EXYNOS_UART2_IRQ    85
-     #define EXYNOS_UART3_IRQ    86
-     */
-
-    uart_thread_inst.ID = 1;
+    uart_inst.ID = 1;
   }
 }
