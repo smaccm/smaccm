@@ -1,4 +1,4 @@
-#include <smaccm_sender_thread.h>
+#include <smaccm_sender.h>
 #include <stdio.h>
 
 char alpha = 'A';
@@ -18,5 +18,5 @@ void send(const uint64_t *time) {
   packet.charmander = getNextAlpha();
 
   printf("Sending code: 0x%x --> %c\n", packet.datum, packet.datum);
-  sender_thread_write_output(&packet);
+  sender_write_output(&packet);
 }

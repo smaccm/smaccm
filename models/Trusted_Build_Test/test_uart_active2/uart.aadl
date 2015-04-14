@@ -15,6 +15,7 @@ public
   thread uart
     features
       input: in event data port packet.i;
+      output: out event data port packet.i;
       
     properties
     	SMACCM_SYS::Is_External => true;
@@ -46,6 +47,19 @@ public
       SMACCM_SYS::Sends_Events_To => "{{1 output}}";
   end sender;
   
+  thread receiver
+    features
+      input: in event data port packet.i;
+      
+    properties
+      SMACCM_SYS::Thread_Type => Passive;
+      Compute_Execution_Time => 0ms .. 50ms;
+      Dispatch_Protocol => Aperiodic;
+
+      Source_Text => ("user_code/receiver.c");
+      Compute_Entrypoint_Source_Text => "receive" applies to input;
+  end receiver;
+  
   process proc
   end proc;
   
@@ -53,9 +67,11 @@ public
     subcomponents
       uart: thread uart;
       sender: thread sender;
+      receiver: thread receiver;
   		
     connections
       sender_to_uart: port sender.output -> uart.input;
+      uart_to_receiver: port uart.output -> receiver.input;
   end proc.i;
   
   system wrapper
