@@ -13,7 +13,7 @@ component uart {
 
   include "smaccm_wrapper_i_types.h";
   provides uart__packet_i_writer input;
-  uses uart__packet_i_writer output;
+  uses uart__packet_i_writer uart_output;
 	
   provides uart_inf       uart;
   dataport Buf            vaddr;

@@ -143,7 +143,7 @@ int run(void)
             uart__packet_i packet;
             packet.uart_num = 0;
             packet.datum = c;
-	    output_write_uart__packet_i(&packet);
+	    uart_output_write_uart__packet_i(&packet);
         }
     }
 
