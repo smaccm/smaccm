@@ -1,6 +1,0 @@
-config APP_TEST_UART
-    bool "AADL generic message for implementation test_uart"
-    default n
-    select APP_CAMKES_EXECUTIVE
-    help
-        AADL generic message for implementation test_uart. 

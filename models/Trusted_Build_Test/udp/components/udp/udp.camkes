@@ -1,0 +1,37 @@
+import "../../interfaces/udp_interface.idl4";
+import "../../interfaces/udp__packet_i_writer.idl4";
+
+import <VM/vm.camkes>;
+
+component udp {
+  include "smaccm_wrapper_i_types.h";
+  control;
+
+  /* Internal interface to VM/hardware */
+  has mutex lwip;
+  dataport Buf packet;
+  uses Ethdriver ethdriver;
+  consumes Notifcation eth_rx_ready;
+  attribute string udp_ip_addr;
+
+  /* External client interface */
+  uses udp__packet_i_writer udp_client_output;
+  provides udp__packet_i_writer client_input;
+}
+
+assembly {
+  composition {
+    component VM vm;
+    
+    connection seL4SharedData eth_packet(from vm.ethdriver0_packet0, to udp_inst.packet);
+    connection seL4RPCCall eth_driver(from udp_inst.ethdriver, to vm.ethdriver0_client0);
+    connection seL4Asynch eth_rx_ready(from vm.ethdriver0_rx_ready0, to udp_inst.eth_rx_ready);
+  }
+
+  configuration {
+     udp_inst.client_recv_buffers = 8;
+     udp_inst.client_recv_port = 7;
+     udp_inst.client_send_ports = { "source" : 7, "dest" : 7};
+     udp_inst.udp_ip_addr = "10.13.1.215";
+  }
+}

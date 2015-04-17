@@ -13,6 +13,7 @@ import java.util.Set;
 
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosException;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.Dispatcher;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.PeriodicDispatcher;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.DataPort;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.rpc.RemoteProcedureGroupEndpoint;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.EndpointConnection;
@@ -43,6 +44,19 @@ public class ThreadImplementationNames {
     ArrayList<DispatcherNames> dnList = new ArrayList<>();
     for (Dispatcher d : ti.getDispatcherList()) {
       dnList.add(new DispatcherNames(d));
+    }
+    return dnList;
+  }
+  
+  // MWW TODO: temporary; once we create a periodic port, this 
+  // should go away.
+  
+  public List<DispatcherNames> getPeriodicDispatchers() {
+    ArrayList<DispatcherNames> dnList = new ArrayList<>();
+    for (Dispatcher d : ti.getDispatcherList()) {
+      if (d instanceof PeriodicDispatcher) {
+          dnList.add(new DispatcherNames(d));
+      }
     }
     return dnList;
   }

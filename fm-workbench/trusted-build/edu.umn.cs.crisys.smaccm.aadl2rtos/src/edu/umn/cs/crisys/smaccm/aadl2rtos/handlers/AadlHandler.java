@@ -24,6 +24,7 @@ import org.eclipse.xtext.ui.editor.outline.impl.EObjectNode;
 import org.eclipse.xtext.ui.editor.utils.EditorUtils;
 import org.eclipse.xtext.util.concurrent.IUnitOfWork;
 import org.osate.aadl2.Element;
+import org.osate.aadl2.modelsupport.resources.OsateResourceUtil;
 
 import edu.umn.cs.crisys.smaccm.aadl2rtos.ConsoleLogger;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Logger;
@@ -78,7 +79,8 @@ public abstract class AadlHandler extends AbstractHandler {
                         new IUnitOfWork<IStatus, XtextResource>() {
                             @Override
                             public IStatus exec(XtextResource resource) throws Exception {
-                                EObject eobj = resource.getResourceSet().getEObject(uri, true);
+                                OsateResourceUtil.refreshResourceSet();
+                                EObject eobj = OsateResourceUtil.getResourceSet().getEObject(uri, true);
                                 if (eobj instanceof Element) {
                                     return runJob((Element) eobj, monitor);
                                 } else {

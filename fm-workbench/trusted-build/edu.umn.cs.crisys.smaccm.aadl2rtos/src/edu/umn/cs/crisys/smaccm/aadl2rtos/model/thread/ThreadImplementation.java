@@ -256,6 +256,23 @@ public class ThreadImplementation {
       DispatcherTraverser dt = new DispatcherTraverser();
       dt.dispatcherNonlocalActiveThreadConnectionFrontier(d, frontier);
     }
+    
+    // MWW: 4/14/2015; external threads are not "well behaved" in terms 
+    // of their dispatchers, and should only be connected to other 
+    // active threads.
+    
+    if (this.getIsExternal()) {
+      for (DataPort p : this.getOutputPorts()) {
+        for (PortConnection pc : p.getConnections()) {
+          if (pc.getDestPort().getOwner().getIsPassive()) {
+            throw new Aadl2RtosException("Error: Unsupported connection for thread " + this.getName() + ": Output ports of external threads can only be connected to active threads");
+          }
+          else {
+            frontier.add(pc);
+          }
+        }
+      }
+    }
     return frontier;
   }
 

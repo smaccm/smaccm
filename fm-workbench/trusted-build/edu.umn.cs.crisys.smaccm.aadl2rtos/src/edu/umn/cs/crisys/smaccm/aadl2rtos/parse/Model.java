@@ -75,6 +75,8 @@ public class Model {
 	List<PortConnection> connectionList = new ArrayList<PortConnection>(); 
 	
 	// type stuff
+	Set<String> externalTypeHeaders = new HashSet<String>(); 
+	
 	Map<String, Type> astTypes = new HashMap<String, Type>();
 	Map<String, RemoteProcedureGroup> remoteProcedureGroupMap = new HashMap<>(); 
 	Map<String, RemoteProcedure> remoteProcedureMap = new HashMap<>();
@@ -129,6 +131,14 @@ public class Model {
    */
   public String getOutputDirectory() {
     return outputDirectory;
+  }
+
+  public Set<String> getExternalTypeHeaders() {
+    return externalTypeHeaders;
+  }
+
+  public void setExternalTypeHeaders(Set<String> externalTypeHeaders) {
+    this.externalTypeHeaders = externalTypeHeaders;
   }
 
   /**

@@ -23,8 +23,10 @@ userEntrypointCallerDataOutputArg(dispatchContract) ::=
 userEntrypointCallerFnArgs(dispatcher) ::= <<
 <if(dispatcher.hasData)>
 <[userEntrypointCallerInputArg(dispatcher), dispatcher.dispatchableContracts:userEntrypointCallerDataOutputArg()]; separator=",\n">
-<else>
+<elseif(dispatcher.dispatchableContracts)>
 <dispatcher.dispatchableContracts:userEntrypointCallerDataOutputArg();separator=",\n">
+<else>
+void
 <endif>
 >>
 

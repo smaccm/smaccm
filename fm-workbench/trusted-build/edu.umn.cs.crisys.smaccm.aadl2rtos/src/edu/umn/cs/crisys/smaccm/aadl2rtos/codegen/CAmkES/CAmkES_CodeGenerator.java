@@ -433,6 +433,11 @@ public class CAmkES_CodeGenerator extends CodeGeneratorBase {
     createTemplateMakefile(); 
     createTemplateKconfig(); 
     createTemplateKbuild();
+    
+    // final check for errors from string template.
+    if (listener.isErrorOccurred()) {
+      throw new Aadl2RtosFailure();
+    }
 	}
 
 }

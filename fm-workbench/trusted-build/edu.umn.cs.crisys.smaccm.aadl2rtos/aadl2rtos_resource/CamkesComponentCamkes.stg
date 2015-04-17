@@ -67,7 +67,7 @@ uses <port.type.readerWriterInterfaceName> <port.name>;
 >>
 
 sharedDataAccessorDecl(sharedDataAccessor) ::= <<
-uses <sharedDataAccessor.type.readerWriterInterfaceName> <sharedDataAccessor.name>;
+dataport <sharedDataAccessor.type.name> <sharedDataAccessor.name>;
 
 >>
 
@@ -109,7 +109,8 @@ import "../../interfaces/<threadImpl.idlFileName>";
 <endif>
 
 component <threadImpl.componentName> {
-<if(threadImpl.isActive)><\\>
+include "<threadImpl.model.systemTypeHeaderName>";
+<if(threadImpl.isActive)>
 	control;
     has semaphore <threadImpl.dispatcherComponentSemaphoreName>;
 

@@ -1,0 +1,54 @@
+import "../../interfaces/uart.idl4";
+import "../../interfaces/uart_interface.idl4";
+import "../../interfaces/uart__packet_i_writer.idl4";
+
+component uartbase {
+  hardware;
+  dataport Buf mem;
+  emits DataAvailable irq;
+}
+
+component uart {
+  control;
+
+  include "smaccm_wrapper_i_types.h";
+  provides uart__packet_i_writer input;
+  uses uart__packet_i_writer uart_output;
+	
+  provides uart_inf       uart;
+  dataport Buf            vaddr;
+  consumes DataAvailable  interrupt;
+  has semaphore           read_sem;
+  has semaphore           write_sem;
+  attribute int           ID;
+}
+
+assembly {
+  composition {
+    component uartbase uartbase_comm1;
+    
+    /* UART hardware connection */
+    connection seL4HardwareMMIO uartbase_mem(from uart_inst.vaddr, to uartbase_comm1.mem);
+    connection seL4HardwareInterrupt uartbase_irq(from uartbase_comm1.irq, to uart_inst.interrupt);
+  }
+  
+  configuration {
+    // GPS on daughterboard (unconfirmed)
+    // uartbase_comm1.mem_attributes = "0x12C30000:0x1000";
+    // uartbase_comm1.irq_attributes = 86;
+
+    // Telem on daughterboard (Ihor says UART #3 but the memory address is UART #1)
+    uartbase_comm1.mem_attributes = "0x12C10000:0x1000";
+    uartbase_comm1.irq_attributes = 84;
+
+    // UART #2 - Serial console on ODROID-XU
+    // uartbase_comm1.mem_attributes = "0x12C20000:0x1000";
+    // uartbase_comm1.irq_attributes = 85;
+
+    // UART #0 - LIDAR on daughterboard (unconfirmed)
+    // uartbase_comm1.mem_attributes = "0x12C00000:0x1000";
+    // uartbase_comm1.irq_attributes = 83;
+
+    uart_inst.ID = 1;
+  }
+}

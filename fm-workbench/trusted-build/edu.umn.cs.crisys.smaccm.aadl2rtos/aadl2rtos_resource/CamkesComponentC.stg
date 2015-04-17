@@ -14,6 +14,7 @@ outgoingPortWriterName(destPort, srcPort) ::= <<
 >>
 
 incomingActiveThreadDispatchName(dispatcher) ::= "<dispatcher.qualifiedName>_<dispatcher.type.writerFn>"
+outgoingActiveThreadDispatchName(dispatcher) ::= "<incomingActiveThreadDispatchName(dispatcher)>"
 
 incomingUserEntrypointCallerName(dispatcher) ::= "<dispatcher.threadImplementation.componentDispatcherInterfaceVarIdName>_<dispatcher.idlDispatcherName>"
 

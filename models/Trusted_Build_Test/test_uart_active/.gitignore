@@ -1,0 +1,9 @@
+*.camkes
+*.ramses-log*
+components/sender
+components/receiver
+components/dispatch_periodic
+include
+instances
+interfaces
+make_template

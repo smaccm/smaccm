@@ -12,6 +12,7 @@ incomingPortWriterName(port) ::= "smaccm_<port.qualifiedName>_<port.type.writerF
 outgoingPortWriterName(destPort, srcPort) ::= "<incomingPortWriterName(destPort)>"
 
 incomingActiveThreadDispatchName(dispatcher) ::= "<dispatcher.qualifiedName>"
+outgoingActiveThreadDispatchName(dispatcher) ::= "<incomingActiveThreadDispatchName(dispatcher)>"
 
 incomingUserEntrypointCallerName(dispatcher) ::= "smaccm_entrypoint_<dispatcher.qualifiedName>"
 

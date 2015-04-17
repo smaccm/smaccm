@@ -47,7 +47,7 @@ public abstract class CodeGeneratorBase {
 	protected File includeDirectory;
 	protected File makeTemplateDirectory; 
 	protected String date;
-	protected STErrorListener listener; 
+	protected Aadl2RtosSTErrorListener listener; 
 	protected File pluginDirectory;
 	protected String templatePrefix;
 	
@@ -72,6 +72,7 @@ public abstract class CodeGeneratorBase {
 		  this.pluginDirectory = null;
 		}
 		
+		// throw exception at first error.
 		listener = new Aadl2RtosSTErrorListener(log);
 		
 		//this.templates.verbose = true;
@@ -355,6 +356,10 @@ public abstract class CodeGeneratorBase {
     try (BufferedWriter hwriter = new BufferedWriter(new FileWriter(HFile))) { 
       STGroupFile stg = this.createTemplate("TypesHeader.stg");
       writeBoilerplateHeader(sysInstanceName, path, hwriter, stg.getInstanceOf("datatypesPrefix"));
+      
+      ST st = stg.getInstanceOf("externalTypeDecls");
+      st.add("model", mn);
+      hwriter.append(st.render()); 
       
       createComponentDispatchTypes(hwriter);
       

@@ -41,9 +41,7 @@ end add_subtract_interface;
 -- Example of a periodically dispatched "Active" thread.   
 thread sender
 	features
-		add_subtract: requires subprogram group access add_subtract_interface {
-			SMACCM_SYS::Is_External => true;
-		}; 
+		add_subtract: requires subprogram group access add_subtract_interface ;
 	
 	properties 
 	    Dispatch_Protocol => Periodic;

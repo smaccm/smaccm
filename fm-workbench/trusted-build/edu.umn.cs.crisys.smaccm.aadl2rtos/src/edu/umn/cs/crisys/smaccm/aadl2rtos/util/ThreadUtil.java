@@ -15,9 +15,13 @@ import org.osate.aadl2.Element;
 import org.osate.aadl2.EnumerationLiteral;
 import org.osate.aadl2.IntegerLiteral;
 import org.osate.aadl2.NamedElement;
+import org.osate.aadl2.NumberType;
+import org.osate.aadl2.NumberValue;
 import org.osate.aadl2.Property;
 import org.osate.aadl2.PropertyExpression;
+import org.osate.aadl2.PropertyType;
 import org.osate.aadl2.PropertyValue;
+import org.osate.aadl2.RangeType;
 import org.osate.aadl2.RangeValue;
 import org.osate.aadl2.UnitLiteral;
 import org.osate.aadl2.UnitsType;
@@ -313,7 +317,74 @@ public abstract class ThreadUtil {
     return null; 
 }
  
-  
+
+  /*
+   * 
+   * MWW: 4/12/2015
+   * There is an error when I use this code; I think that the PropertyUtils code is a bit
+   * wonky.  The issue is that when I find the UnitLiteral type, it finds a type with the 
+   * correct name (Time_Units) but the pointer for the type does not match the pointer 
+   * to the unit type declared for the property, which is also named Time_Units.  Perhaps
+   * there are two copies of this property lurking in the model, or perhaps the 
+   * findUnitLiteral code somehow generates a fresh copy.  In any case, the code doesn't 
+   * work, so I have to do it myself.
+   * 
+   */
+  /*
+  public static double getPeriodInMicroseconds(NamedElement t) {
+    try {
+      UnitLiteral ms_lit = findUnitLiteral(t, "ms");
+      if (ms_lit == null) {
+        throw new Aadl2RtosException("For property 'Period': Unable to find unit type 'ms'");
+      }
+      return PropertyUtils.getScaledNumberValue(t, ThreadUtil.PERIOD, ms_lit);
+    } catch (Aadl2RtosException e) {
+      throw e;
+    }
+    catch (Exception e) {
+      throw new Aadl2RtosException("Required property 'Period' not found for thread: " + t.getName());
+    }
+  }
+  */
+
+  /* 
+   * MWW: This *also does not work*.
+   * The Units conversion stuff just seems to be broken.  Even after doing it 
+   * This way, the conversion factors for Time_Units are wrong.  'ms' and 'us' are
+   * converted to the same value.  Disappointing.
+   * 
+  */
+  /*
+  public static double getPeriodInMicroseconds(NamedElement t) {
+    try {
+      PropertyExpression pv = PropertyUtils.getSimplePropertyValue(t, ThreadUtil.PERIOD);
+      PropertyType pt = (PropertyType) ThreadUtil.PERIOD.getType();
+      final UnitsType theUnitsType = ((NumberType) pt).getUnitsType();
+      UnitLiteral us_lit = theUnitsType.findLiteral("us");
+      if (us_lit == null) {
+        throw new Aadl2RtosException("For property 'Period': Unable to find unit type 'ms'");
+      }
+      return ((NumberValue) pv).getScaledValue(us_lit);
+    } catch (Aadl2RtosException e) {
+      throw e;
+    }
+    catch (Exception e) {
+      throw new Aadl2RtosException("Required property 'Period' not found for thread: " + t.getName());
+    }
+  }
+  */
+
+  public static double getPeriodInMicroseconds(NamedElement t) {
+    try {
+      final IntegerLiteral intLit = 
+           (IntegerLiteral) PropertyUtils.getSimplePropertyValue(t, ThreadUtil.PERIOD);
+      double valInPicoseconds = intLit.getScaledValue();
+      return valInPicoseconds / 1000000.0; // microseconds per picosecond.
+    } catch (Exception e) {
+      throw new Aadl2RtosException("Required property 'Compute_Execution_Time' not found for thread: " + t.getName());
+    }
+  }
+
   public static double getMinComputeExecutionTimeInMicroseconds(NamedElement t) {
     try {
       final PropertyExpression pv = PropertyUtils.getSimplePropertyValue(t, ThreadUtil.COMPUTE_EXECUTION_TIME);
@@ -339,5 +410,6 @@ public abstract class ThreadUtil {
       throw new Aadl2RtosException("Required property 'Compute_Execution_Time' not found for thread: " + t.getName());
     }
   }
+
 
 }

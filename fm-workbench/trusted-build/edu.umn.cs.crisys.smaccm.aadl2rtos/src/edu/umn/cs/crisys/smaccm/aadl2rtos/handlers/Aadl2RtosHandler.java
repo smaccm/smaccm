@@ -71,6 +71,7 @@ public class Aadl2RtosHandler extends AadlHandler {
 	public IStatus runJob(Element sel, IProgressMonitor monitor) {
 		// log = new ConsoleLogger(Logger.INFO, "AADL Validation", getWindow());
 
+    // OsateResourceUtil.refreshResourceSet();
 		if (!(sel instanceof SystemImplementation)) {
 			log.error("Aadl2RtosAction.runJob: Must select a system implementation");
 			return Status.CANCEL_STATUS;

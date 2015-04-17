@@ -93,5 +93,10 @@ public class EChronos_CodeGenerator extends CodeGeneratorBase {
     createComponents();
     createAssemblyHeader();
     createPrxFile();
+
+    // final check for errors from string template.
+    if (listener.isErrorOccurred()) {
+      throw new Aadl2RtosFailure();
+    }
   }
 }

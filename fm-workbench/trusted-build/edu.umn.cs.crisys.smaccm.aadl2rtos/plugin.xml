@@ -8,7 +8,7 @@
             id="edu.umn.cs.crisys.smaccm.aadl2rtos.commands.category">
       </category>
       <command
-            name="Generate Code"
+            name="Generate AADL Middleware"
             categoryId="edu.umn.cs.crisys.smaccm.aadl2rtos.commands.category"
             id="edu.umn.cs.crisys.smaccm.aadl2rtos.commands.translateModelCommand">
       </command>

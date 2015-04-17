@@ -1,0 +1,7 @@
+*.camkes
+*.ramses-log*
+components
+include
+instances
+interfaces
+make_template

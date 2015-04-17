@@ -29,6 +29,20 @@ datatypesPrefix(name, date, path) ::= <<
 
 >>
 
+writeExternal(string) ::= << 
+#include "<string>" 
+
+>>
+
+externalTypeDecls(model) ::= <<
+
+// Headers for externally declared types.
+<model.externalTypeHeaders:writeExternal()>
+
+// AADL-defined types.
+
+>>
+
 datatypesPostfix(name, path) ::= <<
 
 /* endif for: #ifndef <datatypesHeaderIfdef(name)> */

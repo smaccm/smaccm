@@ -1,9 +1,17 @@
--- Note: this example shows a single send of a scalar type from an
--- active thread to a passive thread.  It is designed to test:
--- 	Component naming
---  Message distribution for scalars
---  Passive thread dispatch 
-
+------------------------------------------------------------------
+--
+-- test_uart.aadl
+-- 
+-- This model is designed to show the interaction between an 
+-- external AADL thread and an "active" thread.  
+-- 
+-- Due to the translation infrastructure, it is much simpler to 
+-- transmit to an "active" thread than a passive one, and this
+-- is what we model here.  
+-- 
+-- 
+--
+------------------------------------------------------------------
 
 package test_uart
 public 

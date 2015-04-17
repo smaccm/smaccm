@@ -212,7 +212,6 @@ public class DispatcherNames {
   // 
   //////////////////////////////////////////////////////////
 
-  // TODO: change this freakin' name.
   public String getQualifiedName() {
     ThreadImplementationNames tin = new ThreadImplementationNames(dp.getOwner());
     return tin.getNormalizedName() + "_" + dp.getName();

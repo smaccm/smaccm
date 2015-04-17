@@ -13,6 +13,7 @@ import edu.umn.cs.crisys.smaccm.aadl2rtos.model.legacy.ExternalIRQEvent;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.legacy.ExternalISR;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.DataPort;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.ExternalIRQ;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.SharedData;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.ThreadImplementation;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.Type;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.UnitType;
@@ -94,6 +95,14 @@ public class ModelNames {
     return irqs;
   }
   
+  public List<SharedDataNames> getSharedData() {
+    List<SharedDataNames> sdal = new ArrayList<>(); 
+    for (SharedData sd : m.getSharedDataList()) {
+      sdal.add(new SharedDataNames(sd));
+    }
+    return sdal;
+  }
+  
   ////////////////////////////////////////////////////////////
   //
   // Names for system information
@@ -102,6 +111,14 @@ public class ModelNames {
 
   public String getSystemImplementationName() {
     return Util.normalizeAadlName(m.getSystemImplementationName());
+  }
+  
+  public List<String> getExternalTypeHeaders() {
+    List<String> eths = new ArrayList<String>();
+    for (String h: m.getExternalTypeHeaders()) {
+      eths.add(h);
+    }
+    return eths;
   }
   
   public String getSystemTypeHeaderName() {

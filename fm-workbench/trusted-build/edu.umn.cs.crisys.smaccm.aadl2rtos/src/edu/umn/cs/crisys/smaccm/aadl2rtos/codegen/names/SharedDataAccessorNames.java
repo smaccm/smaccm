@@ -22,34 +22,6 @@ public class SharedDataAccessorNames {
     return sda.getName();
   }
 
-  public String getReaderFnName(String tName, String varName) {
-    if (sda.getCommPrimFnNameOpt() != null) {
-      return sda.getCommPrimFnNameOpt();
-    } else {
-      ThreadImplementationNames tin = new ThreadImplementationNames(sda.getOwner());
-      return tin.getNormalizedName() + "_read_" + getName();
-    }
-  }
-
-  public String getWriterFnName(String tName, String varName) {
-    if (sda.getCommPrimFnNameOpt() != null) {
-      return sda.getCommPrimFnNameOpt();
-    } else {
-      ThreadImplementationNames tin = new ThreadImplementationNames(sda.getOwner());
-      return tin.getNormalizedName() + "_write_" + getName();
-    }
-  }
-
-  public boolean getAccessContainsInput() {
-    return (sda.getAccessType() == SharedDataAccessor.AccessType.READ ||
-            sda.getAccessType() == SharedDataAccessor.AccessType.READ_WRITE);
-  }
-  
-  public boolean getAccessContainsOutput() {
-    return (sda.getAccessType() == SharedDataAccessor.AccessType.WRITE ||
-        sda.getAccessType() == SharedDataAccessor.AccessType.READ_WRITE);
-  }
-  
   public TypeNames getType() {
     return new TypeNames(sda.getSharedData().getType());
   }
@@ -58,15 +30,8 @@ public class SharedDataAccessorNames {
     return new SharedDataNames(sda.getSharedData());
   }
   
-  public boolean hasCommPrimHeader() {
-    return sda.getCommPrimHeaderNameOpt() != null;
+  public ThreadImplementationNames getOwner() {
+    return new ThreadImplementationNames(sda.getOwner());
   }
-  
-  public String getCommPrimHeaderName() {
-    if (sda.getCommPrimHeaderNameOpt() == null) {
-      throw new Aadl2RtosException("No CommPrimHeader to return in getCommPrimHeaderName");
-    }
-    return sda.getCommPrimHeaderNameOpt();
-  }
-  
+    
 }
