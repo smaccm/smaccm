@@ -8,26 +8,9 @@
  * @TAG(NICTA_GPL)
  */
 
-#include <autoconf.h>
-
 #include <Echo.h>
-#include <string.h>
-#include <lwip/udp.h>
+#include <smaccm_echo.h>
 
-void echo_has_data(void *cookie) {
-    int status = 0;
-    while (status == 0) {
-        unsigned int len;
-        uint16_t port;
-        ip_addr_t addr;
-        status = echo_recv_poll(&len, &port, &addr);
-        if (status != -1) {
-            echo_send_send((uintptr_t)echo_recv_buf, len, addr);
-        }
-    }
-    echo_recv_ready_reg_callback(echo_has_data, cookie);
-}
-
-void pre_init() {
-    echo_recv_ready_reg_callback(echo_has_data, NULL);
+void receive(const udp__packet_i * input) {
+    echo_write_output(input);
 }
