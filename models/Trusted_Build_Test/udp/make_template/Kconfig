@@ -1,0 +1,6 @@
+config APP_UDP
+    bool "AADL generic message for implementation udp"
+    default n
+    select APP_CAMKES_EXECUTIVE
+    help
+        AADL generic message for implementation udp. 
