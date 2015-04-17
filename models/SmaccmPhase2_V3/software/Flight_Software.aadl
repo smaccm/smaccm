@@ -12,8 +12,6 @@ process main
     ppm_in : in event data port software_types::Flight_Control_Commands.i;
     
     sensors_group : feature group hardware_types::Sensors;
-    battery : in data port software_types::Battery_Data;
-
   annex agree {**
   	
   	--this is an arbitrary constant that we
@@ -73,11 +71,18 @@ process main
   	  time_of_last_ppm <= time and time_of_last_can <= time and
   	  time_of_last_ppm >= 0.0 and time_of_last_can >= 0.0;
   	      
---  	guarantee "if the controller is armed, then an armed signal in the past" : true;
---  	
+  	eq mavlink_armed_in_past : bool;
+  	eq ppm_armed_in_past : bool;
+  	
+  	guarantee "if the controller is armed, then an armed signal in the past" :
+  	  control_mode = AGREE_CONSTS.ARMED_MODE =>
+  	    mavlink_armed_in_past or ppm_armed_in_past;
+
+	guarantee "not vacuous" : control_mode != AGREE_CONSTS.ARMED_MODE;
+
 --  	guarantee "if an arm signal is sent from the ppm controller the controller will be armed" : true;
 --  	
---  	guarantee "if the controller is not armed then the motors should not spin" : true;
+--  	guarantee "if the controller is not disarmed then the motors should not spin" : true;
   	
   **};
 end main;
@@ -122,9 +127,10 @@ process implementation main.i
     conn15 : port sensors_group.barometer -> sensors.barometer;
     conn16 : port sensors_group.motion -> sensors.motion;
     conn17 : port sensors_group.gps -> gps.input;
-    conn18 : port battery -> sensors.battery;
+    conn18 : port sensors_group.battery -> sensors.battery;
     
     clawmux : port control_law.out_law -> ui_mux.control_law;
+    clawmix : port control_law.out_law -> motmix.control_law_in;
   
   properties
     SMACCM::OS => "eChronos";
@@ -366,12 +372,29 @@ process implementation main.i
       ret = if n < 0.0 then -1.0 * n else n;
     tel;
     
-    
     -------- LEMMAS TO PROVE OTHER GUARANTEES ---------
     lemma "positive execs_since_control_law" : control.execs_since_last_control_law >= 0;
     lemma "time of next control bound" : time_of_next_control <= time + CONTROL_PERIOD;
     
-  **};
+    -------- assertions to link contract variables --------
+    
+    assert mavlink_armed_in_past = 
+      (event(can.mav_control_law) and can.mav_control_law.set_armed ->
+      pre(mavlink_armed_in_past) or (event(can.mav_control_law) and can.mav_control_law.set_armed));
+    
+    assert ppm_armed_in_past = 
+      (event(ppm.control_law_out) and ppm.control_law_out.set_armed ->
+      pre(ppm_armed_in_past) or (event(ppm.control_law_out) and ppm.control_law_out.set_armed));
+      
+    eq ui_mux_clock_count : int = 0 -> 
+      if (rise(ui_mux_clock)) then
+        pre(ui_mux_clock_count) + 1
+      else
+        pre(ui_mux_clock_count);
+	
+	lemma "many possible ui_mux" : not (ui_mux_clock_count > 4);
+	
+  **}; 
   
   annex resolute {**
     	prove only_receive_legit(this.motmix)
@@ -380,6 +403,7 @@ end main.i;
 
 thread can_px4_t
   features
+  	
     waypoints : out event data port software_types::waypoint;
     sensor_data : in event data port software_types::Sensor_Data;
     control_data : in event data port software_types::controloutput.impl;
@@ -436,16 +460,16 @@ thread control_law_t
   	--TODO who gets precidence for arming? We make the assumption that the
   	--MAV law will always take precidence
   	
-  	const yaw_mode_rate : int = 0;
-  	const yaw_mode_heading : int = 1;
+--  	const yaw_mode_rate : int = 0;
+--  	const yaw_mode_heading : int = 1;
   	const ui_mavlink : int = 1;
   	const ui_ppm : int = 0;
-  	const auto_throttle : int = 1;
-  	const direct_throttle : int = 0;
+--  	const auto_throttle : int = 1;
+--  	const direct_throttle : int = 0;
   	
-  	const ARMED_SAFE : int = 0;
-  	const ARMED_DISARMED : int = 1;
-  	const ARMED_ARMED : int = 2;
+  	const ARMED_SAFE : int = AGREE_CONSTS.SAFE_MODE;
+  	const ARMED_DISARMED : int = AGREE_CONSTS.DISARMED_MODE;
+  	const ARMED_ARMED : int = AGREE_CONSTS.ARMED_MODE;
   	
   	initially:
   	  not event(out_law);
@@ -459,8 +483,7 @@ thread control_law_t
         autothr_source = 0;
         stab_source = 0;
         head_source = 0;
-        time = 0;
-        flight_mode = 0
+        time = 0
 		};
   
   	eq ui_source_mavlink : bool = false ->
@@ -479,7 +502,7 @@ thread control_law_t
   	
     --note that only ppm and nav events cause an event to be emitted
   	guarantee "output events only occur if and only if nav or ppm events happen" : true ->
-  	  event(out_law) = (event(nav_law) or event(ppm_law));
+  	  event(out_law) = (event(ppm_law) or event(mav_law));
   	  
   	guarantee "source selection":
   	  out_law.ui_source = if ui_source_mavlink then ui_mavlink else ui_ppm;
@@ -498,6 +521,7 @@ thread control_law_t
         out_law.armed_mode = ARMED_DISARMED
       else if ppm_law.set_armed  then
         out_law.armed_mode = ARMED_ARMED
+        
       else
         out_law.armed_mode = pre(out_law.armed_mode);
   	    	  
@@ -538,6 +562,9 @@ thread control_law_t
   **};
     
 end control_law_t;
+
+thread implementation control_law_t.i
+end control_law_t.i;
 
 thread ppm_t
   features
@@ -580,7 +607,7 @@ thread control_t
     
     annex agree {**
    
-      eq mode : int = control_law.flight_mode;
+      eq mode : int;
 	  eq execs_since_last_control_law : int = 
 	    if event(control_law) then
 	      0
@@ -591,15 +618,27 @@ thread control_t
   	    mode = AGREE_CONSTS.DISARMED_MODE and
   	    execs_since_last_control_law = 0;
 
---  	  assume "valid modes for control input":
---  	    event(control_law) =>
---  	      control_law.armed_mode = AGREE_CONSTS.LAND_MODE or
---  	      control_law.armed_mode = AGREE_CONSTS.ARMED_MODE or
---  	      control_law.armed_mode = AGREE_CONSTS.DISARMED_MODE;
+  	  assume "valid modes for control input":
+  	    event(control_law) =>
+  	      control_law.armed_mode = AGREE_CONSTS.LAND_MODE or
+  	      control_law.armed_mode = AGREE_CONSTS.ARMED_MODE or
+  	      control_law.armed_mode = AGREE_CONSTS.DISARMED_MODE;
   	      
   	  guarantee "if we have not seen a control input for a while go in landing mode" :
   	    mode != AGREE_CONSTS.DISARMED_MODE and execs_since_last_control_law >= 2 => mode = AGREE_CONSTS.LAND_MODE;
   	    
+	  guarantee "if the controller is disarmed then the output control is zeroed" :
+	    mode = AGREE_CONSTS.DISARMED_MODE =>
+	    	control_out.throttle = 0.0 and
+	    	control_out.roll = 0.0 and
+	    	control_out.pitch = 0.0 and
+	    	control_out.yaw = 0.0;
+	    	
+	  guarantee "mode behavior" :
+	    if event(control_law) then
+	      mode = control_law.armed_mode
+	    else
+	      mode = (AGREE_CONSTS.DISARMED_MODE -> pre(mode));
 
     **};
     
@@ -651,7 +690,7 @@ end sensors_t;
 thread motmix_t
   features
     motors : out event data port software_types::motors_data.impl;
-    control_in : in data port software_types::controloutput.impl;
+    control_in : in event data port software_types::controloutput.impl;
     control_law_in : in event data port software_types::control_law.impl;
     time : in data port Base_Types::Float;
   
@@ -661,6 +700,8 @@ thread motmix_t
     
   annex agree {**
 
+    const idle : real = 0.15;
+     
   	const disabled : software_types::motors_data.impl = 
   	  software_types::motors_data.impl {
   	    frontleft = 0.0;  
@@ -672,7 +713,12 @@ thread motmix_t
   	initially:
   	  motors = disabled;
   	   
-    guarantee "motors are initially disabled" : motors = disabled -> true;
+    guarantee "motors are initially disabled" : 
+      motors = disabled -> true;
+      
+    guarantee "if control law is disarmed then the motors are disarmed":
+      control_law_in.armed_mode = AGREE_CONSTS.DISARMED_MODE =>
+        motors = disabled;
   	   
   **};
     

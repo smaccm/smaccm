@@ -140,7 +140,6 @@ data implementation control_law.impl
     stab_source : data Base_Types::Unsigned_32;
     head_source : data Base_Types::Unsigned_32;
     time : data Base_Types::Unsigned_32;
-    flight_mode : data Base_Types::Unsigned_32;
 end control_law.impl;
 
 
