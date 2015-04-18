@@ -32,23 +32,20 @@ public class C_Type_Writer {
     
     try {
       // First we need to get all of the "top-level" types described as
-      // ID-types, then
-      // we can sort them topologically, then emit them.
+      // ID-types, then we can sort them topologically and emit them.
       List<Type> idTypes = new ArrayList<Type>();
       for (Entry<String, Type> e : entrySet) {
         if (!(e.getValue() instanceof ExternalType)) {
           idTypes.add(new IdType(e.getKey(), e.getValue()));
         }
       }
-      List<Type> sortedTypes = TopologicalSort.performTopologicalSort(idTypes);
+      List<Type> sortedTypes = TopologicalSort.performElementsOnlyTopologicalSort(idTypes);
       if (sortedTypes.isEmpty()) {
         out.append("\n\n\n // No user defined types.  This space for rent :)\n\n\n"); 
       }
       for (Type t : sortedTypes) {
-        if (t instanceof IdType) {
-          writeType(out, (IdType) t, indent);
-          out.append("\n");
-        }
+         writeType(out, (IdType) t, indent);
+         out.append("\n");
       }
     } catch (CyclicException e) {
       throw new Aadl2RtosException(

@@ -70,10 +70,7 @@ public class RecordType extends Type {
 	public List<Type> dependencies() {
 		ArrayList<Type> deps = new ArrayList<Type>();
 		for (RecordField rf: fields) {
-			List<Type> childDeps = rf.type.dependencies();
-			if (childDeps != null) {
-				deps.addAll(childDeps);
-			}
+			deps.add(rf.type);
 		}
 		return deps;
 	}
