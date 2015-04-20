@@ -35,11 +35,12 @@
             locationURI="menu:org.eclipse.ui.main.menu?after=additions">
          <menu
                label="Translation"
-               mnemonic="M"
+               mnemonic="T"
                id="edu.umn.cs.crisys.smaccm.aadl2rtos.menus.translateMenu">
             <command
                   commandId="edu.umn.cs.crisys.smaccm.aadl2rtos.commands.translateModelCommand"
-                  mnemonic="S"
+                  icon="icons/brick.png"
+                  mnemonic="G"
                   id="edu.umn.cs.crisys.smaccm.aadl2rtos.menus.translateModelCommand">
             </command>
          </menu>
@@ -50,11 +51,21 @@
                id="edu.umn.cs.crisys.smaccm.aadl2rtos.toolbars.translateMenuToolbar">
             <command
                   commandId="edu.umn.cs.crisys.smaccm.aadl2rtos.commands.translateModelCommand"
-                  icon="icons/sample.gif"
+                  icon="icons/brick.png"
                   tooltip="Generate CAmkES or eChronos system skeleton from AADL model"
                   id="edu.umn.cs.crisys.smaccm.aadl2rtos.toolbars.translateModelCommand">
             </command>
          </toolbar>
+      </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="popup:org.osate.xtext.aadl2.ui.outline?after=additions">
+        <command
+                  commandId="edu.umn.cs.crisys.smaccm.aadl2rtos.commands.translateModelCommand"
+                  icon="icons/brick.png"
+                  tooltip="Generate CAmkES or eChronos system skeleton from AADL model"
+                  id="edu.umn.cs.crisys.smaccm.aadl2rtos.popups.translateModelCommand">
+        </command>
       </menuContribution>
    </extension>
 

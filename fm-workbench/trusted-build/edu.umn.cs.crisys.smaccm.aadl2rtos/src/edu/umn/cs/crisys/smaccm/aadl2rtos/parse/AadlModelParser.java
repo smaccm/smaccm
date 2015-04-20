@@ -490,7 +490,7 @@ public class AadlModelParser {
         } else if (threadSurrogate != null){
           d.setDispatchLimits(threadSurrogate.getContracts());
         } else {
-          throw new Aadl2RtosException("No dispatch limit (Sends_Outputs_To) specified for dispatcher " + d.getName());
+          throw new Aadl2RtosException("No dispatch limit (Sends_Events_To) specified for dispatcher " + d.getName());
         }
       }
     }

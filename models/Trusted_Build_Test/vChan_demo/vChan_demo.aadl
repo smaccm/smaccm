@@ -1,0 +1,153 @@
+package vChan_demo
+public 
+   with Base_Types;
+   with Data_Model;
+   with SMACCM_SYS;   
+
+
+
+data vchan_connect_t
+	properties
+		SMACCM_SYS::Is_External => true;
+		SMACCM_SYS::CommPrim_Source_Header => "vmm/vchan_copy.h";
+end vchan_connect_t;
+
+data vchan_ctrl_t
+	properties
+		SMACCM_SYS::Is_External => true;
+		SMACCM_SYS::CommPrim_Source_Header => "vmm/vchan_copy.h";
+end vchan_ctrl_t;
+
+data vchan_headers_t
+	properties
+		SMACCM_SYS::Is_External => true;
+		SMACCM_SYS::CommPrim_Source_Header => "vmm/vchan_sharemem.h";
+end vchan_headers_t;
+	
+
+-- Interfaces for model
+
+-- If the *first* parameter is an out parameter named 'returns'
+-- it makes it the return type of the function in C.
+-- Otherwise, the function returns void.
+
+subprogram new_connection
+features
+	returns: out parameter Base_Types::Integer_32;
+	con: in parameter vchan_connect_t;
+end new_connection;
+
+subprogram rem_connection
+features
+	returns: out parameter Base_Types::Integer_32; 
+	con: in parameter vchan_connect_t;
+end rem_connection;
+
+subprogram get_buf
+features
+	-- really intptr_t
+	returns: out parameter Base_Types::Integer_32; 
+	con: in parameter vchan_ctrl_t;
+	cmd: in parameter Base_Types::Integer_32;
+end get_buf;
+
+subprogram status
+features
+	returns: out parameter Base_Types::Integer_32; 
+	con: in parameter vchan_ctrl_t;
+end status;
+
+subprogram alert_status
+features
+	returns: out parameter Base_Types::Integer_32; 
+	con: in parameter vchan_ctrl_t;
+end alert_status;
+
+subprogram ping
+end ping;
+
+subprogram group VchanInterfaceAadl
+features
+	new_connection: provides subprogram access new_connection;
+	rem_connection: provides subprogram access rem_connection;
+	get_buf: provides subprogram access get_buf;
+	status: provides subprogram access status;
+	alert_status : provides subprogram access alert_status;
+	ping: provides subprogram access ping;
+end VchanInterfaceAadl;
+
+-- Wrapper for the other side of the vChan connection.   
+thread vchan_wrapper
+	features
+		buff1 : requires data access vchan_headers_t {
+			Access_Right => READ_WRITE;
+		};
+		rpc: provides subprogram group access VchanInterfaceAadl ;
+		
+		vevent_sv : out event port ;
+		vevent_cl : out event port ;  
+		
+	
+	properties 
+		SMACCM_SYS::Is_External => true; 
+	    Dispatch_Protocol => Sporadic;
+	    Priority => 10;
+	    Stack_Size => 256 bytes;
+	    SMACCM_SYS::Thread_Type => Active ;
+	    Compute_Execution_Time => 10 us .. 50 us;
+	    SMACCM_SYS::Sends_Events_To => "{{}}";
+end vchan_wrapper; 
+
+-- Local AADL thread that talks to proxy  
+thread server
+	features
+		buff1 : requires data access vchan_headers_t {
+			Access_Right => READ_WRITE;
+		};
+		rpc: requires subprogram group access VchanInterfaceAadl ;
+		vevent_cl : in event port {
+			Compute_Entrypoint_Source_Text => "vchan_shim_handle_vevent";
+		};
+				
+	properties 
+		Initialize_Entrypoint_Source_Text => "init_vchan";
+	    Dispatch_Protocol => Sporadic;
+	    SMACCM_SYS::Thread_Type => Active ;
+	    Priority => 10;
+	    Stack_Size => 256 bytes;
+	    Source_Text => ("user_code/vchan-shim.c", "user_code/vchan-shim.h", "user_code/user_server.c");
+	    Compute_Execution_Time => 10 us .. 50 us;
+	    SMACCM_SYS::Sends_Events_To => "{{}}";
+	    SMACCM_SYS::External_Semaphore_List => ("vevent_sem");
+end server ; 
+
+
+process proc
+
+end proc;
+
+process implementation proc.Impl
+	subcomponents
+		s: thread vchan_wrapper;
+		r: thread server;
+		shared: data vchan_headers_t;
+	connections
+		conn1: data access shared -> s.buff1;
+		conn2: data access shared -> r.buff1;
+		conn3 : subprogram group access r.rpc -> s.rpc;
+		conn4 : port s.vevent_cl -> r.vevent_cl; 
+end proc.Impl;
+
+system vChan_demo
+end vChan_demo;
+
+system implementation vChan_demo.impl
+	subcomponents
+		tl: process proc.Impl;
+	properties
+		SMACCM_SYS::OS => CAmkES; 
+		SMACCM_SYS::HW => QEMU;
+		
+end vChan_demo.impl;
+
+end vChan_demo;
