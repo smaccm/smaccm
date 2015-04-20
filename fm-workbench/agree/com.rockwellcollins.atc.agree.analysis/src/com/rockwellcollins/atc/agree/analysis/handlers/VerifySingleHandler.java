@@ -21,4 +21,9 @@ public class VerifySingleHandler extends VerifyHandler {
     protected boolean isRealizability() {
         return false;
     }
+
+	@Override
+	protected boolean isImplementationRealizability() {
+		return false;
+	}
 }

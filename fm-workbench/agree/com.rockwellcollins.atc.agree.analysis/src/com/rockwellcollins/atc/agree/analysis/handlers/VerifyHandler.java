@@ -70,6 +70,7 @@ public abstract class VerifyHandler extends AadlHandler {
     protected abstract boolean isRecursive();
     protected abstract boolean isMonolithic();
     protected abstract boolean isRealizability();
+    protected abstract boolean isImplementationRealizability();
 
     @Override
     protected IStatus runJob(Element root, IProgressMonitor monitor) {
@@ -115,6 +116,9 @@ public abstract class VerifyHandler extends AadlHandler {
                 AgreeProgram agreeProgram = AgreeGenerator.getRealizabilityLustre(si);
                 result = createRealizabilityVerification(agreeProgram);
                 //result = wrapper;
+            }else if(isImplementationRealizability()){
+            	AgreeProgram agreeProgram = AgreeGenerator.getImplementationRealizabilityLustre(si);
+            	result = createRealizabilityVerification(agreeProgram);
             } else {
             	AgreeProgram agreeProgram = AgreeGenerator.getLustre(si, isMonolithic());//, isMonolithic());
                 wrapper.addChild(createGuaranteeVerification(agreeProgram));

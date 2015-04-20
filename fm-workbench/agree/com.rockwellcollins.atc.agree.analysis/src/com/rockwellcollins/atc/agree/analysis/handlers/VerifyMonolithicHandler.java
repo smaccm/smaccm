@@ -22,4 +22,9 @@ public class VerifyMonolithicHandler extends VerifyHandler {
         return false;
     }
 
+	@Override
+	protected boolean isImplementationRealizability() {
+		return false;
+	}
+
 }

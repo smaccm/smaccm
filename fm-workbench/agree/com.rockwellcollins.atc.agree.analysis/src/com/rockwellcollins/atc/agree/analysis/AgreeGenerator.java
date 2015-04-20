@@ -78,15 +78,15 @@ public class AgreeGenerator {
     	}
     	
     	//add the assertions to the system level assumptions
-    	List<Expr> assumptions = new ArrayList<>();
+    	List<Expr> assertions = new ArrayList<>();
     	int assumeIndex = 0;
     	for(Equation assumEq : state.assumpExpressions){
-    		assumptions.add(new IdExpr(nodeAssumeName+assumeIndex++));
+    		assertions.add(new IdExpr(nodeAssumeName+assumeIndex++));
     	}
-    	assumptions.addAll(subNode.assertions);
+    	assertions.addAll(subNode.assertions);
     	
     	Expr clockHolds = getClockHoldExprs(state);
-    	assumptions.add(clockHolds);
+    	assertions.add(clockHolds);
 
     	//get the guarantees as properties and add them to the renaming
     	int i = 0;
@@ -123,7 +123,7 @@ public class AgreeGenerator {
     	locals.addAll(subNode.locals);
     	equations.addAll(subNode.equations);
     	Node mainNode = new Node(subNode.location, subNode.id, inputs, subNode.outputs,
-    			locals, equations, properties, assumptions,
+    			locals, equations, properties, assertions,
     			null, null, null);
     	
     	nodes.add(mainNode);
@@ -337,12 +337,12 @@ public class AgreeGenerator {
         }
         
         //add the assertions to the system level assumptions
-        List<Expr> assumptions = new ArrayList<>();
+        List<Expr> assertions = new ArrayList<>();
         for(Equation assumEq : state.assumpExpressions){
-            assumptions.add(assumEq.expr);
+            assertions.add(assumEq.expr);
         }
-        assumptions.addAll(state.assertExpressions);
-        assumptions.addAll(subNode.assertions);
+        assertions.addAll(state.assertExpressions);
+        assertions.addAll(subNode.assertions);
 
         //get the guarantees as properties and add them to the renaming
         int i = 0;
@@ -359,7 +359,7 @@ public class AgreeGenerator {
         }
         
         Node mainNode = new Node(subNode.location, subNode.id, subNode.inputs, subNode.outputs,
-                subNode.locals, subNode.equations, state.guarProps, assumptions,
+                subNode.locals, subNode.equations, state.guarProps, assertions,
                 null, null, Optional.of(inputStrs));
         
         nodes.add(mainNode);
@@ -383,6 +383,101 @@ public class AgreeGenerator {
         return agreeProgram;
 
     }
+ 
+ public static AgreeProgram getImplementationRealizabilityLustre(ComponentInstance compInst){
+     
+     AgreeEmitterState state = generateSingleLayer(compInst, null);
+
+     Node subNode = nodeFromState(state, false);
+     
+     List<Node> nodes = new ArrayList<>(state.nodeDefExpressions);
+     
+     if(subNode.outputs.size() != 1){
+         throw new AgreeException("Something went wrong with node generation");
+     }
+     
+     //add the assertions to the system level assumptions
+     List<Expr> assertions = new ArrayList<>();
+     for(Equation assumEq : state.assumpExpressions){
+         assertions.add(assumEq.expr);
+     }
+
+     //get the guarantees as properties and add them to the renaming
+     int i = 0;
+     List<VarDecl> locals = new ArrayList<>();
+ 	 List<VarDecl> inputs = new ArrayList<>();
+     List<Equation> equations = new ArrayList<>();
+     for(Equation eq : state.guarExpressions){
+         String propName = nodeGuarName+i++;
+         state.renaming.addExplicitRename(propName, eq.lhs.get(0).id);
+         state.guarProps.add(propName);
+       //have to add guarantees as local variables for kind 2.0
+         locals.add(new VarDecl(propName, NamedType.BOOL));
+         equations.add(new Equation(new IdExpr(propName), eq.expr));
+     }
+     
+     for(Equation eq : state.lemmaExpressions){
+         String propName = nodeGuarName+i++;
+         state.renaming.addExplicitRename(propName, eq.lhs.get(0).id);
+         state.guarProps.add(propName);
+         //have to add guarantees as local variables for kind 2.0
+         locals.add(new VarDecl(propName, NamedType.BOOL));
+         equations.add(new Equation(new IdExpr(propName), eq.expr));
+     }
+ 	
+ 	//remove guarantee variables from inputs for kind 2.0
+ 	for(VarDecl var : subNode.inputs){
+ 	    if(!var.id.startsWith("__GUARANTEE")){
+ 	        inputs.add(var);
+ 	    }
+ 	}
+     
+     i = 0;
+     final String assertName = "__ASSERT";
+     for(Expr assertExpr : subNode.assertions){
+    	 VarDecl assertVar = new AgreeVarDecl(assertName+i++, NamedType.BOOL);
+    	 IdExpr assertId = new IdExpr(assertVar.id);
+    	 locals.add(assertVar);
+    	 equations.add(new Equation(assertId, assertExpr));
+    	 state.renaming.addExplicitRename(assertVar.id, "Assertion "+(i-1));
+    	 state.guarProps.add(assertVar.id);
+     }
+     
+
+     
+     //get the names of the inputs for realizability checking
+     List<String> inputStrs = new ArrayList<String>();
+     for(VarDecl inputVar : state.inputVars){
+         inputStrs.add(inputVar.id);
+     }
+     
+     locals.addAll(subNode.locals);
+     equations.addAll(subNode.equations);
+     Node mainNode = new Node(subNode.location, subNode.id, inputs, subNode.outputs,
+    		 locals, equations, state.guarProps, assertions,
+             null, null, Optional.of(inputStrs));
+     
+     nodes.add(mainNode);
+     
+     //have to convert the type expressions
+     List<TypeDef> typeDefs = new ArrayList<>();
+     for(RecordType type : state.typeExpressions){
+         TypeDef typeDef = new TypeDef(type.id, type);
+         typeDefs.add(typeDef);
+     }
+     
+     //also add a new top level category to the layout
+     state.layout.addCategory(state.curInst.getName());
+     Program realizeProgram = new Program(typeDefs, null, nodes);
+//     realizeProgram = InlineAssumptionGuarantees.program(realizeProgram);
+     
+     AgreeProgram agreeProgram = new AgreeProgram();
+     agreeProgram.realizeProgram = realizeProgram;
+     agreeProgram.state = state;
+     
+     return agreeProgram;
+
+ }
     
     private static Equation getHistEq(VarDecl var, Expr expr){
     	IdExpr varId = new IdExpr(var.id);
@@ -716,18 +811,25 @@ public class AgreeGenerator {
         }
 
         Expr clockHolds = new BoolExpr(true);
+        boolean foundChildClocks = false;
         for(IdExpr parentClockId : clockIds){
             Expr notParent = new UnaryExpr(UnaryOp.NOT, parentClockId);
-            String prefix = parentClockId.id.replace(state.clockIDSuffix, "");
+            String prefix = parentClockId.id.replace(state.clockIDSuffix, "")+"__";
             Expr notClocks = new BoolExpr(true);
             for(IdExpr childClockId : clockIds){
                 if(childClockId.id.startsWith(prefix) && !childClockId.id.equals(parentClockId.id)){
                     Expr notThisClock = new UnaryExpr(UnaryOp.NOT, new IdExpr(childClockId.id));
                     notClocks = new BinaryExpr(notClocks, BinaryOp.AND, notThisClock);
+                    foundChildClocks = true;
                 }
             }
             notClocks = new BinaryExpr(notParent, BinaryOp.IMPLIES, notClocks);
             clockHolds = new BinaryExpr(clockHolds, BinaryOp.AND, notClocks);
+        }
+        
+        //this should always be true for the single layers case
+        if(!foundChildClocks){
+        	return new BoolExpr(true);
         }
 
         return clockHolds;
