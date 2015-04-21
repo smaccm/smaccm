@@ -11,13 +11,11 @@
 import <Ethdriver.idl4>;
 import <PutChar.idl4>;
 
-import "../../interfaces/udp__packet_i_writer.idl4";
+import <UDPServer/UDPServer.camkes>;
+import <Ethdriver/Ethdriver.camkes>;
+import <VM/vm.camkes>;
 
-component HWEthDriver {
-    hardware;
-    emits IRQ irq;
-    dataport EthDriverMMIO mmio;
-};
+import "../../interfaces/udp__packet_i_writer.idl4";
 
 component udp {
     include "smaccm_wrapper_i_types.h";
@@ -28,29 +26,59 @@ component udp {
     uses udp__packet_i_writer udp_client_output;
 
     /* Driver interface */
-    include "c162/EthType.h";
-    has mutex ethdriver;
-    uses PutChar putchar;
+    provides PutChar putchar;
 
-    provides Ethdriver client0;
-    emits Notification rx_ready0;
-    maybe dataport Buf packet0;
+    uses UDPRecv udp_recv;
+    dataport Buf udp_recv_buf;
+    consumes Notification udp_recv_ready;
+    uses UDPSend udp_send;
+    dataport Buf udp_send_buf;
+}
 
-    /* Hardware interface */
-    consumes IRQ irq;
-    dataport EthDriverMMIO_t EthDriver;
+component HWEthDriver {
+    hardware;
+    emits IRQ irq;
+    dataport EthDriverMMIO mmio;
 }
 
 assembly {
     composition {
-        component HWEthDriver HWEthDriver;
+        component UDPServer udpserver;
+	component Ethdriver ethdriver;
+        component HWEthDriver hwethdriver;
 
-        connection seL4HardwareMMIO ethdrivermmio1(from udp_inst.EthDriver, to HWEthDriver.mmio);
-        connection seL4IOAPICHardwareInterrupt hwethirq(from HWEthDriver.irq, to udp_inst.irq);
+	/* udpserver <--> udp_inst */
+        connection seL4UDPRecv udp_udp_recv(from udp_inst.udp_recv, to udpserver.client_recv);
+        connection seL4UDPSend udp_udp_send(from udp_inst.udp_send, to udpserver.client_send);
+        connection seL4SharedData udp_udp_send_buf(from udp_inst.udp_send_buf, to udpserver.client_send_buf);
+        connection seL4SharedData udp_udp_recv_buf(from udp_inst.udp_recv_buf, to udpserver.client_recv_buf);
+        connection seL4Asynch udp_udp_recv_ready(from udpserver.client_recv_ready, to udp_inst.udp_recv_ready);
+
+	/* ethdriver <--> udp_inst */
+        connection seL4RPCCall eth_putchar(from ethdriver.putchar, to udp_inst.putchar);
+
+	/* ethdriver <--> udpserver */
+        connection seL4SharedData eth_packet(from ethdriver.packet0, to udpserver.packet);
+        connection seL4RPCCall eth_driver(from udpserver.ethdriver, to ethdriver.client0);
+        connection seL4Asynch eth_rx_ready(from ethdriver.rx_ready0, to udpserver.eth_rx_ready);
+
+	/* hwethdriver <--> ethdriver */
+        connection seL4HardwareMMIO ethdrivermmio1(from ethdriver.EthDriver, to hwethdriver.mmio);
+        connection seL4IOAPICHardwareInterrupt hwethirq(from hwethdriver.irq, to ethdriver.irq);
     }
 
     configuration {
-        HWEthDriver.mmio_attributes = "0xf1b80000:0x80000";
-        HWEthDriver.irq_attributes = "16,1,1";
+        udpserver.client_recv_buffers = 8;
+        udpserver.client_recv_port = 7;
+        udpserver.client_send_ports = { "source" : 7, "dest" : 7};
+        udpserver.udp_ip_addr = "10.13.1.215";
+
+        ethdriver0.simple = true;
+        ethdriver0.cnode_size_bits = 12;
+        ethdriver0.iospaces = "0x12:0x1:0x0:0";
+        ethdriver0.simple_untyped20_pool = 2;
+
+        hwethdriver.mmio_attributes = "0xf1b80000:0x80000";
+        hwethdriver.irq_attributes = "16,1,1";
     }
 }
