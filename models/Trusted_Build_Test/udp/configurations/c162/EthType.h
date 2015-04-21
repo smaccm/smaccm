@@ -7,10 +7,11 @@
  *
  * @TAG(NICTA_GPL)
  */
+#ifndef VMM_CONFIG_ETHTYPE_H
+#define VMM_CONFIG_ETHTYPE_H
 
-#include <echo.h>
-#include <smaccm_echo.h>
+typedef struct EthDriverMMIO {
+    char buf[0x80000];
+} EthDriverMMIO_t;
 
-void receive(const udp__packet_i * input) {
-    echo_write_output(input);
-}
+#endif

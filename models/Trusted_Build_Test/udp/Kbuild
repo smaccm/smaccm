@@ -1,5 +1,2 @@
 apps-$(CONFIG_APP_UDP) += udp
-udp: common libsel4 libmuslc libsel4vka libsel4allocman libsel4muslcsys libboost \
-     libsel4vspace libsel4utils libpci libcpio libsel4vmm libelf libutils libsel4camkes \
-     libsel4sync libsel4debug libsel4muslccamkes libsel4simple libsel4simple-stable \
-     libsel4platsupport libethdrivers liblwip
+udp: libsel4 libmuslc libsel4platsupport libsel4muslccamkes libsel4camkes libsel4sync libsel4debug libsel4bench libsel4allocman libethdrivers libboost liblwip

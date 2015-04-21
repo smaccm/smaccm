@@ -1,37 +1,56 @@
-import "../../interfaces/udp_interface.idl4";
+/*
+ * Copyright 2014, NICTA
+ *
+ * This software may be distributed and modified according to the terms of
+ * the GNU General Public License version 2. Note that NO WARRANTY is provided.
+ * See "LICENSE_GPLv2.txt" for details.
+ *
+ * @TAG(NICTA_GPL)
+ */
+
+import <Ethdriver.idl4>;
+import <PutChar.idl4>;
+
 import "../../interfaces/udp__packet_i_writer.idl4";
 
-import <VM/vm.camkes>;
+component HWEthDriver {
+    hardware;
+    emits IRQ irq;
+    dataport EthDriverMMIO mmio;
+};
 
 component udp {
-  include "smaccm_wrapper_i_types.h";
-  control;
+    include "smaccm_wrapper_i_types.h";
+    control;
 
-  /* Internal interface to VM/hardware */
-  has mutex lwip;
-  dataport Buf packet;
-  uses Ethdriver ethdriver;
-  consumes Notifcation eth_rx_ready;
-  attribute string udp_ip_addr;
+    /* AADL expected interface */
+    provides udp__packet_i_writer client_input;
+    uses udp__packet_i_writer udp_client_output;
 
-  /* External client interface */
-  uses udp__packet_i_writer udp_client_output;
-  provides udp__packet_i_writer client_input;
+    /* Driver interface */
+    include "c162/EthType.h";
+    has mutex ethdriver;
+    uses PutChar putchar;
+
+    provides Ethdriver client0;
+    emits Notification rx_ready0;
+    maybe dataport Buf packet0;
+
+    /* Hardware interface */
+    consumes IRQ irq;
+    dataport EthDriverMMIO_t EthDriver;
 }
 
 assembly {
-  composition {
-    component VM vm;
-    
-    connection seL4SharedData eth_packet(from vm.ethdriver0_packet0, to udp_inst.packet);
-    connection seL4RPCCall eth_driver(from udp_inst.ethdriver, to vm.ethdriver0_client0);
-    connection seL4Asynch eth_rx_ready(from vm.ethdriver0_rx_ready0, to udp_inst.eth_rx_ready);
-  }
+    composition {
+        component HWEthDriver HWEthDriver;
 
-  configuration {
-     udp_inst.client_recv_buffers = 8;
-     udp_inst.client_recv_port = 7;
-     udp_inst.client_send_ports = { "source" : 7, "dest" : 7};
-     udp_inst.udp_ip_addr = "10.13.1.215";
-  }
+        connection seL4HardwareMMIO ethdrivermmio1(from udp_inst.EthDriver, to HWEthDriver.mmio);
+        connection seL4IOAPICHardwareInterrupt hwethirq(from HWEthDriver.irq, to udp_inst.irq);
+    }
+
+    configuration {
+        HWEthDriver.mmio_attributes = "0xf1b80000:0x80000";
+        HWEthDriver.irq_attributes = "16,1,1";
+    }
 }
