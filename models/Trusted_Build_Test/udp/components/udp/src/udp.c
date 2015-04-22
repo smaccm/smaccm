@@ -1,9 +1,5 @@
 #include <udp.h>
 
-void putchar_putchar(int c) {
-    printf("Putchar: %c\n", c);
-}
-
 bool client_input_write_udp__packet_i(const udp__packet_i * arg) {
     // Take packet from AADL interface and pass it to UDPServer
     int len = udp_send_send(arg->buffer, arg->len, arg->addr);
