@@ -6,7 +6,7 @@ TEMPLATES := templates
 
 include Ethdriver/Ethdriver.mk
 include UDPServer/UDPServer.mk
-# END HAND EDITED SECTIONx
+# END HAND EDITED SECTION
 
 echo_CFILES :=  \
     $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/echo/src/*.c)) \
