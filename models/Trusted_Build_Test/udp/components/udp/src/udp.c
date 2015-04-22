@@ -26,7 +26,7 @@ void udp_has_data(void *cookie) {
         unsigned int len;
         uint16_t port;
         ip_addr_t addr;
-        status = echo_recv_poll(&len, &port, &addr);
+        status = udp_recv_poll(&len, &port, &addr);
         if (status != -1) {
 	    udp__packet_i packet;
 	    // TODO: Should we be doing this check or just rely on the underlying driver?
@@ -39,7 +39,7 @@ void udp_has_data(void *cookie) {
 	    udp_client_output_write_udp__packet_i(&packet);
         }
     }
-    echo_recv_ready_reg_callback(echo_has_data, cookie);
+    udp_recv_ready_reg_callback(udp_has_data, cookie);
 }
 
 void pre_init() {
