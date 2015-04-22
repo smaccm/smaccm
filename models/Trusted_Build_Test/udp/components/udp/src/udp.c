@@ -1,8 +1,11 @@
+#include <unistd.h>
+#include <string.h>
 #include <udp.h>
 
 bool client_input_write_udp__packet_i(const udp__packet_i * arg) {
     // Take packet from AADL interface and pass it to UDPServer
-    int len = udp_send_send(arg->buffer, arg->len, arg->addr);
+    ip_addr_t addr = { .addr = arg-> addr };
+    int len = udp_send_send((uintptr_t) arg->buffer, arg->len, addr);
     return (len == arg->len);
 }
 
@@ -10,7 +13,7 @@ int run(void) {
     while (1) {
 	// TODO: Read UDP packets from UDPServer and pass them along on AADL interface
 	// TODO: Right now we do this via callback but that does not rate limit at all
-	sleep(1000);
+	sleep(1);
     }
 
     return 0;
@@ -29,9 +32,9 @@ void udp_has_data(void *cookie) {
 	    if (len > 4096) {
 		len = 4096;
 	    }
-	    memcpy(packet.buffer, udp_recv_buf, len);
+	    memcpy(packet.buffer, (struct Buf *) udp_recv_buf, len);
 	    packet.len = len;
-	    packet.addr = addr;
+	    packet.addr = addr.addr;
 	    udp_client_output_write_udp__packet_i(&packet);
         }
     }
