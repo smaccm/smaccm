@@ -9,6 +9,7 @@
  */
 
 #include <smaccm_sender.h>
+#include <stdio.h>
 
 static int id = 0;
 
@@ -29,6 +30,7 @@ void send(const uint64_t *time) {
     frame.payload[6] = 0x07;
     frame.payload[7] = 0x08;
 
+    printf("User code sending CAN frame\n");
     sender_write_output(&frame);
 
     if (id > 8) {

@@ -9,6 +9,7 @@
  */
 
 #include <smaccm_sender.h>
+#include <stdio.h>
 
 static int id = 0;
 
