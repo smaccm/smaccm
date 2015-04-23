@@ -4,6 +4,8 @@ ADL := wrapper_i_assembly.camkes
 # BEGIN HAND EDITED SECTION
 TEMPLATES := templates
 
+CFLAGS += -Werror
+
 include Ethdriver/Ethdriver.mk
 include UDPServer/UDPServer.mk
 # END HAND EDITED SECTION

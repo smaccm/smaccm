@@ -19,20 +19,26 @@ int run(void) {
     return 0;
 }
 
+void local_memcpy(uint8_t *dest, char volatile *src, size_t n) {
+    for (int i = 0; i < n; i++) {
+	dest[i] = src[i];
+    }
+}
+
 void udp_has_data(void *cookie) {
     int status = 0;
     while (status == 0) {
         unsigned int len;
         uint16_t port;
-        ip_addr_t addr;
+        ip_addr_t addr; 
         status = udp_recv_poll(&len, &port, &addr);
         if (status != -1) {
 	    udp__packet_i packet;
-	    // TODO: Should we be doing this check or just rely on the underlying driver?
-	    if (len > 4096) {
-		len = 4096;
+	    int max_len = sizeof(packet.buffer) / sizeof(packet.buffer[0]);
+	    if (len > max_len) {
+		len = max_len;
 	    }
-	    memcpy(packet.buffer, (struct Buf *) udp_recv_buf, len);
+	    local_memcpy(packet.buffer, (char volatile *) udp_recv_buf, len);
 	    packet.len = len;
 	    packet.addr = addr.addr;
 	    udp_client_output_write_udp__packet_i(&packet);
