@@ -58,6 +58,8 @@ assembly {
 	component gpio gpio_obj;
 	component clk clk_obj;
 
+	connection seL4RPC can_node_inst_can(from can_node_inst.can, to can_obj.can);
+
         connection seL4HardwareMMIO clk_cmu_cpu_mem(from clk_obj.cmu_cpu_clk, to clkbase_obj.cmu_cpu_clk);
         connection seL4HardwareMMIO clk_cmu_top_mem(from clk_obj.cmu_top_clk, to clkbase_obj.cmu_top_clk);
         connection seL4HardwareMMIO clk_cmu_core_mem(from clk_obj.cmu_core_clk, to clkbase_obj.cmu_core_clk);

@@ -52,9 +52,8 @@ public
   --
   -- Code to exercise the CAN
   --
-  thread sendrecv
+  thread sender
     features
-      input: in event data port can_frame.i;
       output: out event data port can_frame.i;
 
     properties
@@ -62,15 +61,30 @@ public
       Priority => 11;
       Stack_Size => 1 KByte;
       Compute_Execution_Time => 0 ms .. 50 ms;
-      Dispatch_Protocol => Hybrid;
-      Source_Text => ("user_code/sendrecv.c");
+      Dispatch_Protocol => Periodic;
+      Source_Text => ("user_code/sender.c");
       Period => 1000 ms;
 
       SMACCM_SYS::Sends_Events_To => "{{1 output}}";
-      Compute_Entrypoint_Source_Text => "receive" applies to input;
-      
       Compute_Entrypoint_Source_Text => "send";
-  end sendrecv;
+  end sender;
+  
+  
+  thread receiver
+    features
+      input: in event data port can_frame.i;
+
+    properties
+      SMACCM_SYS::Thread_Type => Active;
+      Priority => 11;
+      Stack_Size => 1 KByte;
+      Compute_Execution_Time => 0 ms .. 50 ms;
+      Dispatch_Protocol => Sporadic;
+      Source_Text => ("user_code/receiver.c");
+
+      SMACCM_SYS::Sends_Events_To => "{{1 output}}";
+      Compute_Entrypoint_Source_Text => "receive" applies to input;
+  end receiver;
 
   process proc
   end proc;
@@ -78,11 +92,12 @@ public
   process implementation proc.i
     subcomponents
       can_node: thread can_node;
-      sendrecv: thread sendrecv;
+      sender: thread sender;
+      receiver: thread receiver;
 
     connections
-      can_node_to_sendrecv: port can_node.client_output -> sendrecv.input;
-      sendrecv_to_can_node: port sendrecv.output -> can_node.client_input;
+      sender_to_can_node: port sender.output -> can_node.client_input;
+      can_node_to_receiver: port can_node.client_output -> receiver.input;
   end proc.i;
 
   system wrapper

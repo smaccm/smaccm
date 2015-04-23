@@ -8,11 +8,11 @@
  * @TAG(NICTA_GPL)
  */
 
-#include <echo.h>
-#include <smaccm_echo.h>
-#include <unistd.h>
+#include <smaccm_receiver.h>
+#include <stdio.h>
 
-void receive(const can__can_frame_i * input) {
-    printf("Recieved can frame: ...\n");
+void receive(const can__can_frame_i *frame) {
+    printf("Recieved can frame: id <%d>, payload <%08x, ...>\n",
+	   frame->ident.id, frame->payload[0]);
 }
 
