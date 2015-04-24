@@ -22,11 +22,4 @@ public class VerifyRealizabilityHandler extends VerifyHandler{
         return true;
     }
 
-	@Override
-	protected boolean isImplementationRealizability() {
-		return false;
-	}
-
-	
-
 }
