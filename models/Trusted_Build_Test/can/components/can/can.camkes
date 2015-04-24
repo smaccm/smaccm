@@ -1,0 +1,31 @@
+/*
+ * Copyright 2014, NICTA
+ *
+ * This software may be distributed and modified according to the terms of
+ * the BSD 2-Clause license. Note that NO WARRANTY is provided.
+ * See "LICENSE_BSD2.txt" for details.
+ *
+ * @TAG(NICTA_BSD)
+ */
+
+import "../../interfaces/spi.idl4"; 
+import "../../interfaces/can.idl4"; 
+
+component can {
+       	provides can_inf can;
+	dataport Buf	can_buf;
+
+	emits txb0_ack  txb0_ack;
+	emits txb1_ack  txb1_ack;
+	emits txb2_ack  txb2_ack;
+
+	uses spi_inf	spi;
+	dataport Buf	spi_can;
+
+	consumes IntEvent   Int;
+	emits 	IntEventAck IntAck;
+
+	has semaphore queue_lock;
+	has mutex     spi_lock;
+}
+

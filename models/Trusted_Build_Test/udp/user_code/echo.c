@@ -8,7 +8,7 @@
  * @TAG(NICTA_GPL)
  */
 
-#include <Echo.h>
+#include <echo.h>
 #include <smaccm_echo.h>
 
 void receive(const udp__packet_i * input) {

@@ -1,26 +1,14 @@
 TARGETS := $(notdir ${SOURCE_DIR}).cdl
 ADL := wrapper_i_assembly.camkes
 
-# Subdirectory containing extra templates.
+# BEGIN HAND EDITED SECTION
 TEMPLATES := templates
 
-VM_CONFIG := c162_twovm
-VM_NUM_VM := 2
+CFLAGS += -Werror
 
-include TimeServer/TimeServer.mk
-include SerialServer/SerialServer.mk
-include RTC/RTC.mk
 include Ethdriver/Ethdriver.mk
 include UDPServer/UDPServer.mk
-include HelloWorld/HelloWorld.mk
-include Vchan/Vchan.mk
-include PCIConfigIO/PCIConfigIO.mk
-include Init/Init.mk
-
-# We want to run C99
-CFLAGS += -std=gnu99 "-DCAMKES_VM_CONFIG=${VM_CONFIG}" "-DBOOST_PP_VARIADICS" -I${SOURCE_DIR}/configurations -I${SOURCE_DIR}/../../components/VM/configurations
-
-CAMKES_FLAGS += --cpp-flag="-DBOOST_PP_VARIADICS" --cpp-flag=-I${SOURCE_DIR}/configurations --cpp-flag=-I${SOURCE_DIR}/../../components/VM --cpp-flag="-DCAMKES_VM_CONFIG=${VM_CONFIG}" --cache-dir=${PWD}/build/camkes_cache
+# END HAND EDITED SECTION
 
 echo_CFILES :=  \
     $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/echo/src/*.c)) \
@@ -55,4 +43,3 @@ udp_ASMFILES := \
 
 include ${PWD}/tools/camkes/camkes.mk
 
-include ${SOURCE_DIR}/configurations/${VM_CONFIG}.makefile

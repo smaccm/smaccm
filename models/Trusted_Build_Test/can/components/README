@@ -1,0 +1,5 @@
+can, clk, canbus, gpio, and spi are copied from
+
+  https://github.com/smaccm/camkes-apps-DARPA--devel
+
+When that repository is changed to use the global components model, this will no longer be needed.

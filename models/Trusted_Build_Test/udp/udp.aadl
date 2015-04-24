@@ -83,7 +83,7 @@ public
       
     properties
       SMACCM_SYS::OS => CAmkES;
-      SMACCM_SYS::HW => ODROID;
+      SMACCM_SYS::HW => QEMU;
   end wrapper.i;
   
 end udp;
