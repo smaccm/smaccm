@@ -1,7 +1,6 @@
 import <std_connector.camkes>;
 
 import "../clk/clk.camkes";
-import "../canbus/canbus.camkes";
 import "../gpio/gpio.camkes";
 import "../spi/spi.camkes";
 import "../can/can.camkes";
@@ -53,7 +52,6 @@ assembly {
     
         // "component can_node can_node_inst" will be defined by the outer camkes file
         component can can_obj;
-	component canbus canbus_obj;
 	component spi spi_obj;
 	component gpio gpio_obj;
 	component clk clk_obj;
@@ -79,26 +77,12 @@ assembly {
         connection seL4RPC spi_gpio(from spi_obj.gpio, to gpio_obj.gpio);
         connection seL4RPC spi_clk(from spi_obj.clktree, to clk_obj.clktree);
 
-        // CAN Application
-        connection seL4RPC canbus_spi(from canbus_obj.spi, to spi_obj.spi);
-        connection seL4RPC canbus_can (from canbus_obj.can, to can_obj.can);
-        connection seL4RPC canbus_gpio (from canbus_obj.gpio, to gpio_obj.gpio);
-
-        connection seL4Asynch txb0_ack(from can_obj.txb0_ack, to canbus_obj.txb0_ack);
-        connection seL4Asynch txb1_ack(from can_obj.txb1_ack, to canbus_obj.txb1_ack);
-        connection seL4Asynch txb2_ack(from can_obj.txb2_ack, to canbus_obj.txb2_ack);
-
         // CAN Driver
         connection seL4RPC can_spi(from can_obj.spi, to spi_obj.spi);
         connection seL4SharedData can_spi_channel(from can_obj.spi_can,to spi_obj.spi1_can);
         // connection seL4RPC gpio_can(from gpio_obj.can, to can_obj.can);
         connection seL4Asynch gpio_can_int(from gpio_obj.CANInt, to can_obj.Int);
         connection seL4Asynch gpio_can_intAck(from can_obj.IntAck, to gpio_obj.CANIntAck);
-
-
-        // Client shared data
-        connection seL4SharedData canbus_spi_channel(from canbus_obj.spi1_client, to spi_obj.spi1_client);
-        connection seL4SharedData canbus_can_channel(from canbus_obj.can_buf, to can_obj.can_buf);
     }
 
     configuration {

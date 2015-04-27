@@ -17,7 +17,6 @@ component spi {
         uses     clk_inf        clktree;
         provides spi_inf        spi;
         dataport Buf            spi1_reg;
-        dataport Buf            spi1_client;
         dataport Buf            spi1_can;
         consumes DataAvailable  spi1_int;
 

@@ -2,12 +2,6 @@ TARGETS := $(notdir ${SOURCE_DIR}).cdl
 ADL := wrapper_i_assembly.camkes
 
 # HAND MODIFIED
-canbus_HFILES := \
-    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/include/*.h)) \
-    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/canbus/include/*.h))
-canbus_CFILES := \
-    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/canbus/src/*.c))
-
 can_HFILES := \
     $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/can/include/*.h))
 can_CFILES := \
