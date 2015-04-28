@@ -38,7 +38,7 @@ property set SMACCM_SYS is
 	Generate_Scheduler_Systick_IRQ: aadlboolean => true applies to (system implementation);
 	
 	-- For CAmkES specifically
-	CAmkES_Owner_Thread : reference (thread) applies to ( data );
+	CAmkES_Owner_Thread : aadlstring applies to ( data );
 	
 
 end SMACCM_SYS;

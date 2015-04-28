@@ -17,6 +17,7 @@ public class SharedData {
 
   private String portName;
   private Type dataType = null;
+  private ThreadImplementation camkesOwner;
   private Set<SharedDataAccessor> accessors;
   
   public SharedData(String portName, Type dataType) {
@@ -49,6 +50,7 @@ public class SharedData {
     return ("MUTEX_ID_" + getMutexName()).toUpperCase();
   }
   
+  
   public String getVarName() {
     return "var_" + getPortName(); 
   }
@@ -57,4 +59,13 @@ public class SharedData {
     return this.dataType;
   }
 
+  public ThreadImplementation getCamkesOwner() {
+    return camkesOwner;
+  }
+
+  public void setCamkesOwner(ThreadImplementation camkesOwner) {
+    this.camkesOwner = camkesOwner;
+  }
+
+  
 }

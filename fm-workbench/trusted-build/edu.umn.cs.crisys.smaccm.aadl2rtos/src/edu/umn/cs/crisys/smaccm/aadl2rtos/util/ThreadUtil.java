@@ -245,13 +245,7 @@ public abstract class ThreadUtil {
       throw new Aadl2RtosException("Required property 'HW' not found for system instance: " + tti.getName() + "Exception: " + e.toString());
     }
   }
-  
-  public static ThreadTypeImpl getCamkesOwnerThread(NamedElement sde) {
-    PropertyExpression pe = PropertyUtils.getSimplePropertyValue(sde, ThreadUtil.CAMKES_OWNER_THREAD);
-    ReferenceValueImpl impl = (ReferenceValueImpl)pe;
-    return null;
-  }
-  
+    
 	public static List<String> getExternalMutexList(NamedElement tti) {
     return getStringList(tti, ThreadUtil.LEGACY_MUTEX_LIST);
   }
