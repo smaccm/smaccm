@@ -405,6 +405,10 @@ public class AgreeGenerator {
     	}
     	
     	agreeProgram.state = state;
+//    	for(Node nodeDef : state.nodeDefExpressions){
+//    		System.out.println(nodeDef.id);
+//    	}
+    	
     	agreeProgram.assumeGuaranteeProgram = getAssumeGuaranteeProgram(state);
     	agreeProgram.consistProgram = getConsistProgram(state);
     	
@@ -697,7 +701,22 @@ public class AgreeGenerator {
     private static void addNodes(AgreeEmitterState state,
             AgreeEmitterState subState) {
 
-        state.nodeDefExpressions.addAll(subState.nodeDefExpressions);
+    	//nodes do not do a compare on their ids so we need to check them
+    	//manually :-(
+    	
+    	for(Node subNode : subState.nodeDefExpressions){
+    		boolean found = false;
+    		for(Node node : state.nodeDefExpressions){
+    			if(node.id.equals(subNode.id)){
+    				found = true;
+    				break;
+    			}
+    		}
+    		if(!found){
+    			state.nodeDefExpressions.add(subNode);
+    		}
+    	}
+        //state.nodeDefExpressions.addAll(subState.nodeDefExpressions);
     }
 
 	private static Expr getClockHoldExprs(AgreeEmitterState state){
