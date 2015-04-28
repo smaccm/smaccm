@@ -44,7 +44,7 @@ public class PreferencesUtil {
 			int depth = prefs.getInt(PreferenceConstants.PREF_CONSIST_DEPTH) + 1;
 			((JKindApi) api).setN(depth);
 			((JKindApi) api).disableInvariantGeneration();
-			((JKindApi) api).disableKInduction();
+			//((JKindApi) api).disableKInduction();
 			((JKindApi) api).setPdrMax(0);
 		}
 		return api;

@@ -123,8 +123,7 @@ public class AgreeGenerator {
     	locals.addAll(subNode.locals);
     	equations.addAll(subNode.equations);
     	Node mainNode = new Node(subNode.location, subNode.id, inputs, subNode.outputs,
-    			locals, equations, properties, assertions,
-    			null, null, null);
+    			locals, equations, properties, assertions, null);
     	
     	nodes.add(mainNode);
     	
@@ -359,8 +358,7 @@ public class AgreeGenerator {
         }
         
         Node mainNode = new Node(subNode.location, subNode.id, subNode.inputs, subNode.outputs,
-                subNode.locals, subNode.equations, state.guarProps, assertions,
-                null, null, Optional.of(inputStrs));
+                subNode.locals, subNode.equations, state.guarProps, assertions, Optional.of(inputStrs));
         
         nodes.add(mainNode);
         
@@ -1032,7 +1030,7 @@ public class AgreeGenerator {
     	equations.add(assertEq);
     	
     	Node subNode = new Node(Location.NULL, nodeId, inputs, outputs, locals, equations,
-    			null, assertions, null, null, null);
+    			null, assertions, null);
     	
     	return subNode;
     	
