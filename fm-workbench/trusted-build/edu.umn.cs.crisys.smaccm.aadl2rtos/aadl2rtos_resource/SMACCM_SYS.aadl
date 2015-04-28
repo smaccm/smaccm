@@ -1,7 +1,8 @@
 property set SMACCM_SYS is
 	-- Definitions for making threads "tower compatible"
 	CommPrim_Source_Header: aadlstring applies to (port, access, data);
-	CommPrim_Source_Text: aadlstring applies to (port, access, data, data implementation);
+	CommPrim_Source_Text: aadlstring applies to (port, access);
+	C_Type_Name : aadlstring applies to (data implementation); 
 	Compute_Entrypoint_Source_Text : list of aadlstring applies to (system, system implementation, port, thread);
 
 	-- For including additional libraries into the build process
@@ -22,7 +23,7 @@ property set SMACCM_SYS is
 	Output_Directory: aadlstring applies to (system implementation);
 	
 	OS : enumeration (eChronos, CAmkES) applies to (system implementation); 
-	HW : enumeration (PX4, ODROID, QEMU) applies to (system implementation); 
+	HW : enumeration (PX4, ODROID, x86, QEMU) applies to (system implementation); 
 	
 	-- For integrating with other code 
 	Is_External: aadlboolean => false applies to (thread, subprogram group access, data);
@@ -36,7 +37,8 @@ property set SMACCM_SYS is
 	External_IRQ_List: list of aadlstring applies to (system implementation);
 	Generate_Scheduler_Systick_IRQ: aadlboolean => true applies to (system implementation);
 	
-	-- Language: aadlstring applies to (thread, system implementation);
-   
+	-- For CAmkES specifically
+	CAmkES_Owner_Thread : aadlstring applies to ( data );
+	
 
 end SMACCM_SYS;

@@ -15,6 +15,8 @@ data implementation a_struct.impl
   subcomponents
     field1 : data Base_Types::Float;
     field2 : data Base_Types::Float;
+  properties
+ 	SMACCM_SYS::C_Type_Name => "A_Struct";
 end a_struct.impl;
 
 -- Example of a periodically dispatched "Active" thread.   

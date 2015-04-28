@@ -46,4 +46,42 @@ public class RemoteProcedureGroupEndpoint {
     return this.rpg;
   }
 
+  @Override
+  public int hashCode() {
+    final int prime = 31;
+    int result = 1;
+    result = prime * result
+        + ((accessType == null) ? 0 : accessType.hashCode());
+    result = prime * result
+        + ((accessorName == null) ? 0 : accessorName.hashCode());
+    result = prime * result + ((rpg == null) ? 0 : rpg.hashCode());
+    return result;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
+    RemoteProcedureGroupEndpoint other = (RemoteProcedureGroupEndpoint) obj;
+    if (accessType != other.accessType)
+      return false;
+    if (accessorName == null) {
+      if (other.accessorName != null)
+        return false;
+    } else if (!accessorName.equals(other.accessorName))
+      return false;
+    if (rpg == null) {
+      if (other.rpg != null)
+        return false;
+    } else if (!rpg.equals(other.rpg))
+      return false;
+    return true;
+  }
+
+
+  
 }

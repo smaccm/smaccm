@@ -86,6 +86,7 @@ import edu.umn.cs.crisys.smaccm.aadl2rtos.util.*;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.*;
 
+import edu.umn.cs.crisys.smaccm.aadl2rtos.parse.Model.OSTarget;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.parse.antlr.*;
 
 public class AadlModelParser {
@@ -106,9 +107,7 @@ public class AadlModelParser {
 	private HashMap<PortImpl, DataPort> portMap = new HashMap<PortImpl, DataPort>();
 	private Map<ComponentInstance, ThreadInstance> threadInstanceMap;
 	private Set<DataClassifier> dataTypes = new HashSet<DataClassifier>();
-
 	
-	//
 	private Model model;
 	
 	private Logger logger;
@@ -399,7 +398,6 @@ public class AadlModelParser {
         String sendsEventsTo = Util.getStringValueOpt(tti, ThreadUtil.SMACCM_SYS_SENDS_EVENTS_TO);
         d.setOptSendsEventsToString(sendsEventsTo);
         d.setImplementationFileList(Util.getSourceTextListOpt(tti, ThreadUtil.SOURCE_TEXT));
-        // TODO: Put the OutgoingDispatchContract here!
         ti.addDispatcher(d);
       } catch (Exception e) {
         throw new Aadl2RtosException(
@@ -710,6 +708,18 @@ public class AadlModelParser {
     destPort.addConnection(conn);
     return conn;
 	}
+
+	private ThreadImplementation findThreadImplementationForName(String name) {
+	  for (Map.Entry<ThreadTypeImpl, ThreadImplementation> entry : 
+	        this.threadImplementationMap.entrySet()) {
+	    if (entry.getKey().getName().equals(name)) {
+	      return entry.getValue(); 
+	    } else {
+	      logger.info("Thread name: " + entry.getKey().getName());
+	    }
+	  }
+	  return null;
+	}
 	
 	private SharedDataAccessor constructAccess(ConnectionInstance ci) {
     ConnectionInstanceEnd destination = ci.getDestination();
@@ -725,8 +735,24 @@ public class AadlModelParser {
     if (this.sharedDataMap.containsKey(srcDataComponent)) {
       sharedData = this.sharedDataMap.get(srcDataComponent);
     } else {
+      // TODO: add the thread owner here.
+      String ttiName = null;
       sharedData = new SharedData(srcDataComponent.getName(), getDataType(srcDataComponent));
       this.sharedDataMap.put(srcDataComponent, sharedData);
+      if (model.getOsTarget() == OSTarget.CAmkES) {
+        try {
+          ttiName = Util.getStringValue(srcDataComponent, ThreadUtil.CAMKES_OWNER_THREAD);
+        } catch (Exception e) {
+            throw new Aadl2RtosException("For shared data instance: " + srcDataComponent.getName() + 
+                ": Generating to CAmkES OS and missing CAmkES_Owner_Thread property.");
+        }
+        ThreadImplementation ti = findThreadImplementationForName(ttiName);  
+        if (ti == null) {
+          throw new Aadl2RtosException("For shared data instance: " + srcDataComponent.getName() + 
+                ": Generating to CAmkES OS and thread id: " + ttiName + " does not map to a known thread feature in the process.");
+        }
+        sharedData.setCamkesOwner(ti);
+      }
     }
     
     // find destination thread instance and implementation.
@@ -948,7 +974,7 @@ public class AadlModelParser {
 
 	private String getDataClassifierName(DataClassifier dc) {
     String typeNameOpt = Util.getStringValueOpt(dc, 
-        ThreadUtil.SMACCM_SYS_COMMPRIM_SOURCE_TEXT);
+        ThreadUtil.C_TYPE_NAME);
     String qualifiedName = dc.getQualifiedName();
     String normalizedName = Util.normalizeAadlName(qualifiedName);
 	  return (typeNameOpt != null) ? typeNameOpt : normalizedName; 

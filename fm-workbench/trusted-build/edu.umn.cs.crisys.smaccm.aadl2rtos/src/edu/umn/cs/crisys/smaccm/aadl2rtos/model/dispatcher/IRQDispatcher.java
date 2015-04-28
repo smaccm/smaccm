@@ -88,4 +88,7 @@ public class IRQDispatcher extends Dispatcher {
     this.firstLevelInterruptHandler = firstLevelInterruptHandler;
   }
 	
+  public int hashCode() {
+    return 0;
+  }
 }

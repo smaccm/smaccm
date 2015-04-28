@@ -13,7 +13,6 @@ import "../../interfaces/can.idl4";
 
 component can {
        	provides can_inf can;
-	dataport Buf	can_buf;
 
 	emits txb0_ack  txb0_ack;
 	emits txb1_ack  txb1_ack;

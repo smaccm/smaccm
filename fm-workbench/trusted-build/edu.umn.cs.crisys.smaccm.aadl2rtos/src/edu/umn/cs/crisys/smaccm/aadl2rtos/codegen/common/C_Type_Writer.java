@@ -23,7 +23,7 @@ public class C_Type_Writer {
 		// (which I expect) then emit a 'typedef struct'. Else emit a typedef.
 		StringBuffer typeName = new StringBuffer();
 		typeName.append("typedef ");
-		typeName.append(ty.getTypeRef().getCType(indent).varString(ty.getTypeId()) + "; \n");
+		typeName.append(ty.getTypeRef().CTypeDecl(indent, ty.getTypeId()) + "; \n");
 		out.append(typeName.toString());
 	}
 

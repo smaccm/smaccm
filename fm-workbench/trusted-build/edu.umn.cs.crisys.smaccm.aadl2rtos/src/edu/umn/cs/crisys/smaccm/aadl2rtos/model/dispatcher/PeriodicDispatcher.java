@@ -48,4 +48,30 @@ public class PeriodicDispatcher extends Dispatcher {
 	public String getFullName() {
      return "periodic_dispatcher (" + Integer.toString(this.getPeriod()) + " ms)";
 	}
+
+
+  @Override
+  public int hashCode() {
+    final int prime = 31;
+    int result = 1;
+    result = prime * result + period;
+    return result;
+  }
+
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
+    PeriodicDispatcher other = (PeriodicDispatcher) obj;
+    if (period != other.period)
+      return false;
+    return true;
+  }
+	
+	
 }

@@ -130,7 +130,9 @@ process implementation proc.Impl
 	subcomponents
 		s: thread vchan_wrapper;
 		r: thread server;
-		shared: data vchan_headers_t;
+		shared: data vchan_headers_t {
+			SMACCM_SYS::Camkes_Owner_Thread => "server";
+		};
 	connections
 		conn1: data access shared -> s.buff1;
 		conn2: data access shared -> r.buff1;

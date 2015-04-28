@@ -33,24 +33,20 @@ public class SharedDataNames {
   
   public List<SharedDataAccessorNames> getNonChosenAccessList() {
     List<SharedDataAccessorNames> sdal = new ArrayList<>(); 
-    if (sd.getAccessors().isEmpty()) {
-      throw new Aadl2RtosException("ERROR: Shared Data element: " + sd.getVarName() +" in AADL model has no accessors."); 
-    }
-    Iterator<SharedDataAccessor> it = sd.getAccessors().iterator();
-    // skip the first element.
-    it.next();
-    while (it.hasNext()) {
-      SharedDataAccessor elem = it.next(); 
-      sdal.add(new SharedDataAccessorNames(elem));
+    for (SharedDataAccessor elem : sd.getAccessors()) {
+      if (elem.getOwner() != sd.getCamkesOwner()) {
+        sdal.add(new SharedDataAccessorNames(elem));
+      }
     }
     return sdal;
   }
   
   public SharedDataAccessorNames getChosenAccess() {
-    if (sd.getAccessors().isEmpty()) {
-      throw new Aadl2RtosException("ERROR: Shared Data element: " + sd.getVarName() +" in AADL model has no accessors."); 
+    for (SharedDataAccessor sda : sd.getAccessors()) {
+      if (sda.getOwner() == sd.getCamkesOwner()) {
+        return new SharedDataAccessorNames(sda);
+      }
     }
-    Iterator<SharedDataAccessor> it = sd.getAccessors().iterator();
-    return new SharedDataAccessorNames(it.next());
+    throw new Aadl2RtosException("Shared data element [" + sd.getVarName() + "] is not accessed by CAmkES owner thread [" + sd.getCamkesOwner().getName() + "]"); 
   }
 }

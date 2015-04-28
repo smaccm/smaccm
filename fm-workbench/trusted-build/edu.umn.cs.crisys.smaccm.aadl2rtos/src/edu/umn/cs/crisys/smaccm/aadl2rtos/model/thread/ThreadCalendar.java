@@ -67,4 +67,33 @@ public class ThreadCalendar {
   public int getHyperperiodSubdivisions() {
     return (this.getLongestPeriodInMilliseconds() / this.getGreatestCommonDivisorInMilliseconds());
   }
+
+  @Override
+  public int hashCode() {
+    final int prime = 31;
+    int result = 1;
+    result = prime * result
+        + ((periodicDispatchers == null) ? 0 : periodicDispatchers.hashCode());
+    return result;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
+    ThreadCalendar other = (ThreadCalendar) obj;
+    if (periodicDispatchers == null) {
+      if (other.periodicDispatchers != null)
+        return false;
+    } else if (!periodicDispatchers.equals(other.periodicDispatchers))
+      return false;
+    return true;
+  }
+  
+  
+  
 }
