@@ -98,10 +98,10 @@ public class ThreadImplementationNames {
 
   public List<RemoteProcedureGroupEndpointNames> getEndpoints() {
     ArrayList<RemoteProcedureGroupEndpointNames> endpoints = new ArrayList<>();
-    for (RemoteProcedureGroupEndpoint rpge : ti.getRequiresRPGList()) {
+    for (RemoteProcedureGroupEndpoint rpge : ti.getRequiresRPGSet()) {
       endpoints.add(new RemoteProcedureGroupEndpointNames(rpge));
     }
-    for (RemoteProcedureGroupEndpoint rpge : ti.getProvidesRPGList()) {
+    for (RemoteProcedureGroupEndpoint rpge : ti.getProvidesRPGSet()) {
       endpoints.add(new RemoteProcedureGroupEndpointNames(rpge));
     }
     return endpoints;
@@ -109,7 +109,7 @@ public class ThreadImplementationNames {
   
   public List<RemoteProcedureGroupEndpointNames> getProvidedEndpoints() {
     ArrayList<RemoteProcedureGroupEndpointNames> endpoints = new ArrayList<>();
-    for (RemoteProcedureGroupEndpoint rpge : ti.getProvidesRPGList()) {
+    for (RemoteProcedureGroupEndpoint rpge : ti.getProvidesRPGSet()) {
       endpoints.add(new RemoteProcedureGroupEndpointNames(rpge));
     }
     return endpoints;
@@ -117,7 +117,7 @@ public class ThreadImplementationNames {
 
   public List<RemoteProcedureGroupEndpointNames> getRequiredEndpoints() {
     ArrayList<RemoteProcedureGroupEndpointNames> endpoints = new ArrayList<>();
-    for (RemoteProcedureGroupEndpoint rpge : ti.getRequiresRPGList()) {
+    for (RemoteProcedureGroupEndpoint rpge : ti.getRequiresRPGSet()) {
       endpoints.add(new RemoteProcedureGroupEndpointNames(rpge));
     }
     return endpoints;
@@ -125,11 +125,11 @@ public class ThreadImplementationNames {
   
   public Collection<RemoteProcedureGroupNames> getUsedRpgs() {
     Map<String, RemoteProcedureGroupNames> rpgMap = new HashMap<>();
-    for (RemoteProcedureGroupEndpoint rpge : ti.getRequiresRPGList()) {
+    for (RemoteProcedureGroupEndpoint rpge : ti.getRequiresRPGSet()) {
       rpgMap.put(rpge.getRemoteProcedureGroup().getId(), 
           new RemoteProcedureGroupNames(rpge.getRemoteProcedureGroup()));
     }
-    for (RemoteProcedureGroupEndpoint rpge : ti.getProvidesRPGList()) {
+    for (RemoteProcedureGroupEndpoint rpge : ti.getProvidesRPGSet()) {
       rpgMap.put(rpge.getRemoteProcedureGroup().getId(), 
           new RemoteProcedureGroupNames(rpge.getRemoteProcedureGroup()));
     }

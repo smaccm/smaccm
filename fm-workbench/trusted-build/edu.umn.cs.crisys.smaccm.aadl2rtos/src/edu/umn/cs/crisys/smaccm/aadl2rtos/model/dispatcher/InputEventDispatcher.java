@@ -33,4 +33,7 @@ public class InputEventDispatcher extends Dispatcher {
 	  
 	public InputEventPort getEventPort() { return this.eventPort; }
 	
+  public int hashCode() {
+    return 0;
+  }
 }

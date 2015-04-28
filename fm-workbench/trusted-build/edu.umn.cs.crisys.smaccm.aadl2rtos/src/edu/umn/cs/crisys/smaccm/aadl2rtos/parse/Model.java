@@ -340,5 +340,18 @@ public class Model {
 		return this.astTypes;
 }
 
+  @Override
+  public int hashCode() {
+    return 0;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj)
+      return true;
+    else 
+      return false;
+  }
+
 
 }

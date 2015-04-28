@@ -106,9 +106,7 @@ public class AadlModelParser {
 	private HashMap<PortImpl, DataPort> portMap = new HashMap<PortImpl, DataPort>();
 	private Map<ComponentInstance, ThreadInstance> threadInstanceMap;
 	private Set<DataClassifier> dataTypes = new HashSet<DataClassifier>();
-
 	
-	//
 	private Model model;
 	
 	private Logger logger;
@@ -399,7 +397,6 @@ public class AadlModelParser {
         String sendsEventsTo = Util.getStringValueOpt(tti, ThreadUtil.SMACCM_SYS_SENDS_EVENTS_TO);
         d.setOptSendsEventsToString(sendsEventsTo);
         d.setImplementationFileList(Util.getSourceTextListOpt(tti, ThreadUtil.SOURCE_TEXT));
-        // TODO: Put the OutgoingDispatchContract here!
         ti.addDispatcher(d);
       } catch (Exception e) {
         throw new Aadl2RtosException(
@@ -725,6 +722,8 @@ public class AadlModelParser {
     if (this.sharedDataMap.containsKey(srcDataComponent)) {
       sharedData = this.sharedDataMap.get(srcDataComponent);
     } else {
+      // TODO: add the thread owner here.  
+      ThreadTypeImpl tti = ThreadUtil.getCamkesOwnerThread(srcDataComponent);
       sharedData = new SharedData(srcDataComponent.getName(), getDataType(srcDataComponent));
       this.sharedDataMap.put(srcDataComponent, sharedData);
     }

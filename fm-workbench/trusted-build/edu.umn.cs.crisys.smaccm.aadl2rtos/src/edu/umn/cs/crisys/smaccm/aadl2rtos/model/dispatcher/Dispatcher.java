@@ -88,4 +88,8 @@ public abstract class Dispatcher {
   public ThreadImplementation getOwner() {
 	  return this.owner;
 	}
+  
+  public int hashCode() {
+    return 0;
+  }
 }

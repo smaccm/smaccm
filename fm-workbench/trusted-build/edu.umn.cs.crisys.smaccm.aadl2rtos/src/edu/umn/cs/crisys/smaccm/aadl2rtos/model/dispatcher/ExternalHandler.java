@@ -20,5 +20,8 @@ public class ExternalHandler {
 //  public String getOptHandlerFileName() {
 //    return optHandlerFileName;
 //  }	
-	
+
+	public int hashCode() {
+	  return 0;
+	}
 }

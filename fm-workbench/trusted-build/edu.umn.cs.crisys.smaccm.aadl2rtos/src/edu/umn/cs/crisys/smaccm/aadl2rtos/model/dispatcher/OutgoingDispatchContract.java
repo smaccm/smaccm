@@ -78,4 +78,8 @@ public class OutgoingDispatchContract {
     }
     return max;
   }
+  public int hashCode() {
+    return 0;
+  }
+
 }

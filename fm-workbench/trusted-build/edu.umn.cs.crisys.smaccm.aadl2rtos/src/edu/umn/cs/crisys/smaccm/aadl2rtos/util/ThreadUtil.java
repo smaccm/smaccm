@@ -25,6 +25,7 @@ import org.osate.aadl2.RangeType;
 import org.osate.aadl2.RangeValue;
 import org.osate.aadl2.UnitLiteral;
 import org.osate.aadl2.UnitsType;
+import org.osate.aadl2.impl.ReferenceValueImpl;
 import org.osate.aadl2.impl.StringLiteralImpl;
 import org.osate.aadl2.impl.ThreadTypeImpl;
 import org.osate.xtext.aadl2.properties.util.EMFIndexRetrieval;
@@ -63,7 +64,7 @@ public abstract class ThreadUtil {
   final public static String ISR_HANDLER_NAME = "SMACCM_SYS::First_Level_Interrupt_Handler";
   final public static String THREAD_TYPE_NAME = "SMACCM_SYS::Thread_Type";
   final public static String SMACCM_SYS_SENDS_EVENTS_TO_NAME = "SMACCM_SYS::Sends_Events_To";
-
+  final public static String CAMKES_OWNER_THREAD_NAME = "SMACCM_SYS::CAmkES_Owner_Thread";
 
 	final public static String DISPATCH_PROTOCOL_NAME = "Dispatch_Protocol";
 	final public static String QUEUE_SIZE_NAME = "QUEUE_SIZE";
@@ -121,6 +122,8 @@ public abstract class ThreadUtil {
 	    Util.getPropertyDefinitionInWorkspace(SMACCM_SYS_COMPUTE_ENTRYPOINT_SOURCE_TEXT_NAME);
   final public static Property SMACCM_SYS_SENDS_EVENTS_TO = Util
       .getPropertyDefinitionInWorkspace(SMACCM_SYS_SENDS_EVENTS_TO_NAME);
+  final public static Property CAMKES_OWNER_THREAD = Util
+      .getPropertyDefinitionInWorkspace(CAMKES_OWNER_THREAD_NAME);
 
 	/*
 	public static List<ThreadImplementation> getTaskThreads(Collection<ThreadImplementation> collection) {
@@ -238,6 +241,12 @@ public abstract class ThreadUtil {
     } catch (Exception e) {
       throw new Aadl2RtosException("Required property 'HW' not found for system instance: " + tti.getName() + "Exception: " + e.toString());
     }
+  }
+  
+  public static ThreadTypeImpl getCamkesOwnerThread(NamedElement sde) {
+    PropertyExpression pe = PropertyUtils.getSimplePropertyValue(sde, ThreadUtil.CAMKES_OWNER_THREAD);
+    ReferenceValueImpl impl = (ReferenceValueImpl)pe;
+    return null;
   }
   
 	public static List<String> getExternalMutexList(NamedElement tti) {

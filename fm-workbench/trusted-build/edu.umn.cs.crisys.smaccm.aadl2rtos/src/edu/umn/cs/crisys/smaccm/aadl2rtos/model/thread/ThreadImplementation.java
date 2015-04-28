@@ -59,8 +59,8 @@ public class ThreadImplementation {
 	private ArrayList<OutgoingDispatchContract> dispatchLimits = new ArrayList<OutgoingDispatchContract>();
 		
 	// RPCs
-	private List<RemoteProcedureGroupEndpoint> providesRPGList = new ArrayList<>(); 
-	private List<RemoteProcedureGroupEndpoint> requiresRPGList = new ArrayList<>();
+	private Set<RemoteProcedureGroupEndpoint> providesRPGSet = new HashSet<>(); 
+	private Set<RemoteProcedureGroupEndpoint> requiresRPGSet = new HashSet<>();
 	
 	// Constructor
 	public ThreadImplementation(Model model, String name, int priority, int stackSize, 
@@ -357,37 +357,37 @@ public class ThreadImplementation {
   /**
    * @return the providesRPCList
    */
-  public List<RemoteProcedureGroupEndpoint> getProvidesRPGList() {
-    return providesRPGList;
+  public Set<RemoteProcedureGroupEndpoint> getProvidesRPGSet() {
+    return providesRPGSet;
   }
 
   public void addProvidesRPG(RemoteProcedureGroupEndpoint rpg) {
-    providesRPGList.add(rpg);
+    providesRPGSet.add(rpg);
   }
   
   /**
    * @param providesRPCList the providesRPCList to set
    */
-  public void setProvidesRPGList(List<RemoteProcedureGroupEndpoint> providesRPGList) {
-    this.providesRPGList = providesRPGList;
+  public void setProvidesRPGSet(Set<RemoteProcedureGroupEndpoint> providesRPGList) {
+    this.providesRPGSet = providesRPGList;
   }
 
   /**
    * @return the requiresRPCList
    */
-  public List<RemoteProcedureGroupEndpoint> getRequiresRPGList() {
-    return requiresRPGList;
+  public Set<RemoteProcedureGroupEndpoint> getRequiresRPGSet() {
+    return requiresRPGSet;
   }
 
   public void addRequiresRPG(RemoteProcedureGroupEndpoint rpg) {
-    requiresRPGList.add(rpg);
+    requiresRPGSet.add(rpg);
   }
   
   /**
    * @param requiresRPCList the requiresRPCList to set
    */
-  public void setRequiresRPGList(List<RemoteProcedureGroupEndpoint> requiresRPGList) {
-    this.requiresRPGList = requiresRPGList;
+  public void setRequiresRPGSet(Set<RemoteProcedureGroupEndpoint> requiresRPGList) {
+    this.requiresRPGSet = requiresRPGList;
   }
 
   /**
@@ -552,6 +552,32 @@ public class ThreadImplementation {
       this.sourceFileList = sourceFileList;
     }
   }
+
+  @Override
+  public int hashCode() {
+    final int prime = 31;
+    int result = 1;
+    result = prime * result + ((name == null) ? 0 : name.hashCode());
+    return result;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
+    ThreadImplementation other = (ThreadImplementation) obj;
+    if (name == null) {
+      if (other.name != null)
+        return false;
+    } else if (!name.equals(other.name))
+      return false;
+    return true;
+  }
+
   
   
 }
