@@ -1,0 +1,25 @@
+/*
+ * Copyright 2014, NICTA
+ *
+ * This software may be distributed and modified according to the terms of
+ * the BSD 2-Clause license. Note that NO WARRANTY is provided.
+ * See "LICENSE_BSD2.txt" for details.
+ *
+ * @TAG(NICTA_BSD)
+ */
+
+import "../../interfaces/spi.idl4"; 
+import "../../interfaces/gpio.idl4"; 
+import "../../interfaces/clk.idl4"; 
+
+component spi {
+        uses     gpio_inf       gpio;
+        uses     clk_inf        clktree;
+        provides spi_inf        spi;
+        dataport Buf            spi1_reg;
+        dataport Buf            spi1_can;
+        consumes DataAvailable  spi1_int;
+
+        has semaphore           bus_sem;
+}
+

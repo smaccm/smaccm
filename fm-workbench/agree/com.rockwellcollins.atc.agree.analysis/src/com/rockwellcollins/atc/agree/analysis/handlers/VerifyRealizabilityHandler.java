@@ -22,6 +22,4 @@ public class VerifyRealizabilityHandler extends VerifyHandler{
         return true;
     }
 
-	
-
 }

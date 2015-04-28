@@ -21,4 +21,5 @@ public class VerifyAllHandler extends VerifyHandler {
     protected boolean isRealizability() {
         return false;
     }
+
 }

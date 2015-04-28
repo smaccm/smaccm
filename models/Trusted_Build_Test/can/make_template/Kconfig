@@ -1,0 +1,6 @@
+config APP_CAN
+    bool "AADL generic message for implementation can"
+    default n
+    select APP_CAMKES_EXECUTIVE
+    help
+        AADL generic message for implementation can. 

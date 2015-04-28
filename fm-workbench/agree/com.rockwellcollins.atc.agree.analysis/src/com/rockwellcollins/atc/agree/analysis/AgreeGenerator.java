@@ -78,15 +78,15 @@ public class AgreeGenerator {
     	}
     	
     	//add the assertions to the system level assumptions
-    	List<Expr> assumptions = new ArrayList<>();
+    	List<Expr> assertions = new ArrayList<>();
     	int assumeIndex = 0;
     	for(Equation assumEq : state.assumpExpressions){
-    		assumptions.add(new IdExpr(nodeAssumeName+assumeIndex++));
+    		assertions.add(new IdExpr(nodeAssumeName+assumeIndex++));
     	}
-    	assumptions.addAll(subNode.assertions);
+    	assertions.addAll(subNode.assertions);
     	
     	Expr clockHolds = getClockHoldExprs(state);
-    	assumptions.add(clockHolds);
+    	assertions.add(clockHolds);
 
     	//get the guarantees as properties and add them to the renaming
     	int i = 0;
@@ -123,7 +123,7 @@ public class AgreeGenerator {
     	locals.addAll(subNode.locals);
     	equations.addAll(subNode.equations);
     	Node mainNode = new Node(subNode.location, subNode.id, inputs, subNode.outputs,
-    			locals, equations, properties, assumptions,
+    			locals, equations, properties, assertions,
     			null, null, null);
     	
     	nodes.add(mainNode);
@@ -337,12 +337,12 @@ public class AgreeGenerator {
         }
         
         //add the assertions to the system level assumptions
-        List<Expr> assumptions = new ArrayList<>();
+        List<Expr> assertions = new ArrayList<>();
         for(Equation assumEq : state.assumpExpressions){
-            assumptions.add(assumEq.expr);
+            assertions.add(assumEq.expr);
         }
-        assumptions.addAll(state.assertExpressions);
-        assumptions.addAll(subNode.assertions);
+        assertions.addAll(state.assertExpressions);
+        assertions.addAll(subNode.assertions);
 
         //get the guarantees as properties and add them to the renaming
         int i = 0;
@@ -359,7 +359,7 @@ public class AgreeGenerator {
         }
         
         Node mainNode = new Node(subNode.location, subNode.id, subNode.inputs, subNode.outputs,
-                subNode.locals, subNode.equations, state.guarProps, assumptions,
+                subNode.locals, subNode.equations, state.guarProps, assertions,
                 null, null, Optional.of(inputStrs));
         
         nodes.add(mainNode);
@@ -716,18 +716,25 @@ public class AgreeGenerator {
         }
 
         Expr clockHolds = new BoolExpr(true);
+        boolean foundChildClocks = false;
         for(IdExpr parentClockId : clockIds){
             Expr notParent = new UnaryExpr(UnaryOp.NOT, parentClockId);
-            String prefix = parentClockId.id.replace(state.clockIDSuffix, "");
+            String prefix = parentClockId.id.replace(state.clockIDSuffix, "")+"__";
             Expr notClocks = new BoolExpr(true);
             for(IdExpr childClockId : clockIds){
                 if(childClockId.id.startsWith(prefix) && !childClockId.id.equals(parentClockId.id)){
                     Expr notThisClock = new UnaryExpr(UnaryOp.NOT, new IdExpr(childClockId.id));
                     notClocks = new BinaryExpr(notClocks, BinaryOp.AND, notThisClock);
+                    foundChildClocks = true;
                 }
             }
             notClocks = new BinaryExpr(notParent, BinaryOp.IMPLIES, notClocks);
             clockHolds = new BinaryExpr(clockHolds, BinaryOp.AND, notClocks);
+        }
+        
+        //this should always be true for the single layers case
+        if(!foundChildClocks){
+        	return new BoolExpr(true);
         }
 
         return clockHolds;

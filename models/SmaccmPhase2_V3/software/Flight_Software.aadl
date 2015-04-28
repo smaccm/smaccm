@@ -47,11 +47,11 @@ process main
   	  time_of_last_ppm = 0.0;
   	
   	--assumptions about how often events can occur
---  	assume "not frequent ppms" : true ->
---  	 time - pre(time_of_last_ppm) < PPM_PERIOD => not event(ppm_in);
---  	  
---  	assume "not frequent can" : true ->
---  	 time - pre(time_of_last_can) < CAN_PERIOD => not event(mission_in);
+  	assume "not frequent ppms" : true ->
+  	 time - pre(time_of_last_ppm) < PPM_PERIOD => not event(ppm_in);
+  	  
+  	assume "not frequent can" : true ->
+  	 time - pre(time_of_last_can) < CAN_PERIOD => not event(mission_in);
   	
   	guarantee "time is positive and increasing" :
   	  (time = 0.0 -> true) and time >= 0.0 and (true -> time > pre(time));
@@ -77,8 +77,6 @@ process main
   	guarantee "if the controller is armed, then an armed signal in the past" :
   	  control_mode = AGREE_CONSTS.ARMED_MODE =>
   	    mavlink_armed_in_past or ppm_armed_in_past;
-
-	guarantee "not vacuous" : control_mode != AGREE_CONSTS.ARMED_MODE;
 
 --  	guarantee "if an arm signal is sent from the ppm controller the controller will be armed" : true;
 --  	
@@ -327,54 +325,54 @@ process implementation main.i
   	  ret = false -> pre(clock) and not clock;
   	tel;
   	
-  	-------------- BEGIN LEMMAS ABOUT SCHEDULABILITY -------------
-  	
-  	--these lemmas about runtime
-  	lemma "control runtime is bounded" :
-  	  0.0 <= control_run_time and control_run_time <= CONTROL_EXEC_TIME;
-  	  
-  	lemma "ppm runtime is bounded" :
-  	  0.0 <= ppm_run_time and ppm_run_time <= PPM_EXEC_TIME;
-  	  
-  	lemma "can runtime is bounded" :
-  	  0.0 <= can_run_time and can_run_time <= CAN_EXEC_TIME;
-  	  
-  	lemma "control_law runtime is bounded" :
-  	  0.0 <= control_law_run_time and control_law_run_time <= CONTROL_LAW_EXEC_TIME;
-  	  
-  	lemma "ui_mux runtime is bounded" :
-  	  0.0 <= ui_mux_run_time and ui_mux_run_time <= UI_MUX_EXEC_TIME;
-  	
-
-  	eq last_control_finished : real = -1.0 * CONTROL_EXEC_TIME ->
-  	  if fall(control_clock) then time else pre(last_control_finished);
-  	  
-  	eq last_control_scheduled : real = 0.0 ->
-  	  if time_of_next_control != pre(time_of_next_control) then
-  	    pre(time_of_next_control)
-  	  else
-  	    pre(last_control_scheduled);
-  	    
-  	lemma "last_control_finished less than or equal to time" : 
-  	  last_control_finished <= time;
-  	  
-  	lemma "last_control_scheduled and finished greater than exec time" : 
-  	  abs(last_control_scheduled - last_control_finished) >= CONTROL_EXEC_TIME;
-  	
-  	lemma "control scheduled if last finished less than last scheduled" :
-  	  last_control_finished < last_control_scheduled => control_scheduled or control_clock;
-  	  
-  	lemma "control task meets its deadline" : true ->
-  	  pre(last_control_scheduled) != last_control_scheduled => last_control_finished > pre(last_control_scheduled);
-
-    node abs(n : real) returns (ret : real);
-    let
-      ret = if n < 0.0 then -1.0 * n else n;
-    tel;
-    
-    -------- LEMMAS TO PROVE OTHER GUARANTEES ---------
-    lemma "positive execs_since_control_law" : control.execs_since_last_control_law >= 0;
-    lemma "time of next control bound" : time_of_next_control <= time + CONTROL_PERIOD;
+--  	-------------- BEGIN LEMMAS ABOUT SCHEDULABILITY -------------
+--  	
+--  	--these lemmas about runtime
+--  	lemma "control runtime is bounded" :
+--  	  0.0 <= control_run_time and control_run_time <= CONTROL_EXEC_TIME;
+--  	  
+--  	lemma "ppm runtime is bounded" :
+--  	  0.0 <= ppm_run_time and ppm_run_time <= PPM_EXEC_TIME;
+--  	  
+--  	lemma "can runtime is bounded" :
+--  	  0.0 <= can_run_time and can_run_time <= CAN_EXEC_TIME;
+--  	  
+--  	lemma "control_law runtime is bounded" :
+--  	  0.0 <= control_law_run_time and control_law_run_time <= CONTROL_LAW_EXEC_TIME;
+--  	  
+--  	lemma "ui_mux runtime is bounded" :
+--  	  0.0 <= ui_mux_run_time and ui_mux_run_time <= UI_MUX_EXEC_TIME;
+--  	
+--
+--  	eq last_control_finished : real = -1.0 * CONTROL_EXEC_TIME ->
+--  	  if fall(control_clock) then time else pre(last_control_finished);
+--  	  
+--  	eq last_control_scheduled : real = 0.0 ->
+--  	  if time_of_next_control != pre(time_of_next_control) then
+--  	    pre(time_of_next_control)
+--  	  else
+--  	    pre(last_control_scheduled);
+--  	    
+--  	lemma "last_control_finished less than or equal to time" : 
+--  	  last_control_finished <= time;
+--  	  
+--  	lemma "last_control_scheduled and finished greater than exec time" : 
+--  	  abs(last_control_scheduled - last_control_finished) >= CONTROL_EXEC_TIME;
+--  	
+--  	lemma "control scheduled if last finished less than last scheduled" :
+--  	  last_control_finished < last_control_scheduled => control_scheduled or control_clock;
+--  	  
+--  	lemma "control task meets its deadline" : true ->
+--  	  pre(last_control_scheduled) != last_control_scheduled => last_control_finished > pre(last_control_scheduled);
+--
+--    node abs(n : real) returns (ret : real);
+--    let
+--      ret = if n < 0.0 then -1.0 * n else n;
+--    tel;
+--    
+--    -------- LEMMAS TO PROVE OTHER GUARANTEES ---------
+--    lemma "positive execs_since_control_law" : control.execs_since_last_control_law >= 0;
+--    lemma "time of next control bound" : time_of_next_control <= time + CONTROL_PERIOD;
     
     -------- assertions to link contract variables --------
     
@@ -385,14 +383,7 @@ process implementation main.i
     assert ppm_armed_in_past = 
       (event(ppm.control_law_out) and ppm.control_law_out.set_armed ->
       pre(ppm_armed_in_past) or (event(ppm.control_law_out) and ppm.control_law_out.set_armed));
-      
-    eq ui_mux_clock_count : int = 0 -> 
-      if (rise(ui_mux_clock)) then
-        pre(ui_mux_clock_count) + 1
-      else
-        pre(ui_mux_clock_count);
-	
-	lemma "many possible ui_mux" : not (ui_mux_clock_count > 4);
+
 	
   **}; 
   
@@ -492,10 +483,10 @@ thread control_law_t
   	eq ui_source_ppm : bool = not ui_source_mavlink;
   	
   	--assume that we only handle one event at a time
-  	assume "a single event occurs" : 
-  	  (event(ppm_law) => not (event(mav_law) or event(nav_law))) and
-  	  (event(mav_law) => not (event(ppm_law) or event(nav_law))) and
-  	  (event(nav_law) => not (event(ppm_law) or event(mav_law)));
+--  	assume "a single event occurs" : 
+--  	  (event(ppm_law) => not (event(mav_law) or event(nav_law))) and
+--  	  (event(mav_law) => not (event(ppm_law) or event(nav_law))) and
+--  	  (event(nav_law) => not (event(ppm_law) or event(mav_law)));
  
   	guarantee "law is always initialized to the initial state" :
   	  out_law = init_law and event(out_law) -> true;
@@ -521,14 +512,13 @@ thread control_law_t
         out_law.armed_mode = ARMED_DISARMED
       else if ppm_law.set_armed  then
         out_law.armed_mode = ARMED_ARMED
-        
       else
         out_law.armed_mode = pre(out_law.armed_mode);
   	    	  
   	    	  
   	guarantee "mav arming logic" : true -> event(mav_law) =>
   	  if pre(out_law.armed_mode) = ARMED_SAFE then
-  	    true
+  	    out_law.armed_mode = pre(out_law.armed_mode)
   	  else if mav_law.set_disarmed then
   	    out_law.armed_mode = ARMED_DISARMED
   	  else if mav_law.set_armed then
@@ -618,11 +608,12 @@ thread control_t
   	    mode = AGREE_CONSTS.DISARMED_MODE and
   	    execs_since_last_control_law = 0;
 
-  	  assume "valid modes for control input":
-  	    event(control_law) =>
-  	      control_law.armed_mode = AGREE_CONSTS.LAND_MODE or
-  	      control_law.armed_mode = AGREE_CONSTS.ARMED_MODE or
-  	      control_law.armed_mode = AGREE_CONSTS.DISARMED_MODE;
+--  	  assume "valid modes for control input":
+--  	    event(control_law) =>
+--  	      control_law.armed_mode = AGREE_CONSTS.SAFE_MODE or
+--  	      control_law.armed_mode = AGREE_CONSTS.LAND_MODE or
+--  	      control_law.armed_mode = AGREE_CONSTS.ARMED_MODE or
+--  	      control_law.armed_mode = AGREE_CONSTS.DISARMED_MODE;
   	      
   	  guarantee "if we have not seen a control input for a while go in landing mode" :
   	    mode != AGREE_CONSTS.DISARMED_MODE and execs_since_last_control_law >= 2 => mode = AGREE_CONSTS.LAND_MODE;

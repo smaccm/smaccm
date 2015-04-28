@@ -145,7 +145,7 @@
                   id="com.rockwellcollins.atc.agree.analysis.menus.verifyAll"
                   style="push">
             </command>
-             <command
+            <command
                   commandId="com.rockwellcollins.atc.agree.analysis.commands.verifyRealize"
                   icon="icons/layers.png"
                   id="com.rockwellcollins.atc.agree.analysis.menus.verifyRealize"
