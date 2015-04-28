@@ -83,11 +83,11 @@ public class RecordType extends Type {
 	  return outputBuffer.toString();
 	}
 	
-	public String makeString(int indent) {
+	public String makeString(int indent, String tyName) {
     StringBuilder buf = new StringBuilder();
     buf.append("\n");
     buf.append(indent(indent)); 
-    buf.append("struct { \n");
+    buf.append("struct " + tyName + " { \n");
     //Iterator<String> iterator = this.fields.iterator();
     for (RecordField rf: fields) {
       buf.append(indent(indent+3));
@@ -100,12 +100,21 @@ public class RecordType extends Type {
     return buf.toString();
 	}
 	
-	// TODO: properly indent the darn thing.
+	public String makeString(int indent) {
+	  return makeString(indent, ""); 
+	}
+	
 	@Override
 	public String toString() {
 	  return makeString(0);
 	}
 
+	@Override
+	public String CTypeDecl(int indent, String name) {
+    return (new CType(makeString(indent, name), "")).varString(name);
+  }
+
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;

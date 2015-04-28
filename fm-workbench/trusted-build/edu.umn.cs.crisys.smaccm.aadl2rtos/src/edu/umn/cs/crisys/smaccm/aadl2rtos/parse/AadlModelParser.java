@@ -947,7 +947,7 @@ public class AadlModelParser {
 
 	private String getDataClassifierName(DataClassifier dc) {
     String typeNameOpt = Util.getStringValueOpt(dc, 
-        ThreadUtil.SMACCM_SYS_COMMPRIM_SOURCE_TEXT);
+        ThreadUtil.C_TYPE_NAME);
     String qualifiedName = dc.getQualifiedName();
     String normalizedName = Util.normalizeAadlName(qualifiedName);
 	  return (typeNameOpt != null) ? typeNameOpt : normalizedName; 
