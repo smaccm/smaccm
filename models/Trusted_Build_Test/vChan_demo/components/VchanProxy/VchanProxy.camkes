@@ -1,0 +1,37 @@
+/*
+ * Copyright 2014, NICTA
+ *
+ * This software may be distributed and modified according to the terms of
+ * the GNU General Public License version 2. Note that NO WARRANTY is provided.
+ * See "LICENSE_GPLv2.txt" for details.
+ *
+ * @TAG(NICTA_GPL)
+ */
+
+import <VchanInterface.idl4>;
+import "../../interfaces/void_writer.idl4";
+import "../../interfaces/vchan_headers_t_writer.idl4";
+import "../../interfaces/VchanInterfaceAadl.idl4";
+
+component VchanProxy {
+    control;
+
+    /* Incoming interfaces */
+
+    include "smaccm_vChan_demo_impl_types.h";
+
+    provides VchanInterfaceAadl rpc_in;
+
+    uses void_writer vevent_in;
+    has mutex smaccm_receiver_vevent_mut_in;
+
+    /* Outgoing interfaces */
+
+    // include "vmm/vchan_sharemem.h";
+    // dataport vchan_headers_t share_mem_out;
+    // dataport vchan_headers_t buff1_in;
+
+    uses VchanInterface vchan_com_out;
+
+    consumes VchanEvent vevent_out;
+}
