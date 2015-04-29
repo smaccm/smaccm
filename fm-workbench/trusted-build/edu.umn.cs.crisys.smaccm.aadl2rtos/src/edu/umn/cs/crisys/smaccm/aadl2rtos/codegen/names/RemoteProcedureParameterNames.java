@@ -20,7 +20,8 @@ public class RemoteProcedureParameterNames {
   public String getDirection() {
     Direction d = rpp.getParamDirection();
     String name = 
-        (d == Direction.IN) ? "in" : 
+        (d == Direction.IN) ? 
+            (rpp.isByReference() ? "refin" : "in") :   
           (d == Direction.OUT) ? "out" : "inout";
     return name;
   }

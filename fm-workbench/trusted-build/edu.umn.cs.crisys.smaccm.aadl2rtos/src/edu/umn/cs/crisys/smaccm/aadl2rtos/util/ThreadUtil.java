@@ -70,6 +70,7 @@ public abstract class ThreadUtil {
 	final public static String QUEUE_SIZE_NAME = "QUEUE_SIZE";
 	final public static String ACCESS_RIGHT_NAME = "Access_Right";
   final public static String C_TYPE_NAME_NAME = "SMACCM_SYS::C_Type_Name";
+  final public static String PASS_BY_REFERENCE_NAME = "SMACCM_SYS::By_Reference";
 
 	final public static Property INITIALIZE_ENTRYPOINT_SOURCE_TEXT = Util
 			.getPropertyDefinitionInWorkspace(INITIALIZE_ENTRYPOINT_SOURCE_TEXT_NAME);
@@ -127,7 +128,10 @@ public abstract class ThreadUtil {
       .getPropertyDefinitionInWorkspace(CAMKES_OWNER_THREAD_NAME);
   final public static Property C_TYPE_NAME = Util
       .getPropertyDefinitionInWorkspace(C_TYPE_NAME_NAME);
-
+  final public static Property PASS_BY_REFERENCE = Util
+      .getPropertyDefinitionInWorkspace(PASS_BY_REFERENCE_NAME);
+  
+  
 	/*
 	public static List<ThreadImplementation> getTaskThreads(Collection<ThreadImplementation> collection) {
 		List<ThreadImplementation> taskThreads = new ArrayList<ThreadImplementation>();
@@ -175,6 +179,15 @@ public abstract class ThreadUtil {
 		} catch(Exception e) {}
 		return legacy;
 	}
+
+  public static boolean getIsPassByReference(NamedElement tti) {
+    boolean pbr = false;
+
+    try {
+      pbr = (boolean) PropertyUtils.getBooleanValue(tti, ThreadUtil.PASS_BY_REFERENCE);
+    } catch(Exception e) {}
+    return pbr;
+  }
 
 	public static Map<String, String> getMemoryRegions(NamedElement tti) {
 	  Map<String, String> m = new HashMap<>();

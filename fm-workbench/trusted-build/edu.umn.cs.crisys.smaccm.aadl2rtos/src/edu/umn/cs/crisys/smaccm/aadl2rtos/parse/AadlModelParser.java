@@ -795,8 +795,10 @@ public class AadlModelParser {
           Direction dir = 
               (parm.getDirection() == DirectionType.IN) ? Direction.IN :
                 (parm.getDirection() == DirectionType.OUT) ? Direction.OUT :
-                  Direction.IN_OUT; 
-          RemoteProcedureParameter modelParam = new RemoteProcedureParameter(t, dir, id);
+                  Direction.IN_OUT;
+          boolean passByReference = ThreadUtil.getIsPassByReference(parm);
+          RemoteProcedureParameter modelParam = 
+              new RemoteProcedureParameter(t, dir, id, passByReference);
           
           // kludge for function return values.
           if (initial && id.equalsIgnoreCase("returns") && 

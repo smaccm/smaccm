@@ -37,6 +37,9 @@ property set SMACCM_SYS is
 	External_IRQ_List: list of aadlstring applies to (system implementation);
 	Generate_Scheduler_Systick_IRQ: aadlboolean => true applies to (system implementation);
 	
+	-- For different parameter passing styles
+	By_Reference : aadlboolean => false applies to (parameter);
+	
 	-- For CAmkES specifically
 	CAmkES_Owner_Thread : aadlstring applies to ( data );
 	
