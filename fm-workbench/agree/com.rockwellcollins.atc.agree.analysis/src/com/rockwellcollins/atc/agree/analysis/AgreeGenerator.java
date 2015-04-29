@@ -123,8 +123,7 @@ public class AgreeGenerator {
     	locals.addAll(subNode.locals);
     	equations.addAll(subNode.equations);
     	Node mainNode = new Node(subNode.location, subNode.id, inputs, subNode.outputs,
-    			locals, equations, properties, assertions,
-    			null, null, null);
+    			locals, equations, properties, assertions, null);
     	
     	nodes.add(mainNode);
     	
@@ -359,8 +358,7 @@ public class AgreeGenerator {
         }
         
         Node mainNode = new Node(subNode.location, subNode.id, subNode.inputs, subNode.outputs,
-                subNode.locals, subNode.equations, state.guarProps, assertions,
-                null, null, Optional.of(inputStrs));
+                subNode.locals, subNode.equations, state.guarProps, assertions, Optional.of(inputStrs));
         
         nodes.add(mainNode);
         
@@ -407,6 +405,10 @@ public class AgreeGenerator {
     	}
     	
     	agreeProgram.state = state;
+//    	for(Node nodeDef : state.nodeDefExpressions){
+//    		System.out.println(nodeDef.id);
+//    	}
+    	
     	agreeProgram.assumeGuaranteeProgram = getAssumeGuaranteeProgram(state);
     	agreeProgram.consistProgram = getConsistProgram(state);
     	
@@ -699,7 +701,22 @@ public class AgreeGenerator {
     private static void addNodes(AgreeEmitterState state,
             AgreeEmitterState subState) {
 
-        state.nodeDefExpressions.addAll(subState.nodeDefExpressions);
+    	//nodes do not do a compare on their ids so we need to check them
+    	//manually :-(
+    	
+    	for(Node subNode : subState.nodeDefExpressions){
+    		boolean found = false;
+    		for(Node node : state.nodeDefExpressions){
+    			if(node.id.equals(subNode.id)){
+    				found = true;
+    				break;
+    			}
+    		}
+    		if(!found){
+    			state.nodeDefExpressions.add(subNode);
+    		}
+    	}
+        //state.nodeDefExpressions.addAll(subState.nodeDefExpressions);
     }
 
 	private static Expr getClockHoldExprs(AgreeEmitterState state){
@@ -1032,7 +1049,7 @@ public class AgreeGenerator {
     	equations.add(assertEq);
     	
     	Node subNode = new Node(Location.NULL, nodeId, inputs, outputs, locals, equations,
-    			null, assertions, null, null, null);
+    			null, assertions, null);
     	
     	return subNode;
     	

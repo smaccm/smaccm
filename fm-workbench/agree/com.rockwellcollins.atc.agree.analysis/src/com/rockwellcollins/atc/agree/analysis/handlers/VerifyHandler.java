@@ -232,7 +232,12 @@ public abstract class VerifyHandler extends AadlHandler {
     	IPreferenceStore prefs = Activator.getDefault().getPreferenceStore();
     	int consistDetph = prefs.getInt(PreferenceConstants.PREF_CONSIST_DEPTH);
     	
-        JKindResult result = new ConsistencyResult("Contract Consistency", agreeProgram.state.consistProps, agreeProgram.state.renaming, consistDetph);
+    	List<Boolean> invertStatuses = new ArrayList<>();
+    	int i;
+    	for(i = 0; i < agreeProgram.state.consistProps.size(); i++){
+    		invertStatuses.add(true);
+    	}
+        JKindResult result = new ConsistencyResult("Contract Consistency", agreeProgram.state.consistProps, invertStatuses, agreeProgram.state.renaming);
         queue.add(result);
 
         ComponentImplementation compImpl = AgreeEmitterUtilities.getInstanceImplementation(agreeProgram.state.curInst);
