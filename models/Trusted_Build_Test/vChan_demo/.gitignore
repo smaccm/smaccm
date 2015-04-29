@@ -8,3 +8,5 @@ make_template
 !components/**/*.camkes
 !components/**/include
 components/server
+!components/server/src/vchan-shim.c
+!components/server/include/vchan-shim.h
