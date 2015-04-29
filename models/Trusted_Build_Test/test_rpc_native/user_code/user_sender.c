@@ -12,6 +12,6 @@ void periodic_ping(const uint64_t *periodic_100_ms) {
    uint32_t result;
    add_subtract_add(my_struct, arg2, &result);
    printf("Result of 'add' call to receiver with arguments 32, 5 : (%d) \n", result);
-   add_subtract_subtract(arg1, arg2, &my_struct);
+   add_subtract_subtract(&arg1, arg2, &my_struct);
    printf("Result of 'subtract' call to receiver with arguments 10, 5 : (%d) \n", my_struct.field2);
 }
