@@ -65,25 +65,18 @@ int can_sendto(int txb_idx, struct can_frame frame)
 
 void can_send(struct can_frame frame)
 {
-    printf("In can_send\n");
 	int ret;
 
 	do {
-	    printf("send 1\n");
 		ret = tx_queue_push(&frame);
-	    printf("send 2\n");
 		start_xmit();
-	    printf("send 3\n");
 	} while (ret < 0);
 }
 
 void can_recv(struct can_frame *frame)
 {
-    	    printf("recv 1\n");
 	queue_lock_wait(); // Wait for frame to be added
-    	    printf("recv 2\n");
 	rx_queue_pop(frame);
-    	    printf("recv 3\n");
 }
 
 void can_abort(int txb_idx)

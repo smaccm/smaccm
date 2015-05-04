@@ -80,7 +80,6 @@ assembly {
         // CAN Driver
         connection seL4RPC can_spi(from can_obj.spi, to spi_obj.spi);
         connection seL4SharedData can_spi_channel(from can_obj.spi_can,to spi_obj.spi1_can);
-        // connection seL4RPC gpio_can(from gpio_obj.can, to can_obj.can);
         connection seL4Asynch gpio_can_int(from gpio_obj.CANInt, to can_obj.Int);
         connection seL4Asynch gpio_can_intAck(from can_obj.IntAck, to gpio_obj.CANIntAck);
     }

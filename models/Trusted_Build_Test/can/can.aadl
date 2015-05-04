@@ -82,7 +82,6 @@ public
       Dispatch_Protocol => Sporadic;
       Source_Text => ("user_code/receiver.c");
 
-      SMACCM_SYS::Sends_Events_To => "{{1 output}}";
       Compute_Entrypoint_Source_Text => "receive" applies to input;
   end receiver;
 

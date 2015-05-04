@@ -462,7 +462,11 @@ void recv_rxb(int rxb_idx, struct can_frame *frame)
 	}
 
 	/* Copy in payload */
-	memcpy(frame->data, buf + DAT, frame->dlc);
+	int len = frame->dlc;
+	if (len > 8) {
+	    len = 8;
+	}
+	memcpy(frame->data, buf + DAT, len);
 }
 
 /**
