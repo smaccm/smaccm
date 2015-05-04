@@ -8,8 +8,11 @@
  * @TAG(NICTA_BSD)
  */
 
-
-procedure spi_inf {
-	int transfer(in int id, in unsigned int wcount, in unsigned int rcount);
-	int transfer_byte(in int id, in char byte);
+procedure can_tx_inf {
+	include "include/can_inf.h";
+	int setup(in int baudrate);
+	int sendto(in int txb_idx, in can_frame_t frame);
+	void send(in can_frame_t frame);
+	void abort(in int txb_idx);
+	int status(in int txb_idx);
 };

@@ -14,7 +14,6 @@
 static int id = 0;
 
 void send(const uint64_t *time) {
-    /*
     can__can_frame_i frame;
 
     frame.ident.id = id++;
@@ -42,6 +41,5 @@ void send(const uint64_t *time) {
     if (id > 8) {
 	id = 0;
     }
-    */
 }
 

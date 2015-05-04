@@ -5,7 +5,7 @@
 
 void pre_init(void) {
     printf("pre_init\n");
-    can_setup(125000);
+    can_tx_setup(125000);
 }
 
 bool client_input_write_can__can_frame_i(const can__can_frame_i * a_frame) {
@@ -22,7 +22,7 @@ bool client_input_write_can__can_frame_i(const can__can_frame_i * a_frame) {
     d_frame.dlc = a_frame->dlc;
     memcpy(d_frame.data, a_frame->payload, a_frame->dlc);
 
-    can_send(d_frame);
+    can_tx_send(d_frame);
     
     return true;
 }
@@ -30,7 +30,7 @@ bool client_input_write_can__can_frame_i(const can__can_frame_i * a_frame) {
 int run(void) {
     for (;;) {
 	can_frame_t d_frame; // Driver frame
-	can_recv(&d_frame);
+	can_rx_recv(&d_frame);
 
 	can__can_frame_i a_frame; // AADL frame
 	a_frame.ident.id = d_frame.ident.id;

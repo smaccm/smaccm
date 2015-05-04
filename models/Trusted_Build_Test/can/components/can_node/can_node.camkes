@@ -16,7 +16,8 @@ component can_node {
     provides can__can_frame_i_writer client_input; 
 
     // Driver interface
-    uses can_inf can;
+    uses can_tx_inf can_tx;
+    uses can_rx_inf can_rx;
 }
 
 component clkbase {
@@ -56,7 +57,8 @@ assembly {
 	component gpio gpio_obj;
 	component clk clk_obj;
 
-	connection seL4RPC can_node_inst_can(from can_node_inst.can, to can_obj.can);
+	connection seL4RPC can_node_inst_can_tx(from can_node_inst.can_tx, to can_obj.can_tx);
+	connection seL4RPC can_node_inst_can_rx(from can_node_inst.can_rx, to can_obj.can_rx);
 
         connection seL4HardwareMMIO clk_cmu_cpu_mem(from clk_obj.cmu_cpu_clk, to clkbase_obj.cmu_cpu_clk);
         connection seL4HardwareMMIO clk_cmu_top_mem(from clk_obj.cmu_top_clk, to clkbase_obj.cmu_top_clk);

@@ -8,8 +8,10 @@
  * @TAG(NICTA_BSD)
  */
 
-
-procedure spi_inf {
-	int transfer(in int id, in unsigned int wcount, in unsigned int rcount);
-	int transfer_byte(in int id, in char byte);
+procedure can_rx_inf {
+	include "include/can_inf.h";
+	void recv(out can_frame_t frame);
+	int set_filter(in can_id_t ident, in unsigned int mask);
+	void clear_filter(in int filter_id);
+	void disable_filtering(void);
 };
