@@ -12,7 +12,7 @@
 #include <stdio.h>
 
 void receive(const can__can_frame_i *frame) {
-    printf("Recieved can frame with id %d, payload: ", frame->ident.id);
+    printf("Recieved can frame with id %d, payload: ", frame->id);
     uint8_t i;
     for (i = 0; i < frame->dlc; i++) {
 	printf("0x%02x ", frame->payload[i]);

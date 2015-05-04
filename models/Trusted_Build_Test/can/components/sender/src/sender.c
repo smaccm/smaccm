@@ -16,10 +16,7 @@ static int id = 0;
 void send(const uint64_t *time) {
     can__can_frame_i frame;
 
-    frame.ident.id = id++;
-    frame.ident.exide = false;
-    frame.ident.rtr = false;
-    frame.ident.err = false;
+    frame.id = id++;
     frame.dlc = 8;
     frame.payload[0] = 0x01;
     frame.payload[1] = 0x02;
@@ -31,7 +28,8 @@ void send(const uint64_t *time) {
     frame.payload[7] = 0x08;
 
     sender_write_output(&frame);
-    printf("Sent can frame with id %d, payload: ", frame.ident.id);
+    sender_abort_write_void();
+    printf("Sent can frame with id %d, payload: ", frame.id);
     uint8_t i;
     for (i = 0; i < frame.dlc; i++) {
 	printf("0x%02x ", frame.payload[i]);
@@ -43,3 +41,6 @@ void send(const uint64_t *time) {
     }
 }
 
+void recvStatus(const bool *status) {
+    printf("Sender received status: %s\n", status ? "true" : "false");
+}

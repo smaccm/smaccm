@@ -3,3 +3,4 @@ bin
 instances
 *.sacm
 .#*
+TAGS

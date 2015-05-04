@@ -9,21 +9,10 @@ public
 
   data implementation can_frame.i
     subcomponents
-      ident: data can_id.i; -- Identifier
-      dlc: data Base_Types::Unsigned_8; -- Data Length Code(0 ~ 8)
-      payload: data can_payload.i; -- Frame payload (8 bytes maximum)
+      id: data Base_Types::Unsigned_32; -- CAN id (11 bits for standard frame, 29 bits if extended frame)
+      dlc: data Base_Types::Unsigned_8; -- Data Length Code (0 ~ 8)
+      payload: data can_payload.i;      -- Frame payload (8 bytes maximum)
   end can_frame.i;
-
-  data can_id
-  end can_id;
-
-  data implementation can_id.i
-    subcomponents
-      id: data Base_Types::Unsigned_32; -- CAN id(11 bits for standard frame, 29 bits if extended frame)
-      exide: data Base_Types::Boolean; -- Extended frame flag
-      rtr: data Base_Types::Boolean; -- Remote Transmission Request
-      err: data Base_Types::Boolean; -- Error frame flag
-  end can_id.i;
 
   data can_payload
   end can_payload;
@@ -37,8 +26,23 @@ public
 
   thread can_node
     features
-      client_input: in event data port can_frame.i;
-      client_output: out event data port can_frame.i;
+      send_0: in event data port can_frame.i;
+      send_1: in event data port can_frame.i;
+      send_2: in event data port can_frame.i;
+      
+      abort_0: in event port;
+      abort_1: in event port;
+      abort_2: in event port;
+      
+      recv: out event data port can_frame.i;
+      status_0: out event data port Base_Types::Boolean;
+      status_1: out event data port Base_Types::Boolean;
+      status_2: out event data port Base_Types::Boolean;
+      
+      -- Do we need filtering?
+      -- Do we need send without a specific buffer?
+      -- Do we really need abort?
+      -- If you abort a send, what behavior do we expect on status?
 
     properties
       SMACCM_SYS::Is_External => true;
@@ -55,6 +59,10 @@ public
   thread sender
     features
       output: out event data port can_frame.i;
+      status_0: in event data port Base_Types::Boolean;
+      status_1: in event data port Base_Types::Boolean;
+      status_2: in event data port Base_Types::Boolean;
+      abort: out event port;
 
     properties
       SMACCM_SYS::Thread_Type => Active;
@@ -67,6 +75,7 @@ public
 
       SMACCM_SYS::Sends_Events_To => "{{1 output}}";
       Compute_Entrypoint_Source_Text => "send";
+      Compute_Entrypoint_Source_Text => "recvStatus" applies to status_0;
   end sender;
   
   
@@ -82,6 +91,7 @@ public
       Dispatch_Protocol => Sporadic;
       Source_Text => ("user_code/receiver.c");
 
+      SMACCM_SYS::Sends_Events_To => "{{1 output}}";
       Compute_Entrypoint_Source_Text => "receive" applies to input;
   end receiver;
 
@@ -95,8 +105,15 @@ public
       receiver: thread receiver;
 
     connections
-      sender_to_can_node: port sender.output -> can_node.client_input;
-      can_node_to_receiver: port can_node.client_output -> receiver.input;
+      send_conn: port sender.output -> can_node.send_0;
+      status_0_conn: port can_node.status_0 -> sender.status_0;
+      abort_conn: port sender.abort -> can_node.abort_0;
+      
+      -- These two lines need to be here just so that the right CAmkES connections are created
+      status_1_conn: port can_node.status_1 -> sender.status_1;
+      status_2_conn: port can_node.status_2 -> sender.status_2;
+      
+      recv: port can_node.recv -> receiver.input;
   end proc.i;
 
   system wrapper
