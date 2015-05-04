@@ -14,6 +14,7 @@
 static int id = 0;
 
 void send(const uint64_t *time) {
+    /*
     can__can_frame_i frame;
 
     frame.ident.id = id++;
@@ -31,15 +32,16 @@ void send(const uint64_t *time) {
     frame.payload[7] = 0x08;
 
     sender_write_output(&frame);
-    printf("Sent can frame with id %d, payload: ", frame->ident.id);
+    printf("Sent can frame with id %d, payload: ", frame.ident.id);
     uint8_t i;
-    for (i = 0; i < frame->dlc; i++) {
-	printf("0x%02x ", frame->payload[i]);
+    for (i = 0; i < frame.dlc; i++) {
+	printf("0x%02x ", frame.payload[i]);
     }
     printf("\n");
 
     if (id > 8) {
 	id = 0;
     }
+    */
 }
 
