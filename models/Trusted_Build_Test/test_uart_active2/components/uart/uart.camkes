@@ -15,7 +15,6 @@ component uart {
   provides uart__packet_i_writer input;
   uses uart__packet_i_writer uart_output;
 	
-  provides uart_inf       uart;
   dataport Buf            vaddr;
   consumes DataAvailable  interrupt;
   has semaphore           read_sem;

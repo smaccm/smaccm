@@ -43,7 +43,7 @@ interrupt_event(void* token)
     interrupt_reg_callback(&interrupt_event, token);
 }
 
-void uart__init(void)
+void pre_init(void)
 {
     /* Iniitialise the UART */
     printf("Initialising UART driver\n");
@@ -131,6 +131,14 @@ int uart_write(int uart_num, char datum)
     write_sem_wait();
 
     return 1;
+}
+
+bool input_write_uart__packet_i(const uart__packet_i * input) {
+    int r = uart_write(input->uart_num, input->datum);
+    if (r < 0) {
+	printf("Error from uart_write, return code: %d\n", r);
+    }
+    return (r >= 0);
 }
 
 int run(void)
