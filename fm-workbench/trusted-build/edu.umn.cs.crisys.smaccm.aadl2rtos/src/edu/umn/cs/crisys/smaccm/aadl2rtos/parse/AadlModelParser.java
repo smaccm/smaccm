@@ -515,6 +515,8 @@ public class AadlModelParser {
       priority = ThreadUtil.getPriority(tti);
       stackSize = ThreadUtil.getStackSizeInBytes(tti);
     } else {
+      // TODO: Compute priorities for passive threads.
+      priority = 300; 
       try {
         ThreadUtil.getPriority(tti);
         logger.warn("Warning: priority ignored for passive thread: " + name);
@@ -735,7 +737,6 @@ public class AadlModelParser {
     if (this.sharedDataMap.containsKey(srcDataComponent)) {
       sharedData = this.sharedDataMap.get(srcDataComponent);
     } else {
-      // TODO: add the thread owner here.
       String ttiName = null;
       sharedData = new SharedData(srcDataComponent.getName(), getDataType(srcDataComponent));
       this.sharedDataMap.put(srcDataComponent, sharedData);
@@ -880,7 +881,6 @@ public class AadlModelParser {
 	                 ci.getSource() instanceof FeatureInstanceImpl) {
 	        constructSubprogramAccess(ci);
 	      } else if (ci.getKind() == ConnectionKind.ACCESS_CONNECTION) {
-	        // TODO: add additional qualifier to accurately identify kind as Data Access Connection
 	        constructAccess(ci); 
 	      } else {
 	        throw new Aadl2RtosException("ConnectionKind: " + ci.getKind() + " is not currently supported by SystemBuild.");
