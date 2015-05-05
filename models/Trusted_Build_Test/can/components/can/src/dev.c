@@ -42,6 +42,7 @@ int can_tx_setup(int baudrate)
 
 //	enable_rollover();
 	set_mode(REQOP_NORMAL);
+//	set_mode(REQOP_LISTEN);
 
 	return 0;
 }
