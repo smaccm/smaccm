@@ -20,7 +20,7 @@ public
     properties
       Data_Model::Data_Representation => Array;
       Data_Model::Base_Type => (classifier (Base_Types::Unsigned_8));
-      Data_Model::Dimension => (256);
+      Data_Model::Dimension => (255);
   end payload.i;
 
   thread uart
