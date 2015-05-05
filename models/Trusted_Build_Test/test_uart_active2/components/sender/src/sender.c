@@ -6,12 +6,13 @@ static int delta = 1;
 
 void send(const uint64_t *time) {
     uart__packet_i packet;
-    packet.length = len;
     for (int i = 0; i < len; i++) {
 	packet.payload[i] = 'A' + i;
     }
+    packet.payload[len] = '\n';
+    packet.length = len + 1;
     
-    printf("Sending packet of length %d\n", packet.length);
+    printf("Sending packet: %s", packet.payload);
     sender_write_output(&packet);
 
     if (len == 26) {
