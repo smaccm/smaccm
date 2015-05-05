@@ -47,14 +47,16 @@ void pre_init(void)
 {
     /* Iniitialise the UART */
     printf("Initialising UART driver\n");
-    if(exynos_serial_init(DEV_ID, vaddr, NULL, NULL, &serial_device)){
+    if(exynos_serial_init(DEV_ID, (void *) vaddr, NULL, NULL, &serial_device)){
         printf("Failed to initialise UART\n");
         while(1);
     }
     serial_configure(&serial_device, BAUD_RATE, 8, PARITY_NONE, 1);
-    /* Prime semaphores */
+    serial_device.flags &= ~SERIAL_AUTO_CR;
+
+    /* Prime semaphore */
     read_sem_wait();
-    write_sem_wait();
+
     /* Register for IRQs */
     interrupt_reg_callback(&interrupt_event, &serial_device);
 }
@@ -80,25 +82,9 @@ read_callback(ps_chardevice_t* device, enum chardev_status stat,
     }
 }
 
-static void
-write_callback(ps_chardevice_t* device, enum chardev_status stat,
-              size_t bytes_transfered, void* token){
-    struct uart_token* t;
-    t = (struct uart_token*)token;
-    t->cur_bytes += bytes_transfered;
-    if(t->cur_bytes == t->req_bytes){
-        write_sem_post();
-    }
-}
-
-
-int uart_read(int uart_num, char *c, int rsize)
+int uart_read(char *c, int rsize)
 {
     struct uart_token token;
-    if (uart_num != 0) {
-        printf("Only support UART0!\n");
-        return -1;
-    }
 
     token.cur_bytes = 0;
     token.req_bytes = rsize;
@@ -112,33 +98,30 @@ int uart_read(int uart_num, char *c, int rsize)
     return token.cur_bytes;
 }
 
-int uart_write(int uart_num, char datum)
-{
-    struct uart_token token;
-    if (uart_num != 0) {
-        printf("Only support UART0!\n");
-        return -1;
+static void
+write_callback(ps_chardevice_t* device, enum chardev_status stat,
+               size_t bytes_transfered, void* token) {
+    struct uart_token* t;
+    t = (struct uart_token*) token;
+    t->cur_bytes += bytes_transfered;
+    if (t->cur_bytes == t->req_bytes) {
+	uart_completed_write_void();
     }
-
-    token.cur_bytes = 0;
-    token.req_bytes = 1;
-    token.buf = &datum;
-
-    if(ps_cdev_write(&serial_device, token.buf, token.req_bytes, &write_callback, &token) < 0){
-        printf("Error writing to UART\n");
-        return -1;
-    }
-    write_sem_wait();
-
-    return 1;
 }
 
-bool input_write_uart__packet_i(const uart__packet_i * input) {
-    int r = uart_write(input->uart_num, input->datum);
-    if (r < 0) {
-	printf("Error from uart_write, return code: %d\n", r);
+bool send_write_uart__packet_i(const uart__packet_i *packet) {
+    struct uart_token token;
+
+    token.cur_bytes = 0;
+    token.req_bytes = packet->length;
+    token.buf = (char*) packet->payload;
+
+    if (ps_cdev_write(&serial_device, token.buf, token.req_bytes, &write_callback, &token) < 0) {
+        printf("Error writing to UART\n");
+        return false;
     }
-    return (r >= 0);
+
+    return true;
 }
 
 int run(void)
@@ -146,12 +129,9 @@ int run(void)
     char c;
 
     while (1) {
-        int r = uart_read(0, &c, 1);
+        int r = uart_read(&c, 1);
         if (r > 0) {
-            uart__packet_i packet;
-            packet.uart_num = 0;
-            packet.datum = c;
-	    uart_output_write_uart__packet_i(&packet);
+	    uart_recv_write_uint8_t((uint8_t*) &c);
         }
     }
 

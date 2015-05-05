@@ -28,6 +28,7 @@ void send(const uint64_t *time) {
     frame.payload[7] = 0x08;
 
     sender_write_output(&frame);
+    sender_abort_write_void();
     printf("Sent can frame with id %d, payload: ", frame.id);
     uint8_t i;
     for (i = 0; i < frame.dlc; i++) {

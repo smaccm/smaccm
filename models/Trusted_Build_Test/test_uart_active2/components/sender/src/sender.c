@@ -1,22 +1,28 @@
 #include <smaccm_sender.h>
 #include <stdio.h>
 
-char alpha = 'A';
-
-char getNextAlpha() {
-  char result = alpha;
-  alpha++;
-  if (alpha > 'Z') {
-    alpha = 'A';
-  }
-  return result;
-}
+static int len = 1;
+static int delta = 1;
 
 void send(const uint64_t *time) {
-  uart__packet_i packet;
-  packet.uart_num = 0;
-  packet.datum = getNextAlpha();
+    uart__packet_i packet;
+    for (int i = 0; i < len; i++) {
+	packet.payload[i] = 'A' + i;
+    }
+    packet.payload[len] = '\n';
+    packet.length = len + 1;
+    
+    printf("Sending: %s", packet.payload);
+    sender_write_output(&packet);
 
-  printf("Sending code: 0x%x --> %c\n", packet.datum, packet.datum);
-  sender_write_output(&packet);
+    if (len == 26) {
+	delta = -1;
+    } else if (len == 1) {
+	delta = 1;
+    }
+    len += delta;
+}
+
+void notify(void) {
+    printf("Received completion notification\n");
 }
