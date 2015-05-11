@@ -75,7 +75,7 @@ TARGETS := $(notdir ${SOURCE_DIR}).cdl
 ADL := <model.camkesSystemAssemblyFileName>
 
 # For time server: subdirectory containing extra templates. FILL THIS IN!!!
-TEMPLATES := templates
+TEMPLATES := ../../projects/templates
 
 include TimeServerKZM/TimeServer.mk
 
