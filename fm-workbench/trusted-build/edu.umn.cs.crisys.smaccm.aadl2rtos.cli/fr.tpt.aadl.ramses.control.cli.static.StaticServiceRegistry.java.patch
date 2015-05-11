@@ -1,0 +1,74 @@
+### Eclipse Workspace Patch 1.0
+#P fr.tpt.aadl.ramses.control.cli.static
+diff --git src/fr/tpt/aadl/ramses/control/cli/StaticServiceRegistry.java src/fr/tpt/aadl/ramses/control/cli/StaticServiceRegistry.java
+index 70ce274..5fa210f 100644
+--- src/fr/tpt/aadl/ramses/control/cli/StaticServiceRegistry.java
++++ src/fr/tpt/aadl/ramses/control/cli/StaticServiceRegistry.java
+@@ -33,21 +33,22 @@
+ import org.osate.ba.AadlBaResolver ;
+ import org.osate.ba.AadlBaUnParserAction ;
+ 
+-import fr.tpt.aadl.launch.AADLInspectorSchedulingAnalysis ;
+-import fr.tpt.aadl.ramses.analysis.eg.EGAnalyzer ;
++//import fr.tpt.aadl.launch.AADLInspectorSchedulingAnalysis ;
++//import fr.tpt.aadl.ramses.analysis.eg.EGAnalyzer ;
+ import fr.tpt.aadl.ramses.control.support.analysis.Analyzer ;
+ import fr.tpt.aadl.ramses.control.support.generator.Generator ;
+-import fr.tpt.aadl.ramses.control.support.generator.GeneratorFactory ;
++//import fr.tpt.aadl.ramses.control.support.generator.GeneratorFactory ;
+ import fr.tpt.aadl.ramses.control.support.instantiation.AadlModelInstantiatior ;
+ import fr.tpt.aadl.ramses.control.support.instantiation.PredefinedAadlModelManager ;
+ import fr.tpt.aadl.ramses.control.support.services.AbstractServiceRegistry ;
+ import fr.tpt.aadl.ramses.control.support.services.ServiceRegistry ;
+ import fr.tpt.aadl.ramses.generation.ada.annex.behavior.AadlBaToADAUnparserAction ;
+ import fr.tpt.aadl.ramses.generation.c.annex.behavior.AadlBaToCUnparserAction ;
+-import fr.tpt.aadl.ramses.generation.launcher.adaravenscar.AdaRavenscarGeneratorFactory ;
+-import fr.tpt.aadl.ramses.generation.osek.OSEKGeneratorFactory ;
+-import fr.tpt.aadl.ramses.generation.pok.ada.AdaPokGeneratorFactory ;
+-import fr.tpt.aadl.ramses.generation.pok.c.PokGeneratorFactory ;
++//import fr.tpt.aadl.ramses.generation.launcher.adaravenscar.AdaRavenscarGeneratorFactory ;
++//import fr.tpt.aadl.ramses.generation.osek.OSEKGeneratorFactory ;
++//import fr.tpt.aadl.ramses.generation.pok.ada.AdaPokGeneratorFactory ;
++//import fr.tpt.aadl.ramses.generation.pok.c.PokGeneratorFactory ;
++import edu.umn.cs.crisys.smaccm.aadl2rtos.cli.RtosGenerator;
+ 
+ /**
+  * This class implements the API to register statically services into RAMSES. These
+@@ -86,17 +87,17 @@
+                    new AadlBaToCUnparserAction()) ;
+     _unparsers.put(AadlBaToADAUnparserAction.ANNEX_NAME,
+             new AadlBaToADAUnparserAction()) ;
+-    
++       
+     /*_analyzers.put(WcetAnalysis.PLUGIN_NAME, new WcetAnalysis(modelInstantiatior,
+                                                               predefinedAadlModels));*/
+-    
++   
++    /****************************************************************************************************
+     _analyzers.put(EGAnalyzer.PLUGIN_NAME, new EGAnalyzer(modelInstantiatior,
+                                                               predefinedAadlModels));
+     
+     _analyzers.put(AADLInspectorSchedulingAnalysis.PLUGIN_NAME, new AADLInspectorSchedulingAnalysis(modelInstantiatior,
+     		            predefinedAadlModels));
+-    
+-    
++        
+     GeneratorFactory pokGeneratorFactory = new PokGeneratorFactory();
+     GeneratorFactory oSEKGeneratorFactory =new OSEKGeneratorFactory();
+     GeneratorFactory adaGeneratorFactory = new AdaPokGeneratorFactory();
+@@ -114,11 +115,14 @@
+     Generator genAdaRavenscar = adaRavenscarGeneratorFactory.
+                                              createGenerator(modelInstantiatior,
+                                                           predefinedAadlModels);
+-    
++        
+     _gen.put(genPok.getRegistryName(), genPok) ;
+     _gen.put(genOsek.getRegistryName(), genOsek) ;
+     _gen.put(genAda.getRegistryName(), genAda) ;
+     _gen.put(genAdaRavenscar.getRegistryName(), genAdaRavenscar) ;
++    *********************************************************************************************************/
++    Generator genRtos = new RtosGenerator();
++    _gen.put(genRtos.getRegistryName(), genRtos);
+ 
+   }
+ 
