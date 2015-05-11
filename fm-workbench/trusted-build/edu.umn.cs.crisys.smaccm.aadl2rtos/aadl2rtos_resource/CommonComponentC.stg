@@ -336,7 +336,7 @@ bool <srcPort.aadlWriterFnName>(const <srcPort.type.aadlInputType.name> <srcPort
 >>
 
 componentRemoteWriterDecl(srcPort) ::= <<
-<componentRemoteCallerFunction(srcPort, srcPort.singletonConnection.destPort)>
+<componentRemoteCallerFunction(srcPort.singletonConnection.destPort, srcPort)>
 >>
 
 /////////////////////////////////////////////////////////////////////
@@ -459,8 +459,8 @@ aadlDispatcherDeclareData(dispatcherContract) ::= <<
 >>
 
 aadlDispatcherPassiveCallOutPortArg(port) ::= <<
-<if(port.hasData)>		<port.type.valToAadlOutput><port.data>,<endif>
-		<port.type.valToAadlOutput><port.index> >>
+<if(port.hasData)>& <port.data>,<endif>
+		& <port.index> >>
 
 aadlDispatcherPassiveCallOutArg(dispatchContract) ::= "<aadlDispatcherPassiveCallOutPortArg(dispatchContract.port)>"
 
@@ -513,7 +513,7 @@ aadlDispatcherFunctionName(dispatcher) ::= <<
  
 aadlDispatcherFunctionArgs(dispatcher) ::= 
 << <if(dispatcher.hasData)><\\>
-	 <[{ <dispatcher.type.aadlInputToCamkesInput> <dispatcher.name>}, dispatcher.dispatchableContracts:aadlDispatcherPassiveCallOutArg() ];separator=", \n"> 
+	 <[{<dispatcher.type.aadlInputToCamkesInput> <dispatcher.name>}, dispatcher.dispatchableContracts:aadlDispatcherPassiveCallOutArg() ];separator=", \n"> 
 	 <else><\\>
 	<dispatcher.dispatchableContracts:aadlDispatcherPassiveCallOutArg();separator=", \n"> <endif>
 >>
@@ -721,7 +721,7 @@ int run() {
 
 
 portDispatchVarDeclarations(port) ::= <<
-<if(port.hasData)><port.type.aadlOutputType.name> <port.globalData>; <endif>
+<if(port.hasData)><port.type.queueType.name> <port.globalData>; <endif>
 <port.indexType.aadlOutputType.name> <port.globalIndex>;
 <port.indexType.name> <port.globalMaxDispatchSize>; 	
 

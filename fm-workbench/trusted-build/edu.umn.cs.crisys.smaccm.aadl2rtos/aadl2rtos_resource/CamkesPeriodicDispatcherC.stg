@@ -6,17 +6,39 @@ outgoingActiveThreadDispatchName(dispatcher) ::= "<incomingActiveThreadDispatchN
 
 periodicComponentCBody(threadCalendar) ::= <<
 
+// prototypes for clock functions
+void clock_init();
+void clock_set_interval_in_ms(uint32_t interval);
+void clock_start_timer(void);
+void clock_irq_callback(void);
+uint64_t clock_get_time();
+
 <periodicComponentCDispatchers(threadCalendar)>
 
-void smaccm_periodic_irq_callback() {
-	clock_irq_callback();
+// no op under the new time server scheme.
+void clock_init() { }
+
+/* Set interrupt interval, in milliseconds. */
+void clock_set_interval_in_ms(uint32_t interval)
+{
+	timer_periodic(0, ((uint64_t)interval)*NS_IN_MS);
+}
+
+// no op under the new time server scheme
+void clock_start_timer(void) { }
+
+// defer to time server
+uint64_t clock_get_time()
+{
+	return (timer_time() / NS_IN_MS);
+}
+
+void timer_complete_callback() {
 	smaccm_thread_calendar(); 
-	irq_reg_callback(smaccm_periodic_irq_callback, NULL);
 }
 
 int run(void)
 {
-	irq_reg_callback(smaccm_periodic_irq_callback, NULL);
 	clock_init();
 	clock_set_interval_in_ms(<threadCalendar.greatestCommonDivisorInMilliseconds>);
 

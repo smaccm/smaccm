@@ -9,6 +9,8 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosException;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.names.TypeNames;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.ArrayType;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.ExternalType;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.IdType;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.Type;
@@ -19,8 +21,6 @@ import edu.umn.cs.crisys.smaccm.topsort.TopologicalSort;
 public class C_Type_Writer {
 	
 	public static void writeType(BufferedWriter out, IdType ty, int indent) throws IOException {
-		// get the underlying type for the id. If it is a structured type,
-		// (which I expect) then emit a 'typedef struct'. Else emit a typedef.
 		StringBuffer typeName = new StringBuffer();
 		typeName.append("typedef ");
 		typeName.append(ty.getTypeRef().CTypeDecl(indent, ty.getTypeId()) + "; \n");
@@ -43,6 +43,17 @@ public class C_Type_Writer {
       if (sortedTypes.isEmpty()) {
         out.append("\n\n\n // No user defined types.  This space for rent :)\n\n\n"); 
       }
+      
+      // TODO: MWW HACK!  Create structured type for each array type to support CAmkES
+      List<Type> arrayStructs = new ArrayList<Type>(); 
+      for (Type t : sortedTypes) {
+        IdType ty = (IdType)t; 
+        if (ty.getTypeRef() instanceof ArrayType) {
+          arrayStructs.add(TypeNames.constructCamkesArrayContainerIdType(ty));
+        }
+      }
+      sortedTypes.addAll(arrayStructs);
+      
       for (Type t : sortedTypes) {
          writeType(out, (IdType) t, indent);
          out.append("\n");

@@ -37,11 +37,12 @@ writePeriodicSenders(threadImpl) ::= <<
 periodicDispatcherCamkesBody(model, type) ::= <<
 
 import "../../interfaces/<type.readerWriterIdlFileName>";
+import <\u003C>Timer.idl4<\u003E>;
 
 component <model.threadCalendar.periodicDispatcherComponentName> {
 	control;
-	consumes DataAvailable irq;
-	dataport Buf mem;
+	uses Timer timer;
+	consumes Notification timer_complete;
 	<model.activeThreadImplementations:writePeriodicSenders()>
 }
 

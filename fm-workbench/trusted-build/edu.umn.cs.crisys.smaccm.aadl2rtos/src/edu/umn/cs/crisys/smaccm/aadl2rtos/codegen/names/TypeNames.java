@@ -10,6 +10,7 @@ import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.ThreadImplementation;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.ArrayType;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.IdType;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.PointerType;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.RecordType;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.Type;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.UnitType;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.util.Util;
@@ -98,6 +99,10 @@ public class TypeNames {
     return new TypeNames(isNativePointerArg() ?
         t : new PointerType(t));
   }
+
+  public TypeNames getQueueType() {
+    return new TypeNames(new PointerType(t));
+  }
   
   public TypeNames getAadlInputType() {
     return getAadlOutputType();
@@ -137,45 +142,94 @@ public class TypeNames {
     if (isNativePointerArg()) { return ""; } else { return "&"; }
   }    
 
-  /* Conversion to CAMKES types */
-  /* CAmkES-native types for inputs and outputs + conversion functions;
-   * now these follow the same conventions as AADL */ 
+  // TODO: MWW: This is a hack because CAmkES does not support arrays.
   public TypeNames getCamkesOutputType() { 
     if (t_structural instanceof ArrayType) {
-      throw new Aadl2RtosException("Error during code generation: Array types are incorrectly implemented in CAmkES");
+      return new TypeNames(
+          new PointerType(TypeNames.constructCamkesArrayContainerIdType((IdType)t))); 
+      // throw new Aadl2RtosException("Error during code generation: Array types are incorrectly implemented in CAmkES");
     }
     return getAadlOutputType();
   }
   
+  // TODO: MWW: This is a hack because CAmkES does not support arrays.
   public TypeNames getCamkesInputType() {
     if (t_structural instanceof ArrayType) {
-      throw new Aadl2RtosException("Error during code generation: Array types are incorrectly implemented in CAmkES");
+      return new TypeNames(
+          new PointerType(TypeNames.constructCamkesArrayContainerIdType((IdType)t))); 
+      // throw new Aadl2RtosException("Error during code generation: Array types are incorrectly implemented in CAmkES");
     }
     return getAadlInputType();
   }
 
+  // TODO: MWW: This is a hack because CAmkES does not support arrays.
+  public String getCamkesName() {
+    if (t_structural instanceof ArrayType) {
+      return TypeNames.getCamkesArrayContainerName((IdType)t);
+    } else {
+      return getName();
+    }
+  }
+
+  // must be called on a structural array type.
+  protected String getArrayPtrCast() {
+    ArrayType theArrayType = (ArrayType)t_structural;
+    return "(" + theArrayType.getElemType().getCType().typeString() + " *)"; 
+  }
+  
+  // MWW: TODO HACK! necessary to get arrays working with CAmkES.
+  //               valToCamkesInput
   public String getValToCamkesInput() {
+    if (t_structural instanceof ArrayType) {
+      String wrapperName = TypeNames.getCamkesArrayContainerName((IdType)t);
+      return "(" + wrapperName + " *)"; 
+      // throw new Aadl2RtosException("Error during code generation: Unexpected instance of array type.");
+    }
     return getValToAadlInput();
   }
 
   public String getCamkesInputToVal() {
-	    return getAadlInputToVal();
-	  }
-
-  public String getCamkesInputToAadlInput() {
-	  return ""; 
+    if (t_structural instanceof ArrayType) {
+      return getArrayPtrCast(); 
+      // throw new Aadl2RtosException("Error during code generation: Unexpected instance of array type.");
+    }
+    return getAadlInputToVal();
   }
 
+  public String getCamkesInputToAadlInput() {
+    if (t_structural instanceof ArrayType) {
+        return getArrayPtrCast();  
+    }
+    else 
+      return ""; 
+  }
+
+  // MWW: TODO HACK! necessary to get arrays working with CAmkES.
   public String getAadlInputToCamkesInput() {
-	  return "";
+    if (t_structural instanceof ArrayType) {
+      String wrapperName = TypeNames.getCamkesArrayContainerName((IdType)t);
+      return "(" + wrapperName + " *)"; 
+    }
+    else 
+      return "";
   }
 
   public String getCamkesInputToPtr() {
+	  if (t_structural instanceof ArrayType) {
+	    return getArrayPtrCast(); 
+	  }
 	  return getAadlInputToPtr();
   }
-  public String getCamkesOutputToAadlOutput() {
-    return ""; 
+
+  public String getCamkesOutputToPtr() {
+    if (t_structural instanceof ArrayType) {
+      return getArrayPtrCast();
+    }
+    return getAadlOutputToPtr();
   }
+//  public String getCamkesOutputToAadlOutput() {
+//    return ""; 
+//  }
 
   public String getReaderWriterInterfaceName() {
     return t.getCType().typeString() + "_writer";
@@ -208,5 +262,21 @@ public class TypeNames {
 	        + "_struct_" + val; 
   }
   
+  // TODO MWW: Hacks!  To get arrays working with CAmkES.
+  static private String getCamkesArrayContainerName(IdType idt) {
+    return "smaccm_" + idt.getTypeId() + "_container";
+  }
+  
+  static private Type constructCamkesArrayContainer(IdType idt) {
+    RecordType t = new RecordType(); 
+    t.addField("f", idt);
+    return t;
+  }
+  
+  static public Type constructCamkesArrayContainerIdType(IdType idt) {
+     return new IdType(
+            TypeNames.getCamkesArrayContainerName(idt),
+            TypeNames.constructCamkesArrayContainer(idt));
+  }
 }
 

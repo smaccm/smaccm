@@ -74,6 +74,11 @@ camkesMakefileBody(model) ::= <<
 TARGETS := $(notdir ${SOURCE_DIR}).cdl
 ADL := <model.camkesSystemAssemblyFileName>
 
+# For time server: subdirectory containing extra templates. FILL THIS IN!!!
+TEMPLATES := templates
+
+include TimeServerKZM/TimeServer.mk
+
 <model.threadImplementations:writeComponent()>
 <if(model.threadCalendar.hasDispatchers)>
 <writeComponentName(model.threadCalendar.periodicDispatcherComponentName)>

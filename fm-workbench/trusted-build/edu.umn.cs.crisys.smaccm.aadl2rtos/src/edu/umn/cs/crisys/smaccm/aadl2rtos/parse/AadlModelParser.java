@@ -152,10 +152,40 @@ public class AadlModelParser {
 		findTopLevelComponentInstances(systemInstance);
 
 		
-		// create the SystickIRQ value, if it exists.
+		// create properties related to timers.
 		try {
 		  this.model.generateSystickIRQ = PropertyUtils.getBooleanValue(systemImplementation, ThreadUtil.GENERATE_SCHEDULER_SYSTICK_IRQ);
-		} catch (Exception e) {}
+		  this.model.externalTimerComponent = PropertyUtils.getBooleanValue(systemImplementation, ThreadUtil.EXTERNAL_TIMER_COMPONENT);
+		} catch (Exception e) {
+      this.logger.error("Unexpected internal exception: properties [generateSystickIRQ, externalTimerComponent] should have default value but were not found.");
+      throw new Aadl2RtosException("Parse failure on one of [generateSystickIRQ, externalTimerComponent] target property ");
+		}
+		
+		try {
+		  if (this.model.getOsTarget() == OSTarget.CAmkES) {
+		    this.model.camkesTimeServerAadlThreadMinIndex = (int)PropertyUtils.getIntegerValue(systemImplementation, ThreadUtil.CAMKES_TIME_SERVER_AADL_THREAD_MIN_INDEX);
+		  }
+		} catch (Exception e) {
+      this.logger.error("Property camkesTimeServerAadlThreadMinIndex must be assigned for CAmkES target.");
+      throw new Aadl2RtosException("Parse failure on [camkesTimeServerAadlThreadMinIndex] target property ");
+		}
+		
+		if (this.model.externalTimerComponent) {
+		  try {
+		    this.model.camkesExternalTimerCompletePath = PropertyUtils.getStringValue(systemImplementation, ThreadUtil.CAMKES_EXTERNAL_TIMER_COMPLETE_PATH);
+		    this.model.camkesExternalTimerInterfacePath = PropertyUtils.getStringValue(systemImplementation, ThreadUtil.CAMKES_EXTERNAL_TIMER_INTERFACE_PATH);
+		  } catch (Exception e) {
+		    this.logger.error("Error in system implementation: if property External_Timer_Component is true, then properties: {SMACCM_SYS::CAmkES_External_Timer_Interface_Path, SMACCM_SYS::CAmkES_External_Timer_Complete_Path} must also be defined.");
+		    throw new Aadl2RtosException("Parse failure on external timer component properties.");
+		  }
+		} else {
+		  try {
+		    this.model.camkesInternalTimerTimersPerClient = (int)PropertyUtils.getIntegerValue(systemImplementation, ThreadUtil.CAMKES_INTERNAL_TIMER_TIMERS_PER_CLIENT);
+		  } catch (Exception e) {
+	      this.logger.error("Unexpected internal exception: property [camkesInternalTimerTimersPerClient] should have default value but were not found.");
+	      throw new Aadl2RtosException("Parse failure on [camkesInternalTimerTimersPerClient] target property ");
+		  }
+		}
 		
 		// Initialize thread implementations
 		constructThreadImplMap();
@@ -516,7 +546,7 @@ public class AadlModelParser {
       stackSize = ThreadUtil.getStackSizeInBytes(tti);
     } else {
       // TODO: Compute priorities for passive threads.
-      priority = 300; 
+      priority = 200; 
       try {
         ThreadUtil.getPriority(tti);
         logger.warn("Warning: priority ignored for passive thread: " + name);

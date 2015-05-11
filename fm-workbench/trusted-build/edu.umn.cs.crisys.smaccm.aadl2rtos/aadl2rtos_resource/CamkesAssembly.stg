@@ -142,7 +142,7 @@ connectReaderWriter(connection, srcThreadImpl, model) ::= <<
 <if(connection.sourcePort.isOutputDataPort)><\\>
 <rpcConnection(model.generateConnectionName, 
 	srcThreadImpl.componentInstanceName,
-	connection.sourcePort.name,
+	connection.sourcePort.qualifiedName,
 	connection.destPortThreadImplementation.componentInstanceName,
 	connection.destPort.name)>
 <endif>
@@ -182,7 +182,7 @@ assemblyConnectSharedData(sharedData, model) ::= <<
 
 assemblySetPriorities(threadImpl) ::= <<
 <if(! threadImpl.isExternal)>
-<threadImpl.componentName>.priority = <threadImpl.priority>;	
+<threadImpl.componentInstanceName>.priority = <threadImpl.priority>;	
 
 <endif>
 >>
@@ -192,13 +192,22 @@ camkesAssemblyBody(model) ::= <<
 
 import <\u003C>std_connector.camkes<\u003E>;
 <if(model.threadCalendar.hasDispatchers)>import "<model.threadCalendar.periodicDispatcherPathName>";
-component EPIT {
-    hardware;
-    dataport Buf mem;
-    emits DataAvailable irq;
-}
 
 <endif>
+
+<if(!model.externalTimerComponent)>
+<if(model.isQemuTarget)>import <\u003C>TimeServerKZM/TimeServer.camkes<\u003E>;
+
+<elseif(model.isOdroidTarget)>import <\u003C>TimeServerOdroid/TimeServer.camkes<\u003E>;
+
+// TODO: MWW: Add import for platform time server .camkes file HERE.  Only know ARM-QEMU time server.
+
+<endif>
+<else>
+// TODO: MWW: not sure what (if anything) needs to be imported for external timer component.	
+
+<endif>
+
 
 <model.threadImplementations:assemblyThreadImplementationImports()>
 
@@ -208,8 +217,17 @@ assembly {
 	composition {
         <if(model.threadCalendar.hasDispatchers)>
         // Periodic components
-        component EPIT epit;
-		<constructPeriodicComponent(model.threadCalendar)>
+        <constructPeriodicComponent(model.threadCalendar)>
+		<endif>
+		
+		<if(!model.externalTimerComponent)>
+		<if(model.isQemuTarget)>
+		component TimeServerKZM time_server;
+		<elseif(model.isOdroidTarget)>
+		component TimeServerOdroid time_server;
+		<else>	
+		// MWW TODO: Fill in time server component HERE.  Need to determine time server for Intel platforms.
+		<endif>
 		<endif>
 		
 		// IRQ-handling hardware components
@@ -227,10 +245,15 @@ assembly {
 		<if(model.threadCalendar.hasDispatchers)>
 		// Periodic dispatcher connections
 		<model.activeThreadImplementations:assemblyConnectPeriodic(model)>
-        connection seL4HardwareMMIO epit_mem(from <model.threadCalendar.periodicDispatcherInstanceName>.mem, to epit.mem);
-		connection seL4HardwareInterrupt irq(from epit.irq, to <model.threadCalendar.periodicDispatcherInstanceName>.irq);
+        
+        <if(!model.externalTimerComponent)>
+		connection seL4TimeServer periodic_dispatch_timer(from <model.threadCalendar.periodicDispatcherInstanceName>.timer, to time_server.the_timer);
+		connection seL4GlobalAsynchCallback echo_int(from time_server.timer_notification, to <model.threadCalendar.periodicDispatcherInstanceName>.timer_complete);
+		<else>
+		connection seL4TimeServer periodic_dispatch_timer(from <model.threadCalendar.periodicDispatcherInstanceName>.timer, to <model.camkesExternalTimerInterfacePath>);
+		connection seL4GlobalAsynchCallback echo_int(from <model.camkesExternalTimerCompletePath>, to <model.threadCalendar.periodicDispatcherInstanceName>.timer_complete);
 		<endif>
-		
+		<endif>	
 		// IRQ connections (if any)
 		<model.irqDispatchers:constructIRQConnections()>
 		
@@ -245,18 +268,10 @@ assembly {
 	}
     configuration {
 		<if(model.threadCalendar.hasDispatchers)>
-		<if(model.isQemuTarget)>
-		/* Freescale i.MX31 (KZM) QEMU Configuration */
-        epit.mem_attributes = "0x53F98000:0x1000";
-		epit.irq_attributes = 27;
-		<elseif(model.isOdroidTarget)>
-		/* Freescale i.MX6 (Sabralite) ODROID Configuration */
-        epit.mem_attributes = "0x12DD0000:0x1000";
-		epit.irq_attributes = 72;
-		<else>
-		AADL Translation Error: unknown target <model.hwTarget>; 
-		I don't know how to configure clock interrupt for this hardware target. 
-		<endif>
+		<model.threadCalendar.periodicDispatcherInstanceName>.timer_attributes = "<model.camkesTimeServerAadlThreadMinIndex>"; 
+		<model.threadCalendar.periodicDispatcherInstanceName>.timer_global_endpoint = "periodic_dispatcher_timer";
+		<model.threadCalendar.periodicDispatcherInstanceName>.timer_complete_global_endpoint = "periodic_dispatcher_timer";				
+		<model.threadCalendar.periodicDispatcherInstanceName>.priority = 201;  
 		<endif>
 		<model.irqDispatchers:constructIRQConfig()>
 		<model.threadImplementations:assemblySetPriorities()>

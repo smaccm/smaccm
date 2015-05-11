@@ -19,7 +19,7 @@ rwInterfaceIdlPostfix(name, path) ::= <<
 >>
 
 rwPrototype(type) ::= <<
-bool <type.writerFn>(refin <type.name> arg);  
+bool <type.writerFn>(refin <type.camkesName> arg);  
 >>
 
 rwProc(type, model) ::= <<

@@ -62,7 +62,7 @@ has mutex <port.mutex>;
 >>
 
 outputDataPortDecl(port) ::= <<
-uses <port.type.readerWriterInterfaceName> <port.name>;
+uses <port.type.readerWriterInterfaceName> <port.qualifiedName>;
 
 >>
 

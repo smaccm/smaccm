@@ -25,12 +25,6 @@ import java.io.File;
 import java.util.List;
 //import java.util.Map;
 
-
-
-
-
-
-
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -50,7 +44,6 @@ import org.osate.aadl2.modelsupport.errorreporting.AnalysisErrorReporterManager;
 import org.osate.aadl2.modelsupport.resources.OsateResourceUtil;
 
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosFailure;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.ConsoleLogger;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Logger;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.CAmkES.CAmkES_CodeGenerator;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.eChronos.EChronos_CodeGenerator;
@@ -176,46 +169,4 @@ public class Aadl2RtosHandler extends AadlHandler {
 		return Status.OK_STATUS;
 	}
 
-/*
-	@Override
-	public void setParameters(Map<String, Object> parameters) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public List<String> getTransformationModuleList() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public static final String PLUGIN_NAME = "AADL2RTOS";
-	
-	@Override
-	public String getRegistryName() {
-		// TODO Auto-generated method stub
-		return PLUGIN_NAME;
-	}
-
-	@Override
-	public String getPluginName() {
-		// TODO Auto-generated method stub
-		return PLUGIN_NAME;
-	}
-
-	@Override
-	public String getPluginId() {
-		// TODO Auto-generated method stub
-		return PLUGIN_NAME;
-	}
-	
-	@Override
-	public void performAnalysis(SystemInstance instance,
-								RamsesConfiguration config,
-	                             AnalysisErrorReporterManager errReporterManager,
-	                             IProgressMonitor monitor) throws AnalysisException {
-
-		this.execute(instance, instance.getSystemImplementation(), monitor, config.getRamsesOutputDir(), new ConsoleLogger(Logger.INFO));
-	}  
-  */
 }

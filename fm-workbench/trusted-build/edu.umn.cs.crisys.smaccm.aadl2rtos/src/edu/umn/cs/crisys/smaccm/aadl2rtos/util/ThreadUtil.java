@@ -15,17 +15,12 @@ import org.osate.aadl2.Element;
 import org.osate.aadl2.EnumerationLiteral;
 import org.osate.aadl2.IntegerLiteral;
 import org.osate.aadl2.NamedElement;
-import org.osate.aadl2.NumberType;
-import org.osate.aadl2.NumberValue;
 import org.osate.aadl2.Property;
 import org.osate.aadl2.PropertyExpression;
-import org.osate.aadl2.PropertyType;
 import org.osate.aadl2.PropertyValue;
-import org.osate.aadl2.RangeType;
 import org.osate.aadl2.RangeValue;
 import org.osate.aadl2.UnitLiteral;
 import org.osate.aadl2.UnitsType;
-import org.osate.aadl2.impl.ReferenceValueImpl;
 import org.osate.aadl2.impl.StringLiteralImpl;
 import org.osate.aadl2.impl.ThreadTypeImpl;
 import org.osate.xtext.aadl2.properties.util.EMFIndexRetrieval;
@@ -71,7 +66,12 @@ public abstract class ThreadUtil {
 	final public static String ACCESS_RIGHT_NAME = "Access_Right";
   final public static String C_TYPE_NAME_NAME = "SMACCM_SYS::C_Type_Name";
   final public static String PASS_BY_REFERENCE_NAME = "SMACCM_SYS::By_Reference";
-
+  final public static String EXTERNAL_TIMER_COMPONENT_NAME = "SMACCM_SYS::External_Timer_Component";
+  final public static String CAMKES_EXTERNAL_TIMER_INTERFACE_PATH_NAME = "SMACCM_SYS::CAmkES_External_Timer_Interface_Path"; 
+  final public static String CAMKES_EXTERNAL_TIMER_COMPLETE_PATH_NAME = "SMACCM_SYS::CAmkES_External_Timer_Complete_Path";
+  final public static String CAMKES_INTERNAL_TIMER_TIMERS_PER_CLIENT_NAME = "SMACCM_SYS::CAmkES_Internal_Timer_Timers_Per_Client"; 
+  final public static String CAMKES_TIME_SERVER_AADL_THREAD_MIN_INDEX_NAME = "SMACCM_SYS::CAmkES_Time_Server_AADL_Thread_Min_Index"; 
+  
 	final public static Property INITIALIZE_ENTRYPOINT_SOURCE_TEXT = Util
 			.getPropertyDefinitionInWorkspace(INITIALIZE_ENTRYPOINT_SOURCE_TEXT_NAME);
 	final public static Property COMPUTE_ENTRYPOINT_SOURCE_TEXT = Util
@@ -130,7 +130,17 @@ public abstract class ThreadUtil {
       .getPropertyDefinitionInWorkspace(C_TYPE_NAME_NAME);
   final public static Property PASS_BY_REFERENCE = Util
       .getPropertyDefinitionInWorkspace(PASS_BY_REFERENCE_NAME);
-  
+  final public static Property EXTERNAL_TIMER_COMPONENT = Util
+      .getPropertyDefinitionInWorkspace(EXTERNAL_TIMER_COMPONENT_NAME);
+  final public static Property CAMKES_EXTERNAL_TIMER_INTERFACE_PATH = Util
+      .getPropertyDefinitionInWorkspace(CAMKES_EXTERNAL_TIMER_INTERFACE_PATH_NAME);
+  final public static Property CAMKES_EXTERNAL_TIMER_COMPLETE_PATH = Util
+      .getPropertyDefinitionInWorkspace(CAMKES_EXTERNAL_TIMER_COMPLETE_PATH_NAME);
+  final public static Property CAMKES_INTERNAL_TIMER_TIMERS_PER_CLIENT = Util
+      .getPropertyDefinitionInWorkspace(CAMKES_INTERNAL_TIMER_TIMERS_PER_CLIENT_NAME);
+  final public static Property CAMKES_TIME_SERVER_AADL_THREAD_MIN_INDEX = Util
+      .getPropertyDefinitionInWorkspace(CAMKES_TIME_SERVER_AADL_THREAD_MIN_INDEX_NAME);
+      
   
 	/*
 	public static List<ThreadImplementation> getTaskThreads(Collection<ThreadImplementation> collection) {

@@ -35,7 +35,16 @@ property set SMACCM_SYS is
 	External_IRQ_Event_List: list of aadlstring applies to (system implementation);
 	External_IRQ_Handler_List: list of aadlstring applies to (system implementation);
 	External_IRQ_List: list of aadlstring applies to (system implementation);
+	
+	-- for eChronos timer interactions
 	Generate_Scheduler_Systick_IRQ: aadlboolean => true applies to (system implementation);
+	
+	-- for CAmkES timer interactions
+	External_Timer_Component : aadlboolean => false applies to (system implementation);
+	CAmkES_External_Timer_Interface_Path: aadlstring applies to (system implementation); 
+	CAmkES_External_Timer_Complete_Path : aadlstring applies to (system implementation);
+	CAmkES_Internal_Timer_Timers_Per_Client : aadlinteger => 8 applies to (system implementation); 
+	CAmkES_Time_Server_AADL_Thread_Min_Index : aadlinteger => 10 applies to (system implementation); 
 	
 	-- For different parameter passing styles
 	By_Reference : aadlboolean => false applies to (parameter);
