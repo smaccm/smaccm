@@ -77,7 +77,14 @@ ADL := <model.camkesSystemAssemblyFileName>
 # For time server: subdirectory containing extra templates. FILL THIS IN!!!
 TEMPLATES := ../../projects/templates
 
+
+<if(model.isQemuTarget)>
 include TimeServerKZM/TimeServer.mk
+<elseif(model.isOdroidTarget)>
+include TimeServerOdroid/TimeServer.mk
+<else>	
+// MWW TODO: Fill in time server component HERE.  Need to determine time server for Intel platforms.
+<endif>
 
 <model.threadImplementations:writeComponent()>
 <if(model.threadCalendar.hasDispatchers)>
