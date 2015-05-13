@@ -118,7 +118,7 @@ include "<threadImpl.model.systemTypeHeaderName>";
 	<threadImpl.nonlocalActiveThreadConnectionFrontier:constructSenderInterface()>
 
 	// references to passive thread receivers	(if any)
-	<threadImpl.model.passiveThreadImplementations:writeToPassiveReceiver()>
+	<threadImpl.passiveThreadRegion:writeToPassiveReceiver()>
 
 	// provided interfaces for input event / event data ports (if any)
 	<threadImpl.inputEventPortList:inputPortDecl()>
