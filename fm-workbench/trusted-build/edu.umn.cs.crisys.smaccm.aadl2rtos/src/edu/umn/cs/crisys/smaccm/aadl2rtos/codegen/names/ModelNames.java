@@ -140,13 +140,14 @@ public class ModelNames {
 		return m.getExternalIRQs();
   }
 
-  
-  int connNumber = 0; 
   public String getGenerateConnectionName() {
-    connNumber++; 
-    return "conn" + connNumber;
+    return "conn" + m.getGenerateConnectionNumber();
   }
 
+  public String getGenerateCamkesTimeServerThreadIndex() {
+    return Integer.toString(m.getGenerateCamkesTimeServerThreadIndex());
+  }
+  
   public boolean getIsCamkesTarget() {
     return m.getOsTarget().equals(Model.OSTarget.CAmkES);
   }

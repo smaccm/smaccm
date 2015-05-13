@@ -288,6 +288,10 @@ public class ThreadImplementationNames {
     return ti.getIsExternal();
   }
   
+  public boolean getRequiresTimeServices() {
+    return ti.getRequiresTimeServices();
+  }
+
   //////////////////////////////////////////////////////////
   //
   // 'root' name
@@ -373,6 +377,11 @@ public class ThreadImplementationNames {
   public String getComponentDispatcherInterfaceVarIdName() {
     return "dispatch";
   }
+  
+  public String getTimeServicesConnectionName() {
+    return ti.getNormalizedName() + "_time_services"; 
+  }
+  
   //////////////////////////////////////////////////////////
   //
   // Function names

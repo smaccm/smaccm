@@ -403,6 +403,14 @@ public class Model {
     this.camkesTimeServerAadlThreadMinIndex = camkesTimeServerAadlThreadMinIndex;
   }
 
-  
+  public int getGenerateCamkesTimeServerThreadIndex() {
+    return camkesTimeServerAadlThreadMinIndex++; 
+  }
+
+  int connNumber = 0; 
+  public int getGenerateConnectionNumber() {
+    connNumber++; 
+    return connNumber;
+  }
 
 }

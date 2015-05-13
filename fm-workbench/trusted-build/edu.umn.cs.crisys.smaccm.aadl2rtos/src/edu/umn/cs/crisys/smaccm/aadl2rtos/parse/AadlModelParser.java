@@ -564,12 +564,14 @@ public class AadlModelParser {
     double minComputeTime = PropertyUtil.getMinComputeExecutionTimeInMicroseconds(tti);
     double maxComputeTime = PropertyUtil.getMaxComputeExecutionTimeInMicroseconds(tti);
     boolean isExternal = PropertyUtil.getIsExternal(tti);
+    boolean requiresTimeServices = PropertyUtils.getBooleanValue(tti, PropertyUtil.REQUIRES_TIME_SERVICES);
     List<String> externalMutexList = (ArrayList<String>) PropertyUtil.getExternalMutexList(tti);
     List<String> externalSemaphoreList = (ArrayList<String>) PropertyUtil.getExternalSemaphoreList(tti);
             
     ti.setMinExecutionTime(minComputeTime);
     ti.setMaxExecutionTime(maxComputeTime);
     ti.setIsExternal(isExternal);
+    ti.setRequiresTimeServices(requiresTimeServices);
     ti.setExternalMutexList(externalMutexList);
     ti.setExternalSemaphoreList(externalSemaphoreList);
     

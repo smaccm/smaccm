@@ -93,6 +93,7 @@ writeRpgInterface(endpoint) ::= <<
 componentCamkesBody(threadImpl) ::= <<
 
 import "../../interfaces/<threadImpl.idlFileName>";
+<if(threadImpl.requiresTimeServices)>import <\u003C>Timer.idl4<\u003E>; <endif>
 
 // Idl files for ports
 <threadImpl.threadPortTypes:importReaderWriterIdl();separator="\n">
@@ -138,7 +139,10 @@ include "<threadImpl.model.systemTypeHeaderName>";
 	<threadImpl.outputDataPortList:outputDataPortDecl()>
 	<threadImpl.sharedDataAccessorList:sharedDataAccessorDecl()>
 
-
+	<if(threadImpl.requiresTimeServices)>
+	// for time services
+	uses Timer timer;
+	<endif>
 }
 
 

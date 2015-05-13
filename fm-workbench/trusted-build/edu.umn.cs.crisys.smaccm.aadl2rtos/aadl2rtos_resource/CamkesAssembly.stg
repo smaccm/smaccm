@@ -187,6 +187,22 @@ assemblySetPriorities(threadImpl) ::= <<
 <endif>
 >>
 
+assemblyConnectTimeServices(threadImpl, model) ::= <<
+<if(threadImpl.requiresTimeServices)><\\>
+<if(model.externalTimerComponent)>
+connection seL4TimeServer <threadImpl.timeServicesConnectionName>(from <threadImpl.componentInstanceName>.timer, to <model.camkesExternalTimerInterfacePath>);
+<else>
+connection seL4TimeServer <threadImpl.timeServicesConnectionName>(from <threadImpl.componentInstanceName>.timer, to time_server.the_timer);
+<endif>
+<endif>
+>>
+
+configConnectTimeServices(threadImpl, model) ::= <<
+<threadImpl.componentInstanceName>.timer_attributes = "<model.generateCamkesTimeServerThreadIndex>"; 
+<threadImpl.componentInstanceName>.timer_global_endpoint = "<threadImpl.timeServicesConnectionName>";
+<threadImpl.componentInstanceName>.timer_complete_global_endpoint = "<threadImpl.timeServicesConnectionName>";				
+
+>>
 
 camkesAssemblyBody(model) ::= <<
 
@@ -200,7 +216,8 @@ import <\u003C>std_connector.camkes<\u003E>;
 
 <elseif(model.isOdroidTarget)>import <\u003C>TimeServerOdroid/TimeServer.camkes<\u003E>;
 
-// TODO: MWW: Add import for platform time server .camkes file HERE.  Only know ARM-QEMU time server.
+<else>
+// TODO: MWW: Add import for platform time server .camkes file HERE.  Only know ARM-QEMU and ODROID time server.
 
 <endif>
 <else>
@@ -253,7 +270,10 @@ assembly {
 		connection seL4TimeServer periodic_dispatch_timer(from <model.threadCalendar.periodicDispatcherInstanceName>.timer, to <model.camkesExternalTimerInterfacePath>);
 		connection seL4GlobalAsynchCallback echo_int(from <model.camkesExternalTimerCompletePath>, to <model.threadCalendar.periodicDispatcherInstanceName>.timer_complete);
 		<endif>
-		<endif>	
+		<endif>
+		
+		<model.threadImplementations:assemblyConnectTimeServices(model)>
+			
 		// IRQ connections (if any)
 		<model.irqDispatchers:constructIRQConnections()>
 		
@@ -268,13 +288,15 @@ assembly {
 	}
     configuration {
 		<if(model.threadCalendar.hasDispatchers)>
-		<model.threadCalendar.periodicDispatcherInstanceName>.timer_attributes = "<model.camkesTimeServerAadlThreadMinIndex>"; 
+		<model.threadCalendar.periodicDispatcherInstanceName>.timer_attributes = "<model.generateCamkesTimeServerThreadIndex>"; 
 		<model.threadCalendar.periodicDispatcherInstanceName>.timer_global_endpoint = "periodic_dispatcher_timer";
 		<model.threadCalendar.periodicDispatcherInstanceName>.timer_complete_global_endpoint = "periodic_dispatcher_timer";				
 		<model.threadCalendar.periodicDispatcherInstanceName>.priority = 201;  
 		<endif>
 		<model.irqDispatchers:constructIRQConfig()>
 		<model.threadImplementations:assemblySetPriorities()>
+		
+		<model.threadImplementations:configConnectTimeServices(model)>
     }
 }
 

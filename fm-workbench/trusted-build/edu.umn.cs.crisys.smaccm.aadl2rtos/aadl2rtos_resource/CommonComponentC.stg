@@ -485,8 +485,10 @@ aadlDispatcherCallPassiveTarget(portDest,portSrc) ::= <<
 
 aadlDispatcherCallActiveTarget(portDest,portSrc) ::= <<
 // Calling an active dispatch target.
-<outgoingPortWriterName(portDest,portSrc)>(<aadlDispatcherWriteActiveArg(portSrc)>);	
-
+{
+  bool remoteCallSuccessful = <outgoingPortWriterName(portDest,portSrc)>(<aadlDispatcherWriteActiveArg(portSrc)>);	
+  assert(remoteCallSuccessful);
+}
 >>
 
 aadlDispatcherSendLoop(dispatchContract,dispatcher) ::= <<
