@@ -748,6 +748,7 @@ componentCFileDecls(threadImpl) ::= <<
 // Local prototypes for AADL dispatchers
 //
 ///////////////////////////////////////////////////////////////////////////
+<threadImpl.dispatchers:aadlDispatcherFunctionPrototype()> 
 <threadImpl.passiveDispatcherRegion:aadlDispatcherFunctionPrototype()> 
 <endif>
 
@@ -765,6 +766,7 @@ componentCFileDecls(threadImpl) ::= <<
 
 <if(threadImpl.isActive)><\\>
 <threadImpl.localActiveThreadConnectionFrontier:componentLocalCallerFunction()>
+<threadImpl.dispatchers:aadlDispatcherFunction()>
 <threadImpl.passiveDispatcherRegion:aadlDispatcherFunction()> 
 <if(threadImpl.isExternal)><\\>
 ////////////////////////////////////////////////////////////////////////////
