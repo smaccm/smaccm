@@ -67,16 +67,16 @@ process main
   	    time - time_of_last_can > TOTAL_LANDING_TIMEOUT => 
   	      control_mode = AGREE_CONSTS.LAND_MODE or control_mode = AGREE_CONSTS.DISARMED_MODE;
   	      
-  	guarantee "time_of_last_ppm and time_of_last_can less than time (lemma for other property)":
-  	  time_of_last_ppm <= time and time_of_last_can <= time and
-  	  time_of_last_ppm >= 0.0 and time_of_last_can >= 0.0;
+--  	guarantee "time_of_last_ppm and time_of_last_can less than time (lemma for other property)":
+--  	  time_of_last_ppm <= time and time_of_last_can <= time and
+--  	  time_of_last_ppm >= 0.0 and time_of_last_can >= 0.0;
   	      
   	eq mavlink_armed_in_past : bool;
   	eq ppm_armed_in_past : bool;
   	
-  	guarantee "if the controller is armed, then an armed signal in the past" :
-  	  control_mode = AGREE_CONSTS.ARMED_MODE =>
-  	    mavlink_armed_in_past or ppm_armed_in_past;
+--  	guarantee "if the controller is armed, then an armed signal in the past" :
+--  	  control_mode = AGREE_CONSTS.ARMED_MODE =>
+--  	    mavlink_armed_in_past or ppm_armed_in_past;
 
 --  	guarantee "if an arm signal is sent from the ppm controller the controller will be armed" : true;
 --  	
@@ -325,8 +325,7 @@ process implementation main.i
   	  ret = false -> pre(clock) and not clock;
   	tel;
   	
---  	-------------- BEGIN LEMMAS ABOUT SCHEDULABILITY -------------
---  	
+  	-------------- BEGIN LEMMAS ABOUT SCHEDULABILITY -------------
 --  	--these lemmas about runtime
 --  	lemma "control runtime is bounded" :
 --  	  0.0 <= control_run_time and control_run_time <= CONTROL_EXEC_TIME;

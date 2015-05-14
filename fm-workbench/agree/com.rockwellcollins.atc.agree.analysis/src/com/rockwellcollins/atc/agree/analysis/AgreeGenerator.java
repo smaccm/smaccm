@@ -40,6 +40,7 @@ import org.osate.aadl2.instance.ComponentInstance;
 import org.osate.aadl2.instance.FeatureInstance;
 import org.osate.annexsupport.AnnexUtil;
 
+import com.google.common.collect.Lists;
 import com.rockwellcollins.atc.agree.agree.AgreeContractSubclause;
 import com.rockwellcollins.atc.agree.agree.AgreePackage;
 import com.rockwellcollins.atc.agree.analysis.preferences.PreferenceConstants;
@@ -70,7 +71,6 @@ public class AgreeGenerator {
     
     private static Program getAssumeGuaranteeProgram(AgreeEmitterState state){
         Node subNode = nodeFromState(state, false);
-    	List<String> properties = new ArrayList<>();
     	List<Node> nodes = new ArrayList<>(state.nodeDefExpressions);
     	
     	if(subNode.outputs.size() != 1){
@@ -97,7 +97,6 @@ public class AgreeGenerator {
     	for(Equation eq : state.guarExpressions){
     		String propName = nodeGuarName+i++;
     		state.renaming.addExplicitRename(propName, eq.lhs.get(0).id);
-    		properties.add(propName);
     		state.guarProps.add(propName);
     		//have to add guarantees as local variables for kind 2.0
     		locals.add(new VarDecl(propName, NamedType.BOOL));
@@ -107,13 +106,15 @@ public class AgreeGenerator {
     	for(Equation eq : state.lemmaExpressions){
             String propName = nodeGuarName+i++;
             state.renaming.addExplicitRename(propName, eq.lhs.get(0).id);
-            properties.add(propName);
             state.guarProps.add(propName);
             //have to add guarantees as local variables for kind 2.0
             locals.add(new VarDecl(propName, NamedType.BOOL));
             equations.add(new Equation(new IdExpr(propName), eq.expr));
         }
-    	
+    	List<String> reverseGuarProps = new ArrayList<>(Lists.reverse(state.guarProps));
+    	state.guarProps.clear();
+    	state.guarProps.addAll(reverseGuarProps);
+    	 
     	//remove guarantee variables from inputs for kind 2.0
     	for(VarDecl var : subNode.inputs){
     	    if(!var.id.startsWith("__GUARANTEE")){
@@ -123,7 +124,7 @@ public class AgreeGenerator {
     	locals.addAll(subNode.locals);
     	equations.addAll(subNode.equations);
     	Node mainNode = new Node(subNode.location, subNode.id, inputs, subNode.outputs,
-    			locals, equations, properties, assertions, null);
+    			locals, equations, new ArrayList<>(state.guarProps), assertions, null);
     	
     	nodes.add(mainNode);
     	
