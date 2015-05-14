@@ -1,0 +1,43 @@
+package hardware_types
+public
+with software_types;
+
+bus SPI_Bus
+end SPI_Bus;
+
+bus I2C_Bus
+end I2C_Bus;
+
+bus CAN
+end CAN;
+
+bus USB
+end USB;
+
+data UART
+end UART;
+
+data Power_Switch
+end Power_Switch;
+
+data PWM
+end PWM;
+
+data PPM
+end PPM;
+
+data ADC
+end ADC;
+
+data GPS
+end GPS;
+
+feature group Sensors
+  features
+    barometer : in data port software_types::Barometric_Data;
+    motion : in data port software_types::Motion_Data.Impl;
+    gps : in event data port GPS;
+    battery : in data port software_types::Battery_Data;
+end Sensors;
+
+end hardware_types;

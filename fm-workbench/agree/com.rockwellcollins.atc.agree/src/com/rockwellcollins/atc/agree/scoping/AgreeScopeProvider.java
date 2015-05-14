@@ -15,6 +15,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.xtext.scoping.IScope;
 import org.eclipse.xtext.scoping.Scopes;
+import org.eclipse.xtext.scoping.impl.SimpleScope;
 import org.osate.aadl2.AadlPackage;
 import org.osate.aadl2.AnnexLibrary;
 import org.osate.aadl2.AnnexSubclause;
@@ -42,6 +43,8 @@ import com.rockwellcollins.atc.agree.agree.AgreeLibrary;
 import com.rockwellcollins.atc.agree.agree.AgreePackage;
 import com.rockwellcollins.atc.agree.agree.Arg;
 import com.rockwellcollins.atc.agree.agree.CalenStatement;
+import com.rockwellcollins.atc.agree.agree.ConnectionStatement;
+import com.rockwellcollins.atc.agree.agree.ConstStatement;
 import com.rockwellcollins.atc.agree.agree.EqStatement;
 import com.rockwellcollins.atc.agree.agree.EventExpr;
 import com.rockwellcollins.atc.agree.agree.Expr;
@@ -49,11 +52,13 @@ import com.rockwellcollins.atc.agree.agree.FnDefExpr;
 import com.rockwellcollins.atc.agree.agree.NestedDotID;
 import com.rockwellcollins.atc.agree.agree.NodeDefExpr;
 import com.rockwellcollins.atc.agree.agree.NodeEq;
+import com.rockwellcollins.atc.agree.agree.OrderStatement;
 import com.rockwellcollins.atc.agree.agree.RecordDefExpr;
 import com.rockwellcollins.atc.agree.agree.RecordExpr;
 import com.rockwellcollins.atc.agree.agree.RecordType;
 import com.rockwellcollins.atc.agree.agree.RecordUpdateExpr;
 import com.rockwellcollins.atc.agree.agree.SpecStatement;
+import com.rockwellcollins.atc.agree.agree.SynchStatement;
 import com.rockwellcollins.atc.agree.agree.Type;
 
 /**
@@ -166,8 +171,30 @@ public class AgreeScopeProvider extends
         }
         return result;
     }
+    
+    IScope scope_NamedElement(ConnectionStatement ctx, EReference ref){
+        EObject container = ctx.getContainingClassifier();
+        IScope outerScope = IScope.NULLSCOPE;
+        if(container instanceof ComponentImplementation){
+            ComponentImplementation compImpl = (ComponentImplementation)container;
+            outerScope = Scopes.scopeFor(compImpl.getAllConnections());
+        }
+        return outerScope;
+    }
 
-    IScope scope_NamedElement(CalenStatement ctx, EReference ref) {
+    IScope scope_NamedElement(OrderStatement ctx, EReference ref) {
+
+        EObject container = ctx.getContainingClassifier();
+
+        IScope outerScope = IScope.NULLSCOPE;
+        if(container instanceof ComponentImplementation){
+            ComponentImplementation compImpl = (ComponentImplementation)container;
+            outerScope = Scopes.scopeFor(compImpl.getAllSubcomponents());
+        }
+        return outerScope;
+    }
+
+    IScope scope_NamedElement(SynchStatement ctx, EReference ref) {
         
     	EObject container = ctx.getContainingClassifier();
     	while(!(container instanceof ComponentClassifier)){
@@ -252,8 +279,15 @@ public class AgreeScopeProvider extends
                 }
             }else if (container instanceof FeatureGroupImpl){
               container = ((FeatureGroupImpl)container).getAllFeatureGroupType();
-            }else if(container instanceof Arg){
-            	Type type = ((Arg) container).getType();
+            }else if(container instanceof Arg || container instanceof ConstStatement){
+                Type type;
+            
+                if(container instanceof Arg){
+            	  type = ((Arg) container).getType();
+                }else{
+                    type = ((ConstStatement)container).getType();
+                }
+                    
             	if(type instanceof RecordType){
             		NestedDotID elID = ((RecordType) type).getRecord();
             		while(elID.getSub() != null){
@@ -278,11 +312,20 @@ public class AgreeScopeProvider extends
         }else if (container instanceof RecordType
         		|| container instanceof RecordExpr){
         	
-        	while(!(container instanceof AgreeContract)){
+        	while(!(container instanceof AgreeContract) &&
+        	      !(container instanceof NodeDefExpr)){
         		container = container.eContainer();
         	}
-        	Set<Element> specs = getAllElementsFromSpecs(((AgreeContract) container).getSpecs());
-    		result.addAll(specs);
+        	
+        	if(container instanceof AgreeContract){
+        	    Set<Element> specs = getAllElementsFromSpecs(((AgreeContract) container).getSpecs());
+        	    result.addAll(specs);
+        	}else{
+        	    if(!(container instanceof NodeDefExpr)){
+        	        throw new AgreeScopingException("container should be an AgreeContract or a NodeDefExpr");
+        	    }
+        	    result.addAll(((NodeDefExpr)container).getArgs());
+        	}
     		
     		while(!(container instanceof AadlPackage)){
         		container = container.eContainer();
@@ -300,7 +343,10 @@ public class AgreeScopeProvider extends
         	if(container instanceof AgreeContract){
         		Set<Element> specs = getAllElementsFromSpecs(((AgreeContract) container).getSpecs());
         		result.addAll(specs);
-        	}else if(container instanceof NodeDefExpr){
+        	}else{
+                if(!(container instanceof NodeDefExpr)){
+                    throw new AgreeScopingException("container should be an AgreeContract or a NodeDefExpr");
+                }
         		result.addAll(((NodeDefExpr) container).getArgs());
         	}
         	
@@ -308,9 +354,6 @@ public class AgreeScopeProvider extends
         		  !(container instanceof AadlPackage)){
         		container = container.eContainer();
         	}
-        	//result.add((AadlPackage)container);
-        	
-        	// return result;
 
         } else {
             // travel out of the annex and get the component
@@ -324,10 +367,7 @@ public class AgreeScopeProvider extends
             }
         }
 
-        if (container == null) {
-            return result; // this will throw a parsing error
-        }
-
+        //check to see what the type the container is and behave accordingly
         if (container instanceof Classifier) {
             Classifier component = (Classifier) container;
             for (Element el : component.getOwnedElements()) {
@@ -338,25 +378,13 @@ public class AgreeScopeProvider extends
             for (Element el : component.getAllFeatures()) {
                 result.add(el);
             }
-            //get any equation statements from any annex in the component type
+            //if the classifier is a component implementation, get all the elements
+            //from the implementation as well as the type
             if(component instanceof ComponentImplementation){
+                getAllAgreeElements(result, component);
             	component = ((ComponentImplementation)component).getType();
             }
-            
-            for (AnnexSubclause subclause : AnnexUtil.getAllAnnexSubclauses(component, AgreePackage.eINSTANCE.getAgreeContractSubclause())) {
-                if (subclause instanceof AgreeContractSubclause) {
-                    AgreeContractSubclause agreeSubclause = (AgreeContractSubclause)subclause;
-                    AgreeContract contract = (AgreeContract)agreeSubclause.getContract();
-                    for(SpecStatement spec : contract.getSpecs()){
-                    	if(spec instanceof EqStatement){
-                    		EqStatement eqStat = (EqStatement)spec;
-                    		for(Arg arg : eqStat.getLhs()){
-                    			result.add(arg);
-                    		}
-                    	}
-                    }
-                }
-            }
+            getAllAgreeElements(result, component);
             
         }else if(container instanceof AadlPackage){
         	AadlPackage aadlPack = (AadlPackage)container;
@@ -390,6 +418,16 @@ public class AgreeScopeProvider extends
         }
 
         return result;
+    }
+
+    private void getAllAgreeElements(Set<Element> result, Classifier component) {
+        for (AnnexSubclause subclause : AnnexUtil.getAllAnnexSubclauses(component, AgreePackage.eINSTANCE.getAgreeContractSubclause())) {
+            if (subclause instanceof AgreeContractSubclause) {
+                AgreeContractSubclause agreeSubclause = (AgreeContractSubclause)subclause;
+                AgreeContract contract = (AgreeContract)agreeSubclause.getContract();
+                result.addAll(getAllElementsFromSpecs(contract.getSpecs()));
+            }
+        }
     }
 
 }

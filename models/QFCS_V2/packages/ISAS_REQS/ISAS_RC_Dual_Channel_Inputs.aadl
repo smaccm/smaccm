@@ -360,3 +360,4 @@ system ISAS_RC_Dual_Channel_Inputs
  end ISAS_RC_Dual_Channel_Inputs.impl;
  
 end ISAS_RC_Dual_Channel_Inputs;
+

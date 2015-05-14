@@ -29,6 +29,7 @@ import org.osate.aadl2.Element;
 
 public abstract class AadlHandler extends AbstractHandler {
     protected static final String TERMINATE_ID = "com.rockwellcollins.atc.agree.analysis.commands.terminate";
+    protected static final String TERMINATE_ALL_ID = "com.rockwellcollins.atc.agree.analysis.commands.terminateAll";
     private IWorkbenchWindow window;
 
     abstract protected IStatus runJob(Element sel, IProgressMonitor monitor);
@@ -68,14 +69,6 @@ public abstract class AadlHandler extends AbstractHandler {
 
             @Override
             public IStatus runInWorkspace(final IProgressMonitor monitor) {
-                activateTerminateHandler(monitor);
-
-                addJobChangeListener(new JobChangeAdapter() {
-                    @Override
-                    public void done(IJobChangeEvent event) {
-                        deactivateTerminateHandler();
-                    }
-                });
 
                 return xtextEditor.getDocument().readOnly(
                         new IUnitOfWork<IStatus, XtextResource>() {
@@ -89,25 +82,6 @@ public abstract class AadlHandler extends AbstractHandler {
                                 }
                             }
                         });
-            }
-
-            private void activateTerminateHandler(final IProgressMonitor monitor) {
-                getWindow().getShell().getDisplay().syncExec(new Runnable() {
-                    @Override
-                    public void run() {
-                        terminateActivation = handlerService.activateHandler(TERMINATE_ID,
-                                new TerminateHandler(monitor));
-                    }
-                });
-            }
-
-            private void deactivateTerminateHandler() {
-                getWindow().getShell().getDisplay().syncExec(new Runnable() {
-                    @Override
-                    public void run() {
-                        handlerService.deactivateHandler(terminateActivation);
-                    }
-                });
             }
         };
 

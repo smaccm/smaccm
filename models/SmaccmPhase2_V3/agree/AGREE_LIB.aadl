@@ -1,0 +1,16 @@
+package AGREE_LIB
+public
+  annex agree {**
+  	node min(a : real, b : real) returns (res : real);
+  	let
+  	  res = if (a < b) then a else b;
+  	tel;
+  	
+  	--if the condition holds then minimum of a and b else b
+  	node min_if(cond : bool, a : real, b : real) returns (res : real);
+  	let
+  	  res = if cond then if (a < b) then a else b else b;
+  	tel;
+  **};
+	
+end AGREE_LIB;

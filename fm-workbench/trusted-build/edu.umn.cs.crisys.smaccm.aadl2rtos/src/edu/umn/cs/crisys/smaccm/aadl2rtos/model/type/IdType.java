@@ -102,13 +102,50 @@ public class IdType extends Type {
 
 	@Override
 	public List<Type> dependencies() {
-		List<Type> tyl = new ArrayList<Type>(1);
-		tyl.add(typeRef);
-		return tyl;
+		if (typeRef != null) {
+		  List<Type> deps = new ArrayList<Type>(1);
+		  deps.add(this.getTypeRef());
+		  return deps;
+		} else {
+		  return new ArrayList<Type>();
+		}
 	}
 
 	@Override
 	public String toString() {
 		return typeId;
 	}
+	
+	@Override
+  public int hashCode() {
+    final int prime = 31;
+    int result = 1;
+    result = prime * result + ((typeId == null) ? 0 : typeId.hashCode());
+    result = prime * result + ((typeRef == null) ? 0 : typeRef.hashCode());
+    return result;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
+    IdType other = (IdType) obj;
+    if (typeId == null) {
+      if (other.typeId != null)
+        return false;
+    } else if (!typeId.equals(other.typeId))
+      return false;
+    if (typeRef == null) {
+      if (other.typeRef != null)
+        return false;
+    } else if (!typeRef.equals(other.typeRef))
+      return false;
+    return true;
+  }
+	
+	
 }

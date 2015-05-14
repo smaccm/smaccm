@@ -1,0 +1,126 @@
+import <std_connector.camkes>;
+
+import "../clk/clk.camkes";
+import "../gpio/gpio.camkes";
+import "../spi/spi.camkes";
+import "../can/can.camkes";
+
+import "../../interfaces/can__can_frame_i_writer.idl4";
+
+component can_node {
+    control;
+
+    // AADL interface
+    include "smaccm_wrapper_i_types.h";
+    uses can__can_frame_i_writer can_node_recv;
+
+    uses bool_writer can_node_status_0;
+    uses bool_writer can_node_status_1;
+    uses bool_writer can_node_status_2;
+    has semaphore status_0_semaphore;
+    has semaphore status_1_semaphore;
+    has semaphore status_2_semaphore;
+
+    provides void_writer abort_0;
+    provides void_writer abort_1;
+    provides void_writer abort_2;
+
+    provides can__can_frame_i_writer send_0;
+    provides can__can_frame_i_writer send_1;
+    provides can__can_frame_i_writer send_2;
+
+    // Driver interface
+    uses can_tx_inf can_tx;
+    uses can_rx_inf can_rx;
+
+    consumes txb0_ack txb0_ack;
+    consumes txb1_ack txb1_ack;
+    consumes txb2_ack txb2_ack;
+}
+
+component clkbase {
+    hardware;
+    include "components/clk/include/porttype.h";
+    dataport CLKData_t cmu_cpu_clk;
+    dataport Buf cmu_core_clk;
+    dataport CLKData_t cmu_top_clk;
+}
+
+component gpiobase {
+    hardware;
+    dataport Buf gpio1base;
+    dataport Buf gpio2base;
+    dataport Buf irqcbase;
+    emits IRQGroup26 irq_grp26_int;
+    emits IRQGroup28 irq_grp28_int;
+    emits IRQGroup31 irq_grp31_int;
+    emits EXINT16_31 xint16_31_int;
+}
+
+component spibase {
+   hardware;
+   dataport Buf spi1_reg;
+   emits DataAvailable spi1_int;
+}
+
+assembly {
+    composition {
+        component clkbase clkbase_obj;
+        component gpiobase gpiobase_obj;
+	component spibase spibase_obj;
+
+        // "component can_node can_node_inst" will be defined by the outer camkes file
+        component can can_obj;
+	component spi spi_obj;
+	component gpio gpio_obj;
+	component clk clk_obj;
+
+	connection seL4RPC can_node_inst_can_tx(from can_node_inst.can_tx, to can_obj.can_tx);
+	connection seL4RPC can_node_inst_can_rx(from can_node_inst.can_rx, to can_obj.can_rx);
+	connection seL4Asynch txb0_ack(from can_obj.txb0_ack, to can_node_inst.txb0_ack);
+	connection seL4Asynch txb1_ack(from can_obj.txb1_ack, to can_node_inst.txb1_ack);
+	connection seL4Asynch txb2_ack(from can_obj.txb2_ack, to can_node_inst.txb2_ack);
+
+        connection seL4HardwareMMIO clk_cmu_cpu_mem(from clk_obj.cmu_cpu_clk, to clkbase_obj.cmu_cpu_clk);
+        connection seL4HardwareMMIO clk_cmu_top_mem(from clk_obj.cmu_top_clk, to clkbase_obj.cmu_top_clk);
+        connection seL4HardwareMMIO clk_cmu_core_mem(from clk_obj.cmu_core_clk, to clkbase_obj.cmu_core_clk);
+
+        connection seL4HardwareMMIO gpio_mem1(from gpio_obj.gpio1base, to gpiobase_obj.gpio1base);
+        connection seL4HardwareMMIO gpio_mem2(from gpio_obj.gpio2base, to gpiobase_obj.gpio2base);
+        connection seL4HardwareMMIO gpio_mem3(from gpio_obj.irqcbase, to gpiobase_obj.irqcbase);
+
+        connection seL4HardwareMMIO spi1_mem(from spi_obj.spi1_reg, to spibase_obj.spi1_reg);
+
+        connection seL4HardwareInterrupt spi1_irq(from spibase_obj.spi1_int, to spi_obj.spi1_int);
+        connection seL4HardwareInterrupt gpio_grp28_irq(from gpiobase_obj.irq_grp28_int, to gpio_obj.irq_grp28_int);
+        connection seL4HardwareInterrupt gpio_grp26_irq(from gpiobase_obj.irq_grp26_int, to gpio_obj.irq_grp26_int);
+        connection seL4HardwareInterrupt gpio_grp31_irq(from gpiobase_obj.irq_grp31_int, to gpio_obj.irq_grp31_int);
+        connection seL4HardwareInterrupt gpio_xint16_31_irq(from gpiobase_obj.xint16_31_int, to gpio_obj.xint16_31_int);
+
+        connection seL4RPC spi_gpio(from spi_obj.gpio, to gpio_obj.gpio);
+        connection seL4RPC spi_clk(from spi_obj.clktree, to clk_obj.clktree);
+
+        // CAN Driver
+        connection seL4RPC can_spi(from can_obj.spi, to spi_obj.spi);
+        connection seL4SharedData can_spi_channel(from can_obj.spi_can,to spi_obj.spi1_can);
+        connection seL4Asynch gpio_can_int(from gpio_obj.CANInt, to can_obj.Int);
+        connection seL4Asynch gpio_can_intAck(from can_obj.IntAck, to gpio_obj.CANIntAck);
+    }
+
+    configuration {
+        gpiobase_obj.gpio2base_attributes = "0x14000000:0x1000"; //GPIO
+        gpiobase_obj.gpio1base_attributes = "0x13400000:0x1000"; //GPIO
+        gpiobase_obj.irqcbase_attributes  = "0x10440000:0x1000"; //IRQ COMBINER
+        gpiobase_obj.irq_grp26_int_attributes     =       58;                     //Combined IRQ group 26
+        gpiobase_obj.irq_grp28_int_attributes     =       60;                     //Combined IRQ group 28
+        gpiobase_obj.irq_grp31_int_attributes     =       63;                     //Combined IRQ group 31
+        gpiobase_obj.xint16_31_int_attributes     =       64;                     //Extern Interrupt EINT16-EINT31
+
+        spibase_obj.spi1_reg_attributes = "0x12D30000:0x1000"; //SPI1
+        spibase_obj.spi1_int_attributes = 101; //SPI1  interrupt
+
+	clkbase_obj.cmu_cpu_clk_attributes = "0x10010000:0x1000"; //CMU_CPU
+        clkbase_obj.cmu_core_clk_attributes = "0x10014000:0x1000"; //CMU_CORE
+        clkbase_obj.cmu_top_clk_attributes = "0x10020000:0x1000"; //CMU_TOP
+    }
+}

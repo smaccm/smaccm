@@ -56,12 +56,14 @@ import org.eclipse.xtext.util.concurrent.IUnitOfWork;
 import org.osate.aadl2.Element;
 import org.osate.aadl2.instance.SystemInstance;
 import org.osate.aadl2.modelsupport.errorreporting.AnalysisErrorReporterManager;
+import org.osate.aadl2.modelsupport.resources.OsateResourceUtil;
 
-import fr.tpt.aadl.ramses.control.support.analysis.AnalysisException;
-import fr.tpt.aadl.ramses.control.support.analysis.Analyzer;
-import fr.tpt.aadl.ramses.control.support.config.RamsesConfiguration;
+//import fr.tpt.aadl.ramses.control.support.analysis.AnalysisException;
+//import fr.tpt.aadl.ramses.control.support.analysis.Analyzer;
+//import fr.tpt.aadl.ramses.control.support.config.RamsesConfiguration;
 
-abstract public class AadlAction implements IWorkbenchWindowActionDelegate, Analyzer {
+@Deprecated
+abstract public class AadlAction implements IWorkbenchWindowActionDelegate {
 	private IWorkbenchWindow window;
 	private Object currentSelection;
 
@@ -112,7 +114,8 @@ abstract public class AadlAction implements IWorkbenchWindowActionDelegate, Anal
 					xtextEditor.getDocument().readOnly(
 						new IUnitOfWork<IStatus, XtextResource>() {
 							public IStatus exec(XtextResource resource) throws Exception {
-								EObject eobj = resource.getResourceSet().getEObject(uri, true);
+								OsateResourceUtil.refreshResourceSet();
+							  EObject eobj = OsateResourceUtil.getResourceSet().getEObject(uri, true);
 								if (eobj instanceof Element) {
 									return runJob((Element) eobj, monitor, log);
 								}

@@ -3,7 +3,6 @@ package edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher;
 import java.util.ArrayList;
 import java.util.List;
 
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.OutgoingDispatchContract;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.ThreadImplementation;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.Type;
 
@@ -16,8 +15,10 @@ import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.Type;
 public abstract class Dispatcher {
 
 	private List<ExternalHandler> externalHandlerList;
+	private List<String> implementationFileList;
 	private ThreadImplementation owner;
-
+  private String optSendsEventsToString = null;
+	
 	 // Outgoing dispatch contract (limits on dispatch)
   private ArrayList<OutgoingDispatchContract> dispatchLimits = new ArrayList<OutgoingDispatchContract>();
 
@@ -42,7 +43,25 @@ public abstract class Dispatcher {
     this.dispatchLimits = dispatchLimits;
   }
 	
-	public abstract String getName(); 
+	/**
+   * @return the implementationFileList
+   */
+  public List<String> getImplementationFileList() {
+    return implementationFileList;
+  }
+
+  /**
+   * @param implementationFileList the implementationFileList to set
+   */
+  public void setImplementationFileList(List<String> implementationFileList) {
+    if (implementationFileList != null) {
+      this.implementationFileList = implementationFileList;
+    } else {
+      this.implementationFileList = new ArrayList<String>(); 
+    }
+  }
+
+  public abstract String getName(); 
 	
 	public abstract Type getType(); 
 	
@@ -50,7 +69,27 @@ public abstract class Dispatcher {
 	  return this.externalHandlerList;
 	}
 	
-	public ThreadImplementation getOwner() {
+	
+	
+	/**
+   * @return the optSendsEventsToString
+   */
+  public String getOptSendsEventsToString() {
+    return optSendsEventsToString;
+  }
+
+  /**
+   * @param optSendsEventsToString the optSendsEventsToString to set
+   */
+  public void setOptSendsEventsToString(String optSendsEventsToString) {
+    this.optSendsEventsToString = optSendsEventsToString;
+  }
+
+  public ThreadImplementation getOwner() {
 	  return this.owner;
 	}
+  
+  public int hashCode() {
+    return 0;
+  }
 }

@@ -12,6 +12,7 @@ package com.rockwellcollins.atc.agree.agree;
  * The following features are supported:
  * <ul>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.SynchStatement#getVal <em>Val</em>}</li>
+ *   <li>{@link com.rockwellcollins.atc.agree.agree.SynchStatement#getVal2 <em>Val2</em>}</li>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.SynchStatement#getSim <em>Sim</em>}</li>
  * </ul>
  * </p>
@@ -47,6 +48,32 @@ public interface SynchStatement extends SpecStatement
    * @generated
    */
   void setVal(String value);
+
+  /**
+   * Returns the value of the '<em><b>Val2</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <p>
+   * If the meaning of the '<em>Val2</em>' attribute isn't clear,
+   * there really should be more of a description here...
+   * </p>
+   * <!-- end-user-doc -->
+   * @return the value of the '<em>Val2</em>' attribute.
+   * @see #setVal2(String)
+   * @see com.rockwellcollins.atc.agree.agree.AgreePackage#getSynchStatement_Val2()
+   * @model
+   * @generated
+   */
+  String getVal2();
+
+  /**
+   * Sets the value of the '{@link com.rockwellcollins.atc.agree.agree.SynchStatement#getVal2 <em>Val2</em>}' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @param value the new value of the '<em>Val2</em>' attribute.
+   * @see #getVal2()
+   * @generated
+   */
+  void setVal2(String value);
 
   /**
    * Returns the value of the '<em><b>Sim</b></em>' attribute.

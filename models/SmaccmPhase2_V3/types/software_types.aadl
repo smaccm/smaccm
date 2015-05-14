@@ -1,0 +1,241 @@
+package software_types
+public
+  with Data_Model;
+  with Base_Types;
+  
+  data RawMessage
+  end RawMessage;
+  
+  data ParsedMessage
+  end ParsedMessage;  
+  
+  data MAVLink
+  end MAVLink;
+  
+  data EncryptMAVLink
+  end EncryptMAVLink;
+  
+  data Thread_Signal
+  end Thread_Signal;
+  
+  data implementation Thread_Signal.Impl_8
+  subcomponents
+  	sig0 : data Base_Types::Boolean;
+  	sig1 : data Base_Types::Boolean;
+  	sig2 : data Base_Types::Boolean;
+  	sig3 : data Base_Types::Boolean;
+  	sig4 : data Base_Types::Boolean;
+  	sig5 : data Base_Types::Boolean;
+  	sig6 : data Base_Types::Boolean;
+  	sig7 : data Base_Types::Boolean;
+  end Thread_Signal.Impl_8;
+  
+  data Flight_Control_Commands
+  properties
+  	Data_Model::Data_Representation => Struct;
+  end Flight_Control_Commands;
+  
+  data implementation Flight_Control_Commands.i
+  subcomponents
+      --ppm inputs
+      ppm0 : data Base_Types::Float;
+      ppm1 : data Base_Types::Float;
+      ppm2 : data Base_Types::Float;
+      ppm3 : data Base_Types::Float;
+      ppm4 : data Base_Types::Float;
+      ppm5 : data Base_Types::Float;
+      ppm6 : data Base_Types::Float;
+      ppm7 : data Base_Types::Float;
+      
+  end Flight_Control_Commands.i;
+
+  data Barometric_Data
+  end Barometric_Data;
+  
+  data Motion_Data
+  end Motion_Data;
+  
+  data implementation Motion_Data.Impl
+  subcomponents
+      vertical_speed : data Base_Types::Float;
+  end Motion_Data.Impl;
+  
+  data Battery_Data
+  end Battery_Data;
+
+  data Sensor_Data
+  end Sensor_Data;
+  
+  data Private_Key_Data
+  end Private_Key_Data;
+  
+  data control_data
+  end control_data;
+  
+  data motmix_data
+  end motmix_data;
+  
+  data can_data
+  end can_data;
+
+data implementation control_data.impl
+  subcomponents
+    param_reader_FS_ALT_OFFS: data Base_Types::Float;
+    param_reader_POS_UI_SENS: data Base_Types::Float;
+    param_reader_POS_THRUST_IMAX: data Base_Types::Float;
+    param_reader_POS_THRUST_D: data Base_Types::Float;
+    param_reader_POS_THRUST_I: data Base_Types::Float;
+    param_reader_POS_THRUST_P: data Base_Types::Float;
+    param_reader_ALT_UI_DEAD: data Base_Types::Float;
+    param_reader_ALT_UI_SENS: data Base_Types::Float;
+    param_reader_ALT_POS_IMAX: data Base_Types::Float;
+    param_reader_ALT_POS_D: data Base_Types::Float;
+    param_reader_ALT_POS_I: data Base_Types::Float;
+    param_reader_ALT_POS_P: data Base_Types::Float;
+    param_reader_ALT_RATE_IMAX: data Base_Types::Float;
+    param_reader_ALT_RATE_D: data Base_Types::Float;
+    param_reader_ALT_RATE_I: data Base_Types::Float;
+    param_reader_ALT_RATE_P: data Base_Types::Float;
+    param_reader_YAW_UI_SENS: data Base_Types::Float;
+    param_reader_YAW_RATE_IMAX: data Base_Types::Float;
+    param_reader_YAW_RATE_D: data Base_Types::Float;
+    param_reader_YAW_RATE_I: data Base_Types::Float;
+    param_reader_YAW_RATE_P: data Base_Types::Float;
+    param_reader_YAW_STAB_IMAX: data Base_Types::Float;
+    param_reader_YAW_STAB_D: data Base_Types::Float;
+    param_reader_YAW_STAB_I: data Base_Types::Float;
+    param_reader_YAW_STAB_P: data Base_Types::Float;
+    param_reader_PITRLL_UI_SENS: data Base_Types::Float;
+    param_reader_PIT_RATE_IMAX: data Base_Types::Float;
+    param_reader_PIT_RATE_D: data Base_Types::Float;
+    param_reader_PIT_RATE_I: data Base_Types::Float;
+    param_reader_PIT_RATE_P: data Base_Types::Float;
+    param_reader_PIT_STAB_IMAX: data Base_Types::Float;
+    param_reader_PIT_STAB_D: data Base_Types::Float;
+    param_reader_PIT_STAB_I: data Base_Types::Float;
+    param_reader_PIT_STAB_P: data Base_Types::Float;
+    param_reader_RLL_RATE_IMAX: data Base_Types::Float;
+    param_reader_RLL_RATE_D: data Base_Types::Float;
+    param_reader_RLL_RATE_I: data Base_Types::Float;
+    param_reader_RLL_RATE_P: data Base_Types::Float;
+    param_reader_RLL_STAB_IMAX: data Base_Types::Float;
+    param_reader_RLL_STAB_D: data Base_Types::Float;
+    param_reader_RLL_STAB_I: data Base_Types::Float;
+    param_reader_RLL_STAB_P: data Base_Types::Float;
+end control_data.impl;
+
+data control_law
+  properties
+    Data_Model::Data_Representation => Struct;
+end control_law;
+
+
+data implementation control_law.impl
+  subcomponents
+    armed_mode : data Base_Types::Unsigned_32;
+    ui_source : data Base_Types::Unsigned_32;
+    yaw_mode : data Base_Types::Unsigned_32;
+    thr_mode : data Base_Types::Unsigned_32;
+    autothr_source : data Base_Types::Unsigned_32;
+    stab_source : data Base_Types::Unsigned_32;
+    head_source : data Base_Types::Unsigned_32;
+    time : data Base_Types::Unsigned_32;
+end control_law.impl;
+
+
+data userinput_result
+  properties
+    Data_Model::Data_Representation => Struct;
+end userinput_result;
+
+
+data implementation userinput_result.impl
+  subcomponents
+    throttle : data Base_Types::Float;
+    roll : data Base_Types::Float;
+    pitch : data Base_Types::Float;
+    yaw : data Base_Types::Float;
+    time : data Base_Types::Unsigned_32;
+    xsource : data Base_Types::Unsigned_32;
+end userinput_result.impl;
+
+
+data position
+  properties
+    Data_Model::Data_Representation => Struct;
+end position;
+
+
+data implementation position.impl
+  subcomponents
+    fix : data Base_Types::Unsigned_32;
+    num_sv : data Base_Types::Unsigned_8;
+    dop : data Base_Types::Float;
+    lat : data Base_Types::Integer_32;
+    lon : data Base_Types::Integer_32;
+    alt : data Base_Types::Integer_32;
+    vnorth : data Base_Types::Integer_32;
+    veast : data Base_Types::Integer_32;
+    vdown : data Base_Types::Integer_32;
+    vground : data Base_Types::Unsigned_32;
+    heading : data Base_Types::Float;
+    time : data Base_Types::Unsigned_32;
+end position.impl;
+
+data motors_data
+end motors_data;
+
+data implementation motors_data.impl
+  subcomponents
+    frontleft : data Base_types::Float;
+    frontright : data Base_types::Float;
+    backleft : data Base_types::Float;
+    backright : data Base_types::Float;
+end motors_data.impl;
+
+data controloutput
+  properties
+    Data_Model::Data_Representation => Struct;
+end controloutput;
+
+
+data implementation controloutput.impl
+  subcomponents
+    armed : data Base_Types::Boolean;
+    throttle : data Base_Types::Float;
+    roll : data Base_Types::Float;
+    pitch : data Base_Types::Float;
+    yaw : data Base_Types::Float;
+    time : data Base_Types::Unsigned_32;
+end controloutput.impl;
+
+data control_law_request
+  properties
+    Data_Model::Data_Representation => Struct;
+end control_law_request;
+
+
+data implementation control_law_request.impl
+  subcomponents
+    set_safe : data Base_Types::Boolean;
+    set_disarmed : data Base_Types::Boolean;
+    set_armed : data Base_Types::Boolean;
+    set_ui_ppm : data Base_Types::Boolean;
+    set_ui_mavlink : data Base_Types::Boolean;
+    set_yaw_rate : data Base_Types::Boolean;
+    set_yaw_heading : data Base_Types::Boolean;
+    set_thr_direct : data Base_Types::Boolean;
+    set_thr_auto : data Base_Types::Boolean;
+    set_autothr_src_ui : data Base_Types::Boolean;
+    set_autothr_src_nav : data Base_Types::Boolean;
+    set_stab_src_ui : data Base_Types::Boolean;
+    set_stab_src_nav : data Base_Types::Boolean;
+    set_head_src_ui : data Base_Types::Boolean;
+    set_head_src_nav : data Base_Types::Boolean;
+    time : data Base_Types::Unsigned_32;
+end control_law_request.impl;
+
+data waypoint
+end waypoint;
+  
+end software_types;

@@ -3,11 +3,11 @@ package edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher;
 public class ExternalHandler {
 
 	private String handlerName;
-	private String optHandlerFileName;
+//	private String optHandlerFileName;
 
-	public ExternalHandler(String entryPointFunctionName, String entryPointSourceText) {
+	public ExternalHandler(String entryPointFunctionName) {
 		this.handlerName = entryPointFunctionName;
-		this.optHandlerFileName = entryPointSourceText;
+//		this.optHandlerFileName = entryPointSourceText;
 	}
 	
 	public String getHandlerName() {
@@ -17,8 +17,11 @@ public class ExternalHandler {
   /**
    * @return the optHandlerFileName
    */
-  public String getOptHandlerFileName() {
-    return optHandlerFileName;
-  }	
-	
+//  public String getOptHandlerFileName() {
+//    return optHandlerFileName;
+//  }	
+
+	public int hashCode() {
+	  return 0;
+	}
 }

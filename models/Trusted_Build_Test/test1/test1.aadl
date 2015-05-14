@@ -1,0 +1,93 @@
+-- Note: this example shows a single send of a scalar type from an
+-- active thread to a passive thread.  It is designed to test:
+-- 	Component naming
+--  Message distribution for scalars
+--  Passive thread dispatch 
+
+
+package test1
+public 
+   with Base_Types;
+   with SMACCM_SYS;   
+
+-- Example of a periodically dispatched "Active" thread.   
+thread sender
+	features
+		Output1: out event data port Base_Types::Unsigned_32 {
+	      SMACCM_SYS::CommPrim_Source_Text => "ping_Output1";			
+		};
+	
+	properties 
+	    Dispatch_Protocol => Periodic;
+	    Period => 2 sec;
+		Source_Text => ("user_code/user_sender.c");
+	    SMACCM_SYS::Compute_Entrypoint_Source_Text => ("periodic_ping");
+	    Priority => 10;
+	    Stack_Size => 4 KByte;
+	    SMACCM_SYS::Thread_Type => Active ;
+	    Compute_Execution_Time => 10 us .. 50 us;
+	    SMACCM_SYS::Sends_Events_To => "{{1 Output1}}";
+end sender ; 
+
+-- Example of an aperiodically dispatched "passive" thread.   
+thread receiver
+	features
+		Input1: in event data port Base_Types::Unsigned_32 {
+	      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("ping_received");
+		  Source_Text => ("user_code/user_receiver1.c");
+		}; 
+
+		Output1: out event data port Base_Types::Unsigned_32 {
+	      SMACCM_SYS::CommPrim_Source_Text => "ping_Output2";			
+		}; 
+				
+	properties 
+	    Dispatch_Protocol => Aperiodic;
+	    SMACCM_SYS::Thread_Type => Passive ;
+	    Compute_Execution_Time => 10 us .. 50 us;
+	    SMACCM_SYS::Sends_Events_To => "{{1 Output1}}";
+end receiver ; 
+
+-- Example of an aperiodically dispatched "passive" thread.   
+thread receiver2
+	features
+		Input1: in event data port Base_Types::Unsigned_32 {
+	      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("ping_received");
+		  Source_Text => ("user_code/user_receiver2.c");
+		}; 
+				
+	properties 
+	    Dispatch_Protocol => Aperiodic;
+	    SMACCM_SYS::Thread_Type => Passive ;
+	    Compute_Execution_Time => 10 us .. 50 us;
+	    SMACCM_SYS::Sends_Events_To => "{{}}";
+end receiver2 ; 
+
+
+process proc
+
+end proc;
+
+process implementation proc.Impl
+	subcomponents
+		s: thread sender;
+		r1: thread receiver;
+		r2: thread receiver2; 
+	connections
+		s_to_r1 : port s.Output1 -> r1.Input1;
+		r1_to_r2 : port r1.Output1 -> r2.Input1;
+end proc.Impl;
+
+system test1
+end test1;
+
+system implementation test1.impl
+	subcomponents
+		tl: process proc.Impl;
+	properties
+		SMACCM_SYS::OS => CAmkES; 
+		SMACCM_SYS::HW => QEMU;
+		
+end test1.impl;
+
+end test1;

@@ -29,6 +29,7 @@ public class SharedDataAccessor {
     this.accessorName = accessorName;
     this.sharedData = sharedData;
     this.accessType = accessType;
+    sharedData.addAccessor(this);
   }
   
   public String getName() {

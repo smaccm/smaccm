@@ -1,165 +1,102 @@
 package edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.eChronos;
 
 import java.io.BufferedWriter;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.List;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-
-import org.w3c.dom.Document;
+import org.stringtemplate.v4.ST;
+import org.stringtemplate.v4.STGroupFile;
 
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosFailure;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Logger;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.*;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.common.CodeGeneratorBase;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.names.ModelNames;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.ThreadImplementation;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.parse.Model;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.util.Util;
 
-// TODO: need to discuss where to place .c / .h files for User-provided thread functions
-
-public class EChronos_CodeGenerator {
-	private Model model;
-	// private AstHelper astHelper;
-
-	private Logger log;
-	private List<OutputEventPort> events;
-	private File dir;
-	
-	public List<ThreadImplementation> allThreads;
+public class EChronos_CodeGenerator extends CodeGeneratorBase {
 
 	// so write threadName_write_portName for each port.
 
-	public EChronos_CodeGenerator(Logger log, Model model, File dir) {
-		this.log = log;
-		this.model = model;
-		this.dir = dir;
+	public EChronos_CodeGenerator(Logger log, Model model, File aadlDirectory, File outputDir) {
+		super(log, model, aadlDirectory, outputDir, "eChronos");
 	}
 
-	public int getSignalSetSize() {
-		return events.size();
-	}
+	 public void createAssemblyHeader() throws Aadl2RtosFailure {
+	   ModelNames mn = new ModelNames(model);
+	   String name = "smaccm_decls.h";
+	   File assemblyFile = new File(includeDirectory, name);
+     String path = assemblyFile.getAbsolutePath();
+     try (BufferedWriter writer = new BufferedWriter(new FileWriter(assemblyFile))) {
+       STGroupFile stg = this.createTemplate("AssemblyHeader.stg");
+       writeBoilerplateDTHeader(name, path, writer, stg.getInstanceOf("headerPrefix"), false);
+ 
+       ST st = stg.getInstanceOf("headerBody");
+       st.add("model", mn);
+       writer.append(st.render());
+     
+       writeBoilerplateFooter(name, path, writer, stg.getInstanceOf("headerPostfix"));
+     } catch (IOException e) {
+       log.error("Problem creating EChronos assembly header file.");
+       throw new Aadl2RtosFailure(); 
+     }
+ }
 
-	// For each thread, get all events (determined by the out-event ports)
-	private void defineSignalSet() {
-		events = new ArrayList<OutputEventPort>();		
-
-		for (ThreadImplementation tw : model.getThreadImplementations()) {
-			events.addAll(tw.getOutputEventPortList());
-			events.addAll(tw.getOutputEventDataPortList());
-		}
-	}
-
-	public void write() throws Aadl2RtosFailure {
-	  
-    // Create source directories
-    File genDir = new File(dir, "gen");
-    genDir.mkdirs();
-
-    // Create new source files
-    String name = Util.normalizeAadlName(model.getSystemInstanceName());
-    File CFile = new File(genDir, name + ".c");
-    File HFile = new File(genDir, name + ".h");
-
-    this.model.getSourceFiles().add(CFile.getPath());
-
-    // Define signal set from event ports
-    // write implementations for event ports set the signals
-    // main tasking threads wait for signal set
-    // and dispatch to appropriate entrypoint
-    defineSignalSet();
-
-    
-    // TODO: This code may leave file handles open.
-    try {
-			log.status("Writing AADL middleware header files...");
-			BufferedWriter hwriter = new BufferedWriter(new FileWriter(HFile));
-			HeaderWriter headerWriter = new HeaderWriter(hwriter, CFile, HFile, model);
-			headerWriter.writeHeader();
-      hwriter.close();
-
-			log.status("Writing AADL middleware source files...");
-			BufferedWriter cwriter = new BufferedWriter(new FileWriter(CFile));
-			SourceWriter sourceWriter = new SourceWriter(cwriter, CFile, HFile, model, events);
-			sourceWriter.writeSource();
-			cwriter.close();
+ public void createPrxFile() throws Aadl2RtosFailure {
+     ModelNames mn = new ModelNames(model);
+     String name = mn.getEChronosPrxFileName();
+     File file = new File(outputDirectory, name);
+     String path = file.getAbsolutePath();
+     String platform; 
+     
+     if (model.getHWTarget().equals("PX4")) {
+       platform = "Prx-stm32f4-discovery.stg";
+     } else {
+       log.error("eChronos code generator: currently only PX4 hardware platform is supported.\n");
+       throw new Aadl2RtosFailure();
+     }
+     
+     try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+       STGroupFile stg = this.createTemplate(platform);
+       writeBoilerplateDTHeader(name, path, writer, stg.getInstanceOf("prxPrefix"), false);
+ 
+       ST st = stg.getInstanceOf("prxBody");
+       st.add("model", mn);
+       writer.append(st.render());
+     
+       writeBoilerplateFooter(name, path, writer, stg.getInstanceOf("prxPostfix"));
+     } catch (IOException e) {
+       log.error("Problem creating EChronos assembly header file.");
+       throw new Aadl2RtosFailure(); 
+     }
+ }
 
 
-      // Print out the .prx file
-      List<String> cFiles = new ArrayList<String>();
-      cFiles.add("gen/" + CFile.getName());
-      genPrxFile(cFiles, dir, model);
-      
-      // Print out the makefile
-      log.status("Creating Makefile in location: " + dir.getPath());
-      MakefileWriter mw = new MakefileWriter(new File(dir, "out").getPath(), new File(dir, "Makefile"), model);
-      mw.writeMakeFile();
-			
-		} catch (IOException e) {
-			log.error("Unable to create output streams.\n");
-		}
-	}
+  @Override
+  public void osSpecificComponentFiles(ThreadImplementation ti,
+      File componentDirectory, File srcDirectory, File includeDirectory)
+      throws Aadl2RtosFailure {
 
-  private void writeXmlFile(Document dom, File file) {
-    try {
-      Transformer tr = TransformerFactory.newInstance().newTransformer();
-      tr.setOutputProperty(OutputKeys.INDENT, "yes");
-      tr.setOutputProperty(OutputKeys.METHOD, "xml");
-      tr.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
-      // tr.setOutputProperty(OutputKeys.DOCTYPE_SYSTEM, "roles.dtd");
-      tr.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
-
-      // send DOM to file
-      ByteArrayOutputStream bs = new ByteArrayOutputStream();
-
-      tr.transform(new DOMSource(dom), new StreamResult(bs));
-
-      OutputStream outputStream = new FileOutputStream(file);
-      bs.writeTo(outputStream);
-      outputStream.close();
-
-    } catch (TransformerException te) {
-      log.error("writeXmlFile::Error while transforming XML: " + te.getMessage());
-    } catch (IOException ie) {
-      log.error("writeXmlFile::Error while writing file: " + ie.getMessage());
-    }
+    // This space (currently) for rent...
   }
 
-  private void genPrxFile(List<String> cFiles, File dir, Model model) throws Aadl2RtosFailure {
-    Document dom;
-    PrxGenerator prxGen;
+  @Override
+  public void createPeriodicDispatcherComponent() throws Aadl2RtosFailure {
+    log.warn("eChronos code generator currently does not autogenerate the periodic dispatcher");
+  }
 
-    DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-    try {
-      // use factory to get an instance of document builder
-      DocumentBuilder db = dbf.newDocumentBuilder();
 
-      // create instance of DOM
-      dom = db.newDocument();
+  @Override
+  public void write() throws Aadl2RtosFailure {
+    createTypesHeader();
+    createComponents();
+    createAssemblyHeader();
+    createPrxFile();
 
-      // create the PRX file
-      prxGen = new PrxGenerator(log, dom, model, cFiles);
-      prxGen.writeToDOM();
-
-      File file = new File(dir, Util.normalizeAadlName(model.getSystemImplementationName()) + ".prx");
-      log.status("Creating .prx file in location: " + file);
-      writeXmlFile(dom, file);
-
-    } catch (ParserConfigurationException pce) {
-      log.error("UsersXML: Error trying to instantiate DocumentBuilder " + pce);
+    // final check for errors from string template.
+    if (listener.isErrorOccurred()) {
+      throw new Aadl2RtosFailure();
     }
   }
 }

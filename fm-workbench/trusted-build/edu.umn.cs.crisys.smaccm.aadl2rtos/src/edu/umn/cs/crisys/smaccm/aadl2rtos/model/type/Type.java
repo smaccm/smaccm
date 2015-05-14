@@ -69,8 +69,13 @@ public abstract class Type implements DependsOn<Type> {
 	// x : array [20] of (array [10] of int) ==>
 	// int x[20][10];
 	abstract public CType getCType(int indent);
-
+	
+	public String CTypeDecl(int indent, String name) {
+	  return getCType(indent).varString(name);
+	}
+	
 	public CType getCType() { return this.getCType(0); }
+	
 	
 	public Type getRootType() throws Aadl2RtosFailure {
 		return this;

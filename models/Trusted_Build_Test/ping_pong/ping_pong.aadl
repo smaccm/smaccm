@@ -1,0 +1,81 @@
+-- Note: this example shows a single send of a scalar type from an
+-- active thread to a passive thread.  It is designed to test:
+-- 	Component naming
+--  Message distribution for scalars
+--  Passive thread dispatch 
+
+
+package ping_pong
+public 
+   with Base_Types;
+   with SMACCM_SYS;   
+
+-- Example of a periodically dispatched "Active" thread.   
+thread sender
+	features
+		Input1: in event data port Base_Types::Unsigned_32 {
+			Compute_Entrypoint_Source_Text => "ping_Loopback";
+			SMACCM_SYS::Sends_Events_To => "{{}}";
+		};
+		Output1: out event data port Base_Types::Unsigned_32 {
+	      SMACCM_SYS::CommPrim_Source_Text => "ping_Output1";			
+		};
+	
+	properties 
+	    Dispatch_Protocol => Periodic;
+	    Period => 1000 ms;
+		Source_Text => ("user_code/user_sender.c");
+	    SMACCM_SYS::Compute_Entrypoint_Source_Text => ("periodic_ping");
+	    Priority => 10;
+	    Stack_Size => 256 bytes;
+	    SMACCM_SYS::Thread_Type => Active ;
+	    Compute_Execution_Time => 10 us .. 50 us;
+	    SMACCM_SYS::Sends_Events_To => "{{1 Output1}}";
+end sender ; 
+
+-- Example of an aperiodically dispatched "passive" thread.   
+thread receiver
+	features
+		Input1: in event data port Base_Types::Unsigned_32 {
+	      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("pong_received");
+		  Source_Text => ("user_code/user_receiver.c");
+		}; 
+
+		Output1: out event data port Base_Types::Unsigned_32 {
+	      SMACCM_SYS::CommPrim_Source_Text => "pong_Output1";			
+		}; 
+				
+	properties 
+	    Dispatch_Protocol => Aperiodic;
+	    SMACCM_SYS::Thread_Type => Passive ;
+	    Compute_Execution_Time => 10 us .. 50 us;
+	    SMACCM_SYS::Sends_Events_To => "{{1 Output1}}";
+end receiver ; 
+
+
+process proc
+
+end proc;
+
+process implementation proc.Impl
+	subcomponents
+		s: thread sender;
+		r: thread receiver;
+	connections
+		s_to_r : port s.Output1 -> r.Input1;
+		r_to_s : port r.Output1 -> s.Input1;
+end proc.Impl;
+
+system ping_pong
+end ping_pong;
+
+system implementation ping_pong.impl
+	subcomponents
+		tl: process proc.Impl;
+	properties
+		SMACCM_SYS::OS => CAmkES; 
+		SMACCM_SYS::HW => QEMU;
+		
+end ping_pong.impl;
+
+end ping_pong;

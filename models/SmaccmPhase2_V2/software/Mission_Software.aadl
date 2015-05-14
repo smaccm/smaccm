@@ -41,12 +41,29 @@ public
       userinput_data_in : in data port userinput_type::userinput_result.impl;
       control_data_out : out data port DATATYPES::control_data.impl;
       sensors_data_in : in data port sensors_type::sensors_result.impl;
+      mavlink: in out data port DATATYPES::EncryptMAVLink;
       
   end Software;
   
   system implementation Software.Impl 
     subcomponents
       ML: process flight_gen_process.Impl;
+      
+    connections
+      conn_pos : port ML.position -> position;
+      conn_ui_emitter: port ML.mav_ui_emitter -> mav_ui_emitter;
+      conn_cr_emitter: port ML.mav_cr_emitter -> mav_cr_emitter;
+      conn_nav_ctl_law_req: port ML.nav_ctl_law_req -> nav_ctl_law_req;
+      
+      conn_mav_data_out: port ML.mav_data_out -> mav_data_out;
+      conn_motor_data_in: port motor_data_in -> ML.motor_data_in;
+      conn_control_out_data_in : port control_out_data_in -> ML.control_out_data_in;
+      conn_alt_data_in : port alt_data_in -> ML.alt_data_in;
+      conn_control_point_data_out : port ML.control_point_data_out -> control_point_data_out;
+      conn_control_law_data_in : port control_law_data_in -> ML.control_law_data_in;
+      conn_control_data_out : port ML.control_data_out -> control_data_out;
+      conn_sensors_data_in : port sensors_data_in -> ML.sensors_data_in;
+      conn_mavlink : port mavlink <-> ML.mavlink;
 
   end Software.Impl;
 
@@ -64,11 +81,10 @@ public
       alt_data_in : in data port alt_control_dbg_type::alt_control_dbg.impl;
       control_point_data_out : out data port control_setpoint_type::control_setpoint.impl;
       control_law_data_in : in data port control_law_type::control_law.impl;
-      userinput_data_in : in data port userinput_type::userinput_result.impl;
       control_data_out : out data port DATATYPES::control_data.impl;
       sensors_data_in : in data port sensors_type::sensors_result.impl;
-      
-      
+      mavlink: in out data port DATATYPES::EncryptMAVLink;
+       
   end flight_gen_process;
 
 process implementation flight_gen_process.impl
@@ -83,7 +99,6 @@ process implementation flight_gen_process.impl
     nav_data : data nav_law_type::nav_law.impl;
     control_point_data : data control_setpoint_type::control_setpoint.impl;
     control_law_data : data control_law_type::control_law.impl;
-    userinput_data : data userinput_type::userinput_result.impl;
     pos_control_data : data pos_control_dbg_type::pos_control_dbg.impl;
     com_data : data Base_Types::Unsigned_32;
     control_data : data DATATYPES::control_data.impl;
@@ -103,13 +118,13 @@ process implementation flight_gen_process.impl
     uart1ISR_inst : thread uart1ISR;
     uart6ISR_inst : thread uart6ISR;
   connections
+    encrypt_mav_in : port mavlink <-> uart1ISR_inst.mavlink;
     mav_out : port mav_data -> mav_data_out;
     motor_in : port motor_data_in -> motor_data;
     control_out_in : port control_out_data_in -> control_out_data;
     alt_in : port alt_data_in -> alt_data;
     control_point_out : port control_point_data -> control_point_data_out;
     control_law_in : port control_law_data_in -> control_law_data;
-    userinput_in : port userinput_data_in -> userinput_data;
     control_out : port control_data -> control_data_out;
     sensors_in : port sensors_data_in -> sensors_data;
     
@@ -630,6 +645,7 @@ end ubloxGPS;
 
 thread uart1ISR
   features
+    mavlink: in out data port DATATYPES::EncryptMAVLink;
     istream: out event data port Base_Types::Unsigned_8 {
       Queue_Size => 1024;
       SMACCM_SYS::CommPrim_Source_Header => "tower_signal_comm_uart1ISR_643.h";

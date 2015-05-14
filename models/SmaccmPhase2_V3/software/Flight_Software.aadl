@@ -1,0 +1,717 @@
+package Flight_Software
+public
+  with software_types;
+  with hardware_types;
+  with SMACCM;
+  with Base_Types;
+  
+process main
+  features
+    mission_out : out event data port software_types::can_data;
+    mission_in : in event data port software_types::can_data;
+    ppm_in : in event data port software_types::Flight_Control_Commands.i;
+    
+    sensors_group : feature group hardware_types::Sensors;
+  annex agree {**
+  	
+  	--this is an arbitrary constant that we
+  	--will eventually use to represent the latency
+  	--of running all the tasks back to back
+  	const latency : real = 50.0;
+  	
+  	--this is an arbitarry constant that we will
+  	--use to represent the total time passed
+  	--without receiving a can message until the 
+  	--mode should be set to landing
+  	const TOTAL_LANDING_TIMEOUT : real = 500.0;
+  	
+  	--bounds frequency for ppms to occur
+  	const PPM_PERIOD : real = 100.0;
+  	
+  	--bounds frequency for can messages
+  	const CAN_PERIOD : real = 100.0;
+
+  	eq time : real;
+  	eq next_time : real;
+  	eq control_mode : int;
+  	  	
+  	eq time_of_last_can : real = 
+  	  0.0 -> if event(mission_in) then time else pre(time_of_last_can);
+  	
+  	eq time_of_last_ppm : real =
+  	  0.0 -> if event(ppm_in) then time else pre(time_of_last_ppm);    
+  	
+  	initially:
+  	  time = 0.0 and
+  	  time_of_last_can = 0.0 and
+  	  time_of_last_ppm = 0.0;
+  	
+  	--assumptions about how often events can occur
+  	assume "not frequent ppms" : true ->
+  	 time - pre(time_of_last_ppm) < PPM_PERIOD => not event(ppm_in);
+  	  
+  	assume "not frequent can" : true ->
+  	 time - pre(time_of_last_can) < CAN_PERIOD => not event(mission_in);
+  	
+  	guarantee "time is positive and increasing" :
+  	  (time = 0.0 -> true) and time >= 0.0 and (true -> time > pre(time));
+  	  
+  	guarantee "next time greater than current" :
+  	  next_time > time and (true -> pre(next_time) = time);
+  	  
+  	guarantee "time change bound" : 
+      5.0 <= next_time - time and next_time - time < 50.0;
+  	
+  	guarantee "if time passes with no message then the mode is landing" :
+  	    time - time_of_last_ppm > TOTAL_LANDING_TIMEOUT and
+  	    time - time_of_last_can > TOTAL_LANDING_TIMEOUT => 
+  	      control_mode = AGREE_CONSTS.LAND_MODE or control_mode = AGREE_CONSTS.DISARMED_MODE;
+  	      
+--  	guarantee "time_of_last_ppm and time_of_last_can less than time (lemma for other property)":
+--  	  time_of_last_ppm <= time and time_of_last_can <= time and
+--  	  time_of_last_ppm >= 0.0 and time_of_last_can >= 0.0;
+  	      
+  	eq mavlink_armed_in_past : bool;
+  	eq ppm_armed_in_past : bool;
+  	
+--  	guarantee "if the controller is armed, then an armed signal in the past" :
+--  	  control_mode = AGREE_CONSTS.ARMED_MODE =>
+--  	    mavlink_armed_in_past or ppm_armed_in_past;
+
+--  	guarantee "if an arm signal is sent from the ppm controller the controller will be armed" : true;
+--  	
+--  	guarantee "if the controller is not disarmed then the motors should not spin" : true;
+  	
+  **};
+end main;
+
+
+process implementation main.i
+  subcomponents
+    can : thread can_px4_t;
+    ppm : thread ppm_t;
+    control : thread control_t;
+    ui_mux : thread ui_mux_t;
+    gps : thread ublox_gps_t;
+    sensors : thread sensors_t;
+    motmix : thread motmix_t;
+    control_law : thread control_law_t;
+    
+    control_params : data software_types::control_data.impl { SMACCM::Trusted => true; };
+    
+  connections
+    conn0 : port sensors.sensor_data -> can.sensor_data;
+    conn1 : port control.control_out -> can.control_data;
+    conn2 : port motmix.motors -> can.motmix_data;
+    conn3 : port mission_in -> can.mission_in;
+    conn4 : port can.mission_out -> mission_out;
+    conn5 : port can.mav_user_input -> ui_mux.mavlink_input;
+    conn7 : port can.mav_control_law -> control_law.mav_law;
+    navlaw : port can.nav_control_law -> control_law.nav_law;
+    
+    ppm1 : port ppm_in -> ppm.flight_command;
+    ppm2 : port ppm.user_input -> ui_mux.ppm_input;
+    ppm3 : port ppm.control_law_out -> control_law.ppm_law;
+    
+    conn8 : port ui_mux.input_select -> control.user_input;
+    conn9 : port control_params -> control.control_params;
+    conn11 : port control.control_out -> motmix.control_in;
+    law : port control_law.out_law -> control.control_law;
+       
+    conn13 : port gps.position -> sensors.gps; 
+    
+    conn14 : port sensors.sensor_data -> control.sensor_data;
+
+    conn15 : port sensors_group.barometer -> sensors.barometer;
+    conn16 : port sensors_group.motion -> sensors.motion;
+    conn17 : port sensors_group.gps -> gps.input;
+    conn18 : port sensors_group.battery -> sensors.battery;
+    
+    clawmux : port control_law.out_law -> ui_mux.control_law;
+    clawmix : port control_law.out_law -> motmix.control_law_in;
+  
+  properties
+    SMACCM::OS => "eChronos";
+  
+  annex agree {**
+  	
+  	synchrony : latched;
+  	
+  	const CAN_EXEC_TIME : real = 5.0;
+  	const PPM_EXEC_TIME : real = 5.0;
+  	const UI_MUX_EXEC_TIME : real = 5.0;
+  	const CONTROL_LAW_EXEC_TIME : real = 5.0;
+  	const CONTROL_EXEC_TIME : real = 5.0;
+  	
+  	const CONTROL_PERIOD : real = 50.0;
+  	
+  	eq control_law_clock : bool = control_law._CLK;
+  	eq ui_mux_clock : bool = ui_mux._CLK;
+  	eq control_clock : bool = control._CLK;
+  	eq ppm_clock : bool = ppm._CLK;
+  	eq can_clock : bool = can._CLK;
+  	
+  	assert control_mode = control.mode;
+  	  	
+  	--precidence for preemption
+  	assert control_clock => 
+  	  not (rise(ppm_clock) or rise(can_clock));
+  	
+  	assert ppm_clock => 
+  	  not rise(can_clock);
+  	  
+  	assert control_law_clock =>
+  	  not (rise(control_clock) or rise(ppm_clock) or rise(can_clock));
+  	       
+  	assert ui_mux_clock =>
+  	  not (rise(control_clock) or rise(ppm_clock) or rise(can_clock));
+  	  
+  	--clocks don't tick unless the are scheduled or driven by an event
+  	assert rise(control_clock) => control_scheduled;
+  	assert rise(ppm_clock) => ppm_scheduled;
+  	assert rise(can_clock) => can_scheduled;
+  	assert rise(control_law_clock) => event(control_law.ppm_law) or 
+  	                                  event(control_law.nav_law) or 
+  	                                  event(control_law.mav_law);
+  	                                  
+    assert rise(ui_mux_clock) => event(ui_mux.ppm_input) or 
+                                 event(ui_mux.mavlink_input) or
+  	                             event(ui_mux.control_law);
+  	  
+  	
+  	--constrain when a clock can start ticking
+  	assert if control_scheduled and not control_law_clock and not ui_mux_clock then
+  	         control_clock
+  	       else if ppm_scheduled and not control_clock and not control_law_clock and 
+  	        not ui_mux_clock then
+  	         ppm_clock
+  	       else if can_scheduled and not control_clock and not ppm_clock and 
+  	        not control_law_clock and not ui_mux_clock then
+  	         can_clock
+  	       else if event(control_law.ppm_law) or event(control_law.nav_law) or 
+  	        event(control_law.mav_law) then
+  	         control_law_clock
+  	       else if event(ui_mux.ppm_input) or event(ui_mux.mavlink_input) or
+  	        event(ui_mux.control_law) then
+  	         ui_mux_clock
+  	       else true;
+  	
+  	--keep track of how long tasks have been running
+  	eq control_run_time : real = 0.0 ->
+  	  if pre(control_clock) then
+  	    pre(control_run_time) + (time - pre(time))
+  	  else
+  	    0.0;
+  	 
+  	eq control_law_run_time : real = 0.0 ->
+  	  if pre(control_law_clock) then
+  	    pre(control_law_run_time) + (time - pre(time))
+  	  else
+  	    0.0; 
+  	
+  	eq ui_mux_run_time : real = 0.0 ->
+  	  if pre(ui_mux_clock) then
+  	    pre(ui_mux_run_time) + (time - pre(time))
+  	  else
+  	    0.0;
+  	
+  	eq ppm_run_time : real = 0.0 ->
+  	  if pre(ppm_clock and not(control_clock)) then
+  	    pre(ppm_run_time) + time - pre(time)
+  	  else 
+  	    0.0;
+  	  
+  	eq can_run_time : real = 0.0 ->
+  	  if pre(can_clock and not(control_clock or ppm_clock)) then
+  	    pre(can_run_time) + time - pre(time)
+  	  else
+  	    0.0;
+  	    
+  	--keep track of next active events
+  	eq time_of_next_control : real = CONTROL_PERIOD ->
+  	  if time < pre(time_of_next_control) then
+  	    pre(time_of_next_control)
+  	  else
+  	    pre(time_of_next_control) + CONTROL_PERIOD;
+  	    
+  	eq time_of_next_ppm : real = PPM_PERIOD ->
+  	  if time < pre(time_of_next_ppm) then
+  	    pre(time_of_next_ppm)
+  	  else
+  	    pre(time_of_next_ppm) + PPM_PERIOD;
+  	    
+  	eq time_of_next_can : real = CAN_PERIOD ->
+  	  if time < pre(time_of_next_can) then
+  	    pre(time_of_next_can)
+  	  else
+  	    pre(time_of_next_can) + CAN_PERIOD;
+  	    
+  	--compute when an active task is scheduled to run
+  	eq control_scheduled : bool = true ->
+  	  if time = pre(time_of_next_control) then
+  	    true
+  	  else if pre(control_clock) then
+  	    false
+  	  else
+  	    pre(control_scheduled);
+  	    
+  	eq ppm_scheduled : bool = true ->
+  	  if time = pre(time_of_next_ppm) then
+  	    true
+  	  else if pre(ppm_clock) then
+  	    false
+  	  else
+  	    pre(ppm_scheduled);
+  	    
+  	eq can_scheduled : bool = true ->
+  	  if time = pre(time_of_next_can) then
+  	    true
+  	  else if pre(can_clock) then
+  	    false
+  	  else
+  	    pre(can_scheduled);
+  	        
+  	--keep track of events finishing
+  	eq control_finishes : real =
+  	  time + CONTROL_EXEC_TIME - control_run_time;
+  	  
+  	eq ppm_finishes : real = 
+  	  time + PPM_EXEC_TIME - ppm_run_time;
+  	    
+  	eq can_finishes : real =
+  	  time + CAN_EXEC_TIME - can_run_time;
+  	  
+  	eq control_law_finishes : real = 
+  	  time + CONTROL_LAW_EXEC_TIME - control_law_run_time;
+
+    eq ui_mux_finishes : real = 
+  	  time + UI_MUX_EXEC_TIME - ui_mux_run_time;
+
+  	--constrain how time progresses
+  	assert time = 0.0 -> true;
+  	assert time >= 0.0 and (true -> time > pre(time));
+    assert true -> time = pre(next_time);
+  	    
+  	assert next_time =
+  	    AGREE_LIB.min_if(control_clock, control_finishes,
+  	    AGREE_LIB.min_if(ppm_clock and not control_clock, ppm_finishes,
+  	    AGREE_LIB.min_if(can_clock and not ppm_clock and not control_clock, can_finishes,
+  	    AGREE_LIB.min_if(control_law_clock, control_law_finishes,
+  	    AGREE_LIB.min_if(ui_mux_clock, ui_mux_finishes,
+  	    AGREE_LIB.min(time_of_next_control, 
+  	    AGREE_LIB.min(time_of_next_can, time_of_next_ppm)))))));
+    
+  	--runtime constraints
+  	assert true -> pre(control_clock) and control_run_time < CONTROL_EXEC_TIME => control_clock;
+  	assert true -> pre(control_law_clock) and control_law_run_time < CONTROL_LAW_EXEC_TIME => control_law_clock;
+  	assert true -> pre(ui_mux_clock) and ui_mux_run_time < UI_MUX_EXEC_TIME => ui_mux_clock;
+  	assert true -> pre(ppm_clock) and ppm_run_time < PPM_EXEC_TIME => ppm_clock;
+  	assert true -> pre(can_clock) and can_run_time < CAN_EXEC_TIME => can_clock;
+  	
+  	assert true -> pre(control_clock) and time = control_finishes => not control_clock;
+  	assert true -> pre(ppm_clock) and time = ppm_finishes => not ppm_clock;
+  	assert true -> pre(can_clock) and time = can_finishes => not can_clock;
+  	assert true -> pre(control_law_clock) and time = control_law_finishes => not control_law_clock;
+  	assert true -> pre(ui_mux_clock) and time = ui_mux_finishes => not ui_mux_clock;
+  
+  	--nodes to compute the rising and falling edges of the clock       
+  	node rise (clock : bool) returns (ret : bool);
+  	let
+  	  ret = clock -> not pre(clock) and clock;
+  	tel;
+  	
+  	node fall (clock : bool) returns (ret : bool);
+  	let
+  	  ret = false -> pre(clock) and not clock;
+  	tel;
+  	
+  	-------------- BEGIN LEMMAS ABOUT SCHEDULABILITY -------------
+--  	--these lemmas about runtime
+--  	lemma "control runtime is bounded" :
+--  	  0.0 <= control_run_time and control_run_time <= CONTROL_EXEC_TIME;
+--  	  
+--  	lemma "ppm runtime is bounded" :
+--  	  0.0 <= ppm_run_time and ppm_run_time <= PPM_EXEC_TIME;
+--  	  
+--  	lemma "can runtime is bounded" :
+--  	  0.0 <= can_run_time and can_run_time <= CAN_EXEC_TIME;
+--  	  
+--  	lemma "control_law runtime is bounded" :
+--  	  0.0 <= control_law_run_time and control_law_run_time <= CONTROL_LAW_EXEC_TIME;
+--  	  
+--  	lemma "ui_mux runtime is bounded" :
+--  	  0.0 <= ui_mux_run_time and ui_mux_run_time <= UI_MUX_EXEC_TIME;
+--  	
+--
+--  	eq last_control_finished : real = -1.0 * CONTROL_EXEC_TIME ->
+--  	  if fall(control_clock) then time else pre(last_control_finished);
+--  	  
+--  	eq last_control_scheduled : real = 0.0 ->
+--  	  if time_of_next_control != pre(time_of_next_control) then
+--  	    pre(time_of_next_control)
+--  	  else
+--  	    pre(last_control_scheduled);
+--  	    
+--  	lemma "last_control_finished less than or equal to time" : 
+--  	  last_control_finished <= time;
+--  	  
+--  	lemma "last_control_scheduled and finished greater than exec time" : 
+--  	  abs(last_control_scheduled - last_control_finished) >= CONTROL_EXEC_TIME;
+--  	
+--  	lemma "control scheduled if last finished less than last scheduled" :
+--  	  last_control_finished < last_control_scheduled => control_scheduled or control_clock;
+--  	  
+--  	lemma "control task meets its deadline" : true ->
+--  	  pre(last_control_scheduled) != last_control_scheduled => last_control_finished > pre(last_control_scheduled);
+--
+--    node abs(n : real) returns (ret : real);
+--    let
+--      ret = if n < 0.0 then -1.0 * n else n;
+--    tel;
+--    
+--    -------- LEMMAS TO PROVE OTHER GUARANTEES ---------
+--    lemma "positive execs_since_control_law" : control.execs_since_last_control_law >= 0;
+--    lemma "time of next control bound" : time_of_next_control <= time + CONTROL_PERIOD;
+    
+    -------- assertions to link contract variables --------
+    
+    assert mavlink_armed_in_past = 
+      (event(can.mav_control_law) and can.mav_control_law.set_armed ->
+      pre(mavlink_armed_in_past) or (event(can.mav_control_law) and can.mav_control_law.set_armed));
+    
+    assert ppm_armed_in_past = 
+      (event(ppm.control_law_out) and ppm.control_law_out.set_armed ->
+      pre(ppm_armed_in_past) or (event(ppm.control_law_out) and ppm.control_law_out.set_armed));
+
+	
+  **}; 
+  
+  annex resolute {**
+    	prove only_receive_legit(this.motmix)
+  **};
+end main.i;
+
+thread can_px4_t
+  features
+  	
+    waypoints : out event data port software_types::waypoint;
+    sensor_data : in event data port software_types::Sensor_Data;
+    control_data : in event data port software_types::controloutput.impl;
+    motmix_data : in event data port software_types::motors_data.impl;
+    mission_out : out event data port software_types::can_data;
+    mission_in : in event data port software_types::can_data;
+    mav_user_input : out event data port software_types::userinput_result.impl;
+    mav_control_law : out event data port software_types::control_law_request.impl;
+    nav_control_law : out event data port software_types::control_law_request.impl;
+    
+  properties
+    SMACCM::Language => "Ivory";
+    SMACCM::Trusted => true;
+  
+  annex agree {**
+
+    initially:
+      not event(nav_control_law) and
+      not event(mav_control_law) and
+      not event(mav_user_input) and
+      not event(mission_out) and
+      not event(waypoints);
+      
+    eq no_ouput_events : bool = 
+      not event(nav_control_law) and
+      not event(mav_control_law) and
+      not event(mav_user_input) and
+      not event(mission_out) and
+      not event(waypoints);
+
+  	--nothing is sent if can_data does not arrive.
+  	guarantee "no can data" : no_ouput_events ->
+  	  event(nav_control_law) or event(mav_control_law) or
+  	  event(mav_user_input) or event(waypoints) => event(mission_in);
+  	
+  **};
+  
+end can_px4_t;
+
+thread control_law_t
+  features
+    mav_law : in event data port software_types::control_law_request.impl;
+    nav_law : in event data port software_types::control_law_request.impl;
+    ppm_law : in event data port software_types::control_law_request.impl;
+    out_law : out event data port software_types::control_law.impl;
+
+  properties
+    SMACCM::Language => "Ivory";
+    SMACCM::Trusted => true;
+
+
+  annex agree {**
+  	--TODO why do mavlink changes not get published?
+  	--TODO who gets precidence for arming? We make the assumption that the
+  	--MAV law will always take precidence
+  	
+--  	const yaw_mode_rate : int = 0;
+--  	const yaw_mode_heading : int = 1;
+  	const ui_mavlink : int = 1;
+  	const ui_ppm : int = 0;
+--  	const auto_throttle : int = 1;
+--  	const direct_throttle : int = 0;
+  	
+  	const ARMED_SAFE : int = AGREE_CONSTS.SAFE_MODE;
+  	const ARMED_DISARMED : int = AGREE_CONSTS.DISARMED_MODE;
+  	const ARMED_ARMED : int = AGREE_CONSTS.ARMED_MODE;
+  	
+  	initially:
+  	  not event(out_law);
+  	
+  	const init_law : software_types::control_law.impl = 
+  	   software_types::control_law.impl { 
+  	   	armed_mode = 0;
+  	   	ui_source = 0;
+        yaw_mode = 0;
+        thr_mode = 0;
+        autothr_source = 0;
+        stab_source = 0;
+        head_source = 0;
+        time = 0
+		};
+  
+  	eq ui_source_mavlink : bool = false ->
+  	  mav_law.set_ui_mavlink and ppm_law.set_ui_mavlink;
+  	  
+  	eq ui_source_ppm : bool = not ui_source_mavlink;
+  	
+  	--assume that we only handle one event at a time
+--  	assume "a single event occurs" : 
+--  	  (event(ppm_law) => not (event(mav_law) or event(nav_law))) and
+--  	  (event(mav_law) => not (event(ppm_law) or event(nav_law))) and
+--  	  (event(nav_law) => not (event(ppm_law) or event(mav_law)));
+ 
+  	guarantee "law is always initialized to the initial state" :
+  	  out_law = init_law and event(out_law) -> true;
+  	
+    --note that only ppm and nav events cause an event to be emitted
+  	guarantee "output events only occur if and only if nav or ppm events happen" : true ->
+  	  event(out_law) = (event(ppm_law) or event(mav_law));
+  	  
+  	guarantee "source selection":
+  	  out_law.ui_source = if ui_source_mavlink then ui_mavlink else ui_ppm;
+  	  
+   --arming logic stuff
+   
+    guarantee "initially we are always in safe mode" : 
+      out_law.armed_mode = ARMED_SAFE -> true;
+      
+    guarantee "ppm arming logic" : true -> event(ppm_law) =>
+      if pre(out_law.armed_mode) = ARMED_SAFE and not ppm_law.set_safe then
+        out_law.armed_mode = ARMED_DISARMED
+      else if ppm_law.set_safe then
+        out_law.armed_mode = ARMED_SAFE
+      else if ppm_law.set_disarmed then
+        out_law.armed_mode = ARMED_DISARMED
+      else if ppm_law.set_armed  then
+        out_law.armed_mode = ARMED_ARMED
+      else
+        out_law.armed_mode = pre(out_law.armed_mode);
+  	    	  
+  	    	  
+  	guarantee "mav arming logic" : true -> event(mav_law) =>
+  	  if pre(out_law.armed_mode) = ARMED_SAFE then
+  	    out_law.armed_mode = pre(out_law.armed_mode)
+  	  else if mav_law.set_disarmed then
+  	    out_law.armed_mode = ARMED_DISARMED
+  	  else if mav_law.set_armed then
+  	    out_law.armed_mode = ARMED_ARMED
+  	  else
+  	    out_law.armed_mode = pre(out_law.armed_mode);
+  	    
+    guarantee "if neither ppm nor mav events occur then the arming state remains the same" : true ->
+      not(event(ppm_law) or event(mav_law)) => out_law.armed_mode = pre(out_law.armed_mode);
+  	    	  
+  	    	  
+-- WE PROBABLY DO NOT NEED TO MODEL THESE CONSTRAINTS  	    	  
+--  	guarantee "yaw mode": out_law.yaw_mode = 
+--      if ui_source_ppm and ppm_req.set_yaw_heading then
+--        yaw_mode_heading
+--      else if ui_source_mavlink and mav_req.set_yaw_heading then
+--        yaw_mode_heading
+--      else
+--        yaw_mode_rate;
+--        
+--    guarantee "throttle mode" : out_law.thr_mode =
+--      if ui_source_ppm and ppm_req.set_thr_auto then 
+--        auto_throttle
+--      else if ui_source_mavlink and mav_req.set_thr_auto then
+--        auto_throttle
+--      else
+--        direct_throttle;
+        
+  	  
+  	
+  **};
+    
+end control_law_t;
+
+thread implementation control_law_t.i
+end control_law_t.i;
+
+thread ppm_t
+  features
+    flight_command : in event data port software_types::Flight_Control_Commands.i;
+    user_input : out event data port software_types::userinput_result.impl;
+    control_law_out : out event data port software_types::control_law_request.impl;
+      
+  properties
+    SMACCM::Language => "Ivory";
+    SMACCM::Trusted => true;
+   
+  annex agree {**
+  	
+  	initially:
+  	  not (event(user_input) or event(control_law_out));
+
+  	guarantee "events generated simultaneously" :
+  	  event(user_input) = event(control_law_out) and
+  	  event(user_input) = event(flight_command);
+  	  
+  	guarantee "no ambiguous user_input_selects" :
+  	  not control_law_out.set_ui_ppm and control_law_out.set_ui_mavlink and
+   	    (control_law_out.set_ui_ppm or control_law_out.set_ui_mavlink);
+  	
+  	
+  **};
+end ppm_t;
+
+thread control_t
+  features
+    user_input : in event data port software_types::userinput_result.impl;
+    control_params : in event data port software_types::control_data.impl;
+    control_law : in event data port software_types::control_law.impl;
+    sensor_data : in event data port software_types::Sensor_Data;
+    control_out : out event data port software_types::controloutput.impl;
+
+  properties
+    SMACCM::Language => "Ivory";
+    SMACCM::Trusted => true;
+    
+    annex agree {**
+   
+      eq mode : int;
+	  eq execs_since_last_control_law : int = 
+	    if event(control_law) then
+	      0
+	    else
+	      (0 -> pre(execs_since_last_control_law)) + 1;
+  	  
+  	  initially :
+  	    mode = AGREE_CONSTS.DISARMED_MODE and
+  	    execs_since_last_control_law = 0;
+
+--  	  assume "valid modes for control input":
+--  	    event(control_law) =>
+--  	      control_law.armed_mode = AGREE_CONSTS.SAFE_MODE or
+--  	      control_law.armed_mode = AGREE_CONSTS.LAND_MODE or
+--  	      control_law.armed_mode = AGREE_CONSTS.ARMED_MODE or
+--  	      control_law.armed_mode = AGREE_CONSTS.DISARMED_MODE;
+  	      
+  	  guarantee "if we have not seen a control input for a while go in landing mode" :
+  	    mode != AGREE_CONSTS.DISARMED_MODE and execs_since_last_control_law >= 2 => mode = AGREE_CONSTS.LAND_MODE;
+  	    
+	  guarantee "if the controller is disarmed then the output control is zeroed" :
+	    mode = AGREE_CONSTS.DISARMED_MODE =>
+	    	control_out.throttle = 0.0 and
+	    	control_out.roll = 0.0 and
+	    	control_out.pitch = 0.0 and
+	    	control_out.yaw = 0.0;
+	    	
+	  guarantee "mode behavior" :
+	    if event(control_law) then
+	      mode = control_law.armed_mode
+	    else
+	      mode = (AGREE_CONSTS.DISARMED_MODE -> pre(mode));
+
+    **};
+    
+end control_t;
+
+thread ui_mux_t
+  features
+    ppm_input : in event data port software_types::userinput_result.impl;
+    mavlink_input : in event data port software_types::userinput_result.impl;
+    
+	control_law : in event data port software_types::control_law.impl;
+    input_select : out event data port software_types::userinput_result.impl;
+          
+  properties
+    SMACCM::Language => "Ivory";
+    SMACCM::Trusted => true;
+    
+   annex agree {**
+     eq blah : int = 0;
+   **};
+    
+end ui_mux_t;
+
+thread ublox_gps_t
+  features
+    input : in event data port hardware_types::GPS;
+    position : out event data port software_types::position.impl;
+    time : in data port Base_Types::Float;
+
+  properties
+    SMACCM::Language => "Ivory";
+    SMACCM::Trusted => true;
+end ublox_gps_t;
+
+thread sensors_t
+  features
+    barometer : in data port software_types::Barometric_Data;
+    motion : in data port software_types::Motion_Data.Impl;
+    battery : in data port software_types::Battery_Data;
+    gps : in data port software_types::Position.Impl;
+    
+    sensor_data : out event data port software_types::Sensor_Data;  
+
+  properties
+    SMACCM::Language => "Ivory";
+    SMACCM::Trusted => true;
+end sensors_t;
+
+thread motmix_t
+  features
+    motors : out event data port software_types::motors_data.impl;
+    control_in : in event data port software_types::controloutput.impl;
+    control_law_in : in event data port software_types::control_law.impl;
+    time : in data port Base_Types::Float;
+  
+  properties
+    SMACCM::Language => "Ivory";
+    SMACCM::Trusted => true;
+    
+  annex agree {**
+
+    const idle : real = 0.15;
+     
+  	const disabled : software_types::motors_data.impl = 
+  	  software_types::motors_data.impl {
+  	    frontleft = 0.0;  
+  	    frontright = 0.0; 
+  	    backleft = 0.0;
+  	    backright = 0.0 
+  	   };
+  	   
+  	initially:
+  	  motors = disabled;
+  	   
+    guarantee "motors are initially disabled" : 
+      motors = disabled -> true;
+      
+    guarantee "if control law is disarmed then the motors are disarmed":
+      control_law_in.armed_mode = AGREE_CONSTS.DISARMED_MODE =>
+        motors = disabled;
+  	   
+  **};
+    
+end motmix_t;
+	
+end Flight_Software;

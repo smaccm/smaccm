@@ -65,8 +65,16 @@ public class PointerType extends Type {
 		return 0;
 	}
 
+	public Type elemType() {
+	  return this.elem; 
+	}
+	
 	@Override
 	public boolean equals(Object obj) {
-		return (obj instanceof RealType);
+	  if (obj instanceof PointerType) {
+	    PointerType other = (PointerType)obj;
+	    return (this.elemType().equals(other.elemType()));
+	  }
+	  return false;
 	}
 }

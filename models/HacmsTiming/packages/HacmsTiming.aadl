@@ -1,0 +1,212 @@
+package HacmsTiming
+public
+  with Base_Types;
+
+system A1
+  features
+    input : in event data port Base_Types::Integer;
+    output : out event data port Base_Types::Integer;
+  
+  annex agree {**
+  	const exec_time : real = 1.0;
+  **};
+    
+end A1;
+
+system A2
+  features
+    input : in event data port Base_Types::Integer;
+    output : out event data port Base_Types::Integer;
+  
+  annex agree {**
+  	const exec_time : real = 1.0;
+  **};
+    
+end A2;
+
+system M1
+  features
+    input : in event data port Base_Types::Integer;
+    output : out event data port Base_Types::Integer;
+  
+  annex agree {**
+  	const exec_time : real = 1.0;
+  	
+  	initially:
+  	  output = 0 and not event(output);
+  	  
+  	 eq input_hold : int = if event(input) then input else prev(input, 0);
+  	 
+  	 guarantee "output behavior" : output = input_hold;
+  	  
+  	 guarantee "pass events" : event(output) = event(input);
+  	 
+  	
+  	
+  **};
+    
+end M1;
+
+system M2
+  features
+    input : in event data port Base_Types::Integer;
+    output : out event data port Base_Types::Integer;
+  
+  annex agree {**
+  	const exec_time : real = 1.0;
+  	
+  	initially:
+  	  output = 0 and not event(output);
+  	  
+  	 eq input_hold : int = if event(input) then input else prev(input, 0);
+  	 
+  	 guarantee "output behavior" : output = input_hold;
+  	 
+  	 guarantee "pass events" : event(output) = event(input);
+  	 
+  **};
+    
+end M2;
+
+system M3
+  features
+    input1 : in event data port Base_Types::Integer;
+    input2 : in event data port Base_Types::Integer;
+    output : out event data port Base_Types::Integer;
+  
+  annex agree {**
+  	const exec_time : real = 1.0;
+  	
+  	initially:
+  	  output = 0;
+  	  
+  	eq input1_hold : int = if event(input1) then input1 else prev(input1_hold, 0);
+  	eq input2_hold : int = if event(input2) then input2 else prev(input2_hold, 0);
+  	
+  	guarantee "output behavior" : output = input1_hold + input2_hold;
+  	
+  	guarantee "pass events" : event(output) = (event(input1) or event(input2));
+  	  
+  **};
+    
+end M3;
+
+system top_level
+  features
+    input : in event data port Base_Types::Integer;
+    output : out event data port Base_Types::Integer;
+    
+  annex agree {**
+  	eq t : real;
+  	
+  	eq time_of_last_input_change : real =
+  	  if(input != prev(input, 0)) then
+  	    t
+  	  else
+  	    prev(time_of_last_input_change, 0.0);
+  	    
+  	guarantee "system latency" : 
+  	  output != prev(output, 0) =>
+  	    time_of_last_input_change < 40.0;
+
+  **};
+end top_level;
+
+system implementation top_level.i
+  subcomponents
+    a1 : system A1;
+    a2 : system A2;
+    m1 : system M1;
+    m2 : system M2;
+    m3 : system M3;
+    
+  connections
+    in_a1 : port input -> a1.input;
+    in_a2 : port input -> a2.input;
+    a1_m1 : port a1.output -> m1.input;
+    a2_m2 : port a2.output -> m2.input;
+    m1_m3 : port m1.output -> m3.input1;
+    m2_m3 : port m2.output -> m3.input2;
+    m3_out : port m3.output -> output;
+    
+  annex agree {**
+  	
+  	 synchrony : asynchronous;
+  	 
+  	 const a1_period : real = 100.0;
+  	 eq a2_period : real;-- = 10.0;
+  	 
+  	 assert 80.0 <= a2_period and a2_period <= 120.0;
+  	
+  	 eq clock_a1 : bool = a1._CLK;
+  	 eq clock_a2 : bool = a2._CLK;
+  	 eq clock_m1 : bool = m1._CLK;
+  	 eq clock_m2 : bool = m2._CLK;
+  	 eq clock_m3 : bool = m3._CLK;
+  	 
+  	 node getLastSignal(time : real, period : real) returns (ret : real);
+  	 let
+  	   ret = 0.0 -> if time < pre(ret) + period then
+  	                  pre(ret)
+  	                else
+  	                  pre(ret) + period;
+  	 tel;
+  	 
+  	 node getSignalCleared(time : real, clock : bool, exec_time : real, init_clear : real) returns (ret : real);
+  	 let
+  	   ret = if clock then time - exec_time else prev(ret, init_clear);
+  	 tel;
+  	 
+  	 --these variables indicate the last time that a signal's period has passed
+  	 eq a1_sig_last : real = getLastSignal(t, a1_period);
+  	 eq a2_sig_last : real = getLastSignal(t, a2_period);
+  	 eq m1_sig_last : real = if clock_a1 and event(m1.input) then t else prev(m1_sig_last, 0.0);
+  	 eq m2_sig_last : real = if clock_a2 and event(m2.input) then t else prev(m2_sig_last, 0.0);
+  	 eq m3_sig_last : real = if clock_m1 and event(m3.input1) then t else
+  	                         if clock_m2 and event(m3.input2) then t else prev(m3_sig_last, 0.0);
+  	 
+  	 --these variables indicate the last time that a component ticked                          
+  	 eq a1_sig_cleared : real = getSignalCleared(t, clock_a1, a1.exec_time, -1.0);
+  	 eq a2_sig_cleared : real = getSignalCleared(t, clock_a2, a2.exec_time, -1.0); 
+  	 eq m1_sig_cleared : real = getSignalCleared(t, clock_m1, m1.exec_time, 0.0); 
+  	 eq m2_sig_cleared : real = getSignalCleared(t, clock_m2, m2.exec_time, 0.0); 
+  	 eq m3_sig_cleared : real = getSignalCleared(t, clock_m3, m3.exec_time, 0.0); 
+                 
+     --these variables are true if a component has yet to execute during its period           
+  	 eq sig_a1 : bool = true -> a1_sig_last > pre(a1_sig_cleared);
+  	 eq sig_a2 : bool = true -> a2_sig_last > pre(a2_sig_cleared);
+  	 eq sig_m1 : bool = m1_sig_last > prev(m1_sig_cleared, 0.0);
+  	 eq sig_m2 : bool = m2_sig_last > prev(m2_sig_cleared, 0.0);
+  	 eq sig_m3 : bool = m3_sig_last > prev(m3_sig_cleared, 0.0);
+  	 
+
+     --time is positive and always increasing
+	 assert t >= 0.0 and (true -> t > pre(t)); 
+	 
+	 --time increases by atleast an execution time
+	 assert t = a1.exec_time or t = a2.exec_time or t = m1.exec_time or t = m2.exec_time or t = m3.exec_time -> true;
+  	  
+  	 --no two clocks tick at the same time
+  	 assert not(clock_a1 and clock_a2) and not(clock_a1 and clock_m1) and
+  	        not(clock_a1 and clock_m2) and not(clock_a1 and clock_m3) and
+  	        not(clock_a2 and clock_m1) and not(clock_a2 and clock_m2) and
+  	        not(clock_a2 and clock_m3) and not(clock_m1 and clock_m2) and
+  	        not(clock_m1 and clock_m3) and not(clock_m2 and clock_m3);
+
+	 --clocks only tick if they have been signaled
+	 assert (clock_a1 => sig_a1) and (clock_a2 => sig_a2) and 
+	        (clock_m1 => sig_m1) and (clock_m2 => sig_m2) and 
+	        (clock_m3 => sig_m3);
+  
+     --assert that clocks meet their deadlines
+     assert  a1_sig_last - a1_sig_cleared < a1_period;     
+     assert  a2_sig_last - a2_sig_cleared < a2_period;
+
+     
+  **};
+    
+    
+end top_level.i;
+
+
+end HacmsTiming;

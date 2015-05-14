@@ -12,11 +12,13 @@ import com.rockwellcollins.atc.agree.agree.AgreeSubclause;
 import com.rockwellcollins.atc.agree.agree.Arg;
 import com.rockwellcollins.atc.agree.agree.AssertStatement;
 import com.rockwellcollins.atc.agree.agree.AssumeStatement;
+import com.rockwellcollins.atc.agree.agree.AsynchStatement;
 import com.rockwellcollins.atc.agree.agree.BinaryExpr;
 import com.rockwellcollins.atc.agree.agree.BoolLitExpr;
 import com.rockwellcollins.atc.agree.agree.CalenStatement;
 import com.rockwellcollins.atc.agree.agree.CallDef;
 import com.rockwellcollins.atc.agree.agree.ComplexExpr;
+import com.rockwellcollins.atc.agree.agree.ConnectionStatement;
 import com.rockwellcollins.atc.agree.agree.ConstStatement;
 import com.rockwellcollins.atc.agree.agree.Contract;
 import com.rockwellcollins.atc.agree.agree.EqStatement;
@@ -28,15 +30,19 @@ import com.rockwellcollins.atc.agree.agree.FnDefExpr;
 import com.rockwellcollins.atc.agree.agree.GetPropertyExpr;
 import com.rockwellcollins.atc.agree.agree.GuaranteeStatement;
 import com.rockwellcollins.atc.agree.agree.IfThenElseExpr;
+import com.rockwellcollins.atc.agree.agree.InitialStatement;
 import com.rockwellcollins.atc.agree.agree.IntLitExpr;
+import com.rockwellcollins.atc.agree.agree.LatchedStatement;
 import com.rockwellcollins.atc.agree.agree.LemmaStatement;
 import com.rockwellcollins.atc.agree.agree.LiftStatement;
+import com.rockwellcollins.atc.agree.agree.MNSynchStatement;
 import com.rockwellcollins.atc.agree.agree.NestedDotID;
 import com.rockwellcollins.atc.agree.agree.NodeBodyExpr;
 import com.rockwellcollins.atc.agree.agree.NodeDefExpr;
 import com.rockwellcollins.atc.agree.agree.NodeEq;
 import com.rockwellcollins.atc.agree.agree.NodeLemma;
 import com.rockwellcollins.atc.agree.agree.NodeStmt;
+import com.rockwellcollins.atc.agree.agree.OrderStatement;
 import com.rockwellcollins.atc.agree.agree.ParamStatement;
 import com.rockwellcollins.atc.agree.agree.PreExpr;
 import com.rockwellcollins.atc.agree.agree.PrevExpr;
@@ -106,6 +112,13 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * @generated
    */
   private EClass synchStatementEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass orderStatementEClass = null;
 
   /**
    * <!-- begin-user-doc -->
@@ -252,6 +265,13 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  private EClass initialStatementEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   private EClass paramStatementEClass = null;
 
   /**
@@ -273,7 +293,35 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  private EClass connectionStatementEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass mnSynchStatementEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   private EClass calenStatementEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass asynchStatementEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass latchedStatementEClass = null;
 
   /**
    * <!-- begin-user-doc -->
@@ -546,9 +594,39 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EAttribute getSynchStatement_Sim()
+  public EAttribute getSynchStatement_Val2()
   {
     return (EAttribute)synchStatementEClass.getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getSynchStatement_Sim()
+  {
+    return (EAttribute)synchStatementEClass.getEStructuralFeatures().get(2);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getOrderStatement()
+  {
+    return orderStatementEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getOrderStatement_Comps()
+  {
+    return (EReference)orderStatementEClass.getEStructuralFeatures().get(0);
   }
 
   /**
@@ -1026,6 +1104,26 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  public EClass getInitialStatement()
+  {
+    return initialStatementEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getInitialStatement_Expr()
+  {
+    return (EReference)initialStatementEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   public EClass getParamStatement()
   {
     return paramStatementEClass;
@@ -1106,6 +1204,86 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  public EClass getConnectionStatement()
+  {
+    return connectionStatementEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getConnectionStatement_Conn()
+  {
+    return (EReference)connectionStatementEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getConnectionStatement_Expr()
+  {
+    return (EReference)connectionStatementEClass.getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getMNSynchStatement()
+  {
+    return mnSynchStatementEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getMNSynchStatement_Comp1()
+  {
+    return (EReference)mnSynchStatementEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getMNSynchStatement_Comp2()
+  {
+    return (EReference)mnSynchStatementEClass.getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getMNSynchStatement_Max()
+  {
+    return (EAttribute)mnSynchStatementEClass.getEStructuralFeatures().get(2);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getMNSynchStatement_Min()
+  {
+    return (EAttribute)mnSynchStatementEClass.getEStructuralFeatures().get(3);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   public EClass getCalenStatement()
   {
     return calenStatementEClass;
@@ -1119,6 +1297,26 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
   public EReference getCalenStatement_Els()
   {
     return (EReference)calenStatementEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getAsynchStatement()
+  {
+    return asynchStatementEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getLatchedStatement()
+  {
+    return latchedStatementEClass;
   }
 
   /**
@@ -1681,7 +1879,11 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
 
     synchStatementEClass = createEClass(SYNCH_STATEMENT);
     createEAttribute(synchStatementEClass, SYNCH_STATEMENT__VAL);
+    createEAttribute(synchStatementEClass, SYNCH_STATEMENT__VAL2);
     createEAttribute(synchStatementEClass, SYNCH_STATEMENT__SIM);
+
+    orderStatementEClass = createEClass(ORDER_STATEMENT);
+    createEReference(orderStatementEClass, ORDER_STATEMENT__COMPS);
 
     callDefEClass = createEClass(CALL_DEF);
 
@@ -1750,6 +1952,9 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     assertStatementEClass = createEClass(ASSERT_STATEMENT);
     createEReference(assertStatementEClass, ASSERT_STATEMENT__EXPR);
 
+    initialStatementEClass = createEClass(INITIAL_STATEMENT);
+    createEReference(initialStatementEClass, INITIAL_STATEMENT__EXPR);
+
     paramStatementEClass = createEClass(PARAM_STATEMENT);
     createEReference(paramStatementEClass, PARAM_STATEMENT__EXPR);
     createEReference(paramStatementEClass, PARAM_STATEMENT__TYPE);
@@ -1761,8 +1966,22 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     liftStatementEClass = createEClass(LIFT_STATEMENT);
     createEReference(liftStatementEClass, LIFT_STATEMENT__SUBCOMP);
 
+    connectionStatementEClass = createEClass(CONNECTION_STATEMENT);
+    createEReference(connectionStatementEClass, CONNECTION_STATEMENT__CONN);
+    createEReference(connectionStatementEClass, CONNECTION_STATEMENT__EXPR);
+
+    mnSynchStatementEClass = createEClass(MN_SYNCH_STATEMENT);
+    createEReference(mnSynchStatementEClass, MN_SYNCH_STATEMENT__COMP1);
+    createEReference(mnSynchStatementEClass, MN_SYNCH_STATEMENT__COMP2);
+    createEAttribute(mnSynchStatementEClass, MN_SYNCH_STATEMENT__MAX);
+    createEAttribute(mnSynchStatementEClass, MN_SYNCH_STATEMENT__MIN);
+
     calenStatementEClass = createEClass(CALEN_STATEMENT);
     createEReference(calenStatementEClass, CALEN_STATEMENT__ELS);
+
+    asynchStatementEClass = createEClass(ASYNCH_STATEMENT);
+
+    latchedStatementEClass = createEClass(LATCHED_STATEMENT);
 
     nodeEqEClass = createEClass(NODE_EQ);
     createEReference(nodeEqEClass, NODE_EQ__LHS);
@@ -1875,6 +2094,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     contractEClass.getESuperTypes().add(theAadl2Package.getElement());
     specStatementEClass.getESuperTypes().add(theAadl2Package.getElement());
     synchStatementEClass.getESuperTypes().add(this.getSpecStatement());
+    orderStatementEClass.getESuperTypes().add(this.getSpecStatement());
     callDefEClass.getESuperTypes().add(theAadl2Package.getNamedElement());
     propertyStatementEClass.getESuperTypes().add(theAadl2Package.getNamedElement());
     propertyStatementEClass.getESuperTypes().add(this.getSpecStatement());
@@ -1885,7 +2105,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     fnDefExprEClass.getESuperTypes().add(theAadl2Package.getNamedElement());
     fnDefExprEClass.getESuperTypes().add(this.getSpecStatement());
     fnDefExprEClass.getESuperTypes().add(this.getCallDef());
-    nodeDefExprEClass.getESuperTypes().add(theAadl2Package.getNamespace());
+    nodeDefExprEClass.getESuperTypes().add(theAadl2Package.getNamedElement());
     nodeDefExprEClass.getESuperTypes().add(this.getSpecStatement());
     nodeDefExprEClass.getESuperTypes().add(this.getCallDef());
     nodeBodyExprEClass.getESuperTypes().add(theAadl2Package.getElement());
@@ -1903,10 +2123,15 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     assumeStatementEClass.getESuperTypes().add(this.getSpecStatement());
     guaranteeStatementEClass.getESuperTypes().add(this.getSpecStatement());
     assertStatementEClass.getESuperTypes().add(this.getSpecStatement());
+    initialStatementEClass.getESuperTypes().add(this.getSpecStatement());
     paramStatementEClass.getESuperTypes().add(this.getSpecStatement());
     lemmaStatementEClass.getESuperTypes().add(this.getSpecStatement());
     liftStatementEClass.getESuperTypes().add(this.getSpecStatement());
+    connectionStatementEClass.getESuperTypes().add(this.getSpecStatement());
+    mnSynchStatementEClass.getESuperTypes().add(this.getSynchStatement());
     calenStatementEClass.getESuperTypes().add(this.getSynchStatement());
+    asynchStatementEClass.getESuperTypes().add(this.getSynchStatement());
+    latchedStatementEClass.getESuperTypes().add(this.getSynchStatement());
     nodeEqEClass.getESuperTypes().add(this.getNodeStmt());
     nodeLemmaEClass.getESuperTypes().add(this.getNodeStmt());
     primTypeEClass.getESuperTypes().add(this.getType());
@@ -1939,7 +2164,11 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
 
     initEClass(synchStatementEClass, SynchStatement.class, "SynchStatement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEAttribute(getSynchStatement_Val(), theEcorePackage.getEString(), "val", null, 0, 1, SynchStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEAttribute(getSynchStatement_Val2(), theEcorePackage.getEString(), "val2", null, 0, 1, SynchStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEAttribute(getSynchStatement_Sim(), theEcorePackage.getEString(), "sim", null, 0, 1, SynchStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+    initEClass(orderStatementEClass, OrderStatement.class, "OrderStatement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getOrderStatement_Comps(), theAadl2Package.getNamedElement(), null, "comps", null, 0, -1, OrderStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(callDefEClass, CallDef.class, "CallDef", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
@@ -2008,6 +2237,9 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     initEClass(assertStatementEClass, AssertStatement.class, "AssertStatement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getAssertStatement_Expr(), this.getExpr(), null, "expr", null, 0, 1, AssertStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
+    initEClass(initialStatementEClass, InitialStatement.class, "InitialStatement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getInitialStatement_Expr(), this.getExpr(), null, "expr", null, 0, 1, InitialStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
     initEClass(paramStatementEClass, ParamStatement.class, "ParamStatement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getParamStatement_Expr(), this.getExpr(), null, "expr", null, 0, 1, ParamStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getParamStatement_Type(), this.getType(), null, "type", null, 0, 1, ParamStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -2019,8 +2251,22 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     initEClass(liftStatementEClass, LiftStatement.class, "LiftStatement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getLiftStatement_Subcomp(), this.getNestedDotID(), null, "subcomp", null, 0, 1, LiftStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
+    initEClass(connectionStatementEClass, ConnectionStatement.class, "ConnectionStatement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getConnectionStatement_Conn(), theAadl2Package.getNamedElement(), null, "conn", null, 0, 1, ConnectionStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getConnectionStatement_Expr(), this.getExpr(), null, "expr", null, 0, 1, ConnectionStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+    initEClass(mnSynchStatementEClass, MNSynchStatement.class, "MNSynchStatement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getMNSynchStatement_Comp1(), theAadl2Package.getNamedElement(), null, "comp1", null, 0, -1, MNSynchStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getMNSynchStatement_Comp2(), theAadl2Package.getNamedElement(), null, "comp2", null, 0, -1, MNSynchStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEAttribute(getMNSynchStatement_Max(), theEcorePackage.getEString(), "max", null, 0, -1, MNSynchStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEAttribute(getMNSynchStatement_Min(), theEcorePackage.getEString(), "min", null, 0, -1, MNSynchStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
     initEClass(calenStatementEClass, CalenStatement.class, "CalenStatement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getCalenStatement_Els(), theAadl2Package.getNamedElement(), null, "els", null, 0, -1, CalenStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+    initEClass(asynchStatementEClass, AsynchStatement.class, "AsynchStatement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+    initEClass(latchedStatementEClass, LatchedStatement.class, "LatchedStatement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
     initEClass(nodeEqEClass, NodeEq.class, "NodeEq", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getNodeEq_Lhs(), this.getArg(), null, "lhs", null, 0, -1, NodeEq.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

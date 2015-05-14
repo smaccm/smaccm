@@ -14,6 +14,12 @@
               icon="icons/layers.png"
               id="com.rockwellcollins.atc.agree.analysis.views.agreeResultsView"
               name="AGREE Results"/>
+        <view
+              category="com.rockwellcollins.atc.agree.analysis"
+              class="com.rockwellcollins.atc.agree.analysis.views.AgreeCounterexampleView"
+              icon="icons/counterexample.png"
+              id="com.rockwellcollins.atc.agree.analysis.views.agreeCounterexampleView"
+              name="AGREE Counterexample"/>
    </extension>
   
    <extension point="org.eclipse.ui.commands">
@@ -29,7 +35,12 @@
      <command categoryId="com.rockwellcollins.atc.agree.analysis.commands"
             description="Terminate the current AGREE analysis"
             id="com.rockwellcollins.atc.agree.analysis.commands.terminate"
-            name="Terminate AGREE Analysis">
+            name="Terminate One AGREE Analysis">
+     </command>     
+     <command categoryId="com.rockwellcollins.atc.agree.analysis.commands"
+            description="Terminate all AGREE analyses"
+            id="com.rockwellcollins.atc.agree.analysis.commands.terminateAll"
+            name="Terminate All AGREE Analyses">
      </command>
      <command categoryId="com.rockwellcollins.atc.agree.analysis.commands"
            description="Verify the contract of the selected component"
@@ -41,6 +52,18 @@
            description="Verify the contracts selected component and everything below"
            id="com.rockwellcollins.atc.agree.analysis.commands.verifyAll"
            name="Verify All Layers">
+     </command>
+     <command
+           categoryId="com.rockwellcollins.atc.agree.analysis.commands"
+           description="Runs realizability analysis"
+           id="com.rockwellcollins.atc.agree.analysis.commands.verifyRealize"
+           name="Check Realizability">
+     </command>
+     <command
+           categoryId="com.rockwellcollins.atc.agree.analysis.commands"
+           description="Verify the contract of the selected component using the contracts of all of the components descendants"
+           id="com.rockwellcollins.atc.agree.analysis.commands.verifyMonolithic"
+           name="Verify Monolithically">
      </command>
    </extension>
    
@@ -59,6 +82,12 @@
                commandId="com.rockwellcollins.atc.agree.analysis.commands.terminate"
                icon="icons/terminate.png"
                label="Terminate"
+               style="push">
+         </command>
+         <command
+               commandId="com.rockwellcollins.atc.agree.analysis.commands.terminateAll"
+               icon="icons/terminateAll.png"
+               label="Terminate All"
                style="push">
          </command>
       </menuContribution>
@@ -83,6 +112,20 @@
                   mnemonic="a"
                   style="push">
             </command>
+            <command
+                  commandId="com.rockwellcollins.atc.agree.analysis.commands.verifyRealize"
+                  icon="icons/layers.png"
+                  id="com.rockwellcollins.atc.agree.analysis.menus.verifyRealize"
+                  mnemonic="a"
+                  style="push">
+			</command>
+			<command
+                  commandId="com.rockwellcollins.atc.agree.analysis.commands.verifyMonolithic"
+                  icon="icons/layers.png"
+                  id="com.rockwellcollins.atc.agree.analysis.menus.verifyMonolithic"
+                  mnemonic="a"
+                  style="push">
+            </command>
          </menu>
       </menuContribution>
       <menuContribution
@@ -100,6 +143,19 @@
                   commandId="com.rockwellcollins.atc.agree.analysis.commands.verifyAll"
                   icon="icons/layers.png"
                   id="com.rockwellcollins.atc.agree.analysis.menus.verifyAll"
+                  style="push">
+            </command>
+            <command
+                  commandId="com.rockwellcollins.atc.agree.analysis.commands.verifyRealize"
+                  icon="icons/layers.png"
+                  id="com.rockwellcollins.atc.agree.analysis.menus.verifyRealize"
+                  style="push">
+            </command>
+            <command
+                  commandId="com.rockwellcollins.atc.agree.analysis.commands.verifyMonolithic"
+                  icon="icons/layers.png"
+                  id="com.rockwellcollins.atc.agree.analysis.menus.verifyMonolithic"
+                  mnemonic="a"
                   style="push">
             </command>
          </toolbar>
@@ -125,6 +181,20 @@
                   mnemonic="a"
                   style="push">
             </command>
+            <command
+                  commandId="com.rockwellcollins.atc.agree.analysis.commands.verifyRealize"
+                  icon="icons/layers.png"
+                  id="com.rockwellcollins.atc.agree.analysis.menus.verifyRealize"
+                  mnemonic="a"
+                  style="push">
+            </command>
+			<command
+                  commandId="com.rockwellcollins.atc.agree.analysis.commands.verifyMonolithic"
+                  icon="icons/layers.png"
+                  id="com.rockwellcollins.atc.agree.analysis.menus.verifyMonolithic"
+                  mnemonic="a"
+                  style="push">
+            </command>
          </menu>
       </menuContribution>
    </extension>
@@ -142,6 +212,24 @@
       <handler
             class="com.rockwellcollins.atc.agree.analysis.handlers.VerifyAllHandler"
             commandId="com.rockwellcollins.atc.agree.analysis.commands.verifyAll">
+         <enabledWhen>
+            <reference
+                  definitionId="com.rockwellcollins.atc.agree.analysis.expressions.isSingleOutlineSelection">
+            </reference>
+         </enabledWhen>
+      </handler>
+      <handler
+            class="com.rockwellcollins.atc.agree.analysis.handlers.VerifyRealizabilityHandler"
+            commandId="com.rockwellcollins.atc.agree.analysis.commands.verifyRealize">
+            <enabledWhen>
+            <reference
+                  definitionId="com.rockwellcollins.atc.agree.analysis.expressions.isSingleOutlineSelection">
+            </reference>
+         </enabledWhen>
+      </handler>
+      <handler
+            class="com.rockwellcollins.atc.agree.analysis.handlers.VerifyMonolithicHandler"
+            commandId="com.rockwellcollins.atc.agree.analysis.commands.verifyMonolithic">
          <enabledWhen>
             <reference
                   definitionId="com.rockwellcollins.atc.agree.analysis.expressions.isSingleOutlineSelection">

@@ -87,7 +87,7 @@ system implementation Squadron.impl
 	    assert 
 			true -> pre(defs.rising(left_shift)) => left_shift or 
 				((form_left.pend_leader != none) and (form_left.pend_right != none) and (form_left.pend_left != none));
-				
+				 
 		assert 
 			true -> pre(defs.rising(right_shift)) => right_shift or 
 				((form_left.pend_leader != none) and (form_left.pend_right != none) and (form_left.pend_left != none));

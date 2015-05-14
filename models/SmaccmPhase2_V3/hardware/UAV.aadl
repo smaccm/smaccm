@@ -1,0 +1,161 @@
+package UAV
+public
+  with UAS;
+  with PixHawk;
+  with ODROID_XU;
+  with XU_DAUGHTER_BOARD;
+  with Flight_Software;
+  with Mission_Software;
+  with software_types;
+  with hardware_types;
+  
+  system UAV
+    features
+      radio_access_915Mhz: requires bus access UAS::RF_Spectrum.RF_915MHz; 
+      radio_access_2_4Ghz: requires bus access UAS::RF_Spectrum.RF_2_4GHz;
+      mavlink_in : in event data port software_types::EncryptMAVLink;
+      mavlink_out : out event data port software_types::EncryptMAVLink;
+      ppm_commands: in event data port software_types::Flight_Control_Commands.i;
+      
+    annex agree {**
+    		
+      const TOTAL_LANDING_TIMEOUT : real = 1500.0;
+      
+      eq time : real;
+  	  eq control_mode : int;
+  	  
+  	  eq last_mavlink_received_time : real =
+  	    if event(mavlink_in) then time else prev(last_mavlink_received_time, 0.0);
+  	  
+  	  eq last_ppm_received_time : real =
+  	    0.0 -> if event(ppm_commands) then time else pre(last_ppm_received_time);
+    	
+      const PPM_PERIOD : real = 100.0;
+      
+  	  assume "not frequent ppms" : true ->
+  	    time - pre(last_ppm_received_time) < PPM_PERIOD => not event(ppm_commands); 
+    	
+--      guarantee "if no ppm or mavlink commands are received then then vehicle is in landing mode" : true;
+--    	
+--      guarantee "if no ppm message is received and mavlink fails to decrypt then landing mode" : true;
+    	
+    	
+    **};
+  end UAV;
+  
+  system implementation UAV.Impl 
+    subcomponents
+      FSW: process Flight_Software::main.i;
+      MSW: system Mission_Software::Software.i;
+      PIXHAWK: system PixHawk::PixHawk.i;
+      ODROID_XU: system ODROID_XU::ODROID_XU.i;
+      XU_DAUGHTER: system XU_DAUGHTER_BOARD::XU_DAUGHTER_BOARD.i;
+      can_bus : bus hardware_types::can;
+      BATTERY : device Battery;
+    connections 
+      --hardware connections
+      conn_ide: feature group XU_DAUGHTER.ide <-> ODROID_XU.ide;
+      conn_mpi: feature group XU_DAUGHTER.mpi <-> ODROID_XU.mpi;
+      
+      conn_can_odroid : bus access XU_DAUGHTER.can <-> can_bus;
+      conn_can_pixhawk : bus access PIXHAWK.can0 <-> can_bus;
+      
+      conn_sensors: feature group PIXHAWK.sensors_group <-> FSW.sensors_group;
+      
+     -- battery_conn: port BATTERY.battery -> FSW.battery;
+      
+      --software connections
+      conn_ppm: port ppm_commands -> FSW.ppm_in;
+      conn_mission0 : port MSW.mission_out -> FSW.mission_in;
+      conn_mission1 : port FSW.mission_out -> MSW.mission_in;
+      conn_mav_in : port mavlink_in -> MSW.enc_mavlink_in;
+      conn_mav_out : port MSW.enc_mavlink_out -> mavlink_out;
+            
+    properties
+      Actual_Connection_Binding => (reference (can_bus)) applies to conn_mission0;
+      Actual_Connection_Binding => (reference (can_bus)) applies to conn_mission1;
+      Actual_Memory_Binding => (reference (ODROID_XU)) applies to MSW;
+      Actual_Memory_Binding => (reference (PIXHAWK.MC.FLASH)) applies to FSW;
+      
+      
+    annex agree {**    		
+    		
+      synchrony : latched;
+
+      assert control_mode = FSW.control_mode;
+
+	  eq fsw_clock : bool = FSW._CLK;
+	  eq msw_clock : bool = MSW._CLK;
+
+      --initialize the FSW and MSW
+      eq step : int = 0 -> pre(step) + 1;
+      assert step = 0 => fsw_clock and msw_clock and time = 0.0; --this is the first step
+      assert step = 1 => (not (fsw_clock or msw_clock) and time = 0.0); --this is the second step
+      
+      --the bodoy of this is asserted after the second step
+      assert true -> step > 1 =>
+        --if either one is low they both go high
+        if pre(not (fsw_clock and msw_clock)) then
+          fsw_clock and msw_clock and time = pre(time)
+        --both clocks are high
+        else if pre(FSW.next_time < MSW.next_time) then
+          (not fsw_clock) and msw_clock and time = FSW.time
+        else if pre(MSW.next_time < FSW.next_time) then
+          (not msw_clock) and fsw_clock and time = MSW.time
+        else
+          not msw_clock and not fsw_clock and time = MSW.time;
+      
+      lemma "how time moves" :
+        time >= 0.0 and (true -> time >= pre(time));
+      
+      lemma "positive receive times" :
+        last_mavlink_received_time >= 0.0 and last_ppm_received_time >= 0.0;
+        
+      lemma "separation between FSW and MSW times" :
+         abs(FSW.time - MSW.time) <= 50.0;
+      
+      lemma "component time never decreases" :
+        true -> FSW.time >= pre(FSW.time) and MSW.time >= pre(MSW.time);
+        
+      lemma "real time is always greater than or equal to component time" :
+        time >= FSW.time and time >= MSW.time;
+        
+      lemma "MSW mavlink receive time lte msw time":
+        MSW.last_mavlink_received_time <= MSW.time;
+        
+      lemma "when MSW sees mavlink message":
+        MSW.time - last_mavlink_received_time > 50.0 => event(MSW.enc_mavlink_in) = false;
+       
+      lemma "when MSW sends mavlink message" :
+        MSW.time - last_mavlink_received_time > 300.0 => event(MSW.mission_out) = false;
+        
+      lemma "when FSW sees ppm message" :
+        FSW.time - last_ppm_received_time > 50.0 => event(FSW.ppm_in) = false;
+       
+--      lemma "when FSW sees mavlink message":
+--        FSW.time - last_mavlink_received_time > 300.0 => event(FSW.mission_in) = false;
+      
+      lemma "fsw last ppm difference" :
+        FSW.time_of_last_ppm > last_ppm_received_time  => FSW.time_of_last_ppm - last_ppm_received_time <= 100.0;
+        
+      lemma "fsw last mav difference" :
+        FSW.time_of_last_can > last_mavlink_received_time => FSW.time_of_last_can - last_mavlink_received_time <= 400.0;
+      
+      lemma "if no mavlink or ppm is received for a certain timeout then the vehicle is in landing mode" : 
+        time - last_mavlink_received_time > TOTAL_LANDING_TIMEOUT and
+        time - last_ppm_received_time > TOTAL_LANDING_TIMEOUT 
+          => control_mode = AGREE_CONSTS.LAND_MODE or control_mode = AGREE_CONSTS.DISARMED_MODE;
+      
+      node abs(a : real) returns (b : real);
+      let b = if a < 0.0 then -1.0*a else a; tel;
+      
+    **};
+      
+  end UAV.Impl;
+
+device Battery
+  features
+    battery : out data port software_types::Battery_Data;
+end Battery;
+
+end UAV;

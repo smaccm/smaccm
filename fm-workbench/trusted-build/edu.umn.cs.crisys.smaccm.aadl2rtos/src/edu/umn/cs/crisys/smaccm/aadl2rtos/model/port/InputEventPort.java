@@ -3,6 +3,7 @@
  */
 package edu.umn.cs.crisys.smaccm.aadl2rtos.model.port;
 
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.InputEventDispatcher;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.ThreadImplementation;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.ArrayType;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.IntType;
@@ -17,7 +18,7 @@ import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.UnitType;
 public class InputEventPort extends InputPort {
 
   private int queueSize = 0;
-  //private List<String> entrypointSourceText = null;
+  private InputEventDispatcher dispatcher = null;
   
   
   public InputEventPort(String portName, 
@@ -42,6 +43,21 @@ public class InputEventPort extends InputPort {
    */
   public void setQueueSize(int queueSize) {
     this.queueSize = queueSize;
+  }
+
+  
+  /**
+   * @return the dispatcher
+   */
+  public InputEventDispatcher getOptDispatcher() {
+    return dispatcher;
+  }
+
+  /**
+   * @param dispatcher the dispatcher to set
+   */
+  public void setDispatcher(InputEventDispatcher dispatcher) {
+    this.dispatcher = dispatcher;
   }
 
   public boolean isInputDataPort() { return false; }

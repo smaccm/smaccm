@@ -7,8 +7,6 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-
 import com.rockwellcollins.atc.resolute.validation.ResoluteType;
 import com.rockwellcollins.atc.resolute.validation.SetType;
 
@@ -45,12 +43,12 @@ public class SetValue extends ResoluteValue {
     @Override
     public ResoluteType getType() {
         if (values.isEmpty()) {
-            throw new NotImplementedException();
+            throw new UnsupportedOperationException();
         } else {
             return new SetType(values.iterator().next().getType());
         }
     }
-    
+
     @Override
     public String toString() {
         StringBuilder text = new StringBuilder();

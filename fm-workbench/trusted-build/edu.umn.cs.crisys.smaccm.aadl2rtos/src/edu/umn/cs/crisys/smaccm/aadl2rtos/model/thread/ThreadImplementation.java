@@ -3,34 +3,43 @@ package edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread;
 /**
  * @author Mead, Whalen
  * 
- * TODO:    In "ThreadImplementation"
- *    ! FIXED: only one thread instance for thread implementation (should be list)
- *    -> ISR threads are not distinguished from "regular" threads
  * 
- * TODO: Why the fuck do we have "legacy semaphores" stored in threads?
- * TODO: Get rid of isrThread, all the other ISR shit.
  * 
  */
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosException;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.*;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.*;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.rpc.RemoteProcedureGroup;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.rpc.RemoteProcedureGroupEndpoint;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.parse.Model;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.util.Util;
 
-public class ThreadImplementation extends ThreadImplementationBase {
+public class ThreadImplementation {
 
 	private ExternalHandler initEntrypointHandler = null;
-	
+	private int priority = -1;
+  private int stackSize = 0; 
+  private double minExecutionTime = -1.0; 
+  private double maxExecutionTime = -1.0; 
+  
+  private String name;
+  private String generatedEntrypoint = null;
+  private  Model model;
+  
 	private List<ThreadInstance> threadInstanceList = new ArrayList<ThreadInstance>();
 	private ArrayList<Dispatcher> dispatcherList = new ArrayList<Dispatcher>();
 	private String dispatchProtocol; 
 	private Boolean isPassive; 
+	private Boolean isExternal = false;
 	
-	// private String smaccmSysSignalOpt = null;
-	// private String isrHandlerName = null;
+	// Necessary for eChronos build.  "Location" defines number of thread.
+	private int eChronosThreadLocation; 
+	
 	
   // Data port lists
 	private ArrayList<InputDataPort> inputDataPortList = new ArrayList<InputDataPort>();
@@ -40,23 +49,111 @@ public class ThreadImplementation extends ThreadImplementationBase {
 	private ArrayList<OutputEventPort> outputEventDataPortList = new ArrayList<OutputEventPort>();
 	private ArrayList<InputEventPort> inputEventDataPortList = new ArrayList<InputEventPort>();
 	private ArrayList<SharedDataAccessor> accessorList = new ArrayList<SharedDataAccessor>();
-	private ArrayList<String> legacySemaphoreList = new ArrayList<String>();
-
+  
+  private List<String> externalMutexList = new ArrayList<String>();
+  private List<String> externalSemaphoreList = new ArrayList<String>();
+  private List<String> externalReferencedFiles = new ArrayList<String>(); 
+	private List<String> sourceFileList = new ArrayList<String>(); 
+	
 	// Outgoing dispatch contract (limits on dispatch)
 	private ArrayList<OutgoingDispatchContract> dispatchLimits = new ArrayList<OutgoingDispatchContract>();
-	
+		
 	// RPCs
-	private List<RemoteProcedureGroup> providesRPCList = new ArrayList<RemoteProcedureGroup>(); 
-	private List<RemoteProcedureGroup> requiresRPCList = new ArrayList<RemoteProcedureGroup>();
+	private Set<RemoteProcedureGroupEndpoint> providesRPGSet = new HashSet<>(); 
+	private Set<RemoteProcedureGroupEndpoint> requiresRPGSet = new HashSet<>();
 	
 	// Constructor
-	public ThreadImplementation(String name, int priority, int stackSize, 
+	public ThreadImplementation(Model model, String name, int priority, int stackSize, 
 	    String generatedEntrypoint, boolean isPassive) {
-	  super(name, priority, stackSize);
+    this.name = name;
+    this.priority = priority;
+    this.stackSize = stackSize;
+    this.model = model;
 	  this.generatedEntrypoint = generatedEntrypoint;
 	  this.isPassive = isPassive; 
   }
 	
+  public Model getModel() {
+    return model;
+  }
+  
+  public String getName() {
+    return name;
+  }
+
+  public String getNormalizedName() {
+    return Util.normalizeAadlName(this.getName());  
+  }
+  
+  public int getPriority() {
+    return this.priority;
+  }
+  
+  public int getStackSize() {
+    return this.stackSize;
+  }
+
+  public String getGeneratedEntrypoint() {
+    return "smaccm_" + generatedEntrypoint;
+  }
+
+  
+  /**
+   * @return the eChronosThreadLocation
+   */
+  public int geteChronosThreadLocation() {
+    return eChronosThreadLocation;
+  }
+
+  /**
+   * @param eChronosThreadLocation the eChronosThreadLocation to set
+   */
+  public void seteChronosThreadLocation(int eChronosThreadLocation) {
+    this.eChronosThreadLocation = eChronosThreadLocation;
+  }
+
+  /**
+   * @return the isExternal
+   */
+  public Boolean getIsExternal() {
+    return isExternal;
+  }
+
+  /**
+   * @param isExternal the isExternal to set
+   */
+  public void setIsExternal(Boolean isExternal) {
+    this.isExternal = isExternal;
+  }
+
+  /**
+   * @return the minExecutionTime
+   */
+  public double getMinExecutionTime() {
+    return minExecutionTime;
+  }
+
+  /**
+   * @param minExecutionTime the minExecutionTime to set
+   */
+  public void setMinExecutionTime(double minExecutionTime) {
+    this.minExecutionTime = minExecutionTime;
+  }
+
+  /**
+   * @return the maxExecutionTime
+   */
+  public double getMaxExecutionTime() {
+    return maxExecutionTime;
+  }
+
+  /**
+   * @param maxExecutionTime the maxExecutionTime to set
+   */
+  public void setMaxExecutionTime(double maxExecutionTime) {
+    this.maxExecutionTime = maxExecutionTime;
+  }
+
   public List<SharedDataAccessor> getSharedDataAccessors() {
     return this.accessorList;
   }
@@ -74,20 +171,62 @@ public class ThreadImplementation extends ThreadImplementationBase {
 	  return this.dispatcherList; 
 	}
 	
-	public List<String> getLegacySemaphores() {
-	    return this.legacySemaphoreList;
-	}
-	  
 	public ExternalHandler getInitializeEntrypointOpt() {
 		return this.initEntrypointHandler;
 	}
 
+	public void setInitializeEntrypointOpt(ExternalHandler handler) {
+	  this.initEntrypointHandler = handler;
+	}
 
 	public void addThreadInstance(ThreadInstance instance) {
 		threadInstanceList.add(instance);
 	}
 
 	
+ 
+  /**
+   * @return the externalMutexList
+   */
+  public List<String> getExternalMutexList() {
+    return externalMutexList;
+  }
+
+  /**
+   * @param externalMutexList the externalMutexList to set
+   */
+  public void setExternalMutexList(List<String> externalMutexList) {
+    this.externalMutexList = externalMutexList;
+  }
+
+  /**
+   * @return the externalSemaphoreList
+   */
+  public List<String> getExternalSemaphoreList() {
+    return externalSemaphoreList;
+  }
+
+  /**
+   * @param externalSemaphoreList the externalSemaphoreList to set
+   */
+  public void setExternalSemaphoreList(List<String> externalSemaphoreList) {
+    this.externalSemaphoreList = externalSemaphoreList;
+  }
+
+  /**
+   * @return the externalReferencedFiles
+   */
+  public List<String> getExternalReferencedFiles() {
+    return externalReferencedFiles;
+  }
+
+  /**
+   * @param externalReferencedFiles the externalReferencedFiles to set
+   */
+  public void setExternalReferencedFiles(List<String> externalReferencedFiles) {
+    this.externalReferencedFiles = externalReferencedFiles;
+  }
+
   /**
    * @return the dispatchLimits
    */
@@ -102,6 +241,58 @@ public class ThreadImplementation extends ThreadImplementationBase {
     this.dispatchLimits = dispatchLimits;
   }
 
+  public Set<Dispatcher> getPassiveDispatcherRegion() {
+    HashSet<Dispatcher> dispatchers = new HashSet<>();
+    for (Dispatcher d : getDispatcherList()) {
+      DispatcherTraverser dt = new DispatcherTraverser(); 
+      dt.passiveDispatchersFromActiveThread(dispatchers, d);
+    }
+    return dispatchers;
+  }
+  
+  public Set<PortConnection> getNonlocalActiveThreadConnectionFrontier() {
+    Set<PortConnection> frontier = new HashSet<>(); 
+    for (Dispatcher d : getDispatcherList()) {
+      DispatcherTraverser dt = new DispatcherTraverser();
+      dt.dispatcherNonlocalActiveThreadConnectionFrontier(d, frontier);
+    }
+    
+    // MWW: 4/14/2015; external threads are not "well behaved" in terms 
+    // of their dispatchers, and should only be connected to other 
+    // active threads.
+    
+    if (this.getIsExternal()) {
+      for (DataPort p : this.getOutputPorts()) {
+        for (PortConnection pc : p.getConnections()) {
+          if (pc.getDestPort().getOwner().getIsPassive()) {
+            throw new Aadl2RtosException("Error: Unsupported connection for thread " + this.getName() + ": Output ports of external threads can only be connected to active threads");
+          }
+          else {
+            frontier.add(pc);
+          }
+        }
+      }
+    }
+    return frontier;
+  }
+
+  public Set<PortConnection> getLocalActiveThreadConnectionFrontier() {
+    Set<PortConnection> frontier = new HashSet<>(); 
+    for (Dispatcher d : getDispatcherList()) {
+      DispatcherTraverser dt = new DispatcherTraverser();
+      dt.dispatcherLocalActiveThreadConnectionFrontier(d, frontier);
+    }
+    return frontier;
+  }
+
+  public Set<ThreadImplementation> getPassiveThreadRegion() {
+    HashSet<ThreadImplementation> threads = new HashSet<>();
+    for (Dispatcher d : getPassiveDispatcherRegion()) {
+      threads.add(d.getOwner());
+    }
+    return threads;
+  }
+  
   /**
    * @return the isPassive
    */
@@ -166,29 +357,37 @@ public class ThreadImplementation extends ThreadImplementationBase {
   /**
    * @return the providesRPCList
    */
-  public List<RemoteProcedureGroup> getProvidesRPCList() {
-    return providesRPCList;
+  public Set<RemoteProcedureGroupEndpoint> getProvidesRPGSet() {
+    return providesRPGSet;
   }
 
+  public void addProvidesRPG(RemoteProcedureGroupEndpoint rpg) {
+    providesRPGSet.add(rpg);
+  }
+  
   /**
    * @param providesRPCList the providesRPCList to set
    */
-  public void setProvidesRPCList(List<RemoteProcedureGroup> providesRPCList) {
-    this.providesRPCList = providesRPCList;
+  public void setProvidesRPGSet(Set<RemoteProcedureGroupEndpoint> providesRPGList) {
+    this.providesRPGSet = providesRPGList;
   }
 
   /**
    * @return the requiresRPCList
    */
-  public List<RemoteProcedureGroup> getRequiresRPCList() {
-    return requiresRPCList;
+  public Set<RemoteProcedureGroupEndpoint> getRequiresRPGSet() {
+    return requiresRPGSet;
   }
 
+  public void addRequiresRPG(RemoteProcedureGroupEndpoint rpg) {
+    requiresRPGSet.add(rpg);
+  }
+  
   /**
    * @param requiresRPCList the requiresRPCList to set
    */
-  public void setRequiresRPCList(List<RemoteProcedureGroup> requiresRPCList) {
-    this.requiresRPCList = requiresRPCList;
+  public void setRequiresRPGSet(Set<RemoteProcedureGroupEndpoint> requiresRPGList) {
+    this.requiresRPGSet = requiresRPGList;
   }
 
   /**
@@ -337,6 +536,48 @@ public class ThreadImplementation extends ThreadImplementationBase {
     ports.addAll(getInputPorts()); 
     return ports;
   }
+
+  /**
+   * @return the sourceFileList
+   */
+  public List<String> getSourceFileList() {
+    return sourceFileList;
+  }
+
+  /**
+   * @param sourceFileList the sourceFileList to set
+   */
+  public void setSourceFileList(List<String> sourceFileList) {
+    if (sourceFileList != null) {
+      this.sourceFileList = sourceFileList;
+    }
+  }
+
+  @Override
+  public int hashCode() {
+    final int prime = 31;
+    int result = 1;
+    result = prime * result + ((name == null) ? 0 : name.hashCode());
+    return result;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
+    ThreadImplementation other = (ThreadImplementation) obj;
+    if (name == null) {
+      if (other.name != null)
+        return false;
+    } else if (!name.equals(other.name))
+      return false;
+    return true;
+  }
+
   
   
 }

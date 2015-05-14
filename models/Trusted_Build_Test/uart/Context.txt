@@ -1,0 +1,15 @@
+// From VM.camkes
+
+component uartbase {
+    hardware;
+    dataport Buf mem;
+    emits DataAvailable	irq;
+}
+
+// From the VM.camkes configuration:
+
+       uartbase_gcs.mem_attributes = "0x12C30000:0x1000";
+        uartbase_gcs.irq_attributes = 86;                        //UART1 interrupt
+
+        uartbase_px4.mem_attributes = "0x12C10000:0x1000";
+        uartbase_px4.irq_attributes = 84;                        //UART1 interrupt

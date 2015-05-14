@@ -124,23 +124,23 @@ public class AgreeCycleVisitor implements jkind.lustre.visitors.ExprVisitor<Set<
 
 	@Override
 	public Set<String> visit(ArrayAccessExpr e) {
-        throw new AgreeException("wtf mate? I didn't think we supported array typesin AGREE?");
+        throw new AgreeException("Array Access Expressions are not handled in the cycle visitor");
 	}
 
 	@Override
 	public Set<String> visit(ArrayExpr e) {
-        throw new AgreeException("wtf mate? I didn't think we supported array typesin AGREE?");
+        throw new AgreeException("Array Expressions are not handled in the cycle visitor");
 
 	}
 
 	@Override
 	public Set<String> visit(ArrayUpdateExpr e) {
-        throw new AgreeException("wtf mate? I didn't think we supported array typesin AGREE?");
+        throw new AgreeException("Array Update Expressiosn are not handled in the cycle visitor");
 	}
 
 	@Override
 	public Set<String> visit(CastExpr e) {
-        throw new AgreeException("wtf mate? I didn't think we supported array typesin AGREE?");
+        return e.expr.accept(this);
 	}
 
 	@Override
@@ -154,7 +154,7 @@ public class AgreeCycleVisitor implements jkind.lustre.visitors.ExprVisitor<Set<
 
 	@Override
 	public Set<String> visit(TupleExpr e) {
-        throw new AgreeException("wtf mate? I didn't think we supported array typesin AGREE?");
+        throw new AgreeException("Type Expressions are not handled in the cycle visitor");
 
 	}
 

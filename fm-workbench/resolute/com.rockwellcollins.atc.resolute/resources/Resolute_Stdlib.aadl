@@ -5,20 +5,20 @@ annex resolute {**
 ------------
 -- Binding
 ------------
-bound(logical : component, physical : component) : bool =
+bound(logical : aadl, physical : component) : bool =
   memory_bound(logical, physical) or
   connection_bound(logical, physical) or
   processor_bound(logical, physical)
   
-memory_bound(logical : component, physical : component) : bool =
+memory_bound(logical : aadl, physical : component) : bool =
   has_property(logical, Deployment_Properties::Actual_Memory_Binding) and
   member(physical, property(logical, Deployment_Properties::Actual_Memory_Binding))
 
-connection_bound(logical : component, physical : component) : bool =
+connection_bound(logical : aadl, physical : component) : bool =
   has_property(logical, Deployment_Properties::Actual_Connection_Binding) and
   member(physical, property(logical, Deployment_Properties::Actual_Connection_Binding))
 
-processor_bound(logical : component, physical : component) : bool =
+processor_bound(logical : aadl, physical : component) : bool =
   has_property(logical, Deployment_Properties::Actual_Processor_Binding) and
   member(physical, property(logical, Deployment_Properties::Actual_Processor_Binding))
 

@@ -14,12 +14,16 @@ public class RemoteProcedureParameter {
   private Type paramType;
   private Direction paramDirection;
   private String id; 
-  
+  // This is only relevant for input parameters; all other parameter types 
+  // must be passed by reference in C.
+  private boolean byReference;
 
-  public RemoteProcedureParameter(Type paramType, Direction paramDirection, String id) {
+  public RemoteProcedureParameter(Type paramType, Direction paramDirection, String id, 
+      boolean byReference) {
     this.paramType = paramType;
     this.paramDirection = paramDirection;
     this.id = id;
+    this.byReference = byReference;
   }
 
   /**
@@ -62,5 +66,13 @@ public class RemoteProcedureParameter {
    */
   public void setId(String id) {
     this.id = id;
+  }
+
+  public boolean isByReference() {
+    return byReference;
+  }
+
+  public void setByReference(boolean byReference) {
+    this.byReference = byReference;
   }
 }

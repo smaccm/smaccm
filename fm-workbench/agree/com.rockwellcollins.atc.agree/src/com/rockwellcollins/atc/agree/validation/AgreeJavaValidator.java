@@ -8,6 +8,7 @@ import static com.rockwellcollins.atc.agree.validation.AgreeType.ERROR;
 import static com.rockwellcollins.atc.agree.validation.AgreeType.INT;
 import static com.rockwellcollins.atc.agree.validation.AgreeType.REAL;
 
+import java.awt.Component;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -33,6 +34,7 @@ import org.osate.aadl2.ClassifierType;
 import org.osate.aadl2.ComponentClassifier;
 import org.osate.aadl2.ComponentImplementation;
 import org.osate.aadl2.ComponentType;
+import org.osate.aadl2.Connection;
 import org.osate.aadl2.DataAccess;
 import org.osate.aadl2.DataImplementation;
 import org.osate.aadl2.DataPort;
@@ -59,10 +61,12 @@ import com.rockwellcollins.atc.agree.agree.AgreeSubclause;
 import com.rockwellcollins.atc.agree.agree.Arg;
 import com.rockwellcollins.atc.agree.agree.AssertStatement;
 import com.rockwellcollins.atc.agree.agree.AssumeStatement;
+import com.rockwellcollins.atc.agree.agree.AsynchStatement;
 import com.rockwellcollins.atc.agree.agree.BinaryExpr;
 import com.rockwellcollins.atc.agree.agree.BoolLitExpr;
 import com.rockwellcollins.atc.agree.agree.CalenStatement;
 import com.rockwellcollins.atc.agree.agree.CallDef;
+import com.rockwellcollins.atc.agree.agree.ConnectionStatement;
 import com.rockwellcollins.atc.agree.agree.ConstStatement;
 import com.rockwellcollins.atc.agree.agree.EqStatement;
 import com.rockwellcollins.atc.agree.agree.EventExpr;
@@ -73,14 +77,18 @@ import com.rockwellcollins.atc.agree.agree.FnDefExpr;
 import com.rockwellcollins.atc.agree.agree.GetPropertyExpr;
 import com.rockwellcollins.atc.agree.agree.GuaranteeStatement;
 import com.rockwellcollins.atc.agree.agree.IfThenElseExpr;
+import com.rockwellcollins.atc.agree.agree.InitialStatement;
 import com.rockwellcollins.atc.agree.agree.IntLitExpr;
+import com.rockwellcollins.atc.agree.agree.LatchedStatement;
 import com.rockwellcollins.atc.agree.agree.LemmaStatement;
 import com.rockwellcollins.atc.agree.agree.LiftStatement;
+import com.rockwellcollins.atc.agree.agree.MNSynchStatement;
 import com.rockwellcollins.atc.agree.agree.NestedDotID;
 import com.rockwellcollins.atc.agree.agree.NodeDefExpr;
 import com.rockwellcollins.atc.agree.agree.NodeEq;
 import com.rockwellcollins.atc.agree.agree.NodeLemma;
 import com.rockwellcollins.atc.agree.agree.NodeStmt;
+import com.rockwellcollins.atc.agree.agree.OrderStatement;
 import com.rockwellcollins.atc.agree.agree.PreExpr;
 import com.rockwellcollins.atc.agree.agree.PrevExpr;
 import com.rockwellcollins.atc.agree.agree.PrimType;
@@ -111,11 +119,78 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
     }
     
     @Check(CheckType.FAST)
+    public void checkConnectionStatement(ConnectionStatement conn){
+        Classifier container = conn.getContainingClassifier();
+        if(container instanceof ComponentImplementation){
+            NamedElement aadlConn = conn.getConn();
+            if(aadlConn == null){
+                return;
+            }
+            if(!(aadlConn instanceof Connection)){
+                error(conn, "The connection label in the connection statement is not a connection");
+                return;
+            }
+            
+            
+        }else{
+            error(conn, "Connection statements are only allowed in component implementations.");
+        }
+    }
+    
+    @Check(CheckType.FAST)
+    public void checkOrderStatement(OrderStatement order){
+    	for(NamedElement el : order.getComps()){
+    		if(!(el instanceof Subcomponent)){
+    			error(el, "Only elements of subcomponent type are allowed in ordering statements");
+    		}
+    	}
+    	Classifier container = order.getContainingClassifier();
+    	if(container instanceof ComponentImplementation){
+    		ComponentImplementation compImpl = (ComponentImplementation)container;
+    		List<NamedElement> notPresent = new ArrayList<>();
+    		for(Subcomponent subcomp : compImpl.getAllSubcomponents()){
+    			boolean found = false;
+    			for(NamedElement el : order.getComps()){
+    				if(el.equals(subcomp)){
+    					found = true;
+    					break;
+    				}
+    			}
+    			if(!found){
+    				notPresent.add(subcomp);
+    			}
+    		}
+    		
+    		if(notPresent.size() != 0){
+    			String delim = "";
+    			StringBuilder errorStr = new StringBuilder("The following subcomponents are not present in the ordering: ");
+    			for(NamedElement subcomp : notPresent){
+    				errorStr.append(delim);
+    				errorStr.append(subcomp.getName());
+    				delim = ", ";
+    			}
+    			error(order, errorStr.toString());
+    		}
+
+    	}else{
+    		error(order, "Ordering statements can only appear in component implementations");
+    	}
+    	
+    	
+    		
+    	
+    }
+    
+    @Check(CheckType.FAST)
     public void checkCalenStatement(CalenStatement calen){
     	for(NamedElement el : calen.getEls()){
     		if(!(el instanceof Subcomponent)){
     			error(calen, "Element '"+el.getName()+"' is not a subcomponent");
     		}
+    	}
+    	Classifier container = calen.getContainingClassifier();
+    	if(!(container instanceof ComponentImplementation)){
+    		error(calen, "Calendar statements can only appear in component implementations");
     	}
     }
     
@@ -144,28 +219,92 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
         NestedDotID nestId = event.getId();
         NamedElement namedEl = getFinalNestId(nestId);
         if(!(namedEl instanceof EventDataPort)){
-        	error(event, "Arguement of event expression must be an event data port");
+        	error(event, "Argument of event expression must be an event data port");
         }
     }
     
     @Check(CheckType.FAST)
     public void checkSynchStatement(SynchStatement sync){
-        //TODO: I'm pretty sure INT_LITs are always positive anyway.
-        //So this may be redundant
-    	if(sync instanceof CalenStatement){
+
+    	Classifier container = sync.getContainingClassifier();
+    	if(!(container instanceof ComponentImplementation)){
+    		error(sync, "Synchrony statements can only appear in component implementations");
+    	}
+    	
+    	if(sync instanceof CalenStatement
+    		|| sync instanceof MNSynchStatement
+    		|| sync instanceof AsynchStatement
+    		|| sync instanceof LatchedStatement){
     		return;
     	}
     	
+        //TODO: I'm pretty sure INT_LITs are always positive anyway.
+        //So this may be redundant    	
         if(Integer.valueOf(sync.getVal()) < 0){
             error(sync, "The value of synchrony statments must be positive");
         }
+        String val2 = sync.getVal2();
+        if(val2 != null){
+        	if(Integer.valueOf(val2) <= 0){
+        		error(sync, "The second value of a synchrony statment must be greater than zero");
+        	}
+        	if(Integer.valueOf(sync.getVal()) <= Integer.valueOf(val2)){
+        		error(sync, "The second value of a synchrony argument must be less than the first");
+        	}
+        }
+        
+    }
+    
+    @Check(CheckType.FAST)
+    public void checkMNSynchStatement(MNSynchStatement sync){
+    	
+    	if(sync.getMax().size() != sync.getMin().size()
+    		&& sync.getMax().size() != sync.getComp1().size()
+    		&& sync.getMax().size() != sync.getComp2().size()){
+    		return; //this should throw a parser error
+    	}
+    	
+    	for (int i = 0; i < sync.getMax().size() ; i++){
+    		String maxStr = sync.getMax().get(i);
+    		String minStr = sync.getMin().get(i);
+    		
+    		int max = Integer.valueOf(maxStr);
+    		int min = Integer.valueOf(minStr);
+    		
+    		if(max < 1 || min < 1){
+    			error(sync, "Quasi-synchronous values must be greater than zero");
+    		}
+    		
+    		if(min > max){
+    			error("Left hand side quasi-synchronous values must be greater than the right hand side");
+    		}
+    	}
     }
     
     @Check(CheckType.FAST)
     public void checkAssume(AssumeStatement assume) {
+    	 Classifier comp = assume.getContainingClassifier();
+         if (!(comp instanceof ComponentType)) {
+             error(assume, "Assume statements are only allowed in component types");
+         }
+    	
         AgreeType exprType = getAgreeType(assume.getExpr());
         if (!matches(BOOL, exprType)) {
             error(assume, "Expression for assume statement is of type '" + exprType.toString()
+                    + "' but must be of type 'bool'");
+        }
+    }
+    
+    @Check(CheckType.FAST)
+    public void checkInitialStatement(InitialStatement statement){
+    	 Classifier comp = statement.getContainingClassifier();
+         if (!(comp instanceof ComponentType)) {
+             error(statement, "Initial statements are only allowed in component types");
+         }
+    	
+    	AgreeType exprType = getAgreeType(statement.getExpr());
+        if (!matches(BOOL, exprType)) {
+            error(statement, "Expression for 'initially' statement is of type '" + exprType.toString()
                     + "' but must be of type 'bool'");
         }
     }
@@ -530,16 +669,19 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
                 List<NestedDotID> nestIds = EcoreUtil2.getAllContentsOfType(constFrontElem,
                         NestedDotID.class);
                 for (NestedDotID nestId : nestIds) {
-                    NamedElement base = getFinalNestId(nestId);
-                    if (base instanceof ConstStatement) {
-                        ConstStatement closConst = (ConstStatement) base;
-                        if (closConst.equals(constStat)) {
-                            error(constStat,
-                                    "The expression for constant statment '" + constStat.getName()
-                                            + "' is in a cyclic definition");
-                            break;
+                    while(nestId != null){
+                        NamedElement base = nestId.getBase();
+                        if (base instanceof ConstStatement) {
+                            ConstStatement closConst = (ConstStatement) base;
+                            if (closConst.equals(constStat)) {
+                                error(constStat,
+                                        "The expression for constant statment '" + constStat.getName()
+                                        + "' is part of a cyclic definition");
+                                break;
+                            }
+                            constClosure.add(closConst);
                         }
-                        constClosure.add(closConst);
+                        nestId = nestId.getSub();
                     }
                 }
             }
@@ -618,7 +760,14 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
             }
             
             NamedElement base = getFinalNestId((NestedDotID) e);
-            return base instanceof ConstStatement;
+            
+            if(base instanceof DataImplementation ||
+               base instanceof ConstStatement ||
+               base instanceof RecordExpr ||
+               base instanceof DataSubcomponent){
+                return true;
+            }
+            return false;
         }
 
         return true;
@@ -748,6 +897,41 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
                         + "' but must be of type '" + rhsType + "'");
             }
         }
+        
+//        // check for constant cycles
+//        Set<EObject> eqClosure = new HashSet<EObject>();
+//        Set<EObject> prevClosure;
+//        eqClosure.add(src);
+//
+//        // quick and dirty cycle check
+//        do {
+//            prevClosure = new HashSet<EObject>(eqClosure);
+//            for (EObject constFrontElem : prevClosure) {
+//                List<NestedDotID> nestIds = EcoreUtil2.getAllContentsOfType(constFrontElem,
+//                        NestedDotID.class);
+//                for (NestedDotID nestId : nestIds) {
+//                    while(nestId != null){
+//                        NamedElement base = nestId.getBase();
+//                        if (base instanceof Arg) {
+//                            EObject container = base;
+//                            while(!(container instanceof EqStatement) &&
+//                                  !(container instanceof NodeEq)){
+//                                container = container.eContainer();
+//                            }
+//                            if (lhsArgs.contains(base)) {
+//                                warning(src,
+//                                        "The expression for eq statment '" + base.getName()
+//                                        + "' may be part of a cyclic definition");
+//                                break;
+//                            } 
+//                            eqClosure.add(container);
+//                        }
+//                        nestId = nestId.getSub();
+//                    }
+//                }
+//            }
+//        } while (!prevClosure.equals(eqClosure));
+        
     }
 
     @Check(CheckType.FAST)
@@ -761,27 +945,58 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 
     @Check(CheckType.FAST)
     public void checkNameOverlap(AgreeContract contract) {
-        ComponentImplementation ci = EcoreUtil2.getContainerOfType(contract,
-                ComponentImplementation.class);
-        if (ci == null) {
-            return;
-        }
 
         Set<SynchStatement> syncs = new HashSet<>();
+        Set<InitialStatement> inits = new HashSet<>();
+        List<ConnectionStatement> conns = new ArrayList<>();
         //check that there are zero or more synchrony statements
         for(SpecStatement spec : contract.getSpecs()){
             if(spec instanceof SynchStatement){
                 syncs.add((SynchStatement)spec);
             }
-            if(spec instanceof CalenStatement){
+            else if(spec instanceof CalenStatement){
             	syncs.add((CalenStatement)spec);
             }
+            else if(spec instanceof InitialStatement){
+            	inits.add((InitialStatement) spec);
+            }else if(spec instanceof ConnectionStatement){
+                conns.add((ConnectionStatement) spec);
+            }
+
         }
         
         if(syncs.size() > 1){
             for(SynchStatement sync : syncs){
                 error(sync, "Multiple synchrony or calender statements in a single contract");
             }
+        }
+        
+        if(inits.size() > 1){
+            for(InitialStatement init : inits){
+                error(init, "Multiple initially statements in a single contract");
+            }
+        }
+        
+        for(int i = 0; i < conns.size(); i++){
+            ConnectionStatement connStat0 = conns.get(i);
+            NamedElement conn0 = connStat0.getConn();
+            for(int j = i+1; j < conns.size(); j++){
+                ConnectionStatement connStat1 = conns.get(j);
+                NamedElement conn1 = connStat1.getConn();
+                if(conn0 == null || conn1 == null){
+                    break;
+                }
+                if(conn0.equals(conn1)){
+                    error(connStat0, "Multiple connection overrides for connection: '"+conn0.getName()+"'");
+                    error(connStat1, "Multiple connection overrides for connection: '"+conn1.getName()+"'");
+                }
+            }
+        }
+        
+        ComponentImplementation ci = EcoreUtil2.getContainerOfType(contract,
+                ComponentImplementation.class);
+        if (ci == null) {
+            return;
         }
         
         Set<String> parentNames = getParentNames(ci);
@@ -832,7 +1047,10 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
             NamedElement id = getFinalNestId(dotId);
             if (!(id instanceof Arg) && !(id instanceof ConstStatement)
                     && !(id instanceof NodeDefExpr) && !(id instanceof FnDefExpr)
-                    && !(id instanceof DataSubcomponent)) {
+                    && !(id instanceof DataSubcomponent)
+                    && !(id instanceof RecordType)
+                    && !(id instanceof DataImplementation)
+                    && !(id instanceof RecordDefExpr)) {
                 error(dotId, "Only arguments, constants, and node calls allowed within a node");
             }
         }

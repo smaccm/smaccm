@@ -1,0 +1,54 @@
+//
+// wrapper for composite component containing other end of vchan interface
+//
+// MWW: Still trying to wrap my head around these new imports from CAmkES 
+// files.
+
+import <std_connector.camkes>;
+import <Vchan/Vchan.camkes>;
+import <HelloWorldClient/HelloWorldClient.camkes>;
+import "../VchanProxy/VchanProxy.camkes";
+import "../../interfaces/VchanInterfaceAadl.idl4";
+
+component vchan_wrapper {
+  include <vmm/vchan_sharemem.h>;
+  include <vmm/vchan_copy.h>;
+  dataport vchan_headers_t buff1;
+  uses void_writer vchan_wrapper_vevent_cl;
+  provides VchanInterfaceAadl rpc;
+  
+  composition {
+    component VchanProxy vchan_proxy;
+    component Vchan vchan_0;
+    component HelloWorldClient hello_client;
+
+    /* Connect AADL to vchan_proxy */
+     connection ExportRPC vchan_event(from vchan_proxy.vevent_in, to vchan_wrapper_vevent_cl); 
+     connection ExportRPC hvchan(from rpc, to vchan_proxy.rpc_in); 
+     
+     // skips proxy entirely.
+     connection ExportData hvchan_sharemem_0(from vchan_0.share_mem, to buff1); 
+
+	// From original file.
+    // connection seL4RPCCall vchan_event(from vchan_proxy.vevent_in, to hello.vevent); 
+    // connection seL4RPCCall hvchan(from hello.rpc, to vchan_proxy.rpc_in); 
+    // connection seL4SharedData hvchan_sharemem_0(from hello.buff1, to vchan_proxy.buff1_in); 
+
+    /* Connect vchan_proxy to vchan_0 */
+    connection seL4Asynch vchan_event_p(from vchan_0.vevent_sv, to vchan_proxy.vevent_out);
+    connection seL4RPCCall hvchan_p(from vchan_proxy.vchan_com_out, to vchan_0.vchan_com);
+    // connection seL4SharedData hvchan_sharemem_0_p(from vchan_proxy.share_mem_out, to vchan_0.share_mem);
+    // connection seL4SharedData hvchan_sharemem_0_p(from vchan_proxy.buff1_in, to vchan_0.share_mem);
+
+    /* Connect vchan_0 to hello_client */
+    connection seL4RPCCall vchan_1(from hello_client.vchan_con, to vchan_0.vchan_com);
+    connection seL4SharedData vchan_sharemem_1(from hello_client.share_mem, to vchan_0.share_mem);
+    connection seL4Asynch vchan_event_init_1(from vchan_0.vevent_cl, to hello_client.vevent);
+
+  }
+  configuration {
+    vchan_0.vchan_com_priority = 200;
+    vchan_proxy._control_priority = 150;
+    hello_client._control_priority = 100;
+  }
+}

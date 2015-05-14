@@ -74,6 +74,11 @@ public class IntType extends Type {
 
 	@Override
 	public boolean equals(Object obj) {
-		return (obj instanceof IntType) && (((IntType) obj).getBitSize() == bitSize);
+	  if (obj instanceof IntType) {
+	    IntType other = (IntType)obj;
+	    return (other.getBitSize() == this.getBitSize() &&
+	            other.isSigned() == this.isSigned());
+	  }
+		return false;
 	}
 }

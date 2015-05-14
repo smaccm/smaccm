@@ -1,0 +1,145 @@
+package Execute_Soundness
+  public 
+    with UAV;
+    
+    annex resolute {**
+
+-- TODO: Define legitimate
+-- TODO: Define trusted (legit => legit)
+
+only_receive_legit(c : component) <=
+  ** c " only receives legitimate data" **
+  is_trusted(c) and
+  all_trusted_components_only_receive_legit()
+
+is_trusted(c : component) <=
+  ** c " is a trusted component" **
+  trusted(c)
+  
+trusted(c : component) : bool =
+  has_property(c, SMACCM::Trusted) and property(c, SMACCM::Trusted)
+  
+all_trusted_components_only_receive_legit() <=
+  ** "All trusted components receive only legitimate data" **
+  forall (c : component). trusted(c) => only_receive_legit_generalized(c)
+
+incoming(t : component) : {connection} =
+  { c for (c : connections(t)) | destination_component(c) = t }
+
+only_receive_legit_generalized(c : component) <=
+  ** c " only receives legitimate data, data from trusted components, or data from an authenticator" **
+  -- TODO: memory_protected(c) and
+  forall (conn : incoming(c)).
+    only_receive_legit_generalized_connection(conn)
+     
+only_receive_legit_generalized_connection(conn : connection) <=
+  ** conn " only receives legitimate data, data from trusted components, or data from an authenticator" **
+    connection_secure(conn) and
+    (only_carries_legitimate_data(conn) or
+     source_is_trusted(conn) or
+     source_is_authenticator(conn))
+
+connection_secure(conn : connection) <=
+  ** conn " preserves legitimate data" **
+  internal_sel4(conn) or
+  internal_process(conn) or
+  secure_can_connection(conn) or
+  hardware_connection(conn)
+
+internal_sel4(conn : connection) <=
+  ** conn " is an internal SeL4 connection" **
+  exists (s : system).
+    is_sel4(s) and
+    contained(source_component(conn), s) and
+    contained(destination_component(conn), s)
+    
+is_sel4(s : system) <=
+  ** s " is running SeL4" **
+  property(s, SMACCM::OS) = "seL4"
+  
+internal_process(conn : connection) <=
+  ** conn " is internal to a memory protected process" **
+  exists (p : process).
+    contained(source_component(conn), p) and
+    contained(destination_component(conn), p) and
+    memory_protected(p)
+
+memory_protected(p : process) <=
+  ** "The memory of process " p " is protected from alterations by other processes" **
+  is_eChronos(p) and
+   forall (mem : memory). bound(p, mem) =>
+     forall (q : process). bound(q, mem) => memory_safe_process(q)
+
+is_eChronos(p : process) <=
+  ** p " is running eChronos" **
+  property(p, SMACCM::OS) = "eChronos"
+
+memory_safe_process(p : process) <=
+  ** "The process " p " only writes to its own memory space" **
+  forall (t : thread). contained(t, p) => memory_safe_thread(t)
+
+memory_safe_thread(t : thread) <=
+  ** "The thread " t " only writes to its own memory space" **
+  ivory_thread(t)
+
+ivory_thread(t : thread) <=
+  ** "The thread " t " is generated from Ivory" **
+  property(t, SMACCM::Language) = "Ivory"
+
+secure_can_connection(conn : connection) <=
+  ** conn " is over secure CAN bus" **
+  exists (b : bus).
+    is_bound(conn, b) and
+    bus_only_trusted_software(b) and
+    bus_only_trusted_hardware(b)
+
+is_bound(conn : connection, b : bus) <=
+  ** conn " is bound to " b **
+  bound(conn, b)
+
+bus_only_trusted_software(b : bus) <=
+  ** b " is only connected to trusted software components" **
+  forall (conn : connection).
+    bound(conn, b) => connection_only_trusted_endpoints(conn)
+    
+connection_only_trusted_endpoints(conn : connection) <=
+  ** "Both endpoints of " conn " are trusted software components" **
+  is_trusted(source_component(conn)) and is_trusted(destination_component(conn))
+  
+bus_only_trusted_hardware(b : bus) <=
+  ** b " is only connected to trusted hardware components" **
+  forall (conn : connection).
+    source_component(conn) = b => is_trusted_hardware(destination_component(conn))
+
+is_trusted_hardware(hw : aadl) <=
+  ** hw " is trusted hardware" **
+  hw = instance(XU_DAUGHTER_BOARD::XU_DAUGHTER_BOARD) or
+  hw = instance(PixHawk::PixHawk)
+
+-- TODO: What exactly makes a connection a hardware connection? What if it goes over a bus, etc?
+hardware_connection(conn : connection) <=
+  ** conn " is a hardware connection" **
+  source_component(conn) instanceof device
+
+only_carries_legitimate_data(c : connection) <=
+  ** c " only carries legitimate data" **
+  is_sensor_data(type(c))
+
+is_sensor_data(conn_type : aadl) <=
+  ** conn_type " is sensor data" **
+  (conn_type = hardware_types::GPS) or
+  (conn_type = software_types::Motion_Data.Impl) or
+  (conn_type = software_types::Barometric_Data) or
+  (conn_type = software_types::Battery_Data)
+
+source_is_trusted(c : connection) <=
+  ** "The source of " c " is trusted" **
+  trusted(source_component(c))
+
+source_is_authenticator(c : connection) <=
+  ** "The source of " c " is an authenticator" **
+  property(source_component(c), SMACCM::Authenticator)
+
+**};
+    
+end Execute_Soundness;

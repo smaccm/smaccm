@@ -9,6 +9,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosException;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.ExternalType;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.IdType;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.Type;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.parse.Model;
@@ -22,7 +23,7 @@ public class C_Type_Writer {
 		// (which I expect) then emit a 'typedef struct'. Else emit a typedef.
 		StringBuffer typeName = new StringBuffer();
 		typeName.append("typedef ");
-		typeName.append(ty.getTypeRef().getCType(indent).varString(ty.getTypeId()) + "; \n");
+		typeName.append(ty.getTypeRef().CTypeDecl(indent, ty.getTypeId()) + "; \n");
 		out.append(typeName.toString());
 	}
 
@@ -31,21 +32,20 @@ public class C_Type_Writer {
     
     try {
       // First we need to get all of the "top-level" types described as
-      // ID-types, then
-      // we can sort them topologically, then emit them.
+      // ID-types, then we can sort them topologically and emit them.
       List<Type> idTypes = new ArrayList<Type>();
       for (Entry<String, Type> e : entrySet) {
-        idTypes.add(new IdType(e.getKey(), e.getValue()));
+        if (!(e.getValue() instanceof ExternalType)) {
+          idTypes.add(new IdType(e.getKey(), e.getValue()));
+        }
       }
-      List<Type> sortedTypes = TopologicalSort.performTopologicalSort(idTypes);
+      List<Type> sortedTypes = TopologicalSort.performElementsOnlyTopologicalSort(idTypes);
       if (sortedTypes.isEmpty()) {
         out.append("\n\n\n // No user defined types.  This space for rent :)\n\n\n"); 
       }
       for (Type t : sortedTypes) {
-        if (t instanceof IdType) {
-          writeType(out, (IdType) t, indent);
-          out.append("\n");
-        }
+         writeType(out, (IdType) t, indent);
+         out.append("\n");
       }
     } catch (CyclicException e) {
       throw new Aadl2RtosException(

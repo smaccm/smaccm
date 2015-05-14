@@ -1,0 +1,185 @@
+<INFO> logger is set to TRACE (RamsesConfiguration.java::setupLogging line 459 ; 2015-03-05 12:59:36,658)
+<INFO> 
+
+********************************************************************************
+*                           Starting RAMSES CLI ...                            *
+
+RAMSES arguments are:
+ -g rtos -i .,../aadl2rtos_resource -o out -l trace -s test0.impl -m SMACCM_SYS.aadl,test0.aadl
+
+VM settings are:
+java.runtime.name=Java(TM) SE Runtime Environment
+sun.boot.library.path=C:\Program Files\Java\jre1.8.0_31\bin
+java.vm.version=25.31-b07
+java.vm.vendor=Oracle Corporation
+java.vendor.url=http://java.oracle.com/
+path.separator=;
+java.vm.name=Java HotSpot(TM) 64-Bit Server VM
+file.encoding.pkg=sun.io
+user.country=US
+user.script=
+sun.java.launcher=SUN_STANDARD
+sun.os.patch.level=Service Pack 1
+java.vm.specification.name=Java Virtual Machine Specification
+user.dir=C:\docs\git_smaccm\phase2\ramses-demo\test0
+java.runtime.version=1.8.0_31-b13
+java.awt.graphicsenv=sun.awt.Win32GraphicsEnvironment
+java.endorsed.dirs=C:\Program Files\Java\jre1.8.0_31\lib\endorsed
+os.arch=amd64
+java.io.tmpdir=C:\Users\Whalen\AppData\Local\Temp\
+line.separator=
+
+java.vm.specification.vendor=Oracle Corporation
+user.variant=
+os.name=Windows 7
+sun.jnu.encoding=Cp1252
+java.library.path=C:\Program Files\Java\jre1.8.0_31\bin;C:\Windows\Sun\Java\bin;C:\Windows\system32;C:\Windows;C:\ProgramData\Oracle\Java\javapath;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Program Files (x86)\Intel\iCLS Client;C:\Program Files\Intel\iCLS Client;C:\Program Files\Common Files\Microsoft Shared\Windows Live;C:\Program Files (x86)\Common Files\Microsoft Shared\Windows Live;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0;C:\Program Files (x86)\NTRU Cryptosystems\NTRU TCG Software Stack\bin;C:\Program Files (x86)\Windows Live\Shared;C:\Program Files\MATLAB\R2013a\runtime\win64;C:\Program Files\MATLAB\R2013a\bin;C:\Program Files (x86)\GNU\GnuPG\pub;C:\Program Files (x86)\MiKTeX 2.9\miktex\bin;C:\cygwin\bin;C:\Program Files (x86)\SMLNJ\bin;C:\Apps\jkind;C:\Apps\z3-4.3.0-x64\bin;C:\Program Files (x86)\Microsoft SQL Server\100\Tools\Binn;C:\Program Files\Microsoft SQL Server\100\Tools\Binn;C:\Program Files\Microsoft SQL Server\100\DTS\Binn;C:\apps\yices-1.0.40\bin;C:\Apps\apache-ant-1.8.4\bin;C:\Program Files\TortoiseHg;C:\Program Files (x86)\Git\cmd;C:\Apps\ANTLR_4;C:\Apps\apache-maven-3.1.0\bin;C:\Program Files\Intel\WiFi\bin;C:\Program Files\Common Files\Intel\WirelessCommon;C:\Program Files\TortoiseSVN\bin;C:\Program Files\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files\Intel\Intel(R) Management Engine Components\IPT;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\IPT;C:\Program Files (x86)\QuickTime\QTSystem;C:\Users\Whalen\AppData\Roaming\MiKTeX\2.9\miktex\bin;C:\Program Files\Intel\WiFi\bin;C:\Program Files\Common Files\Intel\WirelessCommon;.;.;;.
+java.specification.name=Java Platform API Specification
+java.class.version=52.0
+sun.management.compiler=HotSpot 64-Bit Tiered Compilers
+os.version=6.1
+user.home=C:\Users\Whalen
+user.timezone=America/Chicago
+java.awt.printerjob=sun.awt.windows.WPrinterJob
+file.encoding=Cp1252
+java.specification.version=1.8
+java.class.path=../ramses.jar
+user.name=Whalen
+java.vm.specification.version=1.8
+sun.java.command=../ramses.jar -g rtos -i .,../aadl2rtos_resource -o out -l trace -s test0.impl -m SMACCM_SYS.aadl,test0.aadl
+java.home=C:\Program Files\Java\jre1.8.0_31
+sun.arch.data.model=64
+user.language=en
+java.specification.vendor=Oracle Corporation
+awt.toolkit=sun.awt.windows.WToolkit
+java.vm.info=mixed mode
+java.version=1.8.0_31
+java.ext.dirs=C:\Program Files\Java\jre1.8.0_31\lib\ext;C:\Windows\Sun\Java\lib\ext
+sun.boot.class.path=C:\Program Files\Java\jre1.8.0_31\lib\resources.jar;C:\Program Files\Java\jre1.8.0_31\lib\rt.jar;C:\Program Files\Java\jre1.8.0_31\lib\sunrsasign.jar;C:\Program Files\Java\jre1.8.0_31\lib\jsse.jar;C:\Program Files\Java\jre1.8.0_31\lib\jce.jar;C:\Program Files\Java\jre1.8.0_31\lib\charsets.jar;C:\Program Files\Java\jre1.8.0_31\lib\jfr.jar;C:\Program Files\Java\jre1.8.0_31\classes
+java.vendor=Oracle Corporation
+sun.stderr.encoding=cp437
+file.separator=\
+java.vendor.url.bug=http://bugreport.sun.com/bugreport/
+sun.io.unicode.encoding=UnicodeLittle
+sun.cpu.endian=little
+sun.stdout.encoding=cp437
+sun.desktop=windows
+sun.cpu.isalist=amd64
+
+Environment variables are:
+$PATH=C:\ProgramData\Oracle\Java\javapath;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Program Files (x86)\Intel\iCLS Client;C:\Program Files\Intel\iCLS Client;C:\Program Files\Common Files\Microsoft Shared\Windows Live;C:\Program Files (x86)\Common Files\Microsoft Shared\Windows Live;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0;C:\Program Files (x86)\NTRU Cryptosystems\NTRU TCG Software Stack\bin;C:\Program Files (x86)\Windows Live\Shared;C:\Program Files\MATLAB\R2013a\runtime\win64;C:\Program Files\MATLAB\R2013a\bin;C:\Program Files (x86)\GNU\GnuPG\pub;C:\Program Files (x86)\MiKTeX 2.9\miktex\bin;C:\cygwin\bin;C:\Program Files (x86)\SMLNJ\bin;C:\Apps\jkind;C:\Apps\z3-4.3.0-x64\bin;C:\Program Files (x86)\Microsoft SQL Server\100\Tools\Binn;C:\Program Files\Microsoft SQL Server\100\Tools\Binn;C:\Program Files\Microsoft SQL Server\100\DTS\Binn;C:\apps\yices-1.0.40\bin;C:\Apps\apache-ant-1.8.4\bin;C:\Program Files\TortoiseHg;C:\Program Files (x86)\Git\cmd;C:\Apps\ANTLR_4;C:\Apps\apache-maven-3.1.0\bin;C:\Program Files\Intel\WiFi\bin;C:\Program Files\Common Files\Intel\WirelessCommon;C:\Program Files\TortoiseSVN\bin;C:\Program Files\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files\Intel\Intel(R) Management Engine Components\IPT;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\IPT;C:\Program Files (x86)\QuickTime\QTSystem;C:\Users\Whalen\AppData\Roaming\MiKTeX\2.9\miktex\bin;C:\Program Files\Intel\WiFi\bin;C:\Program Files\Common Files\Intel\WirelessCommon;.;.;
+$PROCESSOR_LEVEL=6
+$SYSTEMDRIVE=C:
+$FP_NO_HOST_CHECK=NO
+$M2=C:\Apps\apache-maven-3.1.0\bin
+$SESSIONNAME=Console
+$ALLUSERSPROFILE=C:\ProgramData
+$PROCESSOR_ARCHITECTURE=AMD64
+$PSModulePath=C:\Windows\system32\WindowsPowerShell\v1.0\Modules\
+$VS100COMNTOOLS=C:\Program Files (x86)\Microsoft Visual Studio 10.0\Common7\Tools\
+$PROGRAMFILES=C:\Program Files
+$SMLNJ_HOME=C:\Apps\smlnj\smlnj_110_73
+$USERNAME=Whalen
+$PWD=/cygdrive/c/docs/git_smaccm/phase2/ramses-demo/test0
+$ProgramFiles(x86)=C:\Program Files (x86)
+$PATHEXT=.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC
+$JKIND_HOME=C:\Apps\jkind
+$OLDPWD=/cygdrive/c/docs/git_smaccm/phase2/ramses-demo
+$WINDIR=C:\Windows
+$ProgramData=C:\ProgramData
+$ProgramW6432=C:\Program Files
+$HOMEPATH=\Users\Whalen
+$PROCESSOR_IDENTIFIER=Intel64 Family 6 Model 58 Stepping 9, GenuineIntel
+$M2_HOME=C:\Apps\apache-maven-3.1.0
+$PUBLIC=C:\Users\Public
+$YICES_HOME=C:\apps\yices-1.0.40
+$=::=::\
+$SHLVL=2
+$LOCALAPPDATA=C:\Users\Whalen\AppData\Local
+$SAL_HOME=C:\Apps\sal-3.2
+$USERDOMAIN=WHALEN-LAPTOP-2
+$LOGONSERVER=\\WHALEN-LAPTOP-2
+$JAVA_HOME=C:\Program Files\Java\jdk1.8.0_31
+$PROMPT=$P$G
+$TERM=cygwin
+$ANT_HOME=C:\Apps\apache-ant-1.8.4
+$asl.log=Destination=file
+$=C:=C:\docs\git_smaccm\phase2\ramses-demo
+$APPDATA=C:\Users\Whalen\AppData\Roaming
+$SYSTEMROOT=C:\Windows
+$AADL2RTOS_CONFIG_DIR=../aadl2rtos_resource
+$windows_tracing_logfile=C:\BVTBin\Tests\installpackage\csilogfile.log
+$VBOX_MSI_INSTALL_PATH=C:\Program Files\Oracle\VirtualBox\
+$_=/cygdrive/c/ProgramData/Oracle/Java/javapath/java
+$SDK_TRANSLATOR_HOME=C:\docs\svn_trusted_verification\sdk2
+$OS=Windows_NT
+$windows_tracing_flags=3
+$COMPUTERNAME=WHALEN-LAPTOP-2
+$COMMONPROGRAMFILES=C:\Program Files\Common Files
+$COMSPEC=C:\Windows\system32\cmd.exe
+$PROCESSOR_REVISION=3a09
+$CLASSPATH=C:\apps\ANTLR_4\antlr-4.0-complete.jar;C:\apps\ST\ST-4.0.8.jar
+$CommonProgramW6432=C:\Program Files\Common Files
+$!ExitCode=00000000
+$RAMSES_DIR=../ramses_resource
+$TEMP=C:\Users\Whalen\AppData\Local\Temp
+$HOMEDRIVE=C:
+$USERPROFILE=C:\Users\Whalen
+$TMP=C:\Users\Whalen\AppData\Local\Temp
+$CommonProgramFiles(x86)=C:\Program Files (x86)\Common Files
+$z3_HOME=C:\Apps\z3-4.3.0-x64
+$NUMBER_OF_PROCESSORS=8
+$HOME=C:\cygwin\home\Whalen
+$LUSTRE_TRANSLATOR_HOME=C:\apps\gryphon_install
+********************************************************************************
+ (ToolSuiteLauncherCommand.java::commonOptionsHandler line 391 ; 2015-03-05 12:59:36,673)
+<INFO> set RAMSES resource directory to '../ramses_resource' (RamsesConfiguration.java::setRamsesResourceDir line 73 ; 2015-03-05 12:59:36,686)
+<INFO> set ATL resource directory to '../ramses_resource' (RamsesConfiguration.java::setAtlResourceDir line 134 ; 2015-03-05 12:59:36,686)
+<INFO> set AADL predefined resource directory to '..\ramses_resource\aadl_resources' (RamsesConfiguration.java::setPredefinedResourceDir line 164 ; 2015-03-05 12:59:36,687)
+<INFO> set output directory to 'out' (RamsesConfiguration.java::setRamsesOutputDir line 241 ; 2015-03-05 12:59:38,595)
+<INFO> set generation target id to 'rtos' (RamsesConfiguration.java::setGenerationTargetId line 341 ; 2015-03-05 12:59:38,596)
+<INFO> runtime path has not been set. It can be the normal behavior. Otherwise, 'rtos' generator will try to fetch the runtime path from the '$null' environment variable. (RamsesConfiguration.java::setRuntimePath line 266 ; 2015-03-05 12:59:38,596)
+<INFO> set runtime path to 'null' (RamsesConfiguration.java::setRuntimePath line 276 ; 2015-03-05 12:59:38,596)
+<INFO> Begin task 'Generate code for rtos' (RamsesProgressMonitor.java::beginTask line 48 ; 2015-03-05 12:59:38,596)
+<INFO> Begin sub task 'Parse predefined AADL models' (RamsesProgressMonitor.java::subTask line 104 ; 2015-03-05 12:59:38,597)
+<INFO> Begin sub task 'Parse AADL models' (RamsesProgressMonitor.java::subTask line 104 ; 2015-03-05 12:59:40,338)
+<TRACE> parse behavior_specification in Get_Queueing_Port_Count from ARINC653_runtime.aadl2 (AnnexJob.java::parse line 99 ; 2015-03-05 12:59:40,528)
+<TRACE> parse behavior_specification in Display_Blackboard from ARINC653_runtime.aadl2 (AnnexJob.java::parse line 99 ; 2015-03-05 12:59:40,727)
+<TRACE> parse behavior_specification in Read_Blackboard from ARINC653_runtime.aadl2 (AnnexJob.java::parse line 99 ; 2015-03-05 12:59:40,744)
+<TRACE> parse behavior_specification in Receive_Input from PeriodicDelayed_runtime.aadl2 (AnnexJob.java::parse line 99 ; 2015-03-05 12:59:40,748)
+<TRACE> parse behavior_specification in Next_Value from PeriodicDelayed_runtime.aadl2 (AnnexJob.java::parse line 99 ; 2015-03-05 12:59:40,783)
+<TRACE> parse behavior_specification in Put_Value from PeriodicDelayed_runtime.aadl2 (AnnexJob.java::parse line 99 ; 2015-03-05 12:59:40,819)
+<TRACE> parse behavior_specification in Send_Output from PeriodicDelayed_runtime.aadl2 (AnnexJob.java::parse line 99 ; 2015-03-05 12:59:40,822)
+<TRACE> parse behavior_specification in Receive_Input_LowFP from PeriodicDelayed_runtime.aadl2 (AnnexJob.java::parse line 99 ; 2015-03-05 12:59:40,825)
+<TRACE> parse behavior_specification in Put_Value_LowFP from PeriodicDelayed_runtime.aadl2 (AnnexJob.java::parse line 99 ; 2015-03-05 12:59:40,833)
+<TRACE> parse behavior_specification in Init_Prototype from PeriodicDelayedMutex_runtime.aadl2 (AnnexJob.java::parse line 99 ; 2015-03-05 12:59:40,838)
+<TRACE> parse behavior_specification in Put_Value.impl from PeriodicDelayedMutex_runtime.aadl2 (AnnexJob.java::parse line 99 ; 2015-03-05 12:59:40,851)
+<TRACE> parse behavior_specification in Receive_Input.impl from PeriodicDelayedMutex_runtime.aadl2 (AnnexJob.java::parse line 99 ; 2015-03-05 12:59:40,899)
+<TRACE> parse behavior_specification in Next_Value.impl from PeriodicDelayedMutex_runtime.aadl2 (AnnexJob.java::parse line 99 ; 2015-03-05 12:59:40,919)
+<TRACE> parse behavior_specification in Send_Output from PeriodicDelayedMutex_runtime.aadl2 (AnnexJob.java::parse line 99 ; 2015-03-05 12:59:40,955)
+<TRACE> resolve behavior_specification in Get_Queueing_Port_Count from ARINC653_runtime.aadl2 (AnnexJob.java::resolve line 149 ; 2015-03-05 12:59:40,960)
+<TRACE> resolve behavior_specification in Display_Blackboard from ARINC653_runtime.aadl2 (AnnexJob.java::resolve line 149 ; 2015-03-05 12:59:41,001)
+<TRACE> resolve behavior_specification in Read_Blackboard from ARINC653_runtime.aadl2 (AnnexJob.java::resolve line 149 ; 2015-03-05 12:59:41,035)
+<TRACE> resolve behavior_specification in Receive_Input from PeriodicDelayed_runtime.aadl2 (AnnexJob.java::resolve line 149 ; 2015-03-05 12:59:41,064)
+<TRACE> resolve behavior_specification in Next_Value from PeriodicDelayed_runtime.aadl2 (AnnexJob.java::resolve line 149 ; 2015-03-05 12:59:41,081)
+<TRACE> resolve behavior_specification in Put_Value from PeriodicDelayed_runtime.aadl2 (AnnexJob.java::resolve line 149 ; 2015-03-05 12:59:41,094)
+<TRACE> resolve behavior_specification in Send_Output from PeriodicDelayed_runtime.aadl2 (AnnexJob.java::resolve line 149 ; 2015-03-05 12:59:41,097)
+<TRACE> resolve behavior_specification in Receive_Input_LowFP from PeriodicDelayed_runtime.aadl2 (AnnexJob.java::resolve line 149 ; 2015-03-05 12:59:41,102)
+<TRACE> resolve behavior_specification in Put_Value_LowFP from PeriodicDelayed_runtime.aadl2 (AnnexJob.java::resolve line 149 ; 2015-03-05 12:59:41,128)
+<TRACE> resolve behavior_specification in Init_Prototype from PeriodicDelayedMutex_runtime.aadl2 (AnnexJob.java::resolve line 149 ; 2015-03-05 12:59:41,142)
+<TRACE> resolve behavior_specification in Put_Value.impl from PeriodicDelayedMutex_runtime.aadl2 (AnnexJob.java::resolve line 149 ; 2015-03-05 12:59:41,152)
+<TRACE> resolve behavior_specification in Receive_Input.impl from PeriodicDelayedMutex_runtime.aadl2 (AnnexJob.java::resolve line 149 ; 2015-03-05 12:59:41,189)
+<TRACE> resolve behavior_specification in Next_Value.impl from PeriodicDelayedMutex_runtime.aadl2 (AnnexJob.java::resolve line 149 ; 2015-03-05 12:59:41,197)
+<TRACE> resolve behavior_specification in Send_Output from PeriodicDelayedMutex_runtime.aadl2 (AnnexJob.java::resolve line 149 ; 2015-03-05 12:59:41,201)
+<INFO> Begin sub task 'Instantiate AADL models' (RamsesProgressMonitor.java::subTask line 104 ; 2015-03-05 12:59:41,209)
+<INFO> Begin sub task 'Creating instances in tl' (RamsesProgressMonitor.java::subTask line 104 ; 2015-03-05 12:59:41,557)
+<INFO> Begin sub task 'Creating system operation modes' (RamsesProgressMonitor.java::subTask line 104 ; 2015-03-05 12:59:41,558)
+<INFO> Begin sub task 'Creating connections in  tl' (RamsesProgressMonitor.java::subTask line 104 ; 2015-03-05 12:59:41,563)
+<INFO> Begin sub task 'Creating end-to-end flows in tl' (RamsesProgressMonitor.java::subTask line 104 ; 2015-03-05 12:59:41,566)
+<INFO> Begin sub task 'Caching contained property associations in tl' (RamsesProgressMonitor.java::subTask line 104 ; 2015-03-05 12:59:41,568)
+<INFO> Begin sub task 'Caching system instance contained property associations' (RamsesProgressMonitor.java::subTask line 104 ; 2015-03-05 12:59:41,568)
+<INFO> Begin sub task 'Caching 2 property associations' (RamsesProgressMonitor.java::subTask line 104 ; 2015-03-05 12:59:41,570)
+<INFO> Begin sub task 'Caching property associations in tl' (RamsesProgressMonitor.java::subTask line 104 ; 2015-03-05 12:59:41,573)
+<INFO> Begin sub task 'Saving instance model' (RamsesProgressMonitor.java::subTask line 104 ; 2015-03-05 12:59:41,577)
+<INFO> Begin task 'Generating Configuration for AADL Model' (RamsesProgressMonitor.java::beginTask line 48 ; 2015-03-05 12:59:41,591)
+<INFO> Task Generating Configuration for AADL Model is done (RamsesProgressMonitor.java::done line 59 ; 2015-03-05 12:59:41,897)

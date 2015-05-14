@@ -1,0 +1,99 @@
+/*
+ * Copyright 2014, NICTA
+ *
+ * This software may be distributed and modified according to the terms of
+ * the GNU General Public License version 2. Note that NO WARRANTY is provided.
+ * See "LICENSE_GPLv2.txt" for details.
+ *
+ * @TAG(NICTA_GPL)
+ */
+
+import <Ethdriver.idl4>;
+import <PutChar.idl4>;
+
+import <UDPServer/UDPServer.camkes>;
+import <Ethdriver/Ethdriver.camkes>;
+
+import "../../interfaces/udp__packet_i_writer.idl4";
+
+component udp {
+    include "smaccm_wrapper_i_types.h";
+    control;
+
+    /* AADL expected interface */
+    provides udp__packet_i_writer client_input;
+    uses udp__packet_i_writer udp_client_output;
+
+    /* Driver interface */
+    provides PutChar putchar;
+
+    uses UDPRecv udp_recv;
+    dataport Buf udp_recv_buf;
+    consumes Notification udp_recv_ready;
+    uses UDPSend udp_send;
+    dataport Buf udp_send_buf;
+}
+
+component HWEthDriver {
+    hardware;
+    emits IRQ irq;
+    dataport EthDriverMMIO mmio;
+}
+
+connector seL4UDPSend {
+    from Procedure client template "seL4UDPSend-from.template.c";
+    to Procedure server template "seL4UDPSend-to.template.c";
+}
+
+connector seL4UDPRecv {
+    from Procedure client template "seL4UDPRecv-from.template.c";
+    to Procedure server template "seL4UDPRecv-to.template.c";
+}
+
+connector seL4Ethdriver {
+    from Procedure client template "seL4Ethdriver-from.template.c";
+    to Procedure server template "seL4Ethdriver-to.template.c";
+}
+
+assembly {
+    composition {
+        /* "component udp udp_inst" will be defined by the outer camkes file */
+        component UDPServer udpserver;
+	component Ethdriver ethdriver;
+        component HWEthDriver HWEthDriver;
+
+        /* Connect ethernet driver to udpserver */
+        connection seL4Ethdriver eth_driver(from udpserver.ethdriver, to ethdriver.client);
+
+        /* Hardware resources for ethernet driver */
+        connection seL4HardwareMMIO ethdrivermmio1(from ethdriver.EthDriver, to HWEthDriver.mmio);
+        connection seL4IOAPICHardwareInterrupt hwethirq(from HWEthDriver.irq, to ethdriver.irq);
+
+        /* UDP connections for udp_inst */
+        connection seL4UDPRecv udp_inst_recv(from udp_inst.udp_recv, to udpserver.client_recv);
+        connection seL4UDPSend udp_inst_send(from udp_inst.udp_send, to udpserver.client_send);
+        connection seL4SharedData udp_inst_send_buf(from udp_inst.udp_send_buf, to udpserver.client_send_buf);
+        connection seL4SharedData udp_inst_recv_buf(from udp_inst.udp_recv_buf, to udpserver.client_recv_buf);
+        connection seL4Asynch udp_inst_recv_ready(from udpserver.client_recv_ready, to udp_inst.udp_recv_ready);
+    }
+
+    configuration {
+        udpserver.client_recv_buffers = 8;
+        udpserver.client_recv_port = 7;
+        udpserver.client_send_ports = { "source" : 7, "dest" : 7};
+        udpserver.udp_ip_addr = "10.13.1.215";
+        udpserver.ethdriver_attributes = "1";
+        udpserver.ethdriver_global_endpoint = "udpserver_endpoint";
+        udpserver.ethdriver_mac = [06, 00, 00, 12, 13, 14];
+	
+        ethdriver.simple = true;
+        ethdriver.cnode_size_bits = 12;
+        ethdriver.iospaces = "0x12:0x1:0x0:0";
+        ethdriver.iospace_id = 0x12;
+        ethdriver.pci_bdf = "1:0.0";
+        ethdriver.simple_untyped20_pool = 2;
+	
+        HWEthDriver.mmio_attributes = "0xf1b80000:0x80000";
+        HWEthDriver.irq_attributes = "16,1,1";
+    }
+}

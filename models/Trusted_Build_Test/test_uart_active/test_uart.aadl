@@ -1,0 +1,146 @@
+------------------------------------------------------------------
+--
+-- test_uart.aadl
+-- 
+-- This model is designed to show the interaction between an 
+-- external AADL thread and an "active" thread.  
+-- 
+-- Due to the translation infrastructure, it is much simpler to 
+-- transmit to an "active" thread than a passive one, and this
+-- is what we model here.  
+-- 
+-- 
+--
+------------------------------------------------------------------
+
+package test_uart
+public 
+   with Base_Types;
+   with Data_Model;
+   with SMACCM_SYS;   
+
+data a_array
+  
+end a_array;
+
+
+data implementation a_array.impl
+  properties
+    Data_Model::Data_Representation => Array;
+    Data_Model::Base_Type => (classifier (Base_Types::Unsigned_8));
+    Data_Model::Dimension => (64);
+end a_array.impl;
+
+
+-- Example of an external thread largely implemented by CAmkES.
+-- The dispatch logic remains, but everything else is external.
+data uart_packet
+  properties
+    Data_Model::Data_Representation => Struct;
+end uart_packet;
+
+
+data implementation uart_packet.impl
+  subcomponents
+    uart_num : data Base_Types::Integer_32;
+    datum : data Base_Types::Unsigned_8;
+end uart_packet.impl;
+
+
+--subprogram write_packet
+--features
+--	packet: in parameter uart_packet.impl;
+--	result: out parameter Base_Types::Integer_32;
+--end write_packet;
+
+--subprogram group write_packet_interface
+--features
+--	write: provides subprogram access write_packet;
+--end write_packet_interface;
+
+   
+thread uart
+	features
+		send : in event data port uart_packet.impl {
+			Compute_Entrypoint_Source_Text => "send_handler";
+		    SMACCM_SYS::Sends_Events_To => "{{}}";
+		}; 
+		
+		recv: out event data port uart_packet.impl {
+	      SMACCM_SYS::CommPrim_Source_Text => "recv_data";			
+		};
+		
+	properties 
+	    SMACCM_SYS::Is_External => true;
+	    Dispatch_Protocol => Sporadic;
+	    -- Source_Text => ("user_code/user_sender.c");
+	    Priority => 10;
+	    Stack_Size => 256 bytes;
+	    SMACCM_SYS::Thread_Type => Active ;
+	    Compute_Execution_Time => 10 us .. 50 us;
+end uart ; 
+
+	
+-- Example of an aperiodically dispatched "active" thread.   
+thread receiver
+	features
+		Input1: in event data port uart_packet.impl {
+	      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("ping_received");
+		  Source_Text => ("user_code/user_receiver.c");
+		}; 
+				
+	properties 
+	    Dispatch_Protocol => Sporadic;
+	    Priority => 12;
+	    SMACCM_SYS::Thread_Type => Active ;
+	    Stack_Size => 256 bytes;
+	    Compute_Execution_Time => 10 us .. 50 us;
+	    SMACCM_SYS::Sends_Events_To => "{{}}";
+end receiver ; 
+
+thread sender
+	features
+		Output1: out event data port uart_packet.impl {
+	      SMACCM_SYS::CommPrim_Source_Text => "ping_Output1";			
+		};
+	
+	properties 
+	    Dispatch_Protocol => Periodic;
+	    Period => 100 ms;
+		Source_Text => ("user_code/user_sender.c");
+	    SMACCM_SYS::Compute_Entrypoint_Source_Text => ("periodic_ping");
+	    Priority => 10;
+	    Stack_Size => 256 bytes;
+	    SMACCM_SYS::Thread_Type => Active ;
+	    Compute_Execution_Time => 10 us .. 50 us;
+	    SMACCM_SYS::Sends_Events_To => "{{1 Output1}}";
+end sender ; 
+
+
+process proc
+
+end proc;
+
+process implementation proc.Impl
+	subcomponents
+		s: thread sender;
+		u : thread uart;
+		r: thread receiver;
+	connections
+		s_to_u : port s.Output1 -> u.send;
+		u_to_r : port u.recv -> r.Input1;
+end proc.Impl;
+
+system test_uart
+end test_uart;
+
+system implementation test_uart.impl
+	subcomponents
+		tl: process proc.Impl;
+	properties
+		SMACCM_SYS::OS => CAmkES; 
+		SMACCM_SYS::HW => ODROID;
+		
+end test_uart.impl;
+
+end test_uart;

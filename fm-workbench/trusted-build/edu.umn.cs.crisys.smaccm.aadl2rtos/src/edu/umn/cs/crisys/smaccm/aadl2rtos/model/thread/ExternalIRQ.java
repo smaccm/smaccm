@@ -23,5 +23,5 @@ public class ExternalIRQ {
   public int getIrqId() {
     return irq_id;
   }
-  
+    
 } ; 
