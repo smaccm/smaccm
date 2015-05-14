@@ -77,4 +77,8 @@ public class ArrayType extends Type {
 	  }
 		return false;
 	}
+	
+	public Type getElemType() {
+	  return elem;
+	}
 }

@@ -36,6 +36,7 @@ public class ThreadImplementation {
 	private String dispatchProtocol; 
 	private Boolean isPassive; 
 	private Boolean isExternal = false;
+	private Boolean requiresTimeServices = false;
 	
 	// Necessary for eChronos build.  "Location" defines number of thread.
 	private int eChronosThreadLocation; 
@@ -576,6 +577,14 @@ public class ThreadImplementation {
     } else if (!name.equals(other.name))
       return false;
     return true;
+  }
+
+  public Boolean getRequiresTimeServices() {
+    return requiresTimeServices;
+  }
+
+  public void setRequiresTimeServices(Boolean requiresTimeServices) {
+    this.requiresTimeServices = requiresTimeServices;
   }
 
   

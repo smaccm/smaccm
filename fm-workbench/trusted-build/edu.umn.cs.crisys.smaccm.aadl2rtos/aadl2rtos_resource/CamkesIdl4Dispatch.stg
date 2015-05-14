@@ -41,7 +41,7 @@ contract_params(dispatchContract) ::= <<
 
 dispatcher(dispatcher) ::= <<
 <if(dispatcher.hasData)>
-void <dispatcher.idlDispatcherName>(<[{refin <dispatcher.type.name> smaccm_in}, 
+void <dispatcher.idlDispatcherName>(<[{refin <dispatcher.type.camkesName> smaccm_in}, 
 	  dispatcher.dispatchableContracts:contract_params()]; separator=",\n">); 
 <else>
 void <dispatcher.idlDispatcherName>(<dispatcher.dispatchableContracts:contract_params(); separator=",">);

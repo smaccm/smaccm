@@ -1,0 +1,14 @@
+### Eclipse Workspace Patch 1.0
+#P fr.tpt.aadl.ramses.control.support
+diff --git src/fr/tpt/aadl/ramses/control/support/instantiation/AadlModelsManagerImpl.java src/fr/tpt/aadl/ramses/control/support/instantiation/AadlModelsManagerImpl.java
+index 17ef3c3..b2f0000 100644
+--- src/fr/tpt/aadl/ramses/control/support/instantiation/AadlModelsManagerImpl.java
++++ src/fr/tpt/aadl/ramses/control/support/instantiation/AadlModelsManagerImpl.java
+@@ -112,6 +112,7 @@
+     for(Resource r : aadlModels)
+     {
+       PropertiesLinkingService pls = new PropertiesLinkingService() ;
++      if (!(r.getContents().get(0) instanceof AadlPackage)) continue;
+       AadlPackage pkg = (AadlPackage) r.getContents().get(0) ;
+       SystemImplementation si = (SystemImplementation) pls.
+                     findNamedElementInsideAadlPackage(systemToInstantiate,

@@ -49,23 +49,4 @@ public abstract class PortUtil {
     }
   }
   
-	public static int getQueueSize(org.osate.aadl2.Port port) {
-    try {
-      int queueSize = (int) PropertyUtils.getIntegerValue(port,
-        ThreadUtil.QUEUE_SIZE);
-      return queueSize; 
-    } catch (Exception e) {
-      throw new Aadl2RtosException("Error: required property 'Queue_Size' missing from port: " + port.getName());
-    }	  
-	}
-
-  public static String getCommPrimSourceTextOpt(org.osate.aadl2.Port port) {
-    try {
-      String sourceText = Util.getStringValueOpt(port,
-        ThreadUtil.SMACCM_SYS_COMMPRIM_SOURCE_TEXT);
-      return sourceText; 
-    } catch (Exception e) {
-      throw new Aadl2RtosException("Error reading CommPrimSourceText property from port: " + port.getName());
-    }
-  }	
 }

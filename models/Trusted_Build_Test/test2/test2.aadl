@@ -37,6 +37,7 @@ thread sender
 	    SMACCM_SYS::Thread_Type => Active ;
 	    Compute_Execution_Time => 10 us .. 50 us;
 	    SMACCM_SYS::Sends_Events_To => "{{1 Output1}}";
+	    SMACCM_SYS::Requires_Time_Services => true;
 end sender ; 
 
 -- Example of a periodically dispatched "Active" thread.   
@@ -52,6 +53,7 @@ thread receiver
 	    SMACCM_SYS::Thread_Type => Passive ;  -- Change to 'Monitor'
 	    Compute_Execution_Time => 10 us .. 50 us;
 	    SMACCM_SYS::Sends_Events_To => "{{}}";
+	    SMACCM_SYS::Requires_Time_Services => true;
 end receiver ; 
 
 process proc

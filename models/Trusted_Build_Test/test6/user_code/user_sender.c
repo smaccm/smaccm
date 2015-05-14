@@ -13,10 +13,10 @@ void periodic_ping(const uint64_t * periodic_100_ms) {
    test_data[3] = 3;
    printf("sender: sending test data: (%d, %d, %d, %d) to receiver \n", test_data[0], test_data[1], test_data[2], test_data[3]);
    
-   bool result = ping_Output1(&test_data);
+   bool result = ping_Output1(test_data);
    printf("sender: first attempt at pinging receiver was: %d. \n", result); 
 
-   result = ping_Output1(&test_data);
+   result = ping_Output1(test_data);
    printf("sender: second attempt at pinging receiver was: %d. \n", result); 
 
 }

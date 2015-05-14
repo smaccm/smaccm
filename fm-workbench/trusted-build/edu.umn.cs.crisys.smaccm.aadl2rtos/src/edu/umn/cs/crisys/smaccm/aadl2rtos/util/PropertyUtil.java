@@ -15,17 +15,12 @@ import org.osate.aadl2.Element;
 import org.osate.aadl2.EnumerationLiteral;
 import org.osate.aadl2.IntegerLiteral;
 import org.osate.aadl2.NamedElement;
-import org.osate.aadl2.NumberType;
-import org.osate.aadl2.NumberValue;
 import org.osate.aadl2.Property;
 import org.osate.aadl2.PropertyExpression;
-import org.osate.aadl2.PropertyType;
 import org.osate.aadl2.PropertyValue;
-import org.osate.aadl2.RangeType;
 import org.osate.aadl2.RangeValue;
 import org.osate.aadl2.UnitLiteral;
 import org.osate.aadl2.UnitsType;
-import org.osate.aadl2.impl.ReferenceValueImpl;
 import org.osate.aadl2.impl.StringLiteralImpl;
 import org.osate.aadl2.impl.ThreadTypeImpl;
 import org.osate.xtext.aadl2.properties.util.EMFIndexRetrieval;
@@ -33,7 +28,7 @@ import org.osate.xtext.aadl2.properties.util.PropertyUtils;
 
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosException;
 
-public abstract class ThreadUtil {
+public abstract class PropertyUtil {
 
 	final public static String INITIALIZE_ENTRYPOINT_SOURCE_TEXT_NAME = "Initialize_Entrypoint_Source_Text";
 	final public static String COMPUTE_ENTRYPOINT_SOURCE_TEXT_NAME = "Compute_Entrypoint_Source_Text";
@@ -71,7 +66,13 @@ public abstract class ThreadUtil {
 	final public static String ACCESS_RIGHT_NAME = "Access_Right";
   final public static String C_TYPE_NAME_NAME = "SMACCM_SYS::C_Type_Name";
   final public static String PASS_BY_REFERENCE_NAME = "SMACCM_SYS::By_Reference";
-
+  final public static String EXTERNAL_TIMER_COMPONENT_NAME = "SMACCM_SYS::External_Timer_Component";
+  final public static String CAMKES_EXTERNAL_TIMER_INTERFACE_PATH_NAME = "SMACCM_SYS::CAmkES_External_Timer_Interface_Path"; 
+  final public static String CAMKES_EXTERNAL_TIMER_COMPLETE_PATH_NAME = "SMACCM_SYS::CAmkES_External_Timer_Complete_Path";
+  final public static String CAMKES_INTERNAL_TIMER_TIMERS_PER_CLIENT_NAME = "SMACCM_SYS::CAmkES_Internal_Timer_Timers_Per_Client"; 
+  final public static String CAMKES_TIME_SERVER_AADL_THREAD_MIN_INDEX_NAME = "SMACCM_SYS::CAmkES_Time_Server_AADL_Thread_Min_Index"; 
+  final public static String REQUIRES_TIME_SERVICES_NAME = "SMACCM_SYS::Requires_Time_Services";
+  
 	final public static Property INITIALIZE_ENTRYPOINT_SOURCE_TEXT = Util
 			.getPropertyDefinitionInWorkspace(INITIALIZE_ENTRYPOINT_SOURCE_TEXT_NAME);
 	final public static Property COMPUTE_ENTRYPOINT_SOURCE_TEXT = Util
@@ -130,41 +131,25 @@ public abstract class ThreadUtil {
       .getPropertyDefinitionInWorkspace(C_TYPE_NAME_NAME);
   final public static Property PASS_BY_REFERENCE = Util
       .getPropertyDefinitionInWorkspace(PASS_BY_REFERENCE_NAME);
+  final public static Property EXTERNAL_TIMER_COMPONENT = Util
+      .getPropertyDefinitionInWorkspace(EXTERNAL_TIMER_COMPONENT_NAME);
+  final public static Property CAMKES_EXTERNAL_TIMER_INTERFACE_PATH = Util
+      .getPropertyDefinitionInWorkspace(CAMKES_EXTERNAL_TIMER_INTERFACE_PATH_NAME);
+  final public static Property CAMKES_EXTERNAL_TIMER_COMPLETE_PATH = Util
+      .getPropertyDefinitionInWorkspace(CAMKES_EXTERNAL_TIMER_COMPLETE_PATH_NAME);
+  final public static Property CAMKES_INTERNAL_TIMER_TIMERS_PER_CLIENT = Util
+      .getPropertyDefinitionInWorkspace(CAMKES_INTERNAL_TIMER_TIMERS_PER_CLIENT_NAME);
+  final public static Property CAMKES_TIME_SERVER_AADL_THREAD_MIN_INDEX = Util
+      .getPropertyDefinitionInWorkspace(CAMKES_TIME_SERVER_AADL_THREAD_MIN_INDEX_NAME);
+  final public static Property REQUIRES_TIME_SERVICES = Util
+      .getPropertyDefinitionInWorkspace(REQUIRES_TIME_SERVICES_NAME);
+      
   
-  
-	/*
-	public static List<ThreadImplementation> getTaskThreads(Collection<ThreadImplementation> collection) {
-		List<ThreadImplementation> taskThreads = new ArrayList<ThreadImplementation>();
-		for (ThreadImplementation th : collection) {
-			if (!th.isISRThread()) {
-				taskThreads.add(th);
-			}
-		}
-		return taskThreads;
-	}
-
-	public static List<ThreadImplementation> getISRThreads(Collection<ThreadImplementation> collection) {
-		List<ThreadImplementation> taskThreads = new ArrayList<ThreadImplementation>();
-
-		for (ThreadImplementation th : collection) {
-			if (th.isISRThread()) {
-				taskThreads.add(th);
-			}
-		}
-		return taskThreads;
-	}
-	
-	public static int getThreadTaskIndex(ThreadImplementation tti, ArrayList<ThreadImplementation> threads) {
-		List<ThreadImplementation> taskThreads = getTaskThreads(threads);
-		return taskThreads.indexOf(tti);
-	}
-*/
-
 	public static int getPriority(ThreadTypeImpl tti) {
 		int priority = 0;
 
 		try {
-			priority = (int) PropertyUtils.getIntegerValue(tti, ThreadUtil.PRIORITY);
+			priority = (int) PropertyUtils.getIntegerValue(tti, PropertyUtil.PRIORITY);
 		} catch(Exception e) {
 		  throw new Aadl2RtosException("Error: required property 'Priority' not found in thread: " + tti.getName());
 		}
@@ -175,7 +160,7 @@ public abstract class ThreadUtil {
 		boolean legacy = false;
 
 		try {
-			legacy = (boolean) PropertyUtils.getBooleanValue(tti, ThreadUtil.LEGACY);
+			legacy = (boolean) PropertyUtils.getBooleanValue(tti, PropertyUtil.LEGACY);
 		} catch(Exception e) {}
 		return legacy;
 	}
@@ -184,14 +169,14 @@ public abstract class ThreadUtil {
     boolean pbr = false;
 
     try {
-      pbr = (boolean) PropertyUtils.getBooleanValue(tti, ThreadUtil.PASS_BY_REFERENCE);
+      pbr = (boolean) PropertyUtils.getBooleanValue(tti, PropertyUtil.PASS_BY_REFERENCE);
     } catch(Exception e) {}
     return pbr;
   }
 
 	public static Map<String, String> getMemoryRegions(NamedElement tti) {
 	  Map<String, String> m = new HashMap<>();
-    List<String> elems = getStringList(tti, ThreadUtil.SMACCM_SYS_MEMORY_PAGES);
+    List<String> elems = getStringList(tti, PropertyUtil.SMACCM_SYS_MEMORY_PAGES);
     if (elems.size() % 2 != 0) {
       throw new Aadl2RtosException("Property 'Memory_Regions' should be list of strings arranged as string, hexidecimal integer pairs representing the name and memory region");	      
     }
@@ -228,7 +213,7 @@ public abstract class ThreadUtil {
 	public static boolean getThreadType(NamedElement tti) {
 	  EnumerationLiteral lit = null; 
 	  try {
-      lit = PropertyUtils.getEnumLiteral(tti, ThreadUtil.THREAD_TYPE);
+      lit = PropertyUtils.getEnumLiteral(tti, PropertyUtil.THREAD_TYPE);
     } catch (Exception e) {
       throw new Aadl2RtosException("Required property 'Thread_Type' not found for thread: " + tti.getName() + "Exception: " + e.toString());
     }
@@ -244,7 +229,7 @@ public abstract class ThreadUtil {
   public static String getOS(NamedElement tti) {
     EnumerationLiteral lit = null; 
     try {
-      lit = PropertyUtils.getEnumLiteral(tti, ThreadUtil.SMACCM_SYS_OS);
+      lit = PropertyUtils.getEnumLiteral(tti, PropertyUtil.SMACCM_SYS_OS);
     } catch (Exception e) {
       throw new Aadl2RtosException("Required property 'OS' not found for system instance: " + tti.getName() + "Exception: " + e.toString());
     }
@@ -253,30 +238,30 @@ public abstract class ThreadUtil {
 
   public static String getHW(NamedElement tti) {
     try {
-      return (PropertyUtils.getEnumLiteral(tti, ThreadUtil.SMACCM_SYS_HW).getName());
+      return (PropertyUtils.getEnumLiteral(tti, PropertyUtil.SMACCM_SYS_HW).getName());
     } catch (Exception e) {
       throw new Aadl2RtosException("Required property 'HW' not found for system instance: " + tti.getName() + "Exception: " + e.toString());
     }
   }
     
 	public static List<String> getExternalMutexList(NamedElement tti) {
-    return getStringList(tti, ThreadUtil.LEGACY_MUTEX_LIST);
+    return getStringList(tti, PropertyUtil.LEGACY_MUTEX_LIST);
   }
 
   public static List<String> getExternalSemaphoreList(NamedElement tti) {
-    return getStringList(tti, ThreadUtil.LEGACY_SEMAPHORE_LIST);
+    return getStringList(tti, PropertyUtil.LEGACY_SEMAPHORE_LIST);
   }
 
   public static List<String> getLegacyIRQEventList(NamedElement tti) {
-    return getStringList(tti, ThreadUtil.LEGACY_EXTERNAL_IRQ_EVENT_LIST);
+    return getStringList(tti, PropertyUtil.LEGACY_EXTERNAL_IRQ_EVENT_LIST);
   }
 	
   public static List<String> getLegacyIRQList(NamedElement tti) {
-	return getStringList(tti, ThreadUtil.LEGACY_EXTERNAL_IRQ_LIST);
+	return getStringList(tti, PropertyUtil.LEGACY_EXTERNAL_IRQ_LIST);
   }
 
   public static List<String> getExternalIRQList(NamedElement tti) {
-	return getStringList(tti, ThreadUtil.EXTERNAL_IRQ_LIST);
+	return getStringList(tti, PropertyUtil.EXTERNAL_IRQ_LIST);
   }
   
 	// returns null if there is no handler list.
@@ -285,7 +270,7 @@ public abstract class ThreadUtil {
 		try {
 			EList<Element> eList = 
 				PropertyUtils.getSimplePropertyListValue(container,  
-					ThreadUtil.SMACCM_SYS_COMPUTE_ENTRYPOINT_SOURCE_TEXT).getChildren();
+					PropertyUtil.SMACCM_SYS_COMPUTE_ENTRYPOINT_SOURCE_TEXT).getChildren();
 			
 			for (Element e : eList) {
 				StringLiteralImpl str = (StringLiteralImpl) e; 
@@ -295,7 +280,7 @@ public abstract class ThreadUtil {
 			
 		} catch (Exception e) {}
 		try {
-			String str = Util.getStringValue(container, ThreadUtil.COMPUTE_ENTRYPOINT_SOURCE_TEXT);
+			String str = Util.getStringValue(container, PropertyUtil.COMPUTE_ENTRYPOINT_SOURCE_TEXT);
 			handlerList.add(str);
 			return handlerList;			
 		} catch (Exception e) {
@@ -305,7 +290,7 @@ public abstract class ThreadUtil {
 	
   public static int getStackSizeInBytes(NamedElement thread) {
     try {
-      PropertyExpression value = PropertyUtils.getSimplePropertyValue(thread, ThreadUtil.SOURCE_STACK_SIZE);
+      PropertyExpression value = PropertyUtils.getSimplePropertyValue(thread, PropertyUtil.SOURCE_STACK_SIZE);
       IntegerLiteral intLit = (IntegerLiteral) value;
       double valInBits = intLit.getScaledValue();
       return (new Integer((int) (valInBits / 8.0))); // bits per byte.
@@ -316,7 +301,7 @@ public abstract class ThreadUtil {
 
   public static EnumerationLiteral getDispatchProtocol(ThreadTypeImpl tti) {
     try {
-      return PropertyUtils.getEnumLiteral(tti, ThreadUtil.DISPATCH_PROTOCOL);
+      return PropertyUtils.getEnumLiteral(tti, PropertyUtil.DISPATCH_PROTOCOL);
     } catch (Exception e) {
       throw new Aadl2RtosException("Required property 'Dispatch_Protocol' not found for thread: " + tti.getName());
     }
@@ -396,7 +381,7 @@ public abstract class ThreadUtil {
   public static double getPeriodInMicroseconds(NamedElement t) {
     try {
       final IntegerLiteral intLit = 
-           (IntegerLiteral) PropertyUtils.getSimplePropertyValue(t, ThreadUtil.PERIOD);
+           (IntegerLiteral) PropertyUtils.getSimplePropertyValue(t, PropertyUtil.PERIOD);
       double valInPicoseconds = intLit.getScaledValue();
       return valInPicoseconds / 1000000.0; // microseconds per picosecond.
     } catch (Exception e) {
@@ -406,7 +391,7 @@ public abstract class ThreadUtil {
 
   public static double getMinComputeExecutionTimeInMicroseconds(NamedElement t) {
     try {
-      final PropertyExpression pv = PropertyUtils.getSimplePropertyValue(t, ThreadUtil.COMPUTE_EXECUTION_TIME);
+      final PropertyExpression pv = PropertyUtils.getSimplePropertyValue(t, PropertyUtil.COMPUTE_EXECUTION_TIME);
       final RangeValue rv = (RangeValue) pv;
       final PropertyValue minVal = rv.getMinimumValue();
       IntegerLiteral intLit = (IntegerLiteral) minVal;
@@ -419,7 +404,7 @@ public abstract class ThreadUtil {
 
   public static double getMaxComputeExecutionTimeInMicroseconds(NamedElement t) {
     try {
-      final PropertyExpression pv = PropertyUtils.getSimplePropertyValue(t, ThreadUtil.COMPUTE_EXECUTION_TIME);
+      final PropertyExpression pv = PropertyUtils.getSimplePropertyValue(t, PropertyUtil.COMPUTE_EXECUTION_TIME);
       final RangeValue rv = (RangeValue) pv;
       final PropertyValue minVal = rv.getMaximumValue();
       IntegerLiteral intLit = (IntegerLiteral) minVal;
@@ -430,5 +415,53 @@ public abstract class ThreadUtil {
     }
   }
 
+  public static int getQueueSize(org.osate.aadl2.Port port) {
+    try {
+      int queueSize = (int) PropertyUtils.getIntegerValue(port,
+        PropertyUtil.QUEUE_SIZE);
+      return queueSize; 
+    } catch (Exception e) {
+      throw new Aadl2RtosException("Error: required property 'Queue_Size' missing from port: " + port.getName());
+    }   
+  }
 
+  /*
+  public static String getCommPrimSourceTextOpt(org.osate.aadl2.Port port) {
+    try {
+      String sourceText = Util.getStringValueOpt(port,
+        PropertyUtil.SMACCM_SYS_COMMPRIM_SOURCE_TEXT);
+      return sourceText; 
+    } catch (Exception e) {
+      throw new Aadl2RtosException("Error reading CommPrimSourceText property from port: " + port.getName());
+    }
+  } 
+  */
+
+  /*
+  public static List<ThreadImplementation> getTaskThreads(Collection<ThreadImplementation> collection) {
+    List<ThreadImplementation> taskThreads = new ArrayList<ThreadImplementation>();
+    for (ThreadImplementation th : collection) {
+      if (!th.isISRThread()) {
+        taskThreads.add(th);
+      }
+    }
+    return taskThreads;
+  }
+
+  public static List<ThreadImplementation> getISRThreads(Collection<ThreadImplementation> collection) {
+    List<ThreadImplementation> taskThreads = new ArrayList<ThreadImplementation>();
+
+    for (ThreadImplementation th : collection) {
+      if (th.isISRThread()) {
+        taskThreads.add(th);
+      }
+    }
+    return taskThreads;
+  }
+  
+  public static int getThreadTaskIndex(ThreadImplementation tti, ArrayList<ThreadImplementation> threads) {
+    List<ThreadImplementation> taskThreads = getTaskThreads(threads);
+    return taskThreads.indexOf(tti);
+  }
+*/
 }
