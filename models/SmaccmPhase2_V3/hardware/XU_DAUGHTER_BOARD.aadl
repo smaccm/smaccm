@@ -22,7 +22,7 @@ system implementation XU_DAUGHTER_BOARD.i
     baro_spi : bus access ide.SPI_1 <-> baro.spi;
     accel_spi : bus access ide.SPI_1 <-> accel.spi;
     uart_0_uart_ext : port ide.UART_0 <-> exp.UART_EXT;
-    
+     
 end XU_DAUGHTER_BOARD.i;
 
 --devices
