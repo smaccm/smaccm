@@ -539,11 +539,13 @@ public class AadlModelParser {
     String name = tti.getName().toLowerCase();
     boolean isPassive = PropertyUtil.getThreadType(tti);    
     int priority = -1; 
-    int stackSize = -1;
+    int stackSize = 4096;
     
     if (!isPassive) {
       priority = PropertyUtil.getPriority(tti);
-      stackSize = PropertyUtil.getStackSizeInBytes(tti);
+      
+      // MWW TODO: temporary until after May 15 code drop
+      stackSize = Integer.max(PropertyUtil.getStackSizeInBytes(tti), 4096);
     } else {
       // TODO: Compute priorities for passive threads.
       priority = 200; 

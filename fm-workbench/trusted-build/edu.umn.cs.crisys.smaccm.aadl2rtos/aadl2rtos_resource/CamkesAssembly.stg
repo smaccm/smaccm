@@ -189,6 +189,13 @@ assemblySetPriorities(threadImpl) ::= <<
 <endif>
 >>
 
+assemblySetStackSize(threadImpl) ::= <<
+<if(! threadImpl.isExternal)>
+<threadImpl.componentInstanceName>._control_stack_size = <threadImpl.stackSize>;	
+
+<endif>
+>>
+
 assemblyConnectTimeServices(threadImpl, model) ::= <<
 <if(threadImpl.requiresTimeServices)><\\>
 <if(model.externalTimerComponent)>
@@ -297,7 +304,7 @@ assembly {
 		<endif>
 		<model.irqDispatchers:constructIRQConfig()>
 		<model.threadImplementations:assemblySetPriorities()>
-		
+		<model.threadImplementations:assemblySetStackSize()>		
 		<model.threadImplementations:configConnectTimeServices(model)>
     }
 }

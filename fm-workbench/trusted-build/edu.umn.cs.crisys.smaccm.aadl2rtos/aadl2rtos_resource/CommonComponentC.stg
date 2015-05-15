@@ -549,6 +549,11 @@ void <activeThreadInternalDispatcherName(dispatcher)>(<if(dispatcher.hasData)><d
 
 >>
 
+// For proper initializer that can call other functions: 
+	// need notion of 'dispatchable contracts' for thread.
+	// the dispatcher function in this case is the initializer, 
+	// The dispatcher function args are from the dispatch contract.
+
 aadlDispatcherFunctionPrototype(dispatcher) ::=  <<
 void <activeThreadInternalDispatcherName(dispatcher)>(<if(dispatcher.hasData)><dispatcher.type.aadlInputType.name> <dispatcher.name><endif>); 
 
