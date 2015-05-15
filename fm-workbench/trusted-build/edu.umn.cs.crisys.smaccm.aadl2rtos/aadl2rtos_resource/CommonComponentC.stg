@@ -665,6 +665,7 @@ drainDispatcher(dispatcher) ::= <<
 <dispatcher:eventDispatcher()>
 <elseif(dispatcher.isEventData)>
 <dispatcher:eventDataDispatcher()>
+<elseif(dispatcher.isInitializer)>
 <else>
 	ERROR: dispatcher is not of periodic, IRQ, Event, or EventData type.
 <endif>
@@ -675,7 +676,7 @@ dispatcherComponentEventDecls(dispatcher) ::=  <<
 
 <if(dispatcher.isPeriodic)><dispatcherComponentPeriodicEventDecls(dispatcher)>
 <elseif(dispatcher.isIRQ)><dispatcherComponentIRQEventDecls(dispatcher)>
-<elseif(dispatcher.isInput)><else> ERROR: dispatcher is not IRQ, Event Data, or Periodic
+<elseif(dispatcher.isInput)><elseif(dispatcher.isInitializer)><else> ERROR: dispatcher is not IRQ, Event Data, or Periodic
 <endif>
 >>
 
@@ -699,7 +700,8 @@ int run() {
 	<threadImpl.portList:portInitializer()>
 	
 	// thread initialization routines (if any)...
-	<if(threadImpl.hasInitializeEntrypoint)><threadImpl.initializeEntrypointOpt.handlerName>();<endif>
+	<if(threadImpl.hasInitializeEntrypoint)>
+	  <activeThreadInternalDispatcherName(threadImpl.initializeEntrypointOpt)>();<endif>
 
 	// register interrupt handlers (if any)...
 	<threadImpl.dispatchers:registerIRQs()>

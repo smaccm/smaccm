@@ -207,10 +207,11 @@ connection seL4TimeServer <threadImpl.timeServicesConnectionName>(from <threadIm
 >>
 
 configConnectTimeServices(threadImpl, model) ::= <<
+<if(threadImpl.requiresTimeServices)>
 <threadImpl.componentInstanceName>.timer_attributes = "<model.generateCamkesTimeServerThreadIndex>"; 
 <threadImpl.componentInstanceName>.timer_global_endpoint = "<threadImpl.timeServicesConnectionName>";
 <threadImpl.componentInstanceName>.timer_complete_global_endpoint = "<threadImpl.timeServicesConnectionName>";				
-
+<endif>
 >>
 
 camkesAssemblyBody(model) ::= <<
@@ -244,8 +245,7 @@ assembly {
         <if(model.threadCalendar.hasDispatchers)>
         // Periodic components
         <constructPeriodicComponent(model.threadCalendar)>
-		<endif>
-		
+
 		<if(!model.externalTimerComponent)>
 		<if(model.isQemuTarget)>
 		component TimeServerKZM time_server;
@@ -255,6 +255,8 @@ assembly {
 		// MWW TODO: Fill in time server component HERE.  Need to determine time server for Intel platforms.
 		<endif>
 		<endif>
+		<endif>
+		
 		
 		// IRQ-handling hardware components
 		<model.irqDispatchers:assemblyIrqComponent()>

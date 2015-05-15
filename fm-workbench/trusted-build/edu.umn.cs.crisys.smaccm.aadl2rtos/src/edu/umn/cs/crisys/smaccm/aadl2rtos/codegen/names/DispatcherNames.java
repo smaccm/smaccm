@@ -11,6 +11,7 @@ import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosException;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.Dispatcher;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.ExternalHandler;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.IRQDispatcher;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.InitializerDispatcher;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.InputEventDispatcher;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.OutgoingDispatchContract;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.PeriodicDispatcher;
@@ -70,6 +71,10 @@ public class DispatcherNames {
   public boolean getIsEventData() {
     return (getIsInput()) &&
         ((InputEventDispatcher)dp).getEventPort().hasData(); 
+  }
+  
+  public boolean getIsInitializer() {
+    return dp instanceof InitializerDispatcher;
   }
   
   //////////////////////////////////////////////////////////

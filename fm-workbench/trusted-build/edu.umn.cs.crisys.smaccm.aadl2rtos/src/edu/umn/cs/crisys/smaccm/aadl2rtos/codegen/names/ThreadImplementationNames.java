@@ -354,8 +354,8 @@ public class ThreadImplementationNames {
     return ti.getInitializeEntrypointOpt() != null;
   }
   
-  public ExternalHandlerNames getInitializeEntrypointOpt() {
-    return new ExternalHandlerNames(ti.getInitializeEntrypointOpt()); 
+  public DispatcherNames getInitializeEntrypointOpt() {
+    return new DispatcherNames(ti.getInitializeEntrypointOpt()); 
   }
   
   public String getComponentName() {
