@@ -336,7 +336,7 @@ bool <srcPort.aadlWriterFnName>(const <srcPort.type.aadlInputType.name> <srcPort
 >>
 
 componentRemoteWriterDecl(srcPort) ::= <<
-<componentRemoteCallerFunction(srcPort, srcPort.singletonConnection.destPort)>
+<componentRemoteCallerFunction(srcPort.singletonConnection.destPort, srcPort)>
 >>
 
 /////////////////////////////////////////////////////////////////////
@@ -459,8 +459,8 @@ aadlDispatcherDeclareData(dispatcherContract) ::= <<
 >>
 
 aadlDispatcherPassiveCallOutPortArg(port) ::= <<
-<if(port.hasData)>		<port.type.valToAadlOutput><port.data>,<endif>
-		<port.type.valToAadlOutput><port.index> >>
+<if(port.hasData)>& <port.data>,<endif>
+		& <port.index> >>
 
 aadlDispatcherPassiveCallOutArg(dispatchContract) ::= "<aadlDispatcherPassiveCallOutPortArg(dispatchContract.port)>"
 
@@ -485,8 +485,10 @@ aadlDispatcherCallPassiveTarget(portDest,portSrc) ::= <<
 
 aadlDispatcherCallActiveTarget(portDest,portSrc) ::= <<
 // Calling an active dispatch target.
-<outgoingPortWriterName(portDest,portSrc)>(<aadlDispatcherWriteActiveArg(portSrc)>);	
-
+{
+  bool remoteCallSuccessful = <outgoingPortWriterName(portDest,portSrc)>(<aadlDispatcherWriteActiveArg(portSrc)>);	
+  assert(remoteCallSuccessful);
+}
 >>
 
 aadlDispatcherSendLoop(dispatchContract,dispatcher) ::= <<
@@ -513,7 +515,7 @@ aadlDispatcherFunctionName(dispatcher) ::= <<
  
 aadlDispatcherFunctionArgs(dispatcher) ::= 
 << <if(dispatcher.hasData)><\\>
-	 <[{ <dispatcher.type.aadlInputToCamkesInput> <dispatcher.name>}, dispatcher.dispatchableContracts:aadlDispatcherPassiveCallOutArg() ];separator=", \n"> 
+	 <[{<dispatcher.type.aadlInputToCamkesInput> <dispatcher.name>}, dispatcher.dispatchableContracts:aadlDispatcherPassiveCallOutArg() ];separator=", \n"> 
 	 <else><\\>
 	<dispatcher.dispatchableContracts:aadlDispatcherPassiveCallOutArg();separator=", \n"> <endif>
 >>
@@ -546,6 +548,11 @@ void <activeThreadInternalDispatcherName(dispatcher)>(<if(dispatcher.hasData)><d
 }
 
 >>
+
+// For proper initializer that can call other functions: 
+	// need notion of 'dispatchable contracts' for thread.
+	// the dispatcher function in this case is the initializer, 
+	// The dispatcher function args are from the dispatch contract.
 
 aadlDispatcherFunctionPrototype(dispatcher) ::=  <<
 void <activeThreadInternalDispatcherName(dispatcher)>(<if(dispatcher.hasData)><dispatcher.type.aadlInputType.name> <dispatcher.name><endif>); 
@@ -658,6 +665,7 @@ drainDispatcher(dispatcher) ::= <<
 <dispatcher:eventDispatcher()>
 <elseif(dispatcher.isEventData)>
 <dispatcher:eventDataDispatcher()>
+<elseif(dispatcher.isInitializer)>
 <else>
 	ERROR: dispatcher is not of periodic, IRQ, Event, or EventData type.
 <endif>
@@ -668,7 +676,7 @@ dispatcherComponentEventDecls(dispatcher) ::=  <<
 
 <if(dispatcher.isPeriodic)><dispatcherComponentPeriodicEventDecls(dispatcher)>
 <elseif(dispatcher.isIRQ)><dispatcherComponentIRQEventDecls(dispatcher)>
-<elseif(dispatcher.isInput)><else> ERROR: dispatcher is not IRQ, Event Data, or Periodic
+<elseif(dispatcher.isInput)><elseif(dispatcher.isInitializer)><else> ERROR: dispatcher is not IRQ, Event Data, or Periodic
 <endif>
 >>
 
@@ -692,7 +700,8 @@ int run() {
 	<threadImpl.portList:portInitializer()>
 	
 	// thread initialization routines (if any)...
-	<if(threadImpl.hasInitializeEntrypoint)><threadImpl.initializeEntrypointOpt.handlerName>();<endif>
+	<if(threadImpl.hasInitializeEntrypoint)>
+	  <activeThreadInternalDispatcherName(threadImpl.initializeEntrypointOpt)>();<endif>
 
 	// register interrupt handlers (if any)...
 	<threadImpl.dispatchers:registerIRQs()>
@@ -721,7 +730,7 @@ int run() {
 
 
 portDispatchVarDeclarations(port) ::= <<
-<if(port.hasData)><port.type.aadlOutputType.name> <port.globalData>; <endif>
+<if(port.hasData)><port.type.queueType.name> <port.globalData>; <endif>
 <port.indexType.aadlOutputType.name> <port.globalIndex>;
 <port.indexType.name> <port.globalMaxDispatchSize>; 	
 
@@ -746,6 +755,7 @@ componentCFileDecls(threadImpl) ::= <<
 // Local prototypes for AADL dispatchers
 //
 ///////////////////////////////////////////////////////////////////////////
+<threadImpl.dispatchers:aadlDispatcherFunctionPrototype()> 
 <threadImpl.passiveDispatcherRegion:aadlDispatcherFunctionPrototype()> 
 <endif>
 
@@ -763,6 +773,7 @@ componentCFileDecls(threadImpl) ::= <<
 
 <if(threadImpl.isActive)><\\>
 <threadImpl.localActiveThreadConnectionFrontier:componentLocalCallerFunction()>
+<threadImpl.dispatchers:aadlDispatcherFunction()>
 <threadImpl.passiveDispatcherRegion:aadlDispatcherFunction()> 
 <if(threadImpl.isExternal)><\\>
 ////////////////////////////////////////////////////////////////////////////

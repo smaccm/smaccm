@@ -140,13 +140,14 @@ public class ModelNames {
 		return m.getExternalIRQs();
   }
 
-  
-  int connNumber = 0; 
   public String getGenerateConnectionName() {
-    connNumber++; 
-    return "conn" + connNumber;
+    return "conn" + m.getGenerateConnectionNumber();
   }
 
+  public String getGenerateCamkesTimeServerThreadIndex() {
+    return Integer.toString(m.getGenerateCamkesTimeServerThreadIndex());
+  }
+  
   public boolean getIsCamkesTarget() {
     return m.getOsTarget().equals(Model.OSTarget.CAmkES);
   }
@@ -187,4 +188,23 @@ public class ModelNames {
 	return m.getExternalIRQEvents();
   }
 
+  public boolean getExternalTimerComponent() {
+    return m.isExternalTimerComponent();
+  }
+  
+  public String getCamkesExternalTimerInterfacePath() {
+    return m.getCamkesExternalTimerInterfacePath();
+  }
+  
+  public String getCamkesExternalTimerCompletePath() {
+    return m.getCamkesExternalTimerCompletePath();
+  }
+  
+  public String getCamkesInternalTimerTimersPerClient() {
+    return Integer.toString(m.getCamkesInternalTimerTimersPerClient());
+  }
+  
+  public String getCamkesTimeServerAadlThreadMinIndex() {
+    return Integer.toString(m.getCamkesTimeServerAadlThreadMinIndex());
+  }
 }

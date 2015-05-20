@@ -288,6 +288,10 @@ public class ThreadImplementationNames {
     return ti.getIsExternal();
   }
   
+  public boolean getRequiresTimeServices() {
+    return ti.getRequiresTimeServices();
+  }
+
   //////////////////////////////////////////////////////////
   //
   // 'root' name
@@ -350,8 +354,8 @@ public class ThreadImplementationNames {
     return ti.getInitializeEntrypointOpt() != null;
   }
   
-  public ExternalHandlerNames getInitializeEntrypointOpt() {
-    return new ExternalHandlerNames(ti.getInitializeEntrypointOpt()); 
+  public DispatcherNames getInitializeEntrypointOpt() {
+    return new DispatcherNames(ti.getInitializeEntrypointOpt()); 
   }
   
   public String getComponentName() {
@@ -373,6 +377,11 @@ public class ThreadImplementationNames {
   public String getComponentDispatcherInterfaceVarIdName() {
     return "dispatch";
   }
+  
+  public String getTimeServicesConnectionName() {
+    return ti.getNormalizedName() + "_time_services"; 
+  }
+  
   //////////////////////////////////////////////////////////
   //
   // Function names

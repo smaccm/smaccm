@@ -124,7 +124,7 @@ public class AadlModelParser {
 		ThreadInstance.init();
 		
 		// find the OS and target hardware
-		String OS = ThreadUtil.getOS(sysimpl);
+		String OS = PropertyUtil.getOS(sysimpl);
 	  if ("echronos".equalsIgnoreCase(OS)) {
 	    model.setOsTarget(Model.OSTarget.eChronos);
 	  } else if ("camkes".equalsIgnoreCase(OS)) {
@@ -134,11 +134,11 @@ public class AadlModelParser {
 	    throw new Aadl2RtosException("Parse failure on OS target property ");
 	  }
 
-	  String HW = ThreadUtil.getHW(sysimpl); 
+	  String HW = PropertyUtil.getHW(sysimpl); 
 	  model.setHWTarget(HW);
 	  
 	  // note: may be null, and that's o.k.
-	  model.setOutputDirectory(Util.getStringValueOpt(sysimpl, ThreadUtil.SMACCM_SYS_OUTPUT_DIRECTORY));
+	  model.setOutputDirectory(Util.getStringValueOpt(sysimpl, PropertyUtil.SMACCM_SYS_OUTPUT_DIRECTORY));
 	  
 		threadTypeImplList = new ArrayList<ThreadTypeImpl>();
 		threadInstanceList = new ArrayList<ComponentInstance>();
@@ -152,10 +152,40 @@ public class AadlModelParser {
 		findTopLevelComponentInstances(systemInstance);
 
 		
-		// create the SystickIRQ value, if it exists.
+		// create properties related to timers.
 		try {
-		  this.model.generateSystickIRQ = PropertyUtils.getBooleanValue(systemImplementation, ThreadUtil.GENERATE_SCHEDULER_SYSTICK_IRQ);
-		} catch (Exception e) {}
+		  this.model.generateSystickIRQ = PropertyUtils.getBooleanValue(systemImplementation, PropertyUtil.GENERATE_SCHEDULER_SYSTICK_IRQ);
+		  this.model.externalTimerComponent = PropertyUtils.getBooleanValue(systemImplementation, PropertyUtil.EXTERNAL_TIMER_COMPONENT);
+		} catch (Exception e) {
+      this.logger.error("Unexpected internal exception: properties [generateSystickIRQ, externalTimerComponent] should have default value in SMACCM_SYS, but were not found.");
+      throw new Aadl2RtosException("Parse failure on one of [generateSystickIRQ, externalTimerComponent] target property ");
+		}
+		
+		try {
+		  if (this.model.getOsTarget() == OSTarget.CAmkES) {
+		    this.model.camkesTimeServerAadlThreadMinIndex = (int)PropertyUtils.getIntegerValue(systemImplementation, PropertyUtil.CAMKES_TIME_SERVER_AADL_THREAD_MIN_INDEX);
+		  }
+		} catch (Exception e) {
+      this.logger.error("Property camkesTimeServerAadlThreadMinIndex must be assigned for CAmkES target.");
+      throw new Aadl2RtosException("Parse failure on [camkesTimeServerAadlThreadMinIndex] target property ");
+		}
+		
+		if (this.model.externalTimerComponent) {
+		  try {
+		    this.model.camkesExternalTimerCompletePath = PropertyUtils.getStringValue(systemImplementation, PropertyUtil.CAMKES_EXTERNAL_TIMER_COMPLETE_PATH);
+		    this.model.camkesExternalTimerInterfacePath = PropertyUtils.getStringValue(systemImplementation, PropertyUtil.CAMKES_EXTERNAL_TIMER_INTERFACE_PATH);
+		  } catch (Exception e) {
+		    this.logger.error("Error in system implementation: if property External_Timer_Component is true, then properties: {SMACCM_SYS::CAmkES_External_Timer_Interface_Path, SMACCM_SYS::CAmkES_External_Timer_Complete_Path} must also be defined.");
+		    throw new Aadl2RtosException("Parse failure on external timer component properties.");
+		  }
+		} else {
+		  try {
+		    this.model.camkesInternalTimerTimersPerClient = (int)PropertyUtils.getIntegerValue(systemImplementation, PropertyUtil.CAMKES_INTERNAL_TIMER_TIMERS_PER_CLIENT);
+		  } catch (Exception e) {
+	      this.logger.error("Unexpected internal exception: property [camkesInternalTimerTimersPerClient] should have default value but were not found.");
+	      throw new Aadl2RtosException("Parse failure on [camkesInternalTimerTimersPerClient] target property ");
+		  }
+		}
 		
 		// Initialize thread implementations
 		constructThreadImplMap();
@@ -229,29 +259,29 @@ public class AadlModelParser {
   
   void addIrqHandler(PortImpl port, ThreadImplementation ti) {
     try {
-      List<String> entrypoints = ThreadUtil.getComputeEntrypointList(port);
+      List<String> entrypoints = PropertyUtil.getComputeEntrypointList(port);
       if (entrypoints == null) { 
          throw new Aadl2RtosException("missing entrypoints");
       }
-      List<String> files = Util.getSourceTextListOpt(port,ThreadUtil.SOURCE_TEXT);
-      String signal_name = Util.getStringValue(port, ThreadUtil.SMACCM_SYS_SIGNAL_NAME);
-      String flih_handler = Util.getStringValue(port, ThreadUtil.ISR_HANDLER);
+      List<String> files = Util.getSourceTextListOpt(port,PropertyUtil.SOURCE_TEXT);
+      String signal_name = Util.getStringValue(port, PropertyUtil.SMACCM_SYS_SIGNAL_NAME);
+      String flih_handler = Util.getStringValue(port, PropertyUtil.ISR_HANDLER);
       int signal_number ;
       try {
-        signal_number = (int)PropertyUtils.getIntegerValue(port, ThreadUtil.SMACCM_SYS_SIGNAL_NUMBER);
+        signal_number = (int)PropertyUtils.getIntegerValue(port, PropertyUtil.SMACCM_SYS_SIGNAL_NUMBER);
       } catch (NumberFormatException nfe) {
         logger.error("ISR Port " + port.getName() + ": signal number is not a positive integer. Original error: " + nfe.toString());
         throw new Aadl2RtosException("ISR construction error");
       }
       Map<String, String> memoryRegions;
-      memoryRegions = ThreadUtil.getMemoryRegions(port);
+      memoryRegions = PropertyUtil.getMemoryRegions(port);
       ArrayList<ExternalHandler> ehl = new ArrayList<ExternalHandler>();
       for (String s: entrypoints) {
           ExternalHandler eh = new ExternalHandler(s);
           ehl.add(eh);
       }
       IRQDispatcher disp = new IRQDispatcher(ti, ehl, signal_name, signal_number, flih_handler, memoryRegions);
-      String sendsEventsTo = Util.getStringValueOpt(port, ThreadUtil.SMACCM_SYS_SENDS_EVENTS_TO);
+      String sendsEventsTo = Util.getStringValueOpt(port, PropertyUtil.SMACCM_SYS_SENDS_EVENTS_TO);
       disp.setOptSendsEventsToString(sendsEventsTo);
       disp.setImplementationFileList(files);
       ti.addDispatcher(disp);
@@ -262,7 +292,7 @@ public class AadlModelParser {
   }
   
 	InputEventPort addInputEventPort(PortImpl port, Type datatype, ThreadImplementation ti) {
-    int queueSize = PortUtil.getQueueSize(port); 
+    int queueSize = PropertyUtil.getQueueSize(port); 
     InputEventPort iep = new InputEventPort(port.getName(), datatype, ti, queueSize);
     if (iep.hasData()) {
       ti.addInputEventDataPort(iep);
@@ -270,7 +300,7 @@ public class AadlModelParser {
       ti.addInputEventPort(iep);
     }
     
-    List<String> entrypoints = ThreadUtil.getComputeEntrypointList(port);
+    List<String> entrypoints = PropertyUtil.getComputeEntrypointList(port);
     if (entrypoints != null) {
       ArrayList<ExternalHandler> ehl = new ArrayList<ExternalHandler>();
       for (String s: entrypoints) {
@@ -278,8 +308,8 @@ public class AadlModelParser {
           ehl.add(eh);
       }
       InputEventDispatcher disp = new InputEventDispatcher(ti, ehl, iep);
-      List<String> files = Util.getSourceTextListOpt(port,ThreadUtil.SOURCE_TEXT);
-      String sendsEventsTo = Util.getStringValueOpt(port, ThreadUtil.SMACCM_SYS_SENDS_EVENTS_TO);
+      List<String> files = Util.getSourceTextListOpt(port,PropertyUtil.SOURCE_TEXT);
+      String sendsEventsTo = Util.getStringValueOpt(port, PropertyUtil.SMACCM_SYS_SENDS_EVENTS_TO);
       disp.setOptSendsEventsToString(sendsEventsTo);
       disp.setImplementationFileList(files);
       iep.setDispatcher(disp);
@@ -310,7 +340,7 @@ public class AadlModelParser {
     } else if (port.getCategory() == PortCategory.EVENT) {
       if (port.getDirection() == DirectionType.IN) {
         // handle IRQs specially
-        if (ThreadUtil.getIsIsr(port)) {
+        if (PropertyUtil.getIsIsr(port)) {
           dp = null;
           addIrqHandler(port, ti); 
         } else {
@@ -323,7 +353,7 @@ public class AadlModelParser {
       }
     } else if (port.getCategory() == PortCategory.EVENT_DATA) {
       if (port.getDirection() == DirectionType.IN) {
-        if (ThreadUtil.getIsIsr(port)) {
+        if (PropertyUtil.getIsIsr(port)) {
           dp = null;
           throw new Aadl2RtosException("ISR ports can only be event ports.");
         } else {
@@ -337,9 +367,9 @@ public class AadlModelParser {
     }
 
     if (dp != null) {
-      String initializeEntrypointSourceText = Util.getStringValueOpt(port, ThreadUtil.INITIALIZE_ENTRYPOINT_SOURCE_TEXT);
-      String commprimFnNameOpt = Util.getStringValueOpt(port, ThreadUtil.SMACCM_SYS_COMMPRIM_SOURCE_TEXT);
-      String commprimHeaderNameOpt = Util.getStringValueOpt(port, ThreadUtil.SMACCM_SYS_COMMPRIM_SOURCE_HEADER);
+      String initializeEntrypointSourceText = Util.getStringValueOpt(port, PropertyUtil.INITIALIZE_ENTRYPOINT_SOURCE_TEXT);
+      String commprimFnNameOpt = Util.getStringValueOpt(port, PropertyUtil.SMACCM_SYS_COMMPRIM_SOURCE_TEXT);
+      String commprimHeaderNameOpt = Util.getStringValueOpt(port, PropertyUtil.SMACCM_SYS_COMMPRIM_SOURCE_HEADER);
       dp.setCommprimFnNameOpt(commprimFnNameOpt);
       dp.setCommprimHeaderNameOpt(commprimHeaderNameOpt);
       if (initializeEntrypointSourceText != null) {
@@ -359,7 +389,7 @@ public class AadlModelParser {
   private void setDispatchProtocol(ThreadTypeImpl tti, ThreadImplementation ti, boolean isPassive) {
     EnumerationLiteral dispatchProtocol;  
     try {
-      dispatchProtocol = ThreadUtil.getDispatchProtocol(tti);
+      dispatchProtocol = PropertyUtil.getDispatchProtocol(tti);
     } catch (Exception e) {
       throw new Aadl2RtosException(
           "Dispatch protocol not found for thread: " + tti.getFullName());
@@ -387,17 +417,17 @@ public class AadlModelParser {
     if ((dpName.equalsIgnoreCase("Periodic") || 
          dpName.equalsIgnoreCase("Hybrid"))) {
       try {
-        double periodInUs = ThreadUtil.getPeriodInMicroseconds(tti);
+        double periodInUs = PropertyUtil.getPeriodInMicroseconds(tti);
         int period = (int)(periodInUs / 1000.0);
-        List<String> entrypointNameList = ThreadUtil.getComputeEntrypointList(tti); 
+        List<String> entrypointNameList = PropertyUtil.getComputeEntrypointList(tti); 
         List<ExternalHandler> handlerList = new ArrayList<ExternalHandler>();
         for (String entrypoint : entrypointNameList) {
           handlerList.add(new ExternalHandler(entrypoint)); 
         }
         Dispatcher d = new PeriodicDispatcher(ti, handlerList, period);
-        String sendsEventsTo = Util.getStringValueOpt(tti, ThreadUtil.SMACCM_SYS_SENDS_EVENTS_TO);
+        String sendsEventsTo = Util.getStringValueOpt(tti, PropertyUtil.SMACCM_SYS_SENDS_EVENTS_TO);
         d.setOptSendsEventsToString(sendsEventsTo);
-        d.setImplementationFileList(Util.getSourceTextListOpt(tti, ThreadUtil.SOURCE_TEXT));
+        d.setImplementationFileList(Util.getSourceTextListOpt(tti, PropertyUtil.SOURCE_TEXT));
         ti.addDispatcher(d);
       } catch (Exception e) {
         throw new Aadl2RtosException(
@@ -467,7 +497,7 @@ public class AadlModelParser {
   
   private void constructDispatchLimits(ThreadTypeImpl tti, ThreadImplementation ti) {
     try {
-      String sendsEventsTo = Util.getStringValueOpt(tti, ThreadUtil.SMACCM_SYS_SENDS_EVENTS_TO);
+      String sendsEventsTo = Util.getStringValueOpt(tti, PropertyUtil.SMACCM_SYS_SENDS_EVENTS_TO);
       List<OutputEventPort> outputs = ti.getAllOutputEventPorts();
       SendsToWalker threadSurrogate = null;
       
@@ -499,30 +529,37 @@ public class AadlModelParser {
   }
   
   private void createOptInitializeEntrypoint(ThreadTypeImpl tti, ThreadImplementation ti) {
-    String initializer = Util.getStringValueOpt(tti, ThreadUtil.INITIALIZE_ENTRYPOINT_SOURCE_TEXT);
+    String initializer = Util.getStringValueOpt(tti, PropertyUtil.INITIALIZE_ENTRYPOINT_SOURCE_TEXT);
     if (initializer != null) {
-      ti.setInitializeEntrypointOpt(new ExternalHandler(initializer));
+      ExternalHandler handler = new ExternalHandler(initializer);
+      ArrayList<ExternalHandler> handlers = new ArrayList<ExternalHandler>();
+      handlers.add(handler); 
+      InitializerDispatcher id = new InitializerDispatcher(ti, handlers);
+      ti.setInitializeEntrypointOpt(id);
+      ti.addDispatcher(id);
     }
   }
   
   private ThreadImplementation constructThreadImplementation(ThreadTypeImpl tti) {
     String name = tti.getName().toLowerCase();
-    boolean isPassive = ThreadUtil.getThreadType(tti);    
+    boolean isPassive = PropertyUtil.getThreadType(tti);    
     int priority = -1; 
-    int stackSize = -1;
+    int stackSize = 4096;
     
     if (!isPassive) {
-      priority = ThreadUtil.getPriority(tti);
-      stackSize = ThreadUtil.getStackSizeInBytes(tti);
+      priority = PropertyUtil.getPriority(tti);
+      
+      // MWW TODO: temporary until after May 15 code drop
+      stackSize = java.lang.Math.max(PropertyUtil.getStackSizeInBytes(tti), 4096);
     } else {
       // TODO: Compute priorities for passive threads.
-      priority = 300; 
+      priority = 200; 
       try {
-        ThreadUtil.getPriority(tti);
+        PropertyUtil.getPriority(tti);
         logger.warn("Warning: priority ignored for passive thread: " + name);
       } catch (Aadl2RtosException e) {}
       try {
-        ThreadUtil.getStackSizeInBytes(tti); 
+        PropertyUtil.getStackSizeInBytes(tti); 
         logger.warn("Warning: stack size ignored for passive thread: " + name);
       } catch (Aadl2RtosException e) {}
     }
@@ -531,15 +568,17 @@ public class AadlModelParser {
     ThreadImplementation ti = 
         new ThreadImplementation(model, name, priority, stackSize, generatedEntrypoint, isPassive);
 
-    double minComputeTime = ThreadUtil.getMinComputeExecutionTimeInMicroseconds(tti);
-    double maxComputeTime = ThreadUtil.getMaxComputeExecutionTimeInMicroseconds(tti);
-    boolean isExternal = ThreadUtil.getIsExternal(tti);
-    List<String> externalMutexList = (ArrayList<String>) ThreadUtil.getExternalMutexList(tti);
-    List<String> externalSemaphoreList = (ArrayList<String>) ThreadUtil.getExternalSemaphoreList(tti);
+    double minComputeTime = PropertyUtil.getMinComputeExecutionTimeInMicroseconds(tti);
+    double maxComputeTime = PropertyUtil.getMaxComputeExecutionTimeInMicroseconds(tti);
+    boolean isExternal = PropertyUtil.getIsExternal(tti);
+    boolean requiresTimeServices = PropertyUtils.getBooleanValue(tti, PropertyUtil.REQUIRES_TIME_SERVICES);
+    List<String> externalMutexList = (ArrayList<String>) PropertyUtil.getExternalMutexList(tti);
+    List<String> externalSemaphoreList = (ArrayList<String>) PropertyUtil.getExternalSemaphoreList(tti);
             
     ti.setMinExecutionTime(minComputeTime);
     ti.setMaxExecutionTime(maxComputeTime);
     ti.setIsExternal(isExternal);
+    ti.setRequiresTimeServices(requiresTimeServices);
     ti.setExternalMutexList(externalMutexList);
     ti.setExternalSemaphoreList(externalSemaphoreList);
     
@@ -549,7 +588,7 @@ public class AadlModelParser {
     createOptPeriodicHandler(tti, ti); 
     createOptInitializeEntrypoint(tti, ti); 
 
-    List<String> fileNames = Util.getSourceTextListOpt(tti, ThreadUtil.SOURCE_TEXT);
+    List<String> fileNames = Util.getSourceTextListOpt(tti, PropertyUtil.SOURCE_TEXT);
     ti.setSourceFileList(fileNames);
 
     for (Feature f: tti.getAllFeatures()) {
@@ -642,7 +681,7 @@ public class AadlModelParser {
 	private SharedDataAccessor.AccessType getDataAccessRights(DataAccessImpl destAccessImpl) {
     EnumerationLiteral access = null;
     try {
-      access = PropertyUtils.getEnumLiteral(destAccessImpl, ThreadUtil.ACCESS_RIGHT);
+      access = PropertyUtils.getEnumLiteral(destAccessImpl, PropertyUtil.ACCESS_RIGHT);
     } catch (Exception e) {
       throw new Aadl2RtosException("Required property 'Access_Right' not found for data access: " + destAccessImpl.getName());
     }
@@ -729,8 +768,8 @@ public class AadlModelParser {
         PortUtil.getDataAccessImplFromConnectionInstanceEnd(destination);
     DataSubcomponentImpl srcDataComponent = 
         PortUtil.getDataSubcomponentImplFromConnectionInstanceEnd(ci.getSource());
-    String commprimFnNameOpt = Util.getStringValueOpt(destAccessImpl, ThreadUtil.SMACCM_SYS_COMMPRIM_SOURCE_TEXT);
-    String commprimHeaderNameOpt = Util.getStringValueOpt(destAccessImpl, ThreadUtil.SMACCM_SYS_COMMPRIM_SOURCE_HEADER);
+    String commprimFnNameOpt = Util.getStringValueOpt(destAccessImpl, PropertyUtil.SMACCM_SYS_COMMPRIM_SOURCE_TEXT);
+    String commprimHeaderNameOpt = Util.getStringValueOpt(destAccessImpl, PropertyUtil.SMACCM_SYS_COMMPRIM_SOURCE_HEADER);
     SharedDataAccessor.AccessType accessType = getDataAccessRights(destAccessImpl); 
 
     SharedData sharedData;
@@ -742,7 +781,7 @@ public class AadlModelParser {
       this.sharedDataMap.put(srcDataComponent, sharedData);
       if (model.getOsTarget() == OSTarget.CAmkES) {
         try {
-          ttiName = Util.getStringValue(srcDataComponent, ThreadUtil.CAMKES_OWNER_THREAD);
+          ttiName = Util.getStringValue(srcDataComponent, PropertyUtil.CAMKES_OWNER_THREAD);
         } catch (Exception e) {
             throw new Aadl2RtosException("For shared data instance: " + srcDataComponent.getName() + 
                 ": Generating to CAmkES OS and missing CAmkES_Owner_Thread property.");
@@ -797,7 +836,7 @@ public class AadlModelParser {
               (parm.getDirection() == DirectionType.IN) ? Direction.IN :
                 (parm.getDirection() == DirectionType.OUT) ? Direction.OUT :
                   Direction.IN_OUT;
-          boolean passByReference = ThreadUtil.getIsPassByReference(parm);
+          boolean passByReference = PropertyUtil.getIsPassByReference(parm);
           RemoteProcedureParameter modelParam = 
               new RemoteProcedureParameter(t, dir, id, passByReference);
           
@@ -976,7 +1015,7 @@ public class AadlModelParser {
 
 	private String getDataClassifierName(DataClassifier dc) {
     String typeNameOpt = Util.getStringValueOpt(dc, 
-        ThreadUtil.C_TYPE_NAME);
+        PropertyUtil.C_TYPE_NAME);
     String qualifiedName = dc.getQualifiedName();
     String normalizedName = Util.normalizeAadlName(qualifiedName);
 	  return (typeNameOpt != null) ? typeNameOpt : normalizedName; 
@@ -1025,10 +1064,10 @@ public class AadlModelParser {
 			throw new Aadl2RtosException("Character types are currently unsupported");
 		} else if ("Base_Types::String" == qualifiedName) {
 			throw new Aadl2RtosException("String types are currently unsupported");
-		} else if (ThreadUtil.getIsExternal(dc)) {
+		} else if (PropertyUtil.getIsExternal(dc)) {
 		  try {
 		    String name = dc.getName();
-		    String header = Util.getStringValue(dc, ThreadUtil.SMACCM_SYS_COMMPRIM_SOURCE_HEADER);
+		    String header = Util.getStringValue(dc, PropertyUtil.SMACCM_SYS_COMMPRIM_SOURCE_HEADER);
 		    Type et = new ExternalType(name, header);
 		    this.model.astTypes.put(name, et);
 		    this.model.externalTypeHeaders.add(header);
@@ -1036,7 +1075,7 @@ public class AadlModelParser {
 		    return et;
 		  } catch (Exception e) {
 		    //logger.error("Error: Property " + ThreadUtil.SMACCM_SYS_COMMPRIM_SOURCE_HEADER_NAME + " must be provided for external types");
-		    throw new Aadl2RtosException("Error: Property " + ThreadUtil.SMACCM_SYS_COMMPRIM_SOURCE_HEADER_NAME + " must be provided for external types");
+		    throw new Aadl2RtosException("Error: Property " + PropertyUtil.SMACCM_SYS_COMMPRIM_SOURCE_HEADER_NAME + " must be provided for external types");
 		  }
 		} else if (dc instanceof DataTypeImpl) {
 		  DataTypeImpl dti = (DataTypeImpl)dc;
@@ -1115,7 +1154,7 @@ public class AadlModelParser {
     
     // create initializer handler, if it exists.
     List<String> topLevelFileNames = 
-        Util.getSourceTextListOpt(this.systemImplementation, ThreadUtil.SOURCE_TEXT);
+        Util.getSourceTextListOpt(this.systemImplementation, PropertyUtil.SOURCE_TEXT);
  
     if (topLevelFileNames != null) {
       for (String s : topLevelFileNames) {
@@ -1131,7 +1170,7 @@ public class AadlModelParser {
   }
   
   private void initializeLegacyIRQs() {
-    List<String> irqStrings = ThreadUtil.getLegacyIRQList(this.systemImplementation);
+    List<String> irqStrings = PropertyUtil.getLegacyIRQList(this.systemImplementation);
     
     if (irqStrings.size() % 2 != 0) {
       throw new Aadl2RtosException("Error: legacy IRQ property should be list of size 2*n, where each element of n is a signal_name, handler_name pair");
@@ -1144,7 +1183,7 @@ public class AadlModelParser {
       this.model.externalISRList.add(irq);
     }
     
-    List<String> irqEventStrings = ThreadUtil.getLegacyIRQEventList(this.systemImplementation);
+    List<String> irqEventStrings = PropertyUtil.getLegacyIRQEventList(this.systemImplementation);
     if (irqEventStrings.size() % 3 != 0) {
       throw new Aadl2RtosException("Error: legacy IRQ Event property should be a list of size 3*n, where each element of n is a IRQ_event_name, task_name, sig_set triple");
     }
@@ -1163,7 +1202,7 @@ public class AadlModelParser {
       this.model.externalIRQEventList.add(evt);
     }
     
-    List<String> externalIrqStrings = ThreadUtil.getExternalIRQList(this.systemImplementation);
+    List<String> externalIrqStrings = PropertyUtil.getExternalIRQList(this.systemImplementation);
     if (externalIrqStrings.size() %2 != 0) {
       throw new Aadl2RtosException("Error: External IRQ property should be a list of size 2*n, where each element of n is a external_irq, irq_number pair");
     }

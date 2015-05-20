@@ -94,6 +94,7 @@ public class DispatcherTraverser {
    */
   private void dispatcherActiveThreadConnectionFrontier(Dispatcher init, Set<PortConnection> frontier) {
     Set<Dispatcher> visited = new HashSet<Dispatcher>(); 
+    visited.add(init);
     passiveDispatchersFromActiveThread(visited, init);
     for (Dispatcher d : visited) {
       for (OutgoingDispatchContract limit : d.getDispatchLimits()) {
@@ -155,7 +156,10 @@ public class DispatcherTraverser {
   */
   
   public void passiveDispatchersFromActiveThread(Set<Dispatcher> visited, Dispatcher d) {
-    visited.add(d);
+    if (d.getOwner().getIsPassive()) {
+      visited.add(d);
+    }
+    
     for (OutgoingDispatchContract limit : d.getDispatchLimits()) {
       for (Map.Entry<OutputEventPort, Integer> elem : limit.getContract().entrySet()) {
         for (PortConnection pc : elem.getKey().getConnections()) {

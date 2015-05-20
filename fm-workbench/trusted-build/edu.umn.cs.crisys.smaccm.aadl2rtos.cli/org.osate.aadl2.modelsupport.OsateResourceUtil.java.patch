@@ -1,0 +1,15 @@
+### Eclipse Workspace Patch 1.0
+#P org.osate.aadl2.modelsupport
+diff --git src/org/osate/aadl2/modelsupport/resources/OsateResourceUtil.java src/org/osate/aadl2/modelsupport/resources/OsateResourceUtil.java
+index 6921e2f..69833a3 100644
+--- src/org/osate/aadl2/modelsupport/resources/OsateResourceUtil.java
++++ src/org/osate/aadl2/modelsupport/resources/OsateResourceUtil.java
+@@ -72,7 +72,7 @@
+ 
+ 
+ 	private static boolean DEBUG = true;
+-  public static boolean USES_GUI = true;
++  public static boolean USES_GUI = false; //  SR: hack
+ 	public static final String PLUGIN_RESOURCES_DIRECTORY_NAME = "Plugin_Resources";
+ 
+     

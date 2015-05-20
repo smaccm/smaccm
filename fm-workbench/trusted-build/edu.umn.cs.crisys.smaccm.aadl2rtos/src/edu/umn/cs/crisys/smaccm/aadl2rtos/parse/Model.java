@@ -50,7 +50,7 @@ public class Model {
 	public enum OSTarget {CAmkES, eChronos}; 
 	private OSTarget osTarget = OSTarget.eChronos;
 		
-	// Currently supported targets: QEMU, ODROID, PX4
+	// Currently supported targets: QEMU, ODROID, PX4, X86
 	public String HWTarget ;
 	public String outputDirectory;
 	
@@ -81,7 +81,13 @@ public class Model {
 	Map<String, RemoteProcedureGroup> remoteProcedureGroupMap = new HashMap<>(); 
 	Map<String, RemoteProcedure> remoteProcedureMap = new HashMap<>();
 	
+	// properties related to timers and dispatch
 	boolean generateSystickIRQ;
+	boolean externalTimerComponent; 
+	String camkesExternalTimerInterfacePath;
+	String camkesExternalTimerCompletePath;
+	int camkesInternalTimerTimersPerClient; 
+	int camkesTimeServerAadlThreadMinIndex; 
 	
 	public enum CommMutualExclusionPrimitive {MUTEX, SUSPEND_INTERRUPT} ; 
 	CommMutualExclusionPrimitive commMutexPrimitive = CommMutualExclusionPrimitive.MUTEX; 
@@ -353,5 +359,58 @@ public class Model {
       return false;
   }
 
+  public boolean isExternalTimerComponent() {
+    return externalTimerComponent;
+  }
+
+  public void setExternalTimerComponent(boolean externalTimerComponent) {
+    this.externalTimerComponent = externalTimerComponent;
+  }
+
+  public String getCamkesExternalTimerInterfacePath() {
+    return camkesExternalTimerInterfacePath;
+  }
+
+  public void setCamkesExternalTimerInterfacePath(
+      String camkesExternalTimerInterfacePath) {
+    this.camkesExternalTimerInterfacePath = camkesExternalTimerInterfacePath;
+  }
+
+  public String getCamkesExternalTimerCompletePath() {
+    return camkesExternalTimerCompletePath;
+  }
+
+  public void setCamkesExternalTimerCompletePath(
+      String camkesExternalTimerCompletePath) {
+    this.camkesExternalTimerCompletePath = camkesExternalTimerCompletePath;
+  }
+
+  public int getCamkesInternalTimerTimersPerClient() {
+    return camkesInternalTimerTimersPerClient;
+  }
+
+  public void setCamkesInternalTimerTimersPerClient(
+      int camkesInternalTimerTimersPerClient) {
+    this.camkesInternalTimerTimersPerClient = camkesInternalTimerTimersPerClient;
+  }
+
+  public int getCamkesTimeServerAadlThreadMinIndex() {
+    return camkesTimeServerAadlThreadMinIndex;
+  }
+
+  public void setCamkesTimeServerAadlThreadMinIndex(
+      int camkesTimeServerAadlThreadMinIndex) {
+    this.camkesTimeServerAadlThreadMinIndex = camkesTimeServerAadlThreadMinIndex;
+  }
+
+  public int getGenerateCamkesTimeServerThreadIndex() {
+    return camkesTimeServerAadlThreadMinIndex++; 
+  }
+
+  int connNumber = 0; 
+  public int getGenerateConnectionNumber() {
+    connNumber++; 
+    return connNumber;
+  }
 
 }

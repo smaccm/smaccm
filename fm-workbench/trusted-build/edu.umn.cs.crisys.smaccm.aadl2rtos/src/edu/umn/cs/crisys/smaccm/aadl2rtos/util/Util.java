@@ -244,7 +244,7 @@ public static String getCUintTypeForMaxValue(int maxValue) {
 
 	public static Double getPeriodInPicoSecondsOpt(NamedElement thread) {
 		// Temporary
-		PropertyExpression value = PropertyUtils.getSimplePropertyValue(thread, ThreadUtil.PERIOD);
+		PropertyExpression value = PropertyUtils.getSimplePropertyValue(thread, PropertyUtil.PERIOD);
 		if (value instanceof IntegerLiteral) {
 			IntegerLiteral intLit = (IntegerLiteral) value;
 			return intLit.getScaledValue();

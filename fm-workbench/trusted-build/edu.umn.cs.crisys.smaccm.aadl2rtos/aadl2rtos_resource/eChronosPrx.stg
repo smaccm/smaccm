@@ -158,9 +158,7 @@ $writeInterruptEvent(
 
 writeActiveThreadIrqDispatcher(dispatcher) ::= << 
 $if(dispatcher.isIRQ)$
-$writeInterruptEvent(dispatcher.name, 
-	dispatcher.threadImplementation.normalizedName,
-	1)$
+$writeInterruptEvent(dispatcher.name, dispatcher.threadImplementation.normalizedName, {1})$
 $endif$
 >>
 

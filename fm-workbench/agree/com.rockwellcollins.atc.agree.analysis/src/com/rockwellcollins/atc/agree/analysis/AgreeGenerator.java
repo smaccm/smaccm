@@ -512,6 +512,13 @@ public class AgreeGenerator {
     }
 
 	private static void addQSConstraints(AgreeEmitterState state) {
+		
+		if(state.clockVars.size() == 0){
+			throw new AgreeException("During Lustre generation there were no subcomponent clock varaibles present. "+
+		        "Is it possible that none of the subcomponents in '"+state.curInst.getFullName()+"' contain an AGREE annex?");
+		}
+		
+		
     	String dfaNodeName = "__DFA_NODE_"+state.curInst.getComponentInstancePath();
     	dfaNodeName = dfaNodeName.replace(".", "__");
     	String calenNodeName = "__CALENDAR_NODE_"+state.curInst.getInstanceObjectPath();
@@ -542,7 +549,8 @@ public class AgreeGenerator {
     	        clockAssertion = new BinaryExpr(clockAssertion, BinaryOp.AND, nodeCall);
     	    }
     	}else if(state.calendar.size() != 0){
-    	    List<Expr> clockIds = new ArrayList<>();
+    	   
+    		List<Expr> clockIds = new ArrayList<>(); 
         	for(AgreeVarDecl clockVar : state.clockVars){
         		clockIds.add(new IdExpr(clockVar.id));
         	}

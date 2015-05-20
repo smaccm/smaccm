@@ -155,6 +155,8 @@ public class AgreeEmitterState  extends AgreeSwitch<Expr> {
     private final Map<String, Map<String, String>> nodeLemmaNames = new HashMap<>();
     private final Map<String, Integer> nodeCallCount = new HashMap<>(); //used to keep track of renamings for node lemmas
     
+    private final Set<String> resultNames = new HashSet<>();
+    
     public final Set<Connection> overridenConnections = new HashSet<Connection>();
     public AgreeEmitterState(ComponentInstance compInst, Subcomponent subComp){
     	this.curInst = compInst;
@@ -272,6 +274,10 @@ public class AgreeEmitterState  extends AgreeSwitch<Expr> {
         IdExpr assumId = new IdExpr(assumeStr);
         assumpExpressions.add(new Equation(assumId, expr));
         refMap.put(assumeStr, state);
+        if(!resultNames.add(assumeStr)){
+        	throw new AgreeException("Multiple assumptions with name '"+assumeStr+
+        			"' in component '"+curInst.getFullName()+"'");
+        }
         
         return expr;
     }
@@ -282,6 +288,10 @@ public class AgreeEmitterState  extends AgreeSwitch<Expr> {
         String lemmaStr = state.getStr();
         lemmaStr = "lemma : \""+lemmaStr+"\"";
         refMap.put(lemmaStr, state);
+        if(!resultNames.add(lemmaStr)){
+        	throw new AgreeException("Multiple lemmas with name '"+lemmaStr+
+        			"' in component '"+curInst.getFullName()+"'");
+        }
         IdExpr strId = new IdExpr(lemmaStr);
         Equation eq = new Equation(strId, expr);
         lemmaExpressions.add(eq);
@@ -294,6 +304,10 @@ public class AgreeEmitterState  extends AgreeSwitch<Expr> {
         String guarStr = state.getStr();
         guarStr = guarStr.replace("\"", "");
         refMap.put(guarStr, state);
+        if(!resultNames.add(guarStr)){
+        	throw new AgreeException("Multiple guarantees with name '"+guarStr+
+        			"' in component '"+curInst.getFullName()+"'");
+        }
         IdExpr strId = new IdExpr(guarStr);
         Equation eq = new Equation(strId, expr);
         guarExpressions.add(eq);

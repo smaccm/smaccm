@@ -10,8 +10,9 @@ void send(const uint64_t *time) {
 	packet.payload[i] = 'A' + i;
     }
     packet.payload[len] = '\n';
+    packet.payload[len+1] = 0;
     packet.length = len + 1;
-    
+
     printf("Sending packet: %s", packet.payload);
     sender_write_output(&packet);
 

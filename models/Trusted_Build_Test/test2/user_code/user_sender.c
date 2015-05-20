@@ -12,5 +12,6 @@ void periodic_ping(const uint64_t *periodic_100_ms) {
    ping_Output1(&test_data);
    
    bool result = ping_Output1(&test_data);
-   printf("second attempt at pinging receiver was: %d", result); 
+   printf("At time: %llu: ", timer_time());
+   printf("second attempt at pinging receiver was: %d\n", result);
 }

@@ -293,7 +293,7 @@ public class CAmkES_CodeGenerator extends CodeGeneratorBase {
       writeBoilerplateHeader(name, path, writer, stg.getInstanceOf("periodicDispatcherCPrefix"));
       writer.append("\n"); 
       writer.append("#include <" + mn.getSystemTypeHeaderName() + ">\n");
-      writer.append("#include <clock_driver.h>\n\n");
+      // writer.append("#include <clock_driver.h>\n\n");
       writer.append("#include <string.h>\n\n");
       writer.append("#include <" + tcn.getPeriodicDispatcherCamkesHFileName() +  ">\n");
       
@@ -325,7 +325,9 @@ public class CAmkES_CodeGenerator extends CodeGeneratorBase {
     
     File includeDirectory = new File(componentDirectory, "include");
     includeDirectory.mkdirs();
-    createClockDriver(srcDirectory, includeDirectory);
+    
+    // MWW: removed to work with new periodic driver architecture.
+    // createClockDriver(srcDirectory, includeDirectory);
     createPeriodicDispatcherCFile(srcDirectory); 
     
     File interfaceFile = new File(componentDirectory, mn.getThreadCalendar().getPeriodicDispatcherCamkesFileName());

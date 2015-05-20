@@ -1,6 +1,10 @@
 TARGETS := $(notdir ${SOURCE_DIR}).cdl
 ADL := test6_impl_assembly.camkes
 
+TEMPLATES := templates
+
+include TimeServerKZM/TimeServer.mk
+
 receiver_CFILES :=  \
     $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/receiver/src/*.c)) \
     $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/receiver/src/plat/${PLAT}/*.c)) \

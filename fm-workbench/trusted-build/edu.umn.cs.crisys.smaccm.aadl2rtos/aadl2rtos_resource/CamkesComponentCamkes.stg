@@ -62,7 +62,7 @@ has mutex <port.mutex>;
 >>
 
 outputDataPortDecl(port) ::= <<
-uses <port.type.readerWriterInterfaceName> <port.name>;
+uses <port.type.readerWriterInterfaceName> <port.qualifiedName>;
 
 >>
 
@@ -93,6 +93,7 @@ writeRpgInterface(endpoint) ::= <<
 componentCamkesBody(threadImpl) ::= <<
 
 import "../../interfaces/<threadImpl.idlFileName>";
+<if(threadImpl.requiresTimeServices)>import <\u003C>Timer.idl4<\u003E>; <endif>
 
 // Idl files for ports
 <threadImpl.threadPortTypes:importReaderWriterIdl();separator="\n">
@@ -117,7 +118,7 @@ include "<threadImpl.model.systemTypeHeaderName>";
 	<threadImpl.nonlocalActiveThreadConnectionFrontier:constructSenderInterface()>
 
 	// references to passive thread receivers	(if any)
-	<threadImpl.model.passiveThreadImplementations:writeToPassiveReceiver()>
+	<threadImpl.passiveThreadRegion:writeToPassiveReceiver()>
 
 	// provided interfaces for input event / event data ports (if any)
 	<threadImpl.inputEventPortList:inputPortDecl()>
@@ -138,7 +139,10 @@ include "<threadImpl.model.systemTypeHeaderName>";
 	<threadImpl.outputDataPortList:outputDataPortDecl()>
 	<threadImpl.sharedDataAccessorList:sharedDataAccessorDecl()>
 
-
+	<if(threadImpl.requiresTimeServices)>
+	// for time services
+	uses Timer timer;
+	<endif>
 }
 
 
