@@ -59,11 +59,14 @@ portInitializer(port) ::= <<
 >>
 
 componentGlueCodeHeaderBody(threadImpl) ::= <<
+	// These are functions that are expected to be provided by the user.
 	<threadImpl.dispatchers:writeUdePrototype()>
+	<threadImpl.portList:portInitializer()>
+	
+	// These are functions that are provided by the AADL middleware for 
+	// communication with other threads
 	<threadImpl.outputPortList:writePortWriterPrototype()>
 	<threadImpl.inputPortList:writePortReaderPrototype()>
-	<threadImpl.portList:portInitializer()>
-	<if(threadImpl.hasInitializeEntrypoint)>void <threadImpl.initializeEntrypointOpt.handlerName>();<endif>
 	<if(threadImpl.isExternal)>
 		//////////////////////////////////////////////////////////////////////////
 		// 

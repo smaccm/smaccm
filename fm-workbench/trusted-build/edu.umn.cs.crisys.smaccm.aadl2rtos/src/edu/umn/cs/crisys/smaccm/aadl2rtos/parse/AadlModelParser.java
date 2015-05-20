@@ -531,7 +531,12 @@ public class AadlModelParser {
   private void createOptInitializeEntrypoint(ThreadTypeImpl tti, ThreadImplementation ti) {
     String initializer = Util.getStringValueOpt(tti, PropertyUtil.INITIALIZE_ENTRYPOINT_SOURCE_TEXT);
     if (initializer != null) {
-      ti.setInitializeEntrypointOpt(new ExternalHandler(initializer));
+      ExternalHandler handler = new ExternalHandler(initializer);
+      ArrayList<ExternalHandler> handlers = new ArrayList<ExternalHandler>();
+      handlers.add(handler); 
+      InitializerDispatcher id = new InitializerDispatcher(ti, handlers);
+      ti.setInitializeEntrypointOpt(id);
+      ti.addDispatcher(id);
     }
   }
   
@@ -539,11 +544,13 @@ public class AadlModelParser {
     String name = tti.getName().toLowerCase();
     boolean isPassive = PropertyUtil.getThreadType(tti);    
     int priority = -1; 
-    int stackSize = -1;
+    int stackSize = 4096;
     
     if (!isPassive) {
       priority = PropertyUtil.getPriority(tti);
-      stackSize = PropertyUtil.getStackSizeInBytes(tti);
+      
+      // MWW TODO: temporary until after May 15 code drop
+      stackSize = java.lang.Math.max(PropertyUtil.getStackSizeInBytes(tti), 4096);
     } else {
       // TODO: Compute priorities for passive threads.
       priority = 200; 

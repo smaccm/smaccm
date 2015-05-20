@@ -21,7 +21,7 @@ import edu.umn.cs.crisys.smaccm.aadl2rtos.util.Util;
 
 public class ThreadImplementation {
 
-	private ExternalHandler initEntrypointHandler = null;
+	private InitializerDispatcher initEntrypointHandler = null;
 	private int priority = -1;
   private int stackSize = 0; 
   private double minExecutionTime = -1.0; 
@@ -172,11 +172,11 @@ public class ThreadImplementation {
 	  return this.dispatcherList; 
 	}
 	
-	public ExternalHandler getInitializeEntrypointOpt() {
+	public InitializerDispatcher getInitializeEntrypointOpt() {
 		return this.initEntrypointHandler;
 	}
 
-	public void setInitializeEntrypointOpt(ExternalHandler handler) {
+	public void setInitializeEntrypointOpt(InitializerDispatcher handler) {
 	  this.initEntrypointHandler = handler;
 	}
 
