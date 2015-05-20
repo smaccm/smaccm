@@ -58,7 +58,7 @@ process main
   	  
   	guarantee "next time greater than current" :
   	  next_time > time and (true -> pre(next_time) = time);
-  	  
+  	
   	guarantee "time change bound" : 
       5.0 <= next_time - time and next_time - time < 50.0;
   	
@@ -77,6 +77,7 @@ process main
 --  	guarantee "if the controller is armed, then an armed signal in the past" :
 --  	  control_mode = AGREE_CONSTS.ARMED_MODE =>
 --  	    mavlink_armed_in_past or ppm_armed_in_past;
+  	
 
 --  	guarantee "if an arm signal is sent from the ppm controller the controller will be armed" : true;
 --  	
