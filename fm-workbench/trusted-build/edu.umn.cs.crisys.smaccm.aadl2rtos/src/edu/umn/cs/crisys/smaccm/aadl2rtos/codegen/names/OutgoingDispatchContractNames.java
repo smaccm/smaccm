@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.OutgoingDispatchContract;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.OutgoingDispatchContract;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.OutputEventPort;
 
 /**

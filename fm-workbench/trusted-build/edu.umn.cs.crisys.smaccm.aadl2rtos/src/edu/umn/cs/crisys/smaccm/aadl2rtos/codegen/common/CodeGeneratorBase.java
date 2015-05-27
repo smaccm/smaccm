@@ -20,7 +20,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.stringtemplate.v4.ST;
-import org.stringtemplate.v4.STErrorListener;
 import org.stringtemplate.v4.STGroupFile;
 
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosFailure;
@@ -29,7 +28,6 @@ import edu.umn.cs.crisys.smaccm.aadl2rtos.util.Util;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.names.ModelNames;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.names.ThreadImplementationNames;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.names.TypeNames;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.*;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.*;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.SharedData;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.ThreadImplementation;
@@ -136,11 +134,10 @@ public abstract class CodeGeneratorBase {
 	
 	private void createComponentDispatchTypes(BufferedWriter writer) throws IOException {
     // write dispatcher types
-    //ST st = templates.getInstanceOf("componentGlueCodeHeaderPurpose");
-    //writer.append(st.render());
-    
+	  // Note: for new 
+	  
     for (ThreadImplementation ti : model.getAllThreadImplementations()) {
-      for (Dispatcher d : ti.getDispatcherList()) {
+      for (DispatchableInputPort d : ti.getDispatcherList()) {
         OutgoingDispatchContract maxCalls = 
            OutgoingDispatchContract.maxUsedDispatchers(d.getDispatchLimits());
         for (Map.Entry<OutputEventPort, Integer> entry : maxCalls.getContract().entrySet()) {
@@ -149,9 +146,13 @@ public abstract class CodeGeneratorBase {
             //String arrayTypeName = CommonNames.getDispatchArrayTypeName(ti, entry);
             //model.getAstTypes().put(arrayTypeName, dispatchArrayType);
             
-            // To get around CAmkES array bug!
             RecordType dispatchRecordType = new RecordType();
-            dispatchRecordType.addField("f", dispatchArrayType);
+            if (d.hasData()) {
+              dispatchRecordType.addField("input", d.getType());
+            }
+            dispatchRecordType.addField("data", dispatchArrayType);
+            dispatchRecordType.addField("max", new IntType(32, false));
+            dispatchRecordType.addField("used", new IntType(32, false));
             model.getAstTypes().put(TypeNames.getDispatchStructTypeName(ti, entry.getKey(), entry.getValue()), dispatchRecordType);
           }
         }
@@ -173,7 +174,7 @@ public abstract class CodeGeneratorBase {
     
     rwTypeSet.add(new UnitType());
     //rwTypeSet.add(new IntType(32, false));  
-    rwTypeSet.add(PeriodicDispatcher.getPeriodicDispatcherType());  
+    rwTypeSet.add(InputPeriodicPort.getPortType());  
     
     for (ThreadImplementation ti : model.getAllThreadImplementations()) {
       for (OutputDataPort d : ti.getOutputDataPortList()) {
@@ -265,7 +266,7 @@ public abstract class CodeGeneratorBase {
 	private void copyComponentFiles(File srcDirectory, File includeDirectory, ThreadImplementation ti) throws Aadl2RtosFailure {
 	  // determine the list of source files.
 	  Set<String> srcFiles = new HashSet<String>(); 
-	  for (Dispatcher d: ti.getDispatcherList()) {
+	  for (DispatchableInputPort d: ti.getDispatcherList()) {
 	    srcFiles.addAll(d.getImplementationFileList());
 	  }
 	  srcFiles.addAll(ti.getSourceFileList());

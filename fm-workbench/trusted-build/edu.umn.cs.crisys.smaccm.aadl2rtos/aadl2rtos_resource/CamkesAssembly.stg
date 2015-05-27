@@ -141,7 +141,7 @@ assemblyConnectPeriodic(threadImpl, model) ::= <<
 >>
 
 connectReaderWriter(connection, srcThreadImpl, model) ::= <<
-<if(connection.sourcePort.isOutputDataPort)><\\>
+<if(connection.sourcePort.isOutputData)><\\>
 <rpcConnection(model.generateConnectionName, 
 	srcThreadImpl.componentInstanceName,
 	connection.sourcePort.qualifiedName,

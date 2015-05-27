@@ -11,15 +11,11 @@ import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.Type;
  *
  */
 public abstract class InputPort extends DataPort {
- 
+   
   public InputPort(String portName, 
       Type dataType,
       ThreadImplementation owner) {
     super(portName, dataType, owner);
-  }    
-  
-  public abstract boolean isInputEventPort();  
-  public abstract boolean isInputEventDataPort();
-  public abstract boolean isInputDataPort(); 
-  
+  }
+
 }

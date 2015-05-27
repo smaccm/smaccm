@@ -1,14 +1,12 @@
 /**
  * 
  */
-package edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher;
+package edu.umn.cs.crisys.smaccm.aadl2rtos.model.port;
 
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.OutputEventPort;
 
 /**
  * @author Whalen

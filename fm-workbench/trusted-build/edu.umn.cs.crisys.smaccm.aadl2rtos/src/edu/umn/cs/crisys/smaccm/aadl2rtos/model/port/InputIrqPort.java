@@ -1,6 +1,8 @@
-package edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher;
+/**
+ * 
+ */
+package edu.umn.cs.crisys.smaccm.aadl2rtos.model.port;
 
-import java.util.List;
 import java.util.Map;
 
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.ThreadImplementation;
@@ -8,40 +10,40 @@ import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.Type;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.UnitType;
 
 /**
- * @author Mead, Whalen
- * 
- * TODO: I want separate subclasses for event and periodic dispatchers.
- * 
+ * @author Whalen
+ *
  */
-public class IRQDispatcher extends Dispatcher {
+public class InputIrqPort extends DispatchableInputPort {
 
   private int signalNumber;
   private String signalName;
   private String firstLevelInterruptHandler;
   private Map<String, String> memoryRegions; 
-	
-	public IRQDispatcher(ThreadImplementation owner, List<ExternalHandler> externalHandlerList, 
-	    String signalName, int signalNumber, 
-	    String firstLevelInterruptHandler, Map<String, String> memoryRegions) {
-	  super(owner, externalHandlerList);
-	  this.signalName = signalName;
-	  this.signalNumber = signalNumber;
-	  this.firstLevelInterruptHandler = firstLevelInterruptHandler;
-	  this.memoryRegions = memoryRegions;
-	}
-	
-	public String getName() {
-	  return signalName;
-	}
 
-	public int getNumber() {
-	  return signalNumber;
-	}
-	
-	public Type getType() { 
-	  return new UnitType(); 
-	}
-	
+  /**
+   * @param portName
+   * @param dataType
+   * @param owner
+   */
+  public InputIrqPort(String portName, ThreadImplementation owner,
+      String signalName, int signalNumber, 
+      String firstLevelInterruptHandler, Map<String, String> memoryRegions) {
+    super(portName, new UnitType(), owner);
+    this.signalName = signalName;
+    this.signalNumber = signalNumber;
+    this.firstLevelInterruptHandler = firstLevelInterruptHandler;
+    this.memoryRegions = memoryRegions;
+  }
+
+  // TODO: move most of this stuff into the 'name' class for Irq ports.
+  public int getNumber() {
+    return signalNumber;
+  }
+  
+  public Type getType() { 
+    return new UnitType(); 
+  }
+  
   public String getEChronosIrqSmaccmFlihName() {
     return ("smaccm_irq_" + getSignalName()).toLowerCase();
   }
@@ -53,7 +55,7 @@ public class IRQDispatcher extends Dispatcher {
   public String getEChronosIrqSignalDefine() {
     return ("IRQ_EVENT_ID_" + this.getEChronosIrqSmaccmFlihName()).toUpperCase();
   }
-	
+  
   public Map<String, String> getMemoryRegions() {
     return memoryRegions;
   }
@@ -87,8 +89,9 @@ public class IRQDispatcher extends Dispatcher {
   public void setFirstLevelInterruptHandler(String firstLevelInterruptHandler) {
     this.firstLevelInterruptHandler = firstLevelInterruptHandler;
   }
-	
+  
   public int hashCode() {
     return 0;
   }
+  
 }

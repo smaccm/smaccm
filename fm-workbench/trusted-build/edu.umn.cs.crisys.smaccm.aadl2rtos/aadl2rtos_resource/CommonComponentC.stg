@@ -465,12 +465,12 @@ aadlDispatcherPassiveCallOutPortArg(port) ::= <<
 aadlDispatcherPassiveCallOutArg(dispatchContract) ::= "<aadlDispatcherPassiveCallOutPortArg(dispatchContract.port)>"
 
 aadlDispatcherWritePassiveArg(port) ::= <<
-<if(port.hasData)><port.type.valToAadlInput>(<port.data>.f[smaccm_it])<endif>
+<if(port.hasData)><port.type.valToAadlInput>(<port.data>.data[smaccm_it])<endif>
 >>
 
 aadlDispatcherWriteActiveArg(port) ::= <<
 <if(port.hasData)>
-(<port.type.valToCamkesInput>(<port.data>.f[smaccm_it]))
+(<port.type.valToCamkesInput>(<port.data>.data[smaccm_it]))
 <endif>
 >>
 
@@ -480,7 +480,7 @@ activeThreadInternalDispatcherName(dispatcher) ::= <<
 
 aadlDispatcherCallPassiveTarget(portDest,portSrc) ::= <<
 // Calling a passive dispatch target.
-<activeThreadInternalDispatcherName(portDest.dispatcher)>(<aadlDispatcherWritePassiveArg(portSrc)>);	
+<activeThreadInternalDispatcherName(portDest)>(<aadlDispatcherWritePassiveArg(portSrc)>);	
 >>
 
 aadlDispatcherCallActiveTarget(portDest,portSrc) ::= <<
@@ -641,17 +641,17 @@ if (<dispatcher.dispatchOccurredVar>) {
 >>
 
 eventDispatcher(dispatcher) ::= <<
-while (<dispatcher.inputEventDispatcherPort.aadlReaderFnName>()) {
+while (<dispatcher.aadlReaderFnName>()) {
 	<activeThreadInternalDispatcherName(dispatcher)>();
 }
 
 >>
 
 eventDataDispatcher(dispatcher) ::= <<
-while (!<dispatcher.inputEventDispatcherPort.isEmptyFnCall>) {
-	<dispatcher.inputEventDispatcherPort.varDecl>;
-	<dispatcher.inputEventDispatcherPort.queueReadName>(<dispatcher.type.valToAadlOutput><dispatcher.inputEventDispatcherPort.name>);
-	<activeThreadInternalDispatcherName(dispatcher)>(<dispatcher.type.valToAadlInput><dispatcher.inputEventDispatcherPort.name>); 
+while (!<dispatcher.isEmptyFnCall>) {
+	<dispatcher.varDecl>;
+	<dispatcher.queueReadName>(<dispatcher.type.valToAadlOutput><dispatcher.name>);
+	<activeThreadInternalDispatcherName(dispatcher)>(<dispatcher.type.valToAadlInput><dispatcher.name>); 
 }
 
 >>
@@ -661,9 +661,9 @@ drainDispatcher(dispatcher) ::= <<
 <dispatcher:periodicDispatcher()>
 <elseif(dispatcher.isIRQ)><\\>
 <dispatcher:irqDispatcher()>
-<elseif(dispatcher.isEvent)><\\>
+<elseif(dispatcher.isInputEvent)><\\>
 <dispatcher:eventDispatcher()>
-<elseif(dispatcher.isEventData)>
+<elseif(dispatcher.isInputEventData)>
 <dispatcher:eventDataDispatcher()>
 <elseif(dispatcher.isInitializer)>
 <else>
@@ -676,8 +676,7 @@ dispatcherComponentEventDecls(dispatcher) ::=  <<
 
 <if(dispatcher.isPeriodic)><dispatcherComponentPeriodicEventDecls(dispatcher)>
 <elseif(dispatcher.isIRQ)><dispatcherComponentIRQEventDecls(dispatcher)>
-<elseif(dispatcher.isInput)><elseif(dispatcher.isInitializer)><else> ERROR: dispatcher is not IRQ, Event Data, or Periodic
-<endif>
+<else> <endif>
 >>
 
 portInitializer(port) ::= <<

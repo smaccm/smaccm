@@ -37,7 +37,7 @@ import edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.names.RemoteProcedureGroupName
 import edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.names.ThreadCalendarNames;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.names.ThreadImplementationNames;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.names.TypeNames;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.*;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.InputPeriodicPort;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.rpc.RemoteProcedureGroup;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.SharedData;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.ThreadImplementation;
@@ -315,7 +315,7 @@ public class CAmkES_CodeGenerator extends CodeGeneratorBase {
 	public void createPeriodicDispatcherComponent() throws Aadl2RtosFailure {
 	  ModelNames mn = new ModelNames(model); 
     String name = mn.getThreadCalendar().getPeriodicDispatcherComponentName();
-    TypeNames tn = new TypeNames(PeriodicDispatcher.getPeriodicDispatcherType());
+    TypeNames tn = new TypeNames(InputPeriodicPort.getPortType());
     
     File componentDirectory = new File(componentsDirectory, mn.getThreadCalendar().getPeriodicDispatcherComponentName());
     componentDirectory.mkdirs();
