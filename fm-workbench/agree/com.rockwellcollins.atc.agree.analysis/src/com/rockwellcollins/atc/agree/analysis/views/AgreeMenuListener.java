@@ -26,6 +26,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -47,7 +48,6 @@ import com.rockwellcollins.atc.agree.agree.AssumeStatement;
 import com.rockwellcollins.atc.agree.agree.FnCallExpr;
 import com.rockwellcollins.atc.agree.agree.GuaranteeStatement;
 import com.rockwellcollins.atc.agree.agree.LemmaStatement;
-import com.rockwellcollins.atc.agree.analysis.Activator;
 import com.rockwellcollins.atc.agree.analysis.Util;
 import com.rockwellcollins.atc.agree.analysis.extentions.CexExtractor;
 import com.rockwellcollins.atc.agree.analysis.extentions.CexExtractorRegistry;
@@ -113,47 +113,50 @@ public class AgreeMenuListener implements IMenuListener {
 
     private void addViewCounterexampleMenu(IMenuManager manager, AnalysisResult result) {
         final Counterexample cex = getCounterexample(result);
-        CexExtractorRegistry cexReg = (CexExtractorRegistry) ExtensionRegistry.getRegistry(ExtensionRegistry.CEX_EXTRACTOR_EXT_ID);
+        CexExtractorRegistry cexReg = (CexExtractorRegistry) ExtensionRegistry
+                .getRegistry(ExtensionRegistry.CEX_EXTRACTOR_EXT_ID);
         List<CexExtractor> extractors = cexReg.getCexExtractors();
-        
-        
+
         if (cex != null) {
             final String cexType = getCounterexampleType(result);
             final Layout layout = linker.getLayout(result.getParent());
             final Map<String, EObject> refMap = linker.getReferenceMap(result.getParent());
 
-            //send counterexamples to external plugins
-            PropertyResult pr = (PropertyResult) result;
-            EObject property = refMap.get(pr.getName());
-            for(CexExtractor ex: extractors){
-            	manager.add(new Action(ex.getDisplayText()) {
-            		@Override
-            		public void run() {
-                    	ex.receiveCex(property, cex, refMap);
-            		}
-            	});
-            }
+            MenuManager sub = new MenuManager("View " + cexType + "Counterexample in");
+            manager.add(sub);
 
-            manager.add(new Action("View " + cexType + "Counterexample in Console") {
+            sub.add(new Action("Console") {
                 @Override
                 public void run() {
                     viewCexConsole(cex, layout, refMap);
                 }
             });
 
-            manager.add(new Action("View " + cexType + "Counterexample in Eclipse") {
+            sub.add(new Action("Eclipse") {
                 @Override
                 public void run() {
                     viewCexEclipse(cex, layout, refMap);
                 }
             });
 
-            manager.add(new Action("View " + cexType + "Counterexample in Spreadsheet") {
+            sub.add(new Action("Spreadsheet") {
                 @Override
                 public void run() {
                     viewCexSpreadsheet(cex, layout);
                 }
             });
+            
+            // send counterexamples to external plugins
+            PropertyResult pr = (PropertyResult) result;
+            EObject property = refMap.get(pr.getName());
+            for (CexExtractor ex : extractors) {
+                sub.add(new Action(ex.getDisplayText()) {
+                    @Override
+                    public void run() {
+                        ex.receiveCex(property, cex, refMap);
+                    }
+                });
+            }
         }
     }
 
@@ -181,7 +184,7 @@ public class AgreeMenuListener implements IMenuListener {
             if (property instanceof AssumeStatement) {
                 manager.add(createHyperlinkAction("Go To Assumption", property));
             }
-            if (property instanceof FnCallExpr){
+            if (property instanceof FnCallExpr) {
                 manager.add(createHyperlinkAction("Go To Node Call", property));
             }
         }
@@ -195,13 +198,13 @@ public class AgreeMenuListener implements IMenuListener {
             } else if (prop instanceof UnknownProperty) {
                 return ((UnknownProperty) prop).getInductiveCounterexample();
             }
-        }else if(result instanceof JRealizabilityResult){
+        } else if (result instanceof JRealizabilityResult) {
             PropertyResult propResult = ((JRealizabilityResult) result).getPropertyResult();
             Property prop = propResult.getProperty();
-            if(prop instanceof InvalidProperty){
+            if (prop instanceof InvalidProperty) {
                 return ((InvalidProperty) prop).getCounterexample();
             }
-            
+
         }
 
         return null;
@@ -286,8 +289,8 @@ public class AgreeMenuListener implements IMenuListener {
                         printHLine(out, cex.getLength());
 
                         for (Signal<Value> signal : cex.getCategorySignals(layout, category)) {
-                            //dont' print out values for properties
-                            if(signal.getName().contains(":")){
+                            // dont' print out values for properties
+                            if (signal.getName().contains(":")) {
                                 continue;
                             }
                             out.print(String.format("%-60s", "{" + signal.getName() + "}"));
