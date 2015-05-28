@@ -28,6 +28,15 @@ public class CexExtractorProxy extends ExtensionProxy implements CexExtractor{
 		}
 	}
 
+	@Override
+	public String getDisplayText() {
+		CexExtractor extractor = getCexExtractor();
+		if(extractor != null){
+			return extractor.getDisplayText();
+		}
+		return null;
+	}
+	
 	private CexExtractor getCexExtractor() {
 		if (extractor != null) {
 			return extractor;
@@ -38,7 +47,7 @@ public class CexExtractorProxy extends ExtensionProxy implements CexExtractor{
 			System.err.println("error instantiating cex extractor in plugin " + configElem.getDeclaringExtension().getContributor().getName());
 		}
 		return extractor;
-	};
+	}
 	
 	
 }

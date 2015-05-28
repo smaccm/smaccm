@@ -126,9 +126,14 @@ public class AgreeMenuListener implements IMenuListener {
             PropertyResult pr = (PropertyResult) result;
             EObject property = refMap.get(pr.getName());
             for(CexExtractor ex: extractors){
-            	ex.receiveCex(property, cex, refMap);
+            	manager.add(new Action(ex.getDisplayText()) {
+            		@Override
+            		public void run() {
+                    	ex.receiveCex(property, cex, refMap);
+            		}
+            	});
             }
-            
+
             manager.add(new Action("View " + cexType + "Counterexample in Console") {
                 @Override
                 public void run() {
