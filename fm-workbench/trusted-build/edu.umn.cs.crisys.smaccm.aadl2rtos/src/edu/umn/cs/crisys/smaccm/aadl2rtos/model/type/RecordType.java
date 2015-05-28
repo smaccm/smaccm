@@ -43,6 +43,10 @@ public class RecordType extends Type {
 		return false;
 	}
 
+  public boolean isEmpty() {
+    return fields.isEmpty();
+  }
+	
 	public void addField(String name, Type type) {
 		fields.add(new RecordField(name, type));
 	}

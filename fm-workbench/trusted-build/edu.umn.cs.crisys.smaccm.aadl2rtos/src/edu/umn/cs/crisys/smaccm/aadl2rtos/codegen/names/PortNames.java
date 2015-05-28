@@ -33,7 +33,7 @@ public class PortNames {
   DataPort dp; 
   Type indexType = new IntType(32, false); 
   
-  PortNames(DataPort dp) {
+  public PortNames(DataPort dp) {
     this.dp = dp;
   }
   
@@ -215,6 +215,22 @@ public class PortNames {
     return getName() + "_index";
   }
 
+  public String getDataField() {
+    return getDispatchStructArgName() + "." + getData();
+  }
+  
+  public String getIndexField() {
+    return getDispatchStructArgName() + "." + getIndex(); 
+  }
+  
+  public String getDataFieldFromPtr() {
+    return getDispatchStructArgName() + "->" + getData();
+  }
+  
+  public String getIndexFieldFromPtr() {
+    return getDispatchStructArgName() + "->" + getIndex(); 
+  }
+
   //////////////////////////////////////////////////////////////
   //
   // Names for port dispatcher contents: these are specific to kinds
@@ -259,7 +275,15 @@ public class PortNames {
     InputIrqPort iip = (InputIrqPort)dp; 
     return iip.getFirstLevelInterruptHandler(); 
   }
-  
+
+  // for creating dispatcher structures for components
+  public String getDispatchStructTypeName() {
+     return "smaccm_" + getQualifiedName() + "_struct"; 
+  }
+
+  public String getDispatchStructArgName() {
+    return "smaccm_" + getQualifiedName() + "_arg";
+  }
   public String getEChronosSignalNumberForDispatcher() {
     throw new Aadl2RtosException("getEChronosSignalNumberForDispatcher currently unimplemented!");
   }
@@ -268,7 +292,7 @@ public class PortNames {
     DispatchableInputPort dip = (DispatchableInputPort )dp; 
     OutgoingDispatchContract odc = 
         OutgoingDispatchContract.maxDispatcherUse(dip.getDispatchLimits());
-    OutgoingDispatchContractNames odcNames = new OutgoingDispatchContractNames(odc); 
+    OutgoingDispatchContractNames odcNames = new OutgoingDispatchContractNames(dip, odc); 
     return odcNames;
   }
   
@@ -279,9 +303,9 @@ public class PortNames {
         OutgoingDispatchContract.maxDispatcherUse(dip.getDispatchLimits());
     List<DispatchContractNames> pdl = new ArrayList<>(); 
     for (Map.Entry<OutputEventPort, Integer> elem : odc.getContract().entrySet()) {
-      DispatchContractNames names = new DispatchContractNames(elem);
+      DispatchContractNames names = new DispatchContractNames(dip, elem);
       if (names.getCanDispatch()) {
-        pdl.add(new DispatchContractNames(elem));
+        pdl.add(new DispatchContractNames(dip, elem));
       }
     }
     return pdl;

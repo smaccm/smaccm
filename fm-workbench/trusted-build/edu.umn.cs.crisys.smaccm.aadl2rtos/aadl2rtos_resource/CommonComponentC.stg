@@ -356,16 +356,16 @@ componentRemoteWriterDecl(srcPort) ::= <<
 
 userEntrypointCallerCall(externalHandler, dispatcher) ::= <<
 <if(dispatcher.hasData)>
-<externalHandler.handlerName>(<dispatcher.type.camkesInputToAadlInput><dispatcher.name>); 
+<externalHandler.handlerName>(<dispatcher.type.camkesInputToAadlInput> in_arg); 
 <else><externalHandler.handlerName>();
 <endif>
 >>
 
-userEntrypointCallerAssignGlobals(dispatchContract) ::= <<
+userEntrypointCallerAssignGlobals(dispatchContract, dispatcher) ::= <<
 <dispatchContract.port.globalMaxDispatchSize> = <dispatchContract.maxDispatchSize>;
 <if(dispatchContract.canDispatch)><\\>
-<dispatchContract.port.globalIndex> = <dispatchContract.port.index>;
-<if(dispatchContract.port.hasData)><dispatchContract.port.globalData> = <dispatchContract.port.data>->f;<endif> 
+<dispatchContract.port.globalIndex> = &(out_arg-><dispatchContract.port.index>);
+<if(dispatchContract.port.hasData)><dispatchContract.port.globalData> = out_arg-><dispatchContract.port.data>;<endif> 
 *<dispatchContract.port.globalIndex> = 0; 
 <endif>
 >> 
@@ -381,7 +381,7 @@ userEntrypointCallerFn(dispatcher) ::= <<
  * 
  ************************************************************************/
 <userEntrypointCallerPrototype(dispatcher)> {
-	<dispatcher.maxDispatchContracts.contracts:userEntrypointCallerAssignGlobals()>
+	<dispatcher.maxDispatchContracts.contracts:userEntrypointCallerAssignGlobals(dispatcher)>
 	<dispatcher.externalHandlers:userEntrypointCallerCall(dispatcher)>
 }	
 
@@ -452,25 +452,19 @@ bool <port.aadlWriterFnName>(<port:userSendOptConstAadlInputArg()>) {
 /////////////////////////////////////////////////////////////////////
 
 
-aadlDispatcherDeclareData(dispatcherContract) ::= <<
-<if(dispatcherContract.port.hasData)><dispatcherContract.dataDecl>;<endif>
-<dispatcherContract.port.indexType.name> <dispatcherContract.port.index>;
-
->>
-
 aadlDispatcherPassiveCallOutPortArg(port) ::= <<
 <if(port.hasData)>& <port.data>,<endif>
 		& <port.index> >>
 
 aadlDispatcherPassiveCallOutArg(dispatchContract) ::= "<aadlDispatcherPassiveCallOutPortArg(dispatchContract.port)>"
 
-aadlDispatcherWritePassiveArg(port) ::= <<
-<if(port.hasData)><port.type.valToAadlInput>(<port.data>.data[smaccm_it])<endif>
+aadlDispatcherWritePassiveArg(structName,port) ::= <<
+<if(port.hasData)><port.type.valToAadlInput>(<structName>.<port.data>[smaccm_it])<endif>
 >>
 
-aadlDispatcherWriteActiveArg(port) ::= <<
+aadlDispatcherWriteActiveArg(structName,port) ::= <<
 <if(port.hasData)>
-(<port.type.valToCamkesInput>(<port.data>.data[smaccm_it]))
+(<port.type.valToCamkesInput><structName>.(<port.data>[smaccm_it]))
 <endif>
 >>
 
@@ -478,23 +472,23 @@ activeThreadInternalDispatcherName(dispatcher) ::= <<
 <dispatcher.activeThreadInternalDispatcherFnName>
 >>
 
-aadlDispatcherCallPassiveTarget(portDest,portSrc) ::= <<
+aadlDispatcherCallPassiveTarget(portDest,structName,portSrc) ::= <<
 // Calling a passive dispatch target.
-<activeThreadInternalDispatcherName(portDest)>(<aadlDispatcherWritePassiveArg(portSrc)>);	
+<activeThreadInternalDispatcherName(portDest)>(<aadlDispatcherWritePassiveArg(structName,portSrc)>);	
 >>
 
-aadlDispatcherCallActiveTarget(portDest,portSrc) ::= <<
+aadlDispatcherCallActiveTarget(portDest,structName,portSrc) ::= <<
 // Calling an active dispatch target.
 {
-  bool remoteCallSuccessful = <outgoingPortWriterName(portDest,portSrc)>(<aadlDispatcherWriteActiveArg(portSrc)>);	
+  bool remoteCallSuccessful = <outgoingPortWriterName(portDest,portSrc)>(<aadlDispatcherWriteActiveArg(structName,portSrc)>);	
   assert(remoteCallSuccessful);
 }
 >>
 
-aadlDispatcherSendLoop(dispatchContract,dispatcher) ::= <<
-for (smaccm_it = 0; smaccm_it \< <dispatchContract.port.index> && smaccm_it \< <dispatchContract.maxDispatchSize>; smaccm_it++) {
-   <dispatchContract.passiveDispatchTargetList:aadlDispatcherCallPassiveTarget(dispatchContract.port)>
-   <dispatchContract.activeDispatchTargetList:aadlDispatcherCallActiveTarget(dispatchContract.port)>
+aadlDispatcherSendLoop(dispatchContract, structName) ::= <<
+for (smaccm_it = 0; smaccm_it \< <structName>.<dispatchContract.port.index> && smaccm_it \< <dispatchContract.maxDispatchSize>; smaccm_it++) {
+   <dispatchContract.passiveDispatchTargetList:aadlDispatcherCallPassiveTarget(structName, dispatchContract.port)>
+   <dispatchContract.activeDispatchTargetList:aadlDispatcherCallActiveTarget(structName, dispatchContract.port)>
 }
 
 >>
@@ -515,9 +509,9 @@ aadlDispatcherFunctionName(dispatcher) ::= <<
  
 aadlDispatcherFunctionArgs(dispatcher) ::= 
 << <if(dispatcher.hasData)><\\>
-	 <[{<dispatcher.type.aadlInputToCamkesInput> <dispatcher.name>}, dispatcher.dispatchableContracts:aadlDispatcherPassiveCallOutArg() ];separator=", \n"> 
-	 <else><\\>
-	<dispatcher.dispatchableContracts:aadlDispatcherPassiveCallOutArg();separator=", \n"> <endif>
+  <dispatcher.type.aadlInputToCamkesInput> <dispatcher.name>,
+<endif>
+  &<dispatcher.dispatchStructArgName>
 >>
 
 aadlDispatcherFunction(dispatcher) ::= <<
@@ -529,8 +523,9 @@ aadlDispatcherFunction(dispatcher) ::= <<
  * stimulus: an ISR, a periodic dispatch, or a queued event.
  * 
  ******************************************************************************/
+<dispatcher.dispatchStructTypeName> <dispatcher.dispatchStructArgName>;
+
 void <activeThreadInternalDispatcherName(dispatcher)>(<if(dispatcher.hasData)><dispatcher.type.aadlInputType.name> <dispatcher.name><endif>) {
-	<dispatcher.dispatchableContracts:aadlDispatcherDeclareData()>
 	
 	<portDispatcherLock(dispatcher)>
 	// make the call: 
@@ -543,7 +538,7 @@ void <activeThreadInternalDispatcherName(dispatcher)>(<if(dispatcher.hasData)><d
 	// to prevent misuse by malicious clients, we ensure that the number 
 	// of dispatches is less than the maximum allowed dispatch count.
 	uint32_t smaccm_it; 
-	<dispatcher.dispatchableContracts:aadlDispatcherSendLoop(dispatcher)>
+	<dispatcher.dispatchableContracts:aadlDispatcherSendLoop(dispatcher.dispatchStructArgName)>
 <endif>
 }
 

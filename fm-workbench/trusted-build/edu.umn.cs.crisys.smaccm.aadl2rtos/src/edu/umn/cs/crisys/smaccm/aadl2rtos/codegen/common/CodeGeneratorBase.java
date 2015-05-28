@@ -26,6 +26,7 @@ import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosFailure;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Logger;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.util.Util;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.names.ModelNames;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.names.PortNames;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.names.ThreadImplementationNames;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.names.TypeNames;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.*;
@@ -140,22 +141,25 @@ public abstract class CodeGeneratorBase {
       for (DispatchableInputPort d : ti.getDispatcherList()) {
         OutgoingDispatchContract maxCalls = 
            OutgoingDispatchContract.maxUsedDispatchers(d.getDispatchLimits());
+        RecordType dispatchRecordType = new RecordType();
+        //if (d.hasData()) {
+        //  dispatchRecordType.addField("input", d.getType());
+        //}
         for (Map.Entry<OutputEventPort, Integer> entry : maxCalls.getContract().entrySet()) {
-          if (entry.getKey().hasData()) {
-            ArrayType dispatchArrayType = new ArrayType(entry.getKey().getType(), entry.getValue());
-            //String arrayTypeName = CommonNames.getDispatchArrayTypeName(ti, entry);
-            //model.getAstTypes().put(arrayTypeName, dispatchArrayType);
+          OutputEventPort outp = entry.getKey();
+          if (outp.hasData()) {
+            ArrayType dispatchArrayType = new ArrayType(outp.getType(), entry.getValue());
+            PortNames outpn = new PortNames(outp);
             
-            RecordType dispatchRecordType = new RecordType();
-            if (d.hasData()) {
-              dispatchRecordType.addField("input", d.getType());
-            }
-            dispatchRecordType.addField("data", dispatchArrayType);
-            dispatchRecordType.addField("max", new IntType(32, false));
-            dispatchRecordType.addField("used", new IntType(32, false));
-            model.getAstTypes().put(TypeNames.getDispatchStructTypeName(ti, entry.getKey(), entry.getValue()), dispatchRecordType);
+            dispatchRecordType.addField(outpn.getData(), dispatchArrayType);
+            // dispatchRecordType.addField(outpn.getDataMaxsizeName(), new IntType(32, false));
+            dispatchRecordType.addField(outpn.getIndex(), new IntType(32, false));
           }
         }
+        if (dispatchRecordType.isEmpty()) {
+          dispatchRecordType.addField("unused", new IntType(32, false));
+        }
+        model.getAstTypes().put((new PortNames(d)).getDispatchStructTypeName(), dispatchRecordType);
       }
     }
     
