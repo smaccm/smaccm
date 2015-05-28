@@ -23,6 +23,7 @@ Bundle-ClassPath: .,
 Import-Package: org.osate.aadl2.instantiation,
  org.osate.annexsupport
 Export-Package: com.rockwellcollins.atc.agree.analysis,
+ com.rockwellcollins.atc.agree.analysis.extentions,
  com.rockwellcollins.atc.agree.analysis.preferences,
  jkind,
  jkind.api,

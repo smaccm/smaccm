@@ -3,6 +3,7 @@ package com.rockwellcollins.atc.agree.analysis.views;
 import java.io.File;
 import java.io.IOException;
 import java.text.DecimalFormat;
+import java.util.List;
 import java.util.Map;
 
 import jkind.api.results.AnalysisResult;
@@ -46,7 +47,11 @@ import com.rockwellcollins.atc.agree.agree.AssumeStatement;
 import com.rockwellcollins.atc.agree.agree.FnCallExpr;
 import com.rockwellcollins.atc.agree.agree.GuaranteeStatement;
 import com.rockwellcollins.atc.agree.agree.LemmaStatement;
+import com.rockwellcollins.atc.agree.analysis.Activator;
 import com.rockwellcollins.atc.agree.analysis.Util;
+import com.rockwellcollins.atc.agree.analysis.extentions.CexExtractor;
+import com.rockwellcollins.atc.agree.analysis.extentions.CexExtractorRegistry;
+import com.rockwellcollins.atc.agree.analysis.extentions.ExtensionRegistry;
 
 public class AgreeMenuListener implements IMenuListener {
     private static final GlobalURIEditorOpener globalURIEditorOpener = Util
@@ -108,11 +113,22 @@ public class AgreeMenuListener implements IMenuListener {
 
     private void addViewCounterexampleMenu(IMenuManager manager, AnalysisResult result) {
         final Counterexample cex = getCounterexample(result);
+        CexExtractorRegistry cexReg = (CexExtractorRegistry) ExtensionRegistry.getRegistry(ExtensionRegistry.CEX_EXTRACTOR_EXT_ID);
+        List<CexExtractor> extractors = cexReg.getCexExtractors();
+        
+        
         if (cex != null) {
             final String cexType = getCounterexampleType(result);
             final Layout layout = linker.getLayout(result.getParent());
             final Map<String, EObject> refMap = linker.getReferenceMap(result.getParent());
 
+            //send counterexamples to external plugins
+            PropertyResult pr = (PropertyResult) result;
+            EObject property = refMap.get(pr.getName());
+            for(CexExtractor ex: extractors){
+            	ex.receiveCex(property, cex, refMap);
+            }
+            
             manager.add(new Action("View " + cexType + "Counterexample in Console") {
                 @Override
                 public void run() {
