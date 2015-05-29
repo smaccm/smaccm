@@ -513,11 +513,13 @@ public class AgreeGenerator {
 
 	private static void addQSConstraints(AgreeEmitterState state) {
 		
-		if(state.clockVars.size() == 0){
-			throw new AgreeException("During Lustre generation there were no subcomponent clock varaibles present. "+
-		        "Is it possible that none of the subcomponents in '"+state.curInst.getFullName()+"' contain an AGREE annex?");
+		if(state.latchedClocks || state.asynchClocks || state.mnSyncEls.size() != 0 ||
+				state.calendar.size() != 0 || state.synchrony != 0){
+			if(state.clockVars.size() == 0){
+				throw new AgreeException("During Lustre generation there were no subcomponent clock varaibles present. "+
+						"Is it possible that none of the subcomponents in '"+state.curInst.getFullName()+"' contain an AGREE annex?");
+			}
 		}
-		
 		
     	String dfaNodeName = "__DFA_NODE_"+state.curInst.getComponentInstancePath();
     	dfaNodeName = dfaNodeName.replace(".", "__");

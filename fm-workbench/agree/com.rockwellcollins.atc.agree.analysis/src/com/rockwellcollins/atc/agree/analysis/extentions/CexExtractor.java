@@ -5,7 +5,6 @@ import java.util.Map;
 import jkind.results.Counterexample;
 
 import org.eclipse.emf.ecore.EObject;
-import org.osate.aadl2.ComponentImplementation;
 
 public interface CexExtractor {
 	
