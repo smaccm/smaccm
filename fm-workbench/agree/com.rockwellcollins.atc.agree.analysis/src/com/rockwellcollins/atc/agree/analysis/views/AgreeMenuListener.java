@@ -149,11 +149,13 @@ public class AgreeMenuListener implements IMenuListener {
             // send counterexamples to external plugins
             PropertyResult pr = (PropertyResult) result;
             EObject property = refMap.get(pr.getName());
+            ComponentImplementation compImpl = linker.getComponent(result.getParent());
+            
             for (CexExtractor ex : extractors) {
                 sub.add(new Action(ex.getDisplayText()) {
                     @Override
                     public void run() {
-                        ex.receiveCex(property, cex, refMap);
+                        ex.receiveCex(compImpl, property, cex, refMap);
                     }
                 });
             }

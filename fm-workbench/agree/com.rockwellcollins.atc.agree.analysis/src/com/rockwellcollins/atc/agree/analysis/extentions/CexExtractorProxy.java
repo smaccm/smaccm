@@ -6,6 +6,7 @@ import jkind.results.Counterexample;
 
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.emf.ecore.EObject;
+import org.osate.aadl2.ComponentImplementation;
 import org.osate.annexsupport.AnnexHighlighter;
 import org.osate.annexsupport.AnnexPlugin;
 
@@ -19,12 +20,12 @@ public class CexExtractorProxy extends ExtensionProxy implements CexExtractor{
 	}
 
 	@Override
-	public void receiveCex(EObject property,
+	public void receiveCex(ComponentImplementation compImpl, EObject property,
 			Counterexample cex, Map<String, EObject> refMap) {
 		CexExtractor extractor = getCexExtractor();
 		
 		if(extractor != null){
-			extractor.receiveCex(property, cex, refMap);
+			extractor.receiveCex(compImpl, property, cex, refMap);
 		}
 	}
 
