@@ -163,10 +163,11 @@ public class AadlModelParser {
 		try {
 		  if (this.model.getOsTarget() == OSTarget.CAmkES) {
 		    this.model.camkesTimeServerAadlThreadMinIndex = (int)PropertyUtils.getIntegerValue(systemImplementation, PropertyUtil.CAMKES_TIME_SERVER_AADL_THREAD_MIN_INDEX);
+		    this.model.camkesDataportRpcMinIndex = (int)PropertyUtils.getIntegerValue(systemImplementation, PropertyUtil.CAMKES_DATAPORT_RPC_MIN_INDEX);
 		  }
 		} catch (Exception e) {
-      this.logger.error("Property camkesTimeServerAadlThreadMinIndex must be assigned for CAmkES target.");
-      throw new Aadl2RtosException("Parse failure on [camkesTimeServerAadlThreadMinIndex] target property ");
+      this.logger.error("Properties camkesTimeServerAadlThreadMinIndex and camkesDataportRpcMinIndex must be assigned for CAmkES target.");
+      throw new Aadl2RtosException("Parse failure on one of [camkesTimeServerAadlThreadMinIndex, camkesDataportRpcMinIndex] target property ");
 		}
 		
 		if (this.model.externalTimerComponent) {

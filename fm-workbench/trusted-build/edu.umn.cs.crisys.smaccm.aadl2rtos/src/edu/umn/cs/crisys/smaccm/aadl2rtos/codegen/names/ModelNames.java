@@ -147,7 +147,10 @@ public class ModelNames {
   public String getGenerateCamkesTimeServerThreadIndex() {
     return Integer.toString(m.getGenerateCamkesTimeServerThreadIndex());
   }
-  
+
+  public String getGenerateCamkesDataportRpcMinIndex() {
+    return Integer.toString(m.getGenerateCamkesDataportRpcMinIndex());
+  }
   public boolean getIsCamkesTarget() {
     return m.getOsTarget().equals(Model.OSTarget.CAmkES);
   }

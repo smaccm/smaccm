@@ -88,6 +88,7 @@ public class Model {
 	String camkesExternalTimerCompletePath;
 	int camkesInternalTimerTimersPerClient; 
 	int camkesTimeServerAadlThreadMinIndex; 
+	int camkesDataportRpcMinIndex;
 	
 	public enum CommMutualExclusionPrimitive {MUTEX, SUSPEND_INTERRUPT} ; 
 	CommMutualExclusionPrimitive commMutexPrimitive = CommMutualExclusionPrimitive.MUTEX; 
@@ -404,6 +405,19 @@ public class Model {
   }
 
   public int getGenerateCamkesTimeServerThreadIndex() {
+    return camkesTimeServerAadlThreadMinIndex++; 
+  }
+
+  
+  public int getCamkesDataportRpcMinIndex() {
+    return camkesDataportRpcMinIndex;
+  }
+
+  public void setCamkesDataportRpcMinIndex(int camkesDataportRpcMinIndex) {
+    this.camkesDataportRpcMinIndex = camkesDataportRpcMinIndex;
+  }
+
+  public int getGenerateCamkesDataportRpcMinIndex() {
     return camkesTimeServerAadlThreadMinIndex++; 
   }
 
