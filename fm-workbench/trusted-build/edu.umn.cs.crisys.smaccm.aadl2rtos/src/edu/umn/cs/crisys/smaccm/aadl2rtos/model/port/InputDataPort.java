@@ -10,7 +10,7 @@ import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.Type;
  * @author Whalen
  *
  */
-public class InputDataPort extends DispatchableInputPort {
+public class InputDataPort extends InputPort {
  
   public InputDataPort(String portName, 
       Type dataType,
