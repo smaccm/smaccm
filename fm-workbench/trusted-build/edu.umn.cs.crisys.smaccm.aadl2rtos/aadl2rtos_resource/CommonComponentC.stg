@@ -464,7 +464,7 @@ aadlDispatcherWritePassiveArg(structName,port) ::= <<
 
 aadlDispatcherWriteActiveArg(structName,port) ::= <<
 <if(port.hasData)>
-(<port.type.valToCamkesInput><structName>.(<port.data>[smaccm_it]))
+(<port.type.valToCamkesInput>(<structName>.<port.data>[smaccm_it]))
 <endif>
 >>
 
