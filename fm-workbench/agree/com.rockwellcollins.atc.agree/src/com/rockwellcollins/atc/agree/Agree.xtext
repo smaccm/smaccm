@@ -43,7 +43,7 @@ AgreeContract returns Contract:
 SpecStatement:
 	{AssumeStatement} 'assume' str=STRING ':' expr=Expr ';'
 	| {GuaranteeStatement} 'guarantee' str=STRING ':' expr=Expr ';'
-	| {AssertStatement} 'assert' expr=Expr ';'
+	| {AssertStatement} 'assert' (str=STRING ':')? expr=Expr ';'
 	| {InitialStatement} 'initially' ':' expr = Expr ';'
 	| {ParamStatement} 'parameter' expr=Expr ':' type=Type ';'
 	| {LemmaStatement} 'lemma' str=STRING ':' expr=Expr ';'

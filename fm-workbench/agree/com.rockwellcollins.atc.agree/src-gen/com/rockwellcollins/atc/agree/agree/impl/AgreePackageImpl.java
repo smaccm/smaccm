@@ -1094,9 +1094,19 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  public EAttribute getAssertStatement_Str()
+  {
+    return (EAttribute)assertStatementEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   public EReference getAssertStatement_Expr()
   {
-    return (EReference)assertStatementEClass.getEStructuralFeatures().get(0);
+    return (EReference)assertStatementEClass.getEStructuralFeatures().get(1);
   }
 
   /**
@@ -1950,6 +1960,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     createEReference(guaranteeStatementEClass, GUARANTEE_STATEMENT__EXPR);
 
     assertStatementEClass = createEClass(ASSERT_STATEMENT);
+    createEAttribute(assertStatementEClass, ASSERT_STATEMENT__STR);
     createEReference(assertStatementEClass, ASSERT_STATEMENT__EXPR);
 
     initialStatementEClass = createEClass(INITIAL_STATEMENT);
@@ -2235,6 +2246,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     initEReference(getGuaranteeStatement_Expr(), this.getExpr(), null, "expr", null, 0, 1, GuaranteeStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(assertStatementEClass, AssertStatement.class, "AssertStatement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEAttribute(getAssertStatement_Str(), theEcorePackage.getEString(), "str", null, 0, 1, AssertStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getAssertStatement_Expr(), this.getExpr(), null, "expr", null, 0, 1, AssertStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(initialStatementEClass, InitialStatement.class, "InitialStatement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);

@@ -84,6 +84,7 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//GuaranteeStatement/expr"/>
     </genClasses>
     <genClasses ecoreClass="Agree.ecore#//AssertStatement">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Agree.ecore#//AssertStatement/str"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//AssertStatement/expr"/>
     </genClasses>
     <genClasses ecoreClass="Agree.ecore#//InitialStatement">

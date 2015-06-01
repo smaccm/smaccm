@@ -1597,13 +1597,22 @@ public interface AgreePackage extends EPackage
   int ASSERT_STATEMENT__OWNED_COMMENT = SPEC_STATEMENT__OWNED_COMMENT;
 
   /**
+   * The feature id for the '<em><b>Str</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int ASSERT_STATEMENT__STR = SPEC_STATEMENT_FEATURE_COUNT + 0;
+
+  /**
    * The feature id for the '<em><b>Expr</b></em>' containment reference.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int ASSERT_STATEMENT__EXPR = SPEC_STATEMENT_FEATURE_COUNT + 0;
+  int ASSERT_STATEMENT__EXPR = SPEC_STATEMENT_FEATURE_COUNT + 1;
 
   /**
    * The number of structural features of the '<em>Assert Statement</em>' class.
@@ -1612,7 +1621,7 @@ public interface AgreePackage extends EPackage
    * @generated
    * @ordered
    */
-  int ASSERT_STATEMENT_FEATURE_COUNT = SPEC_STATEMENT_FEATURE_COUNT + 1;
+  int ASSERT_STATEMENT_FEATURE_COUNT = SPEC_STATEMENT_FEATURE_COUNT + 2;
 
   /**
    * The meta object id for the '{@link com.rockwellcollins.atc.agree.agree.impl.InitialStatementImpl <em>Initial Statement</em>}' class.
@@ -3810,6 +3819,17 @@ public interface AgreePackage extends EPackage
   EClass getAssertStatement();
 
   /**
+   * Returns the meta object for the attribute '{@link com.rockwellcollins.atc.agree.agree.AssertStatement#getStr <em>Str</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the attribute '<em>Str</em>'.
+   * @see com.rockwellcollins.atc.agree.agree.AssertStatement#getStr()
+   * @see #getAssertStatement()
+   * @generated
+   */
+  EAttribute getAssertStatement_Str();
+
+  /**
    * Returns the meta object for the containment reference '{@link com.rockwellcollins.atc.agree.agree.AssertStatement#getExpr <em>Expr</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -5127,6 +5147,14 @@ public interface AgreePackage extends EPackage
      * @generated
      */
     EClass ASSERT_STATEMENT = eINSTANCE.getAssertStatement();
+
+    /**
+     * The meta object literal for the '<em><b>Str</b></em>' attribute feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EAttribute ASSERT_STATEMENT__STR = eINSTANCE.getAssertStatement_Str();
 
     /**
      * The meta object literal for the '<em><b>Expr</b></em>' containment reference feature.
