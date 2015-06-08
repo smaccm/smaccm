@@ -5,15 +5,14 @@ package edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.names;
 
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosException;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosFailure;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.DispatchableInputPort;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.OutputEventPort;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.ThreadImplementation;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.ArrayType;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.IdType;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.PointerType;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.RecordType;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.Type;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.UnitType;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.util.Util;
 
 /**
  * @author Whalen
@@ -255,12 +254,6 @@ public class TypeNames {
     return "write_" + getName();
   }
   
-  // for creating dispatcher structures for components
-  static public String getDispatchStructTypeName(ThreadImplementation ti, 
-	      OutputEventPort key, Integer val) {
-	    return "smaccm_" + Util.normalizeAadlName(key.getType().toString()) 
-	        + "_struct_" + val; 
-  }
   
   // TODO MWW: Hacks!  To get arrays working with CAmkES.
   static private String getCamkesArrayContainerName(IdType idt) {

@@ -86,21 +86,27 @@ public class AgreeLinkingService extends PropertiesLinkingService {
             List<String> visibleProjects = getVisibleProjects(contextProject);
 
             for (IEObjectDescription eod : allObjectTypes) {
-                if (eod.getName().toString().equalsIgnoreCase(name)) {
+                if (sameName(eod, name) && isVisible(eod, visibleProjects)) {
                     EObject res = eod.getEObjectOrProxy();
                     res = EcoreUtil.resolve(res, context.eResource().getResourceSet());
                     if (!Aadl2Util.isNull(res)) {
-                        URI linkUri = res.eResource().getURI();
-                        String linkProject = linkUri.segment(1);
-                        if (visibleProjects.contains(linkProject)) {
-                            return Collections.singletonList(res);
-                        }
+                        return Collections.singletonList(res);
                     }
                 }
             }
         }
 
         return super.getLinkedObjects(context, reference, node);
+    }
+
+    private static boolean sameName(IEObjectDescription eod, String name) {
+        return eod.getName().toString().equalsIgnoreCase(name);
+    }
+
+    private static boolean isVisible(IEObjectDescription eod, List<String> visibleProjects) {
+        URI uri = eod.getEObjectURI();
+        String project = uri.segment(1);
+        return visibleProjects.contains(project);
     }
 
     private static List<String> getVisibleProjects(String contextProjectName) {

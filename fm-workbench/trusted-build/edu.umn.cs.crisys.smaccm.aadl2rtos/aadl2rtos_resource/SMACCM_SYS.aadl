@@ -45,6 +45,7 @@ property set SMACCM_SYS is
 	CAmkES_External_Timer_Complete_Path : aadlstring applies to (system implementation);
 	CAmkES_Internal_Timer_Timers_Per_Client : aadlinteger => 8 applies to (system implementation); 
 	CAmkES_Time_Server_AADL_Thread_Min_Index : aadlinteger => 10 applies to (system implementation); 
+	CAmkES_Dataport_RPC_Min_Index : aadlinteger => 10 applies to (system implementation); 
 	Requires_Time_Services : aadlboolean => false applies to (thread); 
 	
 	-- For different parameter passing styles

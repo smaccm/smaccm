@@ -70,7 +70,6 @@ import org.osate.xtext.aadl2.properties.util.PropertyUtils;
 
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosException;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Logger;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.*;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.legacy.*;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.rpc.Direction;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.rpc.RemoteProcedure;
@@ -164,10 +163,11 @@ public class AadlModelParser {
 		try {
 		  if (this.model.getOsTarget() == OSTarget.CAmkES) {
 		    this.model.camkesTimeServerAadlThreadMinIndex = (int)PropertyUtils.getIntegerValue(systemImplementation, PropertyUtil.CAMKES_TIME_SERVER_AADL_THREAD_MIN_INDEX);
+		    this.model.camkesDataportRpcMinIndex = (int)PropertyUtils.getIntegerValue(systemImplementation, PropertyUtil.CAMKES_DATAPORT_RPC_MIN_INDEX);
 		  }
 		} catch (Exception e) {
-      this.logger.error("Property camkesTimeServerAadlThreadMinIndex must be assigned for CAmkES target.");
-      throw new Aadl2RtosException("Parse failure on [camkesTimeServerAadlThreadMinIndex] target property ");
+      this.logger.error("Properties camkesTimeServerAadlThreadMinIndex and camkesDataportRpcMinIndex must be assigned for CAmkES target.");
+      throw new Aadl2RtosException("Parse failure on one of [camkesTimeServerAadlThreadMinIndex, camkesDataportRpcMinIndex] target property ");
 		}
 		
 		if (this.model.externalTimerComponent) {
@@ -257,7 +257,7 @@ public class AadlModelParser {
 	 * 
 	 ***************************************************************************/
   
-  void addIrqHandler(PortImpl port, ThreadImplementation ti) {
+  InputIrqPort addIrqHandler(PortImpl port, ThreadImplementation ti) {
     try {
       List<String> entrypoints = PropertyUtil.getComputeEntrypointList(port);
       if (entrypoints == null) { 
@@ -280,25 +280,24 @@ public class AadlModelParser {
           ExternalHandler eh = new ExternalHandler(s);
           ehl.add(eh);
       }
-      IRQDispatcher disp = new IRQDispatcher(ti, ehl, signal_name, signal_number, flih_handler, memoryRegions);
+      InputIrqPort ip = new InputIrqPort(port.getName(), ti, 
+          signal_name, signal_number, flih_handler, memoryRegions);
+      ip.setExternalHandlerList(ehl);
       String sendsEventsTo = Util.getStringValueOpt(port, PropertyUtil.SMACCM_SYS_SENDS_EVENTS_TO);
-      disp.setOptSendsEventsToString(sendsEventsTo);
-      disp.setImplementationFileList(files);
-      ti.addDispatcher(disp);
+      ip.setOptSendsEventsToString(sendsEventsTo);
+      ip.setImplementationFileList(files);
+      return ip;
+      
     } catch (Exception e) {
       logger.error("Exception in construction of ISR port: " + port.getName() + " (likely missing one of {Compute_Entrypoint, SMACCM_SYS::Signal_Name, SMACCM_SYS::First_Level_Interrupt_Handler}).  Error code: " + 
           e.toString());
+      throw new Aadl2RtosException("Problem constructing ISR port.");
     }
   }
   
 	InputEventPort addInputEventPort(PortImpl port, Type datatype, ThreadImplementation ti) {
     int queueSize = PropertyUtil.getQueueSize(port); 
     InputEventPort iep = new InputEventPort(port.getName(), datatype, ti, queueSize);
-    if (iep.hasData()) {
-      ti.addInputEventDataPort(iep);
-    } else {
-      ti.addInputEventPort(iep);
-    }
     
     List<String> entrypoints = PropertyUtil.getComputeEntrypointList(port);
     if (entrypoints != null) {
@@ -307,13 +306,11 @@ public class AadlModelParser {
           ExternalHandler eh = new ExternalHandler(s);
           ehl.add(eh);
       }
-      InputEventDispatcher disp = new InputEventDispatcher(ti, ehl, iep);
       List<String> files = Util.getSourceTextListOpt(port,PropertyUtil.SOURCE_TEXT);
       String sendsEventsTo = Util.getStringValueOpt(port, PropertyUtil.SMACCM_SYS_SENDS_EVENTS_TO);
-      disp.setOptSendsEventsToString(sendsEventsTo);
-      disp.setImplementationFileList(files);
-      iep.setDispatcher(disp);
-      ti.addDispatcher(disp);
+      iep.setExternalHandlerList(ehl);
+      iep.setOptSendsEventsToString(sendsEventsTo);
+      iep.setImplementationFileList(files);
     } else {
       logger.warn("Warning: event port: " + port.getName() + " in thread: " + ti.getName() + " does not have a compute entrypoint and will not be dispatched.");
     }
@@ -329,54 +326,43 @@ public class AadlModelParser {
     Type datatype = getDataType(port);
     if (port.getCategory() == PortCategory.DATA) {
       if (port.getDirection() == DirectionType.IN) {
-        InputDataPort idp = new InputDataPort(port.getName(), datatype, ti);
-        ti.addInputDataPort(idp);
-        dp = idp;
+        dp = new InputDataPort(port.getName(), datatype, ti);
       } else {
-        OutputDataPort odp = new OutputDataPort(port.getName(), datatype, ti);
-        ti.addOutputDataPort(odp);
-        dp = odp;
+        dp = new OutputDataPort(port.getName(), datatype, ti);
       }
     } else if (port.getCategory() == PortCategory.EVENT) {
       if (port.getDirection() == DirectionType.IN) {
         // handle IRQs specially
         if (PropertyUtil.getIsIsr(port)) {
-          dp = null;
-          addIrqHandler(port, ti); 
+          dp = addIrqHandler(port, ti); 
         } else {
           dp = addInputEventPort(port, new UnitType(), ti);
         }
       } else {
-        OutputEventPort oep = new OutputEventPort(port.getName(), new UnitType(), ti);
-        ti.addOutputEventPort(oep);
-        dp = oep;
+        dp = new OutputEventPort(port.getName(), new UnitType(), ti);
       }
     } else if (port.getCategory() == PortCategory.EVENT_DATA) {
       if (port.getDirection() == DirectionType.IN) {
         if (PropertyUtil.getIsIsr(port)) {
-          dp = null;
           throw new Aadl2RtosException("ISR ports can only be event ports.");
         } else {
           dp = addInputEventPort(port, datatype, ti);
         }
       } else {
-        OutputEventPort oep = new OutputEventPort(port.getName(), datatype, ti);
-        dp = oep;
-        ti.addOutputEventDataPort(oep);
+        dp = new OutputEventPort(port.getName(), datatype, ti);
       }
     }
+    ti.addPort(dp);
 
-    if (dp != null) {
-      String initializeEntrypointSourceText = Util.getStringValueOpt(port, PropertyUtil.INITIALIZE_ENTRYPOINT_SOURCE_TEXT);
-      String commprimFnNameOpt = Util.getStringValueOpt(port, PropertyUtil.SMACCM_SYS_COMMPRIM_SOURCE_TEXT);
-      String commprimHeaderNameOpt = Util.getStringValueOpt(port, PropertyUtil.SMACCM_SYS_COMMPRIM_SOURCE_HEADER);
-      dp.setCommprimFnNameOpt(commprimFnNameOpt);
-      dp.setCommprimHeaderNameOpt(commprimHeaderNameOpt);
-      if (initializeEntrypointSourceText != null) {
-        dp.setInitializeEntrypointSourceText(new ExternalHandler(initializeEntrypointSourceText));
-      }
-      portMap.put(port, dp);
+    String initializeEntrypointSourceText = Util.getStringValueOpt(port, PropertyUtil.INITIALIZE_ENTRYPOINT_SOURCE_TEXT);
+    String commprimFnNameOpt = Util.getStringValueOpt(port, PropertyUtil.SMACCM_SYS_COMMPRIM_SOURCE_TEXT);
+    String commprimHeaderNameOpt = Util.getStringValueOpt(port, PropertyUtil.SMACCM_SYS_COMMPRIM_SOURCE_HEADER);
+    dp.setCommprimFnNameOpt(commprimFnNameOpt);
+    dp.setCommprimHeaderNameOpt(commprimHeaderNameOpt);
+    if (initializeEntrypointSourceText != null) {
+      dp.setInitializeEntrypointSourceText(new ExternalHandler(initializeEntrypointSourceText));
     }
+    portMap.put(port, dp);
 	}
 	
   /***************************************************************************
@@ -424,11 +410,14 @@ public class AadlModelParser {
         for (String entrypoint : entrypointNameList) {
           handlerList.add(new ExternalHandler(entrypoint)); 
         }
-        Dispatcher d = new PeriodicDispatcher(ti, handlerList, period);
+        InputPeriodicPort ipp = new InputPeriodicPort("periodic_dispatcher", ti); 
+        
         String sendsEventsTo = Util.getStringValueOpt(tti, PropertyUtil.SMACCM_SYS_SENDS_EVENTS_TO);
-        d.setOptSendsEventsToString(sendsEventsTo);
-        d.setImplementationFileList(Util.getSourceTextListOpt(tti, PropertyUtil.SOURCE_TEXT));
-        ti.addDispatcher(d);
+        ipp.setPeriod(period);
+        ipp.setOptSendsEventsToString(sendsEventsTo);
+        ipp.setImplementationFileList(Util.getSourceTextListOpt(tti, PropertyUtil.SOURCE_TEXT));
+        ipp.setExternalHandlerList(handlerList);
+        ti.addPort(ipp);
       } catch (Exception e) {
         throw new Aadl2RtosException(
             "For thread " + tti.getFullName()
@@ -509,8 +498,8 @@ public class AadlModelParser {
       // the dispatch limits really should be defined per dispatcher.  For now,
       // we are setting them per-thread.
       
-      List<Dispatcher> dispList = ti.getDispatcherList();
-      for (Dispatcher d : dispList) {
+      List<DispatchableInputPort> dispList = ti.getDispatcherList();
+      for (DispatchableInputPort d : dispList) {
         if (d.getOptSendsEventsToString() != null) {
           String set = d.getOptSendsEventsToString();
           SendsToWalker s = constructDispatchLimit(set, outputs);
@@ -534,14 +523,15 @@ public class AadlModelParser {
       ExternalHandler handler = new ExternalHandler(initializer);
       ArrayList<ExternalHandler> handlers = new ArrayList<ExternalHandler>();
       handlers.add(handler); 
-      InitializerDispatcher id = new InitializerDispatcher(ti, handlers);
+      InitializerPort id = new InitializerPort(ti.getName() + "_initializer", ti);
+      id.setExternalHandlerList(handlers);
       ti.setInitializeEntrypointOpt(id);
-      ti.addDispatcher(id);
+      ti.addPort(id);
     }
   }
   
   private ThreadImplementation constructThreadImplementation(ThreadTypeImpl tti) {
-    String name = tti.getName().toLowerCase();
+    String name = tti.getName();
     boolean isPassive = PropertyUtil.getThreadType(tti);    
     int priority = -1; 
     int stackSize = 4096;
@@ -1145,9 +1135,9 @@ public class AadlModelParser {
     
     // Get dispatcher file names.
     for (ThreadImplementation i: this.getThreadImplementationMap().values()) {
-      for (Dispatcher d: i.getDispatcherList()) {
-        if (d.getImplementationFileList() != null) {
-          this.model.sourceFiles.addAll(d.getImplementationFileList());
+      for (DataPort p : i.getPortList()) {
+        if (p.getImplementationFileList() != null) {
+          this.model.sourceFiles.addAll(p.getImplementationFileList());
         }
       }
     }
@@ -1224,10 +1214,10 @@ public class AadlModelParser {
   private void initializeThreadCalendar() {
     
     for (ThreadImplementation ti: this.threadImplementationMap.values()) {
-      for (Dispatcher d: ti.getDispatcherList()) {
-        if (d instanceof PeriodicDispatcher) {
-          PeriodicDispatcher pd = (PeriodicDispatcher)d;
-          this.model.threadCalendar.addPeriodicDispatcher(pd);
+      for (DataPort p: ti.getPortList()) {
+        if (p instanceof InputPeriodicPort) {
+          InputPeriodicPort pd = (InputPeriodicPort)p;
+          this.model.threadCalendar.addPeriodicPort(pd);
         }
       }
     }

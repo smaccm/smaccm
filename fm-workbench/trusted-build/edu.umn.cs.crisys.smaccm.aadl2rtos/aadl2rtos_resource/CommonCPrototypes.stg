@@ -13,21 +13,13 @@ import "CommonOSSpecificNames.stg"
 /////////////////////////////////////////////////////////////////////
 
 
-userEntrypointCallerInputArg(dispatcher) ::=  <<const <dispatcher.type.camkesInputType.name> <dispatcher.name> >>
-
-userEntrypointCallerDataOutputArg(dispatchContract) ::= 
-<< <if(dispatchContract.canDispatch)> <if(dispatchContract.port.hasData)><dispatchContract.dispatchStructTypeName> *<dispatchContract.port.data>, <endif><\\> 
-  <dispatchContract.port.indexType.aadlOutputType.name> <dispatchContract.port.index> <endif>
->>
+userEntrypointCallerInputArg(dispatcher) ::=  <<const <dispatcher.type.camkesInputType.name> in_arg >>
 
 userEntrypointCallerFnArgs(dispatcher) ::= <<
 <if(dispatcher.hasData)>
-<[userEntrypointCallerInputArg(dispatcher), dispatcher.dispatchableContracts:userEntrypointCallerDataOutputArg()]; separator=",\n">
-<elseif(dispatcher.dispatchableContracts)>
-<dispatcher.dispatchableContracts:userEntrypointCallerDataOutputArg();separator=",\n">
-<else>
-void
+  <userEntrypointCallerInputArg(dispatcher)>,
 <endif>
+  <dispatcher.dispatchStructTypeName> *out_arg
 >>
 
 userEntrypointCallerPrototype(dispatcher) ::= << 

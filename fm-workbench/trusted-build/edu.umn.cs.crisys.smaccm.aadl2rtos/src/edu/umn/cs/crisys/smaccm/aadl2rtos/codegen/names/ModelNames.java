@@ -8,10 +8,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.IRQDispatcher;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.legacy.ExternalIRQEvent;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.legacy.ExternalISR;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.DataPort;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.InputIrqPort;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.ExternalIRQ;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.SharedData;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.ThreadImplementation;
@@ -87,10 +87,10 @@ public class ModelNames {
     return new ThreadCalendarNames(m.getThreadCalendar());
   }
 
-  public List<DispatcherNames> getIrqDispatchers() {
-    List<DispatcherNames> irqs = new ArrayList<>(); 
-    for (IRQDispatcher disp : m.getIRQDispatcherList()) {
-      irqs.add(new DispatcherNames(disp));
+  public List<PortNames> getIrqDispatchers() {
+    List<PortNames> irqs = new ArrayList<>(); 
+    for (InputIrqPort disp : m.getIRQDispatcherList()) {
+      irqs.add(new PortNames(disp));
     }
     return irqs;
   }
@@ -147,7 +147,10 @@ public class ModelNames {
   public String getGenerateCamkesTimeServerThreadIndex() {
     return Integer.toString(m.getGenerateCamkesTimeServerThreadIndex());
   }
-  
+
+  public String getGenerateCamkesDataportRpcMinIndex() {
+    return Integer.toString(m.getGenerateCamkesDataportRpcMinIndex());
+  }
   public boolean getIsCamkesTarget() {
     return m.getOsTarget().equals(Model.OSTarget.CAmkES);
   }

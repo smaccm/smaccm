@@ -93,10 +93,13 @@ component <calendar.periodicDispatcherComponentName> <calendar.periodicDispatche
 rpcConnection(cid, from1, from2, to1, to2) ::= 
    "connection seL4RPCCall <cid> (from <from1>.<from2>, to <to1>.<to2>);"
 
+rpcDataportConnection(cid, from1, from2, to1, to2) ::= 
+   "connection seL4RPCCallDataport <cid> (from <from1>.<from2>, to <to1>.<to2>);"
+
 connectPassiveToActive(passiveThreadImpl, activeThreadImpl, model) ::= <<
 <if(!activeThreadImpl.isExternal)>
 <if(passiveThreadImpl.containsDispatchers)><\\>
-<rpcConnection(model.generateConnectionName,
+<rpcDataportConnection(model.generateConnectionName,
 	activeThreadImpl.componentInstanceName,
 	passiveThreadImpl.interfaceInstanceName,
 	passiveThreadImpl.componentInstanceName,
@@ -141,7 +144,7 @@ assemblyConnectPeriodic(threadImpl, model) ::= <<
 >>
 
 connectReaderWriter(connection, srcThreadImpl, model) ::= <<
-<if(connection.sourcePort.isOutputDataPort)><\\>
+<if(connection.sourcePort.isOutputData)><\\>
 <rpcConnection(model.generateConnectionName, 
 	srcThreadImpl.componentInstanceName,
 	connection.sourcePort.qualifiedName,
@@ -206,6 +209,17 @@ connection seL4TimeServer <threadImpl.timeServicesConnectionName>(from <threadIm
 <endif>
 >>
 
+configActiveToPassiveDataportId(passiveThreadImpl, activeThreadImpl, model) ::= <<
+<if(passiveThreadImpl.containsDispatchers)><\\>
+<activeThreadImpl.componentInstanceName>.<passiveThreadImpl.componentInstanceName>_attributes = "<model.generateCamkesDataportRpcMinIndex>"; 
+<endif>
+>>
+
+configActiveToPassiveRegionDataportId(threadImpl, model) ::= <<
+<threadImpl.passiveThreadRegion:configActiveToPassiveDataportId(threadImpl, model)>
+
+>>
+
 configConnectTimeServices(threadImpl, model) ::= <<
 <if(threadImpl.requiresTimeServices)>
 <threadImpl.componentInstanceName>.timer_attributes = "<model.generateCamkesTimeServerThreadIndex>"; 
@@ -239,6 +253,12 @@ import <\u003C>std_connector.camkes<\u003E>;
 <model.threadImplementations:assemblyThreadImplementationImports()>
 
 <model.irqDispatchers:constructIRQComponent()>
+
+connector seL4RPCCallDataport {
+    from Procedure client template "seL4RPCCallDataport-from.template.c";
+    to Procedure server template "seL4RPCCallDataport-to.template.c";
+}
+
 
 assembly {
 	composition {
@@ -308,6 +328,9 @@ assembly {
 		<model.threadImplementations:assemblySetPriorities()>
 		<model.threadImplementations:assemblySetStackSize()>		
 		<model.threadImplementations:configConnectTimeServices(model)>
+
+		<model.activeThreadImplementations:configActiveToPassiveRegionDataportId(model)>	
+
     }
 }
 

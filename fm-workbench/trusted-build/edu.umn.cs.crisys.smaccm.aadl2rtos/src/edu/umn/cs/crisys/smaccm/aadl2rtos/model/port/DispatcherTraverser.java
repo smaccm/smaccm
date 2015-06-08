@@ -1,12 +1,11 @@
 /**
  * 
  */
-package edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher;
+package edu.umn.cs.crisys.smaccm.aadl2rtos.model.port;
 
 import java.util.*;
 
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosException;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.*;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.*;
 
 /**
@@ -47,9 +46,9 @@ public class DispatcherTraverser {
   
   public DispatcherTraverser() {}
   
-  private boolean allowRecursion = true;
+  private boolean allowRecursion = false;
   
-  private void traversePassiveDispatchersInternal(Set<Dispatcher> visited, Deque<Dispatcher> path, Dispatcher d, String indent) {
+  private void traversePassiveDispatchersInternal(Set<DispatchableInputPort> visited, Deque<DispatchableInputPort> path, DispatchableInputPort d, String indent) {
     
     // System.out.println(indent + "Visiting dispatcher: " + d.getOwner().getName() + "." + d.getName()); 
     if (path.contains(d) && !allowRecursion) {
@@ -63,12 +62,9 @@ public class DispatcherTraverser {
         for (PortConnection pc : elem.getKey().getConnections()) {
           // should be only output event ports, so connection should be to input event ports! 
           InputEventPort iep = (InputEventPort)pc.getDestPort();
-          InputEventDispatcher ied = iep.getOptDispatcher();
-          if (ied != null) {
-            path.push(d);
-            traversePassiveDispatchersInternal(visited, path, ied, indent + "  ");
-            path.pop();
-          }
+          path.push(d);
+          traversePassiveDispatchersInternal(visited, path, iep, indent + "  ");
+          path.pop();
         }
       }
     }
@@ -92,11 +88,11 @@ public class DispatcherTraverser {
    * @param  init  the initial dispatcher for traversal
    * @param  frontier the set containing the result of the traversal.
    */
-  private void dispatcherActiveThreadConnectionFrontier(Dispatcher init, Set<PortConnection> frontier) {
-    Set<Dispatcher> visited = new HashSet<Dispatcher>(); 
+  private void dispatcherActiveThreadConnectionFrontier(DispatchableInputPort init, Set<PortConnection> frontier) {
+    Set<DispatchableInputPort> visited = new HashSet<DispatchableInputPort>(); 
     visited.add(init);
     passiveDispatchersFromActiveThread(visited, init);
-    for (Dispatcher d : visited) {
+    for (DispatchableInputPort d : visited) {
       for (OutgoingDispatchContract limit : d.getDispatchLimits()) {
         for (Map.Entry<OutputEventPort, Integer> elem : limit.getContract().entrySet()) {
           for (PortConnection pc : elem.getKey().getConnections()) {
@@ -110,7 +106,7 @@ public class DispatcherTraverser {
     }
   }
   
-  public void dispatcherNonlocalActiveThreadConnectionFrontier(Dispatcher init, Set<PortConnection> frontier) {
+  public void dispatcherNonlocalActiveThreadConnectionFrontier(DispatchableInputPort init, Set<PortConnection> frontier) {
     dispatcherActiveThreadConnectionFrontier(init, frontier); 
     Iterator<PortConnection> setIt = frontier.iterator();
     while (setIt.hasNext()) {
@@ -121,7 +117,7 @@ public class DispatcherTraverser {
     }  
   }
   
-  public void dispatcherLocalActiveThreadConnectionFrontier(Dispatcher init, Set<PortConnection> frontier) {
+  public void dispatcherLocalActiveThreadConnectionFrontier(DispatchableInputPort init, Set<PortConnection> frontier) {
     dispatcherActiveThreadConnectionFrontier(init, frontier); 
     Iterator<PortConnection> setIt = frontier.iterator();
     while (setIt.hasNext()) {
@@ -155,7 +151,7 @@ public class DispatcherTraverser {
   }
   */
   
-  public void passiveDispatchersFromActiveThread(Set<Dispatcher> visited, Dispatcher d) {
+  public void passiveDispatchersFromActiveThread(Set<DispatchableInputPort> visited, DispatchableInputPort d) {
     if (d.getOwner().getIsPassive()) {
       visited.add(d);
     }
@@ -164,11 +160,8 @@ public class DispatcherTraverser {
       for (Map.Entry<OutputEventPort, Integer> elem : limit.getContract().entrySet()) {
         for (PortConnection pc : elem.getKey().getConnections()) {
           InputEventPort iep = (InputEventPort)pc.getDestPort();
-          InputEventDispatcher ied = iep.getOptDispatcher();
-          Deque<Dispatcher> deque = new ArrayDeque<>();
-          if (ied != null) {
-            traversePassiveDispatchersInternal(visited, deque, ied, " ");
-          }
+          Deque<DispatchableInputPort> deque = new ArrayDeque<>();
+          traversePassiveDispatchersInternal(visited, deque, iep, " ");
         }
       }
     }

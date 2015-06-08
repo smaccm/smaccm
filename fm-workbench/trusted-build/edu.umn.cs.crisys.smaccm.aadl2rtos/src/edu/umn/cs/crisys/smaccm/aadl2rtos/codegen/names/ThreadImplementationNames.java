@@ -12,9 +12,8 @@ import java.util.Map;
 import java.util.Set;
 
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosException;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.Dispatcher;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.PeriodicDispatcher;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.DataPort;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.InputPort;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.rpc.RemoteProcedureGroupEndpoint;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.EndpointConnection;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.PortConnection;
@@ -40,18 +39,11 @@ public class ThreadImplementationNames {
   // 
   //////////////////////////////////////////////////////////
   
-  public List<DispatcherNames> getDispatchers() {
-    ArrayList<DispatcherNames> dnList = new ArrayList<>();
-    for (Dispatcher d : ti.getDispatcherList()) {
-      dnList.add(new DispatcherNames(d));
-    }
-    return dnList;
-  }
   
   // MWW TODO: temporary; once we create a periodic port, this 
   // should go away.
   
-  public List<DispatcherNames> getPeriodicDispatchers() {
+/*  public List<DispatcherNames> getPeriodicDispatchers() {
     ArrayList<DispatcherNames> dnList = new ArrayList<>();
     for (Dispatcher d : ti.getDispatcherList()) {
       if (d instanceof PeriodicDispatcher) {
@@ -60,12 +52,13 @@ public class ThreadImplementationNames {
     }
     return dnList;
   }
+  */
   
   // includes passive thread dispatchers invoked by this component.
-  public List<DispatcherNames> getPassiveDispatcherRegion() {
-    ArrayList<DispatcherNames> dnList = new ArrayList<>();
-    for (Dispatcher d : ti.getPassiveDispatcherRegion()) {
-      dnList.add(new DispatcherNames(d));
+  public List<PortNames> getPassiveDispatcherRegion() {
+    ArrayList<PortNames> dnList = new ArrayList<>();
+    for (InputPort d : ti.getPassiveDispatcherRegion()) {
+      dnList.add(new PortNames(d));
     }
     return dnList;
   }
@@ -135,7 +128,7 @@ public class ThreadImplementationNames {
     }
     return rpgMap.values();
   }
-  
+
   public <U extends DataPort> List<PortNames> constructPortNames(List<U> ports) {
     ArrayList<PortNames> pnList = new ArrayList<>(); 
     for (DataPort d : ports) {
@@ -143,6 +136,11 @@ public class ThreadImplementationNames {
     }
     return pnList;
   }
+  
+  public List<PortNames> getDispatchers() {
+    return constructPortNames(ti.getDispatcherList());
+  }
+  
   public List<PortNames> getAllOutputEventPorts() {
     return constructPortNames(ti.getAllOutputEventPorts());
   }
@@ -158,6 +156,7 @@ public class ThreadImplementationNames {
   public List<PortNames> getInputEventDataPortList() {
     return constructPortNames(ti.getInputEventDataPortList());
   }
+
   
   public List<PortNames> getOutputDataPortList() {
     return constructPortNames(ti.getOutputDataPortList());
@@ -180,6 +179,7 @@ public class ThreadImplementationNames {
   }
   
   public boolean getContainsDispatchers() {
+    
     return !(ti.getDispatcherList().isEmpty());
   }
 
@@ -354,8 +354,8 @@ public class ThreadImplementationNames {
     return ti.getInitializeEntrypointOpt() != null;
   }
   
-  public DispatcherNames getInitializeEntrypointOpt() {
-    return new DispatcherNames(ti.getInitializeEntrypointOpt()); 
+  public PortNames getInitializeEntrypointOpt() {
+    return new PortNames(ti.getInitializeEntrypointOpt()); 
   }
   
   public String getComponentName() {

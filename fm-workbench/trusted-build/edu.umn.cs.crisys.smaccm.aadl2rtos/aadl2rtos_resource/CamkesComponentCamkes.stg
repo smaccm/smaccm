@@ -47,6 +47,14 @@ uses <threadImpl.idlName> <threadImpl.interfaceInstanceName>;
 <endif>
 >>
 
+/* 
+createDataports(threadImpl, destPort) ::= <<
+	dataport <destPort.dispatchStructTypeName> <threadImpl.name>_<destPort.qualifiedName>;
+	<threadImpl.passiveDispatcherRegion:createDataports(threadImpl)>
+
+>>
+*/
+
 
 constructSenderInterface(connection) ::= <<
 // connection to active thread 'send' interface
