@@ -531,7 +531,7 @@ public class AadlModelParser {
   }
   
   private ThreadImplementation constructThreadImplementation(ThreadTypeImpl tti) {
-    String name = tti.getName().toLowerCase();
+    String name = tti.getName();
     boolean isPassive = PropertyUtil.getThreadType(tti);    
     int priority = -1; 
     int stackSize = 4096;
