@@ -100,7 +100,7 @@ public class AgreeLinkingService extends PropertiesLinkingService {
     }
 
     private static boolean sameName(IEObjectDescription eod, String name) {
-        return eod.getName().getLastSegment().equalsIgnoreCase(name);
+        return eod.getName().toString().equalsIgnoreCase(name);
     }
 
     private static boolean isVisible(IEObjectDescription eod, List<String> visibleProjects) {
