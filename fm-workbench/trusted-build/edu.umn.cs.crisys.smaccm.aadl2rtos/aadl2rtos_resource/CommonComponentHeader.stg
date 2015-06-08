@@ -32,7 +32,7 @@ componentGlueCodeHeaderPrefix(name, date, path, datatypesHeader) ::= <<
 
 
 writeExternalHandlerUdePrototype(externalHandler, dispatcher) ::= <<
-<if(dispatcher.isEventData || dispatcher.isPeriodic)><\\>
+<if(dispatcher.isInputEventData || dispatcher.isPeriodic)><\\>
 void <externalHandler.handlerName>(const <dispatcher.type.aadlInputType.name> <dispatcher.name>); 
 <else><\\>
 void <externalHandler.handlerName>(void);

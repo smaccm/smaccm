@@ -13,15 +13,16 @@ import java.util.List;
 import java.util.Set;
 
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosException;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.*;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.names.PortNames;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.*;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.rpc.RemoteProcedureGroupEndpoint;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.UnitType;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.parse.Model;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.util.Util;
 
 public class ThreadImplementation {
 
-	private InitializerDispatcher initEntrypointHandler = null;
+	private InitializerPort initEntrypointHandler = null;
 	private int priority = -1;
   private int stackSize = 0; 
   private double minExecutionTime = -1.0; 
@@ -32,7 +33,6 @@ public class ThreadImplementation {
   private  Model model;
   
 	private List<ThreadInstance> threadInstanceList = new ArrayList<ThreadInstance>();
-	private ArrayList<Dispatcher> dispatcherList = new ArrayList<Dispatcher>();
 	private String dispatchProtocol; 
 	private Boolean isPassive; 
 	private Boolean isExternal = false;
@@ -42,13 +42,8 @@ public class ThreadImplementation {
 	private int eChronosThreadLocation; 
 	
 	
-  // Data port lists
-	private ArrayList<InputDataPort> inputDataPortList = new ArrayList<InputDataPort>();
-  private ArrayList<OutputDataPort> outputDataPortList = new ArrayList<OutputDataPort>();
-	private ArrayList<InputEventPort> inputEventPortList = new ArrayList<InputEventPort>();
-	private ArrayList<OutputEventPort> outputEventPortList = new ArrayList<OutputEventPort>();
-	private ArrayList<OutputEventPort> outputEventDataPortList = new ArrayList<OutputEventPort>();
-	private ArrayList<InputEventPort> inputEventDataPortList = new ArrayList<InputEventPort>();
+  // Data port lists.  This is stupid.  
+	private List<DataPort> ports = new ArrayList<DataPort>();
 	private ArrayList<SharedDataAccessor> accessorList = new ArrayList<SharedDataAccessor>();
   
   private List<String> externalMutexList = new ArrayList<String>();
@@ -163,7 +158,7 @@ public class ThreadImplementation {
     this.accessorList.add(sda);
   }
   
-	
+	/*
 	public void addDispatcher(Dispatcher d) {
 	  this.dispatcherList.add(d);
 	}
@@ -171,12 +166,14 @@ public class ThreadImplementation {
 	public List<Dispatcher> getDispatcherList() {
 	  return this.dispatcherList; 
 	}
-	
-	public InitializerDispatcher getInitializeEntrypointOpt() {
+	*/
+  
+  
+	public InitializerPort getInitializeEntrypointOpt() {
 		return this.initEntrypointHandler;
 	}
 
-	public void setInitializeEntrypointOpt(InitializerDispatcher handler) {
+	public void setInitializeEntrypointOpt(InitializerPort handler) {
 	  this.initEntrypointHandler = handler;
 	}
 
@@ -242,9 +239,9 @@ public class ThreadImplementation {
     this.dispatchLimits = dispatchLimits;
   }
 
-  public Set<Dispatcher> getPassiveDispatcherRegion() {
-    HashSet<Dispatcher> dispatchers = new HashSet<>();
-    for (Dispatcher d : getDispatcherList()) {
+  public Set<DispatchableInputPort> getPassiveDispatcherRegion() {
+    HashSet<DispatchableInputPort> dispatchers = new HashSet<>();
+    for (DispatchableInputPort d : getDispatcherList()) {
       DispatcherTraverser dt = new DispatcherTraverser(); 
       dt.passiveDispatchersFromActiveThread(dispatchers, d);
     }
@@ -253,7 +250,7 @@ public class ThreadImplementation {
   
   public Set<PortConnection> getNonlocalActiveThreadConnectionFrontier() {
     Set<PortConnection> frontier = new HashSet<>(); 
-    for (Dispatcher d : getDispatcherList()) {
+    for (DispatchableInputPort d : getDispatcherList()) {
       DispatcherTraverser dt = new DispatcherTraverser();
       dt.dispatcherNonlocalActiveThreadConnectionFrontier(d, frontier);
     }
@@ -279,7 +276,7 @@ public class ThreadImplementation {
 
   public Set<PortConnection> getLocalActiveThreadConnectionFrontier() {
     Set<PortConnection> frontier = new HashSet<>(); 
-    for (Dispatcher d : getDispatcherList()) {
+    for (DispatchableInputPort d : getDispatcherList()) {
       DispatcherTraverser dt = new DispatcherTraverser();
       dt.dispatcherLocalActiveThreadConnectionFrontier(d, frontier);
     }
@@ -288,7 +285,7 @@ public class ThreadImplementation {
 
   public Set<ThreadImplementation> getPassiveThreadRegion() {
     HashSet<ThreadImplementation> threads = new HashSet<>();
-    for (Dispatcher d : getPassiveDispatcherRegion()) {
+    for (DispatchableInputPort d : getPassiveDispatcherRegion()) {
       threads.add(d.getOwner());
     }
     return threads;
@@ -321,7 +318,8 @@ public class ThreadImplementation {
 	public void setDispatchProtocol(String dispatchProtocol) {
 	  this.dispatchProtocol = dispatchProtocol;
 	}
-	
+
+	/*
 	public int getSignalNumberForInputEventPort(InputEventPort port) {
 
 		for (int i = 0; i < dispatcherList.size(); i++) {
@@ -344,6 +342,7 @@ public class ThreadImplementation {
 		}
 		throw new Aadl2RtosException("Unable to find expected dispatcher in thread " + this.getName()) ;
 	}
+	*/
 	
 	public List<ThreadInstancePort> getThreadInstanceInputPorts() {
 	  ArrayList<ThreadInstancePort> tips = new ArrayList<ThreadInstancePort>();
@@ -391,150 +390,137 @@ public class ThreadImplementation {
     this.requiresRPGSet = requiresRPGList;
   }
 
+
+  public List<DispatchableInputPort> getDispatcherList() {
+    List<DispatchableInputPort> l = new ArrayList<>(); 
+    for (DataPort p: this.ports) {
+      if (p instanceof DispatchableInputPort) {
+        l.add((DispatchableInputPort)p);
+      }
+    }
+    return l;
+  }
+
   /**
    * @return the inputDataPortList
    */
-  public ArrayList<InputDataPort> getInputDataPortList() {
-    return inputDataPortList;
+  public List<InputDataPort> getInputDataPortList() {
+    List<InputDataPort> l = new ArrayList<>(); 
+    for (DataPort p: this.ports) {
+      if (p instanceof InputDataPort) {
+        l.add((InputDataPort)p);
+      }
+    }
+    return l;
   }
 
-  /**
-   * @param inputDataPortList the inputDataPortList to set
-   */
-  public void setInputDataPortList(ArrayList<InputDataPort> inputDataPortList) {
-    this.inputDataPortList = inputDataPortList;
-  }
 
-  public void addInputDataPort(InputDataPort idp) {
-    this.inputDataPortList.add(idp);
+  public void addPort(DataPort idp) {
+    this.ports.add(idp);
   }
 
   /**
    * @return the outputDataPortList
    */
-  public ArrayList<OutputDataPort> getOutputDataPortList() {
-    return outputDataPortList;
+  public List<OutputDataPort> getOutputDataPortList() {
+    List<OutputDataPort> l = new ArrayList<>(); 
+    for (DataPort p: this.ports) {
+      if (p instanceof OutputDataPort) {
+        l.add((OutputDataPort)p);
+      }
+    }
+    return l;
   }
 
-  /**
-   * @param outputDataPortList the outputDataPortList to set
-   */
-  public void setOutputDataPortList(ArrayList<OutputDataPort> outputDataPortList) {
-    this.outputDataPortList = outputDataPortList;
-  }
-
-  public void addOutputDataPort(OutputDataPort odp) {
-    this.outputDataPortList.add(odp);
-  }
   /**
    * @return the inputEventPortList
    */
-  public ArrayList<InputEventPort> getInputEventPortList() {
-    return inputEventPortList;
+  public List<InputEventPort> getInputEventPortList() {
+    List<InputEventPort> l = new ArrayList<>(); 
+    for (DataPort p: this.ports) {
+      if (p instanceof InputEventPort) {
+        if (p.getType() instanceof UnitType) {
+          l.add((InputEventPort)p);
+        }
+      }
+    }
+    return l;
   }
 
-  /**
-   * @param inputEventPortList the inputEventPortList to set
-   */
-  public void setInputEventPortList(ArrayList<InputEventPort> inputEventPortList) {
-    this.inputEventPortList = inputEventPortList;
-  }
-  
-  public void addInputEventPort(InputEventPort inputEventPort) {
-    this.inputEventPortList.add(inputEventPort);
+  public List<InputEventPort> getInputEventDataPortList() {
+    List<InputEventPort> l = new ArrayList<>(); 
+    for (DataPort p: this.ports) {
+      if (p instanceof InputEventPort) {
+        if (!(p.getType() instanceof UnitType)) {
+          l.add((InputEventPort)p);
+        }
+      }
+    }
+    return l;
   }
 
   /**
    * @return the outputEventPortList
    */
-  public ArrayList<OutputEventPort> getOutputEventPortList() {
-    return outputEventPortList;
+  public List<OutputEventPort> getOutputEventPortList() {
+    List<OutputEventPort> l = new ArrayList<>(); 
+    for (DataPort p: this.ports) {
+      if (p instanceof OutputEventPort) {
+        if (p.getType() instanceof UnitType) {
+          l.add((OutputEventPort)p);
+        }
+      }
+    }
+    return l;
   }
 
-  /**
-   * @param outputEventPortList the outputEventPortList to set
-   */
-  public void setOutputEventPortList(
-      ArrayList<OutputEventPort> outputEventPortList) {
-    this.outputEventPortList = outputEventPortList;
+  public List<OutputEventPort> getOutputEventDataPortList() {
+    List<OutputEventPort> l = new ArrayList<>(); 
+    for (DataPort p: this.ports) {
+      if (p instanceof OutputEventPort) {
+        if (!(p.getType() instanceof UnitType)) {
+          l.add((OutputEventPort)p);
+        }
+      }
+    }
+    return l;
   }
   
-  public void addOutputEventPort(OutputEventPort oep) {
-    this.outputEventPortList.add(oep);
-  }
-
-  /**
-   * @return the outputEventDataPortList
-   */
-  public ArrayList<OutputEventPort> getOutputEventDataPortList() {
-    return outputEventDataPortList;
-  }
-
-  /**
-   * @param outputEventDataPortList the outputEventDataPortList to set
-   */
-  public void setOutputEventDataPortList(
-      ArrayList<OutputEventPort> outputEventDataPortList) {
-    this.outputEventDataPortList = outputEventDataPortList;
-  }
-
-  public void addOutputEventDataPort(OutputEventPort oep) {
-    this.outputEventDataPortList.add(oep);
-  }
-  
-  /**
-   * @return the inputEventDataPortList
-   */
-  public ArrayList<InputEventPort> getInputEventDataPortList() {
-    return inputEventDataPortList;
-  }
-
-  /**
-   * @param inputEventDataPortList the inputEventDataPortList to set
-   */
-  public void setInputEventDataPortList(
-      ArrayList<InputEventPort> inputEventDataPortList) {
-    this.inputEventDataPortList = inputEventDataPortList;
-  }
-	
-	public void addInputEventDataPort(InputEventPort iep) {
-	  this.inputEventDataPortList.add(iep);
-	}
-
-  /**
-   * @return
-   */
   public List<InputPort> getInputPorts() {
-    // TODO Auto-generated method stub
-    ArrayList<InputPort> inputPorts = new ArrayList<InputPort>();
-    inputPorts.addAll(this.inputDataPortList);
-    inputPorts.addAll(this.inputEventDataPortList);
-    inputPorts.addAll(this.inputEventPortList);
-    return inputPorts;
+    List<InputPort> l = new ArrayList<>(); 
+    for (DataPort p: this.ports) {
+      if (p instanceof InputPort) {
+        l.add((InputPort)p);
+      }
+    }
+    return l;
   }
   
   public List<OutputPort> getOutputPorts() {
-    ArrayList<OutputPort> outputPorts = new ArrayList<OutputPort>();
-    outputPorts.addAll(this.outputDataPortList);
-    outputPorts.addAll(this.outputEventDataPortList);
-    outputPorts.addAll(this.outputEventPortList);
-    return outputPorts;
+    List<OutputPort> l = new ArrayList<>(); 
+    for (DataPort p: this.ports) {
+      if (p instanceof OutputPort) {
+        l.add((OutputPort)p);
+      }
+    }
+    return l;
   }
 
+  
   public List<OutputEventPort> getAllOutputEventPorts() {
-    ArrayList<OutputEventPort> outputPorts = new ArrayList<>();
-    outputPorts.addAll(this.outputEventDataPortList);
-    outputPorts.addAll(this.outputEventPortList);
-    return outputPorts;
+    List<OutputEventPort> l = new ArrayList<>(); 
+    for (DataPort p: this.ports) {
+      if (p instanceof OutputEventPort) {
+        l.add((OutputEventPort)p);
+      }
+    }
+    return l;
   }
   
   /**
    * @return
    */
   public List<DataPort> getPortList() {
-    ArrayList<DataPort> ports = new ArrayList<DataPort>();
-    ports.addAll(getOutputPorts());
-    ports.addAll(getInputPorts()); 
     return ports;
   }
 

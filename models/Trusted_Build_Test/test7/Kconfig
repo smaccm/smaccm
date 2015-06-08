@@ -1,6 +1,0 @@
-config APP_TEST7
-    bool "AADL Test 7: active -> active threads using scalar read/write"
-    default n
-    select APP_CAMKES_EXECUTIVE
-    help
-        AADL Test 7: active -> active threads using scalar read/write. 

@@ -1,4 +1,4 @@
-package edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher;
+package edu.umn.cs.crisys.smaccm.aadl2rtos.model.port;
 
 public class ExternalHandler {
 

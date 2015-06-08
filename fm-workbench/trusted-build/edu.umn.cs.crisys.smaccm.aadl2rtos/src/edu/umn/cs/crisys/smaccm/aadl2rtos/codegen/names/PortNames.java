@@ -5,17 +5,25 @@ package edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.names;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosException;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.Dispatcher;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.DataPort;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.DispatchableInputPort;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.ExternalHandler;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.InitializerPort;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.InputDataPort;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.InputEventPort;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.InputIrqPort;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.InputPeriodicPort;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.OutgoingDispatchContract;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.OutputDataPort;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.OutputEventPort;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.PortConnection;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.BoolType;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.IntType;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.Type;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.UnitType;
 
 /**
  * @author Whalen
@@ -25,7 +33,7 @@ public class PortNames {
   DataPort dp; 
   Type indexType = new IntType(32, false); 
   
-  PortNames(DataPort dp) {
+  public PortNames(DataPort dp) {
     this.dp = dp;
   }
   
@@ -48,16 +56,6 @@ public class PortNames {
     return new ThreadImplementationNames(dp.getOwner());
   }
 
-  public DispatcherNames getDispatcher() {
-    if (dp instanceof InputEventPort) {
-      Dispatcher d = ((InputEventPort)dp).getOptDispatcher();
-      if (d != null) {
-        return new DispatcherNames(d);
-      }
-    }
-    throw new Aadl2RtosException("GetDispatcher called on port without a dispatcher.");
-  }
-  
   public boolean getHasInitializeEntrypoint() {
     boolean result = dp.getInitializeEntrypointSourceText() != null;
     return result;
@@ -111,20 +109,46 @@ public class PortNames {
   }
   
   public boolean getHasDispatcher() {
-    if (dp instanceof InputEventPort) {
-      return ((InputEventPort)dp).getOptDispatcher() != null; 
+    if (dp instanceof DispatchableInputPort) {
+      return  ((DispatchableInputPort)dp).getExternalHandlerList().size() != 0;
     }
-    return false;
+    else return false;
   }
   
-  public boolean getIsOutputDataPort() {
+  public boolean getIsInputEvent() {
+    return (dp instanceof InputEventPort) &&
+          (dp.getType() instanceof UnitType); 
+  }
+  
+  public boolean getIsInputEventData() {
+    return (dp instanceof InputEventPort) &&
+        !(dp.getType() instanceof UnitType); 
+  }
+  
+  public boolean getIsInputData() {
+    return (dp instanceof InputDataPort) ; 
+  }
+  
+  public boolean getIsOutputData() {
     return (dp instanceof OutputDataPort);
   }
   
-  public boolean getIsOutputEventPort() {
+  public boolean getIsOutputEvent() {
     return (dp instanceof OutputEventPort);
   }
 
+  public boolean getIsPeriodic() {
+    return (dp instanceof InputPeriodicPort);
+  }
+  
+  public boolean getIsIRQ() {
+    return (dp instanceof InputIrqPort); 
+  }
+
+  public boolean getIsInitializer() {
+    return (dp instanceof InitializerPort); 
+  }
+  
   //////////////////////////////////////////////////////////
   //
   // Destination function (for input ports)
@@ -166,6 +190,8 @@ public class PortNames {
   //////////////////////////////////////////////////////////////
   //
   // Names for passive component global data related to port
+  //
+  // TODO: these need to change for dataport-based comm scheme.
   // 
   //////////////////////////////////////////////////////////////
   
@@ -189,20 +215,131 @@ public class PortNames {
     return getName() + "_index";
   }
 
+  public String getDataField() {
+    return getDispatchStructArgName() + "." + getData();
+  }
+  
+  public String getIndexField() {
+    return getDispatchStructArgName() + "." + getIndex(); 
+  }
+  
+  public String getDataFieldFromPtr() {
+    return getDispatchStructArgName() + "->" + getData();
+  }
+  
+  public String getIndexFieldFromPtr() {
+    return getDispatchStructArgName() + "->" + getIndex(); 
+  }
+
   //////////////////////////////////////////////////////////////
   //
-  // Names for port dispatchers
+  // Names for port dispatcher contents: these are specific to kinds
+  // of ports, so the port type should be checked prior to 
+  // calling these functions.
   // 
   //////////////////////////////////////////////////////////////
 
-  public String getDispatcherCFileDispatcherFnName() {
+  public List<ExternalHandlerNames> getExternalHandlers() {
+    DispatchableInputPort dip = ((DispatchableInputPort) dp);
+    List<ExternalHandlerNames> ehl = new ArrayList<>(); 
+    for (ExternalHandler eh : dip.getExternalHandlerList()) {
+      ehl.add(new ExternalHandlerNames(eh)); 
+    }
+    return ehl;
+  }
+
+  public List<MemoryRegionName> getMemoryRegions() {
+    InputIrqPort iip = (InputIrqPort)dp; 
+    List<MemoryRegionName> regions = new ArrayList<>();
+    for (Map.Entry<String, String> entry : iip.getMemoryRegions().entrySet()) {
+        MemoryRegionName region = new MemoryRegionName(entry.getKey(), entry.getValue());
+        regions.add(region);
+    }
+    return regions; 
+  }
+  
+  public String getSignalNumber() {
+    InputIrqPort iip = (InputIrqPort)dp; 
+    return Integer.toString(iip.getNumber()); 
+  }
+
+  public String getIrqObject() {
+    return getName() + "_obj";
+  }
+
+  public String getIrqComponent() {
+    return getName() + "_hw"; 
+  }
+
+  public String getFirstLevelInterruptHandler() {
+    InputIrqPort iip = (InputIrqPort)dp; 
+    return iip.getFirstLevelInterruptHandler(); 
+  }
+
+  // for creating dispatcher structures for components
+  public String getDispatchStructTypeName() {
+     return "smaccm_" + getQualifiedName() + "_struct"; 
+  }
+
+  public String getDispatchStructArgName() {
+    return "smaccm_" + getQualifiedName() + "_arg";
+  }
+  public String getEChronosSignalNumberForDispatcher() {
+    throw new Aadl2RtosException("getEChronosSignalNumberForDispatcher currently unimplemented!");
+  }
+  
+  public OutgoingDispatchContractNames getMaxDispatchContracts() {
+    DispatchableInputPort dip = (DispatchableInputPort )dp; 
+    OutgoingDispatchContract odc = 
+        OutgoingDispatchContract.maxDispatcherUse(dip.getDispatchLimits());
+    OutgoingDispatchContractNames odcNames = new OutgoingDispatchContractNames(dip, odc); 
+    return odcNames;
+  }
+  
+
+  public List<DispatchContractNames> getDispatchableContracts() {
+    DispatchableInputPort dip = (DispatchableInputPort )dp; 
+    OutgoingDispatchContract odc = 
+        OutgoingDispatchContract.maxDispatcherUse(dip.getDispatchLimits());
+    List<DispatchContractNames> pdl = new ArrayList<>(); 
+    for (Map.Entry<OutputEventPort, Integer> elem : odc.getContract().entrySet()) {
+      DispatchContractNames names = new DispatchContractNames(dip, elem);
+      if (names.getCanDispatch()) {
+        pdl.add(new DispatchContractNames(dip, elem));
+      }
+    }
+    return pdl;
+  }
+
+  public String getPeriodicDispatcherPeriod() {
+    InputPeriodicPort ipp = (InputPeriodicPort)dp;
+    return Integer.toString(ipp.getPeriod());
+  }
+
+  public String getDispatchOccurredVar() {
+    return "smaccm_occurred_" + getName(); 
+  }
+  
+  public String getPeriodicTimeVar() {
+    return "smaccm_time_" + getName(); 
+  }
+  
+  public String getActiveThreadInternalDispatcherFnName() {
     return "smaccm_" + dp.getOwner().getNormalizedName() + "_" + getName() + "_dispatcher";
+  }
+  
+  public String getDispatcherCFileDispatcherFnName() {
+    return getActiveThreadInternalDispatcherFnName();
   }
     
   public String getIdlDispatcherName() {
     return "dispatch_" + getName();
   }
   
+  public String getPassiveComponentDispatcherPathName() {
+    return this.getThreadImplementation().getInterfaceInstanceName() + "_" + 
+        this.getIdlDispatcherName(); 
+  }
   
   //////////////////////////////////////////////////////////////
   //

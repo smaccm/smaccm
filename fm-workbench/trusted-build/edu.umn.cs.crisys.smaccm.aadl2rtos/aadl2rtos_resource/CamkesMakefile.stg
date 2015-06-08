@@ -74,8 +74,8 @@ camkesMakefileBody(model) ::= <<
 TARGETS := $(notdir ${SOURCE_DIR}).cdl
 ADL := <model.camkesSystemAssemblyFileName>
 
-# For time server: subdirectory containing extra templates. FILL THIS IN!!!
-TEMPLATES := ../../projects/templates
+# For time server: subdirectory containing extra templates.
+TEMPLATES := ../../projects/templates ../../projects/global-components/templates
 
 
 <if(model.isQemuTarget)>

@@ -6,7 +6,7 @@ package edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.names;
 import java.util.ArrayList;
 import java.util.List;
 
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.PeriodicDispatcher;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.InputPeriodicPort;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.ThreadCalendar;
 
 /**
@@ -37,10 +37,10 @@ public class ThreadCalendarNames {
   //
   ////////////////////////////////////////////////////////////
 
-  public List<DispatcherNames> getPeriodicDispatchers() {
-    List<DispatcherNames> dl = new ArrayList<>();
-    for (PeriodicDispatcher d: c.getPeriodicDispatchers()) {
-      dl.add(new DispatcherNames(d));
+  public List<PortNames> getPeriodicDispatchers() {
+    List<PortNames> dl = new ArrayList<>();
+    for (InputPeriodicPort d: c.getPeriodicDispatchers()) {
+      dl.add(new PortNames(d));
     }
     return dl;
   }
