@@ -1,0 +1,70 @@
+package hello_vm
+public
+  with Base_Types;
+  with SMACCM_SYS;
+  with Data_Model;
+
+  data bbox
+  end bbox;
+
+  data implementation bbox.i
+    subcomponents
+      left: data Base_Types::Unsigned_32; 
+      right: data Base_Types::Unsigned_32; 
+      top: data Base_Types::Unsigned_32; 
+      bottom: data Base_Types::Unsigned_32; 
+  end bbox.i;
+  
+  thread vm_camera
+    features
+      bbox_out: out event data port bbox.i;
+     
+    properties
+      SMACCM_SYS::Is_External => true;
+      SMACCM_SYS::Thread_Type => Active;
+      Priority => 1;
+      Stack_Size => 1 KByte;
+      Compute_Execution_Time => 0 ms .. 50 ms;
+      Dispatch_Protocol => Sporadic;
+  end vm_camera;
+  
+  thread receiver
+    features
+      bbox_in : in event data port bbox.i;
+
+    properties
+      SMACCM_SYS::Thread_Type => Active;
+      Priority => 11;
+      Stack_Size => 1 KByte;
+      Compute_Execution_Time => 0 ms .. 50 ms;
+      Dispatch_Protocol => Sporadic;
+      Source_Text => ("user_code/receiver.c");
+
+      --SMACCM_SYS::Sends_Events_To => "{{1 output}}";
+      Compute_Entrypoint_Source_Text => "receive" applies to bbox_in;
+  end receiver;
+
+  process proc
+  end proc;
+
+  process implementation proc.i
+    subcomponents
+      vm: thread vm_camera;
+      receiver: thread receiver;
+
+    connections
+      camera_telem : port vm.bbox_out -> receiver.bbox_in;
+  end proc.i;
+
+  system wrapper
+  end wrapper;
+
+  system implementation wrapper.i
+    subcomponents
+      proc: process proc.i;
+
+    properties
+      SMACCM_SYS::OS => CAmkES;
+      SMACCM_SYS::HW => ODROID;
+  end wrapper.i;
+end hello_vm;

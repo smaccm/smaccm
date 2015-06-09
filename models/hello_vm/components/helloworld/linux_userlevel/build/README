@@ -1,0 +1,6 @@
+
+Contains user level vchan code, including the vchan library code (for interacting with the hypervisor etc) and a simple test program showing vchan in action
+
+Compiled code is currently set to be in the build/out/bin directory. Program binaries using vchan must be run as root (or have the correct permissions to open a connection to the vmm_manager driver)
+
+At the moment, this code and makefile expects to be built on the odroid-xu board itself, this may not be necessary if it is built with the correct cross compiler and flags

@@ -1,0 +1,43 @@
+#!/bin/sh
+
+#
+# Copyright 2014, NICTA
+#
+# This software may be distributed and modified according to the terms of
+# the GNU General Public License version 2. Note that NO WARRANTY is provided.
+# See "LICENSE_GPLv2.txt" for details.
+#
+# @TAG(NICTA_GPL)
+#
+
+# Simple script to copy zipped vchan linux code from a remote home dir
+# to a dir on the odroid xu filesystem
+
+usage() {
+	echo "Usage: sync_from 'host' -i [sshkey]"
+}
+
+skey=""
+
+if [ "$#" -eq "3" ]; then
+	echo "$1 $2 $3"
+	skey="$3"
+elif [ "$#" -eq "1" ]; then
+	echo "$1"
+else
+	usage 1>&2; exit 1
+fi
+
+if [ -n "$skey" ]; then
+	scp -i "$skey" "$1":vchanbuild.zip .
+else
+	scp "$1":"${path}"vchanbuild.zip .
+fi
+
+if [ -d build ]; then
+	rm -rf build
+fi
+
+unzip vchanbuild.zip
+mv build/sync_from .
+rm vchanbuild.zip
