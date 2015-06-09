@@ -21,6 +21,8 @@
 #include <sel4vchan/libvchan.h>
 #include <sel4vchan/vchan_component.h>
 
+#include <vm_camera.h>
+
 #include <camkes/dataport.h>
 #define NUM_PACKETS 80
 
