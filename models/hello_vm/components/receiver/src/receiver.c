@@ -11,12 +11,10 @@
 #include <smaccm_receiver.h>
 #include <stdio.h>
 
-void receive(const can__can_frame_i *frame) {
-    printf("Recieved can frame with id %d, payload: ", frame->id);
-    uint8_t i;
-    for (i = 0; i < frame->dlc; i++) {
-	printf("0x%02x ", frame->payload[i]);
-    }
-    printf("\n");
+void receive(hello_vm__bbox_i * bbox_in) {
+    printf("Received bounding box with the following data:\n");
+    printf("left: %d\n", bbox_in->left);
+    printf("right: %d\n", bbox_in->right);
+    printf("top: %d\n", bbox_in->top);
+    printf("bottom: %d\n", bbox_in->bottom);
 }
-
