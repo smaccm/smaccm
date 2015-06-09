@@ -1,1 +1,4 @@
-make_template/Kbuild
+apps-$(CONFIG_APP_HELLO_VM) += hello_vm
+hello_vm: libsel4 libmuslc libsel4platsupport libsel4muslccamkes \
+          libsel4camkes libsel4sync libsel4debug libsel4bench \
+	  libsel4vchan libsel4arm-vmm libsel4allocman
