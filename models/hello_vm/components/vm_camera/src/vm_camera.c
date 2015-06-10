@@ -94,7 +94,9 @@ static void rec_packet(libvchan_t * con) {
         DHELL("hello.packet %d|%d\n", x, sizeof(pak));
 
 	// TODO: Fill in bbox
-        if (!vm_camera_write_bbox_out(&bbox)) {
+	if (vm_camera_bbox_out_write_hello_vm__bbox_i(&bbox)) {
+	    printf("Wrote bbox\n");
+	} else {
 	    printf("Failed to write bbox\n");
 	}
     }

@@ -10,9 +10,9 @@ component vm_camera {
 
   // Interface to external aadl world
   include "smaccm_wrapper_i_types.h";
-	uses hello_vm__bbox_i_writer vm_camera_bbox_out;
+  uses hello_vm__bbox_i_writer vm_camera_bbox_out;
 	
-	// Interface to internal vchan wrapper world
+  // Interface to internal vchan wrapper world
   include "sel4vchan/vchan_sharemem.h";
   dataport vchan_headers_t share_mem;
   uses VchanInterface vchan_con;

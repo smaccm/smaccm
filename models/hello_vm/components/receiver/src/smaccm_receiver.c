@@ -125,6 +125,7 @@ bool smaccm_queue_write_bbox_in(const hello_vm__bbox_i * bbox_in) {
 
 bool bbox_in_write_hello_vm__bbox_i(const hello_vm__bbox_i * arg) {
 	bool result;
+	printf("In other component\n");
 	smaccm_receiver_bbox_in_mut_lock(); 
 	result = smaccm_queue_write_bbox_in( arg);
 	smaccm_receiver_bbox_in_mut_unlock(); 

@@ -73,7 +73,7 @@ assembly {
 		// Shared memory connections
 	}
     configuration {
-		receiver_inst.priority = 11;	
+		receiver_inst.priority = 255;	
 
 
 		receiver_inst._control_stack_size = 4096;	
