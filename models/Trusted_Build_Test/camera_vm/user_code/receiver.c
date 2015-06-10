@@ -11,7 +11,7 @@
 #include <smaccm_receiver.h>
 #include <stdio.h>
 
-void receive(const hello_vm__bbox_i * bbox_in) {
+void receive(const camera_vm__bbox_i * bbox_in) {
     printf("Received bounding box with the following data:\n");
     printf("left: %d\n", bbox_in->left);
     printf("right: %d\n", bbox_in->right);

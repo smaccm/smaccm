@@ -34,11 +34,11 @@
 #define MACH_TYPE_SPECIAL    ~0
 #define MACH_TYPE            MACH_TYPE_SPECIAL
 
-#ifdef CONFIG_VM_EMMC2_NODMA
+#ifdef CONFIG_CAMERA_VM_EMMC2_NODMA
 #define FEATURE_MMC_NODMA
 #endif
 
-#ifdef CONFIG_VM_VUSB
+#ifdef CONFIG_CAMERA_VM_VUSB
 #define FEATURE_VUSB
 #endif
 

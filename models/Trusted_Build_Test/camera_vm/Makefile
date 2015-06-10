@@ -5,23 +5,24 @@ ADL := wrapper_i_assembly.camkes
 TEMPLATES := ../../projects/templates ../../projects/global-components/templates
 
 include Vchan/Vchan.mk
+include TimeServerOdroid/TimeServer.mk
 
-vm_camera_CFILES :=  \
-    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/vm_camera/src/*.c)) \
-    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/vm_camera/src/plat/${PLAT}/*.c)) \
-    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/vm_camera/src/arch/${ARCH}/*.c))
+camera_vm_CFILES :=  \
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/camera_vm/src/*.c)) \
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/camera_vm/src/plat/${PLAT}/*.c)) \
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/camera_vm/src/arch/${ARCH}/*.c))
 
-vm_camera_HFILES := \
-   $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/vm_camera/include/*.h)) \
+camera_vm_HFILES := \
+   $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/camera_vm/include/*.h)) \
    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/include/*.h))
 
-vm_camera_ASMFILES := \
-    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/vm_camera/crt/arch-${ARCH}/crt0.S)) \
-    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/vm_camera/src/*.S)) \
-    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/vm_camera/src/arch/${ARCH}/*.S)) \
-    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/vm_camera/src/plat/${PLAT}/*.S))
+camera_vm_ASMFILES := \
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/camera_vm/crt/arch-${ARCH}/crt0.S)) \
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/camera_vm/src/*.S)) \
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/camera_vm/src/arch/${ARCH}/*.S)) \
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/camera_vm/src/plat/${PLAT}/*.S))
 
-vm_camera_LIBS := \
+camera_vm_LIBS := \
     sel4 sel4camkes sel4muslccamkes sel4vka sel4allocman \
     platsupport sel4platsupport sel4vspace \
     sel4utils sel4simple utils  sel4simple-default \
@@ -66,15 +67,15 @@ VM_LIBS := sel4 sel4camkes sel4muslccamkes sel4vka sel4allocman \
 
 include ${PWD}/tools/camkes/camkes.mk
 
-ifeq (${CONFIG_VM_ROOTFS_MMCBLK0P2},y)
+ifeq (${CONFIG_CAMERA_VM_ROOTFS_MMCBLK0P2},y)
 ROOTFS := mmcblk0p2
-else ifeq (${CONFIG_VM_ROOTFS_MMCBLK1P2},y)
+else ifeq (${CONFIG_CAMERA_VM_ROOTFS_MMCBLK1P2},y)
 ROOTFS := mmcblk1p2
 else
 $(error Unknown root filesystem)
 endif
 
-ifeq (${CONFIG_VM_VUSB},y)
+ifeq (${CONFIG_CAMERA_VM_VUSB},y)
 DEVICE_TREE_SRC := ${SOURCE_DIR}/linux/linux-secure-vusb-dtb
 else
 DEVICE_TREE_SRC := ${SOURCE_DIR}/linux/linux-secure-dtb

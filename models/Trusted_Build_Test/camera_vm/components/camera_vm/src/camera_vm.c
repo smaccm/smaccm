@@ -21,12 +21,12 @@
 #include <sel4vchan/libvchan.h>
 #include <sel4vchan/vchan_component.h>
 
-#include <vm_camera.h>
+#include <camera_vm.h>
 
 #include <camkes/dataport.h>
 #define NUM_PACKETS 80
 
-#include "smaccm_vm_camera.h"
+#include "smaccm_camera_vm.h"
 
 static camkes_vchan_con_t con = {
     .connect = &vchan_con_new_connection,
@@ -42,10 +42,10 @@ static camkes_vchan_con_t con = {
     .source_dom_number = 50,
 };
 
-#define DEBUG_HELLO
+#define DEBUG_CAMERA_VM
 
-#ifdef DEBUG_HELLO
-#define DHELL(...) do{ printf("HELLOW: "); printf(__VA_ARGS__); }while(0)
+#ifdef DEBUG_CAMERA_VM
+#define DHELL(...) do{ printf("CAMERA VM DEBUG: "); printf(__VA_ARGS__); }while(0)
 #else
 #define DHELL(...) do{}while(0)
 #endif
@@ -75,10 +75,10 @@ static void rec_packet(libvchan_t * con) {
     sz = libvchan_read(con, &pnum, sizeof(int));
     assert(sz == sizeof(int));
 
-    DHELL("hello: number of packets to recieve = %d\n", pnum);
+    DHELL("camera_vm: number of packets to recieve = %d\n", pnum);
 
     for(x = 0; x < pnum; x++) {
-	hello_vm__bbox_i bbox;
+	camera_vm__bbox_i bbox;
 
         libvchan_wait(con);
         /* Buffer sanity checking */
@@ -91,17 +91,17 @@ static void rec_packet(libvchan_t * con) {
         assert(pak.pnum == x);
         assert(verify_packet(&pak) == 1);
         assert(pak.guard == TEST_VCHAN_PAK_GUARD);
-        DHELL("hello.packet %d|%d\n", x, sizeof(pak));
+        DHELL("camera_vm.packet %d|%d\n", x, sizeof(pak));
 
 	// TODO: Fill in bbox
-	if (vm_camera_bbox_out_write_hello_vm__bbox_i(&bbox)) {
+	if (camera_vm_bbox_out_write_camera_vm__bbox_i(&bbox)) {
 	    printf("Wrote bbox\n");
 	} else {
 	    printf("Failed to write bbox\n");
 	}
     }
 
-    DHELL("hello: sending ack\n");
+    DHELL("camera_vm: sending ack\n");
 
     sz = libvchan_write(con, &done, sizeof(char));
     assert(sz == sizeof(char));
@@ -122,7 +122,7 @@ int run(void) {
     printf("vm_camera connection active\n");
 
     while(1) {
-        printf("hello.packet\n");
+        printf("camera_vm.packet\n");
         rec_packet(connection);
     }
 }

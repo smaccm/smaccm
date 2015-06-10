@@ -10,7 +10,7 @@ component camera_vm {
 
   // Interface to external aadl world
   include "smaccm_wrapper_i_types.h";
-  uses camera_vm__bbox_i_writer vm_camera_bbox_out;
+  uses camera_vm__bbox_i_writer camera_vm_bbox_out;
 	
   // Interface to internal vchan wrapper world
   include "sel4vchan/vchan_sharemem.h";
@@ -24,16 +24,16 @@ assembly {
         component VM vm;
 
         component Vchan vchan_0;
-        // Trusted build tool will create a vm_camera component as follows
-        // component vm_camera vm_camera_inst;
+        // Trusted build tool will create a camera_vm component as follows
+        // component camera_vm camera_vm_inst;
 
         connection seL4RPCCall vchan(from vm.vchan_con, to vchan_0.vchan_com);
         connection seL4Asynch vchan_event_init(from vchan_0.vevent_cl, to vm.vevent);
         connection seL4SharedData vchan_sharemem_0(from vm.share_mem, to vchan_0.share_mem);
 
-        connection seL4Asynch vchan_event(from vchan_0.vevent_sv, to vm_camera_inst.vevent);
-        connection seL4SharedData hvchan_sharemem_0(from vm_camera_inst.share_mem, to vchan_0.share_mem);
-        connection seL4RPCCall hvchan(from vm_camera_inst.vchan_con, to vchan_0.vchan_com);
+        connection seL4Asynch vchan_event(from vchan_0.vevent_sv, to camera_vm_inst.vevent);
+        connection seL4SharedData hvchan_sharemem_0(from camera_vm_inst.share_mem, to vchan_0.share_mem);
+        connection seL4RPCCall hvchan(from camera_vm_inst.vchan_con, to vchan_0.vchan_com);
     }
 
     configuration {
@@ -103,7 +103,7 @@ assembly {
         vm.cnode_size_bits = 18;
         vm.simple_untyped24_pool = 10;
 
-        vm._control_priority = 0;
+        vm._control_priority = 101;
         vm.sem_value = 0;
     }
 }
