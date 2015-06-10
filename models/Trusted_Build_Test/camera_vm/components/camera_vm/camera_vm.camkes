@@ -3,14 +3,14 @@ import <Vchan/Vchan.camkes>;
 import <VchanInterface.idl4>;
 
 import "../VM/VM.camkes";
-import "../../interfaces/hello_vm__bbox_i_writer.idl4";
+import "../../interfaces/camera_vm__bbox_i_writer.idl4";
 
-component vm_camera {
+component camera_vm {
   control;
 
   // Interface to external aadl world
   include "smaccm_wrapper_i_types.h";
-  uses hello_vm__bbox_i_writer vm_camera_bbox_out;
+  uses camera_vm__bbox_i_writer vm_camera_bbox_out;
 	
   // Interface to internal vchan wrapper world
   include "sel4vchan/vchan_sharemem.h";
@@ -103,7 +103,7 @@ assembly {
         vm.cnode_size_bits = 18;
         vm.simple_untyped24_pool = 10;
 
-        vm._control_priority = 101;
+        vm._control_priority = 0;
         vm.sem_value = 0;
     }
 }

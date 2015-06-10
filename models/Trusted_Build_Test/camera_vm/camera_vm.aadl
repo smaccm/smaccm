@@ -1,4 +1,4 @@
-package hello_vm
+package camera_vm
 public
   with Base_Types;
   with SMACCM_SYS;
@@ -15,19 +15,22 @@ public
       bottom: data Base_Types::Unsigned_32; 
   end bbox.i;
   
-  thread vm_camera
+  thread camera_vm
     features
       bbox_out: out event data port bbox.i;
      
     properties
       SMACCM_SYS::Is_External => true;
       SMACCM_SYS::Thread_Type => Active;
-      Priority => 1;
+      Priority => 0;
       Stack_Size => 1 KByte;
       Compute_Execution_Time => 0 ms .. 50 ms;
       Dispatch_Protocol => Sporadic;
-  end vm_camera;
+  end camera_vm;
   
+  --
+  -- Code to exercise camera_vm
+  --
   thread receiver
     features
       bbox_in : in event data port bbox.i;
@@ -49,7 +52,7 @@ public
 
   process implementation proc.i
     subcomponents
-      vm: thread vm_camera;
+      vm: thread camera_vm;
       receiver: thread receiver;
 
     connections
@@ -67,4 +70,4 @@ public
       SMACCM_SYS::OS => CAmkES;
       SMACCM_SYS::HW => ODROID;
   end wrapper.i;
-end hello_vm;
+end camera_vm;
