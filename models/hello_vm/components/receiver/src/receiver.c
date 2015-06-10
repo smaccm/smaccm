@@ -18,3 +18,4 @@ void receive(const hello_vm__bbox_i * bbox_in) {
     printf("top: %d\n", bbox_in->top);
     printf("bottom: %d\n", bbox_in->bottom);
 }
+

@@ -34,7 +34,7 @@ public
 
     properties
       SMACCM_SYS::Thread_Type => Active;
-      Priority => 11;
+      Priority => 200;
       Stack_Size => 1 KByte;
       Compute_Execution_Time => 0 ms .. 50 ms;
       Dispatch_Protocol => Sporadic;
