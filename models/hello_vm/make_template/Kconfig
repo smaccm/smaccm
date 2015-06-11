@@ -1,6 +1,0 @@
-config APP_HELLO_VM
-    bool "AADL generic message for implementation hello_vm"
-    default n
-    select APP_CAMKES_EXECUTIVE
-    help
-        AADL generic message for implementation hello_vm. 
