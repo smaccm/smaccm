@@ -102,10 +102,10 @@ static void rec_packet(libvchan_t * con) {
 	}
     }
 
-    //DHELL("camera_vm: sending ack\n");
+    DHELL("camera_vm: sending ack\n");
 
-    //sz = libvchan_write(con, &done, sizeof(char));
-    //assert(sz == sizeof(char));
+    sz = libvchan_write(con, &done, sizeof(char));
+    assert(sz == sizeof(char));
 }
 
 
