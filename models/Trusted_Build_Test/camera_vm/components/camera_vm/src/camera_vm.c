@@ -51,9 +51,6 @@ static camkes_vchan_con_t con = {
 #endif
 
 
-/*
-    Check if data in a test packet is correct
-*/
 static int verify_packet(vchan_packet_t *pak) {
     for(int i = 0; i < 4; i++) {
         if(pak->datah[i] != i + pak->pnum) {
@@ -89,9 +86,13 @@ static void rec_packet(libvchan_t * con) {
         /* See if the given packet is correct */
         assert(sz == sizeof(pak));
         assert(pak.pnum == x);
-        assert(verify_packet(&pak) == 1);
         assert(pak.guard == TEST_VCHAN_PAK_GUARD);
-        DHELL("camera_vm.packet %d|%d\n", x, sizeof(pak));
+        //DHELL("camera_vm.packet %d|%d\n", x, sizeof(pak));
+
+	bbox.left = pak.datah[0];
+	bbox.right = pak.datah[1];
+	bbox.top = pak.datah[2];
+	bbox.bottom = pak.datah[3];
 
 	// TODO: Fill in bbox
 	if (camera_vm_bbox_out_write_camera_vm__bbox_i(&bbox)) {
@@ -101,10 +102,10 @@ static void rec_packet(libvchan_t * con) {
 	}
     }
 
-    DHELL("camera_vm: sending ack\n");
+    //DHELL("camera_vm: sending ack\n");
 
-    sz = libvchan_write(con, &done, sizeof(char));
-    assert(sz == sizeof(char));
+    //sz = libvchan_write(con, &done, sizeof(char));
+    //assert(sz == sizeof(char));
 }
 
 
