@@ -49,7 +49,7 @@ import com.rockwellcollins.atc.agree.analysis.AgreeEmitterUtilities;
 import com.rockwellcollins.atc.agree.analysis.AgreeException;
 import com.rockwellcollins.atc.agree.analysis.AgreeGenerator;
 import com.rockwellcollins.atc.agree.analysis.AgreeLogger;
-import com.rockwellcollins.atc.agree.analysis.AgreeProgram;
+import com.rockwellcollins.atc.agree.analysis.AgreeAnalysis;
 import com.rockwellcollins.atc.agree.analysis.ConsistencyResult;
 import com.rockwellcollins.atc.agree.analysis.preferences.PreferenceConstants;
 import com.rockwellcollins.atc.agree.analysis.preferences.PreferencesUtil;
@@ -112,11 +112,11 @@ public abstract class VerifyHandler extends AadlHandler {
                 wrapper.addChild(result);
                 result = wrapper;
             }else if (isRealizability()){
-                AgreeProgram agreeProgram = AgreeGenerator.getRealizabilityLustre(si);
+                AgreeAnalysis agreeProgram = AgreeGenerator.getRealizabilityLustre(si);
                 result = createRealizabilityVerification(agreeProgram);
                 //result = wrapper;
             } else {
-            	AgreeProgram agreeProgram = AgreeGenerator.getLustre(si, isMonolithic());//, isMonolithic());
+            	AgreeAnalysis agreeProgram = AgreeGenerator.getLustre(si, isMonolithic());//, isMonolithic());
                 wrapper.addChild(createGuaranteeVerification(agreeProgram));
                 //wrapper.addChild(createAssumptionVerification(si));
                 wrapper.addChild(creatConsistencyVerification(agreeProgram));
@@ -131,7 +131,7 @@ public abstract class VerifyHandler extends AadlHandler {
     }
 
     private AnalysisResult createRealizabilityVerification(
-            AgreeProgram agreeProgram) {
+            AgreeAnalysis agreeProgram) {
         
         JRealizabilityResult result = new JRealizabilityResult("Realizability Analysis", agreeProgram.state.renaming);
         queue.add(result);
@@ -163,7 +163,7 @@ public abstract class VerifyHandler extends AadlHandler {
         CompositeAnalysisResult result = new CompositeAnalysisResult("Verification for " + name);
         
         if(containsAGREEAnnex(ci)){
-        	AgreeProgram agreeProgram = AgreeGenerator.getLustre(ci, isMonolithic());//, isMonolithic());
+        	AgreeAnalysis agreeProgram = AgreeGenerator.getLustre(ci, isMonolithic());//, isMonolithic());
         	AnalysisResult tempResult = createGuaranteeVerification(agreeProgram);
         	if (tempResult != null) {
         		result.addChild(tempResult);
@@ -208,7 +208,7 @@ public abstract class VerifyHandler extends AadlHandler {
 		return false;
 	}
     
-	private AnalysisResult createGuaranteeVerification(AgreeProgram agreeProgram) {
+	private AnalysisResult createGuaranteeVerification(AgreeAnalysis agreeProgram) {
 
     	List<String> props = new ArrayList<>();
     	props.addAll(agreeProgram.state.guarProps);
@@ -227,7 +227,7 @@ public abstract class VerifyHandler extends AadlHandler {
         return result;
     }
     
-    private AnalysisResult creatConsistencyVerification(AgreeProgram agreeProgram) {
+    private AnalysisResult creatConsistencyVerification(AgreeAnalysis agreeProgram) {
     	
     	IPreferenceStore prefs = Activator.getDefault().getPreferenceStore();
     	int consistDetph = prefs.getInt(PreferenceConstants.PREF_CONSIST_DEPTH);

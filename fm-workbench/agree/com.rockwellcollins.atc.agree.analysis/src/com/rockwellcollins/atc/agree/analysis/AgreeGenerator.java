@@ -315,7 +315,7 @@ public class AgreeGenerator {
     	return program;
     }
     
- public static AgreeProgram getRealizabilityLustre(ComponentInstance compInst){
+ public static AgreeAnalysis getRealizabilityLustre(ComponentInstance compInst){
         
         
         ComponentType compType = AgreeEmitterUtilities.getInstanceType(compInst);
@@ -375,7 +375,7 @@ public class AgreeGenerator {
         Program realizeProgram = new Program(typeDefs, null, nodes);
 //        realizeProgram = InlineAssumptionGuarantees.program(realizeProgram);
         
-        AgreeProgram agreeProgram = new AgreeProgram();
+        AgreeAnalysis agreeProgram = new AgreeAnalysis();
         agreeProgram.realizeProgram = realizeProgram;
         agreeProgram.state = state;
         
@@ -392,9 +392,54 @@ public class AgreeGenerator {
     	return histEq;
     }
 
-    public static AgreeProgram getLustre(ComponentInstance compInst, boolean monolithic){
+    public static AgreeAnalysis getLustreWithContracts(ComponentInstance compInst){
+		return null;
+    }
+    
+    private static AgreeEmitterState generateContracts(ComponentInstance compInst,
+    		Subcomponent comp){
+    	 
+    	ComponentType compType = AgreeEmitterUtilities.getInstanceType(compInst);
+    	ComponentImplementation compImpl = AgreeEmitterUtilities.getInstanceImplementation(compInst);
+       
+    	AgreeEmitterState state = new AgreeEmitterState(compInst, comp);
     	
-    	AgreeProgram agreeProgram = new AgreeProgram();
+    	FeatureUtils.recordFeatures(state, true);
+    	boolean result = doSwitchAgreeAnnex(state, compType);
+    	
+        if(!result && compImpl == null){
+        	//we cannot drill down any further
+        	return null;
+        }
+        
+        if(compImpl != null){
+        	ConnectionUtils.recordConnections(state);
+        	boolean foundSubAnnex = doSwitchAgreeAnnex(state, compImpl);
+
+        	//go through the component implementation and build a program for each subcomponent
+        	for(Subcomponent subComp : compImpl.getAllSubcomponents()){
+        		ComponentInstance subCompInst = compInst.findSubcomponentInstance(subComp);
+        		String subCompPrefix = subComp.getName()+"__";
+        		AgreeEmitterState subState = generateContracts(subCompInst, subComp);
+        		if(subState != null){
+        			foundSubAnnex = true;
+        			Node subNode = nodeFromState(subState, false);
+        			addSubcomponentNodeCall(subCompPrefix, state, subState, subNode, true);
+        		}
+        	}
+        	if(!foundSubAnnex && !result){
+        		return null;
+        	}
+        	//handle any quasi-synchronous constraints
+            addQSConstraints(state);	
+        }
+    	
+    	return state;
+    }
+    
+    public static AgreeAnalysis getLustre(ComponentInstance compInst, boolean monolithic){
+    	
+    	AgreeAnalysis agreeProgram = new AgreeAnalysis();
     	AgreeEmitterState state;
     	
     	Subcomponent subComp = compInst.getSubcomponent();
@@ -406,10 +451,6 @@ public class AgreeGenerator {
     	}
     	
     	agreeProgram.state = state;
-//    	for(Node nodeDef : state.nodeDefExpressions){
-//    		System.out.println(nodeDef.id);
-//    	}
-    	
     	agreeProgram.assumeGuaranteeProgram = getAssumeGuaranteeProgram(state);
     	agreeProgram.consistProgram = getConsistProgram(state);
     	
@@ -989,6 +1030,82 @@ public class AgreeGenerator {
             state.assertExpressions.add(holdPrevExpr);
 		
 	}
+	
+public static Node nodeWithContractFromState(AgreeEmitterState subState, boolean assertConract){
+    	
+    	//create the body for the subnode
+    	String nodeId = getLustreNodeName(subState);
+    	List<VarDecl> inputs = new ArrayList<>();
+    	List<VarDecl> outputs = new ArrayList<>();
+    	List<VarDecl> locals = new ArrayList<>();
+    	List<Equation> equations = new ArrayList<>();
+    	List<Expr> assumptions = new ArrayList<>();
+    	List<Expr> guarantees = new ArrayList<>();
+    	List<Expr> assertions = new ArrayList<>();
+
+    	inputs.addAll(subState.inputVars);
+    	outputs.addAll(subState.outputVars);
+    	locals.addAll(subState.internalVars);
+    	
+    	ComponentClassifier compClass = subState.curInst.getComponentClassifier();
+    	
+    	int guarIndex = 0;
+    	for(Equation guarEq : subState.guarExpressions){
+    	    String guarName = nodeGuarName+guarIndex++;
+    	    IdExpr guarId = new IdExpr(guarName);
+            guarantees.add(guarId);
+    	    Expr guarEquality = new BinaryExpr(guarId, BinaryOp.EQUAL, guarEq.expr);
+    	    assertions.add(guarEquality);
+    	    inputs.add(new VarDecl(guarName, NamedType.BOOL));
+    	}
+
+    	for(Equation lemmaEq : subState.lemmaExpressions){
+    	    String lemmaName = nodeGuarName+guarIndex++;
+    	    Expr lemmaEquality = new BinaryExpr(new IdExpr(lemmaName), BinaryOp.EQUAL, lemmaEq.expr);
+    	    assertions.add(lemmaEquality);        
+            inputs.add(new VarDecl(lemmaName, NamedType.BOOL));
+    	}
+
+    	int assumeIndex = 0;
+    	for(Equation assumEq : subState.assumpExpressions){
+    		String assumeName = nodeAssumeName+assumeIndex++;
+    		IdExpr assumeId = new IdExpr(assumeName);
+            assumptions.add(assumeId);
+            Expr assumeEquality = new BinaryExpr(assumeId, BinaryOp.EQUAL, assumEq.expr);
+            assertions.add(assumeEquality);
+            inputs.add(new VarDecl(assumeName, NamedType.BOOL));
+    	}
+    	equations.addAll(subState.eqExpressions);
+    	assertions.addAll(subState.assertExpressions);
+    	
+    	IdExpr assertId = new IdExpr("__ASSERT");
+    	outputs.add(new VarDecl(assertId.id, NamedType.BOOL));
+
+    	Expr finalAssert;
+    	//if this subcomponent is a component type (not an implementation)
+    	//the contract bottoms out here and we need to assert it
+    	if(compClass instanceof ComponentType || assertConract){
+    		finalAssert = assertContract(locals, equations, assumptions, guarantees);	
+//    		guarantees = null;
+//    		assumptions = null;
+    	}else{
+    		finalAssert = new BoolExpr(true);
+    	}
+    	
+    	for(Expr assertExpr : assertions){
+    		finalAssert = new BinaryExpr(finalAssert, BinaryOp.AND, assertExpr);
+    	}
+    	
+    	Equation assertEq = new Equation(assertId, finalAssert);
+    	equations.add(assertEq);
+    	
+    	Node subNode = new Node(Location.NULL, nodeId, inputs, outputs, locals, equations,
+    			null, assertions, null);
+    	
+    	return subNode;
+    	
+    }
+	
     
     public static Node nodeFromState(AgreeEmitterState subState, boolean assertConract){
     	
@@ -1008,7 +1125,6 @@ public class AgreeGenerator {
     	
     	ComponentClassifier compClass = subState.curInst.getComponentClassifier();
     	
-    	//throw away intermediate guarantees
     	int guarIndex = 0;
     	for(Equation guarEq : subState.guarExpressions){
     	    String guarName = nodeGuarName+guarIndex++;

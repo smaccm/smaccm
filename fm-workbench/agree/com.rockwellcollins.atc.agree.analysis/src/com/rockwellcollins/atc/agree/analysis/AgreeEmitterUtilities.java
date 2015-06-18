@@ -309,30 +309,6 @@ public class AgreeEmitterUtilities {
 		return conjoin(Arrays.asList(exprs));
 	}
 
-	static public Expr getLustreAssumptions(AgreeNode agreeNode) {
-		Expr assumps = conjoin(agreeNode.assumptions);
-		IdExpr clockExpr = new IdExpr(agreeNode.clockVar.id);
-		return new BinaryExpr(clockExpr, BinaryOp.IMPLIES, assumps);
-	}
-
-	static public Expr getLustreAssumptionsAndAssertions(AgreeNode agreeNode) {
-		Expr assumAssert = conjoin(conjoin(agreeNode.assertions), conjoin(agreeNode.assumptions));
-		IdExpr clockExpr = new IdExpr(agreeNode.clockVar.id);
-		return new BinaryExpr(clockExpr, BinaryOp.IMPLIES, assumAssert);
-
-	}
-
-	static public Expr getLustreContract(AgreeNode agreeNode) {
-		Expr contract = conjoin(conjoin(agreeNode.assertions), conjoin(agreeNode.assumptions),
-				conjoin(agreeNode.guarantees));
-		IdExpr clockExpr = new IdExpr(agreeNode.clockVar.id);
-		return new BinaryExpr(clockExpr, BinaryOp.IMPLIES, contract);
-
-	}
-
-	static public Expr getLustreGuarantee(AgreeNode agreeNode) {
-		return conjoin(agreeNode.guarantees);
-	}
 
 	static public Equation getLustreHistory(Expr expr, IdExpr histId) {
 
