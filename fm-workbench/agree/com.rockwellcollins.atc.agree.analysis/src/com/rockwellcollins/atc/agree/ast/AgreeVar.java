@@ -3,15 +3,13 @@ package com.rockwellcollins.atc.agree.ast;
 import org.eclipse.emf.ecore.EObject;
 
 import jkind.lustre.Type;
+import jkind.lustre.VarDecl;
 
-public class AgreeVar {
-	public final Type type;
-	public final String name;
+public class AgreeVar extends VarDecl{
+
 	public final EObject reference;
-	
 	public AgreeVar(String name, Type type, EObject reference){
-		this.name = name;
-		this.type = type;
+		super(name, type);
 		this.reference = reference;
 	}
 }
