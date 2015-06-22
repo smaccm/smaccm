@@ -14,11 +14,26 @@ import javax.lang.model.type.PrimitiveType;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.osate.aadl2.AnnexSubclause;
+import org.osate.aadl2.BusAccess;
 import org.osate.aadl2.ComponentClassifier;
 import org.osate.aadl2.ComponentImplementation;
+import org.osate.aadl2.ConnectedElement;
+import org.osate.aadl2.Connection;
+import org.osate.aadl2.ConnectionEnd;
+import org.osate.aadl2.Context;
+import org.osate.aadl2.DataAccess;
+import org.osate.aadl2.DataSubcomponent;
+import org.osate.aadl2.EnumerationLiteral;
+import org.osate.aadl2.FeatureGroup;
+import org.osate.aadl2.Property;
 import org.osate.aadl2.Subcomponent;
 import org.osate.aadl2.instance.ComponentInstance;
+import org.osate.aadl2.instance.FeatureInstance;
+import org.osate.aadl2.modelsupport.resources.OsateResourceUtil;
+import org.osate.aadl2.properties.PropertyDoesNotApplyToHolderException;
 import org.osate.annexsupport.AnnexUtil;
+import org.osate.xtext.aadl2.properties.util.EMFIndexRetrieval;
+import org.osate.xtext.aadl2.properties.util.PropertyUtils;
 
 import jkind.lustre.BinaryExpr;
 import jkind.lustre.BinaryOp;
@@ -31,6 +46,8 @@ import jkind.lustre.Node;
 import jkind.lustre.NodeCallExpr;
 import jkind.lustre.RecordType;
 import jkind.lustre.Type;
+import jkind.lustre.UnaryExpr;
+import jkind.lustre.UnaryOp;
 import jkind.lustre.VarDecl;
 
 import com.rockwellcollins.atc.agree.agree.AgreeContract;
@@ -42,6 +59,7 @@ import com.rockwellcollins.atc.agree.agree.AssumeStatement;
 import com.rockwellcollins.atc.agree.agree.AsynchStatement;
 import com.rockwellcollins.atc.agree.agree.CalenStatement;
 import com.rockwellcollins.atc.agree.agree.Contract;
+import com.rockwellcollins.atc.agree.agree.InitialStatement;
 import com.rockwellcollins.atc.agree.agree.LatchedStatement;
 import com.rockwellcollins.atc.agree.agree.MNSynchStatement;
 import com.rockwellcollins.atc.agree.agree.NestedDotID;
@@ -55,6 +73,7 @@ import com.rockwellcollins.atc.agree.agree.RecordDefExpr;
 import com.rockwellcollins.atc.agree.agree.SpecStatement;
 import com.rockwellcollins.atc.agree.agree.SynchStatement;
 import com.rockwellcollins.atc.agree.agree.util.AgreeSwitch;
+import com.rockwellcollins.atc.agree.analysis.AgreeFeature.ConnType;
 import com.rockwellcollins.atc.agree.ast.AgreeConnection;
 import com.rockwellcollins.atc.agree.ast.AgreeNode;
 import com.rockwellcollins.atc.agree.ast.AgreeProgram;
@@ -71,42 +90,279 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr>{
 	}
 	
 	private AgreeNode getAgreeNode(ComponentInstance compInst){
-		List<AgreeVar> inputs;
-		List<AgreeVar> outputs;
-		List<AgreeConnection> connections;
-		List<AgreeNode> subNodes;
-		List<Node> lustreNodes;
-		List<AgreeStatement> assertions;
-		List<AgreeStatement> assumptions;
-		List<AgreeStatement> guarantees;
-		List<Type> types;
-		Expr clockConstraint;
-		Expr initialConstraint;
-		AgreeVar clockVar;
-		EObject reference;
+		List<AgreeVar> inputs = new ArrayList<>();
+		List<AgreeVar> outputs = new ArrayList<>();
+		List<AgreeConnection> connections = new ArrayList<>();
+		List<AgreeNode> subNodes = new ArrayList<>();
+		List<Node> lustreNodes = new ArrayList<>();
+		List<AgreeStatement> assertions = new ArrayList<>();
+		List<AgreeStatement> assumptions = new ArrayList<>();
+		List<AgreeStatement> guarantees = new ArrayList<>();
+		List<Type> types = new ArrayList<>();
+		Expr clockConstraint = new BoolExpr(true);
+		Expr initialConstraint = new BoolExpr(true);
+		AgreeVar clockVar = new AgreeVar(compInst.getName()+"___CLOCK_", NamedType.BOOL, compInst.getSubcomponent());
+		EObject reference = compInst.getSubcomponent();
 		
 		ComponentClassifier compClass = compInst.getComponentClassifier();
 		if(compClass instanceof ComponentImplementation){
 			AgreeContractSubclause annex = getAgreeAnnex(compClass);
 			AgreeContract contract = (AgreeContract) annex.getContract();
 			
-			subNodes = new ArrayList<>();
-			List<IdExpr> clockVars = new ArrayList<>();
 			for(ComponentInstance subInst : compInst.getAllComponentInstances()){
 				AgreeNode subNode = getAgreeNode(subInst);
 				subNodes.add(subNode);
 			}
 			
-			assertions = getAssertions(contract.getSpecs());
-			lustreNodes = getLustreNodes(contract.getSpecs());
-			types = getLustreTypes(contract.getSpecs());
+			assertions.addAll(getAssertions(contract.getSpecs()));
+			lustreNodes.addAll(getLustreNodes(contract.getSpecs()));
+			types.addAll(getLustreTypes(contract.getSpecs()));
 			//the clock constraints contain other nodes that we add
 			clockConstraint = getClockConstraint(contract.getSpecs(), subNodes, lustreNodes);
+			initialConstraint = getInitialConstraint(contract.getSpecs());
+			connections.addAll(getConnections(((ComponentImplementation) compClass).getAllConnections(), contract.getSpecs()));
+			
+			//make compClass the type so we can get it's other contract elements
+			compClass = ((ComponentImplementation) compClass).getType();
 		}
 		
-		return null;
+		AgreeContractSubclause annex = getAgreeAnnex(compClass);
+		AgreeContract contract = (AgreeContract) annex.getContract();
+		assumptions.addAll(getAssumptions(contract.getSpecs()));
+		guarantees.addAll(getGuarantees(contract.getSpecs()));
+		
+		
+		return new Agree;
 	}
 	
+	private List<AgreeConnection> getConnections(
+			EList<Connection> connections, EList<SpecStatement> specs) {
+		
+		//figure out if this is latched
+		boolean latched = false;
+		for(SpecStatement spec : specs){
+			if(spec instanceof LatchedStatement){
+				latched = true;
+				break;
+			}
+		}
+		
+		Property commTimingProp = EMFIndexRetrieval.getPropertyDefinitionInWorkspace(
+				OsateResourceUtil.getResourceSet(), "Communication_Properties::Timing");
+		List<AgreeConnection> agreeConns = new ArrayList<>();
+		for(Connection conn : connections){
+			
+			ConnectedElement absConnDest = conn.getDestination();
+			ConnectedElement absConnSour = conn.getSource();
+			boolean delayed = false;
+			try{
+				EnumerationLiteral lit = PropertyUtils.getEnumLiteral(conn, commTimingProp);
+				delayed = lit.getName().equals("delayed");
+			}catch(PropertyDoesNotApplyToHolderException e){
+				delayed = false;
+			}
+			Context destContext = absConnDest.getContext();
+			Context sourContext = absConnSour.getContext();
+			//only make connections to things that have annexs
+			if(destContext != null && destContext instanceof Subcomponent){
+				if(!AgreeEmitterUtilities.containsAgreeAnnex((Subcomponent)destContext)){
+					continue;
+				}
+			}
+			if(sourContext != null && sourContext instanceof Subcomponent){
+				if(!AgreeEmitterUtilities.containsAgreeAnnex((Subcomponent)sourContext)){
+					continue;
+				}
+			}
+			
+			//agreeConns.add(makeConnectionExpressions(absConnSour, absConnDest, latched, delayed))
+			throw new AgreeException("We have to implement connections");
+		}
+		return null;
+	}
+		
+//		private static void makeConnectionExpressions(ConnectedElement absConnSour,
+//				ConnectedElement absConnDest, boolean latched, boolean delayed) {
+//			ConnectionEnd destConn = absConnDest.getConnectionEnd();
+//			ConnectionEnd sourConn = absConnSour.getConnectionEnd();
+//			//we currently don't handle data accesses or bus accesses
+//			if(destConn instanceof DataAccess
+//					|| sourConn instanceof DataAccess
+//					|| destConn instanceof BusAccess
+//					|| sourConn instanceof BusAccess
+//					|| destConn instanceof DataSubcomponent
+//					|| sourConn instanceof DataSubcomponent){
+//				return;
+//			}
+//			Context destContext = absConnDest.getContext();
+//			Context sourContext = absConnSour.getContext();
+//			ComponentInstance sourInst = null;
+//			FeatureInstance sourBaseFeatInst = null;
+//			if(sourContext == null){
+//				sourInst = null;
+//			}else if(sourContext instanceof Subcomponent){
+//				sourInst = sourContext.get.findSubcomponentInstance((Subcomponent)sourContext);
+//			}else{
+//				sourBaseFeatInst = state.curInst.findFeatureInstance((FeatureGroup)sourContext);
+//			}
+//			ComponentInstance destInst = null;
+//			FeatureInstance destBaseFeatInst = null;
+//			if(destContext == null){
+//				destInst = state.curInst;
+//			}else if(destContext instanceof Subcomponent){
+//				destInst = state.curInst.findSubcomponentInstance((Subcomponent)destContext);
+//			}else{
+//				destBaseFeatInst = state.curInst.findFeatureInstance((FeatureGroup)destContext);
+//			}
+//			//get the corresponding feature instances
+//			FeatureInstance sourFeatInst = null;
+//			FeatureInstance destFeatInst = null;
+//			List<FeatureInstance> sourFeatInsts = (sourInst == null) ?
+//					sourBaseFeatInst.getFeatureInstances() :
+//					sourInst.getFeatureInstances();
+//					
+//			List<FeatureInstance> destFeatInsts = (destInst == null) ?
+//					destBaseFeatInst.getFeatureInstances() :
+//					destInst.getFeatureInstances();
+//					
+//			for(FeatureInstance featInst : sourFeatInsts){
+//				if(featInst.getFeature() == sourConn){
+//					sourFeatInst = featInst;
+//					break;
+//				}
+//			}
+//			for(FeatureInstance featInst : destFeatInsts){
+//				if(featInst.getFeature() == destConn){
+//						destFeatInst = featInst;
+//						break;
+//				}
+//			}
+//			//grabs the subnames for all the connections
+//			List<AgreeFeature> destConns = state.featInstToAgreeFeatMap.get(destFeatInst);
+//			List<AgreeFeature> sourConns = state.featInstToAgreeFeatMap.get(sourFeatInst);
+//			String lhsLustreName = null;
+//			String rhsLustreName = null;
+//			int i;
+//			assert(destConns.size() == sourConns.size());
+//			for(i = 0; i < destConns.size(); i++){
+//				AgreeFeature agreeDestConn = destConns.get(i);
+//				AgreeFeature agreeSourConn = sourConns.get(i);
+//				if(agreeDestConn.varType == null || agreeSourConn.varType == null){
+//				    if(agreeDestConn.varType != agreeSourConn.varType){
+//				        throw new AgreeException("Either variable: '"+agreeDestConn.lustreString.replace("__", ".")+
+//		                        "' or '"+agreeSourConn.lustreString.replace("__", ".")+"' is reasoned about by AGREE and the other is not.");
+//				    }
+//				}else if(!agreeDestConn.varType.equals(agreeSourConn.varType)){
+//					throw new AgreeException("Variables: '"+agreeDestConn.lustreString.replace("__", ".")+
+//							"' and '"+agreeSourConn.lustreString.replace("__", ".")+"' are of different types");
+//				}
+//				
+//				Expr lhsClock = null;
+//				Expr rhsClock = null;
+//				Subcomponent sourSub = agreeSourConn.compInst.getSubcomponent();
+//				Subcomponent destSub = agreeDestConn.compInst.getSubcomponent();
+//				
+//				//check to see if the destination or source subcomponent is actually the parent
+//				//if this is the case then we are doing monolithic verification and the parent
+//				//subcomponent clock should just be true
+//				if(sourSub != null && destSub != null){
+//				    if(subcomponentContainsSubcomponent(sourSub, destSub)){
+//				        sourSub = null;
+//				    }else if(subcomponentContainsSubcomponent(destSub, sourSub)){
+//				        destSub = null;
+//				    }
+//				}
+//				
+//				String sourConnName = sourSub == null ? null : sourSub.getName();
+//				String destConnName = destSub == null ? null : destSub.getName();
+//				if(destContext == null || destContext instanceof FeatureGroup){
+//					switch(agreeDestConn.direction){
+//					case IN:
+//						lhsLustreName = agreeSourConn.lustreString;
+//						rhsLustreName = agreeDestConn.lustreString;
+//						lhsClock = sourConnName == null ? new BoolExpr(true) : new IdExpr(sourConnName+state.clockIDSuffix);
+//	                    rhsClock = destConnName == null ? new BoolExpr(true) : new IdExpr(destConnName+state.clockIDSuffix);
+//						break;
+//					case OUT:
+//						lhsLustreName = agreeDestConn.lustreString;
+//						rhsLustreName = agreeSourConn.lustreString;
+//	                    lhsClock = destConnName == null ? new BoolExpr(true) : new IdExpr(destConnName+state.clockIDSuffix);
+//	                    rhsClock = sourConnName == null ? new BoolExpr(true) : new IdExpr(sourConnName+state.clockIDSuffix);
+//	                    break;
+//					}
+//				}else{
+//					switch(agreeDestConn.direction){
+//					case IN:
+//						lhsLustreName = agreeDestConn.lustreString;
+//						rhsLustreName = agreeSourConn.lustreString;
+//	                    lhsClock = destConnName == null ? new BoolExpr(true) : new IdExpr(destConnName+state.clockIDSuffix);
+//	                    rhsClock = sourConnName == null ? new BoolExpr(true) : new IdExpr(sourConnName+state.clockIDSuffix);
+//						break;
+//					case OUT:
+//						lhsLustreName = agreeSourConn.lustreString;
+//						rhsLustreName = agreeDestConn.lustreString;
+//	                    lhsClock = sourConnName == null ? new BoolExpr(true) : new IdExpr(sourConnName+state.clockIDSuffix);
+//	                    rhsClock =destConnName == null ? new BoolExpr(true) : new IdExpr(destConnName+state.clockIDSuffix);
+//	                    break;
+//					}
+//				}
+//				Equation connEq;
+//				
+//				//this is a stupid hack to deal with the new asynchronous analysis
+//				if(state.latchedClocks){
+//				    //if we are using latched clocks the rhs clock should only trigger on the
+//				    //falling edge
+//				    if(rhsClock instanceof IdExpr){
+//				        rhsClock = new BinaryExpr(new UnaryExpr(UnaryOp.NOT, rhsClock), 
+//				                BinaryOp.AND, 
+//				                new UnaryExpr(UnaryOp.PRE, rhsClock));
+//				        rhsClock = new BinaryExpr(new BoolExpr(false), BinaryOp.ARROW, rhsClock);
+//				    }
+//				    
+//				    //if we are using latched clocks the lhs clock should only trigger on the rising edge
+//				    if(lhsClock instanceof IdExpr){
+//				        Expr lhsClockRise = new BinaryExpr(new UnaryExpr(UnaryOp.PRE, new UnaryExpr(UnaryOp.NOT, lhsClock)), 
+//	                            BinaryOp.AND, lhsClock);
+//	                    lhsClock = new BinaryExpr(lhsClock, BinaryOp.ARROW, lhsClockRise);
+//				    }
+//				}
+//				
+//				if(agreeDestConn.varType != null && agreeSourConn.varType != null){
+//				    //we only make these connections of the features are reasoned about by agree
+//				    if(delayed){
+//				        Expr connExpr = new UnaryExpr(UnaryOp.PRE, new IdExpr(rhsLustreName));
+//				        connExpr = new BinaryExpr(agreeSourConn.initState, BinaryOp.ARROW, connExpr);
+//				        connEq = new Equation(new IdExpr(lhsLustreName), connExpr);
+//				    }else{
+//				        connEq = new Equation(new IdExpr(lhsLustreName), new IdExpr(rhsLustreName));
+//				    }
+//				    addConnection(state, connEq);
+//				}
+//				if(agreeDestConn.connType == ConnType.EVENT){
+//					if(agreeSourConn.connType != ConnType.EVENT){
+//						throw new AgreeException("The connection between variables '"
+//								+agreeDestConn.lustreString+"' and '"
+//								+agreeSourConn.lustreString+"' are of different types");
+//					}
+//					addEventConnection(state, delayed, lhsLustreName,
+//	                        rhsLustreName, lhsClock, rhsClock);
+//				}
+//			}
+//
+//		}
+//		
+//		return null;
+//	}
+
+	private Expr getInitialConstraint(EList<SpecStatement> specs) {
+		for(SpecStatement spec : specs){
+			if(spec instanceof InitialStatement){
+				return doSwitch(((InitialStatement) spec).getExpr());
+			}
+		}
+		return new BoolExpr(true);
+	}
+
 	private Expr getClockConstraint(EList<SpecStatement> specs, List<AgreeNode> subNodes, List<Node> lustreNodes) {
 		for(SpecStatement spec : specs){
 			if(spec instanceof MNSynchStatement){
@@ -119,15 +375,52 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr>{
 				return new BoolExpr(true);
 			}
 			if(spec instanceof LatchedStatement){
-				
+				return new BoolExpr(true);
 			}
 			if(spec instanceof SynchStatement){
-				
+				return getSynchConstraint((SynchStatement)spec, subNodes, lustreNodes);
 			}
 		}
 		
 		
 		return null;
+	}
+
+	private Expr getSynchConstraint(SynchStatement spec, List<AgreeNode> subNodes, List<Node> lustreNodes) {
+		List<Expr> clockIds = new ArrayList<>();
+		Expr clockAssertion;
+        for(AgreeNode subNode : subNodes){
+            clockIds.add(new IdExpr(subNode.clockVar.id));
+        }
+        
+        int val1 = Integer.decode(spec.getVal());
+        if(spec.getVal2() == null){
+            Node dfaNode = AgreeCalendarUtils.getDFANode("__DFA_NODE", val1); 
+            Node calNode = AgreeCalendarUtils.getCalendarNode("__CALENDAR_NODE", dfaNode.id, clockIds.size());
+            lustreNodes.add(dfaNode);
+            lustreNodes.add(calNode);
+
+            clockAssertion = new NodeCallExpr(calNode.id, clockIds);
+        }else{
+        	int val2 = Integer.decode(spec.getVal2());
+
+        	String nodeName = "__calendar_node_"+val1+"_"+val2;
+        	Node calNode = AgreeCalendarUtils.getMNCalendar(nodeName, val1, val2);
+        	lustreNodes.add(calNode);
+        	clockAssertion = new BoolExpr(true);
+        	int i,j;
+        	for(i = 0; i < clockIds.size(); i++){
+        		Expr clock1 = clockIds.get(i);
+        		for(j = i+1; j < clockIds.size(); j++){
+        			Expr clock2 = clockIds.get(j);
+        			NodeCallExpr nodeCall = new NodeCallExpr(nodeName, clock1, clock2);
+        			clockAssertion = new BinaryExpr(clockAssertion, BinaryOp.AND, nodeCall);
+        			nodeCall = new NodeCallExpr(nodeName, clock2, clock1);
+        			clockAssertion = new BinaryExpr(clockAssertion, BinaryOp.AND, nodeCall);
+        		}
+        	}
+        }
+        return clockAssertion;
 	}
 
 	private Expr getMNSynchConstraint(MNSynchStatement sync, List<Node> lustreNodes) {
