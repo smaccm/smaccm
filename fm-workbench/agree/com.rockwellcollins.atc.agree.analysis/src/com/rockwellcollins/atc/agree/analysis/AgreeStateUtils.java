@@ -39,6 +39,7 @@ import com.rockwellcollins.atc.agree.agree.PrimType;
 import com.rockwellcollins.atc.agree.agree.RecordDefExpr;
 import com.rockwellcollins.atc.agree.agree.RecordType;
 import com.rockwellcollins.atc.agree.agree.ThisExpr;
+import com.rockwellcollins.atc.agree.ast.AgreeASTBuilder;
 
 public class AgreeStateUtils {
 	
@@ -56,6 +57,14 @@ public class AgreeStateUtils {
     	String renaming = agreeRename.rename(refString);
     	refMap.put(renaming, reference);
     	
+    }
+    
+    public static String getRecordTypeName(com.rockwellcollins.atc.agree.agree.Type type){
+    	if(type instanceof PrimType){
+    		return ((PrimType) type).getString();
+    	}else{
+    		return getIDTypeStr((AgreeEmitterUtilities.getFinalNestId(((RecordType)type).getRecord())));
+    	}
     }
     
     public static String getRecordTypeName(com.rockwellcollins.atc.agree.agree.Type type, 
@@ -165,7 +174,7 @@ public class AgreeStateUtils {
         return new RecordExpr(typeStr, fieldExprs);
     }
     
-    private static String getIDTypeStr(NamedElement record) {
+    public static String getIDTypeStr(NamedElement record) {
     	String typeStr = null;
     	EObject container = record.eContainer();
     	
@@ -202,7 +211,7 @@ public class AgreeStateUtils {
     		}
     		if(container instanceof ComponentClassifier){
     			ComponentClassifier compClass = (ComponentClassifier)container;
-    			typeStr = compClass.getName() + "__" + record.getName();
+    			typeStr = compClass.getName() + AgreeASTBuilder.dotChar + record.getName();
     		}else{
     			typeStr = record.getName();
     		}
@@ -211,7 +220,7 @@ public class AgreeStateUtils {
     	while(!(container instanceof AadlPackage)){
     		container = container.eContainer();
     	}
-    	typeStr = ((AadlPackage)container).getName() + "__" + typeStr;
+    	typeStr = ((AadlPackage)container).getName() + AgreeASTBuilder.dotChar + typeStr;
     	typeStr = typeStr.replace(".", "__");
     	typeStr = typeStr.replace("::", "____");
 

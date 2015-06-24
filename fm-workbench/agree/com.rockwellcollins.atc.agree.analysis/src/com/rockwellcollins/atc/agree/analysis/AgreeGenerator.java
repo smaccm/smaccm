@@ -44,6 +44,8 @@ import com.google.common.collect.Lists;
 import com.rockwellcollins.atc.agree.agree.AgreeContractSubclause;
 import com.rockwellcollins.atc.agree.agree.AgreePackage;
 import com.rockwellcollins.atc.agree.analysis.preferences.PreferenceConstants;
+import com.rockwellcollins.atc.agree.ast.AgreeASTBuilder;
+import com.rockwellcollins.atc.agree.ast.AgreeProgram;
 
 public class AgreeGenerator {
 
@@ -438,6 +440,10 @@ public class AgreeGenerator {
     }
     
     public static AgreeAnalysis getLustre(ComponentInstance compInst, boolean monolithic){
+    	
+    	
+    	AgreeProgram program = new AgreeASTBuilder().getAgreeProgram(compInst);
+    	
     	
     	AgreeAnalysis agreeProgram = new AgreeAnalysis();
     	AgreeEmitterState state;
