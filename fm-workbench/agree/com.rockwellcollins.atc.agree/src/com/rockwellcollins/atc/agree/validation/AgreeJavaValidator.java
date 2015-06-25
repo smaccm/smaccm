@@ -350,6 +350,17 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
         }
 
     }
+    
+    @Check(CheckType.FAST)
+    public void checkNestedDotID(NestedDotID dotId){
+    	NestedDotID sub = dotId.getSub();
+    	if(sub != null){
+    		if(sub.getBase() instanceof Property){
+    			error(sub, "You cannot reference AADL properties this way."
+    					+ " Use a \"Get_Property\" statement.");
+    		}
+    	}
+    }
 
     @Check(CheckType.FAST)
     public void checkGuarantee(GuaranteeStatement guar) {
