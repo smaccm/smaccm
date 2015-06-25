@@ -17,7 +17,7 @@ for the thread implementations.
 componentGlueCodeHeaderIfdef(sysInstanceName) ::= "__SMACCM_<sysInstanceName>_types__H"
 
 
-componentGlueCodeHeaderPrefix(name, date, path, datatypesHeader) ::= <<
+filePrefix(name, date, path, datatypesHeader) ::= <<
 #ifndef <componentGlueCodeHeaderIfdef(name)>
 #define <componentGlueCodeHeaderIfdef(name)>
 
@@ -76,7 +76,7 @@ componentGlueCodeHeaderBody(threadImpl) ::= <<
 	<endif>	
 >>
 
-componentGlueCodeHeaderPostfix(name, path) ::= <<
+filePostfix(name, path) ::= <<
 
 /* endif for: #ifndef <componentGlueCodeHeaderIfdef(name)> */
 #endif

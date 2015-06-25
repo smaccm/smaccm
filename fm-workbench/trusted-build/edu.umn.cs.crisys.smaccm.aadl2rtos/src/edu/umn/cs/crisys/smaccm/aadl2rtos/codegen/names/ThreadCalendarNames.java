@@ -94,7 +94,7 @@ public class ThreadCalendarNames {
   }
   
   public String getPriority() {
-    return "50";
+    return "150";
   }
   
 }

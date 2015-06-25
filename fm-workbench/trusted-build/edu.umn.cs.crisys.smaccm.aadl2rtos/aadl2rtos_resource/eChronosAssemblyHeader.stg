@@ -15,7 +15,7 @@ RPC calls for eChronos.
 
 headerIfdef(sysInstanceName) ::= "__SMACCM_<sysInstanceName>_decls__H"
 
-headerPrefix(name, date, path) ::= <<
+filePrefix(name, date, path) ::= <<
 #ifndef <headerIfdef(name)>
 #define <headerIfdef(name)>
 
@@ -29,7 +29,7 @@ headerPrefix(name, date, path) ::= <<
 
 >>
 
-headerPostfix(name, path) ::= <<
+filePostfix(name, path) ::= <<
 
 /* endif for: #ifndef <headerIfdef(name)> */
 #endif

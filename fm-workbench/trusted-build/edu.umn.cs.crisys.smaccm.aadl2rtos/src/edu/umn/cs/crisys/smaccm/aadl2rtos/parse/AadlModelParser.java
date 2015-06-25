@@ -532,11 +532,12 @@ public class AadlModelParser {
   
   private ThreadImplementation constructThreadImplementation(ThreadTypeImpl tti) {
     String name = tti.getName();
-    boolean isPassive = PropertyUtil.getThreadType(tti);    
+    boolean isPassive = PropertyUtil.getThreadType(tti);
+    boolean isExternal = PropertyUtil.getIsExternal(tti);
     int priority = -1; 
     int stackSize = 4096;
     
-    if (!isPassive) {
+    if (!(isPassive || isExternal)) {
       priority = PropertyUtil.getPriority(tti);
       
       // MWW TODO: temporary until after May 15 code drop
@@ -546,11 +547,11 @@ public class AadlModelParser {
       priority = 200; 
       try {
         PropertyUtil.getPriority(tti);
-        logger.warn("Warning: priority ignored for passive thread: " + name);
+        logger.warn("Warning: priority ignored for passive/external thread: " + name);
       } catch (Aadl2RtosException e) {}
       try {
         PropertyUtil.getStackSizeInBytes(tti); 
-        logger.warn("Warning: stack size ignored for passive thread: " + name);
+        logger.warn("Warning: stack size ignored for passive/external thread: " + name);
       } catch (Aadl2RtosException e) {}
     }
     
@@ -560,7 +561,6 @@ public class AadlModelParser {
 
     double minComputeTime = PropertyUtil.getMinComputeExecutionTimeInMicroseconds(tti);
     double maxComputeTime = PropertyUtil.getMaxComputeExecutionTimeInMicroseconds(tti);
-    boolean isExternal = PropertyUtil.getIsExternal(tti);
     boolean requiresTimeServices = PropertyUtils.getBooleanValue(tti, PropertyUtil.REQUIRES_TIME_SERVICES);
     List<String> externalMutexList = (ArrayList<String>) PropertyUtil.getExternalMutexList(tti);
     List<String> externalSemaphoreList = (ArrayList<String>) PropertyUtil.getExternalSemaphoreList(tti);

@@ -13,6 +13,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -37,6 +38,34 @@ import edu.umn.cs.crisys.smaccm.aadl2rtos.parse.Model;
 
 // TODO: need to discuss where to place .c / .h files for User-provided thread functions
 
+/**********************************************************************
+ * 
+ * Scheme for template file management [PROPOSAL]:
+ * ===============================================
+ * 
+ * There is a great deal of commonality between the eChronos and 
+ * CAmkES generation processes, modulo a handful of overridden definitions, 
+ * mostly related to naming.  To manage this, we have a naming scheme for 
+ * templates to manage this.  
+ * 
+ * What we do is, given a root file name YYY, we try to load files in the 
+ * following order:
+ *     CommonYYY
+ *     <OSSpecific>YYY
+ *     <OSAndHWSpecific>YYY
+ *  
+ *  Where <OSSpecific> is the names of the OS: {Camkes, eChronos}, and 
+ *  <OSAndHWSpecific> contains both the OS name and the hardware platform:
+ *   e.g. {CamkesODROID, eChronosPixhawk}
+ *  
+ *  If the OS-specific file is missing, an error is raised.
+ *  If the <Common> or <OSAndHWSpecific> files are missing, they are assumed 
+ *  to be unnecessary and silently ignored.
+ *  
+ *  
+ **********************************************************************/
+
+
 public abstract class CodeGeneratorBase {
 	protected Model model;
 	protected Logger log;
@@ -48,35 +77,37 @@ public abstract class CodeGeneratorBase {
 	protected String date;
 	protected Aadl2RtosSTErrorListener listener; 
 	protected File pluginDirectory;
-	protected String templatePrefix;
+	protected String osPrefix;
+	protected String hwPrefix; 
+	protected String commonPrefix;
 	
 	public List<ThreadImplementation> allThreads;
 
 	// so write threadName_write_portName for each port.
 
 	public CodeGeneratorBase(Logger log, Model model, File aadlDirectory, File outputDir, 
-	    String templatePrefix) {
+	    String osPrefix) {
 		this.log = log;
 		this.model = model;
 		this.outputDirectory = outputDir;
 		this.aadlDirectory = aadlDirectory;
-		this.templatePrefix = templatePrefix;
+		this.commonPrefix = "Common";
+		this.osPrefix = osPrefix;
+		this.hwPrefix = model.getHWTarget(); 
 		
 		try {
 		  this.pluginDirectory = Util.getFileFromURL(Util.createURLFromClass(getClass()));
 		  // System.out.println("CAmkES_CodeGenerator class directory: " + this.pluginDirectory.getPath());
 		} catch (URISyntaxException e) {
-		  log.error("Unable to find plugin directory!  Error: " + e.toString());
-		  System.out.println("Unable to find plugin directory!  Error: " + e.toString());
+		  log.error("Unable to find plugin directory.  Error: " + e.toString());
+		  System.out.println("Unable to find plugin directory.  Error: " + e.toString());
 		  this.pluginDirectory = null;
 		}
 		
 		// throw exception at first error.
 		listener = new Aadl2RtosSTErrorListener(log);
-		
 		//this.templates.verbose = true;
 		
-		//templates.registerRenderer(Type.class, new C_Type_Renderer());
 
 		// Create directories
 		componentsDirectory = 
@@ -95,21 +126,39 @@ public abstract class CodeGeneratorBase {
     date = dateFormat.format(d);  
 	}
 
+	
 	///////////////////////////////////////////////////////////////////////////
 	// 
 	// first try to find templates in file system, then in plugin directory
 	//
 	///////////////////////////////////////////////////////////////////////////
 	
+	protected STGroupFile createTemplateInternal(String fname) {
+    String path = Util.findConfigFileLocation(fname);
+    if (path == null) {
+      path = Util.aadl2rtos_resource + "/" + fname;
+    }
+    STGroupFile templates = new STGroupFile(path);
+    templates.setListener(listener);
+    return templates;
+	  
+	}
+	
 	protected STGroupFile createTemplate(String fname) {
-	  fname = this.templatePrefix + fname;
-	  String path = Util.findConfigFileLocation(fname);
-	  if (path == null) {
-	    path = Util.aadl2rtos_resource + "/" + fname;
+	  return createTemplateInternal(this.osPrefix + fname);
+	}
+	
+	// construct an dynamic, iterated, template inheritance hierarchy.
+	protected STGroupFile createTemplate(List<String> templateNames) {
+	  STGroupFile prevTemplate = null; 
+	  STGroupFile template = null; 
+	  for (String s : templateNames) {
+	    template = createTemplateInternal(s); 
+	    if (prevTemplate != null) {
+	      template.importTemplates(prevTemplate);
+	    }
 	  }
-	  STGroupFile templates = new STGroupFile(path);
-	  templates.setListener(listener);
-	  return templates;
+	  return template;
 	}
 	
 	protected void writeBoilerplateDTHeader(String name, String path, BufferedWriter writer, ST st, boolean usesDTHeader) throws IOException {
@@ -133,9 +182,11 @@ public abstract class CodeGeneratorBase {
 	  writer.append(st.render());
 	}
 	
+	/* MWW TODO: Perhaps this method should be refactored to go in the C_Type_Writer class */
+	
 	private void createComponentDispatchTypes(BufferedWriter writer) throws IOException {
     // write dispatcher types
-	  // Note: for new 
+	  // Note: for new-style "struct" return blocks
 	  
     for (ThreadImplementation ti : model.getAllThreadImplementations()) {
       for (DispatchableInputPort d : ti.getDispatcherList()) {
@@ -162,47 +213,11 @@ public abstract class CodeGeneratorBase {
         model.getAstTypes().put((new PortNames(d)).getDispatchStructTypeName(), dispatchRecordType);
       }
     }
-    
     C_Type_Writer.writeTypes(writer, model, 6);
 	}
 	
-  protected Set<Type> getUserTypes() {
-    // write dispatcher types
-    Set<Type> rwTypeSet = new HashSet<Type>();
-    
-    // "for free types" that are always necessary; void for event ports
-    // and uint32_t for periodic dispatchers.  Note if the dispatcher 
-    // time type changes, it may break code, so perhaps we should 
-    // store the time type somewhere (model?); 
-    // MWW: updated: store this in the periodic dispatcher class.
-    
-    rwTypeSet.add(new UnitType());
-    //rwTypeSet.add(new IntType(32, false));  
-    rwTypeSet.add(InputPeriodicPort.getPortType());  
-    
-    for (ThreadImplementation ti : model.getAllThreadImplementations()) {
-      for (OutputDataPort d : ti.getOutputDataPortList()) {
-        rwTypeSet.add(d.getType());
-      }
-      for (OutputEventPort d : ti.getOutputEventDataPortList()) {
-        rwTypeSet.add(d.getType());
-      }
-      for (InputDataPort d : ti.getInputDataPortList()) {
-        rwTypeSet.add(d.getType());
-      }
-      for (InputEventPort d : ti.getInputEventDataPortList()) {
-        rwTypeSet.add(d.getType());
-      }
-    }
-    for (SharedData d : model.getSharedDataList()) {
-       rwTypeSet.add(d.getType());
-    }
-    return rwTypeSet ; 
-  }
-
-  
-
-  protected Set<Type> getSharedVariableTypes() {
+	
+	protected Set<Type> getSharedVariableTypes() {
     // write dispatcher types
     Set<Type> svTypeSet = new HashSet<Type>();
     
@@ -212,60 +227,54 @@ public abstract class CodeGeneratorBase {
     return svTypeSet ; 
   }
 
+  protected void writeGeneric(File directory, String templateFileName, String templateName, String tlTemplateArg[], Object tlNamesClass[], 
+      String headerFooterName, boolean headerUsesDT, String fileName) throws Aadl2RtosFailure {
+
+    File genericFile = new File(directory, fileName); 
+    String path = genericFile.getAbsolutePath();
+    try (BufferedWriter writer = new BufferedWriter(new FileWriter(genericFile))) {
+      STGroupFile stg = this.createTemplate(templateFileName);
+      writeBoilerplateDTHeader(headerFooterName, path, writer, stg.getInstanceOf("filePrefix"), headerUsesDT);
+
+      ST st = stg.getInstanceOf(templateName);
+
+      assert(tlTemplateArg.length== tlNamesClass.length);
+      
+      for (int i = 0; i < tlTemplateArg.length; i++) {
+        st.add(tlTemplateArg[i], tlNamesClass[i]);
+      }
+      writer.append(st.render() + "\n");
+
+      writeBoilerplateFooter(headerFooterName, path, writer, stg.getInstanceOf("filePostfix")); 
+    } catch (IOException e) {
+      log.error("IO Exception occurred when creating file: " + fileName);
+      throw new Aadl2RtosFailure();
+    }
+
+  }
+  
+  protected void writeGeneric(File directory, String templateFileName, String templateName, String tlTemplateArg, Object tlNamesClass, 
+                            String headerFooterName, boolean headerUsesDT, String fileName) throws Aadl2RtosFailure {
+    String argList[] = new String [] { tlTemplateArg };
+    Object classList[] = new Object [] { tlNamesClass };
+    writeGeneric(directory, templateFileName, templateName, argList, classList, headerFooterName, headerUsesDT, fileName);
+  }
 	
 	private void createComponentHeader(File componentDirectory, ThreadImplementation ti) throws Aadl2RtosFailure {
     ThreadImplementationNames tin = new ThreadImplementationNames(ti);
-    //ModelNames m = new ModelNames(model); 
-
-    String name = tin.getNormalizedName();
-    File interfaceFile = new File(componentDirectory, tin.getComponentGlueCodeHFileName());
-    String path = interfaceFile.getAbsolutePath();
-    try (BufferedWriter writer = new BufferedWriter(new FileWriter(interfaceFile))) {
-      STGroupFile stg = this.createTemplate("ComponentHeader.stg");
-      writeBoilerplateDTHeader(name, path, writer, stg.getInstanceOf("componentGlueCodeHeaderPrefix"), true);
-      
-      ST st = stg.getInstanceOf("componentGlueCodeHeaderBody");
-      st.add("threadImpl", tin);
-      writer.append(st.render() + "\n");
-      
-      writeBoilerplateFooter(name, path, writer, stg.getInstanceOf("componentGlueCodeHeaderPostfix")); 
-    } catch (IOException e) {
-      log.error("IO Exception occurred when creating a component header.");
-      throw new Aadl2RtosFailure();
-    }
+	  writeGeneric(componentDirectory, "ComponentHeader.stg", "componentGlueCodeHeaderBody", 
+	        "threadImpl", tin, tin.getNormalizedName(), true, tin.getComponentGlueCodeHFileName());
 	}
 
 	private void createComponentCFile(File componentDirectory, ThreadImplementation ti) throws Aadl2RtosFailure {
     ThreadImplementationNames tin = new ThreadImplementationNames(ti);
-	  
-	  String name = tin.getNormalizedName();
 	  String fname = tin.getComponentGlueCodeCFileName();
 	  if (ti.getIsExternal()) {
 		  fname += ".template";
 	  }
-    File interfaceFile = new File(componentDirectory, fname);
-    String path = interfaceFile.getAbsolutePath();
-    
-    
-    try (BufferedWriter writer = new BufferedWriter(new FileWriter(interfaceFile))) {
-      STGroupFile stg = this.createTemplate("ComponentC.stg");
-      writeBoilerplateHeader(name, path, writer, stg.getInstanceOf("componentGlueCodeCFilePrefix"));
-      writer.append("\n\n");
-      
-      ST st = stg.getInstanceOf("componentCFileDecls");
-      st.add("threadImpl", tin);
-      writer.append(st.render()); 
-      
-      writeBoilerplateFooter(name, path, writer, stg.getInstanceOf("componentGlueCodeCFilePostfix")); 
-      
-    } catch (IOException e) {
-      log.error("IO Exception occurred when creating a component header.");
-      throw new Aadl2RtosFailure();
-    }
+	  writeGeneric(componentDirectory, "ComponentC.stg", "componentCFileDecls", 
+	       "threadImpl", tin, tin.getNormalizedName(), false, fname);
 	}
-
-	
-
 	
 	private void copyComponentFiles(File srcDirectory, File includeDirectory, ThreadImplementation ti) throws Aadl2RtosFailure {
 	  // determine the list of source files.
@@ -360,7 +369,7 @@ public abstract class CodeGeneratorBase {
 
     try (BufferedWriter hwriter = new BufferedWriter(new FileWriter(HFile))) { 
       STGroupFile stg = this.createTemplate("TypesHeader.stg");
-      writeBoilerplateHeader(sysInstanceName, path, hwriter, stg.getInstanceOf("datatypesPrefix"));
+      writeBoilerplateHeader(sysInstanceName, path, hwriter, stg.getInstanceOf("filePrefix"));
       
       ST st = stg.getInstanceOf("externalTypeDecls");
       st.add("model", mn);
@@ -368,7 +377,7 @@ public abstract class CodeGeneratorBase {
       
       createComponentDispatchTypes(hwriter);
       
-      writeBoilerplateFooter(sysInstanceName, hname, hwriter, stg.getInstanceOf("datatypesPostfix"));
+      writeBoilerplateFooter(sysInstanceName, hname, hwriter, stg.getInstanceOf("filePostfix"));
 
     } catch (IOException e) {
       log.error("IOException occurred during file write: " + e);
@@ -393,3 +402,57 @@ public abstract class CodeGeneratorBase {
 	
 }
 
+
+/* 
+protected STGroupFile createTemplate(String fileNameRoot) {
+  String commonFileName = this.commonPrefix + fileNameRoot; 
+  String osFileName = this.osPrefix + fileNameRoot;
+  String osHwFileName = this.osPrefix + this.hwPrefix + fileNameRoot ; 
+  
+  STGroupFile commonTemplate = null;
+  STGroupFile osTemplate = createTemplateElem(osFileName); 
+  STGroupFile osHwTemplate = null;
+  
+  try {
+    commonTemplate = createTemplateElem(commonFileName);
+    
+
+  osTemplate.importTemplates(commonTemplate);
+  
+  // try to construct OS/HW specific template.  If it doesn't exist,
+  // it is o.k.
+  try { 
+    osHwTemplate = createTemplateElem(osHwFileName); 
+    osHwTemplate.importTemplates(commonTemplate);
+    osHwTemplate.importTemplates(osTemplate);
+  } catch(Exception e) {
+    System.out.println("Unable to create OS/HW template file.  Exception: " + e);
+  }
+
+  if (osHwTemplate != null) {
+    return osHwTemplate;
+  } else {
+    return osTemplate;
+  }
+}
+*/
+
+/*
+//ModelNames m = new ModelNames(model); 
+
+File interfaceFile = new File(componentDirectory, tin.getComponentGlueCodeHFileName());
+String path = interfaceFile.getAbsolutePath();
+try (BufferedWriter writer = new BufferedWriter(new FileWriter(interfaceFile))) {
+  STGroupFile stg = this.createTemplate("ComponentHeader.stg");
+  writeBoilerplateDTHeader(name, path, writer, stg.getInstanceOf("componentGlueCodeHeaderPrefix"), true);
+  
+  ST st = stg.getInstanceOf("componentGlueCodeHeaderBody");
+  st.add("threadImpl", tin);
+  writer.append(st.render() + "\n");
+  
+  writeBoilerplateFooter(name, path, writer, stg.getInstanceOf("componentGlueCodeHeaderPostfix")); 
+} catch (IOException e) {
+  log.error("IO Exception occurred when creating a component header.");
+  throw new Aadl2RtosFailure();
+}
+*/

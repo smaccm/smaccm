@@ -4,6 +4,8 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroupFile;
@@ -12,7 +14,15 @@ import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosFailure;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Logger;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.common.CodeGeneratorBase;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.names.ModelNames;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.InputDataPort;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.InputEventPort;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.InputPeriodicPort;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.OutputDataPort;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.OutputEventPort;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.SharedData;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.ThreadImplementation;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.Type;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.UnitType;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.parse.Model;
 
 public class EChronos_CodeGenerator extends CodeGeneratorBase {
@@ -98,5 +108,39 @@ public class EChronos_CodeGenerator extends CodeGeneratorBase {
     if (listener.isErrorOccurred()) {
       throw new Aadl2RtosFailure();
     }
+  }
+
+  protected Set<Type> getUserTypes() {
+    // write dispatcher types
+    Set<Type> rwTypeSet = new HashSet<Type>();
+    
+    // "for free types" that are always necessary; void for event ports
+    // and uint32_t for periodic dispatchers.  Note if the dispatcher 
+    // time type changes, it may break code, so perhaps we should 
+    // store the time type somewhere (model?); 
+    // MWW: updated: store this in the periodic dispatcher class.
+    
+    rwTypeSet.add(new UnitType());
+    //rwTypeSet.add(new IntType(32, false));  
+    rwTypeSet.add(InputPeriodicPort.getPortType());  
+    
+    for (ThreadImplementation ti : model.getAllThreadImplementations()) {
+      for (OutputDataPort d : ti.getOutputDataPortList()) {
+        rwTypeSet.add(d.getType());
+      }
+      for (OutputEventPort d : ti.getOutputEventDataPortList()) {
+        rwTypeSet.add(d.getType());
+      }
+      for (InputDataPort d : ti.getInputDataPortList()) {
+        rwTypeSet.add(d.getType());
+      }
+      for (InputEventPort d : ti.getInputEventDataPortList()) {
+        rwTypeSet.add(d.getType());
+      }
+    }
+    for (SharedData d : model.getSharedDataList()) {
+       rwTypeSet.add(d.getType());
+    }
+    return rwTypeSet ; 
   }
 }
