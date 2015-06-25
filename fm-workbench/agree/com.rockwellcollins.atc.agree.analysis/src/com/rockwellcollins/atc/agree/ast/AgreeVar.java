@@ -12,4 +12,17 @@ public class AgreeVar extends VarDecl{
 		super(name, type);
 		this.reference = reference;
 	}
+	
+	@Override
+	public int hashCode(){
+		return id.hashCode();
+	}
+	
+	@Override
+	public boolean equals(Object obj){
+		if(!(obj instanceof AgreeVar)){
+			return false;
+		}
+		return ((AgreeVar)obj).id.equals(id);
+	}
 }
