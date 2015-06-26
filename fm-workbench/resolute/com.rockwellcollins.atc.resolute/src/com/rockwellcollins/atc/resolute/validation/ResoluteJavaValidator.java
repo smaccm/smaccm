@@ -101,6 +101,10 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 			if (fnCallExpr.getFn().getBody() instanceof ClaimBody) {
 				return;
 			}
+			if (fnCallExpr.getFn().eIsProxy()) {
+				error(prove, "Could not find claim function");
+				return;
+			}
 		}
 
 		error(prove, "Prove statements must contain a claim");
@@ -229,6 +233,26 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 	}
 
 	@Check
+	public void checkLetExpr(LetExpr letExpr) {
+		ResoluteType exprType;
+		Type letType;
+		exprType = getExprType(letExpr.getBinding().getExpr());
+		letType = letExpr.getBinding().getType();
+		if (!exprType.similar(letType)) {
+			error(letExpr, "types mismatch");
+		}
+
+//		System.out.println("binding=" + letExpr.getBinding());
+//
+//		System.out.println("binding=" + letExpr.getBinding().getType());
+//		System.out.println("binding=" + letExpr.getBinding().getExpr());
+//		System.out.println("expr   =" + letExpr.getExpr());
+//		System.out.println("exprType   =" + exprType);
+//		System.out.println("letType    =" + letType);
+
+	}
+
+	@Check
 	public void checkBinExprCall(BinaryExpr binExpr) {
 		String op = binExpr.getOp();
 		ResoluteType typeLeft = getExprType(binExpr.getLeft());
@@ -238,6 +262,7 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 		case "=>":
 		case "or":
 		case "and":
+		case "andthen":
 			if (typeLeft.subtypeOf(BaseType.BOOL) && typeRight.subtypeOf(BaseType.BOOL)) {
 				return;
 			}
@@ -246,6 +271,7 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 		case "+":
 		case "-":
 		case "*":
+		case "%":
 		case "/":
 		case "<":
 		case "<=":
@@ -255,6 +281,9 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 				return;
 			}
 			if (typeLeft.subtypeOf(BaseType.REAL) && typeRight.subtypeOf(BaseType.REAL)) {
+				return;
+			}
+			if (typeLeft.subtypeOf(BaseType.STRING) && typeRight.subtypeOf(BaseType.STRING)) {
 				return;
 			}
 			break;
@@ -286,7 +315,7 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 		EList<Arg> formals = funDef.getArgs();
 
 		if (funDef.getBody() instanceof ClaimBody && !inClaimContext(funCall)) {
-			error(funCall, "A claim cannot appear in this context");
+			error(funCall, "A claim cannot appear in this context.");
 		}
 
 		if (actuals.size() != formals.size()) {
@@ -320,7 +349,7 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 			if (be.getOp().equals("=>")) {
 				return be.getRight().equals(obj);
 			}
-			if (be.getOp().equals("and") || be.getOp().equals("or")) {
+			if (be.getOp().equals("and") || be.getOp().equals("or") || (be.getOp().equals("andthen"))) {
 				return inClaimContext(be);
 			}
 		}
@@ -358,11 +387,11 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 		case "member":
 			checkMemberCall(funCall, actualTypes);
 			return;
-			
+
 		case "length":
 			checkLengthCall(funCall, actualTypes);
-			return;	
-			
+			return;
+
 		case "sum":
 			checkSumCall(funCall, actualTypes);
 			return;
@@ -377,13 +406,15 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 			return;
 		}
 
-		if (actualTypes.size() != expectedTypes.size()) {
+		if (actualTypes.size() != expectedTypes.size() &&
+		// handle optional third parameter
+				(funCall.getFn().equalsIgnoreCase("property") && actualTypes.size() + 1 != expectedTypes.size())) {
 			error(funCall, "Function expects " + expectedTypes.size() + " arguments but found " + actualTypes.size()
 					+ " arguments");
 			return;
 		}
 
-		for (int i = 0; i < actualTypes.size(); i++) {
+		for (int i = 0; i < actuals.size(); i++) {
 			ResoluteType expected = expectedTypes.get(i);
 			ResoluteType actual = getExprType(actuals.get(i));
 
@@ -439,7 +470,7 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 			}
 		}
 	}
-	
+
 	private void checkLengthCall(BuiltInFnCallExpr funCall, List<ResoluteType> actualTypes) {
 		if (actualTypes.size() != 1) {
 			error(funCall, "function 'length' expects two arguments");
@@ -532,30 +563,34 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 			expectedTypes.add(BaseType.AADL);
 			break;
 		case "has_property":
-		case "property":
 			expectedTypes.add(BaseType.AADL);
 			expectedTypes.add(BaseType.PROPERTY);
 			break;
-			
+		case "property":
+			expectedTypes.add(BaseType.AADL);
+			expectedTypes.add(BaseType.PROPERTY);
+			expectedTypes.add(BaseType.ANY); // this one is optional
+			break;
+
 		case "has_member":
 			expectedTypes.add(BaseType.AADL);
 			expectedTypes.add(BaseType.STRING);
-			break;			
+			break;
 
 		// Primary type: component
 		case "subcomponents":
 			expectedTypes.add(BaseType.COMPONENT);
 			break;
-			
+
 		case "is_of_type":
 			expectedTypes.add(BaseType.COMPONENT);
 			expectedTypes.add(BaseType.AADL);
 			break;
-			
+
 		case "is_bound_to":
 			expectedTypes.add(BaseType.COMPONENT);
 			expectedTypes.add(BaseType.COMPONENT);
-			break;			
+			break;
 
 		// Primary type: connection
 		case "source":
@@ -784,11 +819,13 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 
 	public ResoluteType getBinaryExprType(BinaryExpr binExpr) {
 		ResoluteType leftType = getExprType(binExpr.getLeft());
+		ResoluteType rightType = getExprType(binExpr.getRight());
 
 		switch (binExpr.getOp()) {
 		case "=>":
 		case "or":
 		case "and":
+		case "andthen":
 		case "<":
 		case "<=":
 		case ">":
@@ -800,8 +837,16 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 		case "+":
 		case "-":
 		case "*":
-		case "/":
+		case "%":
+		case "/": {
+			if (leftType.equals(BaseType.REAL) && rightType.equals(BaseType.INT)) {
+				return BaseType.REAL;
+			}
+			if (leftType.equals(BaseType.INT) && rightType.equals(BaseType.REAL)) {
+				return BaseType.REAL;
+			}
 			return leftType;
+		}
 		}
 
 		error(binExpr, "Unable to get type for binary expression");
@@ -864,7 +909,12 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 		switch (funCall.getFn()) {
 		// Primary type: aadl
 		case "property":
-			return getPropertyType(funCall);
+			if (funCall.getArgs().size() > 2) {
+				return getExprType(funCall.getArgs().get(2));
+			} else {
+				return getPropertyType(funCall);
+			}
+
 		case "parent":
 			return BaseType.AADL;
 		case "name":
@@ -892,11 +942,11 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 			return BaseType.BOOL;
 
 		case "is_of_type":
-			return BaseType.BOOL;			
+			return BaseType.BOOL;
 
 		case "is_bound_to":
-			return BaseType.BOOL;				
-			
+			return BaseType.BOOL;
+
 			// Primary type: range
 		case "upper_bound":
 		case "lower_bound":
@@ -937,6 +987,8 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 		if (funCall.getArgs().size() != 2) {
 			return BaseType.FAIL;
 		}
+//		EList<Expr> actuals = funCall.getArgs();
+//		getExprType (funCall.getArgs().get(1));
 
 		Expr propExpr = funCall.getArgs().get(1);
 		if (!(propExpr instanceof IdExpr)) {
@@ -945,12 +997,27 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 		}
 
 		IdExpr idExpr = (IdExpr) propExpr;
-		if (!(idExpr.getId() instanceof Property)) {
+		Property prop = null;
+		if (idExpr.getId() instanceof Property) {
+			prop = (Property) idExpr.getId();
+		}
+//		if (idExpr.getId() instanceof Arg) {
+//			Arg arg = (Arg) idExpr.getId();
+//
+//			System.out.println("arg  =" + arg);
+//			System.out.println("getexpr=" + getExprType(propExpr));
+//
+//			for (org.osate.aadl2.Element e : arg.getChildren()) {
+//				System.out.println("e=" + e);
+//
+//			}
+//		}
+
+		if (prop == null) {
 			error(funCall, "Cannot perform property lookup without literal property reference");
 			return BaseType.FAIL;
 		}
 
-		Property prop = (Property) idExpr.getId();
 		ResoluteType type = convertPropertyType(prop.getPropertyType());
 		if (type == null) {
 			error(funCall.getArgs().get(1), "Unknown property type");

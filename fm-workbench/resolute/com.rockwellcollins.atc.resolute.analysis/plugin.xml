@@ -36,6 +36,11 @@
             id="com.rockwellcollins.atc.resolute.analysis.commands.resolute"
             name="Resolute">
      </command>
+	 <command categoryId="com.rockwellcollins.atc.resolute.analysis.commands"
+	           id="com.rockwellcollins.atc.resolute.analysis.commands.resolutePredefined" 
+	          name="RESOLUTE Predefined">
+	   <commandParameter id="com.rockwellcollins.atc.resolute.analysis.theorem" name="theorem"/>
+	 </command>
    </extension>
      
    <extension
@@ -53,7 +58,17 @@
             </command>
          </toolbar>
       </menuContribution>
-      
+   
+
+       <menuContribution
+            allPopups="false"
+            locationURI="popup:org.osate.xtext.aadl2.ui.outline?after=additions">
+        	<menu id="com.rockwellcollins.atc.resolute.analysis.menus.predefined" icon="icons/claims.png" label="Predefined Theorems">	
+            	<command commandId="com.rockwellcollins.atc.resolute.analysis.commands.resolutePredefined" icon="icons/claims.png" style="push" label="Check ARINC653" id="com.rockwellcollins.atc.resolute.analysis.menus.resolutePredefined">
+					<parameter name="com.rockwellcollins.atc.resolute.analysis.theorem" value="check_arinc653_compliance"/>
+				</command>
+      		</menu>
+      </menuContribution> 
       <menuContribution
             allPopups="false"
             locationURI="popup:org.osate.xtext.aadl2.ui.outline?after=additions">
@@ -83,6 +98,15 @@
       <handler
             class="com.rockwellcollins.atc.resolute.analysis.handlers.ResoluteHandler"
             commandId="com.rockwellcollins.atc.resolute.analysis.commands.resolute">
+         <enabledWhen>
+            <reference
+                  definitionId="com.rockwellcollins.atc.resolute.analysis.expressions.isSingleOutlineSelection">
+            </reference>
+         </enabledWhen>
+      </handler>
+      <handler
+            class="com.rockwellcollins.atc.resolute.analysis.handlers.ResoluteHandler"
+            commandId="com.rockwellcollins.atc.resolute.analysis.commands.resolutePredefined">
          <enabledWhen>
             <reference
                   definitionId="com.rockwellcollins.atc.resolute.analysis.expressions.isSingleOutlineSelection">
