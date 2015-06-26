@@ -257,6 +257,23 @@ public class AgreeStateUtils {
     	return nodeName;
     }
     
+    public static String getObjectLocationPrefix(EObject obj){
+    	String objPrefix = "";
+    	EObject container = obj.eContainer();
+    	
+    	while(!(container instanceof AadlPackage)){
+    		if(container instanceof ComponentClassifier){
+    			objPrefix = ((ComponentClassifier) container).getName();
+    			objPrefix = dotChar + objPrefix;
+    			objPrefix = objPrefix.replace(".", dotChar);
+    		}
+    		container = container.eContainer();
+    	}
+    	objPrefix = ((AadlPackage)container).getName() + objPrefix + dotChar;
+    	
+    	return objPrefix;
+    }
+    
     public static List<VarDecl> argsToVarDeclList(EList<Arg> args,
     		Map<NamedElement, String> typeMap, Set<jkind.lustre.RecordType> typeExpressions) {
         List<VarDecl> varList = new ArrayList<VarDecl>();

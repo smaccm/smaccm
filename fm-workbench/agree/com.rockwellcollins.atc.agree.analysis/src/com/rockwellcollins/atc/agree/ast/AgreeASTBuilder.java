@@ -3,6 +3,7 @@ package com.rockwellcollins.atc.agree.ast;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -82,9 +83,11 @@ import com.rockwellcollins.atc.agree.agree.FloorCast;
 import com.rockwellcollins.atc.agree.agree.FnCallExpr;
 import com.rockwellcollins.atc.agree.agree.FnDefExpr;
 import com.rockwellcollins.atc.agree.agree.GetPropertyExpr;
+import com.rockwellcollins.atc.agree.agree.GuaranteeStatement;
 import com.rockwellcollins.atc.agree.agree.InitialStatement;
 import com.rockwellcollins.atc.agree.agree.IntLitExpr;
 import com.rockwellcollins.atc.agree.agree.LatchedStatement;
+import com.rockwellcollins.atc.agree.agree.LemmaStatement;
 import com.rockwellcollins.atc.agree.agree.MNSynchStatement;
 import com.rockwellcollins.atc.agree.agree.NestedDotID;
 import com.rockwellcollins.atc.agree.agree.NodeBodyExpr;
@@ -120,7 +123,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr>{
 	public static final String eventSuffix = "___EVENT_";
 	public static final String dotChar = "__";
 
-	private List<Node> globalNodes;
+	private static List<Node> globalNodes;
 	private ComponentInstance curInst; //used for Get_Property Expressions
 	
 	public AgreeProgram getAgreeProgram(ComponentInstance compInst){
@@ -150,12 +153,13 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr>{
     		Set<RecordType> globalTypes){
 		List<AgreeVar> inputs = new ArrayList<>();
 		List<AgreeVar> outputs = new ArrayList<>();
+		List<AgreeVar> locals = new ArrayList<>();
 		List<AgreeConnection> connections = new ArrayList<>();
 		List<AgreeNode> subNodes = new ArrayList<>();
-		List<Node> lustreNodes = new ArrayList<>();
 		List<AgreeStatement> assertions = new ArrayList<>();
 		List<AgreeStatement> assumptions = new ArrayList<>();
 		List<AgreeStatement> guarantees = new ArrayList<>();
+		List<AgreeStatement> lemmas = new ArrayList<>();
 		Expr clockConstraint = new BoolExpr(true);
 		Expr initialConstraint = new BoolExpr(true);
 		String id = compInst.getName();
@@ -163,24 +167,31 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr>{
 		EObject reference = compInst.getSubcomponent();
 		TimingModel timing = null;
 		
+		boolean foundSubNode = false;
+		boolean hasDirectAnnex = false;
 		ComponentClassifier compClass = compInst.getComponentClassifier();
 		if(compClass instanceof ComponentImplementation){
 			AgreeContractSubclause annex = getAgreeAnnex(compClass);
 			if(annex != null){
+				hasDirectAnnex = true;
 				AgreeContract contract = (AgreeContract) annex.getContract();
 
 				for(ComponentInstance subInst : compInst.getComponentInstances()){
 					curInst = subInst;
 					AgreeNode subNode = getAgreeNode(subInst, typeMap, globalTypes);
-					subNodes.add(subNode);
+					if(subNode != null){
+						foundSubNode = true;
+						subNodes.add(subNode);
+					}
 				}
 				
 				curInst = compInst;
 				assertions.addAll(getAssertions(contract.getSpecs()));
-				lustreNodes.addAll(getLustreNodes(contract.getSpecs()));
+				lemmas.addAll(getLemmas(contract.getSpecs()));
+				addLustreNodes(contract.getSpecs());
 				gatherLustreTypes(contract.getSpecs(), typeMap, globalTypes);
 				//the clock constraints contain other nodes that we add
-				clockConstraint = getClockConstraint(contract.getSpecs(), subNodes, lustreNodes);
+				clockConstraint = getClockConstraint(contract.getSpecs(), subNodes);
 				initialConstraint = getInitialConstraint(contract.getSpecs());
 				timing = getTimingModel(contract.getSpecs());
 				
@@ -200,22 +211,38 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr>{
 		
 		AgreeContractSubclause annex = getAgreeAnnex(compClass);
 		if(annex != null){
+			hasDirectAnnex = true;
 			AgreeContract contract = (AgreeContract) annex.getContract();
 			assumptions.addAll(getAssumptions(contract.getSpecs()));
 			guarantees.addAll(getGuarantees(contract.getSpecs()));
 			outputs.addAll(getEquationVars(contract.getSpecs()));
-			lustreNodes.addAll(getLustreNodes(contract.getSpecs()));
+			addLustreNodes(contract.getSpecs());
 
 			gatherLustreTypes(contract.getSpecs(), typeMap, globalTypes);
 		}
 		
+		if(!(foundSubNode || hasDirectAnnex)){
+			return null;
+		}
+		
 		gatherOutputsInputsTypes(outputs, inputs, compInst.getFeatureInstances(), typeMap, globalTypes);
 		
-		return new AgreeNode(id, inputs, outputs, connections, subNodes, 
-				lustreNodes, assertions, assumptions, guarantees, 
+		return new AgreeNode(id, inputs, outputs, locals, connections, subNodes, 
+				assertions, assumptions, guarantees, lemmas,
 				clockConstraint, initialConstraint, clockVar, reference, timing);
 	}
 	
+	private List<AgreeStatement> getLemmas(EList<SpecStatement> specs) {
+		List<AgreeStatement> lemmas = new ArrayList<>();
+		for(SpecStatement spec : specs){
+			if(spec instanceof LemmaStatement){
+				LemmaStatement lemma = (LemmaStatement)spec;
+				lemmas.add(new AgreeStatement(lemma.getStr(), doSwitch(lemma.getExpr()), spec));
+			}
+		}
+		return lemmas;
+	}
+
 	private TimingModel getTimingModel(EList<SpecStatement> specs) {
 		for(SpecStatement spec : specs){
 			if(spec instanceof MNSynchStatement){
@@ -428,10 +455,10 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr>{
 		return new BoolExpr(true);
 	}
 
-	private Expr getClockConstraint(EList<SpecStatement> specs, List<AgreeNode> subNodes, List<Node> lustreNodes) {
+	private Expr getClockConstraint(EList<SpecStatement> specs, List<AgreeNode> subNodes) {
 		for(SpecStatement spec : specs){
 			if(spec instanceof MNSynchStatement){
-				return getMNSynchConstraint((MNSynchStatement)spec, lustreNodes);
+				return getMNSynchConstraint((MNSynchStatement)spec);
 			}
 			if(spec instanceof CalenStatement){
 				throw new AgreeException("The use of calendar statements has been depricated");
@@ -443,7 +470,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr>{
 				return new BoolExpr(true);
 			}
 			if(spec instanceof SynchStatement){
-				return getSynchConstraint((SynchStatement)spec, subNodes, lustreNodes);
+				return getSynchConstraint((SynchStatement)spec, subNodes);
 			}
 		}
 		
@@ -451,7 +478,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr>{
 		return null;
 	}
 
-	private Expr getSynchConstraint(SynchStatement spec, List<AgreeNode> subNodes, List<Node> lustreNodes) {
+	private Expr getSynchConstraint(SynchStatement spec, List<AgreeNode> subNodes) {
 		
 		 int val1 = Integer.decode(spec.getVal());
 	        if(val1 == 0){
@@ -465,18 +492,21 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr>{
         }
         
         if(spec.getVal2() == null){
-            Node dfaNode = AgreeCalendarUtils.getDFANode("__DFA_NODE", val1); 
-            Node calNode = AgreeCalendarUtils.getCalendarNode("__CALENDAR_NODE", dfaNode.id, clockIds.size());
-            lustreNodes.add(dfaNode);
-            lustreNodes.add(calNode);
+            Node dfaNode = AgreeCalendarUtils.getDFANode(AgreeStateUtils.getObjectLocationPrefix(spec)+"__DFA_NODE", val1); 
+            Node calNode = AgreeCalendarUtils.getCalendarNode(AgreeStateUtils.getObjectLocationPrefix(spec)+"__CALENDAR_NODE", dfaNode.id, clockIds.size());
+            
+            addToNodeList(dfaNode);
+            addToNodeList(calNode);
 
             clockAssertion = new NodeCallExpr(calNode.id, clockIds);
         }else{
         	int val2 = Integer.decode(spec.getVal2());
 
         	String nodeName = "__calendar_node_"+val1+"_"+val2;
+        	nodeName = AgreeStateUtils.getObjectLocationPrefix(spec)+nodeName;
         	Node calNode = AgreeCalendarUtils.getMNCalendar(nodeName, val1, val2);
-        	lustreNodes.add(calNode);
+        	addToNodeList(calNode);
+        	
         	clockAssertion = new BoolExpr(true);
         	int i,j;
         	for(i = 0; i < clockIds.size(); i++){
@@ -493,7 +523,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr>{
         return clockAssertion;
 	}
 
-	private Expr getMNSynchConstraint(MNSynchStatement sync, List<Node> lustreNodes) {
+	private Expr getMNSynchConstraint(MNSynchStatement sync) {
 
 		Set<String> nodeNames = new HashSet<>();
 	    Expr clockAssertion = new BoolExpr(true);
@@ -509,10 +539,11 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr>{
     		MNSynchronyElement elem = new MNSynchronyElement(maxClock, minClock, max, min);
     		
     		String nodeName = "__calendar_node_"+elem.max+"_"+elem.min;
+    		nodeName = AgreeStateUtils.getObjectLocationPrefix(sync)+nodeName;
 	        if(!nodeNames.contains(nodeName)){
 	            nodeNames.add(nodeName);
 	            Node calNode = AgreeCalendarUtils.getMNCalendar(nodeName, elem.max, elem.min);
-	            lustreNodes.add(calNode);
+	            addToNodeList(calNode);
 	        }
 	        
 	        NodeCallExpr nodeCall = new NodeCallExpr(nodeName, elem.maxClock, elem.minClock);
@@ -535,37 +566,37 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr>{
 		return types;
 	}
 	
-	private List<Node> getLustreNodes(EList<SpecStatement> specs){
+	private List<Node> addLustreNodes(EList<SpecStatement> specs){
 		List<Node> nodes = new ArrayList<>();
 		for(SpecStatement spec : specs){
-			if(spec instanceof NodeDefExpr){
-				nodes.add(getNodeFromDefExpr((NodeDefExpr)spec));
+			if(spec instanceof NodeDefExpr || spec instanceof FnDefExpr){
+				doSwitch(spec);
 			}
 		}
 		return nodes;
 	}
 	
-	private Node getNodeFromDefExpr(NodeDefExpr spec) {
-		List<VarDecl> inputs = agreeVarsFromArgs(spec.getArgs());
-		List<VarDecl> outputs = agreeVarsFromArgs(spec.getRets());
-		
-		NodeBodyExpr body = spec.getNodeBody();
-		List<VarDecl> locals = agreeVarsFromArgs(body.getLocs());
-		
-		List<Equation> equations = new ArrayList<>();
-		for(NodeStmt statement : body.getStmts()){
-			if(statement instanceof NodeEq){
-				List<VarDecl> args = agreeVarsFromArgs(((NodeEq) statement).getLhs());
-				List<IdExpr> eqIds = new ArrayList<>();
-				for(VarDecl var : args){
-					eqIds.add(new IdExpr(var.id));
-				}
-				Expr expr = doSwitch(statement.getExpr());
-				equations.add(new Equation(eqIds, expr));
-			}
-		}
-		return new Node(spec.getName(), inputs, outputs, locals, equations);
-	}
+//	private Node getNodeFromDefExpr(NodeDefExpr spec) {
+//		List<VarDecl> inputs = agreeVarsFromArgs(spec.getArgs());
+//		List<VarDecl> outputs = agreeVarsFromArgs(spec.getRets());
+//		
+//		NodeBodyExpr body = spec.getNodeBody();
+//		List<VarDecl> locals = agreeVarsFromArgs(body.getLocs());
+//		
+//		List<Equation> equations = new ArrayList<>();
+//		for(NodeStmt statement : body.getStmts()){
+//			if(statement instanceof NodeEq){
+//				List<VarDecl> args = agreeVarsFromArgs(((NodeEq) statement).getLhs());
+//				List<IdExpr> eqIds = new ArrayList<>();
+//				for(VarDecl var : args){
+//					eqIds.add(new IdExpr(var.id));
+//				}
+//				Expr expr = doSwitch(statement.getExpr());
+//				equations.add(new Equation(eqIds, expr));
+//			}
+//		}
+//		return new Node(spec.getName(), inputs, outputs, locals, equations);
+//	}
 
 	private List<VarDecl> agreeVarsFromArgs(EList<Arg> args){
 		List<VarDecl> agreeVars = new ArrayList<>();
@@ -628,8 +659,8 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr>{
 	private List<AgreeStatement> getGuarantees(EList<SpecStatement> specs) {
 		List<AgreeStatement> guarantees = new ArrayList<>();
 		for(SpecStatement spec : specs){
-			if(spec instanceof AssumeStatement){
-				AssumeStatement guarantee = (AssumeStatement)spec;
+			if(spec instanceof GuaranteeStatement){
+				GuaranteeStatement guarantee = (GuaranteeStatement)spec;
 				guarantees.add(new AgreeStatement(guarantee.getStr(), doSwitch(guarantee.getExpr()), guarantee));
 			}
 		}
@@ -873,7 +904,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr>{
     	Equation eq = new Equation(new IdExpr("_outvar"), bodyExpr);
     	List<Equation> eqs = Collections.singletonList(eq);
     	Node node = new Node(nodeName, inputs, outputs, Collections.<VarDecl> emptyList(), eqs);
-    	globalNodes.add(node);
+    	addToNodeList(node);
     	return null;
     }
     
@@ -921,7 +952,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr>{
 //        
 //        nodeLemmaNames.put(nodeName, lemmaNames);
         
-        globalNodes.add(new Node(nodeName, inputs, outputs, internals, eqs, props));
+        addToNodeList(new Node(nodeName, inputs, outputs, internals, eqs, props));
         return null;
     }
     
@@ -1097,6 +1128,15 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr>{
         }
 
         return res;
+    }
+    
+    private static void addToNodeList(Node node){
+    	for(Node inList : globalNodes){
+    		if(inList.id.equals(node.id)){
+    			throw new AgreeException("AGREE AST generator tried adding multiple nodes of name '"+node.id+"'");
+    		}
+    	}
+    	globalNodes.add(node);
     }
 	
 	

@@ -443,6 +443,7 @@ public class AgreeGenerator {
     	
     	
     	AgreeProgram program = new AgreeASTBuilder().getAgreeProgram(compInst);
+    	LustreAstBuilder.getLustreProgram(program);
     	
     	
     	AgreeAnalysis agreeProgram = new AgreeAnalysis();
