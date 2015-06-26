@@ -32,7 +32,10 @@ end a_struct_wrapper.impl;
 -- Example of a periodically dispatched "Active" thread.   
 thread sender
 	features
-		buff1 : requires data access a_struct_wrapper.impl; 
+		buff1 : requires data access a_struct_wrapper.impl
+		{
+			Access_Right => READ_WRITE;
+		}; 
 	
 	properties 
 	    Dispatch_Protocol => Periodic;
@@ -49,7 +52,10 @@ end sender ;
 -- Example of a periodically dispatched "Active" thread.   
 thread receiver
 	features
-		buff2 : requires data access a_struct_wrapper.impl; 
+		buff2 : requires data access a_struct_wrapper.impl 
+		{
+			Access_Right => READ_WRITE;
+		}; 
 		
 	properties 
 	    Dispatch_Protocol => Periodic;
@@ -71,7 +77,9 @@ process implementation proc.Impl
 	subcomponents
 		s: thread sender;
 		r: thread receiver;
-		shared: data a_struct_wrapper.impl;
+		shared: data a_struct_wrapper.impl {
+			SMACCM_SYS::CAmkES_Owner_Thread => "sender";
+		};
 	connections
 		conn1: data access shared -> s.buff1;
 		conn2: data access shared -> r.buff2;

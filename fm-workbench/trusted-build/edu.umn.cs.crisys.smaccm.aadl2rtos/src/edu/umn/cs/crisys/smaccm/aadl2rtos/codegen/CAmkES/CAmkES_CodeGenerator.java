@@ -114,7 +114,7 @@ public class CAmkES_CodeGenerator extends CodeGeneratorBase {
     
     for (Type t : getSharedVariableTypes()) {
       TypeNames type = new TypeNames(t);
-      writeGeneric(interfacesDirectory, "Idl4Rpc.stg", "rpgDeclaration", 
+      writeGeneric(interfacesDirectory, "Idl4SharedVar.stg", "svProc", 
           new String[] {"type", "model"}, 
           new Object[] {type, m}, 
           type.getSharedDataInterfaceName(), false, type.getSharedDataIdlFileName());
