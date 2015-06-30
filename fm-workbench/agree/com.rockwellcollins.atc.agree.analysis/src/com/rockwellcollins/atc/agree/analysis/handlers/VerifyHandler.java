@@ -5,7 +5,9 @@ import java.io.StringWriter;
 import java.lang.ref.Reference;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -16,13 +18,17 @@ import jkind.api.results.AnalysisResult;
 import jkind.api.results.CompositeAnalysisResult;
 import jkind.api.results.JKindResult;
 import jkind.api.results.JRealizabilityResult;
+import jkind.lustre.Node;
 import jkind.lustre.Program;
+import jkind.lustre.VarDecl;
+import jkind.results.layout.Layout;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.handlers.IHandlerActivation;
@@ -31,7 +37,10 @@ import org.osate.aadl2.AnnexSubclause;
 import org.osate.aadl2.ComponentClassifier;
 import org.osate.aadl2.ComponentImplementation;
 import org.osate.aadl2.ComponentType;
+import org.osate.aadl2.DataPort;
 import org.osate.aadl2.Element;
+import org.osate.aadl2.EventDataPort;
+import org.osate.aadl2.FeatureGroup;
 import org.osate.aadl2.Subcomponent;
 import org.osate.aadl2.SystemImplementation;
 import org.osate.aadl2.SystemType;
@@ -44,17 +53,29 @@ import org.osate.ui.dialogs.Dialog;
 import com.rockwellcollins.atc.agree.agree.AgreeContractSubclause;
 import com.rockwellcollins.atc.agree.agree.AgreePackage;
 import com.rockwellcollins.atc.agree.agree.AgreeSubclause;
+import com.rockwellcollins.atc.agree.agree.Arg;
+import com.rockwellcollins.atc.agree.agree.AssertStatement;
+import com.rockwellcollins.atc.agree.agree.AssumeStatement;
+import com.rockwellcollins.atc.agree.agree.EqStatement;
+import com.rockwellcollins.atc.agree.agree.GuaranteeStatement;
 import com.rockwellcollins.atc.agree.analysis.Activator;
 import com.rockwellcollins.atc.agree.analysis.AgreeEmitterUtilities;
 import com.rockwellcollins.atc.agree.analysis.AgreeException;
 import com.rockwellcollins.atc.agree.analysis.AgreeGenerator;
+import com.rockwellcollins.atc.agree.analysis.AgreeLayout;
+import com.rockwellcollins.atc.agree.analysis.LustreAstBuilder;
+import com.rockwellcollins.atc.agree.analysis.AgreeLayout.SigType;
 import com.rockwellcollins.atc.agree.analysis.AgreeLogger;
 import com.rockwellcollins.atc.agree.analysis.AgreeAnalysis;
+import com.rockwellcollins.atc.agree.analysis.AgreeRenaming;
 import com.rockwellcollins.atc.agree.analysis.ConsistencyResult;
 import com.rockwellcollins.atc.agree.analysis.preferences.PreferenceConstants;
 import com.rockwellcollins.atc.agree.analysis.preferences.PreferencesUtil;
 import com.rockwellcollins.atc.agree.analysis.views.AgreeResultsLinker;
 import com.rockwellcollins.atc.agree.analysis.views.AgreeResultsView;
+import com.rockwellcollins.atc.agree.ast.AgreeASTBuilder;
+import com.rockwellcollins.atc.agree.ast.AgreeProgram;
+import com.rockwellcollins.atc.agree.ast.AgreeVar;
 
 public abstract class VerifyHandler extends AadlHandler {
     protected AgreeResultsLinker linker = new AgreeResultsLinker();
@@ -117,7 +138,8 @@ public abstract class VerifyHandler extends AadlHandler {
                 //result = wrapper;
             } else {
             	AgreeAnalysis agreeProgram = AgreeGenerator.getLustre(si, isMonolithic());//, isMonolithic());
-                wrapper.addChild(createGuaranteeVerification(agreeProgram));
+                //wrapper.addChild(createGuaranteeVerification(agreeProgram));
+                wrapper.addChild(createGuaranteeVerification(si));
                 //wrapper.addChild(createAssumptionVerification(si));
                 wrapper.addChild(creatConsistencyVerification(agreeProgram));
                 result = wrapper;
@@ -208,6 +230,86 @@ public abstract class VerifyHandler extends AadlHandler {
 		return false;
 	}
     
+    private AnalysisResult createGuaranteeVerification(ComponentInstance compInst){
+        
+        AgreeProgram agreeProgram = new AgreeASTBuilder().getAgreeProgram(compInst);
+    	Program program = LustreAstBuilder.getLustreProgram(agreeProgram);
+    	
+    	Map<String, EObject> refMap = new HashMap<>();
+    	AgreeRenaming renaming = new AgreeRenaming(refMap);
+    	AgreeLayout layout = new AgreeLayout();
+    	Node mainNode = null;
+    	for(Node node : program.nodes){
+    		if(node.id.equals(program.main)){
+    			mainNode = node;
+    			break;
+    		}
+    	}
+    	if(mainNode == null){
+    		throw new AgreeException("Could not find main lustre node after translation");
+    	}
+    	
+    	for(VarDecl var : mainNode.inputs){
+    		if(var instanceof AgreeVar){
+    			String refStr = getReferenceStr((AgreeVar)var);
+    			//TODO verify which reference should be put here
+    			refMap.put(refStr, ((AgreeVar) var).reference);
+    			refMap.put(var.id, ((AgreeVar) var).reference);
+    			//TODO we could clean up the agree renaming as well
+    			renaming.addExplicitRename(var.id, refStr);
+    			String category = getCategory((AgreeVar)var);
+    			if(!layout.getCategories().contains(category)){
+    				layout.addCategory(category);
+    			}
+    			layout.addElement(category, refStr, SigType.INPUT);
+    		}
+    	}
+    	
+    	JKindResult result = new JKindResult("Contract Guarantees", mainNode.properties, renaming);
+        queue.add(result);
+
+        ComponentImplementation compImpl = AgreeEmitterUtilities.getInstanceImplementation(compInst);
+        linker.setProgram(result, program);
+        linker.setComponent(result, compImpl);
+        linker.setContract(result, getContract(compImpl));
+        linker.setLayout(result, layout);
+        linker.setReferenceMap(result, refMap);
+        linker.setLog(result, AgreeLogger.getLog());
+
+        return result;
+    	
+    }
+    
+	private String getCategory(AgreeVar var) {
+		if(var.compInst == null || var.reference == null){
+			return null;
+		}
+		return var.compInst.getInstanceObjectPath();
+	}
+	private String getReferenceStr(AgreeVar var) {
+
+		String prefix = getCategory(var);
+		if(prefix == null){
+			return null;
+		}
+		EObject reference = var.reference;
+		if(reference instanceof GuaranteeStatement){
+			return prefix + ": "+ ((GuaranteeStatement)reference).getStr();
+		}else if(reference instanceof AssumeStatement){
+			return prefix + ": "+ ((AssumeStatement)reference).getStr();
+		}else if(reference instanceof AssertStatement){
+			throw new AgreeException("We really didn't expect to see an assert statement here");
+		}else if(reference instanceof Arg){
+			return prefix + "." + ((Arg)reference).getName();
+		}else if (reference instanceof DataPort){
+			return prefix + "." + ((DataPort)reference).getName();
+		}else if (reference instanceof EventDataPort){
+			return prefix + "." + ((EventDataPort)reference).getName();
+		}else if (reference instanceof FeatureGroup){
+			return prefix + "." + ((FeatureGroup)reference).getName();
+		}
+		throw new AgreeException("Unhandled reference type: '"+reference.getClass().getName()+"'");
+	}
 	private AnalysisResult createGuaranteeVerification(AgreeAnalysis agreeProgram) {
 
     	List<String> props = new ArrayList<>();

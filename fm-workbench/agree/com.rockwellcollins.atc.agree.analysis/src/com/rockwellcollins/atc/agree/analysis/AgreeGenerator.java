@@ -441,11 +441,6 @@ public class AgreeGenerator {
     
     public static AgreeAnalysis getLustre(ComponentInstance compInst, boolean monolithic){
     	
-    	
-    	AgreeProgram program = new AgreeASTBuilder().getAgreeProgram(compInst);
-    	LustreAstBuilder.getLustreProgram(program);
-    	
-    	
     	AgreeAnalysis agreeProgram = new AgreeAnalysis();
     	AgreeEmitterState state;
     	

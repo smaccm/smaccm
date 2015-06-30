@@ -3,6 +3,7 @@ package com.rockwellcollins.atc.agree.ast;
 import java.util.List;
 
 import org.eclipse.emf.ecore.EObject;
+import org.osate.aadl2.instance.ComponentInstance;
 
 import jkind.lustre.Expr;
 import jkind.lustre.Node;
@@ -26,12 +27,14 @@ public class AgreeNode {
 	public final AgreeVar clockVar;
 	public final EObject reference;
 	public final TimingModel timing;
+	public final ComponentInstance compInst;
 	
 	public AgreeNode(String id, List<AgreeVar> inputs, List<AgreeVar> outputs, List<AgreeVar> locals,
 			List<AgreeConnection> connections, List<AgreeNode> subNodes,
 			List<AgreeStatement> assertions, List<AgreeStatement> assumptions, 
 			List<AgreeStatement> guarantees, List<AgreeStatement> lemmas, Expr clockConstraint, 
-			Expr initialConstraint, AgreeVar clockVar, EObject reference, TimingModel timing){
+			Expr initialConstraint, AgreeVar clockVar, EObject reference, TimingModel timing,
+			ComponentInstance compinst){
 		this.id = id;
 		this.inputs = inputs;
 		this.outputs = outputs;
@@ -47,6 +50,7 @@ public class AgreeNode {
 		this.clockVar = clockVar;
 		this.reference = reference;
 		this.timing = timing;
+		this.compInst = compinst;
 	}
 
 }

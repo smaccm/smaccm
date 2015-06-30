@@ -163,7 +163,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr>{
 		Expr clockConstraint = new BoolExpr(true);
 		Expr initialConstraint = new BoolExpr(true);
 		String id = compInst.getName();
-		AgreeVar clockVar = new AgreeVar(id+clockIDSuffix, NamedType.BOOL, compInst.getSubcomponent());
+		AgreeVar clockVar = new AgreeVar(id+clockIDSuffix, NamedType.BOOL, compInst.getSubcomponent(), compInst);
 		EObject reference = compInst.getSubcomponent();
 		TimingModel timing = null;
 		
@@ -198,7 +198,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr>{
 				connections.addAll(getConnections(((ComponentImplementation) compClass).getAllConnections(),
 						compInst, subNodes, contract.getSpecs()));
 
-				outputs.addAll(getEquationVars(contract.getSpecs()));
+				outputs.addAll(getEquationVars(contract.getSpecs(), compInst));
 				//make compClass the type so we can get it's other contract elements
 				compClass = ((ComponentImplementation) compClass).getType();
 			}
@@ -215,7 +215,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr>{
 			AgreeContract contract = (AgreeContract) annex.getContract();
 			assumptions.addAll(getAssumptions(contract.getSpecs()));
 			guarantees.addAll(getGuarantees(contract.getSpecs()));
-			outputs.addAll(getEquationVars(contract.getSpecs()));
+			outputs.addAll(getEquationVars(contract.getSpecs(), compInst));
 			addLustreNodes(contract.getSpecs());
 
 			gatherLustreTypes(contract.getSpecs(), typeMap, globalTypes);
@@ -224,12 +224,11 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr>{
 		if(!(foundSubNode || hasDirectAnnex)){
 			return null;
 		}
-		
 		gatherOutputsInputsTypes(outputs, inputs, compInst.getFeatureInstances(), typeMap, globalTypes);
 		
 		return new AgreeNode(id, inputs, outputs, locals, connections, subNodes, 
 				assertions, assumptions, guarantees, lemmas,
-				clockConstraint, initialConstraint, clockVar, reference, timing);
+				clockConstraint, initialConstraint, clockVar, reference, timing, compInst);
 	}
 	
 	private List<AgreeStatement> getLemmas(EList<SpecStatement> specs) {
@@ -267,12 +266,12 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr>{
 		return TimingModel.SYNC;
 	}
 
-	private List<AgreeVar> getEquationVars(EList<SpecStatement> specs) {
+	private List<AgreeVar> getEquationVars(EList<SpecStatement> specs, ComponentInstance compInst) {
 		List<AgreeVar> agreeVars = new ArrayList<>();
 		for(SpecStatement spec : specs){
 			if(spec instanceof EqStatement){
 				EList<Arg> args = ((EqStatement) spec).getLhs();
-				List<VarDecl> vars = agreeVarsFromArgs(args);
+				List<VarDecl> vars = agreeVarsFromArgs(args, compInst);
 				for(VarDecl var : vars){
 					agreeVars.add((AgreeVar)var);
 				}
@@ -299,11 +298,11 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr>{
 			gatherOutputsInputsTypes(newOutputs, newInputs, feature.getFeatureInstances(), typeMap, typeExpressions);
 			for(AgreeVar agreeVar : newInputs){
 				String newName = feature.getName()+dotChar+agreeVar.id;
-				inputs.add(new AgreeVar(newName, agreeVar.type, feature.getFeature()));
+				inputs.add(new AgreeVar(newName, agreeVar.type, feature.getFeature(), feature.getComponentInstance()));
 			}
 			for(AgreeVar agreeVar : newOutputs){
 				String newName = feature.getName()+dotChar+agreeVar.id;
-				outputs.add(new AgreeVar(newName, agreeVar.type, feature.getFeature()));
+				outputs.add(new AgreeVar(newName, agreeVar.type, feature.getFeature(), feature.getComponentInstance()));
 			}
 			return;
 		case DATA_PORT:
@@ -331,37 +330,42 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr>{
 			EventDataPort eventDataPort = (EventDataPort)dataFeature;
 			dataClass = eventDataPort.getDataFeatureClassifier();
 		}
-		
-		 Type type = getNamedType(AgreeStateUtils.getRecordTypeName(dataClass, typeMap, typeExpressions));
-		 if(type == null){
-			 //we don't reason about this type
-			 return;
-		 }
-		 String name = feature.getName();
-		 
-		 AgreeVar agreeVar = new AgreeVar(name, type, feature.getFeature());
-		 
-		 boolean isEvent = feature.getCategory() == FeatureCategory.EVENT_DATA_PORT;
-		 
-		 switch(feature.getDirection()){
-		 case IN:
-			 inputs.add(agreeVar);
-			 if(isEvent){
-				 inputs.add(new AgreeVar(agreeVar.id+eventSuffix, NamedType.BOOL, agreeVar.reference));
-			 }
-			 break;
-		 case OUT:
-			 outputs.add(agreeVar);
-			 if(isEvent){
-				 outputs.add(new AgreeVar(agreeVar.id+eventSuffix, NamedType.BOOL, agreeVar.reference));
-			 }
-			 break;
-		 default:
-			 break;
-		 }
-		 
-		 
-			
+
+		String name = feature.getName();
+		boolean isEvent = feature.getCategory() == FeatureCategory.EVENT_DATA_PORT;
+		if(isEvent){
+			AgreeVar var = new AgreeVar(name+eventSuffix, NamedType.BOOL, feature.getFeature(), feature.getComponentInstance());
+			switch(feature.getDirection()){
+			case IN:
+				inputs.add(var);
+				break;
+			case OUT:
+				outputs.add(var);
+				break;
+			default:
+				break;
+			}
+		}
+
+		Type type = getNamedType(AgreeStateUtils.getRecordTypeName(dataClass, typeMap, typeExpressions));
+		if(type == null){
+			//we don't reason about this type, keep in mind we still reason about the event port
+			//even if the type is not defined
+			return;
+		}
+
+		AgreeVar agreeVar = new AgreeVar(name, type, feature.getFeature(), feature.getComponentInstance());
+
+		switch(feature.getDirection()){
+		case IN:
+			inputs.add(agreeVar);
+			break;
+		case OUT:
+			outputs.add(agreeVar);
+			break;
+		default:
+			break;
+		}	
 	}
 
 	private List<AgreeConnection> getConnections(EList<Connection> connections, 
@@ -598,11 +602,11 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr>{
 //		return new Node(spec.getName(), inputs, outputs, locals, equations);
 //	}
 
-	private List<VarDecl> agreeVarsFromArgs(EList<Arg> args){
+	private List<VarDecl> agreeVarsFromArgs(EList<Arg> args, ComponentInstance compInst){
 		List<VarDecl> agreeVars = new ArrayList<>();
 		for(Arg arg : args){
 			//TODO: decide whether or not to make these VarDecls or AgreeVars
-			agreeVars.add(new AgreeVar(arg.getName(), agreeTypeToLustreType(arg.getType()), arg));
+			agreeVars.add(new AgreeVar(arg.getName(), agreeTypeToLustreType(arg.getType()), arg, compInst));
 		}
 		return agreeVars;
 	}
@@ -896,7 +900,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr>{
     			return null;
     		}
     	}
-    	List<VarDecl> inputs = agreeVarsFromArgs(expr.getArgs()); 
+    	List<VarDecl> inputs = agreeVarsFromArgs(expr.getArgs(), null); 
     	Expr bodyExpr = doSwitch(expr.getExpr());
     	NamedType outType = AgreeStateUtils.getNamedType(AgreeStateUtils.getRecordTypeName(expr.getType()));
     	VarDecl outVar = new VarDecl("_outvar", outType);
@@ -920,10 +924,10 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr>{
             }
         }
 
-        List<VarDecl> inputs = agreeVarsFromArgs(expr.getArgs());
-        List<VarDecl> outputs = agreeVarsFromArgs(expr.getRets());
+        List<VarDecl> inputs = agreeVarsFromArgs(expr.getArgs(), null);
+        List<VarDecl> outputs = agreeVarsFromArgs(expr.getRets(),  null);
         NodeBodyExpr body = expr.getNodeBody();
-        List<VarDecl> internals = agreeVarsFromArgs(body.getLocs());
+        List<VarDecl> internals = agreeVarsFromArgs(body.getLocs(), null);
         List<Equation> eqs = new ArrayList<Equation>();
         List<String> props = new ArrayList<String>();
 
