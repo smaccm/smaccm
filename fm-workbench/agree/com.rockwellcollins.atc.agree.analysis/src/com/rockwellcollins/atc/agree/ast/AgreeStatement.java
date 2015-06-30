@@ -2,6 +2,8 @@ package com.rockwellcollins.atc.agree.ast;
 
 import org.eclipse.emf.ecore.EObject;
 
+import com.rockwellcollins.atc.agree.analysis.AgreeException;
+
 import jkind.lustre.Expr;
 
 public class AgreeStatement {
@@ -13,6 +15,9 @@ public class AgreeStatement {
 		this.string = string;
 		this.expr = expr;
 		this.reference = reference;
+		if(expr == null){
+			throw new AgreeException("AgreeStatement created with null expression");
+		}
 	}
 
 }

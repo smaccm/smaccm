@@ -62,6 +62,7 @@ import jkind.lustre.NodeCallExpr;
 import jkind.lustre.RealExpr;
 import jkind.lustre.RecordAccessExpr;
 import jkind.lustre.RecordType;
+import jkind.lustre.TupleExpr;
 import jkind.lustre.Type;
 import jkind.lustre.UnaryExpr;
 import jkind.lustre.UnaryOp;
@@ -98,6 +99,7 @@ import com.rockwellcollins.atc.agree.agree.NodeStmt;
 import com.rockwellcollins.atc.agree.agree.PreExpr;
 import com.rockwellcollins.atc.agree.agree.PrevExpr;
 import com.rockwellcollins.atc.agree.agree.PrimType;
+import com.rockwellcollins.atc.agree.agree.PropertyStatement;
 import com.rockwellcollins.atc.agree.agree.RealCast;
 import com.rockwellcollins.atc.agree.agree.RealLitExpr;
 import com.rockwellcollins.atc.agree.agree.RecordDefExpr;
@@ -196,7 +198,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr>{
 				timing = getTimingModel(contract.getSpecs());
 				
 				connections.addAll(getConnections(((ComponentImplementation) compClass).getAllConnections(),
-						compInst, subNodes, contract.getSpecs()));
+						compInst, subNodes, contract.getSpecs(), typeMap, globalTypes));
 
 				outputs.addAll(getEquationVars(contract.getSpecs(), compInst));
 				//make compClass the type so we can get it's other contract elements
@@ -215,6 +217,9 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr>{
 			AgreeContract contract = (AgreeContract) annex.getContract();
 			assumptions.addAll(getAssumptions(contract.getSpecs()));
 			guarantees.addAll(getGuarantees(contract.getSpecs()));
+			//we count eqstatements with expressions as assertions
+			//System.out.println(compInst.getName());
+			assertions.addAll(getAssertions(contract.getSpecs()));
 			outputs.addAll(getEquationVars(contract.getSpecs(), compInst));
 			addLustreNodes(contract.getSpecs());
 
@@ -275,6 +280,8 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr>{
 				for(VarDecl var : vars){
 					agreeVars.add((AgreeVar)var);
 				}
+			}else if(spec instanceof PropertyStatement){
+				agreeVars.add(new AgreeVar(((PropertyStatement) spec).getName(), NamedType.BOOL, spec, compInst));
 			}
 		}
 		return agreeVars;
@@ -369,7 +376,8 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr>{
 	}
 
 	private List<AgreeConnection> getConnections(EList<Connection> connections, 
-			ComponentInstance compInst, List<AgreeNode> subNodes, EList<SpecStatement> specs) {
+			ComponentInstance compInst, List<AgreeNode> subNodes, EList<SpecStatement> specs,
+			Map<NamedElement, String> typeMap, Set<jkind.lustre.RecordType> types) {
 		
 		//figure out if this is latched
 		boolean latched = false;
@@ -423,15 +431,36 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr>{
 					continue;
 				}
 				connType = ConnectionType.EVENT;
+				
+				
+				agreeConns.add(new AgreeConnection(sourceNode, destNode, sourPort.getName()+eventSuffix,
+						destPort.getName()+eventSuffix, connType, latched, delayed, conn));
+				
+			}
+
+			if(!(((destPort instanceof DataPort) && (sourPort instanceof DataPort)) ||
+					((destPort instanceof EventDataPort) && (sourPort instanceof EventDataPort)))){
+				AgreeLogger.logWarning("Connection '"+conn.getName()+
+						"' has ports '"+destPort.getName()+"' and '"+sourPort.getName()+"' of differing type");
+				continue;
+			}
+			connType = ConnectionType.DATA;
+			
+			DataSubcomponentType dataClass;
+			if(destPort instanceof DataPort){
+				DataPort dataPort = (DataPort)destPort;
+				dataClass = dataPort.getDataFeatureClassifier();
 			}else{
-				if(!((destPort instanceof DataPort) && (sourPort instanceof DataPort))){
-					AgreeLogger.logWarning("Connection '"+conn.getName()+
-							"' has ports '"+destPort.getName()+"' and '"+sourPort.getName()+"' of differing type");
-					continue;
-				}
-				connType = ConnectionType.DATA;
+				EventDataPort eventDataPort = (EventDataPort)destPort;
+				dataClass = eventDataPort.getDataFeatureClassifier();
 			}
 			
+			if(getNamedType(AgreeStateUtils.getRecordTypeName(dataClass, typeMap, types)) == null){
+				//we don't reason about this type
+				continue;
+			}
+			
+
 			agreeConns.add(new AgreeConnection(sourceNode, destNode, sourPort.getName(),
 					destPort.getName(), connType, latched, delayed, conn));
 		}
@@ -477,9 +506,8 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr>{
 				return getSynchConstraint((SynchStatement)spec, subNodes);
 			}
 		}
-		
-		
-		return null;
+
+		return new BoolExpr(true);
 	}
 
 	private Expr getSynchConstraint(SynchStatement spec, List<AgreeNode> subNodes) {
@@ -579,28 +607,6 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr>{
 		}
 		return nodes;
 	}
-	
-//	private Node getNodeFromDefExpr(NodeDefExpr spec) {
-//		List<VarDecl> inputs = agreeVarsFromArgs(spec.getArgs());
-//		List<VarDecl> outputs = agreeVarsFromArgs(spec.getRets());
-//		
-//		NodeBodyExpr body = spec.getNodeBody();
-//		List<VarDecl> locals = agreeVarsFromArgs(body.getLocs());
-//		
-//		List<Equation> equations = new ArrayList<>();
-//		for(NodeStmt statement : body.getStmts()){
-//			if(statement instanceof NodeEq){
-//				List<VarDecl> args = agreeVarsFromArgs(((NodeEq) statement).getLhs());
-//				List<IdExpr> eqIds = new ArrayList<>();
-//				for(VarDecl var : args){
-//					eqIds.add(new IdExpr(var.id));
-//				}
-//				Expr expr = doSwitch(statement.getExpr());
-//				equations.add(new Equation(eqIds, expr));
-//			}
-//		}
-//		return new Node(spec.getName(), inputs, outputs, locals, equations);
-//	}
 
 	private List<VarDecl> agreeVarsFromArgs(EList<Arg> args, ComponentInstance compInst){
 		List<VarDecl> agreeVars = new ArrayList<>();
@@ -645,6 +651,31 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr>{
 				AssertStatement assertState = (AssertStatement)spec;
 				asserts.add(new AgreeStatement(assertState.getStr(), doSwitch(assertState.getExpr()), assertState));
 			}
+			else if(spec instanceof EqStatement){
+				EqStatement eq = (EqStatement)spec;
+				if(eq.getExpr() != null){
+					Expr expr = doSwitch(eq.getExpr());
+					
+					EList<Arg> lhs = eq.getLhs();
+					if(lhs.size() != 1){
+						List<Expr> ids = new ArrayList<>();
+						for(Arg arg : lhs){
+							ids.add(new IdExpr(arg.getName()));
+						}
+						TupleExpr tuple = new TupleExpr(ids);
+						expr = new BinaryExpr(tuple, BinaryOp.EQUAL, expr);
+					}else{
+						expr = new BinaryExpr(new IdExpr(lhs.get(0).getName()), BinaryOp.EQUAL, expr);
+					}
+					asserts.add(new AgreeStatement("", expr, spec));
+				}
+			}
+			else if(spec instanceof PropertyStatement){
+				Expr expr = doSwitch(((PropertyStatement) spec).getExpr());
+				expr = new BinaryExpr(new IdExpr(((PropertyStatement) spec).getName()), BinaryOp.EQUAL, expr);
+				asserts.add(new AgreeStatement("", expr, spec));
+			}
+				
 		}
 		return asserts;
 	}
@@ -845,21 +876,19 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr>{
      
         String fnName = AgreeStateUtils.getNodeName(namedEl);
 
-        if(!(dotId.getBase() instanceof NodeDefExpr)){
-        	//this is a global node
-        	boolean found = false;
-        	for(Node node : globalNodes){
-        		if(node.id.equals(fnName)){
-        			found = true;
-        			break;
-        		}
-        	}
-
-        	if(!found){
-        		NestedDotID fn = expr.getFn();
-        		doSwitch(AgreeEmitterUtilities.getFinalNestId(fn));
+        boolean found = false;
+        for(Node node : globalNodes){
+        	if(node.id.equals(fnName)){
+        		found = true;
+        		break;
         	}
         }
+
+        if(!found){
+        	NestedDotID fn = expr.getFn();
+        	doSwitch(AgreeEmitterUtilities.getFinalNestId(fn));
+        }
+
         
      
         List<Expr> argResults = new ArrayList<Expr>();
@@ -936,8 +965,8 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr>{
 //        String lemmaName = "nodeLemma";
 //        int lemmaIndex = 0;
 //        Map<String, String> lemmaNames = new HashMap<>();
-//        for (NodeStmt stmt : body.getStmts()) {
-//            if (stmt instanceof NodeLemma) {
+        for (NodeStmt stmt : body.getStmts()) {
+            if (stmt instanceof NodeLemma) {
 //                NodeLemma nodeLemma = (NodeLemma) stmt;
 //                //String propName = ((NodeLemma) stmt).getStr();
 //                String propName = lemmaName + lemmaIndex++;
@@ -949,15 +978,26 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr>{
 //                eqs.add(eq);
 //                VarDecl lemmaVar = new VarDecl(propName, NamedType.BOOL);
 //                internals.add(lemmaVar);
-//            } else if (stmt instanceof NodeEq) {
-//                eqs.add(nodeEqToEq((NodeEq) stmt));
-//            }
-//        }
-//        
+            } else if (stmt instanceof NodeEq) {
+                eqs.add(nodeEqToEq((NodeEq) stmt));
+            }
+        }
+        
 //        nodeLemmaNames.put(nodeName, lemmaNames);
         
         addToNodeList(new Node(nodeName, inputs, outputs, internals, eqs, props));
         return null;
+    }
+    
+    //helper method for above
+    private Equation nodeEqToEq(NodeEq nodeEq) {
+        Expr expr = doSwitch(nodeEq.getExpr());
+        List<IdExpr> ids = new ArrayList<IdExpr>();
+        for (Arg arg : nodeEq.getLhs()) {
+            ids.add(new IdExpr(arg.getName()));
+        }
+        Equation eq = new Equation(ids, expr);
+        return eq;
     }
     
     @Override

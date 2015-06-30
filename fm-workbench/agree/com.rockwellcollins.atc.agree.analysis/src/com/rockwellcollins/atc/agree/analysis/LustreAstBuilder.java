@@ -8,6 +8,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.SortedMap;
 
+import org.osate.aadl2.instance.ComponentInstance;
+
+import com.rockwellcollins.atc.agree.agree.AssumeStatement;
 import com.rockwellcollins.atc.agree.ast.AgreeASTBuilder;
 import com.rockwellcollins.atc.agree.ast.AgreeConnection;
 import com.rockwellcollins.atc.agree.ast.AgreeConnection.ConnectionType;
@@ -85,16 +88,50 @@ public class LustreAstBuilder {
 		for(AgreeVar var : flatNode.inputs){
 			inputs.add(var);
 		}
+		int j = 0;
 		for(AgreeVar var : flatNode.outputs){
-			inputs.add(var);
+			if(var.reference instanceof AssumeStatement){
+				//remove the reference so that we don't check the ungaurded
+				//variable as an assumption
+				inputs.add(new VarDecl(var.id, NamedType.BOOL));
+				//stupid hack to get the assumption properties right
+				Expr clockExpr = new BoolExpr(true);
+				ComponentInstance curInst = var.compInst;
+				while(curInst != flatNode.compInst){
+					String compLocation = curInst.getInstanceObjectPath();
+					compLocation = getRelativeLocation(compLocation);
+					compLocation.replace(".", AgreeASTBuilder.dotChar);
+					Expr clockId = new IdExpr(compLocation+AgreeASTBuilder.clockIDSuffix);
+					clockExpr = new BinaryExpr(clockExpr, BinaryOp.AND, clockId);
+					
+					curInst = curInst.getContainingComponentInstance();
+				}
+				
+				clockExpr = new BinaryExpr(clockExpr, BinaryOp.IMPLIES, new IdExpr(var.id));
+				AgreeVar assumeCheckVar = new AgreeVar(assumeSuffix+j++, NamedType.BOOL, var.reference, var.compInst);
+				locals.add(assumeCheckVar);
+				equations.add(new Equation(new IdExpr(assumeCheckVar.id), clockExpr));
+				properties.add(assumeCheckVar.id);
+			}else{
+				inputs.add(var);
+			}
 		}
 		
 		Node main = new Node("main", inputs, null, locals, equations, properties, assertions);
 		nodes.add(main);
+		nodes.addAll(agreeProgram.globalLustreNodes);
 		Program program = new Program(types, null, nodes, main.id);
 				
 		return program;
 		
+	}
+	
+	public static String getRelativeLocation(String location){
+		int dotIndex = location.indexOf(".");
+		if(dotIndex < 0){
+			return "";
+		}
+		return location.substring(dotIndex+1);
 	}
 
 	private static Equation getHist(IdExpr histId, Expr expr){
@@ -103,7 +140,7 @@ public class LustreAstBuilder {
 		return new Equation(histId, new BinaryExpr(expr, BinaryOp.ARROW, preAndNow));
 	}
 	
-	private static Node getInputLatchingNode(Expr clockExpr, List<VarDecl> inputs, String nodeName){
+	private static Node getInputLatchingNode(IdExpr clockExpr, List<VarDecl> inputs, String nodeName){
 		List<VarDecl> outputs = new ArrayList<>();
 		List<VarDecl> locals = new ArrayList<>();
 		List<Equation> equations = new ArrayList<>();
@@ -136,6 +173,7 @@ public class LustreAstBuilder {
 //			newInputs.add(var);
 //		}
 		
+		inputs.add(new VarDecl(clockExpr.id, NamedType.BOOL));
 		return new Node(nodeName, inputs, outputs, locals, equations);
 	}
 	
@@ -231,6 +269,7 @@ public class LustreAstBuilder {
 		addConnectionConstraints(agreeNode, assertions);
 		
 		//add any clock constraints
+		assertions.addAll(agreeNode.assertions);
 		assertions.add(new AgreeStatement("", agreeNode.clockConstraint, null));
 		inputs.addAll(agreeNode.inputs);
 		outputs.addAll(agreeNode.outputs);
@@ -238,28 +277,29 @@ public class LustreAstBuilder {
 		
 		return new AgreeNode(agreeNode.id, inputs, outputs, locals, null, 
 				agreeNode.subNodes, assertions, agreeNode.assumptions, agreeNode.guarantees, agreeNode.lemmas,
-				null, agreeNode.initialConstraint, agreeNode.clockVar, agreeNode.reference, null, agreeNode.compInst);
+				new BoolExpr(true), agreeNode.initialConstraint, agreeNode.clockVar, agreeNode.reference, null, agreeNode.compInst);
 	}
 
 	private static void addConnectionConstraints(AgreeNode agreeNode,
 			List<AgreeStatement> assertions) {
 		for(AgreeConnection conn : agreeNode.connections){
-			String destName = conn.destinationNode == null ? "" : conn.destinationNode.id;
-			destName = destName + AgreeASTBuilder.dotChar+conn.destinationVarName;
+			String destName = conn.destinationNode == null ? "" : conn.destinationNode.id + AgreeASTBuilder.dotChar;
+			destName = destName + conn.destinationVarName;
 			
-			String sourName = conn.sourceNode == null ? "" : conn.sourceNode.id;
-			sourName = sourName + AgreeASTBuilder.dotChar+conn.sourceVarName;
+			String sourName = conn.sourceNode == null ? "" : conn.sourceNode.id + AgreeASTBuilder.dotChar;
+			sourName = sourName + conn.sourceVarName;
 			
 			Expr connExpr = new BinaryExpr(new IdExpr(sourName), BinaryOp.EQUAL, new IdExpr(destName));
 			
 			assertions.add(new AgreeStatement("", connExpr, conn.reference));
-			if(conn.type == ConnectionType.EVENT){
-				Expr eventExpr = new BinaryExpr(
-						new IdExpr(sourName+AgreeASTBuilder.eventSuffix), 
-						BinaryOp.EQUAL, 
-						new IdExpr(destName+AgreeASTBuilder.eventSuffix));
-				assertions.add(new AgreeStatement("", eventExpr, null));
-			}
+			//the event connections are added seperatly in the agree ast
+//			if(conn.type == ConnectionType.EVENT){
+//				Expr eventExpr = new BinaryExpr(
+//						new IdExpr(sourName+AgreeASTBuilder.eventSuffix), 
+//						BinaryOp.EQUAL, 
+//						new IdExpr(destName+AgreeASTBuilder.eventSuffix));
+//				assertions.add(new AgreeStatement("", eventExpr, null));
+//			}
 		}
 	}
 
@@ -299,7 +339,7 @@ public class LustreAstBuilder {
 		if(agreeNode.timing != TimingModel.SYNC){
 			Expr hold = new BoolExpr(true);
 			for(AgreeVar outVar : subAgreeNode.outputs){
-				Expr varId = new IdExpr(outVar.id);
+				Expr varId = new IdExpr(subAgreeNode.id+AgreeASTBuilder.dotChar+outVar.id);
 				Expr pre = new UnaryExpr(UnaryOp.PRE, varId);
 				Expr eqPre = new BinaryExpr(varId, BinaryOp.EQUAL, pre);
 				hold = new BinaryExpr(hold, BinaryOp.AND, eqPre);
@@ -357,11 +397,14 @@ public class LustreAstBuilder {
 			outputs.add(local);
 		}
 		
+		int i = 0;
 		for(AgreeStatement statement : subAgreeNode.assumptions){
 			varCount++;
-			AgreeVar output = new AgreeVar(prefix+assumeSuffix, NamedType.BOOL, statement.reference, subAgreeNode.compInst);
+			AgreeVar output = new AgreeVar(prefix+assumeSuffix+i++, NamedType.BOOL, statement.reference, subAgreeNode.compInst);
 			outputs.add(output);
 		}
+		
+		inputs.add(subAgreeNode.clockVar);
 		
 		if(lustreNode.inputs.size() != varCount){
 			throw new AgreeException("Something went wrong during node flattening");
@@ -385,7 +428,7 @@ public class LustreAstBuilder {
 		List<Expr> latchedInputs = new ArrayList<>();
 		List<VarDecl> latchedVars = new ArrayList<>();
 		for(AgreeVar var : subAgreeNode.inputs){
-			String latchedName = prefix+"latched__"+var.id;
+			String latchedName = prefix+"latched___"+var.id;
 			AgreeVar latchedVar = new AgreeVar(latchedName, var.type, var.reference, subAgreeNode.compInst);
 			inputs.add(latchedVar);
 			latchedVars.add(latchedVar);
@@ -393,6 +436,8 @@ public class LustreAstBuilder {
 			latchedInputs.add(new IdExpr(latchedName));
 		}
 		
+		//have to add the clock variable to the node call as well
+		nonLatchedInputs.add(new IdExpr(subAgreeNode.clockVar.id));
 		Node latchNode = getInputLatchingNode(
 				new IdExpr(subAgreeNode.clockVar.id), latchedVars, latchNodeString);
 		
@@ -413,7 +458,7 @@ public class LustreAstBuilder {
 			boolean replaced = false;
 			for(AgreeVar var : subAgreeNode.inputs){
 				if(((IdExpr)inExpr).id.equals(prefix+var.id)){
-					inputIdsReplace.add(new IdExpr(prefix+"latched__"+var.id));
+					inputIdsReplace.add(new IdExpr(prefix+"latched___"+var.id));
 					replaced = true;
 					break;
 				}

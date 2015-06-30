@@ -58,6 +58,8 @@ import com.rockwellcollins.atc.agree.agree.AssertStatement;
 import com.rockwellcollins.atc.agree.agree.AssumeStatement;
 import com.rockwellcollins.atc.agree.agree.EqStatement;
 import com.rockwellcollins.atc.agree.agree.GuaranteeStatement;
+import com.rockwellcollins.atc.agree.agree.LemmaStatement;
+import com.rockwellcollins.atc.agree.agree.PropertyStatement;
 import com.rockwellcollins.atc.agree.analysis.Activator;
 import com.rockwellcollins.atc.agree.analysis.AgreeEmitterUtilities;
 import com.rockwellcollins.atc.agree.analysis.AgreeException;
@@ -251,17 +253,12 @@ public abstract class VerifyHandler extends AadlHandler {
     	
     	for(VarDecl var : mainNode.inputs){
     		if(var instanceof AgreeVar){
-    			String refStr = getReferenceStr((AgreeVar)var);
-    			//TODO verify which reference should be put here
-    			refMap.put(refStr, ((AgreeVar) var).reference);
-    			refMap.put(var.id, ((AgreeVar) var).reference);
-    			//TODO we could clean up the agree renaming as well
-    			renaming.addExplicitRename(var.id, refStr);
-    			String category = getCategory((AgreeVar)var);
-    			if(!layout.getCategories().contains(category)){
-    				layout.addCategory(category);
-    			}
-    			layout.addElement(category, refStr, SigType.INPUT);
+    			addReference(refMap, renaming, layout, var);
+    		}
+    	}
+    	for(VarDecl var : mainNode.locals){
+    		if(var instanceof AgreeVar){
+    			addReference(refMap, renaming, layout, var);
     		}
     	}
     	
@@ -276,15 +273,30 @@ public abstract class VerifyHandler extends AadlHandler {
         linker.setReferenceMap(result, refMap);
         linker.setLog(result, AgreeLogger.getLog());
 
+        //System.out.println(program);
         return result;
     	
     }
+	private void addReference(Map<String, EObject> refMap,
+			AgreeRenaming renaming, AgreeLayout layout, VarDecl var) {
+		String refStr = getReferenceStr((AgreeVar)var);
+		//TODO verify which reference should be put here
+		refMap.put(refStr, ((AgreeVar) var).reference);
+		refMap.put(var.id, ((AgreeVar) var).reference);
+		//TODO we could clean up the agree renaming as well
+		renaming.addExplicitRename(var.id, refStr);
+		String category = getCategory((AgreeVar)var);
+		if(category != null && !layout.getCategories().contains(category)){
+			layout.addCategory(category);
+		}
+		layout.addElement(category, refStr, SigType.INPUT);
+	}
     
 	private String getCategory(AgreeVar var) {
 		if(var.compInst == null || var.reference == null){
 			return null;
 		}
-		return var.compInst.getInstanceObjectPath();
+		return LustreAstBuilder.getRelativeLocation(var.compInst.getInstanceObjectPath());
 	}
 	private String getReferenceStr(AgreeVar var) {
 
@@ -292,21 +304,30 @@ public abstract class VerifyHandler extends AadlHandler {
 		if(prefix == null){
 			return null;
 		}
+		if(var.id.endsWith(AgreeASTBuilder.clockIDSuffix)){
+			return null;
+		}
+		
+		String seperator = (prefix == "" ? "" : ".");
 		EObject reference = var.reference;
 		if(reference instanceof GuaranteeStatement){
-			return prefix + ": "+ ((GuaranteeStatement)reference).getStr();
+			return ((GuaranteeStatement)reference).getStr();
 		}else if(reference instanceof AssumeStatement){
-			return prefix + ": "+ ((AssumeStatement)reference).getStr();
+			return prefix + " assume: "+ ((AssumeStatement)reference).getStr();
+		}else if(reference instanceof LemmaStatement){
+			return prefix + " lemma: "+ ((LemmaStatement)reference).getStr();
 		}else if(reference instanceof AssertStatement){
 			throw new AgreeException("We really didn't expect to see an assert statement here");
 		}else if(reference instanceof Arg){
-			return prefix + "." + ((Arg)reference).getName();
+			return prefix + seperator + ((Arg)reference).getName();
 		}else if (reference instanceof DataPort){
-			return prefix + "." + ((DataPort)reference).getName();
+			return prefix + seperator + ((DataPort)reference).getName();
 		}else if (reference instanceof EventDataPort){
-			return prefix + "." + ((EventDataPort)reference).getName();
+			return prefix + seperator + ((EventDataPort)reference).getName();
 		}else if (reference instanceof FeatureGroup){
-			return prefix + "." + ((FeatureGroup)reference).getName();
+			return prefix + seperator + ((FeatureGroup)reference).getName();
+		}else if (reference instanceof PropertyStatement){
+			return prefix + seperator + ((PropertyStatement)reference).getName();
 		}
 		throw new AgreeException("Unhandled reference type: '"+reference.getClass().getName()+"'");
 	}

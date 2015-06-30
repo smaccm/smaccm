@@ -126,10 +126,10 @@ assume "don't fail otherside assumption" :
        prev(left_side_valid, false) => 
            left_side_valid ;  
 
-assume "dont fail assumption" : 
-	   prev(prev(not right_side_valid, false), false) and
-       prev(right_side_valid, false) =>
-         right_side_valid ;
+--assume "dont fail assumption" : 
+--	   prev(prev(not right_side_valid, false), false) and
+--       prev(right_side_valid, false) =>
+--         right_side_valid ;
 		  
 assume "valid pitch" :AD_L_Pitch_Step_Delta_Valid and  
        AD_R_Pitch_Step_Delta_Valid and pitch_lr_ok ; 
