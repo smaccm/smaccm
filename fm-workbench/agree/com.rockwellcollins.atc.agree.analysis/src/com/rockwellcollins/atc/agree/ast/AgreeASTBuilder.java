@@ -195,7 +195,6 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr>{
 				gatherLustreTypes(contract.getSpecs(), typeMap, globalTypes);
 				//the clock constraints contain other nodes that we add
 				clockConstraint = getClockConstraint(contract.getSpecs(), subNodes);
-				initialConstraint = getInitialConstraint(contract.getSpecs());
 				timing = getTimingModel(contract.getSpecs());
 				
 				connections.addAll(getConnections(((ComponentImplementation) compClass).getAllConnections(),
@@ -203,8 +202,8 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr>{
 
 				outputs.addAll(getEquationVars(contract.getSpecs(), compInst));
 				//make compClass the type so we can get it's other contract elements
-				compClass = ((ComponentImplementation) compClass).getType();
 			}
+			compClass = ((ComponentImplementation) compClass).getType();
 		}
 		curInst = compInst;
 		
@@ -222,6 +221,8 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr>{
 			//System.out.println(compInst.getName());
 			assertions.addAll(getAssertions(contract.getSpecs()));
 			outputs.addAll(getEquationVars(contract.getSpecs(), compInst));
+			initialConstraint = getInitialConstraint(contract.getSpecs());
+
 			addLustreNodes(contract.getSpecs());
 
 			gatherLustreTypes(contract.getSpecs(), typeMap, globalTypes);
@@ -246,6 +247,18 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr>{
 			if(idStr.contains(dotChar)){
 				String prefix = idStr.substring(0,idStr.indexOf(dotChar));
 				boolean found = false;
+				for(AgreeVar var : inputs){
+					if(var.id.startsWith(prefix)){
+						found = true;
+						break;
+					}
+				}
+				for(AgreeVar var : outputs){
+					if(var.id.startsWith(prefix)){
+						found = true;
+						break;
+					}
+				}
 				for(AgreeNode subNode : subNodes){
 					if(subNode.id.equals(prefix)){
 						found = true;
@@ -253,8 +266,8 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr>{
 					}
 				}
 				if(!found){
-					throw new AgreeException("Variable '"+idStr.replace(dotChar, ".")+"' appears in an assertion or lemma "+
-				      "in component '"+compInst.getInstanceObjectPath()+"' but subcomponent '"+prefix+"' does "+
+					throw new AgreeException("Variable '"+idStr.replace(dotChar, ".")+"' appears in an assertion, lemma "+
+				      "or equation statement in component '"+compInst.getInstanceObjectPath()+"' but subcomponent '"+prefix+"' does "+
 							"not contain an AGREE annex");
 				}
 			}

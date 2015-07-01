@@ -91,33 +91,12 @@ public class LustreAstBuilder {
 		for(AgreeVar var : flatNode.inputs){
 			inputs.add(var);
 		}
-		int j = 0;
+		
 		for(AgreeVar var : flatNode.outputs){
 			if(var.reference instanceof AssumeStatement || var.reference instanceof LemmaStatement){
-				//remove the reference so that we don't check the ungaurded
-				//variable as an assumption
-				inputs.add(new VarDecl(var.id, NamedType.BOOL));
-				//stupid hack to get the assumption properties right
-				Expr clockExpr = new BoolExpr(true);
-				ComponentInstance curInst = var.compInst;
-				while(curInst != flatNode.compInst){
-					String compLocation = curInst.getInstanceObjectPath();
-					compLocation = getRelativeLocation(compLocation);
-					compLocation.replace(".", AgreeASTBuilder.dotChar);
-					Expr clockId = new IdExpr(compLocation+AgreeASTBuilder.clockIDSuffix);
-					clockExpr = new BinaryExpr(clockExpr, BinaryOp.AND, clockId);
-					
-					curInst = curInst.getContainingComponentInstance();
-				}
-				
-				clockExpr = new BinaryExpr(clockExpr, BinaryOp.IMPLIES, new IdExpr(var.id));
-				AgreeVar assumeCheckVar = new AgreeVar(assumeSuffix+j++, NamedType.BOOL, var.reference, var.compInst);
-				locals.add(assumeCheckVar);
-				equations.add(new Equation(new IdExpr(assumeCheckVar.id), clockExpr));
-				properties.add(assumeCheckVar.id);
-			}else{
-				inputs.add(var);
+				properties.add(var.id);
 			}
+			inputs.add(var);
 		}
 		
 		Node main = new Node("main", inputs, null, locals, equations, properties, assertions);
@@ -277,14 +256,14 @@ public class LustreAstBuilder {
 			addCondactCall(agreeNode, nodePrefix, inputs, assertions,
 					flatNode, prefix, clockExpr, lustreNode);
 			
-			addClockHolds(agreeNode, assertions, flatNode, clockExpr);
+			addClockHolds(agreeNode, assertions, flatNode, clockExpr, prefix, lustreNode);
 			
 			addInitConstraint(agreeNode, outputs, assertions, flatNode,
-					prefix, clockExpr);
+					prefix, clockExpr, lustreNode);
 
 		}
 		
-		if(agreeNode.timing != TimingModel.SYNC){
+		if(agreeNode.timing == TimingModel.ASYNC){
 			if(someoneTicks == null){
 				throw new AgreeException("Somehow we generated a clock constraint without any clocks");
 			}
@@ -330,7 +309,7 @@ public class LustreAstBuilder {
 
 	private static void addInitConstraint(AgreeNode agreeNode,
 			List<AgreeVar> outputs, List<AgreeStatement> assertions,
-			AgreeNode subAgreeNode, String prefix, Expr clockExpr) {
+			AgreeNode subAgreeNode, String prefix, Expr clockExpr, Node lustreNode) {
 		if(agreeNode.timing != TimingModel.SYNC){
 			String tickedName = subAgreeNode.id+"___TICKED";
 			outputs.add(new AgreeVar(tickedName, NamedType.BOOL, null, agreeNode.compInst));
@@ -355,19 +334,41 @@ public class LustreAstBuilder {
 			
 			Expr initConstr = new BinaryExpr(new UnaryExpr(UnaryOp.NOT, tickedId), BinaryOp.IMPLIES, newInit);
 			assertions.add(new AgreeStatement("", initConstr, null));
+			
+			//we also need to add hold expressions for the assumptions and lemmas
+			Expr assumeLemmaTrue = new BoolExpr(true);
+			for(VarDecl lustreVar : lustreNode.inputs){
+				AgreeVar var = (AgreeVar)lustreVar;
+				if(var.reference instanceof AssumeStatement || var.reference instanceof LemmaStatement){
+					assumeLemmaTrue = new BinaryExpr(assumeLemmaTrue, BinaryOp.AND, new IdExpr(prefix+var.id));
+				}
+			}
+			assumeLemmaTrue = new BinaryExpr(new UnaryExpr(UnaryOp.NOT, tickedId), BinaryOp.IMPLIES, assumeLemmaTrue);
+			assertions.add(new AgreeStatement("", assumeLemmaTrue, null));
+			
 		}
 	}
 
 	private static void addClockHolds(AgreeNode agreeNode,
 			List<AgreeStatement> assertions, AgreeNode subAgreeNode,
-			Expr clockExpr) {
+			Expr clockExpr, String prefix, Node lustreNode) {
 		if(agreeNode.timing != TimingModel.SYNC){
 			Expr hold = new BoolExpr(true);
 			for(AgreeVar outVar : subAgreeNode.outputs){
-				Expr varId = new IdExpr(subAgreeNode.id+AgreeASTBuilder.dotChar+outVar.id);
+				Expr varId = new IdExpr(prefix+outVar.id);
 				Expr pre = new UnaryExpr(UnaryOp.PRE, varId);
 				Expr eqPre = new BinaryExpr(varId, BinaryOp.EQUAL, pre);
 				hold = new BinaryExpr(hold, BinaryOp.AND, eqPre);
+			}
+			
+			for(VarDecl lustreVar : lustreNode.inputs){
+				AgreeVar var = (AgreeVar)lustreVar;
+				if(var.reference instanceof AssumeStatement || var.reference instanceof LemmaStatement){
+					Expr varId = new IdExpr(prefix+var.id);
+					Expr pre = new UnaryExpr(UnaryOp.PRE, varId);
+					Expr eqPre = new BinaryExpr(varId, BinaryOp.EQUAL, pre);
+					hold = new BinaryExpr(hold, BinaryOp.AND, eqPre);
+				}
 			}
 
 			Expr notClock = new UnaryExpr(UnaryOp.NOT, clockExpr);
@@ -405,20 +406,20 @@ public class LustreAstBuilder {
 		int varCount = 0;
 		for(AgreeVar var : subAgreeNode.inputs){
 			varCount++;
-			AgreeVar input = new AgreeVar(prefix+var.id, var.type, var.reference, subAgreeNode.compInst);
+			AgreeVar input = new AgreeVar(prefix+var.id, var.type, var.reference, var.compInst);
 			inputs.add(input);
 		}
 		
 		for(AgreeVar var : subAgreeNode.outputs){
 			varCount++;
-			AgreeVar output = new AgreeVar(prefix+var.id, var.type, var.reference, subAgreeNode.compInst);
+			AgreeVar output = new AgreeVar(prefix+var.id, var.type, var.reference, var.compInst);
 			outputs.add(output);
 		}
 
 		//right now we do not support local variables in our translation
 		for(AgreeVar var : subAgreeNode.locals){
 			varCount++;
-			AgreeVar local = new AgreeVar(prefix+var.id, var.type, var.reference, subAgreeNode.compInst);
+			AgreeVar local = new AgreeVar(prefix+var.id, var.type, var.reference, var.compInst);
 			outputs.add(local);
 		}
 		
