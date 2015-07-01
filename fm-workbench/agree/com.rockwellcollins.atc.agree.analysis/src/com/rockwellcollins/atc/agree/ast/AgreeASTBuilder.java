@@ -489,6 +489,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr>{
 	}
 
 	private Expr getClockConstraint(EList<SpecStatement> specs, List<AgreeNode> subNodes) {
+		//NOTE: we generate the constraint that "someone ticks" during the lustre generation
 		for(SpecStatement spec : specs){
 			if(spec instanceof MNSynchStatement){
 				return getMNSynchConstraint((MNSynchStatement)spec);

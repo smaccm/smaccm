@@ -246,9 +246,16 @@ public class LustreAstBuilder {
 		List<AgreeVar> locals = new ArrayList<>();
 		List<AgreeStatement> assertions = new ArrayList<>();
 				
+		Expr someoneTicks = null;
 		for(AgreeNode subAgreeNode : agreeNode.subNodes){
 			String prefix = subAgreeNode.id+AgreeASTBuilder.dotChar;
 			Expr clockExpr = getClockExpr(agreeNode, subAgreeNode);
+			
+			if(someoneTicks == null){
+				someoneTicks = clockExpr;
+			}else{
+				someoneTicks = new BinaryExpr(someoneTicks, BinaryOp.OR, clockExpr);
+			}
 
 			AgreeNode flatNode = flattenAgreeNode(subAgreeNode, 
 					nodePrefix+subAgreeNode.id+AgreeASTBuilder.dotChar);
@@ -264,6 +271,13 @@ public class LustreAstBuilder {
 			addInitConstraint(agreeNode, outputs, assertions, flatNode,
 					prefix, clockExpr);
 
+		}
+		
+		if(agreeNode.timing != TimingModel.SYNC){
+			if(someoneTicks == null){
+				throw new AgreeException("Somehow we generated a clock constraint without any clocks");
+			}
+			assertions.add(new AgreeStatement("someone ticks", someoneTicks, null));
 		}
 		
 		addConnectionConstraints(agreeNode, assertions);
