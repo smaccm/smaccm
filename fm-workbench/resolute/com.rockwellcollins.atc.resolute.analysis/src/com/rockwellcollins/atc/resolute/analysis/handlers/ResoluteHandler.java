@@ -8,9 +8,15 @@ import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IProjectDescription;
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -30,6 +36,7 @@ import org.osate.aadl2.instance.ComponentInstance;
 import org.osate.aadl2.instance.ConnectionInstance;
 import org.osate.aadl2.instance.SystemInstance;
 import org.osate.aadl2.instantiation.InstantiateModel;
+import org.osate.aadl2.util.Aadl2Util;
 import org.osate.annexsupport.AnnexUtil;
 import org.osate.ui.dialogs.Dialog;
 import org.osate.xtext.aadl2.properties.util.EMFIndexRetrieval;
@@ -55,6 +62,66 @@ public class ResoluteHandler extends AadlHandler {
 	@Override
 	protected String getJobName() {
 		return "Resolute Analysis";
+	}
+
+	private static FunctionDefinition resolveResoluteFunction(EObject context, String resoluteFunctionName) {
+
+		// psNode.setText(resoluteFunctionName);
+		// val List<EObject> boundList = resoluteLinkingService.getLinkedObjects(context,
+		// ResolutePackage.eINSTANCE.getFnCallExpr_Fn(), psNode);
+		// if (boundList.size() > 0) {
+		// return boundList.get(0) as FunctionDefinition;
+		// }
+		EObject res = getNamedElementByType(context, resoluteFunctionName,
+				ResolutePackage.eINSTANCE.getFunctionDefinition());
+
+		return ((FunctionDefinition) res);
+	}
+
+	private static EObject getNamedElementByType(EObject context, String name, EClass eclass) {
+
+		// This code will only link to objects in the projects visible from the current project
+		Iterable<IEObjectDescription> allObjectTypes = EMFIndexRetrieval.getAllEObjectsOfTypeInWorkspace(context,
+				eclass);
+		String contextProject = context.eResource().getURI().segment(1);
+		List<String> visibleProjects = getVisibleProjects(contextProject);
+
+		for (IEObjectDescription eod : allObjectTypes) {
+			if (eod.getName().getLastSegment().equalsIgnoreCase(name)) {
+				EObject res = eod.getEObjectOrProxy();
+				res = EcoreUtil.resolve(res, context.eResource().getResourceSet());
+				if (!Aadl2Util.isNull(res)) {
+					URI linkUri = res.eResource().getURI();
+					String linkProject = linkUri.segment(1);
+					if (visibleProjects.contains(linkProject)) {
+						return res;
+					}
+				}
+			}
+		}
+
+		return null;
+	}
+
+	private static List<String> getVisibleProjects(String contextProjectName) {
+		List<String> result = new ArrayList<String>();
+		result.add(contextProjectName);
+
+		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+		IProject contextProject = root.getProject(URI.decode(contextProjectName));
+		if (!contextProject.exists() || !contextProject.isAccessible() || !contextProject.isOpen())
+			return result;
+		try {
+			IProjectDescription description = contextProject.getDescription();
+			for (IProject referencedProject : description.getReferencedProjects()) {
+				result.add(URI.encodeSegment(referencedProject.getName(), false));
+			}
+		} catch (CoreException ex) {
+			System.out.println("CORE EXCEPTION");
+			ex.printStackTrace();
+		}
+
+		return result;
 	}
 
 	@Override
@@ -90,7 +157,39 @@ public class ResoluteHandler extends AadlHandler {
 
 		List<ResoluteResult> proofTrees = new ArrayList<>();
 
-		if (theorem == null) {
+		if (theorem != null) {
+
+			EvaluationContext context = new EvaluationContext(si, sets, featToConnsMap);
+			FunctionDefinition functionDefinition = resolveResoluteFunction(si, theorem);
+
+			ResoluteSubclause resoluteSubclause = ResoluteFactory.eINSTANCE.createResoluteSubclause();
+			ProveStatement proveStatement;
+			FnCallExpr fnCallExpr;
+
+			proveStatement = ResoluteFactory.eINSTANCE.createProveStatement();
+			fnCallExpr = ResoluteFactory.eINSTANCE.createFnCallExpr();
+			fnCallExpr.getArgs().add(ResoluteFactory.eINSTANCE.createThisExpr());
+			fnCallExpr.setFn(functionDefinition);
+
+//					Arg a = ResoluteFactory.eINSTANCE.createArg();
+//					com.rockwellcollins.atc.resolute.resolute.BaseType t = ResoluteFactory.eINSTANCE.createBaseType();
+//					a.setName("s");
+//					t.setType("system");
+//					a.setType(t);
+//					fnCallExpr.getFn().getArgs().clear();
+//					fnCallExpr.getFn().getArgs().add(a);
+			proveStatement.setExpr(fnCallExpr);
+			resoluteSubclause.getProves().add(proveStatement);
+			si.getComponentClassifier().getOwnedAnnexSubclauses().add(resoluteSubclause);
+			//
+			ResoluteInterpreter interpreter = new ResoluteInterpreter(context);
+
+			for (ProveStatement ps : resoluteSubclause.getProves()) {
+				proofTrees.add(interpreter.evaluateProveStatement(ps));
+				drawProofs(proofTrees);
+			}
+
+		} else {
 			for (NamedElement el : sets.get("component")) {
 				ComponentInstance compInst = (ComponentInstance) el;
 				EClass resoluteSubclauseEClass = ResolutePackage.eINSTANCE.getResoluteSubclause();
@@ -108,128 +207,55 @@ public class ResoluteHandler extends AadlHandler {
 					}
 				}
 			}
-		} else {
+		}
 
-//			for (FunctionDefinition fd : EcoreUtil2.getAllContentsOfType(root.eResource().getResourceSet(),
-//					FunctionDefinition.class)) {
-//				System.out.println("fd=" + fd);
-//			}
-
-//			for (Resource res : root.eResource().getResourceSet().getResources()) {
-//				System.out.println("res=" + res);
-//				TreeIterator<EObject> iterator = res.getAllContents();
-//				while (iterator.hasNext()) {
-//					EObject eobj = (EObject) iterator.next();
-//					if (eobj instanceof AadlPackage) {
-//
-//						System.out.println("pkg=" + eobj);
-//					}
-//
-//				}
-//			}
-//			IProject pluginResources = ResourcesPlugin.getWorkspace().getRoot().getProject("Plugin_Resources");
-//			try {
-//				for (IResource ires : pluginResources.members()) {
-//					System.out.println("ires=" + ires);
-//					System.out.println("res class=" + ires.getClass());
-//
-//					if (ires instanceof Resource) {
-//
-//						Resource res = (Resource) ires;
-//						System.out.println("res=" + res);
-//
-//						TreeIterator<EObject> iterator = res.getAllContents();
-//						while (iterator.hasNext()) {
-//							EObject eobj = (EObject) iterator.next();
-//							if (eobj instanceof AadlPackage) {
-//
-//								System.out.println("pkg=" + eobj);
-//							} else {
-//								System.out.println("eobj=" + eobj);
-//
-//							}
-//
-//						}
-//					}
-//
-//				}
-//
-//			} catch (CoreException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-			ResoluteSubclause subclause;
-			ProveStatement proveStatement;
-			FnCallExpr fnCallExpr;
-
-			subclause = ResoluteFactory.eINSTANCE.createResoluteSubclause();
-			proveStatement = ResoluteFactory.eINSTANCE.createProveStatement();
-			fnCallExpr = ResoluteFactory.eINSTANCE.createFnCallExpr();
-			fnCallExpr.getArgs().add(ResoluteFactory.eINSTANCE.createThisExpr());
-
-			for (IEObjectDescription tmp : EMFIndexRetrieval.getAllEObjectsOfTypeInWorkspace(ResolutePackage.eINSTANCE
-					.getFunctionDefinition())) {
-				if (tmp.getName().getLastSegment().contains("arinc")) {
-					System.out.println("tmp=" + tmp);
-					System.out.println("last=" + tmp.getName().getLastSegment());
-
-				}
-				if (tmp.getName().getLastSegment().equalsIgnoreCase(theorem)) {
-					EObject eobj = tmp.getEObjectOrProxy();
-
-					EObject resolved = EcoreUtil.resolve(eobj, root.eResource().getResourceSet());
-					System.out.println("resolved=" + resolved);
-
-					FunctionDefinition functionDefinition = (FunctionDefinition) resolved;
-					fnCallExpr.setFn(functionDefinition);
-
-				}
-			}
-			proveStatement.setExpr(fnCallExpr);
-			subclause.getProves().add(proveStatement);
-
-//			System.out.println("should check theorem=" + theorem);
-//
-			EvaluationContext context = new EvaluationContext((ComponentInstance) si, sets, featToConnsMap);
-			ResoluteInterpreter interpreter = new ResoluteInterpreter(context);
-			for (ProveStatement ps : subclause.getProves()) {
-				proofTrees.add(interpreter.evaluateProveStatement(ps));
-				drawProofs(proofTrees);
-			}
-//			System.out.println("theorem checked=" + theorem);
-			//
-//			XtextResourceSet resourceSet = new XtextResourceSet();
-////			resourceSet.addLoadOption(XtextResource.OPTION_RESOLVE_ALL, Boolean.TRUE);
-//
-//			File f;
-//			try {
-//				f = File.createTempFile("theorem", ".aadl");
-//
-//				Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(f)));
-//				writer.write("annex resolute {** \n prove ( check_deos_compliance (this)) \n**};");
-//				writer.close();
-//
-//				System.out.println("writing in=" + f.getAbsolutePath().toString());
-//
-//				Resource resource = resourceSet.getResource(URI.createURI("file://" + f.getAbsolutePath()), true);
-//
-//				System.out.println("got the following=" + resource.getContents().get(0));
-//
-////				Model model = (Model) resource.getContents().get(0);
-//			} catch (IOException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
+//		else {
 //			ResoluteSubclause subclause;
-//			subclause = ResoluteFactory.eINSTANCE.createResoluteSubclause();
+//			ProveStatement proveStatement;
+//			FnCallExpr fnCallExpr;
 //
-//			EvaluationContext context = new EvaluationContext(si.getComponentInstance(), sets, featToConnsMap);
+//			subclause = ResoluteFactory.eINSTANCE.createResoluteSubclause();
+//			proveStatement = ResoluteFactory.eINSTANCE.createProveStatement();
+//			fnCallExpr = ResoluteFactory.eINSTANCE.createFnCallExpr();
+//			fnCallExpr.getArgs().add(ResoluteFactory.eINSTANCE.createThisExpr());
+//subclause.s
+//			for (IEObjectDescription tmp : EMFIndexRetrieval.getAllEObjectsOfTypeInWorkspace(ResolutePackage.eINSTANCE
+//					.getFunctionDefinition())) {
+//
+//				if (tmp.getName().getLastSegment().equalsIgnoreCase(theorem)) {
+//					EObject eobj = tmp.getEObjectOrProxy();
+//
+//					EObject resolved = EcoreUtil.resolve(eobj, root.eResource().getResourceSet());
+////					System.out.println("resolved=" + resolved);
+//
+//					FunctionDefinition functionDefinition = (FunctionDefinition) resolved;
+//
+//					fnCallExpr.setFn(functionDefinition);
+//
+//				}
+//			}
+//			Arg a = ResoluteFactory.eINSTANCE.createArg();
+//			com.rockwellcollins.atc.resolute.resolute.BaseType t = ResoluteFactory.eINSTANCE.createBaseType();
+//			a.setName("s");
+//			t.setType("system");
+//			a.setType(t);
+//			fnCallExpr.getFn().getArgs().clear();
+//			fnCallExpr.getFn().getArgs().add(a);
+//			proveStatement.setExpr(fnCallExpr);
+//			subclause.getProves().add(proveStatement);
+//
+//			EvaluationContext context = new EvaluationContext((ComponentInstance) si.getComponentInstance(), sets,
+//					featToConnsMap);
 //			ResoluteInterpreter interpreter = new ResoluteInterpreter(context);
 //			for (ProveStatement ps : subclause.getProves()) {
-//				proofTrees.add(interpreter.evaluateProveStatement(ps));
-//				drawProofs(proofTrees);
+//				try {
+//					proofTrees.add(interpreter.evaluateProveStatement(ps));
+//					drawProofs(proofTrees);
+//				} catch (Exception e) {
+//					e.printStackTrace();
+//				}
 //			}
-		}
+//		}
 
 		stop = System.currentTimeMillis();
 		System.out.println("Evaluation time: " + (stop - start) / 1000.0 + "s");
