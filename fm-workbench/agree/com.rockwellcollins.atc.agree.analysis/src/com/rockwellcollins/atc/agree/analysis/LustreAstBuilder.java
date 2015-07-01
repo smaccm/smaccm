@@ -11,6 +11,7 @@ import java.util.SortedMap;
 import org.osate.aadl2.instance.ComponentInstance;
 
 import com.rockwellcollins.atc.agree.agree.AssumeStatement;
+import com.rockwellcollins.atc.agree.agree.LemmaStatement;
 import com.rockwellcollins.atc.agree.analysis.lustre.visitors.IdRewriteVisitor;
 import com.rockwellcollins.atc.agree.ast.AgreeASTBuilder;
 import com.rockwellcollins.atc.agree.ast.AgreeConnection;
@@ -46,6 +47,7 @@ public class LustreAstBuilder {
 	private static List<Node> nodes;
 	private static final String guarSuffix = "__GUARANTEE";
 	private static final String assumeSuffix = "__ASSUME";
+	private static final String lemmaSuffix = "__LEMMA";
 	
 	public static Program getLustreProgram(AgreeProgram agreeProgram){
 		
@@ -91,7 +93,7 @@ public class LustreAstBuilder {
 		}
 		int j = 0;
 		for(AgreeVar var : flatNode.outputs){
-			if(var.reference instanceof AssumeStatement){
+			if(var.reference instanceof AssumeStatement || var.reference instanceof LemmaStatement){
 				//remove the reference so that we don't check the ungaurded
 				//variable as an assumption
 				inputs.add(new VarDecl(var.id, NamedType.BOOL));
@@ -193,6 +195,14 @@ public class LustreAstBuilder {
 			IdExpr assumeId = new IdExpr(inputName);
 			assertions.add(new BinaryExpr(assumeId, BinaryOp.EQUAL, statement.expr));
 			assumeConjExpr = new BinaryExpr(assumeId, BinaryOp.AND, assumeConjExpr);
+		}
+		
+		int j = 0;
+		for(AgreeStatement statement : agreeNode.lemmas){
+			String inputName = lemmaSuffix+j++;
+			inputs.add(new AgreeVar(inputName, NamedType.BOOL, statement.reference, agreeNode.compInst));
+			IdExpr lemmaId = new IdExpr(inputName);
+			assertions.add(new BinaryExpr(lemmaId, BinaryOp.EQUAL, statement.expr));
 		}
 		
 		String assumeHistName = assumeSuffix+"__HIST";
@@ -416,6 +426,13 @@ public class LustreAstBuilder {
 		for(AgreeStatement statement : subAgreeNode.assumptions){
 			varCount++;
 			AgreeVar output = new AgreeVar(prefix+assumeSuffix+i++, NamedType.BOOL, statement.reference, subAgreeNode.compInst);
+			outputs.add(output);
+		}
+		
+		int j = 0;
+		for(AgreeStatement statement : subAgreeNode.lemmas){
+			varCount++;
+			AgreeVar output = new AgreeVar(prefix+lemmaSuffix+j++, NamedType.BOOL, statement.reference, subAgreeNode.compInst);
 			outputs.add(output);
 		}
 		
