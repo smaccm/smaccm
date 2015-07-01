@@ -43,6 +43,7 @@ import org.osate.annexsupport.AnnexUtil;
 import com.google.common.collect.Lists;
 import com.rockwellcollins.atc.agree.agree.AgreeContractSubclause;
 import com.rockwellcollins.atc.agree.agree.AgreePackage;
+import com.rockwellcollins.atc.agree.analysis.lustre.visitors.IdRewriteVisitor;
 import com.rockwellcollins.atc.agree.analysis.preferences.PreferenceConstants;
 import com.rockwellcollins.atc.agree.ast.AgreeASTBuilder;
 import com.rockwellcollins.atc.agree.ast.AgreeProgram;

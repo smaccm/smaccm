@@ -23,6 +23,10 @@ public class AgreeVar extends VarDecl{
 	
 	@Override
 	public boolean equals(Object obj){
+		if(obj instanceof String){
+			return this.id.equals((String)obj);
+		}
+		
 		if(!(obj instanceof AgreeVar)){
 			return false;
 		}

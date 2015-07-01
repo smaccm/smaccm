@@ -1,10 +1,13 @@
-package com.rockwellcollins.atc.agree.analysis;
+package com.rockwellcollins.atc.agree.analysis.lustre.visitors;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+
+import com.rockwellcollins.atc.agree.analysis.AgreeException;
+import com.rockwellcollins.atc.agree.analysis.IdRewriter;
 
 import jkind.lustre.ArrayAccessExpr;
 import jkind.lustre.ArrayExpr;

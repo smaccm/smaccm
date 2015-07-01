@@ -11,6 +11,7 @@ import java.util.SortedMap;
 import org.osate.aadl2.instance.ComponentInstance;
 
 import com.rockwellcollins.atc.agree.agree.AssumeStatement;
+import com.rockwellcollins.atc.agree.analysis.lustre.visitors.IdRewriteVisitor;
 import com.rockwellcollins.atc.agree.ast.AgreeASTBuilder;
 import com.rockwellcollins.atc.agree.ast.AgreeConnection;
 import com.rockwellcollins.atc.agree.ast.AgreeConnection.ConnectionType;

@@ -116,6 +116,7 @@ import com.rockwellcollins.atc.agree.analysis.AgreeLogger;
 import com.rockwellcollins.atc.agree.analysis.AgreeStateUtils;
 import com.rockwellcollins.atc.agree.analysis.AgreeVarDecl;
 import com.rockwellcollins.atc.agree.analysis.MNSynchronyElement;
+import com.rockwellcollins.atc.agree.analysis.lustre.visitors.IdGatherer;
 import com.rockwellcollins.atc.agree.ast.AgreeConnection.ConnectionType;
 import com.rockwellcollins.atc.agree.ast.AgreeNode.TimingModel;
 
@@ -230,6 +231,34 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr>{
 			return null;
 		}
 		gatherOutputsInputsTypes(outputs, inputs, compInst.getFeatureInstances(), typeMap, globalTypes);
+		
+		//verify that every variable that is reasoned about is
+		//in a component containing an annex
+		Set<String> allExprIds = new HashSet<>();
+		IdGatherer visitor = new IdGatherer();
+		for(AgreeStatement statement : assertions){
+			allExprIds.addAll(statement.expr.accept(visitor));
+		}
+		for(AgreeStatement statement : lemmas){
+			allExprIds.addAll(statement.expr.accept(visitor));
+		}
+		for(String idStr : allExprIds){
+			if(idStr.contains(dotChar)){
+				String prefix = idStr.substring(0,idStr.indexOf(dotChar));
+				boolean found = false;
+				for(AgreeNode subNode : subNodes){
+					if(subNode.id.equals(prefix)){
+						found = true;
+						break;
+					}
+				}
+				if(!found){
+					throw new AgreeException("Variable '"+idStr.replace(dotChar, ".")+"' appears in an assertion or lemma "+
+				      "in component '"+compInst.getInstanceObjectPath()+"' but subcomponent '"+prefix+"' does "+
+							"not contain an AGREE annex");
+				}
+			}
+		}
 		
 		return new AgreeNode(id, inputs, outputs, locals, connections, subNodes, 
 				assertions, assumptions, guarantees, lemmas,
