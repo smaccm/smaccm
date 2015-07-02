@@ -268,7 +268,6 @@ connector seL4RPCCallDataport {
 
 assembly {
 	composition {
-        <if(model.threadCalendar.hasDispatchers)>
         // Periodic components
         <constructPeriodicComponent(model.threadCalendar)>
 
@@ -279,7 +278,6 @@ assembly {
 		component TimeServerOdroid time_server;
 		<else>	
 		// MWW TODO: Fill in time server component HERE.  Need to determine time server for Intel platforms.
-		<endif>
 		<endif>
 		<endif>
 		

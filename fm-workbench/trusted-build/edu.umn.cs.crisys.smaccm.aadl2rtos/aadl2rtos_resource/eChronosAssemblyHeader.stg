@@ -22,10 +22,6 @@ filePrefix(name, date, path) ::= <<
 <DARPALicenseComment()>
 
 <filenameBlockComment(date, path, filePurpose(name))>
-	
-#include \<stdbool.h>
-#include \<stddef.h>
-#include \<stdint.h>
 
 >>
 
@@ -38,13 +34,14 @@ filePostfix(name, path) ::= <<
 
 >>
 
-
+/*
 dataWriterDecl(port) ::= <<
 bool <incomingPortWriterName(port)>(<port.type.camkesInputType.name> arg); 
 >> 
+*/
 
-eventWriterDecl(port) ::= <<
-bool <incomingPortWriterName(port)>(); 
+writerDecl(port) ::= <<
+bool <incomingPortWriterName(port)><if(port.hasData)>(<port.type.camkesInputType.name> arg);<else>();<endif> 
 >>
 
 periodicDispatcherDecl(dispatcher) ::= <<
@@ -62,18 +59,25 @@ void <outgoingActiveThreadDispatchName(dispatcher)>(<dispatcher.type.aadlInputTy
  */
 
 activeThreadDecls(threadImpl) ::= <<
-<threadImpl.inputDataPortList:dataWriterDecl()>
+<threadImpl.inputPortList:writerDecl()>
+>>
+/*  <threadImpl.inputDataPortList:dataWriterDecl()>
 <threadImpl.inputEventDataPortList:dataWriterDecl()>	
 <threadImpl.inputEventPortList:eventWriterDecl()>
-<threadImpl.periodicDispatchers:periodicDispatcherDecl()>
->>
+<threadImpl.periodicDispatchers:periodicDispatcherDecl()> */
 
 passiveThreadDecls(threadImpl) ::= <<
-<threadImpl.inputDataPortList:dataWriterDecl()>
+<threadImpl.inputDataPortList:writerDecl()>
 <threadImpl.dispatchers:userEntrypointCallerDecl()>
 >>
 
 headerBody(model) ::= <<
+
+#include \<stdbool.h>
+#include \<stddef.h>
+#include \<stdint.h>
+#include <\u003C><model.systemTypeHeaderName><\u003E>
+
    <model.activeThreadImplementations:activeThreadDecls()>
    <model.passiveThreadImplementations:passiveThreadDecls()>
 >>
