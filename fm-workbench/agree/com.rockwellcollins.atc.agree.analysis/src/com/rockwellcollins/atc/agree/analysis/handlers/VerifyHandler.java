@@ -2,9 +2,8 @@ package com.rockwellcollins.atc.agree.analysis.handlers;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.lang.ref.Reference;
 import java.util.ArrayDeque;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,7 +20,6 @@ import jkind.api.results.JRealizabilityResult;
 import jkind.lustre.Node;
 import jkind.lustre.Program;
 import jkind.lustre.VarDecl;
-import jkind.results.layout.Layout;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -29,10 +27,10 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.handlers.IHandlerActivation;
 import org.eclipse.ui.handlers.IHandlerService;
+import org.eclipse.xtext.util.Pair;
 import org.osate.aadl2.AnnexSubclause;
 import org.osate.aadl2.ComponentClassifier;
 import org.osate.aadl2.ComponentImplementation;
@@ -41,9 +39,6 @@ import org.osate.aadl2.DataPort;
 import org.osate.aadl2.Element;
 import org.osate.aadl2.EventDataPort;
 import org.osate.aadl2.FeatureGroup;
-import org.osate.aadl2.Subcomponent;
-import org.osate.aadl2.SystemImplementation;
-import org.osate.aadl2.SystemType;
 import org.osate.aadl2.instance.ComponentInstance;
 import org.osate.aadl2.instance.SystemInstance;
 import org.osate.aadl2.instantiation.InstantiateModel;
@@ -56,28 +51,24 @@ import com.rockwellcollins.atc.agree.agree.AgreeSubclause;
 import com.rockwellcollins.atc.agree.agree.Arg;
 import com.rockwellcollins.atc.agree.agree.AssertStatement;
 import com.rockwellcollins.atc.agree.agree.AssumeStatement;
-import com.rockwellcollins.atc.agree.agree.EqStatement;
 import com.rockwellcollins.atc.agree.agree.GuaranteeStatement;
 import com.rockwellcollins.atc.agree.agree.LemmaStatement;
 import com.rockwellcollins.atc.agree.agree.PropertyStatement;
 import com.rockwellcollins.atc.agree.analysis.Activator;
-import com.rockwellcollins.atc.agree.analysis.AgreeEmitterUtilities;
+import com.rockwellcollins.atc.agree.analysis.AgreeUtils;
 import com.rockwellcollins.atc.agree.analysis.AgreeException;
-import com.rockwellcollins.atc.agree.analysis.AgreeGenerator;
 import com.rockwellcollins.atc.agree.analysis.AgreeLayout;
 import com.rockwellcollins.atc.agree.analysis.LustreAstBuilder;
 import com.rockwellcollins.atc.agree.analysis.AgreeLayout.SigType;
 import com.rockwellcollins.atc.agree.analysis.AgreeLogger;
-import com.rockwellcollins.atc.agree.analysis.AgreeAnalysis;
 import com.rockwellcollins.atc.agree.analysis.AgreeRenaming;
 import com.rockwellcollins.atc.agree.analysis.ConsistencyResult;
-import com.rockwellcollins.atc.agree.analysis.preferences.PreferenceConstants;
+import com.rockwellcollins.atc.agree.analysis.ast.AgreeASTBuilder;
+import com.rockwellcollins.atc.agree.analysis.ast.AgreeProgram;
+import com.rockwellcollins.atc.agree.analysis.ast.AgreeVar;
 import com.rockwellcollins.atc.agree.analysis.preferences.PreferencesUtil;
 import com.rockwellcollins.atc.agree.analysis.views.AgreeResultsLinker;
 import com.rockwellcollins.atc.agree.analysis.views.AgreeResultsView;
-import com.rockwellcollins.atc.agree.ast.AgreeASTBuilder;
-import com.rockwellcollins.atc.agree.ast.AgreeProgram;
-import com.rockwellcollins.atc.agree.ast.AgreeVar;
 
 public abstract class VerifyHandler extends AadlHandler {
     protected AgreeResultsLinker linker = new AgreeResultsLinker();
@@ -89,6 +80,7 @@ public abstract class VerifyHandler extends AadlHandler {
     private IHandlerActivation terminateActivation;
     private IHandlerActivation terminateAllActivation;
     private IHandlerService handlerService;
+    private enum AnalysisType  {AssumeGuarantee, Consistency, Realizability};
    
     protected abstract boolean isRecursive();
     protected abstract boolean isMonolithic();
@@ -121,7 +113,7 @@ public abstract class VerifyHandler extends AadlHandler {
             CompositeAnalysisResult wrapper = new CompositeAnalysisResult("");
 
 //            SystemType sysType = si.getSystemImplementation().getType();
-            ComponentType sysType = AgreeEmitterUtilities.getInstanceType(si);
+            ComponentType sysType = AgreeUtils.getInstanceType(si);
             EList<AnnexSubclause> annexSubClauses = AnnexUtil.getAllAnnexSubclauses(sysType,
                     AgreePackage.eINSTANCE.getAgreeContractSubclause());
 
@@ -135,15 +127,12 @@ public abstract class VerifyHandler extends AadlHandler {
                 wrapper.addChild(result);
                 result = wrapper;
             }else if (isRealizability()){
-                AgreeAnalysis agreeProgram = AgreeGenerator.getRealizabilityLustre(si);
-                result = createRealizabilityVerification(agreeProgram);
-                //result = wrapper;
+            	AgreeProgram agreeProgram = new AgreeASTBuilder().getAgreeProgram(si);
+        		Program program = LustreAstBuilder.getRealizabilityLustreProgram(agreeProgram);
+        		wrapper.addChild(createVerification("Realizability Check", si, program, AnalysisType.Realizability));
+                result = wrapper;
             } else {
-            	AgreeAnalysis agreeProgram = AgreeGenerator.getLustre(si, isMonolithic());//, isMonolithic());
-                //wrapper.addChild(createGuaranteeVerification(agreeProgram));
-                wrapper.addChild(createGuaranteeVerification(si));
-                //wrapper.addChild(createAssumptionVerification(si));
-                wrapper.addChild(creatConsistencyVerification(agreeProgram));
+            	wrapVerificationResult(si, wrapper);
                 result = wrapper;
             }
             showView(result, linker);
@@ -153,23 +142,19 @@ public abstract class VerifyHandler extends AadlHandler {
             return new Status(IStatus.ERROR, Activator.PLUGIN_ID, 0, messages, e);
         }
     }
+	private void wrapVerificationResult(ComponentInstance si,
+			CompositeAnalysisResult wrapper) {
+		AgreeProgram agreeProgram = new AgreeASTBuilder().getAgreeProgram(si);
+		Program program = LustreAstBuilder.getAssumeGuaranteeLustreProgram(agreeProgram, isMonolithic());
+		List<Pair<String,Program>> consistencies = LustreAstBuilder.getConsistencyChecks(agreeProgram, isMonolithic());
+		
+		wrapper.addChild(createVerification("Contract Guarantees", si, program, AnalysisType.AssumeGuarantee));
+		for(Pair<String,Program> consistencyAnalysis : consistencies){
+			wrapper.addChild(createVerification(consistencyAnalysis.getFirst(), si, consistencyAnalysis.getSecond(), AnalysisType.Consistency));
+		}
+	}
 
-    private AnalysisResult createRealizabilityVerification(
-            AgreeAnalysis agreeProgram) {
-        
-        JRealizabilityResult result = new JRealizabilityResult("Realizability Analysis", agreeProgram.state.renaming);
-        queue.add(result);
 
-        ComponentImplementation compImpl = AgreeEmitterUtilities.getInstanceImplementation(agreeProgram.state.curInst);
-        linker.setProgram(result, agreeProgram.realizeProgram);
-        linker.setComponent(result, compImpl);
-        linker.setContract(result, getContract(compImpl));
-        linker.setLayout(result, agreeProgram.state.layout);
-        linker.setReferenceMap(result, agreeProgram.state.refMap);
-        linker.setLog(result, AgreeLogger.getLog());
-
-        return result;
-    }
     protected String getNestedMessages(Throwable e) {
         StringWriter sw = new StringWriter();
         PrintWriter pw = new PrintWriter(sw);
@@ -186,29 +171,17 @@ public abstract class VerifyHandler extends AadlHandler {
     private AnalysisResult buildAnalysisResult(String name, ComponentInstance ci) {
         CompositeAnalysisResult result = new CompositeAnalysisResult("Verification for " + name);
         
-        if(containsAGREEAnnex(ci)){
-        	AgreeAnalysis agreeProgram = AgreeGenerator.getLustre(ci, isMonolithic());//, isMonolithic());
-        	AnalysisResult tempResult = createGuaranteeVerification(agreeProgram);
-        	if (tempResult != null) {
-        		result.addChild(tempResult);
-        	}
-        	tempResult = creatConsistencyVerification(agreeProgram);
-        	if (tempResult != null) {
-        		result.addChild(tempResult);
-        	}
-
-        	ComponentImplementation compImpl = AgreeEmitterUtilities.getInstanceImplementation(ci);
-        	for (Subcomponent subComp : compImpl.getAllSubcomponents()) {
-        		ComponentInstance subInst = ci.findSubcomponentInstance(subComp);
-        		if (subInst != ci) {
-        			if (AgreeEmitterUtilities.getInstanceImplementation(subInst) != null) {
+        if(containsAGREEAnnex(ci)){  	
+        	wrapVerificationResult(ci, result);
+        	ComponentImplementation compImpl = AgreeUtils.getInstanceImplementation(ci);
+        	for (ComponentInstance subInst : ci.getComponentInstances()) {
+        			if (AgreeUtils.getInstanceImplementation(subInst) != null) {
         				AnalysisResult buildAnalysisResult = buildAnalysisResult(subInst.getName(),
         						subInst);
         				if (buildAnalysisResult != null) {
         					result.addChild(buildAnalysisResult);
         				}
         			}
-        		}
         	}
 
         	if (result.getChildren().size() != 0) {
@@ -232,11 +205,10 @@ public abstract class VerifyHandler extends AadlHandler {
 		return false;
 	}
     
-    private AnalysisResult createGuaranteeVerification(ComponentInstance compInst){
+    private AnalysisResult createVerification(String resultName, ComponentInstance compInst,
+    		Program program, AnalysisType analysisType){
         
-        AgreeProgram agreeProgram = new AgreeASTBuilder().getAgreeProgram(compInst);
-    	Program program = LustreAstBuilder.getLustreProgram(agreeProgram);
-    	
+
     	Map<String, EObject> refMap = new HashMap<>();
     	AgreeRenaming renaming = new AgreeRenaming(refMap);
     	AgreeLayout layout = new AgreeLayout();
@@ -262,10 +234,23 @@ public abstract class VerifyHandler extends AadlHandler {
     		}
     	}
     	
-    	JKindResult result = new JKindResult("Contract Guarantees", mainNode.properties, renaming);
+    	JKindResult result;
+    	switch(analysisType){
+    	case Consistency:
+    		result = new ConsistencyResult(resultName, mainNode.properties, Collections.singletonList(true), renaming);
+    		break;
+    	case Realizability:
+    		result = new JRealizabilityResult(resultName, renaming);
+    		break;
+    	case AssumeGuarantee:
+    		result = new JKindResult(resultName, mainNode.properties, renaming);
+    		break;
+    	default:
+    		throw new AgreeException("Unhandled Analysis Type");
+    	}
         queue.add(result);
 
-        ComponentImplementation compImpl = AgreeEmitterUtilities.getInstanceImplementation(compInst);
+        ComponentImplementation compImpl = AgreeUtils.getInstanceImplementation(compInst);
         linker.setProgram(result, program);
         linker.setComponent(result, compImpl);
         linker.setContract(result, getContract(compImpl));
@@ -328,52 +313,12 @@ public abstract class VerifyHandler extends AadlHandler {
 			return prefix + seperator + ((FeatureGroup)reference).getName();
 		}else if (reference instanceof PropertyStatement){
 			return prefix + seperator + ((PropertyStatement)reference).getName();
+		}else if (reference instanceof ComponentType || reference instanceof ComponentImplementation){
+			return "Result";
 		}
 		throw new AgreeException("Unhandled reference type: '"+reference.getClass().getName()+"'");
 	}
-	private AnalysisResult createGuaranteeVerification(AgreeAnalysis agreeProgram) {
-
-    	List<String> props = new ArrayList<>();
-    	props.addAll(agreeProgram.state.guarProps);
-    	
-        JKindResult result = new JKindResult("Contract Guarantees", props, agreeProgram.state.renaming);
-        queue.add(result);
-
-        ComponentImplementation compImpl = AgreeEmitterUtilities.getInstanceImplementation(agreeProgram.state.curInst);
-        linker.setProgram(result, agreeProgram.assumeGuaranteeProgram);
-        linker.setComponent(result, compImpl);
-        linker.setContract(result, getContract(compImpl));
-        linker.setLayout(result, agreeProgram.state.layout);
-        linker.setReferenceMap(result, agreeProgram.state.refMap);
-        linker.setLog(result, AgreeLogger.getLog());
-
-        return result;
-    }
-    
-    private AnalysisResult creatConsistencyVerification(AgreeAnalysis agreeProgram) {
-    	
-    	IPreferenceStore prefs = Activator.getDefault().getPreferenceStore();
-    	int consistDetph = prefs.getInt(PreferenceConstants.PREF_CONSIST_DEPTH);
-    	
-    	List<Boolean> invertStatuses = new ArrayList<>();
-    	int i;
-    	for(i = 0; i < agreeProgram.state.consistProps.size(); i++){
-    		invertStatuses.add(true);
-    	}
-        JKindResult result = new ConsistencyResult("Contract Consistency", agreeProgram.state.consistProps, invertStatuses, agreeProgram.state.renaming);
-        queue.add(result);
-
-        ComponentImplementation compImpl = AgreeEmitterUtilities.getInstanceImplementation(agreeProgram.state.curInst);
-        linker.setProgram(result, agreeProgram.consistProgram);
-        linker.setComponent(result, compImpl);
-        linker.setContract(result, getContract(compImpl));
-        linker.setLayout(result, agreeProgram.state.layout);
-        linker.setReferenceMap(result, agreeProgram.state.refMap);
-        linker.setLog(result, AgreeLogger.getLog());
-
-        return result;
-    }
-    
+	
 
     private AgreeSubclause getContract(ComponentImplementation ci) {
         ComponentType ct = ci.getOwnedRealization().getImplemented();

@@ -1,4 +1,4 @@
-package com.rockwellcollins.atc.agree.ast;
+package com.rockwellcollins.atc.agree.analysis.ast;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -110,15 +110,15 @@ import com.rockwellcollins.atc.agree.agree.SynchStatement;
 import com.rockwellcollins.atc.agree.agree.ThisExpr;
 import com.rockwellcollins.atc.agree.agree.util.AgreeSwitch;
 import com.rockwellcollins.atc.agree.analysis.AgreeCalendarUtils;
-import com.rockwellcollins.atc.agree.analysis.AgreeEmitterUtilities;
+import com.rockwellcollins.atc.agree.analysis.AgreeUtils;
 import com.rockwellcollins.atc.agree.analysis.AgreeException;
 import com.rockwellcollins.atc.agree.analysis.AgreeLogger;
-import com.rockwellcollins.atc.agree.analysis.AgreeStateUtils;
+import com.rockwellcollins.atc.agree.analysis.AgreeRecordUtils;
 import com.rockwellcollins.atc.agree.analysis.AgreeVarDecl;
 import com.rockwellcollins.atc.agree.analysis.MNSynchronyElement;
+import com.rockwellcollins.atc.agree.analysis.ast.AgreeConnection.ConnectionType;
+import com.rockwellcollins.atc.agree.analysis.ast.AgreeNode.TimingModel;
 import com.rockwellcollins.atc.agree.analysis.lustre.visitors.IdGatherer;
-import com.rockwellcollins.atc.agree.ast.AgreeConnection.ConnectionType;
-import com.rockwellcollins.atc.agree.ast.AgreeNode.TimingModel;
 
 public class AgreeASTBuilder extends AgreeSwitch<Expr>{
 	
@@ -127,19 +127,23 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr>{
 	public static final String dotChar = "__";
 
 	private static List<Node> globalNodes;
+	private static Set<RecordType> globalTypes;
+	private static Map<NamedElement, String> typeMap;
 	private ComponentInstance curInst; //used for Get_Property Expressions
 	
 	public AgreeProgram getAgreeProgram(ComponentInstance compInst){
 	
 		globalNodes = new ArrayList<>();
-		Set<RecordType> globalRecordTypes = new HashSet<>();
-		AgreeNode topNode = getAgreeNode(compInst, new HashMap<>(), globalRecordTypes);
+		globalTypes = new HashSet<>();
+		typeMap = new HashMap<>();
+		
+		AgreeNode topNode = getAgreeNode(compInst);
 		List<AgreeNode> agreeNodes = gatherNodes(topNode);
 		
 		//have to convert the types. The reason we use Record types in the first
 		//place rather than the more general types is so we can check set containment
 		//easily
-		return new AgreeProgram(agreeNodes, new ArrayList<>(globalNodes), new ArrayList<>(globalRecordTypes), topNode);
+		return new AgreeProgram(agreeNodes, new ArrayList<>(globalNodes), new ArrayList<>(globalTypes), topNode);
 	}
 	
 	private List<AgreeNode> gatherNodes(AgreeNode node){
@@ -152,8 +156,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr>{
 		return nodes;
 	}
 	
-	private AgreeNode getAgreeNode(ComponentInstance compInst,  Map<NamedElement, String> typeMap,
-    		Set<RecordType> globalTypes){
+	private AgreeNode getAgreeNode(ComponentInstance compInst){
 		List<AgreeVar> inputs = new ArrayList<>();
 		List<AgreeVar> outputs = new ArrayList<>();
 		List<AgreeVar> locals = new ArrayList<>();
@@ -181,7 +184,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr>{
 
 				for(ComponentInstance subInst : compInst.getComponentInstances()){
 					curInst = subInst;
-					AgreeNode subNode = getAgreeNode(subInst, typeMap, globalTypes);
+					AgreeNode subNode = getAgreeNode(subInst);
 					if(subNode != null){
 						foundSubNode = true;
 						subNodes.add(subNode);
@@ -192,13 +195,13 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr>{
 				assertions.addAll(getAssertions(contract.getSpecs()));
 				lemmas.addAll(getLemmas(contract.getSpecs()));
 				addLustreNodes(contract.getSpecs());
-				gatherLustreTypes(contract.getSpecs(), typeMap, globalTypes);
+				gatherLustreTypes(contract.getSpecs());
 				//the clock constraints contain other nodes that we add
 				clockConstraint = getClockConstraint(contract.getSpecs(), subNodes);
 				timing = getTimingModel(contract.getSpecs());
 				
 				connections.addAll(getConnections(((ComponentImplementation) compClass).getAllConnections(),
-						compInst, subNodes, contract.getSpecs(), typeMap, globalTypes));
+						compInst, subNodes, contract.getSpecs()));
 
 				outputs.addAll(getEquationVars(contract.getSpecs(), compInst));
 				//make compClass the type so we can get it's other contract elements
@@ -225,7 +228,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr>{
 
 			addLustreNodes(contract.getSpecs());
 
-			gatherLustreTypes(contract.getSpecs(), typeMap, globalTypes);
+			gatherLustreTypes(contract.getSpecs());
 		}
 		
 		if(!(foundSubNode || hasDirectAnnex)){
@@ -396,7 +399,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr>{
 			}
 		}
 
-		Type type = getNamedType(AgreeStateUtils.getRecordTypeName(dataClass, typeMap, typeExpressions));
+		Type type = getNamedType(AgreeRecordUtils.getRecordTypeName(dataClass, typeMap, typeExpressions));
 		if(type == null){
 			//we don't reason about this type, keep in mind we still reason about the event port
 			//even if the type is not defined
@@ -418,8 +421,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr>{
 	}
 
 	private List<AgreeConnection> getConnections(EList<Connection> connections, 
-			ComponentInstance compInst, List<AgreeNode> subNodes, EList<SpecStatement> specs,
-			Map<NamedElement, String> typeMap, Set<jkind.lustre.RecordType> types) {
+			ComponentInstance compInst, List<AgreeNode> subNodes, EList<SpecStatement> specs) {
 		
 		//figure out if this is latched
 		boolean latched = false;
@@ -448,12 +450,12 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr>{
 			Context sourContext = absConnSour.getContext();
 			//only make connections to things that have annexs
 			if(destContext != null && destContext instanceof Subcomponent){
-				if(!AgreeEmitterUtilities.containsAgreeAnnex((Subcomponent)destContext)){
+				if(!AgreeUtils.containsAgreeAnnex((Subcomponent)destContext)){
 					continue;
 				}
 			}
 			if(sourContext != null && sourContext instanceof Subcomponent){
-				if(!AgreeEmitterUtilities.containsAgreeAnnex((Subcomponent)sourContext)){
+				if(!AgreeUtils.containsAgreeAnnex((Subcomponent)sourContext)){
 					continue;
 				}
 			}
@@ -497,7 +499,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr>{
 				dataClass = eventDataPort.getDataFeatureClassifier();
 			}
 			
-			if(getNamedType(AgreeStateUtils.getRecordTypeName(dataClass, typeMap, types)) == null){
+			if(getNamedType(AgreeRecordUtils.getRecordTypeName(dataClass, typeMap, globalTypes)) == null){
 				//we don't reason about this type
 				continue;
 			}
@@ -567,8 +569,8 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr>{
         }
         
         if(spec.getVal2() == null){
-            Node dfaNode = AgreeCalendarUtils.getDFANode(AgreeStateUtils.getObjectLocationPrefix(spec)+"__DFA_NODE", val1); 
-            Node calNode = AgreeCalendarUtils.getCalendarNode(AgreeStateUtils.getObjectLocationPrefix(spec)+"__CALENDAR_NODE", dfaNode.id, clockIds.size());
+            Node dfaNode = AgreeCalendarUtils.getDFANode(AgreeRecordUtils.getObjectLocationPrefix(spec)+"__DFA_NODE", val1); 
+            Node calNode = AgreeCalendarUtils.getCalendarNode(AgreeRecordUtils.getObjectLocationPrefix(spec)+"__CALENDAR_NODE", dfaNode.id, clockIds.size());
             
             addToNodeList(dfaNode);
             addToNodeList(calNode);
@@ -578,7 +580,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr>{
         	int val2 = Integer.decode(spec.getVal2());
 
         	String nodeName = "__calendar_node_"+val1+"_"+val2;
-        	nodeName = AgreeStateUtils.getObjectLocationPrefix(spec)+nodeName;
+        	nodeName = AgreeRecordUtils.getObjectLocationPrefix(spec)+nodeName;
         	Node calNode = AgreeCalendarUtils.getMNCalendar(nodeName, val1, val2);
         	addToNodeList(calNode);
         	
@@ -614,7 +616,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr>{
     		MNSynchronyElement elem = new MNSynchronyElement(maxClock, minClock, max, min);
     		
     		String nodeName = "__calendar_node_"+elem.max+"_"+elem.min;
-    		nodeName = AgreeStateUtils.getObjectLocationPrefix(sync)+nodeName;
+    		nodeName = AgreeRecordUtils.getObjectLocationPrefix(sync)+nodeName;
 	        if(!nodeNames.contains(nodeName)){
 	            nodeNames.add(nodeName);
 	            Node calNode = AgreeCalendarUtils.getMNCalendar(nodeName, elem.max, elem.min);
@@ -630,12 +632,12 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr>{
 		return clockAssertion;
 	}
 
-	private List<Type> gatherLustreTypes(EList<SpecStatement> specs, Map<NamedElement, String> typeMap, Set<RecordType> globalTypes){
+	private List<Type> gatherLustreTypes(EList<SpecStatement> specs){
 		List<Type> types = new ArrayList<>();
 		for(SpecStatement spec : specs){
 			if(spec instanceof RecordDefExpr){
 				//this will record them to the global types
-				AgreeStateUtils.getRecordTypeName((NamedElement)spec, typeMap, globalTypes);
+				AgreeRecordUtils.getRecordTypeName((NamedElement)spec, typeMap, globalTypes);
 			}
 		}
 		return types;
@@ -655,37 +657,35 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr>{
 		List<VarDecl> agreeVars = new ArrayList<>();
 		for(Arg arg : args){
 			//TODO: decide whether or not to make these VarDecls or AgreeVars
-			agreeVars.add(new AgreeVar(arg.getName(), agreeTypeToLustreType(arg.getType()), arg, compInst));
+			NamedType type = getNamedType(AgreeRecordUtils.getRecordTypeName(arg.getType(), typeMap, globalTypes));
+			agreeVars.add(new AgreeVar(arg.getName(), type, arg, compInst));
 		}
 		return agreeVars;
 	}
 
-	private Type agreeTypeToLustreType(com.rockwellcollins.atc.agree.agree.Type type){
-		if(type instanceof PrimType){
-			String typeStr = ((PrimType) type).getString();
-			switch(typeStr){
-			case "real": return NamedType.REAL;
-			case "int": return NamedType.INT;
-			case "bool": return NamedType.BOOL;
-			}
-		}else{
-			if(!(type instanceof com.rockwellcollins.atc.agree.agree.RecordType)){
-				throw new AgreeException("Agree does not know to reason about types of class: "+type.getClass().getSimpleName());
-			}
-			com.rockwellcollins.atc.agree.agree.RecordType record = (com.rockwellcollins.atc.agree.agree.RecordType)type;
-			NestedDotID id = record.getRecord();
-			String recordName = "";
-			String delim = "";
-			while(id != null){
-				recordName = delim+id.getBase().getName();
-				id = id.getSub();
-				delim = ".";
-			}
-			
-			return new NamedType(recordName);
-		}
-		return null;
-	}
+//	private Type agreeTypeToLustreType(com.rockwellcollins.atc.agree.agree.Type type){
+//		if(type instanceof PrimType){
+//			String typeStr = ((PrimType) type).getString();
+//			switch(typeStr){
+//			case "real": return NamedType.REAL;
+//			case "int": return NamedType.INT;
+//			case "bool": return NamedType.BOOL;
+//			}
+//		}else{
+//			if(!(type instanceof com.rockwellcollins.atc.agree.agree.RecordType)){
+//				throw new AgreeException("Agree does not know to reason about types of class: "+type.getClass().getSimpleName());
+//			}
+//			com.rockwellcollins.atc.agree.agree.RecordType record = (com.rockwellcollins.atc.agree.agree.RecordType)type;
+//			NestedDotID id = record.getRecord();
+//
+//			while(id.getSub() != null){
+//				id = id.getSub();
+//			}
+//			
+//			return new NamedType(AgreeRecordUtils.getIDTypeStr(id.getBase()));
+//		}
+//		return null;
+//	}
 	
 	private List<AgreeStatement> getAssertions(EList<SpecStatement> specs) {
 		List<AgreeStatement> asserts = new ArrayList<>();
@@ -817,7 +817,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr>{
     	while(recId.getSub() != null){
     		recId = recId.getSub();
     	}
-    	String recName = AgreeStateUtils.getIDTypeStr(recId.getBase());
+    	String recName = AgreeRecordUtils.getIDTypeStr(recId.getBase());
     	return new jkind.lustre.RecordExpr(recName, argExprMap);
 
     }
@@ -915,9 +915,9 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr>{
     @Override
     public Expr caseFnCallExpr(FnCallExpr expr) {
         NestedDotID dotId = expr.getFn();
-        NamedElement namedEl = AgreeEmitterUtilities.getFinalNestId(dotId);
+        NamedElement namedEl = AgreeUtils.getFinalNestId(dotId);
      
-        String fnName = AgreeStateUtils.getNodeName(namedEl);
+        String fnName = AgreeRecordUtils.getNodeName(namedEl);
 
         boolean found = false;
         for(Node node : globalNodes){
@@ -929,7 +929,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr>{
 
         if(!found){
         	NestedDotID fn = expr.getFn();
-        	doSwitch(AgreeEmitterUtilities.getFinalNestId(fn));
+        	doSwitch(AgreeUtils.getFinalNestId(fn));
         }
 
         
@@ -966,7 +966,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr>{
     
     @Override
     public Expr caseFnDefExpr(FnDefExpr expr) {
-    	String nodeName = AgreeStateUtils.getNodeName(expr);
+    	String nodeName = AgreeRecordUtils.getNodeName(expr);
     	for(Node node : globalNodes){
     		if(node.id.equals(nodeName)){
     			return null;
@@ -974,7 +974,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr>{
     	}
     	List<VarDecl> inputs = agreeVarsFromArgs(expr.getArgs(), null); 
     	Expr bodyExpr = doSwitch(expr.getExpr());
-    	NamedType outType = AgreeStateUtils.getNamedType(AgreeStateUtils.getRecordTypeName(expr.getType()));
+    	NamedType outType = getNamedType(AgreeRecordUtils.getRecordTypeName(expr.getType(), typeMap, globalTypes));
     	VarDecl outVar = new VarDecl("_outvar", outType);
     	List<VarDecl> outputs = Collections.singletonList(outVar);
     	Equation eq = new Equation(new IdExpr("_outvar"), bodyExpr);
@@ -988,7 +988,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr>{
     public Expr caseNodeDefExpr(NodeDefExpr expr) {
         // System.out.println("Visiting caseNodeDefExpr");
 
-        String nodeName = AgreeStateUtils.getNodeName(expr);
+        String nodeName = AgreeRecordUtils.getNodeName(expr);
         
         for(Node node : globalNodes){
             if(node.id.equals(nodeName)){
@@ -1047,11 +1047,11 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr>{
     public Expr caseGetPropertyExpr(GetPropertyExpr expr) {
 
         NamedElement propName = expr.getProp();
-        NamedElement compName = AgreeStateUtils.namedElFromId(expr.getComponent(), curInst);
+        NamedElement compName = AgreeRecordUtils.namedElFromId(expr.getComponent(), curInst);
         
         Property prop = (Property) propName;
 
-        PropertyExpression propVal = AgreeEmitterUtilities.getPropExpression(compName, prop);
+        PropertyExpression propVal = AgreeUtils.getPropExpression(compName, prop);
 
         if(propVal == null){
             throw new AgreeException("Could not locate property value '"+

@@ -1,8 +1,10 @@
-package com.rockwellcollins.atc.agree.ast;
+package com.rockwellcollins.atc.agree.analysis.ast;
 
 import org.eclipse.emf.ecore.EObject;
 import org.osate.aadl2.instance.ComponentInstance;
 
+import jkind.lustre.NamedType;
+import jkind.lustre.RecordType;
 import jkind.lustre.Type;
 import jkind.lustre.VarDecl;
 

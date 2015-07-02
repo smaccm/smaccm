@@ -39,31 +39,22 @@ import com.rockwellcollins.atc.agree.agree.PrimType;
 import com.rockwellcollins.atc.agree.agree.RecordDefExpr;
 import com.rockwellcollins.atc.agree.agree.RecordType;
 import com.rockwellcollins.atc.agree.agree.ThisExpr;
-import com.rockwellcollins.atc.agree.ast.AgreeASTBuilder;
+import com.rockwellcollins.atc.agree.analysis.ast.AgreeASTBuilder;
 
-public class AgreeStateUtils {
+public class AgreeRecordUtils {
 	
 	private static final String dotChar = "__";
 	private static final Expr initBool = new BoolExpr(false);
 	private static final Expr initReal = new RealExpr(BigDecimal.ZERO);
 	private static final Expr initInt = new IntExpr(BigInteger.ZERO);
 	
-    public static void addAllToRefMap(Map<String, EObject> refs, Map<String, EObject> refMap){
-    	refMap.putAll(refs);
-    }
-	
-    public static void addToRefMap(String refString, EObject reference, AgreeRenaming agreeRename,  Map<String, EObject> refMap){
-    	
-    	String renaming = agreeRename.rename(refString);
-    	refMap.put(renaming, reference);
-    	
-    }
+
     
     public static String getRecordTypeName(com.rockwellcollins.atc.agree.agree.Type type){
     	if(type instanceof PrimType){
     		return ((PrimType) type).getString();
     	}else{
-    		return getIDTypeStr((AgreeEmitterUtilities.getFinalNestId(((RecordType)type).getRecord())));
+    		return getIDTypeStr((AgreeUtils.getFinalNestId(((RecordType)type).getRecord())));
     	}
     }
     
@@ -78,7 +69,7 @@ public class AgreeStateUtils {
     
     public static String getRecordTypeName(NestedDotID recId, Map<NamedElement, String> typeMap,
     		Set<jkind.lustre.RecordType> typeExpressions){
-    	NamedElement finalId = AgreeEmitterUtilities.getFinalNestId(recId);
+    	NamedElement finalId = AgreeUtils.getFinalNestId(recId);
     	return getRecordTypeName(finalId, typeMap, typeExpressions);
     }
     
@@ -123,7 +114,7 @@ public class AgreeStateUtils {
     				typeStr = ((PrimType) argType).getString();
     			}else{
     				NestedDotID nestId = ((RecordType) argType).getRecord();
-    				NamedElement namedEl = AgreeEmitterUtilities.getFinalNestId(nestId);
+    				NamedElement namedEl = AgreeUtils.getFinalNestId(nestId);
     				typeStr = getRecordTypeName(namedEl, typeMap, typeExpressions);
     			}
     			subTypeMap.put(arg.getName(), getNamedType(typeStr));
@@ -289,7 +280,7 @@ public class AgreeStateUtils {
     
     public static NamedElement namedElFromId(EObject obj, ComponentInstance compInst) {
         if (obj instanceof NestedDotID) {
-            return AgreeEmitterUtilities.getFinalNestId((NestedDotID) obj);
+            return AgreeUtils.getFinalNestId((NestedDotID) obj);
         } else {
             assert (obj instanceof ThisExpr);
            

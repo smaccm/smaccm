@@ -1,4 +1,4 @@
-package com.rockwellcollins.atc.agree.ast;
+package com.rockwellcollins.atc.agree.analysis.ast;
 
 import java.util.List;
 
@@ -36,15 +36,15 @@ public class AgreeNode {
 			Expr initialConstraint, AgreeVar clockVar, EObject reference, TimingModel timing,
 			ComponentInstance compinst){
 		this.id = id;
-		this.inputs = inputs;
-		this.outputs = outputs;
-		this.locals = locals;
-		this.connections = connections;
-		this.subNodes = subNodes;
-		this.assertions = assertions;
-		this.assumptions = assumptions;
-		this.guarantees = guarantees;
-		this.lemmas = lemmas;
+		this.inputs = jkind.util.Util.safeList(inputs);
+		this.outputs = jkind.util.Util.safeList(outputs);
+		this.locals = jkind.util.Util.safeList(locals);
+		this.connections = jkind.util.Util.safeList(connections);
+		this.subNodes = jkind.util.Util.safeList(subNodes);
+		this.assertions = jkind.util.Util.safeList(assertions);
+		this.assumptions = jkind.util.Util.safeList(assumptions);
+		this.guarantees = jkind.util.Util.safeList(guarantees);
+		this.lemmas = jkind.util.Util.safeList(lemmas);
 		this.clockConstraint = clockConstraint;
 		this.initialConstraint = initialConstraint;
 		this.clockVar = clockVar;

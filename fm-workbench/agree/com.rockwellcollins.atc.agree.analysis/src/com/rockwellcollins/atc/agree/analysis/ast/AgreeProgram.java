@@ -1,4 +1,4 @@
-package com.rockwellcollins.atc.agree.ast;
+package com.rockwellcollins.atc.agree.analysis.ast;
 
 import java.util.List;
 
@@ -13,9 +13,9 @@ public class AgreeProgram {
 	
 	public AgreeProgram(List<AgreeNode> agreeNodes, List<Node> globalLustreNodes,
 			List<Type> globalTypes, AgreeNode topNode){
-		this.agreeNodes = agreeNodes;
-		this.globalLustreNodes = globalLustreNodes;
-		this.globalTypes = globalTypes;
+		this.agreeNodes = jkind.util.Util.safeList(agreeNodes);
+		this.globalLustreNodes = jkind.util.Util.safeList(globalLustreNodes);
+		this.globalTypes = jkind.util.Util.safeList(globalTypes);
 		this.topNode = topNode;
 	}
 

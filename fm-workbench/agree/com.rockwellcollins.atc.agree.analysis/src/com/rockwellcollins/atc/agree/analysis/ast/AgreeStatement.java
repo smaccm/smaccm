@@ -1,4 +1,4 @@
-package com.rockwellcollins.atc.agree.ast;
+package com.rockwellcollins.atc.agree.analysis.ast;
 
 import org.eclipse.emf.ecore.EObject;
 
