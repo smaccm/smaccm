@@ -25,18 +25,14 @@ public abstract class ExtensionRegistry {
 
 	/** ID of counterexample extractor extention point */
 	public static final String CEX_EXTRACTOR_EXT_ID = "cexextractor";
+	public static final String AGREE_AUTOMATER_EXT_ID = "agreeautomater";
 	private static final String ATT_EXTNAME = "pluginName";
 
-	private static final Map<String, ExtensionRegistry> registries = new HashMap();
+	private static final Map<String, ExtensionRegistry> registries = new HashMap<>();
 
 	/** The extensions in this registry */
 	protected Map<String, ExtensionProxy> extensions;
 
-	/**
-	 * Get the annex parser registry.
-	 *
-	 * @return the single instance of this class.
-	 */
 	public static ExtensionRegistry getRegistry(String extensionId) {
 		ExtensionRegistry registry = registries.get(extensionId);
 
@@ -50,6 +46,8 @@ public abstract class ExtensionRegistry {
 	protected static ExtensionRegistry createRegistry(String extensionId) {
 		if (extensionId == CEX_EXTRACTOR_EXT_ID) {
 			return new CexExtractorRegistry();
+		}else if(extensionId == AGREE_AUTOMATER_EXT_ID){
+			return new AgreeAutomaterRegistry();
 		}
 		return null;
 	}

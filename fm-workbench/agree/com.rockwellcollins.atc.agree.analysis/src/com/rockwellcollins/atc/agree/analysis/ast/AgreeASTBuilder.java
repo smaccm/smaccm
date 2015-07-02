@@ -14,6 +14,7 @@ import java.util.Map.Entry;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.jface.action.Action;
 import org.osate.aadl2.AadlPackage;
 import org.osate.aadl2.AnnexSubclause;
 import org.osate.aadl2.BooleanLiteral;
@@ -118,6 +119,11 @@ import com.rockwellcollins.atc.agree.analysis.AgreeVarDecl;
 import com.rockwellcollins.atc.agree.analysis.MNSynchronyElement;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeConnection.ConnectionType;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeNode.TimingModel;
+import com.rockwellcollins.atc.agree.analysis.extentions.AgreeAutomater;
+import com.rockwellcollins.atc.agree.analysis.extentions.AgreeAutomaterRegistry;
+import com.rockwellcollins.atc.agree.analysis.extentions.CexExtractor;
+import com.rockwellcollins.atc.agree.analysis.extentions.CexExtractorRegistry;
+import com.rockwellcollins.atc.agree.analysis.extentions.ExtensionRegistry;
 import com.rockwellcollins.atc.agree.analysis.lustre.visitors.IdGatherer;
 
 public class AgreeASTBuilder extends AgreeSwitch<Expr>{
@@ -143,7 +149,18 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr>{
 		//have to convert the types. The reason we use Record types in the first
 		//place rather than the more general types is so we can check set containment
 		//easily
-		return new AgreeProgram(agreeNodes, new ArrayList<>(globalNodes), new ArrayList<>(globalTypes), topNode);
+		AgreeProgram program = new AgreeProgram(agreeNodes, new ArrayList<>(globalNodes), new ArrayList<>(globalTypes), topNode);
+	
+		//go through the extension registries and transform the program
+		AgreeAutomaterRegistry aAReg = (AgreeAutomaterRegistry) ExtensionRegistry
+                .getRegistry(ExtensionRegistry.AGREE_AUTOMATER_EXT_ID);
+        List<AgreeAutomater> automaters = aAReg.getAgreeAutomaters();
+		
+        for (AgreeAutomater aa : automaters) {
+           program = aa.transform(program);
+        }
+		
+		return program;
 	}
 	
 	private List<AgreeNode> gatherNodes(AgreeNode node){
