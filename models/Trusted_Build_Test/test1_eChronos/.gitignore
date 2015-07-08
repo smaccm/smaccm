@@ -1,5 +1,4 @@
 *.camkes
 *.ramses-log*
-gen
 instances
 make_template
