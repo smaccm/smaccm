@@ -37,7 +37,7 @@ writeTrampoline(name, flihName) ::= <<
 >>
 
 writeDispatcherTrampoline(dispatcher) ::= <<
-$writeTrampoline(dispatcher.name, dispatcher.eChronosIrqSmaccmFlihName)$
+$writeTrampoline(dispatcher.name, dispatcher.firstLevelInterruptHandler)$
 >>
 
 writeExternalIsrTrampoline(externalIsr) ::= <<
@@ -48,7 +48,7 @@ writeTrampolines(model) ::= <<
 $model.irqDispatchers:writeDispatcherTrampoline()$
 $if(model.threadCalendar.hasDispatchers && 
 	model.generateSystickIrq)$
-$writeTrampoline("systick", model.threadCalendar.calendarFnName)$
+$writeTrampoline("systick", "smaccm_tick_irq")$
 $endif$
 $model.externalISRs:writeExternalIsrTrampoline()$
 >>
@@ -67,11 +67,7 @@ writeInterruptHandlers(model) ::= <<
     $model.irqDispatchers:writeInterruptHandler()$
 >>
 
-writeSignalLabels(model) ::= <<
-<!-- TBD: since each task will want to define its own signals, I'm not sure
-     whether we want to define signal labels or not; I'm also not sure whether
-     this is required by eChronos --> 
->>
+writeSignalLabels(model) ::= << >>
 
 writeTask(threadImpl) ::= <<
 	<task>
@@ -84,8 +80,11 @@ writeTask(threadImpl) ::= <<
 
 writeTasks(model) ::= <<
 $model.ActiveThreadImplementations:writeTask()$
-$if(model.threadCalendar.hasDispatchers)$
-	<!-- NOTE: the priority is not set correctly at this point; this will need to be revised -->
+>>
+
+/*
+ * $if(model.threadCalendar.hasDispatchers)$
+	<!-- NOTE: the threadCalendar priority is currently hard-coded.  We should add a user property -->
 	<task>
 		<name>smaccm_periodic_dispatcher</name>
 		<function>smaccm_periodic_dispatcher</function>
@@ -95,8 +94,8 @@ $if(model.threadCalendar.hasDispatchers)$
 $else$
 	<!-- No periodic dispatcher thread -->
 $endif$
->>
-
+ 
+ */
 writeMutex(name) ::= <<
   <mutex>
 	<name>$name$</name>

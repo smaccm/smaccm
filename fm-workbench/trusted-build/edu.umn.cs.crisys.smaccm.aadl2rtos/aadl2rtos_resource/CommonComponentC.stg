@@ -684,12 +684,12 @@ registerIRQs(dispatcher) ::= << <if(dispatcher.isIRQ)><dispatcher.name>_reg_call
 
 dispatcherComponentMainFunction(threadImpl) ::= <<
 /************************************************************************
- * run()
+ * <osSpecificThreadEntrypoint(threadImpl)>
  * Main active thread function.
  * 
  ************************************************************************/
 
-int run() {
+int <osSpecificThreadEntrypoint(threadImpl)>() {
 	// port initialization routines (if any)... 
 	<threadImpl.portList:portInitializer()>
 	

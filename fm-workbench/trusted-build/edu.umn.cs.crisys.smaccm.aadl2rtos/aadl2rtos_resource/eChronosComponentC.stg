@@ -6,6 +6,7 @@ import "CommonComponentC.stg"
  */
 // import "eChronosCNames.stg"
 // import does not override declarations.  Why?
+osSpecificThreadEntrypoint(threadImpl) ::= "<threadImpl.threadImplMainFnName>"
 
 incomingPortWriterName(port) ::= "smaccm_<port.qualifiedName>_<port.type.writerFn>"
 

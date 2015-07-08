@@ -95,3 +95,7 @@ osSpecificIncludeFiles(threadImpl) ::= <<
 <threadImpl.osSpecificIncludeFiles>
 >>
 
+osSpecificThreadEntrypoint(threadImpl) ::= <<
+<genericFailure("osSpecificThreadEntrypoint")>
+<threadImpl.osSpecificThreadEntrypoint>
+>>

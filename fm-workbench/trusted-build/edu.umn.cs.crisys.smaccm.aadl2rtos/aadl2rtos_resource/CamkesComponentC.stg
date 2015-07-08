@@ -13,6 +13,8 @@ outgoingPortWriterName(destPort, srcPort) ::= <<
 <srcPort.qualifiedName>_<srcPort.type.writerFn>
 >>
 
+osSpecificThreadEntrypoint(threadImpl) ::= "run"
+
 incomingActiveThreadDispatchName(dispatcher) ::= "<dispatcher.qualifiedName>_<dispatcher.type.writerFn>"
 outgoingActiveThreadDispatchName(dispatcher) ::= "<incomingActiveThreadDispatchName(dispatcher)>"
 

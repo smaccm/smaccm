@@ -41,11 +41,7 @@ bool <incomingPortWriterName(port)>(<port.type.camkesInputType.name> arg);
 */
 
 writerDecl(port) ::= <<
-bool <incomingPortWriterName(port)><if(port.hasData)>(<port.type.camkesInputType.name> arg);<else>();<endif> 
->>
-
-periodicDispatcherDecl(dispatcher) ::= <<
-void <outgoingActiveThreadDispatchName(dispatcher)>(<dispatcher.type.aadlInputType.name> arg); 
+bool <incomingActiveThreadDispatchName(port)><if(port.hasData)>(const <port.type.camkesInputType.name> arg);<else>();<endif> 
 >>
 
 /*
@@ -77,6 +73,12 @@ headerBody(model) ::= <<
 #include \<stddef.h>
 #include \<stdint.h>
 #include <\u003C><model.systemTypeHeaderName><\u003E>
+#include <\u003C>rtos-kochab.h<\u003E>
+
+// to initialize periodic dispatcher.  Call from main() before
+// starting OS.
+
+bool initialize_periodic_dispatcher(); 
 
    <model.activeThreadImplementations:activeThreadDecls()>
    <model.passiveThreadImplementations:passiveThreadDecls()>

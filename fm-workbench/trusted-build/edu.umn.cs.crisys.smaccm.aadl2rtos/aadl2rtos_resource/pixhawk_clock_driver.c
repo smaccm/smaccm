@@ -1,8 +1,5 @@
 
-#include <autoconf.h>
-#include <stdio.h>
 #include <clock_driver.h>
-#include <dispatch_periodic.h>
 
 
 /**************************************************************************
@@ -29,8 +26,6 @@ uint32_t the_interval = 0;
 
 void clock_init() { }
 
-void clock_init() { }
-
 void clock_set_interval_in_ms(uint32_t interval) {
 
    /* The SysTick Calibration Value Register is a read-only register that contains
@@ -41,7 +36,8 @@ void clock_set_interval_in_ms(uint32_t interval) {
 
    uint32_t cav_value = SYST_CAV_READ();
    uint32_t ten_ms_val = cav_value & 0x00ffffff ;   // number of cycles per 10ms
-   uint32_t one_ms_val = cav_value / 10;            // number of cycles per 1ms
+   // MWW: fixed (7/6/2015)
+   uint32_t one_ms_val = ten_ms_val / 10;            // number of cycles per 1ms
 
    uint32_t mult_of_ten_ms = interval / 10;
    uint32_t remainder_of_ten_ms = interval % 10;

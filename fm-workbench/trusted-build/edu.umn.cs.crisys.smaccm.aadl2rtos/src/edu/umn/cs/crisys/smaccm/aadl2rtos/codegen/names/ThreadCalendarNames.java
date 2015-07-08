@@ -73,7 +73,7 @@ public class ThreadCalendarNames {
     return "smaccm_" + getPeriodicDispatcherComponentName() + ".c";
   }
   
-  public String getPeriodicDispatcherCamkesHFileName() {
+  public String getPeriodicDispatcherHFileName() {
     return getPeriodicDispatcherComponentName() + ".h";
   }
 

@@ -13,7 +13,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -29,7 +28,6 @@ import edu.umn.cs.crisys.smaccm.aadl2rtos.util.Util;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.names.ModelNames;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.names.PortNames;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.names.ThreadImplementationNames;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.names.TypeNames;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.*;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.SharedData;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.ThreadImplementation;
@@ -85,7 +83,14 @@ public abstract class CodeGeneratorBase {
 
 	// so write threadName_write_portName for each port.
 
-	public CodeGeneratorBase(Logger log, Model model, File aadlDirectory, File outputDir, 
+  protected abstract File getGlobalIncludeDirectory(File rootDirectory); 
+  protected abstract File getGlobalTemplateDirectory(File rootDirectory);
+  protected abstract File getGlobalComponentDirectory(File rootDirectory); 
+  protected abstract File getComponentDirectory(File globalComponentDirectory, String name);
+  protected abstract File getComponentHeaderDirectory(File ComponentDirectory);
+  protected abstract File getComponentSourceDirectory(File ComponentDirectory); 
+
+  public CodeGeneratorBase(Logger log, Model model, File aadlDirectory, File outputDir, 
 	    String osPrefix) {
 		this.log = log;
 		this.model = model;
@@ -110,15 +115,13 @@ public abstract class CodeGeneratorBase {
 		
 
 		// Create directories
-		componentsDirectory = 
-		    new File(outputDirectory, "components");
+		componentsDirectory = getGlobalComponentDirectory(outputDirectory); 
+		componentsDirectory.mkdirs(); 
 		
-		includeDirectory = 
-		    new File(outputDirectory, "include");
+		includeDirectory = getGlobalIncludeDirectory(outputDirectory);
 		includeDirectory.mkdirs();
 
-    makeTemplateDirectory = 
-       new File(outputDirectory, "make_template");
+    makeTemplateDirectory = getGlobalTemplateDirectory(outputDirectory);
     makeTemplateDirectory.mkdirs();
 
     DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
@@ -309,7 +312,65 @@ public abstract class CodeGeneratorBase {
 	  }
 	  
 	}
+
+	/* 
+	 * 
+	 * The clock driver is a generic interface for managing the clock interrupt.
+	 * This is no longer required in CAmkES due to the introduction of timer components.
+	 * 
+	 */
 	
+  protected void createClockDriver(File srcDirectory, File includeDirectory) throws Aadl2RtosFailure {
+    
+    String concrete_driver = null; 
+    if (model.getHWTarget().equalsIgnoreCase("QEMU")) {
+      concrete_driver = "qemu_clock_driver.c";
+    } else if (model.getHWTarget().equalsIgnoreCase("ODROID")) {
+      concrete_driver = "odroid_clock_driver.c";
+    } else if (model.getHWTarget().equalsIgnoreCase("PIXHAWK")) {
+      concrete_driver = "pixhawk_clock_driver.c";
+    }
+    else {
+      log.warn("Clock driver for HW platform: " + model.getHWTarget() + " is currently unimplemented.  " + 
+          "Please implement interface as specified in clock_driver.h for this platform, and place the resulting .c file in the dispatch_periodic directory.");
+    }
+    
+    InputStream cSrcFileStream = null;
+    InputStream hSrcFileStream = null;
+    OutputStream cDstFileStream = null;
+    OutputStream hDstFileStream = null;
+    
+    // write the .c / .h files to the destination component
+    try {
+      try {
+        if (concrete_driver != null) {
+          File cdest = new File(srcDirectory, concrete_driver);
+          cSrcFileStream = Util.findConfigFile(concrete_driver);
+          cDstFileStream = new FileOutputStream(cdest);
+          copyFile(cSrcFileStream, cDstFileStream);
+        }
+        
+        File hdest = new File(includeDirectory, "clock_driver.h");
+        hSrcFileStream = Util.findConfigFile("clock_driver.h");
+        hDstFileStream = new FileOutputStream(hdest); 
+        copyFile(hSrcFileStream, hDstFileStream);
+        
+      } catch (IOException ioe) {
+        log.error("IOException occurred during clock driver write: " + ioe);
+        log.error("Continuing anyway...");
+        // throw new Aadl2RtosFailure();
+      } finally {
+        if (cSrcFileStream != null) { cSrcFileStream.close(); }
+        if (hSrcFileStream != null) { hSrcFileStream.close(); }
+        if (cDstFileStream != null) { cDstFileStream.close(); }
+        if (hDstFileStream != null) { hDstFileStream.close(); }
+      }
+    } catch (IOException ioe) {
+      log.error("IOException occurred during clock driver close: " + ioe);
+      throw new Aadl2RtosFailure();
+    }
+  }
+
 	protected abstract void osSpecificComponentFiles(ThreadImplementation ti, 
 	    File componentDirectory, 
 	    File srcDirectory, File includeDirectory) throws Aadl2RtosFailure;
@@ -318,9 +379,9 @@ public abstract class CodeGeneratorBase {
 	  
 	  String name = ti.getNormalizedName();
 	  
-	  File componentDirectory = new File(componentsDirectory, name);
-	  File srcDirectory = new File(componentDirectory, "src");
-	  File includeDirectory = new File(componentDirectory, "include");
+	  File componentDirectory = getComponentDirectory(componentsDirectory, name);
+	  File srcDirectory = getComponentSourceDirectory(componentDirectory);
+	  File includeDirectory = getComponentHeaderDirectory(componentDirectory);
     srcDirectory.mkdirs();
 	  includeDirectory.mkdirs();
     
