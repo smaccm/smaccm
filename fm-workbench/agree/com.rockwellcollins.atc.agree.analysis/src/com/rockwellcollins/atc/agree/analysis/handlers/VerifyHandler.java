@@ -317,7 +317,7 @@ public abstract class VerifyHandler extends AadlHandler {
     					}
     				} catch (JKindException e) {
     					System.out.println("******** JKindException Text ********");
-    					e.printStackTrace();
+    					e.printStackTrace(System.out);
     					System.out.println("******** JKind Output ********");
     					System.out.println(result.getText());
     					System.out.println("******** Agree Lustre ********");
