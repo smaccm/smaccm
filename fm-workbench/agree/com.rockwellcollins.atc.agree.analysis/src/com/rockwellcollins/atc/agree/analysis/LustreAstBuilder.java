@@ -14,6 +14,8 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.xtext.util.Tuples;
 import org.eclipse.xtext.util.Pair;
+import org.osate.aadl2.ComponentClassifier;
+import org.osate.aadl2.ComponentImplementation;
 import org.osate.aadl2.instance.ComponentInstance;
 
 import com.rockwellcollins.atc.agree.agree.Arg;
@@ -89,7 +91,25 @@ public class LustreAstBuilder {
 			equations.add(new Equation(new IdExpr(guarName), guarantee.expr));
 			properties.add(guarName);
 		}
-		
+
+		//perhaps we should break out eq statements into implementation equations
+		//and type equations. This would clear this up
+		for(AgreeStatement statement : topNode.assertions){
+			if(statement.reference instanceof EqStatement ||
+					statement.reference instanceof PropertyStatement){
+
+			}
+			EObject container = statement.reference.eContainer();
+			while(!(container instanceof ComponentClassifier)){
+				container = container.eContainer();
+			}
+			if(container instanceof ComponentImplementation){
+				continue; //throw away eqs and property statements in the implementation
+			}
+
+			assertions.add(statement.expr);
+		}
+
 		List<String> inputStrs = new ArrayList<>();
 		for(AgreeVar var : topNode.inputs){
 			inputs.add(var);
@@ -236,9 +256,27 @@ public class LustreAstBuilder {
 //		for(AgreeStatement guarantee : agreeNode.lemmas){
 //			histConj = new BinaryExpr(histConj, BinaryOp.AND, guarantee.expr);
 //		}
-		
+
 		if(withAssertions){
 			for(AgreeStatement assertion : agreeNode.assertions){
+				stuffConj = new BinaryExpr(stuffConj, BinaryOp.AND, assertion.expr);
+			}
+		}else{
+			//perhaps we should break out eq statements into implementation equations
+			//and type equations. This would clear this up
+			for(AgreeStatement assertion : agreeNode.assertions){
+				if(assertion.reference instanceof EqStatement ||
+						assertion.reference instanceof PropertyStatement){
+
+				}
+				EObject container = assertion.reference.eContainer();
+				while(!(container instanceof ComponentClassifier)){
+					container = container.eContainer();
+				}
+				if(container instanceof ComponentImplementation){
+					continue; //throw away eqs and property statements in the implementation
+				}
+
 				stuffConj = new BinaryExpr(stuffConj, BinaryOp.AND, assertion.expr);
 			}
 		}
@@ -363,11 +401,13 @@ public class LustreAstBuilder {
 		}
 		
 		int j = 0;
-		for(AgreeStatement statement : agreeNode.lemmas){
-			String inputName = lemmaSuffix+j++;
-			inputs.add(new AgreeVar(inputName, NamedType.BOOL, statement.reference, agreeNode.compInst));
-			IdExpr lemmaId = new IdExpr(inputName);
-			assertions.add(new BinaryExpr(lemmaId, BinaryOp.EQUAL, statement.expr));
+		if(monolithic){
+			for(AgreeStatement statement : agreeNode.lemmas){
+				String inputName = lemmaSuffix+j++;
+				inputs.add(new AgreeVar(inputName, NamedType.BOOL, statement.reference, agreeNode.compInst));
+				IdExpr lemmaId = new IdExpr(inputName);
+				assertions.add(new BinaryExpr(lemmaId, BinaryOp.EQUAL, statement.expr));
+			}
 		}
 		
 		String assumeHistName = assumeSuffix+"__HIST";
@@ -385,8 +425,10 @@ public class LustreAstBuilder {
 		for(AgreeStatement statement : agreeNode.guarantees){
 			guarConjExpr = new BinaryExpr(statement.expr, BinaryOp.AND, guarConjExpr);
 		}
+		if(monolithic){
 		for(AgreeStatement statement : agreeNode.lemmas){
 			guarConjExpr = new BinaryExpr(statement.expr, BinaryOp.AND, guarConjExpr);
+		}
 		}
 		assertions.add(new BinaryExpr(assumeHistId, BinaryOp.IMPLIES, guarConjExpr));
 		
@@ -397,6 +439,17 @@ public class LustreAstBuilder {
 			if(monolithic || 
 					statement.reference instanceof EqStatement ||
 					statement.reference instanceof PropertyStatement){
+				
+				if(!monolithic){
+					EObject container = statement.reference.eContainer();
+					while(!(container instanceof ComponentClassifier)){
+						container = container.eContainer();
+					}
+					if(container instanceof ComponentImplementation){
+						continue; //throw away eqs and property statements in the implementation
+					}
+				}
+				
 				assertions.add(statement.expr);
 			}
 		}
@@ -450,7 +503,7 @@ public class LustreAstBuilder {
 			
 			Node lustreNode = addSubNodeLustre(agreeNode, nodePrefix, flatNode, monolithic);
 			
-			addInputsAndOutputs(inputs, outputs, flatNode, lustreNode, prefix);
+			addInputsAndOutputs(inputs, outputs, flatNode, lustreNode, prefix, monolithic);
 			
 			addCondactCall(agreeNode, nodePrefix, inputs, assertions,
 					flatNode, prefix, clockExpr, lustreNode);
@@ -601,7 +654,7 @@ public class LustreAstBuilder {
 
 	private static void addInputsAndOutputs(List<AgreeVar> inputs,
 			List<AgreeVar> outputs, AgreeNode subAgreeNode, Node lustreNode,
-			String prefix) {
+			String prefix, boolean monolithic) {
 		int varCount = 0;
 		for(AgreeVar var : subAgreeNode.inputs){
 			varCount++;
@@ -630,10 +683,12 @@ public class LustreAstBuilder {
 		}
 		
 		int j = 0;
-		for(AgreeStatement statement : subAgreeNode.lemmas){
-			varCount++;
-			AgreeVar output = new AgreeVar(prefix+lemmaSuffix+j++, NamedType.BOOL, statement.reference, subAgreeNode.compInst);
-			outputs.add(output);
+		if(monolithic){
+			for(AgreeStatement statement : subAgreeNode.lemmas){
+				varCount++;
+				AgreeVar output = new AgreeVar(prefix+lemmaSuffix+j++, NamedType.BOOL, statement.reference, subAgreeNode.compInst);
+				outputs.add(output);
+			}
 		}
 		
 		inputs.add(subAgreeNode.clockVar);

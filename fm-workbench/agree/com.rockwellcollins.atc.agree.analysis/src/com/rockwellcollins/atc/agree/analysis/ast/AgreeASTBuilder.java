@@ -195,18 +195,19 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr>{
 		ComponentClassifier compClass = compInst.getComponentClassifier();
 		if(compClass instanceof ComponentImplementation){
 			AgreeContractSubclause annex = getAgreeAnnex(compClass);
+			
+			for(ComponentInstance subInst : compInst.getComponentInstances()){
+				curInst = subInst;
+				AgreeNode subNode = getAgreeNode(subInst);
+				if(subNode != null){
+					foundSubNode = true;
+					subNodes.add(subNode);
+				}
+			}
+			boolean latched = false;
 			if(annex != null){
 				hasDirectAnnex = true;
 				AgreeContract contract = (AgreeContract) annex.getContract();
-
-				for(ComponentInstance subInst : compInst.getComponentInstances()){
-					curInst = subInst;
-					AgreeNode subNode = getAgreeNode(subInst);
-					if(subNode != null){
-						foundSubNode = true;
-						subNodes.add(subNode);
-					}
-				}
 				
 				curInst = compInst;
 				assertions.addAll(getAssertions(contract.getSpecs()));
@@ -216,13 +217,20 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr>{
 				//the clock constraints contain other nodes that we add
 				clockConstraint = getClockConstraint(contract.getSpecs(), subNodes);
 				timing = getTimingModel(contract.getSpecs());
-				
-				connections.addAll(getConnections(((ComponentImplementation) compClass).getAllConnections(),
-						compInst, subNodes, contract.getSpecs()));
 
 				outputs.addAll(getEquationVars(contract.getSpecs(), compInst));
-				//make compClass the type so we can get it's other contract elements
+				
+				for(SpecStatement spec : contract.getSpecs()){
+					if(spec instanceof LatchedStatement){
+						latched = true;
+						break;
+					}
+				}
+				
 			}
+			connections.addAll(getConnections(((ComponentImplementation) compClass).getAllConnections(),
+					compInst, subNodes, latched));
+			//make compClass the type so we can get it's other contract elements
 			compClass = ((ComponentImplementation) compClass).getType();
 		}
 		curInst = compInst;
@@ -438,16 +446,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr>{
 	}
 
 	private List<AgreeConnection> getConnections(EList<Connection> connections, 
-			ComponentInstance compInst, List<AgreeNode> subNodes, EList<SpecStatement> specs) {
-		
-		//figure out if this is latched
-		boolean latched = false;
-		for(SpecStatement spec : specs){
-			if(spec instanceof LatchedStatement){
-				latched = true;
-				break;
-			}
-		}
+			ComponentInstance compInst, List<AgreeNode> subNodes, boolean latched) {
 		
 		Property commTimingProp = EMFIndexRetrieval.getPropertyDefinitionInWorkspace(
 				OsateResourceUtil.getResourceSet(), "Communication_Properties::Timing");
