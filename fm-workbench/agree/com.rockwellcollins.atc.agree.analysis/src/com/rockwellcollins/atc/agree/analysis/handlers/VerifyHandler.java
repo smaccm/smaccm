@@ -316,8 +316,11 @@ public abstract class VerifyHandler extends AadlHandler {
     						api.execute(program, result, subMonitor);
     					}
     				} catch (JKindException e) {
+    					System.out.println("******** JKindException Text ********");
+    					e.printStackTrace(System.out);
+    					System.out.println("******** JKind Output ********");
     					System.out.println(result.getText());
-    					System.out.println("******** HERE IS THE LUSTRE ********");
+    					System.out.println("******** Agree Lustre ********");
     					System.out.println(program);
     					break;
     				}
