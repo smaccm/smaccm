@@ -34,10 +34,9 @@ dispatcherMainInitializeLockStmt(threadImpl) ::= "<threadImpl.camkesDispatcherLo
 
 dispatcherMainLockWaitStmt(threadImpl) ::= "<threadImpl.camkesDispatcherLockStmt>"	
 
-dispatcherMainLockReleaseStmt(threadImpl) ::= "<threadImpl.camkesDispatcherUnlockStmt>"
-
-dispatcherIsrMainLockReleaseStmt(threadImpl) ::= "<dispatcherMainLockReleaseStmt(threadImpl)>"
+dispatcherMainLockReleaseStmt(dispatcher) ::= "<dispatcher.threadImplementation.camkesDispatcherUnlockStmt>"
 
 osSpecificIncludeFiles(threadImpl) ::= <<
+#include <\u003C>string.h<\u003E>
 #include <\u003C><threadImpl.componentCamkesHFileName><\u003E>
 >>

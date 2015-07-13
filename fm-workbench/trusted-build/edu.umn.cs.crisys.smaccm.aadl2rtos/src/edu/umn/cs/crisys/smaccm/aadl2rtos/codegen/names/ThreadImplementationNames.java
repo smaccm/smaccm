@@ -262,6 +262,21 @@ public class ThreadImplementationNames {
 	  return (ModelNames.getEChronosPrefix() + "_TASK_ID_" + this.getNormalizedName()).toUpperCase();
   }
   
+  public String getEChronosDispatchSignal() {
+    return ModelNames.getEChronosDispatchSignal(); 
+  }
+  
+  public String getEChronosDispatchSignalConst() {
+    return (ModelNames.getEChronosPrefix() + "_SIGNAL_ID_" + this.getEChronosDispatchSignal()).toUpperCase();
+  }
+  public String getEChronosInterruptSignal() {
+    return this.getNormalizedName() + "_dispatch_interrupt";
+  }
+  
+  public String getEChronosInterruptSignalConst() {
+    return (ModelNames.getEChronosPrefix() + "_INTERRUPT_EVENT_ID_" + this.getEChronosInterruptSignal()).toUpperCase();
+  }
+
   public List<String> getExternalMutexes() {
     return ti.getExternalMutexList();
   }

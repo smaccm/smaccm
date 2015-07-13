@@ -80,14 +80,9 @@ dispatcherMainLockWaitStmt(threadImpl) ::= <<
 <threadImpl.dispatcherMainLockWaitStmtDoesntExist>
 >>
 
-dispatcherMainLockReleaseStmt(threadImpl) ::= <<
+dispatcherMainLockReleaseStmt(dispatcher, threadImpl) ::= <<
 <genericFailure("dispatcherMainLockReleaseStmt")>
 <threadImpl.dispatcherMainLockReleaseStmtDoesntExist>
->>
-
-dispatcherIsrMainLockReleaseStmt(threadImpl) ::= <<
-<genericFailure("dispatcherIsrMainLockReleaseStmt")>
-<threadImpl.dispatcherIsrMainLockReleaseStmtDoesntExist>
 >>
 
 osSpecificIncludeFiles(threadImpl) ::= <<
