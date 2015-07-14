@@ -38,15 +38,14 @@ portDispatcherUnlock(dispatcher) ::= <<
 dispatcherMainInitializeLockStmt(threadImpl) ::= " "
 
 dispatcherMainLockWaitStmt(threadImpl) ::= <<
-	rtos_signal_wait(1);
+	rtos_signal_wait(<threadImpl.eChronosDispatchSignalConst>);
 >>
 
-dispatcherMainLockReleaseStmt(threadImpl) ::= <<
-	rtos_signal_send(<threadImpl.eChronosTaskIdConst>, 1);
->>
-
-dispatcherIsrMainLockReleaseStmt(threadImpl) ::= <<
-	rtos_interrupt_event_raise(<threadImpl.interruptEventIdConst>);
+dispatcherMainLockReleaseStmt(dispatcher) ::= <<
+	<if(dispatcher.isIRQ || dispatcher.isPeriodic)>
+	rtos_interrupt_event_raise(<dispatcher.threadImplementation.eChronosInterruptSignalConst>);<else>
+	rtos_signal_send(<dispatcher.threadImplementation.eChronosTaskIdConst>, <dispatcher.threadImplementation.eChronosDispatchSignalConst>);
+	<endif>
 >>
 
 osSpecificIncludeFiles(threadImpl) ::= <<

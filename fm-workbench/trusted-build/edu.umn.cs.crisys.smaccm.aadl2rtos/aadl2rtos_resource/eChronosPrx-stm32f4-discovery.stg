@@ -32,7 +32,7 @@ prxBody(model) ::= <<
       
       <signal_labels>
         <signal_label>
-          <name>smaccm_dispatcher</name>
+          <name>$model.eChronosDispatchSignal$</name>
         </signal_label>
       	$writeSignalLabels(model)$
       </signal_labels>

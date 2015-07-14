@@ -210,4 +210,8 @@ public class ModelNames {
   public String getCamkesTimeServerAadlThreadMinIndex() {
     return Integer.toString(m.getCamkesTimeServerAadlThreadMinIndex());
   }
+  
+  public static String getEChronosDispatchSignal() {
+    return "smaccm_dispatcher";
+  }
 }

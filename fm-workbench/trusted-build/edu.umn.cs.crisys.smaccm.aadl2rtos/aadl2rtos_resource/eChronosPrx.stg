@@ -104,7 +104,7 @@ writeMutex(name) ::= <<
 
 // Fill in more stuff HERE!
 writeInputPortMutex(port) ::= << 
-	$writeMutex(port.mutex)$
+$writeMutex(port.mutex)$
 >> 
 
 writeActiveThreadMutexes(threadImpl) ::= <<
@@ -141,11 +141,11 @@ writeSemaphores(model) ::= <<
 
 
 writeInterruptEvent(name, taskName, signalSet) ::= <<
-	<interrupt_event>
-		<name>$name$</name>
-		<task>$taskName$</task>
-		<sig_set>$signalSet$</sig_set>
-	</interrupt_event>
+<interrupt_event>
+	<name>$name$</name>
+	<task>$taskName$</task>
+	<sig_set>$signalSet$</sig_set>
+</interrupt_event>
 >>
 
 writeExternalIrqEvent(externalIrqEvent) ::= <<
@@ -154,15 +154,21 @@ $writeInterruptEvent(
 	externalIrqEvent.taskName,
 	externalIrqEvent.signalSet)$
 >>
-
+/*
 writeActiveThreadIrqDispatcher(dispatcher) ::= << 
 $if(dispatcher.isIRQ)$
-$writeInterruptEvent(dispatcher.name, dispatcher.threadImplementation.normalizedName, {1})$
+$writeInterruptEvent(dispatcher.name, dispatcher.threadImplementation.normalizedName, "smaccm_dispatcher")$
+$elseif(dispatcher.isPeriodic)$
+$writeInterruptEvent(dispatcher.threadImplementation.eChronosInterruptSignal, dispatcher.threadImplementation.normalizedName, "smaccm_dispatcher")$
 $endif$
 >>
 
+
+ $threadImpl.dispatchers:writeActiveThreadIrqDispatcher()$
+ * 
+ */
 writeActiveThreadIrqDispatchers(threadImpl) ::= <<
-$threadImpl.dispatchers:writeActiveThreadIrqDispatcher()$
+$writeInterruptEvent(threadImpl.eChronosInterruptSignal, threadImpl.normalizedName, threadImpl.eChronosDispatchSignal)$
 >>
 
 writeInterruptEvents(model) ::= <<
