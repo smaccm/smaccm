@@ -270,6 +270,19 @@ public class AgreeUtils {
 		return null;
 	}
 
+	
+	public static boolean containsTransitiveAgreeAnnex(ComponentInstance compInst){
+		if(containsAgreeAnnex(compInst.getSubcomponent())){
+			return true;
+		}
+		EList<ComponentInstance> transitiveSubs = compInst.getAllComponentInstances();
+		for(ComponentInstance transInst : transitiveSubs){
+			if(AgreeUtils.containsAgreeAnnex(transInst.getSubcomponent())){
+				return true;
+			}
+		}
+		return false;
+	}
 
 	public static boolean containsAgreeAnnex(Subcomponent subComp) {
 

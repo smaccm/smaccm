@@ -58,10 +58,10 @@ import jkind.lustre.VarDecl;
 
 public class LustreAstBuilder {
 	
-	private static List<Node> nodes;
-	private static final String guarSuffix = "__GUARANTEE";
-	private static final String assumeSuffix = "__ASSUME";
-	private static final String lemmaSuffix = "__LEMMA";
+	protected static List<Node> nodes;
+	protected static final String guarSuffix = "__GUARANTEE";
+	protected static final String assumeSuffix = "__ASSUME";
+	protected static final String lemmaSuffix = "__LEMMA";
 	
 	public static Program getRealizabilityLustreProgram(AgreeProgram agreeProgram){
 		
@@ -234,7 +234,7 @@ public class LustreAstBuilder {
 		return programs;
 	}
 	
-    private static Node getConsistencyLustreNode(AgreeNode agreeNode, boolean withAssertions){
+    protected static Node getConsistencyLustreNode(AgreeNode agreeNode, boolean withAssertions){
 
 		List<Expr> assertions = new ArrayList<>();
 		List<VarDecl> locals = new ArrayList<>();
@@ -340,13 +340,13 @@ public class LustreAstBuilder {
 		return location.substring(dotIndex+1);
 	}
 
-	private static Equation getHist(IdExpr histId, Expr expr){
+	protected static Equation getHist(IdExpr histId, Expr expr){
 		Expr preHist = new UnaryExpr(UnaryOp.PRE, histId);
 		Expr preAndNow = new BinaryExpr(preHist, BinaryOp.AND, expr);
 		return new Equation(histId, new BinaryExpr(expr, BinaryOp.ARROW, preAndNow));
 	}
 	
-	private static Node getInputLatchingNode(IdExpr clockExpr, List<VarDecl> inputs, String nodeName){
+	protected static Node getInputLatchingNode(IdExpr clockExpr, List<VarDecl> inputs, String nodeName){
 		List<VarDecl> outputs = new ArrayList<>();
 		List<VarDecl> locals = new ArrayList<>();
 		List<Equation> equations = new ArrayList<>();
@@ -383,7 +383,7 @@ public class LustreAstBuilder {
 		return new Node(nodeName, inputs, outputs, locals, equations);
 	}
 	
-	private static Node getLustreNode(AgreeNode agreeNode, String nodePrefix, boolean monolithic){
+	protected static Node getLustreNode(AgreeNode agreeNode, String nodePrefix, boolean monolithic){
 		
 		List<VarDecl> inputs = new ArrayList<>();
 		List<VarDecl> locals = new ArrayList<>();
@@ -475,7 +475,7 @@ public class LustreAstBuilder {
 		return new Node(nodePrefix+agreeNode.id, inputs, outputs, locals, equations);
 	}
 	
-	private static AgreeNode flattenAgreeNode(AgreeNode agreeNode, String nodePrefix, boolean monolithic) {
+	protected static AgreeNode flattenAgreeNode(AgreeNode agreeNode, String nodePrefix, boolean monolithic) {
 		
 		List<AgreeVar> inputs = new ArrayList<>();
 		List<AgreeVar> outputs = new ArrayList<>();
@@ -536,7 +536,7 @@ public class LustreAstBuilder {
 				new BoolExpr(true), agreeNode.initialConstraint, agreeNode.clockVar, agreeNode.reference, null, agreeNode.compInst);
 	}
 
-	private static void addConnectionConstraints(AgreeNode agreeNode,
+	protected static void addConnectionConstraints(AgreeNode agreeNode,
 			List<AgreeStatement> assertions) {
 		for(AgreeConnection conn : agreeNode.connections){
 			String destName = conn.destinationNode == null ? "" : conn.destinationNode.id + AgreeASTBuilder.dotChar;
@@ -559,7 +559,7 @@ public class LustreAstBuilder {
 		}
 	}
 
-	private static void addInitConstraint(AgreeNode agreeNode,
+	protected static void addInitConstraint(AgreeNode agreeNode,
 			List<AgreeVar> outputs, List<AgreeStatement> assertions,
 			AgreeNode subAgreeNode, String prefix, Expr clockExpr, Node lustreNode) {
 		if(agreeNode.timing != TimingModel.SYNC){
@@ -601,7 +601,7 @@ public class LustreAstBuilder {
 		}
 	}
 
-	private static void addClockHolds(AgreeNode agreeNode,
+	protected static void addClockHolds(AgreeNode agreeNode,
 			List<AgreeStatement> assertions, AgreeNode subAgreeNode,
 			Expr clockExpr, String prefix, Node lustreNode) {
 		if(agreeNode.timing != TimingModel.SYNC){
@@ -630,7 +630,7 @@ public class LustreAstBuilder {
 		}
 	}
 
-	private static void addCondactCall(AgreeNode agreeNode, String nodePrefix,
+	protected static void addCondactCall(AgreeNode agreeNode, String nodePrefix,
 			List<AgreeVar> inputs, List<AgreeStatement> assertions,
 			AgreeNode subAgreeNode, String prefix, Expr clockExpr,
 			Node lustreNode) {
@@ -652,7 +652,7 @@ public class LustreAstBuilder {
 		assertions.add(condactCall);
 	}
 
-	private static void addInputsAndOutputs(List<AgreeVar> inputs,
+	protected static void addInputsAndOutputs(List<AgreeVar> inputs,
 			List<AgreeVar> outputs, AgreeNode subAgreeNode, Node lustreNode,
 			String prefix, boolean monolithic) {
 		int varCount = 0;
@@ -698,7 +698,7 @@ public class LustreAstBuilder {
 		}
 	}
 
-	private static Node addSubNodeLustre(AgreeNode agreeNode,
+	protected static Node addSubNodeLustre(AgreeNode agreeNode,
 			String nodePrefix, AgreeNode flatNode, boolean monolithic) {
 		
 		Node lustreNode = getLustreNode(flatNode, nodePrefix, monolithic);
@@ -706,7 +706,7 @@ public class LustreAstBuilder {
 		return lustreNode;
 	}
 
-	private static void addLatchedConstraints(String nodePrefix,
+	protected static void addLatchedConstraints(String nodePrefix,
 			List<AgreeVar> inputs, List<AgreeStatement> assertions,
 			AgreeNode subAgreeNode, String prefix, List<Expr> inputIds) {
 		String latchNodeString = nodePrefix+subAgreeNode.id+"__LATCHED_INPUTS";
@@ -759,7 +759,7 @@ public class LustreAstBuilder {
 		inputIds.addAll(inputIdsReplace);
 	}
 
-	private static Expr getClockExpr(AgreeNode agreeNode, AgreeNode subNode) {
+	protected static Expr getClockExpr(AgreeNode agreeNode, AgreeNode subNode) {
 
 		IdExpr clockId = new IdExpr(subNode.clockVar.id);
 		switch(agreeNode.timing){
@@ -779,7 +779,7 @@ public class LustreAstBuilder {
 
 	}
 	
-	private static void addToNodes(Node node){
+	protected static void addToNodes(Node node){
 		for(Node inList : nodes){
 			if(node.id.equals(inList.id)){
 				throw new AgreeException("AGREE Lustre AST Builder attempted to add multiple nodes of name '"+node.id+"'");

@@ -39,6 +39,7 @@ import org.osate.aadl2.PropertyExpression;
 import org.osate.aadl2.RealLiteral;
 import org.osate.aadl2.StringLiteral;
 import org.osate.aadl2.Subcomponent;
+import org.osate.aadl2.instance.AnnexInstance;
 import org.osate.aadl2.instance.ComponentInstance;
 import org.osate.aadl2.instance.FeatureCategory;
 import org.osate.aadl2.instance.FeatureInstance;
@@ -466,12 +467,14 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr>{
 			Context sourContext = absConnSour.getContext();
 			//only make connections to things that have annexs
 			if(destContext != null && destContext instanceof Subcomponent){
-				if(!AgreeUtils.containsAgreeAnnex((Subcomponent)destContext)){
+				ComponentInstance subInst = compInst.findSubcomponentInstance((Subcomponent) destContext);
+				if(!AgreeUtils.containsTransitiveAgreeAnnex(subInst)){
 					continue;
 				}
 			}
 			if(sourContext != null && sourContext instanceof Subcomponent){
-				if(!AgreeUtils.containsAgreeAnnex((Subcomponent)sourContext)){
+				ComponentInstance subInst = compInst.findSubcomponentInstance((Subcomponent) sourContext);
+				if(!AgreeUtils.containsTransitiveAgreeAnnex(subInst)){
 					continue;
 				}
 			}

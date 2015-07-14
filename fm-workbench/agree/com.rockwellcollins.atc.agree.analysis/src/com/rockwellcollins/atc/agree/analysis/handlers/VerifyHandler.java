@@ -27,6 +27,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.handlers.IHandlerActivation;
 import org.eclipse.ui.handlers.IHandlerService;
@@ -59,6 +60,7 @@ import com.rockwellcollins.atc.agree.analysis.AgreeUtils;
 import com.rockwellcollins.atc.agree.analysis.AgreeException;
 import com.rockwellcollins.atc.agree.analysis.AgreeLayout;
 import com.rockwellcollins.atc.agree.analysis.LustreAstBuilder;
+import com.rockwellcollins.atc.agree.analysis.LustreContractAstBuilder;
 import com.rockwellcollins.atc.agree.analysis.AgreeLayout.SigType;
 import com.rockwellcollins.atc.agree.analysis.AgreeLogger;
 import com.rockwellcollins.atc.agree.analysis.AgreeRenaming;
@@ -66,6 +68,7 @@ import com.rockwellcollins.atc.agree.analysis.ConsistencyResult;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeASTBuilder;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeProgram;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeVar;
+import com.rockwellcollins.atc.agree.analysis.preferences.PreferenceConstants;
 import com.rockwellcollins.atc.agree.analysis.preferences.PreferencesUtil;
 import com.rockwellcollins.atc.agree.analysis.views.AgreeResultsLinker;
 import com.rockwellcollins.atc.agree.analysis.views.AgreeResultsView;
@@ -145,7 +148,18 @@ public abstract class VerifyHandler extends AadlHandler {
 	private void wrapVerificationResult(ComponentInstance si,
 			CompositeAnalysisResult wrapper) {
 		AgreeProgram agreeProgram = new AgreeASTBuilder().getAgreeProgram(si);
-		Program program = LustreAstBuilder.getAssumeGuaranteeLustreProgram(agreeProgram, isMonolithic());
+		
+		//generate different lustre depending on which model checker we are using
+		IPreferenceStore prefs = Activator.getDefault().getPreferenceStore();
+		String solver = prefs.getString(PreferenceConstants.PREF_MODEL_CHECKER);
+		
+		Program program;
+		if(solver.equals(PreferenceConstants.MODEL_CHECKER_KIND2) ||
+				solver.equals(PreferenceConstants.MODEL_CHECKER_KIND2WEB)){
+			program = LustreContractAstBuilder.getContractLustreProgram(agreeProgram);
+		}else{
+			program = LustreAstBuilder.getAssumeGuaranteeLustreProgram(agreeProgram, isMonolithic());
+		}
 		List<Pair<String,Program>> consistencies = LustreAstBuilder.getConsistencyChecks(agreeProgram, isMonolithic());
 		
 		wrapper.addChild(createVerification("Contract Guarantees", si, program, AnalysisType.AssumeGuarantee));
