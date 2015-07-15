@@ -378,6 +378,19 @@ public class AgreeEmitterUtilities {
 		} while (subs.size() != prevSize);
 
 	}
+	
+	public static boolean containsTransitiveAgreeAnnex(ComponentInstance compInst){
+		if(containsAgreeAnnex(compInst.getSubcomponent())){
+			return true;
+		}
+		EList<ComponentInstance> transitiveSubs = compInst.getAllComponentInstances();
+		for(ComponentInstance transInst : transitiveSubs){
+			if(containsAgreeAnnex(transInst.getSubcomponent())){
+				return true;
+			}
+		}
+		return false;
+	}
 
 	public static boolean containsAgreeAnnex(Subcomponent subComp) {
 

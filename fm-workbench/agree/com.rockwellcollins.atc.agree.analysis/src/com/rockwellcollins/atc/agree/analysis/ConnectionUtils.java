@@ -63,12 +63,14 @@ public class ConnectionUtils {
 			Context sourContext = absConnSour.getContext();
 			//only make connections to things that have annexs
 			if(destContext != null && destContext instanceof Subcomponent){
-				if(!AgreeEmitterUtilities.containsAgreeAnnex((Subcomponent)destContext)){
+				ComponentInstance subInst = state.curInst.findSubcomponentInstance((Subcomponent) destContext);
+				if(!AgreeEmitterUtilities.containsTransitiveAgreeAnnex(subInst)){
 					continue;
 				}
 			}
 			if(sourContext != null && sourContext instanceof Subcomponent){
-				if(!AgreeEmitterUtilities.containsAgreeAnnex((Subcomponent)sourContext)){
+				ComponentInstance subInst = state.curInst.findSubcomponentInstance((Subcomponent) sourContext);
+				if(!AgreeEmitterUtilities.containsTransitiveAgreeAnnex(subInst)){
 					continue;
 				}
 			}
