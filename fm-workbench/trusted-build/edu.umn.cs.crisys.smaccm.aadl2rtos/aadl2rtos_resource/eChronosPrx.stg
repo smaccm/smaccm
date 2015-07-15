@@ -37,7 +37,7 @@ writeTrampoline(name, flihName) ::= <<
 >>
 
 writeDispatcherTrampoline(dispatcher) ::= <<
-$writeTrampoline(dispatcher.name, dispatcher.firstLevelInterruptHandler)$
+$writeTrampoline(dispatcher.signalName, dispatcher.firstLevelInterruptHandler)$
 >>
 
 writeExternalIsrTrampoline(externalIsr) ::= <<
@@ -58,13 +58,15 @@ writeInterruptHandler(signalName) ::= <<
 >>
 
 writeDispatcherInterruptHandler(dispatcher) ::= << 
-	$writeInterruptHandler(dispatcher.name)$
+	$writeInterruptHandler(dispatcher.signalName)$
 >>
 
 
 writeInterruptHandlers(model) ::= <<
+	$if(model.generateSystickIrq)$
 	$writeInterruptHandler("systick")$
-    $model.irqDispatchers:writeInterruptHandler()$
+	$endif$
+    $model.irqDispatchers:writeDispatcherInterruptHandler()$
 >>
 
 writeSignalLabels(model) ::= << >>

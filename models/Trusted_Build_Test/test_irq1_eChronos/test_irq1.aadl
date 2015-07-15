@@ -5,7 +5,7 @@
 --  Passive thread dispatch 
 
 
-package test1
+package test_irq1
 public 
    with Base_Types;
    with SMACCM_SYS;   
@@ -13,47 +13,40 @@ public
 -- Example of a periodically dispatched "Active" thread.   
 thread sender
 	features
+		Input1: in event port {
+		  Source_Text => ("user_code/user_sender.c", 
+		                  "user_code/pixhawk_clock_driver.c", 
+		                  "user_code/clock_driver.h");
+		  SMACCM_SYS::Is_ISR => true; 
+		  SMACCM_SYS::First_Level_Interrupt_Handler => "timer_flih";
+	      Compute_Entrypoint_Source_Text => "timer_slih";
+		  SMACCM_SYS::Signal_Name => "systick";
+	      SMACCM_SYS::Sends_Events_To => "{{2 Output1}}";
+		  -- NB: Currently unused for eChronos
+		  SMACCM_SYS::Memory_Pages => ("mem", "0x53F98000:0x1000");
+		  SMACCM_SYS::Signal_Number => 27;			
+		};
 		Output1: out event data port Base_Types::Unsigned_32 {
 	      SMACCM_SYS::CommPrim_Source_Text => "ping_Output1";			
 		};
 	
 	properties 
-	    Dispatch_Protocol => Periodic;
+	    Dispatch_Protocol => Sporadic;
 	    Period => 100 ms;
-		Source_Text => ("user_code/user_sender.c", "user_code/user_main.c");
-	    SMACCM_SYS::Compute_Entrypoint_Source_Text => ("periodic_ping");
+	    Initialize_Entrypoint_Source_Text => "initialize_timer";
+	    SMACCM_SYS::Sends_Events_To => "{{}}";
 	    Priority => 10;
-	    Stack_Size => 256 bytes;
+	    Stack_Size => 512 bytes;
 	    SMACCM_SYS::Thread_Type => Active ;
 	    Compute_Execution_Time => 10 us .. 50 us;
-	    SMACCM_SYS::Sends_Events_To => "{{1 Output1}}";
 end sender ; 
 
 -- Example of an aperiodically dispatched "passive" thread.   
 thread receiver
 	features
 		Input1: in event data port Base_Types::Unsigned_32 {
-	      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("ping_received1");
-		  Source_Text => ("user_code/user_receiver1.c");
-		}; 
-
-		Output1: out event data port Base_Types::Unsigned_32 {
-	      SMACCM_SYS::CommPrim_Source_Text => "ping_Output2";			
-		}; 
-				
-	properties 
-	    Dispatch_Protocol => Aperiodic;
-	    SMACCM_SYS::Thread_Type => Passive ;
-	    Compute_Execution_Time => 10 us .. 50 us;
-	    SMACCM_SYS::Sends_Events_To => "{{1 Output1}}";
-end receiver ; 
-
--- Example of an aperiodically dispatched "passive" thread.   
-thread receiver2
-	features
-		Input1: in event data port Base_Types::Unsigned_32 {
-	      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("ping_received2");
-		  Source_Text => ("user_code/user_receiver2.c");
+	      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("ping_received");
+		  Source_Text => ("user_code/user_receiver.c");
 		}; 
 				
 	properties 
@@ -61,7 +54,7 @@ thread receiver2
 	    SMACCM_SYS::Thread_Type => Passive ;
 	    Compute_Execution_Time => 10 us .. 50 us;
 	    SMACCM_SYS::Sends_Events_To => "{{}}";
-end receiver2 ; 
+end receiver ; 
 
 
 process proc
@@ -72,23 +65,21 @@ process implementation proc.Impl
 	subcomponents
 		s: thread sender;
 		r1: thread receiver;
-		r2: thread receiver2; 
 	connections
 		s_to_r1 : port s.Output1 -> r1.Input1;
-		r1_to_r2 : port r1.Output1 -> r2.Input1;
 end proc.Impl;
 
-system test1
-end test1;
+system test_irq1
+end test_irq1;
 
-system implementation test1.impl
+system implementation test_irq1.impl
 	subcomponents
 		tl: process proc.Impl;
 	properties
+		SMACCM_SYS::Generate_Scheduler_Systick_IRQ => false;
 		SMACCM_SYS::OS => eChronos; 
 		SMACCM_SYS::HW => PIXHAWK;
-		-- SMACCM_SYS::Output_Directory => "./out";
 		
-end test1.impl;
+end test_irq1.impl;
 
-end test1;
+end test_irq1;

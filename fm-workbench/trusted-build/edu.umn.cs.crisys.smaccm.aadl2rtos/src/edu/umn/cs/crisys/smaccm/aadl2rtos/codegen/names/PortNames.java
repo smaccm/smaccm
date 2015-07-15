@@ -263,6 +263,11 @@ public class PortNames {
     return Integer.toString(iip.getNumber()); 
   }
 
+  public String getSignalName() {
+    InputIrqPort iip = (InputIrqPort)dp; 
+    return iip.getSignalName(); 
+  }
+  
   public String getIrqObject() {
     return getName() + "_obj";
   }
