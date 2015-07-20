@@ -54,6 +54,7 @@ public static Program getContractLustreProgram(AgreeProgram agreeProgram){
 		List<Expr> assertions = new ArrayList<>();
 		List<VarDecl> locals = new ArrayList<>();
 		List<VarDecl> inputs = new ArrayList<>();
+		List<VarDecl> outputs = new ArrayList<>();
 		List<Equation> equations = new ArrayList<>();
 		List<String> properties = new ArrayList<>();
 		List<Expr> requires = new ArrayList<>();
@@ -80,6 +81,10 @@ public static Program getContractLustreProgram(AgreeProgram agreeProgram){
 		}
 		
 		for(AgreeVar var : flatNode.outputs){
+			outputs.add(var);
+		}
+		
+		for(AgreeVar var : flatNode.outputs){
 			if(var.reference instanceof AssumeStatement || var.reference instanceof LemmaStatement){
 				throw new AgreeException("This shouldn't happen");
 			}
@@ -87,7 +92,7 @@ public static Program getContractLustreProgram(AgreeProgram agreeProgram){
 		
 		Contract contract = new Contract("main", requires, ensures);
 		
-		Node main = new Node("main", inputs, null, locals, equations, properties, assertions, null, Optional.of(Collections.singletonList(contract)));
+		Node main = new Node("main", inputs, outputs, locals, equations, properties, assertions, null, Optional.of(Collections.singletonList(contract)));
 		nodes.addAll(agreeProgram.globalLustreNodes);
 		nodes.add(main);
 		Program program = new Program(types, null, nodes, main.id);
@@ -243,6 +248,7 @@ public static Program getContractLustreProgram(AgreeProgram agreeProgram){
 				AgreeVar outputVar = (AgreeVar)var;
 				String dummyName = prefix+var.id+"__DUMMY";
 				inputs.add(new AgreeVar(dummyName, outputVar.type, outputVar.reference, outputVar.compInst));
+				
 				initOutputsVals.add(new IdExpr(dummyName));
 				nodeOutputIds.add(new IdExpr(prefix+var.id));
 		}
