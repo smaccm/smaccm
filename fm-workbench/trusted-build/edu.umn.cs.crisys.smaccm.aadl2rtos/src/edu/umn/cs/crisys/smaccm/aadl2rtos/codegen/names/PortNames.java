@@ -400,7 +400,7 @@ public class PortNames {
   }
 
   public String getMutex() {
-    return "smaccm_" + dp.getOwner().getNormalizedName() + "_" + dp.getName() + "_mut";
+    return ("smaccm_" + dp.getOwner().getNormalizedName() + "_" + dp.getName() + "_mut").toLowerCase();
   }
   
   public String getEChronosMutexConst() {

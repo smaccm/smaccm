@@ -40,3 +40,15 @@ osSpecificIncludeFiles(threadImpl) ::= <<
 #include <\u003C>string.h<\u003E>
 #include <\u003C><threadImpl.componentCamkesHFileName><\u003E>
 >>
+
+osSpecificIrqDispatcher(dispatcher) ::= << 
+void <incomingActiveThreadDispatchName(dispatcher)>() {
+	<dispatcher.firstLevelInterruptHandler>();
+	<dispatcher.dispatchOccurredVar> = true;
+	<dispatcherMainLockReleaseStmt(dispatcher)>
+	<dispatcher.name>_reg_callback(<incomingActiveThreadDispatchName(dispatcher)>, NULL); 
+}
+>>
+
+osSpecificRegisterIrqs(dispatcher) ::= << <if(dispatcher.isIRQ)><dispatcher.name>_reg_callback(<incomingActiveThreadDispatchName(dispatcher)>, NULL);
+<endif> >>

@@ -16,11 +16,11 @@ fatal(const RtosErrorId error_id)
 int
 main(void)
 {
-	bool result = initialize_periodic_dispatcher();
-	if (!result) {
-		debug_print("Unable to initialize periodic dispatcher.");
-		fatal(-1);
-	}
+	// bool result = initialize_timer();
+	//if (!result) {
+	//	debug_print("Unable to initialize periodic dispatcher.");
+	//	fatal(-1);
+	//}
 
     debug_println("Starting RTOS");
     rtos_start();
