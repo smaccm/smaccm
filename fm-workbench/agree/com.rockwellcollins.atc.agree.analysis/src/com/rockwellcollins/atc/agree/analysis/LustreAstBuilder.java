@@ -267,17 +267,16 @@ public class LustreAstBuilder {
 			for(AgreeStatement assertion : agreeNode.assertions){
 				if(assertion.reference instanceof EqStatement ||
 						assertion.reference instanceof PropertyStatement){
+					EObject container = assertion.reference.eContainer();
+					while(!(container instanceof ComponentClassifier)){
+						container = container.eContainer();
+					}
+					if(container instanceof ComponentImplementation){
+						continue; //throw away eqs and property statements in the implementation
+					}
 
+					stuffConj = new BinaryExpr(stuffConj, BinaryOp.AND, assertion.expr);
 				}
-				EObject container = assertion.reference.eContainer();
-				while(!(container instanceof ComponentClassifier)){
-					container = container.eContainer();
-				}
-				if(container instanceof ComponentImplementation){
-					continue; //throw away eqs and property statements in the implementation
-				}
-
-				stuffConj = new BinaryExpr(stuffConj, BinaryOp.AND, assertion.expr);
 			}
 		}
 		

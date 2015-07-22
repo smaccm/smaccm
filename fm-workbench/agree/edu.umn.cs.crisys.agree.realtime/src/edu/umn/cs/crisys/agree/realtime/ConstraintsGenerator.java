@@ -55,7 +55,7 @@ public class ConstraintsGenerator implements AgreeAutomater{
 		
 		
 		AgreeNode newTopNode = new AgreeNode(program.topNode.id, program.topNode.inputs, program.topNode.outputs, program.topNode.locals, 
-				program.topNode.connections, program.topNode.subNodes, program.topNode.assertions, assertions, 
+				program.topNode.connections, program.topNode.subNodes, assertions, program.topNode.assumptions, 
 				program.topNode.guarantees, program.topNode.lemmas, program.topNode.clockConstraint, program.topNode.initialConstraint, 
 				program.topNode.clockVar, program.topNode.reference, program.topNode.timing, program.topNode.compInst);
 		
