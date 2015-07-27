@@ -53,20 +53,34 @@ $endif$
 $model.externalISRs:writeExternalIsrTrampoline()$
 >>
 
-writeInterruptHandler(signalName) ::= <<
+writeInternalInterruptHandler(signalName) ::= <<
 <$signalName$>rtos_internal_exception_preempt_trampoline_$signalName$</$signalName$>
 >>
 
-writeDispatcherInterruptHandler(dispatcher) ::= << 
-	$writeInterruptHandler(dispatcher.signalName)$
+writeExternalInterruptHandler(signalName, signalNumber) ::= <<
+<external_irq>
+	<number>$signalNumber$</number>
+	<handler>rtos_internal_exception_preempt_trampoline_$signalName$</handler>
+</external_irq>
 >>
 
+writeInternalDispatcherInterruptHandler(dispatcher) ::= << 
+$writeInternalInterruptHandler(dispatcher.signalName)$
+>>
+
+writeExternalDispatcherInterruptHandler(dispatcher) ::= << 
+$writeExternalInterruptHandler(dispatcher.signalName, dispatcher.signalNumber)$
+>>
 
 writeInterruptHandlers(model) ::= <<
-	$if(model.generateSystickIrq)$
-	$writeInterruptHandler("systick")$
-	$endif$
-    $model.irqDispatchers:writeDispatcherInterruptHandler()$
+$if(model.threadCalendar.hasDispatchers && 
+	model.generateSystickIrq)$
+$writeInternalInterruptHandler("systick")$
+$endif$
+$model.internalIrqDispatchers:writeInternalDispatcherInterruptHandler()$
+<external_irqs>
+	$model.externalIrqDispatchers:writeExternalDispatcherInterruptHandler()$
+</external_irqs>
 >>
 
 writeSignalLabels(model) ::= << >>

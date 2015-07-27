@@ -66,6 +66,7 @@ import org.osate.aadl2.instance.ConnectionKind;
 import org.osate.aadl2.instance.FeatureCategory;
 import org.osate.aadl2.instance.SystemInstance;
 import org.osate.aadl2.instance.impl.FeatureInstanceImpl;
+import org.osate.aadl2.properties.PropertyNotPresentException;
 import org.osate.xtext.aadl2.properties.util.PropertyUtils;
 
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosException;
@@ -272,6 +273,13 @@ public class AadlModelParser {
       } catch (NumberFormatException nfe) {
         logger.error("ISR Port " + port.getName() + ": signal number is not a positive integer. Original error: " + nfe.toString());
         throw new Aadl2RtosException("ISR construction error");
+      } catch (PropertyNotPresentException pnpe) {
+        signal_number = InputIrqPort.NO_SIGNAL_NUMBER;
+        
+        // signal number is necessary for CAmkES, but not eChronos
+        if (model.getOsTarget() == Model.OSTarget.CAmkES) {
+          throw pnpe;
+        }
       }
       Map<String, String> memoryRegions;
       memoryRegions = PropertyUtil.getMemoryRegions(port);

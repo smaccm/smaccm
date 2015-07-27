@@ -23,9 +23,8 @@ thread sender
 	      Compute_Entrypoint_Source_Text => "timer_slih";
 		  SMACCM_SYS::Signal_Name => "systick";
 	      SMACCM_SYS::Sends_Events_To => "{{2 Output1}}";
-		  -- NB: Currently unused for eChronos
 		  SMACCM_SYS::Memory_Pages => ("mem", "0x53F98000:0x1000");
-		  SMACCM_SYS::Signal_Number => 27;			
+		  --SMACCM_SYS::Signal_Number => 27;			
 		};
 		Output1: out event data port Base_Types::Unsigned_32 {
 	      SMACCM_SYS::CommPrim_Source_Text => "ping_Output1";			

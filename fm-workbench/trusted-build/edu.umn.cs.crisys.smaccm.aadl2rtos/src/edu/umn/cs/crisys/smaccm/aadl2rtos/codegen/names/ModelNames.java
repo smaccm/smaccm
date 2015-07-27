@@ -95,6 +95,28 @@ public class ModelNames {
     return irqs;
   }
   
+  /* For internal vs. external IRQs (from eChronos' perspective) */
+  public List<PortNames> getExternalIrqDispatchers() {
+    List<PortNames> irqs = new ArrayList<>(); 
+    for (InputIrqPort disp : m.getIRQDispatcherList()) {
+      if (disp.getNumber() != InputIrqPort.NO_SIGNAL_NUMBER) {  
+        irqs.add(new PortNames(disp));
+      }
+    }
+    return irqs;
+  }
+
+  /* For internal vs. external IRQs (from eChronos' perspective) */
+  public List<PortNames> getInternalIrqDispatchers() {
+    List<PortNames> irqs = new ArrayList<>(); 
+    for (InputIrqPort disp : m.getIRQDispatcherList()) {
+      if (disp.getNumber() == InputIrqPort.NO_SIGNAL_NUMBER) {  
+        irqs.add(new PortNames(disp));
+      }
+    }
+    return irqs;
+  }
+  
   public List<SharedDataNames> getSharedData() {
     List<SharedDataNames> sdal = new ArrayList<>(); 
     for (SharedData sd : m.getSharedDataList()) {
