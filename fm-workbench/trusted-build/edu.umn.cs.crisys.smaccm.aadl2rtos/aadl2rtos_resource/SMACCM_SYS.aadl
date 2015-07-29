@@ -51,8 +51,12 @@ property set SMACCM_SYS is
 	-- For different parameter passing styles
 	By_Reference : aadlboolean => false applies to (parameter);
 	
-	-- For CAmkES specifically
+	-- For CAmkES, specifically
 	CAmkES_Owner_Thread : aadlstring applies to ( data );
 	
+	-- For eChronos, specifically.  These properties are used to set the relative module 
+	-- path for the generated code from the place where prj is invoked
+	eChronos_Generate_C_Modules : aadlboolean => false applies to (system implementation);
+	eChronos_C_Module_Path : aadlstring => "gen" applies to (system implementation);
 
 end SMACCM_SYS;

@@ -188,6 +188,15 @@ public class AadlModelParser {
 		  }
 		}
 		
+		try {
+		  this.model.eChronosGenerateCModules = PropertyUtils.getBooleanValue(systemImplementation, PropertyUtil.ECHRONOS_GENERATE_C_MODULES);
+		  if (this.model.eChronosGenerateCModules) {
+		    this.model.eChronosCModulePath = PropertyUtils.getStringValue(systemImplementation, PropertyUtil.ECHRONOS_C_MODULE_PATH);
+		  }
+		} catch (Exception e) {
+      this.logger.error("If eChronosGenerateCModules is 'true', then eChronosCModulePath must be defined.");
+      throw new Aadl2RtosException("Parse failure on eChronosCModulePath target property ");
+    }
 		// Initialize thread implementations
 		constructThreadImplMap();
 

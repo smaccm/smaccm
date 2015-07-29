@@ -88,7 +88,10 @@ system implementation test1.impl
 		SMACCM_SYS::OS => eChronos; 
 		SMACCM_SYS::HW => PIXHAWK;
 		-- SMACCM_SYS::Output_Directory => "./out";
-		
+		-- Defaults to 'false'.  If true, generates module for each C file.
+		SMACCM_SYS::eChronos_Generate_C_Modules => true;
+		-- Defaults to 'gen'
+		-- SMACCM_SYS::eChronos_C_Module_Path => "this.is.a.path";
 end test1.impl;
 
 end test1;

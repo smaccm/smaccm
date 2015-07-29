@@ -3,6 +3,7 @@
  */
 package edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.names;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -236,4 +237,21 @@ public class ModelNames {
   public static String getEChronosDispatchSignal() {
     return "smaccm_dispatcher";
   }
+  
+  public boolean getEChronosGenerateCModules() {
+    return m.isEChronosGenerateCModules();
+  }
+
+  public String getEChronosCModulePath() {
+    return m.getEChronosCModulePath();
+  }
+
+  public List<String> getCFileModules() {
+    List<String> toReturn = new ArrayList<>(); 
+    for (String s: m.getSourceFiles()) {
+      toReturn.add(Util.pathRemoveExtension(Util.fileNameFromPath(s)));
+    }
+    return toReturn;
+  }
+
 }

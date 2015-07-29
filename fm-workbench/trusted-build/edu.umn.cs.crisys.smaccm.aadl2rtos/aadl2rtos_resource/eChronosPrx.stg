@@ -191,3 +191,11 @@ writeInterruptEvents(model) ::= <<
 	$model.externalIRQEvents:writeExternalIrqEvent()$
 	$model.activeThreadImplementations:writeActiveThreadIrqDispatchers()$
 >>
+
+writeCodeModule(moduleName, model) ::= << 
+<module name="$model.eChronosCModulePath$.$moduleName$" />
+>>
+
+writeCodeModules(model) ::= <<
+$model.cFileModules:writeCodeModule(model)$
+>>
