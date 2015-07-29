@@ -6,7 +6,7 @@ outgoingActiveThreadDispatchName(dispatcher) ::= "<incomingActiveThreadDispatchN
 
 periodicComponentCBody(model, threadCalendar) ::= <<
 
-#include <\u003C>string.h<\u003E>
+//#include <\u003C>string.h<\u003E>
 #include <\u003C><model.systemTypeHeaderName><\u003E>
 #include <\u003C>smaccm_decls.h<\u003E>
 // #include <\u003C><threadCalendar.periodicDispatcherHFileName><\u003E>

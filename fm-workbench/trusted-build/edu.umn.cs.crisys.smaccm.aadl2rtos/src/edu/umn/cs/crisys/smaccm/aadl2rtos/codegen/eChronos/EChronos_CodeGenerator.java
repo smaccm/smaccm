@@ -95,6 +95,8 @@ public class EChronos_CodeGenerator extends CodeGeneratorBase {
         new String[] {"model", "threadCalendar"}, 
         new Object[] {mn, tcn}, 
         tcn.getPeriodicDispatcherComponentName(), false, tcn.getPeriodicDispatcherCFileName());
+    
+    model.getSourceFiles().add(tcn.getPeriodicDispatcherCFileName());
   }
   
   // create this only if we have periodic threads.

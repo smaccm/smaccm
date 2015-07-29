@@ -335,6 +335,8 @@ public abstract class CodeGeneratorBase {
           "Please implement interface as specified in clock_driver.h for this platform, and place the resulting .c file in the dispatch_periodic directory.");
     }
     
+    model.getSourceFiles().add(concrete_driver);
+    
     InputStream cSrcFileStream = null;
     InputStream hSrcFileStream = null;
     OutputStream cDstFileStream = null;
