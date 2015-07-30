@@ -36,6 +36,7 @@ thread receiver
 		Input1: in event data port Base_Types::Unsigned_32 {
 	      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("ping_received");
 		  Source_Text => ("user_code/user_receiver1.c");
+	      SMACCM_SYS::Sends_Events_To => "{{1 Output1}}";
 		}; 
 
 		Output1: out event data port Base_Types::Unsigned_32 {
@@ -46,7 +47,6 @@ thread receiver
 	    Dispatch_Protocol => Aperiodic;
 	    SMACCM_SYS::Thread_Type => Passive ;
 	    Compute_Execution_Time => 10 us .. 50 us;
-	    SMACCM_SYS::Sends_Events_To => "{{1 Output1}}";
 end receiver ; 
 
 -- Example of an aperiodically dispatched "passive" thread.   
