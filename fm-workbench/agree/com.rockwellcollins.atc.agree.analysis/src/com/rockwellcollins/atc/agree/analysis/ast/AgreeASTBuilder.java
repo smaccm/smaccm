@@ -681,30 +681,6 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr>{
 		}
 		return agreeVars;
 	}
-
-//	private Type agreeTypeToLustreType(com.rockwellcollins.atc.agree.agree.Type type){
-//		if(type instanceof PrimType){
-//			String typeStr = ((PrimType) type).getString();
-//			switch(typeStr){
-//			case "real": return NamedType.REAL;
-//			case "int": return NamedType.INT;
-//			case "bool": return NamedType.BOOL;
-//			}
-//		}else{
-//			if(!(type instanceof com.rockwellcollins.atc.agree.agree.RecordType)){
-//				throw new AgreeException("Agree does not know to reason about types of class: "+type.getClass().getSimpleName());
-//			}
-//			com.rockwellcollins.atc.agree.agree.RecordType record = (com.rockwellcollins.atc.agree.agree.RecordType)type;
-//			NestedDotID id = record.getRecord();
-//
-//			while(id.getSub() != null){
-//				id = id.getSub();
-//			}
-//			
-//			return new NamedType(AgreeRecordUtils.getIDTypeStr(id.getBase()));
-//		}
-//		return null;
-//	}
 	
 	private List<AgreeStatement> getAssertions(EList<SpecStatement> specs) {
 		List<AgreeStatement> asserts = new ArrayList<>();
@@ -1024,22 +1000,18 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr>{
 
         
         //TODO are node lemmas depricated?
-//        String lemmaName = "nodeLemma";
-//        int lemmaIndex = 0;
-//        Map<String, String> lemmaNames = new HashMap<>();
+        String lemmaName = "__nodeLemma";
+        int lemmaIndex = 0;
         for (NodeStmt stmt : body.getStmts()) {
             if (stmt instanceof NodeLemma) {
-//                NodeLemma nodeLemma = (NodeLemma) stmt;
-//                //String propName = ((NodeLemma) stmt).getStr();
-//                String propName = lemmaName + lemmaIndex++;
-//                lemmaNames.put(propName, nodeLemma.getStr());
-//                props.add(propName);
-//                IdExpr eqId = new IdExpr(propName);
-//                Expr eqExpr = doSwitch(nodeLemma.getExpr());
-//                Equation eq = new Equation(eqId, eqExpr);
-//                eqs.add(eq);
-//                VarDecl lemmaVar = new VarDecl(propName, NamedType.BOOL);
-//                internals.add(lemmaVar);
+                NodeLemma nodeLemma = (NodeLemma) stmt;
+                String propName = lemmaName + lemmaIndex++;
+                IdExpr eqId = new IdExpr(propName);
+                internals.add(new VarDecl(eqId.id, NamedType.BOOL));
+                Expr eqExpr = doSwitch(nodeLemma.getExpr());
+                Equation eq = new Equation(eqId, eqExpr);
+                eqs.add(eq);
+                props.add(eqId.id);
             } else if (stmt instanceof NodeEq) {
                 eqs.add(nodeEqToEq((NodeEq) stmt));
             }
