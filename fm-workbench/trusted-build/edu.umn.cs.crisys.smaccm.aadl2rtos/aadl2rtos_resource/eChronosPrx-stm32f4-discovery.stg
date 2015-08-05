@@ -59,6 +59,9 @@ prxBody(model) ::= <<
       </mutex>
 
     </module>
+$if(model.eChronosGenerateCModules)$
+	$writeCodeModules(model)$
+$endif$    
   </modules>
 </system>
 

@@ -263,6 +263,11 @@ public class PortNames {
     return Integer.toString(iip.getNumber()); 
   }
 
+  public String getSignalName() {
+    InputIrqPort iip = (InputIrqPort)dp; 
+    return iip.getSignalName(); 
+  }
+  
   public String getIrqObject() {
     return getName() + "_obj";
   }
@@ -395,7 +400,7 @@ public class PortNames {
   }
 
   public String getMutex() {
-    return "smaccm_" + dp.getOwner().getNormalizedName() + "_" + dp.getName() + "_mut";
+    return ("smaccm_" + dp.getOwner().getNormalizedName() + "_" + dp.getName() + "_mut").toLowerCase();
   }
   
   public String getEChronosMutexConst() {

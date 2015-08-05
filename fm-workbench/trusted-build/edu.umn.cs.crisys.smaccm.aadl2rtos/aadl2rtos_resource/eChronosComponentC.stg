@@ -51,3 +51,14 @@ dispatcherMainLockReleaseStmt(dispatcher) ::= <<
 osSpecificIncludeFiles(threadImpl) ::= <<
 #include <\u003C>smaccm_decls.h<\u003E>
 >>
+
+osSpecificIrqDispatcher(dispatcher) ::= << 
+bool <incomingActiveThreadDispatchName(dispatcher)>() {
+	<dispatcher.firstLevelInterruptHandler>();
+	<dispatcher.dispatchOccurredVar> = true;
+	<dispatcherMainLockReleaseStmt(dispatcher)>
+	return true;
+}
+>>
+
+osSpecificRegisterIrqs(dispatcher) ::= ""

@@ -37,7 +37,7 @@ writeTrampoline(name, flihName) ::= <<
 >>
 
 writeDispatcherTrampoline(dispatcher) ::= <<
-$writeTrampoline(dispatcher.name, dispatcher.firstLevelInterruptHandler)$
+$writeTrampoline(dispatcher.signalName, dispatcher.qualifiedName)$
 >>
 
 writeExternalIsrTrampoline(externalIsr) ::= <<
@@ -53,18 +53,34 @@ $endif$
 $model.externalISRs:writeExternalIsrTrampoline()$
 >>
 
-writeInterruptHandler(signalName) ::= <<
+writeInternalInterruptHandler(signalName) ::= <<
 <$signalName$>rtos_internal_exception_preempt_trampoline_$signalName$</$signalName$>
 >>
 
-writeDispatcherInterruptHandler(dispatcher) ::= << 
-	$writeInterruptHandler(dispatcher.name)$
+writeExternalInterruptHandler(signalName, signalNumber) ::= <<
+<external_irq>
+	<number>$signalNumber$</number>
+	<handler>rtos_internal_exception_preempt_trampoline_$signalName$</handler>
+</external_irq>
 >>
 
+writeInternalDispatcherInterruptHandler(dispatcher) ::= << 
+$writeInternalInterruptHandler(dispatcher.signalName)$
+>>
+
+writeExternalDispatcherInterruptHandler(dispatcher) ::= << 
+$writeExternalInterruptHandler(dispatcher.signalName, dispatcher.signalNumber)$
+>>
 
 writeInterruptHandlers(model) ::= <<
-	$writeInterruptHandler("systick")$
-    $model.irqDispatchers:writeInterruptHandler()$
+$if(model.threadCalendar.hasDispatchers && 
+	model.generateSystickIrq)$
+$writeInternalInterruptHandler("systick")$
+$endif$
+$model.internalIrqDispatchers:writeInternalDispatcherInterruptHandler()$
+<external_irqs>
+	$model.externalIrqDispatchers:writeExternalDispatcherInterruptHandler()$
+</external_irqs>
 >>
 
 writeSignalLabels(model) ::= << >>
@@ -174,4 +190,12 @@ $writeInterruptEvent(threadImpl.eChronosInterruptSignal, threadImpl.normalizedNa
 writeInterruptEvents(model) ::= <<
 	$model.externalIRQEvents:writeExternalIrqEvent()$
 	$model.activeThreadImplementations:writeActiveThreadIrqDispatchers()$
+>>
+
+writeCodeModule(moduleName, model) ::= << 
+<module name="$model.eChronosCModulePath$.$moduleName$" />
+>>
+
+writeCodeModules(model) ::= <<
+$model.cFileModules:writeCodeModule(model)$
 >>
