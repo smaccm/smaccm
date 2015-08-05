@@ -2,6 +2,7 @@
 <?eclipse version="3.4"?>
 <plugin>
    <extension-point id="cexextractor" name="Counter Example Extractor" schema="schema/cexextractor.exsd"/>
+   <extension-point id="agreeautomater" name="Agree Automater" schema="schema/agreeautomater.exsd"/>
 
    
    <extension point="org.eclipse.ui.views">
