@@ -53,6 +53,8 @@ public class AgreeRenaming extends Renaming {
 		if(findBestReference(original) == null){
 		    if(original.equals("%REALIZABLE")){
 		        return "Realizability Result";
+		    }else if(original.contains("__nodeLemma")){
+		    	return newName;
 		    }
 		    return null;
 		}
