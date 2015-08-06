@@ -200,7 +200,10 @@ public class LustreAstBuilder {
 
 		nodes = new ArrayList<>();
 		Node topConsist = getConsistencyLustreNode(agreeProgram.topNode, false);
-		nodes.addAll(agreeProgram.globalLustreNodes);
+		//we don't want node lemmas to show up in the consistency check
+		for(Node node : agreeProgram.globalLustreNodes){
+			nodes.add(removeProperties(node));
+		}
 		nodes.add(topConsist);
 
 		Program topConsistProg = new Program(types, null, nodes, topConsist.id);
@@ -213,7 +216,9 @@ public class LustreAstBuilder {
 				subNode = flattenAgreeNode(subNode, "_TOP__", true);
 			}
 			Node subConsistNode = getConsistencyLustreNode(subNode, monolithic);
-			nodes.addAll(agreeProgram.globalLustreNodes);
+			for(Node node : agreeProgram.globalLustreNodes){
+				nodes.add(removeProperties(node));
+			}
 			nodes.add(subConsistNode);
 			Program subConsistProg = new Program(types, null, nodes, subConsistNode.id);
 			
@@ -224,7 +229,10 @@ public class LustreAstBuilder {
 		AgreeNode compositionNode =flattenAgreeNode(agreeProgram.topNode, "_TOP__", monolithic);
 		
 		Node topCompositionConsist = getConsistencyLustreNode(compositionNode, true);
-		nodes.addAll(agreeProgram.globalLustreNodes);
+		for(Node node : agreeProgram.globalLustreNodes){
+			nodes.add(removeProperties(node));
+		}
+		//nodes.addAll(agreeProgram.globalLustreNodes);
 		nodes.add(topCompositionConsist);
 
 		Program topCompositConsistProg = new Program(types, null, nodes, topCompositionConsist.id);
@@ -232,6 +240,11 @@ public class LustreAstBuilder {
 		programs.add(Tuples.create("Component composition consistent", topCompositConsistProg));
 		
 		return programs;
+	}
+	
+	protected static Node removeProperties(Node node){
+		return new Node(node.id, node.inputs, node.outputs, node.locals, 
+				node.equations);
 	}
 	
     protected static Node getConsistencyLustreNode(AgreeNode agreeNode, boolean withAssertions){
