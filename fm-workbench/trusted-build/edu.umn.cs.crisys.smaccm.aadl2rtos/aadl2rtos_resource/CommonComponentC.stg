@@ -434,6 +434,12 @@ bool <port.aadlWriterFnName>(<port:userSendOptConstAadlInputArg()>) {
 }
 
 >>
+
+/*  If we want to abort on comm failure.
+ * 		 assert(<port.globalMaxDispatchSize> > 0 && 
+		 		*<port.globalIndex> \< <port.globalMaxDispatchSize>);
+ 
+ */
   
 /////////////////////////////////////////////////////////////////////
 //

@@ -24,7 +24,7 @@ portLockStmt(port) ::= <<
 >>
 
 portUnlockStmt(port) ::= <<
-	rtos_mutex_unlock(<port.eChronosMutextConst>); 
+	rtos_mutex_unlock(<port.eChronosMutexConst>); 
 >>
 
 portDispatcherLock(dispatcher) ::= <<
