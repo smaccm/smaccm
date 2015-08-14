@@ -92,10 +92,10 @@ InputEventDataPortDecls(port) ::= <<
  * 
  ************************************************************************/
  
-<port.queueDataDecl>;
-<port.queueFullDecl> = false;
-<port.queueFrontDecl> = 0;
-<port.queueBackDecl> = 0;
+static <port.queueDataDecl>;
+static <port.queueFullDecl> = false;
+static <port.queueFrontDecl> = 0;
+static <port.queueBackDecl> = 0;
 
 bool <port.queueIsFullName>() {
 	return (<port.queueFrontName> == <port.queueBackName>) && (<port.queueFullName>);
@@ -143,7 +143,7 @@ bool <incomingPortWriterName(port)>(const <port.type.camkesInputType.name> arg) 
 	<portLockStmt(port)> 
 	result = <port.queueWriteName>(<port.type.camkesInputToAadlInput> arg);
 	<portUnlockStmt(port)>
-	<if(port.hasDispatcher)><dispatcherMainLockReleaseStmt(port.threadImplementation)><endif>
+	<if(port.hasDispatcher)><dispatcherMainLockReleaseStmt(port)><endif>
 	return result;
 }
 
@@ -177,7 +177,7 @@ bool <port.aadlReaderFnName>(<port.type.aadlOutputType.name> arg) {
 /////////////////////////////////////////////////////////////////////
 
 InputEventPortDecls(port) ::= <<
-<port.indexType.name> <port.index> = 0;
+static <port.indexType.name> <port.index> = 0;
 
 bool <port.queueIsFullName>() {
 	return false;
@@ -201,7 +201,7 @@ bool <incomingPortWriterName(port)>() {
 	// Note: possibility for overflow here - should I worry about MAXINT messages?
 	<port.index>++;
 	<portUnlockStmt(port)>
-	<if(port.hasDispatcher)><dispatcherMainLockReleaseStmt(port.threadImplementation)><endif>
+	<if(port.hasDispatcher)><dispatcherMainLockReleaseStmt(port)><endif>
 	return true;
 }
 
@@ -434,6 +434,12 @@ bool <port.aadlWriterFnName>(<port:userSendOptConstAadlInputArg()>) {
 }
 
 >>
+
+/*  If we want to abort on comm failure.
+ * 		 assert(<port.globalMaxDispatchSize> > 0 && 
+		 		*<port.globalIndex> \< <port.globalMaxDispatchSize>);
+ 
+ */
   
 /////////////////////////////////////////////////////////////////////
 //
@@ -523,7 +529,7 @@ aadlDispatcherFunction(dispatcher) ::= <<
  * stimulus: an ISR, a periodic dispatch, or a queued event.
  * 
  ******************************************************************************/
-<dispatcher.dispatchStructTypeName> <dispatcher.dispatchStructArgName>;
+static <dispatcher.dispatchStructTypeName> <dispatcher.dispatchStructArgName>;
 
 void <activeThreadInternalDispatcherName(dispatcher)>(<if(dispatcher.hasData)><dispatcher.type.aadlInputType.name> <dispatcher.name><endif>) {
 	
@@ -568,8 +574,8 @@ dispatcherComponentPeriodicEventDecls(dispatcher) ::= <<
  * 
  ************************************************************************/
 
-bool <dispatcher.dispatchOccurredVar>;
-<dispatcher.type.name> <dispatcher.periodicTimeVar>;
+static bool <dispatcher.dispatchOccurredVar>;
+static <dispatcher.type.name> <dispatcher.periodicTimeVar>;
 
 /************************************************************************
  * <incomingActiveThreadDispatchName(dispatcher)>
@@ -584,7 +590,7 @@ bool <incomingActiveThreadDispatchName(dispatcher)><\\>
 (const <dispatcher.type.camkesInputType.name> arg) {
 	<dispatcher.dispatchOccurredVar> = true;
 	<dispatcher.periodicTimeVar> = <dispatcher.type.camkesInputToVal>arg;
-	<dispatcherMainLockReleaseStmt(dispatcher.threadImplementation)>
+	<dispatcherMainLockReleaseStmt(dispatcher)>
 	return true;
 }
 
@@ -592,7 +598,7 @@ bool <incomingActiveThreadDispatchName(dispatcher)><\\>
 
 dispatcherComponentIRQEventDecls(dispatcher) ::= <<
 
-bool <dispatcher.dispatchOccurredVar>;
+static bool <dispatcher.dispatchOccurredVar>;
 
 /************************************************************************
  * <incomingActiveThreadDispatchName(dispatcher)>
@@ -603,12 +609,7 @@ bool <dispatcher.dispatchOccurredVar>;
  * interrupt handler).
  * 
  ************************************************************************/
-void <incomingActiveThreadDispatchName(dispatcher)>() {
-	<dispatcher.firstLevelInterruptHandler>();
-	<dispatcher.dispatchOccurredVar> = true;
-	<dispatcherMainLockReleaseStmt(dispatcher.threadImplementation)>
-	<dispatcher.name>_reg_callback(<incomingActiveThreadDispatchName(dispatcher)>, NULL); 
-}
+<osSpecificIrqDispatcher(dispatcher)>
 
 >> 
 
@@ -679,17 +680,14 @@ portInitializer(port) ::= <<
 <endif>
 >>
 
-registerIRQs(dispatcher) ::= << <if(dispatcher.isIRQ)><dispatcher.name>_reg_callback(<incomingActiveThreadDispatchName(dispatcher)>, NULL);
-<endif> >>
-
 dispatcherComponentMainFunction(threadImpl) ::= <<
 /************************************************************************
- * run()
+ * <osSpecificThreadEntrypoint(threadImpl)>
  * Main active thread function.
  * 
  ************************************************************************/
 
-int run() {
+int <osSpecificThreadEntrypoint(threadImpl)>() {
 	// port initialization routines (if any)... 
 	<threadImpl.portList:portInitializer()>
 	
@@ -699,7 +697,7 @@ int run() {
 	  <activeThreadInternalDispatcherName(threadImpl.initializeEntrypointOpt)>(&dummy_time);<endif>
 
 	// register interrupt handlers (if any)...
-	<threadImpl.dispatchers:registerIRQs()>
+	<threadImpl.dispatchers:osSpecificRegisterIrqs()>
 	
 	// initial lock to await dispatch input.
 	<dispatcherMainInitializeLockStmt(threadImpl)>
@@ -725,9 +723,9 @@ int run() {
 
 
 portDispatchVarDeclarations(port) ::= <<
-<if(port.hasData)><port.type.queueType.name> <port.globalData>; <endif>
-<port.indexType.aadlOutputType.name> <port.globalIndex>;
-<port.indexType.name> <port.globalMaxDispatchSize>; 	
+<if(port.hasData)>static <port.type.queueType.name> <port.globalData>; <endif>
+static <port.indexType.aadlOutputType.name> <port.globalIndex>;
+static <port.indexType.name> <port.globalMaxDispatchSize>; 	
 
 >>
 
@@ -740,7 +738,6 @@ portDispatchVarDeclarations(port) ::= <<
 
 componentCFileDecls(threadImpl) ::= <<
 
-#include <\u003C>string.h<\u003E>
 #include <\u003C><threadImpl.componentGlueCodeHFileName><\u003E>
 <osSpecificIncludeFiles(threadImpl)>
 

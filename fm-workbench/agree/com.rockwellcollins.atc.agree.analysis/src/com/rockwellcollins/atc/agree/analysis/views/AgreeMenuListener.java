@@ -119,8 +119,18 @@ public class AgreeMenuListener implements IMenuListener {
 
         if (cex != null) {
             final String cexType = getCounterexampleType(result);
-            final Layout layout = linker.getLayout(result.getParent());
-            final Map<String, EObject> refMap = linker.getReferenceMap(result.getParent());
+            
+            Map<String, EObject> tempRefMap = linker.getReferenceMap(result.getParent());
+            if(tempRefMap == null){
+            	tempRefMap = linker.getReferenceMap(result);
+            }
+            Layout tempLayout = linker.getLayout(result.getParent());
+            if(tempLayout == null){
+            	tempLayout = linker.getLayout(result);
+            }
+            
+            final Layout layout = tempLayout;
+            final Map<String, EObject> refMap = tempRefMap;   
 
             MenuManager sub = new MenuManager("View " + cexType + "Counterexample in");
             manager.add(sub);
@@ -147,8 +157,7 @@ public class AgreeMenuListener implements IMenuListener {
             });
             
             // send counterexamples to external plugins
-            PropertyResult pr = (PropertyResult) result;
-            EObject property = refMap.get(pr.getName());
+            EObject  property = refMap.get(result.getName());
             ComponentImplementation compImpl = linker.getComponent(result.getParent());
             
             for (CexExtractor ex : extractors) {

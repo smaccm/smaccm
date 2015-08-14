@@ -178,6 +178,11 @@ public static String getCUintTypeForMaxValue(int maxValue) {
 		return name;
 	}
 	
+	public static String fileNameFromPath(String s) {
+    File f = new File(s);
+    return f.getName();
+	}
+	
 	public static String prxPath(String s) {
 	  return pathRemoveExtension(s)
 	          .replace("/", ".")

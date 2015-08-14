@@ -80,14 +80,19 @@ dispatcherMainLockWaitStmt(threadImpl) ::= <<
 <threadImpl.dispatcherMainLockWaitStmtDoesntExist>
 >>
 
-dispatcherMainLockReleaseStmt(threadImpl) ::= <<
+dispatcherMainLockReleaseStmt(dispatcher, threadImpl) ::= <<
 <genericFailure("dispatcherMainLockReleaseStmt")>
 <threadImpl.dispatcherMainLockReleaseStmtDoesntExist>
 >>
 
-dispatcherIsrMainLockReleaseStmt(threadImpl) ::= <<
-<genericFailure("dispatcherIsrMainLockReleaseStmt")>
-<threadImpl.dispatcherIsrMainLockReleaseStmtDoesntExist>
+osSpecificIrqDispatcher(dispatcher) ::= <<
+<genericFailure("osSpecificIrqDispatcher")>
+<dispatcher.osSpecificIrqDispatcherDoesntExist>
+>>
+
+osSpecificRegisterIrqs(dispatcher) ::= <<
+<genericFailure("osSpecificRegisterIrqs")>
+<dispatcher.osSpecificRegisterIrqsDoesntExist>
 >>
 
 osSpecificIncludeFiles(threadImpl) ::= <<
@@ -95,3 +100,7 @@ osSpecificIncludeFiles(threadImpl) ::= <<
 <threadImpl.osSpecificIncludeFiles>
 >>
 
+osSpecificThreadEntrypoint(threadImpl) ::= <<
+<genericFailure("osSpecificThreadEntrypoint")>
+<threadImpl.osSpecificThreadEntrypoint>
+>>

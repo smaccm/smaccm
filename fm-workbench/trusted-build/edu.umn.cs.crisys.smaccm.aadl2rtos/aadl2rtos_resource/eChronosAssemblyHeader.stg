@@ -22,10 +22,6 @@ filePrefix(name, date, path) ::= <<
 <DARPALicenseComment()>
 
 <filenameBlockComment(date, path, filePurpose(name))>
-	
-#include \<stdbool.h>
-#include \<stddef.h>
-#include \<stdint.h>
 
 >>
 
@@ -38,17 +34,14 @@ filePostfix(name, path) ::= <<
 
 >>
 
-
+/*
 dataWriterDecl(port) ::= <<
 bool <incomingPortWriterName(port)>(<port.type.camkesInputType.name> arg); 
 >> 
+*/
 
-eventWriterDecl(port) ::= <<
-bool <incomingPortWriterName(port)>(); 
->>
-
-periodicDispatcherDecl(dispatcher) ::= <<
-void <outgoingActiveThreadDispatchName(dispatcher)>(<dispatcher.type.aadlInputType.name> arg); 
+writerDecl(port) ::= <<
+bool <incomingActiveThreadDispatchName(port)><if(port.hasData)>(const <port.type.camkesInputType.name> arg);<else>();<endif> 
 >>
 
 /*
@@ -62,18 +55,31 @@ void <outgoingActiveThreadDispatchName(dispatcher)>(<dispatcher.type.aadlInputTy
  */
 
 activeThreadDecls(threadImpl) ::= <<
-<threadImpl.inputDataPortList:dataWriterDecl()>
+<threadImpl.inputPortList:writerDecl()>
+>>
+/*  <threadImpl.inputDataPortList:dataWriterDecl()>
 <threadImpl.inputEventDataPortList:dataWriterDecl()>	
 <threadImpl.inputEventPortList:eventWriterDecl()>
-<threadImpl.periodicDispatchers:periodicDispatcherDecl()>
->>
+<threadImpl.periodicDispatchers:periodicDispatcherDecl()> */
 
 passiveThreadDecls(threadImpl) ::= <<
-<threadImpl.inputDataPortList:dataWriterDecl()>
+<threadImpl.inputDataPortList:writerDecl()>
 <threadImpl.dispatchers:userEntrypointCallerDecl()>
 >>
 
 headerBody(model) ::= <<
+
+#include \<stdbool.h>
+#include \<stddef.h>
+#include \<stdint.h>
+#include <\u003C><model.systemTypeHeaderName><\u003E>
+#include <\u003C>rtos-kochab.h<\u003E>
+
+// to initialize periodic dispatcher.  Call from main() before
+// starting OS.
+
+bool initialize_periodic_dispatcher(); 
+
    <model.activeThreadImplementations:activeThreadDecls()>
    <model.passiveThreadImplementations:passiveThreadDecls()>
 >>

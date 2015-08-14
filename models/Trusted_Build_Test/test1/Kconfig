@@ -1,6 +1,0 @@
-config APP_TEST1
-    bool "AADL generic message for implementation test1"
-    default n
-    select APP_CAMKES_EXECUTIVE
-    help
-        AADL generic message for implementation test1. 

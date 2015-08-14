@@ -14,6 +14,8 @@ import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosFailure;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Logger;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.common.CodeGeneratorBase;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.names.ModelNames;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.names.ThreadCalendarNames;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.names.TypeNames;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.InputDataPort;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.InputEventPort;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.InputPeriodicPort;
@@ -33,53 +35,47 @@ public class EChronos_CodeGenerator extends CodeGeneratorBase {
 		super(log, model, aadlDirectory, outputDir, "eChronos");
 	}
 
+	protected File getGlobalIncludeDirectory(File rootDirectory) {
+    return new File(outputDirectory, "gen");
+  }
+  
+  protected File getGlobalTemplateDirectory(File rootDirectory) {
+    return new File(outputDirectory, "make_template");
+  }
+  protected File getGlobalComponentDirectory(File rootDirectory) {
+    return new File(outputDirectory, "gen");
+  }
+  
+  protected File getComponentDirectory(File globalComponentDirectory, String name) {
+    return globalComponentDirectory;
+  }
+  protected File getComponentHeaderDirectory(File componentDirectory) {
+    return componentDirectory;
+  }
+  protected File getComponentSourceDirectory(File componentDirectory) {
+    return componentDirectory;
+  }
+
+	
 	 public void createAssemblyHeader() throws Aadl2RtosFailure {
 	   ModelNames mn = new ModelNames(model);
-	   String name = "smaccm_decls.h";
-	   File assemblyFile = new File(includeDirectory, name);
-     String path = assemblyFile.getAbsolutePath();
-     try (BufferedWriter writer = new BufferedWriter(new FileWriter(assemblyFile))) {
-       STGroupFile stg = this.createTemplate("AssemblyHeader.stg");
-       writeBoilerplateDTHeader(name, path, writer, stg.getInstanceOf("headerPrefix"), false);
- 
-       ST st = stg.getInstanceOf("headerBody");
-       st.add("model", mn);
-       writer.append(st.render());
-     
-       writeBoilerplateFooter(name, path, writer, stg.getInstanceOf("headerPostfix"));
-     } catch (IOException e) {
-       log.error("Problem creating EChronos assembly header file.");
-       throw new Aadl2RtosFailure(); 
-     }
- }
+	   String fileName = "smaccm_decls.h";
+	   writeGeneric(includeDirectory, "AssemblyHeader.stg", "headerBody", "model", mn, model.getSystemInstanceName(), false, fileName);
+   }
 
+	 
+	 
  public void createPrxFile() throws Aadl2RtosFailure {
      ModelNames mn = new ModelNames(model);
      String name = mn.getEChronosPrxFileName();
-     File file = new File(outputDirectory, name);
-     String path = file.getAbsolutePath();
      String platform; 
-     
-     if (model.getHWTarget().equals("PX4")) {
+     if (model.getHWTarget().equalsIgnoreCase("pixhawk")) {
        platform = "Prx-stm32f4-discovery.stg";
      } else {
-       log.error("eChronos code generator: currently only PX4 hardware platform is supported.\n");
+       log.error("eChronos code generator: currently only pixhawk hardware platform is supported.\n");
        throw new Aadl2RtosFailure();
      }
-     
-     try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
-       STGroupFile stg = this.createTemplate(platform);
-       writeBoilerplateDTHeader(name, path, writer, stg.getInstanceOf("prxPrefix"), false);
- 
-       ST st = stg.getInstanceOf("prxBody");
-       st.add("model", mn);
-       writer.append(st.render());
-     
-       writeBoilerplateFooter(name, path, writer, stg.getInstanceOf("prxPostfix"));
-     } catch (IOException e) {
-       log.error("Problem creating EChronos assembly header file.");
-       throw new Aadl2RtosFailure(); 
-     }
+     writeGeneric(outputDirectory, platform, "prxBody", "model", mn, name, false, name);
  }
 
 
@@ -91,9 +87,35 @@ public class EChronos_CodeGenerator extends CodeGeneratorBase {
     // This space (currently) for rent...
   }
 
+  public void createPeriodicDispatcherCFile(File srcDirectory) throws Aadl2RtosFailure {
+    ModelNames mn = new ModelNames(model);
+    ThreadCalendarNames tcn = new ThreadCalendarNames(model.getThreadCalendar());
+
+    writeGeneric(srcDirectory, "PeriodicDispatcherC.stg", "periodicComponentCBody", 
+        new String[] {"model", "threadCalendar"}, 
+        new Object[] {mn, tcn}, 
+        tcn.getPeriodicDispatcherComponentName(), false, tcn.getPeriodicDispatcherCFileName());
+    
+    model.getSourceFiles().add(tcn.getPeriodicDispatcherCFileName());
+  }
+  
+  // create this only if we have periodic threads.
+  
   @Override
   public void createPeriodicDispatcherComponent() throws Aadl2RtosFailure {
-    log.warn("eChronos code generator currently does not autogenerate the periodic dispatcher");
+    ModelNames mn = new ModelNames(model); 
+    
+    File componentDirectory = getComponentDirectory(componentsDirectory, mn.getThreadCalendar().getPeriodicDispatcherComponentName());
+    componentDirectory.mkdirs();
+  
+    File srcDirectory = getComponentSourceDirectory(componentDirectory);
+    srcDirectory.mkdirs();
+    
+    File includeDirectory = getComponentHeaderDirectory(componentDirectory);
+    includeDirectory.mkdirs();
+    
+    createClockDriver(srcDirectory, includeDirectory);
+    createPeriodicDispatcherCFile(srcDirectory); 
   }
 
 

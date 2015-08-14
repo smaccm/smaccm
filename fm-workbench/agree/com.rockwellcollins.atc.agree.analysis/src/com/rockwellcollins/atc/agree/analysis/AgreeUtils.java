@@ -53,7 +53,7 @@ import com.rockwellcollins.atc.agree.agree.AgreePackage;
 import com.rockwellcollins.atc.agree.agree.FnCallExpr;
 import com.rockwellcollins.atc.agree.agree.NestedDotID;
 
-public class AgreeEmitterUtilities {
+public class AgreeUtils {
 
 	static public PropertyExpression getPropExpression(NamedElement comp, Property prop) {
 
@@ -270,113 +270,18 @@ public class AgreeEmitterUtilities {
 		return null;
 	}
 
-	static public AgreeEmitterState getSubcomponentEmitter(Subcomponent sub, List<AgreeEmitterState> subStates) {
-		for (AgreeEmitterState subState : subStates) {
-			if (subState.curComp == sub) {
-				return subState;
+	
+	public static boolean containsTransitiveAgreeAnnex(ComponentInstance compInst){
+		if(containsAgreeAnnex(compInst.getSubcomponent())){
+			return true;
+		}
+		EList<ComponentInstance> transitiveSubs = compInst.getAllComponentInstances();
+		for(ComponentInstance transInst : transitiveSubs){
+			if(AgreeUtils.containsAgreeAnnex(transInst.getSubcomponent())){
+				return true;
 			}
 		}
-		return null;
-	}
-
-	static public Expr conjoin(List<Expr> exprs) {
-		if (exprs.isEmpty()) {
-			return new BoolExpr(true);
-		}
-
-		Iterator<Expr> iterator = exprs.iterator();
-		Expr result = iterator.next();
-		while (iterator.hasNext()) {
-			result = new BinaryExpr(result, BinaryOp.AND, iterator.next());
-		}
-		return result;
-	}
-
-	static public Expr conjoinEqs(List<Equation> eqs) {
-		if (eqs.isEmpty()) {
-			return new BoolExpr(true);
-		}
-
-		Iterator<Equation> iterator = eqs.iterator();
-		Expr result = iterator.next().expr;
-		while (iterator.hasNext()) {
-			result = new BinaryExpr(result, BinaryOp.AND, iterator.next().expr);
-		}
-		return result;
-	}
-
-	static public Expr conjoin(Expr... exprs) {
-		return conjoin(Arrays.asList(exprs));
-	}
-
-	static public Expr getLustreAssumptions(AgreeNode agreeNode) {
-		Expr assumps = conjoin(agreeNode.assumptions);
-		IdExpr clockExpr = new IdExpr(agreeNode.clockVar.id);
-		return new BinaryExpr(clockExpr, BinaryOp.IMPLIES, assumps);
-	}
-
-	static public Expr getLustreAssumptionsAndAssertions(AgreeNode agreeNode) {
-		Expr assumAssert = conjoin(conjoin(agreeNode.assertions), conjoin(agreeNode.assumptions));
-		IdExpr clockExpr = new IdExpr(agreeNode.clockVar.id);
-		return new BinaryExpr(clockExpr, BinaryOp.IMPLIES, assumAssert);
-
-	}
-
-	static public Expr getLustreContract(AgreeNode agreeNode) {
-		Expr contract = conjoin(conjoin(agreeNode.assertions), conjoin(agreeNode.assumptions),
-				conjoin(agreeNode.guarantees));
-		IdExpr clockExpr = new IdExpr(agreeNode.clockVar.id);
-		return new BinaryExpr(clockExpr, BinaryOp.IMPLIES, contract);
-
-	}
-
-	static public Expr getLustreGuarantee(AgreeNode agreeNode) {
-		return conjoin(agreeNode.guarantees);
-	}
-
-	static public Equation getLustreHistory(Expr expr, IdExpr histId) {
-
-		Expr preHist = new UnaryExpr(UnaryOp.PRE, histId);
-		Expr histExpr = new BinaryExpr(expr, BinaryOp.AND, preHist);
-		histExpr = new BinaryExpr(expr, BinaryOp.ARROW, histExpr);
-
-		Equation histEq = new Equation(histId, histExpr);
-
-		return histEq;
-
-	}
-
-	// returns an expression for bounded history
-	static public Expr getFinteConsistancy(Expr histExpr, IdExpr countId, int n) {
-		Expr countExpr = new BinaryExpr(countId, BinaryOp.EQUAL, new IntExpr(BigInteger.valueOf((long) n)));
-
-		Expr consistExpr = new BinaryExpr(histExpr, BinaryOp.AND, countExpr);
-		consistExpr = new UnaryExpr(UnaryOp.NOT, consistExpr);
-
-		return consistExpr;
-	}
-
-	static public void getOutputClosure(List<Connection> conns, Set<Subcomponent> subs) {
-
-		assert (subs.size() == 1);
-		Subcomponent orig = (Subcomponent) (subs.toArray()[0]);
-		int prevSize = subs.size();
-		do {
-			prevSize = subs.size();
-			for (Connection conn : conns) {
-				ConnectedElement absConnDest = conn.getDestination();
-				ConnectedElement absConnSour = conn.getSource();
-
-				Context destContext = absConnDest.getContext();
-				Context sourContext = absConnSour.getContext();
-				if (sourContext != null && subs.contains(sourContext)) {
-					if (destContext != null && destContext instanceof Subcomponent) {
-						subs.add((Subcomponent) destContext);
-					}
-				}
-			}
-		} while (subs.size() != prevSize);
-
+		return false;
 	}
 
 	public static boolean containsAgreeAnnex(Subcomponent subComp) {

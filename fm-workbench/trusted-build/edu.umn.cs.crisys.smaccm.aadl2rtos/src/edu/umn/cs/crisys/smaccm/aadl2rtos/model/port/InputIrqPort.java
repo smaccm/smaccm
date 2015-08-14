@@ -20,6 +20,7 @@ public class InputIrqPort extends DispatchableInputPort {
   private String firstLevelInterruptHandler;
   private Map<String, String> memoryRegions; 
 
+  public static final int NO_SIGNAL_NUMBER = -1;
   /**
    * @param portName
    * @param dataType

@@ -50,7 +50,26 @@ public class CAmkES_CodeGenerator extends CodeGeneratorBase {
 	private File interfacesDirectory;
 	private File makeTemplateDirectory; 
 
-	// so write threadName_write_portName for each port.
+  protected File getGlobalIncludeDirectory(File rootDirectory) {
+    return new File(rootDirectory, "include");
+  }
+  
+  protected File getGlobalTemplateDirectory(File rootDirectory) {
+    return new File(rootDirectory, "make_template");
+  }
+  protected File getGlobalComponentDirectory(File rootDirectory) {
+    return new File(rootDirectory, "components");
+  }
+  
+  protected File getComponentDirectory(File globalComponentDirectory, String name) {
+    return new File(globalComponentDirectory, name);
+  }
+  protected File getComponentHeaderDirectory(File componentDirectory) {
+    return new File(componentDirectory, "include");
+  }
+  protected File getComponentSourceDirectory(File componentDirectory) {
+    return new File(componentDirectory, "src");
+  }
 
 	public CAmkES_CodeGenerator(Logger log, Model model, File aadlDirectory, File outputDir) {
 	  super(log, model, aadlDirectory, outputDir, "Camkes");
@@ -114,7 +133,7 @@ public class CAmkES_CodeGenerator extends CodeGeneratorBase {
     
     for (Type t : getSharedVariableTypes()) {
       TypeNames type = new TypeNames(t);
-      writeGeneric(interfacesDirectory, "Idl4Rpc.stg", "rpgDeclaration", 
+      writeGeneric(interfacesDirectory, "Idl4SharedVar.stg", "svProc", 
           new String[] {"type", "model"}, 
           new Object[] {type, m}, 
           type.getSharedDataInterfaceName(), false, type.getSharedDataIdlFileName());

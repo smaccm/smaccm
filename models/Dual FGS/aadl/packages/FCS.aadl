@@ -126,10 +126,10 @@ assume "don't fail otherside assumption" :
        prev(left_side_valid, false) => 
            left_side_valid ;  
 
-assume "dont fail assumption" : 
-	   prev(prev(not right_side_valid, false), false) and
-       prev(right_side_valid, false) =>
-         right_side_valid ;
+--assume "dont fail assumption" : 
+--	   prev(prev(not right_side_valid, false), false) and
+--       prev(right_side_valid, false) =>
+--         right_side_valid ;
 		  
 assume "valid pitch" :AD_L_Pitch_Step_Delta_Valid and  
        AD_R_Pitch_Step_Delta_Valid and pitch_lr_ok ; 
@@ -203,9 +203,9 @@ assert prev(not(FGS_R.LSO.Valid), false) =>
 	(FGS_L.LSO.Valid => FGS_L.LSO.Leader != Get_Property(FGS_R, META_Properties::Leader_Select_ID));
 			 
   -- If any non-failed nodes exist, one of them will be the leader
-assert (prev(FGS_L.LSO.Valid or FGS_R.LSO.Valid, false)) => 
-	(( FGS_L.LSO.Valid => (FGS_L.LSO.Leader >= 1 and FGS_L.LSO.Leader <= 2)) and
-	(FGS_R.LSO.Valid => (FGS_R.LSO.Leader >= 1 and FGS_R.LSO.Leader <= 2)));
+--assert (prev(FGS_L.LSO.Valid or FGS_R.LSO.Valid, false)) => 
+--	(( FGS_L.LSO.Valid => (FGS_L.LSO.Leader >= 1 and FGS_L.LSO.Leader <= 2)) and
+--	(FGS_R.LSO.Valid => (FGS_R.LSO.Leader >= 1 and FGS_R.LSO.Leader <= 2)));
 			     
   -- If the leader does not fail, it shall remain the leader.  
 property prop2 =
