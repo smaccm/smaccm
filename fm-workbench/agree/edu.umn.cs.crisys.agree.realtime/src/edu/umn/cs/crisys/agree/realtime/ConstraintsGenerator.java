@@ -2,9 +2,13 @@ package edu.umn.cs.crisys.agree.realtime;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.IdentityHashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.eclipse.emf.ecore.EObject;
 import org.osate.aadl2.Property;
@@ -33,6 +37,9 @@ import jkind.lustre.UnaryExpr;
 import jkind.lustre.UnaryOp;
 import jkind.lustre.VarDecl;
 import jkind.lustre.builders.NodeBuilder;
+import jkind.lustre.visitors.ExprIterVisitor;
+import jkind.lustre.visitors.ExprMapVisitor;
+import jkind.lustre.visitors.PrettyPrintVisitor;
 
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeConnection;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeNode;
@@ -40,47 +47,68 @@ import com.rockwellcollins.atc.agree.analysis.ast.AgreeProgram;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeStatement;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeVar;
 import com.rockwellcollins.atc.agree.analysis.extentions.AgreeAutomater;
+import com.rockwellcollins.atc.agree.analysis.lustre.visitors.IdGatherer;
 
 	
 public class ConstraintsGenerator implements AgreeAutomater{
 
 	int clkCnt = 0;
+	AgreeNode mTopNode;
+	List<AgreeVar> mT_inputs = new ArrayList<>();
+	List<AgreeStatement> mT_assertions = new ArrayList<>();
 	
 	@Override
 	public AgreeProgram transform(AgreeProgram program) {
-		//TODO return a new AgreeProgram maniuplated however you want
-				
-//		Expr newAssertion = new BinaryExpr(inputId, BinaryOp.EQUAL, outputId);
-//		AgreeStatement agreeAssertion = new AgreeStatement("", newAssertion, null);
-//		List<AgreeStatement> assertions = new ArrayList<>();
-		
-//		assertions.addAll(program.topNode.assertions);
 		
 		clkCnt = 0;
-		AgreeNode myNode = addClocks(program.topNode);
+		mTopNode = program.topNode;
+		mT_inputs.addAll(mTopNode.inputs);
+		mT_assertions.addAll(mTopNode.assertions);
 		
 		List<Node> lustreNodes = new ArrayList<>();
 		lustreNodes.addAll(program.globalLustreNodes);
+
+		boolean test = true;
+		
+		if (test)
+		{
+		addClocks();
+				
+		lustreNodes = addCSLNodes(lustreNodes);
 		
 		// Only add the calendar nodes if at least one calendar type was created.
 		if (clkCnt > 0) 
 		{
 			lustreNodes = buildClkNode(lustreNodes);
 			lustreNodes = buildMinNode(lustreNodes);			
+			
+			// assert (next_inc = (0 -> (pre next2)));
+			Expr clkIncrAssertion = new BinaryExpr(new IdExpr("__NEXT_INC"),BinaryOp.EQUAL,new BinaryExpr(new IntExpr(BigInteger.valueOf(0)),BinaryOp.ARROW,new UnaryExpr(UnaryOp.PRE,new IdExpr("__NEXT".concat(String.valueOf(clkCnt-1))))));
+			mT_assertions.add(new AgreeStatement("", clkIncrAssertion, null));
+				
+			// check for 'time'
+			for(VarDecl output : mTopNode.outputs)
+			{
+				if (new String("time").equals(output.id))
+				{
+					Expr addTime = new BinaryExpr(new IdExpr("time"),BinaryOp.EQUAL,new BinaryExpr(new IntExpr(BigInteger.valueOf(0)),BinaryOp.ARROW,new BinaryExpr(new UnaryExpr(UnaryOp.PRE,new IdExpr("time")),BinaryOp.PLUS,new IdExpr("__NEXT_INC"))));
+					mT_assertions.add(new AgreeStatement("", addTime, null));
+				}
+			}				
 		}
-
+		}
 //		Property commTimingProp = EMFIndexRetrieval.getPropertyDefinitionInWorkspace(
 //				OsateResourceUtil.getResourceSet(), "Timing_Properties::Period");
 		  
 //		long intVal = PropertyUtils.getIntegerValue(program.topNode.compInst, commTimingProp);
 		//PropertyUtils.getEnumLiteral(conn, commTimingProp);
 				
-//		AgreeNode newTopNode = new AgreeNode(program.topNode.id, myNode.inputs, program.topNode.outputs, program.topNode.locals, 
-//				program.topNode.connections, program.topNode.subNodes, myNode.assertions, program.topNode.assumptions, 
-//				program.topNode.guarantees, program.topNode.lemmas, program.topNode.clockConstraint, program.topNode.initialConstraint, 
-//				program.topNode.clockVar, program.topNode.reference, program.topNode.timing, program.topNode.compInst);
+		mTopNode = new AgreeNode(program.topNode.id, mT_inputs, program.topNode.outputs, program.topNode.locals, 
+				program.topNode.connections, program.topNode.subNodes, mT_assertions, program.topNode.assumptions, 
+				program.topNode.guarantees, program.topNode.lemmas, program.topNode.clockConstraint, program.topNode.initialConstraint, 
+				program.topNode.clockVar, program.topNode.reference, program.topNode.timing, program.topNode.compInst);
 		
-		AgreeProgram newProgram = new AgreeProgram(program.agreeNodes, lustreNodes, program.globalTypes, myNode);
+		AgreeProgram newProgram = new AgreeProgram(program.agreeNodes, lustreNodes, program.globalTypes, mTopNode);
 		
 		return newProgram;
 	}
@@ -166,19 +194,12 @@ public class ConstraintsGenerator implements AgreeAutomater{
 
 //assert ((tmr1, fired1, run1, next1) = Time_Funcs__periodic_proc(sys1.Period, sys1.Phase, sys1.Drift, sys1.tte, next_inc, (0 -> (pre tmr1)), (false -> (pre run1)), (-1)));
 
-	private AgreeNode addClocks(AgreeNode node)
+	private  void addClocks()
 	{
 
-		List<AgreeVar> outputs = node.outputs;
-		List<AgreeVar> inputs = new ArrayList<>();
-		inputs.addAll(node.inputs);
-		List<AgreeStatement> assertions = new ArrayList<>();
-		assertions.addAll(node.assertions);
-	
-		for(VarDecl lustreVar : outputs)
+		for(VarDecl lustreVar : mTopNode.outputs)
 		{
 			AgreeVar var = (AgreeVar)lustreVar;
-//			if (new String("Clock__test__impl__Clk_Stat").equals(var.type.toString() ))
 			if (var.type.toString().endsWith("__Clk_Stat") )
 			{
 
@@ -203,44 +224,164 @@ public class ConstraintsGenerator implements AgreeAutomater{
 				if (clkCnt == 0)
 				{
 					newAssertion = new BinaryExpr(new TupleExpr(ids), BinaryOp.EQUAL,new NodeCallExpr("__CLOCK",a,b,c,d,e,new BinaryExpr(new IntExpr(BigInteger.valueOf(0)),BinaryOp.ARROW,new UnaryExpr(UnaryOp.PRE,f)),new BinaryExpr(new BoolExpr(false),BinaryOp.ARROW,new UnaryExpr(UnaryOp.PRE,g)),new IntExpr(BigInteger.valueOf(-1))));
-					inputs.add(new AgreeVar("__NEXT_INC", NamedType.INT, null, null));
+					mT_inputs.add(new AgreeVar("__NEXT_INC", NamedType.INT, null, null));
 				}	
 				else
 				{
 					newAssertion = new BinaryExpr(new TupleExpr(ids), BinaryOp.EQUAL,new NodeCallExpr("__CLOCK",a,b,c,d,e,new BinaryExpr(new IntExpr(BigInteger.valueOf(0)),BinaryOp.ARROW,new UnaryExpr(UnaryOp.PRE,f)),new BinaryExpr(new BoolExpr(false),BinaryOp.ARROW,new UnaryExpr(UnaryOp.PRE,g)),new IdExpr("__NEXT".concat(String.valueOf(clkCnt - 1)))));
 				}		
 
-				assertions.add(new AgreeStatement("", newAssertion, null));
+				mT_assertions.add(new AgreeStatement("", newAssertion, null));
 
-				inputs.add(new AgreeVar("__TMR".concat(String.valueOf(clkCnt)), NamedType.INT, null, null));
-				inputs.add(new AgreeVar("__RUN".concat(String.valueOf(clkCnt)), NamedType.BOOL, null, null));
-				inputs.add(new AgreeVar("__NEXT".concat(String.valueOf(clkCnt)), NamedType.INT, null, null));
+				mT_inputs.add(new AgreeVar("__TMR".concat(String.valueOf(clkCnt)), NamedType.INT, null, null));
+				mT_inputs.add(new AgreeVar("__RUN".concat(String.valueOf(clkCnt)), NamedType.BOOL, null, null));
+				mT_inputs.add(new AgreeVar("__NEXT".concat(String.valueOf(clkCnt)), NamedType.INT, null, null));
 				
 				clkCnt++;
 			}
 		}
+
+		return;
+	}
 	
-		if (clkCnt > 0)
+	private List<Node> addCSLNodes(List<Node> lustreNodes)
+	{
+		Boolean P1 = false;
+
+		List<AgreeStatement> origAssertions = new ArrayList<>();
+		origAssertions.addAll(mT_assertions);
+
+		List<Node> nodes = new ArrayList<>();
+		nodes.addAll(lustreNodes);
+		
+		for (AgreeStatement nAssertion : origAssertions)
 		{
-//			assert (next_inc = (0 -> (pre next2)));
-			Expr clkIncrAssertion = new BinaryExpr(new IdExpr("__NEXT_INC"),BinaryOp.EQUAL,new BinaryExpr(new IntExpr(BigInteger.valueOf(0)),BinaryOp.ARROW,new UnaryExpr(UnaryOp.PRE,new IdExpr("__NEXT".concat(String.valueOf(clkCnt-1))))));
-			assertions.add(new AgreeStatement("", clkIncrAssertion, null));
-			
-			// check for 'time'
-			for(VarDecl output : outputs)
+			if (nAssertion.expr.toString().contains(new String("CSL__P1")))
 			{
-				if (new String("time").equals(output.id))
+				mT_assertions.add(updateP1NodeCall(nAssertion));
+//				AgreeStatement test = (updateP1NodeCall(nAssertion));
+				mT_assertions.remove(nAssertion);
+				
+				if (!P1)
 				{
-					Expr addTime = new BinaryExpr(new IdExpr("time"),BinaryOp.EQUAL,new BinaryExpr(new IntExpr(BigInteger.valueOf(0)),BinaryOp.ARROW,new BinaryExpr(new UnaryExpr(UnaryOp.PRE,new IdExpr("time")),BinaryOp.PLUS,new IdExpr("__NEXT_INC"))));
-					assertions.add(new AgreeStatement("", addTime, null));
+					for (Node node : nodes)
+					{
+						if (new String("CSL__P1").equals(node.id))
+						{
+							lustreNodes.remove(node);
+							lustreNodes.add(P1Node());
+							P1 = true;
+						}
+					}
 				}
 			}
-			
 		}
+		
+		return lustreNodes;
+	}
+	
+	private AgreeStatement updateP1NodeCall(AgreeStatement assertion)
+	{					
+		List<Expr> mInputs = new ArrayList<>();
+		List<Expr> mOutputs = new ArrayList<>();
+			
+		PrettyPrintVisitor visitor2 = new PrettyPrintVisitor();
+		assertion.expr.accept(visitor2);
+			
+		ExprMapVisitor visitor = new ExprMapVisitor();
+		Expr tmp = assertion.expr.accept(visitor);
+		Expr tmp2 = ((BinaryExpr) tmp).right;
+		Iterator<Expr> iterator = ((NodeCallExpr)tmp2).args.iterator();
+			
+		while (iterator.hasNext()) 
+		{
+			mInputs.add(iterator.next());
+		}
+		mInputs.add(new BinaryExpr(new IntExpr(BigInteger.valueOf(-1)),BinaryOp.ARROW,new UnaryExpr(UnaryOp.PRE,new IdExpr("__T_REMAIN".concat(String.valueOf(clkCnt))))));			
+		mInputs.add(new IdExpr("__NEXT_INC"));
+		if (clkCnt > 0)
+			mInputs.add(new IdExpr("__NEXT".concat(String.valueOf(clkCnt-1))));	
+		else
+			mInputs.add(new IntExpr(BigInteger.valueOf(-1)));	
+			
+			
+		tmp2 = ((BinaryExpr) tmp).left;
+		mOutputs.addAll(((TupleExpr)tmp2).elements);
+		mOutputs.add(new IdExpr("__T_REMAIN".concat(String.valueOf(clkCnt))));			
+		mOutputs.add(new IdExpr("__NEXT".concat(String.valueOf(clkCnt))));	
+		mT_inputs.add(new AgreeVar("__T_REMAIN".concat(String.valueOf(clkCnt)), NamedType.INT, null, null));
+		mT_inputs.add(new AgreeVar("__NEXT".concat(String.valueOf(clkCnt)), NamedType.INT, null, null));
+		clkCnt++;
+		
+		Expr tmpExpr = new BinaryExpr(new TupleExpr(mOutputs), BinaryOp.EQUAL, new NodeCallExpr("__P1",mInputs));
+		
+		AgreeStatement newAssertion = new AgreeStatement("",tmpExpr,null);
 
-		return  new AgreeNode(node.id, inputs, node.outputs, node.locals, 
-				node.connections, node.subNodes, assertions, node.assumptions, 
-				node.guarantees, node.lemmas, node.clockConstraint, node.initialConstraint, 
-				node.clockVar, node.reference, node.timing, node.compInst);
+		return newAssertion;
+	}
+	
+//	node P1 (e : bool, s: bool, i : int, tr : int, del : int, m_nxt : int) returns (active : bool, ok : bool, ntr : int, r_nxt : int);
+//	let
+	
+//		active = tr - del > 0;
+//		ok = (tr - del >= 0 and s) or (tr = -1);
+//		ntr = if e and not active then i
+//			  else if tr - del <= 0 then -1
+//			  	   else tr - del;
+
+//	-- Do a running check for the next min. A -1 resets the calculation
+//	r_nxt = if ntr = -1 then m_nxt
+//			else if m_nxt = -1 then ntr
+//			else if m_nxt <  ntr then m_nxt
+//			else ntr;
+	
+//	tel;
+
+	private Node P1Node()
+	{
+		List<VarDecl> mInputs = new ArrayList<>();
+		List<VarDecl> mOutputs = new ArrayList<>();
+		List<VarDecl> mLocals = new ArrayList<>();
+		List<Equation> mEquations = new ArrayList<>();
+		mInputs.add(new AgreeVar("__EVENT", NamedType.BOOL, null, null));
+		mInputs.add(new AgreeVar("__SIGNAL", NamedType.BOOL, null, null));
+		mInputs.add(new AgreeVar("__INTERVAL", NamedType.INT, null, null));
+		mInputs.add(new AgreeVar("__T_REMAINING", NamedType.INT, null, null));
+		mInputs.add(new AgreeVar("__T_EXPIRED", NamedType.INT, null, null));
+		mInputs.add(new AgreeVar("__CUR_MIN_T_REMAINING", NamedType.INT, null, null));
+
+		mOutputs.add(new AgreeVar("__ACTIVE", NamedType.BOOL, null, null));
+		mOutputs.add(new AgreeVar("__OK", NamedType.BOOL, null, null));
+		mOutputs.add(new AgreeVar("__NEXT_T_REMAINING", NamedType.INT, null, null));
+		mOutputs.add(new AgreeVar("__MIN_T_REMAINING", NamedType.INT, null, null));
+		
+//		active = tr - del > 0;
+		Expr T1 = new BinaryExpr(new IdExpr("__T_REMAINING"),BinaryOp.MINUS,new IdExpr("__T_EXPIRED"));
+		mEquations.add(new Equation(new IdExpr("__ACTIVE"),new BinaryExpr(T1,BinaryOp.GREATER,new IntExpr(BigInteger.valueOf(0)))));
+
+//		ok = (tr - del >= 0 and s) or (tr = -1);
+		Expr T2 = new BinaryExpr(new BinaryExpr(new IdExpr("__T_REMAINING"),BinaryOp.MINUS,new IdExpr("__T_EXPIRED")),BinaryOp.GREATEREQUAL,new IntExpr(BigInteger.valueOf(0)));
+		Expr T3 = new BinaryExpr(T2,BinaryOp.AND,new IdExpr("__SIGNAL"));
+		Expr T4 = new BinaryExpr(new IdExpr("__T_REMAINING"),BinaryOp.EQUAL,new IntExpr(BigInteger.valueOf(-1)));
+		mEquations.add(new Equation(new IdExpr("__OK"),new BinaryExpr(T3,BinaryOp.OR,T4)));
+				
+//		ntr = if e and not active then i
+//			  else if tr - del <= 0 then -1
+//			  	   else tr - del;
+		Expr T5 = new BinaryExpr(new IdExpr("__EVENT"),BinaryOp.AND,new UnaryExpr(UnaryOp.NOT,new IdExpr("__ACTIVE")));
+		Expr T6 = new BinaryExpr(T1,BinaryOp.LESSEQUAL,new IntExpr(BigInteger.valueOf(0)));
+		mEquations.add(new Equation(new IdExpr("__NEXT_T_REMAINING"),new IfThenElseExpr(T5,new IdExpr("__INTERVAL"),new IfThenElseExpr(T6,new IntExpr(BigInteger.valueOf(-1)),T1))));
+
+//	-- Do a running check for the next min. A -1 resets the calculation
+//	r_nxt = if ntr = -1 then m_nxt
+//			else if m_nxt = -1 then ntr
+//			else if m_nxt <  ntr then m_nxt
+//			else ntr;
+		Expr T7 = new BinaryExpr(new IdExpr("__NEXT_T_REMAINING"),BinaryOp.EQUAL,new IntExpr(BigInteger.valueOf(-1)));
+		Expr T8 = new BinaryExpr(new IdExpr("__CUR_MIN_T_REMAINING"),BinaryOp.EQUAL,new IntExpr(BigInteger.valueOf(-1)));
+		Expr T9 = new NodeCallExpr("__MIN2",new IdExpr("__NEXT_T_REMAINING"),new IdExpr("__CUR_MIN_T_REMAINING"));
+		mEquations.add(new Equation(new IdExpr("__MIN_T_REMAINING"),new IfThenElseExpr(T7,new IdExpr("__CUR_MIN_T_REMAINING"),new IfThenElseExpr(T8, new IdExpr("__NEXT_T_REMAINING"), T9))));
+				
+		return new Node("__P1",mInputs,mOutputs,mLocals,mEquations);
 	}
 }
