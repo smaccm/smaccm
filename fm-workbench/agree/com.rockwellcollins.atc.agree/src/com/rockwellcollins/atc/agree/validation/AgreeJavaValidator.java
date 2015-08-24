@@ -182,6 +182,25 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
     }
     
     @Check(CheckType.FAST)
+    public void checkArg(Arg arg){
+    	Type type = arg.getType();
+    	if(type instanceof PrimType){
+    		PrimType primType = (PrimType)type;
+    		String strType = primType.getString();
+    		boolean rangeLowDot = primType.getRangeLow().contains(".");
+    		boolean rangeHighDot = primType.getRangeHigh().contains(".");
+    		if(rangeLowDot != rangeHighDot){
+    			error(arg, "The range intervals are of differing types");
+    		}
+    		float low = Float.valueOf(primType.getRangeLow());
+    		float high = Float.valueOf(primType.getRangeHigh());
+    		if(low >= high){
+    			error(arg, "The low value of the interval is greater than or equal to the high end");
+    		}
+    	}
+    }
+    
+    @Check(CheckType.FAST)
     public void checkCalenStatement(CalenStatement calen){
     	for(NamedElement el : calen.getEls()){
     		if(!(el instanceof Subcomponent)){

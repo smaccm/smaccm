@@ -108,7 +108,7 @@ Arg returns Arg:
 	name=ID ':' type=Type;
 
 Type returns Type:
-	{PrimType} string=primTypes ('[' rangeLow=(INTEGER_LIT|REAL_LIT) ',' rangeHigh=(INTEGER_LIT|REAL_LIT) ']')?
+	{PrimType} string=primTypes ('[' rangeLow=('-')?(INTEGER_LIT|REAL_LIT) ',' rangeHigh=('-')?(INTEGER_LIT|REAL_LIT) ']')?
 |	{RecordType} record=NestedDotID
 ;
 
