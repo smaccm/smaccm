@@ -45,8 +45,8 @@ public class AgreeParser extends AbstractPartialContentAssistParser {
 					put(grammarAccess.getCallDefAccess().getAlternatives(), "rule__CallDef__Alternatives");
 					put(grammarAccess.getNodeStmtAccess().getAlternatives(), "rule__NodeStmt__Alternatives");
 					put(grammarAccess.getTypeAccess().getAlternatives(), "rule__Type__Alternatives");
-					put(grammarAccess.getTypeAccess().getRangeLowAlternatives_0_2_1_0(), "rule__Type__RangeLowAlternatives_0_2_1_0");
-					put(grammarAccess.getTypeAccess().getRangeHighAlternatives_0_2_3_0(), "rule__Type__RangeHighAlternatives_0_2_3_0");
+					put(grammarAccess.getTypeAccess().getAlternatives_0_2_2(), "rule__Type__Alternatives_0_2_2");
+					put(grammarAccess.getTypeAccess().getAlternatives_0_2_5(), "rule__Type__Alternatives_0_2_5");
 					put(grammarAccess.getPrimTypesAccess().getAlternatives(), "rule__PrimTypes__Alternatives");
 					put(grammarAccess.getRelateOpAccess().getAlternatives(), "rule__RelateOp__Alternatives");
 					put(grammarAccess.getAddSubExprAccess().getOpAlternatives_1_0_0_1_0(), "rule__AddSubExpr__OpAlternatives_1_0_0_1_0");
@@ -287,7 +287,7 @@ public class AgreeParser extends AbstractPartialContentAssistParser {
 					put(grammarAccess.getArgAccess().getTypeAssignment_2(), "rule__Arg__TypeAssignment_2");
 					put(grammarAccess.getTypeAccess().getStringAssignment_0_1(), "rule__Type__StringAssignment_0_1");
 					put(grammarAccess.getTypeAccess().getRangeLowAssignment_0_2_1(), "rule__Type__RangeLowAssignment_0_2_1");
-					put(grammarAccess.getTypeAccess().getRangeHighAssignment_0_2_3(), "rule__Type__RangeHighAssignment_0_2_3");
+					put(grammarAccess.getTypeAccess().getRangeHighAssignment_0_2_4(), "rule__Type__RangeHighAssignment_0_2_4");
 					put(grammarAccess.getTypeAccess().getRecordAssignment_1_1(), "rule__Type__RecordAssignment_1_1");
 					put(grammarAccess.getRecordDefExprAccess().getNameAssignment_1(), "rule__RecordDefExpr__NameAssignment_1");
 					put(grammarAccess.getRecordDefExprAccess().getArgsAssignment_5_0(), "rule__RecordDefExpr__ArgsAssignment_5_0");

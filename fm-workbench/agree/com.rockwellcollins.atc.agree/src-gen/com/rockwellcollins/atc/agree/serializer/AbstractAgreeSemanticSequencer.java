@@ -1361,7 +1361,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	
 	/**
 	 * Constraint:
-	 *     (string=primTypes ((rangeLow=INTEGER_LIT | rangeLow=REAL_LIT) (rangeHigh=INTEGER_LIT | rangeHigh=REAL_LIT))?)
+	 *     (string=primTypes (rangeLow='-'? rangeHigh='-'?)?)
 	 */
 	protected void sequence_Type(EObject context, PrimType semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);

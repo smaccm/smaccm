@@ -2141,85 +2141,63 @@ ruleType returns [EObject current=null]
     }
 (
 (
-(
-		lv_rangeLow_3_1=RULE_INTEGER_LIT
-		{
-			newLeafNode(lv_rangeLow_3_1, grammarAccess.getTypeAccess().getRangeLowINTEGER_LITTerminalRuleCall_0_2_1_0_0()); 
-		}
-		{
-	        if ($current==null) {
-	            $current = createModelElement(grammarAccess.getTypeRule());
-	        }
-       		setWithLastConsumed(
-       			$current, 
-       			"rangeLow",
-        		lv_rangeLow_3_1, 
-        		"INTEGER_LIT");
-	    }
-
-    |		lv_rangeLow_3_2=RULE_REAL_LIT
-		{
-			newLeafNode(lv_rangeLow_3_2, grammarAccess.getTypeAccess().getRangeLowREAL_LITTerminalRuleCall_0_2_1_0_1()); 
-		}
-		{
-	        if ($current==null) {
-	            $current = createModelElement(grammarAccess.getTypeRule());
-	        }
-       		setWithLastConsumed(
-       			$current, 
-       			"rangeLow",
-        		lv_rangeLow_3_2, 
-        		"REAL_LIT");
-	    }
-
-)
-
-)
-)
-	otherlv_4=Comma
+		lv_rangeLow_3_0=
+	HyphenMinus
     {
-    	newLeafNode(otherlv_4, grammarAccess.getTypeAccess().getCommaKeyword_0_2_2());
+        newLeafNode(lv_rangeLow_3_0, grammarAccess.getTypeAccess().getRangeLowHyphenMinusKeyword_0_2_1_0());
+    }
+
+	    {
+	        if ($current==null) {
+	            $current = createModelElement(grammarAccess.getTypeRule());
+	        }
+       		setWithLastConsumed($current, "rangeLow", lv_rangeLow_3_0, "-");
+	    }
+
+)
+)?(this_INTEGER_LIT_4=RULE_INTEGER_LIT
+    { 
+    newLeafNode(this_INTEGER_LIT_4, grammarAccess.getTypeAccess().getINTEGER_LITTerminalRuleCall_0_2_2_0()); 
+    }
+
+    |this_REAL_LIT_5=RULE_REAL_LIT
+    { 
+    newLeafNode(this_REAL_LIT_5, grammarAccess.getTypeAccess().getREAL_LITTerminalRuleCall_0_2_2_1()); 
+    }
+)
+	otherlv_6=Comma
+    {
+    	newLeafNode(otherlv_6, grammarAccess.getTypeAccess().getCommaKeyword_0_2_3());
     }
 (
 (
-(
-		lv_rangeHigh_5_1=RULE_INTEGER_LIT
-		{
-			newLeafNode(lv_rangeHigh_5_1, grammarAccess.getTypeAccess().getRangeHighINTEGER_LITTerminalRuleCall_0_2_3_0_0()); 
-		}
-		{
-	        if ($current==null) {
-	            $current = createModelElement(grammarAccess.getTypeRule());
-	        }
-       		setWithLastConsumed(
-       			$current, 
-       			"rangeHigh",
-        		lv_rangeHigh_5_1, 
-        		"INTEGER_LIT");
-	    }
-
-    |		lv_rangeHigh_5_2=RULE_REAL_LIT
-		{
-			newLeafNode(lv_rangeHigh_5_2, grammarAccess.getTypeAccess().getRangeHighREAL_LITTerminalRuleCall_0_2_3_0_1()); 
-		}
-		{
-	        if ($current==null) {
-	            $current = createModelElement(grammarAccess.getTypeRule());
-	        }
-       		setWithLastConsumed(
-       			$current, 
-       			"rangeHigh",
-        		lv_rangeHigh_5_2, 
-        		"REAL_LIT");
-	    }
-
-)
-
-)
-)
-	otherlv_6=RightSquareBracket
+		lv_rangeHigh_7_0=
+	HyphenMinus
     {
-    	newLeafNode(otherlv_6, grammarAccess.getTypeAccess().getRightSquareBracketKeyword_0_2_4());
+        newLeafNode(lv_rangeHigh_7_0, grammarAccess.getTypeAccess().getRangeHighHyphenMinusKeyword_0_2_4_0());
+    }
+
+	    {
+	        if ($current==null) {
+	            $current = createModelElement(grammarAccess.getTypeRule());
+	        }
+       		setWithLastConsumed($current, "rangeHigh", lv_rangeHigh_7_0, "-");
+	    }
+
+)
+)?(this_INTEGER_LIT_8=RULE_INTEGER_LIT
+    { 
+    newLeafNode(this_INTEGER_LIT_8, grammarAccess.getTypeAccess().getINTEGER_LITTerminalRuleCall_0_2_5_0()); 
+    }
+
+    |this_REAL_LIT_9=RULE_REAL_LIT
+    { 
+    newLeafNode(this_REAL_LIT_9, grammarAccess.getTypeAccess().getREAL_LITTerminalRuleCall_0_2_5_1()); 
+    }
+)
+	otherlv_10=RightSquareBracket
+    {
+    	newLeafNode(otherlv_10, grammarAccess.getTypeAccess().getRightSquareBracketKeyword_0_2_6());
     }
 )?)
     |((
@@ -2233,14 +2211,14 @@ ruleType returns [EObject current=null]
 		{ 
 	        newCompositeNode(grammarAccess.getTypeAccess().getRecordNestedDotIDParserRuleCall_1_1_0()); 
 	    }
-		lv_record_8_0=ruleNestedDotID		{
+		lv_record_12_0=ruleNestedDotID		{
 	        if ($current==null) {
 	            $current = createModelElementForParent(grammarAccess.getTypeRule());
 	        }
        		set(
        			$current, 
        			"record",
-        		lv_record_8_0, 
+        		lv_record_12_0, 
         		"NestedDotID");
 	        afterParserOrEnumRuleCall();
 	    }
