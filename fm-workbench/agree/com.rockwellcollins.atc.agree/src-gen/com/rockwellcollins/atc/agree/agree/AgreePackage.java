@@ -2329,13 +2329,31 @@ public interface AgreePackage extends EPackage
   int PRIM_TYPE__STRING = TYPE_FEATURE_COUNT + 0;
 
   /**
+   * The feature id for the '<em><b>Range Low</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int PRIM_TYPE__RANGE_LOW = TYPE_FEATURE_COUNT + 1;
+
+  /**
+   * The feature id for the '<em><b>Range High</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int PRIM_TYPE__RANGE_HIGH = TYPE_FEATURE_COUNT + 2;
+
+  /**
    * The number of structural features of the '<em>Prim Type</em>' class.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int PRIM_TYPE_FEATURE_COUNT = TYPE_FEATURE_COUNT + 1;
+  int PRIM_TYPE_FEATURE_COUNT = TYPE_FEATURE_COUNT + 3;
 
   /**
    * The meta object id for the '{@link com.rockwellcollins.atc.agree.agree.impl.RecordTypeImpl <em>Record Type</em>}' class.
@@ -4137,6 +4155,28 @@ public interface AgreePackage extends EPackage
   EAttribute getPrimType_String();
 
   /**
+   * Returns the meta object for the attribute '{@link com.rockwellcollins.atc.agree.agree.PrimType#getRangeLow <em>Range Low</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the attribute '<em>Range Low</em>'.
+   * @see com.rockwellcollins.atc.agree.agree.PrimType#getRangeLow()
+   * @see #getPrimType()
+   * @generated
+   */
+  EAttribute getPrimType_RangeLow();
+
+  /**
+   * Returns the meta object for the attribute '{@link com.rockwellcollins.atc.agree.agree.PrimType#getRangeHigh <em>Range High</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the attribute '<em>Range High</em>'.
+   * @see com.rockwellcollins.atc.agree.agree.PrimType#getRangeHigh()
+   * @see #getPrimType()
+   * @generated
+   */
+  EAttribute getPrimType_RangeHigh();
+
+  /**
    * Returns the meta object for class '{@link com.rockwellcollins.atc.agree.agree.RecordType <em>Record Type</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -5411,6 +5451,22 @@ public interface AgreePackage extends EPackage
      * @generated
      */
     EAttribute PRIM_TYPE__STRING = eINSTANCE.getPrimType_String();
+
+    /**
+     * The meta object literal for the '<em><b>Range Low</b></em>' attribute feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EAttribute PRIM_TYPE__RANGE_LOW = eINSTANCE.getPrimType_RangeLow();
+
+    /**
+     * The meta object literal for the '<em><b>Range High</b></em>' attribute feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EAttribute PRIM_TYPE__RANGE_HIGH = eINSTANCE.getPrimType_RangeHigh();
 
     /**
      * The meta object literal for the '{@link com.rockwellcollins.atc.agree.agree.impl.RecordTypeImpl <em>Record Type</em>}' class.

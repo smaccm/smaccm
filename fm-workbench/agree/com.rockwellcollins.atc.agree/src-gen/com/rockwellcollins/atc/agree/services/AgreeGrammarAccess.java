@@ -1421,19 +1421,33 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		private final Action cPrimTypeAction_0_0 = (Action)cGroup_0.eContents().get(0);
 		private final Assignment cStringAssignment_0_1 = (Assignment)cGroup_0.eContents().get(1);
 		private final RuleCall cStringPrimTypesParserRuleCall_0_1_0 = (RuleCall)cStringAssignment_0_1.eContents().get(0);
+		private final Group cGroup_0_2 = (Group)cGroup_0.eContents().get(2);
+		private final Keyword cLeftSquareBracketKeyword_0_2_0 = (Keyword)cGroup_0_2.eContents().get(0);
+		private final Assignment cRangeLowAssignment_0_2_1 = (Assignment)cGroup_0_2.eContents().get(1);
+		private final Alternatives cRangeLowAlternatives_0_2_1_0 = (Alternatives)cRangeLowAssignment_0_2_1.eContents().get(0);
+		private final RuleCall cRangeLowINTEGER_LITTerminalRuleCall_0_2_1_0_0 = (RuleCall)cRangeLowAlternatives_0_2_1_0.eContents().get(0);
+		private final RuleCall cRangeLowREAL_LITTerminalRuleCall_0_2_1_0_1 = (RuleCall)cRangeLowAlternatives_0_2_1_0.eContents().get(1);
+		private final Keyword cCommaKeyword_0_2_2 = (Keyword)cGroup_0_2.eContents().get(2);
+		private final Assignment cRangeHighAssignment_0_2_3 = (Assignment)cGroup_0_2.eContents().get(3);
+		private final Alternatives cRangeHighAlternatives_0_2_3_0 = (Alternatives)cRangeHighAssignment_0_2_3.eContents().get(0);
+		private final RuleCall cRangeHighINTEGER_LITTerminalRuleCall_0_2_3_0_0 = (RuleCall)cRangeHighAlternatives_0_2_3_0.eContents().get(0);
+		private final RuleCall cRangeHighREAL_LITTerminalRuleCall_0_2_3_0_1 = (RuleCall)cRangeHighAlternatives_0_2_3_0.eContents().get(1);
+		private final Keyword cRightSquareBracketKeyword_0_2_4 = (Keyword)cGroup_0_2.eContents().get(4);
 		private final Group cGroup_1 = (Group)cAlternatives.eContents().get(1);
 		private final Action cRecordTypeAction_1_0 = (Action)cGroup_1.eContents().get(0);
 		private final Assignment cRecordAssignment_1_1 = (Assignment)cGroup_1.eContents().get(1);
 		private final RuleCall cRecordNestedDotIDParserRuleCall_1_1_0 = (RuleCall)cRecordAssignment_1_1.eContents().get(0);
 		
 		//Type:
-		//	{PrimType} string=primTypes | {RecordType} record=NestedDotID;
+		//	{PrimType} string=primTypes ("[" rangeLow=(INTEGER_LIT | REAL_LIT) "," rangeHigh=(INTEGER_LIT | REAL_LIT) "]")? |
+		//	{RecordType} record=NestedDotID;
 		public ParserRule getRule() { return rule; }
 
-		//{PrimType} string=primTypes | {RecordType} record=NestedDotID
+		//{PrimType} string=primTypes ("[" rangeLow=(INTEGER_LIT | REAL_LIT) "," rangeHigh=(INTEGER_LIT | REAL_LIT) "]")? |
+		//{RecordType} record=NestedDotID
 		public Alternatives getAlternatives() { return cAlternatives; }
 
-		//{PrimType} string=primTypes
+		//{PrimType} string=primTypes ("[" rangeLow=(INTEGER_LIT | REAL_LIT) "," rangeHigh=(INTEGER_LIT | REAL_LIT) "]")?
 		public Group getGroup_0() { return cGroup_0; }
 
 		//{PrimType}
@@ -1444,6 +1458,42 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 
 		//primTypes
 		public RuleCall getStringPrimTypesParserRuleCall_0_1_0() { return cStringPrimTypesParserRuleCall_0_1_0; }
+
+		//("[" rangeLow=(INTEGER_LIT | REAL_LIT) "," rangeHigh=(INTEGER_LIT | REAL_LIT) "]")?
+		public Group getGroup_0_2() { return cGroup_0_2; }
+
+		//"["
+		public Keyword getLeftSquareBracketKeyword_0_2_0() { return cLeftSquareBracketKeyword_0_2_0; }
+
+		//rangeLow=(INTEGER_LIT | REAL_LIT)
+		public Assignment getRangeLowAssignment_0_2_1() { return cRangeLowAssignment_0_2_1; }
+
+		//INTEGER_LIT | REAL_LIT
+		public Alternatives getRangeLowAlternatives_0_2_1_0() { return cRangeLowAlternatives_0_2_1_0; }
+
+		//INTEGER_LIT
+		public RuleCall getRangeLowINTEGER_LITTerminalRuleCall_0_2_1_0_0() { return cRangeLowINTEGER_LITTerminalRuleCall_0_2_1_0_0; }
+
+		//REAL_LIT
+		public RuleCall getRangeLowREAL_LITTerminalRuleCall_0_2_1_0_1() { return cRangeLowREAL_LITTerminalRuleCall_0_2_1_0_1; }
+
+		//","
+		public Keyword getCommaKeyword_0_2_2() { return cCommaKeyword_0_2_2; }
+
+		//rangeHigh=(INTEGER_LIT | REAL_LIT)
+		public Assignment getRangeHighAssignment_0_2_3() { return cRangeHighAssignment_0_2_3; }
+
+		//INTEGER_LIT | REAL_LIT
+		public Alternatives getRangeHighAlternatives_0_2_3_0() { return cRangeHighAlternatives_0_2_3_0; }
+
+		//INTEGER_LIT
+		public RuleCall getRangeHighINTEGER_LITTerminalRuleCall_0_2_3_0_0() { return cRangeHighINTEGER_LITTerminalRuleCall_0_2_3_0_0; }
+
+		//REAL_LIT
+		public RuleCall getRangeHighREAL_LITTerminalRuleCall_0_2_3_0_1() { return cRangeHighREAL_LITTerminalRuleCall_0_2_3_0_1; }
+
+		//"]"
+		public Keyword getRightSquareBracketKeyword_0_2_4() { return cRightSquareBracketKeyword_0_2_4; }
 
 		//{RecordType} record=NestedDotID
 		public Group getGroup_1() { return cGroup_1; }
@@ -3148,7 +3198,8 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 	}
 
 	//Type:
-	//	{PrimType} string=primTypes | {RecordType} record=NestedDotID;
+	//	{PrimType} string=primTypes ("[" rangeLow=(INTEGER_LIT | REAL_LIT) "," rangeHigh=(INTEGER_LIT | REAL_LIT) "]")? |
+	//	{RecordType} record=NestedDotID;
 	public TypeElements getTypeAccess() {
 		return pType;
 	}

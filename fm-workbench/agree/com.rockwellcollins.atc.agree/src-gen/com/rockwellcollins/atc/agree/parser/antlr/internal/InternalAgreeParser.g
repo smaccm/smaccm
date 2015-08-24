@@ -2134,7 +2134,94 @@ ruleType returns [EObject current=null]
 	    }
 
 )
-))
+)(
+	otherlv_2=LeftSquareBracket
+    {
+    	newLeafNode(otherlv_2, grammarAccess.getTypeAccess().getLeftSquareBracketKeyword_0_2_0());
+    }
+(
+(
+(
+		lv_rangeLow_3_1=RULE_INTEGER_LIT
+		{
+			newLeafNode(lv_rangeLow_3_1, grammarAccess.getTypeAccess().getRangeLowINTEGER_LITTerminalRuleCall_0_2_1_0_0()); 
+		}
+		{
+	        if ($current==null) {
+	            $current = createModelElement(grammarAccess.getTypeRule());
+	        }
+       		setWithLastConsumed(
+       			$current, 
+       			"rangeLow",
+        		lv_rangeLow_3_1, 
+        		"INTEGER_LIT");
+	    }
+
+    |		lv_rangeLow_3_2=RULE_REAL_LIT
+		{
+			newLeafNode(lv_rangeLow_3_2, grammarAccess.getTypeAccess().getRangeLowREAL_LITTerminalRuleCall_0_2_1_0_1()); 
+		}
+		{
+	        if ($current==null) {
+	            $current = createModelElement(grammarAccess.getTypeRule());
+	        }
+       		setWithLastConsumed(
+       			$current, 
+       			"rangeLow",
+        		lv_rangeLow_3_2, 
+        		"REAL_LIT");
+	    }
+
+)
+
+)
+)
+	otherlv_4=Comma
+    {
+    	newLeafNode(otherlv_4, grammarAccess.getTypeAccess().getCommaKeyword_0_2_2());
+    }
+(
+(
+(
+		lv_rangeHigh_5_1=RULE_INTEGER_LIT
+		{
+			newLeafNode(lv_rangeHigh_5_1, grammarAccess.getTypeAccess().getRangeHighINTEGER_LITTerminalRuleCall_0_2_3_0_0()); 
+		}
+		{
+	        if ($current==null) {
+	            $current = createModelElement(grammarAccess.getTypeRule());
+	        }
+       		setWithLastConsumed(
+       			$current, 
+       			"rangeHigh",
+        		lv_rangeHigh_5_1, 
+        		"INTEGER_LIT");
+	    }
+
+    |		lv_rangeHigh_5_2=RULE_REAL_LIT
+		{
+			newLeafNode(lv_rangeHigh_5_2, grammarAccess.getTypeAccess().getRangeHighREAL_LITTerminalRuleCall_0_2_3_0_1()); 
+		}
+		{
+	        if ($current==null) {
+	            $current = createModelElement(grammarAccess.getTypeRule());
+	        }
+       		setWithLastConsumed(
+       			$current, 
+       			"rangeHigh",
+        		lv_rangeHigh_5_2, 
+        		"REAL_LIT");
+	    }
+
+)
+
+)
+)
+	otherlv_6=RightSquareBracket
+    {
+    	newLeafNode(otherlv_6, grammarAccess.getTypeAccess().getRightSquareBracketKeyword_0_2_4());
+    }
+)?)
     |((
     {
         $current = forceCreateModelElement(
@@ -2146,14 +2233,14 @@ ruleType returns [EObject current=null]
 		{ 
 	        newCompositeNode(grammarAccess.getTypeAccess().getRecordNestedDotIDParserRuleCall_1_1_0()); 
 	    }
-		lv_record_3_0=ruleNestedDotID		{
+		lv_record_8_0=ruleNestedDotID		{
 	        if ($current==null) {
 	            $current = createModelElementForParent(grammarAccess.getTypeRule());
 	        }
        		set(
        			$current, 
        			"record",
-        		lv_record_3_0, 
+        		lv_record_8_0, 
         		"NestedDotID");
 	        afterParserOrEnumRuleCall();
 	    }
