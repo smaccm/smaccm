@@ -60,7 +60,12 @@ public class ConstraintsGenerator implements AgreeAutomater{
 	@Override
 	public AgreeProgram transform(AgreeProgram program) {
 		
+		// Reset any leftovers from previous runs
 		clkCnt = 0;
+		mT_inputs.clear();
+		mT_assertions.clear();
+
+		// Make local copies of the final structures that we need to modify
 		mTopNode = program.topNode;
 		mT_inputs.addAll(mTopNode.inputs);
 		mT_assertions.addAll(mTopNode.assertions);
@@ -246,7 +251,6 @@ public class ConstraintsGenerator implements AgreeAutomater{
 	
 	private List<Node> addCSLNodes(List<Node> lustreNodes)
 	{
-		Boolean P1 = false;
 
 		List<AgreeStatement> origAssertions = new ArrayList<>();
 		origAssertions.addAll(mT_assertions);
@@ -256,31 +260,28 @@ public class ConstraintsGenerator implements AgreeAutomater{
 		
 		for (AgreeStatement nAssertion : origAssertions)
 		{
-			if (nAssertion.expr.toString().contains(new String("CSL__P1")))
+			String tst = nAssertion.expr.toString();
+			if (nAssertion.expr.toString().contains(new String("CSL__")))
 			{
-				mT_assertions.add(updateP1NodeCall(nAssertion));
-//				AgreeStatement test = (updateP1NodeCall(nAssertion));
+				mT_assertions.add(updateCSLNodeCall(nAssertion));
 				mT_assertions.remove(nAssertion);
 				
-				if (!P1)
-				{
-					for (Node node : nodes)
-					{
-						if (new String("CSL__P1").equals(node.id))
-						{
-							lustreNodes.remove(node);
-							lustreNodes.add(P1Node());
-							P1 = true;
-						}
-					}
-				}
+			}
+		}
+
+		for (Node node : nodes)
+		{
+			if (node.id.startsWith("CSL__"))
+			{
+				lustreNodes.add(updateCSLNode(node));
+				lustreNodes.remove(node);
 			}
 		}
 		
 		return lustreNodes;
 	}
 	
-	private AgreeStatement updateP1NodeCall(AgreeStatement assertion)
+	private AgreeStatement updateCSLNodeCall(AgreeStatement assertion)
 	{					
 		List<Expr> mInputs = new ArrayList<>();
 		List<Expr> mOutputs = new ArrayList<>();
@@ -292,6 +293,7 @@ public class ConstraintsGenerator implements AgreeAutomater{
 		Expr tmp = assertion.expr.accept(visitor);
 		Expr tmp2 = ((BinaryExpr) tmp).right;
 		Iterator<Expr> iterator = ((NodeCallExpr)tmp2).args.iterator();
+		String nodeName = (((NodeCallExpr)tmp2).node.toString()).substring(3);
 			
 		while (iterator.hasNext()) 
 		{
@@ -313,75 +315,50 @@ public class ConstraintsGenerator implements AgreeAutomater{
 		mT_inputs.add(new AgreeVar("__NEXT".concat(String.valueOf(clkCnt)), NamedType.INT, null, null));
 		clkCnt++;
 		
-		Expr tmpExpr = new BinaryExpr(new TupleExpr(mOutputs), BinaryOp.EQUAL, new NodeCallExpr("__P1",mInputs));
+		Expr tmpExpr = new BinaryExpr(new TupleExpr(mOutputs), BinaryOp.EQUAL, new NodeCallExpr(nodeName,mInputs));
 		
 		AgreeStatement newAssertion = new AgreeStatement("",tmpExpr,null);
 
 		return newAssertion;
 	}
 	
-//	node P1 (e : bool, s: bool, i : int, tr : int, del : int, m_nxt : int) returns (active : bool, ok : bool, ntr : int, r_nxt : int);
-//	let
-	
-//		active = tr - del > 0;
-//		ok = (tr - del >= 0 and s) or (tr = -1);
-//		ntr = if e and not active then i
-//			  else if tr - del <= 0 then -1
-//			  	   else tr - del;
 
-//	-- Do a running check for the next min. A -1 resets the calculation
-//	r_nxt = if ntr = -1 then m_nxt
-//			else if m_nxt = -1 then ntr
-//			else if m_nxt <  ntr then m_nxt
-//			else ntr;
-	
-//	tel;
-
-	private Node P1Node()
+	private Node updateCSLNode(Node node)
 	{
 		List<VarDecl> mInputs = new ArrayList<>();
 		List<VarDecl> mOutputs = new ArrayList<>();
 		List<VarDecl> mLocals = new ArrayList<>();
 		List<Equation> mEquations = new ArrayList<>();
-		mInputs.add(new AgreeVar("__EVENT", NamedType.BOOL, null, null));
-		mInputs.add(new AgreeVar("__SIGNAL", NamedType.BOOL, null, null));
-		mInputs.add(new AgreeVar("__INTERVAL", NamedType.INT, null, null));
-		mInputs.add(new AgreeVar("__T_REMAINING", NamedType.INT, null, null));
-		mInputs.add(new AgreeVar("__T_EXPIRED", NamedType.INT, null, null));
-		mInputs.add(new AgreeVar("__CUR_MIN_T_REMAINING", NamedType.INT, null, null));
-
-		mOutputs.add(new AgreeVar("__ACTIVE", NamedType.BOOL, null, null));
-		mOutputs.add(new AgreeVar("__OK", NamedType.BOOL, null, null));
-		mOutputs.add(new AgreeVar("__NEXT_T_REMAINING", NamedType.INT, null, null));
-		mOutputs.add(new AgreeVar("__MIN_T_REMAINING", NamedType.INT, null, null));
 		
-//		active = tr - del > 0;
-		Expr T1 = new BinaryExpr(new IdExpr("__T_REMAINING"),BinaryOp.MINUS,new IdExpr("__T_EXPIRED"));
-		mEquations.add(new Equation(new IdExpr("__ACTIVE"),new BinaryExpr(T1,BinaryOp.GREATER,new IntExpr(BigInteger.valueOf(0)))));
+		mInputs.addAll(node.inputs);
+		mInputs.add(new AgreeVar("T_REMAINING", NamedType.INT, null, null));
+		mInputs.add(new AgreeVar("T_EXPIRED", NamedType.INT, null, null));
+		mInputs.add(new AgreeVar("CUR_MIN_T_REMAINING", NamedType.INT, null, null));
 
-//		ok = (tr - del >= 0 and s) or (tr = -1);
-		Expr T2 = new BinaryExpr(new BinaryExpr(new IdExpr("__T_REMAINING"),BinaryOp.MINUS,new IdExpr("__T_EXPIRED")),BinaryOp.GREATEREQUAL,new IntExpr(BigInteger.valueOf(0)));
-		Expr T3 = new BinaryExpr(T2,BinaryOp.AND,new IdExpr("__SIGNAL"));
-		Expr T4 = new BinaryExpr(new IdExpr("__T_REMAINING"),BinaryOp.EQUAL,new IntExpr(BigInteger.valueOf(-1)));
-		mEquations.add(new Equation(new IdExpr("__OK"),new BinaryExpr(T3,BinaryOp.OR,T4)));
+		mOutputs.addAll(node.outputs);
+		mOutputs.add(new AgreeVar("NEXT_T_REMAINING", NamedType.INT, null, null));
+		mOutputs.add(new AgreeVar("MIN_T_REMAINING", NamedType.INT, null, null));
+		
+		// Flip through all the equations for this node and remove any that set our hidden variables to a value.
+		for (Equation eq : node.equations)
+		{
+			for (IdExpr lhs : eq.lhs)
+			{
+				if (!lhs.id.contentEquals(new String ("T_REMAINING")) && !lhs.id.contentEquals(new String ("T_EXPIRED")) && !lhs.id.contentEquals(new String ("MIN_T_REMAINING")))
+					mEquations.add(eq);
+			}
+		}
+//		-- Add a running check for the next min. A -1 resets the calculation
+//		r_nxt = if ntr = -1 then m_nxt
+//				else if m_nxt = -1 then ntr
+//				else if m_nxt <  ntr then m_nxt
+//				else ntr;
+		Expr T7 = new BinaryExpr(new IdExpr("NEXT_T_REMAINING"),BinaryOp.EQUAL,new IntExpr(BigInteger.valueOf(-1)));
+		Expr T8 = new BinaryExpr(new IdExpr("CUR_MIN_T_REMAINING"),BinaryOp.EQUAL,new IntExpr(BigInteger.valueOf(-1)));
+		Expr T9 = new NodeCallExpr("__MIN2",new IdExpr("NEXT_T_REMAINING"),new IdExpr("CUR_MIN_T_REMAINING"));
+		mEquations.add(new Equation(new IdExpr("MIN_T_REMAINING"),new IfThenElseExpr(T7,new IdExpr("CUR_MIN_T_REMAINING"),new IfThenElseExpr(T8, new IdExpr("NEXT_T_REMAINING"), T9))));
 				
-//		ntr = if e and not active then i
-//			  else if tr - del <= 0 then -1
-//			  	   else tr - del;
-		Expr T5 = new BinaryExpr(new IdExpr("__EVENT"),BinaryOp.AND,new UnaryExpr(UnaryOp.NOT,new IdExpr("__ACTIVE")));
-		Expr T6 = new BinaryExpr(T1,BinaryOp.LESSEQUAL,new IntExpr(BigInteger.valueOf(0)));
-		mEquations.add(new Equation(new IdExpr("__NEXT_T_REMAINING"),new IfThenElseExpr(T5,new IdExpr("__INTERVAL"),new IfThenElseExpr(T6,new IntExpr(BigInteger.valueOf(-1)),T1))));
-
-//	-- Do a running check for the next min. A -1 resets the calculation
-//	r_nxt = if ntr = -1 then m_nxt
-//			else if m_nxt = -1 then ntr
-//			else if m_nxt <  ntr then m_nxt
-//			else ntr;
-		Expr T7 = new BinaryExpr(new IdExpr("__NEXT_T_REMAINING"),BinaryOp.EQUAL,new IntExpr(BigInteger.valueOf(-1)));
-		Expr T8 = new BinaryExpr(new IdExpr("__CUR_MIN_T_REMAINING"),BinaryOp.EQUAL,new IntExpr(BigInteger.valueOf(-1)));
-		Expr T9 = new NodeCallExpr("__MIN2",new IdExpr("__NEXT_T_REMAINING"),new IdExpr("__CUR_MIN_T_REMAINING"));
-		mEquations.add(new Equation(new IdExpr("__MIN_T_REMAINING"),new IfThenElseExpr(T7,new IdExpr("__CUR_MIN_T_REMAINING"),new IfThenElseExpr(T8, new IdExpr("__NEXT_T_REMAINING"), T9))));
-				
-		return new Node("__P1",mInputs,mOutputs,mLocals,mEquations);
+		String nodeName = node.id.toString().substring(3);
+		return new Node(nodeName,mInputs,mOutputs,mLocals,mEquations);
 	}
 }
