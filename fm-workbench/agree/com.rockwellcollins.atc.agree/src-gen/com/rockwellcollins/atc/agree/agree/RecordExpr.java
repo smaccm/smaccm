@@ -13,12 +13,12 @@ import org.osate.aadl2.NamedElement;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.RecordExpr#getRecord <em>Record</em>}</li>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.RecordExpr#getArgs <em>Args</em>}</li>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.RecordExpr#getArgExpr <em>Arg Expr</em>}</li>
  * </ul>
- * </p>
  *
  * @see com.rockwellcollins.atc.agree.agree.AgreePackage#getRecordExpr()
  * @model

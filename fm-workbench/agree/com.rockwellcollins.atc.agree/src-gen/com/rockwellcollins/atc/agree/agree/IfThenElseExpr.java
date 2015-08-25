@@ -10,12 +10,12 @@ package com.rockwellcollins.atc.agree.agree;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.IfThenElseExpr#getA <em>A</em>}</li>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.IfThenElseExpr#getB <em>B</em>}</li>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.IfThenElseExpr#getC <em>C</em>}</li>
  * </ul>
- * </p>
  *
  * @see com.rockwellcollins.atc.agree.agree.AgreePackage#getIfThenElseExpr()
  * @model

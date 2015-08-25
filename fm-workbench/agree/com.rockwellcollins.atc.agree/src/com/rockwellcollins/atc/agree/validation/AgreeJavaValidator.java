@@ -187,16 +187,43 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
     	if(type instanceof PrimType){
     		PrimType primType = (PrimType)type;
     		String strType = primType.getString();
-    		boolean rangeLowDot = primType.getRangeLow().contains(".");
-    		boolean rangeHighDot = primType.getRangeHigh().contains(".");
-    		if(rangeLowDot != rangeHighDot){
-    			error(arg, "The range intervals are of differing types");
+    		String rangeLow = primType.getRangeLow();
+    		String rangeHigh = primType.getRangeHigh();
+    		
+    		if(rangeLow != null && rangeHigh != null){
+    			
+    			//this is a ranged argument. It can only show up in an equation statement
+    			EObject container = arg.eContainer();
+    			if(!(container instanceof EqStatement)){
+    				error(arg, "Ranged arguments can only appear in equation statements");
+    			}
+    			
+    			boolean rangeLowDot = rangeLow.contains(".");
+    			boolean rangeHighDot = rangeHigh.contains(".");
+
+    			if(rangeLowDot != rangeHighDot){
+    				error(arg, "The range intervals are of differing types");
+    			}
+
+    			if(strType.equals("int") && (rangeLowDot || rangeHighDot)){
+    				error(arg, "Ranged variable of type 'int' contains a 'real' value in its interval");		
+    			}
+
+    			if(strType.equals("real") && (!rangeLowDot || !rangeHighDot)){
+    				error(arg, "Ranged variable of type 'real' contains an 'int' value in its interval");		
+    			}
+
+    			float low = Float.valueOf(rangeLow);
+    			float high = Float.valueOf(rangeHigh);
+
+    			low *= primType.getLowNeg() == null ? 1.0 : -1.0;
+    			high *= primType.getHighNeg() == null ? 1.0 : -1.0;
+
+    			if(low >= high){
+    				error(arg, "The low value of the interval is greater than or equal to the high end");
+    			}
     		}
-    		float low = Float.valueOf(primType.getRangeLow());
-    		float high = Float.valueOf(primType.getRangeHigh());
-    		if(low >= high){
-    			error(arg, "The low value of the interval is greater than or equal to the high end");
-    		}
+    		
     	}
     }
     
@@ -885,10 +912,26 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
         return null;
     }
 
+    private boolean argsContainRangeValue(List<Arg> args){
+    	for(Arg arg : args){
+    		Type type = arg.getType();
+    		if(type instanceof PrimType){
+    			PrimType primType = (PrimType)type;
+    			if(primType.getRangeHigh() != null || primType.getRangeLow() != null){
+    				return true;
+    			}
+    		}
+    	}
+    	return false;
+    }
+    
     private void checkMultiAssignEq(EObject src, List<Arg> lhsArgs, Expr rhsExpr) {
 
         if (rhsExpr == null) {
             return;
+        }
+        if(argsContainRangeValue(lhsArgs)){
+        	error(src, "Equation statements cannot contain a ranged value and a right hand side expression");
         }
 
         List<AgreeType> agreeLhsTypes = typesFromArgs(lhsArgs);

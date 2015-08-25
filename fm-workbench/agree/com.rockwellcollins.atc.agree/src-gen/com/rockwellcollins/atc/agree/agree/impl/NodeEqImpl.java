@@ -20,10 +20,10 @@ import org.eclipse.emf.ecore.util.EObjectResolvingEList;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.impl.NodeEqImpl#getLhs <em>Lhs</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

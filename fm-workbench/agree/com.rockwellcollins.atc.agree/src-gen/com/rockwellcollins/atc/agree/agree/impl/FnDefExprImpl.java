@@ -31,12 +31,12 @@ import org.osate.aadl2.impl.NamedElementImpl;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.impl.FnDefExprImpl#getArgs <em>Args</em>}</li>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.impl.FnDefExprImpl#getType <em>Type</em>}</li>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.impl.FnDefExprImpl#getExpr <em>Expr</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

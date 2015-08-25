@@ -358,6 +358,8 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr>{
 		return agreeVars;
 	}
 
+
+	
 	private void gatherOutputsInputsTypes(List<AgreeVar> outputs, List<AgreeVar> inputs, EList<FeatureInstance> features, Map<NamedElement, String> typeMap,
     		Set<RecordType> typeExpressions) {
 		for(FeatureInstance feature : features){
@@ -691,10 +693,10 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr>{
 			}
 			else if(spec instanceof EqStatement){
 				EqStatement eq = (EqStatement)spec;
+				EList<Arg> lhs = eq.getLhs();
 				if(eq.getExpr() != null){
 					Expr expr = doSwitch(eq.getExpr());
 					
-					EList<Arg> lhs = eq.getLhs();
 					if(lhs.size() != 1){
 						List<Expr> ids = new ArrayList<>();
 						for(Arg arg : lhs){
@@ -707,6 +709,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr>{
 					}
 					asserts.add(new AgreeStatement("", expr, spec));
 				}
+				asserts.addAll(getVariableRangeConstraints(lhs, eq));
 			}
 			else if(spec instanceof PropertyStatement){
 				Expr expr = doSwitch(((PropertyStatement) spec).getExpr());
@@ -716,6 +719,46 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr>{
 				
 		}
 		return asserts;
+	}
+	
+	private List<AgreeStatement> getVariableRangeConstraints(List<Arg> args, EqStatement eq){
+		List<AgreeStatement> constraints = new ArrayList<>();
+		for(Arg arg : args){
+			if(arg.getType() instanceof PrimType){
+				PrimType primType = (PrimType)arg.getType();
+				String lowStr = primType.getRangeLow();
+				String highStr = primType.getRangeHigh();
+				IdExpr id = new IdExpr(arg.getName());
+				int lowSign = primType.getLowNeg() == null ? 1 : -1;
+				int highSign = primType.getHighNeg() == null ? 1 : -1;
+				Expr lowVal = null;
+				Expr highVal = null;
+				
+				switch(primType.getString()){
+				case "int":
+					long lowl = Long.valueOf(lowStr) * lowSign;
+					long highl = Long.valueOf(highStr) * highSign;
+					lowVal = new IntExpr(BigInteger.valueOf(lowl));
+					highVal = new IntExpr(BigInteger.valueOf(highl));
+					break;
+				case "real":
+					double lowd = Double.valueOf(lowStr) * lowSign;
+					double highd = Double.valueOf(highStr) * highSign;
+					lowVal = new RealExpr(BigDecimal.valueOf(lowd));
+					highVal = new RealExpr(BigDecimal.valueOf(highd));
+					break;
+				default:
+				    throw new AgreeException("Unhandled type '"+primType.getString()+"' in ranged type");
+				}
+				Expr lowBound = new BinaryExpr(lowVal, BinaryOp.LESSEQUAL, id);
+				Expr highBound = new BinaryExpr(id, BinaryOp.LESSEQUAL, highVal);
+				Expr bound = new BinaryExpr(lowBound, BinaryOp.AND, highBound);
+				//must have reference to eq statement so we don't throw them away later
+				constraints.add(new AgreeStatement("", bound, eq));
+			}
+		}
+		
+		return constraints;
 	}
 	
 	private List<AgreeStatement> getAssumptions(EList<SpecStatement> specs) {

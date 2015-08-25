@@ -22,13 +22,13 @@ import org.osate.aadl2.NamedElement;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.impl.MNSynchStatementImpl#getComp1 <em>Comp1</em>}</li>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.impl.MNSynchStatementImpl#getComp2 <em>Comp2</em>}</li>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.impl.MNSynchStatementImpl#getMax <em>Max</em>}</li>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.impl.MNSynchStatementImpl#getMin <em>Min</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

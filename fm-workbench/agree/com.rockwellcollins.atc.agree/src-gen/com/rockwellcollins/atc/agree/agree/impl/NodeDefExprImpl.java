@@ -30,12 +30,12 @@ import org.osate.aadl2.impl.NamedElementImpl;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.impl.NodeDefExprImpl#getArgs <em>Args</em>}</li>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.impl.NodeDefExprImpl#getRets <em>Rets</em>}</li>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.impl.NodeDefExprImpl#getNodeBody <em>Node Body</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

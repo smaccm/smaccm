@@ -124,7 +124,9 @@
     </genClasses>
     <genClasses ecoreClass="Agree.ecore#//PrimType">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Agree.ecore#//PrimType/string"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Agree.ecore#//PrimType/lowNeg"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Agree.ecore#//PrimType/rangeLow"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Agree.ecore#//PrimType/highNeg"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Agree.ecore#//PrimType/rangeHigh"/>
     </genClasses>
     <genClasses ecoreClass="Agree.ecore#//RecordType">

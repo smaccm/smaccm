@@ -10,12 +10,12 @@ package com.rockwellcollins.atc.agree.agree;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.BinaryExpr#getLeft <em>Left</em>}</li>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.BinaryExpr#getOp <em>Op</em>}</li>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.BinaryExpr#getRight <em>Right</em>}</li>
  * </ul>
- * </p>
  *
  * @see com.rockwellcollins.atc.agree.agree.AgreePackage#getBinaryExpr()
  * @model
