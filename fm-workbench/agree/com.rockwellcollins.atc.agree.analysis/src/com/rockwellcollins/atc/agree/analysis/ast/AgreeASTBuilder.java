@@ -728,33 +728,36 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr>{
 				PrimType primType = (PrimType)arg.getType();
 				String lowStr = primType.getRangeLow();
 				String highStr = primType.getRangeHigh();
-				IdExpr id = new IdExpr(arg.getName());
-				int lowSign = primType.getLowNeg() == null ? 1 : -1;
-				int highSign = primType.getHighNeg() == null ? 1 : -1;
-				Expr lowVal = null;
-				Expr highVal = null;
 				
-				switch(primType.getString()){
-				case "int":
-					long lowl = Long.valueOf(lowStr) * lowSign;
-					long highl = Long.valueOf(highStr) * highSign;
-					lowVal = new IntExpr(BigInteger.valueOf(lowl));
-					highVal = new IntExpr(BigInteger.valueOf(highl));
-					break;
-				case "real":
-					double lowd = Double.valueOf(lowStr) * lowSign;
-					double highd = Double.valueOf(highStr) * highSign;
-					lowVal = new RealExpr(BigDecimal.valueOf(lowd));
-					highVal = new RealExpr(BigDecimal.valueOf(highd));
-					break;
-				default:
-				    throw new AgreeException("Unhandled type '"+primType.getString()+"' in ranged type");
+				if(lowStr != null && highStr != null){
+					IdExpr id = new IdExpr(arg.getName());
+					int lowSign = primType.getLowNeg() == null ? 1 : -1;
+					int highSign = primType.getHighNeg() == null ? 1 : -1;
+					Expr lowVal = null;
+					Expr highVal = null;
+
+					switch(primType.getString()){
+					case "int":
+						long lowl = Long.valueOf(lowStr) * lowSign;
+						long highl = Long.valueOf(highStr) * highSign;
+						lowVal = new IntExpr(BigInteger.valueOf(lowl));
+						highVal = new IntExpr(BigInteger.valueOf(highl));
+						break;
+					case "real":
+						double lowd = Double.valueOf(lowStr) * lowSign;
+						double highd = Double.valueOf(highStr) * highSign;
+						lowVal = new RealExpr(BigDecimal.valueOf(lowd));
+						highVal = new RealExpr(BigDecimal.valueOf(highd));
+						break;
+					default:
+						throw new AgreeException("Unhandled type '"+primType.getString()+"' in ranged type");
+					}
+					Expr lowBound = new BinaryExpr(lowVal, BinaryOp.LESSEQUAL, id);
+					Expr highBound = new BinaryExpr(id, BinaryOp.LESSEQUAL, highVal);
+					Expr bound = new BinaryExpr(lowBound, BinaryOp.AND, highBound);
+					//must have reference to eq statement so we don't throw them away later
+					constraints.add(new AgreeStatement("", bound, eq));
 				}
-				Expr lowBound = new BinaryExpr(lowVal, BinaryOp.LESSEQUAL, id);
-				Expr highBound = new BinaryExpr(id, BinaryOp.LESSEQUAL, highVal);
-				Expr bound = new BinaryExpr(lowBound, BinaryOp.AND, highBound);
-				//must have reference to eq statement so we don't throw them away later
-				constraints.add(new AgreeStatement("", bound, eq));
 			}
 		}
 		
