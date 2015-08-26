@@ -92,24 +92,6 @@ public class LustreAstBuilder {
 			properties.add(guarName);
 		}
 
-		//perhaps we should break out eq statements into implementation equations
-		//and type equations. This would clear this up
-		for(AgreeStatement statement : topNode.assertions){
-			if(statement.reference instanceof EqStatement ||
-					statement.reference instanceof PropertyStatement){
-
-			}
-			EObject container = statement.reference.eContainer();
-			while(!(container instanceof ComponentClassifier)){
-				container = container.eContainer();
-			}
-			if(container instanceof ComponentImplementation){
-				continue; //throw away eqs and property statements in the implementation
-			}
-
-			assertions.add(statement.expr);
-		}
-
 		List<String> inputStrs = new ArrayList<>();
 		for(AgreeVar var : topNode.inputs){
 			inputs.add(var);
@@ -118,6 +100,44 @@ public class LustreAstBuilder {
 		
 		for(AgreeVar var : topNode.outputs){
 			inputs.add(var);
+		}
+		
+		//perhaps we should break out eq statements into implementation equations
+		//and type equations. This would clear this up
+		for(AgreeStatement statement : topNode.assertions){
+			if(statement.reference instanceof EqStatement ||
+					statement.reference instanceof PropertyStatement){
+				EObject container = statement.reference.eContainer();
+				while(!(container instanceof ComponentClassifier)){
+					container = container.eContainer();
+				}
+				if(container instanceof ComponentImplementation){
+					continue; //throw away eqs and property statements in the implementation
+				}
+
+				//this is a strange hack we have to do. we have to make equation and property
+				//statements not assertions. They should all be binary expressions with an 
+				//equals operator. We will need to removing their corresponding variable
+				//from the inputs and add them to the local variables
+				BinaryExpr binExpr = (BinaryExpr)statement.expr;
+				IdExpr varId = (IdExpr) binExpr.left;
+				
+				boolean found = false;
+				int index;
+				for(index = 0; index < inputs.size(); index++){
+					VarDecl var = inputs.get(index);
+					if(var.id.equals(varId.id)){
+						found = true;
+						break;
+					}
+
+				}
+				if(!found || binExpr.op != BinaryOp.EQUAL){
+					throw new AgreeException("Something went very wrong with the lustre generation in the realizability analysis");
+				}
+				locals.add(inputs.remove(index));
+				equations.add(new Equation(varId, binExpr.right));
+			}
 		}
 		
 		Node main = new Node("main", inputs, null, locals, equations, properties, assertions, Optional.of(inputStrs));
