@@ -14,9 +14,8 @@ public class TerminateHandler extends AbstractHandler {
         this.monitorRef = monitorRef;
         this.globalMonitor = null;
     }
-    
-    public TerminateHandler(AtomicReference<IProgressMonitor> monitorRef,
-            IProgressMonitor globalMonitor) {
+
+    public TerminateHandler(AtomicReference<IProgressMonitor> monitorRef, IProgressMonitor globalMonitor) {
         this.monitorRef = monitorRef;
         this.globalMonitor = globalMonitor;
     }
