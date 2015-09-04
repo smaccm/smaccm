@@ -25,14 +25,14 @@ import jkind.lustre.TupleExpr;
 import jkind.lustre.UnaryExpr;
 import jkind.lustre.UnaryOp;
 
-public class AgreeCycleVisitor implements jkind.lustre.visitors.ExprVisitor<Set<String>>{
+public class AgreeCycleVisitor implements jkind.lustre.visitors.ExprVisitor<Set<String>> {
 
     @Override
     public Set<String> visit(BinaryExpr e) {
         // TODO Auto-generated method stub
         Set<String> leftSet = e.left.accept(this);
         Set<String> rightSet = e.right.accept(this);
-        
+
         leftSet.addAll(rightSet);
         return leftSet;
     }
@@ -53,10 +53,10 @@ public class AgreeCycleVisitor implements jkind.lustre.visitors.ExprVisitor<Set<
         Set<String> condSet = e.cond.accept(this);
         Set<String> thenSet = e.thenExpr.accept(this);
         Set<String> elseSet = e.elseExpr.accept(this);
-        
+
         condSet.addAll(thenSet);
         condSet.addAll(elseSet);
-        
+
         return condSet;
     }
 
@@ -67,9 +67,9 @@ public class AgreeCycleVisitor implements jkind.lustre.visitors.ExprVisitor<Set<
 
     @Override
     public Set<String> visit(NodeCallExpr e) {
-        //TODO this may generate false positives
+        // TODO this may generate false positives
         HashSet<String> argSet = new HashSet<>();
-        for(Expr expr : e.args){
+        for (Expr expr : e.args) {
             argSet.addAll(expr.accept(this));
         }
         return argSet;
@@ -77,14 +77,14 @@ public class AgreeCycleVisitor implements jkind.lustre.visitors.ExprVisitor<Set<
 
     @Override
     public Set<String> visit(RecordAccessExpr e) {
-    	Set<String> visits = e.record.accept(this);
-    	
-    	Set<String> returnSet = new HashSet<>();
-    	for(String str : visits){
-    		returnSet.add(str+"."+e.field);
-    	}
-    	
-    	return returnSet;
+        Set<String> visits = e.record.accept(this);
+
+        Set<String> returnSet = new HashSet<>();
+        for (String str : visits) {
+            returnSet.add(str + "." + e.field);
+        }
+
+        return returnSet;
     }
 
     @Override
@@ -94,17 +94,17 @@ public class AgreeCycleVisitor implements jkind.lustre.visitors.ExprVisitor<Set<
 
     @Override
     public Set<String> visit(RecordExpr e) {
-		Set<String> visits = new HashSet<>();
+        Set<String> visits = new HashSet<>();
 
-    	for(Entry<String, Expr> field : e.fields.entrySet()){
-    		visits.addAll(field.getValue().accept(this));
-    	}
-    	return visits;
+        for (Entry<String, Expr> field : e.fields.entrySet()) {
+            visits.addAll(field.getValue().accept(this));
+        }
+        return visits;
     }
 
     @Override
     public Set<String> visit(UnaryExpr e) {
-        if(e.op.equals(UnaryOp.PRE)){
+        if (e.op.equals(UnaryOp.PRE)) {
             return new HashSet<>();
         }
         return e.expr.accept(this);
@@ -113,49 +113,49 @@ public class AgreeCycleVisitor implements jkind.lustre.visitors.ExprVisitor<Set<
     @Override
     public Set<String> visit(CondactExpr e) {
         Set<String> argSet = new HashSet<>();
-        
-        for(Expr argExpr : e.args){
+
+        for (Expr argExpr : e.args) {
             argSet.addAll(argExpr.accept(this));
         }
         argSet.addAll(e.call.accept(this));
-        
+
         return argSet;
     }
 
-	@Override
-	public Set<String> visit(ArrayAccessExpr e) {
+    @Override
+    public Set<String> visit(ArrayAccessExpr e) {
         throw new AgreeException("Array Access Expressions are not handled in the cycle visitor");
-	}
+    }
 
-	@Override
-	public Set<String> visit(ArrayExpr e) {
+    @Override
+    public Set<String> visit(ArrayExpr e) {
         throw new AgreeException("Array Expressions are not handled in the cycle visitor");
 
-	}
+    }
 
-	@Override
-	public Set<String> visit(ArrayUpdateExpr e) {
+    @Override
+    public Set<String> visit(ArrayUpdateExpr e) {
         throw new AgreeException("Array Update Expressiosn are not handled in the cycle visitor");
-	}
+    }
 
-	@Override
-	public Set<String> visit(CastExpr e) {
+    @Override
+    public Set<String> visit(CastExpr e) {
         return e.expr.accept(this);
-	}
+    }
 
-	@Override
-	public Set<String> visit(RecordUpdateExpr e) {
-		Set<String> visits = new HashSet<>();
-		visits.addAll(e.record.accept(this));
-		visits.addAll(e.value.accept(this));
-		
-		return visits;
-	}
+    @Override
+    public Set<String> visit(RecordUpdateExpr e) {
+        Set<String> visits = new HashSet<>();
+        visits.addAll(e.record.accept(this));
+        visits.addAll(e.value.accept(this));
 
-	@Override
-	public Set<String> visit(TupleExpr e) {
+        return visits;
+    }
+
+    @Override
+    public Set<String> visit(TupleExpr e) {
         throw new AgreeException("Type Expressions are not handled in the cycle visitor");
 
-	}
+    }
 
 }

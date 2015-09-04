@@ -28,9 +28,9 @@ public class AgreePatternListener implements IPatternMatchListener {
         int offset = event.getOffset() + 1;
         int length = event.getLength() - 2;
         try {
-        	String name = console.getDocument().get(offset, length);
-        	EObject ref = findBestReference(name);
-            
+            String name = console.getDocument().get(offset, length);
+            EObject ref = findBestReference(name);
+
             if (ref != null) {
                 IHyperlink hyperlink = new AgreeConsoleHyperLink(ref);
                 console.addHyperlink(hyperlink, offset, length);
@@ -39,21 +39,21 @@ public class AgreePatternListener implements IPatternMatchListener {
             e.printStackTrace();
         }
     }
-    
-    private EObject findBestReference(String refStr){
-    	
-    	EObject ref = null;
-    	refStr = refStr.replace(".", "__");
-    	while(ref == null && refStr != null && !refStr.equals("")){
-    		ref = refMap.get(refStr);
-    		int index = refStr.lastIndexOf("__");
-    		if(index == -1){
-    			break;
-    		}
-    		refStr = refStr.substring(0, index);
-    	}
 
-    	return ref;
+    private EObject findBestReference(String refStr) {
+
+        EObject ref = null;
+        refStr = refStr.replace(".", "__");
+        while (ref == null && refStr != null && !refStr.equals("")) {
+            ref = refMap.get(refStr);
+            int index = refStr.lastIndexOf("__");
+            if (index == -1) {
+                break;
+            }
+            refStr = refStr.substring(0, index);
+        }
+
+        return ref;
     }
 
     @Override

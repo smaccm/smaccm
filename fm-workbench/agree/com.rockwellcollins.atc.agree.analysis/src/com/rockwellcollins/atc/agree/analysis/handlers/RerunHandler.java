@@ -17,7 +17,8 @@ public class RerunHandler extends AbstractHandler {
 
     @Override
     public Object execute(ExecutionEvent event) {
-        // Manually clear the view in case the uri is stale and executeURI does nothing
+        // Manually clear the view in case the uri is stale and executeURI does
+        // nothing
         verifyHandler.clearView();
         return verifyHandler.executeURI(uri);
     }

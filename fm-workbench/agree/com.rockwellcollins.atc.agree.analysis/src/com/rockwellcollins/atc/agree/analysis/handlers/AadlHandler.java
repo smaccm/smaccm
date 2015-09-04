@@ -29,7 +29,8 @@ import org.osate.aadl2.Element;
 
 public abstract class AadlHandler extends AbstractHandler {
     protected static final String TERMINATE_ID = "com.rockwellcollins.atc.agree.analysis.commands.terminate";
-    protected static final String TERMINATE_ALL_ID = "com.rockwellcollins.atc.agree.analysis.commands.terminateAll";
+    protected static final String TERMINATE_ALL_ID =
+            "com.rockwellcollins.atc.agree.analysis.commands.terminateAll";
     private IWorkbenchWindow window;
 
     abstract protected IStatus runJob(Element sel, IProgressMonitor monitor);
@@ -62,26 +63,24 @@ public abstract class AadlHandler extends AbstractHandler {
             return null;
         }
 
-        final IHandlerService handlerService = (IHandlerService) window
-                .getService(IHandlerService.class);
+        final IHandlerService handlerService = (IHandlerService) window.getService(IHandlerService.class);
         WorkspaceJob job = new WorkspaceJob(getJobName()) {
             private IHandlerActivation terminateActivation;
 
             @Override
             public IStatus runInWorkspace(final IProgressMonitor monitor) {
 
-                return xtextEditor.getDocument().readOnly(
-                        new IUnitOfWork<IStatus, XtextResource>() {
-                            @Override
-                            public IStatus exec(XtextResource resource) throws Exception {
-                                EObject eobj = resource.getResourceSet().getEObject(uri, true);
-                                if (eobj instanceof Element) {
-                                    return runJob((Element) eobj, monitor);
-                                } else {
-                                    return Status.CANCEL_STATUS;
-                                }
-                            }
-                        });
+                return xtextEditor.getDocument().readOnly(new IUnitOfWork<IStatus, XtextResource>() {
+                    @Override
+                    public IStatus exec(XtextResource resource) throws Exception {
+                        EObject eobj = resource.getResourceSet().getEObject(uri, true);
+                        if (eobj instanceof Element) {
+                            return runJob((Element) eobj, monitor);
+                        } else {
+                            return Status.CANCEL_STATUS;
+                        }
+                    }
+                });
             }
         };
 
@@ -95,8 +94,7 @@ public abstract class AadlHandler extends AbstractHandler {
             return true;
         }
 
-        if (MessageDialog.openConfirm(window.getShell(), "Save editors",
-                "Save editors and continue?")) {
+        if (MessageDialog.openConfirm(window.getShell(), "Save editors", "Save editors and continue?")) {
             NullProgressMonitor monitor = new NullProgressMonitor();
             for (IEditorPart e : dirtyEditors) {
                 e.doSave(monitor);

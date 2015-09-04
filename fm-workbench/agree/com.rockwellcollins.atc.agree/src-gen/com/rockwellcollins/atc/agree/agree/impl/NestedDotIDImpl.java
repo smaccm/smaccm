@@ -22,12 +22,12 @@ import org.osate.aadl2.NamedElement;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.impl.NestedDotIDImpl#getBase <em>Base</em>}</li>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.impl.NestedDotIDImpl#getTag <em>Tag</em>}</li>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.impl.NestedDotIDImpl#getSub <em>Sub</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

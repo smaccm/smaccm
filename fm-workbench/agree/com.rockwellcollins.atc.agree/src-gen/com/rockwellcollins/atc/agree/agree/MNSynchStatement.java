@@ -13,13 +13,13 @@ import org.osate.aadl2.NamedElement;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.MNSynchStatement#getComp1 <em>Comp1</em>}</li>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.MNSynchStatement#getComp2 <em>Comp2</em>}</li>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.MNSynchStatement#getMax <em>Max</em>}</li>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.MNSynchStatement#getMin <em>Min</em>}</li>
  * </ul>
- * </p>
  *
  * @see com.rockwellcollins.atc.agree.agree.AgreePackage#getMNSynchStatement()
  * @model

@@ -16,10 +16,10 @@ public class AgreeLogger {
         log.append(newline);
     }
 
-    public static String getLog(){
-    	return log.toString();
+    public static String getLog() {
+        return log.toString();
     }
-    
+
     @Override
     public String toString() {
         return log.toString();
