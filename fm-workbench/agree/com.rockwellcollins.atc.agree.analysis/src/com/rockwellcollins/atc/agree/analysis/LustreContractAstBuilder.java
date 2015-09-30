@@ -241,7 +241,11 @@ public class LustreContractAstBuilder extends LustreAstBuilder {
         for (VarDecl var : lustreNode.outputs) {
             AgreeVar outputVar = (AgreeVar) var;
             String dummyName = prefix + var.id + "__DUMMY";
-            inputs.add(new AgreeVar(dummyName, outputVar.type, outputVar.reference, outputVar.compInst));
+            AgreeVar dummyVar = new AgreeVar(dummyName, outputVar.type, outputVar.reference, outputVar.compInst);
+            
+            if (!inputs.contains(dummyVar)) {
+                inputs.add(dummyVar);
+            }
 
             initOutputsVals.add(new IdExpr(dummyName));
             nodeOutputIds.add(new IdExpr(prefix + var.id));
@@ -254,8 +258,14 @@ public class LustreContractAstBuilder extends LustreAstBuilder {
         Expr condactExpr =
                 new CondactExpr(clockExpr, new NodeCallExpr(lustreNode.id, inputIds), initOutputsVals);
 
-        TupleExpr tuple = new TupleExpr(nodeOutputIds);
-        Expr condactCall = new BinaryExpr(tuple, BinaryOp.EQUAL, condactExpr);
+        Expr condactOutput;
+        if(nodeOutputIds.size() > 1){
+            condactOutput = new TupleExpr(nodeOutputIds);
+        }else{
+            condactOutput = nodeOutputIds.get(0);
+        }
+        
+        Expr condactCall = new BinaryExpr(condactOutput, BinaryOp.EQUAL, condactExpr);
         assertions.add(new AgreeStatement("", condactCall, null));
     }
 

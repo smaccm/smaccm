@@ -3,6 +3,7 @@ package com.rockwellcollins.atc.agree.analysis.handlers;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -67,6 +68,7 @@ import com.rockwellcollins.atc.agree.analysis.AgreeRenaming;
 import com.rockwellcollins.atc.agree.analysis.ConsistencyResult;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeASTBuilder;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeProgram;
+import com.rockwellcollins.atc.agree.analysis.ast.AgreeStatement;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeVar;
 import com.rockwellcollins.atc.agree.analysis.preferences.PreferenceConstants;
 import com.rockwellcollins.atc.agree.analysis.preferences.PreferencesUtil;
@@ -137,7 +139,7 @@ public abstract class VerifyHandler extends AadlHandler {
                 AgreeProgram agreeProgram = new AgreeASTBuilder().getAgreeProgram(si);
                 Program program = LustreAstBuilder.getRealizabilityLustreProgram(agreeProgram);
                 wrapper.addChild(
-                        createVerification("Realizability Check", si, program, AnalysisType.Realizability));
+                        createVerification("Realizability Check", si, program, agreeProgram, AnalysisType.Realizability));
                 result = wrapper;
             } else {
                 wrapVerificationResult(si, wrapper);
@@ -156,12 +158,9 @@ public abstract class VerifyHandler extends AadlHandler {
 
         // generate different lustre depending on which model checker we are
         // using
-        IPreferenceStore prefs = Activator.getDefault().getPreferenceStore();
-        String solver = prefs.getString(PreferenceConstants.PREF_MODEL_CHECKER);
-
+      
         Program program;
-        if (solver.equals(PreferenceConstants.MODEL_CHECKER_KIND2)
-                || solver.equals(PreferenceConstants.MODEL_CHECKER_KIND2WEB)) {
+        if (AgreeUtils.usingKind2()) {
             program = LustreContractAstBuilder.getContractLustreProgram(agreeProgram);
         } else {
             program = LustreAstBuilder.getAssumeGuaranteeLustreProgram(agreeProgram, isMonolithic());
@@ -170,10 +169,10 @@ public abstract class VerifyHandler extends AadlHandler {
                 LustreAstBuilder.getConsistencyChecks(agreeProgram, isMonolithic());
 
         wrapper.addChild(
-                createVerification("Contract Guarantees", si, program, AnalysisType.AssumeGuarantee));
+                createVerification("Contract Guarantees", si, program, agreeProgram, AnalysisType.AssumeGuarantee));
         for (Pair<String, Program> consistencyAnalysis : consistencies) {
             wrapper.addChild(createVerification(consistencyAnalysis.getFirst(), si,
-                    consistencyAnalysis.getSecond(), AnalysisType.Consistency));
+                    consistencyAnalysis.getSecond(), agreeProgram, AnalysisType.Consistency));
         }
     }
 
@@ -227,15 +226,15 @@ public abstract class VerifyHandler extends AadlHandler {
         return false;
     }
 
-    private AnalysisResult createVerification(String resultName, ComponentInstance compInst, Program program,
+    private AnalysisResult createVerification(String resultName, ComponentInstance compInst, Program lustreProgram, AgreeProgram agreeProgram,
             AnalysisType analysisType) {
 
         Map<String, EObject> refMap = new HashMap<>();
         AgreeRenaming renaming = new AgreeRenaming(refMap);
         AgreeLayout layout = new AgreeLayout();
         Node mainNode = null;
-        for (Node node : program.nodes) {
-            if (node.id.equals(program.main)) {
+        for (Node node : lustreProgram.nodes) {
+            if (node.id.equals(lustreProgram.main)) {
                 mainNode = node;
                 break;
             }
@@ -244,16 +243,8 @@ public abstract class VerifyHandler extends AadlHandler {
             throw new AgreeException("Could not find main lustre node after translation");
         }
 
-        for (VarDecl var : mainNode.inputs) {
-            if (var instanceof AgreeVar) {
-                addReference(refMap, renaming, layout, var);
-            }
-        }
-        for (VarDecl var : mainNode.locals) {
-            if (var instanceof AgreeVar) {
-                addReference(refMap, renaming, layout, var);
-            }
-        }
+        List<String> properties = new ArrayList<>();
+        addRenamings(refMap, renaming, properties, layout, mainNode, agreeProgram);
 
         JKindResult result;
         switch (analysisType) {
@@ -265,7 +256,7 @@ public abstract class VerifyHandler extends AadlHandler {
             result = new JRealizabilityResult(resultName, renaming);
             break;
         case AssumeGuarantee:
-            result = new JKindResult(resultName, mainNode.properties, renaming);
+            result = new JKindResult(resultName, properties, renaming);
             break;
         default:
             throw new AgreeException("Unhandled Analysis Type");
@@ -273,7 +264,7 @@ public abstract class VerifyHandler extends AadlHandler {
         queue.add(result);
 
         ComponentImplementation compImpl = AgreeUtils.getInstanceImplementation(compInst);
-        linker.setProgram(result, program);
+        linker.setProgram(result, lustreProgram);
         linker.setComponent(result, compImpl);
         linker.setContract(result, getContract(compImpl));
         linker.setLayout(result, layout);
@@ -283,6 +274,43 @@ public abstract class VerifyHandler extends AadlHandler {
         // System.out.println(program);
         return result;
 
+    }
+
+    private void addRenamings(Map<String, EObject> refMap, AgreeRenaming renaming, List<String> properties, AgreeLayout layout,
+            Node mainNode, AgreeProgram agreeProgram) {
+        for (VarDecl var : mainNode.inputs) {
+            if (var instanceof AgreeVar) {
+                addReference(refMap, renaming, layout, var);
+            }
+        }
+        
+        for (VarDecl var : mainNode.locals) {
+            if (var instanceof AgreeVar) {
+                addReference(refMap, renaming, layout, var);
+            }
+        }
+        
+        for (VarDecl var : mainNode.outputs) {
+            if (var instanceof AgreeVar) {
+                addReference(refMap, renaming, layout, var);
+            }
+        }
+        
+        //there is a special case in the AgreeRenaming which handles this translation
+        if(AgreeUtils.usingKind2()){
+            int i = 0;
+            for(AgreeStatement statement : agreeProgram.topNode.lemmas){
+                renaming.addExplicitRename("["+(++i)+"]", statement.string);
+                properties.add("["+i+"]");
+            }
+            for(AgreeStatement statement : agreeProgram.topNode.guarantees){
+                renaming.addExplicitRename("["+(++i)+"]", statement.string);
+                properties.add("["+i+"]");
+            }
+        }else{
+            properties.addAll(mainNode.properties);
+        }
+        
     }
 
     private void addReference(Map<String, EObject> refMap, AgreeRenaming renaming, AgreeLayout layout,

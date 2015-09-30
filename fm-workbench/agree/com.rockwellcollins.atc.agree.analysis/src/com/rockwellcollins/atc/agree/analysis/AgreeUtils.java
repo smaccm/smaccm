@@ -1,37 +1,24 @@
 package com.rockwellcollins.atc.agree.analysis;
 
-import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import jkind.lustre.BinaryExpr;
-import jkind.lustre.BinaryOp;
-import jkind.lustre.BoolExpr;
 import jkind.lustre.Equation;
-import jkind.lustre.Expr;
 import jkind.lustre.IdExpr;
-import jkind.lustre.IntExpr;
 import jkind.lustre.NamedType;
-import jkind.lustre.UnaryExpr;
-import jkind.lustre.UnaryOp;
-
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.osate.aadl2.AbstractNamedValue;
 import org.osate.aadl2.ComponentImplementation;
 import org.osate.aadl2.ComponentType;
-import org.osate.aadl2.ConnectedElement;
-import org.osate.aadl2.Connection;
 import org.osate.aadl2.ContainedNamedElement;
 import org.osate.aadl2.ContainmentPathElement;
-import org.osate.aadl2.Context;
 import org.osate.aadl2.DataSubcomponent;
 import org.osate.aadl2.DataType;
 import org.osate.aadl2.ModalPropertyValue;
@@ -52,9 +39,18 @@ import org.osate.xtext.aadl2.properties.util.PropertyUtils;
 import com.rockwellcollins.atc.agree.agree.AgreePackage;
 import com.rockwellcollins.atc.agree.agree.FnCallExpr;
 import com.rockwellcollins.atc.agree.agree.NestedDotID;
+import com.rockwellcollins.atc.agree.analysis.preferences.PreferenceConstants;
 
 public class AgreeUtils {
 
+    static public boolean usingKind2() {
+        IPreferenceStore prefs = Activator.getDefault().getPreferenceStore();
+        String solver = prefs.getString(PreferenceConstants.PREF_MODEL_CHECKER);
+
+        return solver.equals(PreferenceConstants.MODEL_CHECKER_KIND2)
+                || solver.equals(PreferenceConstants.MODEL_CHECKER_KIND2WEB);
+    }
+    
     static public PropertyExpression getPropExpression(NamedElement comp, Property prop) {
 
         PropertyExpression expr;

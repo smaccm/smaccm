@@ -34,6 +34,8 @@ public class AgreeRenaming extends Renaming {
         newName = original.replaceAll("___Nod([^_]_?)*_", "");
         newName = newName.replace("~condact", "");
         newName = newName.replaceAll("~[0-9]*", "");
+        //the following is special for kind 2 contracts
+        newName = newName.replaceAll("__global.ensure\\[.*?\\]", "");
         newName = newName.replace("__", ".");
 
         return newName;
@@ -54,6 +56,8 @@ public class AgreeRenaming extends Renaming {
                 return "Realizability Result";
             } else if (original.contains("__nodeLemma")) {
                 return newName;
+            } else if(newName.matches("\\[[0-9]*\\]")){
+                return this.explicitRenames.get(newName);
             }
             return null;
         }
