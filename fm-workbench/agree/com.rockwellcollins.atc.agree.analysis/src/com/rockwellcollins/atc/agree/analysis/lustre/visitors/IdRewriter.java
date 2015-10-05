@@ -1,4 +1,4 @@
-package com.rockwellcollins.atc.agree.analysis;
+package com.rockwellcollins.atc.agree.analysis.lustre.visitors;
 
 import jkind.lustre.IdExpr;
 
