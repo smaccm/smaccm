@@ -1,0 +1,94 @@
+package MissionSoftware
+public
+	
+	
+process MissionSoftware
+	features
+		uart_out : out event data port;
+		uart_in : in event data port;
+		can_out : out event data port;
+		can_in : in event data port;
+end MissionSoftware;	
+
+process implementation MissionSoftware.i
+	subcomponents
+		uart : thread UART;
+		input : thread Input;
+		server : thread Server;
+		output : thread Output;
+		pproxy : thread PixhawkProxy;
+		can : thread CAN;
+		vm : thread VM;
+		
+	connections
+		uart_inside : port uart_in -> uart.data_in;
+		can_inside : port can_in -> can.data_in;
+		
+		uart_rx : data access uart.rx -> input.rx;
+		uart_outside : port uart.data_out -> uart_out;
+		
+		input_to_svr : port input.to_svr -> server.input;
+		
+		server_output : port server.output -> output.input;
+		
+		output_tx : port output.tx -> uart.tx;
+		
+		pixhawk_data : data access pproxy.pixhawk_data -> server.pixhawk_data;
+		proxy_to_can : port pproxy.tx -> can.tx;
+		
+		can_to_proxy : port can.rx -> pproxy.rx;
+		can_outside : port can.data_out -> can_out;
+		
+		camera_dta : data access vm.camera_data -> server.camera_data;
+		
+end MissionSoftware.i;
+	
+thread UART
+	features
+		tx : in event data port;
+		rx : provides data access;
+		data_in : in event data port;
+		data_out : out event data port;
+end UART;
+	
+thread Input
+	features
+		rx : requires data access;
+		to_svr : out event data port;
+end Input;
+	
+thread Server
+	features
+		input : in event data port;
+		output : out event data port;
+		pixhawk_data : requires data access;
+		camera_data : requires data access;
+end Server;
+	
+thread Output
+	features
+		input : in event data port;
+		tx : out event data port;
+end Output;
+	
+thread PixhawkProxy
+	features
+		pixhawk_data : provides data access;
+		rx : in event data port;
+		tx : out event data port;
+end PixhawkProxy;
+	
+thread CAN
+	features
+		rx : out event data port;
+		tx : in event data port;
+		data_out : out event data port;
+		data_in : in event data port;
+end CAN;
+
+thread VM
+	features
+		camera_data : provides data access;
+end VM;
+	
+end MissionSoftware;
