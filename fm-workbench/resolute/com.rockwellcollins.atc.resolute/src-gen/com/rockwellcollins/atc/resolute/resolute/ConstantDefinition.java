@@ -20,7 +20,7 @@ package com.rockwellcollins.atc.resolute.resolute;
  * @model
  * @generated
  */
-public interface ConstantDefinition extends Definition
+public interface ConstantDefinition extends Definition, ClaimTextVar
 {
   /**
    * Returns the value of the '<em><b>Type</b></em>' containment reference.

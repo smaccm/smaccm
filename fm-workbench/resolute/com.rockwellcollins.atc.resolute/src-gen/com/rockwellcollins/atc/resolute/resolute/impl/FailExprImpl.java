@@ -2,18 +2,25 @@
  */
 package com.rockwellcollins.atc.resolute.resolute.impl;
 
+import com.rockwellcollins.atc.resolute.resolute.ClaimText;
+import com.rockwellcollins.atc.resolute.resolute.Expr;
 import com.rockwellcollins.atc.resolute.resolute.FailExpr;
 import com.rockwellcollins.atc.resolute.resolute.ResolutePackage;
 
+import java.util.Collection;
+
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
+
+import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
-import org.osate.aadl2.StringLiteral;
+import org.eclipse.emf.ecore.util.EObjectContainmentEList;
+import org.eclipse.emf.ecore.util.InternalEList;
 
 /**
  * <!-- begin-user-doc -->
@@ -23,6 +30,7 @@ import org.osate.aadl2.StringLiteral;
  * The following features are implemented:
  * <ul>
  *   <li>{@link com.rockwellcollins.atc.resolute.resolute.impl.FailExprImpl#getVal <em>Val</em>}</li>
+ *   <li>{@link com.rockwellcollins.atc.resolute.resolute.impl.FailExprImpl#getFailmsg <em>Failmsg</em>}</li>
  * </ul>
  * </p>
  *
@@ -38,7 +46,17 @@ public class FailExprImpl extends ExprImpl implements FailExpr
    * @generated
    * @ordered
    */
-  protected StringLiteral val;
+  protected Expr val;
+
+  /**
+   * The cached value of the '{@link #getFailmsg() <em>Failmsg</em>}' containment reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #getFailmsg()
+   * @generated
+   * @ordered
+   */
+  protected EList<ClaimText> failmsg;
 
   /**
    * <!-- begin-user-doc -->
@@ -66,7 +84,7 @@ public class FailExprImpl extends ExprImpl implements FailExpr
    * <!-- end-user-doc -->
    * @generated
    */
-  public StringLiteral getVal()
+  public Expr getVal()
   {
     return val;
   }
@@ -76,9 +94,9 @@ public class FailExprImpl extends ExprImpl implements FailExpr
    * <!-- end-user-doc -->
    * @generated
    */
-  public NotificationChain basicSetVal(StringLiteral newVal, NotificationChain msgs)
+  public NotificationChain basicSetVal(Expr newVal, NotificationChain msgs)
   {
-    StringLiteral oldVal = val;
+    Expr oldVal = val;
     val = newVal;
     if (eNotificationRequired())
     {
@@ -93,7 +111,7 @@ public class FailExprImpl extends ExprImpl implements FailExpr
    * <!-- end-user-doc -->
    * @generated
    */
-  public void setVal(StringLiteral newVal)
+  public void setVal(Expr newVal)
   {
     if (newVal != val)
     {
@@ -114,6 +132,20 @@ public class FailExprImpl extends ExprImpl implements FailExpr
    * <!-- end-user-doc -->
    * @generated
    */
+  public EList<ClaimText> getFailmsg()
+  {
+    if (failmsg == null)
+    {
+      failmsg = new EObjectContainmentEList<ClaimText>(ClaimText.class, this, ResolutePackage.FAIL_EXPR__FAILMSG);
+    }
+    return failmsg;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   @Override
   public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs)
   {
@@ -121,6 +153,8 @@ public class FailExprImpl extends ExprImpl implements FailExpr
     {
       case ResolutePackage.FAIL_EXPR__VAL:
         return basicSetVal(null, msgs);
+      case ResolutePackage.FAIL_EXPR__FAILMSG:
+        return ((InternalEList<?>)getFailmsg()).basicRemove(otherEnd, msgs);
     }
     return super.eInverseRemove(otherEnd, featureID, msgs);
   }
@@ -137,6 +171,8 @@ public class FailExprImpl extends ExprImpl implements FailExpr
     {
       case ResolutePackage.FAIL_EXPR__VAL:
         return getVal();
+      case ResolutePackage.FAIL_EXPR__FAILMSG:
+        return getFailmsg();
     }
     return super.eGet(featureID, resolve, coreType);
   }
@@ -146,13 +182,18 @@ public class FailExprImpl extends ExprImpl implements FailExpr
    * <!-- end-user-doc -->
    * @generated
    */
+  @SuppressWarnings("unchecked")
   @Override
   public void eSet(int featureID, Object newValue)
   {
     switch (featureID)
     {
       case ResolutePackage.FAIL_EXPR__VAL:
-        setVal((StringLiteral)newValue);
+        setVal((Expr)newValue);
+        return;
+      case ResolutePackage.FAIL_EXPR__FAILMSG:
+        getFailmsg().clear();
+        getFailmsg().addAll((Collection<? extends ClaimText>)newValue);
         return;
     }
     super.eSet(featureID, newValue);
@@ -169,7 +210,10 @@ public class FailExprImpl extends ExprImpl implements FailExpr
     switch (featureID)
     {
       case ResolutePackage.FAIL_EXPR__VAL:
-        setVal((StringLiteral)null);
+        setVal((Expr)null);
+        return;
+      case ResolutePackage.FAIL_EXPR__FAILMSG:
+        getFailmsg().clear();
         return;
     }
     super.eUnset(featureID);
@@ -187,6 +231,8 @@ public class FailExprImpl extends ExprImpl implements FailExpr
     {
       case ResolutePackage.FAIL_EXPR__VAL:
         return val != null;
+      case ResolutePackage.FAIL_EXPR__FAILMSG:
+        return failmsg != null && !failmsg.isEmpty();
     }
     return super.eIsSet(featureID);
   }

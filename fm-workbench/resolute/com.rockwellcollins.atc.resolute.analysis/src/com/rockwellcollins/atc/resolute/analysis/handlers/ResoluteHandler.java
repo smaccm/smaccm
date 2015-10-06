@@ -3,34 +3,43 @@ package com.rockwellcollins.atc.resolute.analysis.handlers;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IProjectDescription;
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.handlers.IHandlerActivation;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.xtext.EcoreUtil2;
+import org.eclipse.xtext.resource.IEObjectDescription;
 import org.osate.aadl2.AnnexSubclause;
 import org.osate.aadl2.ComponentCategory;
+import org.osate.aadl2.ComponentImplementation;
 import org.osate.aadl2.Element;
 import org.osate.aadl2.NamedElement;
-import org.osate.aadl2.SystemImplementation;
 import org.osate.aadl2.instance.ComponentInstance;
 import org.osate.aadl2.instance.ConnectionInstance;
 import org.osate.aadl2.instance.SystemInstance;
 import org.osate.aadl2.instantiation.InstantiateModel;
+import org.osate.aadl2.util.Aadl2Util;
 import org.osate.annexsupport.AnnexUtil;
 import org.osate.ui.dialogs.Dialog;
+import org.osate.xtext.aadl2.properties.util.EMFIndexRetrieval;
 
 import com.rockwellcollins.atc.resolute.analysis.execution.EvaluationContext;
 import com.rockwellcollins.atc.resolute.analysis.execution.FeatureToConnectionsMap;
@@ -38,164 +47,305 @@ import com.rockwellcollins.atc.resolute.analysis.execution.NamedElementComparato
 import com.rockwellcollins.atc.resolute.analysis.execution.ResoluteInterpreter;
 import com.rockwellcollins.atc.resolute.analysis.results.ResoluteResult;
 import com.rockwellcollins.atc.resolute.analysis.views.AssuranceCaseView;
+import com.rockwellcollins.atc.resolute.resolute.FnCallExpr;
+import com.rockwellcollins.atc.resolute.resolute.FunctionDefinition;
 import com.rockwellcollins.atc.resolute.resolute.ProveStatement;
+import com.rockwellcollins.atc.resolute.resolute.ResoluteFactory;
 import com.rockwellcollins.atc.resolute.resolute.ResolutePackage;
 import com.rockwellcollins.atc.resolute.resolute.ResoluteSubclause;
 import com.rockwellcollins.atc.resolute.validation.BaseType;
 
 public class ResoluteHandler extends AadlHandler {
-    private static final String RERUN_ID = "com.rockwellcollins.atc.resolute.analysis.commands.rerunResolute";
-    private IHandlerActivation rerunActivation;
+	private static final String RERUN_ID = "com.rockwellcollins.atc.resolute.analysis.commands.rerunResolute";
+	private IHandlerActivation rerunActivation;
 
-    @Override
-    protected String getJobName() {
-        return "Resolute Analysis";
-    }
+	@Override
+	protected String getJobName() {
+		return "Resolute Analysis";
+	}
 
-    @Override
-    protected IStatus runJob(Element root, IProgressMonitor monitor) {
-        clearProofs();
-        disableRerunHandler();
+	private static FunctionDefinition resolveResoluteFunction(EObject context, String resoluteFunctionName) {
 
-        long start = System.currentTimeMillis();
-        SystemInstance si;
-        if (root instanceof SystemImplementation) {
-            SystemImplementation sysimpl = (SystemImplementation) root;
-            try {
-                si = InstantiateModel.buildInstanceModelFile(sysimpl);
-            } catch (Exception e) {
-                Dialog.showError("Model Instantiate", "Error while re-instantiating the model: "
-                        + e.getMessage());
-                return Status.CANCEL_STATUS;
-            }
-        } else {
-            Dialog.showError("Model Instantiate",
-                    "You must select a System Implementation to instantiate");
-            return Status.CANCEL_STATUS;
-        }
-        long stop = System.currentTimeMillis();
-        System.out.println("Instantiation time: " + (stop - start) / 1000.0 + "s");
+		// psNode.setText(resoluteFunctionName);
+		// val List<EObject> boundList = resoluteLinkingService.getLinkedObjects(context,
+		// ResolutePackage.eINSTANCE.getFnCallExpr_Fn(), psNode);
+		// if (boundList.size() > 0) {
+		// return boundList.get(0) as FunctionDefinition;
+		// }
+		EObject res = getNamedElementByType(context, resoluteFunctionName,
+				ResolutePackage.eINSTANCE.getFunctionDefinition());
 
-        start = System.currentTimeMillis();
+		return ((FunctionDefinition) res);
+	}
 
-        Map<String, SortedSet<NamedElement>> sets = new HashMap<>();
-        initializeSets(si, sets);
-        FeatureToConnectionsMap featToConnsMap = new FeatureToConnectionsMap(si);
+	private static EObject getNamedElementByType(EObject context, String name, EClass eclass) {
 
-        // Right now OSATE has a bug where subclauses will show up twice, 
-        Set<AnnexSubclause> osateBugWorkaround = new HashSet<>();
-        
-        List<ResoluteResult> proofTrees = new ArrayList<>();
-        for (NamedElement el : sets.get("component")) {
-            ComponentInstance compInst = (ComponentInstance) el;
-            EClass resoluteSubclauseEClass = ResolutePackage.eINSTANCE.getResoluteSubclause();
-            for (AnnexSubclause subclause : AnnexUtil.getAllAnnexSubclauses(
-                    compInst.getComponentClassifier(), resoluteSubclauseEClass)) {
-                if (osateBugWorkaround.contains(subclause)) {
-                    continue;
-                } else {
-                    osateBugWorkaround.add(subclause);
-                }
-                if (subclause instanceof ResoluteSubclause) {
-                    ResoluteSubclause resoluteSubclause = (ResoluteSubclause) subclause;
-                    EvaluationContext context = new EvaluationContext(compInst, sets,
-                            featToConnsMap);
-                    ResoluteInterpreter interpreter = new ResoluteInterpreter(context);
-                    for (ProveStatement ps : resoluteSubclause.getProves()) {
-                        proofTrees.add(interpreter.evaluateProveStatement(ps));
-                        drawProofs(proofTrees);
-                    }
-                }
-            }
-        }
-        stop = System.currentTimeMillis();
-        System.out.println("Evaluation time: " + (stop - start) / 1000.0 + "s");
+		// This code will only link to objects in the projects visible from the current project
+		Iterable<IEObjectDescription> allObjectTypes = EMFIndexRetrieval.getAllEObjectsOfTypeInWorkspace(context,
+				eclass);
+		String contextProject = context.eResource().getURI().segment(1);
+		List<String> visibleProjects = getVisibleProjects(contextProject);
 
-        enableRerunHandler(root);
-        System.out.println(EcoreUtil2.getURI(root));
+		for (IEObjectDescription eod : allObjectTypes) {
+			if (eod.getName().getLastSegment().equalsIgnoreCase(name)) {
+				EObject res = eod.getEObjectOrProxy();
+				res = EcoreUtil.resolve(res, context.eResource().getResourceSet());
+				if (!Aadl2Util.isNull(res)) {
+					URI linkUri = res.eResource().getURI();
+					String linkProject = linkUri.segment(1);
+					if (visibleProjects.contains(linkProject)) {
+						return res;
+					}
+				}
+			}
+		}
 
-        return Status.OK_STATUS;
-    }
+		return null;
+	}
 
-    private void enableRerunHandler(final Element root) {
-        getWindow().getShell().getDisplay().syncExec(new Runnable() {
-            @Override
-            public void run() {
-                IHandlerService handlerService = getHandlerService();
-                rerunActivation = handlerService.activateHandler(RERUN_ID, new RerunHandler(root, ResoluteHandler.this));
-            }
-        });
-    }
+	private static List<String> getVisibleProjects(String contextProjectName) {
+		List<String> result = new ArrayList<String>();
+		result.add(contextProjectName);
 
-    private void disableRerunHandler() {
-        if (rerunActivation != null) {
-            getWindow().getShell().getDisplay().syncExec(new Runnable() {
-                @Override
-                public void run() {
-                    IHandlerService handlerService = getHandlerService();
-                    handlerService.deactivateHandler(rerunActivation);
-                    rerunActivation = null;
-                }
-            });
-        }
-    }
+		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+		IProject contextProject = root.getProject(URI.decode(contextProjectName));
+		if (!contextProject.exists() || !contextProject.isAccessible() || !contextProject.isOpen())
+			return result;
+		try {
+			IProjectDescription description = contextProject.getDescription();
+			for (IProject referencedProject : description.getReferencedProjects()) {
+				result.add(URI.encodeSegment(referencedProject.getName(), false));
+			}
+		} catch (CoreException ex) {
+			System.out.println("CORE EXCEPTION");
+			ex.printStackTrace();
+		}
 
-    private IHandlerService getHandlerService() {
-        return (IHandlerService) getWindow().getService(IHandlerService.class);
-    }
+		return result;
+	}
 
-    private void initializeSets(ComponentInstance ci, Map<String, SortedSet<NamedElement>> sets) {
-        if (ci == null) {
-            return;
-        }
+	@Override
+	protected IStatus runJob(Element root, IProgressMonitor monitor) {
+		clearProofs();
+		disableRerunHandler();
+		String theorem;
 
-        addToSet(sets, getCategoryName(ci.getCategory()), ci);
-        addToSet(sets, "component", ci);
+		theorem = this.getExecutionEvent().getParameter("com.rockwellcollins.atc.resolute.analysis.theorem");
 
-        for (ComponentInstance sub : ci.getComponentInstances()) {
-            initializeSets(sub, sets);
-        }
+		long start = System.currentTimeMillis();
+		SystemInstance si;
+		if (root instanceof ComponentImplementation) {
+			ComponentImplementation compImpl = (ComponentImplementation) root;
+			try {
+				si = InstantiateModel.buildInstanceModelFile(compImpl);
+			} catch (Exception e) {
+				Dialog.showError("Model Instantiate", "Error while re-instantiating the model: " + e.getMessage());
+				return Status.CANCEL_STATUS;
+			}
+		} else {
+			Dialog.showError("Model Instantiate", "You must select a Component Implementation to instantiate");
+			return Status.CANCEL_STATUS;
+		}
+		long stop = System.currentTimeMillis();
+		System.out.println("Instantiation time: " + (stop - start) / 1000.0 + "s");
 
-        for (ConnectionInstance conn : ci.getConnectionInstances()) {
-            addToSet(sets, "connection", conn);
-        }
-    }
+		start = System.currentTimeMillis();
 
-    private String getCategoryName(ComponentCategory category) {
-        return new BaseType(category).toString();
-    }
+		Map<String, SortedSet<NamedElement>> sets = new HashMap<>();
+		initializeSets(si, sets);
+		FeatureToConnectionsMap featToConnsMap = new FeatureToConnectionsMap(si);
 
-    private void addToSet(Map<String, SortedSet<NamedElement>> sets, String name, NamedElement ne) {
-        SortedSet<NamedElement> set = sets.get(name);
-        if (set == null) {
-            set = new TreeSet<>(new NamedElementComparator());
-            sets.put(name, set);
-        }
-        set.add(ne);
-    }
+		List<ResoluteResult> proofTrees = new ArrayList<>();
 
-    private void drawProofs(final List<ResoluteResult> proofTrees) {
-        final IWorkbenchPage page = getWindow().getActivePage();
+		if (theorem != null) {
 
-        Display.getDefault().asyncExec(new Runnable() {
-            @Override
-            public void run() {
-                displayView(proofTrees, page);
-            }
-        });
-    }
+			EvaluationContext context = new EvaluationContext(si, sets, featToConnsMap);
+			FunctionDefinition functionDefinition = resolveResoluteFunction(si, theorem);
 
-    private void displayView(final List<ResoluteResult> proofTrees, final IWorkbenchPage page) {
-        try {
-            AssuranceCaseView view = (AssuranceCaseView) page.showView(AssuranceCaseView.ID);
-            view.setProofs(proofTrees);
-            view.setFocus();
-        } catch (PartInitException e) {
-            e.printStackTrace();
-        }
-    }
+			ResoluteSubclause resoluteSubclause = ResoluteFactory.eINSTANCE.createResoluteSubclause();
+			ProveStatement proveStatement;
+			FnCallExpr fnCallExpr;
 
-    protected void clearProofs() {
-        drawProofs(Collections.<ResoluteResult> emptyList());
-    }
+			proveStatement = ResoluteFactory.eINSTANCE.createProveStatement();
+			fnCallExpr = ResoluteFactory.eINSTANCE.createFnCallExpr();
+			fnCallExpr.getArgs().add(ResoluteFactory.eINSTANCE.createThisExpr());
+			fnCallExpr.setFn(functionDefinition);
+
+//					Arg a = ResoluteFactory.eINSTANCE.createArg();
+//					com.rockwellcollins.atc.resolute.resolute.BaseType t = ResoluteFactory.eINSTANCE.createBaseType();
+//					a.setName("s");
+//					t.setType("system");
+//					a.setType(t);
+//					fnCallExpr.getFn().getArgs().clear();
+//					fnCallExpr.getFn().getArgs().add(a);
+			proveStatement.setExpr(fnCallExpr);
+			resoluteSubclause.getProves().add(proveStatement);
+			si.getComponentClassifier().getOwnedAnnexSubclauses().add(resoluteSubclause);
+			//
+			ResoluteInterpreter interpreter = new ResoluteInterpreter(context);
+
+			for (ProveStatement ps : resoluteSubclause.getProves()) {
+				proofTrees.add(interpreter.evaluateProveStatement(ps));
+				drawProofs(proofTrees);
+			}
+
+		} else {
+			for (NamedElement el : sets.get("component")) {
+				ComponentInstance compInst = (ComponentInstance) el;
+				EClass resoluteSubclauseEClass = ResolutePackage.eINSTANCE.getResoluteSubclause();
+				for (AnnexSubclause subclause : AnnexUtil.getAllAnnexSubclauses(compInst.getComponentClassifier(),
+						resoluteSubclauseEClass)) {
+
+					if (subclause instanceof ResoluteSubclause) {
+						ResoluteSubclause resoluteSubclause = (ResoluteSubclause) subclause;
+						EvaluationContext context = new EvaluationContext(compInst, sets, featToConnsMap);
+						ResoluteInterpreter interpreter = new ResoluteInterpreter(context);
+						for (ProveStatement ps : resoluteSubclause.getProves()) {
+							proofTrees.add(interpreter.evaluateProveStatement(ps));
+							drawProofs(proofTrees);
+						}
+					}
+				}
+			}
+		}
+
+//		else {
+//			ResoluteSubclause subclause;
+//			ProveStatement proveStatement;
+//			FnCallExpr fnCallExpr;
+//
+//			subclause = ResoluteFactory.eINSTANCE.createResoluteSubclause();
+//			proveStatement = ResoluteFactory.eINSTANCE.createProveStatement();
+//			fnCallExpr = ResoluteFactory.eINSTANCE.createFnCallExpr();
+//			fnCallExpr.getArgs().add(ResoluteFactory.eINSTANCE.createThisExpr());
+//subclause.s
+//			for (IEObjectDescription tmp : EMFIndexRetrieval.getAllEObjectsOfTypeInWorkspace(ResolutePackage.eINSTANCE
+//					.getFunctionDefinition())) {
+//
+//				if (tmp.getName().getLastSegment().equalsIgnoreCase(theorem)) {
+//					EObject eobj = tmp.getEObjectOrProxy();
+//
+//					EObject resolved = EcoreUtil.resolve(eobj, root.eResource().getResourceSet());
+////					System.out.println("resolved=" + resolved);
+//
+//					FunctionDefinition functionDefinition = (FunctionDefinition) resolved;
+//
+//					fnCallExpr.setFn(functionDefinition);
+//
+//				}
+//			}
+//			Arg a = ResoluteFactory.eINSTANCE.createArg();
+//			com.rockwellcollins.atc.resolute.resolute.BaseType t = ResoluteFactory.eINSTANCE.createBaseType();
+//			a.setName("s");
+//			t.setType("system");
+//			a.setType(t);
+//			fnCallExpr.getFn().getArgs().clear();
+//			fnCallExpr.getFn().getArgs().add(a);
+//			proveStatement.setExpr(fnCallExpr);
+//			subclause.getProves().add(proveStatement);
+//
+//			EvaluationContext context = new EvaluationContext((ComponentInstance) si.getComponentInstance(), sets,
+//					featToConnsMap);
+//			ResoluteInterpreter interpreter = new ResoluteInterpreter(context);
+//			for (ProveStatement ps : subclause.getProves()) {
+//				try {
+//					proofTrees.add(interpreter.evaluateProveStatement(ps));
+//					drawProofs(proofTrees);
+//				} catch (Exception e) {
+//					e.printStackTrace();
+//				}
+//			}
+//		}
+
+		stop = System.currentTimeMillis();
+		System.out.println("Evaluation time: " + (stop - start) / 1000.0 + "s");
+
+		enableRerunHandler(root);
+		System.out.println(EcoreUtil2.getURI(root));
+
+		return Status.OK_STATUS;
+	}
+
+	private void enableRerunHandler(final Element root) {
+		getWindow().getShell().getDisplay().syncExec(new Runnable() {
+			@Override
+			public void run() {
+				IHandlerService handlerService = getHandlerService();
+				rerunActivation = handlerService
+						.activateHandler(RERUN_ID, new RerunHandler(root, ResoluteHandler.this));
+			}
+		});
+	}
+
+	private void disableRerunHandler() {
+		if (rerunActivation != null) {
+			getWindow().getShell().getDisplay().syncExec(new Runnable() {
+				@Override
+				public void run() {
+					IHandlerService handlerService = getHandlerService();
+					handlerService.deactivateHandler(rerunActivation);
+					rerunActivation = null;
+				}
+			});
+		}
+	}
+
+	private IHandlerService getHandlerService() {
+		return (IHandlerService) getWindow().getService(IHandlerService.class);
+	}
+
+	private void initializeSets(ComponentInstance ci, Map<String, SortedSet<NamedElement>> sets) {
+		if (ci == null) {
+			return;
+		}
+
+		addToSet(sets, getCategoryName(ci.getCategory()), ci);
+		addToSet(sets, "component", ci);
+
+		for (ComponentInstance sub : ci.getComponentInstances()) {
+			initializeSets(sub, sets);
+		}
+
+		for (ConnectionInstance conn : ci.getConnectionInstances()) {
+			addToSet(sets, "connection", conn);
+		}
+	}
+
+	private String getCategoryName(ComponentCategory category) {
+		return new BaseType(category).toString();
+	}
+
+	private void addToSet(Map<String, SortedSet<NamedElement>> sets, String name, NamedElement ne) {
+		SortedSet<NamedElement> set = sets.get(name);
+		if (set == null) {
+			set = new TreeSet<>(new NamedElementComparator());
+			sets.put(name, set);
+		}
+		set.add(ne);
+	}
+
+	private void drawProofs(final List<ResoluteResult> proofTrees) {
+		final IWorkbenchPage page = getWindow().getActivePage();
+
+		Display.getDefault().asyncExec(new Runnable() {
+			@Override
+			public void run() {
+				displayView(proofTrees, page);
+			}
+		});
+	}
+
+	private void displayView(final List<ResoluteResult> proofTrees, final IWorkbenchPage page) {
+		try {
+			AssuranceCaseView view = (AssuranceCaseView) page.showView(AssuranceCaseView.ID);
+			view.setProofs(proofTrees);
+			view.setFocus();
+		} catch (PartInitException e) {
+			e.printStackTrace();
+		}
+	}
+
+	protected void clearProofs() {
+		drawProofs(Collections.<ResoluteResult> emptyList());
+	}
 }

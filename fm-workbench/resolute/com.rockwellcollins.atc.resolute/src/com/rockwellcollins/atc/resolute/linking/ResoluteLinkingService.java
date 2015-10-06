@@ -45,7 +45,7 @@ public class ResoluteLinkingService extends PropertiesLinkingService {
     }
 
     private EObject getLinkedObject(EObject context, EReference reference, String name) {
-        name = name.replaceAll("::", ".");
+//		name = name.replaceAll("::", ".");
         
         if (context instanceof PropertyValue) {
             return getUnitLiteral(context, name);
@@ -56,6 +56,9 @@ public class ResoluteLinkingService extends PropertiesLinkingService {
         }
 
         if (context instanceof ClaimArg) {
+			if (reference == ResolutePackage.eINSTANCE.getClaimArg_Unit()) {
+				return getUnitLiteral(context, name);
+			}
             return getIndexedObject(context, reference, name);
         }
         
@@ -69,8 +72,8 @@ public class ResoluteLinkingService extends PropertiesLinkingService {
                 return e;
             }
             
-            Iterable<IEObjectDescription> allObjectTypes = 
-                    EMFIndexRetrieval.getAllEObjectsOfTypeInWorkspace(context, reference.getEReferenceType());
+			Iterable<IEObjectDescription> allObjectTypes = EMFIndexRetrieval.getAllEObjectsOfTypeInWorkspace(context,
+					reference.getEReferenceType());
             
             URI contextUri = context.eResource().getURI();
             String contextProject = contextUri.segment(1);
@@ -96,10 +99,24 @@ public class ResoluteLinkingService extends PropertiesLinkingService {
             if (e != null) {
                 return e;
             }
+
+			e = findPropertySetElement(context, reference, name);
+			if (e != null) {
+				return e;
+			}
         }
 
         return null;
     }
+
+	@Override
+	public String getQualifiedName(String packageOrPropertySetName, String elementName) {
+		if (packageOrPropertySetName == null) {
+			return elementName;
+		} else {
+			return packageOrPropertySetName + "." + elementName;
+		}
+	}
 
     private static EObject getFunctionDefinition(EObject context, String name) {
         return getNamedElementByType(context, name, ResolutePackage.Literals.FUNCTION_DEFINITION);
@@ -111,8 +128,8 @@ public class ResoluteLinkingService extends PropertiesLinkingService {
 
     private static EObject getNamedElementByType(EObject context, String name, EClass eclass) {
         // This code will only link to objects in the projects visible from the current project
-        Iterable<IEObjectDescription> allObjectTypes = EMFIndexRetrieval
-                .getAllEObjectsOfTypeInWorkspace(context, eclass);
+		Iterable<IEObjectDescription> allObjectTypes = EMFIndexRetrieval.getAllEObjectsOfTypeInWorkspace(context,
+				eclass);
 
         String contextProject = context.eResource().getURI().segment(1);
         List<String> visibleProjects = getVisibleProjects(contextProject);
@@ -146,6 +163,8 @@ public class ResoluteLinkingService extends PropertiesLinkingService {
 
         IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
         IProject contextProject = root.getProject(URI.decode(contextProjectName));
+		if (!contextProject.exists() || !contextProject.isAccessible() || !contextProject.isOpen())
+			return result;
         try {
             IProjectDescription description = contextProject.getDescription();
             for (IProject referencedProject : description.getReferencedProjects()) {
@@ -163,8 +182,7 @@ public class ResoluteLinkingService extends PropertiesLinkingService {
     private static UnitLiteral getUnitLiteral(EObject context, String name) {
         // TODO: Scope literals by type, but how to do we know the type of an
         // expression?
-        for (IEObjectDescription desc : EMFIndexRetrieval.getAllEObjectsOfTypeInWorkspace(context,
-                UNITS_TYPE)) {
+		for (IEObjectDescription desc : EMFIndexRetrieval.getAllEObjectsOfTypeInWorkspace(context, UNITS_TYPE)) {
             UnitsType unitsType = (UnitsType) EcoreUtil.resolve(desc.getEObjectOrProxy(), context);
             UnitLiteral literal = unitsType.findLiteral(name);
             if (literal != null) {

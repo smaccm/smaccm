@@ -24,89 +24,93 @@ import org.eclipse.xtext.util.concurrent.IUnitOfWork;
 import org.osate.aadl2.Element;
 
 public abstract class AadlHandler extends AbstractHandler {
-    private IWorkbenchWindow window;
+	private IWorkbenchWindow window;
+	private ExecutionEvent executionEvent;
 
-    abstract protected IStatus runJob(Element sel, IProgressMonitor monitor);
+	abstract protected IStatus runJob(Element sel, IProgressMonitor monitor);
 
-    abstract protected String getJobName();
+	abstract protected String getJobName();
 
-    @Override
-    public Object execute(ExecutionEvent event) {
-        EObjectNode node = getEObjectNode(HandlerUtil.getCurrentSelection(event));
-        if (node == null) {
-            return null;
-        }
-        final URI uri = node.getEObjectURI();
+	protected ExecutionEvent getExecutionEvent() {
+		return this.executionEvent;
+	}
 
-        window = HandlerUtil.getActiveWorkbenchWindow(event);
-        if (window == null) {
-            return null;
-        }
+	@Override
+	public Object execute(ExecutionEvent event) {
+		EObjectNode node = getEObjectNode(HandlerUtil.getCurrentSelection(event));
+		this.executionEvent = event;
+		if (node == null) {
+			return null;
+		}
+		final URI uri = node.getEObjectURI();
 
-        return executeURI(uri);
-    }
+		window = HandlerUtil.getActiveWorkbenchWindow(event);
+		if (window == null) {
+			return null;
+		}
 
-    public Object executeURI(final URI uri) {
-        final XtextEditor xtextEditor = EditorUtils.getActiveXtextEditor();
-        if (xtextEditor == null) {
-            return null;
-        }
+		return executeURI(uri);
+	}
 
-        if (!saveChanges(window.getActivePage().getDirtyEditors())) {
-            return null;
-        }
+	public Object executeURI(final URI uri) {
+		final XtextEditor xtextEditor = EditorUtils.getActiveXtextEditor();
+		if (xtextEditor == null) {
+			return null;
+		}
 
-        WorkspaceJob job = new WorkspaceJob(getJobName()) {
-            @Override
-            public IStatus runInWorkspace(final IProgressMonitor monitor) {
-                return xtextEditor.getDocument().readOnly(
-                        new IUnitOfWork<IStatus, XtextResource>() {
-                            @Override
-                            public IStatus exec(XtextResource resource) throws Exception {
-                                EObject eobj = resource.getResourceSet().getEObject(uri, true);
-                                if (eobj instanceof Element) {
-                                    return runJob((Element) eobj, monitor);
-                                } else {
-                                    return Status.CANCEL_STATUS;
-                                }
-                            }
-                        });
-            }
-        };
+		if (!saveChanges(window.getActivePage().getDirtyEditors())) {
+			return null;
+		}
 
-        job.setRule(ResourcesPlugin.getWorkspace().getRoot());
-        job.schedule();
-        return null;
-    }
+		WorkspaceJob job = new WorkspaceJob(getJobName()) {
+			@Override
+			public IStatus runInWorkspace(final IProgressMonitor monitor) {
+				return xtextEditor.getDocument().readOnly(new IUnitOfWork<IStatus, XtextResource>() {
+					@Override
+					public IStatus exec(XtextResource resource) throws Exception {
+						EObject eobj = resource.getResourceSet().getEObject(uri, true);
+						if (eobj instanceof Element) {
+							return runJob((Element) eobj, monitor);
+						} else {
+							return Status.CANCEL_STATUS;
+						}
+					}
+				});
+			}
+		};
 
-    private boolean saveChanges(IEditorPart[] dirtyEditors) {
-        if (dirtyEditors.length == 0) {
-            return true;
-        }
+		job.setRule(ResourcesPlugin.getWorkspace().getRoot());
+		job.schedule();
+		return null;
+	}
 
-        if (MessageDialog.openConfirm(window.getShell(), "Save editors",
-                "Save editors and continue?")) {
-            NullProgressMonitor monitor = new NullProgressMonitor();
-            for (IEditorPart e : dirtyEditors) {
-                e.doSave(monitor);
-            }
-            return true;
-        } else {
-            return false;
-        }
-    }
+	private boolean saveChanges(IEditorPart[] dirtyEditors) {
+		if (dirtyEditors.length == 0) {
+			return true;
+		}
 
-    private EObjectNode getEObjectNode(ISelection currentSelection) {
-        if (currentSelection instanceof IStructuredSelection) {
-            IStructuredSelection iss = (IStructuredSelection) currentSelection;
-            if (iss.size() == 1) {
-                return (EObjectNode) iss.getFirstElement();
-            }
-        }
-        return null;
-    }
+		if (MessageDialog.openConfirm(window.getShell(), "Save editors", "Save editors and continue?")) {
+			NullProgressMonitor monitor = new NullProgressMonitor();
+			for (IEditorPart e : dirtyEditors) {
+				e.doSave(monitor);
+			}
+			return true;
+		} else {
+			return false;
+		}
+	}
 
-    protected IWorkbenchWindow getWindow() {
-        return window;
-    }
+	private EObjectNode getEObjectNode(ISelection currentSelection) {
+		if (currentSelection instanceof IStructuredSelection) {
+			IStructuredSelection iss = (IStructuredSelection) currentSelection;
+			if (iss.size() == 1) {
+				return (EObjectNode) iss.getFirstElement();
+			}
+		}
+		return null;
+	}
+
+	protected IWorkbenchWindow getWindow() {
+		return window;
+	}
 }

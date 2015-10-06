@@ -2,8 +2,6 @@
  */
 package com.rockwellcollins.atc.resolute.resolute;
 
-import org.eclipse.emf.ecore.EObject;
-
 import org.osate.aadl2.NamedElement;
 
 /**
@@ -22,7 +20,7 @@ import org.osate.aadl2.NamedElement;
  * @model
  * @generated
  */
-public interface Arg extends EObject, NamedElement
+public interface Arg extends NamedElement, ClaimTextVar
 {
   /**
    * Returns the value of the '<em><b>Type</b></em>' containment reference.

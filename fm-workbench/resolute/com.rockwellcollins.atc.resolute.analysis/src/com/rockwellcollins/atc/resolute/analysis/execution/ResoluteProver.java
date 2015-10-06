@@ -10,11 +10,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xtext.nodemodel.ICompositeNode;
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 import org.osate.aadl2.Element;
 import org.osate.aadl2.NamedElement;
+import org.osate.aadl2.UnitLiteral;
 import org.osate.aadl2.instance.ComponentInstance;
 import org.osate.aadl2.instance.ConnectionInstance;
 import org.osate.aadl2.instance.FeatureInstance;
@@ -22,275 +24,356 @@ import org.osate.aadl2.instance.FeatureInstance;
 import com.rockwellcollins.atc.resolute.analysis.results.ClaimResult;
 import com.rockwellcollins.atc.resolute.analysis.results.FailResult;
 import com.rockwellcollins.atc.resolute.analysis.results.ResoluteResult;
+import com.rockwellcollins.atc.resolute.analysis.values.IntValue;
 import com.rockwellcollins.atc.resolute.analysis.values.NamedElementValue;
+import com.rockwellcollins.atc.resolute.analysis.values.RealValue;
 import com.rockwellcollins.atc.resolute.analysis.values.ResoluteValue;
+import com.rockwellcollins.atc.resolute.analysis.values.StringValue;
 import com.rockwellcollins.atc.resolute.resolute.Arg;
 import com.rockwellcollins.atc.resolute.resolute.BinaryExpr;
 import com.rockwellcollins.atc.resolute.resolute.ClaimArg;
 import com.rockwellcollins.atc.resolute.resolute.ClaimBody;
 import com.rockwellcollins.atc.resolute.resolute.ClaimString;
 import com.rockwellcollins.atc.resolute.resolute.ClaimText;
+import com.rockwellcollins.atc.resolute.resolute.ClaimTextVar;
+import com.rockwellcollins.atc.resolute.resolute.ConstantDefinition;
+import com.rockwellcollins.atc.resolute.resolute.DefinitionBody;
 import com.rockwellcollins.atc.resolute.resolute.Expr;
+import com.rockwellcollins.atc.resolute.resolute.FailExpr;
 import com.rockwellcollins.atc.resolute.resolute.FnCallExpr;
 import com.rockwellcollins.atc.resolute.resolute.FunctionDefinition;
 import com.rockwellcollins.atc.resolute.resolute.LetBinding;
 import com.rockwellcollins.atc.resolute.resolute.LetExpr;
 import com.rockwellcollins.atc.resolute.resolute.ProveStatement;
 import com.rockwellcollins.atc.resolute.resolute.QuantifiedExpr;
+import com.rockwellcollins.atc.resolute.resolute.StringExpr;
 import com.rockwellcollins.atc.resolute.resolute.ThisExpr;
 import com.rockwellcollins.atc.resolute.resolute.util.ResoluteSwitch;
 
 public class ResoluteProver extends ResoluteSwitch<ResoluteResult> {
-    // Stack for function, claim, and quantifier arguments
-    protected final Deque<Map<NamedElement, ResoluteValue>> varStack = new LinkedList<>();
+	// Stack for function, claim, and quantifier arguments
+	protected final Deque<Map<NamedElement, ResoluteValue>> varStack = new LinkedList<>();
 
-    // Claims have been called with what arguments, used to detect cycles
-    protected final Set<ClaimCallContext> claimCallContexts = new HashSet<>();
+	// Claims have been called with what arguments, used to detect cycles
+	protected final Set<ClaimCallContext> claimCallContexts = new HashSet<>();
 
-    protected final EvaluationContext context;
+	protected final EvaluationContext context;
 
-    public ResoluteProver(EvaluationContext context) {
-        this.context = context;
-    }
+	public ResoluteProver(EvaluationContext context) {
+		this.context = context;
+	}
 
-    /* This will be overridden by children to instantiate modified evaluators */
-    protected ResoluteEvaluator createResoluteEvaluator() {
-        return new ResoluteEvaluator(context, varStack.peek());
-    }
+	/* This will be overridden by children to instantiate modified evaluators */
+	protected ResoluteEvaluator createResoluteEvaluator() {
+		return new ResoluteEvaluator(context, varStack.peek());
+	}
 
-    protected ResoluteValue eval(EObject e) {
-        return createResoluteEvaluator().doSwitch(e);
-    }
+	protected ResoluteValue eval(EObject e) {
+		return createResoluteEvaluator().doSwitch(e);
+	}
 
-    protected Set<ResoluteValue> getArgSet(Arg arg) {
-        return createResoluteEvaluator().getArgSet(arg);
-    }
+	protected List<ResoluteValue> getArgSet(Arg arg) {
+		return createResoluteEvaluator().getArgSet(arg);
+	}
 
-    private List<ResoluteValue> evalList(List<? extends EObject> list) {
-        return createResoluteEvaluator().doSwitchList(list);
-    }
+	private List<ResoluteValue> evalList(List<? extends EObject> list) {
+		return createResoluteEvaluator().doSwitchList(list);
+	}
 
-    /**
-     * The ResoluteProver will only be called on formulas. Everything else is handled by the
-     * ResoluteEvaluator.
-     */
-    @Override
-    public ResoluteResult defaultCase(EObject object) {
-        return new ResoluteResult(eval(object).getBool());
-    }
+	/**
+	 * The ResoluteProver will only be called on formulas. Everything else is handled by the
+	 * ResoluteEvaluator.
+	 */
+	@Override
+	public ResoluteResult defaultCase(EObject object) {
+		return new ResoluteResult(eval(object).getBool());
+	}
 
-    @Override
-    public ResoluteResult caseBinaryExpr(BinaryExpr object) {
-        String op = object.getOp();
+	@Override
+	public ResoluteResult caseBinaryExpr(BinaryExpr object) {
+		String op = object.getOp();
 
-        if (op.equals("and") || op.equals("or") || op.equals("=>")) {
-            ResoluteResult leftResult = doSwitch(object.getLeft());
-            switch (op) {
-            case "and":
-                if (leftResult.isValid()) {
-                    return new ResoluteResult(leftResult, doSwitch(object.getRight()));
-                } else {
-                    return leftResult;
-                }
+		if (op.equals("and") || op.equals("or") || op.equals("andthen") || op.equals("=>")) {
+			ResoluteResult leftResult = doSwitch(object.getLeft());
+			switch (op) {
+			case "and": {
+				ResoluteResult rightResult = doSwitch(object.getRight());
 
-            case "or":
-                if (leftResult.isValid()) {
-                    return leftResult;
-                } else {
-                    return doSwitch(object.getRight());
-                }
+				ResoluteResult result = new ResoluteResult(leftResult, rightResult);
 
-            case "=>":
-                if (!leftResult.isValid()) {
-                    return new ResoluteResult(true);
-                } else {
-                    return doSwitch(object.getRight());
-                }
+				result.setValid(leftResult.isValid() && rightResult.isValid());
+				return result;
+			}
+			case "or":
+				if (leftResult.isValid()) {
+					return leftResult;
+				} else {
+					return doSwitch(object.getRight());
+				}
+			case "andthen":
+				if (!leftResult.isValid()) {
+					return new ResoluteResult(false);
+				} else {
+					return doSwitch(object.getRight());
+				}
 
-            default:
-                throw new IllegalArgumentException();
-            }
-        } else {
-            return new ResoluteResult(eval(object).getBool());
-        }
-    }
+			case "=>":
+				if (!leftResult.isValid()) {
+					return new ResoluteResult(true);
+				} else {
+					return doSwitch(object.getRight());
+				}
 
-    @Override
-    public ResoluteResult caseLetExpr(LetExpr object) {
-        LetBinding binding = object.getBinding();
-        ResoluteValue boundValue = eval(binding.getExpr());
-        varStack.peek().put(binding, boundValue);
-        return doSwitch(object.getExpr());
-    }
+			default:
+				throw new IllegalArgumentException();
+			}
+		} else {
+			return new ResoluteResult(eval(object).getBool());
+		}
+	}
 
-    @Override
-    public ResoluteResult caseQuantifiedExpr(QuantifiedExpr object) {
-        switch (object.getQuant()) {
-        case "exists":
-            return exists(object.getArgs(), object.getExpr());
+	@Override
+	public ResoluteResult caseLetExpr(LetExpr object) {
+		LetBinding binding = object.getBinding();
+		ResoluteValue boundValue = eval(binding.getExpr());
+		varStack.peek().put(binding, boundValue);
+		return doSwitch(object.getExpr());
+	}
 
-        case "forall":
-            return forall(object.getArgs(), object.getExpr());
+	@Override
+	public ResoluteResult caseQuantifiedExpr(QuantifiedExpr object) {
+		switch (object.getQuant()) {
+		case "exists":
+			return exists(object.getArgs(), object.getExpr());
 
-        default:
-            throw new IllegalArgumentException("Unknown quantifier: " + object.getQuant());
-        }
-    }
+		case "forall":
+			return forall(object.getArgs(), object.getExpr());
 
-    private ResoluteResult exists(List<Arg> args, Expr body) {
-        if (args.isEmpty()) {
-            return doSwitch(body);
-        } else {
-            Arg arg = args.get(0);
-            List<Arg> rest = args.subList(1, args.size());
-            for (ResoluteValue value : getArgSet(arg)) {
-                varStack.peek().put(arg, value);
-                ResoluteResult subResult = exists(rest, body);
-                if (subResult.isValid()) {
-                    return subResult;
-                }
-            }
-            return new ResoluteResult(false);
-        }
-    }
+		default:
+			throw new IllegalArgumentException("Unknown quantifier: " + object.getQuant());
+		}
+	}
 
-    private ResoluteResult forall(List<Arg> args, Expr body) {
-        if (args.isEmpty()) {
-            return doSwitch(body);
-        } else {
-            Arg arg = args.get(0);
-            List<Arg> rest = args.subList(1, args.size());
-            List<ResoluteResult> children = new ArrayList<>();
-            for (ResoluteValue value : getArgSet(arg)) {
-                varStack.peek().put(arg, value);
-                ResoluteResult subResult = forall(rest, body);
-                children.add(subResult);
-                if (!subResult.isValid()) {
-                    break;
-                }
-            }
-            return new ResoluteResult(children);
-        }
-    }
+	private ResoluteResult exists(List<Arg> args, Expr body) {
+		if (args.isEmpty()) {
+			return doSwitch(body);
+		} else {
+			Arg arg = args.get(0);
+			List<Arg> rest = args.subList(1, args.size());
+			for (ResoluteValue value : getArgSet(arg)) {
+				varStack.peek().put(arg, value);
+				ResoluteResult subResult = exists(rest, body);
+				if (subResult.isValid()) {
+					return subResult;
+				}
+			}
+			return new ResoluteResult(false);
+		}
+	}
 
-    @Override
-    public ResoluteResult caseFnCallExpr(FnCallExpr object) {
-        if (object.getFn().getBody() instanceof ClaimBody) {
-            return claimCall(object);
-        } else {
-            // Regular function calls are deferred to ResoluteEvaluator
-            return null;
-        }
-    }
+	private ResoluteResult forall(List<Arg> args, Expr body) {
+		if (args.isEmpty()) {
+			return doSwitch(body);
+		} else {
+			Arg arg = args.get(0);
+			List<Arg> rest = args.subList(1, args.size());
+			List<ResoluteResult> children = new ArrayList<>();
+			boolean claimCall = false;
+			if (body instanceof FnCallExpr) {
+				FunctionDefinition fn = ((FnCallExpr) body).getFn();
+				DefinitionBody bod = fn.getBody();
+				if (bod instanceof ClaimBody)
+					claimCall = true;
+			}
+			for (ResoluteValue value : getArgSet(arg)) {
+				varStack.peek().put(arg, value);
+				ResoluteResult subResult = forall(rest, body);
+				children.add(subResult);
+				// shortcut only if call is not to a claim
+				if (!subResult.isValid() && !claimCall && !containsClaim(subResult)) {
+					break;
+				}
+			}
+			return new ResoluteResult(children);
+		}
+	}
 
-    private ResoluteResult claimCall(FnCallExpr object) {
-        FunctionDefinition funcDef = object.getFn();
-        ClaimBody body = (ClaimBody) funcDef.getBody();
-        List<ResoluteValue> argVals = evalList(object.getArgs());
+	private boolean containsClaim(ResoluteResult result) {
+		if (result instanceof ClaimResult)
+			return true;
+		for (ResoluteResult cres : result.getChildren()) {
+			if (containsClaim(cres))
+				return true;
+		}
+		return false;
+	}
 
-        ClaimCallContext context = new ClaimCallContext(funcDef, argVals);
-        if (claimCallContexts.contains(context)) {
-            return new FailResult("Recursive call to " + funcDef.getName() + " with arguments "
-                    + argVals, object);
-        }
+	@Override
+	public ResoluteResult caseFailExpr(FailExpr object) {
+		String str;
+		str = "unknown failure";
 
-        claimCallContexts.add(context);
-        varStack.push(ResoluteEvaluator.pairArguments(funcDef.getArgs(), argVals));
+		if (object.getVal() instanceof BinaryExpr) {
+			BinaryExpr binExpr = (BinaryExpr) object.getVal();
+			Object val = doSwitch(binExpr);
+			StringValue strVal = (StringValue) val;
+			str = strVal.getString();
+		}
 
-        String text = createClaimText(body);
-        Map<String, EObject> references = createClaimReferences(body);
-        ResoluteResult subResult;
-        try {
-            subResult = doSwitch(body.getExpr());
-        } catch (ResoluteFailException e) {
-            subResult = new FailResult(e.getMessage(), e.getLocation());
-        }
+		if (object.getVal() instanceof StringExpr) {
+			StringExpr stringExpr = (StringExpr) object.getVal();
+			str = stringExpr.getVal().getValue();
+		}
 
-        varStack.pop();
-        claimCallContexts.remove(context);
+		if (!object.getFailmsg().isEmpty()) {
+			str = createClaimText(object.getFailmsg());
+		}
 
-        return new ClaimResult(text, subResult, references, funcDef);
-    }
+		return new FailResult("Fail Statement: " + str.replaceAll("\"", ""), object);
+	}
 
-    private String createClaimText(ClaimBody claimBody) {
-        StringBuilder text = new StringBuilder();
+	@Override
+	public ResoluteResult caseFnCallExpr(FnCallExpr object) {
+		if (object.getFn().getBody() instanceof ClaimBody) {
+			return claimCall(object);
+		} else {
+			// Regular function calls are deferred to ResoluteEvaluator
+			return null;
+		}
+	}
 
-        for (Element claim : claimBody.getClaim()) {
-            if (claim instanceof ClaimArg) {
-                Arg claimArg = ((ClaimArg) claim).getArg();
-                text.append("'");
-                text.append(varStack.peek().get(claimArg));
-                text.append("'");
-            } else if (claim instanceof ClaimString) {
-                text.append(((ClaimString) claim).getStr());
-            } else {
-                throw new IllegalArgumentException("Unknown claim type: " + claim.getClass());
-            }
-        }
+	private ResoluteResult claimCall(FnCallExpr object) {
+		FunctionDefinition funcDef = object.getFn();
+		ClaimBody body = (ClaimBody) funcDef.getBody();
+		List<ResoluteValue> argVals = evalList(object.getArgs());
 
-        return text.toString();
-    }
+		ClaimCallContext context = new ClaimCallContext(funcDef, argVals);
+		if (claimCallContexts.contains(context)) {
+			return new FailResult("Recursive call to " + funcDef.getName() + " with arguments " + argVals, object);
+		}
 
-    private Map<String, EObject> createClaimReferences(ClaimBody body) {
-        Map<String, EObject> result = new HashMap<>();
-        for (ClaimText claim : body.getClaim()) {
-            if (claim instanceof ClaimArg) {
-                Arg claimArg = ((ClaimArg) claim).getArg();
-                ResoluteValue argVal = varStack.peek().get(claimArg);
-                if (argVal.isNamedElement()) {
-                    EObject modelElement = getModelElement(argVal.getNamedElement());
-                    if (modelElement != null) {
-                        result.put(argVal.toString(), modelElement);
-                    }
-                }
-            }
-        }
+		claimCallContexts.add(context);
+		varStack.push(ResoluteEvaluator.pairArguments(funcDef.getArgs(), argVals));
 
-        return result;
-    }
+		String text = createClaimText(body.getClaim());
+		Map<String, EObject> references = createClaimReferences(body);
+		ResoluteResult subResult;
+		try {
+			subResult = doSwitch(body.getExpr());
+		} catch (ResoluteFailException e) {
+			subResult = new FailResult(e.getMessage(), e.getLocation());
+		}
 
-    private EObject getModelElement(NamedElement e) {
-        if (e instanceof ComponentInstance) {
-            ComponentInstance ci = (ComponentInstance) e;
-            return ci.getSubcomponent();
-        } else if (e instanceof ConnectionInstance) {
-            ConnectionInstance ci = (ConnectionInstance) e;
-            return ci.getConnectionReferences().get(0).getConnection();
-        } else if (e instanceof FeatureInstance) {
-            FeatureInstance feat = (FeatureInstance) e;
-            return feat.getFeature();
-        } else {
-            return null;
-        }
-    }
+		varStack.pop();
+		claimCallContexts.remove(context);
 
-    public static String proveStatementToString(ProveStatement ps, ComponentInstance thisInst) {
-        FnCallExpr fnCall = (FnCallExpr) ps.getExpr();
+		return new ClaimResult(text, subResult, references, funcDef);
+	}
 
-        StringBuilder text = new StringBuilder();
-        text.append(fnCall.getFn().getName());
-        text.append("(");
-        Iterator<Expr> iterator = fnCall.getArgs().iterator();
-        while (iterator.hasNext()) {
-            Expr arg = iterator.next();
-            if (arg instanceof ThisExpr) {
-                text.append(new NamedElementValue(thisInst));
-            } else {
-                text.append(exprToString(arg));
-            }
-            if (iterator.hasNext()) {
-                text.append(", ");
-            }
-        }
-        text.append(")");
-        return text.toString();
-    }
+	private String createClaimText(EList<ClaimText> claimBody) {
+		StringBuilder text = new StringBuilder();
 
-    private static String exprToString(Expr expr) {
-        ICompositeNode compNode = NodeModelUtils.getNode(expr);
-        if (compNode != null) {
-            return NodeModelUtils.getTokenText(compNode);
-        }
-        return null;
-    }
+		for (Element claim : claimBody) {
+			if (claim instanceof ClaimArg) {
+				ClaimTextVar claimArg = ((ClaimArg) claim).getArg();
+				UnitLiteral claimArgUnit = ((ClaimArg) claim).getUnit();
+//				text.append("'");
+				ResoluteValue val = varStack.peek().get(claimArg);
+				if (val == null) {
+					if (claimArg instanceof ConstantDefinition) {
+						val = eval(((ConstantDefinition) claimArg).getExpr());
+					} else if (claimArg instanceof LetBinding) {
+						val = eval(((LetBinding) claimArg).getExpr());
+					}
+				}
+				if (claimArgUnit != null) {
+					if (val instanceof IntValue) {
+						IntValue ival = (IntValue) val;
+						long sval = ival.getScaledInt(claimArgUnit);
+						if (sval != 0 && ival.getInt() != 0) {
+							val = new IntValue(sval);
+						} else {
+							val = new RealValue(ival.getScaledIntAsDouble(claimArgUnit));
+						}
+					} else if (val instanceof RealValue) {
+						val = new RealValue(((RealValue) val).getScaledReal(claimArgUnit));
+					}
+				}
+				text.append(val);
+				if (claimArgUnit != null) {
+					text.append(" " + claimArgUnit.getName());
+				}
+//				text.append("'");
+			} else if (claim instanceof ClaimString) {
+				text.append(((ClaimString) claim).getStr());
+			} else {
+				throw new IllegalArgumentException("Unknown claim type: " + claim.getClass());
+			}
+		}
+
+		return text.toString();
+	}
+
+	private Map<String, EObject> createClaimReferences(ClaimBody body) {
+		Map<String, EObject> result = new HashMap<>();
+		for (ClaimText claim : body.getClaim()) {
+			if (claim instanceof ClaimArg) {
+				ClaimTextVar claimArg = ((ClaimArg) claim).getArg();
+				ResoluteValue argVal = varStack.peek().get(claimArg);
+				if (argVal != null && argVal.isNamedElement()) {
+					EObject modelElement = getModelElement(argVal.getNamedElement());
+					if (modelElement != null) {
+						result.put(argVal.toString(), modelElement);
+					}
+				}
+			}
+		}
+
+		return result;
+	}
+
+	private EObject getModelElement(NamedElement e) {
+		if (e instanceof ComponentInstance) {
+			ComponentInstance ci = (ComponentInstance) e;
+			return ci.getSubcomponent();
+		} else if (e instanceof ConnectionInstance) {
+			ConnectionInstance ci = (ConnectionInstance) e;
+			return ci.getConnectionReferences().get(0).getConnection();
+		} else if (e instanceof FeatureInstance) {
+			FeatureInstance feat = (FeatureInstance) e;
+			return feat.getFeature();
+		} else {
+			return null;
+		}
+	}
+
+	public static String proveStatementToString(ProveStatement ps, ComponentInstance thisInst) {
+		FnCallExpr fnCall = (FnCallExpr) ps.getExpr();
+
+		StringBuilder text = new StringBuilder();
+		text.append(fnCall.getFn().getName());
+		text.append("(");
+		Iterator<Expr> iterator = fnCall.getArgs().iterator();
+		while (iterator.hasNext()) {
+			Expr arg = iterator.next();
+			if (arg instanceof ThisExpr) {
+				text.append(new NamedElementValue(thisInst));
+			} else {
+				text.append(exprToString(arg));
+			}
+			if (iterator.hasNext()) {
+				text.append(", ");
+			}
+		}
+		text.append(")");
+		return text.toString();
+	}
+
+	private static String exprToString(Expr expr) {
+		ICompositeNode compNode = NodeModelUtils.getNode(expr);
+		if (compNode != null) {
+			return NodeModelUtils.getTokenText(compNode);
+		}
+		return null;
+	}
 }
