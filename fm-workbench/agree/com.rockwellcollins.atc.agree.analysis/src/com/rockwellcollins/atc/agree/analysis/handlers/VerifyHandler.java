@@ -67,6 +67,7 @@ import com.rockwellcollins.atc.agree.analysis.AgreeLogger;
 import com.rockwellcollins.atc.agree.analysis.AgreeRenaming;
 import com.rockwellcollins.atc.agree.analysis.ConsistencyResult;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeASTBuilder;
+import com.rockwellcollins.atc.agree.analysis.ast.AgreeNode;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeProgram;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeStatement;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeVar;
@@ -298,19 +299,30 @@ public abstract class VerifyHandler extends AadlHandler {
         
         //there is a special case in the AgreeRenaming which handles this translation
         if(AgreeUtils.usingKind2()){
-            int i = 0;
-            for(AgreeStatement statement : agreeProgram.topNode.lemmas){
-                renaming.addExplicitRename("["+(++i)+"]", statement.string);
-                properties.add("["+i+"]");
-            }
-            for(AgreeStatement statement : agreeProgram.topNode.guarantees){
-                renaming.addExplicitRename("["+(++i)+"]", statement.string);
-                properties.add("["+i+"]");
-            }
+            addKind2Properties(agreeProgram.topNode, properties, renaming, "_TOP", "");
         }else{
             properties.addAll(mainNode.properties);
         }
         
+    }
+    
+    void addKind2Properties(AgreeNode agreeNode, List<String> properties, AgreeRenaming renaming, String prefix, String userPropPrefix){
+        int i = 0;
+        
+        String propPrefix = (userPropPrefix.equals("")) ? "" : userPropPrefix + ": ";
+        for(AgreeStatement statement : agreeNode.lemmas){
+            renaming.addExplicitRename(prefix+"["+(++i)+"]", propPrefix + statement.string);
+            properties.add(prefix.replaceAll("\\.", AgreeASTBuilder.dotChar)+"["+i+"]");
+        }
+        for(AgreeStatement statement : agreeNode.guarantees){
+            renaming.addExplicitRename(prefix+"["+(++i)+"]", propPrefix + statement.string);
+            properties.add(prefix.replaceAll("\\.", AgreeASTBuilder.dotChar)+"["+i+"]");
+        }
+        
+        userPropPrefix = userPropPrefix.equals("") ? "" : userPropPrefix + ".";
+        for(AgreeNode subNode : agreeNode.subNodes){
+            addKind2Properties(subNode, properties, renaming, prefix+"."+subNode.id, userPropPrefix + subNode.id);
+        }
     }
 
     private void addReference(Map<String, EObject> refMap, AgreeRenaming renaming, AgreeLayout layout,

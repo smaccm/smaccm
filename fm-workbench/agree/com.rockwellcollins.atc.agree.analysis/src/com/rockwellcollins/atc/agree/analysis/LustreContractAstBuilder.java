@@ -89,9 +89,9 @@ public class LustreContractAstBuilder extends LustreAstBuilder {
             }
         }
 
-        Contract contract = new Contract("main", requires, ensures);
+        Contract contract = new Contract("_TOP", requires, ensures);
 
-        Node main = new Node("main", inputs, outputs, locals, equations, properties, assertions, null,
+        Node main = new Node("_TOP", inputs, outputs, locals, equations, properties, assertions, null,
                 Optional.of(Collections.singletonList(contract)));
         nodes.addAll(agreeProgram.globalLustreNodes);
         nodes.add(main);
@@ -189,6 +189,9 @@ public class LustreContractAstBuilder extends LustreAstBuilder {
 
         for (AgreeStatement statement : agreeNode.assertions) {
             assertions.add(statement.expr);
+            if(statementIsContractEqOrProperty(statement)){
+                ensures.add(statement.expr);
+            }
         }
 
         // gather the remaining inputs

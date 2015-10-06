@@ -8,6 +8,10 @@ import java.util.Set;
 import org.eclipse.emf.ecore.EObject;
 
 import jkind.api.results.Renaming;
+import jkind.results.InvalidProperty;
+import jkind.results.Property;
+import jkind.results.UnknownProperty;
+import jkind.results.ValidProperty;
 
 public class AgreeRenaming extends Renaming {
 
@@ -43,6 +47,11 @@ public class AgreeRenaming extends Renaming {
     }
 
     @Override
+    public Property rename(Property property) {
+       return property;
+    }
+    
+    @Override
     public String rename(String original) {
 
         String newName = this.explicitRenames.get(original);
@@ -56,7 +65,7 @@ public class AgreeRenaming extends Renaming {
                 return "Realizability Result";
             } else if (original.contains("__nodeLemma")) {
                 return newName;
-            } else if(newName.matches("\\[[0-9]*\\]")){
+            } else if(newName.matches(".*\\[[0-9]*\\]")){
                 return this.explicitRenames.get(newName);
             }
             return null;

@@ -158,6 +158,22 @@ public class LustreAstBuilder {
 
     }
 
+    
+    protected static boolean statementIsContractEqOrProperty(AgreeStatement statement){
+        if (statement.reference instanceof EqStatement
+                || statement.reference instanceof PropertyStatement) {
+            EObject container = statement.reference.eContainer();
+            while (!(container instanceof ComponentClassifier)) {
+                container = container.eContainer();
+            }
+            if (container instanceof ComponentImplementation) {
+                return false;
+            }
+            return true;
+        }
+        return false;
+    }
+    
     public static Program getAssumeGuaranteeLustreProgram(AgreeProgram agreeProgram, boolean monolithic) {
 
         nodes = new ArrayList<>();
@@ -307,17 +323,7 @@ public class LustreAstBuilder {
             // equations
             // and type equations. This would clear this up
             for (AgreeStatement assertion : agreeNode.assertions) {
-                if (assertion.reference instanceof EqStatement
-                        || assertion.reference instanceof PropertyStatement) {
-                    EObject container = assertion.reference.eContainer();
-                    while (!(container instanceof ComponentClassifier)) {
-                        container = container.eContainer();
-                    }
-                    if (container instanceof ComponentImplementation) {
-                        continue; // throw away eqs and property statements in
-                                  // the implementation
-                    }
-
+                if (statementIsContractEqOrProperty(assertion)) {
                     stuffConj = new BinaryExpr(stuffConj, BinaryOp.AND, assertion.expr);
                 }
             }
@@ -478,20 +484,7 @@ public class LustreAstBuilder {
         // monolithic verification. However, we should add EQ statements
         // with left hand sides which part of the agreeNode assertions
         for (AgreeStatement statement : agreeNode.assertions) {
-            if (monolithic || statement.reference instanceof EqStatement
-                    || statement.reference instanceof PropertyStatement) {
-
-                if (!monolithic) {
-                    EObject container = statement.reference.eContainer();
-                    while (!(container instanceof ComponentClassifier)) {
-                        container = container.eContainer();
-                    }
-                    if (container instanceof ComponentImplementation) {
-                        continue; // throw away eqs and property statements in
-                                  // the implementation
-                    }
-                }
-
+            if (monolithic ||  statementIsContractEqOrProperty(statement)) {
                 assertions.add(statement.expr);
             }
         }

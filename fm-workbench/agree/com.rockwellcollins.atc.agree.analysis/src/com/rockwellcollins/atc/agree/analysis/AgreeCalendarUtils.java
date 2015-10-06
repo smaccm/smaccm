@@ -176,8 +176,9 @@ public class AgreeCalendarUtils {
         equations.add(new Equation(rIsBounded, rIsBoundedExpr));
         equations.add(new Equation(out, outExpr));
 
+        //TODO we used to have the subnode property in here, but it messes up kind2
         List<String> properties = new ArrayList<>();
-        properties.add(rIsBounded.id);
+        //properties.add(rIsBounded.id);
 
         return new Node(name, inputs, outputs, locals, equations, properties);
     }
