@@ -1,5 +1,6 @@
 package MissionSoftware
 public
+	with SMACCM_SYS;
 	
 	
 process MissionSoftware
@@ -39,7 +40,7 @@ process implementation MissionSoftware.i
 		can_to_proxy : port can.rx -> pproxy.rx;
 		can_outside : port can.data_out -> can_out;
 		
-		camera_dta : data access vm.camera_data -> server.camera_data;
+		camera_data : data access vm.camera_data -> server.camera_data;
 		
 end MissionSoftware.i;
 	
@@ -49,12 +50,16 @@ thread UART
 		rx : provides data access;
 		data_in : in event data port;
 		data_out : out event data port;
+	properties
+		Dispatch_Protocol => Sporadic;
 end UART;
 	
 thread Input
 	features
 		rx : requires data access;
 		to_svr : out event data port;
+	properties
+		Dispatch_Protocol => Periodic;
 end Input;
 	
 thread Server
@@ -63,19 +68,26 @@ thread Server
 		output : out event data port;
 		pixhawk_data : requires data access;
 		camera_data : requires data access;
+	properties
+		Dispatch_Protocol => Sporadic;
 end Server;
 	
 thread Output
 	features
 		input : in event data port;
 		tx : out event data port;
+	properties
+		Dispatch_Protocol => Sporadic;
 end Output;
 	
 thread PixhawkProxy
 	features
+		pixhawk_commands : provides data access;
 		pixhawk_data : provides data access;
 		rx : in event data port;
 		tx : out event data port;
+	properties
+		Dispatch_Protocol => Periodic;
 end PixhawkProxy;
 	
 thread CAN
@@ -84,11 +96,15 @@ thread CAN
 		tx : in event data port;
 		data_out : out event data port;
 		data_in : in event data port;
+	properties
+		Dispatch_Protocol => Sporadic;
 end CAN;
 
 thread VM
 	features
 		camera_data : provides data access;
+	properties
+		Dispatch_Protocol => Sporadic;
 end VM;
 	
 end MissionSoftware;
