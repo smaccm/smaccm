@@ -1,6 +1,6 @@
 package com.rockwellcollins.atc.agree.analysis.handlers;
 
-public class VerifySingleHandler extends VerifyHandler {
+public class VerifySingleHandler extends VerifyHandler{
     @Override
     protected boolean isRecursive() {
         return false;
@@ -20,4 +20,6 @@ public class VerifySingleHandler extends VerifyHandler {
     protected boolean isRealizability() {
         return false;
     }
+    
+    
 }

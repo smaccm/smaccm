@@ -133,6 +133,9 @@ public abstract class VerifyHandler extends AadlHandler {
             }
 
             if (isRecursive()) {
+                if(AgreeUtils.usingKind2()){
+                    throw new AgreeException("Kind2 only supports monolithic verification");
+                }
                 result = buildAnalysisResult(ci.getName(), si);
                 wrapper.addChild(result);
                 result = wrapper;
@@ -162,6 +165,9 @@ public abstract class VerifyHandler extends AadlHandler {
       
         Program program;
         if (AgreeUtils.usingKind2()) {
+            if(!isMonolithic()){
+                throw new AgreeException("Kind2 now only supports monolithic verification");
+            }
             program = LustreContractAstBuilder.getContractLustreProgram(agreeProgram);
         } else {
             program = LustreAstBuilder.getAssumeGuaranteeLustreProgram(agreeProgram, isMonolithic());
