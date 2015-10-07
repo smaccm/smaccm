@@ -16,7 +16,7 @@ public class AgreeLayout implements Layout {
     public enum SigType {
         INPUT, OUTPUT
     }
-
+    
     public void addCategory(String category) {
         categories.add(category);
     }
@@ -48,6 +48,7 @@ public class AgreeLayout implements Layout {
     @Override
     public String getCategory(String signal) {
         // TODO this could give false results
+        
         for (String cat : categories) {
             if (signal.startsWith(cat + ".")) {
                 return cat;
@@ -64,5 +65,5 @@ public class AgreeLayout implements Layout {
     public List<String> getAllOutputsFromCategory(String category) {
         return compOutputSignals.get(category);
     }
-
+    
 }
