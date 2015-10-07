@@ -1,6 +1,6 @@
 package com.rockwellcollins.atc.agree.analysis.handlers;
 
-public class VerifyRealizabilityHandler extends VerifyHandler{
+public class VerifyRealizabilityHandler extends VerifyHandler {
 
     @Override
     protected boolean isRecursive() {

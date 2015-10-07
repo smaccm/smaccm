@@ -3,15 +3,16 @@
  */
 package edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.names;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.IRQDispatcher;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.legacy.ExternalIRQEvent;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.legacy.ExternalISR;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.DataPort;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.InputIrqPort;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.ExternalIRQ;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.SharedData;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.ThreadImplementation;
@@ -87,10 +88,32 @@ public class ModelNames {
     return new ThreadCalendarNames(m.getThreadCalendar());
   }
 
-  public List<DispatcherNames> getIrqDispatchers() {
-    List<DispatcherNames> irqs = new ArrayList<>(); 
-    for (IRQDispatcher disp : m.getIRQDispatcherList()) {
-      irqs.add(new DispatcherNames(disp));
+  public List<PortNames> getIrqDispatchers() {
+    List<PortNames> irqs = new ArrayList<>(); 
+    for (InputIrqPort disp : m.getIRQDispatcherList()) {
+      irqs.add(new PortNames(disp));
+    }
+    return irqs;
+  }
+  
+  /* For internal vs. external IRQs (from eChronos' perspective) */
+  public List<PortNames> getExternalIrqDispatchers() {
+    List<PortNames> irqs = new ArrayList<>(); 
+    for (InputIrqPort disp : m.getIRQDispatcherList()) {
+      if (disp.getNumber() != InputIrqPort.NO_SIGNAL_NUMBER) {  
+        irqs.add(new PortNames(disp));
+      }
+    }
+    return irqs;
+  }
+
+  /* For internal vs. external IRQs (from eChronos' perspective) */
+  public List<PortNames> getInternalIrqDispatchers() {
+    List<PortNames> irqs = new ArrayList<>(); 
+    for (InputIrqPort disp : m.getIRQDispatcherList()) {
+      if (disp.getNumber() == InputIrqPort.NO_SIGNAL_NUMBER) {  
+        irqs.add(new PortNames(disp));
+      }
     }
     return irqs;
   }
@@ -147,7 +170,10 @@ public class ModelNames {
   public String getGenerateCamkesTimeServerThreadIndex() {
     return Integer.toString(m.getGenerateCamkesTimeServerThreadIndex());
   }
-  
+
+  public String getGenerateCamkesDataportRpcMinIndex() {
+    return Integer.toString(m.getGenerateCamkesDataportRpcMinIndex());
+  }
   public boolean getIsCamkesTarget() {
     return m.getOsTarget().equals(Model.OSTarget.CAmkES);
   }
@@ -207,4 +233,25 @@ public class ModelNames {
   public String getCamkesTimeServerAadlThreadMinIndex() {
     return Integer.toString(m.getCamkesTimeServerAadlThreadMinIndex());
   }
+  
+  public static String getEChronosDispatchSignal() {
+    return "smaccm_dispatcher";
+  }
+  
+  public boolean getEChronosGenerateCModules() {
+    return m.isEChronosGenerateCModules();
+  }
+
+  public String getEChronosCModulePath() {
+    return m.getEChronosCModulePath();
+  }
+
+  public List<String> getCFileModules() {
+    List<String> toReturn = new ArrayList<>(); 
+    for (String s: m.getSourceFiles()) {
+      toReturn.add(Util.pathRemoveExtension(Util.fileNameFromPath(s)));
+    }
+    return toReturn;
+  }
+
 }

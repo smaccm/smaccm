@@ -36,8 +36,8 @@ system software
   	eq time_of_last_can : real = 
   	  -1.0 * FSW_MAX_CAN_FREQ -> if event(mission_out) then time else pre(time_of_last_can);
   	  
---  	guarantee "not frequent can" : true ->
---  	 time - pre(time_of_last_can) < FSW_MAX_CAN_FREQ => not event(mission_out); 
+  	guarantee "not frequent can" : true ->
+  	 time - pre(time_of_last_can) < FSW_MAX_CAN_FREQ => not event(mission_out); 
   	
   	guarantee "if a message is sent to the flight board then it was received over mavlink" : 
   	  event(mission_out) => mavlink_received_within_bound;
@@ -50,7 +50,7 @@ system software
   	  
     guarantee "time change bound" : 
       5.0 <= next_time - time and next_time - time < 50.0;
-  	  
+  	   
 --  	guarantee "if messasage fails to decrypt then nothing is sent to the mission board" : true;
   	
   **};

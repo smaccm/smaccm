@@ -2,8 +2,8 @@
 #include <sender.h>
 
 
-void periodic_ping(const uint64_t *periodic_100_ms) {
-   printf("sender ping received (%llu).  Writing to receiver \n", *periodic_100_ms);
+void periodic_ping(const int64_t *periodic_100_ms) {
+   printf("sender ping received (%ll).  Writing to receiver \n", *periodic_100_ms);
    test_rpc_native__a_struct_impl my_struct;
    my_struct.field1 = 0.0;
    my_struct.field2 = 32;

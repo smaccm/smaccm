@@ -84,6 +84,7 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//GuaranteeStatement/expr"/>
     </genClasses>
     <genClasses ecoreClass="Agree.ecore#//AssertStatement">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Agree.ecore#//AssertStatement/str"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//AssertStatement/expr"/>
     </genClasses>
     <genClasses ecoreClass="Agree.ecore#//InitialStatement">
@@ -123,6 +124,10 @@
     </genClasses>
     <genClasses ecoreClass="Agree.ecore#//PrimType">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Agree.ecore#//PrimType/string"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Agree.ecore#//PrimType/lowNeg"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Agree.ecore#//PrimType/rangeLow"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Agree.ecore#//PrimType/highNeg"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Agree.ecore#//PrimType/rangeHigh"/>
     </genClasses>
     <genClasses ecoreClass="Agree.ecore#//RecordType">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Agree.ecore#//RecordType/record"/>

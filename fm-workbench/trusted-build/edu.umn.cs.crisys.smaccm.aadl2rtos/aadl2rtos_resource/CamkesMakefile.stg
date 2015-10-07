@@ -34,7 +34,7 @@ camkesMakefileBlockComment(date, path, purpose) ::= <<
 ############################################################################
 >>
 
-camkesMakefilePrefix(name, date, path) ::= <<
+filePrefix(name, date, path) ::= <<
 	
 <camkesMakefileBlockComment(date, path, camkesMakefilePurpose())>
 
@@ -74,8 +74,8 @@ camkesMakefileBody(model) ::= <<
 TARGETS := $(notdir ${SOURCE_DIR}).cdl
 ADL := <model.camkesSystemAssemblyFileName>
 
-# For time server: subdirectory containing extra templates. FILL THIS IN!!!
-TEMPLATES := ../../projects/templates
+# For time server: subdirectory containing extra templates.
+TEMPLATES := ../../projects/templates ../../projects/global-components/templates
 
 
 <if(model.isQemuTarget)>
@@ -96,7 +96,7 @@ include ${PWD}/tools/camkes/camkes.mk
 >>
 
 
-camkesMakefilePostfix(name, path) ::= <<
+filePostfix(name, path) ::= <<
 
 ###################################################################
 #

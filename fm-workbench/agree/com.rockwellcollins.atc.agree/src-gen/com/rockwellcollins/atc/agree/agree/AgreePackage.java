@@ -1597,13 +1597,22 @@ public interface AgreePackage extends EPackage
   int ASSERT_STATEMENT__OWNED_COMMENT = SPEC_STATEMENT__OWNED_COMMENT;
 
   /**
+   * The feature id for the '<em><b>Str</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int ASSERT_STATEMENT__STR = SPEC_STATEMENT_FEATURE_COUNT + 0;
+
+  /**
    * The feature id for the '<em><b>Expr</b></em>' containment reference.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int ASSERT_STATEMENT__EXPR = SPEC_STATEMENT_FEATURE_COUNT + 0;
+  int ASSERT_STATEMENT__EXPR = SPEC_STATEMENT_FEATURE_COUNT + 1;
 
   /**
    * The number of structural features of the '<em>Assert Statement</em>' class.
@@ -1612,7 +1621,7 @@ public interface AgreePackage extends EPackage
    * @generated
    * @ordered
    */
-  int ASSERT_STATEMENT_FEATURE_COUNT = SPEC_STATEMENT_FEATURE_COUNT + 1;
+  int ASSERT_STATEMENT_FEATURE_COUNT = SPEC_STATEMENT_FEATURE_COUNT + 2;
 
   /**
    * The meta object id for the '{@link com.rockwellcollins.atc.agree.agree.impl.InitialStatementImpl <em>Initial Statement</em>}' class.
@@ -2320,13 +2329,49 @@ public interface AgreePackage extends EPackage
   int PRIM_TYPE__STRING = TYPE_FEATURE_COUNT + 0;
 
   /**
+   * The feature id for the '<em><b>Low Neg</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int PRIM_TYPE__LOW_NEG = TYPE_FEATURE_COUNT + 1;
+
+  /**
+   * The feature id for the '<em><b>Range Low</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int PRIM_TYPE__RANGE_LOW = TYPE_FEATURE_COUNT + 2;
+
+  /**
+   * The feature id for the '<em><b>High Neg</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int PRIM_TYPE__HIGH_NEG = TYPE_FEATURE_COUNT + 3;
+
+  /**
+   * The feature id for the '<em><b>Range High</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int PRIM_TYPE__RANGE_HIGH = TYPE_FEATURE_COUNT + 4;
+
+  /**
    * The number of structural features of the '<em>Prim Type</em>' class.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int PRIM_TYPE_FEATURE_COUNT = TYPE_FEATURE_COUNT + 1;
+  int PRIM_TYPE_FEATURE_COUNT = TYPE_FEATURE_COUNT + 5;
 
   /**
    * The meta object id for the '{@link com.rockwellcollins.atc.agree.agree.impl.RecordTypeImpl <em>Record Type</em>}' class.
@@ -3810,6 +3855,17 @@ public interface AgreePackage extends EPackage
   EClass getAssertStatement();
 
   /**
+   * Returns the meta object for the attribute '{@link com.rockwellcollins.atc.agree.agree.AssertStatement#getStr <em>Str</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the attribute '<em>Str</em>'.
+   * @see com.rockwellcollins.atc.agree.agree.AssertStatement#getStr()
+   * @see #getAssertStatement()
+   * @generated
+   */
+  EAttribute getAssertStatement_Str();
+
+  /**
    * Returns the meta object for the containment reference '{@link com.rockwellcollins.atc.agree.agree.AssertStatement#getExpr <em>Expr</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -4115,6 +4171,50 @@ public interface AgreePackage extends EPackage
    * @generated
    */
   EAttribute getPrimType_String();
+
+  /**
+   * Returns the meta object for the attribute '{@link com.rockwellcollins.atc.agree.agree.PrimType#getLowNeg <em>Low Neg</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the attribute '<em>Low Neg</em>'.
+   * @see com.rockwellcollins.atc.agree.agree.PrimType#getLowNeg()
+   * @see #getPrimType()
+   * @generated
+   */
+  EAttribute getPrimType_LowNeg();
+
+  /**
+   * Returns the meta object for the attribute '{@link com.rockwellcollins.atc.agree.agree.PrimType#getRangeLow <em>Range Low</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the attribute '<em>Range Low</em>'.
+   * @see com.rockwellcollins.atc.agree.agree.PrimType#getRangeLow()
+   * @see #getPrimType()
+   * @generated
+   */
+  EAttribute getPrimType_RangeLow();
+
+  /**
+   * Returns the meta object for the attribute '{@link com.rockwellcollins.atc.agree.agree.PrimType#getHighNeg <em>High Neg</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the attribute '<em>High Neg</em>'.
+   * @see com.rockwellcollins.atc.agree.agree.PrimType#getHighNeg()
+   * @see #getPrimType()
+   * @generated
+   */
+  EAttribute getPrimType_HighNeg();
+
+  /**
+   * Returns the meta object for the attribute '{@link com.rockwellcollins.atc.agree.agree.PrimType#getRangeHigh <em>Range High</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the attribute '<em>Range High</em>'.
+   * @see com.rockwellcollins.atc.agree.agree.PrimType#getRangeHigh()
+   * @see #getPrimType()
+   * @generated
+   */
+  EAttribute getPrimType_RangeHigh();
 
   /**
    * Returns the meta object for class '{@link com.rockwellcollins.atc.agree.agree.RecordType <em>Record Type</em>}'.
@@ -5129,6 +5229,14 @@ public interface AgreePackage extends EPackage
     EClass ASSERT_STATEMENT = eINSTANCE.getAssertStatement();
 
     /**
+     * The meta object literal for the '<em><b>Str</b></em>' attribute feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EAttribute ASSERT_STATEMENT__STR = eINSTANCE.getAssertStatement_Str();
+
+    /**
      * The meta object literal for the '<em><b>Expr</b></em>' containment reference feature.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -5383,6 +5491,38 @@ public interface AgreePackage extends EPackage
      * @generated
      */
     EAttribute PRIM_TYPE__STRING = eINSTANCE.getPrimType_String();
+
+    /**
+     * The meta object literal for the '<em><b>Low Neg</b></em>' attribute feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EAttribute PRIM_TYPE__LOW_NEG = eINSTANCE.getPrimType_LowNeg();
+
+    /**
+     * The meta object literal for the '<em><b>Range Low</b></em>' attribute feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EAttribute PRIM_TYPE__RANGE_LOW = eINSTANCE.getPrimType_RangeLow();
+
+    /**
+     * The meta object literal for the '<em><b>High Neg</b></em>' attribute feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EAttribute PRIM_TYPE__HIGH_NEG = eINSTANCE.getPrimType_HighNeg();
+
+    /**
+     * The meta object literal for the '<em><b>Range High</b></em>' attribute feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EAttribute PRIM_TYPE__RANGE_HIGH = eINSTANCE.getPrimType_RangeHigh();
 
     /**
      * The meta object literal for the '{@link com.rockwellcollins.atc.agree.agree.impl.RecordTypeImpl <em>Record Type</em>}' class.

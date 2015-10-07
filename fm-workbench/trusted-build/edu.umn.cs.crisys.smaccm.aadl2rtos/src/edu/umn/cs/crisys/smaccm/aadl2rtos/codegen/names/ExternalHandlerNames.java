@@ -3,7 +3,7 @@
  */
 package edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.names;
 
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.ExternalHandler;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.ExternalHandler;
 
 public class ExternalHandlerNames {
   ExternalHandler eh; 

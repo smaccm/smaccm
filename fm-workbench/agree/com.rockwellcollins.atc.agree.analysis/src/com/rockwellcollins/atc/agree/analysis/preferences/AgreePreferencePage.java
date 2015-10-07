@@ -30,8 +30,7 @@ import com.rockwellcollins.atc.agree.analysis.Activator;
  * preference store that belongs to the main plug-in class. That way,
  * preferences can be accessed directly via the preference store.
  */
-public class AgreePreferencePage extends FieldEditorPreferencePage implements
-        IWorkbenchPreferencePage {
+public class AgreePreferencePage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
 
     public AgreePreferencePage() {
         super(GRID);
@@ -42,18 +41,17 @@ public class AgreePreferencePage extends FieldEditorPreferencePage implements
     private static final String[][] MODEL_CHECKERS = {
             { PreferenceConstants.MODEL_CHECKER_JKIND, PreferenceConstants.MODEL_CHECKER_JKIND },
             { PreferenceConstants.MODEL_CHECKER_KIND2, PreferenceConstants.MODEL_CHECKER_KIND2 },
-            { PreferenceConstants.MODEL_CHECKER_KIND2WEB,
-                    PreferenceConstants.MODEL_CHECKER_KIND2WEB } };
+            { PreferenceConstants.MODEL_CHECKER_KIND2WEB, PreferenceConstants.MODEL_CHECKER_KIND2WEB } };
     private ComboFieldEditor modelCheckerFieldEditor;
     private String selectedModelChecker;
 
     private StringFieldEditor remoteUrlFieldEditor;
 
-    private static final String[][] SOLVERS = {
-            { PreferenceConstants.SOLVER_YICES, PreferenceConstants.SOLVER_YICES },
-            { PreferenceConstants.SOLVER_Z3, PreferenceConstants.SOLVER_Z3 },
-            { PreferenceConstants.SOLVER_CVC4, PreferenceConstants.SOLVER_CVC4 },
-            { PreferenceConstants.SOLVER_YICES2, PreferenceConstants.SOLVER_YICES2 } };
+    private static final String[][] SOLVERS =
+            { { PreferenceConstants.SOLVER_YICES, PreferenceConstants.SOLVER_YICES },
+                    { PreferenceConstants.SOLVER_Z3, PreferenceConstants.SOLVER_Z3 },
+                    { PreferenceConstants.SOLVER_CVC4, PreferenceConstants.SOLVER_CVC4 },
+                    { PreferenceConstants.SOLVER_YICES2, PreferenceConstants.SOLVER_YICES2 } };
     private ComboFieldEditor solverFieldEditor;
     private String selectedSolver;
 
@@ -76,47 +74,42 @@ public class AgreePreferencePage extends FieldEditorPreferencePage implements
                 getFieldEditorParent());
         addField(remoteUrlFieldEditor);
 
-        solverFieldEditor = new ComboFieldEditor(PreferenceConstants.PREF_SOLVER, "SMT Solver",
-                SOLVERS, getFieldEditorParent());
+        solverFieldEditor = new ComboFieldEditor(PreferenceConstants.PREF_SOLVER, "SMT Solver", SOLVERS,
+                getFieldEditorParent());
         addField(solverFieldEditor);
 
-        noKInductionEditor = new BooleanFieldEditor(
-        		PreferenceConstants.PREF_NO_KINDUCTION, "Disable K-Induction", 
-        		getFieldEditorParent());
+        noKInductionEditor = new BooleanFieldEditor(PreferenceConstants.PREF_NO_KINDUCTION,
+                "Disable K-Induction", getFieldEditorParent());
         addField(noKInductionEditor);
-        
-        inductiveCounterexampleFieldEditor = new BooleanFieldEditor(
-                PreferenceConstants.PREF_INDUCT_CEX, "Generate inductive counterexamples",
-                getFieldEditorParent());
+
+        inductiveCounterexampleFieldEditor = new BooleanFieldEditor(PreferenceConstants.PREF_INDUCT_CEX,
+                "Generate inductive counterexamples", getFieldEditorParent());
         addField(inductiveCounterexampleFieldEditor);
 
         smoothingFieldEditor = new BooleanFieldEditor(PreferenceConstants.PREF_SMOOTH_CEX,
                 "Generate smooth counterexamples (minimal number of input value changes)",
                 getFieldEditorParent());
         addField(smoothingFieldEditor);
-        
+
         generalizeFieldEditor = new BooleanFieldEditor(PreferenceConstants.PREF_BLAME_CEX,
-                "Generate blamed counterexamples (generalized counter examples)",
-                getFieldEditorParent());
+                "Generate blamed counterexamples (generalized counter examples)", getFieldEditorParent());
         addField(generalizeFieldEditor);
 
         depthFieldEditor = new NonNegativeIntegerFieldEditor(PreferenceConstants.PREF_DEPTH,
                 "Maximum depth for k-induction", getFieldEditorParent());
         addField(depthFieldEditor);
 
-        pdrMaxEditor = new NonNegativeIntegerFieldEditor(
-        		PreferenceConstants.PREF_PDR_MAX, "Maximum Number of PDR Instances",
-        		getFieldEditorParent());
+        pdrMaxEditor = new NonNegativeIntegerFieldEditor(PreferenceConstants.PREF_PDR_MAX,
+                "Maximum Number of PDR Instances", getFieldEditorParent());
         addField(pdrMaxEditor);
-        
+
         timeoutFieldEditor = new NonNegativeIntegerFieldEditor(PreferenceConstants.PREF_TIMEOUT,
                 "Timeout in seconds", getFieldEditorParent());
         addField(timeoutFieldEditor);
-        
+
         consistDepthEditor = new NonNegativeIntegerFieldEditor(PreferenceConstants.PREF_CONSIST_DEPTH,
                 "Depth to check consistency up to", getFieldEditorParent());
         addField(consistDepthEditor);
-        
 
         Button checkAvailableButton = new Button(getFieldEditorParent(), SWT.PUSH);
         checkAvailableButton.setText("Check if available");
@@ -133,8 +126,7 @@ public class AgreePreferencePage extends FieldEditorPreferencePage implements
             String remoteUrl = remoteUrlFieldEditor.getStringValue();
             KindApi api = PreferencesUtil.getKindApi(selectedModelChecker, remoteUrl);
             api.checkAvailable();
-            MessageDialog.openInformation(getShell(), "Model checker available",
-                    "Model checker available");
+            MessageDialog.openInformation(getShell(), "Model checker available", "Model checker available");
         } catch (Throwable t) {
             MessageDialog.openError(getShell(), "Error running model checker",
                     "Error running model checker: " + t.getMessage());

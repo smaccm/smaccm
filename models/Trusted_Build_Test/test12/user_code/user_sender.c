@@ -2,9 +2,9 @@
 #include <sender.h>
 #include <inttypes.h>
 
-void periodic_ping(const uint64_t * periodic_100_ms) {
+void periodic_ping(const int64_t * periodic_100_ms) {
 
-   printf("sender: periodic dispatch received (%" PRIu64 ").  Writing to receiver \n", *periodic_100_ms);
+   printf("sender: periodic dispatch received (%" PRI64 ").  Writing to receiver \n", *periodic_100_ms);
    
    test12__a_array_impl test_data;
    test_data[0] = 0;

@@ -3,7 +3,6 @@ package edu.umn.cs.crisys.smaccm.aadl2rtos.model.port;
 import java.util.ArrayList;
 import java.util.List;
 
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.ExternalHandler;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.PortConnection;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.ThreadImplementation;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.Type;
@@ -20,6 +19,7 @@ public abstract class DataPort {
   private ExternalHandler initializeEntrypointSourceText = null;
   private String sourceText = null;
   private List<PortConnection> connections = new ArrayList<PortConnection>(); 
+  private List<String> implementationFileList = new ArrayList<String>();
 
 	public DataPort(String portName, 
 	                Type dataType,
@@ -169,4 +169,14 @@ public abstract class DataPort {
   public boolean hasData() {
     return !(this.getType() instanceof UnitType); 
   }
+
+  public List<String> getImplementationFileList() {
+    return implementationFileList;
+  }
+
+  public void setImplementationFileList(List<String> implementationFileList) {
+    this.implementationFileList = implementationFileList;
+  }
+
+
 }

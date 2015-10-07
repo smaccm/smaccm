@@ -18,8 +18,4 @@ public class InputDataPort extends InputPort {
     super(portName, dataType, owner);
   }    
   
-  public boolean isInputDataPort() { return true; }
-  public boolean isInputEventPort() { return false; }
-  public boolean isInputEventDataPort() { return false; }
-  
 }

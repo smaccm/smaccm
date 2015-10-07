@@ -22,6 +22,7 @@ thread sender
 	    Period => 2 sec;
 		Source_Text => ("user_code/user_sender.c");
 	    SMACCM_SYS::Compute_Entrypoint_Source_Text => ("periodic_ping");
+	    SMACCM_SYS::Requires_Time_Services => true;
 	    Priority => 10;
 	    Stack_Size => 4 KByte;
 	    SMACCM_SYS::Thread_Type => Active ;
@@ -35,9 +36,14 @@ thread receiver
 		Input1: in event data port Base_Types::Unsigned_32 {
 	      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("ping_received");
 		  Source_Text => ("user_code/user_receiver1.c");
+	      SMACCM_SYS::Sends_Events_To => "{{2 Output1}}";
 		}; 
 
 		Output1: out event data port Base_Types::Unsigned_32 {
+	      SMACCM_SYS::CommPrim_Source_Text => "ping_Output1";			
+		}; 
+
+		Output2: out event data port Base_Types::Unsigned_32 {
 	      SMACCM_SYS::CommPrim_Source_Text => "ping_Output2";			
 		}; 
 				
@@ -45,7 +51,6 @@ thread receiver
 	    Dispatch_Protocol => Aperiodic;
 	    SMACCM_SYS::Thread_Type => Passive ;
 	    Compute_Execution_Time => 10 us .. 50 us;
-	    SMACCM_SYS::Sends_Events_To => "{{1 Output1}}";
 end receiver ; 
 
 -- Example of an aperiodically dispatched "passive" thread.   

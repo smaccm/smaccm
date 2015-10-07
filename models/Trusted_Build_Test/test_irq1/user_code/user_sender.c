@@ -3,7 +3,7 @@
 #include <inttypes.h>
 #include "clock_driver.h"
 
-void periodic_ping(const uint64_t * periodic_100_ms);
+void periodic_ping(const int64_t * periodic_100_ms);
 
 
 const uint32_t smaccm_tick_interval = 1000;
@@ -33,8 +33,8 @@ void timer_slih() {
 	smaccm_thread_calendar(); 
 }
 
-void periodic_ping(const uint64_t * periodic_100_ms) {
-   printf("sender ping received (%" PRIu64 ").  Writing to receiver \n", *periodic_100_ms);
+void periodic_ping(const int64_t * periodic_100_ms) {
+   printf("sender ping received (%" PRI64 ").  Writing to receiver \n", *periodic_100_ms);
    uint32_t newValue = periodic_100_ms + 1;
    ping_Output1(&newValue);
 }

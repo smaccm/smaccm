@@ -10,10 +10,10 @@ package com.rockwellcollins.atc.agree.agree;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.AgreeContractSubclause#getContract <em>Contract</em>}</li>
  * </ul>
- * </p>
  *
  * @see com.rockwellcollins.atc.agree.agree.AgreePackage#getAgreeContractSubclause()
  * @model

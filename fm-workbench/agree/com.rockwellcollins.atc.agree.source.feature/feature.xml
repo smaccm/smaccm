@@ -21,21 +21,21 @@
          id="com.rockwellcollins.atc.agree.source"
          download-size="0"
          install-size="0"
-         version="2.0.0"
+         version="0.0.0"
          unpack="false"/>
 
    <plugin
          id="com.rockwellcollins.atc.agree.analysis.source"
          download-size="0"
          install-size="0"
-         version="2.0.0"
+         version="0.0.0"
          unpack="false"/>
 
    <plugin
          id="com.rockwellcollins.atc.agree.ui.source"
          download-size="0"
          install-size="0"
-         version="2.0.0"
+         version="0.0.0"
          unpack="false"/>
 
 </feature>

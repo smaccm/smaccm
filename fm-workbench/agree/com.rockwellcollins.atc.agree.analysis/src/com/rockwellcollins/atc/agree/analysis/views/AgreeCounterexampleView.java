@@ -21,8 +21,7 @@ import com.rockwellcollins.atc.agree.analysis.Util;
 
 public class AgreeCounterexampleView extends ViewPart {
     public static final String ID = "com.rockwellcollins.atc.agree.analysis.views.agreeCounterexampleView";
-    private static final GlobalURIEditorOpener globalURIEditorOpener = Util 
-            .getGlobalURIEditorOpener();
+    private static final GlobalURIEditorOpener globalURIEditorOpener = Util.getGlobalURIEditorOpener();
 
     private CounterexampleTreeViewer tree;
     private Map<String, EObject> refMap;
@@ -70,7 +69,7 @@ public class AgreeCounterexampleView extends ViewPart {
             names.add(curr.getName());
             curr = curr.getParent();
         }
-        
+
         EObject result = null;
         String name = "";
         while (!names.isEmpty()) {

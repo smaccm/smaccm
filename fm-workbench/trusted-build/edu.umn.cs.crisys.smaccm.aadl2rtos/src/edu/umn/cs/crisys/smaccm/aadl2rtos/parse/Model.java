@@ -28,10 +28,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.Dispatcher;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.IRQDispatcher;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.legacy.ExternalISR;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.legacy.ExternalIRQEvent;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.InputIrqPort;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.InputPort;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.rpc.RemoteProcedure;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.rpc.RemoteProcedureGroup;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.PortConnection;
@@ -84,10 +84,17 @@ public class Model {
 	// properties related to timers and dispatch
 	boolean generateSystickIRQ;
 	boolean externalTimerComponent; 
+	
+	// CAMKES specific properties
 	String camkesExternalTimerInterfacePath;
 	String camkesExternalTimerCompletePath;
 	int camkesInternalTimerTimersPerClient; 
 	int camkesTimeServerAadlThreadMinIndex; 
+	int camkesDataportRpcMinIndex;
+	
+	// eChronos-specific properties
+	boolean eChronosGenerateCModules;
+	String eChronosCModulePath;
 	
 	public enum CommMutualExclusionPrimitive {MUTEX, SUSPEND_INTERRUPT} ; 
 	CommMutualExclusionPrimitive commMutexPrimitive = CommMutualExclusionPrimitive.MUTEX; 
@@ -178,12 +185,12 @@ public class Model {
 		this.libraryFiles.add(fileName);
 	}	
 	
-  public List<IRQDispatcher> getIRQDispatcherList() {
-    List<IRQDispatcher> idList = new ArrayList<IRQDispatcher>(); 
+  public List<InputIrqPort> getIRQDispatcherList() {
+    List<InputIrqPort> idList = new ArrayList<>(); 
     for (ThreadImplementation ti: this.getAllThreadImplementations()) {
-      for (Dispatcher d: ti.getDispatcherList()) {
-        if (d instanceof IRQDispatcher) {
-          idList.add((IRQDispatcher)d);
+      for (InputPort d: ti.getInputPorts()) {
+        if (d instanceof InputIrqPort) {
+          idList.add((InputIrqPort)d);
         }
       }
     }
@@ -406,6 +413,37 @@ public class Model {
   public int getGenerateCamkesTimeServerThreadIndex() {
     return camkesTimeServerAadlThreadMinIndex++; 
   }
+
+  
+  public int getCamkesDataportRpcMinIndex() {
+    return camkesDataportRpcMinIndex;
+  }
+
+  public void setCamkesDataportRpcMinIndex(int camkesDataportRpcMinIndex) {
+    this.camkesDataportRpcMinIndex = camkesDataportRpcMinIndex;
+  }
+
+  public int getGenerateCamkesDataportRpcMinIndex() {
+    return camkesTimeServerAadlThreadMinIndex++; 
+  }
+
+  
+  public boolean isEChronosGenerateCModules() {
+    return eChronosGenerateCModules;
+  }
+
+  public void setEChronosGenerateCModules(boolean eChronosGenerateCModules) {
+    this.eChronosGenerateCModules = eChronosGenerateCModules;
+  }
+
+  public String getEChronosCModulePath() {
+    return eChronosCModulePath;
+  }
+
+  public void setEChronosCModulePath(String eChronosCModulePath) {
+    this.eChronosCModulePath = eChronosCModulePath;
+  }
+
 
   int connNumber = 0; 
   public int getGenerateConnectionNumber() {

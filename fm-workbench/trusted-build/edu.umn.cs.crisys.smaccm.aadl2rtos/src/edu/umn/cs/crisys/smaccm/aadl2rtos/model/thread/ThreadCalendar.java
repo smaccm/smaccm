@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosException;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.PeriodicDispatcher;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.InputPeriodicPort;
 
 /**
  * @author Whalen
@@ -15,17 +15,17 @@ import edu.umn.cs.crisys.smaccm.aadl2rtos.model.dispatcher.PeriodicDispatcher;
  */
 public class ThreadCalendar {
 
-  List<PeriodicDispatcher> periodicDispatchers = new ArrayList<PeriodicDispatcher>();
+  List<InputPeriodicPort> periodicDispatchers = new ArrayList<InputPeriodicPort>();
   
   public ThreadCalendar() {
     
   }
   
-  public void addPeriodicDispatcher(PeriodicDispatcher d) {
+  public void addPeriodicPort(InputPeriodicPort d) {
     periodicDispatchers.add(d);
   }
   
-  public List<PeriodicDispatcher> getPeriodicDispatchers() {
+  public List<InputPeriodicPort> getPeriodicDispatchers() {
     return periodicDispatchers;
   }
   
@@ -47,7 +47,7 @@ public class ThreadCalendar {
   
   public int getLongestPeriodInMilliseconds() {
     int longest = 0;
-    for (PeriodicDispatcher d : periodicDispatchers) {
+    for (InputPeriodicPort d : periodicDispatchers) {
       longest = java.lang.Math.max(longest, d.getPeriod());
     }
     return longest;
@@ -58,7 +58,7 @@ public class ThreadCalendar {
       throw new Aadl2RtosException("Attempting to compute the GCD of periodic threads, but no periodic threads in model.");
     }
     int gcdVal = periodicDispatchers.get(0).getPeriod();
-    for (PeriodicDispatcher d : periodicDispatchers) {
+    for (InputPeriodicPort d : periodicDispatchers) {
       gcdVal = gcd(d.getPeriod(), gcdVal);
     }
     return gcdVal;

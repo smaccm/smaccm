@@ -1,0 +1,17 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Realtime
+Bundle-SymbolicName: edu.umn.cs.crisys.agree.realtime;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: edu.umn.cs.crisys.agree.realtime.Activator
+Require-Bundle: org.eclipse.core.runtime,
+ com.rockwellcollins.atc.agree.analysis;bundle-version="2.0.0",
+ org.eclipse.core.runtime.compatibility;bundle-version="3.2.200",
+ org.eclipse.emf.ecore;bundle-version="2.10.2",
+ org.osate.aadl2,
+ org.osate.aadl2.modelsupport
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-ActivationPolicy: lazy
+Import-Package: org.eclipse.emf.ecore,
+ org.osate.aadl2.instance,
+ org.osate.xtext.aadl2.properties.util

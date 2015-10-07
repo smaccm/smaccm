@@ -1,0 +1,2 @@
+apps-$(CONFIG_APP_CAMERA_VM) += camera_vm
+camera_vm: libsel4 libmuslc libsel4platsupport libsel4muslccamkes libsel4camkes libsel4sync libsel4debug libsel4bench

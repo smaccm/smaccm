@@ -1,9 +1,7 @@
 package com.rockwellcollins.atc.resolute.analysis.execution;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.eclipse.emf.ecore.EObject;
 import org.osate.aadl2.AbstractNamedValue;
@@ -78,6 +76,10 @@ public class ResoluteBuiltInFnCallEvaluator {
 
 			PropertyExpression expr = getPropertyExpression(element, prop);
 			if (expr == null) {
+				if (args.size() > 2) {
+					return args.get(2);
+
+				}
 				throw new ResoluteFailException("Property " + prop.getName() + " not defined on "
 						+ element.getName(), fnCallExpr);
 			}
@@ -123,21 +125,16 @@ public class ResoluteBuiltInFnCallEvaluator {
 		case "is_bound_to": {
 			NamedElement component = args.get(0).getNamedElement();
 			NamedElement resource = args.get(1).getNamedElement();
-			if ((component instanceof ComponentInstance) &&
-				(resource instanceof ComponentInstance))
-			{
+			if ((component instanceof ComponentInstance) && (resource instanceof ComponentInstance)) {
 				ComponentInstance componentInstance = (ComponentInstance) component;
 				ComponentInstance resourceInstance = (ComponentInstance) resource;
 				
-
 				/**
 				 * Check the processor binding
 				 */
 				
-				for (ComponentInstance binding : GetProperties.getActualProcessorBinding(componentInstance))
-				{
-					if (binding == resourceInstance)
-					{
+				for (ComponentInstance binding : GetProperties.getActualProcessorBinding(componentInstance)) {
+					if (binding == resourceInstance) {
 						return bool(true);
 					}
 				}
@@ -145,10 +142,8 @@ public class ResoluteBuiltInFnCallEvaluator {
 				/**
 				 * Check the memory binding
 				 */
-				for (ComponentInstance binding : GetProperties.getActualMemoryBinding(componentInstance))
-				{
-					if (binding == resourceInstance)
-					{
+				for (ComponentInstance binding : GetProperties.getActualMemoryBinding(componentInstance)) {
+					if (binding == resourceInstance) {
 						return bool(true);
 					}
 				}
@@ -161,15 +156,13 @@ public class ResoluteBuiltInFnCallEvaluator {
 		case "is_of_type": {
 			NamedElement element = args.get(0).getNamedElement();
 			NamedElement type = args.get(1).getNamedElement();
-			if (element instanceof ComponentInstance)
-			{
+			if (element instanceof ComponentInstance) {
 				ComponentInstance ci;
 				ComponentType ct;
 				Classifier cl;
 				ci = (ComponentInstance) element;
 				
-				if ((ci == null) || (ci.getSubcomponent() == null))
-				{
+				if ((ci == null) || (ci.getSubcomponent() == null)) {
 					return bool (false);
 				}
 				
@@ -177,10 +170,8 @@ public class ResoluteBuiltInFnCallEvaluator {
 //				cl = (Classifier) type;
 //				return bool ((ct == cl ) || (ct.isDescendentOf(cl)));
 
-				while (ct != null)
-				{
-					if (ct == type)
-					{
+				while (ct != null) {
+					if (ct == type) {
 						return bool(true);
 					}
 					ct = ct.getExtended();
@@ -203,30 +194,23 @@ public class ResoluteBuiltInFnCallEvaluator {
 			element 	= args.get(0).getNamedElement();
 			memberName 	= args.get(1).getString();
 			
-			if (element instanceof ComponentInstance)
-			{
+			if (element instanceof ComponentInstance) {
 				element = ((ComponentInstance) element).getComponentClassifier();
 			}
 			
-			if (element instanceof ComponentClassifier)
-			{
+			if (element instanceof ComponentClassifier) {
 				ComponentClassifier cc = (ComponentClassifier) element;
-				for (Feature f : cc.getAllFeatures())
-				{
-					if (f.getName().equalsIgnoreCase(memberName))
-					{
+				for (Feature f : cc.getAllFeatures()) {
+					if (f.getName().equalsIgnoreCase(memberName)) {
 						hasMember = true;
 					}
 				}
 			}
 			
-			if (element instanceof ComponentImplementation)
-			{
+			if (element instanceof ComponentImplementation) {
 				ComponentImplementation ci = (ComponentImplementation) element;
-				for (Subcomponent s : ci.getAllSubcomponents())
-				{
-					if (s.getName().equalsIgnoreCase(memberName))
-					{
+				for (Subcomponent s : ci.getAllSubcomponents()) {
+					if (s.getName().equalsIgnoreCase(memberName)) {
 						hasMember = true;
 					}
 				}
@@ -326,14 +310,15 @@ public class ResoluteBuiltInFnCallEvaluator {
 			return bool(args.get(1).getSet().contains(args.get(0)));
 		}
 
+		case "size":
 		case "length": {
-			Set<ResoluteValue> set = args.get(0).getSet();
+			List<ResoluteValue> set = args.get(0).getSet();
 			int setsize = set.size();
 			return new IntValue(setsize);
 		}
 		
 		case "sum": {
-			Set<ResoluteValue> set = args.get(0).getSet();
+			List<ResoluteValue> set = args.get(0).getSet();
 			if (set.isEmpty()) {
 				return new IntValue(0);
 			}
@@ -355,15 +340,21 @@ public class ResoluteBuiltInFnCallEvaluator {
 		}
 
 		case "union": {
-			Set<ResoluteValue> set = new HashSet<>();
+			List<ResoluteValue> set = new ArrayList<>();
 			set.addAll(args.get(0).getSet());
 			set.addAll(args.get(1).getSet());
 			return new SetValue(set);
 		}
 
 		case "intersect": {
-			Set<ResoluteValue> set = new HashSet<>(args.get(0).getSet());
-			set.retainAll(args.get(1).getSet());
+			List<ResoluteValue> set = new ArrayList<>();
+			for (ResoluteValue val1 : args.get(0).getSet()) {
+				for (ResoluteValue val2 : args.get(1).getSet()) {
+					if (val1.equals(val2)) {
+						set.add(val1);
+					}
+				}
+			}
 			return new SetValue(set);
 		}
 
@@ -406,7 +397,7 @@ public class ResoluteBuiltInFnCallEvaluator {
 		case "instances": {
 			NamedElement decl = args.get(0).getNamedElement();
 			SystemInstance top = context.getThisInstance().getSystemInstance();
-			Set<NamedElementValue> result = new HashSet<>();
+			List<NamedElementValue> result = new ArrayList<>();
 			for (ComponentInstance ci : top.getAllComponentInstances()) {
 				if (isInstanceOf(ci, decl)) {
 					result.add(new NamedElementValue(ci));
@@ -458,7 +449,7 @@ public class ResoluteBuiltInFnCallEvaluator {
 	}
 
 	private static SetValue createSetValue(Iterable<? extends NamedElement> iterable) {
-		Set<ResoluteValue> result = new HashSet<ResoluteValue>();
+		List<ResoluteValue> result = new ArrayList<ResoluteValue>();
 		for (NamedElement ne : iterable) {
 			result.add(new NamedElementValue(ne));
 		}

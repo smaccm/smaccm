@@ -11,12 +11,12 @@ import org.osate.aadl2.NamedElement;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.NestedDotID#getBase <em>Base</em>}</li>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.NestedDotID#getTag <em>Tag</em>}</li>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.NestedDotID#getSub <em>Sub</em>}</li>
  * </ul>
- * </p>
  *
  * @see com.rockwellcollins.atc.agree.agree.AgreePackage#getNestedDotID()
  * @model

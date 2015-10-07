@@ -47,11 +47,11 @@ process main
   	  time_of_last_ppm = 0.0;
   	
   	--assumptions about how often events can occur
-  	assume "not frequent ppms" : true ->
-  	 time - pre(time_of_last_ppm) < PPM_PERIOD => not event(ppm_in);
-  	  
-  	assume "not frequent can" : true ->
-  	 time - pre(time_of_last_can) < CAN_PERIOD => not event(mission_in);
+--  	assume "not frequent ppms" : true ->
+--  	 time - pre(time_of_last_ppm) < PPM_PERIOD => not event(ppm_in);
+--  	  
+--  	assume "not frequent can" : true ->
+--  	 time - pre(time_of_last_can) < CAN_PERIOD => not event(mission_in);
   	
   	guarantee "time is positive and increasing" :
   	  (time = 0.0 -> true) and time >= 0.0 and (true -> time > pre(time));
@@ -67,16 +67,16 @@ process main
   	    time - time_of_last_can > TOTAL_LANDING_TIMEOUT => 
   	      control_mode = AGREE_CONSTS.LAND_MODE or control_mode = AGREE_CONSTS.DISARMED_MODE;
   	      
---  	guarantee "time_of_last_ppm and time_of_last_can less than time (lemma for other property)":
---  	  time_of_last_ppm <= time and time_of_last_can <= time and
---  	  time_of_last_ppm >= 0.0 and time_of_last_can >= 0.0;
+  	guarantee "time_of_last_ppm and time_of_last_can less than time (lemma for other property)":
+  	  time_of_last_ppm <= time and time_of_last_can <= time and
+  	  time_of_last_ppm >= 0.0 and time_of_last_can >= 0.0;
   	      
   	eq mavlink_armed_in_past : bool;
   	eq ppm_armed_in_past : bool;
   	
---  	guarantee "if the controller is armed, then an armed signal in the past" :
---  	  control_mode = AGREE_CONSTS.ARMED_MODE =>
---  	    mavlink_armed_in_past or ppm_armed_in_past;
+  	guarantee "if the controller is armed, then an armed signal in the past" :
+  	  control_mode = AGREE_CONSTS.ARMED_MODE =>
+  	    mavlink_armed_in_past or ppm_armed_in_past;
   	
 
 --  	guarantee "if an arm signal is sent from the ppm controller the controller will be armed" : true;
@@ -328,20 +328,20 @@ process implementation main.i
   	
   	-------------- BEGIN LEMMAS ABOUT SCHEDULABILITY -------------
 --  	--these lemmas about runtime
---  	lemma "control runtime is bounded" :
---  	  0.0 <= control_run_time and control_run_time <= CONTROL_EXEC_TIME;
---  	  
---  	lemma "ppm runtime is bounded" :
---  	  0.0 <= ppm_run_time and ppm_run_time <= PPM_EXEC_TIME;
---  	  
---  	lemma "can runtime is bounded" :
---  	  0.0 <= can_run_time and can_run_time <= CAN_EXEC_TIME;
---  	  
---  	lemma "control_law runtime is bounded" :
---  	  0.0 <= control_law_run_time and control_law_run_time <= CONTROL_LAW_EXEC_TIME;
---  	  
---  	lemma "ui_mux runtime is bounded" :
---  	  0.0 <= ui_mux_run_time and ui_mux_run_time <= UI_MUX_EXEC_TIME;
+  	lemma "control runtime is bounded" :
+  	  0.0 <= control_run_time and control_run_time <= CONTROL_EXEC_TIME;
+  	  
+  	lemma "ppm runtime is bounded" :
+  	  0.0 <= ppm_run_time and ppm_run_time <= PPM_EXEC_TIME;
+  	  
+  	lemma "can runtime is bounded" :
+  	  0.0 <= can_run_time and can_run_time <= CAN_EXEC_TIME;
+  	  
+  	lemma "control_law runtime is bounded" :
+  	  0.0 <= control_law_run_time and control_law_run_time <= CONTROL_LAW_EXEC_TIME;
+  	  
+  	lemma "ui_mux runtime is bounded" :
+  	  0.0 <= ui_mux_run_time and ui_mux_run_time <= UI_MUX_EXEC_TIME;
 --  	
 --
 --  	eq last_control_finished : real = -1.0 * CONTROL_EXEC_TIME ->

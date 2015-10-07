@@ -121,8 +121,6 @@ public class Aadl2RtosHandler extends AadlHandler {
 
 			logger.status("Generating code...");
 
-      // split on whether eChronos or CAmkES is the target.
-      // Print out C skeletons
 			if (aadlDir == null) {
 			  aadlDir = Util.getDirectory(sysimpl);
 			}
@@ -134,7 +132,12 @@ public class Aadl2RtosHandler extends AadlHandler {
 			  model.setOutputDirectory(outputDir.getPath());
 			}
 			else if (model.getOutputDirectory() != null) {
-			  outputDir = new File(model.getOutputDirectory());
+			  File temp = new File(model.getOutputDirectory());
+			  if (temp.isAbsolute()) {
+			    outputDir = temp;
+			  } else {
+			    outputDir = new File(aadlDir, model.getOutputDirectory());
+			  }
 			} else {
 			  outputDir = aadlDir;
 			  model.setOutputDirectory(aadlDir.getPath());

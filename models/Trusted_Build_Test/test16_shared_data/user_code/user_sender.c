@@ -6,12 +6,12 @@
 
 char buff[255];
 
-void periodic_ping(const uint64_t * periodic_100_ms) {
+void periodic_ping(const int64_t * periodic_100_ms) {
 
-   printf("sender ping received (%" PRIu64 ").  Writing to receiver \n", *periodic_100_ms);
+   printf("sender ping received (%" PRI64 ").  Writing to receiver \n", *periodic_100_ms);
    /* char *shello = "hello world: "; */
 
-   sprintf(buff, "hello world: %s at %llu", get_instance_name(), *periodic_100_ms);
+   sprintf(buff, "hello world: %s at %ll", get_instance_name(), *periodic_100_ms);
    //strcpy(buff,  "hello world: ");
    // strcpy(buff+13, get_instance_name());
 

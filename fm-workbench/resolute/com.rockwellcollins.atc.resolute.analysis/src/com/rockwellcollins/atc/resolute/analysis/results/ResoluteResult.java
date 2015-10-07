@@ -5,40 +5,44 @@ import java.util.Collections;
 import java.util.List;
 
 public class ResoluteResult {
-    final private boolean valid;
-    final private List<ResoluteResult> children;
+	private boolean valid;
+	final private List<ResoluteResult> children;
 
-    public ResoluteResult(boolean valid, List<ResoluteResult> children) {
-        this.valid = valid;
-        this.children = Collections.unmodifiableList(children);
-    }
+	public ResoluteResult(boolean valid, List<ResoluteResult> children) {
+		this.valid = valid;
+		this.children = Collections.unmodifiableList(children);
+	}
 
-    public ResoluteResult(List<ResoluteResult> children) {
-        this(allValid(children), children);
-    }
+	public ResoluteResult(List<ResoluteResult> children) {
+		this(allValid(children), children);
+	}
 
-    public ResoluteResult(ResoluteResult... results) {
-        this(Arrays.asList(results));
-    }
-    
-    public ResoluteResult(boolean valid, ResoluteResult... results) {
-        this(valid, Arrays.asList(results));
-    }
+	public ResoluteResult(ResoluteResult... results) {
+		this(Arrays.asList(results));
+	}
 
-    private static boolean allValid(List<ResoluteResult> children) {
-        for (ResoluteResult child : children) {
-            if (!child.isValid()) {
-                return false;
-            }
-        }
-        return true;
-    }
+	public ResoluteResult(boolean valid, ResoluteResult... results) {
+		this(valid, Arrays.asList(results));
+	}
 
-    public boolean isValid() {
-        return valid;
-    }
+	private static boolean allValid(List<ResoluteResult> children) {
+		for (ResoluteResult child : children) {
+			if (!child.isValid()) {
+				return false;
+			}
+		}
+		return true;
+	}
 
-    public List<ResoluteResult> getChildren() {
-        return children;
-    }
+	public boolean isValid() {
+		return valid;
+	}
+
+	public List<ResoluteResult> getChildren() {
+		return children;
+	}
+
+	public void setValid(boolean v) {
+		this.valid = v;
+	}
 }

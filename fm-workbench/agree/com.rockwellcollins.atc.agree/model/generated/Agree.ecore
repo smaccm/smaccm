@@ -88,6 +88,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="expr" eType="#//Expr" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="AssertStatement" eSuperTypes="#//SpecStatement">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="str" eType="ecore:EDataType platform:/plugin/org.eclipse.emf.ecore/model/Ecore.ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="expr" eType="#//Expr" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="InitialStatement" eSuperTypes="#//SpecStatement">
@@ -134,6 +135,10 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="PrimType" eSuperTypes="#//Type">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="string" eType="ecore:EDataType platform:/plugin/org.eclipse.emf.ecore/model/Ecore.ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="lowNeg" eType="ecore:EDataType platform:/plugin/org.eclipse.emf.ecore/model/Ecore.ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="rangeLow" eType="ecore:EDataType platform:/plugin/org.eclipse.emf.ecore/model/Ecore.ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="highNeg" eType="ecore:EDataType platform:/plugin/org.eclipse.emf.ecore/model/Ecore.ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="rangeHigh" eType="ecore:EDataType platform:/plugin/org.eclipse.emf.ecore/model/Ecore.ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="RecordType" eSuperTypes="#//Type">
     <eStructuralFeatures xsi:type="ecore:EReference" name="record" eType="#//NestedDotID"

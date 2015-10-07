@@ -51,7 +51,7 @@ annex agree {**
   node spoiler_quad_matches(spoilers : DATA_TYPES::QUAD_Spoilers.treal,
   	spoilers_within_tol : DATA_TYPES::QUAD_Spoilers.tbool
   ) returns (ret : bool);
-  let
+  let 
     ret = spoiler_matches(spoilers.SPOIL1, spoilers.SPOIL2, spoilers.SPOIL3, spoilers.SPOIL4, spoilers_within_tol.SPOIL1) and
           spoiler_matches(spoilers.SPOIL2, spoilers.SPOIL1, spoilers.SPOIL3, spoilers.SPOIL4, spoilers_within_tol.SPOIL2) and
           spoiler_matches(spoilers.SPOIL3, spoilers.SPOIL2, spoilers.SPOIL1, spoilers.SPOIL4, spoilers_within_tol.SPOIL3) and

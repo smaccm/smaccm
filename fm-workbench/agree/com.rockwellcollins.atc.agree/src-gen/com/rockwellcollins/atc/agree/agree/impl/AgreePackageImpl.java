@@ -1094,9 +1094,19 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  public EAttribute getAssertStatement_Str()
+  {
+    return (EAttribute)assertStatementEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   public EReference getAssertStatement_Expr()
   {
-    return (EReference)assertStatementEClass.getEStructuralFeatures().get(0);
+    return (EReference)assertStatementEClass.getEStructuralFeatures().get(1);
   }
 
   /**
@@ -1377,6 +1387,46 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
   public EAttribute getPrimType_String()
   {
     return (EAttribute)primTypeEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getPrimType_LowNeg()
+  {
+    return (EAttribute)primTypeEClass.getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getPrimType_RangeLow()
+  {
+    return (EAttribute)primTypeEClass.getEStructuralFeatures().get(2);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getPrimType_HighNeg()
+  {
+    return (EAttribute)primTypeEClass.getEStructuralFeatures().get(3);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getPrimType_RangeHigh()
+  {
+    return (EAttribute)primTypeEClass.getEStructuralFeatures().get(4);
   }
 
   /**
@@ -1950,6 +2000,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     createEReference(guaranteeStatementEClass, GUARANTEE_STATEMENT__EXPR);
 
     assertStatementEClass = createEClass(ASSERT_STATEMENT);
+    createEAttribute(assertStatementEClass, ASSERT_STATEMENT__STR);
     createEReference(assertStatementEClass, ASSERT_STATEMENT__EXPR);
 
     initialStatementEClass = createEClass(INITIAL_STATEMENT);
@@ -1991,6 +2042,10 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
 
     primTypeEClass = createEClass(PRIM_TYPE);
     createEAttribute(primTypeEClass, PRIM_TYPE__STRING);
+    createEAttribute(primTypeEClass, PRIM_TYPE__LOW_NEG);
+    createEAttribute(primTypeEClass, PRIM_TYPE__RANGE_LOW);
+    createEAttribute(primTypeEClass, PRIM_TYPE__HIGH_NEG);
+    createEAttribute(primTypeEClass, PRIM_TYPE__RANGE_HIGH);
 
     recordTypeEClass = createEClass(RECORD_TYPE);
     createEReference(recordTypeEClass, RECORD_TYPE__RECORD);
@@ -2235,6 +2290,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     initEReference(getGuaranteeStatement_Expr(), this.getExpr(), null, "expr", null, 0, 1, GuaranteeStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(assertStatementEClass, AssertStatement.class, "AssertStatement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEAttribute(getAssertStatement_Str(), theEcorePackage.getEString(), "str", null, 0, 1, AssertStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getAssertStatement_Expr(), this.getExpr(), null, "expr", null, 0, 1, AssertStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(initialStatementEClass, InitialStatement.class, "InitialStatement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -2276,6 +2332,10 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
 
     initEClass(primTypeEClass, PrimType.class, "PrimType", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEAttribute(getPrimType_String(), theEcorePackage.getEString(), "string", null, 0, 1, PrimType.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEAttribute(getPrimType_LowNeg(), theEcorePackage.getEString(), "lowNeg", null, 0, 1, PrimType.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEAttribute(getPrimType_RangeLow(), theEcorePackage.getEString(), "rangeLow", null, 0, 1, PrimType.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEAttribute(getPrimType_HighNeg(), theEcorePackage.getEString(), "highNeg", null, 0, 1, PrimType.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEAttribute(getPrimType_RangeHigh(), theEcorePackage.getEString(), "rangeHigh", null, 0, 1, PrimType.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(recordTypeEClass, RecordType.class, "RecordType", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getRecordType_Record(), this.getNestedDotID(), null, "record", null, 0, 1, RecordType.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

@@ -13,11 +13,11 @@ import org.osate.aadl2.Element;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.EqStatement#getLhs <em>Lhs</em>}</li>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.EqStatement#getExpr <em>Expr</em>}</li>
  * </ul>
- * </p>
  *
  * @see com.rockwellcollins.atc.agree.agree.AgreePackage#getEqStatement()
  * @model

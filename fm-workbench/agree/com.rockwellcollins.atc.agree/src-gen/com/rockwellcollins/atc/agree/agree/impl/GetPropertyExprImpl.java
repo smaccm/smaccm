@@ -23,11 +23,11 @@ import org.osate.aadl2.NamedElement;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.impl.GetPropertyExprImpl#getComponent <em>Component</em>}</li>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.impl.GetPropertyExprImpl#getProp <em>Prop</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */
