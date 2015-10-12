@@ -269,6 +269,16 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 
         // verify that every variable that is reasoned about is
         // in a component containing an annex
+        assertReferencedSubcomponentHasAnnex(compInst, inputs, outputs, subNodes, assertions, lemmas);
+
+        return new AgreeNode(id, inputs, outputs, locals, connections, subNodes, assertions, assumptions,
+                guarantees, lemmas, clockConstraint, initialConstraint, clockVar, reference, timing,
+                compInst);
+    }
+
+    private void assertReferencedSubcomponentHasAnnex(ComponentInstance compInst, List<AgreeVar> inputs,
+            List<AgreeVar> outputs, List<AgreeNode> subNodes, List<AgreeStatement> assertions,
+            List<AgreeStatement> lemmas) {
         Set<String> allExprIds = new HashSet<>();
         IdGatherer visitor = new IdGatherer();
         for (AgreeStatement statement : assertions) {
@@ -307,10 +317,6 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
                 }
             }
         }
-
-        return new AgreeNode(id, inputs, outputs, locals, connections, subNodes, assertions, assumptions,
-                guarantees, lemmas, clockConstraint, initialConstraint, clockVar, reference, timing,
-                compInst);
     }
 
     private List<AgreeStatement> getLemmas(EList<SpecStatement> specs) {
