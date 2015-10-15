@@ -762,31 +762,41 @@ ruleSpecStatement returns [EObject current=null]
 
     |
     { 
-        newCompositeNode(grammarAccess.getSpecStatementAccess().getFnDefExprParserRuleCall_13()); 
+        newCompositeNode(grammarAccess.getSpecStatementAccess().getAssignStatementParserRuleCall_13()); 
     }
-    this_FnDefExpr_50=ruleFnDefExpr
+    this_AssignStatement_50=ruleAssignStatement
     {
-        $current = $this_FnDefExpr_50.current;
+        $current = $this_AssignStatement_50.current;
         afterParserOrEnumRuleCall();
     }
 
     |
     { 
-        newCompositeNode(grammarAccess.getSpecStatementAccess().getNodeDefExprParserRuleCall_14()); 
+        newCompositeNode(grammarAccess.getSpecStatementAccess().getFnDefExprParserRuleCall_14()); 
     }
-    this_NodeDefExpr_51=ruleNodeDefExpr
+    this_FnDefExpr_51=ruleFnDefExpr
     {
-        $current = $this_NodeDefExpr_51.current;
+        $current = $this_FnDefExpr_51.current;
         afterParserOrEnumRuleCall();
     }
 
     |
     { 
-        newCompositeNode(grammarAccess.getSpecStatementAccess().getRecordDefExprParserRuleCall_15()); 
+        newCompositeNode(grammarAccess.getSpecStatementAccess().getNodeDefExprParserRuleCall_15()); 
     }
-    this_RecordDefExpr_52=ruleRecordDefExpr
+    this_NodeDefExpr_52=ruleNodeDefExpr
     {
-        $current = $this_RecordDefExpr_52.current;
+        $current = $this_NodeDefExpr_52.current;
+        afterParserOrEnumRuleCall();
+    }
+
+    |
+    { 
+        newCompositeNode(grammarAccess.getSpecStatementAccess().getRecordDefExprParserRuleCall_16()); 
+    }
+    this_RecordDefExpr_53=ruleRecordDefExpr
+    {
+        $current = $this_RecordDefExpr_53.current;
         afterParserOrEnumRuleCall();
     }
 )
@@ -1480,6 +1490,78 @@ ruleEqStatement returns [EObject current=null]
 	otherlv_6=Semicolon
     {
     	newLeafNode(otherlv_6, grammarAccess.getEqStatementAccess().getSemicolonKeyword_3());
+    }
+)
+;
+
+
+
+
+
+// Entry rule entryRuleAssignStatement
+entryRuleAssignStatement returns [EObject current=null]
+	:
+	{ newCompositeNode(grammarAccess.getAssignStatementRule()); }
+	 iv_ruleAssignStatement=ruleAssignStatement 
+	 { $current=$iv_ruleAssignStatement.current; } 
+	 EOF 
+;
+
+// Rule AssignStatement
+ruleAssignStatement returns [EObject current=null] 
+    @init { enterRule(); 
+    }
+    @after { leaveRule(); }:
+(
+	otherlv_0=Assign
+    {
+    	newLeafNode(otherlv_0, grammarAccess.getAssignStatementAccess().getAssignKeyword_0());
+    }
+(
+(
+		{ 
+	        newCompositeNode(grammarAccess.getAssignStatementAccess().getIdNestedDotIDParserRuleCall_1_0()); 
+	    }
+		lv_id_1_0=ruleNestedDotID		{
+	        if ($current==null) {
+	            $current = createModelElementForParent(grammarAccess.getAssignStatementRule());
+	        }
+       		set(
+       			$current, 
+       			"id",
+        		lv_id_1_0, 
+        		"NestedDotID");
+	        afterParserOrEnumRuleCall();
+	    }
+
+)
+)
+	otherlv_2=EqualsSign
+    {
+    	newLeafNode(otherlv_2, grammarAccess.getAssignStatementAccess().getEqualsSignKeyword_2());
+    }
+(
+(
+		{ 
+	        newCompositeNode(grammarAccess.getAssignStatementAccess().getExprExprParserRuleCall_3_0()); 
+	    }
+		lv_expr_3_0=ruleExpr		{
+	        if ($current==null) {
+	            $current = createModelElementForParent(grammarAccess.getAssignStatementRule());
+	        }
+       		set(
+       			$current, 
+       			"expr",
+        		lv_expr_3_0, 
+        		"Expr");
+	        afterParserOrEnumRuleCall();
+	    }
+
+)
+)
+	otherlv_4=Semicolon
+    {
+    	newLeafNode(otherlv_4, grammarAccess.getAssignStatementAccess().getSemicolonKeyword_4());
     }
 )
 ;

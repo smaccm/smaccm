@@ -113,6 +113,15 @@ public interface AgreeFactory extends EFactory
   EqStatement createEqStatement();
 
   /**
+   * Returns a new object of class '<em>Assign Statement</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Assign Statement</em>'.
+   * @generated
+   */
+  AssignStatement createAssignStatement();
+
+  /**
    * Returns a new object of class '<em>Fn Def Expr</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->

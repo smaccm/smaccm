@@ -11,6 +11,7 @@ import com.rockwellcollins.atc.agree.agree.AgreeContractSubclause;
 import com.rockwellcollins.atc.agree.agree.AgreePackage;
 import com.rockwellcollins.atc.agree.agree.Arg;
 import com.rockwellcollins.atc.agree.agree.AssertStatement;
+import com.rockwellcollins.atc.agree.agree.AssignStatement;
 import com.rockwellcollins.atc.agree.agree.AssumeStatement;
 import com.rockwellcollins.atc.agree.agree.AsynchStatement;
 import com.rockwellcollins.atc.agree.agree.BinaryExpr;
@@ -201,6 +202,9 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 			case AgreePackage.ASSERT_STATEMENT:
 				sequence_SpecStatement(context, (AssertStatement) semanticObject); 
 				return; 
+			case AgreePackage.ASSIGN_STATEMENT:
+				sequence_AssignStatement(context, (AssignStatement) semanticObject); 
+				return; 
 			case AgreePackage.ASSUME_STATEMENT:
 				sequence_SpecStatement(context, (AssumeStatement) semanticObject); 
 				return; 
@@ -378,6 +382,15 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     (name=ID type=Type)
 	 */
 	protected void sequence_Arg(EObject context, Arg semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Constraint:
+	 *     (id=NestedDotID expr=Expr)
+	 */
+	protected void sequence_AssignStatement(EObject context, AssignStatement semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
