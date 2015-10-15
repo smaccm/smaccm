@@ -22,8 +22,13 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE DATA OR THE USE OR OTHER DEALINGS
 package edu.umn.cs.crisys.smaccm.aadl2rtos;
 
 import java.io.File;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.List;
 //import java.util.Map;
+
+
+
 
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -149,8 +154,12 @@ public class Aadl2RtosAction extends AadlAction {
 			return Status.CANCEL_STATUS;
 		} catch (ParserConfigurationException pce) {
       log.error("UsersXML: Error trying to instantiate DocumentBuilder " + pce);
+      String s = "Context: " + Util.stackTraceString(pce);
+      log.error(s);
     } catch (Exception e) {
 			log.error(e);
+			String s = "Context: " + Util.stackTraceString(e);
+			log.error(s);
 			return Status.CANCEL_STATUS;
 		}
 
