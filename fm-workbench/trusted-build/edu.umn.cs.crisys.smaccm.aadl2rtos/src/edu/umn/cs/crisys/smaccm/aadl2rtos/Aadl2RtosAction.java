@@ -22,13 +22,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE DATA OR THE USE OR OTHER DEALINGS
 package edu.umn.cs.crisys.smaccm.aadl2rtos;
 
 import java.io.File;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.util.List;
-//import java.util.Map;
-
-
-
 
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -112,7 +106,7 @@ public class Aadl2RtosAction extends AadlAction {
 			// (it is a factory).
 			logger.status("Generating and typechecking domain model for code generation...");
 			new AadlModelParser(sysimpl, si, model, logger);
-
+			
 			logger.status("Generating code...");
 
       // split on whether eChronos or CAmkES is the target.
@@ -151,15 +145,14 @@ public class Aadl2RtosAction extends AadlAction {
 			for (String msg : msgs) {
 				log.error(msg);
 			}
+      log.error("Context: " + Util.stackTraceString(f));
 			return Status.CANCEL_STATUS;
 		} catch (ParserConfigurationException pce) {
       log.error("UsersXML: Error trying to instantiate DocumentBuilder " + pce);
-      String s = "Context: " + Util.stackTraceString(pce);
-      log.error(s);
+      log.error("Context: " + Util.stackTraceString(pce));
     } catch (Exception e) {
 			log.error(e);
-			String s = "Context: " + Util.stackTraceString(e);
-			log.error(s);
+      log.error("Context: " + Util.stackTraceString(e));
 			return Status.CANCEL_STATUS;
 		}
 
