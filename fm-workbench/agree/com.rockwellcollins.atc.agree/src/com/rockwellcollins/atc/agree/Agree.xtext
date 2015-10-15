@@ -22,9 +22,6 @@ Element returns aadl2::Element:
 	| NodeBodyExpr
 	| EqStatement;
 
-//Namespace returns aadl2::Namespace:
-//	NodeDefExpr;
-
 AnnexLibrary returns aadl2::AnnexLibrary:
 	AgreeLibrary;
 
@@ -54,6 +51,7 @@ SpecStatement:
 	| PropertyStatement
 	| ConstStatement
 	| EqStatement
+	| AssignStatement
 	| FnDefExpr
 	| NodeDefExpr
 	| RecordDefExpr;
@@ -85,6 +83,9 @@ ConstStatement:
 
 EqStatement:
 	'eq' (lhs+=Arg (',' lhs+=Arg)*) ('=' expr=Expr)? ';';
+	
+AssignStatement:
+	'assign' id=NestedDotID '=' expr=Expr ';';
 
 FnDefExpr:
 	'fun' name=ID '(' args+=Arg (',' args+=Arg)* ')' ':' type=Type '=' expr=Expr ';';

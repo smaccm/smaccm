@@ -375,7 +375,7 @@ system Vehicle
 					else
 						state = pend_left;
 					 
-		assume "not shifting both same" : not (left_shift and right_shift);
+		--assume "not shifting both same" : not (left_shift and right_shift);
 					 
 	**};
 		

@@ -75,6 +75,7 @@ import com.rockwellcollins.atc.agree.agree.AgreeContractSubclause;
 import com.rockwellcollins.atc.agree.agree.AgreePackage;
 import com.rockwellcollins.atc.agree.agree.Arg;
 import com.rockwellcollins.atc.agree.agree.AssertStatement;
+import com.rockwellcollins.atc.agree.agree.AssignStatement;
 import com.rockwellcollins.atc.agree.agree.AssumeStatement;
 import com.rockwellcollins.atc.agree.agree.AsynchStatement;
 import com.rockwellcollins.atc.agree.agree.BoolLitExpr;
@@ -215,8 +216,12 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
                 AgreeContract contract = (AgreeContract) annex.getContract();
 
                 curInst = compInst;
-                assertions.addAll(getAssertions(contract.getSpecs()));
-                lemmas.addAll(getLemmas(contract.getSpecs()));
+                assertions.addAll(getAssertionStatements(contract.getSpecs()));
+                assertions.addAll(getEquationStatements(contract.getSpecs()));
+                assertions.addAll(getPropertyStatements(contract.getSpecs()));
+                assertions.addAll(getAssignmentStatements(contract.getSpecs()));
+                
+                lemmas.addAll(getLemmaStatements(contract.getSpecs()));
                 addLustreNodes(contract.getSpecs());
                 gatherLustreTypes(contract.getSpecs());
                 // the clock constraints contain other nodes that we add
@@ -235,6 +240,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
             }
             connections.addAll(getConnections(((ComponentImplementation) compClass).getAllConnections(),
                     compInst, subNodes, latched));
+            
             // make compClass the type so we can get it's other contract
             // elements
             compClass = ((ComponentImplementation) compClass).getType();
@@ -249,16 +255,16 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
         if (annex != null) {
             hasDirectAnnex = true;
             AgreeContract contract = (AgreeContract) annex.getContract();
-            assumptions.addAll(getAssumptions(contract.getSpecs()));
-            guarantees.addAll(getGuarantees(contract.getSpecs()));
+            assumptions.addAll(getAssumptionStatements(contract.getSpecs()));
+            guarantees.addAll(getGuaranteeStatements(contract.getSpecs()));
+            
             // we count eqstatements with expressions as assertions
-            // System.out.println(compInst.getName());
-            assertions.addAll(getAssertions(contract.getSpecs()));
+            assertions.addAll(getEquationStatements(contract.getSpecs()));
+            assertions.addAll(getPropertyStatements(contract.getSpecs()));
             outputs.addAll(getEquationVars(contract.getSpecs(), compInst));
             initialConstraint = getInitialConstraint(contract.getSpecs());
 
             addLustreNodes(contract.getSpecs());
-
             gatherLustreTypes(contract.getSpecs());
         }
 
@@ -269,6 +275,16 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 
         // verify that every variable that is reasoned about is
         // in a component containing an annex
+        assertReferencedSubcomponentHasAnnex(compInst, inputs, outputs, subNodes, assertions, lemmas);
+
+        return new AgreeNode(id, inputs, outputs, locals, connections, subNodes, assertions, assumptions,
+                guarantees, lemmas, clockConstraint, initialConstraint, clockVar, reference, timing,
+                compInst);
+    }
+
+    private void assertReferencedSubcomponentHasAnnex(ComponentInstance compInst, List<AgreeVar> inputs,
+            List<AgreeVar> outputs, List<AgreeNode> subNodes, List<AgreeStatement> assertions,
+            List<AgreeStatement> lemmas) {
         Set<String> allExprIds = new HashSet<>();
         IdGatherer visitor = new IdGatherer();
         for (AgreeStatement statement : assertions) {
@@ -307,13 +323,9 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
                 }
             }
         }
-
-        return new AgreeNode(id, inputs, outputs, locals, connections, subNodes, assertions, assumptions,
-                guarantees, lemmas, clockConstraint, initialConstraint, clockVar, reference, timing,
-                compInst);
     }
 
-    private List<AgreeStatement> getLemmas(EList<SpecStatement> specs) {
+    private List<AgreeStatement> getLemmaStatements(EList<SpecStatement> specs) {
         List<AgreeStatement> lemmas = new ArrayList<>();
         for (SpecStatement spec : specs) {
             if (spec instanceof LemmaStatement) {
@@ -699,14 +711,46 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
         return agreeVars;
     }
 
-    private List<AgreeStatement> getAssertions(EList<SpecStatement> specs) {
+    private List<AgreeStatement> getAssertionStatements(EList<SpecStatement> specs) {
         List<AgreeStatement> asserts = new ArrayList<>();
         for (SpecStatement spec : specs) {
             if (spec instanceof AssertStatement) {
                 AssertStatement assertState = (AssertStatement) spec;
                 asserts.add(new AgreeStatement(assertState.getStr(), doSwitch(assertState.getExpr()),
                         assertState));
-            } else if (spec instanceof EqStatement) {
+            }
+        }
+        return asserts;
+    }
+    
+    private List<AgreeStatement> getAssignmentStatements(EList<SpecStatement> specs) {
+        List<AgreeStatement> assigns = new ArrayList<>();
+        for (SpecStatement spec : specs) {
+            if (spec instanceof AssignStatement) {
+                Expr expr = doSwitch(((AssignStatement) spec).getExpr());
+                expr = new BinaryExpr(new IdExpr(((AssignStatement) spec).getId().getBase().getName()), BinaryOp.EQUAL, expr);
+                assigns.add(new AgreeStatement("", expr, spec));
+            }
+        }
+        return assigns;
+    }
+    
+    private List<AgreeStatement> getPropertyStatements(EList<SpecStatement> specs) {
+        List<AgreeStatement> props = new ArrayList<>();
+        for (SpecStatement spec : specs) {
+            if (spec instanceof PropertyStatement) {
+                Expr expr = doSwitch(((PropertyStatement) spec).getExpr());
+                expr = new BinaryExpr(new IdExpr(((PropertyStatement) spec).getName()), BinaryOp.EQUAL, expr);
+                props.add(new AgreeStatement("", expr, spec));
+            }
+        }
+        return props;
+    }
+
+    private List<AgreeStatement> getEquationStatements(EList<SpecStatement> specs) {
+        List<AgreeStatement> eqs = new ArrayList<>();
+        for (SpecStatement spec : specs) {
+            if (spec instanceof EqStatement) {
                 EqStatement eq = (EqStatement) spec;
                 EList<Arg> lhs = eq.getLhs();
                 if (eq.getExpr() != null) {
@@ -722,19 +766,16 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
                     } else {
                         expr = new BinaryExpr(new IdExpr(lhs.get(0).getName()), BinaryOp.EQUAL, expr);
                     }
-                    asserts.add(new AgreeStatement("", expr, spec));
+                    eqs.add(new AgreeStatement("", expr, spec));
                 }
-                asserts.addAll(getVariableRangeConstraints(lhs, eq));
-            } else if (spec instanceof PropertyStatement) {
-                Expr expr = doSwitch(((PropertyStatement) spec).getExpr());
-                expr = new BinaryExpr(new IdExpr(((PropertyStatement) spec).getName()), BinaryOp.EQUAL, expr);
-                asserts.add(new AgreeStatement("", expr, spec));
+                eqs.addAll(getVariableRangeConstraints(lhs, eq));
             }
-
         }
-        return asserts;
+        return eqs;
     }
-
+    
+    
+    
     private List<AgreeStatement> getVariableRangeConstraints(List<Arg> args, EqStatement eq) {
         List<AgreeStatement> constraints = new ArrayList<>();
         for (Arg arg : args) {
@@ -780,7 +821,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
         return constraints;
     }
 
-    private List<AgreeStatement> getAssumptions(EList<SpecStatement> specs) {
+    private List<AgreeStatement> getAssumptionStatements(EList<SpecStatement> specs) {
         List<AgreeStatement> assumptions = new ArrayList<>();
         for (SpecStatement spec : specs) {
             if (spec instanceof AssumeStatement) {
@@ -792,7 +833,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
         return assumptions;
     }
 
-    private List<AgreeStatement> getGuarantees(EList<SpecStatement> specs) {
+    private List<AgreeStatement> getGuaranteeStatements(EList<SpecStatement> specs) {
         List<AgreeStatement> guarantees = new ArrayList<>();
         for (SpecStatement spec : specs) {
             if (spec instanceof GuaranteeStatement) {

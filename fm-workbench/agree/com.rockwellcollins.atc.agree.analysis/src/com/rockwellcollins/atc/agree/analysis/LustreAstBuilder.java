@@ -580,17 +580,31 @@ public class LustreAstBuilder {
             String sourName = conn.sourceNode == null ? "" : conn.sourceNode.id + AgreeASTBuilder.dotChar;
             sourName = sourName + conn.sourceVarName;
 
-            Expr connExpr = new BinaryExpr(new IdExpr(sourName), BinaryOp.EQUAL, new IdExpr(destName));
+            Expr connExpr;
+            
+            if(!conn.delayed){
+                connExpr = new BinaryExpr(new IdExpr(sourName), BinaryOp.EQUAL, new IdExpr(destName));
+            }else{
+                //we need to get the correct type for the connection
+                //we can assume that the source and destination types are
+                //the same at this point
+                Type type = null;
+                for(AgreeVar var : conn.sourceNode.outputs){
+                    if(var.id.equals(conn.sourceVarName)){
+                        type = var.type;
+                    }
+                }
+                if(type == null){
+                    throw new AgreeException("Could not find type for variable '"+sourName);
+                }
+                Expr initExpr = AgreeUtils.getInitValueFromType(type);
+                Expr preSource = new UnaryExpr(UnaryOp.PRE, new IdExpr(sourName));
+                Expr sourExpr = new BinaryExpr(initExpr, BinaryOp.ARROW, preSource);
+                connExpr = new BinaryExpr(sourExpr, BinaryOp.EQUAL, new IdExpr(destName));
+            }
 
             assertions.add(new AgreeStatement("", connExpr, conn.reference));
-            // the event connections are added seperatly in the agree ast
-            // if(conn.type == ConnectionType.EVENT){
-            // Expr eventExpr = new BinaryExpr(
-            // new IdExpr(sourName+AgreeASTBuilder.eventSuffix),
-            // BinaryOp.EQUAL,
-            // new IdExpr(destName+AgreeASTBuilder.eventSuffix));
-            // assertions.add(new AgreeStatement("", eventExpr, null));
-            // }
+  
         }
     }
 

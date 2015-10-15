@@ -56,6 +56,7 @@ import com.rockwellcollins.atc.agree.agree.AgreePackage;
 import com.rockwellcollins.atc.agree.agree.AgreeSubclause;
 import com.rockwellcollins.atc.agree.agree.Arg;
 import com.rockwellcollins.atc.agree.agree.AssertStatement;
+import com.rockwellcollins.atc.agree.agree.AssignStatement;
 import com.rockwellcollins.atc.agree.agree.AssumeStatement;
 import com.rockwellcollins.atc.agree.agree.AsynchStatement;
 import com.rockwellcollins.atc.agree.agree.BinaryExpr;
@@ -174,6 +175,50 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 
 	}
 
+	@Check(CheckType.FAST)
+	public void checkAssign(AssignStatement assign){
+	    NestedDotID dotId = assign.getId();
+	    NamedElement namedEl = dotId.getBase();
+	    Expr expr = assign.getExpr();
+        
+        if(namedEl == null || expr == null){
+            return;
+        }
+        
+        ComponentImplementation compImpl = EcoreUtil2.getContainerOfType(assign, ComponentImplementation.class);
+        AgreeContract contract = EcoreUtil2.getContainerOfType(assign, AgreeContract.class);
+        
+        if (compImpl == null) {
+            error(assign, "Assignment statements are only allowed in component implementations");
+        }
+        
+        
+	    if(dotId.getSub() != null){
+	        error(dotId, "The Id on the left hand side of an assignment statement "
+	                + "must not contain a \".\"");
+	    }
+	    
+	    AgreeType lhsType = getAgreeType(namedEl);
+	    AgreeType rhsType = getAgreeType(expr);
+	    
+	    if(!lhsType.equals(rhsType)){
+	        error(assign, "The left hand side of the assignment statement is of type '"
+	                +lhsType+"' but the right hand side is of type '"+rhsType+"'");
+	    }
+	    
+	    for(SpecStatement spec : contract.getSpecs()){
+	        if (spec instanceof AssignStatement && spec != assign){
+	            NamedElement otherEl = ((AssignStatement)spec).getId().getBase();
+	            if(otherEl.equals(namedEl)){
+	                error(spec,"Mulitiple assignments to variable '"+namedEl.getName()+"'");
+                    error(assign,"Mulitiple assignments to variable '"+namedEl.getName()+"'");
+	            }
+	        }
+	    }
+	    
+	    
+	}
+	
 	@Check(CheckType.FAST)
 	public void checkArg(Arg arg) {
 		Type type = arg.getType();
@@ -382,6 +427,14 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 			error(asser, "Expression for assert statement is of type '" + exprType.toString()
 					+ "' but must be of type 'bool'");
 		}
+		
+		
+		warning(asser, "We highly discourage the use of assert statements. "
+		        + "They can easily lead to inconsistent or unrealizable systems. "
+		        + "Note that our realizability check does not verify that component "
+		        + "assertions are realizable.  It is likely that you can specify the "
+		        + "behavior you want by changing the subcomponent contracts or "
+		        + "by using assignment statements.");
 
 	}
 
