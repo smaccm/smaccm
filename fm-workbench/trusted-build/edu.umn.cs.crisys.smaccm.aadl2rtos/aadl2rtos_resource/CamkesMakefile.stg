@@ -34,7 +34,7 @@ camkesMakefileBlockComment(date, path, purpose) ::= <<
 ############################################################################
 >>
 
-camkesMakefilePrefix(name, date, path) ::= <<
+filePrefix(name, date, path) ::= <<
 	
 <camkesMakefileBlockComment(date, path, camkesMakefilePurpose())>
 
@@ -96,7 +96,7 @@ include ${PWD}/tools/camkes/camkes.mk
 >>
 
 
-camkesMakefilePostfix(name, path) ::= <<
+filePostfix(name, path) ::= <<
 
 ###################################################################
 #

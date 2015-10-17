@@ -41,6 +41,7 @@ system implementation test0.impl
 	properties
 		SMACCM_SYS::OS => CAmkES;
 		SMACCM_SYS::HW => QEMU;
+		SMACCM_SYS::CAmkES_Dataport_RPC_Min_Index => 5;
 end test0.impl;
 
 end test0;

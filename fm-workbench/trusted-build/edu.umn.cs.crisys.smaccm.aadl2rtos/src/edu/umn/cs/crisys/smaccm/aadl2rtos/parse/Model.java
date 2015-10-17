@@ -84,11 +84,17 @@ public class Model {
 	// properties related to timers and dispatch
 	boolean generateSystickIRQ;
 	boolean externalTimerComponent; 
+	
+	// CAMKES specific properties
 	String camkesExternalTimerInterfacePath;
 	String camkesExternalTimerCompletePath;
 	int camkesInternalTimerTimersPerClient; 
 	int camkesTimeServerAadlThreadMinIndex; 
 	int camkesDataportRpcMinIndex;
+	
+	// eChronos-specific properties
+	boolean eChronosGenerateCModules;
+	String eChronosCModulePath;
 	
 	public enum CommMutualExclusionPrimitive {MUTEX, SUSPEND_INTERRUPT} ; 
 	CommMutualExclusionPrimitive commMutexPrimitive = CommMutualExclusionPrimitive.MUTEX; 
@@ -420,6 +426,24 @@ public class Model {
   public int getGenerateCamkesDataportRpcMinIndex() {
     return camkesTimeServerAadlThreadMinIndex++; 
   }
+
+  
+  public boolean isEChronosGenerateCModules() {
+    return eChronosGenerateCModules;
+  }
+
+  public void setEChronosGenerateCModules(boolean eChronosGenerateCModules) {
+    this.eChronosGenerateCModules = eChronosGenerateCModules;
+  }
+
+  public String getEChronosCModulePath() {
+    return eChronosCModulePath;
+  }
+
+  public void setEChronosCModulePath(String eChronosCModulePath) {
+    this.eChronosCModulePath = eChronosCModulePath;
+  }
+
 
   int connNumber = 0; 
   public int getGenerateConnectionNumber() {

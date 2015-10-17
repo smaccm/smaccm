@@ -66,6 +66,7 @@ import org.osate.aadl2.instance.ConnectionKind;
 import org.osate.aadl2.instance.FeatureCategory;
 import org.osate.aadl2.instance.SystemInstance;
 import org.osate.aadl2.instance.impl.FeatureInstanceImpl;
+import org.osate.aadl2.properties.PropertyNotPresentException;
 import org.osate.xtext.aadl2.properties.util.PropertyUtils;
 
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosException;
@@ -187,6 +188,15 @@ public class AadlModelParser {
 		  }
 		}
 		
+		try {
+		  this.model.eChronosGenerateCModules = PropertyUtils.getBooleanValue(systemImplementation, PropertyUtil.ECHRONOS_GENERATE_C_MODULES);
+		  if (this.model.eChronosGenerateCModules) {
+		    this.model.eChronosCModulePath = PropertyUtils.getStringValue(systemImplementation, PropertyUtil.ECHRONOS_C_MODULE_PATH);
+		  }
+		} catch (Exception e) {
+      this.logger.error("If eChronosGenerateCModules is 'true', then eChronosCModulePath must be defined.");
+      throw new Aadl2RtosException("Parse failure on eChronosCModulePath target property ");
+    }
 		// Initialize thread implementations
 		constructThreadImplMap();
 
@@ -272,6 +282,13 @@ public class AadlModelParser {
       } catch (NumberFormatException nfe) {
         logger.error("ISR Port " + port.getName() + ": signal number is not a positive integer. Original error: " + nfe.toString());
         throw new Aadl2RtosException("ISR construction error");
+      } catch (PropertyNotPresentException pnpe) {
+        signal_number = InputIrqPort.NO_SIGNAL_NUMBER;
+        
+        // signal number is necessary for CAmkES, but not eChronos
+        if (model.getOsTarget() == Model.OSTarget.CAmkES) {
+          throw pnpe;
+        }
       }
       Map<String, String> memoryRegions;
       memoryRegions = PropertyUtil.getMemoryRegions(port);
@@ -532,11 +549,12 @@ public class AadlModelParser {
   
   private ThreadImplementation constructThreadImplementation(ThreadTypeImpl tti) {
     String name = tti.getName();
-    boolean isPassive = PropertyUtil.getThreadType(tti);    
+    boolean isPassive = PropertyUtil.getThreadType(tti);
+    boolean isExternal = PropertyUtil.getIsExternal(tti);
     int priority = -1; 
     int stackSize = 4096;
     
-    if (!isPassive) {
+    if (!(isPassive || isExternal)) {
       priority = PropertyUtil.getPriority(tti);
       
       // MWW TODO: temporary until after May 15 code drop
@@ -546,11 +564,11 @@ public class AadlModelParser {
       priority = 200; 
       try {
         PropertyUtil.getPriority(tti);
-        logger.warn("Warning: priority ignored for passive thread: " + name);
+        logger.warn("Warning: priority ignored for passive/external thread: " + name);
       } catch (Aadl2RtosException e) {}
       try {
         PropertyUtil.getStackSizeInBytes(tti); 
-        logger.warn("Warning: stack size ignored for passive thread: " + name);
+        logger.warn("Warning: stack size ignored for passive/external thread: " + name);
       } catch (Aadl2RtosException e) {}
     }
     
@@ -560,7 +578,6 @@ public class AadlModelParser {
 
     double minComputeTime = PropertyUtil.getMinComputeExecutionTimeInMicroseconds(tti);
     double maxComputeTime = PropertyUtil.getMaxComputeExecutionTimeInMicroseconds(tti);
-    boolean isExternal = PropertyUtil.getIsExternal(tti);
     boolean requiresTimeServices = PropertyUtils.getBooleanValue(tti, PropertyUtil.REQUIRES_TIME_SERVICES);
     List<String> externalMutexList = (ArrayList<String>) PropertyUtil.getExternalMutexList(tti);
     List<String> externalSemaphoreList = (ArrayList<String>) PropertyUtil.getExternalSemaphoreList(tti);

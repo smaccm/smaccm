@@ -47,7 +47,7 @@ import com.rockwellcollins.atc.agree.analysis.ast.AgreeProgram;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeStatement;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeVar;
 import com.rockwellcollins.atc.agree.analysis.extentions.AgreeAutomater;
-import com.rockwellcollins.atc.agree.analysis.lustre.visitors.IdGatherer;
+//import com.rockwellcollins.atc.agree.analysis.lustre.visitors.IdGatherer;
 
 	
 public class ConstraintsGenerator implements AgreeAutomater{

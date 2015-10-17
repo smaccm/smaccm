@@ -80,12 +80,11 @@ static void rec_packet(libvchan_t * con) {
         libvchan_wait(con);
         /* Buffer sanity checking */
         assert(libvchan_data_ready(con) != 0);
-        assert(libvchan_buffer_space(con) == FILE_DATAPORT_MAX_SIZE);
+        //assert(libvchan_buffer_space(con) == FILE_DATAPORT_MAX_SIZE);
         /* Perform read operation */
         sz = libvchan_read(con, &pak, sizeof(pak));
         /* See if the given packet is correct */
         assert(sz == sizeof(pak));
-        assert(pak.pnum == x);
         assert(pak.guard == TEST_VCHAN_PAK_GUARD);
         //DHELL("camera_vm.packet %d|%d\n", x, sizeof(pak));
 

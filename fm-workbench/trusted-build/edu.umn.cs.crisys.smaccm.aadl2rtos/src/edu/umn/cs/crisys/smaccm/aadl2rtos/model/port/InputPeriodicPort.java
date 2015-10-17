@@ -26,7 +26,7 @@ public class InputPeriodicPort extends DispatchableInputPort {
 
   }
 
-  static public Type getPortType() { return new IntType(64, false); }
+  static public Type getPortType() { return new IntType(64, true); }
   
   public int getPeriod() {
     return period;

@@ -32,7 +32,7 @@ prxBody(model) ::= <<
       
       <signal_labels>
         <signal_label>
-          <name>smaccm_dispatcher</name>
+          <name>$model.eChronosDispatchSignal$</name>
         </signal_label>
       	$writeSignalLabels(model)$
       </signal_labels>
@@ -59,6 +59,9 @@ prxBody(model) ::= <<
       </mutex>
 
     </module>
+$if(model.eChronosGenerateCModules)$
+	$writeCodeModules(model)$
+$endif$    
   </modules>
 </system>
 
