@@ -32,6 +32,8 @@ system C
 		Output: out data port Base_Types::Integer;
 			
 	annex agree {** 
+		assume "C input1 range" : Input1 < 127;
+		assume "C input2 range" : Input2 < 127;	
 		guarantee "C output range" : Output = Input1 + Input2;
 	**};	
 end C ; 
