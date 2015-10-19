@@ -109,8 +109,12 @@ DefinitionBody:
 
 ClaimText:
 	 {ClaimString} str=STRING 
-| 	 {ClaimArg} arg=[Arg]
+| 	 {ClaimArg} arg=[ClaimTextVar] ('%' unit=[aadl2::UnitLiteral])?
 ;
+
+
+
+ClaimTextVar: Arg | ConstantDefinition | LetBinding;
 
 Expr:
 	ImpliesExpr
@@ -125,7 +129,7 @@ OrExpr returns Expr:
 ;
 
 AndExpr returns Expr:
-	InstanceOfExpr (=>({BinaryExpr.left=current} op='and') right=InstanceOfExpr)*
+	InstanceOfExpr (=>({BinaryExpr.left=current} (op='and'|op='andthen')) right=InstanceOfExpr)*
 ;
 
 InstanceOfExpr returns Expr:
@@ -145,7 +149,7 @@ PlusExpr returns Expr:
 ;
 
 TimesExpr returns Expr:
-	PrefixExpr (=>({BinaryExpr.left=current} op=('*' | '/')) right=PrefixExpr)*	
+	PrefixExpr (=>({BinaryExpr.left=current} op=('*' | '/' | '%')) right=PrefixExpr)*	
 ;
 
 PrefixExpr returns Expr:
@@ -157,7 +161,7 @@ PrefixExpr returns Expr:
 AtomicExpr returns Expr:
 	{IdExpr} id=[aadl2::NamedElement | QCREF]
 |	{ThisExpr} 'this' ('.' sub=NestedDotID)?
-|   {FailExpr} 'fail' (val=StringTerm)?
+|   {FailExpr} 'fail' ( val=Expr | ( '**' (failmsg+=ClaimText)+  '**')) 
 |	{IntExpr} val=IntegerTerm
 |   {RealExpr} val=RealTerm
 |	{BoolExpr} val=BooleanLiteral
@@ -212,6 +216,7 @@ BuiltInFn:
 |	'sum'
 |	'union'
 |   'length'
+| 	'size'
 |	'intersect'
 
 // Other

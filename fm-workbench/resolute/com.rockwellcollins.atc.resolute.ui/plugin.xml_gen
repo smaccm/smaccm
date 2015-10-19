@@ -361,5 +361,11 @@
             extensions="resolute">
     </provider>
   </extension>
+  <extension point="org.eclipse.team.core.fileTypes">
+    <fileTypes
+            extension="resolute"
+            type="text">
+    </fileTypes>
+  </extension>
 
 </plugin>

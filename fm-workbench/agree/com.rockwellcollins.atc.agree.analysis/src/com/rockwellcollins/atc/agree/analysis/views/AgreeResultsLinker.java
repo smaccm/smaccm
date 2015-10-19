@@ -59,11 +59,11 @@ public class AgreeResultsLinker {
     public Map<String, EObject> getReferenceMap(AnalysisResult result) {
         return referenceMaps.get(result);
     }
-    
+
     public void setLog(AnalysisResult result, String log) {
         logs.put(result, log);
     }
-    
+
     public String getLog(AnalysisResult result) {
         return logs.get(result);
     }

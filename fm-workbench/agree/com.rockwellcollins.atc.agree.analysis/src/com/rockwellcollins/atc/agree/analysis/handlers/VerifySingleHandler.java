@@ -1,10 +1,9 @@
 package com.rockwellcollins.atc.agree.analysis.handlers;
 
-
-public class VerifySingleHandler extends VerifyHandler {
+public class VerifySingleHandler extends VerifyHandler{
     @Override
     protected boolean isRecursive() {
-       return false;
+        return false;
     }
 
     @Override
@@ -12,13 +11,15 @@ public class VerifySingleHandler extends VerifyHandler {
         return "AGREE - Verify Single Layer";
     }
 
-	@Override
-	protected boolean isMonolithic() {
-		return false;
-	}
+    @Override
+    protected boolean isMonolithic() {
+        return false;
+    }
 
     @Override
     protected boolean isRealizability() {
         return false;
     }
+    
+    
 }

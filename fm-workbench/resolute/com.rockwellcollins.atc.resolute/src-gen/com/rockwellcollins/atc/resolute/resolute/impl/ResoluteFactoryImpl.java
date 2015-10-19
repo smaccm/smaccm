@@ -73,6 +73,7 @@ public class ResoluteFactoryImpl extends EFactoryImpl implements ResoluteFactory
       case ResolutePackage.FUNCTION_DEFINITION: return createFunctionDefinition();
       case ResolutePackage.DEFINITION_BODY: return createDefinitionBody();
       case ResolutePackage.CLAIM_TEXT: return createClaimText();
+      case ResolutePackage.CLAIM_TEXT_VAR: return createClaimTextVar();
       case ResolutePackage.EXPR: return createExpr();
       case ResolutePackage.LET_BINDING: return createLetBinding();
       case ResolutePackage.RESOLUTE_SUBCLAUSE: return createResoluteSubclause();
@@ -204,6 +205,17 @@ public class ResoluteFactoryImpl extends EFactoryImpl implements ResoluteFactory
   {
     ClaimTextImpl claimText = new ClaimTextImpl();
     return claimText;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public ClaimTextVar createClaimTextVar()
+  {
+    ClaimTextVarImpl claimTextVar = new ClaimTextVarImpl();
+    return claimTextVar;
   }
 
   /**

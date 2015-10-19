@@ -2,7 +2,7 @@
  */
 package com.rockwellcollins.atc.resolute.resolute;
 
-import org.osate.aadl2.StringLiteral;
+import org.eclipse.emf.common.util.EList;
 
 /**
  * <!-- begin-user-doc -->
@@ -13,6 +13,7 @@ import org.osate.aadl2.StringLiteral;
  * The following features are supported:
  * <ul>
  *   <li>{@link com.rockwellcollins.atc.resolute.resolute.FailExpr#getVal <em>Val</em>}</li>
+ *   <li>{@link com.rockwellcollins.atc.resolute.resolute.FailExpr#getFailmsg <em>Failmsg</em>}</li>
  * </ul>
  * </p>
  *
@@ -31,12 +32,12 @@ public interface FailExpr extends Expr
    * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Val</em>' containment reference.
-   * @see #setVal(StringLiteral)
+   * @see #setVal(Expr)
    * @see com.rockwellcollins.atc.resolute.resolute.ResolutePackage#getFailExpr_Val()
    * @model containment="true"
    * @generated
    */
-  StringLiteral getVal();
+  Expr getVal();
 
   /**
    * Sets the value of the '{@link com.rockwellcollins.atc.resolute.resolute.FailExpr#getVal <em>Val</em>}' containment reference.
@@ -46,6 +47,22 @@ public interface FailExpr extends Expr
    * @see #getVal()
    * @generated
    */
-  void setVal(StringLiteral value);
+  void setVal(Expr value);
+
+  /**
+   * Returns the value of the '<em><b>Failmsg</b></em>' containment reference list.
+   * The list contents are of type {@link com.rockwellcollins.atc.resolute.resolute.ClaimText}.
+   * <!-- begin-user-doc -->
+   * <p>
+   * If the meaning of the '<em>Failmsg</em>' containment reference list isn't clear,
+   * there really should be more of a description here...
+   * </p>
+   * <!-- end-user-doc -->
+   * @return the value of the '<em>Failmsg</em>' containment reference list.
+   * @see com.rockwellcollins.atc.resolute.resolute.ResolutePackage#getFailExpr_Failmsg()
+   * @model containment="true"
+   * @generated
+   */
+  EList<ClaimText> getFailmsg();
 
 } // FailExpr

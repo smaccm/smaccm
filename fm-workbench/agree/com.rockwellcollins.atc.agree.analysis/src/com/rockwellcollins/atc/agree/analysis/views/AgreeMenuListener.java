@@ -54,8 +54,7 @@ import com.rockwellcollins.atc.agree.analysis.extentions.CexExtractorRegistry;
 import com.rockwellcollins.atc.agree.analysis.extentions.ExtensionRegistry;
 
 public class AgreeMenuListener implements IMenuListener {
-    private static final GlobalURIEditorOpener globalURIEditorOpener = Util
-            .getGlobalURIEditorOpener();
+    private static final GlobalURIEditorOpener globalURIEditorOpener = Util.getGlobalURIEditorOpener();
     private final IWorkbenchWindow window;
     private final AnalysisResultTree tree;
     private AgreeResultsLinker linker;
@@ -113,24 +112,24 @@ public class AgreeMenuListener implements IMenuListener {
 
     private void addViewCounterexampleMenu(IMenuManager manager, AnalysisResult result) {
         final Counterexample cex = getCounterexample(result);
-        CexExtractorRegistry cexReg = (CexExtractorRegistry) ExtensionRegistry
-                .getRegistry(ExtensionRegistry.CEX_EXTRACTOR_EXT_ID);
+        CexExtractorRegistry cexReg =
+                (CexExtractorRegistry) ExtensionRegistry.getRegistry(ExtensionRegistry.CEX_EXTRACTOR_EXT_ID);
         List<CexExtractor> extractors = cexReg.getCexExtractors();
 
         if (cex != null) {
             final String cexType = getCounterexampleType(result);
-            
+
             Map<String, EObject> tempRefMap = linker.getReferenceMap(result.getParent());
-            if(tempRefMap == null){
-            	tempRefMap = linker.getReferenceMap(result);
+            if (tempRefMap == null) {
+                tempRefMap = linker.getReferenceMap(result);
             }
             Layout tempLayout = linker.getLayout(result.getParent());
-            if(tempLayout == null){
-            	tempLayout = linker.getLayout(result);
+            if (tempLayout == null) {
+                tempLayout = linker.getLayout(result);
             }
-            
+
             final Layout layout = tempLayout;
-            final Map<String, EObject> refMap = tempRefMap;   
+            final Map<String, EObject> refMap = tempRefMap;
 
             MenuManager sub = new MenuManager("View " + cexType + "Counterexample in");
             manager.add(sub);
@@ -155,11 +154,11 @@ public class AgreeMenuListener implements IMenuListener {
                     viewCexSpreadsheet(cex, layout);
                 }
             });
-            
+
             // send counterexamples to external plugins
-            EObject  property = refMap.get(result.getName());
+            EObject property = refMap.get(result.getName());
             ComponentImplementation compImpl = linker.getComponent(result.getParent());
-            
+
             for (CexExtractor ex : extractors) {
                 sub.add(new Action(ex.getDisplayText()) {
                     @Override
@@ -251,10 +250,11 @@ public class AgreeMenuListener implements IMenuListener {
                 console.clearConsole();
 
                 /*
-                 * From the Eclipse API: "Clients should avoid writing large amounts of output to
-                 * this stream in the UI thread. The console needs to process the output in the UI
-                 * thread and if the client hogs the UI thread writing output to the console, the
-                 * console will not be able to process the output."
+                 * From the Eclipse API: "Clients should avoid writing large
+                 * amounts of output to this stream in the UI thread. The
+                 * console needs to process the output in the UI thread and if
+                 * the client hogs the UI thread writing output to the console,
+                 * the console will not be able to process the output."
                  */
                 new Thread(new Runnable() {
                     @Override
@@ -266,18 +266,18 @@ public class AgreeMenuListener implements IMenuListener {
         };
     }
 
-    private void viewCexConsole(final Counterexample cex, final Layout layout,
-            Map<String, EObject> refMap) {
+    private void viewCexConsole(final Counterexample cex, final Layout layout, Map<String, EObject> refMap) {
         final MessageConsole console = findConsole("Counterexample");
         showConsole(console);
         console.clearConsole();
         console.addPatternMatchListener(new AgreePatternListener(refMap));
 
         /*
-         * From the Eclipse API: "Clients should avoid writing large amounts of output to this
-         * stream in the UI thread. The console needs to process the output in the UI thread and if
-         * the client hogs the UI thread writing output to the console, the console will not be able
-         * to process the output."
+         * From the Eclipse API: "Clients should avoid writing large amounts of
+         * output to this stream in the UI thread. The console needs to process
+         * the output in the UI thread and if the client hogs the UI thread
+         * writing output to the console, the console will not be able to
+         * process the output."
          */
         new Thread(new Runnable() {
             @Override
@@ -310,8 +310,7 @@ public class AgreeMenuListener implements IMenuListener {
                                 if (jkind.util.Util.isArbitrary(val)) {
                                     out.print(String.format("%-15s", "-"));
                                 } else if (val instanceof NumericInterval) {
-                                    out.print(String.format("%-15s",
-                                            formatInterval((NumericInterval) val)));
+                                    out.print(String.format("%-15s", formatInterval((NumericInterval) val)));
                                 } else {
                                     out.print(String.format("%-15s", val.toString()));
                                 }
@@ -394,8 +393,8 @@ public class AgreeMenuListener implements IMenuListener {
 
     private void viewCexEclipse(Counterexample cex, Layout layout, Map<String, EObject> refMap) {
         try {
-            AgreeCounterexampleView cexView = (AgreeCounterexampleView) window.getActivePage()
-                    .showView(AgreeCounterexampleView.ID);
+            AgreeCounterexampleView cexView =
+                    (AgreeCounterexampleView) window.getActivePage().showView(AgreeCounterexampleView.ID);
             cexView.setInput(cex, layout, refMap);
             cexView.setFocus();
         } catch (PartInitException e) {

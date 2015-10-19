@@ -10,11 +10,11 @@ package com.rockwellcollins.atc.agree.agree;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.PrevExpr#getDelay <em>Delay</em>}</li>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.PrevExpr#getInit <em>Init</em>}</li>
  * </ul>
- * </p>
  *
  * @see com.rockwellcollins.atc.agree.agree.AgreePackage#getPrevExpr()
  * @model

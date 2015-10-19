@@ -127,6 +127,11 @@ public class ResoluteAdapterFactory extends AdapterFactoryImpl
         return createClaimTextAdapter();
       }
       @Override
+      public Adapter caseClaimTextVar(ClaimTextVar object)
+      {
+        return createClaimTextVarAdapter();
+      }
+      @Override
       public Adapter caseExpr(Expr object)
       {
         return createExprAdapter();
@@ -454,6 +459,21 @@ public class ResoluteAdapterFactory extends AdapterFactoryImpl
    * @generated
    */
   public Adapter createClaimTextAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.resolute.resolute.ClaimTextVar <em>Claim Text Var</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see com.rockwellcollins.atc.resolute.resolute.ClaimTextVar
+   * @generated
+   */
+  public Adapter createClaimTextVarAdapter()
   {
     return null;
   }

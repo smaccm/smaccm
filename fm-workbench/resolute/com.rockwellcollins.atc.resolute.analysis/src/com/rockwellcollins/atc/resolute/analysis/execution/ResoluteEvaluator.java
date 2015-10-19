@@ -7,8 +7,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.SortedSet;
-import java.util.TreeSet;
 
 import org.eclipse.emf.ecore.EObject;
 import org.osate.aadl2.Classifier;
@@ -55,374 +53,433 @@ import com.rockwellcollins.atc.resolute.resolute.util.ResoluteSwitch;
 import com.rockwellcollins.atc.resolute.validation.ResoluteType;
 
 public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
-    // Stack for function, claim, and quantifier arguments
-    protected final Deque<Map<NamedElement, ResoluteValue>> varStack = new LinkedList<>();
+	// Stack for function, claim, and quantifier arguments
+	protected final Deque<Map<NamedElement, ResoluteValue>> varStack = new LinkedList<>();
 
-    // Keeps track of context of the initial prove statement
-    protected final EvaluationContext context;
+	// Keeps track of context of the initial prove statement
+	protected final EvaluationContext context;
 
-    private static final BoolValue TRUE = new BoolValue(true);
-    private static final BoolValue FALSE = new BoolValue(false);
+	private static final BoolValue TRUE = new BoolValue(true);
+	private static final BoolValue FALSE = new BoolValue(false);
 
-    public ResoluteEvaluator(EvaluationContext context, Map<NamedElement, ResoluteValue> env) {
-        this.context = context;
-        if (env == null) {
-            Map<NamedElement, ResoluteValue> emptyMap = Collections.emptyMap();
-            this.varStack.push(emptyMap);
-        } else {
-            this.varStack.push(new HashMap<>(env));
-        }
-    }
+	public ResoluteEvaluator(EvaluationContext context, Map<NamedElement, ResoluteValue> env) {
+		this.context = context;
+		if (env == null) {
+			Map<NamedElement, ResoluteValue> emptyMap = Collections.emptyMap();
+			this.varStack.push(emptyMap);
+		} else {
+			this.varStack.push(new HashMap<>(env));
+		}
+	}
 
-    public EvaluationContext getEvaluationContext() {
-        return context;
-    }
+	public EvaluationContext getEvaluationContext() {
+		return context;
+	}
 
-    @Override
-    public ResoluteValue caseFailExpr(FailExpr object) {
-        if (object.getVal() != null) {
-            throw new ResoluteFailException(object.getVal().getValue().replace("\"", ""), object);
-        } else {
-            throw new ResoluteFailException("Fail Statement Reached", object);
-        }
-    }
+	@Override
+	public ResoluteValue caseFailExpr(FailExpr object) {
+		if (object.getVal() != null || object.getFailmsg() != null) {
+			return FALSE;
+		} else {
+			throw new ResoluteFailException("Fail Statement Reached", object);
+		}
+	}
 
-    @Override
-    public ResoluteValue caseConstantDefinition(ConstantDefinition object) {
-        return doSwitch(object.getExpr());
-    }
+	@Override
+	public ResoluteValue caseConstantDefinition(ConstantDefinition object) {
+		return doSwitch(object.getExpr());
+	}
 
-    @Override
-    public ResoluteValue caseArg(Arg object) {
-        return varStack.peek().get(object);
-    }
+	@Override
+	public ResoluteValue caseArg(Arg object) {
+		return varStack.peek().get(object);
+	}
 
-    @Override
-    public ResoluteValue caseBinaryExpr(BinaryExpr object) {
-        String op = object.getOp();
+	@Override
+	public ResoluteValue caseBinaryExpr(BinaryExpr object) {
+		String op = object.getOp();
 
-        // Short circuit ops first
-        ResoluteValue leftValue = doSwitch(object.getLeft());
-        switch (op) {
-        case "and":
-            if (leftValue.getBool()) {
-                return doSwitch(object.getRight());
-            } else {
-                return FALSE;
-            }
+		// Short circuit ops first
+		ResoluteValue leftValue = doSwitch(object.getLeft());
+		switch (op) {
+		case "and":
+			if (leftValue.getBool()) {
+				return doSwitch(object.getRight());
+			} else {
+				return FALSE;
+			}
 
-        case "or":
-            if (leftValue.getBool()) {
-                return TRUE;
-            } else {
-                return doSwitch(object.getRight());
-            }
+		case "or":
+			if (leftValue.getBool()) {
+				return TRUE;
+			} else {
+				return doSwitch(object.getRight());
+			}
 
-        case "=>":
-            if (leftValue.getBool()) {
-                return doSwitch(object.getRight());
-            } else {
-                return TRUE;
-            }
-        }
+		case "=>":
+			if (leftValue.getBool()) {
+				return doSwitch(object.getRight());
+			} else {
+				return TRUE;
+			}
+		}
 
-        ResoluteValue rightValue = doSwitch(object.getRight());
-        switch (op) {
-        case "=":
-            return new BoolValue(leftValue.equals(rightValue));
+		ResoluteValue rightValue = doSwitch(object.getRight());
+		switch (op) {
+		case "=":
+			return new BoolValue(leftValue.equals(rightValue));
 
-        case "<>":
-            return new BoolValue(!leftValue.equals(rightValue));
+		case "<>":
+			return new BoolValue(!leftValue.equals(rightValue));
 
-        case "+":
-            if (leftValue.isInt()) {
-                return new IntValue(leftValue.getInt() + rightValue.getInt());
-            } else {
-                return new RealValue(leftValue.getReal() + rightValue.getReal());
-            }
+		case "+":
+			if (leftValue.isInt() && rightValue.isInt()) {
+				return new IntValue(leftValue.getInt() + rightValue.getInt());
+			}
 
-        case "-":
-            if (leftValue.isInt()) {
-                return new IntValue(leftValue.getInt() - rightValue.getInt());
-            } else {
-                return new RealValue(leftValue.getReal() - rightValue.getReal());
-            }
+			if (leftValue.isReal() && rightValue.isReal()) {
+				return new RealValue(leftValue.getReal() + rightValue.getReal());
+			}
 
-        case "*":
-            if (leftValue.isInt()) {
-                return new IntValue(leftValue.getInt() * rightValue.getInt());
-            } else {
-                return new RealValue(leftValue.getReal() * rightValue.getReal());
-            }
+			if (leftValue.isInt() && rightValue.isReal()) {
+				return new RealValue((double) leftValue.getInt() + rightValue.getReal());
+			}
 
-        case "/":
-            if (leftValue.isInt()) {
-                return new IntValue(leftValue.getInt() / rightValue.getInt());
-            } else {
-                return new RealValue(leftValue.getReal() / rightValue.getReal());
-            }
+			if (leftValue.isReal() && rightValue.isInt()) {
+				return new RealValue(leftValue.getInt() + (double) rightValue.getInt());
+			}
 
-        case "<":
-            return new BoolValue(leftValue.compareTo(rightValue) < 0);
+			if (leftValue.isString()) {
+				return new StringValue(leftValue.getString() + rightValue.getString());
+			}
 
-        case ">":
-            return new BoolValue(leftValue.compareTo(rightValue) > 0);
+		case "-":
+			if (leftValue.isInt() && rightValue.isInt()) {
+				return new IntValue(leftValue.getInt() - rightValue.getInt());
+			}
 
-        case "<=":
-            return new BoolValue(leftValue.compareTo(rightValue) <= 0);
+			if (leftValue.isReal() && rightValue.isReal()) {
+				return new RealValue(leftValue.getReal() - rightValue.getReal());
+			}
 
-        case ">=":
-            return new BoolValue(leftValue.compareTo(rightValue) >= 0);
+			if (leftValue.isInt() && rightValue.isReal()) {
+				return new RealValue((double) leftValue.getInt() - rightValue.getReal());
+			}
 
-        default:
-            throw new IllegalArgumentException("Unknown binary operator: " + op);
-        }
-    }
+			if (leftValue.isReal() && rightValue.isInt()) {
+				return new RealValue(leftValue.getInt() - (double) rightValue.getInt());
+			}
 
-    @Override
-    public ResoluteValue caseUnaryExpr(UnaryExpr object) {
-        switch (object.getOp()) {
-        case "not":
-            return new BoolValue(!doSwitch(object.getExpr()).getBool());
+		case "*":
+			if (leftValue.isInt() && rightValue.isInt()) {
+				return new IntValue(leftValue.getInt() * rightValue.getInt());
+			}
 
-        case "-": {
-            ResoluteValue value = doSwitch(object.getExpr());
-            if (value.isInt()) {
-                return new IntValue(-value.getInt());
-            } else {
-                return new RealValue(-value.getReal());
-            }
-        }
+			if (leftValue.isReal() && rightValue.isReal()) {
+				return new RealValue(leftValue.getReal() * rightValue.getReal());
+			}
 
-        default:
-            throw new IllegalArgumentException("Unknown unary operator: " + object.getOp());
-        }
-    }
+			if (leftValue.isInt() && rightValue.isReal()) {
+				return new RealValue(((double) leftValue.getInt()) * rightValue.getReal());
+			}
 
-    @Override
-    public ResoluteValue caseIdExpr(IdExpr object) {
-        NamedElement ref = object.getId();
-        if (ref instanceof Classifier || ref instanceof Property) {
-            return new NamedElementValue(ref);
-        } else {
-            return doSwitch(ref);
-        }
-    }
+			if (leftValue.isReal() && rightValue.isInt()) {
+				return new RealValue(leftValue.getReal() * (double) rightValue.getInt());
+			}
 
-    @Override
-    public ResoluteValue caseThisExpr(ThisExpr object) {
-        ComponentInstance curr = context.getThisInstance();
-        for (NestedDotID id = object.getSub(); id != null; id = id.getSub()) {
-            curr = getInstanceChild(curr, id.getBase());
-        }
-        return new NamedElementValue(curr);
-    }
+		case "/":
+			if (leftValue.isInt() && rightValue.isInt()) {
+				return new IntValue(leftValue.getInt() / rightValue.getInt());
+			}
 
-    public ComponentInstance getInstanceChild(ComponentInstance instance, NamedElement subcomponent) {
-        for (ComponentInstance child : instance.getComponentInstances()) {
-            if (child.getSubcomponent().equals(subcomponent)) {
-                return child;
-            }
-        }
-        throw new IllegalArgumentException("Unable to find subcomponent " + subcomponent.getName()
-                + " in instance of " + instance.getComponentClassifier().getName());
-    }
+			if (leftValue.isReal() && rightValue.isReal()) {
+				return new RealValue(leftValue.getReal() / rightValue.getReal());
+			}
 
-    @Override
-    public ResoluteValue caseIntExpr(IntExpr object) {
-        return new IntValue((long) object.getVal().getScaledValue());
-    }
+			if (leftValue.isInt() && rightValue.isReal()) {
+				return new RealValue((double) leftValue.getInt() / rightValue.getReal());
+			}
 
-    @Override
-    public ResoluteValue caseRealExpr(RealExpr object) {
-        return new RealValue(object.getVal().getScaledValue());
-    }
+			if (leftValue.isReal() && rightValue.isInt()) {
+				return new RealValue(leftValue.getReal() / (double) rightValue.getInt());
+			}
 
-    @Override
-    public ResoluteValue caseBoolExpr(BoolExpr object) {
-        return new BoolValue(object.getVal().getValue());
-    }
+		case "%":
+			if (leftValue.isInt() && rightValue.isInt()) {
+				return new IntValue(leftValue.getInt() % rightValue.getInt());
+			}
 
-    @Override
-    public ResoluteValue caseStringExpr(StringExpr object) {
-        // there are an extra set of quotes ("") around a StringExpr
-        // that need to be removed
-        return new StringValue(object.getVal().getValue().replace("\"", ""));
-    }
+			if (leftValue.isReal() && rightValue.isReal()) {
+				return new RealValue(leftValue.getReal() % rightValue.getReal());
+			}
 
-    @Override
-    public ResoluteValue caseIfThenElseExpr(IfThenElseExpr object) {
-        if (doSwitch(object.getCond()).getBool()) {
-            return doSwitch(object.getThen());
-        } else {
-            return doSwitch(object.getElse());
-        }
-    }
+			if (leftValue.isInt() && rightValue.isReal()) {
+				return new RealValue((double) leftValue.getInt() % rightValue.getReal());
+			}
 
-    @Override
-    public ResoluteValue caseQuantifiedExpr(QuantifiedExpr object) {
-        switch (object.getQuant()) {
-        case "exists":
-            return exists(object.getArgs(), object.getExpr());
+			if (leftValue.isReal() && rightValue.isInt()) {
+				return new RealValue(leftValue.getReal() % (double) rightValue.getInt());
+			}
 
-        case "forall":
-            return forall(object.getArgs(), object.getExpr());
+		case "<":
+			return new BoolValue(leftValue.compareTo(rightValue) < 0);
 
-        default:
-            throw new IllegalArgumentException("Unknown quantifier: " + object.getQuant());
-        }
-    }
+		case ">":
+			return new BoolValue(leftValue.compareTo(rightValue) > 0);
 
-    private ResoluteValue exists(List<Arg> args, Expr body) {
-        if (args.isEmpty()) {
-            return doSwitch(body);
-        } else {
-            Arg arg = args.get(0);
-            List<Arg> rest = args.subList(1, args.size());
-            for (ResoluteValue value : getArgSet(arg)) {
-                varStack.peek().put(arg, value);
-                if (exists(rest, body).getBool()) {
-                    return TRUE;
-                }
-            }
-            return FALSE;
-        }
-    }
+		case "<=":
+			return new BoolValue(leftValue.compareTo(rightValue) <= 0);
 
-    private ResoluteValue forall(List<Arg> args, Expr body) {
-        if (args.isEmpty()) {
-            return doSwitch(body);
-        } else {
-            Arg arg = args.get(0);
-            List<Arg> rest = args.subList(1, args.size());
-            for (ResoluteValue value : getArgSet(arg)) {
-                varStack.peek().put(arg, value);
-                if (!forall(rest, body).getBool()) {
-                    return FALSE;
-                }
-            }
-            return TRUE;
-        }
-    }
+		case ">=":
+			return new BoolValue(leftValue.compareTo(rightValue) >= 0);
 
-    public SortedSet<ResoluteValue> getArgSet(Arg arg) {
-        if (arg instanceof QuantArg) {
-            QuantArg quantArg = (QuantArg) arg;
-            return doSwitch(quantArg.getExpr()).getSet();
-        } else {
-            SortedSet<ResoluteValue> values = new TreeSet<ResoluteValue>();
-            BaseType type = (BaseType) arg.getType();
-            for (NamedElement ne : context.getSet(type.getType())) {
-                values.add(new NamedElementValue(ne));
-            }
-            return values;
-        }
-    }
+		default:
+			throw new IllegalArgumentException("Unknown binary operator: " + op);
+		}
+	}
 
-    @Override
-    public ResoluteValue caseFnCallExpr(FnCallExpr object) {
-        if (object.getFn().getBody() instanceof FunctionBody) {
-            return functionCall(object);
-        } else {
-            throw new ResoluteFailException("Encountered claim call in evaluator", object);
-        }
-    }
+	@Override
+	public ResoluteValue caseUnaryExpr(UnaryExpr object) {
+		switch (object.getOp()) {
+		case "not":
+			return new BoolValue(!doSwitch(object.getExpr()).getBool());
 
-    private ResoluteValue functionCall(FnCallExpr object) {
-        FunctionDefinition funcDef = object.getFn();
-        DefinitionBody body = funcDef.getBody();
-        List<ResoluteValue> argVals = doSwitchList(object.getArgs());
+		case "-": {
+			ResoluteValue value = doSwitch(object.getExpr());
+			if (value.isInt()) {
+				return new IntValue(-value.getInt());
+			} else {
+				return new RealValue(-value.getReal());
+			}
+		}
 
-        varStack.push(pairArguments(funcDef.getArgs(), argVals));
-        ResoluteValue value = doSwitch(body.getExpr());
-        varStack.pop();
+		default:
+			throw new IllegalArgumentException("Unknown unary operator: " + object.getOp());
+		}
+	}
 
-        return value;
-    }
+	@Override
+	public ResoluteValue caseIdExpr(IdExpr object) {
+		NamedElement ref = object.getId();
+		if (ref instanceof Classifier || ref instanceof Property) {
+			return new NamedElementValue(ref);
+		} else {
+			return doSwitch(ref);
+		}
+	}
 
-    public static Map<NamedElement, ResoluteValue> pairArguments(List<Arg> args,
-            List<ResoluteValue> argVals) {
-        Map<NamedElement, ResoluteValue> result = new HashMap<>();
-        for (int i = 0; i < args.size(); i++) {
-            result.put(args.get(i), argVals.get(i));
-        }
-        return result;
-    }
+	@Override
+	public ResoluteValue caseThisExpr(ThisExpr object) {
+		ComponentInstance curr = context.getThisInstance();
+		for (NestedDotID id = object.getSub(); id != null; id = id.getSub()) {
+			curr = getInstanceChild(curr, id.getBase());
+		}
+		return new NamedElementValue(curr);
+	}
 
-    @Override
-    public ResoluteValue caseFilterMapExpr(FilterMapExpr object) {
-        return new SetValue(filterMap(object.getArgs(), object.getMap(), object.getFilter()));
-    }
+	public ComponentInstance getInstanceChild(ComponentInstance instance, NamedElement subcomponent) {
+		for (ComponentInstance child : instance.getComponentInstances()) {
+			if (child.getSubcomponent().equals(subcomponent)) {
+				return child;
+			}
+		}
+		throw new IllegalArgumentException("Unable to find subcomponent " + subcomponent.getName() + " in instance of "
+				+ instance.getComponentClassifier().getName());
+	}
 
-    private SortedSet<ResoluteValue> filterMap(List<Arg> args, Expr map, Expr filter) {
-        if (args.isEmpty()) {
-            return filter(map, filter);
-        } else {
-            Arg arg = args.get(0);
-            List<Arg> rest = args.subList(1, args.size());
-            SortedSet<ResoluteValue> result = new TreeSet<ResoluteValue>();
-            for (ResoluteValue value : getArgSet(arg)) {
-                varStack.peek().put(arg, value);
-                result.addAll(filterMap(rest, map, filter));
-            }
-            return result;
-        }
-    }
+	@Override
+	public ResoluteValue caseIntExpr(IntExpr object) {
+		return new IntValue((long) object.getVal().getScaledValue());
+	}
 
-    private SortedSet<ResoluteValue> filter(Expr map, Expr filter) {
-        TreeSet<ResoluteValue> result = new TreeSet<ResoluteValue>();
-        if (filter == null || doSwitch(filter).getBool()) {
-            result.add(doSwitch(map));
-        }
-        return result;
-    }
+	@Override
+	public ResoluteValue caseRealExpr(RealExpr object) {
+		return new RealValue(object.getVal().getScaledValue());
+	}
 
-    @Override
-    public ResoluteValue caseSetExpr(SetExpr object) {
-        return new SetValue(doSwitchList(object.getExprs()));
-    }
+	@Override
+	public ResoluteValue caseBoolExpr(BoolExpr object) {
+		return new BoolValue(object.getVal().getValue());
+	}
 
-    @Override
-    public ResoluteValue caseInstanceOfExpr(InstanceOfExpr object) {
-        ResoluteType valueType = doSwitch(object.getExpr()).getType();
-        ResoluteType checkType = new com.rockwellcollins.atc.resolute.validation.BaseType(object
-                .getType().getType());
-        return bool(valueType.subtypeOf(checkType));
-    }
+	@Override
+	public ResoluteValue caseStringExpr(StringExpr object) {
+		// there are an extra set of quotes ("") around a StringExpr
+		// that need to be removed
+		return new StringValue(object.getVal().getValue().replace("\"", ""));
+	}
 
-    @Override
-    public ResoluteValue caseCastExpr(CastExpr object) {
-        return doSwitch(object.getExpr());
-    }
+	@Override
+	public ResoluteValue caseIfThenElseExpr(IfThenElseExpr object) {
+		if (doSwitch(object.getCond()).getBool()) {
+			return doSwitch(object.getThen());
+		} else {
+			return doSwitch(object.getElse());
+		}
+	}
 
-    @Override
-    public ResoluteValue caseLetExpr(LetExpr object) {
-        LetBinding binding = object.getBinding();
-        ResoluteValue boundValue = doSwitch(binding.getExpr());
-        varStack.peek().put(binding, boundValue);
-        return doSwitch(object.getExpr());
-    }
+	@Override
+	public ResoluteValue caseQuantifiedExpr(QuantifiedExpr object) {
+		switch (object.getQuant()) {
+		case "exists":
+			return exists(object.getArgs(), object.getExpr());
 
-    @Override
-    public ResoluteValue caseLetBinding(LetBinding object) {
-        return varStack.peek().get(object);
-    }
+		case "forall":
+			return forall(object.getArgs(), object.getExpr());
 
-    @Override
-    public ResoluteValue caseBuiltInFnCallExpr(BuiltInFnCallExpr object) {
-        List<ResoluteValue> args = doSwitchList(object.getArgs());
-        return new ResoluteBuiltInFnCallEvaluator(context).evaluate(object, args);
-    }
+		default:
+			throw new IllegalArgumentException("Unknown quantifier: " + object.getQuant());
+		}
+	}
 
-    private static ResoluteValue bool(boolean bool) {
-        return bool ? TRUE : FALSE;
-    }
+	private ResoluteValue exists(List<Arg> args, Expr body) {
+		if (args.isEmpty()) {
+			return doSwitch(body);
+		} else {
+			Arg arg = args.get(0);
+			List<Arg> rest = args.subList(1, args.size());
+			for (ResoluteValue value : getArgSet(arg)) {
+				varStack.peek().put(arg, value);
+				if (exists(rest, body).getBool()) {
+					return TRUE;
+				}
+			}
+			return FALSE;
+		}
+	}
 
-    public List<ResoluteValue> doSwitchList(List<? extends EObject> list) {
-        List<ResoluteValue> values = new ArrayList<>();
-        for (EObject e : list) {
-            values.add(doSwitch(e));
-        }
-        return values;
-    }
+	private ResoluteValue forall(List<Arg> args, Expr body) {
+		if (args.isEmpty()) {
+			return doSwitch(body);
+		} else {
+			Arg arg = args.get(0);
+			List<Arg> rest = args.subList(1, args.size());
+			for (ResoluteValue value : getArgSet(arg)) {
+				varStack.peek().put(arg, value);
+				if (!forall(rest, body).getBool()) {
+					return FALSE;
+				}
+			}
+			return TRUE;
+		}
+	}
+
+	public List<ResoluteValue> getArgSet(Arg arg) {
+		if (arg instanceof QuantArg) {
+			QuantArg quantArg = (QuantArg) arg;
+			return doSwitch(quantArg.getExpr()).getSet();
+		} else {
+			List<ResoluteValue> values = new ArrayList<ResoluteValue>();
+			BaseType type = (BaseType) arg.getType();
+			for (NamedElement ne : context.getSet(type.getType())) {
+				values.add(new NamedElementValue(ne));
+			}
+			return values;
+		}
+	}
+
+	@Override
+	public ResoluteValue caseFnCallExpr(FnCallExpr object) {
+		if (object.getFn().getBody() instanceof FunctionBody) {
+			return functionCall(object);
+		} else {
+			throw new ResoluteFailException("Encountered claim call in evaluator", object);
+		}
+	}
+
+	private ResoluteValue functionCall(FnCallExpr object) {
+		FunctionDefinition funcDef = object.getFn();
+		DefinitionBody body = funcDef.getBody();
+		List<ResoluteValue> argVals = doSwitchList(object.getArgs());
+
+		varStack.push(pairArguments(funcDef.getArgs(), argVals));
+		ResoluteValue value = doSwitch(body.getExpr());
+		varStack.pop();
+
+		return value;
+	}
+
+	public static Map<NamedElement, ResoluteValue> pairArguments(List<Arg> args, List<ResoluteValue> argVals) {
+		Map<NamedElement, ResoluteValue> result = new HashMap<>();
+		for (int i = 0; i < args.size(); i++) {
+			result.put(args.get(i), argVals.get(i));
+		}
+		return result;
+	}
+
+	@Override
+	public ResoluteValue caseFilterMapExpr(FilterMapExpr object) {
+		return new SetValue(filterMap(object.getArgs(), object.getMap(), object.getFilter()));
+	}
+
+	private List<ResoluteValue> filterMap(List<Arg> args, Expr map, Expr filter) {
+		if (args.isEmpty()) {
+			return filter(map, filter);
+		} else {
+			Arg arg = args.get(0);
+			List<Arg> rest = args.subList(1, args.size());
+			List<ResoluteValue> result = new ArrayList<ResoluteValue>();
+			for (ResoluteValue value : getArgSet(arg)) {
+				varStack.peek().put(arg, value);
+				result.addAll(filterMap(rest, map, filter));
+			}
+			return result;
+		}
+	}
+
+	private List<ResoluteValue> filter(Expr map, Expr filter) {
+		List<ResoluteValue> result = new ArrayList<ResoluteValue>();
+		if (filter == null || doSwitch(filter).getBool()) {
+			result.add(doSwitch(map));
+		}
+		return result;
+	}
+
+	@Override
+	public ResoluteValue caseSetExpr(SetExpr object) {
+		return new SetValue(doSwitchList(object.getExprs()));
+	}
+
+	@Override
+	public ResoluteValue caseInstanceOfExpr(InstanceOfExpr object) {
+		ResoluteType valueType = doSwitch(object.getExpr()).getType();
+		ResoluteType checkType = new com.rockwellcollins.atc.resolute.validation.BaseType(object.getType().getType());
+		return bool(valueType.subtypeOf(checkType));
+	}
+
+	@Override
+	public ResoluteValue caseCastExpr(CastExpr object) {
+		return doSwitch(object.getExpr());
+	}
+
+	@Override
+	public ResoluteValue caseLetExpr(LetExpr object) {
+		LetBinding binding = object.getBinding();
+		ResoluteValue boundValue = doSwitch(binding.getExpr());
+		varStack.peek().put(binding, boundValue);
+		return doSwitch(object.getExpr());
+	}
+
+	@Override
+	public ResoluteValue caseLetBinding(LetBinding object) {
+		return varStack.peek().get(object);
+	}
+
+	@Override
+	public ResoluteValue caseBuiltInFnCallExpr(BuiltInFnCallExpr object) {
+		List<ResoluteValue> args = doSwitchList(object.getArgs());
+		return new ResoluteBuiltInFnCallEvaluator(context).evaluate(object, args);
+	}
+
+	private static ResoluteValue bool(boolean bool) {
+		return bool ? TRUE : FALSE;
+	}
+
+	public List<ResoluteValue> doSwitchList(List<? extends EObject> list) {
+		List<ResoluteValue> values = new ArrayList<>();
+		for (EObject e : list) {
+			values.add(doSwitch(e));
+		}
+		return values;
+	}
 }

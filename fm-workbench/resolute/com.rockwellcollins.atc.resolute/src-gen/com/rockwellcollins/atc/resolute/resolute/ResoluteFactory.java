@@ -104,6 +104,15 @@ public interface ResoluteFactory extends EFactory
   ClaimText createClaimText();
 
   /**
+   * Returns a new object of class '<em>Claim Text Var</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Claim Text Var</em>'.
+   * @generated
+   */
+  ClaimTextVar createClaimTextVar();
+
+  /**
    * Returns a new object of class '<em>Expr</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->

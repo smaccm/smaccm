@@ -23,58 +23,59 @@ import com.rockwellcollins.atc.agree.analysis.Activator;
 
 public abstract class ExtensionRegistry {
 
-	/** ID of counterexample extractor extention point */
-	public static final String CEX_EXTRACTOR_EXT_ID = "cexextractor";
-	public static final String AGREE_AUTOMATER_EXT_ID = "agreeautomater";
-	private static final String ATT_EXTNAME = "pluginName";
+    /** ID of counterexample extractor extention point */
+    public static final String CEX_EXTRACTOR_EXT_ID = "cexextractor";
+    public static final String AGREE_AUTOMATER_EXT_ID = "agreeautomater";
+    private static final String ATT_EXTNAME = "pluginName";
 
-	private static final Map<String, ExtensionRegistry> registries = new HashMap<>();
+    private static final Map<String, ExtensionRegistry> registries = new HashMap<>();
 
-	/** The extensions in this registry */
-	protected Map<String, ExtensionProxy> extensions;
+    /** The extensions in this registry */
+    protected Map<String, ExtensionProxy> extensions;
 
-	public static ExtensionRegistry getRegistry(String extensionId) {
-		ExtensionRegistry registry = registries.get(extensionId);
+    public static ExtensionRegistry getRegistry(String extensionId) {
+        ExtensionRegistry registry = registries.get(extensionId);
 
-		if (registry == null) {
-			registry = createRegistry(extensionId);
-			registries.put(extensionId, registry);
-		}
-		return registry;
-	}
+        if (registry == null) {
+            registry = createRegistry(extensionId);
+            registries.put(extensionId, registry);
+        }
+        return registry;
+    }
 
-	protected static ExtensionRegistry createRegistry(String extensionId) {
-		if (extensionId == CEX_EXTRACTOR_EXT_ID) {
-			return new CexExtractorRegistry();
-		}else if(extensionId == AGREE_AUTOMATER_EXT_ID){
-			return new AgreeAutomaterRegistry();
-		}
-		return null;
-	}
-	
-	protected void initialize(String extensionId) {
-		IExtensionRegistry extensionRegistry = Platform.getExtensionRegistry();
-		IExtensionPoint extensionPoint = extensionRegistry.getExtensionPoint(Activator.PLUGIN_ID, extensionId);
-		IExtension[] exts = extensionPoint.getExtensions();
+    protected static ExtensionRegistry createRegistry(String extensionId) {
+        if (extensionId == CEX_EXTRACTOR_EXT_ID) {
+            return new CexExtractorRegistry();
+        } else if (extensionId == AGREE_AUTOMATER_EXT_ID) {
+            return new AgreeAutomaterRegistry();
+        }
+        return null;
+    }
 
-		extensions = new HashMap<String, ExtensionProxy>();
-		for (int i = 0; i < exts.length; i++) {
-			IConfigurationElement[] configElems = exts[i].getConfigurationElements();
+    protected void initialize(String extensionId) {
+        IExtensionRegistry extensionRegistry = Platform.getExtensionRegistry();
+        IExtensionPoint extensionPoint =
+                extensionRegistry.getExtensionPoint(Activator.PLUGIN_ID, extensionId);
+        IExtension[] exts = extensionPoint.getExtensions();
 
-			for (int j = 0; j < configElems.length; j++) {
-				String extentionName = configElems[j].getAttribute(ATT_EXTNAME);
+        extensions = new HashMap<String, ExtensionProxy>();
+        for (int i = 0; i < exts.length; i++) {
+            IConfigurationElement[] configElems = exts[i].getConfigurationElements();
 
-				if (extensions.get(extentionName) != null) {
-					System.err.println("Duplicate extension: " + extensionId + ", name: " + extentionName);
-				} else {
-					if(extentionName != null){
-						extensions.put(extentionName.toLowerCase(), createProxy(configElems[j]));
-					}
-				}
-			}
-		}
-	}
-	
-	protected abstract ExtensionProxy createProxy(IConfigurationElement configElem);
+            for (int j = 0; j < configElems.length; j++) {
+                String extentionName = configElems[j].getAttribute(ATT_EXTNAME);
+
+                if (extensions.get(extentionName) != null) {
+                    System.err.println("Duplicate extension: " + extensionId + ", name: " + extentionName);
+                } else {
+                    if (extentionName != null) {
+                        extensions.put(extentionName.toLowerCase(), createProxy(configElems[j]));
+                    }
+                }
+            }
+        }
+    }
+
+    protected abstract ExtensionProxy createProxy(IConfigurationElement configElem);
 
 }

@@ -13,37 +13,36 @@ import org.osate.annexsupport.AnnexPlugin;
 
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeProgram;
 
-public class AgreeAutomaterProxy extends ExtensionProxy implements AgreeAutomater{
+public class AgreeAutomaterProxy extends ExtensionProxy implements AgreeAutomater {
 
-	private AgreeAutomater extractor;
+    private AgreeAutomater extractor;
 
-	protected AgreeAutomaterProxy(IConfigurationElement configElem) {
-		super(configElem);
-		// TODO Auto-generated constructor stub
-	} 
+    protected AgreeAutomaterProxy(IConfigurationElement configElem) {
+        super(configElem);
+        // TODO Auto-generated constructor stub
+    }
 
-	@Override
-	public AgreeProgram transform(AgreeProgram program){
-		AgreeAutomater extractor = getAgreeAutomater();
-		
-		if(extractor != null){
-			return extractor.transform(program);
-		}
-		return null;
-	}
+    @Override
+    public AgreeProgram transform(AgreeProgram program) {
+        AgreeAutomater extractor = getAgreeAutomater();
 
-	
-	private AgreeAutomater getAgreeAutomater() {
-		if (extractor != null) {
-			return extractor;
-		}
-		try {
-			extractor = (AgreeAutomater) configElem.createExecutableExtension(ATT_CLASS);
-		} catch (Exception e) {
-			System.err.println("error instantiating agree automater in plugin " + configElem.getDeclaringExtension().getContributor().getName());
-		}
-		return extractor;
-	}
-	
-	
+        if (extractor != null) {
+            return extractor.transform(program);
+        }
+        return null;
+    }
+
+    private AgreeAutomater getAgreeAutomater() {
+        if (extractor != null) {
+            return extractor;
+        }
+        try {
+            extractor = (AgreeAutomater) configElem.createExecutableExtension(ATT_CLASS);
+        } catch (Exception e) {
+            System.err.println("error instantiating agree automater in plugin "
+                    + configElem.getDeclaringExtension().getContributor().getName());
+        }
+        return extractor;
+    }
+
 }
