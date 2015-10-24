@@ -228,12 +228,12 @@ public class ConstraintsGenerator implements AgreeAutomater{
 				Expr newAssertion;
 				if (clkCnt == 0)
 				{
-					newAssertion = new BinaryExpr(new TupleExpr(ids), BinaryOp.EQUAL,new NodeCallExpr("__CLOCK",a,b,c,d,e,new BinaryExpr(new IntExpr(BigInteger.valueOf(0)),BinaryOp.ARROW,new UnaryExpr(UnaryOp.PRE,f)),new BinaryExpr(new BoolExpr(false),BinaryOp.ARROW,new UnaryExpr(UnaryOp.PRE,g)),new IntExpr(BigInteger.valueOf(-1))));
+					newAssertion = new BinaryExpr(new TupleExpr(ids), BinaryOp.EQUAL,new NodeCallExpr("__CLOCK",a,b,c,d,e,new BinaryExpr(b,BinaryOp.ARROW,new UnaryExpr(UnaryOp.PRE,f)),new BinaryExpr(new BoolExpr(false),BinaryOp.ARROW,new UnaryExpr(UnaryOp.PRE,g)),new IntExpr(BigInteger.valueOf(-1))));
 					mT_inputs.add(new AgreeVar("__NEXT_INC", NamedType.INT, null, null));
 				}	
 				else
 				{
-					newAssertion = new BinaryExpr(new TupleExpr(ids), BinaryOp.EQUAL,new NodeCallExpr("__CLOCK",a,b,c,d,e,new BinaryExpr(new IntExpr(BigInteger.valueOf(0)),BinaryOp.ARROW,new UnaryExpr(UnaryOp.PRE,f)),new BinaryExpr(new BoolExpr(false),BinaryOp.ARROW,new UnaryExpr(UnaryOp.PRE,g)),new IdExpr("__NEXT".concat(String.valueOf(clkCnt - 1)))));
+					newAssertion = new BinaryExpr(new TupleExpr(ids), BinaryOp.EQUAL,new NodeCallExpr("__CLOCK",a,b,c,d,e,new BinaryExpr(b,BinaryOp.ARROW,new UnaryExpr(UnaryOp.PRE,f)),new BinaryExpr(new BoolExpr(false),BinaryOp.ARROW,new UnaryExpr(UnaryOp.PRE,g)),new IdExpr("__NEXT".concat(String.valueOf(clkCnt - 1)))));
 				}		
 
 				mT_assertions.add(new AgreeStatement("", newAssertion, null));
