@@ -215,14 +215,14 @@ public class ConstraintsGenerator implements AgreeAutomater{
 				IdExpr d = new IdExpr(var.id.concat(".tte"));
 				IdExpr e = new IdExpr("__NEXT_INC");
 				IdExpr f = new IdExpr("__TMR".concat(String.valueOf(clkCnt)));
-				IdExpr g = new IdExpr("__RUN".concat(String.valueOf(clkCnt)));
+				IdExpr g = new IdExpr(var.id.concat(".run"));
 				
 		
 				// The outputs
 				List<Expr> ids = new ArrayList<>();
 				ids.add(new IdExpr("__TMR".concat(String.valueOf(clkCnt))));
 				ids.add(new IdExpr(var.id.concat(".fired")));
-				ids.add(new IdExpr("__RUN".concat(String.valueOf(clkCnt))));
+				ids.add(new IdExpr(var.id.concat(".run")));
 				ids.add(new IdExpr("__NEXT".concat(String.valueOf(clkCnt))));
 		
 				Expr newAssertion;
