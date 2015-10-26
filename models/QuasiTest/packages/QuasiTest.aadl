@@ -198,11 +198,14 @@ system Formation
 			true -> (pend_right = pre(left) and pend_right != none => last_shift_left) and
 			        (pend_left = pre(leader) and pend_left != none => last_shift_left) and
 			        (pend_leader = pre(right) and pend_leader != none => last_shift_left);
-				
-		assume "not shifting both same" : not (left_shift and right_shift);
 		
 		eq pending : bool = (leader = none or right = none or left = none);
+		
+		guarantee "not pending or shifting means not moving" : 
+		  true -> not pre(pending) and not (left_shift or right_shift) => not pending;
 				
+		assume "not shifting both same" : not (left_shift and right_shift);
+						
 		assume "only shift if none pending" : true ->
 			defs.rising(left_shift) or defs.rising(right_shift) => 
 				not pre(pending);
