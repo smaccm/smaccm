@@ -7,6 +7,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -105,6 +107,13 @@ public abstract class Util {
     } catch (Exception e) {
       throw new Aadl2RtosException("Required property 'Dimension' not found for type: " + tti.getName());
     }
+  }
+  
+  public static String stackTraceString(Exception e) {
+    StringWriter sw = new StringWriter();
+    PrintWriter pw = new PrintWriter(sw);
+    e.printStackTrace(pw);
+    return sw.toString();
   }
   
 	// Normalize AADL string name
