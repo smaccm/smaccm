@@ -612,24 +612,34 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
             clockIds.add(new IdExpr(subNode.clockVar.id));
         }
 
+        String dfaPrefix = AgreeRecordUtils.getObjectLocationPrefix(spec);
+        
         if (spec.getVal2() == null) {
-            Node dfaNode = AgreeCalendarUtils
-                    .getDFANode(AgreeRecordUtils.getObjectLocationPrefix(spec) + "__DFA_NODE", val1);
+            Node dfaNode = AgreeCalendarUtils.getDFANode(dfaPrefix + "__DFA_NODE", val1);
             Node calNode = AgreeCalendarUtils.getCalendarNode(
-                    AgreeRecordUtils.getObjectLocationPrefix(spec) + "__CALENDAR_NODE", dfaNode.id,
+                    dfaPrefix + "__CALENDAR_NODE", dfaNode.id,
                     clockIds.size());
 
-            addToNodeList(dfaNode);
-            addToNodeList(calNode);
+            //we do not need to make copies of the nodes if they exist
+            if (!nodeNameExists(dfaNode.id)) {
+                if(nodeNameExists(calNode.id)){
+                    throw new AgreeException("The calander node should not exist if the dfa node does not exist");
+                }
+                addToNodeList(dfaNode);
+                addToNodeList(calNode);
+            }
 
             clockAssertion = new NodeCallExpr(calNode.id, clockIds);
         } else {
             int val2 = Integer.decode(spec.getVal2());
 
             String nodeName = "__calendar_node_" + val1 + "_" + val2;
-            nodeName = AgreeRecordUtils.getObjectLocationPrefix(spec) + nodeName;
+            nodeName = dfaPrefix + nodeName;
             Node calNode = AgreeCalendarUtils.getMNCalendar(nodeName, val1, val2);
-            addToNodeList(calNode);
+            
+            if (!nodeNameExists(calNode.id)) {
+                addToNodeList(calNode);
+            }
 
             clockAssertion = new BoolExpr(true);
             int i, j;
@@ -1322,6 +1332,15 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
             }
         }
         globalNodes.add(node);
+    }
+    
+    private static boolean nodeNameExists(String name){
+        for(Node inList : globalNodes){
+            if(inList.id.equals(name)){
+                return true;
+            }
+        }
+        return false;
     }
 
 }
