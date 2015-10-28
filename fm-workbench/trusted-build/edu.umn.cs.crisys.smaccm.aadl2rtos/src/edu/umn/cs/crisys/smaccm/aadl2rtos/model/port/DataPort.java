@@ -175,7 +175,12 @@ public abstract class DataPort {
   }
 
   public void setImplementationFileList(List<String> implementationFileList) {
-    this.implementationFileList = implementationFileList;
+    if (implementationFileList == null) {
+    	this.implementationFileList = new ArrayList<>();
+    }
+    else {
+    	this.implementationFileList = implementationFileList;
+    }
   }
 
 

@@ -302,7 +302,9 @@ public class AadlModelParser {
       ip.setExternalHandlerList(ehl);
       String sendsEventsTo = Util.getStringValueOpt(port, PropertyUtil.SMACCM_SYS_SENDS_EVENTS_TO);
       ip.setOptSendsEventsToString(sendsEventsTo);
-      ip.setImplementationFileList(files);
+      if (files != null) {
+    	  ip.setImplementationFileList(files);
+      }
       return ip;
       
     } catch (Exception e) {
@@ -327,7 +329,9 @@ public class AadlModelParser {
       String sendsEventsTo = Util.getStringValueOpt(port, PropertyUtil.SMACCM_SYS_SENDS_EVENTS_TO);
       iep.setExternalHandlerList(ehl);
       iep.setOptSendsEventsToString(sendsEventsTo);
-      iep.setImplementationFileList(files);
+      if (files != null) {
+    	  iep.setImplementationFileList(files);
+      }
     } else {
       logger.warn("Warning: event port: " + port.getName() + " in thread: " + ti.getName() + " does not have a compute entrypoint and will not be dispatched.");
     }
@@ -432,7 +436,10 @@ public class AadlModelParser {
         String sendsEventsTo = Util.getStringValueOpt(tti, PropertyUtil.SMACCM_SYS_SENDS_EVENTS_TO);
         ipp.setPeriod(period);
         ipp.setOptSendsEventsToString(sendsEventsTo);
-        ipp.setImplementationFileList(Util.getSourceTextListOpt(tti, PropertyUtil.SOURCE_TEXT));
+        List<String> files = Util.getSourceTextListOpt(tti, PropertyUtil.SOURCE_TEXT);
+        if (files != null) {
+        	ipp.setImplementationFileList(files);
+        }
         ipp.setExternalHandlerList(handlerList);
         ti.addPort(ipp);
       } catch (Exception e) {
