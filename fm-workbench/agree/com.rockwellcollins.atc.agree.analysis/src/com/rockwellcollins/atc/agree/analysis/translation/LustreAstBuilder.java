@@ -1,4 +1,4 @@
-package com.rockwellcollins.atc.agree.analysis;
+package com.rockwellcollins.atc.agree.analysis.translation;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -24,6 +24,9 @@ import com.rockwellcollins.atc.agree.agree.AssumeStatement;
 import com.rockwellcollins.atc.agree.agree.EqStatement;
 import com.rockwellcollins.atc.agree.agree.LemmaStatement;
 import com.rockwellcollins.atc.agree.agree.PropertyStatement;
+import com.rockwellcollins.atc.agree.analysis.Activator;
+import com.rockwellcollins.atc.agree.analysis.AgreeException;
+import com.rockwellcollins.atc.agree.analysis.AgreeUtils;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeASTBuilder;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeConnection;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeNode;
@@ -107,16 +110,7 @@ public class LustreAstBuilder {
         // equations
         // and type equations. This would clear this up
         for (AgreeStatement statement : topNode.assertions) {
-            if (statement.reference instanceof EqStatement
-                    || statement.reference instanceof PropertyStatement) {
-                EObject container = statement.reference.eContainer();
-                while (!(container instanceof ComponentClassifier)) {
-                    container = container.eContainer();
-                }
-                if (container instanceof ComponentImplementation) {
-                    continue; // throw away eqs and property statements in the
-                              // implementation
-                }
+            if (AgreeUtils.statementIsContractEqOrProperty(statement)){
 
                 // this is a strange hack we have to do. we have to make
                 // equation and property
@@ -156,22 +150,6 @@ public class LustreAstBuilder {
 
         return program;
 
-    }
-
-    
-    protected static boolean statementIsContractEqOrProperty(AgreeStatement statement){
-        if (statement.reference instanceof EqStatement
-                || statement.reference instanceof PropertyStatement) {
-            EObject container = statement.reference.eContainer();
-            while (!(container instanceof ComponentClassifier)) {
-                container = container.eContainer();
-            }
-            if (container instanceof ComponentImplementation) {
-                return false;
-            }
-            return true;
-        }
-        return false;
     }
     
     public static Program getAssumeGuaranteeLustreProgram(AgreeProgram agreeProgram, boolean monolithic) {
@@ -323,7 +301,7 @@ public class LustreAstBuilder {
             // equations
             // and type equations. This would clear this up
             for (AgreeStatement assertion : agreeNode.assertions) {
-                if (statementIsContractEqOrProperty(assertion)) {
+                if (AgreeUtils.statementIsContractEqOrProperty(assertion)) {
                     stuffConj = new BinaryExpr(stuffConj, BinaryOp.AND, assertion.expr);
                 }
             }
@@ -484,7 +462,7 @@ public class LustreAstBuilder {
         // monolithic verification. However, we should add EQ statements
         // with left hand sides which part of the agreeNode assertions
         for (AgreeStatement statement : agreeNode.assertions) {
-            if (monolithic ||  statementIsContractEqOrProperty(statement)) {
+            if (monolithic ||  AgreeUtils.statementIsContractEqOrProperty(statement)) {
                 assertions.add(statement.expr);
             }
         }

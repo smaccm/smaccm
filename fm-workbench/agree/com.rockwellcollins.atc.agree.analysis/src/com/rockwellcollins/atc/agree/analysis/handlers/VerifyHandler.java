@@ -60,8 +60,6 @@ import com.rockwellcollins.atc.agree.analysis.Activator;
 import com.rockwellcollins.atc.agree.analysis.AgreeUtils;
 import com.rockwellcollins.atc.agree.analysis.AgreeException;
 import com.rockwellcollins.atc.agree.analysis.AgreeLayout;
-import com.rockwellcollins.atc.agree.analysis.LustreAstBuilder;
-import com.rockwellcollins.atc.agree.analysis.LustreContractAstBuilder;
 import com.rockwellcollins.atc.agree.analysis.AgreeLayout.SigType;
 import com.rockwellcollins.atc.agree.analysis.AgreeLogger;
 import com.rockwellcollins.atc.agree.analysis.AgreeRenaming;
@@ -73,6 +71,9 @@ import com.rockwellcollins.atc.agree.analysis.ast.AgreeStatement;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeVar;
 import com.rockwellcollins.atc.agree.analysis.preferences.PreferenceConstants;
 import com.rockwellcollins.atc.agree.analysis.preferences.PreferencesUtil;
+import com.rockwellcollins.atc.agree.analysis.translation.AgreeNodeToLustreContract;
+import com.rockwellcollins.atc.agree.analysis.translation.LustreAstBuilder;
+import com.rockwellcollins.atc.agree.analysis.translation.LustreContractAstBuilder;
 import com.rockwellcollins.atc.agree.analysis.views.AgreeResultsLinker;
 import com.rockwellcollins.atc.agree.analysis.views.AgreeResultsView;
 
@@ -159,7 +160,7 @@ public abstract class VerifyHandler extends AadlHandler {
 
     private void wrapVerificationResult(ComponentInstance si, CompositeAnalysisResult wrapper) {
         AgreeProgram agreeProgram = new AgreeASTBuilder().getAgreeProgram(si);
-
+ 
         // generate different lustre depending on which model checker we are
         // using
       

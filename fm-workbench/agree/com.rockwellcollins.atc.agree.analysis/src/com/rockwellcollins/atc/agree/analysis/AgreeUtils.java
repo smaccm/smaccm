@@ -24,8 +24,10 @@ import jkind.lustre.RecordType;
 import jkind.lustre.Type;
 
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.osate.aadl2.AbstractNamedValue;
+import org.osate.aadl2.ComponentClassifier;
 import org.osate.aadl2.ComponentImplementation;
 import org.osate.aadl2.ComponentType;
 import org.osate.aadl2.ContainedNamedElement;
@@ -48,8 +50,11 @@ import org.osate.annexsupport.AnnexUtil;
 import org.osate.xtext.aadl2.properties.util.PropertyUtils;
 
 import com.rockwellcollins.atc.agree.agree.AgreePackage;
+import com.rockwellcollins.atc.agree.agree.EqStatement;
 import com.rockwellcollins.atc.agree.agree.FnCallExpr;
 import com.rockwellcollins.atc.agree.agree.NestedDotID;
+import com.rockwellcollins.atc.agree.agree.PropertyStatement;
+import com.rockwellcollins.atc.agree.analysis.ast.AgreeStatement;
 import com.rockwellcollins.atc.agree.analysis.preferences.PreferenceConstants;
 
 public class AgreeUtils {
@@ -340,6 +345,21 @@ public class AgreeUtils {
             return new RealExpr(BigDecimal.ZERO);
         }
         throw new AgreeException("Unhandled initial type for type '"+type+"'");
+    }
+    
+    public static boolean statementIsContractEqOrProperty(AgreeStatement statement){
+        if (statement.reference instanceof EqStatement
+                || statement.reference instanceof PropertyStatement) {
+            EObject container = statement.reference.eContainer();
+            while (!(container instanceof ComponentClassifier)) {
+                container = container.eContainer();
+            }
+            if (container instanceof ComponentImplementation) {
+                return false;
+            }
+            return true;
+        }
+        return false;
     }
 
 }
