@@ -20,7 +20,8 @@ Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: .,
  dependencies/jkind-api.jar,
  dependencies/jxl.jar
-Import-Package: org.osate.aadl2.instantiation,
+Import-Package: 
+ org.osate.aadl2.instantiation,
  org.osate.annexsupport
 Export-Package: com.rockwellcollins.atc.agree.analysis,
  com.rockwellcollins.atc.agree.analysis.ast,

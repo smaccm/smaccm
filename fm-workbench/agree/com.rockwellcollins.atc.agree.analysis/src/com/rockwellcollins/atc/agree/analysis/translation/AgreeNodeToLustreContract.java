@@ -23,22 +23,21 @@ import jkind.lustre.TupleExpr;
 import jkind.lustre.Type;
 import jkind.lustre.TypeDef;
 import jkind.lustre.VarDecl;
+import jkind.translation.DistributePres;
+import jkind.translation.FlattenPres;
+import jkind.translation.InlineNodeCalls;
+import jkind.translation.OrderEquations;
 
 public class AgreeNodeToLustreContract {
-    
-    public static Program translate(AgreeNode agreeNode, AgreeProgram agreeProgram){
-        return translate(Collections.singletonList(agreeNode), agreeProgram);
-    }
-    
-    public static Program translate(List<AgreeNode> agreeNodes, AgreeProgram agreeProgram){
+
+    public static Node translate(AgreeNode agreeNode, AgreeProgram agreeProgram){
         
         List<Node> nodes = new ArrayList<>();
         
-        for(AgreeNode agreeNode : agreeNodes){
-            nodes.add(translateNode(agreeNode));
-        }
-        
         nodes.addAll(agreeProgram.globalLustreNodes);
+        //this node needs to be the last in the list
+        //so that it is set as the main node in the program
+        nodes.add(translateNode(agreeNode));
         
         List<TypeDef> types = new ArrayList<>();
         for (Type type : agreeProgram.globalTypes) {
@@ -46,11 +45,18 @@ public class AgreeNodeToLustreContract {
             types.add(new TypeDef(recType.id, type));
         }
 
-        return new Program(types, Collections.emptyList(), nodes);
+        Program program = new Program(types, Collections.emptyList(), nodes);
+        System.out.println(program);
+        Node node = InlineNodeCalls.program(program);
+        node = FlattenPres.node(node);
+        node = DistributePres.node(node);
+        node = OrderEquations.node(node);
+        
+        return node;
     }
     
     
-    public static Node translateNode(AgreeNode agreeNode){
+    private static Node translateNode(AgreeNode agreeNode){
         
         List<VarDecl> inputs = new ArrayList<>();
         List<VarDecl> locals = new ArrayList<>();
