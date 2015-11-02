@@ -10,6 +10,7 @@ import org.osate.aadl2.Classifier;
 import org.osate.aadl2.ComponentClassifier;
 import org.osate.aadl2.ComponentImplementation;
 import org.osate.aadl2.ComponentType;
+import org.osate.aadl2.DataAccess;
 import org.osate.aadl2.DataPort;
 import org.osate.aadl2.EnumerationLiteral;
 import org.osate.aadl2.EventPort;
@@ -372,6 +373,18 @@ public class ResoluteBuiltInFnCallEvaluator {
 			} else {
 				return value;
 			}
+		}
+		
+		case "is_data_access": {
+			NamedElement feat = args.get(0).getNamedElement();
+			if (feat instanceof ConnectionInstance)
+			{
+				ConnectionInstance ci = (ConnectionInstance) feat;
+				return new BoolValue(ci.getKind() == org.osate.aadl2.instance.ConnectionKind.ACCESS_CONNECTION);
+				
+			}
+			
+			return new BoolValue(feat instanceof DataAccess);
 		}
 
 		case "instance": {

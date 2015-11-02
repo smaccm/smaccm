@@ -206,6 +206,7 @@ BuiltInFn:
 // Primary type: feature
 |	'direction'
 |	'is_event_port'
+|	'is_data_access'
 
 // Primary type: range
 |	'lower_bound'
