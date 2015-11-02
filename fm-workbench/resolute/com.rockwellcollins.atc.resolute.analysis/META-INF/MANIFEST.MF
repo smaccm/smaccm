@@ -41,9 +41,9 @@ Export-Package: com.rockwellcollins.atc.resolute.analysis,
  com.rockwellcollins.atc.resolute.analysis.views
 Eclipse-RegisterBuddy: com.rockwellcollins.atc.resolute.ui
 Bundle-Vendor: Rockwell Collins, Inc.
-Import-Package: net.dependableos.dcase,
- net.dependableos.dcase.diagram.edit.parts,
- net.dependableos.dcase.diagram.part,
+Import-Package: net.dependableos.dcase;resolution:=optional,
+ net.dependableos.dcase.diagram.edit.parts;resolution:=optional,
+ net.dependableos.dcase.diagram.part;resolution:=optional,
  org.eclipse.emf.transaction,
  org.eclipse.gmf.runtime.diagram.core.preferences,
  org.eclipse.gmf.runtime.diagram.core.services,
