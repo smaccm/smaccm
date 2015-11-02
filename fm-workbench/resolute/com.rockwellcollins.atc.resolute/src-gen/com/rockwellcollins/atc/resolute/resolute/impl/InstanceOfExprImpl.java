@@ -21,11 +21,11 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link com.rockwellcollins.atc.resolute.resolute.impl.InstanceOfExprImpl#getExpr <em>Expr</em>}</li>
  *   <li>{@link com.rockwellcollins.atc.resolute.resolute.impl.InstanceOfExprImpl#getType <em>Type</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

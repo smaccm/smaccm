@@ -15,10 +15,10 @@ import org.osate.aadl2.AnnexSubclause;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link com.rockwellcollins.atc.resolute.resolute.ResoluteSubclause#getProves <em>Proves</em>}</li>
  * </ul>
- * </p>
  *
  * @see com.rockwellcollins.atc.resolute.resolute.ResolutePackage#getResoluteSubclause()
  * @model

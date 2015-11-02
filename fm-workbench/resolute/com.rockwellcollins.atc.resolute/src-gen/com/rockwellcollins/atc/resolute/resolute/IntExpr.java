@@ -11,10 +11,10 @@ import org.osate.aadl2.IntegerLiteral;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link com.rockwellcollins.atc.resolute.resolute.IntExpr#getVal <em>Val</em>}</li>
  * </ul>
- * </p>
  *
  * @see com.rockwellcollins.atc.resolute.resolute.ResolutePackage#getIntExpr()
  * @model

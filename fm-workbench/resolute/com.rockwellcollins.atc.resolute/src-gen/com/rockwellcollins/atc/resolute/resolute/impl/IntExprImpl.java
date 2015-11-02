@@ -21,10 +21,10 @@ import org.osate.aadl2.IntegerLiteral;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link com.rockwellcollins.atc.resolute.resolute.impl.IntExprImpl#getVal <em>Val</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

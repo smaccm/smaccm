@@ -13,10 +13,10 @@ import org.osate.aadl2.Element;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link com.rockwellcollins.atc.resolute.resolute.DefinitionBody#getExpr <em>Expr</em>}</li>
  * </ul>
- * </p>
  *
  * @see com.rockwellcollins.atc.resolute.resolute.ResolutePackage#getDefinitionBody()
  * @model

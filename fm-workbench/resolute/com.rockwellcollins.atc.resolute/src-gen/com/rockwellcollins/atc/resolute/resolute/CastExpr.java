@@ -10,11 +10,11 @@ package com.rockwellcollins.atc.resolute.resolute;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link com.rockwellcollins.atc.resolute.resolute.CastExpr#getType <em>Type</em>}</li>
  *   <li>{@link com.rockwellcollins.atc.resolute.resolute.CastExpr#getExpr <em>Expr</em>}</li>
  * </ul>
- * </p>
  *
  * @see com.rockwellcollins.atc.resolute.resolute.ResolutePackage#getCastExpr()
  * @model

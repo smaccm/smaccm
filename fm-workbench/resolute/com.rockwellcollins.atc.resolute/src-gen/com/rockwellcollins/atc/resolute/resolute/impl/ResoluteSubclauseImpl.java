@@ -26,10 +26,10 @@ import org.osate.aadl2.impl.AnnexSubclauseImpl;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link com.rockwellcollins.atc.resolute.resolute.impl.ResoluteSubclauseImpl#getProves <em>Proves</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */
