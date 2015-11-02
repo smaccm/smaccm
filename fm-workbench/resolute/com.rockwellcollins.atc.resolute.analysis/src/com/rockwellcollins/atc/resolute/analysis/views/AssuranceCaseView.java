@@ -122,6 +122,16 @@ public class AssuranceCaseView extends ViewPart {
             CERTWARE_INSTALLED = false;
         }
     }
+    
+    private static boolean DCASE_INSTALLED;
+    static {
+        try {
+            Dcase.tryLoad();
+            DCASE_INSTALLED = true;
+        } catch (NoClassDefFoundError e) {
+        	DCASE_INSTALLED = false;
+        }
+    }
 
     private IAction createExportCAZAction(final ClaimResult claim) {
         String name = "Export to CertWare";
@@ -149,13 +159,29 @@ public class AssuranceCaseView extends ViewPart {
     }
 
     private Action createExportDcaseAction(final ClaimResult claim) {
-        return new Action("Export to  GSN with D-Case") {
+        String name = "Export to GSN with D-Case";
+        if (!DCASE_INSTALLED) {
+            name += " [Dcase plug-ins not installed]";
+        }
+        
+        return new Action(name) {
             @Override
             public void run() {
-                MessageConsole console = findConsole("Dcase Export");
-                showConsole(console);
-                console.clearConsole();
-                Dcase.claimToGSN(claim);
+                try {
+                    MessageConsole console = findConsole("Dcase Export");
+                    showConsole(console);
+                    console.clearConsole();
+                    Dcase.claimToGSN(claim);
+                } catch (Throwable t) {
+                    MessageDialog.openError(treeViewer.getControl().getShell(),
+                            "Error during export to Dcase", t.getMessage());
+                    t.printStackTrace();
+                }
+            }
+            
+            @Override
+            public boolean isEnabled() {
+                return DCASE_INSTALLED;
             }
         };
     }

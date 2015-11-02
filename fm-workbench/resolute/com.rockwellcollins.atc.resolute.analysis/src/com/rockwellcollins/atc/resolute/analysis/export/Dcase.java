@@ -40,6 +40,10 @@ import net.dependableos.dcase.diagram.part.Messages;
 public class Dcase {
 
 	private static Argument model;
+	
+    public static void tryLoad() throws NoClassDefFoundError {
+        // Nothing needed since static initialization of this class already tries to load CertWare
+    }
 
 	public static void claimToGSN(ClaimResult claim) {
 		OsateDebug.osateDebug("GSN export", "Export to GSN");
