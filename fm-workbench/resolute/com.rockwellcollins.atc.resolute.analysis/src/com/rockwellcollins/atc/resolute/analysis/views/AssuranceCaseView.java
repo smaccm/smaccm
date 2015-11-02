@@ -34,7 +34,7 @@ import org.eclipse.ui.part.ViewPart;
 import org.eclipse.xtext.ui.editor.GlobalURIEditorOpener;
 
 import com.google.inject.Inject;
-import com.rockwellcollins.atc.resolute.analysis.export.CertWareExport;
+import com.rockwellcollins.atc.resolute.analysis.export.Dcase;
 import com.rockwellcollins.atc.resolute.analysis.export.ResoluteDOTUtils;
 import com.rockwellcollins.atc.resolute.analysis.results.ClaimResult;
 import com.rockwellcollins.atc.resolute.analysis.results.FailResult;
@@ -99,6 +99,7 @@ public class AssuranceCaseView extends ViewPart {
         MenuManager manager = new MenuManager("Export");
 
         manager.add(createExportDOTAction(claim));
+        manager.add(createExportDcaseAction(claim));
         manager.add(createExportCAZAction(claim));
         return manager;
     }
@@ -115,7 +116,7 @@ public class AssuranceCaseView extends ViewPart {
     private static boolean CERTWARE_INSTALLED;
     static {
         try {
-            CertWareExport.tryLoad();
+//            CertWareExport.tryLoad();
             CERTWARE_INSTALLED = true;
         } catch (NoClassDefFoundError e) {
             CERTWARE_INSTALLED = false;
@@ -132,7 +133,7 @@ public class AssuranceCaseView extends ViewPart {
             @Override
             public void run() {
                 try {
-                    CertWareExport.export(claim);
+//                    CertWareExport.export(claim);
                 } catch (Throwable t) {
                     MessageDialog.openError(treeViewer.getControl().getShell(),
                             "Error during export to CertWare", t.getMessage());
@@ -147,6 +148,18 @@ public class AssuranceCaseView extends ViewPart {
         };
     }
 
+    private Action createExportDcaseAction(final ClaimResult claim) {
+        return new Action("Export to  GSN with D-Case") {
+            @Override
+            public void run() {
+                MessageConsole console = findConsole("Dcase Export");
+                showConsole(console);
+                console.clearConsole();
+                Dcase.claimToGSN(claim);
+            }
+        };
+    }
+    
     private Action createExportDOTAction(final ClaimResult claim) {
         return new Action("Show DOT Text in Console") {
             @Override
