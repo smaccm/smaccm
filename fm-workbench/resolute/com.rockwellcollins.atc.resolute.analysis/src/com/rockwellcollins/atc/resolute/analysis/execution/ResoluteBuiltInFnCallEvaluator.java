@@ -374,18 +374,6 @@ public class ResoluteBuiltInFnCallEvaluator {
 				return value;
 			}
 		}
-		
-		case "is_data_access": {
-			NamedElement feat = args.get(0).getNamedElement();
-			if (feat instanceof ConnectionInstance)
-			{
-				ConnectionInstance ci = (ConnectionInstance) feat;
-				return new BoolValue(ci.getKind() == org.osate.aadl2.instance.ConnectionKind.ACCESS_CONNECTION);
-				
-			}
-			
-			return new BoolValue(feat instanceof DataAccess);
-		}
 
 		case "instance": {
 			NamedElement decl = args.get(0).getNamedElement();
