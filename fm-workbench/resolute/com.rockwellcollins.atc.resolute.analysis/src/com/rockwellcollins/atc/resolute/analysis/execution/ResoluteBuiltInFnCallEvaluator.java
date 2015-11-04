@@ -32,6 +32,7 @@ import org.osate.aadl2.instance.InstanceReferenceValue;
 import org.osate.aadl2.instance.SystemInstance;
 import org.osate.aadl2.properties.PropertyDoesNotApplyToHolderException;
 import org.osate.aadl2.properties.PropertyNotPresentException;
+import org.osate.aadl2.util.OsateDebug;
 import org.osate.xtext.aadl2.errormodel.errorModel.ErrorBehaviorTransition;
 import org.osate.xtext.aadl2.errormodel.errorModel.ErrorPropagation;
 import org.osate.xtext.aadl2.errormodel.errorModel.ErrorTypes;
@@ -534,6 +535,11 @@ public class ResoluteBuiltInFnCallEvaluator {
 			return dp.getDataFeatureClassifier();
 		} else if (ne instanceof FeatureInstance) {
 			FeatureInstance fi = (FeatureInstance) ne;
+			if (fi.getFeature() instanceof DataPort)
+			{
+				DataPort dp = (DataPort) fi.getFeature();
+				return dp.getDataFeatureClassifier();
+			}
 			return (NamedElement) fi.getFeature().getFeatureClassifier();
 		} else if (ne instanceof ComponentInstance) {
 			ComponentInstance ci = (ComponentInstance) ne;
@@ -544,25 +550,29 @@ public class ResoluteBuiltInFnCallEvaluator {
 	}
 
 	private static PropertyExpression getPropertyExpression(NamedElement comp, Property prop) {
+		PropertyExpression result;
+		
 		if (comp instanceof ConnectionInstance) {
+			PropertyExpression expr;
 			ConnectionInstance conn = (ConnectionInstance) comp;
+			
 			for (ConnectionReference ref : conn.getConnectionReferences()) {
-				PropertyExpression expr = getPropertyExpression(ref, prop);
+				expr = getPropertyExpression(ref, prop);
 				if (expr != null) {
-					return expr;
+					result = expr;
 				}
 			}
-			return null;
 		}
 
 		try {
 			comp.getPropertyValue(prop); // this just checks to see if the
 											// property is associated
-			return PropertyUtils.getSimplePropertyValue(comp, prop);
+			result = PropertyUtils.getSimplePropertyValue(comp, prop);
 		} catch (PropertyDoesNotApplyToHolderException propException) {
 			return null;
 		} catch (PropertyNotPresentException propNotPresentException) {
 			return null;
 		}
+		return result;
 	}
 }
