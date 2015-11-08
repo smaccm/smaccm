@@ -559,6 +559,8 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 		case "has_type":
 		case "features":
 		case "is_data_access":
+		case "is_data_port":
+		case "is_port":
 		case "is_event_port":
 		case "connections":
 			expectedTypes.add(BaseType.AADL);

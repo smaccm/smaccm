@@ -13,6 +13,7 @@ import org.osate.aadl2.ComponentType;
 import org.osate.aadl2.DataAccess;
 import org.osate.aadl2.DataPort;
 import org.osate.aadl2.EnumerationLiteral;
+import org.osate.aadl2.EventDataPort;
 import org.osate.aadl2.EventPort;
 import org.osate.aadl2.Feature;
 import org.osate.aadl2.IntegerLiteral;
@@ -302,6 +303,17 @@ public class ResoluteBuiltInFnCallEvaluator {
 		case "is_event_port": {
 			NamedElement feat = (FeatureInstance) args.get(0).getNamedElement();
 			return new BoolValue(feat instanceof EventPort);
+		}
+
+		case "is_port": {
+			NamedElement feat = (FeatureInstance) args.get(0).getNamedElement();
+			return new BoolValue(
+					(feat instanceof DataPort) || (feat instanceof EventDataPort) || (feat instanceof EventDataPort));
+		}
+
+		case "is_data_port": {
+			NamedElement feat = (FeatureInstance) args.get(0).getNamedElement();
+			return new BoolValue((feat instanceof DataPort) || (feat instanceof EventDataPort));
 		}
 
 			/*
