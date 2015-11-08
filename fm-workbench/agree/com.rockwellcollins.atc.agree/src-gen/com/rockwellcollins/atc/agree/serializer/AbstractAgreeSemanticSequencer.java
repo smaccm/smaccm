@@ -5,6 +5,7 @@ package com.rockwellcollins.atc.agree.serializer;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
+import com.rockwellcollins.atc.agree.agree.AbstractEqStatement;
 import com.rockwellcollins.atc.agree.agree.AgreeContract;
 import com.rockwellcollins.atc.agree.agree.AgreeContractLibrary;
 import com.rockwellcollins.atc.agree.agree.AgreeContractSubclause;
@@ -18,7 +19,6 @@ import com.rockwellcollins.atc.agree.agree.BoolLitExpr;
 import com.rockwellcollins.atc.agree.agree.CalenStatement;
 import com.rockwellcollins.atc.agree.agree.ConnectionStatement;
 import com.rockwellcollins.atc.agree.agree.ConstStatement;
-import com.rockwellcollins.atc.agree.agree.EqStatement;
 import com.rockwellcollins.atc.agree.agree.EventExpr;
 import com.rockwellcollins.atc.agree.agree.FloorCast;
 import com.rockwellcollins.atc.agree.agree.FnCallExpr;
@@ -37,6 +37,7 @@ import com.rockwellcollins.atc.agree.agree.NodeBodyExpr;
 import com.rockwellcollins.atc.agree.agree.NodeDefExpr;
 import com.rockwellcollins.atc.agree.agree.NodeEq;
 import com.rockwellcollins.atc.agree.agree.NodeLemma;
+import com.rockwellcollins.atc.agree.agree.NonAbstractEqStatement;
 import com.rockwellcollins.atc.agree.agree.OrderStatement;
 import com.rockwellcollins.atc.agree.agree.ParamStatement;
 import com.rockwellcollins.atc.agree.agree.PreExpr;
@@ -186,6 +187,9 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 				return; 
 			}
 		else if(semanticObject.eClass().getEPackage() == AgreePackage.eINSTANCE) switch(semanticObject.eClass().getClassifierID()) {
+			case AgreePackage.ABSTRACT_EQ_STATEMENT:
+				sequence_EqStatement(context, (AbstractEqStatement) semanticObject); 
+				return; 
 			case AgreePackage.AGREE_CONTRACT:
 				sequence_AgreeContract(context, (AgreeContract) semanticObject); 
 				return; 
@@ -221,9 +225,6 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 				return; 
 			case AgreePackage.CONST_STATEMENT:
 				sequence_ConstStatement(context, (ConstStatement) semanticObject); 
-				return; 
-			case AgreePackage.EQ_STATEMENT:
-				sequence_EqStatement(context, (EqStatement) semanticObject); 
 				return; 
 			case AgreePackage.EVENT_EXPR:
 				sequence_TermExpr(context, (EventExpr) semanticObject); 
@@ -278,6 +279,9 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 				return; 
 			case AgreePackage.NODE_LEMMA:
 				sequence_NodeStmt(context, (NodeLemma) semanticObject); 
+				return; 
+			case AgreePackage.NON_ABSTRACT_EQ_STATEMENT:
+				sequence_EqStatement(context, (NonAbstractEqStatement) semanticObject); 
 				return; 
 			case AgreePackage.ORDER_STATEMENT:
 				sequence_OrderStatement(context, (OrderStatement) semanticObject); 
@@ -411,9 +415,18 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	
 	/**
 	 * Constraint:
+	 *     (lhs+=Arg lhs+=Arg*)
+	 */
+	protected void sequence_EqStatement(EObject context, AbstractEqStatement semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Constraint:
 	 *     (lhs+=Arg lhs+=Arg* expr=Expr?)
 	 */
-	protected void sequence_EqStatement(EObject context, EqStatement semanticObject) {
+	protected void sequence_EqStatement(EObject context, NonAbstractEqStatement semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	

@@ -2,6 +2,7 @@
  */
 package com.rockwellcollins.atc.agree.agree.impl;
 
+import com.rockwellcollins.atc.agree.agree.AbstractEqStatement;
 import com.rockwellcollins.atc.agree.agree.AgreeContract;
 import com.rockwellcollins.atc.agree.agree.AgreeContractLibrary;
 import com.rockwellcollins.atc.agree.agree.AgreeContractSubclause;
@@ -42,6 +43,7 @@ import com.rockwellcollins.atc.agree.agree.NodeDefExpr;
 import com.rockwellcollins.atc.agree.agree.NodeEq;
 import com.rockwellcollins.atc.agree.agree.NodeLemma;
 import com.rockwellcollins.atc.agree.agree.NodeStmt;
+import com.rockwellcollins.atc.agree.agree.NonAbstractEqStatement;
 import com.rockwellcollins.atc.agree.agree.OrderStatement;
 import com.rockwellcollins.atc.agree.agree.ParamStatement;
 import com.rockwellcollins.atc.agree.agree.PreExpr;
@@ -322,6 +324,20 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * @generated
    */
   private EClass latchedStatementEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass abstractEqStatementEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass nonAbstractEqStatementEClass = null;
 
   /**
    * <!-- begin-user-doc -->
@@ -707,16 +723,6 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
   public EReference getEqStatement_Lhs()
   {
     return (EReference)eqStatementEClass.getEStructuralFeatures().get(0);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EReference getEqStatement_Expr()
-  {
-    return (EReference)eqStatementEClass.getEStructuralFeatures().get(1);
   }
 
   /**
@@ -1327,6 +1333,36 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
   public EClass getLatchedStatement()
   {
     return latchedStatementEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getAbstractEqStatement()
+  {
+    return abstractEqStatementEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getNonAbstractEqStatement()
+  {
+    return nonAbstractEqStatementEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getNonAbstractEqStatement_Expr()
+  {
+    return (EReference)nonAbstractEqStatementEClass.getEStructuralFeatures().get(0);
   }
 
   /**
@@ -1946,7 +1982,6 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
 
     eqStatementEClass = createEClass(EQ_STATEMENT);
     createEReference(eqStatementEClass, EQ_STATEMENT__LHS);
-    createEReference(eqStatementEClass, EQ_STATEMENT__EXPR);
 
     fnDefExprEClass = createEClass(FN_DEF_EXPR);
     createEReference(fnDefExprEClass, FN_DEF_EXPR__ARGS);
@@ -2033,6 +2068,11 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     asynchStatementEClass = createEClass(ASYNCH_STATEMENT);
 
     latchedStatementEClass = createEClass(LATCHED_STATEMENT);
+
+    abstractEqStatementEClass = createEClass(ABSTRACT_EQ_STATEMENT);
+
+    nonAbstractEqStatementEClass = createEClass(NON_ABSTRACT_EQ_STATEMENT);
+    createEReference(nonAbstractEqStatementEClass, NON_ABSTRACT_EQ_STATEMENT__EXPR);
 
     nodeEqEClass = createEClass(NODE_EQ);
     createEReference(nodeEqEClass, NODE_EQ__LHS);
@@ -2187,6 +2227,8 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     calenStatementEClass.getESuperTypes().add(this.getSynchStatement());
     asynchStatementEClass.getESuperTypes().add(this.getSynchStatement());
     latchedStatementEClass.getESuperTypes().add(this.getSynchStatement());
+    abstractEqStatementEClass.getESuperTypes().add(this.getEqStatement());
+    nonAbstractEqStatementEClass.getESuperTypes().add(this.getEqStatement());
     nodeEqEClass.getESuperTypes().add(this.getNodeStmt());
     nodeLemmaEClass.getESuperTypes().add(this.getNodeStmt());
     primTypeEClass.getESuperTypes().add(this.getType());
@@ -2236,7 +2278,6 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
 
     initEClass(eqStatementEClass, EqStatement.class, "EqStatement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getEqStatement_Lhs(), this.getArg(), null, "lhs", null, 0, -1, EqStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getEqStatement_Expr(), this.getExpr(), null, "expr", null, 0, 1, EqStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(fnDefExprEClass, FnDefExpr.class, "FnDefExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getFnDefExpr_Args(), this.getArg(), null, "args", null, 0, -1, FnDefExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -2323,6 +2364,11 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     initEClass(asynchStatementEClass, AsynchStatement.class, "AsynchStatement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
     initEClass(latchedStatementEClass, LatchedStatement.class, "LatchedStatement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+    initEClass(abstractEqStatementEClass, AbstractEqStatement.class, "AbstractEqStatement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+    initEClass(nonAbstractEqStatementEClass, NonAbstractEqStatement.class, "NonAbstractEqStatement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getNonAbstractEqStatement_Expr(), this.getExpr(), null, "expr", null, 0, 1, NonAbstractEqStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(nodeEqEClass, NodeEq.class, "NodeEq", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getNodeEq_Lhs(), this.getArg(), null, "lhs", null, 0, -1, NodeEq.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

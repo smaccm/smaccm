@@ -26,7 +26,6 @@
   <eClassifiers xsi:type="ecore:EClass" name="EqStatement" eSuperTypes="platform:/resource/org.osate.aadl2/model/aadl2.ecore#//Element #//SpecStatement">
     <eStructuralFeatures xsi:type="ecore:EReference" name="lhs" upperBound="-1" eType="#//Arg"
         containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="expr" eType="#//Expr" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="FnDefExpr" eSuperTypes="platform:/resource/org.osate.aadl2/model/aadl2.ecore#//NamedElement #//SpecStatement #//CallDef">
     <eStructuralFeatures xsi:type="ecore:EReference" name="args" upperBound="-1" eType="#//Arg"
@@ -126,6 +125,10 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="AsynchStatement" eSuperTypes="#//SynchStatement"/>
   <eClassifiers xsi:type="ecore:EClass" name="LatchedStatement" eSuperTypes="#//SynchStatement"/>
+  <eClassifiers xsi:type="ecore:EClass" name="AbstractEqStatement" eSuperTypes="#//EqStatement"/>
+  <eClassifiers xsi:type="ecore:EClass" name="NonAbstractEqStatement" eSuperTypes="#//EqStatement">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="expr" eType="#//Expr" containment="true"/>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="NodeEq" eSuperTypes="#//NodeStmt">
     <eStructuralFeatures xsi:type="ecore:EReference" name="lhs" unique="false" upperBound="-1"
         eType="#//Arg"/>

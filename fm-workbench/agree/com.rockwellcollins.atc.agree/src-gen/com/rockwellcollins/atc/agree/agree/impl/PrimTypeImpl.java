@@ -17,7 +17,6 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
- * </p>
  * <ul>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.impl.PrimTypeImpl#getString <em>String</em>}</li>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.impl.PrimTypeImpl#getLowNeg <em>Low Neg</em>}</li>
@@ -25,6 +24,7 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  *   <li>{@link com.rockwellcollins.atc.agree.agree.impl.PrimTypeImpl#getHighNeg <em>High Neg</em>}</li>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.impl.PrimTypeImpl#getRangeHigh <em>Range High</em>}</li>
  * </ul>
+ * </p>
  *
  * @generated
  */

@@ -338,6 +338,24 @@ public interface AgreeFactory extends EFactory
   LatchedStatement createLatchedStatement();
 
   /**
+   * Returns a new object of class '<em>Abstract Eq Statement</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Abstract Eq Statement</em>'.
+   * @generated
+   */
+  AbstractEqStatement createAbstractEqStatement();
+
+  /**
+   * Returns a new object of class '<em>Non Abstract Eq Statement</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Non Abstract Eq Statement</em>'.
+   * @generated
+   */
+  NonAbstractEqStatement createNonAbstractEqStatement();
+
+  /**
    * Returns a new object of class '<em>Node Eq</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->

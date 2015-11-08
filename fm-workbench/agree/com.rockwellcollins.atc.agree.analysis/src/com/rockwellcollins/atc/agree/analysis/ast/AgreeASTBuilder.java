@@ -98,6 +98,7 @@ import com.rockwellcollins.atc.agree.agree.NodeDefExpr;
 import com.rockwellcollins.atc.agree.agree.NodeEq;
 import com.rockwellcollins.atc.agree.agree.NodeLemma;
 import com.rockwellcollins.atc.agree.agree.NodeStmt;
+import com.rockwellcollins.atc.agree.agree.NonAbstractEqStatement;
 import com.rockwellcollins.atc.agree.agree.PreExpr;
 import com.rockwellcollins.atc.agree.agree.PrevExpr;
 import com.rockwellcollins.atc.agree.agree.PrimType;
@@ -707,7 +708,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
                 asserts.add(new AgreeStatement(assertState.getStr(), doSwitch(assertState.getExpr()),
                         assertState));
             } else if (spec instanceof EqStatement) {
-                EqStatement eq = (EqStatement) spec;
+                NonAbstractEqStatement eq = (NonAbstractEqStatement) spec;
                 EList<Arg> lhs = eq.getLhs();
                 if (eq.getExpr() != null) {
                     Expr expr = doSwitch(eq.getExpr());

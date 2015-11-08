@@ -56,7 +56,7 @@ public class AgreeSwitch<T> extends Switch<T>
    * Checks whether this is a switch for the given package.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @param ePackage the package in question.
+   * @parameter ePackage the package in question.
    * @return whether this is a switch for the given package.
    * @generated
    */
@@ -404,6 +404,26 @@ public class AgreeSwitch<T> extends Switch<T>
         if (result == null) result = caseSynchStatement(latchedStatement);
         if (result == null) result = caseSpecStatement(latchedStatement);
         if (result == null) result = caseElement(latchedStatement);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case AgreePackage.ABSTRACT_EQ_STATEMENT:
+      {
+        AbstractEqStatement abstractEqStatement = (AbstractEqStatement)theEObject;
+        T result = caseAbstractEqStatement(abstractEqStatement);
+        if (result == null) result = caseEqStatement(abstractEqStatement);
+        if (result == null) result = caseSpecStatement(abstractEqStatement);
+        if (result == null) result = caseElement(abstractEqStatement);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case AgreePackage.NON_ABSTRACT_EQ_STATEMENT:
+      {
+        NonAbstractEqStatement nonAbstractEqStatement = (NonAbstractEqStatement)theEObject;
+        T result = caseNonAbstractEqStatement(nonAbstractEqStatement);
+        if (result == null) result = caseEqStatement(nonAbstractEqStatement);
+        if (result == null) result = caseSpecStatement(nonAbstractEqStatement);
+        if (result == null) result = caseElement(nonAbstractEqStatement);
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
@@ -1149,6 +1169,38 @@ public class AgreeSwitch<T> extends Switch<T>
    * @generated
    */
   public T caseLatchedStatement(LatchedStatement object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Abstract Eq Statement</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Abstract Eq Statement</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseAbstractEqStatement(AbstractEqStatement object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Non Abstract Eq Statement</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Non Abstract Eq Statement</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseNonAbstractEqStatement(NonAbstractEqStatement object)
   {
     return null;
   }

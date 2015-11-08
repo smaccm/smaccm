@@ -99,6 +99,8 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
       case AgreePackage.CALEN_STATEMENT: return createCalenStatement();
       case AgreePackage.ASYNCH_STATEMENT: return createAsynchStatement();
       case AgreePackage.LATCHED_STATEMENT: return createLatchedStatement();
+      case AgreePackage.ABSTRACT_EQ_STATEMENT: return createAbstractEqStatement();
+      case AgreePackage.NON_ABSTRACT_EQ_STATEMENT: return createNonAbstractEqStatement();
       case AgreePackage.NODE_EQ: return createNodeEq();
       case AgreePackage.NODE_LEMMA: return createNodeLemma();
       case AgreePackage.PRIM_TYPE: return createPrimType();
@@ -507,6 +509,28 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
   {
     LatchedStatementImpl latchedStatement = new LatchedStatementImpl();
     return latchedStatement;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public AbstractEqStatement createAbstractEqStatement()
+  {
+    AbstractEqStatementImpl abstractEqStatement = new AbstractEqStatementImpl();
+    return abstractEqStatement;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public NonAbstractEqStatement createNonAbstractEqStatement()
+  {
+    NonAbstractEqStatementImpl nonAbstractEqStatement = new NonAbstractEqStatementImpl();
+    return nonAbstractEqStatement;
   }
 
   /**

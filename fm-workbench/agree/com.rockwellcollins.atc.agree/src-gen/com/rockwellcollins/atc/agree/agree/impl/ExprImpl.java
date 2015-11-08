@@ -13,6 +13,8 @@ import org.osate.aadl2.impl.ElementImpl;
  * <!-- begin-user-doc -->
  * An implementation of the model object '<em><b>Expr</b></em>'.
  * <!-- end-user-doc -->
+ * <p>
+ * </p>
  *
  * @generated
  */

@@ -84,7 +84,8 @@ ConstStatement:
 	'const' name=ID ':' type=Type '=' expr=Expr ';'; //this should really be an "Arg"
 
 EqStatement:
-	'eq' (lhs+=Arg (',' lhs+=Arg)*) ('=' expr=Expr)? ';';
+    {AbstractEqStatement} 'eq' 'abstract' (lhs+=Arg (',' lhs+=Arg)*) ';'
+	| {NonAbstractEqStatement} 'eq' (lhs+=Arg (',' lhs+=Arg)*) ('=' expr=Expr)? ';';
 
 FnDefExpr:
 	'fun' name=ID '(' args+=Arg (',' args+=Arg)* ')' ':' type=Type '=' expr=Expr ';';

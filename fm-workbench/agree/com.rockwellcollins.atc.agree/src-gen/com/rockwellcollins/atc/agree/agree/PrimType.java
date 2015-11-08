@@ -10,7 +10,6 @@ package com.rockwellcollins.atc.agree.agree;
  *
  * <p>
  * The following features are supported:
- * </p>
  * <ul>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.PrimType#getString <em>String</em>}</li>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.PrimType#getLowNeg <em>Low Neg</em>}</li>
@@ -18,6 +17,7 @@ package com.rockwellcollins.atc.agree.agree;
  *   <li>{@link com.rockwellcollins.atc.agree.agree.PrimType#getHighNeg <em>High Neg</em>}</li>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.PrimType#getRangeHigh <em>Range High</em>}</li>
  * </ul>
+ * </p>
  *
  * @see com.rockwellcollins.atc.agree.agree.AgreePackage#getPrimType()
  * @model
