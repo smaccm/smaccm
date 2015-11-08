@@ -20,6 +20,7 @@ import org.osate.aadl2.ListValue;
 import org.osate.aadl2.NamedElement;
 import org.osate.aadl2.NamedValue;
 import org.osate.aadl2.Property;
+import org.osate.aadl2.PropertyConstant;
 import org.osate.aadl2.PropertyExpression;
 import org.osate.aadl2.RealLiteral;
 import org.osate.aadl2.StringLiteral;
@@ -32,7 +33,6 @@ import org.osate.aadl2.instance.InstanceReferenceValue;
 import org.osate.aadl2.instance.SystemInstance;
 import org.osate.aadl2.properties.PropertyDoesNotApplyToHolderException;
 import org.osate.aadl2.properties.PropertyNotPresentException;
-import org.osate.aadl2.util.OsateDebug;
 import org.osate.xtext.aadl2.errormodel.errorModel.ErrorBehaviorTransition;
 import org.osate.xtext.aadl2.errormodel.errorModel.ErrorPropagation;
 import org.osate.xtext.aadl2.errormodel.errorModel.ErrorTypes;
@@ -501,6 +501,10 @@ public class ResoluteBuiltInFnCallEvaluator {
 			return new StringValue(value.getValue());
 		} else if (expr instanceof NamedValue) {
 			NamedValue namedVal = (NamedValue) expr;
+			if (namedVal.getNamedValue() instanceof PropertyConstant) {
+				PropertyConstant pc = (PropertyConstant) namedVal.getNamedValue();
+				return exprToValue(pc.getConstantValue());
+			}
 			AbstractNamedValue absVal = namedVal.getNamedValue();
 			EnumerationLiteral enVal = (EnumerationLiteral) absVal;
 			return new StringValue(enVal.getName());
@@ -546,8 +550,7 @@ public class ResoluteBuiltInFnCallEvaluator {
 			return dp.getDataFeatureClassifier();
 		} else if (ne instanceof FeatureInstance) {
 			FeatureInstance fi = (FeatureInstance) ne;
-			if (fi.getFeature() instanceof DataPort)
-			{
+			if (fi.getFeature() instanceof DataPort) {
 				DataPort dp = (DataPort) fi.getFeature();
 				return dp.getDataFeatureClassifier();
 			}
@@ -562,11 +565,11 @@ public class ResoluteBuiltInFnCallEvaluator {
 
 	private static PropertyExpression getPropertyExpression(NamedElement comp, Property prop) {
 		PropertyExpression result;
-		
+
 		if (comp instanceof ConnectionInstance) {
 			PropertyExpression expr;
 			ConnectionInstance conn = (ConnectionInstance) comp;
-			
+
 			for (ConnectionReference ref : conn.getConnectionReferences()) {
 				expr = getPropertyExpression(ref, prop);
 				if (expr != null) {
