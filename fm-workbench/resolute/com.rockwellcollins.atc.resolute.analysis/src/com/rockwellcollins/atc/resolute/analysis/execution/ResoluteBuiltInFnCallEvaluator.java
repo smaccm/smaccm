@@ -35,6 +35,7 @@ import org.osate.aadl2.instance.InstanceReferenceValue;
 import org.osate.aadl2.instance.SystemInstance;
 import org.osate.aadl2.properties.PropertyDoesNotApplyToHolderException;
 import org.osate.aadl2.properties.PropertyNotPresentException;
+import org.osate.aadl2.util.OsateDebug;
 import org.osate.xtext.aadl2.errormodel.errorModel.ErrorBehaviorTransition;
 import org.osate.xtext.aadl2.errormodel.errorModel.ErrorPropagation;
 import org.osate.xtext.aadl2.errormodel.errorModel.ErrorTypes;
@@ -306,7 +307,7 @@ public class ResoluteBuiltInFnCallEvaluator {
 			ComponentInstance ci = (ComponentInstance) args.get(0).getNamedElement();
 			return new BoolValue(ci.getCategory() == ComponentCategory.PROCESSOR);
 		}
-			
+		
 		case "is_virtual_processor":
 		{
 			ComponentInstance ci = (ComponentInstance) args.get(0).getNamedElement();
@@ -458,8 +459,23 @@ public class ResoluteBuiltInFnCallEvaluator {
 		case "is_data_access": {
 			NamedElement feat = args.get(0).getNamedElement();
 			if (feat instanceof ConnectionInstance) {
+				ComponentInstance accessedComponent = null;
 				ConnectionInstance ci = (ConnectionInstance) feat;
-				return new BoolValue(ci.getKind() == org.osate.aadl2.instance.ConnectionKind.ACCESS_CONNECTION);
+				
+//				OsateDebug.osateDebug("source=" + ci.getSource());
+//				OsateDebug.osateDebug("destination=" + ci.getDestination());
+				if (ci.getSource() instanceof ComponentInstance)
+				{
+					accessedComponent = (ComponentInstance) ci.getSource();
+				}
+				
+				if (ci.getDestination() instanceof ComponentInstance)
+				{
+					accessedComponent = (ComponentInstance) ci.getDestination();
+				}
+				
+				return new BoolValue((ci.getKind() == org.osate.aadl2.instance.ConnectionKind.ACCESS_CONNECTION) &&
+						(accessedComponent.getCategory() == ComponentCategory.DATA));
 
 			}
 
@@ -484,6 +500,23 @@ public class ResoluteBuiltInFnCallEvaluator {
 			} else {
 				throw new ResoluteFailException("Failed to find instance of declarative element", fnCallExpr);
 			}
+		}
+		
+		case "debug": {
+			int i = 0;
+			String s = "";
+			for (ResoluteValue arg : args)
+			{
+				if (i > 0)
+				{
+					s += ",";
+				}
+				s += "#" + i + ": "+arg.toString();
+				i++;
+			}
+			OsateDebug.osateDebug(s);
+
+			return TRUE;
 		}
 
 		case "instances": {

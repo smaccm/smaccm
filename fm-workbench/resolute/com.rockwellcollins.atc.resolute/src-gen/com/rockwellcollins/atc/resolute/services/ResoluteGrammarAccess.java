@@ -1869,11 +1869,12 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		private final Keyword cIntersectKeyword_37 = (Keyword)cAlternatives.eContents().get(37);
 		private final Keyword cInstanceKeyword_38 = (Keyword)cAlternatives.eContents().get(38);
 		private final Keyword cInstancesKeyword_39 = (Keyword)cAlternatives.eContents().get(39);
-		private final Keyword cAnalysisKeyword_40 = (Keyword)cAlternatives.eContents().get(40);
-		private final Keyword cReceive_errorKeyword_41 = (Keyword)cAlternatives.eContents().get(41);
-		private final Keyword cContain_errorKeyword_42 = (Keyword)cAlternatives.eContents().get(42);
-		private final Keyword cPropagate_errorKeyword_43 = (Keyword)cAlternatives.eContents().get(43);
-		private final Keyword cError_state_reachableKeyword_44 = (Keyword)cAlternatives.eContents().get(44);
+		private final Keyword cDebugKeyword_40 = (Keyword)cAlternatives.eContents().get(40);
+		private final Keyword cAnalysisKeyword_41 = (Keyword)cAlternatives.eContents().get(41);
+		private final Keyword cReceive_errorKeyword_42 = (Keyword)cAlternatives.eContents().get(42);
+		private final Keyword cContain_errorKeyword_43 = (Keyword)cAlternatives.eContents().get(43);
+		private final Keyword cPropagate_errorKeyword_44 = (Keyword)cAlternatives.eContents().get(44);
+		private final Keyword cError_state_reachableKeyword_45 = (Keyword)cAlternatives.eContents().get(45);
 		
 		//BuiltInFn: // Primary type: aadl
 		//	"has_property" // Primary type: component
@@ -1887,7 +1888,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		//	"is_system" | "is_bus" | "is_virtual_bus" | "is_device" | "is_memory" | "is_thread" | "is_process" | "is_subprogram" |
 		//	"is_of_type" | "is_bound_to" | "has_member" | "features" | "connections" | "subcomponents" | "source" | "destination"
 		//	| "direction" | "is_event_port" | "is_data_port" | "is_port" | "is_data_access" | "lower_bound" | "upper_bound" |
-		//	"member" | "sum" | "union" | "length" | "size" | "intersect" | "instance" | "instances" | "analysis" | // the component can receive an incoming error
+		//	"member" | "sum" | "union" | "length" | "size" | "intersect" | "instance" | "instances" | "debug" | "analysis" | // the component can receive an incoming error
 		//	"receive_error" | // the component contain the error
 		//	"contain_error" | // the component propagate an error
 		//	"propagate_error" | // the error state is reachable
@@ -1906,7 +1907,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		//"is_system" | "is_bus" | "is_virtual_bus" | "is_device" | "is_memory" | "is_thread" | "is_process" | "is_subprogram" |
 		//"is_of_type" | "is_bound_to" | "has_member" | "features" | "connections" | "subcomponents" | "source" | "destination" |
 		//"direction" | "is_event_port" | "is_data_port" | "is_port" | "is_data_access" | "lower_bound" | "upper_bound" |
-		//"member" | "sum" | "union" | "length" | "size" | "intersect" | "instance" | "instances" | "analysis" | // the component can receive an incoming error
+		//"member" | "sum" | "union" | "length" | "size" | "intersect" | "instance" | "instances" | "debug" | "analysis" | // the component can receive an incoming error
 		//"receive_error" | // the component contain the error
 		//"contain_error" | // the component propagate an error
 		//"propagate_error" | // the error state is reachable
@@ -2034,24 +2035,27 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		//"instances"
 		public Keyword getInstancesKeyword_39() { return cInstancesKeyword_39; }
 
+		//"debug"
+		public Keyword getDebugKeyword_40() { return cDebugKeyword_40; }
+
 		//"analysis"
-		public Keyword getAnalysisKeyword_40() { return cAnalysisKeyword_40; }
+		public Keyword getAnalysisKeyword_41() { return cAnalysisKeyword_41; }
 
 		//// the component can receive an incoming error
 		//"receive_error"
-		public Keyword getReceive_errorKeyword_41() { return cReceive_errorKeyword_41; }
+		public Keyword getReceive_errorKeyword_42() { return cReceive_errorKeyword_42; }
 
 		//// the component contain the error
 		//"contain_error"
-		public Keyword getContain_errorKeyword_42() { return cContain_errorKeyword_42; }
+		public Keyword getContain_errorKeyword_43() { return cContain_errorKeyword_43; }
 
 		//// the component propagate an error
 		//"propagate_error"
-		public Keyword getPropagate_errorKeyword_43() { return cPropagate_errorKeyword_43; }
+		public Keyword getPropagate_errorKeyword_44() { return cPropagate_errorKeyword_44; }
 
 		//// the error state is reachable
 		//"error_state_reachable"
-		public Keyword getError_state_reachableKeyword_44() { return cError_state_reachableKeyword_44; }
+		public Keyword getError_state_reachableKeyword_45() { return cError_state_reachableKeyword_45; }
 	}
 
 	public class RealTermElements extends AbstractParserRuleElementFinder {
@@ -2635,7 +2639,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	//	"is_system" | "is_bus" | "is_virtual_bus" | "is_device" | "is_memory" | "is_thread" | "is_process" | "is_subprogram" |
 	//	"is_of_type" | "is_bound_to" | "has_member" | "features" | "connections" | "subcomponents" | "source" | "destination"
 	//	| "direction" | "is_event_port" | "is_data_port" | "is_port" | "is_data_access" | "lower_bound" | "upper_bound" |
-	//	"member" | "sum" | "union" | "length" | "size" | "intersect" | "instance" | "instances" | "analysis" | // the component can receive an incoming error
+	//	"member" | "sum" | "union" | "length" | "size" | "intersect" | "instance" | "instances" | "debug" | "analysis" | // the component can receive an incoming error
 	//	"receive_error" | // the component contain the error
 	//	"contain_error" | // the component propagate an error
 	//	"propagate_error" | // the error state is reachable

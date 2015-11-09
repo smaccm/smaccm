@@ -237,6 +237,7 @@ BuiltInFn:
 // Other
 |	'instance'
 |	'instances'
+|	'debug'
 |	'analysis'
 
 // Error Annex

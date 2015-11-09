@@ -384,6 +384,7 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 		case "analysis":
 			checkAnalysisCall(funCall, actuals);
 			return;
+			
 		case "member":
 			checkMemberCall(funCall, actualTypes);
 			return;
@@ -571,16 +572,6 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 		case "is_memory":
 		case "is_thread":
 		case "is_process":
-//			|	'is_processor'
-//			|	'is_virtual_processor'
-//			|	'is_system'
-//			|	'is_bus'
-//			|	'is_virtual_bus'
-//			|	'is_device'
-//			|	'is_memory'
-//			|	'is_thread'
-//			|	'is_process'	
-			
 		case "is_event_port":
 		case "connections":
 			expectedTypes.add(BaseType.AADL);
@@ -612,7 +603,7 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 
 		case "is_bound_to":
 			expectedTypes.add(BaseType.AADL);
-			expectedTypes.add(BaseType.COMPONENT);
+			expectedTypes.add(BaseType.AADL);
 			break;
 
 		// Primary type: connection
@@ -647,6 +638,9 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 			expectedTypes.add(BaseType.STRING);
 			break;
 
+		case "debug":
+			break;
+			
 		default:
 			error(funCall, "Unknown built-in function '" + funCall.getFn() + "'");
 			return null;
@@ -1000,6 +994,9 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 			return new SetType(BaseType.COMPONENT);
 		case "analysis":
 			return getAnalysisType(funCall);
+		
+		case "debug":
+			return BaseType.BOOL;
 
 		// Error Annex
 		case "receive_error":
