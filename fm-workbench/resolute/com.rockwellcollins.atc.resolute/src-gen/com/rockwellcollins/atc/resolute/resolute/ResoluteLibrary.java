@@ -15,10 +15,10 @@ import org.osate.aadl2.AnnexLibrary;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link com.rockwellcollins.atc.resolute.resolute.ResoluteLibrary#getDefinitions <em>Definitions</em>}</li>
  * </ul>
- * </p>
  *
  * @see com.rockwellcollins.atc.resolute.resolute.ResolutePackage#getResoluteLibrary()
  * @model

@@ -11,11 +11,11 @@ import org.osate.aadl2.UnitLiteral;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link com.rockwellcollins.atc.resolute.resolute.ClaimArg#getArg <em>Arg</em>}</li>
  *   <li>{@link com.rockwellcollins.atc.resolute.resolute.ClaimArg#getUnit <em>Unit</em>}</li>
  * </ul>
- * </p>
  *
  * @see com.rockwellcollins.atc.resolute.resolute.ResolutePackage#getClaimArg()
  * @model

@@ -10,11 +10,11 @@ package com.rockwellcollins.atc.resolute.resolute;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link com.rockwellcollins.atc.resolute.resolute.UnaryExpr#getOp <em>Op</em>}</li>
  *   <li>{@link com.rockwellcollins.atc.resolute.resolute.UnaryExpr#getExpr <em>Expr</em>}</li>
  * </ul>
- * </p>
  *
  * @see com.rockwellcollins.atc.resolute.resolute.ResolutePackage#getUnaryExpr()
  * @model

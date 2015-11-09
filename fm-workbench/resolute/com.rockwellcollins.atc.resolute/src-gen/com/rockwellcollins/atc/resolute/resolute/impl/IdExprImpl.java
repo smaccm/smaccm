@@ -21,10 +21,10 @@ import org.osate.aadl2.NamedElement;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link com.rockwellcollins.atc.resolute.resolute.impl.IdExprImpl#getId <em>Id</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

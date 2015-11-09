@@ -10,11 +10,11 @@ package com.rockwellcollins.atc.resolute.resolute;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link com.rockwellcollins.atc.resolute.resolute.LetExpr#getBinding <em>Binding</em>}</li>
  *   <li>{@link com.rockwellcollins.atc.resolute.resolute.LetExpr#getExpr <em>Expr</em>}</li>
  * </ul>
- * </p>
  *
  * @see com.rockwellcollins.atc.resolute.resolute.ResolutePackage#getLetExpr()
  * @model
