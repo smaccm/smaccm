@@ -190,6 +190,18 @@ BuiltInFn:
 |	'name'
 |	'type'
 |	'has_type'
+
+|	'is_processor'
+|	'is_virtual_processor'
+|	'is_system'
+|	'is_bus'
+|	'is_virtual_bus'
+|	'is_device'
+|	'is_memory'
+|	'is_thread'
+|	'is_process'
+
+|	'is_subprogram'
 |   'is_of_type'
 |   'is_bound_to'
 |	'has_member'

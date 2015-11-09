@@ -7,6 +7,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.osate.aadl2.AbstractNamedValue;
 import org.osate.aadl2.BooleanLiteral;
 import org.osate.aadl2.Classifier;
+import org.osate.aadl2.ComponentCategory;
 import org.osate.aadl2.ComponentClassifier;
 import org.osate.aadl2.ComponentImplementation;
 import org.osate.aadl2.ComponentType;
@@ -298,6 +299,60 @@ public class ResoluteBuiltInFnCallEvaluator {
 		case "direction": {
 			FeatureInstance feat = (FeatureInstance) args.get(0).getNamedElement();
 			return new StringValue(feat.getDirection().toString());
+		}
+		
+		case "is_processor":
+		{
+			ComponentInstance ci = (ComponentInstance) args.get(0).getNamedElement();
+			return new BoolValue(ci.getCategory() == ComponentCategory.PROCESSOR);
+		}
+			
+		case "is_virtual_processor":
+		{
+			ComponentInstance ci = (ComponentInstance) args.get(0).getNamedElement();
+			return new BoolValue(ci.getCategory() == ComponentCategory.VIRTUAL_PROCESSOR);
+		}
+		
+		case "is_system":
+		{
+			ComponentInstance ci = (ComponentInstance) args.get(0).getNamedElement();
+			return new BoolValue(ci.getCategory() == ComponentCategory.SYSTEM);
+		}
+		
+		case "is_bus":
+		{
+			ComponentInstance ci = (ComponentInstance) args.get(0).getNamedElement();
+			return new BoolValue(ci.getCategory() == ComponentCategory.BUS);
+		}
+		
+		case "is_virtual_bus":
+		{
+			ComponentInstance ci = (ComponentInstance) args.get(0).getNamedElement();
+			return new BoolValue(ci.getCategory() == ComponentCategory.VIRTUAL_BUS);
+		}
+		
+		case "is_device":
+		{
+			ComponentInstance ci = (ComponentInstance) args.get(0).getNamedElement();
+			return new BoolValue(ci.getCategory() == ComponentCategory.DEVICE);
+		}
+		
+		case "is_memory":
+		{
+			ComponentInstance ci = (ComponentInstance) args.get(0).getNamedElement();
+			return new BoolValue(ci.getCategory() == ComponentCategory.MEMORY);
+		}
+		
+		case "is_thread":
+		{
+			ComponentInstance ci = (ComponentInstance) args.get(0).getNamedElement();
+			return new BoolValue(ci.getCategory() == ComponentCategory.THREAD);
+		}
+		
+		case "is_process":
+		{
+			ComponentInstance ci = (ComponentInstance) args.get(0).getNamedElement();
+			return new BoolValue(ci.getCategory() == ComponentCategory.PROCESS);
 		}
 
 		case "is_event_port": {

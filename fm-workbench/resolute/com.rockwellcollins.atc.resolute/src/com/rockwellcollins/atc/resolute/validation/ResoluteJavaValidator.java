@@ -561,6 +561,26 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 		case "is_data_access":
 		case "is_data_port":
 		case "is_port":
+		
+		case "is_processor":
+		case "is_virtual_processor":
+		case "is_system":
+		case "is_bus":
+		case "is_virtual_bus":
+		case "is_device":
+		case "is_memory":
+		case "is_thread":
+		case "is_process":
+//			|	'is_processor'
+//			|	'is_virtual_processor'
+//			|	'is_system'
+//			|	'is_bus'
+//			|	'is_virtual_bus'
+//			|	'is_device'
+//			|	'is_memory'
+//			|	'is_thread'
+//			|	'is_process'	
+			
 		case "is_event_port":
 		case "connections":
 			expectedTypes.add(BaseType.AADL);
@@ -941,12 +961,19 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 			return new SetType(BaseType.CONNECTION);
 		case "direction":
 			return BaseType.STRING;
+			
+			
 		case "is_event_port":
-			return BaseType.BOOL;
-
+		case "is_processor":
+		case "is_virtual_processor":
+		case "is_system":
+		case "is_bus":
+		case "is_virtual_bus":
+		case "is_device":
+		case "is_memory":
+		case "is_thread":
+		case "is_process":
 		case "is_of_type":
-			return BaseType.BOOL;
-
 		case "is_bound_to":
 			return BaseType.BOOL;
 
