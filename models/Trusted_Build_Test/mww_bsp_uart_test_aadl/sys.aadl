@@ -46,7 +46,6 @@ system implementation sys.impl
   properties
     SMACCM_SYS::OS => EChronos;
     SMACCM_SYS::HW => PIXHAWK;
-    SMACCM_SYS::eChronos_Generate_C_Modules => true;
 end sys.impl;
 
 end sys;

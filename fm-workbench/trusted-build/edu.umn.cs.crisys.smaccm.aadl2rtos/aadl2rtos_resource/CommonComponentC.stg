@@ -471,8 +471,12 @@ aadlDispatcherCallPassiveTarget(portDest,structName,portSrc) ::= <<
 aadlDispatcherCallActiveTarget(portDest,structName,portSrc) ::= <<
 // Calling an active dispatch target.
 {
-  bool remoteCallSuccessful = <outgoingPortWriterName(portDest,portSrc)>(<aadlDispatcherWriteActiveArg(structName,portSrc)>);	
-  assert(remoteCallSuccessful);
+  // MWW: FIX: Right now there is no 'assert' in eChronos.
+  // So I'm disabling this code.
+  /* bool remoteCallSuccessful = <outgoingPortWriterName(portDest,portSrc)>(<aadlDispatcherWriteActiveArg(structName,portSrc)>);	
+   assert(remoteCallSuccessful);
+   */
+  <outgoingPortWriterName(portDest,portSrc)>(<aadlDispatcherWriteActiveArg(structName,portSrc)>);	
 }
 >>
 
@@ -541,7 +545,7 @@ void <activeThreadInternalDispatcherName(dispatcher)>(<if(dispatcher.hasData)><d
 	// The dispatcher function args are from the dispatch contract.
 
 aadlDispatcherFunctionPrototype(dispatcher) ::=  <<
-void <activeThreadInternalDispatcherName(dispatcher)>(<if(dispatcher.hasData)><dispatcher.type.aadlInputType.name> <dispatcher.name><endif>); 
+static void <activeThreadInternalDispatcherName(dispatcher)>(<if(dispatcher.hasData)><dispatcher.type.aadlInputType.name> <dispatcher.name><endif>); 
 
 >>
 

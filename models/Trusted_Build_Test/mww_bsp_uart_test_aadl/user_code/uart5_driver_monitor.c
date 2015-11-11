@@ -162,7 +162,7 @@ void callback_req_chan(const struct ivory_string_UARTBuffer* n_var0)
     ivory_hw_io_write_u16((uint32_t) 1073762316U, (uint16_t) ((uint16_t) (n_r0 & (uint16_t) ~(uint16_t) ((uint16_t) 1U << (uint16_t) 7U)) | (uint16_t) ((uint16_t) 1U << (uint16_t) 7U)));
 }
 
-void callback_interrupt(const int64_t* n_var0)
+void callback_interrupt()
 {
     /* reg get uart5->sr:  */
     ;
