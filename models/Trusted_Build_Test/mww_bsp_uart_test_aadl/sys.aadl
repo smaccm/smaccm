@@ -1,0 +1,51 @@
+-- File generated from Tower-AADL compiler
+
+package sys
+public
+  with Base_Types;
+  with Data_Model;
+  with Data_Types;
+  with SMACCM_SYS;
+  with thread_period_1ms;
+  with thread_period_10ms;
+  with uart5_driver;
+  with settableled;
+  with uart_unbuffer;
+  with echoprompt;
+
+process sys_process
+  
+end sys_process;
+
+process implementation sys_process.impl
+  subcomponents
+    th0: thread thread_period_1ms::thread_period_1ms;
+    th1: thread thread_period_10ms::thread_period_10ms;
+    th2: thread uart5_driver::uart5_driver;
+    th3: thread settableled::settableled;
+    th4: thread uart_unbuffer::uart_unbuffer;
+    th5: thread echoprompt::echoprompt;
+  connections
+    th5_to_th3_0: port th5.Output_istream_0 -> th3.Input_newoutput;
+    th4_to_th2_1: port th4.Output_uart_tx_flush_0 -> th2.Input_req_chan;
+    th2_to_th4_2: port th2.Output_interrupt_1 -> th4.Input_uart_tx_res;
+    th2_to_th5_3: port th2.Output_interrupt_0 -> th5.Input_istream;
+    th5_to_th4_4: port th5.Output_init_2_0 -> th4.Input_uart_byte_tosend;
+    th5_to_th4_5: port th5.Output_istream_1 -> th4.Input_uart_byte_tosend;
+    th0_to_th5_6: port th0.Output_1ms -> th5.Input_1ms;
+    th1_to_th4_7: port th1.Output_10ms -> th4.Input_10ms;
+end sys_process.impl;
+
+system sys
+  
+end sys;
+
+system implementation sys.impl
+  subcomponents
+    p0:process sys_process.impl;
+  properties
+    SMACCM_SYS::OS => EChronos;
+    SMACCM_SYS::HW => PIXHAWK;
+end sys.impl;
+
+end sys;
