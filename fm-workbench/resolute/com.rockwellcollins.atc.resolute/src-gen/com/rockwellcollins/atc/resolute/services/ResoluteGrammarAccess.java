@@ -1831,50 +1831,51 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
 		private final Keyword cHas_propertyKeyword_0 = (Keyword)cAlternatives.eContents().get(0);
 		private final Keyword cPropertyKeyword_1 = (Keyword)cAlternatives.eContents().get(1);
-		private final Keyword cHas_parentKeyword_2 = (Keyword)cAlternatives.eContents().get(2);
-		private final Keyword cParentKeyword_3 = (Keyword)cAlternatives.eContents().get(3);
-		private final Keyword cNameKeyword_4 = (Keyword)cAlternatives.eContents().get(4);
-		private final Keyword cTypeKeyword_5 = (Keyword)cAlternatives.eContents().get(5);
-		private final Keyword cHas_typeKeyword_6 = (Keyword)cAlternatives.eContents().get(6);
-		private final Keyword cIs_processorKeyword_7 = (Keyword)cAlternatives.eContents().get(7);
-		private final Keyword cIs_virtual_processorKeyword_8 = (Keyword)cAlternatives.eContents().get(8);
-		private final Keyword cIs_systemKeyword_9 = (Keyword)cAlternatives.eContents().get(9);
-		private final Keyword cIs_busKeyword_10 = (Keyword)cAlternatives.eContents().get(10);
-		private final Keyword cIs_virtual_busKeyword_11 = (Keyword)cAlternatives.eContents().get(11);
-		private final Keyword cIs_deviceKeyword_12 = (Keyword)cAlternatives.eContents().get(12);
-		private final Keyword cIs_memoryKeyword_13 = (Keyword)cAlternatives.eContents().get(13);
-		private final Keyword cIs_threadKeyword_14 = (Keyword)cAlternatives.eContents().get(14);
-		private final Keyword cIs_processKeyword_15 = (Keyword)cAlternatives.eContents().get(15);
-		private final Keyword cIs_subprogramKeyword_16 = (Keyword)cAlternatives.eContents().get(16);
-		private final Keyword cIs_of_typeKeyword_17 = (Keyword)cAlternatives.eContents().get(17);
-		private final Keyword cIs_bound_toKeyword_18 = (Keyword)cAlternatives.eContents().get(18);
-		private final Keyword cHas_memberKeyword_19 = (Keyword)cAlternatives.eContents().get(19);
-		private final Keyword cFeaturesKeyword_20 = (Keyword)cAlternatives.eContents().get(20);
-		private final Keyword cConnectionsKeyword_21 = (Keyword)cAlternatives.eContents().get(21);
-		private final Keyword cSubcomponentsKeyword_22 = (Keyword)cAlternatives.eContents().get(22);
-		private final Keyword cSourceKeyword_23 = (Keyword)cAlternatives.eContents().get(23);
-		private final Keyword cDestinationKeyword_24 = (Keyword)cAlternatives.eContents().get(24);
-		private final Keyword cDirectionKeyword_25 = (Keyword)cAlternatives.eContents().get(25);
-		private final Keyword cIs_event_portKeyword_26 = (Keyword)cAlternatives.eContents().get(26);
-		private final Keyword cIs_data_portKeyword_27 = (Keyword)cAlternatives.eContents().get(27);
-		private final Keyword cIs_portKeyword_28 = (Keyword)cAlternatives.eContents().get(28);
-		private final Keyword cIs_data_accessKeyword_29 = (Keyword)cAlternatives.eContents().get(29);
-		private final Keyword cLower_boundKeyword_30 = (Keyword)cAlternatives.eContents().get(30);
-		private final Keyword cUpper_boundKeyword_31 = (Keyword)cAlternatives.eContents().get(31);
-		private final Keyword cMemberKeyword_32 = (Keyword)cAlternatives.eContents().get(32);
-		private final Keyword cSumKeyword_33 = (Keyword)cAlternatives.eContents().get(33);
-		private final Keyword cUnionKeyword_34 = (Keyword)cAlternatives.eContents().get(34);
-		private final Keyword cLengthKeyword_35 = (Keyword)cAlternatives.eContents().get(35);
-		private final Keyword cSizeKeyword_36 = (Keyword)cAlternatives.eContents().get(36);
-		private final Keyword cIntersectKeyword_37 = (Keyword)cAlternatives.eContents().get(37);
-		private final Keyword cInstanceKeyword_38 = (Keyword)cAlternatives.eContents().get(38);
-		private final Keyword cInstancesKeyword_39 = (Keyword)cAlternatives.eContents().get(39);
-		private final Keyword cDebugKeyword_40 = (Keyword)cAlternatives.eContents().get(40);
-		private final Keyword cAnalysisKeyword_41 = (Keyword)cAlternatives.eContents().get(41);
-		private final Keyword cReceive_errorKeyword_42 = (Keyword)cAlternatives.eContents().get(42);
-		private final Keyword cContain_errorKeyword_43 = (Keyword)cAlternatives.eContents().get(43);
-		private final Keyword cPropagate_errorKeyword_44 = (Keyword)cAlternatives.eContents().get(44);
-		private final Keyword cError_state_reachableKeyword_45 = (Keyword)cAlternatives.eContents().get(45);
+		private final Keyword cProperty_memberKeyword_2 = (Keyword)cAlternatives.eContents().get(2);
+		private final Keyword cHas_parentKeyword_3 = (Keyword)cAlternatives.eContents().get(3);
+		private final Keyword cParentKeyword_4 = (Keyword)cAlternatives.eContents().get(4);
+		private final Keyword cNameKeyword_5 = (Keyword)cAlternatives.eContents().get(5);
+		private final Keyword cTypeKeyword_6 = (Keyword)cAlternatives.eContents().get(6);
+		private final Keyword cHas_typeKeyword_7 = (Keyword)cAlternatives.eContents().get(7);
+		private final Keyword cIs_processorKeyword_8 = (Keyword)cAlternatives.eContents().get(8);
+		private final Keyword cIs_virtual_processorKeyword_9 = (Keyword)cAlternatives.eContents().get(9);
+		private final Keyword cIs_systemKeyword_10 = (Keyword)cAlternatives.eContents().get(10);
+		private final Keyword cIs_busKeyword_11 = (Keyword)cAlternatives.eContents().get(11);
+		private final Keyword cIs_virtual_busKeyword_12 = (Keyword)cAlternatives.eContents().get(12);
+		private final Keyword cIs_deviceKeyword_13 = (Keyword)cAlternatives.eContents().get(13);
+		private final Keyword cIs_memoryKeyword_14 = (Keyword)cAlternatives.eContents().get(14);
+		private final Keyword cIs_threadKeyword_15 = (Keyword)cAlternatives.eContents().get(15);
+		private final Keyword cIs_processKeyword_16 = (Keyword)cAlternatives.eContents().get(16);
+		private final Keyword cIs_subprogramKeyword_17 = (Keyword)cAlternatives.eContents().get(17);
+		private final Keyword cIs_of_typeKeyword_18 = (Keyword)cAlternatives.eContents().get(18);
+		private final Keyword cIs_bound_toKeyword_19 = (Keyword)cAlternatives.eContents().get(19);
+		private final Keyword cHas_memberKeyword_20 = (Keyword)cAlternatives.eContents().get(20);
+		private final Keyword cFeaturesKeyword_21 = (Keyword)cAlternatives.eContents().get(21);
+		private final Keyword cConnectionsKeyword_22 = (Keyword)cAlternatives.eContents().get(22);
+		private final Keyword cSubcomponentsKeyword_23 = (Keyword)cAlternatives.eContents().get(23);
+		private final Keyword cSourceKeyword_24 = (Keyword)cAlternatives.eContents().get(24);
+		private final Keyword cDestinationKeyword_25 = (Keyword)cAlternatives.eContents().get(25);
+		private final Keyword cDirectionKeyword_26 = (Keyword)cAlternatives.eContents().get(26);
+		private final Keyword cIs_event_portKeyword_27 = (Keyword)cAlternatives.eContents().get(27);
+		private final Keyword cIs_data_portKeyword_28 = (Keyword)cAlternatives.eContents().get(28);
+		private final Keyword cIs_portKeyword_29 = (Keyword)cAlternatives.eContents().get(29);
+		private final Keyword cIs_data_accessKeyword_30 = (Keyword)cAlternatives.eContents().get(30);
+		private final Keyword cLower_boundKeyword_31 = (Keyword)cAlternatives.eContents().get(31);
+		private final Keyword cUpper_boundKeyword_32 = (Keyword)cAlternatives.eContents().get(32);
+		private final Keyword cMemberKeyword_33 = (Keyword)cAlternatives.eContents().get(33);
+		private final Keyword cSumKeyword_34 = (Keyword)cAlternatives.eContents().get(34);
+		private final Keyword cUnionKeyword_35 = (Keyword)cAlternatives.eContents().get(35);
+		private final Keyword cLengthKeyword_36 = (Keyword)cAlternatives.eContents().get(36);
+		private final Keyword cSizeKeyword_37 = (Keyword)cAlternatives.eContents().get(37);
+		private final Keyword cIntersectKeyword_38 = (Keyword)cAlternatives.eContents().get(38);
+		private final Keyword cInstanceKeyword_39 = (Keyword)cAlternatives.eContents().get(39);
+		private final Keyword cInstancesKeyword_40 = (Keyword)cAlternatives.eContents().get(40);
+		private final Keyword cDebugKeyword_41 = (Keyword)cAlternatives.eContents().get(41);
+		private final Keyword cAnalysisKeyword_42 = (Keyword)cAlternatives.eContents().get(42);
+		private final Keyword cReceive_errorKeyword_43 = (Keyword)cAlternatives.eContents().get(43);
+		private final Keyword cContain_errorKeyword_44 = (Keyword)cAlternatives.eContents().get(44);
+		private final Keyword cPropagate_errorKeyword_45 = (Keyword)cAlternatives.eContents().get(45);
+		private final Keyword cError_state_reachableKeyword_46 = (Keyword)cAlternatives.eContents().get(46);
 		
 		//BuiltInFn: // Primary type: aadl
 		//	"has_property" // Primary type: component
@@ -1884,11 +1885,12 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		//	// Primary type: set
 		//	// Other
 		//	// Error Annex
-		//	| "property" | "has_parent" | "parent" | "name" | "type" | "has_type" | "is_processor" | "is_virtual_processor" |
-		//	"is_system" | "is_bus" | "is_virtual_bus" | "is_device" | "is_memory" | "is_thread" | "is_process" | "is_subprogram" |
-		//	"is_of_type" | "is_bound_to" | "has_member" | "features" | "connections" | "subcomponents" | "source" | "destination"
-		//	| "direction" | "is_event_port" | "is_data_port" | "is_port" | "is_data_access" | "lower_bound" | "upper_bound" |
-		//	"member" | "sum" | "union" | "length" | "size" | "intersect" | "instance" | "instances" | "debug" | "analysis" | // the component can receive an incoming error
+		//	| "property" | "property_member" | "has_parent" | "parent" | "name" | "type" | "has_type" | "is_processor" |
+		//	"is_virtual_processor" | "is_system" | "is_bus" | "is_virtual_bus" | "is_device" | "is_memory" | "is_thread" |
+		//	"is_process" | "is_subprogram" | "is_of_type" | "is_bound_to" | "has_member" | "features" | "connections" |
+		//	"subcomponents" | "source" | "destination" | "direction" | "is_event_port" | "is_data_port" | "is_port" |
+		//	"is_data_access" | "lower_bound" | "upper_bound" | "member" | "sum" | "union" | "length" | "size" | "intersect" |
+		//	"instance" | "instances" | "debug" | "analysis" | // the component can receive an incoming error
 		//	"receive_error" | // the component contain the error
 		//	"contain_error" | // the component propagate an error
 		//	"propagate_error" | // the error state is reachable
@@ -1903,11 +1905,12 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		//// Primary type: set
 		//// Other
 		//// Error Annex
-		//| "property" | "has_parent" | "parent" | "name" | "type" | "has_type" | "is_processor" | "is_virtual_processor" |
-		//"is_system" | "is_bus" | "is_virtual_bus" | "is_device" | "is_memory" | "is_thread" | "is_process" | "is_subprogram" |
-		//"is_of_type" | "is_bound_to" | "has_member" | "features" | "connections" | "subcomponents" | "source" | "destination" |
-		//"direction" | "is_event_port" | "is_data_port" | "is_port" | "is_data_access" | "lower_bound" | "upper_bound" |
-		//"member" | "sum" | "union" | "length" | "size" | "intersect" | "instance" | "instances" | "debug" | "analysis" | // the component can receive an incoming error
+		//| "property" | "property_member" | "has_parent" | "parent" | "name" | "type" | "has_type" | "is_processor" |
+		//"is_virtual_processor" | "is_system" | "is_bus" | "is_virtual_bus" | "is_device" | "is_memory" | "is_thread" |
+		//"is_process" | "is_subprogram" | "is_of_type" | "is_bound_to" | "has_member" | "features" | "connections" |
+		//"subcomponents" | "source" | "destination" | "direction" | "is_event_port" | "is_data_port" | "is_port" |
+		//"is_data_access" | "lower_bound" | "upper_bound" | "member" | "sum" | "union" | "length" | "size" | "intersect" |
+		//"instance" | "instances" | "debug" | "analysis" | // the component can receive an incoming error
 		//"receive_error" | // the component contain the error
 		//"contain_error" | // the component propagate an error
 		//"propagate_error" | // the error state is reachable
@@ -1921,141 +1924,144 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		//"property"
 		public Keyword getPropertyKeyword_1() { return cPropertyKeyword_1; }
 
+		//"property_member"
+		public Keyword getProperty_memberKeyword_2() { return cProperty_memberKeyword_2; }
+
 		//"has_parent"
-		public Keyword getHas_parentKeyword_2() { return cHas_parentKeyword_2; }
+		public Keyword getHas_parentKeyword_3() { return cHas_parentKeyword_3; }
 
 		//"parent"
-		public Keyword getParentKeyword_3() { return cParentKeyword_3; }
+		public Keyword getParentKeyword_4() { return cParentKeyword_4; }
 
 		//"name"
-		public Keyword getNameKeyword_4() { return cNameKeyword_4; }
+		public Keyword getNameKeyword_5() { return cNameKeyword_5; }
 
 		//"type"
-		public Keyword getTypeKeyword_5() { return cTypeKeyword_5; }
+		public Keyword getTypeKeyword_6() { return cTypeKeyword_6; }
 
 		//"has_type"
-		public Keyword getHas_typeKeyword_6() { return cHas_typeKeyword_6; }
+		public Keyword getHas_typeKeyword_7() { return cHas_typeKeyword_7; }
 
 		//"is_processor"
-		public Keyword getIs_processorKeyword_7() { return cIs_processorKeyword_7; }
+		public Keyword getIs_processorKeyword_8() { return cIs_processorKeyword_8; }
 
 		//"is_virtual_processor"
-		public Keyword getIs_virtual_processorKeyword_8() { return cIs_virtual_processorKeyword_8; }
+		public Keyword getIs_virtual_processorKeyword_9() { return cIs_virtual_processorKeyword_9; }
 
 		//"is_system"
-		public Keyword getIs_systemKeyword_9() { return cIs_systemKeyword_9; }
+		public Keyword getIs_systemKeyword_10() { return cIs_systemKeyword_10; }
 
 		//"is_bus"
-		public Keyword getIs_busKeyword_10() { return cIs_busKeyword_10; }
+		public Keyword getIs_busKeyword_11() { return cIs_busKeyword_11; }
 
 		//"is_virtual_bus"
-		public Keyword getIs_virtual_busKeyword_11() { return cIs_virtual_busKeyword_11; }
+		public Keyword getIs_virtual_busKeyword_12() { return cIs_virtual_busKeyword_12; }
 
 		//"is_device"
-		public Keyword getIs_deviceKeyword_12() { return cIs_deviceKeyword_12; }
+		public Keyword getIs_deviceKeyword_13() { return cIs_deviceKeyword_13; }
 
 		//"is_memory"
-		public Keyword getIs_memoryKeyword_13() { return cIs_memoryKeyword_13; }
+		public Keyword getIs_memoryKeyword_14() { return cIs_memoryKeyword_14; }
 
 		//"is_thread"
-		public Keyword getIs_threadKeyword_14() { return cIs_threadKeyword_14; }
+		public Keyword getIs_threadKeyword_15() { return cIs_threadKeyword_15; }
 
 		//"is_process"
-		public Keyword getIs_processKeyword_15() { return cIs_processKeyword_15; }
+		public Keyword getIs_processKeyword_16() { return cIs_processKeyword_16; }
 
 		//"is_subprogram"
-		public Keyword getIs_subprogramKeyword_16() { return cIs_subprogramKeyword_16; }
+		public Keyword getIs_subprogramKeyword_17() { return cIs_subprogramKeyword_17; }
 
 		//"is_of_type"
-		public Keyword getIs_of_typeKeyword_17() { return cIs_of_typeKeyword_17; }
+		public Keyword getIs_of_typeKeyword_18() { return cIs_of_typeKeyword_18; }
 
 		//"is_bound_to"
-		public Keyword getIs_bound_toKeyword_18() { return cIs_bound_toKeyword_18; }
+		public Keyword getIs_bound_toKeyword_19() { return cIs_bound_toKeyword_19; }
 
 		//"has_member"
-		public Keyword getHas_memberKeyword_19() { return cHas_memberKeyword_19; }
+		public Keyword getHas_memberKeyword_20() { return cHas_memberKeyword_20; }
 
 		//"features"
-		public Keyword getFeaturesKeyword_20() { return cFeaturesKeyword_20; }
+		public Keyword getFeaturesKeyword_21() { return cFeaturesKeyword_21; }
 
 		//"connections"
-		public Keyword getConnectionsKeyword_21() { return cConnectionsKeyword_21; }
+		public Keyword getConnectionsKeyword_22() { return cConnectionsKeyword_22; }
 
 		//"subcomponents"
-		public Keyword getSubcomponentsKeyword_22() { return cSubcomponentsKeyword_22; }
+		public Keyword getSubcomponentsKeyword_23() { return cSubcomponentsKeyword_23; }
 
 		//"source"
-		public Keyword getSourceKeyword_23() { return cSourceKeyword_23; }
+		public Keyword getSourceKeyword_24() { return cSourceKeyword_24; }
 
 		//"destination"
-		public Keyword getDestinationKeyword_24() { return cDestinationKeyword_24; }
+		public Keyword getDestinationKeyword_25() { return cDestinationKeyword_25; }
 
 		//"direction"
-		public Keyword getDirectionKeyword_25() { return cDirectionKeyword_25; }
+		public Keyword getDirectionKeyword_26() { return cDirectionKeyword_26; }
 
 		//"is_event_port"
-		public Keyword getIs_event_portKeyword_26() { return cIs_event_portKeyword_26; }
+		public Keyword getIs_event_portKeyword_27() { return cIs_event_portKeyword_27; }
 
 		//"is_data_port"
-		public Keyword getIs_data_portKeyword_27() { return cIs_data_portKeyword_27; }
+		public Keyword getIs_data_portKeyword_28() { return cIs_data_portKeyword_28; }
 
 		//"is_port"
-		public Keyword getIs_portKeyword_28() { return cIs_portKeyword_28; }
+		public Keyword getIs_portKeyword_29() { return cIs_portKeyword_29; }
 
 		//"is_data_access"
-		public Keyword getIs_data_accessKeyword_29() { return cIs_data_accessKeyword_29; }
+		public Keyword getIs_data_accessKeyword_30() { return cIs_data_accessKeyword_30; }
 
 		//"lower_bound"
-		public Keyword getLower_boundKeyword_30() { return cLower_boundKeyword_30; }
+		public Keyword getLower_boundKeyword_31() { return cLower_boundKeyword_31; }
 
 		//"upper_bound"
-		public Keyword getUpper_boundKeyword_31() { return cUpper_boundKeyword_31; }
+		public Keyword getUpper_boundKeyword_32() { return cUpper_boundKeyword_32; }
 
 		//"member"
-		public Keyword getMemberKeyword_32() { return cMemberKeyword_32; }
+		public Keyword getMemberKeyword_33() { return cMemberKeyword_33; }
 
 		//"sum"
-		public Keyword getSumKeyword_33() { return cSumKeyword_33; }
+		public Keyword getSumKeyword_34() { return cSumKeyword_34; }
 
 		//"union"
-		public Keyword getUnionKeyword_34() { return cUnionKeyword_34; }
+		public Keyword getUnionKeyword_35() { return cUnionKeyword_35; }
 
 		//"length"
-		public Keyword getLengthKeyword_35() { return cLengthKeyword_35; }
+		public Keyword getLengthKeyword_36() { return cLengthKeyword_36; }
 
 		//"size"
-		public Keyword getSizeKeyword_36() { return cSizeKeyword_36; }
+		public Keyword getSizeKeyword_37() { return cSizeKeyword_37; }
 
 		//"intersect"
-		public Keyword getIntersectKeyword_37() { return cIntersectKeyword_37; }
+		public Keyword getIntersectKeyword_38() { return cIntersectKeyword_38; }
 
 		//"instance"
-		public Keyword getInstanceKeyword_38() { return cInstanceKeyword_38; }
+		public Keyword getInstanceKeyword_39() { return cInstanceKeyword_39; }
 
 		//"instances"
-		public Keyword getInstancesKeyword_39() { return cInstancesKeyword_39; }
+		public Keyword getInstancesKeyword_40() { return cInstancesKeyword_40; }
 
 		//"debug"
-		public Keyword getDebugKeyword_40() { return cDebugKeyword_40; }
+		public Keyword getDebugKeyword_41() { return cDebugKeyword_41; }
 
 		//"analysis"
-		public Keyword getAnalysisKeyword_41() { return cAnalysisKeyword_41; }
+		public Keyword getAnalysisKeyword_42() { return cAnalysisKeyword_42; }
 
 		//// the component can receive an incoming error
 		//"receive_error"
-		public Keyword getReceive_errorKeyword_42() { return cReceive_errorKeyword_42; }
+		public Keyword getReceive_errorKeyword_43() { return cReceive_errorKeyword_43; }
 
 		//// the component contain the error
 		//"contain_error"
-		public Keyword getContain_errorKeyword_43() { return cContain_errorKeyword_43; }
+		public Keyword getContain_errorKeyword_44() { return cContain_errorKeyword_44; }
 
 		//// the component propagate an error
 		//"propagate_error"
-		public Keyword getPropagate_errorKeyword_44() { return cPropagate_errorKeyword_44; }
+		public Keyword getPropagate_errorKeyword_45() { return cPropagate_errorKeyword_45; }
 
 		//// the error state is reachable
 		//"error_state_reachable"
-		public Keyword getError_state_reachableKeyword_45() { return cError_state_reachableKeyword_45; }
+		public Keyword getError_state_reachableKeyword_46() { return cError_state_reachableKeyword_46; }
 	}
 
 	public class RealTermElements extends AbstractParserRuleElementFinder {
@@ -2635,11 +2641,12 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	//	// Primary type: set
 	//	// Other
 	//	// Error Annex
-	//	| "property" | "has_parent" | "parent" | "name" | "type" | "has_type" | "is_processor" | "is_virtual_processor" |
-	//	"is_system" | "is_bus" | "is_virtual_bus" | "is_device" | "is_memory" | "is_thread" | "is_process" | "is_subprogram" |
-	//	"is_of_type" | "is_bound_to" | "has_member" | "features" | "connections" | "subcomponents" | "source" | "destination"
-	//	| "direction" | "is_event_port" | "is_data_port" | "is_port" | "is_data_access" | "lower_bound" | "upper_bound" |
-	//	"member" | "sum" | "union" | "length" | "size" | "intersect" | "instance" | "instances" | "debug" | "analysis" | // the component can receive an incoming error
+	//	| "property" | "property_member" | "has_parent" | "parent" | "name" | "type" | "has_type" | "is_processor" |
+	//	"is_virtual_processor" | "is_system" | "is_bus" | "is_virtual_bus" | "is_device" | "is_memory" | "is_thread" |
+	//	"is_process" | "is_subprogram" | "is_of_type" | "is_bound_to" | "has_member" | "features" | "connections" |
+	//	"subcomponents" | "source" | "destination" | "direction" | "is_event_port" | "is_data_port" | "is_port" |
+	//	"is_data_access" | "lower_bound" | "upper_bound" | "member" | "sum" | "union" | "length" | "size" | "intersect" |
+	//	"instance" | "instances" | "debug" | "analysis" | // the component can receive an incoming error
 	//	"receive_error" | // the component contain the error
 	//	"contain_error" | // the component propagate an error
 	//	"propagate_error" | // the error state is reachable

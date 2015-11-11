@@ -14,6 +14,7 @@ public class BaseType extends ResoluteType {
 	public static final BaseType BOOL = new BaseType("bool");
 	public static final BaseType FAIL = new BaseType("fail");
 	public static final BaseType RANGE = new BaseType("range");
+	public static final BaseType RECORD = new BaseType("record");
 
 	public static final BaseType AADL = new BaseType("aadl");
 
