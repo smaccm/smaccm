@@ -1,0 +1,25 @@
+-- File generated from Tower-AADL compiler
+
+package Data_Types
+public
+  with Base_Types;
+  with Data_Model;
+  with SMACCM_SYS;
+
+data array_128_Unsigned_8
+
+end array_128_Unsigned_8;
+
+data implementation array_128_Unsigned_8.impl
+  properties
+    Data_Model::Data_Representation => Array;
+    Data_Model::Base_Type => (classifier (Base_Types::Unsigned_8));
+    Data_Model::Dimension => (128);
+end array_128_Unsigned_8.impl;
+data ivory_string_UARTBuffer
+  properties
+    SMACCM_SYS::Is_External => true;
+    SMACCM_SYS::CommPrim_Source_Header => "uartTestTypes.h";
+end ivory_string_UARTBuffer;
+
+end Data_Types;

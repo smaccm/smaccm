@@ -1,0 +1,9 @@
+*.camkes
+*.ramses-log*
+.aadlbin-gen
+components
+gen
+include
+instances
+interfaces
+make_template
