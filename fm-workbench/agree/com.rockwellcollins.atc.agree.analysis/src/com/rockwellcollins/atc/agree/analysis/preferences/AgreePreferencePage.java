@@ -1,5 +1,8 @@
 package com.rockwellcollins.atc.agree.analysis.preferences;
 
+import java.awt.Desktop;
+import java.io.File;
+
 import jkind.api.KindApi;
 
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -63,6 +66,7 @@ public class AgreePreferencePage extends FieldEditorPreferencePage implements IW
     private NonNegativeIntegerFieldEditor timeoutFieldEditor;
     private NonNegativeIntegerFieldEditor pdrMaxEditor;
     private NonNegativeIntegerFieldEditor consistDepthEditor;
+    private BooleanFieldEditor debugFieldEditor;
 
     @Override
     public void createFieldEditors() {
@@ -109,8 +113,13 @@ public class AgreePreferencePage extends FieldEditorPreferencePage implements IW
 
         consistDepthEditor = new NonNegativeIntegerFieldEditor(PreferenceConstants.PREF_CONSIST_DEPTH,
                 "Depth to check consistency up to", getFieldEditorParent());
-        addField(consistDepthEditor);
+		addField(consistDepthEditor);
 
+		debugFieldEditor = new BooleanButtonFieldEditor(PreferenceConstants.PREF_DEBUG,
+				"Debug mode (record log files)", "Open temporary folder", this::openTemporaryFolder,
+				getFieldEditorParent());
+		addField(debugFieldEditor);
+        
         Button checkAvailableButton = new Button(getFieldEditorParent(), SWT.PUSH);
         checkAvailableButton.setText("Check if available");
         checkAvailableButton.addListener(SWT.Selection, new Listener() {
@@ -121,12 +130,25 @@ public class AgreePreferencePage extends FieldEditorPreferencePage implements IW
         });
     }
 
+    private void openTemporaryFolder() {
+    	Desktop desktop = Desktop.getDesktop();
+        try {
+        	File tempFile = File.createTempFile("agree", ".tmp");
+        	tempFile.delete();
+			File tempDir = tempFile.getParentFile();
+        	desktop.open(tempDir);
+        } catch (Throwable t) {
+            MessageDialog.openError(getShell(), "Error opening temporary directory",
+                    "Error opening temporary directory: " + t.getMessage());
+        }
+    }
+    
     private void checkAvailable() {
         try {
             String remoteUrl = remoteUrlFieldEditor.getStringValue();
             KindApi api = PreferencesUtil.getKindApi(selectedModelChecker, remoteUrl);
-            api.checkAvailable();
-            MessageDialog.openInformation(getShell(), "Model checker available", "Model checker available");
+            String details = api.checkAvailable();
+            MessageDialog.openInformation(getShell(), "Model checker available", details);
         } catch (Throwable t) {
             MessageDialog.openError(getShell(), "Error running model checker",
                     "Error running model checker: " + t.getMessage());
