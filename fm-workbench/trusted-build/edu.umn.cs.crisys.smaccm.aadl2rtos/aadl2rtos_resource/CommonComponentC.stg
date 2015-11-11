@@ -303,21 +303,6 @@ componentLocalReaderDecl(port) ::= <<
 <componentRemoteWriteFunction(port)>
 >>
 
-componentLocalCallerFunction(connection) ::= <<
-/************************************************************************
- *  <connection.sourcePort.dispatcherCFileDispatcherFnName>: 
- * Invoked from user code in the local thread.
- * 
- * This function is necessary to mimic a remote call by a passive
- * thread to a remote active thread, but redirects to the local 
- * active thread.
- * 
- ************************************************************************/
-
-bool <outgoingPortWriterName(connection.destPort,connection.sourcePort)>(const <connection.sourcePort.type.aadlInputType.name> <connection.sourcePort.name>) {
-	return <incomingPortWriterName(connection.destPort)>(<connection.sourcePort.name>);
-}
->>
 
 componentRemoteCallerFunction(destPort, srcPort) ::= <<
 /************************************************************************
@@ -764,7 +749,7 @@ componentCFileDecls(threadImpl) ::= <<
 <threadImpl.outputDataPortList:componentRemoteWriterDecl()>
 
 <if(threadImpl.isActive)><\\>
-<threadImpl.localActiveThreadConnectionFrontier:componentLocalCallerFunction()>
+<threadImpl.localActiveThreadConnectionFrontier:osSpecificComponentLocalCallerFunction()>
 <threadImpl.dispatchers:aadlDispatcherFunction()>
 <threadImpl.passiveDispatcherRegion:aadlDispatcherFunction()> 
 <if(threadImpl.isExternal)><\\>
