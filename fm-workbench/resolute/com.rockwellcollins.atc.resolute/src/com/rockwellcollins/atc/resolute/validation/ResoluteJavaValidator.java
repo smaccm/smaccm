@@ -400,7 +400,14 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 		case "intersect":
 			checkBinarySetOpCall(funCall, actualTypes);
 			return;
+			
+		case "debug":
+		{
+			return;
 		}
+		} 
+		
+
 
 		List<ResoluteType> expectedTypes = getExpectedTypes(funCall);
 		if (expectedTypes == null) {
