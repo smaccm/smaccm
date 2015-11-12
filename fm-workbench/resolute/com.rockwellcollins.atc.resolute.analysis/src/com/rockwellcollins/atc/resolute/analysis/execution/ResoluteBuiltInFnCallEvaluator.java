@@ -2,9 +2,13 @@ package com.rockwellcollins.atc.resolute.analysis.execution;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.eclipse.emf.ecore.EObject;
 import org.osate.aadl2.AbstractNamedValue;
+import org.osate.aadl2.BasicPropertyAssociation;
 import org.osate.aadl2.BooleanLiteral;
 import org.osate.aadl2.Classifier;
 import org.osate.aadl2.ComponentCategory;
@@ -25,6 +29,7 @@ import org.osate.aadl2.Property;
 import org.osate.aadl2.PropertyConstant;
 import org.osate.aadl2.PropertyExpression;
 import org.osate.aadl2.RealLiteral;
+import org.osate.aadl2.RecordValue;
 import org.osate.aadl2.StringLiteral;
 import org.osate.aadl2.Subcomponent;
 import org.osate.aadl2.instance.ComponentInstance;
@@ -49,6 +54,7 @@ import com.rockwellcollins.atc.resolute.analysis.values.IntValue;
 import com.rockwellcollins.atc.resolute.analysis.values.NamedElementValue;
 import com.rockwellcollins.atc.resolute.analysis.values.RangeValue;
 import com.rockwellcollins.atc.resolute.analysis.values.RealValue;
+import com.rockwellcollins.atc.resolute.analysis.values.ResoluteRecordValue;
 import com.rockwellcollins.atc.resolute.analysis.values.ResoluteValue;
 import com.rockwellcollins.atc.resolute.analysis.values.SetValue;
 import com.rockwellcollins.atc.resolute.analysis.values.StringValue;
@@ -90,6 +96,17 @@ public class ResoluteBuiltInFnCallEvaluator {
 			}
 
 			return exprToValue(expr);
+		}
+		
+		case "property_member": {
+			ResoluteRecordValue record = (ResoluteRecordValue)args.get(0);
+			String fieldName = args.get(1).getString().toLowerCase();
+			
+			ResoluteValue fieldValue = record.getField(fieldName);
+			if (fieldValue == null) {
+				throw new ResoluteFailException("Record Field " + fieldName + " not found", fnCallExpr);
+			}
+			return fieldValue;
 		}
 
 		case "has_parent": {
@@ -630,6 +647,14 @@ public class ResoluteBuiltInFnCallEvaluator {
 				result.add(exprToValue(element));
 			}
 			return new SetValue(result);
+		} else if (expr instanceof RecordValue) {
+			Stream<BasicPropertyAssociation> fieldsStream = ((RecordValue)expr).getOwnedFieldValues().stream();
+			Map<String, ResoluteValue> fieldsMap = fieldsStream.collect(Collectors.toMap(field -> {
+				return field.getProperty().getName().toLowerCase();
+			}, field -> {
+				return exprToValue(field.getOwnedValue());
+			}));
+			return new ResoluteRecordValue(fieldsMap);
 		} else {
 			throw new IllegalArgumentException("Unknown property expression type: " + expr.getClass().getName());
 		}

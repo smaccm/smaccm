@@ -32,6 +32,7 @@ import org.osate.aadl2.ProcessorType;
 import org.osate.aadl2.Property;
 import org.osate.aadl2.PropertyType;
 import org.osate.aadl2.RangeType;
+import org.osate.aadl2.RecordType;
 import org.osate.aadl2.ReferenceType;
 import org.osate.aadl2.Subcomponent;
 import org.osate.aadl2.SubprogramGroupType;
@@ -592,6 +593,10 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 			expectedTypes.add(BaseType.PROPERTY);
 			expectedTypes.add(BaseType.ANY); // this one is optional
 			break;
+		case "property_member":
+			expectedTypes.add(BaseType.RECORD);
+			expectedTypes.add(BaseType.STRING);
+			break;
 
 		case "has_member":
 			expectedTypes.add(BaseType.AADL);
@@ -1076,6 +1081,8 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 			return BaseType.RANGE;
 		} else if (propType instanceof ReferenceType) {
 			return BaseType.AADL;
+		} else if (propType instanceof RecordType) {
+			return BaseType.RECORD;
 		} else if (propType instanceof ListType) {
 			ListType listType = (ListType) propType;
 			ResoluteType elementType = convertPropertyType(listType.getElementType());
