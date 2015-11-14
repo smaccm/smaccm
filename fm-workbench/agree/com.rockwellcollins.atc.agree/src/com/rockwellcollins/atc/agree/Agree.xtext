@@ -49,6 +49,7 @@ SpecStatement:
 	| {LemmaStatement} 'lemma' str=STRING ':' expr=Expr ';'
 	| {LiftStatement} 'lift' subcomp=NestedDotID ';'
 	| {ConnectionStatement} 'connection' conn=[aadl2::NamedElement] ':' expr=Expr ';'
+	| {InheritStatement} 'inherit' ';'
 	| SynchStatement
 	| OrderStatement
 	| PropertyStatement

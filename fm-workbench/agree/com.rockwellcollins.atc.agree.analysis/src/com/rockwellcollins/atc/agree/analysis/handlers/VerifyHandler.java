@@ -75,6 +75,7 @@ import com.rockwellcollins.atc.agree.analysis.preferences.PreferenceConstants;
 import com.rockwellcollins.atc.agree.analysis.preferences.PreferencesUtil;
 import com.rockwellcollins.atc.agree.analysis.views.AgreeResultsLinker;
 import com.rockwellcollins.atc.agree.analysis.views.AgreeResultsView;
+import com.rockwellcollins.atc.agree.shared.AgreeStatementsShared;
 
 public abstract class VerifyHandler extends AadlHandler {
     protected AgreeResultsLinker linker = new AgreeResultsLinker();
@@ -109,6 +110,11 @@ public abstract class VerifyHandler extends AadlHandler {
 
         try {
             ComponentImplementation ci = (ComponentImplementation) root;
+            
+            if(AgreeStatementsShared.getRepository(ci.getFullName()).isAbstract()) {
+            	return new Status(IStatus.ERROR, Activator.PLUGIN_ID,
+                        "Cannot perform verification on an abstract entity");
+            }
 
             SystemInstance si = null;
             try {

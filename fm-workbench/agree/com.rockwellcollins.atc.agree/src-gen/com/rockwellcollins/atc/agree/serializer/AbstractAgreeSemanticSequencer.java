@@ -26,6 +26,7 @@ import com.rockwellcollins.atc.agree.agree.FnDefExpr;
 import com.rockwellcollins.atc.agree.agree.GetPropertyExpr;
 import com.rockwellcollins.atc.agree.agree.GuaranteeStatement;
 import com.rockwellcollins.atc.agree.agree.IfThenElseExpr;
+import com.rockwellcollins.atc.agree.agree.InheritStatement;
 import com.rockwellcollins.atc.agree.agree.InitialStatement;
 import com.rockwellcollins.atc.agree.agree.IntLitExpr;
 import com.rockwellcollins.atc.agree.agree.LatchedStatement;
@@ -246,6 +247,9 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 				return; 
 			case AgreePackage.IF_THEN_ELSE_EXPR:
 				sequence_IfThenElseExpr(context, (IfThenElseExpr) semanticObject); 
+				return; 
+			case AgreePackage.INHERIT_STATEMENT:
+				sequence_SpecStatement(context, (InheritStatement) semanticObject); 
 				return; 
 			case AgreePackage.INITIAL_STATEMENT:
 				sequence_SpecStatement(context, (InitialStatement) semanticObject); 
@@ -580,6 +584,15 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     (str=STRING expr=Expr)
 	 */
 	protected void sequence_SpecStatement(EObject context, GuaranteeStatement semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Constraint:
+	 *     {InheritStatement}
+	 */
+	protected void sequence_SpecStatement(EObject context, InheritStatement semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	

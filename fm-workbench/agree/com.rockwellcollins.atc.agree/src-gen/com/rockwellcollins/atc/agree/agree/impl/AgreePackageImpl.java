@@ -31,6 +31,7 @@ import com.rockwellcollins.atc.agree.agree.FnDefExpr;
 import com.rockwellcollins.atc.agree.agree.GetPropertyExpr;
 import com.rockwellcollins.atc.agree.agree.GuaranteeStatement;
 import com.rockwellcollins.atc.agree.agree.IfThenElseExpr;
+import com.rockwellcollins.atc.agree.agree.InheritStatement;
 import com.rockwellcollins.atc.agree.agree.InitialStatement;
 import com.rockwellcollins.atc.agree.agree.IntLitExpr;
 import com.rockwellcollins.atc.agree.agree.LatchedStatement;
@@ -296,6 +297,13 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * @generated
    */
   private EClass connectionStatementEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass inheritStatementEClass = null;
 
   /**
    * <!-- begin-user-doc -->
@@ -1250,6 +1258,16 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  public EClass getInheritStatement()
+  {
+    return inheritStatementEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   public EClass getMNSynchStatement()
   {
     return mnSynchStatementEClass;
@@ -2056,6 +2074,8 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     createEReference(connectionStatementEClass, CONNECTION_STATEMENT__CONN);
     createEReference(connectionStatementEClass, CONNECTION_STATEMENT__EXPR);
 
+    inheritStatementEClass = createEClass(INHERIT_STATEMENT);
+
     mnSynchStatementEClass = createEClass(MN_SYNCH_STATEMENT);
     createEReference(mnSynchStatementEClass, MN_SYNCH_STATEMENT__COMP1);
     createEReference(mnSynchStatementEClass, MN_SYNCH_STATEMENT__COMP2);
@@ -2223,6 +2243,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     lemmaStatementEClass.getESuperTypes().add(this.getSpecStatement());
     liftStatementEClass.getESuperTypes().add(this.getSpecStatement());
     connectionStatementEClass.getESuperTypes().add(this.getSpecStatement());
+    inheritStatementEClass.getESuperTypes().add(this.getSpecStatement());
     mnSynchStatementEClass.getESuperTypes().add(this.getSynchStatement());
     calenStatementEClass.getESuperTypes().add(this.getSynchStatement());
     asynchStatementEClass.getESuperTypes().add(this.getSynchStatement());
@@ -2351,6 +2372,8 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     initEClass(connectionStatementEClass, ConnectionStatement.class, "ConnectionStatement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getConnectionStatement_Conn(), theAadl2Package.getNamedElement(), null, "conn", null, 0, 1, ConnectionStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getConnectionStatement_Expr(), this.getExpr(), null, "expr", null, 0, 1, ConnectionStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+    initEClass(inheritStatementEClass, InheritStatement.class, "InheritStatement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
     initEClass(mnSynchStatementEClass, MNSynchStatement.class, "MNSynchStatement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getMNSynchStatement_Comp1(), theAadl2Package.getNamedElement(), null, "comp1", null, 0, -1, MNSynchStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

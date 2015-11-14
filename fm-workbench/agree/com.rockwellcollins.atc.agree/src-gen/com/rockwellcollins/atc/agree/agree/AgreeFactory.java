@@ -302,6 +302,15 @@ public interface AgreeFactory extends EFactory
   ConnectionStatement createConnectionStatement();
 
   /**
+   * Returns a new object of class '<em>Inherit Statement</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Inherit Statement</em>'.
+   * @generated
+   */
+  InheritStatement createInheritStatement();
+
+  /**
    * Returns a new object of class '<em>MN Synch Statement</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->

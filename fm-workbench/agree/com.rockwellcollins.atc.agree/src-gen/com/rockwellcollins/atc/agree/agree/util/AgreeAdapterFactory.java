@@ -236,6 +236,11 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
         return createConnectionStatementAdapter();
       }
       @Override
+      public Adapter caseInheritStatement(InheritStatement object)
+      {
+        return createInheritStatementAdapter();
+      }
+      @Override
       public Adapter caseMNSynchStatement(MNSynchStatement object)
       {
         return createMNSynchStatementAdapter();
@@ -873,6 +878,21 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
    * @generated
    */
   public Adapter createConnectionStatementAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.InheritStatement <em>Inherit Statement</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see com.rockwellcollins.atc.agree.agree.InheritStatement
+   * @generated
+   */
+  public Adapter createInheritStatementAdapter()
   {
     return null;
   }

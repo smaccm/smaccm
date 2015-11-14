@@ -1,35 +1,41 @@
 package com.rockwellcollins.atc.agree.shared;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import com.rockwellcollins.atc.agree.agree.SpecStatement;
 
 public class AgreeStatementsShared {
-	private static class AgreeStatementRepository {
+	public static class AgreeStatementRepository {
 		public static class AnnexRepository {
-			private Set<SpecStatement> statements;
-			private Set<String> parents;
-			private Set<String> children;
+			private List<SpecStatement> statements;
+			private String parent;
+			private List<String> children;
 			private boolean isAbstract = false;
 			
 			public AnnexRepository() {
-				statements = new HashSet<SpecStatement>();
-				parents = new HashSet<String>();
-				children = new HashSet<String>();
+				statements = new ArrayList<SpecStatement>();
+				parent = null;
+				children = new ArrayList<String>();
 			}
 			
-			public Set<SpecStatement> getStatements() {
+			public List<SpecStatement> getStatements() {
 				return statements;
 			}
 			
-			public Set<String> getParents() {
-				return parents;
+			public String getParent() {
+				return parent;
 			}
 			
-			public Set<String> getChildren() {
+			public void setParent(String parent) {
+				this.parent = parent;
+			}
+			
+			public List<String> getChildren() {
 				return children;
 			}
 			

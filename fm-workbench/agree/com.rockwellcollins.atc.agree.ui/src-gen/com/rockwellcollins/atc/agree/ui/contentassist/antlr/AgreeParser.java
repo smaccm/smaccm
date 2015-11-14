@@ -81,6 +81,7 @@ public class AgreeParser extends AbstractPartialContentAssistParser {
 					put(grammarAccess.getSpecStatementAccess().getGroup_5(), "rule__SpecStatement__Group_5__0");
 					put(grammarAccess.getSpecStatementAccess().getGroup_6(), "rule__SpecStatement__Group_6__0");
 					put(grammarAccess.getSpecStatementAccess().getGroup_7(), "rule__SpecStatement__Group_7__0");
+					put(grammarAccess.getSpecStatementAccess().getGroup_8(), "rule__SpecStatement__Group_8__0");
 					put(grammarAccess.getSynchStatementAccess().getGroup_0(), "rule__SynchStatement__Group_0__0");
 					put(grammarAccess.getSynchStatementAccess().getGroup_0_4(), "rule__SynchStatement__Group_0_4__0");
 					put(grammarAccess.getSynchStatementAccess().getGroup_1(), "rule__SynchStatement__Group_1__0");

@@ -127,74 +127,77 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 			checked.clear();
 		}
 		if(classifier.getExtended() != null) {
-			AgreeStatementsShared.getRepository(classifier.getFullName()).getParents().add(classifier.getExtended().getFullName());
+			AgreeStatementsShared.getRepository(classifier.getFullName()).setParent(classifier.getExtended().getFullName());
 			AgreeStatementsShared.getRepository(classifier.getExtended().getFullName()).getChildren().add(classifier.getFullName());
 		}
-		for(SpecStatement statement : contract.getSpecs()) {
-			AgreeStatementsShared.getRepository(classifier.getFullName()).getStatements().add(statement);
-			if(statement instanceof AbstractEqStatement) {
+		
+		List<SpecStatement> myStatements = collapseStatements(getParentSpecs(classifier));
+		for(int i = 0; i < myStatements.size(); ++i) {
+			if(myStatements.get(i) instanceof AbstractEqStatement) {
 				AgreeStatementsShared.getRepository(classifier.getFullName()).setAbstract();
-				//do any of my children override this?
-				Set<String> children = AgreeStatementsShared.getRepository(classifier.getFullName()).getChildren();
-				while(children.size() > 0) {
-					Set<String> newChildren = new HashSet<String>();
-					for(String child : children) {
-						for(SpecStatement childStatement : AgreeStatementsShared.getRepository(child).getStatements()) {
-							if(childStatement instanceof NonAbstractEqStatement) {
-								List<AgreeType> myAssignments = typesFromArgs(((AbstractEqStatement)statement).getLhs());
-								List<AgreeType> childAssignments = typesFromArgs(((NonAbstractEqStatement)childStatement).getLhs());
-								int i = 0, j = 0;
-								for(Arg myArg : ((AbstractEqStatement)statement).getLhs()) {
-									j = 0;
-									for(Arg childArg : ((NonAbstractEqStatement)childStatement).getLhs()) {
-										if(myArg.getName().equals(childArg.getName())) {
-											if(!myAssignments.get(i).equals(childAssignments.get(j))) {
-												error(childStatement, "Parent defines abstract as type " + myAssignments.get(i) + " but child uses type " + childAssignments.get(j));
-											}
-										}
-										++j;
-									}
-									++i;
-								}
-							}
-						}
-						newChildren.addAll(AgreeStatementsShared.getRepository(child).getChildren());
-					}
-					children = newChildren;
-				}
 			}
-			if(statement instanceof NonAbstractEqStatement) {
-				//do I override a parent's abstract?
-				Set<String> parents = AgreeStatementsShared.getRepository(classifier.getFullName()).getParents();
-				while(parents.size() > 0) {
-					Set<String> newParents = new HashSet<String>();
-					for(String parent : parents) {
-						for(SpecStatement parentStatement : AgreeStatementsShared.getRepository(parent).getStatements()) {
-							if(parentStatement instanceof AbstractEqStatement) {
-								List<AgreeType> myAssignments = typesFromArgs(((NonAbstractEqStatement)statement).getLhs());
-								List<AgreeType> parentAssignments = typesFromArgs(((AbstractEqStatement)parentStatement).getLhs());
-								int i = 0, j = 0;
-								for(Arg myArg : ((NonAbstractEqStatement)statement).getLhs()) {
-									j = 0;
-									for(Arg parentArg : ((AbstractEqStatement)parentStatement).getLhs()) {
-										if(myArg.getName().equals(parentArg.getName())) {
-											if(!myAssignments.get(i).equals(parentAssignments.get(j))) {
-												error(statement, "Parent defines abstract as type " + parentAssignments.get(j) + " but child uses type " + myAssignments.get(i));
-											}
+		}
+		
+		AgreeStatementsShared.getRepository(classifier.getFullName()).getStatements().addAll(myStatements);
+		
+		checked.add(classifier.getFullName());
+	}
+	
+	List<SpecStatement> collapseStatements(List<List<SpecStatement>> statements) {
+		List<SpecStatement> myStatements = new ArrayList<SpecStatement>();
+		for(int i = 0; i < statements.size(); ++i) {
+			if(i == 0) {
+				myStatements.addAll(statements.get(i));
+			} else {
+				List<SpecStatement> annexStatements = statements.get(i);
+				List<SpecStatement> statementsToAdd = new ArrayList<SpecStatement>();
+				for(SpecStatement annexStatement : annexStatements) {
+					if(annexStatement instanceof NonAbstractEqStatement) {
+						for(SpecStatement myStatement : myStatements) {
+							if(myStatement instanceof AbstractEqStatement) {
+								AbstractEqStatement abstractStmt = (AbstractEqStatement)myStatement;
+								NonAbstractEqStatement nonabstractStmt = (NonAbstractEqStatement)annexStatement;
+								for(int j = 0; j < abstractStmt.getLhs().size(); ++j) {
+									for(Arg nonabstractArg : nonabstractStmt.getLhs()) {
+										if(abstractStmt.getLhs().get(j).getName().equals(nonabstractArg.getName())) {
+											abstractStmt.getLhs().remove(j);
+											j -= 1;
 										}
-										++j;
 									}
-									++i;
 								}
 							}
 						}
-						newParents.addAll(AgreeStatementsShared.getRepository(parent).getParents());
+						statementsToAdd.add(annexStatement);
+					} else {
+						statementsToAdd.add(annexStatement);
 					}
-					parents = newParents;
+				}
+				myStatements.addAll(statementsToAdd);
+			}
+		}
+		
+		for(int i = 0; i < myStatements.size(); ++i) {
+			if(myStatements.get(i) instanceof AbstractEqStatement) {
+				AbstractEqStatement stmt = (AbstractEqStatement)myStatements.get(i);
+				if(stmt.getLhs().size() == 0) {
+					myStatements.remove(i);
+					i -= 1;
 				}
 			}
 		}
-		checked.add(classifier.getFullName());
+		
+		return myStatements;
+	}
+	
+	List<List<SpecStatement>> getParentSpecs(Classifier classifier) {
+		List<List<SpecStatement>> parentAnnexes = new ArrayList<List<SpecStatement>>();
+		while(classifier != null) {
+			for(AgreeContract contract : EcoreUtil2.getAllContentsOfType(classifier, AgreeContract.class)) {
+				parentAnnexes.add(0, contract.getSpecs());
+			}
+			classifier = classifier.getExtended();
+		}
+		return parentAnnexes;
 	}
 
 	@Check(CheckType.FAST)
@@ -949,48 +952,46 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 			}
 		}
 		
-		Set<String> parents = AgreeStatementsShared.getRepository(compImpl.getFullName()).getParents();
-		while(parents.size() > 0) {
-			Set<String> newParents = new HashSet<String>();
-			for(String parent : parents) {
-				Set<SpecStatement> statements = AgreeStatementsShared.getRepository(parent).getStatements();
-				for(SpecStatement statement : statements) {
-					//we now also need to check our parents to make sure that we are not reusing a name
-					//PropertyStatement
-					if(statement instanceof PropertyStatement) {
-						if(namedEl.getName().equals(((PropertyStatement)statement).getName())) {
-							error(namedEl, "A parent (" + parent + ") already defines a PropertyStatement with the name (" + namedEl.getName() + ")");
-						}
+		String parent = AgreeStatementsShared.getRepository(compImpl.getFullName()).getParent();
+		while(parent != null) {
+			String newParent = null;
+			List<SpecStatement> statements = AgreeStatementsShared.getRepository(parent).getStatements();
+			for(SpecStatement statement : statements) {
+				//we now also need to check our parents to make sure that we are not reusing a name
+				//PropertyStatement
+				if(statement instanceof PropertyStatement) {
+					if(namedEl.getName().equals(((PropertyStatement)statement).getName())) {
+						error(namedEl, "A parent (" + parent + ") already defines a PropertyStatement with the name (" + namedEl.getName() + ")");
 					}
-					//ConstStatement
-					if(statement instanceof ConstStatement) {
-						if(namedEl.getName().equals(((ConstStatement)statement).getName())) {
-							error(namedEl, "A parent (" + parent + ") already defines a ConstStatement with the name (" + namedEl.getName() + ")");
-						}
+				}
+				//ConstStatement
+				if(statement instanceof ConstStatement) {
+					if(namedEl.getName().equals(((ConstStatement)statement).getName())) {
+						error(namedEl, "A parent (" + parent + ") already defines a ConstStatement with the name (" + namedEl.getName() + ")");
 					}
-					//NonAbstractEqStatement
-					if(statement instanceof NonAbstractEqStatement) {
-						for(Arg name : ((NonAbstractEqStatement)statement).getLhs()) {
-							if(namedEl.getName().equals(name.getName())) {
-								error(namedEl, "A parent (" + parent + ") already defines a EqStatement with the name (" + namedEl.getName() + ")");
-							}
-						}
-					}
-					//FnDefExpr
-					if(statement instanceof FnDefExpr) {
-						if(namedEl.getName().equals(((FnDefExpr)statement).getName())) {
-							error(namedEl, "A parent (" + parent + ") already defines a FnDefExpr with the name (" + namedEl.getName() + ")");
-						}
-					}
-					//NodeDefExpr
-					if(statement instanceof NodeDefExpr) {
-						if(namedEl.getName().equals(((NodeDefExpr)statement).getName())) {
-							error(namedEl, "A parent (" + parent + ") already defines a NodeDefExpr with the name (" + namedEl.getName() + ")");
+				}
+				//NonAbstractEqStatement
+				if(statement instanceof NonAbstractEqStatement) {
+					for(Arg name : ((NonAbstractEqStatement)statement).getLhs()) {
+						if(namedEl.getName().equals(name.getName())) {
+							error(namedEl, "A parent (" + parent + ") already defines a EqStatement with the name (" + namedEl.getName() + ")");
 						}
 					}
 				}
+				//FnDefExpr
+				if(statement instanceof FnDefExpr) {
+					if(namedEl.getName().equals(((FnDefExpr)statement).getName())) {
+						error(namedEl, "A parent (" + parent + ") already defines a FnDefExpr with the name (" + namedEl.getName() + ")");
+					}
+				}
+				//NodeDefExpr
+				if(statement instanceof NodeDefExpr) {
+					if(namedEl.getName().equals(((NodeDefExpr)statement).getName())) {
+						error(namedEl, "A parent (" + parent + ") already defines a NodeDefExpr with the name (" + namedEl.getName() + ")");
+					}
+				}
 			}
-			parents = newParents;
+			parent = newParent;
 		}
 	}
 

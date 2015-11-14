@@ -367,6 +367,15 @@ public class AgreeSwitch<T> extends Switch<T>
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
+      case AgreePackage.INHERIT_STATEMENT:
+      {
+        InheritStatement inheritStatement = (InheritStatement)theEObject;
+        T result = caseInheritStatement(inheritStatement);
+        if (result == null) result = caseSpecStatement(inheritStatement);
+        if (result == null) result = caseElement(inheritStatement);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
       case AgreePackage.MN_SYNCH_STATEMENT:
       {
         MNSynchStatement mnSynchStatement = (MNSynchStatement)theEObject;
@@ -1105,6 +1114,22 @@ public class AgreeSwitch<T> extends Switch<T>
    * @generated
    */
   public T caseConnectionStatement(ConnectionStatement object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Inherit Statement</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Inherit Statement</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseInheritStatement(InheritStatement object)
   {
     return null;
   }
