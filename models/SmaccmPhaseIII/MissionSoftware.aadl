@@ -1,6 +1,8 @@
 package MissionSoftware
 public
 	with SMACCM_SYS;
+	with DATA_TYPES;
+	with SMACCM_DATA;
 	
 	
 process MissionSoftware
@@ -47,8 +49,8 @@ end MissionSoftware.i;
 	
 thread UART
 	features
-		tx : provides data access;
-		rx : provides data access;
+		tx : provides data access Data_Types::ivory_string_UartPacket;
+		rx : provides data access Data_Types::array_96_Unsigned_8.impl;
 		data_in : in event data port;
 		data_out : out event data port;
 	properties
@@ -57,26 +59,27 @@ end UART;
 	
 thread Input
 	features
-		rx : requires data access;
-		to_svr : requires data access;
+		--not sure what the dimension of this array should be
+		rx : requires data access Data_Types::array_96_Unsigned_8.impl;
+		to_svr : requires data access SMACCM_DATA::ServerInputData.i;
 	properties
 		Dispatch_Protocol => Periodic;
 end Input;
 	
 thread Server
 	features
-		input : provides data access;
-		output : requires data access;
-		pixhawk_data : requires data access;
-		camera_data : requires data access;
+		input : provides data access SMACCM_DATA::ServerInputData.i;
+		output : requires data access SMACCM_DATA::ServerOutputData.i;
+		pixhawk_data : requires data access SMACCM_DATA::PixHawkData.i;
+		camera_data : requires data access Data_Types::array_80_Unsigned_8.impl;
 	properties
 		Dispatch_Protocol => Sporadic;
 end Server;
 	
 thread Output
 	features
-		input : provides data access;
-		tx : requires data access;
+		input : provides data access SMACCM_DATA::ServerOutputData.i;
+		tx : requires data access Data_Types::ivory_string_UartPacket;
 	properties
 		Dispatch_Protocol => Sporadic;
 end Output;
@@ -84,17 +87,17 @@ end Output;
 thread PixhawkProxy
 	features
 		pixhawk_commands : provides data access;
-		pixhawk_data : provides data access;
-		rx : requires data access;
-		tx : requires data access;
+		pixhawk_data : provides data access SMACCM_DATA::PixHawkData.i;
+		rx : requires data access Data_Types::can_message;
+		tx : requires data access SMACCM_DATA::CanSenderData.i;
 	properties
 		Dispatch_Protocol => Periodic;
 end PixhawkProxy;
 	
 thread CAN
 	features
-		rx : provides data access;
-		tx : provides data access;
+		rx : provides data access Data_Types::can_message;
+		tx : provides data access SMACCM_DATA::CanSenderData.i;
 		data_out : out event data port;
 		data_in : in event data port;
 	properties
@@ -103,7 +106,7 @@ end CAN;
 
 thread VM
 	features
-		camera_data : provides data access;
+		camera_data : provides data access Data_Types::array_80_Unsigned_8.impl;
 	properties
 		Dispatch_Protocol => Sporadic;
 end VM;

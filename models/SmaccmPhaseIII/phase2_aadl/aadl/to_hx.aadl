@@ -1,0 +1,33 @@
+-- File generated from Tower-AADL compiler
+
+package to_hx
+public
+  with Base_Types;
+  with Data_Model;
+  with Data_Types;
+  with SMACCM_SYS;
+
+thread to_hx
+  features
+    Input_unpack: in event data port Data_Types::ivory_string_UartPacket
+      {
+        SMACCM_SYS::Compute_Entrypoint_Source_Text => ("callback_unpack");
+        Source_Text => ("user_code/to_hx_monitor.c");
+        Queue_Size => 1000;
+        SMACCM_SYS::Sends_Events_To => "{{255 Output_unpack_0}}";
+      };
+    Output_unpack_0: out event data port Base_Types::Unsigned_8
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_unpack_chan_131";
+      };
+  properties
+    Compute_Execution_Time => 10 us .. 100 us;
+    SMACCM_SYS::Sends_Events_To => "{{255 Output_unpack_0}}";
+    Source_Text => ();
+    SMACCM_SYS::Thread_Type => Active;
+    Dispatch_Protocol => Sporadic;
+    Stack_Size => 1000 bytes;
+    Priority => 140;
+end to_hx;
+
+end to_hx;

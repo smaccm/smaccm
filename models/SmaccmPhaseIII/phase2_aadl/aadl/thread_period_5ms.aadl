@@ -1,0 +1,28 @@
+-- File generated from Tower-AADL compiler
+
+package thread_period_5ms
+public
+  with Base_Types;
+  with Data_Model;
+  with Data_Types;
+  with SMACCM_SYS;
+
+thread thread_period_5ms
+  features
+    Output_5ms: out event data port Base_Types::Integer_64
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_5ms";
+      };
+  properties
+    SMACCM_SYS::Thread_Type => Active;
+    Dispatch_Protocol => Periodic;
+    Period => 5 ms;
+    Compute_Execution_Time => 10 us .. 100 us;
+    SMACCM_SYS::Sends_Events_To => "{{1 Output_5ms}}";
+    Stack_Size => 1000 bytes;
+    Priority => 121;
+    SMACCM_SYS::Compute_Entrypoint_Source_Text => ("callback_5ms");
+    Source_Text => ("user_code/callback_5ms.c");
+end thread_period_5ms;
+
+end thread_period_5ms;
