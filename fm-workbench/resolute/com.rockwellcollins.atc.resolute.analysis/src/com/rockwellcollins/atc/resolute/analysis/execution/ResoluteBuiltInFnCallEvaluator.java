@@ -18,8 +18,6 @@ import org.osate.aadl2.ComponentType;
 import org.osate.aadl2.DataAccess;
 import org.osate.aadl2.DataPort;
 import org.osate.aadl2.EnumerationLiteral;
-import org.osate.aadl2.EventDataPort;
-import org.osate.aadl2.EventPort;
 import org.osate.aadl2.Feature;
 import org.osate.aadl2.IntegerLiteral;
 import org.osate.aadl2.ListValue;
@@ -97,11 +95,11 @@ public class ResoluteBuiltInFnCallEvaluator {
 
 			return exprToValue(expr);
 		}
-		
+
 		case "property_member": {
 			ResoluteRecordValue record = (ResoluteRecordValue)args.get(0);
 			String fieldName = args.get(1).getString().toLowerCase();
-			
+
 			ResoluteValue fieldValue = record.getField(fieldName);
 			if (fieldValue == null) {
 				throw new ResoluteFailException("Record Field " + fieldName + " not found", fnCallExpr);
@@ -318,55 +316,55 @@ public class ResoluteBuiltInFnCallEvaluator {
 			FeatureInstance feat = (FeatureInstance) args.get(0).getNamedElement();
 			return new StringValue(feat.getDirection().toString());
 		}
-		
+
 		case "is_processor":
 		{
 			ComponentInstance ci = (ComponentInstance) args.get(0).getNamedElement();
 			return new BoolValue(ci.getCategory() == ComponentCategory.PROCESSOR);
 		}
-		
+
 		case "is_virtual_processor":
 		{
 			ComponentInstance ci = (ComponentInstance) args.get(0).getNamedElement();
 			return new BoolValue(ci.getCategory() == ComponentCategory.VIRTUAL_PROCESSOR);
 		}
-		
+
 		case "is_system":
 		{
 			ComponentInstance ci = (ComponentInstance) args.get(0).getNamedElement();
 			return new BoolValue(ci.getCategory() == ComponentCategory.SYSTEM);
 		}
-		
+
 		case "is_bus":
 		{
 			ComponentInstance ci = (ComponentInstance) args.get(0).getNamedElement();
 			return new BoolValue(ci.getCategory() == ComponentCategory.BUS);
 		}
-		
+
 		case "is_virtual_bus":
 		{
 			ComponentInstance ci = (ComponentInstance) args.get(0).getNamedElement();
 			return new BoolValue(ci.getCategory() == ComponentCategory.VIRTUAL_BUS);
 		}
-		
+
 		case "is_device":
 		{
 			ComponentInstance ci = (ComponentInstance) args.get(0).getNamedElement();
 			return new BoolValue(ci.getCategory() == ComponentCategory.DEVICE);
 		}
-		
+
 		case "is_memory":
 		{
 			ComponentInstance ci = (ComponentInstance) args.get(0).getNamedElement();
 			return new BoolValue(ci.getCategory() == ComponentCategory.MEMORY);
 		}
-		
+
 		case "is_thread":
 		{
 			ComponentInstance ci = (ComponentInstance) args.get(0).getNamedElement();
 			return new BoolValue(ci.getCategory() == ComponentCategory.THREAD);
 		}
-		
+
 		case "is_process":
 		{
 			ComponentInstance ci = (ComponentInstance) args.get(0).getNamedElement();
@@ -374,19 +372,66 @@ public class ResoluteBuiltInFnCallEvaluator {
 		}
 
 		case "is_event_port": {
-			NamedElement feat = (FeatureInstance) args.get(0).getNamedElement();
-			return new BoolValue(feat instanceof EventPort);
+			NamedElement feat = args.get(0).getNamedElement();
+			if (feat instanceof FeatureInstance)
+			{
+
+				FeatureInstance fi = (FeatureInstance) feat;
+
+				if (fi.getCategory() == org.osate.aadl2.instance.FeatureCategory.EVENT_PORT)
+				{
+					return new BoolValue(true);
+				}
+				if (fi.getCategory() == org.osate.aadl2.instance.FeatureCategory.EVENT_DATA_PORT)
+				{
+					return new BoolValue(true);
+				}
+			}
+			return new BoolValue(false);
 		}
 
 		case "is_port": {
-			NamedElement feat = (FeatureInstance) args.get(0).getNamedElement();
-			return new BoolValue(
-					(feat instanceof DataPort) || (feat instanceof EventDataPort) || (feat instanceof EventDataPort));
+			boolean ret;
+			ret = false;
+			NamedElement feat = args.get(0).getNamedElement();
+			if (feat instanceof FeatureInstance)
+			{
+				FeatureInstance fi = (FeatureInstance) feat;
+				if (fi.getCategory() == org.osate.aadl2.instance.FeatureCategory.DATA_PORT)
+				{
+					ret = true;
+				}
+				if (fi.getCategory() == org.osate.aadl2.instance.FeatureCategory.EVENT_DATA_PORT)
+				{
+					ret = true;
+				}
+				if (fi.getCategory() == org.osate.aadl2.instance.FeatureCategory.EVENT_PORT)
+				{
+					ret = true;
+				}
+
+			}
+			return new BoolValue(ret);
+
 		}
 
 		case "is_data_port": {
-			NamedElement feat = (FeatureInstance) args.get(0).getNamedElement();
-			return new BoolValue((feat instanceof DataPort) || (feat instanceof EventDataPort));
+			NamedElement feat = args.get(0).getNamedElement();
+			if (feat instanceof FeatureInstance)
+			{
+
+				FeatureInstance fi = (FeatureInstance) feat;
+
+				if (fi.getCategory() == org.osate.aadl2.instance.FeatureCategory.DATA_PORT)
+				{
+					return new BoolValue(true);
+				}
+				if (fi.getCategory() == org.osate.aadl2.instance.FeatureCategory.EVENT_DATA_PORT)
+				{
+					return new BoolValue(true);
+				}
+			}
+			return new BoolValue(false);
 		}
 
 			/*
@@ -478,19 +523,19 @@ public class ResoluteBuiltInFnCallEvaluator {
 			if (feat instanceof ConnectionInstance) {
 				ComponentInstance accessedComponent = null;
 				ConnectionInstance ci = (ConnectionInstance) feat;
-				
+
 //				OsateDebug.osateDebug("source=" + ci.getSource());
 //				OsateDebug.osateDebug("destination=" + ci.getDestination());
 				if (ci.getSource() instanceof ComponentInstance)
 				{
 					accessedComponent = (ComponentInstance) ci.getSource();
 				}
-				
+
 				if (ci.getDestination() instanceof ComponentInstance)
 				{
 					accessedComponent = (ComponentInstance) ci.getDestination();
 				}
-				
+
 				return new BoolValue((ci.getKind() == org.osate.aadl2.instance.ConnectionKind.ACCESS_CONNECTION) &&
 						(accessedComponent.getCategory() == ComponentCategory.DATA));
 
@@ -518,7 +563,7 @@ public class ResoluteBuiltInFnCallEvaluator {
 				throw new ResoluteFailException("Failed to find instance of declarative element", fnCallExpr);
 			}
 		}
-		
+
 		case "debug": {
 			int i = 0;
 			String s = "";
