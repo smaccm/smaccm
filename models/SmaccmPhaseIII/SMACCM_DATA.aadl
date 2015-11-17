@@ -3,6 +3,17 @@ public
 	with Data_Types;
 	with Base_Types;
 	
+	data CameraData
+	end CameraData;
+	
+	data implementation CameraData.i
+		subcomponents
+			left : data Base_Types::Integer_32;
+			right : data Base_Types::Integer_32;
+			top : data Base_Types::Integer_32;
+			bottom : data Base_Types::Integer_32;
+	end CameraData.i;
+	
 	data ServerInputData
 	end ServerInputData;
 	
@@ -134,13 +145,6 @@ public
     
     data implementation CanSenderData.i
     	subcomponents
-    		--TODO add in event strings here
-    		-- e.g.
-	    	--SMACCM_SYS::Compute_Entrypoint_Source_Text => ("callback_fragment_req_0x200");
-	        --Source_Text => ("user_code/fragment_0x200_monitor.c");
-	        --Queue_Size => 1000;
-	        --SMACCM_SYS::Sends_Events_To => "{{1 Output_fragment_req_0x200_0}}";
-	        
     		Input_fragment_req: data Data_Types::array_80_Unsigned_8.impl;
     		Input_fragment_complete: data Base_Types::Boolean;
    			Input_fragment_abort: data Base_Types::Boolean;

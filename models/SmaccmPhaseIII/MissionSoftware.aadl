@@ -3,14 +3,20 @@ public
 	with SMACCM_SYS;
 	with DATA_TYPES;
 	with SMACCM_DATA;
-	
+	with MissionSubprograms;
+
+system top
+end top;
+
+system implementation top.i
+	subcomponents
+		proc : process MissionSoftware.i;
+	properties
+		SMACCM_SYS::OS => CAmkES;
+		SMACCM_SYS::HW => QEMU;
+end top.i;
 	
 process MissionSoftware
-	features
-		uart_out : out event data port;
-		uart_in : in event data port;
-		can_out : out event data port;
-		can_in : in event data port;
 end MissionSoftware;	
 
 process implementation MissionSoftware.i
@@ -24,91 +30,109 @@ process implementation MissionSoftware.i
 		vm : thread VM;
 		
 	connections
-		uart_inside : port uart_in -> uart.data_in;
-		can_inside : port can_in -> can.data_in;
-		uart_outside : port uart.data_out -> uart_out;
-		can_outside : port can.data_out -> can_out;
-
-		
-		uart_rx : data access uart.rx -> input.rx;
-		
-		input_to_svr : data access input.to_svr -> server.input;
-		
-		server_output : data access server.output -> output.input;
-		
-		output_tx : data access output.tx -> uart.tx;
-		
-		pixhawk_data : data access pproxy.pixhawk_data -> server.pixhawk_data;
-		proxy_to_can : data access pproxy.tx -> can.tx;
-		
-		can_to_proxy : data access can.rx -> pproxy.rx;
-		
-		camera_data : data access vm.camera_data -> server.camera_data;
+		uart_rx : subprogram group access uart.uart -> input.uart;
+		input_to_svr : subprogram group access input.to_svr -> server.input;
+		server_output : subprogram group access server.output -> output.input;
+		output_tx : subprogram group access output.uart -> uart.uart;
+		pixhawk_data : subprogram group access pproxy.pixhawk_data -> server.pixhawk_data;
+		proxy_to_can : subprogram group access pproxy.can -> can.can;
+		camera_data : subprogram group access vm.camera_data -> server.camera_data;
 		
 end MissionSoftware.i;
-	
+
 thread UART
 	features
-		tx : provides data access Data_Types::ivory_string_UartPacket;
-		rx : provides data access Data_Types::array_96_Unsigned_8.impl;
-		data_in : in event data port;
-		data_out : out event data port;
+		uart : provides subprogram group access MissionSubprograms::UART_Features;
 	properties
-		Dispatch_Protocol => Sporadic;
+	    SMACCM_SYS::Is_External => true;
+	    Dispatch_Protocol => Sporadic;
+	    SMACCM_SYS::Thread_Type => Active;
+	    Compute_Execution_Time => 10 us .. 100 us;
+	    Source_Text => ();
+	    Period => 100ms;
 end UART;
 	
 thread Input
 	features
 		--not sure what the dimension of this array should be
-		rx : requires data access Data_Types::array_96_Unsigned_8.impl;
-		to_svr : requires data access SMACCM_DATA::ServerInputData.i;
+		uart : requires subprogram group access MissionSubprograms::UART_Features;
+		to_svr : requires subprogram group access MissionSubprograms::Server_Inputs;
 	properties
 		Dispatch_Protocol => Periodic;
+		SMACCM_SYS::Thread_Type => Active;
+		Priority => 1;
+		Stack_Size => 1024 Bytes;
+	    Compute_Execution_Time => 10 us .. 100 us;
+	    Period => 100ms;
+	    Source_Text => ("usercode/input.c");
+	    Compute_Entrypoint_Source_Text => "entry";
 end Input;
 	
 thread Server
 	features
-		input : provides data access SMACCM_DATA::ServerInputData.i;
-		output : requires data access SMACCM_DATA::ServerOutputData.i;
-		pixhawk_data : requires data access SMACCM_DATA::PixHawkData.i;
-		camera_data : requires data access Data_Types::array_80_Unsigned_8.impl;
+		input : provides subprogram group access MissionSubprograms::Server_Inputs;
+		output : requires subprogram group access MissionSubprograms::Server_Outputs;
+		pixhawk_data : requires subprogram group access MissionSubprograms::Pixhawk_Interface;
+		camera_data : requires subprogram group access MissionSubprograms::Camera_Interface;
 	properties
-		Dispatch_Protocol => Sporadic;
+		Dispatch_Protocol => Aperiodic;
+		SMACCM_SYS::Thread_Type => Passive;
+		Priority => 1;
+		Stack_Size => 1024 Bytes;
+	    Compute_Execution_Time => 10 us .. 100 us;
+	    Source_Text => ("usercode/server.c");
 end Server;
 	
 thread Output
 	features
-		input : provides data access SMACCM_DATA::ServerOutputData.i;
-		tx : requires data access Data_Types::ivory_string_UartPacket;
+		input : provides subprogram group access MissionSubprograms::Server_Outputs;
+		uart : requires subprogram group access MissionSubprograms::UART_Features;
 	properties
-		Dispatch_Protocol => Sporadic;
+		Dispatch_Protocol => Aperiodic;
+		SMACCM_SYS::Thread_Type => Passive;
+		Priority => 1;
+		Stack_Size => 1024 Bytes;
+	    Compute_Execution_Time => 10 us .. 100 us;
+	    Source_Text => ("usercode/output.c");
 end Output;
 	
 thread PixhawkProxy
 	features
-		pixhawk_commands : provides data access;
-		pixhawk_data : provides data access SMACCM_DATA::PixHawkData.i;
-		rx : requires data access Data_Types::can_message;
-		tx : requires data access SMACCM_DATA::CanSenderData.i;
+		pixhawk_data : provides subprogram group access MissionSubprograms::Pixhawk_Interface;
+		can : requires subprogram group access MissionSubprograms::CAN_Interface;
 	properties
 		Dispatch_Protocol => Periodic;
+		SMACCM_SYS::Thread_Type => Active;
+		Priority => 1;
+		Stack_Size => 1024 Bytes;
+	    Compute_Execution_Time => 10 us .. 100 us;
+	    Period => 100ms;
+	    Source_Text => ("usercode/pixhawk_proxy.c");
+	    Compute_Entrypoint_Source_Text => "entry";
 end PixhawkProxy;
 	
 thread CAN
 	features
-		rx : provides data access Data_Types::can_message;
-		tx : provides data access SMACCM_DATA::CanSenderData.i;
-		data_out : out event data port;
-		data_in : in event data port;
+		can : provides subprogram group access MissionSubprograms::CAN_Interface;
+--		data_out : out event data port;
+--		data_in : in event data port;
 	properties
-		Dispatch_Protocol => Sporadic;
+	    SMACCM_SYS::Is_External => true;
+	    Dispatch_Protocol => Sporadic;
+	    SMACCM_SYS::Thread_Type => Active;
+	    Compute_Execution_Time => 10 us .. 100 us;
+	    Source_Text => ();
 end CAN;
 
 thread VM
 	features
-		camera_data : provides data access Data_Types::array_80_Unsigned_8.impl;
+		camera_data : provides subprogram group access MissionSubprograms::Camera_Interface;
 	properties
-		Dispatch_Protocol => Sporadic;
+		SMACCM_SYS::Is_External => true;
+	    Dispatch_Protocol => Sporadic;
+	    SMACCM_SYS::Thread_Type => Active;
+	    Compute_Execution_Time => 10 us .. 100 us;
+	    Source_Text => ();
 end VM;
 	
 end MissionSoftware;
