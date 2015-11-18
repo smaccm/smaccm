@@ -44,11 +44,11 @@ subprogram receive_can_data
 		result : out parameter SMACCM_DATA::CanSenderData.i;
 end receive_can_data;
 	
-subprogram group UART_Features
+subprogram group UART_group
 	features
 		tx : provides subprogram access MissionSubprograms::send_uart_packet;
 		rx : provides subprogram access MissionSubprograms::get_uart_packet;
-end UART_Features;
+end UART_group;
 
 subprogram group Server_Inputs
 	features
@@ -60,21 +60,21 @@ subprogram group Server_Outputs
 		output : provides subprogram access MissionSubprograms::server_output;
 end Server_outputs;
 
-subprogram group Pixhawk_Interface
+subprogram group Pixhawk_group
 	features
 		--pixhawk_commands : provides subprogram access;
 		pixhawk_data : provides subprogram access MissionSubprograms::get_pixhawk_data;
-end Pixhawk_Interface;
+end Pixhawk_group;
 	
-subprogram group Camera_Interface
+subprogram group Camera_group
 	features
 		camera_data : provides subprogram access get_camera_data;
-end Camera_Interface;
+end Camera_group;
 
-subprogram group CAN_Interface
+subprogram group CAN_group
 	features
 		rx : provides subprogram access MissionSubprograms::receive_can_data;
 		tx : provides subprogram access MissionSubprograms::send_can_packet;
-end CAN_Interface;
+end CAN_group;
 
 end MissionSubprograms;

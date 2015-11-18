@@ -42,7 +42,7 @@ end MissionSoftware.i;
 
 thread UART
 	features
-		uart : provides subprogram group access MissionSubprograms::UART_Features;
+		uart : provides subprogram group access MissionSubprograms::UART_group;
 	properties
 	    SMACCM_SYS::Is_External => true;
 	    Dispatch_Protocol => Sporadic;
@@ -55,7 +55,7 @@ end UART;
 thread Input
 	features
 		--not sure what the dimension of this array should be
-		uart : requires subprogram group access MissionSubprograms::UART_Features;
+		uart : requires subprogram group access MissionSubprograms::UART_group;
 		to_svr : requires subprogram group access MissionSubprograms::Server_Inputs;
 	properties
 		Dispatch_Protocol => Periodic;
@@ -72,8 +72,8 @@ thread Server
 	features
 		input : provides subprogram group access MissionSubprograms::Server_Inputs;
 		output : requires subprogram group access MissionSubprograms::Server_Outputs;
-		pixhawk_data : requires subprogram group access MissionSubprograms::Pixhawk_Interface;
-		camera_data : requires subprogram group access MissionSubprograms::Camera_Interface;
+		pixhawk_data : requires subprogram group access MissionSubprograms::Pixhawk_group;
+		camera_data : requires subprogram group access MissionSubprograms::Camera_group;
 	properties
 		Dispatch_Protocol => Aperiodic;
 		SMACCM_SYS::Thread_Type => Passive;
@@ -86,7 +86,7 @@ end Server;
 thread Output
 	features
 		input : provides subprogram group access MissionSubprograms::Server_Outputs;
-		uart : requires subprogram group access MissionSubprograms::UART_Features;
+		uart : requires subprogram group access MissionSubprograms::UART_group;
 	properties
 		Dispatch_Protocol => Aperiodic;
 		SMACCM_SYS::Thread_Type => Passive;
@@ -98,8 +98,8 @@ end Output;
 	
 thread PixhawkProxy
 	features
-		pixhawk_data : provides subprogram group access MissionSubprograms::Pixhawk_Interface;
-		can : requires subprogram group access MissionSubprograms::CAN_Interface;
+		pixhawk_data : provides subprogram group access MissionSubprograms::Pixhawk_group;
+		can : requires subprogram group access MissionSubprograms::CAN_group;
 	properties
 		Dispatch_Protocol => Periodic;
 		SMACCM_SYS::Thread_Type => Active;
@@ -113,7 +113,7 @@ end PixhawkProxy;
 	
 thread CAN
 	features
-		can : provides subprogram group access MissionSubprograms::CAN_Interface;
+		can : provides subprogram group access MissionSubprograms::CAN_group;
 --		data_out : out event data port;
 --		data_in : in event data port;
 	properties
@@ -126,7 +126,7 @@ end CAN;
 
 thread VM
 	features
-		camera_data : provides subprogram group access MissionSubprograms::Camera_Interface;
+		camera_data : provides subprogram group access MissionSubprograms::Camera_group;
 	properties
 		SMACCM_SYS::Is_External => true;
 	    Dispatch_Protocol => Sporadic;
