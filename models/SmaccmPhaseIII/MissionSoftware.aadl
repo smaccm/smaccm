@@ -30,13 +30,13 @@ process implementation MissionSoftware.i
 		vm : thread VM;
 		
 	connections
-		uart_rx : subprogram group access uart.uart -> input.uart;
-		input_to_svr : subprogram group access input.to_svr -> server.input;
-		server_output : subprogram group access server.output -> output.input;
-		output_tx : subprogram group access output.uart -> uart.uart;
-		pixhawk_data : subprogram group access pproxy.pixhawk_data -> server.pixhawk_data;
-		proxy_to_can : subprogram group access pproxy.can -> can.can;
-		camera_data : subprogram group access vm.camera_data -> server.camera_data;
+		uart_rx : subprogram group access uart.uart <-> input.uart;
+		input_to_svr : subprogram group access input.to_svr <-> server.input;
+		server_output : subprogram group access server.output <-> output.input;
+		output_tx : subprogram group access output.uart <-> uart.uart;
+		pixhawk_data : subprogram group access pproxy.pixhawk_data <-> server.pixhawk_data;
+		proxy_to_can : subprogram group access pproxy.can <-> can.can;
+		camera_data : subprogram group access vm.camera_data <-> server.camera_data;
 		
 end MissionSoftware.i;
 
