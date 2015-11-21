@@ -160,6 +160,11 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 								for(int j = 0; j < abstractStmt.getLhs().size(); ++j) {
 									for(Arg nonabstractArg : nonabstractStmt.getLhs()) {
 										if(abstractStmt.getLhs().get(j).getName().equals(nonabstractArg.getName())) {
+											AgreeType abstractType = getAgreeType(abstractStmt.getLhs().get(j));
+											AgreeType nonabstractType = getAgreeType(nonabstractArg);
+											if(!abstractType.equals(nonabstractType)) {
+												error(nonabstractArg, "Abstract parent is of type " + abstractType + " but this is type " + nonabstractType);
+											}
 											abstractStmt.getLhs().remove(j);
 											j -= 1;
 										}
