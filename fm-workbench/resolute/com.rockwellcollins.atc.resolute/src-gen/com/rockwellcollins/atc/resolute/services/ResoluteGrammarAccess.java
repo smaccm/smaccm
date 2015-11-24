@@ -237,6 +237,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		private final Keyword cTypeProvides_subprogram_group_accessKeyword_0_40 = (Keyword)cTypeAlternatives_0.eContents().get(40);
 		private final Keyword cTypeRequires_subprogram_group_accessKeyword_0_41 = (Keyword)cTypeAlternatives_0.eContents().get(41);
 		private final Keyword cTypeFlow_specificationKeyword_0_42 = (Keyword)cTypeAlternatives_0.eContents().get(42);
+		private final Keyword cTypeEnd_to_end_flowKeyword_0_43 = (Keyword)cTypeAlternatives_0.eContents().get(43);
 		
 		//BaseType:
 		//	type=("int" | "real" | "string" | "bool" | "range" | "aadl" | "component" | "abstract" | "bus" | "data" | "device" |
@@ -245,7 +246,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		//	"event_data_port" | "feature_group" | "access" | "bus_access" | "provides_bus_access" | "requires_bus_access" |
 		//	"data_access" | "provides_data_access" | "requires_data_access" | "subprogram_access" | "provides_subprogram_access" |
 		//	"requires_subprogram_access" | "subprogram_group_access" | "provides_subprogram_group_access" |
-		//	"requires_subprogram_group_access" | "flow_specification");
+		//	"requires_subprogram_group_access" | "flow_specification" | "end_to_end_flow");
 		@Override public ParserRule getRule() { return rule; }
 
 		//type=("int" | "real" | "string" | "bool" | "range" | "aadl" | "component" | "abstract" | "bus" | "data" | "device" |
@@ -254,7 +255,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		//"event_data_port" | "feature_group" | "access" | "bus_access" | "provides_bus_access" | "requires_bus_access" |
 		//"data_access" | "provides_data_access" | "requires_data_access" | "subprogram_access" | "provides_subprogram_access" |
 		//"requires_subprogram_access" | "subprogram_group_access" | "provides_subprogram_group_access" |
-		//"requires_subprogram_group_access" | "flow_specification")
+		//"requires_subprogram_group_access" | "flow_specification" | "end_to_end_flow")
 		public Assignment getTypeAssignment() { return cTypeAssignment; }
 
 		//"int" | "real" | "string" | "bool" | "range" | "aadl" | "component" | "abstract" | "bus" | "data" | "device" | "memory"
@@ -263,7 +264,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		//"feature_group" | "access" | "bus_access" | "provides_bus_access" | "requires_bus_access" | "data_access" |
 		//"provides_data_access" | "requires_data_access" | "subprogram_access" | "provides_subprogram_access" |
 		//"requires_subprogram_access" | "subprogram_group_access" | "provides_subprogram_group_access" |
-		//"requires_subprogram_group_access" | "flow_specification"
+		//"requires_subprogram_group_access" | "flow_specification" | "end_to_end_flow"
 		public Alternatives getTypeAlternatives_0() { return cTypeAlternatives_0; }
 
 		//"int"
@@ -394,6 +395,9 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 
 		//"flow_specification"
 		public Keyword getTypeFlow_specificationKeyword_0_42() { return cTypeFlow_specificationKeyword_0_42; }
+
+		//"end_to_end_flow"
+		public Keyword getTypeEnd_to_end_flowKeyword_0_43() { return cTypeEnd_to_end_flowKeyword_0_43; }
 	}
 
 	public class ArgElements extends AbstractParserRuleElementFinder {
@@ -1882,6 +1886,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		private final Keyword cError_state_reachableKeyword_46 = (Keyword)cAlternatives.eContents().get(46);
 		private final Keyword cFlow_sourceKeyword_47 = (Keyword)cAlternatives.eContents().get(47);
 		private final Keyword cFlow_destinationKeyword_48 = (Keyword)cAlternatives.eContents().get(48);
+		private final Keyword cFlow_elementsKeyword_49 = (Keyword)cAlternatives.eContents().get(49);
 		
 		//BuiltInFn: // Primary type: aadl
 		//	"has_property" // Primary type: component
@@ -1900,7 +1905,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		//	"receive_error" | // the component contain the error
 		//	"contain_error" | // the component propagate an error
 		//	"propagate_error" | // the error state is reachable
-		//	"error_state_reachable" | "flow_source" | "flow_destination";
+		//	"error_state_reachable" | "flow_source" | "flow_destination" | "flow_elements";
 		@Override public ParserRule getRule() { return rule; }
 
 		//// Primary type: aadl
@@ -1920,7 +1925,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		//"receive_error" | // the component contain the error
 		//"contain_error" | // the component propagate an error
 		//"propagate_error" | // the error state is reachable
-		//"error_state_reachable" | "flow_source" | "flow_destination"
+		//"error_state_reachable" | "flow_source" | "flow_destination" | "flow_elements"
 		public Alternatives getAlternatives() { return cAlternatives; }
 
 		//// Primary type: aadl
@@ -2074,6 +2079,9 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 
 		//"flow_destination"
 		public Keyword getFlow_destinationKeyword_48() { return cFlow_destinationKeyword_48; }
+
+		//"flow_elements"
+		public Keyword getFlow_elementsKeyword_49() { return cFlow_elementsKeyword_49; }
 	}
 
 	public class RealTermElements extends AbstractParserRuleElementFinder {
@@ -2449,7 +2457,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	//	"event_data_port" | "feature_group" | "access" | "bus_access" | "provides_bus_access" | "requires_bus_access" |
 	//	"data_access" | "provides_data_access" | "requires_data_access" | "subprogram_access" | "provides_subprogram_access" |
 	//	"requires_subprogram_access" | "subprogram_group_access" | "provides_subprogram_group_access" |
-	//	"requires_subprogram_group_access" | "flow_specification");
+	//	"requires_subprogram_group_access" | "flow_specification" | "end_to_end_flow");
 	public BaseTypeElements getBaseTypeAccess() {
 		return pBaseType;
 	}
@@ -2662,7 +2670,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	//	"receive_error" | // the component contain the error
 	//	"contain_error" | // the component propagate an error
 	//	"propagate_error" | // the error state is reachable
-	//	"error_state_reachable" | "flow_source" | "flow_destination";
+	//	"error_state_reachable" | "flow_source" | "flow_destination" | "flow_elements";
 	public BuiltInFnElements getBuiltInFnAccess() {
 		return pBuiltInFn;
 	}

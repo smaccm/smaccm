@@ -33,6 +33,7 @@ import org.osate.aadl2.Subcomponent;
 import org.osate.aadl2.instance.ComponentInstance;
 import org.osate.aadl2.instance.ConnectionInstance;
 import org.osate.aadl2.instance.ConnectionReference;
+import org.osate.aadl2.instance.EndToEndFlowInstance;
 import org.osate.aadl2.instance.FeatureInstance;
 import org.osate.aadl2.instance.FlowSpecificationInstance;
 import org.osate.aadl2.instance.InstanceReferenceValue;
@@ -637,6 +638,11 @@ public class ResoluteBuiltInFnCallEvaluator {
 			return new NamedElementValue(flowSpec.getDestination());
 		}
 
+		case "flow_elements": {
+			EndToEndFlowInstance etef = (EndToEndFlowInstance)args.get(0).getNamedElement();
+			return createSetValue(etef.getFlowElements());
+		}
+		
 		default:
 			throw new IllegalArgumentException("Unknown function: " + fnCallExpr.getFn());
 		}

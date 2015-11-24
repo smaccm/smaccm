@@ -59,6 +59,7 @@ public class BaseType extends ResoluteType {
 	public static final BaseType REQUIRES_SUBPROGRAM_GROUP_ACCESS = new BaseType("requires_subprogram_group_access");
 	
 	public static final BaseType FLOW_SPECIFICATION = new BaseType("flow_specification");
+	public static final BaseType END_TO_END_FLOW = new BaseType("end_to_end_flow");
 
 	final public String name;
 
@@ -126,7 +127,7 @@ public class BaseType extends ResoluteType {
 			switch (bt.name) {
 			case "aadl":
 				return subtypeOf(COMPONENT) || subtypeOf(CONNECTION) || subtypeOf(PROPERTY) || subtypeOf(FEATURE)
-						|| subtypeOf(FLOW_SPECIFICATION);
+						|| subtypeOf(FLOW_SPECIFICATION) || subtypeOf(END_TO_END_FLOW);
 
 			case "component":
 				return subtypeOf(ABSTRACT) || subtypeOf(BUS) || subtypeOf(DATA) || subtypeOf(DEVICE)

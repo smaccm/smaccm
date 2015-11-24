@@ -2051,6 +2051,14 @@ rule__BaseType__TypeAlternatives_0
 { after(grammarAccess.getBaseTypeAccess().getTypeFlow_specificationKeyword_0_42()); }
 )
 
+    |(
+{ before(grammarAccess.getBaseTypeAccess().getTypeEnd_to_end_flowKeyword_0_43()); }
+
+	'end_to_end_flow' 
+
+{ after(grammarAccess.getBaseTypeAccess().getTypeEnd_to_end_flowKeyword_0_43()); }
+)
+
 ;
 finally {
 	restoreStackSize(stackSize);
@@ -2882,6 +2890,14 @@ rule__BuiltInFn__Alternatives
 	'flow_destination' 
 
 { after(grammarAccess.getBuiltInFnAccess().getFlow_destinationKeyword_48()); }
+)
+
+    |(
+{ before(grammarAccess.getBuiltInFnAccess().getFlow_elementsKeyword_49()); }
+
+	'flow_elements' 
+
+{ after(grammarAccess.getBuiltInFnAccess().getFlow_elementsKeyword_49()); }
 )
 
 ;

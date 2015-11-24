@@ -87,6 +87,7 @@ BaseType:
          | 'provides_subprogram_group_access'
          | 'requires_subprogram_group_access'
          | 'flow_specification'
+         | 'end_to_end_flow'
          );
 
 //Arg types are used for functions, claims, and quantifiers
@@ -250,6 +251,7 @@ BuiltInFn:
 
 |   'flow_source'
 |   'flow_destination'
+|   'flow_elements'
 ;
 
 RealTerm returns aadl2::RealLiteral:
