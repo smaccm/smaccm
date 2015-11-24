@@ -23,6 +23,7 @@ import jkind.lustre.TupleExpr;
 import jkind.lustre.Type;
 import jkind.lustre.TypeDef;
 import jkind.lustre.VarDecl;
+import jkind.lustre.builders.NodeBuilder;
 import jkind.translation.DistributePres;
 import jkind.translation.FlattenPres;
 import jkind.translation.InlineNodeCalls;
@@ -98,7 +99,14 @@ public class AgreeNodeToLustreContract {
             eqs.add(new Equation(new IdExpr(guarName), statement.expr));
         }
         
-        return new Node(agreeNode.id, inputs, Collections.emptyList(), locals, eqs, properties, assertions);
+        NodeBuilder builder = new NodeBuilder(agreeNode.id);
+        builder.addInputs(inputs);
+        builder.addLocals(locals);
+        builder.addEquations(eqs);
+        builder.addProperties(properties);
+        builder.addAssertions(assertions);
+        
+        return builder.build();
         
     }
 

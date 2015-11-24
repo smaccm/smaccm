@@ -22,6 +22,7 @@ import jkind.lustre.Type;
 import jkind.lustre.UnaryExpr;
 import jkind.lustre.UnaryOp;
 import jkind.lustre.VarDecl;
+import jkind.lustre.builders.NodeBuilder;
 
 public class AgreeCalendarUtils {
 
@@ -86,7 +87,12 @@ public class AgreeCalendarUtils {
         okExpr = new BinaryExpr(pId, BinaryOp.IMPLIES, okExpr);
         eqs.add(new Equation(new IdExpr("ok"), okExpr));
 
-        return new Node(nodeName, inputs, outputs, locals, eqs);
+        NodeBuilder builder = new NodeBuilder(nodeName);
+        builder.addInputs(inputs);
+        builder.addOutputs(outputs);
+        builder.addLocals(locals);
+        builder.addEquations(eqs);
+        return builder.build();
 
     }
 
@@ -180,7 +186,14 @@ public class AgreeCalendarUtils {
         List<String> properties = new ArrayList<>();
         //properties.add(rIsBounded.id);
 
-        return new Node(name, inputs, outputs, locals, equations, properties);
+        NodeBuilder builder = new NodeBuilder(name);
+        builder.addInputs(inputs);
+        builder.addOutputs(outputs);
+        builder.addLocals(locals);
+        builder.addEquations(equations);
+        builder.addProperties(properties);
+        
+        return builder.build();
     }
 
     public static Node getExplicitCalendarNode(String nodeName, List<IdExpr> calendar, List<Expr> clocks) {
@@ -265,12 +278,17 @@ public class AgreeCalendarUtils {
         }
         Equation outEq = new Equation(outputAssert, calendarConstraint);
         equations.add(outEq);
+        
+        NodeBuilder builder = new NodeBuilder(nodeName);
+        builder.addInputs(inputs);
+        builder.addOutputs(outputs);
+        builder.addLocals(locals);
+        builder.addEquations(equations);
 
-        return new Node(nodeName, inputs, outputs, locals, equations);
+        return builder.build();
     }
 
     static public Node getCalendarNode(String name, String dfaName, int numClks) {
-        Node calendarNode;
         Expr nodeExpr = null;
         String clkVarPrefix = "_clk_";
         IdExpr outVar = new IdExpr("_out");
@@ -300,12 +318,13 @@ public class AgreeCalendarUtils {
         }
 
         Equation nodeEq = new Equation(outVar, nodeExpr);
-        calendarNode =
-                new Node(name, inputs, outputs, new ArrayList<VarDecl>(), Collections.singletonList(nodeEq));
-
-        dfaName = null;
-
-        return calendarNode;
+        
+        NodeBuilder builder = new NodeBuilder(name);
+        builder.addInputs(inputs);
+        builder.addOutputs(outputs);
+        builder.addEquations(Collections.singletonList(nodeEq));        
+        
+        return builder.build();
     }
 
     static public List<Equation> getAllClksHaveTicked(String name, String clkPref, List<Expr> clks) {
@@ -450,8 +469,15 @@ public class AgreeCalendarUtils {
         Equation propEq0 = new Equation(propId0, propExpr);
         eqs.add(propEq0);
         props.add(propId0.id);
-
-        return new Node(nodeName, inputs, outputs, locals, eqs, props);
+        
+        NodeBuilder builder = new NodeBuilder(nodeName);
+        builder.addInputs(inputs);
+        builder.addOutputs(outputs);
+        builder.addLocals(locals);
+        builder.addEquations(eqs);
+        builder.addProperties(props);
+        
+        return builder.build();
 
     }
 
@@ -549,7 +575,14 @@ public class AgreeCalendarUtils {
         eqs.add(propEq0);
         props.add(propId0.id);
 
-        return new Node(nodeName, inputs, outputs, locals, eqs, props);
+        NodeBuilder builder = new NodeBuilder(nodeName);
+        builder.addInputs(inputs);
+        builder.addOutputs(outputs);
+        builder.addLocals(locals);
+        builder.addEquations(eqs);
+        builder.addProperties(props);
+        
+        return builder.build();
 
     }
 
@@ -584,7 +617,13 @@ public class AgreeCalendarUtils {
         Equation outEq = new Equation(output, outExpr);
         eqs.add(outEq);
 
-        return new Node(nodeName, inputs, outputs, locals, eqs);
+        NodeBuilder builder = new NodeBuilder(nodeName);
+        builder.addInputs(inputs);
+        builder.addOutputs(outputs);
+        builder.addLocals(locals);
+        builder.addEquations(eqs);
+        
+        return builder.build();
 
     }
 

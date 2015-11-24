@@ -69,6 +69,7 @@ import jkind.lustre.Type;
 import jkind.lustre.UnaryExpr;
 import jkind.lustre.UnaryOp;
 import jkind.lustre.VarDecl;
+import jkind.lustre.builders.NodeBuilder;
 
 import com.rockwellcollins.atc.agree.agree.AgreeContract;
 import com.rockwellcollins.atc.agree.agree.AgreeContractSubclause;
@@ -1092,7 +1093,13 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
         List<VarDecl> outputs = Collections.singletonList(outVar);
         Equation eq = new Equation(new IdExpr("_outvar"), bodyExpr);
         List<Equation> eqs = Collections.singletonList(eq);
-        Node node = new Node(nodeName, inputs, outputs, Collections.<VarDecl> emptyList(), eqs);
+        
+        NodeBuilder builder = new NodeBuilder(nodeName);
+        builder.addInputs(inputs);
+        builder.addOutputs(outputs);
+        builder.addEquations(eqs);
+        
+        Node node = builder.build();
         addToNodeList(node);
         return null;
     }
@@ -1136,7 +1143,14 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 
         // nodeLemmaNames.put(nodeName, lemmaNames);
 
-        addToNodeList(new Node(nodeName, inputs, outputs, internals, eqs, props));
+        NodeBuilder builder = new NodeBuilder(nodeName);
+        builder.addInputs(inputs);
+        builder.addOutputs(outputs);
+        builder.addLocals(internals);
+        builder.addEquations(eqs);
+        builder.addProperties(props);
+        
+        addToNodeList(builder.build());
         return null;
     }
 

@@ -59,6 +59,7 @@ import jkind.lustre.TypeDef;
 import jkind.lustre.UnaryExpr;
 import jkind.lustre.UnaryOp;
 import jkind.lustre.VarDecl;
+import jkind.lustre.builders.NodeBuilder;
 
 public class LustreAstBuilder {
 
@@ -141,8 +142,15 @@ public class LustreAstBuilder {
             }
         }
 
-        Node main = new Node("main", inputs, null, locals, equations, properties, assertions,
-                Optional.of(inputStrs));
+        NodeBuilder builder = new NodeBuilder("main");
+        builder.addInputs(inputs);
+        builder.addLocals(locals);
+        builder.addEquations(equations);
+        builder.addProperties(properties);
+        builder.addAssertions(assertions);
+        builder.setRealizabilityInputs(inputStrs);
+        
+        Node main = builder.build();
         List<Node> nodes = new ArrayList<>();
         nodes.add(main);
         nodes.addAll(agreeProgram.globalLustreNodes);
@@ -202,7 +210,14 @@ public class LustreAstBuilder {
             inputs.add(var);
         }
 
-        Node main = new Node("main", inputs, null, locals, equations, properties, assertions);
+        NodeBuilder builder = new NodeBuilder("main");
+        builder.addInputs(inputs);
+        builder.addLocals(locals);
+        builder.addEquations(equations);
+        builder.addProperties(properties);
+        builder.addAssertions(assertions);
+        
+        Node main = builder.build();
         nodes.add(main);
         nodes.addAll(agreeProgram.globalLustreNodes);
         Program program = new Program(types, null, nodes, main.id);
@@ -266,7 +281,13 @@ public class LustreAstBuilder {
     }
 
     protected static Node removeProperties(Node node) {
-        return new Node(node.id, node.inputs, node.outputs, node.locals, node.equations);
+        NodeBuilder builder = new NodeBuilder(node.id);
+        builder.addInputs(node.inputs);
+        builder.addOutputs(node.outputs);
+        builder.addLocals(node.locals);
+        builder.addEquations(node.equations);
+        
+        return builder.build();
     }
 
     protected static Node getConsistencyLustreNode(AgreeNode agreeNode, boolean withAssertions) {
@@ -353,7 +374,14 @@ public class LustreAstBuilder {
         equations.add(new Equation(propId, new UnaryExpr(UnaryOp.NOT, propExpr)));
         properties.add(propId.id);
 
-        Node node = new Node("consistency", inputs, null, locals, equations, properties, assertions);
+        NodeBuilder builder = new NodeBuilder("consistency");
+        builder.addInputs(inputs);
+        builder.addLocals(locals);
+        builder.addEquations(equations);
+        builder.addProperties(properties);
+        builder.addAssertions(assertions);
+        
+        Node node = builder.build();
 
         return node;
 
@@ -400,13 +428,15 @@ public class LustreAstBuilder {
                     new BinaryExpr(input, BinaryOp.ARROW, new IfThenElseExpr(clockRiseId, input, preLatch))));
         }
 
-        // List<VarDecl> newInputs = new ArrayList<>();
-        // for(AgreeVar var : inputs){
-        // newInputs.add(var);
-        // }
-
         inputs.add(new VarDecl(clockExpr.id, NamedType.BOOL));
-        return new Node(nodeName, inputs, outputs, locals, equations);
+        
+        NodeBuilder builder = new NodeBuilder(nodeName);
+        builder.addInputs(inputs);
+        builder.addOutputs(outputs);
+        builder.addLocals(locals);
+        builder.addEquations(equations);
+        
+        return builder.build();
     }
 
     protected static Node getLustreNode(AgreeNode agreeNode, String nodePrefix, boolean monolithic) {
@@ -485,7 +515,13 @@ public class LustreAstBuilder {
             inputs.add(var);
         }
 
-        return new Node(nodePrefix + agreeNode.id, inputs, outputs, locals, equations);
+        NodeBuilder builder = new NodeBuilder(nodePrefix + agreeNode.id);
+        builder.addInputs(inputs);
+        builder.addOutputs(outputs);
+        builder.addLocals(locals);
+        builder.addEquations(equations);
+        
+        return builder.build();
     }
 
     protected static AgreeNode flattenAgreeNode(AgreeNode agreeNode, String nodePrefix, boolean monolithic) {
