@@ -770,6 +770,18 @@ ruleBaseType returns [EObject current=null]
        		setWithLastConsumed($current, "type", lv_type_0_42, null);
 	    }
 
+    |		lv_type_0_43=	'flow_specification' 
+    {
+        newLeafNode(lv_type_0_43, grammarAccess.getBaseTypeAccess().getTypeFlow_specificationKeyword_0_42());
+    }
+ 
+	    {
+	        if ($current==null) {
+	            $current = createModelElement(grammarAccess.getBaseTypeRule());
+	        }
+       		setWithLastConsumed($current, "type", lv_type_0_43, null);
+	    }
+
 )
 
 )
@@ -3264,6 +3276,20 @@ ruleBuiltInFn returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken
     {
         $current.merge(kw);
         newLeafNode(kw, grammarAccess.getBuiltInFnAccess().getError_state_reachableKeyword_46()); 
+    }
+
+    |
+	kw='flow_source' 
+    {
+        $current.merge(kw);
+        newLeafNode(kw, grammarAccess.getBuiltInFnAccess().getFlow_sourceKeyword_47()); 
+    }
+
+    |
+	kw='flow_destination' 
+    {
+        $current.merge(kw);
+        newLeafNode(kw, grammarAccess.getBuiltInFnAccess().getFlow_destinationKeyword_48()); 
     }
 )
     ;

@@ -57,6 +57,8 @@ public class BaseType extends ResoluteType {
 	public static final BaseType SUBPROGRAM_GROUP_ACCESS = new BaseType("subprogram_group_access");
 	public static final BaseType PROVIDES_SUBPROGRAM_GROUP_ACCESS = new BaseType("provides_subprogram_group_access");
 	public static final BaseType REQUIRES_SUBPROGRAM_GROUP_ACCESS = new BaseType("requires_subprogram_group_access");
+	
+	public static final BaseType FLOW_SPECIFICATION = new BaseType("flow_specification");
 
 	final public String name;
 
@@ -123,7 +125,8 @@ public class BaseType extends ResoluteType {
 			BaseType bt = (BaseType) otherType;
 			switch (bt.name) {
 			case "aadl":
-				return subtypeOf(COMPONENT) || subtypeOf(CONNECTION) || subtypeOf(PROPERTY) || subtypeOf(FEATURE);
+				return subtypeOf(COMPONENT) || subtypeOf(CONNECTION) || subtypeOf(PROPERTY) || subtypeOf(FEATURE)
+						|| subtypeOf(FLOW_SPECIFICATION);
 
 			case "component":
 				return subtypeOf(ABSTRACT) || subtypeOf(BUS) || subtypeOf(DATA) || subtypeOf(DEVICE)

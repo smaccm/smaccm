@@ -652,6 +652,11 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 
 		case "debug":
 			break;
+		
+		case "flow_source":
+		case "flow_destination":
+			expectedTypes.add(BaseType.FLOW_SPECIFICATION);
+			break;
 			
 		default:
 			error(funCall, "Unknown built-in function '" + funCall.getFn() + "'");

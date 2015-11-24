@@ -34,6 +34,7 @@ import org.osate.aadl2.Element;
 import org.osate.aadl2.NamedElement;
 import org.osate.aadl2.instance.ComponentInstance;
 import org.osate.aadl2.instance.ConnectionInstance;
+import org.osate.aadl2.instance.FlowSpecificationInstance;
 import org.osate.aadl2.instance.SystemInstance;
 import org.osate.aadl2.instantiation.InstantiateModel;
 import org.osate.aadl2.util.Aadl2Util;
@@ -308,6 +309,10 @@ public class ResoluteHandler extends AadlHandler {
 
 		for (ConnectionInstance conn : ci.getConnectionInstances()) {
 			addToSet(sets, "connection", conn);
+		}
+		
+		for (FlowSpecificationInstance flowSpec : ci.getFlowSpecifications()) {
+			addToSet(sets, "flow_specification", flowSpec);
 		}
 	}
 

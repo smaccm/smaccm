@@ -483,7 +483,8 @@ public class ResoluteSemanticSequencer extends PropertiesSemanticSequencer {
 	 *         type='requires_subprogram_access' | 
 	 *         type='subprogram_group_access' | 
 	 *         type='provides_subprogram_group_access' | 
-	 *         type='requires_subprogram_group_access'
+	 *         type='requires_subprogram_group_access' | 
+	 *         type='flow_specification'
 	 *     )
 	 */
 	protected void sequence_BaseType(EObject context, BaseType semanticObject) {

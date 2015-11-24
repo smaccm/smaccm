@@ -2043,6 +2043,14 @@ rule__BaseType__TypeAlternatives_0
 { after(grammarAccess.getBaseTypeAccess().getTypeRequires_subprogram_group_accessKeyword_0_41()); }
 )
 
+    |(
+{ before(grammarAccess.getBaseTypeAccess().getTypeFlow_specificationKeyword_0_42()); }
+
+	'flow_specification' 
+
+{ after(grammarAccess.getBaseTypeAccess().getTypeFlow_specificationKeyword_0_42()); }
+)
+
 ;
 finally {
 	restoreStackSize(stackSize);
@@ -2858,6 +2866,22 @@ rule__BuiltInFn__Alternatives
 	'error_state_reachable' 
 
 { after(grammarAccess.getBuiltInFnAccess().getError_state_reachableKeyword_46()); }
+)
+
+    |(
+{ before(grammarAccess.getBuiltInFnAccess().getFlow_sourceKeyword_47()); }
+
+	'flow_source' 
+
+{ after(grammarAccess.getBuiltInFnAccess().getFlow_sourceKeyword_47()); }
+)
+
+    |(
+{ before(grammarAccess.getBuiltInFnAccess().getFlow_destinationKeyword_48()); }
+
+	'flow_destination' 
+
+{ after(grammarAccess.getBuiltInFnAccess().getFlow_destinationKeyword_48()); }
 )
 
 ;

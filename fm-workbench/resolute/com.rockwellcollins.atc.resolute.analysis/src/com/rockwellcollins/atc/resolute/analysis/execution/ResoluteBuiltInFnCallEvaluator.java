@@ -34,6 +34,7 @@ import org.osate.aadl2.instance.ComponentInstance;
 import org.osate.aadl2.instance.ConnectionInstance;
 import org.osate.aadl2.instance.ConnectionReference;
 import org.osate.aadl2.instance.FeatureInstance;
+import org.osate.aadl2.instance.FlowSpecificationInstance;
 import org.osate.aadl2.instance.InstanceReferenceValue;
 import org.osate.aadl2.instance.SystemInstance;
 import org.osate.aadl2.properties.PropertyDoesNotApplyToHolderException;
@@ -624,6 +625,16 @@ public class ResoluteBuiltInFnCallEvaluator {
 			}
 
 			return FALSE;
+		}
+		
+		case "flow_source": {
+			FlowSpecificationInstance flowSpec = (FlowSpecificationInstance)args.get(0).getNamedElement();
+			return new NamedElementValue(flowSpec.getSource());
+		}
+		
+		case "flow_destination": {
+			FlowSpecificationInstance flowSpec = (FlowSpecificationInstance)args.get(0).getNamedElement();
+			return new NamedElementValue(flowSpec.getDestination());
 		}
 
 		default:

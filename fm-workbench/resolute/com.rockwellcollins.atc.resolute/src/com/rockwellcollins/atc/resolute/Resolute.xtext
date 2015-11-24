@@ -86,6 +86,7 @@ BaseType:
          | 'subprogram_group_access'
          | 'provides_subprogram_group_access'
          | 'requires_subprogram_group_access'
+         | 'flow_specification'
          );
 
 //Arg types are used for functions, claims, and quantifiers
@@ -246,6 +247,9 @@ BuiltInFn:
 |	'contain_error'           // the component contain the error
 |	'propagate_error'         // the component propagate an error
 |   'error_state_reachable'   // the error state is reachable
+
+|   'flow_source'
+|   'flow_destination'
 ;
 
 RealTerm returns aadl2::RealLiteral:
