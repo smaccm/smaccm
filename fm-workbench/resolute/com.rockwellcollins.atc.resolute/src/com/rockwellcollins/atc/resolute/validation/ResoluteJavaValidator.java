@@ -661,6 +661,11 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 		case "flow_elements":
 			expectedTypes.add(BaseType.END_TO_END_FLOW);
 			break;
+		
+		case "flow_specifications":
+		case "end_to_end_flows":
+			expectedTypes.add(BaseType.COMPONENT);
+			break;
 			
 		default:
 			error(funCall, "Unknown built-in function '" + funCall.getFn() + "'");

@@ -2900,6 +2900,22 @@ rule__BuiltInFn__Alternatives
 { after(grammarAccess.getBuiltInFnAccess().getFlow_elementsKeyword_49()); }
 )
 
+    |(
+{ before(grammarAccess.getBuiltInFnAccess().getFlow_specificationsKeyword_50()); }
+
+	'flow_specifications' 
+
+{ after(grammarAccess.getBuiltInFnAccess().getFlow_specificationsKeyword_50()); }
+)
+
+    |(
+{ before(grammarAccess.getBuiltInFnAccess().getEnd_to_end_flowsKeyword_51()); }
+
+	'end_to_end_flows' 
+
+{ after(grammarAccess.getBuiltInFnAccess().getEnd_to_end_flowsKeyword_51()); }
+)
+
 ;
 finally {
 	restoreStackSize(stackSize);

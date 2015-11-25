@@ -3310,6 +3310,20 @@ ruleBuiltInFn returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken
         $current.merge(kw);
         newLeafNode(kw, grammarAccess.getBuiltInFnAccess().getFlow_elementsKeyword_49()); 
     }
+
+    |
+	kw='flow_specifications' 
+    {
+        $current.merge(kw);
+        newLeafNode(kw, grammarAccess.getBuiltInFnAccess().getFlow_specificationsKeyword_50()); 
+    }
+
+    |
+	kw='end_to_end_flows' 
+    {
+        $current.merge(kw);
+        newLeafNode(kw, grammarAccess.getBuiltInFnAccess().getEnd_to_end_flowsKeyword_51()); 
+    }
 )
     ;
 

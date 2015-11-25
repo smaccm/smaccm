@@ -643,6 +643,16 @@ public class ResoluteBuiltInFnCallEvaluator {
 			return createSetValue(etef.getFlowElements());
 		}
 		
+		case "flow_specifications": {
+			ComponentInstance comp = (ComponentInstance)args.get(0).getNamedElement();
+			return createSetValue(comp.getFlowSpecifications());
+		}
+		
+		case "end_to_end_flows": {
+			ComponentInstance comp = (ComponentInstance)args.get(0).getNamedElement();
+			return createSetValue(comp.getEndToEndFlows());
+		}
+		
 		default:
 			throw new IllegalArgumentException("Unknown function: " + fnCallExpr.getFn());
 		}

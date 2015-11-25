@@ -252,6 +252,8 @@ BuiltInFn:
 |   'flow_source'
 |   'flow_destination'
 |   'flow_elements'
+|   'flow_specifications'
+|   'end_to_end_flows'
 ;
 
 RealTerm returns aadl2::RealLiteral:
