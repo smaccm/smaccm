@@ -29,14 +29,27 @@ process implementation MissionSoftware.i
 		can : thread CAN;
 		vm : thread VM;
 		
+		pixhawk_data: data SMACCM_DATA::PixHawkData.i {
+			SMACCM_SYS::CAmkES_Owner_Thread => "PixhawkProxy";
+		};
+		
+     	output_data: data SMACCM_DATA::ServerOutputData.i {
+			SMACCM_SYS::CAmkES_Owner_Thread => "Server";
+		};
+		
 	connections
 		uart_rx : subprogram group access uart.uart <-> input.uart;
 		input_to_svr : subprogram group access input.to_svr <-> server.input;
-		server_output : subprogram group access server.output <-> output.input;
-		output_tx : subprogram group access output.uart <-> uart.uart;
-		pixhawk_data : subprogram group access pproxy.pixhawk_data <-> server.pixhawk_data;
+		server_output_notify : subprogram group access server.output_notify <-> output.input_notify;
+		output_tx : subprogram group access uart.uart <-> output.uart;
+		pixhawk_data_notify : subprogram group access pproxy.request_data <-> server.pixhawk_notify;
 		proxy_to_can : subprogram group access pproxy.can <-> can.can;
 		camera_data : subprogram group access vm.camera_data <-> server.camera_data;
+		
+		pixhawk_proxy_access : data access pixhawk_data -> pproxy.pixhawk_data;
+		server_proxy_access : data access  pixhawk_data -> server.pixhawk_data;
+		server_output_access : data access output_data -> server.output_data;
+		output_output_access : data access output_data -> output.input_data;
 		
 end MissionSoftware.i;
 
@@ -71,9 +84,12 @@ end Input;
 thread Server
 	features
 		input : provides subprogram group access MissionSubprograms::Server_Inputs;
-		output : requires subprogram group access MissionSubprograms::Server_Outputs;
-		pixhawk_data : requires subprogram group access MissionSubprograms::Pixhawk_group;
+		output_notify : requires subprogram group access MissionSubprograms::Server_Outputs;
+		pixhawk_notify : requires subprogram group access MissionSubprograms::Pixhawk_group;
 		camera_data : requires subprogram group access MissionSubprograms::Camera_group;
+		
+		pixhawk_data : requires data access SMACCM_DATA::PixhawkData.i;
+		output_data : requires data access SMACCM_DATA::ServerOutputData.i;
 	properties
 		Dispatch_Protocol => Aperiodic;
 		SMACCM_SYS::Thread_Type => Passive;
@@ -85,8 +101,10 @@ end Server;
 	
 thread Output
 	features
-		input : provides subprogram group access MissionSubprograms::Server_Outputs;
+		input_notify : provides subprogram group access MissionSubprograms::Server_Outputs;
 		uart : requires subprogram group access MissionSubprograms::UART_group;
+		
+		input_data : requires data access SMACCM_DATA::ServerOutputData.i;
 	properties
 		Dispatch_Protocol => Aperiodic;
 		SMACCM_SYS::Thread_Type => Passive;
@@ -98,8 +116,11 @@ end Output;
 	
 thread PixhawkProxy
 	features
-		pixhawk_data : provides subprogram group access MissionSubprograms::Pixhawk_group;
+		request_data : provides subprogram group access MissionSubprograms::Pixhawk_group;
 		can : requires subprogram group access MissionSubprograms::CAN_group;
+
+		pixhawk_data : requires data access SMACCM_DATA::PixHawkData.i;
+		
 	properties
 		Dispatch_Protocol => Periodic;
 		SMACCM_SYS::Thread_Type => Active;

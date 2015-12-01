@@ -21,12 +21,14 @@ end server_input;
 
 subprogram server_output
 	features
-		input: in parameter SMACCM_DATA::ServerOutputData.i;
+		input: in parameter Base_Types::Boolean;
 end server_output;
 
 subprogram get_pixhawk_data
 	features
-		result : out parameter SMACCM_DATA::PixHawkData.i;
+--		result : out parameter SMACCM_DATA::PixHawkData.i;
+		result : out parameter Base_Types::Boolean;
+
 end get_pixhawk_data;
 
 subprogram get_camera_data

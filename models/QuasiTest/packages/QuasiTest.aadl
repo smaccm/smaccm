@@ -354,53 +354,53 @@ system Vehicle
 		  
 		eq is_pending : bool = state >= 3 or state <= 5;
 		
---		guarantee "state range":
---			state >= 0 and state <= 5;
---
---		guarantee "leader position behavior": true ->
---			((defs.rising(left_shift) and pre(state) = leader) => state = pend_left)
---			and
---			((defs.rising(right_shift) and pre(state) = leader) => state = pend_right);
---			
---		guarantee "left position behavior": true ->
---			((defs.rising(left_shift) and pre(state) = left) => state = pend_right)
---			and
---			((defs.rising(right_shift) and pre(state) = left) => state = pend_leader);
---			
---		guarantee "right position behavior": true ->
---			((defs.rising(left_shift) and pre(state) = right) => state = pend_leader)
---			and
---			((defs.rising(right_shift) and pre(state) = right) => state = pend_left);
---			
---		guarantee "initial state" : state = init_state -> true;
---		
---		guarantee "stationary behavior" : true ->
---			not (defs.rising(left_shift) or defs.rising(right_shift)) and pre(state) <= 2 =>
---				state = pre(state);
---			
---		guarantee "state leader transition behavior" :
---			true -> 
---				(pre(state) = pend_leader) => 
---					if (pre(neighbor_state0) != leader and pre(neighbor_state1) != leader) then
---						state = leader
---					else
---						state = pend_leader;
---					 
---		guarantee "state right transition behavior" :
---			true -> 
---				(pre(state) = pend_right) =>
---					if (pre(neighbor_state0) != right and pre(neighbor_state1) != right) then
---						state = right
---					else
---						state = pend_right;
---					 
---		guarantee "state left transition behavior" :
---			true -> 
---				(pre(state) = pend_left) => 
---					if (pre(neighbor_state0) != left and pre(neighbor_state1) != left) then
---						state = left
---					else
---						state = pend_left;
+		guarantee "state range":
+			state >= 0 and state <= 5;
+
+		guarantee "leader position behavior": true ->
+			((defs.rising(left_shift) and pre(state) = leader) => state = pend_left)
+			and
+			((defs.rising(right_shift) and pre(state) = leader) => state = pend_right);
+			
+		guarantee "left position behavior": true ->
+			((defs.rising(left_shift) and pre(state) = left) => state = pend_right)
+			and
+			((defs.rising(right_shift) and pre(state) = left) => state = pend_leader);
+			
+		guarantee "right position behavior": true ->
+			((defs.rising(left_shift) and pre(state) = right) => state = pend_leader)
+			and
+			((defs.rising(right_shift) and pre(state) = right) => state = pend_left);
+			
+		guarantee "initial state" : state = init_state -> true;
+		
+		guarantee "stationary behavior" : true ->
+			not (defs.rising(left_shift) or defs.rising(right_shift)) and pre(state) <= 2 =>
+				state = pre(state);
+			
+		guarantee "state leader transition behavior" :
+			true -> 
+				(pre(state) = pend_leader) => 
+					if (pre(neighbor_state0) != leader and pre(neighbor_state1) != leader) then
+						state = leader
+					else
+						state = pend_leader;
+					 
+		guarantee "state right transition behavior" :
+			true -> 
+				(pre(state) = pend_right) =>
+					if (pre(neighbor_state0) != right and pre(neighbor_state1) != right) then
+						state = right
+					else
+						state = pend_right;
+					 
+		guarantee "state left transition behavior" :
+			true -> 
+				(pre(state) = pend_left) => 
+					if (pre(neighbor_state0) != left and pre(neighbor_state1) != left) then
+						state = left
+					else
+						state = pend_left;
 					 
 		assume "not shifting both same" : not (left_shift and right_shift);
 					 
