@@ -69,7 +69,7 @@ writeExternalInterruptHandler(signalName, signalNumber) ::= <<
 >>
 
 writeInternalDispatcherInterruptHandler(dispatcher) ::= << 
-$writeInternalInterruptHandler(dispatcher.signalName)$
+$writeInternalInterruptHandler(dispatcher.signalName)$ 
 >>
 
 writeExternalDispatcherInterruptHandler(dispatcher) ::= << 
