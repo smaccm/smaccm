@@ -1124,6 +1124,16 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 			return BaseType.FAIL;
 		}
 
+		if (!(getExprType(funCall.getArgs().get(0)) instanceof SetType))
+		{
+			return BaseType.FAIL;
+		}
+		
+		if (!(getExprType(funCall.getArgs().get(1)) instanceof SetType))
+		{
+			return BaseType.FAIL;
+		}
+		
 		SetType set1 = (SetType) getExprType(funCall.getArgs().get(0));
 		SetType set2 = (SetType) getExprType(funCall.getArgs().get(1));
 
