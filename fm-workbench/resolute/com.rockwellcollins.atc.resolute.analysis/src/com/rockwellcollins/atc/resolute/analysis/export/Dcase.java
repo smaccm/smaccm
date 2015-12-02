@@ -49,8 +49,7 @@ public class Dcase {
 		OsateDebug.osateDebug("GSN export", "Export to GSN");
 
 		long start = System.currentTimeMillis();
-		long stop = System.currentTimeMillis();
-		OsateDebug.osateDebug("Evaluation time: " + (stop - start) / 1000.0 + "s");
+
 		model = createInitialModel();
 
 		Goal goal = DcaseFactory.eINSTANCE.createGoal();
@@ -69,6 +68,8 @@ public class Dcase {
 		modelURI = getModelURI(claim);
 		Resource diagram = createDiagram(model, diagramURI, modelURI);
 		System.out.println("diagram = " + diagram);
+		long stop = System.currentTimeMillis();
+		OsateDebug.osateDebug("Export time: " + (stop - start) / 1000.0 + "s");
 	}
 
 	private static void export(BasicNode parent, ResoluteResult resoluteResult) {
@@ -112,35 +113,39 @@ public class Dcase {
 				export(subgoal, rr);
 			}
 		}
+		else
+		{
+
+			for (ResoluteResult rr : resoluteResult.getChildren()) {
+				export(parent, rr);
+			}
+		}
 
 		/**
 		 * Then, we process the sub results - if we created a new subgoal, we
 		 * will associate it with it - otherwise, we keep the parent.
 		 */
-		for (ResoluteResult rr : resoluteResult.getChildren()) {
-			export(subgoal != null ? subgoal : parent, rr);
-		}
 
 		/**
 		 * Here, if the result has no child, then, we create an evidence
 		 * connected to the goal created
 		 */
-		if (resoluteResult.getChildren().size() == 0) {
-			Evidence evidence = DcaseFactory.eINSTANCE.createEvidence();
-			DcaseLink001 linkEvidence = DcaseFactory.eINSTANCE.createDcaseLink001();
-			linkEvidence.setTarget(evidence);
-			linkEvidence.setSource(parent);
-
-			if (resoluteResult.isValid()) {
-				evidence.setName("Validated");
-			} else {
-				evidence.setName("Not validated");
-			}
-
-			model.getRootBasicLink().add(linkEvidence);
-			model.getRootBasicNode().add(evidence);
-
-		}
+//		if (resoluteResult.getChildren().size() == 0) {
+//			Evidence evidence = DcaseFactory.eINSTANCE.createEvidence();
+//			DcaseLink001 linkEvidence = DcaseFactory.eINSTANCE.createDcaseLink001();
+//			linkEvidence.setTarget(evidence);
+//			linkEvidence.setSource(parent);
+//
+//			if (resoluteResult.isValid()) {
+//				evidence.setName("Validated");
+//			} else {
+//				evidence.setName("Not validated");
+//			}
+//
+//			model.getRootBasicLink().add(linkEvidence);
+//			model.getRootBasicNode().add(evidence);
+//
+//		}
 
 	}
 
