@@ -12,6 +12,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.workspace.util.WorkspaceSynchronizer;
@@ -19,6 +20,7 @@ import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.diagram.core.services.ViewService;
 import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractTransactionalCommand;
 import org.eclipse.gmf.runtime.emf.core.GMFEditingDomainFactory;
+import org.eclipse.gmf.runtime.emf.core.resources.GMFResource;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.xtext.ui.util.ResourceUtil;
 import org.osate.aadl2.util.OsateDebug;
@@ -31,7 +33,6 @@ import net.dependableos.dcase.Argument;
 import net.dependableos.dcase.BasicNode;
 import net.dependableos.dcase.DcaseFactory;
 import net.dependableos.dcase.DcaseLink001;
-import net.dependableos.dcase.Evidence;
 import net.dependableos.dcase.Goal;
 import net.dependableos.dcase.diagram.edit.parts.ArgumentEditPart;
 import net.dependableos.dcase.diagram.part.DcaseDiagramEditorPlugin;
@@ -40,7 +41,7 @@ import net.dependableos.dcase.diagram.part.Messages;
 public class Dcase {
 
 	private static Argument model;
-	
+
     public static void tryLoad() throws NoClassDefFoundError {
         // Nothing needed since static initialization of this class already tries to load CertWare
     }
@@ -175,16 +176,24 @@ public class Dcase {
 		final String diagramName = diagramURI.lastSegment();
 		AbstractTransactionalCommand command = new AbstractTransactionalCommand(editingDomain,
 				Messages.DcaseDiagramEditorUtil_CreateDiagramCommandLabel, Collections.EMPTY_LIST) {
+			@Override
 			protected CommandResult doExecuteWithResult(IProgressMonitor monitor, IAdaptable info)
 					throws ExecutionException {
 				attachModelToResource(arg, modelResource);
 
 				Diagram diagram = ViewService.createDiagram(arg, ArgumentEditPart.MODEL_ID,
 						DcaseDiagramEditorPlugin.DIAGRAM_PREFERENCES_HINT);
+
+
 				if (diagram != null) {
 					diagramResource.getContents().add(diagram);
 					diagram.setName(diagramName);
 					diagram.setElement(arg);
+				}
+
+				for (Object obj : diagram.getChildren())
+				{
+					OsateDebug.osateDebug("Dcase", "obj: " + obj);
 				}
 
 				try {
@@ -194,6 +203,9 @@ public class Dcase {
 
 					DcaseDiagramEditorPlugin.getInstance().logError("Unable to store model and diagram resources", e); //$NON-NLS-1$
 				}
+				OsateDebug.osateDebug("Dcase", "diagramResource: " + diagramResource);
+				GMFResource gmfres = (GMFResource) diagramResource;
+				updateDiagram (gmfres);
 				return CommandResult.newOKCommandResult();
 			}
 		};
@@ -216,6 +228,28 @@ public class Dcase {
 		} catch (CoreException e) {
 			DcaseDiagramEditorPlugin.getInstance().logError("Unable to set charset for file " + file.getFullPath(), e); //$NON-NLS-1$
 		}
+	}
+
+	private static void updateDiagram (GMFResource gmfres)
+	{
+		OsateDebug.osateDebug("Dcase", "gmfres: " + gmfres);
+
+		for (EObject eobj : gmfres.getContents())
+		{
+			updateDiagram (eobj, 0);
+		}
+	}
+
+	private static void updateDiagram (EObject eobj, int level)
+	{
+		String str = "";
+		for (int i = 0 ; i < level ; i++)
+		{
+			str += " ";
+		}
+		str += eobj.toString();
+		OsateDebug.osateDebug("Dcase", "eobj: " + str);
+
 	}
 
 	private static void attachModelToResource(Argument model, Resource resource) {
