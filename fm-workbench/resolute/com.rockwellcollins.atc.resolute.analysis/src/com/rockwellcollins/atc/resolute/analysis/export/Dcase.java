@@ -204,12 +204,21 @@ public class Dcase {
 					diagramResource.getContents().add(diagram);
 					diagram.setName(diagramName);
 					diagram.setElement(arg);
-				}
+					diagram.persist();
+					try {
 
-				for (Object obj : diagram.getChildren())
-				{
-					OsateDebug.osateDebug("Dcase", "obj: " + obj);
+						diagramResource.setModified(true);
+						diagramResource.save(null);
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				}
+//
+//				for (Object obj : diagram.getChildren())
+//				{
+//					OsateDebug.osateDebug("Dcase", "obj: " + obj);
+//				}
 
 				try {
 					modelResource.save(net.dependableos.dcase.diagram.part.DcaseDiagramEditorUtil.getSaveOptions());
