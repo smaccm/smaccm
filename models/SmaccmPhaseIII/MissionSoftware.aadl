@@ -38,10 +38,10 @@ process implementation MissionSoftware.i
 		};
 		
 	connections
-		uart_rx : subprogram group access uart.uart <-> input.uart;
+		uart_rx : subprogram group access input.uart <-> uart.uart;
 		input_to_svr : subprogram group access input.to_svr <-> server.input;
 		server_output_notify : subprogram group access server.output_notify <-> output.input_notify;
-		output_tx : subprogram group access uart.uart <-> output.uart;
+		output_tx : subprogram group access output.uart <-> uart.uart;
 		pixhawk_data_notify : subprogram group access pproxy.request_data <-> server.pixhawk_notify;
 		proxy_to_can : subprogram group access pproxy.can <-> can.can;
 		camera_data : subprogram group access vm.camera_data <-> server.camera_data;
