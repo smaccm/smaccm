@@ -23,6 +23,7 @@ import org.eclipse.gmf.runtime.emf.core.GMFEditingDomainFactory;
 import org.eclipse.gmf.runtime.emf.core.resources.GMFResource;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.xtext.ui.util.ResourceUtil;
+import org.osate.aadl2.NamedElement;
 import org.osate.aadl2.util.OsateDebug;
 
 import com.rockwellcollins.atc.resolute.analysis.results.ClaimResult;
@@ -31,8 +32,10 @@ import com.rockwellcollins.atc.resolute.analysis.results.ResoluteResult;
 
 import net.dependableos.dcase.Argument;
 import net.dependableos.dcase.BasicNode;
+import net.dependableos.dcase.Context;
 import net.dependableos.dcase.DcaseFactory;
 import net.dependableos.dcase.DcaseLink001;
+import net.dependableos.dcase.Evidence;
 import net.dependableos.dcase.Goal;
 import net.dependableos.dcase.diagram.edit.parts.ArgumentEditPart;
 import net.dependableos.dcase.diagram.part.DcaseDiagramEditorPlugin;
@@ -83,9 +86,8 @@ public class Dcase {
 			subgoal = DcaseFactory.eINSTANCE.createGoal();
 			FailResult fr = (FailResult) resoluteResult;
 			subgoal.setMessage(fr.getText());
-
+			OsateDebug.osateDebug("Dcase", "fr location=" + fr.getLocation());
 		}
-
 		/**
 		 * A claimresult is also mapped into a goal
 		 */
@@ -94,6 +96,20 @@ public class Dcase {
 			ClaimResult cr = (ClaimResult) resoluteResult;
 			subgoal.setMessage(resoluteResult.toString());
 			subgoal.setMessage(cr.getText());
+			for (String refName : cr.getReferences().keySet())
+			{
+				EObject reference = cr.getReferences().get(refName);
+				NamedElement aadlNamedReference = (NamedElement) reference;
+//				OsateDebug.osateDebug("Dcase", "reference=" + reference);
+
+				Context context = DcaseFactory.eINSTANCE.createContext();
+//				context.setDesc("component " + refName);
+				DcaseLink001 linkContext = DcaseFactory.eINSTANCE.createDcaseLink001();
+				linkContext.setTarget(context);
+				linkContext.setSource(subgoal);
+				model.getRootBasicLink().add(linkContext);
+				model.getRootBasicNode().add(context);
+			}
 		}
 
 		/**
@@ -116,7 +132,6 @@ public class Dcase {
 		}
 		else
 		{
-
 			for (ResoluteResult rr : resoluteResult.getChildren()) {
 				export(parent, rr);
 			}
@@ -131,22 +146,22 @@ public class Dcase {
 		 * Here, if the result has no child, then, we create an evidence
 		 * connected to the goal created
 		 */
-//		if (resoluteResult.getChildren().size() == 0) {
-//			Evidence evidence = DcaseFactory.eINSTANCE.createEvidence();
-//			DcaseLink001 linkEvidence = DcaseFactory.eINSTANCE.createDcaseLink001();
-//			linkEvidence.setTarget(evidence);
-//			linkEvidence.setSource(parent);
-//
-//			if (resoluteResult.isValid()) {
-//				evidence.setName("Validated");
-//			} else {
-//				evidence.setName("Not validated");
-//			}
-//
-//			model.getRootBasicLink().add(linkEvidence);
-//			model.getRootBasicNode().add(evidence);
-//
-//		}
+		if (resoluteResult.getChildren().size() == 0) {
+			Evidence evidence = DcaseFactory.eINSTANCE.createEvidence();
+			DcaseLink001 linkEvidence = DcaseFactory.eINSTANCE.createDcaseLink001();
+			linkEvidence.setTarget(evidence);
+			linkEvidence.setSource(parent);
+
+			if (resoluteResult.isValid()) {
+				evidence.setDesc("Validated");
+			} else {
+				evidence.setDesc("Not validated");
+			}
+
+			model.getRootBasicLink().add(linkEvidence);
+			model.getRootBasicNode().add(evidence);
+
+		}
 
 	}
 
@@ -156,7 +171,7 @@ public class Dcase {
 
 	private static URI getModelURI(ClaimResult claim) {
 		IFile file = ResourceUtil.getFile(claim.getLocation().eResource());
-		IPath path = file.getFullPath();
+		IPath path = file.getFullPath().removeFileExtension();
 		return URI.createPlatformResourceURI(path.addFileExtension("dcase_model").toString(), true);
 	}
 
@@ -164,7 +179,7 @@ public class Dcase {
 		// EObject obj = cr.getLocation();
 		Resource res = claim.getLocation().eResource();
 		IFile file = ResourceUtil.getFile(res);
-		IPath path = file.getFullPath();
+		IPath path = file.getFullPath().removeFileExtension();
 		return URI.createPlatformResourceURI(path.addFileExtension("dcase_diagram").toString(), true);
 	}
 
@@ -203,9 +218,7 @@ public class Dcase {
 
 					DcaseDiagramEditorPlugin.getInstance().logError("Unable to store model and diagram resources", e); //$NON-NLS-1$
 				}
-				OsateDebug.osateDebug("Dcase", "diagramResource: " + diagramResource);
-				GMFResource gmfres = (GMFResource) diagramResource;
-				updateDiagram (gmfres);
+		
 				return CommandResult.newOKCommandResult();
 			}
 		};
@@ -228,28 +241,6 @@ public class Dcase {
 		} catch (CoreException e) {
 			DcaseDiagramEditorPlugin.getInstance().logError("Unable to set charset for file " + file.getFullPath(), e); //$NON-NLS-1$
 		}
-	}
-
-	private static void updateDiagram (GMFResource gmfres)
-	{
-		OsateDebug.osateDebug("Dcase", "gmfres: " + gmfres);
-
-		for (EObject eobj : gmfres.getContents())
-		{
-			updateDiagram (eobj, 0);
-		}
-	}
-
-	private static void updateDiagram (EObject eobj, int level)
-	{
-		String str = "";
-		for (int i = 0 ; i < level ; i++)
-		{
-			str += " ";
-		}
-		str += eobj.toString();
-		OsateDebug.osateDebug("Dcase", "eobj: " + str);
-
 	}
 
 	private static void attachModelToResource(Argument model, Resource resource) {
