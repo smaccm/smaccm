@@ -10,9 +10,12 @@ void input_input(SMACCM_DATA__ServerInputData_i input){
     bool newPixhawkData;
     pixhawk_notify_pixhawk_data(&newPixhawkData);
 
+    //only access the pixhawk_data structure within these semaphores
+    pixhawk_state_sem_wait();
     printf("The first field of the pixhawk data is %d\n", pixhawk_data->Output_parse_frame_0);
+    pixhawk_state_sem_post();
 
-    output_notify_output(true);
+    output_notify_output(newPixhawkData);
 
     
 }

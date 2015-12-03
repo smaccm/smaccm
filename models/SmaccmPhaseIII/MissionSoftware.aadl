@@ -97,6 +97,10 @@ thread Server
 		Stack_Size => 1024 Bytes;
 	    Compute_Execution_Time => 10 us .. 100 us;
 	    Source_Text => ("usercode/server.c");
+	    --we should not need the output_state_sem anyway since the output
+	    --thread should just run with the RPC from the server
+	    SMACCM_SYS::External_Semaphore_List => ("pixhawk_state_sem", "output_state_sem");
+	    
 end Server;
 	
 thread Output
@@ -112,6 +116,7 @@ thread Output
 		Stack_Size => 1024 Bytes;
 	    Compute_Execution_Time => 10 us .. 100 us;
 	    Source_Text => ("usercode/output.c");
+	    SMACCM_SYS::External_Semaphore_List => ("output_state_sem");
 end Output;
 	
 thread PixhawkProxy
@@ -130,13 +135,12 @@ thread PixhawkProxy
 	    Period => 100ms;
 	    Source_Text => ("usercode/pixhawk_proxy.c");
 	    Compute_Entrypoint_Source_Text => "entry";
+	    SMACCM_SYS::External_Semaphore_List => ("pixhawk_state_sem");
 end PixhawkProxy;
 	
 thread CAN
 	features
 		can : provides subprogram group access MissionSubprograms::CAN_group;
---		data_out : out event data port;
---		data_in : in event data port;
 	properties
 	    SMACCM_SYS::Is_External => true;
 	    Dispatch_Protocol => Sporadic;
