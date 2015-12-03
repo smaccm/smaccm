@@ -14,4 +14,5 @@ void uart_rx(ivory_string_UartPacket * result){
 
 void uart_tx(ivory_string_UartPacket input){
     printf("UART component received request to transmit data\n");
+    printf("The first element of this data is %d\n", input.ivory_string_UartPacket_data[0]);
 }
