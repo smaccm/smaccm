@@ -21,7 +21,7 @@ import com.rockwellcollins.atc.agree.codegen.ast.MATLABPrimaryFunction;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABProperty;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABStatement;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABIdExpr;
-import com.rockwellcollins.atc.agree.codgen.visitors.LustreToMATLABExprVisitor;
+import com.rockwellcollins.atc.agree.codegen.visitors.LustreToMATLABExprVisitor;
 
 public class LustreToMATLABTranslator {
 

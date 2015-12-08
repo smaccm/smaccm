@@ -1,7 +1,7 @@
 package com.rockwellcollins.atc.agree.codegen.ast;
 
-import com.rockwellcollins.atc.agree.codgen.visitors.MATLABAstVisitor;
-import com.rockwellcollins.atc.agree.codgen.visitors.MATLABPrettyPrintVisitor;
+import com.rockwellcollins.atc.agree.codegen.visitors.MATLABAstVisitor;
+import com.rockwellcollins.atc.agree.codegen.visitors.MATLABPrettyPrintVisitor;
 
 public abstract class MATLABAst {
 	

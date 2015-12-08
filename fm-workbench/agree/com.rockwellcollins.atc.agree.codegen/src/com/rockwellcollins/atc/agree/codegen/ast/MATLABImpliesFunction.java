@@ -1,6 +1,6 @@
 package com.rockwellcollins.atc.agree.codegen.ast;
 
-import com.rockwellcollins.atc.agree.codgen.visitors.MATLABAstVisitor;
+import com.rockwellcollins.atc.agree.codegen.visitors.MATLABAstVisitor;
 
 /**function output = impliesFunction(left, right)
  * 		output = (not(left) || right);

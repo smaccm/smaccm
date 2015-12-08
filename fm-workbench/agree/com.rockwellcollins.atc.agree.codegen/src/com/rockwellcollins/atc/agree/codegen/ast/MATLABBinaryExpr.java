@@ -1,6 +1,6 @@
 package com.rockwellcollins.atc.agree.codegen.ast;
 
-import com.rockwellcollins.atc.agree.codgen.visitors.MATLABExprVisitor;
+import com.rockwellcollins.atc.agree.codegen.visitors.MATLABExprVisitor;
 
 import jkind.Assert;
 

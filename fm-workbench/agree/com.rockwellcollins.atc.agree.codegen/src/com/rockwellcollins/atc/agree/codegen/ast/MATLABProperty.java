@@ -2,7 +2,7 @@ package com.rockwellcollins.atc.agree.codegen.ast;
 
 import jkind.Assert;
 
-import com.rockwellcollins.atc.agree.codgen.visitors.MATLABAstVisitor;
+import com.rockwellcollins.atc.agree.codegen.visitors.MATLABAstVisitor;
 
 public class MATLABProperty extends MATLABStatement {
 

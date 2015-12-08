@@ -2,7 +2,7 @@ package com.rockwellcollins.atc.agree.codegen.ast;
 
 import java.math.BigInteger;
 
-import com.rockwellcollins.atc.agree.codgen.visitors.MATLABExprVisitor;
+import com.rockwellcollins.atc.agree.codegen.visitors.MATLABExprVisitor;
 
 import jkind.Assert;
 

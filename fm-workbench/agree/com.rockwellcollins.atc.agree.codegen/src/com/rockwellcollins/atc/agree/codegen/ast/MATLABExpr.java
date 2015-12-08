@@ -1,7 +1,7 @@
 package com.rockwellcollins.atc.agree.codegen.ast;
 
-import com.rockwellcollins.atc.agree.codgen.visitors.MATLABAstVisitor;
-import com.rockwellcollins.atc.agree.codgen.visitors.MATLABExprVisitor;
+import com.rockwellcollins.atc.agree.codegen.visitors.MATLABAstVisitor;
+import com.rockwellcollins.atc.agree.codegen.visitors.MATLABExprVisitor;
 
 public abstract class MATLABExpr extends MATLABAst {
 

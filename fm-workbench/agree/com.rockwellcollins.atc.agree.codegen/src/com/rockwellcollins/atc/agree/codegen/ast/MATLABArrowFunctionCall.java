@@ -2,7 +2,7 @@ package com.rockwellcollins.atc.agree.codegen.ast;
 
 import jkind.Assert;
 
-import com.rockwellcollins.atc.agree.codgen.visitors.MATLABExprVisitor;
+import com.rockwellcollins.atc.agree.codegen.visitors.MATLABExprVisitor;
 
 public class MATLABArrowFunctionCall extends MATLABFunctionCall {
 
