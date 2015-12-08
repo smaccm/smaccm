@@ -401,7 +401,12 @@ public abstract class VerifyHandler extends AadlHandler {
     }
 
     protected void showView(final AnalysisResult result, final AgreeResultsLinker linker) {
-        getWindow().getShell().getDisplay().syncExec(new Runnable() {
+		/*
+		 * This command is executed while the xtext document is locked. Thus it must be async
+		 * otherwise we can get a deadlock condition if the UI tries to lock the document,
+		 * e.g., to pull up hover information.
+		 */
+        getWindow().getShell().getDisplay().asyncExec(new Runnable() {
             @Override
             public void run() {
                 try {

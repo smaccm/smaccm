@@ -10,12 +10,12 @@ package com.rockwellcollins.atc.resolute.resolute;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link com.rockwellcollins.atc.resolute.resolute.IfThenElseExpr#getCond <em>Cond</em>}</li>
  *   <li>{@link com.rockwellcollins.atc.resolute.resolute.IfThenElseExpr#getThen <em>Then</em>}</li>
  *   <li>{@link com.rockwellcollins.atc.resolute.resolute.IfThenElseExpr#getElse <em>Else</em>}</li>
  * </ul>
- * </p>
  *
  * @see com.rockwellcollins.atc.resolute.resolute.ResolutePackage#getIfThenElseExpr()
  * @model

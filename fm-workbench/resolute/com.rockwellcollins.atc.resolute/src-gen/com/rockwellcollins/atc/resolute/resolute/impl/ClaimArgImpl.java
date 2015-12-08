@@ -22,11 +22,11 @@ import org.osate.aadl2.UnitLiteral;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link com.rockwellcollins.atc.resolute.resolute.impl.ClaimArgImpl#getArg <em>Arg</em>}</li>
  *   <li>{@link com.rockwellcollins.atc.resolute.resolute.impl.ClaimArgImpl#getUnit <em>Unit</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

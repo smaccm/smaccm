@@ -11,10 +11,10 @@ import org.osate.aadl2.BooleanLiteral;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link com.rockwellcollins.atc.resolute.resolute.BoolExpr#getVal <em>Val</em>}</li>
  * </ul>
- * </p>
  *
  * @see com.rockwellcollins.atc.resolute.resolute.ResolutePackage#getBoolExpr()
  * @model

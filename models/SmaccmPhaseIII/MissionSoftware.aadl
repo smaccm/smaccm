@@ -1,14 +1,22 @@
 package MissionSoftware
 public
 	with SMACCM_SYS;
-	
+	with DATA_TYPES;
+	with SMACCM_DATA;
+	with MissionSubprograms;
+
+system top
+end top;
+
+system implementation top.i
+	subcomponents
+		proc : process MissionSoftware.i;
+	properties
+		SMACCM_SYS::OS => CAmkES;
+		SMACCM_SYS::HW => QEMU;
+end top.i;
 	
 process MissionSoftware
-	features
-		uart_out : out event data port;
-		uart_in : in event data port;
-		can_out : out event data port;
-		can_in : in event data port;
 end MissionSoftware;	
 
 process implementation MissionSoftware.i
@@ -21,90 +29,135 @@ process implementation MissionSoftware.i
 		can : thread CAN;
 		vm : thread VM;
 		
+		pixhawk_data: data SMACCM_DATA::PixHawkData.i {
+			SMACCM_SYS::CAmkES_Owner_Thread => "PixhawkProxy";
+		};
+		
+     	output_data: data SMACCM_DATA::ServerOutputData.i {
+			SMACCM_SYS::CAmkES_Owner_Thread => "Server";
+		};
+		
 	connections
-		uart_inside : port uart_in -> uart.data_in;
-		can_inside : port can_in -> can.data_in;
+		uart_rx : subprogram group access input.uart <-> uart.uart;
+		input_to_svr : subprogram group access input.to_svr <-> server.input;
+		server_output_notify : subprogram group access server.output_notify <-> output.input_notify;
+		output_tx : subprogram group access output.uart <-> uart.uart;
+		pixhawk_data_notify : subprogram group access pproxy.request_data <-> server.pixhawk_notify;
+		proxy_to_can : subprogram group access pproxy.can <-> can.can;
+		camera_data : subprogram group access vm.camera_data <-> server.camera_data;
 		
-		uart_rx : data access uart.rx -> input.rx;
-		uart_outside : port uart.data_out -> uart_out;
-		
-		input_to_svr : port input.to_svr -> server.input;
-		
-		server_output : port server.output -> output.input;
-		
-		output_tx : port output.tx -> uart.tx;
-		
-		pixhawk_data : data access pproxy.pixhawk_data -> server.pixhawk_data;
-		proxy_to_can : port pproxy.tx -> can.tx;
-		
-		can_to_proxy : port can.rx -> pproxy.rx;
-		can_outside : port can.data_out -> can_out;
-		
-		camera_data : data access vm.camera_data -> server.camera_data;
+		pixhawk_proxy_access : data access pixhawk_data -> pproxy.pixhawk_data;
+		server_proxy_access : data access  pixhawk_data -> server.pixhawk_data;
+		server_output_access : data access output_data -> server.output_data;
+		output_output_access : data access output_data -> output.input_data;
 		
 end MissionSoftware.i;
-	
+
 thread UART
 	features
-		tx : in event data port;
-		rx : provides data access;
-		data_in : in event data port;
-		data_out : out event data port;
+		uart : provides subprogram group access MissionSubprograms::UART_group;
 	properties
-		Dispatch_Protocol => Sporadic;
+	    SMACCM_SYS::Is_External => true;
+	    Dispatch_Protocol => Sporadic;
+	    SMACCM_SYS::Thread_Type => Active;
+	    Compute_Execution_Time => 10 us .. 100 us;
+	    Source_Text => ();
+	    Period => 100ms;
 end UART;
 	
 thread Input
 	features
-		rx : requires data access;
-		to_svr : out event data port;
+		--not sure what the dimension of this array should be
+		uart : requires subprogram group access MissionSubprograms::UART_group;
+		to_svr : requires subprogram group access MissionSubprograms::Server_Inputs;
 	properties
 		Dispatch_Protocol => Periodic;
+		SMACCM_SYS::Thread_Type => Active;
+		Priority => 1;
+		Stack_Size => 1024 Bytes;
+	    Compute_Execution_Time => 10 us .. 100 us;
+	    Period => 100ms;
+	    Source_Text => ("usercode/input.c");
+	    Compute_Entrypoint_Source_Text => "entry";
 end Input;
 	
 thread Server
 	features
-		input : in event data port;
-		output : out event data port;
-		pixhawk_data : requires data access;
-		camera_data : requires data access;
+		input : provides subprogram group access MissionSubprograms::Server_Inputs;
+		output_notify : requires subprogram group access MissionSubprograms::Server_Outputs;
+		pixhawk_notify : requires subprogram group access MissionSubprograms::Pixhawk_group;
+		camera_data : requires subprogram group access MissionSubprograms::Camera_group;
+		
+		pixhawk_data : requires data access SMACCM_DATA::PixhawkData.i;
+		output_data : requires data access SMACCM_DATA::ServerOutputData.i;
 	properties
-		Dispatch_Protocol => Sporadic;
+		Dispatch_Protocol => Aperiodic;
+		SMACCM_SYS::Thread_Type => Passive;
+		Priority => 1;
+		Stack_Size => 1024 Bytes;
+	    Compute_Execution_Time => 10 us .. 100 us;
+	    Source_Text => ("usercode/server.c");
+	    --we should not need the output_state_sem anyway since the output
+	    --thread should just run with the RPC from the server
+	    SMACCM_SYS::External_Semaphore_List => ("pixhawk_state_sem", "output_state_sem");
+	    
 end Server;
 	
 thread Output
 	features
-		input : in event data port;
-		tx : out event data port;
+		input_notify : provides subprogram group access MissionSubprograms::Server_Outputs;
+		uart : requires subprogram group access MissionSubprograms::UART_group;
+		
+		input_data : requires data access SMACCM_DATA::ServerOutputData.i;
 	properties
-		Dispatch_Protocol => Sporadic;
+		Dispatch_Protocol => Aperiodic;
+		SMACCM_SYS::Thread_Type => Passive;
+		Priority => 1;
+		Stack_Size => 1024 Bytes;
+	    Compute_Execution_Time => 10 us .. 100 us;
+	    Source_Text => ("usercode/output.c");
+	    SMACCM_SYS::External_Semaphore_List => ("output_state_sem");
 end Output;
 	
 thread PixhawkProxy
 	features
-		pixhawk_commands : provides data access;
-		pixhawk_data : provides data access;
-		rx : in event data port;
-		tx : out event data port;
+		request_data : provides subprogram group access MissionSubprograms::Pixhawk_group;
+		can : requires subprogram group access MissionSubprograms::CAN_group;
+
+		pixhawk_data : requires data access SMACCM_DATA::PixHawkData.i;
+		
 	properties
 		Dispatch_Protocol => Periodic;
+		SMACCM_SYS::Thread_Type => Active;
+		Priority => 1;
+		Stack_Size => 1024 Bytes;
+	    Compute_Execution_Time => 10 us .. 100 us;
+	    Period => 100ms;
+	    Source_Text => ("usercode/pixhawk_proxy.c");
+	    Compute_Entrypoint_Source_Text => "entry";
+	    SMACCM_SYS::External_Semaphore_List => ("pixhawk_state_sem");
 end PixhawkProxy;
 	
 thread CAN
 	features
-		rx : out event data port;
-		tx : in event data port;
-		data_out : out event data port;
-		data_in : in event data port;
+		can : provides subprogram group access MissionSubprograms::CAN_group;
 	properties
-		Dispatch_Protocol => Sporadic;
+	    SMACCM_SYS::Is_External => true;
+	    Dispatch_Protocol => Sporadic;
+	    SMACCM_SYS::Thread_Type => Active;
+	    Compute_Execution_Time => 10 us .. 100 us;
+	    Source_Text => ();
 end CAN;
 
 thread VM
 	features
-		camera_data : provides data access;
+		camera_data : provides subprogram group access MissionSubprograms::Camera_group;
 	properties
-		Dispatch_Protocol => Sporadic;
+		SMACCM_SYS::Is_External => true;
+	    Dispatch_Protocol => Sporadic;
+	    SMACCM_SYS::Thread_Type => Active;
+	    Compute_Execution_Time => 10 us .. 100 us;
+	    Source_Text => ();
 end VM;
 	
 end MissionSoftware;

@@ -10,10 +10,10 @@ package com.rockwellcollins.atc.resolute.resolute;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link com.rockwellcollins.atc.resolute.resolute.SetType#getType <em>Type</em>}</li>
  * </ul>
- * </p>
  *
  * @see com.rockwellcollins.atc.resolute.resolute.ResolutePackage#getSetType()
  * @model

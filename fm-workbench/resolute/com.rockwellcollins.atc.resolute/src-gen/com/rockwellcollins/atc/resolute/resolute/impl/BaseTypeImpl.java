@@ -17,10 +17,10 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link com.rockwellcollins.atc.resolute.resolute.impl.BaseTypeImpl#getType <em>Type</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

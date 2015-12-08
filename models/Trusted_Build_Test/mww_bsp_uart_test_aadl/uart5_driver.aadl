@@ -1,0 +1,46 @@
+-- File generated from Tower-AADL compiler
+
+package uart5_driver
+public
+  with Base_Types;
+  with Data_Model;
+  with Data_Types;
+  with SMACCM_SYS;
+
+thread uart5_driver
+  features
+    Input_req_chan: in event data port Data_Types::ivory_string_UARTBuffer
+      {
+        SMACCM_SYS::Compute_Entrypoint_Source_Text => ("callback_req_chan");
+        Source_Text => ("user_code/uart5_driver_monitor.c");
+        SMACCM_SYS::Sends_Events_To => "{{}}";
+      };
+    Input_UART5_IRQHandler: in event port
+      {
+        Source_Text => ("user_code/uart5_driver_monitor.c", "libsmaccmpilot/src/UART5_IRQHandler.c");
+        SMACCM_SYS::Is_ISR => true;
+        SMACCM_SYS::First_Level_Interrupt_Handler => "UART5_IRQHandler";
+        SMACCM_SYS::Compute_Entrypoint_Source_Text => ("callback_interrupt");
+        SMACCM_SYS::Signal_Name => "UART5_IRQHandler";
+        SMACCM_SYS::Signal_Number => 53;
+      };
+    Output_interrupt_0: out event data port Base_Types::Unsigned_8
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_interrupt_chan_4";
+      };
+    Output_interrupt_1: out event data port Base_Types::Boolean
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_interrupt_chan_3";
+      };
+  properties
+    Compute_Execution_Time => 10 us .. 100 us;
+    Source_Text => ("user_code/uart5_driver_monitor.c");
+    SMACCM_SYS::Thread_Type => Active;
+    Dispatch_Protocol => Sporadic;
+    Stack_Size => 1000 bytes;
+    Priority => 120;
+    SMACCM_SYS::Sends_Events_To => "{{1 Output_interrupt_0, 1 Output_interrupt_1}}";
+    Initialize_Entrypoint_Source_Text => "callback_init";
+end uart5_driver;
+
+end uart5_driver;

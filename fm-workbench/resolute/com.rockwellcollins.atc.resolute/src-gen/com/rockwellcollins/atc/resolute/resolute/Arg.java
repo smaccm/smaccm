@@ -11,10 +11,10 @@ import org.osate.aadl2.NamedElement;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link com.rockwellcollins.atc.resolute.resolute.Arg#getType <em>Type</em>}</li>
  * </ul>
- * </p>
  *
  * @see com.rockwellcollins.atc.resolute.resolute.ResolutePackage#getArg()
  * @model

@@ -1,0 +1,34 @@
+-- File generated from Tower-AADL compiler
+
+package uart
+public
+  with Base_Types;
+  with Data_Model;
+  with Data_Types;
+  with SMACCM_SYS;
+
+thread uart
+  features
+    Input_send: in event data port Data_Types::ivory_string_UartPacket
+      {
+        SMACCM_SYS::Compute_Entrypoint_Source_Text => ("callback_send");
+        SMACCM_SYS::Sends_Events_To => "{{}}";
+        SMACCM_SYS::Sends_Events_To => "{{1 Output_send_0}}";
+      };
+    Output_recv_rx_0: out event data port Data_Types::ivory_string_UartPacket
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_recv_rx_chan_126";
+      };
+    Output_recv_resp_0: out event data port Base_Types::Boolean
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_recv_resp_chan_125";
+      };
+  properties
+    SMACCM_SYS::Is_External => true;
+    Dispatch_Protocol => Sporadic;
+    SMACCM_SYS::Thread_Type => Active;
+    Compute_Execution_Time => 10 us .. 100 us;
+    Source_Text => ();
+end uart;
+
+end uart;

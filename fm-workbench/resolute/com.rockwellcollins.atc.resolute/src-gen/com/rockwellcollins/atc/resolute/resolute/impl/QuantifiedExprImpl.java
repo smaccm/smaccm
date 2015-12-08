@@ -28,12 +28,12 @@ import org.eclipse.emf.ecore.util.InternalEList;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link com.rockwellcollins.atc.resolute.resolute.impl.QuantifiedExprImpl#getQuant <em>Quant</em>}</li>
  *   <li>{@link com.rockwellcollins.atc.resolute.resolute.impl.QuantifiedExprImpl#getArgs <em>Args</em>}</li>
  *   <li>{@link com.rockwellcollins.atc.resolute.resolute.impl.QuantifiedExprImpl#getExpr <em>Expr</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

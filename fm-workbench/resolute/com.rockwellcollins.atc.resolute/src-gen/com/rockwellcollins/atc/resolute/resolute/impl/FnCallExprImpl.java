@@ -28,11 +28,11 @@ import org.eclipse.emf.ecore.util.InternalEList;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link com.rockwellcollins.atc.resolute.resolute.impl.FnCallExprImpl#getFn <em>Fn</em>}</li>
  *   <li>{@link com.rockwellcollins.atc.resolute.resolute.impl.FnCallExprImpl#getArgs <em>Args</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

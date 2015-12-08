@@ -53,7 +53,10 @@ public class ResoluteScopeProvider extends PropertiesScopeProvider {
             List<Arg> visibleArgs = args.subList(0, args.indexOf(ctx));
             return Scopes.scopeFor(visibleArgs, getScope(parent.eContainer(), ref));
         }
-
+        else if(ctx.eContainer() instanceof FunctionDefinition){
+            return IScope.NULLSCOPE;
+        }
+        
         return getScope(ctx.eContainer(), ref);
     }
 

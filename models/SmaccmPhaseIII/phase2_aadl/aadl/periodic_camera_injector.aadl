@@ -1,0 +1,40 @@
+-- File generated from Tower-AADL compiler
+
+package periodic_camera_injector
+public
+  with Base_Types;
+  with Data_Model;
+  with Data_Types;
+  with SMACCM_SYS;
+
+thread periodic_camera_injector
+  features
+    Input_camera_req: in event data port Base_Types::Unsigned_32
+      {
+        SMACCM_SYS::Compute_Entrypoint_Source_Text => ("callback_camera_req");
+        Source_Text => ("user_code/periodic_camera_injector_monitor.c");
+        Queue_Size => 1000;
+        SMACCM_SYS::Sends_Events_To => "{{1 Output_camera_req_0}}";
+      };
+    Input_cameraDataRx: in event data port Data_Types::camera_data
+      {
+        SMACCM_SYS::Compute_Entrypoint_Source_Text => ("callback_cameraDataRx");
+        Source_Text => ("user_code/periodic_camera_injector_monitor.c");
+        Queue_Size => 1000;
+        SMACCM_SYS::Sends_Events_To => "{{}}";
+      };
+    Output_camera_req_0: out event data port Data_Types::sequence_numbered_camera_target
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_camera_req_chan_14";
+      };
+  properties
+    Compute_Execution_Time => 10 us .. 100 us;
+    SMACCM_SYS::Sends_Events_To => "{{1 Output_camera_req_0}}";
+    Source_Text => ();
+    SMACCM_SYS::Thread_Type => Active;
+    Dispatch_Protocol => Sporadic;
+    Stack_Size => 1000 bytes;
+    Priority => 140;
+end periodic_camera_injector;
+
+end periodic_camera_injector;

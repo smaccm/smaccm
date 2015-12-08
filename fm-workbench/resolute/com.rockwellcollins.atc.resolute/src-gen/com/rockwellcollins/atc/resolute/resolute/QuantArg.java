@@ -10,10 +10,10 @@ package com.rockwellcollins.atc.resolute.resolute;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link com.rockwellcollins.atc.resolute.resolute.QuantArg#getExpr <em>Expr</em>}</li>
  * </ul>
- * </p>
  *
  * @see com.rockwellcollins.atc.resolute.resolute.ResolutePackage#getQuantArg()
  * @model
