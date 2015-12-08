@@ -565,7 +565,8 @@ public class LustreAstBuilder {
 
         if (agreeNode.timing == TimingModel.ASYNC) {
             if (someoneTicks == null) {
-                throw new AgreeException("Somehow we generated a clock constraint without any clocks");
+                throw new AgreeException("Somehow we generated a clock constraint without any clocks."
+                        + " Perhaps none of your subcomponents have an agree annex?");
             }
             assertions.add(new AgreeStatement("someone ticks", someoneTicks, null));
         }
