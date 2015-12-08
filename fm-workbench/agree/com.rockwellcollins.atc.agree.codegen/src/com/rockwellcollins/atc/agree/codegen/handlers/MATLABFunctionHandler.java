@@ -2,29 +2,16 @@ package com.rockwellcollins.atc.agree.codegen.handlers;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.List;
+import jkind.lustre.Node;
 
-import jkind.api.results.AnalysisResult;
-import jkind.api.results.CompositeAnalysisResult;
-import jkind.lustre.Program;
-
-import org.eclipse.core.commands.AbstractHandler;
-import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.handlers.HandlerUtil;
-import org.eclipse.ui.handlers.IHandlerService;
-import org.eclipse.xtext.util.Pair;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.osate.aadl2.AnnexSubclause;
 import org.osate.aadl2.ComponentImplementation;
 import org.osate.aadl2.ComponentType;
 import org.osate.aadl2.Element;
-import org.osate.aadl2.instance.ComponentInstance;
 import org.osate.aadl2.instance.SystemInstance;
 import org.osate.aadl2.instantiation.InstantiateModel;
 import org.osate.annexsupport.AnnexUtil;
@@ -33,24 +20,24 @@ import org.osate.ui.dialogs.Dialog;
 import com.rockwellcollins.atc.agree.agree.AgreePackage;
 import com.rockwellcollins.atc.agree.analysis.AgreeException;
 import com.rockwellcollins.atc.agree.analysis.AgreeUtils;
-import com.rockwellcollins.atc.agree.analysis.LustreAstBuilder;
-import com.rockwellcollins.atc.agree.analysis.LustreContractAstBuilder;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeASTBuilder;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeProgram;
 import com.rockwellcollins.atc.agree.analysis.handlers.AadlHandler;
+import com.rockwellcollins.atc.agree.analysis.translation.AgreeNodeToLustreContract;
 import com.rockwellcollins.atc.agree.codegen.Activator;
-import com.rockwellcollins.atc.agree.codegen.MatlabFunctionBuilder;
+import com.rockwellcollins.atc.agree.codegen.ast.MATLABPrimaryFunction;
+import com.rockwellcollins.atc.agree.codegen.translation.LustreToMATLABTranslator;
 
 /**
  * Our sample handler extends AbstractHandler, an IHandler base class.
  * @see org.eclipse.core.commands.IHandler
  * @see org.eclipse.core.commands.AbstractHandler
  */
-public class MatlabFunctionHandler extends AadlHandler {
+public class MATLABFunctionHandler extends AadlHandler {
 	/**
 	 * The constructor.
 	 */
-	public MatlabFunctionHandler() {
+	public MATLABFunctionHandler() {
 	}
 
     protected String getNestedMessages(Throwable e) {
@@ -93,8 +80,20 @@ public class MatlabFunctionHandler extends AadlHandler {
                 throw new AgreeException(
                         "There is not an AGREE annex in the '" + sysType.getName() + "' system type.");
             }
+            
+            //Get Agree program
             AgreeProgram agreeProgram = new AgreeASTBuilder().getAgreeProgram(si);
-            MatlabFunctionBuilder.createMatlabFunction(agreeProgram);
+
+            //Translate Agree Node to Lustre Node with pre-statement flatten, helper nodes inlined,
+            //and variable declarations sorted so they are declared before use
+            Node lustreNode = AgreeNodeToLustreContract.translate(agreeProgram.topNode, agreeProgram);
+            
+            //Translate Lustre Node to MATLAB Function AST
+            MATLABPrimaryFunction matlabFunction = LustreToMATLABTranslator.translate(lustreNode);
+            
+            //Walk through MATLAB function AST and print out
+            System.out.println(matlabFunction);
+            //TODO write to MATLAB script file with the same name as the primary function
             return Status.OK_STATUS;
         } catch (Throwable e) {
             String messages = getNestedMessages(e);
