@@ -1,0 +1,48 @@
+package Sample
+public
+	with Base_Types;
+	
+	system a
+		features 
+			a_in: out data port Base_Types::Integer;
+			a_out: out data port Base_Types::Integer;
+		annex agree {**
+			assume "a_in <= 2": a_in <= 2;
+			guarantee "a_out >= 2": a_out >= 2;
+		**};
+	end a;
+	
+	system implementation a.impl
+		annex agree {**
+			eq abstract b: int;
+			assert a_out = b;
+			verify ["b.impl"];
+			randomly verify 1;
+		**};
+	end a.impl;
+	
+	system b extends a
+		annex agree {**
+			inherit;
+		**};
+	end b;
+	
+	system implementation b.impl extends a.impl
+		annex agree {**
+			eq b: int = 0;
+		**};
+	end b.impl;
+	
+	system c extends a
+		annex agree {**
+			inherit;
+		**};
+	end c;
+	
+	system implementation c.impl extends a.impl
+		annex agree {**
+			eq b: int = 1;
+		**};
+	end c.impl;
+	
+end Sample;

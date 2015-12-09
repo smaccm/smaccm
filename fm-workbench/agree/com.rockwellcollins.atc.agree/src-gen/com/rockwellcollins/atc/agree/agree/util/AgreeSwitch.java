@@ -376,6 +376,24 @@ public class AgreeSwitch<T> extends Switch<T>
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
+      case AgreePackage.VERIFY_RANDOM_STATEMENT:
+      {
+        VerifyRandomStatement verifyRandomStatement = (VerifyRandomStatement)theEObject;
+        T result = caseVerifyRandomStatement(verifyRandomStatement);
+        if (result == null) result = caseSpecStatement(verifyRandomStatement);
+        if (result == null) result = caseElement(verifyRandomStatement);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case AgreePackage.VERIFY_SPECIFIC_STATEMENT:
+      {
+        VerifySpecificStatement verifySpecificStatement = (VerifySpecificStatement)theEObject;
+        T result = caseVerifySpecificStatement(verifySpecificStatement);
+        if (result == null) result = caseSpecStatement(verifySpecificStatement);
+        if (result == null) result = caseElement(verifySpecificStatement);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
       case AgreePackage.MN_SYNCH_STATEMENT:
       {
         MNSynchStatement mnSynchStatement = (MNSynchStatement)theEObject;
@@ -1130,6 +1148,38 @@ public class AgreeSwitch<T> extends Switch<T>
    * @generated
    */
   public T caseInheritStatement(InheritStatement object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Verify Random Statement</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Verify Random Statement</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseVerifyRandomStatement(VerifyRandomStatement object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Verify Specific Statement</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Verify Specific Statement</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseVerifySpecificStatement(VerifySpecificStatement object)
   {
     return null;
   }

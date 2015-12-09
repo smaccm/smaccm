@@ -103,6 +103,8 @@ import com.rockwellcollins.atc.agree.agree.SynchStatement;
 import com.rockwellcollins.atc.agree.agree.ThisExpr;
 import com.rockwellcollins.atc.agree.agree.Type;
 import com.rockwellcollins.atc.agree.agree.UnaryExpr;
+import com.rockwellcollins.atc.agree.agree.VerifyRandomStatement;
+import com.rockwellcollins.atc.agree.agree.VerifySpecificStatement;
 import com.rockwellcollins.atc.agree.shared.AgreeStatementsShared;
 
 /** 
@@ -130,11 +132,32 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 			AgreeStatementsShared.getRepository(classifier.getFullName()).setParent(classifier.getExtended().getFullName());
 			AgreeStatementsShared.getRepository(classifier.getExtended().getFullName()).getChildren().add(classifier.getFullName());
 		}
+		if(classifier instanceof ComponentImplementation) {
+			AgreeStatementsShared.getRepository(classifier.getFullName()).setImplementation((ComponentImplementation)classifier);
+		}
 		
 		List<SpecStatement> myStatements = collapseStatements(getParentSpecs(classifier));
 		for(int i = 0; i < myStatements.size(); ++i) {
 			if(myStatements.get(i) instanceof AbstractEqStatement) {
 				AgreeStatementsShared.getRepository(classifier.getFullName()).setAbstract();
+			}
+			if(myStatements.get(i) instanceof VerifyRandomStatement) {
+				VerifyRandomStatement statement = (VerifyRandomStatement)myStatements.get(i);
+				AgreeStatementsShared.getRepository(classifier.getFullName()).setRandomlyVerify(Integer.parseInt(statement.getNum()));
+				if(Integer.parseInt(statement.getNum()) < 0) {
+					error(myStatements.get(i), "Number must be greater than or equal to 0");
+				}
+				if(!(classifier instanceof ComponentImplementation)) {
+					error(myStatements.get(i), "This statement can only appear in implementations");
+				}
+			}
+			if(myStatements.get(i) instanceof VerifySpecificStatement) {
+				VerifySpecificStatement statement = (VerifySpecificStatement)myStatements.get(i);
+				AgreeStatementsShared.getRepository(classifier.getFullName()).getVerify().add(statement.getFirst());
+				AgreeStatementsShared.getRepository(classifier.getFullName()).getVerify().addAll(statement.getRest());
+				if(!(classifier instanceof ComponentImplementation)) {
+					error(myStatements.get(i), "This statement can only appear in implementations");
+				}
 			}
 		}
 		

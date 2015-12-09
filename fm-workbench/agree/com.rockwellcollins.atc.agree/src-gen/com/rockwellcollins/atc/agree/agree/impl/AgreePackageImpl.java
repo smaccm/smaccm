@@ -62,6 +62,8 @@ import com.rockwellcollins.atc.agree.agree.SynchStatement;
 import com.rockwellcollins.atc.agree.agree.ThisExpr;
 import com.rockwellcollins.atc.agree.agree.Type;
 import com.rockwellcollins.atc.agree.agree.UnaryExpr;
+import com.rockwellcollins.atc.agree.agree.VerifyRandomStatement;
+import com.rockwellcollins.atc.agree.agree.VerifySpecificStatement;
 
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
@@ -304,6 +306,20 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * @generated
    */
   private EClass inheritStatementEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass verifyRandomStatementEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass verifySpecificStatementEClass = null;
 
   /**
    * <!-- begin-user-doc -->
@@ -1268,6 +1284,56 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  public EClass getVerifyRandomStatement()
+  {
+    return verifyRandomStatementEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getVerifyRandomStatement_Num()
+  {
+    return (EAttribute)verifyRandomStatementEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getVerifySpecificStatement()
+  {
+    return verifySpecificStatementEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getVerifySpecificStatement_First()
+  {
+    return (EAttribute)verifySpecificStatementEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getVerifySpecificStatement_Rest()
+  {
+    return (EAttribute)verifySpecificStatementEClass.getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   public EClass getMNSynchStatement()
   {
     return mnSynchStatementEClass;
@@ -2076,6 +2142,13 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
 
     inheritStatementEClass = createEClass(INHERIT_STATEMENT);
 
+    verifyRandomStatementEClass = createEClass(VERIFY_RANDOM_STATEMENT);
+    createEAttribute(verifyRandomStatementEClass, VERIFY_RANDOM_STATEMENT__NUM);
+
+    verifySpecificStatementEClass = createEClass(VERIFY_SPECIFIC_STATEMENT);
+    createEAttribute(verifySpecificStatementEClass, VERIFY_SPECIFIC_STATEMENT__FIRST);
+    createEAttribute(verifySpecificStatementEClass, VERIFY_SPECIFIC_STATEMENT__REST);
+
     mnSynchStatementEClass = createEClass(MN_SYNCH_STATEMENT);
     createEReference(mnSynchStatementEClass, MN_SYNCH_STATEMENT__COMP1);
     createEReference(mnSynchStatementEClass, MN_SYNCH_STATEMENT__COMP2);
@@ -2244,6 +2317,8 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     liftStatementEClass.getESuperTypes().add(this.getSpecStatement());
     connectionStatementEClass.getESuperTypes().add(this.getSpecStatement());
     inheritStatementEClass.getESuperTypes().add(this.getSpecStatement());
+    verifyRandomStatementEClass.getESuperTypes().add(this.getSpecStatement());
+    verifySpecificStatementEClass.getESuperTypes().add(this.getSpecStatement());
     mnSynchStatementEClass.getESuperTypes().add(this.getSynchStatement());
     calenStatementEClass.getESuperTypes().add(this.getSynchStatement());
     asynchStatementEClass.getESuperTypes().add(this.getSynchStatement());
@@ -2374,6 +2449,13 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     initEReference(getConnectionStatement_Expr(), this.getExpr(), null, "expr", null, 0, 1, ConnectionStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(inheritStatementEClass, InheritStatement.class, "InheritStatement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+    initEClass(verifyRandomStatementEClass, VerifyRandomStatement.class, "VerifyRandomStatement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEAttribute(getVerifyRandomStatement_Num(), theEcorePackage.getEString(), "num", null, 0, 1, VerifyRandomStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+    initEClass(verifySpecificStatementEClass, VerifySpecificStatement.class, "VerifySpecificStatement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEAttribute(getVerifySpecificStatement_First(), theEcorePackage.getEString(), "first", null, 0, 1, VerifySpecificStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEAttribute(getVerifySpecificStatement_Rest(), theEcorePackage.getEString(), "rest", null, 0, -1, VerifySpecificStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(mnSynchStatementEClass, MNSynchStatement.class, "MNSynchStatement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getMNSynchStatement_Comp1(), theAadl2Package.getNamedElement(), null, "comp1", null, 0, -1, MNSynchStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

@@ -311,6 +311,24 @@ public interface AgreeFactory extends EFactory
   InheritStatement createInheritStatement();
 
   /**
+   * Returns a new object of class '<em>Verify Random Statement</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Verify Random Statement</em>'.
+   * @generated
+   */
+  VerifyRandomStatement createVerifyRandomStatement();
+
+  /**
+   * Returns a new object of class '<em>Verify Specific Statement</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Verify Specific Statement</em>'.
+   * @generated
+   */
+  VerifySpecificStatement createVerifySpecificStatement();
+
+  /**
    * Returns a new object of class '<em>MN Synch Statement</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->

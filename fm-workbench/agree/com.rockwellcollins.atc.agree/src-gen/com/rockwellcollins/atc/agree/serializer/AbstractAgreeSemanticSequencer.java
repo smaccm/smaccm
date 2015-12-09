@@ -54,6 +54,8 @@ import com.rockwellcollins.atc.agree.agree.RecordUpdateExpr;
 import com.rockwellcollins.atc.agree.agree.SynchStatement;
 import com.rockwellcollins.atc.agree.agree.ThisExpr;
 import com.rockwellcollins.atc.agree.agree.UnaryExpr;
+import com.rockwellcollins.atc.agree.agree.VerifyRandomStatement;
+import com.rockwellcollins.atc.agree.agree.VerifySpecificStatement;
 import com.rockwellcollins.atc.agree.services.AgreeGrammarAccess;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xtext.serializer.acceptor.ISemanticSequenceAcceptor;
@@ -331,6 +333,12 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 				return; 
 			case AgreePackage.UNARY_EXPR:
 				sequence_UnaryExpr(context, (UnaryExpr) semanticObject); 
+				return; 
+			case AgreePackage.VERIFY_RANDOM_STATEMENT:
+				sequence_SpecStatement(context, (VerifyRandomStatement) semanticObject); 
+				return; 
+			case AgreePackage.VERIFY_SPECIFIC_STATEMENT:
+				sequence_SpecStatement(context, (VerifySpecificStatement) semanticObject); 
 				return; 
 			}
 		if (errorAcceptor != null) errorAcceptor.accept(diagnosticProvider.createInvalidContextOrTypeDiagnostic(semanticObject, context));
@@ -629,6 +637,24 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     (expr=Expr type=Type)
 	 */
 	protected void sequence_SpecStatement(EObject context, ParamStatement semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Constraint:
+	 *     num=INTEGER_LIT
+	 */
+	protected void sequence_SpecStatement(EObject context, VerifyRandomStatement semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Constraint:
+	 *     (first=STRING rest+=STRING*)
+	 */
+	protected void sequence_SpecStatement(EObject context, VerifySpecificStatement semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	

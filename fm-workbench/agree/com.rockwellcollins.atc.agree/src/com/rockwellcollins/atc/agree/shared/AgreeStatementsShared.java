@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.osate.aadl2.ComponentImplementation;
+
 import com.rockwellcollins.atc.agree.agree.SpecStatement;
 
 public class AgreeStatementsShared {
@@ -16,11 +18,15 @@ public class AgreeStatementsShared {
 			private String parent;
 			private List<String> children;
 			private boolean isAbstract = false;
+			private ComponentImplementation implementation;
+			private int randomlyVerify = 0;
+			private List<String> verify;
 			
 			public AnnexRepository() {
 				statements = new ArrayList<SpecStatement>();
 				parent = null;
 				children = new ArrayList<String>();
+				verify = new ArrayList<String>();
 			}
 			
 			public List<SpecStatement> getStatements() {
@@ -45,6 +51,26 @@ public class AgreeStatementsShared {
 			
 			public boolean isAbstract() {
 				return isAbstract;
+			}
+			
+			public void setImplementation(ComponentImplementation implementation) {
+				this.implementation = implementation;
+			}
+			
+			public ComponentImplementation getImplementation() {
+				return implementation;
+			}
+			
+			public void setRandomlyVerify(int randomlyVerify) {
+				this.randomlyVerify = randomlyVerify;
+			}
+			
+			public int getRandomlyVerify() {
+				return randomlyVerify;
+			}
+			
+			public List<String> getVerify() {
+				return verify;
 			}
 		}
 		
