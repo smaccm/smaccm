@@ -86,6 +86,7 @@ import com.rockwellcollins.atc.agree.agree.NodeEq;
 import com.rockwellcollins.atc.agree.agree.NodeLemma;
 import com.rockwellcollins.atc.agree.agree.NodeStmt;
 import com.rockwellcollins.atc.agree.agree.OrderStatement;
+import com.rockwellcollins.atc.agree.agree.PatternStatement;
 import com.rockwellcollins.atc.agree.agree.PreExpr;
 import com.rockwellcollins.atc.agree.agree.PrevExpr;
 import com.rockwellcollins.atc.agree.agree.PrimType;
@@ -99,8 +100,14 @@ import com.rockwellcollins.atc.agree.agree.RecordUpdateExpr;
 import com.rockwellcollins.atc.agree.agree.SpecStatement;
 import com.rockwellcollins.atc.agree.agree.SynchStatement;
 import com.rockwellcollins.atc.agree.agree.ThisExpr;
+import com.rockwellcollins.atc.agree.agree.TimeInterval;
 import com.rockwellcollins.atc.agree.agree.Type;
 import com.rockwellcollins.atc.agree.agree.UnaryExpr;
+import com.rockwellcollins.atc.agree.agree.WhenHoldsStatement;
+import com.rockwellcollins.atc.agree.agree.WhenOccursStatment;
+import com.rockwellcollins.atc.agree.agree.WheneverHoldsStatement;
+import com.rockwellcollins.atc.agree.agree.WheneverImpliesStatement;
+import com.rockwellcollins.atc.agree.agree.WheneverOccursStatement;
 import com.rockwellcollins.atc.agree.visitors.ExprCycleVisitor;
 
 /** 
@@ -368,12 +375,16 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 			error(assume, "Assume statements are only allowed in component types");
 		}
 
-		AgreeType exprType = getAgreeType(assume.getExpr());
-		if (!matches(BOOL, exprType)) {
-			error(assume, "Expression for assume statement is of type '" + exprType.toString()
-					+ "' but must be of type 'bool'");
-		}
-	}
+		//the expression could be null if a pattern is used
+		Expr expr = assume.getExpr();
+        if (expr != null) {
+            AgreeType exprType = getAgreeType(expr);
+            if (!matches(BOOL, exprType)) {
+                error(assume, "Expression for assume statement is of type '" + exprType.toString()
+                        + "' but must be of type 'bool'");
+            }
+        }
+    }
 
 	@Check(CheckType.FAST)
 	public void checkInitialStatement(InitialStatement statement) {
@@ -423,11 +434,15 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 			error(asser, "Assert statements are only allowed in component implementations.");
 		}
 
-		AgreeType exprType = getAgreeType(asser.getExpr());
-		if (!matches(BOOL, exprType)) {
-			error(asser, "Expression for assert statement is of type '" + exprType.toString()
-					+ "' but must be of type 'bool'");
-		}
+		//the expression could be null if a pattern is used
+		Expr expr = asser.getExpr();
+        if (expr != null) {
+            AgreeType exprType = getAgreeType(expr);
+            if (!matches(BOOL, exprType)) {
+                error(asser, "Expression for assert statement is of type '" + exprType.toString()
+                        + "' but must be of type 'bool'");
+            }
+        }
 		
 		
 		warning(asser, "We highly discourage the use of assert statements. "
@@ -455,12 +470,136 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 		if (!(comp instanceof ComponentType)) {
 			error(guar, "Guarantee statements are only allowed in component types");
 		}
+		
+		//the expression could be null if a pattern is used
+		Expr expr = guar.getExpr();
+        if (expr != null) {
+            AgreeType exprType = getAgreeType(expr);
+            if (!matches(BOOL, exprType)) {
+                error(guar, "Expression for guarantee statement is of type '" + exprType.toString()
+                        + "' but must be of type 'bool'");
+            }
+        }
+	}
+	
+	@Check(CheckType.FAST)
+	public void checkWhenHoldsStatement(WhenHoldsStatement when){
+	    Expr condition = when.getCondition();
+	    Expr event = when.getEvent();
+	    
+        AgreeType type = getAgreeType(condition);
+	    if(!matches(BOOL, type)){
+	        error(condition, "The condition of a when statement is of type '" +type +"'"
+	                + " but must be of type 'bool'");
+	    }
+	    type = getAgreeType(event);
+	    if(!matches(BOOL, type)){
+	        error(event, "The effect of a when statement is of type '" +type+"'"
+	                + " but must be of type 'bool'");
+	    }
+	}
+	
+	@Check(CheckType.FAST)
+    public void checkWhenOccursStatment(WhenOccursStatment when){
+        Expr condition = when.getCondition();
+        Expr event = when.getEvent();
+        Expr times = when.getTimes();
+        
+        AgreeType type = getAgreeType(condition);
+        if(!matches(BOOL, type)){
+            error(condition, "The condition of the 'when' statement is of type '" +type +"'"
+                    + " but must be of type 'bool'");
+        }
+        type = getAgreeType(event);
+        if(!matches(BOOL, type)){
+            error(event, "The effect of the 'when' statement is of type '" +type+"'"
+                    + " but must be of type 'bool'");
+        }
+        type = getAgreeType(times);
+        if(!matches(INT, type)){
+            error(event, "The 'times' of the 'when' statement is of type '" +type+"'"
+                    + " but must be of type 'int'");
+        }    
+        
+    }
+	
+	@Check(CheckType.FAST)
+	public void checkWheneverOccursStatement(WheneverOccursStatement whenever){
+	    Expr cause = whenever.getCause();
+	    Expr effect = whenever.getEffect();
+	    
+	    AgreeType type = getAgreeType(cause);
+	    if(!matches(BOOL, type)){
+	        error(cause, "The cause of the 'whenever' statement is of type '"+type+"' "
+	                + "but must be of type 'bool'");
+	    }
+	    type = getAgreeType(effect);
+        if(!matches(BOOL, type)){
+            error(effect, "The effect of the 'whenever' statement is of type '"+type+"' "
+                    + "but must be of type 'bool'");
+        }
+	}
 
-		AgreeType exprType = getAgreeType(guar.getExpr());
-		if (!matches(BOOL, exprType)) {
-			error(guar, "Expression for guarantee statement is of type '" + exprType.toString()
-					+ "' but must be of type 'bool'");
-		}
+    @Check(CheckType.FAST)
+    public void checkWheneverHoldsStatement(WheneverHoldsStatement whenever) {
+        Expr cause = whenever.getCause();
+        Expr effect = whenever.getEffect();
+
+        AgreeType type = getAgreeType(cause);
+        if (!matches(BOOL, type)) {
+            error(cause, "The cause of the 'whenever' statement is of type '" + type + "' "
+                    + "but must be of type 'bool'");
+        }
+        type = getAgreeType(effect);
+        if (!matches(BOOL, type)) {
+            error(effect, "The effect of the 'whenever' statement is of type '" + type + "' "
+                    + "but must be of type 'bool'");
+        }
+    }
+	
+    @Check(CheckType.FAST)
+    public void checkWheneverImpliesStatement(WheneverImpliesStatement whenever) {
+        Expr cause = whenever.getCause();
+        Expr lhs = whenever.getLhs();
+        Expr rhs = whenever.getRhs();
+
+        AgreeType type = getAgreeType(cause);
+        if (!matches(BOOL, type)) {
+            error(cause, "The cause of the 'whenever' statement is of type '" + type + "' "
+                    + "but must be of type 'bool'");
+        }
+        
+        type = getAgreeType(lhs);
+        if (!matches(BOOL, type)) {
+            error(lhs, "The left hand side of the 'implies' of the 'whenever' statement is of type '" + type + "' "
+                    + "but must be of type 'bool'");
+        }
+        
+        type = getAgreeType(rhs);
+        if (!matches(BOOL, type)) {
+            error(lhs, "The rhs hand side of the 'implies' of the 'whenever' statement is of type '" + type + "' "
+                    + "but must be of type 'bool'");
+        }
+    }
+    
+	@Check(CheckType.FAST)
+	public void checkTimeInterval(TimeInterval interval){
+	    Expr lower = interval.getLow();
+	    Expr higher = interval.getHigh();
+	    
+	    AgreeType lowerType = getAgreeType(lower);
+	    AgreeType higherType = getAgreeType(higher);
+	    
+	    if(!matches(REAL, lowerType)){
+	        error(lower, "Lower interval is of type '"+lowerType+"' but "
+	                + "must be of type 'real'");
+	    }
+	    
+	    if(!matches(REAL, higherType)){
+            error(higher, "higher interval is of type '"+higherType+"' but "
+                    + "must be of type 'real'");
+        }
+	            
 	}
 
 	@Check(CheckType.FAST)

@@ -68,6 +68,10 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
       case AgreePackage.AGREE_SUBCLAUSE: return createAgreeSubclause();
       case AgreePackage.CONTRACT: return createContract();
       case AgreePackage.SPEC_STATEMENT: return createSpecStatement();
+      case AgreePackage.PATTERN_STATEMENT: return createPatternStatement();
+      case AgreePackage.WHEN_STATEMENT: return createWhenStatement();
+      case AgreePackage.WHENEVER_STATEMENT: return createWheneverStatement();
+      case AgreePackage.TIME_INTERVAL: return createTimeInterval();
       case AgreePackage.SYNCH_STATEMENT: return createSynchStatement();
       case AgreePackage.ORDER_STATEMENT: return createOrderStatement();
       case AgreePackage.CALL_DEF: return createCallDef();
@@ -96,6 +100,12 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
       case AgreePackage.LEMMA_STATEMENT: return createLemmaStatement();
       case AgreePackage.LIFT_STATEMENT: return createLiftStatement();
       case AgreePackage.CONNECTION_STATEMENT: return createConnectionStatement();
+      case AgreePackage.ALWAYS_STATEMENT: return createAlwaysStatement();
+      case AgreePackage.WHEN_HOLDS_STATEMENT: return createWhenHoldsStatement();
+      case AgreePackage.WHEN_OCCURS_STATMENT: return createWhenOccursStatment();
+      case AgreePackage.WHENEVER_OCCURS_STATEMENT: return createWheneverOccursStatement();
+      case AgreePackage.WHENEVER_HOLDS_STATEMENT: return createWheneverHoldsStatement();
+      case AgreePackage.WHENEVER_IMPLIES_STATEMENT: return createWheneverImpliesStatement();
       case AgreePackage.MN_SYNCH_STATEMENT: return createMNSynchStatement();
       case AgreePackage.CALEN_STATEMENT: return createCalenStatement();
       case AgreePackage.ASYNCH_STATEMENT: return createAsynchStatement();
@@ -167,6 +177,50 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
   {
     SpecStatementImpl specStatement = new SpecStatementImpl();
     return specStatement;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public PatternStatement createPatternStatement()
+  {
+    PatternStatementImpl patternStatement = new PatternStatementImpl();
+    return patternStatement;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public WhenStatement createWhenStatement()
+  {
+    WhenStatementImpl whenStatement = new WhenStatementImpl();
+    return whenStatement;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public WheneverStatement createWheneverStatement()
+  {
+    WheneverStatementImpl wheneverStatement = new WheneverStatementImpl();
+    return wheneverStatement;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public TimeInterval createTimeInterval()
+  {
+    TimeIntervalImpl timeInterval = new TimeIntervalImpl();
+    return timeInterval;
   }
 
   /**
@@ -475,6 +529,72 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
   {
     ConnectionStatementImpl connectionStatement = new ConnectionStatementImpl();
     return connectionStatement;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public AlwaysStatement createAlwaysStatement()
+  {
+    AlwaysStatementImpl alwaysStatement = new AlwaysStatementImpl();
+    return alwaysStatement;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public WhenHoldsStatement createWhenHoldsStatement()
+  {
+    WhenHoldsStatementImpl whenHoldsStatement = new WhenHoldsStatementImpl();
+    return whenHoldsStatement;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public WhenOccursStatment createWhenOccursStatment()
+  {
+    WhenOccursStatmentImpl whenOccursStatment = new WhenOccursStatmentImpl();
+    return whenOccursStatment;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public WheneverOccursStatement createWheneverOccursStatement()
+  {
+    WheneverOccursStatementImpl wheneverOccursStatement = new WheneverOccursStatementImpl();
+    return wheneverOccursStatement;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public WheneverHoldsStatement createWheneverHoldsStatement()
+  {
+    WheneverHoldsStatementImpl wheneverHoldsStatement = new WheneverHoldsStatementImpl();
+    return wheneverHoldsStatement;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public WheneverImpliesStatement createWheneverImpliesStatement()
+  {
+    WheneverImpliesStatementImpl wheneverImpliesStatement = new WheneverImpliesStatementImpl();
+    return wheneverImpliesStatement;
   }
 
   /**

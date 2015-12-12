@@ -115,6 +115,36 @@ public class AgreeSwitch<T> extends Switch<T>
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
+      case AgreePackage.PATTERN_STATEMENT:
+      {
+        PatternStatement patternStatement = (PatternStatement)theEObject;
+        T result = casePatternStatement(patternStatement);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case AgreePackage.WHEN_STATEMENT:
+      {
+        WhenStatement whenStatement = (WhenStatement)theEObject;
+        T result = caseWhenStatement(whenStatement);
+        if (result == null) result = casePatternStatement(whenStatement);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case AgreePackage.WHENEVER_STATEMENT:
+      {
+        WheneverStatement wheneverStatement = (WheneverStatement)theEObject;
+        T result = caseWheneverStatement(wheneverStatement);
+        if (result == null) result = casePatternStatement(wheneverStatement);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case AgreePackage.TIME_INTERVAL:
+      {
+        TimeInterval timeInterval = (TimeInterval)theEObject;
+        T result = caseTimeInterval(timeInterval);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
       case AgreePackage.SYNCH_STATEMENT:
       {
         SynchStatement synchStatement = (SynchStatement)theEObject;
@@ -373,6 +403,59 @@ public class AgreeSwitch<T> extends Switch<T>
         T result = caseConnectionStatement(connectionStatement);
         if (result == null) result = caseSpecStatement(connectionStatement);
         if (result == null) result = caseElement(connectionStatement);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case AgreePackage.ALWAYS_STATEMENT:
+      {
+        AlwaysStatement alwaysStatement = (AlwaysStatement)theEObject;
+        T result = caseAlwaysStatement(alwaysStatement);
+        if (result == null) result = casePatternStatement(alwaysStatement);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case AgreePackage.WHEN_HOLDS_STATEMENT:
+      {
+        WhenHoldsStatement whenHoldsStatement = (WhenHoldsStatement)theEObject;
+        T result = caseWhenHoldsStatement(whenHoldsStatement);
+        if (result == null) result = caseWhenStatement(whenHoldsStatement);
+        if (result == null) result = casePatternStatement(whenHoldsStatement);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case AgreePackage.WHEN_OCCURS_STATMENT:
+      {
+        WhenOccursStatment whenOccursStatment = (WhenOccursStatment)theEObject;
+        T result = caseWhenOccursStatment(whenOccursStatment);
+        if (result == null) result = caseWhenStatement(whenOccursStatment);
+        if (result == null) result = casePatternStatement(whenOccursStatment);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case AgreePackage.WHENEVER_OCCURS_STATEMENT:
+      {
+        WheneverOccursStatement wheneverOccursStatement = (WheneverOccursStatement)theEObject;
+        T result = caseWheneverOccursStatement(wheneverOccursStatement);
+        if (result == null) result = caseWheneverStatement(wheneverOccursStatement);
+        if (result == null) result = casePatternStatement(wheneverOccursStatement);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case AgreePackage.WHENEVER_HOLDS_STATEMENT:
+      {
+        WheneverHoldsStatement wheneverHoldsStatement = (WheneverHoldsStatement)theEObject;
+        T result = caseWheneverHoldsStatement(wheneverHoldsStatement);
+        if (result == null) result = caseWheneverStatement(wheneverHoldsStatement);
+        if (result == null) result = casePatternStatement(wheneverHoldsStatement);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case AgreePackage.WHENEVER_IMPLIES_STATEMENT:
+      {
+        WheneverImpliesStatement wheneverImpliesStatement = (WheneverImpliesStatement)theEObject;
+        T result = caseWheneverImpliesStatement(wheneverImpliesStatement);
+        if (result == null) result = caseWheneverStatement(wheneverImpliesStatement);
+        if (result == null) result = casePatternStatement(wheneverImpliesStatement);
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
@@ -662,6 +745,70 @@ public class AgreeSwitch<T> extends Switch<T>
    * @generated
    */
   public T caseSpecStatement(SpecStatement object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Pattern Statement</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Pattern Statement</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T casePatternStatement(PatternStatement object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>When Statement</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>When Statement</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseWhenStatement(WhenStatement object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Whenever Statement</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Whenever Statement</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseWheneverStatement(WheneverStatement object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Time Interval</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Time Interval</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseTimeInterval(TimeInterval object)
   {
     return null;
   }
@@ -1110,6 +1257,102 @@ public class AgreeSwitch<T> extends Switch<T>
    * @generated
    */
   public T caseConnectionStatement(ConnectionStatement object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Always Statement</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Always Statement</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseAlwaysStatement(AlwaysStatement object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>When Holds Statement</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>When Holds Statement</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseWhenHoldsStatement(WhenHoldsStatement object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>When Occurs Statment</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>When Occurs Statment</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseWhenOccursStatment(WhenOccursStatment object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Whenever Occurs Statement</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Whenever Occurs Statement</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseWheneverOccursStatement(WheneverOccursStatement object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Whenever Holds Statement</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Whenever Holds Statement</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseWheneverHoldsStatement(WheneverHoldsStatement object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Whenever Implies Statement</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Whenever Implies Statement</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseWheneverImpliesStatement(WheneverImpliesStatement object)
   {
     return null;
   }

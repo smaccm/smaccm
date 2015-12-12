@@ -59,6 +59,42 @@ public interface AgreeFactory extends EFactory
   SpecStatement createSpecStatement();
 
   /**
+   * Returns a new object of class '<em>Pattern Statement</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Pattern Statement</em>'.
+   * @generated
+   */
+  PatternStatement createPatternStatement();
+
+  /**
+   * Returns a new object of class '<em>When Statement</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>When Statement</em>'.
+   * @generated
+   */
+  WhenStatement createWhenStatement();
+
+  /**
+   * Returns a new object of class '<em>Whenever Statement</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Whenever Statement</em>'.
+   * @generated
+   */
+  WheneverStatement createWheneverStatement();
+
+  /**
+   * Returns a new object of class '<em>Time Interval</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Time Interval</em>'.
+   * @generated
+   */
+  TimeInterval createTimeInterval();
+
+  /**
    * Returns a new object of class '<em>Synch Statement</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -309,6 +345,60 @@ public interface AgreeFactory extends EFactory
    * @generated
    */
   ConnectionStatement createConnectionStatement();
+
+  /**
+   * Returns a new object of class '<em>Always Statement</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Always Statement</em>'.
+   * @generated
+   */
+  AlwaysStatement createAlwaysStatement();
+
+  /**
+   * Returns a new object of class '<em>When Holds Statement</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>When Holds Statement</em>'.
+   * @generated
+   */
+  WhenHoldsStatement createWhenHoldsStatement();
+
+  /**
+   * Returns a new object of class '<em>When Occurs Statment</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>When Occurs Statment</em>'.
+   * @generated
+   */
+  WhenOccursStatment createWhenOccursStatment();
+
+  /**
+   * Returns a new object of class '<em>Whenever Occurs Statement</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Whenever Occurs Statement</em>'.
+   * @generated
+   */
+  WheneverOccursStatement createWheneverOccursStatement();
+
+  /**
+   * Returns a new object of class '<em>Whenever Holds Statement</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Whenever Holds Statement</em>'.
+   * @generated
+   */
+  WheneverHoldsStatement createWheneverHoldsStatement();
+
+  /**
+   * Returns a new object of class '<em>Whenever Implies Statement</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Whenever Implies Statement</em>'.
+   * @generated
+   */
+  WheneverImpliesStatement createWheneverImpliesStatement();
 
   /**
    * Returns a new object of class '<em>MN Synch Statement</em>'.

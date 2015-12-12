@@ -38,10 +38,10 @@ AgreeContract returns Contract:
 	{AgreeContract} (specs+=SpecStatement)+;
 
 SpecStatement:
-	{AssumeStatement} 'assume' str=STRING ':' expr=Expr ';'
-	| {GuaranteeStatement} 'guarantee' str=STRING ':' expr=Expr ';'
-	| {AssertStatement} 'assert' (str=STRING ':')? expr=Expr ';'
-	| {InitialStatement} 'initially' ':' expr = Expr ';'
+	{AssumeStatement} 'assume' str=STRING ':' (expr=Expr | pattern=PatternStatement) ';'
+	| {GuaranteeStatement} 'guarantee' str=STRING ':' (expr=Expr | pattern=PatternStatement) ';'
+	| {AssertStatement} 'assert' (str=STRING ':')? (expr=Expr | pattern=PatternStatement)';'
+	| {InitialStatement} 'initially' ':' expr=Expr  ';'
 	| {ParamStatement} 'parameter' expr=Expr ':' type=Type ';'
 	| {LemmaStatement} 'lemma' str=STRING ':' expr=Expr ';'
 	| {LiftStatement} 'lift' subcomp=NestedDotID ';'
@@ -55,6 +55,37 @@ SpecStatement:
 	| FnDefExpr
 	| NodeDefExpr
 	| RecordDefExpr;
+	
+//The following are patterns from the CESAR RSL
+PatternStatement returns PatternStatement:
+	//Patterns 1,3,4, and 7
+	WheneverStatement
+	//Pattern 5
+|	{AlwaysStatement} 'always' expr=Expr ';'
+    //Pattern 6
+|   WhenStatement
+;
+
+WhenStatement:
+	=> ({WhenHoldsStatement} 'when' condition=Expr 'holds') 'during' 
+        conditionInterval=TimeInterval event=Expr 'occurs' ('during' eventInterval=TimeInterval)? 
+|   => ({WhenOccursStatment} 'when' condition=Expr 'occurs') 
+        times=Expr 'times' 'during' interval=TimeInterval 'raises' event=Expr 
+;
+
+WheneverStatement:
+	=> ({WheneverOccursStatement} 'whenever' cause=Expr ('occurs' | 'becomes' 'true')
+	    effect=Expr ('occur' | 'occurs')) ('during' interval=TimeInterval)? 
+|	=> ({WheneverHoldsStatement} 'whenever' cause=Expr 'occurs'
+	    effect=Expr ('holds')) ('during' interval=TimeInterval)? 
+|   => ({WheneverImpliesStatement} 'whenever' cause=Expr 'occurs'
+	    lhs=Expr 'implies') rhs=Expr ('during' interval=TimeInterval)? 
+	    
+;
+ 
+TimeInterval:
+	{TimeInterval} ('[' | '(') low=Expr ',' high=Expr (')' | ']')
+;
 
 SynchStatement:
 	{SynchStatement} 'synchrony' ':' val = INTEGER_LIT (',' val2=INTEGER_LIT)? (sim=('simult'|'no_simult'))? ';'
