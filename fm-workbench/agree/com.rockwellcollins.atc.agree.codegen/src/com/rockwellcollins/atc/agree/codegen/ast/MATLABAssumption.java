@@ -2,6 +2,7 @@ package com.rockwellcollins.atc.agree.codegen.ast;
 
 import jkind.Assert;
 
+import com.rockwellcollins.atc.agree.codegen.ast.expr.MATLABExpr;
 import com.rockwellcollins.atc.agree.codegen.visitors.MATLABAstVisitor;
 
 public class MATLABAssumption extends MATLABStatement {

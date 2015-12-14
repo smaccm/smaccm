@@ -2,28 +2,23 @@ package com.rockwellcollins.atc.agree.codegen.ast;
 
 import jkind.Assert;
 
+import com.rockwellcollins.atc.agree.codegen.ast.expr.MATLABTypeInitExpr;
 import com.rockwellcollins.atc.agree.codegen.visitors.MATLABAstVisitor;
 
-/**
- * if isempty(preVar)
- *    preVar = coder.nullcopy(var);
- * end
- */
-public class MATLABPreVarInit extends MATLABPersistentVarInit {
+public class MATLABPreLocalVarInit extends MATLABPersistentVarInit {
 
 	public final String preVar;
-	public final String var; 
+	public final MATLABTypeInitExpr typeInitExpr; 
 
-	public MATLABPreVarInit(String preVar, String var) {
+	public MATLABPreLocalVarInit(String preVar, MATLABTypeInitExpr typeInitExpr) {
 		Assert.isNotNull(preVar);
-		Assert.isNotNull(var);
+		Assert.isNotNull(typeInitExpr);
 		this.preVar = preVar;
-		this.var = var;
+		this.typeInitExpr = typeInitExpr;
 	}
 	
 	@Override
 	public <T, S extends T> T accept(MATLABAstVisitor<T, S> visitor) {
 		return visitor.visit(this);
 	}
-
 }

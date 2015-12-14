@@ -1,21 +1,19 @@
-package com.rockwellcollins.atc.agree.codegen.ast;
-
-import jkind.Assert;
+package com.rockwellcollins.atc.agree.codegen.ast.expr;
 
 import com.rockwellcollins.atc.agree.codegen.visitors.MATLABExprVisitor;
 
-public class MATLABDoubleExpr extends MATLABExpr {
+import jkind.Assert;
 
-	public final double value;
+public class MATLABBoolExpr extends MATLABExpr {
+	public final boolean value;
 
-	public MATLABDoubleExpr(double value) {
+	public MATLABBoolExpr(boolean value) {
 		Assert.isNotNull(value);
 		this.value = value;
 	}
-
+	
 	@Override
 	public <T> T accept(MATLABExprVisitor<T> visitor) {
 		return visitor.visit(this);
 	}
-
 }

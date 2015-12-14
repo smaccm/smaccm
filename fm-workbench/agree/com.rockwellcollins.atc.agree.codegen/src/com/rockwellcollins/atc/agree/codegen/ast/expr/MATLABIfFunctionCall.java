@@ -1,4 +1,4 @@
-package com.rockwellcollins.atc.agree.codegen.ast;
+package com.rockwellcollins.atc.agree.codegen.ast.expr;
 
 import jkind.Assert;
 
@@ -10,9 +10,9 @@ public class MATLABIfFunctionCall extends MATLABFunctionCall {
 	
 	public final MATLABExpr cond; 
 	
-	public final MATLABExpr ifExpr;
+	public MATLABExpr ifExpr;
 	
-	public final MATLABExpr elseExpr;
+	public MATLABExpr elseExpr;
 	
 	public MATLABIfFunctionCall(MATLABExpr cond, MATLABExpr ifExpr, MATLABExpr elseExpr) {
 		Assert.isNotNull(cond);
