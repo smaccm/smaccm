@@ -1,17 +1,18 @@
 package com.rockwellcollins.atc.agree.codegen.visitors;
 
-import com.rockwellcollins.atc.agree.codegen.ast.MATLABArrowFunctionCall;
-import com.rockwellcollins.atc.agree.codegen.ast.MATLABBinaryExpr;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABBinaryFunctionCall;
-import com.rockwellcollins.atc.agree.codegen.ast.MATLABBoolExpr;
-import com.rockwellcollins.atc.agree.codegen.ast.MATLABBusElementExpr;
-import com.rockwellcollins.atc.agree.codegen.ast.MATLABBusExpr;
-import com.rockwellcollins.atc.agree.codegen.ast.MATLABDoubleExpr;
-import com.rockwellcollins.atc.agree.codegen.ast.MATLABIdExpr;
-import com.rockwellcollins.atc.agree.codegen.ast.MATLABIfFunctionCall;
-import com.rockwellcollins.atc.agree.codegen.ast.MATLABIntCastExpr;
-import com.rockwellcollins.atc.agree.codegen.ast.MATLABIntExpr;
-import com.rockwellcollins.atc.agree.codegen.ast.MATLABUnaryExpr;
+import com.rockwellcollins.atc.agree.codegen.ast.expr.MATLABArrowFunctionCall;
+import com.rockwellcollins.atc.agree.codegen.ast.expr.MATLABBinaryExpr;
+import com.rockwellcollins.atc.agree.codegen.ast.expr.MATLABBoolExpr;
+import com.rockwellcollins.atc.agree.codegen.ast.expr.MATLABBusElementExpr;
+import com.rockwellcollins.atc.agree.codegen.ast.expr.MATLABBusExpr;
+import com.rockwellcollins.atc.agree.codegen.ast.expr.MATLABDoubleExpr;
+import com.rockwellcollins.atc.agree.codegen.ast.expr.MATLABIdExpr;
+import com.rockwellcollins.atc.agree.codegen.ast.expr.MATLABIfFunctionCall;
+import com.rockwellcollins.atc.agree.codegen.ast.expr.MATLABIntExpr;
+import com.rockwellcollins.atc.agree.codegen.ast.expr.MATLABTypeCastExpr;
+import com.rockwellcollins.atc.agree.codegen.ast.expr.MATLABTypeInitExpr;
+import com.rockwellcollins.atc.agree.codegen.ast.expr.MATLABUnaryExpr;
 
 public interface MATLABExprVisitor<T> {
 	
@@ -22,9 +23,10 @@ public interface MATLABExprVisitor<T> {
 	public T visit(MATLABIfFunctionCall e);
 	public T visit(MATLABIntExpr e);
 	public T visit(MATLABUnaryExpr e);
-	public T visit(MATLABIntCastExpr matlabIntCastExpr);
 	public T visit(MATLABArrowFunctionCall matlabArrowFunctionCall);
 	public T visit(MATLABDoubleExpr matlabDoubleExpr);
 	public T visit(MATLABBusElementExpr matlabBusElementExpr);
 	public T visit(MATLABBusExpr matlabBusExpr);
+	public T visit(MATLABTypeCastExpr matlabTypeCastExpr);
+	public T visit(MATLABTypeInitExpr matlabTypeInitExpr);
 }

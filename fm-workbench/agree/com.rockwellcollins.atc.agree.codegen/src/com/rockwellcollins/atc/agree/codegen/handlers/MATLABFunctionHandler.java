@@ -2,6 +2,7 @@ package com.rockwellcollins.atc.agree.codegen.handlers;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+
 import jkind.lustre.Node;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -106,3 +107,4 @@ public class MATLABFunctionHandler extends AadlHandler {
 	}
 	
 }
+
