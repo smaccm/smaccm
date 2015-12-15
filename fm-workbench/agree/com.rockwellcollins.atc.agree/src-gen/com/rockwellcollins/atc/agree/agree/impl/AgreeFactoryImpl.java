@@ -120,6 +120,7 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
       case AgreePackage.PREV_EXPR: return createPrevExpr();
       case AgreePackage.GET_PROPERTY_EXPR: return createGetPropertyExpr();
       case AgreePackage.RECORD_UPDATE_EXPR: return createRecordUpdateExpr();
+      case AgreePackage.TIME_EXPR: return createTimeExpr();
       case AgreePackage.INT_LIT_EXPR: return createIntLitExpr();
       case AgreePackage.PRE_EXPR: return createPreExpr();
       case AgreePackage.EVENT_EXPR: return createEventExpr();
@@ -749,6 +750,17 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
   {
     RecordUpdateExprImpl recordUpdateExpr = new RecordUpdateExprImpl();
     return recordUpdateExpr;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public TimeExpr createTimeExpr()
+  {
+    TimeExprImpl timeExpr = new TimeExprImpl();
+    return timeExpr;
   }
 
   /**

@@ -13,6 +13,7 @@ import com.rockwellcollins.atc.agree.agree.Expr;
 import com.rockwellcollins.atc.agree.agree.IfThenElseExpr;
 import com.rockwellcollins.atc.agree.agree.NestedDotID;
 import com.rockwellcollins.atc.agree.agree.PreExpr;
+import com.rockwellcollins.atc.agree.agree.RecordDefExpr;
 import com.rockwellcollins.atc.agree.agree.RecordExpr;
 import com.rockwellcollins.atc.agree.agree.RecordType;
 import com.rockwellcollins.atc.agree.agree.RecordUpdateExpr;
@@ -90,6 +91,8 @@ public class RecordExprScoper {
     		if(dataClass instanceof DataImplementation){
     			return AgreeScopeProvider.getRecordComponents(dataClass);
     		}
+    	}else if(recStatement instanceof RecordDefExpr){
+    	    return AgreeScopeProvider.getRecordComponents(recStatement);
     	}
     	return IScope.NULLSCOPE;
 	}

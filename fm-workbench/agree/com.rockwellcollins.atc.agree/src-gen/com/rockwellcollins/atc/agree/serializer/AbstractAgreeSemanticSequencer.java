@@ -53,6 +53,7 @@ import com.rockwellcollins.atc.agree.agree.RecordType;
 import com.rockwellcollins.atc.agree.agree.RecordUpdateExpr;
 import com.rockwellcollins.atc.agree.agree.SynchStatement;
 import com.rockwellcollins.atc.agree.agree.ThisExpr;
+import com.rockwellcollins.atc.agree.agree.TimeExpr;
 import com.rockwellcollins.atc.agree.agree.TimeInterval;
 import com.rockwellcollins.atc.agree.agree.UnaryExpr;
 import com.rockwellcollins.atc.agree.agree.WhenHoldsStatement;
@@ -337,6 +338,9 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 				return; 
 			case AgreePackage.THIS_EXPR:
 				sequence_TermExpr(context, (ThisExpr) semanticObject); 
+				return; 
+			case AgreePackage.TIME_EXPR:
+				sequence_TermExpr(context, (TimeExpr) semanticObject); 
 				return; 
 			case AgreePackage.TIME_INTERVAL:
 				sequence_TimeInterval(context, (TimeInterval) semanticObject); 
@@ -780,6 +784,15 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     (subThis=NestedDotID?)
 	 */
 	protected void sequence_TermExpr(EObject context, ThisExpr semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Constraint:
+	 *     {TimeExpr}
+	 */
+	protected void sequence_TermExpr(EObject context, TimeExpr semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	

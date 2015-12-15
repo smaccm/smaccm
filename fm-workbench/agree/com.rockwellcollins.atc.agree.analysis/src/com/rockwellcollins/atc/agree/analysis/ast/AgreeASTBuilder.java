@@ -729,8 +729,10 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
         for (SpecStatement spec : specs) {
             if (spec instanceof AssertStatement) {
                 AssertStatement assertState = (AssertStatement) spec;
-                asserts.add(new AgreeStatement(assertState.getStr(), doSwitch(assertState.getExpr()),
-                        assertState));
+                if (assertState.getExpr() != null) {
+                    asserts.add(new AgreeStatement(assertState.getStr(), doSwitch(assertState.getExpr()),
+                            assertState));
+                }
             }
         }
         return asserts;
@@ -839,8 +841,10 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
         for (SpecStatement spec : specs) {
             if (spec instanceof AssumeStatement) {
                 AssumeStatement assumption = (AssumeStatement) spec;
-                assumptions.add(
-                        new AgreeStatement(assumption.getStr(), doSwitch(assumption.getExpr()), assumption));
+                if (assumption.getExpr() != null) {
+                    assumptions.add(new AgreeStatement(assumption.getStr(), doSwitch(assumption.getExpr()),
+                            assumption));
+                }
             }
         }
         return assumptions;
@@ -851,8 +855,11 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
         for (SpecStatement spec : specs) {
             if (spec instanceof GuaranteeStatement) {
                 GuaranteeStatement guarantee = (GuaranteeStatement) spec;
-                guarantees.add(
-                        new AgreeStatement(guarantee.getStr(), doSwitch(guarantee.getExpr()), guarantee));
+                //we fill in pattern expressions later
+                if (guarantee.getExpr() != null) {
+                    guarantees.add(
+                            new AgreeStatement(guarantee.getStr(), doSwitch(guarantee.getExpr()), guarantee));
+                }
             }
         }
         return guarantees;

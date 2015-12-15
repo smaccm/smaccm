@@ -60,6 +60,7 @@ import com.rockwellcollins.atc.agree.agree.RecordUpdateExpr;
 import com.rockwellcollins.atc.agree.agree.SpecStatement;
 import com.rockwellcollins.atc.agree.agree.SynchStatement;
 import com.rockwellcollins.atc.agree.agree.ThisExpr;
+import com.rockwellcollins.atc.agree.agree.TimeExpr;
 import com.rockwellcollins.atc.agree.agree.TimeInterval;
 import com.rockwellcollins.atc.agree.agree.Type;
 import com.rockwellcollins.atc.agree.agree.UnaryExpr;
@@ -480,6 +481,13 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * @generated
    */
   private EClass recordUpdateExprEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass timeExprEClass = null;
 
   /**
    * <!-- begin-user-doc -->
@@ -2062,6 +2070,16 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  public EClass getTimeExpr()
+  {
+    return timeExprEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   public EClass getIntLitExpr()
   {
     return intLitExprEClass;
@@ -2517,6 +2535,8 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     createEReference(recordUpdateExprEClass, RECORD_UPDATE_EXPR__ARGS);
     createEReference(recordUpdateExprEClass, RECORD_UPDATE_EXPR__ARG_EXPR);
 
+    timeExprEClass = createEClass(TIME_EXPR);
+
     intLitExprEClass = createEClass(INT_LIT_EXPR);
     createEAttribute(intLitExprEClass, INT_LIT_EXPR__VAL);
 
@@ -2646,6 +2666,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     prevExprEClass.getESuperTypes().add(this.getExpr());
     getPropertyExprEClass.getESuperTypes().add(this.getExpr());
     recordUpdateExprEClass.getESuperTypes().add(this.getExpr());
+    timeExprEClass.getESuperTypes().add(this.getExpr());
     intLitExprEClass.getESuperTypes().add(this.getExpr());
     preExprEClass.getESuperTypes().add(this.getExpr());
     eventExprEClass.getESuperTypes().add(this.getExpr());
@@ -2857,6 +2878,8 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     initEReference(getRecordUpdateExpr_Record(), this.getExpr(), null, "record", null, 0, 1, RecordUpdateExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getRecordUpdateExpr_Args(), theAadl2Package.getNamedElement(), null, "args", null, 0, -1, RecordUpdateExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getRecordUpdateExpr_ArgExpr(), this.getExpr(), null, "argExpr", null, 0, -1, RecordUpdateExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+    initEClass(timeExprEClass, TimeExpr.class, "TimeExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
     initEClass(intLitExprEClass, IntLitExpr.class, "IntLitExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEAttribute(getIntLitExpr_Val(), theEcorePackage.getEString(), "val", null, 0, 1, IntLitExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

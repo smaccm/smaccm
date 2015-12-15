@@ -211,6 +211,7 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//RecordUpdateExpr/argExpr"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//RecordUpdateExpr/expr"/>
     </genClasses>
+    <genClasses ecoreClass="Agree.ecore#//TimeExpr"/>
     <genClasses ecoreClass="Agree.ecore#//IntLitExpr">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Agree.ecore#//IntLitExpr/val"/>
     </genClasses>

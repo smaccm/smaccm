@@ -527,6 +527,15 @@ public interface AgreeFactory extends EFactory
   RecordUpdateExpr createRecordUpdateExpr();
 
   /**
+   * Returns a new object of class '<em>Time Expr</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Time Expr</em>'.
+   * @generated
+   */
+  TimeExpr createTimeExpr();
+
+  /**
    * Returns a new object of class '<em>Int Lit Expr</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->

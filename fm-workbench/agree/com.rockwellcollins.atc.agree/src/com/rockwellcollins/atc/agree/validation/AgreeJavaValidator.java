@@ -100,6 +100,7 @@ import com.rockwellcollins.atc.agree.agree.RecordUpdateExpr;
 import com.rockwellcollins.atc.agree.agree.SpecStatement;
 import com.rockwellcollins.atc.agree.agree.SynchStatement;
 import com.rockwellcollins.atc.agree.agree.ThisExpr;
+import com.rockwellcollins.atc.agree.agree.TimeExpr;
 import com.rockwellcollins.atc.agree.agree.TimeInterval;
 import com.rockwellcollins.atc.agree.agree.Type;
 import com.rockwellcollins.atc.agree.agree.UnaryExpr;
@@ -587,17 +588,15 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 	    Expr lower = interval.getLow();
 	    Expr higher = interval.getHigh();
 	    
-	    AgreeType lowerType = getAgreeType(lower);
-	    AgreeType higherType = getAgreeType(higher);
+//	    AgreeType lowerType = getAgreeType(lower);
+//	    AgreeType higherType = getAgreeType(higher);
 	    
-	    if(!matches(REAL, lowerType)){
-	        error(lower, "Lower interval is of type '"+lowerType+"' but "
-	                + "must be of type 'real'");
+	    if(!(lower instanceof RealLitExpr)){
+	        error(lower, "Lower interval must be a real valued literal");
 	    }
 	    
-	    if(!matches(REAL, higherType)){
-            error(higher, "higher interval is of type '"+higherType+"' but "
-                    + "must be of type 'real'");
+	    if(!(higher instanceof RealLitExpr)){
+            error(higher, "higher interval must be a real valued literal");
         }
 	            
 	}
@@ -1952,6 +1951,8 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 			return REAL;
 		} else if (expr instanceof EventExpr) {
 			return BOOL;
+		} else if (expr instanceof TimeExpr) {
+		    return REAL;
 		}
 
 		return ERROR;

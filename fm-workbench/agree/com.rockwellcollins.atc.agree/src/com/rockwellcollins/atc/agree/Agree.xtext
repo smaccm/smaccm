@@ -199,7 +199,8 @@ RecordUpdateExpr returns Expr:
 ;
 
 TermExpr returns Expr:
-	  ComplexExpr
+	{TimeExpr} 'time'
+	| ComplexExpr
 	| {IntLitExpr} val=INTEGER_LIT
 	| {PreExpr} 'pre' '(' expr=Expr ')'
 	| {EventExpr} 'event' '(' id = NestedDotID ')'

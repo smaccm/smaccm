@@ -22,8 +22,8 @@ import org.eclipse.xtext.serializer.sequencer.AbstractSyntacticSequencer;
 public abstract class AbstractAgreeSyntacticSequencer extends AbstractSyntacticSequencer {
 
 	protected AgreeGrammarAccess grammarAccess;
-	protected AbstractElementAlias match_TermExpr_LeftParenthesisKeyword_9_0_a;
-	protected AbstractElementAlias match_TermExpr_LeftParenthesisKeyword_9_0_p;
+	protected AbstractElementAlias match_TermExpr_LeftParenthesisKeyword_10_0_a;
+	protected AbstractElementAlias match_TermExpr_LeftParenthesisKeyword_10_0_p;
 	protected AbstractElementAlias match_TimeInterval_LeftParenthesisKeyword_1_1_or_LeftSquareBracketKeyword_1_0;
 	protected AbstractElementAlias match_TimeInterval_RightParenthesisKeyword_5_0_or_RightSquareBracketKeyword_5_1;
 	protected AbstractElementAlias match_WheneverStatement_OccurKeyword_0_0_0_5_0_or_OccursKeyword_0_0_0_5_1;
@@ -32,8 +32,8 @@ public abstract class AbstractAgreeSyntacticSequencer extends AbstractSyntacticS
 	@Inject
 	protected void init(IGrammarAccess access) {
 		grammarAccess = (AgreeGrammarAccess) access;
-		match_TermExpr_LeftParenthesisKeyword_9_0_a = new TokenAlias(true, true, grammarAccess.getTermExprAccess().getLeftParenthesisKeyword_9_0());
-		match_TermExpr_LeftParenthesisKeyword_9_0_p = new TokenAlias(true, false, grammarAccess.getTermExprAccess().getLeftParenthesisKeyword_9_0());
+		match_TermExpr_LeftParenthesisKeyword_10_0_a = new TokenAlias(true, true, grammarAccess.getTermExprAccess().getLeftParenthesisKeyword_10_0());
+		match_TermExpr_LeftParenthesisKeyword_10_0_p = new TokenAlias(true, false, grammarAccess.getTermExprAccess().getLeftParenthesisKeyword_10_0());
 		match_TimeInterval_LeftParenthesisKeyword_1_1_or_LeftSquareBracketKeyword_1_0 = new AlternativeAlias(false, false, new TokenAlias(false, false, grammarAccess.getTimeIntervalAccess().getLeftParenthesisKeyword_1_1()), new TokenAlias(false, false, grammarAccess.getTimeIntervalAccess().getLeftSquareBracketKeyword_1_0()));
 		match_TimeInterval_RightParenthesisKeyword_5_0_or_RightSquareBracketKeyword_5_1 = new AlternativeAlias(false, false, new TokenAlias(false, false, grammarAccess.getTimeIntervalAccess().getRightParenthesisKeyword_5_0()), new TokenAlias(false, false, grammarAccess.getTimeIntervalAccess().getRightSquareBracketKeyword_5_1()));
 		match_WheneverStatement_OccurKeyword_0_0_0_5_0_or_OccursKeyword_0_0_0_5_1 = new AlternativeAlias(false, false, new TokenAlias(false, false, grammarAccess.getWheneverStatementAccess().getOccurKeyword_0_0_0_5_0()), new TokenAlias(false, false, grammarAccess.getWheneverStatementAccess().getOccursKeyword_0_0_0_5_1()));
@@ -52,10 +52,10 @@ public abstract class AbstractAgreeSyntacticSequencer extends AbstractSyntacticS
 		List<INode> transitionNodes = collectNodes(fromNode, toNode);
 		for (AbstractElementAlias syntax : transition.getAmbiguousSyntaxes()) {
 			List<INode> syntaxNodes = getNodesFor(transitionNodes, syntax);
-			if(match_TermExpr_LeftParenthesisKeyword_9_0_a.equals(syntax))
-				emit_TermExpr_LeftParenthesisKeyword_9_0_a(semanticObject, getLastNavigableState(), syntaxNodes);
-			else if(match_TermExpr_LeftParenthesisKeyword_9_0_p.equals(syntax))
-				emit_TermExpr_LeftParenthesisKeyword_9_0_p(semanticObject, getLastNavigableState(), syntaxNodes);
+			if(match_TermExpr_LeftParenthesisKeyword_10_0_a.equals(syntax))
+				emit_TermExpr_LeftParenthesisKeyword_10_0_a(semanticObject, getLastNavigableState(), syntaxNodes);
+			else if(match_TermExpr_LeftParenthesisKeyword_10_0_p.equals(syntax))
+				emit_TermExpr_LeftParenthesisKeyword_10_0_p(semanticObject, getLastNavigableState(), syntaxNodes);
 			else if(match_TimeInterval_LeftParenthesisKeyword_1_1_or_LeftSquareBracketKeyword_1_0.equals(syntax))
 				emit_TimeInterval_LeftParenthesisKeyword_1_1_or_LeftSquareBracketKeyword_1_0(semanticObject, getLastNavigableState(), syntaxNodes);
 			else if(match_TimeInterval_RightParenthesisKeyword_5_0_or_RightSquareBracketKeyword_5_1.equals(syntax))
@@ -82,6 +82,7 @@ public abstract class AbstractAgreeSyntacticSequencer extends AbstractSyntacticS
 	 *     (rule start) (ambiguity) 'real' '(' expr=Expr
 	 *     (rule start) (ambiguity) 'this' '.' subThis=NestedDotID
 	 *     (rule start) (ambiguity) 'this' (rule start)
+	 *     (rule start) (ambiguity) 'time' (rule start)
 	 *     (rule start) (ambiguity) base=[NamedElement|QCPREF]
 	 *     (rule start) (ambiguity) op='-'
 	 *     (rule start) (ambiguity) op='not'
@@ -93,7 +94,7 @@ public abstract class AbstractAgreeSyntacticSequencer extends AbstractSyntacticS
 	 *     (rule start) (ambiguity) {RecordExpr.record=}
 	 *     (rule start) (ambiguity) {RecordUpdateExpr.record=}
 	 */
-	protected void emit_TermExpr_LeftParenthesisKeyword_9_0_a(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
+	protected void emit_TermExpr_LeftParenthesisKeyword_10_0_a(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
 		acceptNodes(transition, nodes);
 	}
 	
@@ -110,7 +111,7 @@ public abstract class AbstractAgreeSyntacticSequencer extends AbstractSyntacticS
 	 *     (rule start) (ambiguity) {BinaryExpr.left=}
 	 *     (rule start) (ambiguity) {RecordUpdateExpr.record=}
 	 */
-	protected void emit_TermExpr_LeftParenthesisKeyword_9_0_p(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
+	protected void emit_TermExpr_LeftParenthesisKeyword_10_0_p(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
 		acceptNodes(transition, nodes);
 	}
 	
