@@ -2,15 +2,17 @@ package com.rockwellcollins.atc.agree.codegen.ast;
 
 import jkind.Assert;
 
+import com.rockwellcollins.atc.agree.codegen.ast.expr.MATLABExpr;
+import com.rockwellcollins.atc.agree.codegen.ast.expr.MATLABFunctionCall;
 import com.rockwellcollins.atc.agree.codegen.visitors.MATLABExprVisitor;
 
 public class MATLABBinaryFunctionCall extends MATLABFunctionCall {
 	
 	public final String name; 
 	
-	public final MATLABExpr leftExpr;
+	public MATLABExpr leftExpr;
 	
-	public final MATLABExpr rightExpr;
+	public MATLABExpr rightExpr;
 	
 	public MATLABBinaryFunctionCall(String name, MATLABExpr leftExpr, MATLABExpr rightExpr) {
 		Assert.isNotNull(name);

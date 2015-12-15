@@ -13,15 +13,20 @@ import jkind.lustre.VarDecl;
 
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABAssumption;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABAssignment;
-import com.rockwellcollins.atc.agree.codegen.ast.MATLABExpr;
+import com.rockwellcollins.atc.agree.codegen.ast.MATLABDoubleType;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABFunction;
+import com.rockwellcollins.atc.agree.codegen.ast.MATLABInt32Type;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABPersistentVarDecl;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABPersistentVarInit;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABPrimaryFunction;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABProperty;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABStatement;
-import com.rockwellcollins.atc.agree.codegen.ast.MATLABIdExpr;
+import com.rockwellcollins.atc.agree.codegen.ast.MATLABType;
+import com.rockwellcollins.atc.agree.codegen.ast.expr.MATLABExpr;
+import com.rockwellcollins.atc.agree.codegen.ast.expr.MATLABIdExpr;
 import com.rockwellcollins.atc.agree.codegen.visitors.LustreToMATLABExprVisitor;
+import com.rockwellcollins.atc.agree.codegen.visitors.LustreToMATLABTypeVisitor;
+import com.rockwellcollins.atc.agree.codegen.visitors.MATLABTypeCastExprVisitor;
 
 public class LustreToMATLABTranslator {
 
@@ -31,18 +36,26 @@ public class LustreToMATLABTranslator {
         List<MATLABFunction> functions = new ArrayList<>();
         List<MATLABPersistentVarDecl> persistentVarDecl = new ArrayList<>();
         
-		LustreToMATLABExprVisitor exprVisitor = new LustreToMATLABExprVisitor();
-        //inputs.addAll(agreeNode.inputs);
+        LustreToMATLABExprVisitor exprVisitor = new LustreToMATLABExprVisitor();
+        LustreToMATLABTypeVisitor typeVisitor = new LustreToMATLABTypeVisitor();
+        
         //get function name
     	String functionName = "check_"+lustreNode.id;
     	
+    	//add input variables
 		for (VarDecl inputVar : lustreNode.inputs){
 			//get inputs
-			inputs.add(new MATLABIdExpr(inputVar.id));
+			inputs.add(new MATLABIdExpr(exprVisitor.updateName(inputVar.id)));
 			//translate the Lustre expression to MATLAB expression
 			//add input Ids to inputList of the exprVisitor 
 			//to help identify local variables
 			exprVisitor.inputSet.add(inputVar.id);
+		}
+		
+		//add local variable and types
+		for (VarDecl localVar : lustreNode.locals){
+			//get local var Name and Type
+			exprVisitor.localVarTypeMap.put(exprVisitor.updateName(localVar.id), localVar.type.accept(typeVisitor));	
 		}
 		
 		//translate equations to assignments
@@ -51,8 +64,17 @@ public class LustreToMATLABTranslator {
 				//get the variable to assign
 				String varId = exprVisitor.updateName(equation.lhs.get(0).id);
 				MATLABIdExpr varToAssign = new MATLABIdExpr(varId);
+				//get the type for the local variable
+				MATLABType type = exprVisitor.localVarTypeMap.get(varId);
 				//translate expressions
 				MATLABExpr expr = exprVisitor.visit(equation.expr);
+				//conduct explicit type cast if it's of double type or int type
+				if ((type instanceof MATLABDoubleType) || (type instanceof MATLABInt32Type)){
+					//add explicit type cast to the last two expr arguments of 
+					//the if and arrow function calls inside the expr
+					MATLABTypeCastExprVisitor typeCastVisitor = new MATLABTypeCastExprVisitor(type);
+					expr = typeCastVisitor.visit(expr);
+				}
 				//add any new preVar init from exprVisitor
 				Iterator<MATLABPersistentVarInit> persistentVarInitIterator = exprVisitor.persistentVarInits.iterator();
 				while (persistentVarInitIterator.hasNext()) {
@@ -94,7 +116,8 @@ public class LustreToMATLABTranslator {
 		}
 		
 		//add definitions for the functions that have been called
-		//update the names of the funcitons included in matlabFunction
+		//TODO
+		//update the names of the functions included in matlabFunction
     	//to make sure they are unique, and the function names to the idList 
 		for(Map.Entry<String, MATLABFunction> functionEntry: exprVisitor.functionMap.entrySet()){
 			MATLABFunction function = functionEntry.getValue();

@@ -1,7 +1,16 @@
 package com.rockwellcollins.atc.agree.codegen.handlers;
 
+import java.io.BufferedWriter;
+import java.io.File;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
+import javax.swing.JFileChooser;
+
 import jkind.lustre.Node;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -93,6 +102,29 @@ public class MATLABFunctionHandler extends AadlHandler {
             
             //Walk through MATLAB function AST and print out
             System.out.println(matlabFunction);
+            
+            
+    		// Get the directory to create the output file
+    		// File name will be the same as the function name
+    		JFileChooser component = new JFileChooser();
+    		component.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+    		component.showOpenDialog(component);
+    		component.getSelectedFile();
+    		File directory = component.getSelectedFile();
+    		Path filePath = Paths.get(directory.toString(), matlabFunction.name);
+
+    		// Write MATLAB function code into the specified file
+    		try {
+    			BufferedWriter writer = Files.newBufferedWriter(filePath,
+    					StandardCharsets.UTF_8);
+
+    			// Write MATLAB function name
+    			writer.write(matlabFunction.toString());
+    			writer.close();
+    		} catch (Exception e) {
+    			e.printStackTrace();
+    		}
+            
             //TODO write to MATLAB script file with the same name as the primary function
             return Status.OK_STATUS;
         } catch (Throwable e) {
@@ -106,3 +138,4 @@ public class MATLABFunctionHandler extends AadlHandler {
 	}
 	
 }
+

@@ -1,4 +1,4 @@
-package com.rockwellcollins.atc.agree.codegen.ast;
+package com.rockwellcollins.atc.agree.codegen.ast.expr;
 
 import jkind.Assert;
 
@@ -10,9 +10,9 @@ public class MATLABArrowFunctionCall extends MATLABFunctionCall {
 
 	public final String firstTimeVar;
 	
-	public final MATLABExpr leftExpr;
+	public MATLABExpr leftExpr;
 	
-	public final MATLABExpr rightExpr;
+	public MATLABExpr rightExpr;
 	
 	public MATLABArrowFunctionCall(String name, String firstTimeVar, MATLABExpr leftExpr, MATLABExpr rightExpr) {
 		Assert.isNotNull(name);

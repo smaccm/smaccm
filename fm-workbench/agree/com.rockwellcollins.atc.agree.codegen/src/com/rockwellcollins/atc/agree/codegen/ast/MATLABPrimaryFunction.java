@@ -5,6 +5,7 @@ import java.util.List;
 
 import jkind.Assert;
 
+import com.rockwellcollins.atc.agree.codegen.ast.expr.MATLABIdExpr;
 import com.rockwellcollins.atc.agree.codegen.visitors.MATLABAstVisitor;
 
 public class MATLABPrimaryFunction extends MATLABFunction {

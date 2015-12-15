@@ -7,8 +7,8 @@ import com.rockwellcollins.atc.agree.codegen.ast.MATLABFirstTimeVarInit;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABIfFunction;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABImpliesFunction;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABPersistentVarDecl;
-import com.rockwellcollins.atc.agree.codegen.ast.MATLABPersistentVarStatement;
-import com.rockwellcollins.atc.agree.codegen.ast.MATLABPreVarInit;
+import com.rockwellcollins.atc.agree.codegen.ast.MATLABPreInputVarInit;
+import com.rockwellcollins.atc.agree.codegen.ast.MATLABPreLocalVarInit;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABPrimaryFunction;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABProperty;
 
@@ -25,15 +25,15 @@ public interface MATLABAstVisitor<T, S extends T> extends MATLABExprVisitor<S> {
 
 	public T visit(MATLABPersistentVarDecl matlabPersistentVarDecl);
 
-	public T visit(MATLABPreVarInit matlabPreVarInit);
-
-	public T visit(MATLABPersistentVarStatement matlabPersistentVarStatement);
+	public T visit(MATLABPreInputVarInit matlabPreVarInit);
 
 	public T visit(MATLABFirstTimeVarInit matlabFirstTimeVarInit);
 
 	public T visit(MATLABAssumption matlabAssertion);
 
 	public T visit(MATLABProperty matlabProperty);
+
+	public T visit(MATLABPreLocalVarInit matlabPreLocalVarInit);
 
 
 }
