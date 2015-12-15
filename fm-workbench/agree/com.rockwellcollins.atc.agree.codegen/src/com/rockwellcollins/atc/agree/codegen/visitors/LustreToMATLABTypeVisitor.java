@@ -1,6 +1,5 @@
 package com.rockwellcollins.atc.agree.codegen.visitors;
 
-import com.rockwellcollins.atc.agree.codegen.ast.MATLABArrayType;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABBoolType;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABBusType;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABDoubleType;
@@ -19,8 +18,7 @@ public class LustreToMATLABTypeVisitor implements TypeVisitor<MATLABType> {
 	
 	@Override
 	public MATLABType visit(ArrayType e) {
-		//return new ArrayType(e.location, e.base.accept(this), e.size);
-		return new MATLABArrayType();
+		throw new IllegalArgumentException(); 
 	}
 
 	@Override
@@ -38,17 +36,11 @@ public class LustreToMATLABTypeVisitor implements TypeVisitor<MATLABType> {
 	
 	@Override
 	public MATLABType visit(EnumType e) {
-		//return e;
 		throw new IllegalArgumentException(); 
 	}
 
 	@Override
 	public MATLABType visit(RecordType e) {
-		//Map<String, Type> fields = new HashMap<>();
-		//for (Entry<String, Type> entry : e.fields.entrySet()) {
-			//fields.put(entry.getKey(), entry.getValue().accept(this));
-		//}
-		//return new RecordType(e.location, e.id, fields);
 		return new MATLABBusType(e.id);
 	}
 
@@ -59,8 +51,6 @@ public class LustreToMATLABTypeVisitor implements TypeVisitor<MATLABType> {
 	
 	@Override
 	public MATLABType visit(SubrangeIntType e) {
-		//translate to int type
-		//TODO add assumptions for the min and max values
-		return new MATLABInt32Type();
+		throw new IllegalArgumentException();
 	}
 }

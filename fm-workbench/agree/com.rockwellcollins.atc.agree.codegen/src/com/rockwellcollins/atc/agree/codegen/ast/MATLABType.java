@@ -2,7 +2,6 @@ package com.rockwellcollins.atc.agree.codegen.ast;
 
 import com.rockwellcollins.atc.agree.codegen.visitors.MATLABTypeVisitor;
 
-import jkind.Assert;
 
 public abstract class MATLABType {
 	

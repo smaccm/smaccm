@@ -72,14 +72,12 @@ public class LustreToMATLABExprVisitor implements ExprVisitor<MATLABExpr> {
 
 	@Override
 	public MATLABExpr visit(ArrayExpr e) {
-		// TODO Auto-generated method stub
-		return null;
+		throw new IllegalArgumentException();
 	}
 
 	@Override
 	public MATLABExpr visit(ArrayUpdateExpr e) {
-		// TODO Auto-generated method stub
-		return null;
+		throw new IllegalArgumentException();
 	}
 
 	@Override
