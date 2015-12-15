@@ -36,12 +36,13 @@ import com.rockwellcollins.atc.agree.codegen.ast.MATLABPersistentVarInit;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABPreInputVarInit;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABPreLocalVarInit;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABType;
+import com.rockwellcollins.atc.agree.codegen.ast.expr.MATLABArrayAccessExpr;
 import com.rockwellcollins.atc.agree.codegen.ast.expr.MATLABArrowFunctionCall;
 import com.rockwellcollins.atc.agree.codegen.ast.expr.MATLABBinaryExpr;
 import com.rockwellcollins.atc.agree.codegen.ast.expr.MATLABBinaryOp;
 import com.rockwellcollins.atc.agree.codegen.ast.expr.MATLABBoolExpr;
 import com.rockwellcollins.atc.agree.codegen.ast.expr.MATLABBusElementExpr;
-import com.rockwellcollins.atc.agree.codegen.ast.expr.MATLABBusExpr;
+import com.rockwellcollins.atc.agree.codegen.ast.expr.MATLABBusElementUpdateExpr;
 import com.rockwellcollins.atc.agree.codegen.ast.expr.MATLABDoubleExpr;
 import com.rockwellcollins.atc.agree.codegen.ast.expr.MATLABExpr;
 import com.rockwellcollins.atc.agree.codegen.ast.expr.MATLABIdExpr;
@@ -66,8 +67,7 @@ public class LustreToMATLABExprVisitor implements ExprVisitor<MATLABExpr> {
 	
 	@Override
 	public MATLABExpr visit(ArrayAccessExpr e) {
-		// TODO Auto-generated method stub
-		return null;
+		return new MATLABArrayAccessExpr(e.array.accept(this), e.index.accept(this)); 
 	}
 
 	@Override
@@ -131,8 +131,8 @@ public class LustreToMATLABExprVisitor implements ExprVisitor<MATLABExpr> {
 
 	@Override
 	public MATLABExpr visit(CastExpr e) {
-		// TODO Auto-generated method stub
-		return null;
+		LustreToMATLABTypeVisitor typeVisitor = new LustreToMATLABTypeVisitor();
+		return new MATLABTypeCastExpr(e.type.accept(typeVisitor), e.expr.accept(this));
 	}
 
 	@Override
@@ -171,21 +171,25 @@ public class LustreToMATLABExprVisitor implements ExprVisitor<MATLABExpr> {
 
 	@Override
 	public MATLABExpr visit(RecordAccessExpr e) {
-		MATLABBusExpr busExpr = new MATLABBusExpr(e.record.accept(this));
 		MATLABIdExpr elementExpr = new MATLABIdExpr(updateName(e.field));
-		return new MATLABBusElementExpr(busExpr, elementExpr);
+		return new MATLABBusElementExpr(e.record.accept(this), elementExpr);
 	}
 
 	@Override
 	public MATLABExpr visit(RecordExpr e) {
-		// TODO Auto-generated method stub
+		// TODO 
+		//when used to initiate a record type variable
+		//each field of the record type variable will get 
+		//assigned the value from the field in the RecordExpr
+		//create MATLABBusUpdateExpr for this
+		//the assignment handling in the translator need to 
+		//assign every value to each element of the bus
 		return null;
 	}
 
 	@Override
 	public MATLABExpr visit(RecordUpdateExpr e) {
-		// TODO Auto-generated method stub
-		return null;
+		return new MATLABBusElementUpdateExpr(e.record.accept(this), new MATLABIdExpr(updateName(e.field)), e.value.accept(this));
 	}
 
 	@Override

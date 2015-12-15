@@ -6,13 +6,6 @@ import jkind.Assert;
 
 public abstract class MATLABType {
 	
-	public final String name;
-	
-	public MATLABType(String name) {
-		Assert.isNotNull(name);
-		this.name = name;
-	}
-	
 	public abstract String getValueStr();
 	
 	/**

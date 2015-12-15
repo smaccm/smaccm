@@ -1,16 +1,16 @@
 package com.rockwellcollins.atc.agree.codegen.ast;
 
-import java.math.BigInteger;
+import jkind.Assert;
 
 import com.rockwellcollins.atc.agree.codegen.visitors.MATLABTypeVisitor;
 
-public class MATLABInt32Type extends MATLABType {
-
-	public final BigInteger defaultValue;
-	public final String name = "int32";
+public class MATLABBusType extends MATLABType {
 	
-	public MATLABInt32Type() {
-		this.defaultValue = BigInteger.valueOf(0);
+	public final String name;
+	
+	public MATLABBusType(String name) {
+		Assert.isNotNull(name);
+		this.name = name;
 	}
 
 	@Override
@@ -20,7 +20,7 @@ public class MATLABInt32Type extends MATLABType {
 
 	@Override
 	public String getValueStr() {
-		return defaultValue.toString();
+		return null;
 	}
 	
 }

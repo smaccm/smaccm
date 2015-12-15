@@ -6,8 +6,9 @@ public class MATLABBoolType extends MATLABType {
 
 	public final boolean defaultValue;
 	
+	public final String name = "boolean";
+	
 	public MATLABBoolType() {
-		super("boolean");
 		this.defaultValue = false;
 	}
 

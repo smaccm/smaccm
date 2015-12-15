@@ -1,6 +1,8 @@
 package com.rockwellcollins.atc.agree.codegen.visitors;
 
+import com.rockwellcollins.atc.agree.codegen.ast.MATLABArrayType;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABBoolType;
+import com.rockwellcollins.atc.agree.codegen.ast.MATLABBusType;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABDoubleType;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABInt32Type;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABType;
@@ -14,10 +16,11 @@ import jkind.lustre.TupleType;
 import jkind.lustre.visitors.TypeVisitor;
 
 public class LustreToMATLABTypeVisitor implements TypeVisitor<MATLABType> {
+	
 	@Override
 	public MATLABType visit(ArrayType e) {
 		//return new ArrayType(e.location, e.base.accept(this), e.size);
-		throw new IllegalArgumentException(); 
+		return new MATLABArrayType();
 	}
 
 	@Override
@@ -30,7 +33,7 @@ public class LustreToMATLABTypeVisitor implements TypeVisitor<MATLABType> {
 		else if(e.name.equals("real"))
 			return new MATLABDoubleType();
 		else
-			throw new IllegalArgumentException(); 
+			return new MATLABBusType(e.name);
 	}
 	
 	@Override
@@ -46,22 +49,18 @@ public class LustreToMATLABTypeVisitor implements TypeVisitor<MATLABType> {
 			//fields.put(entry.getKey(), entry.getValue().accept(this));
 		//}
 		//return new RecordType(e.location, e.id, fields);
-		throw new IllegalArgumentException(); 
+		return new MATLABBusType(e.id);
 	}
 
 	@Override
 	public MATLABType visit(TupleType e) {
-		//List<Type> types = new ArrayList<>();
-		//for(Type t : e.types) {
-			//types.add(t.accept(this));
-		//}
-		//return new TupleType(types);
 		throw new IllegalArgumentException(); 
 	}
 	
 	@Override
 	public MATLABType visit(SubrangeIntType e) {
-		//return e;
-		throw new IllegalArgumentException(); 
+		//translate to int type
+		//TODO add assumptions for the min and max values
+		return new MATLABInt32Type();
 	}
 }

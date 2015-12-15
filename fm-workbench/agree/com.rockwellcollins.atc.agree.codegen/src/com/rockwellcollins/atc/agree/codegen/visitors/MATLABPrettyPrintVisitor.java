@@ -2,11 +2,13 @@ package com.rockwellcollins.atc.agree.codegen.visitors;
 
 import java.util.Iterator;
 
+import com.rockwellcollins.atc.agree.codegen.ast.MATLABArrayType;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABArrowFunction;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABAssumption;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABAssignment;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABBinaryFunctionCall;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABBoolType;
+import com.rockwellcollins.atc.agree.codegen.ast.MATLABBusType;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABDoubleType;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABFirstTimeVarInit;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABFunction;
@@ -20,11 +22,12 @@ import com.rockwellcollins.atc.agree.codegen.ast.MATLABPrimaryFunction;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABProperty;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABStatement;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABType;
+import com.rockwellcollins.atc.agree.codegen.ast.expr.MATLABArrayAccessExpr;
 import com.rockwellcollins.atc.agree.codegen.ast.expr.MATLABArrowFunctionCall;
 import com.rockwellcollins.atc.agree.codegen.ast.expr.MATLABBinaryExpr;
 import com.rockwellcollins.atc.agree.codegen.ast.expr.MATLABBoolExpr;
 import com.rockwellcollins.atc.agree.codegen.ast.expr.MATLABBusElementExpr;
-import com.rockwellcollins.atc.agree.codegen.ast.expr.MATLABBusExpr;
+import com.rockwellcollins.atc.agree.codegen.ast.expr.MATLABBusElementUpdateExpr;
 import com.rockwellcollins.atc.agree.codegen.ast.expr.MATLABDoubleExpr;
 import com.rockwellcollins.atc.agree.codegen.ast.expr.MATLABExpr;
 import com.rockwellcollins.atc.agree.codegen.ast.expr.MATLABIdExpr;
@@ -324,10 +327,10 @@ public class MATLABPrettyPrintVisitor implements MATLABTypeVisitor<Void>, MATLAB
 	}
 
 	@Override
-	public Void visit(MATLABAssumption assertion) {
+	public Void visit(MATLABAssumption assumption) {
 		newline();
 		write("sldv.assume(");
-		expr(assertion.expr);
+		expr(assumption.expr);
 		write(")");
 		newline();
 		return null;
@@ -357,11 +360,6 @@ public class MATLABPrettyPrintVisitor implements MATLABTypeVisitor<Void>, MATLAB
 		return null;
 	}
 
-	@Override
-	public Void visit(MATLABBusExpr e) {
-		write(e.id);
-		return null;
-	}
 
 	/**
 	 * if isempty(preVar)
@@ -404,6 +402,17 @@ public class MATLABPrettyPrintVisitor implements MATLABTypeVisitor<Void>, MATLAB
 		write(type.name);
 		return null;
 	}
+	
+	@Override
+	public Void visit(MATLABArrayType type) {
+		return null;
+	}
+	
+	@Override
+	public Void visit(MATLABBusType type) {
+		write(type.name);
+		return null;
+	}
 
 	@Override
 	public Void visit(MATLABTypeCastExpr e) {
@@ -420,6 +429,22 @@ public class MATLABPrettyPrintVisitor implements MATLABTypeVisitor<Void>, MATLAB
 		write("(");
 		write(e.type.getValueStr());
 		write(")");
+		return null;
+	}
+
+	@Override
+	public Void visit(MATLABArrayAccessExpr e) {
+		expr(e.array);
+		write("(");
+		expr(e.index);
+		write(")");
+		return null;
+	}
+
+	@Override
+	public Void visit(MATLABBusElementUpdateExpr e) {
+		//TODO to confirm that we only need to assign value here
+		expr(e.value);
 		return null;
 	}
 	

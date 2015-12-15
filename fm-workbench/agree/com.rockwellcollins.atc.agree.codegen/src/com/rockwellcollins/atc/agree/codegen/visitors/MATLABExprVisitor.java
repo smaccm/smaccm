@@ -1,11 +1,12 @@
 package com.rockwellcollins.atc.agree.codegen.visitors;
 
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABBinaryFunctionCall;
+import com.rockwellcollins.atc.agree.codegen.ast.expr.MATLABArrayAccessExpr;
 import com.rockwellcollins.atc.agree.codegen.ast.expr.MATLABArrowFunctionCall;
 import com.rockwellcollins.atc.agree.codegen.ast.expr.MATLABBinaryExpr;
 import com.rockwellcollins.atc.agree.codegen.ast.expr.MATLABBoolExpr;
 import com.rockwellcollins.atc.agree.codegen.ast.expr.MATLABBusElementExpr;
-import com.rockwellcollins.atc.agree.codegen.ast.expr.MATLABBusExpr;
+import com.rockwellcollins.atc.agree.codegen.ast.expr.MATLABBusElementUpdateExpr;
 import com.rockwellcollins.atc.agree.codegen.ast.expr.MATLABDoubleExpr;
 import com.rockwellcollins.atc.agree.codegen.ast.expr.MATLABIdExpr;
 import com.rockwellcollins.atc.agree.codegen.ast.expr.MATLABIfFunctionCall;
@@ -26,7 +27,8 @@ public interface MATLABExprVisitor<T> {
 	public T visit(MATLABArrowFunctionCall matlabArrowFunctionCall);
 	public T visit(MATLABDoubleExpr matlabDoubleExpr);
 	public T visit(MATLABBusElementExpr matlabBusElementExpr);
-	public T visit(MATLABBusExpr matlabBusExpr);
 	public T visit(MATLABTypeCastExpr matlabTypeCastExpr);
 	public T visit(MATLABTypeInitExpr matlabTypeInitExpr);
+	public T visit(MATLABArrayAccessExpr matlabArrayAccessExpr);
+	public T visit(MATLABBusElementUpdateExpr matlabBusElementUpdateExpr);
 }

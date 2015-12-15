@@ -2,15 +2,7 @@ package com.rockwellcollins.atc.agree.codegen.ast;
 
 import com.rockwellcollins.atc.agree.codegen.visitors.MATLABTypeVisitor;
 
-
-public class MATLABDoubleType extends MATLABType {
-
-	public final double defaultValue;
-	public final String name = "double";
-	
-	public MATLABDoubleType() {
-		this.defaultValue = 0;
-	}
+public class MATLABArrayType extends MATLABType {
 
 	@Override
 	public <T> T accept(MATLABTypeVisitor<T> visitor) {
@@ -19,7 +11,10 @@ public class MATLABDoubleType extends MATLABType {
 
 	@Override
 	public String getValueStr() {
-		return Double.toString(defaultValue);
+		return null;
 	}
 	
+	
+	
+
 }

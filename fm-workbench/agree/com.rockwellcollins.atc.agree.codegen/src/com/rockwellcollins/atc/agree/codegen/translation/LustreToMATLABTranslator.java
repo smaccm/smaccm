@@ -13,8 +13,9 @@ import jkind.lustre.VarDecl;
 
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABAssumption;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABAssignment;
-import com.rockwellcollins.atc.agree.codegen.ast.MATLABBoolType;
+import com.rockwellcollins.atc.agree.codegen.ast.MATLABDoubleType;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABFunction;
+import com.rockwellcollins.atc.agree.codegen.ast.MATLABInt32Type;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABPersistentVarDecl;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABPersistentVarInit;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABPrimaryFunction;
@@ -67,7 +68,8 @@ public class LustreToMATLABTranslator {
 				MATLABType type = exprVisitor.localVarTypeMap.get(varId);
 				//translate expressions
 				MATLABExpr expr = exprVisitor.visit(equation.expr);
-				if (!(type instanceof MATLABBoolType)){
+				//conduct explicit type cast if it's of double type or int type
+				if ((type instanceof MATLABDoubleType) || (type instanceof MATLABInt32Type)){
 					//add explicit type cast to the last two expr arguments of 
 					//the if and arrow function calls inside the expr
 					MATLABTypeCastExprVisitor typeCastVisitor = new MATLABTypeCastExprVisitor(type);
