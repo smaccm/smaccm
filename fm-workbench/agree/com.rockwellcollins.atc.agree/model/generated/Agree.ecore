@@ -157,6 +157,10 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="effect" eType="#//Expr"
         containment="true"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="WheneverBecomesTrueStatement" eSuperTypes="#//WheneverStatement">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="effect" eType="#//Expr"
+        containment="true"/>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="WheneverHoldsStatement" eSuperTypes="#//WheneverStatement">
     <eStructuralFeatures xsi:type="ecore:EReference" name="effect" eType="#//Expr"
         containment="true"/>

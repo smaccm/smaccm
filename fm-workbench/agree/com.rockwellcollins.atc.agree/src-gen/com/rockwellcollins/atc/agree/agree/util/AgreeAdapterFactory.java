@@ -281,6 +281,11 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
         return createWheneverOccursStatementAdapter();
       }
       @Override
+      public Adapter caseWheneverBecomesTrueStatement(WheneverBecomesTrueStatement object)
+      {
+        return createWheneverBecomesTrueStatementAdapter();
+      }
+      @Override
       public Adapter caseWheneverHoldsStatement(WheneverHoldsStatement object)
       {
         return createWheneverHoldsStatementAdapter();
@@ -1058,6 +1063,21 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
    * @generated
    */
   public Adapter createWheneverOccursStatementAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.WheneverBecomesTrueStatement <em>Whenever Becomes True Statement</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see com.rockwellcollins.atc.agree.agree.WheneverBecomesTrueStatement
+   * @generated
+   */
+  public Adapter createWheneverBecomesTrueStatementAdapter()
   {
     return null;
   }

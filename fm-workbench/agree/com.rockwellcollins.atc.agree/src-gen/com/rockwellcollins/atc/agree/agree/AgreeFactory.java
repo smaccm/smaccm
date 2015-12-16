@@ -383,6 +383,15 @@ public interface AgreeFactory extends EFactory
   WheneverOccursStatement createWheneverOccursStatement();
 
   /**
+   * Returns a new object of class '<em>Whenever Becomes True Statement</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Whenever Becomes True Statement</em>'.
+   * @generated
+   */
+  WheneverBecomesTrueStatement createWheneverBecomesTrueStatement();
+
+  /**
    * Returns a new object of class '<em>Whenever Holds Statement</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->

@@ -104,6 +104,7 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
       case AgreePackage.WHEN_HOLDS_STATEMENT: return createWhenHoldsStatement();
       case AgreePackage.WHEN_OCCURS_STATMENT: return createWhenOccursStatment();
       case AgreePackage.WHENEVER_OCCURS_STATEMENT: return createWheneverOccursStatement();
+      case AgreePackage.WHENEVER_BECOMES_TRUE_STATEMENT: return createWheneverBecomesTrueStatement();
       case AgreePackage.WHENEVER_HOLDS_STATEMENT: return createWheneverHoldsStatement();
       case AgreePackage.WHENEVER_IMPLIES_STATEMENT: return createWheneverImpliesStatement();
       case AgreePackage.MN_SYNCH_STATEMENT: return createMNSynchStatement();
@@ -574,6 +575,17 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
   {
     WheneverOccursStatementImpl wheneverOccursStatement = new WheneverOccursStatementImpl();
     return wheneverOccursStatement;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public WheneverBecomesTrueStatement createWheneverBecomesTrueStatement()
+  {
+    WheneverBecomesTrueStatementImpl wheneverBecomesTrueStatement = new WheneverBecomesTrueStatementImpl();
+    return wheneverBecomesTrueStatement;
   }
 
   /**

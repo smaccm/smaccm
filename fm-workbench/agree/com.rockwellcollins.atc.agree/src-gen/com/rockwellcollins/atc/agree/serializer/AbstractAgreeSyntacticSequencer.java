@@ -12,7 +12,6 @@ import org.eclipse.xtext.RuleCall;
 import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.serializer.analysis.GrammarAlias.AbstractElementAlias;
 import org.eclipse.xtext.serializer.analysis.GrammarAlias.AlternativeAlias;
-import org.eclipse.xtext.serializer.analysis.GrammarAlias.GroupAlias;
 import org.eclipse.xtext.serializer.analysis.GrammarAlias.TokenAlias;
 import org.eclipse.xtext.serializer.analysis.ISyntacticSequencerPDAProvider.ISynNavigable;
 import org.eclipse.xtext.serializer.analysis.ISyntacticSequencerPDAProvider.ISynTransition;
@@ -27,7 +26,7 @@ public abstract class AbstractAgreeSyntacticSequencer extends AbstractSyntacticS
 	protected AbstractElementAlias match_TimeInterval_LeftParenthesisKeyword_1_1_or_LeftSquareBracketKeyword_1_0;
 	protected AbstractElementAlias match_TimeInterval_RightParenthesisKeyword_5_0_or_RightSquareBracketKeyword_5_1;
 	protected AbstractElementAlias match_WheneverStatement_OccurKeyword_0_0_0_5_0_or_OccursKeyword_0_0_0_5_1;
-	protected AbstractElementAlias match_WheneverStatement_OccursKeyword_0_0_0_3_0_or___BecomesKeyword_0_0_0_3_1_0_TrueKeyword_0_0_0_3_1_1__;
+	protected AbstractElementAlias match_WheneverStatement_OccurKeyword_1_0_0_6_0_or_OccursKeyword_1_0_0_6_1;
 	
 	@Inject
 	protected void init(IGrammarAccess access) {
@@ -37,7 +36,7 @@ public abstract class AbstractAgreeSyntacticSequencer extends AbstractSyntacticS
 		match_TimeInterval_LeftParenthesisKeyword_1_1_or_LeftSquareBracketKeyword_1_0 = new AlternativeAlias(false, false, new TokenAlias(false, false, grammarAccess.getTimeIntervalAccess().getLeftParenthesisKeyword_1_1()), new TokenAlias(false, false, grammarAccess.getTimeIntervalAccess().getLeftSquareBracketKeyword_1_0()));
 		match_TimeInterval_RightParenthesisKeyword_5_0_or_RightSquareBracketKeyword_5_1 = new AlternativeAlias(false, false, new TokenAlias(false, false, grammarAccess.getTimeIntervalAccess().getRightParenthesisKeyword_5_0()), new TokenAlias(false, false, grammarAccess.getTimeIntervalAccess().getRightSquareBracketKeyword_5_1()));
 		match_WheneverStatement_OccurKeyword_0_0_0_5_0_or_OccursKeyword_0_0_0_5_1 = new AlternativeAlias(false, false, new TokenAlias(false, false, grammarAccess.getWheneverStatementAccess().getOccurKeyword_0_0_0_5_0()), new TokenAlias(false, false, grammarAccess.getWheneverStatementAccess().getOccursKeyword_0_0_0_5_1()));
-		match_WheneverStatement_OccursKeyword_0_0_0_3_0_or___BecomesKeyword_0_0_0_3_1_0_TrueKeyword_0_0_0_3_1_1__ = new AlternativeAlias(false, false, new GroupAlias(false, false, new TokenAlias(false, false, grammarAccess.getWheneverStatementAccess().getBecomesKeyword_0_0_0_3_1_0()), new TokenAlias(false, false, grammarAccess.getWheneverStatementAccess().getTrueKeyword_0_0_0_3_1_1())), new TokenAlias(false, false, grammarAccess.getWheneverStatementAccess().getOccursKeyword_0_0_0_3_0()));
+		match_WheneverStatement_OccurKeyword_1_0_0_6_0_or_OccursKeyword_1_0_0_6_1 = new AlternativeAlias(false, false, new TokenAlias(false, false, grammarAccess.getWheneverStatementAccess().getOccurKeyword_1_0_0_6_0()), new TokenAlias(false, false, grammarAccess.getWheneverStatementAccess().getOccursKeyword_1_0_0_6_1()));
 	}
 	
 	@Override
@@ -62,8 +61,8 @@ public abstract class AbstractAgreeSyntacticSequencer extends AbstractSyntacticS
 				emit_TimeInterval_RightParenthesisKeyword_5_0_or_RightSquareBracketKeyword_5_1(semanticObject, getLastNavigableState(), syntaxNodes);
 			else if(match_WheneverStatement_OccurKeyword_0_0_0_5_0_or_OccursKeyword_0_0_0_5_1.equals(syntax))
 				emit_WheneverStatement_OccurKeyword_0_0_0_5_0_or_OccursKeyword_0_0_0_5_1(semanticObject, getLastNavigableState(), syntaxNodes);
-			else if(match_WheneverStatement_OccursKeyword_0_0_0_3_0_or___BecomesKeyword_0_0_0_3_1_0_TrueKeyword_0_0_0_3_1_1__.equals(syntax))
-				emit_WheneverStatement_OccursKeyword_0_0_0_3_0_or___BecomesKeyword_0_0_0_3_1_0_TrueKeyword_0_0_0_3_1_1__(semanticObject, getLastNavigableState(), syntaxNodes);
+			else if(match_WheneverStatement_OccurKeyword_1_0_0_6_0_or_OccursKeyword_1_0_0_6_1.equals(syntax))
+				emit_WheneverStatement_OccurKeyword_1_0_0_6_0_or_OccursKeyword_1_0_0_6_1(semanticObject, getLastNavigableState(), syntaxNodes);
 			else acceptNodes(getLastNavigableState(), syntaxNodes);
 		}
 	}
@@ -151,12 +150,13 @@ public abstract class AbstractAgreeSyntacticSequencer extends AbstractSyntacticS
 	
 	/**
 	 * Ambiguous syntax:
-	 *     'occurs' | ('becomes' 'true')
+	 *     'occur' | 'occurs'
 	 *
 	 * This ambiguous syntax occurs at:
-	 *     cause=Expr (ambiguity) effect=Expr
+	 *     effect=Expr (ambiguity) 'during' interval=TimeInterval
+	 *     effect=Expr (ambiguity) (rule end)
 	 */
-	protected void emit_WheneverStatement_OccursKeyword_0_0_0_3_0_or___BecomesKeyword_0_0_0_3_1_0_TrueKeyword_0_0_0_3_1_1__(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
+	protected void emit_WheneverStatement_OccurKeyword_1_0_0_6_0_or_OccursKeyword_1_0_0_6_1(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
 		acceptNodes(transition, nodes);
 	}
 	

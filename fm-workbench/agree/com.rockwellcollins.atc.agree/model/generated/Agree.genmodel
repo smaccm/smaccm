@@ -147,6 +147,9 @@
     <genClasses ecoreClass="Agree.ecore#//WheneverOccursStatement">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//WheneverOccursStatement/effect"/>
     </genClasses>
+    <genClasses ecoreClass="Agree.ecore#//WheneverBecomesTrueStatement">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//WheneverBecomesTrueStatement/effect"/>
+    </genClasses>
     <genClasses ecoreClass="Agree.ecore#//WheneverHoldsStatement">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//WheneverHoldsStatement/effect"/>
     </genClasses>

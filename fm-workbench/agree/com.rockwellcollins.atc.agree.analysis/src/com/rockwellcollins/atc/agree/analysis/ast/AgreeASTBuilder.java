@@ -100,6 +100,7 @@ import com.rockwellcollins.atc.agree.agree.NodeDefExpr;
 import com.rockwellcollins.atc.agree.agree.NodeEq;
 import com.rockwellcollins.atc.agree.agree.NodeLemma;
 import com.rockwellcollins.atc.agree.agree.NodeStmt;
+import com.rockwellcollins.atc.agree.agree.PatternStatement;
 import com.rockwellcollins.atc.agree.agree.PreExpr;
 import com.rockwellcollins.atc.agree.agree.PrevExpr;
 import com.rockwellcollins.atc.agree.agree.PrimType;
@@ -150,12 +151,13 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
         List<AgreeNode> agreeNodes = gatherNodes(topNode);
 
         // have to convert the types. The reason we use Record types in the
-        // first
-        // place rather than the more general types is so we can check set
-        // containment
-        // easily
+        // first place rather than the more general types is so we can check set
+        // containment easily
         AgreeProgram program = new AgreeProgram(agreeNodes, new ArrayList<>(globalNodes),
                 new ArrayList<>(globalTypes), topNode);
+        
+        //if there are any patterns in the AgreeProgram we need to inline them
+        program = PatternTranslator.translate(program);
 
         // go through the extension registries and transform the program
         AgreeAutomaterRegistry aAReg = (AgreeAutomaterRegistry) ExtensionRegistry
@@ -729,15 +731,20 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
         for (SpecStatement spec : specs) {
             if (spec instanceof AssertStatement) {
                 AssertStatement assertState = (AssertStatement) spec;
+                String str = assertState.getStr();
+
                 if (assertState.getExpr() != null) {
-                    asserts.add(new AgreeStatement(assertState.getStr(), doSwitch(assertState.getExpr()),
+                    asserts.add(new AgreeStatement(str, doSwitch(assertState.getExpr()),
                             assertState));
+                }else{
+                    PatternStatement pattern = assertState.getPattern();
+                    asserts.add(new PatternBuilder(str, assertState, this).doSwitch(pattern));
                 }
             }
         }
         return asserts;
     }
-    
+
     private List<AgreeStatement> getAssignmentStatements(EList<SpecStatement> specs) {
         List<AgreeStatement> assigns = new ArrayList<>();
         for (SpecStatement spec : specs) {
@@ -841,9 +848,13 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
         for (SpecStatement spec : specs) {
             if (spec instanceof AssumeStatement) {
                 AssumeStatement assumption = (AssumeStatement) spec;
+                String str = assumption.getStr();
                 if (assumption.getExpr() != null) {
-                    assumptions.add(new AgreeStatement(assumption.getStr(), doSwitch(assumption.getExpr()),
+                    assumptions.add(new AgreeStatement(str, doSwitch(assumption.getExpr()),
                             assumption));
+                }else{
+                    PatternStatement pattern = assumption.getPattern();
+                    assumptions.add(new PatternBuilder(str, assumption, this).doSwitch(pattern));
                 }
             }
         }
@@ -855,10 +866,13 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
         for (SpecStatement spec : specs) {
             if (spec instanceof GuaranteeStatement) {
                 GuaranteeStatement guarantee = (GuaranteeStatement) spec;
-                //we fill in pattern expressions later
+                String str = guarantee.getStr();
                 if (guarantee.getExpr() != null) {
                     guarantees.add(
-                            new AgreeStatement(guarantee.getStr(), doSwitch(guarantee.getExpr()), guarantee));
+                            new AgreeStatement(str, doSwitch(guarantee.getExpr()), guarantee));
+                }else{
+                    PatternStatement pattern = guarantee.getPattern();
+                    guarantees.add(new PatternBuilder(str, guarantee, this).doSwitch(pattern));
                 }
             }
         }

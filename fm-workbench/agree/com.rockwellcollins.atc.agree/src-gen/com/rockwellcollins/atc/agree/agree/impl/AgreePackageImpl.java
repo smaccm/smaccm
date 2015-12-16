@@ -67,6 +67,7 @@ import com.rockwellcollins.atc.agree.agree.UnaryExpr;
 import com.rockwellcollins.atc.agree.agree.WhenHoldsStatement;
 import com.rockwellcollins.atc.agree.agree.WhenOccursStatment;
 import com.rockwellcollins.atc.agree.agree.WhenStatement;
+import com.rockwellcollins.atc.agree.agree.WheneverBecomesTrueStatement;
 import com.rockwellcollins.atc.agree.agree.WheneverHoldsStatement;
 import com.rockwellcollins.atc.agree.agree.WheneverImpliesStatement;
 import com.rockwellcollins.atc.agree.agree.WheneverOccursStatement;
@@ -369,6 +370,13 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * @generated
    */
   private EClass wheneverOccursStatementEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass wheneverBecomesTrueStatementEClass = null;
 
   /**
    * <!-- begin-user-doc -->
@@ -1600,6 +1608,26 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  public EClass getWheneverBecomesTrueStatement()
+  {
+    return wheneverBecomesTrueStatementEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getWheneverBecomesTrueStatement_Effect()
+  {
+    return (EReference)wheneverBecomesTrueStatementEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   public EClass getWheneverHoldsStatement()
   {
     return wheneverHoldsStatementEClass;
@@ -2472,6 +2500,9 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     wheneverOccursStatementEClass = createEClass(WHENEVER_OCCURS_STATEMENT);
     createEReference(wheneverOccursStatementEClass, WHENEVER_OCCURS_STATEMENT__EFFECT);
 
+    wheneverBecomesTrueStatementEClass = createEClass(WHENEVER_BECOMES_TRUE_STATEMENT);
+    createEReference(wheneverBecomesTrueStatementEClass, WHENEVER_BECOMES_TRUE_STATEMENT__EFFECT);
+
     wheneverHoldsStatementEClass = createEClass(WHENEVER_HOLDS_STATEMENT);
     createEReference(wheneverHoldsStatementEClass, WHENEVER_HOLDS_STATEMENT__EFFECT);
 
@@ -2650,6 +2681,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     whenHoldsStatementEClass.getESuperTypes().add(this.getWhenStatement());
     whenOccursStatmentEClass.getESuperTypes().add(this.getWhenStatement());
     wheneverOccursStatementEClass.getESuperTypes().add(this.getWheneverStatement());
+    wheneverBecomesTrueStatementEClass.getESuperTypes().add(this.getWheneverStatement());
     wheneverHoldsStatementEClass.getESuperTypes().add(this.getWheneverStatement());
     wheneverImpliesStatementEClass.getESuperTypes().add(this.getWheneverStatement());
     mnSynchStatementEClass.getESuperTypes().add(this.getSynchStatement());
@@ -2815,6 +2847,9 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
 
     initEClass(wheneverOccursStatementEClass, WheneverOccursStatement.class, "WheneverOccursStatement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getWheneverOccursStatement_Effect(), this.getExpr(), null, "effect", null, 0, 1, WheneverOccursStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+    initEClass(wheneverBecomesTrueStatementEClass, WheneverBecomesTrueStatement.class, "WheneverBecomesTrueStatement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getWheneverBecomesTrueStatement_Effect(), this.getExpr(), null, "effect", null, 0, 1, WheneverBecomesTrueStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(wheneverHoldsStatementEClass, WheneverHoldsStatement.class, "WheneverHoldsStatement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getWheneverHoldsStatement_Effect(), this.getExpr(), null, "effect", null, 0, 1, WheneverHoldsStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

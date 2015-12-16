@@ -106,6 +106,7 @@ import com.rockwellcollins.atc.agree.agree.Type;
 import com.rockwellcollins.atc.agree.agree.UnaryExpr;
 import com.rockwellcollins.atc.agree.agree.WhenHoldsStatement;
 import com.rockwellcollins.atc.agree.agree.WhenOccursStatment;
+import com.rockwellcollins.atc.agree.agree.WheneverBecomesTrueStatement;
 import com.rockwellcollins.atc.agree.agree.WheneverHoldsStatement;
 import com.rockwellcollins.atc.agree.agree.WheneverImpliesStatement;
 import com.rockwellcollins.atc.agree.agree.WheneverOccursStatement;
@@ -524,6 +525,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
         
     }
 	
+	
 	@Check(CheckType.FAST)
 	public void checkWheneverOccursStatement(WheneverOccursStatement whenever){
 	    Expr cause = whenever.getCause();
@@ -540,6 +542,23 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
                     + "but must be of type 'bool'");
         }
 	}
+	
+	@Check(CheckType.FAST)
+    public void checkWheneverBecomesTrueStatement(WheneverBecomesTrueStatement whenever){
+        Expr cause = whenever.getCause();
+        Expr effect = whenever.getEffect();
+        
+        AgreeType type = getAgreeType(cause);
+        if(!matches(BOOL, type)){
+            error(cause, "The cause of the 'whenever' statement is of type '"+type+"' "
+                    + "but must be of type 'bool'");
+        }
+        type = getAgreeType(effect);
+        if(!matches(BOOL, type)){
+            error(effect, "The effect of the 'whenever' statement is of type '"+type+"' "
+                    + "but must be of type 'bool'");
+        }
+    }
 
     @Check(CheckType.FAST)
     public void checkWheneverHoldsStatement(WheneverHoldsStatement whenever) {

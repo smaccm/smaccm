@@ -74,7 +74,9 @@ WhenStatement:
 ;
 
 WheneverStatement:
-	=> ({WheneverOccursStatement} 'whenever' cause=Expr ('occurs' | 'becomes' 'true')
+	=> ({WheneverOccursStatement} 'whenever' cause=Expr 'occurs'
+	    effect=Expr ('occur' | 'occurs')) ('during' interval=TimeInterval)? 
+|   => ({WheneverBecomesTrueStatement} 'whenever' cause=Expr 'becomes' 'true'
 	    effect=Expr ('occur' | 'occurs')) ('during' interval=TimeInterval)? 
 |	=> ({WheneverHoldsStatement} 'whenever' cause=Expr 'occurs'
 	    effect=Expr ('holds')) ('during' interval=TimeInterval)? 

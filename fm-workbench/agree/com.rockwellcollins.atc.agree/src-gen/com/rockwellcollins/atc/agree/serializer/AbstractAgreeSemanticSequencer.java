@@ -58,6 +58,7 @@ import com.rockwellcollins.atc.agree.agree.TimeInterval;
 import com.rockwellcollins.atc.agree.agree.UnaryExpr;
 import com.rockwellcollins.atc.agree.agree.WhenHoldsStatement;
 import com.rockwellcollins.atc.agree.agree.WhenOccursStatment;
+import com.rockwellcollins.atc.agree.agree.WheneverBecomesTrueStatement;
 import com.rockwellcollins.atc.agree.agree.WheneverHoldsStatement;
 import com.rockwellcollins.atc.agree.agree.WheneverImpliesStatement;
 import com.rockwellcollins.atc.agree.agree.WheneverOccursStatement;
@@ -353,6 +354,9 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 				return; 
 			case AgreePackage.WHEN_OCCURS_STATMENT:
 				sequence_WhenStatement(context, (WhenOccursStatment) semanticObject); 
+				return; 
+			case AgreePackage.WHENEVER_BECOMES_TRUE_STATEMENT:
+				sequence_WheneverStatement(context, (WheneverBecomesTrueStatement) semanticObject); 
 				return; 
 			case AgreePackage.WHENEVER_HOLDS_STATEMENT:
 				sequence_WheneverStatement(context, (WheneverHoldsStatement) semanticObject); 
@@ -874,6 +878,15 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 		feeder.accept(grammarAccess.getWhenStatementAccess().getIntervalTimeIntervalParserRuleCall_1_4_0(), semanticObject.getInterval());
 		feeder.accept(grammarAccess.getWhenStatementAccess().getEventExprParserRuleCall_1_6_0(), semanticObject.getEvent());
 		feeder.finish();
+	}
+	
+	
+	/**
+	 * Constraint:
+	 *     (cause=Expr effect=Expr interval=TimeInterval?)
+	 */
+	protected void sequence_WheneverStatement(EObject context, WheneverBecomesTrueStatement semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
 	}
 	
 	
