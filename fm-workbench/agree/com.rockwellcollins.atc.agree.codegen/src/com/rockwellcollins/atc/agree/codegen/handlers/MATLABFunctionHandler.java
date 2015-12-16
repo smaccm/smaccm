@@ -101,10 +101,6 @@ public class MATLABFunctionHandler extends AadlHandler {
             //Translate Lustre Node to MATLAB Function AST
             MATLABPrimaryFunction matlabFunction = LustreToMATLABTranslator.translate(lustreNode);
             
-            //Walk through MATLAB function AST and print out
-            System.out.println(matlabFunction);
-            
-            
     		// Get the directory to create the output file
     		// File name will be the same as the function name
             Preferences pref = Preferences.userRoot();
