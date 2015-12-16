@@ -9,9 +9,9 @@
             id="com.rockwellcollins.atc.agree.codegen.commands">
       </category>
      <command categoryId="com.rockwellcollins.atc.agree.codegen.commands"
-           description="Generate Matlab Function for the contract of the selected component"
+           description="Generate MATLAB Function for the contract of the selected component"
            id="com.rockwellcollins.atc.agree.codegen.commands.genCodeSingle"
-           name="Generate Matlab Function Single Layer">
+           name="Generate MATLAB Function Single Layer">
      </command>    
    </extension>
    <extension
@@ -38,7 +38,7 @@
             <command
                   commandId="com.rockwellcollins.atc.agree.codegen.commands.genCodeSingle"
                   icon="icons/layer.png"
-                  tooltip="Generate Matlab Function Single Layer"
+                  tooltip="Generate MATLAB Function Single Layer"
                   id="com.rockwellcollins.atc.agree.codegen.commands.genCodeSingle"
                   style="push">
             </command>
