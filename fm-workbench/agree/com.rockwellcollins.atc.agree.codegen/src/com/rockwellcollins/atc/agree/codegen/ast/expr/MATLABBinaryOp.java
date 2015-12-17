@@ -9,7 +9,7 @@ public enum MATLABBinaryOp {
 		LESS ("<"),	
 		GREATEREQUAL (">="),
 		LESSEQUAL ("<="),
-		EQUAL ("=="),
+		//EQUAL ("=="),
 		NOTEQUAL ("~="),
 		OR ("||"),
 		AND ("&&");
