@@ -1,9 +1,9 @@
 package com.rockwellcollins.atc.agree.codegen.visitors;
 
-import com.rockwellcollins.atc.agree.codegen.ast.MATLABBinaryFunctionCall;
 import com.rockwellcollins.atc.agree.codegen.ast.expr.MATLABArrayAccessExpr;
 import com.rockwellcollins.atc.agree.codegen.ast.expr.MATLABArrowFunctionCall;
 import com.rockwellcollins.atc.agree.codegen.ast.expr.MATLABBinaryExpr;
+import com.rockwellcollins.atc.agree.codegen.ast.expr.MATLABBinaryFunctionCall;
 import com.rockwellcollins.atc.agree.codegen.ast.expr.MATLABBoolExpr;
 import com.rockwellcollins.atc.agree.codegen.ast.expr.MATLABBusElementExpr;
 import com.rockwellcollins.atc.agree.codegen.ast.expr.MATLABBusElementUpdateExpr;

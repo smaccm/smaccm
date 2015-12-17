@@ -26,7 +26,6 @@ import jkind.lustre.UnaryExpr;
 import jkind.lustre.visitors.ExprVisitor;
 
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABArrowFunction;
-import com.rockwellcollins.atc.agree.codegen.ast.MATLABBinaryFunctionCall;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABFirstTimeVarInit;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABFunction;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABIfFunction;
@@ -39,6 +38,7 @@ import com.rockwellcollins.atc.agree.codegen.ast.MATLABType;
 import com.rockwellcollins.atc.agree.codegen.ast.expr.MATLABArrayAccessExpr;
 import com.rockwellcollins.atc.agree.codegen.ast.expr.MATLABArrowFunctionCall;
 import com.rockwellcollins.atc.agree.codegen.ast.expr.MATLABBinaryExpr;
+import com.rockwellcollins.atc.agree.codegen.ast.expr.MATLABBinaryFunctionCall;
 import com.rockwellcollins.atc.agree.codegen.ast.expr.MATLABBinaryOp;
 import com.rockwellcollins.atc.agree.codegen.ast.expr.MATLABBoolExpr;
 import com.rockwellcollins.atc.agree.codegen.ast.expr.MATLABBusElementExpr;
@@ -113,6 +113,9 @@ public class LustreToMATLABExprVisitor implements ExprVisitor<MATLABExpr> {
 					}
 					return new MATLABArrowFunctionCall(functionMap.get(functionName).name,"first_time", leftExpr,rightExpr);
 				}
+				else if(opName.equals("EQUAL")){
+					return new MATLABBinaryFunctionCall("isequal",leftExpr,rightExpr);
+				}
 				else{
 					throw new IllegalArgumentException();
 				}		
@@ -174,18 +177,17 @@ public class LustreToMATLABExprVisitor implements ExprVisitor<MATLABExpr> {
 	}
 
 	@Override
+	//only need to handle assignment (including from arrow and pre operators)
+	//and equation of record types
+	//others are not defined in AGREE
 	public MATLABExpr visit(RecordExpr e) {
-		// TODO 
-		//when used to initiate a record type variable
-		//each field of the record type variable will get 
-		//assigned the value from the field in the RecordExpr
-		//create MATLABBusUpdateExpr for this
-		//the assignment handling in the translator need to 
-		//assign every value to each element of the bus
-		return null;
+		return new MATLABIdExpr(e.id);
 	}
 
 	@Override
+	//only need to handle assignment (including from arrow and pre operators)
+	//and equation of record types
+	//others are not defined in AGREE
 	public MATLABExpr visit(RecordUpdateExpr e) {
 		return new MATLABBusElementUpdateExpr(e.record.accept(this), new MATLABIdExpr(updateName(e.field)), e.value.accept(this));
 	}
