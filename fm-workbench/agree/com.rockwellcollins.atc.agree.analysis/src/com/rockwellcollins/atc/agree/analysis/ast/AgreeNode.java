@@ -5,6 +5,7 @@ import java.util.List;
 import org.eclipse.emf.ecore.EObject;
 import org.osate.aadl2.instance.ComponentInstance;
 
+import jkind.lustre.Equation;
 import jkind.lustre.Expr;
 import jkind.lustre.Node;
 import jkind.lustre.Type;
@@ -24,6 +25,7 @@ public class AgreeNode {
     public final List<AgreeStatement> assumptions;
     public final List<AgreeStatement> guarantees;
     public final List<AgreeStatement> lemmas;
+    public final List<Equation> localEquations;
     public final Expr clockConstraint;
     public final Expr initialConstraint;
     public final AgreeVar clockVar;
@@ -32,7 +34,7 @@ public class AgreeNode {
     public final ComponentInstance compInst;
 
     public AgreeNode(String id, List<AgreeVar> inputs, List<AgreeVar> outputs, List<AgreeVar> locals,
-            List<AgreeConnection> connections, List<AgreeNode> subNodes, List<AgreeStatement> assertions,
+            List<Equation> localEquations, List<AgreeConnection> connections, List<AgreeNode> subNodes, List<AgreeStatement> assertions,
             List<AgreeStatement> assumptions, List<AgreeStatement> guarantees, List<AgreeStatement> lemmas,
             Expr clockConstraint, Expr initialConstraint, AgreeVar clockVar, EObject reference,
             TimingModel timing, ComponentInstance compinst) {
@@ -40,6 +42,7 @@ public class AgreeNode {
         this.inputs = jkind.util.Util.safeList(inputs);
         this.outputs = jkind.util.Util.safeList(outputs);
         this.locals = jkind.util.Util.safeList(locals);
+        this.localEquations = jkind.util.Util.safeList(localEquations);
         this.connections = jkind.util.Util.safeList(connections);
         this.subNodes = jkind.util.Util.safeList(subNodes);
         this.assertions = jkind.util.Util.safeList(assertions);

@@ -9,6 +9,11 @@ import org.osate.aadl2.instance.ComponentInstance;
 
 import com.rockwellcollins.atc.agree.analysis.AgreeException;
 
+import jkind.lustre.BinaryExpr;
+import jkind.lustre.BinaryOp;
+import jkind.lustre.Equation;
+import jkind.lustre.Expr;
+import jkind.lustre.IdExpr;
 import jkind.lustre.NamedType;
 import jkind.lustre.Node;
 
@@ -66,6 +71,12 @@ public class PatternTranslator {
         builder.addLocal(effectVar);
         builder.addLocal(timeCause);
         builder.addLocal(timeEffect);
+        
+        builder.addLocalEquation(new Equation(new IdExpr(causeVar.id), pattern.cause));
+        builder.addLocalEquation(new Equation(new IdExpr(effectVar.id), pattern.effect));
+        
+        //continue here
+        
 
         return null;
     }

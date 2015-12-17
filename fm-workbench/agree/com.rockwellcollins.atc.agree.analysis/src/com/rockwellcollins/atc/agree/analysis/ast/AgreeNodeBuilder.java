@@ -8,6 +8,7 @@ import org.osate.aadl2.instance.ComponentInstance;
 
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeNode.TimingModel;
 
+import jkind.lustre.Equation;
 import jkind.lustre.Expr;
 
 public class AgreeNodeBuilder {
@@ -16,6 +17,7 @@ public class AgreeNodeBuilder {
     private List<AgreeVar> inputs = new ArrayList<>();
     private List<AgreeVar> outputs = new ArrayList<>();
     private List<AgreeVar> locals = new ArrayList<>();
+    private List<Equation> equations = new ArrayList<>();
     private List<AgreeConnection> connections = new ArrayList<>();
     private List<AgreeNode> subNodes = new ArrayList<>();
     private List<AgreeStatement> assertions = new ArrayList<>();
@@ -38,6 +40,7 @@ public class AgreeNodeBuilder {
         this.inputs = new ArrayList<>(node.inputs);
         this.outputs = new ArrayList<>(node.outputs);
         this.locals = new ArrayList<>(node.locals);
+        this.equations = new ArrayList<>(node.localEquations);
         this.connections = new ArrayList<>(node.connections);
         this.subNodes = new ArrayList<>(node.subNodes);
         this.assertions = new ArrayList<>(node.assertions);
@@ -78,6 +81,14 @@ public class AgreeNodeBuilder {
     
     public void clearLocals(){
         this.locals.clear();
+    }
+    
+    public void addLocalEquation(Equation eq){
+        this.equations.add(eq);
+    }
+    
+    public void clearLocalEquations(){
+        this.equations.clear();
     }
     
     public void addConnection(AgreeConnection conn){
@@ -147,15 +158,15 @@ public class AgreeNodeBuilder {
     public void setTiming(TimingModel time){
         this.timing = time;
     }
-    
-    public void setCompInst(ComponentInstance compInst){
+
+    public void setCompInst(ComponentInstance compInst) {
         this.compInst = compInst;
     }
-    
+
     public AgreeNode build() {
-        return new AgreeNode(id, inputs, outputs, locals, connections, subNodes, assertions, assumptions,
-                guarantees, lemmas, clockConstraint, initialConstraint, clockVar, reference, timing,
-                compInst);
+        return new AgreeNode(id, inputs, outputs, locals, equations, connections, subNodes, assertions,
+                assumptions, guarantees, lemmas, clockConstraint, initialConstraint, clockVar, reference,
+                timing, compInst);
     }
-    
+
 }

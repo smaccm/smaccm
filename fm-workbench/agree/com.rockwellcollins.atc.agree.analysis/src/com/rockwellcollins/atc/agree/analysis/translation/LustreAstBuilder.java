@@ -141,6 +141,8 @@ public class LustreAstBuilder {
                 equations.add(new Equation(varId, binExpr.right));
             }
         }
+        
+        equations.addAll(topNode.localEquations);
 
         NodeBuilder builder = new NodeBuilder("main");
         builder.addInputs(inputs);
@@ -210,6 +212,7 @@ public class LustreAstBuilder {
             inputs.add(var);
         }
 
+        equations.addAll(flatNode.localEquations);
         NodeBuilder builder = new NodeBuilder("main");
         builder.addInputs(inputs);
         builder.addLocals(locals);
@@ -308,6 +311,7 @@ public class LustreAstBuilder {
             stuffConj = new BinaryExpr(stuffConj, BinaryOp.AND, guarantee.expr);
         }
 
+        equations.addAll(agreeNode.localEquations);
         // TODO should we include lemmas in the consistency check?
         // for(AgreeStatement guarantee : agreeNode.lemmas){
         // histConj = new BinaryExpr(histConj, BinaryOp.AND, guarantee.expr);
@@ -580,7 +584,7 @@ public class LustreAstBuilder {
         outputs.addAll(agreeNode.outputs);
         locals.addAll(agreeNode.locals);
 
-        return new AgreeNode(agreeNode.id, inputs, outputs, locals, null, agreeNode.subNodes, assertions,
+        return new AgreeNode(agreeNode.id, inputs, outputs, locals, agreeNode.localEquations, null, agreeNode.subNodes, assertions,
                 agreeNode.assumptions, agreeNode.guarantees, agreeNode.lemmas, new BoolExpr(true),
                 agreeNode.initialConstraint, agreeNode.clockVar, agreeNode.reference, null,
                 agreeNode.compInst);

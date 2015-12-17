@@ -155,8 +155,8 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
         // containment easily
         AgreeProgram program = new AgreeProgram(agreeNodes, new ArrayList<>(globalNodes),
                 new ArrayList<>(globalTypes), topNode);
-        
-        //if there are any patterns in the AgreeProgram we need to inline them
+
+        // if there are any patterns in the AgreeProgram we need to inline them
         program = PatternTranslator.translate(program);
 
         // go through the extension registries and transform the program
@@ -191,6 +191,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
         List<AgreeStatement> assumptions = new ArrayList<>();
         List<AgreeStatement> guarantees = new ArrayList<>();
         List<AgreeStatement> lemmas = new ArrayList<>();
+        List<Equation> localEquations = new ArrayList<>();
         Expr clockConstraint = new BoolExpr(true);
         Expr initialConstraint = new BoolExpr(true);
         String id = compInst.getName();
@@ -223,7 +224,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
                 assertions.addAll(getEquationStatements(contract.getSpecs()));
                 assertions.addAll(getPropertyStatements(contract.getSpecs()));
                 assertions.addAll(getAssignmentStatements(contract.getSpecs()));
-                
+
                 lemmas.addAll(getLemmaStatements(contract.getSpecs()));
                 addLustreNodes(contract.getSpecs());
                 gatherLustreTypes(contract.getSpecs());
@@ -243,7 +244,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
             }
             connections.addAll(getConnections(((ComponentImplementation) compClass).getAllConnections(),
                     compInst, subNodes, latched));
-            
+
             // make compClass the type so we can get it's other contract
             // elements
             compClass = ((ComponentImplementation) compClass).getType();
@@ -260,7 +261,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
             AgreeContract contract = (AgreeContract) annex.getContract();
             assumptions.addAll(getAssumptionStatements(contract.getSpecs()));
             guarantees.addAll(getGuaranteeStatements(contract.getSpecs()));
-            
+
             // we count eqstatements with expressions as assertions
             assertions.addAll(getEquationStatements(contract.getSpecs()));
             assertions.addAll(getPropertyStatements(contract.getSpecs()));
@@ -280,9 +281,9 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
         // in a component containing an annex
         assertReferencedSubcomponentHasAnnex(compInst, inputs, outputs, subNodes, assertions, lemmas);
 
-        return new AgreeNode(id, inputs, outputs, locals, connections, subNodes, assertions, assumptions,
-                guarantees, lemmas, clockConstraint, initialConstraint, clockVar, reference, timing,
-                compInst);
+        return new AgreeNode(id, inputs, outputs, locals, localEquations, connections, subNodes, assertions,
+                assumptions, guarantees, lemmas, clockConstraint, initialConstraint, clockVar, reference,
+                timing, compInst);
     }
 
     private void assertReferencedSubcomponentHasAnnex(ComponentInstance compInst, List<AgreeVar> inputs,
@@ -448,17 +449,17 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
                 outputs.add(var);
                 break;
             default:
-                throw new AgreeException("Unable to reason about bi-directional event port: "+name);
+                throw new AgreeException("Unable to reason about bi-directional event port: " + name);
             }
         }
 
-        if(dataClass == null){
-            //we do not reason about this type
+        if (dataClass == null) {
+            // we do not reason about this type
             return;
         }
         Type type = getNamedType(AgreeRecordUtils.getRecordTypeName(dataClass, typeMap, typeExpressions));
         if (type == null) {
-            //we do not reason about this type
+            // we do not reason about this type
             return;
         }
 
@@ -548,7 +549,8 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
                 dataClass = eventDataPort.getDataFeatureClassifier();
             }
 
-            if (dataClass == null || getNamedType(AgreeRecordUtils.getRecordTypeName(dataClass, typeMap, globalTypes)) == null) {
+            if (dataClass == null || getNamedType(
+                    AgreeRecordUtils.getRecordTypeName(dataClass, typeMap, globalTypes)) == null) {
                 // we don't reason about this type
                 continue;
             }
@@ -618,17 +620,17 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
         }
 
         String dfaPrefix = AgreeRecordUtils.getObjectLocationPrefix(spec);
-        
+
         if (spec.getVal2() == null) {
             Node dfaNode = AgreeCalendarUtils.getDFANode(dfaPrefix + "__DFA_NODE", val1);
-            Node calNode = AgreeCalendarUtils.getCalendarNode(
-                    dfaPrefix + "__CALENDAR_NODE", dfaNode.id,
+            Node calNode = AgreeCalendarUtils.getCalendarNode(dfaPrefix + "__CALENDAR_NODE", dfaNode.id,
                     clockIds.size());
 
-            //we do not need to make copies of the nodes if they exist
+            // we do not need to make copies of the nodes if they exist
             if (!nodeNameExists(dfaNode.id)) {
-                if(nodeNameExists(calNode.id)){
-                    throw new AgreeException("The calander node should not exist if the dfa node does not exist");
+                if (nodeNameExists(calNode.id)) {
+                    throw new AgreeException(
+                            "The calander node should not exist if the dfa node does not exist");
                 }
                 addToNodeList(dfaNode);
                 addToNodeList(calNode);
@@ -641,7 +643,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
             String nodeName = "__calendar_node_" + val1 + "_" + val2;
             nodeName = dfaPrefix + nodeName;
             Node calNode = AgreeCalendarUtils.getMNCalendar(nodeName, val1, val2);
-            
+
             if (!nodeNameExists(calNode.id)) {
                 addToNodeList(calNode);
             }
@@ -734,9 +736,8 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
                 String str = assertState.getStr();
 
                 if (assertState.getExpr() != null) {
-                    asserts.add(new AgreeStatement(str, doSwitch(assertState.getExpr()),
-                            assertState));
-                }else{
+                    asserts.add(new AgreeStatement(str, doSwitch(assertState.getExpr()), assertState));
+                } else {
                     PatternStatement pattern = assertState.getPattern();
                     asserts.add(new PatternBuilder(str, assertState, this).doSwitch(pattern));
                 }
@@ -750,13 +751,14 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
         for (SpecStatement spec : specs) {
             if (spec instanceof AssignStatement) {
                 Expr expr = doSwitch(((AssignStatement) spec).getExpr());
-                expr = new BinaryExpr(new IdExpr(((AssignStatement) spec).getId().getBase().getName()), BinaryOp.EQUAL, expr);
+                expr = new BinaryExpr(new IdExpr(((AssignStatement) spec).getId().getBase().getName()),
+                        BinaryOp.EQUAL, expr);
                 assigns.add(new AgreeStatement("", expr, spec));
             }
         }
         return assigns;
     }
-    
+
     private List<AgreeStatement> getPropertyStatements(EList<SpecStatement> specs) {
         List<AgreeStatement> props = new ArrayList<>();
         for (SpecStatement spec : specs) {
@@ -795,9 +797,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
         }
         return eqs;
     }
-    
-    
-    
+
     private List<AgreeStatement> getVariableRangeConstraints(List<Arg> args, EqStatement eq) {
         List<AgreeStatement> constraints = new ArrayList<>();
         for (Arg arg : args) {
@@ -850,9 +850,8 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
                 AssumeStatement assumption = (AssumeStatement) spec;
                 String str = assumption.getStr();
                 if (assumption.getExpr() != null) {
-                    assumptions.add(new AgreeStatement(str, doSwitch(assumption.getExpr()),
-                            assumption));
-                }else{
+                    assumptions.add(new AgreeStatement(str, doSwitch(assumption.getExpr()), assumption));
+                } else {
                     PatternStatement pattern = assumption.getPattern();
                     assumptions.add(new PatternBuilder(str, assumption, this).doSwitch(pattern));
                 }
@@ -868,9 +867,8 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
                 GuaranteeStatement guarantee = (GuaranteeStatement) spec;
                 String str = guarantee.getStr();
                 if (guarantee.getExpr() != null) {
-                    guarantees.add(
-                            new AgreeStatement(str, doSwitch(guarantee.getExpr()), guarantee));
-                }else{
+                    guarantees.add(new AgreeStatement(str, doSwitch(guarantee.getExpr()), guarantee));
+                } else {
                     PatternStatement pattern = guarantee.getPattern();
                     guarantees.add(new PatternBuilder(str, guarantee, this).doSwitch(pattern));
                 }
@@ -1116,12 +1114,12 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
         List<VarDecl> outputs = Collections.singletonList(outVar);
         Equation eq = new Equation(new IdExpr("_outvar"), bodyExpr);
         List<Equation> eqs = Collections.singletonList(eq);
-        
+
         NodeBuilder builder = new NodeBuilder(nodeName);
         builder.addInputs(inputs);
         builder.addOutputs(outputs);
         builder.addEquations(eqs);
-        
+
         Node node = builder.build();
         addToNodeList(node);
         return null;
@@ -1172,7 +1170,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
         builder.addLocals(internals);
         builder.addEquations(eqs);
         builder.addProperties(props);
-        
+
         addToNodeList(builder.build());
         return null;
     }
@@ -1370,10 +1368,10 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
         }
         globalNodes.add(node);
     }
-    
-    private static boolean nodeNameExists(String name){
-        for(Node inList : globalNodes){
-            if(inList.id.equals(name)){
+
+    private static boolean nodeNameExists(String name) {
+        for (Node inList : globalNodes) {
+            if (inList.id.equals(name)) {
                 return true;
             }
         }
