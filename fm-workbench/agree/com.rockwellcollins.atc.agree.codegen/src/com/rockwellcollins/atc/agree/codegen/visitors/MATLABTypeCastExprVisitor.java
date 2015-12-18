@@ -54,14 +54,14 @@ public class MATLABTypeCastExprVisitor implements MATLABExprVisitor<MATLABExpr> 
 
 	@Override
 	public MATLABExpr visit(MATLABIfFunctionCall e) {
-		e.ifExpr = new MATLABTypeCastExpr(type,e.ifExpr.accept(this));
-		e.elseExpr = new MATLABTypeCastExpr(type,e.elseExpr.accept(this));
+		e.ifExpr = e.ifExpr.accept(this);
+		e.elseExpr = e.elseExpr.accept(this);
 		return e;
 	}
 
 	@Override
 	public MATLABExpr visit(MATLABIntExpr e) {
-		return e;
+		return new MATLABTypeCastExpr(type,e);
 	}
 
 	@Override
@@ -72,14 +72,14 @@ public class MATLABTypeCastExprVisitor implements MATLABExprVisitor<MATLABExpr> 
 
 	@Override
 	public MATLABExpr visit(MATLABArrowFunctionCall e) {
-		e.leftExpr = new MATLABTypeCastExpr(type,e.leftExpr.accept(this));
-		e.rightExpr = new MATLABTypeCastExpr(type,e.rightExpr.accept(this));
+		e.leftExpr = e.leftExpr.accept(this);
+		e.rightExpr = e.rightExpr.accept(this);
 		return e;
 	}
 
 	@Override
 	public MATLABExpr visit(MATLABDoubleExpr e) {
-		return e;
+		return new MATLABTypeCastExpr(type,e);
 	}
 
 	@Override
@@ -98,8 +98,7 @@ public class MATLABTypeCastExprVisitor implements MATLABExprVisitor<MATLABExpr> 
 	}
 	
 	public MATLABExpr visit(MATLABExpr e) {
-		e = new MATLABTypeCastExpr(type, e.accept(this));
-		return e;
+		return e.accept(this);
 	}
 
 	@Override

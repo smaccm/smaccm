@@ -68,7 +68,9 @@ public class LustreToMATLABTranslator {
 				MATLABType type = exprVisitor.localVarTypeMap.get(varId);
 				//translate expressions
 				MATLABExpr expr = exprVisitor.visit(equation.expr);
-				//conduct explicit type cast if it's of double type or int type
+				//conduct explicit type cast if it's a constant of double type or int type
+				//no need to type cast for assignment from an input variable
+				//or operations (including functions) involving known types
 				if ((type instanceof MATLABDoubleType) || (type instanceof MATLABInt32Type)){
 					//add explicit type cast to the last two expr arguments of 
 					//the if and arrow function calls inside the expr

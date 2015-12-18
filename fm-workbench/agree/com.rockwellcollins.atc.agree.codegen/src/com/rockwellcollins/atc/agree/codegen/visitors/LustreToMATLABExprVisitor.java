@@ -229,10 +229,7 @@ public class LustreToMATLABExprVisitor implements ExprVisitor<MATLABExpr> {
 							if(localVarTypeMap.containsKey(varName)){
 								MATLABType type = localVarTypeMap.get(varName);
 								persistentVarInits.add(new MATLABPreLocalVarInit(preVarName, new MATLABTypeInitExpr(type)));
-								//the preVar assignment at the end of the function needs to
-								//conduct explicit type cast
-								MATLABTypeCastExpr typeCastExpr = new MATLABTypeCastExpr(type, new MATLABIdExpr(varName));
-								persistentVarMap.put(preVarName, typeCastExpr);
+								persistentVarMap.put(preVarName, new MATLABIdExpr(varName));
 							}
 							else{
 								throw new IllegalArgumentException();
