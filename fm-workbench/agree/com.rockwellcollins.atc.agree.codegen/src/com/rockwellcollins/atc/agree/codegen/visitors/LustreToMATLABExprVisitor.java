@@ -84,6 +84,7 @@ public class LustreToMATLABExprVisitor implements ExprVisitor<MATLABExpr> {
 	public MATLABExpr visit(BinaryExpr e){
 		MATLABExpr leftExpr = e.left.accept(this);
 		String opName = e.op.name();
+		String opFuncStr = e.op.toString();
 		MATLABBinaryOp op = MATLABBinaryOp.fromName(opName);
 		MATLABExpr rightExpr = e.right.accept(this);
 		if(op == null){
@@ -117,7 +118,7 @@ public class LustreToMATLABExprVisitor implements ExprVisitor<MATLABExpr> {
 					return new MATLABBinaryFunctionCall("isequal",leftExpr,rightExpr);
 				}
 				else{
-					throw new IllegalArgumentException();
+					return new MATLABBinaryFunctionCall(opFuncStr,leftExpr,rightExpr);
 				}		
 			}
 		}
