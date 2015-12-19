@@ -2,11 +2,9 @@ package com.rockwellcollins.atc.agree.codegen.visitors;
 
 import java.util.Iterator;
 
-import com.rockwellcollins.atc.agree.codegen.ast.MATLABArrayType;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABArrowFunction;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABAssumption;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABAssignment;
-import com.rockwellcollins.atc.agree.codegen.ast.MATLABBinaryFunctionCall;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABBoolType;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABBusType;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABDoubleType;
@@ -25,6 +23,7 @@ import com.rockwellcollins.atc.agree.codegen.ast.MATLABType;
 import com.rockwellcollins.atc.agree.codegen.ast.expr.MATLABArrayAccessExpr;
 import com.rockwellcollins.atc.agree.codegen.ast.expr.MATLABArrowFunctionCall;
 import com.rockwellcollins.atc.agree.codegen.ast.expr.MATLABBinaryExpr;
+import com.rockwellcollins.atc.agree.codegen.ast.expr.MATLABBinaryFunctionCall;
 import com.rockwellcollins.atc.agree.codegen.ast.expr.MATLABBoolExpr;
 import com.rockwellcollins.atc.agree.codegen.ast.expr.MATLABBusElementExpr;
 import com.rockwellcollins.atc.agree.codegen.ast.expr.MATLABBusElementUpdateExpr;
@@ -172,11 +171,8 @@ public class MATLABPrettyPrintVisitor implements MATLABTypeVisitor<Void>, MATLAB
 
 	@Override
 	public Void visit(MATLABUnaryExpr e) {
-		write("(");
 		write(e.op);
-		if (e.op != MATLABUnaryOp.NEGATIVE) {
-			write(" ");
-		}
+	    write("(");
 		expr(e.expr);
 		write(")");
 		return null;
@@ -360,7 +356,6 @@ public class MATLABPrettyPrintVisitor implements MATLABTypeVisitor<Void>, MATLAB
 		return null;
 	}
 
-
 	/**
 	 * if isempty(preVar)
 	 *    preVar = coder.nullcopy(type(default_value));
@@ -399,12 +394,8 @@ public class MATLABPrettyPrintVisitor implements MATLABTypeVisitor<Void>, MATLAB
 
 	@Override
 	public Void visit(MATLABBoolType type) {
-		write(type.name);
-		return null;
-	}
-	
-	@Override
-	public Void visit(MATLABArrayType type) {
+		//no need to typecast Boolean 
+		//also Boolean() is illegal
 		return null;
 	}
 	
@@ -443,7 +434,6 @@ public class MATLABPrettyPrintVisitor implements MATLABTypeVisitor<Void>, MATLAB
 
 	@Override
 	public Void visit(MATLABBusElementUpdateExpr e) {
-		//TODO to confirm that we only need to assign value here
 		expr(e.value);
 		return null;
 	}
