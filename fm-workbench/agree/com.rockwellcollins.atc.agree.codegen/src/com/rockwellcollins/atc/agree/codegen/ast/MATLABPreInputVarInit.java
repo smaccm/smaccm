@@ -4,11 +4,6 @@ import jkind.Assert;
 
 import com.rockwellcollins.atc.agree.codegen.visitors.MATLABAstVisitor;
 
-/**
- * if isempty(preVar)
- *    preVar = coder.nullcopy(var);
- * end
- */
 public class MATLABPreInputVarInit extends MATLABPersistentVarInit {
 
 	public final String preVar;

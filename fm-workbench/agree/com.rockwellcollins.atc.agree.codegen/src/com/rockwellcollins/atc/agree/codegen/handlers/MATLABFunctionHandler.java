@@ -99,7 +99,7 @@ public class MATLABFunctionHandler extends AadlHandler {
             Node lustreNode = AgreeNodeToLustreContract.translate(agreeProgram.topNode, agreeProgram);
             
             //Translate Lustre Node to MATLAB Function AST
-            MATLABPrimaryFunction matlabFunction = LustreToMATLABTranslator.translate(lustreNode);
+            MATLABPrimaryFunction matlabFunction = LustreToMATLABTranslator.translate(lustreNode, agreeProgram);
             
     		// Get the directory to create the output file
     		// File name will be the same as the function name

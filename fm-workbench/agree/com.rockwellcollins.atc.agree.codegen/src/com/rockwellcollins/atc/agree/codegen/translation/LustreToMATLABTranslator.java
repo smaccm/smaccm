@@ -11,17 +11,16 @@ import jkind.lustre.Expr;
 import jkind.lustre.Node;
 import jkind.lustre.VarDecl;
 
+import com.rockwellcollins.atc.agree.analysis.ast.AgreeProgram;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABAssumption;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABAssignment;
-import com.rockwellcollins.atc.agree.codegen.ast.MATLABDoubleType;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABFunction;
-import com.rockwellcollins.atc.agree.codegen.ast.MATLABInt32Type;
+import com.rockwellcollins.atc.agree.codegen.ast.MATLABLocalBusVarInit;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABPersistentVarDecl;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABPersistentVarInit;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABPrimaryFunction;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABProperty;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABStatement;
-import com.rockwellcollins.atc.agree.codegen.ast.MATLABType;
 import com.rockwellcollins.atc.agree.codegen.ast.expr.MATLABExpr;
 import com.rockwellcollins.atc.agree.codegen.ast.expr.MATLABIdExpr;
 import com.rockwellcollins.atc.agree.codegen.visitors.LustreToMATLABExprVisitor;
@@ -30,7 +29,7 @@ import com.rockwellcollins.atc.agree.codegen.visitors.MATLABTypeCastExprVisitor;
 
 public class LustreToMATLABTranslator {
 
-    public static MATLABPrimaryFunction translate(Node lustreNode){
+    public static MATLABPrimaryFunction translate(Node lustreNode, AgreeProgram agreeProgram){
         List<MATLABIdExpr> inputs = new ArrayList<>();
         List<MATLABStatement> statements = new ArrayList<>();
         List<MATLABFunction> functions = new ArrayList<>();
@@ -52,7 +51,7 @@ public class LustreToMATLABTranslator {
 			exprVisitor.inputSet.add(inputVar.id);
 		}
 		
-		//add local variable and types
+		//add local variable and their types
 		for (VarDecl localVar : lustreNode.locals){
 			//get local var Name and Type
 			exprVisitor.localVarTypeMap.put(exprVisitor.updateName(localVar.id), localVar.type.accept(typeVisitor));	
@@ -65,18 +64,14 @@ public class LustreToMATLABTranslator {
 				String varId = exprVisitor.updateName(equation.lhs.get(0).id);
 				MATLABIdExpr varToAssign = new MATLABIdExpr(varId);
 				//get the type for the local variable
-				MATLABType type = exprVisitor.localVarTypeMap.get(varId);
+				//MATLABType type = exprVisitor.localVarTypeMap.get(varId);
 				//translate expressions
 				MATLABExpr expr = exprVisitor.visit(equation.expr);
 				//conduct explicit type cast if it's a constant of double type or int type
 				//no need to type cast for assignment from an input variable
 				//or operations (including functions) involving known types
-				if ((type instanceof MATLABDoubleType) || (type instanceof MATLABInt32Type)){
-					//add explicit type cast to the last two expr arguments of 
-					//the if and arrow function calls inside the expr
-					MATLABTypeCastExprVisitor typeCastVisitor = new MATLABTypeCastExprVisitor(type);
-					expr = typeCastVisitor.visit(expr);
-				}
+				MATLABTypeCastExprVisitor typeCastVisitor = new MATLABTypeCastExprVisitor();
+				expr = typeCastVisitor.visit(expr);
 				//add any new preVar init from exprVisitor
 				Iterator<MATLABPersistentVarInit> persistentVarInitIterator = exprVisitor.persistentVarInits.iterator();
 				while (persistentVarInitIterator.hasNext()) {
@@ -86,6 +81,17 @@ public class LustreToMATLABTranslator {
 					//remove the new preVar init from exprVisitor
 					persistentVarInitIterator.remove();
 				}
+				
+				//add any new local Bus var init from exprVisitor
+				Iterator<MATLABLocalBusVarInit> busVarInitIterator = exprVisitor.localBusVarInits.iterator();
+				while (busVarInitIterator.hasNext()) {
+					MATLABLocalBusVarInit busVarInit = busVarInitIterator.next();
+					//add new local Bus var init to the statements before the assignment
+					statements.add(busVarInit);
+					//remove the new local Bus var init from exprVisitor
+					busVarInitIterator.remove();
+				}
+				
 				//add assignment
 				MATLABAssignment assignment = new MATLABAssignment(varToAssign,expr);
 				statements.add(assignment);

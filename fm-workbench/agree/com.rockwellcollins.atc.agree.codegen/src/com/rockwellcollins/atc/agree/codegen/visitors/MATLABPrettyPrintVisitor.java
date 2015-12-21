@@ -1,6 +1,8 @@
 package com.rockwellcollins.atc.agree.codegen.visitors;
 
 import java.util.Iterator;
+import java.util.Map.Entry;
+
 
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABArrowFunction;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABAssumption;
@@ -13,6 +15,7 @@ import com.rockwellcollins.atc.agree.codegen.ast.MATLABFunction;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABIfFunction;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABImpliesFunction;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABInt32Type;
+import com.rockwellcollins.atc.agree.codegen.ast.MATLABLocalBusVarInit;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABPersistentVarDecl;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABPreInputVarInit;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABPreLocalVarInit;
@@ -35,7 +38,6 @@ import com.rockwellcollins.atc.agree.codegen.ast.expr.MATLABIntExpr;
 import com.rockwellcollins.atc.agree.codegen.ast.expr.MATLABTypeCastExpr;
 import com.rockwellcollins.atc.agree.codegen.ast.expr.MATLABTypeInitExpr;
 import com.rockwellcollins.atc.agree.codegen.ast.expr.MATLABUnaryExpr;
-import com.rockwellcollins.atc.agree.codegen.ast.expr.MATLABUnaryOp;
 
 public class MATLABPrettyPrintVisitor implements MATLABTypeVisitor<Void>, MATLABAstVisitor<Void, Void>  {
 
@@ -268,11 +270,6 @@ public class MATLABPrettyPrintVisitor implements MATLABTypeVisitor<Void>, MATLAB
 	}
 
 	
-	/**
-	 * if isempty(preVar)
-	 *    preVar = coder.nullcopy(var);
-	 * end
-	 */
 	@Override
 	public Void visit(MATLABPreInputVarInit preVarInit) {
 		newline();
@@ -282,9 +279,11 @@ public class MATLABPrettyPrintVisitor implements MATLABTypeVisitor<Void>, MATLAB
 		newline();
 		write("\t");
 		write(preVarInit.preVar);
-		write(" = coder.nullcopy(");
+		write (" = ");
+		//write(" = coder.nullcopy(");
 		write(preVarInit.var);
-		write(");");
+		//write(");");
+		write (";");
 		newline();
 		write("end");
 		newline();
@@ -356,11 +355,6 @@ public class MATLABPrettyPrintVisitor implements MATLABTypeVisitor<Void>, MATLAB
 		return null;
 	}
 
-	/**
-	 * if isempty(preVar)
-	 *    preVar = coder.nullcopy(type(default_value));
-	 * end
-	 */
 	@Override
 	public Void visit(MATLABPreLocalVarInit preVarInit) {
 		newline();
@@ -370,9 +364,11 @@ public class MATLABPrettyPrintVisitor implements MATLABTypeVisitor<Void>, MATLAB
 		newline();
 		write("\t");
 		write(preVarInit.preVar);
-		write(" = coder.nullcopy(");
+		write(" = ");
+		//write(" = coder.nullcopy(");
 		preVarInit.typeInitExpr.accept(this);
-		write(");");
+		//write(");");
+		write(";");
 		newline();
 		write("end");
 		newline();
@@ -435,6 +431,22 @@ public class MATLABPrettyPrintVisitor implements MATLABTypeVisitor<Void>, MATLAB
 	@Override
 	public Void visit(MATLABBusElementUpdateExpr e) {
 		expr(e.value);
+		return null;
+	}
+
+	@Override
+	public Void visit(MATLABLocalBusVarInit busVarInit) {
+		Iterator<Entry<String, MATLABExpr>> iterator = busVarInit.fields.entrySet().iterator();
+		while (iterator.hasNext()) {
+			Entry<String, MATLABExpr> entry = iterator.next();
+			write(busVarInit.localVar);
+			write(".");
+			write(entry.getKey());
+			write(" = ");
+			expr(entry.getValue());
+			write(";");
+			newline();
+		}
 		return null;
 	}
 	

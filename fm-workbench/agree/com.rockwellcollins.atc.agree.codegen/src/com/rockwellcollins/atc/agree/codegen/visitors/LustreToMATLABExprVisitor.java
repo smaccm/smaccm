@@ -3,7 +3,11 @@ package com.rockwellcollins.atc.agree.codegen.visitors;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.SortedMap;
+import java.util.TreeMap;
+import java.util.Map.Entry;
 
 import jkind.lustre.ArrayAccessExpr;
 import jkind.lustre.ArrayExpr;
@@ -24,6 +28,7 @@ import jkind.lustre.RecordUpdateExpr;
 import jkind.lustre.TupleExpr;
 import jkind.lustre.UnaryExpr;
 import jkind.lustre.visitors.ExprVisitor;
+import jkind.util.StringNaturalOrdering;
 
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABArrowFunction;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABFirstTimeVarInit;
@@ -31,6 +36,7 @@ import com.rockwellcollins.atc.agree.codegen.ast.MATLABFunction;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABIfFunction;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABImpliesFunction;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABInt32Type;
+import com.rockwellcollins.atc.agree.codegen.ast.MATLABLocalBusVarInit;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABPersistentVarInit;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABPreInputVarInit;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABPreLocalVarInit;
@@ -42,7 +48,6 @@ import com.rockwellcollins.atc.agree.codegen.ast.expr.MATLABBinaryFunctionCall;
 import com.rockwellcollins.atc.agree.codegen.ast.expr.MATLABBinaryOp;
 import com.rockwellcollins.atc.agree.codegen.ast.expr.MATLABBoolExpr;
 import com.rockwellcollins.atc.agree.codegen.ast.expr.MATLABBusElementExpr;
-import com.rockwellcollins.atc.agree.codegen.ast.expr.MATLABBusElementUpdateExpr;
 import com.rockwellcollins.atc.agree.codegen.ast.expr.MATLABDoubleExpr;
 import com.rockwellcollins.atc.agree.codegen.ast.expr.MATLABExpr;
 import com.rockwellcollins.atc.agree.codegen.ast.expr.MATLABIdExpr;
@@ -60,6 +65,8 @@ public class LustreToMATLABExprVisitor implements ExprVisitor<MATLABExpr> {
     public HashMap<String, MATLABExpr> persistentVarMap = new HashMap<String, MATLABExpr>();
     public HashMap<String, MATLABType> localVarTypeMap = new HashMap<String, MATLABType>();
     public List<MATLABPersistentVarInit> persistentVarInits = new ArrayList<>();
+    public List<MATLABLocalBusVarInit> localBusVarInits = new ArrayList<>();
+    private int localVarIndex = 0;
 	
 	public LustreToMATLABExprVisitor() {
 		addFunctions();
@@ -178,19 +185,42 @@ public class LustreToMATLABExprVisitor implements ExprVisitor<MATLABExpr> {
 	}
 
 	@Override
-	//only need to handle assignment (including from arrow and pre operators)
-	//and equation of record types
-	//others are not defined in AGREE
 	public MATLABExpr visit(RecordExpr e) {
-		return new MATLABIdExpr(e.id);
+		//Create a local variable with the record type id as prefix
+		String locaVarName = e.id + "_var"+localVarIndex;
+		localVarIndex++;
+		//add assignment to assign the fields of the variable
+		//to the value specified in the RecordExpr
+		SortedMap<String, MATLABExpr> fields = new TreeMap<>(new StringNaturalOrdering());
+		
+		Iterator<Entry<String, Expr>> iterator = e.fields.entrySet().iterator();
+		while (iterator.hasNext()) {
+			Entry<String, Expr> entry = iterator.next();
+			//conduct explicit type cast if a field value is a constant of double type or int type 
+			MATLABTypeCastExprVisitor typeCastVisitor = new MATLABTypeCastExprVisitor();
+			MATLABExpr fieldExpr = typeCastVisitor.visit(entry.getValue().accept(this));
+			fields.put(entry.getKey(), fieldExpr);
+		}
+		
+		localBusVarInits.add(new MATLABLocalBusVarInit(locaVarName, fields));
+		//In the expression that uses the RecordExpr, just reference the local variable
+		return new MATLABIdExpr(locaVarName);
 	}
 
 	@Override
-	//only need to handle assignment (including from arrow and pre operators)
-	//and equation of record types
-	//others are not defined in AGREE
 	public MATLABExpr visit(RecordUpdateExpr e) {
-		return new MATLABBusElementUpdateExpr(e.record.accept(this), new MATLABIdExpr(updateName(e.field)), e.value.accept(this));
+		MATLABIdExpr recordVar = (MATLABIdExpr) e.record.accept(this);
+		//Assign the specific field of the variable created from the recordExpr associated with it
+		//to the value specified in the RecordUpdateExpr
+		SortedMap<String, MATLABExpr> fields = new TreeMap<>(new StringNaturalOrdering());
+		//conduct explicit type cast if a field value is a constant of double type or int type 
+		MATLABTypeCastExprVisitor typeCastVisitor = new MATLABTypeCastExprVisitor();
+		MATLABExpr fieldExpr = typeCastVisitor.visit(e.value.accept(this));
+		fields.put(e.field, fieldExpr);
+		localBusVarInits.add(new MATLABLocalBusVarInit(recordVar.id, fields));
+		
+		//In the expression that uses the RecordUpdateExpr, just reference the variable
+		return recordVar;
 	}
 
 	@Override

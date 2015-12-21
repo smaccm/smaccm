@@ -1,8 +1,7 @@
 package com.rockwellcollins.atc.agree.codegen.visitors;
 
-import jkind.Assert;
-
-import com.rockwellcollins.atc.agree.codegen.ast.MATLABType;
+import com.rockwellcollins.atc.agree.codegen.ast.MATLABDoubleType;
+import com.rockwellcollins.atc.agree.codegen.ast.MATLABInt32Type;
 import com.rockwellcollins.atc.agree.codegen.ast.expr.MATLABArrayAccessExpr;
 import com.rockwellcollins.atc.agree.codegen.ast.expr.MATLABArrowFunctionCall;
 import com.rockwellcollins.atc.agree.codegen.ast.expr.MATLABBinaryExpr;
@@ -20,13 +19,6 @@ import com.rockwellcollins.atc.agree.codegen.ast.expr.MATLABTypeInitExpr;
 import com.rockwellcollins.atc.agree.codegen.ast.expr.MATLABUnaryExpr;
 
 public class MATLABTypeCastExprVisitor implements MATLABExprVisitor<MATLABExpr> {
-
-	public final MATLABType type; 
-	
-	public MATLABTypeCastExprVisitor(MATLABType type) {
-		Assert.isNotNull(type);
-		this.type = type;
-	}
 	
 	@Override
 	public MATLABExpr visit(MATLABBinaryExpr e) {
@@ -61,7 +53,7 @@ public class MATLABTypeCastExprVisitor implements MATLABExprVisitor<MATLABExpr> 
 
 	@Override
 	public MATLABExpr visit(MATLABIntExpr e) {
-		return new MATLABTypeCastExpr(type,e);
+		return new MATLABTypeCastExpr(new MATLABInt32Type(),e);
 	}
 
 	@Override
@@ -79,7 +71,7 @@ public class MATLABTypeCastExprVisitor implements MATLABExprVisitor<MATLABExpr> 
 
 	@Override
 	public MATLABExpr visit(MATLABDoubleExpr e) {
-		return new MATLABTypeCastExpr(type,e);
+		return new MATLABTypeCastExpr(new MATLABDoubleType(),e);
 	}
 
 	@Override
