@@ -19,6 +19,7 @@ import com.rockwellcollins.atc.agree.agree.BinaryExpr;
 import com.rockwellcollins.atc.agree.agree.BoolLitExpr;
 import com.rockwellcollins.atc.agree.agree.CalenStatement;
 import com.rockwellcollins.atc.agree.agree.CallDef;
+import com.rockwellcollins.atc.agree.agree.ClosedTimeInterval;
 import com.rockwellcollins.atc.agree.agree.ComplexExpr;
 import com.rockwellcollins.atc.agree.agree.ConnectionStatement;
 import com.rockwellcollins.atc.agree.agree.ConstStatement;
@@ -44,6 +45,9 @@ import com.rockwellcollins.atc.agree.agree.NodeDefExpr;
 import com.rockwellcollins.atc.agree.agree.NodeEq;
 import com.rockwellcollins.atc.agree.agree.NodeLemma;
 import com.rockwellcollins.atc.agree.agree.NodeStmt;
+import com.rockwellcollins.atc.agree.agree.OpenLeftTimeInterval;
+import com.rockwellcollins.atc.agree.agree.OpenRightTimeInterval;
+import com.rockwellcollins.atc.agree.agree.OpenTimeInterval;
 import com.rockwellcollins.atc.agree.agree.OrderStatement;
 import com.rockwellcollins.atc.agree.agree.ParamStatement;
 import com.rockwellcollins.atc.agree.agree.PatternStatement;
@@ -391,6 +395,34 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * @generated
    */
   private EClass wheneverImpliesStatementEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass closedTimeIntervalEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass openLeftTimeIntervalEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass openRightTimeIntervalEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass openTimeIntervalEClass = null;
 
   /**
    * <!-- begin-user-doc -->
@@ -1678,6 +1710,46 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  public EClass getClosedTimeInterval()
+  {
+    return closedTimeIntervalEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getOpenLeftTimeInterval()
+  {
+    return openLeftTimeIntervalEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getOpenRightTimeInterval()
+  {
+    return openRightTimeIntervalEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getOpenTimeInterval()
+  {
+    return openTimeIntervalEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   public EClass getMNSynchStatement()
   {
     return mnSynchStatementEClass;
@@ -2510,6 +2582,14 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     createEReference(wheneverImpliesStatementEClass, WHENEVER_IMPLIES_STATEMENT__LHS);
     createEReference(wheneverImpliesStatementEClass, WHENEVER_IMPLIES_STATEMENT__RHS);
 
+    closedTimeIntervalEClass = createEClass(CLOSED_TIME_INTERVAL);
+
+    openLeftTimeIntervalEClass = createEClass(OPEN_LEFT_TIME_INTERVAL);
+
+    openRightTimeIntervalEClass = createEClass(OPEN_RIGHT_TIME_INTERVAL);
+
+    openTimeIntervalEClass = createEClass(OPEN_TIME_INTERVAL);
+
     mnSynchStatementEClass = createEClass(MN_SYNCH_STATEMENT);
     createEReference(mnSynchStatementEClass, MN_SYNCH_STATEMENT__COMP1);
     createEReference(mnSynchStatementEClass, MN_SYNCH_STATEMENT__COMP2);
@@ -2684,6 +2764,10 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     wheneverBecomesTrueStatementEClass.getESuperTypes().add(this.getWheneverStatement());
     wheneverHoldsStatementEClass.getESuperTypes().add(this.getWheneverStatement());
     wheneverImpliesStatementEClass.getESuperTypes().add(this.getWheneverStatement());
+    closedTimeIntervalEClass.getESuperTypes().add(this.getTimeInterval());
+    openLeftTimeIntervalEClass.getESuperTypes().add(this.getTimeInterval());
+    openRightTimeIntervalEClass.getESuperTypes().add(this.getTimeInterval());
+    openTimeIntervalEClass.getESuperTypes().add(this.getTimeInterval());
     mnSynchStatementEClass.getESuperTypes().add(this.getSynchStatement());
     calenStatementEClass.getESuperTypes().add(this.getSynchStatement());
     asynchStatementEClass.getESuperTypes().add(this.getSynchStatement());
@@ -2857,6 +2941,14 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     initEClass(wheneverImpliesStatementEClass, WheneverImpliesStatement.class, "WheneverImpliesStatement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getWheneverImpliesStatement_Lhs(), this.getExpr(), null, "lhs", null, 0, 1, WheneverImpliesStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getWheneverImpliesStatement_Rhs(), this.getExpr(), null, "rhs", null, 0, 1, WheneverImpliesStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+    initEClass(closedTimeIntervalEClass, ClosedTimeInterval.class, "ClosedTimeInterval", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+    initEClass(openLeftTimeIntervalEClass, OpenLeftTimeInterval.class, "OpenLeftTimeInterval", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+    initEClass(openRightTimeIntervalEClass, OpenRightTimeInterval.class, "OpenRightTimeInterval", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+    initEClass(openTimeIntervalEClass, OpenTimeInterval.class, "OpenTimeInterval", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
     initEClass(mnSynchStatementEClass, MNSynchStatement.class, "MNSynchStatement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getMNSynchStatement_Comp1(), theAadl2Package.getNamedElement(), null, "comp1", null, 0, -1, MNSynchStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

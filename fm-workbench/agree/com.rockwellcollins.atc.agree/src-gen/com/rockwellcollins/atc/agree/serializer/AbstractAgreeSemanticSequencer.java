@@ -18,6 +18,7 @@ import com.rockwellcollins.atc.agree.agree.AsynchStatement;
 import com.rockwellcollins.atc.agree.agree.BinaryExpr;
 import com.rockwellcollins.atc.agree.agree.BoolLitExpr;
 import com.rockwellcollins.atc.agree.agree.CalenStatement;
+import com.rockwellcollins.atc.agree.agree.ClosedTimeInterval;
 import com.rockwellcollins.atc.agree.agree.ConnectionStatement;
 import com.rockwellcollins.atc.agree.agree.ConstStatement;
 import com.rockwellcollins.atc.agree.agree.EqStatement;
@@ -39,6 +40,9 @@ import com.rockwellcollins.atc.agree.agree.NodeBodyExpr;
 import com.rockwellcollins.atc.agree.agree.NodeDefExpr;
 import com.rockwellcollins.atc.agree.agree.NodeEq;
 import com.rockwellcollins.atc.agree.agree.NodeLemma;
+import com.rockwellcollins.atc.agree.agree.OpenLeftTimeInterval;
+import com.rockwellcollins.atc.agree.agree.OpenRightTimeInterval;
+import com.rockwellcollins.atc.agree.agree.OpenTimeInterval;
 import com.rockwellcollins.atc.agree.agree.OrderStatement;
 import com.rockwellcollins.atc.agree.agree.ParamStatement;
 import com.rockwellcollins.atc.agree.agree.PreExpr;
@@ -54,7 +58,6 @@ import com.rockwellcollins.atc.agree.agree.RecordUpdateExpr;
 import com.rockwellcollins.atc.agree.agree.SynchStatement;
 import com.rockwellcollins.atc.agree.agree.ThisExpr;
 import com.rockwellcollins.atc.agree.agree.TimeExpr;
-import com.rockwellcollins.atc.agree.agree.TimeInterval;
 import com.rockwellcollins.atc.agree.agree.UnaryExpr;
 import com.rockwellcollins.atc.agree.agree.WhenHoldsStatement;
 import com.rockwellcollins.atc.agree.agree.WhenOccursStatment;
@@ -235,6 +238,9 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 			case AgreePackage.CALEN_STATEMENT:
 				sequence_SynchStatement(context, (CalenStatement) semanticObject); 
 				return; 
+			case AgreePackage.CLOSED_TIME_INTERVAL:
+				sequence_TimeInterval(context, (ClosedTimeInterval) semanticObject); 
+				return; 
 			case AgreePackage.CONNECTION_STATEMENT:
 				sequence_SpecStatement(context, (ConnectionStatement) semanticObject); 
 				return; 
@@ -298,6 +304,15 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 			case AgreePackage.NODE_LEMMA:
 				sequence_NodeStmt(context, (NodeLemma) semanticObject); 
 				return; 
+			case AgreePackage.OPEN_LEFT_TIME_INTERVAL:
+				sequence_TimeInterval(context, (OpenLeftTimeInterval) semanticObject); 
+				return; 
+			case AgreePackage.OPEN_RIGHT_TIME_INTERVAL:
+				sequence_TimeInterval(context, (OpenRightTimeInterval) semanticObject); 
+				return; 
+			case AgreePackage.OPEN_TIME_INTERVAL:
+				sequence_TimeInterval(context, (OpenTimeInterval) semanticObject); 
+				return; 
 			case AgreePackage.ORDER_STATEMENT:
 				sequence_OrderStatement(context, (OrderStatement) semanticObject); 
 				return; 
@@ -342,9 +357,6 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 				return; 
 			case AgreePackage.TIME_EXPR:
 				sequence_TermExpr(context, (TimeExpr) semanticObject); 
-				return; 
-			case AgreePackage.TIME_INTERVAL:
-				sequence_TimeInterval(context, (TimeInterval) semanticObject); 
 				return; 
 			case AgreePackage.UNARY_EXPR:
 				sequence_UnaryExpr(context, (UnaryExpr) semanticObject); 
@@ -805,7 +817,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 * Constraint:
 	 *     (low=Expr high=Expr)
 	 */
-	protected void sequence_TimeInterval(EObject context, TimeInterval semanticObject) {
+	protected void sequence_TimeInterval(EObject context, ClosedTimeInterval semanticObject) {
 		if(errorAcceptor != null) {
 			if(transientValues.isValueTransient(semanticObject, AgreePackage.Literals.TIME_INTERVAL__LOW) == ValueTransient.YES)
 				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, AgreePackage.Literals.TIME_INTERVAL__LOW));
@@ -814,8 +826,65 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 		}
 		INodesForEObjectProvider nodes = createNodeProvider(semanticObject);
 		SequenceFeeder feeder = createSequencerFeeder(semanticObject, nodes);
-		feeder.accept(grammarAccess.getTimeIntervalAccess().getLowExprParserRuleCall_2_0(), semanticObject.getLow());
-		feeder.accept(grammarAccess.getTimeIntervalAccess().getHighExprParserRuleCall_4_0(), semanticObject.getHigh());
+		feeder.accept(grammarAccess.getTimeIntervalAccess().getLowExprParserRuleCall_0_0_2_0(), semanticObject.getLow());
+		feeder.accept(grammarAccess.getTimeIntervalAccess().getHighExprParserRuleCall_0_0_4_0(), semanticObject.getHigh());
+		feeder.finish();
+	}
+	
+	
+	/**
+	 * Constraint:
+	 *     (low=Expr high=Expr)
+	 */
+	protected void sequence_TimeInterval(EObject context, OpenLeftTimeInterval semanticObject) {
+		if(errorAcceptor != null) {
+			if(transientValues.isValueTransient(semanticObject, AgreePackage.Literals.TIME_INTERVAL__LOW) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, AgreePackage.Literals.TIME_INTERVAL__LOW));
+			if(transientValues.isValueTransient(semanticObject, AgreePackage.Literals.TIME_INTERVAL__HIGH) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, AgreePackage.Literals.TIME_INTERVAL__HIGH));
+		}
+		INodesForEObjectProvider nodes = createNodeProvider(semanticObject);
+		SequenceFeeder feeder = createSequencerFeeder(semanticObject, nodes);
+		feeder.accept(grammarAccess.getTimeIntervalAccess().getLowExprParserRuleCall_1_0_2_0(), semanticObject.getLow());
+		feeder.accept(grammarAccess.getTimeIntervalAccess().getHighExprParserRuleCall_1_0_4_0(), semanticObject.getHigh());
+		feeder.finish();
+	}
+	
+	
+	/**
+	 * Constraint:
+	 *     (low=Expr high=Expr)
+	 */
+	protected void sequence_TimeInterval(EObject context, OpenRightTimeInterval semanticObject) {
+		if(errorAcceptor != null) {
+			if(transientValues.isValueTransient(semanticObject, AgreePackage.Literals.TIME_INTERVAL__LOW) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, AgreePackage.Literals.TIME_INTERVAL__LOW));
+			if(transientValues.isValueTransient(semanticObject, AgreePackage.Literals.TIME_INTERVAL__HIGH) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, AgreePackage.Literals.TIME_INTERVAL__HIGH));
+		}
+		INodesForEObjectProvider nodes = createNodeProvider(semanticObject);
+		SequenceFeeder feeder = createSequencerFeeder(semanticObject, nodes);
+		feeder.accept(grammarAccess.getTimeIntervalAccess().getLowExprParserRuleCall_2_0_2_0(), semanticObject.getLow());
+		feeder.accept(grammarAccess.getTimeIntervalAccess().getHighExprParserRuleCall_2_0_4_0(), semanticObject.getHigh());
+		feeder.finish();
+	}
+	
+	
+	/**
+	 * Constraint:
+	 *     (low=Expr high=Expr)
+	 */
+	protected void sequence_TimeInterval(EObject context, OpenTimeInterval semanticObject) {
+		if(errorAcceptor != null) {
+			if(transientValues.isValueTransient(semanticObject, AgreePackage.Literals.TIME_INTERVAL__LOW) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, AgreePackage.Literals.TIME_INTERVAL__LOW));
+			if(transientValues.isValueTransient(semanticObject, AgreePackage.Literals.TIME_INTERVAL__HIGH) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, AgreePackage.Literals.TIME_INTERVAL__HIGH));
+		}
+		INodesForEObjectProvider nodes = createNodeProvider(semanticObject);
+		SequenceFeeder feeder = createSequencerFeeder(semanticObject, nodes);
+		feeder.accept(grammarAccess.getTimeIntervalAccess().getLowExprParserRuleCall_3_0_2_0(), semanticObject.getLow());
+		feeder.accept(grammarAccess.getTimeIntervalAccess().getHighExprParserRuleCall_3_0_4_0(), semanticObject.getHigh());
 		feeder.finish();
 	}
 	

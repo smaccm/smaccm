@@ -7,6 +7,8 @@ import java.util.Map;
 
 import org.osate.aadl2.instance.ComponentInstance;
 
+import com.rockwellcollins.atc.agree.agree.OpenTimeInterval;
+import com.rockwellcollins.atc.agree.agree.TimeInterval;
 import com.rockwellcollins.atc.agree.analysis.AgreeException;
 
 import jkind.lustre.BinaryExpr;
@@ -21,9 +23,14 @@ public class PatternTranslator {
 
     private static final String TIME_PREFIX = "__TIME__";
     private static final String EVENT_PREFIX = "__EVENT__";
+    private static final String EFFECT_TIME_PREFIX = "__EFFECT_TIME__";
+    private static final String EFFECT_TIME_RANGE_PREFIX = "__EFFECT_TIME_RANGE__";
+    
     private static int eventIndex;
+    private static int patternIndex;
     private static List<Node> patternLustreNodes;
     private static Map<AgreeNode, List<AgreeVar>> nodeEvents;
+    private static IdExpr timeExpr = new IdExpr("time");
     
     public static AgreeProgram translate(AgreeProgram program) {
         patternLustreNodes = new ArrayList<>();
@@ -38,6 +45,7 @@ public class PatternTranslator {
 
     private static AgreeNode translateNode(AgreeNode node) {
         eventIndex = 0;
+        patternIndex = 0;
         AgreeNodeBuilder builder = new AgreeNodeBuilder(node);
 
         return builder.build();
@@ -58,6 +66,7 @@ public class PatternTranslator {
 
         AgreeNode curNode = builder.build();
         ComponentInstance compInst = curNode.compInst;
+        
         if (pattern instanceof AgreeTimesPattern) {
             return translatePattern((AgreeTimesPattern) pattern, builder);
         }
@@ -74,11 +83,58 @@ public class PatternTranslator {
         
         builder.addLocalEquation(new Equation(new IdExpr(causeVar.id), pattern.cause));
         builder.addLocalEquation(new Equation(new IdExpr(effectVar.id), pattern.effect));
-        
-        //continue here
-        
 
+        // create a variable that is always within the range of when the effect
+        // may occur. This is regardless of whether or not the cause has
+        // actually happen
+        AgreeVar causeTimeRangeVar =
+                new AgreeVar(EFFECT_TIME_RANGE_PREFIX + patternIndex, NamedType.REAL, null, compInst);
+        builder.addInput(causeTimeRangeVar);
+        Expr causeTimeRangeId = new IdExpr(causeTimeRangeVar.id);
+
+        Expr causeTimeRangeConstraint = getCauseTimeRangeConstraint(causeTimeRangeId, pattern.causeInterval);
+        builder.addAssertion(new AgreeStatement(null, causeTimeRangeConstraint, null));
+
+        // create a variable that will "predict" when the effect will occur by
+        // looking and the prediction of when the effect will occur when the
+        // cause occurs
+        AgreeVar causeTimeVar =
+                new AgreeVar(EFFECT_TIME_PREFIX + patternIndex, NamedType.REAL, null, compInst);
+        builder.addLocal(causeTimeVar);
+        Expr causeTimeId = new IdExpr(causeTimeVar.id);
+        
+        //START HERE: set the causeTimeId to lock in the value of causeTimeRangeId
+        
         return null;
+    }
+
+    private static Expr getCauseTimeRangeConstraint(Expr causeTimeRangeId, AgreePatternInterval causeInterval) {
+        Expr occurs = new BinaryExpr(timeExpr, BinaryOp.MINUS, causeTimeRangeId);
+        BinaryOp left;
+        BinaryOp right;
+        switch (causeInterval.type) {
+        case CLOSED:
+            left = BinaryOp.LESSEQUAL;
+            right = BinaryOp.LESSEQUAL;
+            break;
+        case OPEN:
+            left = BinaryOp.LESS;
+            right = BinaryOp.LESS;
+            break;
+        case OPEN_LEFT:
+            left = BinaryOp.LESS;
+            right = BinaryOp.LESSEQUAL;
+            break;
+        case OPEN_RIGHT:
+            left = BinaryOp.LESSEQUAL;
+            right = BinaryOp.LESS;
+            break;
+        default:
+            throw new AgreeException("Unhandled IntervalType : " + causeInterval.type);
+        }
+        Expr lower = new BinaryExpr(causeInterval.low, left, occurs);
+        Expr higher = new BinaryExpr(occurs, right, causeInterval.high);
+        return new BinaryExpr(lower, BinaryOp.AND, higher);
     }
 
     private static AgreeStatement translatePattern(AgreeTimesPattern pattern, AgreeNodeBuilder builder) {

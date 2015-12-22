@@ -410,6 +410,42 @@ public interface AgreeFactory extends EFactory
   WheneverImpliesStatement createWheneverImpliesStatement();
 
   /**
+   * Returns a new object of class '<em>Closed Time Interval</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Closed Time Interval</em>'.
+   * @generated
+   */
+  ClosedTimeInterval createClosedTimeInterval();
+
+  /**
+   * Returns a new object of class '<em>Open Left Time Interval</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Open Left Time Interval</em>'.
+   * @generated
+   */
+  OpenLeftTimeInterval createOpenLeftTimeInterval();
+
+  /**
+   * Returns a new object of class '<em>Open Right Time Interval</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Open Right Time Interval</em>'.
+   * @generated
+   */
+  OpenRightTimeInterval createOpenRightTimeInterval();
+
+  /**
+   * Returns a new object of class '<em>Open Time Interval</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Open Time Interval</em>'.
+   * @generated
+   */
+  OpenTimeInterval createOpenTimeInterval();
+
+  /**
    * Returns a new object of class '<em>MN Synch Statement</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->

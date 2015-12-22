@@ -23,8 +23,6 @@ public abstract class AbstractAgreeSyntacticSequencer extends AbstractSyntacticS
 	protected AgreeGrammarAccess grammarAccess;
 	protected AbstractElementAlias match_TermExpr_LeftParenthesisKeyword_10_0_a;
 	protected AbstractElementAlias match_TermExpr_LeftParenthesisKeyword_10_0_p;
-	protected AbstractElementAlias match_TimeInterval_LeftParenthesisKeyword_1_1_or_LeftSquareBracketKeyword_1_0;
-	protected AbstractElementAlias match_TimeInterval_RightParenthesisKeyword_5_0_or_RightSquareBracketKeyword_5_1;
 	protected AbstractElementAlias match_WheneverStatement_OccurKeyword_0_0_0_5_0_or_OccursKeyword_0_0_0_5_1;
 	protected AbstractElementAlias match_WheneverStatement_OccurKeyword_1_0_0_6_0_or_OccursKeyword_1_0_0_6_1;
 	
@@ -33,8 +31,6 @@ public abstract class AbstractAgreeSyntacticSequencer extends AbstractSyntacticS
 		grammarAccess = (AgreeGrammarAccess) access;
 		match_TermExpr_LeftParenthesisKeyword_10_0_a = new TokenAlias(true, true, grammarAccess.getTermExprAccess().getLeftParenthesisKeyword_10_0());
 		match_TermExpr_LeftParenthesisKeyword_10_0_p = new TokenAlias(true, false, grammarAccess.getTermExprAccess().getLeftParenthesisKeyword_10_0());
-		match_TimeInterval_LeftParenthesisKeyword_1_1_or_LeftSquareBracketKeyword_1_0 = new AlternativeAlias(false, false, new TokenAlias(false, false, grammarAccess.getTimeIntervalAccess().getLeftParenthesisKeyword_1_1()), new TokenAlias(false, false, grammarAccess.getTimeIntervalAccess().getLeftSquareBracketKeyword_1_0()));
-		match_TimeInterval_RightParenthesisKeyword_5_0_or_RightSquareBracketKeyword_5_1 = new AlternativeAlias(false, false, new TokenAlias(false, false, grammarAccess.getTimeIntervalAccess().getRightParenthesisKeyword_5_0()), new TokenAlias(false, false, grammarAccess.getTimeIntervalAccess().getRightSquareBracketKeyword_5_1()));
 		match_WheneverStatement_OccurKeyword_0_0_0_5_0_or_OccursKeyword_0_0_0_5_1 = new AlternativeAlias(false, false, new TokenAlias(false, false, grammarAccess.getWheneverStatementAccess().getOccurKeyword_0_0_0_5_0()), new TokenAlias(false, false, grammarAccess.getWheneverStatementAccess().getOccursKeyword_0_0_0_5_1()));
 		match_WheneverStatement_OccurKeyword_1_0_0_6_0_or_OccursKeyword_1_0_0_6_1 = new AlternativeAlias(false, false, new TokenAlias(false, false, grammarAccess.getWheneverStatementAccess().getOccurKeyword_1_0_0_6_0()), new TokenAlias(false, false, grammarAccess.getWheneverStatementAccess().getOccursKeyword_1_0_0_6_1()));
 	}
@@ -55,10 +51,6 @@ public abstract class AbstractAgreeSyntacticSequencer extends AbstractSyntacticS
 				emit_TermExpr_LeftParenthesisKeyword_10_0_a(semanticObject, getLastNavigableState(), syntaxNodes);
 			else if(match_TermExpr_LeftParenthesisKeyword_10_0_p.equals(syntax))
 				emit_TermExpr_LeftParenthesisKeyword_10_0_p(semanticObject, getLastNavigableState(), syntaxNodes);
-			else if(match_TimeInterval_LeftParenthesisKeyword_1_1_or_LeftSquareBracketKeyword_1_0.equals(syntax))
-				emit_TimeInterval_LeftParenthesisKeyword_1_1_or_LeftSquareBracketKeyword_1_0(semanticObject, getLastNavigableState(), syntaxNodes);
-			else if(match_TimeInterval_RightParenthesisKeyword_5_0_or_RightSquareBracketKeyword_5_1.equals(syntax))
-				emit_TimeInterval_RightParenthesisKeyword_5_0_or_RightSquareBracketKeyword_5_1(semanticObject, getLastNavigableState(), syntaxNodes);
 			else if(match_WheneverStatement_OccurKeyword_0_0_0_5_0_or_OccursKeyword_0_0_0_5_1.equals(syntax))
 				emit_WheneverStatement_OccurKeyword_0_0_0_5_0_or_OccursKeyword_0_0_0_5_1(semanticObject, getLastNavigableState(), syntaxNodes);
 			else if(match_WheneverStatement_OccurKeyword_1_0_0_6_0_or_OccursKeyword_1_0_0_6_1.equals(syntax))
@@ -111,28 +103,6 @@ public abstract class AbstractAgreeSyntacticSequencer extends AbstractSyntacticS
 	 *     (rule start) (ambiguity) {RecordUpdateExpr.record=}
 	 */
 	protected void emit_TermExpr_LeftParenthesisKeyword_10_0_p(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
-		acceptNodes(transition, nodes);
-	}
-	
-	/**
-	 * Ambiguous syntax:
-	 *     '[' | '('
-	 *
-	 * This ambiguous syntax occurs at:
-	 *     (rule start) (ambiguity) low=Expr
-	 */
-	protected void emit_TimeInterval_LeftParenthesisKeyword_1_1_or_LeftSquareBracketKeyword_1_0(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
-		acceptNodes(transition, nodes);
-	}
-	
-	/**
-	 * Ambiguous syntax:
-	 *     ')' | ']'
-	 *
-	 * This ambiguous syntax occurs at:
-	 *     high=Expr (ambiguity) (rule end)
-	 */
-	protected void emit_TimeInterval_RightParenthesisKeyword_5_0_or_RightSquareBracketKeyword_5_1(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
 		acceptNodes(transition, nodes);
 	}
 	

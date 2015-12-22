@@ -17,14 +17,14 @@ public class AgreePattern extends AgreeStatement {
     public final Expr cause;
     public final Expr effect;
 
-    public final TimeInterval causeInterval;
-    public final TimeInterval effectInterval;
+    public final AgreePatternInterval causeInterval;
+    public final AgreePatternInterval effectInterval;
 
     public final TriggerType causeType;
     public final TriggerType effectType;
 
     public AgreePattern(String string, EObject reference, Expr cause, Expr effect,
-            TimeInterval causeInterval, TimeInterval effectInterval, TriggerType causeType,
+            AgreePatternInterval causeInterval, AgreePatternInterval effectInterval, TriggerType causeType,
             TriggerType effectType) {
         super(string, null, reference);
         this.cause = cause;

@@ -1645,76 +1645,298 @@ ruleTimeInterval returns [EObject current=null]
     @init { enterRule(); 
     }
     @after { leaveRule(); }:
-((
+(((((
+)
+LeftSquareBracket
+(
+(
+ruleExpr
+)
+)
+Comma
+(
+(
+ruleExpr
+)
+)
+RightSquareBracket
+))=>((
     {
         $current = forceCreateModelElement(
-            grammarAccess.getTimeIntervalAccess().getTimeIntervalAction_0(),
+            grammarAccess.getTimeIntervalAccess().getClosedTimeIntervalAction_0_0_0(),
             $current);
     }
-)(
+)
 	otherlv_1=LeftSquareBracket
     {
-    	newLeafNode(otherlv_1, grammarAccess.getTimeIntervalAccess().getLeftSquareBracketKeyword_1_0());
+    	newLeafNode(otherlv_1, grammarAccess.getTimeIntervalAccess().getLeftSquareBracketKeyword_0_0_1());
     }
-
-    |
-	otherlv_2=LeftParenthesis
-    {
-    	newLeafNode(otherlv_2, grammarAccess.getTimeIntervalAccess().getLeftParenthesisKeyword_1_1());
-    }
-)(
+(
 (
 		{ 
-	        newCompositeNode(grammarAccess.getTimeIntervalAccess().getLowExprParserRuleCall_2_0()); 
+	        newCompositeNode(grammarAccess.getTimeIntervalAccess().getLowExprParserRuleCall_0_0_2_0()); 
 	    }
-		lv_low_3_0=ruleExpr		{
+		lv_low_2_0=ruleExpr		{
 	        if ($current==null) {
 	            $current = createModelElementForParent(grammarAccess.getTimeIntervalRule());
 	        }
        		set(
        			$current, 
        			"low",
-        		lv_low_3_0, 
+        		lv_low_2_0, 
         		"Expr");
 	        afterParserOrEnumRuleCall();
 	    }
 
 )
 )
-	otherlv_4=Comma
+	otherlv_3=Comma
     {
-    	newLeafNode(otherlv_4, grammarAccess.getTimeIntervalAccess().getCommaKeyword_3());
+    	newLeafNode(otherlv_3, grammarAccess.getTimeIntervalAccess().getCommaKeyword_0_0_3());
     }
 (
 (
 		{ 
-	        newCompositeNode(grammarAccess.getTimeIntervalAccess().getHighExprParserRuleCall_4_0()); 
+	        newCompositeNode(grammarAccess.getTimeIntervalAccess().getHighExprParserRuleCall_0_0_4_0()); 
 	    }
-		lv_high_5_0=ruleExpr		{
+		lv_high_4_0=ruleExpr		{
 	        if ($current==null) {
 	            $current = createModelElementForParent(grammarAccess.getTimeIntervalRule());
 	        }
        		set(
        			$current, 
        			"high",
-        		lv_high_5_0, 
+        		lv_high_4_0, 
         		"Expr");
 	        afterParserOrEnumRuleCall();
 	    }
 
 )
-)(
-	otherlv_6=RightParenthesis
+)
+	otherlv_5=RightSquareBracket
     {
-    	newLeafNode(otherlv_6, grammarAccess.getTimeIntervalAccess().getRightParenthesisKeyword_5_0());
-    }
-
-    |
-	otherlv_7=RightSquareBracket
-    {
-    	newLeafNode(otherlv_7, grammarAccess.getTimeIntervalAccess().getRightSquareBracketKeyword_5_1());
+    	newLeafNode(otherlv_5, grammarAccess.getTimeIntervalAccess().getRightSquareBracketKeyword_0_0_5());
     }
 ))
+    |((((
+)
+LeftParenthesis
+(
+(
+ruleExpr
+)
+)
+Comma
+(
+(
+ruleExpr
+)
+)
+RightSquareBracket
+))=>((
+    {
+        $current = forceCreateModelElement(
+            grammarAccess.getTimeIntervalAccess().getOpenLeftTimeIntervalAction_1_0_0(),
+            $current);
+    }
+)
+	otherlv_7=LeftParenthesis
+    {
+    	newLeafNode(otherlv_7, grammarAccess.getTimeIntervalAccess().getLeftParenthesisKeyword_1_0_1());
+    }
+(
+(
+		{ 
+	        newCompositeNode(grammarAccess.getTimeIntervalAccess().getLowExprParserRuleCall_1_0_2_0()); 
+	    }
+		lv_low_8_0=ruleExpr		{
+	        if ($current==null) {
+	            $current = createModelElementForParent(grammarAccess.getTimeIntervalRule());
+	        }
+       		set(
+       			$current, 
+       			"low",
+        		lv_low_8_0, 
+        		"Expr");
+	        afterParserOrEnumRuleCall();
+	    }
+
+)
+)
+	otherlv_9=Comma
+    {
+    	newLeafNode(otherlv_9, grammarAccess.getTimeIntervalAccess().getCommaKeyword_1_0_3());
+    }
+(
+(
+		{ 
+	        newCompositeNode(grammarAccess.getTimeIntervalAccess().getHighExprParserRuleCall_1_0_4_0()); 
+	    }
+		lv_high_10_0=ruleExpr		{
+	        if ($current==null) {
+	            $current = createModelElementForParent(grammarAccess.getTimeIntervalRule());
+	        }
+       		set(
+       			$current, 
+       			"high",
+        		lv_high_10_0, 
+        		"Expr");
+	        afterParserOrEnumRuleCall();
+	    }
+
+)
+)
+	otherlv_11=RightSquareBracket
+    {
+    	newLeafNode(otherlv_11, grammarAccess.getTimeIntervalAccess().getRightSquareBracketKeyword_1_0_5());
+    }
+))
+    |((((
+)
+LeftSquareBracket
+(
+(
+ruleExpr
+)
+)
+Comma
+(
+(
+ruleExpr
+)
+)
+RightParenthesis
+))=>((
+    {
+        $current = forceCreateModelElement(
+            grammarAccess.getTimeIntervalAccess().getOpenRightTimeIntervalAction_2_0_0(),
+            $current);
+    }
+)
+	otherlv_13=LeftSquareBracket
+    {
+    	newLeafNode(otherlv_13, grammarAccess.getTimeIntervalAccess().getLeftSquareBracketKeyword_2_0_1());
+    }
+(
+(
+		{ 
+	        newCompositeNode(grammarAccess.getTimeIntervalAccess().getLowExprParserRuleCall_2_0_2_0()); 
+	    }
+		lv_low_14_0=ruleExpr		{
+	        if ($current==null) {
+	            $current = createModelElementForParent(grammarAccess.getTimeIntervalRule());
+	        }
+       		set(
+       			$current, 
+       			"low",
+        		lv_low_14_0, 
+        		"Expr");
+	        afterParserOrEnumRuleCall();
+	    }
+
+)
+)
+	otherlv_15=Comma
+    {
+    	newLeafNode(otherlv_15, grammarAccess.getTimeIntervalAccess().getCommaKeyword_2_0_3());
+    }
+(
+(
+		{ 
+	        newCompositeNode(grammarAccess.getTimeIntervalAccess().getHighExprParserRuleCall_2_0_4_0()); 
+	    }
+		lv_high_16_0=ruleExpr		{
+	        if ($current==null) {
+	            $current = createModelElementForParent(grammarAccess.getTimeIntervalRule());
+	        }
+       		set(
+       			$current, 
+       			"high",
+        		lv_high_16_0, 
+        		"Expr");
+	        afterParserOrEnumRuleCall();
+	    }
+
+)
+)
+	otherlv_17=RightParenthesis
+    {
+    	newLeafNode(otherlv_17, grammarAccess.getTimeIntervalAccess().getRightParenthesisKeyword_2_0_5());
+    }
+))
+    |((((
+)
+LeftParenthesis
+(
+(
+ruleExpr
+)
+)
+Comma
+(
+(
+ruleExpr
+)
+)
+RightParenthesis
+))=>((
+    {
+        $current = forceCreateModelElement(
+            grammarAccess.getTimeIntervalAccess().getOpenTimeIntervalAction_3_0_0(),
+            $current);
+    }
+)
+	otherlv_19=LeftParenthesis
+    {
+    	newLeafNode(otherlv_19, grammarAccess.getTimeIntervalAccess().getLeftParenthesisKeyword_3_0_1());
+    }
+(
+(
+		{ 
+	        newCompositeNode(grammarAccess.getTimeIntervalAccess().getLowExprParserRuleCall_3_0_2_0()); 
+	    }
+		lv_low_20_0=ruleExpr		{
+	        if ($current==null) {
+	            $current = createModelElementForParent(grammarAccess.getTimeIntervalRule());
+	        }
+       		set(
+       			$current, 
+       			"low",
+        		lv_low_20_0, 
+        		"Expr");
+	        afterParserOrEnumRuleCall();
+	    }
+
+)
+)
+	otherlv_21=Comma
+    {
+    	newLeafNode(otherlv_21, grammarAccess.getTimeIntervalAccess().getCommaKeyword_3_0_3());
+    }
+(
+(
+		{ 
+	        newCompositeNode(grammarAccess.getTimeIntervalAccess().getHighExprParserRuleCall_3_0_4_0()); 
+	    }
+		lv_high_22_0=ruleExpr		{
+	        if ($current==null) {
+	            $current = createModelElementForParent(grammarAccess.getTimeIntervalRule());
+	        }
+       		set(
+       			$current, 
+       			"high",
+        		lv_high_22_0, 
+        		"Expr");
+	        afterParserOrEnumRuleCall();
+	    }
+
+)
+)
+	otherlv_23=RightParenthesis
+    {
+    	newLeafNode(otherlv_23, grammarAccess.getTimeIntervalAccess().getRightParenthesisKeyword_3_0_5());
+    }
+)))
 ;
 
 

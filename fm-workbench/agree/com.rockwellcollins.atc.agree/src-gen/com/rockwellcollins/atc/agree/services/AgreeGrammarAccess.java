@@ -1064,62 +1064,177 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 
 	public class TimeIntervalElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "TimeInterval");
-		private final Group cGroup = (Group)rule.eContents().get(1);
-		private final Action cTimeIntervalAction_0 = (Action)cGroup.eContents().get(0);
-		private final Alternatives cAlternatives_1 = (Alternatives)cGroup.eContents().get(1);
-		private final Keyword cLeftSquareBracketKeyword_1_0 = (Keyword)cAlternatives_1.eContents().get(0);
-		private final Keyword cLeftParenthesisKeyword_1_1 = (Keyword)cAlternatives_1.eContents().get(1);
-		private final Assignment cLowAssignment_2 = (Assignment)cGroup.eContents().get(2);
-		private final RuleCall cLowExprParserRuleCall_2_0 = (RuleCall)cLowAssignment_2.eContents().get(0);
-		private final Keyword cCommaKeyword_3 = (Keyword)cGroup.eContents().get(3);
-		private final Assignment cHighAssignment_4 = (Assignment)cGroup.eContents().get(4);
-		private final RuleCall cHighExprParserRuleCall_4_0 = (RuleCall)cHighAssignment_4.eContents().get(0);
-		private final Alternatives cAlternatives_5 = (Alternatives)cGroup.eContents().get(5);
-		private final Keyword cRightParenthesisKeyword_5_0 = (Keyword)cAlternatives_5.eContents().get(0);
-		private final Keyword cRightSquareBracketKeyword_5_1 = (Keyword)cAlternatives_5.eContents().get(1);
+		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
+		private final Group cGroup_0 = (Group)cAlternatives.eContents().get(0);
+		private final Group cGroup_0_0 = (Group)cGroup_0.eContents().get(0);
+		private final Action cClosedTimeIntervalAction_0_0_0 = (Action)cGroup_0_0.eContents().get(0);
+		private final Keyword cLeftSquareBracketKeyword_0_0_1 = (Keyword)cGroup_0_0.eContents().get(1);
+		private final Assignment cLowAssignment_0_0_2 = (Assignment)cGroup_0_0.eContents().get(2);
+		private final RuleCall cLowExprParserRuleCall_0_0_2_0 = (RuleCall)cLowAssignment_0_0_2.eContents().get(0);
+		private final Keyword cCommaKeyword_0_0_3 = (Keyword)cGroup_0_0.eContents().get(3);
+		private final Assignment cHighAssignment_0_0_4 = (Assignment)cGroup_0_0.eContents().get(4);
+		private final RuleCall cHighExprParserRuleCall_0_0_4_0 = (RuleCall)cHighAssignment_0_0_4.eContents().get(0);
+		private final Keyword cRightSquareBracketKeyword_0_0_5 = (Keyword)cGroup_0_0.eContents().get(5);
+		private final Group cGroup_1 = (Group)cAlternatives.eContents().get(1);
+		private final Group cGroup_1_0 = (Group)cGroup_1.eContents().get(0);
+		private final Action cOpenLeftTimeIntervalAction_1_0_0 = (Action)cGroup_1_0.eContents().get(0);
+		private final Keyword cLeftParenthesisKeyword_1_0_1 = (Keyword)cGroup_1_0.eContents().get(1);
+		private final Assignment cLowAssignment_1_0_2 = (Assignment)cGroup_1_0.eContents().get(2);
+		private final RuleCall cLowExprParserRuleCall_1_0_2_0 = (RuleCall)cLowAssignment_1_0_2.eContents().get(0);
+		private final Keyword cCommaKeyword_1_0_3 = (Keyword)cGroup_1_0.eContents().get(3);
+		private final Assignment cHighAssignment_1_0_4 = (Assignment)cGroup_1_0.eContents().get(4);
+		private final RuleCall cHighExprParserRuleCall_1_0_4_0 = (RuleCall)cHighAssignment_1_0_4.eContents().get(0);
+		private final Keyword cRightSquareBracketKeyword_1_0_5 = (Keyword)cGroup_1_0.eContents().get(5);
+		private final Group cGroup_2 = (Group)cAlternatives.eContents().get(2);
+		private final Group cGroup_2_0 = (Group)cGroup_2.eContents().get(0);
+		private final Action cOpenRightTimeIntervalAction_2_0_0 = (Action)cGroup_2_0.eContents().get(0);
+		private final Keyword cLeftSquareBracketKeyword_2_0_1 = (Keyword)cGroup_2_0.eContents().get(1);
+		private final Assignment cLowAssignment_2_0_2 = (Assignment)cGroup_2_0.eContents().get(2);
+		private final RuleCall cLowExprParserRuleCall_2_0_2_0 = (RuleCall)cLowAssignment_2_0_2.eContents().get(0);
+		private final Keyword cCommaKeyword_2_0_3 = (Keyword)cGroup_2_0.eContents().get(3);
+		private final Assignment cHighAssignment_2_0_4 = (Assignment)cGroup_2_0.eContents().get(4);
+		private final RuleCall cHighExprParserRuleCall_2_0_4_0 = (RuleCall)cHighAssignment_2_0_4.eContents().get(0);
+		private final Keyword cRightParenthesisKeyword_2_0_5 = (Keyword)cGroup_2_0.eContents().get(5);
+		private final Group cGroup_3 = (Group)cAlternatives.eContents().get(3);
+		private final Group cGroup_3_0 = (Group)cGroup_3.eContents().get(0);
+		private final Action cOpenTimeIntervalAction_3_0_0 = (Action)cGroup_3_0.eContents().get(0);
+		private final Keyword cLeftParenthesisKeyword_3_0_1 = (Keyword)cGroup_3_0.eContents().get(1);
+		private final Assignment cLowAssignment_3_0_2 = (Assignment)cGroup_3_0.eContents().get(2);
+		private final RuleCall cLowExprParserRuleCall_3_0_2_0 = (RuleCall)cLowAssignment_3_0_2.eContents().get(0);
+		private final Keyword cCommaKeyword_3_0_3 = (Keyword)cGroup_3_0.eContents().get(3);
+		private final Assignment cHighAssignment_3_0_4 = (Assignment)cGroup_3_0.eContents().get(4);
+		private final RuleCall cHighExprParserRuleCall_3_0_4_0 = (RuleCall)cHighAssignment_3_0_4.eContents().get(0);
+		private final Keyword cRightParenthesisKeyword_3_0_5 = (Keyword)cGroup_3_0.eContents().get(5);
 		
 		//TimeInterval:
-		//	{TimeInterval} ("[" | "(") low=Expr "," high=Expr (")" | "]");
+		//	=> ({ClosedTimeInterval} "[" low=Expr "," high=Expr "]") | => ({OpenLeftTimeInterval} "(" low=Expr "," high=Expr "]")
+		//	| => ({OpenRightTimeInterval} "[" low=Expr "," high=Expr ")") | => ({OpenTimeInterval} "(" low=Expr "," high=Expr
+		//	")");
 		@Override public ParserRule getRule() { return rule; }
 
-		//{TimeInterval} ("[" | "(") low=Expr "," high=Expr (")" | "]")
-		public Group getGroup() { return cGroup; }
+		//=> ({ClosedTimeInterval} "[" low=Expr "," high=Expr "]") | => ({OpenLeftTimeInterval} "(" low=Expr "," high=Expr "]") |
+		//=> ({OpenRightTimeInterval} "[" low=Expr "," high=Expr ")") | => ({OpenTimeInterval} "(" low=Expr "," high=Expr ")")
+		public Alternatives getAlternatives() { return cAlternatives; }
 
-		//{TimeInterval}
-		public Action getTimeIntervalAction_0() { return cTimeIntervalAction_0; }
+		//=> ({ClosedTimeInterval} "[" low=Expr "," high=Expr "]")
+		public Group getGroup_0() { return cGroup_0; }
 
-		//"[" | "("
-		public Alternatives getAlternatives_1() { return cAlternatives_1; }
+		//{ClosedTimeInterval} "[" low=Expr "," high=Expr "]"
+		public Group getGroup_0_0() { return cGroup_0_0; }
+
+		//{ClosedTimeInterval}
+		public Action getClosedTimeIntervalAction_0_0_0() { return cClosedTimeIntervalAction_0_0_0; }
 
 		//"["
-		public Keyword getLeftSquareBracketKeyword_1_0() { return cLeftSquareBracketKeyword_1_0; }
-
-		//"("
-		public Keyword getLeftParenthesisKeyword_1_1() { return cLeftParenthesisKeyword_1_1; }
+		public Keyword getLeftSquareBracketKeyword_0_0_1() { return cLeftSquareBracketKeyword_0_0_1; }
 
 		//low=Expr
-		public Assignment getLowAssignment_2() { return cLowAssignment_2; }
+		public Assignment getLowAssignment_0_0_2() { return cLowAssignment_0_0_2; }
 
 		//Expr
-		public RuleCall getLowExprParserRuleCall_2_0() { return cLowExprParserRuleCall_2_0; }
+		public RuleCall getLowExprParserRuleCall_0_0_2_0() { return cLowExprParserRuleCall_0_0_2_0; }
 
 		//","
-		public Keyword getCommaKeyword_3() { return cCommaKeyword_3; }
+		public Keyword getCommaKeyword_0_0_3() { return cCommaKeyword_0_0_3; }
 
 		//high=Expr
-		public Assignment getHighAssignment_4() { return cHighAssignment_4; }
+		public Assignment getHighAssignment_0_0_4() { return cHighAssignment_0_0_4; }
 
 		//Expr
-		public RuleCall getHighExprParserRuleCall_4_0() { return cHighExprParserRuleCall_4_0; }
-
-		//")" | "]"
-		public Alternatives getAlternatives_5() { return cAlternatives_5; }
-
-		//")"
-		public Keyword getRightParenthesisKeyword_5_0() { return cRightParenthesisKeyword_5_0; }
+		public RuleCall getHighExprParserRuleCall_0_0_4_0() { return cHighExprParserRuleCall_0_0_4_0; }
 
 		//"]"
-		public Keyword getRightSquareBracketKeyword_5_1() { return cRightSquareBracketKeyword_5_1; }
+		public Keyword getRightSquareBracketKeyword_0_0_5() { return cRightSquareBracketKeyword_0_0_5; }
+
+		//=> ({OpenLeftTimeInterval} "(" low=Expr "," high=Expr "]")
+		public Group getGroup_1() { return cGroup_1; }
+
+		//{OpenLeftTimeInterval} "(" low=Expr "," high=Expr "]"
+		public Group getGroup_1_0() { return cGroup_1_0; }
+
+		//{OpenLeftTimeInterval}
+		public Action getOpenLeftTimeIntervalAction_1_0_0() { return cOpenLeftTimeIntervalAction_1_0_0; }
+
+		//"("
+		public Keyword getLeftParenthesisKeyword_1_0_1() { return cLeftParenthesisKeyword_1_0_1; }
+
+		//low=Expr
+		public Assignment getLowAssignment_1_0_2() { return cLowAssignment_1_0_2; }
+
+		//Expr
+		public RuleCall getLowExprParserRuleCall_1_0_2_0() { return cLowExprParserRuleCall_1_0_2_0; }
+
+		//","
+		public Keyword getCommaKeyword_1_0_3() { return cCommaKeyword_1_0_3; }
+
+		//high=Expr
+		public Assignment getHighAssignment_1_0_4() { return cHighAssignment_1_0_4; }
+
+		//Expr
+		public RuleCall getHighExprParserRuleCall_1_0_4_0() { return cHighExprParserRuleCall_1_0_4_0; }
+
+		//"]"
+		public Keyword getRightSquareBracketKeyword_1_0_5() { return cRightSquareBracketKeyword_1_0_5; }
+
+		//=> ({OpenRightTimeInterval} "[" low=Expr "," high=Expr ")")
+		public Group getGroup_2() { return cGroup_2; }
+
+		//{OpenRightTimeInterval} "[" low=Expr "," high=Expr ")"
+		public Group getGroup_2_0() { return cGroup_2_0; }
+
+		//{OpenRightTimeInterval}
+		public Action getOpenRightTimeIntervalAction_2_0_0() { return cOpenRightTimeIntervalAction_2_0_0; }
+
+		//"["
+		public Keyword getLeftSquareBracketKeyword_2_0_1() { return cLeftSquareBracketKeyword_2_0_1; }
+
+		//low=Expr
+		public Assignment getLowAssignment_2_0_2() { return cLowAssignment_2_0_2; }
+
+		//Expr
+		public RuleCall getLowExprParserRuleCall_2_0_2_0() { return cLowExprParserRuleCall_2_0_2_0; }
+
+		//","
+		public Keyword getCommaKeyword_2_0_3() { return cCommaKeyword_2_0_3; }
+
+		//high=Expr
+		public Assignment getHighAssignment_2_0_4() { return cHighAssignment_2_0_4; }
+
+		//Expr
+		public RuleCall getHighExprParserRuleCall_2_0_4_0() { return cHighExprParserRuleCall_2_0_4_0; }
+
+		//")"
+		public Keyword getRightParenthesisKeyword_2_0_5() { return cRightParenthesisKeyword_2_0_5; }
+
+		//=> ({OpenTimeInterval} "(" low=Expr "," high=Expr ")")
+		public Group getGroup_3() { return cGroup_3; }
+
+		//{OpenTimeInterval} "(" low=Expr "," high=Expr ")"
+		public Group getGroup_3_0() { return cGroup_3_0; }
+
+		//{OpenTimeInterval}
+		public Action getOpenTimeIntervalAction_3_0_0() { return cOpenTimeIntervalAction_3_0_0; }
+
+		//"("
+		public Keyword getLeftParenthesisKeyword_3_0_1() { return cLeftParenthesisKeyword_3_0_1; }
+
+		//low=Expr
+		public Assignment getLowAssignment_3_0_2() { return cLowAssignment_3_0_2; }
+
+		//Expr
+		public RuleCall getLowExprParserRuleCall_3_0_2_0() { return cLowExprParserRuleCall_3_0_2_0; }
+
+		//","
+		public Keyword getCommaKeyword_3_0_3() { return cCommaKeyword_3_0_3; }
+
+		//high=Expr
+		public Assignment getHighAssignment_3_0_4() { return cHighAssignment_3_0_4; }
+
+		//Expr
+		public RuleCall getHighExprParserRuleCall_3_0_4_0() { return cHighExprParserRuleCall_3_0_4_0; }
+
+		//")"
+		public Keyword getRightParenthesisKeyword_3_0_5() { return cRightParenthesisKeyword_3_0_5; }
 	}
 
 	public class SynchStatementElements extends AbstractParserRuleElementFinder {
@@ -3790,7 +3905,9 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 	}
 
 	//TimeInterval:
-	//	{TimeInterval} ("[" | "(") low=Expr "," high=Expr (")" | "]");
+	//	=> ({ClosedTimeInterval} "[" low=Expr "," high=Expr "]") | => ({OpenLeftTimeInterval} "(" low=Expr "," high=Expr "]")
+	//	| => ({OpenRightTimeInterval} "[" low=Expr "," high=Expr ")") | => ({OpenTimeInterval} "(" low=Expr "," high=Expr
+	//	")");
 	public TimeIntervalElements getTimeIntervalAccess() {
 		return pTimeInterval;
 	}

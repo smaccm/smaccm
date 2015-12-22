@@ -5,7 +5,11 @@ import java.math.BigInteger;
 import org.eclipse.emf.ecore.EObject;
 
 import com.rockwellcollins.atc.agree.agree.AlwaysStatement;
+import com.rockwellcollins.atc.agree.agree.ClosedTimeInterval;
 import com.rockwellcollins.atc.agree.agree.IntLitExpr;
+import com.rockwellcollins.atc.agree.agree.OpenLeftTimeInterval;
+import com.rockwellcollins.atc.agree.agree.OpenRightTimeInterval;
+import com.rockwellcollins.atc.agree.agree.OpenTimeInterval;
 import com.rockwellcollins.atc.agree.agree.PatternStatement;
 import com.rockwellcollins.atc.agree.agree.TimeInterval;
 import com.rockwellcollins.atc.agree.agree.WhenHoldsStatement;
@@ -17,6 +21,7 @@ import com.rockwellcollins.atc.agree.agree.WheneverOccursStatement;
 import com.rockwellcollins.atc.agree.agree.util.AgreeSwitch;
 import com.rockwellcollins.atc.agree.analysis.AgreeException;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreePattern.TriggerType;
+import com.rockwellcollins.atc.agree.analysis.ast.AgreePatternInterval.IntervalType;
 
 import jkind.lustre.BinaryExpr;
 import jkind.lustre.BinaryOp;
@@ -46,9 +51,10 @@ public class PatternBuilder extends AgreeSwitch<AgreeStatement> {
     public AgreeStatement caseWheneverHoldsStatement(WheneverHoldsStatement object) {
         Expr cause = builder.doSwitch(object.getCause());
         Expr effect = builder.doSwitch(object.getEffect());
-        TimeInterval effectInterval = object.getInterval();
-
-        return new AgreePattern(str, ref, cause, effect, null, effectInterval, TriggerType.EVENT,
+        
+        AgreePatternInterval interval = getIntervalType(object.getInterval());
+        
+        return new AgreePattern(str, ref, cause, effect, null, interval, TriggerType.EVENT,
                 TriggerType.CONDITION);
     }
 
@@ -57,7 +63,7 @@ public class PatternBuilder extends AgreeSwitch<AgreeStatement> {
         Expr cause = builder.doSwitch(object.getCause());
         Expr lhs = builder.doSwitch(object.getLhs());
         Expr rhs = builder.doSwitch(object.getRhs());
-        TimeInterval effectInterval = object.getInterval();
+        AgreePatternInterval effectInterval = getIntervalType(object.getInterval());
 
         Expr effect = new BinaryExpr(lhs, BinaryOp.IMPLIES, rhs);
         return new AgreePattern(str, ref, cause, effect, null, effectInterval, TriggerType.EVENT,
@@ -68,7 +74,7 @@ public class PatternBuilder extends AgreeSwitch<AgreeStatement> {
     public AgreeStatement caseWheneverOccursStatement(WheneverOccursStatement object) {
         Expr cause = builder.doSwitch(object.getCause());
         Expr effect = builder.doSwitch(object.getEffect());
-        TimeInterval effectInterval = object.getInterval();
+        AgreePatternInterval effectInterval = getIntervalType(object.getInterval());
 
         return new AgreePattern(str, ref, cause, effect, null, effectInterval, TriggerType.EVENT,
                 TriggerType.EVENT);
@@ -78,7 +84,7 @@ public class PatternBuilder extends AgreeSwitch<AgreeStatement> {
     public AgreeStatement caseWheneverBecomesTrueStatement(WheneverBecomesTrueStatement object) {
         Expr cause = builder.doSwitch(object.getCause());
         Expr effect = builder.doSwitch(object.getEffect());
-        TimeInterval effectInterval = object.getInterval();
+        AgreePatternInterval effectInterval = getIntervalType(object.getInterval());
 
         // make the effect rising edge sensitive
         Expr preEffect = new UnaryExpr(UnaryOp.PRE, effect);
@@ -93,8 +99,8 @@ public class PatternBuilder extends AgreeSwitch<AgreeStatement> {
     public AgreeStatement caseWhenHoldsStatement(WhenHoldsStatement object) {
         Expr condition = builder.doSwitch(object.getCondition());
         Expr effect = builder.doSwitch(object.getEvent());
-        TimeInterval conditionInterval = object.getConditionInterval();
-        TimeInterval effectInterval = object.getEventInterval();
+        AgreePatternInterval conditionInterval = getIntervalType(object.getConditionInterval());
+        AgreePatternInterval effectInterval = getIntervalType(object.getEventInterval());
 
         return new AgreePattern(str, ref, condition, effect, conditionInterval, effectInterval,
                 TriggerType.CONDITION, TriggerType.EVENT);
@@ -109,10 +115,33 @@ public class PatternBuilder extends AgreeSwitch<AgreeStatement> {
             throw new AgreeException("Expected an integer literal in 'When Occurs' pattern");
         }
         BigInteger times = ((IntExpr) timesExpr).value;
-        TimeInterval interval = object.getInterval();
+        AgreePatternInterval interval = getIntervalType(object.getInterval());
 
         return new AgreeTimesPattern(str, ref, condition, effect, interval, null, TriggerType.CONDITION,
                 TriggerType.CONDITION, times, null);
     }
+    
+    private AgreePatternInterval getIntervalType(TimeInterval interval) {
+        if(interval == null){
+            return null;
+        }
+        Expr low = builder.doSwitch(interval.getLow());
+        Expr high = builder.doSwitch(interval.getHigh());
+        IntervalType type;
+
+        if (interval instanceof OpenTimeInterval) {
+            type = IntervalType.OPEN;
+        } else if (interval instanceof OpenLeftTimeInterval) {
+            type = IntervalType.OPEN_LEFT;
+        } else if (interval instanceof OpenRightTimeInterval) {
+            type = IntervalType.OPEN_RIGHT;
+        } else if (interval instanceof ClosedTimeInterval) {
+            type = IntervalType.CLOSED;
+        } else {
+            throw new AgreeException("Unhandled TimeInterval type: " + interval.getClass());
+        }
+        return new AgreePatternInterval(type, low, high);
+    }
+
 
 }

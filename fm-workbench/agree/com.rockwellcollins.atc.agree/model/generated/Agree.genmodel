@@ -157,6 +157,10 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//WheneverImpliesStatement/lhs"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//WheneverImpliesStatement/rhs"/>
     </genClasses>
+    <genClasses ecoreClass="Agree.ecore#//ClosedTimeInterval"/>
+    <genClasses ecoreClass="Agree.ecore#//OpenLeftTimeInterval"/>
+    <genClasses ecoreClass="Agree.ecore#//OpenRightTimeInterval"/>
+    <genClasses ecoreClass="Agree.ecore#//OpenTimeInterval"/>
     <genClasses ecoreClass="Agree.ecore#//MNSynchStatement">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Agree.ecore#//MNSynchStatement/comp1"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Agree.ecore#//MNSynchStatement/comp2"/>

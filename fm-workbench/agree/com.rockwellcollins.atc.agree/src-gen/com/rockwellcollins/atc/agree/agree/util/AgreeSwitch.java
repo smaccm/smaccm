@@ -468,6 +468,38 @@ public class AgreeSwitch<T> extends Switch<T>
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
+      case AgreePackage.CLOSED_TIME_INTERVAL:
+      {
+        ClosedTimeInterval closedTimeInterval = (ClosedTimeInterval)theEObject;
+        T result = caseClosedTimeInterval(closedTimeInterval);
+        if (result == null) result = caseTimeInterval(closedTimeInterval);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case AgreePackage.OPEN_LEFT_TIME_INTERVAL:
+      {
+        OpenLeftTimeInterval openLeftTimeInterval = (OpenLeftTimeInterval)theEObject;
+        T result = caseOpenLeftTimeInterval(openLeftTimeInterval);
+        if (result == null) result = caseTimeInterval(openLeftTimeInterval);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case AgreePackage.OPEN_RIGHT_TIME_INTERVAL:
+      {
+        OpenRightTimeInterval openRightTimeInterval = (OpenRightTimeInterval)theEObject;
+        T result = caseOpenRightTimeInterval(openRightTimeInterval);
+        if (result == null) result = caseTimeInterval(openRightTimeInterval);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case AgreePackage.OPEN_TIME_INTERVAL:
+      {
+        OpenTimeInterval openTimeInterval = (OpenTimeInterval)theEObject;
+        T result = caseOpenTimeInterval(openTimeInterval);
+        if (result == null) result = caseTimeInterval(openTimeInterval);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
       case AgreePackage.MN_SYNCH_STATEMENT:
       {
         MNSynchStatement mnSynchStatement = (MNSynchStatement)theEObject;
@@ -1387,6 +1419,70 @@ public class AgreeSwitch<T> extends Switch<T>
    * @generated
    */
   public T caseWheneverImpliesStatement(WheneverImpliesStatement object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Closed Time Interval</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Closed Time Interval</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseClosedTimeInterval(ClosedTimeInterval object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Open Left Time Interval</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Open Left Time Interval</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseOpenLeftTimeInterval(OpenLeftTimeInterval object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Open Right Time Interval</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Open Right Time Interval</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseOpenRightTimeInterval(OpenRightTimeInterval object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Open Time Interval</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Open Time Interval</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseOpenTimeInterval(OpenTimeInterval object)
   {
     return null;
   }

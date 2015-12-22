@@ -2424,6 +2424,154 @@ public interface AgreePackage extends EPackage
   int WHENEVER_IMPLIES_STATEMENT_FEATURE_COUNT = WHENEVER_STATEMENT_FEATURE_COUNT + 2;
 
   /**
+   * The meta object id for the '{@link com.rockwellcollins.atc.agree.agree.impl.ClosedTimeIntervalImpl <em>Closed Time Interval</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see com.rockwellcollins.atc.agree.agree.impl.ClosedTimeIntervalImpl
+   * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getClosedTimeInterval()
+   * @generated
+   */
+  int CLOSED_TIME_INTERVAL = 43;
+
+  /**
+   * The feature id for the '<em><b>Low</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int CLOSED_TIME_INTERVAL__LOW = TIME_INTERVAL__LOW;
+
+  /**
+   * The feature id for the '<em><b>High</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int CLOSED_TIME_INTERVAL__HIGH = TIME_INTERVAL__HIGH;
+
+  /**
+   * The number of structural features of the '<em>Closed Time Interval</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int CLOSED_TIME_INTERVAL_FEATURE_COUNT = TIME_INTERVAL_FEATURE_COUNT + 0;
+
+  /**
+   * The meta object id for the '{@link com.rockwellcollins.atc.agree.agree.impl.OpenLeftTimeIntervalImpl <em>Open Left Time Interval</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see com.rockwellcollins.atc.agree.agree.impl.OpenLeftTimeIntervalImpl
+   * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getOpenLeftTimeInterval()
+   * @generated
+   */
+  int OPEN_LEFT_TIME_INTERVAL = 44;
+
+  /**
+   * The feature id for the '<em><b>Low</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int OPEN_LEFT_TIME_INTERVAL__LOW = TIME_INTERVAL__LOW;
+
+  /**
+   * The feature id for the '<em><b>High</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int OPEN_LEFT_TIME_INTERVAL__HIGH = TIME_INTERVAL__HIGH;
+
+  /**
+   * The number of structural features of the '<em>Open Left Time Interval</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int OPEN_LEFT_TIME_INTERVAL_FEATURE_COUNT = TIME_INTERVAL_FEATURE_COUNT + 0;
+
+  /**
+   * The meta object id for the '{@link com.rockwellcollins.atc.agree.agree.impl.OpenRightTimeIntervalImpl <em>Open Right Time Interval</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see com.rockwellcollins.atc.agree.agree.impl.OpenRightTimeIntervalImpl
+   * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getOpenRightTimeInterval()
+   * @generated
+   */
+  int OPEN_RIGHT_TIME_INTERVAL = 45;
+
+  /**
+   * The feature id for the '<em><b>Low</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int OPEN_RIGHT_TIME_INTERVAL__LOW = TIME_INTERVAL__LOW;
+
+  /**
+   * The feature id for the '<em><b>High</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int OPEN_RIGHT_TIME_INTERVAL__HIGH = TIME_INTERVAL__HIGH;
+
+  /**
+   * The number of structural features of the '<em>Open Right Time Interval</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int OPEN_RIGHT_TIME_INTERVAL_FEATURE_COUNT = TIME_INTERVAL_FEATURE_COUNT + 0;
+
+  /**
+   * The meta object id for the '{@link com.rockwellcollins.atc.agree.agree.impl.OpenTimeIntervalImpl <em>Open Time Interval</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see com.rockwellcollins.atc.agree.agree.impl.OpenTimeIntervalImpl
+   * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getOpenTimeInterval()
+   * @generated
+   */
+  int OPEN_TIME_INTERVAL = 46;
+
+  /**
+   * The feature id for the '<em><b>Low</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int OPEN_TIME_INTERVAL__LOW = TIME_INTERVAL__LOW;
+
+  /**
+   * The feature id for the '<em><b>High</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int OPEN_TIME_INTERVAL__HIGH = TIME_INTERVAL__HIGH;
+
+  /**
+   * The number of structural features of the '<em>Open Time Interval</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int OPEN_TIME_INTERVAL_FEATURE_COUNT = TIME_INTERVAL_FEATURE_COUNT + 0;
+
+  /**
    * The meta object id for the '{@link com.rockwellcollins.atc.agree.agree.impl.MNSynchStatementImpl <em>MN Synch Statement</em>}' class.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -2431,7 +2579,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getMNSynchStatement()
    * @generated
    */
-  int MN_SYNCH_STATEMENT = 43;
+  int MN_SYNCH_STATEMENT = 47;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -2531,7 +2679,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getCalenStatement()
    * @generated
    */
-  int CALEN_STATEMENT = 44;
+  int CALEN_STATEMENT = 48;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -2604,7 +2752,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getAsynchStatement()
    * @generated
    */
-  int ASYNCH_STATEMENT = 45;
+  int ASYNCH_STATEMENT = 49;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -2668,7 +2816,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getLatchedStatement()
    * @generated
    */
-  int LATCHED_STATEMENT = 46;
+  int LATCHED_STATEMENT = 50;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -2732,7 +2880,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getNodeEq()
    * @generated
    */
-  int NODE_EQ = 47;
+  int NODE_EQ = 51;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -2787,7 +2935,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getNodeLemma()
    * @generated
    */
-  int NODE_LEMMA = 48;
+  int NODE_LEMMA = 52;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -2842,7 +2990,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getPrimType()
    * @generated
    */
-  int PRIM_TYPE = 49;
+  int PRIM_TYPE = 53;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -2924,7 +3072,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getRecordType()
    * @generated
    */
-  int RECORD_TYPE = 50;
+  int RECORD_TYPE = 54;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -2970,7 +3118,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getBinaryExpr()
    * @generated
    */
-  int BINARY_EXPR = 51;
+  int BINARY_EXPR = 55;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -3034,7 +3182,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getUnaryExpr()
    * @generated
    */
-  int UNARY_EXPR = 52;
+  int UNARY_EXPR = 56;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -3089,7 +3237,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getIfThenElseExpr()
    * @generated
    */
-  int IF_THEN_ELSE_EXPR = 53;
+  int IF_THEN_ELSE_EXPR = 57;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -3153,7 +3301,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getPrevExpr()
    * @generated
    */
-  int PREV_EXPR = 54;
+  int PREV_EXPR = 58;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -3208,7 +3356,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getGetPropertyExpr()
    * @generated
    */
-  int GET_PROPERTY_EXPR = 55;
+  int GET_PROPERTY_EXPR = 59;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -3263,7 +3411,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getRecordUpdateExpr()
    * @generated
    */
-  int RECORD_UPDATE_EXPR = 56;
+  int RECORD_UPDATE_EXPR = 60;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -3327,7 +3475,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getTimeExpr()
    * @generated
    */
-  int TIME_EXPR = 57;
+  int TIME_EXPR = 61;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -3364,7 +3512,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getIntLitExpr()
    * @generated
    */
-  int INT_LIT_EXPR = 58;
+  int INT_LIT_EXPR = 62;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -3410,7 +3558,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getPreExpr()
    * @generated
    */
-  int PRE_EXPR = 59;
+  int PRE_EXPR = 63;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -3456,7 +3604,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getEventExpr()
    * @generated
    */
-  int EVENT_EXPR = 60;
+  int EVENT_EXPR = 64;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -3502,7 +3650,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getRealLitExpr()
    * @generated
    */
-  int REAL_LIT_EXPR = 61;
+  int REAL_LIT_EXPR = 65;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -3548,7 +3696,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getBoolLitExpr()
    * @generated
    */
-  int BOOL_LIT_EXPR = 62;
+  int BOOL_LIT_EXPR = 66;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -3594,7 +3742,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getThisExpr()
    * @generated
    */
-  int THIS_EXPR = 63;
+  int THIS_EXPR = 67;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -3640,7 +3788,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getFloorCast()
    * @generated
    */
-  int FLOOR_CAST = 64;
+  int FLOOR_CAST = 68;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -3686,7 +3834,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getRealCast()
    * @generated
    */
-  int REAL_CAST = 65;
+  int REAL_CAST = 69;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -3732,7 +3880,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getFnCallExpr()
    * @generated
    */
-  int FN_CALL_EXPR = 66;
+  int FN_CALL_EXPR = 70;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -3787,7 +3935,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getRecordExpr()
    * @generated
    */
-  int RECORD_EXPR = 67;
+  int RECORD_EXPR = 71;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -4944,6 +5092,46 @@ public interface AgreePackage extends EPackage
    * @generated
    */
   EReference getWheneverImpliesStatement_Rhs();
+
+  /**
+   * Returns the meta object for class '{@link com.rockwellcollins.atc.agree.agree.ClosedTimeInterval <em>Closed Time Interval</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>Closed Time Interval</em>'.
+   * @see com.rockwellcollins.atc.agree.agree.ClosedTimeInterval
+   * @generated
+   */
+  EClass getClosedTimeInterval();
+
+  /**
+   * Returns the meta object for class '{@link com.rockwellcollins.atc.agree.agree.OpenLeftTimeInterval <em>Open Left Time Interval</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>Open Left Time Interval</em>'.
+   * @see com.rockwellcollins.atc.agree.agree.OpenLeftTimeInterval
+   * @generated
+   */
+  EClass getOpenLeftTimeInterval();
+
+  /**
+   * Returns the meta object for class '{@link com.rockwellcollins.atc.agree.agree.OpenRightTimeInterval <em>Open Right Time Interval</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>Open Right Time Interval</em>'.
+   * @see com.rockwellcollins.atc.agree.agree.OpenRightTimeInterval
+   * @generated
+   */
+  EClass getOpenRightTimeInterval();
+
+  /**
+   * Returns the meta object for class '{@link com.rockwellcollins.atc.agree.agree.OpenTimeInterval <em>Open Time Interval</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>Open Time Interval</em>'.
+   * @see com.rockwellcollins.atc.agree.agree.OpenTimeInterval
+   * @generated
+   */
+  EClass getOpenTimeInterval();
 
   /**
    * Returns the meta object for class '{@link com.rockwellcollins.atc.agree.agree.MNSynchStatement <em>MN Synch Statement</em>}'.
@@ -6586,6 +6774,46 @@ public interface AgreePackage extends EPackage
      * @generated
      */
     EReference WHENEVER_IMPLIES_STATEMENT__RHS = eINSTANCE.getWheneverImpliesStatement_Rhs();
+
+    /**
+     * The meta object literal for the '{@link com.rockwellcollins.atc.agree.agree.impl.ClosedTimeIntervalImpl <em>Closed Time Interval</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see com.rockwellcollins.atc.agree.agree.impl.ClosedTimeIntervalImpl
+     * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getClosedTimeInterval()
+     * @generated
+     */
+    EClass CLOSED_TIME_INTERVAL = eINSTANCE.getClosedTimeInterval();
+
+    /**
+     * The meta object literal for the '{@link com.rockwellcollins.atc.agree.agree.impl.OpenLeftTimeIntervalImpl <em>Open Left Time Interval</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see com.rockwellcollins.atc.agree.agree.impl.OpenLeftTimeIntervalImpl
+     * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getOpenLeftTimeInterval()
+     * @generated
+     */
+    EClass OPEN_LEFT_TIME_INTERVAL = eINSTANCE.getOpenLeftTimeInterval();
+
+    /**
+     * The meta object literal for the '{@link com.rockwellcollins.atc.agree.agree.impl.OpenRightTimeIntervalImpl <em>Open Right Time Interval</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see com.rockwellcollins.atc.agree.agree.impl.OpenRightTimeIntervalImpl
+     * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getOpenRightTimeInterval()
+     * @generated
+     */
+    EClass OPEN_RIGHT_TIME_INTERVAL = eINSTANCE.getOpenRightTimeInterval();
+
+    /**
+     * The meta object literal for the '{@link com.rockwellcollins.atc.agree.agree.impl.OpenTimeIntervalImpl <em>Open Time Interval</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see com.rockwellcollins.atc.agree.agree.impl.OpenTimeIntervalImpl
+     * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getOpenTimeInterval()
+     * @generated
+     */
+    EClass OPEN_TIME_INTERVAL = eINSTANCE.getOpenTimeInterval();
 
     /**
      * The meta object literal for the '{@link com.rockwellcollins.atc.agree.agree.impl.MNSynchStatementImpl <em>MN Synch Statement</em>}' class.

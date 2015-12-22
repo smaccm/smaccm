@@ -296,6 +296,26 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
         return createWheneverImpliesStatementAdapter();
       }
       @Override
+      public Adapter caseClosedTimeInterval(ClosedTimeInterval object)
+      {
+        return createClosedTimeIntervalAdapter();
+      }
+      @Override
+      public Adapter caseOpenLeftTimeInterval(OpenLeftTimeInterval object)
+      {
+        return createOpenLeftTimeIntervalAdapter();
+      }
+      @Override
+      public Adapter caseOpenRightTimeInterval(OpenRightTimeInterval object)
+      {
+        return createOpenRightTimeIntervalAdapter();
+      }
+      @Override
+      public Adapter caseOpenTimeInterval(OpenTimeInterval object)
+      {
+        return createOpenTimeIntervalAdapter();
+      }
+      @Override
       public Adapter caseMNSynchStatement(MNSynchStatement object)
       {
         return createMNSynchStatementAdapter();
@@ -1108,6 +1128,66 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
    * @generated
    */
   public Adapter createWheneverImpliesStatementAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.ClosedTimeInterval <em>Closed Time Interval</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see com.rockwellcollins.atc.agree.agree.ClosedTimeInterval
+   * @generated
+   */
+  public Adapter createClosedTimeIntervalAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.OpenLeftTimeInterval <em>Open Left Time Interval</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see com.rockwellcollins.atc.agree.agree.OpenLeftTimeInterval
+   * @generated
+   */
+  public Adapter createOpenLeftTimeIntervalAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.OpenRightTimeInterval <em>Open Right Time Interval</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see com.rockwellcollins.atc.agree.agree.OpenRightTimeInterval
+   * @generated
+   */
+  public Adapter createOpenRightTimeIntervalAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.OpenTimeInterval <em>Open Time Interval</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see com.rockwellcollins.atc.agree.agree.OpenTimeInterval
+   * @generated
+   */
+  public Adapter createOpenTimeIntervalAdapter()
   {
     return null;
   }

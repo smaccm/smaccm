@@ -107,6 +107,10 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
       case AgreePackage.WHENEVER_BECOMES_TRUE_STATEMENT: return createWheneverBecomesTrueStatement();
       case AgreePackage.WHENEVER_HOLDS_STATEMENT: return createWheneverHoldsStatement();
       case AgreePackage.WHENEVER_IMPLIES_STATEMENT: return createWheneverImpliesStatement();
+      case AgreePackage.CLOSED_TIME_INTERVAL: return createClosedTimeInterval();
+      case AgreePackage.OPEN_LEFT_TIME_INTERVAL: return createOpenLeftTimeInterval();
+      case AgreePackage.OPEN_RIGHT_TIME_INTERVAL: return createOpenRightTimeInterval();
+      case AgreePackage.OPEN_TIME_INTERVAL: return createOpenTimeInterval();
       case AgreePackage.MN_SYNCH_STATEMENT: return createMNSynchStatement();
       case AgreePackage.CALEN_STATEMENT: return createCalenStatement();
       case AgreePackage.ASYNCH_STATEMENT: return createAsynchStatement();
@@ -608,6 +612,50 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
   {
     WheneverImpliesStatementImpl wheneverImpliesStatement = new WheneverImpliesStatementImpl();
     return wheneverImpliesStatement;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public ClosedTimeInterval createClosedTimeInterval()
+  {
+    ClosedTimeIntervalImpl closedTimeInterval = new ClosedTimeIntervalImpl();
+    return closedTimeInterval;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public OpenLeftTimeInterval createOpenLeftTimeInterval()
+  {
+    OpenLeftTimeIntervalImpl openLeftTimeInterval = new OpenLeftTimeIntervalImpl();
+    return openLeftTimeInterval;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public OpenRightTimeInterval createOpenRightTimeInterval()
+  {
+    OpenRightTimeIntervalImpl openRightTimeInterval = new OpenRightTimeIntervalImpl();
+    return openRightTimeInterval;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public OpenTimeInterval createOpenTimeInterval()
+  {
+    OpenTimeIntervalImpl openTimeInterval = new OpenTimeIntervalImpl();
+    return openTimeInterval;
   }
 
   /**

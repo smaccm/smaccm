@@ -9,12 +9,12 @@ import com.rockwellcollins.atc.agree.agree.TimeInterval;
 import jkind.lustre.Expr;
 
 public class AgreeTimesPattern extends AgreePattern{
-    
+
     public final BigInteger causeTimes;
     public final BigInteger effectTimes;
 
     public AgreeTimesPattern(String string, EObject reference, Expr cause, Expr effect,
-            TimeInterval causeInterval, TimeInterval effectInterval, TriggerType causeType,
+            AgreePatternInterval causeInterval, AgreePatternInterval effectInterval, TriggerType causeType,
             TriggerType effectType, BigInteger causeTimes, BigInteger effectTimes) {
         super(string, reference, cause, effect, causeInterval, effectInterval, causeType, effectType);
         this.causeTimes = causeTimes;

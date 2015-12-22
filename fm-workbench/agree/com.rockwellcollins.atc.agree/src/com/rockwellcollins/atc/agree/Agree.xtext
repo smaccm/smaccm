@@ -85,8 +85,11 @@ WheneverStatement:
 	    
 ;
  
-TimeInterval:
-	{TimeInterval} ('[' | '(') low=Expr ',' high=Expr (')' | ']')
+TimeInterval returns TimeInterval:
+	=>({ClosedTimeInterval} '[' low=Expr ',' high=Expr ']')
+|   =>({OpenLeftTimeInterval} '(' low=Expr ',' high=Expr']')
+|   =>({OpenRightTimeInterval} '[' low=Expr ',' high=Expr ')')
+|   =>({OpenTimeInterval} '(' low=Expr ',' high=Expr ')') 
 ;
 
 SynchStatement:
