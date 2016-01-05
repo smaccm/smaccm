@@ -84,26 +84,32 @@ public class PatternTranslator {
         builder.addLocalEquation(new Equation(new IdExpr(causeVar.id), pattern.cause));
         builder.addLocalEquation(new Equation(new IdExpr(effectVar.id), pattern.effect));
 
+        Expr causeId = new IdExpr(causeVar.id);
         // create a variable that is always within the range of when the effect
         // may occur. This is regardless of whether or not the cause has
         // actually happen
-        AgreeVar causeTimeRangeVar =
+        AgreeVar effectTimeRangeVar =
                 new AgreeVar(EFFECT_TIME_RANGE_PREFIX + patternIndex, NamedType.REAL, null, compInst);
-        builder.addInput(causeTimeRangeVar);
-        Expr causeTimeRangeId = new IdExpr(causeTimeRangeVar.id);
+        builder.addInput(effectTimeRangeVar);
+        Expr effectTimeRangeId = new IdExpr(effectTimeRangeVar.id);
 
-        Expr causeTimeRangeConstraint = getCauseTimeRangeConstraint(causeTimeRangeId, pattern.causeInterval);
-        builder.addAssertion(new AgreeStatement(null, causeTimeRangeConstraint, null));
+        Expr effectTimeRangeConstraint = getCauseTimeRangeConstraint(effectTimeRangeId, pattern.causeInterval);
+        builder.addAssertion(new AgreeStatement(null, effectTimeRangeConstraint, null));
 
         // create a variable that will "predict" when the effect will occur by
-        // looking and the prediction of when the effect will occur when the
+        // looking at the prediction of when the effect will occur when the
         // cause occurs
-        AgreeVar causeTimeVar =
+        AgreeVar effectTimeVar =
                 new AgreeVar(EFFECT_TIME_PREFIX + patternIndex, NamedType.REAL, null, compInst);
-        builder.addLocal(causeTimeVar);
-        Expr causeTimeId = new IdExpr(causeTimeVar.id);
+        builder.addLocal(effectTimeVar);
+        Expr effectTimeId = new IdExpr(effectTimeVar.id);
         
-        //START HERE: set the causeTimeId to lock in the value of causeTimeRangeId
+        //START HERE: set the effectTimeId to lock in the value of effectTimeRangeId
+        
+        //effectTimeId = if causeId then effectTimeRangeId else
+        //                  effectId
+        
+        //get 
         
         return null;
     }
