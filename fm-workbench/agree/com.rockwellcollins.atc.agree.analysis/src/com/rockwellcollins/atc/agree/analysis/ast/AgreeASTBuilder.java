@@ -454,12 +454,24 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
             //we do not reason about this type
             return;
         }
-        Type type = getNamedType(AgreeRecordUtils.getRecordTypeName(dataClass, typeMap, typeExpressions));
-        if (type == null) {
+        String typeName = AgreeRecordUtils.getRecordTypeName(dataClass, typeMap, typeExpressions);
+        if (typeName == null) {
             //we do not reason about this type
             return;
         }
 
+        Type type = getNamedType(typeName);
+        for(RecordType recType : typeExpressions){
+            if(recType.id.equals(typeName)){
+                type = recType;
+                break;
+            }
+        }
+        
+        if(type == null){
+            throw new AgreeException("The type name should have been created");
+        }
+       
         AgreeVar agreeVar = new AgreeVar(name, type, feature.getFeature(), feature.getComponentInstance());
 
         switch (feature.getDirection()) {
