@@ -187,8 +187,7 @@ public class LustreToMATLABExprVisitor implements ExprVisitor<MATLABExpr> {
 	@Override
 	public MATLABExpr visit(RecordExpr e) {
 		//Create a local variable with the record type id as prefix
-		String locaVarName = e.id + "_var"+localVarIndex;
-		localVarIndex++;
+		String localVarName = e.id + "_var"+localVarIndex;
 		//add assignment to assign the fields of the variable
 		//to the value specified in the RecordExpr
 		SortedMap<String, MATLABExpr> fields = new TreeMap<>(new StringNaturalOrdering());
@@ -202,14 +201,23 @@ public class LustreToMATLABExprVisitor implements ExprVisitor<MATLABExpr> {
 			fields.put(entry.getKey(), fieldExpr);
 		}
 		
-		localBusVarInits.add(new MATLABLocalBusVarInit(locaVarName, fields));
+		localBusVarInits.add(new MATLABLocalBusVarInit(localVarName, null, fields));
 		//In the expression that uses the RecordExpr, just reference the local variable
-		return new MATLABIdExpr(locaVarName);
+		return new MATLABIdExpr(localVarName);
 	}
 
 	@Override
 	public MATLABExpr visit(RecordUpdateExpr e) {
-		MATLABIdExpr recordVar = (MATLABIdExpr) e.record.accept(this);
+		MATLABIdExpr recordIdExpr = (MATLABIdExpr) e.record.accept(this);
+		String originalVar = null;
+		if(e.record instanceof IdExpr){
+			originalVar = e.record.toString();
+		}
+		else
+		originalVar = recordIdExpr.id.split("var")[0]+"var"+localVarIndex;
+		localVarIndex++;
+		String newVar = recordIdExpr.id.split("var")[0]+"var"+localVarIndex;
+		
 		//Assign the specific field of the variable created from the recordExpr associated with it
 		//to the value specified in the RecordUpdateExpr
 		SortedMap<String, MATLABExpr> fields = new TreeMap<>(new StringNaturalOrdering());
@@ -217,10 +225,9 @@ public class LustreToMATLABExprVisitor implements ExprVisitor<MATLABExpr> {
 		MATLABTypeCastExprVisitor typeCastVisitor = new MATLABTypeCastExprVisitor();
 		MATLABExpr fieldExpr = typeCastVisitor.visit(e.value.accept(this));
 		fields.put(e.field, fieldExpr);
-		localBusVarInits.add(new MATLABLocalBusVarInit(recordVar.id, fields));
-		
+		localBusVarInits.add(new MATLABLocalBusVarInit(originalVar, newVar, fields));
 		//In the expression that uses the RecordUpdateExpr, just reference the variable
-		return recordVar;
+		return new MATLABIdExpr(originalVar);
 	}
 
 	@Override

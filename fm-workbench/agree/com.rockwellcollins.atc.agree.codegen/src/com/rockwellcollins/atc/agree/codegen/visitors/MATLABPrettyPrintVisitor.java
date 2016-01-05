@@ -439,7 +439,17 @@ public class MATLABPrettyPrintVisitor implements MATLABTypeVisitor<Void>, MATLAB
 		Iterator<Entry<String, MATLABExpr>> iterator = busVarInit.fields.entrySet().iterator();
 		while (iterator.hasNext()) {
 			Entry<String, MATLABExpr> entry = iterator.next();
-			write(busVarInit.localVar);
+			if(busVarInit.newVar != null){
+				write(busVarInit.newVar);
+				write("=");
+				write(busVarInit.originalVar);
+				write(";");
+				newline();
+				write(busVarInit.newVar);
+			}
+			else{
+				write(busVarInit.originalVar);
+			}
 			write(".");
 			write(entry.getKey());
 			write(" = ");

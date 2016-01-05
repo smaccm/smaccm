@@ -11,14 +11,18 @@ import com.rockwellcollins.atc.agree.codegen.visitors.MATLABAstVisitor;
 
 public class MATLABLocalBusVarInit extends MATLABStatement {
 
-	public final String localVar;
+	public final String originalVar;
+	public final String newVar;
 	public final SortedMap<String, MATLABExpr> fields;
 
-	public MATLABLocalBusVarInit(String localVar, Map<String, MATLABExpr> fields) {
-		Assert.isNotNull(localVar);
+	public MATLABLocalBusVarInit(String originalVar, String newVar, Map<String, MATLABExpr> fields) {
+		Assert.isNotNull(originalVar);
+		//newVar is null for RecordExpr, not null for RecordUpdateExpr
+		//to store originalVar's original values
 		Assert.isNotNull(fields);
 		Assert.isTrue(fields.size() > 0);
-		this.localVar = localVar;
+		this.originalVar = originalVar;
+		this.newVar = newVar;
 		this.fields = Util.safeStringSortedMap(fields);
 	}
 	
