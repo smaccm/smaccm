@@ -187,6 +187,7 @@ public class LustreToMATLABExprVisitor implements ExprVisitor<MATLABExpr> {
 	@Override
 	public MATLABExpr visit(RecordExpr e) {
 		//Create a local variable with the record type id as prefix
+		localVarIndex++;
 		String localVarName = e.id + "_var"+localVarIndex;
 		//add assignment to assign the fields of the variable
 		//to the value specified in the RecordExpr
@@ -209,14 +210,6 @@ public class LustreToMATLABExprVisitor implements ExprVisitor<MATLABExpr> {
 	@Override
 	public MATLABExpr visit(RecordUpdateExpr e) {
 		MATLABIdExpr recordIdExpr = (MATLABIdExpr) e.record.accept(this);
-		String originalVar = null;
-		if(e.record instanceof IdExpr){
-			originalVar = e.record.toString();
-		}
-		else
-		originalVar = recordIdExpr.id.split("var")[0]+"var"+localVarIndex;
-		localVarIndex++;
-		String newVar = recordIdExpr.id.split("var")[0]+"var"+localVarIndex;
 		
 		//Assign the specific field of the variable created from the recordExpr associated with it
 		//to the value specified in the RecordUpdateExpr
@@ -225,9 +218,19 @@ public class LustreToMATLABExprVisitor implements ExprVisitor<MATLABExpr> {
 		MATLABTypeCastExprVisitor typeCastVisitor = new MATLABTypeCastExprVisitor();
 		MATLABExpr fieldExpr = typeCastVisitor.visit(e.value.accept(this));
 		fields.put(e.field, fieldExpr);
+		
+		String originalVar = null;
+		if(e.record instanceof IdExpr){
+			originalVar = e.record.toString();
+		}
+		else{
+			originalVar = recordIdExpr.id.split("_var")[0]+"_var"+localVarIndex;
+		}
+		localVarIndex++;
+		String newVar = recordIdExpr.id.split("_var")[0]+"_var"+localVarIndex;
 		localBusVarInits.add(new MATLABLocalBusVarInit(originalVar, newVar, fields));
 		//In the expression that uses the RecordUpdateExpr, just reference the variable
-		return new MATLABIdExpr(originalVar);
+		return new MATLABIdExpr(newVar);
 	}
 
 	@Override
