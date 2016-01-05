@@ -191,8 +191,8 @@ annex agree {**
     subcomponents
       LS: thread LDS::Leader_Selection.Leader_Selection_Impl {
         Deadline => 20 ms in binding (IMA::PowerPC_350Mhz);
-        Deadline => 30 ms in binding (IMA::PowerPC_250Mhz);
-        META_Properties::Output_Delay => 10 ms in binding (IMA::PowerPC_250Mhz);
+--        Deadline => 30 ms in binding (IMA::PowerPC_250Mhz);
+--        META_Properties::Output_Delay => 10 ms in binding (IMA::PowerPC_250Mhz);
         META_Properties::Output_Delay => 7 ms in binding (IMA::PowerPC_350Mhz);
         PALS_Properties::PALS_Id => "Leader_Selection";
         PALS_Properties::PALS_Period => 40 ms;

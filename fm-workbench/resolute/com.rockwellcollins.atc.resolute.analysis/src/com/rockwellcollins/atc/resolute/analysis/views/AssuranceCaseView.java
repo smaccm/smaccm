@@ -34,7 +34,6 @@ import org.eclipse.ui.part.ViewPart;
 import org.eclipse.xtext.ui.editor.GlobalURIEditorOpener;
 
 import com.google.inject.Inject;
-import com.rockwellcollins.atc.resolute.analysis.export.Dcase;
 import com.rockwellcollins.atc.resolute.analysis.export.ResoluteDOTUtils;
 import com.rockwellcollins.atc.resolute.analysis.results.ClaimResult;
 import com.rockwellcollins.atc.resolute.analysis.results.FailResult;
@@ -99,11 +98,10 @@ public class AssuranceCaseView extends ViewPart {
         MenuManager manager = new MenuManager("Export");
 
         manager.add(createExportDOTAction(claim));
-        manager.add(createExportDcaseAction(claim));
         manager.add(createExportCAZAction(claim));
         return manager;
     }
-
+ 
     private IAction createHyperlinkAction(String text, final EObject eObject) {
         return new Action(text) {
             @Override
@@ -123,15 +121,7 @@ public class AssuranceCaseView extends ViewPart {
         }
     }
     
-    private static boolean DCASE_INSTALLED;
-    static {
-        try {
-            Dcase.tryLoad();
-            DCASE_INSTALLED = true;
-        } catch (NoClassDefFoundError e) {
-        	DCASE_INSTALLED = false;
-        }
-    }
+   
 
     private IAction createExportCAZAction(final ClaimResult claim) {
         String name = "Export to CertWare";
@@ -158,34 +148,7 @@ public class AssuranceCaseView extends ViewPart {
         };
     }
 
-    private Action createExportDcaseAction(final ClaimResult claim) {
-        String name = "Export to GSN with D-Case";
-        if (!DCASE_INSTALLED) {
-            name += " [Dcase plug-ins not installed]";
-        }
-        
-        return new Action(name) {
-            @Override
-            public void run() {
-                try {
-                    MessageConsole console = findConsole("Dcase Export");
-                    showConsole(console);
-                    console.clearConsole();
-                    Dcase.claimToGSN(claim);
-                } catch (Throwable t) {
-                    MessageDialog.openError(treeViewer.getControl().getShell(),
-                            "Error during export to Dcase", t.getMessage());
-                    t.printStackTrace();
-                }
-            }
-            
-            @Override
-            public boolean isEnabled() {
-                return DCASE_INSTALLED;
-            }
-        };
-    }
-    
+  
     private Action createExportDOTAction(final ClaimResult claim) {
         return new Action("Show DOT Text in Console") {
             @Override

@@ -52,7 +52,8 @@ public class NamedElementValue extends ResoluteValue {
         if (value instanceof ComponentInstance) {
             ComponentInstance ci = (ComponentInstance) value;
             ComponentClassifier cc = ci.getComponentClassifier();
-            return value.getName() + " : " + cc.getQualifiedName();
+            String qualifiedName = cc == null ? "<no classifier>" : cc.getQualifiedName();
+            return value.getName() + " : " + qualifiedName;
         }
 
         if (value instanceof FeatureInstance) {

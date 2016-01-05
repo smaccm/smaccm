@@ -26,6 +26,7 @@ import jkind.lustre.TupleExpr;
 import jkind.lustre.Type;
 import jkind.lustre.TypeDef;
 import jkind.lustre.VarDecl;
+import jkind.lustre.builders.NodeBuilder;
 
 import com.rockwellcollins.atc.agree.agree.AssumeStatement;
 import com.rockwellcollins.atc.agree.agree.EqStatement;
@@ -91,10 +92,19 @@ public class LustreContractAstBuilder extends LustreAstBuilder {
             }
         }
 
-        Contract contract = new Contract("_TOP", requires, ensures);
+        Contract contract = new Contract(requires, ensures);
 
-        Node main = new Node("_TOP", inputs, outputs, locals, equations, properties, assertions, null,
-                Optional.of(Collections.singletonList(contract)));
+        NodeBuilder builder = new NodeBuilder("_TOP");
+        builder.addInputs(inputs);
+        builder.addOutputs(outputs);
+        builder.addLocals(locals);
+        builder.addEquations(equations);
+        builder.addProperties(properties);
+        builder.addAssertions(assertions);
+        builder.setContract(contract);
+        
+        Node main = builder.build();
+        
         nodes.addAll(agreeProgram.globalLustreNodes);
         nodes.add(main);
         Program program = new Program(types, null, nodes, main.id);
@@ -203,9 +213,19 @@ public class LustreContractAstBuilder extends LustreAstBuilder {
         for (AgreeVar var : agreeNode.outputs) {
             outputs.add(var);
         }
-        Contract contract = new Contract(nodePrefix + agreeNode.id, requires, ensures);
-        return new Node(nodePrefix + agreeNode.id, inputs, outputs, locals, equations, null, assertions, null,
-                Optional.of(Collections.singletonList(contract)));
+        //Contract contract = new Contract(nodePrefix + agreeNode.id, requires, ensures);
+        Contract contract = new Contract(requires, ensures);
+
+        
+        NodeBuilder builder = new NodeBuilder(nodePrefix + agreeNode.id);
+        builder.addInputs(inputs);
+        builder.addOutputs(outputs);
+        builder.addLocals(locals);
+        builder.addEquations(equations);
+        builder.addAssertions(assertions);
+        builder.setContract(contract);
+        
+        return builder.build();
     }
 
     protected static void addInputsAndOutputs(List<AgreeVar> inputs, List<AgreeVar> outputs,

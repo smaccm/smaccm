@@ -34,4 +34,6 @@ public class PreferenceConstants {
     public static final String PREF_REMOTE_URL = "remoteUrl";
 
     public static final String PREF_CONSIST_DEPTH = "consistDepth";
+
+	public static final String PREF_DEBUG = "debug";
 }

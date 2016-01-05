@@ -100,7 +100,9 @@ public class AgreeRecordUtils {
                 } else {
                     typeStr = getRecordTypeName(subCompImpl, typeMap, typeExpressions);
                 }
-                subTypeMap.put(subComp.getName(), getNamedType(typeStr));
+                if (typeStr != null) {
+                    subTypeMap.put(subComp.getName(), getNamedType(typeStr));
+                }
             }
         } else if (el instanceof RecordDefExpr) {
             RecordDefExpr agreeRecDef = (RecordDefExpr) el;

@@ -1,0 +1,27 @@
+-- File generated from Tower-AADL compiler
+
+package commsecDecodeStaticKey
+public
+  with Base_Types;
+  with Data_Model;
+  with Data_Types;
+  with SMACCM_SYS;
+
+thread commsecDecodeStaticKey
+  features
+    Output_configureStaticKey_2_0: out event data port Data_Types::array_24_Unsigned_8.impl
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_configureStaticKey_2_chan_122";
+      };
+  properties
+    Compute_Execution_Time => 10 us .. 100 us;
+    Source_Text => ("user_code/commsecDecodeStaticKey_monitor.c");
+    SMACCM_SYS::Thread_Type => Active;
+    Dispatch_Protocol => Sporadic;
+    Stack_Size => 1000 bytes;
+    Priority => 120;
+    SMACCM_SYS::Sends_Events_To => "{{1 Output_configureStaticKey_2_0}}";
+    Initialize_Entrypoint_Source_Text => "callback_configureStaticKey_2";
+end commsecDecodeStaticKey;
+
+end commsecDecodeStaticKey;

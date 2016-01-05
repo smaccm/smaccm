@@ -1,6 +1,10 @@
 delimiters "$", "$"
 import "xmlCommon.stg"
 
+//imported from eChronosComponentC
+incomingPortWriterName(port) ::= "smaccm_$port.qualifiedName$_$port.type.writerFn$"
+incomingActiveThreadDispatchName(dispatcher) ::= "$incomingPortWriterName(dispatcher)$"
+
 
 ////////////////////////////////////////////////////////////////////////////
 //
@@ -37,7 +41,7 @@ writeTrampoline(name, flihName) ::= <<
 >>
 
 writeDispatcherTrampoline(dispatcher) ::= <<
-$writeTrampoline(dispatcher.signalName, dispatcher.qualifiedName)$
+$writeTrampoline(dispatcher.signalName, incomingActiveThreadDispatchName(dispatcher))$
 >>
 
 writeExternalIsrTrampoline(externalIsr) ::= <<
@@ -54,18 +58,18 @@ $model.externalISRs:writeExternalIsrTrampoline()$
 >>
 
 writeInternalInterruptHandler(signalName) ::= <<
-<$signalName$>rtos_internal_exception_preempt_trampoline_$signalName$</$signalName$>
+<$signalName$>exception_preempt_trampoline_$signalName$</$signalName$>
 >>
 
 writeExternalInterruptHandler(signalName, signalNumber) ::= <<
 <external_irq>
 	<number>$signalNumber$</number>
-	<handler>rtos_internal_exception_preempt_trampoline_$signalName$</handler>
+	<handler>exception_preempt_trampoline_$signalName$</handler>
 </external_irq>
 >>
 
 writeInternalDispatcherInterruptHandler(dispatcher) ::= << 
-$writeInternalInterruptHandler(dispatcher.signalName)$
+$writeInternalInterruptHandler(dispatcher.signalName)$ 
 >>
 
 writeExternalDispatcherInterruptHandler(dispatcher) ::= << 
@@ -170,6 +174,7 @@ $writeInterruptEvent(
 	externalIrqEvent.taskName,
 	externalIrqEvent.signalSet)$
 >>
+
 /*
 writeActiveThreadIrqDispatcher(dispatcher) ::= << 
 $if(dispatcher.isIRQ)$
@@ -183,6 +188,9 @@ $endif$
  $threadImpl.dispatchers:writeActiveThreadIrqDispatcher()$
  * 
  */
+
+
+
 writeActiveThreadIrqDispatchers(threadImpl) ::= <<
 $writeInterruptEvent(threadImpl.eChronosInterruptSignal, threadImpl.normalizedName, threadImpl.eChronosDispatchSignal)$
 >>
