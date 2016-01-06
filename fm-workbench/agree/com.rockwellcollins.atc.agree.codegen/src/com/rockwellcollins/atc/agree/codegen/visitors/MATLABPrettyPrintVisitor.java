@@ -80,6 +80,8 @@ public class MATLABPrettyPrintVisitor implements MATLABTypeVisitor<Void>, MATLAB
 			persistentVarDecl.accept(this);
 		}
 		
+		newline();
+		
 		//write statements
 		for(MATLABStatement statement: primaryFunction.statements){
 			statement.accept(this);

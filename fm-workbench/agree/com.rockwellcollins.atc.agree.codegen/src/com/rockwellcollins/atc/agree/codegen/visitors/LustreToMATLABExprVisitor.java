@@ -116,7 +116,7 @@ public class LustreToMATLABExprVisitor implements ExprVisitor<MATLABExpr> {
 					String firstTimeVar = ((MATLABArrowFunction)functionMap.get(functionName)).firstTimeVar;
 					//no duplicate addition
 					if(!persistentVarMap.containsKey(firstTimeVar)){
-						persistentVarMap.put(firstTimeVar, new MATLABBoolExpr(true));
+						persistentVarMap.put(firstTimeVar, new MATLABBoolExpr(false));
 						persistentVarInits.add(new MATLABFirstTimeVarInit(firstTimeVar));
 					}
 					return new MATLABArrowFunctionCall(functionMap.get(functionName).name,"first_time", leftExpr,rightExpr);

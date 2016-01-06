@@ -122,7 +122,7 @@ public class MATLABFunctionHandler extends AadlHandler {
     		    // Save the selected path
     		    pref.put("DEFAULT_PATH", directory.getAbsolutePath());
     		    
-    		    Path filePath = Paths.get(directory.toString(), matlabFunction.name);
+    		    Path filePath = Paths.get(directory.toString(), matlabFunction.name+".m");
 
         		// Write MATLAB function code into the specified file
         		try {
