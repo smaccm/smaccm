@@ -1,4 +1,4 @@
-package com.rockwellcollins.atc.agree.analysis.ast;
+package com.rockwellcollins.atc.agree.analysis.realtime;
 
 import java.math.BigInteger;
 
@@ -20,8 +20,10 @@ import com.rockwellcollins.atc.agree.agree.WheneverImpliesStatement;
 import com.rockwellcollins.atc.agree.agree.WheneverOccursStatement;
 import com.rockwellcollins.atc.agree.agree.util.AgreeSwitch;
 import com.rockwellcollins.atc.agree.analysis.AgreeException;
-import com.rockwellcollins.atc.agree.analysis.ast.AgreePattern.TriggerType;
-import com.rockwellcollins.atc.agree.analysis.ast.AgreePatternInterval.IntervalType;
+import com.rockwellcollins.atc.agree.analysis.ast.AgreeASTBuilder;
+import com.rockwellcollins.atc.agree.analysis.ast.AgreeStatement;
+import com.rockwellcollins.atc.agree.analysis.realtime.AgreePattern.TriggerType;
+import com.rockwellcollins.atc.agree.analysis.realtime.AgreePatternInterval.IntervalType;
 
 import jkind.lustre.BinaryExpr;
 import jkind.lustre.BinaryOp;
@@ -30,13 +32,13 @@ import jkind.lustre.IntExpr;
 import jkind.lustre.UnaryExpr;
 import jkind.lustre.UnaryOp;
 
-public class PatternBuilder extends AgreeSwitch<AgreeStatement> {
+public class AgreePatternBuilder extends AgreeSwitch<AgreeStatement> {
 
     private final String str;
     private final EObject ref;
     private final AgreeASTBuilder builder;
 
-    public PatternBuilder(String str, EObject ref, AgreeASTBuilder builder) {
+    public AgreePatternBuilder(String str, EObject ref, AgreeASTBuilder builder) {
         this.str = str;
         this.ref = ref;
         this.builder = builder;

@@ -4,10 +4,12 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
+import java.util.Set;
 import java.util.SortedMap;
 
 import org.eclipse.emf.ecore.EObject;
@@ -38,6 +40,8 @@ import com.rockwellcollins.atc.agree.analysis.ast.AgreeNode.TimingModel;
 import com.rockwellcollins.atc.agree.analysis.lustre.visitors.IdRewriteVisitor;
 import com.rockwellcollins.atc.agree.analysis.lustre.visitors.IdRewriter;
 import com.rockwellcollins.atc.agree.analysis.preferences.PreferenceConstants;
+import com.rockwellcollins.atc.agree.analysis.realtime.AgreePatternTranslator;
+import com.rockwellcollins.atc.agree.analysis.realtime.AgreeRealtimeCalendarBuilder;
 
 import jkind.lustre.BinaryExpr;
 import jkind.lustre.BinaryOp;
@@ -213,6 +217,12 @@ public class LustreAstBuilder {
         }
 
         equations.addAll(flatNode.localEquations);
+        
+        //add realtime constraints
+        if(flatNode.eventTimes.size() != 0){
+            equations.add(AgreeRealtimeCalendarBuilder.getTimeConstraint(flatNode.eventTimes));
+        }
+        
         NodeBuilder builder = new NodeBuilder("main");
         builder.addInputs(inputs);
         builder.addLocals(locals);
@@ -223,6 +233,8 @@ public class LustreAstBuilder {
         Node main = builder.build();
         nodes.add(main);
         nodes.addAll(agreeProgram.globalLustreNodes);
+        //add realtime constraint node
+        nodes.add(AgreeRealtimeCalendarBuilder.getMinPosNode());
         Program program = new Program(types, null, nodes, main.id);
 
         return program;
@@ -534,6 +546,7 @@ public class LustreAstBuilder {
         List<AgreeVar> outputs = new ArrayList<>();
         List<AgreeVar> locals = new ArrayList<>();
         List<AgreeStatement> assertions = new ArrayList<>();
+        Set<IdExpr> timeEvents = new HashSet<>(agreeNode.eventTimes);
 
         Expr someoneTicks = null;
         for (AgreeNode subAgreeNode : agreeNode.subNodes) {
@@ -558,6 +571,8 @@ public class LustreAstBuilder {
 
             addInputsAndOutputs(inputs, outputs, flatNode, lustreNode, prefix, monolithic);
 
+            addTimeEvents(timeEvents, flatNode, prefix, assertions);
+            
             addCondactCall(agreeNode, nodePrefix, inputs, assertions, flatNode, prefix, clockExpr,
                     lustreNode);
 
@@ -586,8 +601,17 @@ public class LustreAstBuilder {
 
         return new AgreeNode(agreeNode.id, inputs, outputs, locals, agreeNode.localEquations, null, agreeNode.subNodes, assertions,
                 agreeNode.assumptions, agreeNode.guarantees, agreeNode.lemmas, new BoolExpr(true),
-                agreeNode.initialConstraint, agreeNode.clockVar, agreeNode.reference, null,
+                agreeNode.initialConstraint, agreeNode.clockVar, agreeNode.reference, null, timeEvents,
                 agreeNode.compInst);
+    }
+
+    private static void addTimeEvents(Set<IdExpr> timeEvents, AgreeNode flatNode, String prefix, List<AgreeStatement> assertions) {
+        for(IdExpr event : flatNode.eventTimes){
+            timeEvents.add(new IdExpr(prefix + event.id));
+        }
+        //set the time variable to be equal
+        IdExpr timeId = AgreePatternTranslator.timeExpr;
+        assertions.add(new AgreeStatement("", new BinaryExpr(timeId, BinaryOp.EQUAL, new IdExpr(prefix + timeId.id)), null));
     }
 
     protected static void addConnectionConstraints(AgreeNode agreeNode, List<AgreeStatement> assertions) {

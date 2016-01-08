@@ -1,8 +1,9 @@
-package com.rockwellcollins.atc.agree.analysis.ast;
+package com.rockwellcollins.atc.agree.analysis.realtime;
 
 import org.eclipse.emf.ecore.EObject;
 
 import com.rockwellcollins.atc.agree.agree.TimeInterval;
+import com.rockwellcollins.atc.agree.analysis.ast.AgreeStatement;
 
 import jkind.lustre.Expr;
 import jkind.lustre.IdExpr;

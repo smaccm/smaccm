@@ -1,7 +1,9 @@
 package com.rockwellcollins.atc.agree.analysis.ast;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.emf.ecore.EObject;
 import org.osate.aadl2.instance.ComponentInstance;
@@ -10,6 +12,7 @@ import com.rockwellcollins.atc.agree.analysis.ast.AgreeNode.TimingModel;
 
 import jkind.lustre.Equation;
 import jkind.lustre.Expr;
+import jkind.lustre.IdExpr;
 
 public class AgreeNodeBuilder {
     
@@ -30,6 +33,7 @@ public class AgreeNodeBuilder {
     private EObject reference;
     private TimingModel timing;
     private ComponentInstance compInst;
+    private Set<IdExpr> eventTimes = new HashSet<>();
     
     public AgreeNodeBuilder(String id){
         this.id = id;
@@ -57,6 +61,14 @@ public class AgreeNodeBuilder {
     
     public void setId(String id){
         this.id = id;
+    }
+    
+    public void addEventTime(IdExpr event){
+        this.eventTimes.add(event);
+    }
+    
+    public void clearEventTimes(){
+        this.eventTimes.clear();
     }
     
     public void addInput(AgreeVar var){
@@ -166,7 +178,7 @@ public class AgreeNodeBuilder {
     public AgreeNode build() {
         return new AgreeNode(id, inputs, outputs, locals, equations, connections, subNodes, assertions,
                 assumptions, guarantees, lemmas, clockConstraint, initialConstraint, clockVar, reference,
-                timing, compInst);
+                timing, eventTimes, compInst);
     }
 
 }

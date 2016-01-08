@@ -166,7 +166,7 @@ public class LustreContractAstBuilder extends LustreAstBuilder {
 
         return new AgreeNode(agreeNode.id, inputs, outputs, locals, agreeNode.localEquations, null, agreeNode.subNodes, assertions,
                 agreeNode.assumptions, agreeNode.guarantees, agreeNode.lemmas, new BoolExpr(true),
-                agreeNode.initialConstraint, agreeNode.clockVar, agreeNode.reference, null,
+                agreeNode.initialConstraint, agreeNode.clockVar, agreeNode.reference, null, agreeNode.eventTimes,
                 agreeNode.compInst);
     }
 

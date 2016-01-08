@@ -129,6 +129,8 @@ import com.rockwellcollins.atc.agree.analysis.extentions.CexExtractor;
 import com.rockwellcollins.atc.agree.analysis.extentions.CexExtractorRegistry;
 import com.rockwellcollins.atc.agree.analysis.extentions.ExtensionRegistry;
 import com.rockwellcollins.atc.agree.analysis.lustre.visitors.IdGatherer;
+import com.rockwellcollins.atc.agree.analysis.realtime.AgreePatternBuilder;
+import com.rockwellcollins.atc.agree.analysis.realtime.AgreePatternTranslator;
 
 public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 
@@ -157,7 +159,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
                 new ArrayList<>(globalTypes), topNode);
 
         // if there are any patterns in the AgreeProgram we need to inline them
-        program = PatternTranslator.translate(program);
+        program = AgreePatternTranslator.translate(program);
 
         // go through the extension registries and transform the program
         AgreeAutomaterRegistry aAReg = (AgreeAutomaterRegistry) ExtensionRegistry
@@ -283,7 +285,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 
         return new AgreeNode(id, inputs, outputs, locals, localEquations, connections, subNodes, assertions,
                 assumptions, guarantees, lemmas, clockConstraint, initialConstraint, clockVar, reference,
-                timing, compInst);
+                timing, null, compInst);
     }
 
     private void assertReferencedSubcomponentHasAnnex(ComponentInstance compInst, List<AgreeVar> inputs,
@@ -739,7 +741,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
                     asserts.add(new AgreeStatement(str, doSwitch(assertState.getExpr()), assertState));
                 } else {
                     PatternStatement pattern = assertState.getPattern();
-                    asserts.add(new PatternBuilder(str, assertState, this).doSwitch(pattern));
+                    asserts.add(new AgreePatternBuilder(str, assertState, this).doSwitch(pattern));
                 }
             }
         }
@@ -853,7 +855,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
                     assumptions.add(new AgreeStatement(str, doSwitch(assumption.getExpr()), assumption));
                 } else {
                     PatternStatement pattern = assumption.getPattern();
-                    assumptions.add(new PatternBuilder(str, assumption, this).doSwitch(pattern));
+                    assumptions.add(new AgreePatternBuilder(str, assumption, this).doSwitch(pattern));
                 }
             }
         }
@@ -870,7 +872,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
                     guarantees.add(new AgreeStatement(str, doSwitch(guarantee.getExpr()), guarantee));
                 } else {
                     PatternStatement pattern = guarantee.getPattern();
-                    guarantees.add(new PatternBuilder(str, guarantee, this).doSwitch(pattern));
+                    guarantees.add(new AgreePatternBuilder(str, guarantee, this).doSwitch(pattern));
                 }
             }
         }

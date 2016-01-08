@@ -3,6 +3,7 @@ package com.rockwellcollins.atc.agree.analysis.ast;
 import org.eclipse.emf.ecore.EObject;
 
 import com.rockwellcollins.atc.agree.analysis.AgreeException;
+import com.rockwellcollins.atc.agree.analysis.realtime.AgreePattern;
 
 import jkind.lustre.Expr;
 
@@ -15,7 +16,7 @@ public class AgreeStatement {
         this.string = string;
         this.expr = expr;
         this.reference = reference;
-        if (expr == null) {
+        if (expr == null && !(this instanceof AgreePattern)) {
             throw new AgreeException("AgreeStatement created with null expression");
         }
     }
