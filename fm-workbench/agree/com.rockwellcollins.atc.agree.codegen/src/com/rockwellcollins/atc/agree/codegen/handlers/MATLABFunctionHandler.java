@@ -108,6 +108,7 @@ public class MATLABFunctionHandler extends AadlHandler {
             //if no path has previously been selected
             String path = pref.get("DEFAULT_PATH", "");
     		JFileChooser chooser = new JFileChooser();
+    		chooser.setDialogTitle("Choose Output Directory");
     		chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
     		
     		// Set the path that was saved in preferences

@@ -46,6 +46,7 @@ public class MATLABTypeCastExprVisitor implements MATLABExprVisitor<MATLABExpr> 
 
 	@Override
 	public MATLABExpr visit(MATLABIfFunctionCall e) {
+		e.cond = e.cond.accept(this);
 		e.ifExpr = e.ifExpr.accept(this);
 		e.elseExpr = e.elseExpr.accept(this);
 		return e;
