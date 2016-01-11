@@ -27,7 +27,8 @@ uint32_t the_interval = 0;
 void clock_init() { }
 
 void clock_set_interval_in_ms(uint32_t interval) {
-
+   the_interval = interval;
+   
    /* The SysTick Calibration Value Register is a read-only register that contains
    the number of pulses for a period of 10ms, in the TENMS field, bits[23:0].
    This register also has a SKEW bit. Bit[30] == 1 indicates that the calibration
@@ -47,6 +48,10 @@ void clock_set_interval_in_ms(uint32_t interval) {
    SYST_CVR_WRITE(0);
    SYST_CSR_WRITE((1 << 1) | 1);
 };
+
+void clock_set_interval_in_us(uint32_t interval) {
+   clock_set_interval_in_ms(interval*1000); 
+}
 
 void clock_start_timer(void)
 {
