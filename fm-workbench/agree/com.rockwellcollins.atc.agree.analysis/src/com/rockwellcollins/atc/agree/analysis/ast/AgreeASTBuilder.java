@@ -446,15 +446,17 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
                 outputs.add(var);
                 break;
             default:
-                break;
+                throw new AgreeException("Unable to reason about bi-directional event port: "+name);
             }
         }
 
+        if(dataClass == null){
+            //we do not reason about this type
+            return;
+        }
         Type type = getNamedType(AgreeRecordUtils.getRecordTypeName(dataClass, typeMap, typeExpressions));
         if (type == null) {
-            // we don't reason about this type, keep in mind we still reason
-            // about the event port
-            // even if the type is not defined
+            //we do not reason about this type
             return;
         }
 
@@ -544,7 +546,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
                 dataClass = eventDataPort.getDataFeatureClassifier();
             }
 
-            if (getNamedType(AgreeRecordUtils.getRecordTypeName(dataClass, typeMap, globalTypes)) == null) {
+            if (dataClass == null || getNamedType(AgreeRecordUtils.getRecordTypeName(dataClass, typeMap, globalTypes)) == null) {
                 // we don't reason about this type
                 continue;
             }

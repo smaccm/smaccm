@@ -565,7 +565,8 @@ public class LustreAstBuilder {
 
         if (agreeNode.timing == TimingModel.ASYNC) {
             if (someoneTicks == null) {
-                throw new AgreeException("Somehow we generated a clock constraint without any clocks");
+                throw new AgreeException("Somehow we generated a clock constraint without any clocks."
+                        + " Perhaps none of your subcomponents have an agree annex?");
             }
             assertions.add(new AgreeStatement("someone ticks", someoneTicks, null));
         }
@@ -771,11 +772,17 @@ public class LustreAstBuilder {
 
     protected static void addLatchedConstraints(String nodePrefix, List<AgreeVar> inputs,
             List<AgreeStatement> assertions, AgreeNode subAgreeNode, String prefix, List<Expr> inputIds) {
+        
+        if(subAgreeNode.inputs.size() == 0){
+            return; //we don't need to create latched inputs if there are none
+        }
+        
         String latchNodeString = nodePrefix + subAgreeNode.id + "__LATCHED_INPUTS";
 
         List<Expr> nonLatchedInputs = new ArrayList<>();
         List<Expr> latchedInputs = new ArrayList<>();
         List<VarDecl> latchedVars = new ArrayList<>();
+        
         for (AgreeVar var : subAgreeNode.inputs) {
             String latchedName = prefix + "latched___" + var.id;
             AgreeVar latchedVar = new AgreeVar(latchedName, var.type, var.reference, subAgreeNode.compInst);
