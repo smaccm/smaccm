@@ -379,7 +379,11 @@ public abstract class VerifyHandler extends AadlHandler {
         } else if (reference instanceof DataPort) {
             return prefix + seperator + ((DataPort) reference).getName();
         } else if (reference instanceof EventDataPort) {
-            return prefix + seperator + ((EventDataPort) reference).getName()+"._EVENT_";
+            if (var.id.endsWith(AgreeASTBuilder.eventSuffix)) {
+                return prefix + seperator + ((EventDataPort) reference).getName() + "._EVENT_";
+            } else {
+                return prefix + seperator + ((EventDataPort) reference).getName();
+            }
         } else if (reference instanceof FeatureGroup) {
             return prefix + seperator + ((FeatureGroup) reference).getName();
         } else if (reference instanceof PropertyStatement) {

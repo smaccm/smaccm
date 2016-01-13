@@ -347,7 +347,10 @@ public class AgreeUtils {
         throw new AgreeException("Unhandled initial type for type '"+type+"'");
     }
     
-    public static boolean statementIsContractEqOrProperty(AgreeStatement statement){
+    public static boolean statementIsNullOrContractEqOrProperty(AgreeStatement statement){
+        if(statement.reference == null){
+            return true;
+        }
         if (statement.reference instanceof EqStatement
                 || statement.reference instanceof PropertyStatement) {
             EObject container = statement.reference.eContainer();

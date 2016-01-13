@@ -115,7 +115,7 @@ public class LustreAstBuilder {
         // equations
         // and type equations. This would clear this up
         for (AgreeStatement statement : topNode.assertions) {
-            if (AgreeUtils.statementIsContractEqOrProperty(statement)){
+            if (AgreeUtils.statementIsNullOrContractEqOrProperty(statement)){
 
                 // this is a strange hack we have to do. we have to make
                 // equation and property
@@ -215,12 +215,16 @@ public class LustreAstBuilder {
             }
             inputs.add(var);
         }
+        
+        for(AgreeVar var : flatNode.locals){
+            locals.add(var);
+        }
 
         equations.addAll(flatNode.localEquations);
         
         //add realtime constraints
         if(flatNode.eventTimes.size() != 0){
-            equations.add(AgreeRealtimeCalendarBuilder.getTimeConstraint(flatNode.eventTimes));
+            assertions.add(AgreeRealtimeCalendarBuilder.getTimeConstraint(flatNode.eventTimes));
         }
         
         NodeBuilder builder = new NodeBuilder("main");
@@ -252,6 +256,9 @@ public class LustreAstBuilder {
         }
 
         nodes = new ArrayList<>();
+        //add the realtime constraint node
+        nodes.add(AgreeRealtimeCalendarBuilder.getMinPosNode());
+        
         Node topConsist = getConsistencyLustreNode(agreeProgram.topNode, false);
         // we don't want node lemmas to show up in the consistency check
         for (Node node : agreeProgram.globalLustreNodes) {
@@ -279,6 +286,8 @@ public class LustreAstBuilder {
         }
 
         nodes = new ArrayList<>();
+        nodes.add(AgreeRealtimeCalendarBuilder.getMinPosNode());
+        
         AgreeNode compositionNode = flattenAgreeNode(agreeProgram.topNode, "_TOP__", monolithic);
 
         Node topCompositionConsist = getConsistencyLustreNode(compositionNode, true);
@@ -338,10 +347,15 @@ public class LustreAstBuilder {
             // equations
             // and type equations. This would clear this up
             for (AgreeStatement assertion : agreeNode.assertions) {
-                if (AgreeUtils.statementIsContractEqOrProperty(assertion)) {
+                if (AgreeUtils.statementIsNullOrContractEqOrProperty(assertion)) {
                     stuffConj = new BinaryExpr(stuffConj, BinaryOp.AND, assertion.expr);
                 }
             }
+        }
+        
+        //add realtime constraints
+        if(agreeNode.eventTimes.size() != 0){
+            assertions.add(AgreeRealtimeCalendarBuilder.getTimeConstraint(agreeNode.eventTimes));
         }
 
         for (AgreeVar var : agreeNode.inputs) {
@@ -350,6 +364,10 @@ public class LustreAstBuilder {
 
         for (AgreeVar var : agreeNode.outputs) {
             inputs.add(var);
+        }
+        
+        for(AgreeVar var : agreeNode.locals){
+            locals.add(var);
         }
 
         EObject classifier = agreeNode.compInst.getComponentClassifier();
@@ -508,7 +526,7 @@ public class LustreAstBuilder {
         // monolithic verification. However, we should add EQ statements
         // with left hand sides which part of the agreeNode assertions
         for (AgreeStatement statement : agreeNode.assertions) {
-            if (monolithic ||  AgreeUtils.statementIsContractEqOrProperty(statement)) {
+            if (monolithic ||  AgreeUtils.statementIsNullOrContractEqOrProperty(statement)) {
                 assertions.add(statement.expr);
             }
         }

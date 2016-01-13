@@ -5,8 +5,11 @@ import java.util.Set;
 
 import org.eclipse.emf.mwe.core.container.IfComponent;
 
+import com.rockwellcollins.atc.agree.analysis.ast.AgreeStatement;
+
 import jkind.lustre.BinaryExpr;
 import jkind.lustre.BinaryOp;
+import jkind.lustre.BoolExpr;
 import jkind.lustre.Equation;
 import jkind.lustre.Expr;
 import jkind.lustre.IdExpr;
@@ -33,16 +36,18 @@ public class AgreeRealtimeCalendarBuilder {
         builder.addInput(new VarDecl(b.id, NamedType.REAL));
         builder.addOutput(new VarDecl(ret.id, NamedType.REAL));
         
-        Expr aLessB = new BinaryExpr(a, BinaryOp.LESS, b);
-        Expr aNeg = new BinaryExpr(a, BinaryOp.LESS, new RealExpr(BigDecimal.ZERO));
+        Expr aLessB = new BinaryExpr(a, BinaryOp.LESSEQUAL, b);
+        Expr bNeg = new BinaryExpr(b, BinaryOp.LESSEQUAL, new RealExpr(BigDecimal.ZERO));
+        Expr aNeg = new BinaryExpr(a, BinaryOp.LESSEQUAL, new RealExpr(BigDecimal.ZERO));
         Expr ifALessB = new IfThenElseExpr(aLessB, a, b);
-        Expr ifANeg = new IfThenElseExpr(aNeg, b, ifALessB);
+        Expr ifBNeg = new IfThenElseExpr(bNeg, a, ifALessB);
+        Expr ifANeg = new IfThenElseExpr(aNeg, b, ifBNeg);
         
         builder.addEquation(new Equation(ret, ifANeg));
         return builder.build();
     }
     
-    public static Equation getTimeConstraint(Set<IdExpr> events){
+    public static Expr getTimeConstraint(Set<IdExpr> events){
         
         IdExpr timeId = AgreePatternTranslator.timeExpr;
         Expr nodeCall = new RealExpr(BigDecimal.valueOf(-1.0));
@@ -50,10 +55,13 @@ public class AgreeRealtimeCalendarBuilder {
             nodeCall = new NodeCallExpr(NODE_NAME, new BinaryExpr(event, BinaryOp.MINUS, timeId), nodeCall);
         }
         
+        nodeCall = new BinaryExpr(timeId, BinaryOp.PLUS, nodeCall);
         nodeCall = new UnaryExpr(UnaryOp.PRE, nodeCall);
-        Expr expr = new BinaryExpr(new RealExpr(BigDecimal.ZERO), BinaryOp.ARROW, nodeCall);
-        
-        return new Equation(timeId, expr); 
+        Expr timeExpr = new BinaryExpr(timeId, BinaryOp.EQUAL, nodeCall);
+        timeExpr = new BinaryExpr(new BoolExpr(true), BinaryOp.ARROW, timeExpr);
+        Expr posTime = new BinaryExpr(timeId, BinaryOp.GREATEREQUAL, new RealExpr(BigDecimal.ZERO));
+        posTime = new BinaryExpr(posTime, BinaryOp.ARROW, new BoolExpr(true));
+        return new BinaryExpr(posTime, BinaryOp.AND, timeExpr);
     }
     
 }

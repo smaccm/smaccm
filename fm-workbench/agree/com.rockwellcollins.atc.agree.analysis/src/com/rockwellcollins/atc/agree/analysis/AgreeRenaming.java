@@ -99,6 +99,8 @@ public class AgreeRenaming extends Renaming {
 //                   return original;
 //               }
                return newName;
+            } else if(newName.matches("time")){
+                return "time";
             }
             return null;
         }

@@ -113,6 +113,7 @@ import com.rockwellcollins.atc.agree.agree.RecordUpdateExpr;
 import com.rockwellcollins.atc.agree.agree.SpecStatement;
 import com.rockwellcollins.atc.agree.agree.SynchStatement;
 import com.rockwellcollins.atc.agree.agree.ThisExpr;
+import com.rockwellcollins.atc.agree.agree.TimeExpr;
 import com.rockwellcollins.atc.agree.agree.util.AgreeSwitch;
 import com.rockwellcollins.atc.agree.analysis.AgreeCalendarUtils;
 import com.rockwellcollins.atc.agree.analysis.AgreeUtils;
@@ -129,6 +130,7 @@ import com.rockwellcollins.atc.agree.analysis.extentions.CexExtractor;
 import com.rockwellcollins.atc.agree.analysis.extentions.CexExtractorRegistry;
 import com.rockwellcollins.atc.agree.analysis.extentions.ExtensionRegistry;
 import com.rockwellcollins.atc.agree.analysis.lustre.visitors.IdGatherer;
+import com.rockwellcollins.atc.agree.analysis.realtime.AgreePattern;
 import com.rockwellcollins.atc.agree.analysis.realtime.AgreePatternBuilder;
 import com.rockwellcollins.atc.agree.analysis.realtime.AgreePatternTranslator;
 
@@ -292,12 +294,11 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
             List<AgreeVar> outputs, List<AgreeNode> subNodes, List<AgreeStatement> assertions,
             List<AgreeStatement> lemmas) {
         Set<String> allExprIds = new HashSet<>();
-        IdGatherer visitor = new IdGatherer();
         for (AgreeStatement statement : assertions) {
-            allExprIds.addAll(statement.expr.accept(visitor));
+            allExprIds.addAll(gatherStatementIds(statement));
         }
         for (AgreeStatement statement : lemmas) {
-            allExprIds.addAll(statement.expr.accept(visitor));
+            allExprIds.addAll(gatherStatementIds(statement));
         }
         for (String idStr : allExprIds) {
             if (idStr.contains(dotChar)) {
@@ -329,6 +330,19 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
                 }
             }
         }
+    }
+
+    private Set<String> gatherStatementIds(AgreeStatement statement) {
+        IdGatherer visitor = new IdGatherer();
+        Set<String> ids = new HashSet<>();
+        if (statement instanceof AgreePattern) {
+            AgreePattern pattern = (AgreePattern) statement;
+            ids.addAll(pattern.cause.accept(visitor));
+            ids.addAll(pattern.effect.accept(visitor));
+        }else{
+            ids.addAll(statement.expr.accept(visitor));
+        }
+        return ids;
     }
 
     private List<AgreeStatement> getLemmaStatements(EList<SpecStatement> specs) {
@@ -1342,6 +1356,11 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
         return new RealExpr(BigDecimal.valueOf(Double.parseDouble(expr.getVal())));
     }
 
+    @Override
+    public Expr caseTimeExpr(TimeExpr time){
+        return AgreePatternTranslator.timeExpr;
+    }
+    
     @Override
     public Expr caseUnaryExpr(com.rockwellcollins.atc.agree.agree.UnaryExpr expr) {
         Expr subExpr = doSwitch(expr.getExpr());

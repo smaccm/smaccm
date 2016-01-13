@@ -89,10 +89,10 @@ public class AgreePatternBuilder extends AgreeSwitch<AgreeStatement> {
         AgreePatternInterval effectInterval = getIntervalType(object.getInterval());
 
         // make the effect rising edge sensitive
-        Expr preEffect = new UnaryExpr(UnaryOp.PRE, effect);
-        Expr notPreEffect = new UnaryExpr(UnaryOp.NOT, preEffect);
-        Expr edgeEffect = new BinaryExpr(notPreEffect, BinaryOp.AND, effect);
-        effect = new BinaryExpr(effect, BinaryOp.ARROW, edgeEffect);
+//        Expr preEffect = new UnaryExpr(UnaryOp.PRE, effect);
+//        Expr notPreEffect = new UnaryExpr(UnaryOp.NOT, preEffect);
+//        Expr edgeEffect = new BinaryExpr(notPreEffect, BinaryOp.AND, effect);
+//        effect = new BinaryExpr(effect, BinaryOp.ARROW, edgeEffect);
         return new AgreePattern(str, ref, cause, effect, null, effectInterval, TriggerType.EVENT,
                 TriggerType.EVENT);
     }
