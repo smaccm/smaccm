@@ -84,6 +84,7 @@ import com.rockwellcollins.atc.agree.agree.CalenStatement;
 import com.rockwellcollins.atc.agree.agree.ConstStatement;
 import com.rockwellcollins.atc.agree.agree.EqStatement;
 import com.rockwellcollins.atc.agree.agree.EventExpr;
+import com.rockwellcollins.atc.agree.agree.EventStatement;
 import com.rockwellcollins.atc.agree.agree.FloorCast;
 import com.rockwellcollins.atc.agree.agree.FnCallExpr;
 import com.rockwellcollins.atc.agree.agree.FnDefExpr;
@@ -237,6 +238,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
                 timing = getTimingModel(contract.getSpecs());
 
                 outputs.addAll(getEquationVars(contract.getSpecs(), compInst));
+                outputs.addAll(getEventStatementVars(contract.getSpecs(), compInst));
 
                 for (SpecStatement spec : contract.getSpecs()) {
                     if (spec instanceof LatchedStatement) {
@@ -270,6 +272,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
             assertions.addAll(getEquationStatements(contract.getSpecs()));
             assertions.addAll(getPropertyStatements(contract.getSpecs()));
             outputs.addAll(getEquationVars(contract.getSpecs(), compInst));
+            outputs.addAll(getEventStatementVars(contract.getSpecs(), compInst));
             initialConstraint = getInitialConstraint(contract.getSpecs());
 
             addLustreNodes(contract.getSpecs());
@@ -288,6 +291,17 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
         return new AgreeNode(id, inputs, outputs, locals, localEquations, connections, subNodes, assertions,
                 assumptions, guarantees, lemmas, clockConstraint, initialConstraint, clockVar, reference,
                 timing, null, compInst);
+    }
+
+    private List<AgreeVar> getEventStatementVars(EList<SpecStatement> specs,
+            ComponentInstance compInst) {
+        List<AgreeVar> vars = new ArrayList<>();
+        for(SpecStatement spec : specs){
+            if(spec instanceof EventStatement){
+                vars.add(new AgreeVar(((EventStatement) spec).getName(), NamedType.BOOL, spec, compInst));
+            }
+        }
+        return vars;
     }
 
     private void assertReferencedSubcomponentHasAnnex(ComponentInstance compInst, List<AgreeVar> inputs,

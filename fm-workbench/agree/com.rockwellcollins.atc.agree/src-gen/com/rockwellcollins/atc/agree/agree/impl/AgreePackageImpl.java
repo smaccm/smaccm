@@ -26,6 +26,7 @@ import com.rockwellcollins.atc.agree.agree.ConstStatement;
 import com.rockwellcollins.atc.agree.agree.Contract;
 import com.rockwellcollins.atc.agree.agree.EqStatement;
 import com.rockwellcollins.atc.agree.agree.EventExpr;
+import com.rockwellcollins.atc.agree.agree.EventStatement;
 import com.rockwellcollins.atc.agree.agree.Expr;
 import com.rockwellcollins.atc.agree.agree.FloorCast;
 import com.rockwellcollins.atc.agree.agree.FnCallExpr;
@@ -192,6 +193,13 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * @generated
    */
   private EClass eqStatementEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass eventStatementEClass = null;
 
   /**
    * <!-- begin-user-doc -->
@@ -953,6 +961,16 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
   public EReference getEqStatement_Expr()
   {
     return (EReference)eqStatementEClass.getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getEventStatement()
+  {
+    return eventStatementEClass;
   }
 
   /**
@@ -2478,6 +2496,8 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     createEReference(eqStatementEClass, EQ_STATEMENT__LHS);
     createEReference(eqStatementEClass, EQ_STATEMENT__EXPR);
 
+    eventStatementEClass = createEClass(EVENT_STATEMENT);
+
     assignStatementEClass = createEClass(ASSIGN_STATEMENT);
     createEReference(assignStatementEClass, ASSIGN_STATEMENT__ID);
     createEReference(assignStatementEClass, ASSIGN_STATEMENT__EXPR);
@@ -2730,6 +2750,8 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     constStatementEClass.getESuperTypes().add(this.getSpecStatement());
     eqStatementEClass.getESuperTypes().add(theAadl2Package.getElement());
     eqStatementEClass.getESuperTypes().add(this.getSpecStatement());
+    eventStatementEClass.getESuperTypes().add(theAadl2Package.getNamedElement());
+    eventStatementEClass.getESuperTypes().add(this.getSpecStatement());
     assignStatementEClass.getESuperTypes().add(this.getSpecStatement());
     fnDefExprEClass.getESuperTypes().add(theAadl2Package.getNamedElement());
     fnDefExprEClass.getESuperTypes().add(this.getSpecStatement());
@@ -2837,6 +2859,8 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     initEClass(eqStatementEClass, EqStatement.class, "EqStatement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getEqStatement_Lhs(), this.getArg(), null, "lhs", null, 0, -1, EqStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getEqStatement_Expr(), this.getExpr(), null, "expr", null, 0, 1, EqStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+    initEClass(eventStatementEClass, EventStatement.class, "EventStatement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
     initEClass(assignStatementEClass, AssignStatement.class, "AssignStatement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getAssignStatement_Id(), this.getNestedDotID(), null, "id", null, 0, 1, AssignStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

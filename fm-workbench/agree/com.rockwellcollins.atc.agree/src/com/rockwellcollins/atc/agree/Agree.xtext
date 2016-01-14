@@ -11,7 +11,8 @@ NamedElement returns aadl2::NamedElement:
 	| PropertyStatement
 	| ConstStatement
 	| NodeDefExpr
-	| RecordDefExpr;
+	| RecordDefExpr
+	| EventStatement;
 
 Element returns aadl2::Element:
 	Expr
@@ -54,7 +55,8 @@ SpecStatement:
 	| AssignStatement
 	| FnDefExpr
 	| NodeDefExpr
-	| RecordDefExpr;
+	| RecordDefExpr
+	| EventStatement;
 	
 //The following are patterns from the CESAR RSL
 PatternStatement returns PatternStatement:
@@ -120,6 +122,9 @@ ConstStatement:
 EqStatement:
 	'eq' (lhs+=Arg (',' lhs+=Arg)*) ('=' expr=Expr)? ';';
 	
+EventStatement: 
+	'event' name=ID ';' ;
+
 AssignStatement:
 	'assign' id=NestedDotID '=' expr=Expr ';';
 

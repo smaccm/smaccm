@@ -130,6 +130,16 @@ ruleNamedElement returns [EObject current=null]
         $current = $this_RecordDefExpr_5.current;
         afterParserOrEnumRuleCall();
     }
+
+    |
+    { 
+        newCompositeNode(grammarAccess.getNamedElementAccess().getEventStatementParserRuleCall_6()); 
+    }
+    this_EventStatement_6=ruleEventStatement
+    {
+        $current = $this_EventStatement_6.current;
+        afterParserOrEnumRuleCall();
+    }
 )
 ;
 
@@ -854,6 +864,16 @@ ruleSpecStatement returns [EObject current=null]
     this_RecordDefExpr_56=ruleRecordDefExpr
     {
         $current = $this_RecordDefExpr_56.current;
+        afterParserOrEnumRuleCall();
+    }
+
+    |
+    { 
+        newCompositeNode(grammarAccess.getSpecStatementAccess().getEventStatementParserRuleCall_17()); 
+    }
+    this_EventStatement_57=ruleEventStatement
+    {
+        $current = $this_EventStatement_57.current;
         afterParserOrEnumRuleCall();
     }
 )
@@ -2627,6 +2647,55 @@ ruleEqStatement returns [EObject current=null]
 	otherlv_6=Semicolon
     {
     	newLeafNode(otherlv_6, grammarAccess.getEqStatementAccess().getSemicolonKeyword_3());
+    }
+)
+;
+
+
+
+
+
+// Entry rule entryRuleEventStatement
+entryRuleEventStatement returns [EObject current=null]
+	:
+	{ newCompositeNode(grammarAccess.getEventStatementRule()); }
+	 iv_ruleEventStatement=ruleEventStatement 
+	 { $current=$iv_ruleEventStatement.current; } 
+	 EOF 
+;
+
+// Rule EventStatement
+ruleEventStatement returns [EObject current=null] 
+    @init { enterRule(); 
+    }
+    @after { leaveRule(); }:
+(
+	otherlv_0=Event
+    {
+    	newLeafNode(otherlv_0, grammarAccess.getEventStatementAccess().getEventKeyword_0());
+    }
+(
+(
+		lv_name_1_0=RULE_ID
+		{
+			newLeafNode(lv_name_1_0, grammarAccess.getEventStatementAccess().getNameIDTerminalRuleCall_1_0()); 
+		}
+		{
+	        if ($current==null) {
+	            $current = createModelElement(grammarAccess.getEventStatementRule());
+	        }
+       		setWithLastConsumed(
+       			$current, 
+       			"name",
+        		lv_name_1_0, 
+        		"ID");
+	    }
+
+)
+)
+	otherlv_2=Semicolon
+    {
+    	newLeafNode(otherlv_2, grammarAccess.getEventStatementAccess().getSemicolonKeyword_2());
     }
 )
 ;

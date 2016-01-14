@@ -193,8 +193,7 @@ public class AgreePatternTranslator {
             builder.addAssertion(timeConstrStatement);
             builder.addEventTime(effectTimeIntervalEndId);
 
-            // the final property is that time is never the same as the end of
-            // the effect interval
+            //if we ever reach the end of the time interval, it means the effect did not occur
             return new BinaryExpr(timeExpr, BinaryOp.NOTEQUAL, effectTimeIntervalEndId);
         } else {
             builder.addInput(effectTimeRangeVar);
@@ -207,7 +206,7 @@ public class AgreePatternTranslator {
             builder.addEventTime(timeEffectId);
             // make the equation that triggers the event at the correct ime
             Expr timeEqualsPreTime = new BinaryExpr(timeExpr, BinaryOp.EQUAL, timeEffectId);
-            Expr impliesEffect = new BinaryExpr(timeEqualsPreTime, BinaryOp.IMPLIES, effectId);
+            Expr impliesEffect = new BinaryExpr(timeEqualsPreTime, BinaryOp.EQUAL, effectId);
             return impliesEffect;
         }
 

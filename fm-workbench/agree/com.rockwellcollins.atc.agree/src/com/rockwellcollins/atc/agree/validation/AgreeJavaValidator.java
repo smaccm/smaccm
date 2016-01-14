@@ -67,6 +67,7 @@ import com.rockwellcollins.atc.agree.agree.ConnectionStatement;
 import com.rockwellcollins.atc.agree.agree.ConstStatement;
 import com.rockwellcollins.atc.agree.agree.EqStatement;
 import com.rockwellcollins.atc.agree.agree.EventExpr;
+import com.rockwellcollins.atc.agree.agree.EventStatement;
 import com.rockwellcollins.atc.agree.agree.Expr;
 import com.rockwellcollins.atc.agree.agree.FloorCast;
 import com.rockwellcollins.atc.agree.agree.FnCallExpr;
@@ -485,9 +486,43 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 	}
 	
 	@Check(CheckType.FAST)
+	public void checkEventStatement(EventStatement event){
+	    
+	}
+	
+	
+	private void verifyIsEvent(Expr expr){
+	    if(expr instanceof EventExpr){
+	        return;
+	    }
+	    if(expr instanceof NestedDotID){
+	        NamedElement base = ((NestedDotID) expr).getBase();
+	        if(base instanceof EventStatement){
+	            return;
+	        }
+	    }
+	    error(expr, "Expression must be an event (not an arbitrary variable)");
+	}
+	
+	@Check(CheckType.FAST)
 	public void checkWhenHoldsStatement(WhenHoldsStatement when){
 	    Expr condition = when.getCondition();
 	    Expr event = when.getEvent();
+	    TimeInterval condInterval = when.getConditionInterval();
+	    
+	    verifyIsEvent(event);
+	    
+	    if(condInterval != null){
+	        Expr lowExpr = condInterval.getLow();
+	        if (lowExpr instanceof RealLitExpr) {
+                RealLitExpr realExpr = (RealLitExpr) lowExpr;
+                if(!realExpr.getVal().equals("0.0")){
+                    error(lowExpr, "The lower bound of this interval must be zero");
+                }
+            }
+	    }else{
+	        error(when, "Statement most of a cause interval");
+	    }
 	    
         AgreeType type = getAgreeType(condition);
 	    if(!matches(BOOL, type)){
@@ -506,6 +541,8 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
         Expr condition = when.getCondition();
         Expr event = when.getEvent();
         Expr times = when.getTimes();
+        
+        verifyIsEvent(event);
         
         AgreeType type = getAgreeType(condition);
         if(!matches(BOOL, type)){
@@ -531,6 +568,8 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 	    Expr cause = whenever.getCause();
 	    Expr effect = whenever.getEffect();
 	    
+	    verifyIsEvent(effect);
+	    
 	    AgreeType type = getAgreeType(cause);
 	    if(!matches(BOOL, type)){
 	        error(cause, "The cause of the 'whenever' statement is of type '"+type+"' "
@@ -547,6 +586,8 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
     public void checkWheneverBecomesTrueStatement(WheneverBecomesTrueStatement whenever){
         Expr cause = whenever.getCause();
         Expr effect = whenever.getEffect();
+        
+        verifyIsEvent(effect);
         
         AgreeType type = getAgreeType(cause);
         if(!matches(BOOL, type)){
@@ -582,6 +623,9 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
         Expr cause = whenever.getCause();
         Expr lhs = whenever.getLhs();
         Expr rhs = whenever.getRhs();
+        
+        verifyIsEvent(lhs);
+        verifyIsEvent(rhs);
 
         AgreeType type = getAgreeType(cause);
         if (!matches(BOOL, type)) {
@@ -1756,6 +1800,8 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 			return getAgreeType((ComponentClassifier) namedEl);
 		} else if (namedEl instanceof DataImplementation) {
 			return getAgreeType((DataImplementation) namedEl);
+		} else if (namedEl instanceof EventStatement){
+		    return BOOL;
 		}
 
 		return ERROR;

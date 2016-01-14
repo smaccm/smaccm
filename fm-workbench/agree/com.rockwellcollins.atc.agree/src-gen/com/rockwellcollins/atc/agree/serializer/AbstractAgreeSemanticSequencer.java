@@ -23,6 +23,7 @@ import com.rockwellcollins.atc.agree.agree.ConnectionStatement;
 import com.rockwellcollins.atc.agree.agree.ConstStatement;
 import com.rockwellcollins.atc.agree.agree.EqStatement;
 import com.rockwellcollins.atc.agree.agree.EventExpr;
+import com.rockwellcollins.atc.agree.agree.EventStatement;
 import com.rockwellcollins.atc.agree.agree.FloorCast;
 import com.rockwellcollins.atc.agree.agree.FnCallExpr;
 import com.rockwellcollins.atc.agree.agree.FnDefExpr;
@@ -253,6 +254,9 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 			case AgreePackage.EVENT_EXPR:
 				sequence_TermExpr(context, (EventExpr) semanticObject); 
 				return; 
+			case AgreePackage.EVENT_STATEMENT:
+				sequence_EventStatement(context, (EventStatement) semanticObject); 
+				return; 
 			case AgreePackage.FLOOR_CAST:
 				sequence_TermExpr(context, (FloorCast) semanticObject); 
 				return; 
@@ -478,6 +482,15 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     (lhs+=Arg lhs+=Arg* expr=Expr?)
 	 */
 	protected void sequence_EqStatement(EObject context, EqStatement semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Constraint:
+	 *     name=ID
+	 */
+	protected void sequence_EventStatement(EObject context, EventStatement semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
