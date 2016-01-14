@@ -57,6 +57,7 @@ import com.rockwellcollins.atc.agree.codegen.ast.expr.MATLABTypeCastExpr;
 import com.rockwellcollins.atc.agree.codegen.ast.expr.MATLABTypeInitExpr;
 import com.rockwellcollins.atc.agree.codegen.ast.expr.MATLABUnaryExpr;
 import com.rockwellcollins.atc.agree.codegen.ast.expr.MATLABUnaryOp;
+import com.rockwellcollins.atc.agree.codegen.util.UniqueID;
 
 public class LustreToMATLABExprVisitor implements ExprVisitor<MATLABExpr> {
 
@@ -66,6 +67,7 @@ public class LustreToMATLABExprVisitor implements ExprVisitor<MATLABExpr> {
     public HashMap<String, MATLABType> localVarTypeMap = new HashMap<String, MATLABType>();
     public List<MATLABPersistentVarInit> persistentVarInits = new ArrayList<>();
     public List<MATLABLocalBusVarInit> localBusVarInits = new ArrayList<>();
+    public HashMap<UniqueID, UniqueID> idMap = new HashMap<UniqueID, UniqueID>();
     private int localVarIndex = 0;
 	
 	public LustreToMATLABExprVisitor() {
@@ -119,7 +121,7 @@ public class LustreToMATLABExprVisitor implements ExprVisitor<MATLABExpr> {
 						persistentVarMap.put(firstTimeVar, new MATLABBoolExpr(false));
 						persistentVarInits.add(new MATLABFirstTimeVarInit(firstTimeVar));
 					}
-					return new MATLABArrowFunctionCall(functionMap.get(functionName).name,"first_time", leftExpr,rightExpr);
+					return new MATLABArrowFunctionCall(functionMap.get(functionName).name, firstTimeVar, leftExpr, rightExpr);
 				}
 				else if(opName.equals("EQUAL")){
 					return new MATLABBinaryFunctionCall("isequal",leftExpr,rightExpr);
@@ -151,7 +153,7 @@ public class LustreToMATLABExprVisitor implements ExprVisitor<MATLABExpr> {
 
 	@Override
 	public MATLABExpr visit(IdExpr e) {
-		return new MATLABIdExpr(updateName(e.id));
+		return new MATLABIdExpr(updateName(e.id, ""));
 	}
 
 	@Override
@@ -180,15 +182,16 @@ public class LustreToMATLABExprVisitor implements ExprVisitor<MATLABExpr> {
 
 	@Override
 	public MATLABExpr visit(RecordAccessExpr e) {
-		MATLABIdExpr elementExpr = new MATLABIdExpr(updateName(e.field));
-		return new MATLABBusElementExpr(e.record.accept(this), elementExpr);
+		MATLABExpr busExpr = e.record.accept(this);
+		MATLABIdExpr elementExpr = new MATLABIdExpr(updateName(e.field, busExpr.toString()));
+		return new MATLABBusElementExpr(busExpr, elementExpr);
 	}
 
 	@Override
 	public MATLABExpr visit(RecordExpr e) {
 		//Create a local variable with the record type id as prefix
 		localVarIndex++;
-		String localVarName = e.id + "_var"+localVarIndex;
+		String localVarName = updateName(e.id + "_var"+localVarIndex,"");
 		//add assignment to assign the fields of the variable
 		//to the value specified in the RecordExpr
 		SortedMap<String, MATLABExpr> fields = new TreeMap<>(new StringNaturalOrdering());
@@ -199,7 +202,7 @@ public class LustreToMATLABExprVisitor implements ExprVisitor<MATLABExpr> {
 			//conduct explicit type cast if a field value is a constant of double type or int type 
 			MATLABTypeCastExprVisitor typeCastVisitor = new MATLABTypeCastExprVisitor();
 			MATLABExpr fieldExpr = typeCastVisitor.visit(entry.getValue().accept(this));
-			fields.put(entry.getKey(), fieldExpr);
+			fields.put(updateName(entry.getKey(),e.id), fieldExpr);
 		}
 		
 		localBusVarInits.add(new MATLABLocalBusVarInit(localVarName, null, fields));
@@ -217,17 +220,17 @@ public class LustreToMATLABExprVisitor implements ExprVisitor<MATLABExpr> {
 		//conduct explicit type cast if a field value is a constant of double type or int type 
 		MATLABTypeCastExprVisitor typeCastVisitor = new MATLABTypeCastExprVisitor();
 		MATLABExpr fieldExpr = typeCastVisitor.visit(e.value.accept(this));
-		fields.put(e.field, fieldExpr);
+		fields.put(updateName(e.field,recordIdExpr.id), fieldExpr);
 		
 		String originalVar = null;
 		if(e.record instanceof IdExpr){
-			originalVar = e.record.toString();
+			originalVar = updateName(e.record.toString(),"");
 		}
 		else{
-			originalVar = recordIdExpr.id.split("_var")[0]+"_var"+localVarIndex;
+			originalVar = updateName(recordIdExpr.id.split("_var")[0]+"_var"+localVarIndex,"");
 		}
 		localVarIndex++;
-		String newVar = recordIdExpr.id.split("_var")[0]+"_var"+localVarIndex;
+		String newVar = updateName(recordIdExpr.id.split("_var")[0]+"_var"+localVarIndex,"");
 		localBusVarInits.add(new MATLABLocalBusVarInit(originalVar, newVar, fields));
 		//In the expression that uses the RecordUpdateExpr, just reference the variable
 		return new MATLABIdExpr(newVar);
@@ -249,7 +252,7 @@ public class LustreToMATLABExprVisitor implements ExprVisitor<MATLABExpr> {
 					//function call for the following AGREE unary operator
 					//PRE ("pre");
 					String varName = ((MATLABIdExpr) expr).id;
-					String preVarName = updateName("pre_"+varName);
+					String preVarName = updateName("pre_"+varName,"");
 					//no duplicate addition
 					if(!persistentVarMap.containsKey(preVarName)){
 						//add preVarInit
@@ -295,16 +298,39 @@ public class LustreToMATLABExprVisitor implements ExprVisitor<MATLABExpr> {
 		return expr.accept(this);
 	}
 	
-	public String updateName(String name){
-		//remove leading _ 
-		//replace ~ with _
-		name = name.replaceAll("~", "_").replaceAll("^_+", "");
-		//check if the name is an input or a local
-		//if local, replace . with _
-		if(!inputSet.contains(name)){
-			name = name.replaceAll("\\.","_");
+	public String updateName(String name, String recordId){
+		String updatedName = null;
+		String nameToCheck = null;
+		int varIndex = 0;
+		UniqueID originalNameId = new UniqueID(name,recordId);
+		//first check if the original name and recordId tuple is already in the keys of the map
+		//if yes, retrieve the updated name from its value
+		if(idMap.containsKey(originalNameId)){
+			updatedName = idMap.get(originalNameId).id;
 		}
-		return name;
+		//if not, update the name
+		else{
+			//remove leading _ 
+			//replace ~ with _
+			updatedName = name.replaceAll("~", "_").replaceAll("^_+", "");
+			//check if the name is an input or a local
+			//if local, replace . with _
+			if(!inputSet.contains(name)){
+				updatedName = updatedName.replaceAll("\\.","_");
+			}
+			nameToCheck = updatedName;
+			//check if the updated name and recordId tuple is in the map values
+			//if yes, update the name further so it's unique from existing values
+			while(idMap.containsValue(new UniqueID(nameToCheck, recordId))){
+				varIndex++;
+				nameToCheck = updatedName + "_"+varIndex;
+			}
+			updatedName = nameToCheck;
+			//add a new entry into the map
+			idMap.put(originalNameId, new UniqueID(updatedName, recordId));
+		}
+		
+		return updatedName;
 	}
 	
 	private void addFunctions(){
@@ -314,6 +340,11 @@ public class LustreToMATLABExprVisitor implements ExprVisitor<MATLABExpr> {
 		functionMap.put("arrowFunction", new MATLABArrowFunction());
 		functionMap.put("ifFunction", new MATLABIfFunction());
 		functionMap.put("impliesFunction", new MATLABImpliesFunction());
+		//add the names of the functions and first_time variable to the idMap
+		updateName("arrowFunction","");
+		updateName("first_time","");
+		updateName("ifFunction","");
+		updateName("impliesFunction","");	
 	}
 	
 }

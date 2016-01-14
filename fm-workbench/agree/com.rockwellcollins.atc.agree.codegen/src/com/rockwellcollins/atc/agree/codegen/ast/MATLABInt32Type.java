@@ -23,4 +23,8 @@ public class MATLABInt32Type extends MATLABType {
 		return defaultValue.toString();
 	}
 	
+	public String toString() {
+		return name;
+	}
+	
 }

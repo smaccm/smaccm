@@ -44,7 +44,7 @@ public class LustreToMATLABTranslator {
     	//add input variables
 		for (VarDecl inputVar : lustreNode.inputs){
 			//get inputs
-			inputs.add(new MATLABIdExpr(exprVisitor.updateName(inputVar.id)));
+			inputs.add(new MATLABIdExpr(exprVisitor.updateName(inputVar.id,"")));
 			//translate the Lustre expression to MATLAB expression
 			//add input Ids to inputList of the exprVisitor 
 			//to help identify local variables
@@ -54,14 +54,14 @@ public class LustreToMATLABTranslator {
 		//add local variable and their types
 		for (VarDecl localVar : lustreNode.locals){
 			//get local var Name and Type
-			exprVisitor.localVarTypeMap.put(exprVisitor.updateName(localVar.id), localVar.type.accept(typeVisitor));	
+			exprVisitor.localVarTypeMap.put(exprVisitor.updateName(localVar.id,""), localVar.type.accept(typeVisitor));	
 		}
 		
 		//translate equations to assignments
 		if (!lustreNode.equations.isEmpty()) {
 			for (Equation equation : lustreNode.equations) {
 				//get the variable to assign
-				String varId = exprVisitor.updateName(equation.lhs.get(0).id);
+				String varId = exprVisitor.updateName(equation.lhs.get(0).id,"");
 				MATLABIdExpr varToAssign = new MATLABIdExpr(varId);
 				//get the type for the local variable
 				//MATLABType type = exprVisitor.localVarTypeMap.get(varId);
@@ -118,15 +118,12 @@ public class LustreToMATLABTranslator {
 		
 		//translate properties
 		for (String propertyStr : lustreNode.properties) {
-			propertyStr = exprVisitor.updateName(propertyStr);
+			propertyStr = exprVisitor.updateName(propertyStr,"");
 			MATLABProperty property = new MATLABProperty(propertyStr);
 			statements.add(property);
 		}
 		
 		//add definitions for the functions that have been called
-		//TODO
-		//update the names of the functions included in matlabFunction
-    	//to make sure they are unique, and the function names to the idList 
 		for(Map.Entry<String, MATLABFunction> functionEntry: exprVisitor.functionMap.entrySet()){
 			MATLABFunction function = functionEntry.getValue();
 			if(function.functionCalled){
