@@ -2,10 +2,10 @@ package com.rockwellcollins.atc.agree.codegen.ast;
 
 import com.rockwellcollins.atc.agree.codegen.visitors.MATLABTypeVisitor;
 
-public class MATLABInt32Type extends MATLABType {
+public class MATLABUInt8Type extends MATLABType {
 
 	public final int defaultValue = 0;
-	public final String name = "int32";
+	public final String name = "uint8";
 	
 	@Override
 	public <T> T accept(MATLABTypeVisitor<T> visitor) {
@@ -20,5 +20,5 @@ public class MATLABInt32Type extends MATLABType {
 	public String toString() {
 		return name;
 	}
-	
+
 }

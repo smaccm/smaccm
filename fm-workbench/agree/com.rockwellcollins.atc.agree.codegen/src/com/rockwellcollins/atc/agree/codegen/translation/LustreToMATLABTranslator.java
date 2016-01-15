@@ -6,12 +6,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.eclipse.jface.preference.IPreferenceStore;
+
 import jkind.lustre.Equation;
 import jkind.lustre.Expr;
 import jkind.lustre.Node;
 import jkind.lustre.VarDecl;
 
+import com.rockwellcollins.atc.agree.codegen.Activator;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeProgram;
+import com.rockwellcollins.atc.agree.codegen.preferences.PreferenceConstants;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABAssumption;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABAssignment;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABFunction;
@@ -28,8 +32,14 @@ import com.rockwellcollins.atc.agree.codegen.visitors.LustreToMATLABTypeVisitor;
 import com.rockwellcollins.atc.agree.codegen.visitors.MATLABTypeCastExprVisitor;
 
 public class LustreToMATLABTranslator {
-
+	public static String intTypeStr = null;
+	public static String realTypeStr = null;
+	
     public static MATLABPrimaryFunction translate(Node lustreNode, AgreeProgram agreeProgram){
+        IPreferenceStore prefs = Activator.getDefault().getPreferenceStore();
+        intTypeStr = prefs.getString(PreferenceConstants.PREF_INT);
+        realTypeStr = prefs.getString(PreferenceConstants.PREF_REAL);
+    	
         List<MATLABIdExpr> inputs = new ArrayList<>();
         List<MATLABStatement> statements = new ArrayList<>();
         List<MATLABFunction> functions = new ArrayList<>();

@@ -94,4 +94,20 @@
          </with>
       </definition>
    </extension>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            category="com.rockwellcollins.atc.agree.Agree"
+            class="com.rockwellcollins.atc.agree.codegen.preferences.MATLABCodeGenPreferencePage"
+            id="com.rockwellcollins.atc.agree.codegen.preferences.MATLABCodeGenPreferencePage"
+            name="Code Generation">
+            <keywordReference id="com.rockwellcollins.atc.agree.ui.keyword_Agree"/>
+      </page>
+   </extension>
+   <extension
+         point="org.eclipse.core.runtime.preferences">
+      <initializer
+            class="com.rockwellcollins.atc.agree.codegen.preferences.PreferenceInitializer">
+      </initializer>
+   </extension>
 </plugin>

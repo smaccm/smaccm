@@ -2,11 +2,15 @@ package com.rockwellcollins.atc.agree.codegen.ast;
 
 import com.rockwellcollins.atc.agree.codegen.visitors.MATLABTypeVisitor;
 
-public class MATLABInt32Type extends MATLABType {
+public class MATLABSingleType extends MATLABType {
 
-	public final int defaultValue = 0;
-	public final String name = "int32";
+	public final float defaultValue;
+	public final String name = "single";
 	
+	public MATLABSingleType() {
+		this.defaultValue = 0;
+	}
+
 	@Override
 	public <T> T accept(MATLABTypeVisitor<T> visitor) {
 		return visitor.visit(this);
@@ -14,11 +18,11 @@ public class MATLABInt32Type extends MATLABType {
 
 	@Override
 	public String getValueStr() {
-		return Integer.toString(defaultValue);
+		return Float.toString(defaultValue);
 	}
 	
 	public String toString() {
 		return name;
 	}
-	
+
 }
