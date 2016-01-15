@@ -8,7 +8,7 @@ import com.rockwellcollins.atc.agree.agree.TimeInterval;
 
 import jkind.lustre.Expr;
 
-public class AgreeTimesPattern extends AgreePattern{
+public class AgreeTimesPattern extends AgreeCauseEffectPattern{
 
     public final BigInteger causeTimes;
     public final BigInteger effectTimes;

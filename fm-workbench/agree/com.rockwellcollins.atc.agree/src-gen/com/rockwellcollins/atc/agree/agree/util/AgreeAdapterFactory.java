@@ -116,6 +116,11 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
         return createWheneverStatementAdapter();
       }
       @Override
+      public Adapter caseRealTimeStatement(RealTimeStatement object)
+      {
+        return createRealTimeStatementAdapter();
+      }
+      @Override
       public Adapter caseTimeInterval(TimeInterval object)
       {
         return createTimeIntervalAdapter();
@@ -299,6 +304,11 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
       public Adapter caseWheneverImpliesStatement(WheneverImpliesStatement object)
       {
         return createWheneverImpliesStatementAdapter();
+      }
+      @Override
+      public Adapter casePeriodicStatement(PeriodicStatement object)
+      {
+        return createPeriodicStatementAdapter();
       }
       @Override
       public Adapter caseClosedTimeInterval(ClosedTimeInterval object)
@@ -593,6 +603,21 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
    * @generated
    */
   public Adapter createWheneverStatementAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.RealTimeStatement <em>Real Time Statement</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see com.rockwellcollins.atc.agree.agree.RealTimeStatement
+   * @generated
+   */
+  public Adapter createRealTimeStatementAdapter()
   {
     return null;
   }
@@ -1148,6 +1173,21 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
    * @generated
    */
   public Adapter createWheneverImpliesStatementAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.PeriodicStatement <em>Periodic Statement</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see com.rockwellcollins.atc.agree.agree.PeriodicStatement
+   * @generated
+   */
+  public Adapter createPeriodicStatementAdapter()
   {
     return null;
   }

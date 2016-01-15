@@ -19,6 +19,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="interval" eType="#//TimeInterval"
         containment="true"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="RealTimeStatement" eSuperTypes="#//PatternStatement"/>
   <eClassifiers xsi:type="ecore:EClass" name="TimeInterval">
     <eStructuralFeatures xsi:type="ecore:EReference" name="low" eType="#//Expr" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="high" eType="#//Expr" containment="true"/>
@@ -169,6 +170,14 @@
   <eClassifiers xsi:type="ecore:EClass" name="WheneverImpliesStatement" eSuperTypes="#//WheneverStatement">
     <eStructuralFeatures xsi:type="ecore:EReference" name="lhs" eType="#//Expr" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="rhs" eType="#//Expr" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="PeriodicStatement" eSuperTypes="#//RealTimeStatement">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="event" eType="#//Expr"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="period" eType="#//Expr"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="jitter" eType="#//Expr"
+        containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ClosedTimeInterval" eSuperTypes="#//TimeInterval"/>
   <eClassifiers xsi:type="ecore:EClass" name="OpenLeftTimeInterval" eSuperTypes="#//TimeInterval"/>

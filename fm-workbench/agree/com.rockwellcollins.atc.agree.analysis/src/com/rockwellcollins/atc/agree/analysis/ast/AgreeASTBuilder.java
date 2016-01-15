@@ -131,7 +131,7 @@ import com.rockwellcollins.atc.agree.analysis.extentions.CexExtractor;
 import com.rockwellcollins.atc.agree.analysis.extentions.CexExtractorRegistry;
 import com.rockwellcollins.atc.agree.analysis.extentions.ExtensionRegistry;
 import com.rockwellcollins.atc.agree.analysis.lustre.visitors.IdGatherer;
-import com.rockwellcollins.atc.agree.analysis.realtime.AgreePattern;
+import com.rockwellcollins.atc.agree.analysis.realtime.AgreeCauseEffectPattern;
 import com.rockwellcollins.atc.agree.analysis.realtime.AgreePatternBuilder;
 import com.rockwellcollins.atc.agree.analysis.realtime.AgreePatternTranslator;
 
@@ -349,8 +349,8 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
     private Set<String> gatherStatementIds(AgreeStatement statement) {
         IdGatherer visitor = new IdGatherer();
         Set<String> ids = new HashSet<>();
-        if (statement instanceof AgreePattern) {
-            AgreePattern pattern = (AgreePattern) statement;
+        if (statement instanceof AgreeCauseEffectPattern) {
+            AgreeCauseEffectPattern pattern = (AgreeCauseEffectPattern) statement;
             ids.addAll(pattern.cause.accept(visitor));
             ids.addAll(pattern.effect.accept(visitor));
         }else{

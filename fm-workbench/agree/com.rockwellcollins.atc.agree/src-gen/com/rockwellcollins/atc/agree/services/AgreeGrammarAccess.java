@@ -581,21 +581,16 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cExprExprParserRuleCall_1_2_0 = (RuleCall)cExprAssignment_1_2.eContents().get(0);
 		private final Keyword cSemicolonKeyword_1_3 = (Keyword)cGroup_1.eContents().get(3);
 		private final RuleCall cWhenStatementParserRuleCall_2 = (RuleCall)cAlternatives.eContents().get(2);
+		private final RuleCall cRealTimeStatementParserRuleCall_3 = (RuleCall)cAlternatives.eContents().get(3);
 		
 		////The following are patterns from the CESAR RSL
-		//PatternStatement: //Patterns 1,3,4, and 7
-		//	WheneverStatement //Pattern 5
-		//	//Pattern 6
-		//	| {AlwaysStatement} "always" expr=Expr ";" | WhenStatement;
+		//PatternStatement:
+		//	WheneverStatement | {AlwaysStatement} "always" expr=Expr ";" | WhenStatement | RealTimeStatement;
 		@Override public ParserRule getRule() { return rule; }
 
-		////Patterns 1,3,4, and 7
-		//WheneverStatement //Pattern 5
-		////Pattern 6
-		//| {AlwaysStatement} "always" expr=Expr ";" | WhenStatement
+		//WheneverStatement | {AlwaysStatement} "always" expr=Expr ";" | WhenStatement | RealTimeStatement
 		public Alternatives getAlternatives() { return cAlternatives; }
 
-		////Patterns 1,3,4, and 7
 		//WheneverStatement
 		public RuleCall getWheneverStatementParserRuleCall_0() { return cWheneverStatementParserRuleCall_0; }
 
@@ -619,6 +614,9 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 
 		//WhenStatement
 		public RuleCall getWhenStatementParserRuleCall_2() { return cWhenStatementParserRuleCall_2; }
+
+		//RealTimeStatement
+		public RuleCall getRealTimeStatementParserRuleCall_3() { return cRealTimeStatementParserRuleCall_3; }
 	}
 
 	public class WhenStatementElements extends AbstractParserRuleElementFinder {
@@ -1068,6 +1066,78 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 
 		//TimeInterval
 		public RuleCall getIntervalTimeIntervalParserRuleCall_3_2_1_0() { return cIntervalTimeIntervalParserRuleCall_3_2_1_0; }
+	}
+
+	public class RealTimeStatementElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "RealTimeStatement");
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final Group cGroup_0 = (Group)cGroup.eContents().get(0);
+		private final Group cGroup_0_0 = (Group)cGroup_0.eContents().get(0);
+		private final Action cPeriodicStatementAction_0_0_0 = (Action)cGroup_0_0.eContents().get(0);
+		private final Keyword cConditionKeyword_0_0_1 = (Keyword)cGroup_0_0.eContents().get(1);
+		private final Assignment cEventAssignment_0_0_2 = (Assignment)cGroup_0_0.eContents().get(2);
+		private final RuleCall cEventExprParserRuleCall_0_0_2_0 = (RuleCall)cEventAssignment_0_0_2.eContents().get(0);
+		private final Keyword cOccursKeyword_0_0_3 = (Keyword)cGroup_0_0.eContents().get(3);
+		private final Keyword cEachKeyword_0_0_4 = (Keyword)cGroup_0_0.eContents().get(4);
+		private final Assignment cPeriodAssignment_1 = (Assignment)cGroup.eContents().get(1);
+		private final RuleCall cPeriodExprParserRuleCall_1_0 = (RuleCall)cPeriodAssignment_1.eContents().get(0);
+		private final Group cGroup_2 = (Group)cGroup.eContents().get(2);
+		private final Keyword cWithKeyword_2_0 = (Keyword)cGroup_2.eContents().get(0);
+		private final Keyword cJitterKeyword_2_1 = (Keyword)cGroup_2.eContents().get(1);
+		private final Assignment cJitterAssignment_2_2 = (Assignment)cGroup_2.eContents().get(2);
+		private final RuleCall cJitterExprParserRuleCall_2_2_0 = (RuleCall)cJitterAssignment_2_2.eContents().get(0);
+		
+		//RealTimeStatement:
+		//	=> ({PeriodicStatement} "condition" event=Expr "occurs" "each") period=Expr ("with" "jitter" jitter=Expr)?;
+		@Override public ParserRule getRule() { return rule; }
+
+		//=> ({PeriodicStatement} "condition" event=Expr "occurs" "each") period=Expr ("with" "jitter" jitter=Expr)?
+		public Group getGroup() { return cGroup; }
+
+		//=> ({PeriodicStatement} "condition" event=Expr "occurs" "each")
+		public Group getGroup_0() { return cGroup_0; }
+
+		//{PeriodicStatement} "condition" event=Expr "occurs" "each"
+		public Group getGroup_0_0() { return cGroup_0_0; }
+
+		//{PeriodicStatement}
+		public Action getPeriodicStatementAction_0_0_0() { return cPeriodicStatementAction_0_0_0; }
+
+		//"condition"
+		public Keyword getConditionKeyword_0_0_1() { return cConditionKeyword_0_0_1; }
+
+		//event=Expr
+		public Assignment getEventAssignment_0_0_2() { return cEventAssignment_0_0_2; }
+
+		//Expr
+		public RuleCall getEventExprParserRuleCall_0_0_2_0() { return cEventExprParserRuleCall_0_0_2_0; }
+
+		//"occurs"
+		public Keyword getOccursKeyword_0_0_3() { return cOccursKeyword_0_0_3; }
+
+		//"each"
+		public Keyword getEachKeyword_0_0_4() { return cEachKeyword_0_0_4; }
+
+		//period=Expr
+		public Assignment getPeriodAssignment_1() { return cPeriodAssignment_1; }
+
+		//Expr
+		public RuleCall getPeriodExprParserRuleCall_1_0() { return cPeriodExprParserRuleCall_1_0; }
+
+		//("with" "jitter" jitter=Expr)?
+		public Group getGroup_2() { return cGroup_2; }
+
+		//"with"
+		public Keyword getWithKeyword_2_0() { return cWithKeyword_2_0; }
+
+		//"jitter"
+		public Keyword getJitterKeyword_2_1() { return cJitterKeyword_2_1; }
+
+		//jitter=Expr
+		public Assignment getJitterAssignment_2_2() { return cJitterAssignment_2_2; }
+
+		//Expr
+		public RuleCall getJitterExprParserRuleCall_2_2_0() { return cJitterExprParserRuleCall_2_2_0; }
 	}
 
 	public class TimeIntervalElements extends AbstractParserRuleElementFinder {
@@ -3693,6 +3763,7 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 	private final PatternStatementElements pPatternStatement;
 	private final WhenStatementElements pWhenStatement;
 	private final WheneverStatementElements pWheneverStatement;
+	private final RealTimeStatementElements pRealTimeStatement;
 	private final TimeIntervalElements pTimeInterval;
 	private final SynchStatementElements pSynchStatement;
 	private final OrderStatementElements pOrderStatement;
@@ -3751,6 +3822,7 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		this.pPatternStatement = new PatternStatementElements();
 		this.pWhenStatement = new WhenStatementElements();
 		this.pWheneverStatement = new WheneverStatementElements();
+		this.pRealTimeStatement = new RealTimeStatementElements();
 		this.pTimeInterval = new TimeIntervalElements();
 		this.pSynchStatement = new SynchStatementElements();
 		this.pOrderStatement = new OrderStatementElements();
@@ -3904,10 +3976,8 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 	}
 
 	////The following are patterns from the CESAR RSL
-	//PatternStatement: //Patterns 1,3,4, and 7
-	//	WheneverStatement //Pattern 5
-	//	//Pattern 6
-	//	| {AlwaysStatement} "always" expr=Expr ";" | WhenStatement;
+	//PatternStatement:
+	//	WheneverStatement | {AlwaysStatement} "always" expr=Expr ";" | WhenStatement | RealTimeStatement;
 	public PatternStatementElements getPatternStatementAccess() {
 		return pPatternStatement;
 	}
@@ -3940,6 +4010,16 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 	
 	public ParserRule getWheneverStatementRule() {
 		return getWheneverStatementAccess().getRule();
+	}
+
+	//RealTimeStatement:
+	//	=> ({PeriodicStatement} "condition" event=Expr "occurs" "each") period=Expr ("with" "jitter" jitter=Expr)?;
+	public RealTimeStatementElements getRealTimeStatementAccess() {
+		return pRealTimeStatement;
+	}
+	
+	public ParserRule getRealTimeStatementRule() {
+		return getRealTimeStatementAccess().getRule();
 	}
 
 	//TimeInterval:

@@ -113,6 +113,10 @@ public class AgreeParser extends AbstractPartialContentAssistParser {
 					put(grammarAccess.getWheneverStatementAccess().getGroup_3_0(), "rule__WheneverStatement__Group_3_0__0");
 					put(grammarAccess.getWheneverStatementAccess().getGroup_3_0_0(), "rule__WheneverStatement__Group_3_0_0__0");
 					put(grammarAccess.getWheneverStatementAccess().getGroup_3_2(), "rule__WheneverStatement__Group_3_2__0");
+					put(grammarAccess.getRealTimeStatementAccess().getGroup(), "rule__RealTimeStatement__Group__0");
+					put(grammarAccess.getRealTimeStatementAccess().getGroup_0(), "rule__RealTimeStatement__Group_0__0");
+					put(grammarAccess.getRealTimeStatementAccess().getGroup_0_0(), "rule__RealTimeStatement__Group_0_0__0");
+					put(grammarAccess.getRealTimeStatementAccess().getGroup_2(), "rule__RealTimeStatement__Group_2__0");
 					put(grammarAccess.getTimeIntervalAccess().getGroup_0(), "rule__TimeInterval__Group_0__0");
 					put(grammarAccess.getTimeIntervalAccess().getGroup_0_0(), "rule__TimeInterval__Group_0_0__0");
 					put(grammarAccess.getTimeIntervalAccess().getGroup_1(), "rule__TimeInterval__Group_1__0");
@@ -315,6 +319,9 @@ public class AgreeParser extends AbstractPartialContentAssistParser {
 					put(grammarAccess.getWheneverStatementAccess().getLhsAssignment_3_0_0_4(), "rule__WheneverStatement__LhsAssignment_3_0_0_4");
 					put(grammarAccess.getWheneverStatementAccess().getRhsAssignment_3_1(), "rule__WheneverStatement__RhsAssignment_3_1");
 					put(grammarAccess.getWheneverStatementAccess().getIntervalAssignment_3_2_1(), "rule__WheneverStatement__IntervalAssignment_3_2_1");
+					put(grammarAccess.getRealTimeStatementAccess().getEventAssignment_0_0_2(), "rule__RealTimeStatement__EventAssignment_0_0_2");
+					put(grammarAccess.getRealTimeStatementAccess().getPeriodAssignment_1(), "rule__RealTimeStatement__PeriodAssignment_1");
+					put(grammarAccess.getRealTimeStatementAccess().getJitterAssignment_2_2(), "rule__RealTimeStatement__JitterAssignment_2_2");
 					put(grammarAccess.getTimeIntervalAccess().getLowAssignment_0_0_2(), "rule__TimeInterval__LowAssignment_0_0_2");
 					put(grammarAccess.getTimeIntervalAccess().getHighAssignment_0_0_4(), "rule__TimeInterval__HighAssignment_0_0_4");
 					put(grammarAccess.getTimeIntervalAccess().getLowAssignment_1_0_2(), "rule__TimeInterval__LowAssignment_1_0_2");

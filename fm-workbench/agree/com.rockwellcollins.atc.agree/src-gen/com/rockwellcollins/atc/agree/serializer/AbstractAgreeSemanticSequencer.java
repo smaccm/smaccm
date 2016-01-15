@@ -46,6 +46,7 @@ import com.rockwellcollins.atc.agree.agree.OpenRightTimeInterval;
 import com.rockwellcollins.atc.agree.agree.OpenTimeInterval;
 import com.rockwellcollins.atc.agree.agree.OrderStatement;
 import com.rockwellcollins.atc.agree.agree.ParamStatement;
+import com.rockwellcollins.atc.agree.agree.PeriodicStatement;
 import com.rockwellcollins.atc.agree.agree.PreExpr;
 import com.rockwellcollins.atc.agree.agree.PrevExpr;
 import com.rockwellcollins.atc.agree.agree.PrimType;
@@ -322,6 +323,9 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 				return; 
 			case AgreePackage.PARAM_STATEMENT:
 				sequence_SpecStatement(context, (ParamStatement) semanticObject); 
+				return; 
+			case AgreePackage.PERIODIC_STATEMENT:
+				sequence_RealTimeStatement(context, (PeriodicStatement) semanticObject); 
 				return; 
 			case AgreePackage.PRE_EXPR:
 				sequence_TermExpr(context, (PreExpr) semanticObject); 
@@ -606,6 +610,15 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     (name=ID expr=Expr)
 	 */
 	protected void sequence_PropertyStatement(EObject context, PropertyStatement semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Constraint:
+	 *     (event=Expr period=Expr jitter=Expr?)
+	 */
+	protected void sequence_RealTimeStatement(EObject context, PeriodicStatement semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	

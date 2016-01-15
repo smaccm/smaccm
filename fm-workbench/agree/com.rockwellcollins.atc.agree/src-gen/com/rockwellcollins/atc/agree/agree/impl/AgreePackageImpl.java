@@ -52,12 +52,14 @@ import com.rockwellcollins.atc.agree.agree.OpenTimeInterval;
 import com.rockwellcollins.atc.agree.agree.OrderStatement;
 import com.rockwellcollins.atc.agree.agree.ParamStatement;
 import com.rockwellcollins.atc.agree.agree.PatternStatement;
+import com.rockwellcollins.atc.agree.agree.PeriodicStatement;
 import com.rockwellcollins.atc.agree.agree.PreExpr;
 import com.rockwellcollins.atc.agree.agree.PrevExpr;
 import com.rockwellcollins.atc.agree.agree.PrimType;
 import com.rockwellcollins.atc.agree.agree.PropertyStatement;
 import com.rockwellcollins.atc.agree.agree.RealCast;
 import com.rockwellcollins.atc.agree.agree.RealLitExpr;
+import com.rockwellcollins.atc.agree.agree.RealTimeStatement;
 import com.rockwellcollins.atc.agree.agree.RecordDefExpr;
 import com.rockwellcollins.atc.agree.agree.RecordExpr;
 import com.rockwellcollins.atc.agree.agree.RecordType;
@@ -144,6 +146,13 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * @generated
    */
   private EClass wheneverStatementEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass realTimeStatementEClass = null;
 
   /**
    * <!-- begin-user-doc -->
@@ -403,6 +412,13 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * @generated
    */
   private EClass wheneverImpliesStatementEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass periodicStatementEClass = null;
 
   /**
    * <!-- begin-user-doc -->
@@ -781,6 +797,16 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
   public EReference getWheneverStatement_Interval()
   {
     return (EReference)wheneverStatementEClass.getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getRealTimeStatement()
+  {
+    return realTimeStatementEClass;
   }
 
   /**
@@ -1728,6 +1754,46 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  public EClass getPeriodicStatement()
+  {
+    return periodicStatementEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getPeriodicStatement_Event()
+  {
+    return (EReference)periodicStatementEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getPeriodicStatement_Period()
+  {
+    return (EReference)periodicStatementEClass.getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getPeriodicStatement_Jitter()
+  {
+    return (EReference)periodicStatementEClass.getEStructuralFeatures().get(2);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   public EClass getClosedTimeInterval()
   {
     return closedTimeIntervalEClass;
@@ -2471,6 +2537,8 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     createEReference(wheneverStatementEClass, WHENEVER_STATEMENT__CAUSE);
     createEReference(wheneverStatementEClass, WHENEVER_STATEMENT__INTERVAL);
 
+    realTimeStatementEClass = createEClass(REAL_TIME_STATEMENT);
+
     timeIntervalEClass = createEClass(TIME_INTERVAL);
     createEReference(timeIntervalEClass, TIME_INTERVAL__LOW);
     createEReference(timeIntervalEClass, TIME_INTERVAL__HIGH);
@@ -2601,6 +2669,11 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     wheneverImpliesStatementEClass = createEClass(WHENEVER_IMPLIES_STATEMENT);
     createEReference(wheneverImpliesStatementEClass, WHENEVER_IMPLIES_STATEMENT__LHS);
     createEReference(wheneverImpliesStatementEClass, WHENEVER_IMPLIES_STATEMENT__RHS);
+
+    periodicStatementEClass = createEClass(PERIODIC_STATEMENT);
+    createEReference(periodicStatementEClass, PERIODIC_STATEMENT__EVENT);
+    createEReference(periodicStatementEClass, PERIODIC_STATEMENT__PERIOD);
+    createEReference(periodicStatementEClass, PERIODIC_STATEMENT__JITTER);
 
     closedTimeIntervalEClass = createEClass(CLOSED_TIME_INTERVAL);
 
@@ -2741,6 +2814,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     specStatementEClass.getESuperTypes().add(theAadl2Package.getElement());
     whenStatementEClass.getESuperTypes().add(this.getPatternStatement());
     wheneverStatementEClass.getESuperTypes().add(this.getPatternStatement());
+    realTimeStatementEClass.getESuperTypes().add(this.getPatternStatement());
     synchStatementEClass.getESuperTypes().add(this.getSpecStatement());
     orderStatementEClass.getESuperTypes().add(this.getSpecStatement());
     callDefEClass.getESuperTypes().add(theAadl2Package.getNamedElement());
@@ -2786,6 +2860,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     wheneverBecomesTrueStatementEClass.getESuperTypes().add(this.getWheneverStatement());
     wheneverHoldsStatementEClass.getESuperTypes().add(this.getWheneverStatement());
     wheneverImpliesStatementEClass.getESuperTypes().add(this.getWheneverStatement());
+    periodicStatementEClass.getESuperTypes().add(this.getRealTimeStatement());
     closedTimeIntervalEClass.getESuperTypes().add(this.getTimeInterval());
     openLeftTimeIntervalEClass.getESuperTypes().add(this.getTimeInterval());
     openRightTimeIntervalEClass.getESuperTypes().add(this.getTimeInterval());
@@ -2834,6 +2909,8 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     initEClass(wheneverStatementEClass, WheneverStatement.class, "WheneverStatement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getWheneverStatement_Cause(), this.getExpr(), null, "cause", null, 0, 1, WheneverStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getWheneverStatement_Interval(), this.getTimeInterval(), null, "interval", null, 0, 1, WheneverStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+    initEClass(realTimeStatementEClass, RealTimeStatement.class, "RealTimeStatement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
     initEClass(timeIntervalEClass, TimeInterval.class, "TimeInterval", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getTimeInterval_Low(), this.getExpr(), null, "low", null, 0, 1, TimeInterval.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -2965,6 +3042,11 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     initEClass(wheneverImpliesStatementEClass, WheneverImpliesStatement.class, "WheneverImpliesStatement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getWheneverImpliesStatement_Lhs(), this.getExpr(), null, "lhs", null, 0, 1, WheneverImpliesStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getWheneverImpliesStatement_Rhs(), this.getExpr(), null, "rhs", null, 0, 1, WheneverImpliesStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+    initEClass(periodicStatementEClass, PeriodicStatement.class, "PeriodicStatement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getPeriodicStatement_Event(), this.getExpr(), null, "event", null, 0, 1, PeriodicStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getPeriodicStatement_Period(), this.getExpr(), null, "period", null, 0, 1, PeriodicStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getPeriodicStatement_Jitter(), this.getExpr(), null, "jitter", null, 0, 1, PeriodicStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(closedTimeIntervalEClass, ClosedTimeInterval.class, "ClosedTimeInterval", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 

@@ -951,7 +951,28 @@ rulePatternStatement returns [EObject current=null]
         $current = $this_WhenStatement_5.current;
         afterParserOrEnumRuleCall();
     }
+
+    |((((
 )
+Condition
+(
+(
+ruleExpr
+)
+)
+Occurs
+
+Each
+))=>
+    { 
+        newCompositeNode(grammarAccess.getPatternStatementAccess().getRealTimeStatementParserRuleCall_3()); 
+    }
+    this_RealTimeStatement_6=ruleRealTimeStatement
+    {
+        $current = $this_RealTimeStatement_6.current;
+        afterParserOrEnumRuleCall();
+    }
+))
 ;
 
 
@@ -1645,6 +1666,123 @@ Implies
 
 )
 ))?))
+;
+
+
+
+
+
+// Entry rule entryRuleRealTimeStatement
+entryRuleRealTimeStatement returns [EObject current=null]
+	:
+	{ newCompositeNode(grammarAccess.getRealTimeStatementRule()); }
+	 iv_ruleRealTimeStatement=ruleRealTimeStatement 
+	 { $current=$iv_ruleRealTimeStatement.current; } 
+	 EOF 
+;
+
+// Rule RealTimeStatement
+ruleRealTimeStatement returns [EObject current=null] 
+    @init { enterRule(); 
+    }
+    @after { leaveRule(); }:
+(((((
+)
+Condition
+(
+(
+ruleExpr
+)
+)
+Occurs
+
+Each
+))=>((
+    {
+        $current = forceCreateModelElement(
+            grammarAccess.getRealTimeStatementAccess().getPeriodicStatementAction_0_0_0(),
+            $current);
+    }
+)
+	otherlv_1=Condition
+    {
+    	newLeafNode(otherlv_1, grammarAccess.getRealTimeStatementAccess().getConditionKeyword_0_0_1());
+    }
+(
+(
+		{ 
+	        newCompositeNode(grammarAccess.getRealTimeStatementAccess().getEventExprParserRuleCall_0_0_2_0()); 
+	    }
+		lv_event_2_0=ruleExpr		{
+	        if ($current==null) {
+	            $current = createModelElementForParent(grammarAccess.getRealTimeStatementRule());
+	        }
+       		set(
+       			$current, 
+       			"event",
+        		lv_event_2_0, 
+        		"Expr");
+	        afterParserOrEnumRuleCall();
+	    }
+
+)
+)
+	otherlv_3=Occurs
+    {
+    	newLeafNode(otherlv_3, grammarAccess.getRealTimeStatementAccess().getOccursKeyword_0_0_3());
+    }
+
+	otherlv_4=Each
+    {
+    	newLeafNode(otherlv_4, grammarAccess.getRealTimeStatementAccess().getEachKeyword_0_0_4());
+    }
+))(
+(
+		{ 
+	        newCompositeNode(grammarAccess.getRealTimeStatementAccess().getPeriodExprParserRuleCall_1_0()); 
+	    }
+		lv_period_5_0=ruleExpr		{
+	        if ($current==null) {
+	            $current = createModelElementForParent(grammarAccess.getRealTimeStatementRule());
+	        }
+       		set(
+       			$current, 
+       			"period",
+        		lv_period_5_0, 
+        		"Expr");
+	        afterParserOrEnumRuleCall();
+	    }
+
+)
+)(
+	otherlv_6=With
+    {
+    	newLeafNode(otherlv_6, grammarAccess.getRealTimeStatementAccess().getWithKeyword_2_0());
+    }
+
+	otherlv_7=Jitter
+    {
+    	newLeafNode(otherlv_7, grammarAccess.getRealTimeStatementAccess().getJitterKeyword_2_1());
+    }
+(
+(
+		{ 
+	        newCompositeNode(grammarAccess.getRealTimeStatementAccess().getJitterExprParserRuleCall_2_2_0()); 
+	    }
+		lv_jitter_8_0=ruleExpr		{
+	        if ($current==null) {
+	            $current = createModelElementForParent(grammarAccess.getRealTimeStatementRule());
+	        }
+       		set(
+       			$current, 
+       			"jitter",
+        		lv_jitter_8_0, 
+        		"Expr");
+	        afterParserOrEnumRuleCall();
+	    }
+
+)
+))?)
 ;
 
 

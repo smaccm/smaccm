@@ -59,9 +59,9 @@ public class AgreeRealtimeCalendarBuilder {
         nodeCall = new UnaryExpr(UnaryOp.PRE, nodeCall);
         Expr timeExpr = new BinaryExpr(timeId, BinaryOp.EQUAL, nodeCall);
         timeExpr = new BinaryExpr(new BoolExpr(true), BinaryOp.ARROW, timeExpr);
-        Expr posTime = new BinaryExpr(timeId, BinaryOp.GREATEREQUAL, new RealExpr(BigDecimal.ZERO));
-        posTime = new BinaryExpr(posTime, BinaryOp.ARROW, new BoolExpr(true));
-        return new BinaryExpr(posTime, BinaryOp.AND, timeExpr);
+        Expr timeInitZero = new BinaryExpr(timeId, BinaryOp.EQUAL, new RealExpr(BigDecimal.ZERO));
+        timeInitZero = new BinaryExpr(timeInitZero, BinaryOp.ARROW, new BoolExpr(true));
+        return new BinaryExpr(timeInitZero, BinaryOp.AND, timeExpr);
     }
     
 }

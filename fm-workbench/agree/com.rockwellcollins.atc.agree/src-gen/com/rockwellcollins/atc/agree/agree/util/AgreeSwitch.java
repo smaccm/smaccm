@@ -138,6 +138,14 @@ public class AgreeSwitch<T> extends Switch<T>
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
+      case AgreePackage.REAL_TIME_STATEMENT:
+      {
+        RealTimeStatement realTimeStatement = (RealTimeStatement)theEObject;
+        T result = caseRealTimeStatement(realTimeStatement);
+        if (result == null) result = casePatternStatement(realTimeStatement);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
       case AgreePackage.TIME_INTERVAL:
       {
         TimeInterval timeInterval = (TimeInterval)theEObject;
@@ -475,6 +483,15 @@ public class AgreeSwitch<T> extends Switch<T>
         T result = caseWheneverImpliesStatement(wheneverImpliesStatement);
         if (result == null) result = caseWheneverStatement(wheneverImpliesStatement);
         if (result == null) result = casePatternStatement(wheneverImpliesStatement);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case AgreePackage.PERIODIC_STATEMENT:
+      {
+        PeriodicStatement periodicStatement = (PeriodicStatement)theEObject;
+        T result = casePeriodicStatement(periodicStatement);
+        if (result == null) result = caseRealTimeStatement(periodicStatement);
+        if (result == null) result = casePatternStatement(periodicStatement);
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
@@ -853,6 +870,22 @@ public class AgreeSwitch<T> extends Switch<T>
    * @generated
    */
   public T caseWheneverStatement(WheneverStatement object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Real Time Statement</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Real Time Statement</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseRealTimeStatement(RealTimeStatement object)
   {
     return null;
   }
@@ -1445,6 +1478,22 @@ public class AgreeSwitch<T> extends Switch<T>
    * @generated
    */
   public T caseWheneverImpliesStatement(WheneverImpliesStatement object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Periodic Statement</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Periodic Statement</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T casePeriodicStatement(PeriodicStatement object)
   {
     return null;
   }

@@ -86,6 +86,15 @@ public interface AgreeFactory extends EFactory
   WheneverStatement createWheneverStatement();
 
   /**
+   * Returns a new object of class '<em>Real Time Statement</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Real Time Statement</em>'.
+   * @generated
+   */
+  RealTimeStatement createRealTimeStatement();
+
+  /**
    * Returns a new object of class '<em>Time Interval</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -417,6 +426,15 @@ public interface AgreeFactory extends EFactory
    * @generated
    */
   WheneverImpliesStatement createWheneverImpliesStatement();
+
+  /**
+   * Returns a new object of class '<em>Periodic Statement</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Periodic Statement</em>'.
+   * @generated
+   */
+  PeriodicStatement createPeriodicStatement();
 
   /**
    * Returns a new object of class '<em>Closed Time Interval</em>'.

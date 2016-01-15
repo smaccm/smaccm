@@ -3,6 +3,7 @@ package com.rockwellcollins.atc.agree.analysis.ast;
 import org.eclipse.emf.ecore.EObject;
 
 import com.rockwellcollins.atc.agree.analysis.AgreeException;
+import com.rockwellcollins.atc.agree.analysis.realtime.AgreeCauseEffectPattern;
 import com.rockwellcollins.atc.agree.analysis.realtime.AgreePattern;
 
 import jkind.lustre.Expr;

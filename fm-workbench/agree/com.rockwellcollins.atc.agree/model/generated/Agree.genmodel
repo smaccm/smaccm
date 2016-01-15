@@ -20,6 +20,7 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//WheneverStatement/cause"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//WheneverStatement/interval"/>
     </genClasses>
+    <genClasses ecoreClass="Agree.ecore#//RealTimeStatement"/>
     <genClasses ecoreClass="Agree.ecore#//TimeInterval">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//TimeInterval/low"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//TimeInterval/high"/>
@@ -146,6 +147,11 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//WheneverImpliesStatement/lhs"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//WheneverImpliesStatement/rhs"/>
     </genClasses>
+    <genClasses ecoreClass="Agree.ecore#//PeriodicStatement">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//PeriodicStatement/event"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//PeriodicStatement/period"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//PeriodicStatement/jitter"/>
+    </genClasses>
     <genClasses ecoreClass="Agree.ecore#//ClosedTimeInterval"/>
     <genClasses ecoreClass="Agree.ecore#//OpenLeftTimeInterval"/>
     <genClasses ecoreClass="Agree.ecore#//OpenRightTimeInterval"/>
@@ -237,6 +243,11 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//RecordExpr/record"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Agree.ecore#//RecordExpr/args"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//RecordExpr/argExpr"/>
+    </genClasses>
+    <genClasses ecoreClass="Agree.ecore#//PeriodStatement">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//PeriodStatement/event"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//PeriodStatement/period"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//PeriodStatement/jitter"/>
     </genClasses>
   </genPackages>
 </genmodel:GenModel>

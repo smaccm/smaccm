@@ -71,6 +71,7 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
       case AgreePackage.PATTERN_STATEMENT: return createPatternStatement();
       case AgreePackage.WHEN_STATEMENT: return createWhenStatement();
       case AgreePackage.WHENEVER_STATEMENT: return createWheneverStatement();
+      case AgreePackage.REAL_TIME_STATEMENT: return createRealTimeStatement();
       case AgreePackage.TIME_INTERVAL: return createTimeInterval();
       case AgreePackage.SYNCH_STATEMENT: return createSynchStatement();
       case AgreePackage.ORDER_STATEMENT: return createOrderStatement();
@@ -108,6 +109,7 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
       case AgreePackage.WHENEVER_BECOMES_TRUE_STATEMENT: return createWheneverBecomesTrueStatement();
       case AgreePackage.WHENEVER_HOLDS_STATEMENT: return createWheneverHoldsStatement();
       case AgreePackage.WHENEVER_IMPLIES_STATEMENT: return createWheneverImpliesStatement();
+      case AgreePackage.PERIODIC_STATEMENT: return createPeriodicStatement();
       case AgreePackage.CLOSED_TIME_INTERVAL: return createClosedTimeInterval();
       case AgreePackage.OPEN_LEFT_TIME_INTERVAL: return createOpenLeftTimeInterval();
       case AgreePackage.OPEN_RIGHT_TIME_INTERVAL: return createOpenRightTimeInterval();
@@ -217,6 +219,17 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
   {
     WheneverStatementImpl wheneverStatement = new WheneverStatementImpl();
     return wheneverStatement;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public RealTimeStatement createRealTimeStatement()
+  {
+    RealTimeStatementImpl realTimeStatement = new RealTimeStatementImpl();
+    return realTimeStatement;
   }
 
   /**
@@ -624,6 +637,17 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
   {
     WheneverImpliesStatementImpl wheneverImpliesStatement = new WheneverImpliesStatementImpl();
     return wheneverImpliesStatement;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public PeriodicStatement createPeriodicStatement()
+  {
+    PeriodicStatementImpl periodicStatement = new PeriodicStatementImpl();
+    return periodicStatement;
   }
 
   /**

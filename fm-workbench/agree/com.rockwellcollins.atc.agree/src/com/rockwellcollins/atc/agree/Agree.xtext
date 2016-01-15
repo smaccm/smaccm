@@ -60,12 +60,10 @@ SpecStatement:
 	
 //The following are patterns from the CESAR RSL
 PatternStatement returns PatternStatement:
-	//Patterns 1,3,4, and 7
 	WheneverStatement
-	//Pattern 5
 |	{AlwaysStatement} 'always' expr=Expr ';'
-    //Pattern 6
 |   WhenStatement
+|   RealTimeStatement
 ;
 
 WhenStatement:
@@ -83,8 +81,11 @@ WheneverStatement:
 |	=> ({WheneverHoldsStatement} 'whenever' cause=Expr 'occurs'
 	    effect=Expr ('holds')) ('during' interval=TimeInterval)? 
 |   => ({WheneverImpliesStatement} 'whenever' cause=Expr 'occurs'
-	    lhs=Expr 'implies') rhs=Expr ('during' interval=TimeInterval)? 
-	    
+	    lhs=Expr 'implies') rhs=Expr ('during' interval=TimeInterval)? 	    
+;
+
+RealTimeStatement:
+	=> ({PeriodicStatement} 'condition' event=Expr 'occurs' 'each') period=Expr ('with' 'jitter' jitter=Expr)? 
 ;
  
 TimeInterval returns TimeInterval:

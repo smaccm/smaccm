@@ -88,6 +88,7 @@ import com.rockwellcollins.atc.agree.agree.NodeLemma;
 import com.rockwellcollins.atc.agree.agree.NodeStmt;
 import com.rockwellcollins.atc.agree.agree.OrderStatement;
 import com.rockwellcollins.atc.agree.agree.PatternStatement;
+import com.rockwellcollins.atc.agree.agree.PeriodicStatement;
 import com.rockwellcollins.atc.agree.agree.PreExpr;
 import com.rockwellcollins.atc.agree.agree.PrevExpr;
 import com.rockwellcollins.atc.agree.agree.PrimType;
@@ -502,6 +503,40 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 	        }
 	    }
 	    error(expr, "Expression must be an event (not an arbitrary variable)");
+	}
+	
+	@Check(CheckType.FAST)
+	public void checkPeriodicStatement(PeriodicStatement statement){
+	    Expr event = statement.getEvent();
+	    Expr jitter = statement.getJitter();
+	    Expr period = statement.getPeriod();
+	    
+	    AgreeType eventType = getAgreeType(event);
+	    if(!matches(BOOL, eventType)){
+	        error(event, "Expression is of type '"+eventType+"' but must be of type 'bool'");
+	    }
+
+        if (jitter != null) {
+            if (!(jitter instanceof RealLitExpr)) {
+                error(jitter, "The specified jitter must be a real literal");
+            } else {
+                RealLitExpr jitterReal = (RealLitExpr) jitter;
+                Double val = Double.valueOf(jitterReal.getVal());
+                if(val < 0){
+                    error(jitter, "The specified jitter must be positive");
+                }
+            }
+        }
+        
+        if (!(period instanceof RealLitExpr)) {
+            error(period, "The specified period must be a real literal");
+        } else {
+            RealLitExpr periodReal = (RealLitExpr) period;
+            Double val = Double.valueOf(periodReal.getVal());
+            if(val < 0){
+                error(period, "The specified period must be positive");
+            }
+        }
 	}
 	
 	@Check(CheckType.FAST)
