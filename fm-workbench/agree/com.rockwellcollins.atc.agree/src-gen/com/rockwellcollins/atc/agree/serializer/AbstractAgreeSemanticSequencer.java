@@ -23,7 +23,6 @@ import com.rockwellcollins.atc.agree.agree.ConnectionStatement;
 import com.rockwellcollins.atc.agree.agree.ConstStatement;
 import com.rockwellcollins.atc.agree.agree.EqStatement;
 import com.rockwellcollins.atc.agree.agree.EventExpr;
-import com.rockwellcollins.atc.agree.agree.EventStatement;
 import com.rockwellcollins.atc.agree.agree.FloorCast;
 import com.rockwellcollins.atc.agree.agree.FnCallExpr;
 import com.rockwellcollins.atc.agree.agree.FnDefExpr;
@@ -255,9 +254,6 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 			case AgreePackage.EVENT_EXPR:
 				sequence_TermExpr(context, (EventExpr) semanticObject); 
 				return; 
-			case AgreePackage.EVENT_STATEMENT:
-				sequence_EventStatement(context, (EventStatement) semanticObject); 
-				return; 
 			case AgreePackage.FLOOR_CAST:
 				sequence_TermExpr(context, (FloorCast) semanticObject); 
 				return; 
@@ -486,15 +482,6 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     (lhs+=Arg lhs+=Arg* expr=Expr?)
 	 */
 	protected void sequence_EqStatement(EObject context, EqStatement semanticObject) {
-		genericSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * Constraint:
-	 *     name=ID
-	 */
-	protected void sequence_EventStatement(EObject context, EventStatement semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
@@ -944,7 +931,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	
 	/**
 	 * Constraint:
-	 *     (condition=Expr conditionInterval=TimeInterval event=Expr eventInterval=TimeInterval?)
+	 *     (condition=Expr excl='exclusively'? conditionInterval=TimeInterval event=Expr eventInterval=TimeInterval?)
 	 */
 	protected void sequence_WhenStatement(EObject context, WhenHoldsStatement semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -953,32 +940,16 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	
 	/**
 	 * Constraint:
-	 *     (condition=Expr times=Expr interval=TimeInterval event=Expr)
+	 *     (condition=Expr excl='exclusively'? times=Expr interval=TimeInterval event=Expr)
 	 */
 	protected void sequence_WhenStatement(EObject context, WhenOccursStatment semanticObject) {
-		if(errorAcceptor != null) {
-			if(transientValues.isValueTransient(semanticObject, AgreePackage.Literals.WHEN_STATEMENT__CONDITION) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, AgreePackage.Literals.WHEN_STATEMENT__CONDITION));
-			if(transientValues.isValueTransient(semanticObject, AgreePackage.Literals.WHEN_STATEMENT__EVENT) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, AgreePackage.Literals.WHEN_STATEMENT__EVENT));
-			if(transientValues.isValueTransient(semanticObject, AgreePackage.Literals.WHEN_OCCURS_STATMENT__TIMES) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, AgreePackage.Literals.WHEN_OCCURS_STATMENT__TIMES));
-			if(transientValues.isValueTransient(semanticObject, AgreePackage.Literals.WHEN_OCCURS_STATMENT__INTERVAL) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, AgreePackage.Literals.WHEN_OCCURS_STATMENT__INTERVAL));
-		}
-		INodesForEObjectProvider nodes = createNodeProvider(semanticObject);
-		SequenceFeeder feeder = createSequencerFeeder(semanticObject, nodes);
-		feeder.accept(grammarAccess.getWhenStatementAccess().getConditionExprParserRuleCall_1_0_0_2_0(), semanticObject.getCondition());
-		feeder.accept(grammarAccess.getWhenStatementAccess().getTimesExprParserRuleCall_1_1_0(), semanticObject.getTimes());
-		feeder.accept(grammarAccess.getWhenStatementAccess().getIntervalTimeIntervalParserRuleCall_1_4_0(), semanticObject.getInterval());
-		feeder.accept(grammarAccess.getWhenStatementAccess().getEventExprParserRuleCall_1_6_0(), semanticObject.getEvent());
-		feeder.finish();
+		genericSequencer.createSequence(context, semanticObject);
 	}
 	
 	
 	/**
 	 * Constraint:
-	 *     (cause=Expr effect=Expr interval=TimeInterval?)
+	 *     (cause=Expr effect=Expr excl='exclusively'? interval=TimeInterval?)
 	 */
 	protected void sequence_WheneverStatement(EObject context, WheneverBecomesTrueStatement semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -987,7 +958,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	
 	/**
 	 * Constraint:
-	 *     (cause=Expr effect=Expr interval=TimeInterval?)
+	 *     (cause=Expr effect=Expr excl='exclusively'? interval=TimeInterval?)
 	 */
 	protected void sequence_WheneverStatement(EObject context, WheneverHoldsStatement semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -996,7 +967,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	
 	/**
 	 * Constraint:
-	 *     (cause=Expr lhs=Expr rhs=Expr interval=TimeInterval?)
+	 *     (cause=Expr lhs=Expr rhs=Expr excl='exclusively'? interval=TimeInterval?)
 	 */
 	protected void sequence_WheneverStatement(EObject context, WheneverImpliesStatement semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -1005,7 +976,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	
 	/**
 	 * Constraint:
-	 *     (cause=Expr effect=Expr interval=TimeInterval?)
+	 *     (cause=Expr effect=Expr excl='exclusively'? interval=TimeInterval?)
 	 */
 	protected void sequence_WheneverStatement(EObject context, WheneverOccursStatement semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);

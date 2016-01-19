@@ -209,16 +209,6 @@ public class AgreeSwitch<T> extends Switch<T>
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
-      case AgreePackage.EVENT_STATEMENT:
-      {
-        EventStatement eventStatement = (EventStatement)theEObject;
-        T result = caseEventStatement(eventStatement);
-        if (result == null) result = caseNamedElement(eventStatement);
-        if (result == null) result = caseSpecStatement(eventStatement);
-        if (result == null) result = caseElement(eventStatement);
-        if (result == null) result = defaultCase(theEObject);
-        return result;
-      }
       case AgreePackage.ASSIGN_STATEMENT:
       {
         AssignStatement assignStatement = (AssignStatement)theEObject;
@@ -998,22 +988,6 @@ public class AgreeSwitch<T> extends Switch<T>
    * @generated
    */
   public T caseEqStatement(EqStatement object)
-  {
-    return null;
-  }
-
-  /**
-   * Returns the result of interpreting the object as an instance of '<em>Event Statement</em>'.
-   * <!-- begin-user-doc -->
-   * This implementation returns null;
-   * returning a non-null result will terminate the switch.
-   * <!-- end-user-doc -->
-   * @param object the target of the switch.
-   * @return the result of interpreting the object as an instance of '<em>Event Statement</em>'.
-   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-   * @generated
-   */
-  public T caseEventStatement(EventStatement object)
   {
     return null;
   }

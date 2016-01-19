@@ -158,15 +158,6 @@ public interface AgreeFactory extends EFactory
   EqStatement createEqStatement();
 
   /**
-   * Returns a new object of class '<em>Event Statement</em>'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return a new object of class '<em>Event Statement</em>'.
-   * @generated
-   */
-  EventStatement createEventStatement();
-
-  /**
    * Returns a new object of class '<em>Assign Statement</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->

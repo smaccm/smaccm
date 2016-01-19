@@ -24,6 +24,7 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  * </p>
  * <ul>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.impl.WheneverStatementImpl#getCause <em>Cause</em>}</li>
+ *   <li>{@link com.rockwellcollins.atc.agree.agree.impl.WheneverStatementImpl#getExcl <em>Excl</em>}</li>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.impl.WheneverStatementImpl#getInterval <em>Interval</em>}</li>
  * </ul>
  *
@@ -40,6 +41,26 @@ public class WheneverStatementImpl extends PatternStatementImpl implements Whene
    * @ordered
    */
   protected Expr cause;
+
+  /**
+   * The default value of the '{@link #getExcl() <em>Excl</em>}' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #getExcl()
+   * @generated
+   * @ordered
+   */
+  protected static final String EXCL_EDEFAULT = null;
+
+  /**
+   * The cached value of the '{@link #getExcl() <em>Excl</em>}' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #getExcl()
+   * @generated
+   * @ordered
+   */
+  protected String excl = EXCL_EDEFAULT;
 
   /**
    * The cached value of the '{@link #getInterval() <em>Interval</em>}' containment reference.
@@ -125,6 +146,29 @@ public class WheneverStatementImpl extends PatternStatementImpl implements Whene
    * <!-- end-user-doc -->
    * @generated
    */
+  public String getExcl()
+  {
+    return excl;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public void setExcl(String newExcl)
+  {
+    String oldExcl = excl;
+    excl = newExcl;
+    if (eNotificationRequired())
+      eNotify(new ENotificationImpl(this, Notification.SET, AgreePackage.WHENEVER_STATEMENT__EXCL, oldExcl, excl));
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   public TimeInterval getInterval()
   {
     return interval;
@@ -198,6 +242,8 @@ public class WheneverStatementImpl extends PatternStatementImpl implements Whene
     {
       case AgreePackage.WHENEVER_STATEMENT__CAUSE:
         return getCause();
+      case AgreePackage.WHENEVER_STATEMENT__EXCL:
+        return getExcl();
       case AgreePackage.WHENEVER_STATEMENT__INTERVAL:
         return getInterval();
     }
@@ -216,6 +262,9 @@ public class WheneverStatementImpl extends PatternStatementImpl implements Whene
     {
       case AgreePackage.WHENEVER_STATEMENT__CAUSE:
         setCause((Expr)newValue);
+        return;
+      case AgreePackage.WHENEVER_STATEMENT__EXCL:
+        setExcl((String)newValue);
         return;
       case AgreePackage.WHENEVER_STATEMENT__INTERVAL:
         setInterval((TimeInterval)newValue);
@@ -237,6 +286,9 @@ public class WheneverStatementImpl extends PatternStatementImpl implements Whene
       case AgreePackage.WHENEVER_STATEMENT__CAUSE:
         setCause((Expr)null);
         return;
+      case AgreePackage.WHENEVER_STATEMENT__EXCL:
+        setExcl(EXCL_EDEFAULT);
+        return;
       case AgreePackage.WHENEVER_STATEMENT__INTERVAL:
         setInterval((TimeInterval)null);
         return;
@@ -256,10 +308,29 @@ public class WheneverStatementImpl extends PatternStatementImpl implements Whene
     {
       case AgreePackage.WHENEVER_STATEMENT__CAUSE:
         return cause != null;
+      case AgreePackage.WHENEVER_STATEMENT__EXCL:
+        return EXCL_EDEFAULT == null ? excl != null : !EXCL_EDEFAULT.equals(excl);
       case AgreePackage.WHENEVER_STATEMENT__INTERVAL:
         return interval != null;
     }
     return super.eIsSet(featureID);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public String toString()
+  {
+    if (eIsProxy()) return super.toString();
+
+    StringBuffer result = new StringBuffer(super.toString());
+    result.append(" (excl: ");
+    result.append(excl);
+    result.append(')');
+    return result.toString();
   }
 
 } //WheneverStatementImpl

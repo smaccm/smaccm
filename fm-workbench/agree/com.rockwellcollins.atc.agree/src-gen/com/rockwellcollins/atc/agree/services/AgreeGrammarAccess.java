@@ -27,13 +27,12 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cConstStatementParserRuleCall_3 = (RuleCall)cAlternatives.eContents().get(3);
 		private final RuleCall cNodeDefExprParserRuleCall_4 = (RuleCall)cAlternatives.eContents().get(4);
 		private final RuleCall cRecordDefExprParserRuleCall_5 = (RuleCall)cAlternatives.eContents().get(5);
-		private final RuleCall cEventStatementParserRuleCall_6 = (RuleCall)cAlternatives.eContents().get(6);
 		
 		//NamedElement returns aadl2::NamedElement:
-		//	Arg | FnDefExpr | PropertyStatement | ConstStatement | NodeDefExpr | RecordDefExpr | EventStatement;
+		//	Arg | FnDefExpr | PropertyStatement | ConstStatement | NodeDefExpr | RecordDefExpr;
 		@Override public ParserRule getRule() { return rule; }
 
-		//Arg | FnDefExpr | PropertyStatement | ConstStatement | NodeDefExpr | RecordDefExpr | EventStatement
+		//Arg | FnDefExpr | PropertyStatement | ConstStatement | NodeDefExpr | RecordDefExpr
 		public Alternatives getAlternatives() { return cAlternatives; }
 
 		//Arg
@@ -53,9 +52,6 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 
 		//RecordDefExpr
 		public RuleCall getRecordDefExprParserRuleCall_5() { return cRecordDefExprParserRuleCall_5; }
-
-		//EventStatement
-		public RuleCall getEventStatementParserRuleCall_6() { return cEventStatementParserRuleCall_6; }
 	}
 
 	public class ElementElements extends AbstractParserRuleElementFinder {
@@ -284,7 +280,6 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cFnDefExprParserRuleCall_14 = (RuleCall)cAlternatives.eContents().get(14);
 		private final RuleCall cNodeDefExprParserRuleCall_15 = (RuleCall)cAlternatives.eContents().get(15);
 		private final RuleCall cRecordDefExprParserRuleCall_16 = (RuleCall)cAlternatives.eContents().get(16);
-		private final RuleCall cEventStatementParserRuleCall_17 = (RuleCall)cAlternatives.eContents().get(17);
 		
 		//SpecStatement:
 		//	{AssumeStatement} "assume" str=STRING ":" (expr=Expr | pattern=PatternStatement) ";" | {GuaranteeStatement}
@@ -293,7 +288,7 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		//	"parameter" expr=Expr ":" type=Type ";" | {LemmaStatement} "lemma" str=STRING ":" expr=Expr ";" | {LiftStatement}
 		//	"lift" subcomp=NestedDotID ";" | {ConnectionStatement} "connection" conn=[aadl2::NamedElement] ":" expr=Expr ";" |
 		//	SynchStatement | OrderStatement | PropertyStatement | ConstStatement | EqStatement | AssignStatement | FnDefExpr |
-		//	NodeDefExpr | RecordDefExpr | EventStatement;
+		//	NodeDefExpr | RecordDefExpr;
 		@Override public ParserRule getRule() { return rule; }
 
 		//{AssumeStatement} "assume" str=STRING ":" (expr=Expr | pattern=PatternStatement) ";" | {GuaranteeStatement} "guarantee"
@@ -302,7 +297,7 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		//expr=Expr ":" type=Type ";" | {LemmaStatement} "lemma" str=STRING ":" expr=Expr ";" | {LiftStatement} "lift"
 		//subcomp=NestedDotID ";" | {ConnectionStatement} "connection" conn=[aadl2::NamedElement] ":" expr=Expr ";" |
 		//SynchStatement | OrderStatement | PropertyStatement | ConstStatement | EqStatement | AssignStatement | FnDefExpr |
-		//NodeDefExpr | RecordDefExpr | EventStatement
+		//NodeDefExpr | RecordDefExpr
 		public Alternatives getAlternatives() { return cAlternatives; }
 
 		//{AssumeStatement} "assume" str=STRING ":" (expr=Expr | pattern=PatternStatement) ";"
@@ -565,9 +560,6 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 
 		//RecordDefExpr
 		public RuleCall getRecordDefExprParserRuleCall_16() { return cRecordDefExprParserRuleCall_16; }
-
-		//EventStatement
-		public RuleCall getEventStatementParserRuleCall_17() { return cEventStatementParserRuleCall_17; }
 	}
 
 	public class PatternStatementElements extends AbstractParserRuleElementFinder {
@@ -630,16 +622,18 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		private final Assignment cConditionAssignment_0_0_0_2 = (Assignment)cGroup_0_0_0.eContents().get(2);
 		private final RuleCall cConditionExprParserRuleCall_0_0_0_2_0 = (RuleCall)cConditionAssignment_0_0_0_2.eContents().get(0);
 		private final Keyword cHoldsKeyword_0_0_0_3 = (Keyword)cGroup_0_0_0.eContents().get(3);
-		private final Keyword cDuringKeyword_0_1 = (Keyword)cGroup_0.eContents().get(1);
-		private final Assignment cConditionIntervalAssignment_0_2 = (Assignment)cGroup_0.eContents().get(2);
-		private final RuleCall cConditionIntervalTimeIntervalParserRuleCall_0_2_0 = (RuleCall)cConditionIntervalAssignment_0_2.eContents().get(0);
-		private final Assignment cEventAssignment_0_3 = (Assignment)cGroup_0.eContents().get(3);
-		private final RuleCall cEventExprParserRuleCall_0_3_0 = (RuleCall)cEventAssignment_0_3.eContents().get(0);
-		private final Keyword cOccursKeyword_0_4 = (Keyword)cGroup_0.eContents().get(4);
-		private final Group cGroup_0_5 = (Group)cGroup_0.eContents().get(5);
-		private final Keyword cDuringKeyword_0_5_0 = (Keyword)cGroup_0_5.eContents().get(0);
-		private final Assignment cEventIntervalAssignment_0_5_1 = (Assignment)cGroup_0_5.eContents().get(1);
-		private final RuleCall cEventIntervalTimeIntervalParserRuleCall_0_5_1_0 = (RuleCall)cEventIntervalAssignment_0_5_1.eContents().get(0);
+		private final Assignment cExclAssignment_0_1 = (Assignment)cGroup_0.eContents().get(1);
+		private final Keyword cExclExclusivelyKeyword_0_1_0 = (Keyword)cExclAssignment_0_1.eContents().get(0);
+		private final Keyword cDuringKeyword_0_2 = (Keyword)cGroup_0.eContents().get(2);
+		private final Assignment cConditionIntervalAssignment_0_3 = (Assignment)cGroup_0.eContents().get(3);
+		private final RuleCall cConditionIntervalTimeIntervalParserRuleCall_0_3_0 = (RuleCall)cConditionIntervalAssignment_0_3.eContents().get(0);
+		private final Assignment cEventAssignment_0_4 = (Assignment)cGroup_0.eContents().get(4);
+		private final RuleCall cEventExprParserRuleCall_0_4_0 = (RuleCall)cEventAssignment_0_4.eContents().get(0);
+		private final Keyword cOccursKeyword_0_5 = (Keyword)cGroup_0.eContents().get(5);
+		private final Group cGroup_0_6 = (Group)cGroup_0.eContents().get(6);
+		private final Keyword cDuringKeyword_0_6_0 = (Keyword)cGroup_0_6.eContents().get(0);
+		private final Assignment cEventIntervalAssignment_0_6_1 = (Assignment)cGroup_0_6.eContents().get(1);
+		private final RuleCall cEventIntervalTimeIntervalParserRuleCall_0_6_1_0 = (RuleCall)cEventIntervalAssignment_0_6_1.eContents().get(0);
 		private final Group cGroup_1 = (Group)cAlternatives.eContents().get(1);
 		private final Group cGroup_1_0 = (Group)cGroup_1.eContents().get(0);
 		private final Group cGroup_1_0_0 = (Group)cGroup_1_0.eContents().get(0);
@@ -648,29 +642,31 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		private final Assignment cConditionAssignment_1_0_0_2 = (Assignment)cGroup_1_0_0.eContents().get(2);
 		private final RuleCall cConditionExprParserRuleCall_1_0_0_2_0 = (RuleCall)cConditionAssignment_1_0_0_2.eContents().get(0);
 		private final Keyword cOccursKeyword_1_0_0_3 = (Keyword)cGroup_1_0_0.eContents().get(3);
-		private final Assignment cTimesAssignment_1_1 = (Assignment)cGroup_1.eContents().get(1);
-		private final RuleCall cTimesExprParserRuleCall_1_1_0 = (RuleCall)cTimesAssignment_1_1.eContents().get(0);
-		private final Keyword cTimesKeyword_1_2 = (Keyword)cGroup_1.eContents().get(2);
-		private final Keyword cDuringKeyword_1_3 = (Keyword)cGroup_1.eContents().get(3);
-		private final Assignment cIntervalAssignment_1_4 = (Assignment)cGroup_1.eContents().get(4);
-		private final RuleCall cIntervalTimeIntervalParserRuleCall_1_4_0 = (RuleCall)cIntervalAssignment_1_4.eContents().get(0);
-		private final Keyword cRaisesKeyword_1_5 = (Keyword)cGroup_1.eContents().get(5);
-		private final Assignment cEventAssignment_1_6 = (Assignment)cGroup_1.eContents().get(6);
-		private final RuleCall cEventExprParserRuleCall_1_6_0 = (RuleCall)cEventAssignment_1_6.eContents().get(0);
+		private final Assignment cExclAssignment_1_1 = (Assignment)cGroup_1.eContents().get(1);
+		private final Keyword cExclExclusivelyKeyword_1_1_0 = (Keyword)cExclAssignment_1_1.eContents().get(0);
+		private final Assignment cTimesAssignment_1_2 = (Assignment)cGroup_1.eContents().get(2);
+		private final RuleCall cTimesExprParserRuleCall_1_2_0 = (RuleCall)cTimesAssignment_1_2.eContents().get(0);
+		private final Keyword cTimesKeyword_1_3 = (Keyword)cGroup_1.eContents().get(3);
+		private final Keyword cDuringKeyword_1_4 = (Keyword)cGroup_1.eContents().get(4);
+		private final Assignment cIntervalAssignment_1_5 = (Assignment)cGroup_1.eContents().get(5);
+		private final RuleCall cIntervalTimeIntervalParserRuleCall_1_5_0 = (RuleCall)cIntervalAssignment_1_5.eContents().get(0);
+		private final Keyword cRaisesKeyword_1_6 = (Keyword)cGroup_1.eContents().get(6);
+		private final Assignment cEventAssignment_1_7 = (Assignment)cGroup_1.eContents().get(7);
+		private final RuleCall cEventExprParserRuleCall_1_7_0 = (RuleCall)cEventAssignment_1_7.eContents().get(0);
 		
 		//WhenStatement:
-		//	=> ({WhenHoldsStatement} "when" condition=Expr "holds") "during" conditionInterval=TimeInterval event=Expr "occurs"
-		//	("during" eventInterval=TimeInterval)? | => ({WhenOccursStatment} "when" condition=Expr "occurs") times=Expr "times"
-		//	"during" interval=TimeInterval "raises" event=Expr;
+		//	=> ({WhenHoldsStatement} "when" condition=Expr "holds") excl="exclusively"? "during" conditionInterval=TimeInterval
+		//	event=Expr "occurs" ("during" eventInterval=TimeInterval)? | => ({WhenOccursStatment} "when" condition=Expr "occurs")
+		//	excl="exclusively"? times=Expr "times" "during" interval=TimeInterval "raises" event=Expr;
 		@Override public ParserRule getRule() { return rule; }
 
-		//=> ({WhenHoldsStatement} "when" condition=Expr "holds") "during" conditionInterval=TimeInterval event=Expr "occurs"
-		//("during" eventInterval=TimeInterval)? | => ({WhenOccursStatment} "when" condition=Expr "occurs") times=Expr "times"
-		//"during" interval=TimeInterval "raises" event=Expr
+		//=> ({WhenHoldsStatement} "when" condition=Expr "holds") excl="exclusively"? "during" conditionInterval=TimeInterval
+		//event=Expr "occurs" ("during" eventInterval=TimeInterval)? | => ({WhenOccursStatment} "when" condition=Expr "occurs")
+		//excl="exclusively"? times=Expr "times" "during" interval=TimeInterval "raises" event=Expr
 		public Alternatives getAlternatives() { return cAlternatives; }
 
-		//=> ({WhenHoldsStatement} "when" condition=Expr "holds") "during" conditionInterval=TimeInterval event=Expr "occurs"
-		//("during" eventInterval=TimeInterval)?
+		//=> ({WhenHoldsStatement} "when" condition=Expr "holds") excl="exclusively"? "during" conditionInterval=TimeInterval
+		//event=Expr "occurs" ("during" eventInterval=TimeInterval)?
 		public Group getGroup_0() { return cGroup_0; }
 
 		//=> ({WhenHoldsStatement} "when" condition=Expr "holds")
@@ -694,38 +690,44 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		//"holds"
 		public Keyword getHoldsKeyword_0_0_0_3() { return cHoldsKeyword_0_0_0_3; }
 
+		//excl="exclusively"?
+		public Assignment getExclAssignment_0_1() { return cExclAssignment_0_1; }
+
+		//"exclusively"
+		public Keyword getExclExclusivelyKeyword_0_1_0() { return cExclExclusivelyKeyword_0_1_0; }
+
 		//"during"
-		public Keyword getDuringKeyword_0_1() { return cDuringKeyword_0_1; }
+		public Keyword getDuringKeyword_0_2() { return cDuringKeyword_0_2; }
 
 		//conditionInterval=TimeInterval
-		public Assignment getConditionIntervalAssignment_0_2() { return cConditionIntervalAssignment_0_2; }
+		public Assignment getConditionIntervalAssignment_0_3() { return cConditionIntervalAssignment_0_3; }
 
 		//TimeInterval
-		public RuleCall getConditionIntervalTimeIntervalParserRuleCall_0_2_0() { return cConditionIntervalTimeIntervalParserRuleCall_0_2_0; }
+		public RuleCall getConditionIntervalTimeIntervalParserRuleCall_0_3_0() { return cConditionIntervalTimeIntervalParserRuleCall_0_3_0; }
 
 		//event=Expr
-		public Assignment getEventAssignment_0_3() { return cEventAssignment_0_3; }
+		public Assignment getEventAssignment_0_4() { return cEventAssignment_0_4; }
 
 		//Expr
-		public RuleCall getEventExprParserRuleCall_0_3_0() { return cEventExprParserRuleCall_0_3_0; }
+		public RuleCall getEventExprParserRuleCall_0_4_0() { return cEventExprParserRuleCall_0_4_0; }
 
 		//"occurs"
-		public Keyword getOccursKeyword_0_4() { return cOccursKeyword_0_4; }
+		public Keyword getOccursKeyword_0_5() { return cOccursKeyword_0_5; }
 
 		//("during" eventInterval=TimeInterval)?
-		public Group getGroup_0_5() { return cGroup_0_5; }
+		public Group getGroup_0_6() { return cGroup_0_6; }
 
 		//"during"
-		public Keyword getDuringKeyword_0_5_0() { return cDuringKeyword_0_5_0; }
+		public Keyword getDuringKeyword_0_6_0() { return cDuringKeyword_0_6_0; }
 
 		//eventInterval=TimeInterval
-		public Assignment getEventIntervalAssignment_0_5_1() { return cEventIntervalAssignment_0_5_1; }
+		public Assignment getEventIntervalAssignment_0_6_1() { return cEventIntervalAssignment_0_6_1; }
 
 		//TimeInterval
-		public RuleCall getEventIntervalTimeIntervalParserRuleCall_0_5_1_0() { return cEventIntervalTimeIntervalParserRuleCall_0_5_1_0; }
+		public RuleCall getEventIntervalTimeIntervalParserRuleCall_0_6_1_0() { return cEventIntervalTimeIntervalParserRuleCall_0_6_1_0; }
 
-		//=> ({WhenOccursStatment} "when" condition=Expr "occurs") times=Expr "times" "during" interval=TimeInterval "raises"
-		//event=Expr
+		//=> ({WhenOccursStatment} "when" condition=Expr "occurs") excl="exclusively"? times=Expr "times" "during"
+		//interval=TimeInterval "raises" event=Expr
 		public Group getGroup_1() { return cGroup_1; }
 
 		//=> ({WhenOccursStatment} "when" condition=Expr "occurs")
@@ -749,32 +751,38 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		//"occurs"
 		public Keyword getOccursKeyword_1_0_0_3() { return cOccursKeyword_1_0_0_3; }
 
+		//excl="exclusively"?
+		public Assignment getExclAssignment_1_1() { return cExclAssignment_1_1; }
+
+		//"exclusively"
+		public Keyword getExclExclusivelyKeyword_1_1_0() { return cExclExclusivelyKeyword_1_1_0; }
+
 		//times=Expr
-		public Assignment getTimesAssignment_1_1() { return cTimesAssignment_1_1; }
+		public Assignment getTimesAssignment_1_2() { return cTimesAssignment_1_2; }
 
 		//Expr
-		public RuleCall getTimesExprParserRuleCall_1_1_0() { return cTimesExprParserRuleCall_1_1_0; }
+		public RuleCall getTimesExprParserRuleCall_1_2_0() { return cTimesExprParserRuleCall_1_2_0; }
 
 		//"times"
-		public Keyword getTimesKeyword_1_2() { return cTimesKeyword_1_2; }
+		public Keyword getTimesKeyword_1_3() { return cTimesKeyword_1_3; }
 
 		//"during"
-		public Keyword getDuringKeyword_1_3() { return cDuringKeyword_1_3; }
+		public Keyword getDuringKeyword_1_4() { return cDuringKeyword_1_4; }
 
 		//interval=TimeInterval
-		public Assignment getIntervalAssignment_1_4() { return cIntervalAssignment_1_4; }
+		public Assignment getIntervalAssignment_1_5() { return cIntervalAssignment_1_5; }
 
 		//TimeInterval
-		public RuleCall getIntervalTimeIntervalParserRuleCall_1_4_0() { return cIntervalTimeIntervalParserRuleCall_1_4_0; }
+		public RuleCall getIntervalTimeIntervalParserRuleCall_1_5_0() { return cIntervalTimeIntervalParserRuleCall_1_5_0; }
 
 		//"raises"
-		public Keyword getRaisesKeyword_1_5() { return cRaisesKeyword_1_5; }
+		public Keyword getRaisesKeyword_1_6() { return cRaisesKeyword_1_6; }
 
 		//event=Expr
-		public Assignment getEventAssignment_1_6() { return cEventAssignment_1_6; }
+		public Assignment getEventAssignment_1_7() { return cEventAssignment_1_7; }
 
 		//Expr
-		public RuleCall getEventExprParserRuleCall_1_6_0() { return cEventExprParserRuleCall_1_6_0; }
+		public RuleCall getEventExprParserRuleCall_1_7_0() { return cEventExprParserRuleCall_1_7_0; }
 	}
 
 	public class WheneverStatementElements extends AbstractParserRuleElementFinder {
@@ -793,10 +801,12 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		private final Alternatives cAlternatives_0_0_0_5 = (Alternatives)cGroup_0_0_0.eContents().get(5);
 		private final Keyword cOccurKeyword_0_0_0_5_0 = (Keyword)cAlternatives_0_0_0_5.eContents().get(0);
 		private final Keyword cOccursKeyword_0_0_0_5_1 = (Keyword)cAlternatives_0_0_0_5.eContents().get(1);
-		private final Group cGroup_0_1 = (Group)cGroup_0.eContents().get(1);
-		private final Keyword cDuringKeyword_0_1_0 = (Keyword)cGroup_0_1.eContents().get(0);
-		private final Assignment cIntervalAssignment_0_1_1 = (Assignment)cGroup_0_1.eContents().get(1);
-		private final RuleCall cIntervalTimeIntervalParserRuleCall_0_1_1_0 = (RuleCall)cIntervalAssignment_0_1_1.eContents().get(0);
+		private final Assignment cExclAssignment_0_1 = (Assignment)cGroup_0.eContents().get(1);
+		private final Keyword cExclExclusivelyKeyword_0_1_0 = (Keyword)cExclAssignment_0_1.eContents().get(0);
+		private final Group cGroup_0_2 = (Group)cGroup_0.eContents().get(2);
+		private final Keyword cDuringKeyword_0_2_0 = (Keyword)cGroup_0_2.eContents().get(0);
+		private final Assignment cIntervalAssignment_0_2_1 = (Assignment)cGroup_0_2.eContents().get(1);
+		private final RuleCall cIntervalTimeIntervalParserRuleCall_0_2_1_0 = (RuleCall)cIntervalAssignment_0_2_1.eContents().get(0);
 		private final Group cGroup_1 = (Group)cAlternatives.eContents().get(1);
 		private final Group cGroup_1_0 = (Group)cGroup_1.eContents().get(0);
 		private final Group cGroup_1_0_0 = (Group)cGroup_1_0.eContents().get(0);
@@ -811,10 +821,12 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		private final Alternatives cAlternatives_1_0_0_6 = (Alternatives)cGroup_1_0_0.eContents().get(6);
 		private final Keyword cOccurKeyword_1_0_0_6_0 = (Keyword)cAlternatives_1_0_0_6.eContents().get(0);
 		private final Keyword cOccursKeyword_1_0_0_6_1 = (Keyword)cAlternatives_1_0_0_6.eContents().get(1);
-		private final Group cGroup_1_1 = (Group)cGroup_1.eContents().get(1);
-		private final Keyword cDuringKeyword_1_1_0 = (Keyword)cGroup_1_1.eContents().get(0);
-		private final Assignment cIntervalAssignment_1_1_1 = (Assignment)cGroup_1_1.eContents().get(1);
-		private final RuleCall cIntervalTimeIntervalParserRuleCall_1_1_1_0 = (RuleCall)cIntervalAssignment_1_1_1.eContents().get(0);
+		private final Assignment cExclAssignment_1_1 = (Assignment)cGroup_1.eContents().get(1);
+		private final Keyword cExclExclusivelyKeyword_1_1_0 = (Keyword)cExclAssignment_1_1.eContents().get(0);
+		private final Group cGroup_1_2 = (Group)cGroup_1.eContents().get(2);
+		private final Keyword cDuringKeyword_1_2_0 = (Keyword)cGroup_1_2.eContents().get(0);
+		private final Assignment cIntervalAssignment_1_2_1 = (Assignment)cGroup_1_2.eContents().get(1);
+		private final RuleCall cIntervalTimeIntervalParserRuleCall_1_2_1_0 = (RuleCall)cIntervalAssignment_1_2_1.eContents().get(0);
 		private final Group cGroup_2 = (Group)cAlternatives.eContents().get(2);
 		private final Group cGroup_2_0 = (Group)cGroup_2.eContents().get(0);
 		private final Group cGroup_2_0_0 = (Group)cGroup_2_0.eContents().get(0);
@@ -826,10 +838,12 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		private final Assignment cEffectAssignment_2_0_0_4 = (Assignment)cGroup_2_0_0.eContents().get(4);
 		private final RuleCall cEffectExprParserRuleCall_2_0_0_4_0 = (RuleCall)cEffectAssignment_2_0_0_4.eContents().get(0);
 		private final Keyword cHoldsKeyword_2_0_0_5 = (Keyword)cGroup_2_0_0.eContents().get(5);
-		private final Group cGroup_2_1 = (Group)cGroup_2.eContents().get(1);
-		private final Keyword cDuringKeyword_2_1_0 = (Keyword)cGroup_2_1.eContents().get(0);
-		private final Assignment cIntervalAssignment_2_1_1 = (Assignment)cGroup_2_1.eContents().get(1);
-		private final RuleCall cIntervalTimeIntervalParserRuleCall_2_1_1_0 = (RuleCall)cIntervalAssignment_2_1_1.eContents().get(0);
+		private final Assignment cExclAssignment_2_1 = (Assignment)cGroup_2.eContents().get(1);
+		private final Keyword cExclExclusivelyKeyword_2_1_0 = (Keyword)cExclAssignment_2_1.eContents().get(0);
+		private final Group cGroup_2_2 = (Group)cGroup_2.eContents().get(2);
+		private final Keyword cDuringKeyword_2_2_0 = (Keyword)cGroup_2_2.eContents().get(0);
+		private final Assignment cIntervalAssignment_2_2_1 = (Assignment)cGroup_2_2.eContents().get(1);
+		private final RuleCall cIntervalTimeIntervalParserRuleCall_2_2_1_0 = (RuleCall)cIntervalAssignment_2_2_1.eContents().get(0);
 		private final Group cGroup_3 = (Group)cAlternatives.eContents().get(3);
 		private final Group cGroup_3_0 = (Group)cGroup_3.eContents().get(0);
 		private final Group cGroup_3_0_0 = (Group)cGroup_3_0.eContents().get(0);
@@ -843,28 +857,32 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		private final Keyword cImpliesKeyword_3_0_0_5 = (Keyword)cGroup_3_0_0.eContents().get(5);
 		private final Assignment cRhsAssignment_3_1 = (Assignment)cGroup_3.eContents().get(1);
 		private final RuleCall cRhsExprParserRuleCall_3_1_0 = (RuleCall)cRhsAssignment_3_1.eContents().get(0);
-		private final Group cGroup_3_2 = (Group)cGroup_3.eContents().get(2);
-		private final Keyword cDuringKeyword_3_2_0 = (Keyword)cGroup_3_2.eContents().get(0);
-		private final Assignment cIntervalAssignment_3_2_1 = (Assignment)cGroup_3_2.eContents().get(1);
-		private final RuleCall cIntervalTimeIntervalParserRuleCall_3_2_1_0 = (RuleCall)cIntervalAssignment_3_2_1.eContents().get(0);
+		private final Assignment cExclAssignment_3_2 = (Assignment)cGroup_3.eContents().get(2);
+		private final Keyword cExclExclusivelyKeyword_3_2_0 = (Keyword)cExclAssignment_3_2.eContents().get(0);
+		private final Group cGroup_3_3 = (Group)cGroup_3.eContents().get(3);
+		private final Keyword cDuringKeyword_3_3_0 = (Keyword)cGroup_3_3.eContents().get(0);
+		private final Assignment cIntervalAssignment_3_3_1 = (Assignment)cGroup_3_3.eContents().get(1);
+		private final RuleCall cIntervalTimeIntervalParserRuleCall_3_3_1_0 = (RuleCall)cIntervalAssignment_3_3_1.eContents().get(0);
 		
 		//WheneverStatement:
-		//	=> ({WheneverOccursStatement} "whenever" cause=Expr "occurs" effect=Expr ("occur" | "occurs")) ("during"
-		//	interval=TimeInterval)? | => ({WheneverBecomesTrueStatement} "whenever" cause=Expr "becomes" "true" effect=Expr
-		//	("occur" | "occurs")) ("during" interval=TimeInterval)? | => ({WheneverHoldsStatement} "whenever" cause=Expr "occurs"
-		//	effect=Expr "holds") ("during" interval=TimeInterval)? | => ({WheneverImpliesStatement} "whenever" cause=Expr
-		//	"occurs" lhs=Expr "implies") rhs=Expr ("during" interval=TimeInterval)?;
+		//	=> ({WheneverOccursStatement} "whenever" cause=Expr "occurs" effect=Expr ("occur" | "occurs")) excl="exclusively"?
+		//	("during" interval=TimeInterval)? | => ({WheneverBecomesTrueStatement} "whenever" cause=Expr "becomes" "true"
+		//	effect=Expr ("occur" | "occurs")) excl="exclusively"? ("during" interval=TimeInterval)? | =>
+		//	({WheneverHoldsStatement} "whenever" cause=Expr "occurs" effect=Expr "holds") excl="exclusively"? ("during"
+		//	interval=TimeInterval)? | => ({WheneverImpliesStatement} "whenever" cause=Expr "occurs" lhs=Expr "implies") rhs=Expr
+		//	excl="exclusively"? ("during" interval=TimeInterval)?;
 		@Override public ParserRule getRule() { return rule; }
 
-		//=> ({WheneverOccursStatement} "whenever" cause=Expr "occurs" effect=Expr ("occur" | "occurs")) ("during"
-		//interval=TimeInterval)? | => ({WheneverBecomesTrueStatement} "whenever" cause=Expr "becomes" "true" effect=Expr
-		//("occur" | "occurs")) ("during" interval=TimeInterval)? | => ({WheneverHoldsStatement} "whenever" cause=Expr "occurs"
-		//effect=Expr "holds") ("during" interval=TimeInterval)? | => ({WheneverImpliesStatement} "whenever" cause=Expr "occurs"
-		//lhs=Expr "implies") rhs=Expr ("during" interval=TimeInterval)?
+		//=> ({WheneverOccursStatement} "whenever" cause=Expr "occurs" effect=Expr ("occur" | "occurs")) excl="exclusively"?
+		//("during" interval=TimeInterval)? | => ({WheneverBecomesTrueStatement} "whenever" cause=Expr "becomes" "true"
+		//effect=Expr ("occur" | "occurs")) excl="exclusively"? ("during" interval=TimeInterval)? | => ({WheneverHoldsStatement}
+		//"whenever" cause=Expr "occurs" effect=Expr "holds") excl="exclusively"? ("during" interval=TimeInterval)? | =>
+		//({WheneverImpliesStatement} "whenever" cause=Expr "occurs" lhs=Expr "implies") rhs=Expr excl="exclusively"? ("during"
+		//interval=TimeInterval)?
 		public Alternatives getAlternatives() { return cAlternatives; }
 
-		//=> ({WheneverOccursStatement} "whenever" cause=Expr "occurs" effect=Expr ("occur" | "occurs")) ("during"
-		//interval=TimeInterval)?
+		//=> ({WheneverOccursStatement} "whenever" cause=Expr "occurs" effect=Expr ("occur" | "occurs")) excl="exclusively"?
+		//("during" interval=TimeInterval)?
 		public Group getGroup_0() { return cGroup_0; }
 
 		//=> ({WheneverOccursStatement} "whenever" cause=Expr "occurs" effect=Expr ("occur" | "occurs"))
@@ -903,20 +921,26 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		//"occurs"
 		public Keyword getOccursKeyword_0_0_0_5_1() { return cOccursKeyword_0_0_0_5_1; }
 
+		//excl="exclusively"?
+		public Assignment getExclAssignment_0_1() { return cExclAssignment_0_1; }
+
+		//"exclusively"
+		public Keyword getExclExclusivelyKeyword_0_1_0() { return cExclExclusivelyKeyword_0_1_0; }
+
 		//("during" interval=TimeInterval)?
-		public Group getGroup_0_1() { return cGroup_0_1; }
+		public Group getGroup_0_2() { return cGroup_0_2; }
 
 		//"during"
-		public Keyword getDuringKeyword_0_1_0() { return cDuringKeyword_0_1_0; }
+		public Keyword getDuringKeyword_0_2_0() { return cDuringKeyword_0_2_0; }
 
 		//interval=TimeInterval
-		public Assignment getIntervalAssignment_0_1_1() { return cIntervalAssignment_0_1_1; }
+		public Assignment getIntervalAssignment_0_2_1() { return cIntervalAssignment_0_2_1; }
 
 		//TimeInterval
-		public RuleCall getIntervalTimeIntervalParserRuleCall_0_1_1_0() { return cIntervalTimeIntervalParserRuleCall_0_1_1_0; }
+		public RuleCall getIntervalTimeIntervalParserRuleCall_0_2_1_0() { return cIntervalTimeIntervalParserRuleCall_0_2_1_0; }
 
-		//=> ({WheneverBecomesTrueStatement} "whenever" cause=Expr "becomes" "true" effect=Expr ("occur" | "occurs")) ("during"
-		//interval=TimeInterval)?
+		//=> ({WheneverBecomesTrueStatement} "whenever" cause=Expr "becomes" "true" effect=Expr ("occur" | "occurs"))
+		//excl="exclusively"? ("during" interval=TimeInterval)?
 		public Group getGroup_1() { return cGroup_1; }
 
 		//=> ({WheneverBecomesTrueStatement} "whenever" cause=Expr "becomes" "true" effect=Expr ("occur" | "occurs"))
@@ -958,19 +982,26 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		//"occurs"
 		public Keyword getOccursKeyword_1_0_0_6_1() { return cOccursKeyword_1_0_0_6_1; }
 
+		//excl="exclusively"?
+		public Assignment getExclAssignment_1_1() { return cExclAssignment_1_1; }
+
+		//"exclusively"
+		public Keyword getExclExclusivelyKeyword_1_1_0() { return cExclExclusivelyKeyword_1_1_0; }
+
 		//("during" interval=TimeInterval)?
-		public Group getGroup_1_1() { return cGroup_1_1; }
+		public Group getGroup_1_2() { return cGroup_1_2; }
 
 		//"during"
-		public Keyword getDuringKeyword_1_1_0() { return cDuringKeyword_1_1_0; }
+		public Keyword getDuringKeyword_1_2_0() { return cDuringKeyword_1_2_0; }
 
 		//interval=TimeInterval
-		public Assignment getIntervalAssignment_1_1_1() { return cIntervalAssignment_1_1_1; }
+		public Assignment getIntervalAssignment_1_2_1() { return cIntervalAssignment_1_2_1; }
 
 		//TimeInterval
-		public RuleCall getIntervalTimeIntervalParserRuleCall_1_1_1_0() { return cIntervalTimeIntervalParserRuleCall_1_1_1_0; }
+		public RuleCall getIntervalTimeIntervalParserRuleCall_1_2_1_0() { return cIntervalTimeIntervalParserRuleCall_1_2_1_0; }
 
-		//=> ({WheneverHoldsStatement} "whenever" cause=Expr "occurs" effect=Expr "holds") ("during" interval=TimeInterval)?
+		//=> ({WheneverHoldsStatement} "whenever" cause=Expr "occurs" effect=Expr "holds") excl="exclusively"? ("during"
+		//interval=TimeInterval)?
 		public Group getGroup_2() { return cGroup_2; }
 
 		//=> ({WheneverHoldsStatement} "whenever" cause=Expr "occurs" effect=Expr "holds")
@@ -1003,19 +1034,25 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		//"holds"
 		public Keyword getHoldsKeyword_2_0_0_5() { return cHoldsKeyword_2_0_0_5; }
 
+		//excl="exclusively"?
+		public Assignment getExclAssignment_2_1() { return cExclAssignment_2_1; }
+
+		//"exclusively"
+		public Keyword getExclExclusivelyKeyword_2_1_0() { return cExclExclusivelyKeyword_2_1_0; }
+
 		//("during" interval=TimeInterval)?
-		public Group getGroup_2_1() { return cGroup_2_1; }
+		public Group getGroup_2_2() { return cGroup_2_2; }
 
 		//"during"
-		public Keyword getDuringKeyword_2_1_0() { return cDuringKeyword_2_1_0; }
+		public Keyword getDuringKeyword_2_2_0() { return cDuringKeyword_2_2_0; }
 
 		//interval=TimeInterval
-		public Assignment getIntervalAssignment_2_1_1() { return cIntervalAssignment_2_1_1; }
+		public Assignment getIntervalAssignment_2_2_1() { return cIntervalAssignment_2_2_1; }
 
 		//TimeInterval
-		public RuleCall getIntervalTimeIntervalParserRuleCall_2_1_1_0() { return cIntervalTimeIntervalParserRuleCall_2_1_1_0; }
+		public RuleCall getIntervalTimeIntervalParserRuleCall_2_2_1_0() { return cIntervalTimeIntervalParserRuleCall_2_2_1_0; }
 
-		//=> ({WheneverImpliesStatement} "whenever" cause=Expr "occurs" lhs=Expr "implies") rhs=Expr ("during"
+		//=> ({WheneverImpliesStatement} "whenever" cause=Expr "occurs" lhs=Expr "implies") rhs=Expr excl="exclusively"? ("during"
 		//interval=TimeInterval)?
 		public Group getGroup_3() { return cGroup_3; }
 
@@ -1055,17 +1092,23 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		//Expr
 		public RuleCall getRhsExprParserRuleCall_3_1_0() { return cRhsExprParserRuleCall_3_1_0; }
 
+		//excl="exclusively"?
+		public Assignment getExclAssignment_3_2() { return cExclAssignment_3_2; }
+
+		//"exclusively"
+		public Keyword getExclExclusivelyKeyword_3_2_0() { return cExclExclusivelyKeyword_3_2_0; }
+
 		//("during" interval=TimeInterval)?
-		public Group getGroup_3_2() { return cGroup_3_2; }
+		public Group getGroup_3_3() { return cGroup_3_3; }
 
 		//"during"
-		public Keyword getDuringKeyword_3_2_0() { return cDuringKeyword_3_2_0; }
+		public Keyword getDuringKeyword_3_3_0() { return cDuringKeyword_3_3_0; }
 
 		//interval=TimeInterval
-		public Assignment getIntervalAssignment_3_2_1() { return cIntervalAssignment_3_2_1; }
+		public Assignment getIntervalAssignment_3_3_1() { return cIntervalAssignment_3_3_1; }
 
 		//TimeInterval
-		public RuleCall getIntervalTimeIntervalParserRuleCall_3_2_1_0() { return cIntervalTimeIntervalParserRuleCall_3_2_1_0; }
+		public RuleCall getIntervalTimeIntervalParserRuleCall_3_3_1_0() { return cIntervalTimeIntervalParserRuleCall_3_3_1_0; }
 	}
 
 	public class RealTimeStatementElements extends AbstractParserRuleElementFinder {
@@ -1815,34 +1858,6 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 
 		//";"
 		public Keyword getSemicolonKeyword_3() { return cSemicolonKeyword_3; }
-	}
-
-	public class EventStatementElements extends AbstractParserRuleElementFinder {
-		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "EventStatement");
-		private final Group cGroup = (Group)rule.eContents().get(1);
-		private final Keyword cEventKeyword_0 = (Keyword)cGroup.eContents().get(0);
-		private final Assignment cNameAssignment_1 = (Assignment)cGroup.eContents().get(1);
-		private final RuleCall cNameIDTerminalRuleCall_1_0 = (RuleCall)cNameAssignment_1.eContents().get(0);
-		private final Keyword cSemicolonKeyword_2 = (Keyword)cGroup.eContents().get(2);
-		
-		//EventStatement:
-		//	"event" name=ID ";";
-		@Override public ParserRule getRule() { return rule; }
-
-		//"event" name=ID ";"
-		public Group getGroup() { return cGroup; }
-
-		//"event"
-		public Keyword getEventKeyword_0() { return cEventKeyword_0; }
-
-		//name=ID
-		public Assignment getNameAssignment_1() { return cNameAssignment_1; }
-
-		//ID
-		public RuleCall getNameIDTerminalRuleCall_1_0() { return cNameIDTerminalRuleCall_1_0; }
-
-		//";"
-		public Keyword getSemicolonKeyword_2() { return cSemicolonKeyword_2; }
 	}
 
 	public class AssignStatementElements extends AbstractParserRuleElementFinder {
@@ -3772,7 +3787,6 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 	private final PropertyStatementElements pPropertyStatement;
 	private final ConstStatementElements pConstStatement;
 	private final EqStatementElements pEqStatement;
-	private final EventStatementElements pEventStatement;
 	private final AssignStatementElements pAssignStatement;
 	private final FnDefExprElements pFnDefExpr;
 	private final NodeDefExprElements pNodeDefExpr;
@@ -3831,7 +3845,6 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		this.pPropertyStatement = new PropertyStatementElements();
 		this.pConstStatement = new ConstStatementElements();
 		this.pEqStatement = new EqStatementElements();
-		this.pEventStatement = new EventStatementElements();
 		this.pAssignStatement = new AssignStatementElements();
 		this.pFnDefExpr = new FnDefExprElements();
 		this.pNodeDefExpr = new NodeDefExprElements();
@@ -3890,7 +3903,7 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 
 	
 	//NamedElement returns aadl2::NamedElement:
-	//	Arg | FnDefExpr | PropertyStatement | ConstStatement | NodeDefExpr | RecordDefExpr | EventStatement;
+	//	Arg | FnDefExpr | PropertyStatement | ConstStatement | NodeDefExpr | RecordDefExpr;
 	public NamedElementElements getNamedElementAccess() {
 		return pNamedElement;
 	}
@@ -3966,7 +3979,7 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 	//	"parameter" expr=Expr ":" type=Type ";" | {LemmaStatement} "lemma" str=STRING ":" expr=Expr ";" | {LiftStatement}
 	//	"lift" subcomp=NestedDotID ";" | {ConnectionStatement} "connection" conn=[aadl2::NamedElement] ":" expr=Expr ";" |
 	//	SynchStatement | OrderStatement | PropertyStatement | ConstStatement | EqStatement | AssignStatement | FnDefExpr |
-	//	NodeDefExpr | RecordDefExpr | EventStatement;
+	//	NodeDefExpr | RecordDefExpr;
 	public SpecStatementElements getSpecStatementAccess() {
 		return pSpecStatement;
 	}
@@ -3987,9 +4000,9 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 	}
 
 	//WhenStatement:
-	//	=> ({WhenHoldsStatement} "when" condition=Expr "holds") "during" conditionInterval=TimeInterval event=Expr "occurs"
-	//	("during" eventInterval=TimeInterval)? | => ({WhenOccursStatment} "when" condition=Expr "occurs") times=Expr "times"
-	//	"during" interval=TimeInterval "raises" event=Expr;
+	//	=> ({WhenHoldsStatement} "when" condition=Expr "holds") excl="exclusively"? "during" conditionInterval=TimeInterval
+	//	event=Expr "occurs" ("during" eventInterval=TimeInterval)? | => ({WhenOccursStatment} "when" condition=Expr "occurs")
+	//	excl="exclusively"? times=Expr "times" "during" interval=TimeInterval "raises" event=Expr;
 	public WhenStatementElements getWhenStatementAccess() {
 		return pWhenStatement;
 	}
@@ -3999,11 +4012,12 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 	}
 
 	//WheneverStatement:
-	//	=> ({WheneverOccursStatement} "whenever" cause=Expr "occurs" effect=Expr ("occur" | "occurs")) ("during"
-	//	interval=TimeInterval)? | => ({WheneverBecomesTrueStatement} "whenever" cause=Expr "becomes" "true" effect=Expr
-	//	("occur" | "occurs")) ("during" interval=TimeInterval)? | => ({WheneverHoldsStatement} "whenever" cause=Expr "occurs"
-	//	effect=Expr "holds") ("during" interval=TimeInterval)? | => ({WheneverImpliesStatement} "whenever" cause=Expr
-	//	"occurs" lhs=Expr "implies") rhs=Expr ("during" interval=TimeInterval)?;
+	//	=> ({WheneverOccursStatement} "whenever" cause=Expr "occurs" effect=Expr ("occur" | "occurs")) excl="exclusively"?
+	//	("during" interval=TimeInterval)? | => ({WheneverBecomesTrueStatement} "whenever" cause=Expr "becomes" "true"
+	//	effect=Expr ("occur" | "occurs")) excl="exclusively"? ("during" interval=TimeInterval)? | =>
+	//	({WheneverHoldsStatement} "whenever" cause=Expr "occurs" effect=Expr "holds") excl="exclusively"? ("during"
+	//	interval=TimeInterval)? | => ({WheneverImpliesStatement} "whenever" cause=Expr "occurs" lhs=Expr "implies") rhs=Expr
+	//	excl="exclusively"? ("during" interval=TimeInterval)?;
 	public WheneverStatementElements getWheneverStatementAccess() {
 		return pWheneverStatement;
 	}
@@ -4107,16 +4121,6 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 	
 	public ParserRule getEqStatementRule() {
 		return getEqStatementAccess().getRule();
-	}
-
-	//EventStatement:
-	//	"event" name=ID ";";
-	public EventStatementElements getEventStatementAccess() {
-		return pEventStatement;
-	}
-	
-	public ParserRule getEventStatementRule() {
-		return getEventStatementAccess().getRule();
 	}
 
 	//AssignStatement:

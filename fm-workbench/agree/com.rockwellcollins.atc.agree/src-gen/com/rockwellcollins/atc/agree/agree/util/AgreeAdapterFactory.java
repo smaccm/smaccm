@@ -156,11 +156,6 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
         return createEqStatementAdapter();
       }
       @Override
-      public Adapter caseEventStatement(EventStatement object)
-      {
-        return createEventStatementAdapter();
-      }
-      @Override
       public Adapter caseAssignStatement(AssignStatement object)
       {
         return createAssignStatementAdapter();
@@ -723,21 +718,6 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
    * @generated
    */
   public Adapter createEqStatementAdapter()
-  {
-    return null;
-  }
-
-  /**
-   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.EventStatement <em>Event Statement</em>}'.
-   * <!-- begin-user-doc -->
-   * This default implementation returns null so that we can easily ignore cases;
-   * it's useful to ignore a case when inheritance will catch all the cases anyway.
-   * <!-- end-user-doc -->
-   * @return the new adapter.
-   * @see com.rockwellcollins.atc.agree.agree.EventStatement
-   * @generated
-   */
-  public Adapter createEventStatementAdapter()
   {
     return null;
   }

@@ -23,6 +23,7 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  * </p>
  * <ul>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.impl.WhenStatementImpl#getCondition <em>Condition</em>}</li>
+ *   <li>{@link com.rockwellcollins.atc.agree.agree.impl.WhenStatementImpl#getExcl <em>Excl</em>}</li>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.impl.WhenStatementImpl#getEvent <em>Event</em>}</li>
  * </ul>
  *
@@ -39,6 +40,26 @@ public class WhenStatementImpl extends PatternStatementImpl implements WhenState
    * @ordered
    */
   protected Expr condition;
+
+  /**
+   * The default value of the '{@link #getExcl() <em>Excl</em>}' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #getExcl()
+   * @generated
+   * @ordered
+   */
+  protected static final String EXCL_EDEFAULT = null;
+
+  /**
+   * The cached value of the '{@link #getExcl() <em>Excl</em>}' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #getExcl()
+   * @generated
+   * @ordered
+   */
+  protected String excl = EXCL_EDEFAULT;
 
   /**
    * The cached value of the '{@link #getEvent() <em>Event</em>}' containment reference.
@@ -124,6 +145,29 @@ public class WhenStatementImpl extends PatternStatementImpl implements WhenState
    * <!-- end-user-doc -->
    * @generated
    */
+  public String getExcl()
+  {
+    return excl;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public void setExcl(String newExcl)
+  {
+    String oldExcl = excl;
+    excl = newExcl;
+    if (eNotificationRequired())
+      eNotify(new ENotificationImpl(this, Notification.SET, AgreePackage.WHEN_STATEMENT__EXCL, oldExcl, excl));
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   public Expr getEvent()
   {
     return event;
@@ -197,6 +241,8 @@ public class WhenStatementImpl extends PatternStatementImpl implements WhenState
     {
       case AgreePackage.WHEN_STATEMENT__CONDITION:
         return getCondition();
+      case AgreePackage.WHEN_STATEMENT__EXCL:
+        return getExcl();
       case AgreePackage.WHEN_STATEMENT__EVENT:
         return getEvent();
     }
@@ -215,6 +261,9 @@ public class WhenStatementImpl extends PatternStatementImpl implements WhenState
     {
       case AgreePackage.WHEN_STATEMENT__CONDITION:
         setCondition((Expr)newValue);
+        return;
+      case AgreePackage.WHEN_STATEMENT__EXCL:
+        setExcl((String)newValue);
         return;
       case AgreePackage.WHEN_STATEMENT__EVENT:
         setEvent((Expr)newValue);
@@ -236,6 +285,9 @@ public class WhenStatementImpl extends PatternStatementImpl implements WhenState
       case AgreePackage.WHEN_STATEMENT__CONDITION:
         setCondition((Expr)null);
         return;
+      case AgreePackage.WHEN_STATEMENT__EXCL:
+        setExcl(EXCL_EDEFAULT);
+        return;
       case AgreePackage.WHEN_STATEMENT__EVENT:
         setEvent((Expr)null);
         return;
@@ -255,10 +307,29 @@ public class WhenStatementImpl extends PatternStatementImpl implements WhenState
     {
       case AgreePackage.WHEN_STATEMENT__CONDITION:
         return condition != null;
+      case AgreePackage.WHEN_STATEMENT__EXCL:
+        return EXCL_EDEFAULT == null ? excl != null : !EXCL_EDEFAULT.equals(excl);
       case AgreePackage.WHEN_STATEMENT__EVENT:
         return event != null;
     }
     return super.eIsSet(featureID);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public String toString()
+  {
+    if (eIsProxy()) return super.toString();
+
+    StringBuffer result = new StringBuffer(super.toString());
+    result.append(" (excl: ");
+    result.append(excl);
+    result.append(')');
+    return result.toString();
   }
 
 } //WhenStatementImpl

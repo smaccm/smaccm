@@ -139,6 +139,7 @@ import com.rockwellcollins.atc.agree.services.AgreeGrammarAccess;
 		tokenNameToValue.put("Synchrony", "'synchrony'");
 		tokenNameToValue.put("Classifier", "'classifier'");
 		tokenNameToValue.put("Connection", "'connection'");
+		tokenNameToValue.put("Exclusively", "'exclusively'");
 		tokenNameToValue.put("Get_Property", "'Get_Property'");
 		tokenNameToValue.put("Asynchronous", "'asynchronous'");
  	}
@@ -611,34 +612,6 @@ ruleEqStatement
 { before(grammarAccess.getEqStatementAccess().getGroup()); }
 (rule__EqStatement__Group__0)
 { after(grammarAccess.getEqStatementAccess().getGroup()); }
-)
-
-;
-finally {
-	restoreStackSize(stackSize);
-}
-
-
-
-// Entry rule entryRuleEventStatement
-entryRuleEventStatement 
-:
-{ before(grammarAccess.getEventStatementRule()); }
-	 ruleEventStatement
-{ after(grammarAccess.getEventStatementRule()); } 
-	 EOF 
-;
-
-// Rule EventStatement
-ruleEventStatement 
-    @init {
-		int stackSize = keepStackSize();
-    }
-    :
-(
-{ before(grammarAccess.getEventStatementAccess().getGroup()); }
-(rule__EventStatement__Group__0)
-{ after(grammarAccess.getEventStatementAccess().getGroup()); }
 )
 
 ;
@@ -2356,12 +2329,6 @@ rule__NamedElement__Alternatives
 { after(grammarAccess.getNamedElementAccess().getRecordDefExprParserRuleCall_5()); }
 )
 
-    |(
-{ before(grammarAccess.getNamedElementAccess().getEventStatementParserRuleCall_6()); }
-	ruleEventStatement
-{ after(grammarAccess.getNamedElementAccess().getEventStatementParserRuleCall_6()); }
-)
-
 ;
 finally {
 	restoreStackSize(stackSize);
@@ -2473,12 +2440,6 @@ rule__SpecStatement__Alternatives
 { before(grammarAccess.getSpecStatementAccess().getRecordDefExprParserRuleCall_16()); }
 	ruleRecordDefExpr
 { after(grammarAccess.getSpecStatementAccess().getRecordDefExprParserRuleCall_16()); }
-)
-
-    |(
-{ before(grammarAccess.getSpecStatementAccess().getEventStatementParserRuleCall_17()); }
-	ruleEventStatement
-{ after(grammarAccess.getSpecStatementAccess().getEventStatementParserRuleCall_17()); }
 )
 
 ;
@@ -5444,11 +5405,9 @@ rule__WhenStatement__Group_0__1__Impl
     }
 :
 (
-{ before(grammarAccess.getWhenStatementAccess().getDuringKeyword_0_1()); }
-
-	During 
-
-{ after(grammarAccess.getWhenStatementAccess().getDuringKeyword_0_1()); }
+{ before(grammarAccess.getWhenStatementAccess().getExclAssignment_0_1()); }
+(rule__WhenStatement__ExclAssignment_0_1)?
+{ after(grammarAccess.getWhenStatementAccess().getExclAssignment_0_1()); }
 )
 
 ;
@@ -5475,9 +5434,11 @@ rule__WhenStatement__Group_0__2__Impl
     }
 :
 (
-{ before(grammarAccess.getWhenStatementAccess().getConditionIntervalAssignment_0_2()); }
-(rule__WhenStatement__ConditionIntervalAssignment_0_2)
-{ after(grammarAccess.getWhenStatementAccess().getConditionIntervalAssignment_0_2()); }
+{ before(grammarAccess.getWhenStatementAccess().getDuringKeyword_0_2()); }
+
+	During 
+
+{ after(grammarAccess.getWhenStatementAccess().getDuringKeyword_0_2()); }
 )
 
 ;
@@ -5504,9 +5465,9 @@ rule__WhenStatement__Group_0__3__Impl
     }
 :
 (
-{ before(grammarAccess.getWhenStatementAccess().getEventAssignment_0_3()); }
-(rule__WhenStatement__EventAssignment_0_3)
-{ after(grammarAccess.getWhenStatementAccess().getEventAssignment_0_3()); }
+{ before(grammarAccess.getWhenStatementAccess().getConditionIntervalAssignment_0_3()); }
+(rule__WhenStatement__ConditionIntervalAssignment_0_3)
+{ after(grammarAccess.getWhenStatementAccess().getConditionIntervalAssignment_0_3()); }
 )
 
 ;
@@ -5533,11 +5494,9 @@ rule__WhenStatement__Group_0__4__Impl
     }
 :
 (
-{ before(grammarAccess.getWhenStatementAccess().getOccursKeyword_0_4()); }
-
-	Occurs 
-
-{ after(grammarAccess.getWhenStatementAccess().getOccursKeyword_0_4()); }
+{ before(grammarAccess.getWhenStatementAccess().getEventAssignment_0_4()); }
+(rule__WhenStatement__EventAssignment_0_4)
+{ after(grammarAccess.getWhenStatementAccess().getEventAssignment_0_4()); }
 )
 
 ;
@@ -5552,6 +5511,7 @@ rule__WhenStatement__Group_0__5
     }
 :
 	rule__WhenStatement__Group_0__5__Impl
+	rule__WhenStatement__Group_0__6
 ;
 finally {
 	restoreStackSize(stackSize);
@@ -5563,15 +5523,47 @@ rule__WhenStatement__Group_0__5__Impl
     }
 :
 (
-{ before(grammarAccess.getWhenStatementAccess().getGroup_0_5()); }
-(rule__WhenStatement__Group_0_5__0)?
-{ after(grammarAccess.getWhenStatementAccess().getGroup_0_5()); }
+{ before(grammarAccess.getWhenStatementAccess().getOccursKeyword_0_5()); }
+
+	Occurs 
+
+{ after(grammarAccess.getWhenStatementAccess().getOccursKeyword_0_5()); }
 )
 
 ;
 finally {
 	restoreStackSize(stackSize);
 }
+
+
+rule__WhenStatement__Group_0__6
+    @init {
+		int stackSize = keepStackSize();
+    }
+:
+	rule__WhenStatement__Group_0__6__Impl
+;
+finally {
+	restoreStackSize(stackSize);
+}
+
+rule__WhenStatement__Group_0__6__Impl
+    @init {
+		int stackSize = keepStackSize();
+    }
+:
+(
+{ before(grammarAccess.getWhenStatementAccess().getGroup_0_6()); }
+(rule__WhenStatement__Group_0_6__0)?
+{ after(grammarAccess.getWhenStatementAccess().getGroup_0_6()); }
+)
+
+;
+finally {
+	restoreStackSize(stackSize);
+}
+
+
 
 
 
@@ -5745,29 +5737,29 @@ finally {
 
 
 
-rule__WhenStatement__Group_0_5__0
+rule__WhenStatement__Group_0_6__0
     @init {
 		int stackSize = keepStackSize();
     }
 :
-	rule__WhenStatement__Group_0_5__0__Impl
-	rule__WhenStatement__Group_0_5__1
+	rule__WhenStatement__Group_0_6__0__Impl
+	rule__WhenStatement__Group_0_6__1
 ;
 finally {
 	restoreStackSize(stackSize);
 }
 
-rule__WhenStatement__Group_0_5__0__Impl
+rule__WhenStatement__Group_0_6__0__Impl
     @init {
 		int stackSize = keepStackSize();
     }
 :
 (
-{ before(grammarAccess.getWhenStatementAccess().getDuringKeyword_0_5_0()); }
+{ before(grammarAccess.getWhenStatementAccess().getDuringKeyword_0_6_0()); }
 
 	During 
 
-{ after(grammarAccess.getWhenStatementAccess().getDuringKeyword_0_5_0()); }
+{ after(grammarAccess.getWhenStatementAccess().getDuringKeyword_0_6_0()); }
 )
 
 ;
@@ -5776,26 +5768,26 @@ finally {
 }
 
 
-rule__WhenStatement__Group_0_5__1
+rule__WhenStatement__Group_0_6__1
     @init {
 		int stackSize = keepStackSize();
     }
 :
-	rule__WhenStatement__Group_0_5__1__Impl
+	rule__WhenStatement__Group_0_6__1__Impl
 ;
 finally {
 	restoreStackSize(stackSize);
 }
 
-rule__WhenStatement__Group_0_5__1__Impl
+rule__WhenStatement__Group_0_6__1__Impl
     @init {
 		int stackSize = keepStackSize();
     }
 :
 (
-{ before(grammarAccess.getWhenStatementAccess().getEventIntervalAssignment_0_5_1()); }
-(rule__WhenStatement__EventIntervalAssignment_0_5_1)
-{ after(grammarAccess.getWhenStatementAccess().getEventIntervalAssignment_0_5_1()); }
+{ before(grammarAccess.getWhenStatementAccess().getEventIntervalAssignment_0_6_1()); }
+(rule__WhenStatement__EventIntervalAssignment_0_6_1)
+{ after(grammarAccess.getWhenStatementAccess().getEventIntervalAssignment_0_6_1()); }
 )
 
 ;
@@ -5855,9 +5847,9 @@ rule__WhenStatement__Group_1__1__Impl
     }
 :
 (
-{ before(grammarAccess.getWhenStatementAccess().getTimesAssignment_1_1()); }
-(rule__WhenStatement__TimesAssignment_1_1)
-{ after(grammarAccess.getWhenStatementAccess().getTimesAssignment_1_1()); }
+{ before(grammarAccess.getWhenStatementAccess().getExclAssignment_1_1()); }
+(rule__WhenStatement__ExclAssignment_1_1)?
+{ after(grammarAccess.getWhenStatementAccess().getExclAssignment_1_1()); }
 )
 
 ;
@@ -5884,11 +5876,9 @@ rule__WhenStatement__Group_1__2__Impl
     }
 :
 (
-{ before(grammarAccess.getWhenStatementAccess().getTimesKeyword_1_2()); }
-
-	Times 
-
-{ after(grammarAccess.getWhenStatementAccess().getTimesKeyword_1_2()); }
+{ before(grammarAccess.getWhenStatementAccess().getTimesAssignment_1_2()); }
+(rule__WhenStatement__TimesAssignment_1_2)
+{ after(grammarAccess.getWhenStatementAccess().getTimesAssignment_1_2()); }
 )
 
 ;
@@ -5915,11 +5905,11 @@ rule__WhenStatement__Group_1__3__Impl
     }
 :
 (
-{ before(grammarAccess.getWhenStatementAccess().getDuringKeyword_1_3()); }
+{ before(grammarAccess.getWhenStatementAccess().getTimesKeyword_1_3()); }
 
-	During 
+	Times 
 
-{ after(grammarAccess.getWhenStatementAccess().getDuringKeyword_1_3()); }
+{ after(grammarAccess.getWhenStatementAccess().getTimesKeyword_1_3()); }
 )
 
 ;
@@ -5946,9 +5936,11 @@ rule__WhenStatement__Group_1__4__Impl
     }
 :
 (
-{ before(grammarAccess.getWhenStatementAccess().getIntervalAssignment_1_4()); }
-(rule__WhenStatement__IntervalAssignment_1_4)
-{ after(grammarAccess.getWhenStatementAccess().getIntervalAssignment_1_4()); }
+{ before(grammarAccess.getWhenStatementAccess().getDuringKeyword_1_4()); }
+
+	During 
+
+{ after(grammarAccess.getWhenStatementAccess().getDuringKeyword_1_4()); }
 )
 
 ;
@@ -5975,11 +5967,9 @@ rule__WhenStatement__Group_1__5__Impl
     }
 :
 (
-{ before(grammarAccess.getWhenStatementAccess().getRaisesKeyword_1_5()); }
-
-	Raises 
-
-{ after(grammarAccess.getWhenStatementAccess().getRaisesKeyword_1_5()); }
+{ before(grammarAccess.getWhenStatementAccess().getIntervalAssignment_1_5()); }
+(rule__WhenStatement__IntervalAssignment_1_5)
+{ after(grammarAccess.getWhenStatementAccess().getIntervalAssignment_1_5()); }
 )
 
 ;
@@ -5994,6 +5984,7 @@ rule__WhenStatement__Group_1__6
     }
 :
 	rule__WhenStatement__Group_1__6__Impl
+	rule__WhenStatement__Group_1__7
 ;
 finally {
 	restoreStackSize(stackSize);
@@ -6005,15 +5996,47 @@ rule__WhenStatement__Group_1__6__Impl
     }
 :
 (
-{ before(grammarAccess.getWhenStatementAccess().getEventAssignment_1_6()); }
-(rule__WhenStatement__EventAssignment_1_6)
-{ after(grammarAccess.getWhenStatementAccess().getEventAssignment_1_6()); }
+{ before(grammarAccess.getWhenStatementAccess().getRaisesKeyword_1_6()); }
+
+	Raises 
+
+{ after(grammarAccess.getWhenStatementAccess().getRaisesKeyword_1_6()); }
 )
 
 ;
 finally {
 	restoreStackSize(stackSize);
 }
+
+
+rule__WhenStatement__Group_1__7
+    @init {
+		int stackSize = keepStackSize();
+    }
+:
+	rule__WhenStatement__Group_1__7__Impl
+;
+finally {
+	restoreStackSize(stackSize);
+}
+
+rule__WhenStatement__Group_1__7__Impl
+    @init {
+		int stackSize = keepStackSize();
+    }
+:
+(
+{ before(grammarAccess.getWhenStatementAccess().getEventAssignment_1_7()); }
+(rule__WhenStatement__EventAssignment_1_7)
+{ after(grammarAccess.getWhenStatementAccess().getEventAssignment_1_7()); }
+)
+
+;
+finally {
+	restoreStackSize(stackSize);
+}
+
+
 
 
 
@@ -6224,6 +6247,7 @@ rule__WheneverStatement__Group_0__1
     }
 :
 	rule__WheneverStatement__Group_0__1__Impl
+	rule__WheneverStatement__Group_0__2
 ;
 finally {
 	restoreStackSize(stackSize);
@@ -6235,15 +6259,45 @@ rule__WheneverStatement__Group_0__1__Impl
     }
 :
 (
-{ before(grammarAccess.getWheneverStatementAccess().getGroup_0_1()); }
-(rule__WheneverStatement__Group_0_1__0)?
-{ after(grammarAccess.getWheneverStatementAccess().getGroup_0_1()); }
+{ before(grammarAccess.getWheneverStatementAccess().getExclAssignment_0_1()); }
+(rule__WheneverStatement__ExclAssignment_0_1)?
+{ after(grammarAccess.getWheneverStatementAccess().getExclAssignment_0_1()); }
 )
 
 ;
 finally {
 	restoreStackSize(stackSize);
 }
+
+
+rule__WheneverStatement__Group_0__2
+    @init {
+		int stackSize = keepStackSize();
+    }
+:
+	rule__WheneverStatement__Group_0__2__Impl
+;
+finally {
+	restoreStackSize(stackSize);
+}
+
+rule__WheneverStatement__Group_0__2__Impl
+    @init {
+		int stackSize = keepStackSize();
+    }
+:
+(
+{ before(grammarAccess.getWheneverStatementAccess().getGroup_0_2()); }
+(rule__WheneverStatement__Group_0_2__0)?
+{ after(grammarAccess.getWheneverStatementAccess().getGroup_0_2()); }
+)
+
+;
+finally {
+	restoreStackSize(stackSize);
+}
+
+
 
 
 
@@ -6471,29 +6525,29 @@ finally {
 
 
 
-rule__WheneverStatement__Group_0_1__0
+rule__WheneverStatement__Group_0_2__0
     @init {
 		int stackSize = keepStackSize();
     }
 :
-	rule__WheneverStatement__Group_0_1__0__Impl
-	rule__WheneverStatement__Group_0_1__1
+	rule__WheneverStatement__Group_0_2__0__Impl
+	rule__WheneverStatement__Group_0_2__1
 ;
 finally {
 	restoreStackSize(stackSize);
 }
 
-rule__WheneverStatement__Group_0_1__0__Impl
+rule__WheneverStatement__Group_0_2__0__Impl
     @init {
 		int stackSize = keepStackSize();
     }
 :
 (
-{ before(grammarAccess.getWheneverStatementAccess().getDuringKeyword_0_1_0()); }
+{ before(grammarAccess.getWheneverStatementAccess().getDuringKeyword_0_2_0()); }
 
 	During 
 
-{ after(grammarAccess.getWheneverStatementAccess().getDuringKeyword_0_1_0()); }
+{ after(grammarAccess.getWheneverStatementAccess().getDuringKeyword_0_2_0()); }
 )
 
 ;
@@ -6502,26 +6556,26 @@ finally {
 }
 
 
-rule__WheneverStatement__Group_0_1__1
+rule__WheneverStatement__Group_0_2__1
     @init {
 		int stackSize = keepStackSize();
     }
 :
-	rule__WheneverStatement__Group_0_1__1__Impl
+	rule__WheneverStatement__Group_0_2__1__Impl
 ;
 finally {
 	restoreStackSize(stackSize);
 }
 
-rule__WheneverStatement__Group_0_1__1__Impl
+rule__WheneverStatement__Group_0_2__1__Impl
     @init {
 		int stackSize = keepStackSize();
     }
 :
 (
-{ before(grammarAccess.getWheneverStatementAccess().getIntervalAssignment_0_1_1()); }
-(rule__WheneverStatement__IntervalAssignment_0_1_1)
-{ after(grammarAccess.getWheneverStatementAccess().getIntervalAssignment_0_1_1()); }
+{ before(grammarAccess.getWheneverStatementAccess().getIntervalAssignment_0_2_1()); }
+(rule__WheneverStatement__IntervalAssignment_0_2_1)
+{ after(grammarAccess.getWheneverStatementAccess().getIntervalAssignment_0_2_1()); }
 )
 
 ;
@@ -6569,6 +6623,7 @@ rule__WheneverStatement__Group_1__1
     }
 :
 	rule__WheneverStatement__Group_1__1__Impl
+	rule__WheneverStatement__Group_1__2
 ;
 finally {
 	restoreStackSize(stackSize);
@@ -6580,15 +6635,45 @@ rule__WheneverStatement__Group_1__1__Impl
     }
 :
 (
-{ before(grammarAccess.getWheneverStatementAccess().getGroup_1_1()); }
-(rule__WheneverStatement__Group_1_1__0)?
-{ after(grammarAccess.getWheneverStatementAccess().getGroup_1_1()); }
+{ before(grammarAccess.getWheneverStatementAccess().getExclAssignment_1_1()); }
+(rule__WheneverStatement__ExclAssignment_1_1)?
+{ after(grammarAccess.getWheneverStatementAccess().getExclAssignment_1_1()); }
 )
 
 ;
 finally {
 	restoreStackSize(stackSize);
 }
+
+
+rule__WheneverStatement__Group_1__2
+    @init {
+		int stackSize = keepStackSize();
+    }
+:
+	rule__WheneverStatement__Group_1__2__Impl
+;
+finally {
+	restoreStackSize(stackSize);
+}
+
+rule__WheneverStatement__Group_1__2__Impl
+    @init {
+		int stackSize = keepStackSize();
+    }
+:
+(
+{ before(grammarAccess.getWheneverStatementAccess().getGroup_1_2()); }
+(rule__WheneverStatement__Group_1_2__0)?
+{ after(grammarAccess.getWheneverStatementAccess().getGroup_1_2()); }
+)
+
+;
+finally {
+	restoreStackSize(stackSize);
+}
+
+
 
 
 
@@ -6849,29 +6934,29 @@ finally {
 
 
 
-rule__WheneverStatement__Group_1_1__0
+rule__WheneverStatement__Group_1_2__0
     @init {
 		int stackSize = keepStackSize();
     }
 :
-	rule__WheneverStatement__Group_1_1__0__Impl
-	rule__WheneverStatement__Group_1_1__1
+	rule__WheneverStatement__Group_1_2__0__Impl
+	rule__WheneverStatement__Group_1_2__1
 ;
 finally {
 	restoreStackSize(stackSize);
 }
 
-rule__WheneverStatement__Group_1_1__0__Impl
+rule__WheneverStatement__Group_1_2__0__Impl
     @init {
 		int stackSize = keepStackSize();
     }
 :
 (
-{ before(grammarAccess.getWheneverStatementAccess().getDuringKeyword_1_1_0()); }
+{ before(grammarAccess.getWheneverStatementAccess().getDuringKeyword_1_2_0()); }
 
 	During 
 
-{ after(grammarAccess.getWheneverStatementAccess().getDuringKeyword_1_1_0()); }
+{ after(grammarAccess.getWheneverStatementAccess().getDuringKeyword_1_2_0()); }
 )
 
 ;
@@ -6880,26 +6965,26 @@ finally {
 }
 
 
-rule__WheneverStatement__Group_1_1__1
+rule__WheneverStatement__Group_1_2__1
     @init {
 		int stackSize = keepStackSize();
     }
 :
-	rule__WheneverStatement__Group_1_1__1__Impl
+	rule__WheneverStatement__Group_1_2__1__Impl
 ;
 finally {
 	restoreStackSize(stackSize);
 }
 
-rule__WheneverStatement__Group_1_1__1__Impl
+rule__WheneverStatement__Group_1_2__1__Impl
     @init {
 		int stackSize = keepStackSize();
     }
 :
 (
-{ before(grammarAccess.getWheneverStatementAccess().getIntervalAssignment_1_1_1()); }
-(rule__WheneverStatement__IntervalAssignment_1_1_1)
-{ after(grammarAccess.getWheneverStatementAccess().getIntervalAssignment_1_1_1()); }
+{ before(grammarAccess.getWheneverStatementAccess().getIntervalAssignment_1_2_1()); }
+(rule__WheneverStatement__IntervalAssignment_1_2_1)
+{ after(grammarAccess.getWheneverStatementAccess().getIntervalAssignment_1_2_1()); }
 )
 
 ;
@@ -6947,6 +7032,7 @@ rule__WheneverStatement__Group_2__1
     }
 :
 	rule__WheneverStatement__Group_2__1__Impl
+	rule__WheneverStatement__Group_2__2
 ;
 finally {
 	restoreStackSize(stackSize);
@@ -6958,15 +7044,45 @@ rule__WheneverStatement__Group_2__1__Impl
     }
 :
 (
-{ before(grammarAccess.getWheneverStatementAccess().getGroup_2_1()); }
-(rule__WheneverStatement__Group_2_1__0)?
-{ after(grammarAccess.getWheneverStatementAccess().getGroup_2_1()); }
+{ before(grammarAccess.getWheneverStatementAccess().getExclAssignment_2_1()); }
+(rule__WheneverStatement__ExclAssignment_2_1)?
+{ after(grammarAccess.getWheneverStatementAccess().getExclAssignment_2_1()); }
 )
 
 ;
 finally {
 	restoreStackSize(stackSize);
 }
+
+
+rule__WheneverStatement__Group_2__2
+    @init {
+		int stackSize = keepStackSize();
+    }
+:
+	rule__WheneverStatement__Group_2__2__Impl
+;
+finally {
+	restoreStackSize(stackSize);
+}
+
+rule__WheneverStatement__Group_2__2__Impl
+    @init {
+		int stackSize = keepStackSize();
+    }
+:
+(
+{ before(grammarAccess.getWheneverStatementAccess().getGroup_2_2()); }
+(rule__WheneverStatement__Group_2_2__0)?
+{ after(grammarAccess.getWheneverStatementAccess().getGroup_2_2()); }
+)
+
+;
+finally {
+	restoreStackSize(stackSize);
+}
+
+
 
 
 
@@ -7196,29 +7312,29 @@ finally {
 
 
 
-rule__WheneverStatement__Group_2_1__0
+rule__WheneverStatement__Group_2_2__0
     @init {
 		int stackSize = keepStackSize();
     }
 :
-	rule__WheneverStatement__Group_2_1__0__Impl
-	rule__WheneverStatement__Group_2_1__1
+	rule__WheneverStatement__Group_2_2__0__Impl
+	rule__WheneverStatement__Group_2_2__1
 ;
 finally {
 	restoreStackSize(stackSize);
 }
 
-rule__WheneverStatement__Group_2_1__0__Impl
+rule__WheneverStatement__Group_2_2__0__Impl
     @init {
 		int stackSize = keepStackSize();
     }
 :
 (
-{ before(grammarAccess.getWheneverStatementAccess().getDuringKeyword_2_1_0()); }
+{ before(grammarAccess.getWheneverStatementAccess().getDuringKeyword_2_2_0()); }
 
 	During 
 
-{ after(grammarAccess.getWheneverStatementAccess().getDuringKeyword_2_1_0()); }
+{ after(grammarAccess.getWheneverStatementAccess().getDuringKeyword_2_2_0()); }
 )
 
 ;
@@ -7227,26 +7343,26 @@ finally {
 }
 
 
-rule__WheneverStatement__Group_2_1__1
+rule__WheneverStatement__Group_2_2__1
     @init {
 		int stackSize = keepStackSize();
     }
 :
-	rule__WheneverStatement__Group_2_1__1__Impl
+	rule__WheneverStatement__Group_2_2__1__Impl
 ;
 finally {
 	restoreStackSize(stackSize);
 }
 
-rule__WheneverStatement__Group_2_1__1__Impl
+rule__WheneverStatement__Group_2_2__1__Impl
     @init {
 		int stackSize = keepStackSize();
     }
 :
 (
-{ before(grammarAccess.getWheneverStatementAccess().getIntervalAssignment_2_1_1()); }
-(rule__WheneverStatement__IntervalAssignment_2_1_1)
-{ after(grammarAccess.getWheneverStatementAccess().getIntervalAssignment_2_1_1()); }
+{ before(grammarAccess.getWheneverStatementAccess().getIntervalAssignment_2_2_1()); }
+(rule__WheneverStatement__IntervalAssignment_2_2_1)
+{ after(grammarAccess.getWheneverStatementAccess().getIntervalAssignment_2_2_1()); }
 )
 
 ;
@@ -7323,6 +7439,7 @@ rule__WheneverStatement__Group_3__2
     }
 :
 	rule__WheneverStatement__Group_3__2__Impl
+	rule__WheneverStatement__Group_3__3
 ;
 finally {
 	restoreStackSize(stackSize);
@@ -7334,15 +7451,45 @@ rule__WheneverStatement__Group_3__2__Impl
     }
 :
 (
-{ before(grammarAccess.getWheneverStatementAccess().getGroup_3_2()); }
-(rule__WheneverStatement__Group_3_2__0)?
-{ after(grammarAccess.getWheneverStatementAccess().getGroup_3_2()); }
+{ before(grammarAccess.getWheneverStatementAccess().getExclAssignment_3_2()); }
+(rule__WheneverStatement__ExclAssignment_3_2)?
+{ after(grammarAccess.getWheneverStatementAccess().getExclAssignment_3_2()); }
 )
 
 ;
 finally {
 	restoreStackSize(stackSize);
 }
+
+
+rule__WheneverStatement__Group_3__3
+    @init {
+		int stackSize = keepStackSize();
+    }
+:
+	rule__WheneverStatement__Group_3__3__Impl
+;
+finally {
+	restoreStackSize(stackSize);
+}
+
+rule__WheneverStatement__Group_3__3__Impl
+    @init {
+		int stackSize = keepStackSize();
+    }
+:
+(
+{ before(grammarAccess.getWheneverStatementAccess().getGroup_3_3()); }
+(rule__WheneverStatement__Group_3_3__0)?
+{ after(grammarAccess.getWheneverStatementAccess().getGroup_3_3()); }
+)
+
+;
+finally {
+	restoreStackSize(stackSize);
+}
+
+
 
 
 
@@ -7574,29 +7721,29 @@ finally {
 
 
 
-rule__WheneverStatement__Group_3_2__0
+rule__WheneverStatement__Group_3_3__0
     @init {
 		int stackSize = keepStackSize();
     }
 :
-	rule__WheneverStatement__Group_3_2__0__Impl
-	rule__WheneverStatement__Group_3_2__1
+	rule__WheneverStatement__Group_3_3__0__Impl
+	rule__WheneverStatement__Group_3_3__1
 ;
 finally {
 	restoreStackSize(stackSize);
 }
 
-rule__WheneverStatement__Group_3_2__0__Impl
+rule__WheneverStatement__Group_3_3__0__Impl
     @init {
 		int stackSize = keepStackSize();
     }
 :
 (
-{ before(grammarAccess.getWheneverStatementAccess().getDuringKeyword_3_2_0()); }
+{ before(grammarAccess.getWheneverStatementAccess().getDuringKeyword_3_3_0()); }
 
 	During 
 
-{ after(grammarAccess.getWheneverStatementAccess().getDuringKeyword_3_2_0()); }
+{ after(grammarAccess.getWheneverStatementAccess().getDuringKeyword_3_3_0()); }
 )
 
 ;
@@ -7605,26 +7752,26 @@ finally {
 }
 
 
-rule__WheneverStatement__Group_3_2__1
+rule__WheneverStatement__Group_3_3__1
     @init {
 		int stackSize = keepStackSize();
     }
 :
-	rule__WheneverStatement__Group_3_2__1__Impl
+	rule__WheneverStatement__Group_3_3__1__Impl
 ;
 finally {
 	restoreStackSize(stackSize);
 }
 
-rule__WheneverStatement__Group_3_2__1__Impl
+rule__WheneverStatement__Group_3_3__1__Impl
     @init {
 		int stackSize = keepStackSize();
     }
 :
 (
-{ before(grammarAccess.getWheneverStatementAccess().getIntervalAssignment_3_2_1()); }
-(rule__WheneverStatement__IntervalAssignment_3_2_1)
-{ after(grammarAccess.getWheneverStatementAccess().getIntervalAssignment_3_2_1()); }
+{ before(grammarAccess.getWheneverStatementAccess().getIntervalAssignment_3_3_1()); }
+(rule__WheneverStatement__IntervalAssignment_3_3_1)
+{ after(grammarAccess.getWheneverStatementAccess().getIntervalAssignment_3_3_1()); }
 )
 
 ;
@@ -11086,102 +11233,6 @@ rule__EqStatement__Group_2__1__Impl
 finally {
 	restoreStackSize(stackSize);
 }
-
-
-
-
-
-
-rule__EventStatement__Group__0
-    @init {
-		int stackSize = keepStackSize();
-    }
-:
-	rule__EventStatement__Group__0__Impl
-	rule__EventStatement__Group__1
-;
-finally {
-	restoreStackSize(stackSize);
-}
-
-rule__EventStatement__Group__0__Impl
-    @init {
-		int stackSize = keepStackSize();
-    }
-:
-(
-{ before(grammarAccess.getEventStatementAccess().getEventKeyword_0()); }
-
-	Event 
-
-{ after(grammarAccess.getEventStatementAccess().getEventKeyword_0()); }
-)
-
-;
-finally {
-	restoreStackSize(stackSize);
-}
-
-
-rule__EventStatement__Group__1
-    @init {
-		int stackSize = keepStackSize();
-    }
-:
-	rule__EventStatement__Group__1__Impl
-	rule__EventStatement__Group__2
-;
-finally {
-	restoreStackSize(stackSize);
-}
-
-rule__EventStatement__Group__1__Impl
-    @init {
-		int stackSize = keepStackSize();
-    }
-:
-(
-{ before(grammarAccess.getEventStatementAccess().getNameAssignment_1()); }
-(rule__EventStatement__NameAssignment_1)
-{ after(grammarAccess.getEventStatementAccess().getNameAssignment_1()); }
-)
-
-;
-finally {
-	restoreStackSize(stackSize);
-}
-
-
-rule__EventStatement__Group__2
-    @init {
-		int stackSize = keepStackSize();
-    }
-:
-	rule__EventStatement__Group__2__Impl
-;
-finally {
-	restoreStackSize(stackSize);
-}
-
-rule__EventStatement__Group__2__Impl
-    @init {
-		int stackSize = keepStackSize();
-    }
-:
-(
-{ before(grammarAccess.getEventStatementAccess().getSemicolonKeyword_2()); }
-
-	Semicolon 
-
-{ after(grammarAccess.getEventStatementAccess().getSemicolonKeyword_2()); }
-)
-
-;
-finally {
-	restoreStackSize(stackSize);
-}
-
-
 
 
 
@@ -22778,14 +22829,22 @@ finally {
 	restoreStackSize(stackSize);
 }
 
-rule__WhenStatement__ConditionIntervalAssignment_0_2
+rule__WhenStatement__ExclAssignment_0_1
     @init {
 		int stackSize = keepStackSize();
     }
 :
 (
-{ before(grammarAccess.getWhenStatementAccess().getConditionIntervalTimeIntervalParserRuleCall_0_2_0()); }
-	ruleTimeInterval{ after(grammarAccess.getWhenStatementAccess().getConditionIntervalTimeIntervalParserRuleCall_0_2_0()); }
+{ before(grammarAccess.getWhenStatementAccess().getExclExclusivelyKeyword_0_1_0()); }
+(
+{ before(grammarAccess.getWhenStatementAccess().getExclExclusivelyKeyword_0_1_0()); }
+
+	Exclusively 
+
+{ after(grammarAccess.getWhenStatementAccess().getExclExclusivelyKeyword_0_1_0()); }
+)
+
+{ after(grammarAccess.getWhenStatementAccess().getExclExclusivelyKeyword_0_1_0()); }
 )
 
 ;
@@ -22793,14 +22852,14 @@ finally {
 	restoreStackSize(stackSize);
 }
 
-rule__WhenStatement__EventAssignment_0_3
+rule__WhenStatement__ConditionIntervalAssignment_0_3
     @init {
 		int stackSize = keepStackSize();
     }
 :
 (
-{ before(grammarAccess.getWhenStatementAccess().getEventExprParserRuleCall_0_3_0()); }
-	ruleExpr{ after(grammarAccess.getWhenStatementAccess().getEventExprParserRuleCall_0_3_0()); }
+{ before(grammarAccess.getWhenStatementAccess().getConditionIntervalTimeIntervalParserRuleCall_0_3_0()); }
+	ruleTimeInterval{ after(grammarAccess.getWhenStatementAccess().getConditionIntervalTimeIntervalParserRuleCall_0_3_0()); }
 )
 
 ;
@@ -22808,14 +22867,29 @@ finally {
 	restoreStackSize(stackSize);
 }
 
-rule__WhenStatement__EventIntervalAssignment_0_5_1
+rule__WhenStatement__EventAssignment_0_4
     @init {
 		int stackSize = keepStackSize();
     }
 :
 (
-{ before(grammarAccess.getWhenStatementAccess().getEventIntervalTimeIntervalParserRuleCall_0_5_1_0()); }
-	ruleTimeInterval{ after(grammarAccess.getWhenStatementAccess().getEventIntervalTimeIntervalParserRuleCall_0_5_1_0()); }
+{ before(grammarAccess.getWhenStatementAccess().getEventExprParserRuleCall_0_4_0()); }
+	ruleExpr{ after(grammarAccess.getWhenStatementAccess().getEventExprParserRuleCall_0_4_0()); }
+)
+
+;
+finally {
+	restoreStackSize(stackSize);
+}
+
+rule__WhenStatement__EventIntervalAssignment_0_6_1
+    @init {
+		int stackSize = keepStackSize();
+    }
+:
+(
+{ before(grammarAccess.getWhenStatementAccess().getEventIntervalTimeIntervalParserRuleCall_0_6_1_0()); }
+	ruleTimeInterval{ after(grammarAccess.getWhenStatementAccess().getEventIntervalTimeIntervalParserRuleCall_0_6_1_0()); }
 )
 
 ;
@@ -22838,14 +22912,22 @@ finally {
 	restoreStackSize(stackSize);
 }
 
-rule__WhenStatement__TimesAssignment_1_1
+rule__WhenStatement__ExclAssignment_1_1
     @init {
 		int stackSize = keepStackSize();
     }
 :
 (
-{ before(grammarAccess.getWhenStatementAccess().getTimesExprParserRuleCall_1_1_0()); }
-	ruleExpr{ after(grammarAccess.getWhenStatementAccess().getTimesExprParserRuleCall_1_1_0()); }
+{ before(grammarAccess.getWhenStatementAccess().getExclExclusivelyKeyword_1_1_0()); }
+(
+{ before(grammarAccess.getWhenStatementAccess().getExclExclusivelyKeyword_1_1_0()); }
+
+	Exclusively 
+
+{ after(grammarAccess.getWhenStatementAccess().getExclExclusivelyKeyword_1_1_0()); }
+)
+
+{ after(grammarAccess.getWhenStatementAccess().getExclExclusivelyKeyword_1_1_0()); }
 )
 
 ;
@@ -22853,14 +22935,14 @@ finally {
 	restoreStackSize(stackSize);
 }
 
-rule__WhenStatement__IntervalAssignment_1_4
+rule__WhenStatement__TimesAssignment_1_2
     @init {
 		int stackSize = keepStackSize();
     }
 :
 (
-{ before(grammarAccess.getWhenStatementAccess().getIntervalTimeIntervalParserRuleCall_1_4_0()); }
-	ruleTimeInterval{ after(grammarAccess.getWhenStatementAccess().getIntervalTimeIntervalParserRuleCall_1_4_0()); }
+{ before(grammarAccess.getWhenStatementAccess().getTimesExprParserRuleCall_1_2_0()); }
+	ruleExpr{ after(grammarAccess.getWhenStatementAccess().getTimesExprParserRuleCall_1_2_0()); }
 )
 
 ;
@@ -22868,14 +22950,29 @@ finally {
 	restoreStackSize(stackSize);
 }
 
-rule__WhenStatement__EventAssignment_1_6
+rule__WhenStatement__IntervalAssignment_1_5
     @init {
 		int stackSize = keepStackSize();
     }
 :
 (
-{ before(grammarAccess.getWhenStatementAccess().getEventExprParserRuleCall_1_6_0()); }
-	ruleExpr{ after(grammarAccess.getWhenStatementAccess().getEventExprParserRuleCall_1_6_0()); }
+{ before(grammarAccess.getWhenStatementAccess().getIntervalTimeIntervalParserRuleCall_1_5_0()); }
+	ruleTimeInterval{ after(grammarAccess.getWhenStatementAccess().getIntervalTimeIntervalParserRuleCall_1_5_0()); }
+)
+
+;
+finally {
+	restoreStackSize(stackSize);
+}
+
+rule__WhenStatement__EventAssignment_1_7
+    @init {
+		int stackSize = keepStackSize();
+    }
+:
+(
+{ before(grammarAccess.getWhenStatementAccess().getEventExprParserRuleCall_1_7_0()); }
+	ruleExpr{ after(grammarAccess.getWhenStatementAccess().getEventExprParserRuleCall_1_7_0()); }
 )
 
 ;
@@ -22913,14 +23010,37 @@ finally {
 	restoreStackSize(stackSize);
 }
 
-rule__WheneverStatement__IntervalAssignment_0_1_1
+rule__WheneverStatement__ExclAssignment_0_1
     @init {
 		int stackSize = keepStackSize();
     }
 :
 (
-{ before(grammarAccess.getWheneverStatementAccess().getIntervalTimeIntervalParserRuleCall_0_1_1_0()); }
-	ruleTimeInterval{ after(grammarAccess.getWheneverStatementAccess().getIntervalTimeIntervalParserRuleCall_0_1_1_0()); }
+{ before(grammarAccess.getWheneverStatementAccess().getExclExclusivelyKeyword_0_1_0()); }
+(
+{ before(grammarAccess.getWheneverStatementAccess().getExclExclusivelyKeyword_0_1_0()); }
+
+	Exclusively 
+
+{ after(grammarAccess.getWheneverStatementAccess().getExclExclusivelyKeyword_0_1_0()); }
+)
+
+{ after(grammarAccess.getWheneverStatementAccess().getExclExclusivelyKeyword_0_1_0()); }
+)
+
+;
+finally {
+	restoreStackSize(stackSize);
+}
+
+rule__WheneverStatement__IntervalAssignment_0_2_1
+    @init {
+		int stackSize = keepStackSize();
+    }
+:
+(
+{ before(grammarAccess.getWheneverStatementAccess().getIntervalTimeIntervalParserRuleCall_0_2_1_0()); }
+	ruleTimeInterval{ after(grammarAccess.getWheneverStatementAccess().getIntervalTimeIntervalParserRuleCall_0_2_1_0()); }
 )
 
 ;
@@ -22958,14 +23078,37 @@ finally {
 	restoreStackSize(stackSize);
 }
 
-rule__WheneverStatement__IntervalAssignment_1_1_1
+rule__WheneverStatement__ExclAssignment_1_1
     @init {
 		int stackSize = keepStackSize();
     }
 :
 (
-{ before(grammarAccess.getWheneverStatementAccess().getIntervalTimeIntervalParserRuleCall_1_1_1_0()); }
-	ruleTimeInterval{ after(grammarAccess.getWheneverStatementAccess().getIntervalTimeIntervalParserRuleCall_1_1_1_0()); }
+{ before(grammarAccess.getWheneverStatementAccess().getExclExclusivelyKeyword_1_1_0()); }
+(
+{ before(grammarAccess.getWheneverStatementAccess().getExclExclusivelyKeyword_1_1_0()); }
+
+	Exclusively 
+
+{ after(grammarAccess.getWheneverStatementAccess().getExclExclusivelyKeyword_1_1_0()); }
+)
+
+{ after(grammarAccess.getWheneverStatementAccess().getExclExclusivelyKeyword_1_1_0()); }
+)
+
+;
+finally {
+	restoreStackSize(stackSize);
+}
+
+rule__WheneverStatement__IntervalAssignment_1_2_1
+    @init {
+		int stackSize = keepStackSize();
+    }
+:
+(
+{ before(grammarAccess.getWheneverStatementAccess().getIntervalTimeIntervalParserRuleCall_1_2_1_0()); }
+	ruleTimeInterval{ after(grammarAccess.getWheneverStatementAccess().getIntervalTimeIntervalParserRuleCall_1_2_1_0()); }
 )
 
 ;
@@ -23003,14 +23146,37 @@ finally {
 	restoreStackSize(stackSize);
 }
 
-rule__WheneverStatement__IntervalAssignment_2_1_1
+rule__WheneverStatement__ExclAssignment_2_1
     @init {
 		int stackSize = keepStackSize();
     }
 :
 (
-{ before(grammarAccess.getWheneverStatementAccess().getIntervalTimeIntervalParserRuleCall_2_1_1_0()); }
-	ruleTimeInterval{ after(grammarAccess.getWheneverStatementAccess().getIntervalTimeIntervalParserRuleCall_2_1_1_0()); }
+{ before(grammarAccess.getWheneverStatementAccess().getExclExclusivelyKeyword_2_1_0()); }
+(
+{ before(grammarAccess.getWheneverStatementAccess().getExclExclusivelyKeyword_2_1_0()); }
+
+	Exclusively 
+
+{ after(grammarAccess.getWheneverStatementAccess().getExclExclusivelyKeyword_2_1_0()); }
+)
+
+{ after(grammarAccess.getWheneverStatementAccess().getExclExclusivelyKeyword_2_1_0()); }
+)
+
+;
+finally {
+	restoreStackSize(stackSize);
+}
+
+rule__WheneverStatement__IntervalAssignment_2_2_1
+    @init {
+		int stackSize = keepStackSize();
+    }
+:
+(
+{ before(grammarAccess.getWheneverStatementAccess().getIntervalTimeIntervalParserRuleCall_2_2_1_0()); }
+	ruleTimeInterval{ after(grammarAccess.getWheneverStatementAccess().getIntervalTimeIntervalParserRuleCall_2_2_1_0()); }
 )
 
 ;
@@ -23063,14 +23229,37 @@ finally {
 	restoreStackSize(stackSize);
 }
 
-rule__WheneverStatement__IntervalAssignment_3_2_1
+rule__WheneverStatement__ExclAssignment_3_2
     @init {
 		int stackSize = keepStackSize();
     }
 :
 (
-{ before(grammarAccess.getWheneverStatementAccess().getIntervalTimeIntervalParserRuleCall_3_2_1_0()); }
-	ruleTimeInterval{ after(grammarAccess.getWheneverStatementAccess().getIntervalTimeIntervalParserRuleCall_3_2_1_0()); }
+{ before(grammarAccess.getWheneverStatementAccess().getExclExclusivelyKeyword_3_2_0()); }
+(
+{ before(grammarAccess.getWheneverStatementAccess().getExclExclusivelyKeyword_3_2_0()); }
+
+	Exclusively 
+
+{ after(grammarAccess.getWheneverStatementAccess().getExclExclusivelyKeyword_3_2_0()); }
+)
+
+{ after(grammarAccess.getWheneverStatementAccess().getExclExclusivelyKeyword_3_2_0()); }
+)
+
+;
+finally {
+	restoreStackSize(stackSize);
+}
+
+rule__WheneverStatement__IntervalAssignment_3_3_1
+    @init {
+		int stackSize = keepStackSize();
+    }
+:
+(
+{ before(grammarAccess.getWheneverStatementAccess().getIntervalTimeIntervalParserRuleCall_3_3_1_0()); }
+	ruleTimeInterval{ after(grammarAccess.getWheneverStatementAccess().getIntervalTimeIntervalParserRuleCall_3_3_1_0()); }
 )
 
 ;
@@ -23546,21 +23735,6 @@ rule__EqStatement__ExprAssignment_2_1
 (
 { before(grammarAccess.getEqStatementAccess().getExprExprParserRuleCall_2_1_0()); }
 	ruleExpr{ after(grammarAccess.getEqStatementAccess().getExprExprParserRuleCall_2_1_0()); }
-)
-
-;
-finally {
-	restoreStackSize(stackSize);
-}
-
-rule__EventStatement__NameAssignment_1
-    @init {
-		int stackSize = keepStackSize();
-    }
-:
-(
-{ before(grammarAccess.getEventStatementAccess().getNameIDTerminalRuleCall_1_0()); }
-	RULE_ID{ after(grammarAccess.getEventStatementAccess().getNameIDTerminalRuleCall_1_0()); }
 )
 
 ;

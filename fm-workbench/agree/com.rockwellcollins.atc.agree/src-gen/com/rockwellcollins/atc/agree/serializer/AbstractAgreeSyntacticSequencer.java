@@ -113,6 +113,7 @@ public abstract class AbstractAgreeSyntacticSequencer extends AbstractSyntacticS
 	 * This ambiguous syntax occurs at:
 	 *     effect=Expr (ambiguity) 'during' interval=TimeInterval
 	 *     effect=Expr (ambiguity) (rule end)
+	 *     effect=Expr (ambiguity) excl='exclusively'
 	 */
 	protected void emit_WheneverStatement_OccurKeyword_0_0_0_5_0_or_OccursKeyword_0_0_0_5_1(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
 		acceptNodes(transition, nodes);
@@ -125,6 +126,7 @@ public abstract class AbstractAgreeSyntacticSequencer extends AbstractSyntacticS
 	 * This ambiguous syntax occurs at:
 	 *     effect=Expr (ambiguity) 'during' interval=TimeInterval
 	 *     effect=Expr (ambiguity) (rule end)
+	 *     effect=Expr (ambiguity) excl='exclusively'
 	 */
 	protected void emit_WheneverStatement_OccurKeyword_1_0_0_6_0_or_OccursKeyword_1_0_0_6_1(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
 		acceptNodes(transition, nodes);
