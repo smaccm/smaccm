@@ -140,6 +140,7 @@ public class MATLABFunctionHandler extends AadlHandler {
             return Status.OK_STATUS;
         } catch (Throwable e) {
             String messages = getNestedMessages(e);
+            e.printStackTrace();
             return new Status(IStatus.ERROR, Activator.PLUGIN_ID, 0, messages, e);
         }
     }

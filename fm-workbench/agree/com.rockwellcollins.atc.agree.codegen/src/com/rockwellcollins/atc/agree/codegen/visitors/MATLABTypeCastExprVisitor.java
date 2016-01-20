@@ -1,16 +1,11 @@
 package com.rockwellcollins.atc.agree.codegen.visitors;
 
-import jkind.lustre.NamedType;
-
-import com.rockwellcollins.atc.agree.codegen.ast.MATLABBoolType;
-import com.rockwellcollins.atc.agree.codegen.ast.MATLABBusType;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABDoubleType;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABInt16Type;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABInt32Type;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABInt64Type;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABInt8Type;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABSingleType;
-import com.rockwellcollins.atc.agree.codegen.ast.MATLABType;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABUInt16Type;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABUInt32Type;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABUInt64Type;
