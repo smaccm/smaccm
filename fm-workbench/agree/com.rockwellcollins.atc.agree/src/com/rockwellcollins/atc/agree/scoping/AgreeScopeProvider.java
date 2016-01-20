@@ -49,6 +49,7 @@ import com.rockwellcollins.atc.agree.agree.EqStatement;
 import com.rockwellcollins.atc.agree.agree.EventExpr;
 import com.rockwellcollins.atc.agree.agree.Expr;
 import com.rockwellcollins.atc.agree.agree.FnDefExpr;
+import com.rockwellcollins.atc.agree.agree.InputStatement;
 import com.rockwellcollins.atc.agree.agree.NestedDotID;
 import com.rockwellcollins.atc.agree.agree.NodeDefExpr;
 import com.rockwellcollins.atc.agree.agree.NodeEq;
@@ -80,17 +81,9 @@ public class AgreeScopeProvider extends
         Set<Element> result = getCorrespondingAadlElement(ctx.getId());
     	
 		return Scopes.scopeFor(result, getScope(ctx.eContainer(), ref));
+    }
 
-    	
-    }
-    
-    IScope scope_NamedElement(EqStatement ctx, EReference ref) {
-        return Scopes.scopeFor(ctx.getLhs(), getScope(ctx.eContainer(), ref));
-    }
-    
     IScope scope_NamedElement(RecordType ctx, EReference ref) {
-        //result = getAllElementsFromSpecs(((AgreeContract) container).getSpecs());
-
         return getScope(ctx.eContainer(), ref);
     }
 
@@ -105,15 +98,6 @@ public class AgreeScopeProvider extends
     
     IScope scope_NamedElement(RecordUpdateExpr ctx, EReference ref) {
     	Expr recordExpr = ctx.getRecord();
-//    	
-//    	Expr record = ctx.getRecord();
-//    	
-//    	getScope(record, ref);
-//    	if(record instanceof NestedDotID){
-//    		return scope_NamedElement((NestedDotID)record, ref);
-//    	}
-//    	
-//    	return Scopes.scopeFor(Collections.singleton(ctx.getRecord()), getScope(ctx.eContainer(), ref));
     	return RecordExprScoper.getScope(recordExpr);
     }
     
@@ -165,7 +149,9 @@ public class AgreeScopeProvider extends
             if (spec instanceof EqStatement) {
                 EqStatement eq = (EqStatement) spec;
                 result.addAll(eq.getLhs());
-            } else {
+            }else if (spec instanceof InputStatement){
+                result.addAll(((InputStatement) spec).getLhs());
+            }else{
                 result.add(spec);
             }
         }

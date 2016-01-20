@@ -107,6 +107,7 @@ public class LustreContractAstBuilder extends LustreAstBuilder {
         
         nodes.addAll(agreeProgram.globalLustreNodes);
         nodes.add(main);
+        
         Program program = new Program(types, null, nodes, main.id);
 
         return program;

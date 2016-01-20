@@ -14,8 +14,8 @@
     <genClasses ecoreClass="Agree.ecore#//PatternStatement"/>
     <genClasses ecoreClass="Agree.ecore#//WhenStatement">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//WhenStatement/condition"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Agree.ecore#//WhenStatement/excl"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//WhenStatement/event"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Agree.ecore#//WhenStatement/excl"/>
     </genClasses>
     <genClasses ecoreClass="Agree.ecore#//WheneverStatement">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//WheneverStatement/cause"/>
@@ -46,6 +46,9 @@
     <genClasses ecoreClass="Agree.ecore#//EqStatement">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//EqStatement/lhs"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//EqStatement/expr"/>
+    </genClasses>
+    <genClasses ecoreClass="Agree.ecore#//InputStatement">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//InputStatement/lhs"/>
     </genClasses>
     <genClasses ecoreClass="Agree.ecore#//AssignStatement">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//AssignStatement/id"/>

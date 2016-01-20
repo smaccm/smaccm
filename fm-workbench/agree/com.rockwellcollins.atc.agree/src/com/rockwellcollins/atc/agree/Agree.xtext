@@ -20,7 +20,8 @@ Element returns aadl2::Element:
 	| SpecStatement
 	| NodeStmt
 	| NodeBodyExpr
-	| EqStatement;
+	| EqStatement
+	| InputStatement;
 
 AnnexLibrary returns aadl2::AnnexLibrary:
 	AgreeLibrary;
@@ -54,7 +55,8 @@ SpecStatement:
 	| AssignStatement
 	| FnDefExpr
 	| NodeDefExpr
-	| RecordDefExpr;
+	| RecordDefExpr
+	| InputStatement;
 	
 //The following are patterns from the CESAR RSL
 PatternStatement returns PatternStatement:
@@ -65,19 +67,19 @@ PatternStatement returns PatternStatement:
 ;
 
 WhenStatement:
-	=> ({WhenHoldsStatement} 'when' condition=Expr 'holds') (excl='exclusively')? 'during' 
-        conditionInterval=TimeInterval event=Expr 'occurs' ('during' eventInterval=TimeInterval)? 
-|   => ({WhenOccursStatment} 'when' condition=Expr 'occurs') (excl='exclusively')? 
-        times=Expr 'times' 'during' interval=TimeInterval 'raises' event=Expr 
+	=> ({WhenHoldsStatement} 'when' condition=Expr 'holds') 'during' 
+        conditionInterval=TimeInterval event=Expr (excl='exclusively')? 'occurs' ('during' eventInterval=TimeInterval)? 
+|   => ({WhenOccursStatment} 'when' condition=Expr 'occurs')
+        times=Expr 'times' 'during' interval=TimeInterval (excl='exclusively')? 'raises' event=Expr 
 ;
 
 WheneverStatement:
 	=> ({WheneverOccursStatement} 'whenever' cause=Expr 'occurs'
-	    effect=Expr ('occur' | 'occurs')) (excl='exclusively')? ('during' interval=TimeInterval)? 
+	    effect=Expr (excl='exclusively')? ('occur' | 'occurs')) ('during' interval=TimeInterval)? 
 |   => ({WheneverBecomesTrueStatement} 'whenever' cause=Expr 'becomes' 'true'
-	    effect=Expr ('occur' | 'occurs')) (excl='exclusively')? ('during' interval=TimeInterval)? 
+	    effect=Expr (excl='exclusively')? ('occur' | 'occurs')) ('during' interval=TimeInterval)? 
 |	=> ({WheneverHoldsStatement} 'whenever' cause=Expr 'occurs'
-	    effect=Expr ('holds')) (excl='exclusively')? ('during' interval=TimeInterval)? 
+	    effect=Expr (excl='exclusively')? ('holds')) ('during' interval=TimeInterval)? 
 |   => ({WheneverImpliesStatement} 'whenever' cause=Expr 'occurs'
 	    lhs=Expr 'implies') rhs=Expr (excl='exclusively')? ('during' interval=TimeInterval)? 	    
 ;
@@ -120,6 +122,9 @@ ConstStatement:
 
 EqStatement:
 	'eq' (lhs+=Arg (',' lhs+=Arg)*) ('=' expr=Expr)? ';';
+	
+InputStatement:
+	'agree_input' (lhs+=Arg (',' lhs+=Arg)*) ';';
 
 AssignStatement:
 	'assign' id=NestedDotID '=' expr=Expr ';';

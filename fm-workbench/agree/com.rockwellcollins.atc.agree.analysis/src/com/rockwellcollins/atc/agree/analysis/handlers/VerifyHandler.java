@@ -53,7 +53,6 @@ import com.rockwellcollins.atc.agree.agree.AgreeSubclause;
 import com.rockwellcollins.atc.agree.agree.Arg;
 import com.rockwellcollins.atc.agree.agree.AssertStatement;
 import com.rockwellcollins.atc.agree.agree.AssumeStatement;
-import com.rockwellcollins.atc.agree.agree.EventStatement;
 import com.rockwellcollins.atc.agree.agree.GuaranteeStatement;
 import com.rockwellcollins.atc.agree.agree.LemmaStatement;
 import com.rockwellcollins.atc.agree.agree.PropertyStatement;
@@ -391,8 +390,6 @@ public abstract class VerifyHandler extends AadlHandler {
             return prefix + seperator + ((PropertyStatement) reference).getName();
         } else if (reference instanceof ComponentType || reference instanceof ComponentImplementation) {
             return "Result";
-        } else if (reference instanceof EventStatement) {
-            return prefix + seperator + ((EventStatement) reference).getName();
         }
         throw new AgreeException("Unhandled reference type: '" + reference.getClass().getName() + "'");
     }

@@ -71,6 +71,7 @@ public class LustreAstBuilder {
     protected static final String guarSuffix = "__GUARANTEE";
     protected static final String assumeSuffix = "__ASSUME";
     protected static final String lemmaSuffix = "__LEMMA";
+    protected static final String historyNodeName = "__HIST";
 
     public static Program getRealizabilityLustreProgram(AgreeProgram agreeProgram) {
 
@@ -160,6 +161,8 @@ public class LustreAstBuilder {
         List<Node> nodes = new ArrayList<>();
         nodes.add(main);
         nodes.addAll(agreeProgram.globalLustreNodes);
+        nodes.add(getHistNode());
+
         Program program = new Program(types, null, nodes, main.id);
 
         return program;
@@ -235,10 +238,13 @@ public class LustreAstBuilder {
         builder.addAssertions(assertions);
         
         Node main = builder.build();
+
         nodes.add(main);
         nodes.addAll(agreeProgram.globalLustreNodes);
-        //add realtime constraint node
-        nodes.add(AgreeRealtimeCalendarBuilder.getMinPosNode());
+        nodes.add(getHistNode());
+
+        //add realtime constraint nodes
+        nodes.addAll(AgreeRealtimeCalendarBuilder.getRealTimeNodes());
         Program program = new Program(types, null, nodes, main.id);
 
         return program;
@@ -256,8 +262,6 @@ public class LustreAstBuilder {
         }
 
         nodes = new ArrayList<>();
-        //add the realtime constraint node
-        nodes.add(AgreeRealtimeCalendarBuilder.getMinPosNode());
         
         Node topConsist = getConsistencyLustreNode(agreeProgram.topNode, false);
         // we don't want node lemmas to show up in the consistency check
@@ -265,6 +269,8 @@ public class LustreAstBuilder {
             nodes.add(removeProperties(node));
         }
         nodes.add(topConsist);
+        nodes.add(getHistNode());
+        nodes.addAll(AgreeRealtimeCalendarBuilder.getRealTimeNodes());
 
         Program topConsistProg = new Program(types, null, nodes, topConsist.id);
 
@@ -280,13 +286,13 @@ public class LustreAstBuilder {
                 nodes.add(removeProperties(node));
             }
             nodes.add(subConsistNode);
+            nodes.add(getHistNode());
             Program subConsistProg = new Program(types, null, nodes, subConsistNode.id);
 
             programs.add(Tuples.create(subNode.id + " consistent", subConsistProg));
         }
 
         nodes = new ArrayList<>();
-        nodes.add(AgreeRealtimeCalendarBuilder.getMinPosNode());
         
         AgreeNode compositionNode = flattenAgreeNode(agreeProgram.topNode, "_TOP__", monolithic);
 
@@ -296,7 +302,10 @@ public class LustreAstBuilder {
         }
         // nodes.addAll(agreeProgram.globalLustreNodes);
         nodes.add(topCompositionConsist);
-
+        //add the realtime constraint node
+        nodes.addAll(AgreeRealtimeCalendarBuilder.getRealTimeNodes());
+        nodes.add(getHistNode());
+        
         Program topCompositConsistProg = new Program(types, null, nodes, topCompositionConsist.id);
 
         programs.add(Tuples.create("Component composition consistent", topCompositConsistProg));
@@ -480,14 +489,19 @@ public class LustreAstBuilder {
         List<Equation> equations = new ArrayList<>();
         List<Expr> assertions = new ArrayList<>();
 
-        Expr assumeConjExpr = new BoolExpr(true);
+//        Expr assumeConjExpr = new BoolExpr(true);
+        
+        //add assumption history variable
+        IdExpr assumHist = new IdExpr(assumeSuffix+"__HIST");//new NodeCallExpr(historyNodeName, assumeConjExpr);
+        inputs.add(new AgreeVar(assumHist.id, NamedType.BOOL, null, agreeNode.compInst));
+        
         int i = 0;
         for (AgreeStatement statement : agreeNode.assumptions) {
             String inputName = assumeSuffix + i++;
             inputs.add(new AgreeVar(inputName, NamedType.BOOL, statement.reference, agreeNode.compInst));
             IdExpr assumeId = new IdExpr(inputName);
             assertions.add(new BinaryExpr(assumeId, BinaryOp.EQUAL, statement.expr));
-            assumeConjExpr = new BinaryExpr(assumeId, BinaryOp.AND, assumeConjExpr);
+//            assumeConjExpr = new BinaryExpr(assumeId, BinaryOp.AND, assumeConjExpr);
         }
 
         int j = 0;
@@ -500,16 +514,16 @@ public class LustreAstBuilder {
             }
         }
 
-        String assumeHistName = assumeSuffix + "__HIST";
-        String assumeConjName = assumeSuffix + "__CONJ";
-        IdExpr assumeHistId = new IdExpr(assumeHistName);
-        IdExpr assumeConjId = new IdExpr(assumeConjName);
-
-        locals.add(new VarDecl(assumeHistName, NamedType.BOOL));
-        locals.add(new VarDecl(assumeConjName, NamedType.BOOL));
-
-        equations.add(new Equation(assumeConjId, assumeConjExpr));
-        equations.add(getHist(assumeHistId, assumeConjId));
+//        String assumeHistName = assumeSuffix + "__HIST";
+//        String assumeConjName = assumeSuffix + "__CONJ";
+//        IdExpr assumeHistId = new IdExpr(assumeHistName);
+//        IdExpr assumeConjId = new IdExpr(assumeConjName);
+//
+//        locals.add(new VarDecl(assumeHistName, NamedType.BOOL));
+//        locals.add(new VarDecl(assumeConjName, NamedType.BOOL));
+//
+//        equations.add(new Equation(assumeConjId, assumeConjExpr));
+//        equations.add(getHist(assumeHistId, assumeConjId));
 
         Expr guarConjExpr = new BoolExpr(true);
         for (AgreeStatement statement : agreeNode.guarantees) {
@@ -520,7 +534,12 @@ public class LustreAstBuilder {
                 guarConjExpr = new BinaryExpr(statement.expr, BinaryOp.AND, guarConjExpr);
             }
         }
-        assertions.add(new BinaryExpr(assumeHistId, BinaryOp.IMPLIES, guarConjExpr));
+//        
+//        assertions.add(new BinaryExpr(assumeHistId, BinaryOp.IMPLIES, guarConjExpr));
+//        
+//        
+        //assert that of the assumptions have held historically, then the gurantees hold
+        assertions.add(new BinaryExpr(assumHist, BinaryOp.IMPLIES, guarConjExpr));
 
         // we only add the assertions of an agreenode if we are performing
         // monolithic verification. However, we should add EQ statements
@@ -594,6 +613,8 @@ public class LustreAstBuilder {
             addCondactCall(agreeNode, nodePrefix, inputs, assertions, flatNode, prefix, clockExpr,
                     lustreNode);
 
+            addHistoricalAssumptionConstraint(agreeNode, prefix, clockExpr, assertions, lustreNode);
+            
             addClockHolds(agreeNode, assertions, flatNode, clockExpr, prefix, lustreNode);
 
             addInitConstraint(agreeNode, outputs, assertions, flatNode, prefix, clockExpr, lustreNode);
@@ -621,6 +642,22 @@ public class LustreAstBuilder {
                 agreeNode.assumptions, agreeNode.guarantees, agreeNode.lemmas, new BoolExpr(true),
                 agreeNode.initialConstraint, agreeNode.clockVar, agreeNode.reference, null, timeEvents,
                 agreeNode.compInst);
+    }
+
+    private static void addHistoricalAssumptionConstraint(AgreeNode agreeNode, String prefix, Expr clockExpr, List<AgreeStatement> assertions, Node lustreNode) {
+        Expr assumConj = new BoolExpr(true);
+        for (VarDecl lustreVar : lustreNode.inputs) {
+            AgreeVar var = (AgreeVar) lustreVar;
+            if (var.reference instanceof AssumeStatement || var.reference instanceof LemmaStatement) {
+                Expr varId = new IdExpr(prefix + var.id);
+                assumConj = new BinaryExpr(varId, BinaryOp.AND, assumConj);
+            }
+        }
+        assumConj = new BinaryExpr(clockExpr, BinaryOp.IMPLIES, assumConj);
+        Expr histCall = new NodeCallExpr(historyNodeName, assumConj);
+        Expr assertExpr = new BinaryExpr(new IdExpr(prefix + assumeSuffix+"__HIST"), BinaryOp.EQUAL, histCall);
+        assertions.add(new AgreeStatement("", assertExpr, null));
+        
     }
 
     private static void addTimeEvents(Set<IdExpr> timeEvents, AgreeNode flatNode, String prefix, List<AgreeStatement> assertions) {
@@ -790,6 +827,9 @@ public class LustreAstBuilder {
                     subAgreeNode.compInst);
             outputs.add(output);
         }
+        //add the assumption history var
+        varCount++;
+        outputs.add(new AgreeVar(prefix + assumeSuffix + "__HIST", NamedType.BOOL, null, subAgreeNode.compInst));
 
         int j = 0;
         if (monolithic) {
@@ -824,8 +864,8 @@ public class LustreAstBuilder {
         List<Expr> latchedInputs = new ArrayList<>();
         List<VarDecl> latchedVars = new ArrayList<>();
         for (AgreeVar var : subAgreeNode.inputs) {
-            String latchedName = prefix + "latched___" + var.id;
-            AgreeVar latchedVar = new AgreeVar(latchedName, var.type, var.reference, subAgreeNode.compInst);
+            String latchedName = "__LATCHED__" + prefix + var.id;
+            AgreeVar latchedVar = new AgreeVar(latchedName, var.type, null /*var.reference*/, subAgreeNode.compInst);
             inputs.add(latchedVar);
             latchedVars.add(latchedVar);
             nonLatchedInputs.add(new IdExpr(prefix + var.id));
@@ -854,7 +894,7 @@ public class LustreAstBuilder {
             boolean replaced = false;
             for (AgreeVar var : subAgreeNode.inputs) {
                 if (((IdExpr) inExpr).id.equals(prefix + var.id)) {
-                    inputIdsReplace.add(new IdExpr(prefix + "latched___" + var.id));
+                    inputIdsReplace.add(new IdExpr("__LATCHED__" + prefix + var.id));
                     replaced = true;
                     break;
                 }
@@ -898,4 +938,19 @@ public class LustreAstBuilder {
         nodes.add(node);
     }
 
+    protected static Node getHistNode(){
+        NodeBuilder builder = new NodeBuilder(historyNodeName);
+        builder.addInput(new VarDecl("input", NamedType.BOOL));
+        builder.addOutput(new VarDecl("hist", NamedType.BOOL));
+        
+        IdExpr histId = new IdExpr("hist");
+        IdExpr inputId = new IdExpr("input");
+        Expr preHist = new UnaryExpr(UnaryOp.PRE, histId);
+        Expr histExpr = new BinaryExpr(preHist, BinaryOp.AND, inputId);
+        histExpr = new BinaryExpr(inputId, BinaryOp.ARROW, histExpr);
+        
+        builder.addEquation(new Equation(histId, histExpr));
+        return builder.build();
+    }
+    
 }

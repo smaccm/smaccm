@@ -13,10 +13,10 @@ public class AgreeTimesPattern extends AgreeCauseEffectPattern{
     public final BigInteger causeTimes;
     public final BigInteger effectTimes;
 
-    public AgreeTimesPattern(String string, EObject reference, Expr cause, Expr effect,
+    public AgreeTimesPattern(String string, EObject reference, boolean effectIsExclusive, Expr cause, Expr effect,
             AgreePatternInterval causeInterval, AgreePatternInterval effectInterval, TriggerType causeType,
             TriggerType effectType, BigInteger causeTimes, BigInteger effectTimes) {
-        super(string, reference, cause, effect, causeInterval, effectInterval, causeType, effectType);
+        super(string, reference, effectIsExclusive, cause, effect, causeInterval, effectInterval, causeType, effectType);
         this.causeTimes = causeTimes;
         this.effectTimes = effectTimes;
     }

@@ -10,9 +10,9 @@
   <eClassifiers xsi:type="ecore:EClass" name="WhenStatement" eSuperTypes="#//PatternStatement">
     <eStructuralFeatures xsi:type="ecore:EReference" name="condition" eType="#//Expr"
         containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="excl" eType="ecore:EDataType platform:/plugin/org.eclipse.emf.ecore/model/Ecore.ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="event" eType="#//Expr"
         containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="excl" eType="ecore:EDataType platform:/plugin/org.eclipse.emf.ecore/model/Ecore.ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="WheneverStatement" eSuperTypes="#//PatternStatement">
     <eStructuralFeatures xsi:type="ecore:EReference" name="cause" eType="#//Expr"
@@ -47,6 +47,10 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="lhs" upperBound="-1" eType="#//Arg"
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="expr" eType="#//Expr" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="InputStatement" eSuperTypes="platform:/resource/org.osate.aadl2/model/aadl2.ecore#//Element #//SpecStatement">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="lhs" upperBound="-1" eType="#//Arg"
+        containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="AssignStatement" eSuperTypes="#//SpecStatement">
     <eStructuralFeatures xsi:type="ecore:EReference" name="id" eType="#//NestedDotID"

@@ -34,6 +34,7 @@ import com.rockwellcollins.atc.agree.agree.GetPropertyExpr;
 import com.rockwellcollins.atc.agree.agree.GuaranteeStatement;
 import com.rockwellcollins.atc.agree.agree.IfThenElseExpr;
 import com.rockwellcollins.atc.agree.agree.InitialStatement;
+import com.rockwellcollins.atc.agree.agree.InputStatement;
 import com.rockwellcollins.atc.agree.agree.IntLitExpr;
 import com.rockwellcollins.atc.agree.agree.LatchedStatement;
 import com.rockwellcollins.atc.agree.agree.LemmaStatement;
@@ -201,6 +202,13 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * @generated
    */
   private EClass eqStatementEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass inputStatementEClass = null;
 
   /**
    * <!-- begin-user-doc -->
@@ -756,9 +764,9 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EAttribute getWhenStatement_Excl()
+  public EReference getWhenStatement_Event()
   {
-    return (EAttribute)whenStatementEClass.getEStructuralFeatures().get(1);
+    return (EReference)whenStatementEClass.getEStructuralFeatures().get(1);
   }
 
   /**
@@ -766,9 +774,9 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getWhenStatement_Event()
+  public EAttribute getWhenStatement_Excl()
   {
-    return (EReference)whenStatementEClass.getEStructuralFeatures().get(2);
+    return (EAttribute)whenStatementEClass.getEStructuralFeatures().get(2);
   }
 
   /**
@@ -999,6 +1007,26 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
   public EReference getEqStatement_Expr()
   {
     return (EReference)eqStatementEClass.getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getInputStatement()
+  {
+    return inputStatementEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getInputStatement_Lhs()
+  {
+    return (EReference)inputStatementEClass.getEStructuralFeatures().get(0);
   }
 
   /**
@@ -2533,8 +2561,8 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
 
     whenStatementEClass = createEClass(WHEN_STATEMENT);
     createEReference(whenStatementEClass, WHEN_STATEMENT__CONDITION);
-    createEAttribute(whenStatementEClass, WHEN_STATEMENT__EXCL);
     createEReference(whenStatementEClass, WHEN_STATEMENT__EVENT);
+    createEAttribute(whenStatementEClass, WHEN_STATEMENT__EXCL);
 
     wheneverStatementEClass = createEClass(WHENEVER_STATEMENT);
     createEReference(wheneverStatementEClass, WHENEVER_STATEMENT__CAUSE);
@@ -2567,6 +2595,9 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     eqStatementEClass = createEClass(EQ_STATEMENT);
     createEReference(eqStatementEClass, EQ_STATEMENT__LHS);
     createEReference(eqStatementEClass, EQ_STATEMENT__EXPR);
+
+    inputStatementEClass = createEClass(INPUT_STATEMENT);
+    createEReference(inputStatementEClass, INPUT_STATEMENT__LHS);
 
     assignStatementEClass = createEClass(ASSIGN_STATEMENT);
     createEReference(assignStatementEClass, ASSIGN_STATEMENT__ID);
@@ -2826,6 +2857,8 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     constStatementEClass.getESuperTypes().add(this.getSpecStatement());
     eqStatementEClass.getESuperTypes().add(theAadl2Package.getElement());
     eqStatementEClass.getESuperTypes().add(this.getSpecStatement());
+    inputStatementEClass.getESuperTypes().add(theAadl2Package.getElement());
+    inputStatementEClass.getESuperTypes().add(this.getSpecStatement());
     assignStatementEClass.getESuperTypes().add(this.getSpecStatement());
     fnDefExprEClass.getESuperTypes().add(theAadl2Package.getNamedElement());
     fnDefExprEClass.getESuperTypes().add(this.getSpecStatement());
@@ -2904,8 +2937,8 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
 
     initEClass(whenStatementEClass, WhenStatement.class, "WhenStatement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getWhenStatement_Condition(), this.getExpr(), null, "condition", null, 0, 1, WhenStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEAttribute(getWhenStatement_Excl(), theEcorePackage.getEString(), "excl", null, 0, 1, WhenStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getWhenStatement_Event(), this.getExpr(), null, "event", null, 0, 1, WhenStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEAttribute(getWhenStatement_Excl(), theEcorePackage.getEString(), "excl", null, 0, 1, WhenStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(wheneverStatementEClass, WheneverStatement.class, "WheneverStatement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getWheneverStatement_Cause(), this.getExpr(), null, "cause", null, 0, 1, WheneverStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -2938,6 +2971,9 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     initEClass(eqStatementEClass, EqStatement.class, "EqStatement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getEqStatement_Lhs(), this.getArg(), null, "lhs", null, 0, -1, EqStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getEqStatement_Expr(), this.getExpr(), null, "expr", null, 0, 1, EqStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+    initEClass(inputStatementEClass, InputStatement.class, "InputStatement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getInputStatement_Lhs(), this.getArg(), null, "lhs", null, 0, -1, InputStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(assignStatementEClass, AssignStatement.class, "AssignStatement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getAssignStatement_Id(), this.getNestedDotID(), null, "id", null, 0, 1, AssignStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

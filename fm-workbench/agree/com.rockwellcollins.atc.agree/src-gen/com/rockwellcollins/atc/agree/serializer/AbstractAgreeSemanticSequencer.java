@@ -30,6 +30,7 @@ import com.rockwellcollins.atc.agree.agree.GetPropertyExpr;
 import com.rockwellcollins.atc.agree.agree.GuaranteeStatement;
 import com.rockwellcollins.atc.agree.agree.IfThenElseExpr;
 import com.rockwellcollins.atc.agree.agree.InitialStatement;
+import com.rockwellcollins.atc.agree.agree.InputStatement;
 import com.rockwellcollins.atc.agree.agree.IntLitExpr;
 import com.rockwellcollins.atc.agree.agree.LatchedStatement;
 import com.rockwellcollins.atc.agree.agree.LemmaStatement;
@@ -275,6 +276,9 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 			case AgreePackage.INITIAL_STATEMENT:
 				sequence_SpecStatement(context, (InitialStatement) semanticObject); 
 				return; 
+			case AgreePackage.INPUT_STATEMENT:
+				sequence_InputStatement(context, (InputStatement) semanticObject); 
+				return; 
 			case AgreePackage.INT_LIT_EXPR:
 				sequence_TermExpr(context, (IntLitExpr) semanticObject); 
 				return; 
@@ -500,6 +504,15 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     (a=Expr b=Expr c=Expr)
 	 */
 	protected void sequence_IfThenElseExpr(EObject context, IfThenElseExpr semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Constraint:
+	 *     (lhs+=Arg lhs+=Arg*)
+	 */
+	protected void sequence_InputStatement(EObject context, InputStatement semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
@@ -931,7 +944,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	
 	/**
 	 * Constraint:
-	 *     (condition=Expr excl='exclusively'? conditionInterval=TimeInterval event=Expr eventInterval=TimeInterval?)
+	 *     (condition=Expr conditionInterval=TimeInterval event=Expr excl='exclusively'? eventInterval=TimeInterval?)
 	 */
 	protected void sequence_WhenStatement(EObject context, WhenHoldsStatement semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -940,7 +953,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	
 	/**
 	 * Constraint:
-	 *     (condition=Expr excl='exclusively'? times=Expr interval=TimeInterval event=Expr)
+	 *     (condition=Expr times=Expr interval=TimeInterval excl='exclusively'? event=Expr)
 	 */
 	protected void sequence_WhenStatement(EObject context, WhenOccursStatment semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);

@@ -27,6 +27,7 @@ import jkind.lustre.IdExpr;
 import jkind.lustre.IfThenElseExpr;
 import jkind.lustre.NamedType;
 import jkind.lustre.Node;
+import jkind.lustre.NodeCallExpr;
 import jkind.lustre.RealExpr;
 import jkind.lustre.UnaryExpr;
 import jkind.lustre.UnaryOp;
@@ -165,6 +166,7 @@ public class AgreePatternTranslator {
         //pnext = p -> pre pnext + if e then p else 0
         Expr ifElse = new IfThenElseExpr(pattern.event, pattern.period, new RealExpr(BigDecimal.ZERO));
         Expr prePnext = new UnaryExpr(UnaryOp.PRE, periodId);
+        prePnext = new BinaryExpr(prePnext, BinaryOp.PLUS, ifElse);
         prePnext = new BinaryExpr(pattern.period, BinaryOp.ARROW, prePnext);
         builder.addLocalEquation(new Equation(periodId, prePnext));
         
@@ -184,9 +186,6 @@ public class AgreePatternTranslator {
     
 
     private static Expr translatePattern(AgreeCauseEffectPattern pattern, AgreeNodeBuilder builder, boolean isProperty) {
-
-//        AgreeNode curNode = builder.build();
-//        ComponentInstance compInst = curNode.compInst;
 
         if (pattern instanceof AgreeTimesPattern) {
             return translatePattern((AgreeTimesPattern) pattern, builder);
@@ -221,8 +220,7 @@ public class AgreePatternTranslator {
         if(pattern.causeType == TriggerType.CONDITION){
             causeId = translateCauseCondtionPattern(causeId, pattern.causeInterval, builder);
         }
-        
-        
+                
         if (isProperty) {
             builder.addLocal(timeCause);
             // builder.addLocal(inEffectInterval);
@@ -249,7 +247,20 @@ public class AgreePatternTranslator {
             builder.addEventTime(timeoutId);
 
             //if we ever reach the end of the time interval, it means the effect did not occur
-            return new BinaryExpr(timeExpr, BinaryOp.NOTEQUAL, timeoutId);
+            Expr endOfInterval = new BinaryExpr(timeExpr, BinaryOp.NOTEQUAL, timeoutId);
+            //if the event is exclusive, it should only occur during the interval
+            if (pattern.effectIsExclusive) {
+                Expr eventDuringInterval = new BinaryExpr(effectId, BinaryOp.IMPLIES, effectOccursInInterval);
+                endOfInterval = new BinaryExpr(endOfInterval, BinaryOp.AND, eventDuringInterval);
+            }
+            
+            //strengthen the property so that if it is false, then the cause occured in the past.
+            //this helps prevent strange inductive counterexamples
+            Expr occured = new NodeCallExpr(AgreeRealtimeCalendarBuilder.OCCURRED_IN_PAST_NODE_NAME, causeId);
+            Expr nonNegTimeout = new BinaryExpr(timeoutId, BinaryOp.GREATEREQUAL, new RealExpr(BigDecimal.ZERO));
+            Expr nonNegOccuredPast = new BinaryExpr(nonNegTimeout, BinaryOp.IMPLIES, occured);
+            
+            return new BinaryExpr(nonNegOccuredPast, BinaryOp.AND, endOfInterval);
         } else {
             builder.addInput(effectTimeRangeVar);
             Expr effectTimeRangeConstraint =
@@ -261,7 +272,9 @@ public class AgreePatternTranslator {
             builder.addEventTime(timeEffectId);
             // make the equation that triggers the event at the correct ime
             Expr timeEqualsPreTime = new BinaryExpr(timeExpr, BinaryOp.EQUAL, timeEffectId);
-            Expr impliesEffect = new BinaryExpr(timeEqualsPreTime, BinaryOp.EQUAL, effectId);
+            //if the event is exclusive it only occurs when scheduled
+            BinaryOp effectOp = pattern.effectIsExclusive ? BinaryOp.EQUAL : BinaryOp.IMPLIES;
+            Expr impliesEffect = new BinaryExpr(timeEqualsPreTime, effectOp, effectId);
             return impliesEffect;
         }
 

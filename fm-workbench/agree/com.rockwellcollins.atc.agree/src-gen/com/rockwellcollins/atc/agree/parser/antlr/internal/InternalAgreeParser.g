@@ -856,6 +856,16 @@ ruleSpecStatement returns [EObject current=null]
         $current = $this_RecordDefExpr_56.current;
         afterParserOrEnumRuleCall();
     }
+
+    |
+    { 
+        newCompositeNode(grammarAccess.getSpecStatementAccess().getInputStatementParserRuleCall_17()); 
+    }
+    this_InputStatement_57=ruleInputStatement
+    {
+        $current = $this_InputStatement_57.current;
+        afterParserOrEnumRuleCall();
+    }
 )
 ;
 
@@ -1016,40 +1026,24 @@ Holds
     {
     	newLeafNode(otherlv_3, grammarAccess.getWhenStatementAccess().getHoldsKeyword_0_0_0_3());
     }
-))(
-(
-		lv_excl_4_0=
-	Exclusively
+))
+	otherlv_4=During
     {
-        newLeafNode(lv_excl_4_0, grammarAccess.getWhenStatementAccess().getExclExclusivelyKeyword_0_1_0());
-    }
-
-	    {
-	        if ($current==null) {
-	            $current = createModelElement(grammarAccess.getWhenStatementRule());
-	        }
-       		setWithLastConsumed($current, "excl", lv_excl_4_0, "exclusively");
-	    }
-
-)
-)?
-	otherlv_5=During
-    {
-    	newLeafNode(otherlv_5, grammarAccess.getWhenStatementAccess().getDuringKeyword_0_2());
+    	newLeafNode(otherlv_4, grammarAccess.getWhenStatementAccess().getDuringKeyword_0_1());
     }
 (
 (
 		{ 
-	        newCompositeNode(grammarAccess.getWhenStatementAccess().getConditionIntervalTimeIntervalParserRuleCall_0_3_0()); 
+	        newCompositeNode(grammarAccess.getWhenStatementAccess().getConditionIntervalTimeIntervalParserRuleCall_0_2_0()); 
 	    }
-		lv_conditionInterval_6_0=ruleTimeInterval		{
+		lv_conditionInterval_5_0=ruleTimeInterval		{
 	        if ($current==null) {
 	            $current = createModelElementForParent(grammarAccess.getWhenStatementRule());
 	        }
        		set(
        			$current, 
        			"conditionInterval",
-        		lv_conditionInterval_6_0, 
+        		lv_conditionInterval_5_0, 
         		"TimeInterval");
 	        afterParserOrEnumRuleCall();
 	    }
@@ -1058,22 +1052,38 @@ Holds
 )(
 (
 		{ 
-	        newCompositeNode(grammarAccess.getWhenStatementAccess().getEventExprParserRuleCall_0_4_0()); 
+	        newCompositeNode(grammarAccess.getWhenStatementAccess().getEventExprParserRuleCall_0_3_0()); 
 	    }
-		lv_event_7_0=ruleExpr		{
+		lv_event_6_0=ruleExpr		{
 	        if ($current==null) {
 	            $current = createModelElementForParent(grammarAccess.getWhenStatementRule());
 	        }
        		set(
        			$current, 
        			"event",
-        		lv_event_7_0, 
+        		lv_event_6_0, 
         		"Expr");
 	        afterParserOrEnumRuleCall();
 	    }
 
 )
+)(
+(
+		lv_excl_7_0=
+	Exclusively
+    {
+        newLeafNode(lv_excl_7_0, grammarAccess.getWhenStatementAccess().getExclExclusivelyKeyword_0_4_0());
+    }
+
+	    {
+	        if ($current==null) {
+	            $current = createModelElement(grammarAccess.getWhenStatementRule());
+	        }
+       		setWithLastConsumed($current, "excl", lv_excl_7_0, "exclusively");
+	    }
+
 )
+)?
 	otherlv_8=Occurs
     {
     	newLeafNode(otherlv_8, grammarAccess.getWhenStatementAccess().getOccursKeyword_0_5());
@@ -1147,67 +1157,67 @@ Occurs
     }
 ))(
 (
-		lv_excl_15_0=
-	Exclusively
-    {
-        newLeafNode(lv_excl_15_0, grammarAccess.getWhenStatementAccess().getExclExclusivelyKeyword_1_1_0());
-    }
-
-	    {
-	        if ($current==null) {
-	            $current = createModelElement(grammarAccess.getWhenStatementRule());
-	        }
-       		setWithLastConsumed($current, "excl", lv_excl_15_0, "exclusively");
-	    }
-
-)
-)?(
-(
 		{ 
-	        newCompositeNode(grammarAccess.getWhenStatementAccess().getTimesExprParserRuleCall_1_2_0()); 
+	        newCompositeNode(grammarAccess.getWhenStatementAccess().getTimesExprParserRuleCall_1_1_0()); 
 	    }
-		lv_times_16_0=ruleExpr		{
+		lv_times_15_0=ruleExpr		{
 	        if ($current==null) {
 	            $current = createModelElementForParent(grammarAccess.getWhenStatementRule());
 	        }
        		set(
        			$current, 
        			"times",
-        		lv_times_16_0, 
+        		lv_times_15_0, 
         		"Expr");
 	        afterParserOrEnumRuleCall();
 	    }
 
 )
 )
-	otherlv_17=Times
+	otherlv_16=Times
     {
-    	newLeafNode(otherlv_17, grammarAccess.getWhenStatementAccess().getTimesKeyword_1_3());
+    	newLeafNode(otherlv_16, grammarAccess.getWhenStatementAccess().getTimesKeyword_1_2());
     }
 
-	otherlv_18=During
+	otherlv_17=During
     {
-    	newLeafNode(otherlv_18, grammarAccess.getWhenStatementAccess().getDuringKeyword_1_4());
+    	newLeafNode(otherlv_17, grammarAccess.getWhenStatementAccess().getDuringKeyword_1_3());
     }
 (
 (
 		{ 
-	        newCompositeNode(grammarAccess.getWhenStatementAccess().getIntervalTimeIntervalParserRuleCall_1_5_0()); 
+	        newCompositeNode(grammarAccess.getWhenStatementAccess().getIntervalTimeIntervalParserRuleCall_1_4_0()); 
 	    }
-		lv_interval_19_0=ruleTimeInterval		{
+		lv_interval_18_0=ruleTimeInterval		{
 	        if ($current==null) {
 	            $current = createModelElementForParent(grammarAccess.getWhenStatementRule());
 	        }
        		set(
        			$current, 
        			"interval",
-        		lv_interval_19_0, 
+        		lv_interval_18_0, 
         		"TimeInterval");
 	        afterParserOrEnumRuleCall();
 	    }
 
 )
+)(
+(
+		lv_excl_19_0=
+	Exclusively
+    {
+        newLeafNode(lv_excl_19_0, grammarAccess.getWhenStatementAccess().getExclExclusivelyKeyword_1_5_0());
+    }
+
+	    {
+	        if ($current==null) {
+	            $current = createModelElement(grammarAccess.getWhenStatementRule());
+	        }
+       		setWithLastConsumed($current, "excl", lv_excl_19_0, "exclusively");
+	    }
+
 )
+)?
 	otherlv_20=Raises
     {
     	newLeafNode(otherlv_20, grammarAccess.getWhenStatementAccess().getRaisesKeyword_1_6());
@@ -1265,6 +1275,13 @@ Occurs
 ruleExpr
 )
 )(
+(
+
+Exclusively
+
+
+)
+)?(
 Occur
 
     |
@@ -1322,41 +1339,41 @@ Occurs
 
 )
 )(
-	otherlv_5=Occur
-    {
-    	newLeafNode(otherlv_5, grammarAccess.getWheneverStatementAccess().getOccurKeyword_0_0_0_5_0());
-    }
-
-    |
-	otherlv_6=Occurs
-    {
-    	newLeafNode(otherlv_6, grammarAccess.getWheneverStatementAccess().getOccursKeyword_0_0_0_5_1());
-    }
-)))(
 (
-		lv_excl_7_0=
+		lv_excl_5_0=
 	Exclusively
     {
-        newLeafNode(lv_excl_7_0, grammarAccess.getWheneverStatementAccess().getExclExclusivelyKeyword_0_1_0());
+        newLeafNode(lv_excl_5_0, grammarAccess.getWheneverStatementAccess().getExclExclusivelyKeyword_0_0_0_5_0());
     }
 
 	    {
 	        if ($current==null) {
 	            $current = createModelElement(grammarAccess.getWheneverStatementRule());
 	        }
-       		setWithLastConsumed($current, "excl", lv_excl_7_0, "exclusively");
+       		setWithLastConsumed($current, "excl", lv_excl_5_0, "exclusively");
 	    }
 
 )
 )?(
+	otherlv_6=Occur
+    {
+    	newLeafNode(otherlv_6, grammarAccess.getWheneverStatementAccess().getOccurKeyword_0_0_0_6_0());
+    }
+
+    |
+	otherlv_7=Occurs
+    {
+    	newLeafNode(otherlv_7, grammarAccess.getWheneverStatementAccess().getOccursKeyword_0_0_0_6_1());
+    }
+)))(
 	otherlv_8=During
     {
-    	newLeafNode(otherlv_8, grammarAccess.getWheneverStatementAccess().getDuringKeyword_0_2_0());
+    	newLeafNode(otherlv_8, grammarAccess.getWheneverStatementAccess().getDuringKeyword_0_1_0());
     }
 (
 (
 		{ 
-	        newCompositeNode(grammarAccess.getWheneverStatementAccess().getIntervalTimeIntervalParserRuleCall_0_2_1_0()); 
+	        newCompositeNode(grammarAccess.getWheneverStatementAccess().getIntervalTimeIntervalParserRuleCall_0_1_1_0()); 
 	    }
 		lv_interval_9_0=ruleTimeInterval		{
 	        if ($current==null) {
@@ -1388,6 +1405,13 @@ True
 ruleExpr
 )
 )(
+(
+
+Exclusively
+
+
+)
+)?(
 Occur
 
     |
@@ -1450,41 +1474,41 @@ Occurs
 
 )
 )(
-	otherlv_16=Occur
-    {
-    	newLeafNode(otherlv_16, grammarAccess.getWheneverStatementAccess().getOccurKeyword_1_0_0_6_0());
-    }
-
-    |
-	otherlv_17=Occurs
-    {
-    	newLeafNode(otherlv_17, grammarAccess.getWheneverStatementAccess().getOccursKeyword_1_0_0_6_1());
-    }
-)))(
 (
-		lv_excl_18_0=
+		lv_excl_16_0=
 	Exclusively
     {
-        newLeafNode(lv_excl_18_0, grammarAccess.getWheneverStatementAccess().getExclExclusivelyKeyword_1_1_0());
+        newLeafNode(lv_excl_16_0, grammarAccess.getWheneverStatementAccess().getExclExclusivelyKeyword_1_0_0_6_0());
     }
 
 	    {
 	        if ($current==null) {
 	            $current = createModelElement(grammarAccess.getWheneverStatementRule());
 	        }
-       		setWithLastConsumed($current, "excl", lv_excl_18_0, "exclusively");
+       		setWithLastConsumed($current, "excl", lv_excl_16_0, "exclusively");
 	    }
 
 )
 )?(
+	otherlv_17=Occur
+    {
+    	newLeafNode(otherlv_17, grammarAccess.getWheneverStatementAccess().getOccurKeyword_1_0_0_7_0());
+    }
+
+    |
+	otherlv_18=Occurs
+    {
+    	newLeafNode(otherlv_18, grammarAccess.getWheneverStatementAccess().getOccursKeyword_1_0_0_7_1());
+    }
+)))(
 	otherlv_19=During
     {
-    	newLeafNode(otherlv_19, grammarAccess.getWheneverStatementAccess().getDuringKeyword_1_2_0());
+    	newLeafNode(otherlv_19, grammarAccess.getWheneverStatementAccess().getDuringKeyword_1_1_0());
     }
 (
 (
 		{ 
-	        newCompositeNode(grammarAccess.getWheneverStatementAccess().getIntervalTimeIntervalParserRuleCall_1_2_1_0()); 
+	        newCompositeNode(grammarAccess.getWheneverStatementAccess().getIntervalTimeIntervalParserRuleCall_1_1_1_0()); 
 	    }
 		lv_interval_20_0=ruleTimeInterval		{
 	        if ($current==null) {
@@ -1513,7 +1537,14 @@ Occurs
 (
 ruleExpr
 )
+)(
+(
+
+Exclusively
+
+
 )
+)?
 Holds
 ))=>((
     {
@@ -1567,36 +1598,36 @@ Holds
 	    }
 
 )
-)
-	otherlv_26=Holds
-    {
-    	newLeafNode(otherlv_26, grammarAccess.getWheneverStatementAccess().getHoldsKeyword_2_0_0_5());
-    }
-))(
+)(
 (
-		lv_excl_27_0=
+		lv_excl_26_0=
 	Exclusively
     {
-        newLeafNode(lv_excl_27_0, grammarAccess.getWheneverStatementAccess().getExclExclusivelyKeyword_2_1_0());
+        newLeafNode(lv_excl_26_0, grammarAccess.getWheneverStatementAccess().getExclExclusivelyKeyword_2_0_0_5_0());
     }
 
 	    {
 	        if ($current==null) {
 	            $current = createModelElement(grammarAccess.getWheneverStatementRule());
 	        }
-       		setWithLastConsumed($current, "excl", lv_excl_27_0, "exclusively");
+       		setWithLastConsumed($current, "excl", lv_excl_26_0, "exclusively");
 	    }
 
 )
-)?(
+)?
+	otherlv_27=Holds
+    {
+    	newLeafNode(otherlv_27, grammarAccess.getWheneverStatementAccess().getHoldsKeyword_2_0_0_6());
+    }
+))(
 	otherlv_28=During
     {
-    	newLeafNode(otherlv_28, grammarAccess.getWheneverStatementAccess().getDuringKeyword_2_2_0());
+    	newLeafNode(otherlv_28, grammarAccess.getWheneverStatementAccess().getDuringKeyword_2_1_0());
     }
 (
 (
 		{ 
-	        newCompositeNode(grammarAccess.getWheneverStatementAccess().getIntervalTimeIntervalParserRuleCall_2_2_1_0()); 
+	        newCompositeNode(grammarAccess.getWheneverStatementAccess().getIntervalTimeIntervalParserRuleCall_2_1_1_0()); 
 	    }
 		lv_interval_29_0=ruleTimeInterval		{
 	        if ($current==null) {
@@ -2861,6 +2892,78 @@ ruleEqStatement returns [EObject current=null]
 	otherlv_6=Semicolon
     {
     	newLeafNode(otherlv_6, grammarAccess.getEqStatementAccess().getSemicolonKeyword_3());
+    }
+)
+;
+
+
+
+
+
+// Entry rule entryRuleInputStatement
+entryRuleInputStatement returns [EObject current=null]
+	:
+	{ newCompositeNode(grammarAccess.getInputStatementRule()); }
+	 iv_ruleInputStatement=ruleInputStatement 
+	 { $current=$iv_ruleInputStatement.current; } 
+	 EOF 
+;
+
+// Rule InputStatement
+ruleInputStatement returns [EObject current=null] 
+    @init { enterRule(); 
+    }
+    @after { leaveRule(); }:
+(
+	otherlv_0=Agree_input
+    {
+    	newLeafNode(otherlv_0, grammarAccess.getInputStatementAccess().getAgree_inputKeyword_0());
+    }
+((
+(
+		{ 
+	        newCompositeNode(grammarAccess.getInputStatementAccess().getLhsArgParserRuleCall_1_0_0()); 
+	    }
+		lv_lhs_1_0=ruleArg		{
+	        if ($current==null) {
+	            $current = createModelElementForParent(grammarAccess.getInputStatementRule());
+	        }
+       		add(
+       			$current, 
+       			"lhs",
+        		lv_lhs_1_0, 
+        		"Arg");
+	        afterParserOrEnumRuleCall();
+	    }
+
+)
+)(
+	otherlv_2=Comma
+    {
+    	newLeafNode(otherlv_2, grammarAccess.getInputStatementAccess().getCommaKeyword_1_1_0());
+    }
+(
+(
+		{ 
+	        newCompositeNode(grammarAccess.getInputStatementAccess().getLhsArgParserRuleCall_1_1_1_0()); 
+	    }
+		lv_lhs_3_0=ruleArg		{
+	        if ($current==null) {
+	            $current = createModelElementForParent(grammarAccess.getInputStatementRule());
+	        }
+       		add(
+       			$current, 
+       			"lhs",
+        		lv_lhs_3_0, 
+        		"Arg");
+	        afterParserOrEnumRuleCall();
+	    }
+
+)
+))*)
+	otherlv_4=Semicolon
+    {
+    	newLeafNode(otherlv_4, grammarAccess.getInputStatementAccess().getSemicolonKeyword_2());
     }
 )
 ;

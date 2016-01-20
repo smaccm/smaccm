@@ -63,10 +63,11 @@ public class AgreePatternBuilder extends AgreeSwitch<AgreeStatement> {
     public AgreeStatement caseWheneverHoldsStatement(WheneverHoldsStatement object) {
         Expr cause = builder.doSwitch(object.getCause());
         Expr effect = builder.doSwitch(object.getEffect());
+        boolean exclusive = object.getExcl() != null;
         
         AgreePatternInterval interval = getIntervalType(object.getInterval());
         
-        return new AgreeCauseEffectPattern(str, ref, cause, effect, null, interval, TriggerType.EVENT,
+        return new AgreeCauseEffectPattern(str, ref, exclusive, cause, effect, null, interval, TriggerType.EVENT,
                 TriggerType.CONDITION);
     }
 
@@ -75,10 +76,11 @@ public class AgreePatternBuilder extends AgreeSwitch<AgreeStatement> {
         Expr cause = builder.doSwitch(object.getCause());
         Expr lhs = builder.doSwitch(object.getLhs());
         Expr rhs = builder.doSwitch(object.getRhs());
+        boolean exclusive = object.getExcl() != null;
         AgreePatternInterval effectInterval = getIntervalType(object.getInterval());
 
         Expr effect = new BinaryExpr(lhs, BinaryOp.IMPLIES, rhs);
-        return new AgreeCauseEffectPattern(str, ref, cause, effect, null, effectInterval, TriggerType.EVENT,
+        return new AgreeCauseEffectPattern(str, ref, exclusive, cause, effect, null, effectInterval, TriggerType.EVENT,
                 TriggerType.CONDITION);
     }
 
@@ -86,9 +88,10 @@ public class AgreePatternBuilder extends AgreeSwitch<AgreeStatement> {
     public AgreeStatement caseWheneverOccursStatement(WheneverOccursStatement object) {
         Expr cause = builder.doSwitch(object.getCause());
         Expr effect = builder.doSwitch(object.getEffect());
+        boolean exclusive = object.getExcl() != null;
         AgreePatternInterval effectInterval = getIntervalType(object.getInterval());
 
-        return new AgreeCauseEffectPattern(str, ref, cause, effect, null, effectInterval, TriggerType.EVENT,
+        return new AgreeCauseEffectPattern(str, ref, exclusive, cause, effect, null, effectInterval, TriggerType.EVENT,
                 TriggerType.EVENT);
     }
 
@@ -96,6 +99,7 @@ public class AgreePatternBuilder extends AgreeSwitch<AgreeStatement> {
     public AgreeStatement caseWheneverBecomesTrueStatement(WheneverBecomesTrueStatement object) {
         Expr cause = builder.doSwitch(object.getCause());
         Expr effect = builder.doSwitch(object.getEffect());
+        boolean exclusive = object.getExcl() != null;
         AgreePatternInterval effectInterval = getIntervalType(object.getInterval());
 
         // make the effect rising edge sensitive
@@ -103,7 +107,7 @@ public class AgreePatternBuilder extends AgreeSwitch<AgreeStatement> {
 //        Expr notPreEffect = new UnaryExpr(UnaryOp.NOT, preEffect);
 //        Expr edgeEffect = new BinaryExpr(notPreEffect, BinaryOp.AND, effect);
 //        effect = new BinaryExpr(effect, BinaryOp.ARROW, edgeEffect);
-        return new AgreeCauseEffectPattern(str, ref, cause, effect, null, effectInterval, TriggerType.EVENT,
+        return new AgreeCauseEffectPattern(str, ref, exclusive, cause, effect, null, effectInterval, TriggerType.EVENT,
                 TriggerType.EVENT);
     }
 
@@ -111,10 +115,11 @@ public class AgreePatternBuilder extends AgreeSwitch<AgreeStatement> {
     public AgreeStatement caseWhenHoldsStatement(WhenHoldsStatement object) {
         Expr condition = builder.doSwitch(object.getCondition());
         Expr effect = builder.doSwitch(object.getEvent());
+        boolean exclusive = object.getExcl() != null;
         AgreePatternInterval conditionInterval = getIntervalType(object.getConditionInterval());
         AgreePatternInterval effectInterval = getIntervalType(object.getEventInterval());
 
-        return new AgreeCauseEffectPattern(str, ref, condition, effect, conditionInterval, effectInterval,
+        return new AgreeCauseEffectPattern(str, ref, exclusive, condition, effect, conditionInterval, effectInterval,
                 TriggerType.CONDITION, TriggerType.EVENT);
     }
 
@@ -123,13 +128,14 @@ public class AgreePatternBuilder extends AgreeSwitch<AgreeStatement> {
         Expr condition = builder.doSwitch(object.getCondition());
         Expr effect = builder.doSwitch(object.getEvent());
         Expr timesExpr = builder.doSwitch(object.getTimes());
+        boolean exclusive = object.getExcl() != null;
         if (!(timesExpr instanceof IntExpr)) {
             throw new AgreeException("Expected an integer literal in 'When Occurs' pattern");
         }
         BigInteger times = ((IntExpr) timesExpr).value;
         AgreePatternInterval interval = getIntervalType(object.getInterval());
 
-        return new AgreeTimesPattern(str, ref, condition, effect, interval, null, TriggerType.CONDITION,
+        return new AgreeTimesPattern(str, ref, exclusive, condition, effect, interval, null, TriggerType.CONDITION,
                 TriggerType.CONDITION, times, null);
     }
     

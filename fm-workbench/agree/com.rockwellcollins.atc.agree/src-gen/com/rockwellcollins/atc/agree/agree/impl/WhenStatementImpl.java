@@ -23,8 +23,8 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  * </p>
  * <ul>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.impl.WhenStatementImpl#getCondition <em>Condition</em>}</li>
- *   <li>{@link com.rockwellcollins.atc.agree.agree.impl.WhenStatementImpl#getExcl <em>Excl</em>}</li>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.impl.WhenStatementImpl#getEvent <em>Event</em>}</li>
+ *   <li>{@link com.rockwellcollins.atc.agree.agree.impl.WhenStatementImpl#getExcl <em>Excl</em>}</li>
  * </ul>
  *
  * @generated
@@ -40,6 +40,16 @@ public class WhenStatementImpl extends PatternStatementImpl implements WhenState
    * @ordered
    */
   protected Expr condition;
+
+  /**
+   * The cached value of the '{@link #getEvent() <em>Event</em>}' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #getEvent()
+   * @generated
+   * @ordered
+   */
+  protected Expr event;
 
   /**
    * The default value of the '{@link #getExcl() <em>Excl</em>}' attribute.
@@ -60,16 +70,6 @@ public class WhenStatementImpl extends PatternStatementImpl implements WhenState
    * @ordered
    */
   protected String excl = EXCL_EDEFAULT;
-
-  /**
-   * The cached value of the '{@link #getEvent() <em>Event</em>}' containment reference.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see #getEvent()
-   * @generated
-   * @ordered
-   */
-  protected Expr event;
 
   /**
    * <!-- begin-user-doc -->
@@ -145,29 +145,6 @@ public class WhenStatementImpl extends PatternStatementImpl implements WhenState
    * <!-- end-user-doc -->
    * @generated
    */
-  public String getExcl()
-  {
-    return excl;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public void setExcl(String newExcl)
-  {
-    String oldExcl = excl;
-    excl = newExcl;
-    if (eNotificationRequired())
-      eNotify(new ENotificationImpl(this, Notification.SET, AgreePackage.WHEN_STATEMENT__EXCL, oldExcl, excl));
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
   public Expr getEvent()
   {
     return event;
@@ -216,6 +193,29 @@ public class WhenStatementImpl extends PatternStatementImpl implements WhenState
    * <!-- end-user-doc -->
    * @generated
    */
+  public String getExcl()
+  {
+    return excl;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public void setExcl(String newExcl)
+  {
+    String oldExcl = excl;
+    excl = newExcl;
+    if (eNotificationRequired())
+      eNotify(new ENotificationImpl(this, Notification.SET, AgreePackage.WHEN_STATEMENT__EXCL, oldExcl, excl));
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   @Override
   public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs)
   {
@@ -241,10 +241,10 @@ public class WhenStatementImpl extends PatternStatementImpl implements WhenState
     {
       case AgreePackage.WHEN_STATEMENT__CONDITION:
         return getCondition();
-      case AgreePackage.WHEN_STATEMENT__EXCL:
-        return getExcl();
       case AgreePackage.WHEN_STATEMENT__EVENT:
         return getEvent();
+      case AgreePackage.WHEN_STATEMENT__EXCL:
+        return getExcl();
     }
     return super.eGet(featureID, resolve, coreType);
   }
@@ -262,11 +262,11 @@ public class WhenStatementImpl extends PatternStatementImpl implements WhenState
       case AgreePackage.WHEN_STATEMENT__CONDITION:
         setCondition((Expr)newValue);
         return;
-      case AgreePackage.WHEN_STATEMENT__EXCL:
-        setExcl((String)newValue);
-        return;
       case AgreePackage.WHEN_STATEMENT__EVENT:
         setEvent((Expr)newValue);
+        return;
+      case AgreePackage.WHEN_STATEMENT__EXCL:
+        setExcl((String)newValue);
         return;
     }
     super.eSet(featureID, newValue);
@@ -285,11 +285,11 @@ public class WhenStatementImpl extends PatternStatementImpl implements WhenState
       case AgreePackage.WHEN_STATEMENT__CONDITION:
         setCondition((Expr)null);
         return;
-      case AgreePackage.WHEN_STATEMENT__EXCL:
-        setExcl(EXCL_EDEFAULT);
-        return;
       case AgreePackage.WHEN_STATEMENT__EVENT:
         setEvent((Expr)null);
+        return;
+      case AgreePackage.WHEN_STATEMENT__EXCL:
+        setExcl(EXCL_EDEFAULT);
         return;
     }
     super.eUnset(featureID);
@@ -307,10 +307,10 @@ public class WhenStatementImpl extends PatternStatementImpl implements WhenState
     {
       case AgreePackage.WHEN_STATEMENT__CONDITION:
         return condition != null;
-      case AgreePackage.WHEN_STATEMENT__EXCL:
-        return EXCL_EDEFAULT == null ? excl != null : !EXCL_EDEFAULT.equals(excl);
       case AgreePackage.WHEN_STATEMENT__EVENT:
         return event != null;
+      case AgreePackage.WHEN_STATEMENT__EXCL:
+        return EXCL_EDEFAULT == null ? excl != null : !EXCL_EDEFAULT.equals(excl);
     }
     return super.eIsSet(featureID);
   }

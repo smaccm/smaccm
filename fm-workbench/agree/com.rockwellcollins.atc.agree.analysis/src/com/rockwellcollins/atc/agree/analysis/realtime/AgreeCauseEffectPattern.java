@@ -14,6 +14,7 @@ public class AgreeCauseEffectPattern extends AgreePattern {
         EVENT, CONDITION
     };
 
+    public final boolean effectIsExclusive;
     public final Expr cause;
     public final Expr effect;
 
@@ -23,10 +24,11 @@ public class AgreeCauseEffectPattern extends AgreePattern {
     public final TriggerType causeType;
     public final TriggerType effectType;
 
-    public AgreeCauseEffectPattern(String string, EObject reference, Expr cause, Expr effect,
+    public AgreeCauseEffectPattern(String string, EObject reference, boolean effectIsExclusive, Expr cause, Expr effect,
             AgreePatternInterval causeInterval, AgreePatternInterval effectInterval, TriggerType causeType,
             TriggerType effectType) {
         super(string, null, reference);
+        this.effectIsExclusive = effectIsExclusive;
         this.cause = cause;
         this.effect = effect;
         this.causeInterval = causeInterval;

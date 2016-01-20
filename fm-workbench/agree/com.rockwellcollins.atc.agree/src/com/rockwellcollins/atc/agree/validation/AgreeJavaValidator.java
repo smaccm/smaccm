@@ -67,7 +67,6 @@ import com.rockwellcollins.atc.agree.agree.ConnectionStatement;
 import com.rockwellcollins.atc.agree.agree.ConstStatement;
 import com.rockwellcollins.atc.agree.agree.EqStatement;
 import com.rockwellcollins.atc.agree.agree.EventExpr;
-import com.rockwellcollins.atc.agree.agree.EventStatement;
 import com.rockwellcollins.atc.agree.agree.Expr;
 import com.rockwellcollins.atc.agree.agree.FloorCast;
 import com.rockwellcollins.atc.agree.agree.FnCallExpr;
@@ -76,6 +75,7 @@ import com.rockwellcollins.atc.agree.agree.GetPropertyExpr;
 import com.rockwellcollins.atc.agree.agree.GuaranteeStatement;
 import com.rockwellcollins.atc.agree.agree.IfThenElseExpr;
 import com.rockwellcollins.atc.agree.agree.InitialStatement;
+import com.rockwellcollins.atc.agree.agree.InputStatement;
 import com.rockwellcollins.atc.agree.agree.IntLitExpr;
 import com.rockwellcollins.atc.agree.agree.LatchedStatement;
 import com.rockwellcollins.atc.agree.agree.LemmaStatement;
@@ -487,25 +487,6 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 	}
 	
 	@Check(CheckType.FAST)
-	public void checkEventStatement(EventStatement event){
-	    
-	}
-	
-	
-	private void verifyIsEvent(Expr expr){
-	    if(expr instanceof EventExpr){
-	        return;
-	    }
-	    if(expr instanceof NestedDotID){
-	        NamedElement base = ((NestedDotID) expr).getBase();
-	        if(base instanceof EventStatement){
-	            return;
-	        }
-	    }
-	    error(expr, "Expression must be an event (not an arbitrary variable)");
-	}
-	
-	@Check(CheckType.FAST)
 	public void checkPeriodicStatement(PeriodicStatement statement){
 	    Expr event = statement.getEvent();
 	    Expr jitter = statement.getJitter();
@@ -544,9 +525,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 	    Expr condition = when.getCondition();
 	    Expr event = when.getEvent();
 	    TimeInterval condInterval = when.getConditionInterval();
-	    
-	    verifyIsEvent(event);
-	    
+	    	    
 	    if(condInterval != null){
 	        Expr lowExpr = condInterval.getLow();
 	        if (lowExpr instanceof RealLitExpr) {
@@ -576,9 +555,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
         Expr condition = when.getCondition();
         Expr event = when.getEvent();
         Expr times = when.getTimes();
-        
-        verifyIsEvent(event);
-        
+                
         AgreeType type = getAgreeType(condition);
         if(!matches(BOOL, type)){
             error(condition, "The condition of the 'when' statement is of type '" +type +"'"
@@ -602,9 +579,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 	public void checkWheneverOccursStatement(WheneverOccursStatement whenever){
 	    Expr cause = whenever.getCause();
 	    Expr effect = whenever.getEffect();
-	    
-	    verifyIsEvent(effect);
-	    
+	    	    
 	    AgreeType type = getAgreeType(cause);
 	    if(!matches(BOOL, type)){
 	        error(cause, "The cause of the 'whenever' statement is of type '"+type+"' "
@@ -621,9 +596,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
     public void checkWheneverBecomesTrueStatement(WheneverBecomesTrueStatement whenever){
         Expr cause = whenever.getCause();
         Expr effect = whenever.getEffect();
-        
-        verifyIsEvent(effect);
-        
+                
         AgreeType type = getAgreeType(cause);
         if(!matches(BOOL, type)){
             error(cause, "The cause of the 'whenever' statement is of type '"+type+"' "
@@ -659,9 +632,6 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
         Expr lhs = whenever.getLhs();
         Expr rhs = whenever.getRhs();
         
-        verifyIsEvent(lhs);
-        verifyIsEvent(rhs);
-
         AgreeType type = getAgreeType(cause);
         if (!matches(BOOL, type)) {
             error(cause, "The cause of the 'whenever' statement is of type '" + type + "' "
@@ -746,6 +716,15 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 
 	}
 
+	@Check(CheckType.FAST)
+	public void checkInputStatement(InputStatement input){
+	    ComponentType comp = EcoreUtil2.getContainerOfType(input, ComponentType.class);
+        if (comp == null) {
+            error(input, "Input statements are only allowed in component types");
+        }
+	    
+	}
+	
 	@Check(CheckType.FAST)
 	public void checkRecordUpdateExpr(RecordUpdateExpr upExpr) {
 
@@ -1835,8 +1814,6 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 			return getAgreeType((ComponentClassifier) namedEl);
 		} else if (namedEl instanceof DataImplementation) {
 			return getAgreeType((DataImplementation) namedEl);
-		} else if (namedEl instanceof EventStatement){
-		    return BOOL;
 		}
 
 		return ERROR;
