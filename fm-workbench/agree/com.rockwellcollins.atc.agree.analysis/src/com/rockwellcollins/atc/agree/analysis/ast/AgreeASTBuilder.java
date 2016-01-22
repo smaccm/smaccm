@@ -196,7 +196,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
         List<AgreeStatement> assumptions = new ArrayList<>();
         List<AgreeStatement> guarantees = new ArrayList<>();
         List<AgreeStatement> lemmas = new ArrayList<>();
-        List<Equation> localEquations = new ArrayList<>();
+        List<AgreeEquation> localEquations = new ArrayList<>();
         Expr clockConstraint = new BoolExpr(true);
         Expr initialConstraint = new BoolExpr(true);
         String id = compInst.getName();
@@ -513,6 +513,8 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
     private List<AgreeConnection> getConnections(EList<Connection> connections, ComponentInstance compInst,
             List<AgreeNode> subNodes, boolean latched) {
 
+        Set<String> destinationSet = new HashSet<>();
+        
         Property commTimingProp = EMFIndexRetrieval.getPropertyDefinitionInWorkspace(
                 OsateResourceUtil.getResourceSet(), "Communication_Properties::Timing");
         List<AgreeConnection> agreeConns = new ArrayList<>();
@@ -560,8 +562,14 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
                 }
                 connType = ConnectionType.EVENT;
 
-                agreeConns.add(new AgreeConnection(sourceNode, destNode, sourPort.getName() + eventSuffix,
-                        destPort.getName() + eventSuffix, connType, latched, delayed, conn));
+                AgreeConnection agreeConnection = new AgreeConnection(sourceNode, destNode, sourPort.getName() + eventSuffix,
+                        destPort.getName() + eventSuffix, connType, latched, delayed, conn);
+                
+                if(!destinationSet.add(agreeConnection.destinationVarName)){
+                    AgreeLogger.logWarning("Multiple connections to feature '"+agreeConnection.destinationVarName+"'");
+                }
+                
+                agreeConns.add(agreeConnection);
 
             }
 
@@ -588,12 +596,18 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
                 continue;
             }
 
-            agreeConns.add(new AgreeConnection(sourceNode, destNode, sourPort.getName(), destPort.getName(),
-                    connType, latched, delayed, conn));
+            AgreeConnection agreeConnection = new AgreeConnection(sourceNode, destNode, sourPort.getName(), destPort.getName(),
+                    connType, latched, delayed, conn);
+            
+            if(!destinationSet.add(agreeConnection.destinationVarName)){
+                AgreeLogger.logWarning("Multiple connections to feature '"+agreeConnection.destinationVarName+"'");
+            }
+            
+            agreeConns.add(agreeConnection);
         }
         return agreeConns;
     }
-
+    
     private AgreeNode agreeNodeFromNamedEl(List<AgreeNode> nodes, NamedElement comp) {
         if (comp == null) {
             return null;

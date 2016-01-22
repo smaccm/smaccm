@@ -36,6 +36,7 @@ import com.rockwellcollins.atc.agree.analysis.ast.AgreeProgram;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeStatement;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeVar;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeConnection.ConnectionType;
+import com.rockwellcollins.atc.agree.analysis.ast.AgreeEquation;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeNode.TimingModel;
 import com.rockwellcollins.atc.agree.analysis.lustre.visitors.IdRewriteVisitor;
 import com.rockwellcollins.atc.agree.analysis.lustre.visitors.IdRewriter;
@@ -116,7 +117,7 @@ public class LustreAstBuilder {
         // equations
         // and type equations. This would clear this up
         for (AgreeStatement statement : topNode.assertions) {
-            if (AgreeUtils.statementIsNullOrContractEqOrProperty(statement)){
+            if (AgreeUtils.referenceIsNullOrContractEqOrProperty(statement.reference)){
 
                 // this is a strange hack we have to do. we have to make
                 // equation and property
@@ -341,7 +342,15 @@ public class LustreAstBuilder {
             stuffConj = new BinaryExpr(stuffConj, BinaryOp.AND, guarantee.expr);
         }
 
-        equations.addAll(agreeNode.localEquations);
+        if(withAssertions){
+            equations.addAll(agreeNode.localEquations);
+        } else {
+            for (AgreeEquation eq : agreeNode.localEquations) {
+                if (AgreeUtils.referenceIsInContract(eq.reference)) {
+                    equations.add(eq);
+                }
+            }
+        }
         // TODO should we include lemmas in the consistency check?
         // for(AgreeStatement guarantee : agreeNode.lemmas){
         // histConj = new BinaryExpr(histConj, BinaryOp.AND, guarantee.expr);
@@ -356,7 +365,7 @@ public class LustreAstBuilder {
             // equations
             // and type equations. This would clear this up
             for (AgreeStatement assertion : agreeNode.assertions) {
-                if (AgreeUtils.statementIsNullOrContractEqOrProperty(assertion)) {
+                if (AgreeUtils.referenceIsNullOrContractEqOrProperty(assertion.reference)) {
                     stuffConj = new BinaryExpr(stuffConj, BinaryOp.AND, assertion.expr);
                 }
             }
@@ -374,9 +383,15 @@ public class LustreAstBuilder {
         for (AgreeVar var : agreeNode.outputs) {
             inputs.add(var);
         }
-        
-        for(AgreeVar var : agreeNode.locals){
-            locals.add(var);
+
+        for (AgreeVar var : agreeNode.locals) {
+            if (withAssertions) {
+                locals.add(var);
+            } else {
+                if (AgreeUtils.referenceIsInContract(var.reference)) {
+                    locals.add(var);
+                }
+            }
         }
 
         EObject classifier = agreeNode.compInst.getComponentClassifier();
@@ -545,7 +560,7 @@ public class LustreAstBuilder {
         // monolithic verification. However, we should add EQ statements
         // with left hand sides which part of the agreeNode assertions
         for (AgreeStatement statement : agreeNode.assertions) {
-            if (monolithic ||  AgreeUtils.statementIsNullOrContractEqOrProperty(statement)) {
+            if (monolithic ||  AgreeUtils.referenceIsNullOrContractEqOrProperty(statement.reference)) {
                 assertions.add(statement.expr);
             }
         }

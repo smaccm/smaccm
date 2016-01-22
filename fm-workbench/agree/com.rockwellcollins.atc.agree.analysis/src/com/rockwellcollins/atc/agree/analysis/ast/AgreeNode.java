@@ -28,7 +28,7 @@ public class AgreeNode {
     public final List<AgreeStatement> assumptions;
     public final List<AgreeStatement> guarantees;
     public final List<AgreeStatement> lemmas;
-    public final List<Equation> localEquations;
+    public final List<AgreeEquation> localEquations;
     public final Expr clockConstraint;
     public final Expr initialConstraint;
     public final AgreeVar clockVar;
@@ -39,7 +39,7 @@ public class AgreeNode {
     public final Set<IdExpr> eventTimes;
 
     public AgreeNode(String id, List<AgreeVar> inputs, List<AgreeVar> outputs, List<AgreeVar> locals,
-            List<Equation> localEquations, List<AgreeConnection> connections, List<AgreeNode> subNodes, List<AgreeStatement> assertions,
+            List<AgreeEquation> localEquations, List<AgreeConnection> connections, List<AgreeNode> subNodes, List<AgreeStatement> assertions,
             List<AgreeStatement> assumptions, List<AgreeStatement> guarantees, List<AgreeStatement> lemmas,
             Expr clockConstraint, Expr initialConstraint, AgreeVar clockVar, EObject reference,
             TimingModel timing, Set<IdExpr> eventTimes, ComponentInstance compinst) {

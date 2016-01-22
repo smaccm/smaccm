@@ -20,7 +20,7 @@ public class AgreeNodeBuilder {
     private List<AgreeVar> inputs = new ArrayList<>();
     private List<AgreeVar> outputs = new ArrayList<>();
     private List<AgreeVar> locals = new ArrayList<>();
-    private List<Equation> equations = new ArrayList<>();
+    private List<AgreeEquation> equations = new ArrayList<>();
     private List<AgreeConnection> connections = new ArrayList<>();
     private List<AgreeNode> subNodes = new ArrayList<>();
     private List<AgreeStatement> assertions = new ArrayList<>();
@@ -95,7 +95,7 @@ public class AgreeNodeBuilder {
         this.locals.clear();
     }
     
-    public void addLocalEquation(Equation eq){
+    public void addLocalEquation(AgreeEquation eq){
         this.equations.add(eq);
     }
     
