@@ -4,6 +4,8 @@ import java.util.Iterator;
 import java.util.Map.Entry;
 
 
+
+
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABArrowFunction;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABAssumption;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABAssignment;
@@ -14,15 +16,23 @@ import com.rockwellcollins.atc.agree.codegen.ast.MATLABFirstTimeVarInit;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABFunction;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABIfFunction;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABImpliesFunction;
+import com.rockwellcollins.atc.agree.codegen.ast.MATLABInt16Type;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABInt32Type;
+import com.rockwellcollins.atc.agree.codegen.ast.MATLABInt64Type;
+import com.rockwellcollins.atc.agree.codegen.ast.MATLABInt8Type;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABLocalBusVarInit;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABPersistentVarDecl;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABPreInputVarInit;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABPreLocalVarInit;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABPrimaryFunction;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABProperty;
+import com.rockwellcollins.atc.agree.codegen.ast.MATLABSingleType;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABStatement;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABType;
+import com.rockwellcollins.atc.agree.codegen.ast.MATLABUInt16Type;
+import com.rockwellcollins.atc.agree.codegen.ast.MATLABUInt32Type;
+import com.rockwellcollins.atc.agree.codegen.ast.MATLABUInt64Type;
+import com.rockwellcollins.atc.agree.codegen.ast.MATLABUInt8Type;
 import com.rockwellcollins.atc.agree.codegen.ast.expr.MATLABArrayAccessExpr;
 import com.rockwellcollins.atc.agree.codegen.ast.expr.MATLABArrowFunctionCall;
 import com.rockwellcollins.atc.agree.codegen.ast.expr.MATLABBinaryExpr;
@@ -79,6 +89,8 @@ public class MATLABPrettyPrintVisitor implements MATLABTypeVisitor<Void>, MATLAB
 		for(MATLABPersistentVarDecl persistentVarDecl: primaryFunction.persistentVarDecl){
 			persistentVarDecl.accept(this);
 		}
+		
+		newline();
 		
 		//write statements
 		for(MATLABStatement statement: primaryFunction.statements){
@@ -375,9 +387,57 @@ public class MATLABPrettyPrintVisitor implements MATLABTypeVisitor<Void>, MATLAB
 		newline();
 		return null;
 	}
+	
+	@Override
+	public Void visit(MATLABUInt32Type type) {
+		write(type.name);
+		return null;
+	}
+
+	@Override
+	public Void visit(MATLABInt8Type type) {
+		write(type.name);
+		return null;
+	}
+
+	@Override
+	public Void visit(MATLABUInt8Type type) {
+		write(type.name);
+		return null;
+	}
+
+	@Override
+	public Void visit(MATLABInt16Type type) {
+		write(type.name);
+		return null;
+	}
+
+	@Override
+	public Void visit(MATLABUInt16Type type) {
+		write(type.name);
+		return null;
+	}
+
+	@Override
+	public Void visit(MATLABInt64Type type) {
+		write(type.name);
+		return null;
+	}
+
+	@Override
+	public Void visit(MATLABUInt64Type type) {
+		write(type.name);
+		return null;
+	}
 
 	@Override
 	public Void visit(MATLABInt32Type type) {
+		write(type.name);
+		return null;
+	}
+	
+	@Override
+	public Void visit(MATLABSingleType type) {
 		write(type.name);
 		return null;
 	}

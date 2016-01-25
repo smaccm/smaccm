@@ -1,16 +1,14 @@
 package com.rockwellcollins.atc.agree.codegen.ast;
 
-import jkind.Assert;
-
 import com.rockwellcollins.atc.agree.codegen.visitors.MATLABTypeVisitor;
 
-public class MATLABBusType extends MATLABType {
+public class MATLABSingleType extends MATLABType {
+
+	public final float defaultValue;
+	public final String name = "single";
 	
-	public final String name;
-	
-	public MATLABBusType(String name) {
-		Assert.isNotNull(name);
-		this.name = name;
+	public MATLABSingleType() {
+		this.defaultValue = 0;
 	}
 
 	@Override
@@ -20,11 +18,11 @@ public class MATLABBusType extends MATLABType {
 
 	@Override
 	public String getValueStr() {
-		return null;
+		return Float.toString(defaultValue);
 	}
 	
 	public String toString() {
 		return name;
 	}
-	
+
 }

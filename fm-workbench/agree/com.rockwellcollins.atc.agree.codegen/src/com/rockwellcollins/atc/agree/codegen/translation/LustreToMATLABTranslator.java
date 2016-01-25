@@ -6,12 +6,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.eclipse.jface.preference.IPreferenceStore;
+
 import jkind.lustre.Equation;
 import jkind.lustre.Expr;
 import jkind.lustre.Node;
 import jkind.lustre.VarDecl;
 
+import com.rockwellcollins.atc.agree.codegen.Activator;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeProgram;
+import com.rockwellcollins.atc.agree.codegen.preferences.PreferenceConstants;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABAssumption;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABAssignment;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABFunction;
@@ -28,8 +32,14 @@ import com.rockwellcollins.atc.agree.codegen.visitors.LustreToMATLABTypeVisitor;
 import com.rockwellcollins.atc.agree.codegen.visitors.MATLABTypeCastExprVisitor;
 
 public class LustreToMATLABTranslator {
-
+	public static String intTypeStr = null;
+	public static String realTypeStr = null;
+	
     public static MATLABPrimaryFunction translate(Node lustreNode, AgreeProgram agreeProgram){
+        IPreferenceStore prefs = Activator.getDefault().getPreferenceStore();
+        intTypeStr = prefs.getString(PreferenceConstants.PREF_INT);
+        realTypeStr = prefs.getString(PreferenceConstants.PREF_REAL);
+    	
         List<MATLABIdExpr> inputs = new ArrayList<>();
         List<MATLABStatement> statements = new ArrayList<>();
         List<MATLABFunction> functions = new ArrayList<>();
@@ -44,7 +54,7 @@ public class LustreToMATLABTranslator {
     	//add input variables
 		for (VarDecl inputVar : lustreNode.inputs){
 			//get inputs
-			inputs.add(new MATLABIdExpr(exprVisitor.updateName(inputVar.id)));
+			inputs.add(new MATLABIdExpr(exprVisitor.updateName(inputVar.id,"")));
 			//translate the Lustre expression to MATLAB expression
 			//add input Ids to inputList of the exprVisitor 
 			//to help identify local variables
@@ -54,14 +64,14 @@ public class LustreToMATLABTranslator {
 		//add local variable and their types
 		for (VarDecl localVar : lustreNode.locals){
 			//get local var Name and Type
-			exprVisitor.localVarTypeMap.put(exprVisitor.updateName(localVar.id), localVar.type.accept(typeVisitor));	
+			exprVisitor.localVarTypeMap.put(exprVisitor.updateName(localVar.id,""), localVar.type.accept(typeVisitor));	
 		}
 		
 		//translate equations to assignments
 		if (!lustreNode.equations.isEmpty()) {
 			for (Equation equation : lustreNode.equations) {
 				//get the variable to assign
-				String varId = exprVisitor.updateName(equation.lhs.get(0).id);
+				String varId = exprVisitor.updateName(equation.lhs.get(0).id,"");
 				MATLABIdExpr varToAssign = new MATLABIdExpr(varId);
 				//get the type for the local variable
 				//MATLABType type = exprVisitor.localVarTypeMap.get(varId);
@@ -118,15 +128,12 @@ public class LustreToMATLABTranslator {
 		
 		//translate properties
 		for (String propertyStr : lustreNode.properties) {
-			propertyStr = exprVisitor.updateName(propertyStr);
+			propertyStr = exprVisitor.updateName(propertyStr,"");
 			MATLABProperty property = new MATLABProperty(propertyStr);
 			statements.add(property);
 		}
 		
 		//add definitions for the functions that have been called
-		//TODO
-		//update the names of the functions included in matlabFunction
-    	//to make sure they are unique, and the function names to the idList 
 		for(Map.Entry<String, MATLABFunction> functionEntry: exprVisitor.functionMap.entrySet()){
 			MATLABFunction function = functionEntry.getValue();
 			if(function.functionCalled){

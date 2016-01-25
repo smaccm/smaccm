@@ -21,4 +21,8 @@ public class MATLABBoolType extends MATLABType {
 		return visitor.visit(this);
 	}
 	
+	public String toString() {
+		return name;
+	}
+	
 }

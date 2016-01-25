@@ -1,18 +1,12 @@
 package com.rockwellcollins.atc.agree.codegen.ast;
 
-import jkind.Assert;
-
 import com.rockwellcollins.atc.agree.codegen.visitors.MATLABTypeVisitor;
 
-public class MATLABBusType extends MATLABType {
-	
-	public final String name;
-	
-	public MATLABBusType(String name) {
-		Assert.isNotNull(name);
-		this.name = name;
-	}
+public class MATLABUInt16Type extends MATLABType {
 
+	public final int defaultValue = 0;
+	public final String name = "uint16";
+	
 	@Override
 	public <T> T accept(MATLABTypeVisitor<T> visitor) {
 		return visitor.visit(this);
@@ -20,11 +14,10 @@ public class MATLABBusType extends MATLABType {
 
 	@Override
 	public String getValueStr() {
-		return null;
+		return Integer.toString(defaultValue);
 	}
 	
 	public String toString() {
 		return name;
 	}
-	
 }

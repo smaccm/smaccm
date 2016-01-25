@@ -108,6 +108,7 @@ public class MATLABFunctionHandler extends AadlHandler {
             //if no path has previously been selected
             String path = pref.get("DEFAULT_PATH", "");
     		JFileChooser chooser = new JFileChooser();
+    		chooser.setDialogTitle("Choose Output Directory");
     		chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
     		
     		// Set the path that was saved in preferences
@@ -122,7 +123,7 @@ public class MATLABFunctionHandler extends AadlHandler {
     		    // Save the selected path
     		    pref.put("DEFAULT_PATH", directory.getAbsolutePath());
     		    
-    		    Path filePath = Paths.get(directory.toString(), matlabFunction.name);
+    		    Path filePath = Paths.get(directory.toString(), matlabFunction.name+".m");
 
         		// Write MATLAB function code into the specified file
         		try {
@@ -139,6 +140,7 @@ public class MATLABFunctionHandler extends AadlHandler {
             return Status.OK_STATUS;
         } catch (Throwable e) {
             String messages = getNestedMessages(e);
+            e.printStackTrace();
             return new Status(IStatus.ERROR, Activator.PLUGIN_ID, 0, messages, e);
         }
     }

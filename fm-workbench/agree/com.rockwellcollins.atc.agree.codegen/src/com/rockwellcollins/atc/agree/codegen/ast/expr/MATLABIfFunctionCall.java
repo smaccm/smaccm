@@ -8,7 +8,7 @@ public class MATLABIfFunctionCall extends MATLABFunctionCall {
 	
 	public String name = "ifFunction";
 	
-	public final MATLABExpr cond; 
+	public MATLABExpr cond; 
 	
 	public MATLABExpr ifExpr;
 	
