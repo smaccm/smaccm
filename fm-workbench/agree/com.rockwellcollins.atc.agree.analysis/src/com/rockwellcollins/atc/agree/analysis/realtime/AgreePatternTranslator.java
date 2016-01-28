@@ -163,11 +163,12 @@ public class AgreePatternTranslator {
         IdExpr jitterId = new IdExpr(jitterVar.id);
         IdExpr periodId = new IdExpr(periodVar.id);
         IdExpr timeoutId = new IdExpr(timeoutVar.id);
-        
+
         builder.addEventTime(timeoutId);
-        
-        //-j <= jitter <= j
-        Expr jitterLow = new BinaryExpr(new UnaryExpr(UnaryOp.NEGATIVE, pattern.jitter), BinaryOp.LESSEQUAL, jitterId);
+
+        // -j <= jitter <= j
+        Expr jitterLow =
+                new BinaryExpr(new UnaryExpr(UnaryOp.NEGATIVE, pattern.jitter), BinaryOp.LESSEQUAL, jitterId);
         Expr jitterHigh = new BinaryExpr(jitterId, BinaryOp.LESSEQUAL, pattern.jitter);
         builder.addAssertion(new AgreeStatement(null, new BinaryExpr(jitterLow, BinaryOp.AND, jitterHigh), pattern.reference));
         
@@ -188,6 +189,9 @@ public class AgreePatternTranslator {
         //event = (t = (0 -> pre timeout))
         Expr timeEq = new BinaryExpr(timeExpr, BinaryOp.EQUAL, preTimeout);
         Expr expr = new BinaryExpr(pattern.event, BinaryOp.EQUAL, timeEq);
+        
+        //assert that the timeout is always greater than the current time
+        builder.addAssertion(new AgreeStatement(null, new BinaryExpr(timeoutId, BinaryOp.GREATER, timeExpr), pattern.reference));
         
         return expr;
     }
