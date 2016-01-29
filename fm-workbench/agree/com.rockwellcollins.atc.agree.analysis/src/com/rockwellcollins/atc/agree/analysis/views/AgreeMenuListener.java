@@ -3,21 +3,28 @@ package com.rockwellcollins.atc.agree.analysis.views;
 import java.io.File;
 import java.io.IOException;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import jkind.api.results.AnalysisResult;
+import jkind.api.results.JKindResult;
 import jkind.api.results.JRealizabilityResult;
+import jkind.api.results.MapRenaming;
 import jkind.api.results.PropertyResult;
+import jkind.api.results.Renaming;
 import jkind.api.ui.results.AnalysisResultTree;
 import jkind.interval.NumericInterval;
+import jkind.lustre.Node;
 import jkind.lustre.Program;
+import jkind.lustre.VarDecl;
 import jkind.lustre.values.Value;
 import jkind.results.Counterexample;
 import jkind.results.InvalidProperty;
 import jkind.results.Property;
 import jkind.results.Signal;
 import jkind.results.UnknownProperty;
+import jkind.results.ValidProperty;
 import jkind.results.layout.Layout;
 
 import org.eclipse.emf.ecore.EObject;
@@ -27,6 +34,7 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -40,6 +48,7 @@ import org.eclipse.ui.console.IConsoleView;
 import org.eclipse.ui.console.MessageConsole;
 import org.eclipse.ui.console.MessageConsoleStream;
 import org.eclipse.xtext.ui.editor.GlobalURIEditorOpener;
+import org.osate.aadl2.ComponentClassifier;
 import org.osate.aadl2.ComponentImplementation;
 import org.osate.ui.dialogs.Dialog;
 
@@ -48,10 +57,16 @@ import com.rockwellcollins.atc.agree.agree.AssumeStatement;
 import com.rockwellcollins.atc.agree.agree.FnCallExpr;
 import com.rockwellcollins.atc.agree.agree.GuaranteeStatement;
 import com.rockwellcollins.atc.agree.agree.LemmaStatement;
+import com.rockwellcollins.atc.agree.analysis.Activator;
+import com.rockwellcollins.atc.agree.analysis.ConsistencyResult;
 import com.rockwellcollins.atc.agree.analysis.Util;
+import com.rockwellcollins.atc.agree.analysis.ast.AgreeNode;
+import com.rockwellcollins.atc.agree.analysis.ast.AgreeProgram;
+import com.rockwellcollins.atc.agree.analysis.ast.AgreeVar;
 import com.rockwellcollins.atc.agree.analysis.extentions.CexExtractor;
 import com.rockwellcollins.atc.agree.analysis.extentions.CexExtractorRegistry;
 import com.rockwellcollins.atc.agree.analysis.extentions.ExtensionRegistry;
+import com.rockwellcollins.atc.agree.analysis.preferences.PreferenceConstants;
 
 public class AgreeMenuListener implements IMenuListener {
     private static final GlobalURIEditorOpener globalURIEditorOpener = Util.getGlobalURIEditorOpener();
@@ -84,6 +99,150 @@ public class AgreeMenuListener implements IMenuListener {
         addViewCounterexampleMenu(manager, result);
         addViewLustreMenu(manager, result);
         addResultsLinkingMenu(manager, result);
+        //Anitha added this for set of support
+        addViewSupportMenu(manager, result);
+        addTraceabilityDocMenu(manager, result);
+    }
+  //Anitha added this displaying traceability document in Contract Gurantees only
+    private void addTraceabilityDocMenu(IMenuManager manager, AnalysisResult result) {
+    	IPreferenceStore prefs = Activator.getDefault().getPreferenceStore();  
+    	if (prefs.getString(PreferenceConstants.PREF_MODEL_CHECKER).equals(PreferenceConstants.MODEL_CHECKER_JKIND) 
+    			&& prefs.getBoolean(PreferenceConstants.PREF_SUPPORT)) {
+	    		if (result.getName().equals("Contract Guarantees")) {
+	    			if (result.toString().contains("- Valid")) {
+		    			manager.add(addViewTraceabilityConsole("View Traceability Document", manager, result));
+	    			}
+	    		}
+    	}
+    }
+    //Anitha added this displaying traceability in console
+    private IAction addViewTraceabilityConsole(String text, IMenuManager manager, AnalysisResult result) {
+    	return new Action(text) {
+    		public void run() {
+    			Map<String, EObject> tempRefMap = linker.getReferenceMap(result.getParent());
+		        if (tempRefMap == null) {
+		            tempRefMap = linker.getReferenceMap(result);
+		        }
+		        final Map<String, EObject> refMap = tempRefMap;
+    			final MessageConsole console = findConsole("Traceability");
+				showConsole(console);
+        		console.clearConsole();
+        		console.addPatternMatchListener(new AgreePatternListener(refMap));
+        		new Thread(new Runnable() {
+     	            @Override
+     	            public void run() {
+				        try {   
+				        	MessageConsoleStream out = console.newMessageStream();
+				        	printHLine(out, 2);
+	       	        		out.println("Traceability for Valid Contract Guarantees");
+	       	        		printHLine(out, 2);
+	       	        		out.println("");
+				        	if (result instanceof JKindResult) {
+			        	    	 List<PropertyResult> allProperties = new ArrayList<PropertyResult> (((JKindResult) result).getPropertyResults());
+			        	    	 out.println(String.format("%-30s%-30s%-30s","Gurantee name","Component name","Property name"));
+			        	    	 //Anitha: the support string is returned back as Compname.guratee name. hence I had to demux it here.
+			        	    	 printHLine(out, 2);
+			        	    	 if (!allProperties.isEmpty()) {		 
+			        	    		 for (PropertyResult prop : allProperties) {
+			        	    			 if (prop.getStatus().equals(jkind.api.results.Status.VALID)){
+			        	    				 ValidProperty vp = (ValidProperty)(prop.getProperty());
+			        	    				 if (!vp.getSupport().isEmpty()){
+			        	    					 out.println("{"+vp.getName()+"}");
+				        	    				 for (String supportString : vp.getSupport()) {
+			        	    						String componentName = "";
+					           	        			String guranteeName =  "";
+ 					           	        			if (supportString.contains(".")) {
+					           	        			  componentName =  supportString.substring(0,supportString.indexOf('.'));        			
+					           	        			  guranteeName =  supportString.substring(supportString.indexOf('.')+1,supportString.length());
+					           	        			}else{
+					           	        			//Anitha: this is hardcoded. Indicates that this is not a component property.
+					           	        				componentName = "Top Level System";
+					           	        				guranteeName=supportString;					           	        				
+					           	        			}
+ 					           	        		    out.println(String.format("%-30s%-30s%-30s","", componentName ,"{"+guranteeName+"}"));
+			        	    					 }
+				        	    				 printHLine(out, 2);
+			        	    				 }
+			        	    			 }
+			        	    		 }
+			        	    	 }
+			        	     }
+		                } catch (Exception e) {
+		                    e.printStackTrace();
+		                }
+     	            }
+        		 }).start();
+    		}
+    	};
+    }
+    
+  //Anitha added this displaying view support menu
+    private void addViewSupportMenu(IMenuManager manager, AnalysisResult result) {
+    	IPreferenceStore prefs = Activator.getDefault().getPreferenceStore();    	
+    	if (prefs.getString(PreferenceConstants.PREF_MODEL_CHECKER).equals(PreferenceConstants.MODEL_CHECKER_JKIND) 
+    			&& prefs.getBoolean(PreferenceConstants.PREF_SUPPORT)) {
+    				if (!(result instanceof ConsistencyResult || result instanceof JRealizabilityResult)) {
+    					if (result instanceof PropertyResult) {
+    						if (((PropertyResult) result).getStatus().equals(jkind.api.results.Status.VALID) ){ 
+    							if (!((PropertyResult) result).getParent().getName().contains("consistent")) {
+    								manager.add(addViewSupportConsole("Set of Support", manager, result));
+    							}
+    						}
+    					}
+    				}
+    	}
+    }
+  //Anitha added this displaying support in console
+    private IAction addViewSupportConsole(String text, IMenuManager manager, AnalysisResult result) {
+        return new Action(text) {
+        	public void run() { 
+        		Map<String, EObject> tempRefMap = linker.getReferenceMap(result.getParent());
+		        if (tempRefMap == null) {
+		            tempRefMap = linker.getReferenceMap(result);
+		        }
+		        final Map<String, EObject> refMap = tempRefMap;
+        		final MessageConsole console = findConsole("Support");
+				showConsole(console);
+        		console.clearConsole();
+        		console.addPatternMatchListener(new AgreePatternListener(refMap));
+        		   new Thread(new Runnable() {
+        	            @Override
+        	            public void run() {
+				            try (MessageConsoleStream out = console.newMessageStream()) {                
+                    			 ValidProperty vp = (ValidProperty)(((PropertyResult) result).getProperty());
+                    			 printHLine(out, 2);
+            	        		 out.println("Set of Support for Gurantee: "+"{"+vp.getName()+"}");
+            	        		 printHLine(out, 2);
+            	        		 out.println("");
+                    			 if (!vp.getSupport().isEmpty()){
+	                    			 printHLine(out, 2);
+	                    			 out.println(String.format("%-25s%-25s","Component name","Property name"));
+	            	        		 printHLine(out, 2);
+	            	        		 //Anitha: the support string is returned back as Compname.guratee name. hence I had to demux it here.
+	            	        		 for (String supportString : vp.getSupport()) {
+	            	        			 String componentName = "";
+	            	        			 String guranteeName =  "";
+	            	        			if (supportString.contains(".")) {
+	            	        			 componentName =  supportString.substring(0,supportString.indexOf('.'));        			
+	            	        			 guranteeName =  supportString.substring(supportString.indexOf('.')+1,supportString.length());
+	            	        			}else{
+	            	        				//Anitha: this is hardcoded. Indicates that this is not a component property.
+	            	        				componentName = "Top Level System";
+	            	        				guranteeName=supportString;
+	            	        			}
+	            	        			out.println(String.format("%-25s%-25s",componentName ,"{"+guranteeName+"}"));        			
+	            	        		 }
+	            	        		 printHLine(out, 2);   
+                    			 }else{
+                    				 out.println("There are no support elements to display.");
+                    			 }
+			                } catch (IOException e) {
+			                    e.printStackTrace();
+			                }
+        	            }
+                   }).start();
+        	}
+        };
     }
 
     private void addOpenComponentMenu(IMenuManager manager, AnalysisResult result) {

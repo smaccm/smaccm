@@ -6,3 +6,8 @@ instances
 .#*
 TAGS
 .aadlbin-gen
+fm-workbench/agree/com.rockwellcollins.atc.agree.analysis/.classpath
+*.jar
+fm-workbench/agree/com.rockwellcollins.atc.agree.analysis/.classpath
+fm-workbench/agree/com.rockwellcollins.atc.agree.analysis/.classpath
+*.classpath
