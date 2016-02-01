@@ -52,10 +52,13 @@ import com.rockwellcollins.atc.agree.agree.AgreePackage;
 import com.rockwellcollins.atc.agree.agree.AgreeSubclause;
 import com.rockwellcollins.atc.agree.agree.Arg;
 import com.rockwellcollins.atc.agree.agree.AssertStatement;
+import com.rockwellcollins.atc.agree.agree.AssignStatement;
 import com.rockwellcollins.atc.agree.agree.AssumeStatement;
+import com.rockwellcollins.atc.agree.agree.EqStatement;
 import com.rockwellcollins.atc.agree.agree.GuaranteeStatement;
 import com.rockwellcollins.atc.agree.agree.LemmaStatement;
 import com.rockwellcollins.atc.agree.agree.PropertyStatement;
+import com.rockwellcollins.atc.agree.agree.impl.AssignStatementImpl;
 import com.rockwellcollins.atc.agree.analysis.Activator;
 import com.rockwellcollins.atc.agree.analysis.AgreeException;
 import com.rockwellcollins.atc.agree.analysis.AgreeLayout;
@@ -85,6 +88,8 @@ public abstract class VerifyHandler extends AadlHandler {
     private IHandlerActivation terminateActivation;
     private IHandlerActivation terminateAllActivation;
     private IHandlerService handlerService;
+    
+    protected static final String topPrefix = "_TOP__";
 
     private enum AnalysisType {
         AssumeGuarantee, Consistency, Realizability
@@ -347,33 +352,31 @@ public abstract class VerifyHandler extends AadlHandler {
     
    //Anitha: adding these references additionally for support variables.
     private void addReferenceForSupport(Node node, Map<String, EObject> refMap, AgreeRenaming renaming, AgreeLayout layout,
-            VarDecl var, AgreeProgram agreeProgram ) {
+           VarDecl var, AgreeProgram agreeProgram ) {
     	   String componentName = null;
-    	   String varId="";
+    	   String varId=var.id;
     	   String varReference="";
     	   String strippedNodeId = layout.getCategory(node.id);
-    	   for (AgreeNode subNode : agreeProgram.agreeNodes) { 
-    			if (!strippedNodeId.isEmpty() && (subNode.id).equals(strippedNodeId)) {
-    				//Anitha: We need to get the system name that is displayed
-    				//get qualified name gets packagename::systemname
-    				componentName =  subNode.compInst.getComponentClassifier().getQualifiedName();    
-    				//the systemname can be systemname.impl (depending upon how it is declared in the features
-    				componentName =componentName.substring(componentName.indexOf(":")+2,componentName.length());
-    				//stripping off .impl if its present just for pretty printing
-    				if(componentName.contains(".Impl")){
-    					componentName =componentName.substring(0,componentName.indexOf(".Impl"));
-    				}
-    			}
-		   }
-    	   varId= var.id;
     	   if (!strippedNodeId.isEmpty() && varId.contains(strippedNodeId)) {
 	        	String refStr = getReferenceStr((AgreeVar) var);
-	    		String currentNodeRename = renaming.rename(strippedNodeId);
-	    		if (componentName != null) {	    			
-	    			currentNodeRename = componentName;
-	    		}
-	    		varId = node.id+"."+varId;	    		
-	    		varReference = currentNodeRename+"."+refStr;	            
+	        	varId = node.id+"."+varId;
+	           //Get the component's name from the component's instance
+	     	   for (AgreeNode subNode : agreeProgram.agreeNodes) { 
+	     			if (!strippedNodeId.isEmpty() && (subNode.id).equals(strippedNodeId)) {
+	     				componentName =  subNode.compInst.getComponentClassifier().getQualifiedName();  
+	     				componentName =componentName.substring(componentName.indexOf(":")+2,componentName.length());
+	     				//This is to strip off the .XXX such as .Impl if its present just for pretty printing
+	     				if(componentName.contains(".")){
+	     					componentName =componentName.substring(0,componentName.indexOf("."));
+	     				}
+	     				break;
+	     			} 
+	     	   }
+	     	   if ( ((AgreeVar) var).reference instanceof EqStatement) {
+	    		   varReference = componentName+"."+strippedNodeId+"."+refStr;
+	     	   }else{
+	     		  varReference = componentName+"."+refStr;
+	     	   }
     		}else{
     			varReference = getReferenceStr((AgreeVar) var);
     		}
@@ -409,7 +412,11 @@ public abstract class VerifyHandler extends AadlHandler {
     }
 
     private String getReferenceStr(AgreeVar var) {
-
+    	
+    	if(var.equals(null)){
+    		return null;
+    	}
+    	
         String prefix = getCategory(var);
         if (prefix == null) {
             return null;
@@ -429,7 +436,13 @@ public abstract class VerifyHandler extends AadlHandler {
         } else if (reference instanceof LemmaStatement) {
             return prefix + " lemma: " + ((LemmaStatement) reference).getStr();
         } else if (reference instanceof AssertStatement) {
-            throw new AgreeException("We really didn't expect to see an assert statement here");
+        	String referenceString =  "Assertion";
+        	//TODO: Anitha: I am not able to get a reference name for assert ?
+        	if (var.id.contains("_TOP__ASSERT__")) {
+        		referenceString = referenceString +"__" +var.id.substring(var.id.indexOf("ASSERT__")+8,var.id.length());
+        	}
+        	return (referenceString);
+        	//throw new AgreeException("We really didn't expect to see an assert statement here");
         } else if (reference instanceof Arg) {
             return prefix + seperator + ((Arg) reference).getName();
         } else if (reference instanceof DataPort) {
@@ -443,7 +456,23 @@ public abstract class VerifyHandler extends AadlHandler {
         } else if (reference instanceof ComponentType || reference instanceof ComponentImplementation) {
             return "Result";
         }
-        throw new AgreeException("Unhandled reference type: '" + reference.getClass().getName() + "'");
+        //Anitha Added this to include reference for equations
+        else if (reference instanceof EqStatement) {
+        	 EList<Arg> args = ((EqStatement) reference).getLhs();
+        	 if (!args.isEmpty() && args.size() >= 0) {
+        		 return (args.get(0).getName());         
+        	 } else{
+        		 return ((EqStatement) reference).getLhs().toString(); 
+        	 }
+        } else if (reference instanceof AssignStatementImpl) {
+        	String referenceString = "Assignment";
+        	//TODO: Anitha: I am not able to get a reference name for assert ?
+        	if (var.id.contains("_TOP__ASSERT__")) {
+        		referenceString = referenceString +"__" +var.id.substring(var.id.indexOf("ASSERT__")+8,var.id.length());
+        	}
+        	return (referenceString);
+       }
+       throw new AgreeException("Unhandled reference type: '" + reference.getClass().getName() + "'");
     }
 
     private AgreeSubclause getContract(ComponentImplementation ci) {

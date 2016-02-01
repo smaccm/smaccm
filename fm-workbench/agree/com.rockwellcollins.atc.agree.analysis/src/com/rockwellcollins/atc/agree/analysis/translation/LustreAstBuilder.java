@@ -31,8 +31,10 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.xtext.util.Pair;
 import org.eclipse.xtext.util.Tuples;
+import org.osate.aadl2.PortConnection;
 
 import com.rockwellcollins.atc.agree.agree.AssumeStatement;
+import com.rockwellcollins.atc.agree.agree.EqStatement;
 import com.rockwellcollins.atc.agree.agree.LemmaStatement;
 import com.rockwellcollins.atc.agree.analysis.Activator;
 import com.rockwellcollins.atc.agree.analysis.AgreeException;
@@ -167,13 +169,11 @@ public class LustreAstBuilder {
         List<VarDecl> inputs = new ArrayList<>();
         List<Equation> equations = new ArrayList<>();
         List<String> properties = new ArrayList<>();
-      //Anitha added this code to include top level assumptions in set of support
         List<String> setofsupport = new ArrayList<>();
 
-        // Anitha: Count is introduced to name support element variables
-        int count = 0;
+        int i = 0;
         for (AgreeStatement assumption : flatNode.assumptions) {
-            String assumeName = topPrefix + "ASSUME" + dotChar + count++;
+            String assumeName = topPrefix + "ASSUME" + dotChar + i++;
             locals.add(new AgreeVar(assumeName, NamedType.BOOL, assumption.reference, flatNode.compInst));
             // making each assumption an expression assigned to a new variable.
             equations.add(new Equation(new IdExpr(assumeName), assumption.expr));
@@ -181,60 +181,23 @@ public class LustreAstBuilder {
             setofsupport.add(assumeName);
         }
         
-        count = 0;
+        //Anitha: If an assertion is not a connection, then we need to add to set of support
+        i = 0;
         for(AgreeStatement assertion : flatNode.assertions){
-            if(assertion.reference != null){
-                String assertName = topPrefix+"ASSERT"+dotChar+count++;
-                AgreeVarDecl assertVar = new AgreeVarDecl(assertName, NamedType.BOOL);
-                IdExpr assertId = new IdExpr(assertVar.id);
+        	if(assertion.reference != null && !(assertion.reference instanceof PortConnection)){
+        		String assertName = topPrefix+"ASSERT"+dotChar+i++;
+        		locals.add(new AgreeVar(assertName, NamedType.BOOL, assertion.reference, flatNode.compInst));
+                //AgreeVarDecl assertVar = new AgreeVarDecl(assertName, NamedType.BOOL);
+                IdExpr assertId = new IdExpr(assertName);
                 equations.add(new Equation(assertId, assertion.expr));
                 assertions.add(assertId);
-                setofsupport.add(assertId.id);
+                setofsupport.add(assertName);
+            } else{
+            	assertions.add(assertion.expr);
             }
         }
         
-        
-//        AgreeNode topNode = agreeProgram.topNode;
-//        count = 0;
-//        for (AgreeStatement assertion : topNode.assertions) {
-//        	//Anitha: assertion can be eq or assert statements
-//        	//Anitha: Added this to get refernce when adding the equation's LHS
-//			 EObject ref = null;
-//			 if(assertion.reference != null){
-//			 assertion.reference
-//			 if (assertion.expr.toString().contains("=")) {
-//				 String lhs =  assertion.expr.toString().substring(1,assertion.expr.toString().indexOf('=')).trim();        			
-//				 for (AgreeVar var : topNode.outputs) {
-//					 ref = null; 
-//					 if (var.id != null && var.id.toString().equals(lhs)) {
-//						  ref = var.reference;
-//						  break;
-//					 }
-//				}
-//			}
-//			//Anitha: Added this for all equations to support elements
-//			String eqnName = topPrefix+"EQN"+dotChar+count;
-//			locals.add(new AgreeVar(eqnName, NamedType.BOOL, ref, flatNode.compInst));
-//			equations.add(new Equation(new IdExpr(eqnName), assertion.expr));   
-//			assertions.add(new IdExpr(eqnName));
-//			count++;
-//			setofsupport.add(eqnName);
-//        }
-//        
-//        for (AgreeStatement assertion : flatNode.assertions) {
-//        	//Anitha added this code to ensure top level eqations are not added twice
-//        	boolean equationAdded = false;
-//        	for (AgreeStatement equation : topNode.assertions) {
-//        		if (assertion.expr.equals(equation.expr)) {
-//        			equationAdded = true;
-//        		}
-//        	}
-//        	if (!equationAdded) {
-//            assertions.add(assertion.expr);
-//        	}
-//        }
-
-        int i = 0;
+        i = 0;
         for (AgreeStatement guarantee : flatNode.lemmas) {
             String guarName = guarSuffix + i++;
             locals.add(new AgreeVar(guarName, NamedType.BOOL, guarantee.reference, flatNode.compInst));
@@ -552,56 +515,33 @@ public class LustreAstBuilder {
 	        }
         }
         Expr guarExpr = new BinaryExpr(assumeHistId, BinaryOp.IMPLIES, guarConjExpr);
-		
-        //assertions.add(new BinaryExpr(assumeHistId, BinaryOp.IMPLIES, guarConjExpr));
 
         // we only add the assertions of an agreenode if we are performing
         // monolithic verification. However, we should add EQ statements
         // with left hand sides which part of the agreeNode assertions
-        for (AgreeStatement statement : agreeNode.assertions) {
-            if (monolithic ||  AgreeUtils.statementIsContractEqOrProperty(statement)) {
-                assertions.add(statement.expr);
-            }
-        }
 
+        int count=0;
         Expr assertExpr = new BoolExpr(true);
-        count=0;
-        for (Expr expr : assertions) {
-        	//Anitha: I had to get a refernce for the equations. So I make the variables
-        	//in the LHS as the reference.
-			String lhs =  null;
-			if (!expr.equals(null)) {
-				lhs =  expr.toString();
-			}
-			
-			if (!expr.toString().equals(null) && expr.toString().contains("=")) {
-				lhs =  expr.toString().substring(1,expr.toString().indexOf('=')).trim();
-			}
-			//Anitha: an assertion can be a assumption. 
-			//We do not include in the set of support the subcomponent assumption
-			//since it is implied by system assumptions/component gurantees.
-			//if the assertion is not an assumption, then we add it to set of support
-			String exprName = lhs;
-			if (!lhs.equals(null) && !lhs.contains("__ASSUME")){
-				exprName = dotChar+agreeNode.id+dotChar+"EXP"+dotChar+count;
-				EObject ref = null;
-	        	 for (AgreeVar var : agreeNode.outputs) {
-	        		 ref = null; 
-	        		 if (var.id != null && var.id.toString().equals(lhs)) {
-	        			  ref = var.reference;
-	        			  break;
-	        		 }
-	             }
-	        	 locals.add(new AgreeVar(exprName, NamedType.BOOL, ref , agreeNode.compInst));
-	        	 equations.add(new Equation(new IdExpr(exprName), expr));
-	             count++;
-	             setofsupport.add(exprName);
-			} 
-		     IdExpr newAssertName = new IdExpr(exprName);
-             assertExpr = new BinaryExpr(newAssertName, BinaryOp.AND, assertExpr);
-        }
-        assertExpr = new BinaryExpr(assertExpr, BinaryOp.AND, guarExpr); 
-
+        for (AgreeStatement statement : agreeNode.assertions) {
+          if (monolithic) {
+        	  assertions.add(statement.expr);
+          } else {
+        	  if (AgreeUtils.statementIsContractEqOrProperty(statement)){
+        		  if(statement.reference != null){
+	                  String assertName = dotChar+agreeNode.id+dotChar+"ASSERT"+dotChar+count++;
+	                  locals.add(new AgreeVar(assertName, NamedType.BOOL, statement.reference,  agreeNode.compInst));
+	                  //AgreeVarDecl assertVar = new AgreeVarDecl(assertName, NamedType.BOOL);
+	                  IdExpr assertId = new IdExpr(assertName);
+	                  equations.add(new Equation(assertId, statement.expr));
+	                  assertions.add(assertId);
+	                  setofsupport.add(assertName);
+	                  assertExpr = new BinaryExpr(assertExpr, BinaryOp.AND, assertId);
+	        	  }
+        	  }
+         }  
+      }
+      assertExpr = new BinaryExpr(assertExpr, BinaryOp.AND, guarExpr); 
+    
         String outputName = "__ASSERT";
         List<VarDecl> outputs = new ArrayList<>();
         outputs.add(new VarDecl(outputName, NamedType.BOOL));
