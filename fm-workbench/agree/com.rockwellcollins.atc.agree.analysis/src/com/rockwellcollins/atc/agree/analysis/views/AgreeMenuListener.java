@@ -149,7 +149,7 @@ public class AgreeMenuListener implements IMenuListener {
 			        	    				 if (!vp.getSupport().isEmpty()){
 			        	    					 out.println("{"+vp.getName()+"}");
 				        	    				 for (String supportString : vp.getSupport()) {
-			        	    						String componentName = "";
+				        	    				    String componentName = "";
 					           	        			String guranteeName =  "";
  					           	        			if (supportString.contains(".")) {
 					           	        			  componentName =  supportString.substring(0,supportString.indexOf('.'));        			

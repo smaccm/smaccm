@@ -350,39 +350,27 @@ public abstract class VerifyHandler extends AadlHandler {
     }
     
     
-   //Anitha: adding these references additionally for support variables.
+   //Anitha: adding these additional references to rename support elements of form ComponentName.SupportElement 
     private void addReferenceForSupport(Node node, Map<String, EObject> refMap, AgreeRenaming renaming, AgreeLayout layout,
            VarDecl var, AgreeProgram agreeProgram ) {
-    	   String componentName = null;
+    	   String componentName = layout.getCategory(node.id);
     	   String varId=var.id;
-    	   String varReference="";
-    	   String strippedNodeId = layout.getCategory(node.id);
-    	   if (!strippedNodeId.isEmpty() && varId.contains(strippedNodeId)) {
-	        	String refStr = getReferenceStr((AgreeVar) var);
-	        	varId = node.id+"."+varId;
-	           //Get the component's name from the component's instance
-	     	   for (AgreeNode subNode : agreeProgram.agreeNodes) { 
-	     			if (!strippedNodeId.isEmpty() && (subNode.id).equals(strippedNodeId)) {
-	     				componentName =  subNode.compInst.getComponentClassifier().getQualifiedName();  
-	     				componentName =componentName.substring(componentName.indexOf(":")+2,componentName.length());
-	     				//This is to strip off the .XXX such as .Impl if its present just for pretty printing
-	     				if(componentName.contains(".")){
-	     					componentName =componentName.substring(0,componentName.indexOf("."));
-	     				}
-	     				break;
-	     			} 
-	     	   }
-	     	   if ( ((AgreeVar) var).reference instanceof EqStatement) {
-	    		   varReference = componentName+"."+strippedNodeId+"."+refStr;
+    	   String varReference=getReferenceStr((AgreeVar) var);
+    	   if (!componentName.isEmpty() && varId.contains(componentName)) {
+    		   varReference = getReferenceStr((AgreeVar) var);
+         	   varId = topPrefix+componentName+"."+varId;
+   	    	   if ( ((AgreeVar) var).reference instanceof EqStatement) {
+	       	   	//Anitha: the reason we add component name twice is have 
+   	    		//Instance Name.Variable name in support display so that it is clickable
+   	    		//We separate componentName and rest in suppport display   
+   	    		  varReference = componentName+"."+componentName+"."+varReference;
 	     	   }else{
-	     		  varReference = componentName+"."+refStr;
-	     	   }
-    		}else{
-    			varReference = getReferenceStr((AgreeVar) var);
-    		}
-    		refMap.put(varId, ((AgreeVar) var).reference);
-            refMap.put(varReference, ((AgreeVar) var).reference);
-            renaming.addExplicitRename(varId, varReference);
+	     		  varReference = componentName+"." + varReference;
+	     	   }	
+    	       refMap.put(varReference, ((AgreeVar) var).reference);
+	    	   refMap.put(varId, ((AgreeVar) var).reference);
+		       renaming.addExplicitRename(varId, varReference);
+    	   }
     }
 
     private void addReference(Map<String, EObject> refMap, AgreeRenaming renaming, AgreeLayout layout,
