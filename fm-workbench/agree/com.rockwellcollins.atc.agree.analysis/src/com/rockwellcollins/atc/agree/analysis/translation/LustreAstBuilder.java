@@ -36,6 +36,7 @@ import org.osate.aadl2.PortConnection;
 import com.rockwellcollins.atc.agree.agree.AssumeStatement;
 import com.rockwellcollins.atc.agree.agree.EqStatement;
 import com.rockwellcollins.atc.agree.agree.LemmaStatement;
+import com.rockwellcollins.atc.agree.agree.impl.AssignStatementImpl;
 import com.rockwellcollins.atc.agree.analysis.Activator;
 import com.rockwellcollins.atc.agree.analysis.AgreeException;
 import com.rockwellcollins.atc.agree.analysis.AgreeUtils;
@@ -456,7 +457,7 @@ public class LustreAstBuilder {
 
     protected static Node getLustreNode(AgreeNode agreeNode, String nodePrefix, boolean monolithic) {
 
-        List<VarDecl> inputs = new ArrayList<>();
+    	List<VarDecl> inputs = new ArrayList<>();
         List<VarDecl> locals = new ArrayList<>();
         List<Equation> equations = new ArrayList<>();
         List<Expr> assertions = new ArrayList<>();
@@ -466,7 +467,7 @@ public class LustreAstBuilder {
         Expr assumeConjExpr = new BoolExpr(true);
         int i = 0;
         for (AgreeStatement statement : agreeNode.assumptions) {
-            String inputName = assumeSuffix + i++;
+        	String inputName = assumeSuffix + i++;
             inputs.add(new AgreeVar(inputName, NamedType.BOOL, statement.reference, agreeNode.compInst));
             IdExpr assumeId = new IdExpr(inputName);
             assertions.add(new BinaryExpr(assumeId, BinaryOp.EQUAL, statement.expr));
@@ -514,18 +515,18 @@ public class LustreAstBuilder {
 	            setofsupport.add(guaranteeName);
 	        }
         }
-        Expr guarExpr = new BinaryExpr(assumeHistId, BinaryOp.IMPLIES, guarConjExpr);
-
+        assertions.add(new BinaryExpr(assumeHistId, BinaryOp.IMPLIES, guarConjExpr));
+       
         // we only add the assertions of an agreenode if we are performing
         // monolithic verification. However, we should add EQ statements
         // with left hand sides which part of the agreeNode assertions
 
         int count=0;
-        Expr assertExpr = new BoolExpr(true);
         for (AgreeStatement statement : agreeNode.assertions) {
           if (monolithic) {
         	  assertions.add(statement.expr);
           } else {
+        	  System.out.println(statement.expr);
         	  if (AgreeUtils.statementIsContractEqOrProperty(statement)){
         		  if(statement.reference != null){
 	                  String assertName = dotChar+agreeNode.id+dotChar+"ASSERT"+dotChar+count++;
@@ -535,13 +536,15 @@ public class LustreAstBuilder {
 	                  equations.add(new Equation(assertId, statement.expr));
 	                  assertions.add(assertId);
 	                  setofsupport.add(assertName);
-	                  assertExpr = new BinaryExpr(assertExpr, BinaryOp.AND, assertId);
 	        	  }
         	  }
          }  
       }
-      assertExpr = new BinaryExpr(assertExpr, BinaryOp.AND, guarExpr); 
-    
+      Expr assertExpr = new BoolExpr(true);
+      for (Expr expr : assertions) {
+          assertExpr = new BinaryExpr(expr, BinaryOp.AND, assertExpr);
+      }
+      
         String outputName = "__ASSERT";
         List<VarDecl> outputs = new ArrayList<>();
         outputs.add(new VarDecl(outputName, NamedType.BOOL));
