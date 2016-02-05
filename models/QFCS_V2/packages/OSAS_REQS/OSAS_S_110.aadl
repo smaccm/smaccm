@@ -64,27 +64,5 @@ annex agree {**
   tel;
 **};
 
-system OSAS_S_100_SYS
-  features
-
-  fault : in data port Base_Types::Boolean;
-  count : out data port Base_Types::Integer;
-  annex agree {**
-  guarantee "Expression equivalence": 
-  (if fault then prev(count,0) + 1
-   			else if(RUN_LENGTH.f(not fault)>=5) then 0
-    		else prev(count,0)) = 
-  (if fault then prev(count,0)  + 1
-   			else if fault = prev(fault,true)
-   				and prev(fault,true) = prev(prev(fault,true),true)
-   				and prev(prev(fault,true),true) = prev(prev(prev(fault,true),true),true)
-   				and prev(prev(prev(fault,true),true),true) = prev(prev(prev(prev(fault,true),true),true),true)
-   				then 0
-    		else prev(count,0));
-  **};
-end OSAS_S_100_SYS;
-
-system implementation OSAS_S_100_SYS.i
-end OSAS_S_100_SYS.i;
   
 end OSAS_S_110;

@@ -103,7 +103,7 @@ system FCC
       
     eq claw_acts : DATA_TYPES::Actuators.impl;
     eq osas_failure : bool;
-
+    
   **};
 
 end FCC;
@@ -113,6 +113,8 @@ system implementation FCC.Impl
     ISAS_comp : system ISAS::ISAS_Sys;
     OSAS_comp : system OSAS::OSAS_Sys;
     CLAW_comp : system CLAW::CLAW;
+    GUIDE_comp: system Guide::GUIDE;
+    
     
   connections
  
