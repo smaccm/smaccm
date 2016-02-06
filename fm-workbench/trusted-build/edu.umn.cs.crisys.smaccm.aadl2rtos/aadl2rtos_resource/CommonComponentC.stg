@@ -631,7 +631,9 @@ if (<dispatcher.dispatchOccurredVar>) {
 irqDispatcher(dispatcher) ::= <<
 if (<dispatcher.dispatchOccurredVar>) {
 	<dispatcher.dispatchOccurredVar> = false;
-	<activeThreadInternalDispatcherName(dispatcher)>();
+	// dummy input to match the expectations of Tower.
+	int64_t _dummy;
+	<activeThreadInternalDispatcherName(dispatcher)>(&dummy);
 }
 
 >>

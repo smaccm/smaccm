@@ -23,22 +23,41 @@ Initialize the systick signal based on the GCD of the thread periods
 
 uint64_t ticks = 0;
 uint32_t the_interval = 0;
+uint64_t the_CPU_rate = 0;
 
 void clock_init() { }
 
+/* do not pass in a negative number here */
+void clock_set_cpu_rate_in_hz(uint64_t rate) {
+	the_CPU_rate = rate;
+}
+
 void clock_set_interval_in_ms(uint32_t interval) {
 
+   the_interval = interval;
+   
    /* The SysTick Calibration Value Register is a read-only register that contains
    the number of pulses for a period of 10ms, in the TENMS field, bits[23:0].
    This register also has a SKEW bit. Bit[30] == 1 indicates that the calibration
    for 10ms in the TENMS section is not exactly 10ms due to clock frequency.
    Bit[31] == 1 indicates that the reference clock is not provided.*/
 
-   uint32_t cav_value = SYST_CAV_READ();
+   /* MWW: 2/4/2016, no longer using CAV; apparently it is unreliable 
+   uint32_t cav_value = SYST_CAV_READ(); 
    uint32_t ten_ms_val = cav_value & 0x00ffffff ;   // number of cycles per 10ms
-   // MWW: fixed (7/6/2015)
    uint32_t one_ms_val = ten_ms_val / 10;            // number of cycles per 1ms
-
+   */
+   
+   /* instead compute ticks from CPU rate */
+   /* constant 8000 due to sleuthing by Jason Dagit: It looks like the calculation is 
+     basically the clock's hertz divided by 1000 to get it into the tens of ms magnitude, 
+     plus a factor for the clock divider. In our case, it looks like we're using clock/8, 
+     so effectively we need to take the clock speed in hertz and divide by 8000. */
+   
+   assert(the_CPU_rate); 
+   uint32_t ten_ms_val = the_CPU_rate / 8000; 
+   uint32_t one_ms_val = ten_ms_val / 10;
+ 
    uint32_t mult_of_ten_ms = interval / 10;
    uint32_t remainder_of_ten_ms = interval % 10;
 
