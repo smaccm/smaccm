@@ -20,8 +20,8 @@ filePrefix(name, date, path, datatypesHeader) ::= <<
 
 writePeriodicDispatcher(dispatcher, threadCalendar) ::= <<
 if ((smaccm_calendar_counter % (<dispatcher.periodicDispatcherPeriod> / smaccm_tick_interval)) == 0) {
-	// MWW: modification of time type to match Ivory/Tower (CAmkES time server uses uint64_t)
-	int64_t the_time = (int64_t)clock_get_time();
+	// MWW: modification of time type to match Ivory/Tower (our stuff uses uint64_t in milliseconds and Tower expects int64_t * in microseconds)
+	int64_t the_time = ((int64_t)clock_get_time())*1000;
 	<outgoingActiveThreadDispatchName(dispatcher)>(&the_time); 
 }
 >>
