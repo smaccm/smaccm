@@ -6,6 +6,7 @@ package edu.umn.cs.crisys.smaccm.aadl2rtos.model.port;
 import java.util.Map;
 
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.ThreadImplementation;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.IntType;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.Type;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.UnitType;
 
@@ -29,8 +30,11 @@ public class InputIrqPort extends DispatchableInputPort {
   public InputIrqPort(String portName, ThreadImplementation owner,
       String signalName, int signalNumber, 
       String firstLevelInterruptHandler, Map<String, String> memoryRegions) {
-    super(portName, new UnitType(), owner);
-    this.signalName = signalName;
+    // super(portName, new UnitType(), owner);
+    // Temporary hack for Tower.
+	  super(portName, new IntType(64, true), owner);
+	  
+	this.signalName = signalName;
     this.signalNumber = signalNumber;
     this.firstLevelInterruptHandler = firstLevelInterruptHandler;
     this.memoryRegions = memoryRegions;
