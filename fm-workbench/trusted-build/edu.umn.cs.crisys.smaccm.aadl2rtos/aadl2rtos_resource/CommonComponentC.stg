@@ -625,7 +625,7 @@ if (<dispatcher.dispatchOccurredVar>) {
 	<dispatcher.dispatchOccurredVar> = false;
     // dummy input to match the expectations of Tower.
 	int64_t _dummy;
-	<activeThreadInternalDispatcherName(dispatcher)>(&dummy);
+	<activeThreadInternalDispatcherName(dispatcher)>(&_dummy);
 }
 
 >>

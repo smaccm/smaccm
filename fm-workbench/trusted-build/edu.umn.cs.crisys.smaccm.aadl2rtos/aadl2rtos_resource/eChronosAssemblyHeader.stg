@@ -41,8 +41,10 @@ bool <incomingPortWriterName(port)>(<port.type.camkesInputType.name> arg);
 */
 
 writerDecl(port) ::= <<
+<if(port.isIRQ)>
+<else>
 bool <incomingPortWriterName(port)><if(port.hasData)>(const <port.type.camkesInputType.name> arg);<else>();<endif> 
-
+<endif>
 >>
 
 /*

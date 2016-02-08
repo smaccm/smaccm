@@ -45,10 +45,6 @@ public class InputIrqPort extends DispatchableInputPort {
     return signalNumber;
   }
   
-  public Type getType() { 
-    return new UnitType(); 
-  }
-  
   public String getEChronosIrqSmaccmFlihName() {
     return ("smaccm_irq_" + getSignalName()).toLowerCase();
   }

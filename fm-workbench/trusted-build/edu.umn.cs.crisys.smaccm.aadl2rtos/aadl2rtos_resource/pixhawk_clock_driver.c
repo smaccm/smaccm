@@ -22,6 +22,7 @@ Initialize the systick signal based on the GCD of the thread periods
 
 
 uint64_t ticks = 0;
+uint64_t the_CPU_rate = 0; 
 uint32_t the_interval = 0;
 
 void clock_init() { }
