@@ -85,6 +85,10 @@ public class ThreadImplementation {
   }
   
   public int getStackSize() {
+	  if (model.getOsTarget() == Model.OSTarget.eChronos) {
+		  // TODO: MWW temporary (2/17/2016): eChronos apparently measures stack size in 32 bit words. 
+		    return (this.stackSize / 4 + ((this.stackSize % 4 == 0) ? 0 : 1)); 
+	  }
     return this.stackSize;
   }
 
