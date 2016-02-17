@@ -302,6 +302,33 @@ public interface AgreeFactory extends EFactory
   ConnectionStatement createConnectionStatement();
 
   /**
+   * Returns a new object of class '<em>Inherit Statement</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Inherit Statement</em>'.
+   * @generated
+   */
+  InheritStatement createInheritStatement();
+
+  /**
+   * Returns a new object of class '<em>Verify Random Statement</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Verify Random Statement</em>'.
+   * @generated
+   */
+  VerifyRandomStatement createVerifyRandomStatement();
+
+  /**
+   * Returns a new object of class '<em>Verify Specific Statement</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Verify Specific Statement</em>'.
+   * @generated
+   */
+  VerifySpecificStatement createVerifySpecificStatement();
+
+  /**
    * Returns a new object of class '<em>MN Synch Statement</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -336,6 +363,24 @@ public interface AgreeFactory extends EFactory
    * @generated
    */
   LatchedStatement createLatchedStatement();
+
+  /**
+   * Returns a new object of class '<em>Abstract Eq Statement</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Abstract Eq Statement</em>'.
+   * @generated
+   */
+  AbstractEqStatement createAbstractEqStatement();
+
+  /**
+   * Returns a new object of class '<em>Non Abstract Eq Statement</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Non Abstract Eq Statement</em>'.
+   * @generated
+   */
+  NonAbstractEqStatement createNonAbstractEqStatement();
 
   /**
    * Returns a new object of class '<em>Node Eq</em>'.

@@ -12,12 +12,14 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
 
+import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.action.Action;
 import org.osate.aadl2.AadlPackage;
 import org.osate.aadl2.AnnexSubclause;
 import org.osate.aadl2.BooleanLiteral;
+import org.osate.aadl2.Classifier;
 import org.osate.aadl2.ComponentClassifier;
 import org.osate.aadl2.ComponentImplementation;
 import org.osate.aadl2.ConnectedElement;
@@ -70,6 +72,7 @@ import jkind.lustre.UnaryExpr;
 import jkind.lustre.UnaryOp;
 import jkind.lustre.VarDecl;
 
+import com.rockwellcollins.atc.agree.agree.AbstractEqStatement;
 import com.rockwellcollins.atc.agree.agree.AgreeContract;
 import com.rockwellcollins.atc.agree.agree.AgreeContractSubclause;
 import com.rockwellcollins.atc.agree.agree.AgreePackage;
@@ -98,6 +101,7 @@ import com.rockwellcollins.atc.agree.agree.NodeDefExpr;
 import com.rockwellcollins.atc.agree.agree.NodeEq;
 import com.rockwellcollins.atc.agree.agree.NodeLemma;
 import com.rockwellcollins.atc.agree.agree.NodeStmt;
+import com.rockwellcollins.atc.agree.agree.NonAbstractEqStatement;
 import com.rockwellcollins.atc.agree.agree.PreExpr;
 import com.rockwellcollins.atc.agree.agree.PrevExpr;
 import com.rockwellcollins.atc.agree.agree.PrimType;
@@ -126,6 +130,8 @@ import com.rockwellcollins.atc.agree.analysis.extentions.CexExtractor;
 import com.rockwellcollins.atc.agree.analysis.extentions.CexExtractorRegistry;
 import com.rockwellcollins.atc.agree.analysis.extentions.ExtensionRegistry;
 import com.rockwellcollins.atc.agree.analysis.lustre.visitors.IdGatherer;
+import com.rockwellcollins.atc.agree.shared.AgreeStatementsShared;
+import com.rockwellcollins.atc.agree.shared.AgreeStatementsShared.AgreeStatementRepository;
 
 public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 
@@ -176,6 +182,14 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
         }
         return nodes;
     }
+    
+    private EList<SpecStatement> getSpecs(AgreeContract contract) {
+    	Classifier classifier = contract.getContainingClassifier();
+    	AgreeStatementRepository.AnnexRepository repository = AgreeStatementsShared.getRepository(classifier.getFullName());
+    	EList<SpecStatement> statements = new BasicEList<SpecStatement>();
+    	statements.addAll(repository.getStatements());
+    	return statements;
+    }
 
     private AgreeNode getAgreeNode(ComponentInstance compInst) {
         List<AgreeVar> inputs = new ArrayList<>();
@@ -215,17 +229,17 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
                 AgreeContract contract = (AgreeContract) annex.getContract();
 
                 curInst = compInst;
-                assertions.addAll(getAssertions(contract.getSpecs()));
-                lemmas.addAll(getLemmas(contract.getSpecs()));
-                addLustreNodes(contract.getSpecs());
-                gatherLustreTypes(contract.getSpecs());
+                assertions.addAll(getAssertions(getSpecs(contract)));
+                lemmas.addAll(getLemmas(getSpecs(contract)));
+                addLustreNodes(getSpecs(contract));
+                gatherLustreTypes(getSpecs(contract));
                 // the clock constraints contain other nodes that we add
-                clockConstraint = getClockConstraint(contract.getSpecs(), subNodes);
-                timing = getTimingModel(contract.getSpecs());
+                clockConstraint = getClockConstraint(getSpecs(contract), subNodes);
+                timing = getTimingModel(getSpecs(contract));
 
-                outputs.addAll(getEquationVars(contract.getSpecs(), compInst));
+                outputs.addAll(getEquationVars(getSpecs(contract), compInst));
 
-                for (SpecStatement spec : contract.getSpecs()) {
+                for (SpecStatement spec : getSpecs(contract)) {
                     if (spec instanceof LatchedStatement) {
                         latched = true;
                         break;
@@ -249,17 +263,17 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
         if (annex != null) {
             hasDirectAnnex = true;
             AgreeContract contract = (AgreeContract) annex.getContract();
-            assumptions.addAll(getAssumptions(contract.getSpecs()));
-            guarantees.addAll(getGuarantees(contract.getSpecs()));
+            assumptions.addAll(getAssumptions(getSpecs(contract)));
+            guarantees.addAll(getGuarantees(getSpecs(contract)));
             // we count eqstatements with expressions as assertions
             // System.out.println(compInst.getName());
-            assertions.addAll(getAssertions(contract.getSpecs()));
-            outputs.addAll(getEquationVars(contract.getSpecs(), compInst));
-            initialConstraint = getInitialConstraint(contract.getSpecs());
+            assertions.addAll(getAssertions(getSpecs(contract)));
+            outputs.addAll(getEquationVars(getSpecs(contract), compInst));
+            initialConstraint = getInitialConstraint(getSpecs(contract));
 
-            addLustreNodes(contract.getSpecs());
+            addLustreNodes(getSpecs(contract));
 
-            gatherLustreTypes(contract.getSpecs());
+            gatherLustreTypes(getSpecs(contract));
         }
 
         if (!(foundSubNode || hasDirectAnnex)) {
@@ -707,7 +721,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
                 asserts.add(new AgreeStatement(assertState.getStr(), doSwitch(assertState.getExpr()),
                         assertState));
             } else if (spec instanceof EqStatement) {
-                EqStatement eq = (EqStatement) spec;
+                NonAbstractEqStatement eq = (NonAbstractEqStatement) spec;
                 EList<Arg> lhs = eq.getLhs();
                 if (eq.getExpr() != null) {
                     Expr expr = doSwitch(eq.getExpr());

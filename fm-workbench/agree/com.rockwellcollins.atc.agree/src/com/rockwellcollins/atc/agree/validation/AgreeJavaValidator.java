@@ -18,6 +18,7 @@ import java.util.Set;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.mwe2.language.mwe2.impl.ComponentImpl;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.validation.Check;
 import org.eclipse.xtext.validation.CheckType;
@@ -51,6 +52,7 @@ import org.osate.aadl2.Subcomponent;
 import org.osate.aadl2.impl.SubcomponentImpl;
 import org.osate.annexsupport.AnnexUtil;
 
+import com.rockwellcollins.atc.agree.agree.AbstractEqStatement;
 import com.rockwellcollins.atc.agree.agree.AgreeContract;
 import com.rockwellcollins.atc.agree.agree.AgreePackage;
 import com.rockwellcollins.atc.agree.agree.AgreeSubclause;
@@ -84,6 +86,7 @@ import com.rockwellcollins.atc.agree.agree.NodeDefExpr;
 import com.rockwellcollins.atc.agree.agree.NodeEq;
 import com.rockwellcollins.atc.agree.agree.NodeLemma;
 import com.rockwellcollins.atc.agree.agree.NodeStmt;
+import com.rockwellcollins.atc.agree.agree.NonAbstractEqStatement;
 import com.rockwellcollins.atc.agree.agree.OrderStatement;
 import com.rockwellcollins.atc.agree.agree.PreExpr;
 import com.rockwellcollins.atc.agree.agree.PrevExpr;
@@ -100,6 +103,9 @@ import com.rockwellcollins.atc.agree.agree.SynchStatement;
 import com.rockwellcollins.atc.agree.agree.ThisExpr;
 import com.rockwellcollins.atc.agree.agree.Type;
 import com.rockwellcollins.atc.agree.agree.UnaryExpr;
+import com.rockwellcollins.atc.agree.agree.VerifyRandomStatement;
+import com.rockwellcollins.atc.agree.agree.VerifySpecificStatement;
+import com.rockwellcollins.atc.agree.shared.AgreeStatementsShared;
 
 /** 
  * Custom validation rules.
@@ -108,10 +114,118 @@ import com.rockwellcollins.atc.agree.agree.UnaryExpr;
  */
 public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 	private Set<CallDef> checkedRecCalls = new HashSet<>();
+	private Set<String> checked = new HashSet<String>();
 
 	@Override
 	protected boolean isResponsible(Map<Object, Object> context, EObject eObject) {
 		return (eObject.eClass().getEPackage() == AgreePackage.eINSTANCE);
+	}
+	
+	@Check(CheckType.FAST)
+	public void checkAgreeContract(AgreeContract contract) {
+		Classifier classifier = contract.getContainingClassifier();
+		if(checked.contains(classifier.getFullName())) {
+			AgreeStatementsShared.clearRepository();
+			checked.clear();
+		}
+		if(classifier.getExtended() != null) {
+			AgreeStatementsShared.getRepository(classifier.getFullName()).setParent(classifier.getExtended().getFullName());
+			AgreeStatementsShared.getRepository(classifier.getExtended().getFullName()).getChildren().add(classifier.getFullName());
+		}
+		if(classifier instanceof ComponentImplementation) {
+			AgreeStatementsShared.getRepository(classifier.getFullName()).setImplementation((ComponentImplementation)classifier);
+		}
+		
+		List<SpecStatement> myStatements = collapseStatements(getParentSpecs(classifier));
+		for(int i = 0; i < myStatements.size(); ++i) {
+			if(myStatements.get(i) instanceof AbstractEqStatement) {
+				AgreeStatementsShared.getRepository(classifier.getFullName()).setAbstract();
+			}
+			if(myStatements.get(i) instanceof VerifyRandomStatement) {
+				VerifyRandomStatement statement = (VerifyRandomStatement)myStatements.get(i);
+				AgreeStatementsShared.getRepository(classifier.getFullName()).setRandomlyVerify(Integer.parseInt(statement.getNum()));
+				if(Integer.parseInt(statement.getNum()) < 0) {
+					error(myStatements.get(i), "Number must be greater than or equal to 0");
+				}
+				if(!(classifier instanceof ComponentImplementation)) {
+					error(myStatements.get(i), "This statement can only appear in implementations");
+				}
+			}
+			if(myStatements.get(i) instanceof VerifySpecificStatement) {
+				VerifySpecificStatement statement = (VerifySpecificStatement)myStatements.get(i);
+				AgreeStatementsShared.getRepository(classifier.getFullName()).getVerify().add(statement.getFirst());
+				AgreeStatementsShared.getRepository(classifier.getFullName()).getVerify().addAll(statement.getRest());
+				if(!(classifier instanceof ComponentImplementation)) {
+					error(myStatements.get(i), "This statement can only appear in implementations");
+				}
+			}
+		}
+		
+		AgreeStatementsShared.getRepository(classifier.getFullName()).getStatements().addAll(myStatements);
+		
+		checked.add(classifier.getFullName());
+	}
+	
+	List<SpecStatement> collapseStatements(List<List<SpecStatement>> statements) {
+		List<SpecStatement> myStatements = new ArrayList<SpecStatement>();
+		for(int i = 0; i < statements.size(); ++i) {
+			if(i == 0) {
+				myStatements.addAll(statements.get(i));
+			} else {
+				List<SpecStatement> annexStatements = statements.get(i);
+				List<SpecStatement> statementsToAdd = new ArrayList<SpecStatement>();
+				for(SpecStatement annexStatement : annexStatements) {
+					if(annexStatement instanceof NonAbstractEqStatement) {
+						for(SpecStatement myStatement : myStatements) {
+							if(myStatement instanceof AbstractEqStatement) {
+								AbstractEqStatement abstractStmt = (AbstractEqStatement)myStatement;
+								NonAbstractEqStatement nonabstractStmt = (NonAbstractEqStatement)annexStatement;
+								for(int j = 0; j < abstractStmt.getLhs().size(); ++j) {
+									for(Arg nonabstractArg : nonabstractStmt.getLhs()) {
+										if(abstractStmt.getLhs().get(j).getName().equals(nonabstractArg.getName())) {
+											AgreeType abstractType = getAgreeType(abstractStmt.getLhs().get(j));
+											AgreeType nonabstractType = getAgreeType(nonabstractArg);
+											if(!abstractType.equals(nonabstractType)) {
+												error(nonabstractArg, "Abstract parent is of type " + abstractType + " but this is type " + nonabstractType);
+											}
+											abstractStmt.getLhs().remove(j);
+											j -= 1;
+										}
+									}
+								}
+							}
+						}
+						statementsToAdd.add(annexStatement);
+					} else {
+						statementsToAdd.add(annexStatement);
+					}
+				}
+				myStatements.addAll(statementsToAdd);
+			}
+		}
+		
+		for(int i = 0; i < myStatements.size(); ++i) {
+			if(myStatements.get(i) instanceof AbstractEqStatement) {
+				AbstractEqStatement stmt = (AbstractEqStatement)myStatements.get(i);
+				if(stmt.getLhs().size() == 0) {
+					myStatements.remove(i);
+					i -= 1;
+				}
+			}
+		}
+		
+		return myStatements;
+	}
+	
+	List<List<SpecStatement>> getParentSpecs(Classifier classifier) {
+		List<List<SpecStatement>> parentAnnexes = new ArrayList<List<SpecStatement>>();
+		while(classifier != null) {
+			for(AgreeContract contract : EcoreUtil2.getAllContentsOfType(classifier, AgreeContract.class)) {
+				parentAnnexes.add(0, contract.getSpecs());
+			}
+			classifier = classifier.getExtended();
+		}
+		return parentAnnexes;
 	}
 
 	@Check(CheckType.FAST)
@@ -848,7 +962,8 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 
 	private void checkDupNames(NamedElement namedEl, ComponentType type, ComponentImplementation compImpl) {
 		NamedElement match = matchedInAgreeAnnex(type, namedEl.getName());
-
+		
+		
 		if (match != null) {
 			error(match, "Element of the same name ('" + namedEl.getName() + "') in component implementation '"
 					+ compImpl.getName() + "'");
@@ -863,6 +978,48 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 				error(namedEl, "Subcomponent of the same name ('" + namedEl.getName()
 						+ "') in component implementation");
 			}
+		}
+		
+		String parent = AgreeStatementsShared.getRepository(compImpl.getFullName()).getParent();
+		while(parent != null) {
+			String newParent = null;
+			List<SpecStatement> statements = AgreeStatementsShared.getRepository(parent).getStatements();
+			for(SpecStatement statement : statements) {
+				//we now also need to check our parents to make sure that we are not reusing a name
+				//PropertyStatement
+				if(statement instanceof PropertyStatement) {
+					if(namedEl.getName().equals(((PropertyStatement)statement).getName())) {
+						error(namedEl, "A parent (" + parent + ") already defines a PropertyStatement with the name (" + namedEl.getName() + ")");
+					}
+				}
+				//ConstStatement
+				if(statement instanceof ConstStatement) {
+					if(namedEl.getName().equals(((ConstStatement)statement).getName())) {
+						error(namedEl, "A parent (" + parent + ") already defines a ConstStatement with the name (" + namedEl.getName() + ")");
+					}
+				}
+				//NonAbstractEqStatement
+				if(statement instanceof NonAbstractEqStatement) {
+					for(Arg name : ((NonAbstractEqStatement)statement).getLhs()) {
+						if(namedEl.getName().equals(name.getName())) {
+							error(namedEl, "A parent (" + parent + ") already defines a EqStatement with the name (" + namedEl.getName() + ")");
+						}
+					}
+				}
+				//FnDefExpr
+				if(statement instanceof FnDefExpr) {
+					if(namedEl.getName().equals(((FnDefExpr)statement).getName())) {
+						error(namedEl, "A parent (" + parent + ") already defines a FnDefExpr with the name (" + namedEl.getName() + ")");
+					}
+				}
+				//NodeDefExpr
+				if(statement instanceof NodeDefExpr) {
+					if(namedEl.getName().equals(((NodeDefExpr)statement).getName())) {
+						error(namedEl, "A parent (" + parent + ") already defines a NodeDefExpr with the name (" + namedEl.getName() + ")");
+					}
+				}
+			}
+			parent = newParent;
 		}
 	}
 
@@ -980,11 +1137,14 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 
 	@Check(CheckType.FAST)
 	public void checkEqStatement(EqStatement eqStat) {
-		AnnexLibrary library = EcoreUtil2.getContainerOfType(eqStat, AnnexLibrary.class);
-		if (library != null) {
-			error(eqStat, "Equation statments are only allowed in component annexes");
+		if (!(eqStat instanceof AbstractEqStatement)) {
+			NonAbstractEqStatement nonAbEqStat = (NonAbstractEqStatement)eqStat;
+			AnnexLibrary library = EcoreUtil2.getContainerOfType(eqStat, AnnexLibrary.class);
+			if (library != null) {
+				error(eqStat, "Equation statments are only allowed in component annexes");
+			}
+			checkMultiAssignEq(eqStat, eqStat.getLhs(), nonAbEqStat.getExpr());
 		}
-		checkMultiAssignEq(eqStat, eqStat.getLhs(), eqStat.getExpr());
 	}
 
 	@Check(CheckType.FAST)
@@ -1066,7 +1226,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 		}
 		return result;
 	}
-
+	
 	@Check(CheckType.FAST)
 	public void checkNodeEq(NodeEq nodeEq) {
 		checkMultiAssignEq(nodeEq, nodeEq.getLhs(), nodeEq.getExpr());

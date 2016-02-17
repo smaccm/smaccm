@@ -49,6 +49,9 @@ SpecStatement:
 	| {LemmaStatement} 'lemma' str=STRING ':' expr=Expr ';'
 	| {LiftStatement} 'lift' subcomp=NestedDotID ';'
 	| {ConnectionStatement} 'connection' conn=[aadl2::NamedElement] ':' expr=Expr ';'
+	| {InheritStatement} 'inherit' ';'
+	| {VerifyRandomStatement} 'randomly' 'verify' num=INTEGER_LIT ';'
+	| {VerifySpecificStatement} 'verify' '[' first=STRING (',' rest+=STRING)* ']' ';'
 	| SynchStatement
 	| OrderStatement
 	| PropertyStatement
@@ -84,7 +87,8 @@ ConstStatement:
 	'const' name=ID ':' type=Type '=' expr=Expr ';'; //this should really be an "Arg"
 
 EqStatement:
-	'eq' (lhs+=Arg (',' lhs+=Arg)*) ('=' expr=Expr)? ';';
+    {AbstractEqStatement} 'eq' 'abstract' (lhs+=Arg (',' lhs+=Arg)*) ';'
+	| {NonAbstractEqStatement} 'eq' (lhs+=Arg (',' lhs+=Arg)*) ('=' expr=Expr)? ';';
 
 FnDefExpr:
 	'fun' name=ID '(' args+=Arg (',' args+=Arg)* ')' ':' type=Type '=' expr=Expr ';';

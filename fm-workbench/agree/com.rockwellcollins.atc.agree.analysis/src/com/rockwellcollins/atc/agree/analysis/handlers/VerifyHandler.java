@@ -75,6 +75,7 @@ import com.rockwellcollins.atc.agree.analysis.preferences.PreferenceConstants;
 import com.rockwellcollins.atc.agree.analysis.preferences.PreferencesUtil;
 import com.rockwellcollins.atc.agree.analysis.views.AgreeResultsLinker;
 import com.rockwellcollins.atc.agree.analysis.views.AgreeResultsView;
+import com.rockwellcollins.atc.agree.shared.AgreeStatementsShared;
 
 public abstract class VerifyHandler extends AadlHandler {
     protected AgreeResultsLinker linker = new AgreeResultsLinker();
@@ -108,48 +109,108 @@ public abstract class VerifyHandler extends AadlHandler {
         }
 
         try {
-            ComponentImplementation ci = (ComponentImplementation) root;
-
-            SystemInstance si = null;
-            try {
-                si = InstantiateModel.buildInstanceModelFile(ci);
-            } catch (Exception e) {
-                Dialog.showError("Model Instantiate",
-                        "Error while re-instantiating the model: " + e.getMessage());
-                return Status.CANCEL_STATUS;
+            ComponentImplementation myRoot = (ComponentImplementation) root;
+            
+            List<ComponentImplementation> toVerify = new ArrayList<ComponentImplementation>();
+            if(AgreeStatementsShared.getRepository(myRoot.getFullName()).isAbstract()) {
+            	List<String> children = AgreeStatementsShared.getRepository(myRoot.getFullName()).getChildren();
+            	while(children.size() != 0) {
+            		List<String> newChildren = new ArrayList<String>();
+            		for(String child : children) {
+            			if(AgreeStatementsShared.getRepository(child).isAbstract()) {
+            				newChildren.addAll(AgreeStatementsShared.getRepository(child).getChildren());
+            			} else {
+            				toVerify.add(AgreeStatementsShared.getRepository(child).getImplementation());
+            			}
+            		}
+            		children = newChildren;
+            	}
+            } else {
+            	toVerify.add(myRoot);
             }
-
+            
+            List<ComponentImplementation> randomlyVerify = new ArrayList<ComponentImplementation>();
+            if(AgreeStatementsShared.getRepository(myRoot.getFullName()).getRandomlyVerify() > 0) {
+            	for(int i = 0; i < AgreeStatementsShared.getRepository(myRoot.getFullName()).getRandomlyVerify(); ++i) {
+            		if(toVerify.size() > 0) {
+	            		int x = (int)(Math.random() % (toVerify.size() - 1));
+	            		randomlyVerify.add(toVerify.get(x));
+            		}
+            	}
+            }
+            List<ComponentImplementation> explicityVerify = new ArrayList<ComponentImplementation>();
+            if(AgreeStatementsShared.getRepository(myRoot.getFullName()).getVerify().size() > 0) {
+            	for(String child : AgreeStatementsShared.getRepository(myRoot.getFullName()).getVerify()) {
+            		explicityVerify.add(AgreeStatementsShared.getRepository(child).getImplementation());
+            		if(AgreeStatementsShared.getRepository(child).getImplementation() == null) {
+            			return new Status(IStatus.ERROR, Activator.PLUGIN_ID,
+                                child + " is not an implementation");
+            		}
+            		boolean found = false;
+            		for(int i = 0; i < toVerify.size(); ++i) {
+            			if(toVerify.get(i).getFullName().equals(child)) {
+            				found = true;
+            			}
+            		}
+            		if(!found) {
+            			return new Status(IStatus.ERROR, Activator.PLUGIN_ID,
+                                child + " is not a concrete child of " + myRoot.getFullName());
+            		}
+            	}
+            }
+            
+            if(randomlyVerify.size() > 0 || explicityVerify.size() > 0) {
+            	toVerify.clear();
+            	toVerify.addAll(randomlyVerify);
+            	toVerify.addAll(explicityVerify);
+            }
+            
             AnalysisResult result;
             CompositeAnalysisResult wrapper = new CompositeAnalysisResult("");
 
-            // SystemType sysType = si.getSystemImplementation().getType();
-            ComponentType sysType = AgreeUtils.getInstanceType(si);
-            EList<AnnexSubclause> annexSubClauses = AnnexUtil.getAllAnnexSubclauses(sysType,
-                    AgreePackage.eINSTANCE.getAgreeContractSubclause());
-
-            if (annexSubClauses.size() == 0) {
-                throw new AgreeException(
-                        "There is not an AGREE annex in the '" + sysType.getName() + "' system type.");
+            for(ComponentImplementation ci : toVerify) {
+	            SystemInstance si = null;
+	            try {
+	                si = InstantiateModel.buildInstanceModelFile(ci);
+	            } catch (Exception e) {
+	                Dialog.showError("Model Instantiate",
+	                        "Error while re-instantiating the model: " + e.getMessage());
+	                return Status.CANCEL_STATUS;
+	            }
+	
+	            // SystemType sysType = si.getSystemImplementation().getType();
+	            ComponentType sysType = AgreeUtils.getInstanceType(si);
+	            EList<AnnexSubclause> annexSubClauses = AnnexUtil.getAllAnnexSubclauses(sysType,
+	                    AgreePackage.eINSTANCE.getAgreeContractSubclause());
+	
+	            if (annexSubClauses.size() == 0) {
+	                throw new AgreeException(
+	                        "There is not an AGREE annex in the '" + sysType.getName() + "' system type.");
+	            }
+	
+	            if (isRecursive()) {
+	                if(AgreeUtils.usingKind2()){
+	                    throw new AgreeException("Kind2 only supports monolithic verification");
+	                }
+	                result = buildAnalysisResult(ci.getName(), si);
+	                wrapper.addChild(result);
+	                result = wrapper;
+	            } else if (isRealizability()) {
+	                AgreeProgram agreeProgram = new AgreeASTBuilder().getAgreeProgram(si);
+	                Program program = LustreAstBuilder.getRealizabilityLustreProgram(agreeProgram);
+	                CompositeAnalysisResult childWrapper = new CompositeAnalysisResult("Realizability results for " + ci.getFullName());
+	                childWrapper.addChild(
+	                        createVerification("Realizability Check", si, program, agreeProgram, AnalysisType.Realizability));
+	                wrapper.addChild(childWrapper);
+	                result = wrapper;
+	            } else {
+	            	CompositeAnalysisResult childWrapper = new CompositeAnalysisResult("Verification results for " + ci.getFullName());
+	            	wrapVerificationResult(si, childWrapper);
+	            	wrapper.addChild(childWrapper);
+	                result = wrapper;
+	            }
+	            showView(result, linker);
             }
-
-            if (isRecursive()) {
-                if(AgreeUtils.usingKind2()){
-                    throw new AgreeException("Kind2 only supports monolithic verification");
-                }
-                result = buildAnalysisResult(ci.getName(), si);
-                wrapper.addChild(result);
-                result = wrapper;
-            } else if (isRealizability()) {
-                AgreeProgram agreeProgram = new AgreeASTBuilder().getAgreeProgram(si);
-                Program program = LustreAstBuilder.getRealizabilityLustreProgram(agreeProgram);
-                wrapper.addChild(
-                        createVerification("Realizability Check", si, program, agreeProgram, AnalysisType.Realizability));
-                result = wrapper;
-            } else {
-                wrapVerificationResult(si, wrapper);
-                result = wrapper;
-            }
-            showView(result, linker);
             return doAnalysis(root, monitor);
         } catch (Throwable e) {
             String messages = getNestedMessages(e);

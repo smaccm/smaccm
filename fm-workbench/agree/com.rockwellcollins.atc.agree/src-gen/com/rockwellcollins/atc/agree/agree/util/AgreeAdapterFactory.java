@@ -236,6 +236,21 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
         return createConnectionStatementAdapter();
       }
       @Override
+      public Adapter caseInheritStatement(InheritStatement object)
+      {
+        return createInheritStatementAdapter();
+      }
+      @Override
+      public Adapter caseVerifyRandomStatement(VerifyRandomStatement object)
+      {
+        return createVerifyRandomStatementAdapter();
+      }
+      @Override
+      public Adapter caseVerifySpecificStatement(VerifySpecificStatement object)
+      {
+        return createVerifySpecificStatementAdapter();
+      }
+      @Override
       public Adapter caseMNSynchStatement(MNSynchStatement object)
       {
         return createMNSynchStatementAdapter();
@@ -254,6 +269,16 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
       public Adapter caseLatchedStatement(LatchedStatement object)
       {
         return createLatchedStatementAdapter();
+      }
+      @Override
+      public Adapter caseAbstractEqStatement(AbstractEqStatement object)
+      {
+        return createAbstractEqStatementAdapter();
+      }
+      @Override
+      public Adapter caseNonAbstractEqStatement(NonAbstractEqStatement object)
+      {
+        return createNonAbstractEqStatementAdapter();
       }
       @Override
       public Adapter caseNodeEq(NodeEq object)
@@ -868,6 +893,51 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
   }
 
   /**
+   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.InheritStatement <em>Inherit Statement</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see com.rockwellcollins.atc.agree.agree.InheritStatement
+   * @generated
+   */
+  public Adapter createInheritStatementAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.VerifyRandomStatement <em>Verify Random Statement</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see com.rockwellcollins.atc.agree.agree.VerifyRandomStatement
+   * @generated
+   */
+  public Adapter createVerifyRandomStatementAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.VerifySpecificStatement <em>Verify Specific Statement</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see com.rockwellcollins.atc.agree.agree.VerifySpecificStatement
+   * @generated
+   */
+  public Adapter createVerifySpecificStatementAdapter()
+  {
+    return null;
+  }
+
+  /**
    * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.MNSynchStatement <em>MN Synch Statement</em>}'.
    * <!-- begin-user-doc -->
    * This default implementation returns null so that we can easily ignore cases;
@@ -923,6 +993,36 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
    * @generated
    */
   public Adapter createLatchedStatementAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.AbstractEqStatement <em>Abstract Eq Statement</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see com.rockwellcollins.atc.agree.agree.AbstractEqStatement
+   * @generated
+   */
+  public Adapter createAbstractEqStatementAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.NonAbstractEqStatement <em>Non Abstract Eq Statement</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see com.rockwellcollins.atc.agree.agree.NonAbstractEqStatement
+   * @generated
+   */
+  public Adapter createNonAbstractEqStatementAdapter()
   {
     return null;
   }
