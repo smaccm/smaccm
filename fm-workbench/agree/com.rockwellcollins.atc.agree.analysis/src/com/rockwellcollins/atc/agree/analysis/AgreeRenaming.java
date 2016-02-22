@@ -16,7 +16,7 @@ import jkind.results.ValidProperty;
 
 public class AgreeRenaming extends Renaming {
 
-    private Map<String, String> explicitRenames = new HashMap<>();
+    protected Map<String, String> explicitRenames = new HashMap<>();
     private Map<String, EObject> refMap;
 
     public AgreeRenaming(Map<String, EObject> refMap) {
@@ -29,6 +29,10 @@ public class AgreeRenaming extends Renaming {
     }
 
     public void addExplicitRename(String oldName, String newName) {
+        this.explicitRenames.put(oldName, newName);
+    }
+    
+    public void addSupportExplicitRename(String oldName, String newName) {
         this.explicitRenames.put(oldName, newName);
     }
 
@@ -49,6 +53,7 @@ public class AgreeRenaming extends Renaming {
 
     @Override
     public Property rename(Property property) {
+    	//System.out.println(" IN agree support renamings rename property");
         //another hack for kind2
        if(property.getName().matches("guarantee\\[.*?\\]")){
            return renameKind2Prop(property);
@@ -81,6 +86,8 @@ public class AgreeRenaming extends Renaming {
     @Override
     public String rename(String original) {
 
+    	//System.out.println(" IN agree support renamings rename string");
+    	
         String newName = this.explicitRenames.get(original);
         if (newName != null) {
             return newName;
