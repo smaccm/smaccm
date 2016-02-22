@@ -25,7 +25,6 @@ public class AgreePatternListener implements IPatternMatchListener {
     @Override
     public void matchFound(PatternMatchEvent event) {
     	
-    	//System.out.println("-----------In match found");
         // remove the brackets
         int offset = event.getOffset() + 1;
         int length = event.getLength() - 2;

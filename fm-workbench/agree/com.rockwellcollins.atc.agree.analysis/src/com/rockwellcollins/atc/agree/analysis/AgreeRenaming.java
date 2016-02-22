@@ -53,7 +53,6 @@ public class AgreeRenaming extends Renaming {
 
     @Override
     public Property rename(Property property) {
-    	//System.out.println(" IN agree support renamings rename property");
         //another hack for kind2
        if(property.getName().matches("guarantee\\[.*?\\]")){
            return renameKind2Prop(property);
@@ -86,9 +85,7 @@ public class AgreeRenaming extends Renaming {
     @Override
     public String rename(String original) {
 
-    	//System.out.println(" IN agree support renamings rename string");
-    	
-        String newName = this.explicitRenames.get(original);
+    	String newName = this.explicitRenames.get(original);
         if (newName != null) {
             return newName;
         }
