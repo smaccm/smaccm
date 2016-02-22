@@ -380,25 +380,6 @@ public abstract class VerifyHandler extends AadlHandler {
     	   }
     	   return;
     }
-    
-    //Anitha: adding these additional references to rename support elements of form ComponentName.SupportElement 
-    private void addMonolithicReference(Node node, Map<String, EObject> refMap, AgreeSupportRenaming renaming, AgreeLayout layout,
-           VarDecl var, AgreeProgram agreeProgram ) {
-
-    	   String varId=var.id;
-    	   String varReference=getReferenceStr((AgreeVar) var);
-    	   refMap.put(varId, ((AgreeVar) var).reference);
-		   refMap.put(varReference, ((AgreeVar) var).reference);
-		   renaming.addExplicitRename(varId, varReference);
-			//System.out.println("Mono varId :" + varId+ "  varReference :" + varReference);
-			String category = getCategory((AgreeVar) var);
-			if (category != null && !layout.getCategories().contains(category)) {
-			    layout.addCategory(category);
-			}
-			layout.addElement(category, varReference, SigType.INPUT);		       
-		   
-    	   return;
-    }
 
     private void addReference(Map<String, EObject> refMap, AgreeSupportRenaming renaming, AgreeLayout layout,
             VarDecl var) {

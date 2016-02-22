@@ -13,7 +13,7 @@ public class VerifyMonolithicHandler extends VerifyHandler {
     }
 
     @Override
-    public boolean isMonolithic() {
+    protected boolean isMonolithic() {
         return true;
     }
 
