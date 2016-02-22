@@ -18,6 +18,10 @@ public class AgreeVar extends VarDecl {
         this.reference = reference;
         this.compInst = compInst;
     }
+    
+    public AgreeVar(String name, Type type, EObject reference) {
+        this(name, type, reference, null);
+    }
 
     @Override
     public int hashCode() {

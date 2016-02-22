@@ -117,7 +117,7 @@ public class LustreAstBuilder {
         // equations
         // and type equations. This would clear this up
         for (AgreeStatement statement : topNode.assertions) {
-            if (AgreeUtils.referenceIsNullOrContractEqOrProperty(statement.reference)){
+            if (AgreeUtils.referenceIsInContract(statement.reference)){
 
                 // this is a strange hack we have to do. we have to make
                 // equation and property
@@ -365,7 +365,7 @@ public class LustreAstBuilder {
             // equations
             // and type equations. This would clear this up
             for (AgreeStatement assertion : agreeNode.assertions) {
-                if (AgreeUtils.referenceIsNullOrContractEqOrProperty(assertion.reference)) {
+                if (AgreeUtils.referenceIsInContract(assertion.reference)) {
                     stuffConj = new BinaryExpr(stuffConj, BinaryOp.AND, assertion.expr);
                 }
             }
@@ -396,9 +396,9 @@ public class LustreAstBuilder {
 
         EObject classifier = agreeNode.compInst.getComponentClassifier();
 
-        AgreeVar countVar = new AgreeVar("__COUNT", NamedType.INT, null, null);
-        AgreeVar stuffVar = new AgreeVar("__STUFF", NamedType.BOOL, null, null);
-        AgreeVar histVar = new AgreeVar("__HIST", NamedType.BOOL, null, null);
+        AgreeVar countVar = new AgreeVar("__COUNT", NamedType.INT, null);
+        AgreeVar stuffVar = new AgreeVar("__STUFF", NamedType.BOOL, null);
+        AgreeVar histVar = new AgreeVar("__HIST", NamedType.BOOL, null);
         AgreeVar propVar = new AgreeVar("__PROP", NamedType.BOOL, classifier, agreeNode.compInst);
 
         locals.add(countVar);
@@ -560,7 +560,7 @@ public class LustreAstBuilder {
         // monolithic verification. However, we should add EQ statements
         // with left hand sides which part of the agreeNode assertions
         for (AgreeStatement statement : agreeNode.assertions) {
-            if (monolithic ||  AgreeUtils.referenceIsNullOrContractEqOrProperty(statement.reference)) {
+            if (monolithic ||  AgreeUtils.referenceIsInContract(statement.reference)) {
                 assertions.add(statement.expr);
             }
         }
@@ -582,6 +582,11 @@ public class LustreAstBuilder {
         for (AgreeVar var : agreeNode.outputs) {
             inputs.add(var);
         }
+        for(AgreeVar var : agreeNode.locals){
+            locals.add(var);
+        }
+        
+        equations.addAll(agreeNode.localEquations);
 
         NodeBuilder builder = new NodeBuilder(nodePrefix + agreeNode.id);
         builder.addInputs(inputs);
@@ -829,11 +834,11 @@ public class LustreAstBuilder {
         }
 
         // right now we do not support local variables in our translation
-        for (AgreeVar var : subAgreeNode.locals) {
-            varCount++;
-            AgreeVar local = new AgreeVar(prefix + var.id, var.type, var.reference, var.compInst);
-            outputs.add(local);
-        }
+//        for (AgreeVar var : subAgreeNode.locals) {
+//            varCount++;
+//            AgreeVar local = new AgreeVar(prefix + var.id, var.type, var.reference, var.compInst);
+//            outputs.add(local);
+//        }
 
         int i = 0;
         for (AgreeStatement statement : subAgreeNode.assumptions) {
