@@ -19,8 +19,8 @@ public class AgreeRenaming extends Renaming {
     private Map<String, String> explicitRenames = new HashMap<>();
     private Map<String, EObject> refMap;
 
-    public AgreeRenaming(Map<String, EObject> refMap) {
-        this.refMap = refMap;
+    public AgreeRenaming() {
+        this.refMap = new HashMap<String, EObject>();
     }
 
     public void addRenamings(AgreeRenaming renaming) {
@@ -30,6 +30,19 @@ public class AgreeRenaming extends Renaming {
 
     public void addExplicitRename(String oldName, String newName) {
         this.explicitRenames.put(oldName, newName);
+    }
+    
+    public void addToRefMap(String str, EObject ref) {
+        if (str != null) {
+            str = rename(str);
+            if (str != null) {
+                refMap.put(str, ref);
+            }
+        }
+    }
+    
+    public Map<String, EObject> getRefMap(){
+        return refMap;
     }
 
     public String forceRename(String original) {

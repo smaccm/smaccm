@@ -200,7 +200,7 @@ assemblySetPriorities(threadImpl) ::= <<
 
 assemblySetStackSize(threadImpl) ::= <<
 <if(!threadImpl.isExternal)>
-<threadImpl.componentInstanceName>._control_stack_size = <threadImpl.stackSize>;	
+<threadImpl.componentInstanceName>._control_stack_size = <threadImpl.osSpecificStackSize>;	
 
 <endif>
 >>

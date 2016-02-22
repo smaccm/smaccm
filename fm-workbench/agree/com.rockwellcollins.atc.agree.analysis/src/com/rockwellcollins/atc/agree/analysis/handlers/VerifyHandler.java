@@ -237,8 +237,7 @@ public abstract class VerifyHandler extends AadlHandler {
     private AnalysisResult createVerification(String resultName, ComponentInstance compInst, Program lustreProgram, AgreeProgram agreeProgram,
             AnalysisType analysisType) {
 
-        Map<String, EObject> refMap = new HashMap<>();
-        AgreeRenaming renaming = new AgreeRenaming(refMap);
+        AgreeRenaming renaming = new AgreeRenaming();
         AgreeLayout layout = new AgreeLayout();
         Node mainNode = null;
         for (Node node : lustreProgram.nodes) {
@@ -252,7 +251,7 @@ public abstract class VerifyHandler extends AadlHandler {
         }
 
         List<String> properties = new ArrayList<>();
-        addRenamings(refMap, renaming, properties, layout, mainNode, agreeProgram);
+        addRenamings(renaming, properties, layout, mainNode, agreeProgram);
 
         JKindResult result;
         switch (analysisType) {
@@ -276,7 +275,7 @@ public abstract class VerifyHandler extends AadlHandler {
         linker.setComponent(result, compImpl);
         linker.setContract(result, getContract(compImpl));
         linker.setLayout(result, layout);
-        linker.setReferenceMap(result, refMap);
+        linker.setReferenceMap(result, renaming.getRefMap());
         linker.setLog(result, AgreeLogger.getLog());
 
         // System.out.println(program);
@@ -284,23 +283,23 @@ public abstract class VerifyHandler extends AadlHandler {
 
     }
 
-    private void addRenamings(Map<String, EObject> refMap, AgreeRenaming renaming, List<String> properties, AgreeLayout layout,
+    private void addRenamings(AgreeRenaming renaming, List<String> properties, AgreeLayout layout,
             Node mainNode, AgreeProgram agreeProgram) {
         for (VarDecl var : mainNode.inputs) {
             if (var instanceof AgreeVar) {
-                addReference(refMap, renaming, layout, var);
+                addReference(renaming, layout, var);
             }
         }
         
         for (VarDecl var : mainNode.locals) {
             if (var instanceof AgreeVar) {
-                addReference(refMap, renaming, layout, var);
+                addReference(renaming, layout, var);
             }
         }
         
         for (VarDecl var : mainNode.outputs) {
             if (var instanceof AgreeVar) {
-                addReference(refMap, renaming, layout, var);
+                addReference(renaming, layout, var);
             }
         }
         
@@ -332,14 +331,11 @@ public abstract class VerifyHandler extends AadlHandler {
         }
     }
 
-    private void addReference(Map<String, EObject> refMap, AgreeRenaming renaming, AgreeLayout layout,
+    private void addReference(AgreeRenaming renaming, AgreeLayout layout,
             VarDecl var) {
         String refStr = getReferenceStr((AgreeVar) var);
-        // TODO verify which reference should be put here
-        refMap.put(refStr, ((AgreeVar) var).reference);
-        refMap.put(var.id, ((AgreeVar) var).reference);
-        // TODO we could clean up the agree renaming as well
         renaming.addExplicitRename(var.id, refStr);
+        renaming.addToRefMap(var.id, ((AgreeVar) var).reference);
         String category = getCategory((AgreeVar) var);
         if (category != null && !layout.getCategories().contains(category)) {
             layout.addCategory(category);

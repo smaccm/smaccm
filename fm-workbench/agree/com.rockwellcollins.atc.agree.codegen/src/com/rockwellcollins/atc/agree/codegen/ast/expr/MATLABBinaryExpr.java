@@ -1,13 +1,13 @@
-package com.rockwellcollins.atc.agree.codegen.ast;
+package com.rockwellcollins.atc.agree.codegen.ast.expr;
 
 import com.rockwellcollins.atc.agree.codegen.visitors.MATLABExprVisitor;
 
 import jkind.Assert;
 
 public class MATLABBinaryExpr extends MATLABExpr {
-	public final MATLABExpr left;
+	public MATLABExpr left;
 	public final MATLABBinaryOp op;
-	public final MATLABExpr right;
+	public MATLABExpr right;
 
 	public MATLABBinaryExpr(MATLABExpr left, MATLABBinaryOp op, MATLABExpr right) {
 		Assert.isNotNull(left);

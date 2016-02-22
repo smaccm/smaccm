@@ -94,7 +94,7 @@ writeTask(threadImpl) ::= <<
 		<name>$threadImpl.normalizedName$</name>
 		<function>$threadImpl.threadImplMainFnName$</function>
 		<priority>$threadImpl.priority$</priority>
-		<stack_size>$threadImpl.stackSize$</stack_size>
+		<stack_size>$threadImpl.osSpecificStackSize$</stack_size>
 	</task>
 >>
 

@@ -1,7 +1,17 @@
 package com.rockwellcollins.atc.agree.codegen.handlers;
 
+import java.io.BufferedWriter;
+import java.io.File;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.prefs.Preferences;
+
+import javax.swing.JFileChooser;
+
 import jkind.lustre.Node;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -89,14 +99,48 @@ public class MATLABFunctionHandler extends AadlHandler {
             Node lustreNode = AgreeNodeToLustreContract.translate(agreeProgram.topNode, agreeProgram);
             
             //Translate Lustre Node to MATLAB Function AST
-            MATLABPrimaryFunction matlabFunction = LustreToMATLABTranslator.translate(lustreNode);
+            MATLABPrimaryFunction matlabFunction = LustreToMATLABTranslator.translate(lustreNode, agreeProgram);
             
-            //Walk through MATLAB function AST and print out
-            System.out.println(matlabFunction);
-            //TODO write to MATLAB script file with the same name as the primary function
+    		// Get the directory to create the output file
+    		// File name will be the same as the function name
+            Preferences pref = Preferences.userRoot();
+            //Retrieve the selected path or use an empty string
+            //if no path has previously been selected
+            String path = pref.get("DEFAULT_PATH", "");
+    		JFileChooser chooser = new JFileChooser();
+    		chooser.setDialogTitle("Choose Output Directory");
+    		chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+    		
+    		// Set the path that was saved in preferences
+    		chooser.setCurrentDirectory(new File(path));
+    		
+    		int returnVal = chooser.showOpenDialog(null);
+    		
+    		if (returnVal == JFileChooser.APPROVE_OPTION)
+    		{
+    		    File directory = chooser.getSelectedFile();
+    		    chooser.setCurrentDirectory(directory);
+    		    // Save the selected path
+    		    pref.put("DEFAULT_PATH", directory.getAbsolutePath());
+    		    
+    		    Path filePath = Paths.get(directory.toString(), matlabFunction.name+".m");
+
+        		// Write MATLAB function code into the specified file
+        		try {
+        			BufferedWriter writer = Files.newBufferedWriter(filePath,
+        					StandardCharsets.UTF_8);
+
+        			// Write MATLAB function name
+        			writer.write(matlabFunction.toString());
+        			writer.close();
+        		} catch (Exception e) {
+        			e.printStackTrace();
+        		}
+    		}
             return Status.OK_STATUS;
         } catch (Throwable e) {
             String messages = getNestedMessages(e);
+            e.printStackTrace();
             return new Status(IStatus.ERROR, Activator.PLUGIN_ID, 0, messages, e);
         }
     }
@@ -106,3 +150,4 @@ public class MATLABFunctionHandler extends AadlHandler {
 	}
 	
 }
+

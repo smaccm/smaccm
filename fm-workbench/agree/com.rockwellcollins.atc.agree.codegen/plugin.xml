@@ -9,9 +9,9 @@
             id="com.rockwellcollins.atc.agree.codegen.commands">
       </category>
      <command categoryId="com.rockwellcollins.atc.agree.codegen.commands"
-           description="Generate Matlab Function for the contract of the selected component"
+           description="Generate MATLAB Function for the contract of the selected component"
            id="com.rockwellcollins.atc.agree.codegen.commands.genCodeSingle"
-           name="Generate Matlab Function Single Layer">
+           name="Generate MATLAB Function Single Layer">
      </command>    
    </extension>
    <extension
@@ -38,7 +38,7 @@
             <command
                   commandId="com.rockwellcollins.atc.agree.codegen.commands.genCodeSingle"
                   icon="icons/layer.png"
-                  tooltip="Generate Matlab Function Single Layer"
+                  tooltip="Generate MATLAB Function Single Layer"
                   id="com.rockwellcollins.atc.agree.codegen.commands.genCodeSingle"
                   style="push">
             </command>
@@ -93,5 +93,21 @@
             </and>
          </with>
       </definition>
+   </extension>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            category="com.rockwellcollins.atc.agree.Agree"
+            class="com.rockwellcollins.atc.agree.codegen.preferences.MATLABCodeGenPreferencePage"
+            id="com.rockwellcollins.atc.agree.codegen.preferences.MATLABCodeGenPreferencePage"
+            name="Code Generation">
+            <keywordReference id="com.rockwellcollins.atc.agree.ui.keyword_Agree"/>
+      </page>
+   </extension>
+   <extension
+         point="org.eclipse.core.runtime.preferences">
+      <initializer
+            class="com.rockwellcollins.atc.agree.codegen.preferences.PreferenceInitializer">
+      </initializer>
    </extension>
 </plugin>

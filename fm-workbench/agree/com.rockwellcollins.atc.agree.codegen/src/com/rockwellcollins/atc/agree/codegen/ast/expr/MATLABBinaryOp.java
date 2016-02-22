@@ -1,4 +1,4 @@
-package com.rockwellcollins.atc.agree.codegen.ast;
+package com.rockwellcollins.atc.agree.codegen.ast.expr;
 
 public enum MATLABBinaryOp {
 		PLUS ("+"),
@@ -9,7 +9,6 @@ public enum MATLABBinaryOp {
 		LESS ("<"),	
 		GREATEREQUAL (">="),
 		LESSEQUAL ("<="),
-		EQUAL ("=="),
 		NOTEQUAL ("~="),
 		OR ("||"),
 		AND ("&&");
