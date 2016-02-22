@@ -239,8 +239,8 @@ public class AgreePatternTranslator {
             IdExpr causeId, IdExpr effectId) {
         EObject varReference = pattern.reference;
         AgreeVar timerVar = new AgreeVar(TIMER_PREFIX+patternIndex, NamedType.REAL, varReference);
-        AgreeVar runVar = new AgreeVar(RUNNING_PREFIX, NamedType.REAL, varReference);
-        AgreeVar recordVar = new AgreeVar(RECORD_PREFIX+patternIndex, NamedType.REAL, varReference);
+        AgreeVar runVar = new AgreeVar(RUNNING_PREFIX+patternIndex, NamedType.BOOL, varReference);
+        AgreeVar recordVar = new AgreeVar(RECORD_PREFIX+patternIndex, NamedType.BOOL, varReference);
         builder.addLocal(timerVar);
         builder.addLocal(runVar);
         builder.addInput(recordVar);
@@ -269,9 +269,7 @@ public class AgreePatternTranslator {
         cond1 = new BinaryExpr(cond1, BinaryOp.AND, timerHigh);
         Expr if1 = new IfThenElseExpr(cond1, new BoolExpr(false), if2);
         Expr runExpr = new BinaryExpr(recordId, BinaryOp.ARROW, if1);
-        runExpr = new BinaryExpr(runId, BinaryOp.EQUAL, runExpr);
-        AgreeStatement statement = new AgreeStatement("", runExpr, varReference);
-        builder.addAssertion(statement);
+        builder.addLocalEquation(new AgreeEquation(runId, runExpr, varReference));
         }
         
         //timer = (0 -> if pre(run) then pre(timer) + (t - pre(t)) else 0)
@@ -280,15 +278,23 @@ public class AgreePatternTranslator {
         Expr preT = new UnaryExpr(UnaryOp.PRE, timeExpr);
         Expr elapsed = new BinaryExpr(timeExpr, BinaryOp.MINUS, preT);
         Expr total = new BinaryExpr(preTimer, BinaryOp.PLUS, elapsed);
-        Expr timerExpr = new IfThenElseExpr(preRun, total, new IntExpr(BigInteger.ZERO));
-        timerExpr = new BinaryExpr(new IntExpr(BigInteger.ZERO), BinaryOp.ARROW, timerExpr);
-        timerExpr = new BinaryExpr(timerId, BinaryOp.EQUAL, timerExpr);
-        AgreeStatement statement = new AgreeStatement("", timerExpr, varReference);
+        Expr timerExpr = new IfThenElseExpr(preRun, total, new RealExpr(BigDecimal.ZERO));
+        timerExpr = new BinaryExpr(new RealExpr(BigDecimal.ZERO), BinaryOp.ARROW, timerExpr);
+        builder.addLocalEquation(new AgreeEquation(timerId, timerExpr, varReference));
+        }
+        
+        //record => cause
+        
+        {
+        Expr recordExpr = new BinaryExpr(recordId, BinaryOp.IMPLIES, causeId);
+        AgreeStatement statement = new AgreeStatement("", recordExpr, varReference);
         builder.addAssertion(statement);
         }
         
+        //timer <= h
+        BinaryOp right = getIntervalRightOp(pattern.effectInterval);
+        return new BinaryExpr(timerId, right, pattern.effectInterval.high);
         
-        return null;
     }
 
     private static Expr translatePatternConstraint(AgreeCauseEffectPattern pattern, AgreeNodeBuilder builder,
@@ -297,10 +303,12 @@ public class AgreePatternTranslator {
         AgreeVar timeEffect = new AgreeVar(TIME_PREFIX + effectId.id, NamedType.REAL, varReference);
         AgreeVar effectTimeRangeVar =
                 new AgreeVar(EFFECT_TIME_RANGE_PREFIX + patternIndex, NamedType.REAL, varReference);
+        builder.addInput(timeEffect);
+        builder.addInput(effectTimeRangeVar);
+
         IdExpr timeEffectId = new IdExpr(timeEffect.id);
         IdExpr effectTimeRangeId = new IdExpr(effectTimeRangeVar.id);
 
-        builder.addInput(effectTimeRangeVar);
         Expr effectTimeRangeConstraint = getTimeRangeConstraint(effectTimeRangeId, pattern.effectInterval);
         builder.addAssertion(new AgreeStatement(null, effectTimeRangeConstraint, pattern.reference));
         // make a constraint that triggers when the event WILL happen
