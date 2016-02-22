@@ -335,7 +335,7 @@ public abstract class VerifyHandler extends AadlHandler {
             VarDecl var) {
         String refStr = getReferenceStr((AgreeVar) var);
         renaming.addExplicitRename(var.id, refStr);
-        renaming.addToReferenceMap(var.id, ((AgreeVar) var).reference);
+        renaming.addToRefMap(var.id, ((AgreeVar) var).reference);
         String category = getCategory((AgreeVar) var);
         if (category != null && !layout.getCategories().contains(category)) {
             layout.addCategory(category);

@@ -32,7 +32,7 @@ public class AgreeRenaming extends Renaming {
         this.explicitRenames.put(oldName, newName);
     }
     
-    public void addToReferenceMap(String str, EObject ref) {
+    public void addToRefMap(String str, EObject ref) {
         if (str != null) {
             str = rename(str);
             if (str != null) {
