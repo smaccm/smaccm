@@ -28,12 +28,12 @@ import org.eclipse.emf.ecore.util.InternalEList;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link com.rockwellcollins.atc.resolute.resolute.impl.FilterMapExprImpl#getMap <em>Map</em>}</li>
  *   <li>{@link com.rockwellcollins.atc.resolute.resolute.impl.FilterMapExprImpl#getArgs <em>Args</em>}</li>
  *   <li>{@link com.rockwellcollins.atc.resolute.resolute.impl.FilterMapExprImpl#getFilter <em>Filter</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

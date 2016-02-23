@@ -74,6 +74,7 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
       case AgreePackage.PROPERTY_STATEMENT: return createPropertyStatement();
       case AgreePackage.CONST_STATEMENT: return createConstStatement();
       case AgreePackage.EQ_STATEMENT: return createEqStatement();
+      case AgreePackage.ASSIGN_STATEMENT: return createAssignStatement();
       case AgreePackage.FN_DEF_EXPR: return createFnDefExpr();
       case AgreePackage.NODE_DEF_EXPR: return createNodeDefExpr();
       case AgreePackage.NODE_BODY_EXPR: return createNodeBodyExpr();
@@ -232,6 +233,17 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
   {
     EqStatementImpl eqStatement = new EqStatementImpl();
     return eqStatement;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public AssignStatement createAssignStatement()
+  {
+    AssignStatementImpl assignStatement = new AssignStatementImpl();
+    return assignStatement;
   }
 
   /**

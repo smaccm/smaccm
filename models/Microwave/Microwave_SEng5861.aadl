@@ -24,16 +24,16 @@ system Mode_Control
 			seconds_to_cook >= 0; 
 
 		guarantee "The range of the cooking_mode variable shall be [1..3]" : 
-			true ; 
+			1 <= cooking_mode and cooking_mode <= 3 ; 
 		
 		guarantee "The microwave shall be in cooking mode only when the door is closed." : 
-			true;			
+			is_cooking => door_closed;			
 		
 		-- encode this property using the defs.initially_true node.  
 		-- take a look at this definition: why does it encode something that 
 		-- is true in the initial instant?
 		guarantee "The microwave shall be in setup mode in the initial state." : 
-			true; 
+			is_setup -> true; 
 
 		-- A freebie		
 		guarantee "At the instant the microwave starts running, it shall be in the cooking mode if the door is closed" : 
@@ -88,7 +88,7 @@ system implementation Mode_Control.Impl
 				COOKING_MODE
 			else pre(sm); 
 
-		assert(cooking_mode = sm); 
+		assign cooking_mode = sm; 
 					
 	**};
 end Mode_Control.Impl;
@@ -143,37 +143,38 @@ system Display_Control
 
 		-- range guarantees:
 		guarantee "left_digit range shall be [0..9]" : 
-			true; 
+			0 <= left_digit and left_digit <= 9; 
 		guarantee "middle_digit range shall be [0..9]" :
-			true;
+			0 <= middle_digit and middle_digit <= 9; 
 		guarantee "right_digit_range shall be [0..9]" :
-			true;
+			0 <= right_digit and right_digit <= 9; 
 
 		-- For the following property, the left-most digit corresponds to minutes (60 seconds), 
 		-- the middle digit is tens of seconds, and 
 		-- the right digit is seconds
 		guarantee "The seconds_to_cook shall match the total time of the displayed digits" : 
-			true;
+			seconds_to_cook = 60 * left_digit + 10 * middle_digit + right_digit;
 					
 		guarantee "If the keypad is enabled and the clear button is pressed, the steps to cook shall be zero" : 
-			true;
+			keypad_enabled and clear_pressed => seconds_to_cook = 0;
 		
 		-- some of the state change properties, such as the one below, must just be set to true 
 		-- for the initial instant.  The form for this is: 
 		-- guarantee "foo" : true -> (<property that involves 'pre' operator>)
 		
 		guarantee "If the display is quiescent (no buttons pressed) and the keypad is enabled, the seconds_to_cook shall not change." : 
-			true;
+			true -> ((not any_digit_pressed) and keypad_enabled and not clear_pressed) => seconds_to_cook = pre(seconds_to_cook);
+			
 		guarantee "Steps to cook shall be initially zero" : 
-			true; 
+			seconds_to_cook = 0 -> true; 
 
 		-- This property could be tighted up significantly; we could mention it decreases by 1, but
 		-- this is not really necessary for the property. 
 		guarantee "While the microwave is in cooking mode, seconds_to_cook shall decrease" : 
-			true;
+			true -> defs.is_cooking(cooking_mode) => seconds_to_cook <= pre(seconds_to_cook) ;
 				    
 		guarantee "when the keypad is initially enabled, if no digits are pressed, the value shall be zero" :
-			true;
+			(keypad_enabled and not any_digit_pressed => seconds_to_cook = 0) -> true;
 		
 	**};	
 end Display_Control ; 
@@ -232,10 +233,10 @@ system implementation Display_Control.Impl
 		eq left_eq : int, left_carry: bool = 
 			update_digit(9, cooking_mode, prev(middle_eq, 0), middle_carry, any_digit_pressed, clear_pressed, prev_at_zero);
 		 
-		assert(left_digit = left_eq);
-		assert(middle_digit = middle_eq);
-		assert(right_digit = right_eq);
-		assert(seconds_to_cook = eq_secs);
+		assign left_digit = left_eq;
+		assign middle_digit = middle_eq;
+		assign right_digit = right_eq;
+		assign seconds_to_cook = eq_secs;
 		  
 	**};
 	
@@ -275,15 +276,17 @@ system Microwave_Control
 		right_digit : out data port Base_Types::Integer; 
 					
 	annex agree {** 
+			
+		eq time : int = (left_digit * 60) + (middle_digit * 10) + right_digit;
 		
 		guarantee "heating_element_on implies door_closed_sensor" : 
-			true ;  
+			heating_element_on => door_closed ;  
 		
 		guarantee "heating element on implies time to cook decreases" : 
-			true; 
+			true -> (not start and heating_element_on => (time <= pre(time))); 
 					
 		guarantee "time to cook = 0 implies heating_element_off" : 
-			true; 
+			time = 0 => not heating_element_on; 
 		
 			
 	**};	
@@ -292,8 +295,8 @@ end Microwave_Control ;
 
 system implementation Microwave_Control.Impl
 	subcomponents
-		MC : system Mode_Control ; 
-		DC : system Display_Control; 
+		MC : system Mode_Control.impl ; 
+		DC : system Display_Control.impl; 
 		OP : system Output_Processing ; 
 	connections
 		clear_TO_MC_clear : port clear -> MC.clear {Communication_Properties::Timing => immediate;};

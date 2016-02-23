@@ -1,0 +1,24 @@
+-- File generated from Tower-AADL compiler
+
+package camera_vm
+public
+  with Base_Types;
+  with Data_Model;
+  with Data_Types;
+  with SMACCM_SYS;
+
+thread camera_vm
+  features
+    Output_from_vm_0: out event data port Data_Types::camera_data
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_from_vm_chan_2";
+      };
+  properties
+    SMACCM_SYS::Is_External => true;
+    Dispatch_Protocol => Sporadic;
+    SMACCM_SYS::Thread_Type => Active;
+    Compute_Execution_Time => 10 us .. 100 us;
+    Source_Text => ();
+end camera_vm;
+
+end camera_vm;

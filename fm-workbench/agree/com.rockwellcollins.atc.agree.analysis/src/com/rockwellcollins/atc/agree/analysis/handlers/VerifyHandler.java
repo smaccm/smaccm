@@ -60,8 +60,6 @@ import com.rockwellcollins.atc.agree.analysis.Activator;
 import com.rockwellcollins.atc.agree.analysis.AgreeUtils;
 import com.rockwellcollins.atc.agree.analysis.AgreeException;
 import com.rockwellcollins.atc.agree.analysis.AgreeLayout;
-import com.rockwellcollins.atc.agree.analysis.LustreAstBuilder;
-import com.rockwellcollins.atc.agree.analysis.LustreContractAstBuilder;
 import com.rockwellcollins.atc.agree.analysis.AgreeLayout.SigType;
 import com.rockwellcollins.atc.agree.analysis.AgreeLogger;
 import com.rockwellcollins.atc.agree.analysis.AgreeRenaming;
@@ -73,6 +71,9 @@ import com.rockwellcollins.atc.agree.analysis.ast.AgreeStatement;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeVar;
 import com.rockwellcollins.atc.agree.analysis.preferences.PreferenceConstants;
 import com.rockwellcollins.atc.agree.analysis.preferences.PreferencesUtil;
+import com.rockwellcollins.atc.agree.analysis.translation.AgreeNodeToLustreContract;
+import com.rockwellcollins.atc.agree.analysis.translation.LustreAstBuilder;
+import com.rockwellcollins.atc.agree.analysis.translation.LustreContractAstBuilder;
 import com.rockwellcollins.atc.agree.analysis.views.AgreeResultsLinker;
 import com.rockwellcollins.atc.agree.analysis.views.AgreeResultsView;
 
@@ -159,7 +160,7 @@ public abstract class VerifyHandler extends AadlHandler {
 
     private void wrapVerificationResult(ComponentInstance si, CompositeAnalysisResult wrapper) {
         AgreeProgram agreeProgram = new AgreeASTBuilder().getAgreeProgram(si);
-
+ 
         // generate different lustre depending on which model checker we are
         // using
       
@@ -236,8 +237,7 @@ public abstract class VerifyHandler extends AadlHandler {
     private AnalysisResult createVerification(String resultName, ComponentInstance compInst, Program lustreProgram, AgreeProgram agreeProgram,
             AnalysisType analysisType) {
 
-        Map<String, EObject> refMap = new HashMap<>();
-        AgreeRenaming renaming = new AgreeRenaming(refMap);
+        AgreeRenaming renaming = new AgreeRenaming();
         AgreeLayout layout = new AgreeLayout();
         Node mainNode = null;
         for (Node node : lustreProgram.nodes) {
@@ -251,7 +251,7 @@ public abstract class VerifyHandler extends AadlHandler {
         }
 
         List<String> properties = new ArrayList<>();
-        addRenamings(refMap, renaming, properties, layout, mainNode, agreeProgram);
+        addRenamings(renaming, properties, layout, mainNode, agreeProgram);
 
         JKindResult result;
         switch (analysisType) {
@@ -275,7 +275,7 @@ public abstract class VerifyHandler extends AadlHandler {
         linker.setComponent(result, compImpl);
         linker.setContract(result, getContract(compImpl));
         linker.setLayout(result, layout);
-        linker.setReferenceMap(result, refMap);
+        linker.setReferenceMap(result, renaming.getRefMap());
         linker.setLog(result, AgreeLogger.getLog());
 
         // System.out.println(program);
@@ -283,23 +283,23 @@ public abstract class VerifyHandler extends AadlHandler {
 
     }
 
-    private void addRenamings(Map<String, EObject> refMap, AgreeRenaming renaming, List<String> properties, AgreeLayout layout,
+    private void addRenamings(AgreeRenaming renaming, List<String> properties, AgreeLayout layout,
             Node mainNode, AgreeProgram agreeProgram) {
         for (VarDecl var : mainNode.inputs) {
             if (var instanceof AgreeVar) {
-                addReference(refMap, renaming, layout, var);
+                addReference(renaming, layout, var);
             }
         }
         
         for (VarDecl var : mainNode.locals) {
             if (var instanceof AgreeVar) {
-                addReference(refMap, renaming, layout, var);
+                addReference(renaming, layout, var);
             }
         }
         
         for (VarDecl var : mainNode.outputs) {
             if (var instanceof AgreeVar) {
-                addReference(refMap, renaming, layout, var);
+                addReference(renaming, layout, var);
             }
         }
         
@@ -331,14 +331,11 @@ public abstract class VerifyHandler extends AadlHandler {
         }
     }
 
-    private void addReference(Map<String, EObject> refMap, AgreeRenaming renaming, AgreeLayout layout,
+    private void addReference(AgreeRenaming renaming, AgreeLayout layout,
             VarDecl var) {
         String refStr = getReferenceStr((AgreeVar) var);
-        // TODO verify which reference should be put here
-        refMap.put(refStr, ((AgreeVar) var).reference);
-        refMap.put(var.id, ((AgreeVar) var).reference);
-        // TODO we could clean up the agree renaming as well
         renaming.addExplicitRename(var.id, refStr);
+        renaming.addToRefMap(var.id, ((AgreeVar) var).reference);
         String category = getCategory((AgreeVar) var);
         if (category != null && !layout.getCategories().contains(category)) {
             layout.addCategory(category);
@@ -378,7 +375,7 @@ public abstract class VerifyHandler extends AadlHandler {
         } else if (reference instanceof DataPort) {
             return prefix + seperator + ((DataPort) reference).getName();
         } else if (reference instanceof EventDataPort) {
-            return prefix + seperator + ((EventDataPort) reference).getName();
+            return prefix + seperator + ((EventDataPort) reference).getName()+"._EVENT_";
         } else if (reference instanceof FeatureGroup) {
             return prefix + seperator + ((FeatureGroup) reference).getName();
         } else if (reference instanceof PropertyStatement) {
@@ -400,7 +397,12 @@ public abstract class VerifyHandler extends AadlHandler {
     }
 
     protected void showView(final AnalysisResult result, final AgreeResultsLinker linker) {
-        getWindow().getShell().getDisplay().syncExec(new Runnable() {
+		/*
+		 * This command is executed while the xtext document is locked. Thus it must be async
+		 * otherwise we can get a deadlock condition if the UI tries to lock the document,
+		 * e.g., to pull up hover information.
+		 */
+        getWindow().getShell().getDisplay().asyncExec(new Runnable() {
             @Override
             public void run() {
                 try {

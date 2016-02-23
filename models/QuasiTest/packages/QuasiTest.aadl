@@ -12,6 +12,8 @@ system Squadron
 		leader_r: out data port Base_Types::Integer;
 		right_r: out data port Base_Types::Integer;
 		left_r: out data port Base_types::Integer;
+		left_pend : out data port Base_Types::Boolean;
+		right_pend : out data port Base_Types::Boolean;
 		left_shift : in data port Base_types::Boolean;
 		right_shift : in data port Base_types::Boolean;
 
@@ -20,13 +22,25 @@ system Squadron
 		const none : int = 3;
 		
 		assume "init leader" : leader_l = 0 and leader_r = 0 -> true;  
-		assume "init right" : right_l = 1 and right_r = 1 -> true;
-		assume "init left" : left_l = 2 and left_r = 2 -> true;  
+		assume "init right" : right_l = 2 and right_r = 2 -> true;
+		assume "init left" : left_l = 1 and left_r = 1 -> true;  
+		
+		assume "not both shifting" : not (left_shift and right_shift);
+		
+		eq left_shift_time : int = defs.high_for(left_shift);
+		eq right_shift_time : int = defs.high_for(right_shift);
+			
+	    assume "left shift time": true -> pre(0 < left_shift_time and left_shift_time < 25) => left_shift;
+	    assume "right shift time": true -> pre(0 < right_shift_time and right_shift_time < 25) => right_shift;
+		
+		eq pending : bool = left_pend or right_pend;
+				
+		assume "only shift if none pending" : true ->
+			defs.rising(left_shift) or defs.rising(right_shift) => 
+				not pre(pending);
 		
 		guarantee "leader equivalence" : 
-			(leader_l != none) and (leader_r != none) and
-			(right_l != none) and (right_r != none) and
-			(left_l != none) and (left_r != none)
+			not (pending or left_shift or right_shift)
 			=>
 			(leader_l = leader_r and
 			 right_l = right_r and
@@ -51,14 +65,18 @@ system implementation Squadron.impl
 
 	annex agree {**
 		
-		synchrony : 1; 
+		synchrony : 3; 
 				
 		--initial tick
 		assert form_right._CLK and form_left._CLK -> true;
 				
 		--make sure that everyone shifts the same
-		assert right_shift = form_right.right_shift;
-		assert left_shift = form_right.left_shift;
+		assign right_shift = form_right.right_shift;
+		assign left_shift = form_right.left_shift;
+		
+		assign left_pend = form_left.pending;
+		assign right_pend = form_right.pending;
+		
 		assert form_right.left_shift = form_left.left_shift;
 		assert form_right.right_shift = form_left.right_shift;
 		
@@ -72,32 +90,32 @@ system implementation Squadron.impl
 			form_right.left != none or
 			form_right.right != none;
 			
-		assert 
-			true -> pre(defs.rising(left_shift)) => left_shift or 
-				((form_right.pend_leader != none) and (form_right.pend_right != none) and (form_right.pend_left != none));
-				
-		assert 
-			true -> pre(defs.rising(right_shift)) => right_shift or 
-				((form_right.pend_leader != none) and (form_right.pend_right != none) and (form_right.pend_left != none));
-				
-		assert
-			defs.rising(left_shift) or defs.rising(right_shift) => 
-				((pre(form_right.leader) != none) and (pre(form_right.right) != none) and (pre(form_right.left) != none));
-				
-	    assert 
-			true -> pre(defs.rising(left_shift)) => left_shift or 
-				((form_left.pend_leader != none) and (form_left.pend_right != none) and (form_left.pend_left != none));
-				 
-		assert 
-			true -> pre(defs.rising(right_shift)) => right_shift or 
-				((form_left.pend_leader != none) and (form_left.pend_right != none) and (form_left.pend_left != none));
-				
-		assert
-			defs.rising(left_shift) or defs.rising(right_shift) => 
-				((pre(form_left.leader) != none) and (pre(form_left.right) != none) and (pre(form_left.left) != none));
+			
+--		assert 
+--			true -> pre(defs.rising(left_shift)) => left_shift or 
+--				((form_right.pend_leader != none) and (form_right.pend_right != none) and (form_right.pend_left != none));
+--				
+--		assert 
+--			true -> pre(defs.rising(right_shift)) => right_shift or 
+--				((form_right.pend_leader != none) and (form_right.pend_right != none) and (form_right.pend_left != none));
+--				
+--		assert
+--			defs.rising(left_shift) or defs.rising(right_shift) => 
+--				((pre(form_right.leader) != none) and (pre(form_right.right) != none) and (pre(form_right.left) != none));
+--				
+--	    assert 
+--			true -> pre(defs.rising(left_shift)) => left_shift or 
+--				((form_left.pend_leader != none) and (form_left.pend_right != none) and (form_left.pend_left != none));
+--				 
+--		assert 
+--			true -> pre(defs.rising(right_shift)) => right_shift or 
+--				((form_left.pend_leader != none) and (form_left.pend_right != none) and (form_left.pend_left != none));
+--				
+--		assert
+--			defs.rising(left_shift) or defs.rising(right_shift) => 
+--				((pre(form_left.leader) != none) and (pre(form_left.right) != none) and (pre(form_left.left) != none));
 			
 				
-	    assert  not (left_shift and right_shift);
 					
 	**};
 
@@ -180,20 +198,26 @@ system Formation
 			true -> (pend_right = pre(left) and pend_right != none => last_shift_left) and
 			        (pend_left = pre(leader) and pend_left != none => last_shift_left) and
 			        (pend_leader = pre(right) and pend_leader != none => last_shift_left);
+		
+		eq pending : bool = (leader = none or right = none or left = none);
+		
+		guarantee "not pending or shifting means not moving" : 
+		  true -> not pre(pending) and not (left_shift or right_shift) => not pending;
 				
 		assume "not shifting both same" : not (left_shift and right_shift);
-				
-		assume "all components see left shift" :
-			true -> pre(defs.rising(left_shift)) => left_shift or 
-				((pend_leader != none) and (pend_right != none) and (pend_left != none));
-				
-		assume "all components see right shift" : 
-			true -> pre(defs.rising(right_shift)) => right_shift or 
-				((pend_leader != none) and (pend_right != none) and (pend_left != none));
-				
+						
 		assume "only shift if none pending" : true ->
 			defs.rising(left_shift) or defs.rising(right_shift) => 
-				((pre(leader) != none) and (pre(right) != none) and (pre(left) != none));
+				not pre(pending);
+				
+		eq left_shift_time : int = defs.high_for(left_shift);
+		eq right_shift_time : int = defs.high_for(right_shift);
+			
+	    assume "left shift time": true -> 
+	      pre(0 < left_shift_time and left_shift_time < 3) => left_shift;
+	      
+	    assume "right shift time": true -> 
+	      pre(0 < right_shift_time and right_shift_time < 3) => right_shift;
 				
 
 	**};
@@ -240,7 +264,7 @@ system implementation Formation.impl
 		
 		assert a_clk and b_clk and c_clk -> true;
 		
-		assert leader = 
+		assign leader = 
 			if VA.state = leader_state then
 				0
 			else if VB.state = leader_state then
@@ -250,7 +274,7 @@ system implementation Formation.impl
 			else
 				3;
 				
-		assert pend_leader = 
+		assign pend_leader = 
 			if VA.state = pend_leader_state then
 				0
 			else if VB.state = pend_leader_state then
@@ -260,7 +284,7 @@ system implementation Formation.impl
 			else
 				3;
 				
-		assert right = 
+		assign right = 
 			if VA.state = right_state then
 				0
 			else if VB.state = right_state then
@@ -270,7 +294,7 @@ system implementation Formation.impl
 			else
 				3;
 		
-		assert pend_right = 
+		assign pend_right = 
 			if VA.state = pend_right_state then
 				0
 			else if VB.state = pend_right_state then
@@ -280,7 +304,7 @@ system implementation Formation.impl
 			else
 				3;
 				
-		assert left = 
+		assign left = 
 			if VA.state = left_state then
 				0
 			else if VB.state = left_state then
@@ -290,7 +314,7 @@ system implementation Formation.impl
 			else
 				3;
 				
-		assert pend_left = 
+		assign pend_left = 
 			if VA.state = pend_left_state then
 				0
 			else if VB.state = pend_left_state then
@@ -313,6 +337,9 @@ system Vehicle
 		neighbor_state0: in data port Base_Types::Integer;
 		neighbor_state1: in data port Base_Types::Integer;
 		state: out data port Base_Types::Integer;
+		
+	properties
+		QuasiTestProps::Init_State => 0;
 
 	annex agree {**
 		
@@ -330,17 +357,17 @@ system Vehicle
 		guarantee "state range":
 			state >= 0 and state <= 5;
 
-		guarantee "leader position behavior":
+		guarantee "leader position behavior": true ->
 			((defs.rising(left_shift) and pre(state) = leader) => state = pend_left)
 			and
 			((defs.rising(right_shift) and pre(state) = leader) => state = pend_right);
 			
-		guarantee "left position behavior":
+		guarantee "left position behavior": true ->
 			((defs.rising(left_shift) and pre(state) = left) => state = pend_right)
 			and
 			((defs.rising(right_shift) and pre(state) = left) => state = pend_leader);
 			
-		guarantee "right position behavior":
+		guarantee "right position behavior": true ->
 			((defs.rising(left_shift) and pre(state) = right) => state = pend_leader)
 			and
 			((defs.rising(right_shift) and pre(state) = right) => state = pend_left);
@@ -385,7 +412,7 @@ system implementation Vehicle.impl
 
 	annex agree {**
 		
-		assert state = (init_state -> 
+		assign state = (init_state -> 
 				if(pre(state) = pend_leader and pre(neighbor_state0) != leader and pre(neighbor_state1) != leader) then
 					leader
 				else if(pre(state) = pend_right and pre(neighbor_state0) != right and pre(neighbor_state1) != right) then

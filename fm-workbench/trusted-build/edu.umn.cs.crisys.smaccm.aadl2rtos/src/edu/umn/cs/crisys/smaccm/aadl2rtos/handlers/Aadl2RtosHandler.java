@@ -22,8 +22,11 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE DATA OR THE USE OR OTHER DEALINGS
 package edu.umn.cs.crisys.smaccm.aadl2rtos.handlers;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 //import java.util.Map;
+
+
 
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -113,7 +116,7 @@ public class Aadl2RtosHandler extends AadlHandler {
 			// Now harvest the stuff we need from the OSATE AST.
 		  
 			Model model = new Model(sysimpl.getName(), si.getName());
-			
+						
 			// AadlModelParser initializes the Model class from the OSATE hierarchy
 			// (it is a factory).
 			logger.status("Generating and typechecking domain model for code generation...");
@@ -160,11 +163,14 @@ public class Aadl2RtosHandler extends AadlHandler {
 			for (String msg : msgs) {
 				log.error(msg);
 			}
+      log.error("Context: " + Util.stackTraceString(f));
 			return Status.CANCEL_STATUS;
 		} catch (ParserConfigurationException pce) {
       log.error("UsersXML: Error trying to instantiate DocumentBuilder " + pce);
+      log.error("Context: " + Util.stackTraceString(pce));
     } catch (Exception e) {
 			log.error(e);
+      log.error("Context: " + Util.stackTraceString(e));
 			return Status.CANCEL_STATUS;
 		}
 

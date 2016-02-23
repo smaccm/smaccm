@@ -28,11 +28,11 @@ import org.eclipse.emf.ecore.util.InternalEList;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link com.rockwellcollins.atc.resolute.resolute.impl.FailExprImpl#getVal <em>Val</em>}</li>
  *   <li>{@link com.rockwellcollins.atc.resolute.resolute.impl.FailExprImpl#getFailmsg <em>Failmsg</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

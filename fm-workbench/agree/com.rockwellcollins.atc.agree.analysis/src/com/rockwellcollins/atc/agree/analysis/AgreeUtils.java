@@ -1,5 +1,7 @@
 package com.rockwellcollins.atc.agree.analysis;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -7,14 +9,25 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
+import jkind.lustre.BoolExpr;
 import jkind.lustre.Equation;
+import jkind.lustre.Expr;
 import jkind.lustre.IdExpr;
+import jkind.lustre.IntExpr;
 import jkind.lustre.NamedType;
+import jkind.lustre.RealExpr;
+import jkind.lustre.RecordExpr;
+import jkind.lustre.RecordType;
+import jkind.lustre.Type;
+
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.osate.aadl2.AbstractNamedValue;
+import org.osate.aadl2.ComponentClassifier;
 import org.osate.aadl2.ComponentImplementation;
 import org.osate.aadl2.ComponentType;
 import org.osate.aadl2.ContainedNamedElement;
@@ -37,8 +50,11 @@ import org.osate.annexsupport.AnnexUtil;
 import org.osate.xtext.aadl2.properties.util.PropertyUtils;
 
 import com.rockwellcollins.atc.agree.agree.AgreePackage;
+import com.rockwellcollins.atc.agree.agree.EqStatement;
 import com.rockwellcollins.atc.agree.agree.FnCallExpr;
 import com.rockwellcollins.atc.agree.agree.NestedDotID;
+import com.rockwellcollins.atc.agree.agree.PropertyStatement;
+import com.rockwellcollins.atc.agree.analysis.ast.AgreeStatement;
 import com.rockwellcollins.atc.agree.analysis.preferences.PreferenceConstants;
 
 public class AgreeUtils {
@@ -298,6 +314,50 @@ public class AgreeUtils {
                     .size() > 0) {
                 return true;
             }
+        }
+        return false;
+    }
+    
+    public static Expr getInitValueFromType(Type type){
+        if(type instanceof NamedType){
+            return getInitValueFromType((NamedType)type);
+        }
+        if(type instanceof RecordType){
+            RecordType recordType = (RecordType)type;
+            Map<String, Expr> fieldMap = new HashMap<>();
+            for(Entry<String, Type> entry : recordType.fields.entrySet()){
+                Expr subExpr = getInitValueFromType(entry.getValue());
+                fieldMap.put(entry.getKey(), subExpr);
+            }
+            return new RecordExpr(recordType.id, fieldMap);
+        }
+        throw new AgreeException("AGREE cannot figure out an initial type for Lustre type: "+type.getClass());
+    }
+    
+    private static Expr getInitValueFromType(NamedType type){
+        if(type.equals(NamedType.BOOL)){
+            return new BoolExpr(false);
+        }
+        if(type.equals(NamedType.INT)){
+            return new IntExpr(BigInteger.ZERO);
+        }
+        if(type.equals(NamedType.REAL)){
+            return new RealExpr(BigDecimal.ZERO);
+        }
+        throw new AgreeException("Unhandled initial type for type '"+type+"'");
+    }
+    
+    public static boolean statementIsContractEqOrProperty(AgreeStatement statement){
+        if (statement.reference instanceof EqStatement
+                || statement.reference instanceof PropertyStatement) {
+            EObject container = statement.reference.eContainer();
+            while (!(container instanceof ComponentClassifier)) {
+                container = container.eContainer();
+            }
+            if (container instanceof ComponentImplementation) {
+                return false;
+            }
+            return true;
         }
         return false;
     }

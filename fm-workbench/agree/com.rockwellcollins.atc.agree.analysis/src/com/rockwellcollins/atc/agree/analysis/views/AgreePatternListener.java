@@ -43,10 +43,9 @@ public class AgreePatternListener implements IPatternMatchListener {
     private EObject findBestReference(String refStr) {
 
         EObject ref = null;
-        refStr = refStr.replace(".", "__");
         while (ref == null && refStr != null && !refStr.equals("")) {
             ref = refMap.get(refStr);
-            int index = refStr.lastIndexOf("__");
+            int index = refStr.lastIndexOf(".");
             if (index == -1) {
                 break;
             }

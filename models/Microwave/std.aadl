@@ -22,7 +22,7 @@ annex agree {**
 		o = FallingEdge(i, init); 
 	tel;
 	
-	node Initially(i: bool) returns (o: bool);
+	node Initial(i: bool) returns (o: bool);
 	let
 		o = i -> true;
 	tel;

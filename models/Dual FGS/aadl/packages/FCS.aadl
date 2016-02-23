@@ -105,11 +105,16 @@ const CSA_MAX_PITCH_DELTA_STEP: real = 5.0 ;
 		  
 -- We assume that the transient for altitude is bounded both 
 -- in terms of the next state and from left to right side. 	  
+
+-- real time:
+-- at arbitrary instant, max pitch change is less than ADS_MAX_PITCH_DELTA within 1 second.
     		  
 property AD_L_Pitch_Step_Delta_Valid = 
   true -> abs(AD_L.Pitch.Val - prev(AD_L.Pitch.Val, 0.0)) < ADS_MAX_PITCH_DELTA ;
 property AD_R_Pitch_Step_Delta_Valid =
   true -> abs(AD_R.Pitch.Val - prev(AD_R.Pitch.Val, 0.0)) < ADS_MAX_PITCH_DELTA ; 
+
+-- no change for real time - it is invariant
 property pitch_lr_ok = 
   abs(AD_L.Pitch.Val - AD_R.Pitch.Val) < FCS_MAX_PITCH_SIDE_DELTA ; 
 property left_side_valid = AD_L.Pitch.Valid ;
@@ -122,9 +127,14 @@ assume "valid assumption" : some_side_valid ;
 
 -- We assume when a side recovers it does not fail immediately
 assume "don't fail otherside assumption" : 
+	   -- After_2_steps((pre(pre(not left_side_valid)) and pre(left_side_valid)) => left_side_valid);   
 	   prev(prev(not left_side_valid, false), false) and 
        prev(left_side_valid, false) => 
            left_side_valid ;  
+
+-- real-time: 
+-- If fail, then there is a minimum time 
+-- on falling edge of valid, valid will not occur within 2 seconds. 
 
 --assume "dont fail assumption" : 
 --	   prev(prev(not right_side_valid, false), false) and
@@ -137,8 +147,14 @@ assume "valid pitch" :AD_L_Pitch_Step_Delta_Valid and
 -- Assertion: our computed pitch deltas are less than some 
 -- maximum amount.
 
+-- initial values have to be replaced by initial time intervals.
+-- after 1 second, then...
+
 guarantee "pitch is valid" : 
   	true -> abs(CSA.CSA_Pitch_Delta) < CSA_MAX_PITCH_DELTA ;
+
+-- another example of an invariant within an interval:
+-- the commanded pitch delta is within CSA_MAX_PITCH_DELTA_STEP over a 500 ms interval.
 
 guarantee "pitch step is valid" : 
 	true -> abs(CSA.CSA_Pitch_Delta - prev(CSA.CSA_Pitch_Delta, 0.0)) < CSA_MAX_PITCH_DELTA_STEP ;
@@ -195,6 +211,10 @@ annex agree {**
 assert (FGS_L.LSO.Valid and FGS_R.LSO.Valid) => FGS_L.LSO.Leader = FGS_R.LSO.Leader;
 			
   -- If a node fails, leadership is transferred to a non-failed node (if one exists)
+  -- real-time: These must be in terms of time!
+  -- If the left side is invalid, then within XXX time (50 ms), the right side will 
+  -- select itself to be the leader if it is valid.
+  -- symmetric for right side.
   
 assert (prev(not(FGS_L.LSO.Valid), false) => 
 	(FGS_R.LSO.Valid => FGS_R.LSO.Leader != Get_Property(FGS_L, META_Properties::Leader_Select_ID)));		
@@ -203,11 +223,23 @@ assert prev(not(FGS_R.LSO.Valid), false) =>
 	(FGS_L.LSO.Valid => FGS_L.LSO.Leader != Get_Property(FGS_R, META_Properties::Leader_Select_ID));
 			 
   -- If any non-failed nodes exist, one of them will be the leader
+  -- If either side has been valid for at least interval XXX (125ms?) then 
+  -- one side has a reasonable leader.
 assert (prev(FGS_L.LSO.Valid or FGS_R.LSO.Valid, false)) => 
 	(( FGS_L.LSO.Valid => (FGS_L.LSO.Leader >= 1 and FGS_L.LSO.Leader <= 2)) and
 	(FGS_R.LSO.Valid => (FGS_R.LSO.Leader >= 1 and FGS_R.LSO.Leader <= 2)));
 			     
   -- If the leader does not fail, it shall remain the leader.  
+  --  ????  This is an interesting one.
+  -- We could approximate it: if I am leader now, I will be the leader in the future.
+  -- This is just an "arbitrary time" property.  At any instant, if I am leader for interval, 
+  -- I will continue to be leader.
+  -- Need a category of things that are checked at every "interesting" instant.
+  -- Some notion of a "minimum quanta", use to check edges or min intervals.
+  
+  -- Any signal "inside" or box has a start and end time.  External signals are arbitrary.
+  -- How do we talk about random, external events?
+  
 property prop2 =
 	(prev(FGS_L.LSO.Valid and FGS_L.LSO.Leader = Get_Property(FGS_L, META_Properties::Leader_Select_ID), false)) =>
 	(FGS_L.LSO.Valid => FGS_L.LSO.Leader = Get_Property(FGS_L, META_Properties::Leader_Select_ID));

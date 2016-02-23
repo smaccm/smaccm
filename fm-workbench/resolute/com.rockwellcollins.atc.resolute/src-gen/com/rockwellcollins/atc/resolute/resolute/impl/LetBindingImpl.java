@@ -23,11 +23,11 @@ import org.osate.aadl2.impl.NamedElementImpl;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link com.rockwellcollins.atc.resolute.resolute.impl.LetBindingImpl#getType <em>Type</em>}</li>
  *   <li>{@link com.rockwellcollins.atc.resolute.resolute.impl.LetBindingImpl#getExpr <em>Expr</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

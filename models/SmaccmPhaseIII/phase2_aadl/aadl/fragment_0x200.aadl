@@ -1,0 +1,59 @@
+-- File generated from Tower-AADL compiler
+
+package fragment_0x200
+public
+  with Base_Types;
+  with Data_Model;
+  with Data_Types;
+  with SMACCM_SYS;
+
+thread fragment_0x200
+  features
+    Input_fragment_req_0x200: in event data port Data_Types::array_80_Unsigned_8.impl
+      {
+        SMACCM_SYS::Compute_Entrypoint_Source_Text => ("callback_fragment_req_0x200");
+        Source_Text => ("user_code/fragment_0x200_monitor.c");
+        Queue_Size => 1000;
+        SMACCM_SYS::Sends_Events_To => "{{1 Output_fragment_req_0x200_0}}";
+      };
+    Input_fragment_complete_0x200: in event data port Base_Types::Boolean
+      {
+        SMACCM_SYS::Compute_Entrypoint_Source_Text => ("callback_fragment_complete_0x200");
+        Source_Text => ("user_code/fragment_0x200_monitor.c");
+        Queue_Size => 1000;
+        SMACCM_SYS::Sends_Events_To => "{{1 Output_fragment_complete_0x200_0, 1 Output_fragment_complete_0x200_1}}";
+      };
+    Input_fragment_abort_0x200: in event data port Base_Types::Boolean
+      {
+        SMACCM_SYS::Compute_Entrypoint_Source_Text => ("callback_fragment_abort_0x200");
+        Source_Text => ("user_code/fragment_0x200_monitor.c");
+        Queue_Size => 1000;
+        SMACCM_SYS::Sends_Events_To => "{{1 Output_fragment_abort_0x200_0}}";
+      };
+    Output_fragment_req_0x200_0: out event data port Data_Types::can_message
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_fragment_req_0x200_chan_5";
+      };
+    Output_fragment_complete_0x200_0: out event data port Data_Types::can_message
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_fragment_complete_0x200_chan_5";
+      };
+    Output_fragment_complete_0x200_1: out event data port Base_Types::Boolean
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_fragment_complete_0x200_chan_134";
+      };
+    Output_fragment_abort_0x200_0: out event data port Base_Types::Boolean
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_fragment_abort_0x200_chan_6";
+      };
+  properties
+    Compute_Execution_Time => 10 us .. 100 us;
+    SMACCM_SYS::Sends_Events_To => "{{1 Output_fragment_req_0x200_0, 1 Output_fragment_complete_0x200_0, 1 Output_fragment_complete_0x200_1, 1 Output_fragment_abort_0x200_0}}";
+    Source_Text => ();
+    SMACCM_SYS::Thread_Type => Active;
+    Dispatch_Protocol => Sporadic;
+    Stack_Size => 1000 bytes;
+    Priority => 140;
+end fragment_0x200;
+
+end fragment_0x200;

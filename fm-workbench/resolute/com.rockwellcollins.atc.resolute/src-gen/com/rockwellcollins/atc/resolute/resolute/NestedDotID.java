@@ -13,11 +13,11 @@ import org.osate.aadl2.NamedElement;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link com.rockwellcollins.atc.resolute.resolute.NestedDotID#getBase <em>Base</em>}</li>
  *   <li>{@link com.rockwellcollins.atc.resolute.resolute.NestedDotID#getSub <em>Sub</em>}</li>
  * </ul>
- * </p>
  *
  * @see com.rockwellcollins.atc.resolute.resolute.ResolutePackage#getNestedDotID()
  * @model

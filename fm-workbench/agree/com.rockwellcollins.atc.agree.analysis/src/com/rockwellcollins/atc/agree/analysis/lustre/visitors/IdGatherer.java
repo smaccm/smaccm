@@ -19,10 +19,8 @@ import jkind.lustre.CondactExpr;
 import jkind.lustre.Expr;
 import jkind.lustre.IdExpr;
 import jkind.lustre.IfThenElseExpr;
-import jkind.lustre.InductDataExpr;
 import jkind.lustre.IntExpr;
 import jkind.lustre.NodeCallExpr;
-import jkind.lustre.QuantExpr;
 import jkind.lustre.RealExpr;
 import jkind.lustre.RecordAccessExpr;
 import jkind.lustre.RecordExpr;
@@ -148,16 +146,6 @@ public class IdGatherer implements ExprVisitor<Set<String>> {
     @Override
     public Set<String> visit(UnaryExpr e) {
         return e.expr.accept(this);
-    }
-
-    @Override
-    public Set<String> visit(InductDataExpr e) {
-        throw new AgreeException("We do not support Quantified Expressions or Inductive Datatypes");
-    }
-
-    @Override
-    public Set<String> visit(QuantExpr e) {
-        throw new AgreeException("We do not support Quantified Expressions or Inductive Datatypes");
     }
 
 }

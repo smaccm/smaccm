@@ -105,41 +105,41 @@ public
         else
           not msw_clock and not fsw_clock and time = MSW.time;
       
---      lemma "how time moves" :
---        time >= 0.0 and (true -> time >= pre(time));
---      
---      lemma "positive receive times" :
---        last_mavlink_received_time >= 0.0 and last_ppm_received_time >= 0.0;
---        
---      lemma "separation between FSW and MSW times" :
---         abs(FSW.time - MSW.time) <= 50.0;
---      
---      lemma "component time never decreases" :
---        true -> FSW.time >= pre(FSW.time) and MSW.time >= pre(MSW.time);
---        
---      lemma "real time is always greater than or equal to component time" :
---        time >= FSW.time and time >= MSW.time;
---        
---      lemma "MSW mavlink receive time lte msw time":
---        MSW.last_mavlink_received_time <= MSW.time;
---        
---      lemma "when MSW sees mavlink message":
---        MSW.time - last_mavlink_received_time > 50.0 => event(MSW.enc_mavlink_in) = false;
---       
---      lemma "when MSW sends mavlink message" :
---        MSW.time - last_mavlink_received_time > 300.0 => event(MSW.mission_out) = false;
---        
---      lemma "when FSW sees ppm message" :
---        FSW.time - last_ppm_received_time > 50.0 => event(FSW.ppm_in) = false;
---       
-----      lemma "when FSW sees mavlink message":
-----        FSW.time - last_mavlink_received_time > 300.0 => event(FSW.mission_in) = false;
---      
---      lemma "fsw last ppm difference" :
---        FSW.time_of_last_ppm > last_ppm_received_time  => FSW.time_of_last_ppm - last_ppm_received_time <= 100.0;
---        
---      lemma "fsw last mav difference" :
---        FSW.time_of_last_can > last_mavlink_received_time => FSW.time_of_last_can - last_mavlink_received_time <= 400.0;
+      lemma "how time moves" :
+        time >= 0.0 and (true -> time >= pre(time));
+      
+      lemma "positive receive times" :
+        last_mavlink_received_time >= 0.0 and last_ppm_received_time >= 0.0;
+        
+      lemma "separation between FSW and MSW times" :
+         abs(FSW.time - MSW.time) <= 50.0;
+      
+      lemma "component time never decreases" :
+        true -> FSW.time >= pre(FSW.time) and MSW.time >= pre(MSW.time);
+        
+      lemma "real time is always greater than or equal to component time" :
+        time >= FSW.time and time >= MSW.time;
+        
+      lemma "MSW mavlink receive time lte msw time":
+        MSW.last_mavlink_received_time <= MSW.time;
+        
+      lemma "when MSW sees mavlink message":
+        MSW.time - last_mavlink_received_time > 50.0 => event(MSW.enc_mavlink_in) = false;
+       
+      lemma "when MSW sends mavlink message" :
+        MSW.time - last_mavlink_received_time > 300.0 => event(MSW.mission_out) = false;
+        
+      lemma "when FSW sees ppm message" :
+        FSW.time - last_ppm_received_time > 50.0 => event(FSW.ppm_in) = false;
+       
+--      lemma "when FSW sees mavlink message":
+--        FSW.time - last_mavlink_received_time > 300.0 => event(FSW.mission_in) = false;
+      
+      lemma "fsw last ppm difference" :
+        FSW.time_of_last_ppm > last_ppm_received_time  => FSW.time_of_last_ppm - last_ppm_received_time <= 100.0;
+        
+      lemma "fsw last mav difference" :
+        FSW.time_of_last_can > last_mavlink_received_time => FSW.time_of_last_can - last_mavlink_received_time <= 400.0;
       
       lemma "if no mavlink or ppm is received for a certain timeout then the vehicle is in landing mode" : 
         time - last_mavlink_received_time > TOTAL_LANDING_TIMEOUT and

@@ -11,12 +11,12 @@ import org.eclipse.emf.common.util.EList;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link com.rockwellcollins.atc.resolute.resolute.QuantifiedExpr#getQuant <em>Quant</em>}</li>
  *   <li>{@link com.rockwellcollins.atc.resolute.resolute.QuantifiedExpr#getArgs <em>Args</em>}</li>
  *   <li>{@link com.rockwellcollins.atc.resolute.resolute.QuantifiedExpr#getExpr <em>Expr</em>}</li>
  * </ul>
- * </p>
  *
  * @see com.rockwellcollins.atc.resolute.resolute.ResolutePackage#getQuantifiedExpr()
  * @model

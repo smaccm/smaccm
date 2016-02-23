@@ -51,8 +51,8 @@ only_receive_decrypt(x : component) <=
     
 only_receive_decrypt_channel(c : connection) <=
   ** "The connection " c " only carries messages that pass Decrypt" **
-  let src : component = parent(source(c));
-  unalterable_channel(c) and (is_decrypter(src) or only_receive_decrypt(src))      
+  let src : component = source_component(c); 
+  unalterable_channel(c) and (is_decrypter(src) or only_receive_decrypt(src))       
 
 is_decrypter(comp : component) <=
   ** comp " is the decrypter" **

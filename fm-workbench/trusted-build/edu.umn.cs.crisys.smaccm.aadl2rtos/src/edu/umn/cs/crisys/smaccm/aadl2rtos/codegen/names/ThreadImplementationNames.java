@@ -21,6 +21,7 @@ import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.SharedDataAccessor;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.ThreadImplementation;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.ThreadInstance;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.Type;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.parse.Model;
 
 /**
  * @author Whalen
@@ -317,7 +318,11 @@ public class ThreadImplementationNames {
     return ti.getNormalizedName();
   }
   
-  public String getStackSize() {
+  public String getOsSpecificStackSize() {
+	  if (ti.getModel().getOsTarget() == Model.OSTarget.eChronos) {
+		  // TODO: MWW temporary (2/17/2016): eChronos apparently measures stack size in 32 bit words. 
+		    return Integer.toString(ti.getStackSize() / 4 + ((ti.getStackSize() % 4 == 0) ? 0 : 1)); 
+	  }
 	  return Integer.toString(ti.getStackSize());
   }
   

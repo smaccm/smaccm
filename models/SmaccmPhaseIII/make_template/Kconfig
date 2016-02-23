@@ -1,0 +1,6 @@
+config APP_SMACCMPHASEIII
+    bool "AADL generic message for implementation SmaccmPhaseIII"
+    default n
+    select APP_CAMKES_EXECUTIVE
+    help
+        AADL generic message for implementation SmaccmPhaseIII. 

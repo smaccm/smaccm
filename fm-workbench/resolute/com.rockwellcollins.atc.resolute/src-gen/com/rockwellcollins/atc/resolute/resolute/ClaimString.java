@@ -10,10 +10,10 @@ package com.rockwellcollins.atc.resolute.resolute;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link com.rockwellcollins.atc.resolute.resolute.ClaimString#getStr <em>Str</em>}</li>
  * </ul>
- * </p>
  *
  * @see com.rockwellcollins.atc.resolute.resolute.ResolutePackage#getClaimString()
  * @model

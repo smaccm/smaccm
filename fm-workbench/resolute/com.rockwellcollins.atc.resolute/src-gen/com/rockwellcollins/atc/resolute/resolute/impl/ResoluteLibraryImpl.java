@@ -26,10 +26,10 @@ import org.osate.aadl2.impl.AnnexLibraryImpl;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link com.rockwellcollins.atc.resolute.resolute.impl.ResoluteLibraryImpl#getDefinitions <em>Definitions</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */
