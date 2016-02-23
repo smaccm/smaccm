@@ -10,10 +10,10 @@ package com.rockwellcollins.atc.agree.agree;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.RecordType#getRecord <em>Record</em>}</li>
  * </ul>
- * </p>
  *
  * @see com.rockwellcollins.atc.agree.agree.AgreePackage#getRecordType()
  * @model

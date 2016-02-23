@@ -11,11 +11,11 @@ import org.osate.aadl2.NamedElement;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.GetPropertyExpr#getComponent <em>Component</em>}</li>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.GetPropertyExpr#getProp <em>Prop</em>}</li>
  * </ul>
- * </p>
  *
  * @see com.rockwellcollins.atc.agree.agree.AgreePackage#getGetPropertyExpr()
  * @model

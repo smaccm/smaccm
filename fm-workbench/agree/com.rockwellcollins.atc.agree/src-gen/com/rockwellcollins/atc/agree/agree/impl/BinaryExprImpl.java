@@ -20,12 +20,12 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.impl.BinaryExprImpl#getLeft <em>Left</em>}</li>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.impl.BinaryExprImpl#getOp <em>Op</em>}</li>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.impl.BinaryExprImpl#getRight <em>Right</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

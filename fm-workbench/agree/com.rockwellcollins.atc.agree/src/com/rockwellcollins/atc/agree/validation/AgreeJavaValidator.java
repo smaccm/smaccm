@@ -66,6 +66,7 @@ import com.rockwellcollins.atc.agree.agree.CalenStatement;
 import com.rockwellcollins.atc.agree.agree.CallDef;
 import com.rockwellcollins.atc.agree.agree.ConnectionStatement;
 import com.rockwellcollins.atc.agree.agree.ConstStatement;
+import com.rockwellcollins.atc.agree.agree.DoNotInheritStatement;
 import com.rockwellcollins.atc.agree.agree.EqStatement;
 import com.rockwellcollins.atc.agree.agree.EventExpr;
 import com.rockwellcollins.atc.agree.agree.Expr;
@@ -219,11 +220,24 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 	
 	List<List<SpecStatement>> getParentSpecs(Classifier classifier) {
 		List<List<SpecStatement>> parentAnnexes = new ArrayList<List<SpecStatement>>();
+		boolean shouldInherit = true;
+		for(AgreeContract contract : EcoreUtil2.getAllContentsOfType(classifier, AgreeContract.class)) {
+			for(SpecStatement statement : contract.getSpecs()) {
+				if(statement instanceof DoNotInheritStatement) {
+					shouldInherit = false;
+				}
+			}
+		}
+		
 		while(classifier != null) {
 			for(AgreeContract contract : EcoreUtil2.getAllContentsOfType(classifier, AgreeContract.class)) {
 				parentAnnexes.add(0, contract.getSpecs());
 			}
-			classifier = classifier.getExtended();
+			if(shouldInherit) {
+				classifier = classifier.getExtended();
+			} else {
+				classifier = null;
+			}
 		}
 		return parentAnnexes;
 	}

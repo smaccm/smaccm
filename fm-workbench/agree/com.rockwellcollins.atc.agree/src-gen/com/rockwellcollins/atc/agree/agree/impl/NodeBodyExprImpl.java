@@ -27,11 +27,11 @@ import org.osate.aadl2.impl.ElementImpl;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.impl.NodeBodyExprImpl#getLocs <em>Locs</em>}</li>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.impl.NodeBodyExprImpl#getStmts <em>Stmts</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

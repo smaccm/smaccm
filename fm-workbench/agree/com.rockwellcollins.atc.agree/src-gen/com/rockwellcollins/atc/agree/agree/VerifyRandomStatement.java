@@ -10,10 +10,10 @@ package com.rockwellcollins.atc.agree.agree;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.VerifyRandomStatement#getNum <em>Num</em>}</li>
  * </ul>
- * </p>
  *
  * @see com.rockwellcollins.atc.agree.agree.AgreePackage#getVerifyRandomStatement()
  * @model

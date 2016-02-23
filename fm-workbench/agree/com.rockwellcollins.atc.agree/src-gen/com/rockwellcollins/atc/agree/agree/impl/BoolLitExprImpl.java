@@ -21,10 +21,10 @@ import org.osate.aadl2.BooleanLiteral;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.impl.BoolLitExprImpl#getVal <em>Val</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

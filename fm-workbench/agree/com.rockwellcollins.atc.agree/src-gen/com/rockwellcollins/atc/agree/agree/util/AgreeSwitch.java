@@ -56,7 +56,7 @@ public class AgreeSwitch<T> extends Switch<T>
    * Checks whether this is a switch for the given package.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @parameter ePackage the package in question.
+   * @param ePackage the package in question.
    * @return whether this is a switch for the given package.
    * @generated
    */
@@ -373,6 +373,15 @@ public class AgreeSwitch<T> extends Switch<T>
         T result = caseInheritStatement(inheritStatement);
         if (result == null) result = caseSpecStatement(inheritStatement);
         if (result == null) result = caseElement(inheritStatement);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case AgreePackage.DO_NOT_INHERIT_STATEMENT:
+      {
+        DoNotInheritStatement doNotInheritStatement = (DoNotInheritStatement)theEObject;
+        T result = caseDoNotInheritStatement(doNotInheritStatement);
+        if (result == null) result = caseSpecStatement(doNotInheritStatement);
+        if (result == null) result = caseElement(doNotInheritStatement);
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
@@ -1148,6 +1157,22 @@ public class AgreeSwitch<T> extends Switch<T>
    * @generated
    */
   public T caseInheritStatement(InheritStatement object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Do Not Inherit Statement</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Do Not Inherit Statement</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseDoNotInheritStatement(DoNotInheritStatement object)
   {
     return null;
   }

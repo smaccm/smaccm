@@ -31,12 +31,12 @@ import org.osate.aadl2.NamedElement;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.impl.RecordExprImpl#getRecord <em>Record</em>}</li>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.impl.RecordExprImpl#getArgs <em>Args</em>}</li>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.impl.RecordExprImpl#getArgExpr <em>Arg Expr</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

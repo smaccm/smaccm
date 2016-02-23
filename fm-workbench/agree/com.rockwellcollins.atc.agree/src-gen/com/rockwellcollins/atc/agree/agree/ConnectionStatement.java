@@ -11,11 +11,11 @@ import org.osate.aadl2.NamedElement;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.ConnectionStatement#getConn <em>Conn</em>}</li>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.ConnectionStatement#getExpr <em>Expr</em>}</li>
  * </ul>
- * </p>
  *
  * @see com.rockwellcollins.atc.agree.agree.AgreePackage#getConnectionStatement()
  * @model

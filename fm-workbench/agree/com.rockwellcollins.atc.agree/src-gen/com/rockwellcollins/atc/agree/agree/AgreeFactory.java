@@ -311,6 +311,15 @@ public interface AgreeFactory extends EFactory
   InheritStatement createInheritStatement();
 
   /**
+   * Returns a new object of class '<em>Do Not Inherit Statement</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Do Not Inherit Statement</em>'.
+   * @generated
+   */
+  DoNotInheritStatement createDoNotInheritStatement();
+
+  /**
    * Returns a new object of class '<em>Verify Random Statement</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->

@@ -50,6 +50,7 @@ SpecStatement:
 	| {LiftStatement} 'lift' subcomp=NestedDotID ';'
 	| {ConnectionStatement} 'connection' conn=[aadl2::NamedElement] ':' expr=Expr ';'
 	| {InheritStatement} 'inherit' ';'
+	| {DoNotInheritStatement} 'do' 'not' 'inherit' ';'
 	| {VerifyRandomStatement} 'randomly' 'verify' num=INTEGER_LIT ';'
 	| {VerifySpecificStatement} 'verify' '[' first=STRING (',' rest+=STRING)* ']' ';'
 	| SynchStatement

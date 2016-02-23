@@ -241,6 +241,11 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
         return createInheritStatementAdapter();
       }
       @Override
+      public Adapter caseDoNotInheritStatement(DoNotInheritStatement object)
+      {
+        return createDoNotInheritStatementAdapter();
+      }
+      @Override
       public Adapter caseVerifyRandomStatement(VerifyRandomStatement object)
       {
         return createVerifyRandomStatementAdapter();
@@ -903,6 +908,21 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
    * @generated
    */
   public Adapter createInheritStatementAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.DoNotInheritStatement <em>Do Not Inherit Statement</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see com.rockwellcollins.atc.agree.agree.DoNotInheritStatement
+   * @generated
+   */
+  public Adapter createDoNotInheritStatementAdapter()
   {
     return null;
   }

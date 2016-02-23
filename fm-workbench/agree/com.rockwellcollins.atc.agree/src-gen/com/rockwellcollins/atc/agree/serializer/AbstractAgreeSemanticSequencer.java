@@ -19,6 +19,7 @@ import com.rockwellcollins.atc.agree.agree.BoolLitExpr;
 import com.rockwellcollins.atc.agree.agree.CalenStatement;
 import com.rockwellcollins.atc.agree.agree.ConnectionStatement;
 import com.rockwellcollins.atc.agree.agree.ConstStatement;
+import com.rockwellcollins.atc.agree.agree.DoNotInheritStatement;
 import com.rockwellcollins.atc.agree.agree.EventExpr;
 import com.rockwellcollins.atc.agree.agree.FloorCast;
 import com.rockwellcollins.atc.agree.agree.FnCallExpr;
@@ -228,6 +229,9 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 				return; 
 			case AgreePackage.CONST_STATEMENT:
 				sequence_ConstStatement(context, (ConstStatement) semanticObject); 
+				return; 
+			case AgreePackage.DO_NOT_INHERIT_STATEMENT:
+				sequence_SpecStatement(context, (DoNotInheritStatement) semanticObject); 
 				return; 
 			case AgreePackage.EVENT_EXPR:
 				sequence_TermExpr(context, (EventExpr) semanticObject); 
@@ -583,6 +587,15 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     (conn=[NamedElement|ID] expr=Expr)
 	 */
 	protected void sequence_SpecStatement(EObject context, ConnectionStatement semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Constraint:
+	 *     {DoNotInheritStatement}
+	 */
+	protected void sequence_SpecStatement(EObject context, DoNotInheritStatement semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	

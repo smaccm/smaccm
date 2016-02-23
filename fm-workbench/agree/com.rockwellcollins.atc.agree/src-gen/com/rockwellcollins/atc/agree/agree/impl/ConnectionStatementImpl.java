@@ -23,11 +23,11 @@ import org.osate.aadl2.NamedElement;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.impl.ConnectionStatementImpl#getConn <em>Conn</em>}</li>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.impl.ConnectionStatementImpl#getExpr <em>Expr</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

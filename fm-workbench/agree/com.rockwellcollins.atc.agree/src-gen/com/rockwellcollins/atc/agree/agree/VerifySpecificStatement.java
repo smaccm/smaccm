@@ -11,11 +11,11 @@ import org.eclipse.emf.common.util.EList;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.VerifySpecificStatement#getFirst <em>First</em>}</li>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.VerifySpecificStatement#getRest <em>Rest</em>}</li>
  * </ul>
- * </p>
  *
  * @see com.rockwellcollins.atc.agree.agree.AgreePackage#getVerifySpecificStatement()
  * @model

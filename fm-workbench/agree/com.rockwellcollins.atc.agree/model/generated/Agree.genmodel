@@ -106,6 +106,7 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//ConnectionStatement/expr"/>
     </genClasses>
     <genClasses ecoreClass="Agree.ecore#//InheritStatement"/>
+    <genClasses ecoreClass="Agree.ecore#//DoNotInheritStatement"/>
     <genClasses ecoreClass="Agree.ecore#//VerifyRandomStatement">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Agree.ecore#//VerifyRandomStatement/num"/>
     </genClasses>

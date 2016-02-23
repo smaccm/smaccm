@@ -23,11 +23,11 @@ import org.eclipse.emf.ecore.util.EDataTypeEList;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.impl.VerifySpecificStatementImpl#getFirst <em>First</em>}</li>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.impl.VerifySpecificStatementImpl#getRest <em>Rest</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

@@ -26,10 +26,10 @@ import org.osate.aadl2.impl.ElementImpl;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.impl.EqStatementImpl#getLhs <em>Lhs</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

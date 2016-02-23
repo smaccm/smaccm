@@ -13,12 +13,12 @@ import org.osate.aadl2.NamedElement;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.NodeDefExpr#getArgs <em>Args</em>}</li>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.NodeDefExpr#getRets <em>Rets</em>}</li>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.NodeDefExpr#getNodeBody <em>Node Body</em>}</li>
  * </ul>
- * </p>
  *
  * @see com.rockwellcollins.atc.agree.agree.AgreePackage#getNodeDefExpr()
  * @model

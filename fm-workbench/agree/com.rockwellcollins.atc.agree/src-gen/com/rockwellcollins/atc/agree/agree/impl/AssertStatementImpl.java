@@ -20,11 +20,11 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.impl.AssertStatementImpl#getStr <em>Str</em>}</li>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.impl.AssertStatementImpl#getExpr <em>Expr</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

@@ -22,6 +22,7 @@ import com.rockwellcollins.atc.agree.agree.ComplexExpr;
 import com.rockwellcollins.atc.agree.agree.ConnectionStatement;
 import com.rockwellcollins.atc.agree.agree.ConstStatement;
 import com.rockwellcollins.atc.agree.agree.Contract;
+import com.rockwellcollins.atc.agree.agree.DoNotInheritStatement;
 import com.rockwellcollins.atc.agree.agree.EqStatement;
 import com.rockwellcollins.atc.agree.agree.EventExpr;
 import com.rockwellcollins.atc.agree.agree.Expr;
@@ -306,6 +307,13 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * @generated
    */
   private EClass inheritStatementEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass doNotInheritStatementEClass = null;
 
   /**
    * <!-- begin-user-doc -->
@@ -1284,6 +1292,16 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  public EClass getDoNotInheritStatement()
+  {
+    return doNotInheritStatementEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   public EClass getVerifyRandomStatement()
   {
     return verifyRandomStatementEClass;
@@ -2142,6 +2160,8 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
 
     inheritStatementEClass = createEClass(INHERIT_STATEMENT);
 
+    doNotInheritStatementEClass = createEClass(DO_NOT_INHERIT_STATEMENT);
+
     verifyRandomStatementEClass = createEClass(VERIFY_RANDOM_STATEMENT);
     createEAttribute(verifyRandomStatementEClass, VERIFY_RANDOM_STATEMENT__NUM);
 
@@ -2317,6 +2337,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     liftStatementEClass.getESuperTypes().add(this.getSpecStatement());
     connectionStatementEClass.getESuperTypes().add(this.getSpecStatement());
     inheritStatementEClass.getESuperTypes().add(this.getSpecStatement());
+    doNotInheritStatementEClass.getESuperTypes().add(this.getSpecStatement());
     verifyRandomStatementEClass.getESuperTypes().add(this.getSpecStatement());
     verifySpecificStatementEClass.getESuperTypes().add(this.getSpecStatement());
     mnSynchStatementEClass.getESuperTypes().add(this.getSynchStatement());
@@ -2449,6 +2470,8 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     initEReference(getConnectionStatement_Expr(), this.getExpr(), null, "expr", null, 0, 1, ConnectionStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(inheritStatementEClass, InheritStatement.class, "InheritStatement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+    initEClass(doNotInheritStatementEClass, DoNotInheritStatement.class, "DoNotInheritStatement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
     initEClass(verifyRandomStatementEClass, VerifyRandomStatement.class, "VerifyRandomStatement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEAttribute(getVerifyRandomStatement_Num(), theEcorePackage.getEString(), "num", null, 0, 1, VerifyRandomStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

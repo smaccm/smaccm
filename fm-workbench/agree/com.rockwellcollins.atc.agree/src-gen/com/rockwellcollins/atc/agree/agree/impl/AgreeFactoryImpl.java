@@ -96,6 +96,7 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
       case AgreePackage.LIFT_STATEMENT: return createLiftStatement();
       case AgreePackage.CONNECTION_STATEMENT: return createConnectionStatement();
       case AgreePackage.INHERIT_STATEMENT: return createInheritStatement();
+      case AgreePackage.DO_NOT_INHERIT_STATEMENT: return createDoNotInheritStatement();
       case AgreePackage.VERIFY_RANDOM_STATEMENT: return createVerifyRandomStatement();
       case AgreePackage.VERIFY_SPECIFIC_STATEMENT: return createVerifySpecificStatement();
       case AgreePackage.MN_SYNCH_STATEMENT: return createMNSynchStatement();
@@ -479,6 +480,17 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
   {
     InheritStatementImpl inheritStatement = new InheritStatementImpl();
     return inheritStatement;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public DoNotInheritStatement createDoNotInheritStatement()
+  {
+    DoNotInheritStatementImpl doNotInheritStatement = new DoNotInheritStatementImpl();
+    return doNotInheritStatement;
   }
 
   /**

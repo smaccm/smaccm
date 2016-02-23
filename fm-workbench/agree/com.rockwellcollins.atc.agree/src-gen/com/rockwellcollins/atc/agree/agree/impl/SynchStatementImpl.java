@@ -17,12 +17,12 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.impl.SynchStatementImpl#getVal <em>Val</em>}</li>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.impl.SynchStatementImpl#getVal2 <em>Val2</em>}</li>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.impl.SynchStatementImpl#getSim <em>Sim</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

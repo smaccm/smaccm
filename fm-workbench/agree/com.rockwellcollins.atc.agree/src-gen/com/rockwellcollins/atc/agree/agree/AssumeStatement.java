@@ -10,11 +10,11 @@ package com.rockwellcollins.atc.agree.agree;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.AssumeStatement#getStr <em>Str</em>}</li>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.AssumeStatement#getExpr <em>Expr</em>}</li>
  * </ul>
- * </p>
  *
  * @see com.rockwellcollins.atc.agree.agree.AgreePackage#getAssumeStatement()
  * @model

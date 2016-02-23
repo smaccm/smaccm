@@ -10,12 +10,12 @@ package com.rockwellcollins.atc.agree.agree;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.SynchStatement#getVal <em>Val</em>}</li>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.SynchStatement#getVal2 <em>Val2</em>}</li>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.SynchStatement#getSim <em>Sim</em>}</li>
  * </ul>
- * </p>
  *
  * @see com.rockwellcollins.atc.agree.agree.AgreePackage#getSynchStatement()
  * @model
