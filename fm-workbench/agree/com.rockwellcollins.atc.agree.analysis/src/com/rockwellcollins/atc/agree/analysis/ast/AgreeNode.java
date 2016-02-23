@@ -28,6 +28,7 @@ public class AgreeNode {
     public final List<AgreeStatement> assumptions;
     public final List<AgreeStatement> guarantees;
     public final List<AgreeStatement> lemmas;
+    public final List<AgreeStatement> patternProps;
     public final List<AgreeEquation> localEquations;
     public final Expr clockConstraint;
     public final Expr initialConstraint;
@@ -40,13 +41,14 @@ public class AgreeNode {
 
     public AgreeNode(String id, List<AgreeVar> inputs, List<AgreeVar> outputs, List<AgreeVar> locals,
             List<AgreeEquation> localEquations, List<AgreeConnection> connections, List<AgreeNode> subNodes, List<AgreeStatement> assertions,
-            List<AgreeStatement> assumptions, List<AgreeStatement> guarantees, List<AgreeStatement> lemmas,
+            List<AgreeStatement> assumptions, List<AgreeStatement> guarantees, List<AgreeStatement> lemmas, List<AgreeStatement> patternProps,
             Expr clockConstraint, Expr initialConstraint, AgreeVar clockVar, EObject reference,
             TimingModel timing, Set<IdExpr> eventTimes, ComponentInstance compinst) {
         this.id = id;
         this.inputs = jkind.util.Util.safeList(inputs);
         this.outputs = jkind.util.Util.safeList(outputs);
         this.locals = jkind.util.Util.safeList(locals);
+        this.patternProps = jkind.util.Util.safeList(patternProps);
         this.localEquations = jkind.util.Util.safeList(localEquations);
         this.connections = jkind.util.Util.safeList(connections);
         this.subNodes = jkind.util.Util.safeList(subNodes);

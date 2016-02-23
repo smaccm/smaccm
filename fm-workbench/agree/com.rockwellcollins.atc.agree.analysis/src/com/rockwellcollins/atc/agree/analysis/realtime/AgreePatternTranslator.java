@@ -230,6 +230,7 @@ public class AgreePatternTranslator {
         if (isProperty) {
             return translatePatternProperty(pattern, builder, causeId, effectId);
         } else {
+            addPatternConstraintProperty(pattern, builder, causeId, effectId);
             return translatePatternConstraint(pattern, builder, causeId, effectId);
         }
 
@@ -296,13 +297,49 @@ public class AgreePatternTranslator {
         return new BinaryExpr(timerId, right, pattern.effectInterval.high);
         
     }
+    
+    private static void addPatternConstraintProperty(AgreeCauseEffectPattern pattern, AgreeNodeBuilder builder,
+            IdExpr causeId, IdExpr effectId) {
+        AgreeVar timeEffect = new AgreeVar("__OCURRED__"+TIME_PREFIX + effectId.id, NamedType.REAL, pattern);
+        AgreeVar timeCause = new AgreeVar("__OCURRED__"+TIME_PREFIX + causeId.id, NamedType.REAL, pattern);
+        builder.addLocal(timeEffect);
+        builder.addLocal(timeCause);
+        
+        IdExpr timeEffectId = new IdExpr(timeEffect.id);
+        IdExpr timeCauseId = new IdExpr(timeCause.id);
+        
+        {
+        Expr preTimeEffect = new UnaryExpr(UnaryOp.PRE, timeEffectId);
+        preTimeEffect = new BinaryExpr(NEG_ONE, BinaryOp.ARROW, preTimeEffect);
+        Expr timeEffectExpr = new IfThenElseExpr(effectId, timeExpr, preTimeEffect);
+        builder.addLocalEquation(new AgreeEquation(timeEffectId, timeEffectExpr, pattern));
+        }
+        {
+        Expr preTimeCause = new UnaryExpr(UnaryOp.PRE, timeCauseId);
+        preTimeCause = new BinaryExpr(NEG_ONE, BinaryOp.ARROW, preTimeCause);
+        Expr timeCauseExpr = new IfThenElseExpr(causeId, timeExpr, preTimeCause);
+            builder.addLocalEquation(new AgreeEquation(timeCauseId, timeCauseExpr, pattern));
+        }
+
+        Expr preTimeCause = new UnaryExpr(UnaryOp.PRE, timeCauseId);
+        Expr newCause = new BinaryExpr(preTimeCause, BinaryOp.NOTEQUAL, timeCauseId);
+        newCause = new BinaryExpr(newCause, BinaryOp.AND,
+                new BinaryExpr(preTimeCause, BinaryOp.GREATEREQUAL, new RealExpr(BigDecimal.ZERO)));
+        Expr preTimeCausePlusL = new BinaryExpr(preTimeCause, BinaryOp.PLUS, pattern.effectInterval.low);
+        BinaryOp left = getIntervalLeftOp(pattern.effectInterval);
+        Expr inInterval = new BinaryExpr(preTimeCausePlusL, left, timeEffectId);
+        Expr propExpr = new BinaryExpr(newCause, BinaryOp.IMPLIES, inInterval);
+        propExpr = new BinaryExpr(new BoolExpr(true), BinaryOp.ARROW, propExpr);
+        AgreeStatement statement = new AgreeStatement(" pattern "+patternIndex+" in bounds", propExpr, pattern);
+        builder.addPatternProp(statement);
+        
+    }
 
     private static Expr translatePatternConstraint(AgreeCauseEffectPattern pattern, AgreeNodeBuilder builder,
             IdExpr causeId, IdExpr effectId) {
-        EObject varReference = pattern.reference;
-        AgreeVar timeEffect = new AgreeVar(TIME_PREFIX + effectId.id, NamedType.REAL, varReference);
+        AgreeVar timeEffect = new AgreeVar(TIME_PREFIX + effectId.id, NamedType.REAL, pattern);
         AgreeVar effectTimeRangeVar =
-                new AgreeVar(EFFECT_TIME_RANGE_PREFIX + patternIndex, NamedType.REAL, varReference);
+                new AgreeVar(EFFECT_TIME_RANGE_PREFIX + patternIndex, NamedType.REAL, pattern);
         builder.addInput(timeEffect);
         builder.addInput(effectTimeRangeVar);
 
@@ -330,15 +367,10 @@ public class AgreePatternTranslator {
     // event that triggers when the condition is held for the interval
     private static IdExpr translateCauseCondtionPattern(AgreeCauseEffectPattern pattern, IdExpr causeId,
             AgreeNodeBuilder builder) {
-
-        EObject varReference = pattern.reference;
-        while(!(varReference instanceof ComponentClassifier)){
-            varReference = varReference.eContainer();
-        }
         
-        AgreeVar condEventVar = new AgreeVar(CAUSE_CONDITION_EVENT_PREFIX + causeId.id, NamedType.BOOL, varReference);
-        AgreeVar condEventStartVar = new AgreeVar(CAUSE_CONDITION_START_PREFIX + causeId.id, NamedType.REAL, varReference);
-        AgreeVar condEventEndVar = new AgreeVar(CAUSE_CONDITION_END_PREFIX + causeId.id, NamedType.REAL, varReference);
+        AgreeVar condEventVar = new AgreeVar(CAUSE_CONDITION_EVENT_PREFIX + causeId.id, NamedType.BOOL, pattern);
+        AgreeVar condEventStartVar = new AgreeVar(CAUSE_CONDITION_START_PREFIX + causeId.id, NamedType.REAL, pattern);
+        AgreeVar condEventEndVar = new AgreeVar(CAUSE_CONDITION_END_PREFIX + causeId.id, NamedType.REAL, pattern);
         
         builder.addLocal(condEventVar);
         builder.addLocal(condEventStartVar);

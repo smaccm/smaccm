@@ -197,6 +197,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
         List<AgreeStatement> guarantees = new ArrayList<>();
         List<AgreeStatement> lemmas = new ArrayList<>();
         List<AgreeEquation> localEquations = new ArrayList<>();
+        List<AgreeStatement> patternProps = Collections.emptyList();
         Expr clockConstraint = new BoolExpr(true);
         Expr initialConstraint = new BoolExpr(true);
         String id = compInst.getName();
@@ -288,7 +289,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
         assertReferencedSubcomponentHasAnnex(compInst, inputs, outputs, subNodes, assertions, lemmas);
 
         return new AgreeNode(id, inputs, outputs, locals, localEquations, connections, subNodes, assertions,
-                assumptions, guarantees, lemmas, clockConstraint, initialConstraint, clockVar, reference,
+                assumptions, guarantees, lemmas, patternProps, clockConstraint, initialConstraint, clockVar, reference,
                 timing, null, compInst);
     }
 

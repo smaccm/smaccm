@@ -49,9 +49,11 @@ import com.rockwellcollins.atc.agree.agree.FnCallExpr;
 import com.rockwellcollins.atc.agree.agree.GuaranteeStatement;
 import com.rockwellcollins.atc.agree.agree.LemmaStatement;
 import com.rockwellcollins.atc.agree.analysis.Util;
+import com.rockwellcollins.atc.agree.analysis.ast.AgreeStatement;
 import com.rockwellcollins.atc.agree.analysis.extentions.CexExtractor;
 import com.rockwellcollins.atc.agree.analysis.extentions.CexExtractorRegistry;
 import com.rockwellcollins.atc.agree.analysis.extentions.ExtensionRegistry;
+import com.rockwellcollins.atc.agree.analysis.realtime.AgreePattern;
 
 public class AgreeMenuListener implements IMenuListener {
     private static final GlobalURIEditorOpener globalURIEditorOpener = Util.getGlobalURIEditorOpener();
@@ -196,6 +198,13 @@ public class AgreeMenuListener implements IMenuListener {
             }
             if (property instanceof FnCallExpr) {
                 manager.add(createHyperlinkAction("Go To Node Call", property));
+            }
+            if(property instanceof AgreeStatement){
+                AgreeStatement statement = (AgreeStatement)property;
+                if(statement.reference instanceof AgreePattern){
+                    AgreePattern pattern = (AgreePattern)statement.reference;
+                    manager.add(createHyperlinkAction("Go To Pattern", pattern.reference));
+                }
             }
         }
     }

@@ -27,6 +27,8 @@ public class AgreeNodeBuilder {
     private List<AgreeStatement> assumptions = new ArrayList<>();
     private List<AgreeStatement> guarantees = new ArrayList<>();
     private List<AgreeStatement> lemmas = new ArrayList<>();
+    private List<AgreeEquation> localEquations = new ArrayList<>();
+    private List<AgreeStatement> patternProps = new ArrayList<>();
     private Expr clockConstraint;
     private Expr initialConstraint;
     private AgreeVar clockVar;
@@ -51,6 +53,8 @@ public class AgreeNodeBuilder {
         this.assumptions = new ArrayList<>(node.assumptions);
         this.guarantees = new ArrayList<>(node.guarantees);
         this.lemmas = new ArrayList<>(node.lemmas);
+        this.localEquations = new ArrayList<>(node.localEquations);
+        this.patternProps = new ArrayList<>(node.patternProps);
         this.clockConstraint = node.clockConstraint;
         this.initialConstraint = node.initialConstraint;
         this.clockVar = node.clockVar;
@@ -61,6 +65,18 @@ public class AgreeNodeBuilder {
     
     public void setId(String id){
         this.id = id;
+    }
+    
+    public String getId(){
+        return this.id;
+    }
+        
+    public void addPatternProp(AgreeStatement statement){
+        this.patternProps.add(statement);
+    }
+    
+    public void clearPatternProps(){
+        this.patternProps.clear();
     }
     
     public void addEventTime(IdExpr event){
@@ -177,7 +193,7 @@ public class AgreeNodeBuilder {
 
     public AgreeNode build() {
         return new AgreeNode(id, inputs, outputs, locals, equations, connections, subNodes, assertions,
-                assumptions, guarantees, lemmas, clockConstraint, initialConstraint, clockVar, reference,
+                assumptions, guarantees, lemmas, patternProps, clockConstraint, initialConstraint, clockVar, reference,
                 timing, eventTimes, compInst);
     }
 

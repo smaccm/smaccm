@@ -386,6 +386,8 @@ public abstract class VerifyHandler extends AadlHandler {
             return prefix + seperator + ((PropertyStatement) reference).getName();
         } else if (reference instanceof ComponentType || reference instanceof ComponentImplementation) {
             return "Result";
+        } else if(reference instanceof AgreeStatement){
+            return prefix + reference.toString();
         }
         throw new AgreeException("Unhandled reference type: '" + reference.getClass().getName() + "'");
     }
