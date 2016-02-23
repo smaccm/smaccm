@@ -76,17 +76,21 @@ public class AgreeRealtimeCalendarBuilder {
     public static Expr getTimeConstraint(Set<IdExpr> events){
         
         IdExpr timeId = AgreePatternTranslator.timeExpr;
-        Expr nodeCall = new RealExpr(BigDecimal.valueOf(-1.0));
+        Expr preTime = new UnaryExpr(UnaryOp.PRE, timeId);
+
+        Expr nodeCall = new BinaryExpr(timeId, BinaryOp.MINUS, preTime);
         for(IdExpr event : events){
-            nodeCall = new NodeCallExpr(MIN_POS_NODE_NAME, new BinaryExpr(event, BinaryOp.MINUS, timeId), nodeCall);
+            BinaryExpr timeChange = new BinaryExpr(event, BinaryOp.MINUS, timeId);
+            Expr preTimeChange = new UnaryExpr(UnaryOp.PRE, timeChange);
+            nodeCall = new NodeCallExpr(MIN_POS_NODE_NAME, preTimeChange, nodeCall);
         }
         
-        nodeCall = new BinaryExpr(timeId, BinaryOp.PLUS, nodeCall);
-        nodeCall = new UnaryExpr(UnaryOp.PRE, nodeCall);
+        nodeCall = new BinaryExpr(preTime, BinaryOp.PLUS, nodeCall);
         Expr timeExpr = new BinaryExpr(timeId, BinaryOp.EQUAL, nodeCall);
         timeExpr = new BinaryExpr(new BoolExpr(true), BinaryOp.ARROW, timeExpr);
+        Expr timeGrtPreTime = new BinaryExpr(timeId, BinaryOp.GREATER, preTime);
         Expr timeInitZero = new BinaryExpr(timeId, BinaryOp.EQUAL, new RealExpr(BigDecimal.ZERO));
-        timeInitZero = new BinaryExpr(timeInitZero, BinaryOp.ARROW, new BoolExpr(true));
+        timeInitZero = new BinaryExpr(timeInitZero, BinaryOp.ARROW, timeGrtPreTime);
         return new BinaryExpr(timeInitZero, BinaryOp.AND, timeExpr);
     }
     

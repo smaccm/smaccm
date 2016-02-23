@@ -288,6 +288,8 @@ public class LustreAstBuilder {
             }
             nodes.add(subConsistNode);
             nodes.add(getHistNode());
+            nodes.addAll(AgreeRealtimeCalendarBuilder.getRealTimeNodes());
+
             Program subConsistProg = new Program(types, null, nodes, subConsistNode.id);
 
             programs.add(Tuples.create(subNode.id + " consistent", subConsistProg));
@@ -303,9 +305,8 @@ public class LustreAstBuilder {
         }
         // nodes.addAll(agreeProgram.globalLustreNodes);
         nodes.add(topCompositionConsist);
-        //add the realtime constraint node
-        nodes.addAll(AgreeRealtimeCalendarBuilder.getRealTimeNodes());
         nodes.add(getHistNode());
+        nodes.addAll(AgreeRealtimeCalendarBuilder.getRealTimeNodes());
         
         Program topCompositConsistProg = new Program(types, null, nodes, topCompositionConsist.id);
 
