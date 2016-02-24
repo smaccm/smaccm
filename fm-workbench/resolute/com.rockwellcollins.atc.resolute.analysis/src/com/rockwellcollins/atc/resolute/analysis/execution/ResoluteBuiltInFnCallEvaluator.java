@@ -34,6 +34,7 @@ import org.osate.aadl2.instance.ComponentInstance;
 import org.osate.aadl2.instance.ConnectionInstance;
 import org.osate.aadl2.instance.ConnectionReference;
 import org.osate.aadl2.instance.EndToEndFlowInstance;
+import org.osate.aadl2.instance.FeatureCategory;
 import org.osate.aadl2.instance.FeatureInstance;
 import org.osate.aadl2.instance.FlowSpecificationInstance;
 import org.osate.aadl2.instance.InstanceReferenceValue;
@@ -298,6 +299,60 @@ public class ResoluteBuiltInFnCallEvaluator {
 			return sv;
 		}
 
+		case "is_in_array": {
+			boolean result = false;
+
+			if (args.get(0).getNamedElement() instanceof ComponentInstance)
+			{
+				ComponentInstance ci = (ComponentInstance) args.get(0).getNamedElement();
+
+				if ( (ci.getIndices() != null) && (ci.getIndices().size() > 0) && (ci.getIndices().get(0) > 0))
+				{
+					result = true;
+				}
+			}
+			if (args.get(0).getNamedElement() instanceof FeatureInstance)
+			{
+				FeatureInstance fi = (FeatureInstance) args.get(0).getNamedElement();
+				if (fi.getIndex() > 0)
+				{
+					result = true;
+				}
+			}
+			return new BoolValue(result);
+		}
+
+		case "has_prototypes": {
+			boolean result = false;
+
+			if (args.get(0).getNamedElement() instanceof ComponentInstance)
+			{
+				ComponentInstance ci = (ComponentInstance) args.get(0).getNamedElement();
+
+				if ( (ci.getComponentClassifier().getAllPrototypes() != null) &&
+						(ci.getComponentClassifier().getAllPrototypes().size() > 0))
+				{
+					result = true;
+				}
+
+			}
+			return new BoolValue(result);
+		}
+
+		case "has_modes": {
+			boolean result = false;
+
+			if (args.get(0).getNamedElement() instanceof ComponentInstance)
+			{
+				ComponentInstance ci = (ComponentInstance) args.get(0).getNamedElement();
+				if ((ci.getModeInstances() != null) && (ci.getModeInstances().size() > 0))
+				{
+					result = true;
+				}
+			}
+			return new BoolValue(result);
+		}
+
 			/*
 			 * Primary type: connection
 			 */
@@ -390,6 +445,20 @@ public class ResoluteBuiltInFnCallEvaluator {
 				}
 			}
 			return new BoolValue(false);
+		}
+
+		case "is_abstract_feature": {
+			boolean result = false;
+			NamedElement feat = args.get(0).getNamedElement();
+			if (feat instanceof FeatureInstance)
+			{
+				FeatureInstance fi = (FeatureInstance) feat;
+				if (fi.getCategory() == FeatureCategory.ABSTRACT_FEATURE)
+				{
+					result = true;
+				}
+			}
+			return new BoolValue(result);
 		}
 
 		case "is_port": {
@@ -627,12 +696,12 @@ public class ResoluteBuiltInFnCallEvaluator {
 
 			return FALSE;
 		}
-		
+
 		case "flow_source": {
 			FlowSpecificationInstance flowSpec = (FlowSpecificationInstance)args.get(0).getNamedElement();
 			return new NamedElementValue(flowSpec.getSource());
 		}
-		
+
 		case "flow_destination": {
 			FlowSpecificationInstance flowSpec = (FlowSpecificationInstance)args.get(0).getNamedElement();
 			return new NamedElementValue(flowSpec.getDestination());
@@ -642,17 +711,17 @@ public class ResoluteBuiltInFnCallEvaluator {
 			EndToEndFlowInstance etef = (EndToEndFlowInstance)args.get(0).getNamedElement();
 			return createSetValue(etef.getFlowElements());
 		}
-		
+
 		case "flow_specifications": {
 			ComponentInstance comp = (ComponentInstance)args.get(0).getNamedElement();
 			return createSetValue(comp.getFlowSpecifications());
 		}
-		
+
 		case "end_to_end_flows": {
 			ComponentInstance comp = (ComponentInstance)args.get(0).getNamedElement();
 			return createSetValue(comp.getEndToEndFlows());
 		}
-		
+
 		default:
 			throw new IllegalArgumentException("Unknown function: " + fnCallExpr.getFn());
 		}

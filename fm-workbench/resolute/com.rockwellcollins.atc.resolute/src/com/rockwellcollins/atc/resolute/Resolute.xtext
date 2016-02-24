@@ -193,6 +193,9 @@ BuiltInFn:
 |	'name'
 |	'type'
 |	'has_type'
+|	'is_in_array'
+|	'has_prototypes'
+|	'has_modes'
 
 |	'is_processor'
 |	'is_virtual_processor'
@@ -221,6 +224,7 @@ BuiltInFn:
 // Primary type: feature
 |	'direction'
 |	'is_event_port'
+|	'is_abstract_feature'
 |	'is_data_port'
 |	'is_port'
 |	'is_data_access'
