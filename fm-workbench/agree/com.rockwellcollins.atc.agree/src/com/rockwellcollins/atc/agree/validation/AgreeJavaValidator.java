@@ -101,6 +101,7 @@ import com.rockwellcollins.atc.agree.agree.SynchStatement;
 import com.rockwellcollins.atc.agree.agree.ThisExpr;
 import com.rockwellcollins.atc.agree.agree.Type;
 import com.rockwellcollins.atc.agree.agree.UnaryExpr;
+import com.rockwellcollins.atc.agree.visitors.ExprCycleVisitor;
 
 /** 
  * Custom validation rules.
@@ -955,6 +956,17 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 		if (rhsExpr == null) {
 			return;
 		}
+		
+		if(lhsArgs.size() == 1){
+		    //we should only need to check for cycles for single equations
+		    String name = lhsArgs.get(0).getName();
+            ExprCycleVisitor cycleVisitor = new ExprCycleVisitor(name);
+		    Set<EObject> cycleObjects = cycleVisitor.doSwitch(rhsExpr);
+		    for(EObject obj : cycleObjects){
+		        error(obj, "Cyclic reference to variable '"+name+"'");
+		    }
+		}
+		
 		if (argsContainRangeValue(lhsArgs)) {
 			error(src, "Equation statements cannot contain a ranged value and a right hand side expression");
 		}

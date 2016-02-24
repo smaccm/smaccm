@@ -1,0 +1,82 @@
+package MissionSubprograms
+public
+	with Base_Types;
+	with DATA_TYPES;
+	with SMACCM_DATA;
+	
+subprogram get_uart_packet
+	features
+		result: out parameter Data_Types::ivory_string_UartPacket;
+end get_uart_packet;
+
+subprogram send_uart_packet
+	features
+		input: in parameter Data_Types::ivory_string_UartPacket;
+end send_uart_packet;
+	
+subprogram server_input
+	features
+		input: in parameter SMACCM_DATA::ServerInputData.i;
+end server_input;
+
+subprogram server_output
+	features
+		input: in parameter Base_Types::Boolean;
+end server_output;
+
+subprogram get_pixhawk_data
+	features
+--		result : out parameter SMACCM_DATA::PixHawkData.i;
+		result : out parameter Base_Types::Boolean;
+
+end get_pixhawk_data;
+
+subprogram get_camera_data
+	features
+		result : out parameter SMACCM_DATA::CameraData.i;
+end get_camera_data;
+
+subprogram send_can_packet
+	features
+		input : in parameter Data_Types::can_message;
+end send_can_packet;
+
+subprogram receive_can_data
+	features
+		result : out parameter SMACCM_DATA::CanSenderData.i;
+end receive_can_data;
+	
+subprogram group UART_group
+	features
+		tx : provides subprogram access MissionSubprograms::send_uart_packet;
+		rx : provides subprogram access MissionSubprograms::get_uart_packet;
+end UART_group;
+
+subprogram group Server_Inputs
+	features
+		input : provides subprogram access MissionSubprograms::server_input;
+end Server_Inputs;
+
+subprogram group Server_Outputs
+	features
+		output : provides subprogram access MissionSubprograms::server_output;
+end Server_outputs;
+
+subprogram group Pixhawk_group
+	features
+		--pixhawk_commands : provides subprogram access;
+		pixhawk_data : provides subprogram access MissionSubprograms::get_pixhawk_data;
+end Pixhawk_group;
+	
+subprogram group Camera_group
+	features
+		camera_data : provides subprogram access get_camera_data;
+end Camera_group;
+
+subprogram group CAN_group
+	features
+		rx : provides subprogram access MissionSubprograms::receive_can_data;
+		tx : provides subprogram access MissionSubprograms::send_can_packet;
+end CAN_group;
+
+end MissionSubprograms;

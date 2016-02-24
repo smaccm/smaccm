@@ -1,0 +1,35 @@
+-- File generated from Tower-AADL compiler
+
+package commsecDecodeState
+public
+  with Base_Types;
+  with Data_Model;
+  with Data_Types;
+  with SMACCM_SYS;
+
+thread commsecDecodeState
+  features
+    Input_gec_decode_init: in event data port Data_Types::array_24_Unsigned_8.impl
+      {
+        SMACCM_SYS::Compute_Entrypoint_Source_Text => ("callback_gec_decode_init");
+        Source_Text => ("user_code/commsecDecodeState_monitor.c");
+        SMACCM_SYS::Sends_Events_To => "{{}}";
+      };
+    Input_cyphertext_decode: in event data port Data_Types::array_96_Unsigned_8.impl
+      {
+        SMACCM_SYS::Compute_Entrypoint_Source_Text => ("callback_cyphertext_decode");
+        Source_Text => ("user_code/commsecDecodeState_monitor.c");
+        SMACCM_SYS::Sends_Events_To => "{{1 Output_cyphertext_decode_0}}";
+      };
+    Output_cyphertext_decode_0: out event data port Data_Types::array_80_Unsigned_8.impl
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_cyphertext_decode_chan_11";
+      };
+  properties
+    SMACCM_SYS::Thread_Type => Passive;
+    Dispatch_Protocol => Aperiodic;
+    Compute_Execution_Time => 10 us .. 100 us;
+    Source_Text => ();
+end commsecDecodeState;
+
+end commsecDecodeState;

@@ -12,6 +12,11 @@
  *   dispatcherMainLockWaitStmt
  *   dispatcherMainLockReleaseStmt
  *   osSpecificIncludeFiles
+ *   osSpecificIrqDispatcher
+ *   osSpecificRegisterIrqs
+ *   osSpecificThreadEntrypoint
+ *   osSpecificComponentLocalCallerFunction
+ *   osSpecificAssert
  * This file just 'fails' for each of these calls.
 >>
  
@@ -103,4 +108,14 @@ osSpecificIncludeFiles(threadImpl) ::= <<
 osSpecificThreadEntrypoint(threadImpl) ::= <<
 <genericFailure("osSpecificThreadEntrypoint")>
 <threadImpl.osSpecificThreadEntrypoint>
+>>
+
+osSpecificComponentLocalCallerFunction(connection) ::= <<
+<genericFailure("componentLocalCallerFunction")>
+<connection.componentLocalCallerFunction>
+>>
+
+osSpecificAssert(predicate) ::= <<
+<genericFailure("osSpecificAssert")>
+<connection.osSpecificAssert>
 >>

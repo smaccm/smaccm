@@ -1,0 +1,29 @@
+-- File generated from Tower-AADL compiler
+
+package send_transdata
+public
+  with Base_Types;
+  with Data_Model;
+  with Data_Types;
+  with SMACCM_SYS;
+
+thread send_transdata
+  features
+    Input_send_translate: in event data port Data_Types::ivory_string_HXCyphertext
+      {
+        SMACCM_SYS::Compute_Entrypoint_Source_Text => ("callback_send_translate");
+        Source_Text => ("user_code/send_transdata_monitor.c");
+        SMACCM_SYS::Sends_Events_To => "{{1 Output_send_translate_0}}";
+      };
+    Output_send_translate_0: out event data port Data_Types::ivory_string_UartPacket
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_send_translate_chan_124";
+      };
+  properties
+    SMACCM_SYS::Thread_Type => Passive;
+    Dispatch_Protocol => Aperiodic;
+    Compute_Execution_Time => 10 us .. 100 us;
+    Source_Text => ();
+end send_transdata;
+
+end send_transdata;

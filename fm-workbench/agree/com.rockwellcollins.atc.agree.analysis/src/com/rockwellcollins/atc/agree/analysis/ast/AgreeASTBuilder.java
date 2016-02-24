@@ -69,6 +69,7 @@ import jkind.lustre.Type;
 import jkind.lustre.UnaryExpr;
 import jkind.lustre.UnaryOp;
 import jkind.lustre.VarDecl;
+import jkind.lustre.builders.NodeBuilder;
 
 import com.rockwellcollins.atc.agree.agree.AgreeContract;
 import com.rockwellcollins.atc.agree.agree.AgreeContractSubclause;
@@ -445,15 +446,17 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
                 outputs.add(var);
                 break;
             default:
-                break;
+                throw new AgreeException("Unable to reason about bi-directional event port: "+name);
             }
         }
 
+        if(dataClass == null){
+            //we do not reason about this type
+            return;
+        }
         Type type = getNamedType(AgreeRecordUtils.getRecordTypeName(dataClass, typeMap, typeExpressions));
         if (type == null) {
-            // we don't reason about this type, keep in mind we still reason
-            // about the event port
-            // even if the type is not defined
+            //we do not reason about this type
             return;
         }
 
@@ -543,7 +546,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
                 dataClass = eventDataPort.getDataFeatureClassifier();
             }
 
-            if (getNamedType(AgreeRecordUtils.getRecordTypeName(dataClass, typeMap, globalTypes)) == null) {
+            if (dataClass == null || getNamedType(AgreeRecordUtils.getRecordTypeName(dataClass, typeMap, globalTypes)) == null) {
                 // we don't reason about this type
                 continue;
             }
@@ -1092,7 +1095,13 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
         List<VarDecl> outputs = Collections.singletonList(outVar);
         Equation eq = new Equation(new IdExpr("_outvar"), bodyExpr);
         List<Equation> eqs = Collections.singletonList(eq);
-        Node node = new Node(nodeName, inputs, outputs, Collections.<VarDecl> emptyList(), eqs);
+        
+        NodeBuilder builder = new NodeBuilder(nodeName);
+        builder.addInputs(inputs);
+        builder.addOutputs(outputs);
+        builder.addEquations(eqs);
+        
+        Node node = builder.build();
         addToNodeList(node);
         return null;
     }
@@ -1136,7 +1145,14 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 
         // nodeLemmaNames.put(nodeName, lemmaNames);
 
-        addToNodeList(new Node(nodeName, inputs, outputs, internals, eqs, props));
+        NodeBuilder builder = new NodeBuilder(nodeName);
+        builder.addInputs(inputs);
+        builder.addOutputs(outputs);
+        builder.addLocals(internals);
+        builder.addEquations(eqs);
+        builder.addProperties(props);
+        
+        addToNodeList(builder.build());
         return null;
     }
 

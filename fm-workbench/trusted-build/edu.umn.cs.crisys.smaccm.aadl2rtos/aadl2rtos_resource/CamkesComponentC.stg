@@ -52,3 +52,19 @@ void <incomingActiveThreadDispatchName(dispatcher)>() {
 
 osSpecificRegisterIrqs(dispatcher) ::= << <if(dispatcher.isIRQ)><dispatcher.name>_reg_callback(<incomingActiveThreadDispatchName(dispatcher)>, NULL);
 <endif> >>
+
+osSpecificComponentLocalCallerFunction(connection) ::= <<
+/************************************************************************
+ * <outgoingPortWriterName(connection.destPort,connection.sourcePort)>: 
+ * Invoked from user code in the local thread.
+ * 
+ * This function is necessary to mimic a remote call by a passive
+ * thread to a remote active thread, but redirects to the local 
+ * active thread.
+ * 
+ ************************************************************************/
+
+bool <outgoingPortWriterName(connection.destPort,connection.sourcePort)>(const <connection.sourcePort.type.aadlInputType.name> <connection.sourcePort.name>) {
+	return <incomingPortWriterName(connection.destPort)>(<connection.sourcePort.name>);
+}
+>>

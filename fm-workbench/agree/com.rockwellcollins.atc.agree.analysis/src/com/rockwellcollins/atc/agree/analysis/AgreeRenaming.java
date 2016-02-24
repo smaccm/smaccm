@@ -40,7 +40,7 @@ public class AgreeRenaming extends Renaming {
         newName = newName.replace("~condact", "");
         newName = newName.replaceAll("~[0-9]*", "");
         //the following is special for kind 2 contracts
-        newName = newName.replaceAll("__global.ensure\\[.*?\\]", "");
+        newName = newName.replaceAll("guarantee\\[.*?\\]", "");
         newName = newName.replace("__", ".");
 
         return newName;
@@ -50,7 +50,7 @@ public class AgreeRenaming extends Renaming {
     @Override
     public Property rename(Property property) {
         //another hack for kind2
-       if(property.getName().matches("__global.ensure\\[.*?\\]")){
+       if(property.getName().matches("guarantee\\[.*?\\]")){
            return renameKind2Prop(property);
            //return property;
        }

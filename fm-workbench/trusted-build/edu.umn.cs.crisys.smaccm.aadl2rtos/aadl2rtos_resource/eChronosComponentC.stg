@@ -12,7 +12,7 @@ incomingPortWriterName(port) ::= "smaccm_<port.qualifiedName>_<port.type.writerF
 
 outgoingPortWriterName(destPort, srcPort) ::= "<incomingPortWriterName(destPort)>"
 
-incomingActiveThreadDispatchName(dispatcher) ::= "<dispatcher.qualifiedName>"
+incomingActiveThreadDispatchName(dispatcher) ::= "<incomingPortWriterName(dispatcher)>"
 outgoingActiveThreadDispatchName(dispatcher) ::= "<incomingActiveThreadDispatchName(dispatcher)>"
 
 incomingUserEntrypointCallerName(dispatcher) ::= "smaccm_entrypoint_<dispatcher.qualifiedName>"
@@ -50,6 +50,8 @@ dispatcherMainLockReleaseStmt(dispatcher) ::= <<
 
 osSpecificIncludeFiles(threadImpl) ::= <<
 #include <\u003C>smaccm_decls.h<\u003E>
+#include <\u003C>string.h<\u003E>
+
 >>
 
 osSpecificIrqDispatcher(dispatcher) ::= << 
@@ -62,3 +64,6 @@ bool <incomingActiveThreadDispatchName(dispatcher)>() {
 >>
 
 osSpecificRegisterIrqs(dispatcher) ::= ""
+
+osSpecificComponentLocalCallerFunction(connection) ::= ""
+

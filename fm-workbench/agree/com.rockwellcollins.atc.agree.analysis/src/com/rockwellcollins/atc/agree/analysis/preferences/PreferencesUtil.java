@@ -16,7 +16,11 @@ public class PreferencesUtil {
         IPreferenceStore prefs = getPreferenceStore();
         String modelChecker = prefs.getString(PreferenceConstants.PREF_MODEL_CHECKER);
         String remoteUrl = prefs.getString(PreferenceConstants.PREF_REMOTE_URL);
-        return getKindApi(modelChecker, remoteUrl);
+        KindApi api = getKindApi(modelChecker, remoteUrl);
+        if (prefs.getBoolean(PreferenceConstants.PREF_DEBUG)) {
+        	api.setApiDebug();
+        }
+        return api;
     }
 
     private static IPreferenceStore getPreferenceStore() {

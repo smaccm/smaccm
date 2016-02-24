@@ -1,0 +1,159 @@
+package SMACCM_DATA
+public
+	with Data_Types;
+	with Base_Types;
+	
+	data CameraData
+	end CameraData;
+	
+	data implementation CameraData.i
+		subcomponents
+			left : data Base_Types::Integer_32;
+			right : data Base_Types::Integer_32;
+			top : data Base_Types::Integer_32;
+			bottom : data Base_Types::Integer_32;
+	end CameraData.i;
+	
+	data ServerInputData
+	end ServerInputData;
+	
+	data implementation ServerInputData.i
+		subcomponents
+			frame_0: data Data_Types::sequence_numbered_reboot;
+    		frame_1: data Data_Types::sequence_numbered_pid_config;
+    		frame_2: data Base_Types::Unsigned_32;
+    		frame_3: data Data_Types::sequence_numbered_pid_config;
+    		frame_4: data Base_Types::Unsigned_32;
+    		frame_5: data Data_Types::sequence_numbered_throttle_ui;
+		    frame_6: data Base_Types::Unsigned_32;
+		    frame_7: data Data_Types::sequence_numbered_stab_config;
+		    frame_8: data Base_Types::Unsigned_32;
+		    frame_9: data Data_Types::sequence_numbered_stab_config;
+		    frame_10: data Base_Types::Unsigned_32;
+		    frame_11: data Data_Types::sequence_numbered_pid_config;
+		    frame_12: data Base_Types::Unsigned_32;
+		    frame_13: data Data_Types::sequence_numbered_pid_config;
+		    frame_14: data Base_Types::Unsigned_32;
+		    frame_15: data Data_Types::sequence_numbered_tristate;
+		    frame_16: data Base_Types::Unsigned_32;
+		    frame_17: data Data_Types::sequence_numbered_control_modes;
+		    frame_18: data Base_Types::Unsigned_32;
+		    frame_19: data Data_Types::sequence_numbered_user_input;
+		    frame_20: data Base_Types::Unsigned_32;
+		    frame_21: data Data_Types::sequence_numbered_rgb_led_setting;
+		    frame_22: data Base_Types::Unsigned_32;
+		    frame_23: data Base_Types::Unsigned_32;
+		    frame_24: data Base_Types::Unsigned_32;
+		    frame_25: data Base_Types::Unsigned_32;
+		    frame_26: data Base_Types::Unsigned_32;
+		    frame_27: data Base_Types::Unsigned_32;
+		    frame_28: data Base_Types::Unsigned_32;
+		    frame_29: data Base_Types::Unsigned_32;
+		    frame_30: data Base_Types::Unsigned_32;
+		    frame_31: data Base_Types::Unsigned_32;
+		    frame_32: data Base_Types::Unsigned_32;
+		    frame_33: data Base_Types::Unsigned_32;
+		    frame_34: data Base_Types::Unsigned_32;
+		    frame_35: data Base_Types::Unsigned_32;
+		    frame_36: data Base_Types::Unsigned_32;
+		    frame_37: data Base_Types::Unsigned_32;
+		    frame_38: data Base_Types::Unsigned_32;
+		    frame_39: data Base_Types::Unsigned_32;
+		    frame_40: data Base_Types::Unsigned_32;
+		    frame_41: data Base_Types::Unsigned_32;
+		    frame_42: data Base_Types::Unsigned_32;
+		    frame_43: data Base_Types::Unsigned_32;
+		    frame_44: data Base_Types::Unsigned_32;
+		    frame_45: data Base_Types::Unsigned_32;
+		    frame_46: data Base_Types::Unsigned_32;
+		    frame_47: data Base_Types::Unsigned_32;
+		    frame_48: data Base_Types::Unsigned_32;
+		    frame_49: data Base_Types::Unsigned_32;
+		    frame_50: data Base_Types::Unsigned_32;
+    end ServerInputData.i;
+    
+    data PixHawkData
+    end PixHawkData;
+    
+    data implementation PixHawkData.i
+    	subcomponents
+		    Output_parse_frame_0: data Base_Types::Unsigned_32;
+		    Output_parse_frame_1: data Base_Types::Unsigned_32;
+		    Output_parse_frame_2: data Data_Types::sequence_numbered_pid_config;
+		    Output_parse_frame_3: data Base_Types::Unsigned_32;
+		    Output_parse_frame_4: data Data_Types::sequence_numbered_pid_config;
+		    Output_parse_frame_5: data Base_Types::Unsigned_32;
+		    Output_parse_frame_6: data Data_Types::sequence_numbered_throttle_ui;
+		    Output_parse_frame_7: data Base_Types::Unsigned_32;
+		    Output_parse_frame_8: data Data_Types::sequence_numbered_stab_config;
+		    Output_parse_frame_9: data Base_Types::Unsigned_32;
+		    Output_parse_frame_10: data Data_Types::sequence_numbered_stab_config;
+		    Output_parse_frame_11: data Base_Types::Unsigned_32;
+		    Output_parse_frame_12: data Data_Types::sequence_numbered_pid_config;
+		    Output_parse_frame_13: data Base_Types::Unsigned_32;
+		    Output_parse_frame_14: data Data_Types::sequence_numbered_pid_config;
+		    Output_parse_frame_15: data Base_Types::Unsigned_32;
+		    Output_parse_frame_16: data Data_Types::sequence_numbered_tristate;
+		    Output_parse_frame_17: data Base_Types::Unsigned_32;
+		    Output_parse_frame_18: data Data_Types::sequence_numbered_control_modes;
+		    Output_parse_frame_19: data Base_Types::Unsigned_32;
+		    Output_parse_frame_20: data Data_Types::sequence_numbered_user_input;
+		    Output_parse_frame_21: data Base_Types::Unsigned_32;
+		    Output_parse_frame_22: data Data_Types::sequence_numbered_rgb_led_setting;
+		    Output_parse_frame_23: data Data_Types::sequence_numbered_camera_target;
+		    Output_parse_frame_24: data Data_Types::heartbeat;
+		    Output_parse_frame_25: data Data_Types::sequence_numbered_packed_status;
+		    Output_parse_frame_26: data Data_Types::sequence_numbered_control_law;
+		    Output_parse_frame_27: data Data_Types::sequence_numbered_rc_input;
+		    Output_parse_frame_28: data Data_Types::sequence_numbered_user_input_result;
+		    Output_parse_frame_29: data Data_Types::sequence_numbered_sensors_result;
+		    Output_parse_frame_30: data Data_Types::sequence_numbered_gyroscope_sample;
+		    Output_parse_frame_31: data Data_Types::sequence_numbered_xyz_calibration;
+		    Output_parse_frame_32: data Data_Types::sequence_numbered_xyz_calibration;
+		    Output_parse_frame_33: data Data_Types::sequence_numbered_gyroscope_sample;
+		    Output_parse_frame_34: data Data_Types::sequence_numbered_accelerometer_sample;
+		    Output_parse_frame_35: data Data_Types::sequence_numbered_xyz_calibration;
+		    Output_parse_frame_36: data Data_Types::sequence_numbered_xyz_calibration;
+		    Output_parse_frame_37: data Data_Types::sequence_numbered_accelerometer_sample;
+		    Output_parse_frame_38: data Data_Types::sequence_numbered_barometer_sample;
+		    Output_parse_frame_39: data Data_Types::sequence_numbered_magnetometer_sample;
+		    Output_parse_frame_40: data Data_Types::sequence_numbered_xyz_calibration;
+		    Output_parse_frame_41: data Data_Types::sequence_numbered_xyz_calibration;
+		    Output_parse_frame_42: data Data_Types::sequence_numbered_magnetometer_sample;
+		    Output_parse_frame_43: data Data_Types::sequence_numbered_position_sample;
+		    Output_parse_frame_44: data Data_Types::sequence_numbered_control_setpoint;
+		    Output_parse_frame_45: data Data_Types::sequence_numbered_control_output;
+		    Output_parse_frame_46: data Data_Types::sequence_numbered_quadcopter_motors;
+		    Output_parse_frame_47: data Data_Types::sequence_numbered_att_control_debug;
+		    Output_parse_frame_48: data Data_Types::sequence_numbered_alt_control_debug;
+		    Output_parse_frame_49: data Data_Types::sequence_numbered_px4io_state;
+		    Output_parse_frame_50: data Data_Types::sequence_numbered_arming_status;
+		    Output_parse_frame_51: data Data_Types::sequence_numbered_float;
+    end PixHawkData.i;
+    
+    data ServerOutputData
+    end ServerOutputData;
+    
+    data implementation ServerOutputData.i
+    	subcomponents
+    		camera_data: data Data_Types::array_80_Unsigned_8.impl;
+    		pixhawk_data: data PixHawkData.i;
+    end ServerOutputData.i;
+    
+    data CanSenderData
+    end CanSenderData;
+    
+    data implementation CanSenderData.i
+    	subcomponents
+    		Input_fragment_req: data Data_Types::array_80_Unsigned_8.impl;
+    		Input_fragment_complete: data Base_Types::Boolean;
+   			Input_fragment_abort: data Base_Types::Boolean;
+		    Output_fragment_req: data Data_Types::can_message;
+		    Output_fragment_complete_data: data Data_Types::can_message;
+		    Output_fragment_complete_bool: data Base_Types::Boolean;
+		    Output_fragment_abort: data Base_Types::Boolean;
+    end CanSenderData.i;
+    
+    
+    
+end SMACCM_DATA;
