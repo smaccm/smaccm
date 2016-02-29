@@ -47,15 +47,21 @@ void clock_set_interval_in_ms(uint32_t interval) {
     uint32_t one_ms_val = ten_ms_val / 10;            // number of cycles per 1ms
    */
    
-   /* instead compute ticks from CPU rate */
-   /* constant 8000 due to sleuthing by Jason Dagit: It looks like the calculation is 
-     basically the clock's hertz divided by 1000 to get it into the tens of ms magnitude, 
-     plus a factor for the clock divider. In our case, it looks like we're using clock/8, 
-     so effectively we need to take the clock speed in hertz and divide by 8000. */
+   /* ...instead compute ticks from CPU rate */
+   /* Explanation from JD: To get a 1ms timer we should be taking the clock frequency and 
+      dividing by 1000. The way to think of this is that every clock pulse the value 
+      is decremented by one and when it reaches zero the systick interrupt happens. 
+      So in 1 second, it will decrement the_CPU_rate times (168000000 times). So if 
+      we want a systick 1000 times a second (1 ms rate) then we should divide by the 
+      clock rate by 1000 (168000000 / 1000 = 168000).
+
+	  So, instead of dividing by 1000 when computing ten_ms_val, you should be 
+	  dividing by 100.
+     */
    
    // MWW: assertions are unsupported on eChronos.
    // assert(the_CPU_rate > 0); 
-   uint32_t ten_ms_val = the_CPU_rate / 8000; 
+   uint32_t ten_ms_val = the_CPU_rate / 100; 
    uint32_t one_ms_val = ten_ms_val / 10;
  
 
@@ -65,8 +71,11 @@ void clock_set_interval_in_ms(uint32_t interval) {
    uint32_t desired_rate = (mult_of_ten_ms * ten_ms_val) + (remainder_of_ten_ms * one_ms_val) ;
    SYST_RVR_WRITE(desired_rate);
    SYST_CVR_WRITE(0);
-   SYST_CSR_WRITE((1 << 1) | 1);
-};
+   
+   /* Bits 1,2 must be set.  We set bit 3 to get rid of an additional factor of 8 in 
+      the calculation to simplify the write to RVR */
+   SYST_CSR_WRITE((1 << 2) | (1 << 1) | 1); /* Sets bits 0, 1, and 2 */
+ };
 
 void clock_set_interval_in_us(uint32_t interval) {
    clock_set_interval_in_ms(interval/1000); 
