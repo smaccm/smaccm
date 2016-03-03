@@ -10,7 +10,6 @@ import org.osate.aadl2.Classifier;
 import org.osate.aadl2.ComponentClassifier;
 import org.osate.aadl2.ComponentImplementation;
 import org.osate.aadl2.ComponentType;
-import org.osate.aadl2.DataAccess;
 import org.osate.aadl2.DataPort;
 import org.osate.aadl2.EnumerationLiteral;
 import org.osate.aadl2.EventPort;
@@ -20,6 +19,7 @@ import org.osate.aadl2.ListValue;
 import org.osate.aadl2.NamedElement;
 import org.osate.aadl2.NamedValue;
 import org.osate.aadl2.Property;
+import org.osate.aadl2.PropertyConstant;
 import org.osate.aadl2.PropertyExpression;
 import org.osate.aadl2.RealLiteral;
 import org.osate.aadl2.StringLiteral;
@@ -81,8 +81,8 @@ public class ResoluteBuiltInFnCallEvaluator {
 					return args.get(2);
 
 				}
-				throw new ResoluteFailException("Property " + prop.getName() + " not defined on "
-						+ element.getName(), fnCallExpr);
+				throw new ResoluteFailException("Property " + prop.getName() + " not defined on " + element.getName(),
+						fnCallExpr);
 			}
 
 			return exprToValue(expr);
@@ -122,24 +122,24 @@ public class ResoluteBuiltInFnCallEvaluator {
 			NamedElement type = builtinType(element);
 			return bool(type != null);
 		}
-		
+
 		case "is_bound_to": {
 			NamedElement component = args.get(0).getNamedElement();
 			NamedElement resource = args.get(1).getNamedElement();
 			if ((component instanceof ComponentInstance) && (resource instanceof ComponentInstance)) {
 				ComponentInstance componentInstance = (ComponentInstance) component;
 				ComponentInstance resourceInstance = (ComponentInstance) resource;
-				
+
 				/**
 				 * Check the processor binding
 				 */
-				
+
 				for (ComponentInstance binding : GetProperties.getActualProcessorBinding(componentInstance)) {
 					if (binding == resourceInstance) {
 						return bool(true);
 					}
 				}
-				
+
 				/**
 				 * Check the memory binding
 				 */
@@ -148,12 +148,12 @@ public class ResoluteBuiltInFnCallEvaluator {
 						return bool(true);
 					}
 				}
-				
+
 			}
 			return bool(false);
-				
+
 		}
-		
+
 		case "is_of_type": {
 			NamedElement element = args.get(0).getNamedElement();
 			NamedElement type = args.get(1).getNamedElement();
@@ -162,11 +162,11 @@ public class ResoluteBuiltInFnCallEvaluator {
 				ComponentType ct;
 				Classifier cl;
 				ci = (ComponentInstance) element;
-				
+
 				if ((ci == null) || (ci.getSubcomponent() == null)) {
-					return bool (false);
+					return bool(false);
 				}
-				
+
 				ct = ci.getSubcomponent().getComponentType();
 //				cl = (Classifier) type;
 //				return bool ((ct == cl ) || (ct.isDescendentOf(cl)));
@@ -177,28 +177,28 @@ public class ResoluteBuiltInFnCallEvaluator {
 					}
 					ct = ct.getExtended();
 				}
-				 
+
 			}
-				return bool (false);
-	
+			return bool(false);
+
 //			}
 //			
 //			return bool(false);
 		}
-		
+
 		case "has_member": {
 			boolean hasMember;
-			String       memberName;
+			String memberName;
 			NamedElement element;
-			
-			hasMember 	= false; 
-			element 	= args.get(0).getNamedElement();
-			memberName 	= args.get(1).getString();
-			
+
+			hasMember = false;
+			element = args.get(0).getNamedElement();
+			memberName = args.get(1).getString();
+
 			if (element instanceof ComponentInstance) {
 				element = ((ComponentInstance) element).getComponentClassifier();
 			}
-			
+
 			if (element instanceof ComponentClassifier) {
 				ComponentClassifier cc = (ComponentClassifier) element;
 				for (Feature f : cc.getAllFeatures()) {
@@ -207,7 +207,7 @@ public class ResoluteBuiltInFnCallEvaluator {
 					}
 				}
 			}
-			
+
 			if (element instanceof ComponentImplementation) {
 				ComponentImplementation ci = (ComponentImplementation) element;
 				for (Subcomponent s : ci.getAllSubcomponents()) {
@@ -216,7 +216,7 @@ public class ResoluteBuiltInFnCallEvaluator {
 					}
 				}
 			}
-			
+
 			return bool(hasMember);
 		}
 
@@ -256,18 +256,18 @@ public class ResoluteBuiltInFnCallEvaluator {
 			}
 		}
 
-		/*
-		 * Primary type: component
-		 */
+			/*
+			 * Primary type: component
+			 */
 		case "subcomponents": {
 			ComponentInstance ci = (ComponentInstance) args.get(0).getNamedElement();
 			SetValue sv = createSetValue(ci.getComponentInstances());
 			return sv;
 		}
 
-		/*
-		 * Primary type: connection
-		 */
+			/*
+			 * Primary type: connection
+			 */
 		case "source": {
 			ConnectionInstance conn = (ConnectionInstance) args.get(0).getNamedElement();
 			return new NamedElementValue(conn.getSource());
@@ -278,9 +278,9 @@ public class ResoluteBuiltInFnCallEvaluator {
 			return new NamedElementValue(conn.getDestination());
 		}
 
-		/*
-		 * Primary type: feature
-		 */
+			/*
+			 * Primary type: feature
+			 */
 		case "direction": {
 			FeatureInstance feat = (FeatureInstance) args.get(0).getNamedElement();
 			return new StringValue(feat.getDirection().toString());
@@ -291,9 +291,9 @@ public class ResoluteBuiltInFnCallEvaluator {
 			return new BoolValue(feat instanceof EventPort);
 		}
 
-		/*
-		 * Primary type: range
-		 */
+			/*
+			 * Primary type: range
+			 */
 		case "lower_bound": {
 			RangeValue rv = (RangeValue) args.get(0);
 			return rv.getMin();
@@ -304,9 +304,9 @@ public class ResoluteBuiltInFnCallEvaluator {
 			return rv.getMax();
 		}
 
-		/*
-		 * Primary type: set
-		 */
+			/*
+			 * Primary type: set
+			 */
 		case "member": {
 			return bool(args.get(1).getSet().contains(args.get(0)));
 		}
@@ -317,7 +317,7 @@ public class ResoluteBuiltInFnCallEvaluator {
 			int setsize = set.size();
 			return new IntValue(setsize);
 		}
-		
+
 		case "sum": {
 			List<ResoluteValue> set = args.get(0).getSet();
 			if (set.isEmpty()) {
@@ -359,9 +359,9 @@ public class ResoluteBuiltInFnCallEvaluator {
 			return new SetValue(set);
 		}
 
-		/*
-		 * Other
-		 */
+			/*
+			 * Other
+			 */
 		case "analysis": {
 			String analysisName = args.get(0).getString();
 			List<ResoluteValue> analysisArgs = args.subList(1, args.size());
@@ -407,9 +407,9 @@ public class ResoluteBuiltInFnCallEvaluator {
 			return new SetValue(result);
 		}
 
-		/*
-		 * Error Annex
-		 */
+			/*
+			 * Error Annex
+			 */
 		case "error_state_reachable": {
 			ComponentInstance comp = (ComponentInstance) args.get(0).getNamedElement();
 			String stateName = args.get(1).getString();
@@ -478,8 +478,15 @@ public class ResoluteBuiltInFnCallEvaluator {
 		} else if (expr instanceof NamedValue) {
 			NamedValue namedVal = (NamedValue) expr;
 			AbstractNamedValue absVal = namedVal.getNamedValue();
-			EnumerationLiteral enVal = (EnumerationLiteral) absVal;
-			return new StringValue(enVal.getName());
+			if (absVal instanceof EnumerationLiteral) {
+				EnumerationLiteral enVal = (EnumerationLiteral) absVal;
+				return new StringValue(enVal.getName());
+			} else if (absVal instanceof PropertyConstant) {
+				PropertyConstant pc = (PropertyConstant) absVal;
+				return exprToValue(pc.getConstantValue());
+			} else {
+				throw new IllegalArgumentException("Unhandled NamedValue type: " + expr.getClass().getName());
+			}
 		} else if (expr instanceof BooleanLiteral) {
 			BooleanLiteral value = (BooleanLiteral) expr;
 			return bool(value.getValue());
