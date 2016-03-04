@@ -47,7 +47,7 @@ void clock_set_interval_in_ms(uint32_t interval) {
     uint32_t one_ms_val = ten_ms_val / 10;            // number of cycles per 1ms
    */
    
-   /* ...instead compute ticks from CPU rate */
+   /* ...instead compute ticks from CPU rate (2/29/2016) */
    /* Explanation from JD: To get a 1ms timer we should be taking the clock frequency and 
       dividing by 1000. The way to think of this is that every clock pulse the value 
       is decremented by one and when it reaches zero the systick interrupt happens. 

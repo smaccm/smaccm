@@ -473,10 +473,8 @@ aadlDispatcherCallActiveTarget(portDest,structName,portSrc) ::= <<
 {
   // MWW: FIX: Right now there is no 'assert' in eChronos.
   // So I'm disabling this code.
-  /* bool remoteCallSuccessful = <outgoingPortWriterName(portDest,portSrc)>(<aadlDispatcherWriteActiveArg(structName,portSrc)>);	
-   assert(remoteCallSuccessful);
-   */
-  <outgoingPortWriterName(portDest,portSrc)>(<aadlDispatcherWriteActiveArg(structName,portSrc)>);	
+   bool remoteCallSuccessful = <outgoingPortWriterName(portDest,portSrc)>(<aadlDispatcherWriteActiveArg(structName,portSrc)>);	
+   <osSpecificAssert({remoteCallSuccessful})>;
 }
 >>
 

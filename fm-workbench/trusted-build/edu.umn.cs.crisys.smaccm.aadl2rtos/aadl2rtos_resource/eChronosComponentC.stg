@@ -67,3 +67,5 @@ osSpecificRegisterIrqs(dispatcher) ::= ""
 
 osSpecificComponentLocalCallerFunction(connection) ::= ""
 
+osSpecificAssert(predicate) ::= "api_assert(<predicate>, 42) "
+
