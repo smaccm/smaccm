@@ -8,6 +8,7 @@ import java.util.Set;
 import org.eclipse.emf.mwe.core.container.IfComponent;
 
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeStatement;
+import com.rockwellcollins.atc.agree.analysis.ast.AgreeVar;
 
 import jkind.lustre.BinaryExpr;
 import jkind.lustre.BinaryOp;
@@ -93,13 +94,14 @@ public class AgreeRealtimeCalendarBuilder {
         return builder.build();
     }
     
-    public static Expr getTimeConstraint(Set<IdExpr> events){
+    public static Expr getTimeConstraint(Set<AgreeVar> events){
         
         IdExpr timeId = AgreePatternTranslator.timeExpr;
         Expr preTime = new UnaryExpr(UnaryOp.PRE, timeId);
 
         Expr nodeCall = new BinaryExpr(timeId, BinaryOp.MINUS, preTime);
-        for(IdExpr event : events){
+        for(AgreeVar eventVar : events){
+            Expr event = new IdExpr(eventVar.id);
             BinaryExpr timeChange = new BinaryExpr(event, BinaryOp.MINUS, timeId);
             Expr preTimeChange = new UnaryExpr(UnaryOp.PRE, timeChange);
             nodeCall = new NodeCallExpr(MIN_POS_NODE_NAME, preTimeChange, nodeCall);

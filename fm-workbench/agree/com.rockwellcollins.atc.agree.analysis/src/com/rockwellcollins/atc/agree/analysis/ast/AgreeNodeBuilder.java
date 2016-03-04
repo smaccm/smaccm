@@ -35,7 +35,7 @@ public class AgreeNodeBuilder {
     private EObject reference;
     private TimingModel timing;
     private ComponentInstance compInst;
-    private Set<IdExpr> eventTimes = new HashSet<>();
+    private Set<AgreeVar> eventTimes = new HashSet<>();
     
     public AgreeNodeBuilder(String id){
         this.id = id;
@@ -79,7 +79,7 @@ public class AgreeNodeBuilder {
         this.patternProps.clear();
     }
     
-    public void addEventTime(IdExpr event){
+    public void addEventTime(AgreeVar event){
         this.eventTimes.add(event);
     }
     

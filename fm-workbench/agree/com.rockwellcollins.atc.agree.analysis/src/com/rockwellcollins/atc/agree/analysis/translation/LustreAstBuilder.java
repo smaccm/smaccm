@@ -392,11 +392,23 @@ public class LustreAstBuilder {
                 }
             }
         }
-        
-        //add realtime constraints
-        if(agreeNode.eventTimes.size() != 0){
-            assertions.add(AgreeRealtimeCalendarBuilder.getTimeConstraint(agreeNode.eventTimes));
+
+        // add realtime constraints
+        Set<AgreeVar> eventTimes = new HashSet<>();
+        if (withAssertions) {
+            eventTimes.addAll(agreeNode.eventTimes);
+        } else {
+            for (AgreeVar eventVar : agreeNode.eventTimes) {
+                if (AgreeUtils.referenceIsInContract(eventVar.reference)) {
+                    eventTimes.add(eventVar);
+                }
+            }
         }
+
+        if (eventTimes.size() != 0) {
+            assertions.add(AgreeRealtimeCalendarBuilder.getTimeConstraint(eventTimes));
+        }
+        
 
         for (AgreeVar var : agreeNode.inputs) {
             inputs.add(var);
@@ -634,7 +646,7 @@ public class LustreAstBuilder {
         List<AgreeVar> outputs = new ArrayList<>();
         List<AgreeVar> locals = new ArrayList<>();
         List<AgreeStatement> assertions = new ArrayList<>();
-        Set<IdExpr> timeEvents = new HashSet<>(agreeNode.eventTimes);
+        Set<AgreeVar> timeEvents = new HashSet<>(agreeNode.eventTimes);
 
         Expr someoneTicks = null;
         for (AgreeNode subAgreeNode : agreeNode.subNodes) {
@@ -711,9 +723,9 @@ public class LustreAstBuilder {
         
     }
 
-    private static void addTimeEvents(Set<IdExpr> timeEvents, AgreeNode flatNode, String prefix, List<AgreeStatement> assertions) {
-        for(IdExpr event : flatNode.eventTimes){
-            timeEvents.add(new IdExpr(prefix + event.id));
+    private static void addTimeEvents(Set<AgreeVar> timeEvents, AgreeNode flatNode, String prefix, List<AgreeStatement> assertions) {
+        for(AgreeVar event : flatNode.eventTimes){
+            timeEvents.add(new AgreeVar(prefix + event.id, event.type, event.reference, event.compInst));
         }
         //set the time variable to be equal
         IdExpr timeId = AgreePatternTranslator.timeExpr;

@@ -171,7 +171,7 @@ public class AgreePatternTranslator {
         IdExpr periodId = new IdExpr(periodVar.id);
         IdExpr timeoutId = new IdExpr(timeoutVar.id);
 
-        builder.addEventTime(timeoutId);
+        builder.addEventTime(timeoutVar);
 
         // -j <= jitter <= j
         Expr jitterLow =
@@ -364,7 +364,7 @@ public class AgreePatternTranslator {
         builder.addAssertion(
                 getTimeConstrStatement(timeEffectId, causeId, effectTimeRangeId, pattern.reference));
         // register the event time
-        builder.addEventTime(timeEffectId);
+        builder.addEventTime(timeEffect);
         // make the equation that triggers the event at the correct ime
         Expr timeEqualsPreTime = new BinaryExpr(timeExpr, BinaryOp.EQUAL, timeEffectId);
         // if the event is exclusive it only occurs when scheduled
@@ -425,7 +425,7 @@ public class AgreePatternTranslator {
         Expr heldTime = new BinaryExpr(causeRiseTimeId, BinaryOp.PLUS, pattern.causeInterval.high);
         Expr ifExpr = new IfThenElseExpr(cond, heldTime, NEG_ONE);
         builder.addLocalEquation(new AgreeEquation(causeHeldTimeoutId, ifExpr, pattern));
-        builder.addEventTime(causeHeldTimeoutId);
+        builder.addEventTime(causeHeldTimeoutVar);
         }
         
         {

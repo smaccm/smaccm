@@ -37,13 +37,13 @@ public class AgreeNode {
     public final TimingModel timing;
     public final ComponentInstance compInst;
     
-    public final Set<IdExpr> eventTimes;
+    public final Set<AgreeVar> eventTimes;
 
     public AgreeNode(String id, List<AgreeVar> inputs, List<AgreeVar> outputs, List<AgreeVar> locals,
             List<AgreeEquation> localEquations, List<AgreeConnection> connections, List<AgreeNode> subNodes, List<AgreeStatement> assertions,
             List<AgreeStatement> assumptions, List<AgreeStatement> guarantees, List<AgreeStatement> lemmas, List<AgreeStatement> patternProps,
             Expr clockConstraint, Expr initialConstraint, AgreeVar clockVar, EObject reference,
-            TimingModel timing, Set<IdExpr> eventTimes, ComponentInstance compinst) {
+            TimingModel timing, Set<AgreeVar> eventTimes, ComponentInstance compinst) {
         this.id = id;
         this.inputs = jkind.util.Util.safeList(inputs);
         this.outputs = jkind.util.Util.safeList(outputs);
