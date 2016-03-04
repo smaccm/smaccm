@@ -42,7 +42,7 @@ system top_level
 		Output: out data port Base_Types::Float;
 	annex agree {** 
 		assume "System input range " : Input <= 10.0;
-		guarantee "System output range" : Output < 50.0;
+		guarantee "System output range" : Output < 70.0;
 	**};	
 end top_level;
 

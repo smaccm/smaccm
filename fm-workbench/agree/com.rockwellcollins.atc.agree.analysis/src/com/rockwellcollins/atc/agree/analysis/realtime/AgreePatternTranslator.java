@@ -21,6 +21,7 @@ import com.rockwellcollins.atc.agree.analysis.ast.AgreeProgram;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeStatement;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeVar;
 import com.rockwellcollins.atc.agree.analysis.realtime.AgreeCauseEffectPattern.TriggerType;
+import com.rockwellcollins.atc.agree.analysis.realtime.AgreePatternInterval.IntervalType;
 
 import jkind.lustre.BinaryExpr;
 import jkind.lustre.BinaryOp;
@@ -45,9 +46,10 @@ public class AgreePatternTranslator {
     private static final String CAUSE_PREFIX = "__CAUSE__";
     private static final String EFFECT_TIME_RANGE_PREFIX = "__EFFECT_TIME_RANGE__";
     private static final String TIMEOUT_PREFIX = "__TIMEOUT__";
-    private static final String CAUSE_CONDITION_EVENT_PREFIX = "__CAUSE_CONDITION_HELD__";
-    private static final String CAUSE_CONDITION_START_PREFIX = "__CAUSE_CONDITION_START__";
-    private static final String CAUSE_CONDITION_END_PREFIX = "__CAUSE_CONDITION_END__";
+    private static final String CAUSE_CONDITION_RISE_PREFIX = "__CAUSE_CONDITION_RISE__";
+    private static final String CAUSE_CONDITION_FALL_PREFIX = "__CAUSE_CONDITION_FALL__";
+    private static final String CAUSE_CONDITION_HELD_PREFIX = "__CAUSE_CONDITION_HELD__";
+    private static final String CAUSE_CONDITION_TIMEOUT_PREFIX = "__CAUSE_CONDITION_TIMEOUT__";
     private static final String JITTER_PREFIX = "__JITTER__";
     private static final String PERIOD_PREFIX = "__PERIOD__";
     private static final String TIMER_PREFIX = "__TIMER__";
@@ -284,14 +286,24 @@ public class AgreePatternTranslator {
         builder.addLocalEquation(new AgreeEquation(timerId, timerExpr, varReference));
         }
         
-        //record => cause
+        //record => cause and not (e and (l = 0))
         
         {
-        Expr recordExpr = new BinaryExpr(recordId, BinaryOp.IMPLIES, causeId);
+        Expr causeExpr;
+        if (pattern.effectInterval.type == IntervalType.OPEN_LEFT
+                || pattern.effectInterval.type == IntervalType.OPEN) {
+            causeExpr = causeId;
+        } else {
+            Expr eAndLZero =
+                    new BinaryExpr(pattern.effectInterval.low, BinaryOp.EQUAL, new RealExpr(BigDecimal.ZERO));
+            eAndLZero = new BinaryExpr(effectId, BinaryOp.AND, eAndLZero);
+            Expr notEAndLZero = new UnaryExpr(UnaryOp.NOT, eAndLZero);
+            causeExpr = new BinaryExpr(causeId, BinaryOp.AND, notEAndLZero);
+        }
+        Expr recordExpr = new BinaryExpr(recordId, BinaryOp.IMPLIES, causeExpr);
         AgreeStatement statement = new AgreeStatement("", recordExpr, varReference);
         builder.addAssertion(statement);
         }
-        
         //timer <= h
         BinaryOp right = getIntervalRightOp(pattern.effectInterval);
         return new BinaryExpr(timerId, right, pattern.effectInterval.high);
@@ -368,59 +380,61 @@ public class AgreePatternTranslator {
     private static IdExpr translateCauseCondtionPattern(AgreeCauseEffectPattern pattern, IdExpr causeId,
             AgreeNodeBuilder builder) {
         
-        AgreeVar condEventVar = new AgreeVar(CAUSE_CONDITION_EVENT_PREFIX + causeId.id, NamedType.BOOL, pattern);
-        AgreeVar condEventStartVar = new AgreeVar(CAUSE_CONDITION_START_PREFIX + causeId.id, NamedType.REAL, pattern);
-        AgreeVar condEventEndVar = new AgreeVar(CAUSE_CONDITION_END_PREFIX + causeId.id, NamedType.REAL, pattern);
+        AgreeVar causeRiseTimeVar = new AgreeVar(CAUSE_CONDITION_RISE_PREFIX + causeId.id, NamedType.REAL, pattern);
+        AgreeVar causeFallTimeVar = new AgreeVar(CAUSE_CONDITION_FALL_PREFIX + causeId.id, NamedType.REAL, pattern);
+        AgreeVar causeHeldVar = new AgreeVar(CAUSE_CONDITION_HELD_PREFIX + causeId.id, NamedType.BOOL, pattern);
+        AgreeVar causeHeldTimeoutVar = new AgreeVar(CAUSE_CONDITION_TIMEOUT_PREFIX + causeId.id, NamedType.REAL, pattern);
         
-        builder.addLocal(condEventVar);
-        builder.addLocal(condEventStartVar);
-        builder.addLocal(condEventEndVar);
+        builder.addLocal(causeRiseTimeVar);
+        builder.addLocal(causeFallTimeVar);
+        builder.addLocal(causeHeldVar);
+        builder.addLocal(causeHeldTimeoutVar);
         
-        IdExpr condEventStartId = new IdExpr(condEventStartVar.id);
-        IdExpr condEventEndId = new IdExpr(condEventEndVar.id);
-        IdExpr condEventId = new IdExpr(condEventVar.id);
+        IdExpr causeFallTimeId = new IdExpr(causeFallTimeVar.id);
+        IdExpr causeHeldId = new IdExpr(causeHeldVar.id);
+        IdExpr causeRiseTimeId = new IdExpr(causeRiseTimeVar.id);
+        IdExpr causeHeldTimeoutId = new IdExpr(causeHeldTimeoutVar.id);
         
-        Expr preStart = new UnaryExpr(UnaryOp.PRE, condEventStartId);
-        Expr notCond = new UnaryExpr(UnaryOp.NOT, causeId);
-        Expr preIsNegOne = new BinaryExpr(preStart, BinaryOp.EQUAL, NEG_ONE);
-        preIsNegOne = new BinaryExpr(new BoolExpr(true), BinaryOp.ARROW, preIsNegOne);
-        Expr preOrNegOne = new BinaryExpr(NEG_ONE, BinaryOp.ARROW, preStart);
-        Expr causeAndNotPreReset = new BinaryExpr(causeId, BinaryOp.AND, preIsNegOne);
-        //if not cause then 1 else -1 -> pre start
-        Expr ifCond = new IfThenElseExpr(notCond, NEG_ONE, preOrNegOne);
-        ifCond = new IfThenElseExpr(causeAndNotPreReset, timeExpr, ifCond);
+        {
+        //causeRiseTime = if rise(cause) then t else -1 -> pre(causeRiseTime)
+        Expr elseRise = new UnaryExpr(UnaryOp.PRE, causeRiseTimeId);
+        elseRise = new BinaryExpr(NEG_ONE, BinaryOp.ARROW, elseRise);
+        Expr rise = new NodeCallExpr(AgreeRealtimeCalendarBuilder.RISE_NODE_NAME, causeId);
+        Expr ifRise = new IfThenElseExpr(rise, timeExpr, elseRise);
+        builder.addLocalEquation(new AgreeEquation(causeRiseTimeId, ifRise, pattern));
+        }
         
-        builder.addLocalEquation(new AgreeEquation(condEventStartId, ifCond, pattern.reference));
-
-        Expr plusHigh = new BinaryExpr(condEventStartId, BinaryOp.PLUS, pattern.causeInterval.high);
-        Expr CondEventStartIsNeg = new BinaryExpr(condEventStartId, BinaryOp.LESS, new RealExpr(BigDecimal.ZERO));
-        Expr condEventEndExpr = new IfThenElseExpr(CondEventStartIsNeg, NEG_ONE, plusHigh);
+        {
+        //causeFallTime = if fall(cause) then t else -1 -> pre(causeFallTime)
+        Expr elseFall = new UnaryExpr(UnaryOp.PRE, causeFallTimeId);
+        elseFall = new BinaryExpr(NEG_ONE, BinaryOp.ARROW, elseFall);
+        Expr fall = new NodeCallExpr(AgreeRealtimeCalendarBuilder.FALL_NODE_NAME, causeId);
+        Expr ifFall = new IfThenElseExpr(fall, timeExpr, elseFall);
+        builder.addLocalEquation(new AgreeEquation(causeFallTimeId, ifFall, pattern));
+        }
         
-        builder.addLocalEquation(new AgreeEquation(condEventEndId, condEventEndExpr, pattern.reference));
-        builder.addEventTime(condEventEndId);
-
-        Expr timeIsCondEnd = new UnaryExpr(UnaryOp.PRE, condEventEndId);
-        timeIsCondEnd = new BinaryExpr(NEG_ONE, BinaryOp.ARROW, timeIsCondEnd);
-        timeIsCondEnd = new BinaryExpr(timeExpr, BinaryOp.EQUAL, timeIsCondEnd);
-        timeIsCondEnd = new BinaryExpr(timeIsCondEnd, BinaryOp.AND, causeId);
-        builder.addLocalEquation(new AgreeEquation(condEventId, timeIsCondEnd, pattern.reference));
+        {
+        //timeout = if causeRiseTime > -1 and causeRiseTime > causeFallTime then 
+        //             causeRiseTime + h
+        //          else
+        //             -1
+        Expr posRise = new BinaryExpr(causeRiseTimeId, BinaryOp.GREATER, NEG_ONE);
+        Expr gtFall = new BinaryExpr(causeRiseTimeId, BinaryOp.GREATER, causeFallTimeId);
+        Expr cond = new BinaryExpr(posRise, BinaryOp.AND, gtFall);
         
-        return condEventId;
-    }
-
-    private static Expr eventOccursInterval(IdExpr referenceTimeId, IdExpr eventId, AgreePatternInterval interval){
-        Expr notNeg = new BinaryExpr(referenceTimeId, BinaryOp.GREATEREQUAL, new RealExpr(BigDecimal.ZERO));
-        BinaryOp left = getIntervalLeftOp(interval);
-        BinaryOp right = getIntervalRightOp(interval);
+        Expr heldTime = new BinaryExpr(causeRiseTimeId, BinaryOp.PLUS, pattern.causeInterval.high);
+        Expr ifExpr = new IfThenElseExpr(cond, heldTime, NEG_ONE);
+        builder.addLocalEquation(new AgreeEquation(causeHeldTimeoutId, ifExpr, pattern));
+        builder.addEventTime(causeHeldTimeoutId);
+        }
         
-        Expr plusLow = new BinaryExpr(referenceTimeId, BinaryOp.PLUS, interval.low);
-        Expr plusHigh = new BinaryExpr(referenceTimeId, BinaryOp.PLUS, interval.high);
-        Expr low = new BinaryExpr(plusLow, left, timeExpr);
-        Expr high = new BinaryExpr(timeExpr, right, plusHigh);
-        Expr expr = new BinaryExpr(low, BinaryOp.AND, high);
-        expr = new BinaryExpr(expr, BinaryOp.AND, eventId);
+        {
+        //causeHeld = (t = causeHeldTimeout)
+        Expr causeHeldExpr = new BinaryExpr(timeExpr, BinaryOp.EQUAL, causeHeldTimeoutId);
+        builder.addLocalEquation(new AgreeEquation(causeHeldId, causeHeldExpr, pattern));
+        }
         
-        return new BinaryExpr(expr, BinaryOp.AND, notNeg);
+        return causeHeldId;
     }
 
     private static AgreeStatement getTimeConstrStatement(IdExpr timeId, Expr setCond, Expr setVal, EObject reference) {
@@ -476,17 +490,6 @@ public class AgreePatternTranslator {
 
         Expr lower = new BinaryExpr(interval.low, left, occurs);
         Expr higher = new BinaryExpr(occurs, right, interval.high);
-        return new BinaryExpr(lower, BinaryOp.AND, higher);
-    }
-
-    private static Expr getTimeRangeProperty(Expr timeRangeId, AgreePatternInterval interval) {
-        BinaryOp left = getIntervalLeftOp(interval);
-        BinaryOp right = getIntervalRightOp(interval);
-
-        Expr lower = new BinaryExpr(interval.high, BinaryOp.MINUS, interval.low);
-        lower = new BinaryExpr(timeExpr, BinaryOp.MINUS, lower);
-        lower = new BinaryExpr(lower, left, timeRangeId);
-        Expr higher = new BinaryExpr(timeRangeId, right, timeExpr);
         return new BinaryExpr(lower, BinaryOp.AND, higher);
     }
 

@@ -28,28 +28,48 @@ import jkind.lustre.builders.NodeBuilder;
 public class AgreeRealtimeCalendarBuilder {
 
     private static final String MIN_POS_NODE_NAME = "__MinPos";
-    public static final String OCCURRED_IN_PAST_NODE_NAME = "__OccuredInPast";
+    public static final String RISE_NODE_NAME = "__Rise";
+    public static final String FALL_NODE_NAME = "__Fall";
     
     public static List<Node> getRealTimeNodes(){
         List<Node> nodes = new ArrayList<>();
         nodes.add(getMinPosNode());
-        nodes.add(getOccuredInPastNode());
+        nodes.add(getRiseNode());
+        nodes.add(getFallNode());
         return nodes;
     }
     
-    private static Node getOccuredInPastNode() {
-        NodeBuilder builder = new NodeBuilder(OCCURRED_IN_PAST_NODE_NAME);
+    private static Node getRiseNode(){
+        NodeBuilder builder = new NodeBuilder(RISE_NODE_NAME);
         builder.addInput(new VarDecl("input", NamedType.BOOL));
         builder.addOutput(new VarDecl("output", NamedType.BOOL));
         
         IdExpr inputId = new IdExpr("input");
         IdExpr outputId = new IdExpr("output");
         
-        Expr preOutput = new UnaryExpr(UnaryOp.PRE, outputId);
-        Expr outputExpr = new BinaryExpr(preOutput, BinaryOp.OR, inputId);
+        Expr outputExpr = new UnaryExpr(UnaryOp.NOT, inputId);
+        outputExpr = new UnaryExpr(UnaryOp.PRE, outputExpr);
+        outputExpr = new BinaryExpr(outputExpr, BinaryOp.AND, inputId);
         outputExpr = new BinaryExpr(inputId, BinaryOp.ARROW, outputExpr);
-        builder.addEquation(new Equation(outputId, outputExpr));
         
+        builder.addEquation(new Equation(outputId, outputExpr));
+        return builder.build();
+    }
+    
+    private static Node getFallNode(){
+        NodeBuilder builder = new NodeBuilder(FALL_NODE_NAME);
+        builder.addInput(new VarDecl("input", NamedType.BOOL));
+        builder.addOutput(new VarDecl("output", NamedType.BOOL));
+
+        IdExpr inputId = new IdExpr("input");
+        IdExpr outputId = new IdExpr("output");
+
+        Expr outputExpr = new UnaryExpr(UnaryOp.PRE, inputId);
+        Expr notInput = new UnaryExpr(UnaryOp.NOT, inputId);
+        outputExpr = new BinaryExpr(outputExpr, BinaryOp.AND, notInput);
+        outputExpr = new BinaryExpr(notInput, BinaryOp.ARROW, outputExpr);
+
+        builder.addEquation(new Equation(outputId, outputExpr));
         return builder.build();
     }
 
