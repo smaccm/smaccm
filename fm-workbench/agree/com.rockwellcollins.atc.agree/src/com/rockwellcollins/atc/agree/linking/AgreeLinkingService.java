@@ -27,6 +27,7 @@ import org.osate.aadl2.util.Aadl2Util;
 import org.osate.xtext.aadl2.properties.linking.PropertiesLinkingService;
 import org.osate.xtext.aadl2.properties.util.EMFIndexRetrieval;
 
+import com.rockwellcollins.atc.agree.agree.AgreeDataType;
 import com.rockwellcollins.atc.agree.agree.CalenStatement;
 import com.rockwellcollins.atc.agree.agree.ConnectionStatement;
 import com.rockwellcollins.atc.agree.agree.GetPropertyExpr;
@@ -34,7 +35,6 @@ import com.rockwellcollins.atc.agree.agree.NestedDotID;
 import com.rockwellcollins.atc.agree.agree.NodeEq;
 import com.rockwellcollins.atc.agree.agree.OrderStatement;
 import com.rockwellcollins.atc.agree.agree.RecordExpr;
-import com.rockwellcollins.atc.agree.agree.RecordType;
 import com.rockwellcollins.atc.agree.agree.RecordUpdateExpr;
 import com.rockwellcollins.atc.agree.agree.EventExpr;
 import com.rockwellcollins.atc.agree.agree.SynchStatement;
@@ -60,7 +60,7 @@ public class AgreeLinkingService extends PropertiesLinkingService {
                 || context instanceof NodeEq
                 || context instanceof SynchStatement
                 || context instanceof RecordExpr
-                || context instanceof RecordType
+                || context instanceof AgreeDataType
                 || context instanceof GetPropertyExpr
                 || context instanceof RecordUpdateExpr
                 || context instanceof EventExpr

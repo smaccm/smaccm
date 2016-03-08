@@ -133,10 +133,8 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Agree.ecore#//PrimType/highNeg"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Agree.ecore#//PrimType/rangeHigh"/>
     </genClasses>
-    <genClasses ecoreClass="Agree.ecore#//RecordType">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Agree.ecore#//RecordType/record"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//RecordType/featureGroup"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Agree.ecore#//RecordType/name"/>
+    <genClasses ecoreClass="Agree.ecore#//AgreeDataType">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//AgreeDataType/data"/>
     </genClasses>
     <genClasses ecoreClass="Agree.ecore#//BinaryExpr">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//BinaryExpr/left"/>
@@ -166,6 +164,10 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//RecordUpdateExpr/argExpr"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//RecordUpdateExpr/expr"/>
     </genClasses>
+    <genClasses ecoreClass="Agree.ecore#//ArrayAccessExpr">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//ArrayAccessExpr/array"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//ArrayAccessExpr/arg"/>
+    </genClasses>
     <genClasses ecoreClass="Agree.ecore#//IntLitExpr">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Agree.ecore#//IntLitExpr/val"/>
     </genClasses>
@@ -174,12 +176,6 @@
     </genClasses>
     <genClasses ecoreClass="Agree.ecore#//EventExpr">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//EventExpr/id"/>
-    </genClasses>
-    <genClasses ecoreClass="Agree.ecore#//RealLitExpr">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Agree.ecore#//RealLitExpr/val"/>
-    </genClasses>
-    <genClasses ecoreClass="Agree.ecore#//BoolLitExpr">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//BoolLitExpr/val"/>
     </genClasses>
     <genClasses ecoreClass="Agree.ecore#//ThisExpr">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//ThisExpr/subThis"/>
@@ -190,6 +186,12 @@
     <genClasses ecoreClass="Agree.ecore#//RealCast">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//RealCast/expr"/>
     </genClasses>
+    <genClasses ecoreClass="Agree.ecore#//RealLitExpr">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Agree.ecore#//RealLitExpr/val"/>
+    </genClasses>
+    <genClasses ecoreClass="Agree.ecore#//BoolLitExpr">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//BoolLitExpr/val"/>
+    </genClasses>
     <genClasses ecoreClass="Agree.ecore#//FnCallExpr">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//FnCallExpr/fn"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//FnCallExpr/args"/>
@@ -198,6 +200,14 @@
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Agree.ecore#//RecordExpr/record"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Agree.ecore#//RecordExpr/args"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//RecordExpr/argExpr"/>
+    </genClasses>
+    <genClasses ecoreClass="Agree.ecore#//DataType">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//DataType/data"/>
+    </genClasses>
+    <genClasses ecoreClass="Agree.ecore#//RecordType">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Agree.ecore#//RecordType/record"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//RecordType/featureGroup"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Agree.ecore#//RecordType/name"/>
     </genClasses>
     <genClasses ecoreClass="Agree.ecore#//IdExpr">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Agree.ecore#//IdExpr/id"/>

@@ -443,12 +443,12 @@ public class AgreeSwitch<T> extends Switch<T>
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
-      case AgreePackage.RECORD_TYPE:
+      case AgreePackage.AGREE_DATA_TYPE:
       {
-        RecordType recordType = (RecordType)theEObject;
-        T result = caseRecordType(recordType);
-        if (result == null) result = caseType(recordType);
-        if (result == null) result = caseElement(recordType);
+        AgreeDataType agreeDataType = (AgreeDataType)theEObject;
+        T result = caseAgreeDataType(agreeDataType);
+        if (result == null) result = caseType(agreeDataType);
+        if (result == null) result = caseElement(agreeDataType);
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
@@ -506,6 +506,15 @@ public class AgreeSwitch<T> extends Switch<T>
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
+      case AgreePackage.ARRAY_ACCESS_EXPR:
+      {
+        ArrayAccessExpr arrayAccessExpr = (ArrayAccessExpr)theEObject;
+        T result = caseArrayAccessExpr(arrayAccessExpr);
+        if (result == null) result = caseExpr(arrayAccessExpr);
+        if (result == null) result = caseElement(arrayAccessExpr);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
       case AgreePackage.INT_LIT_EXPR:
       {
         IntLitExpr intLitExpr = (IntLitExpr)theEObject;
@@ -533,24 +542,6 @@ public class AgreeSwitch<T> extends Switch<T>
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
-      case AgreePackage.REAL_LIT_EXPR:
-      {
-        RealLitExpr realLitExpr = (RealLitExpr)theEObject;
-        T result = caseRealLitExpr(realLitExpr);
-        if (result == null) result = caseExpr(realLitExpr);
-        if (result == null) result = caseElement(realLitExpr);
-        if (result == null) result = defaultCase(theEObject);
-        return result;
-      }
-      case AgreePackage.BOOL_LIT_EXPR:
-      {
-        BoolLitExpr boolLitExpr = (BoolLitExpr)theEObject;
-        T result = caseBoolLitExpr(boolLitExpr);
-        if (result == null) result = caseExpr(boolLitExpr);
-        if (result == null) result = caseElement(boolLitExpr);
-        if (result == null) result = defaultCase(theEObject);
-        return result;
-      }
       case AgreePackage.THIS_EXPR:
       {
         ThisExpr thisExpr = (ThisExpr)theEObject;
@@ -575,6 +566,24 @@ public class AgreeSwitch<T> extends Switch<T>
         T result = caseRealCast(realCast);
         if (result == null) result = caseExpr(realCast);
         if (result == null) result = caseElement(realCast);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case AgreePackage.REAL_LIT_EXPR:
+      {
+        RealLitExpr realLitExpr = (RealLitExpr)theEObject;
+        T result = caseRealLitExpr(realLitExpr);
+        if (result == null) result = caseExpr(realLitExpr);
+        if (result == null) result = caseElement(realLitExpr);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case AgreePackage.BOOL_LIT_EXPR:
+      {
+        BoolLitExpr boolLitExpr = (BoolLitExpr)theEObject;
+        T result = caseBoolLitExpr(boolLitExpr);
+        if (result == null) result = caseExpr(boolLitExpr);
+        if (result == null) result = caseElement(boolLitExpr);
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
@@ -1227,17 +1236,17 @@ public class AgreeSwitch<T> extends Switch<T>
   }
 
   /**
-   * Returns the result of interpreting the object as an instance of '<em>Record Type</em>'.
+   * Returns the result of interpreting the object as an instance of '<em>Data Type</em>'.
    * <!-- begin-user-doc -->
    * This implementation returns null;
    * returning a non-null result will terminate the switch.
    * <!-- end-user-doc -->
    * @param object the target of the switch.
-   * @return the result of interpreting the object as an instance of '<em>Record Type</em>'.
+   * @return the result of interpreting the object as an instance of '<em>Data Type</em>'.
    * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
    * @generated
    */
-  public T caseRecordType(RecordType object)
+  public T caseAgreeDataType(AgreeDataType object)
   {
     return null;
   }
@@ -1339,6 +1348,22 @@ public class AgreeSwitch<T> extends Switch<T>
   }
 
   /**
+   * Returns the result of interpreting the object as an instance of '<em>Array Access Expr</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Array Access Expr</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseArrayAccessExpr(ArrayAccessExpr object)
+  {
+    return null;
+  }
+
+  /**
    * Returns the result of interpreting the object as an instance of '<em>Int Lit Expr</em>'.
    * <!-- begin-user-doc -->
    * This implementation returns null;
@@ -1387,38 +1412,6 @@ public class AgreeSwitch<T> extends Switch<T>
   }
 
   /**
-   * Returns the result of interpreting the object as an instance of '<em>Real Lit Expr</em>'.
-   * <!-- begin-user-doc -->
-   * This implementation returns null;
-   * returning a non-null result will terminate the switch.
-   * <!-- end-user-doc -->
-   * @param object the target of the switch.
-   * @return the result of interpreting the object as an instance of '<em>Real Lit Expr</em>'.
-   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-   * @generated
-   */
-  public T caseRealLitExpr(RealLitExpr object)
-  {
-    return null;
-  }
-
-  /**
-   * Returns the result of interpreting the object as an instance of '<em>Bool Lit Expr</em>'.
-   * <!-- begin-user-doc -->
-   * This implementation returns null;
-   * returning a non-null result will terminate the switch.
-   * <!-- end-user-doc -->
-   * @param object the target of the switch.
-   * @return the result of interpreting the object as an instance of '<em>Bool Lit Expr</em>'.
-   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-   * @generated
-   */
-  public T caseBoolLitExpr(BoolLitExpr object)
-  {
-    return null;
-  }
-
-  /**
    * Returns the result of interpreting the object as an instance of '<em>This Expr</em>'.
    * <!-- begin-user-doc -->
    * This implementation returns null;
@@ -1462,6 +1455,38 @@ public class AgreeSwitch<T> extends Switch<T>
    * @generated
    */
   public T caseRealCast(RealCast object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Real Lit Expr</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Real Lit Expr</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseRealLitExpr(RealLitExpr object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Bool Lit Expr</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Bool Lit Expr</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseBoolLitExpr(BoolLitExpr object)
   {
     return null;
   }

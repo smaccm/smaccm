@@ -70,6 +70,7 @@ public abstract class AbstractAgreeSyntacticSequencer extends AbstractSyntacticS
 	 *     (rule start) (ambiguity) val=BooleanLiteral
 	 *     (rule start) (ambiguity) val=INTEGER_LIT
 	 *     (rule start) (ambiguity) val=REAL_LIT
+	 *     (rule start) (ambiguity) {ArrayAccessExpr.array=}
 	 *     (rule start) (ambiguity) {BinaryExpr.left=}
 	 *     (rule start) (ambiguity) {FnCallExpr.fn=}
 	 *     (rule start) (ambiguity) {RecordExpr.record=}
@@ -89,6 +90,7 @@ public abstract class AbstractAgreeSyntacticSequencer extends AbstractSyntacticS
 	 *     (rule start) (ambiguity) 'prev' '(' delay=Expr
 	 *     (rule start) (ambiguity) op='-'
 	 *     (rule start) (ambiguity) op='not'
+	 *     (rule start) (ambiguity) {ArrayAccessExpr.array=}
 	 *     (rule start) (ambiguity) {BinaryExpr.left=}
 	 *     (rule start) (ambiguity) {RecordUpdateExpr.record=}
 	 */

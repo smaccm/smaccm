@@ -2,9 +2,9 @@
  */
 package com.rockwellcollins.atc.agree.agree.impl;
 
+import com.rockwellcollins.atc.agree.agree.AgreeDataType;
 import com.rockwellcollins.atc.agree.agree.AgreePackage;
 import com.rockwellcollins.atc.agree.agree.NestedDotID;
-import com.rockwellcollins.atc.agree.agree.RecordType;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
@@ -16,35 +16,35 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Record Type</b></em>'.
+ * An implementation of the model object '<em><b>Data Type</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link com.rockwellcollins.atc.agree.agree.impl.RecordTypeImpl#getRecord <em>Record</em>}</li>
+ *   <li>{@link com.rockwellcollins.atc.agree.agree.impl.AgreeDataTypeImpl#getData <em>Data</em>}</li>
  * </ul>
  *
  * @generated
  */
-public class RecordTypeImpl extends TypeImpl implements RecordType
+public class AgreeDataTypeImpl extends TypeImpl implements AgreeDataType
 {
   /**
-   * The cached value of the '{@link #getRecord() <em>Record</em>}' containment reference.
+   * The cached value of the '{@link #getData() <em>Data</em>}' containment reference.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @see #getRecord()
+   * @see #getData()
    * @generated
    * @ordered
    */
-  protected NestedDotID record;
+  protected NestedDotID data;
 
   /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  protected RecordTypeImpl()
+  protected AgreeDataTypeImpl()
   {
     super();
   }
@@ -57,7 +57,7 @@ public class RecordTypeImpl extends TypeImpl implements RecordType
   @Override
   protected EClass eStaticClass()
   {
-    return AgreePackage.Literals.RECORD_TYPE;
+    return AgreePackage.Literals.AGREE_DATA_TYPE;
   }
 
   /**
@@ -65,9 +65,9 @@ public class RecordTypeImpl extends TypeImpl implements RecordType
    * <!-- end-user-doc -->
    * @generated
    */
-  public NestedDotID getRecord()
+  public NestedDotID getData()
   {
-    return record;
+    return data;
   }
 
   /**
@@ -75,13 +75,13 @@ public class RecordTypeImpl extends TypeImpl implements RecordType
    * <!-- end-user-doc -->
    * @generated
    */
-  public NotificationChain basicSetRecord(NestedDotID newRecord, NotificationChain msgs)
+  public NotificationChain basicSetData(NestedDotID newData, NotificationChain msgs)
   {
-    NestedDotID oldRecord = record;
-    record = newRecord;
+    NestedDotID oldData = data;
+    data = newData;
     if (eNotificationRequired())
     {
-      ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, AgreePackage.RECORD_TYPE__RECORD, oldRecord, newRecord);
+      ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, AgreePackage.AGREE_DATA_TYPE__DATA, oldData, newData);
       if (msgs == null) msgs = notification; else msgs.add(notification);
     }
     return msgs;
@@ -92,20 +92,20 @@ public class RecordTypeImpl extends TypeImpl implements RecordType
    * <!-- end-user-doc -->
    * @generated
    */
-  public void setRecord(NestedDotID newRecord)
+  public void setData(NestedDotID newData)
   {
-    if (newRecord != record)
+    if (newData != data)
     {
       NotificationChain msgs = null;
-      if (record != null)
-        msgs = ((InternalEObject)record).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - AgreePackage.RECORD_TYPE__RECORD, null, msgs);
-      if (newRecord != null)
-        msgs = ((InternalEObject)newRecord).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - AgreePackage.RECORD_TYPE__RECORD, null, msgs);
-      msgs = basicSetRecord(newRecord, msgs);
+      if (data != null)
+        msgs = ((InternalEObject)data).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - AgreePackage.AGREE_DATA_TYPE__DATA, null, msgs);
+      if (newData != null)
+        msgs = ((InternalEObject)newData).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - AgreePackage.AGREE_DATA_TYPE__DATA, null, msgs);
+      msgs = basicSetData(newData, msgs);
       if (msgs != null) msgs.dispatch();
     }
     else if (eNotificationRequired())
-      eNotify(new ENotificationImpl(this, Notification.SET, AgreePackage.RECORD_TYPE__RECORD, newRecord, newRecord));
+      eNotify(new ENotificationImpl(this, Notification.SET, AgreePackage.AGREE_DATA_TYPE__DATA, newData, newData));
   }
 
   /**
@@ -118,8 +118,8 @@ public class RecordTypeImpl extends TypeImpl implements RecordType
   {
     switch (featureID)
     {
-      case AgreePackage.RECORD_TYPE__RECORD:
-        return basicSetRecord(null, msgs);
+      case AgreePackage.AGREE_DATA_TYPE__DATA:
+        return basicSetData(null, msgs);
     }
     return super.eInverseRemove(otherEnd, featureID, msgs);
   }
@@ -134,8 +134,8 @@ public class RecordTypeImpl extends TypeImpl implements RecordType
   {
     switch (featureID)
     {
-      case AgreePackage.RECORD_TYPE__RECORD:
-        return getRecord();
+      case AgreePackage.AGREE_DATA_TYPE__DATA:
+        return getData();
     }
     return super.eGet(featureID, resolve, coreType);
   }
@@ -150,8 +150,8 @@ public class RecordTypeImpl extends TypeImpl implements RecordType
   {
     switch (featureID)
     {
-      case AgreePackage.RECORD_TYPE__RECORD:
-        setRecord((NestedDotID)newValue);
+      case AgreePackage.AGREE_DATA_TYPE__DATA:
+        setData((NestedDotID)newValue);
         return;
     }
     super.eSet(featureID, newValue);
@@ -167,8 +167,8 @@ public class RecordTypeImpl extends TypeImpl implements RecordType
   {
     switch (featureID)
     {
-      case AgreePackage.RECORD_TYPE__RECORD:
-        setRecord((NestedDotID)null);
+      case AgreePackage.AGREE_DATA_TYPE__DATA:
+        setData((NestedDotID)null);
         return;
     }
     super.eUnset(featureID);
@@ -184,10 +184,10 @@ public class RecordTypeImpl extends TypeImpl implements RecordType
   {
     switch (featureID)
     {
-      case AgreePackage.RECORD_TYPE__RECORD:
-        return record != null;
+      case AgreePackage.AGREE_DATA_TYPE__DATA:
+        return data != null;
     }
     return super.eIsSet(featureID);
   }
 
-} //RecordTypeImpl
+} //AgreeDataTypeImpl

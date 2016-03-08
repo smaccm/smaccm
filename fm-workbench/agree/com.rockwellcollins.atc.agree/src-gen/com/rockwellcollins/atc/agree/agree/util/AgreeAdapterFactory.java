@@ -276,9 +276,9 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
         return createPrimTypeAdapter();
       }
       @Override
-      public Adapter caseRecordType(RecordType object)
+      public Adapter caseAgreeDataType(AgreeDataType object)
       {
-        return createRecordTypeAdapter();
+        return createAgreeDataTypeAdapter();
       }
       @Override
       public Adapter caseBinaryExpr(BinaryExpr object)
@@ -311,6 +311,11 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
         return createRecordUpdateExprAdapter();
       }
       @Override
+      public Adapter caseArrayAccessExpr(ArrayAccessExpr object)
+      {
+        return createArrayAccessExprAdapter();
+      }
+      @Override
       public Adapter caseIntLitExpr(IntLitExpr object)
       {
         return createIntLitExprAdapter();
@@ -326,16 +331,6 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
         return createEventExprAdapter();
       }
       @Override
-      public Adapter caseRealLitExpr(RealLitExpr object)
-      {
-        return createRealLitExprAdapter();
-      }
-      @Override
-      public Adapter caseBoolLitExpr(BoolLitExpr object)
-      {
-        return createBoolLitExprAdapter();
-      }
-      @Override
       public Adapter caseThisExpr(ThisExpr object)
       {
         return createThisExprAdapter();
@@ -349,6 +344,16 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
       public Adapter caseRealCast(RealCast object)
       {
         return createRealCastAdapter();
+      }
+      @Override
+      public Adapter caseRealLitExpr(RealLitExpr object)
+      {
+        return createRealLitExprAdapter();
+      }
+      @Override
+      public Adapter caseBoolLitExpr(BoolLitExpr object)
+      {
+        return createBoolLitExprAdapter();
       }
       @Override
       public Adapter caseFnCallExpr(FnCallExpr object)
@@ -993,16 +998,16 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
   }
 
   /**
-   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.RecordType <em>Record Type</em>}'.
+   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.AgreeDataType <em>Data Type</em>}'.
    * <!-- begin-user-doc -->
    * This default implementation returns null so that we can easily ignore cases;
    * it's useful to ignore a case when inheritance will catch all the cases anyway.
    * <!-- end-user-doc -->
    * @return the new adapter.
-   * @see com.rockwellcollins.atc.agree.agree.RecordType
+   * @see com.rockwellcollins.atc.agree.agree.AgreeDataType
    * @generated
    */
-  public Adapter createRecordTypeAdapter()
+  public Adapter createAgreeDataTypeAdapter()
   {
     return null;
   }
@@ -1098,6 +1103,21 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
   }
 
   /**
+   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.ArrayAccessExpr <em>Array Access Expr</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see com.rockwellcollins.atc.agree.agree.ArrayAccessExpr
+   * @generated
+   */
+  public Adapter createArrayAccessExprAdapter()
+  {
+    return null;
+  }
+
+  /**
    * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.IntLitExpr <em>Int Lit Expr</em>}'.
    * <!-- begin-user-doc -->
    * This default implementation returns null so that we can easily ignore cases;
@@ -1143,36 +1163,6 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
   }
 
   /**
-   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.RealLitExpr <em>Real Lit Expr</em>}'.
-   * <!-- begin-user-doc -->
-   * This default implementation returns null so that we can easily ignore cases;
-   * it's useful to ignore a case when inheritance will catch all the cases anyway.
-   * <!-- end-user-doc -->
-   * @return the new adapter.
-   * @see com.rockwellcollins.atc.agree.agree.RealLitExpr
-   * @generated
-   */
-  public Adapter createRealLitExprAdapter()
-  {
-    return null;
-  }
-
-  /**
-   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.BoolLitExpr <em>Bool Lit Expr</em>}'.
-   * <!-- begin-user-doc -->
-   * This default implementation returns null so that we can easily ignore cases;
-   * it's useful to ignore a case when inheritance will catch all the cases anyway.
-   * <!-- end-user-doc -->
-   * @return the new adapter.
-   * @see com.rockwellcollins.atc.agree.agree.BoolLitExpr
-   * @generated
-   */
-  public Adapter createBoolLitExprAdapter()
-  {
-    return null;
-  }
-
-  /**
    * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.ThisExpr <em>This Expr</em>}'.
    * <!-- begin-user-doc -->
    * This default implementation returns null so that we can easily ignore cases;
@@ -1213,6 +1203,36 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
    * @generated
    */
   public Adapter createRealCastAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.RealLitExpr <em>Real Lit Expr</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see com.rockwellcollins.atc.agree.agree.RealLitExpr
+   * @generated
+   */
+  public Adapter createRealLitExprAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.BoolLitExpr <em>Bool Lit Expr</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see com.rockwellcollins.atc.agree.agree.BoolLitExpr
+   * @generated
+   */
+  public Adapter createBoolLitExprAdapter()
   {
     return null;
   }

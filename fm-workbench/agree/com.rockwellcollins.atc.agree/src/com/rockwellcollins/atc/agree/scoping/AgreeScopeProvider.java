@@ -39,6 +39,7 @@ import org.osate.annexsupport.AnnexUtil;
 import com.rockwellcollins.atc.agree.agree.AgreeContract;
 import com.rockwellcollins.atc.agree.agree.AgreeContractLibrary;
 import com.rockwellcollins.atc.agree.agree.AgreeContractSubclause;
+import com.rockwellcollins.atc.agree.agree.AgreeDataType;
 import com.rockwellcollins.atc.agree.agree.AgreeLibrary;
 import com.rockwellcollins.atc.agree.agree.AgreePackage;
 import com.rockwellcollins.atc.agree.agree.Arg;
@@ -55,11 +56,11 @@ import com.rockwellcollins.atc.agree.agree.NodeEq;
 import com.rockwellcollins.atc.agree.agree.OrderStatement;
 import com.rockwellcollins.atc.agree.agree.RecordDefExpr;
 import com.rockwellcollins.atc.agree.agree.RecordExpr;
-import com.rockwellcollins.atc.agree.agree.RecordType;
 import com.rockwellcollins.atc.agree.agree.RecordUpdateExpr;
 import com.rockwellcollins.atc.agree.agree.SpecStatement;
 import com.rockwellcollins.atc.agree.agree.SynchStatement;
 import com.rockwellcollins.atc.agree.agree.Type;
+import com.rockwellcollins.atc.agree.validation.AgreeArrayType;
 
 /**
  * This class contains custom scoping description.
@@ -88,9 +89,7 @@ public class AgreeScopeProvider extends
         return Scopes.scopeFor(ctx.getLhs(), getScope(ctx.eContainer(), ref));
     }
     
-    IScope scope_NamedElement(RecordType ctx, EReference ref) {
-        //result = getAllElementsFromSpecs(((AgreeContract) container).getSpecs());
-
+    IScope scope_NamedElement(AgreeDataType ctx, EReference ref) {
         return getScope(ctx.eContainer(), ref);
     }
 
@@ -288,8 +287,8 @@ public class AgreeScopeProvider extends
                     type = ((ConstStatement)container).getType();
                 }
                     
-            	if(type instanceof RecordType){
-            		NestedDotID elID = ((RecordType) type).getRecord();
+            	if(type instanceof AgreeDataType){
+            		NestedDotID elID = ((AgreeDataType) type).getData();
             		while(elID.getSub() != null){
             			elID = elID.getSub();
             		}
@@ -309,7 +308,7 @@ public class AgreeScopeProvider extends
         } else if (container instanceof NodeEq){
         	return result;
         	
-        }else if (container instanceof RecordType
+        }else if (container instanceof AgreeDataType
         		|| container instanceof RecordExpr){
         	
         	while(!(container instanceof AgreeContract) &&

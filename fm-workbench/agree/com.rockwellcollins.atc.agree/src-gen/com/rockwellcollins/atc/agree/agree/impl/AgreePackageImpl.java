@@ -5,11 +5,13 @@ package com.rockwellcollins.atc.agree.agree.impl;
 import com.rockwellcollins.atc.agree.agree.AgreeContract;
 import com.rockwellcollins.atc.agree.agree.AgreeContractLibrary;
 import com.rockwellcollins.atc.agree.agree.AgreeContractSubclause;
+import com.rockwellcollins.atc.agree.agree.AgreeDataType;
 import com.rockwellcollins.atc.agree.agree.AgreeFactory;
 import com.rockwellcollins.atc.agree.agree.AgreeLibrary;
 import com.rockwellcollins.atc.agree.agree.AgreePackage;
 import com.rockwellcollins.atc.agree.agree.AgreeSubclause;
 import com.rockwellcollins.atc.agree.agree.Arg;
+import com.rockwellcollins.atc.agree.agree.ArrayAccessExpr;
 import com.rockwellcollins.atc.agree.agree.AssertStatement;
 import com.rockwellcollins.atc.agree.agree.AssignStatement;
 import com.rockwellcollins.atc.agree.agree.AssumeStatement;
@@ -53,7 +55,6 @@ import com.rockwellcollins.atc.agree.agree.RealCast;
 import com.rockwellcollins.atc.agree.agree.RealLitExpr;
 import com.rockwellcollins.atc.agree.agree.RecordDefExpr;
 import com.rockwellcollins.atc.agree.agree.RecordExpr;
-import com.rockwellcollins.atc.agree.agree.RecordType;
 import com.rockwellcollins.atc.agree.agree.RecordUpdateExpr;
 import com.rockwellcollins.atc.agree.agree.SpecStatement;
 import com.rockwellcollins.atc.agree.agree.SynchStatement;
@@ -357,7 +358,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass recordTypeEClass = null;
+  private EClass agreeDataTypeEClass = null;
 
   /**
    * <!-- begin-user-doc -->
@@ -406,6 +407,13 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  private EClass arrayAccessExprEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   private EClass intLitExprEClass = null;
 
   /**
@@ -427,20 +435,6 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass realLitExprEClass = null;
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  private EClass boolLitExprEClass = null;
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
   private EClass thisExprEClass = null;
 
   /**
@@ -456,6 +450,20 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * @generated
    */
   private EClass realCastEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass realLitExprEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass boolLitExprEClass = null;
 
   /**
    * <!-- begin-user-doc -->
@@ -1472,9 +1480,9 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getRecordType()
+  public EClass getAgreeDataType()
   {
-    return recordTypeEClass;
+    return agreeDataTypeEClass;
   }
 
   /**
@@ -1482,9 +1490,9 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getRecordType_Record()
+  public EReference getAgreeDataType_Data()
   {
-    return (EReference)recordTypeEClass.getEStructuralFeatures().get(0);
+    return (EReference)agreeDataTypeEClass.getEStructuralFeatures().get(0);
   }
 
   /**
@@ -1702,6 +1710,36 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  public EClass getArrayAccessExpr()
+  {
+    return arrayAccessExprEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getArrayAccessExpr_Array()
+  {
+    return (EReference)arrayAccessExprEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getArrayAccessExpr_Arg()
+  {
+    return (EReference)arrayAccessExprEClass.getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   public EClass getIntLitExpr()
   {
     return intLitExprEClass;
@@ -1762,46 +1800,6 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getRealLitExpr()
-  {
-    return realLitExprEClass;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EAttribute getRealLitExpr_Val()
-  {
-    return (EAttribute)realLitExprEClass.getEStructuralFeatures().get(0);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EClass getBoolLitExpr()
-  {
-    return boolLitExprEClass;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EReference getBoolLitExpr_Val()
-  {
-    return (EReference)boolLitExprEClass.getEStructuralFeatures().get(0);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
   public EClass getThisExpr()
   {
     return thisExprEClass;
@@ -1855,6 +1853,46 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
   public EReference getRealCast_Expr()
   {
     return (EReference)realCastEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getRealLitExpr()
+  {
+    return realLitExprEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getRealLitExpr_Val()
+  {
+    return (EAttribute)realLitExprEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getBoolLitExpr()
+  {
+    return boolLitExprEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getBoolLitExpr_Val()
+  {
+    return (EReference)boolLitExprEClass.getEStructuralFeatures().get(0);
   }
 
   /**
@@ -2089,8 +2127,8 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     createEAttribute(primTypeEClass, PRIM_TYPE__HIGH_NEG);
     createEAttribute(primTypeEClass, PRIM_TYPE__RANGE_HIGH);
 
-    recordTypeEClass = createEClass(RECORD_TYPE);
-    createEReference(recordTypeEClass, RECORD_TYPE__RECORD);
+    agreeDataTypeEClass = createEClass(AGREE_DATA_TYPE);
+    createEReference(agreeDataTypeEClass, AGREE_DATA_TYPE__DATA);
 
     binaryExprEClass = createEClass(BINARY_EXPR);
     createEReference(binaryExprEClass, BINARY_EXPR__LEFT);
@@ -2119,6 +2157,10 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     createEReference(recordUpdateExprEClass, RECORD_UPDATE_EXPR__ARGS);
     createEReference(recordUpdateExprEClass, RECORD_UPDATE_EXPR__ARG_EXPR);
 
+    arrayAccessExprEClass = createEClass(ARRAY_ACCESS_EXPR);
+    createEReference(arrayAccessExprEClass, ARRAY_ACCESS_EXPR__ARRAY);
+    createEReference(arrayAccessExprEClass, ARRAY_ACCESS_EXPR__ARG);
+
     intLitExprEClass = createEClass(INT_LIT_EXPR);
     createEAttribute(intLitExprEClass, INT_LIT_EXPR__VAL);
 
@@ -2128,12 +2170,6 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     eventExprEClass = createEClass(EVENT_EXPR);
     createEReference(eventExprEClass, EVENT_EXPR__ID);
 
-    realLitExprEClass = createEClass(REAL_LIT_EXPR);
-    createEAttribute(realLitExprEClass, REAL_LIT_EXPR__VAL);
-
-    boolLitExprEClass = createEClass(BOOL_LIT_EXPR);
-    createEReference(boolLitExprEClass, BOOL_LIT_EXPR__VAL);
-
     thisExprEClass = createEClass(THIS_EXPR);
     createEReference(thisExprEClass, THIS_EXPR__SUB_THIS);
 
@@ -2142,6 +2178,12 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
 
     realCastEClass = createEClass(REAL_CAST);
     createEReference(realCastEClass, REAL_CAST__EXPR);
+
+    realLitExprEClass = createEClass(REAL_LIT_EXPR);
+    createEAttribute(realLitExprEClass, REAL_LIT_EXPR__VAL);
+
+    boolLitExprEClass = createEClass(BOOL_LIT_EXPR);
+    createEReference(boolLitExprEClass, BOOL_LIT_EXPR__VAL);
 
     fnCallExprEClass = createEClass(FN_CALL_EXPR);
     createEReference(fnCallExprEClass, FN_CALL_EXPR__FN);
@@ -2233,21 +2275,22 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     nodeEqEClass.getESuperTypes().add(this.getNodeStmt());
     nodeLemmaEClass.getESuperTypes().add(this.getNodeStmt());
     primTypeEClass.getESuperTypes().add(this.getType());
-    recordTypeEClass.getESuperTypes().add(this.getType());
+    agreeDataTypeEClass.getESuperTypes().add(this.getType());
     binaryExprEClass.getESuperTypes().add(this.getExpr());
     unaryExprEClass.getESuperTypes().add(this.getExpr());
     ifThenElseExprEClass.getESuperTypes().add(this.getExpr());
     prevExprEClass.getESuperTypes().add(this.getExpr());
     getPropertyExprEClass.getESuperTypes().add(this.getExpr());
     recordUpdateExprEClass.getESuperTypes().add(this.getExpr());
+    arrayAccessExprEClass.getESuperTypes().add(this.getExpr());
     intLitExprEClass.getESuperTypes().add(this.getExpr());
     preExprEClass.getESuperTypes().add(this.getExpr());
     eventExprEClass.getESuperTypes().add(this.getExpr());
-    realLitExprEClass.getESuperTypes().add(this.getExpr());
-    boolLitExprEClass.getESuperTypes().add(this.getExpr());
     thisExprEClass.getESuperTypes().add(this.getExpr());
     floorCastEClass.getESuperTypes().add(this.getExpr());
     realCastEClass.getESuperTypes().add(this.getExpr());
+    realLitExprEClass.getESuperTypes().add(this.getExpr());
+    boolLitExprEClass.getESuperTypes().add(this.getExpr());
     fnCallExprEClass.getESuperTypes().add(this.getComplexExpr());
     recordExprEClass.getESuperTypes().add(this.getComplexExpr());
 
@@ -2384,8 +2427,8 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     initEAttribute(getPrimType_HighNeg(), theEcorePackage.getEString(), "highNeg", null, 0, 1, PrimType.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEAttribute(getPrimType_RangeHigh(), theEcorePackage.getEString(), "rangeHigh", null, 0, 1, PrimType.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-    initEClass(recordTypeEClass, RecordType.class, "RecordType", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getRecordType_Record(), this.getNestedDotID(), null, "record", null, 0, 1, RecordType.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEClass(agreeDataTypeEClass, AgreeDataType.class, "AgreeDataType", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getAgreeDataType_Data(), this.getNestedDotID(), null, "data", null, 0, 1, AgreeDataType.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(binaryExprEClass, BinaryExpr.class, "BinaryExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getBinaryExpr_Left(), this.getExpr(), null, "left", null, 0, 1, BinaryExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -2414,6 +2457,10 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     initEReference(getRecordUpdateExpr_Args(), theAadl2Package.getNamedElement(), null, "args", null, 0, -1, RecordUpdateExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getRecordUpdateExpr_ArgExpr(), this.getExpr(), null, "argExpr", null, 0, -1, RecordUpdateExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
+    initEClass(arrayAccessExprEClass, ArrayAccessExpr.class, "ArrayAccessExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getArrayAccessExpr_Array(), this.getExpr(), null, "array", null, 0, 1, ArrayAccessExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getArrayAccessExpr_Arg(), this.getExpr(), null, "arg", null, 0, 1, ArrayAccessExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
     initEClass(intLitExprEClass, IntLitExpr.class, "IntLitExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEAttribute(getIntLitExpr_Val(), theEcorePackage.getEString(), "val", null, 0, 1, IntLitExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
@@ -2423,12 +2470,6 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     initEClass(eventExprEClass, EventExpr.class, "EventExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getEventExpr_Id(), this.getNestedDotID(), null, "id", null, 0, 1, EventExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-    initEClass(realLitExprEClass, RealLitExpr.class, "RealLitExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEAttribute(getRealLitExpr_Val(), theEcorePackage.getEString(), "val", null, 0, 1, RealLitExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-    initEClass(boolLitExprEClass, BoolLitExpr.class, "BoolLitExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getBoolLitExpr_Val(), theAadl2Package.getBooleanLiteral(), null, "val", null, 0, 1, BoolLitExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
     initEClass(thisExprEClass, ThisExpr.class, "ThisExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getThisExpr_SubThis(), this.getNestedDotID(), null, "subThis", null, 0, 1, ThisExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
@@ -2437,6 +2478,12 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
 
     initEClass(realCastEClass, RealCast.class, "RealCast", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getRealCast_Expr(), this.getExpr(), null, "expr", null, 0, 1, RealCast.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+    initEClass(realLitExprEClass, RealLitExpr.class, "RealLitExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEAttribute(getRealLitExpr_Val(), theEcorePackage.getEString(), "val", null, 0, 1, RealLitExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+    initEClass(boolLitExprEClass, BoolLitExpr.class, "BoolLitExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getBoolLitExpr_Val(), theAadl2Package.getBooleanLiteral(), null, "val", null, 0, 1, BoolLitExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(fnCallExprEClass, FnCallExpr.class, "FnCallExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getFnCallExpr_Fn(), this.getNestedDotID(), null, "fn", null, 0, 1, FnCallExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

@@ -33,11 +33,11 @@ import org.osate.aadl2.Subcomponent;
 import org.osate.aadl2.instance.ComponentInstance;
 import org.osate.aadl2.instance.FeatureInstance;
 
+import com.rockwellcollins.atc.agree.agree.AgreeDataType;
 import com.rockwellcollins.atc.agree.agree.Arg;
 import com.rockwellcollins.atc.agree.agree.NestedDotID;
 import com.rockwellcollins.atc.agree.agree.PrimType;
 import com.rockwellcollins.atc.agree.agree.RecordDefExpr;
-import com.rockwellcollins.atc.agree.agree.RecordType;
 import com.rockwellcollins.atc.agree.agree.ThisExpr;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeASTBuilder;
 
@@ -52,7 +52,7 @@ public class AgreeRecordUtils {
         if (type instanceof PrimType) {
             return ((PrimType) type).getString();
         } else {
-            return getIDTypeStr((AgreeUtils.getFinalNestId(((RecordType) type).getRecord())));
+            return getIDTypeStr((AgreeUtils.getFinalNestId(((AgreeDataType) type).getData())));
         }
     }
 
@@ -61,7 +61,7 @@ public class AgreeRecordUtils {
         if (type instanceof PrimType) {
             return ((PrimType) type).getString();
         } else {
-            return getRecordTypeName(((RecordType) type).getRecord(), typeMap, typeExpressions);
+            return getRecordTypeName(((AgreeDataType) type).getData(), typeMap, typeExpressions);
         }
     }
 
@@ -113,7 +113,7 @@ public class AgreeRecordUtils {
                 if (argType instanceof PrimType) {
                     typeStr = ((PrimType) argType).getString();
                 } else {
-                    NestedDotID nestId = ((RecordType) argType).getRecord();
+                    NestedDotID nestId = ((AgreeDataType) argType).getData();
                     NamedElement namedEl = AgreeUtils.getFinalNestId(nestId);
                     typeStr = getRecordTypeName(namedEl, typeMap, typeExpressions);
                 }
@@ -152,7 +152,7 @@ public class AgreeRecordUtils {
                 foundType = true;
                 for (Entry<String, Type> field : type.fields.entrySet()) {
                     Type fieldType = field.getValue();
-                    if (!(fieldType instanceof NamedType) && !(fieldType instanceof RecordType)) {
+                    if (!(fieldType instanceof NamedType) && !(fieldType instanceof AgreeDataType)) {
                         throw new AgreeException(
                                 "Unhandled type: '" + fieldType.getClass().getTypeName() + "'");
                     }
@@ -266,18 +266,6 @@ public class AgreeRecordUtils {
         objPrefix = ((AadlPackage) container).getName() + objPrefix + dotChar;
 
         return objPrefix;
-    }
-
-    public static List<VarDecl> argsToVarDeclList(EList<Arg> args, Map<NamedElement, String> typeMap,
-            Set<jkind.lustre.RecordType> typeExpressions) {
-        List<VarDecl> varList = new ArrayList<VarDecl>();
-        for (Arg arg : args) {
-            Type type = getNamedType(getRecordTypeName(arg.getType(), typeMap, typeExpressions));
-            VarDecl varDecl = new VarDecl(arg.getName(), type);
-            varList.add(varDecl);
-        }
-
-        return varList;
     }
 
     public static NamedElement namedElFromId(EObject obj, ComponentInstance compInst) {

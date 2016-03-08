@@ -374,13 +374,13 @@ public interface AgreeFactory extends EFactory
   PrimType createPrimType();
 
   /**
-   * Returns a new object of class '<em>Record Type</em>'.
+   * Returns a new object of class '<em>Data Type</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @return a new object of class '<em>Record Type</em>'.
+   * @return a new object of class '<em>Data Type</em>'.
    * @generated
    */
-  RecordType createRecordType();
+  AgreeDataType createAgreeDataType();
 
   /**
    * Returns a new object of class '<em>Binary Expr</em>'.
@@ -437,6 +437,15 @@ public interface AgreeFactory extends EFactory
   RecordUpdateExpr createRecordUpdateExpr();
 
   /**
+   * Returns a new object of class '<em>Array Access Expr</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Array Access Expr</em>'.
+   * @generated
+   */
+  ArrayAccessExpr createArrayAccessExpr();
+
+  /**
    * Returns a new object of class '<em>Int Lit Expr</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -464,24 +473,6 @@ public interface AgreeFactory extends EFactory
   EventExpr createEventExpr();
 
   /**
-   * Returns a new object of class '<em>Real Lit Expr</em>'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return a new object of class '<em>Real Lit Expr</em>'.
-   * @generated
-   */
-  RealLitExpr createRealLitExpr();
-
-  /**
-   * Returns a new object of class '<em>Bool Lit Expr</em>'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return a new object of class '<em>Bool Lit Expr</em>'.
-   * @generated
-   */
-  BoolLitExpr createBoolLitExpr();
-
-  /**
    * Returns a new object of class '<em>This Expr</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -507,6 +498,24 @@ public interface AgreeFactory extends EFactory
    * @generated
    */
   RealCast createRealCast();
+
+  /**
+   * Returns a new object of class '<em>Real Lit Expr</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Real Lit Expr</em>'.
+   * @generated
+   */
+  RealLitExpr createRealLitExpr();
+
+  /**
+   * Returns a new object of class '<em>Bool Lit Expr</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Bool Lit Expr</em>'.
+   * @generated
+   */
+  BoolLitExpr createBoolLitExpr();
 
   /**
    * Returns a new object of class '<em>Fn Call Expr</em>'.

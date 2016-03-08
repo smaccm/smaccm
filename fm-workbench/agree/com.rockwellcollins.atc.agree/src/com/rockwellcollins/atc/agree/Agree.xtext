@@ -110,7 +110,7 @@ Arg returns Arg:
 
 Type returns Type:
 	{PrimType} string=primTypes ('[' (lowNeg='-')? rangeLow=(INTEGER_LIT|REAL_LIT) ',' (highNeg='-')? rangeHigh=(INTEGER_LIT|REAL_LIT) ']')?
-|	{RecordType} record=NestedDotID
+|	{AgreeDataType} data=NestedDotID
 ;
 
 primTypes:
@@ -164,7 +164,11 @@ PreDefFnExpr returns Expr:
 	| RecordUpdateExpr;
 
 RecordUpdateExpr returns Expr:
-	TermExpr (=> ({RecordUpdateExpr.record=current} ('{' args+=[aadl2::NamedElement|ID] ':=' argExpr+=Expr '}')+))?
+	ArrayAccessExpr (=> ({RecordUpdateExpr.record=current} ('{' args+=[aadl2::NamedElement|ID] ':=' argExpr+=Expr '}')+))?
+;
+
+ArrayAccessExpr returns Expr:
+	TermExpr (=> ({ArrayAccessExpr.array=current} '[' arg=Expr ']' ))?
 ;
 
 TermExpr returns Expr:
@@ -172,11 +176,11 @@ TermExpr returns Expr:
 	| {IntLitExpr} val=INTEGER_LIT
 	| {PreExpr} 'pre' '(' expr=Expr ')'
 	| {EventExpr} 'event' '(' id = NestedDotID ')'
-	| {RealLitExpr} val=REAL_LIT
-	| {BoolLitExpr} val=BooleanLiteral
 	| {ThisExpr} 'this' ('.' subThis=NestedDotID)?
 	| {FloorCast} 'floor' '(' expr=Expr ')'
 	| {RealCast}  'real' '(' expr=Expr ')'
+	| {RealLitExpr} val=REAL_LIT
+	| {BoolLitExpr} val=BooleanLiteral
 	| '(' Expr ')';
 	
 

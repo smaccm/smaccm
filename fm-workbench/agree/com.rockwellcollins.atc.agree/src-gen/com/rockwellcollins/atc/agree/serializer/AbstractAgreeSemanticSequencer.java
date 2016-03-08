@@ -8,8 +8,10 @@ import com.google.inject.Provider;
 import com.rockwellcollins.atc.agree.agree.AgreeContract;
 import com.rockwellcollins.atc.agree.agree.AgreeContractLibrary;
 import com.rockwellcollins.atc.agree.agree.AgreeContractSubclause;
+import com.rockwellcollins.atc.agree.agree.AgreeDataType;
 import com.rockwellcollins.atc.agree.agree.AgreePackage;
 import com.rockwellcollins.atc.agree.agree.Arg;
+import com.rockwellcollins.atc.agree.agree.ArrayAccessExpr;
 import com.rockwellcollins.atc.agree.agree.AssertStatement;
 import com.rockwellcollins.atc.agree.agree.AssignStatement;
 import com.rockwellcollins.atc.agree.agree.AssumeStatement;
@@ -48,7 +50,6 @@ import com.rockwellcollins.atc.agree.agree.RealCast;
 import com.rockwellcollins.atc.agree.agree.RealLitExpr;
 import com.rockwellcollins.atc.agree.agree.RecordDefExpr;
 import com.rockwellcollins.atc.agree.agree.RecordExpr;
-import com.rockwellcollins.atc.agree.agree.RecordType;
 import com.rockwellcollins.atc.agree.agree.RecordUpdateExpr;
 import com.rockwellcollins.atc.agree.agree.SynchStatement;
 import com.rockwellcollins.atc.agree.agree.ThisExpr;
@@ -196,8 +197,14 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 			case AgreePackage.AGREE_CONTRACT_SUBCLAUSE:
 				sequence_AgreeSubclause(context, (AgreeContractSubclause) semanticObject); 
 				return; 
+			case AgreePackage.AGREE_DATA_TYPE:
+				sequence_Type(context, (AgreeDataType) semanticObject); 
+				return; 
 			case AgreePackage.ARG:
 				sequence_Arg(context, (Arg) semanticObject); 
+				return; 
+			case AgreePackage.ARRAY_ACCESS_EXPR:
+				sequence_ArrayAccessExpr(context, (ArrayAccessExpr) semanticObject); 
 				return; 
 			case AgreePackage.ASSERT_STATEMENT:
 				sequence_SpecStatement(context, (AssertStatement) semanticObject); 
@@ -313,9 +320,6 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 			case AgreePackage.RECORD_EXPR:
 				sequence_ComplexExpr(context, (RecordExpr) semanticObject); 
 				return; 
-			case AgreePackage.RECORD_TYPE:
-				sequence_Type(context, (RecordType) semanticObject); 
-				return; 
 			case AgreePackage.RECORD_UPDATE_EXPR:
 				sequence_RecordUpdateExpr(context, (RecordUpdateExpr) semanticObject); 
 				return; 
@@ -382,6 +386,15 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     (name=ID type=Type)
 	 */
 	protected void sequence_Arg(EObject context, Arg semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Constraint:
+	 *     (array=ArrayAccessExpr_ArrayAccessExpr_1_0_0 arg=Expr)
+	 */
+	protected void sequence_ArrayAccessExpr(EObject context, ArrayAccessExpr semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
@@ -739,18 +752,18 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	
 	/**
 	 * Constraint:
-	 *     (string=primTypes (lowNeg='-'? (rangeLow=INTEGER_LIT | rangeLow=REAL_LIT) highNeg='-'? (rangeHigh=INTEGER_LIT | rangeHigh=REAL_LIT))?)
+	 *     data=NestedDotID
 	 */
-	protected void sequence_Type(EObject context, PrimType semanticObject) {
+	protected void sequence_Type(EObject context, AgreeDataType semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
 	
 	/**
 	 * Constraint:
-	 *     record=NestedDotID
+	 *     (string=primTypes (lowNeg='-'? (rangeLow=INTEGER_LIT | rangeLow=REAL_LIT) highNeg='-'? (rangeHigh=INTEGER_LIT | rangeHigh=REAL_LIT))?)
 	 */
-	protected void sequence_Type(EObject context, RecordType semanticObject) {
+	protected void sequence_Type(EObject context, PrimType semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	

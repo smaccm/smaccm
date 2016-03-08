@@ -7,6 +7,7 @@ import org.osate.aadl2.DataSubcomponentType;
 import org.osate.aadl2.EventDataPort;
 import org.osate.aadl2.NamedElement;
 
+import com.rockwellcollins.atc.agree.agree.AgreeDataType;
 import com.rockwellcollins.atc.agree.agree.Arg;
 import com.rockwellcollins.atc.agree.agree.BinaryExpr;
 import com.rockwellcollins.atc.agree.agree.Expr;
@@ -15,7 +16,6 @@ import com.rockwellcollins.atc.agree.agree.NestedDotID;
 import com.rockwellcollins.atc.agree.agree.PreExpr;
 import com.rockwellcollins.atc.agree.agree.RecordDefExpr;
 import com.rockwellcollins.atc.agree.agree.RecordExpr;
-import com.rockwellcollins.atc.agree.agree.RecordType;
 import com.rockwellcollins.atc.agree.agree.RecordUpdateExpr;
 import com.rockwellcollins.atc.agree.agree.Type;
 
@@ -74,8 +74,8 @@ public class RecordExprScoper {
     	NamedElement recStatement = nestExpr.getBase();
     	if(recStatement instanceof Arg){
     		Type type = ((Arg) recStatement).getType();
-    		if(type instanceof RecordType){
-    			nestExpr = ((RecordType) type).getRecord();
+    		if(type instanceof AgreeDataType){
+    			nestExpr = ((AgreeDataType) type).getData();
     			while(nestExpr.getSub() != null){
     	    		nestExpr = nestExpr.getSub();
     	    	}

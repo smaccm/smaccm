@@ -26,6 +26,7 @@ import org.osate.xtext.aadl2.properties.ui.contentassist.PropertiesProposalProvi
 import com.google.inject.Injector;
 import com.rockwellcollins.atc.agree.agree.AgreeContract;
 import com.rockwellcollins.atc.agree.agree.AgreeContractLibrary;
+import com.rockwellcollins.atc.agree.agree.AgreeDataType;
 import com.rockwellcollins.atc.agree.agree.AgreeLibrary;
 import com.rockwellcollins.atc.agree.agree.AgreePackage;
 import com.rockwellcollins.atc.agree.agree.Arg;
@@ -33,7 +34,6 @@ import com.rockwellcollins.atc.agree.agree.ConstStatement;
 import com.rockwellcollins.atc.agree.agree.Contract;
 import com.rockwellcollins.atc.agree.agree.NestedDotID;
 import com.rockwellcollins.atc.agree.agree.RecordDefExpr;
-import com.rockwellcollins.atc.agree.agree.RecordType;
 import com.rockwellcollins.atc.agree.agree.SpecStatement;
 import com.rockwellcollins.atc.agree.agree.Type;
 import com.rockwellcollins.atc.agree.ui.contentassist.AgreeProposalProvider;
@@ -132,7 +132,7 @@ public class AgreeAnnexContentAssist implements AnnexContentAssist {
 		
 		if(base instanceof Arg){
 			Type type = ((Arg) base).getType();
-			NestedDotID elID = ((RecordType) type).getRecord();
+			NestedDotID elID = ((AgreeDataType) type).getData();
     		namedEl = elID.getBase();
 		}else if(base instanceof DataPort){
 			namedEl = ((DataPort) base).getDataFeatureClassifier();

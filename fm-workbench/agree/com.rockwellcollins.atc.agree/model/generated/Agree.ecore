@@ -145,8 +145,8 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="highNeg" eType="ecore:EDataType platform:/plugin/org.eclipse.emf.ecore/model/Ecore.ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="rangeHigh" eType="ecore:EDataType platform:/plugin/org.eclipse.emf.ecore/model/Ecore.ecore#//EString"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="RecordType" eSuperTypes="#//Type">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="record" eType="#//NestedDotID"
+  <eClassifiers xsi:type="ecore:EClass" name="AgreeDataType" eSuperTypes="#//Type">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="data" eType="#//NestedDotID"
         containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="BinaryExpr" eSuperTypes="#//Expr">
@@ -182,6 +182,11 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="argExpr" upperBound="-1"
         eType="#//Expr" containment="true"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ArrayAccessExpr" eSuperTypes="#//Expr">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="array" eType="#//Expr"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="arg" eType="#//Expr" containment="true"/>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="IntLitExpr" eSuperTypes="#//Expr">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="val" eType="ecore:EDataType platform:/plugin/org.eclipse.emf.ecore/model/Ecore.ecore#//EString"/>
   </eClassifiers>
@@ -190,13 +195,6 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="EventExpr" eSuperTypes="#//Expr">
     <eStructuralFeatures xsi:type="ecore:EReference" name="id" eType="#//NestedDotID"
-        containment="true"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="RealLitExpr" eSuperTypes="#//Expr">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="val" eType="ecore:EDataType platform:/plugin/org.eclipse.emf.ecore/model/Ecore.ecore#//EString"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="BoolLitExpr" eSuperTypes="#//Expr">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="val" eType="ecore:EClass platform:/resource/org.osate.aadl2/model/aadl2.ecore#//BooleanLiteral"
         containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ThisExpr" eSuperTypes="#//Expr">
@@ -208,6 +206,13 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="RealCast" eSuperTypes="#//Expr">
     <eStructuralFeatures xsi:type="ecore:EReference" name="expr" eType="#//Expr" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="RealLitExpr" eSuperTypes="#//Expr">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="val" eType="ecore:EDataType platform:/plugin/org.eclipse.emf.ecore/model/Ecore.ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="BoolLitExpr" eSuperTypes="#//Expr">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="val" eType="ecore:EClass platform:/resource/org.osate.aadl2/model/aadl2.ecore#//BooleanLiteral"
+        containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="FnCallExpr" eSuperTypes="#//ComplexExpr">
     <eStructuralFeatures xsi:type="ecore:EReference" name="fn" eType="#//NestedDotID"

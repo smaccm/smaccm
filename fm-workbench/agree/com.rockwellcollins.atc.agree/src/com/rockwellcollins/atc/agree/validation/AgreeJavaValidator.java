@@ -52,9 +52,11 @@ import org.osate.aadl2.impl.SubcomponentImpl;
 import org.osate.annexsupport.AnnexUtil;
 
 import com.rockwellcollins.atc.agree.agree.AgreeContract;
+import com.rockwellcollins.atc.agree.agree.AgreeDataType;
 import com.rockwellcollins.atc.agree.agree.AgreePackage;
 import com.rockwellcollins.atc.agree.agree.AgreeSubclause;
 import com.rockwellcollins.atc.agree.agree.Arg;
+import com.rockwellcollins.atc.agree.agree.ArrayAccessExpr;
 import com.rockwellcollins.atc.agree.agree.AssertStatement;
 import com.rockwellcollins.atc.agree.agree.AssignStatement;
 import com.rockwellcollins.atc.agree.agree.AssumeStatement;
@@ -94,7 +96,6 @@ import com.rockwellcollins.atc.agree.agree.RealCast;
 import com.rockwellcollins.atc.agree.agree.RealLitExpr;
 import com.rockwellcollins.atc.agree.agree.RecordDefExpr;
 import com.rockwellcollins.atc.agree.agree.RecordExpr;
-import com.rockwellcollins.atc.agree.agree.RecordType;
 import com.rockwellcollins.atc.agree.agree.RecordUpdateExpr;
 import com.rockwellcollins.atc.agree.agree.SpecStatement;
 import com.rockwellcollins.atc.agree.agree.SynchStatement;
@@ -176,6 +177,16 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 
 	}
 
+	@Check(CheckType.FAST)
+	public void checkArrayAccess(ArrayAccessExpr access){
+	    Expr array = access.getArray();
+	    AgreeType type = getAgreeType(array);
+	    
+	    if(!(type instanceof AgreeArrayType)){
+	        error(access, "Array access to expression of non-array type");
+	    }
+	}
+	
 	@Check(CheckType.FAST)
 	public void checkAssign(AssignStatement assign){
 	    NestedDotID dotId = assign.getId();
@@ -535,8 +546,8 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 	}
 
 	@Check(CheckType.FAST)
-	public void checkRecordType(RecordType recType) {
-		NestedDotID recId = recType.getRecord();
+	public void checkDataType(AgreeDataType recType) {
+		NestedDotID recId = recType.getData();
 		NamedElement finalId = getFinalNestId(recId);
 
 		if (!(finalId instanceof DataImplementation) && !(finalId instanceof RecordDefExpr)) {
@@ -696,8 +707,8 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 
 		for (Arg arg : recordDef.getArgs()) {
 			Type type = arg.getType();
-			if (type instanceof RecordType) {
-				NestedDotID subRec = ((RecordType) type).getRecord();
+			if (type instanceof AgreeDataType) {
+				NestedDotID subRec = ((AgreeDataType) type).getData();
 				NamedElement finalId = getFinalNestId(subRec);
 
 				if (!(finalId instanceof DataImplementation) && !(finalId instanceof RecordDefExpr)) {
@@ -724,8 +735,8 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 				}
 				for (Arg arg : subRecDef.getArgs()) {
 					Type type = arg.getType();
-					if (type instanceof RecordType) {
-						NestedDotID subRecId = ((RecordType) type).getRecord();
+					if (type instanceof AgreeDataType) {
+						NestedDotID subRecId = ((AgreeDataType) type).getData();
 						NamedElement subFinalEl = getFinalNestId(subRecId);
 						if (subFinalEl instanceof RecordDefExpr) {
 							recordClosure.add((RecordDefExpr) subFinalEl);
@@ -790,8 +801,8 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 			typeName = ((PrimType) type).getString();
 			return new AgreeType(typeName);
 		} else {
-			RecordType recType = (RecordType) type;
-			NestedDotID recId = recType.getRecord();
+		    AgreeDataType dataType = (AgreeDataType) type;
+			NestedDotID recId = dataType.getData();
 			return getNestIdAsType(recId);
 		}
 	}
@@ -1151,7 +1162,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 		for (NestedDotID dotId : dotIds) {
 			NamedElement id = getFinalNestId(dotId);
 			if (!(id instanceof Arg) && !(id instanceof ConstStatement) && !(id instanceof NodeDefExpr)
-					&& !(id instanceof FnDefExpr) && !(id instanceof DataSubcomponent) && !(id instanceof RecordType)
+					&& !(id instanceof FnDefExpr) && !(id instanceof DataSubcomponent) && !(id instanceof AgreeDataType)
 					&& !(id instanceof DataImplementation) && !(id instanceof RecordDefExpr)) {
 				error(dotId, "Only arguments, constants, and node calls allowed within a node");
 			}
@@ -1778,6 +1789,10 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 		return ERROR;
 	}
 
+	private AgreeType getAgreeType(ArrayAccessExpr expr) {
+	    return getAgreeType(expr.getArray());
+	}
+	
 	private AgreeType getAgreeType(Expr expr) {
 		if (expr instanceof BinaryExpr) {
 			return getAgreeType((BinaryExpr) expr);
@@ -1813,6 +1828,8 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 			return REAL;
 		} else if (expr instanceof EventExpr) {
 			return BOOL;
+		} else if (expr instanceof ArrayAccessExpr){
+		    return getAgreeType((ArrayAccessExpr) expr);
 		}
 
 		return ERROR;

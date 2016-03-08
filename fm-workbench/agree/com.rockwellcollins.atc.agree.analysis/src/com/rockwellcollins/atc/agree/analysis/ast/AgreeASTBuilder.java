@@ -728,7 +728,6 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
     private List<VarDecl> agreeVarsFromArgs(EList<Arg> args, ComponentInstance compInst) {
         List<VarDecl> agreeVars = new ArrayList<>();
         for (Arg arg : args) {
-            // TODO: decide whether or not to make these VarDecls or AgreeVars
             NamedType type =
                     getNamedType(AgreeRecordUtils.getRecordTypeName(arg.getType(), typeMap, globalTypes));
             agreeVars.add(new AgreeVar(arg.getName(), type, arg, compInst));

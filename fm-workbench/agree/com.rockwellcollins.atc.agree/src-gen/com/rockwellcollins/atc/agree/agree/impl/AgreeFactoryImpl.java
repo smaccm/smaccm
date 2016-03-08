@@ -103,21 +103,22 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
       case AgreePackage.NODE_EQ: return createNodeEq();
       case AgreePackage.NODE_LEMMA: return createNodeLemma();
       case AgreePackage.PRIM_TYPE: return createPrimType();
-      case AgreePackage.RECORD_TYPE: return createRecordType();
+      case AgreePackage.AGREE_DATA_TYPE: return createAgreeDataType();
       case AgreePackage.BINARY_EXPR: return createBinaryExpr();
       case AgreePackage.UNARY_EXPR: return createUnaryExpr();
       case AgreePackage.IF_THEN_ELSE_EXPR: return createIfThenElseExpr();
       case AgreePackage.PREV_EXPR: return createPrevExpr();
       case AgreePackage.GET_PROPERTY_EXPR: return createGetPropertyExpr();
       case AgreePackage.RECORD_UPDATE_EXPR: return createRecordUpdateExpr();
+      case AgreePackage.ARRAY_ACCESS_EXPR: return createArrayAccessExpr();
       case AgreePackage.INT_LIT_EXPR: return createIntLitExpr();
       case AgreePackage.PRE_EXPR: return createPreExpr();
       case AgreePackage.EVENT_EXPR: return createEventExpr();
-      case AgreePackage.REAL_LIT_EXPR: return createRealLitExpr();
-      case AgreePackage.BOOL_LIT_EXPR: return createBoolLitExpr();
       case AgreePackage.THIS_EXPR: return createThisExpr();
       case AgreePackage.FLOOR_CAST: return createFloorCast();
       case AgreePackage.REAL_CAST: return createRealCast();
+      case AgreePackage.REAL_LIT_EXPR: return createRealLitExpr();
+      case AgreePackage.BOOL_LIT_EXPR: return createBoolLitExpr();
       case AgreePackage.FN_CALL_EXPR: return createFnCallExpr();
       case AgreePackage.RECORD_EXPR: return createRecordExpr();
       default:
@@ -559,10 +560,10 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public RecordType createRecordType()
+  public AgreeDataType createAgreeDataType()
   {
-    RecordTypeImpl recordType = new RecordTypeImpl();
-    return recordType;
+    AgreeDataTypeImpl agreeDataType = new AgreeDataTypeImpl();
+    return agreeDataType;
   }
 
   /**
@@ -636,6 +637,17 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
    * <!-- end-user-doc -->
    * @generated
    */
+  public ArrayAccessExpr createArrayAccessExpr()
+  {
+    ArrayAccessExprImpl arrayAccessExpr = new ArrayAccessExprImpl();
+    return arrayAccessExpr;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   public IntLitExpr createIntLitExpr()
   {
     IntLitExprImpl intLitExpr = new IntLitExprImpl();
@@ -669,28 +681,6 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public RealLitExpr createRealLitExpr()
-  {
-    RealLitExprImpl realLitExpr = new RealLitExprImpl();
-    return realLitExpr;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public BoolLitExpr createBoolLitExpr()
-  {
-    BoolLitExprImpl boolLitExpr = new BoolLitExprImpl();
-    return boolLitExpr;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
   public ThisExpr createThisExpr()
   {
     ThisExprImpl thisExpr = new ThisExprImpl();
@@ -717,6 +707,28 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
   {
     RealCastImpl realCast = new RealCastImpl();
     return realCast;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public RealLitExpr createRealLitExpr()
+  {
+    RealLitExprImpl realLitExpr = new RealLitExprImpl();
+    return realLitExpr;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public BoolLitExpr createBoolLitExpr()
+  {
+    BoolLitExprImpl boolLitExpr = new BoolLitExprImpl();
+    return boolLitExpr;
   }
 
   /**
