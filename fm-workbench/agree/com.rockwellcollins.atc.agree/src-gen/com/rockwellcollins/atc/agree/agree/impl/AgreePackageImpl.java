@@ -1730,7 +1730,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getArrayAccessExpr_Arg()
+  public EReference getArrayAccessExpr_Args()
   {
     return (EReference)arrayAccessExprEClass.getEStructuralFeatures().get(1);
   }
@@ -2159,7 +2159,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
 
     arrayAccessExprEClass = createEClass(ARRAY_ACCESS_EXPR);
     createEReference(arrayAccessExprEClass, ARRAY_ACCESS_EXPR__ARRAY);
-    createEReference(arrayAccessExprEClass, ARRAY_ACCESS_EXPR__ARG);
+    createEReference(arrayAccessExprEClass, ARRAY_ACCESS_EXPR__ARGS);
 
     intLitExprEClass = createEClass(INT_LIT_EXPR);
     createEAttribute(intLitExprEClass, INT_LIT_EXPR__VAL);
@@ -2459,7 +2459,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
 
     initEClass(arrayAccessExprEClass, ArrayAccessExpr.class, "ArrayAccessExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getArrayAccessExpr_Array(), this.getExpr(), null, "array", null, 0, 1, ArrayAccessExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getArrayAccessExpr_Arg(), this.getExpr(), null, "arg", null, 0, 1, ArrayAccessExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getArrayAccessExpr_Args(), this.getExpr(), null, "args", null, 0, -1, ArrayAccessExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(intLitExprEClass, IntLitExpr.class, "IntLitExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEAttribute(getIntLitExpr_Val(), theEcorePackage.getEString(), "val", null, 0, 1, IntLitExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

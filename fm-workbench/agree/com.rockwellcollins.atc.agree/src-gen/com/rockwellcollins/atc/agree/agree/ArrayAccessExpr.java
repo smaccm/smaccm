@@ -2,6 +2,7 @@
  */
 package com.rockwellcollins.atc.agree.agree;
 
+import org.eclipse.emf.common.util.EList;
 
 /**
  * <!-- begin-user-doc -->
@@ -13,7 +14,7 @@ package com.rockwellcollins.atc.agree.agree;
  * </p>
  * <ul>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.ArrayAccessExpr#getArray <em>Array</em>}</li>
- *   <li>{@link com.rockwellcollins.atc.agree.agree.ArrayAccessExpr#getArg <em>Arg</em>}</li>
+ *   <li>{@link com.rockwellcollins.atc.agree.agree.ArrayAccessExpr#getArgs <em>Args</em>}</li>
  * </ul>
  *
  * @see com.rockwellcollins.atc.agree.agree.AgreePackage#getArrayAccessExpr()
@@ -49,29 +50,19 @@ public interface ArrayAccessExpr extends Expr
   void setArray(Expr value);
 
   /**
-   * Returns the value of the '<em><b>Arg</b></em>' containment reference.
+   * Returns the value of the '<em><b>Args</b></em>' containment reference list.
+   * The list contents are of type {@link com.rockwellcollins.atc.agree.agree.Expr}.
    * <!-- begin-user-doc -->
    * <p>
-   * If the meaning of the '<em>Arg</em>' containment reference isn't clear,
+   * If the meaning of the '<em>Args</em>' containment reference list isn't clear,
    * there really should be more of a description here...
    * </p>
    * <!-- end-user-doc -->
-   * @return the value of the '<em>Arg</em>' containment reference.
-   * @see #setArg(Expr)
-   * @see com.rockwellcollins.atc.agree.agree.AgreePackage#getArrayAccessExpr_Arg()
+   * @return the value of the '<em>Args</em>' containment reference list.
+   * @see com.rockwellcollins.atc.agree.agree.AgreePackage#getArrayAccessExpr_Args()
    * @model containment="true"
    * @generated
    */
-  Expr getArg();
-
-  /**
-   * Sets the value of the '{@link com.rockwellcollins.atc.agree.agree.ArrayAccessExpr#getArg <em>Arg</em>}' containment reference.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @param value the new value of the '<em>Arg</em>' containment reference.
-   * @see #getArg()
-   * @generated
-   */
-  void setArg(Expr value);
+  EList<Expr> getArgs();
 
 } // ArrayAccessExpr

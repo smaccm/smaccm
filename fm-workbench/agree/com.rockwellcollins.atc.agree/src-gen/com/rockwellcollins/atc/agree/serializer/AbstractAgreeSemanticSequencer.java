@@ -392,7 +392,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	
 	/**
 	 * Constraint:
-	 *     (array=ArrayAccessExpr_ArrayAccessExpr_1_0_0 arg=Expr)
+	 *     (array=ArrayAccessExpr_ArrayAccessExpr_1_0_0 args+=Expr+)
 	 */
 	protected void sequence_ArrayAccessExpr(EObject context, ArrayAccessExpr semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);

@@ -185,7 +185,8 @@
   <eClassifiers xsi:type="ecore:EClass" name="ArrayAccessExpr" eSuperTypes="#//Expr">
     <eStructuralFeatures xsi:type="ecore:EReference" name="array" eType="#//Expr"
         containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="arg" eType="#//Expr" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="args" upperBound="-1" eType="#//Expr"
+        containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="IntLitExpr" eSuperTypes="#//Expr">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="val" eType="ecore:EDataType platform:/plugin/org.eclipse.emf.ecore/model/Ecore.ecore#//EString"/>

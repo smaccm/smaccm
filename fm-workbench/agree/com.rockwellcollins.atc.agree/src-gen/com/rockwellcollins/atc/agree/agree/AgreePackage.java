@@ -2869,13 +2869,13 @@ public interface AgreePackage extends EPackage
   int ARRAY_ACCESS_EXPR__ARRAY = EXPR_FEATURE_COUNT + 0;
 
   /**
-   * The feature id for the '<em><b>Arg</b></em>' containment reference.
+   * The feature id for the '<em><b>Args</b></em>' containment reference list.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int ARRAY_ACCESS_EXPR__ARG = EXPR_FEATURE_COUNT + 1;
+  int ARRAY_ACCESS_EXPR__ARGS = EXPR_FEATURE_COUNT + 1;
 
   /**
    * The number of structural features of the '<em>Array Access Expr</em>' class.
@@ -4626,15 +4626,15 @@ public interface AgreePackage extends EPackage
   EReference getArrayAccessExpr_Array();
 
   /**
-   * Returns the meta object for the containment reference '{@link com.rockwellcollins.atc.agree.agree.ArrayAccessExpr#getArg <em>Arg</em>}'.
+   * Returns the meta object for the containment reference list '{@link com.rockwellcollins.atc.agree.agree.ArrayAccessExpr#getArgs <em>Args</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @return the meta object for the containment reference '<em>Arg</em>'.
-   * @see com.rockwellcollins.atc.agree.agree.ArrayAccessExpr#getArg()
+   * @return the meta object for the containment reference list '<em>Args</em>'.
+   * @see com.rockwellcollins.atc.agree.agree.ArrayAccessExpr#getArgs()
    * @see #getArrayAccessExpr()
    * @generated
    */
-  EReference getArrayAccessExpr_Arg();
+  EReference getArrayAccessExpr_Args();
 
   /**
    * Returns the meta object for class '{@link com.rockwellcollins.atc.agree.agree.IntLitExpr <em>Int Lit Expr</em>}'.
@@ -5941,12 +5941,12 @@ public interface AgreePackage extends EPackage
     EReference ARRAY_ACCESS_EXPR__ARRAY = eINSTANCE.getArrayAccessExpr_Array();
 
     /**
-     * The meta object literal for the '<em><b>Arg</b></em>' containment reference feature.
+     * The meta object literal for the '<em><b>Args</b></em>' containment reference list feature.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      */
-    EReference ARRAY_ACCESS_EXPR__ARG = eINSTANCE.getArrayAccessExpr_Arg();
+    EReference ARRAY_ACCESS_EXPR__ARGS = eINSTANCE.getArrayAccessExpr_Args();
 
     /**
      * The meta object literal for the '{@link com.rockwellcollins.atc.agree.agree.impl.IntLitExprImpl <em>Int Lit Expr</em>}' class.

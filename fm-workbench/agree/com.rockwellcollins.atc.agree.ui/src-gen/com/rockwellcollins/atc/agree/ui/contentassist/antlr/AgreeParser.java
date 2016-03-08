@@ -160,6 +160,7 @@ public class AgreeParser extends AbstractPartialContentAssistParser {
 					put(grammarAccess.getArrayAccessExprAccess().getGroup(), "rule__ArrayAccessExpr__Group__0");
 					put(grammarAccess.getArrayAccessExprAccess().getGroup_1(), "rule__ArrayAccessExpr__Group_1__0");
 					put(grammarAccess.getArrayAccessExprAccess().getGroup_1_0(), "rule__ArrayAccessExpr__Group_1_0__0");
+					put(grammarAccess.getArrayAccessExprAccess().getGroup_1_0_1(), "rule__ArrayAccessExpr__Group_1_0_1__0");
 					put(grammarAccess.getTermExprAccess().getGroup_1(), "rule__TermExpr__Group_1__0");
 					put(grammarAccess.getTermExprAccess().getGroup_2(), "rule__TermExpr__Group_2__0");
 					put(grammarAccess.getTermExprAccess().getGroup_3(), "rule__TermExpr__Group_3__0");
@@ -327,7 +328,7 @@ public class AgreeParser extends AbstractPartialContentAssistParser {
 					put(grammarAccess.getPreDefFnExprAccess().getPropAssignment_1_5(), "rule__PreDefFnExpr__PropAssignment_1_5");
 					put(grammarAccess.getRecordUpdateExprAccess().getArgsAssignment_1_0_1_1(), "rule__RecordUpdateExpr__ArgsAssignment_1_0_1_1");
 					put(grammarAccess.getRecordUpdateExprAccess().getArgExprAssignment_1_0_1_3(), "rule__RecordUpdateExpr__ArgExprAssignment_1_0_1_3");
-					put(grammarAccess.getArrayAccessExprAccess().getArgAssignment_1_0_2(), "rule__ArrayAccessExpr__ArgAssignment_1_0_2");
+					put(grammarAccess.getArrayAccessExprAccess().getArgsAssignment_1_0_1_1(), "rule__ArrayAccessExpr__ArgsAssignment_1_0_1_1");
 					put(grammarAccess.getTermExprAccess().getValAssignment_1_1(), "rule__TermExpr__ValAssignment_1_1");
 					put(grammarAccess.getTermExprAccess().getExprAssignment_2_3(), "rule__TermExpr__ExprAssignment_2_3");
 					put(grammarAccess.getTermExprAccess().getIdAssignment_3_3(), "rule__TermExpr__IdAssignment_3_3");

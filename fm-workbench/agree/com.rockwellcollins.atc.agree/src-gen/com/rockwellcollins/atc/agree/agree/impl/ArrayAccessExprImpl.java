@@ -6,13 +6,20 @@ import com.rockwellcollins.atc.agree.agree.AgreePackage;
 import com.rockwellcollins.atc.agree.agree.ArrayAccessExpr;
 import com.rockwellcollins.atc.agree.agree.Expr;
 
+import java.util.Collection;
+
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
+
+import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
+
+import org.eclipse.emf.ecore.util.EObjectContainmentEList;
+import org.eclipse.emf.ecore.util.InternalEList;
 
 /**
  * <!-- begin-user-doc -->
@@ -23,7 +30,7 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  * </p>
  * <ul>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.impl.ArrayAccessExprImpl#getArray <em>Array</em>}</li>
- *   <li>{@link com.rockwellcollins.atc.agree.agree.impl.ArrayAccessExprImpl#getArg <em>Arg</em>}</li>
+ *   <li>{@link com.rockwellcollins.atc.agree.agree.impl.ArrayAccessExprImpl#getArgs <em>Args</em>}</li>
  * </ul>
  *
  * @generated
@@ -41,14 +48,14 @@ public class ArrayAccessExprImpl extends ExprImpl implements ArrayAccessExpr
   protected Expr array;
 
   /**
-   * The cached value of the '{@link #getArg() <em>Arg</em>}' containment reference.
+   * The cached value of the '{@link #getArgs() <em>Args</em>}' containment reference list.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @see #getArg()
+   * @see #getArgs()
    * @generated
    * @ordered
    */
-  protected Expr arg;
+  protected EList<Expr> args;
 
   /**
    * <!-- begin-user-doc -->
@@ -124,47 +131,13 @@ public class ArrayAccessExprImpl extends ExprImpl implements ArrayAccessExpr
    * <!-- end-user-doc -->
    * @generated
    */
-  public Expr getArg()
+  public EList<Expr> getArgs()
   {
-    return arg;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public NotificationChain basicSetArg(Expr newArg, NotificationChain msgs)
-  {
-    Expr oldArg = arg;
-    arg = newArg;
-    if (eNotificationRequired())
+    if (args == null)
     {
-      ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, AgreePackage.ARRAY_ACCESS_EXPR__ARG, oldArg, newArg);
-      if (msgs == null) msgs = notification; else msgs.add(notification);
+      args = new EObjectContainmentEList<Expr>(Expr.class, this, AgreePackage.ARRAY_ACCESS_EXPR__ARGS);
     }
-    return msgs;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public void setArg(Expr newArg)
-  {
-    if (newArg != arg)
-    {
-      NotificationChain msgs = null;
-      if (arg != null)
-        msgs = ((InternalEObject)arg).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - AgreePackage.ARRAY_ACCESS_EXPR__ARG, null, msgs);
-      if (newArg != null)
-        msgs = ((InternalEObject)newArg).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - AgreePackage.ARRAY_ACCESS_EXPR__ARG, null, msgs);
-      msgs = basicSetArg(newArg, msgs);
-      if (msgs != null) msgs.dispatch();
-    }
-    else if (eNotificationRequired())
-      eNotify(new ENotificationImpl(this, Notification.SET, AgreePackage.ARRAY_ACCESS_EXPR__ARG, newArg, newArg));
+    return args;
   }
 
   /**
@@ -179,8 +152,8 @@ public class ArrayAccessExprImpl extends ExprImpl implements ArrayAccessExpr
     {
       case AgreePackage.ARRAY_ACCESS_EXPR__ARRAY:
         return basicSetArray(null, msgs);
-      case AgreePackage.ARRAY_ACCESS_EXPR__ARG:
-        return basicSetArg(null, msgs);
+      case AgreePackage.ARRAY_ACCESS_EXPR__ARGS:
+        return ((InternalEList<?>)getArgs()).basicRemove(otherEnd, msgs);
     }
     return super.eInverseRemove(otherEnd, featureID, msgs);
   }
@@ -197,8 +170,8 @@ public class ArrayAccessExprImpl extends ExprImpl implements ArrayAccessExpr
     {
       case AgreePackage.ARRAY_ACCESS_EXPR__ARRAY:
         return getArray();
-      case AgreePackage.ARRAY_ACCESS_EXPR__ARG:
-        return getArg();
+      case AgreePackage.ARRAY_ACCESS_EXPR__ARGS:
+        return getArgs();
     }
     return super.eGet(featureID, resolve, coreType);
   }
@@ -208,6 +181,7 @@ public class ArrayAccessExprImpl extends ExprImpl implements ArrayAccessExpr
    * <!-- end-user-doc -->
    * @generated
    */
+  @SuppressWarnings("unchecked")
   @Override
   public void eSet(int featureID, Object newValue)
   {
@@ -216,8 +190,9 @@ public class ArrayAccessExprImpl extends ExprImpl implements ArrayAccessExpr
       case AgreePackage.ARRAY_ACCESS_EXPR__ARRAY:
         setArray((Expr)newValue);
         return;
-      case AgreePackage.ARRAY_ACCESS_EXPR__ARG:
-        setArg((Expr)newValue);
+      case AgreePackage.ARRAY_ACCESS_EXPR__ARGS:
+        getArgs().clear();
+        getArgs().addAll((Collection<? extends Expr>)newValue);
         return;
     }
     super.eSet(featureID, newValue);
@@ -236,8 +211,8 @@ public class ArrayAccessExprImpl extends ExprImpl implements ArrayAccessExpr
       case AgreePackage.ARRAY_ACCESS_EXPR__ARRAY:
         setArray((Expr)null);
         return;
-      case AgreePackage.ARRAY_ACCESS_EXPR__ARG:
-        setArg((Expr)null);
+      case AgreePackage.ARRAY_ACCESS_EXPR__ARGS:
+        getArgs().clear();
         return;
     }
     super.eUnset(featureID);
@@ -255,8 +230,8 @@ public class ArrayAccessExprImpl extends ExprImpl implements ArrayAccessExpr
     {
       case AgreePackage.ARRAY_ACCESS_EXPR__ARRAY:
         return array != null;
-      case AgreePackage.ARRAY_ACCESS_EXPR__ARG:
-        return arg != null;
+      case AgreePackage.ARRAY_ACCESS_EXPR__ARGS:
+        return args != null && !args.isEmpty();
     }
     return super.eIsSet(featureID);
   }

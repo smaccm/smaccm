@@ -168,7 +168,7 @@ RecordUpdateExpr returns Expr:
 ;
 
 ArrayAccessExpr returns Expr:
-	TermExpr (=> ({ArrayAccessExpr.array=current} '[' arg=Expr ']' ))?
+	TermExpr (=> ({ArrayAccessExpr.array=current} ('[' args+=Expr ']')+ ))?
 ;
 
 TermExpr returns Expr:

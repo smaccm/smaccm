@@ -2406,41 +2406,45 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		private final Group cGroup_1 = (Group)cGroup.eContents().get(1);
 		private final Group cGroup_1_0 = (Group)cGroup_1.eContents().get(0);
 		private final Action cArrayAccessExprArrayAction_1_0_0 = (Action)cGroup_1_0.eContents().get(0);
-		private final Keyword cLeftSquareBracketKeyword_1_0_1 = (Keyword)cGroup_1_0.eContents().get(1);
-		private final Assignment cArgAssignment_1_0_2 = (Assignment)cGroup_1_0.eContents().get(2);
-		private final RuleCall cArgExprParserRuleCall_1_0_2_0 = (RuleCall)cArgAssignment_1_0_2.eContents().get(0);
-		private final Keyword cRightSquareBracketKeyword_1_0_3 = (Keyword)cGroup_1_0.eContents().get(3);
+		private final Group cGroup_1_0_1 = (Group)cGroup_1_0.eContents().get(1);
+		private final Keyword cLeftSquareBracketKeyword_1_0_1_0 = (Keyword)cGroup_1_0_1.eContents().get(0);
+		private final Assignment cArgsAssignment_1_0_1_1 = (Assignment)cGroup_1_0_1.eContents().get(1);
+		private final RuleCall cArgsExprParserRuleCall_1_0_1_1_0 = (RuleCall)cArgsAssignment_1_0_1_1.eContents().get(0);
+		private final Keyword cRightSquareBracketKeyword_1_0_1_2 = (Keyword)cGroup_1_0_1.eContents().get(2);
 		
 		//ArrayAccessExpr returns Expr:
-		//	TermExpr => ({ArrayAccessExpr.array=current} "[" arg=Expr "]")?;
+		//	TermExpr => ({ArrayAccessExpr.array=current} ("[" args+=Expr "]")+)?;
 		@Override public ParserRule getRule() { return rule; }
 
-		//TermExpr => ({ArrayAccessExpr.array=current} "[" arg=Expr "]")?
+		//TermExpr => ({ArrayAccessExpr.array=current} ("[" args+=Expr "]")+)?
 		public Group getGroup() { return cGroup; }
 
 		//TermExpr
 		public RuleCall getTermExprParserRuleCall_0() { return cTermExprParserRuleCall_0; }
 
-		//=> ({ArrayAccessExpr.array=current} "[" arg=Expr "]")?
+		//=> ({ArrayAccessExpr.array=current} ("[" args+=Expr "]")+)?
 		public Group getGroup_1() { return cGroup_1; }
 
-		//{ArrayAccessExpr.array=current} "[" arg=Expr "]"
+		//{ArrayAccessExpr.array=current} ("[" args+=Expr "]")+
 		public Group getGroup_1_0() { return cGroup_1_0; }
 
 		//{ArrayAccessExpr.array=current}
 		public Action getArrayAccessExprArrayAction_1_0_0() { return cArrayAccessExprArrayAction_1_0_0; }
 
-		//"["
-		public Keyword getLeftSquareBracketKeyword_1_0_1() { return cLeftSquareBracketKeyword_1_0_1; }
+		//("[" args+=Expr "]")+
+		public Group getGroup_1_0_1() { return cGroup_1_0_1; }
 
-		//arg=Expr
-		public Assignment getArgAssignment_1_0_2() { return cArgAssignment_1_0_2; }
+		//"["
+		public Keyword getLeftSquareBracketKeyword_1_0_1_0() { return cLeftSquareBracketKeyword_1_0_1_0; }
+
+		//args+=Expr
+		public Assignment getArgsAssignment_1_0_1_1() { return cArgsAssignment_1_0_1_1; }
 
 		//Expr
-		public RuleCall getArgExprParserRuleCall_1_0_2_0() { return cArgExprParserRuleCall_1_0_2_0; }
+		public RuleCall getArgsExprParserRuleCall_1_0_1_1_0() { return cArgsExprParserRuleCall_1_0_1_1_0; }
 
 		//"]"
-		public Keyword getRightSquareBracketKeyword_1_0_3() { return cRightSquareBracketKeyword_1_0_3; }
+		public Keyword getRightSquareBracketKeyword_1_0_1_2() { return cRightSquareBracketKeyword_1_0_1_2; }
 	}
 
 	public class TermExprElements extends AbstractParserRuleElementFinder {
@@ -3487,7 +3491,7 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 	}
 
 	//ArrayAccessExpr returns Expr:
-	//	TermExpr => ({ArrayAccessExpr.array=current} "[" arg=Expr "]")?;
+	//	TermExpr => ({ArrayAccessExpr.array=current} ("[" args+=Expr "]")+)?;
 	public ArrayAccessExprElements getArrayAccessExprAccess() {
 		return pArrayAccessExpr;
 	}

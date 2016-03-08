@@ -30,6 +30,7 @@ import org.osate.aadl2.AnnexLibrary;
 import org.osate.aadl2.AnnexSubclause;
 import org.osate.aadl2.Classifier;
 import org.osate.aadl2.ClassifierType;
+import org.osate.aadl2.ClassifierValue;
 import org.osate.aadl2.ComponentClassifier;
 import org.osate.aadl2.ComponentImplementation;
 import org.osate.aadl2.ComponentType;
@@ -41,15 +42,22 @@ import org.osate.aadl2.DataSubcomponent;
 import org.osate.aadl2.DataSubcomponentType;
 import org.osate.aadl2.DataType;
 import org.osate.aadl2.Element;
+import org.osate.aadl2.EnumerationLiteral;
 import org.osate.aadl2.EnumerationType;
 import org.osate.aadl2.EventDataPort;
 import org.osate.aadl2.Feature;
+import org.osate.aadl2.ListValue;
 import org.osate.aadl2.NamedElement;
 import org.osate.aadl2.Property;
+import org.osate.aadl2.PropertyExpression;
 import org.osate.aadl2.PropertyType;
 import org.osate.aadl2.Subcomponent;
 import org.osate.aadl2.impl.SubcomponentImpl;
+import org.osate.aadl2.modelsupport.resources.OsateResourceUtil;
+import org.osate.aadl2.properties.PropertyNotPresentException;
 import org.osate.annexsupport.AnnexUtil;
+import org.osate.xtext.aadl2.properties.util.EMFIndexRetrieval;
+import org.osate.xtext.aadl2.properties.util.PropertyUtils;
 
 import com.rockwellcollins.atc.agree.agree.AgreeContract;
 import com.rockwellcollins.atc.agree.agree.AgreeDataType;
@@ -1615,6 +1623,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 		return ERROR;
 	}
 
+	
 	private AgreeType getAgreeType(DataImplementation dataImpl) {
 
 		AgreeType nativeType = getNativeType(dataImpl);
@@ -1629,72 +1638,103 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 		return new AgreeType(typeStr);
 	}
 
+
 	private AgreeType getNativeType(DataImplementation dataImpl) {
-		EList<Subcomponent> subComps = dataImpl.getAllSubcomponents();
-		// if there are no subcomponents, use the component type
-		if (subComps.size() == 0) {
-			return getAgreeType((ComponentClassifier) dataImpl.getType());
-		}
-		return null;
-	}
+        EList<Subcomponent> subComps = dataImpl.getAllSubcomponents();
+        // if there are no subcomponents, use the component type
+        if (subComps.size() == 0) {
+            AgreeType arrayType = getArrayType(dataImpl);
+            if(arrayType != null){
+                return arrayType;
+            }
+            return getAgreeType((ComponentClassifier) dataImpl.getType());
+        }
+        return null;
+    }
 
-	private AgreeType getAgreeType(ComponentClassifier dataClass) {
+    private AgreeType getAgreeType(ComponentClassifier dataClass) {
 
-		while (dataClass != null) {
-			switch (dataClass.getQualifiedName()) {
-			case "Base_Types::Boolean":
-				return BOOL;
-			case "Base_Types::Integer":
-				return INT;
-			case "Base_Types::Float":
-				return REAL;
-			}
+        while (dataClass != null) {
+            switch (dataClass.getQualifiedName()) {
+            case "Base_Types::Boolean":
+                return BOOL;
+            case "Base_Types::Integer":
+                return INT;
+            case "Base_Types::Float":
+                return REAL;
+            }
 
-			DataType dataType = (DataType) dataClass;
-			dataClass = dataType.getExtended();
-		}
+            DataType dataType = (DataType) dataClass;
+            dataClass = dataType.getExtended();
+        }
+        
+        return ERROR;
+    }
 
-		return AgreeType.ERROR;
-	}
+    private AgreeType getArrayType(ComponentClassifier dataClass) {
 
-	private AgreeType getAgreeType(ComponentType compType) {
+        String dataRep = null;
+        Classifier type = null;
+        List<PropertyExpression> dimensions = null;
+        try {
+            if (dataClass != null) {
+                dataRep = getPropertyEnumString(dataClass, "Data_Model::Data_Representation");
+                if (dataRep.equals("Array")) {
+                    PropertyExpression typeExpr = getPropertyList(dataClass, "Data_Model::Base_Type").get(0);
+                    type = ((ClassifierValue) typeExpr).getClassifier();
+                    dimensions = getPropertyList(dataClass, "Data_Model::Dimension");
 
-		while (compType.getExtended() != null) {
-			compType = compType.getExtended();
-		}
+                    return AgreeArrayType.getArrayType(getAgreeType(type), dimensions.size());
+                }
+            }
+        } catch (PropertyNotPresentException e) {
+            if(dataRep == null){
+                return null;
+            }
+            if(type == null){
+                error(dataClass, "Array types must have a 'Data_Model::Base_Type' property for AGREE to reason about");
+                return null;
+            }
+            if(dimensions == null){
+                error(dataClass, "Array types must have a 'Data_Model::Dimension' property for AGREE to reason about");
+                return null;
+            }
+        }
+        ;
+        return null;
+    }
 
-		String qualName = compType.getQualifiedName();
-		switch (qualName) {
-		case "Base_Types::Boolean":
-			return BOOL;
-		case "Base_Types::Integer":
-			return INT;
-		case "Base_Types::Float":
-			return REAL;
-		}
+//    private long getPropertyInteger(NamedElement namedEl, String property) {
+//        Property prop = EMFIndexRetrieval.getPropertyDefinitionInWorkspace(
+//                OsateResourceUtil.getResourceSet(), property);
+//        return PropertyUtils.getIntegerValue(namedEl, prop);
+//    }
 
-		return new AgreeType(qualName);
+    private String getPropertyEnumString(NamedElement namedEl, String property){
+        Property prop = EMFIndexRetrieval.getPropertyDefinitionInWorkspace(
+                OsateResourceUtil.getResourceSet(), property);
+        EnumerationLiteral lit = PropertyUtils.getEnumLiteral(namedEl, prop);
+        return lit.getName();
+    }
+    
+//  private String getPropertyClassifierString(NamedElement namedEl, String property){
+//      Property prop = EMFIndexRetrieval.getPropertyDefinitionInWorkspace(
+//                OsateResourceUtil.getResourceSet(), property);
+//      Classifier classifier = PropertyUtils.getClassifierReference(namedEl, prop);
+//      return classifier.getQualifiedName();
+//  }
+    
+    private List<PropertyExpression> getPropertyList(NamedElement namedEl, String property){
 
-	}
-
-	private AgreeType getAgreeType(DataSubcomponentType data) {
-		if (data instanceof DataType) {
-			ComponentType compType = ((DataType) data).getExtended();
-			if (compType != null) {
-				return getAgreeType(compType);
-			}
-		}
-		String qualName = data.getQualifiedName();
-		switch (qualName) {
-		case "Base_Types::Boolean":
-			return BOOL;
-		case "Base_Types::Integer":
-			return INT;
-		case "Base_Types::Float":
-			return REAL;
-		}
-		return new AgreeType(qualName);
-	}
+        List<PropertyExpression> els = new ArrayList<>();
+        Property prop = EMFIndexRetrieval.getPropertyDefinitionInWorkspace(
+                OsateResourceUtil.getResourceSet(), property);
+        ListValue listExpr = (ListValue) PropertyUtils.getSimplePropertyListValue(namedEl, prop);
+        for(PropertyExpression propExpr : listExpr.getOwnedListElements()){
+            els.add(propExpr);
+        }
+        return els;
+    }
 
 	private AgreeType getAgreeType(PropertyStatement propStat) {
 		return getAgreeType(propStat.getExpr());
@@ -1789,10 +1829,17 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 		return ERROR;
 	}
 
-	private AgreeType getAgreeType(ArrayAccessExpr expr) {
-	    return getAgreeType(expr.getArray());
-	}
-	
+    private AgreeType getAgreeType(ArrayAccessExpr expr) {
+        AgreeType arrayType = getAgreeType(expr.getArray());
+            for (Expr arg : expr.getArgs()) {
+                if(!(arrayType instanceof AgreeArrayType)){
+                    return ERROR;
+                }
+                arrayType = ((AgreeArrayType) arrayType).getSubType();
+            }
+        return arrayType;
+    }
+
 	private AgreeType getAgreeType(Expr expr) {
 		if (expr instanceof BinaryExpr) {
 			return getAgreeType((BinaryExpr) expr);

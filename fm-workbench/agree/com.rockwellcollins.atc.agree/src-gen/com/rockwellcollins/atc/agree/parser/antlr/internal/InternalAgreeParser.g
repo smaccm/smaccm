@@ -3790,7 +3790,7 @@ ruleArrayAccessExpr returns [EObject current=null]
         afterParserOrEnumRuleCall();
     }
 ((((
-)
+)(
 LeftSquareBracket
 (
 (
@@ -3798,30 +3798,30 @@ ruleExpr
 )
 )
 RightSquareBracket
-))=>((
+)+))=>((
     {
         $current = forceCreateModelElementAndSet(
             grammarAccess.getArrayAccessExprAccess().getArrayAccessExprArrayAction_1_0_0(),
             $current);
     }
-)
+)(
 	otherlv_2=LeftSquareBracket
     {
-    	newLeafNode(otherlv_2, grammarAccess.getArrayAccessExprAccess().getLeftSquareBracketKeyword_1_0_1());
+    	newLeafNode(otherlv_2, grammarAccess.getArrayAccessExprAccess().getLeftSquareBracketKeyword_1_0_1_0());
     }
 (
 (
 		{ 
-	        newCompositeNode(grammarAccess.getArrayAccessExprAccess().getArgExprParserRuleCall_1_0_2_0()); 
+	        newCompositeNode(grammarAccess.getArrayAccessExprAccess().getArgsExprParserRuleCall_1_0_1_1_0()); 
 	    }
-		lv_arg_3_0=ruleExpr		{
+		lv_args_3_0=ruleExpr		{
 	        if ($current==null) {
 	            $current = createModelElementForParent(grammarAccess.getArrayAccessExprRule());
 	        }
-       		set(
+       		add(
        			$current, 
-       			"arg",
-        		lv_arg_3_0, 
+       			"args",
+        		lv_args_3_0, 
         		"Expr");
 	        afterParserOrEnumRuleCall();
 	    }
@@ -3830,9 +3830,9 @@ RightSquareBracket
 )
 	otherlv_4=RightSquareBracket
     {
-    	newLeafNode(otherlv_4, grammarAccess.getArrayAccessExprAccess().getRightSquareBracketKeyword_1_0_3());
+    	newLeafNode(otherlv_4, grammarAccess.getArrayAccessExprAccess().getRightSquareBracketKeyword_1_0_1_2());
     }
-))?)
+)+))?)
 ;
 
 

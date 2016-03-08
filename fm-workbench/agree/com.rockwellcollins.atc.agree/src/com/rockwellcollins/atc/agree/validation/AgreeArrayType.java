@@ -13,7 +13,7 @@ public class AgreeArrayType extends AgreeType {
             AgreeArrayType subArray = (AgreeArrayType) subType;
             return subArray.getNumDimensions() + 1;
         }else{
-            return 0;
+            return 1;
         }
     }
 
@@ -24,5 +24,17 @@ public class AgreeArrayType extends AgreeType {
         }else{
             return subType;
         }
+    }
+    
+    public static AgreeArrayType getArrayType(AgreeType baseType, int numDimensionts){
+        AgreeArrayType type = new AgreeArrayType(baseType);
+        for(int i = 1; i < numDimensionts; i++){
+            type = new AgreeArrayType(type);
+        }
+        return type;
+    }
+    
+    public AgreeType getSubType(){
+        return this.subType;
     }
 }

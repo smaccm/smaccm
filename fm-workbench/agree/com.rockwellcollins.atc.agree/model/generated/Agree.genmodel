@@ -166,6 +166,7 @@
     </genClasses>
     <genClasses ecoreClass="Agree.ecore#//ArrayAccessExpr">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//ArrayAccessExpr/array"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//ArrayAccessExpr/args"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//ArrayAccessExpr/arg"/>
     </genClasses>
     <genClasses ecoreClass="Agree.ecore#//IntLitExpr">
