@@ -30,6 +30,7 @@ import org.osate.ui.dialogs.Dialog;
 import com.rockwellcollins.atc.agree.agree.AgreePackage;
 import com.rockwellcollins.atc.agree.analysis.AgreeException;
 import com.rockwellcollins.atc.agree.analysis.AgreeUtils;
+import com.rockwellcollins.atc.agree.analysis.Util;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeASTBuilder;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeProgram;
 import com.rockwellcollins.atc.agree.analysis.handlers.AadlHandler;
@@ -64,13 +65,13 @@ public class MATLABFunctionHandler extends AadlHandler {
     }
 	
     protected IStatus runJob(Element root, IProgressMonitor monitor) {
-        if (!(root instanceof ComponentImplementation)) {
+        if (!(root instanceof ComponentType)) {
             return new Status(IStatus.ERROR, Activator.PLUGIN_ID,
-                    "Must select an AADL Component Implementation");
+                    "Must select an AADL Component Type");
         }
 
         try {
-            ComponentImplementation ci = (ComponentImplementation) root;
+            ComponentImplementation ci = Util.compImplFromType((ComponentType) root);
 
             SystemInstance si = null;
             try {
