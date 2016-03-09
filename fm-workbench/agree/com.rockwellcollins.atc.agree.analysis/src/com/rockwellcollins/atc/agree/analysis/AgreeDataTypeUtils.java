@@ -41,7 +41,7 @@ import com.rockwellcollins.atc.agree.agree.RecordDefExpr;
 import com.rockwellcollins.atc.agree.agree.ThisExpr;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeASTBuilder;
 
-public class AgreeRecordUtils {
+public class AgreeDataTypeUtils {
 
     private static final String dotChar = "__";
     private static final Expr initBool = new BoolExpr(false);
@@ -56,32 +56,32 @@ public class AgreeRecordUtils {
         }
     }
 
-    public static String getRecordTypeName(com.rockwellcollins.atc.agree.agree.Type type,
+    public static String getLustreTypeName(com.rockwellcollins.atc.agree.agree.Type type,
             Map<NamedElement, String> typeMap, Set<jkind.lustre.RecordType> typeExpressions) {
         if (type instanceof PrimType) {
             return ((PrimType) type).getString();
         } else {
-            return getRecordTypeName(((AgreeDataType) type).getData(), typeMap, typeExpressions);
+            return getLustreTypeName(((AgreeDataType) type).getData(), typeMap, typeExpressions);
         }
     }
 
-    public static String getRecordTypeName(NestedDotID recId, Map<NamedElement, String> typeMap,
+    public static String getLustreTypeName(NestedDotID recId, Map<NamedElement, String> typeMap,
             Set<jkind.lustre.RecordType> typeExpressions) {
         NamedElement finalId = AgreeUtils.getFinalNestId(recId);
-        return getRecordTypeName(finalId, typeMap, typeExpressions);
+        return getLustreTypeName(finalId, typeMap, typeExpressions);
     }
 
-    public static String getRecordTypeName(NamedElement finalId, Map<NamedElement, String> typeMap,
+    public static String getLustreTypeName(NamedElement finalId, Map<NamedElement, String> typeMap,
             Set<jkind.lustre.RecordType> typeExpressions) {
 
         if (typeMap.containsKey(finalId)) {
             return typeMap.get(finalId);
         }
-        recordRecType(finalId, typeMap, typeExpressions);
+        recordType(finalId, typeMap, typeExpressions);
         return typeMap.get(finalId);
     }
 
-    private static void recordRecType(NamedElement el, Map<NamedElement, String> typeMap,
+    private static void recordType(NamedElement el, Map<NamedElement, String> typeMap,
             Set<jkind.lustre.RecordType> typeExpressions) {
         Map<String, Type> subTypeMap = new HashMap<String, Type>();
         if (el instanceof ComponentImplementation) {
@@ -96,9 +96,9 @@ public class AgreeRecordUtils {
                 ComponentImplementation subCompImpl = subComp.getComponentImplementation();
                 if (subCompImpl == null) {
                     ComponentType subCompType = subComp.getComponentType();
-                    typeStr = getRecordTypeName(subCompType, typeMap, typeExpressions);
+                    typeStr = getLustreTypeName(subCompType, typeMap, typeExpressions);
                 } else {
-                    typeStr = getRecordTypeName(subCompImpl, typeMap, typeExpressions);
+                    typeStr = getLustreTypeName(subCompImpl, typeMap, typeExpressions);
                 }
                 if (typeStr != null) {
                     subTypeMap.put(subComp.getName(), getNamedType(typeStr));
@@ -115,7 +115,7 @@ public class AgreeRecordUtils {
                 } else {
                     NestedDotID nestId = ((AgreeDataType) argType).getData();
                     NamedElement namedEl = AgreeUtils.getFinalNestId(nestId);
-                    typeStr = getRecordTypeName(namedEl, typeMap, typeExpressions);
+                    typeStr = getLustreTypeName(namedEl, typeMap, typeExpressions);
                 }
                 subTypeMap.put(arg.getName(), getNamedType(typeStr));
             }
