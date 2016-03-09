@@ -8,11 +8,10 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.IJobChangeEvent;
-import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IEditorPart;
@@ -20,6 +19,8 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.handlers.IHandlerActivation;
 import org.eclipse.ui.handlers.IHandlerService;
+import org.eclipse.xtext.EcoreUtil2;
+import org.eclipse.xtext.resource.EObjectAtOffsetHelper;
 import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.ui.editor.XtextEditor;
 import org.eclipse.xtext.ui.editor.outline.impl.EObjectNode;
@@ -39,11 +40,10 @@ public abstract class AadlHandler extends AbstractHandler {
 
     @Override
     public Object execute(ExecutionEvent event) {
-        EObjectNode node = getEObjectNode(HandlerUtil.getCurrentSelection(event));
-        if (node == null) {
+        URI uri = getSelectionURI(HandlerUtil.getCurrentSelection(event));
+        if (uri == null) {
             return null;
         }
-        final URI uri = node.getEObjectURI();
 
         window = HandlerUtil.getActiveWorkbenchWindow(event);
         if (window == null) {
@@ -105,13 +105,22 @@ public abstract class AadlHandler extends AbstractHandler {
         }
     }
 
-    private EObjectNode getEObjectNode(ISelection currentSelection) {
+    private URI getSelectionURI(ISelection currentSelection) {
         if (currentSelection instanceof IStructuredSelection) {
             IStructuredSelection iss = (IStructuredSelection) currentSelection;
             if (iss.size() == 1) {
-                return (EObjectNode) iss.getFirstElement();
+                EObjectNode node = (EObjectNode) iss.getFirstElement();
+                return node.getEObjectURI();
             }
-        }
+        } else if (currentSelection instanceof TextSelection) {
+        	// Selection may be stale, get latest from editor
+			XtextEditor xtextEditor = EditorUtils.getActiveXtextEditor();
+			TextSelection ts = (TextSelection) xtextEditor.getSelectionProvider().getSelection();
+			return xtextEditor.getDocument().readOnly(resource -> {
+    			EObject e = new EObjectAtOffsetHelper().resolveContainedElementAt(resource, ts.getOffset());
+    			return EcoreUtil2.getURI(e);
+            });
+		}
         return null;
     }
 

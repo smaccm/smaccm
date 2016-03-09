@@ -35,6 +35,7 @@ import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.util.Pair;
 import org.osate.aadl2.AadlPackage;
 import org.osate.aadl2.AnnexSubclause;
+import org.osate.aadl2.Classifier;
 import org.osate.aadl2.ComponentClassifier;
 import org.osate.aadl2.ComponentImplementation;
 import org.osate.aadl2.ComponentType;
@@ -110,19 +111,20 @@ public abstract class VerifyHandler extends AadlHandler {
 	}
 
 	private ComponentImplementation getComponentImplementation(Element root) {
+		Classifier classifier = getOutermostClassifier(root);
 		if (isRealizability()) {
-			if (!(root instanceof ComponentType)) {
+			if (!(classifier instanceof ComponentType)) {
 				throw new AgreeException("Must select an AADL Component Type");
 			}
-			return AgreeUtils.compImplFromType((ComponentType) root);
+			return AgreeUtils.compImplFromType((ComponentType) classifier);
 		} else {
-			if (root instanceof ComponentImplementation) {
-				return (ComponentImplementation) root;
+			if (classifier instanceof ComponentImplementation) {
+				return (ComponentImplementation) classifier;
 			}
-			if (!(root instanceof ComponentType)) {
+			if (!(classifier instanceof ComponentType)) {
 				throw new AgreeException("Must select an AADL Component Type or Implementation");
 			}
-			ComponentType ct = (ComponentType) root;
+			ComponentType ct = (ComponentType) classifier;
 			List<ComponentImplementation> cis = getComponentImplementations(ct);
 			if (cis.size() == 0) {
 				throw new AgreeException("AADL Component Type has no implementation to verify");
@@ -138,6 +140,23 @@ public abstract class VerifyHandler extends AadlHandler {
 						"AADL Component Type has multiple implementation to verify: please select just one");
 			}
 		}
+	}
+
+	private Classifier getOutermostClassifier(Element element) {
+		List<EObject> containers = new ArrayList<>();
+		EObject curr = element;
+		while (curr != null) {
+			containers.add(curr);
+			curr = curr.eContainer();
+		}
+		Collections.reverse(containers);
+		for (EObject container : containers) {
+			if (container instanceof Classifier) {
+				System.out.println(container);
+				return (Classifier) container;
+			}
+		}
+		return null;
 	}
 
 	private List<ComponentImplementation> getComponentImplementations(ComponentType ct) {
