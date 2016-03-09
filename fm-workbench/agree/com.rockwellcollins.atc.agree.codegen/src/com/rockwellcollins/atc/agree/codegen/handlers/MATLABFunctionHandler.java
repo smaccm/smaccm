@@ -30,7 +30,6 @@ import org.osate.ui.dialogs.Dialog;
 import com.rockwellcollins.atc.agree.agree.AgreePackage;
 import com.rockwellcollins.atc.agree.analysis.AgreeException;
 import com.rockwellcollins.atc.agree.analysis.AgreeUtils;
-import com.rockwellcollins.atc.agree.analysis.Util;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeASTBuilder;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeProgram;
 import com.rockwellcollins.atc.agree.analysis.handlers.AadlHandler;
@@ -71,7 +70,7 @@ public class MATLABFunctionHandler extends AadlHandler {
         }
 
         try {
-            ComponentImplementation ci = Util.compImplFromType((ComponentType) root);
+            ComponentImplementation ci = AgreeUtils.compImplFromType((ComponentType) root);
 
             SystemInstance si = null;
             try {

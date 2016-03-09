@@ -17,11 +17,11 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.xtext.ui.editor.GlobalURIEditorOpener;
 
-import com.rockwellcollins.atc.agree.analysis.Util;
+import com.rockwellcollins.atc.agree.analysis.AgreeUtils;
 
 public class AgreeCounterexampleView extends ViewPart {
     public static final String ID = "com.rockwellcollins.atc.agree.analysis.views.agreeCounterexampleView";
-    private static final GlobalURIEditorOpener globalURIEditorOpener = Util.getGlobalURIEditorOpener();
+    private static final GlobalURIEditorOpener globalURIEditorOpener = AgreeUtils.getGlobalURIEditorOpener();
 
     private CounterexampleTreeViewer tree;
     private Map<String, EObject> refMap;

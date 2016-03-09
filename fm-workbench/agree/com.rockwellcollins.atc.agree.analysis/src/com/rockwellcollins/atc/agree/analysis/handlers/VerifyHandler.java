@@ -67,7 +67,6 @@ import com.rockwellcollins.atc.agree.analysis.AgreeLayout.SigType;
 import com.rockwellcollins.atc.agree.analysis.AgreeLogger;
 import com.rockwellcollins.atc.agree.analysis.AgreeRenaming;
 import com.rockwellcollins.atc.agree.analysis.ConsistencyResult;
-import com.rockwellcollins.atc.agree.analysis.Util;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeASTBuilder;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeNode;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeProgram;
@@ -111,7 +110,7 @@ public abstract class VerifyHandler extends AadlHandler {
             if(!(root instanceof ComponentType)){
                 throw new AgreeException("Must select an AADL Component Type");
             }
-            ci = Util.compImplFromType((ComponentType) root);
+            ci = AgreeUtils.compImplFromType((ComponentType) root);
         } else {
             if (!(root instanceof ComponentImplementation)) {
                 throw new AgreeException("Must select an AADL Component Implementation");

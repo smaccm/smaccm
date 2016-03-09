@@ -26,6 +26,8 @@ import jkind.lustre.Type;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.xtext.ui.editor.GlobalURIEditorOpener;
+import org.osate.aadl2.Aadl2Factory;
 import org.osate.aadl2.AbstractNamedValue;
 import org.osate.aadl2.ComponentClassifier;
 import org.osate.aadl2.ComponentImplementation;
@@ -42,6 +44,7 @@ import org.osate.aadl2.PropertyAssociation;
 import org.osate.aadl2.PropertyConstant;
 import org.osate.aadl2.PropertyExpression;
 import org.osate.aadl2.Subcomponent;
+import org.osate.aadl2.ThreadType;
 import org.osate.aadl2.instance.ComponentInstance;
 import org.osate.aadl2.instance.SystemInstance;
 import org.osate.aadl2.properties.PropertyDoesNotApplyToHolderException;
@@ -49,6 +52,7 @@ import org.osate.aadl2.properties.PropertyNotPresentException;
 import org.osate.annexsupport.AnnexUtil;
 import org.osate.xtext.aadl2.properties.util.PropertyUtils;
 
+import com.google.inject.Injector;
 import com.rockwellcollins.atc.agree.agree.AgreePackage;
 import com.rockwellcollins.atc.agree.agree.EqStatement;
 import com.rockwellcollins.atc.agree.agree.FnCallExpr;
@@ -56,8 +60,11 @@ import com.rockwellcollins.atc.agree.agree.NestedDotID;
 import com.rockwellcollins.atc.agree.agree.PropertyStatement;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeStatement;
 import com.rockwellcollins.atc.agree.analysis.preferences.PreferenceConstants;
+import com.rockwellcollins.atc.agree.ui.internal.AgreeActivator;
 
 public class AgreeUtils {
+    
+    private static GlobalURIEditorOpener globalURIEditorOpener;
 
     static public boolean usingKind2() {
         IPreferenceStore prefs = Activator.getDefault().getPreferenceStore();
@@ -360,6 +367,30 @@ public class AgreeUtils {
             return true;
         }
         return false;
+    }
+    
+    public static GlobalURIEditorOpener getGlobalURIEditorOpener() {
+        if (globalURIEditorOpener == null) {
+            AgreeActivator activator = AgreeActivator.getInstance();
+            String language = AgreeActivator.COM_ROCKWELLCOLLINS_ATC_AGREE_AGREE;
+            Injector injector = activator.getInjector(language);
+            globalURIEditorOpener = injector.getInstance(GlobalURIEditorOpener.class);
+        }
+        return globalURIEditorOpener;
+    }
+    
+    public static ComponentImplementation compImplFromType(ComponentType ct) {
+        ComponentImplementation ci;
+        if(ct instanceof ThreadType){
+            ci = Aadl2Factory.eINSTANCE.createThreadImplementation();
+        }else{
+            ci = Aadl2Factory.eINSTANCE.createSystemImplementation();
+        }
+        ci.setName(ct.getName() + ".wrapper");
+        ci.setType(ct);
+        ct.eResource().getContents().add(ci);
+
+        return ci;
     }
 
 }
