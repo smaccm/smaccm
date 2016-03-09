@@ -64,13 +64,13 @@ public class MATLABFunctionHandler extends AadlHandler {
     }
 	
     protected IStatus runJob(Element root, IProgressMonitor monitor) {
-        if (!(root instanceof ComponentImplementation)) {
+        if (!(root instanceof ComponentType)) {
             return new Status(IStatus.ERROR, Activator.PLUGIN_ID,
-                    "Must select an AADL Component Implementation");
+                    "Must select an AADL Component Type");
         }
 
         try {
-            ComponentImplementation ci = (ComponentImplementation) root;
+            ComponentImplementation ci = AgreeUtils.compImplFromType((ComponentType) root);
 
             SystemInstance si = null;
             try {

@@ -1638,7 +1638,6 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 		return new AgreeType(typeStr);
 	}
 
-
 	private AgreeType getNativeType(DataImplementation dataImpl) {
         EList<Subcomponent> subComps = dataImpl.getAllSubcomponents();
         // if there are no subcomponents, use the component type

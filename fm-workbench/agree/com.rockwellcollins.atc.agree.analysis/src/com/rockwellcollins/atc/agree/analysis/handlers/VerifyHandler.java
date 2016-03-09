@@ -33,6 +33,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.handlers.IHandlerActivation;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.xtext.util.Pair;
+import org.osate.aadl2.Aadl2Factory;
 import org.osate.aadl2.AnnexSubclause;
 import org.osate.aadl2.ComponentClassifier;
 import org.osate.aadl2.ComponentImplementation;
@@ -41,6 +42,8 @@ import org.osate.aadl2.DataPort;
 import org.osate.aadl2.Element;
 import org.osate.aadl2.EventDataPort;
 import org.osate.aadl2.FeatureGroup;
+import org.osate.aadl2.NamedElement;
+import org.osate.aadl2.ThreadType;
 import org.osate.aadl2.instance.ComponentInstance;
 import org.osate.aadl2.instance.SystemInstance;
 import org.osate.aadl2.instantiation.InstantiateModel;
@@ -98,27 +101,42 @@ public abstract class VerifyHandler extends AadlHandler {
 
     protected abstract boolean isRealizability();
 
+
+    
+    protected SystemInstance getSysInstance(Element root){
+        
+        ComponentImplementation ci = null;
+        if (isRealizability()) {
+            if(!(root instanceof ComponentType)){
+                throw new AgreeException("Must select an AADL Component Type");
+            }
+            ci = AgreeUtils.compImplFromType((ComponentType) root);
+        } else {
+            if (!(root instanceof ComponentImplementation)) {
+                throw new AgreeException("Must select an AADL Component Implementation");
+            }
+            ci = (ComponentImplementation)root;
+        }
+        
+        SystemInstance si = null;
+        try {
+            si = InstantiateModel.buildInstanceModelFile(ci);
+        } catch (Exception e) {
+            Dialog.showError("Model Instantiate",
+                    "Error while re-instantiating the model: " + e.getMessage());
+            throw new AgreeException("Error Instantiating model");
+        }
+        
+        return si;
+    }
+    
     @Override
     protected IStatus runJob(Element root, IProgressMonitor monitor) {
         disableRerunHandler();
         handlerService = (IHandlerService) getWindow().getService(IHandlerService.class);
 
-        if (!(root instanceof ComponentImplementation)) {
-            return new Status(IStatus.ERROR, Activator.PLUGIN_ID,
-                    "Must select an AADL Component Implementation");
-        }
-
         try {
-            ComponentImplementation ci = (ComponentImplementation) root;
-
-            SystemInstance si = null;
-            try {
-                si = InstantiateModel.buildInstanceModelFile(ci);
-            } catch (Exception e) {
-                Dialog.showError("Model Instantiate",
-                        "Error while re-instantiating the model: " + e.getMessage());
-                return Status.CANCEL_STATUS;
-            }
+            SystemInstance si = getSysInstance(root);
 
             AnalysisResult result;
             CompositeAnalysisResult wrapper = new CompositeAnalysisResult("");
@@ -137,7 +155,7 @@ public abstract class VerifyHandler extends AadlHandler {
                 if(AgreeUtils.usingKind2()){
                     throw new AgreeException("Kind2 only supports monolithic verification");
                 }
-                result = buildAnalysisResult(ci.getName(), si);
+                result = buildAnalysisResult(((NamedElement)root).getName(), si);
                 wrapper.addChild(result);
                 result = wrapper;
             } else if (isRealizability()) {
