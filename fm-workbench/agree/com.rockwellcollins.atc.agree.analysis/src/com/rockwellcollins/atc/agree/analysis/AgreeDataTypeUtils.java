@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
 
+import jkind.lustre.ArrayType;
 import jkind.lustre.BoolExpr;
 import jkind.lustre.Expr;
 import jkind.lustre.IntExpr;
@@ -21,6 +22,8 @@ import jkind.lustre.VarDecl;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.osate.aadl2.AadlPackage;
+import org.osate.aadl2.Classifier;
+import org.osate.aadl2.ClassifierValue;
 import org.osate.aadl2.ComponentClassifier;
 import org.osate.aadl2.ComponentImplementation;
 import org.osate.aadl2.ComponentType;
@@ -28,11 +31,15 @@ import org.osate.aadl2.DataPort;
 import org.osate.aadl2.DataType;
 import org.osate.aadl2.Feature;
 import org.osate.aadl2.FeatureGroup;
+import org.osate.aadl2.IntegerLiteral;
 import org.osate.aadl2.NamedElement;
+import org.osate.aadl2.PropertyExpression;
 import org.osate.aadl2.Subcomponent;
 import org.osate.aadl2.instance.ComponentInstance;
 import org.osate.aadl2.instance.FeatureInstance;
+import org.osate.aadl2.properties.PropertyNotPresentException;
 
+import com.rockwellcollins.atc.agree.AgreeAADLPropertyUtils;
 import com.rockwellcollins.atc.agree.agree.AgreeDataType;
 import com.rockwellcollins.atc.agree.agree.Arg;
 import com.rockwellcollins.atc.agree.agree.NestedDotID;
@@ -40,6 +47,7 @@ import com.rockwellcollins.atc.agree.agree.PrimType;
 import com.rockwellcollins.atc.agree.agree.RecordDefExpr;
 import com.rockwellcollins.atc.agree.agree.ThisExpr;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeASTBuilder;
+import com.rockwellcollins.atc.agree.validation.AgreeArrayType;
 
 public class AgreeDataTypeUtils {
 
@@ -48,30 +56,31 @@ public class AgreeDataTypeUtils {
     private static final Expr initReal = new RealExpr(BigDecimal.ZERO);
     private static final Expr initInt = new IntExpr(BigInteger.ZERO);
 
-    public static String getRecordTypeName(com.rockwellcollins.atc.agree.agree.Type type) {
-        if (type instanceof PrimType) {
-            return ((PrimType) type).getString();
-        } else {
-            return getIDTypeStr((AgreeUtils.getFinalNestId(((AgreeDataType) type).getData())));
+    private static Type primTypeToLustreType(PrimType type){
+        String name = ((PrimType) type).getString();
+        switch (name){
+        case "int": return NamedType.INT;
+        case "real": return NamedType.REAL;
+        case "bool": return NamedType.BOOL;
         }
+        throw new AgreeException("Unhandled primative type '"+name+"'");
     }
-
-    public static String getLustreTypeName(com.rockwellcollins.atc.agree.agree.Type type,
-            Map<NamedElement, String> typeMap, Set<jkind.lustre.RecordType> typeExpressions) {
+    public static Type getLustreTypeName(com.rockwellcollins.atc.agree.agree.Type type,
+            Map<NamedElement, Type> typeMap, Set<jkind.lustre.RecordType> typeExpressions) {
         if (type instanceof PrimType) {
-            return ((PrimType) type).getString();
+            return primTypeToLustreType((PrimType) type);
         } else {
             return getLustreTypeName(((AgreeDataType) type).getData(), typeMap, typeExpressions);
         }
     }
 
-    public static String getLustreTypeName(NestedDotID recId, Map<NamedElement, String> typeMap,
+    public static Type getLustreTypeName(NestedDotID recId, Map<NamedElement, Type> typeMap,
             Set<jkind.lustre.RecordType> typeExpressions) {
         NamedElement finalId = AgreeUtils.getFinalNestId(recId);
         return getLustreTypeName(finalId, typeMap, typeExpressions);
     }
 
-    public static String getLustreTypeName(NamedElement finalId, Map<NamedElement, String> typeMap,
+    public static Type getLustreTypeName(NamedElement finalId, Map<NamedElement, Type> typeMap,
             Set<jkind.lustre.RecordType> typeExpressions) {
 
         if (typeMap.containsKey(finalId)) {
@@ -81,104 +90,82 @@ public class AgreeDataTypeUtils {
         return typeMap.get(finalId);
     }
 
-    private static void recordType(NamedElement el, Map<NamedElement, String> typeMap,
+    private static void recordType(NamedElement el, Map<NamedElement, Type> typeMap,
             Set<jkind.lustre.RecordType> typeExpressions) {
         Map<String, Type> subTypeMap = new HashMap<String, Type>();
-        if (el instanceof ComponentImplementation) {
-            ComponentImplementation compImpl = (ComponentImplementation) el;
-            String typeStr = null;
-            if (compImpl.getAllSubcomponents().size() == 0) {
-                typeStr = getIDTypeStr(compImpl.getType());
-                typeMap.put(el, typeStr);
-                return;
-            }
-            for (Subcomponent subComp : compImpl.getAllSubcomponents()) {
-                ComponentImplementation subCompImpl = subComp.getComponentImplementation();
-                if (subCompImpl == null) {
-                    ComponentType subCompType = subComp.getComponentType();
-                    typeStr = getLustreTypeName(subCompType, typeMap, typeExpressions);
+        if (el instanceof ComponentClassifier) {
+            Type type = null;
+            if (el instanceof ComponentImplementation) {
+                ComponentImplementation compImpl = (ComponentImplementation) el;
+                if (compImpl.getAllSubcomponents().size() == 0) {
+                    //this is either an array type or a native type
+                    type = getIDType(compImpl.getType());
+                    if(type == null){
+                        type = getIDType(compImpl);
+                    }
                 } else {
-                    typeStr = getLustreTypeName(subCompImpl, typeMap, typeExpressions);
+                    for (Subcomponent subComp : compImpl.getAllSubcomponents()) {
+                        ComponentClassifier subCompClass = subComp.getComponentImplementation();
+                        if (subCompClass == null) {
+                            subCompClass = subComp.getComponentType();
+                        }
+                        Type subType = getLustreTypeName(subCompClass, typeMap, typeExpressions);
+                        if (subType != null) {
+                            //type string will be null if it is a type that AGREE does not reason about
+                            subTypeMap.put(subComp.getName(), subType);
+                        }
+                    }
+                    type = getIDType(el);
+                    jkind.lustre.RecordType lustreRecord = new jkind.lustre.RecordType(type.toString(), subTypeMap);
+                    typeExpressions.add(lustreRecord);
                 }
-                if (typeStr != null) {
-                    subTypeMap.put(subComp.getName(), getNamedType(typeStr));
-                }
+            }else{
+                type = getIDType(el);
             }
+            typeMap.put(el, type);
         } else if (el instanceof RecordDefExpr) {
             RecordDefExpr agreeRecDef = (RecordDefExpr) el;
             for (Arg arg : agreeRecDef.getArgs()) {
 
                 com.rockwellcollins.atc.agree.agree.Type argType = arg.getType();
-                String typeStr = null;
+                Type type = null;
                 if (argType instanceof PrimType) {
-                    typeStr = ((PrimType) argType).getString();
+                    type = primTypeToLustreType((PrimType) argType);
                 } else {
                     NestedDotID nestId = ((AgreeDataType) argType).getData();
                     NamedElement namedEl = AgreeUtils.getFinalNestId(nestId);
-                    typeStr = getLustreTypeName(namedEl, typeMap, typeExpressions);
+                    type = getLustreTypeName(namedEl, typeMap, typeExpressions);
                 }
-                subTypeMap.put(arg.getName(), getNamedType(typeStr));
+                subTypeMap.put(arg.getName(), type);
             }
 
-        } else if (el instanceof ComponentType) {
-            String typeStr = getIDTypeStr(el);
-            typeMap.put(el, typeStr);
-            return;
+            Type type = getIDType(el);
+            typeMap.put(el, type);
+            jkind.lustre.RecordType lustreRecord = new jkind.lustre.RecordType(type.toString(), subTypeMap);
+            // getInitType(lustreRecord);
+            typeExpressions.add(lustreRecord);
+            
         }
-        String typeStr = getIDTypeStr(el);
-        typeMap.put(el, typeStr);
-        jkind.lustre.RecordType lustreRecord = new jkind.lustre.RecordType(typeStr, subTypeMap);
-        // getInitType(lustreRecord);
-        typeExpressions.add(lustreRecord);
-
     }
 
-    public static Expr getInitialType(String typeStr, Set<jkind.lustre.RecordType> typeExpressions) {
-
-        switch (typeStr) {
-        case "bool":
-            return initBool;
-        case "real":
-            return initReal;
-        case "int":
-            return initInt;
-        default:
-        }
-
-        boolean foundType = false;
-        Map<String, Expr> fieldExprs = new HashMap<>();
-        for (jkind.lustre.RecordType type : typeExpressions) {
-            if (type.id.equals(typeStr)) {
-                foundType = true;
-                for (Entry<String, Type> field : type.fields.entrySet()) {
-                    Type fieldType = field.getValue();
-                    if (!(fieldType instanceof NamedType) && !(fieldType instanceof AgreeDataType)) {
-                        throw new AgreeException(
-                                "Unhandled type: '" + fieldType.getClass().getTypeName() + "'");
-                    }
-                    Expr fieldExpr = getInitialType(fieldType.toString(), typeExpressions);
-                    fieldExprs.put(field.getKey(), fieldExpr);
-                }
-            }
-        }
-        if (!foundType) {
-            throw new AgreeException("Could not find type: '" + typeStr + "'");
-        }
-
-        return new RecordExpr(typeStr, fieldExprs);
-    }
-
-    public static String getIDTypeStr(NamedElement record) {
+   
+    public static Type getIDType(NamedElement el) {
         String typeStr = null;
-        EObject container = record.eContainer();
+        EObject container = el.eContainer();
+        
+        Type arrayType = getArrayType(el);
+        
+        if(arrayType != null){
+            return arrayType;
+        }
 
-        if (record instanceof ComponentType) {
-            ComponentType type = (ComponentType) record;
+        if (el instanceof ComponentType) {
+            ComponentType type = (ComponentType) el;
             do {
                 String name = type.getQualifiedName();
                 switch (name) {
                 case "Base_Types::Boolean":
-                    return "bool";
+                    return NamedType.BOOL;
                 case "Base_Types::Integer":
                 case "Base_Types::Unsigned":
                 case "Base_Types::Unsigned_32":
@@ -187,27 +174,27 @@ public class AgreeDataTypeUtils {
                 case "Base_Types::Integer_32":
                 case "Base_Types::Integer_16":
                 case "Base_Types::Integer_8":
-                    return "int";
+                    return NamedType.INT;
                 case "Base_Types::Float":
-                    return "real";
+                    return NamedType.REAL;
                 }
                 type = (DataType) type.getExtended();
 
             } while (type != null);
-            AgreeLogger.logWarning("Reference to component type '" + record.getName()
+            AgreeLogger.logWarning("Reference to component type '" + el.getName()
                     + "' is not among the types reasoned about by AGREE");
             return null;
-        } else if (record instanceof ComponentImplementation) {
-            typeStr = record.getName();
+        } else if (el instanceof ComponentImplementation) {
+            typeStr = el.getName();
         } else {
             while (!(container instanceof ComponentClassifier) && !(container instanceof AadlPackage)) {
                 container = container.eContainer();
             }
             if (container instanceof ComponentClassifier) {
                 ComponentClassifier compClass = (ComponentClassifier) container;
-                typeStr = compClass.getName() + AgreeASTBuilder.dotChar + record.getName();
+                typeStr = compClass.getName() + AgreeASTBuilder.dotChar + el.getName();
             } else {
-                typeStr = record.getName();
+                typeStr = el.getName();
             }
         }
         // get the name of the containing package
@@ -218,9 +205,42 @@ public class AgreeDataTypeUtils {
         typeStr = typeStr.replace(".", "__");
         typeStr = typeStr.replace("::", "____");
 
-        return typeStr;
+        return new NamedType(typeStr);
     }
 
+    private static Type getArrayType(NamedElement el) {
+        String dataRep = null;
+        Classifier type = null;
+        List<PropertyExpression> propDimensions = null;
+        List<Long> dimensions = new ArrayList<>();
+        try {
+            if (el != null) {
+                dataRep = AgreeAADLPropertyUtils.getPropertyEnumString(el, "Data_Model::Data_Representation");
+                if (dataRep.equals("Array")) {
+                    PropertyExpression typeExpr = AgreeAADLPropertyUtils.getPropertyList(el, "Data_Model::Base_Type").get(0);
+                    type = ((ClassifierValue) typeExpr).getClassifier();
+                    propDimensions = AgreeAADLPropertyUtils.getPropertyList(el, "Data_Model::Dimension");
+
+                    for(PropertyExpression propExpr : propDimensions){
+                        dimensions.add(((IntegerLiteral)propExpr).getValue());
+                    }
+                    
+                    return getArrayType(getIDType(type), dimensions);
+                }
+            }
+        } catch (Throwable e) {
+        }
+        ;
+        return null;
+    }
+    
+    private static Type getArrayType(Type type, List<Long> dimensions) {
+        for(long n : dimensions){
+            type = new ArrayType(type, (int)n);
+        }
+        return type;
+    }
+    
     public static NamedType getNamedType(String name) {
         switch (name) {
         case "bool":

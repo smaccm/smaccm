@@ -20,7 +20,8 @@ Require-Bundle: org.eclipse.xtext;visibility:=reexport,
  org.eclipse.emf.common,
  org.antlr.runtime,
  org.eclipse.xtext.common.types
-Import-Package: org.apache.log4j,
+Import-Package: 
+ org.apache.log4j,
  org.eclipse.xtext.xbase.lib,
  org.osate.annexsupport
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8

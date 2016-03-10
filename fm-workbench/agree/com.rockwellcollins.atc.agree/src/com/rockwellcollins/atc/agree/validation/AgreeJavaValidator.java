@@ -59,6 +59,7 @@ import org.osate.annexsupport.AnnexUtil;
 import org.osate.xtext.aadl2.properties.util.EMFIndexRetrieval;
 import org.osate.xtext.aadl2.properties.util.PropertyUtils;
 
+import com.rockwellcollins.atc.agree.AgreeAADLPropertyUtils;
 import com.rockwellcollins.atc.agree.agree.AgreeContract;
 import com.rockwellcollins.atc.agree.agree.AgreeDataType;
 import com.rockwellcollins.atc.agree.agree.AgreePackage;
@@ -1677,11 +1678,11 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
         List<PropertyExpression> dimensions = null;
         try {
             if (dataClass != null) {
-                dataRep = getPropertyEnumString(dataClass, "Data_Model::Data_Representation");
+                dataRep = AgreeAADLPropertyUtils.getPropertyEnumString(dataClass, "Data_Model::Data_Representation");
                 if (dataRep.equals("Array")) {
-                    PropertyExpression typeExpr = getPropertyList(dataClass, "Data_Model::Base_Type").get(0);
+                    PropertyExpression typeExpr = AgreeAADLPropertyUtils.getPropertyList(dataClass, "Data_Model::Base_Type").get(0);
                     type = ((ClassifierValue) typeExpr).getClassifier();
-                    dimensions = getPropertyList(dataClass, "Data_Model::Dimension");
+                    dimensions = AgreeAADLPropertyUtils.getPropertyList(dataClass, "Data_Model::Dimension");
 
                     return AgreeArrayType.getArrayType(getAgreeType(type), dimensions.size());
                 }
@@ -1703,37 +1704,6 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
         return null;
     }
 
-//    private long getPropertyInteger(NamedElement namedEl, String property) {
-//        Property prop = EMFIndexRetrieval.getPropertyDefinitionInWorkspace(
-//                OsateResourceUtil.getResourceSet(), property);
-//        return PropertyUtils.getIntegerValue(namedEl, prop);
-//    }
-
-    private String getPropertyEnumString(NamedElement namedEl, String property){
-        Property prop = EMFIndexRetrieval.getPropertyDefinitionInWorkspace(
-                OsateResourceUtil.getResourceSet(), property);
-        EnumerationLiteral lit = PropertyUtils.getEnumLiteral(namedEl, prop);
-        return lit.getName();
-    }
-    
-//  private String getPropertyClassifierString(NamedElement namedEl, String property){
-//      Property prop = EMFIndexRetrieval.getPropertyDefinitionInWorkspace(
-//                OsateResourceUtil.getResourceSet(), property);
-//      Classifier classifier = PropertyUtils.getClassifierReference(namedEl, prop);
-//      return classifier.getQualifiedName();
-//  }
-    
-    private List<PropertyExpression> getPropertyList(NamedElement namedEl, String property){
-
-        List<PropertyExpression> els = new ArrayList<>();
-        Property prop = EMFIndexRetrieval.getPropertyDefinitionInWorkspace(
-                OsateResourceUtil.getResourceSet(), property);
-        ListValue listExpr = (ListValue) PropertyUtils.getSimplePropertyListValue(namedEl, prop);
-        for(PropertyExpression propExpr : listExpr.getOwnedListElements()){
-            els.add(propExpr);
-        }
-        return els;
-    }
 
 	private AgreeType getAgreeType(PropertyStatement propStat) {
 		return getAgreeType(propStat.getExpr());

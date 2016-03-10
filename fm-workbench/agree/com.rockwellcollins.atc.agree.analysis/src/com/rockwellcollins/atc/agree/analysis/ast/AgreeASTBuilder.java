@@ -75,6 +75,7 @@ import com.rockwellcollins.atc.agree.agree.AgreeContract;
 import com.rockwellcollins.atc.agree.agree.AgreeContractSubclause;
 import com.rockwellcollins.atc.agree.agree.AgreePackage;
 import com.rockwellcollins.atc.agree.agree.Arg;
+import com.rockwellcollins.atc.agree.agree.ArrayAccessExpr;
 import com.rockwellcollins.atc.agree.agree.AssertStatement;
 import com.rockwellcollins.atc.agree.agree.AssignStatement;
 import com.rockwellcollins.atc.agree.agree.AssumeStatement;
@@ -137,7 +138,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 
     private static List<Node> globalNodes;
     private static Set<RecordType> globalTypes;
-    private static Map<NamedElement, String> typeMap;
+    private static Map<NamedElement, Type> typeMap;
     private ComponentInstance curInst; // used for Get_Property Expressions
 
     public AgreeProgram getAgreeProgram(ComponentInstance compInst) {
@@ -379,7 +380,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
     }
 
     private void gatherOutputsInputsTypes(List<AgreeVar> outputs, List<AgreeVar> inputs,
-            EList<FeatureInstance> features, Map<NamedElement, String> typeMap,
+            EList<FeatureInstance> features, Map<NamedElement, Type> typeMap,
             Set<RecordType> typeExpressions) {
         for (FeatureInstance feature : features) {
             featureToAgreeVars(outputs, inputs, feature, typeMap, typeExpressions);
@@ -388,7 +389,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
     }
 
     private void featureToAgreeVars(List<AgreeVar> outputs, List<AgreeVar> inputs, FeatureInstance feature,
-            Map<NamedElement, String> typeMap, Set<RecordType> typeExpressions) {
+            Map<NamedElement, Type> typeMap, Set<RecordType> typeExpressions) {
 
         switch (feature.getCategory()) {
         case FEATURE_GROUP:
@@ -421,7 +422,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
     }
 
     private void portToAgreeVar(List<AgreeVar> outputs, List<AgreeVar> inputs, FeatureInstance feature,
-            Map<NamedElement, String> typeMap, Set<RecordType> typeExpressions) {
+            Map<NamedElement, Type> typeMap, Set<RecordType> typeExpressions) {
 
         DataSubcomponentType dataClass;
         Feature dataFeature = feature.getFeature();
@@ -454,24 +455,12 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
             //we do not reason about this type
             return;
         }
-        String typeName = AgreeDataTypeUtils.getLustreTypeName(dataClass, typeMap, typeExpressions);
-        if (typeName == null) {
+        Type type = AgreeDataTypeUtils.getLustreTypeName(dataClass, typeMap, typeExpressions);
+        if (type == null) {
             //we do not reason about this type
             return;
         }
 
-        Type type = getNamedType(typeName);
-        for(RecordType recType : typeExpressions){
-            if(recType.id.equals(typeName)){
-                type = recType;
-                break;
-            }
-        }
-        
-        if(type == null){
-            throw new AgreeException("The type name should have been created");
-        }
-       
         AgreeVar agreeVar = new AgreeVar(name, type, feature.getFeature(), feature.getComponentInstance());
 
         switch (feature.getDirection()) {
@@ -558,7 +547,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
                 dataClass = eventDataPort.getDataFeatureClassifier();
             }
 
-            if (dataClass == null || getNamedType(AgreeDataTypeUtils.getLustreTypeName(dataClass, typeMap, globalTypes)) == null) {
+            if (dataClass == null || AgreeDataTypeUtils.getLustreTypeName(dataClass, typeMap, globalTypes) == null) {
                 // we don't reason about this type
                 continue;
             }
@@ -729,7 +718,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
         List<VarDecl> agreeVars = new ArrayList<>();
         for (Arg arg : args) {
             Type type =
-                    getNamedType(AgreeDataTypeUtils.getLustreTypeName(arg.getType(), typeMap, globalTypes));
+                    AgreeDataTypeUtils.getLustreTypeName(arg.getType(), typeMap, globalTypes);
             agreeVars.add(new AgreeVar(arg.getName(), type, arg, compInst));
         }
         return agreeVars;
@@ -944,7 +933,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
         while (recId.getSub() != null) {
             recId = recId.getSub();
         }
-        String recName = AgreeDataTypeUtils.getIDTypeStr(recId.getBase());
+        String recName = AgreeDataTypeUtils.getIDType(recId.getBase()).toString();
         return new jkind.lustre.RecordExpr(recName, argExprMap);
 
     }
@@ -954,6 +943,15 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
         Expr expr = doSwitch(floor.getExpr());
         Expr castExpr = new CastExpr(NamedType.INT, expr);
         return castExpr;
+    }
+    
+    @Override
+    public Expr caseArrayAccessExpr(ArrayAccessExpr access){
+        Expr array = doSwitch(access.getArray());
+        for(com.rockwellcollins.atc.agree.agree.Expr arg : access.getArgs()){
+            array = new jkind.lustre.ArrayAccessExpr(array, doSwitch(arg));
+        }
+        return array;
     }
 
     @Override
@@ -1100,8 +1098,8 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
         }
         List<VarDecl> inputs = agreeVarsFromArgs(expr.getArgs(), null);
         Expr bodyExpr = doSwitch(expr.getExpr());
-        NamedType outType =
-                getNamedType(AgreeDataTypeUtils.getLustreTypeName(expr.getType(), typeMap, globalTypes));
+        Type outType =
+                AgreeDataTypeUtils.getLustreTypeName(expr.getType(), typeMap, globalTypes);
         VarDecl outVar = new VarDecl("_outvar", outType);
         List<VarDecl> outputs = Collections.singletonList(outVar);
         Equation eq = new Equation(new IdExpr("_outvar"), bodyExpr);
