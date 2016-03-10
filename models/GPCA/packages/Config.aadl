@@ -6,7 +6,7 @@
 ----------------------------------------------------------------------------
 -- Edited by : Anitha Murugesan 
 -- Date 7/18/2013
--- The features matches the Config behavioral model.
+-- The features matches the Config behavioral model. 
 --------------------------------------------------------------------------
 
 package Config
@@ -45,6 +45,26 @@ public
 		property config_gt_1_implies_values_configured =
 			(TLM_MODE_IN.System_On and CONFIG_OUT.Configured > 0 ) => CONFIG_OUT.Infusion_Total_Duration > 0;
 		guarantee "config_gt_1_implies_values_configured":  config_gt_1_implies_values_configured;
+		
+		property configuration_type_request =
+			OP_CMD_IN.Data_Config => CONFIG_OUT.Request_Config_Type;
+		guarantee "configuration_type_request" : configuration_type_request;
+		
+		property validate_configured_patient_drug_info =
+			(CONFIG_OUT.Configured = 1) and ((PRES_IN.Drug_Name = 0) or ((PRES_IN.Drug_Concentration < DB_IN.Drug_Concentration_Low) or
+			(PRES_IN.Drug_Concentration > DB_IN.Drug_Concentration_High)) or (PRES_IN.Entered_Reservoir_Volume < CONST_IN.Empty_Reservoir)) => 
+			(CONFIG_OUT.Error_Message_ID = 5) and CONFIG_OUT.Request_Patient_Drug_Info;
+		guarantee "validate_configured_patient_drug_info" : validate_configured_patient_drug_info;
+		
+		property validate_configured_infusion_info =
+			(CONFIG_OUT.Configured > 0) and ((PRES_IN.VTBI_Total > DB_IN.VTBI_High) or (PRES_IN.VTBI_Total < DB_IN.VTBI_Low) or
+			(PRES_IN.Flow_Rate_Basal < DB_IN.Flow_Rate_Low) or (PRES_IN.Flow_Rate_Basal > DB_IN.Flow_Rate_High) or 
+			(PRES_IN.Flow_Rate_Intermittent_Bolus < DB_IN.Flow_Rate_Low) or (PRES_IN.Flow_Rate_Intermittent_Bolus > DB_IN.Flow_Rate_High) or
+			(PRES_IN.Flow_Rate_Patient_Bolus < DB_IN.Flow_Rate_Low) or (PRES_IN.Flow_Rate_Patient_Bolus > DB_IN.Flow_Rate_High) or
+			(PRES_IN.Duration_Intermittent_Bolus > PRES_IN.Interval_Intermittent_Bolus) or (PRES_IN.Max_Number_of_Patient_Bolus 
+			> DB_IN.Number_Max_Patient_Bolus) or (PRES_IN.Flow_Rate_Intermittent_Bolus < PRES_IN.Flow_Rate_Basal) or
+			(PRES_IN.Flow_Rate_Patient_Bolus < PRES_IN.Flow_Rate_Basal)) => CONFIG_OUT.Request_Patient_Drug_Info;
+		guarantee "validate_configured_infusion_info" : validate_configured_infusion_info;
 		
 		
 	
