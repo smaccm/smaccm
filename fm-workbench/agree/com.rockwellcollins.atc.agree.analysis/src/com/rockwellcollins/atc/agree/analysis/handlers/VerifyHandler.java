@@ -152,9 +152,6 @@ public abstract class VerifyHandler extends AadlHandler {
             }
 
             if (isRecursive()) {
-                if(AgreeUtils.usingKind2()){
-                    throw new AgreeException("Kind2 only supports monolithic verification");
-                }
                 result = buildAnalysisResult(((NamedElement)root).getName(), si);
                 wrapper.addChild(result);
                 result = wrapper;

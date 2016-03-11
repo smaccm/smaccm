@@ -105,13 +105,21 @@ public class AgreeRenaming extends Renaming {
                 return "Realizability Result";
             } else if (original.contains("__nodeLemma")) {
                 return newName;
-            } else if(newName.matches(".*\\[[0-9]*\\]")){
-                //kind2 hacks
-               newName = this.explicitRenames.get(newName);
-//               if(newName == null){
-//                   return original;
-//               }
-               return newName;
+            } else if (newName.matches(".*\\[[0-9]*\\]")) {
+                // kind2 and array hacks
+                String renamed = this.explicitRenames.get(newName);
+                if (renamed == null) {
+                    // get the index of the array bound
+                    int accessIndex = newName.indexOf("[");
+                    String arrayName = newName.substring(0, accessIndex);
+                    String arrayAccess = newName.substring(accessIndex);
+                    renamed = rename(arrayName);
+                    if (renamed != null) {
+                        renamed += arrayAccess;
+                    }
+                }
+                return renamed;
+
             }
             return null;
         }
