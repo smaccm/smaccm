@@ -35,12 +35,19 @@ import com.rockwellcollins.atc.agree.codegen.ast.MATLABFirstTimeVarInit;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABFunction;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABIfFunction;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABImpliesFunction;
+import com.rockwellcollins.atc.agree.codegen.ast.MATLABInt16Type;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABInt32Type;
+import com.rockwellcollins.atc.agree.codegen.ast.MATLABInt64Type;
+import com.rockwellcollins.atc.agree.codegen.ast.MATLABInt8Type;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABLocalBusVarInit;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABPersistentVarInit;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABPreInputVarInit;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABPreLocalVarInit;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABType;
+import com.rockwellcollins.atc.agree.codegen.ast.MATLABUInt16Type;
+import com.rockwellcollins.atc.agree.codegen.ast.MATLABUInt32Type;
+import com.rockwellcollins.atc.agree.codegen.ast.MATLABUInt64Type;
+import com.rockwellcollins.atc.agree.codegen.ast.MATLABUInt8Type;
 import com.rockwellcollins.atc.agree.codegen.ast.expr.MATLABArrayAccessExpr;
 import com.rockwellcollins.atc.agree.codegen.ast.expr.MATLABArrowFunctionCall;
 import com.rockwellcollins.atc.agree.codegen.ast.expr.MATLABBinaryExpr;
@@ -57,6 +64,8 @@ import com.rockwellcollins.atc.agree.codegen.ast.expr.MATLABTypeCastExpr;
 import com.rockwellcollins.atc.agree.codegen.ast.expr.MATLABTypeInitExpr;
 import com.rockwellcollins.atc.agree.codegen.ast.expr.MATLABUnaryExpr;
 import com.rockwellcollins.atc.agree.codegen.ast.expr.MATLABUnaryOp;
+import com.rockwellcollins.atc.agree.codegen.preferences.PreferenceConstants;
+import com.rockwellcollins.atc.agree.codegen.translation.LustreToMATLABTranslator;
 import com.rockwellcollins.atc.agree.codegen.util.UniqueID;
 
 public class LustreToMATLABExprVisitor implements ExprVisitor<MATLABExpr> {
@@ -98,8 +107,37 @@ public class LustreToMATLABExprVisitor implements ExprVisitor<MATLABExpr> {
 		MATLABExpr rightExpr = e.right.accept(this);
 		if(op == null){
 			if(opName.equals("INT_DIVIDE")){
-				MATLABTypeCastExpr castLeftExpr = new MATLABTypeCastExpr(new MATLABInt32Type(),leftExpr);
-				MATLABTypeCastExpr castRightExpr = new MATLABTypeCastExpr(new MATLABInt32Type(),rightExpr);
+		        MATLABType type = null;
+				switch (LustreToMATLABTranslator.intTypeStr) {
+				case PreferenceConstants.INT_INT8:
+					type = new MATLABInt8Type();
+					break;
+				case PreferenceConstants.INT_UINT8:
+					type = new MATLABUInt8Type();
+					break;
+				case PreferenceConstants.INT_INT16:
+					type = new MATLABInt16Type();
+					break;
+				case PreferenceConstants.INT_UINT16:
+					type = new MATLABUInt16Type();
+					break;
+				case PreferenceConstants.INT_INT32:
+					type = new MATLABInt32Type();
+					break;
+				case PreferenceConstants.INT_UINT32:
+					type = new MATLABUInt32Type();
+					break;
+				case PreferenceConstants.INT_INT64:
+					type = new MATLABInt64Type();
+					break;
+				case PreferenceConstants.INT_UINT64:
+					type = new MATLABUInt64Type();
+					break;
+				}
+				MATLABTypeCastExpr castLeftExpr = new MATLABTypeCastExpr(type,
+						leftExpr);
+				MATLABTypeCastExpr castRightExpr = new MATLABTypeCastExpr(type,
+						rightExpr);
 				MATLABBinaryOp castOp = MATLABBinaryOp.fromName("DIVIDE");
 				return new MATLABBinaryExpr(castLeftExpr, castOp, castRightExpr);
 			}
