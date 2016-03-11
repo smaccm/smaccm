@@ -61,12 +61,10 @@ public class AgreePatternTranslator {
     private static int eventIndex;
     private static int patternIndex;
     private static List<Node> patternLustreNodes;
-    private static Map<AgreeNode, List<AgreeVar>> nodeEvents;
     public static final IdExpr timeExpr = new IdExpr("time");
 
     public static AgreeProgram translate(AgreeProgram program) {
         patternLustreNodes = new ArrayList<>();
-        nodeEvents = new HashMap<>();
 
         AgreeNode topNode = translateNode(program.topNode, true);
         List<AgreeNode> agreeNodes = gatherNodes(topNode);
@@ -142,10 +140,27 @@ public class AgreePatternTranslator {
 
         if(pattern instanceof AgreeCauseEffectPattern){
             return translatePattern((AgreeCauseEffectPattern)pattern, builder, isProperty);
-        }else if(pattern instanceof AgreePeriodicPattern){
-            return translatePattern((AgreePeriodicPattern)pattern, builder, isProperty);
+        }else if(pattern instanceof AgreeRealtimePattern){
+            return translatePattern((AgreeRealtimePattern)pattern, builder, isProperty);
         }
-        throw new AgreeException("Unhandled pattern: "+pattern.getClass().toString());
+        throw new AgreeException("Unhandled Pattern: "+pattern.getClass().toString());
+    }
+    
+    private static Expr translatePattern(AgreeRealtimePattern pattern, AgreeNodeBuilder builder, boolean isProperty){
+        if(pattern instanceof AgreePeriodicPattern){
+            return translatePattern((AgreePeriodicPattern)pattern, builder, isProperty);
+        }else if(pattern instanceof AgreeSporadicPattern){
+            return translatePattern((AgreeSporadicPattern)pattern, builder, isProperty);
+        }
+        throw new AgreeException("Unhandled Pattern: "+pattern.getClass().toString());
+    }
+    
+    private static Expr translatePattern(AgreeSporadicPattern pattern, AgreeNodeBuilder builder, boolean isProperty) {
+        if(isProperty){
+            throw new AgreeException("We have not translated this pattern to properties yet");
+        }
+        
+        throw new AgreeException("unimplemented");
     }
     
     private static Expr translatePattern(AgreePeriodicPattern pattern, AgreeNodeBuilder builder, boolean isProperty) {
@@ -164,7 +179,7 @@ public class AgreePatternTranslator {
         AgreeVar timeoutVar = new AgreeVar(TIMEOUT_PREFIX+patternIndex, NamedType.REAL, varReference);
         
         builder.addOutput(jitterVar);
-        builder.addLocal(periodVar);
+        builder.addOutput(periodVar);
         builder.addOutput(timeoutVar);
         
         IdExpr jitterId = new IdExpr(jitterVar.id);
@@ -179,28 +194,26 @@ public class AgreePatternTranslator {
         Expr jitterHigh = new BinaryExpr(jitterId, BinaryOp.LESSEQUAL, pattern.jitter);
         builder.addAssertion(new AgreeStatement(null, new BinaryExpr(jitterLow, BinaryOp.AND, jitterHigh), pattern.reference));
         
-        //pnext = p -> pre pnext + if e then p else 0
-        Expr ifElse = new IfThenElseExpr(pattern.event, pattern.period, new RealExpr(BigDecimal.ZERO));
+        //(pnext <= p) -> (pnext = pre pnext + if pre(e) then p else 0)
+        Expr preE = new UnaryExpr(UnaryOp.PRE, pattern.event);
+        Expr ifElse = new IfThenElseExpr(preE, pattern.period, new RealExpr(BigDecimal.ZERO));
         Expr prePnext = new UnaryExpr(UnaryOp.PRE, periodId);
         prePnext = new BinaryExpr(prePnext, BinaryOp.PLUS, ifElse);
-        prePnext = new BinaryExpr(pattern.period, BinaryOp.ARROW, prePnext);
-        builder.addLocalEquation(new AgreeEquation(periodId, prePnext, pattern.reference));
+        Expr pNext = new BinaryExpr(periodId, BinaryOp.EQUAL, prePnext);
+        Expr pInit = new BinaryExpr(periodId, BinaryOp.LESSEQUAL, pattern.period);
+        Expr nextP = new BinaryExpr(pInit, BinaryOp.ARROW, pNext);
+        builder.addAssertion(new AgreeStatement(null, nextP, pattern.reference));
         
-        //timeout = if e then pnext + jitter else 0 -> pre timeout
-        Expr preTimeout = new UnaryExpr(UnaryOp.PRE, timeoutId);
-        preTimeout = new BinaryExpr(new RealExpr(BigDecimal.ZERO), BinaryOp.ARROW, preTimeout);
-        Expr periodPlusJit = new BinaryExpr(periodId, BinaryOp.PLUS, jitterId);
-        ifElse = new IfThenElseExpr(pattern.event, periodPlusJit, preTimeout);
-        builder.addAssertion(new AgreeStatement(null, new BinaryExpr(timeoutId, BinaryOp.EQUAL, ifElse), pattern.reference));
+        //timeout = pnext + jitter
+        Expr timeoutExpr = new BinaryExpr(periodId, BinaryOp.PLUS, jitterId);
+        timeoutExpr = new BinaryExpr(timeoutId, BinaryOp.EQUAL, timeoutExpr);
+        builder.addAssertion(new AgreeStatement(null, timeoutExpr, pattern.reference));
         
-        //event = (t = (0 -> pre timeout))
-        Expr timeEq = new BinaryExpr(timeExpr, BinaryOp.EQUAL, preTimeout);
-        Expr expr = new BinaryExpr(pattern.event, BinaryOp.EQUAL, timeEq);
+        //event = (t = timeout)
+        Expr eventExpr = new BinaryExpr(timeExpr, BinaryOp.EQUAL, timeoutId);
+        eventExpr = new BinaryExpr(pattern.event, BinaryOp.EQUAL, eventExpr);
         
-        //assert that the timeout is always greater than the current time
-        builder.addAssertion(new AgreeStatement(null, new BinaryExpr(timeoutId, BinaryOp.GREATER, timeExpr), pattern.reference));
-        
-        return expr;
+        return eventExpr;
     }
     
 

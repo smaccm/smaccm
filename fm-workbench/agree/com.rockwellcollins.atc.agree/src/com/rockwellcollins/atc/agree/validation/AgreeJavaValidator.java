@@ -100,6 +100,7 @@ import com.rockwellcollins.atc.agree.agree.RecordExpr;
 import com.rockwellcollins.atc.agree.agree.RecordType;
 import com.rockwellcollins.atc.agree.agree.RecordUpdateExpr;
 import com.rockwellcollins.atc.agree.agree.SpecStatement;
+import com.rockwellcollins.atc.agree.agree.SporadicStatement;
 import com.rockwellcollins.atc.agree.agree.SynchStatement;
 import com.rockwellcollins.atc.agree.agree.ThisExpr;
 import com.rockwellcollins.atc.agree.agree.TimeExpr;
@@ -519,6 +520,40 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
             }
         }
 	}
+	
+	@Check(CheckType.FAST)
+    public void checkSporadicStatement(SporadicStatement statement){
+        Expr event = statement.getEvent();
+        Expr jitter = statement.getJitter();
+        Expr iat = statement.getIat();
+        
+        AgreeType eventType = getAgreeType(event);
+        if(!matches(BOOL, eventType)){
+            error(event, "Expression is of type '"+eventType+"' but must be of type 'bool'");
+        }
+
+        if (jitter != null) {
+            if (!(jitter instanceof RealLitExpr)) {
+                error(jitter, "The specified jitter must be a real literal");
+            } else {
+                RealLitExpr jitterReal = (RealLitExpr) jitter;
+                Double val = Double.valueOf(jitterReal.getVal());
+                if(val < 0){
+                    error(jitter, "The specified jitter must be positive");
+                }
+            }
+        }
+        
+        if (!(iat instanceof RealLitExpr)) {
+            error(iat, "The specified interarrival time must be a real literal");
+        } else {
+            RealLitExpr periodReal = (RealLitExpr) iat;
+            Double val = Double.valueOf(periodReal.getVal());
+            if(val < 0){
+                error(iat, "The specified interarrival time must be positive");
+            }
+        }
+    }
 	
 	@Check(CheckType.FAST)
 	public void checkWhenHoldsStatement(WhenHoldsStatement when){

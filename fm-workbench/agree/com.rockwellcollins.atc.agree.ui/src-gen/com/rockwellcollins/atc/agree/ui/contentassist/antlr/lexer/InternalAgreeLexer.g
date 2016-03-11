@@ -50,6 +50,8 @@ Ordering : ('O'|'o')('R'|'r')('D'|'d')('E'|'e')('R'|'r')('I'|'i')('N'|'n')('G'|'
 
 Property : ('P'|'p')('R'|'r')('O'|'o')('P'|'p')('E'|'e')('R'|'r')('T'|'t')('Y'|'y');
 
+Sporadic : ('S'|'s')('P'|'p')('O'|'o')('R'|'r')('A'|'a')('D'|'d')('I'|'i')('C'|'c');
+
 Whenever : ('W'|'w')('H'|'h')('E'|'e')('N'|'n')('E'|'e')('V'|'v')('E'|'e')('R'|'r');
 
 KW__INSERT : '_'('I'|'i')('N'|'n')('S'|'s')('E'|'e')('R'|'r')('T'|'t');
@@ -145,6 +147,8 @@ With : ('W'|'w')('I'|'i')('T'|'t')('H'|'h');
 PlusSignEqualsSignGreaterThanSign : '+''=''>';
 
 LessThanSignEqualsSignGreaterThanSign : '<''=''>';
+
+IAT : ('I'|'i')('A'|'a')('T'|'t');
 
 And : ('A'|'a')('N'|'n')('D'|'d');
 

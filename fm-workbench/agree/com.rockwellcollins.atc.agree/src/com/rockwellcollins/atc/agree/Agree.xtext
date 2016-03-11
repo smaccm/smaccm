@@ -86,6 +86,7 @@ WheneverStatement:
 
 RealTimeStatement:
 	=> ({PeriodicStatement} 'condition' event=Expr 'occurs' 'each') period=Expr ('with' 'jitter' jitter=Expr)? 
+|	=> ({SporadicStatement} 'condition' event=Expr 'occurs' 'sporadic') 'with' 'IAT' iat=Expr ('with' 'jitter' jitter=Expr)?
 ;
  
 TimeInterval returns TimeInterval:

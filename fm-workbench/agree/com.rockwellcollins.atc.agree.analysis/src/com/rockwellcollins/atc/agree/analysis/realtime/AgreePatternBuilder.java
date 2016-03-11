@@ -12,6 +12,7 @@ import com.rockwellcollins.atc.agree.agree.OpenRightTimeInterval;
 import com.rockwellcollins.atc.agree.agree.OpenTimeInterval;
 import com.rockwellcollins.atc.agree.agree.PatternStatement;
 import com.rockwellcollins.atc.agree.agree.PeriodicStatement;
+import com.rockwellcollins.atc.agree.agree.SporadicStatement;
 import com.rockwellcollins.atc.agree.agree.TimeInterval;
 import com.rockwellcollins.atc.agree.agree.WhenHoldsStatement;
 import com.rockwellcollins.atc.agree.agree.WhenOccursStatment;
@@ -53,10 +54,28 @@ public class AgreePatternBuilder extends AgreeSwitch<AgreeStatement> {
     @Override
     public AgreeStatement casePeriodicStatement(PeriodicStatement object){
         Expr event = builder.doSwitch(object.getEvent());
-        Expr jitter = builder.doSwitch(object.getJitter());
+        
+        com.rockwellcollins.atc.agree.agree.Expr jitter = object.getJitter();
+        Expr jitterExpr = null;
+        if (jitter != null) {
+            jitterExpr = builder.doSwitch(jitter);
+        }
         Expr period = builder.doSwitch(object.getPeriod());
         
-        return new AgreePeriodicPattern(str, ref, event, period, jitter);
+        return new AgreePeriodicPattern(str, ref, event, period, jitterExpr);
+    }
+    
+    @Override
+    public AgreeStatement caseSporadicStatement(SporadicStatement object){
+        Expr event = builder.doSwitch(object.getEvent());
+        com.rockwellcollins.atc.agree.agree.Expr jitter = object.getJitter();
+        Expr jitterExpr = null;
+        if (jitter != null) {
+            jitterExpr = builder.doSwitch(jitter);
+        }
+        Expr iat = builder.doSwitch(object.getIat());
+        
+        return new AgreeSporadicPattern(str, ref, event, iat, jitterExpr);
     }
     
     @Override
