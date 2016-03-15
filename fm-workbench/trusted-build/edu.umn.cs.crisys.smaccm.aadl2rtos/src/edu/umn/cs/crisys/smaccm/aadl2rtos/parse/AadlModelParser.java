@@ -563,7 +563,7 @@ public class AadlModelParser {
     boolean isPassive = PropertyUtil.getThreadType(tti);
     boolean isExternal = PropertyUtil.getIsExternal(tti);
     int priority = -1; 
-    int stackSize = 0;
+    int stackSize = 4096;
     
     if (!(isPassive || isExternal)) {
       priority = PropertyUtil.getPriority(tti);
@@ -571,6 +571,7 @@ public class AadlModelParser {
     } else {
       // TODO: Compute priorities for passive threads.
       priority = 200; 
+      stackSize = 4096;
       try {
         PropertyUtil.getPriority(tti);
         logger.warn("Warning: priority ignored for passive/external thread: " + name);
