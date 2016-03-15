@@ -60,6 +60,22 @@
             </command>
          </menu>
       </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="popup:#TextEditorContext?after=additions">
+         <menu
+               id="com.rockwellcollins.atc.agree.analysis.popups.texteditor"
+               label="AGREE"
+               mnemonic="g">
+            <command
+                  commandId="com.rockwellcollins.atc.agree.codegen.commands.genCodeSingle"
+                  icon="icons/layer.png"
+                  id="com.rockwellcollins.atc.agree.codegen.commands.genCodeSingle"
+                  mnemonic="G"
+                  style="push">
+            </command>
+         </menu>
+      </menuContribution>
    </extension>
    <extension
          point="org.eclipse.ui.handlers">
@@ -68,31 +84,10 @@
             class="com.rockwellcollins.atc.agree.codegen.handlers.MATLABFunctionHandler">
       	 <enabledWhen>
             <reference
-                  definitionId="com.rockwellcollins.atc.agree.analysis.expressions.isSingleOutlineSelection">
+                  definitionId="com.rockwellcollins.atc.agree.analysis.expressions.eObjectSelected">
             </reference>
          </enabledWhen>         
       </handler>
-   </extension>
-   <extension
-         point="org.eclipse.core.expressions.definitions">
-      <definition
-            id="com.rockwellcollins.atc.agree.analysis.expressions.isSingleOutlineSelection">
-         <with
-               variable="selection">
-            <and>
-               <count
-                     value="1">
-               </count>
-               <iterate
-                     ifEmpty="false"
-                     operator="or">
-                  <instanceof
-                        value="org.eclipse.xtext.ui.editor.outline.impl.EObjectNode">
-                  </instanceof>
-               </iterate>
-            </and>
-         </with>
-      </definition>
    </extension>
    <extension
          point="org.eclipse.ui.preferencePages">
