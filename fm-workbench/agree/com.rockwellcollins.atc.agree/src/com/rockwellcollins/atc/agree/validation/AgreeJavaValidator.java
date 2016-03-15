@@ -499,31 +499,44 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 	    }
 
         if (jitter != null) {
-            if (!(jitter instanceof RealLitExpr)) {
+            if (!(jitter instanceof RealLitExpr || isConst(jitter))) {
                 error(jitter, "The specified jitter must be a real literal");
             } else {
-                RealLitExpr jitterReal = (RealLitExpr) jitter;
-                Double val = Double.valueOf(jitterReal.getVal());
+                Double val = getRealConstVal(jitter);
                 if(val < 0){
                     error(jitter, "The specified jitter must be positive");
                 }
             }
         }
         
-        if (!(period instanceof RealLitExpr)) {
+        if (!(period instanceof RealLitExpr || isConst(period))) {
             error(period, "The specified period must be a real literal");
         } else {
-            RealLitExpr periodReal = (RealLitExpr) period;
-            Double val = Double.valueOf(periodReal.getVal());
+            Double val = getRealConstVal(period);
             if(val < 0){
                 error(period, "The specified period must be positive");
             }
         }
 	}
 	
+	private double getRealConstVal(Expr expr){
+	    if (expr instanceof RealLitExpr) {
+            RealLitExpr realLit = (RealLitExpr) expr;
+            return Double.valueOf(realLit.getVal());
+        }else if (expr instanceof NestedDotID) {
+            NestedDotID id = (NestedDotID) expr;
+            NamedElement finalId = getFinalNestId(id);
+            if (finalId instanceof ConstStatement) {
+                ConstStatement constState = (ConstStatement) finalId;
+                return getRealConstVal(constState.getExpr());
+            }
+        }
+	    throw new IllegalArgumentException("not constant or literal value evalued");
+	}
+	
 	@Check(CheckType.FAST)
     public void checkSporadicStatement(SporadicStatement statement){
-        Expr event = statement.getEvent();
+	    Expr event = statement.getEvent();
         Expr jitter = statement.getJitter();
         Expr iat = statement.getIat();
         
@@ -533,22 +546,20 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
         }
 
         if (jitter != null) {
-            if (!(jitter instanceof RealLitExpr)) {
+            if (!(jitter instanceof RealLitExpr || isConst(jitter))) {
                 error(jitter, "The specified jitter must be a real literal");
             } else {
-                RealLitExpr jitterReal = (RealLitExpr) jitter;
-                Double val = Double.valueOf(jitterReal.getVal());
+                Double val = getRealConstVal(jitter);
                 if(val < 0){
                     error(jitter, "The specified jitter must be positive");
                 }
             }
         }
         
-        if (!(iat instanceof RealLitExpr)) {
+        if (!(iat instanceof RealLitExpr || isConst(iat))) {
             error(iat, "The specified interarrival time must be a real literal");
         } else {
-            RealLitExpr periodReal = (RealLitExpr) iat;
-            Double val = Double.valueOf(periodReal.getVal());
+            Double val = getRealConstVal(iat);
             if(val < 0){
                 error(iat, "The specified interarrival time must be positive");
             }
@@ -694,14 +705,23 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 //	    AgreeType lowerType = getAgreeType(lower);
 //	    AgreeType higherType = getAgreeType(higher);
 	    
-	    if(!(lower instanceof RealLitExpr)){
+	    if(!(lower instanceof RealLitExpr || isConst(lower))){
 	        error(lower, "Lower interval must be a real valued literal");
 	    }
 	    
-	    if(!(higher instanceof RealLitExpr)){
+	    if(!(higher instanceof RealLitExpr || isConst(higher))){
             error(higher, "higher interval must be a real valued literal");
         }
 	            
+	}
+	
+	private boolean isConst(Expr expr){
+	    if (expr instanceof NestedDotID) {
+            NestedDotID id = (NestedDotID) expr;
+            NamedElement finalId = getFinalNestId(id);
+            return (finalId instanceof ConstStatement);
+        }
+	    return false;
 	}
 
 	@Check(CheckType.FAST)
