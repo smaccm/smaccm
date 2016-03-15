@@ -6,7 +6,7 @@ annex agree {**
   const relay_low : real = 5.0;
   const relay_high : real = 10.0;
   const send_period : real = 50.0;
-  const recieve_bound : real = 25.0;
+  const receive_bound : real = 25.0;
   
   node num_true(a : bool, b : bool, c : bool) returns (ret : int);
   let
@@ -44,7 +44,7 @@ system OM1
     guarantee "receive vals correct" : whenever event(send_val) occurs 
       receive_val1 = sent_val and
       receive_val2 = sent_val occurs
-        during [0.0, OM1.recieve_bound];
+        during [0.0, OM1.receive_bound];
     
   **};
 end OM1;
@@ -54,8 +54,8 @@ system implementation OM1.i
 		rly1 : system relay;
 		rly2 : system relay;
 		rly3 : system relay;
-		rec1 : system reciever;
-		rec2 : system reciever;
+		rec1 : system receiver;
+		rec2 : system receiver;
 	connections
 	  conn_rl1 : port send_val -> rly1.input;
     conn_rl2 : port send_val -> rly2.input;
@@ -103,7 +103,7 @@ system relay
   **};
 end relay;
 	
-system reciever
+system receiver
 	features
 		input1 : in event data port Base_Types::Integer;
 		input2 : in event data port Base_Types::Integer;
@@ -119,7 +119,7 @@ system reciever
       (last1 = last3 => output = last1) and
       (last2 = last3 => output = last2);
 	**};
-end reciever;
+end receiver;
 
 
 end OM1;
