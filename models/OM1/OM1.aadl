@@ -35,7 +35,7 @@ system OM1
     eq num_faults : int = OM1.num_true(fault1, fault2, fault3);
     eq sent_val : int = if event(send_val) then send_val else 0 -> pre(sent_val);
       
-    assume "bounded sending frequency" : condition event(send_val) occurs each OM1.send_period; 
+    assume "bounded sending frequency" : condition event(send_val) occurs sporadic with IAT OM1.send_period; 
     assume "constant faults" : true ->
       fault1 = pre(fault1) and fault2 = pre(fault2) and fault3 = pre(fault3);
     

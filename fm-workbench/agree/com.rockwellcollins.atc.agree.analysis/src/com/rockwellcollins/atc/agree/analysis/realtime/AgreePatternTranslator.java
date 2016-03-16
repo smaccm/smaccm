@@ -31,6 +31,7 @@ import jkind.lustre.Expr;
 import jkind.lustre.IdExpr;
 import jkind.lustre.IfThenElseExpr;
 import jkind.lustre.IntExpr;
+import jkind.lustre.LustreUtil;
 import jkind.lustre.NamedType;
 import jkind.lustre.Node;
 import jkind.lustre.NodeCallExpr;
@@ -160,7 +161,56 @@ public class AgreePatternTranslator {
             throw new AgreeException("We have not translated this pattern to properties yet");
         }
         
-        throw new AgreeException("unimplemented");
+        EObject varReference = pattern.reference;
+        while(!(varReference instanceof ComponentClassifier)){
+            varReference = varReference.eContainer();
+        }
+        
+        AgreeVar jitterVar = new AgreeVar(JITTER_PREFIX+patternIndex, NamedType.REAL, varReference);
+        AgreeVar periodVar = new AgreeVar(PERIOD_PREFIX+patternIndex, NamedType.REAL, varReference);
+        AgreeVar timeoutVar = new AgreeVar(TIMEOUT_PREFIX+patternIndex, NamedType.REAL, varReference);
+        
+        builder.addOutput(jitterVar);
+        builder.addOutput(periodVar);
+        builder.addOutput(timeoutVar);
+        
+        IdExpr jitterId = new IdExpr(jitterVar.id);
+        IdExpr periodId = new IdExpr(periodVar.id);
+        IdExpr timeoutId = new IdExpr(timeoutVar.id);
+
+        builder.addEventTime(timeoutVar);
+
+        // -j <= jitter <= j
+        Expr jitterLow =
+                new BinaryExpr(new UnaryExpr(UnaryOp.NEGATIVE, pattern.jitter), BinaryOp.LESSEQUAL, jitterId);
+        Expr jitterHigh = new BinaryExpr(jitterId, BinaryOp.LESSEQUAL, pattern.jitter);
+        builder.addAssertion(new AgreeStatement(null, new BinaryExpr(jitterLow, BinaryOp.AND, jitterHigh), pattern.reference));
+        
+        //pnext >= 0 -> if pre ((pnext + jitter) = t) then pnext >= p + pre(pnext) else pre(pnext)
+        
+        Expr prePNext = new UnaryExpr(UnaryOp.PRE, periodId);
+        Expr pNextInit = new BinaryExpr(periodId, BinaryOp.GREATEREQUAL, new RealExpr(BigDecimal.ZERO));
+        Expr pNextCond = new BinaryExpr(periodId, BinaryOp.PLUS, jitterId);
+        pNextCond = new BinaryExpr(pNextCond, BinaryOp.EQUAL, timeExpr);
+        pNextCond = new UnaryExpr(UnaryOp.PRE, pNextCond);
+        Expr pNextThen = new BinaryExpr(pattern.period, BinaryOp.PLUS, prePNext);
+        pNextThen = new BinaryExpr(periodId, BinaryOp.GREATEREQUAL, pNextThen);
+        Expr pNextHold = new BinaryExpr(periodId, BinaryOp.EQUAL, prePNext);
+        Expr pNextIf = new IfThenElseExpr(pNextCond, pNextThen, pNextHold);
+        Expr pNext = new BinaryExpr(pNextInit, BinaryOp.ARROW, pNextIf);
+        
+        builder.addAssertion(new AgreeStatement(null, pNext, pattern.reference));
+        
+        //timeout = pnext + jitter
+        Expr timeoutExpr = new BinaryExpr(periodId, BinaryOp.PLUS, jitterId);
+        timeoutExpr = new BinaryExpr(timeoutId, BinaryOp.EQUAL, timeoutExpr);
+        builder.addAssertion(new AgreeStatement(null, timeoutExpr, pattern.reference));
+        
+        //event = (t = timeout)
+        Expr eventExpr = new BinaryExpr(timeExpr, BinaryOp.EQUAL, timeoutId);
+        eventExpr = new BinaryExpr(pattern.event, BinaryOp.EQUAL, eventExpr);
+        
+        return eventExpr;
     }
     
     private static Expr translatePattern(AgreePeriodicPattern pattern, AgreeNodeBuilder builder, boolean isProperty) {
