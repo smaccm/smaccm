@@ -11,6 +11,8 @@ import java.nio.file.Paths;
 import java.util.prefs.Preferences;
 
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+import javax.swing.JTextField;
 
 import jkind.lustre.Node;
 
@@ -119,24 +121,50 @@ public class MATLABFunctionHandler extends AadlHandler {
     		if (returnVal == JFileChooser.APPROVE_OPTION)
     		{
     		    File directory = chooser.getSelectedFile();
+    		    String dirStr = directory.toString();
     		    chooser.setCurrentDirectory(directory);
     		    // Save the selected path
     		    pref.put("DEFAULT_PATH", directory.getAbsolutePath());
     		    
-    		    Path filePath = Paths.get(directory.toString(), matlabFunction.name+".m");
-
-        		// Write MATLAB function code into the specified file
-        		try {
-        			BufferedWriter writer = Files.newBufferedWriter(filePath,
-        					StandardCharsets.UTF_8);
-
-        			// Write MATLAB function name
-        			writer.write(matlabFunction.toString());
-        			writer.close();
-        		} catch (Exception e) {
-        			e.printStackTrace();
-        		}
+    		    String matlabFuncScriptName = matlabFunction.name+".m";
+    		    
+    		    Path matlabFuncScriptPath = Paths.get(dirStr, matlabFuncScriptName);
+    		    
+    		    //Write MATLAB function code into the specified file in the selected output folder
+    		    writeToFile(matlabFuncScriptPath, matlabFunction.toString());
+    		    
+    		    //Get info of the model and subsystem to create observer for   		    	    
+        		JTextField origMdlName = new JTextField();
+        		JTextField updatedMdlName = new JTextField();
+        		JTextField subSysName = new JTextField();
+        		Object[] message = {
+        		    "Original Model Name:", origMdlName,
+        		    "Updated Model Name:", updatedMdlName,
+        		    "Subsystem Name:", subSysName, 
+        		};	
+        		
+        		int option = JOptionPane.showConfirmDialog(null, message, "Enter Model Info to Insert Simulink Observer", JOptionPane.OK_CANCEL_OPTION);
+        		if (option == JOptionPane.OK_OPTION) {
+        			//Create Simulink Design Verifier (SLDV) invocation file into the output folder
+        			SLDVInvocationScriptCreator sldvInvokeScript = new SLDVInvocationScriptCreator(origMdlName.getText(), updatedMdlName.getText(), subSysName.getText(), matlabFuncScriptName);
+        			
+        			String sldvInvokeScriptName = matlabFunction.name+"_sldv.m";
+        		    Path sldvInvokeScriptPath = Paths.get(dirStr, sldvInvokeScriptName); 
+        			writeToFile(sldvInvokeScriptPath, sldvInvokeScript.toString());	
+            		
+            		//create batch file into the output folder
+            		MATLABInvocationScriptCreator matlabInvokeScript = new MATLABInvocationScriptCreator(dirStr, sldvInvokeScriptName);
+        		    String batchFileName = matlabFunction.name+"_cmd_line.bat";
+            		
+            		Path batchPath = Paths.get(dirStr, batchFileName); 
+            		String batchPathStr = dirStr+"\\"+ batchFileName;
+        			writeToFile(batchPath, matlabInvokeScript.toString());	
+            		
+            		//invoke the batch file
+            		Runtime.getRuntime().exec(batchPathStr);  			
+        		} 
     		}
+    	    		
             return Status.OK_STATUS;
         } catch (Throwable e) {
             String messages = getNestedMessages(e);
@@ -147,6 +175,20 @@ public class MATLABFunctionHandler extends AadlHandler {
 	
 	protected String getJobName() {
 		 return "AGREE - Generate Matlab Function Single Layer";
+	}
+  
+	public void writeToFile(Path filePath, String contentStr) {	
+		// Write MATLAB function code into the specified file
+		try {
+			BufferedWriter writer = Files.newBufferedWriter(filePath,
+					StandardCharsets.UTF_8);
+
+			// Write MATLAB function name
+			writer.write(contentStr);
+			writer.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 }
