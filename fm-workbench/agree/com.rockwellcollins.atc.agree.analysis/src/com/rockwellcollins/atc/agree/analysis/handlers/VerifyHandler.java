@@ -142,23 +142,6 @@ public abstract class VerifyHandler extends AadlHandler {
 		}
 	}
 
-	private Classifier getOutermostClassifier(Element element) {
-		List<EObject> containers = new ArrayList<>();
-		EObject curr = element;
-		while (curr != null) {
-			containers.add(curr);
-			curr = curr.eContainer();
-		}
-		Collections.reverse(containers);
-		for (EObject container : containers) {
-			if (container instanceof Classifier) {
-				System.out.println(container);
-				return (Classifier) container;
-			}
-		}
-		return null;
-	}
-
 	private List<ComponentImplementation> getComponentImplementations(ComponentType ct) {
 		List<ComponentImplementation> result = new ArrayList<>();
 		AadlPackage pkg = AadlUtil.getContainingPackage(ct);

@@ -23,6 +23,7 @@ import org.eclipse.emf.common.util.EList;
 import org.osate.aadl2.Aadl2Factory;
 import org.osate.aadl2.Aadl2Package;
 import org.osate.aadl2.AnnexSubclause;
+import org.osate.aadl2.Classifier;
 import org.osate.aadl2.ComponentImplementation;
 import org.osate.aadl2.ComponentType;
 import org.osate.aadl2.Element;
@@ -30,7 +31,6 @@ import org.osate.aadl2.ListValue;
 import org.osate.aadl2.ModalPropertyValue;
 import org.osate.aadl2.Property;
 import org.osate.aadl2.PropertyAssociation;
-import org.osate.aadl2.PropertyExpression;
 import org.osate.aadl2.StringLiteral;
 import org.osate.aadl2.instance.SystemInstance;
 import org.osate.aadl2.instantiation.InstantiateModel;
@@ -45,7 +45,6 @@ import com.rockwellcollins.atc.agree.analysis.AgreeException;
 import com.rockwellcollins.atc.agree.analysis.AgreeUtils;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeASTBuilder;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeProgram;
-import com.rockwellcollins.atc.agree.analysis.handlers.AadlHandler;
 import com.rockwellcollins.atc.agree.analysis.handlers.ModifyingAadlHandler;
 import com.rockwellcollins.atc.agree.analysis.translation.AgreeNodeToLustreContract;
 import com.rockwellcollins.atc.agree.codegen.Activator;
@@ -78,11 +77,12 @@ public class MATLABFunctionHandler extends ModifyingAadlHandler {
 	}
 
 	protected IStatus runJob(Element root, IProgressMonitor monitor) {
-		if (!(root instanceof ComponentType)) {
+		Classifier classifier = getOutermostClassifier(root);
+		if (!(classifier instanceof ComponentType)) {
 			return new Status(IStatus.ERROR, Activator.PLUGIN_ID, "Must select an AADL Component Type");
 		}
 
-		ComponentType ct = (ComponentType) root;
+		ComponentType ct = (ComponentType) classifier;
 		ComponentImplementation ci = null;
 		try {
 			ci = AgreeUtils.compImplFromType(ct);

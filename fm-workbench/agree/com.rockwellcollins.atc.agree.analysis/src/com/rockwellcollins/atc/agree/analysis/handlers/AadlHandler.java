@@ -1,5 +1,8 @@
 package com.rockwellcollins.atc.agree.analysis.handlers;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.function.Function;
 
 import org.eclipse.core.commands.AbstractHandler;
@@ -28,6 +31,7 @@ import org.eclipse.xtext.ui.editor.XtextEditor;
 import org.eclipse.xtext.ui.editor.outline.impl.EObjectNode;
 import org.eclipse.xtext.ui.editor.utils.EditorUtils;
 import org.eclipse.xtext.util.concurrent.IUnitOfWork;
+import org.osate.aadl2.Classifier;
 import org.osate.aadl2.Element;
 
 public abstract class AadlHandler extends AbstractHandler {
@@ -128,6 +132,23 @@ public abstract class AadlHandler extends AbstractHandler {
 		}
         return null;
     }
+
+	protected Classifier getOutermostClassifier(Element element) {
+		List<EObject> containers = new ArrayList<>();
+		EObject curr = element;
+		while (curr != null) {
+			containers.add(curr);
+			curr = curr.eContainer();
+		}
+		Collections.reverse(containers);
+		for (EObject container : containers) {
+			if (container instanceof Classifier) {
+				System.out.println(container);
+				return (Classifier) container;
+			}
+		}
+		return null;
+	}
 
     protected IWorkbenchWindow getWindow() {
         return window;
