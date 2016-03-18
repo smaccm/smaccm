@@ -10,7 +10,8 @@ Require-Bundle: org.eclipse.ui,
  org.osate.aadl2,
  com.rockwellcollins.atc.agree.analysis,
  com.rockwellcollins.atc.agree;bundle-version="2.0.0",
- org.osate.annexsupport
+ org.osate.annexsupport,
+ org.osate.xtext.aadl2.properties;bundle-version="1.0.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Import-Package: com.rockwellcollins.atc.agree.analysis.handlers,

@@ -1,5 +1,7 @@
 package com.rockwellcollins.atc.agree.analysis.handlers;
 
+import java.util.function.Function;
+
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -69,8 +71,7 @@ public abstract class AadlHandler extends AbstractHandler {
 
             @Override
             public IStatus runInWorkspace(final IProgressMonitor monitor) {
-
-                return xtextEditor.getDocument().readOnly(new IUnitOfWork<IStatus, XtextResource>() {
+            	return getAadlOperation(xtextEditor).apply(new IUnitOfWork<IStatus, XtextResource>() {
                     @Override
                     public IStatus exec(XtextResource resource) throws Exception {
                         EObject eobj = resource.getResourceSet().getEObject(uri, true);
@@ -88,6 +89,10 @@ public abstract class AadlHandler extends AbstractHandler {
         job.schedule();
         return null;
     }
+
+	protected Function<IUnitOfWork<IStatus, XtextResource>, IStatus> getAadlOperation(XtextEditor xtextEditor) {
+		return xtextEditor.getDocument()::readOnly;
+	}
 
     private boolean saveChanges(IEditorPart[] dirtyEditors) {
         if (dirtyEditors.length == 0) {
