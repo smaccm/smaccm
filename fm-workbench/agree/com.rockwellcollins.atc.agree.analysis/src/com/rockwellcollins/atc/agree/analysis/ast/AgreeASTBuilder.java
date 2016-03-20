@@ -134,6 +134,7 @@ import com.rockwellcollins.atc.agree.analysis.lustre.visitors.IdGatherer;
 import com.rockwellcollins.atc.agree.analysis.realtime.AgreeCauseEffectPattern;
 import com.rockwellcollins.atc.agree.analysis.realtime.AgreePatternBuilder;
 import com.rockwellcollins.atc.agree.analysis.realtime.AgreePatternTranslator;
+import com.rockwellcollins.atc.agree.analysis.realtime.AgreePeriodicPattern;
 
 public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 
@@ -357,6 +358,9 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
             AgreeCauseEffectPattern pattern = (AgreeCauseEffectPattern) statement;
             ids.addAll(pattern.cause.accept(visitor));
             ids.addAll(pattern.effect.accept(visitor));
+        } else if (statement instanceof AgreePeriodicPattern){
+            AgreePeriodicPattern pattern = (AgreePeriodicPattern) statement;
+            ids.addAll(pattern.event.accept(visitor));
         }else{
             ids.addAll(statement.expr.accept(visitor));
         }

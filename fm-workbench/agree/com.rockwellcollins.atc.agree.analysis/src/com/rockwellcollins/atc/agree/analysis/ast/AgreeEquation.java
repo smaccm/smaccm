@@ -22,5 +22,9 @@ public class AgreeEquation extends Equation{
         super(Location.NULL, id, expr);
         this.reference = reference;
     }
+    
+    public AgreeEquation(Equation eq, EObject reference){
+        this(eq.lhs, eq.expr, reference);
+    }
 
 }
