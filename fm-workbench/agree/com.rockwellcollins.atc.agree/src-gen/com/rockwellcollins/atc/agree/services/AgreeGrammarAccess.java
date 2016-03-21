@@ -1663,16 +1663,104 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		public Keyword getSemicolonKeyword_7() { return cSemicolonKeyword_7; }
 	}
 
-	public class ExprElements extends AbstractParserRuleElementFinder {
-		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "Expr");
-		private final RuleCall cArrowExprParserRuleCall = (RuleCall)rule.eContents().get(1);
+	public class QuantElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "Quant");
+		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
+		private final Keyword cForallKeyword_0 = (Keyword)cAlternatives.eContents().get(0);
+		private final Keyword cExistsKeyword_1 = (Keyword)cAlternatives.eContents().get(1);
 		
-		//Expr:
-		//	ArrowExpr;
+		//Quant:
+		//	"forall" | "exists";
 		@Override public ParserRule getRule() { return rule; }
 
+		//"forall" | "exists"
+		public Alternatives getAlternatives() { return cAlternatives; }
+
+		//"forall"
+		public Keyword getForallKeyword_0() { return cForallKeyword_0; }
+
+		//"exists"
+		public Keyword getExistsKeyword_1() { return cExistsKeyword_1; }
+	}
+
+	public class ExprElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "Expr");
+		private final RuleCall cQuantExprParserRuleCall = (RuleCall)rule.eContents().get(1);
+		
+		//Expr:
+		//	QuantExpr;
+		@Override public ParserRule getRule() { return rule; }
+
+		//QuantExpr
+		public RuleCall getQuantExprParserRuleCall() { return cQuantExprParserRuleCall; }
+	}
+
+	public class QuantExprElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "QuantExpr");
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final Assignment cQuantAssignment_0 = (Assignment)cGroup.eContents().get(0);
+		private final RuleCall cQuantQuantParserRuleCall_0_0 = (RuleCall)cQuantAssignment_0.eContents().get(0);
+		private final Keyword cLeftParenthesisKeyword_1 = (Keyword)cGroup.eContents().get(1);
+		private final Group cGroup_2 = (Group)cGroup.eContents().get(2);
+		private final Assignment cArgsAssignment_2_0 = (Assignment)cGroup_2.eContents().get(0);
+		private final RuleCall cArgsArgParserRuleCall_2_0_0 = (RuleCall)cArgsAssignment_2_0.eContents().get(0);
+		private final Group cGroup_2_1 = (Group)cGroup_2.eContents().get(1);
+		private final Keyword cCommaKeyword_2_1_0 = (Keyword)cGroup_2_1.eContents().get(0);
+		private final Assignment cArgsAssignment_2_1_1 = (Assignment)cGroup_2_1.eContents().get(1);
+		private final RuleCall cArgsArgParserRuleCall_2_1_1_0 = (RuleCall)cArgsAssignment_2_1_1.eContents().get(0);
+		private final Keyword cRightParenthesisKeyword_3 = (Keyword)cGroup.eContents().get(3);
+		private final Keyword cFullStopKeyword_4 = (Keyword)cGroup.eContents().get(4);
+		private final Assignment cExprAssignment_5 = (Assignment)cGroup.eContents().get(5);
+		private final RuleCall cExprArrowExprParserRuleCall_5_0 = (RuleCall)cExprAssignment_5.eContents().get(0);
+		
+		//QuantExpr:
+		//	quant=Quant "(" (args+=Arg ("," args+=Arg)*)? ")" "." expr=ArrowExpr;
+		@Override public ParserRule getRule() { return rule; }
+
+		//quant=Quant "(" (args+=Arg ("," args+=Arg)*)? ")" "." expr=ArrowExpr
+		public Group getGroup() { return cGroup; }
+
+		//quant=Quant
+		public Assignment getQuantAssignment_0() { return cQuantAssignment_0; }
+
+		//Quant
+		public RuleCall getQuantQuantParserRuleCall_0_0() { return cQuantQuantParserRuleCall_0_0; }
+
+		//"("
+		public Keyword getLeftParenthesisKeyword_1() { return cLeftParenthesisKeyword_1; }
+
+		//(args+=Arg ("," args+=Arg)*)?
+		public Group getGroup_2() { return cGroup_2; }
+
+		//args+=Arg
+		public Assignment getArgsAssignment_2_0() { return cArgsAssignment_2_0; }
+
+		//Arg
+		public RuleCall getArgsArgParserRuleCall_2_0_0() { return cArgsArgParserRuleCall_2_0_0; }
+
+		//("," args+=Arg)*
+		public Group getGroup_2_1() { return cGroup_2_1; }
+
+		//","
+		public Keyword getCommaKeyword_2_1_0() { return cCommaKeyword_2_1_0; }
+
+		//args+=Arg
+		public Assignment getArgsAssignment_2_1_1() { return cArgsAssignment_2_1_1; }
+
+		//Arg
+		public RuleCall getArgsArgParserRuleCall_2_1_1_0() { return cArgsArgParserRuleCall_2_1_1_0; }
+
+		//")"
+		public Keyword getRightParenthesisKeyword_3() { return cRightParenthesisKeyword_3; }
+
+		//"."
+		public Keyword getFullStopKeyword_4() { return cFullStopKeyword_4; }
+
+		//expr=ArrowExpr
+		public Assignment getExprAssignment_5() { return cExprAssignment_5; }
+
 		//ArrowExpr
-		public RuleCall getArrowExprParserRuleCall() { return cArrowExprParserRuleCall; }
+		public RuleCall getExprArrowExprParserRuleCall_5_0() { return cExprArrowExprParserRuleCall_5_0; }
 	}
 
 	public class ArrowExprElements extends AbstractParserRuleElementFinder {
@@ -2992,7 +3080,9 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 	private final TypeElements pType;
 	private final PrimTypesElements pPrimTypes;
 	private final RecordDefExprElements pRecordDefExpr;
+	private final QuantElements pQuant;
 	private final ExprElements pExpr;
+	private final QuantExprElements pQuantExpr;
 	private final ArrowExprElements pArrowExpr;
 	private final ImpliesExprElements pImpliesExpr;
 	private final EquivExprElements pEquivExpr;
@@ -3046,7 +3136,9 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		this.pType = new TypeElements();
 		this.pPrimTypes = new PrimTypesElements();
 		this.pRecordDefExpr = new RecordDefExprElements();
+		this.pQuant = new QuantElements();
 		this.pExpr = new ExprElements();
+		this.pQuantExpr = new QuantExprElements();
 		this.pArrowExpr = new ArrowExprElements();
 		this.pImpliesExpr = new ImpliesExprElements();
 		this.pEquivExpr = new EquivExprElements();
@@ -3347,14 +3439,34 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		return getRecordDefExprAccess().getRule();
 	}
 
+	//Quant:
+	//	"forall" | "exists";
+	public QuantElements getQuantAccess() {
+		return pQuant;
+	}
+	
+	public ParserRule getQuantRule() {
+		return getQuantAccess().getRule();
+	}
+
 	//Expr:
-	//	ArrowExpr;
+	//	QuantExpr;
 	public ExprElements getExprAccess() {
 		return pExpr;
 	}
 	
 	public ParserRule getExprRule() {
 		return getExprAccess().getRule();
+	}
+
+	//QuantExpr:
+	//	quant=Quant "(" (args+=Arg ("," args+=Arg)*)? ")" "." expr=ArrowExpr;
+	public QuantExprElements getQuantExprAccess() {
+		return pQuantExpr;
+	}
+	
+	public ParserRule getQuantExprRule() {
+		return getQuantExprAccess().getRule();
 	}
 
 	//ArrowExpr returns Expr:

@@ -54,6 +54,7 @@ import com.rockwellcollins.atc.agree.agree.NestedDotID;
 import com.rockwellcollins.atc.agree.agree.NodeDefExpr;
 import com.rockwellcollins.atc.agree.agree.NodeEq;
 import com.rockwellcollins.atc.agree.agree.OrderStatement;
+import com.rockwellcollins.atc.agree.agree.QuantExpr;
 import com.rockwellcollins.atc.agree.agree.RecordDefExpr;
 import com.rockwellcollins.atc.agree.agree.RecordExpr;
 import com.rockwellcollins.atc.agree.agree.RecordUpdateExpr;
@@ -77,12 +78,8 @@ public class AgreeScopeProvider extends
     }
     
     IScope scope_NamedElement(EventExpr ctx, EReference ref) {
-    	EObject container = ctx.eContainer();
         Set<Element> result = getCorrespondingAadlElement(ctx.getId());
-    	
-		return Scopes.scopeFor(result, getScope(ctx.eContainer(), ref));
-
-    	
+		return Scopes.scopeFor(result, getScope(ctx.eContainer(), ref));	
     }
     
     IScope scope_NamedElement(EqStatement ctx, EReference ref) {
@@ -104,15 +101,6 @@ public class AgreeScopeProvider extends
     
     IScope scope_NamedElement(RecordUpdateExpr ctx, EReference ref) {
     	Expr recordExpr = ctx.getRecord();
-//    	
-//    	Expr record = ctx.getRecord();
-//    	
-//    	getScope(record, ref);
-//    	if(record instanceof NestedDotID){
-//    		return scope_NamedElement((NestedDotID)record, ref);
-//    	}
-//    	
-//    	return Scopes.scopeFor(Collections.singleton(ctx.getRecord()), getScope(ctx.eContainer(), ref));
     	return RecordExprScoper.getScope(recordExpr);
     }
     
@@ -229,15 +217,13 @@ public class AgreeScopeProvider extends
     	}else{
     		return Scopes.scopeFor(components, getScope(ctx.eContainer(), ref));
     	}
-
+    }
+    
+    IScope scope_NamedElement(QuantExpr ctx, EReference ref){
+        return Scopes.scopeFor(ctx.getArgs(), getScope(ctx.eContainer(), ref));
     }
     
     IScope scope_NamedElement(Arg ctx, EReference ref){
-    //	
-    //	EObject container = ctx.eContainer();
-    //	while(!(container instanceof ComponentClassi)
-    //	
-     //   return Scopes.scopeFor(getAllElementsFromSpecs(ctx.getSpecs()), IScope.NULLSCOPE);
     	return IScope.NULLSCOPE;
     }
     
@@ -361,7 +347,8 @@ public class AgreeScopeProvider extends
             // then stop once you hit the contract library
             while (!(container instanceof ComponentClassifier)
                     && !(container instanceof AgreeContractLibrary)
-                    && !(container instanceof NodeDefExpr)) {
+                    && !(container instanceof NodeDefExpr)
+                    && !(container instanceof QuantExpr)) {
                 container = container.eContainer();
             }
         }

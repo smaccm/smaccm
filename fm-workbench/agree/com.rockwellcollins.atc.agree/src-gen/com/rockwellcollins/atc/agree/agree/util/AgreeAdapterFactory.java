@@ -176,6 +176,11 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
         return createExprAdapter();
       }
       @Override
+      public Adapter caseQuantExpr(QuantExpr object)
+      {
+        return createQuantExprAdapter();
+      }
+      @Override
       public Adapter caseComplexExpr(ComplexExpr object)
       {
         return createComplexExprAdapter();
@@ -693,6 +698,21 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
    * @generated
    */
   public Adapter createExprAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.QuantExpr <em>Quant Expr</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see com.rockwellcollins.atc.agree.agree.QuantExpr
+   * @generated
+   */
+  public Adapter createQuantExprAdapter()
   {
     return null;
   }

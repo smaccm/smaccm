@@ -83,6 +83,7 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
       case AgreePackage.TYPE: return createType();
       case AgreePackage.RECORD_DEF_EXPR: return createRecordDefExpr();
       case AgreePackage.EXPR: return createExpr();
+      case AgreePackage.QUANT_EXPR: return createQuantExpr();
       case AgreePackage.COMPLEX_EXPR: return createComplexExpr();
       case AgreePackage.NESTED_DOT_ID: return createNestedDotID();
       case AgreePackage.AGREE_CONTRACT_LIBRARY: return createAgreeContractLibrary();
@@ -333,6 +334,17 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
   {
     ExprImpl expr = new ExprImpl();
     return expr;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public QuantExpr createQuantExpr()
+  {
+    QuantExprImpl quantExpr = new QuantExprImpl();
+    return quantExpr;
   }
 
   /**

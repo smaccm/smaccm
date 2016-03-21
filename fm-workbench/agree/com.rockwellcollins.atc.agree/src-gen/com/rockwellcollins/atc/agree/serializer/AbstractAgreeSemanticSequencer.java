@@ -46,6 +46,7 @@ import com.rockwellcollins.atc.agree.agree.PreExpr;
 import com.rockwellcollins.atc.agree.agree.PrevExpr;
 import com.rockwellcollins.atc.agree.agree.PrimType;
 import com.rockwellcollins.atc.agree.agree.PropertyStatement;
+import com.rockwellcollins.atc.agree.agree.QuantExpr;
 import com.rockwellcollins.atc.agree.agree.RealCast;
 import com.rockwellcollins.atc.agree.agree.RealLitExpr;
 import com.rockwellcollins.atc.agree.agree.RecordDefExpr;
@@ -219,8 +220,47 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 				sequence_SynchStatement(context, (AsynchStatement) semanticObject); 
 				return; 
 			case AgreePackage.BINARY_EXPR:
-				sequence_AddSubExpr_AndExpr_ArrowExpr_EquivExpr_ImpliesExpr_MultDivExpr_OrExpr_RelateExpr(context, (BinaryExpr) semanticObject); 
-				return; 
+				if(context == grammarAccess.getArrowExprRule()) {
+					sequence_AddSubExpr_AndExpr_ArrowExpr_EquivExpr_ImpliesExpr_MultDivExpr_OrExpr_RelateExpr(context, (BinaryExpr) semanticObject); 
+					return; 
+				}
+				else if(context == grammarAccess.getArrowExprAccess().getBinaryExprLeftAction_1_0_0_0() ||
+				   context == grammarAccess.getImpliesExprRule()) {
+					sequence_AddSubExpr_AndExpr_EquivExpr_ImpliesExpr_MultDivExpr_OrExpr_RelateExpr(context, (BinaryExpr) semanticObject); 
+					return; 
+				}
+				else if(context == grammarAccess.getEquivExprRule() ||
+				   context == grammarAccess.getImpliesExprAccess().getBinaryExprLeftAction_1_0_0_0()) {
+					sequence_AddSubExpr_AndExpr_EquivExpr_MultDivExpr_OrExpr_RelateExpr(context, (BinaryExpr) semanticObject); 
+					return; 
+				}
+				else if(context == grammarAccess.getEquivExprAccess().getBinaryExprLeftAction_1_0_0_0() ||
+				   context == grammarAccess.getOrExprRule() ||
+				   context == grammarAccess.getOrExprAccess().getBinaryExprLeftAction_1_0_0_0()) {
+					sequence_AddSubExpr_AndExpr_MultDivExpr_OrExpr_RelateExpr(context, (BinaryExpr) semanticObject); 
+					return; 
+				}
+				else if(context == grammarAccess.getAndExprRule() ||
+				   context == grammarAccess.getAndExprAccess().getBinaryExprLeftAction_1_0_0_0()) {
+					sequence_AddSubExpr_AndExpr_MultDivExpr_RelateExpr(context, (BinaryExpr) semanticObject); 
+					return; 
+				}
+				else if(context == grammarAccess.getAddSubExprRule() ||
+				   context == grammarAccess.getAddSubExprAccess().getBinaryExprLeftAction_1_0_0_0() ||
+				   context == grammarAccess.getRelateExprAccess().getBinaryExprLeftAction_1_0_0_0()) {
+					sequence_AddSubExpr_MultDivExpr(context, (BinaryExpr) semanticObject); 
+					return; 
+				}
+				else if(context == grammarAccess.getRelateExprRule()) {
+					sequence_AddSubExpr_MultDivExpr_RelateExpr(context, (BinaryExpr) semanticObject); 
+					return; 
+				}
+				else if(context == grammarAccess.getMultDivExprRule() ||
+				   context == grammarAccess.getMultDivExprAccess().getBinaryExprLeftAction_1_0_0_0()) {
+					sequence_MultDivExpr(context, (BinaryExpr) semanticObject); 
+					return; 
+				}
+				else break;
 			case AgreePackage.BOOL_LIT_EXPR:
 				sequence_TermExpr(context, (BoolLitExpr) semanticObject); 
 				return; 
@@ -308,6 +348,9 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 			case AgreePackage.PROPERTY_STATEMENT:
 				sequence_PropertyStatement(context, (PropertyStatement) semanticObject); 
 				return; 
+			case AgreePackage.QUANT_EXPR:
+				sequence_QuantExpr(context, (QuantExpr) semanticObject); 
+				return; 
 			case AgreePackage.REAL_CAST:
 				sequence_TermExpr(context, (RealCast) semanticObject); 
 				return; 
@@ -350,6 +393,93 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     )
 	 */
 	protected void sequence_AddSubExpr_AndExpr_ArrowExpr_EquivExpr_ImpliesExpr_MultDivExpr_OrExpr_RelateExpr(EObject context, BinaryExpr semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Constraint:
+	 *     (
+	 *         (left=AddSubExpr_BinaryExpr_1_0_0_0 (op='+' | op='-') right=MultDivExpr) | 
+	 *         (left=MultDivExpr_BinaryExpr_1_0_0_0 (op='*' | op='/' | op='div' | op='mod') right=UnaryExpr) | 
+	 *         (left=RelateExpr_BinaryExpr_1_0_0_0 op=RelateOp right=AddSubExpr) | 
+	 *         (left=AndExpr_BinaryExpr_1_0_0_0 op='and' right=RelateExpr) | 
+	 *         (left=OrExpr_BinaryExpr_1_0_0_0 op='or' right=AndExpr) | 
+	 *         (left=EquivExpr_BinaryExpr_1_0_0_0 op='<=>' right=OrExpr) | 
+	 *         (left=ImpliesExpr_BinaryExpr_1_0_0_0 op='=>' right=ImpliesExpr)
+	 *     )
+	 */
+	protected void sequence_AddSubExpr_AndExpr_EquivExpr_ImpliesExpr_MultDivExpr_OrExpr_RelateExpr(EObject context, BinaryExpr semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Constraint:
+	 *     (
+	 *         (left=AddSubExpr_BinaryExpr_1_0_0_0 (op='+' | op='-') right=MultDivExpr) | 
+	 *         (left=MultDivExpr_BinaryExpr_1_0_0_0 (op='*' | op='/' | op='div' | op='mod') right=UnaryExpr) | 
+	 *         (left=RelateExpr_BinaryExpr_1_0_0_0 op=RelateOp right=AddSubExpr) | 
+	 *         (left=AndExpr_BinaryExpr_1_0_0_0 op='and' right=RelateExpr) | 
+	 *         (left=OrExpr_BinaryExpr_1_0_0_0 op='or' right=AndExpr) | 
+	 *         (left=EquivExpr_BinaryExpr_1_0_0_0 op='<=>' right=OrExpr)
+	 *     )
+	 */
+	protected void sequence_AddSubExpr_AndExpr_EquivExpr_MultDivExpr_OrExpr_RelateExpr(EObject context, BinaryExpr semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Constraint:
+	 *     (
+	 *         (left=AddSubExpr_BinaryExpr_1_0_0_0 (op='+' | op='-') right=MultDivExpr) | 
+	 *         (left=MultDivExpr_BinaryExpr_1_0_0_0 (op='*' | op='/' | op='div' | op='mod') right=UnaryExpr) | 
+	 *         (left=RelateExpr_BinaryExpr_1_0_0_0 op=RelateOp right=AddSubExpr) | 
+	 *         (left=AndExpr_BinaryExpr_1_0_0_0 op='and' right=RelateExpr) | 
+	 *         (left=OrExpr_BinaryExpr_1_0_0_0 op='or' right=AndExpr)
+	 *     )
+	 */
+	protected void sequence_AddSubExpr_AndExpr_MultDivExpr_OrExpr_RelateExpr(EObject context, BinaryExpr semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Constraint:
+	 *     (
+	 *         (left=AddSubExpr_BinaryExpr_1_0_0_0 (op='+' | op='-') right=MultDivExpr) | 
+	 *         (left=MultDivExpr_BinaryExpr_1_0_0_0 (op='*' | op='/' | op='div' | op='mod') right=UnaryExpr) | 
+	 *         (left=RelateExpr_BinaryExpr_1_0_0_0 op=RelateOp right=AddSubExpr) | 
+	 *         (left=AndExpr_BinaryExpr_1_0_0_0 op='and' right=RelateExpr)
+	 *     )
+	 */
+	protected void sequence_AddSubExpr_AndExpr_MultDivExpr_RelateExpr(EObject context, BinaryExpr semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Constraint:
+	 *     (
+	 *         (left=AddSubExpr_BinaryExpr_1_0_0_0 (op='+' | op='-') right=MultDivExpr) | 
+	 *         (left=MultDivExpr_BinaryExpr_1_0_0_0 (op='*' | op='/' | op='div' | op='mod') right=UnaryExpr)
+	 *     )
+	 */
+	protected void sequence_AddSubExpr_MultDivExpr(EObject context, BinaryExpr semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Constraint:
+	 *     (
+	 *         (left=AddSubExpr_BinaryExpr_1_0_0_0 (op='+' | op='-') right=MultDivExpr) | 
+	 *         (left=MultDivExpr_BinaryExpr_1_0_0_0 (op='*' | op='/' | op='div' | op='mod') right=UnaryExpr) | 
+	 *         (left=RelateExpr_BinaryExpr_1_0_0_0 op=RelateOp right=AddSubExpr)
+	 *     )
+	 */
+	protected void sequence_AddSubExpr_MultDivExpr_RelateExpr(EObject context, BinaryExpr semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
@@ -464,6 +594,15 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	
 	/**
 	 * Constraint:
+	 *     (left=MultDivExpr_BinaryExpr_1_0_0_0 (op='*' | op='/' | op='div' | op='mod') right=UnaryExpr)
+	 */
+	protected void sequence_MultDivExpr(EObject context, BinaryExpr semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Constraint:
 	 *     (base=[NamedElement|QCPREF] (tag=ReservedVarTag | sub=NestedDotID)?)
 	 */
 	protected void sequence_NestedDotID(EObject context, NestedDotID semanticObject) {
@@ -539,6 +678,15 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     (name=ID expr=Expr)
 	 */
 	protected void sequence_PropertyStatement(EObject context, PropertyStatement semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Constraint:
+	 *     (quant=Quant (args+=Arg args+=Arg*)? expr=ArrowExpr)
+	 */
+	protected void sequence_QuantExpr(EObject context, QuantExpr semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	

@@ -34,6 +34,7 @@ import com.rockwellcollins.atc.agree.agree.GetPropertyExpr;
 import com.rockwellcollins.atc.agree.agree.NestedDotID;
 import com.rockwellcollins.atc.agree.agree.NodeEq;
 import com.rockwellcollins.atc.agree.agree.OrderStatement;
+import com.rockwellcollins.atc.agree.agree.QuantExpr;
 import com.rockwellcollins.atc.agree.agree.RecordExpr;
 import com.rockwellcollins.atc.agree.agree.RecordUpdateExpr;
 import com.rockwellcollins.atc.agree.agree.EventExpr;
@@ -65,7 +66,8 @@ public class AgreeLinkingService extends PropertiesLinkingService {
                 || context instanceof RecordUpdateExpr
                 || context instanceof EventExpr
                 || context instanceof OrderStatement
-                || context instanceof ConnectionStatement) {
+                || context instanceof ConnectionStatement
+                || context instanceof QuantExpr) {
 
             //EObject e = findClassifier(context, reference, name);
         	EObject e = getIndexedObject(context, reference, name);

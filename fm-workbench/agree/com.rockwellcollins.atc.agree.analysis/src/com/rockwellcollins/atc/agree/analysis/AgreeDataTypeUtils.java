@@ -3,6 +3,7 @@ package com.rockwellcollins.atc.agree.analysis;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -224,7 +225,8 @@ public class AgreeDataTypeUtils {
                     for(PropertyExpression propExpr : propDimensions){
                         dimensions.add(((IntegerLiteral)propExpr).getValue());
                     }
-                    
+                    // reverse array dimensions for Lustre arrays
+                    Collections.reverse(dimensions);
                     return getArrayType(getIDType(type), dimensions);
                 }
             }

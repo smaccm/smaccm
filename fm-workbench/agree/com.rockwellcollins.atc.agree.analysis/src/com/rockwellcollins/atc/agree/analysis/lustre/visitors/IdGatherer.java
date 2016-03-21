@@ -33,7 +33,10 @@ public class IdGatherer implements ExprVisitor<Set<String>> {
 
     @Override
     public Set<String> visit(ArrayAccessExpr e) {
-        throw new AgreeException("We do not support array expressions");
+        Set<String> ids = new HashSet<>();
+        ids.addAll(e.array.accept(this));
+        ids.addAll(e.index.accept(this));
+        return ids;
     }
 
     @Override

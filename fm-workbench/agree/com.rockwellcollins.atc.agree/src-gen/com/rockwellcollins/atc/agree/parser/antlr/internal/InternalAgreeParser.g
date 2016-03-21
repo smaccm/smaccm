@@ -2519,6 +2519,41 @@ ruleRecordDefExpr returns [EObject current=null]
 
 
 
+// Entry rule entryRuleQuant
+entryRuleQuant returns [String current=null] 
+:
+	{ newCompositeNode(grammarAccess.getQuantRule()); } 
+	 iv_ruleQuant=ruleQuant 
+	 { $current=$iv_ruleQuant.current.getText(); }  
+	 EOF 
+;
+
+// Rule Quant
+ruleQuant returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] 
+    @init { enterRule(); 
+    }
+    @after { leaveRule();
+    }:
+(
+	kw=Forall 
+    {
+        $current.merge(kw);
+        newLeafNode(kw, grammarAccess.getQuantAccess().getForallKeyword_0()); 
+    }
+
+    |
+	kw=Exists 
+    {
+        $current.merge(kw);
+        newLeafNode(kw, grammarAccess.getQuantAccess().getExistsKeyword_1()); 
+    }
+)
+    ;
+
+
+
+
+
 // Entry rule entryRuleExpr
 entryRuleExpr returns [EObject current=null]
 	:
@@ -2535,14 +2570,127 @@ ruleExpr returns [EObject current=null]
     @after { leaveRule(); }:
 
     { 
-        newCompositeNode(grammarAccess.getExprAccess().getArrowExprParserRuleCall()); 
+        newCompositeNode(grammarAccess.getExprAccess().getQuantExprParserRuleCall()); 
     }
-    this_ArrowExpr_0=ruleArrowExpr
+    this_QuantExpr_0=ruleQuantExpr
     {
-        $current = $this_ArrowExpr_0.current;
+        $current = $this_QuantExpr_0.current;
         afterParserOrEnumRuleCall();
     }
 
+;
+
+
+
+
+
+// Entry rule entryRuleQuantExpr
+entryRuleQuantExpr returns [EObject current=null]
+	:
+	{ newCompositeNode(grammarAccess.getQuantExprRule()); }
+	 iv_ruleQuantExpr=ruleQuantExpr 
+	 { $current=$iv_ruleQuantExpr.current; } 
+	 EOF 
+;
+
+// Rule QuantExpr
+ruleQuantExpr returns [EObject current=null] 
+    @init { enterRule(); 
+    }
+    @after { leaveRule(); }:
+((
+(
+		{ 
+	        newCompositeNode(grammarAccess.getQuantExprAccess().getQuantQuantParserRuleCall_0_0()); 
+	    }
+		lv_quant_0_0=ruleQuant		{
+	        if ($current==null) {
+	            $current = createModelElementForParent(grammarAccess.getQuantExprRule());
+	        }
+       		set(
+       			$current, 
+       			"quant",
+        		lv_quant_0_0, 
+        		"Quant");
+	        afterParserOrEnumRuleCall();
+	    }
+
+)
+)
+	otherlv_1=LeftParenthesis
+    {
+    	newLeafNode(otherlv_1, grammarAccess.getQuantExprAccess().getLeftParenthesisKeyword_1());
+    }
+((
+(
+		{ 
+	        newCompositeNode(grammarAccess.getQuantExprAccess().getArgsArgParserRuleCall_2_0_0()); 
+	    }
+		lv_args_2_0=ruleArg		{
+	        if ($current==null) {
+	            $current = createModelElementForParent(grammarAccess.getQuantExprRule());
+	        }
+       		add(
+       			$current, 
+       			"args",
+        		lv_args_2_0, 
+        		"Arg");
+	        afterParserOrEnumRuleCall();
+	    }
+
+)
+)(
+	otherlv_3=Comma
+    {
+    	newLeafNode(otherlv_3, grammarAccess.getQuantExprAccess().getCommaKeyword_2_1_0());
+    }
+(
+(
+		{ 
+	        newCompositeNode(grammarAccess.getQuantExprAccess().getArgsArgParserRuleCall_2_1_1_0()); 
+	    }
+		lv_args_4_0=ruleArg		{
+	        if ($current==null) {
+	            $current = createModelElementForParent(grammarAccess.getQuantExprRule());
+	        }
+       		add(
+       			$current, 
+       			"args",
+        		lv_args_4_0, 
+        		"Arg");
+	        afterParserOrEnumRuleCall();
+	    }
+
+)
+))*)?
+	otherlv_5=RightParenthesis
+    {
+    	newLeafNode(otherlv_5, grammarAccess.getQuantExprAccess().getRightParenthesisKeyword_3());
+    }
+
+	otherlv_6=FullStop
+    {
+    	newLeafNode(otherlv_6, grammarAccess.getQuantExprAccess().getFullStopKeyword_4());
+    }
+(
+(
+		{ 
+	        newCompositeNode(grammarAccess.getQuantExprAccess().getExprArrowExprParserRuleCall_5_0()); 
+	    }
+		lv_expr_7_0=ruleArrowExpr		{
+	        if ($current==null) {
+	            $current = createModelElementForParent(grammarAccess.getQuantExprRule());
+	        }
+       		set(
+       			$current, 
+       			"expr",
+        		lv_expr_7_0, 
+        		"ArrowExpr");
+	        afterParserOrEnumRuleCall();
+	    }
+
+)
+))
 ;
 
 
