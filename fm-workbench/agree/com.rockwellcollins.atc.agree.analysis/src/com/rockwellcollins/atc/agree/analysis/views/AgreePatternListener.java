@@ -24,18 +24,18 @@ public class AgreePatternListener implements IPatternMatchListener {
 
     @Override
     public void matchFound(PatternMatchEvent event) {
+    	
         // remove the brackets
         int offset = event.getOffset() + 1;
         int length = event.getLength() - 2;
         try {
             String name = console.getDocument().get(offset, length);
-            EObject ref = findBestReference(name);
-
+        	EObject ref = findBestReference(name);
             if (ref != null) {
                 IHyperlink hyperlink = new AgreeConsoleHyperLink(ref);
                 console.addHyperlink(hyperlink, offset, length);
             }
-        } catch (BadLocationException e) {
+        } catch (BadLocationException e) {        
             e.printStackTrace();
         }
     }
@@ -43,16 +43,36 @@ public class AgreePatternListener implements IPatternMatchListener {
     private EObject findBestReference(String refStr) {
 
         EObject ref = null;
-        refStr = refStr.replace(".", "__");
+        //Anitha: new Code for getting refernce without replacing
         while (ref == null && refStr != null && !refStr.equals("")) {
-            ref = refMap.get(refStr);
-            int index = refStr.lastIndexOf("__");
+        	ref = refMap.get(refStr);
+        	if (ref == null) {
+        		break;
+            }
+            int index = refStr.indexOf(".");
             if (index == -1) {
                 break;
             }
             refStr = refStr.substring(0, index);
+        }        
+        if (ref != null) {
+        	return ref;
+        }else{
+        	//Anitha: old Code for getting refernce without replacing
+        	// this is done for monolithic
+        	refStr = refStr.replace(".", "__");
+        	while (ref == null && refStr != null && !refStr.equals("")) {
+            	ref = refMap.get(refStr);
+            	if (ref == null) {
+            		break;
+                }
+                int index = refStr.lastIndexOf("__");
+                if (index == -1) {
+                    break;
+                }
+                refStr = refStr.substring(0, index);
+            }
         }
-
         return ref;
     }
 

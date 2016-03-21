@@ -105,6 +105,8 @@ public class AgreeMenuListener implements IMenuListener {
     }
   //Anitha added this displaying traceability document in Contract Gurantees only
     private void addTraceabilityDocMenu(IMenuManager manager, AnalysisResult result) {
+    	
+    	
     	IPreferenceStore prefs = Activator.getDefault().getPreferenceStore();  
     	if (prefs.getString(PreferenceConstants.PREF_MODEL_CHECKER).equals(PreferenceConstants.MODEL_CHECKER_JKIND) 
     			&& prefs.getBoolean(PreferenceConstants.PREF_SUPPORT)) {
@@ -114,7 +116,7 @@ public class AgreeMenuListener implements IMenuListener {
 	    			}
 	    		}
     	}
-    }
+    } 
     //Anitha added this displaying traceability in console
     private IAction addViewTraceabilityConsole(String text, IMenuManager manager, AnalysisResult result) {
     	return new Action(text) {
@@ -153,7 +155,8 @@ public class AgreeMenuListener implements IMenuListener {
 					           	        			String guranteeName =  "";
  					           	        			if (supportString.contains(".")) {
 					           	        			  componentName =  supportString.substring(0,supportString.indexOf('.'));        			
-					           	        			  guranteeName =  supportString.substring(supportString.indexOf('.')+1,supportString.length());
+					           	        			  //guranteeName =  supportString.substring(supportString.indexOf('.')+1,supportString.length());
+					           	        			 guranteeName =  supportString;
 					           	        			}else{
 					           	        			//Anitha: this is hardcoded. Indicates that this is not a component property.
 					           	        				componentName = "Top Level System";
@@ -224,7 +227,8 @@ public class AgreeMenuListener implements IMenuListener {
 	            	        			 String guranteeName =  "";
 	            	        			if (supportString.contains(".")) {
 	            	        			 componentName =  supportString.substring(0,supportString.indexOf('.'));        			
-	            	        			 guranteeName =  supportString.substring(supportString.indexOf('.')+1,supportString.length());
+	            	        			 //guranteeName =  supportString.substring(supportString.indexOf('.')+1,supportString.length());
+	            	        			 guranteeName =  supportString;
 	            	        			}else{
 	            	        				//Anitha: this is hardcoded. Indicates that this is not a component property.
 	            	        				componentName = "Top Level System";

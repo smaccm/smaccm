@@ -11,18 +11,6 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.atomic.AtomicReference;
 
-import jkind.JKindException;
-import jkind.api.JRealizabilityApi;
-import jkind.api.KindApi;
-import jkind.api.results.AnalysisResult;
-import jkind.api.results.CompositeAnalysisResult;
-import jkind.api.results.JKindResult;
-import jkind.api.results.JRealizabilityResult;
-import jkind.lustre.NamedType;
-import jkind.lustre.Node;
-import jkind.lustre.Program;
-import jkind.lustre.VarDecl;
-
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -52,7 +40,6 @@ import com.rockwellcollins.atc.agree.agree.AgreePackage;
 import com.rockwellcollins.atc.agree.agree.AgreeSubclause;
 import com.rockwellcollins.atc.agree.agree.Arg;
 import com.rockwellcollins.atc.agree.agree.AssertStatement;
-import com.rockwellcollins.atc.agree.agree.AssignStatement;
 import com.rockwellcollins.atc.agree.agree.AssumeStatement;
 import com.rockwellcollins.atc.agree.agree.EqStatement;
 import com.rockwellcollins.atc.agree.agree.GuaranteeStatement;
@@ -64,7 +51,7 @@ import com.rockwellcollins.atc.agree.analysis.AgreeException;
 import com.rockwellcollins.atc.agree.analysis.AgreeLayout;
 import com.rockwellcollins.atc.agree.analysis.AgreeLayout.SigType;
 import com.rockwellcollins.atc.agree.analysis.AgreeLogger;
-import com.rockwellcollins.atc.agree.analysis.AgreeRenaming;
+import com.rockwellcollins.atc.agree.analysis.AgreeSupportRenaming;
 import com.rockwellcollins.atc.agree.analysis.AgreeUtils;
 import com.rockwellcollins.atc.agree.analysis.ConsistencyResult;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeASTBuilder;
@@ -77,6 +64,18 @@ import com.rockwellcollins.atc.agree.analysis.translation.LustreAstBuilder;
 import com.rockwellcollins.atc.agree.analysis.translation.LustreContractAstBuilder;
 import com.rockwellcollins.atc.agree.analysis.views.AgreeResultsLinker;
 import com.rockwellcollins.atc.agree.analysis.views.AgreeResultsView;
+
+import jkind.JKindException;
+import jkind.api.JRealizabilityApi;
+import jkind.api.KindApi;
+import jkind.api.results.AnalysisResult;
+import jkind.api.results.CompositeAnalysisResult;
+import jkind.api.results.JKindResult;
+import jkind.api.results.JRealizabilityResult;
+import jkind.lustre.NamedType;
+import jkind.lustre.Node;
+import jkind.lustre.Program;
+import jkind.lustre.VarDecl;
 
 public abstract class VerifyHandler extends AadlHandler {
     protected AgreeResultsLinker linker = new AgreeResultsLinker();
@@ -124,6 +123,7 @@ public abstract class VerifyHandler extends AadlHandler {
             }
 
             AnalysisResult result;
+           
             CompositeAnalysisResult wrapper = new CompositeAnalysisResult("");
 
             // SystemType sysType = si.getSystemImplementation().getType();
@@ -241,7 +241,7 @@ public abstract class VerifyHandler extends AadlHandler {
             AnalysisType analysisType) {
 
         Map<String, EObject> refMap = new HashMap<>();
-        AgreeRenaming renaming = new AgreeRenaming(refMap);
+        AgreeSupportRenaming renaming = new AgreeSupportRenaming(refMap);
         AgreeLayout layout = new AgreeLayout();
         Node mainNode = null;
         List<String> properties = new ArrayList<>();
@@ -288,21 +288,24 @@ public abstract class VerifyHandler extends AadlHandler {
 
     }
 
-    private void addRenamings(Map<String, EObject> refMap, AgreeRenaming renaming, List<String> properties, AgreeLayout layout,
+    private void addRenamings(Map<String, EObject> refMap, AgreeSupportRenaming renaming, List<String> properties, AgreeLayout layout,
             Node node, AgreeProgram agreeProgram) {
             	
         for (VarDecl var : node.inputs) {
             if (var instanceof AgreeVar) {
                 addReference(refMap, renaming, layout, var);
+                
             }
         }
         
         for (VarDecl var : node.locals) {
             if (var instanceof AgreeVar) {
                 addReference(refMap, renaming, layout, var);
-                // Anitha added this for support string renaming
-                // <componentname.localvarname>
-                addReferenceForSupport(node, refMap, renaming, layout, var, agreeProgram);
+                // Anitha added this for support string renaming <componentname.localvarname>
+                if (!AgreeUtils.usingKind2() && !isMonolithic()){
+                		addReferenceForSupport(node, refMap, renaming, layout, var, agreeProgram);
+                		
+                }
             }
         }
         
@@ -320,7 +323,7 @@ public abstract class VerifyHandler extends AadlHandler {
         }
     }
 
-    private void addSupportRenamings(Map<String, EObject> refMap, AgreeRenaming renaming, AgreeLayout layout,
+    private void addSupportRenamings(Map<String, EObject> refMap, AgreeSupportRenaming renaming, AgreeLayout layout,
             AgreeProgram agreeProgram) {
         for (AgreeNode subNode : agreeProgram.agreeNodes) { 
 		  		ComponentClassifier compClass = subNode.compInst.getComponentClassifier();
@@ -330,7 +333,7 @@ public abstract class VerifyHandler extends AadlHandler {
 		}
     }
     
-    void addKind2Properties(AgreeNode agreeNode, List<String> properties, AgreeRenaming renaming, String prefix, String userPropPrefix){
+    void addKind2Properties(AgreeNode agreeNode, List<String> properties, AgreeSupportRenaming renaming, String prefix, String userPropPrefix){
         int i = 0;
         
         String propPrefix = (userPropPrefix.equals("")) ? "" : userPropPrefix + ": ";
@@ -347,41 +350,47 @@ public abstract class VerifyHandler extends AadlHandler {
         for(AgreeNode subNode : agreeNode.subNodes){
             addKind2Properties(subNode, properties, renaming, prefix+"."+subNode.id, userPropPrefix + subNode.id);
         }
-    }
+    }    
     
-    
-   //Anitha: adding these additional references to rename support elements of form ComponentName.SupportElement 
-    private void addReferenceForSupport(Node node, Map<String, EObject> refMap, AgreeRenaming renaming, AgreeLayout layout,
+    //Anitha: adding these additional references to rename support elements of form ComponentName.SupportElement 
+    private void addReferenceForSupport(Node node, Map<String, EObject> refMap, AgreeSupportRenaming renaming, AgreeLayout layout,
            VarDecl var, AgreeProgram agreeProgram ) {
     	   String componentName = layout.getCategory(node.id);
     	   String varId=var.id;
     	   String varReference=getReferenceStr((AgreeVar) var);
+    	   
+    	   
+    	   
     	   if (!componentName.isEmpty() && varId.contains(componentName)) {
-    		   varReference = getReferenceStr((AgreeVar) var);
-         	   varId = topPrefix+componentName+"."+varId;
-   	    	   if ( ((AgreeVar) var).reference instanceof EqStatement) {
-	       	   	//Anitha: the reason we add component name twice is have 
-   	    		//Instance Name.Variable name in support display so that it is clickable
-   	    		//We separate componentName and rest in suppport display   
-   	    		  varReference = componentName+"."+componentName+"."+varReference;
-	     	   }else{
-	     		  varReference = componentName+"." + varReference;
-	     	   }	
-    	       refMap.put(varReference, ((AgreeVar) var).reference);
-	    	   refMap.put(varId, ((AgreeVar) var).reference);
-		       renaming.addExplicitRename(varId, varReference);
+    		   System.out.println(" varId : " + varId) ;
+			varId = topPrefix+componentName+"."+varId;
+			varReference = componentName+"."+varReference;
+			refMap.put(varId, ((AgreeVar) var).reference);
+			refMap.put(varReference, ((AgreeVar) var).reference);
+			renaming.addExplicitRename(varId, varReference);
+			//System.out.println("Support varId :" + varId+ "  varReference :" + varReference);
+			String category = getCategory((AgreeVar) var);
+			if (category != null && !layout.getCategories().contains(category)) {
+			    layout.addCategory(category);
+			}
+			layout.addElement(category, varReference, SigType.INPUT);		       
+			//varReference = componentName+"."+varReference;
+			//System.out.println("Support varId :" + varId+ "  varReference :" + varReference);
+			//renaming.addExplicitRename(varId, varReference);
     	   }
+    	   return;
     }
 
-    private void addReference(Map<String, EObject> refMap, AgreeRenaming renaming, AgreeLayout layout,
+    private void addReference(Map<String, EObject> refMap, AgreeSupportRenaming renaming, AgreeLayout layout,
             VarDecl var) {
         String refStr = getReferenceStr((AgreeVar) var);
         addSpecificReference(refMap, renaming, layout, var, refStr);
     }
 
-    private void addSpecificReference(Map<String, EObject> refMap, AgreeRenaming renaming, AgreeLayout layout,
+    private void addSpecificReference(Map<String, EObject> refMap, AgreeSupportRenaming renaming, AgreeLayout layout,
             VarDecl var, String refStr) {
-        refMap.put(refStr, ((AgreeVar) var).reference);
+       
+    	refMap.put(refStr, ((AgreeVar) var).reference);
         refMap.put(var.id, ((AgreeVar) var).reference);
         renaming.addExplicitRename(var.id, refStr);
         String category = getCategory((AgreeVar) var);

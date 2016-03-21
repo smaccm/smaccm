@@ -526,7 +526,6 @@ public class LustreAstBuilder {
           if (monolithic) {
         	  assertions.add(statement.expr);
           } else {
-        	  System.out.println(statement.expr);
         	  if (AgreeUtils.statementIsContractEqOrProperty(statement)){
         		  if(statement.reference != null){
 	                  String assertName = dotChar+agreeNode.id+dotChar+"ASSERT"+dotChar+count++;
