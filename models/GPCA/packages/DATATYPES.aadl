@@ -6,7 +6,7 @@
 ----------------------------------------------------------------------------
 -- Edited by : Anitha Murugesan 
 -- Date 7/18/2013
--- The data definitions in this file matches the data inputs in buses-uint8.mat for the behavioral models
+-- The data definitions in this file matches the data inputs in buses-uint8.mat for the behavioral models 
 --------------------------------------------------------------------------
 
 package DATATYPES
@@ -108,9 +108,9 @@ with Base_Types;
   		Supply_Voltage : data Base_Types::Boolean ; 
   		CPU_Error : data Base_Types::Boolean ;
   		RTC_Error : data Base_Types::Boolean ;
-  		WatchDog_Interrupt_Detected : data Base_Types::Boolean ;
+  		Watchdog_Interrupted : data Base_Types::Boolean ;
   		Memory_Corrupted : data Base_Types::Boolean ;
-  		Log : data Base_Types::Boolean ;
+  		--Log : data Base_Types::Boolean ;
   		Pump_Too_Hot : data Base_Types::Boolean ;
   		Pump_Overheated : data Base_Types::Boolean ;
   		Pump_Primed : data Base_Types::Boolean ;
@@ -172,6 +172,9 @@ with Base_Types;
 	  Request_Confirm_Infusion_Initiate : data Base_Types::Boolean ; 
 	  Request_Patient_Drug_Info : data Base_Types::Boolean ; 
 	  Request_Infusion_Info : data Base_Types::Boolean ; 
+	  New_Infusion : data Base_Types::Boolean ;
+
+	  Is_Locked_Out:data Base_Types::Boolean;
   end GPCA_SW_Outputs.Impl;
   
   data Infusion_Manager_Outputs
@@ -184,12 +187,13 @@ with Base_Types;
   		New_Infusion : data Base_Types::Boolean ; 
   		Log_Message_ID : data Base_Types::Integer ;
   		Actual_Infusion_Duration : data Base_Types::Integer ; 
+  		Is_Locked_Out:data Base_Types::Boolean;
   end Infusion_Manager_Outputs.Impl;
   
   data Log_Output
   end Log_Output; 
   
-  data implementation Log_Output.Impl
+  data implementation Log_Output.Impl	
   	subcomponents
   		Log : data Base_Types::Integer;
   		Logging_Failed : data Base_Types::Boolean ;
@@ -269,8 +273,8 @@ data Patient_Inputs
    Volume_Infused : data Base_Types::Integer ;  
    Log_Message_ID : data Base_Types::Integer ;  
    In_Therapy : data Base_Types::Boolean ; 
-   --Paused_Time_Exceeded : data Base_Types::Boolean ; 
-   --Idle_Time_Exceeded : data Base_Types::Boolean ;    
+   Paused_Time_Exceeded : data Base_Types::Boolean ; 
+   Idle_Time_Exceeded : data Base_Types::Boolean ;    
   end System_Status_Outputs.Impl; 
   
   

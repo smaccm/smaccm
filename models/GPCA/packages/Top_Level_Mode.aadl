@@ -1,26 +1,13 @@
--- Copyright (c) 2011, Rockwell Collins. Developed with the sponsorship
--- of the Defense Advanced Research Projects Agency (DARPA).
--- 
--- Permission is hereby granted, free of charge, to any person obtaining
--- a copy of this data, including any software or models in source or
--- binary form, as well as any drawings, specifications, and
--- documentation (collectively "the Data"), to deal in the Data without
--- restriction, including without limitation the rights to use, copy,
--- modify, merge, publish, distribute, sublicense, and/or sell copies of
--- the Data, and to permit persons to whom the Data is furnished to do
--- so, subject to the following conditions:
--- 
--- The above copyright notice and this permission notice shall be
--- included in all copies or substantial portions of the Data.
--- 
--- THE DATA IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
--- IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
--- MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
--- IN NO EVENT SHALL THE AUTHORS, SPONSORS, DEVELOPERS, CONTRIBUTORS, OR
--- COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
--- WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT
--- OF OR IN CONNECTION WITH THE DATA OR THE USE OR OTHER DEALINGS IN THE
--- DATA.
+---------------------------------------------------------------------------
+-- Copyright (c) 2013 University of Minnesota
+-- Author: Mike Whalen
+---------------------------------------------------------------------------
+
+----------------------------------------------------------------------------
+-- Edited by : Anitha Murugesan 
+-- Date 7/18/2013
+-- The features matches the top level mode behavioral model.
+--------------------------------------------------------------------------
 
 package Top_Level_Mode
 public
@@ -35,18 +22,22 @@ public
       TLM_MODE_OUT: out data port DATATYPES::Top_Level_Mode_Outputs.Impl;
             
     annex agree {**
-
+	--assume "not_system_start_and_system_stop" : not(OP_CMD_IN.System_Start and OP_CMD_IN.System_Stop);
 	-------> If System_Start and not System_Stop, then mode is ON<-------
 
 	property system_start_implies_system_on = 
-		  (OP_CMD_IN.System_Start ) => (TLM_MODE_OUT.System_On); 
-	
+		  (OP_CMD_IN.System_Start) => (TLM_MODE_OUT.System_On); 
+--	 and not OP_CMD_IN.System_Stop
 	guarantee "system_start_implies_system_on" : system_start_implies_system_on;
 	
 	property not_system_start_implies_system_off = 
-		  not(OP_CMD_IN.System_Start ) => not(TLM_MODE_OUT.System_On); 
+		  not(OP_CMD_IN.System_Start) => not(TLM_MODE_OUT.System_On); 
 	
 	guarantee "not_system_start_implies_system_off" : not_system_start_implies_system_off;
+	
+	property system_stop_implies_not_system_on =
+			(OP_CMD_IN.System_Stop) => not(TLM_MODE_OUT.System_On);
+	guarantee "system_stop_implies_not_system_on" : system_stop_implies_not_system_on;
 	
 	**};
 	
