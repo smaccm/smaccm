@@ -7,7 +7,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.prefs.Preferences;
+import java.util.regex.Matcher;
 
 import jkind.lustre.Node;
 
@@ -15,8 +15,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.osate.aadl2.Aadl2Package;
@@ -112,23 +110,23 @@ public class MATLABFunctionHandler extends ModifyingAadlHandler {
 			// Translate Lustre Node to MATLAB Function AST
 			MATLABPrimaryFunction matlabFunction = LustreToMATLABTranslator.translate(lustreNode, agreeProgram);
 
-			String dirStr = getOutputDirectory();
+			ModelInfo info = getModelInfo(ct);
+			if (info == null) {
+				return Status.CANCEL_STATUS;
+			}
+			
+			String dirStr = info.outputDirPath;
 			if (dirStr == null || dirStr.isEmpty()) {
 				return Status.CANCEL_STATUS;
 			}
-
+			
 			String matlabFuncScriptName = matlabFunction.name + ".m";
 
 			Path matlabFuncScriptPath = Paths.get(dirStr, matlabFuncScriptName);
 
 			// Write MATLAB function code into the specified file in the selected output folder
 			writeToFile(matlabFuncScriptPath, matlabFunction.toString());
-
-			ModelInfo info = getModelInfo(ct);
-			if (info == null) {
-				return Status.CANCEL_STATUS;
-			}
-
+			
 			// Create Simulink Design Verifier (SLDV) invocation file into the output folder
 			SLDVInvocationScriptCreator sldvInvokeScript = new SLDVInvocationScriptCreator(info.originalModelName,
 					info.updatedModelName, info.subsystemName, matlabFuncScriptName);
@@ -161,38 +159,6 @@ public class MATLABFunctionHandler extends ModifyingAadlHandler {
 		}
 	}
 
-	private static final String DEFAULT_PATH = "com.rockwellcollins.atc.agree.codegen.default_path";
-
-	/**
-	 * Get the directory to create the output file
-	 * File name will be the same as the function name
-	 */
-	protected String getOutputDirectory() {
-		// Get saved output directory
-		Preferences pref = Preferences.userRoot();
-		String savedDir = pref.get(DEFAULT_PATH, "");
-
-		// Prompt for updated output directory
-		Shell shell = getWindow().getShell();
-		Display display = shell.getDisplay();
-		String result[] = new String[1];
-		display.syncExec(() -> {
-			DirectoryDialog directoryChooser = new DirectoryDialog(shell, SWT.SAVE);
-			directoryChooser.setMessage("Choose Output Directory");
-			if (!savedDir.equals("")) {
-				directoryChooser.setFilterPath(savedDir);
-			}
-			result[0] = directoryChooser.open();
-		});
-		String updatedDir = result[0];
-
-		// Save updated output directory
-		if (updatedDir != null && !updatedDir.isEmpty()) {
-			pref.put(DEFAULT_PATH, updatedDir);
-		}
-		return updatedDir;
-	}
-
 	protected ModelInfo getModelInfo(ComponentType ct) {
 		// Get saved model info
 		ModelInfo savedInfo = getMatlabExportInfo(ct);
@@ -219,7 +185,11 @@ public class MATLABFunctionHandler extends ModifyingAadlHandler {
 		Property prop = EMFIndexRetrieval.getPropertyDefinitionInWorkspace(ct, "Source_Text");
 		try {
 			ListValue lv = (ListValue) PropertyUtils.getSimplePropertyListValue(ct, prop);
-			return new ModelInfo(getStringElement(lv, 0), getStringElement(lv, 1), getStringElement(lv, 2));
+			String str1 = readPathFromAADLProperty(getStringElement(lv, 0));
+			String str2 = readPathFromAADLProperty(getStringElement(lv, 1));
+			String str3 = readPathFromAADLProperty(getStringElement(lv, 2));
+			String str4 = readPathFromAADLProperty(getStringElement(lv, 3));
+			return new ModelInfo(str1, str2, str3, str4);
 		} catch (PropertyNotPresentException e) {
 			return new ModelInfo();
 		}
@@ -236,15 +206,19 @@ public class MATLABFunctionHandler extends ModifyingAadlHandler {
 
 	private void setMatlabExportInfo(ComponentType ct, ModelInfo info) {
 		ListValue lv = getOrCreateSourceText(ct);
-
+		
 		StringLiteral sl1 = (StringLiteral) lv.createOwnedListElement(Aadl2Package.eINSTANCE.getStringLiteral());
-		sl1.setValue(info.originalModelName);
+		sl1.setValue(savePathToAADLProperty(info.outputDirPath));
 
 		StringLiteral sl2 = (StringLiteral) lv.createOwnedListElement(Aadl2Package.eINSTANCE.getStringLiteral());
-		sl2.setValue(info.updatedModelName);
+		sl2.setValue(savePathToAADLProperty(info.originalModelName));
 
 		StringLiteral sl3 = (StringLiteral) lv.createOwnedListElement(Aadl2Package.eINSTANCE.getStringLiteral());
-		sl3.setValue(info.subsystemName);
+		sl3.setValue(savePathToAADLProperty(info.updatedModelName));
+
+		StringLiteral sl4 = (StringLiteral) lv.createOwnedListElement(Aadl2Package.eINSTANCE.getStringLiteral());
+		sl4.setValue(savePathToAADLProperty(info.subsystemName));
+		
 	}
 
 	private ListValue getOrCreateSourceText(ComponentType ct) {
@@ -279,6 +253,16 @@ public class MATLABFunctionHandler extends ModifyingAadlHandler {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	private String readPathFromAADLProperty(String inputStr) {
+		String updatedStr = inputStr.replaceAll("(\\\\+|/+)", Matcher.quoteReplacement(System.getProperty("file.separator")));
+		return updatedStr;
+	}
+
+	private String savePathToAADLProperty(String inputStr) {
+		String updatedStr = inputStr.replace("\\", "\\\\");
+		return updatedStr;
 	}
 
 }
