@@ -17,10 +17,10 @@ import jkind.results.ValidProperty;
 public class AgreeRenaming extends Renaming {
 
     protected Map<String, String> explicitRenames = new HashMap<>();
-    private Map<String, EObject> refMap;
+    protected Map<String, EObject> refMap;
 
-    public AgreeRenaming(Map<String, EObject> refMap) {
-        this.refMap = refMap;
+    public AgreeRenaming() {
+        //this.refMap = new HashMap<String, EObject>();
     }
 
     public void addRenamings(AgreeRenaming renaming) {
@@ -34,6 +34,10 @@ public class AgreeRenaming extends Renaming {
     
     public void addSupportExplicitRename(String oldName, String newName) {
         this.explicitRenames.put(oldName, newName);
+    }
+    
+    public Map<String, EObject> getRefMap(){
+        return refMap;
     }
 
     public String forceRename(String original) {
@@ -99,9 +103,6 @@ public class AgreeRenaming extends Renaming {
             } else if(newName.matches(".*\\[[0-9]*\\]")){
                 //kind2 hacks
                newName = this.explicitRenames.get(newName);
-//               if(newName == null){
-//                   return original;
-//               }
                return newName;
             }
             return null;

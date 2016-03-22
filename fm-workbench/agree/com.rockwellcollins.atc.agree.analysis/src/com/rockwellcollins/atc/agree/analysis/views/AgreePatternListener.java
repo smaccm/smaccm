@@ -41,38 +41,64 @@ public class AgreePatternListener implements IPatternMatchListener {
     }
 
     private EObject findBestReference(String refStr) {
-
-        EObject ref = null;
-        //Anitha: new Code for getting refernce without replacing
-        while (ref == null && refStr != null && !refStr.equals("")) {
+    	
+    	String originalString = refStr;
+    	
+    	EObject ref = null;
+        //Anitha: new Code for getting reference without replacing . with __
+        //This works for getting reference for regaulr and support strings
+        if (refStr != null && !refStr.equals("")) {
+        	//check for the string as is
         	ref = refMap.get(refStr);
-        	if (ref == null) {
-        		break;
+        	if (ref != null) {
+        		return ref;
             }
+        	//check if there is a . - first part is usually component name.
+        	//we want to take things after for support strings.
             int index = refStr.indexOf(".");
+            if (index != -1) {                  
+	            refStr = refStr.substring(index+1, refStr.length());
+	            ref = refMap.get(refStr);
+	            if (ref != null) {
+	        		return ref;
+	            }
+            }
+        }
+        
+        /*Anitha: This piece of code helps identify if the variables of form: CONFIG__OP_CMD_IN.Data_Config
+         * Such variables reference will be CONFIG.OP_CMD_IN 
+         * We want to display the whole name, but when clicked it should go to its reference 
+         * */
+       
+        ref = null;
+        String tempName = originalString;
+        while (ref == null && tempName != null && !tempName.equals("")) {        	
+            ref = refMap.get(tempName);
+            if (!(ref == null)) {
+            	return ref;
+            }
+    		int index = tempName.lastIndexOf(".");
             if (index == -1) {
                 break;
             }
-            refStr = refStr.substring(0, index);
-        }        
-        if (ref != null) {
-        	return ref;
-        }else{
-        	//Anitha: old Code for getting refernce without replacing
-        	// this is done for monolithic
-        	refStr = refStr.replace(".", "__");
-        	while (ref == null && refStr != null && !refStr.equals("")) {
-            	ref = refMap.get(refStr);
-            	if (ref == null) {
-            		break;
-                }
-                int index = refStr.lastIndexOf("__");
-                if (index == -1) {
-                    break;
-                }
-                refStr = refStr.substring(0, index);
-            }
-        }
+            tempName = tempName.substring(0, index);
+           }
+        
+        
+        //Anitha: old Code for getting reference with replacing . with __
+		// this is done for monolithic
+		refStr = refStr.replace(".", "__");
+		while (ref == null && refStr != null && !refStr.equals("")) {
+			ref = refMap.get(refStr);
+			if (ref == null) {
+				break;
+		    }
+		    int index = refStr.lastIndexOf("__");
+		    if (index == -1) {
+		        break;
+		    }
+		    refStr = refStr.substring(0, index);
+		}
         return ref;
     }
 

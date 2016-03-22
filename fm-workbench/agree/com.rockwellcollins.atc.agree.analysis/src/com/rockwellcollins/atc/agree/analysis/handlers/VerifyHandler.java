@@ -5,9 +5,7 @@ import java.io.StringWriter;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -125,8 +123,6 @@ public abstract class VerifyHandler extends AadlHandler {
             AnalysisResult result;
            
             CompositeAnalysisResult wrapper = new CompositeAnalysisResult("");
-
-            // SystemType sysType = si.getSystemImplementation().getType();
             ComponentType sysType = AgreeUtils.getInstanceType(si);
             EList<AnnexSubclause> annexSubClauses = AnnexUtil.getAllAnnexSubclauses(sysType,
                     AgreePackage.eINSTANCE.getAgreeContractSubclause());
@@ -240,8 +236,8 @@ public abstract class VerifyHandler extends AadlHandler {
     private AnalysisResult createVerification(String resultName, ComponentInstance compInst, Program lustreProgram, AgreeProgram agreeProgram,
             AnalysisType analysisType) {
 
-        Map<String, EObject> refMap = new HashMap<>();
-        AgreeSupportRenaming renaming = new AgreeSupportRenaming(refMap);
+        AgreeSupportRenaming renaming = new AgreeSupportRenaming();
+        
         AgreeLayout layout = new AgreeLayout();
         Node mainNode = null;
         List<String> properties = new ArrayList<>();
@@ -250,10 +246,10 @@ public abstract class VerifyHandler extends AadlHandler {
             if (node.id.equals(lustreProgram.main)) {
                 mainNode = node;
             }
-            addRenamings(refMap, renaming, properties, layout, node, agreeProgram);
+            addRenamings(renaming, properties, layout, node, agreeProgram);
         }
         
-        addSupportRenamings(refMap, renaming, layout, agreeProgram);
+       addSupportRenamings(renaming, layout, agreeProgram);
         
         if (mainNode == null) {
             throw new AgreeException("Could not find main lustre node after translation");
@@ -281,37 +277,32 @@ public abstract class VerifyHandler extends AadlHandler {
         linker.setComponent(result, compImpl);
         linker.setContract(result, getContract(compImpl));
         linker.setLayout(result, layout);
-        linker.setReferenceMap(result, refMap);
+        linker.setReferenceMap(result, renaming.getRefMap());
         linker.setLog(result, AgreeLogger.getLog());
-
         return result;
-
     }
-
-    private void addRenamings(Map<String, EObject> refMap, AgreeSupportRenaming renaming, List<String> properties, AgreeLayout layout,
-            Node node, AgreeProgram agreeProgram) {
-            	
+    
+    private void addRenamings(AgreeSupportRenaming renaming, List<String> properties, AgreeLayout layout, Node node, AgreeProgram agreeProgram) {
+    	
         for (VarDecl var : node.inputs) {
             if (var instanceof AgreeVar) {
-                addReference(refMap, renaming, layout, var);
+                addReference(renaming, layout, var);
                 
             }
-        }
-        
+        }      	
         for (VarDecl var : node.locals) {
             if (var instanceof AgreeVar) {
-                addReference(refMap, renaming, layout, var);
-                // Anitha added this for support string renaming <componentname.localvarname>
-                if (!AgreeUtils.usingKind2() && !isMonolithic()){
-                		addReferenceForSupport(node, refMap, renaming, layout, var, agreeProgram);
-                		
-                }
+		        	addReference(renaming, layout, var);
+		        	// Anitha added this for support string renaming <componentname.localvarname>
+		            if (!AgreeUtils.usingKind2() ){ //&& !isMonolithic()){
+		            	addReferenceForSupport(node, renaming, layout, var, agreeProgram);                		
+		            }
             }
         }
         
         for (VarDecl var : node.outputs) {
             if (var instanceof AgreeVar) {
-                addReference(refMap, renaming, layout, var);
+            	addReference(renaming, layout, var);
             }
         }
         
@@ -323,14 +314,14 @@ public abstract class VerifyHandler extends AadlHandler {
         }
     }
 
-    private void addSupportRenamings(Map<String, EObject> refMap, AgreeSupportRenaming renaming, AgreeLayout layout,
+    private void addSupportRenamings(AgreeSupportRenaming renaming, AgreeLayout layout,
             AgreeProgram agreeProgram) {
-        for (AgreeNode subNode : agreeProgram.agreeNodes) { 
+    	for (AgreeNode subNode : agreeProgram.agreeNodes) { 
 		  		ComponentClassifier compClass = subNode.compInst.getComponentClassifier();
 		  		AgreeVar nodeIdVar= new AgreeVar(subNode.id, NamedType.BOOL,null, subNode.compInst);
 		  		String componentName = (compClass.getQualifiedName()).substring(0,(compClass.getQualifiedName()).indexOf(':'));
-		  		addSpecificReference(refMap, renaming, layout, nodeIdVar,componentName);
-		}
+		  		addSpecificReference(renaming, layout, nodeIdVar,componentName);
+			}
     }
     
     void addKind2Properties(AgreeNode agreeNode, List<String> properties, AgreeSupportRenaming renaming, String prefix, String userPropPrefix){
@@ -353,46 +344,44 @@ public abstract class VerifyHandler extends AadlHandler {
     }    
     
     //Anitha: adding these additional references to rename support elements of form ComponentName.SupportElement 
-    private void addReferenceForSupport(Node node, Map<String, EObject> refMap, AgreeSupportRenaming renaming, AgreeLayout layout,
-           VarDecl var, AgreeProgram agreeProgram ) {
-    	   String componentName = layout.getCategory(node.id);
-    	   String varId=var.id;
+    private void addReferenceForSupport(Node node, AgreeSupportRenaming renaming, AgreeLayout layout,
+           VarDecl var, AgreeProgram agreeProgram) {
+    	   String componentName =  node.id; //layout.getCategory(node.id);
+    	   String varId=var.id; 	  
     	   String varReference=getReferenceStr((AgreeVar) var);
     	   
-    	   
-    	   
-    	   if (!componentName.isEmpty() && varId.contains(componentName)) {
-    		   System.out.println(" varId : " + varId) ;
-			varId = topPrefix+componentName+"."+varId;
-			varReference = componentName+"."+varReference;
-			refMap.put(varId, ((AgreeVar) var).reference);
-			refMap.put(varReference, ((AgreeVar) var).reference);
-			renaming.addExplicitRename(varId, varReference);
-			//System.out.println("Support varId :" + varId+ "  varReference :" + varReference);
+		   componentName = layout.getCategory(node.id);
+		   varReference=getReferenceStr((AgreeVar) var);
+		   if (!componentName.isEmpty() && varId != null && varId.contains(componentName)) {	
+			   varId = topPrefix+componentName+"."+varId;
+			  // varReference=componentName+"."+varReference;
+			   
+		   }
+		  
+		    renaming.addExplicitRename(varId, varReference);	
+		    //renaming.addSupportToRefMap(varReference, ((AgreeVar) var).reference);
+			renaming.addSupportToRefMap(varId, ((AgreeVar) var).reference);
+			
 			String category = getCategory((AgreeVar) var);
 			if (category != null && !layout.getCategories().contains(category)) {
 			    layout.addCategory(category);
 			}
-			layout.addElement(category, varReference, SigType.INPUT);		       
-			//varReference = componentName+"."+varReference;
-			//System.out.println("Support varId :" + varId+ "  varReference :" + varReference);
-			//renaming.addExplicitRename(varId, varReference);
-    	   }
-    	   return;
+			layout.addElement(category, varReference, SigType.INPUT);	
+			
+		   return;
     }
 
-    private void addReference(Map<String, EObject> refMap, AgreeSupportRenaming renaming, AgreeLayout layout,
-            VarDecl var) {
+    private void addReference(AgreeSupportRenaming renaming, AgreeLayout layout, VarDecl var) {
         String refStr = getReferenceStr((AgreeVar) var);
-        addSpecificReference(refMap, renaming, layout, var, refStr);
+        addSpecificReference(renaming, layout, var, refStr);
     }
 
-    private void addSpecificReference(Map<String, EObject> refMap, AgreeSupportRenaming renaming, AgreeLayout layout,
+    private void addSpecificReference(AgreeSupportRenaming renaming, AgreeLayout layout,
             VarDecl var, String refStr) {
-       
-    	refMap.put(refStr, ((AgreeVar) var).reference);
-        refMap.put(var.id, ((AgreeVar) var).reference);
-        renaming.addExplicitRename(var.id, refStr);
+    	
+    	renaming.addExplicitRename(var.id, refStr);
+        renaming.addToRefMap(var.id, ((AgreeVar) var).reference);
+        
         String category = getCategory((AgreeVar) var);
         if (category != null && !layout.getCategories().contains(category)) {
             layout.addCategory(category);
@@ -425,7 +414,7 @@ public abstract class VerifyHandler extends AadlHandler {
         String seperator = (prefix == "" ? "" : ".");
         EObject reference = var.reference;
         if (reference instanceof GuaranteeStatement) {
-            return ((GuaranteeStatement) reference).getStr();
+            return prefix + seperator +((GuaranteeStatement) reference).getStr();
         } else if (reference instanceof AssumeStatement) {
         	return prefix + "assumption: " + ((AssumeStatement) reference).getStr();
         	//Anitha: commented this and added the above line
@@ -437,7 +426,12 @@ public abstract class VerifyHandler extends AadlHandler {
         	//TODO: Anitha: I am not able to get a reference name for assert ?
         	if (var.id.contains("_TOP__ASSERT__")) {
         		referenceString = referenceString +"__" +var.id.substring(var.id.indexOf("ASSERT__")+8,var.id.length());
+        	}else{
+        		if (var.id.contains("ASSERT__")) {
+            		referenceString = referenceString +"__" +var.id.substring(var.id.indexOf("ASSERT__")+8,var.id.length());
+        		}
         	}
+        	
         	return (referenceString);
         	//throw new AgreeException("We really didn't expect to see an assert statement here");
         } else if (reference instanceof Arg) {
@@ -457,15 +451,19 @@ public abstract class VerifyHandler extends AadlHandler {
         else if (reference instanceof EqStatement) {
         	 EList<Arg> args = ((EqStatement) reference).getLhs();
         	 if (!args.isEmpty() && args.size() >= 0) {
-        		 return (args.get(0).getName());         
+        		 return (prefix + seperator + (args.get(0).getName()));         
         	 } else{
-        		 return ((EqStatement) reference).getLhs().toString(); 
+        		 return (prefix + seperator + ((EqStatement) reference).getLhs().toString()); 
         	 }
         } else if (reference instanceof AssignStatementImpl) {
         	String referenceString = "Assignment";
         	//TODO: Anitha: I am not able to get a reference name for assert ?
         	if (var.id.contains("_TOP__ASSERT__")) {
         		referenceString = referenceString +"__" +var.id.substring(var.id.indexOf("ASSERT__")+8,var.id.length());
+        	}else{
+        		if (var.id.contains("ASSERT__")) {
+            		referenceString = referenceString +"__" +var.id.substring(var.id.indexOf("ASSERT__")+8,var.id.length());
+        		}
         	}
         	return (referenceString);
        }

@@ -465,19 +465,19 @@ public class LustreAstBuilder {
         List<String> setofsupport = new ArrayList<>();
 
         Expr assumeConjExpr = new BoolExpr(true);
-        int i = 0;
+        int count = 0;
         for (AgreeStatement statement : agreeNode.assumptions) {
-        	String inputName = assumeSuffix + i++;
+        	String inputName = assumeSuffix + count++;
             inputs.add(new AgreeVar(inputName, NamedType.BOOL, statement.reference, agreeNode.compInst));
             IdExpr assumeId = new IdExpr(inputName);
             assertions.add(new BinaryExpr(assumeId, BinaryOp.EQUAL, statement.expr));
             assumeConjExpr = new BinaryExpr(assumeId, BinaryOp.AND, assumeConjExpr);
         }
 
-        int j = 0;
+        count = 0;
         if (monolithic) {
-            for (AgreeStatement statement : agreeNode.lemmas) {
-                String inputName = lemmaSuffix + j++;
+        	for (AgreeStatement statement : agreeNode.lemmas) {
+                String inputName = lemmaSuffix + count++;
                 inputs.add(new AgreeVar(inputName, NamedType.BOOL, statement.reference, agreeNode.compInst));
                 IdExpr lemmaId = new IdExpr(inputName);
                 assertions.add(new BinaryExpr(lemmaId, BinaryOp.EQUAL, statement.expr));
@@ -497,15 +497,31 @@ public class LustreAstBuilder {
 
         Expr guarConjExpr = new BoolExpr(true);
         if (monolithic) {
+        	count=0;
             //do not care about set of support for monolithic stuff
 	        for (AgreeStatement statement : agreeNode.guarantees) {
-	            guarConjExpr = new BinaryExpr(statement.expr, BinaryOp.AND, guarConjExpr);
+	           //Anitha: added this for monolithic
+	        	String guaranteeName = dotChar+agreeNode.id+dotChar+"PROP"+dotChar+count++;
+	            locals.add(new AgreeVar(guaranteeName, NamedType.BOOL,statement.reference, agreeNode.compInst));
+                IdExpr newPropName = new IdExpr(guaranteeName);
+	            equations.add(new Equation(newPropName, statement.expr));
+	            guarConjExpr = new BinaryExpr(newPropName, BinaryOp.AND, guarConjExpr);
+	            setofsupport.add(guaranteeName);
+	         // guarConjExpr = new BinaryExpr(statement.expr, BinaryOp.AND, guarConjExpr);
 	        }
+	        count=0;
 	        for (AgreeStatement statement : agreeNode.lemmas) {
-	            guarConjExpr = new BinaryExpr(statement.expr, BinaryOp.AND, guarConjExpr);
+	        	//Anitha: added this for monolithic
+	        	String lemmaName = dotChar+agreeNode.id+dotChar+"LEMMA"+dotChar+count++;
+	            locals.add(new AgreeVar(lemmaName, NamedType.BOOL,statement.reference, agreeNode.compInst));
+                IdExpr newPropName = new IdExpr(lemmaName);
+	            equations.add(new Equation(newPropName, statement.expr));
+	            guarConjExpr = new BinaryExpr(newPropName, BinaryOp.AND, guarConjExpr);
+	            setofsupport.add(lemmaName);
+	        	//guarConjExpr = new BinaryExpr(statement.expr, BinaryOp.AND, guarConjExpr);	            
 	        }
         }else{
-            int count=0;
+            count=0;
 	        for (AgreeStatement statement : agreeNode.guarantees) {
 	        	String guaranteeName = dotChar+agreeNode.id+dotChar+"PROP"+dotChar+count++;
 	            locals.add(new AgreeVar(guaranteeName, NamedType.BOOL,statement.reference, agreeNode.compInst));
@@ -521,10 +537,23 @@ public class LustreAstBuilder {
         // monolithic verification. However, we should add EQ statements
         // with left hand sides which part of the agreeNode assertions
 
-        int count=0;
+        count=0;
         for (AgreeStatement statement : agreeNode.assertions) {
           if (monolithic) {
-        	  assertions.add(statement.expr);
+        	 //Anitha: added this for monolithic
+        	  if (AgreeUtils.statementIsContractEqOrProperty(statement)){
+        		  if(statement.reference != null){
+        			  String assertName = dotChar+agreeNode.id+dotChar+"ASSERT"+dotChar+count++;
+	                  locals.add(new AgreeVar(assertName, NamedType.BOOL, statement.reference,  agreeNode.compInst));
+	                  //AgreeVarDecl assertVar = new AgreeVarDecl(assertName, NamedType.BOOL);
+	                  IdExpr assertId = new IdExpr(assertName);
+	                  equations.add(new Equation(assertId, statement.expr));
+	                  assertions.add(assertId);
+	                  setofsupport.add(assertName);
+	        	  }
+        	  }else{
+        		  assertions.add(statement.expr);
+        	  }
           } else {
         	  if (AgreeUtils.statementIsContractEqOrProperty(statement)){
         		  if(statement.reference != null){
