@@ -101,6 +101,7 @@ import com.rockwellcollins.atc.agree.agree.PreExpr;
 import com.rockwellcollins.atc.agree.agree.PrevExpr;
 import com.rockwellcollins.atc.agree.agree.PrimType;
 import com.rockwellcollins.atc.agree.agree.PropertyStatement;
+import com.rockwellcollins.atc.agree.agree.QuantExpr;
 import com.rockwellcollins.atc.agree.agree.RealCast;
 import com.rockwellcollins.atc.agree.agree.RealLitExpr;
 import com.rockwellcollins.atc.agree.agree.RecordDefExpr;
@@ -143,6 +144,18 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 			error(conn, "Connection statements are only allowed in component implementations.");
 		}
 	}
+
+	@Check(CheckType.FAST)
+	public void checkQuantExpr(QuantExpr quantExpr){
+	    Expr expr = quantExpr.getExpr();
+	    if(expr != null){
+            AgreeType type = getAgreeType(expr);
+            if (!matches(type, BOOL)) {
+                error(expr,
+                        "Expression under quantifier is of type '" + type + "' but must be of type 'bool'");
+            }
+        }
+    }
 
 	@Check(CheckType.FAST)
 	public void checkOrderStatement(OrderStatement order) {
@@ -1846,6 +1859,8 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 			return BOOL;
 		} else if (expr instanceof ArrayAccessExpr){
 		    return getAgreeType((ArrayAccessExpr) expr);
+		} else if(expr instanceof QuantExpr){
+		    return BOOL;
 		}
 
 		return ERROR;

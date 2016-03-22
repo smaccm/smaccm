@@ -219,13 +219,6 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass quantExprEClass = null;
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
   private EClass complexExprEClass = null;
 
   /**
@@ -367,6 +360,13 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * @generated
    */
   private EClass agreeDataTypeEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass quantExprEClass = null;
 
   /**
    * <!-- begin-user-doc -->
@@ -968,46 +968,6 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getQuantExpr()
-  {
-    return quantExprEClass;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EAttribute getQuantExpr_Quant()
-  {
-    return (EAttribute)quantExprEClass.getEStructuralFeatures().get(0);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EReference getQuantExpr_Args()
-  {
-    return (EReference)quantExprEClass.getEStructuralFeatures().get(1);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EReference getQuantExpr_Expr()
-  {
-    return (EReference)quantExprEClass.getEStructuralFeatures().get(2);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
   public EClass getComplexExpr()
   {
     return complexExprEClass;
@@ -1541,6 +1501,46 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
   public EReference getAgreeDataType_Data()
   {
     return (EReference)agreeDataTypeEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getQuantExpr()
+  {
+    return quantExprEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getQuantExpr_Quant()
+  {
+    return (EAttribute)quantExprEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getQuantExpr_Args()
+  {
+    return (EReference)quantExprEClass.getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getQuantExpr_Expr()
+  {
+    return (EReference)quantExprEClass.getEStructuralFeatures().get(2);
   }
 
   /**
@@ -2103,11 +2103,6 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
 
     exprEClass = createEClass(EXPR);
 
-    quantExprEClass = createEClass(QUANT_EXPR);
-    createEAttribute(quantExprEClass, QUANT_EXPR__QUANT);
-    createEReference(quantExprEClass, QUANT_EXPR__ARGS);
-    createEReference(quantExprEClass, QUANT_EXPR__EXPR);
-
     complexExprEClass = createEClass(COMPLEX_EXPR);
 
     nestedDotIDEClass = createEClass(NESTED_DOT_ID);
@@ -2182,6 +2177,11 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
 
     agreeDataTypeEClass = createEClass(AGREE_DATA_TYPE);
     createEReference(agreeDataTypeEClass, AGREE_DATA_TYPE__DATA);
+
+    quantExprEClass = createEClass(QUANT_EXPR);
+    createEAttribute(quantExprEClass, QUANT_EXPR__QUANT);
+    createEReference(quantExprEClass, QUANT_EXPR__ARGS);
+    createEReference(quantExprEClass, QUANT_EXPR__EXPR);
 
     binaryExprEClass = createEClass(BINARY_EXPR);
     createEReference(binaryExprEClass, BINARY_EXPR__LEFT);
@@ -2308,7 +2308,6 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     recordDefExprEClass.getESuperTypes().add(theAadl2Package.getNamedElement());
     recordDefExprEClass.getESuperTypes().add(this.getSpecStatement());
     exprEClass.getESuperTypes().add(theAadl2Package.getElement());
-    quantExprEClass.getESuperTypes().add(this.getExpr());
     complexExprEClass.getESuperTypes().add(this.getExpr());
     nestedDotIDEClass.getESuperTypes().add(this.getComplexExpr());
     agreeContractLibraryEClass.getESuperTypes().add(this.getAgreeLibrary());
@@ -2330,6 +2329,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     nodeLemmaEClass.getESuperTypes().add(this.getNodeStmt());
     primTypeEClass.getESuperTypes().add(this.getType());
     agreeDataTypeEClass.getESuperTypes().add(this.getType());
+    quantExprEClass.getESuperTypes().add(this.getExpr());
     binaryExprEClass.getESuperTypes().add(this.getExpr());
     unaryExprEClass.getESuperTypes().add(this.getExpr());
     ifThenElseExprEClass.getESuperTypes().add(this.getExpr());
@@ -2409,11 +2409,6 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
 
     initEClass(exprEClass, Expr.class, "Expr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
-    initEClass(quantExprEClass, QuantExpr.class, "QuantExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEAttribute(getQuantExpr_Quant(), theEcorePackage.getEString(), "quant", null, 0, 1, QuantExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getQuantExpr_Args(), this.getArg(), null, "args", null, 0, -1, QuantExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getQuantExpr_Expr(), this.getExpr(), null, "expr", null, 0, 1, QuantExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
     initEClass(complexExprEClass, ComplexExpr.class, "ComplexExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
     initEClass(nestedDotIDEClass, NestedDotID.class, "NestedDotID", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -2488,6 +2483,11 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
 
     initEClass(agreeDataTypeEClass, AgreeDataType.class, "AgreeDataType", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getAgreeDataType_Data(), this.getNestedDotID(), null, "data", null, 0, 1, AgreeDataType.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+    initEClass(quantExprEClass, QuantExpr.class, "QuantExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEAttribute(getQuantExpr_Quant(), theEcorePackage.getEString(), "quant", null, 0, 1, QuantExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getQuantExpr_Args(), this.getArg(), null, "args", null, 0, -1, QuantExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getQuantExpr_Expr(), this.getExpr(), null, "expr", null, 0, 1, QuantExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(binaryExprEClass, BinaryExpr.class, "BinaryExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getBinaryExpr_Left(), this.getExpr(), null, "left", null, 0, 1, BinaryExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

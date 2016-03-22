@@ -194,15 +194,6 @@ public interface AgreeFactory extends EFactory
   Expr createExpr();
 
   /**
-   * Returns a new object of class '<em>Quant Expr</em>'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return a new object of class '<em>Quant Expr</em>'.
-   * @generated
-   */
-  QuantExpr createQuantExpr();
-
-  /**
    * Returns a new object of class '<em>Complex Expr</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -390,6 +381,15 @@ public interface AgreeFactory extends EFactory
    * @generated
    */
   AgreeDataType createAgreeDataType();
+
+  /**
+   * Returns a new object of class '<em>Quant Expr</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Quant Expr</em>'.
+   * @generated
+   */
+  QuantExpr createQuantExpr();
 
   /**
    * Returns a new object of class '<em>Binary Expr</em>'.

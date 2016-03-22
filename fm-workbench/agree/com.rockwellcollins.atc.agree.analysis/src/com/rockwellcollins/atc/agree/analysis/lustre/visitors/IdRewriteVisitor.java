@@ -18,14 +18,17 @@ import jkind.lustre.CondactExpr;
 import jkind.lustre.Expr;
 import jkind.lustre.IdExpr;
 import jkind.lustre.IfThenElseExpr;
+import jkind.lustre.InductDataExpr;
 import jkind.lustre.IntExpr;
 import jkind.lustre.NodeCallExpr;
+import jkind.lustre.QuantExpr;
 import jkind.lustre.RealExpr;
 import jkind.lustre.RecordAccessExpr;
 import jkind.lustre.RecordExpr;
 import jkind.lustre.RecordUpdateExpr;
 import jkind.lustre.TupleExpr;
 import jkind.lustre.UnaryExpr;
+import jkind.lustre.VarDecl;
 import jkind.lustre.visitors.ExprVisitor;
 
 public class IdRewriteVisitor implements ExprVisitor<Expr> {
@@ -73,7 +76,7 @@ public class IdRewriteVisitor implements ExprVisitor<Expr> {
 
     @Override
     public Expr visit(IdExpr e) {
-        return rewriter.rewrite(e);
+        return new IdExpr(rewriter.rewrite(e.id));
     }
 
     @Override
@@ -133,5 +136,19 @@ public class IdRewriteVisitor implements ExprVisitor<Expr> {
         }
 
         return result;
+    }
+
+    @Override
+    public Expr visit(InductDataExpr e) {
+        throw new AgreeException("We do not support inductive data types in AGREE");
+    }
+
+    @Override
+    public Expr visit(QuantExpr e) {
+        List<VarDecl> vars = new ArrayList<>();
+        for(VarDecl var : e.boundVars){
+            vars.add(new VarDecl(rewriter.rewrite(var.id), var.type));
+        }
+        return new QuantExpr(e.op, vars, e.expr.accept(this));
     }
 }

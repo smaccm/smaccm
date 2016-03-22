@@ -127,8 +127,9 @@ Quant:
 Expr returns Expr:
 	QuantExpr;
 
-QuantExpr:
-	quant=Quant '(' (args+=Arg (',' args+=Arg)*)? ')' '.' expr=ArrowExpr
+QuantExpr returns Expr:
+	{QuantExpr} quant=Quant '(' (args+=Arg (',' args+=Arg)*)? ')' '.' expr=Expr
+| ArrowExpr
 ;
 
 ArrowExpr returns Expr:

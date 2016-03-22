@@ -49,6 +49,7 @@ public class AgreeParser extends AbstractPartialContentAssistParser {
 					put(grammarAccess.getTypeAccess().getRangeHighAlternatives_0_2_5_0(), "rule__Type__RangeHighAlternatives_0_2_5_0");
 					put(grammarAccess.getPrimTypesAccess().getAlternatives(), "rule__PrimTypes__Alternatives");
 					put(grammarAccess.getQuantAccess().getAlternatives(), "rule__Quant__Alternatives");
+					put(grammarAccess.getQuantExprAccess().getAlternatives(), "rule__QuantExpr__Alternatives");
 					put(grammarAccess.getRelateOpAccess().getAlternatives(), "rule__RelateOp__Alternatives");
 					put(grammarAccess.getAddSubExprAccess().getOpAlternatives_1_0_0_1_0(), "rule__AddSubExpr__OpAlternatives_1_0_0_1_0");
 					put(grammarAccess.getMultDivExprAccess().getOpAlternatives_1_0_0_1_0(), "rule__MultDivExpr__OpAlternatives_1_0_0_1_0");
@@ -118,9 +119,9 @@ public class AgreeParser extends AbstractPartialContentAssistParser {
 					put(grammarAccess.getRecordDefExprAccess().getGroup(), "rule__RecordDefExpr__Group__0");
 					put(grammarAccess.getRecordDefExprAccess().getGroup_5(), "rule__RecordDefExpr__Group_5__0");
 					put(grammarAccess.getRecordDefExprAccess().getGroup_5_1(), "rule__RecordDefExpr__Group_5_1__0");
-					put(grammarAccess.getQuantExprAccess().getGroup(), "rule__QuantExpr__Group__0");
-					put(grammarAccess.getQuantExprAccess().getGroup_2(), "rule__QuantExpr__Group_2__0");
-					put(grammarAccess.getQuantExprAccess().getGroup_2_1(), "rule__QuantExpr__Group_2_1__0");
+					put(grammarAccess.getQuantExprAccess().getGroup_0(), "rule__QuantExpr__Group_0__0");
+					put(grammarAccess.getQuantExprAccess().getGroup_0_3(), "rule__QuantExpr__Group_0_3__0");
+					put(grammarAccess.getQuantExprAccess().getGroup_0_3_1(), "rule__QuantExpr__Group_0_3_1__0");
 					put(grammarAccess.getArrowExprAccess().getGroup(), "rule__ArrowExpr__Group__0");
 					put(grammarAccess.getArrowExprAccess().getGroup_1(), "rule__ArrowExpr__Group_1__0");
 					put(grammarAccess.getArrowExprAccess().getGroup_1_0(), "rule__ArrowExpr__Group_1_0__0");
@@ -305,10 +306,10 @@ public class AgreeParser extends AbstractPartialContentAssistParser {
 					put(grammarAccess.getRecordDefExprAccess().getNameAssignment_1(), "rule__RecordDefExpr__NameAssignment_1");
 					put(grammarAccess.getRecordDefExprAccess().getArgsAssignment_5_0(), "rule__RecordDefExpr__ArgsAssignment_5_0");
 					put(grammarAccess.getRecordDefExprAccess().getArgsAssignment_5_1_1(), "rule__RecordDefExpr__ArgsAssignment_5_1_1");
-					put(grammarAccess.getQuantExprAccess().getQuantAssignment_0(), "rule__QuantExpr__QuantAssignment_0");
-					put(grammarAccess.getQuantExprAccess().getArgsAssignment_2_0(), "rule__QuantExpr__ArgsAssignment_2_0");
-					put(grammarAccess.getQuantExprAccess().getArgsAssignment_2_1_1(), "rule__QuantExpr__ArgsAssignment_2_1_1");
-					put(grammarAccess.getQuantExprAccess().getExprAssignment_5(), "rule__QuantExpr__ExprAssignment_5");
+					put(grammarAccess.getQuantExprAccess().getQuantAssignment_0_1(), "rule__QuantExpr__QuantAssignment_0_1");
+					put(grammarAccess.getQuantExprAccess().getArgsAssignment_0_3_0(), "rule__QuantExpr__ArgsAssignment_0_3_0");
+					put(grammarAccess.getQuantExprAccess().getArgsAssignment_0_3_1_1(), "rule__QuantExpr__ArgsAssignment_0_3_1_1");
+					put(grammarAccess.getQuantExprAccess().getExprAssignment_0_6(), "rule__QuantExpr__ExprAssignment_0_6");
 					put(grammarAccess.getArrowExprAccess().getOpAssignment_1_0_0_1(), "rule__ArrowExpr__OpAssignment_1_0_0_1");
 					put(grammarAccess.getArrowExprAccess().getRightAssignment_1_1(), "rule__ArrowExpr__RightAssignment_1_1");
 					put(grammarAccess.getImpliesExprAccess().getOpAssignment_1_0_0_1(), "rule__ImpliesExpr__OpAssignment_1_0_0_1");

@@ -61,6 +61,7 @@ import jkind.lustre.IntExpr;
 import jkind.lustre.NamedType;
 import jkind.lustre.Node;
 import jkind.lustre.NodeCallExpr;
+import jkind.lustre.QuantOp;
 import jkind.lustre.RealExpr;
 import jkind.lustre.RecordAccessExpr;
 import jkind.lustre.RecordType;
@@ -105,6 +106,7 @@ import com.rockwellcollins.atc.agree.agree.PreExpr;
 import com.rockwellcollins.atc.agree.agree.PrevExpr;
 import com.rockwellcollins.atc.agree.agree.PrimType;
 import com.rockwellcollins.atc.agree.agree.PropertyStatement;
+import com.rockwellcollins.atc.agree.agree.QuantExpr;
 import com.rockwellcollins.atc.agree.agree.RealCast;
 import com.rockwellcollins.atc.agree.agree.RealLitExpr;
 import com.rockwellcollins.atc.agree.agree.RecordDefExpr;
@@ -1347,6 +1349,23 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
         }
 
         return res;
+    }
+    
+    @Override
+    public Expr caseQuantExpr(QuantExpr quantExpr){
+        Expr expr = doSwitch(quantExpr.getExpr());
+        List<VarDecl> vars = agreeVarsFromArgs(quantExpr.getArgs(), null);
+        QuantOp op;
+        switch(quantExpr.getQuant()){
+        case "forall" :
+            op = QuantOp.FORALL;
+            break;
+        case "exists":
+            op = QuantOp.EXISTS;
+        default:
+            throw new AgreeException("Unknown quantifier '"+quantExpr.getQuant()+"'");
+        }
+        return new jkind.lustre.QuantExpr(op, vars, expr);
     }
 
     private static void addToNodeList(Node node) {

@@ -344,17 +344,17 @@ public class LustreAstBuilder {
         AgreeVar propVar = new AgreeVar("__PROP", NamedType.BOOL, classifier, agreeNode.compInst);
 
         locals.add(countVar);
-        locals.add(stuffVar);
         locals.add(histVar);
         locals.add(propVar);
+        inputs.add(stuffVar);
 
         IdExpr countId = new IdExpr(countVar.id);
-        IdExpr stuffId = new IdExpr(stuffVar.id);
         IdExpr histId = new IdExpr(histVar.id);
         IdExpr propId = new IdExpr(propVar.id);
+        IdExpr stuffId = new IdExpr(stuffVar.id);
 
-        equations.add(new Equation(stuffId, stuffConj));
-
+        assertions.add(new BinaryExpr(stuffId, BinaryOp.EQUAL, stuffConj));
+        
         Expr histExpr = new UnaryExpr(UnaryOp.PRE, histId);
         histExpr = new BinaryExpr(histExpr, BinaryOp.AND, stuffId);
         histExpr = new BinaryExpr(stuffId, BinaryOp.ARROW, histExpr);
@@ -641,9 +641,9 @@ public class LustreAstBuilder {
             IdRewriter rewriter = new IdRewriter() {
 
                 @Override
-                public IdExpr rewrite(IdExpr id) {
+                public String rewrite(String id) {
                     // TODO Auto-generated method stub
-                    return new IdExpr(prefix + id.id);
+                    return prefix + id;
                 }
             };
             Expr newInit = subAgreeNode.initialConstraint.accept(new IdRewriteVisitor(rewriter));

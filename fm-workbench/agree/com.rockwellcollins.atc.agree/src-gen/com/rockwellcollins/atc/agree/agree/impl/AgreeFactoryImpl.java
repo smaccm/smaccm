@@ -83,7 +83,6 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
       case AgreePackage.TYPE: return createType();
       case AgreePackage.RECORD_DEF_EXPR: return createRecordDefExpr();
       case AgreePackage.EXPR: return createExpr();
-      case AgreePackage.QUANT_EXPR: return createQuantExpr();
       case AgreePackage.COMPLEX_EXPR: return createComplexExpr();
       case AgreePackage.NESTED_DOT_ID: return createNestedDotID();
       case AgreePackage.AGREE_CONTRACT_LIBRARY: return createAgreeContractLibrary();
@@ -105,6 +104,7 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
       case AgreePackage.NODE_LEMMA: return createNodeLemma();
       case AgreePackage.PRIM_TYPE: return createPrimType();
       case AgreePackage.AGREE_DATA_TYPE: return createAgreeDataType();
+      case AgreePackage.QUANT_EXPR: return createQuantExpr();
       case AgreePackage.BINARY_EXPR: return createBinaryExpr();
       case AgreePackage.UNARY_EXPR: return createUnaryExpr();
       case AgreePackage.IF_THEN_ELSE_EXPR: return createIfThenElseExpr();
@@ -341,17 +341,6 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public QuantExpr createQuantExpr()
-  {
-    QuantExprImpl quantExpr = new QuantExprImpl();
-    return quantExpr;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
   public ComplexExpr createComplexExpr()
   {
     ComplexExprImpl complexExpr = new ComplexExprImpl();
@@ -576,6 +565,17 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
   {
     AgreeDataTypeImpl agreeDataType = new AgreeDataTypeImpl();
     return agreeDataType;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public QuantExpr createQuantExpr()
+  {
+    QuantExprImpl quantExpr = new QuantExprImpl();
+    return quantExpr;
   }
 
   /**

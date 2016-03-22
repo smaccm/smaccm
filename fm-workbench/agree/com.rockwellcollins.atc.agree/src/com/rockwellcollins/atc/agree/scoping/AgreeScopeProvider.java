@@ -141,7 +141,21 @@ public class AgreeScopeProvider extends
                 }
             }
         }
-        return Scopes.scopeFor(getAllElementsFromSpecs(ctx.getSpecs()), IScope.NULLSCOPE);
+        
+        Set<Element> result = new HashSet<>();
+        ComponentType component = (ComponentType)container;
+        for (Element el : component.getOwnedElements()) {
+            if(!(el instanceof DefaultAnnexSubclause)){
+                result.add(el);
+            }
+        }
+        for (Element el : component.getAllFeatures()) {
+            result.add(el);
+        }
+        
+        result.addAll(getAllElementsFromSpecs(ctx.getSpecs()));
+        
+        return Scopes.scopeFor(result, IScope.NULLSCOPE);
                 
     }
     
