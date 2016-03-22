@@ -3,7 +3,6 @@ package com.rockwellcollins.atc.agree.analysis.handlers;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.function.Function;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -22,8 +21,6 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.handlers.HandlerUtil;
-import org.eclipse.ui.handlers.IHandlerActivation;
-import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.resource.EObjectAtOffsetHelper;
 import org.eclipse.xtext.resource.XtextResource;
@@ -35,103 +32,102 @@ import org.osate.aadl2.Classifier;
 import org.osate.aadl2.Element;
 
 public abstract class AadlHandler extends AbstractHandler {
-    protected static final String TERMINATE_ID = "com.rockwellcollins.atc.agree.analysis.commands.terminate";
-    protected static final String TERMINATE_ALL_ID =
-            "com.rockwellcollins.atc.agree.analysis.commands.terminateAll";
-    private IWorkbenchWindow window;
+	protected static final String TERMINATE_ID = "com.rockwellcollins.atc.agree.analysis.commands.terminate";
+	protected static final String TERMINATE_ALL_ID = "com.rockwellcollins.atc.agree.analysis.commands.terminateAll";
+	private IWorkbenchWindow window;
 
-    abstract protected IStatus runJob(Element sel, IProgressMonitor monitor);
+	abstract protected IStatus runJob(Element sel, IProgressMonitor monitor);
 
-    abstract protected String getJobName();
+	abstract protected String getJobName();
 
-    @Override
-    public Object execute(ExecutionEvent event) {
-        URI uri = getSelectionURI(HandlerUtil.getCurrentSelection(event));
-        if (uri == null) {
-            return null;
-        }
+	@Override
+	public Object execute(ExecutionEvent event) {
+		URI uri = getSelectionURI(HandlerUtil.getCurrentSelection(event));
+		if (uri == null) {
+			return null;
+		}
 
-        window = HandlerUtil.getActiveWorkbenchWindow(event);
-        if (window == null) {
-            return null;
-        }
+		window = HandlerUtil.getActiveWorkbenchWindow(event);
+		if (window == null) {
+			return null;
+		}
 
-        return executeURI(uri);
-    }
-
-    public Object executeURI(final URI uri) {
-        final XtextEditor xtextEditor = EditorUtils.getActiveXtextEditor();
-        if (xtextEditor == null) {
-            return null;
-        }
-
-        if (!saveChanges(window.getActivePage().getDirtyEditors())) {
-            return null;
-        }
-
-        final IHandlerService handlerService = (IHandlerService) window.getService(IHandlerService.class);
-        WorkspaceJob job = new WorkspaceJob(getJobName()) {
-            private IHandlerActivation terminateActivation;
-
-            @Override
-            public IStatus runInWorkspace(final IProgressMonitor monitor) {
-            	return getAadlOperation(xtextEditor).apply(new IUnitOfWork<IStatus, XtextResource>() {
-                    @Override
-                    public IStatus exec(XtextResource resource) throws Exception {
-                        EObject eobj = resource.getResourceSet().getEObject(uri, true);
-                        if (eobj instanceof Element) {
-                            return runJob((Element) eobj, monitor);
-                        } else {
-                            return Status.CANCEL_STATUS;
-                        }
-                    }
-                });
-            }
-        };
-
-        job.setRule(ResourcesPlugin.getWorkspace().getRoot());
-        job.schedule();
-        return null;
-    }
-
-	protected Function<IUnitOfWork<IStatus, XtextResource>, IStatus> getAadlOperation(XtextEditor xtextEditor) {
-		return xtextEditor.getDocument()::readOnly;
+		return executeURI(uri);
 	}
 
-    private boolean saveChanges(IEditorPart[] dirtyEditors) {
-        if (dirtyEditors.length == 0) {
-            return true;
-        }
+	public Object executeURI(final URI uri) {
+		final XtextEditor xtextEditor = EditorUtils.getActiveXtextEditor();
+		if (xtextEditor == null) {
+			return null;
+		}
 
-        if (MessageDialog.openConfirm(window.getShell(), "Save editors", "Save editors and continue?")) {
-            NullProgressMonitor monitor = new NullProgressMonitor();
-            for (IEditorPart e : dirtyEditors) {
-                e.doSave(monitor);
-            }
-            return true;
-        } else {
-            return false;
-        }
-    }
+		if (!saveChanges(window.getActivePage().getDirtyEditors())) {
+			return null;
+		}
 
-    private URI getSelectionURI(ISelection currentSelection) {
-        if (currentSelection instanceof IStructuredSelection) {
-            IStructuredSelection iss = (IStructuredSelection) currentSelection;
-            if (iss.size() == 1) {
-                EObjectNode node = (EObjectNode) iss.getFirstElement();
-                return node.getEObjectURI();
-            }
-        } else if (currentSelection instanceof TextSelection) {
-        	// Selection may be stale, get latest from editor
+		WorkspaceJob job = getWorkspaceJob(xtextEditor, uri);
+		job.setRule(ResourcesPlugin.getWorkspace().getRoot());
+		job.schedule();
+		return null;
+	}
+
+	protected WorkspaceJob getWorkspaceJob(XtextEditor xtextEditor, URI uri) {
+		return new WorkspaceJob(getJobName()) {
+			@Override
+			public IStatus runInWorkspace(IProgressMonitor monitor) {
+				return xtextEditor.getDocument().readOnly(getUnitOfWork(uri, monitor));
+			}
+		};
+	}
+
+	protected IUnitOfWork<IStatus, XtextResource> getUnitOfWork(URI uri, IProgressMonitor monitor) {
+		return new IUnitOfWork<IStatus, XtextResource>() {
+			@Override
+			public IStatus exec(XtextResource resource) throws Exception {
+				EObject eobj = resource.getResourceSet().getEObject(uri, true);
+				if (eobj instanceof Element) {
+					return runJob((Element) eobj, monitor);
+				} else {
+					return Status.CANCEL_STATUS;
+				}
+			}
+		};
+	}
+	
+	private boolean saveChanges(IEditorPart[] dirtyEditors) {
+		if (dirtyEditors.length == 0) {
+			return true;
+		}
+
+		if (MessageDialog.openConfirm(window.getShell(), "Save editors", "Save editors and continue?")) {
+			NullProgressMonitor monitor = new NullProgressMonitor();
+			for (IEditorPart e : dirtyEditors) {
+				e.doSave(monitor);
+			}
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	private URI getSelectionURI(ISelection currentSelection) {
+		if (currentSelection instanceof IStructuredSelection) {
+			IStructuredSelection iss = (IStructuredSelection) currentSelection;
+			if (iss.size() == 1) {
+				EObjectNode node = (EObjectNode) iss.getFirstElement();
+				return node.getEObjectURI();
+			}
+		} else if (currentSelection instanceof TextSelection) {
+			// Selection may be stale, get latest from editor
 			XtextEditor xtextEditor = EditorUtils.getActiveXtextEditor();
 			TextSelection ts = (TextSelection) xtextEditor.getSelectionProvider().getSelection();
 			return xtextEditor.getDocument().readOnly(resource -> {
-    			EObject e = new EObjectAtOffsetHelper().resolveContainedElementAt(resource, ts.getOffset());
-    			return EcoreUtil2.getURI(e);
-            });
+				EObject e = new EObjectAtOffsetHelper().resolveContainedElementAt(resource, ts.getOffset());
+				return EcoreUtil2.getURI(e);
+			});
 		}
-        return null;
-    }
+		return null;
+	}
 
 	protected Classifier getOutermostClassifier(Element element) {
 		List<EObject> containers = new ArrayList<>();
@@ -150,7 +146,7 @@ public abstract class AadlHandler extends AbstractHandler {
 		return null;
 	}
 
-    protected IWorkbenchWindow getWindow() {
-        return window;
-    }
+	protected IWorkbenchWindow getWindow() {
+		return window;
+	}
 }

@@ -15,7 +15,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.osate.aadl2.Aadl2Package;
 import org.osate.aadl2.AnnexSubclause;
@@ -165,14 +164,9 @@ public class MATLABFunctionHandler extends ModifyingAadlHandler {
 
 		// Prompt for updated model info
 		Shell shell = getWindow().getShell();
-		Display display = shell.getDisplay();
-		ModelInfo[] result = new ModelInfo[1];
-		display.syncExec(() -> {
-			ModelInfoDialog dialog = new ModelInfoDialog(shell, savedInfo);
-			dialog.open();
-			result[0] = dialog.getModelInfo();
-		});
-		ModelInfo updatedModelInfo = result[0];
+		ModelInfoDialog dialog = new ModelInfoDialog(shell, savedInfo);
+		dialog.open();
+		ModelInfo updatedModelInfo = dialog.getModelInfo();
 
 		// Save updated model info
 		if (updatedModelInfo != null) {

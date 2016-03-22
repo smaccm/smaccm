@@ -8,9 +8,8 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.DirectoryDialog;
-import org.eclipse.swt.widgets.FileDialog;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
@@ -19,48 +18,44 @@ import org.eclipse.swt.widgets.Text;
 public class ModelInfoDialog extends Dialog {
 	private final class DirChooserListner implements Listener {
 		public void handleEvent(Event event) {
-				// Get saved or entered output directory
-			    String existingDir = outputText.getText();
-				// Prompt for updated output directory
-				Display display = parentShell.getDisplay();
-				String result[] = new String[1];
-				display.syncExec(() -> {
-					DirectoryDialog directoryChooser = new DirectoryDialog(parentShell, SWT.SAVE);
-					directoryChooser.setMessage("Choose Output Directory");
-					if (!existingDir.equals("")) {
-						directoryChooser.setFilterPath(existingDir);
-					}	
-					result[0] = directoryChooser.open();
-				});
-				String updatedDir = result[0];
+			// Get saved or entered output directory
+			String existingDir = outputText.getText();
+			// Prompt for updated output directory
+			DirectoryDialog directoryChooser = new DirectoryDialog(parentShell, SWT.SAVE);
+			directoryChooser.setMessage("Choose Output Directory");
+			if (!existingDir.equals("")) {
+				directoryChooser.setFilterPath(existingDir);
+			}
+			String updatedDir = directoryChooser.open();
+			if (updatedDir != null) {
 				outputText.setText(updatedDir);
 			}
-	}
-	
-	private final class OriginalMdlChooserListner implements Listener {
-		public void handleEvent(Event event) {
-				// Get saved or entered file path
-			    String defaultPath = originalText.getText();
-				// Prompt for updated output directory
-				Display display = parentShell.getDisplay();
-				String result[] = new String[1];
-				display.syncExec(() -> {
-					FileDialog fileChooser = new FileDialog(parentShell, SWT.SAVE);
-					fileChooser.setFilterNames(new String[] { "*.slx" });
-					fileChooser.setFilterExtensions(new String[] { "*.slx"});
-					if (!defaultPath.equals("")) {
-						fileChooser.setFilterPath(defaultPath);
-					}	
-					result[0] = fileChooser.open();
-				});
-				String updatedFile = result[0];
-				originalText.setText(updatedFile);
-			}
+		}
 	}
 
+	private final class OriginalMdlChooserListner implements Listener {
+		public void handleEvent(Event event) {
+			// Get saved or entered file path
+			String defaultPath = originalText.getText();
+			// Prompt for updated output directory
+			FileDialog fileChooser = new FileDialog(parentShell, SWT.OPEN);
+			fileChooser.setFilterNames(new String[] { "Simulink Models (*.slx)" });
+			fileChooser.setFilterExtensions(new String[] { "*.slx" });
+			if (!defaultPath.equals("")) {
+				fileChooser.setFilterPath(defaultPath);
+			} else if (!outputText.getText().equals("")) {
+				fileChooser.setFilterPath(outputText.getText());
+			}
+			String updatedFile = fileChooser.open();
+			if (updatedFile != null) {
+				originalText.setText(updatedFile);
+			}
+		}
+	}
+
+	private final Shell parentShell;
 	private final ModelInfo savedInfo;
 	private ModelInfo updatedInfo;
-	private Shell parentShell;
 
 	private Text outputText;
 	private Text originalText;
@@ -95,25 +90,25 @@ public class ModelInfoDialog extends Dialog {
 		layout.marginRight = 5;
 		layout.marginLeft = 10;
 		container.setLayout(layout);
-		
+
 		Label outputLabel = new Label(container, SWT.NONE);
 		outputLabel.setText("Output Directory Path:");
 		GridData gridData = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
 		gridData.widthHint = 150;
 		outputLabel.setLayoutData(gridData);
-		
+
 		outputText = new Text(container, SWT.BORDER);
 		outputText.setText(savedInfo.outputDirPath);
 		gridData = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
 		gridData.widthHint = 300;
 		outputText.setLayoutData(gridData);
-		
+
 		Button browseOutputButton = new Button(container, SWT.PUSH);
 		browseOutputButton.setText("Browse");
 		gridData = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
 		gridData.widthHint = 100;
 		browseOutputButton.setLayoutData(gridData);
-		browseOutputButton.addListener(SWT.Selection, new DirChooserListner());	
+		browseOutputButton.addListener(SWT.Selection, new DirChooserListner());
 
 		Label originalLabel = new Label(container, SWT.NONE);
 		originalLabel.setText("Original Model Name:");
@@ -126,7 +121,7 @@ public class ModelInfoDialog extends Dialog {
 		gridData = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
 		gridData.widthHint = 300;
 		originalText.setLayoutData(gridData);
-		
+
 		Button browseOriginalButton = new Button(container, SWT.PUSH);
 		browseOriginalButton.setText("Browse");
 		gridData = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
@@ -163,8 +158,9 @@ public class ModelInfoDialog extends Dialog {
 
 	@Override
 	protected void okPressed() {
-		//for source text property saved in AADL, need to update the separator in the path string
-		updatedInfo = new ModelInfo(outputText.getText(), originalText.getText(), updatedText.getText(), subsystemText.getText());
+		// for source text property saved in AADL, need to update the separator in the path string
+		updatedInfo = new ModelInfo(outputText.getText(), originalText.getText(), updatedText.getText(),
+				subsystemText.getText());
 		super.okPressed();
 	}
 }
