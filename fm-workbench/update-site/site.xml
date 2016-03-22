@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <feature url="features/com.rockwellcollins.atc.agree.feature_2.1.2.v201603221519.jar" id="com.rockwellcollins.atc.agree.feature" version="2.1.2.v201603221519">
+      <category name="com.rockwellcollins.atc.smaccm"/>
+   </feature>
+   <feature url="features/com.rockwellcollins.atc.resolute.feature_1.0.0.v201603221519.jar" id="com.rockwellcollins.atc.resolute.feature" version="1.0.0.v201603221519">
+      <category name="com.rockwellcollins.atc.smaccm"/>
+   </feature>
+   <category-def name="com.rockwellcollins.atc.smaccm" label="SMACCM"/>
+</site>
