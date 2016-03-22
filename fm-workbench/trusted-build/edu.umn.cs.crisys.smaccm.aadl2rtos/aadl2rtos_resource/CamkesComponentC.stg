@@ -68,3 +68,5 @@ bool <outgoingPortWriterName(connection.destPort,connection.sourcePort)>(const <
 	return <incomingPortWriterName(connection.destPort)>(<connection.sourcePort.name>);
 }
 >>
+
+osSpecificAssert(predicate) ::= "assert(<predicate>) "

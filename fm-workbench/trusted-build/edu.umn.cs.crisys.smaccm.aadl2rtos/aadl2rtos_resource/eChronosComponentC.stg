@@ -67,3 +67,6 @@ osSpecificRegisterIrqs(dispatcher) ::= ""
 
 osSpecificComponentLocalCallerFunction(connection) ::= ""
 
+// TODO: add an eChronos assert function.
+osSpecificAssert(predicate) ::= ""
+

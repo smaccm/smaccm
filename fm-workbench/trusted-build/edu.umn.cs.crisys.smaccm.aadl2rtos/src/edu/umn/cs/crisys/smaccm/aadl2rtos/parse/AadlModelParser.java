@@ -563,7 +563,7 @@ public class AadlModelParser {
     boolean isPassive = PropertyUtil.getThreadType(tti);
     boolean isExternal = PropertyUtil.getIsExternal(tti);
     int priority = -1; 
-    int stackSize = 0;
+    int stackSize = 4096;
     
     if (!(isPassive || isExternal)) {
       priority = PropertyUtil.getPriority(tti);
@@ -571,14 +571,22 @@ public class AadlModelParser {
     } else {
       // TODO: Compute priorities for passive threads.
       priority = 200; 
+      // TODO: deprecate use of 'default' stack size
+      stackSize = 16384;
       try {
         PropertyUtil.getPriority(tti);
         logger.warn("Warning: priority ignored for passive/external thread: " + name);
       } catch (Aadl2RtosException e) {}
       try {
-        PropertyUtil.getStackSizeInBytes(tti); 
-        logger.warn("Warning: stack size ignored for passive/external thread: " + name);
-      } catch (Aadl2RtosException e) {}
+        stackSize = PropertyUtil.getStackSizeInBytes(tti); 
+        if (model.getOsTarget() == Model.OSTarget.eChronos) {
+          logger.warn("Warning: stack size ignored for passive/external thread: " + name);
+        }
+      } catch (Aadl2RtosException e) {
+    	if (model.getOsTarget() == Model.OSTarget.CAmkES) {
+          logger.warn("Deprecation warning: default stack size (16384) used for passive thread: " + name);
+    	}
+      }
     }
     
     String generatedEntrypoint = tti.getFullName();
