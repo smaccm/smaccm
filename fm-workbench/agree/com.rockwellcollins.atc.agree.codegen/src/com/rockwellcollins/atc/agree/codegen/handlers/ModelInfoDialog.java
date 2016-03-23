@@ -49,7 +49,7 @@ public class ModelInfoDialog extends TitleAreaDialog{
 			fileChooser.setFilterNames(new String[] { "Simulink Models (*.slx)" });
 			fileChooser.setFilterExtensions(new String[] { "*.slx" });
 			if (!defaultPath.equals("")) {
-				fileChooser.setFilterPath(defaultPath);
+				fileChooser.setFileName(defaultPath);
 			} else if (!outputText.getText().equals("")) {
 				fileChooser.setFilterPath(outputText.getText());
 			}
