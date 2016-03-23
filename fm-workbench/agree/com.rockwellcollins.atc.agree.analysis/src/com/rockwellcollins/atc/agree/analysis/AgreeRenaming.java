@@ -110,7 +110,7 @@ public class AgreeRenaming extends Renaming {
         
         newName = forceRename(original);
 
-        if (findBestReference(original) == null) {
+        if (findBestReference(newName) == null) {
             if (original.equals("%REALIZABLE")) {
                 return "Realizability Result";
             } else if (original.contains("__nodeLemma")) {
@@ -137,10 +137,9 @@ public class AgreeRenaming extends Renaming {
     private EObject findBestReference(String refStr) {
 
         EObject ref = null;
-        refStr = refStr.replace(".", "__");
         while (ref == null && refStr != null && !refStr.equals("")) {
             ref = refMap.get(refStr);
-            int index = refStr.lastIndexOf("__");
+            int index = refStr.lastIndexOf(".");
             if (index == -1) {
                 break;
             }
