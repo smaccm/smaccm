@@ -102,12 +102,6 @@ public class AgreeRenaming extends Renaming {
             return newName;
         }
         
-        //hacky, but we do not want any of the "latched inputs" from
-        //models with "synchrony latched" to appear in counter examples
-        if(original.contains(LustreAstBuilder.LATCHED_INPUTS_PREFIX)){
-            return null;
-        }
-        
         newName = forceRename(original);
 
         if (findBestReference(newName) == null) {
