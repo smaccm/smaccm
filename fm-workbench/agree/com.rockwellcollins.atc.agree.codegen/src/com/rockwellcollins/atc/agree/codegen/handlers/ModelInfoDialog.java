@@ -22,7 +22,7 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-public class ModelInfoDialog extends TitleAreaDialog {
+public class ModelInfoDialog extends TitleAreaDialog{
 	private final class DirChooserListner implements Listener {
 		public void handleEvent(Event event) {
 			// Get saved or entered output directory
@@ -196,6 +196,18 @@ public class ModelInfoDialog extends TitleAreaDialog {
 
 		return container;
 	}
+	
+	protected void createButtonsForButtonBar(Composite parent) {
+		createButton(parent, ModelInfoDialogConstants.EXPORT_SCRIPT_ID,
+				ModelInfoDialogConstants.EXPORT_LABEL, true);
+		createButton(parent, ModelInfoDialogConstants.UPDATE_MODEL_ID,
+				ModelInfoDialogConstants.UPDATE_LABEL, true);
+		createButton(parent, ModelInfoDialogConstants.VERIFY_SUBSYSTEM_ID,
+				ModelInfoDialogConstants.VERIFY_LABEL, true);
+		createButton(parent, IDialogConstants.CANCEL_ID,
+				IDialogConstants.CANCEL_LABEL, false);
+	}
+	
 
 	@Override
 	protected Control createContents(Composite parent) {
@@ -205,50 +217,131 @@ public class ModelInfoDialog extends TitleAreaDialog {
 	}
 
 	protected void validate() {
-		boolean hasErrors = false;
-
-		if (!updatedText.getText().endsWith(".slx")) {
-			setErrorMessage("Updated model name must have .slx extension");
-			setOkEnabled(false);
-			updatedTextError.show();
-			hasErrors = true;
-		} else {
-			updatedTextError.hide();
-		}
-
-		if (!new File(originalText.getText()).exists()) {
-			originalTextError.setDescriptionText("Original model file does not exist");
-			setErrorMessage("Original model file does not exist");
-			setOkEnabled(false);
-			originalTextError.show();
-			hasErrors = true;
-		} else if (!originalText.getText().endsWith(".slx")) {
-			setErrorMessage("Original model must have .xls extension");
-			setOkEnabled(false);
-			originalTextError.show();
-			hasErrors = true;
-		} else {
-			originalTextError.hide();
-		}
-
-		if (!hasErrors) {
+		boolean exportError = false;
+		boolean updateError = false;
+		boolean verifyError = false;
+		
+		if (outputText.getText().equals("")) {
+			setErrorMessage("Must fill out the output directory");
+			exportError = true;
+		}else if(!new File(outputText.getText()).exists()){
+			setErrorMessage("The output directory does not exist");
+			exportError = true;
+		}else{
 			setErrorMessage(null);
-			setOkEnabled(true);
+		}
+		
+		if (originalText.getText().equals("")) {
+			updateError = true;
+			verifyError = true;
+		} else {
+			if (!new File(originalText.getText()).exists()) {
+				originalTextError.setDescriptionText("Original model file does not exist");
+				updateError = true;
+				verifyError = true;
+				originalTextError.show();
+			} else if (!originalText.getText().endsWith(".slx")) {
+				setErrorMessage("Original model must have .slx extension");
+				updateError = true;
+				verifyError = true;
+				originalTextError.show();
+			} else {
+				originalTextError.hide();
+			}
+		}
+		
+		if (updatedText.getText().equals("")) {
+			updateError = true;
+			verifyError = true;
+		} else {
+			if (!updatedText.getText().endsWith(".slx")) {
+				setErrorMessage("Updated model name must have .slx extension");
+				updateError = true;
+				verifyError = true;
+				updatedTextError.show();
+			} else {
+				updatedTextError.hide();
+			}
+		}
+		
+		if (subsystemText.getText().equals("")) {
+			verifyError = true;
+		}
+		
+		if (!exportError) {
+			setExportEnabled(true);
+		} else{
+			setExportEnabled(false);
+		}
+		
+		if (!updateError) {
+			setUpdateEnabled(true);
+		} else{
+			setUpdateEnabled(false);
+		}
+
+		if (!verifyError) {
+			setVerifyEnabled(true);
+		} else{
+			setVerifyEnabled(false);
+		}
+		
+		if(!exportError && !updateError && !verifyError){
+			setErrorMessage(null);
 		}
 	}
 
-	private void setOkEnabled(boolean enabled) {
-		Button ok = getButton(IDialogConstants.OK_ID);
-		if (ok != null) {
-			ok.setEnabled(enabled);
+	protected void buttonPressed(int buttonId) {
+		if (ModelInfoDialogConstants.EXPORT_SCRIPT_ID == buttonId) {
+			exportPressed();
+		} else if (ModelInfoDialogConstants.UPDATE_MODEL_ID == buttonId) {
+			updatePressed();
+		} else if (ModelInfoDialogConstants.VERIFY_SUBSYSTEM_ID == buttonId) {
+			verifyPressed();
+		} else if (IDialogConstants.CANCEL_ID == buttonId) {
+			cancelPressed();
+		}
+	}
+	
+	private void setExportEnabled(boolean enabled) {
+		Button export = getButton(ModelInfoDialogConstants.EXPORT_SCRIPT_ID);
+		if (export != null) {
+			export.setEnabled(enabled);
+		}
+	}
+	
+	private void setUpdateEnabled(boolean enabled) {
+		Button update = getButton(ModelInfoDialogConstants.UPDATE_MODEL_ID);
+		if (update != null) {
+			update.setEnabled(enabled);
+		}
+	}
+	
+	private void setVerifyEnabled(boolean enabled) {
+		Button verify = getButton(ModelInfoDialogConstants.VERIFY_SUBSYSTEM_ID);
+		if (verify != null) {
+			verify.setEnabled(enabled);
 		}
 	}
 
-	@Override
-	protected void okPressed() {
+	protected void exportPressed() {
 		// for source text property saved in AADL, need to update the separator in the path string
 		updatedInfo = new ModelInfo(outputText.getText(), originalText.getText(), updatedText.getText(),
-				subsystemText.getText());
+				subsystemText.getText(), true, false, false);
+		super.okPressed();
+	}
+	
+	protected void updatePressed() {
+		// for source text property saved in AADL, need to update the separator in the path string
+		updatedInfo = new ModelInfo(outputText.getText(), originalText.getText(), updatedText.getText(),
+				subsystemText.getText(), false, true, false);
+		super.okPressed();
+	}
+	
+	protected void verifyPressed() {
+		// for source text property saved in AADL, need to update the separator in the path string
+		updatedInfo = new ModelInfo(outputText.getText(), originalText.getText(), updatedText.getText(),
+				subsystemText.getText(), false, false, true);
 		super.okPressed();
 	}
 }

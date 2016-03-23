@@ -119,33 +119,50 @@ public class MATLABFunctionHandler extends ModifyingAadlHandler {
 				return Status.CANCEL_STATUS;
 			}
 			
-			String matlabFuncScriptName = matlabFunction.name + ".m";
-
-			Path matlabFuncScriptPath = Paths.get(dirStr, matlabFuncScriptName);
-
-			// Write MATLAB function code into the specified file in the selected output folder
-			writeToFile(matlabFuncScriptPath, matlabFunction.toString());
+			boolean exportPressed = info.exportPressed;
+			boolean updatePressed = info.updatePressed;
+			boolean verifyPressed = info.verifyPressed;
 			
-			// Create Simulink Design Verifier (SLDV) invocation file into the output folder
-			SLDVInvocationScriptCreator sldvInvokeScript = new SLDVInvocationScriptCreator(info.originalModelName,
-					info.updatedModelName, info.subsystemName, matlabFuncScriptName);
+			if (exportPressed || updatePressed || verifyPressed) {
+				String matlabFuncScriptName = matlabFunction.name + ".m";
+				Path matlabFuncScriptPath = Paths.get(dirStr,
+						matlabFuncScriptName);
+				// Write MATLAB function code into the specified file in the
+				// selected output folder
+				writeToFile(matlabFuncScriptPath, matlabFunction.toString());
+				if (info.updatePressed || info.verifyPressed) {
 
-			String sldvInvokeScriptName = matlabFunction.name + "_sldv.m";
-			Path sldvInvokeScriptPath = Paths.get(dirStr, sldvInvokeScriptName);
-			writeToFile(sldvInvokeScriptPath, sldvInvokeScript.toString());
+					// Create Simulink Model Update script into the output
+					// folder
+					SimulinkObserverScriptCreator modelUpdateScript = new SimulinkObserverScriptCreator(
+							info.originalModelName, info.updatedModelName,
+							info.subsystemName, matlabFuncScriptName,
+							info.verifyPressed);
 
-			// create batch file into the output folder
-			MATLABInvocationScriptCreator matlabInvokeScript = new MATLABInvocationScriptCreator(dirStr,
-					sldvInvokeScriptName);
-			String batchFileName = matlabFunction.name + "_cmd_line.bat";
+					String modelUpdateScriptName = matlabFunction.name
+							+ "_Observer.m";
+					
+					Path modelUpdateScriptPath = Paths.get(dirStr,
+							modelUpdateScriptName);
+					
+					writeToFile(modelUpdateScriptPath,
+							modelUpdateScript.toString());
 
-			Path batchPath = Paths.get(dirStr, batchFileName);
-			String batchPathStr = dirStr + "\\" + batchFileName;
-			writeToFile(batchPath, matlabInvokeScript.toString());
+					// create batch file into the output folder
+					MATLABInvocationScriptCreator matlabInvokeScript = new MATLABInvocationScriptCreator(
+							dirStr, modelUpdateScriptName);
+					
+					String batchFileName = matlabFunction.name
+							+ "_cmd_line.bat";
 
-			// invoke the batch file
-			Runtime.getRuntime().exec(batchPathStr);
+					Path batchPath = Paths.get(dirStr, batchFileName);
+					String batchPathStr = dirStr + "\\" + batchFileName;
+					writeToFile(batchPath, matlabInvokeScript.toString());
 
+					// invoke the batch file
+					Runtime.getRuntime().exec(batchPathStr);
+				}
+			}
 			return Status.OK_STATUS;
 		} catch (Throwable e) {
 			String messages = getNestedMessages(e);
