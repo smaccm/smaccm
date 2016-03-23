@@ -7,6 +7,9 @@ import java.util.Set;
 
 import org.eclipse.emf.ecore.EObject;
 
+import com.rockwellcollins.atc.agree.analysis.ast.AgreeASTBuilder;
+import com.rockwellcollins.atc.agree.analysis.translation.LustreAstBuilder;
+
 import jkind.JKindException;
 import jkind.api.results.Renaming;
 import jkind.results.InvalidProperty;
@@ -98,6 +101,13 @@ public class AgreeRenaming extends Renaming {
         if (newName != null) {
             return newName;
         }
+        
+        //hacky, but we do not want any of the "latched inputs" from
+        //models with "synchrony latched" to appear in counter examples
+        if(original.contains(LustreAstBuilder.LATCHED_INPUTS_PREFIX)){
+            return null;
+        }
+        
         newName = forceRename(original);
 
         if (findBestReference(original) == null) {
@@ -114,6 +124,8 @@ public class AgreeRenaming extends Renaming {
                return newName;
             } else if(newName.matches("time")){
                 return "time";
+            } else if (original.endsWith(AgreeASTBuilder.clockIDSuffix)){
+                return newName;
             }
             return null;
         }

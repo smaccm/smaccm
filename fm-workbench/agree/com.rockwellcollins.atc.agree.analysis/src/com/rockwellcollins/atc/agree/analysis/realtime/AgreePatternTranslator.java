@@ -250,16 +250,14 @@ public class AgreePatternTranslator {
                 new BinaryExpr(new UnaryExpr(UnaryOp.NEGATIVE, pattern.jitter), BinaryOp.LESSEQUAL, jitterId);
         Expr jitterHigh = new BinaryExpr(jitterId, BinaryOp.LESSEQUAL, pattern.jitter);
         builder.addAssertion(new AgreeStatement(null, new BinaryExpr(jitterLow, BinaryOp.AND, jitterHigh), pattern.reference));
-        
-        //(pnext <= p) -> (pnext = pre pnext + if pre(e) then p else 0)
-        Expr preE = new UnaryExpr(UnaryOp.PRE, pattern.event);
-        Expr ifElse = new IfThenElseExpr(preE, pattern.period, new RealExpr(BigDecimal.ZERO));
-        Expr prePnext = new UnaryExpr(UnaryOp.PRE, periodId);
-        prePnext = new BinaryExpr(prePnext, BinaryOp.PLUS, ifElse);
-        Expr pNext = new BinaryExpr(periodId, BinaryOp.EQUAL, prePnext);
-        Expr pInit = new BinaryExpr(periodId, BinaryOp.LESSEQUAL, pattern.period);
-        Expr nextP = new BinaryExpr(pInit, BinaryOp.ARROW, pNext);
-        builder.addAssertion(new AgreeStatement(null, nextP, pattern.reference));
+
+        Expr expr = expr("(0.0 <= period) and (period < p) -> "
+                + "(period = (pre period) + (if pre(e) then p else 0.0))",
+                to("period", periodVar),
+                to("p", pattern.period),
+                to("e", pattern.event));
+
+        builder.addAssertion(new AgreeStatement(null, expr, pattern.reference));
         
         //timeout = pnext + jitter
         Expr timeoutExpr = new BinaryExpr(periodId, BinaryOp.PLUS, jitterId);
@@ -418,7 +416,7 @@ public class AgreePatternTranslator {
         Expr expr = expr("record => cause", to("record", recordVar), to("cause", causeId));
         builder.addAssertion(new AgreeStatement(null, expr, varReference));
         
-        Equation eq = equation("trecord = if record then time else -1 -> pre(record)",
+        Equation eq = equation("trecord = if record then time else -1.0 -> pre(trecord);",
                 to("trecord", timeRecordVar),
                 to("record", recordVar),
                 to("time", timeExpr));
@@ -427,8 +425,8 @@ public class AgreePatternTranslator {
         BinaryOp left = getIntervalLeftOp(pattern.effectInterval);
         BinaryOp right = getIntervalRightOp(pattern.effectInterval);
         
-        eq = equation("in_window = if (trecord <> -1) and "
-                + "(l + trecord "+left+" time "+right+" h + trecord)",
+        eq = equation("in_window = (trecord <> -1.0) and "
+                + "(l + trecord "+left+" time) and (time "+right+" h + trecord);",
                 to("in_window", windowVar),
                 to("trecord", timeRecordVar),
                 to("time", timeExpr),
@@ -483,7 +481,7 @@ public class AgreePatternTranslator {
             AgreeStatement statement = new AgreeStatement(" pattern "+patternIndex+" in bounds", propExpr, pattern);
             builder.addPatternProp(statement);
         } else {
-            Equation eq = equation("timeEnd = timeCause + h",
+            Equation eq = equation("timeEnd = timeCause + h;",
                     to("timeEnd", timeEffectId),
                     to("timeCause", timeCauseId),
                     to("h", pattern.effectInterval.high));
@@ -505,7 +503,7 @@ public class AgreePatternTranslator {
         AgreeVar timeCauseVar = new AgreeVar(TIME_PREFIX + causeId.id, NamedType.REAL, pattern);
         builder.addLocal(timeCauseVar);
         
-        Equation eq = equation("timeCause = if causeId then time else (-1 -> pre timeCause)",
+        Equation eq = equation("timeCause = if causeId then time else (-1.0 -> pre timeCause);",
                 to("timeCause", timeCauseVar),
                 to("causeId", causeId),
                 to("time", timeExpr));
@@ -526,9 +524,17 @@ public class AgreePatternTranslator {
         
         Expr inInterval = new BinaryExpr(intervalLeft, BinaryOp.AND, intervalRight);
         
-        Expr expr = expr("timeCause > -1 => inInterval",
+        String constrString;
+        if(pattern.effectIsExclusive){
+            constrString = "if timeCause > -1.0 and inInterval then effectTrue else not effectTrue";
+        }else{
+            constrString = "timeCause > -1.0 => inInterval => effectTrue";
+        }
+        
+        Expr expr = expr(constrString,
                 to("timeCause", timeCauseVar),
-                to("inInterval", inInterval));
+                to("inInterval", inInterval),
+                to("effectTrue", effectId));
 
         return expr;
     }
@@ -548,7 +554,7 @@ public class AgreePatternTranslator {
         builder.addAssertion(new AgreeStatement(null, effectTimeRangeConstraint, pattern.reference));
         // make a constraint that triggers when the event WILL happen
         
-        Expr expr = expr("timeEffect = if causeId then effectTimeRangeId else (-1 -> pre timeEffect)",
+        Expr expr = expr("timeEffect = if causeId then effectTimeRangeId else (-1.0 -> pre timeEffect)",
                 to("timeEffect", timeEffectId),
                 to("causeId", causeId),
                 to("effectTimeRangeId", effectTimeRangeId));

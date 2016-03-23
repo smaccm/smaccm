@@ -60,6 +60,7 @@ public class LustreAstBuilder {
     protected static final String lemmaSuffix = "__LEMMA";
     protected static final String historyNodeName = "__HIST";
     protected static final String patternPropSuffix = "__PATTERN";
+    public static final String LATCHED_INPUTS_PREFIX = "__LATCHED_INPUTS";
 
     public static Program getRealizabilityLustreProgram(AgreeProgram agreeProgram) {
 
@@ -917,7 +918,7 @@ public class LustreAstBuilder {
             return; //we don't need to create latched inputs if there are none
         }
         
-        String latchNodeString = nodePrefix + subAgreeNode.id + "__LATCHED_INPUTS";
+        String latchNodeString = nodePrefix + subAgreeNode.id + LATCHED_INPUTS_PREFIX;
 
         List<Expr> nonLatchedInputs = new ArrayList<>();
         List<Expr> latchedInputs = new ArrayList<>();

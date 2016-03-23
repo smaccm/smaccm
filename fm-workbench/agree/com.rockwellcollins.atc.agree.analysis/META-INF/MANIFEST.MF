@@ -19,7 +19,8 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: .,
  dependencies/jkind-api.jar,
- dependencies/jxl.jar
+ dependencies/jxl.jar,
+ dependencies/antlr-runtime-4.4.jar
 Import-Package: 
  org.osate.aadl2.instantiation,
  org.osate.annexsupport
