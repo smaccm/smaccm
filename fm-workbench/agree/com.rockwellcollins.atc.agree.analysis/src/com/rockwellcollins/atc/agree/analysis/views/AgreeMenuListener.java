@@ -289,7 +289,12 @@ public class AgreeMenuListener implements IMenuListener {
                         }
 
                         printHLine(out, cex.getLength());
-                        out.println("Variables for " + category);
+                        if (category == "") {
+                            out.println("Variables for the selected component implementation");
+
+                        } else {
+                            out.println("Variables for " + category);
+                        }
                         printHLine(out, cex.getLength());
 
                         out.print(String.format("%-60s", "Variable Name"));
