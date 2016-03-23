@@ -463,12 +463,12 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 		}
 		
 		
-		warning(asser, "We highly discourage the use of assert statements. "
-		        + "They can easily lead to inconsistent or unrealizable systems. "
-		        + "Note that our realizability check does not verify that component "
-		        + "assertions are realizable.  It is likely that you can specify the "
-		        + "behavior you want by changing the subcomponent contracts or "
-		        + "by using assignment statements.");
+//		warning(asser, "We highly discourage the use of assert statements. "
+//		        + "They can easily lead to inconsistent or unrealizable systems. "
+//		        + "Note that our realizability check does not verify that component "
+//		        + "assertions are realizable.  It is likely that you can specify the "
+//		        + "behavior you want by changing the subcomponent contracts or "
+//		        + "by using assignment statements.");
 
 	}
 
