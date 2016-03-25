@@ -10,4 +10,8 @@ Install
 
 Notes
 =====
-The AGREE plugin is only packaged with the SMTInterpol SMT solver. If you want to use other solvers (like Z3, Yices, or CVC4) you will need to obtain them separately and place them in your PATH environment variable.  In order to perform Realizability Analysis you must have Z3 installed.
+The AGREE plugin is only packaged with the SMTInterpol SMT solver. If you want to use other solvers ([Z3](https://github.com/Z3Prover/z3),
+[Yices (version 1)](http://yices.csl.sri.com/download-yices1.shtml), 
+[Yices 2](http://yices.csl.sri.com/index.shtml),
+[CVC4](http://cvc4.cs.nyu.edu/web/), or
+[MathSAT](http://mathsat.fbk.eu/)) you will need to obtain them separately and place them in your PATH environment variable.  In order to perform Realizability Analysis you must have Z3 installed.
