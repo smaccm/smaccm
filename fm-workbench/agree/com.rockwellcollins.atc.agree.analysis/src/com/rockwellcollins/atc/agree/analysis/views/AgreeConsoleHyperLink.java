@@ -5,10 +5,10 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.ui.console.IHyperlink;
 import org.eclipse.xtext.ui.editor.GlobalURIEditorOpener;
 
-import com.rockwellcollins.atc.agree.analysis.Util;
+import com.rockwellcollins.atc.agree.analysis.AgreeUtils;
 
 public class AgreeConsoleHyperLink implements IHyperlink {
-    private static GlobalURIEditorOpener globalURIEditorOpener = Util.getGlobalURIEditorOpener();
+    private static GlobalURIEditorOpener globalURIEditorOpener = AgreeUtils.getGlobalURIEditorOpener();
     private EObject ref;
 
     public AgreeConsoleHyperLink(EObject ref) {

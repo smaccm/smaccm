@@ -20,6 +20,7 @@ public class PreferenceConstants {
 
     public static final String PREF_SOLVER = "solver";
 
+    public static final String SOLVER_SMTINTERPOL = "SMTInterpol";
     public static final String SOLVER_YICES = "Yices";
     public static final String SOLVER_Z3 = "Z3";
     public static final String SOLVER_CVC4 = "CVC4";

@@ -50,11 +50,12 @@ public class AgreePreferencePage extends FieldEditorPreferencePage implements IW
 
     private StringFieldEditor remoteUrlFieldEditor;
 
-    private static final String[][] SOLVERS =
-            { { PreferenceConstants.SOLVER_YICES, PreferenceConstants.SOLVER_YICES },
-                    { PreferenceConstants.SOLVER_Z3, PreferenceConstants.SOLVER_Z3 },
-                    { PreferenceConstants.SOLVER_CVC4, PreferenceConstants.SOLVER_CVC4 },
-                    { PreferenceConstants.SOLVER_YICES2, PreferenceConstants.SOLVER_YICES2 } };
+    private static final String[][] SOLVERS = {
+			{ PreferenceConstants.SOLVER_SMTINTERPOL, PreferenceConstants.SOLVER_SMTINTERPOL },
+			{ PreferenceConstants.SOLVER_YICES, PreferenceConstants.SOLVER_YICES },
+			{ PreferenceConstants.SOLVER_Z3, PreferenceConstants.SOLVER_Z3 },
+			{ PreferenceConstants.SOLVER_CVC4, PreferenceConstants.SOLVER_CVC4 },
+			{ PreferenceConstants.SOLVER_YICES2, PreferenceConstants.SOLVER_YICES2 } };
     private ComboFieldEditor solverFieldEditor;
     private String selectedSolver;
 
@@ -179,11 +180,12 @@ public class AgreePreferencePage extends FieldEditorPreferencePage implements IW
         boolean isJKind = selectedModelChecker.equals(PreferenceConstants.MODEL_CHECKER_JKIND);
         boolean isRemote = selectedModelChecker.equals(PreferenceConstants.MODEL_CHECKER_KIND2WEB);
         boolean isYices = selectedSolver.equals(PreferenceConstants.SOLVER_YICES);
+        boolean isZ3 = selectedSolver.equals(PreferenceConstants.SOLVER_Z3);
 
         remoteUrlFieldEditor.setEnabled(isRemote, getFieldEditorParent());
         solverFieldEditor.setEnabled(isJKind, getFieldEditorParent());
         inductiveCounterexampleFieldEditor.setEnabled(isJKind, getFieldEditorParent());
-        smoothingFieldEditor.setEnabled(isJKind && isYices, getFieldEditorParent());
+        smoothingFieldEditor.setEnabled(isJKind && (isYices || isZ3), getFieldEditorParent());
         noKInductionEditor.setEnabled(isJKind, getFieldEditorParent());
         pdrMaxEditor.setEnabled(isJKind, getFieldEditorParent());
         generalizeFieldEditor.setEnabled(isJKind, getFieldEditorParent());

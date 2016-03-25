@@ -5,9 +5,7 @@ import java.io.StringWriter;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -28,12 +26,16 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.handlers.IHandlerActivation;
 import org.eclipse.ui.handlers.IHandlerService;
+import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.util.Pair;
+import org.osate.aadl2.AadlPackage;
 import org.osate.aadl2.AnnexSubclause;
+import org.osate.aadl2.Classifier;
 import org.osate.aadl2.ComponentClassifier;
 import org.osate.aadl2.ComponentImplementation;
 import org.osate.aadl2.ComponentType;
@@ -41,9 +43,11 @@ import org.osate.aadl2.DataPort;
 import org.osate.aadl2.Element;
 import org.osate.aadl2.EventDataPort;
 import org.osate.aadl2.FeatureGroup;
+import org.osate.aadl2.NamedElement;
 import org.osate.aadl2.instance.ComponentInstance;
 import org.osate.aadl2.instance.SystemInstance;
 import org.osate.aadl2.instantiation.InstantiateModel;
+import org.osate.aadl2.modelsupport.util.AadlUtil;
 import org.osate.annexsupport.AnnexUtil;
 import org.osate.ui.dialogs.Dialog;
 
@@ -57,21 +61,19 @@ import com.rockwellcollins.atc.agree.agree.GuaranteeStatement;
 import com.rockwellcollins.atc.agree.agree.LemmaStatement;
 import com.rockwellcollins.atc.agree.agree.PropertyStatement;
 import com.rockwellcollins.atc.agree.analysis.Activator;
-import com.rockwellcollins.atc.agree.analysis.AgreeUtils;
 import com.rockwellcollins.atc.agree.analysis.AgreeException;
 import com.rockwellcollins.atc.agree.analysis.AgreeLayout;
 import com.rockwellcollins.atc.agree.analysis.AgreeLayout.SigType;
 import com.rockwellcollins.atc.agree.analysis.AgreeLogger;
 import com.rockwellcollins.atc.agree.analysis.AgreeRenaming;
+import com.rockwellcollins.atc.agree.analysis.AgreeUtils;
 import com.rockwellcollins.atc.agree.analysis.ConsistencyResult;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeASTBuilder;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeNode;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeProgram;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeStatement;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeVar;
-import com.rockwellcollins.atc.agree.analysis.preferences.PreferenceConstants;
 import com.rockwellcollins.atc.agree.analysis.preferences.PreferencesUtil;
-import com.rockwellcollins.atc.agree.analysis.translation.AgreeNodeToLustreContract;
 import com.rockwellcollins.atc.agree.analysis.translation.LustreAstBuilder;
 import com.rockwellcollins.atc.agree.analysis.translation.LustreContractAstBuilder;
 import com.rockwellcollins.atc.agree.analysis.views.AgreeResultsLinker;
@@ -98,27 +100,66 @@ public abstract class VerifyHandler extends AadlHandler {
 
     protected abstract boolean isRealizability();
 
+	protected SystemInstance getSysInstance(Element root) {
+		ComponentImplementation ci = getComponentImplementation(root);
+		try {
+			return InstantiateModel.buildInstanceModelFile(ci);
+		} catch (Exception e) {
+			Dialog.showError("Model Instantiate", "Error while re-instantiating the model: " + e.getMessage());
+			throw new AgreeException("Error Instantiating model");
+		}
+	}
+
+	private ComponentImplementation getComponentImplementation(Element root) {
+		Classifier classifier = getOutermostClassifier(root);
+		if (isRealizability()) {
+			if (!(classifier instanceof ComponentType)) {
+				throw new AgreeException("Must select an AADL Component Type");
+			}
+			return AgreeUtils.compImplFromType((ComponentType) classifier);
+		} else {
+			if (classifier instanceof ComponentImplementation) {
+				return (ComponentImplementation) classifier;
+			}
+			if (!(classifier instanceof ComponentType)) {
+				throw new AgreeException("Must select an AADL Component Type or Implementation");
+			}
+			ComponentType ct = (ComponentType) classifier;
+			List<ComponentImplementation> cis = getComponentImplementations(ct);
+			if (cis.size() == 0) {
+				throw new AgreeException("AADL Component Type has no implementation to verify");
+			} else if (cis.size() == 1) {
+				ComponentImplementation ci = cis.get(0);
+				Shell shell = getWindow().getShell();
+				String message = "User selected " + ct.getFullName() + ".\nRunning analysis on " + ci.getFullName()	+ " instead.";
+				shell.getDisplay().asyncExec(
+						() -> MessageDialog.openInformation(shell, "Analysis information", message));
+				return ci;
+			} else {
+				throw new AgreeException(
+						"AADL Component Type has multiple implementation to verify: please select just one");
+			}
+		}
+	}
+
+	private List<ComponentImplementation> getComponentImplementations(ComponentType ct) {
+		List<ComponentImplementation> result = new ArrayList<>();
+		AadlPackage pkg = AadlUtil.getContainingPackage(ct);
+		for (ComponentImplementation ci : EcoreUtil2.getAllContentsOfType(pkg, ComponentImplementation.class)) {
+			if (ci.getType().equals(ct)) {
+				result.add(ci);
+			}
+		}
+		return result;
+	}
+
     @Override
     protected IStatus runJob(Element root, IProgressMonitor monitor) {
         disableRerunHandler();
         handlerService = (IHandlerService) getWindow().getService(IHandlerService.class);
 
-        if (!(root instanceof ComponentImplementation)) {
-            return new Status(IStatus.ERROR, Activator.PLUGIN_ID,
-                    "Must select an AADL Component Implementation");
-        }
-
         try {
-            ComponentImplementation ci = (ComponentImplementation) root;
-
-            SystemInstance si = null;
-            try {
-                si = InstantiateModel.buildInstanceModelFile(ci);
-            } catch (Exception e) {
-                Dialog.showError("Model Instantiate",
-                        "Error while re-instantiating the model: " + e.getMessage());
-                return Status.CANCEL_STATUS;
-            }
+            SystemInstance si = getSysInstance(root);
 
             AnalysisResult result;
             CompositeAnalysisResult wrapper = new CompositeAnalysisResult("");
@@ -137,7 +178,7 @@ public abstract class VerifyHandler extends AadlHandler {
                 if(AgreeUtils.usingKind2()){
                     throw new AgreeException("Kind2 only supports monolithic verification");
                 }
-                result = buildAnalysisResult(ci.getName(), si);
+                result = buildAnalysisResult(((NamedElement)root).getName(), si);
                 wrapper.addChild(result);
                 result = wrapper;
             } else if (isRealizability()) {

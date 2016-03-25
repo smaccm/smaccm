@@ -43,7 +43,6 @@ system top_level
 	annex agree {** 
 		assume "System input range " : Input < 10;
 		guarantee "System output range" : Output < 50;
-		guarantee "new prop" : Input < 10;
 	**};	
 end top_level;
 

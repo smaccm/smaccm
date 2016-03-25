@@ -8,7 +8,7 @@
 -- The features matches the Infusion Manager behavioral model.
 --------------------------------------------------------------------------
 
-package Logging
+package Logging 
 public
   with DATATYPES;
   
