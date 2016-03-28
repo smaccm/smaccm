@@ -509,6 +509,13 @@ public class AgreePatternTranslator {
                 to("time", timeExpr));
         builder.addLocalEquation(new AgreeEquation(eq, pattern));
         
+        Expr lemmaExpr = expr("timeCause <= time and timeCause >= -1.0",
+                to("timeCause", timeCauseVar),
+                to("time", timeExpr));
+        
+        //add this assertion to help with proofs (it should always be true)
+        builder.addAssertion(new AgreeStatement("", lemmaExpr, pattern));
+        
         BinaryOp left = getIntervalLeftOp(pattern.effectInterval);
         BinaryOp right = getIntervalRightOp(pattern.effectInterval);
         
