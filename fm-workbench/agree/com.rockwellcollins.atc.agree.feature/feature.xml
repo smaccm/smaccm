@@ -41,21 +41,21 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
          id="com.rockwellcollins.atc.agree.analysis"
          download-size="0"
          install-size="0"
-         version="0.0.0"
+         version="2.1.3.qualifier"
          unpack="false"/>
 
    <plugin
          id="com.rockwellcollins.atc.agree.ui"
          download-size="0"
          install-size="0"
-         version="0.0.0"
+         version="2.1.3.qualifier"
          unpack="false"/>
 
    <plugin
          id="com.rockwellcollins.atc.agree"
          download-size="0"
          install-size="0"
-         version="0.0.0"
+         version="2.1.3.qualifier"
          unpack="false"/>
 
 </feature>

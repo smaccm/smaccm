@@ -24,6 +24,7 @@ Initialize the systick signal based on the GCD of the thread periods
 uint64_t ticks = 0;
 uint64_t the_CPU_rate = 0; 
 uint32_t the_interval = 0;
+uint64_t the_CPU_rate = 0;
 
 void clock_init() { }
 
@@ -31,7 +32,6 @@ void clock_init() { }
 void clock_set_cpu_rate_in_hz(uint64_t rate) {
 	the_CPU_rate = rate;
 }
-
 void clock_set_interval_in_ms(uint32_t interval) {
    the_interval = interval;
    
@@ -41,10 +41,12 @@ void clock_set_interval_in_ms(uint32_t interval) {
    for 10ms in the TENMS section is not exactly 10ms due to clock frequency.
    Bit[31] == 1 indicates that the reference clock is not provided.*/
 
+
 /* MWW: 2/4/2016, no longer using CAV; apparently it is unreliable 
    uint32_t cav_value = SYST_CAV_READ(); 
     uint32_t ten_ms_val = cav_value & 0x00ffffff ;   // number of cycles per 10ms
     uint32_t one_ms_val = ten_ms_val / 10;            // number of cycles per 1ms
+
    */
    
    /* ...instead compute ticks from CPU rate (2/29/2016) */
@@ -63,7 +65,6 @@ void clock_set_interval_in_ms(uint32_t interval) {
    // assert(the_CPU_rate > 0); 
    uint32_t ten_ms_val = the_CPU_rate / 100; 
    uint32_t one_ms_val = ten_ms_val / 10;
- 
 
    uint32_t mult_of_ten_ms = interval / 10;
    uint32_t remainder_of_ten_ms = interval % 10;
