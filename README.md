@@ -7,7 +7,6 @@ Install
 2. Start OSATE and go to "Help -> Install New Software..."
 3. Click the "Add..." button in the upper right hand corner and add this URL as an update site: (https://raw.githubusercontent.com/smaccm/update-site/master/site.xml)
 4. Click the box labeled "SMACCM", click "Finish", and proceed through the dialog.
-*Note: If you have trouble installing the updates you might need to run OSATE as administrator.
 
 Notes
 =====
@@ -16,3 +15,5 @@ The AGREE plugin is only packaged with the SMTInterpol SMT solver. If you want t
 [Yices 2](http://yices.csl.sri.com/index.shtml),
 [CVC4](http://cvc4.cs.nyu.edu/web/), or
 [MathSAT](http://mathsat.fbk.eu/)) you will need to obtain them separately and set your PATH environment variable to point at their location.  In order to perform Realizability Analysis you must have Z3 installed.
+
+**If you have trouble installing the updates you might need to run OSATE as administrator.**
