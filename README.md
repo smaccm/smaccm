@@ -7,6 +7,7 @@ Install
 2. Start OSATE and go to "Help -> Install New Software..."
 3. Click the "Add..." button in the upper right hand corner and add this URL as an update site: (https://raw.githubusercontent.com/smaccm/update-site/master/site.xml)
 4. Click the box labeled "SMACCM", click "Finish", and proceed through the dialog.
+*Note: If you have trouble installing the updates you might need to run OSATE as administrator.
 
 Notes
 =====
